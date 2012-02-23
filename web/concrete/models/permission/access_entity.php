@@ -34,12 +34,16 @@ class GroupPermissionAccessEntity extends PermissionAccessEntity {
 	protected $group = false;
 	public function getGroupObject() {return $this->group;}
 	
-	public static function create(Group $g) {
+	public static function getOrCreate(Group $g) {
 		$db = Loader::db();
-		$db->Execute("insert into PermissionAccessEntities (peType) values('G')");
-		$id = $db->Insert_ID();
-		$db->Execute('insert into PermissionAccessEntityGroups (peID, gID) values (?, ?)', array($id, $g->getGroupID()));
-		return PermissionAccessEntity::getByID($id);
+		$peID = $db->GetOne('select pae.peID from PermissionAccessEntities pae inner join PermissionAccessEntityGroups paeg on pae.peID = paeg.peID where peType = ? and paeg.gID = ?', 
+			array('G', $g->getGroupID()));
+		if (!$peID) { 
+			$db->Execute("insert into PermissionAccessEntities (peType) values('G')");
+			$peID = $db->Insert_ID();
+			$db->Execute('insert into PermissionAccessEntityGroups (peID, gID) values (?, ?)', array($peID, $g->getGroupID()));
+		}
+		return PermissionAccessEntity::getByID($peID);
 	}
 	
 	public function load() {
@@ -63,14 +67,29 @@ class GroupCombinationPermissionAccessEntity extends PermissionAccessEntity {
 		return $this->groups;
 	}
 	
-	public static function create($groups) {
+	public static function getOrCreate($groups) {
 		$db = Loader::db();
-		$db->Execute("insert into PermissionAccessEntities (peType) values('C')");
-		$id = $db->Insert_ID();
+		$q = 'select pae.peID from PermissionAccessEntities pae ';
+		$i = 1;
 		foreach($groups as $g) {
-			$db->Execute('insert into PermissionAccessEntityGroups (peID, gID) values (?, ?)', array($id, $g->getGroupID()));
+			$q .= 'left join PermissionAccessEntityGroups paeg' . $i . ' on pae.peID = paeg' . $i . '.peID ';
+			$i++;
 		}
-		return PermissionAccessEntity::getByID($id);
+		$q .= 'where peType = \'C\' ';
+		$i = 1;
+		foreach($groups as $g) {
+			$q .= 'and paeg' . $i . '.gID = ' . $g->getGroupID() . ' ';
+			$i++;
+		}
+		$peID = $db->GetOne($q);
+		if (!$peID) { 
+			$db->Execute("insert into PermissionAccessEntities (peType) values('C')");
+			$peID = $db->Insert_ID();
+			foreach($groups as $g) {
+				$db->Execute('insert into PermissionAccessEntityGroups (peID, gID) values (?, ?)', array($peID, $g->getGroupID()));
+			}
+		}
+		return PermissionAccessEntity::getByID($peID);
 	}
 
 	public function load() {
@@ -97,12 +116,16 @@ class UserPermissionAccessEntity extends PermissionAccessEntity {
 	protected $user;
 	public function getUserObject() {return $this->user;}
 	
-	public static function create(UserInfo $ui) {
+	public static function getOrCreate(UserInfo $ui) {
 		$db = Loader::db();
-		$db->Execute("insert into PermissionAccessEntities (peType) values('U')");
-		$id = $db->Insert_ID();
-		$db->Execute('insert into PermissionAccessEntityUsers (peID, uID) values (?, ?)', array($id, $ui->getUserID()));
-		return PermissionAccessEntity::getByID($id);
+		$peID = $db->GetOne('select pae.peID from PermissionAccessEntities pae inner join PermissionAccessEntityUsers paeg on pae.peID = paeg.peID where peType = ? and paeg.uID = ?', 
+			array('U', $ui->getUserID()));
+		if (!$peID) { 
+			$db->Execute("insert into PermissionAccessEntities (peType) values('U')");
+			$peID = $db->Insert_ID();
+			$db->Execute('insert into PermissionAccessEntityUsers (peID, uID) values (?, ?)', array($peID, $ui->getUserID()));
+		}
+		return PermissionAccessEntity::getByID($peID);
 	}
 
 	public function load() {

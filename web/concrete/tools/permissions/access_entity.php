@@ -53,7 +53,7 @@ if ($_POST['task'] == 'save_permissions') {
 			if (isset($_POST['uID'])) {
 				$ui = UserInfo::getByID($_POST['uID']);
 				if (is_object($ui)) { 
-					$pae = UserPermissionAccessEntity::create($ui);
+					$pae = UserPermissionAccessEntity::getOrCreate($ui);
 				}
 			} else {
 				if (count($_POST['gID']) > 1) { 
@@ -64,11 +64,11 @@ if ($_POST['task'] == 'save_permissions') {
 							$groups[] = $g;
 						}
 					}
-					$pae = GroupCombinationPermissionAccessEntity::create($groups);
+					$pae = GroupCombinationPermissionAccessEntity::getOrCreate($groups);
 				} else {
 					$g = Group::getByID($_POST['gID'][0]);
 					if (is_object($g)) {
-						$pae = GroupPermissionAccessEntity::create($g);			
+						$pae = GroupPermissionAccessEntity::getOrCreate($g);			
 					}
 				}
 			}
