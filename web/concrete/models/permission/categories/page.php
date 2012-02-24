@@ -19,6 +19,18 @@ class PagePermissionKey extends PermissionKey {
 			return $pk;
 		}
 	}
+
+	public static function getByHandle($pkHandle, Page $page) {
+		$db = Loader::db();
+		$pkID = $db->GetOne('select pkID from PermissionKeys where pkHandle = ?', array($pkHandle));
+		if ($pkID) { 
+			$pk = self::load($pkID);
+			if ($pk->getPermissionKeyID() > 0) {
+				$pk->setPageObject($page);
+				return $pk;
+			}
+		}
+	}
 	
 	public function getAssignmentList($accessType = PagePermissionKey::ACCESS_TYPE_INCLUDE) {
 		$db = Loader::db();
