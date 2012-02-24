@@ -162,7 +162,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		 * Gets the permissions object for this controller's block
 		 *
 		 */
-		public function getPermissionsObject() {
+		public function getPermissionObject() {
 			$bp = new Permissions(Block::getByID($this->bID));
 			return $bp;
 		}

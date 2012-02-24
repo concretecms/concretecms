@@ -4,6 +4,7 @@ class PermissionResponse {
 
 	protected $object;
 	protected $allowedPermissions = array();
+	protected $customResponseObjects = array();
 	protected $category;
 	
 	public function setPermissionObject($object) { 
@@ -29,6 +30,13 @@ class PermissionResponse {
 		return $this->allowedPermissions;
 	}
 	
+	public function setCustomResponseObjects() {
+		if (is_object($this->category)) { 
+			$db = Loader::db();
+			$this->customResponseObjects = $db->GetCol('select pkHandle from PermissionKeys where pkCategoryID = ? and pkHasCustomResponse = 1', array($this->category->getPermissionKeyCategoryID()));
+		}
+	}
+
 	public static function getResponse($handle, $args) {
 		$category = PermissionKeyCategory::getByHandle($handle);
 		if (is_object($category) && $category->getPackageID() > 0) { 
@@ -46,6 +54,7 @@ class PermissionResponse {
 		$pr = new $c1();
 		$pr->setPermissionObject($args);
 		$pr->setPermissionCategoryObject($category);
+		$pr->setCustomResponseObjects();
 		$pr->loadPermissions();
 		return $pr;
 	}
@@ -53,7 +62,15 @@ class PermissionResponse {
 	public function __call($f, $a) {
 		$permission = substr($f, 3);
 		$permission = Loader::helper('text')->uncamelcase($permission);
-		return in_array($permission, $this->getAllowedPermissions());
+		if (in_array($permission, $this->getAllowedPermissions())) {
+			if (!in_array($permission, $this->customResponseObjects)) { 
+				return true;
+			} else { 
+				$pk = $this->category->getPermissionKeyByHandle($permission);
+				$pk->setPermissionObject($this->object);
+				return call_user_func_array(array($pk, 'validate'), $a);
+			}
+		}
 	}
 	
 

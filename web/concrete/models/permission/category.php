@@ -49,6 +49,19 @@ class PermissionKeyCategory extends Object {
 		return $list;
 	}	
 
+	public function getPermissionKeyByHandle($pkHandle) {
+		if ($this->pkgID > 0) {
+			Loader::model('permission/categories/' . $this->pkCategoryHandle, $this->getPackageHandle());
+		} else {
+			Loader::model('permission/categories/' . $this->pkCategoryHandle);
+		}		
+		$txt = Loader::helper('text');
+		$className = $txt->camelcase($this->pkCategoryHandle);
+		$c1 = $className . 'PermissionKey';
+		$ak = call_user_func(array($c1, 'getByHandle'), $pkHandle);
+		return $ak;
+	}
+
 	public function getPermissionKeyByID($pkID) {
 		if ($this->pkgID > 0) {
 			Loader::model('permission/categories/' . $this->pkCategoryHandle, $this->getPackageHandle());
@@ -58,7 +71,7 @@ class PermissionKeyCategory extends Object {
 		$txt = Loader::helper('text');
 		$className = $txt->camelcase($this->pkCategoryHandle);
 		$c1 = $className . 'PermissionKey';
-		$ak = call_user_func(array($c1, 'getByID'), $akID);
+		$ak = call_user_func(array($c1, 'getByID'), $pkID);
 		return $ak;
 	}
 	

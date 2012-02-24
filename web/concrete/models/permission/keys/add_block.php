@@ -5,18 +5,18 @@ class AddBlockAreaPermissionKey extends AreaPermissionKey  {
 
 	public function savePermissionKey($args) {
 		$db = Loader::db();
-		$db->Execute('delete from AreaPermissionBlockTypeAssignments where cID = ? and arHandle = ?', array($this->area->getCollectionID(), $this->area->getAreaHandle()));
-		$db->Execute('delete from AreaPermissionBlockTypeAssignmentsCustom where cID = ? and arHandle = ?', array($this->area->getCollectionID(), $this->area->getAreaHandle()));
+		$db->Execute('delete from AreaPermissionBlockTypeAssignments where cID = ? and arHandle = ?', array($this->permissionObject->getCollectionID(), $this->permissionObject->getAreaHandle()));
+		$db->Execute('delete from AreaPermissionBlockTypeAssignmentsCustom where cID = ? and arHandle = ?', array($this->permissionObject->getCollectionID(), $this->permissionObject->getAreaHandle()));
 		if (is_array($args['blockTypesIncluded'])) { 
 			foreach($args['blockTypesIncluded'] as $peID => $permission) {
-				$v = array($this->area->getCollectionID(), $this->area->getAreaHandle(), $peID, $permission);
+				$v = array($this->permissionObject->getCollectionID(), $this->permissionObject->getAreaHandle(), $peID, $permission);
 				$db->Execute('insert into AreaPermissionBlockTypeAssignments (cID, arHandle, peID, permission) values (?, ?, ?, ?)', $v);
 			}
 		}
 		
 		if (is_array($args['blockTypesExcluded'])) { 
 			foreach($args['blockTypesExcluded'] as $peID => $permission) {
-				$v = array($this->area->getCollectionID(), $this->area->getAreaHandle(), $peID, $permission);
+				$v = array($this->permissionObject->getCollectionID(), $this->permissionObject->getAreaHandle(), $peID, $permission);
 				$db->Execute('insert into AreaPermissionBlockTypeAssignments (cID, arHandle, peID, permission) values (?, ?, ?, ?)', $v);
 			}
 		}
@@ -24,7 +24,7 @@ class AddBlockAreaPermissionKey extends AreaPermissionKey  {
 		if (is_array($args['btIDInclude'])) { 
 			foreach($args['btIDInclude'] as $peID => $btIDs) {
 				foreach($btIDs as $btID) { 
-					$v = array($this->area->getCollectionID(), $this->area->getAreaHandle(), $peID, $btID);
+					$v = array($this->permissionObject->getCollectionID(), $this->permissionObject->getAreaHandle(), $peID, $btID);
 					$db->Execute('insert into AreaPermissionBlockTypeAssignmentsCustom (cID, arHandle, peID, btID) values (?, ?, ?, ?)', $v);
 				}
 			}
@@ -33,7 +33,7 @@ class AddBlockAreaPermissionKey extends AreaPermissionKey  {
 		if (is_array($args['btIDExclude'])) { 
 			foreach($args['btIDExclude'] as $peID => $btIDs) {
 				foreach($btIDs as $btID) { 
-					$v = array($this->area->getCollectionID(), $this->area->getAreaHandle(), $peID, $btID);
+					$v = array($this->permissionObject->getCollectionID(), $this->permissionObject->getAreaHandle(), $peID, $btID);
 					$db->Execute('insert into AreaPermissionBlockTypeAssignmentsCustom (cID, arHandle, peID, btID) values (?, ?, ?, ?)', $v);
 				}
 			}
@@ -42,12 +42,12 @@ class AddBlockAreaPermissionKey extends AreaPermissionKey  {
 	}
 
 
-	public function getAssignmentList($accessType = AreaPermissionKey::ACCESS_TYPE_INCLUDE) {
+	public function getAssignmentList($accessType = AreaPermissionKey::ACCESS_TYPE_INCLUDE, $filterEntities = array()) {
 		$db = Loader::db();
-		$list = parent::getAssignmentList($accessType);
+		$list = parent::getAssignmentList($accessType, $filterEntities);
 		foreach($list as $l) {
 			$pe = $l->getAccessEntityObject();
-			if ($this->permissionsObject instanceof Page && $accessType == AreaPermissionKey::ACCESS_TYPE_INCLUDE) {
+			if ($this->permissionObject instanceof Page && $accessType == AreaPermissionKey::ACCESS_TYPE_INCLUDE) {
 				$permission = 1;
 			} else { 
 				$permission = $db->GetOne('select permission from AreaPermissionBlockTypeAssignments where peID = ?', array($pe->getAccessEntityID()));

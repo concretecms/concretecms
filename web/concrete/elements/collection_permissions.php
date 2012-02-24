@@ -21,7 +21,9 @@ if ($cp->canAdminPage()) {
 }
 ?>
 <div class="ccm-ui" id="ccm-page-permissions-list">
-<? $pk = PagePermissionKey::getByID($_REQUEST['pkID'], $c); ?>
+<? $pk = PagePermissionKey::getByID($_REQUEST['pkID']);
+$pk->setPermissionObject($c);
+?>
 <? $included = $pk->getAssignmentList(); ?>
 <? $excluded = $pk->getAssignmentList(PermissionKey::ACCESS_TYPE_EXCLUDE); ?>
 

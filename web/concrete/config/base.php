@@ -163,6 +163,7 @@ define('DIRNAME_MODELS', 'models');
 define('DIRNAME_ATTRIBUTES', 'attribute');
 define('DIRNAME_ATTRIBUTE_TYPES', 'types');
 define('DIRNAME_LIBRARIES', 'libraries');
+define('DIRNAME_RESPONSE', 'response');
 define('DIRNAME_PERMISSIONS', 'permission');
 define('DIRNAME_KEYS', 'keys');
 define('DIRNAME_PAGE_TYPES', 'page_types');

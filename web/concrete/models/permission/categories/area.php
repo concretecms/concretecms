@@ -3,7 +3,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 class AreaPermissionKey extends PermissionKey {
 	
 	protected $area;
-	protected $permissionsObject;
+	protected $permissionObjectToCheck;
 	protected $inheritedPermissions = array(
 		'view_area' => 'view_page',
 		'edit_area_contents' => 'edit_page_contents',
@@ -14,22 +14,18 @@ class AreaPermissionKey extends PermissionKey {
 		'delete_area_contents' => 'edit_page_contents'		
 	);
 	
-	public function getAreaObject() {
-		return $this->area;
-	}
-
-	public function setAreaObject(Area $a) {
+	public function setPermissionObject(Area $a) {
 		$ax = $a;
 		if ($a->isGlobalArea()) {
 			$cx = Stack::getByName($a->getAreaHandle());
 			$a = Area::get($cx, STACKS_AREA_NAME);
 		}
 
-		$this->area = $a;
+		$this->permissionObject = $a;
 		
 		// if the area overrides the collection permissions explicitly (with a one on the override column) we check
 		if ($a->overrideCollectionPermissions()) {
-			$this->permissionsObject = $a;
+			$this->permissionObjectToCheck = $a;
 		} else {
 			if ($a->getAreaCollectionInheritID() > 0) {
 				// in theory we're supposed to be inheriting some permissions from an area with the same handle,
@@ -42,12 +38,12 @@ class AreaPermissionKey extends PermissionKey {
 					// okay, so that area is still around, still has set permissions on it. So we
 					// pass our current area to our grouplist, userinfolist objects, knowing that they will 
 					// smartly inherit the correct items.
-					$this->permissionsObject = $inheritArea;
+					$this->permissionObjectToCheck = $inheritArea;
 				}
 			}
 			
-			if (!$this->permissionsObject) { 
-				$this->permissionsObject = $a->getAreaCollectionObject();
+			if (!$this->permissionObjectToCheck) { 
+				$this->permissionObjectToCheck = $a->getAreaCollectionObject();
 			}
 		}
 	}
@@ -58,12 +54,12 @@ class AreaPermissionKey extends PermissionKey {
 		if (isset($this->inheritedPermissions[$this->getPermissionKeyHandle()])) {
 			$inheritedPKID = $db->GetOne('select pkID from PermissionKeys where pkHandle = ?', array($this->inheritedPermissions[$this->getPermissionKeyHandle()]));
 			$r = $db->Execute('select peID, accessType from PagePermissionAssignments where cID = ? and pkID = ?', array(
-				$this->permissionsObject->getCollectionID(), $inheritedPKID
+				$this->permissionObjectToCheck->getCollectionID(), $inheritedPKID
 			));
 			while ($row = $r->FetchRow()) {
 				$db->Replace('AreaPermissionAssignments', array(
-					'cID' => $this->area->getCollectionID(), 
-					'arHandle' => $this->area->getAreaHandle(), 
+					'cID' => $this->permissionObject->getCollectionID(), 
+					'arHandle' => $this->permissionObject->getAreaHandle(), 
 					'pkID' => $this->getPermissionKeyID(),
 					'accessType' => $row['accessType'],
 					'peID' => $row['peID']), array('cID', 'arHandle', 'peID', 'pkID'), true);				
@@ -71,25 +67,26 @@ class AreaPermissionKey extends PermissionKey {
 		}
 	}
 	
-	public static function getByID($pkID, Area $area) {
+	public static function getByID($pkID) {
 		$pk = self::load($pkID);
 		if ($pk->getPermissionKeyID() > 0) {
-			$pk->setAreaObject($area);
 			return $pk;
 		}
 	}
 	
-	public function getAssignmentList($accessType = AreaPermissionKey::ACCESS_TYPE_INCLUDE) {
+	public function getAssignmentList($accessType = AreaPermissionKey::ACCESS_TYPE_INCLUDE, $filterEntities = array()) {
 		$db = Loader::db();
-		if ($this->permissionsObject instanceof Area) { 
-			$r = $db->Execute('select peID, pdID from AreaPermissionAssignments where cID = ? and arHandle = ? and accessType = ? and pkID = ?', array(
-				$this->permissionsObject->getCollectionID(), $this->permissionsObject->getAreaHandle(), $accessType, $this->getPermissionKeyID()
+		$filterString = $this->buildAssignmentFilterString($accessType, $filterEntities);
+
+		if ($this->permissionObjectToCheck instanceof Area) { 
+			$r = $db->Execute('select accessType, peID, pdID from AreaPermissionAssignments where cID = ? and arHandle = ? and accessType = ? and pkID = ? ' . $filterString, array(
+				$this->permissionObjectToCheck->getCollectionID(), $this->permissionObjectToCheck->getAreaHandle(), $accessType, $this->getPermissionKeyID()
 			));
 		} else if (isset($this->inheritedPermissions[$this->getPermissionKeyHandle()])) { 
 			// this is a page
 			$inheritedPKID = $db->GetOne('select pkID from PermissionKeys where pkHandle = ?', array($this->inheritedPermissions[$this->getPermissionKeyHandle()]));
-			$r = $db->Execute('select peID, 0 as pdID from PagePermissionAssignments where cID = ? and accessType = ? and pkID = ?', array(
-				$this->permissionsObject->getCollectionID(), $accessType, $inheritedPKID
+			$r = $db->Execute('select accessType, peID, 0 as pdID from PagePermissionAssignments where cID = ? and accessType = ? and pkID = ? ' . $filterString, array(
+				$this->permissionObjectToCheck->getCollectionID(), $accessType, $inheritedPKID
 			));
 		} else {
 			return array();
@@ -102,10 +99,10 @@ class AreaPermissionKey extends PermissionKey {
  		}
  		while ($row = $r->FetchRow()) {
  			$ppa = new $class();
- 			$ppa->setAccessType($accessType);
+ 			$ppa->setAccessType($row['accessType']);
  			$ppa->loadPermissionDurationObject($row['pdID']);
  			$ppa->loadAccessEntityObject($row['peID']);
-			$ppa->setAreaObject($this->area);
+			$ppa->setPermissionObject($this->permissionObject);
 			$list[] = $ppa;
  		}
  		
@@ -120,8 +117,8 @@ class AreaPermissionKey extends PermissionKey {
 		}
 		
 		$db->Replace('AreaPermissionAssignments', array(
-			'cID' => $this->area->getCollectionID(),
-			'arHandle' => $this->area->getAreaHandle(),
+			'cID' => $this->permissionObject->getCollectionID(),
+			'arHandle' => $this->permissionObject->getAreaHandle(),
 			'pkID' => $this->getPermissionKeyID(), 
 			'peID' => $pae->getAccessEntityID(),
 			'pdID' => $pdID,
@@ -131,12 +128,12 @@ class AreaPermissionKey extends PermissionKey {
 	
 	public function removeAssignment(PermissionAccessEntity $pe) {
 		$db = Loader::db();
-		$db->Execute('delete from AreaPermissionAssignments where cID = ? and arHandle = ? and peID = ?', array($this->area->getCollectionID(), $this->area->getAreaHandle(), $pe->getAccessEntityID()));
+		$db->Execute('delete from AreaPermissionAssignments where cID = ? and arHandle = ? and peID = ?', array($this->permissionObject->getCollectionID(), $this->permissionObject->getAreaHandle(), $pe->getAccessEntityID()));
 		
 	}
 	
 	public function getPermissionKeyToolsURL($task = false) {
-		$area = $this->getAreaObject();
+		$area = $this->getPermissionObject();
 		$c = $area->getAreaCollectionObject();
 		return parent::getPermissionKeyToolsURL($task) . '&cID=' . $c->getCollectionID() . '&arHandle=' . $area->getAreaHandle();
 	}
@@ -145,9 +142,7 @@ class AreaPermissionKey extends PermissionKey {
 
 class AreaPermissionAssignment extends PermissionAssignment {
 
-	public function setAreaObject($area) {
-		$this->area = $area;
-	}
+
 
 
 }

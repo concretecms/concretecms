@@ -6,7 +6,7 @@ $stringHelper=Loader::helper('text');
 $tArray = PageTheme::getGlobalList();
 $tArray2 = PageTheme::getLocalList();
 $tArray = array_merge($tArray, $tArray2);
-$ctArray = CollectionType::getList($c->getAllowedSubCollections());
+$ctArray = CollectionType::getList();
 
 $cp = new Permissions($c);
 if ($c->getCollectionID() > 1) {

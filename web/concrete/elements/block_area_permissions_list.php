@@ -42,7 +42,7 @@ if ($a->getAreaCollectionInheritID() != $c->getCollectionID() && $a->getAreaColl
 <?
 $permissions = PermissionKey::getList('area');
 foreach($permissions as $pk) { 
-	$pk->setAreaObject($a);
+	$pk->setPermissionObject($a);
 
 ?>
 	<li><? if ($enablePermissions) { ?><a dialog-width="500" dialog-height="380" class="dialog-launch" dialog-title="<?=t('Permissions')?>" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_area_popup?arHandle=<?=$a->getAreaHandle()?>&cID=<?=$c->getCollectionID()?>&atask=set_advanced_permissions&pkID=<?=$pk->getPermissionKeyID()?>"><? } ?><?=$pk->getPermissionKeyName()?><? if ($enablePermissions) { ?></a><? } ?><br/><?=$pk->getPermissionKeyDescription()?>

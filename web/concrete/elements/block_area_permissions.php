@@ -3,7 +3,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 $c = $a->getAreaCollectionObject();
 ?>
 <div class="ccm-ui" id="ccm-area-permissions-list">
-<? $pk = AreaPermissionKey::getByID($_REQUEST['pkID'], $a); ?>
+<? $pk = AreaPermissionKey::getByID($_REQUEST['pkID']); ?>
+<? $pk->setPermissionObject($a); ?>
 <? $included = $pk->getAssignmentList(); ?>
 <? $excluded = $pk->getAssignmentList(PermissionKey::ACCESS_TYPE_EXCLUDE); ?>
 

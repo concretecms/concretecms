@@ -30,7 +30,7 @@ if (!$b->overrideAreaPermissions()) { ?>
 <?
 $permissions = PermissionKey::getList('block');
 foreach($permissions as $pk) { 
-	$pk->setBlockObject($b);
+	$pk->setPermissionObject($b);
 
 ?>
 	<li><? if ($enablePermissions) { ?><a dialog-width="500" dialog-height="380" class="dialog-launch" dialog-title="<?=t('Permissions')?>" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_block_popup?bID=<?=$b->getBlockID()?>&arHandle=<?=$b->getAreaHandle()?>&cvID=<?=$c->getVersionID()?>&bID=<?=$b->getBlockID()?>&cID=<?=$c->getCollectionID()?>&btask=set_advanced_permissions&pkID=<?=$pk->getPermissionKeyID()?>"><? } ?><?=$pk->getPermissionKeyName()?><? if ($enablePermissions) { ?></a><? } ?><br/><?=$pk->getPermissionKeyDescription()?>

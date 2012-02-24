@@ -22,7 +22,8 @@ if (is_object($a)) {
 		$b->loadNewCollection($nvc);
 
 		if ($_REQUEST['task'] == 'add_access_entity' && Loader::helper("validation/token")->validate('add_access_entity')) {
-			$pk = BlockPermissionKey::getByID($_REQUEST['pkID'], $b);
+			$pk = BlockPermissionKey::getByID($_REQUEST['pkID']);
+			$pk->setPermissionObject($b);
 			$pe = PermissionAccessEntity::getByID($_REQUEST['peID']);
 			$pd = PermissionDuration::getByID($_REQUEST['pdID']);
 			$pk->addAssignment($pe, $pd, $_REQUEST['accessType']);
@@ -37,13 +38,15 @@ if (is_object($a)) {
 		}
 	
 		if ($_REQUEST['task'] == 'remove_access_entity' && Loader::helper("validation/token")->validate('remove_access_entity')) {
-			$pk = BlockPermissionKey::getByID($_REQUEST['pkID'], $b);
+			$pk = BlockPermissionKey::getByID($_REQUEST['pkID']);
+			$pk->setPermissionObject($b);
 			$pe = PermissionAccessEntity::getByID($_REQUEST['peID']);
 			$pk->removeAssignment($pe);
 		}
 	
 		if ($_REQUEST['task'] == 'save_permission' && Loader::helper("validation/token")->validate('save_permission')) {
-			$pk = BlockPermissionKey::getByID($_REQUEST['pkID'], $b);
+			$pk = BlockPermissionKey::getByID($_REQUEST['pkID']);
+			$pk->setPermissionObject($b);
 			$pk->savePermissionKey($_POST);
 		}
 	}
