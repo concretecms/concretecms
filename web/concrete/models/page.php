@@ -289,6 +289,7 @@ class Page extends Collection {
 	}
 	
 	public function assignPermissions($userOrGroup, $permissions = array(), $accessType = PagePermissionKey::ACCESS_TYPE_INCLUDE) {
+		$this->setPermissionsToManualOverride();
 		if (is_array($userOrGroup)) { 
 			$pe = GroupCombinationPermissionAccessEntity::getOrCreate($userOrGroup);
 			// group combination
@@ -300,28 +301,27 @@ class Page extends Collection {
 		}
 		
 		foreach($permissions as $pkHandle) { 
-			$pk = PagePermissionKey::getByHandle($pkHandle, $this);
+			$pk = PagePermissionKey::getByHandle($pkHandle);
+			$pk->setPermissionObject($this);
 			$pk->addAssignment($pe, false, $accessType);
 		}
-
-		$this->setPermissionsToManualOverride();
 		
 	}
 	
 	
 	private static function translatePermissionsXMLToKeys($node) {
 		$pkHandles = array();
-		if ($node['canRead']) {
+		if ($node['canRead'] == '1') {
 			$pkHandles[] = 'view_page';
 		}
-		if ($node['canWrite']) {
+		if ($node['canWrite'] == '1') {
 			$pkHandles[] = 'view_page_versions';
 			$pkHandles[] = 'edit_page_properties';
 			$pkHandles[] = 'edit_page_contents';
 			$pkHandles[] = 'approve_page_versions';
 			$pkHandles[] = 'move_or_copy_page';
 		}
-		if ($node['canAdmin']) {
+		if ($node['canAdmin'] == '1') {
 			$pkHandles[] = 'edit_page_speed_settings';
 			$pkHandles[] = 'edit_page_permissions';
 			$pkHandles[] = 'edit_page_design';
@@ -768,13 +768,6 @@ class Page extends Collection {
 	 */	
 	function getCollectionCheckedOutUserID() {
 		return $this->cCheckedOutUID;
-	}
-
-	/**
-	 * Gets the allowed sub pages for a page
-	 */	
-	function getAllowedSubCollections() {
-		return $this->allowedSubCollections;
 	}
 
 	/**

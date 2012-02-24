@@ -162,7 +162,7 @@
     </field>
   </table>
 
-  <table name="PermissionKeys">
+<table name="PermissionKeys">
     <field name="pkID" type="I" size="10">
       <KEY/>
       <AUTOINCREMENT/>
@@ -174,9 +174,15 @@
     <field name="pkName" type="C" size="255">
       <NOTNULL/>
     </field>
+    <field name="pkDescription" type="C" size="255"></field>
     <field name="pkCategoryID" type="I" size="10">
       <UNSIGNED />
     </field>
+    <field name="pkHasCustomResponse" type="I" size="1">
+      <UNSIGNED />
+      <notnull />
+      <DEFAULT value="0"/>
+    </field>    
     <field name="pkgID" type="I" size="10">
       <UNSIGNED />
     </field>
@@ -185,6 +191,7 @@
       <col>pkHandle</col>
     </index>
   </table>
+
   <table name="PermissionKeyCategories">
     <field name="pkCategoryID" type="I" size="10">
       <KEY/>

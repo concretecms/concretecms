@@ -6,6 +6,10 @@ class PermissionAssignment extends Object {
 		$this->accessType = $accessType;
 	}
 	
+	public function getAccessType() {
+		return $this->accessType;
+	}
+	
 	public function loadPermissionDurationObject($pdID) {
 		$pd = PermissionDuration::getByID($pdID);
 		$this->duration = $pd;
@@ -19,5 +23,11 @@ class PermissionAssignment extends Object {
 	public function getAccessEntityObject() {return $this->accessEntity;}
 	public function getPermissionDurationObject() {return $this->duration;}
 	
+	public function setPermissionObject($object) {
+		$this->permissionObject = $object;
+	}
+	public function getPermissionObject() {
+		return $this->permissionObject;
+	}
 	
 }

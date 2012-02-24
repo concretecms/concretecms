@@ -40,7 +40,7 @@ if ($c->getCollectionInheritance() == 'OVERRIDE') {
 <?
 $permissions = PermissionKey::getList('page');
 foreach($permissions as $pk) { 
-	$pk->setPageObject($c);
+	$pk->setPermissionObject($c);
 	?>
 	<li><? if ($editPermissions) { ?><a dialog-width="500" dialog-height="380" class="dialog-launch" dialog-title="<?=t('Permissions')?>" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_collection_popup?cID=<?=$c->getCollectionID()?>&ctask=set_advanced_permissions&pkID=<?=$pk->getPermissionKeyID()?>"><? } ?><?=$pk->getPermissionKeyName()?><? if ($editPermissions) { ?></a><? } ?><br/><?=$pk->getPermissionKeyDescription()?>
 	<br/><br/>

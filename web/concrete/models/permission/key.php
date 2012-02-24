@@ -5,6 +5,7 @@ abstract class PermissionKey extends Object {
 
 	const ACCESS_TYPE_INCLUDE = 1;
 	const ACCESS_TYPE_EXCLUDE = -1;
+	const ACCESS_TYPE_ALL = 0;
 	
 	/** 
 	 * Returns the name for this permission key
@@ -27,6 +28,13 @@ abstract class PermissionKey extends Object {
 	public function getPermissionKeyID() {return $this->pkID;}
 	public function getPermissionKeyCategoryID() {return $this->pkCategoryID;}
 	
+	public function setPermissionObject($object) {
+		$this->permissionObject = $object;
+	}
+	
+	public function getPermissionObject() {
+		return $this->permissionObject;
+	}
 
 	protected static function load($pkID) {
 		$db = Loader::db();
@@ -170,12 +178,23 @@ abstract class PermissionKey extends Object {
 		$pkgID = 0;
 		if (is_object($pkg)) {
 			$pkgID = $pkg->getPackageID();
+			$f1 = DIR_PACKAGES . '/' . $pkg->getPackageHandle() . '/' . DIRNAME_MODELS . '/' . DIRNAME_PERMISSIONS . '/' . DIRNAME_RESPONSE . '/' . DIRNAME_KEYS . '/' . $pkHandle . '.php';
+			$f2 = DIR_PACKAGES_CORE . '/' . $pkg->getPackageHandle() . '/' . DIRNAME_MODELS . '/' . DIRNAME_PERMISSIONS . '/' . DIRNAME_RESPONSE . '/' . DIRNAME_KEYS . '/' . $pkHandle . '.php';
+		} else {
+			$f1 = DIR_MODELS . '/' . DIRNAME_PERMISSIONS . '/' . DIRNAME_RESPONSE . '/' . DIRNAME_KEYS . '/' . $pkHandle . '.php';
+			$f2 = DIR_MODELS_CORE . '/' . DIRNAME_PERMISSIONS . '/' . DIRNAME_RESPONSE . '/' . DIRNAME_KEYS . '/' . $pkHandle . '.php';
+		}
+
+		$pkHasCustomResponse = 0;
+		if (file_exists($f1) || file_exists($f2)) { 
+			$pkHasCustomResponse = 1;
 		}
 
 		$db = Loader::db();
+		
 		$pkCategoryID = $db->GetOne("select pkCategoryID from PermissionKeyCategories where pkCategoryHandle = ?", $pkCategoryHandle);
-		$a = array($pkHandle, $pkName, $pkDescription, $pkCategoryID, $pkgID);
-		$r = $db->query("insert into PermissionKeys (pkHandle, pkName, pkDescription, pkCategoryID, pkgID) values (?, ?, ?, ?, ?)", $a);
+		$a = array($pkHandle, $pkName, $pkDescription, $pkCategoryID, $pkHasCustomResponse, $pkgID);
+		$r = $db->query("insert into PermissionKeys (pkHandle, pkName, pkDescription, pkCategoryID, pkHasCustomResponse, pkgID) values (?, ?, ?, ?, ?, ?)", $a);
 		
 		$category = AttributeKeyCategory::getByID($pkCategoryID);
 		
@@ -188,6 +207,23 @@ abstract class PermissionKey extends Object {
 		}
 	}
 
+	protected function buildAssignmentFilterString($accessType, $filterEntities) { 
+		$peIDs = '';
+		$filters = array();
+		if (count($filterEntities) > 0) {
+			foreach($filterEntities as $ent) {
+				$filters[] = $ent->getAccessEntityID();
+			}
+			$peIDs .= 'and peID in (' . implode($filters, ',') . ')';
+		}
+		if ($accessType == 0) {
+			$accessType = '';
+		} else { 
+			$accessType = ' and accessType = ' . $accessType;
+		}
+		return $peIDs . ' ' . $accessType . ' order by accessType desc'; // we order desc so that excludes come last (-1)
+	}
+	
 	public function delete() {
 	
 		$db = Loader::db();
@@ -195,7 +231,7 @@ abstract class PermissionKey extends Object {
 
 	}
 	
-	abstract public function getAssignmentList($accessType = false);
+	abstract public function getAssignmentList($accessType = false, $filterEntities = array());
 	
 
 	

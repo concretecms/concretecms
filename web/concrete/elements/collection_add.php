@@ -161,13 +161,13 @@ $dh = Loader::helper('date');
 <? } else {
 
 
-$ctArray = CollectionType::getList($c->getAllowedSubCollections());
+$ctArray = CollectionType::getList();
 $cp = new Permissions($c);
 
 $cnt = 0;
 for ($i = 0; $i < count($ctArray); $i++) {
 	$ct = $ctArray[$i];
-	if ($cp->canAddSubCollection($ct)) { 
+	if ($cp->canAddSubpage($ct)) { 
 		$cnt++;
 	}
 }
@@ -178,7 +178,7 @@ for ($i = 0; $i < count($ctArray); $i++) {
 			<ul id="ccm-select-page-type">
 				<? 
 				foreach($ctArray as $ct) { 
-					if ($cp->canAddSubCollection($ct)) { 
+					if ($cp->canAddSubpage($ct)) { 
 					$requiredKeys=array();
 					$aks = $ct->getAvailableAttributeKeys();
 					foreach($aks as $ak)
