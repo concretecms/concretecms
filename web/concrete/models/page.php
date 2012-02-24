@@ -287,7 +287,81 @@ class Page extends Collection {
 		// generated collections are collections without types, that have special cFilename attributes
 		return $this->cFilename != null && $this->ctID == 0;
 	}
+	
+	public function assignPermissions($userOrGroup, $permissions = array(), $accessType = PagePermissionKey::ACCESS_TYPE_INCLUDE) {
+		if (is_array($userOrGroup)) { 
+			$pe = GroupCombinationPermissionAccessEntity::getOrCreate($userOrGroup);
+			// group combination
+		} else if ($userOrGroup instanceof User || $userOrGroup instanceof UserInfo) { 
+			$pe = UserPermissionAccessEntity::getOrCreate($userOrGroup);
+		} else { 
+			// group;
+			$pe = GroupPermissionAccessEntity::getOrCreate($userOrGroup);
+		}
+		
+		foreach($permissions as $pkHandle) { 
+			$pk = PagePermissionKey::getByHandle($pkHandle, $this);
+			$pk->addAssignment($pe, false, $accessType);
+		}
 
+		$this->setPermissionsToManualOverride();
+		
+	}
+	
+	
+	private static function translatePermissionsXMLToKeys($node) {
+		$pkHandles = array();
+		if ($node['canRead']) {
+			$pkHandles[] = 'view_page';
+		}
+		if ($node['canWrite']) {
+			$pkHandles[] = 'view_page_versions';
+			$pkHandles[] = 'edit_page_properties';
+			$pkHandles[] = 'edit_page_contents';
+			$pkHandles[] = 'approve_page_versions';
+			$pkHandles[] = 'move_or_copy_page';
+		}
+		if ($node['canAdmin']) {
+			$pkHandles[] = 'edit_page_speed_settings';
+			$pkHandles[] = 'edit_page_permissions';
+			$pkHandles[] = 'edit_page_design';
+			$pkHandles[] = 'delete_page';
+			$pkHandles[] = 'delete_page_versions';
+		}
+		return $pkHandles;
+	}
+	
+	/** 
+	 * @private
+	 */
+	public function assignPermissionSet($px) {
+		// this is the legacy function that is called just by xml. We pass these values in as though they were the old ones.
+		if (isset($px->guests)) {
+			$pkHandles = self::translatePermissionsXMLToKeys($px->guests);
+			$this->assignPermissions(Group::getByID(GUEST_GROUP_ID), $pkHandles);
+		}	
+		if (isset($px->registered)) {
+			$pkHandles = self::translatePermissionsXMLToKeys($px->registered);
+			$this->assignPermissions(Group::getByID(REGISTERED_GROUP_ID), $pkHandles);
+		}	
+		if (isset($px->administrators)) {
+			$pkHandles = self::translatePermissionsXMLToKeys($px->administrators);
+			$this->assignPermissions(Group::getByID(ADMIN_GROUP_ID), $pkHandles);
+		}
+		if (isset($px->group)) {
+			foreach($px->group as $g) {
+				$pkHandles = self::translatePermissionsXMLToKeys($px->administrators);
+				$this->assignPermissions(Group::getByID($g['gID']), $pkHandles);
+			}
+		}	
+		if (isset($px->user)) {
+			foreach($px->user as $u) {
+				$pkHandles = self::translatePermissionsXMLToKeys($px->administrators);
+				$this->assignPermissions(Group::getByID($u['uID']), $pkHandles);
+			}
+		}
+	}
+	
 	/**
 	 * Assign permissions to a page based on an array
 	 * <code>
@@ -298,6 +372,7 @@ class Page extends Collection {
 	 * </code>
 	 * @param array $permissionsArray
 	 */	
+	/*
 	function assignPermissionSet($permissionsArray) {
 		$db = Loader::db();
 		// first, we make sure to set this collection's permission inheritance to override
@@ -441,6 +516,8 @@ class Page extends Collection {
 		
 		$this->refreshCache();
 	}
+	*/
+	
 
 	/**
 	 * Make an alias to a page
@@ -1345,18 +1422,20 @@ class Page extends Collection {
 	}
 	
 	public function setPermissionsToManualOverride() {
-		$db = Loader::db();
-		$cpID = $this->cID;
-		$this->updatePermissionsCollectionID($this->cID, $cpID);
-		$v = array('OVERRIDE', $cpID, $this->cID);
-		$q = "update Pages set cInheritPermissionsFrom = ?, cInheritPermissionsFromCID = ? where cID = ?";
-		$r = $db->query($q, $v);
-		$this->cInheritPermissionsFrom = 'OVERRIDE';
-		$this->cInheritPermissionsFromCID = $cpID;
-		$this->clearPagePermissions();
-		$this->rescanAreaPermissions();
-		
-		// copy permissions
+		if ($this->cInheritPermissionsFrom != 'OVERRIDE') { 
+			$db = Loader::db();
+			$cpID = $this->cID;
+			$this->updatePermissionsCollectionID($this->cID, $cpID);
+			$v = array('OVERRIDE', $cpID, $this->cID);
+			$q = "update Pages set cInheritPermissionsFrom = ?, cInheritPermissionsFromCID = ? where cID = ?";
+			$r = $db->query($q, $v);
+			$this->cInheritPermissionsFrom = 'OVERRIDE';
+			$this->cInheritPermissionsFromCID = $cpID;
+			$this->clearPagePermissions();
+			$this->rescanAreaPermissions();
+
+			// copy permissions
+		}	
 	}
 	
 	public function rescanAreaPermissions() {

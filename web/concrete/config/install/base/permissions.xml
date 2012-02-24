@@ -25,6 +25,7 @@
         <permissionkey handle="delete_page_versions" name="Delete Versions" package="" category="page"/>
         <permissionkey handle="approve_page_versions" name="Approve Changes" package="" category="page"/>
         <permissionkey handle="add_subpage" name="Add Sub-Page" package="" category="page"/>
+        <permissionkey handle="move_or_copy_page" name="Move or Copy Page" package="" category="page"/>
 		<!-- areas //-->
         <permissionkey handle="view_area" name="View Area" package="" category="area"/>
         <permissionkey handle="edit_area_contents" name="Edit Area Contents" package="" category="area"/>

@@ -79,6 +79,7 @@
 	Loader::model('permission/key');
 	Loader::model('permission/assignment');
 	Loader::model('permissions');
+	Loader::model('permission/response');
 	Loader::model("permission/categories/page");
 	Loader::model("permission/categories/area");
 	Loader::model("permission/categories/block");
@@ -214,7 +215,7 @@
 			}
 		}
 
-		if (!$c->isActive() && (!$cp->canWrite())) {
+		if (!$c->isActive() && (!$cp->canReadPageVersions())) {
 			$v = View::getInstance();
 			$v->render('/page_not_found');
 		}
@@ -224,7 +225,7 @@
 		## version. We pass the function the collection object, as well as the collection permissions
 		## object, which the function will use to determine what version we get to see
 	
-		if ($cp->canWrite() || $cp->canReadVersions()) {
+		if ($cp->canEditPageContents() || $cp->canEditPageProperties() || $cp->canReadPageVersions()) {
 			$cvID = ($_REQUEST['cvID']) ? $_REQUEST['cvID'] : "RECENT";
 		} else {
 			$cvID = "ACTIVE";

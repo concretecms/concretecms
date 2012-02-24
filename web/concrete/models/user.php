@@ -26,6 +26,8 @@
 		public $superUser = false;
 		public $uTimezone = NULL;
 		protected $uDefaultLanguage = null;
+		// an associative array of all access entity objects that are associated with this user.
+		protected $accessEntities = array();
 		
 		/**
 		 * @param int $uID
@@ -68,6 +70,7 @@
 		
 		protected static function regenerateSession() {
 			unset($_SESSION['dashboardMenus']);
+			unset($_SESSION['accessEntities']);
 			$tmpSession = $_SESSION; 
 			session_write_close(); 
 			@setcookie(session_name(), session_id(), time()-100000);
@@ -306,9 +309,20 @@
 		
 		function refreshUserGroups() {
 			unset($_SESSION['uGroups']);
+			unset($_SESSION['accessEntities']);
 			$ug = $this->_getUserGroups();
 			$_SESSION['uGroups'] = $ug;
 			$this->uGroups = $ug;
+		}
+		
+		public function getUserAccessEntityObjects() {
+			if (isset($_SESSION['accessEntities'])) {
+				$entities = $_SESSION['accessEntities'];
+			} else {
+				$entities = PermissionAccessEntity::getForUser($this);
+				$_SESSION['accessEntities'] = $entities;
+			}
+			return $entities;
 		}
 		
 		function _getUserGroups($disableLogin = false) {

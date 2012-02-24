@@ -147,10 +147,10 @@ var ccmi18n_filemanager = {
 	rescan: "<?=t('Rescan')?>",
 	pending: "<?=t('Pending')?>",
 	uploadComplete: "<?=t('Upload Complete')?>",
-	
-	PTYPE_CUSTOM: "<?=FilePermissions::PTYPE_CUSTOM?>",
-	PTYPE_NONE: "<?=FilePermissions::PTYPE_NONE?>",
-	PTYPE_ALL: "<?=FilePermissions::PTYPE_ALL?>",
+
+	PTYPE_CUSTOM: "<?//=FilePermissions::PTYPE_CUSTOM?>",
+	PTYPE_NONE: "<?//=FilePermissions::PTYPE_NONE?>",
+	PTYPE_ALL: "<?//=FilePermissions::PTYPE_ALL?>",
 
 	FTYPE_IMAGE: "<?=FileType::T_IMAGE?>",	
 	FTYPE_VIDEO: "<?=FileType::T_VIDEO?>",	
