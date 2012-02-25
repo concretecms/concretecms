@@ -225,7 +225,7 @@ menuHTML += '<ul>';
 <? if ($cp->canEditPageSpeedSettings()) { ?>
 	menuHTML += '<li><a class="ccm-menu-icon ccm-icon-speed-settings" id="ccm-toolbar-nav-speed-settings" dialog-append-buttons="true" dialog-width="550" dialog-height="280" dialog-modal="false" dialog-title="<?=t('Speed Settings')?>" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_collection_popup.php?&cID=<?=$cID?>&ctask=edit_speed_settings"><?=t('Speed Settings')?></a></li>';
 <? } ?>
-<?php  if ($sh->canRead()) { ?>
+<? if ($cp->canMoveOrCopyPage()) { ?>
 	menuHTML += '<li><a class="ccm-menu-icon ccm-icon-move-copy" id="ccm-toolbar-nav-move-copy" dialog-width="90%" dialog-height="70%" dialog-modal="false" dialog-title="<?=t('Move/Copy Page')?>" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/sitemap_search_selector?select_mode=move_copy_delete&cID=<?=$cID?>"><?=t('Move/Copy')?></a></li>';
 <? } ?>
 <? if ($cp->canDeletePage()) { ?>
