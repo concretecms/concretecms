@@ -401,7 +401,7 @@ class Permissions extends Object {
 		$c = Page::getByPath('/dashboard/files/sets');
 		if (is_object($c) && !$c->isError()) {
 			$cp = new Permissions($c);
-			return $cp->canRead();
+			return $cp->canViewPage();
 		}
 	}
 

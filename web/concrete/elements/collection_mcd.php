@@ -40,7 +40,7 @@ div#ccm-mc-page h1#ccm-sitemap-title {display: none}
 </div>
 <?
 
-if ($cp->canDeleteCollection()) { ?>
+if ($cp->canDeletePage()) { ?>
 
 <div class="ccm-form-area" style="margin-top: 10px">
 			<? if ($c->getCollectionID() == 1) {  ?>

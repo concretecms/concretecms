@@ -18,10 +18,14 @@ class AddSubpagePagePermissionKey extends PagePermissionKey  {
 				$canAddSubpage = false;
 			}
 			if ($l->getPageTypesAllowedPermission() == 'C') {
-				if ($l->getAccessType() == PagePermissionKey::ACCESS_TYPE_EXCLUDE) {
-					$canAddSubpage = !in_array($ct->getCollectionTypeID(), $l->getPageTypesAllowedArray());
-				} else { 
-					$canAddSubpage = in_array($ct->getCollectionTypeID(), $l->getPageTypesAllowedArray());
+				if (is_object($ct)) { 
+					if ($l->getAccessType() == PagePermissionKey::ACCESS_TYPE_EXCLUDE) {
+						$canAddSubpage = !in_array($ct->getCollectionTypeID(), $l->getPageTypesAllowedArray());
+					} else { 
+						$canAddSubpage = in_array($ct->getCollectionTypeID(), $l->getPageTypesAllowedArray());
+					}
+				} else {
+					$canAddSubpage = true;
 				}
 			}
 			if ($l->getPageTypesAllowedPermission() == '1') {

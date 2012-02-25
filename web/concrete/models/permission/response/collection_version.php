@@ -6,7 +6,7 @@ class CollectionVersionPermissionResponse extends PermissionResponse {
 		if (!$this->object->getVersionID()) {
 			$c = Page::getByID($this->object->getCollectionID());
 			$cp = new Permissions($c);
-			if ($cp->canReadPageVersions()) { 
+			if ($cp->canViewPageVersions()) { 
 				$this->error = COLLECTION_FORBIDDEN;
 			} else { 
 				$this->error = COLLECTION_NOT_FOUND;

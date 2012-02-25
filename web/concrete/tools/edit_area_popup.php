@@ -14,7 +14,7 @@ $ap = new Permissions($ax);
 $valt = Loader::helper('validation/token');
 $token = '&' . $valt->getParameter();
 
-if (!$cp->canWrite()) {
+if (!$cp->canEditPageContents()) {
 	die(t("Access Denied."));
 }
 

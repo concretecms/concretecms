@@ -3,7 +3,7 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 $c = Page::getByID($_REQUEST['cID']);
 $cp = new Permissions($c);
-if (!$cp->canWrite()) {
+if (!$cp->canEditPageProperties() && (!$cp->canEditPageContents())) {
 	die(t("Access Denied."));
 }
 

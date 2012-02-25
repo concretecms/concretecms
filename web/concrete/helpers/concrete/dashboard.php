@@ -25,14 +25,14 @@ class ConcreteDashboardHelper {
 	public function canRead() {
 		$c = Page::getByPath('/dashboard', 'ACTIVE');
 		$cp = new Permissions($c);
-		return $cp->canRead();
+		return $cp->canViewPage();
 	}
 	
 	
 	public function canAccessComposer() {
 		$c = Page::getByPath('/dashboard/composer', 'ACTIVE');
 		$cp = new Permissions($c);
-		return $cp->canRead();
+		return $cp->canViewPage();
 	}
 
 	public function inDashboard($page = false) {
@@ -88,7 +88,7 @@ class ConcreteDashboardHelper {
 			$subpagesP = array();
 			foreach($subpages as $sc) {
 				$cp = new Permissions($sc);
-				if ($cp->canRead()) { 
+				if ($cp->canViewPage()) { 
 					$subpagesP[] = $sc;
 				}
 			}

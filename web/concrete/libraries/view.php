@@ -799,7 +799,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 					
 					// do we have any custom menu plugins?
 					$cp = new Permissions($view);
-					if ($cp->canWrite() || $cp->canAddSubContent() || $cp->canAdminPage() || $cp->canApproveCollection()) { 
+					if ($cp->canViewToolbar()) { 
 						$ih = Loader::helper('concrete/interface/menu');
 						$_interfaceItems = $ih->getPageHeaderMenuItems();
 						foreach($_interfaceItems as $_im) {

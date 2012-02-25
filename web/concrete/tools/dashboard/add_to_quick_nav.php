@@ -10,11 +10,7 @@ if ($ih->integer($_REQUEST['cID'])) {
 	if (is_object($c) && (!$c->isError())) { 
 		$cp = new Permissions($c);
 		if ($dh->inDashboard($c)) {
-			if ($cp->canRead()) {
-				$canAdd = true;
-			}
-		} else {
-			if ($cp->canWrite() || $cp->canAddSubContent() || $cp->canAdminPage() || $cp->canApproveCollection()) { // we get the bar
+			if ($cp->canViewPage()) {
 				$canAdd = true;
 			}
 		}

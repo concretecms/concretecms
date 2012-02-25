@@ -16,7 +16,7 @@ if($scrapbookName) $scrapbookHelper->setDefault($scrapbookName);
 $c = Page::getByID($_REQUEST['cID']);
 // add a block to a pile	
 $cp = new Permissions($c);
-if (!$cp->canRead()) {
+if (!$cp->canViewPage()) {
 	exit;
 }
 
@@ -66,7 +66,7 @@ if (($_REQUEST['btask'] == 'add' || $_REQUEST['ctask'] == 'add') && $scrapbookNa
 		case 'add_contents':
 			$c = Page::getByID($_REQUEST['cID']);
 			$cp = new Permissions($c);
-			if (!$cp->canRead()) {
+			if (!$cp->canViewPage()) {
 				exit;
 			}
 			
@@ -96,7 +96,7 @@ if (($_REQUEST['btask'] == 'add' || $_REQUEST['ctask'] == 'add') && $scrapbookNa
 		case 'add_prepare':
 			$c = Page::getByID($_REQUEST['cID']);
 			$cp = new Permissions($c);
-			if (!$cp->canRead()) {
+			if (!$cp->canViewPage()) {
 				exit;
 			}
 			$a = Area::get($c, $_REQUEST['arHandle']);

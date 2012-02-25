@@ -7,10 +7,10 @@ class CoreStackPageTypeController extends Controller {
 	public function on_start() {
 		$c = Page::getByPath('/dashboard/blocks/stacks');
 		$cp = new Permissions($c);
-		if ($cp->canRead()) {
+		if ($cp->canViewPage()) {
 			$c = Page::getCurrentPage();
 			$pcp = new Permissions($c);
-			if ((!$pcp->canReadVersions()) || ($_GET['vtask'] != 'view_versions' && $_GET['vtask'] != 'compare')) {
+			if ((!$pcp->canViewPageVersions()) || ($_GET['vtask'] != 'view_versions' && $_GET['vtask'] != 'compare')) {
 				$cID = $c->getCollectionID();
 				$this->redirect('/dashboard/blocks/stacks','view_details', $cID);		
 			} else {

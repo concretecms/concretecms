@@ -215,7 +215,7 @@
 			}
 		}
 
-		if (!$c->isActive() && (!$cp->canReadPageVersions())) {
+		if (!$c->isActive() && (!$cp->canViewPageVersions())) {
 			$v = View::getInstance();
 			$v->render('/page_not_found');
 		}
@@ -225,7 +225,7 @@
 		## version. We pass the function the collection object, as well as the collection permissions
 		## object, which the function will use to determine what version we get to see
 	
-		if ($cp->canEditPageContents() || $cp->canEditPageProperties() || $cp->canReadPageVersions()) {
+		if ($cp->canEditPageContents() || $cp->canEditPageProperties() || $cp->canViewPageVersions()) {
 			$cvID = ($_REQUEST['cvID']) ? $_REQUEST['cvID'] : "RECENT";
 		} else {
 			$cvID = "ACTIVE";

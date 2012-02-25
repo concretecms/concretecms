@@ -10,7 +10,7 @@
 	$cp = new Permissions($c);
 	$isCheckedOut = $c->isCheckedOut() && !$c->isEditMode();
 	
-	if (!$cp->canReadVersions() && !$cp->canApproveCollection()) {
+	if (!$cp->canViewPageVersions() && !$cp->canApproveCollection()) {
 		die(t("Access Denied."));
 	}
 	
@@ -130,7 +130,7 @@
 			
 			switch($_GET['ctask']) {
 				case 'approve_pending_action':
-					if ($cp->canApproveCollection() && $cp->canWrite() && !$isCheckedOut) {
+					if ($cp->canApproveCollection() && !$isCheckedOut) {
 						$approve = false;
 						if ($c->isPendingDelete()) {
 							$children = $c->getNumChildren();
@@ -153,7 +153,7 @@
 					}
 					break;
 				case 'clear_pending_action':
-					if ($cp->canApproveCollection() && $cp->canWrite() && !$isCheckedOut) {
+					if ($cp->canApproveCollection() && !$isCheckedOut) {
 						$c->clearPendingAction();
 						header("Location: " . REL_DIR_FILES_TOOLS_REQUIRED . "/versions.php?cID=" . $cID);
 						exit;

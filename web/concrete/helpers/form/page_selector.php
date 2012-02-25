@@ -126,7 +126,7 @@ class FormPageSelectorHelper {
 		if ($selectedCID > 0) {
 			$oc = Page::getByID($selectedCID);
 			$cp = new Permissions($oc);
-			if ($cp->canRead()) {
+			if ($cp->canViewPage()) {
 				$cName = $oc->getCollectionName();
 			}
 		}

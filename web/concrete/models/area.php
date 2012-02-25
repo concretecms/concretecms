@@ -196,7 +196,7 @@ class Area extends Object {
 		if ($this->arIsGlobal) {
 			$blocks = array();
 			$cp = new Permissions($c);
-			if ($cp->canReadVersions()) {
+			if ($cp->canViewPageVersions()) {
 				$c = Stack::getByName($this->arHandle);
 			} else {
 				$c = Stack::getByName($this->arHandle, 'ACTIVE');

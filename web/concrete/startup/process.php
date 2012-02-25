@@ -39,7 +39,7 @@
 		
 		switch ($_REQUEST['btask']) {
 			case 'ajax_do_arrange': /* called via ajax */
-				if ($cp->canWrite()) {
+				if ($cp->canEditPageContents()) {
 					$nvc = $c->getVersionToModify();
 					$nvc->processArrangement($_POST['area']);
 				}
@@ -539,7 +539,7 @@
 		
 		switch ($_REQUEST['ctask']) {
 			case 'delete':
-				if ($cp->canDeleteCollection() && $c->getCollectionID != '1' && (!$c->isMasterCollection())) {
+				if ($cp->canDeletePage() && $c->getCollectionID != '1' && (!$c->isMasterCollection())) {
 					$children = $c->getNumChildren();
 					if ($children == 0 || $cp->canAdminPage()) {
 						$parent = Page::getByID($c->getCollectionParentID());
@@ -567,7 +567,7 @@
 					exit;
 				}
 			case 'approve_pending_action':
-				if ($cp->canApproveCollection() && $cp->canWrite() && !$isCheckedOut) {
+				if ($cp->canApproveCollection() && !$isCheckedOut) {
 					$approve = false;
 					if ($c->isPendingDelete()) {
 						$children = $c->getNumChildren();
@@ -593,7 +593,7 @@
 				}
 				break;
 			case 'remove-alias':
-				if ($cp->canWrite()) {
+				if ($cp->canDeletePage()) {
 					$redir = $c->removeThisAlias();
 					header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $redir . $step);
 					exit;
@@ -601,7 +601,7 @@
 				break;
 			case 'check-out':
 			case 'check-out-first':
-				if ($cp->canWrite() || $cp->canApproveCollection()) {
+				if ($cp->canEditPageContents() || $cp->canEditPageProperties() || $cp->canApproveCollection()) {
 					// checking out the collection for editing
 					$u = new User();
 					$u->loadCollectionEdit($c);
@@ -618,7 +618,7 @@
 				}
 				break;
 			case 'check-in':
-				if ($cp->canWrite() || $cp->canApproveCollection()) {
+				if ($cp->canEditPageContents() || $cp->canEditPageProperties() || $cp->canApproveCollection()) {
 
 					$v = CollectionVersion::get($c, "RECENT");
 					
@@ -882,64 +882,6 @@
 
 	if ($_POST['processCollection'] && $valt->validate()) { 
 
-	
-		/*
-		if ($_POST['ctask'] == 'copy') {
-			if ($cp->canWrite()) {
-				if ($_POST['cParentID']) {
-					Loader::model('collection_types');
-					$ct = CollectionType::getByID($c->getCollectionTypeID());
-					$nc = Page::getByID($_REQUEST['cParentID']);
-					$ncp = new Permissions($nc);
-					
-					if ($ncp->canAddSubCollection($ct) && $c->canMoveCopyTo($nc)) {
-						if ($_POST['copyAll'] && $ncp->canAdminPage()) {
-							$nc2 = $c->duplicateAll($nc); // new collection is passed back
-						} else {
-							$nc2 = $c->duplicate($nc);
-						}
-						header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $nc2->getCollectionID() . '&ctask=mcd' . $step);
-						exit;			
-					}
-				}
-			}	
-		} else if ($_POST['ctask'] == 'alias') {
-			// moving a collection to a new location
-			if ($cp->canWrite()) {
-				if ($_POST['cParentID']) {
-					Loader::model('collection_types');
-
-					$ct = CollectionType::getByID($c->getCollectionTypeID());
-					$nc = Page::getByID($_REQUEST['cParentID']);
-					$ncp = new Permissions($nc);
-
-					User::unloadCollectionEdit();
-					if ($ncp->canAddSubCollection($ct) && $c->canMoveCopyTo($nc)) {
-						$ncID = $c->addCollectionAlias($nc);						
-						header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $ncID . $step);
-						exit;			
-					}
-				}
-			}		
-		
-		} else if ($_POST['ctask'] == 'move') {
-			// moving a collection to a new location
-			if ($cp->canWrite()) {
-				if ($_POST['cParentID']) {
-					Loader::model('collection_types');
-
-					$ct = CollectionType::getByID($c->getCollectionTypeID());
-					$nc = Page::getByID($_REQUEST['cParentID']);
-					$ncp = new Permissions($nc);
-					if ($ncp->canAddSubCollection($ct) && $c->canMoveCopyTo($nc)) {
-						$c->markPendingAction('MOVE', $nc);						
-						header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $_GET['cID'] . '&ctask=mcd' . $step);
-						exit;			
-					}
-				}
-			}	
-		} else */
-		
 		if ($_POST['update_theme']) { 
 			if ($cp->canAdminPage()) {
 				$nvc = $c->getVersionToModify();
@@ -1001,7 +943,7 @@
 			}	
 		} else if ($_POST['update_metadata']) { 
 			// updating a collection
-			if ($cp->canWrite()) {
+			if ($cp->canEditPageProperties()) {
 				$nvc = $c->getVersionToModify();
 				
 				$data = array();
@@ -1045,7 +987,7 @@
 				exit;
 			}	
 		} else if ($_POST['update_external']) {
-			if ($cp->canWrite()) {
+			if ($cp->canAddSubpage()) {
 				$ncID = $c->updateCollectionAliasExternal($_POST['cName'], $_POST['cExternalLink'], $_POST['cExternalLinkNewWindow']);						
 				header('Location: ' . URL_SITEMAP);
 				exit;
@@ -1098,7 +1040,7 @@
 			Loader::model('collection_types');
 
 			$ct = CollectionType::getByID($_POST['ctID']);
-			if ($cp->canAddSubContent($ct)) {		
+			if ($cp->canAddSubpage($ct)) {		
 				// the $c below identifies that we're adding a collection _to_ that particular collection object
 				//$newCollectionID = $ct->addCollection($c);				
 				
@@ -1149,7 +1091,7 @@
 		} else if ($_POST['add_external']) { 
 			// adding a collection to a collection
 			Loader::model('collection_types');
-			if ($cp->canWrite()) {
+			if ($cp->canAddSubpage()) {
 				$ncID = $c->addCollectionAliasExternal($_POST['cName'], $_POST['cExternalLink'], $_POST['cExternalLinkNewWindow']);						
 				header('Location: ' . URL_SITEMAP);
 				exit;

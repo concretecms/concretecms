@@ -15,7 +15,7 @@ if (is_array($_REQUEST['cID'])) {
 	foreach($_REQUEST['cID'] as $cID) {
 		$c = Page::getByID($cID);
 		$cp = new Permissions($c);
-		if ($cp->canWrite()) {
+		if ($cp->canEditPageProperties()) {
 			$pages[] = $c;
 		}
 	}
@@ -28,7 +28,7 @@ if ($_POST['task'] == 'update_extended_attribute') {
 	$ak = CollectionAttributeKey::get($cakID);
 	foreach($pages as $c) {
 		$cp = new Permissions($c);
-		if ($cp->canWrite()) {
+		if ($cp->canEditPageProperties()) {
 			$ak->saveAttributeForm($c);
 			$c->reindex();
 
@@ -47,7 +47,7 @@ if ($_POST['task'] == 'clear_extended_attribute') {
 	$ak = CollectionAttributeKey::get($cakID);
 	foreach($pages as $c) {
 		$cp = new Permissions($c);
-		if ($cp->canWrite()) {
+		if ($cp->canEditPageProperties()) {
 			$c->clearAttribute($ak);
 			$c->reindex();
 		}

@@ -46,7 +46,7 @@ class ComposerPage extends Page {
 			return false;
 		}
 		$cp = new Permissions($entry);
-		if (!$cp->canWrite()) {
+		if (!$cp->canEditPageContents()) {
 			return false;
 		}			
 		return true;

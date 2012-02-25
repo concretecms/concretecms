@@ -411,7 +411,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		if (count($rs) > 0) {
 			$pcp = new Permissions($this);
 			foreach($rs as $garHandle) {
-				if ($pcp->canReadVersions()) {
+				if ($pcp->canViewPageVersions()) {
 					$s = Stack::getByName($garHandle, 'RECENT');
 				} else {
 					$s = Stack::getByName($garHandle, 'ACTIVE');
@@ -708,7 +708,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			if (count($rs) > 0) {
 				$pcp = new Permissions($this);
 				foreach($rs as $garHandle) {
-					if ($pcp->canReadVersions()) {
+					if ($pcp->canViewPageVersions()) {
 						$s = Stack::getByName($garHandle, 'RECENT');
 					} else {
 						$s = Stack::getByName($garHandle, 'ACTIVE');

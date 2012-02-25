@@ -11,7 +11,7 @@ $additionalArgs = array();
 switch($_GET['ctask']) {
 	case 'edit_metadata':
 		$toolSection = "collection_metadata";
-		$canViewPane = $cp->canWrite();
+		$canViewPane = $cp->canEditPageProperties();
 		break;
 	case 'edit_speed_settings':
 		$toolSection = "collection_speed_settings";
@@ -41,7 +41,7 @@ switch($_GET['ctask']) {
 		break;
 	case 'delete':
 		$toolSection = "collection_delete";
-		$canViewPane = $cp->canDeleteCollection();
+		$canViewPane = $cp->canDeletePage();
 		break;
 	case 'set_theme':
 		$toolSection = "collection_theme";
@@ -51,7 +51,7 @@ switch($_GET['ctask']) {
 	case 'add':
 		$toolSection = "collection_add";
 		$divID = 'ccm-edit-collection-design';
-		$canViewPane = $cp->canAddSubContent();
+		$canViewPane = $cp->canAddSubpage();
 		if ($_REQUEST['ctID']) {
 			$ct = CollectionType::getByID($_REQUEST['ctID']);
 			if (!is_object($ct)) {
