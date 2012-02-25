@@ -37,7 +37,7 @@ foreach($originalPages as $oc) {
 		$canReadSource = false;
 	}
 	$ct = CollectionType::getByID($oc->getCollectionTypeID());
-	if (!$dcp->canAddSubContent($ct)) {
+	if (!$dcp->canAddSubpage($ct)) {
 		$canAddSubContent = false;
 	}
 	if (!$oc->canMoveCopyTo($dc)) {

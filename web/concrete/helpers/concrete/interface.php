@@ -201,7 +201,7 @@ class ConcreteInterfaceHelper {
 			foreach($quicknav as $cID) {
 				$c = Page::getByID($cID);
 				$cp = new Permissions($c);
-				if ($cp->canRead() && is_object($c) && (!$c->isError())) {
+				if ($cp->canViewPage() && is_object($c) && (!$c->isError())) {
 					$html .= '<li id="ccm-quick-nav-page-' . $c->getCollectionID() . '">' . $this->getQuickNavigationLinkHTML($c) . '</li>';
 				}
 			}

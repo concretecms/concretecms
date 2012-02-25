@@ -38,7 +38,7 @@
 			<a class="btn small ccm-main-nav-edit-option" dialog-width="580" dialog-append-buttons="true" dialog-height="420" dialog-title="<?=t('Stack Permissions')?>" id="stackPermissions" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_area_popup.php?cID=<?=$stack->getCollectionID()?>&arHandle=Main&atask=groups"><?=t('Permissions')?></a>
 		<? } ?>
 
-		<? if ($cpc->canDeleteCollection()) { ?>
+		<? if ($cpc->canDeletePage()) { ?>
 			<a class="btn ccm-button-v2-right small ccm-main-nav-edit-option error" href="javascript:void(0)" onclick="if (confirm('<?=t('Are you sure you want to remove this stack?')?>')) { window.location.href='<?=$this->url('/dashboard/blocks/stacks/', 'delete', $stack->getCollectionID(), Loader::helper('validation/token')->generate('delete'))?>' }"><?=t('Delete Stack')?></a>
 		<? } ?>
 

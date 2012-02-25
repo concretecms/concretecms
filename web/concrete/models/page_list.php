@@ -401,7 +401,7 @@ class PageList extends DatabaseItemList {
 			$nc = $this->loadPageID($row['cID']);
 			if (!$this->displayOnlyApprovedPages) {
 				$cp = new Permissions($nc);
-				if ($cp->canReadVersions()) {
+				if ($cp->canViewPageVersions()) {
 					$nc->loadVersionObject('RECENT');
 				} else {
 					$nc->loadVersionObject();

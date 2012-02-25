@@ -44,7 +44,7 @@ class DashboardBlocksStacksController extends DashboardBaseController {
 			$s = Stack::getByID($cID);
 			if (is_object($s)) {
 				$sps = new Permissions($s);
-				if ($sps->canDeleteCollection()) {
+				if ($sps->canDeletePage()) {
 					$s->delete();
 					$this->redirect('/dashboard/blocks/stacks', 'stack_deleted');
 				} else {

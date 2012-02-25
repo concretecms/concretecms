@@ -11,7 +11,30 @@ class PagePermissionResponse extends PermissionResponse {
 	public function canApproveCollection() { return in_array('approve_page_versions', $this->allowedPermissions);}
 	public function canAdminPage() { return in_array('edit_page_permissions', $this->allowedPermissions);}
 	public function canAdmin() { return in_array('edit_page_permissions', $this->allowedPermissions);}
-		
+	public function canAddSubCollection($ct) {
+		$pk = $this->category->getPermissionKeyByHandle('add_subpage');
+		$pk->setPermissionObject($this->object);
+		return $pk->validate($ct);
+	}
+	// end legacy
+	
+	// convenience function
+	public function canViewToolbar() {
+		$dh = Loader::helper('concrete/dashboard');
+		if ($dh->canRead() || in_array(
+			array('view_page_versions', 
+			'edit_page_contents', 
+			'add_subpage', 
+			'delete_page', 
+			'approve_page_versions', 
+			'edit_page_permissions',
+			'move_or_copy_page'), $this->allowedPermissions)) {
+				return true;
+		} else { 
+			return false;
+		}
+	}
+
 	public function testForErrors() { 
 		if ((!$this->canViewPage()) && (!$this->object->getCollectionPointerExternalLink() != '')) {
 			return COLLECTION_FORBIDDEN;

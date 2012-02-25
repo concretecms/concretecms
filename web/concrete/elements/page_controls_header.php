@@ -6,7 +6,7 @@ $html = Loader::helper('html');
 $dh = Loader::helper('concrete/dashboard');
 
 if (isset($cp)) {
-	if ($dh->canRead() || $cp->canWrite() || $cp->canAddSubContent() || $cp->canAdminPage() || $cp->canApproveCollection()) {
+	if ($cp->canViewToolbar()) { 
 
 ?>
 

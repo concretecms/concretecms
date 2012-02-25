@@ -72,36 +72,7 @@ class ConcreteDashboardSitemapHelper {
 			$c = $cItem;
 		}
 		
-		/*
-		$db = Loader::db();
-		$v = array($cID);
-		$q = "select cPointerID from Pages where cID = ?";
-		$cPointerID = $db->getOne($q, $v);
-		if ($cPointerID > 0) {
-			$v = array($cPointerID);	
-		} else {
-			$cPointerID = 0;
-		}
-
-		//$q = "select Pages.cPendingAction, Pages.cChildren, CollectionVersions.cID, CollectionVersions.cvName, PageTypes.ctIcon, CollectionVersions.cvIsApproved from Pages left join PageTypes on Pages.ctID = PageTypes.ctID inner join CollectionVersions on Pages.cID = CollectionVersions.cID where CollectionVersions.cID = ? order by CollectionVersions.cvDateCreated desc limit 1";
-		//$r = $db->query($q, $v);
-		//$row = $r->fetchRow();
-		
-		*/
-		
-		
 		$cp = new Permissions($c);
-		
-		/*
-		if ($c->isSystemPage() && (!ConcreteDashboardSitemapHelper::showSystemPages())) {
-			return false;
-		}
-		
-		if ((!$cp->canRead()) && ($c->getCollectionPointerExternalLink() == null)) {
-			return false;
-		}
-		*/
-		
 		$canWrite = ($cp->canWrite()) ? true : false;
 		
 		$nodeOpen = false;

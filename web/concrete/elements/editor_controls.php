@@ -17,7 +17,7 @@
 <?php
 $path = Page::getByPath('/dashboard/settings');
 $cp = new Permissions($path);
-if($cp->canRead()) { ?>
+if($cp->canViewPage()) { ?>
 	<li><a style="float: right" href="<?php echo View::url('/dashboard/system/basics/editor')?>" target="_blank"><?php echo t('Customize Toolbar')?></a></li>
 <?php } ?>
 </ul>
