@@ -61,7 +61,7 @@ class PagePermissionKey extends PermissionKey {
 	
 	public function removeAssignment(PermissionAccessEntity $pe) {
 		$db = Loader::db();
-		$db->Execute('delete from PagePermissionAssignments where cID = ? and peID = ?', array($this->permissionObject->getCollectionID(), $pe->getAccessEntityID()));
+		$db->Execute('delete from PagePermissionAssignments where cID = ? and peID = ? and pkID = ?', array($this->permissionObject->getCollectionID(), $pe->getAccessEntityID(), $this->getPermissionKeyID()));
 		
 	}
 	
