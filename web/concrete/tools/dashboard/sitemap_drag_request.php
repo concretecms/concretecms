@@ -19,6 +19,8 @@ if (isset($_REQUEST['destCID'] ) && is_numeric($_REQUEST['destCID'])) {
 	$dc = Page::getByID($_REQUEST['destCID']);
 	$dcp = new Permissions($dc);
 }
+$u = new User();
+
 
 $canReadSource = true;
 $canAddSubContent = true;
@@ -43,7 +45,7 @@ foreach($originalPages as $oc) {
 	if (!$oc->canMoveCopyTo($dc)) {
 		$canMoveCopyTo = false;
 	}	
-	if ((!$ocp->canAdminPage()) || ($oc->getCollectionPointerID() > 0)) {
+	if ((!$u->isSuperUser()) || ($oc->getCollectionPointerID() > 0)) {
 		$canCopyChildren = false;
 	}
 }
@@ -78,7 +80,7 @@ if (!$error) {
 					}
 					break;
 				case "COPY":
-					if ($_REQUEST['copyAll'] && $dcp->canAdminPage()) {
+					if ($_REQUEST['copyAll'] && $u->isSuperUser()) {
 						foreach($originalPages as $oc) {
 							$nc2 = $oc->duplicateAll($dc); // new collection is passed back
 							if (is_object($nc2)) {
@@ -103,7 +105,7 @@ if (!$error) {
 					foreach($originalPages as $oc) {
 						$ocp = new Permissions($oc);
 						$_SESSION['movePageSaveOldPagePath'] = $_REQUEST['saveOldPagePath'];
-						if ($dcp->canApproveCollection() && $ocp->canApproveCollection()) {
+						if ($dcp->canApprovePageVersions() && $ocp->canApprovePageVersions()) {
 							if ($_REQUEST['saveOldPagePath']) {
 								$nc2 = $oc->move($dc, true);
 							} else {
