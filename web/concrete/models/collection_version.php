@@ -257,7 +257,7 @@
 				while ($row = $r->FetchRow()) {
 					$cn = Page::getByID($row['cRelationID'], $row['cvRelationID']);
 					$cnp = new Permissions($cn);
-					if ($cnp->canApproveCollection()) {
+					if ($cnp->canApprovePageVersions()) {
 						$v = $cn->getVersionObject();
 						if ($v->isNew()) {
 							$v->approve();

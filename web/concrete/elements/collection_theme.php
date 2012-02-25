@@ -13,7 +13,7 @@ if ($c->getCollectionID() > 1) {
 	$parent = Page::getByID($c->getCollectionParentID());
 	$parentCP = new Permissions($parent);
 }
-if (!$cp->canAdminPage()) {
+if (!$cp->canEditPageDesign()) {
 	die(t('Access Denied'));
 }
 

@@ -15,7 +15,7 @@ switch($_GET['ctask']) {
 		break;
 	case 'edit_speed_settings':
 		$toolSection = "collection_speed_settings";
-		$canViewPane = $cp->canAdminPage();
+		$canViewPane = $cp->canEditPageSpeedSettings();
 		break;
 	case 'edit_permissions':
 		if (PERMISSIONS_MODEL == 'simple') {
@@ -23,15 +23,15 @@ switch($_GET['ctask']) {
 		} else {
 			$toolSection = "collection_permissions_list";
 		}
-		$canViewPane = $cp->canAdminPage();
+		$canViewPane = $cp->canEditPagePermissions();
 		break;
 	case 'set_advanced_permissions':
 		$toolSection = "collection_permissions";
-		$canViewPane = $cp->canAdminPage();
+		$canViewPane = $cp->canEditPagePermissions();
 		break;
 	case 'edit_permissions_composer':
 		$toolSection = "collection_permissions";
-		$canViewPane = $cp->canAdminPage();
+		$canViewPane = $cp->canEditPagePermissions();
 		$additionalArgs['isComposer'] = true;
 		break;
 	case 'mcd':
@@ -74,9 +74,7 @@ switch($_GET['ctask']) {
 		$canViewPane = $cparentP->canWrite();
 		break;
 }
-if ($toolSection == "collection_permissions" && !$cp->canAdminPage()) {
-	$toolSection = "collection_metadata";
-}
+
 if (!isset($divID)) {
 	$divID = 'ccm-edit-collection';
 }

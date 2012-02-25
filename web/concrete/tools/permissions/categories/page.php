@@ -2,7 +2,7 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 $c = Page::getByID($_REQUEST['cID']);
 $cp = new Permissions($c);
-if ($cp->canAdminPage()) {
+if ($cp->canEditPagePermissions()) {
 
 	if ($_REQUEST['task'] == 'add_access_entity' && Loader::helper("validation/token")->validate('add_access_entity')) {
 		$pk = PagePermissionKey::getByID($_REQUEST['pkID']);

@@ -15,9 +15,9 @@ if ($_POST['task'] == 'delete_pages') {
 			$c = Page::getByID($cID);
 			$cp = new Permissions($c);
 			$children = $c->getNumChildren();
-			if ($children == 0 || $cp->canAdminPage()) {
+			if ($children == 0 || $cp->canDeletePage()) {
 				$c->markPendingAction('DELETE');
-				if ($cp->canApproveCollection()) {
+				if ($cp->canApprovePageVersions()) {
 					$c->delete();
 				}
 			} else {

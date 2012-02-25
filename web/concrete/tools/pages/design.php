@@ -20,7 +20,7 @@ if ($_POST['task'] == 'design_pages') {
 		foreach($_POST['cID'] as $cID) {
 			$c = Page::getByID($cID);
 			$cp = new Permissions($c);
-			if ($cp->canAdminPage()) {
+			if ($cp->canEditPageDesign()) {
 				if ($_POST['plID'] > 0) {
 					$c->setTheme($pl);
 				}
@@ -69,7 +69,7 @@ foreach($pages as $c) {
 		$isMasterCollection = true;
 	}
 	$cp = new Permissions($c);
-	if ($cp->canAdminPage()) {
+	if ($cp->canEditPageDesign()) {
 		$pcnt++;
 	}
 }

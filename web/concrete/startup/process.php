@@ -347,28 +347,6 @@
 	
 	if ($_GET['atask'] && $valt->validate()) {
 		switch($_GET['atask']) { 		
-			case 'update':
-				if ($cp->canAdminPage()) {
-					$a = Area::get($c, $_GET['arHandle']);
-					$ax = $a; 
-					$cx = $c;
-					if ($a->isGlobalArea()) {
-						$cx = Stack::getByName($_REQUEST['arHandle']);
-						$ax = Area::get($cx, STACKS_AREA_NAME);
-					}
-
-					if (is_object($a)) {
-						if ($_POST['aRevertToPagePermissions']) {
-							$ax->revertToPagePermissions();		
-						} else {
-							$ax->update();
-						}
-					}
-					
-					header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $_GET['cID'] . '&mode=edit' . $step);
-					exit;
-				}				
-				break;
 			case 'add_stack':
 				$a = Area::get($c, $_GET['arHandle']);
 				$cx = $c;
@@ -541,10 +519,10 @@
 			case 'delete':
 				if ($cp->canDeletePage() && $c->getCollectionID != '1' && (!$c->isMasterCollection())) {
 					$children = $c->getNumChildren();
-					if ($children == 0 || $cp->canAdminPage()) {
+					if ($children == 0 || $cp->canApprovePageVersions()) {
 						$parent = Page::getByID($c->getCollectionParentID());
 						$c->markPendingAction('DELETE', $parent);
-						if ($cp->canApproveCollection()) {
+						if ($cp->canApprovePageVersions()) {
 							$cParentID = $c->getCollectionParentID();
 							$c->approvePendingAction();
 						}
@@ -561,17 +539,17 @@
 
 				}
 			case 'clear_pending_action':
-				if ($cp->canApproveCollection() || $u->getUserID() == $c->getPendingActionUserID()) {
+				if ($cp->canApprovePageVersions() || $u->getUserID() == $c->getPendingActionUserID()) {
 					$c->clearPendingAction();
 					header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $c->getCollectionID() . '&ctask=mcd' . $step);
 					exit;
 				}
 			case 'approve_pending_action':
-				if ($cp->canApproveCollection() && !$isCheckedOut) {
+				if ($cp->canApprovePageVersions() && !$isCheckedOut) {
 					$approve = false;
 					if ($c->isPendingDelete()) {
 						$children = $c->getNumChildren();
-						if ($children == 0 || $cp->canAdminPage()) {
+						if ($children == 0 || $cp->canApprovePageVersions()) {
 							$approve = true;
 							$cParentID = $c->getCollectionParentID();
 						}
@@ -601,7 +579,7 @@
 				break;
 			case 'check-out':
 			case 'check-out-first':
-				if ($cp->canEditPageContents() || $cp->canEditPageProperties() || $cp->canApproveCollection()) {
+				if ($cp->canEditPageContents() || $cp->canEditPageProperties() || $cp->canApprovePageVersions()) {
 					// checking out the collection for editing
 					$u = new User();
 					$u->loadCollectionEdit($c);
@@ -618,12 +596,12 @@
 				}
 				break;
 			case 'check-in':
-				if ($cp->canEditPageContents() || $cp->canEditPageProperties() || $cp->canApproveCollection()) {
+				if ($cp->canEditPageContents() || $cp->canEditPageProperties() || $cp->canApprovePageVersions()) {
 
 					$v = CollectionVersion::get($c, "RECENT");
 					
 					$v->setComment($_REQUEST['comments']);
-					if ($_REQUEST['approve'] == 'APPROVE' && $cp->canApproveCollection()) {
+					if ($_REQUEST['approve'] == 'APPROVE' && $cp->canApprovePageVersions()) {
 						$v->approve(false);
 					} 
 
@@ -641,7 +619,7 @@
 				}
 				break;
 			case 'approve-recent':
-				if ($cp->canApproveCollection()) {
+				if ($cp->canApprovePageVersions()) {
 					// checking out the collection for editing
 					$v = CollectionVersion::get($c, "RECENT");
 					$v->setComment($_REQUEST['comments']);
@@ -883,7 +861,7 @@
 	if ($_POST['processCollection'] && $valt->validate()) { 
 
 		if ($_POST['update_theme']) { 
-			if ($cp->canAdminPage()) {
+			if ($cp->canEditPageDesign()) {
 				$nvc = $c->getVersionToModify();
 				
 				$data = array();
@@ -926,7 +904,7 @@
 			}		
 		} else if ($_POST['update_speed_settings']) {
 			// updating a collection
-			if ($cp->canAdminPage()) {
+			if ($cp->canEditPageDesign()) {
 				
 				$data = array();
 				$data['cCacheFullPageContent'] = $_POST['cCacheFullPageContent'];
@@ -965,16 +943,14 @@
 				$dt = Loader::helper('form/date_time');
 				$dh = Loader::helper('date');
 				$data['cDatePublic'] = $dh->getSystemDateTime($dt->translate('cDatePublic'));
-				if ($cp->canAdminPage()) {
-					$data['uID'] = $_POST['uID'];
-				}
+				$data['uID'] = $_POST['uID'];
 				
 				$nvc->update($data);
 				processMetaData($nvc);
 				
 				$obj = new stdClass;
 
-				if (($_POST['rel'] == 'SITEMAP' || $_POST['approveImmediately']) && ($cp->canApproveCollection())) {
+				if (($_POST['rel'] == 'SITEMAP' || $_POST['approveImmediately']) && ($cp->canApprovePageVersions())) {
 					$v = CollectionVersion::get($c, "RECENT");
 					$v->approve(false);
 					$u = new User();
@@ -994,7 +970,7 @@
 			}
 		} else if ($_POST['update_permissions']) { 
 			// updating a collection
-			if ($cp->canAdminPage()) {
+			if ($cp->canEditPagePermissions()) {
 				if (PERMISSIONS_MODEL == 'simple') {
 					$args['cInheritPermissionsFrom'] = 'OVERRIDE';
 					$args['cOverrideTemplatePermissions'] = 1;
@@ -1065,7 +1041,7 @@
 					
 
 					if ($_POST['rel'] == 'SITEMAP') { 
-						if ($cp->canApproveCollection()) {
+						if ($cp->canApprovePageVersions()) {
 							$v = CollectionVersion::get($nc, "RECENT");
 							$v->approve(false);
 						}
