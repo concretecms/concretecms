@@ -67,11 +67,11 @@ $areEntries = count($entries) > 0 ? true : false;
                     <? } ?></td>
                     <td valign="top"><strong><?=$ent->getType()?></strong></td>
                     <td valign="top"><strong><?php
-                    if($ent->getUser() == NULL){
+                    if($ent->getUserID() == NULL){
                         echo t("Guest");
                     }
                     else{
-                        $u = User::getByUserID($ent->getUser());
+                        $u = User::getByUserID($ent->getUserID());
                         echo $u->getUserName();
                     }
                     ?></strong></td>
