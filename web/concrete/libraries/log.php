@@ -25,7 +25,7 @@ class LogEntry extends Object {
 	public function getType() {return $this->logType;}
 	public function getText() {return $this->logText;}
 	public function getID() {return $this->logID;}
-	public function getUser() {return $this->logUser;}
+	public function getUserID() {return $this->logUserID;}
 	
 	public function getTimestamp($type = 'system') {
 		if(ENABLE_USER_TIMEZONES && $type == 'user') {
@@ -137,7 +137,7 @@ class Log {
 
 		$v = array($this->log, htmlentities($this->sessionText, ENT_COMPAT, APP_CHARSET), $this->isInternal, $u->getUserID());
 		$db = Loader::db();
-		$db->Execute("insert into Logs (logType, logText, logIsInternal, logUser) values (?, ?, ?, ?)", $v);
+		$db->Execute("insert into Logs (logType, logText, logIsInternal, logUserID) values (?, ?, ?, ?)", $v);
 		$this->sessionText = '';
 	}
 	
