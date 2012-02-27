@@ -1032,11 +1032,6 @@
     <field name="pkCategoryID" type="I" size="10">
       <UNSIGNED />
     </field>
-    <field name="pkHasCustomResponse" type="I" size="1">
-      <UNSIGNED />
-      <notnull />
-      <DEFAULT value="0"/>
-    </field>    
     <field name="pkgID" type="I" size="10">
       <UNSIGNED />
     </field>

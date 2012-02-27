@@ -2,24 +2,6 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 class PagePermissionKey extends PermissionKey {
 	
-	public static function getByID($pkID) {
-		$pk = self::load($pkID);
-		if ($pk->getPermissionKeyID() > 0) {
-			return $pk;
-		}
-	}
-
-	public static function getByHandle($pkHandle) {
-		$db = Loader::db();
-		$pkID = $db->GetOne('select pkID from PermissionKeys where pkHandle = ?', array($pkHandle));
-		if ($pkID) { 
-			$pk = self::load($pkID);
-			if ($pk->getPermissionKeyID() > 0) {
-				return $pk;
-			}
-		}
-	}
-	
 	public function getAssignmentList($accessType = PagePermissionKey::ACCESS_TYPE_INCLUDE, $filterEntities = array()) {
 		$db = Loader::db();
 		$filterString = $this->buildAssignmentFilterString($accessType, $filterEntities);
@@ -68,6 +50,7 @@ class PagePermissionKey extends PermissionKey {
 	public function getPermissionKeyToolsURL($task = false) {
 		return parent::getPermissionKeyToolsURL($task) . '&cID=' . $this->getPermissionObject()->getCollectionID();
 	}
+
 
 }
 

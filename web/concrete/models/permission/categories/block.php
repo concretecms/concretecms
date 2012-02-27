@@ -20,7 +20,6 @@ class BlockPermissionKey extends PermissionKey {
 		'delete_block' => 'edit_page_contents'		
 	);
 	
-	
 	public function setPermissionObject(Block $b) {
 		$this->permissionObject = $b;
 		
