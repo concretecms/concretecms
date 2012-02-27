@@ -12,7 +12,7 @@ jQuery.fn.dialog = function() {
 	}
 	// LEGACY SUPPORT
 	return $(this).each(function() {
-		$(this).unbind('click').click(function(e) {
+		$(this).unbind('click.make-dialog').bind('click.make-dialog', function(e) {
 			var href = $(this).attr('href');
 			var width = $(this).attr('dialog-width');
 			var height =$(this).attr('dialog-height');
@@ -36,7 +36,7 @@ jQuery.fn.dialog = function() {
 			}
 			jQuery.fn.dialog.open(obj);
 			return false;
-		});	
+		});
 	});
 }
 
