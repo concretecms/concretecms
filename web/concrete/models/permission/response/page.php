@@ -3,14 +3,14 @@ defined('C5_EXECUTE') or die("Access Denied.");
 class PagePermissionResponse extends PermissionResponse {
 	
 	// legacy support
-	public function canWrite() { return in_array('edit_page_contents', $this->allowedPermissions); }
-	public function canReadVersions() { return in_array('view_page_versions', $this->allowedPermissions);}
-	public function canRead() { return in_array('view_page', $this->allowedPermissions);}
-	public function canAddSubContent() { return in_array('add_subpage', $this->allowedPermissions);}
-	public function canDeleteCollection() { return in_array('delete_page', $this->allowedPermissions);}
-	public function canApproveCollection() { return in_array('approve_page_versions', $this->allowedPermissions);}
-	public function canAdminPage() { return in_array('edit_page_permissions', $this->allowedPermissions);}
-	public function canAdmin() { return in_array('edit_page_permissions', $this->allowedPermissions);}
+	public function canWrite() { return $this->validate('edit_page_contents'); }
+	public function canReadVersions() { return $this->validate('view_page_versions');}
+	public function canRead() { return $this->validate('view_page');}
+	public function canAddSubContent() { return $this->validate('add_subpage');}
+	public function canDeleteCollection() { return $this->validate('delete_page');}
+	public function canApproveCollection() { return $this->validate('approve_page_versions');}
+	public function canAdminPage() { return $this->validate('edit_page_permissions');}
+	public function canAdmin() { return $this->validate('edit_page_permissions');}
 	public function canAddSubCollection($ct) {
 		$pk = $this->category->getPermissionKeyByHandle('add_subpage');
 		$pk->setPermissionObject($this->object);
@@ -21,15 +21,15 @@ class PagePermissionResponse extends PermissionResponse {
 	// convenience function
 	public function canViewToolbar() {
 		$dh = Loader::helper('concrete/dashboard');
-		if ($dh->canRead() || in_array(
-			array('view_page_versions', 
-			'edit_page_contents', 
-			'add_subpage', 
-			'delete_page', 
-			'approve_page_versions', 
-			'edit_page_permissions',
-			'move_or_copy_page'), $this->allowedPermissions)) {
-				return true;
+		if ($dh->canRead() ||
+		$this->canViewPageVersions() ||
+		$this->canEditPageContents() || 
+		$this->canAddSubpage() ||
+		$this->canDeletePage() ||
+		$this->canApprovePageVersions() ||
+		$this->canEditPagePermissions() ||
+		$this->canMoveOrCopyPage()) {
+			return true;
 		} else { 
 			return false;
 		}
@@ -48,22 +48,6 @@ class PagePermissionResponse extends PermissionResponse {
 
 	}
 
-	public function loadPermissions() {
-		$u = new User();
-		if ($u->isSuperUser()) {
-			$this->loadSuperUserPermissions();
-		} else {
-			$accessEntities = $u->getUserAccessEntityObjects();
-			$peIDs = array('-1');
-			foreach($accessEntities as $pe) {
-				$peIDs[] = $pe->getAccessEntityID();
-			}
-			$db = Loader::db();
-			$this->allowedPermissions = $db->GetCol('select pkHandle from PermissionKeys pk inner join PagePermissionAssignments ppa where pk.pkID = ppa.pkID and ppa.cID = ? and ppa.peID in (' . implode(',', $peIDs) . ')', array(
-				$this->object->getPermissionsCollectionID()
-			)); 
-		}
-	}
 	
 	
 }

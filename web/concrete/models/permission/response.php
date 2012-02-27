@@ -4,7 +4,7 @@ class PermissionResponse {
 
 	protected $object;
 	protected $allowedPermissions = array();
-	protected $customResponseObjects = array();
+	protected $customClassObjects = array();
 	protected $category;
 	
 	public function setPermissionObject($object) { 
@@ -17,26 +17,7 @@ class PermissionResponse {
 	
 	public function testForErrors() { }
 	
-	public function loadSuperUserPermissions() {
-		$u = new User();
-		$db = Loader::db();
-		if ($u->isSuperUser()) {
-			// all permissions
-			$this->allowedPermissions = $db->GetCol('select pkHandle from PermissionKeys');
-		}
-	}
 	
-	public function getAllowedPermissions() {
-		return $this->allowedPermissions;
-	}
-	
-	public function setCustomResponseObjects() {
-		if (is_object($this->category)) { 
-			$db = Loader::db();
-			$this->customResponseObjects = $db->GetCol('select pkHandle from PermissionKeys where pkCategoryID = ? and pkHasCustomResponse = 1', array($this->category->getPermissionKeyCategoryID()));
-		}
-	}
-
 	public static function getResponse($handle, $args) {
 		$category = PermissionKeyCategory::getByHandle($handle);
 		if (is_object($category) && $category->getPackageID() > 0) { 
@@ -54,23 +35,24 @@ class PermissionResponse {
 		$pr = new $c1();
 		$pr->setPermissionObject($args);
 		$pr->setPermissionCategoryObject($category);
-		$pr->setCustomResponseObjects();
-		$pr->loadPermissions();
 		return $pr;
+	}
+	
+	public function validate($permission, $args = array()) {
+		$u = new User();
+		if ($u->isSuperUser()) {
+			return true;
+		}
+
+		$pk = $this->category->getPermissionKeyByHandle($permission);
+		$pk->setPermissionObject($this->object);
+		return call_user_func_array(array($pk, 'validate'), $args);
 	}
 	
 	public function __call($f, $a) {
 		$permission = substr($f, 3);
 		$permission = Loader::helper('text')->uncamelcase($permission);
-		if (in_array($permission, $this->getAllowedPermissions())) {
-			if (!in_array($permission, $this->customResponseObjects)) { 
-				return true;
-			} else { 
-				$pk = $this->category->getPermissionKeyByHandle($permission);
-				$pk->setPermissionObject($this->object);
-				return call_user_func_array(array($pk, 'validate'), $a);
-			}
-		}
+		return $this->validate($permission, $a);
 	}
 	
 
