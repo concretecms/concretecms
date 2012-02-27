@@ -82,7 +82,7 @@ class BlockPermissionKey extends PermissionKey {
 		if ($this->permissionObjectToCheck instanceof Block) { 
 			$co = $this->permissionObjectToCheck->getBlockCollectionObject();
 			$arHandle = $this->permissionObjectToCheck->getAreaHandle();
-			$r = $db->Execute('select accessType, peID, pdID from BlockPermissionAssignments where cID = ? and cvID = ? and arHandle = ? and bID = ? and accessType = ? and pkID = ? ' . $filterString, array(
+			$r = $db->Execute('select accessType, peID, pdID from BlockPermissionAssignments where cID = ? and cvID = ? and arHandle = ? and bID = ? and pkID = ? ' . $filterString, array(
 				$co->getCollectionID(), $co->getVersionID(), $arHandle, $this->permissionObject->getBlockID(), $this->getPermissionKeyID()
 			));
 		} else if ($this->permissionObjectToCheck instanceof Area && isset($this->inheritedAreaPermissions[$this->getPermissionKeyHandle()])) { 
