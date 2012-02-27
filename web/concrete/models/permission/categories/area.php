@@ -79,14 +79,14 @@ class AreaPermissionKey extends PermissionKey {
 		$filterString = $this->buildAssignmentFilterString($accessType, $filterEntities);
 
 		if ($this->permissionObjectToCheck instanceof Area) { 
-			$r = $db->Execute('select accessType, peID, pdID from AreaPermissionAssignments where cID = ? and arHandle = ? and accessType = ? and pkID = ? ' . $filterString, array(
-				$this->permissionObjectToCheck->getCollectionID(), $this->permissionObjectToCheck->getAreaHandle(), $accessType, $this->getPermissionKeyID()
+			$r = $db->Execute('select accessType, peID, pdID from AreaPermissionAssignments where cID = ? and arHandle = ? and pkID = ? ' . $filterString, array(
+				$this->permissionObjectToCheck->getCollectionID(), $this->permissionObjectToCheck->getAreaHandle(), $this->getPermissionKeyID()
 			));
 		} else if (isset($this->inheritedPermissions[$this->getPermissionKeyHandle()])) { 
 			// this is a page
 			$inheritedPKID = $db->GetOne('select pkID from PermissionKeys where pkHandle = ?', array($this->inheritedPermissions[$this->getPermissionKeyHandle()]));
-			$r = $db->Execute('select accessType, peID, 0 as pdID from PagePermissionAssignments where cID = ? and accessType = ? and pkID = ? ' . $filterString, array(
-				$this->permissionObjectToCheck->getCollectionID(), $accessType, $inheritedPKID
+			$r = $db->Execute('select accessType, peID, 0 as pdID from PagePermissionAssignments where cID = ? and pkID = ? ' . $filterString, array(
+				$this->permissionObjectToCheck->getCollectionID(), $inheritedPKID
 			));
 		} else {
 			return array();

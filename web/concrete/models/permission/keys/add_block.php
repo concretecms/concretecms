@@ -40,6 +40,39 @@ class AddBlockAreaPermissionKey extends AreaPermissionKey  {
 		}
 
 	}
+	
+	public function validate($bt = false) {
+		$u = new User();
+		if ($u->isSuperUser()) {
+			return true;
+		}
+		
+		$accessEntities = $u->getUserAccessEntityObjects();
+		$list = $this->getAssignmentList(AreaPermissionKey::ACCESS_TYPE_ALL, $accessEntities);
+		// these are assignments that apply to me
+		$canAddBlockType = false;
+		foreach($list as $l) {
+			if ($l->getBlockTypesAllowedPermission() == '0') {
+				$canAddBlockType = false;
+			}
+			if ($l->getBlockTypesAllowedPermission() == 'C') {
+				if (is_object($bt)) { 
+					if ($l->getAccessType() == AreaPermissionKey::ACCESS_TYPE_EXCLUDE) {
+						$canAddBlockType = !in_array($bt->getBlockTypeID(), $l->getBlockTypesAllowedPermission());
+					} else { 
+						$canAddBlockType = in_array($bt->getBlockTypeID(), $l->getBlockTypesAllowedPermission());
+					}
+				} else {
+					$canAddSubpage = true;
+				}
+			}
+			if ($l->getBlockTypesAllowedPermission() == '1') {
+				$canAddBlockType = true;
+			}
+		}
+		
+		return $canAddBlockType;
+	}
 
 
 	public function getAssignmentList($accessType = AreaPermissionKey::ACCESS_TYPE_INCLUDE, $filterEntities = array()) {
@@ -47,7 +80,7 @@ class AddBlockAreaPermissionKey extends AreaPermissionKey  {
 		$list = parent::getAssignmentList($accessType, $filterEntities);
 		foreach($list as $l) {
 			$pe = $l->getAccessEntityObject();
-			if ($this->permissionObject instanceof Page && $accessType == AreaPermissionKey::ACCESS_TYPE_INCLUDE) {
+			if ($this->permissionObjectToCheck instanceof Page && $l->getAccessType() == AreaPermissionKey::ACCESS_TYPE_INCLUDE) {
 				$permission = 1;
 			} else { 
 				$permission = $db->GetOne('select permission from AreaPermissionBlockTypeAssignments where peID = ?', array($pe->getAccessEntityID()));
