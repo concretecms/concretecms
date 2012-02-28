@@ -38,15 +38,16 @@ if ($a->getAreaCollectionInheritID() != $c->getCollectionID() && $a->getAreaColl
 	</div>
 
 <? } ?>
-<ul>
+<table>
 <?
 $permissions = PermissionKey::getList('area');
 foreach($permissions as $pk) { 
 	$pk->setPermissionObject($a);
 
 ?>
-	<li><? if ($enablePermissions) { ?><a dialog-width="500" dialog-height="380" class="dialog-launch" dialog-title="<?=t('Permissions')?>" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_area_popup?arHandle=<?=$a->getAreaHandle()?>&cID=<?=$c->getCollectionID()?>&atask=set_advanced_permissions&pkID=<?=$pk->getPermissionKeyID()?>"><? } ?><?=$pk->getPermissionKeyName()?><? if ($enablePermissions) { ?></a><? } ?><br/><?=$pk->getPermissionKeyDescription()?>
-	<br/><br/>
+	<tr>
+	<td style="white-space: nowrap"><strong><? if ($enablePermissions) { ?><a dialog-width="500" dialog-height="380" class="dialog-launch" dialog-title="<?=t('Permissions')?>" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_area_popup?arHandle=<?=$a->getAreaHandle()?>&cID=<?=$c->getCollectionID()?>&atask=set_advanced_permissions&pkID=<?=$pk->getPermissionKeyID()?>"><? } ?><?=$pk->getPermissionKeyName()?><? if ($enablePermissions) { ?></a><? } ?></strong></td>
+	<td width="100%">
 	<?
 	$included = $pk->getAssignmentList(AreaPermissionKey::ACCESS_TYPE_INCLUDE);
 	$excluded = $pk->getAssignmentList(AreaPermissionKey::ACCESS_TYPE_EXCLUDE);
@@ -79,12 +80,10 @@ foreach($permissions as $pk) {
 	?>
 	
 	
-	<div><?=t('Included: %s', $includedStr)?></div>
-	<div><?=t('Excluded: %s', $excludedStr)?></div>
-	<br/>
-	</li>
+	<?=t('Included: %s.', $includedStr)?> <?=t('Excluded: %s', $excludedStr)?>
+	</td></tr>
 <? } ?>
-</ul>
+</tr></table>
 </div>
 
 <script type="text/javascript">
