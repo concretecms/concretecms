@@ -78,6 +78,7 @@ class AddSubpagePagePermissionKey extends PagePermissionKey  {
 	public function getAssignmentList($accessType = PagePermissionKey::ACCESS_TYPE_INCLUDE, $filterEntities = array()) {
 		$db = Loader::db();
 		$list = parent::getAssignmentList($accessType, $filterEntities);
+		$list = PermissionDuration::filterByActive($list);
 		foreach($list as $l) {
 			$pe = $l->getAccessEntityObject();
 			$permission = $db->GetOne('select permission from PagePermissionPageTypeAssignments where peID = ?', array($pe->getAccessEntityID()));
