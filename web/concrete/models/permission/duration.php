@@ -52,14 +52,75 @@ class PermissionDuration extends Object {
 	
 	public function isActive() {
 		$now = strtotime(Loader::helper('date')->getLocalDateTime());
-		if ($this->getStartDate() != '' && strtotime($this->getStartDate()) > $now) {
-			return false;
-		}
-		if ($this->getEndDate() != '' && strtotime($this->getEndDate()) < $now) {
-			return false;
-		}
-		
-		return true;
+		if (!$this->repeats()) { 
+			$isActive = true;
+			if ($this->getStartDate() != '' && strtotime($this->getStartDate()) > $now) {
+				$isActive = false;
+			}
+			if ($this->getEndDate() != '' && strtotime($this->getEndDate()) < $now) {
+				$isActive = false;
+			}
+		} else {
+			$isActive = false;
+			$startsOn = date('Y-m-d', strtotime($this->getStartDate()));
+			$ymd = date('Y-m-d', $now);
+			$dailyTimeStart = strtotime($ymd . ' ' . date('H:i:s', strtotime($this->getStartDate())));
+			$dailyTimeEnd = strtotime($ymd . ' ' . date('H:i:s', strtotime($this->getEndDate())));
+			switch($this->getRepeatPeriod()) {
+				case 'daily':
+					// number of days between now and the start
+					$numDays = round(($now - strtotime($startsOn)) / 86400);
+					if (($numDays % $this->getRepeatPeriodEveryNum()) == 0) {
+						if ($now >= $dailyTimeStart && $now <= $dailyTimeEnd) {
+							$isActive = true;
+						}
+					}
+					break;
+				case 'weekly':
+					$numWeeks = round(($now - strtotime($startsOn)) / (86400 * 7));
+					if (($numWeeks % $this->getRepeatPeriodEveryNum()) == 0) {
+						// now we check to see if it's on the right day
+						$days = $this->getRepeatPeriodWeekDays();
+						$dow = date('w', $now);
+						if (in_array($dow, $days)) { 
+							if ($now >= $dailyTimeStart && $now <= $dailyTimeEnd) {
+								$isActive = true;
+							}
+						}
+					}
+					break;
+				case 'monthly':
+					$numMonths = round(($now - strtotime($startsOn)) / (86400 * 30));
+					$checkTime = false;
+					if (($numMonths % $this->getRepeatPeriodEveryNum()) == 0) {
+						// now we check to see if it's on the right day
+						if ($this->getRepeatMonthBy() == 'month') {
+							// that means it has to be the same day of the month. e.g. the 29th, etc..
+							if (date('d', $now) == date('d', strtotime($this->getStartDate()))) {
+								$checkTime = true;
+							}
+						} else if ($this->getRepeatMonthBy() == 'week') {
+							// the last sunday? etc..
+							$savedWeekNum = date("W", strtotime($this->getStartDate())) - date("W", strtotime(date("Y-m-01", strtotime($this->getStartDate())))) + 1;
+							$nowWeekNum = date("W", $now) - date("W", strtotime(date("Y-m-01", $now))) + 1;
+							if ($savedWeekNum == $nowWeekNum) {
+								if (date('d', $now) == date('d', strtotime($this->getStartDate()))) {
+									$checkTime = true;
+								}
+							}								
+						}
+						
+						if ($checkTime) {
+							if ($now >= $dailyTimeStart && $now <= $dailyTimeEnd) {
+								$isActive = true;
+							}
+						}
+					}
+					break;
+
+			}
+		}		
+		return $isActive;
 	}
 
 	public static function filterByActive($list) {

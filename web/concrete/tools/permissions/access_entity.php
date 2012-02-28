@@ -148,7 +148,6 @@ if (is_object($pd)) {
 	$pdRepeats = $pd->repeats();
 	$pdRepeatPeriod = $pd->getRepeatPeriod();
 	$pdRepeatPeriodWeekDays = $pd->getRepeatPeriodWeekDays();
-	$pdRepeatPeriodWeekDays = $pd->getRepeatPeriodWeekDays();
 	if ($pdRepeatPeriod == 'daily') {
 		$pdRepeatPeriodDaysEvery = $pd->getRepeatPeriodEveryNum();
 	}
@@ -258,8 +257,8 @@ if (is_object($pd)) {
 <?=$form->label('pdRepeatPeriodMonthsRepeatBy', t('Repeat By'))?>
 <div class="input">
 <ul class="inputs-list">
-	<li><label><?=$form->radio('pdRepeatPeriodMonthsRepeatBy', 'month', 'month')?> <span><?=t('Day of Month')?></span></label></li>
-	<li><label><?=$form->radio('pdRepeatPeriodMonthsRepeatBy', 'week')?> <span><?=t('Day of Week')?></span></label></li>
+	<li><label><?=$form->radio('pdRepeatPeriodMonthsRepeatBy', 'month', $pdRepeatPeriodMonthsRepeatBy)?> <span><?=t('Day of Month')?></span></label></li>
+	<li><label><?=$form->radio('pdRepeatPeriodMonthsRepeatBy', 'week', $pdRepeatPeriodMonthsRepeatBy)?> <span><?=t('Day of Week')?></span></label></li>
 </ul>
 </div>
 </div>
@@ -283,9 +282,15 @@ if (is_object($pd)) {
 <label><?=t('On')?></label>
 <div class="input">
 <ul class="inputs-list">
-<? foreach($list['format']['wide'] as $key => $value) { ?>
-	<li><label><?=$form->checkbox('pdRepeatPeriodWeeksDays[]', $key, in_array($key, $pdRepeatPeriodWeekDays))?> <span><?=$value?></span></label></li>
-<? } ?>
+<? 
+$x = 0;
+foreach($list['format']['wide'] as $key => $value) { ?>
+	<li><label><input <? if (in_array($x, $pdRepeatPeriodWeekDays)) { ?>checked="checked" <? } ?>
+	type="checkbox" name="pdRepeatPeriodWeeksDays[]" value="<?=$x?>" /> <span><?=$value?></span></label></li>
+	
+<?
+	$x++;
+} ?>
 </ul>
 </div>
 </div>
@@ -398,25 +403,25 @@ ccm_accessEntityCalculateRepeatOptions = function() {
 	$('input[name=pdStartRepeatDate]').val($("#pdStartDate_dt").val());
 	switch(sdfr.getDay()) {
 		case 0:
-			$("#ccm-permissions-access-entity-dates-repeat-weekly-dow input[value=sun]").attr('checked', true);
+			$("#ccm-permissions-access-entity-dates-repeat-weekly-dow input[value=0]").attr('checked', true);
 			break;
 		case 1:
-			$("#ccm-permissions-access-entity-dates-repeat-weekly-dow input[value=mon]").attr('checked', true);
+			$("#ccm-permissions-access-entity-dates-repeat-weekly-dow input[value=1]").attr('checked', true);
 			break;
 		case 2:
-			$("#ccm-permissions-access-entity-dates-repeat-weekly-dow input[value=tue]").attr('checked', true);
+			$("#ccm-permissions-access-entity-dates-repeat-weekly-dow input[value=2]").attr('checked', true);
 			break;
 		case 3:
-			$("#ccm-permissions-access-entity-dates-repeat-weekly-dow input[value=wed]").attr('checked', true);
+			$("#ccm-permissions-access-entity-dates-repeat-weekly-dow input[value=3]").attr('checked', true);
 			break;
 		case 4:
-			$("#ccm-permissions-access-entity-dates-repeat-weekly-dow input[value=thu]").attr('checked', true);
+			$("#ccm-permissions-access-entity-dates-repeat-weekly-dow input[value=4]").attr('checked', true);
 			break;
 		case 5:
-			$("#ccm-permissions-access-entity-dates-repeat-weekly-dow input[value=fri]").attr('checked', true);
+			$("#ccm-permissions-access-entity-dates-repeat-weekly-dow input[value=5]").attr('checked', true);
 			break;
 		case 6:
-			$("#ccm-permissions-access-entity-dates-repeat-weekly-dow input[value=sat]").attr('checked', true);
+			$("#ccm-permissions-access-entity-dates-repeat-weekly-dow input[value=6]").attr('checked', true);
 			break;
 	}
 }

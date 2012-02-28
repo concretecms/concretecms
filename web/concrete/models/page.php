@@ -1108,6 +1108,7 @@ class Page extends Collection {
 		$db = Loader::db();
 		if ($this->cID) {
 			$db->query("update Pages set cOverrideTemplatePermissions = 0 where cID = {$this->cID}");
+			$this->refreshCache();
 		}
 	}
 
@@ -1118,6 +1119,7 @@ class Page extends Collection {
 		$db = Loader::db();
 		if ($this->cID) {
 			$db->query("update Pages set cOverrideTemplatePermissions = 1 where cID = {$this->cID}");
+			$this->refreshCache();
 		}
 	}
 
@@ -1417,6 +1419,9 @@ class Page extends Collection {
 	public function setPermissionsToManualOverride() {
 		if ($this->cInheritPermissionsFrom != 'OVERRIDE') { 
 			$db = Loader::db();
+			$this->acquirePagePermissions($this->getPermissionsCollectionID());
+			$this->acquireAreaPermissions($this->getPermissionsCollectionID());
+
 			$cpID = $this->cID;
 			$this->updatePermissionsCollectionID($this->cID, $cpID);
 			$v = array('OVERRIDE', $cpID, $this->cID);
@@ -1424,10 +1429,7 @@ class Page extends Collection {
 			$r = $db->query($q, $v);
 			$this->cInheritPermissionsFrom = 'OVERRIDE';
 			$this->cInheritPermissionsFromCID = $cpID;
-			$this->clearPagePermissions();
 			$this->rescanAreaPermissions();
-
-			// copy permissions
 		}	
 	}
 	
@@ -1478,32 +1480,85 @@ class Page extends Collection {
 	function acquireAreaPermissions($permissionsCollectionID) {
 		$v = array($this->cID);
 		$db = Loader::db();
-		$q = "delete from AreaGroups where cID = ?";
+		$q = "delete from AreaPermissionAssignments where cID = ?";
 		$db->query($q, $v);
-		$q = "delete from AreaGroupBlockTypes where cID = ?";
+		$q = "delete from AreaPermissionBlockTypeAssignments where cID = ?";
+		$db->query($q, $v);
+		$q = "delete from AreaPermissionBlockTypeAssignmentsCustom where cID = ?";
 		$db->query($q, $v);
 
 
 		// ack - we need to copy area permissions from that page as well
 		$v = array($permissionsCollectionID);
-		$q = "select cID, arHandle, gID, uID, agPermissions from AreaGroups where cID = ?";
+		$q = "select cID, arHandle, peID, pdID, pkID, accessType from AreaPermissionAssignments where cID = ?";
 		$r = $db->query($q, $v);
 		while($row = $r->fetchRow()) {
-			$v = array($this->cID, $row['arHandle'], $row['gID'], $row['uID'], $row['agPermissions']);
-			$q = "insert into AreaGroups (cID, arHandle, gID, uID, agPermissions) values (?, ?, ?, ?, ?)";
+			$v = array($this->cID, $row['arHandle'], $row['peID'], $row['pdID'], $row['pkID'], $row['accessType']);
+			$q = "insert into AreaPermissionAssignments (cID, arHandle, peID, pdID, pkID, accessType) values (?, ?, ?, ?, ?, ?)";
 			$db->query($q, $v);
 		}
 
 		$v = array($permissionsCollectionID);
-		$q = "select cID, arHandle, gID, uID, btID from AreaGroupBlockTypes where cID = ?";
+		$q = "select cID, arHandle, peID, permission from AreaPermissionBlockTypeAssignments where cID = ?";
 		$r = $db->query($q, $v);
 		while($row = $r->fetchRow()) {
-			$v = array($this->cID, $row['arHandle'], $row['gID'], $row['uID'], $row['btID']);
-			$q = "insert into AreaGroupBlockTypes (cID, arHandle, gID, uID, btID) values (?, ?, ?, ?, ?)";
+			$v = array($this->cID, $row['arHandle'], $row['peID'], $row['permission']);
+			$q = "insert into AreaPermissionBlockTypeAssignments (cID, arHandle, peID, permission) values (?, ?, ?, ?)";
 			$db->query($q, $v);
 		}
+
+		$v = array($permissionsCollectionID);
+		$q = "select cID, arHandle, peID, btID from AreaPermissionBlockTypeAssignmentsCustom where cID = ?";
+		$r = $db->query($q, $v);
+		while($row = $r->fetchRow()) {
+			$v = array($this->cID, $row['arHandle'], $row['peID'], $row['btID']);
+			$q = "insert into AreaPermissionBlockTypeAssignmentsCustom (cID, arHandle, peID, btID) values (?, ?, ?, ?)";
+			$db->query($q, $v);
+		}
+
 	}
 
+	function acquirePagePermissions($permissionsCollectionID) {
+		$v = array($this->cID);
+		$db = Loader::db();
+		$q = "delete from PagePermissionAssignments where cID = ?";
+		$db->query($q, $v);
+		$q = "delete from PagePermissionPageTypeAssignments where cID = ?";
+		$db->query($q, $v);
+		$q = "delete from PagePermissionPageTypeAssignmentsCustom where cID = ?";
+		$db->query($q, $v);
+
+
+		$v = array($permissionsCollectionID);
+		$q = "select cID, peID, pdID, pkID, accessType from PagePermissionAssignments where cID = ?";
+		$r = $db->query($q, $v);
+		while($row = $r->fetchRow()) {
+			$v = array($this->cID, $row['peID'], $row['pdID'], $row['pkID'], $row['accessType']);
+			$q = "insert into PagePermissionAssignments (cID, peID, pdID, pkID, accessType) values (?, ?, ?, ?, ?)";
+			$db->query($q, $v);
+		}
+
+		$v = array($permissionsCollectionID);
+		$q = "select cID, peID, permission from PagePermissionPageTypeAssignments where cID = ?";
+		$r = $db->query($q, $v);
+		while($row = $r->fetchRow()) {
+			$v = array($this->cID, $row['peID'], $row['permission']);
+			$q = "insert into PagePermissionPageTypeAssignments (cID, peID, permission) values (?, ?, ?)";
+			$db->query($q, $v);
+		}
+
+		$v = array($permissionsCollectionID);
+		$q = "select cID, peID, ctID from PagePermissionPageTypeAssignmentsCustom where cID = ?";
+		$r = $db->query($q, $v);
+		while($row = $r->fetchRow()) {
+			$v = array($this->cID, $row['peID'], $row['ctID']);
+			$q = "insert into PagePermissionPageTypeAssignmentsCustom (cID, peID, ctID) values (?, ?, ?)";
+			$db->query($q, $v);
+		}
+
+	}
+
+	/*
 	function updatePermissions($args = null) {
 		$db = Loader::db();
 		if (!is_array($args)) {
@@ -1569,6 +1624,7 @@ class Page extends Collection {
 		$db->query($q, $v);
 		parent::refreshCache();
 	}
+	*/
 	
 	public function __destruct() {
 		parent::__destruct();
