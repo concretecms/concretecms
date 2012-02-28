@@ -86,7 +86,7 @@ class AreaPermissionKey extends PermissionKey {
 		} else if (isset($this->inheritedPermissions[$this->getPermissionKeyHandle()])) { 
 			// this is a page
 			$inheritedPKID = $db->GetOne('select pkID from PermissionKeys where pkHandle = ?', array($this->inheritedPermissions[$this->getPermissionKeyHandle()]));
-			$r = $db->Execute('select accessType, peID, 0 as pdID from PagePermissionAssignments where cID = ? and pkID = ? ' . $filterString, array(
+			$r = $db->Execute('select accessType, peID, pdID from PagePermissionAssignments where cID = ? and pkID = ? ' . $filterString, array(
 				$this->permissionObjectToCheck->getCollectionID(), $inheritedPKID
 			));
 		} else {

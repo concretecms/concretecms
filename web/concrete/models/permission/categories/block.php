@@ -87,13 +87,13 @@ class BlockPermissionKey extends PermissionKey {
 			));
 		} else if ($this->permissionObjectToCheck instanceof Area && isset($this->inheritedAreaPermissions[$this->getPermissionKeyHandle()])) { 
 			$inheritedPKID = $db->GetOne('select pkID from PermissionKeys where pkHandle = ?', array($this->inheritedAreaPermissions[$this->getPermissionKeyHandle()]));
-			$r = $db->Execute('select accessType, peID, 0 as pdID from AreaPermissionAssignments where cID = ? and arHandle = ? and pkID = ? ' . $filterString, array(
+			$r = $db->Execute('select accessType, peID, pdID from AreaPermissionAssignments where cID = ? and arHandle = ? and pkID = ? ' . $filterString, array(
 				$this->permissionObjectToCheck->getCollectionID(), $this->permissionObjectToCheck->getAreaHandle(), $inheritedPKID
 			));
 		} else if ($this->permissionObjectToCheck instanceof Page && isset($this->inheritedPagePermissions[$this->getPermissionKeyHandle()])) { 
 			// this is a page
 			$inheritedPKID = $db->GetOne('select pkID from PermissionKeys where pkHandle = ?', array($this->inheritedPagePermissions[$this->getPermissionKeyHandle()]));
-			$r = $db->Execute('select accessType, peID, 0 as pdID from PagePermissionAssignments where cID = ? and pkID = ? ' . $filterString, array(
+			$r = $db->Execute('select accessType, peID, pdID from PagePermissionAssignments where cID = ? and pkID = ? ' . $filterString, array(
 				$this->permissionObjectToCheck->getCollectionID(), $inheritedPKID
 			));
 		} else {

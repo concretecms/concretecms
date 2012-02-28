@@ -216,6 +216,7 @@ abstract class PermissionKey extends Object {
 		$accessEntities = $u->getUserAccessEntityObjects();
 		$valid = false;
 		$list = $this->getAssignmentList(PermissionKey::ACCESS_TYPE_ALL, $accessEntities);
+		$list = PermissionDuration::filterByActive($list);
 		foreach($list as $l) {
 			if ($l->getAccessType() == PermissionKey::ACCESS_TYPE_INCLUDE) {
 				$valid = true;

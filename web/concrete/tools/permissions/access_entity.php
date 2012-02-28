@@ -103,6 +103,8 @@ if ($_POST['task'] == 'save_permissions') {
 					$pd->setRepeatPeriodEnd($dt->translate('pdEndRepeatDateSpecific'));
 				}
 				$pd->save();		
+			} else {
+				unset($pd);
 			}
 			
 		} else {

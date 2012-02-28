@@ -49,6 +49,7 @@ class AddBlockAreaPermissionKey extends AreaPermissionKey  {
 		
 		$accessEntities = $u->getUserAccessEntityObjects();
 		$list = $this->getAssignmentList(AreaPermissionKey::ACCESS_TYPE_ALL, $accessEntities);
+		$list = PermissionDuration::filterByActive($list);
 		// these are assignments that apply to me
 		$canAddBlockType = false;
 		foreach($list as $l) {

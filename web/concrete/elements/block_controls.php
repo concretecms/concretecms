@@ -70,7 +70,7 @@ if ($b->getBlockTypeHandle() == BLOCK_HANDLE_STACK_PROXY) { ?>
 <? } else { ?>
 	ccm_menuObj<?=$id?>.canCopyToScrapbook = true;
 <? } 
-if ($p->canEditBlocKPermissions() && PERMISSIONS_MODEL != 'simple') { ?>
+if ($p->canEditBlockPermissions() && PERMISSIONS_MODEL != 'simple') { ?>
 ccm_menuObj<?=$id?>.canModifyGroups = true;
 <? }
 if ($p->canEditBlockDesign() && ENABLE_CUSTOM_DESIGN == true) { ?>
