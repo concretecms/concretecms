@@ -264,6 +264,7 @@ class Block extends Object {
 
 		$db->query("delete from BlockPermissionAssignments where cID = ? and cvID = ? and bID = ? and arHandle = ?", $v);
 		$db->query("update CollectionVersionBlocks set cbOverrideAreaPermissions = 0 where cID = ? and (cvID = ? or cbIncludeAll=1) and bID = ? and arHandle = ?", $v);
+		$this->refreshCache();
 	 }
 	 
 	public function getBlockPath() {
@@ -994,7 +995,7 @@ class Block extends Object {
 		// copy permissions from the page to the area
 		$permissions = PermissionKey::getList('block');
 		foreach($permissions as $pk) { 
-			$pk->setBlockObject($this);
+			$pk->setPermissionObject($this);
 			$pk->copyFromPageOrAreaToBlock();
 		}		
 		$this->refreshCache();

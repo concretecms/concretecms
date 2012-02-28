@@ -381,6 +381,10 @@ class Area extends Object {
 			$ourArea->maximumBlocks = $this->maximumBlocks;
 		}
 		$ap = new Permissions($ourArea);
+		if (!$ap->canViewArea()) {
+			return false;
+		}
+		
 		$blocksToDisplay = ($alternateBlockArray) ? $alternateBlockArray : $ourArea->getAreaBlocksArray($c, $ap);
 		$this->totalBlocks = $ourArea->getTotalBlocksInArea();
 		$u = new User();
@@ -422,11 +426,11 @@ class Area extends Object {
 				$b->setBlockActionCollectionID($stack->getCollectionID());
 			}
 			$p = new Permissions($b);
-			if (($p->canWrite() || $p->canDeleteBlock()) && $c->isEditMode() && $this->showControls) {
+			if ($c->isEditMode() && $this->showControls) {
 				$includeEditStrip = true;
 			}
 
-			if ($p->canRead()) {
+			if ($p->canViewBlock()) {
 				if (!$c->isEditMode()) {
 					$this->outputBlockWrapper(true, $b, $blockPositionInArea);
 				}
@@ -575,7 +579,7 @@ class Area extends Object {
 		// copy permissions from the page to the area
 		$permissions = PermissionKey::getList('area');
 		foreach($permissions as $pk) { 
-			$pk->setAreaObject($this);
+			$pk->setPermissionObject($this);
 			$pk->copyFromPageToArea();
 		}
 		

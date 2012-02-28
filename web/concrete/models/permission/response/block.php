@@ -7,5 +7,6 @@ class BlockPermissionResponse extends PermissionResponse {
 	public function canWrite() { return $this->validate('edit_block'); }
 	public function canDeleteBlock() { return $this->validate('delete_block'); }
 	public function canAdmin() { return $this->validate('edit_block_permissions'); }
+	public function canAdminBlock() { return $this->validate('edit_block_permissions'); }
 	
 }

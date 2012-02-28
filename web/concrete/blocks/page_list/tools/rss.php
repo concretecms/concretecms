@@ -16,7 +16,7 @@ if($_GET['bID'] && $_GET['cID'] && $nh->integer($_GET['bID']) && $nh->integer($_
 		$rssUrl = $controller->getRssUrl($b);
 		
 		$bp = new Permissions($b);
-		if( $bp->canRead() && $controller->rss) {
+		if( $bp->canViewBlock() && $controller->rss) {
 	
 			$cArray = $controller->getPages();
 			$nh = Loader::helper('navigation');

@@ -36,9 +36,15 @@ class Permissions {
 	 */
 	public function __call($f, $a) {
 		if (count($a) > 0) { 
-			return call_user_func_array(array($this->response, $f), $a);
+			$r = call_user_func_array(array($this->response, $f), $a);
 		} else { 
-			return $this->response->{$f}();
+			$r = $this->response->{$f}();
+		}
+		
+		if ($r) {
+			return 1;
+		} else {
+			return 0;
 		}
 	}
 	

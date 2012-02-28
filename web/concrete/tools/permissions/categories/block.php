@@ -13,7 +13,7 @@ if (is_object($a)) {
 	$b = Block::getByID($_GET['bID'], $cx, $ax); 
 	$p = new Permissions($b);
 	// we're updating the groups for a particular block
-	if ($p->canAdminBlock()) {
+	if ($p->canEditBlockPermissions()) {
 		$nvc = $cx->getVersionToModify();
 		if ($a->isGlobalArea()) {
 			$xvc = $c->getVersionToModify(); // we need to create a new version of THIS page as well.

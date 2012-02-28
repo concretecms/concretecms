@@ -81,7 +81,11 @@ class AddSubpagePagePermissionKey extends PagePermissionKey  {
 		foreach($list as $l) {
 			$pe = $l->getAccessEntityObject();
 			$permission = $db->GetOne('select permission from PagePermissionPageTypeAssignments where peID = ?', array($pe->getAccessEntityID()));
-			$l->setPageTypesAllowedPermission($permission);
+			if ($permission === '0' || $permission == 'C') {
+				$l->setPageTypesAllowedPermission($permission);
+			} else { 
+				$l->setPageTypesAllowedPermission('1');
+			}
 			if ($permission == 'C') { 
 				$ctIDs = $db->GetCol('select ctID from PagePermissionPageTypeAssignmentsCustom where peID = ?', array($pe->getAccessEntityID()));
 				$l->setPageTypesAllowedArray($ctIDs);

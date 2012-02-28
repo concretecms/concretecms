@@ -58,12 +58,12 @@ class AddBlockAreaPermissionKey extends AreaPermissionKey  {
 			if ($l->getBlockTypesAllowedPermission() == 'C') {
 				if (is_object($bt)) { 
 					if ($l->getAccessType() == AreaPermissionKey::ACCESS_TYPE_EXCLUDE) {
-						$canAddBlockType = !in_array($bt->getBlockTypeID(), $l->getBlockTypesAllowedPermission());
+						$canAddBlockType = !in_array($bt->getBlockTypeID(), $l->getBlockTypesAllowedArray());
 					} else { 
-						$canAddBlockType = in_array($bt->getBlockTypeID(), $l->getBlockTypesAllowedPermission());
+						$canAddBlockType = in_array($bt->getBlockTypeID(), $l->getBlockTypesAllowedArray());
 					}
 				} else {
-					$canAddSubpage = true;
+					$canAddBlockType = true;
 				}
 			}
 			if ($l->getBlockTypesAllowedPermission() == '1') {
@@ -84,6 +84,10 @@ class AddBlockAreaPermissionKey extends AreaPermissionKey  {
 				$permission = 1;
 			} else { 
 				$permission = $db->GetOne('select permission from AreaPermissionBlockTypeAssignments where peID = ?', array($pe->getAccessEntityID()));
+				if ($permission !== '0' && $permission != 'C') {
+					$permission = 1;
+				}
+
 			}
 			$l->setBlockTypesAllowedPermission($permission);
 			if ($permission == 'C') { 
