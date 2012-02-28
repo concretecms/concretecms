@@ -243,10 +243,6 @@
 			// if we've gotten an error getting information about this particular collection
 			// than we load up the Content class, and get prepared to fire away
 			switch($vp->getError()) {
-				case VERSION_NOT_RECENT:
-					// the collection is not the most recent version. We're not going to allow any writing to the collection
-					$cp->disableWrite();
-					break;
 				case COLLECTION_NOT_FOUND:
 					$v = View::getInstance();
 					$v->render('/page_not_found');

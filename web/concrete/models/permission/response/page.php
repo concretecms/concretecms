@@ -35,7 +35,7 @@ class PagePermissionResponse extends PermissionResponse {
 			return false;
 		}
 	}
-
+	
 	public function testForErrors() { 
 		if ((!$this->canViewPage()) && (!$this->object->getCollectionPointerExternalLink() != '')) {
 			return COLLECTION_FORBIDDEN;
