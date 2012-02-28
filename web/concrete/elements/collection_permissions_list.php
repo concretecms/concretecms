@@ -13,7 +13,7 @@ if ($c->getCollectionInheritance() == 'OVERRIDE') {
 <div class="ccm-pane-options">
 <div class="ccm-pane-options-permanent-search">
   <strong><?=t('Permissions Set')?></strong>&nbsp;
-   <select id="ccm-page-permissions-inherit" style="width: 160px">
+   <select id="ccm-page-permissions-inherit" style="width: 180px">
 	<? if ($c->getCollectionID() > 1) { ?><option value="PARENT" <? if ($c->getCollectionInheritance() == "PARENT") { ?> selected<? } ?>><?=t('By Area of Site (Hierarchy)')?></option><? } ?>
 	<? if ($c->getMasterCollectionID() > 1) { ?><option value="TEMPLATE"  <? if ($c->getCollectionInheritance() == "TEMPLATE") { ?> selected<? } ?>><?=t('By Page Type Defaults')?></option><? } ?>
 	<option value="OVERRIDE" <? if ($c->getCollectionInheritance() == "OVERRIDE") { ?> selected<? } ?>><?=t('Manually')?></option>
@@ -21,7 +21,7 @@ if ($c->getCollectionInheritance() == 'OVERRIDE') {
 	<? if (!$c->isMasterCollection()) { ?>
 	&nbsp;&nbsp;
 		<b><?=t('Sub-pages added')?></b>: 
-		<select id="ccm-page-permissions-subpages-override-template-permissions">
+		<select id="ccm-page-permissions-subpages-override-template-permissions" style="width: 260px">
 			<option value="0"<? if (!$c->overrideTemplatePermissions()) { ?>selected<? } ?>><?=t('Inherit page type default permissions.')?></option>
 			<option value="1"<? if ($c->overrideTemplatePermissions()) { ?>selected<? } ?>><?=t('Inherit the permissions of this page.')?></option>
 		</select>
