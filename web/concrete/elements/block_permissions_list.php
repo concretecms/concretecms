@@ -26,15 +26,15 @@ if (!$b->overrideAreaPermissions()) { ?>
 	</div>
 
 <? } ?>
-<ul>
+<table>
 <?
 $permissions = PermissionKey::getList('block');
 foreach($permissions as $pk) { 
 	$pk->setPermissionObject($b);
 
 ?>
-	<li><? if ($enablePermissions) { ?><a dialog-width="500" dialog-height="380" class="dialog-launch" dialog-title="<?=t('Permissions')?>" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_block_popup?bID=<?=$b->getBlockID()?>&arHandle=<?=$b->getAreaHandle()?>&cvID=<?=$c->getVersionID()?>&bID=<?=$b->getBlockID()?>&cID=<?=$c->getCollectionID()?>&btask=set_advanced_permissions&pkID=<?=$pk->getPermissionKeyID()?>"><? } ?><?=$pk->getPermissionKeyName()?><? if ($enablePermissions) { ?></a><? } ?><br/><?=$pk->getPermissionKeyDescription()?>
-	<br/><br/>
+	<tr><td style="white-space: nowrap"><strong><? if ($enablePermissions) { ?><a dialog-width="500" dialog-height="380" class="dialog-launch" dialog-title="<?=t('Permissions')?>" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_block_popup?bID=<?=$b->getBlockID()?>&arHandle=<?=$b->getAreaHandle()?>&cvID=<?=$c->getVersionID()?>&bID=<?=$b->getBlockID()?>&cID=<?=$c->getCollectionID()?>&btask=set_advanced_permissions&pkID=<?=$pk->getPermissionKeyID()?>"><? } ?><?=$pk->getPermissionKeyName()?><? if ($enablePermissions) { ?></a><? } ?></strong></td>
+	<td width="100%">
 	<?
 	$included = $pk->getAssignmentList(BlockPermissionKey::ACCESS_TYPE_INCLUDE);
 	$excluded = $pk->getAssignmentList(BlockPermissionKey::ACCESS_TYPE_EXCLUDE);
@@ -67,12 +67,11 @@ foreach($permissions as $pk) {
 	?>
 	
 	
-	<div><?=t('Included: %s', $includedStr)?></div>
-	<div><?=t('Excluded: %s', $excludedStr)?></div>
-	<br/>
-	</li>
+	<?=t('Included: %s.', $includedStr)?> <?=t('Excluded: %s', $excludedStr)?>
+	</td>
+</tr>
 <? } ?>
-</ul>
+</table>
 </div>
 
 <script type="text/javascript">

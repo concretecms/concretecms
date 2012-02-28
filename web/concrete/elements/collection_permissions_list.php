@@ -36,14 +36,15 @@ if ($c->getCollectionInheritance() == 'OVERRIDE') {
 	<div><strong><?=t('This page inherits its permissions from:');?> <a target="_blank" href="<?=DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=<?=$cpc->getCollectionID()?>"><?=$cpc->getCollectionName()?></a></strong></div><br/><br/>
 	<? } ?>		
 
-<ul>
+<table>
 <?
 $permissions = PermissionKey::getList('page');
 foreach($permissions as $pk) { 
 	$pk->setPermissionObject($c);
 	?>
-	<li><? if ($editPermissions) { ?><a dialog-width="500" dialog-height="380" class="dialog-launch" dialog-title="<?=t('Permissions')?>" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_collection_popup?cID=<?=$c->getCollectionID()?>&ctask=set_advanced_permissions&pkID=<?=$pk->getPermissionKeyID()?>"><? } ?><?=$pk->getPermissionKeyName()?><? if ($editPermissions) { ?></a><? } ?><br/><?=$pk->getPermissionKeyDescription()?>
-	<br/><br/>
+	<tr>
+	<td style="white-space: nowrap"><strong><? if ($editPermissions) { ?><a dialog-width="500" dialog-height="380" class="dialog-launch" dialog-title="<?=t('Permissions')?>" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_collection_popup?cID=<?=$c->getCollectionID()?>&ctask=set_advanced_permissions&pkID=<?=$pk->getPermissionKeyID()?>"><? } ?><?=$pk->getPermissionKeyName()?><? if ($editPermissions) { ?></a><? } ?></td>
+	<td width="100%">
 	<?
 	$included = $pk->getAssignmentList(PagePermissionKey::ACCESS_TYPE_INCLUDE);
 	$excluded = $pk->getAssignmentList(PagePermissionKey::ACCESS_TYPE_EXCLUDE);
@@ -74,14 +75,12 @@ foreach($permissions as $pk) {
 	}
 	
 	?>
-	
-	
-	<div><?=t('Included: %s', $includedStr)?></div>
-	<div><?=t('Excluded: %s', $excludedStr)?></div>
-	<br/>
-	</li>
+	<?=t('Included: %s', $includedStr)?>. <?=t('Excluded: %s', $excludedStr)?>
+	</td>
+</tr>
 <? } ?>
-</ul>
+</table>
+
 </div>
 
 <script type="text/javascript">
