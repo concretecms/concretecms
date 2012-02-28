@@ -9,6 +9,7 @@ class AreaPermissionKey extends PermissionKey {
 		'edit_area_contents' => 'edit_page_contents',
 		'add_block' => 'edit_page_contents',
 		'add_layout' => 'edit_page_contents',
+		'add_stack' => 'edit_page_contents',
 		'edit_area_design' => 'edit_page_design',
 		'edit_area_permissions' => 'edit_page_permissions',
 		'delete_area_contents' => 'edit_page_contents'		
@@ -128,7 +129,7 @@ class AreaPermissionKey extends PermissionKey {
 	
 	public function removeAssignment(PermissionAccessEntity $pe) {
 		$db = Loader::db();
-		$db->Execute('delete from AreaPermissionAssignments where cID = ? and arHandle = ? and peID = ?', array($this->permissionObject->getCollectionID(), $this->permissionObject->getAreaHandle(), $pe->getAccessEntityID()));
+		$db->Execute('delete from AreaPermissionAssignments where cID = ? and arHandle = ? and peID = ? and pkID = ?', array($this->permissionObject->getCollectionID(), $this->permissionObject->getAreaHandle(), $pe->getAccessEntityID(), $this->getPermissionKeyID()));
 		
 	}
 	

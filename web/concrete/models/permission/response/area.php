@@ -7,6 +7,7 @@ class AreaPermissionResponse extends PermissionResponse {
 	public function canWrite() { return $this->validate('edit_area_contents'); }
 	public function canAdmin() { return $this->validate('edit_area_permissions'); }
 	public function canAddBlocks() { return $this->validate('add_block'); }
+	public function canAddStacks() { return $this->validate('add_stack'); }
 	public function canAddBlock($bt) {
 		$pk = $this->category->getPermissionKeyByHandle('add_block');
 		$pk->setPermissionObject($this->object);

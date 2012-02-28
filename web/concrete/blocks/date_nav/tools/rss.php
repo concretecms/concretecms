@@ -13,7 +13,7 @@ if($_GET['bID']) {
 	$rssUrl = $controller->getRssUrl($b);
 	
 	$bp = new Permissions($b);
-	if( $bp->canRead() && $controller->rss) {
+	if( $bp->canViewBlock() && $controller->rss) {
 
 		$cArray = $controller->getPages();
 		$nh = Loader::helper('navigation');

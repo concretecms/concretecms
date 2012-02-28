@@ -3,6 +3,7 @@
 
     <permissioncategories>
         <category handle="page" package=""/>
+        <category handle="stack" package=""/>
         <category handle="user" package=""/>
         <category handle="file" package=""/>
         <category handle="area" package=""/>
@@ -30,6 +31,7 @@
         <permissionkey handle="view_area" name="View Area" package="" category="area"/>
         <permissionkey handle="edit_area_contents" name="Edit Area Contents" package="" category="area"/>
         <permissionkey handle="add_block" name="Add Blocks to Area" package="" category="area"/>
+        <permissionkey handle="add_stack" name="Add Stacks to Area" package="" category="area"/>
         <permissionkey handle="add_layout" name="Add Layouts to Area" package="" category="area"/>
         <permissionkey handle="edit_area_design" name="Edit Area Design" package="" category="area"/>
         <permissionkey handle="edit_area_permissions" name="Edit Area Permissions" package="" category="area"/>

@@ -12,7 +12,8 @@ if (!$a->isGlobalArea()) {
 }
 
 $bp = new Permissions($b);
-if (!$bp->canWrite()) {
+$ap = new Permissions($a);
+if ((!$bp->canWrite()) && (!$ap->canAddBlocks())) {
 	die(t("Access Denied."));
 } 
 
@@ -45,7 +46,7 @@ if ($b->isAliasOfMasterCollection() && $_REQUEST['btask'] != 'view_edit_mode') {
 if (is_object($b)) {
 	switch($_REQUEST['btask']) {
 		case 'block_css': 		
-			if ($bp->canWrite()) {
+			if ($bp->canEditBlockDesign()) {
 				$style = $b->getBlockCustomStyleRule();
 				$action = $b->getBlockUpdateCssAction();
 				if ($_REQUEST['subtask'] == 'delete_custom_style_preset') {
@@ -57,12 +58,12 @@ if (is_object($b)) {
 			}
 			break;	 
 		case 'template': 		
-			if ($bp->canWrite()) {
+			if ($bp->canEditBlockCustomTemplate()) {
 				$bv->renderElement('block_custom_template', array('b' => $b, 'rcID'=>$rcID));
 			}
 			break;
 		case 'view':
-			if ($bp->canRead()) {
+			if ($bp->canViewBlock()) {
 				$bv->render($b, 'view', array(
 					'c' => $c,
 					'a' => $a
@@ -70,7 +71,7 @@ if (is_object($b)) {
 			}
 			break;
 		case 'view_edit_mode':
-			if ($bp->canWrite()) {
+			if ($bp->canWrite() || $ap->canAddBlocks()) {
 
 				$btc = $b->getInstance();
 				// now we inject any custom template CSS and JavaScript into the header
@@ -121,12 +122,12 @@ if (is_object($b)) {
 			}
 			break;
 		case 'groups':
-			if ($bp->canAdminBlock()) {
+			if ($bp->canEditBlockPermissions()) {
 				$bv->renderElement('block_permissions_list', array('b' => $b, 'rcID'=>$rcID));
 			}
 			break;
 		case 'set_advanced_permissions':
-			if ($bp->canAdminBlock()) {
+			if ($bp->canEditBlockPermissions()) {
 				$bv->renderElement('block_permissions', array('b' => $b, 'rcID'=>$rcID));
 			}
 			break;

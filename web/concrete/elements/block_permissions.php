@@ -4,7 +4,8 @@ $c = $b->getBlockCollectionObject();
 $arHandle = $b->getAreaHandle();
 ?>
 <div class="ccm-ui" id="ccm-block-permissions-list">
-<? $pk = BlockPermissionKey::getByID($_REQUEST['pkID'], $b); ?>
+<? $pk = BlockPermissionKey::getByID($_REQUEST['pkID']); ?>
+<? $pk->setPermissionObject($b); ?>
 <? $included = $pk->getAssignmentList(); ?>
 <? $excluded = $pk->getAssignmentList(PermissionKey::ACCESS_TYPE_EXCLUDE); ?>
 

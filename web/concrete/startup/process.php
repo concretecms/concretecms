@@ -94,7 +94,7 @@
 
 					$b = Block::getByID($_REQUEST['bID'], $cx, $ax);
 					$p = new Permissions($b);
-					if ($p->canWrite()){ 					
+					if ($p->canEditBlockDesign()){ 					
 						
 						$updateAll = false;
 						$scrapbookHelper=Loader::helper('concrete/scrapbook'); 
@@ -143,45 +143,7 @@
 					}
 				}
 				break;
-			case 'update_groups':
-				$a = Area::get($c, $_GET['arHandle']);
-				if (is_object($a)) {
-					$ax = $a;
-					$cx = $c;
-					if ($a->isGlobalArea()) {
-						$ax = STACKS_AREA_NAME;
-						$cx = Stack::getByName($_REQUEST['arHandle']);
-					}
 
-					$b = Block::getByID($_GET['bID'], $cx, $ax); 
-					$p = new Permissions($b);
-					// we're updating the groups for a particular block
-					if ($p->canAdminBlock()) {
-						$nvc = $cx->getVersionToModify();
-						if ($a->isGlobalArea()) {
-							$xvc = $c->getVersionToModify(); // we need to create a new version of THIS page as well.
-							$xvc->relateVersionEdits($nvc);
-						}
-						$b->loadNewCollection($nvc);
-						if ($c->isMasterCollection()) {
-							$b->updateBlockGroups(true);
-						} else {
-							$b->updateBlockGroups();
-						}
-						
-						$obj = new stdClass;
-						$obj->bID = $b->getBlockID();
-						$obj->aID = $a->getAreaID();
-						$obj->cID = $c->getCollectionID();
-						$obj->arHandle= $a->getAreaHandle();
-						$obj->task = 'update_groups';
-						$obj->error = false;
-						
-						print Loader::helper('json')->encode($obj);
-						exit;
-					}
-				}
-				break;
 			case 'mc_alias':
 				$a = Area::get($c, $_GET['arHandle']);
 				if (is_object($a)) {
@@ -233,8 +195,7 @@
 				}
 				$b = Block::getByID($_REQUEST['bID'], $cx, $ax);
 				$p = new Permissions($b);
-				// we're updating the groups for a particular block
-				if ($p->canWrite()) {
+				if ($p->canEditBlockCustomTemplate()) {
 
 					$bt = BlockType::getByHandle($b->getBlockTypeHandle());
 					if (!$bt->includeAll()) {
@@ -321,7 +282,7 @@
 							// basically, we hand off the current request to the block
 							// which handles permissions and everything
 							$p = new Permissions($b);
-							if ($p->canRead()) {
+							if ($p->canViewBlock()) {
 								$action = $b->passThruBlock($_REQUEST['method']);
 							}
 						}
@@ -335,7 +296,7 @@
 						$b = Block::getByID($_GET['bID'], Page::getByID($_REQUEST['stackID'], 'ACTIVE'), STACKS_AREA_NAME);
 						if (is_object($b)) {
 							$p = new Permissions($b);
-							if ($p->canRead()) {
+							if ($p->canViewBlock()) {
 								$action = $b->passThruBlock($_REQUEST['method']);
 							}
 						}
@@ -393,7 +354,7 @@
 			case 'design':
 				$area = Area::get($c, $_GET['arHandle']);
 				$ap = new Permissions($area);
-				if ($ap->canWrite() ) {
+				if ($ap->canEditAreaDesign() ) {
 					Loader::model('custom_style');				
 					
 					$nvc = $c->getVersionToModify();
@@ -425,7 +386,7 @@
 			case 'layout':
 				$area = Area::get($c, $_GET['arHandle']);
 				$ap = new Permissions($area);
-				if ($ap->canWrite() ) {
+				if ($ap->canAddLayout() ) {
 					Loader::model('custom_style');				
 					
 					$nvc = $c->getVersionToModify();

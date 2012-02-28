@@ -11,13 +11,17 @@ class PermissionAssignment extends Object {
 	}
 	
 	public function loadPermissionDurationObject($pdID) {
-		$pd = PermissionDuration::getByID($pdID);
-		$this->duration = $pd;
+		if ($pdID > 0) { 
+			$pd = PermissionDuration::getByID($pdID);
+			$this->duration = $pd;
+		}
 	}
 
 	public function loadAccessEntityObject($peID) {
-		$pe = PermissionAccessEntity::getByID($peID);
-		$this->accessEntity = $pe;
+		if ($peID > 0) { 
+			$pe = PermissionAccessEntity::getByID($peID);
+			$this->accessEntity = $pe;
+		}
 	}
 	
 	public function getAccessEntityObject() {return $this->accessEntity;}

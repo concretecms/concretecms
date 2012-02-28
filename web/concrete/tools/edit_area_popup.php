@@ -35,7 +35,7 @@ switch($_GET['atask']) {
 		break;
 	case 'add_from_stack':
 		$toolSection = "block_area_add_stack";
-		$canViewPane = $ap->canAddBlocks();
+		$canViewPane = $ap->canAddStacks();
 		break;
 	case 'paste':
 		$toolSection = "block_area_add_scrapbook";
@@ -45,7 +45,7 @@ switch($_GET['atask']) {
 		$originalLayoutId = (intval($_REQUEST['originalLayoutID'])) ? intval($_REQUEST['originalLayoutID']) : intval($_REQUEST['layoutID']);
 		$args['refreshAction'] = REL_DIR_FILES_TOOLS_REQUIRED . '/edit_area_popup?atask=layout&cID=' . $c->getCollectionID() . '&arHandle=' . $a->getAreaHandle() . '&refresh=1&originalLayoutID='.$originalLayoutId.'&cvalID='.$_REQUEST['cvalID'];
 		$toolSection = "block_area_layout";
-		$canViewPane = $ap->canWrite();
+		$canViewPane = $ap->canAddLayout();
 		$args['action'] = $a->getAreaUpdateAction('layout').'&originalLayoutID='.$originalLayoutId.'&cvalID='.intval($_REQUEST['cvalID']);
 		break;
 	case 'design':
@@ -53,7 +53,7 @@ switch($_GET['atask']) {
 		$args['style'] = $c->getAreaCustomStyleRule($a);
 		$args['action'] = $a->getAreaUpdateAction('design');
 		$args['refreshAction'] = REL_DIR_FILES_TOOLS_REQUIRED . '/edit_area_popup?atask=design&cID=' . $c->getCollectionID() . '&arHandle=' . $a->getAreaHandle() . '&refresh=1';
-		$canViewPane = $ap->canWrite();
+		$canViewPane = $ap->canEditAreaDesign();
 		if ($canViewPane) {
 			if ($_REQUEST['subtask'] == 'delete_custom_style_preset') {
 				$styleToDelete = CustomStylePreset::getByID($_REQUEST['deleteCspID']);
@@ -63,11 +63,11 @@ switch($_GET['atask']) {
 		break;
 	case 'groups':
 		$toolSection = "block_area_permissions_list";
-		$canViewPane = $cp->canAdmin();
+		$canViewPane = $ap->canEditAreaPermissions();
 		break;
 	case 'set_advanced_permissions':
 		$toolSection = "block_area_permissions";
-		$canViewPane = $cp->canAdmin();
+		$canViewPane = $ap->canEditAreaPermissions();
 		break;
 }
 

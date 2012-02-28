@@ -34,7 +34,7 @@ if (($_REQUEST['btask'] == 'add' || $_REQUEST['ctask'] == 'add') && $scrapbookNa
 			$b = Block::getByID($bi->getOriginalBlockID());
 		}
 		$ap = new Permissions($a);
-		if (!$ap->canRead()) {
+		if (!$ap->canViewArea()) {
 			exit;
 		}
 		$obj = &$b;
@@ -101,7 +101,7 @@ if (($_REQUEST['btask'] == 'add' || $_REQUEST['ctask'] == 'add') && $scrapbookNa
 			}
 			$a = Area::get($c, $_REQUEST['arHandle']);
 			$ap = new Permissions($a);
-			if (!$ap->canRead() || !$ap->canAddBlocks()) {
+			if (!$ap->canViewArea() || !$ap->canAddBlocks()) {
 				exit;
 			}
 			break;

@@ -9,7 +9,7 @@ class BlockPermissionKey extends PermissionKey {
 		'edit_block_custom_template' => 'edit_area_contents',
 		'edit_block_design' => 'edit_area_contents',
 		'edit_block_permissions' => 'edit_area_permissions',
-		'delete_block' => 'edit_area_contents'		
+		'delete_block' => 'delete_area_contents'		
 	);
 	protected $inheritedPagePermissions = array(
 		'view_block' => 'view_page',
@@ -94,7 +94,7 @@ class BlockPermissionKey extends PermissionKey {
 			// this is a page
 			$inheritedPKID = $db->GetOne('select pkID from PermissionKeys where pkHandle = ?', array($this->inheritedPagePermissions[$this->getPermissionKeyHandle()]));
 			$r = $db->Execute('select accessType, peID, 0 as pdID from PagePermissionAssignments where cID = ? and pkID = ? ' . $filterString, array(
-				$this->permissionObjectToCheck->getCollectionID(), $accessType, $inheritedPKID
+				$this->permissionObjectToCheck->getCollectionID(), $inheritedPKID
 			));
 		} else {
 			return array();
@@ -141,7 +141,9 @@ class BlockPermissionKey extends PermissionKey {
 	
 	public function removeAssignment(PermissionAccessEntity $pe) {
 		$db = Loader::db();
-		$db->Execute('delete from BlockPermissionAssignments where cID = ? and cvID = ? and bID = ? and arHandle = ? and peID = ?', array($co->getCollectionID(), $co->getVersionID(), $this->permissionObject->getBlockID(), $a->getAreaHandle(), $pe->getAccessEntityID()));
+		$co = $this->permissionObject->getBlockCollectionObject();
+		$arHandle = $this->permissionObject->getAreaHandle();
+		$db->Execute('delete from BlockPermissionAssignments where cID = ? and cvID = ? and bID = ? and arHandle = ? and peID = ? and pkID = ?', array($co->getCollectionID(), $co->getVersionID(), $this->permissionObject->getBlockID(), $arHandle, $pe->getAccessEntityID(), $this->getPermissionKeyID()));
 		
 	}
 	
