@@ -14,6 +14,7 @@ $canContinue = ($_REQUEST['btask'] == 'alias') ? $ap->canAddBlocks() : $ap->canA
 
 if (!$canContinue) {
 	print t('Access Denied');
+	exit;
 }
 	
 $c->loadVersionObject('RECENT');

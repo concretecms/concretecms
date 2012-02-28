@@ -50,20 +50,26 @@ class PermissionDuration extends Object {
 	public function getRepeatPeriodEveryNum() {return $this->pdRepeatEveryNum;}
 	public function getRepeatPeriodEnd() {return $this->pdRepeatPeriodEnd;}	
 	
+	public function isActive() {
+		$now = strtotime(Loader::helper('date')->getLocalDateTime());
+		if ($this->getStartDate() != '' && strtotime($this->getStartDate()) > $now) {
+			return false;
+		}
+		if ($this->getEndDate() != '' && strtotime($this->getEndDate()) < $now) {
+			return false;
+		}
+		
+		return true;
+	}
+
 	public static function filterByActive($list) {
 		$filteredList = array();
 		foreach($list as $l) { 
 			$pd = $l->getPermissionDurationObject();
 			if (is_object($pd)) { 
-				$now = strtotime(Loader::helper('date')->getLocalDateTime());
-				if ($pd->getStartDate() != '' && strtotime($pd->getStartDate()) > $now) {
-					continue;
+				if ($pd->isActive()) { 					
+					$filteredList[] = $l;
 				}
-				if ($pd->getEndDate() != '' && strtotime($pd->getEndDate()) < $now) {
-					continue;
-				}
-				
-				$filteredList[] = $l;
 			} else { 
 				$filteredList[] = $l;
 			}

@@ -104,45 +104,49 @@ class PageList extends DatabaseItemList {
 	 * Sets up a list to only return items the proper user can access 
 	 */
 	public function setupPermissions() {
+		
 		$u = new User();
 		if ($u->isSuperUser() || ($this->ignorePermissions)) {
 			return; // super user always sees everything. no need to limit
 		}
 		
-		$groups = $u->getUserGroups();
-		$groupIDs = array();
-		foreach($groups as $key => $value) {
-			$groupIDs[] = $key;
+		$accessEntities = $u->getUserAccessEntityObjects();
+		foreach($accessEntities as $pae) {
+			$peIDs[] = $pae->getAccessEntityID();
 		}
-		
-		$uID = -1;
-		if ($u->isRegistered()) {
-			$uID = $u->getUserID();
+		// now we retrieve a list of permission duration object IDs that are attached view_page or view_page_version
+		// against any of these access entity objects. We just get'em all.
+		$db = Loader::db();
+		$activePDIDs = array();
+		$vpPKID = $db->GetOne('select pkID from PermissionKeys where pkHandle = \'view_page\'');
+		$vpvPKID = $db->GetOne('select pkID from PermissionKeys where pkHandle = \'view_page_versions\'');
+		$pdIDs = $db->GetCol("select distinct pdID from PagePermissionAssignments where pkID in (?, ?) and pdID > 0", array($vpPKID, $vpvPKID));
+		if (count($pdIDs) > 0) {
+			// then we iterate through all of them and find any that are active RIGHT NOW
+			foreach($pdIDs as $pdID) {
+				$pd = PermissionDuration::getByID($pdID);
+				if ($pd->isActive()) {
+					$activePDIDs[] = $pd->getPermissionDurationID();	
+				}
+			}
 		}
-		
-		$date = Loader::helper('date')->getLocalDateTime();
-		
+		$activePDIDs[] = 0;
+
 		if ($this->includeAliases) {
 			$cInheritPermissionsFromCID = 'if(p2.cID is null, p1.cInheritPermissionsFromCID, p2.cInheritPermissionsFromCID)';
 		} else {
 			$cInheritPermissionsFromCID = 'p1.cInheritPermissionsFromCID';
 		}
-		if (PERMISSIONS_MODEL != 'simple') {
-			// support timed release
-			if ($this->displayOnlyApprovedPages) {
-				$cvIsApproved = ' and cv.cvIsApproved = 1';
-			}
-			$this->filter(false, "((select count(cID) from PagePermissions pp1 where pp1.cID = {$cInheritPermissionsFromCID} and
-				((pp1.cgPermissions like 'r%'" . $cvIsApproved . ") or (pp1.cgPermissions like '%rv%')) and (
-					(pp1.gID in (" . implode(',', $groupIDs) . ") or pp1.uID = {$uID})
-					and 
-						(pp1.cgStartDate is null or pp1.cgStartDate <= '{$date}')
-					and 
-						(pp1.cgEndDate is null or pp1.cgEndDate >= '{$date}')
-				)) > 0 or (p1.cPointerExternalLink !='' AND p1.cPointerExternalLink IS NOT NULL ))");
-		} else {
-			$this->filter(false, "(((select count(cID) from PagePermissions pp1 where pp1.cID = {$cInheritPermissionsFromCID} and pp1.cgPermissions like 'r%' and (pp1.gID in (" . implode(',', $groupIDs) . ") or pp1.uID = {$uID}))) > 0 or (p1.cPointerExternalLink !='' AND p1.cPointerExternalLink IS NOT NULL))");	
+
+		if ($this->displayOnlyApprovedPages) {
+			$cvIsApproved = ' and cv.cvIsApproved = 1';
 		}
+		
+		$this->filter(false, "((select count(cID) from PagePermissionAssignments ppa1 where ppa1.cID = {$cInheritPermissionsFromCID} and accessType = " . PermissionKey::ACCESS_TYPE_INCLUDE . " and pdID in (" . implode(',', $activePDIDs) . ")
+			and ppa1.peID in (" . implode(',', $peIDs) . ") and (ppa1.pkID = " . $vpPKID . $cvIsApproved . " or ppa1.pkID = " . $vpvPKID . ")) > 0
+			or (p1.cPointerExternalLink !='' AND p1.cPointerExternalLink IS NOT NULL))");
+		$this->filter(false, "((select count(cID) from PagePermissionAssignments ppaExclude where ppaExclude.cID = {$cInheritPermissionsFromCID} and accessType = " . PermissionKey::ACCESS_TYPE_EXCLUDE . " and pdID in (" . implode(',', $activePDIDs) . ")
+			and ppaExclude.peID in (" . implode(',', $peIDs) . ") and (ppaExclude.pkID = " . $vpPKID . $cvIsApproved . " or ppaExclude.pkID = " . $vpvPKID . ")) = 0)");		
 	}
 
 	public function sortByRelevance() {

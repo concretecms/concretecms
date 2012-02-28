@@ -7,6 +7,7 @@ class PagePermissionResponse extends PermissionResponse {
 	public function canReadVersions() { return $this->validate('view_page_versions');}
 	public function canRead() { return $this->validate('view_page');}
 	public function canAddSubContent() { return $this->validate('add_subpage');}
+	public function canAddSubpages() { return $this->validate('add_subpage');}
 	public function canDeleteCollection() { return $this->validate('delete_page');}
 	public function canApproveCollection() { return $this->validate('approve_page_versions');}
 	public function canAdminPage() { return $this->validate('edit_page_permissions');}
