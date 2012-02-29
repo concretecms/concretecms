@@ -7,7 +7,11 @@ $blockTypes = $btl->getBlockTypeList();
 ?>
 <? $form = Loader::helper('form'); ?>
 
-<form id="ccm-area-permissions-add-block-form" method="post" action="<?=$permissionKey->getPermissionKeyToolsURL()?>">
+<form id="ccm-area-permissions-add-block-form" onsubmit="return false" method="post" action="<?=$permissionKey->getPermissionKeyToolsURL()?>">
+
+<? if (count($included) > 0 || count($excluded) > 0) { ?>
+
+<div class="well clearfix">
 
 <? if (count($included) > 0) { ?>
 
@@ -62,10 +66,11 @@ $blockTypes = $btl->getBlockTypeList();
 
 } ?>
 
-<div class="dialog-buttons">
-	<input type="button" class="btn" onclick="jQuery.fn.dialog.closeTop()" value="<?=t('Cancel')?>" />
-	<input type="submit" class="btn primary ccm-button-right" onclick="$('#ccm-area-permissions-add-block-form').submit()" value="<?=t('Save')?>" />
+
+<input type="submit" class="btn primary ccm-button-right" onclick="$('#ccm-area-permissions-add-block-form').submit()" value="<?=t('Update Custom Settings')?>" />
 </div>
+
+<? } ?>
 
 </form>
 
