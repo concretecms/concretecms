@@ -64,14 +64,12 @@ switch($_GET['ctask']) {
 	case 'add_external':
 		$toolSection = "collection_add_external";
 		$divID = 'ccm-edit-collection-external';
-		$canViewPane = $cp->canWrite();
+		$canViewPane = $cp->canAddExternalLink();
 		break;
 	case 'edit_external':
 		$toolSection = "collection_edit_external";
 		$divID = 'ccm-edit-collection-external';
-		$cparent = Page::getByID($c->getCollectionParentID(), "RECENT");
-		$cparentP = new Permissions($cparent);
-		$canViewPane = $cparentP->canWrite();
+		$canViewPane = $cp->canEditPageProperties();
 		break;
 }
 

@@ -3,6 +3,26 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 class AddSubpagePagePermissionKey extends PagePermissionKey  {
 	
+	public function canAddExternalLink() {
+		$u = new User();
+		if ($u->isSuperUser()) {
+			return true;
+		}
+		
+		$accessEntities = $u->getUserAccessEntityObjects();
+		$list = $this->getAssignmentList(PagePermissionKey::ACCESS_TYPE_ALL, $accessEntities);
+		$canAddLinks = false;
+		foreach($list as $l) {
+			if ($l->allowExternalLinks() == '0') {
+				$canAddLinks = false;
+			}
+			if ($l->allowExternalLinks() == '1') {
+				$canAddLinks = true;
+			}
+		}
+		return $canAddLinks;
+	}
+	
 	public function validate($ct = false) {
 		$u = new User();
 		if ($u->isSuperUser()) {

@@ -478,14 +478,18 @@
 		
 		switch ($_REQUEST['ctask']) {
 			case 'delete':
-				if ($cp->canDeletePage() && $c->getCollectionID != '1' && (!$c->isMasterCollection())) {
+				if ($cp->canDeletePage() && $c->getCollectionID() != '1' && (!$c->isMasterCollection())) {
 					$children = $c->getNumChildren();
 					if ($children == 0 || $cp->canApprovePageVersions()) {
-						$parent = Page::getByID($c->getCollectionParentID());
-						$c->markPendingAction('DELETE', $parent);
-						if ($cp->canApprovePageVersions()) {
-							$cParentID = $c->getCollectionParentID();
-							$c->approvePendingAction();
+						if ($c->isExternalLink()) {
+							$c->delete();
+						} else { 
+							$parent = Page::getByID($c->getCollectionParentID());
+							$c->markPendingAction('DELETE', $parent);
+							if ($cp->canApprovePageVersions()) {
+								$cParentID = $c->getCollectionParentID();
+								$c->approvePendingAction();
+							}
 						}
 					}
 					$obj = new stdClass;
@@ -924,7 +928,9 @@
 				exit;
 			}	
 		} else if ($_POST['update_external']) {
-			if ($cp->canAddSubpage()) {
+			$parent = Page::getByID($c->getCollectionParentID());
+			$parentP = new Permissions($parent);
+			if ($parentP->canAddExternalLink()) {
 				$ncID = $c->updateCollectionAliasExternal($_POST['cName'], $_POST['cExternalLink'], $_POST['cExternalLinkNewWindow']);						
 				header('Location: ' . URL_SITEMAP);
 				exit;
@@ -1028,7 +1034,7 @@
 		} else if ($_POST['add_external']) { 
 			// adding a collection to a collection
 			Loader::model('collection_types');
-			if ($cp->canAddSubpage()) {
+			if ($cp->canAddExternalLink()) {
 				$ncID = $c->addCollectionAliasExternal($_POST['cName'], $_POST['cExternalLink'], $_POST['cExternalLinkNewWindow']);						
 				header('Location: ' . URL_SITEMAP);
 				exit;
