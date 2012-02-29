@@ -3,6 +3,9 @@ defined('C5_EXECUTE') or die("Access Denied.");
 $c = $a->getAreaCollectionObject();
 ?>
 <div class="ccm-ui" id="ccm-area-permissions-list">
+
+<? Loader::element('permission/message_list'); ?>
+
 <? $pk = AreaPermissionKey::getByID($_REQUEST['pkID']); ?>
 <? $pk->setPermissionObject($a); ?>
 <? $included = $pk->getAssignmentList(); ?>
@@ -27,7 +30,7 @@ ccm_addAccessEntity = function(peID, pdID, accessType) {
 	jQuery.fn.dialog.showLoader();
 	
 	$.get('<?=$pk->getPermissionKeyToolsURL("add_access_entity")?>&pdID=' + pdID + '&accessType=' + accessType + '&peID=' + peID, function() { 
-		$.get('<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_area_popup?atask=set_advanced_permissions&pkID=<?=$pk->getPermissionKeyID()?>&arHandle=<?=$a->getAreaHandle()?>&cID=<?=$c->getCollectionID()?>', function(r) { 
+		$.get('<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_area_popup?atask=set_advanced_permissions&message=entity_added&pkID=<?=$pk->getPermissionKeyID()?>&arHandle=<?=$a->getAreaHandle()?>&cID=<?=$c->getCollectionID()?>', function(r) { 
 			jQuery.fn.dialog.replaceTop(r);
 			jQuery.fn.dialog.hideLoader();
 		});
@@ -38,7 +41,7 @@ ccm_deleteAccessEntityAssignment = function(peID) {
 	jQuery.fn.dialog.showLoader();
 	
 	$.get('<?=$pk->getPermissionKeyToolsURL("remove_access_entity")?>&peID=' + peID, function() { 
-		$.get('<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_area_popup?atask=set_advanced_permissions&pkID=<?=$pk->getPermissionKeyID()?>&arHandle=<?=$a->getAreaHandle()?>&cID=<?=$c->getCollectionID()?>', function(r) { 
+		$.get('<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_area_popup?atask=set_advanced_permissions&message=entity_removed&pkID=<?=$pk->getPermissionKeyID()?>&arHandle=<?=$a->getAreaHandle()?>&cID=<?=$c->getCollectionID()?>', function(r) { 
 			jQuery.fn.dialog.replaceTop(r);
 			jQuery.fn.dialog.hideLoader();
 		});

@@ -5,7 +5,11 @@
 <? $pageTypes = CollectionType::getList(); ?>
 <? $form = Loader::helper('form'); ?>
 
-<form id="ccm-page-permissions-add-subpage-form" method="post" action="<?=$permissionKey->getPermissionKeyToolsURL()?>">
+<form id="ccm-page-permissions-add-subpage-form" onsubmit="return false" method="post" action="<?=$permissionKey->getPermissionKeyToolsURL()?>">
+
+<? if (count($included) > 0 || count($excluded) > 0) { ?>
+
+<div class="well clearfix">
 
 <? if (count($included) > 0) { ?>
 
@@ -60,10 +64,10 @@
 
 } ?>
 
-<div class="dialog-buttons">
-	<input type="button" class="btn" onclick="jQuery.fn.dialog.closeTop()" value="<?=t('Cancel')?>" />
-	<input type="submit" class="btn primary ccm-button-right" onclick="$('#ccm-page-permissions-add-subpage-form').submit()" value="<?=t('Save')?>" />
+<input type="submit" class="btn primary ccm-button-right" onclick="$('#ccm-page-permissions-add-subpage-form').submit()" value="<?=t('Update Custom Settings')?>" />
 </div>
+
+<? } ?>
 
 </form>
 

@@ -46,7 +46,7 @@ foreach($permissions as $pk) {
 
 ?>
 	<tr>
-	<td style="white-space: nowrap"><strong><? if ($enablePermissions) { ?><a dialog-width="500" dialog-height="380" class="dialog-launch" dialog-title="<?=t('Permissions')?>" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_area_popup?arHandle=<?=$a->getAreaHandle()?>&cID=<?=$c->getCollectionID()?>&atask=set_advanced_permissions&pkID=<?=$pk->getPermissionKeyID()?>"><? } ?><?=$pk->getPermissionKeyName()?><? if ($enablePermissions) { ?></a><? } ?></strong></td>
+	<td style="white-space: nowrap"><strong><? if ($enablePermissions) { ?><a dialog-width="500" dialog-height="430" class="dialog-launch" dialog-title="<?=t('Permissions')?>" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_area_popup?arHandle=<?=$a->getAreaHandle()?>&cID=<?=$c->getCollectionID()?>&atask=set_advanced_permissions&pkID=<?=$pk->getPermissionKeyID()?>"><? } ?><?=$pk->getPermissionKeyName()?><? if ($enablePermissions) { ?></a><? } ?></strong></td>
 	<td width="100%">
 	<?
 	$included = $pk->getAssignmentList(AreaPermissionKey::ACCESS_TYPE_INCLUDE);

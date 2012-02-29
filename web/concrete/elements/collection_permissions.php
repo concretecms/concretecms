@@ -21,6 +21,9 @@ if ($cp->canEditPagePermissions()) {
 }
 ?>
 <div class="ccm-ui" id="ccm-page-permissions-list">
+
+<? Loader::element('permission/message_list'); ?>
+
 <? $pk = PagePermissionKey::getByID($_REQUEST['pkID']);
 $pk->setPermissionObject($c);
 ?>
@@ -47,7 +50,7 @@ ccm_addAccessEntity = function(peID, pdID, accessType) {
 	
 	$.get('<?=$pk->getPermissionKeyToolsURL("add_access_entity")?>&pdID=' + pdID + '&accessType=' + accessType + '&peID=' + peID, function(r) { 
 		console.log(r);
-		$.get('<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_collection_popup?ctask=set_advanced_permissions&pkID=<?=$pk->getPermissionKeyID()?>&cID=<?=$c->getCollectionID()?>', function(r) { 
+		$.get('<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_collection_popup?ctask=set_advanced_permissions&message=entity_added&pkID=<?=$pk->getPermissionKeyID()?>&cID=<?=$c->getCollectionID()?>', function(r) { 
 			jQuery.fn.dialog.replaceTop(r);
 			jQuery.fn.dialog.hideLoader();
 		});
@@ -58,7 +61,7 @@ ccm_deleteAccessEntityAssignment = function(peID) {
 	jQuery.fn.dialog.showLoader();
 	
 	$.get('<?=$pk->getPermissionKeyToolsURL("remove_access_entity")?>&peID=' + peID, function() { 
-		$.get('<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_collection_popup?ctask=set_advanced_permissions&pkID=<?=$pk->getPermissionKeyID()?>&cID=<?=$c->getCollectionID()?>', function(r) { 
+		$.get('<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_collection_popup?ctask=set_advanced_permissions&message=entity_removed&pkID=<?=$pk->getPermissionKeyID()?>&cID=<?=$c->getCollectionID()?>', function(r) { 
 			jQuery.fn.dialog.replaceTop(r);
 			jQuery.fn.dialog.hideLoader();
 		});
