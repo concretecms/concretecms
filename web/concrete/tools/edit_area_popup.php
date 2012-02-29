@@ -62,11 +62,11 @@ switch($_GET['atask']) {
 		}		
 		break;
 	case 'groups':
-		$toolSection = "block_area_permissions_list";
+		$toolSection = "permission/lists/area";
 		$canViewPane = $ap->canEditAreaPermissions();
 		break;
 	case 'set_advanced_permissions':
-		$toolSection = "block_area_permissions";
+		$toolSection = "permission/details/area";
 		$canViewPane = $ap->canEditAreaPermissions();
 		break;
 }

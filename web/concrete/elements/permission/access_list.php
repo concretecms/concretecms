@@ -4,7 +4,7 @@ if (!$accessType) {
 	$accessType = PermissionKey::ACCESS_TYPE_INCLUDE;
 }
 ?>
-<table class="zebra-striped ccm-permission-access-list">
+<table class="ccm-permission-access-list">
 <tr>
 	<th colspan="3">
 		<div style="position: relative">
