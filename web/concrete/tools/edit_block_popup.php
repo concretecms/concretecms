@@ -123,12 +123,12 @@ if (is_object($b)) {
 			break;
 		case 'groups':
 			if ($bp->canEditBlockPermissions()) {
-				$bv->renderElement('block_permissions_list', array('b' => $b, 'rcID'=>$rcID));
+				$bv->renderElement('permission/lists/block', array('b' => $b, 'rcID'=>$rcID));
 			}
 			break;
 		case 'set_advanced_permissions':
 			if ($bp->canEditBlockPermissions()) {
-				$bv->renderElement('block_permissions', array('b' => $b, 'rcID'=>$rcID));
+				$bv->renderElement('permission/details/block', array('b' => $b, 'rcID'=>$rcID));
 			}
 			break;
 		case 'child_pages':

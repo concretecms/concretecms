@@ -61,12 +61,42 @@ foreach($permissions as $pk) {
 
 </div>
 
+<div id="ccm-page-permissions-confirm-dialog" style="display: none">
+<?=t('Changing this setting will affect this page immediately. Are you sure?')?>
+<div id="dialog-buttons-start">
+	<input type="button" class="btn" value="Cancel" onclick="jQuery.fn.dialog.closeTop()" />
+	<input type="button" class="btn error ccm-button-right" value="Ok" onclick="ccm_pagePermissionsConfirmInheritanceChange()" />
+</div>
+</div>
+
 <script type="text/javascript">
+var inheritanceVal = '';
+
+ccm_pagePermissionsCancelInheritance = function() {
+	$('#ccm-page-permissions-inherit').val(inheritanceVal);
+}
+
+ccm_pagePermissionsConfirmInheritanceChange = function() { 
+	jQuery.fn.dialog.showLoader();
+	$.get('<?=$pk->getPermissionKeyToolsURL("change_permission_inheritance")?>&cID=<?=$c->getCollectionID()?>&mode=' + $('#ccm-page-permissions-inherit').val(), function() { 
+		jQuery.fn.dialog.closeTop();
+		ccm_refreshPagePermissions();
+	});
+}
+
+
 $(function() {
+	inheritanceVal = $('#ccm-page-permissions-inherit').val();
 	$('#ccm-page-permissions-inherit').change(function() {
-		jQuery.fn.dialog.showLoader();
-		$.get('<?=$pk->getPermissionKeyToolsURL("change_permission_inheritance")?>&cID=<?=$c->getCollectionID()?>&mode=' + $(this).val(), function() { 
-			ccm_refreshPagePermissions();
+		$('#dialog-buttons-start').addClass('dialog-buttons');
+		jQuery.fn.dialog.open({
+			element: '#ccm-page-permissions-confirm-dialog',
+			title: '<?=t("Confirm Change")?>',
+			width: 280,
+			height: 100,
+			onClose: function() {
+				ccm_pagePermissionsCancelInheritance();
+			}
 		});
 	});
 	
