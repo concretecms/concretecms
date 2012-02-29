@@ -80,6 +80,7 @@ class ConcreteDashboardSitemapHelper {
 		$canViewPageVersions = $cp->canViewPageVersions();
 		$canDeletePage = $cp->canDeletePage();
 		$canAddSubpages = $cp->canAddSubpage();
+		$canAddExternalLinks = $cp->canAddExternalLink();
 		
 		$nodeOpen = false;
 		if (is_array($_SESSION['dsbSitemapNodes'])) {
@@ -141,6 +142,7 @@ class ConcreteDashboardSitemapHelper {
 			'canViewPageVersions'=>$canViewPageVersions,
 			'canDeletePage'=>$canDeletePage,
 			'canAddSubpages'=>$canAddSubpages,
+			'canAddExternalLinks'=>$canAddExternalLinks,
 			'canCompose' => $canCompose,
 			'id'=>$cID,
 			'selected'=>$selected
@@ -223,6 +225,9 @@ class ConcreteDashboardSitemapHelper {
 		}
 		if ($obj['canAddSubpages']) {
 			$str .= 'tree-node-can-add-subpages="true" ';
+		}
+		if ($obj['canAddExternalLinks']) {
+			$str .= 'tree-node-can-add-external-links="true" ';
 		}
 		return $str;
 	}
