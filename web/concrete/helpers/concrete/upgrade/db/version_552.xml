@@ -143,7 +143,12 @@
       <NOTNULL/>
       <DEFAULT value="1"/>
     </field>
-  </table>
+    <field name="externalLink" type="I" size="1">
+      <UNSIGNED/>
+      <default value="0" />
+    </field>
+</table>
+
   <table name="PagePermissionPageTypeAssignmentsCustom">
     <field name="cID" type="I" size="10">
       <KEY/>

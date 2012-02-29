@@ -42,15 +42,23 @@ class AddSubpagePagePermissionKey extends PagePermissionKey  {
 		$db->Execute('delete from PagePermissionPageTypeAssignmentsCustom where cID = ?', array($this->permissionObject->getCollectionID()));
 		if (is_array($args['pageTypesIncluded'])) { 
 			foreach($args['pageTypesIncluded'] as $peID => $permission) {
-				$v = array($this->permissionObject->getCollectionID(), $peID, $permission);
-				$db->Execute('insert into PagePermissionPageTypeAssignments (cID, peID, permission) values (?, ?, ?)', $v);
+				$ext = 0;
+				if (!empty($args['allowExternalLinksIncluded'][$peID])) {
+					$ext = $args['allowExternalLinksIncluded'][$peID];
+				}
+				$v = array($this->permissionObject->getCollectionID(), $peID, $permission, $ext);
+				$db->Execute('insert into PagePermissionPageTypeAssignments (cID, peID, permission, externalLink) values (?, ?, ?, ?)', $v);
 			}
 		}
 		
 		if (is_array($args['pageTypesExcluded'])) { 
 			foreach($args['pageTypesExcluded'] as $peID => $permission) {
-				$v = array($this->permissionObject->getCollectionID(), $peID, $permission);
-				$db->Execute('insert into PagePermissionPageTypeAssignments (cID, peID, permission) values (?, ?, ?)', $v);
+				$ext = 0;
+				if (!empty($args['allowExternalLinksExcluded'][$peID])) {
+					$ext = $args['allowExternalLinksExcluded'][$peID];
+				}
+				$v = array($this->permissionObject->getCollectionID(), $peID, $permission, $ext);
+				$db->Execute('insert into PagePermissionPageTypeAssignments (cID, peID, permission, externalLink) values (?, ?, ?, ?)', $v);
 			}
 		}
 
@@ -81,11 +89,14 @@ class AddSubpagePagePermissionKey extends PagePermissionKey  {
 		$list = PermissionDuration::filterByActive($list);
 		foreach($list as $l) {
 			$pe = $l->getAccessEntityObject();
-			$permission = $db->GetOne('select permission from PagePermissionPageTypeAssignments where peID = ?', array($pe->getAccessEntityID()));
-			if ($permission === '0' || $permission == 'C') {
-				$l->setPageTypesAllowedPermission($permission);
-			} else { 
-				$l->setPageTypesAllowedPermission('1');
+			$prow = $db->GetRow('select permission, externalLink from PagePermissionPageTypeAssignments where peID = ?', array($pe->getAccessEntityID()));
+			if (is_array($prow) && isset($prow['permission'])) { 
+				$l->setPageTypesAllowedPermission($prow['permission']);
+				$l->setAllowExternalLinks($prow['externalLink']);
+				$permission = $prow['permission'];
+			} else {
+				$l->setPageTypesAllowedPermission(1);
+				$l->setAllowExternalLinks(1);
 			}
 			if ($permission == 'C') { 
 				$ctIDs = $db->GetCol('select ctID from PagePermissionPageTypeAssignmentsCustom where peID = ?', array($pe->getAccessEntityID()));
@@ -101,6 +112,7 @@ class AddSubpagePagePermissionAssignment extends PagePermissionAssignment {
 	
 	protected $customPageTypeArray = array();
 	protected $pageTypesAllowedPermission = 0;
+	protected $allowExternalLinks = 0;
 
 	public function setPageTypesAllowedPermission($permission) {
 		$this->pageTypesAllowedPermission = $permission;
@@ -113,6 +125,14 @@ class AddSubpagePagePermissionAssignment extends PagePermissionAssignment {
 	}
 	public function getPageTypesAllowedArray() {
 		return $this->customPageTypeArray;
+	}
+	
+	public function setAllowExternalLinks($allow) {
+		$this->allowExternalLinks = $allow;
+	}
+	
+	public function allowExternalLinks() {
+		return $this->allowExternalLinks;
 	}
 	
 	
