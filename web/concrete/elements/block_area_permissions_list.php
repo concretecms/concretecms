@@ -38,7 +38,11 @@ if ($a->getAreaCollectionInheritID() != $c->getCollectionID() && $a->getAreaColl
 	</div>
 
 <? } ?>
-<table>
+
+<?=Loader::element('permission/help');?>
+
+<table class="ccm-permission-grid">
+
 <?
 $permissions = PermissionKey::getList('area');
 foreach($permissions as $pk) { 
@@ -46,65 +50,35 @@ foreach($permissions as $pk) {
 
 ?>
 	<tr>
-	<td style="white-space: nowrap"><strong><? if ($enablePermissions) { ?><a dialog-width="500" dialog-height="430" class="dialog-launch" dialog-title="<?=t('Permissions')?>" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_area_popup?arHandle=<?=$a->getAreaHandle()?>&cID=<?=$c->getCollectionID()?>&atask=set_advanced_permissions&pkID=<?=$pk->getPermissionKeyID()?>"><? } ?><?=$pk->getPermissionKeyName()?><? if ($enablePermissions) { ?></a><? } ?></strong></td>
-	<td width="100%">
-	<?
-	$included = $pk->getAssignmentList(AreaPermissionKey::ACCESS_TYPE_INCLUDE);
-	$excluded = $pk->getAssignmentList(AreaPermissionKey::ACCESS_TYPE_EXCLUDE);
-	
-	$includedStr = t('None');
-	$excludedStr = t('None');
-	if (count($included) > 0) {
-		$includedStr = '';
-		for ($i = 0; $i < count($included); $i++) { 
-			$as = $included[$i];
-			$entity = $as->getAccessEntityObject();
-			$includedStr .= $entity->getAccessEntityLabel();
-			if ($i + 1 < count($included)) {
-				$includedStr .= ', ';
-			}
-		}
-	}
-	if (count($excluded) > 0) {
-		$excludedStr = '';
-		for ($i = 0; $i < count($excluded); $i++) { 
-			$as = $excluded[$i];
-			$entity = $as->getAccessEntityObject();
-			$excludedStr .= $entity->getAccessEntityLabel();
-			if ($i + 1 < count($excluded)) {
-				$excludedStr .= ', ';
-			}
-		}
-	}
-	
-	?>
-	
-	
-	<?=t('Included: %s.', $includedStr)?> <?=t('Excluded: %s', $excludedStr)?>
-	</td></tr>
+	<td class="ccm-permission-grid-name"><strong><? if ($enablePermissions) { ?><a dialog-width="500" dialog-height="430" dialog-on-destroy="ccm_refreshAreaPermissions()" class="dialog-launch" dialog-title="<?=t('Permissions')?>" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_area_popup?arHandle=<?=$a->getAreaHandle()?>&cID=<?=$c->getCollectionID()?>&atask=set_advanced_permissions&pkID=<?=$pk->getPermissionKeyID()?>"><? } ?><?=$pk->getPermissionKeyName()?><? if ($enablePermissions) { ?></a><? } ?></strong></td>
+	<td><?=Loader::element('permission/labels', array('pk' => $pk))?></td>
+</tr>
 <? } ?>
-</tr></table>
+</table>
 </div>
 
 <script type="text/javascript">
 ccm_revertToPagePermissions = function() {
 	jQuery.fn.dialog.showLoader();
 	$.get('<?=$pk->getPermissionKeyToolsURL("revert_to_page_permissions")?>&arHandle=<?=urlencode($a->getAreaHandle())?>&cID=<?=$c->getCollectionID()?>', function() { 
-		$.get('<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_area_popup?atask=groups&arHandle=<?=urlencode($a->getAreaHandle())?>&cID=<?=$c->getCollectionID()?>', function(r) { 
-			jQuery.fn.dialog.replaceTop(r);
-			jQuery.fn.dialog.hideLoader();
-		});
+		ccm_refreshAreaPermissions();
 	});
 }
 
 ccm_setAreaPermissionsToOverride = function() {
 	jQuery.fn.dialog.showLoader();
 	$.get('<?=$pk->getPermissionKeyToolsURL("override_page_permissions")?>&arHandle=<?=urlencode($a->getAreaHandle())?>&cID=<?=$c->getCollectionID()?>', function() { 
-		$.get('<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_area_popup?atask=groups&arHandle=<?=urlencode($a->getAreaHandle())?>&cID=<?=$c->getCollectionID()?>', function(r) { 
-			jQuery.fn.dialog.replaceTop(r);
-			jQuery.fn.dialog.hideLoader();
-		});
+		ccm_refreshAreaPermissions();
 	});
 }
+
+ccm_refreshAreaPermissions = function() {
+	jQuery.fn.dialog.showLoader();
+	$.get('<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_area_popup?atask=groups&arHandle=<?=urlencode($a->getAreaHandle())?>&cID=<?=$c->getCollectionID()?>', function(r) { 
+		jQuery.fn.dialog.replaceTop(r);
+		jQuery.fn.dialog.hideLoader();
+	});
+}
+
 
 </script>
