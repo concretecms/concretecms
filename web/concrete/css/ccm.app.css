@@ -746,6 +746,9 @@ div.ccm-editor-controls ul li a:hover{text-decoration:underline;}
 div.ccm-summary-selected-item{border:1px solid #dedede;margin-top:8px;margin-bottom:8px;padding:10px;}
 .ccm-button-v2-left{margin-right:8px;}
 .ccm-button-v2-right{float:right;margin-left:8px;}
+table.ccm-permission-grid{border:0px;}
+table.ccm-permission-grid td.ccm-permission-grid-name{text-align:right;width:auto;white-space:nowrap;}
+table.ccm-permission-grid td{width:100%;border-left:0px !important;border-right:0px !important;}
 div.ccm-block-field-group{margin-bottom:10px;border-bottom:1px dotted #aaa;padding-bottom:10px;}
 roudiv.ccm-block-field-group h2{margin-bottom:6px;}
 ul#ccm-block-type-list{padding:2px 0px 0px 0px;margin:0px 0px 16px 0px;}
