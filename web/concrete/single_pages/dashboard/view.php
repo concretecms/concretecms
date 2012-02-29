@@ -68,7 +68,7 @@ for ($i = 0; $i < count($categories); $i++) {
 
 	$settingsPage = Page::getByPath('/dashboard/system');
 	$settingsPageP = new Permissions($settingsPage);
-	if ($newsPageP->canRead()) { ?>
+	if ($settingsPageP->canRead()) { ?>
 		<div><a href="<?=Loader::helper('navigation')->getLinkToCollection($settingsPage, false, true)?>"><strong><?=t('System &amp; Settings')?></strong></a> - <?=t('Secure and setup your site.')?></div>
 	<? }
 	
