@@ -1772,35 +1772,8 @@ class Page extends Collection {
 		
 		// now with any specific permissions - but only if this collection is set to override
 		if ($this->getCollectionInheritance() == 'OVERRIDE') {
-			$q = "select cID, gID, uID, cgPermissions, cgStartDate, cgEndDate from PagePermissions where cID = '{$this->cID}'";
-			$r = $db->query($q);
-			while ($row = $r->fetchRow()) {
-				$vp = array($newCID, $row['gID'], $row['uID'], $row['cgPermissions'], $row['cgStartDate'], $row['cgEndDate']);
-				$qp = "insert into PagePermissions (cID, gID, uID, cgPermissions, cgStartDate, cgEndDate) values (?, ?, ?, ?, ?, ?)";
-				$db->query($qp, $vp);
-			}
-			$q = "select cID, gID, uID, ctID from PagePermissionPageTypes where cID = '{$this->cID}'";
-			$r = $db->query($q);
-			while ($row = $r->fetchRow()) {
-				$vp = array($newCID, $row['gID'], $row['uID'], $row['ctID']);
-				$qp = "insert into PagePermissionPageTypes (cID, gID, uID, ctID) values (?, ?, ?, ?)";
-				$db->query($qp, $vp);
-			}
-			$q = "select cID, arHandle, gID, uID, agPermissions from AreaGroups where cID = '{$this->cID}'";
-			$r = $db->query($q);
-			while($row = $r->fetchRow()) {
-				$v = array($this->cID, $row['arHandle'], $row['gID'], $row['uID'], $row['agPermissions']);
-				$q = "insert into AreaGroups (cID, arHandle, gID, uID, agPermissions) values (?, ?, ?, ?, ?)";
-				$db->query($q, $v);
-			}
-
-			$q = "select cID, arHandle, gID, uID, btID from AreaGroupBlockTypes where cID = '{$this->cID}'";
-			$r = $db->query($q);
-			while($row = $r->fetchRow()) {
-				$v = array($this->cID, $row['arHandle'], $row['gID'], $row['uID'], $row['btID']);
-				$q = "insert into AreaGroupBlockTypes (cID, arHandle, gID, uID, btID) values (?, ?, ?, ?, ?)";
-				$db->query($q, $v);
-			}
+			$newC->acquirePagePermissions($this->getPermissionsCollectionID());
+			$newC->acquireAreaPermissions($this->getPermissionsCollectionID());
 		} else if ($this->getCollectionInheritance() == "PARENT") {
 			// we need to clear out any lingering permissions groups (just in case), and set this collection to inherit from the parent
 			$npID = $nc->getPermissionsCollectionID();
@@ -1865,7 +1838,13 @@ class Page extends Collection {
 		// Update cChildren for cParentID
 		PageStatistics::decrementParents($cID);
 		
-		$q = "delete from PagePermissions where cID = '{$cID}'";
+		$q = "delete from PagePermissionAssignments where cID = '{$cID}'";
+		$r = $db->query($q);
+
+		$q = "delete from PagePermissionPageTypeAssignments where cID = '{$cID}'";
+		$r = $db->query($q);
+
+		$q = "delete from PagePermissionPageTypeAssignmentsCustom where cID = '{$cID}'";
 		$r = $db->query($q);
 
 		$q = "delete from Pages where cID = '{$cID}'";

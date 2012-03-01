@@ -933,12 +933,12 @@ defined('C5_EXECUTE') or die("Access Denied.");
 					$q = "insert into CollectionVersionBlocks (cID, cvID, bID, arHandle, cbDisplayOrder, isOriginal, cbOverrideAreaPermissions, cbIncludeAll) values (?, ?, ?, ?, ?, ?, ?, ?)";
 					$db->query($q, $v);
 					if ($row['cbOverrideAreaPermissions'] != 0) {
-						$q2 = "select gID, uID, cbgPermissions from CollectionVersionBlockPermissions where cID = '{$this->cID}' and bID = '{$row['bID']}' and cvID = '{$row['cvID']}'";
+						$q2 = "select peID, pdID, accessType, pkID from BlockPermissionAssignments where cID = '{$this->cID}' and bID = '{$row['bID']}' and cvID = '{$row['cvID']}'";
 						$r2 = $db->query($q2);
 						while ($row2 = $r2->fetchRow()) {
-							$db->Replace('CollectionVersionBlockPermissions', 
-								array('cID' => $newCID, 'cvID' => $row['cvID'], 'bID' => $row['bID'], 'gID' => $row2['gID'], 'uID' => $row2['uID'], 'cbgPermissions' => $row2['cbgPermissions']),
-								array('cID', 'cvID', 'bID', 'gID', 'uID'), true);
+							$db->Replace('BlockPermissionAssignments', 
+								array('cID' => $newCID, 'cvID' => $row['cvID'], 'bID' => $row['bID'], 'peID' => $row2['peID'], 'pdID' => $row2['pdID'], 'accessType' => $row2['accessType'], 'pkID' => $row2['pkID']),
+								array('cID', 'cvID', 'bID', 'peID', 'pkID'), true);
 						}
 					}
 				}

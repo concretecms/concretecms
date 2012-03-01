@@ -260,9 +260,10 @@ class Block extends Object {
 		$c = $this->getBlockCollectionObject();
 
 		$db = Loader::db();
-		$v = array($c->getCollectionID(), $c->getVersionID(), $this->bID, $this->arHandle);
+		$v = array($c->getCollectionID(), $c->getVersionID(), $this->bID);
 
-		$db->query("delete from BlockPermissionAssignments where cID = ? and cvID = ? and bID = ? and arHandle = ?", $v);
+		$db->query("delete from BlockPermissionAssignments where cID = ? and cvID = ? and bID = ?", $v);
+		$v[] = $this->arHandle;
 		$db->query("update CollectionVersionBlocks set cbOverrideAreaPermissions = 0 where cID = ? and (cvID = ? or cbIncludeAll=1) and bID = ? and arHandle = ?", $v);
 		$this->refreshCache();
 	 }
@@ -466,14 +467,14 @@ class Block extends Object {
 				$ocID = $oc->getCollectionID();
 				$ocvID = $oc->getVersionID();
 
-				$qa = "select gID, uID, cbgPermissions from CollectionVersionBlockPermissions where bID = '{$this->bID}' and cID = '$ocID' and cvID='{$ocvID}'";
+				$qa = "select peID, pdID, pkID, accessType from BlockPermissionAssignments where bID = '{$this->bID}' and cID = '$ocID' and cvID='{$ocvID}'";
 				$ra = $db->query($qa);
 
 				if ($ra) {
 					while ($row_a = $ra->fetchRow()) {
-						$db->Replace('CollectionVersionBlockPermissions', 
-							array('cID' => $cID, 'cvID' => $cvID, 'bID' => $this->bID, 'gID' => $row_a['gID'], 'uID' => $row_a['uID'], 'cbgPermissions' => $row_a['cbgPermissions']),
-							array('cID', 'cvID', 'bID', 'gID', 'uID'), true);
+						$db->Replace('BlockPermissionAssignments', 
+							array('cID' => $cID, 'cvID' => $cvID, 'bID' => $this->bID, 'peID' => $row_a['peID'], 'pdID' => $row_a['pdID'], 'pkID' => $row_a['pkID'], 'accessType' => $row_a['accessType']),
+							array('cID', 'cvID', 'bID', 'peID', 'pkID'), true);
 					}
 					$ra->free();
 				}
@@ -523,13 +524,13 @@ class Block extends Object {
 		$ncID = $nc->getCollectionID();
 		$nvID = $nc->getVersionID();
 
-		$q = "select gID, uID, cbgPermissions from CollectionVersionBlockPermissions where cID = '$ocID' and bID = '{$this->bID}' and cvID = '{$ovID}'";
+		$q = "select peID, pdID, pkID, accessType from BlockPermissionAssignments where cID = '$ocID' and bID = '{$this->bID}' and cvID = '{$ovID}'";
 		$r = $db->query($q);
 		if ($r) {
 			while ($row = $r->fetchRow()) {
-				$db->Replace('CollectionVersionBlockPermissions', 
-					array('cID' => $ncID, 'cvID' => $nvID, 'bID' => $newBID, 'gID' => $row['gID'], 'uID' => $row['uID'], 'cbgPermissions' => $row['cbgPermissions']),
-					array('cID', 'cvID', 'bID', 'gID', 'uID'), true);
+				$db->Replace('BlockPermissionAssignments', 
+					array('cID' => $ncID, 'cvID' => $nvID, 'bID' => $newBID, 'peID' => $row['peID'], 'pdID' => $row['pdID'], 'pkID' => $row['pkID'], 'accessType' => $row['accessType']),
+					array('cID', 'cvID', 'bID', 'peID', 'pkID'), true);
 
 			}
 			$r->free();
@@ -850,7 +851,7 @@ class Block extends Object {
 			$q = "delete from ComposerContentLayout where bID = '$bID'";
 			$r = $db->query($q);
 
-			$q = "delete from CollectionVersionBlockPermissions where bID = '$bID'";
+			$q = "delete from BlockPermissionAssignments where bID = '$bID'";
 			$r = $db->query($q);
 			
 			$q = "delete from CollectionVersionBlockStyles where bID = ".intval($bID);
@@ -861,7 +862,7 @@ class Block extends Object {
 			$r = $db->query($q);
 
 			// next, we delete the groups instance of this block
-			$q = "delete from CollectionVersionBlockPermissions where bID = '$bID' and cvID = '$cvID' and cID = '$cID'";
+			$q = "delete from BlockPermissionAssignments where bID = '$bID' and cvID = '$cvID' and cID = '$cID'";
 			$r = $db->query($q);
 			
 			$q = "delete from CollectionVersionBlockStyles where cID = '$cID' and cvID = '$cvID' and bID = '$bID' and arHandle = '$arHandle'";
