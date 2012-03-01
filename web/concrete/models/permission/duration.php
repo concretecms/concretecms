@@ -73,6 +73,9 @@ class PermissionDuration extends Object {
 					if (($numDays % $this->getRepeatPeriodEveryNum()) == 0) {
 						if ($now >= $dailyTimeStart && $now <= $dailyTimeEnd) {
 							$isActive = true;
+							if ($this->getRepeatPeriodEnd() != '' && strtotime($ymd) > strtotime($this->getRepeatPeriodEnd())) {
+								$isActive = false;
+							}
 						}
 					}
 					break;
@@ -85,6 +88,9 @@ class PermissionDuration extends Object {
 						if (in_array($dow, $days)) { 
 							if ($now >= $dailyTimeStart && $now <= $dailyTimeEnd) {
 								$isActive = true;
+								if ($this->getRepeatPeriodEnd() != '' && strtotime($ymd) > strtotime($this->getRepeatPeriodEnd())) {
+									$isActive = false;
+								}
 							}
 						}
 					}
@@ -113,6 +119,9 @@ class PermissionDuration extends Object {
 						if ($checkTime) {
 							if ($now >= $dailyTimeStart && $now <= $dailyTimeEnd) {
 								$isActive = true;
+								if ($this->getRepeatPeriodEnd() != '' && strtotime($ymd) > strtotime($this->getRepeatPeriodEnd())) {
+									$isActive = false;
+								}
 							}
 						}
 					}

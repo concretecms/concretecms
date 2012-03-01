@@ -209,6 +209,7 @@ $(function() {
 		}});
 		
 		$("#ccm-toolbar-nav-properties").dialog();
+		$("#ccm-toolbar-nav-preview-as-user").dialog();
 		$("#ccm-toolbar-add-subpage").dialog();
 		$("#ccm-toolbar-nav-versions").dialog();
 		$("#ccm-toolbar-nav-design").dialog();

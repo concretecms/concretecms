@@ -69,6 +69,11 @@ foreach($permissions as $pk) {
 </div>
 </div>
 
+
+</form>
+</div>
+
+
 <script type="text/javascript">
 var inheritanceVal = '';
 

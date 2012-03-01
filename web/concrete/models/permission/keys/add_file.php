@@ -109,7 +109,7 @@ class AddFileFileSetPermissionKey extends FileSetPermissionKey  {
 	*/	
 }
 
-class AddBlockAreaPermissionAssignment extends AreaPermissionAssignment {
+class AddFileFileSetPermissionAssignment extends FileSetPermissionAssignment {
 	
 	protected $customBlockTypeArray = array();
 	protected $blockTypesAllowedPermission = 0;
