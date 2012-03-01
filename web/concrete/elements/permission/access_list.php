@@ -1,9 +1,10 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?>
-<?
-if (!$accessType) {
-	$accessType = PermissionKey::ACCESS_TYPE_INCLUDE;
-}
-?>
+
+<? foreach($accessTypes as $accessType => $title) { 
+	$list = $permissionKey->getAssignmentList($accessType); 
+	?>
+	<h3><?=$title?></h3>
+
 <table class="ccm-permission-access-list">
 <tr>
 	<th colspan="3">
@@ -41,3 +42,5 @@ if (!$accessType) {
 
 </table>
 
+
+<? } ?>

@@ -1,42 +1,33 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?>
 <?
-$included = $pk->getAssignmentList(PagePermissionKey::ACCESS_TYPE_INCLUDE);
-$excluded = $pk->getAssignmentList(PagePermissionKey::ACCESS_TYPE_EXCLUDE);
+$assignments = $pk->getAssignmentList(PagePermissionKey::ACCESS_TYPE_ALL);
 
-$excludedStr = '';
-$includedStr = '';
-$timeStr = '';
+$str = '';
 
-if (count($included) > 0) {
-	for ($i = 0; $i < count($included); $i++) { 
+if (count($assignments) > 0) {
+	for ($i = 0; $i < count($assignments); $i++) { 
 		$class = '';
-		$as = $included[$i];
+		$as = $assignments[$i];
 		$entity = $as->getAccessEntityObject();
 		$pd = $as->getPermissionDurationObject();
-		if (is_object($pd)) {
-			$class = 'notice';
+		if ($as->getAccessType() == PermissionKey::ACCESS_TYPE_EXCLUDE) {
+			if (is_object($pd)) {
+				$class = 'warning';
+			} else {
+				$class = 'important';
+			}
+		} else { 
+			if (is_object($pd)) {
+				$class = 'notice';
+			}
 		}
-		$includedStr .= '<span class="label ' . $class . '">' . $entity->getAccessEntityLabel() . '</span> ';
-	}
-}
-if (count($excluded) > 0) {
-	for ($i = 0; $i < count($excluded); $i++) { 
-		$class = '';
-		$as = $excluded[$i];
-		$entity = $as->getAccessEntityObject();
-		$pd = $as->getPermissionDurationObject();
-		if (is_object($pd)) {
-			$class = 'warning';
-		} else {
-			$class = 'important';
-		}
-		$excludedStr .= '<span class="label ' . $class . '">' . $entity->getAccessEntityLabel() . '</span> ';
+		$str .= '<span class="label ' . $class . '">' . $entity->getAccessEntityLabel() . '</span> ';
 	}
 }
 
 ?>
-<? if (!$includedStr && !$excludedStr) { ?>
+<? if (!$str) { ?>
 	<span style="color: #ccc"><?=t('None')?>
 <? } else { ?>
-	<?=$includedStr?> <?=$excludedStr?>
+	<?=$str?>
 <? } ?>

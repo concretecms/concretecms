@@ -3,9 +3,17 @@ defined('C5_EXECUTE') or die("Access Denied.");
 abstract class PermissionKey extends Object {
 	
 
-	const ACCESS_TYPE_INCLUDE = 1;
+	const ACCESS_TYPE_INCLUDE = 10;
 	const ACCESS_TYPE_EXCLUDE = -1;
 	const ACCESS_TYPE_ALL = 0;
+	
+	public function getSupportedAccessTypes() {
+		$types = array(
+			self::ACCESS_TYPE_INCLUDE => t('Included'),
+			self::ACCESS_TYPE_EXCLUDE => t('Excluded'),
+		);
+		return $types;
+	}
 	
 	/** 
 	 * Returns the name for this permission key
@@ -39,7 +47,7 @@ abstract class PermissionKey extends Object {
 	protected static function load($pkID) {
 		$db = Loader::db();
 		$r = $db->GetRow('select pkID, pkName, pkDescription, pkHandle, pkCategoryHandle, PermissionKeys.pkgID from PermissionKeys inner join PermissionKeyCategories on PermissionKeyCategories.pkCategoryID = PermissionKeys.pkCategoryID where pkID = ?', array($pkID));
-		$class = Loader::helper('text')->unhandle($r['pkCategoryHandle']) . 'PermissionKey';
+		$class = Loader::helper('text')->camelcase($r['pkCategoryHandle']) . 'PermissionKey';
 		if (!is_array($r) && (!$r['pkID'])) { 
 			return false;
 		}

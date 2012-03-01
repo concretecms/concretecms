@@ -16,14 +16,9 @@ $arHandle = $b->getAreaHandle();
 
 <? Loader::element('permission/message_list'); ?>
 
-<? $included = $pk->getAssignmentList(); ?>
-<? $excluded = $pk->getAssignmentList(PermissionKey::ACCESS_TYPE_EXCLUDE); ?>
-
-<h3><?=t('Included')?></h3>
-<? Loader::element('permission/access_list', array('permissionKey' => $pk, 'list' => $included)); ?>
-
-<h3><?=t('Excluded')?></h3>
-<? Loader::element('permission/access_list', array('permissionKey' => $pk, 'list' => $excluded, 'accessType' => PermissionKey::ACCESS_TYPE_EXCLUDE)); ?>
+<?
+$accessTypes = $pk->getSupportedAccessTypes();
+Loader::element('permission/access_list', array('permissionKey' => $pk, 'accessTypes' => $accessTypes)); ?>
 
 <? if ($pk->getPackageID() > 0) { ?>
 	<? Loader::packageElement('permission/keys/' . $pk->getPermissionKeyHandle(), $pk->getPackageHandle(), array('permissionKey' => $pk)); ?>

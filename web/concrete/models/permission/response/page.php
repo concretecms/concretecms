@@ -61,16 +61,16 @@ class PagePermissionResponse extends PermissionResponse {
 	}
 	
 	public function testForErrors() { 
-		if ((!$this->canViewPage()) && (!$this->object->getCollectionPointerExternalLink() != '')) {
-			return COLLECTION_FORBIDDEN;
-		}
 		if ($this->object->isMasterCollection()) {
 			$canEditMaster = TaskPermission::getByHandle('access_page_defaults')->can();
 			if (!($canEditMaster && $_SESSION['mcEditID'] == $this->object->getCollectionID())) {
 				return COLLECTION_FORBIDDEN;
 			}
+		} else {
+			if ((!$this->canViewPage()) && (!$this->object->getCollectionPointerExternalLink() != '')) {
+				return COLLECTION_FORBIDDEN;
+			}
 		}
-
 	}
 
 	
