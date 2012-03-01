@@ -87,9 +87,6 @@
       <DEFAULT value="0"/>
       <UNSIGNED/>
     </field>
-    <field name="arHandle" type="C" size="255">
-      <KEY/>
-    </field>
     <field name="bID" type="I" size="10">
       <KEY/>
       <DEFAULT value="0"/>

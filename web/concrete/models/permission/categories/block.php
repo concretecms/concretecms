@@ -60,11 +60,10 @@ class BlockPermissionKey extends PermissionKey {
 				$db->Replace('BlockPermissionAssignments', array(
 					'cID' => $co->getCollectionID(), 
 					'cvID' => $co->getVersionID(), 
-					'arHandle' => $arHandle,
 					'bID' => $this->permissionObject->getBlockID(), 
 					'pkID' => $this->getPermissionKeyID(),
 					'accessType' => $row['accessType'],
-					'peID' => $row['peID']), array('cID', 'cvID', 'bID', 'arHandle', 'peID', 'pkID'), true);				
+					'peID' => $row['peID']), array('cID', 'cvID', 'bID', 'peID', 'pkID'), true);				
 			}
 		}
 	}
@@ -82,8 +81,8 @@ class BlockPermissionKey extends PermissionKey {
 		if ($this->permissionObjectToCheck instanceof Block) { 
 			$co = $this->permissionObjectToCheck->getBlockCollectionObject();
 			$arHandle = $this->permissionObjectToCheck->getAreaHandle();
-			$r = $db->Execute('select accessType, peID, pdID from BlockPermissionAssignments where cID = ? and cvID = ? and arHandle = ? and bID = ? and pkID = ? ' . $filterString, array(
-				$co->getCollectionID(), $co->getVersionID(), $arHandle, $this->permissionObject->getBlockID(), $this->getPermissionKeyID()
+			$r = $db->Execute('select accessType, peID, pdID from BlockPermissionAssignments where cID = ? and cvID = ? and bID = ? and pkID = ? ' . $filterString, array(
+				$co->getCollectionID(), $co->getVersionID(), $this->permissionObject->getBlockID(), $this->getPermissionKeyID()
 			));
 		} else if ($this->permissionObjectToCheck instanceof Area && isset($this->inheritedAreaPermissions[$this->getPermissionKeyHandle()])) { 
 			$inheritedPKID = $db->GetOne('select pkID from PermissionKeys where pkHandle = ?', array($this->inheritedAreaPermissions[$this->getPermissionKeyHandle()]));
@@ -130,20 +129,19 @@ class BlockPermissionKey extends PermissionKey {
 		$db->Replace('BlockPermissionAssignments', array(
 			'cID' => $co->getCollectionID(),
 			'cvID' => $co->getVersionID(),
-			'arHandle' => $arHandle,
 			'bID' => $this->permissionObject->getBlockID(),
 			'pkID' => $this->getPermissionKeyID(), 
 			'peID' => $pae->getAccessEntityID(),
 			'pdID' => $pdID,
 			'accessType' => $accessType
-		), array('cID', 'cvID', 'arHandle', 'peID', 'pkID'), true);
+		), array('cID', 'cvID', 'peID', 'pkID'), true);
 	}
 	
 	public function removeAssignment(PermissionAccessEntity $pe) {
 		$db = Loader::db();
 		$co = $this->permissionObject->getBlockCollectionObject();
 		$arHandle = $this->permissionObject->getAreaHandle();
-		$db->Execute('delete from BlockPermissionAssignments where cID = ? and cvID = ? and bID = ? and arHandle = ? and peID = ? and pkID = ?', array($co->getCollectionID(), $co->getVersionID(), $this->permissionObject->getBlockID(), $arHandle, $pe->getAccessEntityID(), $this->getPermissionKeyID()));
+		$db->Execute('delete from BlockPermissionAssignments where cID = ? and cvID = ? and bID = ? and peID = ? and pkID = ?', array($co->getCollectionID(), $co->getVersionID(), $this->permissionObject->getBlockID(), $pe->getAccessEntityID(), $this->getPermissionKeyID()));
 		
 	}
 	
