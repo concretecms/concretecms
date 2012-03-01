@@ -136,7 +136,12 @@
 			}
 		}			
 		
-		public function getFileSetID() {return $this->fsID;}
+		public function getFileSetID() {
+			if ($this->fsID) {
+				return $this->fsID;
+			}
+			return 0;
+		}
 		public function overrideGlobalPermissions() {return $this->fsOverrideGlobalPermissions;}
 		
 		public function getFileSetName() {return $this->fsName;}	

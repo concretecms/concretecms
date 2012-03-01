@@ -61,6 +61,7 @@
 	Loader::model('block');
 	Loader::model('custom_style');
 	Loader::model('file');
+	Loader::model('file_set');
 	Loader::model('file_version');
 	Loader::model('block_types');
 	Loader::model('collection');
@@ -81,6 +82,7 @@
 	Loader::model('permissions');
 	Loader::model('permission/response');
 	Loader::model("permission/categories/page");
+	Loader::model("permission/categories/file_set");
 	Loader::model("permission/categories/area");
 	Loader::model("permission/categories/block");
 	Loader::model('user');

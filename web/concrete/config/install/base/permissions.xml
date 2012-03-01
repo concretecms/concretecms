@@ -5,7 +5,7 @@
         <category handle="page" package=""/>
         <category handle="stack" package=""/>
         <category handle="user" package=""/>
-        <category handle="file" package=""/>
+        <category handle="file_set" package=""/>
         <category handle="area" package=""/>
         <category handle="block" package=""/>
         <category handle="sitemap" package=""/>
@@ -43,6 +43,14 @@
         <permissionkey handle="delete_block" name="Delete Block" package="" category="block"/>
         <permissionkey handle="edit_block_design" name="Edit Design" package="" category="block"/>
         <permissionkey handle="edit_block_permissions" name="Edit Permissions" package="" category="block"/>
+        <!-- files //-->
+        <permissionkey handle="search_files" name="Search Files in File Manager" description="Can access the file manager" package="" category="file_set"/>
+        <permissionkey handle="edit_file_set_file_properties" name="Edit File Properties" description="Can edit a file's properties" package="" category="file_set"/>
+        <permissionkey handle="edit_file_set_file_contents" name="Edit File Contents" description="Edit/Replace Files" package="" category="file_set"/>
+        <permissionkey handle="copy_file_set_files" name="Copy File" description="" package="" category="file_set"/>
+        <permissionkey handle="edit_file_set_permissions" name="Edit File Access" description="" package="" category="file_set"/>
+        <permissionkey handle="delete_file_set_files" name="Delete File" description="" package="" category="file_set"/>
+        <permissionkey handle="add_file" name="Add File" description="" package="" category="file_set"/>
 	</permissionkeys>
 	
     <taskpermissions>
