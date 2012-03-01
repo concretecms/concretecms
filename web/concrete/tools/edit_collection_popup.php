@@ -34,6 +34,10 @@ switch($_GET['ctask']) {
 		$canViewPane = $cp->canEditPagePermissions();
 		$additionalArgs['isComposer'] = true;
 		break;
+	case 'preview_page_as_user':
+		$toolSection = "collection_preview_as_user";
+		$canViewPane = ($cp->canEditPageContents() && PERMISSIONS_MODEL == 'advanced' && TaskPermission::getByHandle('access_user_search')->can());
+		break;
 	case 'mcd':
 		$toolSection = "collection_mcd";
 		$canViewPane = $cp->canWrite();
