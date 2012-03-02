@@ -73,9 +73,6 @@ class PermissionDuration extends Object {
 					if (($numDays % $this->getRepeatPeriodEveryNum()) == 0) {
 						if ($now >= $dailyTimeStart && $now <= $dailyTimeEnd) {
 							$isActive = true;
-							if ($this->getRepeatPeriodEnd() != '' && strtotime($ymd) > strtotime($this->getRepeatPeriodEnd())) {
-								$isActive = false;
-							}
 						}
 					}
 					break;
@@ -83,14 +80,28 @@ class PermissionDuration extends Object {
 					$numWeeks = round(($now - strtotime($startsOn)) / (86400 * 7));
 					if (($numWeeks % $this->getRepeatPeriodEveryNum()) == 0) {
 						// now we check to see if it's on the right day
-						$days = $this->getRepeatPeriodWeekDays();
+						$startDOW = date('w', strtotime($this->getStartDate()));
+						$endDOW = date('w', strtotime($this->getEndDate()));
 						$dow = date('w', $now);
-						if (in_array($dow, $days)) { 
-							if ($now >= $dailyTimeStart && $now <= $dailyTimeEnd) {
-								$isActive = true;
-								if ($this->getRepeatPeriodEnd() != '' && strtotime($ymd) > strtotime($this->getRepeatPeriodEnd())) {
-									$isActive = false;
+						if ($startDOW == $endDOW) {
+							$days = $this->getRepeatPeriodWeekDays();
+							if (in_array($dow, $days)) { 
+								if ($now >= $dailyTimeStart && $now <= $dailyTimeEnd) {
+									$isActive = true;
 								}
+							}
+						} else {
+							$checkTime = false;
+							if ($dow < $endDOW && $dow > $startDOW) {
+								$isActive = true; // we fall between the date range so we know it's perfect
+							} else if ($dow == $startDOW) {
+								if ($now >= $dailyTimeStart) {
+									$isActive = true;
+								}								
+							} else if ($dow == $endDOW) {
+								if ($now <= $dailyTimeEnd) {
+									$isActive = true;
+								}								
 							}
 						}
 					}
@@ -119,15 +130,20 @@ class PermissionDuration extends Object {
 						if ($checkTime) {
 							if ($now >= $dailyTimeStart && $now <= $dailyTimeEnd) {
 								$isActive = true;
-								if ($this->getRepeatPeriodEnd() != '' && strtotime($ymd) > strtotime($this->getRepeatPeriodEnd())) {
-									$isActive = false;
-								}
 							}
 						}
 					}
 					break;
 
 			}
+			
+			if ($this->getStartDate() != '' && strtotime($this->getStartDate()) > $now) {
+				$isActive = false;
+			}
+			if ($this->getRepeatPeriodEnd() != '' && strtotime($ymd) > strtotime($this->getRepeatPeriodEnd())) {
+				$isActive = false;
+			}
+
 		}		
 		return $isActive;
 	}

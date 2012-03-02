@@ -10,7 +10,9 @@ class PermissionResponse {
 	public function setPermissionObject($object) { 
 		$this->object = $object;
 	}
-	
+	public function getPermissionObject() {
+		return $this->object;
+	}
 	public function setPermissionCategoryObject($category) {
 		$this->category = $category;
 	}

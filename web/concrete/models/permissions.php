@@ -20,6 +20,14 @@ class Permissions {
 		return $this->error;
 	}
 	
+	/** 
+	 * Legacy
+	 * @private
+	 */
+	public function getOriginalObject() {
+		return $this->response->getPermissionObject();
+	}
+	
 
 	public function __construct($object) {
 		$handle = Loader::helper('text')->uncamelcase(get_class($object));

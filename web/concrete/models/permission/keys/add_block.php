@@ -84,7 +84,7 @@ class AddBlockAreaPermissionKey extends AreaPermissionKey  {
 			if ($this->permissionObjectToCheck instanceof Page && $l->getAccessType() == AreaPermissionKey::ACCESS_TYPE_INCLUDE) {
 				$permission = 1;
 			} else { 
-				$permission = $db->GetOne('select permission from AreaPermissionBlockTypeAssignments where peID = ?', array($pe->getAccessEntityID()));
+				$permission = $db->GetOne('select permission from AreaPermissionBlockTypeAssignments where peID = ? and cID = ? and arHandle = ?', array($pe->getAccessEntityID(), $this->permissionObjectToCheck->getCollectionID(), $this->permissionObjectToCheck->getAreaHandle()));
 				if ($permission !== '0' && $permission != 'C') {
 					$permission = 1;
 				}
@@ -92,7 +92,13 @@ class AddBlockAreaPermissionKey extends AreaPermissionKey  {
 			}
 			$l->setBlockTypesAllowedPermission($permission);
 			if ($permission == 'C') { 
-				$ctIDs = $db->GetCol('select btID from AreaPermissionBlockTypeAssignmentsCustom where peID = ?', array($pe->getAccessEntityID()));
+				if ($this->permissionObjectToCheck instanceof Area) { 
+					$cID = $this->permissionObjectToCheck->getCollectionID();
+				} else {
+					$cID = $this->permissionObjectToCheck->getPermissionsCollectionID();
+				}
+				$arHandle = $this->permissionObjectToCheck->getAreaHandle();
+				$ctIDs = $db->GetCol('select btID from AreaPermissionBlockTypeAssignmentsCustom where peID = ? and cID = ? and arHandle = ?', array($pe->getAccessEntityID(), $cID, $arHandle));
 				$l->setBlockTypesAllowedArray($ctIDs);
 			}
 		}
