@@ -1170,47 +1170,6 @@
     </field>
   </table>
 
-
-
-  <table name="FileSetPermissions">
-    <field name="fsID" type="I" size="10">
-      <KEY/>
-      <DEFAULT value="0"/>
-      <UNSIGNED/>
-    </field>
-    <field name="gID" type="I" size="10">
-      <KEY/>
-      <DEFAULT value="0"/>
-      <UNSIGNED/>
-    </field>
-    <field name="uID" type="I" size="10">
-      <KEY/>
-      <DEFAULT value="0"/>
-      <UNSIGNED/>
-    </field>
-    <field name="canRead" type="I" size="4"/>
-    <field name="canWrite" type="I" size="4"/>
-    <field name="canAdmin" type="I" size="4"/>
-    <field name="canAdd" type="I" size="4"/>
-    <field name="canSearch" type="I" size="3">
-      <UNSIGNED/>
-    </field>
-    <index name="canRead">
-      <col>canRead</col>
-    </index>
-    <index name="canWrite">
-      <col>canWrite</col>
-    </index>
-    <index name="canAdmin">
-      <col>canAdmin</col>
-    </index>
-    <index name="canSearch">
-      <col>canSearch</col>
-    </index>
-    <index name="canAdd">
-      <col>canAdd</col>
-    </index>
-  </table>
   <table name="FileVersions">
     <opt platform="MYSQL">ENGINE=MYISAM</opt>
     <field name="fID" type="I" size="10">
@@ -2379,6 +2338,38 @@
       <col>ipFrom</col>
     </index>
   </table>  
+  
+    <table name="FilePermissionAssignments">
+    <field name="fID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="peID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="pdID" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="pkID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="accessType" type="I" size="4">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <index name="cID">
+      <col>fsID</col>
+      <col>pkID</col>
+      <col>accessType</col>
+    </index>
+  </table>
   
   <table name="FileSets">
     <field name="fsID" type="I" size="10">

@@ -83,6 +83,7 @@
 	Loader::model('permission/response');
 	Loader::model("permission/categories/page");
 	Loader::model("permission/categories/file_set");
+	Loader::model("permission/categories/file");
 	Loader::model("permission/categories/area");
 	Loader::model("permission/categories/block");
 	Loader::model('user');
