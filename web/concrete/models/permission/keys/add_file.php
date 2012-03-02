@@ -6,50 +6,50 @@ class AddFileFileSetPermissionKey extends FileSetPermissionKey  {
 	public function getSupportedAccessTypes() {
 		$types = array(
 			self::ACCESS_TYPE_INCLUDE => t('Included'),
-			self::ACCESS_TYPE_EXCLUDE => t('Excluded'),
+			self::ACCESS_TYPE_EXCLUDE => t('Excluded')
 		);
 		return $types;
 	}
 
 	public function savePermissionKey($args) {
 		$db = Loader::db();
-		$db->Execute('delete from AreaPermissionBlockTypeAssignments where cID = ? and arHandle = ?', array($this->permissionObject->getCollectionID(), $this->permissionObject->getAreaHandle()));
-		$db->Execute('delete from AreaPermissionBlockTypeAssignmentsCustom where cID = ? and arHandle = ?', array($this->permissionObject->getCollectionID(), $this->permissionObject->getAreaHandle()));
-		if (is_array($args['blockTypesIncluded'])) { 
-			foreach($args['blockTypesIncluded'] as $peID => $permission) {
-				$v = array($this->permissionObject->getCollectionID(), $this->permissionObject->getAreaHandle(), $peID, $permission);
-				$db->Execute('insert into AreaPermissionBlockTypeAssignments (cID, arHandle, peID, permission) values (?, ?, ?, ?)', $v);
+		$db->Execute('delete from FileSetPermissionFileTypeAssignments where fsID = ?', array($this->permissionObject->getFileSetID()));
+		$db->Execute('delete from FileSetPermissionFileTypeAssignmentsCustom where fsID = ?', array($this->permissionObject->getFileSetID()));
+		if (is_array($args['fileTypesIncluded'])) { 
+			foreach($args['fileTypesIncluded'] as $peID => $permission) {
+				$v = array($this->permissionObject->getFileSetID(), $peID, $permission);
+				$db->Execute('insert into FileSetPermissionFileTypeAssignments (fsID, peID, permission) values (?, ?, ?)', $v);
 			}
 		}
 		
-		if (is_array($args['blockTypesExcluded'])) { 
-			foreach($args['blockTypesExcluded'] as $peID => $permission) {
-				$v = array($this->permissionObject->getCollectionID(), $this->permissionObject->getAreaHandle(), $peID, $permission);
-				$db->Execute('insert into AreaPermissionBlockTypeAssignments (cID, arHandle, peID, permission) values (?, ?, ?, ?)', $v);
+		if (is_array($args['fileTypesExcluded'])) { 
+			foreach($args['fileTypesExcluded'] as $peID => $permission) {
+				$v = array($this->permissionObject->getFileSetID(), $peID, $permission);
+				$db->Execute('insert into FileSetPermissionFileTypeAssignments (fsID, peID, permission) values (?, ?, ?)', $v);
 			}
 		}
 
-		if (is_array($args['btIDInclude'])) { 
-			foreach($args['btIDInclude'] as $peID => $btIDs) {
-				foreach($btIDs as $btID) { 
-					$v = array($this->permissionObject->getCollectionID(), $this->permissionObject->getAreaHandle(), $peID, $btID);
-					$db->Execute('insert into AreaPermissionBlockTypeAssignmentsCustom (cID, arHandle, peID, btID) values (?, ?, ?, ?)', $v);
+		if (is_array($args['extensionInclude'])) { 
+			foreach($args['extensionInclude'] as $peID => $extensions) {
+				foreach($extensions as $extension) { 
+					$v = array($this->permissionObject->getFileSetID(), $peID, $extension);
+					$db->Execute('insert into FileSetPermissionFileTypeAssignmentsCustom (fsID, peID, extension) values (?, ?, ?)', $v);
 				}
 			}
 		}
 
-		if (is_array($args['btIDExclude'])) { 
-			foreach($args['btIDExclude'] as $peID => $btIDs) {
-				foreach($btIDs as $btID) { 
-					$v = array($this->permissionObject->getCollectionID(), $this->permissionObject->getAreaHandle(), $peID, $btID);
-					$db->Execute('insert into AreaPermissionBlockTypeAssignmentsCustom (cID, arHandle, peID, btID) values (?, ?, ?, ?)', $v);
+		if (is_array($args['extensionExclude'])) { 
+			foreach($args['extensionExclude'] as $peID => $extensions) {
+				foreach($extensions as $extension) { 
+					$v = array($this->permissionObject->getFileSetID(), $peID, $extension);
+					$db->Execute('insert into FileSetPermissionFileTypeAssignmentsCustom (fsID, peID, extension) values (?, ?, ?)', $v);
 				}
 			}
 		}
-
 	}
 	
 	public function validate($bt = false) {
+		/*
 		$u = new User();
 		if ($u->isSuperUser()) {
 			return true;
@@ -79,52 +79,46 @@ class AddFileFileSetPermissionKey extends FileSetPermissionKey  {
 				$canAddBlockType = true;
 			}
 		}
-		
+		*/
 		return $canAddBlockType;
 	}
-/*
 
-	public function getAssignmentList($accessType = AreaPermissionKey::ACCESS_TYPE_INCLUDE, $filterEntities = array()) {
+	public function getAssignmentList($accessType = FileSetPermissionKey::ACCESS_TYPE_INCLUDE, $filterEntities = array()) {
 		$db = Loader::db();
 		$list = parent::getAssignmentList($accessType, $filterEntities);
 		foreach($list as $l) {
 			$pe = $l->getAccessEntityObject();
-			if ($this->permissionObjectToCheck instanceof Page && $l->getAccessType() == AreaPermissionKey::ACCESS_TYPE_INCLUDE) {
+			$permission = $db->GetOne('select permission from FileSetPermissionFileTypeAssignments where peID = ? and fsID = ?', array($pe->getAccessEntityID(), $this->permissionObject->getFileSetID()));
+			if ($permission !== '0' && $permission != 'C') {
 				$permission = 1;
-			} else { 
-				$permission = $db->GetOne('select permission from AreaPermissionBlockTypeAssignments where peID = ?', array($pe->getAccessEntityID()));
-				if ($permission !== '0' && $permission != 'C') {
-					$permission = 1;
-				}
-
 			}
-			$l->setBlockTypesAllowedPermission($permission);
+			$l->setFileTypesAllowedPermission($permission);
 			if ($permission == 'C') { 
-				$ctIDs = $db->GetCol('select btID from AreaPermissionBlockTypeAssignmentsCustom where peID = ?', array($pe->getAccessEntityID()));
-				$l->setBlockTypesAllowedArray($ctIDs);
+				$extensions = $db->GetCol('select extension from FileSetPermissionFileTypeAssignmentsCustom where peID = ? and fsID = ?', array($pe->getAccessEntityID(), $this->permissionObject->getFileSetID()));
+				$l->setFileTypesAllowedArray($extensions);
 			}
 		}
 		return $list;
 	}
-	*/	
+
 }
 
 class AddFileFileSetPermissionAssignment extends FileSetPermissionAssignment {
 	
-	protected $customBlockTypeArray = array();
-	protected $blockTypesAllowedPermission = 0;
+	protected $customFileTypesArray = array();
+	protected $fileTypesAllowedPermission = 0;
 
-	public function setBlockTypesAllowedPermission($permission) {
-		$this->blockTypesAllowedPermission = $permission;
+	public function setFileTypesAllowedPermission($permission) {
+		$this->fileTypesAllowedPermission = $permission;
 	}
-	public function getBlockTypesAllowedPermission() {
-		return $this->blockTypesAllowedPermission;
+	public function getFileTypesAllowedPermission() {
+		return $this->fileTypesAllowedPermission;
 	}
-	public function setBlockTypesAllowedArray($ctIDs) {
-		$this->customBlockTypeArray = $ctIDs;
+	public function setFileTypesAllowedArray($extensions) {
+		$this->customFileTypesArray = $extensions;
 	}
-	public function getBlockTypesAllowedArray() {
-		return $this->customBlockTypeArray;
+	public function getFileTypesAllowedArray() {
+		return $this->customFileTypesArray;
 	}
 	
 	
