@@ -198,7 +198,74 @@
       <col>accessType</col>
     </index>
   </table>
+  
+      <table name="FilePermissionAssignments">
+    <field name="fID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="peID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="pdID" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="pkID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="accessType" type="I" size="4">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <index name="cID">
+      <col>fsID</col>
+      <col>pkID</col>
+      <col>accessType</col>
+    </index>
+  </table>
 
+
+  <table name="FileSetPermissionFileTypeAssignments">
+    <field name="fsID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="peID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="permission" type="C" size="1">
+      <NOTNULL/>
+      <DEFAULT value="1"/>
+    </field>
+  </table>
+  
+  <table name="FileSetPermissionFileTypeAssignmentsCustom">
+    <field name="fsID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="peID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="extension" type="C" size="64">
+	     <KEY/>
+		<notnull />
+    </field>
+  </table>
+  
 <table name="PermissionKeys">
     <field name="pkID" type="I" size="10">
       <KEY/>
