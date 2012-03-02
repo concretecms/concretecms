@@ -205,7 +205,7 @@
 					$this->uTimezone = null;
 				}
 				$this->uGroups = $this->_getUserGroups();
-				if (!isset($args[2])) {
+				if (!isset($args[2]) && !$req->hasCustomRequestUser()) {
 					$_SESSION['uGroups'] = $this->uGroups;
 				}
 			}
