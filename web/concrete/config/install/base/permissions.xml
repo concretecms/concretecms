@@ -51,6 +51,7 @@
         <permissionkey handle="edit_file_set_file_contents" name="Edit File Contents" description="Edit/Replace Files" package="" category="file_set"/>
         <permissionkey handle="copy_file_set_files" name="Copy File" description="" package="" category="file_set"/>
         <permissionkey handle="edit_file_set_permissions" name="Edit File Access" description="" package="" category="file_set"/>
+        <permissionkey handle="delete_file_set" name="Delete File Set" description="" package="" category="file_set"/>
         <permissionkey handle="delete_file_set_files" name="Delete File" description="" package="" category="file_set"/>
         <permissionkey handle="add_file" name="Add File" description="" package="" category="file_set"/>
 
