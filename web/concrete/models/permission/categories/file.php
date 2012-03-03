@@ -21,8 +21,14 @@ class FilePermissionKey extends PermissionKey {
 			$this->permissionObjectToCheck = $f;
 		} else {
 			$sets = $f->getFileSets();
-			if (is_array($sets) && count($sets) > 0) {
-				$this->permissionObjectToCheck = $sets;
+			$permsets = array();
+			foreach($sets as $fs) {
+				if ($fs->overrideGlobalPermissions()) {
+					$permsets[] = $fs;
+				}
+			}
+			if (count($permsets) > 0) {
+				$this->permissionObjectToCheck = $permsets;
 			} else { 
 				$fs = FileSet::getGlobal();
 				$this->permissionObjectToCheck = $fs;

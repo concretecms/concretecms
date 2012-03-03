@@ -7,7 +7,7 @@ $form = Loader::helper('form');
 
 $f = File::getByID($_REQUEST['fID']);
 $fp = new Permissions($f);
-if (!$fp->canRead()) {
+if (!$fp->canViewFile()) {
 	die(t("Access Denied."));
 }
 
@@ -17,7 +17,7 @@ $canViewInline = $fv->canView() ? 1 : 0;
 $canEdit = $fv->canEdit() ? 1 : 0;
 ?>
 
-<div class="ccm-file-selected" fID="<?=$_REQUEST['fID']?>" ccm-file-manager-field="<?=$_REQUEST['ccm_file_selected_field']?>" ccm-file-manager-can-admin="<?=($fp->canAdmin())?>" ccm-file-manager-can-delete="<?=$fp->canAdmin()?>" ccm-file-manager-can-view="<?=$canViewInline?>" ccm-file-manager-can-replace="<?=$fp->canWrite()?>" ccm-file-manager-can-edit="<?=$canEdit?>"  >
+<div class="ccm-file-selected" fID="<?=$_REQUEST['fID']?>" ccm-file-manager-field="<?=$_REQUEST['ccm_file_selected_field']?>" ccm-file-manager-can-admin="<?=($fp->canEditFilePermissions())?>" ccm-file-manager-can-delete="<?=$fp->canDeleteFile()?>" ccm-file-manager-can-view="<?=$canViewInline?>" ccm-file-manager-can-replace="<?=$fp->canEditFileContents()?>" ccm-file-manager-can-edit="<?=$canEdit?>"  >
 <div class="ccm-file-selected-thumbnail"><?=$fv->getThumbnail(1)?></div>
 <div class="ccm-file-selected-data"><div><?=$fv->getTitle()?></div><div></div></div>
 <div class="ccm-spacer">&nbsp;</div>

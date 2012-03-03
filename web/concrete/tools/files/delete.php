@@ -14,7 +14,7 @@ if ($_POST['task'] == 'delete_files') {
 		foreach($_POST['fID'] as $fID) {
 			$f = File::getByID($fID);
 			$fp = new Permissions($f);
-			if ($fp->canAdmin()) {
+			if ($fp->canDeleteFile()) {
 				$f->delete();
 			} else {
 				$json['error'] = t('Unable to delete one or more files.');
@@ -41,7 +41,7 @@ if (is_array($_REQUEST['fID'])) {
 $fcnt = 0;
 foreach($files as $f) { 
 	$fp = new Permissions($f);
-	if ($fp->canAdmin()) {
+	if ($fp->canDeleteFile()) {
 		$fcnt++;
 	}
 }
@@ -64,7 +64,7 @@ $searchInstance = $_REQUEST['searchInstance'];
 	
 	<? foreach($files as $f) { 
 		$fp = new Permissions($f);
-		if ($fp->canAdmin()) {
+		if ($fp->canDeleteFile()) {
 			$fv = $f->getApprovedVersion();
 			if (is_object($fv)) { ?>
 			

@@ -202,27 +202,13 @@ class StartingPointPackage extends Package {
 		$g2 = Group::getByID(REGISTERED_GROUP_ID);
 		$g3 = Group::getByID(ADMIN_GROUP_ID);
 		
-		/*
-		$fs->setPermissions($g1, FilePermissions::PTYPE_NONE, FilePermissions::PTYPE_ALL, FilePermissions::PTYPE_NONE, FilePermissions::PTYPE_NONE, FilePermissions::PTYPE_NONE);
-		$fs->setPermissions($g2, FilePermissions::PTYPE_NONE, FilePermissions::PTYPE_ALL, FilePermissions::PTYPE_NONE, FilePermissions::PTYPE_NONE, FilePermissions::PTYPE_NONE);
-		$fs->setPermissions($g3, FilePermissions::PTYPE_ALL, FilePermissions::PTYPE_ALL, FilePermissions::PTYPE_ALL, FilePermissions::PTYPE_ALL, FilePermissions::PTYPE_ALL);
-		*/
-		
+		$fs->assignPermissions($g1, array('view_file_set_file'));
+		$fs->assignPermissions($g3, array('view_file_set_file', 'search_file_set', 'edit_file_set_file_properties', 'edit_file_set_file_contents', 'copy_file_set_files', 'edit_file_set_permissions', 'delete_file_set_files', 'delete_file_set', 'add_file'));
+
 		Config::save('SITE', SITE);
 		Config::save('SITE_APP_VERSION', APP_VERSION);
 		$u = new User();
 		$u->saveConfig('NEWSFLOW_LAST_VIEWED', 'FIRSTRUN');
-		
-		$args = array();
-		$args['cInheritPermissionsFrom'] = 'OVERRIDE';
-		$args['cOverrideTemplatePermissions'] = 1;
-		$args['collectionRead'][] = 'gID:' . GUEST_GROUP_ID;
-		$args['collectionAdmin'][] = 'gID:' . ADMIN_GROUP_ID;
-		$args['collectionRead'][] = 'gID:' . ADMIN_GROUP_ID;
-		$args['collectionApprove'][] = 'gID:' . ADMIN_GROUP_ID;
-		$args['collectionReadVersions'][] = 'gID:' . ADMIN_GROUP_ID;
-		$args['collectionWrite'][] = 'gID:' . ADMIN_GROUP_ID;
-		$args['collectionDelete'][] = 'gID:' . ADMIN_GROUP_ID;
 		
 		$home = Page::getByID(1, "RECENT");
 		$home->assignPermissions($g1, array('view_page'));

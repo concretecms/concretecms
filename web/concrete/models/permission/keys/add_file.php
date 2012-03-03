@@ -48,8 +48,7 @@ class AddFileFileSetPermissionKey extends FileSetPermissionKey  {
 		}
 	}
 	
-	public function validate($bt = false) {
-		/*
+	public function validate($extension = false) {
 		$u = new User();
 		if ($u->isSuperUser()) {
 			return true;
@@ -59,28 +58,27 @@ class AddFileFileSetPermissionKey extends FileSetPermissionKey  {
 		$list = $this->getAssignmentList(AreaPermissionKey::ACCESS_TYPE_ALL, $accessEntities);
 		$list = PermissionDuration::filterByActive($list);
 		// these are assignments that apply to me
-		$canAddBlockType = false;
+		$canAddFileType = false;
 		foreach($list as $l) {
-			if ($l->getBlockTypesAllowedPermission() == '0') {
-				$canAddBlockType = false;
+			if ($l->getFileTypesAllowedPermission() == '0') {
+				$canAddFileType = false;
 			}
-			if ($l->getBlockTypesAllowedPermission() == 'C') {
-				if (is_object($bt)) { 
+			if ($l->getFileTypesAllowedPermission() == 'C') {
+				if ($extension) { 
 					if ($l->getAccessType() == AreaPermissionKey::ACCESS_TYPE_EXCLUDE) {
-						$canAddBlockType = !in_array($bt->getBlockTypeID(), $l->getBlockTypesAllowedArray());
+						$canAddFileType = !in_array($extension, $l->getFileTypesAllowedArray());
 					} else { 
-						$canAddBlockType = in_array($bt->getBlockTypeID(), $l->getBlockTypesAllowedArray());
+						$canAddFileType = in_array($extension, $l->getFileTypesAllowedArray());
 					}
 				} else {
-					$canAddBlockType = true;
+					$canAddFileType = true;
 				}
 			}
-			if ($l->getBlockTypesAllowedPermission() == '1') {
-				$canAddBlockType = true;
+			if ($l->getFileTypesAllowedPermission() == '1') {
+				$canAddFileType = true;
 			}
 		}
-		*/
-		return $canAddBlockType;
+		return $canAddFileType;
 	}
 
 	public function getAssignmentList($accessType = FileSetPermissionKey::ACCESS_TYPE_INCLUDE, $filterEntities = array()) {

@@ -281,7 +281,37 @@
 				$db->query($q, $v);
 			}
 		}
-				
+		
+		public function assignPermissions($userOrGroup, $permissions = array(), $accessType = FileSetPermissionKey::ACCESS_TYPE_INCLUDE) {
+			$db = Loader::db();
+			if ($this->fsID > 0) { 
+				$db->Execute("update FileSets set fsOverrideGlobalPermissions = 1 where fsID = ?", array($this->fsID));
+			}
+			
+			if (is_array($userOrGroup)) { 
+				$pe = GroupCombinationPermissionAccessEntity::getOrCreate($userOrGroup);
+				// group combination
+			} else if ($userOrGroup instanceof User || $userOrGroup instanceof UserInfo) { 
+				$pe = UserPermissionAccessEntity::getOrCreate($userOrGroup);
+			} else { 
+				// group;
+				$pe = GroupPermissionAccessEntity::getOrCreate($userOrGroup);
+			}
+			
+			foreach($permissions as $pkHandle) { 
+				$pk = FileSetPermissionKey::getByHandle($pkHandle);
+				$pk->setPermissionObject($this);
+				$pk->addAssignment($pe, false, $accessType);
+			}
+		}
+
+
+			
+			
+		/** 
+		 * legacy
+		 */
+		/*
 		public function setPermissions($obj, $canSearch, $canRead, $canWrite, $canAdmin, $canAdd, $extensions = array()) {
 			$fsID = $this->fsID;
 			$uID = 0;
@@ -319,7 +349,11 @@
 				}
 			}
 		}		
+	
+		*/
+	
 	}
+	
 	class FileSetFile extends Model {
 		public static function createAndGetFile($f_id, $fs_id){	
 			$file_set_file = new FileSetFile();

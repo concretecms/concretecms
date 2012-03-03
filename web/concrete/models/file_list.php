@@ -12,7 +12,7 @@ class FileList extends DatabaseItemList {
 	protected $autoSortColumns = array('fvFilename', 'fvAuthorName','fvTitle', 'fDateAdded', 'fvDateAdded', 'fvSize');
 	protected $itemsPerPage = 10;
 	protected $attributeClass = 'FileAttributeKey';
-	protected $permissionLevel = 'canSearch';
+	protected $permissionLevel = 'search_files_in_set';
 	protected $filteredFileSetIDs = array();
 	
 	/* magic method for filtering by attributes. */
@@ -190,7 +190,17 @@ class FileList extends DatabaseItemList {
 		LEFT JOIN Users u on u.uID = fv.fvAuthorUID
 		');
 	}
-	
+
+	protected function setupFilePermissions() {
+		$u = new User();
+		if ($this->permissionLevel == false || $u->isSuperUser()) {
+			return false;
+		}
+		
+		
+	}
+
+	/*
 	protected function setupFilePermissions() {
 		
 		$u = new User();
@@ -254,6 +264,7 @@ class FileList extends DatabaseItemList {
 			}			
 		}
 	}
+	*/
 	
 	/** 
 	 * Returns an array of file objects based on current settings

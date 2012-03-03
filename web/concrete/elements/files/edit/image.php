@@ -4,7 +4,7 @@ $u = new User();
 $form = Loader::helper('form');
 $f = $fv->getFile();
 $fp = new Permissions($f);
-if (!$fp->canWrite()) {
+if (!$fp->canEditFileContents()) {
 	die(t("Access Denied."));
 }
 
