@@ -43,9 +43,14 @@ class DashboardFilesSetsController extends Controller {
 		if (!$valt->validate('delete_file_set', $token)) {
 			throw new Exception($valt->getErrorMessage());
 		}
-			
-		$fs->delete(); 
-		$this->redirect('/dashboard/files/sets', 'file_set_deleted');			
+		
+		$fsp = new Permissions($fs);
+		if ($fsp->canDeleteFileSet()) { 
+			$fs->delete(); 
+			$this->redirect('/dashboard/files/sets', 'file_set_deleted');
+		} else {
+			throw new Exception(t('You do not have permission to delete this file set.'));
+		}
 	}
 	
 	public function view_detail($fsID, $action = false) {

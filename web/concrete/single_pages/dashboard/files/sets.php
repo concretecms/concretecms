@@ -112,7 +112,9 @@
 	</div>
 	<div class="ccm-pane-footer">
 		<input type="submit" value="<?=t('Save')?>" class="btn primary ccm-button-v2-right" />
-		<? print $ih->button_js(t('Delete'), "deleteFileSet()", 'right','error');?>
+		<? if ($fsp->canDeleteFileSet()) { ?>
+			<? print $ih->button_js(t('Delete'), "deleteFileSet()", 'right','error');?>
+		<? } ?>
 	</div>
 
 	<?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(false)?>
