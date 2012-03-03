@@ -6,7 +6,8 @@ class FileSetPermissionResponse extends PermissionResponse {
 	public function canRead() { return $this->validate('view_file_set_file'); }
 	public function canWrite() { return $this->validate('edit_file_set_file'); }
 	public function canAddFiles() { return $this->validate('add_file');}
-
+	public function canAccessFileManager() {return $this->validate('search_file_set'); }
+	
 	public function canAddFileType($ext) {
 		$pk = $this->category->getPermissionKeyByHandle('add_file');
 		$pk->setPermissionObject($this->object);

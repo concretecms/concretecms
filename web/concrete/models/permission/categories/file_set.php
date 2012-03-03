@@ -3,7 +3,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 class FileSetPermissionKey extends PermissionKey {
 
 	const ACCESS_TYPE_MINE = 5;
-
+	protected $permissionObjectToCheck;
+	
 	public function getSupportedAccessTypes() {
 		$types = array(
 			self::ACCESS_TYPE_INCLUDE => t('Included'),
@@ -12,12 +13,23 @@ class FileSetPermissionKey extends PermissionKey {
 		);
 		return $types;
 	}
+
+	public function setPermissionObject(FileSet $fs) {
+		$this->permissionObject = $fs;
+		
+		if ($fs->overrideGlobalPermissions()) {
+			$this->permissionObjectToCheck = $fs;
+		} else {
+			$fs = FileSet::getGlobal();
+			$this->permissionObjectToCheck = $fs;
+		}
+	}
 	
 	public function getAssignmentList($accessType = FileSetPermissionKey::ACCESS_TYPE_INCLUDE, $filterEntities = array()) {
 		$db = Loader::db();
 		$filterString = $this->buildAssignmentFilterString($accessType, $filterEntities);
  		$r = $db->Execute('select peID, pdID, accessType from FileSetPermissionAssignments where fsID = ? and pkID = ? ' . $filterString, array(
- 			$this->permissionObject->getFileSetID(), $this->getPermissionKeyID()
+ 			$this->permissionObjectToCheck->getFileSetID(), $this->getPermissionKeyID()
  		));
  		$list = array();
  		$class = str_replace('FileSetPermissionKey', 'FileSetPermissionAssignment', get_class($this));

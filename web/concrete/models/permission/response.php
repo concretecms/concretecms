@@ -47,6 +47,10 @@ class PermissionResponse {
 		}
 
 		$pk = $this->category->getPermissionKeyByHandle($permission);
+		if (!$pk) {
+			print t('Unable to get permission key for %s', $permission);
+			exit;
+		}
 		$pk->setPermissionObject($this->object);
 		return call_user_func_array(array($pk, 'validate'), $args);
 	}
