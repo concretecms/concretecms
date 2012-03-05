@@ -342,6 +342,9 @@ if (defined('DIR_FILES_CACHE') && !is_dir(DIR_FILES_CACHE)) {
 if (!defined('DIR_TMP')) {
 	define('DIR_TMP', DIR_BASE . '/files/tmp');
 }
+if (!defined('DIR_SESSIONS')) {
+	define('DIR_SESSIONS', DIR_TMP);
+}
 define('DISPATCHER_FILENAME_CORE', 'dispatcher.php');
 
 
