@@ -70,7 +70,7 @@
 			file_put_contents($fh->getTemporaryDirectory() . '/' . $src2, $ret);
 			
 			if (is_executable(DIR_FILES_BIN_HTMLDIFF)) {
-				$val = system(DIR_FILES_BIN_HTMLDIFF . ' ' . $fh->getTemporaryDirectory() . '/' . $src1 . ' ' . $fh->getTemporaryDirectory() . '/' . $src2);
+				$val = system(DIR_FILES_BIN_HTMLDIFF . ' ' . escapeshellcmd($fh->getTemporaryDirectory() . '/' . $src1) . ' ' . escapeshellcmd($fh->getTemporaryDirectory() . '/' . $src2));
 				$val = str_replace($val, '</head>', '<style type="text/css">@import "' . ASSETS_URL_CSS . '/ccm.compare.css";</style></head>');
 				print $val;
 			} else {
