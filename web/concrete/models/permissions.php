@@ -49,7 +49,9 @@ class Permissions {
 			$r = $this->response->{$f}();
 		}
 		
-		if ($r) {
+		if (is_array($r) || is_object($r)) {
+			return $r;
+		} else if ($r) {
 			return 1;
 		} else {
 			return 0;
