@@ -8,7 +8,7 @@ $previewMode = false;
 $f = File::getByID($_REQUEST['fID']);
 
 $fp = new Permissions($f);
-if (!$fp->canViewFile()) {
+if (!$fp->canViewFileInFileManager()) {
 	die(t("Access Denied."));
 }
 

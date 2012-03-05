@@ -8,6 +8,16 @@ class FileSetPermissionResponse extends PermissionResponse {
 	public function canAddFiles() { return $this->validate('add_file');}
 	public function canAccessFileManager() {return $this->validate('search_file_set'); }
 	
+	/** 
+	 * Returns all file extensions this user can add
+	 */
+	public function getAllowedFileExtensions() {
+		$pk = $this->category->getPermissionKeyByHandle('add_file');
+		$pk->setPermissionObject($this->object);
+		$r = $pk->getAllowedFileExtensions();
+		return $r;
+	}
+	
 	public function canAddFileType($ext) {
 		$pk = $this->category->getPermissionKeyByHandle('add_file');
 		$pk->setPermissionObject($this->object);

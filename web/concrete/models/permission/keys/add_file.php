@@ -48,38 +48,42 @@ class AddFileFileSetPermissionKey extends FileSetPermissionKey  {
 		}
 	}
 	
-	public function validate($extension = false) {
+	public function getAllowedFileExtensions() {
 		$u = new User();
+		$extensions = array();
 		if ($u->isSuperUser()) {
-			return true;
+			$extensions = Loader::helper('concrete/file')->getAllowedFileExtensions();
+			return $extensions;
 		}
-		
+	
 		$accessEntities = $u->getUserAccessEntityObjects();
-		$list = $this->getAssignmentList(AreaPermissionKey::ACCESS_TYPE_ALL, $accessEntities);
+		$list = $this->getAssignmentList(FileSetPermissionKey::ACCESS_TYPE_ALL, $accessEntities);
 		$list = PermissionDuration::filterByActive($list);
-		// these are assignments that apply to me
-		$canAddFileType = false;
+
 		foreach($list as $l) {
 			if ($l->getFileTypesAllowedPermission() == '0') {
-				$canAddFileType = false;
+				$extensions = array();
 			}
 			if ($l->getFileTypesAllowedPermission() == 'C') {
-				if ($extension) { 
-					if ($l->getAccessType() == AreaPermissionKey::ACCESS_TYPE_EXCLUDE) {
-						$canAddFileType = !in_array($extension, $l->getFileTypesAllowedArray());
-					} else { 
-						$canAddFileType = in_array($extension, $l->getFileTypesAllowedArray());
-					}
-				} else {
-					$canAddFileType = true;
-				}
+				$extensions = array_unique(array_merge($extensions, $l->getFileTypesAllowedArray()));
 			}
 			if ($l->getFileTypesAllowedPermission() == '1') {
-				$canAddFileType = true;
+				$extensions = Loader::helper('concrete/file')->getAllowedFileExtensions();
 			}
 		}
-		return $canAddFileType;
+		
+		return $extensions;
 	}
+	
+	public function validate($extension = false) {
+		$extensions = $this->getAllowedFileExtensions();
+		if ($ext != false) {
+			return in_array($extension, $extensions);
+		} else {
+			return count($extensions) > 0;
+		}
+	}
+	
 
 	public function getAssignmentList($accessType = FileSetPermissionKey::ACCESS_TYPE_INCLUDE, $filterEntities = array()) {
 		$db = Loader::db();
