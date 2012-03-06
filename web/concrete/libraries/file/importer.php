@@ -91,7 +91,9 @@ class FileImporter {
 		if ($path == false) {
 			$path = $fi->mapSystemPath($prefix, $filename, true);
 		}
-		return @copy($pointer, $path);
+		$r = @copy($pointer, $path);
+		@chmod($path, FILE_PERMISSIONS_MODE);
+		return $r;
 	}
 	
 	/** 

@@ -24,17 +24,19 @@
 				$timeStr = '%x ' . t('at') . ' %I:%M %p';
 			} else {
 				$timeStr = '%x ' . t('at') . ' %l:%M %p';
-			}		
-			$this->set('uLastLogin', strftime($timeStr, $ui->getLastLogin('user')));
-			$this->set('uName', $ui->getUserName());
-			$this->set('lastEditSite', strftime($timeStr, strtotime(PageStatistics::getSiteLastEdit('user'))));
-			$llu = UserStatistics::getLastLoggedInUser();
-			if ($llu->getUserID() == $u->getUserID()) {
-				$this->set('lastLoginSite', t('Your login is the most recent.'));		
-			} else { 
-				$this->set('lastLoginSite', strftime($timeStr, $llu->getLastLogin()));
 			}
-			Loader::block('form');
+			if (is_object($ui)) { 
+				$this->set('uLastLogin', strftime($timeStr, $ui->getLastLogin('user')));
+				$this->set('uName', $ui->getUserName());
+				$this->set('lastEditSite', strftime($timeStr, strtotime(PageStatistics::getSiteLastEdit('user'))));
+				$llu = UserStatistics::getLastLoggedInUser();
+				if ($llu->getUserID() == $u->getUserID()) {
+					$this->set('lastLoginSite', t('Your login is the most recent.'));		
+				} else { 
+					$this->set('lastLoginSite', strftime($timeStr, $llu->getLastLogin()));
+				}
+				Loader::block('form');
+			}				
 			$this->set('totalFormSubmissions', FormBlockStatistics::getTotalSubmissions());
 			$this->set('totalFormSubmissionsToday', FormBlockStatistics::getTotalSubmissions(date('Y-m-d')));
 		}

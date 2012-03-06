@@ -55,5 +55,18 @@ class Database {
 		$ADODB_PERF_MIN = 0;
 	}
 
+	public static function ensureEncoding() {
+		if (!defined('DB_CHARSET') || DB_CHARSET == '') { 
+			return false;
+		}
+
+		$db = Loader::db();
+		$q = "ALTER DATABASE `{$db->database}` character set " . DB_CHARSET;
+		if (!defined('DB_COLLATE') || DB_COLLATE != '') { 
+			$q .= " COLLATE " . DB_COLLATE;
+		}
+		$db->Execute($q);
+	}
+
 
 }

@@ -55,6 +55,7 @@ class FormUserSelectorHelper {
 		$html .= 'var ccmActiveUserField;';		
 		$html .= '}';
 		$html .= '
+		$(function() { 
 		ccm_triggerSelectUser = function(uID, uName, uEmail) { ';
 		if($javascriptFunc=='' || $javascriptFunc=='ccm_triggerSelectUser'){
 			$html .= '
@@ -66,7 +67,7 @@ class FormUserSelectorHelper {
 		}else{
 			$html .= $javascriptFunc."(uID, uName); \n";
 		}
-		$html .= "} \r\n </script>";
+		$html .= "}}); \r\n </script>";
 		return $html;
 	}
 	
@@ -114,24 +115,26 @@ class FormUserSelectorHelper {
 				$(this).parents(\'tr\').remove();
 				ccm_setupGridStriping(\'ccmUserSelect' . $fieldName . '\');
 			});
+
+			ccm_triggerSelectUser = function(uID, uName, uEmail) {
+				$("tr.ccm-user-selected-item-none").hide();
+				if ($("#ccmUserSelect' . $fieldName . '_" + uID).length < 1) {
+					var html = "";
+					html += "<tr id=\"ccmUserSelect' . $fieldName . '_" + uID + "\" class=\"ccm-list-record\"><td><input type=\"hidden\" name=\"' . $fieldName . '[]\" value=\"" + uID + "\" />" + uName + "</td>";
+					html += "<td>" + uEmail + "</td>";
+					html += "<td><a href=\"javascript:void(0)\" class=\"ccm-user-list-clear\"><img src=\"' . ASSETS_URL_IMAGES . '/icons/close.png\" width=\"16\" height=\"16\" class=\"ccm-user-list-clear-button\" /></a>";
+					html += "</tr>";
+					$("#ccmUserSelect' . $fieldName . '_body").append(html);
+				}
+				ccm_setupGridStriping(\'ccmUserSelect' . $fieldName . '\');
+				$("a.ccm-user-list-clear").click(function() {
+					$(this).parents(\'tr\').remove();
+					ccm_setupGridStriping(\'ccmUserSelect' . $fieldName . '\');
+				});
+			}
+
 		});
 		
-		ccm_triggerSelectUser = function(uID, uName, uEmail) {
-			$("tr.ccm-user-selected-item-none").hide();
-			if ($("#ccmUserSelect' . $fieldName . '_" + uID).length < 1) {
-				var html = "";
-				html += "<tr id=\"ccmUserSelect' . $fieldName . '_" + uID + "\" class=\"ccm-list-record\"><td><input type=\"hidden\" name=\"' . $fieldName . '[]\" value=\"" + uID + "\" />" + uName + "</td>";
-				html += "<td>" + uEmail + "</td>";
-				html += "<td><a href=\"javascript:void(0)\" class=\"ccm-user-list-clear\"><img src=\"' . ASSETS_URL_IMAGES . '/icons/close.png\" width=\"16\" height=\"16\" class=\"ccm-user-list-clear-button\" /></a>";
-				html += "</tr>";
-				$("#ccmUserSelect' . $fieldName . '_body").append(html);
-			}
-			ccm_setupGridStriping(\'ccmUserSelect' . $fieldName . '\');
-			$("a.ccm-user-list-clear").click(function() {
-				$(this).parents(\'tr\').remove();
-				ccm_setupGridStriping(\'ccmUserSelect' . $fieldName . '\');
-			});
-		}
 		</script>';	
 		return $html;
 	}

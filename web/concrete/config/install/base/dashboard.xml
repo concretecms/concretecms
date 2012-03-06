@@ -238,6 +238,18 @@
 				</attributekey>
 			</attributes>
         </page>
+        <page name="Dashboard" path="/dashboard/news" filename="/dashboard/news.php" pagetype="" description="" package="">
+			<attributes>
+				<attributekey handle="exclude_nav">
+					<value><![CDATA[1]]></value>
+				</attributekey>
+			</attributes>
+			<attributes>
+				<attributekey handle="exclude_search_index">
+					<value><![CDATA[1]]></value>
+				</attributekey>
+			</attributes>
+        </page>
         <page name="Add Functionality" path="/dashboard/extend/install" filename="/dashboard/extend/install.php" pagetype="" description="Install add-ons &amp; themes." package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
@@ -321,6 +333,14 @@
 				</attributekey>
 			</attributes>
         </page>
+        <page name="Interface Preferences" path="/dashboard/system/basics/interface" filename="/dashboard/system/basics/interface.php" pagetype="" description="" package="">
+			<attributes>
+				<attributekey handle="meta_keywords">
+					<value>interface, quick nav, dashboard background, background image</value>
+				</attributekey>
+			</attributes>
+        </page>
+
         <page name="SEO &amp; Statistics" path="/dashboard/system/seo" filename="/dashboard/system/seo/view.php" pagetype="" description="Enable pretty URLs, statistics and tracking codes." package=""/>
         <page name="Pretty URLs" path="/dashboard/system/seo/urls" filename="/dashboard/system/seo/urls.php" pagetype="" description="" package="">
 			<attributes>
@@ -486,7 +506,13 @@
         <page name="Sets" path="/dashboard/system/attributes/sets" filename="/dashboard/system/attributes/sets.php" pagetype="" description="Group attributes into sets for easier organization" package=""/>
         <page name="Types" path="/dashboard/system/attributes/types" filename="/dashboard/system/attributes/types.php" pagetype="" description="Choose which attribute types are available for different items." package=""/>
 
-        <page name="Environment" path="/dashboard/system/environment" filename="/dashboard/system/environment/view.php" pagetype="" description="Advanced settings for web developers." package=""/>
+        <page name="Environment" path="/dashboard/system/environment" filename="/dashboard/system/environment/view.php" pagetype="" description="Advanced settings for web developers." package="">
+			<attributes>
+				<attributekey handle="exclude_search_index">
+					<value><![CDATA[1]]></value>
+				</attributekey>
+			</attributes>
+        </page>
         <page name="Environment Information" path="/dashboard/system/environment/info" filename="/dashboard/system/environment/info.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">

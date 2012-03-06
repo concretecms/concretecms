@@ -36,7 +36,9 @@ class Area extends Object {
 	public $attributes = array();
 
 	public $enclosingStart = '';
+	public $enclosingStartHasReplacements = false; //Denotes if we should run sprintf() on blockWrapperStart
 	public $enclosingEnd = '';
+	public $enclosingEndHasReplacements = false; //Denotes if we should run sprintf() on blockWrapperStartEnd
 	
 	/* run-time variables */
 
@@ -363,6 +365,9 @@ class Area extends Object {
 			return false;
 		}
 		
+		if ($this->arIsGlobal) {
+			$stack = Stack::getByName($this->arHandle);
+		}		
 		$currentPage = Page::getCurrentPage();
 		$ourArea = Area::getOrCreate($c, $this->arHandle, $this->arIsGlobal);
 		if (count($this->customTemplateArray) > 0) {
@@ -400,8 +405,9 @@ class Area extends Object {
 				echo '<div class="ccm-layouts-block-arrange-placeholder ccm-block-arrange"></div>';
 			}
 		}
-
-
+		
+		$blockPositionInArea = 1; //for blockWrapper output
+		
 		foreach ($blocksToDisplay as $b) {
 			$bv = new BlockView();
 			$bv->setAreaObject($ourArea); 
@@ -411,6 +417,9 @@ class Area extends Object {
 			if ($currentPage->getCollectionID() != $c->getCollectionID()) {
 				$b->setBlockActionCollectionID($c->getCollectionID());
 			}
+			if ($this->arIsGlobal && is_object($stack)) {
+				$b->setBlockActionCollectionID($stack->getCollectionID());
+			}
 			$p = new Permissions($b);
 			if (($p->canWrite() || $p->canDeleteBlock()) && $c->isEditMode() && $this->showControls) {
 				$includeEditStrip = true;
@@ -418,7 +427,7 @@ class Area extends Object {
 
 			if ($p->canRead()) {
 				if (!$c->isEditMode()) {
-					echo $this->enclosingStart;
+					$this->outputBlockWrapper(true, $b, $blockPositionInArea);
 				}
 				if ($includeEditStrip) {
 					$bv->renderElement('block_controls', array(
@@ -438,15 +447,38 @@ class Area extends Object {
 					$bv->renderElement('block_footer');
 				}
 				if (!$c->isEditMode()) {
-					echo $this->enclosingEnd;
+					$this->outputBlockWrapper(false, $b, $blockPositionInArea);
 				}
 			}
+			
+			$blockPositionInArea++;
 		}
 
 		$bv->renderElement('block_area_footer_view', array('a' => $ourArea));	
 
 		if (($this->showControls) && ($c->isEditMode() && ($ap->canAddBlocks() || $u->isSuperUser()))) {
 			$bv->renderElement('block_area_footer', array('a' => $ourArea));	
+		}
+	}
+	
+	/**
+	 * Internal helper function for display()
+	 */
+	private function outputBlockWrapper($isStart, &$block, $blockPositionInArea) {
+		static $th = null;
+		$enclosing = $isStart ? $this->enclosingStart : $this->enclosingEnd;
+		$hasReplacements = $isStart ? $this->enclosingStartHasReplacements : $this->enclosingEndHasReplacements;
+		
+		if (!empty($enclosing) && $hasReplacements) {
+			$bID = $block->getBlockID();
+			$btHandle = $block->getBlockTypeHandle();
+			$bName = ($btHandle == 'core_stack_display') ? Stack::getByID($block->getInstance()->stID)->getStackName() : $block->getBlockName();
+			$th = is_null($th) ? Loader::helper('text') : $th;
+			$bSafeName = $th->entities($bName);
+			$alternatingClass = ($blockPositionInArea % 2 == 0) ? 'even' : 'odd';
+			echo sprintf($enclosing, $bID, $btHandle, $bSafeName, $blockPositionInArea, $alternatingClass);
+		} else {
+			echo $enclosing;
 		}
 	}
 	
@@ -509,16 +541,27 @@ class Area extends Object {
 
 	/** 
 	 * Specify HTML to automatically print before blocks contained within the area
+	 * Pass true for $hasReplacements if the $html contains sprintf replacements tokens.
+	 * Available tokens:
+	 *  %1$s -> Block ID
+	 *  %2$s -> Block Type Handle
+	 *  %3$s -> Block/Stack Name
+	 *  %4$s -> Block position in area (first block is 1, second block is 2, etc.)
+	 *  %5$s -> 'odd' or 'even' (useful for "zebra stripes" CSS classes)
 	 */
-	function setBlockWrapperStart($html) {
+	function setBlockWrapperStart($html, $hasReplacements = false) {
 		$this->enclosingStart = $html;
+		$this->enclosingStartHasReplacements = $hasReplacements;
 	}
 	
 	/** 
 	 * Set HTML that automatically prints after any blocks contained within the area
+	 * Pass true for $hasReplacements if the $html contains sprintf replacements tokens.
+	 * See setBlockWrapperStart() comments for available tokens.
 	 */
-	function setBlockWrapperEnd($html) {
+	function setBlockWrapperEnd($html, $hasReplacements = false) {
 		$this->enclosingEnd = $html;
+		$this->enclosingEndHasReplacements = $hasReplacements;
 	}
 
 	function update() {

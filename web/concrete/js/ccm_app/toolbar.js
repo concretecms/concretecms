@@ -1,6 +1,8 @@
 $(function() {
-	ccm_intelligentSearchActivateResults();	
-	ccm_intelligentSearchDoRemoteCalls($('#ccm-nav-intelligent-search').val());
+	if ($("#ccm-toolbar").length > 0) { 
+		ccm_intelligentSearchActivateResults();	
+		ccm_intelligentSearchDoRemoteCalls($('#ccm-nav-intelligent-search').val());
+	}
 });
 
 	var ccm_quickNavTimer = false;
@@ -21,8 +23,10 @@ $(function() {
 	}
 	
 	ccm_hideQuickNav = function() {
-		$("#ccm-quick-nav").fadeOut(120, 'easeInExpo');
-		clearTimeout(ccm_quickNavTimer);
+		if (!$("#ccm-quick-nav").hasClass('ccm-quick-nav-always')) { 
+			$("#ccm-quick-nav").fadeOut(120, 'easeInExpo');
+			clearTimeout(ccm_quickNavTimer);
+		}
 	}
 	
 	ccm_togglePopover = function(e, link) {
@@ -84,13 +88,20 @@ $(function() {
 	}
 	
 	ccm_activateToolbar = function() {
-		$("#ccm-toolbar,#ccm-quick-nav").hover(function() {
-			ccm_showQuickNav();
-		}, function() {
-			ccm_quickNavTimer = setTimeout(function() {
-				ccm_hideQuickNav();
-			}, 1000);
-		});
+		if (!$("#ccm-quick-nav").hasClass('ccm-quick-nav-always')) { 
+			$("#ccm-toolbar,#ccm-quick-nav").hover(function() {
+				ccm_showQuickNav();
+			}, function() {
+				ccm_quickNavTimer = setTimeout(function() {
+					ccm_hideQuickNav();
+				}, 1000);
+			});
+		
+			$("#ccm-quick-nav").hoverIntent(function() {
+				ccm_hideToolbarMenus();
+				$("#ccm-intelligent-search-results").hide();
+			}, function() {});
+		}
 		
 		$("#ccm-dashboard-overlay").css('visibility','visible').hide();
 	
@@ -106,7 +117,7 @@ $(function() {
 			}
 		});
 		
-		$("#ccm-nav-dashboard").click(function() {
+		$(".ccm-nav-edit-mode-active").click(function() {
 			void(0);
 			return false;
 		});
@@ -115,7 +126,7 @@ $(function() {
 			clearTimeout(ccm_hideToolbarMenusTimer);
 		});
 		
-		$("#ccm-nav-dashboard").mouseover(function() {
+		$("#ccm-nav-dashboard").hoverIntent(function() {
 			clearTimeout(ccm_hideToolbarMenusTimer);
 			$(".ccm-system-nav-selected").removeClass('ccm-system-nav-selected');
 			$(this).parent().addClass('ccm-system-nav-selected');
@@ -140,12 +151,12 @@ $(function() {
 				});
 			//}
 			return false;
-		});
+		}, function() {});
 		
 		$("#ccm-nav-dashboard,#ccm-dashboard-overlay,#ccm-nav-edit,#ccm-edit-overlay").mouseout(function() {
 			ccm_hideToolbarMenusTimer = setTimeout(function() {
 				ccm_hideToolbarMenus();
-			}, 2000);
+			}, 1500);
 		});
 	
 		$("#ccm-nav-intelligent-search").bind('keydown.ccm-intelligent-search', function(e) {
@@ -205,8 +216,13 @@ $(function() {
 		$("#ccm-toolbar-nav-speed-settings").dialog();
 		$("#ccm-toolbar-nav-move-copy").dialog();
 		$("#ccm-toolbar-nav-delete").dialog();
+
+		$("#ccm-edit-overlay,#ccm-dashboard-overlay").click(function(e) {
+			e.stopPropagation();
+		});
 	
-		$("#ccm-nav-edit").mouseover(function() {
+		
+		$("#ccm-nav-edit").hoverIntent(function() {
 			clearTimeout(ccm_hideToolbarMenusTimer);
 			$(".ccm-system-nav-selected").removeClass('ccm-system-nav-selected');
 			$(this).parent().addClass('ccm-system-nav-selected');
@@ -223,9 +239,6 @@ $(function() {
 				$('#ccm-edit-overlay').fadeOut(90, 'easeOutExpo');
 				$(window).unbind('click.ccm-edit');
 			} else {*/
-				$("#ccm-edit-overlay").click(function(e) {
-					e.stopPropagation();
-				});
 				setTimeout("$('#ccm-check-in-comments').focus();",300);
 				$("#ccm-check-in-preview").click(function() {
 					$("#ccm-approve-field").val('PREVIEW');
@@ -256,7 +269,7 @@ $(function() {
 				});
 			//}
 			return false;
-		});
+		}, function() {});
 
 	}
 	var ajaxtimer = null;
@@ -281,18 +294,19 @@ $(function() {
 	}
 	
 	ccm_intelligentSearchDoRemoteCalls = function(query) {	
+		query = jQuery.trim(query);
 		if (!query) {
 			return;
 		}
-		if (query.trim().length > 2) {
-			if (query.trim() == ajaxquery) {
+		if (query.length > 2) {
+			if (query == ajaxquery) {
 				return;
 			}
 			
 			if (ajaxtimer) {
 				window.clearTimeout(ajaxtimer);
 			}
-			ajaxquery = query.trim();
+			ajaxquery = query;
 			ajaxtimer = window.setTimeout(function() {
 				ajaxtimer = null;
 				$("#ccm-intelligent-search-results-list-marketplace").parent().show();
@@ -310,7 +324,7 @@ $(function() {
 					$("#ccm-intelligent-search-results-list-marketplace").html('');
 					for (i = 0; i < r.length; i++) {
 						var rr= r[i];
-						var _onclick = "ccm_openAddonLauncher(" + rr.mpID + ")";
+						var _onclick = "ccm_getMarketplaceItemDetails(" + rr.mpID + ")";
 						$("#ccm-intelligent-search-results-list-marketplace").append('<li><a href="javascript:void(0)" onclick="' + _onclick + '"><img src="' + rr.img + '" />' + rr.name + '</a></li>');
 					}
 					if (r.length == 0) {

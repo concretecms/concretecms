@@ -21,7 +21,11 @@ class ValidationAntispamHelper {
 			foreach($additionalArgs as $key => $value) {
 				$args[$key] = $value;
 			}
-			$u = new User();
+			if (isset($args['user']) && is_object($args['user'])) {
+				$u = $args['user'];
+			} else {
+				$u = new User();
+			}
 			if (!isset($args['email']) && $u->isRegistered()) {
 				$ui = UserInfo::getByID($u->getUserID());
 				$args['email'] = $ui->getUserEmail();
@@ -35,7 +39,6 @@ class ValidationAntispamHelper {
 					$logText .= t('URL: %s', Loader::helper('navigation')->getLinkToCollection($c, true));
 					$logText .= "\n";
 				}
-				$u = new User();
 				if ($u->isRegistered()) { 
 					$logText .= t('User: %s (ID %s)', $u->getUserName(), $u->getUserID());
 					$logText .= "\n";

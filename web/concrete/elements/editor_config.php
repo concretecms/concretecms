@@ -31,6 +31,7 @@ $(function() {
 		width: "<?=$textEditorWidth?>", 
 		height: "<?=$textEditorHeight?>px", 	
 		inlinepopups_skin : "concreteMCE",
+		entity_encoding: 'raw',
 		theme_concrete_buttons2_add : "spellchecker",
 		relative_urls : false,
 		document_base_url: '<?=BASE_URL . DIR_REL?>/',

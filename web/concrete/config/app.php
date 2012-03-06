@@ -107,6 +107,9 @@ if (!defined('ENABLE_PROGRESSIVE_PAGE_REINDEX')) {
 	define('ENABLE_PROGRESSIVE_PAGE_REINDEX', true);
 }
 
+if (!defined('ENABLE_APP_NEWS')) {
+	Config::getOrDefine('ENABLE_APP_NEWS', true);
+}
 
 if (URL_REWRITING_ALL == true) {
 	define('URL_SITEMAP', BASE_URL . DIR_REL . '/dashboard/sitemap');
@@ -210,7 +213,7 @@ define('UVTYPE_CHANGE_PASSWORD', 1);
 
 
 if (!defined('UPLOAD_FILE_EXTENSIONS_ALLOWED')) {
-	Config::getOrDefine('UPLOAD_FILE_EXTENSIONS_ALLOWED','*.flv;*.jpg;*.gif;*.jpeg;*.ico;*.docx;*.xla;*.png;*.psd;*.swf;*.doc;*.txt;*.xls;*.xlsx;*.csv;*.pdf;*.tiff;*.rtf;*.m4a;*.mov;*.wmv;*.mpeg;*.mpg;*.wav;*.avi;*.m4v;*.mp4;*.mp3;*.qt;*.ppt;*.pptx;*.kml;*.xml');
+	Config::getOrDefine('UPLOAD_FILE_EXTENSIONS_ALLOWED','*.flv;*.jpg;*.gif;*.jpeg;*.ico;*.docx;*.xla;*.png;*.psd;*.swf;*.doc;*.txt;*.xls;*.xlsx;*.csv;*.pdf;*.tiff;*.rtf;*.m4a;*.mov;*.wmv;*.mpeg;*.mpg;*.wav;*.3gp;*.avi;*.m4v;*.mp4;*.mp3;*.qt;*.ppt;*.pptx;*.kml;*.xml');
 	define('UPLOAD_FILE_EXTENSIONS_CONFIGURABLE', true);
 } else {
 	define('UPLOAD_FILE_EXTENSIONS_CONFIGURABLE', false);

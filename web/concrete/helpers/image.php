@@ -111,6 +111,7 @@ class ImageHelper {
 			$image = @imageCreateTrueColor($finalWidth, $finalHeight);
 		}
 		
+		$im = false;		
 		switch($imageSize[2]) {
 			case IMAGETYPE_GIF:
 				$im = @imageCreateFromGIF($originalPath);
@@ -177,6 +178,8 @@ class ImageHelper {
 				}
 			}
 		}
+		
+		@chmod($newPath, FILE_PERMISSIONS_MODE);
 	}
 	
 	/** 

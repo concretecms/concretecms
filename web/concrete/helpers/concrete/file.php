@@ -92,16 +92,24 @@
 				$d3 = substr($prefix, 8);
 				
 				if ($createDirectories) { 
+					if (!is_dir($base)) { 
+						@mkdir($base, FILE_PERMISSIONS_MODE, TRUE); 
+						@chmod($base, FILE_PERMISSIONS_MODE); 
+						@touch($base . '/' . $d1 . '/index.html');
+					} 
 					if (!is_dir($base . '/' . $d1)) { 
-						@mkdir($base . '/' . $d1, 0777, TRUE); 
+						@mkdir($base . '/' . $d1, FILE_PERMISSIONS_MODE, TRUE); 
+						@chmod($base . '/' . $d1, FILE_PERMISSIONS_MODE); 
 						@touch($base . '/' . $d1 . '/index.html');
 					} 
 					if (!is_dir($base . '/' . $d1 . '/' . $d2)) { 
-						@mkdir($base . '/' . $d1 . '/' . $d2, 0777, TRUE); 
+						@mkdir($base . '/' . $d1 . '/' . $d2, FILE_PERMISSIONS_MODE, TRUE); 
+						@chmod($base . '/' . $d1 . '/' . $d2, FILE_PERMISSIONS_MODE); 
 						@touch($base . '/' . $d1 . '/' . $d2 . '/index.html');
 					} 
 					if (!is_dir($base . '/' . $d1 . '/' . $d2 . '/' . $d3)) { 
-						@mkdir($base . '/' . $d1 . '/' . $d2 . '/' . $d3, 0777, TRUE); 
+						@mkdir($base . '/' . $d1 . '/' . $d2 . '/' . $d3, FILE_PERMISSIONS_MODE, TRUE); 
+						@chmod($base . '/' . $d1 . '/' . $d2 . '/' . $d3, FILE_PERMISSIONS_MODE); 
 						@touch($base . '/' . $d1 . '/' . $d2 . '/' . $d3 . '/index.html');
 					} 
 				}

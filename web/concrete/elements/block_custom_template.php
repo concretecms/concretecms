@@ -16,16 +16,13 @@ $txt = Loader::helper('text');
 <form method="post" id="ccmCustomTemplateForm" action="<?=$b->getBlockUpdateInformationAction()?>&amp;rcID=<?=intval($rcID) ?>" class="form-stacked clearfix">
 	
 	<? if (count($templates) == 0) { ?>
-	
+
 		<?=t('There are no custom templates available.')?>
-		<div class="ccm-buttons dialog-buttons">
-			<a href="#" class="btn ccm-dialog-close ccm-button-left cancel"><?=t('Cancel')?></a>
-		</div>
 
 	<? } else { ?>
 		
     	<div class="clearfix">
-            <label for="bFilename"><?=t('Custom Template')?></label>
+          <label for="bFilename"><?=t('Custom Template')?></label>
             <div class="input">
                 <select id="bFilename" name="bFilename" class="xlarge">
                     <option value="">(<?=t('None selected')?>)</option>
@@ -40,14 +37,22 @@ $txt = Loader::helper('text');
                     <? } ?>
                 </select>
             </div>
+				</div>
+
+	<? } ?>
+
+        <div class="clearfix" style="padding-top:10px">
+          <label for="bName"><?=t('Block Name')?></label>
+            <div class="input">
+						<input type="text" id="bName" name="bName" class="bName" value="<?=$b->getBlockName() ?>" />
+            </div>
         </div>
-        
+
 		<div class="ccm-buttons dialog-buttons">
 			<a href="#" class="btn ccm-dialog-close ccm-button-left cancel"><?=t('Cancel')?></a>
 			<a href="javascript:void(0)" onclick="$('#ccmCustomTemplateForm').submit()" class="ccm-button-right accept primary btn"><span><?=t('Save')?></span></a>
 		</div>
 		
-	<? } ?>
 <?
 $valt = Loader::helper('validation/token');
 $valt->output();

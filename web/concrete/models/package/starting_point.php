@@ -120,6 +120,7 @@ class StartingPointPackage extends Package {
 		$db = Loader::db();			
 		$installDirectory = DIR_BASE_CORE. '/config';
 		try {
+			Database::ensureEncoding();
 			Package::installDB($installDirectory . '/db.xml');
 		} catch (Exception $e) { 
 			throw new Exception(t('Unable to install database: %s', $db->ErrorMsg()));
@@ -154,22 +155,28 @@ class StartingPointPackage extends Package {
 		Cache::flush();
 		
 		if (!is_dir(DIR_FILES_UPLOADED_THUMBNAILS)) {
-			mkdir(DIR_FILES_UPLOADED_THUMBNAILS);
+			mkdir(DIR_FILES_UPLOADED_THUMBNAILS, FILE_PERMISSIONS_MODE);
+			chmod(DIR_FILES_UPLOADED_THUMBNAILS, FILE_PERMISSIONS_MODE);
 		}
 		if (!is_dir(DIR_FILES_INCOMING)) {
 			mkdir(DIR_FILES_INCOMING);
+			chmod(DIR_FILES_INCOMING, FILE_PERMISSIONS_MODE);
 		}
 		if (!is_dir(DIR_FILES_TRASH)) {
-			mkdir(DIR_FILES_TRASH);
+			mkdir(DIR_FILES_TRASH, FILE_PERMISSIONS_MODE);
+			chmod(DIR_FILES_TRASH, FILE_PERMISSIONS_MODE);
 		}
 		if (!is_dir(DIR_FILES_CACHE)) {
-			mkdir(DIR_FILES_CACHE);
+			mkdir(DIR_FILES_CACHE, FILE_PERMISSIONS_MODE);
+			chmod(DIR_FILES_CACHE, FILE_PERMISSIONS_MODE);
 		}
 		if (!is_dir(DIR_FILES_CACHE_DB)) {
-			mkdir(DIR_FILES_CACHE_DB);
+			mkdir(DIR_FILES_CACHE_DB, FILE_PERMISSIONS_MODE);
+			chmod(DIR_FILES_CACHE_DB, FILE_PERMISSIONS_MODE);
 		}
 		if (!is_dir(DIR_FILES_AVATARS)) {
-			mkdir(DIR_FILES_AVATARS);
+			mkdir(DIR_FILES_AVATARS, FILE_PERMISSIONS_MODE);
+			chmod(DIR_FILES_AVATARS, FILE_PERMISSIONS_MODE);
 		}
 	}
 	

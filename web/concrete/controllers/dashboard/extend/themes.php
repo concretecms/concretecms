@@ -16,7 +16,7 @@ class DashboardExtendThemesController extends Controller {
 			Loader::model('marketplace_remote_item');
 			
 			$mri = new MarketplaceRemoteItemList();
-			$mri->setItemsPerPage(3);
+			$mri->setItemsPerPage(9);
 			$sets = MarketplaceRemoteItemList::getItemSets('themes');
 
 			$setsel = array('' => t('All Items'), 'FEATURED' => t('Featured Items'));
@@ -27,7 +27,7 @@ class DashboardExtendThemesController extends Controller {
 			}
 			
 			$sortBy = array(
-				'recommended' => t('Recommended'),
+				'' => t('Recommended'),
 				'popular' => t('Popular'),
 				'recent' => t('Recently Added'),
 				'rating' => t('Highest Rated'),
@@ -51,7 +51,11 @@ class DashboardExtendThemesController extends Controller {
 			} else {
 				$mri->sortBy('recommended');
 			}
-	
+			
+			if (isset($_REQUEST['marketplaceIncludeOnlyCompatibleAddons']) && $_REQUEST['marketplaceIncludeOnlyCompatibleAddons'] == 1) {
+				$mri->filterByCompatibility(1);
+			}
+			
 			if (isset($_REQUEST['marketplaceRemoteItemKeywords']) && $_REQUEST['marketplaceRemoteItemKeywords']) {
 				$keywords = $_REQUEST['marketplaceRemoteItemKeywords'];
 				$sortBy = array('relevance' => t('Relevance')) + $sortBy;

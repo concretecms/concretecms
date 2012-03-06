@@ -10,7 +10,7 @@ global $c;
 
 	<script type="text/javascript"> 
 		
-		ccm_settingsSetupCacheForm = function() {
+		ccm_settingsSetupCacheForm = function(reset) {
 			var obj = $('input[name=cCacheFullPageContent]:checked');
 			if (obj.attr('enable-cache') == 1) {
 				$('div.ccm-properties-cache-lifetime input').attr('disabled', false);
@@ -18,23 +18,24 @@ global $c;
 				$('div.ccm-properties-cache-lifetime input').attr('disabled', true);
 				$('input[name=cCacheFullPageContentOverrideLifetime][value=0]').attr('checked', true);
 			}
-
 			var obj2 = $('input[name=cCacheFullPageContentOverrideLifetime]:checked');
 			if (obj2.val() == 'custom') {
 				$('input[name=cCacheFullPageContentLifetimeCustom]').attr('disabled', false);
 			} else {
 				$('input[name=cCacheFullPageContentLifetimeCustom]').attr('disabled', true);
-				$('input[name=cCacheFullPageContentLifetimeCustom]').val('');
+				if (reset) {
+					$('input[name=cCacheFullPageContentLifetimeCustom]').val('');
+				}
 			}
 
 		}
 		
 		$(function() {
 			$("input[name=cCacheFullPageContent]").click(function() {
-				ccm_settingsSetupCacheForm();
+				ccm_settingsSetupCacheForm(true);
 			});
 			$("input[name=cCacheFullPageContentOverrideLifetime]").click(function() {
-				ccm_settingsSetupCacheForm();
+				ccm_settingsSetupCacheForm(true);
 			});
 			$("input[name=cCacheFullPageContentOverrideLifetime][value=custom]").click(function() {
 				$('input[name=cCacheFullPageContentLifetimeCustom]').get(0).focus();
@@ -126,7 +127,7 @@ global $c;
 			<div class="ccm-properties-cache-lifetime input">
 			<ul class="inputs-list">
 				<? $val = ($c->getCollectionFullPageCachingLifetimeCustomValue() > 0 && $c->getCollectionFullPageCachingLifetime()) ? $c->getCollectionFullPageCachingLifetimeCustomValue() : ''; ?>
-				<li><label><span><?=$form->radio('cCacheFullPageContentOverrideLifetime', 0, $c->getCollectionFullPageCachingLifetime())?> 
+				<li><label><span><input type="radio" name="cCacheFullPageContentOverrideLifetime" value="0" <? if ($c->getCollectionFullPageCachingLifetime() == '0') { ?> checked="checked" <? } ?> /> 
 				<?=t('Use global setting - %s', $globalSettingLifetime)?>
 				</span></label></li>
 				<li><label><span><?=$form->radio('cCacheFullPageContentOverrideLifetime', 'default', $c->getCollectionFullPageCachingLifetime())?> 

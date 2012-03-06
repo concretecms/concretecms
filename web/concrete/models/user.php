@@ -1,5 +1,4 @@
-<?php
-defined('C5_EXECUTE') or die("Access Denied.");
+<?php defined('C5_EXECUTE') or die("Access Denied.");
 
 /**
  * @package Users
@@ -68,11 +67,12 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		}
 		
 		protected static function regenerateSession() {
+			unset($_SESSION['dashboardMenus']);
 			$tmpSession = $_SESSION; 
 			session_write_close(); 
-			setcookie(session_name(), session_id(), time()-100000);
+			@setcookie(session_name(), session_id(), time()-100000);
 			session_id(sha1(mt_rand())); 
-			session_start(); 
+			@session_start(); 
 			$_SESSION = $tmpSession; 
 		}
 		

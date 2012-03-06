@@ -46,7 +46,7 @@ ccm_showBlockMenu = function(obj, e) {
 		var html = '<div class="popover"><div class="arrow"></div><div class="inner"><div class="content">';
 		html += '<ul>';
 		//html += '<li class="header"></li>';
-		if (obj.canWrite) {
+		if (obj.canWrite && obj.hasEditDialog) {
 			html += (obj.editInline) ? '<li><a class="ccm-menu-icon ccm-icon-edit-menu" onclick="ccm_hideMenus()" id="menuEdit' + obj.bID + '-' + obj.aID + '" href="' + CCM_DISPATCHER_FILENAME + '?cID=' + obj.cID + '&bID=' + obj.bID + '&arHandle=' + encodeURIComponent(obj.arHandle) + '&btask=edit#_edit' + obj.bID + '">' + ccmi18n.editBlock + '</a></li>'
 				: '<li><a class="ccm-menu-icon ccm-icon-edit-menu" onclick="ccm_hideMenus()" dialog-title="' + ccmi18n.editBlock + ' ' + obj.btName + '" dialog-append-buttons="true" dialog-modal="false" dialog-on-close="ccm_blockWindowAfterClose()" dialog-width="' + obj.width + '" dialog-height="' + obj.height + '" id="menuEdit' + obj.bID + '-' + obj.aID + '" href="' + CCM_TOOLS_PATH + '/edit_block_popup.php?cID=' + obj.cID + '&bID=' + obj.bID + '&arHandle=' + encodeURIComponent(obj.arHandle) + '&btask=edit">' + ccmi18n.editBlock + '</a></li>';
 		}
@@ -72,7 +72,7 @@ ccm_showBlockMenu = function(obj, e) {
 			html += '<li><a class="ccm-menu-icon ccm-icon-design-menu" onclick="ccm_hideMenus()" dialog-modal="false" dialog-title="' + ccmi18n.changeBlockBaseStyle + '" dialog-width="475" dialog-height="500" dialog-append-buttons="true" id="menuChangeCSS' + obj.bID + '-' + obj.aID + '" href="' + CCM_TOOLS_PATH + '/edit_block_popup.php?cID=' + obj.cID + '&bID=' + obj.bID + '&arHandle=' + encodeURIComponent(obj.arHandle) + '&btask=block_css&modal=true&width=300&height=100" title="' + ccmi18n.changeBlockCSS + '">' + ccmi18n.changeBlockCSS + '</a></li>';
 		}
 		if (obj.canWrite) {
-			html += '<li><a class="ccm-menu-icon ccm-icon-custom-template-menu" onclick="ccm_hideMenus()" dialog-append-buttons="true" 	dialog-modal="false" dialog-title="' + ccmi18n.changeBlockTemplate + '" dialog-width="300" dialog-height="230" id="menuChangeTemplate' + obj.bID + '-' + obj.aID + '" href="' + CCM_TOOLS_PATH + '/edit_block_popup.php?cID=' + obj.cID + '&bID=' + obj.bID + '&arHandle=' + encodeURIComponent(obj.arHandle) + '&btask=template&modal=true&width=300&height=230" title="' + ccmi18n.changeBlockTemplate + '">' + ccmi18n.changeBlockTemplate + '</a></li>';
+			html += '<li><a class="ccm-menu-icon ccm-icon-custom-template-menu" onclick="ccm_hideMenus()" dialog-append-buttons="true" 	dialog-modal="false" dialog-title="' + ccmi18n.changeBlockTemplate + '" dialog-width="300" dialog-height="275" id="menuChangeTemplate' + obj.bID + '-' + obj.aID + '" href="' + CCM_TOOLS_PATH + '/edit_block_popup.php?cID=' + obj.cID + '&bID=' + obj.bID + '&arHandle=' + encodeURIComponent(obj.arHandle) + '&btask=template&modal=true&width=300&height=275" title="' + ccmi18n.changeBlockTemplate + '">' + ccmi18n.changeBlockTemplate + '</a></li>';
 		}
 
 		if (obj.canModifyGroups || obj.canAliasBlockOut || obj.canSetupComposer) {
@@ -154,7 +154,8 @@ ccm_showAreaMenu = function(obj, e) {
 			el = document.createElement("DIV");
 			el.id = "ccm-area-menu" + obj.aID;
 			el.className = "ccm-menu ccm-ui";
-			el.style.display = "none";
+			el.style.display = "block";
+			el.style.visibility = "hidden";
 			document.body.appendChild(el);
 			
 			aobj = $("#ccm-area-menu" + obj.aID);
@@ -484,6 +485,14 @@ ccm_triggerSelectGroup = function(gID, gName) {
 	alert(gName);
 }
 
+ccm_setupGroupSearchPaging = function() {
+	$("div#ccm-group-paging").each(function() {
+		$(this).closest('.ui-dialog-content').dialog('option', 'buttons', [{}]);
+		$(this).closest('.ui-dialog').find('.ui-dialog-buttonpane .ccm-pane-dialog-pagination').remove();
+		$(this).appendTo($(this).closest('.ui-dialog').find('.ui-dialog-buttonpane').addClass('ccm-ui'));
+	});
+}
+
 ccm_setupGroupSearch = function() {
 	$('div.ccm-group a').unbind();
 	$('div.ccm-group a').each(function(i) {
@@ -504,6 +513,7 @@ ccm_setupGroupSearch = function() {
 	});
 	
 	/* setup paging */
+	ccm_setupGroupSearchPaging();
 	$("div#ccm-group-paging a").click(function() {
 		$("#ccm-group-search-wrapper").html("");	
 		$.ajax({

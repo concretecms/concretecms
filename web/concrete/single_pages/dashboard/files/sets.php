@@ -51,8 +51,9 @@
 		</div>
 
 		<div id="ccm-file-set-permissions-wrapper" <? if (!$fs->overrideGlobalPermissions()) { ?> style="display: none" <? } ?>>
-		<a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/user_group_selector" id="ug-selector" dialog-width="90%" dialog-title="<?=t('Choose User/Group')?>"  dialog-height="70%" class="ccm-button-right dialog-launch btn"><?=t('Add Group or User')?></a>
-		<p><?=t('Add users or groups to determine access to the file manager. These permissions affect only this set.');?></p>
+
+		<a class="btn ccm-button-right dialog-launch ug-selector" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/users/search_dialog?mode=choose_multiple" dialog-modal="false" dialog-width="90%" dialog-title="<?=t('Add User')?>"  dialog-height="70%"><?=t('Add User')?></a>
+		<a class="btn ccm-button-right dialog-launch ug-selector" style="margin-right: 5px" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/select_group" dialog-modal="false" dialog-title="<?=t('Add Group')?>"><?=t('Add Group')?></a>
 
 		<div class="ccm-spacer">&nbsp;</div><br/>
 
@@ -181,7 +182,7 @@
 				ccm_alSelectPermissionsEntity('gID', gID, gName);
 			}
 
-			$("#ug-selector").dialog();	
+			$(".ug-selector").dialog();	
 			ccm_alActivateFilePermissionsSelector();	
 			
 			$("#fsOverrideGlobalPermissions").click(function() {
@@ -227,13 +228,17 @@
 	</div>
 	<div class="ccm-pane-body <? if (!$fsl->requiresPaging()) { ?> ccm-pane-body-footer <? } ?> ">
 
-		<a href="<?=View::url('/dashboard/files/add_set')?>" style="float: right;z-index:999;position:relative" class="btn primary"><?=t("Add Set")?></a>
+		<a href="<?=View::url('/dashboard/files/add_set')?>" style="float: right;z-index:999;position:relative;top:-5px" class="btn primary"><?=t("Add File Set")?></a>
 
 		<?=$fsl->displaySummary()?>
 	
-		<? if (count($fileSets) > 0) { 
+		<? if (count($fileSets) > 0) { ?>
 			
-		foreach ($fileSets as $fs) { ?>
+			<style type="text/css">
+				div.ccm-paging-top {padding-bottom:10px;}
+			</style>
+		
+		<? foreach ($fileSets as $fs) { ?>
 		
 			<div class="ccm-group">
 				<a class="ccm-group-inner" href="<?=$this->url('/dashboard/files/sets/', 'view_detail', $fs->getFileSetID())?>" style="background-image: url(<?=ASSETS_URL_IMAGES?>/icons/group.png)"><?=$fs->getFileSetName()?></a>

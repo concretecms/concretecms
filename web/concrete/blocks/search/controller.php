@@ -15,9 +15,13 @@ class SearchBlockController extends BlockController {
 	protected $hColor = '#EFE795';
 
 	public function highlightedMarkup($fulltext, $highlight) {
+		if (!$highlight) {
+			return $fulltext;
+		}
+
 		$this->hText = $fulltext;
 		$this->hHighlight  = str_replace(array('"',"'","&quot;"),'',$highlight); // strip the quotes as they mess the regex
-		$this->hText = @preg_replace( "#$this->hHighlight#i", '<span style="background-color:'. $this->hColor .';">$0</span>', $this->hText );	
+		$this->hText = @preg_replace( "#$this->hHighlight#ui", '<span style="background-color:'. $this->hColor .';">$0</span>', $this->hText );	
 		return $this->hText; 
 	}
 	
@@ -27,8 +31,16 @@ class SearchBlockController extends BlockController {
 		$matches = array();
 		$highlight = str_replace(array('"',"'","&quot;"),'',$highlight); // strip the quotes as they mess the regex
 		
-		$regex = '([a-z|A-Z|0-9|\.|_|\s]{0,45})'. $highlight .'([a-z|A-Z|0-9|\.|_|\s]{0,45})';
-		preg_match_all("#$regex#i", $text, $matches);
+		if (!$highlight) {
+			$text = Loader::helper('text')->shorten($fulltext, 180);
+			if (strlen($fulltext) > 180) {
+				$text . '&hellip;';
+			}
+			return $text;
+		}
+		
+		$regex = '([[:alnum:]|\'|\.|_|\s]{0,45})'. $highlight .'([[:alnum:]|\.|_|\s]{0,45})';
+		preg_match_all("#$regex#ui", $text, $matches);
 		
 		if(!empty($matches[0])) {
 			$body_length = 0;
@@ -36,13 +48,15 @@ class SearchBlockController extends BlockController {
 			foreach($matches[0] as $line) {
 				$body_length += strlen($line);
 				
-				$body_string[] = $this->highlightedMarkup($line, $highlight);
-				
+				$r = $this->highlightedMarkup($line, $highlight);
+				if ($r) {
+					$body_string[] = $r;
+				}
 				if($body_length > 150)
 					break;
 			}
 			if(!empty($body_string))
-				return @implode("....", $body_string);
+				return @implode("&hellip;", $body_string);
 		}
 	}
 	

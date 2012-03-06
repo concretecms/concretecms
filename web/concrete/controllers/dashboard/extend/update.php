@@ -36,13 +36,11 @@ class DashboardExtendUpdateController extends Controller {
 			$mi = Marketplace::getInstance();
 			if ($mi->isConnected()) {
 				Marketplace::checkPackageUpdates();
-			} else {
-				$this->redirect('/dashboard/extend/connect');
 			}
 		}
 	}
 
-    public function prepare_remote_upgrade($remoteMPID){
+    public function prepare_remote_upgrade($remoteMPID = 0){
 		$tp = new TaskPermission();
 		if ($tp->canInstallPackages()) { 
 			Loader::model('marketplace_remote_item');

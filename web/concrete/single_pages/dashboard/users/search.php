@@ -39,9 +39,7 @@ function printAttributeRow($ak, $uo) {
 		<input type="hidden" name="uID" value="' . $uo->getUserID() . '" />
 		<input type="hidden" name="task" value="update_extended_attribute" />
 		<div class="ccm-attribute-editable-field-form ccm-attribute-editable-field-type-' . strtolower($type->getAttributeTypeHandle()) . '">
-		<label>
 		' . $ak->render('form', $vo, true) . '
-		</label>
 		</div>
 		</form>
 		</td>
@@ -208,7 +206,7 @@ if (is_object($uo)) {
                         Zend_Locale_Data::setCache(Cache::getLibrary());
                         foreach($languages as $lang) {
                             $loc = new Zend_Locale($lang);
-                            $locales[$lang] = Zend_Locale::getTranslation($loc->getLanguage(), 'language', ACTIVE_LOCALE);
+                            $locales[$lang] = Zend_Locale::getTranslation($loc->getLanguage(), 'language', $lang);
                         }
                         $ux = $uo->getUserObject();
                         print $form->select('uDefaultLanguage', $locales, $ux->getUserDefaultLanguage());

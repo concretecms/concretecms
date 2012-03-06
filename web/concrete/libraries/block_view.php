@@ -200,7 +200,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 					$this->controller = Loader::controller($obj);
 				}
 			}
-			if (in_array($view, array('view', 'add', 'edit'))) {
+			if (in_array($view, array('view', 'add', 'edit', 'composer'))) {
 				$_action = $view;
 			} else {
 				$_action = 'view';
@@ -213,7 +213,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			$page = Page::getCurrentPage();
 			
 			if ($view == 'view') {
-				if ($this->controller->cacheBlockOutput() && ($obj instanceof Block)) {
+				if ($this->controller->cacheBlockOutput() && ($obj instanceof Block) && (!$obj->isBlockInStack())) {
 					if ((!$u->isRegistered() || ($this->controller->cacheBlockOutputForRegisteredUsers())) &&
 						(($_SERVER['REQUEST_METHOD'] != 'POST' || ($this->controller->cacheBlockOutputOnPost() == true)))) {
 							$useCache = true;

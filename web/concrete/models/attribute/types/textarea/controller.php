@@ -27,23 +27,14 @@ class TextareaAttributeTypeController extends DefaultAttributeTypeController  {
 		if (is_object($this->attributeValue)) {
 			$value = $this->getAttributeValue()->getValue();
 		}
-		$this->addHeaderItem(Loader::helper('html')->javascript('tiny_mce/tiny_mce.js'));
+		$this->addFooterItem(Loader::helper('html')->javascript('tiny_mce/tiny_mce.js'));
 		// switch display type here
 		if ($this->akTextareaDisplayMode == 'text' || $this->akTextareaDisplayMode == '') {
 			print Loader::helper('form')->textarea($this->field('value'), $value, array('class' => $additionalClass, 'rows' => 5));
 		} else {
-			$this->addHeaderItem(Loader::helper('html')->css('ccm.dialog.css'));
-			$this->addHeaderItem(Loader::helper('html')->css('ccm.forms.css'));
-			$this->addHeaderItem(Loader::helper('html')->css('ccm.filemanager.css'));
-			$this->addHeaderItem(Loader::helper('html')->css('ccm.search.css'));
-			$this->addHeaderItem(Loader::helper('html')->css('ccm.menus.css'));
-			$this->addHeaderItem(Loader::helper('html')->javascript('ccm.filemanager.js'));
-			$this->addHeaderItem(Loader::helper('html')->javascript('ccm.dialog.js'));
-			$this->addHeaderItem(Loader::helper('html')->javascript('ccm.ui.js'));
-			$this->addHeaderItem(Loader::helper('html')->javascript('jquery.form.js'));
-			$this->addHeaderItem(Loader::helper('html')->javascript('jquery.liveupdate.js'));
-			$this->addHeaderItem(Loader::helper('html')->javascript('ccm.search.js'));
-			$this->addHeaderItem('<script type="text/javascript" src="' . REL_DIR_FILES_TOOLS_REQUIRED . '/i18n_js"></script>'); 
+			$this->addHeaderItem(Loader::helper('html')->css('ccm.app.css'));
+			$this->addFooterItem(Loader::helper('html')->javascript('ccm.app.js'));
+			$this->addFooterItem('<script type="text/javascript" src="' . REL_DIR_FILES_TOOLS_REQUIRED . '/i18n_js"></script>'); 
 			Loader::element('editor_init');
 			$editor_mode = strtoupper(str_replace('rich_text_', '', $this->akTextareaDisplayMode));
 			Loader::element('editor_config', array('editor_mode' => $editor_mode, 'editor_selector' => 'ccm-advanced-editor-' . $this->attributeKey->getAttributeKeyID()));
@@ -55,7 +46,7 @@ class TextareaAttributeTypeController extends DefaultAttributeTypeController  {
 	}
 	
 	public function composer() {
-		$this->form('span12');
+		$this->form('span4');
 	}
 
 	public function searchForm($list) {

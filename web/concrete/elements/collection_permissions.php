@@ -177,7 +177,9 @@ $saveMsg = t('Save permissions first.');
 			<option value="datetime"><?=t('Timed Release Settings')?></option>
 		  </select>
 
-		<a class="btn ccm-button-right dialog-launch" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/user_group_selector.php?cID=<?=$_REQUEST['cID']?>" dialog-modal="false" dialog-width="90%" dialog-title="<?=t('Add User/Group')?>"  dialog-height="70%"><?=t('Add User/Group')?></a>
+		
+		<a class="btn ccm-button-right dialog-launch" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/users/search_dialog?mode=choose_multiple&cID=<?=$_REQUEST['cID']?>" dialog-modal="false" dialog-width="90%" dialog-title="<?=t('Add User')?>"  dialog-height="70%"><?=t('Add User')?></a>
+		<a class="btn ccm-button-right dialog-launch" style="margin-right: 5px" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/select_group?cID=<?=$_REQUEST['cID']?>" dialog-modal="false" dialog-title="<?=t('Add Group')?>"><?=t('Add Group')?></a>
 
 		</div>
 
