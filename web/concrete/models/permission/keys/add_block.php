@@ -53,7 +53,7 @@ class AddBlockAreaPermissionKey extends AreaPermissionKey  {
 		// these are assignments that apply to me
 		$canAddBlockType = false;
 		foreach($list as $l) {
-			if ($l->getBlockTypesAllowedPermission() == '0') {
+			if ($l->getBlockTypesAllowedPermission() == 'N') {
 				$canAddBlockType = false;
 			}
 			if ($l->getBlockTypesAllowedPermission() == 'C') {
@@ -67,7 +67,7 @@ class AddBlockAreaPermissionKey extends AreaPermissionKey  {
 					$canAddBlockType = true;
 				}
 			}
-			if ($l->getBlockTypesAllowedPermission() == '1') {
+			if ($l->getBlockTypesAllowedPermission() == 'A') {
 				$canAddBlockType = true;
 			}
 		}
@@ -85,7 +85,7 @@ class AddBlockAreaPermissionKey extends AreaPermissionKey  {
 				$permission = 1;
 			} else { 
 				$permission = $db->GetOne('select permission from AreaPermissionBlockTypeAssignments where peID = ? and cID = ? and arHandle = ?', array($pe->getAccessEntityID(), $this->permissionObjectToCheck->getCollectionID(), $this->permissionObjectToCheck->getAreaHandle()));
-				if ($permission !== '0' && $permission != 'C') {
+				if ($permission != 'N' && $permission != 'C') {
 					$permission = 1;
 				}
 
@@ -110,7 +110,7 @@ class AddBlockAreaPermissionKey extends AreaPermissionKey  {
 class AddBlockAreaPermissionAssignment extends AreaPermissionAssignment {
 	
 	protected $customBlockTypeArray = array();
-	protected $blockTypesAllowedPermission = 0;
+	protected $blockTypesAllowedPermission = 'N';
 
 	public function setBlockTypesAllowedPermission($permission) {
 		$this->blockTypesAllowedPermission = $permission;

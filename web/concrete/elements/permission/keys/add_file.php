@@ -27,7 +27,7 @@ $extensions = Loader::helper('concrete/file')->getAllowedFileExtensions();
 <div class="clearfix">
 	<label><?=$entity->getAccessEntityLabel()?></label>
 	<div class="input">
-	<?=$form->select('fileTypesIncluded[' . $entity->getAccessEntityID() . ']', array('1' => t('All File Types'), 'C' => t('Custom')), $assignment->getFileTypesAllowedPermission())?><br/><br/>
+	<?=$form->select('fileTypesIncluded[' . $entity->getAccessEntityID() . ']', array('A' => t('All File Types'), 'C' => t('Custom')), $assignment->getFileTypesAllowedPermission())?><br/><br/>
 	<ul class="inputs-list" <? if ($assignment->getFileTypesAllowedPermission() != 'C') { ?>style="display: none"<? } ?>>
 	<? foreach($extensions as $ext) {
 		$checked = ($assignment->getFileTypesAllowedPermission() == 1 || ($assignment->getFileTypesAllowedPermission() == 'C' && in_array($ext, $assignment->getFileTypesAllowedArray())));
@@ -55,7 +55,7 @@ $extensions = Loader::helper('concrete/file')->getAllowedFileExtensions();
 <div class="clearfix">
 	<label><?=$entity->getAccessEntityLabel()?></label>
 	<div class="input">
-	<?=$form->select('fileTypesExcluded[' . $entity->getAccessEntityID() . ']', array('0' => t('No File Types'), 'C' => t('Custom')), $assignment->getFileTypesAllowedPermission())?><br/><br/>
+	<?=$form->select('fileTypesExcluded[' . $entity->getAccessEntityID() . ']', array('N' => t('No File Types'), 'C' => t('Custom')), $assignment->getFileTypesAllowedPermission())?><br/><br/>
 	<ul class="inputs-list" <? if ($assignment->getFileTypesAllowedPermission() != 'C') { ?>style="display: none"<? } ?>>
 	<? foreach($extensions as $ext) {
 		$checked = in_array($ext, $assignment->getFileTypesAllowedArray());

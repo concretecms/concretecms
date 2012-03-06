@@ -25,7 +25,7 @@ $blockTypes = $btl->getBlockTypeList();
 <div class="clearfix">
 	<label><?=$entity->getAccessEntityLabel()?></label>
 	<div class="input">
-	<?=$form->select('blockTypesIncluded[' . $entity->getAccessEntityID() . ']', array('1' => t('All Block Types'), 'C' => t('Custom')), $assignment->getBlockTypesAllowedPermission())?><br/><br/>
+	<?=$form->select('blockTypesIncluded[' . $entity->getAccessEntityID() . ']', array('A' => t('All Block Types'), 'C' => t('Custom')), $assignment->getBlockTypesAllowedPermission())?><br/><br/>
 	<ul class="inputs-list" <? if ($assignment->getBlockTypesAllowedPermission() != 'C') { ?>style="display: none"<? } ?>>
 		<? foreach($blockTypes as $bt) { ?>
 			<li><label><input type="checkbox" name="btIDInclude[<?=$entity->getAccessEntityID()?>][]" value="<?=$bt->getBlockTypeID()?>" <? if (in_array($bt->getBlockTypeID(), $assignment->getBlockTypesAllowedArray())) { ?> checked="checked" <? } ?> /> <span><?=$bt->getBlockTypeName()?></span></label></li>
@@ -51,7 +51,7 @@ $blockTypes = $btl->getBlockTypeList();
 <div class="clearfix">
 	<label><?=$entity->getAccessEntityLabel()?></label>
 	<div class="input">
-	<?=$form->select('blockTypesExcluded[' . $entity->getAccessEntityID() . ']', array('0' => t('No Block Types'), 'C' => t('Custom')), $assignment->getBlockTypesAllowedPermission())?><br/><br/>
+	<?=$form->select('blockTypesExcluded[' . $entity->getAccessEntityID() . ']', array('N' => t('No Block Types'), 'C' => t('Custom')), $assignment->getBlockTypesAllowedPermission())?><br/><br/>
 	<ul class="inputs-list" <? if ($assignment->getBlockTypesAllowedPermission() != 'C') { ?>style="display: none"<? } ?>>
 		<? foreach($blockTypes as $bt) { ?>
 			<li><label><input type="checkbox" name="btIDExclude[<?=$entity->getAccessEntityID()?>][]" value="<?=$bt->getBlockTypeID()?>" <? if (in_array($bt->getBlockTypeID(), $assignment->getBlockTypesAllowedArray())) { ?> checked="checked" <? } ?> /> <span><?=$bt->getBlockTypeName()?></span></label></li>
