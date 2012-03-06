@@ -95,10 +95,8 @@ $ih = Loader::helper('concrete/interface');
 					<div id="ccm-form-fileset">
 						<?php
 							Loader::model('file_set');
-							$fsl = new FileSetList();
-							$fsl->filterByType(FileSet::TYPE_PUBLIC);
-							$fsl->setItemsPerPage(-1);
-							$fileSets = $fsl->getPage();
+							$fs = new FileSet();
+							$fileSets = $fs->getMySets();
 							$sets = array(0 => t('None'));
 							foreach($fileSets as $fileSet) {
 								$sets[$fileSet->fsID] = $fileSet->fsName;
