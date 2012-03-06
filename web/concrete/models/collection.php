@@ -701,8 +701,9 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		}
 		
 		public function getGlobalBlocks() {
-			$db = Loader::db();		
-			$rs = $db->GetCol('select arHandle from Areas where arIsGlobal = 1 and cID = ?', array($this->getCollectionID()));
+			$db = Loader::db();
+			$v = array( Stack::ST_TYPE_GLOBAL_AREA );
+			$rs = $db->GetCol('select stName from Stacks where Stacks.stType = ?', $v );
 			$blocks = array();
 			if (count($rs) > 0) {
 				$pcp = new Permissions($this);
@@ -821,8 +822,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			
 			if ($res) {
 				// now we add a pending version to the collectionversions table
-				$v2 = array($newCID, 1, $data['name'], $data['handle'], $data['cDescription'], $cDatePublic, $cDate, VERSION_INITIAL_COMMENT, $data['uID'], $cvIsApproved);
-				$q2 = "insert into CollectionVersions (cID, cvID, cvName, cvHandle, cvDescription, cvDatePublic, cvDateCreated, cvComments, cvAuthorUID, cvIsApproved) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+				$v2 = array($newCID, 1, $data['name'], $data['handle'], $data['cDescription'], $cDatePublic, $cDate, VERSION_INITIAL_COMMENT, $data['uID'], $cvIsApproved, 1);
+				$q2 = "insert into CollectionVersions (cID, cvID, cvName, cvHandle, cvDescription, cvDatePublic, cvDateCreated, cvComments, cvAuthorUID, cvIsApproved, cvIsNew) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 				$r2 = $db->prepare($q2);
 				$res2 = $db->execute($r2, $v2);
 			}

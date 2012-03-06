@@ -44,7 +44,7 @@ class SurveyBlockController extends BlockController {
 	
 	function __construct($obj = NULL) {
 		parent::__construct($obj);
-		$c = $this->getCollectionObject();
+		$c = Page::getCurrentPage();
 		
 		if (is_object($c)) {
 			$this->cID = $c->getCollectionID();

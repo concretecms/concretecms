@@ -77,16 +77,19 @@ class DashboardSystemBackupRestoreBackupController extends DashboardBaseControll
 	}
 
 	public function restore_backup() {
+		set_time_limit(0);
 		$tp = new TaskPermission();
 		  if (!$tp->canBackup()) {
 			return false;
 		}
 
-		$file = $this->post('backup_file');
-		
+		$file = basename(realpath(DIR_FILES_BACKUPS . '/' . $this->post('backup_file')));
 		$fh = Loader::helper('file');
 		
 		$db = Loader::db(); 
+		if (!file_exists(DIR_FILES_BACKUPS . '/'. $file)) {
+			throw new Exception(t('Invalid backup file specified.'));
+		}
 		chmod(DIR_FILES_BACKUPS . '/'. $file, 0666);
 		$str_restSql = $fh->getContents(DIR_FILES_BACKUPS . '/' . $file);
 		//$str_restSql = file_get_contents(DIR_FILES_BACKUPS . '/' . $file);

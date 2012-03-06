@@ -2368,6 +2368,7 @@ class Page extends Collection {
 			Events::fire('on_page_add', $pc);
 			$pc->rescanCollectionPath();
 
+
 		}
 		
 		return $pc;

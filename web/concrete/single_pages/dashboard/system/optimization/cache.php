@@ -21,7 +21,7 @@
     	<div class="clearfix inputs-list">
             <label>
                 <input type="radio" name="FULL_PAGE_CACHE_GLOBAL" value="0" <?php  if (FULL_PAGE_CACHE_GLOBAL == 0) { ?> checked <?php  } ?> />
-                <span><?php echo t('Off - Turn is on by hand for specific pages.')?></span>
+                <span><?php echo t('Off - Turn it on by hand for specific pages.')?></span>
             </label>
             <label>
                 <input type="radio" name="FULL_PAGE_CACHE_GLOBAL" value="blocks" <?php  if (FULL_PAGE_CACHE_GLOBAL == 'blocks') { ?> checked <?php  } ?> />

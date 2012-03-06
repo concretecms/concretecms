@@ -7,6 +7,7 @@
 		protected $btCacheBlockOutput = true;
 		protected $btCacheBlockOutputOnPost = true;
 		protected $btCacheBlockOutputForRegisteredUsers = true;
+		protected $btCacheBlockOutputLifetime = 86400; // check every day
 
 		protected $btIsInternal = true;		
 		
@@ -22,6 +23,8 @@
 			$this->set('latest_version', Config::get('APP_VERSION_LATEST'));
 			$tp = new TaskPermission();
 			$updates = 0;
+			$local = array();
+			$remote = array();
 			if ($tp->canInstallPackages()) { 
 				$local = Package::getLocalUpgradeablePackages();
 				$remote = Package::getRemotelyUpgradeablePackages();

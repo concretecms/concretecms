@@ -32,9 +32,11 @@ if ($do_search) {
 			<div class="searchResult">
 				<h3><a href="<?=$r->getPath()?>"><?=$r->getName()?></a></h3>
 				<p>
-					<?php echo ($currentPageBody ? $currentPageBody .'<br />' : '')?>
-					<?php echo $this->controller->highlightedMarkup($tt->shortText($r->getDescription()),$query)?>
-					<a href="<?php echo $r->getPath(); ?>" class="pageLink"><?php echo $this->controller->highlightedMarkup($r->getPath(),$query)?></a>
+					<? if ($r->getDescription()) { ?>
+						<?php  echo $this->controller->highlightedMarkup($tt->shortText($r->getDescription()),$query)?><br/>
+					<? } ?>
+					<?php echo $currentPageBody; ?>
+					<a href="<?php  echo $r->getPath(); ?>" class="pageLink"><?php  echo $this->controller->highlightedMarkup($r->getPath(),$query)?></a>
 				</p>
 			</div>
 		<? 	}//foreach search result ?>

@@ -84,7 +84,7 @@ if (isset($cp)) {
 		$statusMessage .= "<br/>" . t('(All edits take effect immediately)');
 	}
 
-	if ($cp->canWrite() || $cp->canAddSubContent() || $cp->canAdminPage() || $cp->canApproveCollection()) { 
+	if ($dh->canRead() || $cp->canWrite() || $cp->canAddSubContent() || $cp->canAdminPage() || $cp->canApproveCollection()) { 
 	
 		$cID = $c->getCollectionID(); ?>
 
@@ -102,18 +102,23 @@ menuHTML += '<li id="ccm-logo-wrapper"><?=Loader::helper('concrete/interface')->
 	menuHTML += '<li><a class="ccm-icon-back ccm-menu-icon" href="<?=View::url('/dashboard/pages/types')?>"><?=t('Page Types')?></a></li>';
 <? } ?>
 
-menuHTML += '<li <? if ($c->isEditMode()) { ?>class="ccm-nav-edit-mode-active"<? } ?>><a class="ccm-icon-edit ccm-menu-icon" id="ccm-nav-edit" href="javascript:void(0)"><? if ($c->isEditMode()) { ?><?=t('Editing')?><? } else { ?><?=t('Edit')?></a><? } ?></li>';
-<?
-$items = $ihm->getPageHeaderMenuItems('left');
-foreach($items as $ih) {
-	$cnt = $ih->getController(); 
-	if ($cnt->displayItem()) {
-	?>
-		menuHTML += '<li><?=$cnt->getMenuLinkHTML()?></li>';
+<? if ($cp->canWrite() || $cp->canAddSubContent() || $cp->canAdminPage() || $cp->canApproveCollection()) { ?>
+	
+	menuHTML += '<li <? if ($c->isEditMode()) { ?>class="ccm-nav-edit-mode-active"<? } ?>><a class="ccm-icon-edit ccm-menu-icon" id="ccm-nav-edit" href="<? if (!$c->isEditMode()) { ?><?=DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=<?=$c->getCollectionID()?>&ctask=check-out<?=$token?><? } else { ?>javascript:void(0);<? } ?>"><? if ($c->isEditMode()) { ?><?=t('Editing')?><? } else { ?><?=t('Edit')?><? } ?></a></li>';
 	<?
+	$items = $ihm->getPageHeaderMenuItems('left');
+	foreach($items as $ih) {
+		$cnt = $ih->getController(); 
+		if ($cnt->displayItem()) {
+		?>
+			menuHTML += '<li><?=$cnt->getMenuLinkHTML()?></li>';
+		<?
+		}
 	}
-}
-if (Loader::helper('concrete/interface')->showWhiteLabelMessage()) { ?>
+	
+} ?>
+
+<? if (Loader::helper('concrete/interface')->showWhiteLabelMessage()) { ?>
 	menuHTML += '<li id="ccm-white-label-message"><?=t('Powered by <a href="%s">concrete5</a>.', CONCRETE5_ORG_URL)?></li>';
 <? }
 ?>
@@ -144,7 +149,7 @@ menuHTML += '</div>';
 $dh = Loader::helper('concrete/dashboard');
 ?>
 
-menuHTML += '<?=$dh->getDashboardAndSearchMenus()?>';
+menuHTML += '<?=addslashes($dh->getDashboardAndSearchMenus())?>';
 
 menuHTML += '<div id="ccm-edit-overlay">';
 menuHTML += '<div class="ccm-edit-overlay-inner">';
@@ -152,22 +157,21 @@ menuHTML += '<div class="ccm-edit-overlay-inner">';
 <? if ($c->isEditMode()) { ?>
 
 menuHTML += '<div id="ccm-exit-edit-mode-direct" <? if ($vo->isNew()) { ?>style="display: none"<? } ?>>';
-menuHTML += '<span class="label notice"><?=t('Version %s', $c->getVersionID())?></span>';
-menuHTML += '<?=t('Page currently in edit mode on %s', date(DATE_APP_GENERIC_MDYT))?>';
 menuHTML += '<div class="ccm-edit-overlay-actions">';
 menuHTML += '<a href="javascript:void(0)" onclick="window.location.href=\'<?=DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=<?=$c->getCollectionID()?>&ctask=check-in<?=$token?>\'" id="ccm-nav-exit-edit-direct" class="btn primary"><?=t('Exit Edit Mode')?></a>';
 menuHTML += '</div>';
+menuHTML += '<span class="label notice"><?=t('Version %s', $c->getVersionID())?></span>';
+menuHTML += '<?=t('Page currently in edit mode on %s', date(DATE_APP_GENERIC_MDYT))?>';
+
 menuHTML += '</div>';
 
 menuHTML += '<div id="ccm-exit-edit-mode-comment" <? if (!$vo->isNew()) { ?>style="display: none"<? } ?>>';
-menuHTML += '<span class="label notice"><?=t('Version %s', $c->getVersionID())?></span>';
-menuHTML += '<?=t('Page currently in edit mode on %s', date(DATE_APP_GENERIC_MDYT))?>';
 menuHTML += '<div class="ccm-edit-overlay-actions" class="clearfix">';
 menuHTML += '<form method="post" id="ccm-check-in" action="<?=DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=<?=$c->getCollectionID()?>&ctask=check-in">';
 <? $valt = Loader::helper('validation/token'); ?>
 menuHTML += '<?=$valt->output('', true)?>';
 menuHTML += '<h4><?=t('Version Comments')?></h4>';
-menuHTML += '<p><input type="text" name="comments" id="ccm-check-in-comments" value="<?=$vo->getVersionComments()?>" style="width:520px"/></p>';
+menuHTML += '<p><input type="text" name="comments" id="ccm-check-in-comments" value="<?=$vo->getVersionComments()?>" onclick="this.select()" style="width:520px"/></p>';
 <? if ($cp->canApproveCollection()) { ?>
 menuHTML += '<a href="javascript:void(0)" id="ccm-check-in-publish" class="btn primary" style="float: right"><span><?=t('Publish My Edits')?></span></a>';
 <? } ?>
@@ -177,20 +181,23 @@ menuHTML += '<input type="hidden" name="approve" value="PREVIEW" id="ccm-approve
 menuHTML += '</form><br/>';
 
 menuHTML += '</div>';
+menuHTML += '<span class="label notice"><?=t('Version %s', $c->getVersionID())?></span>';
+menuHTML += '<?=t('Page currently in edit mode on %s', date(DATE_APP_GENERIC_MDYT))?>';
+
 menuHTML += '</div>';
 
 <? } else { ?>
 
-menuHTML += '<span class="label notice"><?=t('Version %s', $c->getVersionID())?></span>';
-menuHTML += '<?=t('Page last edited on %s', $c->getCollectionDateLastModified(DATE_APP_GENERIC_MDYT))?>';
 menuHTML += '<div class="ccm-edit-overlay-actions">';
 <? if ($cp->canWrite()) { ?>
 	menuHTML += '<a id="ccm-nav-check-out" href="<? if (!$cantCheckOut) { ?><?=DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=<?=$c->getCollectionID()?>&ctask=check-out<?=$token?><? } else { ?>javascript:void(0);<? } ?>" class="btn primary <? if ($cantCheckOut) { ?> disabled <? } ?> tooltip" <? if ($cantCheckOut) { ?>title="<?=t('Someone has already checked this page out for editing.')?>"<? } ?>><?=t('Edit this Page')?></a>';
 <? } ?>
 <? if ($cp->canAddSubContent()) { ?>
-	menuHTML += '<a id="ccm-toolbar-add-subpage" dialog-width="600" dialog-modal="false" dialog-append-buttons="true" dialog-height="230" dialog-title="<?=t('Add a Sub-Page')?>" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_collection_popup.php?cID=<?=$cID?>&ctask=add"class="btn"><?=t('Add a Sub-Page')?></a>';
+	menuHTML += '<a id="ccm-toolbar-add-subpage" dialog-width="645" dialog-modal="false" dialog-append-buttons="true" dialog-height="345" dialog-title="<?=t('Add a Sub-Page')?>" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_collection_popup.php?cID=<?=$cID?>&ctask=add"class="btn"><?=t('Add a Sub-Page')?></a>';
 <? } ?>
 menuHTML += '</div>';
+menuHTML += '<span class="label notice"><?=t('Version %s', $c->getVersionID())?></span>';
+menuHTML += '<?=t('Page last edited on %s', $c->getCollectionDateLastModified(DATE_APP_GENERIC_MDYT))?>';
 
 
 <? } ?>

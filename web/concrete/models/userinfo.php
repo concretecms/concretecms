@@ -267,7 +267,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			$messageText .= "\n";
 			$messageText .= t('Message: %s', $text);
 			
-			if (!$antispam->check($messageText, 'private_message')) {
+			$additionalArgs = array('user' => $this);
+			if (!$antispam->check($messageText, 'private_message', $additionalArgs)) {
 				return false;
 			}
 			

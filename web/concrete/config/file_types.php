@@ -24,6 +24,7 @@ $ft->define('ico', t('Icon'), FileType::T_IMAGE);
 $ft->define('asf,wmv', t('Windows Video'), FileType::T_VIDEO, false, 'video');
 $ft->define('mov,qt', t('Quicktime'), FileType::T_VIDEO, false, 'video');
 $ft->define('avi', t('AVI'), FileType::T_VIDEO, false, 'video');
+$ft->define('3gp', t('3GP'), FileType::T_VIDEO, false, 'video');
 $ft->define('txt', t('Plain Text'), FileType::T_TEXT, false, 'text');
 $ft->define('csv', t('CSV'), FileType::T_TEXT, false, 'text');
 $ft->define('xml', t('XML'), FileType::T_TEXT);

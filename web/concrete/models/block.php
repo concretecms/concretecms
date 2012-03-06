@@ -169,14 +169,33 @@ class Block extends Object {
 		$db = Loader::db();
 		$scrapbookHelper=Loader::helper('concrete/scrapbook'); 
 		$globalScrapbookPage=$scrapbookHelper->getGlobalScrapbookPage();
-		$row = $db->getRow( 'SELECT b.bID, cvb.arHandle FROM Blocks AS b, CollectionVersionBlocks AS cvb '.
-						  'WHERE b.bName=? AND b.bID=cvb.bID AND cvb.cID=? ORDER BY cvb.cvID DESC', 
-						   array($globalBlockName, intval($globalScrapbookPage->getCollectionId()) ) ); 
+		if ($globalScrapbookPage->getCollectionID()) {
+			$row = $db->getRow( 'SELECT b.bID, cvb.arHandle FROM Blocks AS b, CollectionVersionBlocks AS cvb '.
+							  'WHERE b.bName=? AND b.bID=cvb.bID AND cvb.cID=? ORDER BY cvb.cvID DESC', 
+							   array($globalBlockName, intval($globalScrapbookPage->getCollectionId()) ) ); 
+			if ($row != false && isset($row['bID']) && $row['bID'] > 0) {
+				return Block::getByID( $row['bID'], $globalScrapbookPage, $row['arHandle'] );
+			}
+		}
+		
+		//If we made it this far, either there's no scrapbook (clean installation of Concrete5.5+),
+		// or the block wasn't in the legacy scrapbook -- so look in stacks...
+		$sql = 'SELECT b.bID, cvb.arHandle, cvb.cID'
+		 	 . ' FROM Blocks AS b'
+			 . ' INNER JOIN CollectionVersionBlocks AS cvb ON b.bID = cvb.bID'
+			 . ' INNER JOIN CollectionVersions AS cv ON cvb.cID = cv.cID AND cvb.cvID = cv.cvID'
+		 	 . ' WHERE b.bName = ? AND cv.cvIsApproved = 1'
+		 	 . ' AND cvb.cID IN (SELECT cID FROM Stacks)'
+		 	 . ' ORDER BY cvb.cvID DESC'
+			 . ' LIMIT 1';
+		$vals = array($globalBlockName);
+		$row = $db->getRow($sql, $vals);
 		if ($row != false && isset($row['bID']) && $row['bID'] > 0) {
-			return Block::getByID( $row['bID'], $globalScrapbookPage, $row['arHandle'] );
+			return Block::getByID($row['bID'], Page::getByID($row['cID']), $row['arHandle']);
 		} else {
 			return new Block();
 		}
+	
 	}
 	
 	public function display( $view = 'view', $args = array()){
@@ -213,6 +232,16 @@ class Block extends Object {
 	
 	public function isGlobal() {
 		return false; // legacy. no more scrapbooks in the dashboard.
+	}
+	
+	public function isBlockInStack() {
+		$co = $this->getBlockCollectionObject();
+		if (is_object($co)) {
+			if ($co->getCollectionTypeHandle() == STACKS_PAGE_TYPE) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	public function inc($file) {
@@ -741,10 +770,21 @@ class Block extends Object {
 	}	
 
 	function getBlockPassThruAction() {
-		$str = $this->_getBlockAction();
-		return $str . '&amp;btask=passthru';
+		// is the block located in a stack?
+		$pc = $this->getBlockCollectionObject();
+		if ($pc->getCollectionTypeHandle() == STACKS_PAGE_TYPE) {
+			$c = Page::getCurrentPage();
+			$cID = $c->getCollectionID();
+			$bID = $this->getBlockID();
+			$valt = Loader::helper('validation/token');
+			$token = $valt->generate();
+			$str = DIR_REL . "/" . DISPATCHER_FILENAME . "?cID={$cID}&amp;stackID=" . $this->getBlockActionCollectionID() . "&amp;bID={$bID}&amp;btask=passthru_stack&amp;ccm_token=" . $token;
+			return $str;
+		} else { 
+			$str = $this->_getBlockAction();
+			return $str . '&amp;btask=passthru';
+		}
 	}
-
 	
 	function isEditable() {
 		$bv = new BlockView();

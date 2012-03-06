@@ -181,11 +181,6 @@
 			}
 		}
 		
-		if (!$c->isActive()) {
-			$v = View::getInstance();
-			$v->render('/page_not_found');
-		}
-
 		## Check maintenance mode
 		require(dirname(__FILE__) . '/startup/maintenance_mode_check.php');
 		
@@ -210,6 +205,12 @@
 					break;
 			}
 		}
+
+		if (!$c->isActive() && (!$cp->canWrite())) {
+			$v = View::getInstance();
+			$v->render('/page_not_found');
+		}
+
 	
 		## If there's no error, then we build the collection, but first we load it with the appropriate
 		## version. We pass the function the collection object, as well as the collection permissions

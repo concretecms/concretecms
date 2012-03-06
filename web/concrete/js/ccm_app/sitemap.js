@@ -19,7 +19,8 @@ showPageMenu = function(obj, e) {
 		el = document.createElement("DIV");
 		el.id = "ccm-page-menu" + obj.cID;
 		el.className = "ccm-menu ccm-ui";
-		el.style.display = "none";
+		el.style.display = "block";
+		el.style.visibility = "hidden";
 		document.body.appendChild(el);
 		
 		bobj = $("#ccm-page-menu" + obj.cID);
@@ -92,7 +93,7 @@ showPageMenu = function(obj, e) {
 				html += '<li class=\"ccm-menu-separator\"><\/li>';
 				
 			}
-			html += '<li><a class="ccm-menu-icon ccm-icon-add-page-menu" dialog-append-buttons="true" dialog-width="600" dialog-modal="false" dialog-height="215" dialog-title="' + ccmi18n_sitemap.addPage + '" id="menuSubPage' + obj.cID + '" href="' + CCM_TOOLS_PATH + '/edit_collection_popup.php?rel=SITEMAP&mode=' + obj.display_mode + '&cID=' + obj.cID + '&ctask=add">' + ccmi18n_sitemap.addPage + '<\/a><\/li>';
+			html += '<li><a class="ccm-menu-icon ccm-icon-add-page-menu" dialog-append-buttons="true" dialog-width="645" dialog-modal="false" dialog-height="345" dialog-title="' + ccmi18n_sitemap.addPage + '" id="menuSubPage' + obj.cID + '" href="' + CCM_TOOLS_PATH + '/edit_collection_popup.php?rel=SITEMAP&mode=' + obj.display_mode + '&cID=' + obj.cID + '&ctask=add">' + ccmi18n_sitemap.addPage + '<\/a><\/li>';
 			if (obj.display_mode != 'search') {
 				html += '<li><a class="ccm-menu-icon ccm-icon-add-external-link-menu" dialog-width="350" dialog-modal="false" dialog-height="170" dialog-title="' + ccmi18n_sitemap.addExternalLink + '" dialog-modal="false" dialog-append-buttons="true" id="menuLink' + obj.cID + '" href="' + CCM_TOOLS_PATH + '/edit_collection_popup.php?rel=SITEMAP&cID=' + obj.cID + '&ctask=add_external">' + ccmi18n_sitemap.addExternalLink + '<\/a><\/li>';
 			}
@@ -331,7 +332,7 @@ selectLabel = function(e, node) {
 }
 
 ccmSitemapHighlightPageLabel = function(cID, name) {
-	var sp = $("#tree-label" + cID + " span");
+	var sp = $("#tree-label" + cID + " > span");
 
 	if (sp.length == 0) {
 		var sp = $("tr.ccm-list-record[cID=" + cID + "]");

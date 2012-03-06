@@ -353,10 +353,13 @@ class Permissions extends Object {
 		return true;
 	}
 	function canAddFiles() {
-		return count($this->permissions['canAddFileTypes']) > 0;
+		return is_array($this->permissions['canAddFileTypes']) && count($this->permissions['canAddFileTypes']) > 0;
 	}
 	
 	function canAddFileType($ext) {
+		if (!is_array($this->permissions['canAddFileTypes'])) {
+			return false;
+		}
 		$ext = strtolower($ext);
 		return (in_array($ext, $this->permissions['canAddFileTypes']));
 	}

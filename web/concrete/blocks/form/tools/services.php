@@ -14,7 +14,14 @@ if($_GET['cID'] && $_GET['arHandle']){
 		if(!$ap->canAddBlock($bt)) $badPermissions=true;
 	}else{
 		//edit survey mode
-		$b = Block::getByID($_GET['bID'], $c, $a);
+		// this really ought to be refactored
+		if (!$a->isGlobalArea()) {
+			$b = Block::getByID($_REQUEST['bID'], $c, $a);
+		} else {
+			$b = Block::getByID($_REQUEST['bID'], Stack::getByName($a->getAreaHandle()), STACKS_AREA_NAME);
+			$b->setBlockAreaObject($a); // set the original area object
+		}
+
 		$bp = new Permissions($b);
 		if( !$bp->canWrite() ) $badPermissions=true;
 	}

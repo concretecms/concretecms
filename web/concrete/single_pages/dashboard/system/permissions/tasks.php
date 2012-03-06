@@ -1,10 +1,10 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?>
 
 <? $h = Loader::helper('concrete/dashboard'); ?>
-<?=$h->getDashboardPaneHeaderWrapper(t('Site Permissions'), false, false, false);?>
 <?
 $tp1 = TaskPermission::getByHandle('access_task_permissions');
 if ($tp1->can()) { 
+	print $h->getDashboardPaneHeaderWrapper(t('Site Permissions'), false, false, false);
 	$ih = Loader::helper('concrete/interface');
 	$tps = array(
 		TaskPermission::getByHandle('access_task_permissions'),

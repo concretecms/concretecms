@@ -48,6 +48,14 @@ switch($_GET['ctask']) {
 		$toolSection = "collection_add";
 		$divID = 'ccm-edit-collection-design';
 		$canViewPane = $cp->canAddSubContent();
+		if ($_REQUEST['ctID']) {
+			$ct = CollectionType::getByID($_REQUEST['ctID']);
+			if (!is_object($ct)) {
+				$canViewPane = false;
+			} else {
+				$canViewPane = $cp->canAddSubCollection($ct);
+			}
+		}
 		break;
 	case 'add_external':
 		$toolSection = "collection_add_external";
@@ -95,7 +103,8 @@ if (!$canViewPane) {
 	if (($c->isEditMode() || ($_GET['ctask'] == 'add')) && $toolSection) {
 		$args = array(
 			'c' => $c,
-			'cp' => $cp			
+			'cp' => $cp,
+			'ct' => $ct
 		);
 		$args = array_merge($args, $additionalArgs);
 		Loader::element($toolSection, $args);

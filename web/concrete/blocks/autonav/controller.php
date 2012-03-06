@@ -224,11 +224,12 @@
 					  $this->bID = $obj->bID;
 					  break;
 				}
-				$c = Page::getCurrentPage();
-				if (is_object($c)) {
-				   $this->cID = $c->getCollectionID();
-				   $this->cParentID = $c->getCollectionParentID();
-				}
+			}
+
+			$c = Page::getCurrentPage();
+			if (is_object($c)) {
+			   $this->cID = $c->getCollectionID();
+			   $this->cParentID = $c->getCollectionParentID();
 			}
 			
 			parent::__construct($obj);

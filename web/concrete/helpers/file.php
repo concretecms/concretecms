@@ -63,7 +63,7 @@ class FileHelper {
 	 * @param string $target Place to copy the source
 	 * @param int $mode What to chmod the file to
 	 */
-	public function copyAll($source, $target, $mode = 0777) {
+	public function copyAll($source, $target, $mode = FILE_PERMISSIONS_MODE) {
 		if (is_dir($source)) {
 			@mkdir($target, $mode);
 			@chmod($target, $mode);
@@ -139,7 +139,8 @@ class FileHelper {
 	 */
 	public function getTemporaryDirectory() {
 		if (!is_dir(DIR_TMP)) {
-			mkdir(DIR_TMP, 0777);
+			mkdir(DIR_TMP, FILE_PERMISSIONS_MODE);
+			chmod(DIR_TMP, FILE_PERMISSIONS_MODE);
 			touch(DIR_TMP . '/index.html');
 		}
 		return DIR_TMP;

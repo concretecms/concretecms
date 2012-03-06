@@ -155,7 +155,7 @@ class SelectAttributeTypeController extends AttributeTypeController  {
 		}
 		$this->set('selectedOptionValues',$selectedOptionValues);
 		$this->set('selectedOptions', $selectedOptions);
-		$this->addHeaderItem(Loader::helper('html')->javascript('jquery.ui.js'));
+		$this->addFooterItem(Loader::helper('html')->javascript('jquery.ui.js'));
 		$this->addHeaderItem(Loader::helper('html')->css('jquery.ui.css'));
 	}
 	
@@ -521,7 +521,7 @@ class SelectAttributeTypeOption extends Object {
 		if (!$sanitize) {
 			return $this->value;
 		} else {
-			return $this->th->entities($this->value);
+			return $this->th->specialchars($this->value);
 		}
 	}
 	public function getSelectAttributeOptionDisplayOrder() {return $this->displayOrder;}

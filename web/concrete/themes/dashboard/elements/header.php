@@ -61,17 +61,17 @@ if ($dashboard->getCollectionID() == $c->getCollectionID()) {
 $disp .= "</script>"."\n";
 //require(DIR_FILES_ELEMENTS_CORE . '/header_required.php'); 
 $v->addHeaderItem($disp);
-
 Loader::element('header_required');
-
 $backgroundImage = Loader::helper('concrete/dashboard')->getDashboardBackgroundImage();
 ?>
 
 <script type="text/javascript">
 	$(function() {
-	    $.backstretch("<?=$backgroundImage->image?>" <? if (!$_SESSION['dashboardHasSeenImage']) { ?>,  {speed: 750}<? } ?>);
+		<? if ($backgroundImage->image) { ?>
+		    $.backstretch("<?=$backgroundImage->image?>" <? if (!$_SESSION['dashboardHasSeenImage']) { ?>,  {speed: 750}<? } ?>);
+	    <? } ?>
 	    <? if ($backgroundImage->checkData) { ?>
-		    ccm_getDashboardBackgroundImageData('<?=$backgroundImage->filename?>');
+		    ccm_getDashboardBackgroundImageData('<?=$backgroundImage->filename?>', <? if ($backgroundImage->displayCaption) { ?> true <? } else { ?> false <? } ?>);
 		<? } ?>
 	});
 </script>
