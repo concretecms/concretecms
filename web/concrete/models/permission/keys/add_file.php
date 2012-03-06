@@ -61,13 +61,13 @@ class AddFileFileSetPermissionKey extends FileSetPermissionKey  {
 		$list = PermissionDuration::filterByActive($list);
 
 		foreach($list as $l) {
-			if ($l->getFileTypesAllowedPermission() == '0') {
+			if ($l->getFileTypesAllowedPermission() == 'N') {
 				$extensions = array();
 			}
 			if ($l->getFileTypesAllowedPermission() == 'C') {
 				$extensions = array_unique(array_merge($extensions, $l->getFileTypesAllowedArray()));
 			}
-			if ($l->getFileTypesAllowedPermission() == '1') {
+			if ($l->getFileTypesAllowedPermission() == 'A') {
 				$extensions = Loader::helper('concrete/file')->getAllowedFileExtensions();
 			}
 		}
@@ -91,8 +91,8 @@ class AddFileFileSetPermissionKey extends FileSetPermissionKey  {
 		foreach($list as $l) {
 			$pe = $l->getAccessEntityObject();
 			$permission = $db->GetOne('select permission from FileSetPermissionFileTypeAssignments where peID = ? and fsID = ?', array($pe->getAccessEntityID(), $this->permissionObject->getFileSetID()));
-			if ($permission !== '0' && $permission != 'C') {
-				$permission = 1;
+			if ($permission != 'N' && $permission != 'C') {
+				$permission = 'A';
 			}
 			$l->setFileTypesAllowedPermission($permission);
 			if ($permission == 'C') { 
@@ -108,7 +108,7 @@ class AddFileFileSetPermissionKey extends FileSetPermissionKey  {
 class AddFileFileSetPermissionAssignment extends FileSetPermissionAssignment {
 	
 	protected $customFileTypesArray = array();
-	protected $fileTypesAllowedPermission = 0;
+	protected $fileTypesAllowedPermission = 'N';
 
 	public function setFileTypesAllowedPermission($permission) {
 		$this->fileTypesAllowedPermission = $permission;
