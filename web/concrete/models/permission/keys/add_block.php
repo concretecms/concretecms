@@ -38,7 +38,40 @@ class AddBlockAreaPermissionKey extends AreaPermissionKey  {
 				}
 			}
 		}
+	}
 
+	protected function getAllowedBlockTypeIDs() {
+
+		$u = new User();
+		$accessEntities = $u->getUserAccessEntityObjects();
+		$list = $this->getAssignmentList(AreaPermissionKey::ACCESS_TYPE_ALL, $accessEntities);
+		$list = PermissionDuration::filterByActive($list);
+		
+		$db = Loader::db();
+		$dsh = Loader::helper('concrete/dashboard');
+		if ($dsh->inDashboard()) {
+			$allBTIDs = $db->GetCol('select btID from BlockTypes');
+		} else { 
+			$allBTIDs = $db->GetCol('select btID from BlockTypes where btIsInternal = 0');
+		}
+		$btIDs = array();
+		foreach($list as $l) {
+			if ($l->getBlockTypesAllowedPermission() == 'N') {
+				$btIDs = array();
+			}
+			if ($l->getBlockTypesAllowedPermission() == 'C') {
+				if ($l->getAccessType() == AreaPermissionKey::ACCESS_TYPE_EXCLUDE) {
+					$btIDs = array_values(array_diff($btIDs, $l->getBlockTypesAllowedArray()));
+				} else { 
+					$btIDs = array_unique(array_merge($btIDs, $l->getBlockTypesAllowedArray()));
+				}
+			}
+			if ($l->getBlockTypesAllowedPermission() == 'A') {
+				$btIDs = $allBTIDs;
+			}
+		}
+		
+		return $btIDs;
 	}
 	
 	public function validate($bt = false) {
@@ -46,35 +79,14 @@ class AddBlockAreaPermissionKey extends AreaPermissionKey  {
 		if ($u->isSuperUser()) {
 			return true;
 		}
-		
-		$accessEntities = $u->getUserAccessEntityObjects();
-		$list = $this->getAssignmentList(AreaPermissionKey::ACCESS_TYPE_ALL, $accessEntities);
-		$list = PermissionDuration::filterByActive($list);
-		// these are assignments that apply to me
-		$canAddBlockType = false;
-		foreach($list as $l) {
-			if ($l->getBlockTypesAllowedPermission() == 'N') {
-				$canAddBlockType = false;
-			}
-			if ($l->getBlockTypesAllowedPermission() == 'C') {
-				if (is_object($bt)) { 
-					if ($l->getAccessType() == AreaPermissionKey::ACCESS_TYPE_EXCLUDE) {
-						$canAddBlockType = !in_array($bt->getBlockTypeID(), $l->getBlockTypesAllowedArray());
-					} else { 
-						$canAddBlockType = in_array($bt->getBlockTypeID(), $l->getBlockTypesAllowedArray());
-					}
-				} else {
-					$canAddBlockType = true;
-				}
-			}
-			if ($l->getBlockTypesAllowedPermission() == 'A') {
-				$canAddBlockType = true;
-			}
-		}
-		
-		return $canAddBlockType;
-	}
 
+		$types = $this->getAllowedBlockTypeIDs();
+		if ($bt != false) {
+			return in_array($bt->getBlockTypeID(), $types);
+		} else {
+			return count($types) > 0;
+		}
+	}	
 
 	public function getAssignmentList($accessType = AreaPermissionKey::ACCESS_TYPE_INCLUDE, $filterEntities = array()) {
 		$db = Loader::db();
@@ -82,11 +94,11 @@ class AddBlockAreaPermissionKey extends AreaPermissionKey  {
 		foreach($list as $l) {
 			$pe = $l->getAccessEntityObject();
 			if ($this->permissionObjectToCheck instanceof Page && $l->getAccessType() == AreaPermissionKey::ACCESS_TYPE_INCLUDE) {
-				$permission = 1;
+				$permission = 'A';
 			} else { 
 				$permission = $db->GetOne('select permission from AreaPermissionBlockTypeAssignments where peID = ? and cID = ? and arHandle = ?', array($pe->getAccessEntityID(), $this->permissionObjectToCheck->getCollectionID(), $this->permissionObjectToCheck->getAreaHandle()));
 				if ($permission != 'N' && $permission != 'C') {
-					$permission = 1;
+					$permission = 'A';
 				}
 
 			}
@@ -98,8 +110,8 @@ class AddBlockAreaPermissionKey extends AreaPermissionKey  {
 					$cID = $this->permissionObjectToCheck->getPermissionsCollectionID();
 				}
 				$arHandle = $this->permissionObjectToCheck->getAreaHandle();
-				$ctIDs = $db->GetCol('select btID from AreaPermissionBlockTypeAssignmentsCustom where peID = ? and cID = ? and arHandle = ?', array($pe->getAccessEntityID(), $cID, $arHandle));
-				$l->setBlockTypesAllowedArray($ctIDs);
+				$btIDs = $db->GetCol('select btID from AreaPermissionBlockTypeAssignmentsCustom where peID = ? and cID = ? and arHandle = ?', array($pe->getAccessEntityID(), $cID, $arHandle));
+				$l->setBlockTypesAllowedArray($btIDs);
 			}
 		}
 		return $list;
@@ -118,8 +130,8 @@ class AddBlockAreaPermissionAssignment extends AreaPermissionAssignment {
 	public function getBlockTypesAllowedPermission() {
 		return $this->blockTypesAllowedPermission;
 	}
-	public function setBlockTypesAllowedArray($ctIDs) {
-		$this->customBlockTypeArray = $ctIDs;
+	public function setBlockTypesAllowedArray($btIDs) {
+		$this->customBlockTypeArray = $btIDs;
 	}
 	public function getBlockTypesAllowedArray() {
 		return $this->customBlockTypeArray;
