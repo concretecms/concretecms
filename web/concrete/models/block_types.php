@@ -615,17 +615,21 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				$btd->btInterfaceWidth = $bta->getInterfaceWidth();
 				$btd->pkgID = $bt->getPackageID();
 				
-				if ($bta->isBlockTypeInternal()) {
-					$btd->btDisplayOrder = 0;
-				} else {
-					$btd->btDisplayOrder = 1;
-					$db->Execute('UPDATE BlockTypes SET btDisplayOrder = btDisplayOrder + 1 WHERE btIsInternal = 0'); //Bump up all other non-internal block types so new one goes at the top
-				}
-				
 				if ($btID > 0) {
 					$btd->btID = $btID;
 					$r = $btd->Replace();
 				} else {
+					if ($bta->isBlockTypeInternal()) {
+						$btd->btDisplayOrder = 0;
+					} else {
+						$btMax = $db->GetOne('select max(btDisplayOrder) from BlockTypes');
+						if ($btMax < 1 && $btMax !== '0') {
+							$btd->btDisplayOrder = 0;
+						} else {
+							$btd->btDisplayOrder = $btMax + 1;
+						}
+					}
+
 					$r = $btd->save();
 				}
 				
