@@ -88,9 +88,6 @@
 		</permissionkey>
 
         <permissionkey handle="access_task_permissions" name="Access Task Permissions" package="" category="admin">
-            <access>
-                <group name="Administrators"/>
-            </access>
 		</permissionkey>
 
         <permissionkey handle="access_sitemap" name="Access Sitemap" package="" category="sitemap">

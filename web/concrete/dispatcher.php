@@ -93,7 +93,6 @@
 	Loader::model("permission/categories/marketplace_newsflow");
 	Loader::model('user');
 	Loader::model('userinfo');
-	Loader::model('task_permission');
 	Loader::model('stack/model');
 
 	## Setup timzone support

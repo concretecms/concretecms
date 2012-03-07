@@ -218,8 +218,19 @@ abstract class PermissionKey extends Object {
 		}
 	}
 
+	/** 
+	 * @access private
+	 * legacy support
+	 */
+	public function can() {
+		return $this->validate();
+	}
+	
 	public function validate() {
 		$u = new User();
+		if ($u->isSuperUser()) {
+			return true;
+		}
 		$accessEntities = $u->getUserAccessEntityObjects();
 		$valid = false;
 		$list = $this->getAssignmentList(PermissionKey::ACCESS_TYPE_ALL, $accessEntities);
