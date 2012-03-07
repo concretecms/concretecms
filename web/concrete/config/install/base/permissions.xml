@@ -8,6 +8,7 @@
         <category handle="file_set" package=""/>
         <category handle="file" package=""/>
         <category handle="area" package=""/>
+        <category handle="block_type" package=""/>
         <category handle="block" package=""/>
         <category handle="admin" package=""/>
         <category handle="sitemap" package=""/>
@@ -27,12 +28,24 @@
         <permissionkey handle="approve_page_versions" name="Approve Changes" package="" category="page"/>
         <permissionkey handle="add_subpage" name="Add Sub-Page" package="" category="page"/>
         <permissionkey handle="move_or_copy_page" name="Move or Copy Page" package="" category="page"/>
+		<!-- block types //-->
+        <permissionkey handle="add_block" name="Add Block to Page Area" package="" category="block_type">
+            <access>
+                <group name="Administrators"/>
+            </access>
+        </permissionkey>
+        <permissionkey handle="add_stack" name="Add Stack to Page Area" package="" category="block_type">
+            <access>
+                <group name="Administrators"/>
+            </access>
+        </permissionkey>
+        
 		<!-- areas //-->
         <permissionkey handle="view_area" name="View Area" package="" category="area"/>
         <permissionkey handle="edit_area_contents" name="Edit Area Contents" package="" category="area"/>
-        <permissionkey handle="add_block" name="Add Blocks to Area" package="" category="area"/>
-        <permissionkey handle="add_stack" name="Add Stacks to Area" package="" category="area"/>
-        <permissionkey handle="add_layout" name="Add Layouts to Area" package="" category="area"/>
+        <permissionkey handle="add_block_to_area" name="Add Blocks to Area" package="" category="area"/>
+        <permissionkey handle="add_stack_to_area" name="Add Stacks to Area" package="" category="area"/>
+        <permissionkey handle="add_layout_to_area" name="Add Layouts to Area" package="" category="area"/>
         <permissionkey handle="edit_area_design" name="Edit Area Design" package="" category="area"/>
         <permissionkey handle="edit_area_permissions" name="Edit Area Permissions" package="" category="area"/>
         <permissionkey handle="delete_area_contents" name="Delete Area Contents" package="" category="area"/>
@@ -72,10 +85,10 @@
             </access>
         </permissionkey>
         
-        <permissionkey handle="sign_in_as_user" name="Sign in as User" package="" category="user">
+        <permissionkey handle="sudo" name="Sign in as User" package="" category="user">
         </permissionkey>
         
-        <permissionkey handle="delete_users" name="Delete Users" package="" category="user">
+        <permissionkey handle="delete_user" name="Delete Users" package="" category="user">
             <access>
                 <group name="Administrators"/>
             </access>

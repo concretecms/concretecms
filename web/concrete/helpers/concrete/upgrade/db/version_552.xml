@@ -231,6 +231,31 @@
     </index>
   </table>
 
+  <table name="BlockTypePermissionBlockTypeAssignments">
+    <field name="peID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="permission" type="C" size="1">
+      <NOTNULL/>
+      <DEFAULT value="1"/>
+    </field>
+  </table>
+
+  <table name="BlockTypePermissionBlockTypeAssignmentsCustom">
+    <field name="peID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="btID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+  </table>
+
 
   <table name="FileSetPermissionFileTypeAssignments">
     <field name="fsID" type="I" size="10">

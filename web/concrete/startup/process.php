@@ -322,7 +322,7 @@
 				$ap = new Permissions($ax);	
 				$stack = Stack::getByID($_REQUEST['stID']);
 				if (is_object($stack)) {
-					if ($ap->canAddStack($stack)) {
+					if ($ap->canAddStackToArea($stack)) {
 						// we've already run permissions on the stack at this point, at least for viewing the stack.
 						$btx = BlockType::getByHandle(BLOCK_HANDLE_STACK_PROXY);
 						$nvc = $cx->getVersionToModify();
@@ -386,7 +386,7 @@
 			case 'layout':
 				$area = Area::get($c, $_GET['arHandle']);
 				$ap = new Permissions($area);
-				if ($ap->canAddLayout() ) {
+				if ($ap->canAddLayoutToArea() ) {
 					Loader::model('custom_style');				
 					
 					$nvc = $c->getVersionToModify();
