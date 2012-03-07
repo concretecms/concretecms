@@ -125,6 +125,10 @@
 			</li>
 		<? } ?>
 	</ul>
+	
+	<h3><?=t('Permissions &amp; Access')?></h3>
+	<? Loader::element('permission/lists/block_type')?>
+	
 
 </div>
 	

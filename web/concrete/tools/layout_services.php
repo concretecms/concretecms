@@ -36,7 +36,7 @@ if ( is_object($layout) && is_object($a) && is_object($c) ){
 	if($validLayout) $cvalID = intval($areaLayoutData['cvalID']);
 }
 
-if ( !$validLayout || !$cp->canEditPageContents() || !$ap->canAddLayout()  ) {
+if ( !$validLayout || !$cp->canEditPageContents() || !$ap->canAddLayoutToArea()  ) {
 	$jsonData['msg']=t('Access Denied.'); 
 	
 }elseif ( !is_object($layout) ) {

@@ -7,12 +7,15 @@ class AreaPermissionKey extends PermissionKey {
 	protected $inheritedPermissions = array(
 		'view_area' => 'view_page',
 		'edit_area_contents' => 'edit_page_contents',
-		'add_block' => 'edit_page_contents',
-		'add_layout' => 'edit_page_contents',
-		'add_stack' => 'edit_page_contents',
+		'add_layout_to_area' => 'edit_page_contents',
 		'edit_area_design' => 'edit_page_design',
 		'edit_area_permissions' => 'edit_page_permissions',
 		'delete_area_contents' => 'edit_page_contents'		
+	);
+	
+	protected $blockTypeInheritedPermissions = array(
+		'add_block_to_area' => 'add_block',
+		'add_stack_to_area' => 'add_stack'
 	);
 	
 	public function setPermissionObject(Area $a) {
@@ -57,6 +60,13 @@ class AreaPermissionKey extends PermissionKey {
 			$r = $db->Execute('select peID, accessType from PagePermissionAssignments where cID = ? and pkID = ?', array(
 				$this->permissionObjectToCheck->getPermissionsCollectionID(), $inheritedPKID
 			));
+		} else if (isset($this->blockTypeInheritedPermissions[$this->getPermissionKeyHandle()])) { 
+			$inheritedPKID = $db->GetOne('select pkID from PermissionKeys where pkHandle = ?', array($this->blockTypeInheritedPermissions[$this->getPermissionKeyHandle()]));
+			$r = $db->Execute('select peID, accessType from BlockTypePermissionAssignments where pkID = ?', array(
+				$inheritedPKID
+			));
+		}		
+		if ($r) { 
 			while ($row = $r->FetchRow()) {
 				$db->Replace('AreaPermissionAssignments', array(
 					'cID' => $this->permissionObject->getCollectionID(), 
@@ -88,6 +98,12 @@ class AreaPermissionKey extends PermissionKey {
 			$inheritedPKID = $db->GetOne('select pkID from PermissionKeys where pkHandle = ?', array($this->inheritedPermissions[$this->getPermissionKeyHandle()]));
 			$r = $db->Execute('select accessType, peID, pdID from PagePermissionAssignments where cID = ? and pkID = ? ' . $filterString, array(
 				$this->permissionObjectToCheck->getPermissionsCollectionID(), $inheritedPKID
+			));
+		} else if (isset($this->blockTypeInheritedPermissions[$this->getPermissionKeyHandle()])) { 
+			// this is a page
+			$inheritedPKID = $db->GetOne('select pkID from PermissionKeys where pkHandle = ?', array($this->blockTypeInheritedPermissions[$this->getPermissionKeyHandle()]));
+			$r = $db->Execute('select accessType, peID, pdID from BlockTypePermissionAssignments where pkID = ? ' . $filterString, array(
+				$inheritedPKID
 			));
 		} else {
 			return array();

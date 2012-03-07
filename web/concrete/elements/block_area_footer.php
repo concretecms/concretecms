@@ -36,7 +36,7 @@ if ($a->areaAcceptsBlocks()) { ?>
 	<? if ($ap->canEditAreaPermissions() && PERMISSIONS_MODEL != 'simple') { ?>
 		ccm_areaMenuObj<?=$a->getAreaID()?>.canModifyGroups = true;
 	<? } ?>
-	<? if ($ap->canAddLayout() && ENABLE_AREA_LAYOUTS == true && (!$a->isGlobalArea()) && (!$c->isMasterCollection())) { ?>
+	<? if ($ap->canAddLayoutToArea() && ENABLE_AREA_LAYOUTS == true && (!$a->isGlobalArea()) && (!$c->isMasterCollection())) { ?>
 		ccm_areaMenuObj<?=$a->getAreaID()?>.canLayout = true;
 	<? } else { ?>
 		ccm_areaMenuObj<?=$a->getAreaID()?>.canLayout = false;

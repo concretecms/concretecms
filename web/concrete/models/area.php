@@ -393,7 +393,7 @@ class Area extends Object {
 		
 		// now, we iterate through these block groups (which are actually arrays of block objects), and display them on the page
 		
-		if (($this->showControls) && ($c->isEditMode() && ($ap->canAddBlocks() || $u->isSuperUser()))) {
+		if ($this->showControls && $c->isEditMode() && $ap->canViewAreaControls()) {
 			$bv->renderElement('block_area_header', array('a' => $ourArea));	
 		}
 
@@ -461,7 +461,7 @@ class Area extends Object {
 
 		$bv->renderElement('block_area_footer_view', array('a' => $ourArea));	
 
-		if (($this->showControls) && ($c->isEditMode() && ($ap->canAddBlocks() || $u->isSuperUser()))) {
+		if ($this->showControls && $c->isEditMode() && $ap->canViewAreaControls()) {
 			$bv->renderElement('block_area_footer', array('a' => $ourArea));	
 		}
 	}
