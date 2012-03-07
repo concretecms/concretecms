@@ -81,11 +81,16 @@
 	Loader::model('permission/assignment');
 	Loader::model('permissions');
 	Loader::model('permission/response');
+	Loader::model("permission/categories/task");
 	Loader::model("permission/categories/page");
 	Loader::model("permission/categories/file_set");
 	Loader::model("permission/categories/file");
 	Loader::model("permission/categories/area");
 	Loader::model("permission/categories/block");
+	Loader::model("permission/categories/user");
+	Loader::model("permission/categories/sitemap");
+	Loader::model("permission/categories/admin");
+	Loader::model("permission/categories/marketplace_newsflow");
 	Loader::model('user');
 	Loader::model('userinfo');
 	Loader::model('task_permission');

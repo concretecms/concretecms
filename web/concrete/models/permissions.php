@@ -29,8 +29,10 @@ class Permissions {
 	}
 	
 
-	public function __construct($object) {
-		$handle = Loader::helper('text')->uncamelcase(get_class($object));
+	public function __construct($object = false) {
+		if ($object) { 
+			$handle = Loader::helper('text')->uncamelcase(get_class($object));
+		}
 		$this->response = PermissionResponse::getResponse($handle, $object);
 		$r = $this->response->testForErrors();
 		if ($r) {
