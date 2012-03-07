@@ -33,8 +33,8 @@ class ContentImporter {
 		$this->importAttributeSets($sx);
 		$this->importThemes($sx);
 		$this->importPermissionCategories($sx);
-		$this->importPermissions($sx);
 		$this->importTaskPermissions($sx);
+		$this->importPermissions($sx);
 		$this->importJobs($sx);
 		// import bare page types first, then import structure, then page types blocks, attributes and composer settings, then page content, because we need the structure for certain attributes and stuff set in master collections (like composer)
 		$this->importPageTypesBase($sx);
@@ -413,7 +413,20 @@ class ContentImporter {
 				$txt = Loader::helper('text');
 				$className = $txt->camelcase($pkc->getPermissionKeyCategoryHandle());
 				$c1 = $className . 'PermissionKey';
-				$pk = call_user_func(array($c1, 'import'), $pk);				
+				$pkx = call_user_func(array($c1, 'import'), $pk);	
+				if (isset($pk->access)) {
+					foreach($pk->access->children() as $ch) {
+						if ($ch->getName() == 'group') {
+							$g = Group::getByName($ch['name']);
+							if (!is_object($g)) {
+								$g = Group::add($g['name'], $g['description']);
+							}
+							$pae = GroupPermissionAccessEntity::getOrCreate($g);
+							$pkx->addAssignment($pae);
+						}
+					}
+				}
+			
 			}
 		}
 	}

@@ -174,6 +174,7 @@ abstract class PermissionKey extends Object {
 			$pkg = Package::getByHandle($pk['package']);
 		}
 		$pkn = self::add($pkCategoryHandle, $pk['handle'], $pk['name'], $pk['description'], $pkg);
+		return $pkn;
 	}
 
 	public static function getByID($pkID) {
@@ -212,9 +213,7 @@ abstract class PermissionKey extends Object {
 		
 		if ($r) {
 			$pkID = $db->Insert_ID();
-			$className = $txt->camelcase($pkCategoryHandle) . 'PermissionKey';
-			$ak = new $className();
-			$ak->load($pkID);
+			$ak = self::load($pkID);
 			return $ak;
 		}
 	}

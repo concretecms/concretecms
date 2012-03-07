@@ -9,10 +9,9 @@
         <category handle="file" package=""/>
         <category handle="area" package=""/>
         <category handle="block" package=""/>
+        <category handle="admin" package=""/>
         <category handle="sitemap" package=""/>
-        <category handle="page_types" package=""/>
-        <category handle="newsflow" package=""/>
-        <category handle="marketplace" package=""/>
+        <category handle="marketplace_newsflow" package=""/>
     </permissioncategories>
 
     <permissionkeys>
@@ -54,7 +53,6 @@
         <permissionkey handle="delete_file_set" name="Delete File Set" description="" package="" category="file_set"/>
         <permissionkey handle="delete_file_set_files" name="Delete File" description="" package="" category="file_set"/>
         <permissionkey handle="add_file" name="Add File" description="" package="" category="file_set"/>
-
         <permissionkey handle="view_file" name="View Files" description="Can view and download files in the site." package="" category="file"/>
         <permissionkey handle="view_file_in_file_manager" name="View File in File Manager" description="Can access the file manager" package="" category="file"/>
         <permissionkey handle="edit_file_properties" name="Edit File Properties" description="Can edit a file's properties" package="" category="file"/>
@@ -62,63 +60,71 @@
         <permissionkey handle="copy_file" name="Copy File" description="" package="" category="file"/>
         <permissionkey handle="edit_file_permissions" name="Edit File Access" description="" package="" category="file"/>
         <permissionkey handle="delete_file" name="Delete File" description="" package="" category="file"/>
+        <!-- users //-->
+        <permissionkey handle="access_user_search" name="Access User Search" description="" package="" category="user">
+            <access>
+                <group name="Administrators"/>
+            </access>
+        </permissionkey>
+        <permissionkey handle="access_group_search" name="Access Group Search" description="" package="" category="user">
+            <access>
+                <group name="Administrators"/>
+            </access>
+        </permissionkey>
         
+        <permissionkey handle="sign_in_as_user" name="Sign in as User" package="" category="user">
+        </permissionkey>
+        
+        <permissionkey handle="delete_users" name="Delete Users" package="" category="user">
+            <access>
+                <group name="Administrators"/>
+            </access>
+		</permissionkey>
+
+        <permissionkey handle="backup" name="Perform Backups" package="" category="admin">
+            <access>
+                <group name="Administrators"/>
+            </access>
+		</permissionkey>
+
+        <permissionkey handle="access_task_permissions" name="Access Task Permissions" package="" category="admin">
+            <access>
+                <group name="Administrators"/>
+            </access>
+		</permissionkey>
+
+        <permissionkey handle="access_sitemap" name="Access Sitemap" package="" category="sitemap">
+            <access>
+                <group name="Administrators"/>
+            </access>
+		</permissionkey>
+
+        <permissionkey handle="access_page_defaults" name="Access Page Type Defaults" package="" category="admin">
+            <access>
+                <group name="Administrators"/>
+            </access>
+		</permissionkey>
+
+        <permissionkey handle="uninstall_packages" name="Uninstall Packages" package="" category="marketplace_newsflow">
+            <access>
+                <group name="Administrators"/>
+            </access>
+		</permissionkey>
+
+        <permissionkey handle="install_packages" name="Install Packages" package="" category="marketplace_newsflow">
+            <access>
+                <group name="Administrators"/>
+            </access>
+		</permissionkey>
+
+        <permissionkey handle="view_newsflow" name="View Newsflow" package="" category="marketplace_newsflow">
+            <access>
+                <group name="Administrators"/>
+            </access>
+		</permissionkey>
         
 	</permissionkeys>
-	
-    <taskpermissions>
-        <taskpermission handle="access_task_permissions" name="Change Task Permissions" description="" package="">
-            <access>
-                <group name="Administrators"/>
-            </access>
-        </taskpermission>
-        <taskpermission handle="access_sitemap" name="Access Sitemap and Page Search" description="" package="">
-            <access>
-                <group name="Administrators"/>
-            </access>
-        </taskpermission>
-        <taskpermission handle="access_user_search" name="Access User Search" description="" package="">
-            <access>
-                <group name="Administrators"/>
-            </access>
-        </taskpermission>
-        <taskpermission handle="access_group_search" name="Access Group Search" description="" package="">
-            <access>
-                <group name="Administrators"/>
-            </access>
-        </taskpermission>
-        <taskpermission handle="access_page_defaults" name="Change Content on Page Type Default Pages" description="" package="">
-            <access>
-                <group name="Administrators"/>
-            </access>
-        </taskpermission>
-        <taskpermission handle="backup" name="Perform Full Database Backups" description="" package="">
-            <access>
-                <group name="Administrators"/>
-            </access>
-        </taskpermission>
-        <taskpermission handle="sudo" name="Sign in as User" description="" package=""/>
-        <taskpermission handle="uninstall_packages" name="Uninstall Packages" description="" package="">
-            <access>
-                <group name="Administrators"/>
-            </access>
-        </taskpermission>
-        <taskpermission handle="install_packages" name="Install Packages and Connect to the Marketplace" description="" package="">
-            <access>
-                <group name="Administrators"/>
-            </access>
-        </taskpermission>
-        <taskpermission handle="delete_user" name="Delete Users" description="" package="">
-            <access>
-                <group name="Administrators"/>
-            </access>
-        </taskpermission>
-        <taskpermission handle="view_newsflow" name="View Newsflow Updates in an Overlay" description="" package="">
-            <access>
-                <group name="Administrators"/>
-            </access>
-        </taskpermission>
-    </taskpermissions>
+    
 	<systemcaptcha>
 		<library handle="securimage" name="SecurImage (Default)" package="" activated="1"/>
 	</systemcaptcha>
