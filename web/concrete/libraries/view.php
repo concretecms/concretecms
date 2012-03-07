@@ -641,6 +641,61 @@ defined('C5_EXECUTE') or die("Access Denied.");
 								
 				ob_start();			
 				if ($view instanceof Page) {
+
+					$_pageBlocks = $view->getBlocks();
+					$_pageBlocksGlobal = $view->getGlobalBlocks();
+					$_pageBlocks = array_merge($_pageBlocks, $_pageBlocksGlobal);
+					if ($view->supportsPageCache($_pageBlocks, $this->controller)) {
+						$pageContent = $view->getFromPageCache();
+						if ($pageContent != false) {
+							Events::fire('on_before_render', $this);
+							if (defined('APP_CHARSET')) {
+								header("Content-Type: text/html; charset=" . APP_CHARSET);
+							}
+							print($pageContent);
+							Events::fire('on_render_complete', $this);
+							if (ob_get_level() == OB_INITIAL_LEVEL) {
+		
+								require(DIR_BASE_CORE . '/startup/shutdown.php');
+								exit;
+							}
+							return;
+						}
+					}
+					
+					foreach($_pageBlocks as $b1) {
+						$b1p = new Permissions($b1);
+						if ($b1p->canRead()) { 
+							$btc = $b1->getInstance();
+							// now we inject any custom template CSS and JavaScript into the header
+							if('Controller' != get_class($btc)){
+								$btc->outputAutoHeaderItems();
+							}
+							$btc->runTask('on_page_view', array($view));
+						}
+					}
+					
+					// do we have any custom menu plugins?
+					$cp = new Permissions($view);
+					if ($cp->canViewToolbar()) { 
+						$ih = Loader::helper('concrete/interface/menu');
+						$_interfaceItems = $ih->getPageHeaderMenuItems();
+						foreach($_interfaceItems as $_im) {
+							$_controller = $_im->getController();
+							$_controller->outputAutoHeaderItems();
+						}
+						unset($_interfaceItems);
+						unset($_im);
+						unset($_controller);
+					}
+					unset($_interfaceItems);
+					unset($_im);
+					unset($_controller);
+					
+					
+					// now, we output all the custom style records for the design tab in blocks/areas on the page
+					$c = $this->getCollectionObject();
+					$view->outputCustomStyleHeaderItems(); 	
 					
 					$viewPath = $view->getCollectionPath();
 					$this->viewPath = $viewPath;
@@ -761,64 +816,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				
 				$this->setThemeForView($theme, $themeFilename, $wrapTemplateInTheme);
 
-				// Now, if we're on an actual page, we retrieve all the blocks on the page
-				// and store their view states in the local cache (for the page). That way
-				// we can add header items and have them show up in the header BEFORE
-				// the block itself is actually loaded 			
-				
-				if ($view instanceof Page) {
-					$_pageBlocks = $view->getBlocks();
-					$_pageBlocksGlobal = $view->getGlobalBlocks();
-					$_pageBlocks = array_merge($_pageBlocks, $_pageBlocksGlobal);
-					if ($view->supportsPageCache($_pageBlocks, $this->controller)) {
-						$pageContent = $view->getFromPageCache();
-						if ($pageContent != false) {
-							Events::fire('on_before_render', $this);
-							if (defined('APP_CHARSET')) {
-								header("Content-Type: text/html; charset=" . APP_CHARSET);
-							}
-							print($pageContent);
-							Events::fire('on_render_complete', $this);
-							if (ob_get_level() == OB_INITIAL_LEVEL) {
-		
-								require(DIR_BASE_CORE . '/startup/shutdown.php');
-								exit;
-							}
-							return;
-						}
-					}
-					
-					foreach($_pageBlocks as $b1) {
-						$btc = $b1->getInstance();
-						// now we inject any custom template CSS and JavaScript into the header
-						if('Controller' != get_class($btc)){
-							$btc->outputAutoHeaderItems();
-						}
-						$btc->runTask('on_page_view', array($view));
-					}
-					
-					// do we have any custom menu plugins?
-					$cp = new Permissions($view);
-					if ($cp->canViewToolbar()) { 
-						$ih = Loader::helper('concrete/interface/menu');
-						$_interfaceItems = $ih->getPageHeaderMenuItems();
-						foreach($_interfaceItems as $_im) {
-							$_controller = $_im->getController();
-							$_controller->outputAutoHeaderItems();
-						}
-						unset($_interfaceItems);
-						unset($_im);
-						unset($_controller);
-					}
-					unset($_interfaceItems);
-					unset($_im);
-					unset($_controller);
-					
-					
-					// now, we output all the custom style records for the design tab in blocks/areas on the page
-					$c = $this->getCollectionObject();
-					$view->outputCustomStyleHeaderItems(); 				
-				}
 	
 				// finally, we include the theme (which was set by setTheme and will automatically include innerContent)
 				// disconnect from our db and exit
