@@ -32,11 +32,11 @@ class Permissions {
 	public function __construct($object = false) {
 		if ($object) { 
 			$handle = Loader::helper('text')->uncamelcase(get_class($object));
-		}
-		$this->response = PermissionResponse::getResponse($handle, $object);
-		$r = $this->response->testForErrors();
-		if ($r) {
-			$this->error = $r;
+			$this->response = PermissionResponse::getResponse($handle, $object);
+			$r = $this->response->testForErrors();
+			if ($r) {
+				$this->error = $r;
+			}
 		}
 	}
 	
@@ -45,10 +45,25 @@ class Permissions {
 	 * object
 	 */
 	public function __call($f, $a) {
+		if (!is_object($this->response)) {
+			// handles task permissions
+			$permission = Loader::helper('text')->uncamelcase($f);
+		}
+		
 		if (count($a) > 0) { 
-			$r = call_user_func_array(array($this->response, $f), $a);
+			if (is_object($this->response)) { 
+				$r = call_user_func_array(array($this->response, $f), $a);
+			} else {
+				$pk = PermissionKey::getByHandle($permission);
+				$r = call_user_func_array(array($pk, $f), $a);
+			}
 		} else { 
-			$r = $this->response->{$f}();
+			if (is_object($this->response)) { 
+				$r = $this->response->{$f}();
+			} else {
+				$pk = PermissionKey::getByHandle($permission);
+				$r = $pk->validate();
+			}
 		}
 		
 		if (is_array($r) || is_object($r)) {

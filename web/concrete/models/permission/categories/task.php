@@ -46,3 +46,15 @@ class TaskPermissionKey extends PermissionKey {
 	}
 
 }
+
+/**
+ * legacy
+ */
+class TaskPermission extends Permissions {
+	
+	public function getByHandle($handle) {
+		$pk = PermissionKey::getByHandle($handle);
+		return $pk;
+	}
+	
+}

@@ -5,7 +5,15 @@
 	<? ob_end_clean(); ?>
 	
 	<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Task Permissions'), $help, 'span12 offset2')?>
-
-	<? Loader::element('permission/lists/miscellaneous')?>
-
+	
+	<?
+	$tp = new TaskPermission();
+	if ($tp->canAccessTaskPermissions()) { ?>
+	
+		<? Loader::element('permission/lists/miscellaneous')?>
+	
+	<? } else { ?>
+		<p><?=t('You cannot access task permissions.')?></p>
+	<? } ?>
+	
 	<?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(false)?>
