@@ -32,7 +32,7 @@ class DashboardBlocksTypesController extends Controller {
 	
 	public function reset_display_order() {
 		if ($this->post()) {
-			BlockTypeList::setBlockTypeDisplayOrderToAlpha();
+			BlockTypeList::resetBlockTypeDisplayOrder();
 			$this->set('message', t('Display Order Reset.'));
 		}
 		$this->view();

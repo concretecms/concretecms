@@ -202,12 +202,12 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			return $str;			
 		}
 		
-		public static function setBlockTypeDisplayOrderToAlpha() {
+		public static function resetBlockTypeDisplayOrder($column = 'btID') {
 			$db = Loader::db();
 			$ca = new Cache();
 			$stmt = $db->Prepare("UPDATE BlockTypes SET btDisplayOrder = ? WHERE btID = ?");
 			$btDisplayOrder = 1;
-			$blockTypes = $db->GetArray("SELECT btID, btHandle, btIsInternal FROM BlockTypes ORDER BY btName ASC");
+			$blockTypes = $db->GetArray("SELECT btID, btHandle, btIsInternal FROM BlockTypes ORDER BY {$column} ASC");
 			foreach ($blockTypes as $bt) {
 				if ($bt['btIsInternal']) {
 					$db->Execute($stmt, array(0, $bt['btID']));
