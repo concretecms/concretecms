@@ -41,7 +41,7 @@ class Page extends Collection {
 			$version = CollectionVersion::getNumericalVersionID($cID, $versionOrig);
 		}
 		$ca = new Cache();
-		$c = ($version > 0) ? $ca->get(strtolower($class), $cID . ':' . $version) : $ca->get(strtolower($class), $cID);
+		$c = ($version > 0) ? $ca->get(strtolower($class), $cID . ':' . $version) : '';
 
 		if ($c instanceof $class) {
 			return $c;
@@ -54,8 +54,6 @@ class Page extends Collection {
 		// must use cID instead of c->getCollectionID() because cID may be the pointer to another page		
 		if ($version > 0) {
 			$ca->set(strtolower($class), $cID . ':' . $version, $c);
-		} else {
-			$ca->set(strtolower($class), $cID, $c);
 		}
 		return $c;
 	}
