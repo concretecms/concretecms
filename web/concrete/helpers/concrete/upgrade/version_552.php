@@ -27,6 +27,11 @@ class ConcreteUpgradeVersion552Helper {
 			$d1a = SinglePage::add('/dashboard/system/permissions/users');
 			$d1a->update(array('cName'=>t('User Permissions')));
 		}
+		$sp = Page::getByPath('/dashboard/system/permissions/advanced');
+		if ($sp->isError()) {
+			$d1b = SinglePage::add('/dashboard/system/permissions/advanced');
+			$d1b->update(array('cName'=>t('Advanced Permissions')));
+		}
 	}
 
 	
