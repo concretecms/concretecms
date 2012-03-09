@@ -24,6 +24,29 @@ class FileSetPermissionKey extends PermissionKey {
 			$this->permissionObjectToCheck = $fs;
 		}
 	}
+
+	public function validate() {
+		$u = new User();
+		if ($u->isSuperUser()) {
+			return true;
+		}
+		$accessEntities = $u->getUserAccessEntityObjects();
+		$valid = false;
+		$list = $this->getAssignmentList(PermissionKey::ACCESS_TYPE_ALL, $accessEntities);
+		$list = PermissionDuration::filterByActive($list);
+		foreach($list as $l) {
+			if ($l->getAccessType() == PermissionKey::ACCESS_TYPE_INCLUDE) {
+				$valid = true;
+			}
+			if ($l->getAccessType() == FileSetPermissionKey::ACCESS_TYPE_MINE) {
+				$valid = true;
+			}
+			if ($l->getAccessType() == PermissionKey::ACCESS_TYPE_EXCLUDE) {
+				$valid = false;
+			}
+		}
+		return $valid;		
+	}
 	
 	public function getAssignmentList($accessType = FileSetPermissionKey::ACCESS_TYPE_INCLUDE, $filterEntities = array()) {
 		$db = Loader::db();
