@@ -40,6 +40,10 @@ class Permissions {
 		}
 	}
 	
+	public function getResponseObject() {
+		return $this->response;
+	}
+	
 	/** 
 	 * We take any permissions function run on the permissions class and send it into the category
 	 * object
