@@ -46,12 +46,12 @@ class FilePermissionKey extends PermissionKey {
 				foreach($this->permissionObjectToCheck as $fs) {
 					$sets[] = $fs->getFileSetID();
 				}
-				$r = $db->Execute('select distinct peID, accessType, pdID from FileSetPermissionAssignments where fsID in (' . implode(',', $sets) . ') and pkID = ? ' . $filterString, array(
-					$inheritedPKID
+				$r = $db->Execute('select distinct peID, accessType, pdID from FileSetPermissionAssignments where fsID in (' . implode(',', $sets) . ') and pkID = ? and accessType <> ? ' . $filterString, array(
+					$inheritedPKID, FileSetPermissionKey::ACCESS_TYPE_MINE
 				));
 			} else {
-				$r = $db->Execute('select accessType, peID, pdID from FileSetPermissionAssignments where fsID = ? and pkID = ? ' . $filterString, array(
-					$this->permissionObjectToCheck->getFileSetID(), $inheritedPKID
+				$r = $db->Execute('select accessType, peID, pdID from FileSetPermissionAssignments where fsID = ? and pkID = ? and accessType <> ? ' . $filterString, array(
+					$this->permissionObjectToCheck->getFileSetID(), $inheritedPKID, FileSetPermissionKey::ACCESS_TYPE_MINE
 				));
 			}
 

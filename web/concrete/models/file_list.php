@@ -267,7 +267,12 @@ class FileList extends DatabaseItemList {
 		// There is a really stupid MySQL bug that, if the subquery returns null, the entire query is nullified
 		// So I have to do this query OUTSIDE of MySQL and give it to mysql
 		$db = Loader::db();
-		$vpPKID = $db->GetOne('select pkID from PermissionKeys where pkHandle = \'view_file_in_file_manager\'');
+		$vpvPKID = $db->GetOne('select pkID from PermissionKeys where pkHandle = \'view_file\'');
+		if ($this->permissionLevel == 'search_file_set') { 
+			$vpPKID = $db->GetOne('select pkID from PermissionKeys where pkHandle = \'view_file_in_file_manager\'');
+		} else {
+			$vpPKID = $vpvPKID;
+		}
 		$pdIDs = $db->GetCol("select distinct pdID from PagePermissionAssignments where pkID in (?, ?) and pdID > 0", array($vpPKID, $vpvPKID));
 		$activePDIDs = array();
 		if (count($pdIDs) > 0) {
@@ -282,10 +287,13 @@ class FileList extends DatabaseItemList {
 		$activePDIDs[] = 0;
 		
 		// exclude files where its overridden but I don't have the ability to read
+		$this->addToQuery('left join FilePermissionAssignments fpa2 on f.fID = fpa2.fID and fpa2.accessType = ' . FileSetPermissionKey::ACCESS_TYPE_INCLUDE . ' and pdID in (' . implode(',', $activePDIDs) . ')
+			and fpa2.peID in (' . implode(',', $peIDs) . ') and fpa2.pkID in (' . $vpPKID . ')');		
+		$this->filter(false, '(f.fOverrideSetPermissions = 0 or (f.fID = fpa2.fID and fpa2.fID is not null))');
 		
-		// exclude detail files
+		// exclude detail files where read is excluded
 		$this->filter(false, "f.fID not in (select ff.fID from Files ff inner join FilePermissionAssignments fpaExclude on ff.fID = fpaExclude.fID where fOverrideSetPermissions = 1 and accessType = " . PermissionKey::ACCESS_TYPE_EXCLUDE . " and pdID in (" . implode(',', $activePDIDs) . ")
-			and fpaExclude.peID in (" . implode(',', $peIDs) . ") and fpaExclude.pkID = " . $vpPKID . ")");		
+			and fpaExclude.peID in (" . implode(',', $peIDs) . ") and fpaExclude.pkID in (" . $vpPKID . "," . $vpvPKID . "))");		
 	}
 	
 
