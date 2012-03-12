@@ -134,7 +134,7 @@ class BlockPermissionKey extends PermissionKey {
 			'peID' => $pae->getAccessEntityID(),
 			'pdID' => $pdID,
 			'accessType' => $accessType
-		), array('cID', 'cvID', 'peID', 'pkID'), true);
+		), array('cID', 'cvID', 'bID', 'peID', 'pkID'), true);
 	}
 	
 	public function removeAssignment(PermissionAccessEntity $pe) {
