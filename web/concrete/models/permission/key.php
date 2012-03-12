@@ -89,7 +89,8 @@ abstract class PermissionKey extends Object {
 			$task = 'save_permission';
 		}
 		$uh = Loader::helper('concrete/urls');
-		$url = $uh->getToolsURL('permissions/categories/' . $this->pkCategoryHandle, $this->getPackageHandle());
+		$akc = PermissionKeyCategory::getByID($this->getPermissionKeyCategoryID());
+		$url = $uh->getToolsURL('permissions/categories/' . $this->pkCategoryHandle, $akc->getPackageHandle());
 		$token = Loader::helper('validation/token')->getParameter($task);
 		$url .= '?' . $token . '&task=' . $task . '&pkID=' . $this->getPermissionKeyID();
 		return $url;
@@ -196,12 +197,16 @@ abstract class PermissionKey extends Object {
 	/** 
 	 * Adds an permission key. 
 	 */
-	protected function add($pkCategoryHandle, $pkHandle, $pkName, $pkDescription, $pkg = false) {
+	public function add($pkCategoryHandle, $pkHandle, $pkName, $pkDescription, $pkg = false) {
 		
 		$vn = Loader::helper('validation/numbers');
 		$txt = Loader::helper('text');
 		$pkgID = 0;
 		$db = Loader::db();
+		
+		if (is_object($pkg)) {
+			$pkgID = $pkg->getPackageID();
+		}
 		
 		$pkCategoryID = $db->GetOne("select pkCategoryID from PermissionKeyCategories where pkCategoryHandle = ?", $pkCategoryHandle);
 		$a = array($pkHandle, $pkName, $pkDescription, $pkCategoryID, $pkgID);
@@ -262,10 +267,8 @@ abstract class PermissionKey extends Object {
 	}
 	
 	public function delete() {
-	
 		$db = Loader::db();
 		$db->Execute('delete from PermissionKeys where pkID = ?', array($this->getPermissionKeyID()));
-
 	}
 	
 	abstract public function getAssignmentList($accessType = false, $filterEntities = array());

@@ -44,6 +44,12 @@ class TaskPermissionKey extends PermissionKey {
 		$db->Execute('delete from TaskPermissionAssignments where peID = ? and pkID = ?', array($pe->getAccessEntityID(), $this->getPermissionKeyID()));	
 	}
 	
+	public function delete() {
+		parent::delete();
+		$db = Loader::db();
+		$db->Execute('delete from TaskPermissionAssignments where pkID = ?', array($this->getPermissionKeyID()));
+	}
+	
 	public function exportAccess($pxml) {
 		$assignments = $this->getAssignmentList();
 		if (count($assignments) > 0) { 
