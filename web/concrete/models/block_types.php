@@ -680,11 +680,17 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		}
 		
 		/** 
-		 * Removes the block type. ONLY removes the block type from the blocktypes table - doesn't do any kind of 
-		 * content deactivation.
+		 * Removes the block type. Also removes instances of content.
 		 */
 		public function delete() {
 			$db = Loader::db();
+			$r = $db->Execute('select cID, cvID, b.bID, arHandle from CollectionVersionBlocks cvb inner join Blocks b on b.bID = cvb.bID where btID = ?', array($this->getBlockTypeID()));
+			while ($row = $r->FetchRow()) {
+				$nc = Page::getByID($row['cID'], $row['cvID']);
+				$b = Block::getByID($row['bID'], $nc, $row['arHandle']);
+				$b->deleteBlock();
+			}
+			
 			$ca = new Cache();
 			$ca->delete('blockTypeByID', $this->btID);
 			$ca->delete('blockTypeByHandle', $btHandle);		 	
