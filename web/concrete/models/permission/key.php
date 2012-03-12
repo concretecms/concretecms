@@ -46,7 +46,7 @@ abstract class PermissionKey extends Object {
 
 	protected static function load($pkID) {
 		$db = Loader::db();
-		$r = $db->GetRow('select pkID, pkName, pkDescription, pkHandle, pkCategoryHandle, PermissionKeys.pkgID from PermissionKeys inner join PermissionKeyCategories on PermissionKeyCategories.pkCategoryID = PermissionKeys.pkCategoryID where pkID = ?', array($pkID));
+		$r = $db->GetRow('select pkID, pkName, pkDescription, pkHandle, pkCategoryHandle, PermissionKeys.pkCategoryID, PermissionKeys.pkgID from PermissionKeys inner join PermissionKeyCategories on PermissionKeyCategories.pkCategoryID = PermissionKeys.pkCategoryID where pkID = ?', array($pkID));
 		$class = Loader::helper('text')->camelcase($r['pkCategoryHandle']) . 'PermissionKey';
 		if (!is_array($r) && (!$r['pkID'])) { 
 			return false;
@@ -117,17 +117,15 @@ abstract class PermissionKey extends Object {
 		return $list;
 	}
 	
-	public function export($axml, $exporttype = 'full') {
+	public function export($axml) {
 		$category = PermissionKeyCategory::getByID($this->pkCategoryID)->getPermissionKeyCategoryHandle();
 		$pkey = $axml->addChild('permissionkey');
 		$pkey->addAttribute('handle',$this->getPermissionKeyHandle());
-		if ($exporttype == 'full') { 
-			$pkey->addAttribute('name', $this->getPermissionKeyName());
-			$pkey->addAttribute('description', $this->getPermissionKeyDescription());
-			$pkey->addAttribute('package', $this->getPackageHandle());
-			$pkey->addAttribute('category', $category);
-			$this->getController()->exportKey($pkey);
-		}
+		$pkey->addAttribute('name', $this->getPermissionKeyName());
+		$pkey->addAttribute('description', $this->getPermissionKeyDescription());
+		$pkey->addAttribute('package', $this->getPackageHandle());
+		$pkey->addAttribute('category', $category);
+		$this->exportAccess($pkey);
 		return $pkey;
 	}
 
@@ -271,7 +269,9 @@ abstract class PermissionKey extends Object {
 	}
 	
 	abstract public function getAssignmentList($accessType = false, $filterEntities = array());
-	
+	public function exportAccess($pxml) {
+		// by default we don't. but tasks do
+	}
 
 	
 
