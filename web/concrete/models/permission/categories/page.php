@@ -31,7 +31,6 @@ class PagePermissionKey extends PermissionKey {
 		if ($durationObject instanceof PermissionDuration) {
 			$pdID = $durationObject->getPermissionDurationID();
 		}
-		
 		$db->Replace('PagePermissionAssignments', array(
 			'cID' => $this->permissionObject->getCollectionID(),
 			'pkID' => $this->getPermissionKeyID(), 
@@ -39,6 +38,11 @@ class PagePermissionKey extends PermissionKey {
 			'pdID' => $pdID,
 			'accessType' => $accessType
 		), array('cID', 'peID', 'pkID'), false);
+	}
+	
+	public function clearAssignments() {
+		$db = Loader::db();
+		$db->Execute('delete from PagePermissionAssignments where cID = ? and pkID = ?', array($this->permissionObject->getCollectionID(), $this->getPermissionKeyID()));
 	}
 	
 	public function removeAssignment(PermissionAccessEntity $pe) {

@@ -937,33 +937,50 @@
 			}
 		} else if ($_POST['update_permissions']) { 
 			// updating a collection
-			if ($cp->canEditPagePermissions()) {
-				if (PERMISSIONS_MODEL == 'simple') {
-					$args['cInheritPermissionsFrom'] = 'OVERRIDE';
-					$args['cOverrideTemplatePermissions'] = 1;
-
-					if (is_array($_POST['readGID'])) {
-						foreach($_POST['readGID'] as $gID) {
-							$args['collectionRead'][] = 'gID:' . $gID;
-						}
-					}				
-
-					$args['collectionWrite'] = array();
-					if (is_array($_POST['editGID'])) {
-						foreach($_POST['editGID'] as $gID) {
-							$args['collectionReadVersions'][] = 'gID:' . $gID;
-							$args['collectionWrite'][] = 'gID:' . $gID;
-							$args['collectionAdmin'][] = 'gID:' . $gID;
-							$args['collectionDelete'][] = 'gID:' . $gID;
-						}
-					}				
-					$c->updatePermissions($args);
-				} else {
-					$c->updatePermissions();
-				}
+			if ($cp->canEditPagePermissions() && PERMISSIONS_MODEL == 'simple') {
 
 				$obj = new stdClass;
+				$c->setPermissionsToManualOverride();
 
+				$pk = PermissionKey::getByHandle('view_page');
+				$pk->setPermissionObject($c);
+				$pk->clearAssignments();
+				
+				if (is_array($_POST['readGID'])) {
+					foreach($_POST['readGID'] as $gID) {
+						$pk->addAssignment(GroupPermissionAccessEntity::getOrCreate(Group::getByID($gID)));
+					}
+				}				
+
+				$editAccessEntities = array();
+				if (is_array($_POST['editGID'])) {
+					foreach($_POST['editGID'] as $gID) {
+						$editAccessEntities[] = GroupPermissionAccessEntity::getOrCreate(Group::getByID($gID));
+					}
+				}
+				
+				$editPermissions = array(
+					'view_page_versions',
+					'edit_page_properties',
+					'edit_page_contents',
+					'edit_page_speed_settings',
+					'edit_page_design',
+					'edit_page_permissions',
+					'delete_page',
+					'delete_page_versions',
+					'approve_page_versions',
+					'add_subpage',
+					'move_or_copy_page',
+				);
+				foreach($editPermissions as $pkHandle) { 
+					$pk = PermissionKey::getByHandle($pkHandle);
+					$pk->setPermissionObject($c);
+					$pk->clearAssignments();
+					foreach($editAccessEntities as $editObj) {
+						$pk->addAssignment($editObj);
+					}
+				}
+				
 				if ($_POST['rel'] == 'SITEMAP') { 
 					$u = new User();
 					$u->unloadCollectionEdit();
@@ -976,8 +993,7 @@
 				$obj->cID = $c->getCollectionID();
 				print Loader::helper('json')->encode($obj);
 				exit;
-
-			}	
+			}
 		} else if ($_POST['add']) { 
 			// adding a collection to a collection
 			Loader::model('collection_types');
