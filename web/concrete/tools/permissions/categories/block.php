@@ -1,7 +1,7 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
 $c = Page::getByID($_REQUEST['cID']);
-$a = Area::get($c, $_GET['arHandle']);
+$a = Area::get($c, $_REQUEST['arHandle']);
 if (is_object($a)) {
 	$ax = $a;
 	$cx = $c;
@@ -10,7 +10,7 @@ if (is_object($a)) {
 		$cx = Stack::getByName($_REQUEST['arHandle']);
 	}
 
-	$b = Block::getByID($_GET['bID'], $cx, $ax); 
+	$b = Block::getByID($_REQUEST['bID'], $cx, $ax); 
 	$p = new Permissions($b);
 	// we're updating the groups for a particular block
 	if ($p->canEditBlockPermissions()) {
@@ -29,6 +29,15 @@ if (is_object($a)) {
 			$pk->addAssignment($pe, $pd, $_REQUEST['accessType']);
 		}
 
+		if ($_REQUEST['task'] == 'set_timed_guest_access' && Loader::helper("validation/token")->validate('set_timed_guest_access')) {
+			$b->doOverrideAreaPermissions();
+			$pk = PermissionKey::getByHandle('view_block');
+			$pk->setPermissionObject($b);
+			$pe = GroupPermissionAccessEntity::getOrCreate(Group::getByID(GUEST_GROUP_ID));
+			$pd = PermissionDuration::translateFromRequest();
+			$pk->addAssignment($pe, $pd, BlockPermissionKey::ACCESS_TYPE_INCLUDE);
+		}
+		
 		if ($_REQUEST['task'] == 'revert_to_area_permissions' && Loader::helper("validation/token")->validate('revert_to_area_permissions')) {
 			$b->revertToAreaPermissions();		
 		}

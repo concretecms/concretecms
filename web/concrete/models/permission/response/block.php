@@ -9,4 +9,22 @@ class BlockPermissionResponse extends PermissionResponse {
 	public function canAdmin() { return $this->validate('edit_block_permissions'); }
 	public function canAdminBlock() { return $this->validate('edit_block_permissions'); }
 	
+	public function canGuestsViewThisBlock() {
+		$pk = PermissionKey::getByHandle('view_block');
+		$pk->setPermissionObject($this->getPermissionObject());
+		$gg = GroupPermissionAccessEntity::getOrCreate(Group::getByID(GUEST_GROUP_ID));
+		$accessEntities = array($gg);
+		$valid = false;
+		$list = $pk->getAssignmentList(PermissionKey::ACCESS_TYPE_ALL, $accessEntities);
+		foreach($list as $l) {
+			if ($l->getAccessType() == PermissionKey::ACCESS_TYPE_INCLUDE) {
+				$valid = true;
+			}
+			if ($l->getAccessType() == PermissionKey::ACCESS_TYPE_EXCLUDE) {
+				$valid = false;
+			}
+		}
+		
+		return $valid;		
+	}
 }
