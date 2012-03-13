@@ -92,3 +92,33 @@ div.main-content-thumb h3 {
 .main-content-post-footer-share-facebook {
 	padding: 0 4px;
 }
+
+div.ccm-profile-attribute {
+  margin: 18px 0px 0px 12px;
+  padding: 0;
+}
+
+div.ccm-profile-attribute div.input {
+   margin: 4px 0px 2px 8px;
+}
+div.ccm-profile-attribute div.input div{
+   margin-bottom: 7px;
+}
+
+div.ccm-profile-attribute input, select {
+   margin-left:16px;
+}
+
+div.ccm-profile-attribute ul li {
+   list-style:none;
+   margin:0;
+}
+
+div.ccm-profile-attribute ul.inputs-list {
+   margin-bottom:4px;
+}
+
+h1.profilin {
+   margin-top: 16px;
+}
+
