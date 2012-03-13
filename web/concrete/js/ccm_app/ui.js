@@ -81,6 +81,9 @@ ccm_showBlockMenu = function(obj, e) {
 
 		if (obj.canModifyGroups) {
 			html += '<li><a title="' + ccmi18n.setBlockPermissions + '" onclick="ccm_hideMenus()" class="ccm-menu-icon ccm-icon-permissions-menu" dialog-width="420" dialog-height="350" id="menuBlockGroups' + obj.bID + '-' + obj.aID + '" href="' + CCM_TOOLS_PATH + '/edit_block_popup.php?cID=' + obj.cID + '&bID=' + obj.bID + '&arHandle=' + encodeURIComponent(obj.arHandle) + '&btask=groups" dialog-append-buttons="true" dialog-title="' + ccmi18n.setBlockPermissions + '">' + ccmi18n.setBlockPermissions + '</a></li>';
+			if (obj.canBeViewedByGuests) {
+				html += '<li><a title="' + ccmi18n.setBlockPermissionsViewDuration + '" onclick="ccm_hideMenus()" class="ccm-menu-icon ccm-icon-clock-menu" dialog-width="420" dialog-height="350" id="menuBlockViewClock' + obj.bID + '-' + obj.aID + '" href="' + CCM_TOOLS_PATH + '/edit_block_popup.php?cID=' + obj.cID + '&bID=' + obj.bID + '&arHandle=' + encodeURIComponent(obj.arHandle) + '&btask=guest_timed_access" dialog-append-buttons="true" dialog-title="' + ccmi18n.setBlockPermissionsViewDuration + '">' + ccmi18n.setBlockPermissionsViewDuration + '</a></li>';
+			}
 		}
 		if (obj.canAliasBlockOut) {
 			html += '<li><a class="ccm-menu-icon ccm-icon-setup-child-pages-menu" dialog-append-buttons="true" onclick="ccm_hideMenus()" dialog-width="550" dialog-height="450" id="menuBlockAliasOut' + obj.bID + '-' + obj.aID + '" href="' + CCM_TOOLS_PATH + '/edit_block_popup.php?cID=' + obj.cID + '&bID=' + obj.bID + '&arHandle=' + encodeURIComponent(obj.arHandle) + '&btask=child_pages" dialog-title="' + ccmi18n.setBlockAlias + '">' + ccmi18n.setBlockAlias + '</a></li>';
@@ -112,8 +115,8 @@ ccm_showBlockMenu = function(obj, e) {
 		}
 		if (obj.canModifyGroups) {
 			$("#menuBlockGroups" + obj.bID + '-' + obj.aID).dialog();
+			$("#menuBlockViewClock" + obj.bID + '-' + obj.aID).dialog();
 		}
-
 	} else {
 		bobj = $("#ccm-block-menu" + obj.bID + '-' + obj.aID);
 	}

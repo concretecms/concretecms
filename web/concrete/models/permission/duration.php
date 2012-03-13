@@ -163,5 +163,41 @@ class PermissionDuration extends Object {
 		return $filteredList;
 	}
 	
+	public static function translateFromRequest() {
+		$dt = Loader::helper('form/date_time');
+		$dateStart = $dt->translate('pdStartDate');
+		$dateEnd = $dt->translate('pdEndDate');
+		
+		if ($dateStart || $dateEnd) {
+			// create a PermissionDuration object
+			if ($_REQUEST['pdID']) { 
+				$pd = PermissionDuration::getByID($_REQUEST['pdID']);
+			} else { 
+				$pd = new PermissionDuration();
+			}
+			
+			$pd->setStartDate($dateStart);
+			$pd->setEndDate($dateEnd);
+			if ($_POST['pdRepeatPeriod']) {
+				$pd->setRepeatPeriod($_POST['pdRepeatPeriod']);
+				if ($_POST['pdRepeatPeriod'] == 'daily') {
+					$pd->setRepeatEveryNum($_POST['pdRepeatPeriodDaysEvery']);
+				} else if ($_POST['pdRepeatPeriod'] == 'weekly') {
+					$pd->setRepeatEveryNum($_POST['pdRepeatPeriodWeeksEvery']);
+					$pd->setRepeatPeriodWeekDays($_POST['pdRepeatPeriodWeeksDays']);
+				} else if ($_POST['pdRepeatPeriod'] == 'monthly') {
+					$pd->setRepeatMonthBy($_POST['pdRepeatPeriodMonthsRepeatBy']);
+					$pd->setRepeatEveryNum($_POST['pdRepeatPeriodMonthsEvery']);					
+				}
+				$pd->setRepeatPeriodEnd($dt->translate('pdEndRepeatDateSpecific'));
+			}
+			$pd->save();		
+		} else {
+			unset($pd);
+		}
+
+		return $pd;
+	}
+	
 }
 

@@ -131,6 +131,12 @@ if (is_object($b)) {
 				$bv->renderElement('permission/details/block', array('b' => $b, 'rcID'=>$rcID));
 			}
 			break;
+		case 'guest_timed_access':
+			if ($bp->canEditBlockPermissions() && $bp->canGuestsViewThisBlock()) {
+				$bv->renderElement('permission/details/block/timed_guest_access', array('b' => $b, 'rcID'=>$rcID));
+			}
+			break;
+
 		case 'child_pages':
 			if ($bp->canAdminBlock()) {
 				$bv->renderElement('block_master_collection_alias', array('b' => $b));
