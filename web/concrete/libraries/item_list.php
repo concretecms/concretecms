@@ -500,6 +500,9 @@ class ItemList {
 			$this->sortByDirection = 'asc';
 		}
 	}
+	
+	public function getSortBy() {return $this->sortBy;}
+	public function getSortByDirection() {return $this->sortByDirection;}
 
 	/** 
 	 * Sets up a column to sort by
