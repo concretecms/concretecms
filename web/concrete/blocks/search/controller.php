@@ -34,7 +34,7 @@ class SearchBlockController extends BlockController {
 		if (!$highlight) {
 			$text = Loader::helper('text')->shorten($fulltext, 180);
 			if (strlen($fulltext) > 180) {
-				$text . '&hellip;';
+				$text . '&hellip;<wbr>';
 			}
 			return $text;
 		}
@@ -56,7 +56,7 @@ class SearchBlockController extends BlockController {
 					break;
 			}
 			if(!empty($body_string))
-				return @implode("&hellip;", $body_string);
+				return @implode("&hellip;<wbr>", $body_string);
 		}
 	}
 	
