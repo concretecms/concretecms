@@ -58,7 +58,7 @@ $(function() {
 	});
 	
 	var h = $('#ccm-collection-preview-as-user-form').closest('.ui-dialog-content').height();
-	h = h - 80;
+	h = h - 120;
 	$('#ccm-collection-preview-as-user-frame').css('height', h + 'px');
 });
 </script>
