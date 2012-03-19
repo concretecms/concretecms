@@ -147,7 +147,25 @@ class PermissionDuration extends Object {
 		}		
 		return $isActive;
 	}
-
+	
+	public function getTextRepresentation() {
+		$text = '';
+		if ($this->getStartDate() != '') { 
+			$text .= t('Starts %s. ', date(DATE_APP_GENERIC_MDYT, strtotime($this->getStartDate())));
+		} else {
+			$text .= t('Already Started. ');
+		} 
+		if ($this->getEndDate() != '') { 
+			$text .= t('Ends %s. ', date(DATE_APP_GENERIC_MDYT, strtotime($this->getEndDate())));
+		} else {
+			$text .= t('No End Date. ');
+		} 
+		if ($this->repeats()) { 
+			$text .= t('Repeats %s. ', ucfirst($this->getRepeatPeriod()));
+		}
+		return $text;
+	}
+	
 	public static function filterByActive($list) {
 		$filteredList = array();
 		foreach($list as $l) { 

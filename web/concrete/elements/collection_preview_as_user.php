@@ -11,7 +11,7 @@ $us = Loader::helper('form/user_selector'); ?>
 <form id="ccm-collection-preview-as-user-form" method="get" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/pages/preview_as_user" target="ccm-collection-preview-as-user-frame">
 	<input type="hidden" name="cID" value="<?=$c->getCollectionID()?>" />
 
-	<div class="span8">
+	<div style="clear: both; width: auto; float: none; ">
 	<label><?=t('Preview As')?></label>	
 	<div class="input">
 	<label style="margin-right: 10px"><input type="radio" value="guest" name="ccm-collection-preview-as" checked="checked" /> <?=t('Guest')?>
@@ -23,7 +23,7 @@ $us = Loader::helper('form/user_selector'); ?>
 	</div>
 	</div>
 
-	<div class="span8">
+	<div style="clear: both; width: auto; float: none; padding-top: 10px">
 	<?=$form->label('onDate_dt', t('On Date'))?>
 	<div class="input">
 		<?=$date->datetime('onDate')?>
@@ -33,6 +33,13 @@ $us = Loader::helper('form/user_selector'); ?>
 
 </form>
 </div>
+
+<?
+$assignments = $cp->getAllTimedAssignmentsForPage();
+if (count($assignments) > 0) { ?>
+	<a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_collection_popup.php?cID=<?=$c->getCollectionID()?>&ctask=view_timed_permission_list" dialog-width="500" dialog-height="300" dialog-title="<?=t('View Timed Permission Assignments')?>" class="dialog-launch" onclick="" id="ccm-list-view-customize-top"><span class="ccm-menu-icon ccm-icon-clock"></span><? 
+		if (count($assignments) == 1) { ?><?=t('1 Timed Permission Found')?><? } else { ?><?=t('%s Timed Permissions Found', count($assignments))?><? } ?></a>
+<? } ?>
 </div>
 <br/>
 <iframe width="100%" height="200" style="border: 0px" border="0" frameborder="0" id="ccm-collection-preview-as-user-frame" name="ccm-collection-preview-as-user-frame" src="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/pages/preview_as_user?cID=<?=$c->getCollectionID()?>"></iframe>

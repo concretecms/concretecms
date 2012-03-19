@@ -73,6 +73,66 @@ class PagePermissionResponse extends PermissionResponse {
 		}
 	}
 
+
+	public function getAllTimedAssignmentsForPage() {
+		$db = Loader::db();
+		$assignments = array();
+		$r = $db->Execute('select peID, pkID, pdID from PagePermissionAssignments where pdID > 0 and cID = ?', array($this->object->getCollectionID()));
+		while ($row = $r->FetchRow()) { 
+			$pk = PagePermissionKey::getByID($row['pkID']);
+			$pae = PermissionAccessEntity::getByID($row['peID']);
+			$pd = PermissionDuration::getByID($row['pdID']);
+			$ppc = new PageContentPermissionTimedAssignment();
+			$ppc->setDurationObject($pd);
+			$ppc->setAccessEntityObject($pae);
+			$ppc->setPermissionKeyObject($pk);
+			$assignments[] = $ppc;
+		}
+		$r = $db->Execute('select peID, arHandle, pdID, pkID from AreaPermissionAssignments where pdID > 0 and cID = ?', array($this->object->getCollectionID()));
+		while ($row = $r->FetchRow()) { 
+			$pk = AreaPermissionKey::getByID($row['pkID']);
+			$pae = PermissionAccessEntity::getByID($row['peID']);
+			$area = Area::get($this->getPermissionObject(), $row['arHandle']);
+			$pk->setPermissionObject($area);
+			$pd = PermissionDuration::getByID($row['pdID']);
+			$ppc = new PageContentPermissionTimedAssignment();
+			$ppc->setDurationObject($pd);
+			$ppc->setAccessEntityObject($pae);
+			$ppc->setPermissionKeyObject($pk);
+			$assignments[] = $ppc;
+		}
+		$r = $db->Execute('select peID, cvID, bID, pdID, pkID from BlockPermissionAssignments where pdID > 0 and cID = ?', array($this->object->getCollectionID()));
+		while ($row = $r->FetchRow()) { 
+			$pk = BlockPermissionKey::getByID($row['pkID']);
+			$pae = PermissionAccessEntity::getByID($row['peID']);
+			$arHandle = $db->GetOne('select arHandle from CollectionVersionBlocks where bID = ? and cvID = ? and cID = ?', array(
+				$row['bID'], $row['cvID'], $this->object->getCollectionID()
+			));
+			$b = Block::getByID($row['bID'], $this->object, $arHandle);
+			$pk->setPermissionObject($b);
+			$pd = PermissionDuration::getByID($row['pdID']);
+			$ppc = new PageContentPermissionTimedAssignment();
+			$ppc->setDurationObject($pd);
+			$ppc->setAccessEntityObject($pae);
+			$ppc->setPermissionKeyObject($pk);
+			$assignments[] = $ppc;
+		}
+		return $assignments;
+	}
 	
+}
+
+class PageContentPermissionTimedAssignment {
+	
+	protected $permissionKey;
+	protected $durationObject;
+	protected $accessEntity;
+	
+	public function getPermissionKeyObject() {return $this->permissionKey;}
+	public function getDurationObject() {return $this->durationObject;}
+	public function getAccessEntityObject() {return $this->accessEntity;}
+	public function setPermissionKeyObject($pk) {$this->permissionKey = $pk;}
+	public function setDurationObject($do) {$this->durationObject = $do;}
+	public function setAccessEntityObject($accessEntity) {$this->accessEntity = $accessEntity;}
 	
 }
