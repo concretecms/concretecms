@@ -20,5 +20,10 @@ if (PERMISSIONS_MODEL == 'advanced' && $cp->canEditPageContents() && TaskPermiss
 	$date = $dt->translate('onDate', $_REQUEST);
 	$req->setCustomRequestDateTime($date);
 	$req = Request::get();
-	$v->render($c); 
+	$cp = new Permissions($c);
+	if ($cp->canRead()) { 
+		$v->render($c); 
+	} else {
+		print t('Unable to view page.');
+	}
 }
