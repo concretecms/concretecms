@@ -16,7 +16,7 @@ if (is_array($_REQUEST['fID'])) {
 foreach($fileIDs as $fID) {
 	$f = File::getByID($fID);
 	$fp = new Permissions($f);
-	if ($fp->canViewFile()) {
+	if ($fp->canViewFileInFileManager()) {
 		$files[] = $f;
 	}
 }
