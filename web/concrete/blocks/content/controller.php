@@ -228,9 +228,9 @@
 			if ($fID > 0) {
 				$c = Page::getCurrentPage();
 				if (is_object($c)) {
-					return View::url('/download_file', 'view', $fID);
+					return View::url('/download_file', 'view', $fID, $c->getCollectionID());
 				} else {
-					return View::url('/download_file', 'view', $fID, $c->getCollectionID());				
+					return View::url('/download_file', 'view', $fID);
 				}
 			}
 		}
@@ -238,7 +238,6 @@
 		private function replaceDownloadFileIDInEditMode($match) {
 			$fID = $match[1];
 			if ($fID > 0) {
-				$c = Page::getCurrentPage();
 				return View::url('/download_file', 'view', $fID);
 			}
 		}
