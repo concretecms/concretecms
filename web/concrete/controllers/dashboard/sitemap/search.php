@@ -153,6 +153,9 @@ class DashboardSitemapSearchController extends Controller {
 							Loader::model('attribute/categories/collection');
 							$akID = $item;
 							$fak = CollectionAttributeKey::get($akID);
+							if(!is_object($fak) && !$fak instanceof CollectionAttributeKey){
+								break;
+							}
 							$type = $fak->getAttributeType();
 							$cnt = $type->getController();
 							$cnt->setRequestArray($req);
