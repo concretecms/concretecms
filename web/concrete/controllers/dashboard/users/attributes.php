@@ -84,7 +84,11 @@ class DashboardUsersAttributesController extends Controller {
 	public function select_type() {
 		$atID = $this->request('atID');
 		$at = AttributeType::getByID($atID);
-		$this->set('type', $at);
+		if(isset($at->atID) && $at->atID > 0) {
+			$this->set('type', $at);
+		} else {
+			throw new Exception(t('Invalid Attribute Type.'));
+		}
 	}
 	
 	public function view() {
