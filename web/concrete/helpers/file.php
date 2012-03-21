@@ -251,10 +251,10 @@ class FileHelper {
 	
 	
 	/**
-	 * returns an object with two permissions modes:
-	 * $res->file
-	 * $res->dir
-	 * @param string $path
+	 * returns an object with two permissions modes (octal):
+	 * one for files: $res->file
+	 * and another for directories: $res->dir
+	 * @param string $path (optional)
 	 * @return StdClass
 	 */
 	public function getCreateFilePermissions($path = NULL) {
