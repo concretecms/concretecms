@@ -63,10 +63,17 @@ class FileHelper {
 	 * @param string $target Place to copy the source
 	 * @param int $mode What to chmod the file to
 	 */
-	public function copyAll($source, $target, $mode = FILE_PERMISSIONS_MODE) {
+	public function copyAll($source, $target, $mode = NULL) {
 		if (is_dir($source)) {
-			@mkdir($target, $mode);
-			@chmod($target, $mode);
+			if(!isset($mode)) {
+				$mode = FILE_PERMISSIONS_MODE;
+				@mkdir($target, DIRECTORY_PERMISSIONS_MODE);
+				@chmod($target, $mode);
+			} else { 
+				@mkdir($target, $mode);
+				@chmod($target, $mode);
+			}
+			
 			
 			$d = dir($source);
 			while (FALSE !== ($entry = $d->read())) {
@@ -139,7 +146,7 @@ class FileHelper {
 	 */
 	public function getTemporaryDirectory() {
 		if (!is_dir(DIR_TMP)) {
-			mkdir(DIR_TMP, FILE_PERMISSIONS_MODE);
+			mkdir(DIR_TMP, DIRECTORY_PERMISSIONS_MODE);
 			chmod(DIR_TMP, FILE_PERMISSIONS_MODE);
 			touch(DIR_TMP . '/index.html');
 		}
@@ -240,6 +247,50 @@ class FileHelper {
 	public function replaceExtension($filename, $extension) {
 		$newFileName = substr($filename, 0, strrpos($filename, '.')) . '.' . $extension;
 		return $newFileName;
+	}
+	
+	
+	/**
+	 * returns an object with two permissions modes:
+	 * $res->file
+	 * $res->dir
+	 * @param string $path
+	 * @return StdClass
+	 */
+	public function getCreateFilePermissions($path = NULL) {
+		try {
+			if(!isset($path)) {
+				$path = DIR_BASE."/files";
+			}
+			
+			if(!is_dir($path)) {
+				$path = @dirname($path);
+			}
+			$perms = @fileperms($path);
+			
+			if(!$perms) { throw new Exception(t('An error occured while attempting to determine file permissions.')); }
+			clearstatcache();
+			$dir_perms = substr(decoct($perms),1);
+			
+			$file_perms = "0";
+			$parts[] = substr($dir_perms,1,1);
+			$parts[] = substr($dir_perms,2,1);
+			$parts[] = substr($dir_perms,3,1);
+			foreach($parts as $p){
+				if(intval($p)%2 == 0) {
+					$file_perms.=$p;
+					continue;
+				}
+				$file_perms .= intval($p)-1;
+			}
+		} catch(Exception $e) {
+			return false;
+		}
+		$res = new stdClass();
+		$res->file 	= intval($file_perms,8);
+		$res->dir 	= intval($dir_perms,8);
+		
+		return $res;
 	}
 		
 }
