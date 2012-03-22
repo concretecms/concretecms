@@ -6,11 +6,13 @@
 			<unsigned />
 		</field>
 		<field name="title" type="C" size="255">
-		</field> 			
+		</field>
 		<field name="buttonText" type="C" size="128">
 		</field>
 		<field name="baseSearchPath" type="C" size="255">
-		</field>	
+		</field>
+		<field name="pagePath" type="C" size="255">
+		</field>
 		<field name="resultsURL" type="C" size="255">
 		</field>
 	</table>
