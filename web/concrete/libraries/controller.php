@@ -177,7 +177,6 @@ class Controller {
 	 * @return void
 	 */	
 	public function setupAndRun() {
-		$req = Request::get();
 		$this->setupRequestTask();
 		$this->on_start();
 		
