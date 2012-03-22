@@ -42,7 +42,11 @@ table#searchBlockSetup .note{ font-size:10px; color:#999999; font-weight:normal 
 					<? $form = Loader::helper('form/page_selector');
 					if ($searchWithinOther) {
 						$cpo = Page::getByPath($baseSearchPath);
-						print $form->selectPage('searchUnderCID', $cpo->getCollectionID());
+						if (is_object($cpo)) {
+							print $form->selectPage('searchUnderCID', $cpo->getCollectionID());
+						} else {
+							print $form->selectPage('searchUnderCID');
+						}
 					} else {
 						print $form->selectPage('searchUnderCID');
 					}
@@ -55,19 +59,23 @@ table#searchBlockSetup .note{ font-size:10px; color:#999999; font-weight:normal 
 		<th><?=t('Results Page')?>:</th>
 		<td>
 			<div>
-				<input id="ccm-searchBlock-externalTarget" name="externalTarget" type="checkbox" value="1" <?=(strlen($searchObj->resultsURL))?'checked':''?> />
+				<input id="ccm-searchBlock-externalTarget" name="externalTarget" type="checkbox" value="1" <?=(strlen($searchObj->resultsURL) || $alternatPagePath)?'checked':''?> />
 				<?=t('Post to Another Page Elsewhere')?>
 			</div>
-			<div id="ccm-searchBlock-resultsURL-wrap" style=" <?=(strlen($searchObj->resultsURL))?'':'display:none'?>" >
+			<div id="ccm-searchBlock-resultsURL-wrap" style=" <?=(strlen($searchObj->resultsURL) || $alternatPagePath)?'':'display:none'?>" >
 				<?
 				if ($alternatPagePath) {
 					$cpo = Page::getByPath($pagePath);
-					print $form->selectPage('pagePath', $cpo->getCollectionID());
+					if (is_object($cpo)) {
+						print $form->selectPage('pagePath', $cpo->getCollectionID());
+					} else {
+						print $form->selectPage('pagePath');
+					}
 				} else {
 					print $form->selectPage('pagePath');
 				}
 				?>
-				OR  Path:
+				<?=t('OR Path')?>:
 				<input id="ccm-searchBlock-resultsURL" name="resultsURL" value="<?=$searchObj->resultsURL?>" maxlength="255" type="text" style="width:100%">
 			</div>
 		</td>
