@@ -154,7 +154,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			foreach ($againstItems as $itemNamespace) {
 				foreach ($itemNamespace as $itemKey => $againstItem) {
 					//A duplicate is an item of the same type with the same non-empty handle
-					if (!empty($againstItem->handle) && ($checkItem->type == $againstItem->type) && ($checkItem->handle['handle'] == $againstItem->handle['handle'])) {
+					if (!empty($againstItem->handle) && ($checkItem->type == $againstItem->type) && (strtolower($checkItem->handle['handle']) == strtolower($againstItem->handle['handle']))) {
 						//Does the given item have a higher version than the existing found item?
 						if (version_compare($checkItem->handle['version'], $againstItem->handle['version'], '>')) {
 							//Yes (new item is higher) so remove old item
