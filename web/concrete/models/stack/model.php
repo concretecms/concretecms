@@ -63,8 +63,12 @@ class Stack extends Page {
 		
 		// finally we add the row to the stacks table
 		$db = Loader::db();
-		$v = array($stackName, $page->getCollectionID(), $type);
+		$stackCID = $page->getCollectionID();
+		$v = array($stackName, $stackCID, $type);
 		$db->Execute('insert into Stacks (stName, cID, stType) values (?, ?, ?)', $v);
+		
+		//Return the new stack
+		return self::getByID($stackCID);
 	}
 	
 	public static function getByName($stackName, $cvID = 'RECENT') {
