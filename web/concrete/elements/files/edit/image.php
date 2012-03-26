@@ -43,18 +43,6 @@ if (!$fp->canWrite()) {
 			  <div id="crop_container"></div>
 			  <div class="cleared"></div> 
 		  </div>  
-		  <br />
-		  <span class="button-wrapper" id="crop">
-				<span class="l"> </span>
-				<span class="r"> </span>
-				<a class="button" href="javascript:void(0)">Crop</a>
-		  </span>
-		  &nbsp;
-		  <span class="button-wrapper" id="restore">
-				<span class="l"> </span>
-				<span class="r"> </span>
-				<a class="button" href="javascript:void(0)">Restore</a>
-		  </span>
 	</div>
 
 </div>
@@ -67,9 +55,9 @@ if (!$fp->canWrite()) {
 	   var w = $('#ccm-file-manager-edit-image').closest('.ui-dialog-content').width();
 	   var h = $('#ccm-file-manager-edit-image').closest('.ui-dialog-content').height();
 	   h = h - 100;
-	   if (h > <?=$f->getAttribute('height')?>) {
+	   /* if (h > <?=$f->getAttribute('height')?>) {
 	   	h = <?=$f->getAttribute('height')?>;
-	   }
+	   }*/ 
 	   var cropzoom = $('#crop_container').cropzoom({
             width: w - 20,
             height: h,
