@@ -45,12 +45,15 @@ class HtmlHelper {
 	 * First, if the item is either a path or a URL it just returns the link to that item (as XHTML-formatted style tag.) 
 	 * Then it checks the currently active theme, then if a package is specified it checks there. Otherwise if nothing is found it
 	 * fires off a request to the relative directory CSS directory. If nothing is there, then it checks to the assets directories
-	 * @param $file
-	 * @return $str
+	 *
+	 * @param string $file name of css file
+	 * @param string $pkgHandle handle of the package that the css file is located in (if applicable)
+	 * @param array $uniqueItemHandle contains two elements: 'handle' and 'version' (both strings) -- helps prevent duplicate output of the same css file (in View::addHeaderItem() and View::addFooterItem()).
+	 * @return CSSOutputObject
 	 */
-	public function css($file, $pkgHandle = null) {
+	public function css($file, $pkgHandle = null, $uniqueItemHandle = array()) {
 
-		$css = new CSSOutputObject();
+		$css = new CSSOutputObject($uniqueItemHandle);
 
 		// if the first character is a / then that means we just go right through, it's a direct path
 		if (substr($file, 0, 1) == '/' || substr($file, 0, 4) == 'http' || strpos($file, DISPATCHER_FILENAME) > -1) {
@@ -94,12 +97,15 @@ class HtmlHelper {
 	 * First, if the item is either a path or a URL it just returns the link to that item (as XHTML-formatted script tag.) 
 	 * If a package is specified it checks there. Otherwise if nothing is found it
 	 * fires off a request to the relative directory JavaScript directory.
-	 * @param $file
-	 * @return $str
+	 *
+	 * @param string $file name of javascript file
+	 * @param string $pkgHandle handle of the package that the javascript file is located in (if applicable)
+	 * @param array $uniqueItemHandle contains two elements: 'handle' and 'version' (both strings) -- helps prevent duplicate output of the same javascript file (in View::addHeaderItem() and View::addFooterItem()).
+	 * @return JavaScriptOutputObject
 	 */
-	public function javascript($file, $pkgHandle = null) {
+	public function javascript($file, $pkgHandle = null, $uniqueItemHandle = array()) {
 
-		$js = new JavaScriptOutputObject();
+		$js = new JavaScriptOutputObject($uniqueItemHandle);
 		
 		if (substr($file, 0, 1) == '/' || substr($file, 0, 4) == 'http' || strpos($file, DISPATCHER_FILENAME) > -1) {
 			$js->compress = false;
@@ -134,12 +140,14 @@ class HtmlHelper {
 	
 	/** 
 	 * Includes a JavaScript inline script.
-	 * @param string $script
-	 * @return string $str
+	 *
+	 * @param string $script javascript code (not including the surrounding <script> tags)
+	 * @param array $uniqueItemHandle contains two elements: 'handle' and 'version' (both strings) -- helps prevent duplicate output of the same script (in View::addHeaderItem() and View::addFooterItem()).
+	 * @return InlineScriptOutputObject
 	 */
-	public function script($script) {
-		$js = new InlineScriptOutputObject();
-    		$js->script = $script;
+	public function script($script, $uniqueItemHandle = array()) {
+		$js = new InlineScriptOutputObject($uniqueItemHandle);
+		$js->script = $script;
 		return $js;
 	}
 	
@@ -214,6 +222,21 @@ class HeaderOutputObject {
 	public $href = '';
   	public $script = '';
 	public $compress = true;
+	public $handle = array(); //used in View::aadHeaderItem()/View::addFooterItem() to prevent duplicate output of conflicting items
+	
+	public function __construct($uniqueItemHandle = array()) {
+		if (is_array($uniqueItemHandle) && array_key_exists('handle', $uniqueItemHandle) && !empty($uniqueItemHandle['handle'])) {
+			$this->handle = array(
+				'handle' => $uniqueItemHandle['handle'],
+				'version' => array_key_exists('version', $uniqueItemHandle) ? $uniqueItemHandle['version'] : '0',
+			);
+		} else if (is_string($uniqueItemHandle) && !empty($uniqueItemHandle)) {
+			$this->handle = array(
+				'handle' => $uniqueItemHandle,
+				'version' => '0',
+			);
+		}
+	}
 
 }
 
@@ -221,6 +244,9 @@ class HeaderOutputObject {
  * @access private
  */
 class JavaScriptOutputObject extends HeaderOutputObject {
+	
+	public $type = 'javascript';
+	
 	public function __toString() {
 		return '<script type="text/javascript" src="' . $this->file . '"></script>';
 	}
@@ -231,18 +257,22 @@ class JavaScriptOutputObject extends HeaderOutputObject {
  * @access private
  */
 class InlineScriptOutputObject extends HeaderOutputObject {
+	
+	public $type = 'javascript';
+	
+	public function __toString() {
+		return '<script type="text/javascript">/*<![CDATA[*/'. $this->script .'/*]]>*/</script>';
+	}
 
-  public function __toString() {
-    return '<script type="text/javascript">/*<![CDATA[*/'. $this->script .'/*]]>*/</script>';
-  }
-  
 }
 
 /** 
  * @access private
  */
 class CSSOutputObject extends HeaderOutputObject {
-
+	
+	public $type = 'css';
+	
 	public function __toString() {
 		return '<link rel="stylesheet" type="text/css" href="' . $this->file . '" />';
 	}
