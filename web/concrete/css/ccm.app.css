@@ -496,6 +496,10 @@ div.ccm-file-manager-pre-filter{margin-bottom:10px;font-size:14px;color:#888;fon
 div.ccm-file-selected-thumbnail{width:60px;margin-right:10px;float:left;}
 div.ccm-file-selected-data{padding-top:0px;float:left;}
 div.ccm-file-selected-data div{font-size:11px;word-wrap:break-word;}
+#ccm-file-manager-edit-image{margin-top:10px;}
+#ccm-file-manager-zoom-slider #zoomMin,#ccm-file-manager-zoom-slider #zoomMax{display:none;}
+#ccm-file-manager-zoom-slider{width:120px;}
+#ccm-file-manager-rotate #rotationMin,#ccm-file-manager-rotate #rotationMax{display:none;}
 table.ccm-marketplace-results{margin-top:-20px;border:0px !important;margin-left:-20px;margin-bottom:-20px;margin-right:-20px;width:938px;}
 table.ccm-marketplace-results td{height:90px !important;vertical-align:top;border-bottom:1px solid #dedede;border-radius:0px;-webkit-border-radius:0px;-moz-border-radius:0px;border-top:0px !important;border-left:0px !important;height:125px;border-right:1px solid #dedede;}
 table.ccm-marketplace-results td:last-child{border-right:0px !important;}
