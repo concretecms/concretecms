@@ -81,8 +81,8 @@ if (!$fp->canWrite()) {
                 width: <?=$f->getAttribute('width')?>,
                 height:<?=$f->getAttribute('height')?>,
                 minZoom:10,
-                startZoom: 0,
-                maxZoom:150
+                startZoom: 100,
+                maxZoom:600
             }
         });
        cropzoom.setSelector(45,45,200,150,true);
