@@ -1050,8 +1050,9 @@ THE SOFTWARE.
 	};
 
 	/* Support attributes on SVG nodes. */
+	/*
 	var origAttr = $.fn.attr;
-
+	
 	$.fn.attr = function(name, value, type) {
 		if (typeof name === 'string' && value === undefined) {
 			var val = origAttr.apply(this, [ name, value, type ]);
@@ -1074,8 +1075,10 @@ THE SOFTWARE.
 			}
 		});
 	};
-
+		*/
+		
 	/* Support removing attributes on SVG nodes. */
+	/*
 	var origRemoveAttr = $.fn.removeAttr;
 
 	$.fn.removeAttr = function(name) {
@@ -1090,11 +1093,12 @@ THE SOFTWARE.
 				});
 	};
 
+	;
+	*/
 	function isSVGElem(node) {
 		return (node.nodeType == 1 && node.namespaceURI == 'http://www.w3.org/2000/svg');
 	}
-	;
-
+	
 	// Css Hooks
 	/*
 	 * jQuery.cssHooks["MsTransform"] = { set: function( elem, value ) {
