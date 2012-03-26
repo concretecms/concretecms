@@ -86,7 +86,7 @@ if ($_POST['task'] == 'save_permissions') {
 <?=$form->hidden('peID');?>
 <?=$form->hidden('pdID');?>
 
-<h4><?=t('Groups or Users')?></h4>
+<h4><?=t('Users or Groups')?></h4>
 
 <p><?=t('Who gets access to this permission?')?></p>
 
@@ -104,8 +104,8 @@ if ($_POST['task'] == 'save_permissions') {
 </table>
 <? if (!is_object($pae)) { ?>
 <div style="margin-top: -10px" class="clearfix">
-<input type="button" class="btn ccm-button-right small dialog-launch" id="ccm-permissions-access-entity-members-add-user" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/users/search_dialog?mode=choose_multiple&cID=<?=$_REQUEST['cID']?>" dialog-modal="false" dialog-width="90%" dialog-title="<?=t('Add User')?>"  dialog-height="70%" value="<?=t('Add User')?>" />
-<input type="button" class="btn ccm-button-right small dialog-launch" id="ccm-permissions-access-entity-members-add-group" style="margin-right: 5px" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/select_group?cID=<?=$_REQUEST['cID']?>&include_core_groups=1" dialog-modal="false" dialog-title="<?=t('Add Group')?>" value="<?=t('Add Group')?>" />
+<input type="button" class="btn ccm-button-right small dialog-launch" id="ccm-permissions-access-entity-members-add-group" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/select_group?cID=<?=$_REQUEST['cID']?>&include_core_groups=1" dialog-modal="false" dialog-title="<?=t('Add Group')?>" value="<?=t('Add Group')?>" />
+<input type="button" class="btn ccm-button-right small dialog-launch" id="ccm-permissions-access-entity-members-add-user" style="margin-right: 5px" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/users/search_dialog?mode=choose_multiple&cID=<?=$_REQUEST['cID']?>" dialog-modal="false" dialog-width="90%" dialog-title="<?=t('Add User')?>"  dialog-height="70%" value="<?=t('Add User')?>" />
 </div>
 <br/>
 <? } ?>
