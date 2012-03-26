@@ -23,7 +23,7 @@
 		/** 
 		 * Loads a library file, either from the site's files or from Concrete's
 		 */
-		public static function library($lib, $pkgHandle = null) {
+		public function library($lib, $pkgHandle = null) {
 		
 			if (file_exists(DIR_LIBRARIES . '/' . $lib . '.php')) {
 				require_once(DIR_LIBRARIES . '/' . $lib . '.php');
@@ -46,7 +46,7 @@
 		/** 
 		 * Loads a model from either an application, the site, or the core Concrete directory
 		 */
-		public static function model($mod, $pkgHandle = null) {
+		public function model($mod, $pkgHandle = null) {
 
 			if (file_exists(DIR_MODELS . '/' . $mod . '.php')) {
 				require_once(DIR_MODELS . '/' . $mod . '.php');
@@ -66,7 +66,7 @@
 			Loader::legacyModel($mod);
 		}
 		
-		protected static function legacyModel($model) {
+		protected function legacyModel($model) {
 			switch($model) {
 				case 'collection_attributes':
 					Loader::model('attribute/categories/collection');
@@ -89,7 +89,7 @@
 		/** 
 		 * @access private
 		 */
-		public static function packageElement($file, $pkgHandle, $args = null) {
+		public function packageElement($file, $pkgHandle, $args = null) {
 			if (is_array($args)) {
 				extract($args);
 			}
@@ -106,7 +106,7 @@
 		/** 
 		 * Loads an element from C5 or the site
 		 */
-		public static function element($file, $args = null) {
+		public function element($file, $args = null) {
 			if (is_array($args)) {
 				extract($args);
 			}
@@ -124,7 +124,7 @@
 		 * If it isn't there and pkgHandle is defined it checks in root/concrete/packages/pkghandle
 		 * Finally it checks if its in root/concrete/tools
 		 */
-		public static function tool($file, $args = null, $pkgHandle= null) {
+		public function tool($file, $args = null, $pkgHandle= null) {
 		   if (is_array($args)) {
 			   extract($args);
 		   }
@@ -147,7 +147,7 @@
 		 * <?php Loader::block('autonav'); ?>
 		 * </code>
 		 */
-		public static function block($bl) {
+		public function block($bl) {
 			if (file_exists(DIR_FILES_BLOCK_TYPES . '/' . $bl . '/' . FILENAME_BLOCK_CONTROLLER)) {
 				require_once(DIR_FILES_BLOCK_TYPES . '/' . $bl . '/' . FILENAME_BLOCK_CONTROLLER);
 			} else if (file_exists(DIR_FILES_BLOCK_TYPES_CORE . '/' . $bl . '/' . FILENAME_BLOCK_CONTROLLER)) {
@@ -173,7 +173,7 @@
 		 * Loads the various files for the database abstraction layer. We would bundle these in with the db() method below but
 		 * these need to be loaded before the models which need to be loaded before db() 
 		 */
-		public static function database() {
+		public function database() {
 			Loader::library('3rdparty/adodb/adodb.inc');
 			Loader::library('3rdparty/adodb/adodb-exceptions.inc');
 			Loader::library('3rdparty/adodb/adodb-active-record.inc');
@@ -189,7 +189,7 @@
 		 * $db->query($sql);
 		 * </code>
 		 */
-		public static function db($server = null, $username = null, $password = null, $database = null, $create = false, $autoconnect = true) {
+		public function db($server = null, $username = null, $password = null, $database = null, $create = false, $autoconnect = true) {
 			static $_dba;
 			if ((!isset($_dba) || $create) && ($autoconnect)) {
 				if ($server == null && defined('DB_SERVER')) {	
@@ -226,7 +226,7 @@
 		/** 
 		 * Loads a helper file. If the same helper file is contained in both the core concrete directory and the site's directory, it will load the site's first, which could then extend the core.
 		 */
-		public static function helper($file, $pkgHandle = false) {
+		public function helper($file, $pkgHandle = false) {
 		
 			static $instances = array();
 			$class = false;		
@@ -282,7 +282,7 @@
 		/**
 		 * @access private
 		 */
-		public static function package($pkgHandle) {
+		public function package($pkgHandle) {
 			// loads and instantiates the object
 			$dir = (is_dir(DIR_PACKAGES . '/' . $pkgHandle)) ? DIR_PACKAGES : DIR_PACKAGES_CORE;
 			if (file_exists($dir . '/' . $pkgHandle . '/' . FILENAME_PACKAGE_CONTROLLER)) {
@@ -298,7 +298,7 @@
 		/**
 		 * @access private
 		 */
-		public static function startingPointPackage($pkgHandle) {
+		public function startingPointPackage($pkgHandle) {
 			// loads and instantiates the object
 			$dir = (is_dir(DIR_STARTING_POINT_PACKAGES . '/' . $pkgHandle)) ? DIR_STARTING_POINT_PACKAGES : DIR_STARTING_POINT_PACKAGES_CORE;
 			if (file_exists($dir . '/' . $pkgHandle . '/' . FILENAME_PACKAGE_CONTROLLER)) {
@@ -315,7 +315,7 @@
 		/** 
 		 * Gets the path to a particular page type controller
 		 */
-		public static function pageTypeControllerPath($ctHandle) {
+		public function pageTypeControllerPath($ctHandle) {
 			
 			Loader::model('collection_types');
 			$ct = CollectionType::getByHandle($ctHandle);
@@ -341,7 +341,7 @@
 		/** 
 		 * Loads a controller for either a page or view
 		 */
-		public static function controller($item) {
+		public function controller($item) {
 			
 			$include = false;
 			
