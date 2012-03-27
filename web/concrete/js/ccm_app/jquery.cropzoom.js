@@ -438,7 +438,7 @@ THE SOFTWARE.
 									value : value,
 									range : "max",
 									min : 0,
-									max : 270,
+									max : 359,
 									step : (($options.rotationSteps > 360 || $options.rotationSteps < 0) ? 1
 											: $options.rotationSteps),
 									slide : function(event, ui) {
@@ -449,7 +449,17 @@ THE SOFTWARE.
 										if ($options.image.onRotate != null)
 											$options.image.onRotate($slider,
 													getData('image').rotation);
+									},
+									change : function(event, ui) {
+										getData('image').rotation = (value == 360 ? Math
+												.abs(360 - ui.value)
+												: Math.abs(ui.value));
+										calculateTranslationAndRotation();
+										if ($options.image.onRotate != null)
+											$options.image.onRotate($slider,
+													getData('image').rotation);
 									}
+									
 								});
 
 						rotationContainerSlider.append(rotMin);
