@@ -693,8 +693,8 @@ THE SOFTWARE.
 									aspectRatio : $options.selector.aspectRatio,
 									maxHeight : $options.selector.maxHeight,
 									maxWidth : $options.selector.maxWidth,
-									minHeight : $options.selector.h,
-									minWidth : $options.selector.w,
+									minHeight : 10,
+									minWidth : 10,
 									containment : 'parent',
 									resize : function(event, ui) {
 										// Actualizamos las posiciones de la
