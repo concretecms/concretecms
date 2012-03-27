@@ -3,14 +3,14 @@
 	defined('C5_EXECUTE') or die("Access Denied.");	
 	class ImageBlockController extends BlockController {
 
-		protected $btInterfaceWidth = 300;
-		protected $btInterfaceHeight = 450;
+		protected $btInterfaceWidth = 400;
+		protected $btInterfaceHeight = 550;
 		protected $btTable = 'btContentImage';
 		protected $btCacheBlockRecord = true;
 		protected $btCacheBlockOutput = true;
 		protected $btCacheBlockOutputOnPost = true;
 		protected $btCacheBlockOutputForRegisteredUsers = true;
-		
+		protected $btWrapperClass = 'ccm-ui';
 		protected $btExportFileColumns = array('fID','fOnstateID');
 
 		/** 
@@ -89,7 +89,9 @@
 			    return '';
 			}	
 			
-			if ($this->maxWidth > 0 || $this->maxHeight > 0) {
+			if ($this->maxWidth == $size[0] && $this->maxHeight == $size[1]) {
+				$sizeStr = $size[3];
+			} else if (!$this->forceImageToMatchDimensions && ($this->maxWidth > 0 || $this->maxHeight > 0)) { 
 				$mw = $this->maxWidth > 0 ? $this->maxWidth : $size[0];
 				$mh = $this->maxHeight > 0 ? $this->maxHeight : $size[1];
 				$ih = Loader::helper('image');
@@ -106,8 +108,12 @@
 			$img .= ($style) ? "style=\"{$style}\" " : '';
 			if($this->fOnstateID != 0) {
 				$fos = $this->getFileOnstateObject();
-				
-				if ($this->maxWidth > 0 || $this->maxHeight > 0) {
+				$fullPathOnstate = $f->getPath();
+				$sizehover = @getimagesize($fullPathOnstate);
+
+				if ($this->maxWidth == $sizehover[0] && $this->maxHeight == $sizehover[1]) {
+					$relPathHover = $fos->getRelativePath();
+				} else if (!$this->forceImageToMatchDimensions && ($this->maxWidth > 0 || $this->maxHeight > 0)) {
 					$thumbHover = $ih->getThumbnail($fos, $mw, $mh);				
 					$relPathHover = $thumbHover->src;
 				} else {

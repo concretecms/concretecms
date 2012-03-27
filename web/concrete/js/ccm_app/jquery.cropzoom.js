@@ -58,6 +58,8 @@ THE SOFTWARE.
 							showDimetionsOnDrag : true,
 							maxHeight : null,
 							maxWidth : null,
+							minHeight: null,
+							minWidth : null,
 							startWithOverlay : false,
 							hideOverlayOnDragAndResize : true,
 							onSelectorDrag : null,
@@ -693,8 +695,8 @@ THE SOFTWARE.
 									aspectRatio : $options.selector.aspectRatio,
 									maxHeight : $options.selector.maxHeight,
 									maxWidth : $options.selector.maxWidth,
-									minHeight : 10,
-									minWidth : 10,
+									minHeight : $options.selector.minHeight,
+									minWidth : $options.selector.minWidth,
 									containment : 'parent',
 									resize : function(event, ui) {
 										// Actualizamos las posiciones de la
@@ -969,6 +971,8 @@ THE SOFTWARE.
 
 	/* Code taken from jquery.svgdom.js */
 	/* Support adding class names to SVG nodes. */
+	/* Andrew: This plays hell with a lot of stuff and I don't think it's needed ?! */
+	/*
 	var origAddClass = $.fn.addClass;
 
 	$.fn.addClass = function(classNames) {
@@ -990,8 +994,9 @@ THE SOFTWARE.
 			}
 		});
 	};
-
+	*/
 	/* Support removing class names from SVG nodes. */
+	/*
 	var origRemoveClass = $.fn.removeClass;
 
 	$.fn.removeClass = function(classNames) {
@@ -1013,8 +1018,9 @@ THE SOFTWARE.
 			}
 		});
 	};
-
+	*/
 	/* Support toggling class names on SVG nodes. */
+	/*
 	var origToggleClass = $.fn.toggleClass;
 
 	$.fn.toggleClass = function(className, state) {
@@ -1029,8 +1035,9 @@ THE SOFTWARE.
 			}
 		});
 	};
-
+	*/
 	/* Support checking class names on SVG nodes. */
+	/*
 	var origHasClass = $.fn.hasClass;
 
 	$.fn.hasClass = function(className) {
@@ -1048,7 +1055,7 @@ THE SOFTWARE.
 		});
 		return found;
 	};
-
+	*/
 	/* Support attributes on SVG nodes. */
 	/*
 	var origAttr = $.fn.attr;
@@ -1095,9 +1102,11 @@ THE SOFTWARE.
 
 	;
 	*/
+	/*
 	function isSVGElem(node) {
 		return (node.nodeType == 1 && node.namespaceURI == 'http://www.w3.org/2000/svg');
 	}
+	*/
 	
 	// Css Hooks
 	/*
