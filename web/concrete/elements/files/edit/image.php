@@ -83,6 +83,18 @@ if (!$fp->canWrite()) {
             selector:{        
               centered:true,
               borderColor:'blue',
+              <? if ($_REQUEST['maxWidth']) { ?>
+              	maxWidth: <?=$_REQUEST['maxWidth']?>,
+              <? } ?>
+              <? if ($_REQUEST['maxHeight']) { ?>
+              	maxHeight: <?=$_REQUEST['maxHeight']?>,
+              <? } ?>
+              <? if ($_REQUEST['minWidth']) { ?>
+              	minWidth: <?=$_REQUEST['minWidth']?>,
+              <? } ?>
+              <? if ($_REQUEST['minHeight']) { ?>
+              	minHeight: <?=$_REQUEST['minHeight']?>,
+              <? } ?>
               borderColorHover:'red'
             },
             image:{
@@ -94,7 +106,24 @@ if (!$fp->canWrite()) {
                 maxZoom:300
             }
         });
-       cropzoom.setSelector(45,45,200,150,true);
+        <?
+        $selectorStartWidth = 200;
+        $selectorStartHeight = 150;
+        if ($_REQUEST['maxWidth'] && ($_REQUEST['maxWidth'] < $selectorStartWidth)) {
+        	$selectorStartWidth = $_REQUEST['maxWidth'];
+        }
+        if ($_REQUEST['maxHeight'] && ($_REQUEST['maxHeight'] < $selectorStartHeight)) {
+        	$selectorStartHeight = $_REQUEST['maxHeight'];
+        }
+        if ($_REQUEST['minWidth'] > $selectorStartWidth) {
+        	$selectorStartWidth = $_REQUEST['minWidth'];
+        }
+        if ($_REQUEST['minHeight'] > $selectorStartHeight) {
+        	$selectorStartHeight = $_REQUEST['minHeight'];
+        }        
+        ?>
+        
+       cropzoom.setSelector(0,0, <?=$selectorStartWidth?> , <?=$selectorStartHeight?>,true);
        
        $('#ccm-file-manager-edit-save').click(function(){ 
        		jQuery.fn.dialog.showLoader();
