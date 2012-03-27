@@ -52,14 +52,23 @@ if (!$fp->canWrite()) {
 
     <script type="text/javascript">
     $(document).ready(function(){
+       var iw = <?=$f->getAttribute('width')?>;
+       var ih = <?=$f->getAttribute('height')?>;
 	   var w = $('#ccm-file-manager-edit-image').closest('.ui-dialog-content').width();
 	   var h = $('#ccm-file-manager-edit-image').closest('.ui-dialog-content').height();
-	   h = h - 100;
-	   /* if (h > <?=$f->getAttribute('height')?>) {
-	   	h = <?=$f->getAttribute('height')?>;
-	   }*/ 
+	   if (iw > (w + 20)) {
+	   	w = iw;
+	   } else {
+	   	w = w - 20;
+	   }
+	   
+	   if (ih > (h + 100)) {
+	   	h = ih;
+	   } else {
+	   	h = h - 100;
+	   }
 	   var cropzoom = $('#crop_container').cropzoom({
-            width: w - 20,
+            width: w,
             height: h,
             bgColor: '#CCC',
             enableRotation:true,
@@ -80,9 +89,9 @@ if (!$fp->canWrite()) {
                 source:'<?=$f->getRelativePath()?>',
                 width: <?=$f->getAttribute('width')?>,
                 height:<?=$f->getAttribute('height')?>,
-                minZoom:10,
+                minZoom:5,
                 startZoom: 100,
-                maxZoom:600
+                maxZoom:300
             }
         });
        cropzoom.setSelector(45,45,200,150,true);
