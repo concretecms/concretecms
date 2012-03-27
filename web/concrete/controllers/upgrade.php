@@ -144,6 +144,9 @@ class UpgradeController extends Controller {
 		if (version_compare($sav, '5.5.1', '<')) { 
 			$ugvs[] = "version_551";
 		}
+		if (version_compare($sav, '5.5.2', '<')) { 
+			$ugvs[] = "version_552";
+		}
 
 		foreach($ugvs as $ugh) {
 			$this->upgrades[] = Loader::helper('concrete/upgrade/' . $ugh);
