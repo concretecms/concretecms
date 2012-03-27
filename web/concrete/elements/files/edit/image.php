@@ -25,9 +25,11 @@ if (!$fp->canWrite()) {
 
 <div class="span6">
 	<label><?=t('Rotate')?></label>
-	<div class="input" style="margin-top: 11px">
+	<div class="input" style="margin-top: 11px; position: relative">
+		<a href="javascript:void(0)" id="ccm-file-manager-rotate-btn" class="btn" style="position: absolute; top: -10px; right: -50px">&crarr;</a>
 		<div id="ccm-file-manager-rotate"></div>
 	</div>
+	
 </div>
 
 </form>
@@ -51,6 +53,7 @@ if (!$fp->canWrite()) {
 
 
     <script type="text/javascript">
+    
     $(document).ready(function(){
        var iw = <?=$f->getAttribute('width')?>;
        var ih = <?=$f->getAttribute('height')?>;
@@ -74,7 +77,7 @@ if (!$fp->canWrite()) {
             enableRotation:true,
             enableZoom:true,
             zoomSteps:10,
-            rotationSteps:90,
+            rotationSteps:1,
             expose: {
             slidersOrientation: 'horizontal',
             rotationElement: '#ccm-file-manager-rotate',
@@ -124,6 +127,21 @@ if (!$fp->canWrite()) {
         ?>
         
        cropzoom.setSelector(0,0, <?=$selectorStartWidth?> , <?=$selectorStartHeight?>,true);
+       
+       $('#ccm-file-manager-rotate-btn').click(function() {
+        var slideVal = $('#rotationSlider').slider('value');
+		var newVal;
+		if (slideVal < 90) {
+			newVal = 90;
+		} else if (slideVal < 180) {
+			newVal = 180;
+		} else if (slideVal < 270) {
+			newVal = 270;
+		} else {
+			newVal = 0;
+		}
+       	$('#rotationSlider').slider('value', newVal);
+       });
        
        $('#ccm-file-manager-edit-save').click(function(){ 
        		jQuery.fn.dialog.showLoader();
