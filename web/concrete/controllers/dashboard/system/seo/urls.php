@@ -15,7 +15,7 @@ class DashboardSystemSeoUrlsController extends DashboardBaseController{
 		RewriteCond %{REQUEST_FILENAME} !-f
 		RewriteCond %{REQUEST_FILENAME}/index.html !-f
 		RewriteCond %{REQUEST_FILENAME}/index.php !-f
-		RewriteRule ^(.*)$ ' . DISPATCHER_FILENAME . '/$1 [L]
+		RewriteRule ^(.*)$ ' . DISPATCHER_FILENAME .'
 		</IfModule>';
 		
 		return preg_replace('/\t/', '', $strRules);
