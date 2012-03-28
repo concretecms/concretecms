@@ -239,7 +239,6 @@ $(function() {
 	$(window).css('overflow', 'hidden');
 	$(window).unbind('keydown.attribs');
 	ccmPageAttributesMapKeys();
-	$("#ccmSearchAttributeListField").get(0).focus();
 
 	$("a.ccm-meta-close").click(function() {
 		var thisField = $(this).attr('id').substring(19);
