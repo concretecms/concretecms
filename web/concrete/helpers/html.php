@@ -222,7 +222,8 @@ class HeaderOutputObject {
 	public $href = '';
   	public $script = '';
 	public $compress = true;
-	public $handle = array(); //used in View::aadHeaderItem()/View::addFooterItem() to prevent duplicate output of conflicting items
+	public $type = ''; //to be overridden by sub-classes -- e.g. 'javascript' or 'css' (enabled both the JavaScriptOutputObject and InlineScriptOutputObject classes to be checked against each other for conflicting items)
+	public $handle = array(); //used in View::addHeaderItem()/View::addFooterItem() to prevent duplicate output of conflicting items
 	
 	public function __construct($uniqueItemHandle = array()) {
 		if (is_array($uniqueItemHandle) && array_key_exists('handle', $uniqueItemHandle) && !empty($uniqueItemHandle['handle'])) {
