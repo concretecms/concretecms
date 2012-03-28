@@ -4,7 +4,9 @@ class ConcreteUpgradeVersion552Helper {
 
 	public function run() {
 		$bt = BlockType::getByHandle('image');
-		$bt->refresh();
+		if (is_object($bt)) { 
+			$bt->refresh();
+		}
 	}
 
 
