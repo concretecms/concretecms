@@ -65,10 +65,9 @@ class FileHelper {
 	 */
 	public function copyAll($source, $target, $mode = NULL) {
 		if (is_dir($source)) {
-			if(!isset($mode)) {
-				$mode = FILE_PERMISSIONS_MODE;
+			if($mode == null) {
 				@mkdir($target, DIRECTORY_PERMISSIONS_MODE);
-				@chmod($target, $mode);
+				@chmod($target, DIRECTORY_PERMISSIONS_MODE);
 			} else { 
 				@mkdir($target, $mode);
 				@chmod($target, $mode);
@@ -86,13 +85,20 @@ class FileHelper {
 					$this->copyAll($Entry, $target . '/' . $entry, $mode);
 					continue;
 				}
-				
+
 				copy($Entry, $target . '/' . $entry);
-				@chmod($target . '/' . $entry, $mode);
+				if($mode == null) {
+					@chmod($target . '/' . $entry, $this->getCreateFilePermissions($target));
+				} else {
+					@chmod($target . '/' . $entry, $mode);
+				}
 			}
 			
 			$d->close();
 		} else {
+			if ($mode == null) {
+				$mode = $this->getCreateFilePermissions(dirname($target));
+			}
 			copy($source, $target);
 			chmod($target, $mode);
 		}
