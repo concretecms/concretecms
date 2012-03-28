@@ -333,11 +333,6 @@ if (!defined('CACHE_ID')) {
 	define('CACHE_ID', md5(str_replace(array('https://', 'http://'), '', BASE_URL) . DIR_REL));
 }
 
-if (defined('DIR_FILES_CACHE') && !is_dir(DIR_FILES_CACHE)) {
-	@mkdir(DIR_FILES_CACHE);
-	@chmod(DIR_FILES_CACHE, DIRECTORY_PERMISSIONS_MODE);
-}
-
 # Sessions/TMP directories
 if (!defined('DIR_TMP')) {
 	define('DIR_TMP', DIR_BASE . '/files/tmp');
