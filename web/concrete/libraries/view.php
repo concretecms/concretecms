@@ -147,19 +147,19 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			
 			if (is_null($againstItems)) {
 				//If no items array was passed, that means the caller wants to check ALL items (header and footer)
-				return ($this->resolveItemConflicts($item, $this->headerItems) && $this->resolveItemConflicts($item, $this->footerItems));
+				return ($this->resolveItemConflicts($checkItem, $this->headerItems) && $this->resolveItemConflicts($checkItem, $this->footerItems));
 			}
 			
-			//Loop through all items and check for duplicates s
-			foreach ($againstItems as $itemNamespace) {
-				foreach ($itemNamespace as $itemKey => $againstItem) {
+			//Loop through all items and check for duplicates
+			foreach ($againstItems as $itemNamespace => $namespaceItems) {
+				foreach ($namespaceItems as $itemKey => $againstItem) {
 					//A duplicate is an item of the same type with the same non-empty handle
 					if (!empty($againstItem->handle) && ($checkItem->type == $againstItem->type) && (strtolower($checkItem->handle['handle']) == strtolower($againstItem->handle['handle']))) {
 						//Does the given item have a higher version than the existing found item?
 						if (version_compare($checkItem->handle['version'], $againstItem->handle['version'], '>')) {
 							//Yes (new item is higher) so remove old item
 							// and return true to indicate that the new item should be added.
-							unset($this->headerItems[$headerNamespace][$itemKey]); // bug note: if we didn't return in the next line, this would cause problems the next time the loop iterated!
+							unset($this->headerItems[$itemNamespace][$itemKey]); // bug note: if we didn't return in the next line, this would cause problems the next time the loop iterated!
 							return true;
 						} else {
 							//No (new item is not higher) so leave old item where it is
