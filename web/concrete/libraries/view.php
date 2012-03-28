@@ -124,7 +124,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		/**
 		 * Internal helper function for addHeaderItem() and addFooterItem().
 		 * Looks through the given headerItems or footerItems array
-		 * for anything with the same type (css vs. js) and "unique handle" as the given item.
+		 * for anything with the same "unique handle" as the given item.
 		 *
 		 * HOW TO USE THIS FUNCTION:
 		 * When calling this function, just pass the first $item argument
@@ -153,13 +153,12 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			//Loop through all items and check for duplicates
 			foreach ($againstItems as $itemNamespace => $namespaceItems) {
 				foreach ($namespaceItems as $itemKey => $againstItem) {
-					//A duplicate is an item of the same type with the same non-empty handle
-					if (!empty($againstItem->handle) && ($checkItem->type == $againstItem->type) && (strtolower($checkItem->handle['handle']) == strtolower($againstItem->handle['handle']))) {
+					if (!empty($againstItem->handle) && (strtolower($checkItem->handle['handle']) == strtolower($againstItem->handle['handle']))) {
 						//Does the given item have a higher version than the existing found item?
 						if (version_compare($checkItem->handle['version'], $againstItem->handle['version'], '>')) {
 							//Yes (new item is higher) so remove old item
 							// and return true to indicate that the new item should be added.
-							unset($this->headerItems[$itemNamespace][$itemKey]); // bug note: if we didn't return in the next line, this would cause problems the next time the loop iterated!
+							unset($againstItems[$itemNamespace][$itemKey]); // bug note: if we didn't return in the next line, this would cause problems the next time the loop iterated!
 							return true;
 						} else {
 							//No (new item is not higher) so leave old item where it is
