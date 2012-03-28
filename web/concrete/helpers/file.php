@@ -145,15 +145,36 @@ class FileHelper {
 	 * @return string
 	 */
 	public function getTemporaryDirectory() {
-		if (!is_dir(DIR_TMP)) {
-			mkdir(DIR_TMP, DIRECTORY_PERMISSIONS_MODE);
-			chmod(DIR_TMP, FILE_PERMISSIONS_MODE);
-			touch(DIR_TMP . '/index.html');
+		if (defined('DIR_TMP')) {
+			return DIR_TMP;
 		}
-		return DIR_TMP;
 		
-	}
+		if (!is_dir(DIR_BASE . '/files/tmp')) { 
+			@mkdir(DIR_BASE . '/files/tmp', DIRECTORY_PERMISSIONS_MODE);
+			@chmod(DIR_BASE . '/files/tmp', DIRECTORY_PERMISSIONS_MODE);
+			@touch(DIR_BASE . '/files/tmp/index.html');
+		}
 
+		if (is_dir(DIR_BASE . '/files/tmp') && is_writable(DIR_BASE . '/files/tmp')) {
+			return DIR_BASE . '/files/tmp';
+		}
+
+		if ($temp=getenv('TMP')) {
+			return $temp;
+		}
+		if ($temp=getenv('TEMP')) {
+			return $temp;
+		}
+		if ($temp=getenv('TMPDIR')) {
+			return $temp;
+		}
+		
+		$temp=tempnam(__FILE__,'');
+		if (file_exists($temp)) {
+			unlink($temp);
+			return dirname($temp);
+		}
+	}
 
 	
 	/**

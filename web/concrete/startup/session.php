@@ -1,4 +1,4 @@
-<?
+<?php 
 defined('C5_EXECUTE') or die("Access Denied.");
 
 // Start the session
@@ -14,11 +14,7 @@ session_set_cookie_params(
 	(defined('SESSION_COOKIE_PARAM_SECURE')?SESSION_COOKIE_PARAM_SECURE:false),
 	(defined('SESSION_COOKIE_PARAM_HTTPONLY')?SESSION_COOKIE_PARAM_HTTPONLY:false)
 	);
-if (!is_dir(DIR_SESSIONS)) {
-	mkdir(DIR_SESSIONS, DIRECTORY_PERMISSIONS_MODE);
-	chmod(DIR_SESSIONS, DIRECTORY_PERMISSIONS_MODE);
-	touch(DIR_SESSIONS . '/index.html');
-}
+	
 ini_set('session.save_path', DIR_SESSIONS);
 ini_set('session.gc_maxlifetime', SESSION_MAX_LIFETIME);
 
