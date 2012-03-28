@@ -53,12 +53,12 @@ showPageMenu = function(obj, e) {
 		
 		} else if (obj.canWrite == 'false') {
 		
-			html += '<li><a class="ccm-menu-icon ccm-icon-visit" id="menuVisit' + obj.cID + '" href="javascript:void(0)" onclick="window.location.href=\'' + CCM_DISPATCHER_FILENAME + '?cID=' + obj.cID + '\'">' + ccmi18n_sitemap.visitPage + '<\/a><\/li>';
+			html += '<li><a class="ccm-menu-icon ccm-icon-visit" id="menuVisit' + obj.cID + '" href="' + CCM_DISPATCHER_FILENAME + '?cID=' + obj.cID + '">' + ccmi18n_sitemap.visitPage + '<\/a><\/li>';
 
 		
 		} else {
 		
-			html += '<li><a class="ccm-menu-icon ccm-icon-visit" id="menuVisit' + obj.cID + '" href="javascript:void(0)" onclick="window.location.href=\'' + CCM_DISPATCHER_FILENAME + '?cID=' + obj.cID + '\'">' + ccmi18n_sitemap.visitPage + '<\/a><\/li>';
+			html += '<li><a class="ccm-menu-icon ccm-icon-visit" id="menuVisit' + obj.cID + '" href="' + CCM_DISPATCHER_FILENAME + '?cID=' + obj.cID + '">' + ccmi18n_sitemap.visitPage + '<\/a><\/li>';
 			if (obj.canCompose) {
 				html += '<li><a class="ccm-menu-icon ccm-icon-edit-in-composer-menu" id="menuComposer' + obj.cID + '" href="' + CCM_DISPATCHER_FILENAME + '/dashboard/composer/write/-/edit/' + obj.cID + '">' + ccmi18n_sitemap.editInComposer + '<\/a><\/li>';
 			}
