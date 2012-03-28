@@ -333,13 +333,6 @@ if (!defined('CACHE_ID')) {
 	define('CACHE_ID', md5(str_replace(array('https://', 'http://'), '', BASE_URL) . DIR_REL));
 }
 
-# Sessions/TMP directories
-if (!defined('DIR_TMP')) {
-	define('DIR_TMP', DIR_BASE . '/files/tmp');
-}
-if (!defined('DIR_SESSIONS')) {
-	define('DIR_SESSIONS', DIR_TMP);
-}
 define('DISPATCHER_FILENAME_CORE', 'dispatcher.php');
 
 
