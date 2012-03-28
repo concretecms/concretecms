@@ -35,7 +35,6 @@ class TextareaAttributeTypeController extends DefaultAttributeTypeController  {
 			$this->addHeaderItem(Loader::helper('html')->css('ccm.app.css'));
 			$this->addFooterItem(Loader::helper('html')->javascript('ccm.app.js'));
 			$this->addFooterItem('<script type="text/javascript" src="' . REL_DIR_FILES_TOOLS_REQUIRED . '/i18n_js"></script>'); 
-			Loader::element('editor_init');
 			$editor_mode = strtoupper(str_replace('rich_text_', '', $this->akTextareaDisplayMode));
 			Loader::element('editor_config', array('editor_mode' => $editor_mode, 'editor_selector' => 'ccm-advanced-editor-' . $this->attributeKey->getAttributeKeyID()));
 			if (in_array($this->akTextareaDisplayMode, array('rich_text', 'rich_text_advanced', 'rich_text_office', 'rich_text_custom'))) {

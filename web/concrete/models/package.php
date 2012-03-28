@@ -409,7 +409,7 @@ class Package extends Object {
 		return false;
 	}
 	
-	public function clearSiteContents($options) {
+	public function swapContent($options) {
 		if ($this->validateClearSiteContents($options)) { 
 			Loader::model("page_list");
 			Loader::model("file_list");
