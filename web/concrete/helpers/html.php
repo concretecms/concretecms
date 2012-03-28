@@ -222,7 +222,6 @@ class HeaderOutputObject {
 	public $href = '';
   	public $script = '';
 	public $compress = true;
-	public $type = ''; //to be overridden by sub-classes -- e.g. 'javascript' or 'css' (enabled both the JavaScriptOutputObject and InlineScriptOutputObject classes to be checked against each other for conflicting items)
 	public $handle = array(); //used in View::addHeaderItem()/View::addFooterItem() to prevent duplicate output of conflicting items
 	
 	public function __construct($uniqueItemHandle = array()) {
@@ -246,8 +245,6 @@ class HeaderOutputObject {
  */
 class JavaScriptOutputObject extends HeaderOutputObject {
 	
-	public $type = 'javascript';
-	
 	public function __toString() {
 		return '<script type="text/javascript" src="' . $this->file . '"></script>';
 	}
@@ -259,8 +256,6 @@ class JavaScriptOutputObject extends HeaderOutputObject {
  */
 class InlineScriptOutputObject extends HeaderOutputObject {
 	
-	public $type = 'javascript';
-	
 	public function __toString() {
 		return '<script type="text/javascript">/*<![CDATA[*/'. $this->script .'/*]]>*/</script>';
 	}
@@ -271,8 +266,6 @@ class InlineScriptOutputObject extends HeaderOutputObject {
  * @access private
  */
 class CSSOutputObject extends HeaderOutputObject {
-	
-	public $type = 'css';
 	
 	public function __toString() {
 		return '<link rel="stylesheet" type="text/css" href="' . $this->file . '" />';
