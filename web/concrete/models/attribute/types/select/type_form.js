@@ -77,9 +77,9 @@ var ccmAttributesHelper={
 	addEnterClick:function(e,fn){
 		// this approach is totally !@#&* unreliable in IE because IE sucks
 		var form = $("#ccm-attribute-key-form");
-		form.submit(function() {return false;});
 		var keyCode = e.which;
 		if(keyCode == 13 && typeof(fn)=='function' ) {
+			form.submit(function() {return false;});
 			fn();
 			setTimeout(function() { 
 				form.unbind();
