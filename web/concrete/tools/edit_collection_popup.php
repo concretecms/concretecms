@@ -62,6 +62,13 @@ switch($_GET['ctask']) {
 		$divID = 'ccm-edit-collection-external';
 		$canViewPane = $cp->canWrite();
 		break;
+	case 'delete_external':
+		$toolSection = "collection_delete_external";
+		$divID = 'ccm-delete-collection-external';
+		$cparent = Page::getByID($c->getCollectionParentID(), "RECENT");
+		$cparentP = new Permissions($cparent);
+		$canViewPane = $cparentP->canWrite();
+		break;
 	case 'edit_external':
 		$toolSection = "collection_edit_external";
 		$divID = 'ccm-edit-collection-external';
@@ -92,7 +99,7 @@ if (!$canViewPane) {
 
 <? if (!$_GET['close']) {
 
-	if (!$c->isEditMode() && ($_GET['ctask'] != 'add')) {
+	if (!$c->isEditMode() && (!in_array($_GET['ctask'], array('add', 'edit_external', 'delete_external')))) {
 		// first, we attempt to check the user in as editing the collection
 		$u = new User();
 		if ($u->isRegistered()) {
@@ -100,7 +107,7 @@ if (!$canViewPane) {
 		}
 	}
 	
-	if (($c->isEditMode() || ($_GET['ctask'] == 'add')) && $toolSection) {
+	if (($c->isEditMode() || (in_array($_GET['ctask'], array('add', 'edit_external', 'delete_external')))) && $toolSection) {
 		$args = array(
 			'c' => $c,
 			'cp' => $cp,
