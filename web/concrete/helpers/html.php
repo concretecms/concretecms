@@ -222,8 +222,12 @@ class HeaderOutputObject {
 	public $href = '';
   	public $script = '';
 	public $compress = true;
-	public $handle = array(); //used in View::addHeaderItem()/View::addFooterItem() to prevent duplicate output of conflicting items
+	public $handle = array(); //optional 'handle' and 'version' that the View class can use to avoid duplicate output of conflicting js/css files
 	
+	/**
+	 * @param optional: pass in handle and version (as array) or just handle (as string; version will be '0')
+	 *        	        to avoid duplicate output of the same js/css items from other blocks/theme code.
+	 */
 	public function __construct($uniqueItemHandle = array()) {
 		if (is_array($uniqueItemHandle) && array_key_exists('handle', $uniqueItemHandle) && !empty($uniqueItemHandle['handle'])) {
 			$this->handle = array(
