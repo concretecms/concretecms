@@ -381,7 +381,7 @@ class ItemList {
 			$args[$k] = $v;
 		}
 		$url = $uh->setVariable($args, false, $baseURL);
-		print $url;
+		print strip_tags($url);
 	}
 	
 	public function isActiveSortColumn($column) {
