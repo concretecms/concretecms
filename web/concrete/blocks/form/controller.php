@@ -8,11 +8,12 @@ class FormBlockController extends BlockController {
 	public $btAnswersTablename = 'btFormAnswers'; 	
 	public $btInterfaceWidth = '420';
 	public $btInterfaceHeight = '430';
-	public $thankyouMsg=''; 
+	public $thankyouMsg='';
+	public $noSubmitFormRedirect=0;
+	
 	protected $btExportTables = array('btForm', 'btFormQuestions');
 	protected $btExportPageColumns = array('redirectCID');
 	
-	protected $noSubmitFormRedirect=0;
 	protected $lastAnswerSetId=0;
 		
 	/** 
@@ -403,7 +404,7 @@ class FormBlockController extends BlockController {
 				}
 			}
 			
-			if(!$this->noSubmitFormRedirect){ // not sure if this is used, but someone must be depending on it??
+			if(!$this->noSubmitFormRedirect){
 				header("Location: ".$refer_uri."&surveySuccess=1&qsid=".$this->questionSetId."#".$this->questionSetId);
 				die;
 			}
