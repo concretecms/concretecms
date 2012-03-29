@@ -11,10 +11,12 @@ if ($tp->canInstallPackages()) {
 $pkgRemote = array();
 $pkgLocal = array();
 if (ENABLE_MARKETPLACE_SUPPORT) {
-	$pkgArray = Package::getInstalledList();
-	foreach($pkgArray as $pkg) {
-		if ($pkg->isPackageInstalled() && version_compare($pkg->getPackageVersion(), $pkg->getPackageVersionUpdateAvailable(), '<')) { 
-			$pkgRemote[] = $pkg;
+	if ($mi->isConnected()) { 
+		$pkgArray = Package::getInstalledList();
+		foreach($pkgArray as $pkg) {
+			if ($pkg->isPackageInstalled() && version_compare($pkg->getPackageVersion(), $pkg->getPackageVersionUpdateAvailable(), '<')) { 
+				$pkgRemote[] = $pkg;
+			}
 		}
 	}
 }
@@ -117,7 +119,11 @@ if (!$tp->canInstallPackages()) { ?>
 			<h3><?=t("Project Page")?></h3>
 			<p><?=t('Your site is currently connected to the concrete5 community. Your project page URL is:')?><br/>
 			<a href="<?=$mi->getSitePageURL()?>"><?=$mi->getSitePageURL()?></a></p>
-
+		
+		<? } else if (is_object($mi) && $mi->hasConnectionError()) { ?>
+			
+			<?=Loader::element('dashboard/marketplace_connect_failed');?>
+		
 		<? } else if ($tp->canInstallPackages() && ENABLE_MARKETPLACE_SUPPORT == true) { ?>
 
 			<div class="well" style="padding:10px 20px;">
