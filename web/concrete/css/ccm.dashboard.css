@@ -65,3 +65,4 @@ div#jquery-font-panel div.jquery-font-panel-list div{padding:4px;border-bottom:2
 div#jquery-font-panel div.jquery-font-panel-list div.font-panel-list-selected{background-color:#E6EBED;color:#333333;}
 .ccm-inline-form-and-text{margin-bottom:10px;}
 table#ip-blacklist td label{width:auto;text-align:left;}
+table#ccm-site-statistics-downloads td.ccm-site-statistics-downloads-title{white-space:nowrap;font-family:monospace;}
