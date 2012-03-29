@@ -912,8 +912,9 @@ class Page extends Collection {
 	 */		
 	function getCollectionParentIDFromChildID($cID) {
 		$db = Loader::db();
-		$q = "select cParentID from Pages where cID = '" . intval($cID) . "'";
-		return $db->GetOne($q);
+		$q = "select cParentID from Pages where cID = ?";
+		$cParentID = $db->GetOne($q, array($cID));
+		return $cParentID;
 	}
 
 	/**
