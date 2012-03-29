@@ -2,7 +2,13 @@
 	## This constant ensures that we're operating inside dispatcher.php. There is a LATER check to ensure that dispatcher.php is being called correctly. ##
 	if (!defined("C5_EXECUTE")) {
 		define('C5_EXECUTE', true);
-	} 
+	}
+
+	if(defined("E_DEPRECATED")) {
+		error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED); // E_DEPRECATED required for php 5.3.0 because of depreciated function calls in 3rd party libs (adodb).
+	} else {
+		error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT);
+	}
 	
 	## Startup check ##	
 	require(dirname(__FILE__) . '/config/base_pre.php');
