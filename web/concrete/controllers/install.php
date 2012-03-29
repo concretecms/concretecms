@@ -1,9 +1,9 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
 if (!defined('E_DEPRECATED')) {
-	error_reporting(E_ALL ^ E_NOTICE);
+	error_reporting(E_ALL ^ E_NOTICE ^ E_STRICT);
 } else {
-	error_reporting(E_ALL ^ E_NOTICE ^ E_DEPRECATED);
+	error_reporting(E_ALL ^ E_NOTICE ^ E_STRICT ^ E_DEPRECATED);
 }
 
 ini_set('display_errors', 1);
