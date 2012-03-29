@@ -139,6 +139,22 @@
 	top: 112px;
 	left: 282px;
 }
+input.colorpicker_none {
+	position: absolute;
+	left: 290px;
+	top: 145px;
+	width: 20px;
+	padding: 0px;
+	font-size: 10px; 
+}
+input.colorpicker_submit {
+	position: absolute;
+	left: 314px;
+	top: 145px;
+	width: 32px;
+	padding: 0px;
+	font-size: 10px; 
+}
 .colorpicker_focus {
 	background-position: center;
 }
@@ -169,74 +185,4 @@ div.ccm-color-swatch-wrapper  div.ccm-color-swatch div {
 	width: 28px;
 	height: 28px;
 	background: url(../images/widgets/colorpicker/select2.png) center;
-}
-
-// Colorpicker button generic styles
-input.colorpicker_none,
-input.colorpicker_submit {
-	cursor: pointer;
-	position: absolute;
-	display: inline-block;
-	padding:3px 0 5px 0;
-	text-shadow: 0 1px 1px rgba(255,255,255,.75);
-	color: @white;
-	font-size: 10px;
-	line-height: 13px;
-	border: 1px solid #ccc;
-	*border:0;
-	border-bottom-color: #bbb;
-	.border-radius(4px);
-	@shadow: inset 0 1px 0 rgba(255,255,255,.2), 0 1px 2px rgba(0,0,0,.05);
-	.box-shadow(@shadow);
-
-	&:hover {
-	  background-position: 0 -15px;
-	  color: #FFF;
-	  text-decoration: none;
-	}
-
-	// Focus state for keyboard and accessibility
-	&:focus {
-	  outline: 0;
-	}
-
-	&:active {
-	  @shadow: inset 0 2px 4px rgba(0,0,0,.25), 0 1px 2px rgba(0,0,0,.05);
-	  .box-shadow(@shadow);
-	}
-
-	 // Transitions
-	.transition(.1s linear all);
-}
-
-// Super jank hack for removing border-radius from IE9 so we can keep filter gradients on alerts and buttons
-:root input.colorpicker_none,
-:root input.colorpicker_submit {
-	border-radius: 0 \0;
-}
-
-// Help Firefox not be a jerk about adding extra padding to buttons
-.colorpicker input.colorpicker_none,
-.colorpicker input.colorpicker_submit {
-  &::-moz-focus-inner {
-  	padding: 0;
-  	border: 0;
-  }
-}
-
-// Submit OK colorpicker button styles
-input.colorpicker_submit {
-	.gradientBar(@blue, @blueDark);
-	left:313px;
-	top:141px;
-	width:32px;
-}
-
-// Close colorpicker button styles
-input.colorpicker_none {
-	.gradientBar(#ee5f5b, #c43c35);
-	left:289px;
-	top:141px;
-	width:20px;
-	padding:2px 0 6px 0;
-}
+} 
