@@ -508,16 +508,11 @@ class ItemList {
 	public function getSortByDirection() {return $this->sortByDirection;}
 
 	/** 
-	 * Sets up a column to sort by
+	 * Sets up a multiple columns to search by. Each argument is taken "as-is" (including asc or desc) and concatenated with commas
+	 * Note that this is overrides any previous sortByMultiple() call, and all sortBy() calls
 	 */
 	public function sortByMultiple() {
-		$args = func_get_args();
-		for ($i = 0; $i < count($args); $i++) {
-			$this->sortByString .= $args[$i];
-			if (($i + 1) < count($args)) { 
-				$this->sortByString .= ', ';
-			}
-		}
+		$this->sortByString = implode(', ', func_get_args());
 	}
 }
 
