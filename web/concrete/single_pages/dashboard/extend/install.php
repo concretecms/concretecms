@@ -291,6 +291,11 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
 			<p><?=t('Your site is currently connected to the concrete5 community. Your project page URL is:')?><br/>
 			<a href="<?=$mi->getSitePageURL()?>"><?=$mi->getSitePageURL()?></a></p>
 
+		<? } else if (is_object($mi) && $mi->hasConnectionError()) { ?>
+			
+			<?=Loader::element('dashboard/marketplace_connect_failed');?>
+		
+
 		<? } else if ($tp->canInstallPackages() && ENABLE_MARKETPLACE_SUPPORT == true) { ?>
 
 			<div class="well" style="padding:10px 20px;">
