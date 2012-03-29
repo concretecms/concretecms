@@ -685,7 +685,7 @@ div#newsflow-header{background-color:#f1f1f1;padding:40px 30px 10px 60px;backgro
 .newsflow-column-first-run h3{line-height:28px !important;margin-bottom:10px;font-weight:normal;font-size:24px;color:#09f;}
 .newsflow-column-first-run{padding:10px 10px 100px 10px;overflow:visible;}
 .newsflow .ccm-pane-options{-webkit-border-top-left-radius:5px;-webkit-border-top-right-radius:5px;-moz-border-radius-topleft:5px;-moz-border-radius-topright:5px;border-top-left-radius:5px;border-top-right-radius:5px;}
-.newsflow-paging-previous,.newsflow-paging-next{width:33px;-webkit-border-top-right-radius:4px;-webkit-border-bottom-right-radius:4px;-moz-border-radius-topright:4px;-moz-border-radius-bottomright:4px;border-top-right-radius:4px;border-bottom-right-radius:4px;text-align:center;height:100%;z-index:10;position:absolute;top:0px;background-clip:padding-box;}
+.newsflow-paging-previous,.newsflow-paging-next{width:33px;text-align:center;height:100%;z-index:10;position:absolute;top:0px;background-clip:padding-box;}
 .newsflow-paging-previous{left:-65px;padding-left:10px;}
 .newsflow-paging-previous:hover span{background-image:url(../images/newsflow_previous_white.png);}
 .newsflow-paging-next:hover span{background-image:url(../images/newsflow_next_white.png);}
