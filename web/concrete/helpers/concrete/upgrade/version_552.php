@@ -7,6 +7,10 @@ class ConcreteUpgradeVersion552Helper {
 		if (is_object($bt)) { 
 			$bt->refresh();
 		}
+		$bt = BlockType::getByHandle('form');
+		if (is_object($bt)) { 
+			$bt->refresh();
+		}
 	}
 
 
