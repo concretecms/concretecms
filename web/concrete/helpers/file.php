@@ -88,7 +88,7 @@ class FileHelper {
 
 				copy($Entry, $target . '/' . $entry);
 				if($mode == null) {
-					@chmod($target . '/' . $entry, $this->getCreateFilePermissions($target));
+					@chmod($target . '/' . $entry, $this->getCreateFilePermissions($target)->file);
 				} else {
 					@chmod($target . '/' . $entry, $mode);
 				}
@@ -97,7 +97,7 @@ class FileHelper {
 			$d->close();
 		} else {
 			if ($mode == null) {
-				$mode = $this->getCreateFilePermissions(dirname($target));
+				$mode = $this->getCreateFilePermissions(dirname($target))->file;
 			}
 			copy($source, $target);
 			chmod($target, $mode);
