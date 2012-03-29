@@ -30,8 +30,7 @@
 		}
 		
 		public function getSearchableContent(){
-			$f = $this->getFileObject();
-			return $f->getTitle().' '.$f->getDescription();
+			return $this->fileLinkText;
 		}
 		
 		public function validate($args) {
