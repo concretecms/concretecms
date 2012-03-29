@@ -208,7 +208,7 @@ class InstallController extends Controller {
 
 			// attempt to connect to the database
 			if (defined('DB_SERVER')) {
-				$db = Loader::db($DB_SERVER, $DB_USERNAME, $DB_PASSWORD, $DB_DATABASE, true);			
+				$db = Loader::db($DB_SERVER, $DB_USERNAME, $DB_PASSWORD, $DB_DATABASE, true);
 				$DB_SERVER = DB_SERVER;
 				$DB_DATABASE = DB_DATABASE;
 			} else {
