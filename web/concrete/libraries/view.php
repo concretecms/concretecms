@@ -123,8 +123,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		
 		/**
 		 * Internal helper function for addHeaderItem() and addFooterItem().
-		 * Looks through the given headerItems or footerItems array
-		 * for anything with the same "unique handle" as the given item.
+		 * Looks through header and footer items for anything of the same type
+		 * and having the same "unique handle" as the given item.
 		 *
 		 * HOW TO USE THIS FUNCTION:
 		 * When calling this function, just pass the first $item argument
@@ -141,29 +141,37 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		 */
 		private function resolveItemConflicts($checkItem, &$againstItems = null) {
 			
+			//Only check items that have "unique handles"
 			if (empty($checkItem->handle)) {
 				return true;
 			}
 			
+			//Recursively check header items AND footer items
 			if (is_null($againstItems)) {
-				//If no items array was passed, that means the caller wants to check ALL items (header and footer)
 				return ($this->resolveItemConflicts($checkItem, $this->headerItems) && $this->resolveItemConflicts($checkItem, $this->footerItems));
 			}
 			
 			//Loop through all items and check for duplicates
 			foreach ($againstItems as $itemNamespace => $namespaceItems) {
 				foreach ($namespaceItems as $itemKey => $againstItem) {
+					//Check the "unique handles"
 					if (!empty($againstItem->handle) && (strtolower($checkItem->handle['handle']) == strtolower($againstItem->handle['handle']))) {
-						//Does the given item have a higher version than the existing found item?
-						if (version_compare($checkItem->handle['version'], $againstItem->handle['version'], '>')) {
-							//Yes (new item is higher) so remove old item
-							// and return true to indicate that the new item should be added.
-							unset($againstItems[$itemNamespace][$itemKey]); // bug note: if we didn't return in the next line, this would cause problems the next time the loop iterated!
-							return true;
-						} else {
-							//No (new item is not higher) so leave old item where it is
-							// and return false to indicate that the new item should *not* be added.
-							return false;
+						//Check the item types (so js and css items can have the same handle without conflicting)
+						//Note that we consider both the JavaScript and InlineScript items to be the same "type".
+						$checkClass = get_class($checkItem);
+						$againstClass = get_class($againstItem);
+						if (($checkClass == $againstClass) || (!array_diff(array($checkClass, $againstClass), array('JavaScriptOutputObject', 'InlineScriptOutputObject')))) {
+							//Does the given item have a higher version than the existing found item?
+							if (version_compare($checkItem->handle['version'], $againstItem->handle['version'], '>')) {
+								//Yes (new item is higher) so remove old item
+								// and return true to indicate that the new item should be added.
+								unset($againstItems[$itemNamespace][$itemKey]); // bug note: if we didn't return in the next line, this would cause problems the next time the loop iterated!
+								return true;
+							} else {
+								//No (new item is not higher) so leave old item where it is
+								// and return false to indicate that the new item should *not* be added.
+								return false;
+							}
 						}
 					}
 				}
