@@ -27,7 +27,7 @@ $dh = Loader::helper('date');
 
 		
 		<div class="clearfix">
-			<?=$form->label('cHandle', t('Alias'))?>
+			<?=$form->label('cHandle', t('URL Slug'))?>
 			<div class="input"><input type="text" name="cHandle" class="span8" value="" id="cHandle"></div>
 		</div>
 		
