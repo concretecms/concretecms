@@ -512,7 +512,8 @@ class ItemList {
 	 * Note that this is overrides any previous sortByMultiple() call, and all sortBy() calls
 	 */
 	public function sortByMultiple() {
-		$this->sortByString = implode(', ', func_get_args());
+		$args = func_get_args();
+		$this->sortByString = implode(', ', $args);
 	}
 }
 
