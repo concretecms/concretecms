@@ -36,11 +36,11 @@ switch($_GET['ctask']) {
 		break;
 	case 'preview_page_as_user':
 		$toolSection = "collection_preview_as_user";
-		$canViewPane = ($cp->canEditPageContents() && PERMISSIONS_MODEL == 'advanced' && TaskPermission::getByHandle('access_user_search')->can());
+		$canViewPane = ($cp->canPreviewPageAsUser() && PERMISSIONS_MODEL == 'advanced');
 		break;
 	case 'view_timed_permission_list':
 		$toolSection = "collection_timed_permission_list";
-		$canViewPane = ($cp->canEditPageContents() && PERMISSIONS_MODEL == 'advanced' && TaskPermission::getByHandle('access_user_search')->can());
+		$canViewPane = ($cp->canPreviewPageAsUser() && PERMISSIONS_MODEL == 'advanced');
 		break;
 	case 'mcd':
 		$toolSection = "collection_mcd";
