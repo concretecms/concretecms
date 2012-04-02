@@ -4,7 +4,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 $c = Page::getByID($_REQUEST['cID'], 'RECENT'); //,"ACTIVE"
 $cp = new Permissions($c);
-if (PERMISSIONS_MODEL == 'advanced' && $cp->canEditPageContents() && TaskPermission::getByHandle("access_user_search")->can()) {
+if ($cp->canPreviewPageAsUser() && PERMISSIONS_MODEL == 'advanced') {
 	$v = View::getInstance();
 	$v->disableEditing();
 	$v->disableLinks();

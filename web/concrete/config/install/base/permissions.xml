@@ -18,6 +18,7 @@
     <permissionkeys>
         <permissionkey handle="view_page" name="View" description="Can see a page exists and read its content." package="" category="page"/>
         <permissionkey handle="view_page_versions" name="View Versions" description="Can view the page versions dialog and read past versions of a page." package="" category="page"/>
+        <permissionkey handle="preview_page_as_user" name="Preview Page As User" description="" package="" category="page"/>
         <permissionkey handle="edit_page_properties" name="Edit Properties" package="" category="page"/>
         <permissionkey handle="edit_page_contents" name="Edit Contents" package="" category="page"/>
         <permissionkey handle="edit_page_speed_settings" name="Edit Speed Settings" package="" category="page"/>
