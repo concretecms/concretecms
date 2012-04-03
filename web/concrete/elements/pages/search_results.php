@@ -68,6 +68,7 @@ if (isset($_REQUEST['searchInstance'])) {
 
 		</tr>
 	<?
+		$dsh = Loader::helper('concrete/dashboard/sitemap');
 		foreach($pages as $cobj) {
 			$cpobj = new Permissions($cobj); 
 			if (!isset($striped) || $striped == 'ccm-list-record-alt') {
@@ -76,11 +77,38 @@ if (isset($_REQUEST['searchInstance'])) {
 				$striped = 'ccm-list-record-alt';
 			}
 
+			$canEditPageProperties = $cpobj->canEditPageProperties();
+			$canEditPageSpeedSettings = $cpobj->canEditPageSpeedSettings();
+			$canEditPagePermissions = $cpobj->canEditPagePermissions();
+			$canEditPageDesign = $cpobj->canEditPageDesign();
+			$canViewPageVersions = $cpobj->canViewPageVersions();
+			$canDeletePage = $cpobj->canDeletePage();
+			$canAddSubpages = $cpobj->canAddSubpage();
+			$canAddExternalLinks = $cpobj->canAddExternalLink();
+
+			$permissionArray = array(
+				'canEditPageProperties'=> $canEditPageProperties,
+				'canEditPageSpeedSettings'=>$canEditPageSpeedSettings,
+				'canEditPagePermissions'=>$canEditPagePermissions,
+				'canEditPageDesign'=>$canEditPageDesign,
+				'canViewPageVersions'=>$canViewPageVersions,
+				'canDeletePage'=>$canDeletePage,
+				'canAddSubpages'=>$canAddSubpages,
+				'canAddExternalLinks'=>$canAddExternalLinks
+			);
+			
 			?>
-			<tr class="ccm-list-record <?=$striped?>" cName="<?=htmlentities($cobj->getCollectionName(), ENT_QUOTES, APP_CHARSET)?>" cID="<?=$cobj->getCollectionID()?>" sitemap-select-callback="<?=$sitemap_select_callback?>" sitemap-select-mode="<?=$sitemap_select_mode?>" sitemap-instance-id="<?=$searchInstance?>" sitemap-display-mode="search" canWrite="<?=$cpobj->canWrite()?>" cNumChildren="<?=$cobj->getNumChildren()?>" cAlias="false">
+			<tr class="ccm-list-record <?=$striped?>" 
+				cName="<?=htmlentities($cobj->getCollectionName(), ENT_QUOTES, APP_CHARSET)?>" 
+				cID="<?=$cobj->getCollectionID()?>" 
+				sitemap-select-callback="<?=$sitemap_select_callback?>" 
+				sitemap-select-mode="<?=$sitemap_select_mode?>" 
+				sitemap-instance-id="<?=$searchInstance?>" 
+				sitemap-display-mode="search" 
+				cNumChildren="<?=$cobj->getNumChildren()?>" 
+				cAlias="false"
+				<?=$dsh->getPermissionsNodes($permissionArray);?>>
 			<? if (!$searchDialog) { ?><td class="ccm-<?=$searchInstance?>-list-cb" style="vertical-align: middle !important"><input type="checkbox" value="<?=$cobj->getCollectionID()?>" /></td><? } ?>
-
-
 
 			<? foreach($columns->getColumns() as $col) { ?>
 				<? if ($col->getColumnKey() == 'cvName') { ?>
