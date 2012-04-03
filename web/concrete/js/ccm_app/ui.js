@@ -471,7 +471,59 @@ ccm_setupUserSearch = function() {
 					href: CCM_TOOLS_PATH + '/users/bulk_properties?' + uIDstring,
 					title: ccmi18n.properties				
 				});
-				break;				
+				break;
+			case "activate": 
+				uIDstring = '';
+				$("td.ccm-user-list-cb input[type=checkbox]:checked").each(function() {
+					uIDstring=uIDstring+'&uID[]='+$(this).val();
+				});
+				jQuery.fn.dialog.open({
+					width: 630,
+					height: 450,
+					modal: false,
+					href: CCM_TOOLS_PATH + '/users/bulk_activate?' + uIDstring,
+					title: ccmi18n.user_activate				
+				});
+				break;
+			case "deactivate": 
+				uIDstring = '';
+				$("td.ccm-user-list-cb input[type=checkbox]:checked").each(function() {
+					uIDstring=uIDstring+'&uID[]='+$(this).val();
+				});
+				jQuery.fn.dialog.open({
+					width: 630,
+					height: 450,
+					modal: false,
+					href: CCM_TOOLS_PATH + '/users/bulk_deactivate?' + uIDstring,
+					title: ccmi18n.user_deactivate
+				});
+				break;
+			case "password_reset": 
+				uIDstring = '';
+				$("td.ccm-user-list-cb input[type=checkbox]:checked").each(function() {
+					uIDstring=uIDstring+'&uID[]='+$(this).val();
+				});
+				jQuery.fn.dialog.open({
+					width: 630,
+					height: 450,
+					modal: false,
+					href: CCM_TOOLS_PATH + '/users/bulk_password_reset?' + uIDstring,
+					title: ccmi18n.user_password_reset				
+				});
+				break;
+			case "delete": 
+				uIDstring = '';
+				$("td.ccm-user-list-cb input[type=checkbox]:checked").each(function() {
+					uIDstring=uIDstring+'&uID[]='+$(this).val();
+				});
+				jQuery.fn.dialog.open({
+					width: 630,
+					height: 450,
+					modal: false,
+					href: CCM_TOOLS_PATH + '/users/bulk_delete?' + uIDstring,
+					title: ccmi18n.user_delete				
+				});
+				break;
 		}
 		
 		$(this).get(0).selectedIndex = 0;
