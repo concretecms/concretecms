@@ -72,6 +72,7 @@ $dt = Loader::helper('form/date_time');
 <?=$form->label('pdStartDate_activate', t('From'))?>
 <div class="input">
 	<?=$dt->datetime('pdStartDate', $pdStartDate, true);?>
+	<label style="float: none; width: auto"><?=$form->checkbox('pdStartDateAllDayActivate', 1, $pdStartDateAllDayActivate)?> <?=t("All Day")?></label>
 </div>
 </div>
 
@@ -79,6 +80,7 @@ $dt = Loader::helper('form/date_time');
 <?=$form->label('pdEndDate_activate', t('To'))?>
 <div class="input">
 	<?=$dt->datetime('pdEndDate', $pdEndDate, true);?>
+	<label style="float: none; width: auto"><?=$form->checkbox('pdEndDateAllDayActivate', 1, $pdEndDateAllDayActivate)?> <?=t("All Day")?></label>
 </div>
 </div>
 
@@ -269,6 +271,29 @@ ccm_accessEntityOnActivateDates = function() {
 	} else {
 		$("#ccm-permissions-access-entity-repeat").hide();
 	}
+	if ($("#pdStartDate_activate").is(':checked')) {
+		$('#pdStartDateAllDayActivate').attr('disabled', false);		
+	} else {
+		$('input[name=pdStartDateAllDayActivate]').attr('disabled', true);
+	}
+	if ($("#pdEndDate_activate").is(':checked')) {
+		$('#pdEndDateAllDayActivate').attr('disabled', false);		
+	} else {
+		$('input[name=pdEndDateAllDayActivate]').attr('disabled', true);
+	}
+	console.log('wut');
+	if ($("input[name=pdStartDateAllDayActivate]").is(':checked')) {
+		$('span#pdStartDate_tw').hide();
+	} else {
+		$('span#pdStartDate_tw').show();
+	}
+
+	if ($("input[name=pdEndDateAllDayActivate]").is(':checked')) {
+		$('span#pdEndDate_tw').hide();
+	} else {
+		$('span#pdEndDate_tw').show();
+	}
+
 }
 
 ccm_accessEntityOnRepeatPeriodChange = function() {
@@ -290,7 +315,7 @@ ccm_accessEntityCalculateRepeatEnd = function() {
 }
 
 $(function() {
-	$("#ccm-permissions-access-entity-dates input[class=ccm-activate-date-time]").click(function() {
+	$("#ccm-permissions-access-entity-dates input[type=checkbox]").click(function() {
 		ccm_accessEntityOnActivateDates();
 	});	
 	
