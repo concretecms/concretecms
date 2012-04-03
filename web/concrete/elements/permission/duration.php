@@ -41,6 +41,8 @@ if (is_object($pd)) {
 	$pdStartDate = $pd->getStartDate();
 	$pdEndDate = $pd->getEndDate();
 	$pdRepeats = $pd->repeats();
+	$pdStartDateAllDay = $pd->isStartDateAllDay(); 
+	$pdEndDateAllDay = $pd->isEndDateAllDay(); 
 	$pdRepeatPeriod = $pd->getRepeatPeriod();
 	$pdRepeatPeriodWeekDays = $pd->getRepeatPeriodWeekDays();
 	if ($pdRepeatPeriod == 'daily') {
@@ -72,7 +74,7 @@ $dt = Loader::helper('form/date_time');
 <?=$form->label('pdStartDate_activate', t('From'))?>
 <div class="input">
 	<?=$dt->datetime('pdStartDate', $pdStartDate, true);?>
-	<label style="float: none; width: auto"><?=$form->checkbox('pdStartDateAllDayActivate', 1, $pdStartDateAllDayActivate)?> <?=t("All Day")?></label>
+	<label style="display: inline; font-weight: normal; float: none; width: auto"><?=$form->checkbox('pdStartDateAllDayActivate', 1, $pdStartDateAllDay)?> <?=t("All Day")?></label>
 </div>
 </div>
 
@@ -80,7 +82,7 @@ $dt = Loader::helper('form/date_time');
 <?=$form->label('pdEndDate_activate', t('To'))?>
 <div class="input">
 	<?=$dt->datetime('pdEndDate', $pdEndDate, true);?>
-	<label style="float: none; width: auto"><?=$form->checkbox('pdEndDateAllDayActivate', 1, $pdEndDateAllDayActivate)?> <?=t("All Day")?></label>
+	<label style="display: inline; font-weight: normal; float: none; width: auto"><?=$form->checkbox('pdEndDateAllDayActivate', 1, $pdEndDateAllDay)?> <?=t("All Day")?></label>
 </div>
 </div>
 

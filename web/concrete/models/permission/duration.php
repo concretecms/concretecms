@@ -27,6 +27,8 @@ class PermissionDuration extends Object {
 	
 	public function setStartDate($pdStartDate) {$this->pdStartDate = $pdStartDate;}
 	public function setEndDate($pdEndDate) {$this->pdEndDate = $pdEndDate;}
+	public function setStartDateAllDay($pdStartDateAllDay) {$this->pdStartDateAllDay = $pdStartDateAllDay;}
+	public function setEndDateAllDay($pdEndDateAllDay) {$this->pdEndDateAllDay = $pdEndDateAllDay;}	
 	public function setRepeatPeriod($pdRepeatPeriod) {$this->pdRepeatPeriod = $pdRepeatPeriod;}
 	public function setRepeatPeriodWeekDays($pdRepeatPeriodWeeksDays) {$this->pdRepeatPeriodWeeksDays = $pdRepeatPeriodWeeksDays;}
 	public function setRepeatEveryNum($pdRepeatEveryNum) {$this->pdRepeatEveryNum = $pdRepeatEveryNum;}
@@ -34,6 +36,8 @@ class PermissionDuration extends Object {
 	public function setRepeatPeriodEnd($pdRepeatPeriodEnd) {$this->pdRepeatPeriodEnd = $pdRepeatPeriodEnd;}
 	
 	public function getStartDate() {return $this->pdStartDate;}
+	public function isStartDateAllDay() {return $this->pdStartDateAllDay;}
+	public function isEndDateAllDay() {return $this->pdEndDateAllDay;}	
 	public function getEndDate() {return $this->pdEndDate;}
 	public function repeats() {
 		return (in_array($this->pdRepeatPeriod, array('daily','weekly','monthly')));
@@ -193,10 +197,23 @@ class PermissionDuration extends Object {
 			} else { 
 				$pd = new PermissionDuration();
 			}
-			
+
+			if ($_REQUEST['pdStartDateAllDayActivate']) {
+				$pd->setStartDateAllDay(1);
+				$dateStart = date('Y-m-d 00:00:00', strtotime($dateStart));
+			} else {
+				$pd->setStartDateAllDay(0);
+			}
+			if ($_REQUEST['pdEndDateAllDayActivate']) {
+				$pd->setEndDateAllDay(1);
+				$dateEnd = date('Y-m-d 23:59:59', strtotime($dateEnd));
+			} else {
+				$pd->setEndDateAllDay(0);
+			}	
+					
 			$pd->setStartDate($dateStart);
 			$pd->setEndDate($dateEnd);
-			if ($_POST['pdRepeatPeriod']) {
+			if ($_POST['pdRepeatPeriod'] && $_POST['pdRepeat']) {
 				$pd->setRepeatPeriod($_POST['pdRepeatPeriod']);
 				if ($_POST['pdRepeatPeriod'] == 'daily') {
 					$pd->setRepeatEveryNum($_POST['pdRepeatPeriodDaysEvery']);
@@ -208,6 +225,8 @@ class PermissionDuration extends Object {
 					$pd->setRepeatEveryNum($_POST['pdRepeatPeriodMonthsEvery']);					
 				}
 				$pd->setRepeatPeriodEnd($dt->translate('pdEndRepeatDateSpecific'));
+			} else {
+				$pd->setRepeatPeriod(false);
 			}
 			$pd->save();		
 		} else {

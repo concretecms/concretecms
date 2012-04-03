@@ -21,7 +21,7 @@ foreach($list as $pa) {
 
 ?>
 <div class="ccm-ui" id="ccm-permissions-access-entity-wrapper">
-<form id="ccm-permissions-timed-guest-access-form" method="post" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/permissions/categories/block">
+<form id="ccm-permissions-timed-guest-access-form" class="form-stacked" method="post" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/permissions/categories/block">
 <input type="hidden" name="task" value="set_timed_guest_access" />
 <?=Loader::helper('validation/token')->output('set_timed_guest_access');?>
 <input type="hidden" name="cID" value="<?=$c->getCollectionID()?>" />
