@@ -203,7 +203,7 @@ class ConcreteDashboardSitemapHelper {
 		return $obj;
 	}
 	
-	protected function getPermissionsNodes($obj) {
+	public function getPermissionsNodes($obj) {
 		$str = '';
 		if ($obj['canEditPageProperties']) {
 			$str .= 'tree-node-can-edit-properties="true" ';
