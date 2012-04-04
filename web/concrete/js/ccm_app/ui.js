@@ -427,7 +427,7 @@ ccm_triggerSelectUser = function(uID, uName, uEmail) {
 	alert(uEmail);
 }
 
-ccm_setupUserSearch = function() {
+ccm_setupUserSearch = function(searchInstance) {
 	$(".chosen-select").chosen();	
 	
 	$("#ccm-user-list-cb-all").click(function() {
@@ -481,7 +481,7 @@ ccm_setupUserSearch = function() {
 					width: 630,
 					height: 450,
 					modal: false,
-					href: CCM_TOOLS_PATH + '/users/bulk_activate?' + uIDstring,
+					href: CCM_TOOLS_PATH + '/users/bulk_activate?searchInstance='+ searchInstance + '&' + uIDstring,
 					title: ccmi18n.user_activate				
 				});
 				break;
@@ -494,7 +494,7 @@ ccm_setupUserSearch = function() {
 					width: 630,
 					height: 450,
 					modal: false,
-					href: CCM_TOOLS_PATH + '/users/bulk_deactivate?' + uIDstring,
+					href: CCM_TOOLS_PATH + '/users/bulk_deactivate?searchInstance='+ searchInstance + '&' + uIDstring,
 					title: ccmi18n.user_deactivate
 				});
 				break;
@@ -507,8 +507,34 @@ ccm_setupUserSearch = function() {
 					width: 630,
 					height: 450,
 					modal: false,
-					href: CCM_TOOLS_PATH + '/users/bulk_password_reset?' + uIDstring,
+					href: CCM_TOOLS_PATH + '/users/bulk_password_reset?searchInstance='+ searchInstance + '&' + uIDstring,
 					title: ccmi18n.user_password_reset				
+				});
+				break;
+			case "group_add": 
+				uIDstring = '';
+				$("td.ccm-user-list-cb input[type=checkbox]:checked").each(function() {
+					uIDstring=uIDstring+'&uID[]='+$(this).val();
+				});
+				jQuery.fn.dialog.open({
+					width: 630,
+					height: 450,
+					modal: false,
+					href: CCM_TOOLS_PATH + '/users/bulk_group_add?searchInstance='+ searchInstance + '&' + uIDstring,
+					title: ccmi18n.user_group_add		
+				});
+				break;
+			case "group_remove": 
+				uIDstring = '';
+				$("td.ccm-user-list-cb input[type=checkbox]:checked").each(function() {
+					uIDstring=uIDstring+'&uID[]='+$(this).val();
+				});
+				jQuery.fn.dialog.open({
+					width: 630,
+					height: 450,
+					modal: false,
+					href: CCM_TOOLS_PATH + '/users/bulk_group_remove?searchInstance='+ searchInstance + '&' + uIDstring,
+					title: ccmi18n.user_group_remove				
 				});
 				break;
 			case "delete": 
@@ -520,7 +546,7 @@ ccm_setupUserSearch = function() {
 					width: 630,
 					height: 450,
 					modal: false,
-					href: CCM_TOOLS_PATH + '/users/bulk_delete?' + uIDstring,
+					href: CCM_TOOLS_PATH + '/users/bulk_delete?searchInstance='+ searchInstance + '&' + uIDstring,
 					title: ccmi18n.user_delete				
 				});
 				break;
