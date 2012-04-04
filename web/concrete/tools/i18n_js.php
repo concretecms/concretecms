@@ -72,7 +72,6 @@ var ccmi18n = {
 	x: "<?=t('x')?>",
 	user_activate: "<?=t('Activate Users')?>",
 	user_deactivate: "<?=t('Deactivate Users')?>",
-	user_password_reset: "<?=t('Reset Passwords')?>",
 	user_delete: "<?=t('Delete')?>",
 	user_group_remove: "<?=t('Remove From Group')?>",
 	user_group_add: "<?=t('Add to Group')?>"
