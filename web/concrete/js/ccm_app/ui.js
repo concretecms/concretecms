@@ -498,19 +498,6 @@ ccm_setupUserSearch = function(searchInstance) {
 					title: ccmi18n.user_deactivate
 				});
 				break;
-			case "password_reset": 
-				uIDstring = '';
-				$("td.ccm-user-list-cb input[type=checkbox]:checked").each(function() {
-					uIDstring=uIDstring+'&uID[]='+$(this).val();
-				});
-				jQuery.fn.dialog.open({
-					width: 630,
-					height: 450,
-					modal: false,
-					href: CCM_TOOLS_PATH + '/users/bulk_password_reset?searchInstance='+ searchInstance + '&' + uIDstring,
-					title: ccmi18n.user_password_reset				
-				});
-				break;
 			case "group_add": 
 				uIDstring = '';
 				$("td.ccm-user-list-cb input[type=checkbox]:checked").each(function() {
