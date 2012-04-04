@@ -1130,6 +1130,60 @@
     </field>
   </table>
 
+  <table name="PagePermissionPropertyAssignments">
+    <field name="cID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="peID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="name" type="I" size="1">
+      <UNSIGNED/>
+      <default value="0" />
+    </field>
+    <field name="publicDateTime" type="I" size="1">
+      <UNSIGNED/>
+      <default value="0" />
+    </field>
+    <field name="uID" type="I" size="1">
+      <UNSIGNED/>
+      <default value="0" />
+    </field>
+    <field name="description" type="I" size="1">
+      <UNSIGNED/>
+      <default value="0" />
+    </field>
+    <field name="paths" type="I" size="1">
+      <UNSIGNED/>
+      <default value="0" />
+    </field>
+    <field name="attributePermission" type="C" size="1">
+      <NOTNULL/>
+      <DEFAULT value="1"/>
+    </field>
+  </table>
+  <table name="PagePermissionPropertyAttributeAssignmentsCustom">
+    <field name="cID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="peID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="akID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+  </table>
+
   <table name="PagePermissionAssignments">
     <field name="cID" type="I" size="10">
       <KEY/>
