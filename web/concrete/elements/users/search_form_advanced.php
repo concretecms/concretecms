@@ -116,7 +116,7 @@ foreach($searchFieldAttributes as $ak) {
 </form>	
 
 <script type="text/javascript">
-$(function() {
-	ccm_setupUserSearch();
+$(function() { 
+	ccm_setupUserSearch('<?=$searchInstance?>'); 
 });
 </script>
