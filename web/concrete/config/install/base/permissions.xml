@@ -22,7 +22,8 @@
         <permissionkey handle="edit_page_properties" name="Edit Properties" package="" category="page"/>
         <permissionkey handle="edit_page_contents" name="Edit Contents" package="" category="page"/>
         <permissionkey handle="edit_page_speed_settings" name="Edit Speed Settings" package="" category="page"/>
-        <permissionkey handle="edit_page_design" name="Edit Design" package="" category="page"/>
+        <permissionkey handle="edit_page_theme" name="Change Theme" package="" category="page"/>
+        <permissionkey handle="edit_page_type" name="Change Page Type" package="" category="page"/>
         <permissionkey handle="edit_page_permissions" name="Edit Permissions" package="" category="page"/>
         <permissionkey handle="delete_page" name="Delete" package="" category="page"/>
         <permissionkey handle="delete_page_versions" name="Delete Versions" package="" category="page"/>

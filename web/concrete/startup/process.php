@@ -813,16 +813,22 @@
 	if ($_POST['processCollection'] && $valt->validate()) { 
 
 		if ($_POST['update_theme']) { 
-			if ($cp->canEditPageDesign()) {
-				$nvc = $c->getVersionToModify();
-				
-				$data = array();
+		
+			$pl = false;
+			if ($_POST['plID']) { 
 				$pl = PageTheme::getByID($_POST['plID']);
-				$c->setTheme($pl);
+			}
+			
+			if ($cp->canEditPageTheme($pl) || $cp->canEditPageType()) {
+				$nvc = $c->getVersionToModify();				
+				$data = array();
+				if (is_object($pl)) { 
+					$c->setTheme($pl);
+				}
 				
 				if (!$c->isGeneratedCollection()) {
 				
-					if ($_POST['ctID']) {
+					if ($_POST['ctID'] && $cp->canEditPageType()) {
 						// now we have to check to see if you're allowed to update this page to this page type.
 						// We do this by checking to see whether the PARENT page allows you to add this page type here.
 						// if this is the home page then we assume you are good
@@ -837,8 +843,7 @@
 						if ($c->getCollectionID() == 1 || $parentCP->canAddSubCollection($ct)) {
 							$data['ctID'] = $_POST['ctID'];
 							$nvc->update($data);
-						}
-						
+						}						
 					}
 				
 				}
@@ -856,7 +861,7 @@
 			}		
 		} else if ($_POST['update_speed_settings']) {
 			// updating a collection
-			if ($cp->canEditPageDesign()) {
+			if ($cp->canEditPageSpeedSettings()) {
 				
 				$data = array();
 				$data['cCacheFullPageContent'] = $_POST['cCacheFullPageContent'];
@@ -983,7 +988,8 @@
 					'edit_page_properties',
 					'edit_page_contents',
 					'edit_page_speed_settings',
-					'edit_page_design',
+					'edit_page_theme',
+					'edit_page_type',
 					'edit_page_permissions',
 					'delete_page',
 					'delete_page_versions',

@@ -6,7 +6,7 @@ Loader::model('collection_attributes');
 $dt = Loader::helper('form/date_time');
 $uh = Loader::helper('form/user_selector');
 
-if ($cp->canEditPageDesign()) {
+if ($cp->canEditPageType()) {
 	$ctArray = CollectionType::getList();
 }
 

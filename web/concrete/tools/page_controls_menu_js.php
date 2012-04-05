@@ -216,11 +216,11 @@ menuHTML += '<ul>';
 <? if ($cp->canPreviewPageAsUser() && PERMISSIONS_MODEL == 'advanced') { ?>
 	menuHTML += '<li><a class="ccm-menu-icon ccm-icon-preview-as-user" id="ccm-toolbar-nav-preview-as-user" dialog-width="90%" dialog-height="70%" dialog-append-buttons="true" dialog-modal="false" dialog-title="<?=t('View Page as Someone Else')?>" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_collection_popup.php?cID=<?=$c->getCollectionID()?>&ctask=preview_page_as_user"><?=t('Preview as User')?></a></li>';
 <? } ?>
-<? if ($cp->canEditPageDesign()) { ?>
+<? if ($cp->canEditPageTheme() || $cp->canEditPageType()) { ?>
 	menuHTML += '<li><a class="ccm-menu-icon ccm-icon-design" id="ccm-toolbar-nav-design" dialog-append-buttons="true" dialog-width="610" dialog-height="405" dialog-modal="false" dialog-title="<?=t('Design')?>" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_collection_popup.php?cID=<?=$cID?>&ctask=set_theme"><?=t('Design')?></a></li>';
 <? } ?>
 <? if ($cp->canEditPagePermissions()) { ?>
-	menuHTML += '<li><a class="ccm-menu-icon ccm-icon-permissions" dialog-append-buttons="true" id="ccm-toolbar-nav-permissions" dialog-width="420" dialog-height="590" dialog-modal="false" dialog-title="<?=t('Permissions')?>" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_collection_popup.php?&cID=<?=$cID?>&ctask=edit_permissions"><?=t('Permissions')?></a></li>';
+	menuHTML += '<li><a class="ccm-menu-icon ccm-icon-permissions" dialog-append-buttons="true" id="ccm-toolbar-nav-permissions" dialog-width="420" dialog-height="630" dialog-modal="false" dialog-title="<?=t('Permissions')?>" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_collection_popup.php?&cID=<?=$cID?>&ctask=edit_permissions"><?=t('Permissions')?></a></li>';
 <? } ?>
 <? if ($cp->canViewPageVersions()) { ?>
 	menuHTML += '<li><a class="ccm-menu-icon ccm-icon-versions" id="ccm-toolbar-nav-versions" dialog-width="640" dialog-height="340" dialog-modal="false" dialog-title="<?=t('Page Versions')?>" id="menuVersions<?=$cID?>" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/versions.php?cID=<?=$cID?>"><?=t('Versions')?></a></li>';
