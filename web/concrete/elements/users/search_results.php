@@ -6,10 +6,9 @@
 
 <div class="ccm-pane-body">
 
-<? } ?>
+<? } 
 
-<?
-	if (!$mode) {
+if (!$mode) {
 		$mode = $_REQUEST['mode'];
 	}
 	if (!$searchType) {
@@ -36,7 +35,6 @@
 					<option value="deactivate"><?=t('Deactivate')?></option>
 					<option value="group_add"><?=t('Add to Group')?></option>
 					<option value="group_remove"><?=t('Remove from Group')?></option>
-					<option value="password_reset"><?=t('Reset Password')?></option>
 					<option value="delete"><?=t('Delete')?></option>
 				<? if ($mode == 'choose_multiple') { ?>
 					<option value="choose"><?=t('Choose')?></option>
