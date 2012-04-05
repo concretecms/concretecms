@@ -160,25 +160,20 @@ class FormHelper {
 
 	/**
 	 * Generates a radio button
-	 * @param string $key Radio button's name and id
-	 * @param string $value String value sent to server, if button is selected, on submit
-	 * @param string|array $isCheckedOrArray Either the "checked" value (subject to be overridden by $_REQUEST) or $miscFields (see below). Button is checked if value is true (boolean) or the same as $value.
-	 * @param array $miscFields A hash array with html attributes as key/value pairs (possibly including "class")
-	 * @return $html
+	 * @param string $key
+	 * @param string $valueOfButton
+	 * @param string $valueOfSelectedOption
 	 */
-	public function radio($key, $value, $isCheckedOrArray = false, $miscFields = array()) {
+	public function radio($key, $value, $valueOrArray = false, $miscFields = array()) {
 		$str = '<input type="radio" name="' . $key . '" id="' . $key . $this->radioIndex . '" value="' . $value . '" ';
 
-		if (is_array($isCheckedOrArray)) {
-			$miscFields = $isCheckedOrArray;
+		if (is_array($valueOrArray)) {
+			$miscFields = $valueOrArray;
 		}
 
 		$str .= $this->parseMiscFields('ccm-input-radio', $miscFields) . ' ';
 
-		// IF $key NOT PART OF $_REQUEST AND $checked === true (w/ type matching) or $checked == $value
-		if (($isCheckedOrArray === true || $isCheckedOrArray == $value) && !isset($_REQUEST[$key]) ||
-			// OR $key IS PART OF $_REQUEST AND == $value
-			(isset($_REQUEST[$key]) && $_REQUEST[$key] == $value)) {
+		if ($valueOrArray == $value && !isset($_REQUEST[$key]) || (isset($_REQUEST[$key]) && $_REQUEST[$key] == $value)) {
 			$str .= 'checked="checked" ';
 		}
 
