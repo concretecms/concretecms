@@ -14,6 +14,8 @@ $form = Loader::helper('form');
 $ih = Loader::helper('concrete/interface');
 $av = Loader::helper('concrete/avatar'); 
 
+$searchInstance = (isset($searchInstance)?$searchInstance:'user');
+
 function printAttributeRow($ak, $uo) {
 	
 	$vo = $uo->getAttributeValueObject($ak);
@@ -540,7 +542,6 @@ $(function() {
 <?
 $tp = new TaskPermission();
 if ($tp->canAccessUserSearch()) { ?>
-
 <div class="ccm-pane-options" id="ccm-<?=$searchInstance?>-pane-options">
 <? Loader::element('users/search_form_advanced', array('columns' => $columns, 'searchInstance' => $searchInstance, 'searchRequest' => $searchRequest, 'searchType' => 'DASHBOARD')); ?>
 </div>
