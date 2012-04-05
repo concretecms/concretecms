@@ -32,6 +32,9 @@
 		<select id="ccm-<?=$searchInstance?>-list-multiple-operations" class="span3" disabled>
 					<option value="">** <?=t('With Selected')?></option>
 					<option value="properties"><?=t('Edit Properties')?></option>
+					<option value="activate"><?=t('Activate')?></option>
+					<option value="deactivate"><?=t('Deactivate')?></option>
+					<option value="delete"><?=t('Delete')?></option>
 				<? if ($mode == 'choose_multiple') { ?>
 					<option value="choose"><?=t('Choose')?></option>
 				<? } ?>
