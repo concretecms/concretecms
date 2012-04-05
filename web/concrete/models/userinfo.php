@@ -316,6 +316,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			}
 		}
 		
+		/**
+		 * gets the user object of the current UserInfo object ($this)
+		 * @return User
+		 */
 		public function getUserObject() {
 			// returns a full user object - groups and everything - for this userinfo object
 			$nu = User::getByUserID($this->uID);
@@ -324,7 +328,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 		/** 
 		 * Sets the attribute of a user info object to the specified value, and saves it in the database 
-		 */
+		*/
 		public function setAttribute($ak, $value) {
 			Loader::model('attribute/categories/user');
 			if (!is_object($ak)) {
