@@ -5,7 +5,14 @@ $ih = Loader::helper('concrete/interface');
 $form = Loader::helper('form');
 if ($downloadableUpgradeAvailable) { ?>
 	<?=$h->getDashboardPaneHeaderWrapper(t('Download Update'));?>
-		<span class="label"><?=t('Current Version %s',config::get('SITE_APP_VERSION'))?></span>
+	<? if (!defined('MULTI_SITE') || MULTI_SITE == false) { ?>
+		<a href="<?=$this->action('check_for_updates')?>" class="btn" style="float: right"><?=t('Check For Updates')?></a>
+	<? } ?>
+		<h2><?=t('Currently Running %s',config::get('SITE_APP_VERSION'))?></h2>
+		<div class="clearfix">
+		</div>
+		<br/>
+		<h2><?=t('Available Update')?></h2>
 		<form method="post" action="<?=$this->action('download_update')?>" id="ccm-download-update-form">
 		
 			<?=Loader::helper('validation/token')->output('download_update')?>
@@ -59,7 +66,15 @@ if ($downloadableUpgradeAvailable) { ?>
 	<div class="clearfix">&nbsp;</div>
 <? } else { ?>
 	<?=$h->getDashboardPaneHeaderWrapper(t('Update concrete5'));?>
-		<h3><?=t('You are currently up to date!')?></h3>
-		<span class="label"><?=t('Current Version %s',config::get('SITE_APP_VERSION'))?></span>
+	<? if (!defined('MULTI_SITE') || MULTI_SITE == false) { ?>
+		<a href="<?=$this->action('check_for_updates')?>" class="btn" style="float: right"><?=t('Check For Updates')?></a>
+	<? } ?>
+		<h2><?=t('Currently Running %s',config::get('SITE_APP_VERSION'))?></h2>
+		<div class="clearfix">
+		</div>
+		<br/>
+		
+		<p><?=t('No updates available.')?></p>
+
 	<?=$h->getDashboardPaneFooterWrapper();?>
 <? } ?>
