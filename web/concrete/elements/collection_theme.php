@@ -5,7 +5,13 @@ Loader::model('collection_types');
 $stringHelper=Loader::helper('text');
 $tArray = PageTheme::getGlobalList();
 $tArray2 = PageTheme::getLocalList();
-$tArray = array_merge($tArray, $tArray2);
+$tArrayTmp = array_merge($tArray, $tArray2);
+$tArray = array();
+foreach($tArrayTmp as $pt) {
+	if ($cp->canEditPageTheme($pt)) {
+		$tArray[] = $pt;
+	}
+}
 $ctArray = CollectionType::getList();
 
 $cp = new Permissions($c);
@@ -13,7 +19,7 @@ if ($c->getCollectionID() > 1) {
 	$parent = Page::getByID($c->getCollectionParentID());
 	$parentCP = new Permissions($parent);
 }
-if (!$cp->canEditPageDesign()) {
+if (!$cp->canEditPageType() && !$cp->canEditPageTheme()) {
 	die(t('Access Denied'));
 }
 
@@ -40,7 +46,18 @@ if ($plID == 0) {
 	<input type="hidden" name="rel" value="<?=$_REQUEST['rel']?>" />
 
 
-	<? if ($c->isMasterCollection()) { ?>
+	<? 
+	if (!$cp->canEditPageType()) { ?>
+
+		<h3><?=t('Choose a Page Type')?></h3>
+		<p>
+		<?=t("You do not have access to change this page's type.")?>
+		</p>
+		<br/><br/>
+
+	<?	
+	
+	} else if ($c->isMasterCollection()) { ?>
 		<h3><?=t('Choose a Page Type')?></h3>
 		<p>
 		<?=t("This is the defaults page for the %s page type. You cannot change it.", $c->getCollectionTypeName()); ?>
@@ -83,6 +100,8 @@ if ($plID == 0) {
 	<? } ?>
 
 	<h3 ><?=t('Themes')?></h3>
+	
+	<? if ($cp->canEditPageTheme()) { ?>
 
 	<div class="ccm-scroller" current-page="1" current-pos="0" num-pages="<?=ceil(count($tArray)/4)?>">
 		<a href="javascript:void(0)" class="ccm-scroller-l"><img src="<?=ASSETS_URL_IMAGES?>/button_scroller_l.png" width="28" height="79" alt="l" /></a>
@@ -105,7 +124,11 @@ if ($plID == 0) {
 			</ul>
 		</div>
 	</div>
+	<? } else { ?>
 	
+	<p><?=t("You do not have access to change this page's theme."); ?></p>
+
+	<? } ?>
 	
 	<div class="dialog-buttons">
 		<a href="javascript:void(0)" onclick="jQuery.fn.dialog.closeTop()" class="ccm-button-left btn"><?=t('Cancel')?></a>

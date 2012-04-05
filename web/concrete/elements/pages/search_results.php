@@ -80,7 +80,7 @@ if (isset($_REQUEST['searchInstance'])) {
 			$canEditPageProperties = $cpobj->canEditPageProperties();
 			$canEditPageSpeedSettings = $cpobj->canEditPageSpeedSettings();
 			$canEditPagePermissions = $cpobj->canEditPagePermissions();
-			$canEditPageDesign = $cpobj->canEditPageDesign();
+			$canEditPageDesign = ($cpobj->canEditPageTheme() || $cpobj->canEditPageType());
 			$canViewPageVersions = $cpobj->canViewPageVersions();
 			$canDeletePage = $cpobj->canDeletePage();
 			$canAddSubpages = $cpobj->canAddSubpage();

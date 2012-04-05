@@ -324,7 +324,8 @@ class Page extends Collection {
 		if ($node['canAdmin'] == '1') {
 			$pkHandles[] = 'edit_page_speed_settings';
 			$pkHandles[] = 'edit_page_permissions';
-			$pkHandles[] = 'edit_page_design';
+			$pkHandles[] = 'edit_page_theme';
+			$pkHandles[] = 'edit_page_type';
 			$pkHandles[] = 'delete_page';
 			$pkHandles[] = 'delete_page_versions';
 		}

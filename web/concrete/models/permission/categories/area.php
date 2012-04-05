@@ -8,7 +8,7 @@ class AreaPermissionKey extends PermissionKey {
 		'view_area' => 'view_page',
 		'edit_area_contents' => 'edit_page_contents',
 		'add_layout_to_area' => 'edit_page_contents',
-		'edit_area_design' => 'edit_page_design',
+		'edit_area_design' => 'edit_page_contents',
 		'edit_area_permissions' => 'edit_page_permissions',
 		'delete_area_contents' => 'edit_page_contents'		
 	);

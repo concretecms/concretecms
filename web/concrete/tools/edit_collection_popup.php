@@ -44,7 +44,7 @@ switch($_GET['ctask']) {
 		break;
 	case 'mcd':
 		$toolSection = "collection_mcd";
-		$canViewPane = $cp->canWrite();
+		$canViewPane = $cp->canMoveOrCopyPage();
 		$divID = "ccm-collection-mcd";
 		break;
 	case 'delete':
@@ -54,7 +54,7 @@ switch($_GET['ctask']) {
 	case 'set_theme':
 		$toolSection = "collection_theme";
 		$divID = 'ccm-edit-collection-design';
-		$canViewPane = $cp->canWrite();
+		$canViewPane = ($cp->canEditPageTheme() || $cp->canEditPageType());
 		break;
 	case 'add':
 		$toolSection = "collection_add";
