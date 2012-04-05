@@ -13,20 +13,10 @@ if (!$tp->canAccessUserSearch()) {
 }
 
 $users = array();
-$excluded = false;
-$excluded_user_ids = array();
-$excluded_user_ids[] = $u->getUserID(); // can't delete yourself
-$excluded_user_ids[] = USER_SUPER_ID; // can't delete the super user (admin)
-
 if (is_array($_REQUEST['uID'])) {
 	foreach($_REQUEST['uID'] as $uID) {
 		$ui = UserInfo::getByID($uID);
-		
-		if((in_array($ui->getUserID(),$excluded_user_ids))) { 
-			$excluded = true;
-		} else {
-			$users[] = $ui;
-		}
+		$users[] = $ui;
 	}
 }
 
@@ -46,12 +36,7 @@ if (!isset($_REQUEST['reload'])) { ?>
 
 	<div id="ccm-user-deactivate" class="ccm-ui">
 		<form method="post" id="ccm-user-bulk-deactivate" action="<?php echo REL_DIR_FILES_TOOLS_REQUIRED ?>/users/bulk_deactivate">
-			<?php if($excluded) { ?>
-				<div class="alert-message info">
-					<?php echo t("Users you don't have permission to bulk-deactivate have been removed from this list.");	?>
-				</div>
-			<?php }
-			
+			<?php
 			echo $form->hidden('task','deactivate');
 			foreach($users as $ui) {
 				echo $form->hidden('uID[]' , $ui->getUserID());
