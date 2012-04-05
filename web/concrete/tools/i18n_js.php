@@ -65,7 +65,6 @@ var ccmi18n = {
 	properties: "<?=t('Properties')?>",
 	savePropertiesMsg: "<?=t('Page Properties saved.')?>",
 	saveSpeedSettingsMsg: "<?=t("Speed Settings saved.")?>",
-	saveUserSettingsMsg: "<?=t("User Settings saved.")?>",
 	ok: "<?=t('Ok')?>",
 	newsflowLoading: "<?=t("Checking for updates.")?>",
 	authoredBy: "<?=t('by')?>",
@@ -73,9 +72,7 @@ var ccmi18n = {
 	user_activate: "<?=t('Activate Users')?>",
 	user_deactivate: "<?=t('Deactivate Users')?>",
 	user_password_reset: "<?=t('Reset Passwords')?>",
-	user_delete: "<?=t('Delete')?>",
-	user_group_remove: "<?=t('Remove From Group')?>",
-	user_group_add: "<?=t('Add to Group')?>"
+	user_delete: "<?=t('Delete')?>"
 }
 
 var ccmi18n_sitemap = {

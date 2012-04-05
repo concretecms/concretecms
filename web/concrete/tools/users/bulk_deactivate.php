@@ -1,10 +1,4 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
-
-$searchInstance = $_REQUEST['searchInstance'];
-if(!strlen($searchInstance)) {
-	$searchInstance = 'user';
-}
-
 $form = Loader::helper('form');
 $ih = Loader::helper('concrete/interface');
 $tp = new TaskPermission();
@@ -58,14 +52,8 @@ if (!isset($_REQUEST['reload'])) { ?>
 <script type="text/javascript">
 ccm_userBulkDeactivate = function() { 
 	$("#ccm-user-bulk-deactivate").ajaxSubmit(function(resp) {
-		jQuery.fn.dialog.closeTop();
-		jQuery.fn.dialog.hideLoader();
-		ccm_deactivateSearchResults('<?=$searchInstance?>');
-		ccmAlert.hud(ccmi18n.saveUserSettingsMsg, 2000, 'success', ccmi18n.user_deactivate);
-		$("#ccm-<?=$searchInstance?>-advanced-search").ajaxSubmit(function(r) {
-		       ccm_parseAdvancedSearchResponse(r, '<?=$searchInstance?>');
-		});
 	});
-	
+	jQuery.fn.dialog.closeTop();
+	ccm_setupUserSearch();
 };
 </script>
