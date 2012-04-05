@@ -9,6 +9,10 @@ $uh = Loader::helper('form/user_selector');
 if ($cp->canEditPageDesign()) {
 	$ctArray = CollectionType::getList();
 }
+
+$pk = PermissionKey::getByHandle('edit_page_properties');
+$pk->setPermissionObject($c);
+$asl = $pk->getMyAssignment();
 ?>
 <div class="ccm-pane-controls ccm-ui">
 <? if ($_REQUEST['approveImmediately']) { ?>
@@ -87,25 +91,29 @@ if ($cp->canEditPageDesign()) {
 	<ul class="tabs" id="ccm-properties-tabs">
 		<li class="active"><a href="javascript:void(0)" id="ccm-properties-standard"><?=t('Standard Properties')?></a></li>
 		<li><a href="javascript:void(0)" id="ccm-properties-custom"><?=t('Custom Attributes')?></a></li>
-		<li <? if ($c->isMasterCollection()) { ?>style="display: none"<? } ?>><a href="javascript:void(0)" id="ccm-page-paths"><?=t('Page Paths and Location')?></a></li>
+		<li <? if ($c->isMasterCollection() || !$asl->allowEditPaths()) { ?>style="display: none"<? } ?>><a href="javascript:void(0)" id="ccm-page-paths"><?=t('Page Paths and Location')?></a></li>
 	</ul>
 	<? } ?>
 
 	<div id="ccm-properties-standard-tab" <? if ($c->isMasterCollection()) { ?>style="display: none" <? } ?>>
 	
+	<? if ($asl->allowEditName()) { ?>
 	<div class="clearfix">
 		<label for="cName"><?=t('Name')?></label>
 		<div class="input"><input type="text" id="cName" name="cName" value="<?=htmlentities( $c->getCollectionName(), ENT_QUOTES, APP_CHARSET) ?>" />
 			<span class="help-inline"><?=t("Page ID: %s", $c->getCollectionID())?></span>
 		</div>
 	</div>
+	<? } ?>
 
+	<? if ($asl->allowEditDateTime()) { ?>
 	<div class="clearfix">
 		<label for="cDatePublic"><?=t('Public Date/Time')?></label>
 		<div class="input"><? print $dt->datetime('cDatePublic', $c->getCollectionDatePublic(null, 'user')); ?></div>
 	</div>
-
-
+	<? } ?>
+	
+	<? if ($asl->allowEditUserID()) { ?>
 	<div class="clearfix">
 	<label><?=t('Owner')?></label>
 	<div class="input">
@@ -114,15 +122,19 @@ if ($cp->canEditPageDesign()) {
 		?>
 	</div>
 	</div>
-		
+	<? } ?>
 	
+
+	<? if ($asl->allowEditDescription()) { ?>
 	<div class="clearfix">
 	<label for="cDescription"><?=t('Description')?></label>
 	<div class="input"><textarea id="cDescription" name="cDescription" class="ccm-input-text" style="width: 495px; height: 50px"><?=$c->getCollectionDescription()?></textarea></div>
 	</div>
+	<? } ?>
 	
 	</div>
 	
+	<? if ($asl->allowEditPaths()) { ?>
 	<div id="ccm-page-paths-tab" style="display: none">
 		
 		<div class="clearfix">
@@ -167,9 +179,11 @@ if ($cp->canEditPageDesign()) {
 	<style type="text/css">
 	#ccm-more-page-paths div.input {margin-bottom: 10px;}
 	</style>
+	<? } ?>
 	
-	<div id="ccm-properties-custom-tab" <? if (!$c->isMasterCollection()) { ?>style="display: none" <? } ?>>
-		<? Loader::element('collection_metadata_fields', array('c'=>$c ) ); ?>
+	
+	<div id="ccm-properties-custom-tab" <? if (!$c->isMasterCollection() || count($akIDs) == 0) { ?>style="display: none" <? } ?>>
+		<? Loader::element('collection_metadata_fields', array('c'=>$c, 'assignment' => $asl) ); ?>
 	</div>
 
 	

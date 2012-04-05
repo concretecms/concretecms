@@ -7,19 +7,6 @@
 	# checks to see if a any submits are taking place. If they are, then
 	# _process makes sure that they're handled correctly
 	
-	//just trying to prevent duplication of this code
-	function processMetaData($nvc){			
-		Loader::model('collection_attributes');
-		$nvc->clearCollectionAttributes($_POST['selectedAKIDs']);
-		if (is_array($_POST['selectedAKIDs'])) {
-			foreach($_POST['selectedAKIDs'] as $akID) {
-				if ($akID > 0) {
-					$ak = CollectionAttributeKey::getByID($akID);
-					$ak->saveAttributeForm($nvc);
-				}
-			} 
-		}
-	}
 	
 	// Modification for step editing
 	$step = ($_REQUEST['step']) ? '&step=' . $_REQUEST['step'] : '';
@@ -890,28 +877,60 @@
 				$nvc = $c->getVersionToModify();
 				
 				$data = array();
-				$data['cName'] = $_POST['cName'];
-				$data['cDescription'] = $_POST['cDescription'];
-				$data['cHandle'] = $_POST['cHandle'];
-				$data['cCacheFullPageContent'] = $_POST['cCacheFullPageContent'];
-				$data['cCacheFullPageContentLifetimeCustom'] = $_POST['cCacheFullPageContentLifetimeCustom'];
-				$data['cCacheFullPageContentOverrideLifetime'] = $_POST['cCacheFullPageContentOverrideLifetime'];				
-
-				$data['ppURL'] = array();
-				foreach ($_POST as $key=>$value) {
-					if (strpos($key, 'ppURL-') === 0) {
-						$subkey = substr($key, 6);
-						$data['ppURL'][$subkey] = $value;
+				$pk = PermissionKey::getByHandle('edit_page_properties');
+				$pk->setPermissionObject($c);
+				$asl = $pk->getMyAssignment();
+				if ($asl->allowEditName()) { 
+					$data['cName'] = $_POST['cName'];
+				}
+				if ($asl->allowEditDescription()) { 
+					$data['cDescription'] = $_POST['cDescription'];
+				}
+				if ($asl->allowEditPaths()) { 
+					$data['cHandle'] = $_POST['cHandle'];
+					$data['ppURL'] = array();
+					foreach ($_POST as $key=>$value) {
+						if (strpos($key, 'ppURL-') === 0) {
+							$subkey = substr($key, 6);
+							$data['ppURL'][$subkey] = $value;
+						}
 					}
 				}
-				
-				$dt = Loader::helper('form/date_time');
-				$dh = Loader::helper('date');
-				$data['cDatePublic'] = $dh->getSystemDateTime($dt->translate('cDatePublic'));
-				$data['uID'] = $_POST['uID'];
+				if ($asl->allowEditDateTime()) { 
+					$dt = Loader::helper('form/date_time');
+					$dh = Loader::helper('date');
+					$data['cDatePublic'] = $dh->getSystemDateTime($dt->translate('cDatePublic'));
+				}
+				if ($asl->allowEditUserID()) { 
+					$data['uID'] = $_POST['uID'];
+				}
 				
 				$nvc->update($data);
-				processMetaData($nvc);
+				
+				// First, we check out the attributes we need to clear.
+				$setAttribs = $nvc->getSetCollectionAttributes();
+				$processedAttributes = array();
+				foreach($setAttribs as $ak) {
+					// do I have the ability to edit this attribute?
+					if (in_array($ak->getAttributeKeyID(), $asl->getAttributesAllowedArray())) {
+						// Is this item in the selectedAKIDs array? If so then it is being saved
+						if (in_array($ak->getAttributeKeyID(), $_POST['selectedAKIDs'])) {
+							$ak->saveAttributeForm($nvc);
+						} else {
+							// it is being removed
+							$nvc->clearAttribute($ak);
+						}
+						$processedAttributes[] = $ak->getAttributeKeyID();
+					}					
+				}
+				$newAttributes = array_diff($_POST['selectedAKIDs'], $processedAttributes);
+				foreach($newAttributes as $akID) {
+					if ($akID > 0 && in_array($akID, $asl->getAttributesAllowedArray())) {
+						$ak = CollectionAttributeKey::getByID($akID);
+						$ak->saveAttributeForm($nvc);
+					}
+				}
+
 				
 				$obj = new stdClass;
 
