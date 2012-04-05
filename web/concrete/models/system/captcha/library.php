@@ -98,8 +98,6 @@ class SystemCaptchaLibrary extends Object {
 			} else if (file_exists($dpc)) {
 				return true;
 			}
-		} else {
-			return file_exists(DIRNAME_ELEMENTS . '/' . $path);
 		}
 		
 		return false;
