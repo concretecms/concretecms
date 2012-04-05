@@ -41,6 +41,13 @@ if (!isset($_REQUEST['reload'])) { ?>
 				echo $form->hidden('uID[]' , $ui->getUserID());
 			}
 			?>
+			<div class="clearfix">
+				<div class="input">
+					<label><?php echo t('Select Group')?></label>
+					
+				</div>
+			</div>
+			
 			<?php echo t('Are you sure you would like to activate the following users?');?><br/><br/>
 			<?php Loader::element('users/confirm_list',array('users'=>$users)); ?>
 		</form>	
