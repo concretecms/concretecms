@@ -756,10 +756,6 @@ ccm_setupGridStriping = function(tbl) {
 	});
 }
 
-ccm_dashboardRequestRemoteInformation = function() {
-	$.get(CCM_TOOLS_PATH + '/dashboard/get_remote_information');
-}
-
 /** 
  * JavaScript localization. Provide a key and then reference that key in PHP somewhere (where it will be translated)
  */

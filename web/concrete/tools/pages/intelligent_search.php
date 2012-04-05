@@ -6,6 +6,7 @@ $sh = Loader::helper('concrete/dashboard/sitemap');
 if (!$sh->canRead()) {
 	die(t('Access Denied'));
 }
+session_write_close();
 
 $keywords = $_REQUEST['q'];
 Loader::model('page_list');

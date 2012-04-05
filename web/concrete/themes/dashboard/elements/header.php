@@ -53,11 +53,6 @@ $v->addHeaderItem($html->css('jquery.ui.css'));
 $valt = Loader::helper('validation/token');
 $disp = '<script type="text/javascript">'."\n";
 $disp .=  "var CCM_SECURITY_TOKEN = '" . $valt->generate() . "';"."\n";
-if ($dashboard->getCollectionID() == $c->getCollectionID()) {
-	$disp .= '$(function() {';
-	$disp .= "ccm_dashboardRequestRemoteInformation();"."\n";
-	$disp .= '});';
-}
 $disp .= "</script>"."\n";
 //require(DIR_FILES_ELEMENTS_CORE . '/header_required.php'); 
 $v->addHeaderItem($disp);
