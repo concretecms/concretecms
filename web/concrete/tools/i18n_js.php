@@ -68,11 +68,7 @@ var ccmi18n = {
 	ok: "<?=t('Ok')?>",
 	newsflowLoading: "<?=t("Checking for updates.")?>",
 	authoredBy: "<?=t('by')?>",
-	x: "<?=t('x')?>",
-	user_activate: "<?=t('Activate Users')?>",
-	user_deactivate: "<?=t('Deactivate Users')?>",
-	user_password_reset: "<?=t('Reset Passwords')?>",
-	user_delete: "<?=t('Delete')?>"
+	x: "<?=t('x')?>"
 }
 
 var ccmi18n_sitemap = {
