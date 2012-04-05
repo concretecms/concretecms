@@ -236,7 +236,7 @@ $(function() {
 
 <h3><?=t('Forgot Your Password?')?></h3>
 
-<p><?=t("If you've forgotten your password, enter your email address below. We will reset it to a new password, and send the new one to you.")?></p>
+<p><?=t("Enter your email address below. We will send you instructions to reset your password.")?></p>
 
 <a name="forgot_password"></a>
 
