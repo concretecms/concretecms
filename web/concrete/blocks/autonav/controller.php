@@ -732,7 +732,7 @@
 				}
 
 				//Link Disabled attribute (do this separately from the page link, in case the url is needed for something else -- e.g. javascript)
-				$disableLink = $_c->getAttribute('disable_nav_link');
+				$disableLink = $_c->getAttribute('disable_link_in_nav');
 
 				//Current/ancestor page
 				$selected = false;
@@ -794,7 +794,7 @@
 				$navItem->attrClass = $attribute_class;
 				$navItem->isEnabled = !$disableLink;
 				$navItem->isHome = $is_home_page;
-				$navItem->CID = $item_cid;
+				$navItem->cID = $item_cid;
 				$navItem->cObj = $_c;
 				$navItems[] = $navItem;
 			}

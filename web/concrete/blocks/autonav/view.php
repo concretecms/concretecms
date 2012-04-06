@@ -11,22 +11,22 @@
  *	$navItem->url        : URL to the page
  *	$navItem->name       : page title (already escaped for html output)
  *	$navItem->target     : link target (e.g. "_self" or "_blank")
- *	$navItem->level      : number of levels deep the current menu item is from the top (so top-level nav items are 1, their sub-items are 2, etc.)
+ *	$navItem->level      : number of levels deep the current menu item is from the top (top-level nav items are 1, their sub-items are 2, etc.)
  *	$navItem->subDepth   : number of levels deep the current menu item is *compared to the next item in the list* (useful for determining how many <ul>'s to close in a nested list)
- *	$navItem->hasSubmenu : true/false -- if this item has one or more sub-items (sometimes useful for css styling)
+ *	$navItem->hasSubmenu : true/false -- if this item has one or more sub-items (sometimes useful for CSS styling)
  *	$navItem->isFirst    : true/false -- if this is the first nav item *in its level* (for example, the first sub-item of a top-level item is TRUE)
  *	$navItem->isLast     : true/false -- if this is the last nav item *in its level* (for example, the last sub-item of a top-level item is TRUE)
  *	$navItem->isCurrent  : true/false -- if this nav item represents the page currently being viewed
  *	$navItem->inPath     : true/false -- if this nav item represents a parent page of the page currently being viewed (also true for the page currently being viewed)
  *	$navItem->attrClass  : Value of the 'nav_item_class' custom page attribute (if it exists and is set)
- *	$navItem->isEnabled  : true/false -- if the nav item should link to its page (this is only false if the 'disable_nav_link' custom page attribute is checked)
+ *	$navItem->isEnabled  : true/false -- if the nav item should link to its page (this is only false if the 'disable_link_in_nav' custom page attribute is checked)
  *	$navItem->isHome     : true/false -- if this nav item represents the home page
- *	$navItem->CID        : collection id of the page this nav item represents
+ *	$navItem->cID        : collection id of the page this nav item represents
  *	$navItem->cObj       : collection object of the page this nav item represents (use this if you need to access page properties and attributes that aren't already available in the $navItem object)
  */
 
 
-/** NOTE: For extra functionality, you can add the following page attributes to your site (via Dashboard "Page Attributes")
+/** For extra functionality, you can add the following page attributes to your site (via Dashboard "Page Attributes")
  *
  * 1) Handle: replace_link_with_first_in_nav
  *    Type: Checkbox
@@ -36,13 +36,13 @@
  *    Type: Checkbox
  *    Functionality: If a page has this checked, all of that pages children (sub-pages) will be excluded from the nav menu (but the page itself will be included).
  *
- * 3) Handle: nav_item_class
- *    Type: Text
- *    Functionality: Whatever is entered into this textbox will be outputted as an additional CSS class for that page's nav item.
- *
- * 4) Handle: disable_nav_link
+ * 3) Handle: disable_link_in_nav
  *    Type: Checkbox
  *    Functionality: If a page has this checked, it will appear in the nav menu but will not be "clickable" (will not link to any page).
+ *
+ * 4) Handle: nav_item_class
+ *    Type: Text
+ *    Functionality: Whatever is entered into this textbox will be outputted as an additional CSS class for that page's nav item (NOTE: you must un-comment the "$ni->attrClass" code block in the CSS section below for this to work).
  */
 
 
@@ -97,7 +97,7 @@ foreach ($navItems as $ni) {
 
 	/*
 	//unique class for every single menu item
-	$classes[] = 'nav-item-' . $ni->CID;
+	$classes[] = 'nav-item-' . $ni->cID;
 	*/
 
 	//Put all classes together into one space-separated string
