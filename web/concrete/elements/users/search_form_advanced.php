@@ -51,6 +51,7 @@ foreach($searchFieldAttributes as $ak) {
 		</div>
 				
 		<? 
+		$pk = PermissionKey::getByHandle('access_user_search');
 		Loader::model('search/group');
 		$gl = new GroupSearch();
 		$gl->setItemsPerPage(-1);
@@ -61,9 +62,12 @@ foreach($searchFieldAttributes as $ak) {
 			<?=$form->label('gID', t('Group(s)'))?>
 			<div class="input">
 				<select multiple name="gID[]" class="chosen-select" style="width: 140px">
-					<? foreach($g1 as $g) { ?>
+					<? foreach($g1 as $g) {
+						if ($pk->validate($g['gID'])) { ?>
 						<option value="<?=$g['gID']?>"  <? if (is_array($_REQUEST['gID']) && in_array($g['gID'], $_REQUEST['gID'])) { ?> selected="selected" <? } ?>><?=$g['gName']?></option>
-					<? } ?>
+					<? 
+						}
+					} ?>
 				</select>
 			</div>
 		</div>
