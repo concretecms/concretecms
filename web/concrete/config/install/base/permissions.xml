@@ -81,20 +81,52 @@
                 <group name="Administrators"/>
             </access>
         </permissionkey>
+        
+        <permissionkey handle="edit_user_properties" name="Edit User Details" package="" category="user">
+            <access>
+                <group name="Administrators"/>
+            </access>
+		</permissionkey>
+
+        <permissionkey handle="view_user_properties" name="View User Details" package="" category="user">
+            <access>
+                <group name="Administrators"/>
+            </access>
+		</permissionkey>
+
+        <permissionkey handle="activate_user" name="Activate/Deactivate User" package="" category="user">
+            <access>
+                <group name="Administrators"/>
+            </access>
+		</permissionkey>
+
+        <permissionkey handle="sudo" name="Sign in as User" package="" category="user">
+        </permissionkey>
+        
+        
+        <permissionkey handle="delete_user" name="Delete User" package="" category="user">
+            <access>
+                <group name="Administrators"/>
+            </access>
+		</permissionkey>
+
         <permissionkey handle="access_group_search" name="Access Group Search" description="" package="" category="user">
             <access>
                 <group name="Administrators"/>
             </access>
         </permissionkey>
-        
-        <permissionkey handle="sudo" name="Sign in as User" package="" category="user">
-        </permissionkey>
-        
-        <permissionkey handle="delete_user" name="Delete Users" package="" category="user">
+
+        <permissionkey handle="edit_groups" name="Edit Groups" description="" package="" category="user">
             <access>
                 <group name="Administrators"/>
             </access>
-		</permissionkey>
+        </permissionkey>
+
+        <permissionkey handle="assign_user_groups" name="Assign Groups to User" description="" package="" category="user">
+            <access>
+                <group name="Administrators"/>
+            </access>
+        </permissionkey>
 
         <permissionkey handle="backup" name="Perform Backups" package="" category="admin">
             <access>

@@ -162,10 +162,35 @@ class DashboardUsersSearchController extends Controller {
 			$userList->setItemsPerPage($_REQUEST['numResults']);
 		}
 		
+		$pk = PermissionKey::getByHandle('access_user_search');
+		$asl = $pk->getMyAssignment();
+
+		$p = new Permissions();
+
+		$filterGIDs = array();
+		if ($asl->getGroupsAllowedPermission() == 'C') { 
+			$userList->filter('u.uID', USER_SUPER_ID, '<>');
+			$userList->addToQuery("left join UserGroups ugRequired on ugRequired.uID = u.uID ");	
+			if (in_array(REGISTERED_GROUP_ID, $asl->getGroupsAllowedArray())) {
+				$userList->filter(false, '(ugRequired.gID in (' . implode(',', $asl->getGroupsAllowedArray()) . ') or ugRequired.gID is null)');
+			} else {
+				$userList->filter('ugRequired.gID', $asl->getGroupsAllowedArray(), 'in');		
+			}
+		}
+		
 		if (isset($_REQUEST['gID']) && is_array($_REQUEST['gID'])) {
 			foreach($_REQUEST['gID'] as $gID) {
-				$userList->filterByGroupID($gID);
+				$g = Group::getByID($gID);
+				if (is_object($g)) {
+					if ($pk->validate($g) && (!in_array($g->getGroupID(), $filterGIDs))) {
+						$filterGIDs[] = $g->getGroupID();
+					}
+				}
 			}
+		}
+		
+		foreach($filterGIDs as $gID) {
+			$userList->filterByGroupID($gID);
 		}
 		if (is_array($_REQUEST['selectedSearchField'])) {
 			foreach($_REQUEST['selectedSearchField'] as $i => $item) {
