@@ -98,7 +98,9 @@ class SystemCaptchaLibrary extends Object {
 			} else if (file_exists($dpc)) {
 				return true;
 			}
-		}
+		} else {
+            		return file_exists(DIR_FILES_ELEMENTS_CORE . '/' . $path);
+       		}
 		
 		return false;
 	}
