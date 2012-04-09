@@ -60,7 +60,7 @@ ccm_editorSitemapOverlay = function() {
     
     ccm_editorSelectSitemapNode = function(cID, cName) {
 		var mceEd = tinyMCE.activeEditor;	
-		var url = CCM_BASE_URL + CCM_REL + '/' + CCM_DISPATCHER_FILENAME + '?cID=' + cID;
+		var url = CCM_BASE_URL + CCM_REL + CCM_DISPATCHER_FILENAME + '?cID=' + cID;
 		
 		mceEd.selection.moveToBookmark(bm);
 		var selectedText = mceEd.selection.getContent();
@@ -73,7 +73,7 @@ ccm_editorSitemapOverlay = function() {
 				'class' : null
 			});
 		} else {
-			var selectedText = '<a href="' + CCM_BASE_URL + CCM_REL + '/' + CCM_DISPATCHER_FILENAME + '?cID=' + cID + '" title="' + cName + '">' + cName + '<\/a>';
+			var selectedText = '<a href="' + CCM_BASE_URL + CCM_REL + CCM_DISPATCHER_FILENAME + '?cID=' + cID + '" title="' + cName + '">' + cName + '<\/a>';
 			tinyMCE.execCommand('mceInsertRawHTML', false, selectedText, true); 
 		}
 		
