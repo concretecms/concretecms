@@ -10,7 +10,7 @@
 </head>
 <body>
 
-<div id="ccm-logo"><img src="<?=ASSETS_URL_IMAGES?>/logo_menu.png" width="49" height="49" alt="Concrete CMS" /></div>
+<div id="ccm-logo"><?=Loader::helper('concrete/interface')->getToolbarLogoSRC()?></div>
 
 <div id="ccm-theme-wrapper" class="ccm-ui">
 <?				Loader::element('error_fatal', array('innerContent' => $innerContent, 

@@ -21,7 +21,7 @@ if (is_object($c)) {
 <body>
 <div class="ccm-ui">
 
-<div id="ccm-logo"><img src="<?=ASSETS_URL_IMAGES?>/logo_menu.png" width="49" height="49" alt="Concrete CMS" /></div>
+<div id="ccm-logo"><?=Loader::helper('concrete/interface')->getToolbarLogoSRC()?></div>
 
 
 
