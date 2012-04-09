@@ -161,7 +161,9 @@ $(function() {
 			if (ccm_uploadedFiles.length > 0) {
 				queueComplete();
 				jQuery.fn.dialog.closeTop();
-				ccm_filesUploadedDialog('<?=$searchInstance?>'); 
+				setTimeout(function() { 
+					ccm_filesUploadedDialog('<?=$searchInstance?>'); 
+				}, 100);
 			}
 		}
 	});

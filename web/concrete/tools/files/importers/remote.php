@@ -146,13 +146,16 @@ if(count($errors)) {
 	window.parent.ccmAlert.notice("<?=t('Upload Error')?>", "<?=str_replace("\n", '', nl2br(implode('\n', $errors)))?>");
 	window.parent.ccm_alResetSingle();
 <? } else { ?>
-		window.parent.jQuery.fn.dialog.closeTop();
 		highlight = new Array();
 	<? 	foreach ($import_responses as $r) { ?>
 			highlight.push(<?=$r->getFileID()?>);
 			window.parent.ccm_uploadedFiles.push(<?=intval($r->getFileID())?>);
 	<?	} ?>		
-		window.parent.ccm_filesUploadedDialog('<?=$searchInstance?>');	
+		window.parent.jQuery.fn.dialog.closeTop();
+		setTimeout(function() { 
+			window.parent.ccm_filesUploadedDialog('<?=$searchInstance?>');	
+		}, 100);
+		
 <? } ?>
 		</script>
 	</head>
