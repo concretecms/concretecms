@@ -6,6 +6,7 @@ class SearchBlockController extends BlockController {
 	protected $btTable = 'btSearch';
 	protected $btInterfaceWidth = "400";
 	protected $btInterfaceHeight = "240";
+	protected $btWrapperClass = 'ccm-ui';
 
 	public $title = "";
 	public $buttonText = ">";
