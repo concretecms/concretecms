@@ -172,7 +172,7 @@
         <page name="Themes" path="/dashboard/pages/themes" filename="/dashboard/pages/themes/view.php" pagetype="" description="Reskin your site." package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
-					<value>new theme, installed theme, active theme, change theme, template, css</value>
+					<value>new theme, theme, active theme, change theme, template, css</value>
 				</attributekey>
 			</attributes>
         </page>
@@ -253,7 +253,7 @@
         <page name="Add Functionality" path="/dashboard/extend/install" filename="/dashboard/extend/install.php" pagetype="" description="Install add-ons &amp; themes." package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
-					<value>add-on, addon, add on, package,applications, ecommerce, discussions, forums, themes, templates, blocks</value>
+					<value>add-on, addon, ecommerce, install, discussions, forums, themes, templates, blocks</value>
 				</attributekey>
 			</attributes>
         </page>
@@ -274,7 +274,7 @@
         <page name="Get More Themes" path="/dashboard/extend/themes" filename="/dashboard/extend/themes.php" pagetype="" description="Download themes from concrete5.org." package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
-					<value>buy theme, new theme, install theme, marketplace, template</value>
+					<value>buy theme, new theme, marketplace, template</value>
 				</attributekey>
 			</attributes>
         </page>
