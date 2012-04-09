@@ -21,8 +21,23 @@ table#searchBlockSetup .note{ font-size:10px; color:#999999; font-weight:normal 
 		<th><?=t('Search Within Path')?>:</th>
 		<td>
 			<?
-			$searchWithinOther=($searchObj->baseSearchPath!=$c->getCollectionPath() && $searchObj->baseSearchPath!='' && strlen($searchObj->baseSearchPath)>0)?true:false;
-			$alternatPagePath=($searchObj->pagePath!=$c->getCollectionPath() && $searchObj->pagePath!='' && strlen($searchObj->pagePath)>0)?true:false;
+				$searchWithinOther=($searchObj->baseSearchPath!=$c->getCollectionPath() && $searchObj->baseSearchPath!='' && strlen($searchObj->baseSearchPath)>0)?true:false;
+				
+				/**
+				 * Post to another page, get page object.
+				 */
+				$basePostPage = Null;
+				if (isset($searchObj->postTo_cID) && intval($searchObj->postTo_cID) > 0) {
+					$basePostPage = Page::getById($searchObj->postTo_cID);
+				} else if ($searchObj->pagePath != $c->getCollectionPath() && strlen($searchObj->pagePath)) {
+					$basePostPage = Page::getByPath($searchObj->pagePath);
+				}
+				/**
+				 * Verify object.
+				 */
+				if (is_object($basePostPage) && $basePostPage->isError()) {
+					$basePostPage = NULL;
+				}
 			?>
 			<div>
 				<input type="radio" name="baseSearchPath" id="baseSearchPathEverywhere" value="" <?=($searchObj->baseSearchPath=='' || !$searchObj->baseSearchPath)?'checked':''?> onchange="searchBlock.pathSelector(this)" />
@@ -30,7 +45,7 @@ table#searchBlockSetup .note{ font-size:10px; color:#999999; font-weight:normal 
 			</div>
 
 			<div>
-				<input type="radio" name="baseSearchPath" id="baseSearchPathThis" value="<?=$c->getCollectionPath()?>" <?=( $searchObj->baseSearchPath==$c->getCollectionPath() )?'checked':''?> onchange="searchBlock.pathSelector(this)" >
+				<input type="radio" name="baseSearchPath" id="baseSearchPathThis" value="<?=$c->getCollectionPath()?>" <?=( $searchObj->baseSearchPath != '' && $searchObj->baseSearchPath==$c->getCollectionPath() )?'checked':''?> onchange="searchBlock.pathSelector(this)" >
 				<?=t('beneath this page')?>
 			</div>
 
@@ -59,20 +74,15 @@ table#searchBlockSetup .note{ font-size:10px; color:#999999; font-weight:normal 
 		<th><?=t('Results Page')?>:</th>
 		<td>
 			<div>
-				<input id="ccm-searchBlock-externalTarget" name="externalTarget" type="checkbox" value="1" <?=(strlen($searchObj->resultsURL) || $alternatPagePath)?'checked':''?> />
+				<input id="ccm-searchBlock-externalTarget" name="externalTarget" type="checkbox" value="1" <?=(strlen($searchObj->resultsURL) || $basePostPage !== NULL)?'checked':''?> />
 				<?=t('Post to Another Page Elsewhere')?>
 			</div>
-			<div id="ccm-searchBlock-resultsURL-wrap" style=" <?=(strlen($searchObj->resultsURL) || $alternatPagePath)?'':'display:none'?>" >
+			<div id="ccm-searchBlock-resultsURL-wrap" style=" <?=(strlen($searchObj->resultsURL) || $basePostPage !== NULL)?'':'display:none'?>" >
 				<?
-				if ($alternatPagePath) {
-					$cpo = Page::getByPath($pagePath);
-					if (is_object($cpo)) {
-						print $form->selectPage('pagePath', $cpo->getCollectionID());
-					} else {
-						print $form->selectPage('pagePath');
-					}
+				if ($basePostPage !== NULL) {
+					print $form->selectPage('postTo_cID', $basePostPage->getCollectionID());
 				} else {
-					print $form->selectPage('pagePath');
+					print $form->selectPage('postTo_cID');
 				}
 				?>
 				<?=t('OR Path')?>:
