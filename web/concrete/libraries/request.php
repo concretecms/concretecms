@@ -48,18 +48,22 @@ class Request {
 		switch ( $var ) {
 
 			case 'PATH_INFO':
-			// DIR_REL not in path; do nothing.
-			break;
-
+				// DIR_REL not in path; do nothing.
+				break;
+			
+			case 'REQUEST_URI':
+				$path = str_replace($_SERVER['QUERY_STRING'], '', $path);
+				$path = trim($path, '?');
 			default:
-			// if the path starts off with dir_rel, we remove it:
-			if (DIR_REL != '') {
-				$dr = trim(DIR_REL, '/');
-				$path = trim($path, '/');
-				if (strpos($path, $dr) === 0) {
-					$path = substr($path, strlen($dr));	
+				// if the path starts off with dir_rel, we remove it:
+				if (DIR_REL != '') {
+					$dr = trim(DIR_REL, '/');
+					$path = trim($path, '/');
+					if (strpos($path, $dr) === 0) {
+						$path = substr($path, strlen($dr));	
+					}
 				}
-			}
+				break;
 		}
 
 		$path = trim($path, '/');
@@ -92,19 +96,19 @@ class Request {
 				$path = Request::parsePathFromRequest(SERVER_PATH_VARIABLE);
 			}
 			if (!$path) {
-				$path = Request::parsePathFromRequest('ORIG_PATH_INFO');
-			}
-			if (!$path) {
 				$path = Request::parsePathFromRequest('PATH_INFO');
-			}/*
-			if (!$path) {
-				$path = Request::parsePathFromRequest('REQUEST_URI');
-			}*/
-			if (!$path) {
-				$path = Request::parsePathFromRequest('SCRIPT_NAME');
 			}
 			if (!$path) {
 				$path = Request::parsePathFromRequest('REDIRECT_URL');
+			}
+			if (!$path) {
+				$path = Request::parsePathFromRequest('REQUEST_URI');
+			}
+			if (!$path) {
+				$path = Request::parsePathFromRequest('ORIG_PATH_INFO');
+			}
+			if (!$path) {
+				$path = Request::parsePathFromRequest('SCRIPT_NAME');
 			}
 			$req = new Request($path);
 		}
