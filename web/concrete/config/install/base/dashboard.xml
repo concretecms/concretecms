@@ -345,7 +345,7 @@
         <page name="Pretty URLs" path="/dashboard/system/seo/urls" filename="/dashboard/system/seo/urls.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
-					<value>vanity,pretty url, clean url, seo</value>
+					<value>vanity, pretty url, seo</value>
 				</attributekey>
 			</attributes>
         </page>
