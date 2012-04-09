@@ -30,7 +30,7 @@ ccm_editorSetupFilePicker = function() {
 		var mceEd = tinyMCE.activeEditor;
 		mceEd.selection.moveToBookmark(bm); // reset selection to the bookmark (ie looses it)
 		var selectedText = mceEd.selection.getContent();
-		
+
 		if(selectedText != '') { // make a link, let mce deal with the text of the link..
 			mceEd.execCommand('mceInsertLink', false, {
 				href : obj.filePath,
@@ -47,6 +47,10 @@ ccm_editorSetupFilePicker = function() {
 }
 
 ccm_editorSitemapOverlay = function() {
+
+	tinyMCE.activeEditor.focus();
+	var bm = tinyMCE.activeEditor.selection.getBookmark();
+
     $.fn.dialog.open({
         title: ccmi18n_sitemap.choosePage,
         href: CCM_TOOLS_PATH + '/sitemap_overlay.php?sitemap_mode=select_page&callback=ccm_editorSelectSitemapNode',
@@ -55,15 +59,13 @@ ccm_editorSitemapOverlay = function() {
         height: '400'
     });
 
-	tinyMCE.activeEditor.focus();
-	var bm = tinyMCE.activeEditor.selection.getBookmark();
     
     ccm_editorSelectSitemapNode = function(cID, cName) {
 		var mceEd = tinyMCE.activeEditor;	
-		var url = CCM_BASE_URL + CCM_REL + CCM_DISPATCHER_FILENAME + '?cID=' + cID;
-		
 		mceEd.selection.moveToBookmark(bm);
 		var selectedText = mceEd.selection.getContent();
+
+		var url = CCM_BASE_URL + CCM_REL + CCM_DISPATCHER_FILENAME + '?cID=' + cID;
 		
 		if (selectedText != '') {		
 			mceEd.execCommand('mceInsertLink', false, {
