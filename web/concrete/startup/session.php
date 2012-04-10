@@ -15,7 +15,10 @@ session_set_cookie_params(
 	(defined('SESSION_COOKIE_PARAM_HTTPONLY')?SESSION_COOKIE_PARAM_HTTPONLY:false)
 	);
 	
-ini_set('session.save_path', DIR_SESSIONS);
+if (ini_get('session.save_handler') == 'files') {
+     ini_set('session.save_path', DIR_SESSIONS);
+}
+
 ini_set('session.gc_maxlifetime', SESSION_MAX_LIFETIME);
 
 //if we've set the _postSID variable, we populate session_id using it
