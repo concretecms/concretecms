@@ -31,10 +31,10 @@ class SearchBlockController extends BlockController {
 		$exception = array();
 		$errors = Loader::helper('validation/error');
 		if ($post['title'] === false || $post['title'] == '') {
-			$errors->add("Please enter your Search Title.");
+			$errors->add(t("Please enter your Search Title."));
 		}
 		if ($post['buttonText'] === false || $post['buttonText'] == '') {
-			$errors->add("Please enter your Submit Button Text.");
+			$errors->add(t("Please enter your Submit Button Text."));
 		}
 		
 		return $errors;
