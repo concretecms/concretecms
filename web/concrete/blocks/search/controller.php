@@ -6,12 +6,13 @@ class SearchBlockController extends BlockController {
 	protected $btTable = 'btSearch';
 	protected $btInterfaceWidth = "400";
 	protected $btInterfaceHeight = "240";
+	protected $btWrapperClass = 'ccm-ui';
 
 	public $title = "";
 	public $buttonText = ">";
 	public $baseSearchPath = "";
 	public $resultsURL = "";
-	public $pagePath = "";
+	public $postTo_cID = "";
 
 	protected $hColor = '#EFE795';
 
@@ -94,26 +95,18 @@ class SearchBlockController extends BlockController {
 		$this->set('title', $this->title);
 		$this->set('buttonText', $this->buttonText);
 		$this->set('baseSearchPath', $this->baseSearchPath);
-		$this->set('pagePath', $this->pagePath);
+		$this->set('postTo_cID', $this->postTo_cID);
 
-		//auto target is the form action that is used if none is explicity set by the user
-		$autoTarget= $c->getCollectionPath();
-		/*
-		 * This code is weird. I don't know why it's here or what it does
-
-		if( is_array($_REQUEST['search_paths']) ){
-			foreach($_REQUEST['search_paths'] as $search_path){
-				$autoTarget=str_replace('search_paths[]='.$search_path,'',$autoTarget);
-				$autoTarget=str_replace('search_paths%5B%5D='.$search_path,'',$autoTarget);
-			}
+		$resultsURL = $c->getCollectionPath();
+		
+		if ($this->resultsURL != '') {
+			$resultsURL = $this->resultsURL;
+		} else if ($this->postTo_cID != '') {
+			$resultsPage = Page::getById($this->postTo_cID);
+			$resultsURL = $resultsPage->cPath;
 		}
-		$autoTarget=str_replace('page='.$_REQUEST['page'],'',$autoTarget);
-		$autoTarget=str_replace('submit='.$_REQUEST['submit'],'',$autoTarget);
-		$autoTarget=str_replace(array('&&&&','&&&','&&'),'',$autoTarget);
-		*/
 
-		$resultTargetURL = ($this->resultsURL != '') ? $this->resultsURL : ($this->pagePath != '' ? $this->pagePath : $autoTarget);
-		$this->set('resultTargetURL', $resultTargetURL);
+		$this->set('resultTargetURL', $resultsURL);
 
 		//run query if display results elsewhere not set, or the cID of this page is set
 		if( !empty($_REQUEST['query']) || isset($_REQUEST['akID']) || isset($_REQUEST['month']))  {
@@ -133,10 +126,10 @@ class SearchBlockController extends BlockController {
 		if( trim($args['baseSearchPath'])=='/' || strlen(trim($args['baseSearchPath']))==0 )
 			$args['baseSearchPath']='';
 
-		if( intval($data['pagePath'])>0 ){
-			$pagePath = Page::getByID( intval($data['pagePath']) );
-			if( !$pagePath ) $args['pagePath']='';
-			else $args['pagePath'] = $pagePath->getCollectionPath();
+		if( intval($data['postTo_cID'])>0 ){
+			$args['postTo_cID'] = intval($data['postTo_cID']);
+		} else {
+			$args['postTo_cID'] = '';
 		}
 
 		$args['resultsURL'] = ( $data['externalTarget']==1 && strlen($data['resultsURL'])>0 ) ? trim($data['resultsURL']) : '';
