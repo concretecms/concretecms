@@ -11,7 +11,7 @@
 		</field>
 		<field name="baseSearchPath" type="C" size="255">
 		</field>
-		<field name="pagePath" type="C" size="255">
+		<field name="postTo_cID" type="C" size="255">
 		</field>
 		<field name="resultsURL" type="C" size="255">
 		</field>
