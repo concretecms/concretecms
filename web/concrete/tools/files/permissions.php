@@ -70,6 +70,8 @@ if ($_POST['task'] == 'set_advanced_permissions') {
 	<li><a href="javascript:void(0)" id="ccm-file-storage"><?=t('Storage Location')?></a></li>
 </ul>
 
+<div class="clearfix"></div>
+
 <? if (PERMISSIONS_MODEL != 'simple') { ?>
 
 <div id="ccm-file-permissions-advanced-tab">
