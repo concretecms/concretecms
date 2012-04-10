@@ -45,15 +45,20 @@ if (is_object($basePostPage) && $basePostPage->isError()) {
 		<div class='input'>
 			<ul class='inputs-list'>
 				<li>
+					<label>
 					<input type="radio" name="baseSearchPath" id="baseSearchPathEverywhere" value="" <?=($searchObj->baseSearchPath=='' || !$searchObj->baseSearchPath)?'checked':''?> onchange="searchBlock.pathSelector(this)" />
 					<?=t('everywhere')?>
+					</label>
 				</li>
 
 				<li>
-					<input type="radio" name="baseSearchPath" id="baseSearchPathThis" value="<?=$c->getCollectionPath()?>" <?=( $searchObj->baseSearchPath != '' && $searchObj->baseSearchPath==$c->getCollectionPath() )?'checked':''?> onchange="searchBlock.pathSelector(this)" >
-					<?=t('beneath this page')?>
+					<label>
+						<input type="radio" name="baseSearchPath" id="baseSearchPathThis" value="<?=$c->getCollectionPath()?>" <?=( $searchObj->baseSearchPath != '' && $searchObj->baseSearchPath==$c->getCollectionPath() )?'checked':''?> onchange="searchBlock.pathSelector(this)" >
+						<?=t('beneath this page')?>
+					</label>
 				</li>
 				<li>
+					<label>
 					<input type="radio" name="baseSearchPath" id="baseSearchPathOther" value="OTHER" onchange="searchBlock.pathSelector(this)" <?=($searchWithinOther)?'checked':''?>>
 					<?=t('beneath another page')?>
 					<div id="basePathSelector" style="display:<?=($searchWithinOther)?'block':'none'?>" >
@@ -71,6 +76,7 @@ if (is_object($basePostPage) && $basePostPage->isError()) {
 						}
 						?>
 					</div>
+					</label>
 				</li>
 			</ul>
 		</div>
@@ -81,8 +87,10 @@ if (is_object($basePostPage) && $basePostPage->isError()) {
 		<div class='input'>
 			<ul class='inputs-list'>
 				<li>
-					<input id="ccm-searchBlock-externalTarget" name="externalTarget" type="checkbox" value="1" <?=(strlen($searchObj->resultsURL) || $basePostPage !== NULL)?'checked':''?> />
-					<?=t('Post to Another Page Elsewhere')?>
+					<label>
+						<input id="ccm-searchBlock-externalTarget" name="externalTarget" type="checkbox" value="1" <?=(strlen($searchObj->resultsURL) || $basePostPage !== NULL)?'checked':''?> />
+						<?=t('Post to Another Page Elsewhere')?>
+					<label>
 				</li>
 				<li id="ccm-searchBlock-resultsURL-wrap" style=" <?=(strlen($searchObj->resultsURL) || $basePostPage !== NULL)?'':'display:none'?>" >
 					<?
