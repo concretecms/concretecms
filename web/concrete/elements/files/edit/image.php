@@ -110,8 +110,8 @@ if (!$fp->canWrite()) {
             }
         });
         <?
-        $selectorStartWidth = 200;
-        $selectorStartHeight = 150;
+        $selectorStartWidth = $f->getAttribute('width');
+        $selectorStartHeight = $f->getAttribute('height');
         if ($_REQUEST['maxWidth'] && ($_REQUEST['maxWidth'] < $selectorStartWidth)) {
         	$selectorStartWidth = $_REQUEST['maxWidth'];
         }
