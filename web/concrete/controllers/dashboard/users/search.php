@@ -243,20 +243,24 @@ class DashboardUsersSearchController extends Controller {
 			if (!$tp->canSudo()) { 
 				throw new Exception(t('You do not have permission to perform this action.'));
 			}
-	
-			$ui = UserInfo::getByID($uID); 
 			
+			$ui = UserInfo::getByID($uID); 
 			if(!($ui instanceof UserInfo)) {
 				throw new Exception(t('Invalid user ID.'));
 			}
-	
-			$valt = Loader::helper('validation/token');
-			if (!$valt->validate('sudo', $token)) {
-				throw new Exception($valt->getErrorMessage());
-			}
+
+			$pk = PermissionKey::getByHandle('access_user_search');
+			if ($pk->validate($ui)) { 
+		
+				$valt = Loader::helper('validation/token');
+				if (!$valt->validate('sudo', $token)) {
+					throw new Exception($valt->getErrorMessage());
+				}
+				
+				User::loginByUserID($uID);
+				$this->redirect('/');
 			
-			User::loginByUserID($uID);
-			$this->redirect('/');
+			}
 			
 		} catch(Exception $e) {
 			$this->set('error', $e);
