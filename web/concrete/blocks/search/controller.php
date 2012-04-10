@@ -26,7 +26,20 @@ class SearchBlockController extends BlockController {
 		$this->hText = @preg_replace( "#$this->hHighlight#ui", '<span style="background-color:'. $this->hColor .';">$0</span>', $this->hText );
 		return $this->hText;
 	}
-
+	
+	public function validate($post) {
+		$exception = array();
+		$errors = Loader::helper('validation/error');
+		if ($post['title'] === false || $post['title'] == '') {
+			$errors->add("Please enter your Search Title.");
+		}
+		if ($post['buttonText'] === false || $post['buttonText'] == '') {
+			$errors->add("Please enter your Submit Button Text.");
+		}
+		
+		return $errors;
+	}
+	
 	public function highlightedExtendedMarkup($fulltext, $highlight) {
 		$text = @preg_replace("#\n|\r#", ' ', $fulltext);
 
