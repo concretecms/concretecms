@@ -13,6 +13,8 @@ $dh = Loader::helper('date');
 $form = Loader::helper('form');
 $ih = Loader::helper('concrete/interface');
 $av = Loader::helper('concrete/avatar'); 
+$pk = PermissionKey::getByHandle('view_user_attributes');
+
 
 $searchInstance = (isset($searchInstance)?$searchInstance:'user');
 
@@ -300,8 +302,10 @@ if (is_object($uo)) {
             
 				<?            
                 $attribs = UserAttributeKey::getEditableList();
-                foreach($attribs as $ak) { 
-                    printAttributeRow($ak, $uo);
+                foreach($attribs as $ak) {
+					if ($pk->validate($ak)) { 
+                    	printAttributeRow($ak, $uo);
+                	}
                 }
 				?>
                 
@@ -419,7 +423,6 @@ if (is_object($uo)) {
 		<h3><?=t('User Attributes')?></h3>
 
 		<? 
-		$pk = PermissionKey::getByHandle('view_user_attributes');
 		for ($i = 0; $i < count($attribs); $i++) { 			
 			$uk = $attribs[$i]; 
 			if ($pk->validate($uk)) { 

@@ -540,10 +540,14 @@ class DatabaseItemListColumn {
 	}
 }
 
-class DatabaseItemListAttributeKeyColumn extends DatabaseItemListColumn{
+class DatabaseItemListAttributeKeyColumn extends DatabaseItemListColumn {
 
 	protected $attributeKey = false;
 	
+	public function getAttributeKey() {
+		return $this->attributeKey;
+	}
+
 	public function __construct($attributeKey, $isSortable = true, $defaultSort = 'asc') {
 		$this->attributeKey = $attributeKey;
 		parent::__construct('ak_' . $attributeKey->getAttributeKeyHandle(), $attributeKey->getAttributeKeyName(), false, $isSortable, $defaultSort);
@@ -569,7 +573,8 @@ class DatabaseItemListColumnSet {
 	}
 	public function getSortableColumns() {
 		$tmp = array();
-		foreach($this->columns as $col) {
+		$columns = $this->getColumns();
+		foreach($columns as $col) {
 			if ($col->isColumnSortable()) {
 				$tmp[] = $col;
 			}
