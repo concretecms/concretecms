@@ -419,8 +419,10 @@ if (is_object($uo)) {
 		<h3><?=t('User Attributes')?></h3>
 
 		<? 
+		$pk = PermissionKey::getByHandle('view_user_attributes');
 		for ($i = 0; $i < count($attribs); $i++) { 			
 			$uk = $attribs[$i]; 
+			if ($pk->validate($uk)) { 
 			
 			?>
 			
@@ -431,7 +433,11 @@ if (is_object($uo)) {
 		</p></div>
 		</div>
 
-		<? } ?>
+		<? } 
+		
+		}
+		
+		?>
 		
 		<? }  ?>
 		

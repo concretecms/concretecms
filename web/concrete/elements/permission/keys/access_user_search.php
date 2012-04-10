@@ -23,7 +23,7 @@ foreach($gIDs as $gID) {
 
 <? if (count($included) > 0) { ?>
 
-<h3><?=t('Who can add what?')?></h3>
+<h3><?=t('Who can search what?')?></h3>
 
 <? foreach($included as $assignment) {
 	$entity = $assignment->getAccessEntityObject(); 
@@ -49,7 +49,7 @@ foreach($gIDs as $gID) {
 
 <? if (count($excluded) > 0) { ?>
 
-<h3><?=t('Who can\'t add what?')?></h3>
+<h3><?=t('Who can\'t search what?')?></h3>
 
 <? foreach($excluded as $assignment) {
 	$entity = $assignment->getAccessEntityObject(); 

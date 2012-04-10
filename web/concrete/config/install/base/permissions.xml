@@ -88,7 +88,7 @@
             </access>
 		</permissionkey>
 
-        <permissionkey handle="view_user_properties" name="View User Details" package="" category="user">
+        <permissionkey handle="view_user_attributes" name="View User Attributes" package="" category="user">
             <access>
                 <group name="Administrators"/>
             </access>
