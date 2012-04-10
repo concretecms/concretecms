@@ -13,28 +13,28 @@
                 <category handle="file"/>
             </categories>
         </attributetype>
-        <attributetype handle="textarea" package="">
+        <attributetype handle="textarea" name="Text Area" package="">
             <categories>
                 <category handle="collection"/>
                 <category handle="user"/>
                 <category handle="file"/>
             </categories>
         </attributetype>
-        <attributetype handle="boolean" package="">
+        <attributetype handle="boolean" name="Checkbox" package="">
             <categories>
                 <category handle="collection"/>
                 <category handle="user"/>
                 <category handle="file"/>
             </categories>
         </attributetype>
-        <attributetype handle="date_time" package="">
+        <attributetype handle="date_time" name="Date/Time" package="">
             <categories>
                 <category handle="collection"/>
                 <category handle="user"/>
                 <category handle="file"/>
             </categories>
         </attributetype>
-        <attributetype handle="image_file" package="">
+        <attributetype handle="image_file" name="Image/File" package="">
             <categories>
                 <category handle="collection"/>
             </categories>
