@@ -5,6 +5,7 @@ $th = Loader::helper('text');
 
 Loader::model('attribute/categories/user');
 $attribs = UserAttributeKey::getRegistrationList();
+$assignment = PermissionKey::getByHandle('edit_user_properties')->getMyAssignment();
 
 Loader::model("search/group");
 $gl = new GroupSearch();
@@ -87,13 +88,16 @@ $languages = Localization::getAvailableInterfaceLanguages();
 			</thead>
             <tbody class="inputs-list">
             
-			<? foreach($attribs as $ak) { ?>
+			<? foreach($attribs as $ak) { 
+				if (in_array($ak->getAttributeKeyID(), $assignment->getAttributesAllowedArray())) { 
+				?>
                 <tr>
                     <td class="clearfix">
                     	<label><?=$ak->getAttributeKeyName()?> <? if ($ak->isAttributeKeyRequiredOnRegister()) { ?><span class="required">*</span><? } ?></label>
                         <? $ak->render('form', $caValue, false)?>
                     </td>
                 </tr>
+                <? } ?>
             <? } // END Foreach ?>
         
 			</tbody>
