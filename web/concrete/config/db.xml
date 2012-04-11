@@ -1243,6 +1243,61 @@
     </field>
   </table>
 
+  <table name="UserPermissionEditPropertyAssignments">
+    <field name="peID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="uName" type="I" size="1">
+      <UNSIGNED/>
+      <default value="0" />
+    </field>
+    <field name="uEmail" type="I" size="1">
+      <UNSIGNED/>
+      <default value="0" />
+    </field>
+    <field name="uPassword" type="I" size="1">
+      <UNSIGNED/>
+      <default value="0" />
+    </field>
+    <field name="uAvatar" type="I" size="1">
+      <UNSIGNED/>
+      <default value="0" />
+    </field>
+    <field name="uTimezone" type="I" size="1">
+      <UNSIGNED/>
+      <default value="0" />
+    </field>
+    <field name="uDefaultLanguage" type="I" size="1">
+      <UNSIGNED/>
+      <default value="0" />
+    </field>
+
+    <field name="attributePermission" type="C" size="1">
+      <NOTNULL/>
+      <DEFAULT value="1"/>
+    </field>
+  </table>
+  
+  <table name="UserPermissionEditPropertyAttributeAssignmentsCustom">
+    <field name="cID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="peID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="akID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+  </table>
+  
   <table name="UserPermissionViewAttributeAssignments">
     <field name="peID" type="I" size="10">
       <KEY/>

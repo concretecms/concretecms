@@ -440,7 +440,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 					$uTimezone = $data['uTimezone'];
 				}
 				
-				$uDefaultLanguage = null;
+				$ux = $this->getUserObject();
+				$uDefaultLanguage = $ux->getUserDefaultLanguage();				
 				if (isset($data['uDefaultLanguage']) && $data['uDefaultLanguage'] != '') {
 					$uDefaultLanguage = $data['uDefaultLanguage'];
 				}
