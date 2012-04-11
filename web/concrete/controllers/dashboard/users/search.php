@@ -20,7 +20,7 @@ class DashboardUsersSearchController extends Controller {
 		$this->set('users', $users);		
 		$this->set('pagination', $userList->getPagination());	
 		
-		if($_POST['uName'])	{
+		if($_POST['edit'])	{
 			$this->validate_user();
 		}
 		
@@ -41,32 +41,46 @@ class DashboardUsersSearchController extends Controller {
 	
 	
 	
-	public function validate_user(){
-			$vals = Loader::helper('validation/strings');
-			$valt = Loader::helper('validation/token');
-			$valc = Loader::helper('concrete/validation');
+	public function validate_user() {
+		$pke = PermissionKey::getByHandle('edit_user_properties');
+		if (!$pke->validate()) {
+			return false;
+		}
+		
+		$assignment = $pke->getMyAssignment();
+		
+		
+		$vals = Loader::helper('validation/strings');
+		$valt = Loader::helper('validation/token');
+		$valc = Loader::helper('concrete/validation');
 
-			$uo = UserInfo::getByID(intval($_GET['uID']));			
-			
-			$username = trim($_POST['uName']);
-			$username = preg_replace("/\s+/", " ", $username);
-			$_POST['uName'] = $username;
-			
+		$uo = UserInfo::getByID(intval($_GET['uID']));			
+		
+		$username = trim($_POST['uName']);
+		$username = preg_replace("/\s+/", " ", $username);
+		
+		if ($assignment->allowEditPassword()) { 
+
 			$password = $_POST['uPassword'];
 			$passwordConfirm = $_POST['uPasswordConfirm'];
-			
+
 			if ($password) {
 				if ((strlen($password) < USER_PASSWORD_MINIMUM) || (strlen($password) > USER_PASSWORD_MAXIMUM)) {
 					$this->error->add( t('A password must be between %s and %s characters',USER_PASSWORD_MINIMUM,USER_PASSWORD_MAXIMUM));
 				}
 			}
-			
+		}		
+		
+		if ($assignment->allowEditEmail()) { 
 			if (!$vals->email($_POST['uEmail'])) {
 				$this->error->add(t('Invalid email address provided.'));
 			} else if (!$valc->isUniqueEmail($_POST['uEmail']) && $uo->getUserEmail() != $_POST['uEmail']) {
 				$this->error->add(t("The email address '%s' is already in use. Please choose another.",$_POST['uEmail']));
 			}
-			
+		}
+
+		if ($assignment->allowEditUserName()) { 
+			$_POST['uName'] = $username;		
 			if (USER_REGISTRATION_WITH_EMAIL_ADDRESS == false) {
 				if (strlen($username) < USER_USERNAME_MINIMUM) {
 					$this->error->add(t('A username must be at least %s characters long.',USER_USERNAME_MINIMUM));
@@ -75,7 +89,7 @@ class DashboardUsersSearchController extends Controller {
 				if (strlen($username) > USER_USERNAME_MAXIMUM) {
 					$this->error->add(t('A username cannot be more than %s characters long.',USER_USERNAME_MAXIMUM));
 				}
-
+	
 				/*
 				if (strlen($username) >= USER_USERNAME_MINIMUM && !$vals->alphanum($username,USER_USERNAME_ALLOW_SPACES)) {
 					if(USER_USERNAME_ALLOW_SPACES) {
@@ -98,7 +112,9 @@ class DashboardUsersSearchController extends Controller {
 					$this->error->add(t("The username '%s' already exists. Please choose another",$username));
 				}		
 			}
-			
+		}
+
+		if ($assignment->allowEditPassword()) { 
 			if (strlen($password) >= USER_PASSWORD_MINIMUM && !$valc->password($password)) {
 				$this->error->add(t('A password may not contain ", \', >, <, or any spaces.'));
 			}
@@ -108,40 +124,60 @@ class DashboardUsersSearchController extends Controller {
 					$this->error->add(t('The two passwords provided do not match.'));
 				}
 			}
-			
-			if (!$valt->validate('update_account_' . intval($_GET['uID']) )) {
-				$this->error->add($valt->getErrorMessage());
-			}
+		}
 		
-			if (!$this->error->has()) {
-				// do the registration
-				$process = $uo->update($_POST);
-				
-				//$db = Loader::db();
-				if ($process) {
+		if (!$valt->validate('update_account_' . intval($_GET['uID']) )) {
+			$this->error->add($valt->getErrorMessage());
+		}
+	
+		if (!$this->error->has()) {
+			// do the registration
+			$data = array();
+			if ($assignment->allowEditUserName()) { 
+				$data['uName'] = $_POST['uName'];
+			}
+			if ($assignment->allowEditEmail()) { 
+				$data['uEmail'] = $_POST['uEmail'];
+			}
+			if ($assignment->allowEditPassword()) { 
+				$data['uPassword'] = $_POST['uPassword'];
+				$data['uPasswordConfirm'] = $_POST['uPasswordConfirm'];
+			}
+			if ($assignment->allowEditTimezone()) { 
+				$data['uTimezone'] = $_POST['uTimezone'];
+			}
+			if ($assignment->allowEditDefaultLanguage()) { 
+				$data['uDefaultLanguage'] = $_POST['uDefaultLanguage'];
+			}
+			$process = $uo->update($data);
+			
+			//$db = Loader::db();
+			if ($process) {
+				if ($assignment->allowEditAvatar()) {
 					$av = Loader::helper('concrete/avatar'); 
 					if ( is_uploaded_file($_FILES['uAvatar']['tmp_name']) ) {
 						$uHasAvatar = $av->updateUserAvatar($_FILES['uAvatar']['tmp_name'], $uo->getUserID());
 					}
-					
-					$uo->updateGroups($_POST['gID']);
-
-					$message = t("User updated successfully. ");
-					if ($password) {
-						$message .= t("Password changed.");
-					}
-					$editComplete = true;
-					// reload user object
-					$uo = UserInfo::getByID(intval($_GET['uID']));
-					$this->set('message', $message);
-				} else {
-					$db = Loader::db();
-					$this->error->add($db->ErrorMsg());
-					$this->set('error',$this->error);
 				}
-			}else{
+				
+				$uo->updateGroups($_POST['gID']);
+
+				$message = t("User updated successfully. ");
+				if ($password) {
+					$message .= t("Password changed.");
+				}
+				$editComplete = true;
+				// reload user object
+				$uo = UserInfo::getByID(intval($_GET['uID']));
+				$this->set('message', $message);
+			} else {
+				$db = Loader::db();
+				$this->error->add($db->ErrorMsg());
 				$this->set('error',$this->error);
-			}		
+			}
+		}else{
+			$this->set('error',$this->error);
+		}		
 
 	}
 	
@@ -275,7 +311,12 @@ class DashboardUsersSearchController extends Controller {
 			throw new Exception(t('Only the super user may edit this account.'));
 		}
 		
+		$assignment = PermissionKey::getByHandle('edit_user_properties')->getMyAssignment();
 		$akID = $_REQUEST['uakID'];
+		if (!in_array($akID, $assignment->getAttributesAllowedArray())) {
+			throw new Exception(t('You do not have permission to modify this attribute.'));
+		}
+		
 		$ak = UserAttributeKey::get($akID);
 
 		if ($_POST['task'] == 'update_extended_attribute') { 
