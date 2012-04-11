@@ -122,7 +122,7 @@ class AccessUserSearchUserPermissionKey extends UserPermissionKey  {
 				if (in_array(REGISTERED_GROUP_ID, $asl->getGroupsAllowedArray())) {
 					$cnt = $db->GetOne('select count(u.uID) from Users u left join UserGroups ug on u.uID = ug.uID where u.uID = ? and u.uID > ' . USER_SUPER_ID . ' and (gID is null or gID in (' . implode(',', $asl->getGroupsAllowedArray()) . '))', array($obj->getUserID()));
 				} else {
-					$cnt = $db->GetOne('select count(u.uID) from Users u left join UserGroups on u.uID = ug.uID where u.uID = ? and u.uID > ' . USER_SUPER_ID . ' and gID in (' . implode(',', $asl->getGroupsAllowedArray()) . '))', array($obj->getUserID()));
+					$cnt = $db->GetOne('select count(u.uID) from Users u left join UserGroups ug on u.uID = ug.uID where u.uID = ? and u.uID > ' . USER_SUPER_ID . ' and gID in (' . implode(',', $asl->getGroupsAllowedArray()) . ')', array($obj->getUserID()));
 				}
 				return $cnt > 0;
 			} else {
