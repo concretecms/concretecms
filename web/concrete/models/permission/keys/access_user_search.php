@@ -3,21 +3,24 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 class AccessUserSearchUserPermissionKey extends UserPermissionKey  {
 
+	protected $dbTableAssignments = 'UserPermissionUserSearchAssignments';
+	protected $dbTableAssignmentsCustom = 'UserPermissionUserSearchAssignmentsCustom';
+
 	public function savePermissionKey($args) {
 		$db = Loader::db();
-		$db->Execute('delete from UserPermissionUserSearchAssignments');
-		$db->Execute('delete from UserPermissionUserSearchAssignmentsCustom');
+		$db->Execute('delete from ' . $this->dbTableAssignments);
+		$db->Execute('delete from ' . $this->dbTableAssignmentsCustom);
 		if (is_array($args['groupsIncluded'])) { 
 			foreach($args['groupsIncluded'] as $peID => $permission) {
 				$v = array($peID, $permission);
-				$db->Execute('insert into UserPermissionUserSearchAssignments (peID, permission) values (?, ?)', $v);
+				$db->Execute('insert into ' . $this->dbTableAssignments . ' (peID, permission) values (?, ?)', $v);
 			}
 		}
 		
 		if (is_array($args['groupsExcluded'])) { 
 			foreach($args['groupsExcluded'] as $peID => $permission) {
 				$v = array($peID, $permission);
-				$db->Execute('insert into UserPermissionUserSearchAssignments (peID, permission) values (?, ?)', $v);
+				$db->Execute('insert into ' . $this->dbTableAssignments . ' (peID, permission) values (?, ?)', $v);
 			}
 		}
 
@@ -25,7 +28,7 @@ class AccessUserSearchUserPermissionKey extends UserPermissionKey  {
 			foreach($args['gIDInclude'] as $peID => $gIDs) {
 				foreach($gIDs as $gID) { 
 					$v = array($peID, $gID);
-					$db->Execute('insert into UserPermissionUserSearchAssignmentsCustom (peID, gID) values (?, ?)', $v);
+					$db->Execute('insert into ' . $this->dbTableAssignmentsCustom . ' (peID, gID) values (?, ?)', $v);
 				}
 			}
 		}
@@ -34,7 +37,7 @@ class AccessUserSearchUserPermissionKey extends UserPermissionKey  {
 			foreach($args['gIDExclude'] as $peID => $gIDs) {
 				foreach($gIDs as $gID) { 
 					$v = array($peID, $gID);
-					$db->Execute('insert into UserPermissionUserSearchAssignmentsCustom (peID, gID) values (?, ?)', $v);
+					$db->Execute('insert into ' . $this->dbTableAssignmentsCustom . ' (peID, gID) values (?, ?)', $v);
 				}
 			}
 		}
@@ -148,7 +151,7 @@ class AccessUserSearchUserPermissionKey extends UserPermissionKey  {
 			if ($this->permissionObjectToCheck instanceof Page && $l->getAccessType() == PermissionKey::ACCESS_TYPE_INCLUDE) {
 				$permission = 'A';
 			} else { 
-				$permission = $db->GetOne('select permission from UserPermissionUserSearchAssignments where peID = ?', array($pe->getAccessEntityID()));
+				$permission = $db->GetOne('select permission from ' . $this->dbTableAssignments . ' where peID = ?', array($pe->getAccessEntityID()));
 				if ($permission != 'N' && $permission != 'C') {
 					$permission = 'A';
 				}
@@ -156,7 +159,7 @@ class AccessUserSearchUserPermissionKey extends UserPermissionKey  {
 			}
 			$l->setGroupsAllowedPermission($permission);
 			if ($permission == 'C') { 
-				$gIDs = $db->GetCol('select gID from UserPermissionUserSearchAssignmentsCustom where peID = ?', array($pe->getAccessEntityID()));
+				$gIDs = $db->GetCol('select gID from ' . $this->dbTableAssignmentsCustom . ' where peID = ?', array($pe->getAccessEntityID()));
 				$l->setGroupsAllowedArray($gIDs);
 			}
 		}

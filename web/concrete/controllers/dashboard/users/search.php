@@ -160,7 +160,17 @@ class DashboardUsersSearchController extends Controller {
 					}
 				}
 				
-				$uo->updateGroups($_POST['gID']);
+				$gak = PermissionKey::getByHandle('assign_user_groups');
+				$gIDs = array();
+				if (is_array($_POST['gID'])) {
+					foreach($_POST['gID'] as $gID) {
+						if ($gak->validate($gID)) {
+							$gIDs[] = $gID;
+						}
+					}
+				}
+
+				$uo->updateGroups($gIDs);
 
 				$message = t("User updated successfully. ");
 				if ($password) {

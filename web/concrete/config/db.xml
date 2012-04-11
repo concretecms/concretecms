@@ -78,6 +78,31 @@
     </field>
   </table>
 
+  <table name="UserPermissionAssignGroupAssignments">
+    <field name="peID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="permission" type="C" size="1">
+      <NOTNULL/>
+      <DEFAULT value="1"/>
+    </field>
+  </table>
+
+  <table name="UserPermissionAssignGroupAssignmentsCustom">
+    <field name="peID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="gID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+  </table>
+
 
   <table name="AreaPermissionBlockTypeAssignments">
     <field name="cID" type="I" size="10">

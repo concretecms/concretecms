@@ -115,7 +115,13 @@ $languages = Localization::getAvailableInterfaceLanguages();
 				<tr>
 					<td>
                     
-					<? foreach ($gArray as $g) { ?>
+					<? 
+					$gak = PermissionKey::getByHandle('assign_user_groups');
+					foreach ($gArray as $g) { 
+						if ($gak->validate($g['gID'])) {
+
+
+						?>
 						<label>
 							<input type="checkbox" name="gID[]" value="<?=$g['gID']?>" <? 
                             if (is_array($_POST['gID'])) {
@@ -126,7 +132,10 @@ $languages = Localization::getAvailableInterfaceLanguages();
                         ?> />
 							<span><?=$g['gName']?></span>
 						</label>
-                    <? } ?>
+                    <? }
+                    
+                    
+                } ?>
 			
 					<div id="ccm-additional-groups"></div>
 			

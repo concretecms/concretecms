@@ -263,7 +263,7 @@ if (is_object($uo)) {
             	<tr>
                 	<th>
 						<span style="line-height:32px;"><?=t('Groups')?></span>
-                    	<a class="btn small ccm-button-v2-right" id="groupSelector" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/user_group_selector.php?mode=groups" dialog-title="<?=t('Add Groups')?>" dialog-modal="false"><?=t('Add Group')?></a>
+                    	<a class="btn small ccm-button-v2-right" id="groupSelector" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/user_group_selector.php?mode=groups&filter=assign" dialog-title="<?=t('Add Groups')?>" dialog-modal="false"><?=t('Add Group')?></a>
                     </th>
                 </tr>
 			</thead>
