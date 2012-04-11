@@ -15,7 +15,7 @@ class DashboardUsersAddController extends Controller {
 	}
 
 	public function view(){
-	
+			$assignment = PermissionKey::getByHandle('edit_user_properties')->getMyAssignment();
 			$vals = Loader::helper('validation/strings');
 			$valt = Loader::helper('validation/token');
 			$valc = Loader::helper('concrete/validation');
@@ -98,7 +98,9 @@ class DashboardUsersAddController extends Controller {
 						}
 						
 						foreach($aks as $uak) {
-							$uak->saveAttributeForm($uo);				
+							if (in_array($uak->getAttributeKeyID(), $assignment->getAttributesAllowedArray())) { 
+								$uak->saveAttributeForm($uo);
+							}
 						}
 			
 						$uo->updateGroups($_POST['gID']);
