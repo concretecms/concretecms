@@ -102,8 +102,18 @@ class DashboardUsersAddController extends Controller {
 								$uak->saveAttributeForm($uo);
 							}
 						}
-			
-						$uo->updateGroups($_POST['gID']);
+
+						$gak = PermissionKey::getByHandle('assign_user_groups');
+						$gIDs = array();
+						if (is_array($_POST['gID'])) {
+							foreach($_POST['gID'] as $gID) {
+								if ($gak->validate($gID)) {
+									$gIDs[] = $gID;
+								}
+							}
+						}
+		
+						$uo->updateGroups($gIDs);
 						$uID = $uo->getUserID();
 						$this->redirect('/dashboard/users/search?uID=' . $uID . '&user_created=1');
 					} else {
