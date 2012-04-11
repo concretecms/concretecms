@@ -83,21 +83,37 @@ if (intval($_GET['uID'])) {
 			}
 		}
 		
-		if ($_GET['task'] == 'activate') {
-			if( !$valt->validate("user_activate") ){
-				throw new Exception(t('Invalid token.  Unable to activate user.'));
-			}else{		
-				$uo->activate();
-				$uo = UserInfo::getByID(intval($_GET['uID']));
-				$this->controller->redirect('/dashboard/users/search?uID=' . intval($_GET['uID']) . '&activated=1');
+		$tp = new Permissions();
+		if ($tp->canActivateUser()) { 
+			if ($_GET['task'] == 'activate') {
+				if( !$valt->validate("user_activate") ){
+					throw new Exception(t('Invalid token.  Unable to activate user.'));
+				}else{		
+					$uo->activate();
+					$uo = UserInfo::getByID(intval($_GET['uID']));
+					$this->controller->redirect('/dashboard/users/search?uID=' . intval($_GET['uID']) . '&activated=1');
+				}
 			}
-		}
 
-		if ($_GET['task'] == 'validate_email') {
-			$uo->markValidated();
-			$uo = UserInfo::getByID(intval($_GET['uID']));
-			$this->controller->redirect('/dashboard/users/search?uID=' . intval($_GET['uID']) . '&validated=1');
+			if ($_GET['task'] == 'deactivate') {
+				if( !$valt->validate("user_deactivate") ){
+					throw new Exception(t('Invalid token.  Unable to deactivate user.'));
+				}else{
+					$uo->deactivate();
+					$uo = UserInfo::getByID(intval($_GET['uID']));
+					$this->controller->redirect('/dashboard/users/search?uID=' . intval($_GET['uID']) . '&deactivated=1');
+				}
+			}	
+
+
+			if ($_GET['task'] == 'validate_email') {
+				$uo->markValidated();
+				$uo = UserInfo::getByID(intval($_GET['uID']));
+				$this->controller->redirect('/dashboard/users/search?uID=' . intval($_GET['uID']) . '&validated=1');
+			}
+
 		}
+		
 		
 		
 		if ($_GET['task'] == 'remove-avatar' && $assignment->allowEditAvatar()) {
@@ -106,15 +122,6 @@ if (intval($_GET['uID'])) {
 
 		}
 		
-		if ($_GET['task'] == 'deactivate') {
-			if( !$valt->validate("user_deactivate") ){
-				throw new Exception(t('Invalid token.  Unable to deactivate user.'));
-			}else{
-				$uo->deactivate();
-				$uo = UserInfo::getByID(intval($_GET['uID']));
-				$this->controller->redirect('/dashboard/users/search?uID=' . intval($_GET['uID']) . '&deactivated=1');
-			}
-		}	
 	}
 }
 
@@ -343,14 +350,18 @@ if (is_object($uo)) {
 			<? if ($pke->validate()) { ?>
 				<? print $ih->button(t('Edit User'), $this->url('/dashboard/users/search?uID=' . intval($uID) ) . '&task=edit', 'left');?>
 			<? } ?>
+
+			<?
+			$tp = new Permissions();
+			?>
 			
-			<? if (USER_VALIDATE_EMAIL == true) { ?>
+			<? if (USER_VALIDATE_EMAIL == true && $tp->canActivateUser()) { ?>
 				<? if ($uo->isValidated() < 1) { ?>
 				<? print $ih->button(t('Mark Email as Valid'), $this->url('/dashboard/users/search?uID=' . intval($uID) . '&task=validate_email'), 'left');?>
 				<? } ?>
 			<? } ?>
 			
-			<? if ($uo->getUserID() != USER_SUPER_ID) { ?>
+			<? if ($uo->getUserID() != USER_SUPER_ID && $tp->canActivateUser()) { ?>
 				<? if ($uo->isActive()) { ?>
 					<? print $ih->button(t('Deactivate User'), $this->url('/dashboard/users/search?uID=' . intval($uID) . '&task=deactivate&ccm_token='.$valt->generate('user_deactivate')), 'left');?>
 				<? } else { ?>
