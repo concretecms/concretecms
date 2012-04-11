@@ -347,6 +347,16 @@ class DashboardUsersSearchController extends Controller {
 	public function delete($delUserId, $token = null){
 		$u=new User();
 		try {
+
+			$delUI=UserInfo::getByID($delUserId); 
+			
+			if(!($delUI instanceof UserInfo)) {
+				throw new Exception(t('Invalid user ID.'));
+			}
+
+			if (!PermissionKey::getByHandle('access_user_search')->validate($delUI)) { 
+				throw new Exception(t('Access Denied.'));
+			}
 		
 			$tp = new TaskPermission();
 			if (!$tp->canDeleteUser()) { 
@@ -361,11 +371,6 @@ class DashboardUsersSearchController extends Controller {
 				throw new Exception(t('You cannot delete your own user account.'));
 			}
 
-			$delUI=UserInfo::getByID($delUserId); 
-			
-			if(!($delUI instanceof UserInfo)) {
-				throw new Exception(t('Invalid user ID.'));
-			}
 
 			$valt = Loader::helper('validation/token');
 			if (!$valt->validate('delete_account', $token)) {

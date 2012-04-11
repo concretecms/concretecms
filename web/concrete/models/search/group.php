@@ -34,8 +34,8 @@ class GroupSearch extends DatabaseItemList {
 		$gIDs = array('-1');
 		if ($r == 'C') {
 			$gIDs = array_merge($assignment->getGroupsAllowedArray(), $gIDs);
+			$this->filter('gID', $gIDs, 'in');
 		}
-		$this->filter('gID', $gIDs, 'in');
 	}
 	
 	public function updateItemsPerPage( $num ) {

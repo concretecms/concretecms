@@ -69,6 +69,7 @@ if (intval($_GET['uID'])) {
 	
 	$uo = UserInfo::getByID(intval($_GET['uID']));
 	if (is_object($uo)) {
+	
 		if (!PermissionKey::getByHandle('access_user_search')->validate($uo)) { 
 			throw new Exception(t('Access Denied.'));
 		}

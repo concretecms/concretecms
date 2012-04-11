@@ -77,11 +77,12 @@ if ($tp->canAccessGroupSearch()) { ?>
 
 <? if (count($gResults) > 0) { 
 	$gl->displaySummary();
-	
+$gp = new Permissions();
+$canEditGroups = $gp->canEditGroups();
 foreach ($gResults as $g) { ?>
-
+	
 	<div class="ccm-group">
-		<a class="ccm-group-inner" href="<?=$this->url('/dashboard/users/groups?task=edit&gID=' . $g['gID'])?>" style="background-image: url(<?=ASSETS_URL_IMAGES?>/icons/group.png)"><?=t($g['gName'])?></a>
+		<<? if ($canEditGroups) { ?>a<? } else {?>span<? } ?> class="ccm-group-inner" <? if ($canEditGroups) { ?>href="<?=$this->url('/dashboard/users/groups?task=edit&gID=' . $g['gID'])?>"<? } ?> style="background-image: url(<?=ASSETS_URL_IMAGES?>/icons/group.png)"><?=t($g['gName'])?><? if ($canEditGroups) { ?></a><? } else {?></span><? } ?>
 		<? if ($g['gDescription']) { ?>
 			<div class="ccm-group-description"><?=$g['gDescription']?></div>
 		<? } ?>
