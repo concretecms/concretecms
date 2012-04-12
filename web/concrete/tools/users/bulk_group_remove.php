@@ -108,6 +108,7 @@ if (!isset($_REQUEST['reload'])) { ?>
 
 <script type="text/javascript">
 ccm_userBulkGroupRemove = function() { 
+	jQuery.fn.dialog.showLoader();
 	$("#ccm-user-bulk-group-remove").ajaxSubmit(function(resp) {
 		jQuery.fn.dialog.closeTop();
 		jQuery.fn.dialog.hideLoader();

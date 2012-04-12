@@ -73,6 +73,7 @@ if (!isset($_REQUEST['reload'])) { ?>
 
 <script type="text/javascript">
 ccm_userBulkActivate = function() { 
+	jQuery.fn.dialog.showLoader();
 	$("#ccm-user-bulk-delete").ajaxSubmit(function(resp) {
 		jQuery.fn.dialog.closeTop();
 		jQuery.fn.dialog.hideLoader();
