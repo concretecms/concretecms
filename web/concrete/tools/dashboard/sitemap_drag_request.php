@@ -26,6 +26,7 @@ $canReadSource = true;
 $canAddSubContent = true;
 $canMoveCopyTo = true;
 $canCopyChildren = true;
+$canMoveCopyPages = true;
 if (isset($_REQUEST['origCID'] ) && strpos($_REQUEST['origCID'], ',') > -1) {
 	$ocs = explode(',', $_REQUEST['origCID']);
 	foreach($ocs as $ocID) {
@@ -37,6 +38,9 @@ foreach($originalPages as $oc) {
 	$ocp = new Permissions($oc);
 	if (!$ocp->canRead()) {
 		$canReadSource = false;
+	}
+	if (!$ocp->canMoveOrCopyPage()) { 
+		$canMoveCopyPages = false;
 	}
 	$ct = CollectionType::getByID($oc->getCollectionTypeID());
 	if (!$dcp->canAddSubpage($ct)) {
@@ -60,6 +64,8 @@ $json['message'] = false;
 
 if (!$canReadSource) {
 	$error = t("You cannot view the source page(s).");
+} else if (!$canMoveCopyPages) {
+	$error = t("You cannot move or copy the source page(s).");
 } else if (!$canAddSubContent) {
 	$error = t("You do not have sufficient privileges to add this page or these pages to this destination.");
 } else if (!$canMoveCopyTo) {
