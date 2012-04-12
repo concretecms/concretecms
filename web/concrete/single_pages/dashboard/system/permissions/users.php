@@ -6,6 +6,14 @@
 	
 	<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('User Permissions'), $help, 'span12 offset2')?>
 
-	<? Loader::element('permission/lists/user')?>
+	<?
+	$tp = new TaskPermission();
+	if ($tp->canAccessTaskPermissions()) { ?>
 	
+		<? Loader::element('permission/lists/user')?>
+	
+	<? } else { ?>
+		<p><?=t('You cannot access user permissions.')?></p>
+	<? } ?>
+
 	<?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(false)?>
