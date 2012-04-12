@@ -208,12 +208,25 @@ class EditPagePropertiesPagePermissionKey extends PagePermissionKey  {
 		return $list;
 	}
 
-	public function validate() {
+	public function validate($obj = false) {
 		$u = new User();
 		if ($u->isSuperUser()) {
 			return true;
 		}
 		$asl = $this->getMyAssignment();
+		if (is_object($obj)) {
+			if ($obj instanceof CollectionAttributeKey) {
+				if ($asl->getAttributesAllowedPermission() == 'A') {
+					return true;
+				}
+				if ($asl->getAttributesAllowedPermission() == 'C' && in_array($obj->getAttributeKeyID(), $asl->getAttributesAllowedArray())) {
+					return true;
+				} else {
+					return false;
+				}				
+			}
+		}
+
 		if (
 			$asl->allowEditName() || 
 			$asl->allowEditDescription() || 

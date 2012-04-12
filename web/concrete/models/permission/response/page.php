@@ -23,11 +23,14 @@ class PagePermissionResponse extends PermissionResponse {
 		return $pk->validate($ct);
 	}
 	
-	public function canEditPageProperties() {
+	public function canEditPageProperties($obj = false) {
 		if ($this->object->isExternalLink()) {
 			return $this->canDeletePage();
 		}
-		return $this->validate('edit_page_properties');
+
+		$pk = $this->category->getPermissionKeyByHandle('edit_page_properties');
+		$pk->setPermissionObject($this->object);
+		return $pk->validate($obj);
 	}
 	
 	public function canDeletePage() {

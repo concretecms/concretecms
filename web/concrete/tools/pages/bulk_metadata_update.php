@@ -28,10 +28,9 @@ if ($_POST['task'] == 'update_extended_attribute') {
 	$ak = CollectionAttributeKey::get($cakID);
 	foreach($pages as $c) {
 		$cp = new Permissions($c);
-		if ($cp->canEditPageProperties()) {
+		if ($cp->canEditPageProperties($ak)) {
 			$ak->saveAttributeForm($c);
 			$c->reindex();
-
 		}
 	}
 	$val = $c->getAttributeValueObject($ak);
@@ -47,7 +46,7 @@ if ($_POST['task'] == 'clear_extended_attribute') {
 	$ak = CollectionAttributeKey::get($cakID);
 	foreach($pages as $c) {
 		$cp = new Permissions($c);
-		if ($cp->canEditPageProperties()) {
+		if ($cp->canEditPageProperties($ak)) {
 			$c->clearAttribute($ak);
 			$c->reindex();
 		}
