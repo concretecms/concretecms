@@ -8,6 +8,11 @@
 
 <? } 
 
+$ek = PermissionKey::getByHandle('edit_user_properties');
+$ik = PermissionKey::getByHandle('activate_user');
+$gk = PermissionKey::getByHandle('assign_user_groups');
+$dk = PermissionKey::getByHandle('delete_user');
+
 if (!$mode) {
 		$mode = $_REQUEST['mode'];
 	}
@@ -30,12 +35,20 @@ if (!$mode) {
 		<a href="<?=View::url('/dashboard/users/add')?>" style="float: right" class="btn primary"><?=t("Add User")?></a>
 		<select id="ccm-<?=$searchInstance?>-list-multiple-operations" class="span3" disabled>
 					<option value="">** <?=t('With Selected')?></option>
-					<option value="properties"><?=t('Edit Properties')?></option>
-					<option value="activate"><?=t('Activate')?></option>
-					<option value="deactivate"><?=t('Deactivate')?></option>
+					<? if ($ek->validate()) { ?>
+						<option value="properties"><?=t('Edit Properties')?></option>
+					<? } ?>
+					<? if ($ik->validate()) { ?>
+						<option value="activate"><?=t('Activate')?></option>
+						<option value="deactivate"><?=t('Deactivate')?></option>
+					<? } ?>
+					<? if ($gk->validate()) { ?>
 					<option value="group_add"><?=t('Add to Group')?></option>
 					<option value="group_remove"><?=t('Remove from Group')?></option>
+					<? } ?>
+					<? if ($dk->validate()) { ?>
 					<option value="delete"><?=t('Delete')?></option>
+					<? } ?>
 				<? if ($mode == 'choose_multiple') { ?>
 					<option value="choose"><?=t('Choose')?></option>
 				<? } ?>

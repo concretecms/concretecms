@@ -4,10 +4,13 @@ if(!strlen($searchInstance)) {
 	$searchInstance = 'user';
 }
 
+$sk = PermissionKey::getByHandle('access_user_search');
+$ek = PermissionKey::getByHandle('activate_user');
+
 $form = Loader::helper('form');
 $ih = Loader::helper('concrete/interface');
 $tp = new TaskPermission();
-if (!$tp->canAccessUserSearch()) { 
+if (!$tp->canActivateUser()) { 
 	die(t("Access Denied."));
 }
 
@@ -16,6 +19,12 @@ if (is_array($_REQUEST['uID'])) {
 	foreach($_REQUEST['uID'] as $uID) {
 		$ui = UserInfo::getByID($uID);
 		$users[] = $ui;
+	}
+}
+
+foreach($users as $ui) {
+	if (!$sk->validate($ui)) { 
+		die(t("Access Denied."));
 	}
 }
 
@@ -56,6 +65,7 @@ if (!isset($_REQUEST['reload'])) { ?>
 
 <script type="text/javascript">
 ccm_userBulkActivate = function() { 
+	jQuery.fn.dialog.showLoader();
 	$("#ccm-user-bulk-activate").ajaxSubmit(function(resp) {
 		jQuery.fn.dialog.closeTop();
 		jQuery.fn.dialog.hideLoader();

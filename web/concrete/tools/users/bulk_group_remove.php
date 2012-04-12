@@ -7,7 +7,11 @@ if(!strlen($searchInstance)) {
 $form = Loader::helper('form');
 $ih = Loader::helper('concrete/interface');
 $tp = new TaskPermission();
-if (!$tp->canAccessUserSearch()) { 
+
+$sk = PermissionKey::getByHandle('access_user_search');
+$gk = PermissionKey::getByHandle('assign_user_groups');
+
+if (!$gk->validate()) {
 	die(t("Access Denied."));
 }
 
@@ -16,6 +20,12 @@ if (is_array($_REQUEST['uID'])) {
 	foreach($_REQUEST['uID'] as $uID) {
 		$ui = UserInfo::getByID($uID);
 		$users[] = $ui;
+	}
+}
+
+foreach($users as $ui) {
+	if (!$sk->validate($ui)) { 
+		die(t("Access Denied."));
 	}
 }
 
@@ -39,9 +49,11 @@ if ($_POST['task'] == 'group_remove') {
 		if($ui instanceof UserInfo) {
 			$u = $ui->getUserObject();
 			foreach($groups as $g) {
-				if($u->inGroup($g)) { // avoid messing up group enter times
-					$u->exitGroup($g); 
-				}				
+				if ($gk->validate($g)) { 
+					if($u->inGroup($g)) { // avoid messing up group enter times
+						$u->exitGroup($g); 
+					}				
+				}
 			}
 		}
 	}
@@ -66,9 +78,14 @@ if (!isset($_REQUEST['reload'])) { ?>
 				<?=$form->label('groupIDs', t('Remove the users below from Group(s)'))?>
 				<div class="input">
 					<select multiple name="groupIDs[]" class="chosen-select" data-placeholder="<?php echo t('Select Group(s)');?>" >
-						<? foreach($g1 as $g) { ?>
+						<? foreach($g1 as $g) { 
+						if ($gk->validate($g['gID'])) { 
+						
+						?>
 							<option value="<?=$g['gID']?>"  <? if (is_array($_REQUEST['groupIDs']) && in_array($g['gID'], $_REQUEST['groupIDs'])) { ?> selected="selected" <? } ?>><?=$g['gName']?></option>
-						<? } ?>
+						<? } 
+						
+						}?>
 					</select>
 				</div>
 			</div>

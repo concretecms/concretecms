@@ -5,10 +5,13 @@ if(!strlen($searchInstance)) {
 	$searchInstance = 'user';
 }
 
+$sk = PermissionKey::getByHandle('access_user_search');
+$ek = PermissionKey::getByHandle('activate_user');
+
 $form = Loader::helper('form');
 $ih = Loader::helper('concrete/interface');
 $tp = new TaskPermission();
-if (!$tp->canAccessUserSearch()) { 
+if (!$tp->canActivateUser()) { 
 	die(t("Access Denied."));
 }
 
@@ -22,7 +25,7 @@ if (is_array($_REQUEST['uID'])) {
 	foreach($_REQUEST['uID'] as $uID) {
 		$ui = UserInfo::getByID($uID);
 		
-		if((in_array($ui->getUserID(),$excluded_user_ids))) { 
+		if(!$sk->validate($ui) || (in_array($ui->getUserID(),$excluded_user_ids))) { 
 			$excluded = true;
 		} else {
 			$users[] = $ui;
@@ -72,8 +75,10 @@ if (!isset($_REQUEST['reload'])) { ?>
 
 <script type="text/javascript">
 ccm_userBulkDeactivate = function() { 
+	jQuery.fn.dialog.showLoader();
 	$("#ccm-user-bulk-deactivate").ajaxSubmit(function(resp) {
 		jQuery.fn.dialog.closeTop();
+		jQuery.fn.dialog.showLoader();
 		jQuery.fn.dialog.hideLoader();
 		ccm_deactivateSearchResults('<?=$searchInstance?>');
 		ccmAlert.hud(ccmi18n.saveUserSettingsMsg, 2000, 'success', ccmi18n.user_deactivate);
