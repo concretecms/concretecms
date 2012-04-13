@@ -147,7 +147,7 @@ foreach ($gResults as $g) { ?>
 	<div class="clearfix">
 	<?=$form->label('gDescription', t('Description'))?>
 	<div class="input">
-		<textarea name="gDescription" rows="6" class="span6"><?=Loader::helper("text")->entities($_POST['gDescription'])?></textarea>
+		<textarea name="gDescription" rows="6" class="span6"><?=Loader::helper("text")->entities($gDescription)?></textarea>
 	</div>
 	</div>
 	</fieldset>
