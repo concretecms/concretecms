@@ -69,9 +69,10 @@
 		 * @param LibraryFileBlock $bf
 		 * return string $html
 		 */
-		public function image($id, $postname, $chooseText, $fileInstanceBlock = null) {
+		public function image($id, $postname, $chooseText, $fileInstanceBlock = null, $additionalArgs = array()) {
 			$args = array();
 			$args['fType'] = FileType::T_IMAGE;
+			$args = array_merge($args, $additionalArgs);
 			return $this->file($id, $postname, $chooseText, $fileInstanceBlock, $args);
 		}
 		/**
@@ -83,9 +84,10 @@
 		 * return string $html
 		 */
 
-		public function video($id, $postname, $chooseText, $fileInstanceBlock = null) {
+		public function video($id, $postname, $chooseText, $fileInstanceBlock = null, $additionalArgs = array()) {
 			$args = array();
 			$args['fType'] = FileType::T_VIDEO;
+			$args = array_merge($args, $additionalArgs);
 			return $this->file($id, $postname, $chooseText, $fileInstanceBlock, $args);
 		}
 	
@@ -98,9 +100,10 @@
 		 * return string $html
 		 */
 
-		public function text($id, $postname, $chooseText, $fileInstanceBlock = null) {
+		public function text($id, $postname, $chooseText, $fileInstanceBlock = null, $additionalArgs = array()) {
 			$args = array();
 			$args['fType'] = FileType::T_TEXT;
+			$args = array_merge($args, $additionalArgs);
 			return $this->file($id, $postname, $chooseText, $fileInstanceBlock, $args);
 		}
 	
@@ -113,9 +116,10 @@
 		 * return string $html
 		 */
 
-		public function audio($id, $postname, $chooseText, $fileInstanceBlock = null) {
+		public function audio($id, $postname, $chooseText, $fileInstanceBlock = null, $additionalArgs = array()) {
 			$args = array();
 			$args['fType'] = FileType::T_AUDIO;
+			$args = array_merge($args, $additionalArgs);
 			return $this->file($id, $postname, $chooseText, $fileInstanceBlock, $args);
 		}
 	
@@ -128,9 +132,10 @@
 		 * return string $html
 		 */
 
-		public function doc($id, $postname, $chooseText, $fileInstanceBlock = null) {
+		public function doc($id, $postname, $chooseText, $fileInstanceBlock = null, $additionalArgs = array()) {
 			$args = array();
 			$args['fType'] = FileType::T_DOCUMENT;
+			$args = array_merge($args, $additionalArgs);
 			return $this->file($id, $postname, $chooseText, $fileInstanceBlock, $args);
 		}
 	
@@ -143,9 +148,10 @@
 		 * return string $html
 		 */
 
-		public function app($id, $postname, $chooseText, $fileInstanceBlock = null) {
+		public function app($id, $postname, $chooseText, $fileInstanceBlock = null, $additionalArgs = array()) {
 			$args = array();
 			$args['fType'] = FileType::T_APPLICATION;
+			$args = array_merge($args, $additionalArgs);
 			return $this->file($id, $postname, $chooseText, $fileInstanceBlock, $args);
 		}
 	

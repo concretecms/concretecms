@@ -84,7 +84,11 @@ class DashboardUsersAttributesController extends Controller {
 	public function select_type() {
 		$atID = $this->request('atID');
 		$at = AttributeType::getByID($atID);
-		$this->set('type', $at);
+		if(isset($at->atID) && $at->atID > 0) {
+			$this->set('type', $at);
+		} else {
+			throw new Exception(t('Invalid Attribute Type.'));
+		}
 	}
 	
 	public function view() {
@@ -101,20 +105,6 @@ class DashboardUsersAttributesController extends Controller {
 			$this->set('error', $e);
 		} else {
 			$type = AttributeType::getByID($this->post('atID'));
-			$args = array(
-				'akHandle' => $this->post('akHandle'),
-				'akName' => $this->post('akName'),
-				'akIsSearchable' => $this->post('akIsSearchable'),
-				'akIsSearchableIndexed' => $this->post('akIsSearchableIndexed'),
-				'uakProfileDisplay' => $this->post('uakProfileDisplay'),
-				'uakMemberListDisplay' => $this->post('uakMemberListDisplay'),
-				'uakProfileEdit' => $this->post('uakProfileEdit'),
-				'uakProfileEditRequired' => $this->post('uakProfileEditRequired'),
-				'uakRegisterEdit' => $this->post('uakRegisterEdit'),
-				'uakRegisterEditRequired' => $this->post('uakRegisterEditRequired'),				
-				'akIsAutoCreated' => 0,
-				'akIsEditable' => 1
-			);
 			$ak = UserAttributeKey::add($type, $this->post());
 			$this->redirect('/dashboard/users/attributes/', 'attribute_created');
 		}
@@ -148,21 +138,6 @@ class DashboardUsersAttributesController extends Controller {
 			if ($e->has()) {
 				$this->set('error', $e);
 			} else {
-				$args = array(
-					'akHandle' => $this->post('akHandle'),
-					'akName' => $this->post('akName'),
-					'akIsSearchable' => $this->post('akIsSearchable'),
-					'akIsSearchableIndexed' => $this->post('akIsSearchableIndexed'),
-					'uakProfileDisplay' => $this->post('uakProfileDisplay'),
-					'uakMemberListDisplay' => $this->post('uakMemberListDisplay'),
-					'uakProfileEdit' => $this->post('uakProfileEdit'),
-					'uakProfileEditRequired' => $this->post('uakProfileEditRequired'),
-					'uakRegisterEdit' => $this->post('uakRegisterEdit'),
-					'uakRegisterEditRequired' => $this->post('uakRegisterEditRequired'),				
-					'akIsAutoCreated' => 0,
-					'akIsEditable' => 1
-				);
-	
 				$key->update($this->post());
 				$this->redirect('/dashboard/users/attributes', 'attribute_updated');
 			}

@@ -117,7 +117,7 @@ var ccmi18n_sitemap = {
 	backToSitemap: "<?=t('Back to Sitemap')?>",
 	searchResults: "<?=t('Search Results')?>",
 	createdBy: "<?=t('Created By')?>",
-	
+	choosePage: "<?=t('Choose a Page')?>",
 	viewing: "<?=t('Viewing')?>",
 	results: "<?=t('Result(s)')?>",
 	max: "<?=t('max')?>",

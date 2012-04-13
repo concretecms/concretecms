@@ -80,8 +80,9 @@
                             <record>
                                 <fID>{ccm:export:file:europe_england_stonehenge.jpg}</fID>
                                 <fOnstateID/>
-                                <maxWidth><![CDATA[0]]></maxWidth>
-                                <maxHeight><![CDATA[0]]></maxHeight>
+                                <maxWidth><![CDATA[960]]></maxWidth>
+                                <maxHeight><![CDATA[212]]></maxHeight>
+                                <forceImageToMatchDimensions>1</forceImageToMatchDimensions>
                                 <externalLink><![CDATA[]]></externalLink>
                                 <internalLinkCID><![CDATA[0]]></internalLinkCID>
                                 <altText><![CDATA[My concrete5 Blog]]></altText>
@@ -101,8 +102,9 @@
                             <record>
                                 <fID>{ccm:export:file:northern_az_lake_powell_house_boats.jpg}</fID>
                                 <fOnstateID/>
-                                <maxWidth><![CDATA[0]]></maxWidth>
-                                <maxHeight><![CDATA[0]]></maxHeight>
+                                <maxWidth><![CDATA[960]]></maxWidth>
+                                <maxHeight><![CDATA[212]]></maxHeight>
+                                <forceImageToMatchDimensions>1</forceImageToMatchDimensions>
                                 <externalLink><![CDATA[]]></externalLink>
                                 <internalLinkCID><![CDATA[0]]></internalLinkCID>
                                 <altText><![CDATA[]]></altText>
@@ -123,8 +125,9 @@
                             <record>
                                 <fID>{ccm:export:file:europe_valencia_hemispheric.jpg}</fID>
                                 <fOnstateID/>
-                                <maxWidth><![CDATA[0]]></maxWidth>
-                                <maxHeight><![CDATA[0]]></maxHeight>
+                                <maxWidth><![CDATA[960]]></maxWidth>
+                                <maxHeight><![CDATA[212]]></maxHeight>
+                                <forceImageToMatchDimensions>1</forceImageToMatchDimensions>
                                 <externalLink><![CDATA[]]></externalLink>
                                 <internalLinkCID><![CDATA[0]]></internalLinkCID>
                                 <altText><![CDATA[]]></altText>
@@ -142,8 +145,9 @@
                             <record>
                                 <fID>{ccm:export:file:europe_rotterdam_port.jpg}</fID>
                                 <fOnstateID/>
-                                <maxWidth><![CDATA[0]]></maxWidth>
-                                <maxHeight><![CDATA[0]]></maxHeight>
+                                <maxWidth><![CDATA[960]]></maxWidth>
+                                <maxHeight><![CDATA[212]]></maxHeight>
+                                <forceImageToMatchDimensions>1</forceImageToMatchDimensions>
                                 <externalLink><![CDATA[]]></externalLink>
                                 <internalLinkCID><![CDATA[0]]></internalLinkCID>
                                 <altText><![CDATA[]]></altText>
@@ -266,8 +270,9 @@
                                     <record>
                                         <fID>{ccm:export:file:england_village.jpg}</fID>
                                         <fOnstateID/>
-                                        <maxWidth><![CDATA[0]]></maxWidth>
-                                        <maxHeight><![CDATA[0]]></maxHeight>
+										<maxWidth><![CDATA[960]]></maxWidth>
+										<maxHeight><![CDATA[212]]></maxHeight>
+										<forceImageToMatchDimensions>1</forceImageToMatchDimensions>
                                         <externalLink><![CDATA[]]></externalLink>
                                         <internalLinkCID><![CDATA[0]]></internalLinkCID>
                                         <altText><![CDATA[]]></altText>
@@ -565,8 +570,9 @@
                                                                     <record>
                                                                         <fID>{ccm:export:file:europe_england_stonehenge.jpg}</fID>
                                                                         <fOnstateID/>
-                                                                        <maxWidth><![CDATA[0]]></maxWidth>
-                                                                        <maxHeight><![CDATA[0]]></maxHeight>
+																		<maxWidth><![CDATA[960]]></maxWidth>
+																		<maxHeight><![CDATA[212]]></maxHeight>
+																		<forceImageToMatchDimensions>1</forceImageToMatchDimensions>
                                                                         <externalLink><![CDATA[]]></externalLink>
                                                                         <internalLinkCID><![CDATA[0]]></internalLinkCID>
                                                                         <altText><![CDATA[My concrete5 Blog]]></altText>

@@ -38,13 +38,21 @@ div#newsflow-header {background-color: #f1f1f1; padding: 40px 30px 10px 60px; ba
 .newsflow-column-first-run h3 {line-height: 28px !important; margin-bottom: 10px; font-weight: normal; font-size: 24px; color: #09f;}
 .newsflow-column-first-run {padding: 10px 10px 100px 10px; overflow: visible}
 .newsflow .ccm-pane-options {.border-radius-top-only(5px);}
+/*
 .newsflow-paging-previous, .newsflow-paging-next {width: 33px; .border-radius-right-only(4px); text-align: center; height: 100%; z-index: 10; position: absolute; top: 0px; background-clip: padding-box; }
-.newsflow-paging-previous {left: 0px; padding-left: 10px;}
+*/
+.newsflow-paging-previous, .newsflow-paging-next {width: 33px; text-align: center; height: 100%; z-index: 10; position: absolute; top: 0px; background-clip: padding-box; }
+.newsflow-paging-previous {left: -65px; padding-left: 10px;}
+/*
 .newsflow-paging-previous:hover {background: transparent url(../images/bg_newsflow_previous.png) repeat-y top left; .border-radius-left-only(4px); }
-.newsflow-paging-previous:hover a, .newsflow-paging-next:hover a {display: table-cell;}
-.newsflow-paging-next {right: 0px; padding-right: 10px;}
+*/
+.newsflow-paging-previous:hover span {background-image: url(../images/newsflow_previous_white.png)}
+.newsflow-paging-next:hover span {background-image: url(../images/newsflow_next_white.png) }
+.newsflow-paging-next {right: -65px; padding-right: 10px;}
+/*
 .newsflow-paging-next:hover {background: transparent url(../images/bg_newsflow_next.png) repeat-y top right;}
-.newsflow-paging-previous a, .newsflow-paging-next a {width: 33px; vertical-align: middle; display: none;}
+*/
+.newsflow-paging-previous a, .newsflow-paging-next a {width: 33px; vertical-align: middle; display: table-cell;}
 .newsflow-paging-previous span {width: 57px; height: 86px; background: transparent url(../images/newsflow_previous.png) no-repeat; display: inline-block;}
 .newsflow-paging-next span {width: 57px; height: 86px; background: transparent url(../images/newsflow_next.png) no-repeat; display: inline-block}
 div#newsflow-main {z-index: 1 !important;}

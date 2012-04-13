@@ -91,6 +91,11 @@ jQuery.fn.dialog.open = function(obj) {
 		},
 		'escapeClose': true,
 		'title': obj.title,
+		hide: {
+			effect: 'fade',
+			duration: 75,
+			easing: 'easeOutExpo'
+		},
 		'open': function() {
 			$("body").css("overflow", "hidden");
 		},

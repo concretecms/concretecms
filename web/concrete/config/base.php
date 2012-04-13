@@ -22,7 +22,11 @@ if (!defined('BASE_URL')) {
 }
 
 if (!defined('DIR_REL')) {
-	$uri = substr($_SERVER['SCRIPT_NAME'], 0, stripos($_SERVER['SCRIPT_NAME'], DISPATCHER_FILENAME) - 1);
+	$pos = stripos($_SERVER['SCRIPT_NAME'], DISPATCHER_FILENAME);
+	if($pos > 0) { //we do this because in CLI circumstances (and some random ones) we would end up with index.ph instead of index.php
+		$pos = $pos - 1;
+	}
+	$uri = substr($_SERVER['SCRIPT_NAME'], 0, $pos);
 	define('DIR_REL', $uri);
 }
 
@@ -106,10 +110,6 @@ if (!defined("DB_COLLATE")) {
 }
 
 define("LANGUAGE_DOMAIN_CORE", "messages");
-
-if (!defined('FILE_PERMISSIONS_MODE')) {
-	define('FILE_PERMISSIONS_MODE', 0775);
-}
 
 # Path to the core files shared between all concrete 5 installations
 if (!defined('DIR_BASE_CORE')) {
@@ -336,15 +336,6 @@ if (!defined('CACHE_ID')) {
 	define('CACHE_ID', md5(str_replace(array('https://', 'http://'), '', BASE_URL) . DIR_REL));
 }
 
-if (defined('DIR_FILES_CACHE') && !is_dir(DIR_FILES_CACHE)) {
-	@mkdir(DIR_FILES_CACHE);
-	@chmod(DIR_FILES_CACHE, 0777);
-}
-
-# Sessions/TMP directories
-if (!defined('DIR_TMP')) {
-	define('DIR_TMP', DIR_BASE . '/files/tmp');
-}
 define('DISPATCHER_FILENAME_CORE', 'dispatcher.php');
 
 

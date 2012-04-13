@@ -36,3 +36,6 @@ error_log
 .htaccess
 .ftpquota
 /.idea/
+
+# ignore Aptana Project files
+.project

@@ -115,6 +115,7 @@ class FormUserSelectorHelper {
 				$(this).parents(\'tr\').remove();
 				ccm_setupGridStriping(\'ccmUserSelect' . $fieldName . '\');
 			});
+
 			ccm_triggerSelectUser = function(uID, uName, uEmail) {
 				$("tr.ccm-user-selected-item-none").hide();
 				if ($("#ccmUserSelect' . $fieldName . '_" + uID).length < 1) {
@@ -132,6 +133,7 @@ class FormUserSelectorHelper {
 				});
 			}
 		});
+		
 		</script>';	
 		return $html;
 	}

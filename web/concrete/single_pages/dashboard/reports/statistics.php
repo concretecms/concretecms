@@ -1,4 +1,4 @@
-<? 
+<?
 defined('C5_EXECUTE') or die("Access Denied.");
 ?>
 
@@ -22,7 +22,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 </thead>
 <tbody>
 <tr>
-	<th><?=t('Page Views')?></th>	
+	<th><?=t('Page Views')?></th>
 	<? foreach($pageViews as $total) { ?>
 		<td><?=$total?></td>
 	<? } ?>
@@ -46,7 +46,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 </thead>
 <tbody>
 <tr>
-	<th><?=t('User Registrations')?></th>	
+	<th><?=t('User Registrations')?></th>
 	<? foreach($userRegistrations as $total) { ?>
 		<td><?=$total?></td>
 	<? } ?>
@@ -78,7 +78,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 </thead>
 <tbody>
 <tr>
-	<th><?=t('Pages Created')?></th>	
+	<th><?=t('Pages Created')?></th>
 	<? foreach($newPages as $total) { ?>
 		<td><?=$total?></td>
 	<? } ?>
@@ -121,20 +121,29 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		}
 		?>
 	<tr>
-		<td><a href="<?=$f->getDownloadURL()?>"><?=$f->getTitle()?></a></td>
+		<td class='ccm-site-statistics-downloads-title'><a href="<?=$f->getDownloadURL()?>" title="<?=$f->getTitle();?>"><?php
+		$title = $f->getTitle();
+		$maxlen = 20;
+		if (strlen($title) > ($maxlen-4)) {
+			$ext = substr($title,strrpos($title, '.'));
+			if (substr($ext,0,1) != '.') { $ext = ''; }
+			$title = substr($title,0,$maxlen-4-strlen($ext)).'[..]'.$ext;
+		}
+		echo $title;
+		?></a></td>
 		<td>
-			<? 
+			<?
 			$uID=intval($download['uID']);
 			if(!$uID){
 				echo t('Anonymous');
-			}else{ 
+			}else{
 				$downloadUI = UserInfo::getById($uID);
 				if($downloadUI instanceof UserInfo) {
 					echo $downloadUI->getUserName();
 				} else {
 					echo t('Deleted User');
 				}
-			} 
+			}
 			?>
 		</td>
 		<td><?=date(DATE_APP_GENERIC_MDYT, strtotime($download['timestamp']))?></td>
@@ -151,19 +160,19 @@ defined('C5_EXECUTE') or die("Access Denied.");
 <script type="text/javascript">
 $(function() {
 	$("#ccm-site-statistics-visits").visualize({
-		'type': 'line', 
+		'type': 'line',
 		'appendKey': false,
 		'colors': ['#C6DCF1'],
 		'width': '360'
 	});
 	$("#ccm-site-statistics-registrations").visualize({
-		'type': 'line', 
+		'type': 'line',
 		'appendKey': false,
 		'colors': ['#B2E4BA'],
 		'width': '360'
 	});
 	$("#ccm-site-statistics-new-pages").visualize({
-		'type': 'line', 
+		'type': 'line',
 		'appendKey': false,
 		'colors': ['#B2E4BA'],
 		'width': '360'

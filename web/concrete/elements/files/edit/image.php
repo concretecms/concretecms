@@ -7,55 +7,163 @@ $fp = new Permissions($f);
 if (!$fp->canEditFileContents()) {
 	die(t("Access Denied."));
 }
+?>
 
-$apiKey = API_KEY_PICNIK;
-//$apiKey = Config::get("API_KEY_PICNIK");
-$image = BASE_URL . $fv->getRelativePath();
-$service = 'http://www.picnik.com/service/';
-$export = BASE_URL . REL_DIR_FILES_TOOLS_REQUIRED . '/files/importers/remote';
+<div class="ccm-ui">
 
-$valt = Loader::helper('validation/token');
+<div class="ccm-pane-options">
+<form class="clearfix">
+<a href="javascript:void(0)" class="btn primary" id="ccm-file-manager-edit-save" style="float: right; margin-left: 10px"><?=t('Save')?></a>
+<a href="javascript:void(0)" class="btn" id="ccm-file-manager-edit-restore" style="float: right"><?=t('Undo')?></a>
 
-// $strPicnikUrl is the URL that we use to launch Picnik.
-$strPicnikUrl = "http://www.picnik.com/service?".$valt->getParameter('import_remote');
+<div class="span6">
+	<label><?=t('Zoom')?></label>
+	<div class="input" style="margin-top: 11px">
+		<div id="ccm-file-manager-zoom-slider"></div>
+	</div>
+</div>
 
-// $aPicnikParams collects together all the params we'll give Picnik.  Start with an API key
-$aPicnikParams['_apikey'] = $apiKey;
-
-// tell Picnik where to send the exported image
-$aPicnikParams['_export'] = $export;
-
-$aPicnikParams['task'] = "update_file";
-
-$aPicnikParams['fID'] = $f->getFileID();
-
-$aPicnikParams['_export_field'] = "url_upload_1";
-
-$aPicnikParams['_export_agent'] = "browser";
-
-$aPicnikParams['_returntype'] = "text";
-
-$aPicnikParams['_import'] = "image_file";
-
-$aPicnikParams['image_file'] = "@".$fv->getPath();
-
-if (!function_exists('curl_init')) {
-	print t('You must have the curl extension installed to use the remote image editor.');
-} else {
-	$ch = curl_init();
-	curl_setopt($ch, CURLOPT_VERBOSE, 0);
-	curl_setopt($ch, CURLOPT_URL, $strPicnikUrl);
-	//Don't ask me what this does, I just know that without this funny header, the whole thing doesn't work!
-	curl_setopt($ch, CURLOPT_HTTPHEADER,array('Expect:'));
-	curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);
-	curl_setopt($ch, CURLOPT_POST, 1 );
+<div class="span6">
+	<label><?=t('Rotate')?></label>
+	<div class="input" style="margin-top: 11px; position: relative">
+		<a href="javascript:void(0)" id="ccm-file-manager-rotate-btn" class="btn" style="position: absolute; top: -10px; right: -50px">&crarr;</a>
+		<div id="ccm-file-manager-rotate"></div>
+	</div>
 	
-	//seems no need to tell it enctype='multipart/data' it already knows
-	curl_setopt($ch, CURLOPT_POSTFIELDS, $aPicnikParams );
-	
-	$url = curl_exec( $ch );
-	curl_close ($ch);
-	
-	?>
-	<iframe class="ccm-file-editor-wrapper" id="ccm-file-editor-wrapper<?=time()?>" style="padding: 0px; border: 0px; margin: 0px" width="100%" height="100%" frameborder="0" border="0" src="<?=$url?>"></iframe>
-<? } ?>
+</div>
+
+</form>
+</div>
+
+<div class="clearfix"></div>
+
+
+<div id="ccm-file-manager-edit-image">
+
+	<div class="PostContent">
+		  <div class="boxes">
+			  <div id="crop_container"></div>
+			  <div class="cleared"></div> 
+		  </div>  
+	</div>
+
+</div>
+
+</div>
+
+
+    <script type="text/javascript">
+    
+    $(document).ready(function(){
+       var iw = <?=$f->getAttribute('width')?>;
+       var ih = <?=$f->getAttribute('height')?>;
+	   var w = $('#ccm-file-manager-edit-image').closest('.ui-dialog-content').width();
+	   var h = $('#ccm-file-manager-edit-image').closest('.ui-dialog-content').height();
+	   if (iw > (w + 20)) {
+	   	w = iw;
+	   } else {
+	   	w = w - 20;
+	   }
+	   
+	   if (ih > (h + 100)) {
+	   	h = ih;
+	   } else {
+	   	h = h - 100;
+	   }
+	   var cropzoom = $('#crop_container').cropzoom({
+            width: w,
+            height: h,
+            bgColor: '#CCC',
+            enableRotation:true,
+            enableZoom:true,
+            zoomSteps:10,
+            rotationSteps:1,
+            expose: {
+            slidersOrientation: 'horizontal',
+            rotationElement: '#ccm-file-manager-rotate',
+            zoomElement: '#ccm-file-manager-zoom-slider'
+            },
+            selector:{        
+              centered:true,
+              borderColor:'blue',
+              <? if ($_REQUEST['maxWidth']) { ?>
+              	maxWidth: <?=$_REQUEST['maxWidth']?>,
+              <? } ?>
+              <? if ($_REQUEST['maxHeight']) { ?>
+              	maxHeight: <?=$_REQUEST['maxHeight']?>,
+              <? } ?>
+              <? if ($_REQUEST['minWidth']) { ?>
+              	minWidth: <?=$_REQUEST['minWidth']?>,
+              <? } ?>
+              <? if ($_REQUEST['minHeight']) { ?>
+              	minHeight: <?=$_REQUEST['minHeight']?>,
+              <? } ?>
+              borderColorHover:'red'
+            },
+            image:{
+                source:'<?=$f->getRelativePath()?>',
+                width: <?=$f->getAttribute('width')?>,
+                height:<?=$f->getAttribute('height')?>,
+                minZoom:5,
+                startZoom: 100,
+                maxZoom:300
+            }
+        });
+        <?
+        $selectorStartWidth = $f->getAttribute('width');
+        $selectorStartHeight = $f->getAttribute('height');
+        if ($_REQUEST['maxWidth'] && ($_REQUEST['maxWidth'] < $selectorStartWidth)) {
+        	$selectorStartWidth = $_REQUEST['maxWidth'];
+        }
+        if ($_REQUEST['maxHeight'] && ($_REQUEST['maxHeight'] < $selectorStartHeight)) {
+        	$selectorStartHeight = $_REQUEST['maxHeight'];
+        }
+        if ($_REQUEST['minWidth'] > $selectorStartWidth) {
+        	$selectorStartWidth = $_REQUEST['minWidth'];
+        }
+        if ($_REQUEST['minHeight'] > $selectorStartHeight) {
+        	$selectorStartHeight = $_REQUEST['minHeight'];
+        }        
+        ?>
+        
+       cropzoom.setSelector(0,0, <?=$selectorStartWidth?> , <?=$selectorStartHeight?>,true);
+       
+       $('#ccm-file-manager-rotate-btn').click(function() {
+        var slideVal = $('#rotationSlider').slider('value');
+		var newVal;
+		if (slideVal < 90) {
+			newVal = 90;
+		} else if (slideVal < 180) {
+			newVal = 180;
+		} else if (slideVal < 270) {
+			newVal = 270;
+		} else {
+			newVal = 0;
+		}
+       	$('#rotationSlider').slider('value', newVal);
+       });
+       
+       $('#ccm-file-manager-edit-save').click(function(){ 
+       		jQuery.fn.dialog.showLoader();
+            cropzoom.send('<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/image/process','POST',{
+            	'fID': <?=$f->getFileID()?>,
+            },function(rta){
+            	jQuery.fn.dialog.hideLoader();
+				highlight = new Array();
+				highlight.push(<?=$f->getFileID()?>);
+				jQuery.fn.dialog.closeTop();
+				ccm_alRefresh(highlight, '<?=$_REQUEST['searchInstance']?>');
+            });            
+        });
+       
+       $('#ccm-file-manager-edit-restore').click(function(){
+            cropzoom.restore();
+        })
+    })
+</script>
+<style type="text/css">
+	#img_to_crop{
+		-webkit-user-drag: element;
+		-webkit-user-select: none;
+	}
+</style>

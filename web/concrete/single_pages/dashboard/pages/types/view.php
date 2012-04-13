@@ -248,7 +248,7 @@ if ($ctEditMode) {
                 <th width="100%"><?=t('Name')?></th>
                 <th><?=t('Handle')?></th>
                 <th><?=t('Package')?></th>
-                <th <? if ($cap->canAccessComposer()) { ?>colspan="3"<? } else { ?>colspan="2"<? } ?></th>
+                <th <? if ($cap->canAccessComposer()) { ?>colspan="3"<? } else { ?>colspan="2"<? } ?>></th>
             </tr>
 		</thead>
 		<tbody>

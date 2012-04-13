@@ -66,7 +66,12 @@ class DownloadFileController extends Controller {
 		$filename = $file->getFilename();
 		$file->trackDownload($rcID);
 		$ci = Loader::helper('file');
-		$ci->forceDownload($file->getPath());		
+		if ($file->getStorageLocationID() > 0) { 
+			$ci->forceDownload($file->getPath());		
+		} else {
+			header('Location: ' . $file->getRelativePath(true));
+			exit;
+		}
 	}
 	
 }

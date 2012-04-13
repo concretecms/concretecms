@@ -58,6 +58,8 @@ class UrlHelper {
  		$vars = array();
 		if (!is_array($variable)) {
 			$vars[] = $variable;
+		} else {
+			$vars = $variable;
 		}
 		
 		foreach($vars as $variable) {

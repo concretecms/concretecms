@@ -52,6 +52,12 @@ class DashboardSystemBackupRestoreUpdateController extends DashboardBaseControll
 		}
 	}
 	
+	public function check_for_updates() {
+		Config::clear('APP_VERSION_LATEST', false);
+		print Update::getLatestAvailableVersionNumber();
+		$this->redirect('/dashboard/system/backup_restore/update');
+	}
+	
 	public function on_start() {
 		$this->error = Loader::helper('validation/error');
 		$this->secCheck();

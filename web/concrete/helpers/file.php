@@ -63,10 +63,16 @@ class FileHelper {
 	 * @param string $target Place to copy the source
 	 * @param int $mode What to chmod the file to
 	 */
-	public function copyAll($source, $target, $mode = FILE_PERMISSIONS_MODE) {
+	public function copyAll($source, $target, $mode = NULL) {
 		if (is_dir($source)) {
-			@mkdir($target, $mode);
-			@chmod($target, $mode);
+			if($mode == null) {
+				@mkdir($target, DIRECTORY_PERMISSIONS_MODE);
+				@chmod($target, DIRECTORY_PERMISSIONS_MODE);
+			} else { 
+				@mkdir($target, $mode);
+				@chmod($target, $mode);
+			}
+			
 			
 			$d = dir($source);
 			while (FALSE !== ($entry = $d->read())) {
@@ -79,13 +85,20 @@ class FileHelper {
 					$this->copyAll($Entry, $target . '/' . $entry, $mode);
 					continue;
 				}
-				
+
 				copy($Entry, $target . '/' . $entry);
-				@chmod($target . '/' . $entry, $mode);
+				if($mode == null) {
+					@chmod($target . '/' . $entry, $this->getCreateFilePermissions($target)->file);
+				} else {
+					@chmod($target . '/' . $entry, $mode);
+				}
 			}
 			
 			$d->close();
 		} else {
+			if ($mode == null) {
+				$mode = $this->getCreateFilePermissions(dirname($target))->file;
+			}
 			copy($source, $target);
 			chmod($target, $mode);
 		}
@@ -138,15 +151,36 @@ class FileHelper {
 	 * @return string
 	 */
 	public function getTemporaryDirectory() {
-		if (!is_dir(DIR_TMP)) {
-			mkdir(DIR_TMP, FILE_PERMISSIONS_MODE);
-			chmod(DIR_TMP, FILE_PERMISSIONS_MODE);
-			touch(DIR_TMP . '/index.html');
+		if (defined('DIR_TMP')) {
+			return DIR_TMP;
 		}
-		return DIR_TMP;
 		
-	}
+		if (!is_dir(DIR_BASE . '/files/tmp')) { 
+			@mkdir(DIR_BASE . '/files/tmp', DIRECTORY_PERMISSIONS_MODE);
+			@chmod(DIR_BASE . '/files/tmp', DIRECTORY_PERMISSIONS_MODE);
+			@touch(DIR_BASE . '/files/tmp/index.html');
+		}
 
+		if (is_dir(DIR_BASE . '/files/tmp') && is_writable(DIR_BASE . '/files/tmp')) {
+			return DIR_BASE . '/files/tmp';
+		}
+
+		if ($temp=getenv('TMP')) {
+			return $temp;
+		}
+		if ($temp=getenv('TEMP')) {
+			return $temp;
+		}
+		if ($temp=getenv('TMPDIR')) {
+			return $temp;
+		}
+		
+		$temp=tempnam(__FILE__,'');
+		if (file_exists($temp)) {
+			unlink($temp);
+			return dirname($temp);
+		}
+	}
 
 	
 	/**
@@ -186,6 +220,7 @@ class FileHelper {
 				curl_setopt($curl_handle, CURLOPT_SSL_VERIFYPEER, false);
 				$contents = curl_exec($curl_handle);
 				$http_code = curl_getinfo($curl_handle, CURLINFO_HTTP_CODE);
+				curl_close($curl_handle);
 				if ($http_code == 404) {	
 					return false;
 				}
@@ -241,6 +276,49 @@ class FileHelper {
 		$newFileName = substr($filename, 0, strrpos($filename, '.')) . '.' . $extension;
 		return $newFileName;
 	}
+	
+	
+	/**
+	 * returns an object with two permissions modes (octal):
+	 * one for files: $res->file
+	 * and another for directories: $res->dir
+	 * @param string $path (optional)
+	 * @return StdClass
+	 */
+	public function getCreateFilePermissions($path = NULL) {
+		try {
+			if(!isset($path)) {
+				$path = DIR_BASE."/files";
+			}
+			
+			if(!is_dir($path)) {
+				$path = @dirname($path);
+			}
+			$perms = @fileperms($path);
+			
+			if(!$perms) { throw new Exception(t('An error occured while attempting to determine file permissions.')); }
+			clearstatcache();
+			$dir_perms = substr(decoct($perms),1);
+			
+			$file_perms = "0";
+			$parts[] = substr($dir_perms,1,1);
+			$parts[] = substr($dir_perms,2,1);
+			$parts[] = substr($dir_perms,3,1);
+			foreach($parts as $p){
+				if(intval($p)%2 == 0) {
+					$file_perms.=$p;
+					continue;
+				}
+				$file_perms .= intval($p)-1;
+			}
+		} catch(Exception $e) {
+			return false;
+		}
+		$res = new stdClass();
+		$res->file 	= intval($file_perms,8);
+		$res->dir 	= intval($dir_perms,8);
+		
+		return $res;
+	}
 		
 }
-?>

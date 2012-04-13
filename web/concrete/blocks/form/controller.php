@@ -8,11 +8,12 @@ class FormBlockController extends BlockController {
 	public $btAnswersTablename = 'btFormAnswers'; 	
 	public $btInterfaceWidth = '420';
 	public $btInterfaceHeight = '430';
-	public $thankyouMsg=''; 
+	public $thankyouMsg='';
+	public $noSubmitFormRedirect=0;
+	
 	protected $btExportTables = array('btForm', 'btFormQuestions');
 	protected $btExportPageColumns = array('redirectCID');
 	
-	protected $noSubmitFormRedirect=0;
 	protected $lastAnswerSetId=0;
 		
 	/** 
@@ -103,15 +104,19 @@ class FormBlockController extends BlockController {
 			$data['redirect'] = 0;
 			$data['redirectCID'] = 0;
 		}
+
+		if(empty($data['addFilesToSet'])) {
+			$data['addFilesToSet'] = 0;
+		}
 		
-		$v = array( $data['qsID'], $data['surveyName'], intval($data['notifyMeOnSubmission']), $data['recipientEmail'], $data['thankyouMsg'], intval($data['displayCaptcha']), intval($data['redirectCID']), intval($this->bID) );
+		$v = array( $data['qsID'], $data['surveyName'], intval($data['notifyMeOnSubmission']), $data['recipientEmail'], $data['thankyouMsg'], intval($data['displayCaptcha']), intval($data['redirectCID']), intval($data['addFilesToSet']), intval($this->bID) );
  		
 		//is it new? 
-		if( intval($total)==0 ){ 
-			$q = "insert into {$this->btTable} (questionSetId, surveyName, notifyMeOnSubmission, recipientEmail, thankyouMsg, displayCaptcha, redirectCID, bID) values (?, ?, ?, ?, ?, ?, ?, ?)";		
+		if( intval($total)==0 ){
+			$q = "insert into {$this->btTable} (questionSetId, surveyName, notifyMeOnSubmission, recipientEmail, thankyouMsg, displayCaptcha, redirectCID, addFilesToSet, bID) values (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		}else{
-			$q = "update {$this->btTable} set questionSetId = ?, surveyName=?, notifyMeOnSubmission=?, recipientEmail=?, thankyouMsg=?, displayCaptcha=?, redirectCID=? where bID = ? AND questionSetId=".$data['qsID'];
-		}		
+			$q = "update {$this->btTable} set questionSetId = ?, surveyName=?, notifyMeOnSubmission=?, recipientEmail=?, thankyouMsg=?, displayCaptcha=?, redirectCID=?, addFilesToSet=? where bID = ? AND questionSetId=".$data['qsID'];
+		}
 		
 		$rs = $db->query($q,$v);  
 		
@@ -195,8 +200,8 @@ class FormBlockController extends BlockController {
 			
 			//duplicate survey block record 
 			//with a new Block ID and a new Question 
-			$v = array($newQuestionSetId,$row['surveyName'],$newBID,$row['thankyouMsg'],intval($row['notifyMeOnSubmission']),$row['recipientEmail'],$row['displayCaptcha']);
-			$q = "insert into {$this->btTable} ( questionSetId, surveyName, bID,thankyouMsg,notifyMeOnSubmission,recipientEmail,displayCaptcha) values (?, ?, ?, ?, ?, ?, ?)";
+			$v = array($newQuestionSetId,$row['surveyName'],$newBID,$row['thankyouMsg'],intval($row['notifyMeOnSubmission']),$row['recipientEmail'],$row['displayCaptcha'], $row['addFilesToSet']);
+			$q = "insert into {$this->btTable} ( questionSetId, surveyName, bID,thankyouMsg,notifyMeOnSubmission,recipientEmail,displayCaptcha,addFilesToSet) values (?, ?, ?, ?, ?, ?, ?,?)";
 			$result=$db->Execute($q, $v); 
 			
 			$rs=$db->query("SELECT * FROM {$this->btQuestionsTablename} WHERE questionSetId=$oldQuestionSetId AND bID=".intval($this->bID) );
@@ -291,8 +296,16 @@ class FormBlockController extends BlockController {
 				}
 			}else{
 				$tmpFileIds[intval($row['msqID'])] = $resp->getFileID();
-			}	
-		}	
+				if(intval($this->addFilesToSet)) {
+					Loader::model('file_set');
+					$fs = new FileSet();
+					$fs = $fs->getByID($this->addFilesToSet);
+					if($fs->getFileSetID()) {
+						$fs->addFileToSet($resp);
+					}
+				}
+			}
+		}
 		
 		if(count($errors)){			
 			$this->set('formResponse', t('Please correct the following errors:') );
@@ -403,7 +416,7 @@ class FormBlockController extends BlockController {
 				}
 			}
 			
-			if(!$this->noSubmitFormRedirect){ // not sure if this is used, but someone must be depending on it??
+			if(!$this->noSubmitFormRedirect){
 				header("Location: ".$refer_uri."&surveySuccess=1&qsid=".$this->questionSetId."#".$this->questionSetId);
 				die;
 			}
