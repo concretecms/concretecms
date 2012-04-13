@@ -324,7 +324,7 @@ class FormBlockController extends BlockController {
 			$this->lastAnswerSetId=$answerSetID;
 			
 			$questionAnswerPairs=array();
-
+			$this->sendEmailFrom = false;
 			//loop through each question and get the answers 
 			foreach( $rows as $row ){	
 				//save each answer
@@ -348,6 +348,9 @@ class FormBlockController extends BlockController {
 				}elseif($row['inputType']=='email'){
 					$answerLong="";
 					$answer=$txt->sanitize($_POST['Question'.$row['msqID']]);
+					if ($this->sendEmailFrom === false && $row['options'] == '1') {
+						$this->sendEmailFrom = $answer;
+					}
 				}elseif($row['inputType']=='telephone'){
 					$answerLong="";
 					$answer=$txt->sanitize($_POST['Question'.$row['msqID']]);
@@ -385,13 +388,14 @@ class FormBlockController extends BlockController {
 			}
 			
 			if(intval($this->notifyMeOnSubmission)>0 && !$foundSpam){	
-				
-				if( strlen(FORM_BLOCK_SENDER_EMAIL)>1 && strstr(FORM_BLOCK_SENDER_EMAIL,'@') ){
+				if ($this->sendEmailFrom !== false) {
+					$formFormEmailAddress = $this->sendEmailFrom;
+				} else if( strlen(FORM_BLOCK_SENDER_EMAIL)>1 && strstr(FORM_BLOCK_SENDER_EMAIL,'@') ){
 					$formFormEmailAddress = FORM_BLOCK_SENDER_EMAIL;  
 				}else{ 
 					$adminUserInfo=UserInfo::getByID(USER_SUPER_ID);
 					$formFormEmailAddress = $adminUserInfo->getUserEmail(); 
-				}  
+				}
 				
 				$mh = Loader::helper('mail');
 				$mh->to( $this->recipientEmail ); 
@@ -709,11 +713,11 @@ class MiniSurvey{
 						<?php  /* <div class="miniSurveyResponse"><?php echo $this->loadInputType($questionRow,$showEdit)?></div> */ ?>
 						<div class="miniSurveyOptions">
 							<div style="float:right">
-								<a href="#" onclick="miniSurvey.moveUp(this,<?php echo $questionRow['msqID']?>);return false" class="moveUpLink"></a> 
-								<a href="#" onclick="miniSurvey.moveDown(this,<?php echo $questionRow['msqID']?>);return false" class="moveDownLink"></a>						  
+								<a href="javascript:void(0)" onclick="miniSurvey.moveUp(this,<?php echo $questionRow['msqID']?>);return false" class="moveUpLink"></a> 
+								<a href="javascript:void(0)" onclick="miniSurvey.moveDown(this,<?php echo $questionRow['msqID']?>);return false" class="moveDownLink"></a>						  
 							</div>						
-							<a href="#" onclick="miniSurvey.reloadQuestion(<?=intval($questionRow['qID']) ?>);return false"><?php echo t('edit')?></a> &nbsp;&nbsp; 
-							<a href="#" onclick="miniSurvey.deleteQuestion(this,<?=intval($questionRow['msqID']) ?>,<?=intval($questionRow['qID'])?>);return false"><?= t('remove')?></a>
+							<a href="javascript:void(0)" onclick="miniSurvey.reloadQuestion(<?=intval($questionRow['qID']) ?>);return false"><?php echo t('edit')?></a> &nbsp;&nbsp; 
+							<a href="javascript:void(0)" onclick="miniSurvey.deleteQuestion(this,<?=intval($questionRow['msqID']) ?>,<?=intval($questionRow['qID'])?>);return false"><?= t('remove')?></a>
 						</div>
 						<div class="miniSurveySpacer"></div>
 					</div>
