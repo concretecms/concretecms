@@ -156,10 +156,9 @@ class ConcreteUpgradeVersion553Helper {
 		$r = $db->Execute('select * from AreaGroups order by cID asc');	
 		while ($row = $r->FetchRow()) {
 			$pe = $this->migrateAccessEntity($row);
-			$permissions = $this->getPermissionsArray($row['cgPermissions']);
+			$permissions = $this->getPermissionsArray($row['agPermissions']);
 			$co = Page::getByID($row['cID']);
 			$ax = Area::getOrCreate($co, $row['arHandle']);
-			print_r($ax);
 			foreach($permissions as $p) {
 				$permissionsToApply = $permissionMap[$p];
 				foreach($permissionsToApply as $pko) {
