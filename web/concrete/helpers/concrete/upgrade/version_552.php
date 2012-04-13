@@ -1,5 +1,4 @@
 <?
-<<<<<<< HEAD
 /**
  * @access private
  * @package Helpers
@@ -18,7 +17,6 @@
  * @license    http://www.concrete5.org/license/     MIT License
  */
 
-=======
 defined('C5_EXECUTE') or die("Access Denied.");
 class ConcreteUpgradeVersion552Helper {
 
