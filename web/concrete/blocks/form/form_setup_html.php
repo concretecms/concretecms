@@ -143,6 +143,8 @@ $ih = Loader::helper('concrete/interface');
 						<option value="email"><?=t('Email Address')?></option>
 						<option value="telephone"><?=t('Telephone')?></option>
 						<option value="url"><?=t('Web Address')?></option>
+						<option value="date"><?=t('Date Field')?></option>
+						<option value="datetime"><?=t('DateTime Field')?></option>
 					</select>
 				</div>
 			</div>
@@ -246,6 +248,8 @@ $ih = Loader::helper('concrete/interface');
 							<option value="email"><?=t('Email Address')?></option>
 							<option value="telephone"><?=t('Telephone')?></option>
 							<option value="url"><?=t('Web Address')?></option>
+							<option value="date"><?=t('Date Field')?></option>
+							<option value="datetime"><?=t('DateTime Field')?></option>
 						</select>
 					</div>
 				</div>
