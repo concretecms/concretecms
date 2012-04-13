@@ -283,7 +283,7 @@ ccm_accessEntityOnActivateDates = function() {
 	} else {
 		$('input[name=pdEndDateAllDayActivate]').attr('disabled', true);
 	}
-	console.log('wut');
+
 	if ($("input[name=pdStartDateAllDayActivate]").is(':checked')) {
 		$('span#pdStartDate_tw').hide();
 	} else {

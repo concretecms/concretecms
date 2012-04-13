@@ -15,7 +15,7 @@ if ($c->getCollectionInheritance() == 'OVERRIDE') {
 <div class="clearfix">
 <label for="ccm-page-permissions-inherit"><?=t('Assign Permissions')?></label>
 <div class="input">
-   <select id="ccm-page-permissions-inherit" style="width: 180px">
+   <select id="ccm-page-permissions-inherit" style="width: 220px">
 	<? if ($c->getCollectionID() > 1) { ?><option value="PARENT" <? if ($c->getCollectionInheritance() == "PARENT") { ?> selected<? } ?>><?=t('By Area of Site (Hierarchy)')?></option><? } ?>
 	<? if ($c->getMasterCollectionID() > 1) { ?><option value="TEMPLATE"  <? if ($c->getCollectionInheritance() == "TEMPLATE") { ?> selected<? } ?>><?=t('From Page Type Defaults')?></option><? } ?>
 	<option value="OVERRIDE" <? if ($c->getCollectionInheritance() == "OVERRIDE") { ?> selected<? } ?>><?=t('Manually')?></option>

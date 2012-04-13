@@ -96,6 +96,7 @@ var ccmi18n_sitemap = {
 	speedSettings: "<?=t('Speed Settings')?>",
 	speedSettingsTitle: "<?=t('Speed Settings')?>",
 	pagePropertiesTitle: "<?=t('Page Properties')?>",
+	pagePermissionsTitle: "<?=t('Page Permissions')?>",
 	setPagePermissions: "<?=t('Set Permissions')?>",
 	setPagePermissionsMsg: "<?=t('Page permissions updated successfully.')?>",
 	pageDesignMsg: "<?=t('Theme and page type updated successfully.')?>",
