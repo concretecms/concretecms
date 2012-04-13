@@ -2,6 +2,11 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 class PagePermissionKey extends PermissionKey {
 	
+	protected $multiplePageArray; // bulk operations
+	public function setMultiplePageArray($pages) {
+		$this->multiplePageArray = $pages;
+	}
+	
 	public function getAssignmentList($accessType = PagePermissionKey::ACCESS_TYPE_INCLUDE, $filterEntities = array()) {
 		$db = Loader::db();
 		$filterString = $this->buildAssignmentFilterString($accessType, $filterEntities);
@@ -52,7 +57,15 @@ class PagePermissionKey extends PermissionKey {
 	}
 	
 	public function getPermissionKeyToolsURL($task = false) {
-		return parent::getPermissionKeyToolsURL($task) . '&cID=' . $this->getPermissionObject()->getCollectionID();
+		if (isset($this->multiplePageArray)) {
+			$cIDStr = '';
+			foreach($this->multiplePageArray as $sc) {
+				$cIDStr .= '&cID[]=' . $sc->getCollectionID();
+			}
+			return parent::getPermissionKeyToolsURL($task) . $cIDStr;
+		} else {
+			return parent::getPermissionKeyToolsURL($task) . '&cID=' . $this->getPermissionObject()->getCollectionID();
+		}
 	}
 
 

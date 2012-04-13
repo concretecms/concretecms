@@ -67,7 +67,6 @@ class FormPageSelectorHelper {
 			var par = $(ccmActivePageField).parent().find(\'.ccm-summary-selected-item-label\');
 			$(ccmActivePageField).parent().find(\'.ccm-sitemap-clear-selected-page\').hide();
 			var pari = $(ccmActivePageField).parent().find("[name=\'"+fieldName+"\']");
-			console.log(pari);
 			par.html("");
 			pari.val("0");
 		}

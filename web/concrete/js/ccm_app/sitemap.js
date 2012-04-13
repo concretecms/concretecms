@@ -875,6 +875,16 @@ ccm_sitemapSearchSetupCheckboxes = function(instance_id) {
 					title: ccmi18n_sitemap.speedSettingsTitle				
 				});
 				break;
+			case 'permissions':
+				jQuery.fn.dialog.open({
+					width: 430,
+					height: 630,
+					modal: false,
+					appendButtons: true,
+					href: CCM_TOOLS_PATH + '/pages/permissions?' + cIDstring,
+					title: ccmi18n_sitemap.pagePermissionsTitle				
+				});
+				break;
 			case "properties": 
 				jQuery.fn.dialog.open({
 					width: 630,

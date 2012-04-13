@@ -36,6 +36,9 @@ if (isset($_REQUEST['searchInstance'])) {
 			<option value="properties"><?=t('Edit Properties')?></option>
 			<option value="move_copy"><?=t('Move/Copy')?></option>
 			<option value="speed_settings"><?=t('Speed Settings')?></option>
+			<? if (PERMISSIONS_MODEL == 'advanced') { ?>
+				<option value="permissions"><?=t('Change Permissions')?></option>
+			<? } ?>
 			<option value="design"><?=t('Design')?></option>
 			<option value="delete"><?=t('Delete')?></option>
 		</select>	
