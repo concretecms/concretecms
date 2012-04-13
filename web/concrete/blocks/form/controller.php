@@ -13,7 +13,7 @@ class FormBlockController extends BlockController {
 	
 	protected $btExportTables = array('btForm', 'btFormQuestions');
 	protected $btExportPageColumns = array('redirectCID');
-	
+	protected $helpers = array('form');
 	protected $lastAnswerSetId=0;
 		
 	/** 
@@ -265,7 +265,17 @@ class FormBlockController extends BlockController {
 						$notCompleted=1;
 				}elseif( !strlen(trim($_POST['Question'.$row['msqID']])) ){
 					$notCompleted=1;
-				}				
+				} 
+				if ($notCompleted) {
+					if (!isset($datetime)) {
+						$datetime = Loader::helper("form/date_time");
+					}
+					$translated = $datetime->translate('Question'.$row['msqID']);
+					if ($translated) {
+						$_POST['Question'.$row['msqID']] = $translated;
+						$notCompleted=0;
+					}
+				}
 				if($notCompleted) $errors['CompleteRequired'] = t("Complete required fields *") ; 
 			}
 		}
@@ -729,6 +739,7 @@ class MiniSurvey{
 		function loadInputType($questionData,$showEdit){
 			$options=explode('%%',$questionData['options']);
 			$msqID=intval($questionData['msqID']);
+			$datetime = loader::helper('form/date_time');
 			switch($questionData['inputType']){			
 				case 'checkboxlist': 
 					// this is looking really crappy so i'm going to make it behave the same way all the time - andrew
@@ -783,7 +794,14 @@ class MiniSurvey{
 					return '<input name="Question'.$msqID.'" id="Question'.$msqID.'" type="tel" value="'.stripslashes(htmlspecialchars($val)).'" />';
 				case 'email':
 					$val=($_REQUEST['Question'.$msqID])?$_REQUEST['Question'.$msqID]:'';
-					return '<input name="Question'.$msqID.'" id="Question'.$msqID.'" type="email" value="'.stripslashes(htmlspecialchars($val)).'" />';	
+					return '<input name="Question'.$msqID.'" id="Question'.$msqID.'" type="email" value="'.stripslashes(htmlspecialchars($val)).'" />';
+				case 'date':
+					$val=($_REQUEST['Question'.$msqID])?$_REQUEST['Question'.$msqID]:'';
+					return $datetime->date('Question'.$msqID,$val);
+				case 'datetime':
+					$val=($_REQUEST['Question'.$msqID])?$_REQUEST['Question'.$msqID]:'';
+					$out = '<input name="Question'.$msqID.'" id="Question'.$msqID.'" type="datetime" value="'.stripslashes(htmlspecialchars($val)).'" />';
+					return $out . $datetime->datetime('Question'.$msqID,$val);
 				case 'field':
 				default:
 					$val=($_REQUEST['Question'.$msqID])?$_REQUEST['Question'.$msqID]:'';
