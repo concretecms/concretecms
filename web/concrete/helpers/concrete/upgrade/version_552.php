@@ -1,4 +1,5 @@
 <?
+<<<<<<< HEAD
 /**
  * @access private
  * @package Helpers
@@ -17,22 +18,19 @@
  * @license    http://www.concrete5.org/license/     MIT License
  */
 
+=======
 defined('C5_EXECUTE') or die("Access Denied.");
 class ConcreteUpgradeVersion552Helper {
 
 	public function run() {
-		Loader::model('single_page');
-		$sp = Page::getByPath('/dashboard/system/permissions/users');
-		if ($sp->isError()) {
-			$d1a = SinglePage::add('/dashboard/system/permissions/users');
-			$d1a->update(array('cName'=>t('User Permissions')));
+		$bt = BlockType::getByHandle('image');
+		if (is_object($bt)) { 
+			$bt->refresh();
 		}
-		$sp = Page::getByPath('/dashboard/system/permissions/advanced');
-		if ($sp->isError()) {
-			$d1b = SinglePage::add('/dashboard/system/permissions/advanced');
-			$d1b->update(array('cName'=>t('Advanced Permissions')));
+		$bt = BlockType::getByHandle('form');
+		if (is_object($bt)) { 
+			$bt->refresh();
 		}
 	}
 
-	
 }

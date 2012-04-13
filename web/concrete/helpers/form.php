@@ -97,27 +97,28 @@ class FormHelper {
 		return $str;
 	}
 
-	/** 
-	 * Creates an HTML checkbox
-	 * @param string $field
-	 * @param string $value
-	 * @param bool $checked
-	 * @return string $html
+	/**
+	 * Generates a checkbox
+	 * @param string $key Checkbox's name and id. Should end with "[]" if it's to return an array on submit.
+	 * @param string $value String value sent to server, if checkbox is checked, on submit
+	 * @param string $isChecked "Checked" value (subject to be overridden by $_REQUEST). Checkbox is checked if value is true (string). Note that 'false' (string) evaluates to true (boolean)!
+	 * @param array $miscFields A hash array with html attributes as key/value pairs (possibly including "class")
+	 * @return $html
 	 */
-	public function checkbox($field, $value, $isChecked = false, $miscFields = array()) {
-		$id = $field;
-		$_field = $field;
+	public function checkbox($key, $value, $isChecked = false, $miscFields = array()) {
+		$id = $key;
+		$_field = $key;
 
-		if ((strpos($field, '[]') + 2) == strlen($field)) {
-			$_field = substr($field, 0, strpos($field, '[]'));
+		if ((strpos($key, '[]') + 2) == strlen($key)) {
+			$_field = substr($key, 0, strpos($key, '[]'));
 			$id = $_field . '_' . $value;
 		}
 
 		if ($isChecked && (!isset($_REQUEST[$_field])) && ($_SERVER['REQUEST_METHOD'] != 'POST')) {
 			$checked = true;
-		} else if ($this->getRequestValue($field) == $value) {
+		} else if ($this->getRequestValue($key) == $value) {
 			$checked = true;
-		} else if (is_array($this->getRequestValue($field)) && in_array($value, $this->getRequestValue($field))) {
+		} else if (is_array($this->getRequestValue($key)) && in_array($value, $this->getRequestValue($key))) {
 			$checked = true;
 		}
 
@@ -125,7 +126,7 @@ class FormHelper {
 			$checked = 'checked="checked" ';
 		}
 
-		return '<input type="checkbox" '. $this->parseMiscFields('ccm-input-checkbox', $miscFields) . ' name="' . $field . '" id="' . $id . '" value="' . $value . '" ' . $checked . ' />';
+		return '<input type="checkbox" '. $this->parseMiscFields('ccm-input-checkbox', $miscFields) . ' name="' . $key . '" id="' . $id . '" value="' . $value . '" ' . $checked . ' />';
 	}
 
 	/** 

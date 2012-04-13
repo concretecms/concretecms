@@ -105,7 +105,7 @@ menuHTML += '<li id="ccm-logo-wrapper"><?=Loader::helper('concrete/interface')->
 <?
 	if ($cp->canViewToolbar()) {  ?>
 	
-	menuHTML += '<li <? if ($c->isEditMode()) { ?>class="ccm-nav-edit-mode-active"<? } ?>><a class="ccm-icon-edit ccm-menu-icon" id="ccm-nav-edit" href="<? if (!$c->isEditMode()) { ?><?=DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=<?=$c->getCollectionID()?>&ctask=check-out<?=$token?><? } else { ?>javascript:void(0);<? } ?>"><? if ($c->isEditMode()) { ?><?=t('Editing')?><? } else { ?><?=t('Edit')?></a><? } ?></li>';
+	menuHTML += '<li <? if ($c->isEditMode()) { ?>class="ccm-nav-edit-mode-active"<? } ?>><a class="ccm-icon-edit ccm-menu-icon" id="ccm-nav-edit" href="<? if (!$c->isEditMode()) { ?><?=DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=<?=$c->getCollectionID()?>&ctask=check-out<?=$token?><? } else { ?>javascript:void(0);<? } ?>"><? if ($c->isEditMode()) { ?><?=t('Editing')?><? } else { ?><?=t('Edit')?><? } ?></a></li>';
 	<?
 	$items = $ihm->getPageHeaderMenuItems('left');
 	foreach($items as $ih) {
@@ -167,13 +167,14 @@ menuHTML += '<?=t('Page currently in edit mode on %s', date(DATE_APP_GENERIC_MDY
 menuHTML += '</div>';
 
 menuHTML += '<div id="ccm-exit-edit-mode-comment" <? if (!$vo->isNew()) { ?>style="display: none"<? } ?>>';
-menuHTML += '<div class="ccm-edit-overlay-actions" class="clearfix">';
+menuHTML += '<div class="ccm-edit-overlay-actions clearfix">';
 menuHTML += '<form method="post" id="ccm-check-in" action="<?=DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=<?=$c->getCollectionID()?>&ctask=check-in">';
 <? $valt = Loader::helper('validation/token'); ?>
 menuHTML += '<?=$valt->output('', true)?>';
 menuHTML += '<h4><?=t('Version Comments')?></h4>';
-menuHTML += '<p><input type="text" name="comments" id="ccm-check-in-comments" value="<?=$vo->getVersionComments()?>" onclick="this.select()" style="width:520px"/></p>';
+menuHTML += '<p><input type="text" name="comments" id="ccm-check-in-comments" value="<?=addslashes($vo->getVersionComments())?>" onclick="this.select()" style="width:520px"/></p>';
 <? if ($cp->canApprovePageVersions()) { ?>
+menuHTML += '<p><input type="text" name="comments" id="ccm-check-in-comments" value="<?=addslashes($vo->getVersionComments())?>" onclick="this.select()" style="width:520px"/></p>';
 menuHTML += '<a href="javascript:void(0)" id="ccm-check-in-publish" class="btn primary" style="float: right"><span><?=t('Publish My Edits')?></span></a>';
 <? } ?>
 menuHTML += '<a href="javascript:void(0)" id="ccm-check-in-preview" class="btn" style="float: right"><span><?=t('Preview My Edits')?></span></a>';

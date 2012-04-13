@@ -2,7 +2,7 @@
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
-$subject = SITE . " " . t("Registration - Approval Required");
+$subject = SITE . " " . t("Registration - A New User Has Registered");
 $body = t("
 
 A new user has registered on your website.

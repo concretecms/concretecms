@@ -381,7 +381,7 @@ class ItemList {
 			$args[$k] = $v;
 		}
 		$url = $uh->setVariable($args, false, $baseURL);
-		print $url;
+		print strip_tags($url);
 	}
 	
 	public function isActiveSortColumn($column) {
@@ -489,29 +489,31 @@ class ItemList {
 		$ss->needsPaging = ($ss->total > $ss->chunk) ? true : false;
 		return $ss;
 	}
-	/** 
-	 * Sets up a column to sort by
+
+	/**
+	 * Sets column to sort by. Only supports a single column; for multiple columns us sortByMultiple()
+	 * @param string $column Column name to sort
+	 * @param string $direction Sorting direction. Use 'asc' or 'desc'
 	 */
 	public function sortBy($column, $direction = 'asc') {
 		$this->sortBy = $column;
-		if (in_array($direction, array('asc','desc'))) {
+		if (in_array(strtolower($direction), array('asc','desc'))) {
 			$this->sortByDirection = $direction;
 		} else {
 			$this->sortByDirection = 'asc';
 		}
 	}
+	
+	public function getSortBy() {return $this->sortBy;}
+	public function getSortByDirection() {return $this->sortByDirection;}
 
 	/** 
-	 * Sets up a column to sort by
+	 * Sets up a multiple columns to search by. Each argument is taken "as-is" (including asc or desc) and concatenated with commas
+	 * Note that this is overrides any previous sortByMultiple() call, and all sortBy() calls
 	 */
 	public function sortByMultiple() {
 		$args = func_get_args();
-		for ($i = 0; $i < count($args); $i++) {
-			$this->sortByString .= $args[$i];
-			if (($i + 1) < count($args)) { 
-				$this->sortByString .= ', ';
-			}
-		}
+		$this->sortByString = implode(', ', $args);
 	}
 }
 

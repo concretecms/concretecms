@@ -1,11 +1,5 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-if (!defined('E_DEPRECATED')) {
-	error_reporting(E_ALL ^ E_NOTICE);
-} else {
-	error_reporting(E_ALL ^ E_NOTICE ^ E_DEPRECATED);
-}
-
 ini_set('display_errors', 1);
 if (!ini_get('safe_mode')) {
 	@set_time_limit(120);
@@ -208,7 +202,7 @@ class InstallController extends Controller {
 
 			// attempt to connect to the database
 			if (defined('DB_SERVER')) {
-				$db = Loader::db($DB_SERVER, $DB_USERNAME, $DB_PASSWORD, $DB_DATABASE, true);			
+				$db = Loader::db($DB_SERVER, $DB_USERNAME, $DB_PASSWORD, $DB_DATABASE, true);
 				$DB_SERVER = DB_SERVER;
 				$DB_DATABASE = DB_DATABASE;
 			} else {

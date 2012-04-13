@@ -110,5 +110,3 @@ class Simple_BB_Code{
 		$this->smilies[$code] = $src;
 	}
 }
-?>
-

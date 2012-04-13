@@ -1,10 +1,6 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
-if (!defined('E_DEPRECATED')) {
-	error_reporting(E_ALL ^ E_NOTICE);
-} else {
-	error_reporting(E_ALL ^ E_NOTICE ^ E_DEPRECATED);
-}
+
 ini_set('display_errors', 1);
 if (!ini_get('safe_mode')) {
 	@set_time_limit(0);
@@ -146,6 +142,9 @@ class UpgradeController extends Controller {
 		}
 		if (version_compare($sav, '5.5.2', '<')) { 
 			$ugvs[] = "version_552";
+		}
+		if (version_compare($sav, '5.5.3', '<')) { 
+			$ugvs[] = "version_553";
 		}
 
 		foreach($ugvs as $ugh) {

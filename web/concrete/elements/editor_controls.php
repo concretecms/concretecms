@@ -3,8 +3,8 @@
 <div class="ccm-editor-controls-right-cap">
 <div class="ccm-editor-controls">
 <ul>
-<li ccm-file-manager-field="rich-text-editor-image"><a class="ccm-file-manager-launch" onclick="ccm_editorCurrentAuxTool='image'; setBookMark();return false;" href="#"><?=t('Add Image')?></a></li>
-<li><a class="ccm-file-manager-launch" onclick="ccm_editorCurrentAuxTool='file'; setBookMark();return false;" href="#"><?=t('Add File')?></a></li>
+<li ccm-file-manager-field="rich-text-editor-image"><a class="ccm-file-manager-launch" onclick="ccm_editorSetupImagePicker(); return false" href="#"><?=t('Add Image')?></a></li>
+<li><a class="ccm-file-manager-launch" onclick="ccm_editorSetupFilePicker(); return false;" href="#"><?=t('Add File')?></a></li>
 <? // I don't know why I need this ?>
 <? /*
 <?php if (isset($mode) && $mode == 'full') {?>
@@ -13,7 +13,7 @@
 <li><a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/sitemap_overlay.php?sitemap_mode=select_page" onclick="setBookMark();" class="dialog-launch" dialog-modal="false" ><?=t('Insert Link to Page')?></a></li>
 <?php } ?>
 */ ?>
-<li><a href="#" onclick="setBookMark();ccmEditorSitemapOverlay();"><?=t('Insert Link to Page')?></a></li>
+<li><a href="#" onclick="ccm_editorSitemapOverlay();"><?=t('Insert Link to Page')?></a></li>
 <?php
 $path = Page::getByPath('/dashboard/settings');
 $cp = new Permissions($path);
@@ -30,15 +30,6 @@ if($cp->canViewPage()) { ?>
 
 <div class="ccm-spacer">&nbsp;</div>
 <script type="text/javascript">
-function ccmEditorSitemapOverlay() {
-    $.fn.dialog.open({
-        title: '<?php echo t("Choose A Page") ?>',
-        href: CCM_TOOLS_PATH + '/sitemap_overlay.php?sitemap_mode=select_page&callback=ccm_selectSitemapNode<?=$GLOBALS['CCM_EDITOR_SITEMAP_NODE_NUM']?>',
-        width: '550',
-        modal: false,
-        height: '400'
-    });
-};
 $(function() {
 	ccm_activateFileSelectors();
 });

@@ -525,8 +525,24 @@
 			case 'remove-alias':
 				if ($cp->canDeletePage()) {
 					$redir = $c->removeThisAlias();
-					header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $redir . $step);
-					exit;
+					if ($_POST['rel'] == 'SITEMAP') { 
+						$obj = new stdClass;
+						$obj->rel = $_REQUEST['rel'];
+						$obj->cParentID = $c->getCollectionParentID();
+						if ($c->getCollectionPointerOriginalID() != '') { 
+							$obj->cID = $c->getCollectionPointerOriginalID();
+						} else {
+							$obj->cID = $c->getCollectionID();
+						}
+						$obj->display_mode = $_REQUEST['display_mode'];
+						$obj->select_mode = $_REQUEST['select_mode'];
+						$obj->instance_id = $_REQUEST['instance_id'];
+						print Loader::helper('json')->encode($obj);
+						exit;
+					} else { 
+						header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $redir . $step);
+						exit;
+					}
 				}
 				break;
 			case 'check-out':

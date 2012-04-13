@@ -187,6 +187,14 @@ if (!defined('USER_REGISTRATION_APPROVAL_REQUIRED')) {
 	Config::getOrDefine('USER_REGISTRATION_APPROVAL_REQUIRED', false);
 }
 
+if (!defined('REGISTER_NOTIFICATION')) {
+	Config::getOrDefine('REGISTER_NOTIFICATION', false);
+}
+
+if (!defined('EMAIL_ADDRESS_REGISTER_NOTIFICATION')) {
+	Config::getOrDefine('EMAIL_ADDRESS_REGISTER_NOTIFICATION', false);
+}
+
 if (!defined('REGISTRATION_TYPE')) {
 	Config::getOrDefine('REGISTRATION_TYPE', 'disabled');	
 }

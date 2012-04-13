@@ -72,7 +72,9 @@ if ($valt->validate('import_incoming')) {
 			window.parent.ccm_uploadedFiles.push(<?=intval($resp->getFileID())?>);
 		<? } ?>
 		window.parent.jQuery.fn.dialog.closeTop();
-		window.parent.ccm_filesUploadedDialog('<?=$searchInstance?>');		
+		setTimeout(function() { 
+			window.parent.ccm_filesUploadedDialog('<?=$searchInstance?>');		
+		}, 100);
 	<? } ?>
 </script>
 </head>

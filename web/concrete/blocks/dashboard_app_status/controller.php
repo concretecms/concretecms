@@ -20,7 +20,8 @@
 		}
 		
 		public function view() {
-			$this->set('latest_version', Config::get('APP_VERSION_LATEST'));
+			Loader::library('update');
+			$this->set('latest_version', Update::getLatestAvailableVersionNumber());
 			$tp = new TaskPermission();
 			$updates = 0;
 			$local = array();

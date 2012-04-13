@@ -30,6 +30,9 @@
 		<field name="redirectCID" type="i">
 			<default value="0"/>
 		</field>      		
+		<field name="addFilesToSet" type="i">
+			<default value="0" />
+		</field>
 	</table>
 	
 	<table name="btFormQuestions"> 
