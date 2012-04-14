@@ -21,7 +21,8 @@ class StartingPointPackage extends Package {
 		$this->routines = array(
 		new StartingPointInstallRoutine('make_directories', 5, t('Starting installation and creating directories.')),
 		new StartingPointInstallRoutine('install_database', 10, t('Creating database tables.')),
-		new StartingPointInstallRoutine('add_users', 20, t('Adding admin user.')),
+		new StartingPointInstallRoutine('add_users', 15, t('Adding admin user.')),
+		new StartingPointInstallRoutine('install_permissions', 20, t('Installing permissions.')),
 		new StartingPointInstallRoutine('add_home_page', 23, t('Creating home page.')),
 		new StartingPointInstallRoutine('install_attributes', 25, t('Installing attributes.')),
 		new StartingPointInstallRoutine('install_blocktypes', 30, t('Adding block types.')),
@@ -188,9 +189,12 @@ class StartingPointPackage extends Package {
 		@chmod(DIR_CONFIG_SITE . '/site.php', FILE_PERMISSIONS_MODE);
 	}
 	
-	public function set_site_permissions() {
+	public function install_permissions() { 
 		$ci = new ContentImporter();
 		$ci->importContentFile(DIR_BASE_CORE. '/config/install/base/permissions.xml');
+	}
+	
+	public function set_site_permissions() {
 		
 		Loader::model('file_set');
 		$fs = FileSet::getGlobal();
@@ -198,28 +202,17 @@ class StartingPointPackage extends Package {
 		$g2 = Group::getByID(REGISTERED_GROUP_ID);
 		$g3 = Group::getByID(ADMIN_GROUP_ID);
 		
-		$fs->setPermissions($g1, FilePermissions::PTYPE_NONE, FilePermissions::PTYPE_ALL, FilePermissions::PTYPE_NONE, FilePermissions::PTYPE_NONE, FilePermissions::PTYPE_NONE);
-		$fs->setPermissions($g2, FilePermissions::PTYPE_NONE, FilePermissions::PTYPE_ALL, FilePermissions::PTYPE_NONE, FilePermissions::PTYPE_NONE, FilePermissions::PTYPE_NONE);
-		$fs->setPermissions($g3, FilePermissions::PTYPE_ALL, FilePermissions::PTYPE_ALL, FilePermissions::PTYPE_ALL, FilePermissions::PTYPE_ALL, FilePermissions::PTYPE_ALL);
+		$fs->assignPermissions($g1, array('view_file_set_file'));
+		$fs->assignPermissions($g3, array('view_file_set_file', 'search_file_set', 'edit_file_set_file_properties', 'edit_file_set_file_contents', 'copy_file_set_files', 'edit_file_set_permissions', 'delete_file_set_files', 'delete_file_set', 'add_file'));
 
 		Config::save('SITE', SITE);
 		Config::save('SITE_APP_VERSION', APP_VERSION);
 		$u = new User();
 		$u->saveConfig('NEWSFLOW_LAST_VIEWED', 'FIRSTRUN');
 		
-		$args = array();
-		$args['cInheritPermissionsFrom'] = 'OVERRIDE';
-		$args['cOverrideTemplatePermissions'] = 1;
-		$args['collectionRead'][] = 'gID:' . GUEST_GROUP_ID;
-		$args['collectionAdmin'][] = 'gID:' . ADMIN_GROUP_ID;
-		$args['collectionRead'][] = 'gID:' . ADMIN_GROUP_ID;
-		$args['collectionApprove'][] = 'gID:' . ADMIN_GROUP_ID;
-		$args['collectionReadVersions'][] = 'gID:' . ADMIN_GROUP_ID;
-		$args['collectionWrite'][] = 'gID:' . ADMIN_GROUP_ID;
-		$args['collectionDelete'][] = 'gID:' . ADMIN_GROUP_ID;
-		
 		$home = Page::getByID(1, "RECENT");
-		$home->updatePermissions($args);
+		$home->assignPermissions($g1, array('view_page'));
+		$home->assignPermissions($g3, array('view_page_versions', 'preview_page_as_user', 'edit_page_properties', 'edit_page_contents', 'edit_page_speed_settings', 'edit_page_theme', 'edit_page_type', 'edit_page_permissions', 'delete_page', 'delete_page_versions', 'approve_page_versions', 'add_subpage', 'move_or_copy_page'));
 	}
 	
 	public static function hasCustomList() {

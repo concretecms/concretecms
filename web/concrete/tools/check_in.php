@@ -3,13 +3,13 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 $c = Page::getByID($_REQUEST['cID']);
 $cp = new Permissions($c);
-if (!$cp->canWrite()) {
+if (!$cp->canEditPageProperties() && (!$cp->canEditPageContents())) {
 	die(t("Access Denied."));
 }
 
 $v = CollectionVersion::get($c, "RECENT", true);
 
-if ($cp->canApproveCollection()) {
+if ($cp->canApprovePageVersions()) {
 	$approveChecked = "";
 	if (isset($_SESSION['checkInApprove'])) {
 		if ($_SESSION['checkInApprove'] == true) {
@@ -32,7 +32,7 @@ Loader::element('pane_header', array('c'=>$c));
                     <input type="text" class="ccm-input-text" name="comments" id="ccm-check-in-comments" value="<?=$v->getVersionComments()?>" style="width:565px"/>
                 </div>
                 <div class="ccm-buttons">
-                    <? if ($cp->canApproveCollection()) { ?>
+                    <? if ($cp->canApprovePageVersions()) { ?>
                     <a href="javascript:void(0)" id="ccm-check-in-publish" class="ccm-button-right accept"><span><?=t('Publish My Edits')?></span></a>
                     <? } ?>
                     <a href="javascript:void(0)" id="ccm-check-in-preview" class="ccm-button-right accept" style="margin-right: 5px"><span><?=t('Preview My Edits')?></span></a>

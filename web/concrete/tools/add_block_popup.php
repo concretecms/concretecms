@@ -13,6 +13,7 @@ $ap = new Permissions($a);
 $canContinue = ($_REQUEST['btask'] == 'alias') ? $ap->canAddBlocks() : $ap->canAddBlock($bt);
 
 if (!$canContinue) {
+	print t('Access Denied');
 	exit;
 }
 	

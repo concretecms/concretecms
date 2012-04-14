@@ -35,11 +35,11 @@
 		public function on_page_view() {
 			$stack = Stack::getByID($this->stID);
 			$p = new Permissions($stack);
-			if ($p->canRead()) {
+			if ($p->canViewPage()) {
 				$blocks = $stack->getBlocks();
 				foreach($blocks as $b) {
 					$bp = new Permissions($b);
-					if ($bp->canRead()) {
+					if ($bp->canViewBlock()) {
 						$btc = $b->getInstance();
 						if('Controller' != get_class($btc)){
 							$btc->outputAutoHeaderItems();

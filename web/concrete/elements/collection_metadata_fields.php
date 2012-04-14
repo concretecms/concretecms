@@ -2,6 +2,8 @@
 <?
 $attribs = array();
 
+$allowedAKIDs = $assignment->getAttributesAllowedArray();
+
 $requiredKeys = array();
 $usedKeys = array();
 if ($c->getCollectionTypeID() > 0 && !$c->isMasterCollection()) {
@@ -20,7 +22,7 @@ $usedKeysCombined = array_merge($requiredKeys, $usedKeys);
 ?>
 
 <div class="row">
-<div class="span4 columns">
+<div id="ccm-attributes-column" class="span4 columns">
 	<h6><?=t("All Attributes")?></h6>
 	<div class="ccm-block-type-search-wrapper ">
 
@@ -40,12 +42,16 @@ $usedKeysCombined = array_merge($requiredKeys, $usedKeys);
 		<li class="icon-select-list-header ccm-attribute-available"><span><?=$as->getAttributeSetName()?></span></li>
 		<? 
 		$setattribs = $as->getAttributeKeys();
-		foreach($setattribs as $ak) { ?>
+		foreach($setattribs as $ak) { 
+			$attribs[] = $ak;
+			if (!in_array($ak->getAttributeKeyID(), $allowedAKIDs)) {
+				continue;
+			}
+			?>
 			
-			<li id="sak<?=$ak->getAttributeKeyID()?>" class="ccm-attribute-available <? if (in_array($ak->getAttributeKeyID(), $usedKeysCombined)) { ?>ccm-attribute-added<? } ?>"><a style="background-image: url('<?=$ak->getAttributeKeyIconSRC()?>')" href="javascript:void(0)" onclick="ccmShowAttributeKey(<?=$ak->getAttributeKeyID()?>)"><?=$ak->getAttributeKeyName()?></a></li>	
+			<li id="sak<?=$ak->getAttributeKeyID()?>" class="ccm-attribute-key ccm-attribute-available <? if (in_array($ak->getAttributeKeyID(), $usedKeysCombined)) { ?>ccm-attribute-added<? } ?>"><a style="background-image: url('<?=$ak->getAttributeKeyIconSRC()?>')" href="javascript:void(0)" onclick="ccmShowAttributeKey(<?=$ak->getAttributeKeyID()?>)"><?=$ak->getAttributeKeyName()?></a></li>	
 			
 		<? 
-			$attribs[] = $ak;
 		} 	
 		
 	} 
@@ -56,12 +62,18 @@ $usedKeysCombined = array_merge($requiredKeys, $usedKeys);
 		<li class="icon-select-list-header"><span><?=t('Other')?></span></li>
 	<? }
 	
-	foreach($unsetattribs as $ak) { ?>
+	foreach($unsetattribs as $ak) { 
+		$attribs[] = $ak;
+		if (!in_array($ak->getAttributeKeyID(), $allowedAKIDs)) {
+			continue;
+		}
+
+	
+	?>
 		
-		<li id="sak<?=$ak->getAttributeKeyID()?>" class="ccm-attribute-available <? if (in_array($ak->getAttributeKeyID(), $usedKeysCombined)) { ?>ccm-attribute-added<? } ?>"><a style="background-image: url('<?=$ak->getAttributeKeyIconSRC()?>')" href="javascript:void(0)" onclick="ccmShowAttributeKey(<?=$ak->getAttributeKeyID()?>)"><?=$ak->getAttributeKeyName()?></a></li>	
+		<li id="sak<?=$ak->getAttributeKeyID()?>" class="ccm-attribute-key ccm-attribute-available <? if (in_array($ak->getAttributeKeyID(), $usedKeysCombined)) { ?>ccm-attribute-added<? } ?>"><a style="background-image: url('<?=$ak->getAttributeKeyIconSRC()?>')" href="javascript:void(0)" onclick="ccmShowAttributeKey(<?=$ak->getAttributeKeyID()?>)"><?=$ak->getAttributeKeyName()?></a></li>	
 	
 	<? 
-		$attribs[] = $ak;
 	} 	
 	
 	?>
@@ -88,12 +100,18 @@ $usedKeysCombined = array_merge($requiredKeys, $usedKeys);
 	
 		<div class="form-stacked">
 		<div class="well" id="ak<?=$ak->getAttributeKeyID()?>" <? if (!in_array($ak->getAttributeKeyID(), $usedKeysCombined)) { ?> style="display: none" <? } ?>>
+		
+		<? if (in_array($ak->getAttributeKeyID(), $allowedAKIDs)) { ?> 
 		<input type="hidden" class="ccm-meta-field-selected" id="ccm-meta-field-selected<?=$ak->getAttributeKeyID()?>" name="selectedAKIDs[]" value="<? if (!in_array($ak->getAttributeKeyID(), $usedKeysCombined)) { ?>0<? } else { ?><?=$ak->getAttributeKeyID()?><? } ?>" />
 		
 			<a href="javascript:void(0)" class="ccm-meta-close" ccm-meta-name="<?=$ak->getAttributeKeyName()?>" id="ccm-remove-field-ak<?=$ak->getAttributeKeyID()?>" style="display:<?=(!in_array($ak->getAttributeKeyID(), $requiredKeys))?'block':'none'?>"><img src="<?=ASSETS_URL_IMAGES?>/icons/remove_minus.png" width="16" height="16" alt="<?=t('remove')?>" /></a>
 
 			<label><?=$ak->getAttributeKeyName()?></label>
 			<?=$ak->render('form', $caValue); ?>
+		<? } else { ?>
+			<label><?=$ak->getAttributeKeyName()?></label>
+			<?=$c->getAttribute($ak->getAttributeKeyHandle())?>
+		<? } ?>
 		</div>
 		</div>
 		
@@ -253,6 +271,17 @@ $(function() {
 		});
 		
 	});
+	
+	// hide any attribute set headers that don't have any attributes
+	$('.icon-select-list-header').each(function() {
+		if (!($(this).next().hasClass('ccm-attribute-key'))) {
+			$(this).remove();
+		}
+	});
+	
+	if ($('.ccm-attribute-key').length == 0) {
+		$('#ccm-attributes-column').hide();
+	}
 
 	$("a.ccm-meta-path-add").click(function(ev) { ccmPathHelper.add(ev.target) });
 	$("a.ccm-meta-path-del").click(function(ev) { ccmPathHelper.del(ev.target) });

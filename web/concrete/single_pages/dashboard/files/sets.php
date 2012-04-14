@@ -40,7 +40,13 @@
 		</div>
 		</div>
 
-		<? if (PERMISSIONS_MODEL != 'simple') { ?>
+		<? if (PERMISSIONS_MODEL != 'simple') { 
+		
+		$fsp = new Permissions($fs);
+		if ($fsp->canEditFileSetPermissions()) {
+
+		?>
+		
 		<div class="clearfix">
 		<?=$form->label('fsOverrideGlobalPermissions', t('Custom Permissions'))?>
 		<div class="input">
@@ -49,53 +55,18 @@
 		</ul>
 		</div>
 		</div>
+		
+		
 
 		<div id="ccm-file-set-permissions-wrapper" <? if (!$fs->overrideGlobalPermissions()) { ?> style="display: none" <? } ?>>
 
-		<a class="btn ccm-button-right dialog-launch ug-selector" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/users/search_dialog?mode=choose_multiple" dialog-modal="false" dialog-width="90%" dialog-title="<?=t('Add User')?>"  dialog-height="70%"><?=t('Add User')?></a>
-		<a class="btn ccm-button-right dialog-launch ug-selector" style="margin-right: 5px" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/select_group" dialog-modal="false" dialog-title="<?=t('Add Group')?>"><?=t('Add Group')?></a>
-
-		<div class="ccm-spacer">&nbsp;</div><br/>
-
-		<div id="ccm-file-permissions-entities-wrapper" class="ccm-permissions-entities-wrapper">			
-		<div id="ccm-file-permissions-entity-base" class="ccm-permissions-entity-base">
+		<? Loader::element('permission/lists/file_set', array("fs" => $fs)); ?>
 		
-			<? print $ph->getFileAccessRow('SET'); ?>
-			
-			
 		</div>
-		
-		
-		<? 
-		if ($fs->overrideGlobalPermissions()) {
-			$gl = new GroupList($fs);
-			$ul = new UserInfoList($fs);
-		}else {
-			$gfs = FileSet::getGlobal();
-			$gl = new GroupList($gfs);
-			$ul = new UserInfoList($gfs);
+		<? } 
 		
 		}
-		
-		$gArray = $gl->getGroupList();
-		$uArray = $ul->getUserInfoList();
-		foreach($gArray as $g) { ?>
-			
-			<? print $ph->getFileAccessRow('SET','gID_' . $g->getGroupID(), $g->getGroupName(), $g->getFileSearchLevel(), $g->getFileReadLevel(), $g->getFileWriteLevel(), $g->getFileAdminLevel(), $g->getFileAddLevel(), $g->getAllowedFileExtensions()); ?>
-		
-		<? } ?>
-		<? foreach($uArray as $ui) { ?>
-			
-			<? print $ph->getFileAccessRow('SET','uID_' . $ui->getUserID(), $ui->getUserName(), $ui->getFileSearchLevel(), $ui->getFileReadLevel(), $ui->getFileWriteLevel(), $ui->getFileAdminLevel(), $ui->getFileAddLevel(), $ui->getAllowedFileExtensions()); ?>
-		
-		<? } ?>
-		</div>
-		
-		
-		<div class="ccm-spacer">&nbsp;</div>
-		
-		</div>
-		<? } ?>
+		?>
 		
 
 		<?php
@@ -141,7 +112,9 @@
 	</div>
 	<div class="ccm-pane-footer">
 		<input type="submit" value="<?=t('Save')?>" class="btn primary ccm-button-v2-right" />
-		<? print $ih->button_js(t('Delete'), "deleteFileSet()", 'right','error');?>
+		<? if ($fsp->canDeleteFileSet()) { ?>
+			<? print $ih->button_js(t('Delete'), "deleteFileSet()", 'right','error');?>
+		<? } ?>
 	</div>
 
 	<?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(false)?>
@@ -171,29 +144,6 @@
 	.ccm-file-set-file-list:hover {cursor: move}
 	</style>
 
-	<script type="text/javascript">
-		
-		$(function() {	
-			ccm_triggerSelectUser = function(uID, uName) {
-				ccm_alSelectPermissionsEntity('uID', uID, uName);
-			}
-			
-			ccm_triggerSelectGroup = function (gID, gName) {
-				ccm_alSelectPermissionsEntity('gID', gID, gName);
-			}
-
-			$(".ug-selector").dialog();	
-			ccm_alActivateFilePermissionsSelector();	
-			
-			$("#fsOverrideGlobalPermissions").click(function() {
-				if ($(this).prop('checked')) {
-					$('#ccm-file-set-permissions-wrapper').show();
-				} else { 
-					$('#ccm-file-set-permissions-wrapper').hide();
-				}
-			});
-		});
-</script>	
 <?php } else { ?>
 
 

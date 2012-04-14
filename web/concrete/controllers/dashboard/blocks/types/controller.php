@@ -2,25 +2,6 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 class DashboardBlocksTypesController extends Controller {
 
-	public function view() {
-		$btAvailableArray = BlockTypeList::getAvailableList();
-		$btArray = BlockTypeList::getInstalledList();		
-		$coreBlockTypes = array();
-		$webBlockTypes = array();		
-		foreach($btArray as $_bt) {
-			if ($_bt->getPackageID() == 0) {
-				if ($_bt->isCoreBlockType()) {
-					$coreBlockTypes[] = $_bt;
-				} else {
-					$webBlockTypes[] = $_bt;
-				}
-			}
-		}
-		$this->set('webBlockTypes', $webBlockTypes);
-		$this->set('coreBlockTypes', $coreBlockTypes);
-		$this->set('availableBlockTypes', $btAvailableArray);
-	}
-
 	public function on_start() {
 		$this->set('ci', Loader::helper('concrete/urls'));
 		$this->set('ch', Loader::helper('concrete/interface'));
@@ -30,6 +11,31 @@ class DashboardBlocksTypesController extends Controller {
 
 	public function on_before_render() {
 		$this->set('error', $this->error);
+	}
+	
+	public function view() {
+		$btAvailableArray = BlockTypeList::getAvailableList();
+		$btInstalledArray = BlockTypeList::getInstalledList();
+		$internalBlockTypes = array();		
+		$normalBlockTypes = array();
+		foreach($btInstalledArray as $_bt) {
+			if ($_bt->isInternalBlockType()) {
+				$internalBlockTypes[] = $_bt;
+			} else {
+				$normalBlockTypes[] = $_bt;
+			}
+		}
+		$this->set('internalBlockTypes', $internalBlockTypes);
+		$this->set('normalBlockTypes', $normalBlockTypes);
+		$this->set('availableBlockTypes', $btAvailableArray);
+	}
+	
+	public function reset_display_order() {
+		if ($this->post()) {
+			BlockTypeList::resetBlockTypeDisplayOrder();
+			$this->set('message', t('Display Order Reset.'));
+		}
+		$this->view();
 	}
 	
 	public function refresh($btID = 0) {

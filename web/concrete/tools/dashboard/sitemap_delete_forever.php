@@ -9,7 +9,7 @@ if (!$dh->canRead()) {
 $c = Page::getByID($_REQUEST['cID']);
 if (is_object($c) && !$c->isError()) { 
 	$cp = new Permissions($c);
-	if ($cp->canDeleteCollection()) { 
+	if ($cp->canDeletePage()) { 
 		$c->delete();	
 		$message = t('Page deleted.');
 		

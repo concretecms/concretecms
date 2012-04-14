@@ -49,7 +49,7 @@ class ContentExporter {
 		PackageList::export($this->x);
 		
 		// now task permissions
-		TaskPermissionList::export($this->x);
+		PermissionKey::exportList($this->x);
 		
 		// now jobs
 		Loader::model('job');

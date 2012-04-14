@@ -12,7 +12,7 @@ class FileList extends DatabaseItemList {
 	protected $autoSortColumns = array('fvFilename', 'fvAuthorName','fvTitle', 'fDateAdded', 'fvDateAdded', 'fvSize');
 	protected $itemsPerPage = 10;
 	protected $attributeClass = 'FileAttributeKey';
-	protected $permissionLevel = 'canSearch';
+	protected $permissionLevel = 'search_file_set';
 	protected $filteredFileSetIDs = array();
 	
 	/* magic method for filtering by attributes. */
@@ -190,7 +190,114 @@ class FileList extends DatabaseItemList {
 		LEFT JOIN Users u on u.uID = fv.fvAuthorUID
 		');
 	}
+
+	protected function setupFilePermissions() {
+		$u = new User();
+		if ($this->permissionLevel == false || $u->isSuperUser()) {
+			return false;
+		}
+
+		$accessEntities = $u->getUserAccessEntityObjects();
+		foreach($accessEntities as $pae) {
+			$peIDs[] = $pae->getAccessEntityID();
+		}
+		$db = Loader::db();
+		// figure out which sets can read files in, not read files in, and read only my files in.
+		$fsIDs = $db->GetCol('select fsID from FileSets where fsOverrideGlobalPermissions = 1');
+		$viewableSets = array(-1);
+		$nonviewableSets = array(-1);
+		$myviewableSets = array(-1);
+		
+		if (count($fsIDs) > 0) { 
+			$pk = PermissionKey::getByHandle($this->permissionLevel);
+			foreach($fsIDs as $fsID) {
+				$fs = FileSet::getByID($fsID);
+				$pk->setPermissionObject($fs);
+				$list = $pk->getAssignmentList(PermissionKey::ACCESS_TYPE_ALL, $accessEntities);
+				$list = PermissionDuration::filterByActive($list);
+				if (count($list) > 0) { 
+					foreach($list as $l) {
+						if ($l->getAccessType() == PermissionKey::ACCESS_TYPE_INCLUDE) {
+							$viewableSets[] = $fs->getFileSetID();
+						}
+						if ($l->getAccessType() == PermissionKey::ACCESS_TYPE_EXCLUDE) {
+							$nonviewableSets[] = $fs->getFileSetID();
+						}
+						if ($l->getAccessType() == FileSetPermissionKey::ACCESS_TYPE_MINE) {
+							$myviewableSets[] = $fs->getFileSetID();
+						}
+					}
+				} else {
+					$nonviewableSets[] = $fs->getFileSetID();
+				}
+			}
+		}
+
+
+		// this excludes all file that are found in sets that I can't find
+		$this->filter(false, '((select count(fID) from FileSetFiles where FileSetFiles.fID = f.fID and fsID in (' . implode(',', $nonviewableSets) . ')) = 0)');		
+		
+		// deal with "mine"
+		$fs = FileSet::getGlobal();
+		$fk = PermissionKey::getByHandle('search_file_set');
+		$fk->setPermissionObject($fs);
+		$list = $fk->getAssignmentList(PermissionKey::ACCESS_TYPE_ALL, $accessEntities);
+		$list = PermissionDuration::filterByActive($list);
+		foreach($list as $l) {
+			if ($l->getAccessType() == FileSetPermissionKey::ACCESS_TYPE_MINE) {
+				$valid = FileSetPermissionKey::ACCESS_TYPE_MINE;
+			}
+			if ($l->getAccessType() == PermissionKey::ACCESS_TYPE_INCLUDE) {
+				$valid = PermissionKey::ACCESS_TYPE_INCLUDE;
+			}
+			if ($l->getAccessType() == PermissionKey::ACCESS_TYPE_EXCLUDE) {
+				$valid = PermissionKey::ACCESS_TYPE_EXCLUDE;
+			}
+		}
+		
+		$uID = ($u->isRegistered()) ? $u->getUserID() : 0;
+		// This excludes all files found in sets where I may only read mine, and I did not upload the file
+		$this->filter(false, '(f.uID = ' . $uID . ' or (select count(fID) from FileSetFiles where FileSetFiles.fID = f.fID and fsID in (' . implode(',',$myviewableSets) . ')) = 0)');		
+		if ($valid == FileSetPermissionKey::ACCESS_TYPE_MINE) {
+			// this means that we're only allowed to read files we've uploaded (unless, of course, those files are in previously covered sets)
+			$this->filter(false, '(f.uID = ' . $uID . ' or (select count(fID) from FileSetFiles where FileSetFiles.fID = f.fID and fsID in (' . implode(',',$viewableSets) . ')) > 0)');		
+		}
+		
+		// now we filter out files we directly don't have access to
+		// There is a really stupid MySQL bug that, if the subquery returns null, the entire query is nullified
+		// So I have to do this query OUTSIDE of MySQL and give it to mysql
+		$db = Loader::db();
+		$vpvPKID = $db->GetOne('select pkID from PermissionKeys where pkHandle = \'view_file\'');
+		if ($this->permissionLevel == 'search_file_set') { 
+			$vpPKID = $db->GetOne('select pkID from PermissionKeys where pkHandle = \'view_file_in_file_manager\'');
+		} else {
+			$vpPKID = $vpvPKID;
+		}
+		$pdIDs = $db->GetCol("select distinct pdID from PagePermissionAssignments where pkID in (?, ?) and pdID > 0", array($vpPKID, $vpvPKID));
+		$activePDIDs = array();
+		if (count($pdIDs) > 0) {
+			// then we iterate through all of them and find any that are active RIGHT NOW
+			foreach($pdIDs as $pdID) {
+				$pd = PermissionDuration::getByID($pdID);
+				if ($pd->isActive()) {
+					$activePDIDs[] = $pd->getPermissionDurationID();	
+				}
+			}
+		}
+		$activePDIDs[] = 0;
+		
+		// exclude files where its overridden but I don't have the ability to read
+		$this->addToQuery('left join FilePermissionAssignments fpa2 on f.fID = fpa2.fID and fpa2.accessType = ' . FileSetPermissionKey::ACCESS_TYPE_INCLUDE . ' and pdID in (' . implode(',', $activePDIDs) . ')
+			and fpa2.peID in (' . implode(',', $peIDs) . ') and fpa2.pkID in (' . $vpPKID . ')');		
+		$this->filter(false, '(f.fOverrideSetPermissions = 0 or (f.fID = fpa2.fID and fpa2.fID is not null))');
+		
+		// exclude detail files where read is excluded
+		$this->filter(false, "f.fID not in (select ff.fID from Files ff inner join FilePermissionAssignments fpaExclude on ff.fID = fpaExclude.fID where fOverrideSetPermissions = 1 and accessType = " . PermissionKey::ACCESS_TYPE_EXCLUDE . " and pdID in (" . implode(',', $activePDIDs) . ")
+			and fpaExclude.peID in (" . implode(',', $peIDs) . ") and fpaExclude.pkID in (" . $vpPKID . "," . $vpvPKID . "))");		
+	}
 	
+
+	/*
 	protected function setupFilePermissions() {
 		
 		$u = new User();
@@ -254,6 +361,7 @@ class FileList extends DatabaseItemList {
 			}			
 		}
 	}
+	*/
 	
 	/** 
 	 * Returns an array of file objects based on current settings

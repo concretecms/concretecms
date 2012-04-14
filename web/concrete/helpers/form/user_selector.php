@@ -132,7 +132,6 @@ class FormUserSelectorHelper {
 					ccm_setupGridStriping(\'ccmUserSelect' . $fieldName . '\');
 				});
 			}
-
 		});
 		
 		</script>';	

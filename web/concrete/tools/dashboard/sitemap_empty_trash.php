@@ -16,7 +16,7 @@ if (is_object($trash) && !$trash->isError()) {
 	$pages = $pl->get();	
 	foreach($pages as $pc) {
 		$cp = new Permissions($pc);
-		if ($cp->canDeleteCollection()) {
+		if ($cp->canDeletePage()) {
 			$i++;
 			$pc->delete();			
 		}

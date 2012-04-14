@@ -138,7 +138,7 @@ $(function() {
 		foreach($stacks as $s) { 
 			$as = Area::get($s, STACKS_AREA_NAME);
 			$asp = new Permissions($as);
-			if ($asp->canRead() && $ap->canAddStack($s)) { 
+			if ($asp->canRead() && $ap->canAddStackToArea($s)) { 
 			?>	
 			<li class="ccm-stack-available">
 				<a onclick="ccmStackAddToArea(<?=$s->getCollectionID()?>, '<?=Loader::helper('text')->entities($a->getAreaHandle())?>')" href="javascript:void(0)"><?=$s->getCollectionName()?></a>

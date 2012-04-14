@@ -34,6 +34,11 @@ class DateHelper {
 			$mask = 'Y-m-d H:i:s';
 		}
 		
+		$req = Request::get();
+		if ($req->hasCustomRequestUser()) {
+			return date($mask, strtotime($req->getCustomRequestDateTime()));
+		}
+		
 		if(!isset($systemDateTime) || !strlen($systemDateTime)) {
 			return NULL; // if passed a null value, pass it back
 		} elseif(strlen($systemDateTime)) {
@@ -64,6 +69,11 @@ class DateHelper {
 	public function getSystemDateTime($userDateTime = 'now', $mask = NULL) {
 		if(!isset($mask) || !strlen($mask)) {
 			$mask = 'Y-m-d H:i:s';
+		}
+
+		$req = Request::get();
+		if ($req->hasCustomRequestUser()) {
+			return date($mask, strtotime($req->getCustomRequestDateTime()));
 		}
 		
 		if(!isset($userDateTime) || !strlen($userDateTime)) {

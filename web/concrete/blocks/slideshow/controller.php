@@ -73,7 +73,7 @@ class SlideshowBlockController extends BlockController {
 		$maxHeight = 0;
 		foreach ($files as $f) {
 			$fp = new Permissions($f);
-			if(!$fp->canRead()) { continue; }
+			if(!$fp->canViewFile()) { continue; }
 			$image['fID'] 			= $f->getFileID();
 			$image['fileName'] 		= $f->getFileName();
 			$image['fullFilePath'] 	= $f->getPath();

@@ -31,16 +31,17 @@ if ($a->areaAcceptsBlocks()) { ?>
 	ccm_areaMenuObj<?=$a->getAreaID()?>.aID = <?=$a->getAreaID()?>;
 	ccm_areaMenuObj<?=$a->getAreaID()?>.arHandle = "<?=$arHandle?>";
 	ccm_areaMenuObj<?=$a->getAreaID()?>.canAddBlocks = <?=$ap->canAddBlocks()?>;
-	ccm_areaMenuObj<?=$a->getAreaID()?>.canWrite = <?=$ap->canWrite()?>;
-	<? if ($cp->canAdmin() && PERMISSIONS_MODEL != 'simple') { ?>
+	ccm_areaMenuObj<?=$a->getAreaID()?>.canAddStacks = <?=$ap->canAddStacks()?>;
+	ccm_areaMenuObj<?=$a->getAreaID()?>.canWrite = <?=$ap->canEditAreaContents()?>;
+	<? if ($ap->canEditAreaPermissions() && PERMISSIONS_MODEL != 'simple') { ?>
 		ccm_areaMenuObj<?=$a->getAreaID()?>.canModifyGroups = true;
 	<? } ?>
-	<? if ($ap->canWrite() && ENABLE_AREA_LAYOUTS == true && (!$a->isGlobalArea()) && (!$c->isMasterCollection())) { ?>
+	<? if ($ap->canAddLayoutToArea() && ENABLE_AREA_LAYOUTS == true && (!$a->isGlobalArea()) && (!$c->isMasterCollection())) { ?>
 		ccm_areaMenuObj<?=$a->getAreaID()?>.canLayout = true;
 	<? } else { ?>
 		ccm_areaMenuObj<?=$a->getAreaID()?>.canLayout = false;
 	<? } ?>
-	<? if ($ap->canWrite() && ENABLE_CUSTOM_DESIGN == true && (!$c->isMasterCollection())) { ?>
+	<? if ($ap->canEditAreaDesign() && ENABLE_CUSTOM_DESIGN == true && (!$c->isMasterCollection())) { ?>
 		ccm_areaMenuObj<?=$a->getAreaID()?>.canDesign = true;
 	<? } else { ?>
 		ccm_areaMenuObj<?=$a->getAreaID()?>.canDesign = false;

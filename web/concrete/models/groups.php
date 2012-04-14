@@ -354,11 +354,6 @@
 			$db = Loader::db(); 
 			$r = $db->query("DELETE FROM UserGroups WHERE gID = ?",array(intval($this->gID)) );
 			$r = $db->query("DELETE FROM Groups WHERE gID = ?",array(intval($this->gID)) );
-			$r = $db->query("DELETE FROM CollectionVersionBlockPermissions WHERE gID = ?",array(intval($this->gID)) );
-			$r = $db->query("DELETE FROM PagePermissionPageTypes WHERE gID = ?",array(intval($this->gID)) );
-			$r = $db->query("DELETE FROM PagePermissions WHERE gID = ?",array(intval($this->gID)) );
-			$r = $db->query("DELETE FROM AreaGroupBlockTypes WHERE gID = ?",array(intval($this->gID)) );
-			$r = $db->query("DELETE FROM AreaGroups WHERE gID = ?",array(intval($this->gID)) ); 
 		}
 
 		function inGroup() {

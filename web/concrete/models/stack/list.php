@@ -7,6 +7,7 @@ class StackList extends PageList {
 	public function __construct() {
 		$c = Page::getByPath(STACKS_PAGE_PATH);
 		$this->ignoreAliases = true;
+		$this->ignorePermissions = true;
 		$this->addToQuery('inner join Stacks on Stacks.cID = p1.cID');
 		$this->filterByParentID($c->getCollectionID());
 	}

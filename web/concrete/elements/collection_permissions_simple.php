@@ -1,9 +1,39 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-if ($cp->canAdminPage()) {
-$gArray = array();
-$gl = new GroupList($c, false, true);
-$gArray = $gl->getGroupList();
+if ($cp->canEditPagePermissions()) {
+	$editAccess = array();
+	$viewAccess = array();
+		
+	$pk = PermissionKey::getByHandle('view_page');
+	$pk->setPermissionObject($c);
+	$assignments = $pk->getAssignmentList();
+	foreach($assignments as $asi) {
+		$ae = $asi->getAccessEntityObject();
+		$ae = $asi->getAccessEntityObject();
+		if ($ae->getAccessEntityType() == 'G') {
+			$viewAccess[] = $ae->getGroupObject()->getGroupID();
+		}
+	}
+
+	$pk = PermissionKey::getByHandle('edit_page_contents');
+	$pk->setPermissionObject($c);
+	$assignments = $pk->getAssignmentList();
+	foreach($assignments as $asi) {
+		$ae = $asi->getAccessEntityObject();
+		$ae = $asi->getAccessEntityObject();
+		if ($ae->getAccessEntityType() == 'G') {
+			$editAccess[] = $ae->getGroupObject()->getGroupID();
+		}
+	}
+	
+	Loader::model('search/group');
+	$gl = new GroupSearch();
+	$gl->sortBy('gID', 'asc');
+	$gIDs = $gl->get();
+	$gArray = array();
+	foreach($gIDs as $gID) {
+		$gArray[] = Group::getByID($gID);
+	}
 ?>
 
 <div class="ccm-ui">
@@ -20,7 +50,7 @@ $gArray = $gl->getGroupList();
 foreach ($gArray as $g) {
 ?>
 
-<li><label><input type="checkbox" name="readGID[]" value="<?=$g->getGroupID()?>" <? if ($g->canRead()) { ?> checked <? } ?> /> <?=t($g->getGroupName())?></label></li>
+<li><label><input type="checkbox" name="readGID[]" value="<?=$g->getGroupID()?>" <? if (in_array($g->getGroupID(), $viewAccess)) { ?> checked <? } ?> /> <?=t($g->getGroupName())?></label></li>
 
 <? } ?>
 
@@ -38,7 +68,7 @@ foreach ($gArray as $g) {
 foreach ($gArray as $g) {
 ?>
 
-<li><label><input type="checkbox" name="editGID[]" value="<?=$g->getGroupID()?>" <? if ($g->canWrite()) { ?> checked <? } ?> /> <?=t($g->getGroupName())?></label></li>
+<li><label><input type="checkbox" name="editGID[]" value="<?=$g->getGroupID()?>" <? if (in_array($g->getGroupID(), $editAccess)) { ?> checked <? } ?> /> <?=t($g->getGroupName())?></label></li>
 
 <? } ?>
 

@@ -136,7 +136,12 @@
 			}
 		}			
 		
-		public function getFileSetID() {return $this->fsID;}
+		public function getFileSetID() {
+			if ($this->fsID) {
+				return $this->fsID;
+			}
+			return 0;
+		}
 		public function overrideGlobalPermissions() {return $this->fsOverrideGlobalPermissions;}
 		
 		public function getFileSetName() {return $this->fsName;}	
@@ -242,10 +247,71 @@
 		
 		public function resetPermissions() {
 			$db = Loader::db();
-			$db->Execute('delete from FileSetPermissions where fsID = ?', array($this->fsID));
-			$db->Execute('delete from FilePermissionFileTypes where fsID = ?', array($this->fsID));
+			$db->Execute('delete from FileSetPermissionAssignments where fsID = ?', array($this->fsID));
+			$db->Execute('delete from FileSetPermissionFileTypeAssignments where fsID = ?', array($this->fsID));
+			$db->Execute('delete from FileSetPermissionFileTypeAssignmentsCustom where fsID = ?', array($this->fsID));
 		}
 		
+		public function acquireBaseFileSetPermissions() {
+			$this->resetPermissions();
+
+			$db = Loader::db();
+
+			$q = "select fsID, peID, pdID, pkID, accessType from FileSetPermissionAssignments where fsID = 0";
+			$r = $db->query($q);
+			while($row = $r->fetchRow()) {
+				$v = array($this->fsID, $row['peID'], $row['pdID'], $row['pkID'], $row['accessType']);
+				$q = "insert into FileSetPermissionAssignments (fsID, peID, pdID, pkID, accessType) values (?, ?, ?, ?, ?)";
+				$db->query($q, $v);
+			}
+	
+			$q = "select fsID, peID, permission from FileSetPermissionFileTypeAssignments where fsID = 0";
+			$r = $db->query($q);
+			while($row = $r->fetchRow()) {
+				$v = array($this->fsID, $row['peID'], $row['permission']);
+				$q = "insert into FileSetPermissionFileTypeAssignments (fsID, peID, permission) values (?, ?, ?)";
+				$db->query($q, $v);
+			}
+	
+			$q = "select fsID, peID, extension from FileSetPermissionFileTypeAssignmentsCustom where fsID = 0";
+			$r = $db->query($q);
+			while($row = $r->fetchRow()) {
+				$v = array($this->fsID, $row['peID'], $row['extension']);
+				$q = "insert into FileSetPermissionFileTypeAssignmentsCustom (fsID, peID, extension) values (?, ?, ?)";
+				$db->query($q, $v);
+			}
+		}
+		
+		public function assignPermissions($userOrGroup, $permissions = array(), $accessType = FileSetPermissionKey::ACCESS_TYPE_INCLUDE) {
+			$db = Loader::db();
+			if ($this->fsID > 0) { 
+				$db->Execute("update FileSets set fsOverrideGlobalPermissions = 1 where fsID = ?", array($this->fsID));
+			}
+			
+			if (is_array($userOrGroup)) { 
+				$pe = GroupCombinationPermissionAccessEntity::getOrCreate($userOrGroup);
+				// group combination
+			} else if ($userOrGroup instanceof User || $userOrGroup instanceof UserInfo) { 
+				$pe = UserPermissionAccessEntity::getOrCreate($userOrGroup);
+			} else { 
+				// group;
+				$pe = GroupPermissionAccessEntity::getOrCreate($userOrGroup);
+			}
+			
+			foreach($permissions as $pkHandle) { 
+				$pk = FileSetPermissionKey::getByHandle($pkHandle);
+				$pk->setPermissionObject($this);
+				$pk->addAssignment($pe, false, $accessType);
+			}
+		}
+
+
+			
+			
+		/** 
+		 * legacy
+		 */
+		/*
 		public function setPermissions($obj, $canSearch, $canRead, $canWrite, $canAdmin, $canAdd, $extensions = array()) {
 			$fsID = $this->fsID;
 			$uID = 0;
@@ -283,7 +349,11 @@
 				}
 			}
 		}		
+	
+		*/
+	
 	}
+	
 	class FileSetFile extends Model {
 		public static function createAndGetFile($f_id, $fs_id){	
 			$file_set_file = new FileSetFile();

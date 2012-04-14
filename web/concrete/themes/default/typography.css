@@ -5,7 +5,7 @@ body {
 }
 
 img {border: 0px}
-a,a:visited,a:active {
+a {
 	/* customize_link */ color: #66aa33; /* customize_link */
 }
 a:hover {

@@ -148,8 +148,15 @@ class File extends Object {
 	
 	public function resetPermissions($fOverrideSetPermissions = 0) {
 		$db = Loader::db();
-		$db->Execute("delete from FilePermissions where fID = ?", array($this->fID));
+		$db->Execute("delete from FilePermissionAssignments where fID = ?", array($this->fID));
 		$db->Execute("update Files set fOverrideSetPermissions = ? where fID = ?", array($fOverrideSetPermissions, $this->fID));
+		if ($fOverrideSetPermissions) {
+			$permissions = PermissionKey::getList('file');
+			foreach($permissions as $pk) { 
+				$pk->setPermissionObject($this);
+				$pk->copyFromFileSetToFile();
+			}	
+		}
 		$this->refreshCache();
 	}
 	

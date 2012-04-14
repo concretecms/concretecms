@@ -67,6 +67,7 @@
 	Loader::model('block');
 	Loader::model('custom_style');
 	Loader::model('file');
+	Loader::model('file_set');
 	Loader::model('file_version');
 	Loader::model('block_types');
 	Loader::model('collection');
@@ -79,10 +80,26 @@
 	Loader::model('page');
 	Loader::model('page_theme');
 	Loader::model('composer_page');
+	Loader::model('permission/access_entity');
+	Loader::model('permission/duration');
+	Loader::model('permission/category');
+	Loader::model('permission/key');
+	Loader::model('permission/assignment');
 	Loader::model('permissions');
+	Loader::model('permission/response');
+	Loader::model("permission/categories/task");
+	Loader::model("permission/categories/page");
+	Loader::model("permission/categories/block_type");
+	Loader::model("permission/categories/file_set");
+	Loader::model("permission/categories/file");
+	Loader::model("permission/categories/area");
+	Loader::model("permission/categories/block");
+	Loader::model("permission/categories/user");
+	Loader::model("permission/categories/sitemap");
+	Loader::model("permission/categories/admin");
+	Loader::model("permission/categories/marketplace_newsflow");
 	Loader::model('user');
 	Loader::model('userinfo');
-	Loader::model('task_permission');
 	Loader::model('stack/model');
 
 	## Set default permissions for new files and directories ##
@@ -215,7 +232,7 @@
 			}
 		}
 
-		if (!$c->isActive() && (!$cp->canWrite())) {
+		if (!$c->isActive() && (!$cp->canViewPageVersions())) {
 			$v = View::getInstance();
 			$v->render('/page_not_found');
 		}
@@ -225,7 +242,7 @@
 		## version. We pass the function the collection object, as well as the collection permissions
 		## object, which the function will use to determine what version we get to see
 	
-		if ($cp->canWrite() || $cp->canReadVersions()) {
+		if ($cp->canEditPageContents() || $cp->canEditPageProperties() || $cp->canViewPageVersions()) {
 			$cvID = ($_REQUEST['cvID']) ? $_REQUEST['cvID'] : "RECENT";
 		} else {
 			$cvID = "ACTIVE";
@@ -243,10 +260,6 @@
 			// if we've gotten an error getting information about this particular collection
 			// than we load up the Content class, and get prepared to fire away
 			switch($vp->getError()) {
-				case VERSION_NOT_RECENT:
-					// the collection is not the most recent version. We're not going to allow any writing to the collection
-					$cp->disableWrite();
-					break;
 				case COLLECTION_NOT_FOUND:
 					$v = View::getInstance();
 					$v->render('/page_not_found');

@@ -65,10 +65,18 @@ var ccmi18n = {
 	properties: "<?=t('Properties')?>",
 	savePropertiesMsg: "<?=t('Page Properties saved.')?>",
 	saveSpeedSettingsMsg: "<?=t("Speed Settings saved.")?>",
+	saveUserSettingsMsg: "<?=t("User Settings saved.")?>",
 	ok: "<?=t('Ok')?>",
+	setBlockPermissionsViewDuration: "<?=t('Schedule Guest Access')?>",
+	setBlockPermissionsViewDurationSuccess: "<?=t('Timed Access for Guest Users Updated Successfully.')?>",
 	newsflowLoading: "<?=t("Checking for updates.")?>",
 	authoredBy: "<?=t('by')?>",
-	x: "<?=t('x')?>"
+	x: "<?=t('x')?>",
+	user_activate: "<?=t('Activate Users')?>",
+	user_deactivate: "<?=t('Deactivate Users')?>",
+	user_delete: "<?=t('Delete')?>",
+	user_group_remove: "<?=t('Remove From Group')?>",
+	user_group_add: "<?=t('Add to Group')?>"
 }
 
 var ccmi18n_sitemap = {
@@ -88,6 +96,7 @@ var ccmi18n_sitemap = {
 	speedSettings: "<?=t('Speed Settings')?>",
 	speedSettingsTitle: "<?=t('Speed Settings')?>",
 	pagePropertiesTitle: "<?=t('Page Properties')?>",
+	pagePermissionsTitle: "<?=t('Page Permissions')?>",
 	setPagePermissions: "<?=t('Set Permissions')?>",
 	setPagePermissionsMsg: "<?=t('Page permissions updated successfully.')?>",
 	pageDesignMsg: "<?=t('Theme and page type updated successfully.')?>",
@@ -147,10 +156,10 @@ var ccmi18n_filemanager = {
 	rescan: "<?=t('Rescan')?>",
 	pending: "<?=t('Pending')?>",
 	uploadComplete: "<?=t('Upload Complete')?>",
-	
-	PTYPE_CUSTOM: "<?=FilePermissions::PTYPE_CUSTOM?>",
-	PTYPE_NONE: "<?=FilePermissions::PTYPE_NONE?>",
-	PTYPE_ALL: "<?=FilePermissions::PTYPE_ALL?>",
+
+	PTYPE_CUSTOM: "<?//=FilePermissions::PTYPE_CUSTOM?>",
+	PTYPE_NONE: "<?//=FilePermissions::PTYPE_NONE?>",
+	PTYPE_ALL: "<?//=FilePermissions::PTYPE_ALL?>",
 
 	FTYPE_IMAGE: "<?=FileType::T_IMAGE?>",	
 	FTYPE_VIDEO: "<?=FileType::T_VIDEO?>",	
