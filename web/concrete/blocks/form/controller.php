@@ -250,6 +250,15 @@ class FormBlockController extends BlockController {
 		
 		//checked required fields
 		foreach($rows as $row){
+			if ($row['inputType']=='datetime'){
+				if (!isset($datetime)) {
+					$datetime = Loader::helper("form/date_time");
+				}
+				$translated = $datetime->translate('Question'.$row['msqID']);
+				if ($translated) {
+					$_POST['Question'.$row['msqID']] = $translated;
+				}
+			}
 			if( intval($row['required'])==1 ){
 				$notCompleted=0;
 				if($row['inputType']=='checkboxlist'){
@@ -266,16 +275,6 @@ class FormBlockController extends BlockController {
 				}elseif( !strlen(trim($_POST['Question'.$row['msqID']])) ){
 					$notCompleted=1;
 				} 
-				if ($notCompleted) {
-					if (!isset($datetime)) {
-						$datetime = Loader::helper("form/date_time");
-					}
-					$translated = $datetime->translate('Question'.$row['msqID']);
-					if ($translated) {
-						$_POST['Question'.$row['msqID']] = $translated;
-						$notCompleted=0;
-					}
-				}
 				if($notCompleted) $errors['CompleteRequired'] = t("Complete required fields *") ; 
 			}
 		}
@@ -800,8 +799,7 @@ class MiniSurvey{
 					return $datetime->date('Question'.$msqID,$val);
 				case 'datetime':
 					$val=($_REQUEST['Question'.$msqID])?$_REQUEST['Question'.$msqID]:'';
-					$out = '<input name="Question'.$msqID.'" id="Question'.$msqID.'" type="datetime" value="'.stripslashes(htmlspecialchars($val)).'" />';
-					return $out . $datetime->datetime('Question'.$msqID,$val);
+					return $datetime->datetime('Question'.$msqID,$val);
 				case 'field':
 				default:
 					$val=($_REQUEST['Question'.$msqID])?$_REQUEST['Question'.$msqID]:'';
