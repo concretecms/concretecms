@@ -13,7 +13,7 @@ class FormBlockController extends BlockController {
 	
 	protected $btExportTables = array('btForm', 'btFormQuestions');
 	protected $btExportPageColumns = array('redirectCID');
-	
+	protected $helpers = array('form');
 	protected $lastAnswerSetId=0;
 		
 	/** 
@@ -265,7 +265,17 @@ class FormBlockController extends BlockController {
 						$notCompleted=1;
 				}elseif( !strlen(trim($_POST['Question'.$row['msqID']])) ){
 					$notCompleted=1;
-				}				
+				} 
+				if ($notCompleted) {
+					if (!isset($datetime)) {
+						$datetime = Loader::helper("form/date_time");
+					}
+					$translated = $datetime->translate('Question'.$row['msqID']);
+					if ($translated) {
+						$_POST['Question'.$row['msqID']] = $translated;
+						$notCompleted=0;
+					}
+				}
 				if($notCompleted) $errors['CompleteRequired'] = t("Complete required fields *") ; 
 			}
 		}
@@ -324,7 +334,7 @@ class FormBlockController extends BlockController {
 			$this->lastAnswerSetId=$answerSetID;
 			
 			$questionAnswerPairs=array();
-
+			$this->sendEmailFrom = false;
 			//loop through each question and get the answers 
 			foreach( $rows as $row ){	
 				//save each answer
@@ -348,6 +358,9 @@ class FormBlockController extends BlockController {
 				}elseif($row['inputType']=='email'){
 					$answerLong="";
 					$answer=$txt->sanitize($_POST['Question'.$row['msqID']]);
+					if ($this->sendEmailFrom === false && $row['options'] == '1') {
+						$this->sendEmailFrom = $answer;
+					}
 				}elseif($row['inputType']=='telephone'){
 					$answerLong="";
 					$answer=$txt->sanitize($_POST['Question'.$row['msqID']]);
@@ -385,13 +398,14 @@ class FormBlockController extends BlockController {
 			}
 			
 			if(intval($this->notifyMeOnSubmission)>0 && !$foundSpam){	
-				
-				if( strlen(FORM_BLOCK_SENDER_EMAIL)>1 && strstr(FORM_BLOCK_SENDER_EMAIL,'@') ){
+				if ($this->sendEmailFrom !== false) {
+					$formFormEmailAddress = $this->sendEmailFrom;
+				} else if( strlen(FORM_BLOCK_SENDER_EMAIL)>1 && strstr(FORM_BLOCK_SENDER_EMAIL,'@') ){
 					$formFormEmailAddress = FORM_BLOCK_SENDER_EMAIL;  
 				}else{ 
 					$adminUserInfo=UserInfo::getByID(USER_SUPER_ID);
 					$formFormEmailAddress = $adminUserInfo->getUserEmail(); 
-				}  
+				}
 				
 				$mh = Loader::helper('mail');
 				$mh->to( $this->recipientEmail ); 
@@ -709,11 +723,11 @@ class MiniSurvey{
 						<?php  /* <div class="miniSurveyResponse"><?php echo $this->loadInputType($questionRow,$showEdit)?></div> */ ?>
 						<div class="miniSurveyOptions">
 							<div style="float:right">
-								<a href="#" onclick="miniSurvey.moveUp(this,<?php echo $questionRow['msqID']?>);return false" class="moveUpLink"></a> 
-								<a href="#" onclick="miniSurvey.moveDown(this,<?php echo $questionRow['msqID']?>);return false" class="moveDownLink"></a>						  
+								<a href="javascript:void(0)" onclick="miniSurvey.moveUp(this,<?php echo $questionRow['msqID']?>);return false" class="moveUpLink"></a> 
+								<a href="javascript:void(0)" onclick="miniSurvey.moveDown(this,<?php echo $questionRow['msqID']?>);return false" class="moveDownLink"></a>						  
 							</div>						
-							<a href="#" onclick="miniSurvey.reloadQuestion(<?=intval($questionRow['qID']) ?>);return false"><?php echo t('edit')?></a> &nbsp;&nbsp; 
-							<a href="#" onclick="miniSurvey.deleteQuestion(this,<?=intval($questionRow['msqID']) ?>,<?=intval($questionRow['qID'])?>);return false"><?= t('remove')?></a>
+							<a href="javascript:void(0)" onclick="miniSurvey.reloadQuestion(<?=intval($questionRow['qID']) ?>);return false"><?php echo t('edit')?></a> &nbsp;&nbsp; 
+							<a href="javascript:void(0)" onclick="miniSurvey.deleteQuestion(this,<?=intval($questionRow['msqID']) ?>,<?=intval($questionRow['qID'])?>);return false"><?= t('remove')?></a>
 						</div>
 						<div class="miniSurveySpacer"></div>
 					</div>
@@ -725,6 +739,7 @@ class MiniSurvey{
 		function loadInputType($questionData,$showEdit){
 			$options=explode('%%',$questionData['options']);
 			$msqID=intval($questionData['msqID']);
+			$datetime = loader::helper('form/date_time');
 			switch($questionData['inputType']){			
 				case 'checkboxlist': 
 					// this is looking really crappy so i'm going to make it behave the same way all the time - andrew
@@ -779,7 +794,14 @@ class MiniSurvey{
 					return '<input name="Question'.$msqID.'" id="Question'.$msqID.'" type="tel" value="'.stripslashes(htmlspecialchars($val)).'" />';
 				case 'email':
 					$val=($_REQUEST['Question'.$msqID])?$_REQUEST['Question'.$msqID]:'';
-					return '<input name="Question'.$msqID.'" id="Question'.$msqID.'" type="email" value="'.stripslashes(htmlspecialchars($val)).'" />';	
+					return '<input name="Question'.$msqID.'" id="Question'.$msqID.'" type="email" value="'.stripslashes(htmlspecialchars($val)).'" />';
+				case 'date':
+					$val=($_REQUEST['Question'.$msqID])?$_REQUEST['Question'.$msqID]:'';
+					return $datetime->date('Question'.$msqID,$val);
+				case 'datetime':
+					$val=($_REQUEST['Question'.$msqID])?$_REQUEST['Question'.$msqID]:'';
+					$out = '<input name="Question'.$msqID.'" id="Question'.$msqID.'" type="datetime" value="'.stripslashes(htmlspecialchars($val)).'" />';
+					return $out . $datetime->datetime('Question'.$msqID,$val);
 				case 'field':
 				default:
 					$val=($_REQUEST['Question'.$msqID])?$_REQUEST['Question'.$msqID]:'';
