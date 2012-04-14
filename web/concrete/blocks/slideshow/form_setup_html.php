@@ -50,7 +50,7 @@ $ah = Loader::helper('concrete/interface');
 		$fp = new Permissions($f);
 		$imgInfo['thumbPath'] = $f->getThumbnailSRC(1);
 		$imgInfo['fileName'] = $f->getTitle();
-		if ($fp->canRead()) { 
+		if ($fp->canViewFile()) { 
 			$this->inc('image_row_include.php', array('imgInfo' => $imgInfo));
 		}
 	}

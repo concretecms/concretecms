@@ -1,58 +1,174 @@
 <?xml version="1.0"?>
 <concrete5-cif version="1.0">
-    <taskpermissions>
-        <taskpermission handle="access_task_permissions" name="Change Task Permissions" description="" package="">
+
+    <permissioncategories>
+        <category handle="page" package=""/>
+        <category handle="stack" package=""/>
+        <category handle="user" package=""/>
+        <category handle="file_set" package=""/>
+        <category handle="file" package=""/>
+        <category handle="area" package=""/>
+        <category handle="block_type" package=""/>
+        <category handle="block" package=""/>
+        <category handle="admin" package=""/>
+        <category handle="sitemap" package=""/>
+        <category handle="marketplace_newsflow" package=""/>
+    </permissioncategories>
+
+    <permissionkeys>
+        <permissionkey handle="view_page" name="View" description="Can see a page exists and read its content." package="" category="page"/>
+        <permissionkey handle="view_page_versions" name="View Versions" description="Can view the page versions dialog and read past versions of a page." package="" category="page"/>
+        <permissionkey handle="preview_page_as_user" name="Preview Page As User" description="" package="" category="page"/>
+        <permissionkey handle="edit_page_properties" name="Edit Properties" package="" category="page"/>
+        <permissionkey handle="edit_page_contents" name="Edit Contents" package="" category="page"/>
+        <permissionkey handle="edit_page_speed_settings" name="Edit Speed Settings" package="" category="page"/>
+        <permissionkey handle="edit_page_theme" name="Change Theme" package="" category="page"/>
+        <permissionkey handle="edit_page_type" name="Change Page Type" package="" category="page"/>
+        <permissionkey handle="edit_page_permissions" name="Edit Permissions" package="" category="page"/>
+        <permissionkey handle="delete_page" name="Delete" package="" category="page"/>
+        <permissionkey handle="delete_page_versions" name="Delete Versions" package="" category="page"/>
+        <permissionkey handle="approve_page_versions" name="Approve Changes" package="" category="page"/>
+        <permissionkey handle="add_subpage" name="Add Sub-Page" package="" category="page"/>
+        <permissionkey handle="move_or_copy_page" name="Move or Copy Page" package="" category="page"/>
+		<!-- block types //-->
+        <permissionkey handle="add_block" name="Add Block to Page Area" package="" category="block_type">
             <access>
                 <group name="Administrators"/>
             </access>
-        </taskpermission>
-        <taskpermission handle="access_sitemap" name="Access Sitemap and Page Search" description="" package="">
+        </permissionkey>
+        <permissionkey handle="add_stack" name="Add Stack to Page Area" package="" category="block_type">
             <access>
                 <group name="Administrators"/>
             </access>
-        </taskpermission>
-        <taskpermission handle="access_user_search" name="Access User Search" description="" package="">
+        </permissionkey>
+        
+		<!-- areas //-->
+        <permissionkey handle="view_area" name="View Area" package="" category="area"/>
+        <permissionkey handle="edit_area_contents" name="Edit Area Contents" package="" category="area"/>
+        <permissionkey handle="add_block_to_area" name="Add Blocks to Area" package="" category="area"/>
+        <permissionkey handle="add_stack_to_area" name="Add Stacks to Area" package="" category="area"/>
+        <permissionkey handle="add_layout_to_area" name="Add Layouts to Area" package="" category="area"/>
+        <permissionkey handle="edit_area_design" name="Edit Area Design" package="" category="area"/>
+        <permissionkey handle="edit_area_permissions" name="Edit Area Permissions" package="" category="area"/>
+        <permissionkey handle="delete_area_contents" name="Delete Area Contents" package="" category="area"/>
+		<!-- blocks //-->
+        <permissionkey handle="view_block" name="View Block" package="" category="block"/>
+        <permissionkey handle="edit_block" name="Edit Block" package="" category="block"/>
+        <permissionkey handle="edit_block_custom_template" name="Change Custom Template" package="" category="block"/>
+        <permissionkey handle="delete_block" name="Delete Block" package="" category="block"/>
+        <permissionkey handle="edit_block_design" name="Edit Design" package="" category="block"/>
+        <permissionkey handle="edit_block_permissions" name="Edit Permissions" package="" category="block"/>
+        <!-- files //-->
+        <permissionkey handle="view_file_set_file" name="View Files" description="Can view and download files in the site." package="" category="file_set"/>
+        <permissionkey handle="search_file_set" name="Search Files in File Manager" description="Can access the file manager" package="" category="file_set"/>
+        <permissionkey handle="edit_file_set_file_properties" name="Edit File Properties" description="Can edit a file's properties" package="" category="file_set"/>
+        <permissionkey handle="edit_file_set_file_contents" name="Edit File Contents" description="Edit/Replace Files" package="" category="file_set"/>
+        <permissionkey handle="copy_file_set_files" name="Copy File" description="" package="" category="file_set"/>
+        <permissionkey handle="edit_file_set_permissions" name="Edit File Access" description="" package="" category="file_set"/>
+        <permissionkey handle="delete_file_set" name="Delete File Set" description="" package="" category="file_set"/>
+        <permissionkey handle="delete_file_set_files" name="Delete File" description="" package="" category="file_set"/>
+        <permissionkey handle="add_file" name="Add File" description="" package="" category="file_set"/>
+        <permissionkey handle="view_file" name="View Files" description="Can view and download files in the site." package="" category="file"/>
+        <permissionkey handle="view_file_in_file_manager" name="View File in File Manager" description="Can access the file manager" package="" category="file"/>
+        <permissionkey handle="edit_file_properties" name="Edit File Properties" description="Can edit a file's properties" package="" category="file"/>
+        <permissionkey handle="edit_file_contents" name="Edit File Contents" description="Edit/Replace Files" package="" category="file"/>
+        <permissionkey handle="copy_file" name="Copy File" description="" package="" category="file"/>
+        <permissionkey handle="edit_file_permissions" name="Edit File Access" description="" package="" category="file"/>
+        <permissionkey handle="delete_file" name="Delete File" description="" package="" category="file"/>
+        <!-- users //-->
+        <permissionkey handle="access_user_search" name="Access User Search" description="" package="" category="user">
             <access>
                 <group name="Administrators"/>
             </access>
-        </taskpermission>
-        <taskpermission handle="access_group_search" name="Access Group Search" description="" package="">
+        </permissionkey>
+        
+        <permissionkey handle="edit_user_properties" name="Edit User Details" package="" category="user">
             <access>
                 <group name="Administrators"/>
             </access>
-        </taskpermission>
-        <taskpermission handle="access_page_defaults" name="Change Content on Page Type Default Pages" description="" package="">
+		</permissionkey>
+
+        <permissionkey handle="view_user_attributes" name="View User Attributes" package="" category="user">
             <access>
                 <group name="Administrators"/>
             </access>
-        </taskpermission>
-        <taskpermission handle="backup" name="Perform Full Database Backups" description="" package="">
+		</permissionkey>
+
+        <permissionkey handle="activate_user" name="Activate/Deactivate User" package="" category="user">
             <access>
                 <group name="Administrators"/>
             </access>
-        </taskpermission>
-        <taskpermission handle="sudo" name="Sign in as User" description="" package=""/>
-        <taskpermission handle="uninstall_packages" name="Uninstall Packages" description="" package="">
+		</permissionkey>
+
+        <permissionkey handle="sudo" name="Sign in as User" package="" category="user">
+        </permissionkey>
+        
+        
+        <permissionkey handle="delete_user" name="Delete User" package="" category="user">
             <access>
                 <group name="Administrators"/>
             </access>
-        </taskpermission>
-        <taskpermission handle="install_packages" name="Install Packages and Connect to the Marketplace" description="" package="">
+		</permissionkey>
+
+        <permissionkey handle="access_group_search" name="Access Group Search" description="" package="" category="user">
             <access>
                 <group name="Administrators"/>
             </access>
-        </taskpermission>
-        <taskpermission handle="delete_user" name="Delete Users" description="" package="">
+        </permissionkey>
+
+        <permissionkey handle="edit_groups" name="Edit Groups" description="" package="" category="user">
             <access>
                 <group name="Administrators"/>
             </access>
-        </taskpermission>
-        <taskpermission handle="view_newsflow" name="View Newsflow Updates in an Overlay" description="" package="">
+        </permissionkey>
+
+        <permissionkey handle="assign_user_groups" name="Assign Groups to User" description="" package="" category="user">
             <access>
                 <group name="Administrators"/>
             </access>
-        </taskpermission>
-    </taskpermissions>
+        </permissionkey>
+
+        <permissionkey handle="backup" name="Perform Backups" package="" category="admin">
+            <access>
+                <group name="Administrators"/>
+            </access>
+		</permissionkey>
+
+        <permissionkey handle="access_task_permissions" name="Access Task Permissions" package="" category="admin">
+		</permissionkey>
+
+        <permissionkey handle="access_sitemap" name="Access Sitemap" package="" category="sitemap">
+            <access>
+                <group name="Administrators"/>
+            </access>
+		</permissionkey>
+
+        <permissionkey handle="access_page_defaults" name="Access Page Type Defaults" package="" category="admin">
+            <access>
+                <group name="Administrators"/>
+            </access>
+		</permissionkey>
+
+        <permissionkey handle="uninstall_packages" name="Uninstall Packages" package="" category="marketplace_newsflow">
+            <access>
+                <group name="Administrators"/>
+            </access>
+		</permissionkey>
+
+        <permissionkey handle="install_packages" name="Install Packages" package="" category="marketplace_newsflow">
+            <access>
+                <group name="Administrators"/>
+            </access>
+		</permissionkey>
+
+        <permissionkey handle="view_newsflow" name="View Newsflow" package="" category="marketplace_newsflow">
+            <access>
+                <group name="Administrators"/>
+            </access>
+		</permissionkey>
+        
+	</permissionkeys>
+    
 	<systemcaptcha>
 		<library handle="securimage" name="SecurImage (Default)" package="" activated="1"/>
 	</systemcaptcha>

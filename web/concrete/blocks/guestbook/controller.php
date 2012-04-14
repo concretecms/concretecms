@@ -148,7 +148,7 @@
 
 				$E = new GuestBookBlockEntry($this->bID, $c->getCollectionID());
 				if($_POST['entryID']) { // update
-					$bp = $this->getPermissionsObject(); 
+					$bp = $this->getPermissionObject(); 
 					if($bp->canWrite()) {
 						$E->updateEntry($_POST['entryID'], $_POST['commentText'], $_POST['name'], $_POST['email'], $uID );
 						$this->set('response', t('The comment has been saved') );
@@ -227,7 +227,7 @@
 				$this->set('invalidIP', $ip->getErrorMessage());			
 				return;
 			}
-			$bp = $this->getPermissionsObject(); 
+			$bp = $this->getPermissionObject(); 
 			if($bp->canWrite()) {
 				$Entry = new GuestBookBlockEntry($this->bID);
 				$Entry->removeEntry($_GET['entryID']);
@@ -248,7 +248,7 @@
 				return;
 			}
 
-			$bp = $this->getPermissionsObject(); 
+			$bp = $this->getPermissionObject(); 
 			if($bp->canWrite()) {
 				$Entry = new GuestBookBlockEntry($this->bID);
 				$Entry->approveEntry($_GET['entryID']);
@@ -267,7 +267,7 @@
 				return;
 			}
 
-			$bp = $this->getPermissionsObject(); 
+			$bp = $this->getPermissionObject(); 
 			if($bp->canWrite()) {
 				$Entry = new GuestBookBlockEntry($this->bID);
 				$Entry->unApproveEntry($_GET['entryID']);

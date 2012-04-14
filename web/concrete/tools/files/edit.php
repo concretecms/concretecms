@@ -8,7 +8,7 @@ $f = File::getByID($_REQUEST['fID']);
 $fv = $f->getApprovedVersion();
 
 $fp = new Permissions($f);
-if (!$fp->canWrite()) {
+if (!$fp->canEditFileContents()) {
 	die(t("Access Denied."));
 }
 

@@ -15,7 +15,7 @@ class DashboardUsersAddController extends Controller {
 	}
 
 	public function view(){
-	
+			$assignment = PermissionKey::getByHandle('edit_user_properties')->getMyAssignment();
 			$vals = Loader::helper('validation/strings');
 			$valt = Loader::helper('validation/token');
 			$valc = Loader::helper('concrete/validation');
@@ -98,10 +98,22 @@ class DashboardUsersAddController extends Controller {
 						}
 						
 						foreach($aks as $uak) {
-							$uak->saveAttributeForm($uo);				
+							if (in_array($uak->getAttributeKeyID(), $assignment->getAttributesAllowedArray())) { 
+								$uak->saveAttributeForm($uo);
+							}
 						}
-			
-						$uo->updateGroups($_POST['gID']);
+
+						$gak = PermissionKey::getByHandle('assign_user_groups');
+						$gIDs = array();
+						if (is_array($_POST['gID'])) {
+							foreach($_POST['gID'] as $gID) {
+								if ($gak->validate($gID)) {
+									$gIDs[] = $gID;
+								}
+							}
+						}
+		
+						$uo->updateGroups($gIDs);
 						$uID = $uo->getUserID();
 						$this->redirect('/dashboard/users/search?uID=' . $uID . '&user_created=1');
 					} else {

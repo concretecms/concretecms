@@ -8,9 +8,10 @@
 	$c = Page::getByID($_REQUEST['cID']);
 	$cID = $c->getCollectionID();
 	$cp = new Permissions($c);
+	$u = new User();
 	$isCheckedOut = $c->isCheckedOut() && !$c->isEditMode();
 	
-	if (!$cp->canReadVersions() && !$cp->canApproveCollection()) {
+	if (!$cp->canViewPageVersions() && !$cp->canApprovePageVersions()) {
 		die(t("Access Denied."));
 	}
 	
@@ -94,7 +95,7 @@
 		if ($valt->validate()) {
 			switch($_REQUEST['vtask']) {
 				case 'remove_group':
-					if ($cp->canApproveCollection() && !$isCheckedOut) {
+					if ($cp->canApprovePageVersions() && !$isCheckedOut) {
 						$cvIDs = explode('_', $_REQUEST['cvIDs']);
 						if (is_array($cvIDs)) {
 							foreach($cvIDs as $cvID) {
@@ -109,7 +110,7 @@
 					}
 					break;
 				case 'approve':
-					if ($cp->canApproveCollection() && !$isCheckedOut) {
+					if ($cp->canApprovePageVersions() && !$isCheckedOut) {
 						$v = CollectionVersion::get($c, $_GET['cvID']);
 						$v->approve();
 						header("Location: " . REL_DIR_FILES_TOOLS_REQUIRED . "/versions.php?forcereload=1&cID=" . $cID . "&cvID=" . $_GET['cvID']);
@@ -117,7 +118,7 @@
 					}
 					break;
 				case 'deny':
-					if ($cp->canApproveCollection() && !$isCheckedOut) {
+					if ($cp->canApprovePageVersions() && !$isCheckedOut) {
 						$v = CollectionVersion::get($c, $_GET['cvID']);
 						if ($v->isApproved()) {
 							$v->deny();
@@ -130,7 +131,7 @@
 			
 			switch($_GET['ctask']) {
 				case 'approve_pending_action':
-					if ($cp->canApproveCollection() && $cp->canWrite() && !$isCheckedOut) {
+					if ($cp->canApprovePageVersions() && !$isCheckedOut) {
 						$approve = false;
 						if ($c->isPendingDelete()) {
 							$children = $c->getNumChildren();
@@ -153,7 +154,7 @@
 					}
 					break;
 				case 'clear_pending_action':
-					if ($cp->canApproveCollection() && $cp->canWrite() && !$isCheckedOut) {
+					if ($cp->canApprovePageVersions() && !$isCheckedOut) {
 						$c->clearPendingAction();
 						header("Location: " . REL_DIR_FILES_TOOLS_REQUIRED . "/versions.php?cID=" . $cID);
 						exit;
@@ -448,7 +449,7 @@ $("input[name=vRemove]").click(function() {
 				<?=t('(Marked by: <strong>%s</strong> on <strong>%s</strong>)',$ud->getUserName(), date(DATE_APP_PAGE_VERSIONS, strtotime($c->getPendingActionDateTime())))?>
 			</div>
 
-			<? if ($cp->canApproveCollection()) { ?>
+			<? if ($cp->canApprovePageVersions()) { ?>
 				<? if ($children == 0) { ?>
 				
 					<div class="ccm-buttons">
@@ -458,7 +459,7 @@ $("input[name=vRemove]").click(function() {
 			
 				<? } else if ($children > 0) { ?>
 					<?=t('This will remove %s pages.',$pages)?>
-					<? if (!$cp->canAdminPage()) { ?>
+					<? if (!$u->isSuperUser()) { ?>
 						<?=t('Only the super user may remove multiple pages.')?><br>
 						<div class="ccm-buttons">
 						<a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/versions.php?cID=<?=$cID?>&ctask=clear_pending_action<?=$token?>" class="ccm-button-left cancel" onclick="return ccm_runAction(this)"><span><em class="ccm-button-close"><?=t('Deny')?></em></span></a>
@@ -488,7 +489,7 @@ $("input[name=vRemove]").click(function() {
 					<br><?=t('This page is being moved to')?> <strong><a href="<?=DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=<?=$nc->getCollectionID()?>" target="_blank"><?=$nc->getCollectionName()?></a></strong>
 				<? } 
 			?>
-			<? if ($cp->canApproveCollection()) { ?>
+			<? if ($cp->canApprovePageVersions()) { ?>
 				<div class="ccm-buttons">
 				<a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/versions.php?cID=<?=$cID?>&ctask=approve_pending_action<?=$token?>" class="ccm-button-right accept" onclick="return ccm_runAction(this)"><span><?=t('Approve')?></span></a>
 				<a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/versions.php?cID=<?=$cID?>&ctask=clear_pending_action<?=$token?>" class="ccm-button-left cancel" onclick="return ccm_runAction(this)"><span><em class="ccm-button-close"><?=t('Deny')?></em></span></a>

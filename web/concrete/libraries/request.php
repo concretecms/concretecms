@@ -31,6 +31,9 @@ class Request {
 	private $cPath;
 	private $pkgHandle;
 	private $auxData;
+	private $hasCustomRequestUser;
+	private $customRequestUser;
+	private $customRequestDateTime;
 	
 	// parses the current request and returns an 
 	// object with tasks, tools, etc... defined in them
@@ -113,6 +116,27 @@ class Request {
 			$req = new Request($path);
 		}
 		return $req;
+	}
+	
+	public function setCustomRequestUser($ui) {
+		$this->hasCustomRequestUser = true;
+		$this->customRequestUser = $ui;
+	}
+	
+	public function getCustomRequestUser() {
+		return $this->customRequestUser;
+	}
+	
+	public function hasCustomRequestUser() {
+		return $this->hasCustomRequestUser;
+	}
+	
+	public function getCustomRequestDateTime() {
+		return $this->customRequestDateTime;
+	}
+	
+	public function setCustomRequestDateTime($date) {
+		$this->customRequestDateTime = $date;
 	}
 	
 	/** 

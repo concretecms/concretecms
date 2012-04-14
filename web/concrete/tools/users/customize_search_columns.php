@@ -64,11 +64,16 @@ $list = UserAttributeKey::getList();
 	<div class="input">
 	<ul class="inputs-list">
 	
-	<? foreach($list as $ak) { ?>
+	<?
+	$pk = PermissionKey::getByHandle('view_user_attributes');
+	foreach($list as $ak) { 
+		if ($pk->validate($ak)) { ?>
 
 		<li><label><?=$form->checkbox('ak_' . $ak->getAttributeKeyHandle(), 1, $fldc->contains($ak))?> <span><?=$ak->getAttributeKeyDisplayHandle()?></span></label></li>
 	
-	<? } ?>
+	<? } 
+	
+	}?>
 	
 	</ul>
 	</div>

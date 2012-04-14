@@ -229,11 +229,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			$r = $db->query("DELETE FROM Users WHERE uID = ?",array(intval($this->uID)));
 			$r = $db->query("DELETE FROM UserValidationHashes WHERE uID = ?",array(intval($this->uID)));
 			
-			$r = $db->query("DELETE FROM AreaGroupBlockTypes WHERE uID = ?",array(intval($this->uID)));
-			$r = $db->query("DELETE FROM CollectionVersionBlockPermissions WHERE uID = ?",array(intval($this->uID)));
-			$r = $db->query("DELETE FROM PagePermissionPageTypes WHERE uID = ?",array(intval($this->uID)));
-			$r = $db->query("DELETE FROM AreaGroups WHERE uID = ?",array(intval($this->uID)));
-			$r = $db->query("DELETE FROM PagePermissions WHERE uID = ?",array(intval($this->uID)));
 			$r = $db->query("DELETE FROM Piles WHERE uID = ?",array(intval($this->uID)));
 			
 			$r = $db->query("UPDATE Blocks set uID=? WHERE uID = ?",array( intval(USER_SUPER_ID), intval($this->uID)));
@@ -321,6 +316,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			}
 		}
 		
+		/**
+		 * gets the user object of the current UserInfo object ($this)
+		 * @return User
+		 */
 		public function getUserObject() {
 			// returns a full user object - groups and everything - for this userinfo object
 			$nu = User::getByUserID($this->uID);
@@ -329,7 +328,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 		/** 
 		 * Sets the attribute of a user info object to the specified value, and saves it in the database 
-		 */
+		*/
 		public function setAttribute($ak, $value) {
 			Loader::model('attribute/categories/user');
 			if (!is_object($ak)) {
@@ -441,7 +440,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 					$uTimezone = $data['uTimezone'];
 				}
 				
-				$uDefaultLanguage = null;
+				$ux = $this->getUserObject();
+				$uDefaultLanguage = $ux->getUserDefaultLanguage();				
 				if (isset($data['uDefaultLanguage']) && $data['uDefaultLanguage'] != '') {
 					$uDefaultLanguage = $data['uDefaultLanguage'];
 				}

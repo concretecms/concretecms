@@ -5,65 +5,95 @@ class DashboardSystemPermissionsSiteController extends DashboardBaseController {
 			return;
 		}
 		
+		$editAccess = array();
+		
 		$home = Page::getByID(1, "RECENT");
-		$gl = new GroupList($home, false, true);
-		$gArrayTmp = $gl->getGroupList();
-		$gArray = array();
-		foreach($gArrayTmp as $gi) {
-			if ($gi->getGroupID() == GUEST_GROUP_ID) {
-				$ggu = $gi;
-				if ($ggu->canRead()) {
-					$this->set('guestCanRead', true);
-				}
-			} else if ($gi->getGroupID() == REGISTERED_GROUP_ID) {
-				$gru = $gi;
-				if ($gru->canRead()) {
-					$this->set('registeredCanRead', true);
-				}
-			} else {
-				$gArray[] = $gi;
+		$pk = PermissionKey::getByHandle('view_page');
+		$pk->setPermissionObject($home);
+		$assignments = $pk->getAssignmentList();
+		foreach($assignments as $asi) {
+			$ae = $asi->getAccessEntityObject();
+			if ($ae->getAccessEntityType() == 'G' && $ae->getGroupObject()->getGroupID() == GUEST_GROUP_ID) {
+				$this->set('guestCanRead', true);
+			} else if ($ae->getAccessEntityType() == 'G' && $ae->getGroupObject()->getGroupID() == REGISTERED_GROUP_ID) {
+				$this->set('registeredCanRead', true);
 			}
 		}
 		
-		$this->set('ggu', $ggu);
-		$this->set('gru', $gru);
-		$this->set('gArray', $gArray);
+		Loader::model('search/group');
+		$gl = new GroupSearch();
+		$gl->filter('gID', REGISTERED_GROUP_ID, '>');
+		$gIDs = $gl->get();
+		$gArray = array();
+		foreach($gIDs as $gID) {
+			$gArray[] = Group::getByID($gID);
+		}
+
+		$pk = PermissionKey::getByHandle('edit_page_contents');
+		$pk->setPermissionObject($home);
+		$assignments = $pk->getAssignmentList();
+		foreach($assignments as $asi) {
+			$ae = $asi->getAccessEntityObject();
+			if ($ae->getAccessEntityType() == 'G') {
+				$editAccess[] = $ae->getGroupObject()->getGroupID();
+			}
+		}
+
 		$this->set('home', $home);
+		$this->set('gArray', $gArray);
+		$this->set('editAccess', $editAccess);
 		
 		if ($this->isPost()) {
 			if ($this->token->validate('site_permissions_code')) {
-				$gru = Group::getByID(REGISTERED_GROUP_ID);
-				$ggu = Group::getByID(GUEST_GROUP_ID);
-				$gau = Group::getByID(ADMIN_GROUP_ID);
-				$args = array();
+				
 				switch($_POST['view']) {
 					case "ANYONE":
-						$args['collectionRead'][] = 'gID:' . $ggu->getGroupID(); // this API is pretty crappy. TODO: clean this up in a nice object oriented fashion
+						$viewObj = GroupPermissionAccessEntity::getOrCreate(Group::getByID(GUEST_GROUP_ID));
 						break;
 					case "USERS":
-						$args['collectionRead'][] = 'gID:' . $gru->getGroupID(); // this API is pretty crappy. TODO: clean this up in a nice object oriented fashion
+						$viewObj = GroupPermissionAccessEntity::getOrCreate(Group::getByID(REGISTERED_GROUP_ID));
 						break;
 					case "PRIVATE":
-						$args['collectionRead'][] = 'gID:' . $gau->getGroupID();
-						break;
-							
+						$viewObj = GroupPermissionAccessEntity::getOrCreate(Group::getByID(ADMIN_GROUP_ID));
+						break;							
 				}
 				
-				$args['collectionWrite'] = array();
+				
+				$pk = PermissionKey::getByHandle('view_page');
+				$pk->setPermissionObject($home);
+				$pk->clearAssignments();
+				$pk->addAssignment($viewObj);
+
+				$editAccessEntities = array();
 				if (is_array($_POST['gID'])) {
 					foreach($_POST['gID'] as $gID) {
-						$args['collectionReadVersions'][] = 'gID:' . $gID;
-						$args['collectionWrite'][] = 'gID:' . $gID;
-						$args['collectionAdmin'][] = 'gID:' . $gID;
-						$args['collectionDelete'][] = 'gID:' . $gID;
+						$editAccessEntities[] = GroupPermissionAccessEntity::getOrCreate(Group::getByID($gID));
 					}
 				}
 				
-				$args['cInheritPermissionsFrom'] = 'OVERRIDE';
-				$args['cOverrideTemplatePermissions'] = 1;
-				
-				$home->updatePermissions($args);
-				
+				$editPermissions = array(
+					'view_page_versions',
+					'edit_page_properties',
+					'edit_page_contents',
+					'edit_page_speed_settings',
+					'edit_page_theme',
+					'edit_page_type',
+					'edit_page_permissions',
+					'delete_page',
+					'delete_page_versions',
+					'approve_page_versions',
+					'add_subpage',
+					'move_or_copy_page',
+				);
+				foreach($editPermissions as $pkHandle) { 
+					$pk = PermissionKey::getByHandle($pkHandle);
+					$pk->setPermissionObject($home);
+					$pk->clearAssignments();
+					foreach($editAccessEntities as $editObj) {
+						$pk->addAssignment($editObj);
+					}
+				}
+
 				$this->redirect('/dashboard/system/permissions/site/', 'saved');
 			} else {
 				$this->error->add($this->token->getErrorMessage());

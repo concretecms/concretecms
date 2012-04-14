@@ -2,16 +2,18 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 
 class SearchBlockController extends BlockController {
-	
+
 	protected $btTable = 'btSearch';
 	protected $btInterfaceWidth = "400";
 	protected $btInterfaceHeight = "240";
-	
+	protected $btWrapperClass = 'ccm-ui';
+
 	public $title = "";
-	public $buttonText = ">"; 
+	public $buttonText = ">";
 	public $baseSearchPath = "";
 	public $resultsURL = "";
-		
+	public $postTo_cID = "";
+
 	protected $hColor = '#EFE795';
 
 	public function highlightedMarkup($fulltext, $highlight) {
@@ -21,16 +23,29 @@ class SearchBlockController extends BlockController {
 
 		$this->hText = $fulltext;
 		$this->hHighlight  = str_replace(array('"',"'","&quot;"),'',$highlight); // strip the quotes as they mess the regex
-		$this->hText = @preg_replace( "#$this->hHighlight#ui", '<span style="background-color:'. $this->hColor .';">$0</span>', $this->hText );	
-		return $this->hText; 
+		$this->hText = @preg_replace( "#$this->hHighlight#ui", '<span style="background-color:'. $this->hColor .';">$0</span>', $this->hText );
+		return $this->hText;
+	}
+	
+	public function validate($post) {
+		$exception = array();
+		$errors = Loader::helper('validation/error');
+		if ($post['title'] === false || $post['title'] == '') {
+			$errors->add(t("Please enter your Search Title."));
+		}
+		if ($post['buttonText'] === false || $post['buttonText'] == '') {
+			$errors->add(t("Please enter your Submit Button Text."));
+		}
+		
+		return $errors;
 	}
 	
 	public function highlightedExtendedMarkup($fulltext, $highlight) {
 		$text = @preg_replace("#\n|\r#", ' ', $fulltext);
-		
+
 		$matches = array();
 		$highlight = str_replace(array('"',"'","&quot;"),'',$highlight); // strip the quotes as they mess the regex
-		
+
 		if (!$highlight) {
 			$text = Loader::helper('text')->shorten($fulltext, 180);
 			if (strlen($fulltext) > 180) {
@@ -38,16 +53,16 @@ class SearchBlockController extends BlockController {
 			}
 			return $text;
 		}
-		
+
 		$regex = '([[:alnum:]|\'|\.|_|\s]{0,45})'. $highlight .'([[:alnum:]|\.|_|\s]{0,45})';
 		preg_match_all("#$regex#ui", $text, $matches);
-		
+
 		if(!empty($matches[0])) {
 			$body_length = 0;
 			$body_string = array();
 			foreach($matches[0] as $line) {
 				$body_length += strlen($line);
-				
+
 				$r = $this->highlightedMarkup($line, $highlight);
 				if ($r) {
 					$body_string[] = $r;
@@ -59,67 +74,60 @@ class SearchBlockController extends BlockController {
 				return @implode("&hellip;<wbr>", $body_string);
 		}
 	}
-	
-	/** 
+
+	/**
 	 * Used for localization. If we want to localize the name/description we have to include this
 	 */
 	public function getBlockTypeDescription() {
 		return t("Add a search box to your site.");
 	}
-	
+
 	public function getBlockTypeName() {
 		return t("Search");
-	}		
-	
+	}
+
 	public function getJavaScriptStrings() {
 		return array('search-title' => t('Please enter a valid search title.'));
 	}
-	
-	function __construct($obj = null) {		
+
+	function __construct($obj = null) {
 		parent::__construct($obj);
 		if ($this->title == '') {
 			$this->title=t("Search");
 		}
 	}
-	
+
 	public function indexExists() {
 		$db = Loader::db();
 		$numRows = $db->GetOne('select count(cID) from PageSearchIndex');
 		return ($numRows > 0);
 	}
-	
+
 	function view(){
-		$c = Page::getCurrentPage(); 
+		$c = Page::getCurrentPage();
 		$this->set('title', $this->title);
 		$this->set('buttonText', $this->buttonText);
-		$this->set('baseSearchPath', $this->baseSearchPath);			
+		$this->set('baseSearchPath', $this->baseSearchPath);
+		$this->set('postTo_cID', $this->postTo_cID);
+
+		$resultsURL = $c->getCollectionPath();
 		
-		//auto target is the form action that is used if none is explicity set by the user
-		$autoTarget= $c->getCollectionPath();
-		/* 
-		 * This code is weird. I don't know why it's here or what it does 
-		 
-		if( is_array($_REQUEST['search_paths']) ){
-			foreach($_REQUEST['search_paths'] as $search_path){
-				$autoTarget=str_replace('search_paths[]='.$search_path,'',$autoTarget);
-				$autoTarget=str_replace('search_paths%5B%5D='.$search_path,'',$autoTarget);
-			}
+		if ($this->resultsURL != '') {
+			$resultsURL = $this->resultsURL;
+		} else if ($this->postTo_cID != '') {
+			$resultsPage = Page::getById($this->postTo_cID);
+			$resultsURL = $resultsPage->cPath;
 		}
-		$autoTarget=str_replace('page='.$_REQUEST['page'],'',$autoTarget);
-		$autoTarget=str_replace('submit='.$_REQUEST['submit'],'',$autoTarget);
-		$autoTarget=str_replace(array('&&&&','&&&','&&'),'',$autoTarget);
-		*/
-		
-		$resultTargetURL = ($this->resultsURL != '') ? $this->resultsURL : $autoTarget;			
-		$this->set('resultTargetURL', $resultTargetURL);
+
+		$this->set('resultTargetURL', $resultsURL);
 
 		//run query if display results elsewhere not set, or the cID of this page is set
-		if( !empty($_REQUEST['query']) || isset($_REQUEST['akID']) || isset($_REQUEST['month']))  { 
+		if( !empty($_REQUEST['query']) || isset($_REQUEST['akID']) || isset($_REQUEST['month']))  {
 			$this->do_search();
-		}						
+		}
 	}
-	
-	function save($data) { 
+
+	function save($data) {
 		$args['title'] = isset($data['title']) ? $data['title'] : '';
 		$args['buttonText'] = isset($data['buttonText']) ? $data['buttonText'] : '';
 		$args['baseSearchPath'] = isset($data['baseSearchPath']) ? $data['baseSearchPath'] : '';
@@ -129,13 +137,20 @@ class SearchBlockController extends BlockController {
 			else $args['baseSearchPath'] = $customPathC->getCollectionPath();
 		}
 		if( trim($args['baseSearchPath'])=='/' || strlen(trim($args['baseSearchPath']))==0 )
-			$args['baseSearchPath']='';	
-		$args['resultsURL'] = ( $data['externalTarget']==1 && strlen($data['resultsURL'])>0 ) ? trim($data['resultsURL']) : '';		
+			$args['baseSearchPath']='';
+
+		if( intval($data['postTo_cID'])>0 ){
+			$args['postTo_cID'] = intval($data['postTo_cID']);
+		} else {
+			$args['postTo_cID'] = '';
+		}
+
+		$args['resultsURL'] = ( $data['externalTarget']==1 && strlen($data['resultsURL'])>0 ) ? trim($data['resultsURL']) : '';
 		parent::save($args);
 	}
-	
+
 	public $reservedParams=array('page=','query=','search_paths[]=','submit=','search_paths%5B%5D=' );
-	
+
 	function do_search() {
 		$q = $_REQUEST['query'];
 		// i have NO idea why we added this in rev 2000. I think I was being stupid. - andrew
@@ -165,18 +180,18 @@ class SearchBlockController extends BlockController {
 			$ipl->filterByPublicDate($month . '%', 'like');
 			$aksearch = true;
 		}
-		
-		
+
+
 		if (empty($_REQUEST['query']) && $aksearch == false) {
-			return false;		
+			return false;
 		}
-		
+
 		$ipl->setSimpleIndexMode(true);
 		if (isset($_REQUEST['query'])) {
 			$ipl->filterByKeywords($_q);
 		}
-		
-		if( is_array($_REQUEST['search_paths']) ){ 			
+
+		if( is_array($_REQUEST['search_paths']) ){
 			foreach($_REQUEST['search_paths'] as $path) {
 				if(!strlen($path)) continue;
 				$ipl->filterByPath($path);
@@ -184,21 +199,21 @@ class SearchBlockController extends BlockController {
 		} else if ($this->baseSearchPath != '') {
 			$ipl->filterByPath($this->baseSearchPath);
 		}
-		
+
 		$ipl->filter(false, '(ak_exclude_search_index = 0 or ak_exclude_search_index is null)');
 
-		$res = $ipl->getPage(); 
-		
-		foreach($res as $r) { 
+		$res = $ipl->getPage();
+
+		foreach($res as $r) {
 			$results[] = new IndexedSearchResult($r['cID'], $r['cName'], $r['cDescription'], $r['score'], $r['cPath'], $r['content']);
 		}
-				
+
 		$this->set('query', $q);
 		$this->set('paginator', $ipl->getPagination());
 		$this->set('results', $results);
 		$this->set('do_search', true);
-	}		
-	
+	}
+
 }
 
 ?>

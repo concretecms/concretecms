@@ -1,6 +1,6 @@
 <? 
 defined('C5_EXECUTE') or die("Access Denied.");
-$btl = $a->getAddBlockTypes($c, $ap );
+$btl = new BlockTypeList();
 $blockTypes = $btl->getBlockTypeList();
 $dsh = Loader::helper('concrete/dashboard');
 $dashboardBlockTypes = array();
@@ -197,6 +197,9 @@ $(function() {
 	<ul id="ccm-block-type-list">
 	<? if (count($blockTypes) > 0) { 
 		foreach($blockTypes as $bt) { 
+			if (!$ap->canAddBlock($bt)) {
+				continue;
+			}
 			$btIcon = $ci->getBlockTypeIconURL($bt);
 			?>	
 			<li class="ccm-block-type ccm-block-type-available">

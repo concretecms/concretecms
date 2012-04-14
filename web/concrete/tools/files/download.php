@@ -7,7 +7,7 @@ $vh = Loader::helper('validation/identifier');
 $form = Loader::helper('form');
 
 $fp = FilePermissions::getGlobal();
-if (!$fp->canRead()) {
+if (!$fp->canViewFile()) {
 	die(t("Access Denied."));
 }
 
@@ -24,7 +24,7 @@ if (isset($_REQUEST['fID']) && is_array($_REQUEST['fID'])) {
 	foreach($_REQUEST['fID'] as $fID) {
 		$f = File::getByID($fID);
 		$fp = new Permissions($f);
-		if ($fp->canRead()) {
+		if ($fp->canViewFile()) {
 			if (!in_array(basename($f->getPath()), $filenames)) {
 				$files .= "'" . addslashes($f->getPath()) . "' ";
 			}
@@ -39,7 +39,7 @@ if (isset($_REQUEST['fID']) && is_array($_REQUEST['fID'])) {
 	
 	$f = File::getByID($_REQUEST['fID']);
 	$fp = new Permissions($f);
-	if ($fp->canRead()) {
+	if ($fp->canViewFile()) {
 		if (isset($_REQUEST['fvID'])) {
 			$fv = $f->getVersion($_REQUEST['fvID']);
 		} else {

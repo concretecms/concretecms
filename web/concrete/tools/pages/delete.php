@@ -15,9 +15,9 @@ if ($_POST['task'] == 'delete_pages') {
 			$c = Page::getByID($cID);
 			$cp = new Permissions($c);
 			$children = $c->getNumChildren();
-			if ($children == 0 || $cp->canAdminPage()) {
+			if ($children == 0 || $cp->canDeletePage()) {
 				$c->markPendingAction('DELETE');
-				if ($cp->canApproveCollection()) {
+				if ($cp->canApprovePageVersions()) {
 					$c->delete();
 				}
 			} else {
@@ -45,7 +45,7 @@ if (is_array($_REQUEST['cID'])) {
 $pcnt = 0;
 foreach($pages as $c) { 
 	$cp = new Permissions($c);
-	if ($cp->canDeleteCollection()) {
+	if ($cp->canDeletePage()) {
 		$pcnt++;
 	}
 }
@@ -74,7 +74,7 @@ $searchInstance = $_REQUEST['searchInstance'];
 	<? foreach($pages as $c) { 
 		$cp = new Permissions($c);
 		$c->loadVersionObject();
-		if ($cp->canDeleteCollection()) { ?>
+		if ($cp->canDeletePage()) { ?>
 		
 		<?=$form->hidden('cID[]', $c->getCollectionID())?>		
 		

@@ -127,7 +127,7 @@ class DashboardScrapbookController extends Controller {
 		if($block && strlen($_POST['bName']) ){  //&& $block->getAreaHandle()=='Global Scrapbook'		
 			//this is needed so the cache clears correctly
 			$bp = new Permissions($block);
-			if ($bp->canAdmin()) { 
+			if ($bp->canEditBlockPermissions()) { 
 				$block->setBlockAreaObject($globalScrapbookArea);			
 				$block->updateBlockName( $_POST['bName'], 1 );
 			}

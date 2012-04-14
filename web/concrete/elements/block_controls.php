@@ -70,15 +70,23 @@ if ($b->getBlockTypeHandle() == BLOCK_HANDLE_STACK_PROXY) { ?>
 <? } else { ?>
 	ccm_menuObj<?=$id?>.canCopyToScrapbook = true;
 <? } 
-if ($p->canAdminBlock() && PERMISSIONS_MODEL != 'simple') { ?>
+if ($p->canEditBlockPermissions() && PERMISSIONS_MODEL != 'simple') { ?>
 ccm_menuObj<?=$id?>.canModifyGroups = true;
+<? if ($p->canGuestsViewThisBlock()) { ?>
+	ccm_menuObj<?=$id?>.canBeViewedByGuests = true;
+<? } ?>
 <? }
-if ($p->canWrite() && ENABLE_CUSTOM_DESIGN == true) { ?>
+if ($p->canEditBlockDesign() && ENABLE_CUSTOM_DESIGN == true) { ?>
 	ccm_menuObj<?=$id?>.canDesign = true;
 <? } else { ?>
 	ccm_menuObj<?=$id?>.canDesign = false;
 <? }
-if ($p->canAdminBlock()) { ?>
+if ($p->canEditBlockCustomTemplate()) { ?>
+	ccm_menuObj<?=$id?>.canEditBlockCustomTemplate = true;
+<? } else { ?>
+	ccm_menuObj<?=$id?>.canEditBlockCustomTemplate = false;
+<? }
+if ($p->canEditBlockPermissions()) { ?>
 ccm_menuObj<?=$id?>.canAdmin = true;
 <? }
 if ($p->canDeleteBlock()) { ?>

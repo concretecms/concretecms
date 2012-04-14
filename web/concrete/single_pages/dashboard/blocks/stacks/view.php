@@ -34,17 +34,17 @@
 
 		<? $cpc = new Permissions($stack); ?>
 		
-		<? if ($cpc->canAdminPage() && PERMISSIONS_MODEL == 'advanced') { ?>
+		<? if ($cpc->canEditPagePermissions() && PERMISSIONS_MODEL == 'advanced') { ?>
 			<a class="btn small ccm-main-nav-edit-option" dialog-width="580" dialog-append-buttons="true" dialog-height="420" dialog-title="<?=t('Stack Permissions')?>" id="stackPermissions" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_area_popup.php?cID=<?=$stack->getCollectionID()?>&arHandle=Main&atask=groups"><?=t('Permissions')?></a>
 		<? } ?>
 
-		<? if ($cpc->canDeleteCollection()) { ?>
+		<? if ($cpc->canDeletePage()) { ?>
 			<a class="btn ccm-button-v2-right small ccm-main-nav-edit-option error" href="javascript:void(0)" onclick="if (confirm('<?=t('Are you sure you want to remove this stack?')?>')) { window.location.href='<?=$this->url('/dashboard/blocks/stacks/', 'delete', $stack->getCollectionID(), Loader::helper('validation/token')->generate('delete'))?>' }"><?=t('Delete Stack')?></a>
 		<? } ?>
 
 		<?
 		$vo = $stack->getVersionObject();
-		if ($cp->canApproveCollection()) {
+		if ($cp->canApprovePageVersions()) {
 			$token = '&' . Loader::helper('validation/token')->getParameter(); ?>
 			<a style="margin-right: 8px; <? if ($vo->isApproved()) { ?> display: none; <? } ?> href="javascript:void(0)" onclick="window.location.href='<?=DIR_REL . "/" . DISPATCHER_FILENAME . "?cID=" . $stack->getCollectionID() . "&ctask=approve-recent" . $token?>'" class="btn small ccm-main-nav-edit-option ccm-button-v2-right"><?=t('Approve Changes')?></a>
 		<?
@@ -62,7 +62,7 @@
 			$bv = new BlockView();
 			$bv->setAreaObject($a); 
 			$p = new Permissions($b);
-			if ($p->canRead()) {
+			if ($p->canViewBlock()) {
 				$bv->renderElement('block_controls', array( 'a' => $a, 'b' => $b, 'p' => $p ));
 				$bv->renderElement('block_header', array( 'a' => $a, 'b' => $b, 'p' => $p ));
 				$bv->render($b);

@@ -292,8 +292,7 @@ class Package extends Object {
 		$items['configuration_values'] = Config::getListByPackage($this);
 		$items['block_types'] = BlockTypeList::getByPackage($this);
 		$items['page_themes'] = PageTheme::getListByPackage($this);
-		$tp = new TaskPermissionList();		
-		$items['task_permissions'] = $tp->populatePackagePermissions($this);
+		$items['permissions'] = PermissionKey::getListByPackage($this);
 		$items['single_pages'] = SinglePage::getListByPackage($this);
 		$items['attribute_types'] = AttributeType::getListByPackage($this);		
 		$items['captcha_libraries'] = SystemCaptchaLibrary::getListByPackage($this);		
@@ -330,8 +329,8 @@ class Package extends Object {
 			return ucwords(strtolower($txt->unhandle($item->key)));
 		} else if ($item instanceof SystemAntispamLibrary) {
 			return $item->getSystemAntispamLibraryName();
-		} else if (is_a($item, 'TaskPermission')) {
-			return $item->getTaskPermissionName();			
+		} else if (is_a($item, 'PermissionKey')) {
+			return $item->getPermissionKeyName();			
 		} else if (is_a($item, 'Job')) {
 			return $item->getJobName();
 		}
@@ -379,7 +378,7 @@ class Package extends Object {
 						case 'AttributeKeyCategory':
 						case 'AttributeSet':
 						case 'AttributeType':
-						case 'TaskPermission':
+						case 'PermissionKey':
 							$item->delete();
 							break;
 						default:

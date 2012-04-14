@@ -28,6 +28,16 @@ class GroupSearch extends DatabaseItemList {
 		$this->filter(false, "(Groups.gName like " . $db->qstr('%' . $kw . '%') . " or Groups.gDescription like " . $db->qstr('%' . $kw . '%') . ")");
 	}
 	
+	public function filterByAllowedPermission($pk) {
+		$assignment = $pk->getMyAssignment();
+		$r = $assignment->getGroupsAllowedPermission();
+		$gIDs = array('-1');
+		if ($r == 'C') {
+			$gIDs = array_merge($assignment->getGroupsAllowedArray(), $gIDs);
+			$this->filter('gID', $gIDs, 'in');
+		}
+	}
+	
 	public function updateItemsPerPage( $num ) {
 		$this->itemsPerPage = $num;
 	}

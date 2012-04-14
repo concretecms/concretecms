@@ -26,6 +26,8 @@
 		public $superUser = false;
 		public $uTimezone = NULL;
 		protected $uDefaultLanguage = null;
+		// an associative array of all access entity objects that are associated with this user.
+		protected $accessEntities = array();
 		
 		/**
 		 * @param int $uID
@@ -68,6 +70,7 @@
 		
 		protected static function regenerateSession() {
 			unset($_SESSION['dashboardMenus']);
+			unset($_SESSION['accessEntities']);
 			session_regenerate_id(true);
 		}
 		
@@ -164,8 +167,24 @@
 					$this->loadError(USER_INVALID);
 				}
 			} else {
-				// then we just get session info
-				if (isset($_SESSION['uID'])) {
+				$req = Request::get();
+				if ($req->hasCustomRequestUser()) {
+					$this->uID = null;
+					$this->uName = null;
+					$this->superUser = false;
+					$this->uDefaultLanguage = null;
+					$this->uTimezone = null;
+					$ux = $req->getCustomRequestUser();
+					if ($ux) {
+						$this->uID = $ux->getUserID();
+						$this->uName = $ux->getUserName();
+						$this->superUser = $ux->getUserID() == USER_SUPER_ID;
+						if ($ux->getUserDefaultLanguage()) {
+							$this->uDefaultLanguage = $ux->getUserDefaultLanguage();
+						}
+						$this->uTimezone = $ux->getUserTimezone();
+					}
+				} else if (isset($_SESSION['uID'])) {
 					$this->uID = $_SESSION['uID'];
 					$this->uName = $_SESSION['uName'];
 					$this->uTimezone = $_SESSION['uTimezone'];
@@ -181,7 +200,7 @@
 					$this->uTimezone = null;
 				}
 				$this->uGroups = $this->_getUserGroups();
-				if (!isset($args[2])) {
+				if (!isset($args[2]) && !$req->hasCustomRequestUser()) {
 					$_SESSION['uGroups'] = $this->uGroups;
 				}
 			}
@@ -301,13 +320,32 @@
 		
 		function refreshUserGroups() {
 			unset($_SESSION['uGroups']);
+			unset($_SESSION['accessEntities']);
 			$ug = $this->_getUserGroups();
 			$_SESSION['uGroups'] = $ug;
 			$this->uGroups = $ug;
 		}
 		
+		public function getUserAccessEntityObjects() {
+			$req = Request::get();
+			if ($req->hasCustomRequestUser()) {
+				// we bypass session-saving performance
+				// and we don't save them in session.
+				return PermissionAccessEntity::getForUser($this);
+			}
+			
+			if (isset($_SESSION['accessEntities'])) {
+				$entities = $_SESSION['accessEntities'];
+			} else {
+				$entities = PermissionAccessEntity::getForUser($this);
+				$_SESSION['accessEntities'] = $entities;
+			}
+			return $entities;
+		}
+		
 		function _getUserGroups($disableLogin = false) {
-			if ((!empty($_SESSION['uGroups'])) && (!$disableLogin)) {
+			$req = Request::get();
+			if ((!empty($_SESSION['uGroups'])) && (!$disableLogin) && (!$req->hasCustomRequestUser())) {
 				$ug = $_SESSION['uGroups'];
 			} else {
 				$db = Loader::db();

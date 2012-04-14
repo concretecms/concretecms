@@ -196,7 +196,7 @@ class Area extends Object {
 		if ($this->arIsGlobal) {
 			$blocks = array();
 			$cp = new Permissions($c);
-			if ($cp->canReadVersions()) {
+			if ($cp->canViewPageVersions()) {
 				$c = Stack::getByName($this->arHandle);
 			} else {
 				$c = Stack::getByName($this->arHandle, 'ACTIVE');
@@ -249,8 +249,9 @@ class Area extends Object {
 		
 		$db = Loader::db();
 		$v = array($this->getAreaHandle(), $this->getCollectionID());
-		$db->query("delete from AreaGroups where arHandle = ? and cID = ?", $v);
-		$db->query("delete from AreaGroupBlockTypes where arHandle = ? and cID = ?", $v);
+		$db->query("delete from AreaPermissionAssignments where arHandle = ? and cID = ?", $v);
+		$db->query("delete from AreaPermissionBlockTypeAssignments where arHandle = ? and cID = ?", $v);
+		$db->query("delete from AreaPermissionBlockTypeAssignmentsCustom where arHandle = ? and cID = ?", $v);
 		$db->query("update Areas set arOverrideCollectionPermissions = 0 where arID = ?", array($this->getAreaID()));
 		
 		// now we set rescan this area to determine where it -should- be inheriting from
@@ -380,6 +381,10 @@ class Area extends Object {
 			$ourArea->maximumBlocks = $this->maximumBlocks;
 		}
 		$ap = new Permissions($ourArea);
+		if (!$ap->canViewArea()) {
+			return false;
+		}
+		
 		$blocksToDisplay = ($alternateBlockArray) ? $alternateBlockArray : $ourArea->getAreaBlocksArray($c, $ap);
 		$this->totalBlocks = $ourArea->getTotalBlocksInArea();
 		$u = new User();
@@ -388,7 +393,7 @@ class Area extends Object {
 		
 		// now, we iterate through these block groups (which are actually arrays of block objects), and display them on the page
 		
-		if (($this->showControls) && ($c->isEditMode() && ($ap->canAddBlocks() || $u->isSuperUser()))) {
+		if ($this->showControls && $c->isEditMode() && $ap->canViewAreaControls()) {
 			$bv->renderElement('block_area_header', array('a' => $ourArea));	
 		}
 
@@ -421,11 +426,11 @@ class Area extends Object {
 				$b->setBlockActionCollectionID($stack->getCollectionID());
 			}
 			$p = new Permissions($b);
-			if (($p->canWrite() || $p->canDeleteBlock()) && $c->isEditMode() && $this->showControls) {
+			if ($c->isEditMode() && $this->showControls) {
 				$includeEditStrip = true;
 			}
 
-			if ($p->canRead()) {
+			if ($p->canViewBlock()) {
 				if (!$c->isEditMode()) {
 					$this->outputBlockWrapper(true, $b, $blockPositionInArea);
 				}
@@ -456,7 +461,7 @@ class Area extends Object {
 
 		$bv->renderElement('block_area_footer_view', array('a' => $ourArea));	
 
-		if (($this->showControls) && ($c->isEditMode() && ($ap->canAddBlocks() || $u->isSuperUser()))) {
+		if ($this->showControls && $c->isEditMode() && $ap->canViewAreaControls()) {
 			$bv->renderElement('block_area_footer', array('a' => $ourArea));	
 		}
 	}
@@ -563,6 +568,38 @@ class Area extends Object {
 		$this->enclosingEnd = $html;
 		$this->enclosingEndHasReplacements = $hasReplacements;
 	}
+	
+	public function overridePagePermissions() {
+		$db = Loader::db();
+		$cID = $this->getCollectionID();
+		$v = array($cID, $this->getAreaHandle());
+		// update the Area record itself. Hopefully it's been created.
+		$db->query("update Areas set arOverrideCollectionPermissions = 1, arInheritPermissionsFromAreaOnCID = 0 where arID = ?", array($this->getAreaID()));
+		
+		// copy permissions from the page to the area
+		$permissions = PermissionKey::getList('area');
+		foreach($permissions as $pk) { 
+			$pk->setPermissionObject($this);
+			$pk->copyFromPageToArea();
+		}
+		
+		// finally, we rescan subareas so that, if they are inheriting up the tree, they inherit from this place
+		$this->arInheritPermissionsFromAreaOnCID = $this->getCollectionID(); // we don't need to actually save this on the area, but we need it for the rescan function
+		$this->arOverrideCollectionPermissions = 1; // to match what we did above - useful for the rescan functions below
+		
+		$acobj = $this->getAreaCollectionObject();
+		if ($acobj->isMasterCollection()) {
+			// if we're updating the area on a master collection we need to go through to all areas set on subpages that aren't set to override to change them to inherit from this area
+			$this->rescanSubAreaPermissionsMasterCollection($acobj);
+		} else {
+			$this->rescanSubAreaPermissions();
+		}
+
+		$a = Cache::delete('area', $this->getCollectionID() . ':' . $this->getAreaHandle());
+
+	}
+	
+	/*
 
 	function update() {
 		$db = Loader::db();
@@ -698,4 +735,6 @@ class Area extends Object {
 		$a = Cache::delete('area', $this->getCollectionID() . ':' . $this->getAreaHandle());
 
 	}
+	
+	*/
 }
