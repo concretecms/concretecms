@@ -126,7 +126,16 @@ if (!$fp->canWrite()) {
         }        
         ?>
         
-       cropzoom.setSelector(0,0, <?=$selectorStartWidth?> , <?=$selectorStartHeight?>,true);
+        ssw = <?=$selectorStartWidth?>;
+        ssh = <?=$selectorStartHeight?>;
+        
+       if (w < ssw) {
+       	ssw = w;
+       	}
+       	if (h < ssh) {
+       		ssh = h;
+       	}
+       cropzoom.setSelector(0,0, ssw , ssh,true);
        
        $('#ccm-file-manager-rotate-btn').click(function() {
         var slideVal = $('#rotationSlider').slider('value');
