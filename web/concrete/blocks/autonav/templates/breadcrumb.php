@@ -1,4 +1,5 @@
 <? defined('C5_EXECUTE') or die(_("Access Denied."));
+$navItems = $controller->getNavItems();
 
 foreach ($navItems as $ni) {
 	if (!$ni->isFirst) {

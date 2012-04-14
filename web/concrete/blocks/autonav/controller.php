@@ -264,8 +264,11 @@
 			return $pages;
 		}
 		
-		// This function is used by the view() method to generate the raw "pre-processed" nav items array.
-		// It also must exist as a separate function to preserve backwards-compatibility with older autonav templates.
+		/**
+		 * This function is used by the getNavItems() method to generate the raw "pre-processed" nav items array.
+		 * It also must exist as a separate function to preserve backwards-compatibility with older autonav templates.
+		 * Warning: this function has side-effects -- if this gets called twice, items will be duplicated in the nav structure!
+		 */
 		function generateNav() {
 			$db = Loader::db();
 			// now we proceed, with information obtained either from the database, or passed manually from
@@ -661,7 +664,17 @@
 			return ($cParentID) ? $cParentID : 0;
 		}
 		
-		public function view() {
+		/**
+		 * New and improved version of "generateNav()" function.
+		 * Use this unless you need to maintain backwards compatibility with older custom templates.
+		 *
+		 * Historical note: this must stay a function that gets called by the view templates
+		 * (as opposed to just having the view() method set the variables)
+		 * because we need to maintain the generateNav() function for backwards compatibility with
+		 * older custom templates... and that function unfortunately has side-effects so it cannot
+		 * be called more than once per request (otherwise there will be duplicate items in the nav menu).
+		 */
+		public function getNavItems() {
 			$c = Page::getCurrentPage();
 
 			//Create an array of parent cIDs so we can determine the "nav path" of the current page
@@ -731,9 +744,6 @@
 					$pageLink = $ni->getURL();
 				}
 
-				//Link Disabled attribute (do this separately from the page link, in case the url is needed for something else -- e.g. javascript)
-				$disableLink = $_c->getAttribute('disable_link_in_nav');
-
 				//Current/ancestor page
 				$selected = false;
 				$path_selected = false;
@@ -792,14 +802,13 @@
 				$navItem->isCurrent = $selected;
 				$navItem->inPath = $path_selected;
 				$navItem->attrClass = $attribute_class;
-				$navItem->isEnabled = !$disableLink;
 				$navItem->isHome = $is_home_page;
 				$navItem->cID = $item_cid;
 				$navItem->cObj = $_c;
 				$navItems[] = $navItem;
 			}
 			
-			$this->set('navItems', $navItems);
+			return $navItems;
 		}
 	}
 

@@ -1,12 +1,16 @@
 <? defined('C5_EXECUTE') or die(_("Access Denied."));
+
+$navItems = $controller->getNavItems();
+
 /**
- * The $navItems is provided by the controller. It is an array of objects, each representing a nav menu item.
- * The nav items array is a "flattened" one-dimensional list of all nav items -- it is not hierarchical,
- * even though it can represent a hierarchical menu structure.
- * You can look to various properties of each navItem object to determine its place in the menu hierarchy
+ * The $navItems variable is an array of objects, each representing a nav menu item.
+ * It is a "flattened" one-dimensional list of all nav items -- it is not hierarchical.
+ * However, a nested nav menu can be constructed from this "flat" array by
+ * looking at various properties of each item to determine its place in the hierarchy
  * (see below, for example $navItem->level, $navItem->subDepth, $navItem->hasSubmenu, etc.)
- * Items are ordered with the first top-level item first, followed by its sub-items, etc.
- * 
+ *
+ * Items in the array are ordered with the first top-level item first, followed by its sub-items, etc.
+ *
  * Each nav item object contains the following information:
  *	$navItem->url        : URL to the page
  *	$navItem->name       : page title (already escaped for html output)
@@ -19,26 +23,25 @@
  *	$navItem->isCurrent  : true/false -- if this nav item represents the page currently being viewed
  *	$navItem->inPath     : true/false -- if this nav item represents a parent page of the page currently being viewed (also true for the page currently being viewed)
  *	$navItem->attrClass  : Value of the 'nav_item_class' custom page attribute (if it exists and is set)
- *	$navItem->isEnabled  : true/false -- if the nav item should link to its page (this is only false if the 'disable_link_in_nav' custom page attribute is checked)
  *	$navItem->isHome     : true/false -- if this nav item represents the home page
  *	$navItem->cID        : collection id of the page this nav item represents
  *	$navItem->cObj       : collection object of the page this nav item represents (use this if you need to access page properties and attributes that aren't already available in the $navItem object)
  */
 
 
-/** For extra functionality, you can add the following page attributes to your site (via Dashboard "Page Attributes")
+/** For extra functionality, you can add the following page attributes to your site (via Dashboard > Pages & Themes > Attributes):
  *
- * 1) Handle: replace_link_with_first_in_nav
- *    Type: Checkbox
- *    Functionality: If a page has this checked, clicking on it in the nav menu will go to its first child (sub-page) instead.
+ * 1) Handle: exclude_nav
+ *    (This is the "Exclude From Nav" attribute that comes pre-installed with Concrete5, so you do not need to add it yourself.)
+ *    Functionality: If a page has this checked, it will not be included in the nav menu (and neither will its children / sub-pages).
  *
  * 2) Handle: exclude_subpages_from_nav
  *    Type: Checkbox
  *    Functionality: If a page has this checked, all of that pages children (sub-pages) will be excluded from the nav menu (but the page itself will be included).
  *
- * 3) Handle: disable_link_in_nav
+ * 3) Handle: replace_link_with_first_in_nav
  *    Type: Checkbox
- *    Functionality: If a page has this checked, it will appear in the nav menu but will not be "clickable" (will not link to any page).
+ *    Functionality: If a page has this checked, clicking on it in the nav menu will go to its first child (sub-page) instead.
  *
  * 4) Handle: nav_item_class
  *    Type: Text
@@ -113,11 +116,7 @@ foreach ($navItems as $ni) {
 
 	echo '<li class="' . $ni->classes . '">'; //opens a nav item
 
-	if ($ni->isEnabled) {
-		echo '<a href="' . $ni->url . '" target="' . $ni->target . '" class="' . $ni->classes . '">' . $ni->name . '</a>';
-	} else {
-		echo '<span class="' . $ni->classes . '">' . $ni->name . '</span>';
-	}
+	echo '<a href="' . $ni->url . '" target="' . $ni->target . '" class="' . $ni->classes . '">' . $ni->name . '</a>';
 
 	if ($ni->hasSubmenu) {
 		echo '<ul>'; //opens a dropdown sub-menu
