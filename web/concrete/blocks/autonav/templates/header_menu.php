@@ -1,4 +1,6 @@
-<? defined('C5_EXECUTE') or die(_("Access Denied.")); ?>
+<? defined('C5_EXECUTE') or die(_("Access Denied."));
+$navItems = $controller->getNavItems();
+?>
 
 <ul class="nav-header">
 
