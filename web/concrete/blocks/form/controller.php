@@ -796,7 +796,7 @@ class MiniSurvey{
 					return '<input name="Question'.$msqID.'" id="Question'.$msqID.'" type="email" value="'.stripslashes(htmlspecialchars($val)).'" />';
 				case 'date':
 					$val=($_REQUEST['Question'.$msqID])?$_REQUEST['Question'.$msqID]:'';
-					return $datetime->date('Question'.$msqID,$val);
+					return $datetime->date('Question'.$msqID,($val!==''?$val:'now'));
 				case 'datetime':
 					$val=($_REQUEST['Question'.$msqID])?$_REQUEST['Question'.$msqID]:'';
 					return $datetime->datetime('Question'.$msqID,$val);
