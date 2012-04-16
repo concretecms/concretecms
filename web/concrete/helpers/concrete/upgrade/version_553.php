@@ -80,7 +80,12 @@ class ConcreteUpgradeVersion553Helper {
 		$this->migratePagePermissions();
 		$this->migratePagePermissionPageTypes();
 		$this->migrateAreaPermissions();
-		
+		$this->migrateAreaPermissionBlockTypes();
+		$this->migrateBlockPermissions();
+		$this->migrateFileSetPermissions();
+		$this->migrateAddFilePermissions();
+		$this->migrateFilePermissions();
+		$this->migrateTaskPermissions();		
 	}
 	
 	protected function migratePagePermissionPageTypes() {
@@ -93,6 +98,9 @@ class ConcreteUpgradeVersion553Helper {
 			$ro = $db->Execute('select ctID, uID, gID from PagePermissionPageTypes where cID = ?', array($row['cID']));
 			while ($row2 = $ro->FetchRow()) { 
 				$pe = $this->migrateAccessEntity($row2);			
+				if (!$pe) {
+					continue;
+				}
 				if (!in_array($pe, $entities)) {
 					$entities[] = $pe;				
 				}
@@ -111,13 +119,103 @@ class ConcreteUpgradeVersion553Helper {
 		}
 	}
 	
+	protected function migrateTaskPermissions() {
+		$db = Loader::db();
+		$r = $db->Execute('select tp.tpHandle, tpug.* from TaskPermissions tp inner join TaskPermissionUserGroups tpug on tp.tpID = tpug.tpID order by tpID asc');
+		while ($row = $r->FetchRow()) {
+			$pk = PermissionKey::getByHandle($row['tpHandle']);
+			if (is_object($pk)) {
+				$pe = $this->migrateAccessEntity($row);
+				if (!$pe) {
+					continue;
+				}
+				$pk->addAssignment($pe, false, FileSetPermissionKey::ACCESS_TYPE_INCLUDE);	
+			}			
+		}
+	}
+
+	protected function migrateAddFilePermissions() {
+		$db = Loader::db();
+		$r = $db->Execute('select canAdd, gID, uID, fsID from FileSetPermissions where canAdd > 0 order by fsID asc');	
+		$pko = FileSetPermissionKey::getByHandle('add_file');
+		while ($row = $r->FetchRow()) {
+			$pe = $this->migrateAccessEntity($row);
+			if (!$pe) {
+				continue;
+			}
+			
+			if ($row['fsID'] > 0) {
+				$fs = FileSet::getByID($row['fsID']);
+			} else {
+				$fs = FileSet::getGlobal();
+			}
+			if (is_object($fs)) { 
+				$pko->setPermissionObject($fs);
+				$pko->addAssignment($pe, false, FileSetPermissionKey::ACCESS_TYPE_INCLUDE);	
+				$args = array();
+				if ($row['canAdd'] == 10) {
+					$args['fileTypesIncluded'][$pe->getAccessEntityID()] = 'A';
+				} else {
+					$args['fileTypesIncluded'][$pe->getAccessEntityID()] = 'C';
+					$extensions = $db->GetCol('select extension from FilePermissionFileTypes where
+						fsID = ? and gID = ? and uID = ?', array($row['fsID'], $row['gID'], $row['uID']));
+					foreach($extensions as $ext) {
+						$args['extensionInclude'][$pe->getAccessEntityID()][] = $ext;
+					}
+				}
+				$pko->savePermissionKey($args);
+			}
+		}
+	}
+
+
+	protected function migrateAreaPermissionBlockTypes() {
+		$db = Loader::db();
+		$r = $db->Execute('select distinct cID, arHandle from AreaGroupBlockTypes order by cID asc');	
+		$pk = PermissionKey::getByHandle('add_block_to_area');
+		$spk = PermissionKey::getByHandle('add_stack_to_area');
+		while ($row = $r->FetchRow()) {
+			$args = array();
+			$entities = array();
+			$ro = $db->Execute('select btID, uID, gID from AreaGroupBlockTypes where cID = ? and arHandle = ?', array($row['cID'], $row['arHandle']));
+			while ($row2 = $ro->FetchRow()) { 
+				$pe = $this->migrateAccessEntity($row2);			
+				if (!$pe) {
+					continue;
+				}
+				if (!in_array($pe, $entities)) {
+					$entities[] = $pe;				
+				}
+				$args['blockTypesIncluded'][$pe->getAccessEntityID()] = 'C';
+				$args['btIDInclude'][$pe->getAccessEntityID()][] = $row2['btID'];
+			}
+			$co = Page::getByID($row['cID']);
+			if (is_object($co) && (!$co->isError())) { 
+				$ax = Area::getOrCreate($co, $row['arHandle']);
+				if (is_object($ax)) { 
+					$pk->setPermissionObject($ax);
+					$spk->setPermissionObject($ax);
+					foreach($entities as $pe) {
+						$pk->addAssignment($pe, false, AreaPermissionKey::ACCESS_TYPE_INCLUDE);	
+						$spk->addAssignment($pe, false, AreaPermissionKey::ACCESS_TYPE_INCLUDE);
+					}
+					$pk->savePermissionKey($args);
+				}
+			}
+		}
+	}
+	
 	protected function migrateAccessEntity($row) {
 		if ($row['uID'] > 0) {
 			$ui = UserInfo::getByID($row['uID']);
-			$pe = UserPermissionAccessEntity::getOrCreate($ui);
+			if ($ui) { 
+				$pe = UserPermissionAccessEntity::getOrCreate($ui);
+			}
 		} else {
 			$g = Group::getByID($row['gID']);
-			$pe = GroupPermissionAccessEntity::getOrCreate($g);
+			if ($g) { 
+				$pe = GroupPermissionAccessEntity::getOrCreate($g);
+			}
 		}
 		return $pe;		
 	}
@@ -156,6 +254,9 @@ class ConcreteUpgradeVersion553Helper {
 		$r = $db->Execute('select * from AreaGroups order by cID asc');	
 		while ($row = $r->FetchRow()) {
 			$pe = $this->migrateAccessEntity($row);
+			if (!$pe) {
+				continue;
+			}
 			$permissions = $this->getPermissionsArray($row['agPermissions']);
 			$co = Page::getByID($row['cID']);
 			$ax = Area::getOrCreate($co, $row['arHandle']);
@@ -201,6 +302,9 @@ class ConcreteUpgradeVersion553Helper {
 		$r = $db->Execute('select * from PagePermissions order by cID asc');	
 		while ($row = $r->FetchRow()) {
 			$pe = $this->migrateAccessEntity($row);
+			if (!$pe) {
+				continue;
+			}
 			$permissions = $this->getPermissionsArray($row['cgPermissions']);
 			$co = Page::getByID($row['cID']);
 			foreach($permissions as $p) {
@@ -213,6 +317,137 @@ class ConcreteUpgradeVersion553Helper {
 		}
 	}
 	
+	protected function getFileSetPermissionsArray($row) {
+		$check = array('canRead', 'canWrite', 'canAdmin', 'canSearch');
+		$permissions = array();
+		foreach($check as $v) {
+			if ($row[$v] == 3) {
+				$permissions[$v] = FileSetPermissionKey::ACCESS_TYPE_MINE;
+			}
+			if ($row[$v] == 10) {
+				$permissions[$v] = FileSetPermissionKey::ACCESS_TYPE_INCLUDE;
+			}
+		}
+		return $permissions;
+	}
+	
+	protected function migrateFileSetPermissions() {
+		$db = Loader::db();
+		Loader::model("file_set");
+		// permissions
+		
+		$permissionMap = array(
+			'canRead' => array(PermissionKey::getByHandle('view_file_set_file')),
+			'canSearch' => array(PermissionKey::getByHandle('search_file_set')),
+			'canWrite' => array(
+				PermissionKey::getByHandle('edit_file_set_file_properties'),
+				PermissionKey::getByHandle('edit_file_set_file_contents'),
+				PermissionKey::getByHandle('copy_file_set_files'),
+				PermissionKey::getByHandle('delete_file_set_files')
+			),
+			'canAdmin' => array(
+				PermissionKey::getByHandle('edit_file_set_permissions'),
+				PermissionKey::getByHandle('delete_file_set')
+			)
+		);		
+		$r = $db->Execute('select * from FileSetPermissions order by fsID asc');	
+		while ($row = $r->FetchRow()) {
+			$pe = $this->migrateAccessEntity($row);
+			if (!$pe) {
+				continue;
+			}
+			if ($row['fsID'] > 0) {
+				$fs = FileSet::getByID($row['fsID']);
+			} else {
+				$fs = FileSet::getGlobal();
+			}
+			$permissions = $this->getFileSetPermissionsArray($row);
+			if (is_object($fs)) { 
+				foreach($permissions as $p => $accessType) {
+					$permissionsToApply = $permissionMap[$p];
+					foreach($permissionsToApply as $pko) {
+						$pko->setPermissionObject($fs);
+						$pko->addAssignment($pe, false, $accessType);	
+					}
+				}
+			}
+		}
+	}
+
+	protected function migrateFilePermissions() {
+		$db = Loader::db();
+		
+		$permissionMap = array(
+			'canRead' => array(PermissionKey::getByHandle('view_file')),
+			'canSearch' => array(PermissionKey::getByHandle('view_file_in_file_manager')),
+			'canWrite' => array(
+				PermissionKey::getByHandle('edit_file_properties'),
+				PermissionKey::getByHandle('edit_file_contents'),
+				PermissionKey::getByHandle('copy_file'),
+				PermissionKey::getByHandle('delete_file')
+			),
+			'canAdmin' => array(
+				PermissionKey::getByHandle('edit_file_permissions')
+			)
+		);		
+		$r = $db->Execute('select * from FilePermissions order by fID asc');	
+		while ($row = $r->FetchRow()) {
+			$pe = $this->migrateAccessEntity($row);
+			if (!$pe) {
+				continue;
+			}
+			$f = File::getByID($row['fID']);
+			$permissions = $this->getFileSetPermissionsArray($row);
+			if (is_object($f) && !$f->isError()) { 
+				foreach($permissions as $p => $accessType) {
+					$permissionsToApply = $permissionMap[$p];
+					foreach($permissionsToApply as $pko) {
+						$pko->setPermissionObject($f);
+						$pko->addAssignment($pe, false, $accessType);	
+					}
+				}
+			}
+		}
+	}	
+	protected function migrateBlockPermissions() {
+		$db = Loader::db();
+		// permissions
+		$permissionMap = array(
+			'r' => array(PermissionKey::getByHandle('view_block')),
+			'wa' => array(
+				PermissionKey::getByHandle('edit_block'),
+				PermissionKey::getByHandle('edit_block_custom_template'),
+				PermissionKey::getByHandle('edit_block_design')
+			),
+			'db' => array(
+				PermissionKey::getByHandle('delete_block'),
+				PermissionKey::getByHandle('edit_block_permissions')
+			)
+		);
+		
+		$r = $db->Execute('select * from CollectionVersionBlockPermissions order by cID asc');	
+		while ($row = $r->FetchRow()) {
+			$pe = $this->migrateAccessEntity($row);
+			if (!$pe) {
+				continue;
+			}
+			$permissions = $this->getPermissionsArray($row['cbgPermissions']);
+			$co = Page::getByID($row['cID'], $row['cvID']);
+			$arHandle = $db->GetOne('select arHandle from CollectionVersionBlocks cvb where cvb.cID = ? and 
+				cvb.cvID = ? and cvb.bID = ?', array($row['cID'], $row['cvID'], $row['bID']));
+			$a = Area::get($co, $arHandle);
+			$bo = Block::getByID($row['bID'], $co, $a);
+			if (is_object($bo)) { 
+				foreach($permissions as $p) {
+					$permissionsToApply = $permissionMap[$p];
+					foreach($permissionsToApply as $pko) {
+						$pko->setPermissionObject($bo);
+						$pko->addAssignment($pe, false, BlockPermissionKey::ACCESS_TYPE_INCLUDE);	
+					}
+				}
+			}
+		}
+	}	
 	protected function installPermissions() {
 		$sx = simplexml_load_file(DIR_BASE_CORE . '/config/install/base/permissions.xml');
 		foreach($sx->permissioncategories->category as $pkc) {
