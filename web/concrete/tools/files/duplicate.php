@@ -71,7 +71,7 @@ if (!is_array($_REQUEST['fID'])) {
 		}
 	}
 	
-	$searchInstance = $_REQUEST['searchInstance'];
+	$searchInstance = Loader::helper('text')->entities($_REQUEST['searchInstance']);
 
 	?>
 	

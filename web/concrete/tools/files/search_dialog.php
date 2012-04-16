@@ -8,7 +8,7 @@ if (!$cp->canAccessFileManager()) {
 Loader::model('file_list');
 
 if (isset($_REQUEST['searchInstance'])) {
-	$searchInstance = $_REQUEST['searchInstance'];
+	$searchInstance = Loader::helper('text')->entities($_REQUEST['searchInstance']);
 } else {
 	$searchInstance = $page . time();
 }

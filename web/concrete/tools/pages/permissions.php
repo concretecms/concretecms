@@ -28,7 +28,7 @@ foreach($pages as $c) {
 	}
 }
 
-$searchInstance = $_REQUEST['searchInstance'];
+$searchInstance = Loader::helper('text')->entities($_REQUEST['searchInstance']);
 
 ?>
 <div class="ccm-ui">
