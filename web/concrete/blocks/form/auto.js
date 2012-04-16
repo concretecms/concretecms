@@ -18,11 +18,13 @@ var miniSurvey ={
 			$("#answerType").change(function(r) {
 				miniSurvey.optionsCheck($('#answerType').get(0));
 				miniSurvey.settingsCheck($('#answerType').get(0));
+				miniSurvey.replytoCheck($('#answerType').get(0));
 			});
 
 			$("#answerTypeEdit").change(function(r) {
 				miniSurvey.optionsCheck($('#answerTypeEdit').get(0), 'Edit');
 				miniSurvey.settingsCheck($('#answerTypeEdit').get(0), 'Edit');
+				miniSurvey.replytoCheck($('#answerTypeEdit').get(0), 'Edit');
 			});
 
 			$('#refreshButton').click( function(){ miniSurvey.refreshSurvey(); return false; } );
@@ -68,6 +70,12 @@ var miniSurvey ={
 				 $('#answerSettings'+mode).css('display','block');
 			}else $('#answerSettings'+mode).css('display','none');			
 		},
+	replytoCheck : function(radioButton,mode){
+			if(mode!='Edit') mode='';
+			if( radioButton.value=='email' ){
+				 $('#answerReplyto'+mode).css('display','block');
+			}else $('#answerReplyto'+mode).css('display','none');			
+		},
 	addQuestion : function(mode){ 
 			var msqID=0;
 			if(mode!='Edit') {
@@ -75,15 +83,17 @@ var miniSurvey ={
 			} else {
 				msqID=parseInt($('#msqID').val(), 10);
 			}
-			var postStr='question='+encodeURIComponent($('#question'+mode).val())+'&options='+encodeURIComponent($('#answerOptions'+mode).val());
+			var formID = '#answerType'+mode;
+			answerType = $(formID).val();
+			var options = encodeURIComponent($('#answerOptions'+mode).val());
+			if (answerType == 'email') var options = $('#answerReplyto'+mode).find('input').first().prop('checked') ? 1 : 0;
+			var postStr='question='+encodeURIComponent($('#question'+mode).val())+'&options='+options;
 			postStr+='&width='+escape($('#width'+mode).val());
 			postStr+='&height='+escape($('#height'+mode).val());
 			var req = $('#required'+mode+' input[value=1]').prop('checked') ? 1 : 0;
 			postStr+='&required='+req;
 			postStr+='&position='+escape($('#position'+mode).val());
 			var form=document.getElementById('ccm-block-form'); 
-			var formID = '#answerType'+mode;
-			answerType = $(formID).val();
 			postStr+='&inputType='+answerType;//$('input[name=answerType'+mode+']:checked').val()
 			postStr+='&msqID='+msqID+'&qsID='+parseInt(this.qsID);			
 			$.ajax({ 
@@ -153,15 +163,23 @@ var miniSurvey ={
 							$('#requiredEdit input[value=1]').prop('checked', false);
 							$('#requiredEdit input[value=0]').prop('checked', true);
 						} 
+						if (jsonObj.inputType == 'email' && parseInt(jsonObj.optionVals, 10) == 1) {
+							$('#answerReplytoEdit input[value=1]').prop('checked', true);
+							$('#answerReplytoEdit input[value=0]').prop('checked', false);
+						} else {
+							$('#answerReplytoEdit input[value=1]').prop('checked', false);
+							$('#answerReplytoEdit input[value=0]').prop('checked', true);
+						} 
 						
 						$('#msqID').val(jsonObj.msqID);    
 						$('#answerTypeEdit').val(jsonObj.inputType);
 						miniSurvey.optionsCheck($('#answerTypeEdit').get(0), 'Edit');
 						miniSurvey.settingsCheck($('#answerTypeEdit').get(0), 'Edit');
+						miniSurvey.replytoCheck($('#answerTypeEdit').get(0), 'Edit');
 						
 						if(parseInt(jsonObj.bID)>0) 
 							miniSurvey.edit_qID = parseInt(qID) ;
-						scroll(0,165);
+						$('.miniSurveyOptions').first().closest('.ui-dialog-content').get(0).scrollTop = 0;
 					}
 			});
 	},	
@@ -193,6 +211,7 @@ var miniSurvey ={
 			$('#height').val('3');
 			$('#msqID').val('');
 			$('#answerType').val('field').change();
+			$('#answerReplyto').hide();
 			$('#answerOptionsArea').hide();
 			$('#answerSettings').hide();
 			$('#required input').prop('checked', false);
