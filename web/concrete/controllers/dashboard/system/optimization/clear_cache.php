@@ -11,9 +11,8 @@ class DashboardSystemOptimizationClearCacheController extends DashboardBaseContr
 	public function do_clear() {
 		if ($this->token->validate("clear_cache")) {
 			if ($this->isPost()) {
-				if (Cache::flush()) {
-					$this->redirect('/dashboard/system/optimization/clear_cache', 'cache_cleared');
-				}
+				Cache::flush();
+				$this->redirect('/dashboard/system/optimization/clear_cache', 'cache_cleared');
 			}
 		} else {
 			$this->set('error', array($this->token->getErrorMessage()));
