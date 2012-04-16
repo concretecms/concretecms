@@ -23,7 +23,7 @@ Loader::model('file_set');
 $s1 = FileSet::getMySets();
 
 $files = array();
-$searchInstance = $_REQUEST['searchInstance'];
+$searchInstance = Loader::helper('text')->entities($_REQUEST['searchInstance']);
 $extensions = array();
 
 if (is_array($_REQUEST['fID'])) {
