@@ -58,6 +58,7 @@
         <permissionkey handle="delete_block" name="Delete Block" package="" category="block"/>
         <permissionkey handle="edit_block_design" name="Edit Design" package="" category="block"/>
         <permissionkey handle="edit_block_permissions" name="Edit Permissions" package="" category="block"/>
+        <permissionkey handle="schedule_guest_access" name="Schedule Guest Access" package="" category="block"/>
         <!-- files //-->
         <permissionkey handle="view_file_set_file" name="View Files" description="Can view and download files in the site." package="" category="file_set"/>
         <permissionkey handle="search_file_set" name="Search Files in File Manager" description="Can access the file manager" package="" category="file_set"/>
