@@ -28,15 +28,6 @@ if (is_object($a)) {
 			$pd = PermissionDuration::getByID($_REQUEST['pdID']);
 			$pk->addAssignment($pe, $pd, $_REQUEST['accessType']);
 		}
-
-		if ($_REQUEST['task'] == 'set_timed_guest_access' && Loader::helper("validation/token")->validate('set_timed_guest_access')) {
-			$b->doOverrideAreaPermissions();
-			$pk = PermissionKey::getByHandle('view_block');
-			$pk->setPermissionObject($b);
-			$pe = GroupPermissionAccessEntity::getOrCreate(Group::getByID(GUEST_GROUP_ID));
-			$pd = PermissionDuration::translateFromRequest();
-			$pk->addAssignment($pe, $pd, BlockPermissionKey::ACCESS_TYPE_INCLUDE);
-		}
 		
 		if ($_REQUEST['task'] == 'revert_to_area_permissions' && Loader::helper("validation/token")->validate('revert_to_area_permissions')) {
 			$b->revertToAreaPermissions();		
@@ -57,6 +48,16 @@ if (is_object($a)) {
 			$pk = BlockPermissionKey::getByID($_REQUEST['pkID']);
 			$pk->setPermissionObject($b);
 			$pk->savePermissionKey($_POST);
+		}
+	}
+	if ($p->canScheduleGuestAccess()) { 
+		if ($_REQUEST['task'] == 'set_timed_guest_access' && Loader::helper("validation/token")->validate('set_timed_guest_access')) {
+			$b->doOverrideAreaPermissions();
+			$pk = PermissionKey::getByHandle('view_block');
+			$pk->setPermissionObject($b);
+			$pe = GroupPermissionAccessEntity::getOrCreate(Group::getByID(GUEST_GROUP_ID));
+			$pd = PermissionDuration::translateFromRequest();
+			$pk->addAssignment($pe, $pd, BlockPermissionKey::ACCESS_TYPE_INCLUDE);
 		}
 	}
 }
