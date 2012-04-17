@@ -421,7 +421,7 @@ class ConcreteUpgradeVersion553Helper {
 			),
 			'db' => array(
 				PermissionKey::getByHandle('delete_block'),
-				PermissionKey::getByHandle('schedule_guest_access')
+				PermissionKey::getByHandle('schedule_guest_access'),
 				PermissionKey::getByHandle('edit_block_permissions')
 			)
 		);
