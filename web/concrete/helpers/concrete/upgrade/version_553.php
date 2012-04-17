@@ -247,6 +247,7 @@ class ConcreteUpgradeVersion553Helper {
 			),
 			'db' => array(
 				PermissionKey::getByHandle('edit_area_permissions'),
+				PermissionKey::getByHandle('schedule_area_contents_guest_access'),
 				PermissionKey::getByHandle('delete_area_contents')
 			)
 		);
@@ -287,6 +288,7 @@ class ConcreteUpgradeVersion553Helper {
 				PermissionKey::getByHandle('edit_page_speed_settings'),
 				PermissionKey::getByHandle('edit_page_theme'),
 				PermissionKey::getByHandle('edit_page_type'),
+				PermissionKey::getByHandle('schedule_page_contents_guest_access'),
 				PermissionKey::getByHandle('edit_page_permissions')
 			),
 			'dc' => array(
