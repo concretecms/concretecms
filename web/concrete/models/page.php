@@ -1767,21 +1767,22 @@ class Page extends Collection {
 		Loader::model('page_statistics');
 		PageStatistics::incrementParents($newCID);
 		
-		// now with any specific permissions - but only if this collection is set to override
-		if ($this->getCollectionInheritance() == 'OVERRIDE') {
-			$newC->acquirePagePermissions($this->getPermissionsCollectionID());
-			$newC->acquireAreaPermissions($this->getPermissionsCollectionID());
-		} else if ($this->getCollectionInheritance() == "PARENT") {
-			// we need to clear out any lingering permissions groups (just in case), and set this collection to inherit from the parent
-			$npID = $nc->getPermissionsCollectionID();
-			$q = "update Pages set cInheritPermissionsFromCID = {$npID} where cID = {$newCID}";
-			$r = $db->query($q);
-		}
-
 		if ($res) {
 			// rescan the collection path
 			$nc->refreshCache();
 			$nc2 = Page::getByID($newCID);
+			
+			// now with any specific permissions - but only if this collection is set to override
+			if ($this->getCollectionInheritance() == 'OVERRIDE') {
+				$nc2->acquirePagePermissions($this->getPermissionsCollectionID());
+				$nc2->acquireAreaPermissions($this->getPermissionsCollectionID());
+			} else if ($this->getCollectionInheritance() == "PARENT") {
+				// we need to clear out any lingering permissions groups (just in case), and set this collection to inherit from the parent
+				$npID = $nc->getPermissionsCollectionID();
+				$q = "update Pages set cInheritPermissionsFromCID = {$npID} where cID = {$newCID}";
+				$r = $db->query($q);
+			}
+			
 			if ($index > 1) {
 				$args['cName'] = $newCollectionName;
 				$args['cHandle'] = $nc2->getCollectionHandle() . '-' . $index;
