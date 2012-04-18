@@ -70,7 +70,12 @@ class FormBlockController extends BlockController {
 		}
 	}
 	
-	public function view(){ 
+	public function on_page_view() {
+		$this->addFooterItem(Loader::helper('html')->css('jquery.ui.css'));
+		$this->addFooterItem(Loader::helper('html')->javascript('jquery.ui.js'));
+	}
+	
+	public function view(){
 		$pURI = ($_REQUEST['pURI']) ? $_REQUEST['pURI'] : str_replace(array('&ccm_token='.$_REQUEST['ccm_token'],'&btask=passthru','&method=submit_form'),'',$_SERVER['REQUEST_URI']);
 		$this->set('pURI',  htmlentities( $pURI, ENT_COMPAT, APP_CHARSET));
 	}
