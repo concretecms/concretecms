@@ -259,6 +259,7 @@ class ConcreteUpgradeVersion553Helper {
 			}
 			$permissions = $this->getPermissionsArray($row['agPermissions']);
 			$co = Page::getByID($row['cID']);
+			if(!is_object($co) || $co->getCollectionID()<=0) { continue; }
 			$ax = Area::getOrCreate($co, $row['arHandle']);
 			foreach($permissions as $p) {
 				$permissionsToApply = $permissionMap[$p];
