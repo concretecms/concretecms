@@ -152,7 +152,7 @@ if (!$fp->canEditFileContents()) {
 				highlight = new Array();
 				highlight.push(<?=$f->getFileID()?>);
 				jQuery.fn.dialog.closeTop();
-				ccm_alRefresh(highlight, '<?=$_REQUEST['searchInstance']?>');
+				ccm_alRefresh(highlight, '<?=Loader::helper('text')->entities($_REQUEST['searchInstance'])?>');
             });            
         });
        

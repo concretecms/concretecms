@@ -72,9 +72,9 @@ if ($b->getBlockTypeHandle() == BLOCK_HANDLE_STACK_PROXY) { ?>
 <? } 
 if ($p->canEditBlockPermissions() && PERMISSIONS_MODEL != 'simple') { ?>
 ccm_menuObj<?=$id?>.canModifyGroups = true;
-<? if ($p->canGuestsViewThisBlock()) { ?>
-	ccm_menuObj<?=$id?>.canBeViewedByGuests = true;
-<? } ?>
+<? }
+if (PERMISSIONS_MODEL != 'simple' && $p->canGuestsViewThisBlock() && $p->canScheduleGuestAccess()) { ?>
+	ccm_menuObj<?=$id?>.canScheduleGuestAccess = true;
 <? }
 if ($p->canEditBlockDesign() && ENABLE_CUSTOM_DESIGN == true) { ?>
 	ccm_menuObj<?=$id?>.canDesign = true;

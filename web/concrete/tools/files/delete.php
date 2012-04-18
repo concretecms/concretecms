@@ -46,7 +46,7 @@ foreach($files as $f) {
 	}
 }
 
-$searchInstance = $_REQUEST['searchInstance'];
+$searchInstance = Loader::helper('text')->entities($_REQUEST['searchInstance']);
 
 ?>
 

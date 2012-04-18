@@ -15,7 +15,7 @@ if (!isset($sitemap_select_callback)) {
 	}
 }
 if (isset($_REQUEST['searchInstance'])) {
-	$searchInstance = $_REQUEST['searchInstance'];
+	$searchInstance = Loader::helper('text')->entities($_REQUEST['searchInstance']);
 }
 ?>
 

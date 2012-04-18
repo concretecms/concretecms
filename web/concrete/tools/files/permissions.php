@@ -2,7 +2,7 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 $u = new User();
 $form = Loader::helper('form');
-$searchInstance = $_REQUEST['searchInstance'];
+$searchInstance = Loader::helper('text')->entities($_REQUEST['searchInstance']);
 $ih = Loader::helper('concrete/interface'); 
 $f = File::getByID($_REQUEST['fID']);
 $cp = new Permissions($f);
