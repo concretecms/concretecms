@@ -132,7 +132,7 @@ if (is_object($b)) {
 			}
 			break;
 		case 'guest_timed_access':
-			if ($bp->canEditBlockPermissions() && $bp->canGuestsViewThisBlock()) {
+			if ($bp->canScheduleGuestAccess() && $bp->canGuestsViewThisBlock()) {
 				$bv->renderElement('permission/details/block/timed_guest_access', array('b' => $b, 'rcID'=>$rcID));
 			}
 			break;

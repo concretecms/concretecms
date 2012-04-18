@@ -12,7 +12,7 @@ function shutdownRescan() {
 	}
 }
 
-$searchInstance = $_REQUEST['searchInstance'];
+$searchInstance = Loader::helper('text')->entities($_REQUEST['searchInstance']);
 register_shutdown_function('shutdownRescan');
 
 $u = new User();

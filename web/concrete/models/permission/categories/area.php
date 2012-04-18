@@ -10,6 +10,7 @@ class AreaPermissionKey extends PermissionKey {
 		'add_layout_to_area' => 'edit_page_contents',
 		'edit_area_design' => 'edit_page_contents',
 		'edit_area_permissions' => 'edit_page_permissions',
+		'schedule_area_contents_guest_access' => 'schedule_page_contents_guest_access',
 		'delete_area_contents' => 'edit_page_contents'		
 	);
 	

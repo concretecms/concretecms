@@ -30,6 +30,7 @@
         <permissionkey handle="approve_page_versions" name="Approve Changes" package="" category="page"/>
         <permissionkey handle="add_subpage" name="Add Sub-Page" package="" category="page"/>
         <permissionkey handle="move_or_copy_page" name="Move or Copy Page" package="" category="page"/>
+        <permissionkey handle="schedule_page_contents_guest_access" name="Schedule Guest Access" package="" category="page"/>
 		<!-- block types //-->
         <permissionkey handle="add_block" name="Add Block to Page Area" package="" category="block_type">
             <access>
@@ -51,6 +52,8 @@
         <permissionkey handle="edit_area_design" name="Edit Area Design" package="" category="area"/>
         <permissionkey handle="edit_area_permissions" name="Edit Area Permissions" package="" category="area"/>
         <permissionkey handle="delete_area_contents" name="Delete Area Contents" package="" category="area"/>
+        <permissionkey handle="schedule_area_contents_guest_access" name="Schedule Guest Access" package="" category="area" />
+
 		<!-- blocks //-->
         <permissionkey handle="view_block" name="View Block" package="" category="block"/>
         <permissionkey handle="edit_block" name="Edit Block" package="" category="block"/>
@@ -58,6 +61,7 @@
         <permissionkey handle="delete_block" name="Delete Block" package="" category="block"/>
         <permissionkey handle="edit_block_design" name="Edit Design" package="" category="block"/>
         <permissionkey handle="edit_block_permissions" name="Edit Permissions" package="" category="block"/>
+        <permissionkey handle="schedule_guest_access" name="Schedule Guest Access" package="" category="block"/>
         <!-- files //-->
         <permissionkey handle="view_file_set_file" name="View Files" description="Can view and download files in the site." package="" category="file_set"/>
         <permissionkey handle="search_file_set" name="Search Files in File Manager" description="Can access the file manager" package="" category="file_set"/>

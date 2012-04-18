@@ -174,7 +174,6 @@ menuHTML += '<?=$valt->output('', true)?>';
 menuHTML += '<h4><?=t('Version Comments')?></h4>';
 menuHTML += '<p><input type="text" name="comments" id="ccm-check-in-comments" value="<?=addslashes($vo->getVersionComments())?>" onclick="this.select()" style="width:520px"/></p>';
 <? if ($cp->canApprovePageVersions()) { ?>
-menuHTML += '<p><input type="text" name="comments" id="ccm-check-in-comments" value="<?=addslashes($vo->getVersionComments())?>" onclick="this.select()" style="width:520px"/></p>';
 menuHTML += '<a href="javascript:void(0)" id="ccm-check-in-publish" class="btn primary" style="float: right"><span><?=t('Publish My Edits')?></span></a>';
 <? } ?>
 menuHTML += '<a href="javascript:void(0)" id="ccm-check-in-preview" class="btn" style="float: right"><span><?=t('Preview My Edits')?></span></a>';

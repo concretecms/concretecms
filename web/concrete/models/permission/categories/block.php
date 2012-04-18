@@ -9,6 +9,7 @@ class BlockPermissionKey extends PermissionKey {
 		'edit_block_custom_template' => 'edit_area_contents',
 		'edit_block_design' => 'edit_area_contents',
 		'edit_block_permissions' => 'edit_area_permissions',
+		'schedule_guest_access' => 'schedule_area_contents_guest_access',
 		'delete_block' => 'delete_area_contents'		
 	);
 	protected $inheritedPagePermissions = array(
@@ -17,6 +18,7 @@ class BlockPermissionKey extends PermissionKey {
 		'edit_block_custom_template' => 'edit_page_contents',
 		'edit_block_design' => 'edit_page_contents',
 		'edit_block_permissions' => 'edit_page_permissions',
+		'schedule_guest_access' => 'schedule_page_contents_guest_access',
 		'delete_block' => 'edit_page_contents'		
 	);
 	

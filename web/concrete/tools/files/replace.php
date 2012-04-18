@@ -12,7 +12,7 @@ if (!$fp->canEditFileContents()) {
 	die(t('Access Denied.'));
 }
 
-$searchInstance = $_REQUEST['searchInstance'];
+$searchInstance = Loader::helper('text')->entities($_REQUEST['searchInstance']);
 ?>
 
 <div class="ccm-ui">
