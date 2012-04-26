@@ -7,7 +7,11 @@ if (REDIRECT_TO_BASE_URL == true) {
 	$base_url = BASE_URL;
 	if (isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] == 'on')) {
 		$protocol = 'https://';
-		$base_url_ssl = Config::get('BASE_URL_SSL');
+		if (defined('BASE_URL_SSL')) {
+			$base_url_ssl = BASE_URL_SSL;
+		} else { 
+			$base_url_ssl = Config::get('BASE_URL_SSL');
+		}
 		if ($base_url_ssl) {
 			$base_url = $base_url_ssl;
 		}
