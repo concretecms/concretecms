@@ -6,7 +6,7 @@
 <div id="ccm-files-add-asset-replace">
 <h3><?=t('Upload File')?>:</h3>
 <form method="post" enctype="multipart/form-data" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/importers/single" class="ccm-file-manager-submit-single">
-    <input type="file" name="Filedata" class="ccm-al-upload-single-file" />
+    <input type="file" name="Filedata" size="12" class="ccm-al-upload-single-file" />
     <?=$valt->output('upload');?>
     <input type="hidden" name="searchInstance" value="<?=$searchInstance?>" />
     <input type="hidden" name="fID" value="<?=$fID?>" />
