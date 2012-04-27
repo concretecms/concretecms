@@ -69,8 +69,10 @@ if ($errorCode > -1 && $error == '') {
 		<? } ?>
 		
 		window.parent.ccm_uploadedFiles.push(<?=intval($resp->getFileID())?>);
-		window.parent.ccm_filesUploadedDialog('<?=$searchInstance?>');
-		window.parent.ccm_alResetSingle();
+		setTimeout(function() { 
+			window.parent.ccm_filesUploadedDialog('<?=$searchInstance?>');
+			window.parent.ccm_alResetSingle();
+		}, 100);
 	<? } ?>
 </script>
 </head>
