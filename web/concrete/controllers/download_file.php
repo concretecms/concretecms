@@ -12,7 +12,7 @@ class DownloadFileController extends Controller {
 
 	public function view($fID = 0, $rcID=NULL) {
 		// get the block
-		if ($fID > 0) {
+		if ($fID > 0 && Loader::helper('validation/numbers')->integer($fID)) {
 			$file = File::getByID($fID);			
 			if ($file instanceof File && $file->getFileID() > 0) {	
 				
