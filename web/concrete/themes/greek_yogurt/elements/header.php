@@ -13,7 +13,7 @@
 <link rel="stylesheet" href="<?php echo $this->getThemePath(); ?>/css/960_24_col.css" />
 <link rel="stylesheet" media="screen" type="text/css" href="<?php echo $this->getStyleSheet('main.css')?>" />
 <link rel="stylesheet" media="screen" type="text/css" href="<?php echo $this->getStyleSheet('typography.css')?>" />
-<link href='http://fonts.googleapis.com/css?family=Merriweather:400,700,900,300' rel='stylesheet' type='text/css' />
+<link href='<?php echo $_SERVER['HTTPS'] == 'on' ? 'https': 'http'?>://fonts.googleapis.com/css?family=Merriweather:400,700,900,300' rel='stylesheet' type='text/css' />
 
 
 </head>
