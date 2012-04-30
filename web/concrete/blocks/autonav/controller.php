@@ -265,6 +265,10 @@
 		}
 		
 		function generateNav() {
+			if (isset($this->displayPagesCID) && !Loader::helper('validation/numbers')->integer($this->displayPagesCID)) {
+				$this->displayPagesCID = 0;
+			}
+			
 			$db = Loader::db();
 			// now we proceed, with information obtained either from the database, or passed manually from
 			$orderBy = "";
