@@ -7,8 +7,6 @@ MiniSurvey::questionCleanup( intval($miniSurveyInfo['questionSetId']), $b->getBl
 
 $u=new User();
 $ui=UserInfo::getByID($u->uID);
-if( strlen(trim($miniSurveyInfo['recipientEmail']))==0 )
-	$miniSurveyInfo['recipientEmail']=$ui->uEmail;
 ?>
 
 <script>

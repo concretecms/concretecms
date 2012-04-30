@@ -2,7 +2,6 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 $u=new User();
 $ui=UserInfo::getByID($u->uID);
-$miniSurveyInfo['recipientEmail']=$ui->uEmail;
 ?>
 
 <script type="text/javascript">
