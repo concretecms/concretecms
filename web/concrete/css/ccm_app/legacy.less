@@ -39,14 +39,66 @@
 	border-bottom-right-radius: @radius;
 }
 
-.popover .inner {
-	.popover-inner;
-}
-.popover .title {
-	.popover-title;
-}
-.popover .content {
-	.popover-content;
+.ccm-ui {
+
+	.popover .inner {
+		.popover-inner;
+	}
+	.popover .title {
+		.popover-title;
+	}
+	.popover .content {
+		.popover-content;
+	}
+	
+	.btn.primary {
+		.ccm-ui.btn-primary;
+	}
+	
+	.btn.warning {
+		.ccm-ui.btn-warning;
+	}
+	
+	.btn.danger {
+		.ccm-ui.btn-danger;
+	}
+
+	.btn.success {
+		.ccm-ui.btn-success;
+	}
+
+	.btn.info {
+		.ccm-ui.btn-info;
+	}
+
+	.btn.inverse {
+		.ccm-ui.btn-inverse;
+	}
+		
+	.btn.primary,
+	.btn.primary:hover,
+	.btn.warning,
+	.btn.warning:hover,
+	.btn.danger,
+	.btn.danger:hover,
+	.btn.success,
+	.btn.success:hover,
+	.btn.info,
+	.btn.info:hover,
+	.btn.inverse,
+	.btn.inverse:hover {
+	  color: @white;
+	  text-shadow: 0 -1px 0 rgba(0,0,0,.25);
+	}
+	
+	.btn.primary.active,
+	.btn.warning.active,
+	.btn.danger.active,
+	.btn.success.active,
+	.btn.info.active,
+	.btn.inverse.active {
+	  color: rgba(255,255,255,.75);
+	}
 }
 /** 
  * CSS we put in place to not completely break items that have been built prior to 5.5
