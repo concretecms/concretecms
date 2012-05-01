@@ -24,7 +24,7 @@ $al = Loader::helper('concrete/asset_library');
 	<div style="float: left; width: 50%"><?php echo $al->image('ccm-b-image-'.$bID, $this->field('fID'), t('Choose Image'), $bf); ?></div>
 	<div style="padding: 0 10px; float: left; margin-left: 10px; ">
 		<strong><?=t('Target Width')?></strong>: <?=$width?><br/>
-		<strong><?=t('Target Heigh')?>t</strong>: <?=$height?><br/>
+		<strong><?=t('Target Height')?></strong>: <?=$height?><br/>
 		<div id="ccm-image-composer-thumbnail-<?php echo $bID ?>" target-width="<?=$width?>" target-height="<?=$height?>" >
 		</div>
 		<div class="ccm-spacer"></div>
