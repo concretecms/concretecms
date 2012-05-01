@@ -105,16 +105,16 @@ class ConcreteDashboardHelper {
 						$class = '';
 					}
 					
-					$relatedPages .= '<li class="' . $class . '"><a href="' . $nh->getLinkToCollection($sc, false, true) . '">' . $sc->getCollectionName() . '</a></li>';
+					$relatedPages .= '<li class="' . $class . '"><a href="' . $nh->getLinkToCollection($sc, false, true) . '">' . t($sc->getCollectionName()) . '</a></li>';
 				}
 		
 				if ($upToPage) { 
 					$relatedPages .= '<li class="ccm-menu-separator"></li>';
-					$relatedPages .= '<li><a href="' . $nh->getLinkToCollection($upToPage, false, true) . '">' . t('&lt; Back to %s', $upToPage->getCollectionName()) . '</a></li>';
+					$relatedPages .= '<li><a href="' . $nh->getLinkToCollection($upToPage, false, true) . '">' . t('&lt; Back to %s', t($upToPage->getCollectionName())) . '</a></li>';
 				}
 				$relatedPages .= '</ul>';
 				$relatedPages .= '</div>';
-				$navigateTitle = $parent->getCollectionName();
+				$navigateTitle = t($parent->getCollectionName());
 			}
 		}
 		
