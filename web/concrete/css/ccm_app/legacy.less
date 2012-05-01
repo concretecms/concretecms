@@ -59,7 +59,7 @@
 		.ccm-ui.btn-warning;
 	}
 	
-	.btn.danger {
+	.btn.danger, .btn.error {
 		.ccm-ui.btn-danger;
 	}
 
@@ -81,6 +81,8 @@
 	.btn.warning:hover,
 	.btn.danger,
 	.btn.danger:hover,
+	.btn.error,
+	.btn.error:hover,
 	.btn.success,
 	.btn.success:hover,
 	.btn.info,
@@ -94,10 +96,26 @@
 	.btn.primary.active,
 	.btn.warning.active,
 	.btn.danger.active,
+	.btn.error.active,
 	.btn.success.active,
 	.btn.info.active,
 	.btn.inverse.active {
 	  color: rgba(255,255,255,.75);
+	}
+	
+	.message.alert-message.info {
+		.alert;
+		.alert-info;
+	}
+	
+	.message.alert-message.success {
+		.alert;
+		.alert-success;
+	}
+	
+	.message.alert-message.error {
+		.alert;
+		.alert-error;
 	}
 }
 /** 
