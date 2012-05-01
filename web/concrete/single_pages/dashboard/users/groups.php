@@ -59,6 +59,7 @@ $tp = new TaskPermission();
 if ($tp->canAccessGroupSearch()) { ?>
 
 <div class="ccm-pane-options">
+<a href="<?php echo View::url('/dashboard/users/add_group')?>" style="float: right" class="btn primary"><?php echo t("Add Group")?></a>
 <div class="ccm-pane-options-permanent-search">
 <form method="get" action="<?=$this->url('/dashboard/users/groups')?>">
 <div class="span7">
