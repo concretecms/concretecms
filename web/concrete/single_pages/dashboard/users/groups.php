@@ -59,7 +59,6 @@ $tp = new TaskPermission();
 if ($tp->canAccessGroupSearch()) { ?>
 
 <div class="ccm-pane-options">
-<a href="<?php echo View::url('/dashboard/users/add_group')?>" style="float: right" class="btn primary"><?php echo t("Add Group")?></a>
 <div class="ccm-pane-options-permanent-search">
 <form method="get" action="<?=$this->url('/dashboard/users/groups')?>">
 <div class="span7">
@@ -76,8 +75,16 @@ if ($tp->canAccessGroupSearch()) { ?>
 </div>
 <div class="ccm-pane-body <? if (!$gl->requiresPaging()) { ?> ccm-pane-body-footer <? } ?>">
 
+	<a href="<?php echo View::url('/dashboard/users/add_group')?>" style="float: right;z-index:999;position:relative;top:-5px"  class="btn primary"><?php echo t("Add Group")?></a>
+
 <? if (count($gResults) > 0) { 
 	$gl->displaySummary();
+	?>
+				<style type="text/css">
+				div.ccm-paging-top {padding-bottom:10px;}
+			</style>
+
+<?
 	
 foreach ($gResults as $g) { ?>
 
