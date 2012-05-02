@@ -66,7 +66,11 @@
 			$feed->init();
 			$feed->handle_content_type();
 			$posts = $feed->get_items();
-			return $posts;
+			$searchContent='';
+			foreach($posts as $item){
+			    $searchContent.=$item->get_title().' '.strip_tags($item->get_description()).' ';
+                        }
+                        return $searchContent;
 		}
 		
 	}
