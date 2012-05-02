@@ -733,7 +733,7 @@ class Zend_Locale_Format
      * @param  string  $format  Format string in PHP's date format
      * @return string           Format string in ISO format
      */
-        public static function convertPhpToIsoFormat($format)
+    public static function convertPhpToIsoFormat($format)
     {
         if ($format === null) {
             return null;
@@ -756,23 +756,25 @@ class Zend_Locale_Format
                 continue;
             }
             if ($escaped) {
-                if (!$lastescaped) {
+            	if (!$lastescaped) {
             		$temp[] = "'";
             		$lastescaped = true;
             	} 
             	$temp[] = $value;
             	$escaped = false;
             } else { 
-            	if ($lastescaped) {
-            		$temp[] = "'";
-            		$lastescaped = false;
-            	}
             	if ($value == "'") {
 	                $temp[] = "''";
-	            } else if (isset($convert[$value]) === true) {
-	                $temp[] = $convert[$value];
 	            } else {
-	                $temp[] = $value;
+		            if ($lastescaped) {
+	            		$temp[] = "'";
+	            		$lastescaped = false;
+	            	    }
+		            if (isset($convert[$value]) === true) {
+		                $temp[] = $convert[$value];
+		            } else {
+		                $temp[] = $value;
+		            }
 	            }
             }
         }
