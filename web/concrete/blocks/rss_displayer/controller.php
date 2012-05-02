@@ -61,6 +61,15 @@
 			$args['title'] = isset($data['title']) ? $data['title'] : '';
 			parent::save($args);
 		}
+		public function getSearchableContent() {
+			$fp = Loader::helper("feed");			
+			$feed = $fp->load($this->url); 
+			$feed->set_item_limit( intval($this->itemsToDisplay) );
+			$feed->init();
+			$feed->handle_content_type();
+			$posts = $feed->get_items();
+			return $posts;
+		}
 		
 	}
 	
