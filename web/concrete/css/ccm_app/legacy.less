@@ -2,6 +2,13 @@
  * CSS for compatibility for Bootstrap 1.4->2.0.3
  */
 @baseline:          @baseLineHeight;
+@basefont:			@baseFontFamily;
+
+.ccm-ui {
+  margin: 0;
+  #font > .sans-serif();
+  color: @grayDark;
+}
 
 .border-radius-bottom-only(@radius: 5px) {
 	-webkit-border-bottom-left-radius: @radius;
@@ -40,6 +47,30 @@
 }
 
 .ccm-ui {
+	a {
+		color: @linkColor;
+		text-decoration: none;
+		line-height: inherit;
+		font-weight: inherit;
+		&:hover {
+			color: @linkColorHover;
+			text-decoration: underline;
+		}
+	}
+	
+	label {
+		padding-top: 6px;
+		font-size: @basefont;
+		line-height: @baseline;
+		float: left;
+		width: 130px;
+		text-align: right;
+		color: @grayDark;
+	}
+	
+	form .input {
+		margin-left: 150px;
+	}
 
 	.popover .inner {
 		.popover-inner;
