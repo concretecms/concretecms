@@ -16,6 +16,11 @@ abstract class PermissionKey extends Object {
 	}
 	
 	/** 
+	 * Returns whether a permission key can start a workflow
+	 */
+	public function canPermissionKeyTriggerWorkflow() {return $this->pkCanTriggerWorkflow;}
+	
+	/** 
 	 * Returns the name for this permission key
 	 */
 	public function getPermissionKeyName() { return $this->pkName;}
@@ -46,7 +51,7 @@ abstract class PermissionKey extends Object {
 
 	protected static function load($pkID) {
 		$db = Loader::db();
-		$r = $db->GetRow('select pkID, pkName, pkDescription, pkHandle, pkCategoryHandle, PermissionKeys.pkCategoryID, PermissionKeys.pkgID from PermissionKeys inner join PermissionKeyCategories on PermissionKeyCategories.pkCategoryID = PermissionKeys.pkCategoryID where pkID = ?', array($pkID));
+		$r = $db->GetRow('select pkID, pkName, pkDescription, pkHandle, pkCategoryHandle, pkCanTriggerWorkflow, PermissionKeys.pkCategoryID, PermissionKeys.pkgID from PermissionKeys inner join PermissionKeyCategories on PermissionKeyCategories.pkCategoryID = PermissionKeys.pkCategoryID where pkID = ?', array($pkID));
 		$class = Loader::helper('text')->camelcase($r['pkCategoryHandle']) . 'PermissionKey';
 		if (!is_array($r) && (!$r['pkID'])) { 
 			return false;
@@ -172,7 +177,11 @@ abstract class PermissionKey extends Object {
 		if ($pk['package']) {
 			$pkg = Package::getByHandle($pk['package']);
 		}
-		$pkn = self::add($pkCategoryHandle, $pk['handle'], $pk['name'], $pk['description'], $pkg);
+		$pkCanTriggerWorkflow = 0;
+		if ($pk['can-trigger-workflow']) {
+			$pkCanTriggerWorkflow = 1;
+		}
+		$pkn = self::add($pkCategoryHandle, $pk['handle'], $pk['name'], $pk['description'], $pkCanTriggerWorkflow, $pkg);
 		return $pkn;
 	}
 
@@ -195,9 +204,21 @@ abstract class PermissionKey extends Object {
 	}
 	
 	/** 
+	 * Returns an array of assigned workflows
+	 */
+	public function getAssignedWorkflows() {
+		if (!$this->pkCanTriggerWorkflow) {
+			throw new Exception(t('This permission key cannot start a workflow.'));
+		}
+		
+		$defaultWorkflow = new Workflow();
+		return array($defaultWorkflow);
+	}
+	
+	/** 
 	 * Adds an permission key. 
 	 */
-	public function add($pkCategoryHandle, $pkHandle, $pkName, $pkDescription, $pkg = false) {
+	public function add($pkCategoryHandle, $pkHandle, $pkName, $pkDescription, $pkCanTriggerWorkflow, $pkg = false) {
 		
 		$vn = Loader::helper('validation/numbers');
 		$txt = Loader::helper('text');
@@ -208,9 +229,14 @@ abstract class PermissionKey extends Object {
 			$pkgID = $pkg->getPackageID();
 		}
 		
+		if ($pkCanTriggerWorkflow) {
+			$pkCanTriggerWorkflow = 1;
+		} else {
+			$pkCanTriggerWorkflow = 0;
+		}
 		$pkCategoryID = $db->GetOne("select pkCategoryID from PermissionKeyCategories where pkCategoryHandle = ?", $pkCategoryHandle);
-		$a = array($pkHandle, $pkName, $pkDescription, $pkCategoryID, $pkgID);
-		$r = $db->query("insert into PermissionKeys (pkHandle, pkName, pkDescription, pkCategoryID, pkgID) values (?, ?, ?, ?, ?)", $a);
+		$a = array($pkHandle, $pkName, $pkDescription, $pkCategoryID, $pkCanTriggerWorkflow, $pkgID);
+		$r = $db->query("insert into PermissionKeys (pkHandle, pkName, pkDescription, pkCategoryID, pkCanTriggerWorkflow, pkgID) values (?, ?, ?, ?, ?, ?)", $a);
 		
 		$category = AttributeKeyCategory::getByID($pkCategoryID);
 		

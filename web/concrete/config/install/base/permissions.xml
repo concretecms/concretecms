@@ -25,11 +25,11 @@
         <permissionkey handle="edit_page_theme" name="Change Theme" package="" category="page"/>
         <permissionkey handle="edit_page_type" name="Change Page Type" package="" category="page"/>
         <permissionkey handle="edit_page_permissions" name="Edit Permissions" package="" category="page"/>
-        <permissionkey handle="delete_page" name="Delete" package="" category="page"/>
-        <permissionkey handle="delete_page_versions" name="Delete Versions" package="" category="page"/>
-        <permissionkey handle="approve_page_versions" name="Approve Changes" package="" category="page"/>
+        <permissionkey handle="delete_page" name="Delete" package="" category="page" can-trigger-workflow="true" />
+        <permissionkey handle="delete_page_versions" name="Delete Versions" package="" category="page" can-trigger-workflow="true" />
+        <permissionkey handle="approve_page_versions" name="Approve Changes" package="" category="page" can-trigger-workflow="true" />
         <permissionkey handle="add_subpage" name="Add Sub-Page" package="" category="page"/>
-        <permissionkey handle="move_or_copy_page" name="Move or Copy Page" package="" category="page"/>
+        <permissionkey handle="move_or_copy_page" name="Move or Copy Page" package="" category="page" can-trigger-workflow="true" />
         <permissionkey handle="schedule_page_contents_guest_access" name="Schedule Guest Access" package="" category="page"/>
 		<!-- block types //-->
         <permissionkey handle="add_block" name="Add Block to Page Area" package="" category="block_type">

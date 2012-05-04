@@ -64,7 +64,7 @@ class Page extends Collection {
 	protected function populatePage($cInfo, $where, $cvID) {
 		$db = Loader::db();
 		
-		$q0 = "select Pages.cID, Pages.pkgID, Pages.cPointerID, Pages.cPointerExternalLink, Pages.cIsActive, Pages.cIsSystemPage, Pages.cPointerExternalLinkNewWindow, Pages.cFilename, Collections.cDateAdded, Pages.cDisplayOrder, Collections.cDateModified, cInheritPermissionsFromCID, cInheritPermissionsFrom, cOverrideTemplatePermissions, cPendingAction, cPendingActionUID, cPendingActionTargetCID, cPendingActionDatetime, cCheckedOutUID, cIsTemplate, uID, cPath, Pages.ctID, ctHandle, ctIcon, ptID, cParentID, cChildren, ctName, cCacheFullPageContent, cCacheFullPageContentOverrideLifetime, cCacheFullPageContentLifetimeCustom from Pages inner join Collections on Pages.cID = Collections.cID left join PageTypes on (PageTypes.ctID = Pages.ctID) left join PagePaths on (Pages.cID = PagePaths.cID and PagePaths.ppIsCanonical = 1) ";
+		$q0 = "select Pages.cID, Pages.pkgID, Pages.cPointerID, Pages.cPointerExternalLink, Pages.cIsActive, Pages.cIsSystemPage, Pages.cPointerExternalLinkNewWindow, Pages.cFilename, Collections.cDateAdded, Pages.cDisplayOrder, Collections.cDateModified, cInheritPermissionsFromCID, cInheritPermissionsFrom, cOverrideTemplatePermissions, cCheckedOutUID, cIsTemplate, uID, cPath, Pages.ctID, ctHandle, ctIcon, ptID, cParentID, cChildren, ctName, cCacheFullPageContent, cCacheFullPageContentOverrideLifetime, cCacheFullPageContentLifetimeCustom from Pages inner join Collections on Pages.cID = Collections.cID left join PageTypes on (PageTypes.ctID = Pages.ctID) left join PagePaths on (Pages.cID = PagePaths.cID and PagePaths.ppIsCanonical = 1) ";
 		//$q2 = "select cParentID, cPointerID, cPath, Pages.cID from Pages left join PagePaths on (Pages.cID = PagePaths.cID and PagePaths.ppIsCanonical = 1) ";
 		
 		$v = array($cInfo);
@@ -1009,68 +1009,6 @@ class Page extends Collection {
 		return $this->isMasterCollection;
 	}
 
-	/**
-	 * Gets the pending action for a page
-	 * @return string
-	 */	
-	function getPendingAction() {
-		return $this->cPendingAction;
-	}
-
-	/**
-	 * Gets the uID of the user that intiated the pending action
-	 * @return int
-	 */	
-	function getPendingActionUserID() {
-		return $this->cPendingActionUID;
-	}
-
-	/**
-	 * Gets the pending action date, 
-	 * if user is specified, returns in the current user's timezone
-	 * @param string $type (system || user)
-	 * @return string date formated like: 2009-01-01 00:00:00 
-	*/
-	function getPendingActionDateTime($type = 'system') {
-		if(ENABLE_USER_TIMEZONES && $type == 'user') {
-			$dh = Loader::helper('date');
-			return $dh->getLocalDateTime($this->cPendingActionDatetime);
-		} else {
-			return $this->cPendingActionDatetime;
-		}
-	}	
-
-	/**
-	 * Gets the cID of the target page (like for deleting)
-	 * @return int
-	 */		
-	function getPendingActionTargetCollectionID() {
-		return $this->cPendingActionTargetCID;
-	}
-	
-	/**
-	 * Checks if the pending action is move
-	 * @return bool
-	 */		
-	function isPendingMove() {
-		return ($this->cPendingAction == 'MOVE');
-	}
-
-	/**
-	 * Checks if the pending action is copy
-	 * @return bool
-	 */	
-	function isPendingCopy() {
-		return ($this->cPendingAction == 'COPY');
-	}
-
-	/**
-	 * Checks if the pending action is delete
-	 * @return bool
-	 */	
-	function isPendingDelete() {
-		return ($this->cPendingAction == 'DELETE');
-	}
 
 	/**
 	 * Gets the template permissions
@@ -1873,63 +1811,10 @@ class Page extends Collection {
 		}
 	}
 	
-	function markPendingAction($action, $targetC = null) {
-		// delete() and move() and copy() do the dirty work - this is what is called when a user tries to
-		// perform an action - this marks it pending
-
-		if ((!$this->isPendingCopy()) && (!$this->isPendingDelete()) && (!$this->isPendingMove())) {
-			$db = Loader::db();
-			// can't stack actions
-			$u = new User();
-			$uID = $u->getUserID();
-			$cID = $this->getCollectionID();
-			$dh = Loader::helper('date');
-			$dateTime = $dh->getSystemDateTime();
-			$targetCID = (is_object($targetC)) ? $targetC->getCollectionID() : 0;
-			
-			$this->cPendingAction = $action;
-			$this->cPendingActionUID = $uID;
-			$this->cPendingActionDateTime = $dateTime;
-			$this->cPendingActionTargetCID = $targetCID;
-			
-			$v = array($action, $uID, $dateTime, $targetCID, $cID);
-			$q = "update Pages set cPendingAction = ?, cPendingActionUID = ?,  cPendingActionDatetime = ?, cPendingActionTargetCID = ? where cID = ?";
-			$r = $db->query($q, $v);
-			parent::refreshCache();
-		}
-	}
-	
-	function clearPendingAction() {
-		$db = Loader::db();
-		$cID = $this->getCollectionID();
-		$q = "update Pages set cPendingAction = null, cPendingActionUID = null, cPendingActionDatetime = 0 where cID = {$cID}";
-		$r = $db->query($q);
-		parent::refreshCache();
-	}
-
-	function approvePendingAction() {
-		$db = Loader::db();
-		switch($this->getPendingAction()) {
-			case 'DELETE':
-				if (ENABLE_TRASH_CAN) {
-					$this->moveToTrash();
-				} else { 
-					$this->delete();
-				}
-				break;
-			case 'MOVE':
-				$nc = Page::getByID($this->getPendingActionTargetCollectionID());
-				$this->move($nc);
-				$this->clearPendingAction();
-				break;
-		}
-	}
-	
 	public function moveToTrash() {
 		$trash = Page::getByPath(TRASH_PAGE_PATH);
 		$this->move($trash);
 		$this->deactivate();
-		$this->clearPendingAction();
 	}
 
 	function rescanChildrenDisplayOrder() {

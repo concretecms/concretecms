@@ -98,6 +98,9 @@
 	Loader::model("permission/categories/sitemap");
 	Loader::model("permission/categories/admin");
 	Loader::model("permission/categories/marketplace_newsflow");
+	Loader::model("workflow/model");
+	Loader::model("workflow/progress");
+	Loader::model("workflow/request");
 	Loader::model('user');
 	Loader::model('userinfo');
 	Loader::model('stack/model');

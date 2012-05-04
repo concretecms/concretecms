@@ -129,38 +129,6 @@
 					break;
 			}
 			
-			switch($_GET['ctask']) {
-				case 'approve_pending_action':
-					if ($cp->canApprovePageVersions() && !$isCheckedOut) {
-						$approve = false;
-						if ($c->isPendingDelete()) {
-							$children = $c->getNumChildren();
-							if ($children == 0 || $cp->canCP()) {
-								$approve = true;
-								$cParentID = $c->getCollectionParentID();
-							}
-						} else {
-							$approve = true;
-						}
-						if ($approve) {
-							$c->approvePendingAction();
-						}
-						if ($c->isPendingDelete() && $approve) {
-							header("Location: " . REL_DIR_FILES_TOOLS_REQUIRED . "/versions.php?cIsDeleted=1&cParentID={$cParentID}");
-						} else {
-							header("Location: " . REL_DIR_FILES_TOOLS_REQUIRED . "/versions.php?cID=" . $cID);
-						}
-						exit;
-					}
-					break;
-				case 'clear_pending_action':
-					if ($cp->canApprovePageVersions() && !$isCheckedOut) {
-						$c->clearPendingAction();
-						header("Location: " . REL_DIR_FILES_TOOLS_REQUIRED . "/versions.php?cID=" . $cID);
-						exit;
-					}
-					break;
-			}
 		}
 		
 		$page = $_REQUEST[PAGING_STRING];
@@ -432,79 +400,7 @@ $("input[name=vRemove]").click(function() {
 	<? } ?>
 	<br>
 	
-	<h2><?=t('Pending Actions')?></h2>
-	
-	<? 
-
-	$pendingAction = $c->getPendingAction();
-	switch($pendingAction) {
-		case 'DELETE': 
-			$ud = UserInfo::getByID($c->getPendingActionUserID());
-			$children = $c->getNumChildren();
-			$pages = $children + 1;
-			?>
-
-			<div>
-				<strong class="important"><?=t('DELETION')?></strong>
-				<?=t('(Marked by: <strong>%s</strong> on <strong>%s</strong>)',$ud->getUserName(), date(DATE_APP_PAGE_VERSIONS, strtotime($c->getPendingActionDateTime())))?>
-			</div>
-
-			<? if ($cp->canApprovePageVersions()) { ?>
-				<? if ($children == 0) { ?>
-				
-					<div class="ccm-buttons">
-					<a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/versions.php?cID=<?=$cID?>&ctask=approve_pending_action<?=$token?>" class="ccm-button-right accept" onclick="return ccm_runAction(this)"><span><?=t('Approve')?></span></a>
-					<a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/versions.php?cID=<?=$cID?>&ctask=clear_pending_action<?=$token?>" class="ccm-button-left cancel" onclick="return ccm_runAction(this)"><span><em class="ccm-button-close"><?=t('Deny')?></em></span></a>
-					</div>
-			
-				<? } else if ($children > 0) { ?>
-					<?=t('This will remove %s pages.',$pages)?>
-					<? if (!$u->isSuperUser()) { ?>
-						<?=t('Only the super user may remove multiple pages.')?><br>
-						<div class="ccm-buttons">
-						<a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/versions.php?cID=<?=$cID?>&ctask=clear_pending_action<?=$token?>" class="ccm-button-left cancel" onclick="return ccm_runAction(this)"><span><em class="ccm-button-close"><?=t('Deny')?></em></span></a>
-						</div>
-
-					<? } else { ?>
-						<div class="ccm-buttons">
-						<a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/versions.php?cID=<?=$cID?>&ctask=approve_pending_action<?=$token?>" class="ccm-button-right accept" onclick="return ccm_runAction(this)"><span><?=t('Approve')?></span></a>
-						<a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/versions.php?cID=<?=$cID?>&ctask=clear_pending_action<?=$token?>" class="ccm-button-left cancel" onclick="return ccm_runAction(this)"><span><em class="ccm-button-close"><?=t('Deny')?></em></span></a>
-						</div>
-
-					<? } ?>
-				<? } ?>
-			<? } ?>
-
-		<? break;
-		case 'MOVE':
-			$ud = UserInfo::getByID($c->getPendingActionUserID());
-			?>
-
-			<div>
-				<strong class="important"><?=t('MOVE')?></strong>  
-				<?=t('(Marked by: <strong>%s</strong> on <strong>%s</strong>)',$ud->getUserName(), date(DATE_APP_PAGE_VERSIONS, strtotime($c->getPendingActionDateTime()) ))?>
-			</div>
-			<? $nc = Page::getByID($c->getPendingActionTargetCollectionID(), 'ACTIVE'); ?>
-				<? if (is_object($nc)) { ?>
-					<br><?=t('This page is being moved to')?> <strong><a href="<?=DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=<?=$nc->getCollectionID()?>" target="_blank"><?=$nc->getCollectionName()?></a></strong>
-				<? } 
-			?>
-			<? if ($cp->canApprovePageVersions()) { ?>
-				<div class="ccm-buttons">
-				<a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/versions.php?cID=<?=$cID?>&ctask=approve_pending_action<?=$token?>" class="ccm-button-right accept" onclick="return ccm_runAction(this)"><span><?=t('Approve')?></span></a>
-				<a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/versions.php?cID=<?=$cID?>&ctask=clear_pending_action<?=$token?>" class="ccm-button-left cancel" onclick="return ccm_runAction(this)"><span><em class="ccm-button-close"><?=t('Deny')?></em></span></a>
-				</div>
-			<? } ?>
-		<? break;
-		default: ?>
-			
-			<?=t('There are no pending actions for this page.')?>
-			
-		<? break;
-		
-		}
-	
-		}
+<? 	}
 
 ?>
 </div>

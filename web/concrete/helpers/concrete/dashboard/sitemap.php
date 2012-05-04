@@ -91,10 +91,6 @@ class ConcreteDashboardSitemapHelper {
 		
 		$status = '';
 		
-		if ($c->getPendingAction() || ( $c->getVersionObject() && $c->getVersionObject()->isApproved()) ) {
-			$status = ucfirst($c->getPendingAction());
-		}
-		
 		$cls = ($c->getNumChildren() > 0) ? "folder" : "file";
 		$leaf = ($c->getNumChildren() > 0) ? false : true;
 		$numSubpages = ($c->getNumChildren()  > 0) ? $c->getNumChildren()  : '';

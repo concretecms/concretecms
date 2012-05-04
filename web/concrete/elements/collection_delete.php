@@ -36,34 +36,7 @@ $(function() {
 <? if ($c->getCollectionID() == 1) {  ?>
 	<div class="error alert-message"><?=t('You may not delete the home page.');?></div>
 	<div class="dialog-buttons"><input type="button" class="btn" value="<?=t('Cancel')?>" onclick="jQuery.fn.dialog.closeTop()" /></div>
-<? } else {	?>
-	<? if ($c->isPendingDelete()) { ?>
-		<div class="notice alert-message"><?=t('This page has been marked for deletion.');?></div>
-		<?
-		
-		$u = new User();
-		$puID = $u->getUserID();
-		
-		if ($puID == $c->getPendingActionUserID()) { ?>
-			<?=t('You marked this page for deletion on <strong>%s</strong>', date(DATE_APP_PAGE_VERSIONS, strtotime($c->getPendingActionDateTime())))?><br><br>
-	
-			<form method="get" id="ccmDeletePageForm" action="<?=DIR_REL?>/<?=DISPATCHER_FILENAME?>">
-				<div class="dialog-buttons"><input type="button" class="btn ccm-button-left" value="<?=t('Close')?>" onclick="jQuery.fn.dialog.closeTop()" />
-					<input type="submit" class="btn ccm-button-right primary" onclick="$('#ccmDeletePageForm').submit()" value="<?=t('Cancel Delete')?>" />
-				</div>
-				<input type="hidden" name="cID" value="<?=$c->getCollectionID()?>">
-				<input type="hidden" name="ctask" value="clear_pending_action">
-				<input type="hidden" name="rel" value="<?=$_REQUEST['rel']?>" />
-				<input type="hidden" name="display_mode" value="<?=$_REQUEST['display_mode']?>" />
-				<input type="hidden" name="instance_id" value="<?=$_REQUEST['instance_id']?>" />
-				<input type="hidden" name="select_mode" value="<?=$_REQUEST['select_mode']?>" />
-			</form>
-		<? } ?>
-	<? } else if ($c->isPendingMove() || $c->isPendingCopy()) { ?>
-		<div class="error alert-message"><?=t('Since this page is being moved or copied, it cannot be deleted.')?></div>
-		<div class="dialog-buttons"><input type="button" class="btn" value="<?=t('Cancel')?>" onclick="jQuery.fn.dialog.closeTop()" /></div>
-		
-	<? } else if ($numChildren > 0 && !$u->isSuperUser()) { ?>
+<? }  else if ($numChildren > 0 && !$u->isSuperUser()) { ?>
 		<div class="error alert-message"><?=t('Before you can delete this page, you must delete all of its child pages.')?></div>
 		<div class="dialog-buttons"><input type="button" class="btn" value="<?=t('Cancel')?>" onclick="jQuery.fn.dialog.closeTop()" /></div>
 		
@@ -99,5 +72,4 @@ $(function() {
 		</div>
 		
 	<? }
-	
-}?>
+?>
