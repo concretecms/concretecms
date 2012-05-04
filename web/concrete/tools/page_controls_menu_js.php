@@ -51,30 +51,6 @@ if (isset($cp)) {
 				}
 			}
 		}
-		
-		$pendingAction = $c->getPendingAction();
-		if ($pendingAction == 'MOVE') {
-			$statusMessage .= $statusMessage ? "&nbsp;|&nbsp;" : "";
-			$statusMessage .= t("This page is being moved.");
-			if ($cp->canApprovePageVersions() && (!$c->isCheckedOut() || ($c->isCheckedOut() && $c->isEditMode()))) {
-				$statusMessage .= "<br/><a href='" . DIR_REL . "/" . DISPATCHER_FILENAME . "?cID=" . $c->getCollectionID() . "&ctask=approve_pending_action'>" . t('Approve Move') . "</a> | <a href='" . DIR_REL . "/" . DISPATCHER_FILENAME . "?cID=" . $c->getCollectionID() . "&ctask=clear_pending_action" . $token . "'>" . t('Cancel') . "</a>";
-			}
-		} else if ($pendingAction == 'DELETE') {
-			$statusMessage .= $statusMessage ? "<br/>" : "";
-			$statusMessage .= t("This page is marked for removal.");
-			$children = $c->getNumChildren();
-			if ($children > 0) {
-				$pages = $children + 1;
-				$statusMessage .= " " . t('This will remove %s pages.', $pages);
-				if ($u->isSuperUser()) {
-					$statusMessage .= " <a href='" . DIR_REL . "/" . DISPATCHER_FILENAME . "?cID=" . $c->getCollectionID() . "&ctask=approve_pending_action" . $token . "'>" . t('Approve Delete') . "</a> | <a href='" . DIR_REL . "/" . DISPATCHER_FILENAME . "?cID=" . $c->getCollectionID() . "&ctask=clear_pending_action" . $token . "'>" . t('Cancel') . "</a>";
-				} else {
-					$statusMessage .= " " . t('Only the super user can approve a multi-page delete operation.');
-				}
-			} else if ($children == 0 && $cp->canApprovePageVersions() && (!$c->isCheckedOut() || ($c->isCheckedOut() && $c->isEditMode()))) {
-				$statusMessage .= " <a href='" . DIR_REL . "/" . DISPATCHER_FILENAME . "?cID=" . $c->getCollectionID() . "&ctask=approve_pending_action" . $token . "'>" . t('Approve Delete') . "</a> | <a href='" . DIR_REL . "/" . DISPATCHER_FILENAME . "?cID=" . $c->getCollectionID() . "&ctask=clear_pending_action" . $token . "'>" . t('Cancel') . "</a>";
-			}
-		}
 	
 	}
 
@@ -263,12 +239,6 @@ menuHTML += '</div>';
 	
 } ?>
 
-<?
-if ($statusMessage != '') {?> 
-	$(function() { ccmAlert.hud('<?=str_replace("'",'"',$statusMessage) ?>', 5000); });
-<? } ?>
-
-	
 $(function() {
 	<? if ($c->isEditMode()) { ?>
 		$(ccm_editInit);	
@@ -278,6 +248,10 @@ $(function() {
 	if (!$dh->inDashboard()) { ?>
 		$("#ccm-page-controls-wrapper").html(menuHTML);
 		$(".tooltip").twipsy();
+		<?
+		if ($statusMessage != '') {?> 
+			$(function() { ccm_statusBar.open('<?=str_replace("'",'"',$statusMessage) ?>'); });
+		<? } ?>
 		ccm_activateToolbar();
 	<? } ?>
 	

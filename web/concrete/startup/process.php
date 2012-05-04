@@ -471,14 +471,13 @@
 						if ($c->isExternalLink()) {
 							$c->delete();
 						} else { 
-							$parent = Page::getByID($c->getCollectionParentID());
-							$c->markPendingAction('DELETE', $parent);
-							if ($cp->canApprovePageVersions()) {
-								$cParentID = $c->getCollectionParentID();
-								$c->approvePendingAction();
-							}
+							$pk = PermissionKey::getByHandle('delete_page');
+							$pkr = $pk->getWorkflowRequestObject($c);
+							$pkr->trigger();
 						}
 					}
+					$cParentID = $c->getCollectionParentID();
+
 					$obj = new stdClass;
 					$obj->rel = $_REQUEST['rel'];
 					$obj->cParentID = $cParentID;
@@ -490,38 +489,6 @@
 					exit;
 
 				}
-			case 'clear_pending_action':
-				if ($cp->canApprovePageVersions() || $u->getUserID() == $c->getPendingActionUserID()) {
-					$c->clearPendingAction();
-					header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $c->getCollectionID() . '&ctask=mcd' . $step);
-					exit;
-				}
-			case 'approve_pending_action':
-				if ($cp->canApprovePageVersions() && !$isCheckedOut) {
-					$approve = false;
-					if ($c->isPendingDelete()) {
-						$children = $c->getNumChildren();
-						if ($children == 0 || $cp->canApprovePageVersions()) {
-							$approve = true;
-							$cParentID = $c->getCollectionParentID();
-						}
-					} else {
-						$approve = true;
-					}
-					
-					if ($approve) {
-						$c->approvePendingAction();
-					}
-					
-					if ($c->isPendingDelete() && $approve) {
-						header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $cParentID . $step);
-						exit;
-					} else {
-						header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $c->getCollectionID() . $step);
-						exit;
-					}
-				}
-				break;
 			case 'remove-alias':
 				if ($cp->canDeletePage()) {
 					$redir = $c->removeThisAlias();

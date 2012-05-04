@@ -59,8 +59,11 @@ class ConcreteUpgradeVersion553Helper {
 		'FileSetPermissionAssignments',
 		'FileSetPermissionFileTypeAssignments',
 		'FileSetPermissionFileTypeAssignmentsCustom',
-		'FilePermissionAssignments'
+		'FilePermissionAssignments', 
+		'WorkflowProgress', 
+		'WorkflowRequestObjects'
 	);
+	
 	
 	public function run() {
 		Loader::model('single_page');
