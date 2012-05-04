@@ -71,22 +71,24 @@
 	form .input {
 		margin-left: 150px;
 	}
-
-	.popover .inner {
-		.popover-inner;
-	}
-	.popover .title {
-		.popover-title;
-	}
-	.popover .content {
-		.popover-content;
-	}
 	
 	.popover {
 		&.below { .popover.bottom; }
 		&.above { .popover.top; }
 		&.above .arrow    { #popoverArrow > .top(); }
   		&.below .arrow { #popoverArrow > .bottom(); }
+  		
+  		.title {
+			.popover-title;
+		}
+		
+  		.content {
+			.popover-content;
+		}
+		
+		.inner {
+			.popover-inner;
+		}
 	}
 	
 	.btn.primary {
