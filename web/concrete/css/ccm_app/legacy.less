@@ -145,24 +145,23 @@
 		}
 	}
 	
-	.alert-message.info {
+	.alert-message {
 		.alert;
-		.alert-info;
-	}
-	
-	.alert-message.success {
-		.alert;
-		.alert-success;
-	}
-	
-	.alert-message.error {
-		.alert;
-		.alert-error;
-	}
-	
-	.alert-message.notice {
-		.alert;
-		.alert-block;
+		&.info {
+			.alert-info;
+		}
+		
+		&.success {
+			.alert-success;
+		}
+		
+		&.error {
+			.alert-error;
+		}
+		
+		&.notice {
+			.alert-block;
+		}
 	}
 	
 	ul.pills {
