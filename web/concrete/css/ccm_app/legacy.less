@@ -91,56 +91,58 @@
 		}
 	}
 	
-	.btn.primary {
-		.ccm-ui.btn-primary;
-	}
-	
-	.btn.warning {
-		.ccm-ui.btn-warning;
-	}
-	
-	.btn.danger, .btn.error {
-		.ccm-ui.btn-danger;
-	}
-
-	.btn.success {
-		.ccm-ui.btn-success;
-	}
-
-	.btn.info {
-		.ccm-ui.btn-info;
-	}
-
-	.btn.inverse {
-		.ccm-ui.btn-inverse;
-	}
+	.btn {
+		&.primary {
+			.ccm-ui.btn-primary;
+		}
 		
-	.btn.primary,
-	.btn.primary:hover,
-	.btn.warning,
-	.btn.warning:hover,
-	.btn.danger,
-	.btn.danger:hover,
-	.btn.error,
-	.btn.error:hover,
-	.btn.success,
-	.btn.success:hover,
-	.btn.info,
-	.btn.info:hover,
-	.btn.inverse,
-	.btn.inverse:hover {
-	  color: @white;
-	  text-shadow: 0 -1px 0 rgba(0,0,0,.25);
-	}
-	
-	.btn.primary.active,
-	.btn.warning.active,
-	.btn.danger.active,
-	.btn.error.active,
-	.btn.success.active,
-	.btn.info.active,
-	.btn.inverse.active {
-	  color: rgba(255,255,255,.75);
+		&.warning {
+			.ccm-ui.btn-warning;
+		}
+		
+		&.danger, &.error {
+			.ccm-ui.btn-danger;
+		}
+		
+		&.success {
+			.ccm-ui.btn-success;
+		}
+		
+		&.info {
+			.ccm-ui.btn-info;
+		}
+		
+		&.inverse {
+			.ccm-ui.btn-inverse;
+		}
+		
+		&.primary,
+		&.primary:hover,
+		&.warning,
+		&.warning:hover,
+		&.danger,
+		&.danger:hover,
+		&.error,
+		&.error:hover,
+		&.success,
+		&.success:hover,
+		&.info,
+		&.info:hover,
+		&.inverse,
+		&.inverse:hover {
+		  color: @white;
+		  text-shadow: 0 -1px 0 rgba(0,0,0,.25);
+		}
+		
+		&.primary.active,
+		&.warning.active,
+		&.danger.active,
+		&.error.active,
+		&.success.active,
+		&.info.active,
+		&.inverse.active {
+		  color: rgba(255,255,255,.75);
+		}
 	}
 	
 	.alert-message.info {
