@@ -82,6 +82,13 @@
 		.popover-content;
 	}
 	
+	.popover {
+		&.below { .popover.bottom; }
+		&.above { .popover.top; }
+		&.above .arrow    { #popoverArrow > .top(); }
+  		&.below .arrow { #popoverArrow > .bottom(); }
+	}
+	
 	.btn.primary {
 		.ccm-ui.btn-primary;
 	}
@@ -134,19 +141,24 @@
 	  color: rgba(255,255,255,.75);
 	}
 	
-	.message.alert-message.info {
+	.alert-message.info {
 		.alert;
 		.alert-info;
 	}
 	
-	.message.alert-message.success {
+	.alert-message.success {
 		.alert;
 		.alert-success;
 	}
 	
-	.message.alert-message.error {
+	.alert-message.error {
 		.alert;
 		.alert-error;
+	}
+	
+	.alert-message.notice {
+		.alert;
+		.alert-block;
 	}
 	
 	ul.pills {
