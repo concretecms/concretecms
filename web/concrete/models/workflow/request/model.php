@@ -7,7 +7,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
  * @license    http://www.concrete5.org/license/     MIT License
  *
  */
-class WorkflowRequest extends Object {  
+abstract class WorkflowRequest extends Object {  
 	
 	public function __construct(PermissionKey $pk) {
 		$u = new User();
@@ -43,11 +43,18 @@ class WorkflowRequest extends Object {
 	 * @return void
 	 */
 	public function trigger() {
+		if (!$this->wrID) {
+			$this->save();
+		}
+		
 		$pk = PermissionKey::getByID($this->pkID);
 		$workflows = $pk->getAssignedWorkflows();
+		$wpObjects = array();
 		foreach($workflows as $wf) {
-			WorkflowProgress::add($wf, $this);
+			$this->addWorkflowProgress($wf);
 		}
+		return $wpObjects;
 	}
 	
+	abstract function addWorkflowProgress(Workflow $wf);
 }

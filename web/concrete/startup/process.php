@@ -471,8 +471,9 @@
 						if ($c->isExternalLink()) {
 							$c->delete();
 						} else { 
-							$pk = PermissionKey::getByHandle('delete_page');
-							$pkr = $pk->getWorkflowRequestObject($c);
+							Loader::model('workflow/request/delete_page');
+							$pkr = new DeletePagePageWorkflowRequest();
+							$pkr->setRequestedPage($c);
 							$pkr->trigger();
 						}
 					}

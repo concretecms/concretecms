@@ -20,6 +20,8 @@ $dh = Loader::helper('concrete/dashboard');
 $ish = Loader::helper('concrete/interface');
 $token = '&' . $valt->getParameter();
 
+
+
 if (isset($cp)) {
 
 	$u = new User();
@@ -248,10 +250,7 @@ $(function() {
 	if (!$dh->inDashboard()) { ?>
 		$("#ccm-page-controls-wrapper").html(menuHTML);
 		$(".tooltip").twipsy();
-		<?
-		if ($statusMessage != '') {?> 
-			$(function() { ccm_statusBar.open('<?=str_replace("'",'"',$statusMessage) ?>'); });
-		<? } ?>
+
 		ccm_activateToolbar();
 	<? } ?>
 	
