@@ -99,8 +99,10 @@
 	Loader::model("permission/categories/admin");
 	Loader::model("permission/categories/marketplace_newsflow");
 	Loader::model("workflow/model");
-	Loader::model("workflow/progress");
-	Loader::model("workflow/request");
+	Loader::model("workflow/progress/model");
+	Loader::model("workflow/progress/categories/page");
+	Loader::model("workflow/request/model");
+	Loader::model("workflow/request/categories/page");
 	Loader::model('user');
 	Loader::model('userinfo');
 	Loader::model('stack/model');
@@ -113,6 +115,9 @@
 
 	## Startup check, install ##	
 	require(dirname(__FILE__) . '/startup/magic_quotes_gpc_check.php');
+
+	## Called Class Fix for 5.2 ##	
+	require(dirname(__FILE__) . '/startup/get_called_class_check.php');
 
 	## Default routes for various content items ##
 	require(dirname(__FILE__) . '/config/theme_paths.php');
