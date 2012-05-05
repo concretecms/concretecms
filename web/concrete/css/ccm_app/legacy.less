@@ -10,42 +10,6 @@
   color: @grayDark;
 }
 
-.border-radius-bottom-only(@radius: 5px) {
-	-webkit-border-bottom-left-radius: @radius;
-	-webkit-border-bottom-right-radius: @radius;
-	-moz-border-radius-bottomleft: @radius;
-	-moz-border-radius-bottomright: @radius;
-	border-bottom-left-radius: @radius;
-	border-bottom-right-radius: @radius;
-}
-
-.border-radius-top-only(@radius: 5px) {
-	-webkit-border-top-left-radius: @radius;
-	-webkit-border-top-right-radius: @radius;
-	-moz-border-radius-topleft: @radius;
-	-moz-border-radius-topright: @radius;
-	border-top-left-radius: @radius;
-	border-top-right-radius: @radius;
-}
-
-.border-radius-left-only(@radius: 5px) {
-	-webkit-border-top-left-radius: @radius;
-	-webkit-border-bottom-left-radius: @radius;
-	-moz-border-radius-topleft: @radius;
-	-moz-border-radius-bottomleft: @radius;
-	border-top-left-radius: @radius;
-	border-bottom-left-radius: @radius;
-}
-
-.border-radius-right-only(@radius: 5px) {
-	-webkit-border-top-right-radius: @radius;
-	-webkit-border-bottom-right-radius: @radius;
-	-moz-border-radius-topright: @radius;
-	-moz-border-radius-bottomright: @radius;
-	border-top-right-radius: @radius;
-	border-bottom-right-radius: @radius;
-}
-
 .ccm-ui {
 	a {
 		color: @linkColor;
@@ -71,6 +35,50 @@
 	form .input {
 		margin-left: 150px;
 	}
+	
+// Stacked options for forms (radio buttons or checkboxes)
+.inputs-list {
+  margin: 0 0 5px;
+  width: 100%;
+  li {
+    display: block;
+    padding: 0;
+    width: 100%;
+  }
+  label {
+    display: block;
+    float: none;
+    width: auto;
+    padding: 0;
+    line-height: @baseline;
+    text-align: left;
+    white-space: normal;
+    strong {
+      color: @gray;
+    }
+    small {
+      font-size: @basefont - 2;
+      font-weight: normal;
+    }
+  }
+  .inputs-list {
+    margin-left: 25px;
+    margin-bottom: 10px;
+    padding-top: 0;
+  }
+  &:first-child {
+    padding-top: 6px;
+  }
+  li + li {
+    padding-top: 2px;
+  }
+  input[type=radio],
+  input[type=checkbox] {
+    margin-bottom: 0;
+    vertical-align: top;
+    display: inline-block;
+  }
+}
 	
 	.popover {
 		&.below { .popover.bottom; }
