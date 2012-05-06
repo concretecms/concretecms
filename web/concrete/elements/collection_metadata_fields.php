@@ -35,9 +35,9 @@ $usedKeysCombined = array_merge($requiredKeys, $usedKeys);
 	$sets = $category->getAttributeSets();
 	?>
 
-	<ul id="ccm-page-attribute-list" class="icon-select-list">
+	<ul id="ccm-page-attribute-list" class="aicon-select-list">
 	<? foreach($sets as $as) { ?>
-		<li class="icon-select-list-header ccm-attribute-available"><span><?=$as->getAttributeSetName()?></span></li>
+		<li class="aicon-select-list-header ccm-attribute-available"><span><?=$as->getAttributeSetName()?></span></li>
 		<? 
 		$setattribs = $as->getAttributeKeys();
 		foreach($setattribs as $ak) { ?>
@@ -53,7 +53,7 @@ $usedKeysCombined = array_merge($requiredKeys, $usedKeys);
 	$unsetattribs = $category->getUnassignedAttributeKeys();
 	
 	if (count($sets) > 0 && count($unsetattribs) > 0) { ?>
-		<li class="icon-select-list-header"><span><?=t('Other')?></span></li>
+		<li class="aicon-select-list-header"><span><?=t('Other')?></span></li>
 	<? }
 	
 	foreach($unsetattribs as $ak) { ?>
@@ -145,16 +145,16 @@ ccmBlockTypeSearchResultsSelect = function(which, e) {
 	var obj = $("li.ccm-item-selected");
 	var foundblock = false;
 	if (obj.length == 0) {
-		$($("#ccm-page-attribute-list li.ccm-attribute-available:not(.icon-select-list-header)")[0]).addClass('ccm-item-selected');
+		$($("#ccm-page-attribute-list li.ccm-attribute-available:not(.aicon-select-list-header)")[0]).addClass('ccm-item-selected');
 	} else {
 		if (which == 'next') {
-			var nextObj = obj.nextAll('li.ccm-attribute-available:not(.icon-select-list-header)');
+			var nextObj = obj.nextAll('li.ccm-attribute-available:not(.aicon-select-list-header)');
 			if (nextObj.length > 0) {
 				obj.removeClass('ccm-item-selected');
 				$(nextObj[0]).addClass('ccm-item-selected');
 			}
 		} else if (which == 'previous') {
-			var prevObj = obj.prevAll('li.ccm-attribute-available:not(.icon-select-list-header)');
+			var prevObj = obj.prevAll('li.ccm-attribute-available:not(.aicon-select-list-header)');
 			if (prevObj.length > 0) {
 				obj.removeClass('ccm-item-selected');
 				$(prevObj[0]).addClass('ccm-item-selected');
