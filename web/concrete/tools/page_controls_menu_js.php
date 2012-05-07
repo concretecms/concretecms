@@ -28,42 +28,13 @@ if (isset($cp)) {
 	$username = $u->getUserName();
 	$vo = $c->getVersionObject();
 
-	$statusMessage = '';
 	if ($c->isCheckedOut()) {
 		if (!$c->isCheckedOutByMe()) {
 			$cantCheckOut = true;
-			$statusMessage .= t("%s is currently editing this page.", $c->getCollectionCheckedOutUserName());
 		}
-	}
-	
-	if ($c->getCollectionPointerID() > 0) {
-		$statusMessage .= t("This page is an alias of one that actually appears elsewhere. ");
-		$statusMessage .= "<br/><a href='" . DIR_REL . "/" . DISPATCHER_FILENAME . "?cID=" . $c->getCollectionID() . "'>" . t('View/Edit Original') . "</a>";
-		if ($cp->canApprovePageVersions()) {
-			$statusMessage .= "&nbsp;|&nbsp;";
-			$statusMessage .= "<a href='" . DIR_REL . "/" . DISPATCHER_FILENAME . "?cID=" . $c->getCollectionPointerOriginalID() . "&ctask=remove-alias" . $token . "'>" . t('Remove Alias') . "</a>";
-		}
-	} else {
-	
-		if (is_object($vo)) {
-			if (!$vo->isApproved() && !$c->isEditMode()) {
-				$statusMessage .= t("This page is pending approval.");
-				if ($cp->canApprovePageVersions() && !$c->isCheckedOut()) {
-					$statusMessage .= "<br/><a href='" . DIR_REL . "/" . DISPATCHER_FILENAME . "?cID=" . $c->getCollectionID() . "&ctask=approve-recent" . $token . "'>" . t('Approve Version') . "</a>";
-				}
-			}
-		}
-	
-	}
-
-	if ($c->isMasterCollection()) {
-		$statusMessage .= $statusMessage ? "<br/>" : "";
-		$statusMessage .= t('Page Defaults for') . ' "' . $c->getCollectionTypeName() . '" ' . t("page type");
-		$statusMessage .= "<br/>" . t('(All edits take effect immediately)');
 	}
 
 	if ($cp->canViewToolbar()) { 
-	
 		$cID = $c->getCollectionID(); ?>
 
 
@@ -233,7 +204,60 @@ $(function() {
 
 	<? 
 	if (!$dh->inDashboard()) { ?>
-		$("#ccm-page-controls-wrapper").html(menuHTML);
+		$("#ccm-page-controls-wrapper").html(menuHTML); 
+		<? if ($cantCheckOut) { ?>
+			item = new ccm_statusBarItem();
+			item.setCSSClass('info');
+			item.setDescription('<?= t("%s is currently editing this page.", $c->getCollectionCheckedOutUserName())?>');
+			ccm_statusBar.addItem(item);		
+		<? } ?>
+
+		<? if ($c->getCollectionPointerID() > 0) { ?>
+	
+			item = new ccm_statusBarItem();
+			item.setCSSClass('info');
+			item.setDescription('<?= t("This page is an alias of one that actually appears elsewhere.", $c->getCollectionCheckedOutUserName())?>');
+			btn1 = new ccm_statusBarItemButton();
+			btn1.setLabel('<?=t('View/Edit Original')?>');
+			btn1.setURL('<?=DIR_REL . "/" . DISPATCHER_FILENAME . "?cID=" . $c->getCollectionID()?>');
+			item.addButton(btn1);
+			<? if ($cp->canApprovePageVersions()) { ?>
+				btn2 = new ccm_statusBarItemButton();
+				btn2.setLabel('<?=t('Remove Alias')?>');
+				btn2.setCSSClass('danger');
+				btn2.setURL('<?=DIR_REL . "/" . DISPATCHER_FILENAME . "?cID=" . $c->getCollectionPointerOriginalID() . "&ctask=remove-alias" . $token?>');
+				item.addButton(btn2);
+			<? } ?>
+			ccm_statusBar.addItem(item);		
+		
+		<? } 	
+
+		if ($c->isMasterCollection()) { ?>
+
+			item = new ccm_statusBarItem();
+			item.setCSSClass('info');
+			item.setDescription('<?= t('Page Defaults for %s Page Type. All edits take effect immediately.', $c->getCollectionTypeName()) ?>');
+			ccm_statusBar.addItem(item);		
+		<? }
+		
+		if (!$c->getCollectionPointerID()) {
+			if (is_object($vo)) {
+				if (!$vo->isApproved() && !$c->isEditMode()) { ?>
+				
+					item = new ccm_statusBarItem();
+					item.setCSSClass('info');
+					item.setDescription('<?= t("This page is pending approval.")?>');
+					<? if ($cp->canApprovePageVersions() && !$c->isCheckedOut()) { ?>
+						btn1 = new ccm_statusBarItemButton();
+						btn1.setLabel('<?=t('Approve Version')?>');
+						btn1.setURL('<?=DIR_REL . "/" . DISPATCHER_FILENAME . "?cID=" . $c->getCollectionID() . "&ctask=approve-recent" . $token?>');
+						item.addButton(btn1);
+					<? } ?>
+					ccm_statusBar.addItem(item);		
+				<? }
+			}
+		} ?>		
+		
 		<? if (is_array($workflowList)) { ?>
 			<? foreach($workflowList as $wl) { ?>
 				<? $wr = $wl->getWorkflowRequestObject(); ?>
@@ -251,9 +275,10 @@ $(function() {
 				<? } ?>
 				ccm_statusBar.addItem(item);
 			<? } ?>
-			ccm_statusBar.activate();		
 		
 		<? } ?>
+
+		ccm_statusBar.activate();		
 		
 		$(".tooltip").twipsy();
 		ccm_activateToolbar();
