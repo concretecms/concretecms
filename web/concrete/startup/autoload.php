@@ -18,6 +18,16 @@ function CoreAutoload($class) {
 		$class = substr($class, 0, strpos($class, 'AttributeType'));
 		$handle = $txt->uncamelcase($class);
 		$at = AttributeType::getByHandle($handle);
+	} else if (strpos($class, 'WorkflowRequest') > 0) {
+		$class = substr($class, 0, strpos($class, 'WorkflowRequest'));
+		$identifier = $txt->uncamelcase($class);
+		$lastslash = strrpos($identifier, '_') + 1;
+		$category = substr($identifier, $lastslash);
+		$request = substr($identifier, 0, $lastslash - 1);
+		if ($category && $request) {
+			Loader::model('workflow/request/categories/' . $category);
+			Loader::model('workflow/request/requests/' . $request);
+		}
 	}
 }
 

@@ -7,12 +7,16 @@ defined('C5_EXECUTE') or die("Access Denied.");
  * @license    http://www.concrete5.org/license/     MIT License
  *
  */
- 
-class DeletePagePageWorkflowRequest extends PageWorkflowRequest {
+class WorkflowProgressResponse extends Object {  
 	
-	public function __construct() {
-		$pk = PermissionKey::getByHandle('delete_page');
-		parent::__construct($pk);
+	protected $wprURL = '';
+	
+	public function setWorkflowProgressResponseURL($wprURL) {
+		$this->wprURL = $wprURL;
 	}
-	
+
+	public function getWorkflowProgressResponseURL() {
+		return $this->wprURL;
+	}
+
 }

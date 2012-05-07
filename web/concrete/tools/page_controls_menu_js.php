@@ -20,7 +20,7 @@ $dh = Loader::helper('concrete/dashboard');
 $ish = Loader::helper('concrete/interface');
 $token = '&' . $valt->getParameter();
 
-
+$workflowList = PageWorkflowProgress::getList($c);
 
 if (isset($cp)) {
 
@@ -222,21 +222,6 @@ menuHTML += '</div>';
 menuHTML += '<?=addslashes($ish->getQuickNavigationBar())?>';
 
 <?
-/*
-
-?>
-
-menuHTML += '<li class="ccm-main-nav-arrange-option" <? if (!$c->isArrangeMode()) { ?> style="display: none" <? } ?>><a href="#" id="ccm-nav-save-arrange"><?=t('Save Positioning')?></a></li>';
-
-menuHTML += '</ul>';
-menuHTML += '</div>';
-menuHTML += '<div id="ccm-page-detail"><div id="ccm-page-detail-l"><div id="ccm-page-detail-r" class="ccm-ui"><div id="ccm-page-detail-content"></div></div></div>';
-menuHTML += '<div id="ccm-page-detail-lower"><div id="ccm-page-detail-bl"><div id="ccm-page-detail-br"><div id="ccm-page-detail-b"></div></div></div></div>';
-menuHTML += '</div>';
-
-<? */ ?>
-
-<?
 	}
 	
 } ?>
@@ -249,8 +234,28 @@ $(function() {
 	<? 
 	if (!$dh->inDashboard()) { ?>
 		$("#ccm-page-controls-wrapper").html(menuHTML);
+		<? if (is_array($workflowList)) { ?>
+			<? foreach($workflowList as $wl) { ?>
+				<? $wr = $wl->getWorkflowRequestObject(); ?>
+				item = new ccm_statusBarItem();
+				item.setCSSClass('<?=$wr->getWorkflowRequestStyleClass()?>');
+				item.setDescription('<?=$wr->getWorkflowRequestDescription()?>');
+				item.setAction('<?=$wl->getWorkflowProgressFormAction()?>');
+				<? $actions = $wr->getWorkflowRequestActions(); ?>
+				<? foreach($actions as $act) { ?>
+					btn = new ccm_statusBarItemButton();
+					btn.setLabel('<?=$act->getWorkflowRequestActionLabel()?>');
+					btn.setCSSClass('<?=$act->getWorkflowRequestActionStyleClass()?>');
+					btn.setAction('<?=$act->getWorkflowRequestActionTask()?>');
+					item.addButton(btn);
+				<? } ?>
+				ccm_statusBar.addItem(item);
+			<? } ?>
+			ccm_statusBar.activate();		
+		
+		<? } ?>
+		
 		$(".tooltip").twipsy();
-
 		ccm_activateToolbar();
 	<? } ?>
 	

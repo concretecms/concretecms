@@ -9,6 +9,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
  */
 abstract class WorkflowRequest extends Object {  
 	
+	protected $currentWP;
+	
 	public function __construct(PermissionKey $pk) {
 		$u = new User();
 		$this->uID = $u->getUserID();
@@ -16,14 +18,35 @@ abstract class WorkflowRequest extends Object {
 	}
 
 	public function getWorkflowRequestID() { return $this->wrID;}
+	public function getWorkflowRequestPermissionKeyID() {return $this->pkID;}
+	public function getWorkflowRequestUserID() {return $this->pkID;}
+	public function getWorkflowRequestUserObject() {
+		if ($this->uID > 0) {
+			$ui = UserInfo::getByID($this->uID);
+			if (is_object($ui)) {
+				return $ui;
+			}
+		}
+	}
+	public function setCurrentWorkflowProgressObject(WorkflowProgress $wp) {
+		$this->currentWP = $wp;
+	}
+	public function getCurrentWorkflowProgressObject() {
+		return $this->currentWP;
+	}
 	
 	public static function getByID($wrID) {
 		$db = Loader::db();
-		$wrObject = $db->getOne('select wrObject from WorkflowRequests where wrID = ?', array($wrID));
+		$wrObject = $db->getOne('select wrObject from WorkflowRequestObjects where wrID = ?', array($wrID));
 		if ($wrObject) {
 			$wr = unserialize($wrObject);
 			return $wr;
 		}
+	}
+	
+	public function delete() {
+		$db = Loader::db();
+		$db->Execute('delete from WorkflowRequestObjects where wrID = ?', array($this->wrID));
 	}
 	
 	public function save() {
@@ -57,4 +80,8 @@ abstract class WorkflowRequest extends Object {
 	}
 	
 	abstract function addWorkflowProgress(Workflow $wf);
+	abstract function getWorkflowRequestDescription();
+	abstract function getWorkflowRequestStyleClass();
+	abstract function getWorkflowRequestActions();
+
 }

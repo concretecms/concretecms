@@ -7,7 +7,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
  * @license    http://www.concrete5.org/license/     MIT License
  *
  */
-class PageWorkflowRequest extends WorkflowRequest {  
+abstract class PageWorkflowRequest extends WorkflowRequest {  
 	
 	public function setRequestedPage($c) {
 		$this->cID = $c->getCollectionID();
@@ -22,6 +22,7 @@ class PageWorkflowRequest extends WorkflowRequest {
 		$pwp = PageWorkflowProgress::add($wf, $this);
 		return $pwp;
 	}
+	
 }
 
 
