@@ -2930,6 +2930,9 @@
       <NOTNULL/>
       <DEFAULT value="0"/>
     </field>
+    <index name="wrID">
+      <col>wrID</col>
+    </index>
   </table>
   <table name="WorkflowRequestObjects">
     <field name="wrID" type="I" size="10">
