@@ -76,7 +76,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		<div class="dialog-buttons">
 			<form method="post" action="<?= $this->action('restore_backup') ?>" style="display: inline">	
 			<input type="hidden" name="backup_file" value="" />
-			<?= $interface->submit('Restore Backup', false, 'right', 'primary'); ?>
+			<?= $interface->submit(t('Restore Backup'), false, 'right', 'primary'); ?>
 		</form>
 		</div> 
 </div>
