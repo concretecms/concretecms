@@ -119,7 +119,11 @@ if (!$error) {
 							}
 							$successMessage .= '"' . $oc->getCollectionName() . '" '.t('was moved beneath').' "' . $dc->getCollectionName() . '." ';
 						} else {
-							$oc->markPendingAction('MOVE', $dc);
+							$pkr = new MovePagePageWorkflowRequest();
+							$pkr->setRequestedPage($oc);
+							$pkr->setRequestedTargetPage($dc);
+							$u->unloadCollectionEdit($oc);
+							$pkr->trigger();
 							$successMessage .= t("Your request to move \"%s\" beneath \"%s\" has been stored. Someone with approval rights will have to activate the change.\n", $oc->getCollectionName() , $dc->getCollectionName() );
 						}
 					}
