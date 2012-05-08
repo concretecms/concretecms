@@ -12,5 +12,27 @@ class Workflow extends Object {
 	protected $wfID = 0;
 
 	public function getWorkflowID() {return $this->wfID;}
+	public function getWorkflowName() {return $this->wfName;}
+	public function getWorkflowTypeObject() {
+		return WorkflowType::getByID($this->wftID);
+	}
+	
+	public static function add(WorkflowType $wt, $name) {
+		$db = Loader::db();
+		$db->Execute('insert into Workflows (wftID, wfName) values (?, ?)', array($wt->getWorkflowTypeID(), $name));
+		$wfID = $db->Insert_ID();
+		return self::getByID($wfID);
+	}
+	
+	public static function getByID($wfID) {
+		$class = get_called_class();
+		$obj = new $class();
+		$db = Loader::db();
+		$r = $db->GetRow('select * from Workflows where wfID = ?', array($wfID));
+		if (is_array($r) && $r['wfID'] == $wfID) {
+			$obj->setPropertiesFromArray($r);
+			return $obj;
+		}
+	}
 	
 }

@@ -2934,6 +2934,71 @@
       <col>wrID</col>
     </index>
   </table>
+  <table name="WorkflowTypes">
+    <field name="wftID" type="I" size="10">
+      <KEY/>
+      <AUTOINCREMENT/>
+      <UNSIGNED/>
+    </field>
+    <field name="wftHandle" type="C" size="64">
+      <NOTNULL/>
+    </field>
+    <field name="wftName" type="C" size="128">
+      <NOTNULL/>
+    </field>
+    <field name="pkgID" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+  </table>
+  <table name="Workflows">
+    <field name="wfID" type="I" size="10">
+      <KEY/>
+      <AUTOINCREMENT/>
+      <UNSIGNED/>
+    </field>
+    <field name="wfName" type="C" size="255"/>
+    <field name="wftID" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <index name="wfName">
+      <UNIQUE/>
+      <col>wfName</col>
+    </index>
+  </table>
+  <table name="WorkflowAccessEntities">
+    <field name="waeID" type="I" size="10">
+      <KEY/>
+      <AUTOINCREMENT/>
+      <UNSIGNED/>
+    </field>
+    <field name="peID" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="pdID" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="canApproveOrDeny" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="notifyOnEntry" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="notifyOnAction" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+  </table>
+
   <table name="WorkflowRequestObjects">
     <field name="wrID" type="I" size="10">
       <KEY/>

@@ -50,6 +50,9 @@ class ContentExporter {
 		
 		// now task permissions
 		PermissionKey::exportList($this->x);
+
+		// workflow types
+		WorkflowType::exportList($this->x);
 		
 		// now jobs
 		Loader::model('job');

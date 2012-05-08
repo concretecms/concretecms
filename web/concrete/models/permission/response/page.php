@@ -127,6 +127,8 @@ class PagePermissionResponse extends PermissionResponse {
 	
 }
 
+class SinglePagePermissionResponse extends PagePermissionResponse {}
+ 
 class PageContentPermissionTimedAssignment {
 	
 	protected $permissionKey;
