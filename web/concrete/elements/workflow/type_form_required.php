@@ -3,14 +3,14 @@ $form = Loader::helper('form');
 $ih = Loader::helper("concrete/interface");
 $valt = Loader::helper('validation/token');
 
-$wfName = $wf->getWorkflowName();
-$type = $wf->getWorkflowTypeObject();
+$wfName = $workflow->getWorkflowName();
+$type = $workflow->getWorkflowTypeObject();
 
 ?>
 
 <div class="ccm-pane-body">
 
-<? if (is_object($wf)) { ?>
+<? if (is_object($workflow)) { ?>
 
 	<?
 	$valt = Loader::helper('validation/token');
@@ -20,7 +20,7 @@ $type = $wf->getWorkflowTypeObject();
 	<script type="text/javascript">
 	deleteAttribute = function() {
 		if (confirm('<?=$delConfirmJS?>')) { 
-			location.href = "<?=$this->action('delete', $wf->getWorkflowID(), $valt->generate('delete_workflow'))?>";				
+			location.href = "<?=$this->action('delete', $workflow->getWorkflowID(), $valt->generate('delete_workflow'))?>";				
 		}
 	}
 	</script>
@@ -50,9 +50,9 @@ $type = $wf->getWorkflowTypeObject();
 
 <? 
 if ($type->getPackageID() > 0) { 
-	Loader::packageElement('workflow/types/' . $type->getWorkflowTypeHandle(), $type->getPackageHandle(), array('type' => $type));
+	Loader::packageElement('workflow/types/' . $type->getWorkflowTypeHandle(), $type->getPackageHandle(), array('type' => $type, 'workflow' => $workflow));
 } else {
-	Loader::element('workflow/types/' . $type->getWorkflowTypeHandle(), array('type' => $type));
+	Loader::element('workflow/types/' . $type->getWorkflowTypeHandle(), array('type' => $type, 'workflow' => $workflow));
 }
 ?>
 
