@@ -3,6 +3,7 @@
 
     <permissioncategories>
         <category handle="page" package=""/>
+        <category handle="single_page" package=""/>
         <category handle="stack" package=""/>
         <category handle="user" package=""/>
         <category handle="file_set" package=""/>
@@ -176,4 +177,9 @@
 	<systemcaptcha>
 		<library handle="securimage" name="SecurImage (Default)" package="" activated="1"/>
 	</systemcaptcha>
+
+    <workflowtypes>
+        <workflowtype handle="basic" name="Basic Workflow" package=""/>
+    </workflowtypes>
+
 </concrete5-cif>

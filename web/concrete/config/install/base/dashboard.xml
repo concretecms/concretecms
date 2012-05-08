@@ -165,7 +165,7 @@
         <page name="Pages &amp; Themes" path="/dashboard/pages" filename="/dashboard/pages/view.php" pagetype="" description="Reskin your site." package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
-					<value>page types, themes, single pages</value>
+					<value>page types, themes</value>
 				</attributekey>
 			</attributes>
         </page>
@@ -207,6 +207,10 @@
 			</attributes>
         </page>
         <page name="Single Pages" path="/dashboard/pages/single" filename="/dashboard/pages/single.php" pagetype="" description="" package=""/>        
+
+        <page name="Workflow" path="/dashboard/workflow" filename="/dashboard/workflow/view.php" pagetype="" description="" package=""/>
+        <page name="List" path="/dashboard/workflow/list" filename="/dashboard/workflow/list.php" pagetype="" description="" package=""/>
+
         <page name="Stacks &amp; Blocks" path="/dashboard/blocks" filename="/dashboard/blocks/view.php" pagetype="" description="Manage sitewide content and administer block types." package="" />
         <page name="Stacks" path="/dashboard/blocks/stacks" filename="/dashboard/blocks/stacks/view.php" pagetype="" description="Share content across your site." package="" />
         <page name="Stack List" path="/dashboard/blocks/stacks/list" filename="/dashboard/blocks/stacks/list/view.php" pagetype="" description="" package="">

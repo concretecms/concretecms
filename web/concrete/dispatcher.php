@@ -105,6 +105,7 @@
 	Loader::model("workflow/request/model");
 	Loader::model("workflow/request/action");
 	Loader::model("workflow/request/categories/page");
+	Loader::model("workflow/type");
 	Loader::model('user');
 	Loader::model('userinfo');
 	Loader::model('stack/model');

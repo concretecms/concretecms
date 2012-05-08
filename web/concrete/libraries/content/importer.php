@@ -29,6 +29,7 @@ class ContentImporter {
 		$this->importBlockTypes($sx);
 		$this->importAttributeCategories($sx);
 		$this->importAttributeTypes($sx);
+		$this->importWorkflowTypes($sx);
 		$this->importAttributes($sx);
 		$this->importAttributeSets($sx);
 		$this->importThemes($sx);
@@ -285,6 +286,19 @@ class ContentImporter {
 				} else {
 					BlockType::installBlockType($bt['handle']);				
 				}
+			}
+		}
+	}
+
+	protected function importWorkflowTypes(SimpleXMLElement $sx) {
+		if (isset($sx->workflowtypes)) {
+			foreach($sx->workflowtypes->workflowtype as $wt) {
+				$pkg = ContentImporter::getPackageObject($wt['package']);
+				$name = $wt['name'];
+				if (!$name) {
+					$name = Loader::helper('text')->unhandle($wt['handle']);
+				}
+				$type = WorkflowType::add($wt['handle'], $name, $pkg);
 			}
 		}
 	}

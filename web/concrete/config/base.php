@@ -276,6 +276,7 @@ define('DIRNAME_CONTROLLERS', 'controllers');
 define('DIR_FILES_CONTROLLERS_REQUIRED', DIR_BASE_CORE . '/controllers');
 define('FILENAME_ATTRIBUTE_CONTROLLER', 'controller.php');
 define('FILENAME_ATTRIBUTE_DB', 'db.xml');
+define('FILENAME_DB', 'db.xml');
 
 # Elements
 define('DIR_FILES_ELEMENTS', DIR_BASE . '/elements');

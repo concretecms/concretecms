@@ -22,7 +22,7 @@ class StartingPointPackage extends Package {
 		new StartingPointInstallRoutine('make_directories', 5, t('Starting installation and creating directories.')),
 		new StartingPointInstallRoutine('install_database', 10, t('Creating database tables.')),
 		new StartingPointInstallRoutine('add_users', 15, t('Adding admin user.')),
-		new StartingPointInstallRoutine('install_permissions', 20, t('Installing permissions.')),
+		new StartingPointInstallRoutine('install_permissions', 20, t('Installing permissions & workflow.')),
 		new StartingPointInstallRoutine('add_home_page', 23, t('Creating home page.')),
 		new StartingPointInstallRoutine('install_attributes', 25, t('Installing attributes.')),
 		new StartingPointInstallRoutine('install_blocktypes', 30, t('Adding block types.')),
