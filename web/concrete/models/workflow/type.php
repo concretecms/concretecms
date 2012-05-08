@@ -104,5 +104,4 @@ class WorkflowType extends Object {
 		return $est;
 	}
 	
-
 }

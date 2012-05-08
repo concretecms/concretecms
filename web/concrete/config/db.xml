@@ -2969,14 +2969,14 @@
       <col>wfName</col>
     </index>
   </table>
-  <table name="WorkflowAccessEntities">
-    <field name="waeID" type="I" size="10">
+  <table name="BasicWorkflowAssignments">
+    <field name="wfID" type="I" size="10">
       <KEY/>
-      <AUTOINCREMENT/>
+      <DEFAULT value="0"/>
       <UNSIGNED/>
     </field>
     <field name="peID" type="I" size="10">
-      <NOTNULL/>
+      <KEY/>
       <DEFAULT value="0"/>
       <UNSIGNED/>
     </field>

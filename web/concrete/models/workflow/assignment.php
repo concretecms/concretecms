@@ -7,9 +7,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
  * @license    http://www.concrete5.org/license/     MIT License
  *
  */
-class Workflow extends Object {  
-	
-	protected $wfID = 0;
+class WorkflowAssignment extends Object {  
 
 	public function getWorkflowID() {return $this->wfID;}
 	public function getWorkflowName() {return $this->wfName;}
@@ -45,8 +43,7 @@ class Workflow extends Object {
 	
 	public function __call($nm, $args) {
 		$type = $this->getWorkflowTypeObject();
-		$targs = array_merge(array($this), $args);
-		return call_user_func_array(array($type, $nm), $targs);
+		return call_user_func_array(array($type, $nm), $args);
 	}
 
 	

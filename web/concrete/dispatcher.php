@@ -99,6 +99,7 @@
 	Loader::model("permission/categories/admin");
 	Loader::model("permission/categories/marketplace_newsflow");
 	Loader::model("workflow/model");
+	Loader::model("workflow/assignment");
 	Loader::model("workflow/progress/model");
 	Loader::model("workflow/progress/response");
 	Loader::model("workflow/progress/categories/page");

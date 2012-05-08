@@ -1,4 +1,4 @@
-<table class="ccm-workflow-access-list">
+<table class="ccm-permission-access-list">
 <tr>
 	<th colspan="3">
 		<div style="position: relative">

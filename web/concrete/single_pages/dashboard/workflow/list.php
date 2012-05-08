@@ -6,7 +6,7 @@
 
 <form method="post" action="<?=$this->action('edit')?>" id="ccm-workflow-form">
 
-<? Loader::element("workflow/type_form_required", array('wf' => $wf)); ?>
+<? Loader::element("workflow/type_form_required", array('workflow' => $wf)); ?>
 
 </form>
 
