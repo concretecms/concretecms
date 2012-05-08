@@ -67,6 +67,11 @@ class ConcreteUpgradeVersion553Helper {
 	
 	
 	public function run() {
+		$bt = BlockType::getByHandle('core_scrapbook_display');
+		if (is_object($bt)) {
+			$bt->refresh();
+		}
+		
 		Loader::model('single_page');
 		$sp = Page::getByPath('/dashboard/system/permissions/users');
 		if ($sp->isError()) {

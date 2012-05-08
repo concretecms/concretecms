@@ -1195,7 +1195,9 @@ class Block extends Object {
 			
 			// now we check the scrapbook display
 			$db = Loader::db();
-			$rows=$db->getAll( 'SELECT cID, cvID, arHandle FROM CollectionVersionBlocks WHERE bID in (select bID from btCoreScrapbookDisplay where bOriginalID = ?)', array($this->getBlockID()));
+			
+			
+			$rows=$db->getAll('select cID, cvID, arHandle FROM CollectionVersionBlocks cvb inner join btCoreScrapbookDisplay bts on bts.bID = cvb.bID where bts.bOriginalID = ?', array($this->getBlockID()));
 			foreach($rows as $row){
 				Cache::delete('block', $this->getBlockID() . ':' . intval($row['cID']) . ':' . intval($row['cvID']) . ':' . $row['arHandle'] );
 				Cache::delete('block_view_output', $row['cID'] . ':' . $this->getBlockID() . ':' . $row['arHandle']);
@@ -1203,7 +1205,7 @@ class Block extends Object {
 			}
 			
 			if ($this->getBlockTypeHandle() == BLOCK_HANDLE_SCRAPBOOK_PROXY && is_object($a)) {
-				$rows=$db->getAll( 'SELECT cID, bID, cvID, arHandle FROM CollectionVersionBlocks WHERE bID in (select bOriginalID from btCoreScrapbookDisplay where bID = ?)', array($this->getBlockID()));
+				$rows=$db->getAll('select cID, cvID, arHandle FROM CollectionVersionBlocks cvb inner join btCoreScrapbookDisplay bts on bts.bOriginalID = cvb.bID where bts.bID = ?', array($this->getBlockID()));
 				foreach($rows as $row){
 					Cache::delete('block', $row['bID'] . ':' . $c->getCollectionID() . ':' . $c->getVersionID() . ':' . $a->getAreaHandle());
 					Cache::delete('block_view_output', $c->getCollectionID() . ':' . $row['bID'] . ':' . $a->getAreaHandle());
