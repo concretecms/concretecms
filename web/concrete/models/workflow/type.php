@@ -79,6 +79,27 @@ class WorkflowType extends Object {
 		return $list;
 	}	
 	
+	protected function getAssignmentClass() {
+ 		$class = str_replace('BasicWorkflowType', 'BasicWorkflowAssignment', get_class($this));
+ 		if (!class_exists($class)) {
+ 			$class = 'BasicWorkflowAssignment';
+ 			require_once(Loader::helper('concrete/path')->getPath(DIRNAME_MODELS . '/' . DIRNAME_WORKFLOW . '/' . DIRNAME_WORKFLOW_ASSIGNMENTS . '/' . $this->getWorkflowTypeHandle() . '.php', $this->getPackageHandle()));
+ 		}
+ 		return $class;
+ 	}
+	
+	protected function buildAssignmentFilterString($filterEntities) { 
+		$peIDs = '';
+		$filters = array();
+		if (count($filterEntities) > 0) {
+			foreach($filterEntities as $ent) {
+				$filters[] = $ent->getAccessEntityID();
+			}
+			$peIDs .= 'and peID in (' . implode($filters, ',') . ')';
+		}
+		return $peIDs;
+	}
+
 	public function getPackageID() { return $this->pkgID;}
 	public function getPackageHandle() {
 		return PackageList::getHandle($this->pkgID);

@@ -17,6 +17,19 @@ class Workflow extends Object {
 		return WorkflowType::getByID($this->wftID);
 	}
 	
+	public static function getList() {
+		$workflows = array();
+		$db = Loader::db();
+		$r = $db->Execute("select wfID from Workflows order by wfName asc");
+		while ($row = $r->FetchRow()) {
+			$wf = Workflow::getByID($row['wfID']);
+			if (is_object($wf)) {
+				$workflows[] = $wf;
+			}	
+		}
+		return $workflows;
+	}
+	
 	public static function add(WorkflowType $wt, $name) {
 		$db = Loader::db();
 		$db->Execute('insert into Workflows (wftID, wfName) values (?, ?)', array($wt->getWorkflowTypeID(), $name));

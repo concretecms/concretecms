@@ -110,16 +110,22 @@ if ($_POST['task'] == 'save_permissions') {
 <br/>
 <? } ?>
 
+<? if (!isset($_REQUEST['disableDuration'])) { ?>
+
 <h4><?=t('Time Settings')?></h4>
 
 <p><?=t('How long will this permission be valid for?')?></p>
 
 <?=Loader::element('permission/duration', array('pd' => $pd)); ?>
 
+<? } ?>
+
 <div class="dialog-buttons">
 	<input type="button" onclick="jQuery.fn.dialog.closeTop()" value="<?=t('Cancel')?>" class="btn" />
 	<input type="submit" onclick="$('#ccm-permissions-access-entity-form').submit()" value="<?=t('Save')?>" class="btn primary ccm-button-right" />
 </div>
+
+
 </form>
 
 </div>

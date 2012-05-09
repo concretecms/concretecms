@@ -14,6 +14,7 @@
         <category handle="admin" package=""/>
         <category handle="sitemap" package=""/>
         <category handle="marketplace_newsflow" package=""/>
+        <category handle="basic_workflow" package=""/>
     </permissioncategories>
 
     <permissionkeys>
@@ -80,6 +81,12 @@
         <permissionkey handle="copy_file" name="Copy File" description="" package="" category="file"/>
         <permissionkey handle="edit_file_permissions" name="Edit File Access" description="" package="" category="file"/>
         <permissionkey handle="delete_file" name="Delete File" description="" package="" category="file"/>
+        
+        <!-- workflow //-->
+        <permissionkey handle="approve_workflow" name="Approve or Deny" description="" package="" category="basic_workflow" />        
+        <permissionkey handle="notify_on_entry" name="Notify on Entry" package="" category="basic_workflow" />
+        <permissionkey handle="notify_on_action" name="Notify on Action" package="" category="basic_workflow" />
+        		
         <!-- users //-->
         <permissionkey handle="access_user_search" name="Access User Search" description="" package="" category="user">
             <access>

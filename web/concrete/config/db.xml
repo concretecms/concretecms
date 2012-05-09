@@ -2969,7 +2969,8 @@
       <col>wfName</col>
     </index>
   </table>
-  <table name="BasicWorkflowAssignments">
+
+  <table name="BasicWorkflowPermissionAssignments">
     <field name="wfID" type="I" size="10">
       <KEY/>
       <DEFAULT value="0"/>
@@ -2985,19 +2986,22 @@
       <DEFAULT value="0"/>
       <UNSIGNED/>
     </field>
-    <field name="canApproveOrDeny" type="I" size="1">
+    <field name="pkID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="accessType" type="I" size="4">
       <NOTNULL/>
       <DEFAULT value="0"/>
     </field>
-    <field name="notifyOnEntry" type="I" size="1">
-      <NOTNULL/>
-      <DEFAULT value="0"/>
-    </field>
-    <field name="notifyOnAction" type="I" size="1">
-      <NOTNULL/>
-      <DEFAULT value="0"/>
-    </field>
+    <index name="cID">
+      <col>cID</col>
+      <col>pkID</col>
+      <col>accessType</col>
+    </index>
   </table>
+
 
   <table name="WorkflowRequestObjects">
     <field name="wrID" type="I" size="10">

@@ -29,24 +29,13 @@ $type = $workflow->getWorkflowTypeObject();
 <? } ?>
 
 
-<div class="clearfix">
-<label><?=t('Type')?></label>
-<div class="input" style="padding-top: 8px">
-	<?=$type->getWorkflowTypeName()?>
-</div>
-</div>
+<h3><?=t('Type')?></h3>
+<p><?=$type->getWorkflowTypeName()?></p>
+
+<h3><?=t('Name')?></h3>
+<p><?=$wfName?></p>
 
 
-<div class="clearfix">
-<?=$form->label('wfName', t('Workflow Name'))?>
-<div class="input">
-	<?=$form->text('wfName', $wfName)?>
-	<span class="help-inline"><?=t('Required')?></span>
-</div>
-</div>
-
-<?=$form->hidden('wftID', $type->getWorkflowTypeID())?>
-<?=$valt->output('update_workflow')?>
 
 <? 
 if ($type->getPackageID() > 0) { 
@@ -58,5 +47,5 @@ if ($type->getPackageID() > 0) {
 
 </div>
 <div class="ccm-pane-footer">
-	<?=$ih->submit(t('Save'), 'ccm-workflow-form', 'right', 'primary')?>
+	<a href="<?=$this->url('/dashboard/workflow/list')?>" class="btn"><?=t('Back to List')?></a>
 </div>
