@@ -4,27 +4,6 @@ class DashboardWorkflowListController extends DashboardBaseController {
 	
 	public $helpers = array('form');
 	
-	public function on_start() {
-		parent::on_start();
-		$types = array();
-		$list = WorkflowType::getList();
-		foreach($list as $wl) {
-			$types[$wl->getWorkflowTypeID()] = $wl->getWorkflowTypeName();
-		}
-		$this->set('types', $types);
-	}
-
-	public function workflow_updated() {
-		$this->set('message', t('Workflow Updated.'));
-	}
-	
-	public function workflow_created() {
-		$this->set('message', t('Workflow Created.'));
-	}
-	
-	public function workflow_deleted() {
-		$this->set('message', t('Workflow Deleted.'));
-	}
 
 	public function delete($wfID, $token = null){
 		/*
@@ -49,13 +28,19 @@ class DashboardWorkflowListController extends DashboardBaseController {
 		*/
 	}
 	
-	public function select_type() {
-		$wftID = $this->request('wftID');
-		$wt = WorkflowType::getByID($wftID);
-		$this->set('type', $wt);
+	public function view() {
+		$workflows = Workflow::getList();
+		$this->set('workflows', $workflows);
 	}
 	
-	public function add() { }
+	public function add() {
+		$types = array();
+		$list = WorkflowType::getList();
+		foreach($list as $wl) {
+			$types[$wl->getWorkflowTypeID()] = $wl->getWorkflowTypeName();
+		}
+		$this->set('types', $types);
+	 }
 	
 	public function submit_add() {
 		if (!Loader::helper('validation/token')->validate('add_workflow')) {
@@ -70,6 +55,7 @@ class DashboardWorkflowListController extends DashboardBaseController {
 			$wf = Workflow::add($type, $this->post('wfName'));
 			$this->redirect('/dashboard/workflow/list/', 'view_detail', $wf->getWorkflowID(), 'workflow_created');
 		}
+		$this->add();
 	}
 	
 	public function view_detail($wfID = false, $message = false) {
@@ -84,31 +70,6 @@ class DashboardWorkflowListController extends DashboardBaseController {
 		}
 		
 		$this->set('wf', $wf);
-	}
-	
-	public function edit($wfID = 0) {
-		/*
-		if ($this->post('akID')) {
-			$akID = $this->post('akID');
-		}
-		$key = CollectionAttributeKey::getByID($akID);
-		$type = $key->getAttributeType();
-		$this->set('key', $key);
-		$this->set('type', $type);
-		
-		if ($this->isPost()) {
-			$cnt = $type->getController();
-			$cnt->setAttributeKey($key);
-			$e = $cnt->validateKey($this->post());
-			if ($e->has()) {
-				$this->set('error', $e);
-			} else {
-				$type = AttributeType::getByID($this->post('atID'));
-				$key->update($this->post());
-				$this->redirect('/dashboard/pages/attributes/', 'attribute_updated');
-			}
-		}
-		*/
 	}
 	
 }

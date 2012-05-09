@@ -54,9 +54,20 @@
 
 	<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Workflows'), false, 'span12 offset2')?>
 
-		<a href="<?=View::url('/dashboard/workflow/list', 'add')?>" style="float: right;z-index:999;position:relative;top:-5px" class="btn primary"><?=t("Add Workflow")?></a>
+	<a href="<?=View::url('/dashboard/workflow/list', 'add')?>" style="float: right" class="btn primary"><?=t("Add Workflow")?></a>
+	<h6><?=count($workflows)?> <?
+		if (count($workflows) == 1) {
+			print t('Workflow');
+		} else {
+			print t('Workflows');
+		}
+	?></h6>
 		
-	<br/><br/>
+	<? foreach($workflows as $workflow) { ?>
+	<div class="ccm-workflow">
+		<a href="<?=$this->url('/dashboard/workflow/list', 'view_detail', $workflow->getWorkflowID())?>"><?=$workflow->getWorkflowName()?></a>
+	</div>
+	<? } ?>
 		
 	<?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper();?>
 <? } ?>

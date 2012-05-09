@@ -1,31 +1,24 @@
-<fieldset>
-<legend><?=t('Approval & Notification')?></legend>
+<h3><?=t("Workflow Access")?></h3>
 
-<div class="clearfix">
-<div class="input">
-
-<?=Loader::element('workflow/access_list')?>
-
-</fieldset>
+<table class="ccm-permission-grid">
+<?
+$permissions = PermissionKey::getList('basic_workflow');
+foreach($permissions as $pk) { 
+	$pk->setPermissionObject($workflow);
+	?>
+	<tr>
+	<td class="ccm-permission-grid-name"><strong><a dialog-width="500" dialog-height="380" dialog-on-destroy="ccm_refreshBasicWorkflowPermissions()" class="dialog-launch" dialog-title="<?=$pk->getPermissionKeyName()?>" href="<?=Loader::helper('concrete/urls')->getToolsURL('permissions/dialogs/basic_workflow')?>?wfID=<?=$workflow->getWorkflowID()?>&pkID=<?=$pk->getPermissionKeyID()?>"><?=$pk->getPermissionKeyName()?></a></td>
+	<td><?=Loader::element('permission/labels', array('pk' => $pk))?></td>
+</tr>
+<? } ?>
+</table>
 
 <script type="text/javascript">
+$(function() {
+	$('.dialog-launch').dialog();
+});
 
-ccm_addAccessEntity = function(peID, pdID) {
-	jQuery.fn.dialog.closeTop();
-	jQuery.fn.dialog.showLoader();
-	
-	$.get('<?=$workflow->getWorkflowToolsURL("add_access_entity")?>&pdID=' + pdID + '&peID=' + peID, function() { 
-		alert("ok");
-	});
+ccm_refreshBasicWorkflowPermissions = function() {
+	window.location.reload();
 }
-
-ccm_deleteAccessEntityAssignment = function(peID) {
-	jQuery.fn.dialog.showLoader();
-	
-	$.get('<?=$workflow->getWorkflowToolsURL("remove_access_entity")?>&peID=' + peID, function() { 
-		alert("ok");
-	});
-}
-
-
 </script>
