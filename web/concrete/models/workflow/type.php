@@ -10,30 +10,12 @@ class WorkflowType extends Object {
 		$db = Loader::db();
 		$row = $db->GetRow('select wftID, pkgID, wftHandle, wftName from WorkflowTypes where wftID = ?', array($wftID));
 		if ($row['wftHandle']) {
-			$class = Loader::helper('text')->camelcase($row['wftHandle']) . 'WorkflowType';
-			$file = Loader::helper('concrete/path')->getPath(DIRNAME_MODELS . '/' . DIRNAME_WORKFLOW . '/' . DIRNAME_SYSTEM_TYPES . '/' . $row['wftHandle'] . '.php', $row['pkgID']);
-			require_once($file);
-			$wt = new $class();
+			$wt = new WorkflowType();
 			$wt->setPropertiesFromArray($row);
 			return $wt;
 		}
 	}
 
-	protected function loadController() { 
-		$txt = Loader::helper('text');
-		$className = $txt->camelcase($this->wftHandle) . 'WorkflowTypeController';
-		$file = Loader::helper('concrete/path')->getPath(DIRNAME_MODELS . '/' . DIRNAME_WORKFLOW . '/' . DIRNAME_SYSTEM_TYPES . '/' . $this->wftHandle . '/' . FILENAME_CONTROLLER, $this->pkgID);
-		if ($file) { 
-			require_once($file);
-			$this->controller = new $className($this);
-		}
-	}
-	
-	
-	public function __destruct() {
-		unset($this->controller);
-	}
-	
 	public static function getList() {
 		$db = Loader::db();
 		$list = array();
@@ -79,27 +61,6 @@ class WorkflowType extends Object {
 		return $list;
 	}	
 	
-	protected function getAssignmentClass() {
- 		$class = str_replace('BasicWorkflowType', 'BasicWorkflowAssignment', get_class($this));
- 		if (!class_exists($class)) {
- 			$class = 'BasicWorkflowAssignment';
- 			require_once(Loader::helper('concrete/path')->getPath(DIRNAME_MODELS . '/' . DIRNAME_WORKFLOW . '/' . DIRNAME_WORKFLOW_ASSIGNMENTS . '/' . $this->getWorkflowTypeHandle() . '.php', $this->getPackageHandle()));
- 		}
- 		return $class;
- 	}
-	
-	protected function buildAssignmentFilterString($filterEntities) { 
-		$peIDs = '';
-		$filters = array();
-		if (count($filterEntities) > 0) {
-			foreach($filterEntities as $ent) {
-				$filters[] = $ent->getAccessEntityID();
-			}
-			$peIDs .= 'and peID in (' . implode($filters, ',') . ')';
-		}
-		return $peIDs;
-	}
-
 	public function getPackageID() { return $this->pkgID;}
 	public function getPackageHandle() {
 		return PackageList::getHandle($this->pkgID);

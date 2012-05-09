@@ -17,6 +17,11 @@ class Workflow extends Object {
 		return WorkflowType::getByID($this->wftID);
 	}
 	
+	public function delete() {
+		$db = Loader::db();
+		$db->Execute('delete from Workflows where wfID = ?', array($this->wfID));
+	}
+	
 	public static function getList() {
 		$workflows = array();
 		$db = Loader::db();
@@ -37,14 +42,24 @@ class Workflow extends Object {
 		return self::getByID($wfID);
 	}
 	
-	public static function getByID($wfID) {
-		$class = get_called_class();
-		$obj = new $class();
+	protected function load($wfID) {
 		$db = Loader::db();
-		$r = $db->GetRow('select * from Workflows where wfID = ?', array($wfID));
-		if (is_array($r) && $r['wfID'] == $wfID) {
-			$obj->setPropertiesFromArray($r);
-			return $obj;
+		$r = $db->GetRow('select Workflows.* from Workflows where Workflows.wfID = ?', array($wfID));
+		$this->setPropertiesFromArray($r);
+	}
+	
+	final static function getByID($wfID) {
+		$db = Loader::db();
+		$r = $db->GetRow('select WorkflowTypes.wftHandle, WorkflowTypes.pkgID from Workflows inner join WorkflowTypes on Workflows.wftID = WorkflowTypes.wftID where Workflows.wfID = ?', array($wfID));
+		if ($r['wftHandle']) { 
+			$file = Loader::helper('concrete/path')->getPath(DIRNAME_MODELS . '/' . DIRNAME_WORKFLOW . '/' . DIRNAME_SYSTEM_TYPES . '/' . $r['wftHandle'] . '.php', $r['pkgID']);
+			require_once($file);
+			$class = Loader::helper('text')->camelcase($r['wftHandle']) . 'Workflow';
+			$obj = new $class();
+			$obj->load($wfID);
+			if ($obj->getWorkflowID() > 0) { 
+				return $obj;
+			}
 		}
 	}
 
@@ -56,11 +71,5 @@ class Workflow extends Object {
 		return $url;
 	}
 	
-	public function __call($nm, $args) {
-		$type = $this->getWorkflowTypeObject();
-		$targs = array_merge(array($this), $args);
-		return call_user_func_array(array($type, $nm), $targs);
-	}
-
 	
 }

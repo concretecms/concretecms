@@ -18,7 +18,7 @@ $type = $workflow->getWorkflowTypeObject();
 	$delConfirmJS = t('Are you sure you want to remove this workflow?');
 	?>
 	<script type="text/javascript">
-	deleteAttribute = function() {
+	deleteWorkflow = function() {
 		if (confirm('<?=$delConfirmJS?>')) { 
 			location.href = "<?=$this->action('delete', $workflow->getWorkflowID(), $valt->generate('delete_workflow'))?>";				
 		}
