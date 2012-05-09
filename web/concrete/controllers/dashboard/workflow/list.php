@@ -5,27 +5,25 @@ class DashboardWorkflowListController extends DashboardBaseController {
 	public $helpers = array('form');
 	
 
-	public function delete($wfID, $token = null){
-		/*
+	public function delete($wfID = null, $token = null){
 		try {
-			$ak = CollectionAttributeKey::getByID($akID); 
+			$wf = Workflow::getByID($wfID); 
 				
-			if(!($ak instanceof CollectionAttributeKey)) {
-				throw new Exception(t('Invalid attribute ID.'));
+			if(!($wf instanceof Workflow)) {
+				throw new Exception(t('Invalid workflow ID.'));
 			}
 	
 			$valt = Loader::helper('validation/token');
-			if (!$valt->validate('delete_attribute', $token)) {
+			if (!$valt->validate('delete_workflow', $token)) {
 				throw new Exception($valt->getErrorMessage());
 			}
 			
-			$ak->delete();
+			$wf->delete();
 			
-			$this->redirect("/dashboard/pages/attributes", 'attribute_deleted');
+			$this->redirect("/dashboard/workflow/list", 'workflow_deleted');
 		} catch (Exception $e) {
 			$this->set('error', $e);
 		}
-		*/
 	}
 	
 	public function view() {
@@ -41,6 +39,11 @@ class DashboardWorkflowListController extends DashboardBaseController {
 		}
 		$this->set('types', $types);
 	 }
+	
+	public function workflow_deleted() {
+		$this->set("message", t('Workflow deleted successfully.'));
+		$this->view();
+	}
 	
 	public function submit_add() {
 		if (!Loader::helper('validation/token')->validate('add_workflow')) {
