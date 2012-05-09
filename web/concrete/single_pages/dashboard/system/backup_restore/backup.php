@@ -63,7 +63,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		<div class="dialog-buttons">
 			<form method="post" action="<?= $this->action('delete_backup') ?>" style="display: inline">
 			<input type="hidden" name="backup_file" value="" />
-			<?= $interface->submit('Delete Backup', false, 'right', 'error'); ?>
+			<?= $interface->submit(t('Delete Backup'), false, 'right', 'error'); ?>
 	</form>
 		</div> 
 </div>
