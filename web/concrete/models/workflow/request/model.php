@@ -11,10 +11,10 @@ abstract class WorkflowRequest extends Object {
 	
 	protected $currentWP;
 	
-	public function __construct(PermissionKey $pk) {
+	public function __construct() {
 		$u = new User();
 		$this->uID = $u->getUserID();
-		$this->pkID = $pk->getPermissionKeyID();
+		$this->pkID = $this->permissionKey->getPermissionKeyID();
 	}
 
 	public function getWorkflowRequestID() { return $this->wrID;}
@@ -59,19 +59,28 @@ abstract class WorkflowRequest extends Object {
 		$wrObject = serialize($this);
 		$db->Execute('update WorkflowRequestObjects set wrObject = ? where wrID = ?', array($wrObject, $this->wrID));
 	}
-	
+
+		
 	/** 
 	 * Triggers a workflow request, queries a permission key to see what workflows are attached to it
 	 * and initiates them
 	 * @return void
 	 */
-	public function trigger() {
+	protected function trigger($pk) {
 		if (!$this->wrID) {
 			$this->save();
 		}
 		
-		$pk = PermissionKey::getByID($this->pkID);
-		$workflows = $pk->getAssignedWorkflows();
+		if (!$pk->canPermissionKeyTriggerWorkflow()) { 
+			throw new Exception(t('This permission key cannot start a workflow.'));
+		}
+		
+		$workflows = $pk->getWorkflows();
+		if (count($workflows) == 0) {
+			$defaultWorkflow = new Workflow();
+			$workflows = array($defaultWorkflow);
+		}
+
 		$wpObjects = array();
 		foreach($workflows as $wf) {
 			$this->addWorkflowProgress($wf);

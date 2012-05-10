@@ -7,7 +7,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
  * @license    http://www.concrete5.org/license/     MIT License
  *
  */
-class Workflow extends Object {  
+abstract class Workflow extends Object {  
 	
 	protected $wfID = 0;
 
@@ -71,5 +71,6 @@ class Workflow extends Object {
 		return $url;
 	}
 	
+	abstract public function start(WorkflowProgress $wp);
 	
 }

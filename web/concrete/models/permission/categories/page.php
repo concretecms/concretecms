@@ -80,7 +80,7 @@ class PagePermissionKey extends PermissionKey {
 	
 	public function getWorkflows() {
 		$db = Loader::db();
-		$r = $db->Execute('select wfID from PagePermissionWorkflows where cID = ? and pkID = ?', array($this->getPermissionObject()->getCollectionID(), $this->getPermissionKeyID()));
+		$r = $db->Execute('select wfID from PagePermissionWorkflows where cID = ? and pkID = ?', array($this->getPermissionObject()->getPermissionsCollectionID(), $this->getPermissionKeyID()));
 		$workflows = array();
 		while ($row = $r->FetchRow()) {
 			$wf = Workflow::getByID($row['wfID']);

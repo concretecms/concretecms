@@ -487,21 +487,11 @@
 						if ($c->isExternalLink()) {
 							$c->delete();
 						} else { 
-							if ($cp->canApprovePageVersions()) { 
-								$obj->refreshCID = $c->getCollectionParentID();
-
-								if (ENABLE_TRASH_CAN) {
-									$c->moveToTrash();
-								} else {
-									$c->delete();
-								}
-							} else { 
-								$obj->refreshCID = $c->getCollectionID();
-								$pkr = new DeletePagePageWorkflowRequest();
-								$pkr->setRequestedPage($c);
-								$u->unloadCollectionEdit($c);
-								$pkr->trigger();
-							}
+							$obj->refreshCID = $c->getCollectionID();
+							$pkr = new DeletePagePageWorkflowRequest();
+							$pkr->setRequestedPage($c);
+							$u->unloadCollectionEdit($c);
+							$pkr->trigger();
 						}
 					}
 					$cParentID = $c->getCollectionParentID();
