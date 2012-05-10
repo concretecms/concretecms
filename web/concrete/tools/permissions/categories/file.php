@@ -33,6 +33,18 @@ if (is_object($f)) {
 			$pk->setPermissionObject($f);
 			$pk->savePermissionKey($_POST);
 		}
+
+		if ($_REQUEST['task'] == 'save_workflows' && Loader::helper("validation/token")->validate('save_workflows')) {
+			$pk = FilePermissionKey::getByID($_REQUEST['pkID']);
+			$pk->setPermissionObject($f);
+			$pk->clearWorkflows();
+			foreach($_POST['wfID'] as $wfID) {
+				$wf = Workflow::getByID($wfID);
+				if (is_object($wf)) {
+					$pk->attachWorkflow($wf);
+				}
+			}
+		}
 	
 	}
 }

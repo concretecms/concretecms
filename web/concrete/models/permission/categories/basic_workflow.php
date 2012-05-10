@@ -55,6 +55,22 @@ class BasicWorkflowPermissionKey extends PermissionKey {
 		return parent::getPermissionKeyToolsURL($task) . '&wfID=' . $this->getPermissionObject()->getWorkflowID();
 	}
 
+	/** 
+	 * No workflow functionality in workflows.
+	 * @private
+	 */
+	public function clearWorkflows() {}
+	
+	/** 
+	 * @private
+	 */
+	public function attachWorkflow(Workflow $wf) {}
+
+	/** 
+	 * @private
+	 */
+	public function getWorkflows() {return array();}
+
 }
 
 class BasicWorkflowPermissionAssignment extends PermissionAssignment {}

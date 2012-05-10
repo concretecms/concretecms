@@ -156,6 +156,22 @@ class AreaPermissionKey extends PermissionKey {
 		return parent::getPermissionKeyToolsURL($task) . '&cID=' . $c->getCollectionID() . '&arHandle=' . $area->getAreaHandle();
 	}
 
+	/** 
+	 * No workflow functionality in areas
+	 * @private
+	 */
+	public function clearWorkflows() {}
+	
+	/** 
+	 * @private
+	 */
+	public function attachWorkflow(Workflow $wf) {}
+
+	/** 
+	 * @private
+	 */
+	public function getWorkflows() {return array();}
+
 }
 
 class AreaPermissionAssignment extends PermissionAssignment {

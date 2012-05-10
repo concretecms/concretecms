@@ -48,6 +48,30 @@ class TaskPermissionKey extends PermissionKey {
 		parent::delete();
 		$db = Loader::db();
 		$db->Execute('delete from TaskPermissionAssignments where pkID = ?', array($this->getPermissionKeyID()));
+		$this->clearWorkflows();
+	}
+	
+	public function clearWorkflows() {
+		$db = Loader::db();
+		$db->Execute('delete from TaskPermissionWorkflows where pkID = ?', array($this->getPermissionKeyID()));
+	}
+	
+	public function attachWorkflow(Workflow $wf) {
+		$db = Loader::db();
+		$db->Replace('TaskPermissionWorkflows', array('pkID' => $this->getPermissionKeyID(), 'wfID' => $wf->getWorkflowID()), array('pkID', 'wfID'), true);
+	}
+
+	public function getWorkflows() {
+		$db = Loader::db();
+		$r = $db->Execute('select wfID from TaskPermissionWorkflows where pkID = ?', array($this->getPermissionKeyID()));
+		$workflows = array();
+		while ($row = $r->FetchRow()) {
+			$wf = Workflow::getByID($row['wfID']);
+			if (is_object($wf)) {
+				$workflows[] = $wf;
+			}
+		}
+		return $workflows;
 	}
 	
 	public function exportAccess($pxml) {

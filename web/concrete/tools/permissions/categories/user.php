@@ -20,6 +20,18 @@ if ($p->canAccessTaskPermissions()) {
 		$pk = UserPermissionKey::getByID($_REQUEST['pkID']);
 		$pk->savePermissionKey($_POST);
 	}
+
+	if ($_REQUEST['task'] == 'save_workflows' && Loader::helper("validation/token")->validate('save_workflows')) {
+		$pk = UserPermissionKey::getByID($_REQUEST['pkID']);
+		$pk->clearWorkflows();
+		foreach($_POST['wfID'] as $wfID) {
+			$wf = Workflow::getByID($wfID);
+			if (is_object($wf)) {
+				$pk->attachWorkflow($wf);
+			}
+		}
+	}
+	
 	
 }
 
