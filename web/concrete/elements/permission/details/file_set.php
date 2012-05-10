@@ -34,10 +34,21 @@ ccm_deleteAccessEntityAssignment = function(peID) {
 	});
 }
 
-ccm_submitPermissionCustomOptionsForm = function(peID) {
+ccm_submitPermissionCustomOptionsForm = function() {
 	jQuery.fn.dialog.showLoader();
 	$("#ccm-permissions-custom-options-form").ajaxSubmit(function(r) {
 		$.get('<?=REL_DIR_FILES_TOOLS_REQUIRED?>/permissions/dialogs/file_set?message=custom_options_saved&pkID=<?=$pk->getPermissionKeyID()?>&fsID=<?=$fileset->getFileSetID()?>', function(r) { 
+			jQuery.fn.dialog.replaceTop(r);
+			jQuery.fn.dialog.hideLoader();
+		});
+	});
+	return false;
+}
+
+ccm_submitPermissionWorkflowForm = function() {
+	jQuery.fn.dialog.showLoader();
+	$("#ccm-permissions-workflow-form").ajaxSubmit(function(r) {
+		$.get('<?=REL_DIR_FILES_TOOLS_REQUIRED?>/permissions/dialogs/file_set?message=workflows_saved&pkID=<?=$pk->getPermissionKeyID()?>&fsID=<?=$fileset->getFileSetID()?>', function(r) { 
 			jQuery.fn.dialog.replaceTop(r);
 			jQuery.fn.dialog.hideLoader();
 		});

@@ -132,6 +132,29 @@ class FilePermissionKey extends PermissionKey {
 		return parent::getPermissionKeyToolsURL($task) . '&fID=' . $this->getPermissionObject()->getFileID();
 	}
 
+	public function clearWorkflows() {
+		$db = Loader::db();
+		$db->Execute('delete from FilePermissionWorkflows where fID = ? and pkID = ?', array($this->getPermissionObject()->getFileID(), $this->getPermissionKeyID()));
+	}
+	
+	public function attachWorkflow(Workflow $wf) {
+		$db = Loader::db();
+		$db->Replace('FilePermissionWorkflows', array('fID' => $this->getPermissionObject()->getFileID(), 'pkID' => $this->getPermissionKeyID(), 'wfID' => $wf->getWorkflowID()), array('fID', 'pkID', 'wfID'), true);
+	}
+
+	public function getWorkflows() {
+		$db = Loader::db();
+		$r = $db->Execute('select wfID from PagePermissionWorkflows where fID = ? and pkID = ?', array($this->getPermissionObject()->getFileID(), $this->getPermissionKeyID()));
+		$workflows = array();
+		while ($row = $r->FetchRow()) {
+			$wf = Workflow::getByID($row['wfID']);
+			if (is_object($wf)) {
+				$workflows[] = $wf;
+			}
+		}
+		return $workflows;
+	}
+
 }
 
 class FilePermissionAssignment extends PermissionAssignment {

@@ -2970,6 +2970,24 @@
     </index>
   </table>
 
+  <table name="PagePermissionWorkflows">
+    <field name="cID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="pkID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="wfID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+  </table>
+
   <table name="BasicWorkflowPermissionAssignments">
     <field name="wfID" type="I" size="10">
       <KEY/>

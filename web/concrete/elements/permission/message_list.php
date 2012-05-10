@@ -9,7 +9,7 @@
 <?
 if ($_REQUEST['message'] == 'custom_options_saved') { ?>
 	<?=t('Custom Options saved.')?>
-<? } else if ($_REQUEST['message'] == 'workflow_saved') { ?>
+<? } else if ($_REQUEST['message'] == 'workflows_saved') { ?>
 	<?=t('Workflow Options saved.')?>
 <? } else if ($_REQUEST['message'] == 'entity_removed') { ?>
 	<?=t('User/Group Removed')?>

@@ -44,6 +44,20 @@ if (count($pages) > 0) {
 			$pk->savePermissionKey($_POST);
 		}
 	}
+
+	if ($_REQUEST['task'] == 'save_workflows' && Loader::helper("validation/token")->validate('save_workflows')) {
+		$pk = PagePermissionKey::getByID($_REQUEST['pkID']);
+		foreach($pages as $c) { 
+			$pk->setPermissionObject($c);
+			$pk->clearWorkflows();
+			foreach($_POST['wfID'] as $wfID) {
+				$wf = Workflow::getByID($wfID);
+				if (is_object($wf)) {
+					$pk->attachWorkflow($wf);
+				}
+			}
+		}
+	}
 	
 	if ($_REQUEST['task'] == 'change_permission_inheritance' && Loader::helper("validation/token")->validate('change_permission_inheritance')) {
 		foreach($pages as $c) { 

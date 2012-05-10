@@ -34,7 +34,7 @@ ccm_deleteAccessEntityAssignment = function(peID) {
 	});
 }
 
-ccm_submitPermissionCustomOptionsForm = function(peID) {
+ccm_submitPermissionCustomOptionsForm = function() {
 	jQuery.fn.dialog.showLoader();
 	$("#ccm-permissions-custom-options-form").ajaxSubmit(function(r) {
 		$.get('<?=REL_DIR_FILES_TOOLS_REQUIRED?>/permissions/dialogs/basic_workflow?message=custom_options_saved&pkID=<?=$pk->getPermissionKeyID()?>&wfID=<?=$workflow->getWorkflowID()?>', function(r) { 

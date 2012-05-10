@@ -45,6 +45,22 @@ class BlockTypePermissionKey extends PermissionKey {
 		
 	}
 
+	/** 
+	 * No workflow functionality in blocks
+	 * @private
+	 */
+	public function clearWorkflows() {}
+	
+	/** 
+	 * @private
+	 */
+	public function attachWorkflow(Workflow $wf) {}
+	
+	/** 
+	 * @private
+	 */
+	public function getWorkflows() {return array();}
+	
 }
 
 class BlockTypePermissionAssignment extends PermissionAssignment {}

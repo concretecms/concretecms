@@ -53,7 +53,7 @@ ccm_deleteAccessEntityAssignment = function(peID) {
 	});
 }
 
-ccm_submitPermissionCustomOptionsForm = function(peID) {
+ccm_submitPermissionCustomOptionsForm = function() {
 	jQuery.fn.dialog.showLoader();
 	$("#ccm-permissions-custom-options-form").ajaxSubmit(function(r) {
 		$.get('<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_collection_popup?ctask=set_advanced_permissions&message=custom_options_saved&pkID=<?=$pk->getPermissionKeyID()?>&cID=<?=$c->getCollectionID()?>', function(r) { 
@@ -63,6 +63,18 @@ ccm_submitPermissionCustomOptionsForm = function(peID) {
 	});
 	return false;
 }
+
+ccm_submitPermissionWorkflowForm = function() {
+	jQuery.fn.dialog.showLoader();
+	$("#ccm-permissions-workflow-form").ajaxSubmit(function(r) {
+		$.get('<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_collection_popup?ctask=set_advanced_permissions&message=workflows_saved&pkID=<?=$pk->getPermissionKeyID()?>&cID=<?=$c->getCollectionID()?>', function(r) { 
+			jQuery.fn.dialog.replaceTop(r);
+			jQuery.fn.dialog.hideLoader();
+		});
+	});
+	return false;
+}
+
 
 
 </script>

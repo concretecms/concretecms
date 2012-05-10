@@ -303,6 +303,10 @@ abstract class PermissionKey extends Object {
 	}
 	
 	abstract public function getAssignmentList($accessType = false, $filterEntities = array());
+	abstract public function clearWorkflows();
+	abstract public function attachWorkflow(Workflow $wf);
+	abstract public function getWorkflows();
+	
 	public function exportAccess($pxml) {
 		// by default we don't. but tasks do
 	}
