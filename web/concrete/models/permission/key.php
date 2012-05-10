@@ -84,6 +84,11 @@ abstract class PermissionKey extends Object {
 		return $pk;
 	}
 	
+	public function hasCustomOptionsForm() {
+		$file = Loader::helper('concrete/path')->getPath(DIRNAME_ELEMENTS . '/' . DIRNAME_PERMISSIONS . '/' . DIRNAME_KEYS . '/' . $this->pkHandle . '.php', $this->pkgID);
+		return $file != false;
+	}
+	
 	public function getPackageID() { return $this->pkgID;}
 	public function getPackageHandle() {
 		return PackageList::getHandle($this->pkgID);

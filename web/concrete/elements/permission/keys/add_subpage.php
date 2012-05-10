@@ -5,11 +5,7 @@
 <? $pageTypes = CollectionType::getList(); ?>
 <? $form = Loader::helper('form'); ?>
 
-<form id="ccm-page-permissions-add-subpage-form" onsubmit="return false" method="post" action="<?=$permissionKey->getPermissionKeyToolsURL()?>">
-
 <? if (count($included) > 0 || count($excluded) > 0) { ?>
-
-<div class="well clearfix">
 
 <? if (count($included) > 0) { ?>
 
@@ -72,30 +68,17 @@
 
 } ?>
 
-<input type="submit" class="btn primary ccm-button-right" onclick="$('#ccm-page-permissions-add-subpage-form').submit()" value="<?=t('Update Custom Settings')?>" />
-</div>
-
+<? } else {  ?>
+	<p><?=t('No users or groups selected.')?></p>
 <? } ?>
-
-</form>
 
 <script type="text/javascript">
 $(function() {
-	$("#ccm-page-permissions-add-subpage-form select").change(function() {
+	$("#ccm-permissions-custom-options-form select").change(function() {
 		if ($(this).val() == 'C') {
 			$(this).parent().find('ul.page-type-list').show();
 		} else {
 			$(this).parent().find('ul.page-type-list').hide();
-		}
-	});
-	
-	$("#ccm-page-permissions-add-subpage-form").ajaxForm({
-		beforeSubmit: function() {
-			jQuery.fn.dialog.showLoader();
-		},
-		success: function(r) {
-			jQuery.fn.dialog.hideLoader();
-			jQuery.fn.dialog.closeTop();
 		}
 	});
 });

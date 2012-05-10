@@ -20,30 +20,14 @@ if ($cp->canEditPagePermissions()) {
 
 }
 ?>
-<div class="ccm-ui" id="ccm-page-permissions-list">
 
-<? $pk = PagePermissionKey::getByID($_REQUEST['pkID']);
+<?
+$pk = PagePermissionKey::getByID($_REQUEST['pkID']);
 $pk->setPermissionObject($c);
 ?>
 
-<? if ($pk->getPermissionKeyDescription()) { ?>
-<div class="dialog-help">
-<?=$pk->getPermissionKeyDescription()?>
-</div>
-<? } ?>
+<? Loader::element("permission/detail", array('permissionKey' => $pk)); ?>
 
-<? Loader::element('permission/message_list'); ?>
-
-<?
-$accessTypes = $pk->getSupportedAccessTypes();
-Loader::element('permission/access_list', array('permissionKey' => $pk, 'accessTypes' => $accessTypes)); ?>
-
-<? if ($pk->getPackageID() > 0) { ?>
-	<? Loader::packageElement('permission/keys/' . $pk->getPermissionKeyHandle(), $pk->getPackageHandle(), array('permissionKey' => $pk)); ?>
-<? } else { ?>
-	<? Loader::element('permission/keys/' . $pk->getPermissionKeyHandle(), array('permissionKey' => $pk)); ?>
-<? } ?>
-</div>
 
 <script type="text/javascript">
 ccm_addAccessEntity = function(peID, pdID, accessType) {
@@ -67,6 +51,17 @@ ccm_deleteAccessEntityAssignment = function(peID) {
 			jQuery.fn.dialog.hideLoader();
 		});
 	});
+}
+
+ccm_submitPermissionCustomOptionsForm = function(peID) {
+	jQuery.fn.dialog.showLoader();
+	$("#ccm-permissions-custom-options-form").ajaxSubmit(function(r) {
+		$.get('<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_collection_popup?ctask=set_advanced_permissions&message=custom_options_saved&pkID=<?=$pk->getPermissionKeyID()?>&cID=<?=$c->getCollectionID()?>', function(r) { 
+			jQuery.fn.dialog.replaceTop(r);
+			jQuery.fn.dialog.hideLoader();
+		});
+	});
+	return false;
 }
 
 
