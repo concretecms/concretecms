@@ -2,7 +2,6 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 abstract class PermissionKey extends Object {
 	
-
 	const ACCESS_TYPE_INCLUDE = 10;
 	const ACCESS_TYPE_EXCLUDE = -1;
 	const ACCESS_TYPE_ALL = 0;
@@ -206,18 +205,6 @@ abstract class PermissionKey extends Object {
 				return $pk;
 			}
 		}
-	}
-	
-	/** 
-	 * Returns an array of assigned workflows
-	 */
-	public function getAssignedWorkflows() {
-		if (!$this->pkCanTriggerWorkflow) {
-			throw new Exception(t('This permission key cannot start a workflow.'));
-		}
-		
-		$defaultWorkflow = new Workflow();
-		return array($defaultWorkflow);
 	}
 	
 	/** 

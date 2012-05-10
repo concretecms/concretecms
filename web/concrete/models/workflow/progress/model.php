@@ -11,6 +11,18 @@ abstract class WorkflowProgress extends Object {
 
 	protected $wpID;
 	protected $wpDateAdded;
+	protected $wfID;
+	
+	/** 
+	 * Gets the Workflow object attached to this WorkflowProgress object
+	 * @return Workflow
+	 */
+	public function getWorkflowObject() {
+		if ($this->wfID > 0) {
+			$wf = Workflow::getByID($this->wfID);
+			return $wf;
+		}
+	}
 	
 	/** 
 	 * Gets the ID of the progress object
@@ -45,8 +57,10 @@ abstract class WorkflowProgress extends Object {
 		$wpDateAdded = Loader::helper('date')->getLocalDateTime();
 		$db->Execute('insert into WorkflowProgress (wfID, wrID, wpDateAdded) values (?, ?, ?)', array(
 			$wf->getWorkflowID(), $wr->getWorkflowRequestID(), $wpDateAdded
-		));		
-		return self::getByID($db->Insert_ID());
+		));
+		$wp = self::getByID($db->Insert_ID());
+		$wp->start();
+		return $wp;
 	}
 
 	public function delete() {
@@ -78,6 +92,16 @@ abstract class WorkflowProgress extends Object {
 			if (strpos($key, 'action_') > -1) {
 				return substr($key, 7);	
 			}
+		}
+	}
+	
+	/** 
+	 * The function that is automatically run when a workflowprogress object is started
+	 */
+	public function start() {
+		$wf = $this->getWorkflowObject();
+		if (is_object($wf)) {
+			$wf->start($this);
 		}
 	}
 	

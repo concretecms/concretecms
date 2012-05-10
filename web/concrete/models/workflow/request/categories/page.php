@@ -22,6 +22,13 @@ abstract class PageWorkflowRequest extends WorkflowRequest {
 		$pwp = PageWorkflowProgress::add($wf, $this);
 		return $pwp;
 	}
+
+	public function trigger() {
+		$page = Page::getByID($this->cID);
+		$pk = PermissionKey::getByID($this->pkID);
+		$pk->setPermissionObject($page);
+		return parent::trigger($pk);
+	}
 	
 }
 
