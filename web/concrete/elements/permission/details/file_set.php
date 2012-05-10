@@ -1,30 +1,14 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
 ?>
-<div class="ccm-ui" id="ccm-file-set-permissions-list">
 
-<? $pk = FileSetPermissionKey::getByID($_REQUEST['pkID']);
+<? 
+$pk = FileSetPermissionKey::getByID($_REQUEST['pkID']);
 $pk->setPermissionObject($fileset);
 ?>
 
-<? if ($pk->getPermissionKeyDescription()) { ?>
-<div class="dialog-help">
-<?=$pk->getPermissionKeyDescription()?>
-</div>
-<? } ?>
+<? Loader::element("permission/detail", array('permissionKey' => $pk)); ?>
 
-<? Loader::element('permission/message_list'); ?>
-
-<?
-$accessTypes = $pk->getSupportedAccessTypes();
-Loader::element('permission/access_list', array('permissionKey' => $pk, 'accessTypes' => $accessTypes)); ?>
-
-<? if ($pk->getPackageID() > 0) { ?>
-	<? Loader::packageElement('permission/keys/' . $pk->getPermissionKeyHandle(), $pk->getPackageHandle(), array('permissionKey' => $pk)); ?>
-<? } else { ?>
-	<? Loader::element('permission/keys/' . $pk->getPermissionKeyHandle(), array('permissionKey' => $pk)); ?>
-<? } ?>
-</div>
 
 <script type="text/javascript">
 ccm_addAccessEntity = function(peID, pdID, accessType) {
@@ -48,6 +32,17 @@ ccm_deleteAccessEntityAssignment = function(peID) {
 			jQuery.fn.dialog.hideLoader();
 		});
 	});
+}
+
+ccm_submitPermissionCustomOptionsForm = function(peID) {
+	jQuery.fn.dialog.showLoader();
+	$("#ccm-permissions-custom-options-form").ajaxSubmit(function(r) {
+		$.get('<?=REL_DIR_FILES_TOOLS_REQUIRED?>/permissions/dialogs/file_set?message=custom_options_saved&pkID=<?=$pk->getPermissionKeyID()?>&fsID=<?=$fileset->getFileSetID()?>', function(r) { 
+			jQuery.fn.dialog.replaceTop(r);
+			jQuery.fn.dialog.hideLoader();
+		});
+	});
+	return false;
 }
 
 

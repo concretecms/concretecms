@@ -1,9 +1,17 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?>
+
+<div class="clearfix">
+
 <? if (isset($_REQUEST['message'])) { ?>
+
 
 <div class="alert-message success" id="ccm-permissions-message-list">
 <?
-if ($_REQUEST['message'] == 'entity_removed') { ?>
+if ($_REQUEST['message'] == 'custom_options_saved') { ?>
+	<?=t('Custom Options saved.')?>
+<? } else if ($_REQUEST['message'] == 'workflow_saved') { ?>
+	<?=t('Workflow Options saved.')?>
+<? } else if ($_REQUEST['message'] == 'entity_removed') { ?>
 	<?=t('User/Group Removed')?>
 <? } else if ($_REQUEST['message'] == 'entity_added') { ?>
 	<?=t('User/Group Added')?>
@@ -12,6 +20,10 @@ if ($_REQUEST['message'] == 'entity_removed') { ?>
 
 <? } ?>
 
+<div class="alert-message notice block-message">
+	<p><?=t('Note: Permission changes happen in realtime and are applied immediately.')?></p>
+</div>
+</div>
 <script type="text/javascript">
 $(function() {
 	$("#ccm-permissions-message-list").show('highlight', {'color': '#fff'}, function() {
@@ -22,6 +34,3 @@ $(function() {
 });
 </script>
 
-<div class="alert-message notice block-message">
-	<p><?=t('Note: Permission changes happen in realtime. They are not versioned, and they are applied immediately.')?></p>
-</div>

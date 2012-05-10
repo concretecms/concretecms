@@ -7,11 +7,7 @@ $blockTypes = $btl->getBlockTypeList();
 ?>
 <? $form = Loader::helper('form'); ?>
 
-<form id="ccm-area-permissions-add-block-form" onsubmit="return false" method="post" action="<?=$permissionKey->getPermissionKeyToolsURL()?>">
-
 <? if (count($included) > 0 || count($excluded) > 0) { ?>
-
-<div class="well clearfix">
 
 <? if (count($included) > 0) { ?>
 
@@ -66,31 +62,17 @@ $blockTypes = $btl->getBlockTypeList();
 
 } ?>
 
-
-<input type="submit" class="btn primary ccm-button-right" onclick="$('#ccm-area-permissions-add-block-form').submit()" value="<?=t('Update Custom Settings')?>" />
-</div>
-
+<? } else {  ?>
+	<p><?=t('No users or groups selected.')?></p>
 <? } ?>
-
-</form>
 
 <script type="text/javascript">
 $(function() {
-	$("#ccm-area-permissions-add-block-form select").change(function() {
+	$("#ccm-permissions-custom-options-form select").change(function() {
 		if ($(this).val() == 'C') {
 			$(this).parent().find('ul.inputs-list').show();
 		} else {
 			$(this).parent().find('ul.inputs-list').hide();
-		}
-	});
-	
-	$("#ccm-area-permissions-add-block-form").ajaxForm({
-		beforeSubmit: function() {
-			jQuery.fn.dialog.showLoader();
-		},
-		success: function(r) {
-			jQuery.fn.dialog.hideLoader();
-			jQuery.fn.dialog.closeTop();
 		}
 	});
 });
