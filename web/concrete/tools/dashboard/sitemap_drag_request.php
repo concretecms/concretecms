@@ -116,8 +116,12 @@ if (!$error) {
 						$pkr->setRequestedTargetPage($dc);
 						$pkr->setSaveOldPagePath($_REQUEST['saveOldPagePath']);
 						$u->unloadCollectionEdit($oc);
-						$pkr->trigger();
-						$successMessage .= t("Your request to move \"%s\" beneath \"%s\" has been stored. Someone with approval rights will have to activate the change.\n", $oc->getCollectionName() , $dc->getCollectionName() );
+						$r = $pkr->trigger();
+						if ($r instanceof WorkflowProgressResponse) { 
+							$successMessage .= '"' . $oc->getCollectionName() . '" '.t('was moved beneath').' "' . $dc->getCollectionName() . '." ';
+						} else { 
+							$successMessage .= t("Your request to move \"%s\" beneath \"%s\" has been stored. Someone with approval rights will have to activate the change.\n", $oc->getCollectionName() , $dc->getCollectionName() );
+						}
 					}
 					$newCID[] = $oc->getCollectionID();
 					break;

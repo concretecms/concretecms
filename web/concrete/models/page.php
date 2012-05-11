@@ -1462,6 +1462,16 @@ class Page extends Collection {
 		$db->query($q, $v);
 		$q = "delete from PagePermissionPageTypeAssignmentsCustom where cID = ?";
 		$db->query($q, $v);
+		$q = "delete from PagePermissionPropertyAssignments where cID = ?";
+		$db->query($q, $v);
+		$q = "delete from PagePermissionPropertyAttributeAssignmentsCustom where cID = ?";
+		$db->query($q, $v);
+		$q = "delete from PagePermissionThemeAssignments where cID = ?";
+		$db->query($q, $v);
+		$q = "delete from PagePermissionThemeAssignmentsCustom where cID = ?";
+		$db->query($q, $v);
+		$q = "delete from PagePermissionWorkflows where cID = ?";
+		$db->query($q, $v);
 
 
 		$v = array($permissionsCollectionID);
@@ -1491,6 +1501,50 @@ class Page extends Collection {
 			$db->query($q, $v);
 		}
 
+		$v = array($permissionsCollectionID);
+		$q = "select * from PagePermissionPropertyAssignments where cID = ?";
+		$r = $db->query($q, $v);
+		while($row = $r->fetchRow()) {
+			$v = array($this->cID, $row['peID'], $row['name'], $row['publicDateTime'], $row['uID'], $row['description'], $row['paths'], $row['attributePermission']);
+			$q = "insert into PagePermissionPropertyAssignments (cID, peID, name, publicDateTime, uID, description, paths, attributePermission) values (?, ?, ?, ?, ?, ?, ?, ?)";
+			$db->query($q, $v);
+		}
+
+		$v = array($permissionsCollectionID);
+		$q = "select * from PagePermissionPropertyAttributeAssignmentsCustom where cID = ?";
+		$r = $db->query($q, $v);
+		while($row = $r->fetchRow()) {
+			$v = array($this->cID, $row['peID'], $row['akID']);
+			$q = "insert into PagePermissionPropertyAttributeAssignmentsCustom (cID, peID, akID) values (?, ?, ?)";
+			$db->query($q, $v);
+		}
+
+		$v = array($permissionsCollectionID);
+		$q = "select * from PagePermissionThemeAssignments where cID = ?";
+		$r = $db->query($q, $v);
+		while($row = $r->fetchRow()) {
+			$v = array($this->cID, $row['peID'], $row['permission']);
+			$q = "insert into PagePermissionThemeAssignments (cID, peID, permission) values (?, ?, ?)";
+			$db->query($q, $v);
+		}
+
+		$v = array($permissionsCollectionID);
+		$q = "select * from PagePermissionThemeAssignmentsCustom where cID = ?";
+		$r = $db->query($q, $v);
+		while($row = $r->fetchRow()) {
+			$v = array($this->cID, $row['peID'], $row['ptID']);
+			$q = "insert into PagePermissionThemeAssignmentsCustom (cID, peID, ptID) values (?, ?, ?)";
+			$db->query($q, $v);
+		}
+
+		$v = array($permissionsCollectionID);
+		$q = "select * from PagePermissionWorkflows where cID = ?";
+		$r = $db->query($q, $v);
+		while($row = $r->fetchRow()) {
+			$v = array($this->cID, $row['pkID'], $row['wfID']);
+			$q = "insert into PagePermissionWorkflows (cID, pkID, wfID) values (?, ?, ?)";
+			$db->query($q, $v);
+		}
 	}
 
 	/*

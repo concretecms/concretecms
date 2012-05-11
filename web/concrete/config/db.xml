@@ -1918,29 +1918,6 @@
       <col>cRequiresReindex</col>
 	</index>
   </table>
-  <table name="PagePermissionPageTypes">
-    <field name="cID" type="I" size="10">
-      <KEY/>
-      <DEFAULT value="0"/>
-      <UNSIGNED/>
-    </field>
-    <field name="gID" type="I" size="10">
-      <KEY/>
-      <DEFAULT value="0"/>
-      <UNSIGNED />
-    </field>
-    <field name="uID" type="I" size="10">
-      <KEY/>
-      <DEFAULT value="0"/>
-      <UNSIGNED/>
-    </field>
-    <field name="ctID" type="I" size="10">
-      <KEY/>
-      <DEFAULT value="0"/>
-      <UNSIGNED />
-    </field>
-  </table>
-
   <table name="PageStatistics">
     <opt platform="MYSQL">ENGINE=MYISAM</opt>
     <field name="pstID" type="I8" size="20">
