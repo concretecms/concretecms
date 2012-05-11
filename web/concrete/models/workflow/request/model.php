@@ -88,9 +88,17 @@ abstract class WorkflowRequest extends Object {
 		return $wpObjects;
 	}
 	
-	abstract function addWorkflowProgress(Workflow $wf);
-	abstract function getWorkflowRequestDescription();
-	abstract function getWorkflowRequestStyleClass();
-	abstract function getWorkflowRequestActions();
+	abstract public function addWorkflowProgress(Workflow $wf);
+	abstract public function getWorkflowRequestDescription();
+	abstract public function getWorkflowRequestStyleClass();
+	abstract public function getWorkflowRequestApproveButtonText();
+	abstract public function getWorkflowRequestApproveButtonClass();
+	
+	public function runTask($task, WorkflowProgress $wp) {
+		if (method_exists($this, $task)) {
+			$wpr = call_user_func_array(array($this, $task), array($wp));
+			return $wpr;
+		}
+	}
 
 }

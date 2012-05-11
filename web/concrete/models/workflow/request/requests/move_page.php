@@ -42,26 +42,10 @@ class MovePagePageWorkflowRequest extends PageWorkflowRequest {
 		return 'info';
 	}
 	
-	public function getWorkflowRequestActions() {
-		$buttons = array();
-		$c = Page::getByID($this->getRequestedPageID());
-		$cp = new Permissions($c);
-		if ($cp->canApprovePageVersions()) {
-			$button1 = new WorkflowRequestAction();
-			$button1->setWorkflowRequestActionLabel(t('Cancel'));
-			$button1->setWorkflowRequestActionTask('cancel');
-
-			$button2 = new WorkflowRequestAction();
-			$button2->setWorkflowRequestActionStyleClass('success');
-			$button2->setWorkflowRequestActionLabel(t('Approve'));
-			$button2->setWorkflowRequestActionTask('approve');
-
-			$buttons[] = $button1;
-			$buttons[] = $button2;
-		}
-		return $buttons;
+	public function getWorkflowRequestApproveButtonText() {
+		return t('Approve');
 	}
-
+	
 	/** 
 	 * @private
 	 */

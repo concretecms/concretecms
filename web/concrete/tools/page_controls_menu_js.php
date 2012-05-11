@@ -258,24 +258,27 @@ $(function() {
 			}
 		} ?>		
 		
-		<? if (is_array($workflowList)) { ?>
-			<? foreach($workflowList as $wl) { ?>
-				<? $wr = $wl->getWorkflowRequestObject(); ?>
-				item = new ccm_statusBarItem();
-				item.setCSSClass('<?=$wr->getWorkflowRequestStyleClass()?>');
-				item.setDescription('<?=$wr->getWorkflowRequestDescription()?>');
-				item.setAction('<?=$wl->getWorkflowProgressFormAction()?>');
-				<? $actions = $wr->getWorkflowRequestActions(); ?>
-				<? foreach($actions as $act) { ?>
-					btn = new ccm_statusBarItemButton();
-					btn.setLabel('<?=$act->getWorkflowRequestActionLabel()?>');
-					btn.setCSSClass('<?=$act->getWorkflowRequestActionStyleClass()?>');
-					btn.setAction('<?=$act->getWorkflowRequestActionTask()?>');
-					item.addButton(btn);
+		<? if ($cp->canApprovePageVersions()) { ?>
+			<? if (is_array($workflowList)) { ?>
+				<? foreach($workflowList as $wl) { ?>
+					<? $wr = $wl->getWorkflowRequestObject(); ?>
+					<? $wf = $wl->getWorkflowObject(); ?>
+					item = new ccm_statusBarItem();
+					item.setCSSClass('<?=$wr->getWorkflowRequestStyleClass()?>');
+					item.setDescription('<?=$wr->getWorkflowRequestDescription()?>');
+					item.setAction('<?=$wl->getWorkflowProgressFormAction()?>');
+					<? $actions = $wl->getWorkflowProgressActions(); ?>
+					<? foreach($actions as $act) { ?>
+						btn = new ccm_statusBarItemButton();
+						btn.setLabel('<?=$act->getWorkflowProgressActionLabel()?>');
+						btn.setCSSClass('<?=$act->getWorkflowProgressActionStyleClass()?>');
+						btn.setAction('<?=$act->getWorkflowProgressActionTask()?>');
+						item.addButton(btn);
+					<? } ?>
+					ccm_statusBar.addItem(item);
 				<? } ?>
-				ccm_statusBar.addItem(item);
+			
 			<? } ?>
-		
 		<? } ?>
 
 		ccm_statusBar.activate();		

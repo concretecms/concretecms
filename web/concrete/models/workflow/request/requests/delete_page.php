@@ -41,51 +41,28 @@ class DeletePagePageWorkflowRequest extends PageWorkflowRequest {
 		return 'error';
 	}
 	
-	public function getWorkflowRequestActions() {
-		$buttons = array();
-		$c = Page::getByID($this->getRequestedPageID());
-		$cp = new Permissions($c);
-		if ($cp->canApprovePageVersions()) {
-			$button1 = new WorkflowRequestAction();
-			$button1->setWorkflowRequestActionLabel(t('Cancel'));
-			$button1->setWorkflowRequestActionTask('cancel');
-
-			$button2 = new WorkflowRequestAction();
-			$button2->setWorkflowRequestActionStyleClass('error');
-			$button2->setWorkflowRequestActionLabel(t('Delete'));
-			$button2->setWorkflowRequestActionTask('delete');
-
-			$buttons[] = $button1;
-			$buttons[] = $button2;
-		}
-		return $buttons;
+	public function getWorkflowRequestApproveButtonClass() {
+		return 'error';
+	}
+	
+	public function getWorkflowRequestApproveButtonText() {
+		return t('Delete Page');
 	}
 
-	/** 
-	 * @private
-	 */
-	public function action_cancel(WorkflowProgress $wp) {
+	public function cancel(WorkflowProgress $wp) {
 		$c = Page::getByID($this->getRequestedPageID());
-		$cp = new Permissions($c);
-		if ($cp->canApprovePageVersions()) {
-			$wp->delete();			
-		}
 		$wpr = new WorkflowProgressResponse();
 		$wpr->setWorkflowProgressResponseURL(BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $c->getCollectionID());
 		return $wpr;
 	}
 	
-	public function action_delete(WorkflowProgress $wp) {
+	public function approve(WorkflowProgress $wp) {
 		$c = Page::getByID($this->getRequestedPageID());
 		$cParentID = $c->getCollectionParentID();
-		$cp = new Permissions($c);
-		if ($cp->canApprovePageVersions()) {
-			$wp->delete();
-			if (ENABLE_TRASH_CAN) {
-				$c->moveToTrash();
-			} else {
-				$c->delete();
-			}
+		if (ENABLE_TRASH_CAN) {
+			$c->moveToTrash();
+		} else {
+			$c->delete();
 		}
 		$wpr = new WorkflowProgressResponse();
 		$wpr->setWorkflowProgressResponseURL(BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $cParentID);

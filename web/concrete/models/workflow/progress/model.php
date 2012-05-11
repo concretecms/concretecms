@@ -44,8 +44,10 @@ abstract class WorkflowProgress extends Object {
 			$cc = get_called_class();
 			$class = substr($cc, 0, strpos($cc, 'WorkflowProgress')) . 'WorkflowRequest';			
 			$wr = call_user_func_array(array($class, 'getByID'), array($this->wrID));
-			$wr->setCurrentWorkflowProgressObject($this);
-			return $wr;
+			if (is_object($wr)) {
+				$wr->setCurrentWorkflowProgressObject($this);
+				return $wr;
+			}
 		}
 	}
 	
@@ -111,14 +113,19 @@ abstract class WorkflowProgress extends Object {
 	 * @return WorkflowProgressResponse
 	 */
 	public function runTask($task) {
-		$task = 'action_' . $task;
-		$wr = $this->getWorkflowRequestObject();
-		if (method_exists($wr, $task)) {
-			return call_user_func_array(array($wr, $task), array($this));
+		$wf = $this->getWorkflowObject();
+		if (in_array($task, $wf->getAllowedTasks())) {
+			$wpr = call_user_func_array(array($wf, $task), array($this));
 		}
-		if (method_exists($this, $task)) {
-			return call_user_func(array($this, $task));
-		}		
+		if (!($wpr instanceof WorkflowProgressResponse)) {
+			$wpr = new WorkflowProgressResponse();
+		}
+		return $wpr;
+	}
+	
+	public function getWorkflowProgressActions() {
+		$w = $this->getWorkflowObject();
+		return $w->getWorkflowProgressActions($this);
 	}
 	
 	abstract function getWorkflowProgressFormAction();
