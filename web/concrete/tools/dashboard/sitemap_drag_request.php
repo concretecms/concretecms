@@ -111,21 +111,13 @@ if (!$error) {
 					foreach($originalPages as $oc) {
 						$ocp = new Permissions($oc);
 						$_SESSION['movePageSaveOldPagePath'] = $_REQUEST['saveOldPagePath'];
-						if ($dcp->canApprovePageVersions() && $ocp->canApprovePageVersions()) {
-							if ($_REQUEST['saveOldPagePath']) {
-								$nc2 = $oc->move($dc, true);
-							} else {
-								$nc2 = $oc->move($dc);
-							}
-							$successMessage .= '"' . $oc->getCollectionName() . '" '.t('was moved beneath').' "' . $dc->getCollectionName() . '." ';
-						} else {
-							$pkr = new MovePagePageWorkflowRequest();
-							$pkr->setRequestedPage($oc);
-							$pkr->setRequestedTargetPage($dc);
-							$u->unloadCollectionEdit($oc);
-							$pkr->trigger();
-							$successMessage .= t("Your request to move \"%s\" beneath \"%s\" has been stored. Someone with approval rights will have to activate the change.\n", $oc->getCollectionName() , $dc->getCollectionName() );
-						}
+						$pkr = new MovePagePageWorkflowRequest();
+						$pkr->setRequestedPage($oc);
+						$pkr->setRequestedTargetPage($dc);
+						$pkr->setSaveOldPagePath($_REQUEST['saveOldPagePath']);
+						$u->unloadCollectionEdit($oc);
+						$pkr->trigger();
+						$successMessage .= t("Your request to move \"%s\" beneath \"%s\" has been stored. Someone with approval rights will have to activate the change.\n", $oc->getCollectionName() , $dc->getCollectionName() );
 					}
 					$newCID[] = $oc->getCollectionID();
 					break;

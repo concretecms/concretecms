@@ -3003,7 +3003,7 @@
       <DEFAULT value="0"/>
       <UNSIGNED/>
     </field>
-    <field name="wpDateCompleted" type="D"/>
+    <field name="wpDateCompleted" type="T"/>
   </table>
 
   <table name="BasicWorkflowPermissionAssignments">

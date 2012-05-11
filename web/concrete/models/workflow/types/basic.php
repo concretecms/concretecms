@@ -18,33 +18,32 @@ class BasicWorkflow extends Workflow  {
 		
 		// let's get all the people who are set to be notified on entry
 		$req = $wp->getWorkflowRequestObject();
-		$d = new WorkflowDescription();
-		$d->setText(t('User %s %s on %s', $u->getUserName(), $req->getWorkflowRequestDescription(), date(DATE_APP_GENERIC_MDYT_FULL, strtotime($wp->getWorkflowProgressDateAdded()))));
-		$this->notify($wp, $d, 'notify_on_basic_workflow_entry');
+		$message = t('On %s, user %s submitted the following request: %s', date(DATE_APP_GENERIC_MDYT_FULL, strtotime($wp->getWorkflowProgressDateAdded())), $u->getUserName(), $req->getWorkflowRequestDescriptionObject()->getText());
+		$this->notify($wp, $message, 'notify_on_basic_workflow_entry');
 	}
 	
-	public function getWorkflowProgressDescriptionObject(WorkflowProgress $wp) {
+	public function getWorkflowProgressDescription(WorkflowProgress $wp) {
 		Loader::model('workflow/types/basic/data');
 		$bdw = new BasicWorkflowProgressData($wp);
 		$ux = UserInfo::getByID($bdw->getUserStartedID());
-		$d = new WorkflowDescription();
-		$d->setHTML(t('User <strong>%s</strong> marked this page for deletion on %s', $ux->getUserName(), date(DATE_APP_GENERIC_MDYT_FULL, strtotime($wp->getWorkflowProgressDateAdded()))));
-		return $d;
+		$req = $wp->getWorkflowRequestObject();
+		$description = $req->getWorkflowRequestDescriptionObject()->getHTML();
+		return t('On %s, user <strong>%s</strong> %s', date(DATE_APP_GENERIC_MDYT_FULL, strtotime($wp->getWorkflowProgressDateAdded())), $ux->getUserName(), $description);
 	}
 
-	protected function notify(WorkflowProgress $wp, WorkflowDescription $d, $permission, $parameters = array()) {
+	protected function notify(WorkflowProgress $wp, $message, $permission, $parameters = array()) {
 		$nk = PermissionKey::getByHandle('notify_on_basic_workflow_entry');
 		$nk->setPermissionObject($this);
 		$users = $nk->getCurrentlyActiveUsers();
 		$req = $wp->getWorkflowRequestObject();
-		
+
 		foreach($users as $ui) {
 			$mh = Loader::helper('mail');
 			$mh->addParameter('uName', $ui->getUserName());			
 			$mh->to($ui->getUserEmail());
 			$adminUser = UserInfo::getByID(USER_SUPER_ID);
 			$mh->from($adminUser->getUserEmail(),  t('Basic Workflow'));
-			$mh->addParameter('description', $d->getText());
+			$mh->addParameter('message', $message);
 			foreach($parameters as $key => $value) {
 				$mh->addParameter($key, $value);
 			}
@@ -57,9 +56,25 @@ class BasicWorkflow extends Workflow  {
 	
 	public function cancel(WorkflowProgress $wp) {
 		if ($this->canApproveBasicWorkflow()) {
+
 			$req = $wp->getWorkflowRequestObject();
+			Loader::model('workflow/types/basic/data');
+			$bdw = new BasicWorkflowProgressData($wp);
+			$u = new User();
+			$bdw->markCompleted($u);
+			
+			$ux = UserInfo::getByID($bdw->getUserCompletedID());
+
+			$message = t("On %s, user %s cancelled the following request: \n\n---\n%s\n---\n\n", date(DATE_APP_GENERIC_MDYT_FULL, strtotime($bdw->getDateCompleted())), $ux->getUserName(), $req->getWorkflowRequestDescriptionObject()->getText());
+			$this->notify($wp, $message, 'notify_on_basic_workflow_action');
+
 			$wpr = $req->runTask('cancel', $wp);
 			$wp->delete();
+
+			Loader::model('workflow/types/basic/data');
+			$bdw = new BasicWorkflowProgressData($wp);
+			$bdw->delete();			
+
 			return $wpr;
 		}
 	}
@@ -67,8 +82,23 @@ class BasicWorkflow extends Workflow  {
 	public function approve(WorkflowProgress $wp) {
 		if ($this->canApproveBasicWorkflow()) {
 			$req = $wp->getWorkflowRequestObject();
+			Loader::model('workflow/types/basic/data');
+			$bdw = new BasicWorkflowProgressData($wp);
+			$u = new User();
+			$bdw->markCompleted($u);
+			
+			$ux = UserInfo::getByID($bdw->getUserCompletedID());
+
+			$message = t("On %s, user %s approved the following request: \n\n---\n%s\n---\n\n", date(DATE_APP_GENERIC_MDYT_FULL, strtotime($bdw->getDateCompleted())), $ux->getUserName(), $req->getWorkflowRequestDescriptionObject()->getText());
+			$this->notify($wp, $message, 'notify_on_basic_workflow_action');
+
 			$wpr = $req->runTask('approve', $wp);
 			$wp->delete();
+
+			Loader::model('workflow/types/basic/data');
+			$bdw = new BasicWorkflowProgressData($wp);
+			$bdw->delete();			
+
 			return $wpr;
 		}
 	}
