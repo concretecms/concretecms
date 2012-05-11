@@ -100,6 +100,7 @@
 	Loader::model("permission/categories/marketplace_newsflow");
 	Loader::model("permission/categories/basic_workflow");
 	Loader::model("workflow/model");
+	Loader::model("workflow/description");
 	Loader::model("workflow/progress/model");
 	Loader::model("workflow/progress/response");
 	Loader::model("workflow/progress/action");

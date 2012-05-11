@@ -2987,6 +2987,24 @@
       <UNSIGNED/>
     </field>
   </table>
+  <table name="BasicWorkflowProgressData">
+    <field name="wpID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="uIDStarted" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="uIDCompleted" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="wpDateCompleted" type="D"/>
+  </table>
 
   <table name="BasicWorkflowPermissionAssignments">
     <field name="wfID" type="I" size="10">

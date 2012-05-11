@@ -64,7 +64,9 @@ class ConcreteUpgradeVersion553Helper {
 		'WorkflowProgress', 
 		'WorkflowRequestObjects',
 		'PageWorkflowProgress',
-		'PagePermissionWorkflows'
+		'PagePermissionWorkflows',
+		'BasicWorkflowPermissionAssignments',
+		'BasicWorkflowProgressData'
 	);
 	
 	
