@@ -11,23 +11,12 @@ abstract class WorkflowRequest extends Object {
 	
 	protected $currentWP;
 	
-	public function __construct() {
-		$u = new User();
-		$this->uID = $u->getUserID();
-		$this->pkID = $this->permissionKey->getPermissionKeyID();
+	public function __construct($pk) {
+		$this->pkID = $pk->getPermissionKeyID();
 	}
 
 	public function getWorkflowRequestID() { return $this->wrID;}
 	public function getWorkflowRequestPermissionKeyID() {return $this->pkID;}
-	public function getWorkflowRequestUserID() {return $this->pkID;}
-	public function getWorkflowRequestUserObject() {
-		if ($this->uID > 0) {
-			$ui = UserInfo::getByID($this->uID);
-			if (is_object($ui)) {
-				return $ui;
-			}
-		}
-	}
 	public function setCurrentWorkflowProgressObject(WorkflowProgress $wp) {
 		$this->currentWP = $wp;
 	}

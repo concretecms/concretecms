@@ -263,9 +263,10 @@ $(function() {
 				<? foreach($workflowList as $wl) { ?>
 					<? $wr = $wl->getWorkflowRequestObject(); ?>
 					<? $wf = $wl->getWorkflowObject(); ?>
+					<? $d = $wf->getWorkflowProgressDescriptionObject($wl); ?>
 					item = new ccm_statusBarItem();
 					item.setCSSClass('<?=$wr->getWorkflowRequestStyleClass()?>');
-					item.setDescription('<?=$wr->getWorkflowRequestDescription()?>');
+					item.setDescription('<?=$d->getHTML()?>');
 					item.setAction('<?=$wl->getWorkflowProgressFormAction()?>');
 					<? $actions = $wl->getWorkflowProgressActions(); ?>
 					<? foreach($actions as $act) { ?>

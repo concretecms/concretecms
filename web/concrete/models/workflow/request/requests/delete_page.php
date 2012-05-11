@@ -11,30 +11,16 @@ defined('C5_EXECUTE') or die("Access Denied.");
 class DeletePagePageWorkflowRequest extends PageWorkflowRequest {
 	
 	public function __construct() {
-		$this->permissionKey = PermissionKey::getByHandle('delete_page');
-		parent::__construct();
+		$pk = PermissionKey::getByHandle('delete_page');
+		parent::__construct($pk);
 	}
-	
-	public function getWorkflowRequestExternalDescription() {
-		$uName = t('Unknown');
-		$ui = $this->getWorkflowRequestUserObject();
-		if (is_object($ui)) {
-			$uName = $ui->getUserName();
-		}
-		$wp = $this->getCurrentWorkflowProgressObject();
+
+	public function getWorkflowRequestDescription() {
+		$d = new WorkflowDescription();
 		$c = Page::getByID($this->cID, 'ACTIVE');
 		$link = Loader::helper('navigation')->getLinkToCollection($c, true);
-		return t("User %s marked \"%s\" for deletion on %s.\n\nView the page here: %s", $uName, $c->getCollectionName(), date(DATE_APP_GENERIC_MDYT_FULL, strtotime($wp->getWorkflowProgressDateAdded())), $link);
-	}
-	
-	public function getWorkflowRequestDescription() {
-		$uName = t('Unknown');
-		$ui = $this->getWorkflowRequestUserObject();
-		if (is_object($ui)) {
-			$uName = $ui->getUserName();
-		}
-		$wp = $this->getCurrentWorkflowProgressObject();
-		return t('User <strong>%s</strong> marked this page for deletion on %s.', $uName, date(DATE_APP_GENERIC_MDYT_FULL, strtotime($wp->getWorkflowProgressDateAdded())));
+		$d->setText(t("marked \"%s\" for deletion. View the page here: %s", $c->getCollectionName(), $link));
+		$d->setHTML(t("marked this page for deletion"));
 	}
 	
 	public function getWorkflowRequestStyleClass() {

@@ -76,5 +76,6 @@ abstract class Workflow extends Object {
 	
 	abstract public function start(WorkflowProgress $wp);
 	abstract public function getWorkflowProgressActions(WorkflowProgress $wp);
+	abstract public function getWorkflowProgressDescriptionObject(WorkflowProgress $wp);
 	
 }
