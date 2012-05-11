@@ -10,7 +10,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
 abstract class Workflow extends Object {  
 	
 	protected $wfID = 0;
-
+	protected $allowedTasks = array('cancel', 'approve');
+	
+	public function getAllowedTasks() {return $this->allowedTasks;}
+	
 	public function getWorkflowID() {return $this->wfID;}
 	public function getWorkflowName() {return $this->wfName;}
 	public function getWorkflowTypeObject() {
@@ -72,5 +75,6 @@ abstract class Workflow extends Object {
 	}
 	
 	abstract public function start(WorkflowProgress $wp);
+	abstract public function getWorkflowProgressActions(WorkflowProgress $wp);
 	
 }
