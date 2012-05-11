@@ -15,12 +15,13 @@ class DeletePagePageWorkflowRequest extends PageWorkflowRequest {
 		parent::__construct($pk);
 	}
 
-	public function getWorkflowRequestDescription() {
+	public function getWorkflowRequestDescriptionObject() {
 		$d = new WorkflowDescription();
 		$c = Page::getByID($this->cID, 'ACTIVE');
 		$link = Loader::helper('navigation')->getLinkToCollection($c, true);
-		$d->setText(t("marked \"%s\" for deletion. View the page here: %s", $c->getCollectionName(), $link));
-		$d->setHTML(t("marked this page for deletion"));
+		$d->setText(t("\"%s\" has been marked for deletion. View the page here: %s.", $c->getCollectionName(), $link));
+		$d->setHTML(t("marked this page for deletion. "));
+		return $d;
 	}
 	
 	public function getWorkflowRequestStyleClass() {
@@ -35,13 +36,6 @@ class DeletePagePageWorkflowRequest extends PageWorkflowRequest {
 		return t('Delete Page');
 	}
 
-	public function cancel(WorkflowProgress $wp) {
-		$c = Page::getByID($this->getRequestedPageID());
-		$wpr = new WorkflowProgressResponse();
-		$wpr->setWorkflowProgressResponseURL(BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $c->getCollectionID());
-		return $wpr;
-	}
-	
 	public function approve(WorkflowProgress $wp) {
 		$c = Page::getByID($this->getRequestedPageID());
 		$cParentID = $c->getCollectionParentID();

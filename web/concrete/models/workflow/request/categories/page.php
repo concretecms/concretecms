@@ -29,6 +29,13 @@ abstract class PageWorkflowRequest extends WorkflowRequest {
 		$pk->setPermissionObject($page);
 		return parent::trigger($pk);
 	}
+
+	public function cancel(WorkflowProgress $wp) {
+		$c = Page::getByID($this->getRequestedPageID());
+		$wpr = new WorkflowProgressResponse();
+		$wpr->setWorkflowProgressResponseURL(BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $c->getCollectionID());
+		return $wpr;
+	}
 	
 }
 

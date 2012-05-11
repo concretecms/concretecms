@@ -25,60 +25,47 @@ class MovePagePageWorkflowRequest extends PageWorkflowRequest {
 		return $this->targetCID;
 	}	
 	
-	public function getWorkflowRequestDescription() {
-		$uName = t('Unknown');
-		$ui = $this->getWorkflowRequestUserObject();
-		if (is_object($ui)) {
-			$uName = $ui->getUserName();
-		}
-		$wp = $this->getCurrentWorkflowProgressObject();
-		$target = Page::getByID($this->targetCID, 'ACTIVE');
-		if (is_object($target) && !$target->isError()) {
-			return t('User <strong>%s</strong> requested that this page be moved beneath <strong>%s</strong> on %s.', $uName, $target->getCollectionName(), date(DATE_APP_GENERIC_MDYT_FULL, strtotime($wp->getWorkflowProgressDateAdded())));
-		}
+	public function setSaveOldPagePath($r) {
+		$this->saveOldPagePath = $r;
 	}
-	
+
+	public function getWorkflowRequestDescriptionObject() {
+		$d = new WorkflowDescription();
+		$c = Page::getByID($this->cID, 'ACTIVE');
+		$target = Page::getByID($this->targetCID, 'ACTIVE');
+		$link = Loader::helper('navigation')->getLinkToCollection($c, true);
+		$targetLink = Loader::helper('navigation')->getLinkToCollection($target, true);
+		$d->setText(t("\"%s\" is pending a move to beneath \"%s\". Source Page: %s. Target Page: %s", $c->getCollectionName(), $target->getCollectionName(), $link, $targetLink));
+		$d->setHTML(t("requested this page be moved beneath <strong><a href=\"%s\">%s</a></strong>. ", $targetLink, $target->getCollectionName()));
+		return $d;
+	}
+
 	public function getWorkflowRequestStyleClass() {
+		return 'info';
+	}
+
+	public function getWorkflowRequestApproveButtonClass() {
 		return 'info';
 	}
 	
 	public function getWorkflowRequestApproveButtonText() {
-		return t('Approve');
+		return t('Approve Move');
 	}
-	
-	/** 
-	 * @private
-	 */
-	public function action_cancel(WorkflowProgress $wp) {
+
+	public function approve(WorkflowProgress $wp) {
 		$c = Page::getByID($this->getRequestedPageID());
-		$cp = new Permissions($c);
-		if ($cp->canApprovePageVersions()) {
-			$wp->delete();			
-			$wpr = new WorkflowProgressResponse();
-			$wpr->setWorkflowProgressResponseURL(BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $c->getCollectionID());
-			return $wpr;
-		}
-	}
-	
-	public function action_approve(WorkflowProgress $wp) {
-		$c = Page::getByID($this->getRequestedPageID());
-		$cParentID = $c->getCollectionParentID();
 		$dc = Page::getByID($this->targetCID);
 		if (is_object($c) && is_object($dc) && (!$c->isError()) && (!$dc->isError())) { 
-			$cp = new Permissions($c);
-			if ($cp->canApprovePageVersions()) {
-				$dcp = new Permissions($dc);
-				if ($c->canMoveCopyTo($dc)) {
-					$ct = CollectionType::getByID($c->getCollectionTypeID());
-					if ($dcp->canAddSubpage($ct)) {
-						$wp->delete();			
-						$c->move($dc);
-						$wpr = new WorkflowProgressResponse();
-						$wpr->setWorkflowProgressResponseURL(BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $cParentID);
-						return $wpr;
-					}
+			if ($c->canMoveCopyTo($dc)) {
+				if ($this->saveOldPagePath) {
+					$nc2 = $c->move($dc, true);
+				} else {
+					$nc2 = $c->move($dc);
 				}
+				$wpr = new WorkflowProgressResponse();
+				$wpr->setWorkflowProgressResponseURL(BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $c->getCollectionID());
+				return $wpr;
 			}
 		}
-	}	
+	}
 }

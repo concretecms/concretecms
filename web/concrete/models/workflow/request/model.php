@@ -78,7 +78,7 @@ abstract class WorkflowRequest extends Object {
 	}
 	
 	abstract public function addWorkflowProgress(Workflow $wf);
-	abstract public function getWorkflowRequestDescription();
+	abstract public function getWorkflowRequestDescriptionObject();
 	abstract public function getWorkflowRequestStyleClass();
 	abstract public function getWorkflowRequestApproveButtonText();
 	abstract public function getWorkflowRequestApproveButtonClass();
