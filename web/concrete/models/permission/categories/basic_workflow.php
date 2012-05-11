@@ -24,6 +24,27 @@ class BasicWorkflowPermissionKey extends PermissionKey {
  		return $list;
 	}
 	
+	public function getCurrentlyActiveUsers() {
+		$included = $this->getAssignmentList(PermissionKey::ACCESS_TYPE_INCLUDE);
+		$excluded = $this->getAssignmentList(PermissionKey::ACCESS_TYPE_EXCLUDE);
+		$included = PermissionDuration::filterByActive($included);
+		$excluded = PermissionDuration::filterByActive($excluded);
+		$users = array();
+		$usersExcluded = array();
+		foreach($included as $inc) {
+			$pae = $inc->getAccessEntityObject();
+			$users = array_merge($users, $pae->getAccessEntityUsers());	
+		}
+		$users = array_unique($users);
+
+		foreach($excluded as $inc) {
+			$pae = $inc->getAccessEntityObject();
+			$usersExcluded = array_merge($usersExcluded, $pae->getAccessEntityUsers());	
+		}
+		$users = array_diff($users, $usersExcluded);
+		return $users;	
+	}
+	
 	public function addAssignment(PermissionAccessEntity $pae, $durationObject = false, $accessType = BasicWorkflowPermissionKey::ACCESS_TYPE_INCLUDE) {
 		$db = Loader::db();
 		$pdID = 0;

@@ -20,6 +20,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
  */
 
 	class UserInfo extends Object { 
+
+		public function __toString() {
+			return 'UserInfo: ' . $this->getUserID();
+		}
 	
 		/* magic method for user attributes. This is db expensive but pretty damn cool */
 		// so if the attrib handle is "my_attribute", then get the attribute with $ui->getUserMyAttribute(), or "uFirstName" become $ui->getUserUfirstname();
@@ -916,6 +920,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		function getUserInfoList() {
 			return $this->uiArray;
 		}
+		
 		
 				
 		

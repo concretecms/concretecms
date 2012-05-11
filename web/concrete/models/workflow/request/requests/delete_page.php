@@ -15,6 +15,18 @@ class DeletePagePageWorkflowRequest extends PageWorkflowRequest {
 		parent::__construct();
 	}
 	
+	public function getWorkflowRequestExternalDescription() {
+		$uName = t('Unknown');
+		$ui = $this->getWorkflowRequestUserObject();
+		if (is_object($ui)) {
+			$uName = $ui->getUserName();
+		}
+		$wp = $this->getCurrentWorkflowProgressObject();
+		$c = Page::getByID($this->cID, 'ACTIVE');
+		$link = Loader::helper('navigation')->getLinkToCollection($c, true);
+		return t("User %s marked \"%s\" for deletion on %s.\n\nView the page here: %s", $uName, $c->getCollectionName(), date(DATE_APP_GENERIC_MDYT_FULL, strtotime($wp->getWorkflowProgressDateAdded())), $link);
+	}
+	
 	public function getWorkflowRequestDescription() {
 		$uName = t('Unknown');
 		$ui = $this->getWorkflowRequestUserObject();
