@@ -1,10 +1,11 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-class PermissionAccessEntity extends Object {
+abstract class PermissionAccessEntity extends Object {
 	
 	public function getAccessEntityType() {return $this->peType;}
 	public function getAccessEntityID() {return $this->peID;}
 	public function getAccessEntityLabel() {return $this->label;}
+	abstract public function getAccessEntityUsers();
 	
 	public static function getByID($peID) {
 		$db = Loader::db();
@@ -82,6 +83,10 @@ class GroupPermissionAccessEntity extends PermissionAccessEntity {
 
 	protected $group = false;
 	public function getGroupObject() {return $this->group;}
+
+	public function getAccessEntityUsers() {
+		return $this->group->getGroupMembers();
+	}
 	
 	public static function getOrCreate(Group $g) {
 		$db = Loader::db();
@@ -140,6 +145,14 @@ class GroupCombinationPermissionAccessEntity extends PermissionAccessEntity {
 		}
 		return PermissionAccessEntity::getByID($peID);
 	}
+	
+	public function getAccessEntityUsers() {
+		$gl = new GroupList();
+		foreach($this->groups as $g) {
+			$gl->filterByGroupID($g->getGroupID());
+		}
+		return $gl->get();
+	}
 
 	public function load() {
 		$db = Loader::db();
@@ -164,6 +177,10 @@ class UserPermissionAccessEntity extends PermissionAccessEntity {
 
 	protected $user;
 	public function getUserObject() {return $this->user;}
+	
+	public function getAccessEntityUsers() {
+		return array($this->getUserObject());
+	}
 	
 	public static function getOrCreate(UserInfo $ui) {
 		$db = Loader::db();
