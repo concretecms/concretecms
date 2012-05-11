@@ -79,3 +79,18 @@ abstract class Workflow extends Object {
 	abstract public function getWorkflowProgressDescription(WorkflowProgress $wp);
 	
 }
+
+class EmptyWorkflow extends Workflow {
+	public function start(WorkflowProgress $wp) {
+		$req = $wp->getWorkflowRequestObject();
+		$wpr = $req->approve($wp);
+		$wp->delete();
+		return $wpr;
+	}
+	public function getWorkflowProgressActions(WorkflowProgress $wp) {
+		return array();
+	}
+	public function getWorkflowProgressDescription(WorkflowProgress $wp) {
+		return '';
+	}
+}

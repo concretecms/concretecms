@@ -491,7 +491,11 @@
 							$pkr = new DeletePagePageWorkflowRequest();
 							$pkr->setRequestedPage($c);
 							$u->unloadCollectionEdit($c);
-							$pkr->trigger();
+							$response = $pkr->trigger();
+							if ($response instanceof WorkflowProgressResponse) {
+								// we only get this response if we have skipped workflows and jumped straight in to an approve() step.
+								$obj->refreshCID = $c->getCollectionParentID();
+							}
 						}
 					}
 					$cParentID = $c->getCollectionParentID();
