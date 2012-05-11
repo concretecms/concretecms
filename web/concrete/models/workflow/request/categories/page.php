@@ -20,6 +20,8 @@ abstract class PageWorkflowRequest extends WorkflowRequest {
 	public function addWorkflowProgress(Workflow $wf) {
 		Loader::model('workflow/progress/categories/page');
 		$pwp = PageWorkflowProgress::add($wf, $this);
+		$r = $pwp->start();
+		$pwp->setWorkflowProgressResponseObject($r);
 		return $pwp;
 	}
 

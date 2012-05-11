@@ -53,7 +53,7 @@ abstract class WorkflowRequest extends Object {
 	/** 
 	 * Triggers a workflow request, queries a permission key to see what workflows are attached to it
 	 * and initiates them
-	 * @return void
+	 * @return optional WorkflowProgress
 	 */
 	protected function trigger($pk) {
 		if (!$this->wrID) {
@@ -66,15 +66,14 @@ abstract class WorkflowRequest extends Object {
 		
 		$workflows = $pk->getWorkflows();
 		if (count($workflows) == 0) {
-			$defaultWorkflow = new Workflow();
-			$workflows = array($defaultWorkflow);
+			$defaultWorkflow = new EmptyWorkflow();
+			$wp = $this->addWorkflowProgress($defaultWorkflow);
+			return $wp->getWorkflowProgressResponseObject();
 		}
 
-		$wpObjects = array();
 		foreach($workflows as $wf) {
 			$this->addWorkflowProgress($wf);
 		}
-		return $wpObjects;
 	}
 	
 	abstract public function addWorkflowProgress(Workflow $wf);

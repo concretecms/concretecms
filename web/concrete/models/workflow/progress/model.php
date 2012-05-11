@@ -12,6 +12,8 @@ abstract class WorkflowProgress extends Object {
 	protected $wpID;
 	protected $wpDateAdded;
 	protected $wfID;
+	protected $response;
+	
 	
 	/** 
 	 * Gets the Workflow object attached to this WorkflowProgress object
@@ -20,8 +22,21 @@ abstract class WorkflowProgress extends Object {
 	public function getWorkflowObject() {
 		if ($this->wfID > 0) {
 			$wf = Workflow::getByID($this->wfID);
-			return $wf;
+		} else {
+			$wf = new EmptyWorkflow();
 		}
+		return $wf;
+	}
+	
+	/** 
+	 * Gets an optional WorkflowResponse object. This is set in some cases
+	 */
+	public function getWorkflowProgressResponseObject() {
+		return $this->response;
+	}
+	
+	public function setWorkflowProgressResponseObject($obj) {
+		$this->response = $obj;
 	}
 	
 	/** 
@@ -61,7 +76,6 @@ abstract class WorkflowProgress extends Object {
 			$wf->getWorkflowID(), $wr->getWorkflowRequestID(), $wpDateAdded
 		));
 		$wp = self::getByID($db->Insert_ID());
-		$wp->start();
 		return $wp;
 	}
 
@@ -103,7 +117,7 @@ abstract class WorkflowProgress extends Object {
 	public function start() {
 		$wf = $this->getWorkflowObject();
 		if (is_object($wf)) {
-			$wf->start($this);
+			return $wf->start($this);
 		}
 	}
 	
