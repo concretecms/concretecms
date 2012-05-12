@@ -557,7 +557,11 @@
 					
 					$v->setComment($_REQUEST['comments']);
 					if ($_REQUEST['approve'] == 'APPROVE' && $cp->canApprovePageVersions()) {
-						$v->approve(false);
+						$pkr = new ApprovePagePageWorkflowRequest();
+						$pkr->setRequestedPage($c);
+						$pkr->setRequestedVersionID($v->getVersionID());
+						$u->unloadCollectionEdit($c);
+						$response = $pkr->trigger();
 					} 
 
 					if ($_REQUEST['approve'] == 'DISCARD' && $v->canDiscard()) {
