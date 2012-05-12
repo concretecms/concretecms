@@ -17,6 +17,9 @@ abstract class WorkflowRequest extends Object {
 
 	public function getWorkflowRequestID() { return $this->wrID;}
 	public function getWorkflowRequestPermissionKeyID() {return $this->pkID;}
+	public function getWorkflowRequestPermissionKeyObject() {
+		return PermissionKey::getByID($this->pkID);
+	}
 	public function setCurrentWorkflowProgressObject(WorkflowProgress $wp) {
 		$this->currentWP = $wp;
 	}

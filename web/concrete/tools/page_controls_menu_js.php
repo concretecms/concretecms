@@ -238,30 +238,19 @@ $(function() {
 			item.setCSSClass('info');
 			item.setDescription('<?= t('Page Defaults for %s Page Type. All edits take effect immediately.', $c->getCollectionTypeName()) ?>');
 			ccm_statusBar.addItem(item);		
-		<? }
+		<? } ?>
+		<?
+		$hasPendingPageApproval = false;
 		
-		if (!$c->getCollectionPointerID()) {
-			if (is_object($vo)) {
-				if (!$vo->isApproved() && !$c->isEditMode()) { ?>
-				
-					item = new ccm_statusBarItem();
-					item.setCSSClass('info');
-					item.setDescription('<?= t("This page is pending approval.")?>');
-					<? if ($cp->canApprovePageVersions() && !$c->isCheckedOut()) { ?>
-						btn1 = new ccm_statusBarItemButton();
-						btn1.setLabel('<?=t('Approve Version')?>');
-						btn1.setURL('<?=DIR_REL . "/" . DISPATCHER_FILENAME . "?cID=" . $c->getCollectionID() . "&ctask=approve-recent" . $token?>');
-						item.addButton(btn1);
-					<? } ?>
-					ccm_statusBar.addItem(item);		
-				<? }
-			}
-		} ?>		
-		
-		<? if ($cp->canApprovePageVersions()) { ?>
+		if ($cp->canApprovePageVersions()) { ?>
 			<? if (is_array($workflowList)) { ?>
 				<? foreach($workflowList as $wl) { ?>
-					<? $wr = $wl->getWorkflowRequestObject(); ?>
+					<? $wr = $wl->getWorkflowRequestObject(); 
+					$wrk = $wr->getWorkflowRequestPermissionKeyObject(); 
+					if ($wrk->getPermissionKeyHandle() == 'approve_page_versions') {
+						$hasPendingPageApproval = true;
+					}
+					?>
 					<? $wf = $wl->getWorkflowObject(); ?>
 					item = new ccm_statusBarItem();
 					item.setCSSClass('<?=$wr->getWorkflowRequestStyleClass()?>');
@@ -280,6 +269,35 @@ $(function() {
 			
 			<? } ?>
 		<? } ?>
+		
+		<?		
+		
+		if (!$c->getCollectionPointerID() && !$hasPendingPageApproval) {
+			if (is_object($vo)) {
+				if (!$vo->isApproved() && !$c->isEditMode()) { ?>
+				
+					item = new ccm_statusBarItem();
+					item.setCSSClass('info');
+					item.setDescription('<?= t("This page is pending approval.")?>');
+					<? if ($cp->canApprovePageVersions() && !$c->isCheckedOut()) { 
+						$pk = PagePermissionKey::getByHandle('approve_page_versions');
+						$pk->setPermissionObject($c);
+						if (count($pk->getWorkflows()) > 0) {
+							$appLabel = t('Submit for Approval');
+						} else { 
+							$appLabel = t('Approve Version');
+						}
+						?>
+						btn1 = new ccm_statusBarItemButton();
+						btn1.setLabel('<?=$appLabel?>');
+						btn1.setURL('<?=DIR_REL . "/" . DISPATCHER_FILENAME . "?cID=" . $c->getCollectionID() . "&ctask=approve-recent" . $token?>');
+						item.addButton(btn1);
+					<? } ?>
+					ccm_statusBar.addItem(item);		
+				<? }
+			}
+		} ?>		
+		
 
 		ccm_statusBar.activate();		
 		
