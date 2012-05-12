@@ -579,10 +579,12 @@
 				break;
 			case 'approve-recent':
 				if ($cp->canApprovePageVersions()) {
-					// checking out the collection for editing
+					$pkr = new ApprovePagePageWorkflowRequest();
+					$pkr->setRequestedPage($c);
 					$v = CollectionVersion::get($c, "RECENT");
-					$v->setComment($_REQUEST['comments']);
-					$v->approve(false);
+					$pkr->setRequestedVersionID($v->getVersionID());
+					$u->unloadCollectionEdit($c);
+					$response = $pkr->trigger();
 					header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $c->getCollectionID() . $step);
 					exit;
 				}
