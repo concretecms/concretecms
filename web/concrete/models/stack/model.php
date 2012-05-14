@@ -37,11 +37,6 @@ class Stack extends Page {
 			return false;
 		}
 		
-		$as = Area::get($stack, STACKS_AREA_NAME);
-		$asp = new Permissions($as);
-		if (!$asp->canRead()) {
-			return false;
-		}			
 		return true;
 	}
 
