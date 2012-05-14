@@ -1,3 +1,4 @@
+<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 <? 
 $form = Loader::helper('form'); 
 $ih = Loader::helper("concrete/interface");
@@ -39,13 +40,17 @@ $type = $workflow->getWorkflowTypeObject();
 
 <? 
 if ($type->getPackageID() > 0) { 
-	Loader::packageElement('workflow/types/' . $type->getWorkflowTypeHandle(), $type->getPackageHandle(), array('type' => $type, 'workflow' => $workflow));
+	Loader::packageElement('workflow/types/' . $type->getWorkflowTypeHandle()  . '/type_form', $type->getPackageHandle(), array('type' => $type, 'workflow' => $workflow));
 } else {
-	Loader::element('workflow/types/' . $type->getWorkflowTypeHandle(), array('type' => $type, 'workflow' => $workflow));
+	Loader::element('workflow/types/' . $type->getWorkflowTypeHandle() . '/type_form', array('type' => $type, 'workflow' => $workflow));
 }
 ?>
 
 </div>
 <div class="ccm-pane-footer">
 	<a href="<?=$this->url('/dashboard/workflow/list')?>" class="btn"><?=t('Back to List')?></a>
+<? 
+if ($type->getPackageID() > 0) {
+	Loader::packageElement('workflow/types/' . $type->getWorkflowTypeHandle() . '/type_form_buttons', $type->getPackageHandle(), array('type' => $type, 'workflow' => $workflow));
+} ?>
 </div>

@@ -43,10 +43,6 @@ class WorkflowType extends Object {
 	
 	public function delete() {
 		$db = Loader::db();
-		if (method_exists($this->controller, 'deleteType')) {
-			$this->controller->deleteType();
-		}
-		
 		$db->Execute("delete from WorkflowTypes where wftID = ?", array($this->wftID));
 	}
 	

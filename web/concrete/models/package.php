@@ -298,6 +298,7 @@ class Package extends Object {
 		$items['captcha_libraries'] = SystemCaptchaLibrary::getListByPackage($this);		
 		$items['antispam_libraries'] = SystemAntispamLibrary::getListByPackage($this);		
 		$items['jobs'] = Job::getListByPackage($this);		
+		$items['workflow_types'] = WorkflowType::getListByPackage($this);		
 		ksort($items);
 		return $items;
 	}
@@ -333,6 +334,8 @@ class Package extends Object {
 			return $item->getPermissionKeyName();			
 		} else if (is_a($item, 'Job')) {
 			return $item->getJobName();
+		} else if (is_a($item, 'WorkflowType')) {
+			return $item->getWorkflowTypeName();
 		}
 	}
 
@@ -378,6 +381,7 @@ class Package extends Object {
 						case 'AttributeKeyCategory':
 						case 'AttributeSet':
 						case 'AttributeType':
+						case 'WorkflowType':
 						case 'PermissionKey':
 							$item->delete();
 							break;
