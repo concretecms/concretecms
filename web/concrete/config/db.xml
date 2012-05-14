@@ -3008,8 +3008,8 @@
       <NOTNULL/>
       <DEFAULT value="0"/>
     </field>
-    <index name="cID">
-      <col>cID</col>
+    <index name="wfID">
+      <col>wfID</col>
       <col>pkID</col>
       <col>accessType</col>
     </index>

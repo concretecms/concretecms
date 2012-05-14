@@ -4,11 +4,7 @@
 
 <?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Workflow Details'), false, false, false)?>
 
-<form method="post" action="<?=$this->action('edit')?>" id="ccm-workflow-form">
-
 <? Loader::element("workflow/type_form_required", array('workflow' => $wf)); ?>
-
-</form>
 
 <?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(false);?>
 
