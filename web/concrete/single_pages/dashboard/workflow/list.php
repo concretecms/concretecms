@@ -2,7 +2,7 @@
 
 <? if (isset($wf)) { ?>
 
-<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Workflow Details'), false, false, false)?>
+<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper($wf->getWorkflowName(), false, false, false)?>
 
 <? Loader::element("workflow/type_form_required", array('workflow' => $wf)); ?>
 

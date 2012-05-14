@@ -33,11 +33,6 @@ $type = $workflow->getWorkflowTypeObject();
 <h3><?=t('Type')?></h3>
 <p><?=$type->getWorkflowTypeName()?></p>
 
-<h3><?=t('Name')?></h3>
-<p><?=$wfName?></p>
-
-
-
 <? 
 if ($type->getPackageID() > 0) { 
 	Loader::packageElement('workflow/types/' . $type->getWorkflowTypeHandle()  . '/type_form', $type->getPackageHandle(), array('type' => $type, 'workflow' => $workflow));
