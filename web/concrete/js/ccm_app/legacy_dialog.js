@@ -143,7 +143,7 @@ jQuery.fn.dialog.open = function(obj) {
 		});			
 	} else {
 		jQuery.fn.dialog.hideLoader();
-		jQuery.fn.dialog.replaceTop($(obj.element).html());
+		jQuery.fn.dialog.replaceTop($(obj.element));
 		if (typeof obj.onOpen != "undefined") {
 			if ((typeof obj.onOpen) == 'function') {
 				obj.onOpen();
