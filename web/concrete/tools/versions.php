@@ -1,5 +1,10 @@
 <?
 	defined('C5_EXECUTE') or die("Access Denied.");
+
+	if (!Loader::helper('validation/numbers')->integer($_GET['cID'])) {
+		die(t('Access Denied'));
+	}
+
 	$valt = Loader::helper('validation/token');
 	$fh = Loader::helper('file');
 	
