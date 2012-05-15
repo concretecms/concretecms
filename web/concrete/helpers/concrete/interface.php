@@ -243,4 +243,30 @@ class ConcreteInterfaceHelper {
 			$_SESSION['dashboardMenus'] = $ch->getDashboardAndSearchMenus();
 		}
 	}
+	
+	public function tabs($tabs, $jstabs = true) {
+		static $tcn;
+		if (!isset($tcn)) {
+			$tcn = 1;
+		} else {
+			$tcn++;
+		}
+		
+
+		$html = '<ul class="tabs" id="ccm-tabs-' . $tcn . '">';
+		foreach($tabs as $t) {
+			$dt = $t[0];
+			$href = '#';
+			if (!$jstabs) {
+				$dt = '';
+				$href = $t[0];
+			}
+			$html .= '<li class="' . ((isset($t[2]) && $t[2] == true) ? 'active' : ''). '"><a href="' . $href . '" data-tab="' . $dt . '">' . $t[1] . '</a></li>';
+		}
+		$html .= '</ul><div class="clearfix"></div>';
+		if ($jstabs) { 
+			$html .= '<script type="text/javascript">$(function() { ccm_activateTabBar($(\'#ccm-tabs-' . $tcn . '\'));});</script>';
+		}
+		return $html;
+	}
 }
