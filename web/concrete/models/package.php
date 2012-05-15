@@ -285,6 +285,7 @@ class Package extends Object {
 		Loader::model('system/captcha/library');
 		Loader::model('system/antispam/library');
 		$items['attribute_categories'] = AttributeKeyCategory::getListByPackage($this);
+		$items['permission_categories'] = PermissionKeyCategory::getListByPackage($this);
 		$items['attribute_keys'] = AttributeKey::getListByPackage($this);
 		$items['attribute_sets'] = AttributeSet::getListByPackage($this);
 		$items['page_types'] = CollectionType::getListByPackage($this);
@@ -318,6 +319,8 @@ class Package extends Object {
 			return $item->getCollectionPath();
 		} else if ($item instanceof AttributeType) {
 			return $item->getAttributeTypeName();
+		} else if ($item instanceof PermissionKeyCategory) {
+			return $txt->unhandle($item->getPermissionKeyCategoryHandle());
 		} else if ($item instanceof AttributeKeyCategory) {
 			return $txt->unhandle($item->getAttributeKeyCategoryHandle());
 		} else if ($item instanceof AttributeSet) {
@@ -379,6 +382,7 @@ class Package extends Object {
 							$co->clear($item->key);
 							break;
 						case 'AttributeKeyCategory':
+						case 'PermissionKeyCategory':
 						case 'AttributeSet':
 						case 'AttributeType':
 						case 'WorkflowType':
