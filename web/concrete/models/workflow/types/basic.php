@@ -31,6 +31,11 @@ class BasicWorkflow extends Workflow  {
 		return t('On %s, user <strong>%s</strong> %s', date(DATE_APP_GENERIC_MDYT_FULL, strtotime($wp->getWorkflowProgressDateAdded())), $ux->getUserName(), $description);
 	}
 
+	public function getWorkflowProgressStatusDescription(WorkflowProgress $wp) {
+		$req = $wp->getWorkflowRequestObject();
+		return $req->getWorkflowRequestDescriptionObject()->getShortStatus();
+	}
+
 	protected function notify(WorkflowProgress $wp, $message, $permission, $parameters = array()) {
 		$nk = PermissionKey::getByHandle('notify_on_basic_workflow_entry');
 		$nk->setPermissionObject($this);
