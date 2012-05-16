@@ -10,6 +10,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
  
 class DeletePagePageWorkflowRequest extends PageWorkflowRequest {
 	
+	const REQUEST_STATUS_NUM = 100;
+
 	public function __construct() {
 		$pk = PermissionKey::getByHandle('delete_page');
 		parent::__construct($pk);

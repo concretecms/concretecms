@@ -11,6 +11,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 class MovePagePageWorkflowRequest extends PageWorkflowRequest {
 	
 	protected $targetCID;
+	const REQUEST_STATUS_NUM = 50;
 	
 	public function __construct() {
 		$pk = PermissionKey::getByHandle('move_or_copy_page');
@@ -36,7 +37,7 @@ class MovePagePageWorkflowRequest extends PageWorkflowRequest {
 		$link = Loader::helper('navigation')->getLinkToCollection($c, true);
 		$targetLink = Loader::helper('navigation')->getLinkToCollection($target, true);
 		$d->setText(t("\"%s\" is pending a move to beneath \"%s\". Source Page: %s. Target Page: %s", $c->getCollectionName(), $target->getCollectionName(), $link, $targetLink));
-		$d->setHTML(t("requested this page be moved beneath <strong><a href=\"%s\">%s</a></strong>. ", $targetLink, $target->getCollectionName()));
+		$d->setHTML(t("This page is pending a move beneath <strong><a href=\"%s\">%s</a></strong>. ", $targetLink, $target->getCollectionName()));
 		return $d;
 	}
 

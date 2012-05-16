@@ -2910,12 +2910,17 @@
       <DEFAULT value="0"/>
       <UNSIGNED/>
     </field>
-    <field name="wpApproved" type="I" size="1">
+    <field name="wpApproved" type="I1" size="1">
       <NOTNULL/>
       <DEFAULT value="0"/>
       <!-- 0, -1 or 1 //-->
     </field>
     <field name="wpDateAdded" type="T"/>
+    <field name="wpDateLastAction" type="T"/>
+    <field name="wpCurrentStatus" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
     <field name="wrID" type="I" size="1">
       <NOTNULL/>
       <DEFAULT value="0"/>

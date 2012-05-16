@@ -24,6 +24,14 @@ abstract class Workflow extends Object {
 		$db = Loader::db();
 		$db->Execute('delete from Workflows where wfID = ?', array($this->wfID));
 	}
+
+	// by default the basic workflow just passes the status num from the request
+	// we do this so that we can order things by most important, etc...
+	public function getWorkflowProgressCurrentStatusNum(WorkflowProgress $wp) {
+		$req = $wp->getWorkflowRequestObject();
+		return $req->getWorkflowRequestStatusNum();
+	}
+	
 	
 	public static function getList() {
 		$workflows = array();

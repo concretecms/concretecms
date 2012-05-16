@@ -50,9 +50,42 @@ class PageWorkflowProgress extends WorkflowProgress {
 		return DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $this->cID . '&wpID=' . $this->getWorkflowProgressID() . '&ctask=workflow_progress&' . Loader::helper('validation/token')->getParameter();
 	}
 	
-	public static function getMyPendingProgressObjects() {
-		return array();
+}
+
+class PageWorkflowProgressList extends PageList {
+	
+	protected $autoSortColumns = array('wpDateLastAction', 'cvName');
+	
+	public function __construct() {
+		parent::setBaseQuery(', pwp.wpID');
+		$this->addToQuery('inner join PageWorkflowProgress pwp on p1.cID = pwp.cID inner join WorkflowProgress wp on wp.wpID = pwp.wpID');
+	}
+
+	public function get($itemsToGet = 0, $offset = 0) {
+		$_pages = DatabaseItemList::get($itemsToGet, $offset);
+		$pages = array();
+		foreach($_pages as $row) {
+			$cp = new Permissions($c);
+			if ($cp->canViewPageVersions()) { 
+				$c = Page::getByID($row['cID'], 'RECENT');
+			} else {
+				$c = Page::getByID($row['cID'], 'ACTIVE');
+			}
+			$wp = PageWorkflowProgress::getByID($row['wpID']);
+			$pages[] = new PageWorkflowProgressPage($c, $wp);
+		}
+		return $pages;
+	}
+}
+
+class PageWorkflowProgressPage {
+
+	public function __construct(Page $p, WorkflowProgress $wp) {
+		$this->page = $p;
+		$this->wp = $wp;
 	}
 	
-
+	public function getPageObject() {return $this->page;}
+	public function getWorkflowProgressObject() {return $this->wp;}
+	
 }

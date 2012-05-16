@@ -14,7 +14,7 @@ class WorkflowProgressCategory extends Object {
 	
 	public static function getByHandle($wpCategoryHandle) {
 		$db = Loader::db();
-		$row = $db->GetRow('select wpCategoryID, wpCategoryHandle, pkgID from WorkflowProgressCategories where wpCategoryHandle = ?', array($wpCategoryID));
+		$row = $db->GetRow('select wpCategoryID, wpCategoryHandle, pkgID from WorkflowProgressCategories where wpCategoryHandle = ?', array($wpCategoryHandle));
 		if (isset($row['wpCategoryID'])) {
 			$pkc = new WorkflowProgressCategory();
 			$pkc->setPropertiesFromArray($row);

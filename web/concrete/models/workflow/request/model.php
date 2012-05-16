@@ -11,10 +11,17 @@ abstract class WorkflowRequest extends Object {
 	
 	protected $currentWP;
 	
+	const REQUEST_STATUS_NUM = 0;
+	
 	public function __construct($pk) {
 		$this->pkID = $pk->getPermissionKeyID();
 	}
-
+	
+	public function getWorkflowRequestStatusNum() {
+		$class = get_called_class();
+		return $class::REQUEST_STATUS_NUM;
+	}
+	
 	public function getWorkflowRequestID() { return $this->wrID;}
 	public function getWorkflowRequestPermissionKeyID() {return $this->pkID;}
 	public function getWorkflowRequestPermissionKeyObject() {

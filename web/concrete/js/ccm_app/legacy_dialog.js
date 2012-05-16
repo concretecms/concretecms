@@ -157,7 +157,15 @@ jQuery.fn.dialog.open = function(obj) {
 
 jQuery.fn.dialog.replaceTop = function(r) {
 	var nd = $(".ui-dialog").length;
-	$("#ccm-dialog-content" + nd).html(r);
+	if (typeof(r) == 'string') { 
+		$("#ccm-dialog-content" + nd).html(r);
+	} else {
+		var r2 = r.clone().appendTo('#ccm-dialog-content' + nd);
+		if (r2.css('display') == 'none') {
+			r2.show();
+		}
+	}
+
 	$("#ccm-dialog-content" + nd + " .dialog-launch").dialog();
 	$("#ccm-dialog-content" + nd + " .ccm-dialog-close").click(function() {
 		jQuery.fn.dialog.closeTop();
