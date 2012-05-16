@@ -2886,6 +2886,19 @@
     </field>
     <field name="akDefaultCountry" type="C" size="12"/>
   </table>
+  <table name="WorkflowProgressCategories">
+    <field name="wpCategoryID" type="I" size="10">
+      <KEY/>
+      <AUTOINCREMENT/>
+      <UNSIGNED />
+    </field>
+    <field name="wpCategoryHandle" type="C" size="255">
+      <NOTNULL/>
+    </field>
+    <field name="pkgID" type="I" size="10">
+      <UNSIGNED />
+    </field>
+  </table>
   <table name="WorkflowProgress">
     <field name="wpID" type="I" size="10">
       <KEY/>

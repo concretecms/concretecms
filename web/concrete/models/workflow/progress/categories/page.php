@@ -50,5 +50,9 @@ class PageWorkflowProgress extends WorkflowProgress {
 		return DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $this->cID . '&wpID=' . $this->getWorkflowProgressID() . '&ctask=workflow_progress&' . Loader::helper('validation/token')->getParameter();
 	}
 	
+	public static function getMyPendingProgressObjects() {
+		return array();
+	}
+	
 
 }
