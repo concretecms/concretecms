@@ -30,6 +30,7 @@ class ContentImporter {
 		$this->importAttributeCategories($sx);
 		$this->importAttributeTypes($sx);
 		$this->importWorkflowTypes($sx);
+		$this->importWorkflowProgressCategories($sx);
 		$this->importAttributes($sx);
 		$this->importAttributeSets($sx);
 		$this->importThemes($sx);
@@ -410,6 +411,15 @@ class ContentImporter {
 			foreach($sx->permissioncategories->category as $pkc) {
 				$pkg = ContentImporter::getPackageObject($akc['package']);
 				$pkx = PermissionKeyCategory::add($pkc['handle'], $pkg);
+			}
+		}
+	}
+
+	protected function importWorkflowProgressCategories(SimpleXMLElement $sx) {
+		if (isset($sx->workflowprogresscategories)) {
+			foreach($sx->workflowprogresscategories->category as $wpc) {
+				$pkg = ContentImporter::getPackageObject($wpc['package']);
+				$wkx = WorkflowProgressCategory::add($wpc['handle'], $pkg);
 			}
 		}
 	}

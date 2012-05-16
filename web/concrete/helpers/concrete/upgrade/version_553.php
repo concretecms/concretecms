@@ -62,6 +62,7 @@ class ConcreteUpgradeVersion553Helper {
 		'FilePermissionAssignments', 
 		'Workflows',
 		'WorkflowProgress', 
+		'WorkflowProgressCategories', 
 		'WorkflowRequestObjects',
 		'PageWorkflowProgress',
 		'PagePermissionWorkflows',
@@ -87,9 +88,23 @@ class ConcreteUpgradeVersion553Helper {
 			$d1b = SinglePage::add('/dashboard/system/permissions/advanced');
 			$d1b->update(array('cName'=>t('Advanced Permissions')));
 		}
+		$sp = Page::getByPath('/dashboard/workflow');
+		if ($sp->isError()) {
+			$d1a = SinglePage::add('/dashboard/workflow');
+			$d1a->update(array('cName'=>t('Workflow')));
+		}
+		$sp = Page::getByPath('/dashboard/workflow/list');
+		if ($sp->isError()) {
+			$d1a = SinglePage::add('/dashboard/workflow/list');
+		}
+		$sp = Page::getByPath('/dashboard/workflow/me');
+		if ($sp->isError()) {
+			$d1a = SinglePage::add('/dashboard/workflow/me');
+			$d1a->update(array('cName'=>t('Waiting for Me')));
+		}
 		
 		// install the permissions from permissions.xml
-		$this->installPermissions();
+		$this->installPermissionsAndWorkflow();
 		$this->migratePagePermissions();
 		$this->migratePagePermissionPageTypes();
 		$this->migrateAreaPermissions();
@@ -502,13 +517,28 @@ class ConcreteUpgradeVersion553Helper {
 			}
 		}
 	}	
-	protected function installPermissions() {
+	protected function installPermissionsAndWorkflow() {
 		$sx = simplexml_load_file(DIR_BASE_CORE . '/config/install/base/permissions.xml');
 		foreach($sx->permissioncategories->category as $pkc) {
 			$handle = (string) $pkc['handle'];
 			$pkca = PermissionKeyCategory::getByHandle($handle);
 			if (!is_object($pkca)) { 
 				$pkx = PermissionKeyCategory::add($pkc['handle']);
+			}
+		}
+		foreach($sx->workflowprogresscategories->category as $pkc) {
+			$handle = (string) $pkc['handle'];
+			$pkca = WorkflowProgressCategory::getByHandle($handle);
+			if (!is_object($pkca)) { 
+				$pkx = WorkflowProgressCategory::add($pkc['handle']);
+			}
+		}
+		foreach($sx->workflowtypes->workflowtype as $wt) {
+			$handle = (string) $wt['handle'];
+			$name = (string) $wt['name'];
+			$wtt = WorkflowType::getByHandle($handle);
+			if (!is_object($wtt)) { 
+				$pkx = WorkflowType::add($handle, $name);
 			}
 		}
 		$txt = Loader::helper('text');

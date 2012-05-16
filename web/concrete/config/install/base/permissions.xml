@@ -189,4 +189,10 @@
         <workflowtype handle="basic" name="Basic Workflow" package=""/>
     </workflowtypes>
 
+    <workflowprogresscategories>
+        <category handle="page" package=""/>
+        <category handle="file" package=""/>
+        <category handle="user" package=""/>
+    </workflowprogresscategories>
+
 </concrete5-cif>

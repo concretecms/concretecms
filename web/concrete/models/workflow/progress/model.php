@@ -143,7 +143,7 @@ abstract class WorkflowProgress extends Object {
 	}
 	
 	abstract function getWorkflowProgressFormAction();
-
+	abstract static public function getMyPendingProgressObjects();
 	
 	
 }
