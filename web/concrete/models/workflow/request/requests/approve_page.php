@@ -26,7 +26,8 @@ class ApprovePagePageWorkflowRequest extends PageWorkflowRequest {
 		$c = Page::getByID($this->cID, 'ACTIVE');
 		$link = Loader::helper('navigation')->getLinkToCollection($c, true);
 		$d->setText(t("\"%s\" has pending changes and needs to be approved. View the page here: %s.", $c->getCollectionName(), $link));
-		$d->setHTML(t("submitted this page for approval. "));
+		$d->setHTML(t("Page Submitted for Approval."));
+		$d->setShortStatus(t("Pending Approval"));
 		return $d;
 	}
 	

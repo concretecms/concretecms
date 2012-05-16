@@ -54,10 +54,10 @@ class PageWorkflowProgress extends WorkflowProgress {
 
 class PageWorkflowProgressList extends PageList {
 	
-	protected $autoSortColumns = array('wpDateLastAction', 'cvName');
+	protected $autoSortColumns = array('wpDateLastAction', 'cvName', 'wpCurrentStatus');
 	
 	public function __construct() {
-		parent::setBaseQuery(', pwp.wpID');
+		parent::setBaseQuery(', pwp.wpID, wp.wpCurrentStatus');
 		$this->addToQuery('inner join PageWorkflowProgress pwp on p1.cID = pwp.cID inner join WorkflowProgress wp on wp.wpID = pwp.wpID');
 	}
 

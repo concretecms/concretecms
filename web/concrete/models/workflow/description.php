@@ -24,5 +24,14 @@ class WorkflowDescription extends Object {
 	public function getHTML() {
 		return $this->html;
 	}
+	
+	public function setShortStatus($status) {
+		$this->status = $status;
+	}
+	
+	public function getShortStatus() {
+		return $this->status;
+	}
+	
 
 }
