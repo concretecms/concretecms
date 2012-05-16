@@ -13,6 +13,7 @@ abstract class WorkflowProgress extends Object {
 	protected $wpDateAdded;
 	protected $wfID;
 	protected $response;
+	protected $wpDateLastAction;
 	
 	
 	/** 
@@ -37,6 +38,13 @@ abstract class WorkflowProgress extends Object {
 	
 	public function setWorkflowProgressResponseObject($obj) {
 		$this->response = $obj;
+	}
+	
+	/** 
+	 * Gets the date of the last action
+	 */
+	public function getWorkflowProgressDateLastAction() {
+		return $this->wpDateLastAction;
 	}
 	
 	/** 
@@ -117,8 +125,16 @@ abstract class WorkflowProgress extends Object {
 	public function start() {
 		$wf = $this->getWorkflowObject();
 		if (is_object($wf)) {
-			return $wf->start($this);
+			$r = $wf->start($this);
+			$this->updateOnAction($wf);
 		}
+	}
+	
+	public function updateOnAction(Workflow $wf) {
+		$db = Loader::db();
+		$num = $wf->getWorkflowProgressCurrentStatusNum($this);
+		$time = Loader::helper('date')->getLocalDateTime();
+		$db->Execute('update WorkflowProgress set wpDateLastAction = ?, wpCurrentStatus = ? where wpID = ?', array($time, $num, $this->wpID));
 	}
 	
 	/** 
@@ -130,6 +146,7 @@ abstract class WorkflowProgress extends Object {
 		$wf = $this->getWorkflowObject();
 		if (in_array($task, $wf->getAllowedTasks())) {
 			$wpr = call_user_func_array(array($wf, $task), array($this));
+			$this->updateOnAction($wf);
 		}
 		if (!($wpr instanceof WorkflowProgressResponse)) {
 			$wpr = new WorkflowProgressResponse();
@@ -143,7 +160,15 @@ abstract class WorkflowProgress extends Object {
 	}
 	
 	abstract function getWorkflowProgressFormAction();
-	abstract static public function getMyPendingProgressObjects();
+	
+	public function getPendingWorkflowProgressList() {
+		$class = get_called_class();
+		$class = $class . 'List';
+		$list = new $class();
+		$list->filter('wpApproved', 0);
+		$list->sortBy('wpDateLastAction', 'desc');
+		return $list;
+	}
 	
 	
 }

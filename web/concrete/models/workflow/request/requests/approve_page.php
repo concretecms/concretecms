@@ -10,6 +10,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
  
 class ApprovePagePageWorkflowRequest extends PageWorkflowRequest {
 	
+	const REQUEST_STATUS_NUM = 30;
+
 	public function __construct() {
 		$pk = PermissionKey::getByHandle('approve_page_versions');
 		parent::__construct($pk);

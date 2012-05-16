@@ -2,6 +2,9 @@
 
 function CoreAutoload($class) {
 	$txt = Loader::helper('text');
+	if ($class == 'PageList') {
+		Loader::model("page_list");
+	}
 	if ($class == 'DashboardBaseController') { 
 		Loader::controller('/dashboard/base');
 	}
