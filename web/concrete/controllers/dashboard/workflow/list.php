@@ -22,8 +22,9 @@ class DashboardWorkflowListController extends DashboardBaseController {
 			
 			$this->redirect("/dashboard/workflow/list", 'workflow_deleted');
 		} catch (Exception $e) {
-			$this->set('error', $e);
+			$this->error->add($e);
 		}
+		$this->view();
 	}
 	
 	public function view() {

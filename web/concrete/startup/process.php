@@ -469,7 +469,7 @@
 				$wp = PageWorkflowProgress::getByID($_REQUEST['wpID']);
 				if (is_object($wp) && $task) {
 					$r = $wp->runTask($task);
-					if ($r instanceof WorkflowProgressResponse) {
+					if (($r instanceof WorkflowProgressResponse) && $r->getWorkflowProgressResponseURL() != '') {
 						header('Location: ' . $r->getWorkflowProgressResponseURL());
 						exit;
 					} else { 

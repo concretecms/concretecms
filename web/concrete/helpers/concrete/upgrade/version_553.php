@@ -103,6 +103,11 @@ class ConcreteUpgradeVersion553Helper {
 	
 	protected function migratePagePermissionPageTypes() {
 		$db = Loader::db();
+		$tables = $db->MetaTables();
+		if (!in_array('PagePermissionPageTypes', $tables)) {
+			return false;
+		}
+		
 		$r = $db->Execute('select distinct cID from PagePermissionPageTypes order by cID asc');	
 		$pk = PermissionKey::getByHandle('add_subpage');
 		while ($row = $r->FetchRow()) {
@@ -134,6 +139,10 @@ class ConcreteUpgradeVersion553Helper {
 	
 	protected function migrateTaskPermissions() {
 		$db = Loader::db();
+		$tables = $db->MetaTables();
+		if (!in_array('TaskPermissions', $tables)) {
+			return false;
+		}
 		$r = $db->Execute('select tp.tpHandle, tpug.* from TaskPermissions tp inner join TaskPermissionUserGroups tpug on tp.tpID = tpug.tpID order by tpID asc');
 		while ($row = $r->FetchRow()) {
 			$pk = PermissionKey::getByHandle($row['tpHandle']);
@@ -149,6 +158,10 @@ class ConcreteUpgradeVersion553Helper {
 
 	protected function migrateAddFilePermissions() {
 		$db = Loader::db();
+		$tables = $db->MetaTables();
+		if (!in_array('FileSetPermissions', $tables)) {
+			return false;
+		}
 		$r = $db->Execute('select canAdd, gID, uID, fsID from FileSetPermissions where canAdd > 0 order by fsID asc');	
 		$pko = FileSetPermissionKey::getByHandle('add_file');
 		while ($row = $r->FetchRow()) {
@@ -184,6 +197,10 @@ class ConcreteUpgradeVersion553Helper {
 
 	protected function migrateAreaPermissionBlockTypes() {
 		$db = Loader::db();
+		$tables = $db->MetaTables();
+		if (!in_array('AreaGroupBlockTypes', $tables)) {
+			return false;
+		}
 		$r = $db->Execute('select distinct cID, arHandle from AreaGroupBlockTypes order by cID asc');	
 		$pk = PermissionKey::getByHandle('add_block_to_area');
 		$spk = PermissionKey::getByHandle('add_stack_to_area');
@@ -249,6 +266,10 @@ class ConcreteUpgradeVersion553Helper {
 
 	protected function migrateAreaPermissions() {
 		$db = Loader::db();
+		$tables = $db->MetaTables();
+		if (!in_array('AreaGroups', $tables)) {
+			return false;
+		}
 		// permissions
 		$permissionMap = array(
 			'r' => array(PermissionKey::getByHandle('view_area')),
@@ -287,6 +308,10 @@ class ConcreteUpgradeVersion553Helper {
 	
 	protected function migratePagePermissions() {
 		$db = Loader::db();
+		$tables = $db->MetaTables();
+		if (!in_array('PagePermissions', $tables)) {
+			return false;
+		}
 		// permissions
 		$permissionMap = array(
 			'r' => array(PermissionKey::getByHandle('view_page')),
@@ -349,6 +374,10 @@ class ConcreteUpgradeVersion553Helper {
 	
 	protected function migrateFileSetPermissions() {
 		$db = Loader::db();
+		$tables = $db->MetaTables();
+		if (!in_array('FileSetPermissions', $tables)) {
+			return false;
+		}
 		Loader::model("file_set");
 		// permissions
 		
@@ -392,6 +421,10 @@ class ConcreteUpgradeVersion553Helper {
 
 	protected function migrateFilePermissions() {
 		$db = Loader::db();
+		$tables = $db->MetaTables();
+		if (!in_array('FilePermissions', $tables)) {
+			return false;
+		}
 		
 		$permissionMap = array(
 			'canRead' => array(PermissionKey::getByHandle('view_file')),
@@ -427,6 +460,10 @@ class ConcreteUpgradeVersion553Helper {
 	}	
 	protected function migrateBlockPermissions() {
 		$db = Loader::db();
+		$tables = $db->MetaTables();
+		if (!in_array('CollectionVersionBlockPermissions', $tables)) {
+			return false;
+		}
 		// permissions
 		$permissionMap = array(
 			'r' => array(PermissionKey::getByHandle('view_block')),
