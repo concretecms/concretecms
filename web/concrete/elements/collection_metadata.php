@@ -182,7 +182,7 @@ $asl = $pk->getMyAssignment();
 	<? } ?>
 	
 	
-	<div id="ccm-properties-custom-tab" <? if (!$c->isMasterCollection() || count($akIDs) == 0) { ?>style="display: none" <? } ?>>
+	<div id="ccm-properties-custom-tab" <? if (!$c->isMasterCollection()) { ?>style="display: none" <? } ?>>
 		<? Loader::element('collection_metadata_fields', array('c'=>$c, 'assignment' => $asl) ); ?>
 	</div>
 

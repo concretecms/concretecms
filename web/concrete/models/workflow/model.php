@@ -29,7 +29,9 @@ abstract class Workflow extends Object {
 	// we do this so that we can order things by most important, etc...
 	public function getWorkflowProgressCurrentStatusNum(WorkflowProgress $wp) {
 		$req = $wp->getWorkflowRequestObject();
-		return $req->getWorkflowRequestStatusNum();
+		if (is_object($req)) { 
+			return $req->getWorkflowRequestStatusNum();
+		}
 	}
 	
 	
