@@ -26,7 +26,7 @@ if (count($items) > 0) { ?>
 	<td>
 	<? $actions = $wp->getWorkflowProgressActions(); ?>
 	<? foreach($actions as $act) { ?>
-		<a href="<?=$act->getWorkflowProgressActionTask()?>" class="btn <?=$act->getWorkflowProgressActionStyleClass()?>"><?=$act->getWorkflowProgressActionLabel()?></a>
+		<a href="<?=$this->action('workflow_action', $category->getWorkflowProgressCategoryHandle(), $wp->getWorkflowProgressID(), $act->getWorkflowProgressActionTask(), Loader::helper('validation/token')->generate())?>" class="btn <?=$act->getWorkflowProgressActionStyleClass()?>"><?=$act->getWorkflowProgressActionLabel()?></a>
 	<? } ?>
 	</td>
 <? } ?>
