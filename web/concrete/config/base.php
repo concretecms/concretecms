@@ -537,3 +537,4 @@ define('MARKETPLACE_DIRNAME_THEME_PREVIEW', 'previewable_themes');
 define('MARKETPLACE_THEME_PREVIEW_ASSETS_URL', CONCRETE5_ORG_URL ."/". MARKETPLACE_DIRNAME_THEME_PREVIEW);
 
 require_once(DIR_LIBRARIES_CORE . '/loader.php');
+require_once(DIR_LIBRARIES_CORE . '/environment.php');
