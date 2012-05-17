@@ -24,45 +24,16 @@
 		 * Loads a library file, either from the site's files or from Concrete's
 		 */
 		public function library($lib, $pkgHandle = null) {
-		
-			if (file_exists(DIR_LIBRARIES . '/' . $lib . '.php')) {
-				require_once(DIR_LIBRARIES . '/' . $lib . '.php');
-				return;
-			}
-			
-			if ($pkgHandle == null && file_exists(DIR_LIBRARIES_CORE . '/' . $lib . '.php')) {
-				require_once(DIR_LIBRARIES_CORE . '/' . $lib . '.php');
-				return;
-			}
-			
-			if ($pkgHandle != null) {			
-				$dir = (is_dir(DIR_PACKAGES . '/' . $pkgHandle)) ? DIR_PACKAGES : DIR_PACKAGES_CORE;
-				require_once($dir . '/' . $pkgHandle . '/' . DIRNAME_LIBRARIES . '/' . $lib . '.php');
-				return;
-			}
-			
+			$env = Environment::get();
+			require_once($env->getPath(DIRNAME_LIBRARIES . '/' . $lib . '.php', $pkgHandle));
 		}
 
 		/** 
 		 * Loads a model from either an application, the site, or the core Concrete directory
 		 */
 		public function model($mod, $pkgHandle = null) {
-
-			if (file_exists(DIR_MODELS . '/' . $mod . '.php')) {
-				require_once(DIR_MODELS . '/' . $mod . '.php');
-				return;
-			}
-			
-			if ($pkgHandle == null && file_exists(DIR_MODELS_CORE . '/' . $mod . '.php')) {
-				require_once(DIR_MODELS_CORE . '/' . $mod . '.php');
-				return;
-			}
-			
-			if ($pkgHandle != null) {
-				$dir = (is_dir(DIR_PACKAGES . '/' . $pkgHandle)) ? DIR_PACKAGES : DIR_PACKAGES_CORE;
-				require_once($dir . '/' . $pkgHandle . '/' . DIRNAME_MODELS . '/' . $mod . '.php');
-			}
-			
+			$env = Environment::get();
+			require_once($env->getPath(DIRNAME_MODELS . '/' . $mod . '.php', $pkgHandle));
 			Loader::legacyModel($mod);
 		}
 		
@@ -110,11 +81,10 @@
 			if (is_array($args)) {
 				extract($args);
 			}
-			if (file_exists(DIR_FILES_ELEMENTS . '/' . $file . '.php')) {
-				include(DIR_FILES_ELEMENTS . '/' . $file . '.php');
-			} else if (file_exists(DIR_FILES_ELEMENTS_CORE . '/' . $file . '.php')) {
-				include(DIR_FILES_ELEMENTS_CORE . '/' . $file . '.php');
-			}
+
+			$env = Environment::get();
+			include($env->getPath(DIRNAME_ELEMENTS . '/' . $file . '.php'));
+
 		}
 
 		 /**
@@ -174,11 +144,11 @@
 		 * these need to be loaded before the models which need to be loaded before db() 
 		 */
 		public function database() {
-			Loader::library('3rdparty/adodb/adodb.inc');
-			Loader::library('3rdparty/adodb/adodb-exceptions.inc');
-			Loader::library('3rdparty/adodb/adodb-active-record.inc');
-			Loader::library('3rdparty/adodb/adodb-xmlschema03.inc');
-			Loader::library('database');
+			require_once(DIR_BASE_CORE . '/libraries/3rdparty/adodb/adodb.inc.php');
+			require_once(DIR_BASE_CORE . '/libraries/3rdparty/adodb/adodb-exceptions.inc.php');
+			require_once(DIR_BASE_CORE . '/libraries/3rdparty/adodb/adodb-active-record.inc.php');
+			require_once(DIR_BASE_CORE . '/libraries/3rdparty/adodb/adodb-xmlschema03.inc.php');
+			require_once(DIR_BASE_CORE . '/libraries/database.php');
 		}
 		
 		/** 
