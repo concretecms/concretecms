@@ -67,11 +67,12 @@ class PageWorkflowProgressList extends PageList {
 		$_pages = DatabaseItemList::get($itemsToGet, $offset);
 		$pages = array();
 		foreach($_pages as $row) {
+			$c = Page::getByID($row['cID']);
 			$cp = new Permissions($c);
 			if ($cp->canViewPageVersions()) { 
-				$c = Page::getByID($row['cID'], 'RECENT');
+				$c->loadVersionObject('RECENT');
 			} else {
-				$c = Page::getByID($row['cID'], 'ACTIVE');
+				$c->loadVersionObject('ACTIVE');
 			}
 			$wp = PageWorkflowProgress::getByID($row['wpID']);
 			$pages[] = new PageWorkflowProgressPage($c, $wp);

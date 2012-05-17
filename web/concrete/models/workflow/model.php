@@ -88,6 +88,7 @@ abstract class Workflow extends Object {
 	abstract public function getWorkflowProgressActions(WorkflowProgress $wp);
 	abstract public function getWorkflowProgressDescription(WorkflowProgress $wp);
 	abstract public function getWorkflowProgressStatusDescription(WorkflowProgress $wp);
+	abstract public function canApproveWorkflowProgressObject(WorkflowProgress $wp);
 	
 }
 
@@ -97,6 +98,9 @@ class EmptyWorkflow extends Workflow {
 		$wpr = $req->approve($wp);
 		$wp->delete();
 		return $wpr;
+	}
+	public function canApproveWorkflowProgressObject(WorkflowProgress $wp) {
+		return false;
 	}
 	public function getWorkflowProgressActions(WorkflowProgress $wp) {
 		return array();

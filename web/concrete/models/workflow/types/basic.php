@@ -60,7 +60,7 @@ class BasicWorkflow extends Workflow  {
 	}
 	
 	public function cancel(WorkflowProgress $wp) {
-		if ($this->canApproveBasicWorkflow()) {
+		if ($this->canApproveWorkflowProgressObject($wp)) {
 
 			$req = $wp->getWorkflowRequestObject();
 			Loader::model('workflow/types/basic/data');
@@ -85,7 +85,7 @@ class BasicWorkflow extends Workflow  {
 	}
 	
 	public function approve(WorkflowProgress $wp) {
-		if ($this->canApproveBasicWorkflow()) {
+		if ($this->canApproveWorkflowProgressObject($wp)) {
 			$req = $wp->getWorkflowRequestObject();
 			Loader::model('workflow/types/basic/data');
 			$bdw = new BasicWorkflowProgressData($wp);
@@ -108,7 +108,7 @@ class BasicWorkflow extends Workflow  {
 		}
 	}
 	
-	protected function canApproveBasicWorkflow() {
+	public function canApproveWorkflowProgressObject(WorkflowProgress $wp) {
 		$pk = PermissionKey::getByHandle('approve_basic_workflow_action');
 		$pk->setPermissionObject($this);
 		return $pk->validate();
@@ -118,7 +118,7 @@ class BasicWorkflow extends Workflow  {
 		$pk = PermissionKey::getByHandle('approve_basic_workflow_action');
 		$pk->setPermissionObject($this);
 		$buttons = array();
-		if ($this->canApproveBasicWorkflow()) {
+		if ($this->canApproveWorkflowProgressObject($wp)) {
 			$req = $wp->getWorkflowRequestObject();
 			$button1 = new WorkflowProgressCancelAction();
 	
