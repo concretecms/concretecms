@@ -30,5 +30,16 @@ class DashboardWorkflowMeController extends DashboardBaseController {
 		}
 	}
 	
+	public function workflow_action($category = false, $wpID = false, $task = false, $token = false) {
+		if (Loader::helper('validation/token')->validate(false, $token)) { 
+			$class = Loader::helper('text')->camelcase($category) . 'WorkflowProgress';
+			$wp = call_user_func_array(array($class, 'getByID'), array($wpID));
+			if (is_object($wp) && $task) {
+				$r = $wp->runTask($task);
+				$this->redirect('/dashboard/workflow/me');			
+			}		
+		}
+	}
+	
 	
 }
