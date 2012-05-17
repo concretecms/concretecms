@@ -2,7 +2,7 @@
 
 <?
 $list = $category->getPendingWorkflowProgressList();
-$items = $list->getPage();
+$items = $list->get();
 if (count($items) > 0) { ?>
 
 <table class="ccm-results-list">
@@ -13,10 +13,14 @@ if (count($items) > 0) { ?>
 	<th class="<?=$list->getSearchResultsClass('wpCurrentStatus')?>"><a href="<?=$list->getSortByURL('wpCurrentStatus', 'desc')?>"><?=t('Current Status')?></a></th>
 	<th>&nbsp;</th>
 </tr>
-<? foreach($items as $it) { 
+<? 
+$noitems = true;
+	foreach($items as $it) { 
 	$p = $it->getPageObject();
 	$wp = $it->getWorkflowProgressObject();
 	$wf = $wp->getWorkflowObject();
+	if ($wf->canApproveWorkflowProgressObject($wp)) { 
+		$noitems = false;
 	?>
 <tr>
 	<td><?=$p->getCollectionName()?></td>
@@ -29,6 +33,13 @@ if (count($items) > 0) { ?>
 		<a href="<?=$this->action('workflow_action', $category->getWorkflowProgressCategoryHandle(), $wp->getWorkflowProgressID(), $act->getWorkflowProgressActionTask(), Loader::helper('validation/token')->generate())?>" class="btn <?=$act->getWorkflowProgressActionStyleClass()?>"><?=$act->getWorkflowProgressActionLabel()?></a>
 	<? } ?>
 	</td>
+<? } 
+
+} ?>
+<? if ($noitems) { ?>
+	<tr>
+		<td colspan="5"><?=t('There is nothing currently waiting for you.')?></td>
+	</tr>
 <? } ?>
 </table>
 
