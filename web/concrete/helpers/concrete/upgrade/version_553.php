@@ -61,6 +61,7 @@ class ConcreteUpgradeVersion553Helper {
 		'FileSetPermissionFileTypeAssignmentsCustom',
 		'FilePermissionAssignments', 
 		'Workflows',
+		'WorkflowTypes',
 		'WorkflowProgress', 
 		'WorkflowProgressCategories', 
 		'WorkflowRequestObjects',

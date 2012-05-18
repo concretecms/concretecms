@@ -18,123 +18,106 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 class Environment {
 
-	protected $overrides;
-	protected $changed = false;
+	protected $coreOverrides = array();
+	protected $corePackages = array();
+	protected $coreOverridesByPackage = array();
+	protected $overridesScanned = false;
+	protected $cachedOverrides = array();
 	
 	public static function get() {
 		static $env;
 		if (!isset($env)) {
+			$db = Loader::db();
+			$r = $db->GetOne('select cfValue from Config where cfKey = ?', array('ENVIRONMENT_CACHE'));
+			if ($r) {
+				$en = @unserialize($r);
+				if ($en instanceof Environment) {
+					$env = $en;
+					return $env;
+				}
+			}
 			$env = new Environment();
 		}
 		return $env;
 	}
 	
-	protected function parseOverrides() {
-		$this->overrides = array();
-		$db = Loader::db();
-		$r = $db->Execute('select segment, pkgIdentifier, object from OverrideList');
-		while ($row = $r->FetchRow()) {
-			if ($row['pkgIdentifier']) {
-				$this->overrides[$row['segment']][$row['pkgIdentifier']] = unserialize($row['object']);
-			} else { 
-				$this->overrides[$row['segment']] = unserialize($row['object']);
-			}
-		}
-	}
-	
-	protected function pathRecordExists($segment, $pkgIdentifier) {
-		if (!pkgIdentifier) {
-			return isset($this->overrides[$segment][$pkgIdentifier]);
-		} else {
-			return isset($this->overrides[$segment]);
-		}
-	}
-
-	protected function getCachedRecord($segment, $pkgIdentifier) {
-		if (!pkgIdentifier) {
-			return $this->overrides[$segment][$pkgIdentifier];
-		} else {
-			return $this->overrides[$segment];
-		}
-	}
-	
-	public function shutdown() {
-		if ($this->changed) {
-			$db = Loader::db();
-			foreach($this->overrides as $key => $x) {
-				if (is_array($x)) {
-					foreach($x as $_x => $y) {
-						$r = serialize($y);
-						$db->Replace('OverrideList', array("id" => md5($key . $_x), "segment" => $key, "pkgIdentifier" => $_x, 'object' => serialize($y)), array('id'), true);
+	/** 
+	 * Builds a list of all overrides
+	 */
+	protected function getOverrides() {
+		$check = array(DIR_FILES_BLOCK_TYPES, DIR_FILES_CONTROLLERS, DIR_FILES_ELEMENTS, DIR_HELPERS, 
+			DIR_FILES_JOBS, DIR_BASE . '/' . DIRNAME_CSS, DIR_BASE . '/' . DIRNAME_JAVASCRIPT, DIR_BASE . '/' . DIRNAME_LANGUAGES,
+			DIR_LIBRARIES, DIR_FILES_EMAIL_TEMPLATES, DIR_MODELS, DIR_FILES_CONTENT, DIR_FILES_THEMES, DIR_FILES_TOOLS);
+		foreach($check as $loc) {
+			if (is_dir($loc)) {
+				$rc = new RecursiveDirectoryIterator($loc, FilesystemIterator::SKIP_DOTS);
+				$rcd = new RecursiveIteratorIterator($rc);
+				$rgx = new RegexIterator($rcd, '/^.+\.php$/i', RecursiveRegexIterator::GET_MATCH);
+				foreach ($rgx as $r) {
+					foreach($r as $r1) {
+						$this->coreOverrides[] = str_replace(DIR_BASE . '/', '', $r1);
 					}
-				} else {
-					$r = serialize($x);
-					$db->Replace('OverrideList', array("id" => md5($key), "segment" => $key, 'object' => $r), array('id'), true);
-				}			
-			}
-		}
-	}
-	
-	protected function saveCachedRecord($obj) {
-		if ($obj->requestedPkgIdentifier) {
-			$this->overrides[$obj->requestedSegment][$obj->requestedPkgIdentifier] = $obj;
-		} else {
-			$this->overrides[$obj->requestedSegment] = $obj;
-		}
-	}
-	
-	protected function getRecord($segment, $pkgIdentifier = false) {
-		
-		if (!isset($this->overrides)) {
-			$this->parseOverrides();
-		}	
-		
-		if ($this->pathRecordExists($segment, $pkgIndentifier)) {
-			return $this->getCachedRecord($segment, $pkgIdentifier);
-		}
-		$this->changed = true;
-		
-		if (file_exists(DIR_BASE . '/' . $segment)) {
-			$file = DIR_BASE . '/' . $segment;
-			$url = BASE_URL . DIR_REL . '/' . $segment;
-		}
-		
-		if (!isset($file) && $pkgIdentifier != false) {
-			if (Loader::helper('validation/numbers')->integer($pkgIdentifier)) {
-				$pkgHandle = PackageList::getHandle($pkgIdentifier);
-			} else {
-				$pkgHandle = $pkgIdentifier;
-			}
-			
-			$dirp = is_dir(DIR_PACKAGES . '/' . $pkgHandle) ? DIR_PACKAGES . '/' . $pkgHandle : DIR_PACKAGES_CORE . '/' . $pkgHandle;
-			if (file_exists($dirp . '/' . $segment)) {
-				$file = $dirp . '/' . $segment;
-				if (is_dir(DIR_PACKAGES . '/' . $pkgHandle)) { 
-					$url = BASE_URL . DIR_REL . '/' .DIRNAME_PACKAGES. '/' . $pkgHandle . '/' . $segment;
-				} else {
-					$url = ASSETS_URL . '/' . DIRNAME_PACKAGES. '/' . $pkgHandle . '/' . $segment;
 				}
 			}
 		}
-		
-		if (!isset($file)) {
-			if (file_exists(DIR_BASE_CORE . '/' . $segment)) {
-				$file = DIR_BASE_CORE . '/' . $segment;
-				$url = ASSETS_URL . '/' . $segment;
+		if (is_dir(DIR_PACKAGES_CORE)) { 
+			$rc = new RecursiveDirectoryIterator(DIR_PACKAGES_CORE, FilesystemIterator::SKIP_DOTS);
+			foreach ($rc as $r) {
+				if (substr($r->getFileName(), 0, 1) != '.') { 
+					$this->corePackages[] = $r->getFileName();
+				}
 			}
 		}
+		$this->overridesScanned = true;
+		//$db = Loader::db();
+		//$db->Replace('Config', array("cfKey" => 'ENVIRONMENT_CACHE', "cfValue" => serialize($this)), "cfKey", true);
+	}
+	
+	public function overrideCoreByPackage($segment, $pkg) {
+		$pkgHandle = $pkg->getPackageHandle();
+		$this->coreOverridesByPackage[$segment] = $pkgHandle;	
+	}
+	
+	protected function getRecord($segment, $pkgHandle = false) {
 		
-		if (isset($file)) {
-			$obj = new stdClass;
-			$obj->requestedPkgIdentifier = $pkgIdentifier;
-			$obj->requestedSegment = $segment;
-			$obj->file = $file;
-			$obj->url = $url;
-			$this->saveCachedRecord($obj);
-			return $obj;
-		} else {
-			return false;
+		if (!$this->overridesScanned) {
+			$this->getOverrides();
+		}	
+		
+		if (isset($this->cachedOverrides[$segment][$pkgHandle])) {
+			return $this->cachedOverrides[$segment][$pkgHandle];
 		}
+		
+		$obj = new stdClass;
+
+		if (!in_array($segment, $this->coreOverrides) && !$pkgHandle && !array_key_exists($segment, $this->coreOverridesByPackage)) {
+			$obj->file = DIR_BASE_CORE . '/' . $segment;
+			$obj->url = ASSETS_URL . '/' . $segment;
+			$this->cachedOverrides[$segment][''] = $obj;
+			return $obj;
+		}
+			
+		if (in_array($segment, $this->coreOverrides)) {
+			$obj->file = DIR_BASE . '/' . $segment;
+			$obj->url = BASE_URL . DIR_REL . '/' . $segment;
+			$this->cachedOverrides[$segment][''] = $obj;
+			return $obj;
+		} 
+
+		if (array_key_exists($segment, $this->coreOverridesByPackage)) {
+			$pkgHandle = $this->coreOverridesByPackage[$segment];
+		}		
+
+		if (!in_array($pkgHandle, $this->corePackages)) {
+			$dirp = DIR_PACKAGES . '/' . $pkgHandle;		
+			$obj->url = BASE_URL . DIR_REL . '/' . DIRNAME_PACKAGES. '/' . $pkgHandle . '/' . $segment;
+		} else {
+			$dirp = DIR_PACKAGES_CORE . '/' . $pkgHandle;
+			$obj->url = ASSETS_URL . '/' . DIRNAME_PACKAGES. '/' . $pkgHandle . '/' . $segment;
+		}
+		$obj->file = $dirp . '/' . $segment;
+		$this->cachedOverrides[$segment][$pkgHandle] = $obj;
+		return $obj;		
 	}
 	
 	/** 
