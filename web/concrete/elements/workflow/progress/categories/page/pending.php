@@ -33,6 +33,13 @@ $noitems = true;
 		<a href="<?=$this->action('workflow_action', $category->getWorkflowProgressCategoryHandle(), $wp->getWorkflowProgressID(), $act->getWorkflowProgressActionTask(), Loader::helper('validation/token')->generate())?>" class="btn <?=$act->getWorkflowProgressActionStyleClass()?>"><?=$act->getWorkflowProgressActionLabel()?></a>
 	<? } ?>
 	</td>
+</tr>
+<tr>
+	<td colspan="5">
+		<?=Loader::element('workflow/progress/history', array('wp' => $wp))?>
+	</td>
+</tr>
+
 <? } 
 
 } ?>

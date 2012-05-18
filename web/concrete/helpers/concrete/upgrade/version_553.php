@@ -63,6 +63,7 @@ class ConcreteUpgradeVersion553Helper {
 		'Workflows',
 		'WorkflowTypes',
 		'WorkflowProgress', 
+		'WorkflowProgressHistory',
 		'WorkflowProgressCategories', 
 		'WorkflowRequestObjects',
 		'PageWorkflowProgress',

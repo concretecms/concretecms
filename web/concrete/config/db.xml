@@ -2899,6 +2899,23 @@
       <UNSIGNED />
     </field>
   </table>
+  <table name="WorkflowProgressHistory">
+    <field name="wphID" type="I" size="10">
+      <KEY/>
+      <AUTOINCREMENT/>
+      <UNSIGNED/>
+    </field>
+    <field name="wpID" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="timestamp" type="T">
+      <NOTNULL/>
+      <DEFAULT value="CURRENT_TIMESTAMP"/>
+    </field>
+    <field name="object" type="X"/>
+  </table>
   <table name="WorkflowProgress">
     <field name="wpID" type="I" size="10">
       <KEY/>

@@ -10,6 +10,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 abstract class WorkflowRequest extends Object {  
 	
 	protected $currentWP;
+	protected $uID;
 	
 	const REQUEST_STATUS_NUM = 0;
 	
@@ -32,6 +33,12 @@ abstract class WorkflowRequest extends Object {
 	}
 	public function getCurrentWorkflowProgressObject() {
 		return $this->currentWP;
+	}
+	public function setRequesterUserID($uID) {
+		$this->uID = $uID;
+	}
+	public function getRequesterUserID() {
+		return $this->uID;
 	}
 	
 	public static function getByID($wrID) {

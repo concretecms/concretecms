@@ -81,6 +81,10 @@ class PageWorkflowProgressList extends PageList {
 	}
 }
 
+class PageWorkflowProgressHistory extends WorkflowProgressHistory {
+
+}
+
 class PageWorkflowProgressPage {
 
 	public function __construct(Page $p, WorkflowProgress $wp) {
