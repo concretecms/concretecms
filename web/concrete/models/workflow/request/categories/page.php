@@ -17,6 +17,18 @@ abstract class PageWorkflowRequest extends WorkflowRequest {
 		return $this->cID;
 	}
 
+	public function getRequestedPageVersionID() {
+		if (isset($this->cvID)) {
+			return $cvID;
+		}
+		$c = Page::getByID($this->cID, 'RECENT');
+		return $c->getVersionID();
+	}
+	
+	public function setRequestedPageVersionID($cvID) {
+		$this->cvID = $cvID;
+	}
+	
 	public function addWorkflowProgress(Workflow $wf) {
 		Loader::model('workflow/progress/categories/page');
 		$pwp = PageWorkflowProgress::add($wf, $this);

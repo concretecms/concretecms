@@ -1,6 +1,21 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
 
+class BasicWorkflowHistoryEntry extends WorkflowHistoryEntry {
+
+	public function getWorkflowProgressHistoryDescription() {
+		$uID = $this->getRequesterUserID();
+		$ux = UserInfo::getByID($uID);
+		switch($this->getAction()) {
+			case 'approve':
+				return t('Approved by %s', $ux->getUserName());
+				break;
+			case 'cancel':
+				return t('Denied by %s', $ux->getUserName());
+				break;
+		}		
+	}
+}
 
 class BasicWorkflow extends Workflow  {
 	
@@ -12,13 +27,14 @@ class BasicWorkflow extends Workflow  {
 	
 	public function start(WorkflowProgress $wp) {
 		// lets save the basic data associated with this workflow. 
-		$u = new User();
+		$req = $wp->getWorkflowRequestObject();
 		$db = Loader::db();
-		$db->Execute('insert into BasicWorkflowProgressData (wpID, uIDStarted) values (?, ?)', array($wp->getWorkflowProgressID(), $u->getUserID()));
+		$db->Execute('insert into BasicWorkflowProgressData (wpID, uIDStarted) values (?, ?)', array($wp->getWorkflowProgressID(), $req->getRequesterUserID()));
+		
+		$ui = UserInfo::getByID($req->getRequesterUserID());
 		
 		// let's get all the people who are set to be notified on entry
-		$req = $wp->getWorkflowRequestObject();
-		$message = t('On %s, user %s submitted the following request: %s', date(DATE_APP_GENERIC_MDYT_FULL, strtotime($wp->getWorkflowProgressDateAdded())), $u->getUserName(), $req->getWorkflowRequestDescriptionObject()->getText());
+		$message = t('On %s, user %s submitted the following request: %s', date(DATE_APP_GENERIC_MDYT_FULL, strtotime($wp->getWorkflowProgressDateAdded())), $ui->getUserName(), $req->getWorkflowRequestDescriptionObject()->getText());
 		$this->notify($wp, $message, 'notify_on_basic_workflow_entry');
 	}
 	
@@ -56,7 +72,6 @@ class BasicWorkflow extends Workflow  {
 			$mh->sendMail();
 			unset($mh);
 		}
-		
 	}
 	
 	public function cancel(WorkflowProgress $wp) {
@@ -72,6 +87,11 @@ class BasicWorkflow extends Workflow  {
 
 			$message = t("On %s, user %s cancelled the following request: \n\n---\n%s\n---\n\n", date(DATE_APP_GENERIC_MDYT_FULL, strtotime($bdw->getDateCompleted())), $ux->getUserName(), $req->getWorkflowRequestDescriptionObject()->getText());
 			$this->notify($wp, $message, 'notify_on_basic_workflow_action');
+			
+			$hist = new BasicWorkflowHistoryEntry();
+			$hist->setAction('cancel');
+			$hist->setRequesterUserID($u->getUserID());
+			$wp->addWorkflowProgressHistoryObject($hist);
 
 			$wpr = $req->runTask('cancel', $wp);
 			$wp->delete();
@@ -99,6 +119,11 @@ class BasicWorkflow extends Workflow  {
 
 			$wpr = $req->runTask('approve', $wp);
 			$wp->delete();
+
+			$hist = new BasicWorkflowHistoryEntry();
+			$hist->setAction('approve');
+			$hist->setRequesterUserID($u->getUserID());
+			$wp->addWorkflowProgressHistoryObject($hist);
 
 			Loader::model('workflow/types/basic/data');
 			$bdw = new BasicWorkflowProgressData($wp);

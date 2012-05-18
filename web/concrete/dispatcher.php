@@ -104,6 +104,7 @@
 	Loader::model("workflow/description");
 	Loader::model("workflow/progress/model");
 	Loader::model("workflow/progress/category");
+	Loader::model("workflow/progress/history");
 	Loader::model("workflow/progress/response");
 	Loader::model("workflow/progress/action");
 	Loader::model("workflow/progress/categories/page");

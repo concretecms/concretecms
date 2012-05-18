@@ -84,6 +84,7 @@ abstract class WorkflowProgress extends Object {
 			$wf->getWorkflowID(), $wr->getWorkflowRequestID(), $wpDateAdded
 		));
 		$wp = self::getByID($db->Insert_ID());
+		$wp->addWorkflowProgressHistoryObject($wr);
 		return $wp;
 	}
 
@@ -160,6 +161,12 @@ abstract class WorkflowProgress extends Object {
 	}
 	
 	abstract function getWorkflowProgressFormAction();
+	
+	public function addWorkflowProgressHistoryObject($obj) {
+		$db = Loader::db();
+		$db->Execute('insert into WorkflowProgressHistory (wpID, object) values (?, ?)', array($this->wpID, serialize($obj)));
+	}
+
 	
 	public function getPendingWorkflowProgressList() {
 		$class = get_called_class();

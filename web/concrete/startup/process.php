@@ -490,6 +490,7 @@
 							$obj->refreshCID = $c->getCollectionID();
 							$pkr = new DeletePagePageWorkflowRequest();
 							$pkr->setRequestedPage($c);
+							$pkr->setRequesterUserID($u->getUserID());
 							$u->unloadCollectionEdit($c);
 							$response = $pkr->trigger();
 							if ($response instanceof WorkflowProgressResponse) {
@@ -560,6 +561,7 @@
 						$pkr = new ApprovePagePageWorkflowRequest();
 						$pkr->setRequestedPage($c);
 						$pkr->setRequestedVersionID($v->getVersionID());
+						$pkr->setRequesterUserID($u->getUserID());
 						$u->unloadCollectionEdit($c);
 						$response = $pkr->trigger();
 					} 
@@ -583,6 +585,7 @@
 					$pkr->setRequestedPage($c);
 					$v = CollectionVersion::get($c, "RECENT");
 					$pkr->setRequestedVersionID($v->getVersionID());
+					$pkr->setRequesterUserID($u->getUserID());
 					$u->unloadCollectionEdit($c);
 					$response = $pkr->trigger();
 					header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $c->getCollectionID() . $step);

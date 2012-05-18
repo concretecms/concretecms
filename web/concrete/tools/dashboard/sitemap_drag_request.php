@@ -115,6 +115,7 @@ if (!$error) {
 						$pkr->setRequestedPage($oc);
 						$pkr->setRequestedTargetPage($dc);
 						$pkr->setSaveOldPagePath($_REQUEST['saveOldPagePath']);
+						$pkr->setRequesterUserID($u->getUserID());
 						$u->unloadCollectionEdit($oc);
 						$r = $pkr->trigger();
 						if ($r instanceof WorkflowProgressResponse) { 

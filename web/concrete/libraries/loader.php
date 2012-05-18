@@ -33,8 +33,10 @@
 		 */
 		public function model($mod, $pkgHandle = null) {
 			$env = Environment::get();
-			require_once($env->getPath(DIRNAME_MODELS . '/' . $mod . '.php', $pkgHandle));
-			Loader::legacyModel($mod);
+			$r = Loader::legacyModel($mod);
+			if (!$r) {
+				require_once($env->getPath(DIRNAME_MODELS . '/' . $mod . '.php', $pkgHandle));
+			}
 		}
 		
 		protected function legacyModel($model) {
@@ -61,54 +63,30 @@
 		 * @access private
 		 */
 		public function packageElement($file, $pkgHandle, $args = null) {
-			if (is_array($args)) {
-				extract($args);
-			}
-			if (file_exists(DIR_FILES_ELEMENTS . '/' . $file . '.php')) {
-				include(DIR_FILES_ELEMENTS . '/' . $file . '.php');
-			} else {
-				$dir = (is_dir(DIR_PACKAGES . '/' . $pkgHandle)) ? DIR_PACKAGES : DIR_PACKAGES_CORE;
-				if (file_exists($dir . '/' . $pkgHandle . '/' . DIRNAME_ELEMENTS . '/' . $file . '.php')) {
-					include($dir . '/' . $pkgHandle . '/' . DIRNAME_ELEMENTS . '/' . $file . '.php');
-				}
-			}
+			Loader::element($file, $args, $pkgHandle);
 		}
 
 		/** 
 		 * Loads an element from C5 or the site
 		 */
-		public function element($file, $args = null) {
+		public function element($file, $args = null, $pkgHandle= null) {
 			if (is_array($args)) {
 				extract($args);
 			}
 
 			$env = Environment::get();
-			include($env->getPath(DIRNAME_ELEMENTS . '/' . $file . '.php'));
-
+			include($env->getPath(DIRNAME_ELEMENTS . '/' . $file . '.php', $pkgHandle));
 		}
 
 		 /**
 		 * Loads a tool file from c5 or site
-		 * first checks if its in root/tools. 
-		 * If it isn't and pkgHandle is defined it checks in root/packages/pkghandle
-		 * If it isn't there and pkgHandle is defined it checks in root/concrete/packages/pkghandle
-		 * Finally it checks if its in root/concrete/tools
 		 */
 		public function tool($file, $args = null, $pkgHandle= null) {
 		   if (is_array($args)) {
 			   extract($args);
 		   }
-		   if (file_exists(DIR_FILES_TOOLS . '/' . $file . '.php')) {
-				include(DIR_FILES_TOOLS . '/' . $file . '.php');
-		   } else if($pkgHandle){
-			   if(file_exists(DIR_PACKAGES . '/' .$pkgHandle.'/'.DIRNAME_TOOLS.'/'. $file . '.php')){
-				   include(DIR_PACKAGES . '/' .$pkgHandle.'/'.DIRNAME_TOOLS.'/'. $file . '.php');
-			   }else{
-				   include(DIR_PACKAGES_CORE . '/' .$pkgHandle.'/'.DIRNAME_TOOLS.'/'. $file . '.php');
-			   }
-		   } else if(file_exists(DIR_FILES_TOOLS_REQUIRED . '/' . $file . '.php')) {
-				include(DIR_FILES_TOOLS_REQUIRED . '/' . $file . '.php');
-			}
+			$env = Environment::get();
+			require_once($env->getPath(DIRNAME_TOOLS . '/' . $file . '.php', $pkgHandle));
 		}
 		
 		/** 
