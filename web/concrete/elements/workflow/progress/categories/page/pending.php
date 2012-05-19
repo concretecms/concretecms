@@ -28,10 +28,22 @@ $noitems = true;
 	<td><?=date(DATE_APP_GENERIC_MDYT_FULL, strtotime($wp->getWorkflowProgressDateLastAction()))?></td>
 	<td><?=$wf->getWorkflowProgressStatusDescription($wp)?></td>
 	<td>
+	<form action="<?=$wp->getWorkflowProgressFormAction()?>">
+	<input type="hidden" name="source" value="dashboard" />
 	<? $actions = $wp->getWorkflowProgressActions(); ?>
-	<? foreach($actions as $act) { ?>
-		<a href="<?=$this->action('workflow_action', $category->getWorkflowProgressCategoryHandle(), $wp->getWorkflowProgressID(), $act->getWorkflowProgressActionTask(), Loader::helper('validation/token')->generate())?>" class="btn <?=$act->getWorkflowProgressActionStyleClass()?>"><?=$act->getWorkflowProgressActionLabel()?></a>
-	<? } ?>
+	<? foreach($actions as $act) { 
+		$attribs = '';
+		$_attribs = $act->getWorkflowProgressActionExtraButtonParameters();
+		foreach($_attribs as $key => $value) {
+			$attribs .= $key . '="' . $value . '" ';
+		}
+		if ($act->getWorkflowProgressActionURL() != '') {
+			print '<a href="' . $act->getWorkflowProgressActionURL() . '&source=dashboard" ' . $attribs . ' class="btn ' . $act->getWorkflowProgressActionStyleClass() . '">' . $act->getWorkflowProgressActionLabel() . '</a> ';
+		} else { 
+			print '<input type="submit" ' . $attribs . ' name="action_' . $act->getWorkflowProgressActionTask() . '" class="btn ' . $act->getWorkflowProgressActionStyleClass() . '" value="' . $act->getWorkflowProgressActionLabel() . '" /> ';
+		}
+	 } ?>
+	</form>
 	</td>
 </tr>
 <tr>

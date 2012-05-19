@@ -2922,6 +2922,9 @@
       <AUTOINCREMENT/>
       <UNSIGNED/>
     </field>
+    <field name="wpCategoryID" type="I" size="10">
+      <UNSIGNED/>
+    </field>
     <field name="wfID" type="I" size="10">
       <NOTNULL/>
       <DEFAULT value="0"/>

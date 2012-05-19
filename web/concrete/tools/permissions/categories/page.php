@@ -50,10 +50,12 @@ if (count($pages) > 0) {
 		foreach($pages as $c) { 
 			$pk->setPermissionObject($c);
 			$pk->clearWorkflows();
-			foreach($_POST['wfID'] as $wfID) {
-				$wf = Workflow::getByID($wfID);
-				if (is_object($wf)) {
-					$pk->attachWorkflow($wf);
+			if (is_array($_POST['wfID'])) { 
+				foreach($_POST['wfID'] as $wfID) {
+					$wf = Workflow::getByID($wfID);
+					if (is_object($wf)) {
+						$pk->attachWorkflow($wf);
+					}
 				}
 			}
 		}

@@ -32,6 +32,10 @@ class WorkflowProgressHistory extends Object {
 			$ui = UserInfo::getByID($this->object->getRequesterUserID());
 			return $d->getHTML() . ' ' . t('Originally requested by %s.', $ui->getUserName());
 		}
+		if ($this->object instanceof WorkflowHistoryEntry) {
+			$d = $this->object->getWorkflowProgressHistoryDescription();
+			return $d;
+		}
 	}
 	
 	public static function getList(WorkflowProgress $wp) {
