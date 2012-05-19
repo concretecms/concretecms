@@ -256,12 +256,22 @@ $(function() {
 					item.setCSSClass('<?=$wr->getWorkflowRequestStyleClass()?>');
 					item.setDescription('<?=$wf->getWorkflowProgressDescription($wl)?>');
 					item.setAction('<?=$wl->getWorkflowProgressFormAction()?>');
+					item.enableAjaxForm();
 					<? $actions = $wl->getWorkflowProgressActions(); ?>
 					<? foreach($actions as $act) { ?>
 						btn = new ccm_statusBarItemButton();
 						btn.setLabel('<?=$act->getWorkflowProgressActionLabel()?>');
 						btn.setCSSClass('<?=$act->getWorkflowProgressActionStyleClass()?>');
-						btn.setAction('<?=$act->getWorkflowProgressActionTask()?>');
+						<? if ($act->getWorkflowProgressActionURL() != '') { ?>
+							btn.setURL('<?=$act->getWorkflowProgressActionURL()?>');
+						<? } else { ?>
+							btn.setAction('<?=$act->getWorkflowProgressActionTask()?>');
+						<? } ?>
+						<? if (count($act->getWorkflowProgressActionExtraButtonParameters()) > 0) { ?>
+							<? foreach($act->getWorkflowProgressActionExtraButtonParameters() as $key => $value) { ?>
+								btn.addAttribute('<?=$key?>', '<?=$value?>');
+							<? } ?>
+						<? } ?>
 						item.addButton(btn);
 					<? } ?>
 					ccm_statusBar.addItem(item);

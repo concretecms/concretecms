@@ -53,6 +53,11 @@ abstract class WorkflowProgress extends Object {
 	public function getWorkflowProgressID() {return $this->wpID;}
 	
 	/** 
+	 * Get the category ID
+	 */
+	public function getWorkflowProgressCategoryID() {return $this->wpCategoryID;}
+	
+	/** 
 	 * Gets the date the WorkflowProgress object was added
 	 * @return datetime
 	 */
@@ -80,8 +85,12 @@ abstract class WorkflowProgress extends Object {
 	public static function add(Workflow $wf, WorkflowRequest $wr) {
 		$db = Loader::db();
 		$wpDateAdded = Loader::helper('date')->getLocalDateTime();
-		$db->Execute('insert into WorkflowProgress (wfID, wrID, wpDateAdded) values (?, ?, ?)', array(
-			$wf->getWorkflowID(), $wr->getWorkflowRequestID(), $wpDateAdded
+		$class = get_called_class();
+		$class = str_replace('WorkflowProgress', '', $class);
+		$wpCategoryHandle = Loader::helper('text')->uncamelcase($class);
+		$wpCategoryID = $db->GetOne('select wpCategoryID from WorkflowProgressCategories where wpCategoryHandle = ?', array($wpCategoryHandle));
+		$db->Execute('insert into WorkflowProgress (wfID, wrID, wpDateAdded, wpCategoryID) values (?, ?, ?, ?)', array(
+			$wf->getWorkflowID(), $wr->getWorkflowRequestID(), $wpDateAdded, $wpCategoryID
 		));
 		$wp = self::getByID($db->Insert_ID());
 		$wp->addWorkflowProgressHistoryObject($wr);
@@ -143,10 +152,10 @@ abstract class WorkflowProgress extends Object {
 	 * it on the current WorkflowProgress object
 	 * @return WorkflowProgressResponse
 	 */
-	public function runTask($task) {
+	public function runTask($task, $args = array()) {
 		$wf = $this->getWorkflowObject();
 		if (in_array($task, $wf->getAllowedTasks())) {
-			$wpr = call_user_func_array(array($wf, $task), array($this));
+			$wpr = call_user_func_array(array($wf, $task), array($this, $args));
 			$this->updateOnAction($wf);
 		}
 		if (!($wpr instanceof WorkflowProgressResponse)) {

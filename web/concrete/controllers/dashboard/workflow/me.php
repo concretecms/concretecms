@@ -6,6 +6,7 @@ class DashboardWorkflowMeController extends DashboardBaseController {
 	
 	public function on_start() {
 		parent::on_start();
+		$this->addHeaderItem("<script type=\"text/javascript\">$(function() { $('.dialog-launch').dialog();});</script>");
 		$this->categories = WorkflowProgressCategory::getList();
 		foreach($this->categories as $cat) {
 			$this->categoryHandles[] = $cat->getWorkflowProgressCategoryHandle();
@@ -29,17 +30,6 @@ class DashboardWorkflowMeController extends DashboardBaseController {
 			$this->wpCategoryHandleActive = $wpCategoryHandle;		
 		}
 	}
-	
-	public function workflow_action($category = false, $wpID = false, $task = false, $token = false) {
-		if (Loader::helper('validation/token')->validate(false, $token)) { 
-			$class = Loader::helper('text')->camelcase($category) . 'WorkflowProgress';
-			$wp = call_user_func_array(array($class, 'getByID'), array($wpID));
-			if (is_object($wp) && $task) {
-				$r = $wp->runTask($task);
-				$this->redirect('/dashboard/workflow/me');			
-			}		
-		}
-	}
-	
+		
 	
 }

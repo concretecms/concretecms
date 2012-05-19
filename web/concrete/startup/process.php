@@ -464,20 +464,6 @@
 	if ($_REQUEST['ctask'] && $valt->validate()) {
 		
 		switch ($_REQUEST['ctask']) {
-			case 'workflow_progress':
-				$task = WorkflowProgress::getRequestedTask();
-				$wp = PageWorkflowProgress::getByID($_REQUEST['wpID']);
-				if (is_object($wp) && $task) {
-					$r = $wp->runTask($task);
-					if (($r instanceof WorkflowProgressResponse) && $r->getWorkflowProgressResponseURL() != '') {
-						header('Location: ' . $r->getWorkflowProgressResponseURL());
-						exit;
-					} else { 
-						header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $_REQUEST['cID']);
-						exit;
-					}
-				}
-				break;
 			case 'delete':
 				if ($cp->canDeletePage() && $c->getCollectionID() != '1' && (!$c->isMasterCollection())) {
 					$children = $c->getNumChildren();

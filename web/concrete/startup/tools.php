@@ -5,7 +5,6 @@
 	$include = false;
 	if ($co->isIncludeRequest()) {
 		$env = Environment::get();
-		ob_start();
 		switch($co->getIncludeType()) {
 			case "CONCRETE_TOOL":
 			case "TOOL":
@@ -25,13 +24,7 @@
 				}
 				break;
 		}
-		$contents = ob_get_contents();
-		ob_end_clean();
-		print $contents;
 
-		if (!$contents) {
-			header("HTTP/1.0 404 Not Found");
-		}
 
 		require(DIR_BASE_CORE . '/startup/shutdown.php');
 		exit;
