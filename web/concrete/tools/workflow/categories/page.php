@@ -8,6 +8,7 @@ if ($_REQUEST['task'] == 'save_workflow_progress' && Loader::helper("validation/
 	if (is_object($wp)) { 
 		$wf = $wp->getWorkflowObject();
 		$form = Loader::helper('form'); 
+		$obj->wpID = $wp->getWorkflowProgressID();
 		if ($wf->canApproveWorkflowProgressObject($wp)) {
 			$task = WorkflowProgress::getRequestedTask();
 			if ($task) {

@@ -75,7 +75,7 @@
 			}
 
 			$env = Environment::get();
-			include($env->getPath(DIRNAME_ELEMENTS . '/' . $file . '.php', $pkgHandle));
+			@include($env->getPath(DIRNAME_ELEMENTS . '/' . $file . '.php', $pkgHandle));
 		}
 
 		 /**

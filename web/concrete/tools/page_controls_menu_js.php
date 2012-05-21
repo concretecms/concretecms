@@ -242,7 +242,7 @@ $(function() {
 		<?
 		$hasPendingPageApproval = false;
 		
-		if ($cp->canApprovePageVersions()) { ?>
+		if ($cp->canViewToolbar()) { ?>
 			<? if (is_array($workflowList)) { ?>
 				<? foreach($workflowList as $wl) { ?>
 					<? $wr = $wl->getWorkflowRequestObject(); 
