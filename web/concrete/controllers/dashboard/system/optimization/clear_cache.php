@@ -12,6 +12,8 @@ class DashboardSystemOptimizationClearCacheController extends DashboardBaseContr
 		if ($this->token->validate("clear_cache")) {
 			if ($this->isPost()) {
 				Cache::flush();
+				$env = Environment::get();
+				$env->clearOverrideCache();
 				$this->redirect('/dashboard/system/optimization/clear_cache', 'cache_cleared');
 			}
 		} else {

@@ -13,8 +13,12 @@ class DashboardSystemOptimizationCacheController extends DashboardBaseController
 			if ($this->isPost()) {
 				$u = new User();
 				$eca = $this->post('ENABLE_CACHE') == 1 ? 1 : 0; 
+				$eoc = $this->post('ENABLE_OVERRIDE_CACHE') == 1 ? 1 : 0; 
 				Cache::flush();
+				$env = Environment::get();
+				$env->clearOverrideCache();
 				Config::save('ENABLE_CACHE', $eca);
+				Config::save('ENABLE_OVERRIDE_CACHE', $eoc);
 				Config::save('FULL_PAGE_CACHE_GLOBAL', $this->post('FULL_PAGE_CACHE_GLOBAL'));
 				Config::save('FULL_PAGE_CACHE_LIFETIME', $this->post('FULL_PAGE_CACHE_LIFETIME'));
 				Config::save('FULL_PAGE_CACHE_LIFETIME_CUSTOM', $this->post('FULL_PAGE_CACHE_LIFETIME_CUSTOM'));				
