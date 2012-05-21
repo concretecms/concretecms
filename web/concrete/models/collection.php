@@ -817,12 +817,15 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			}
 			
 			$cvIsApproved = (isset($data['cvIsApproved']) && $data['cvIsApproved'] == 0) ? 0 : 1;
-			
+			$cvIsNew = 1;
+			if ($cvIsApproved) {
+				$cvIsNew = 0;
+			}
 			$data['name'] = Loader::helper('text')->sanitize($data['name']);
 			
 			if ($res) {
 				// now we add a pending version to the collectionversions table
-				$v2 = array($newCID, 1, $data['name'], $data['handle'], $data['cDescription'], $cDatePublic, $cDate, VERSION_INITIAL_COMMENT, $data['uID'], $cvIsApproved, 1);
+				$v2 = array($newCID, 1, $data['name'], $data['handle'], $data['cDescription'], $cDatePublic, $cDate, VERSION_INITIAL_COMMENT, $data['uID'], $cvIsApproved, $cvIsNew);
 				$q2 = "insert into CollectionVersions (cID, cvID, cvName, cvHandle, cvDescription, cvDatePublic, cvDateCreated, cvComments, cvAuthorUID, cvIsApproved, cvIsNew) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 				$r2 = $db->prepare($q2);
 				$res2 = $db->execute($r2, $v2);
