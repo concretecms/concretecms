@@ -289,7 +289,7 @@ $(function() {
 <div class="row">
 <div class="span8 columns">
 
-<table class="zebra-striped requirements-table">
+<table class="requirements-table table">
 <tbody>
 <tr>
 	<td><? if ($phpVtest) { ?><img src="<?=ASSETS_URL_IMAGES?>/icons/success.png" /><? } else { ?><img src="<?=ASSETS_URL_IMAGES?>/icons/warning.png" /><? } ?></td>
@@ -319,7 +319,7 @@ $(function() {
 </div>
 <div class="span8 columns">
 
-<table class="requirements-table zebra-striped">
+<table class="requirements-table table">
 
 <tr>
 	<td><? if ($imageTest) { ?><img src="<?=ASSETS_URL_IMAGES?>/icons/success.png" /><? } else { ?><img src="<?=ASSETS_URL_IMAGES?>/icons/error.png" /><? } ?></td>
@@ -346,6 +346,7 @@ $(function() {
 </div>
 </div>
 
+<br/><br/>
 
 <h3><?=t('Testing Optional Items')?></h3>
 
@@ -353,7 +354,7 @@ $(function() {
 <div class="span8 columns">
 
 
-<table class="requirements-table zebra-striped">
+<table class="requirements-table table">
 <tbody>
 <tr>
 	<td><? if ($remoteFileUploadTest) { ?><img src="<?=ASSETS_URL_IMAGES?>/icons/success.png" /><? } else { ?><img src="<?=ASSETS_URL_IMAGES?>/icons/warning.png" /><? } ?></td>
@@ -365,7 +366,7 @@ $(function() {
 
 </div>
 <div class="span8 columns">
-<table class="requirements-table zebra-striped">
+<table class="requirements-table table">
 
 <tr>
 	<td><? if ($diffTest) { ?><img src="<?=ASSETS_URL_IMAGES?>/icons/success.png" /><? } else { ?><img src="<?=ASSETS_URL_IMAGES?>/icons/warning.png" /><? } ?></td>
@@ -381,7 +382,7 @@ $(function() {
 <div class="well" id="install-success">
 	<form method="post" action="<?=$this->url('/install','setup')?>">
 	<input type="hidden" name="locale" value="<?=$locale?>" />
-	<?=$form->submit('install', t('Continue to Installation'), array('class' => 'large primary'))?>
+	<a class="btn btn-large primary" href="javascript:void(0)" onclick="$(this).parent().submit()"><i class="icon-arrow-right icon-white"></i> <?=t('Continue to Installation')?></a>
 	</form>
 </div>
 
@@ -390,15 +391,13 @@ $(function() {
 	<div class="block-actions">
 	<form method="post" action="<?=$this->url('/install')?>">
 	<input type="hidden" name="locale" value="<?=$locale?>" />
-	<?=$form->submit('rerun', t('Run Tests'), array('class' => 'small'))?>
+	<a class="btn" href="javascript:void(0)" onclick="$(this).parent().submit()"><i class="icon-refresh"></i> <?=t('Run Tests')?></a>
 	</form>
 	</div>	
 </div>
 
 <div class="block-message alert-message info">
-<p>
 <?=t('Having trouble? Check the <a href="%s">installation help forums</a>, or <a href="%s">have us host a copy</a> for you.', 'http://www.concrete5.org/community/forums/installation', 'http://www.concrete5.org/services/hosting')?>
-</p>
 </div>
 
 <? } else { ?>

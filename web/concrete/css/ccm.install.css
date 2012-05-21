@@ -1,6 +1,8 @@
 /* install check */
 
-table.requirements-table td {vertical-align:top !important; border-left: none !important}
+table.requirements-table td {vertical-align:top !important;}
+table.requirements-table img {max-width: none;}
+
 table td div.alert-message {margin-top: 12px;}
 table.requirements-table td img {width: 16px; height: 16px;}
 
