@@ -36,7 +36,7 @@ class MovePagePageWorkflowRequest extends PageWorkflowRequest {
 		$target = Page::getByID($this->targetCID, 'ACTIVE');
 		$link = Loader::helper('navigation')->getLinkToCollection($c, true);
 		$targetLink = Loader::helper('navigation')->getLinkToCollection($target, true);
-		$d->setText(t("\"%s\" is pending a move to beneath \"%s\". Source Page: %s. Target Page: %s", $c->getCollectionName(), $target->getCollectionName(), $link, $targetLink));
+		$d->setText(t("\"%s\" is pending a move to beneath \"%s\". Source Page: %s. Target Page: %s.", $c->getCollectionName(), $target->getCollectionName(), $link, $targetLink));
 		$d->setHTML(t("This page is pending a move beneath <strong><a href=\"%s\">%s</a></strong>. ", $targetLink, $target->getCollectionName()));
 		$d->setShortStatus(t("Pending Move"));
 		return $d;
