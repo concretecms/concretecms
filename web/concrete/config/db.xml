@@ -2912,7 +2912,7 @@
     </field>
     <field name="timestamp" type="T">
       <NOTNULL/>
-      <DEFAULT value="CURRENT_TIMESTAMP"/>
+      <DEFTIMESTAMP />
     </field>
     <field name="object" type="X"/>
   </table>

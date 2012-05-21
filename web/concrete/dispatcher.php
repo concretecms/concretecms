@@ -37,8 +37,9 @@
 	Cache::startup();
 
 	## User level config ##	
-	require(dirname(__FILE__) . '/config/app.php');
-	
+	if (!$config_check_failed) { 
+		require(dirname(__FILE__) . '/config/app.php');
+	}
 	## Load required libraries ##
 	Loader::library('log');
 	Loader::library('localization');
