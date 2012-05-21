@@ -5,7 +5,7 @@ $list = $category->getPendingWorkflowProgressList();
 $items = $list->get();
 if (count($items) > 0) { ?>
 
-<table class="ccm-results-list">
+<table class="ccm-results-list" id="ccm-workflow-waiting-for-me">
 <tr>
 	<th class="<?=$list->getSearchResultsClass('cvName')?>"><a href="<?=$list->getSortByURL('cvName', 'asc')?>"><?=t('Page Name')?></a></th>
 	<th><?=t('URL')?></th>
@@ -26,8 +26,8 @@ $noitems = true;
 	<td><?=$p->getCollectionName()?></td>
 	<td><a href="<?=Loader::helper('navigation')->getLinkToCollection($p)?>"><?=$p->getCollectionPath()?></a>
 	<td><?=date(DATE_APP_GENERIC_MDYT_FULL, strtotime($wp->getWorkflowProgressDateLastAction()))?></td>
-	<td><?=$wf->getWorkflowProgressStatusDescription($wp)?></td>
-	<td>
+	<td><a href="javascript:void(0)" title="<?=t('Click for history.')?>" onclick="$(this).parentsUntil('tr').parent().next().show()"><?=$wf->getWorkflowProgressStatusDescription($wp)?></a></td>
+	<td class="ccm-workflow-progress-actions">
 	<form action="<?=$wp->getWorkflowProgressFormAction()?>">
 	<input type="hidden" name="source" value="dashboard" />
 	<? $actions = $wp->getWorkflowProgressActions(); ?>
@@ -46,8 +46,8 @@ $noitems = true;
 	</form>
 	</td>
 </tr>
-<tr>
-	<td colspan="5">
+<tr class="ccm-workflow-progress-history">
+	<td colspan="6">
 		<?=Loader::element('workflow/progress/history', array('wp' => $wp))?>
 	</td>
 </tr>

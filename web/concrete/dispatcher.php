@@ -28,12 +28,18 @@
 	## Load the database ##
 	Loader::database();
 
+	## We load the things that CANNOT be overridden
+	require_once(DIR_BASE_CORE . '/' . DIRNAME_LIBRARIES . '/object.php');
+	require_once(DIR_BASE_CORE . '/' . DIRNAME_LIBRARIES . '/cache.php');
+	require_once(DIR_BASE_CORE . '/' . DIRNAME_MODELS . '/config.php');
+	
 	## Startup cache ##
-	Loader::library('cache');	
 	Cache::startup();
+
+	## User level config ##	
+	require(dirname(__FILE__) . '/config/app.php');
 	
 	## Load required libraries ##
-	Loader::library('object');
 	Loader::library('log');
 	Loader::library('localization');
 	Loader::library('request');
@@ -73,7 +79,6 @@
 	Loader::model('collection');
 	Loader::model('collection_version');
 	Loader::model('collection_types');
-	Loader::model('config');
 	Loader::model('groups');
 	Loader::model('layout');  
 	Loader::model('package');
@@ -138,9 +143,6 @@
 
 	# Startup check, install ##	
 	require(dirname(__FILE__) . '/startup/config_check_complete.php');
-
-	## User level config ##	
-	require(dirname(__FILE__) . '/config/app.php');
 
 	## Localization ##	
 	require(dirname(__FILE__) . '/config/localization.php');

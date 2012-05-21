@@ -23,22 +23,29 @@ class Environment {
 	protected $coreOverridesByPackage = array();
 	protected $overridesScanned = false;
 	protected $cachedOverrides = array();
+	protected $autoLoaded = false;
 	
 	public static function get() {
 		static $env;
 		if (!isset($env)) {
-			$db = Loader::db();
-			$r = $db->GetOne('select cfValue from Config where cfKey = ?', array('ENVIRONMENT_CACHE'));
-			if ($r) {
-				$en = @unserialize($r);
-				if ($en instanceof Environment) {
-					$env = $en;
-					return $env;
+			if (ENABLE_OVERRIDE_CACHE) { 
+				$r = Config::get('ENVIRONMENT_CACHE');
+				if ($r) {
+					$en = @unserialize($r);
+					if ($en instanceof Environment) {
+						$env = $en;
+						$env->autoLoaded = true;
+						return $env;
+					}
 				}
 			}
 			$env = new Environment();
 		}
 		return $env;
+	}
+	
+	public function clearOverrideCache() {
+		Config::clear("ENVIRONMENT_CACHE");
 	}
 	
 	/** 
@@ -69,8 +76,9 @@ class Environment {
 			}
 		}
 		$this->overridesScanned = true;
-		//$db = Loader::db();
-		//$db->Replace('Config', array("cfKey" => 'ENVIRONMENT_CACHE', "cfValue" => serialize($this)), "cfKey", true);
+		if (ENABLE_OVERRIDE_CACHE && !$this->autoLoaded) {
+			Config::save('ENVIRONMENT_CACHE', serialize($this));
+		}		
 	}
 	
 	public function overrideCoreByPackage($segment, $pkg) {

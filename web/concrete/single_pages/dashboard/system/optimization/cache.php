@@ -16,6 +16,18 @@
                 <span><?php echo t('On - Helps speed up a live site.')?></span>
             </label>
         </div>
+
+        <h3><?php echo t('Overrides Cache')?></h3>
+    	<div class="clearfix inputs-list">
+            <label>
+                <input type="radio" name="ENABLE_OVERRIDE_CACHE" value="0" <?php  if (ENABLE_OVERRIDE_CACHE == false) { ?> checked <?php  } ?> />
+                <span><?php echo t('Off - Good for development.')?></span>
+            </label>
+            <label>
+                <input type="radio" name="ENABLE_OVERRIDE_CACHE" value="1" <?php  if (ENABLE_OVERRIDE_CACHE == true) { ?> checked <?php  } ?> />
+                <span><?php echo t('On - Helps speed up a live site.')?></span>
+            </label>
+        </div>
         
         <h3><?php echo t('Full Page Caching')?></h3>
     	<div class="clearfix inputs-list">

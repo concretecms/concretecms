@@ -1,13 +1,6 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 
 <?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Waiting for Me'), false)?>
-<style type="text/css">
-.ccm-results-list td a.btn {
-	font-size: 11px;
-	line-height: 11px;
-	padding: 5px 8px 5px 8px;
-}
-</style>
 
 <?=Loader::helper('concrete/interface')->tabs($tabs, false); ?>
 	
