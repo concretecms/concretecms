@@ -56,7 +56,7 @@ $("#ccm-file-import-tabs a").click(function() {
 });
 </script>
 
-<div style="position: absolute; top: 115px; right: 15px;" id="ccm-file-add-multiple-outer"><span id="ccm-file-add-multiple-spanButtonPlaceHolder"></span></div>
+<div style="position: absolute; top: 107px; right: 15px;" id="ccm-file-add-multiple-outer"><span id="ccm-file-add-multiple-spanButtonPlaceHolder"></span></div>
 
 <div id="ccm-file-add-multiple-tab">
 	<div style="float: right">
@@ -187,7 +187,7 @@ $(function() {
 <form id="form1" action="<?=DISPATCHER_FILENAME?>" method="post" enctype="multipart/form-data">
 
 	
-		<table border="0" width="100%" cellspacing="0" cellpadding="0" id="ccm-file-add-multiple-list">
+		<table border="0" width="100%" cellspacing="0" cellpadding="0" id="ccm-file-add-multiple-list" class="table table-striped">
 		<tr>
 			<th colspan="2"><?=t('Upload Queue');?></th>
 		</tr>

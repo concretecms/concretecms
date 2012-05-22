@@ -2,7 +2,7 @@
 $h = Loader::helper('concrete/dashboard');
 $ih = Loader::helper('concrete/interface');
 $form = Loader::helper('form');
-echo $h->getDashboardPaneHeaderWrapper(t('Advanced Permissions'), false, 'span10 offset2', false);?>
+echo $h->getDashboardPaneHeaderWrapper(t('Advanced Permissions'), false, 'span12 offset2', false);?>
 <form id="permissions-form" action="<?php echo $this->action('enable_advanced_permissions')?>" method="post">
 <div class="ccm-pane-body <? if (PERMISSIONS_MODEL != 'simple') { ?> ccm-pane-body-footer <? } ?>">
 	<?php echo Loader::helper('validation/token')->output('enable_advanced_permissions')?>
