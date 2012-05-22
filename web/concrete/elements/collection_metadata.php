@@ -45,22 +45,6 @@ if ($_REQUEST['approveImmediately'] == 1) {
 			ccm_activePropertiesTab = $(this).attr('id');
 			$(this).parent().addClass("active");
 			$("#" + ccm_activePropertiesTab + "-tab").show();
-			
-			if (ccm_activePropertiesTab == 'ccm-properties-custom') {
-				<? if ($approveImmediately) { ?>
-					$('#ccm-dialog-content1').dialog('option','height','620');
-				<? } else { ?>
-					$('#ccm-dialog-content1').dialog('option','height','570');
-				<? } ?>
-			} else {
-				<? if ($approveImmediately) { ?>
-					$('#ccm-dialog-content1').dialog('option','height','540');
-				<? } else { ?>
-					$('#ccm-dialog-content1').dialog('option','height','490');
-				<? } ?>
-			}
-			$('#ccm-dialog-content1').dialog('option','position','center');
-
 		});
 		
 		$(function() {
@@ -92,7 +76,7 @@ if ($_REQUEST['approveImmediately'] == 1) {
 	
 	
 	<? if (!$c->isMasterCollection()) { ?>
-	<ul class="tabs" id="ccm-properties-tabs">
+	<ul class="nav-tabs nav" id="ccm-properties-tabs">
 		<li class="active"><a href="javascript:void(0)" id="ccm-properties-standard"><?=t('Standard Properties')?></a></li>
 		<li><a href="javascript:void(0)" id="ccm-properties-custom"><?=t('Custom Attributes')?></a></li>
 		<li <? if ($c->isMasterCollection() || !$asl->allowEditPaths()) { ?>style="display: none"<? } ?>><a href="javascript:void(0)" id="ccm-page-paths"><?=t('Page Paths and Location')?></a></li>
