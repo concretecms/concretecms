@@ -20,7 +20,7 @@ class PaginationHelper {
 	public $result_upper=0;
 	public $classOff='ltgray';
 	public $classOn='';
-	public $classCurrent='currentPage';		
+	public $classCurrent='currentPage active';		
 	public $URL=''; //%pageNum% for page number
 	public $jsFunctionCall='';
 	public $queryStringPagingVariable = PAGING_STRING;
@@ -36,7 +36,7 @@ class PaginationHelper {
 		$this->result_upper=0;
 		$this->classOff='ltgray';
 		$this->classOn='';
-		$this->classCurrent='currentPage';		
+		$this->classCurrent='currentPage active';		
 		$this->URL	='';
 		$this->jsFunctionCall='';
 		$this->queryStringPagingVariable = PAGING_STRING;
@@ -161,10 +161,10 @@ class PaginationHelper {
 		if($this->number_of_pages==1) return;		
 		//if not last page
 		if (!$this->hasNextPage())
-			 return '<span class="'.$this->classOff.'">'.$linkText.'</span>';
+			 return '<a class="'.$this->classOff.'" href="#">'.$linkText.'</a>';
 		 else{
 			$linkURL=str_replace("%pageNum%", $this->getNextInt()+1, $this->URL);
-			return '<span class="'.$this->classOn.'"><a href="'.$linkURL.'" '.$this->getJSFunctionCall($this->getNextInt()+1).'>'.$linkText.'</a></span>'; 	
+			return '<a class="'.$this->classOn.'" href="'.$linkURL.'" '.$this->getJSFunctionCall($this->getNextInt()+1).'>'.$linkText.'</a>'; 	
 		}
 	}
 
@@ -180,10 +180,10 @@ class PaginationHelper {
 		if($this->number_of_pages==1) return;
 		//if not first page
 		if ($this->current_page=="0") 
-			 return '<span class="'.$this->classOff.'">'.$linkText.'</span>';
+			 return '<a class="'.$this->classOff.'" href="#">'.$linkText.'</a>';
 		else{
 			$linkURL=str_replace("%pageNum%", $this->getPreviousInt()+1, $this->URL);
-			return '<span class="'.$this->classOn.'"><a href="'.$linkURL.'" '.$this->getJSFunctionCall($this->getPreviousInt()+1).'>'.$linkText.'</a></span>';
+			return '<a class="'.$this->classOn.'" href="'.$linkURL.'" '.$this->getJSFunctionCall($this->getPreviousInt()+1).'>'.$linkText.'</a>';
 		}
 	}
 
@@ -230,9 +230,9 @@ class PaginationHelper {
 			if ($this->current_page==$i){ 
 			
 					if($wrapper == 'li'){
-						$pages.="<li class='$this->classCurrent'><strong>".($i+1)."</strong></li>";
+						$pages.="<li class='$this->classCurrent'><a href=\"#\">".($i+1)."</a></li>";
 					} else {
-						$pages.="<span class='$this->classCurrent'><strong>".($i+1)."</strong></span>";
+						$pages.="<span class='$this->classCurrent'><a href=\"#\">".($i+1)."</a></span>";
 					}
 					
 			} else {
