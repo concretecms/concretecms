@@ -178,6 +178,7 @@
 		protected $btCacheBlockOutputOnPost = true;
 		protected $btCacheBlockOutputForRegisteredUsers = false;
 		protected $btCacheBlockOutputLifetime = 300;
+		protected $btWrapperClass = 'ccm-ui';
 		
 		protected $btExportPageColumns = array('displayPagesCID');
 		
