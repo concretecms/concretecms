@@ -263,7 +263,7 @@ class ConcreteInterfaceHelper {
 			}
 			$html .= '<li class="' . ((isset($t[2]) && $t[2] == true) ? 'active' : ''). '"><a href="' . $href . '" data-tab="' . $dt . '">' . $t[1] . '</a></li>';
 		}
-		$html .= '</ul><div class="clearfix"></div>';
+		$html .= '</ul>';
 		if ($jstabs) { 
 			$html .= '<script type="text/javascript">$(function() { ccm_activateTabBar($(\'#ccm-tabs-' . $tcn . '\'));});</script>';
 		}
