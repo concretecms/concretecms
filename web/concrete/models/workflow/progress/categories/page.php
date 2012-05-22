@@ -33,12 +33,13 @@ class PageWorkflowProgress extends WorkflowProgress {
 		$db->Execute('delete from PageWorkflowProgress where wpID = ?', array($this->wpID));
 	}
 	
-	public static function getList(Page $c, $filters = array('wpIsCompleted', 0)) {
+	public static function getList(Page $c, $filters = array('wpIsCompleted' => 0), $sortBy = 'wpDateAdded asc') {
 		$db = Loader::db();
 		$filter = '';
 		foreach($filters as $key => $value) {
 			$filter .= ' and ' . $key . ' = ' . $value . ' ';
 		}
+		$filter .= ' order by ' . $sortBy;
 		$r = $db->Execute('select wp.wpID from PageWorkflowProgress pwp inner join WorkflowProgress wp on pwp.wpID = wp.wpID where cID = ? ' . $filter, array($c->getCollectionID()));
 		$list = array();
 		while ($row = $r->FetchRow()) {

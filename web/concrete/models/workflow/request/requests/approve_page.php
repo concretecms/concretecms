@@ -41,11 +41,26 @@ class ApprovePagePageWorkflowRequest extends PageWorkflowRequest {
 	
 	public function getWorkflowRequestApproveButtonInnerButtonRightHTML() {
 		return '<i class="icon-white icon-thumbs-up"></i>';
-	}	
-	
+	}		
 	
 	public function getWorkflowRequestApproveButtonText() {
 		return t('Approve Page');
+	}
+	
+	public function getWorkflowRequestAdditionalActions() {
+		
+		$buttons = array();
+		$c = Page::getByID($this->cID, 'ACTIVE');
+		$button = new WorkflowProgressAction();
+		$button->setWorkflowProgressActionLabel(t('View Active Version'));
+		$button->addWorkflowProgressActionButtonParameter('dialog-title', t('Preview Page'));
+		$button->addWorkflowProgressActionButtonParameter('dialog-width', '90%');
+		$button->addWorkflowProgressActionButtonParameter('dialog-height', '70%');
+		$button->setWorkflowProgressActionStyleInnerButtonLeftHTML('<i class="icon-eye-open"></i>');
+		$button->setWorkflowProgressActionURL(REL_DIR_FILES_TOOLS_REQUIRED . '/versions.php?cID=' . $this->cID . '&cvID=' . $c->getVersionID() . '&vtask=view_version');
+		$button->setWorkflowProgressActionStyleClass('dialog-launch');
+		$buttons[] = $button;
+		return $buttons;
 	}
 
 	public function approve(WorkflowProgress $wp) {
