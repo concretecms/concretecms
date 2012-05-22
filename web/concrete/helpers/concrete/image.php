@@ -27,7 +27,8 @@ class ConcreteImageHelper {
 	
 	function startImageProcess($f){
 		$function = '';
-		$ext = $f->getExtension();
+		$ext = strtolower($f->getExtension());
+		//$ext = ($f->getExtension());
 		switch($ext){
 			case "png":
 				$function = "imagecreatefrompng";
@@ -49,7 +50,7 @@ class ConcreteImageHelper {
 	}
 	
 	function parseImage($ext,$img,$file = null){
-		switch($ext){
+		switch(strtolower($ext)){
 			case "png":
 				imagepng($img,($file != null ? $file : ''));
 				break;

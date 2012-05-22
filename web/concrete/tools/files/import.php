@@ -40,6 +40,12 @@ $("#ccm-file-import-tabs a").click(function() {
 
 	$("#" + ccm_fiActiveTab + "-tab").hide();
 	ccm_fiActiveTab = $(this).attr('id');
+	if (ccm_fiActiveTab != 'ccm-file-add-multiple') {
+		$('#ccm-file-add-multiple-outer').css('visibility', 'hidden');
+	} else {
+		$('#ccm-file-add-multiple-outer').css('visibility', 'visible');
+	}
+
 	$(this).parent().addClass("active");
 	$("#" + ccm_fiActiveTab + "-tab").show();
 	var section = $(this).attr('id').substring(13);
@@ -49,6 +55,8 @@ $("#ccm-file-import-tabs a").click(function() {
 
 });
 </script>
+
+<div style="position: absolute; top: 115px; right: 15px;" id="ccm-file-add-multiple-outer"><span id="ccm-file-add-multiple-spanButtonPlaceHolder"></span></div>
 
 <div id="ccm-file-add-multiple-tab">
 	<div style="float: right">
@@ -181,7 +189,7 @@ $(function() {
 	
 		<table border="0" width="100%" cellspacing="0" cellpadding="0" id="ccm-file-add-multiple-list">
 		<tr>
-			<th colspan="2"><div style="width: 80px; float: right"><span id="ccm-file-add-multiple-spanButtonPlaceHolder"></span></div><?=t('Upload Queue');?></th>
+			<th colspan="2"><?=t('Upload Queue');?></th>
 		</tr>
 		</table>
 		

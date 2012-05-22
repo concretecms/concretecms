@@ -28,8 +28,9 @@
 		
 		public function export(SimpleXMLElement $blockNode) {			
 			$stack = Stack::getByID($this->stID);
-			$blockNode->addChild('stack', '<![CDATA[' . $stack->getCollectionName() . ']]>');
-			
+			if (is_object($stack)) {
+				$blockNode->addChild('stack', '<![CDATA[' . $stack->getCollectionName() . ']]>');
+			}
 		}
 		
 		public function on_page_view() {

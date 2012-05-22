@@ -51,6 +51,7 @@ class DashboardComposerWriteController extends Controller {
 					$this->redirect('/dashboard/composer/drafts', 'draft_discarded');
 				} else {
 					// we just discard the most recent changes
+					Events::fire('on_composer_delete_draft', $entry);
 					$v = CollectionVersion::get($entry, 'RECENT');
 					$v->discard();
 					$this->redirect('?cID=' . $entry->getCollectionID());
@@ -71,11 +72,13 @@ class DashboardComposerWriteController extends Controller {
 					$v->approve();
 					if ($entry->isComposerDraft()) { 
 						$entry->move($parent);
+						Events::fire('on_composer_publish', $entry);
 						$entry->markComposerPageAsPublished();
 					}
 					$this->redirect('?cID=' . $entry->getCollectionID());
 				} else if ($this->post('autosave')) { 
 					// this is done by javascript. we refresh silently and send a json success back
+					Events::fire('on_composer_save_draft', $entry);
 					$json = Loader::helper('json');
 					$obj = new stdClass;
 					$dh = Loader::helper('date');

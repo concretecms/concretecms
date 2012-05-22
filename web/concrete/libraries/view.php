@@ -499,7 +499,19 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		 * @private 
 		 */
 		public static function defaultExceptionHandler($e) {
-			View::renderError(t('An unexpected error occurred.'), $e->getMessage(), $e);
+			if (Config::get('SITE_DEBUG_LEVEL') == DEBUG_DISPLAY_ERRORS) {
+				View::renderError(t('An unexpected error occurred.'), $e->getMessage(), $e);		
+			} else {
+				View::renderError(t('An unexpected error occurred.'), t('An error occurred while processing this request.'), $e);
+			}
+			
+			// log if setup to do so
+			if (ENABLE_LOG_ERRORS) {
+				$l = new Log(LOG_TYPE_EXCEPTIONS, true, true);
+				$l->write(t('Exception Occurred: ') . $e->getMessage());
+				$l->write($e->getTraceAsString());
+				$l->close();
+			}
 		}
 
 		/**
