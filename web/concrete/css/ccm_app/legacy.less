@@ -32,6 +32,14 @@
 		color: @grayDark;
 	}
 	
+	/* make sure that control-label doesn't get the legacy styling */
+	label.control-label {
+		padding: 0px; 
+		float: none;
+		width: auto;
+		text-align: left;
+	}
+	
 	form .input {
 		margin-left: 160px;
 	}
@@ -41,9 +49,12 @@
 	}
 	
 	.zebra-striped {
-		.table;
 		.table-striped;
+	}
+
+	table {
 		.table-bordered;
+		.table;
 	}
 	
 	legend + div.clearfix {

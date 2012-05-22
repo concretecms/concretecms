@@ -10,6 +10,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 class WorkflowProgressAction extends Object {  
 	
 	protected $wrActionStyleClass = '';
+	protected $wrActionStyleInnerButtonLeft = '';
+	protected $wrActionStyleInnerButtonRight = '';
 	protected $wrActionTask = '';
 	protected $wrActionOnClick = '';
 	protected $wrActionURL = '';
@@ -17,6 +19,12 @@ class WorkflowProgressAction extends Object {
 	
 	public function setWorkflowProgressActionStyleClass($class) {
 		$this->wrActionStyleClass = $class;
+	}
+	public function setWorkflowProgressActionStyleInnerButtonLeftHTML($html) {
+		$this->wrActionStyleInnerButtonLeft = $html;
+	}
+	public function setWorkflowProgressActionStyleInnerButtonRightHTML($html) {
+		$this->wrActionStyleInnerButtonRight = $html;
 	}
 	public function setWorkflowProgressActionLabel($label) {
 		$this->wrActionLabel = $label;
@@ -38,6 +46,12 @@ class WorkflowProgressAction extends Object {
 	
 	public function getWorkflowProgressActionStyleClass() {
 		return $this->wrActionStyleClass;
+	}
+	public function getWorkflowProgressActionStyleInnerButtonLeftHTML() {
+		return $this->wrActionStyleInnerButtonLeft;
+	}
+	public function getWorkflowProgressActionStyleInnerButtonRightHTML() {
+		return $this->wrActionStyleInnerButtonRight;
 	}
 	public function getWorkflowProgressActionLabel() {
 		return $this->wrActionLabel;

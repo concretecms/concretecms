@@ -70,7 +70,7 @@ class FormHelper {
 	 * @return string $html
 	 */
 	public function label($field, $name, $miscFields = array()) {
-		$str = '<label for="' . $field . '"' . $this->parseMiscFields(null, $miscFields) . '>' . $name . '</label>';
+		$str = '<label for="' . $field . '"' . $this->parseMiscFields('control-label ', $miscFields) . '>' . $name . '</label>';
 		return $str;
 	}
 

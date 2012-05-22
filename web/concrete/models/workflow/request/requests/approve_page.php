@@ -39,6 +39,11 @@ class ApprovePagePageWorkflowRequest extends PageWorkflowRequest {
 		return 'success';
 	}
 	
+	public function getWorkflowRequestApproveButtonInnerButtonRightHTML() {
+		return '<i class="icon-white icon-thumbs-up"></i>';
+	}	
+	
+	
 	public function getWorkflowRequestApproveButtonText() {
 		return t('Approve Page');
 	}

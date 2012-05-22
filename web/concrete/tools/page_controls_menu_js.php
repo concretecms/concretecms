@@ -140,7 +140,7 @@ menuHTML += '</div>';
 
 menuHTML += '<div class="ccm-edit-overlay-actions">';
 <? if ($cp->canEditPageContents()) { ?>
-	menuHTML += '<a id="ccm-nav-check-out" href="<? if (!$cantCheckOut) { ?><?=DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=<?=$c->getCollectionID()?>&ctask=check-out<?=$token?><? } else { ?>javascript:void(0);<? } ?>" class="btn primary <? if ($cantCheckOut) { ?> disabled <? } ?> tooltip" <? if ($cantCheckOut) { ?>title="<?=t('Someone has already checked this page out for editing.')?>"<? } ?>><?=t('Edit this Page')?></a>';
+	menuHTML += '<a id="ccm-nav-check-out" href="<? if (!$cantCheckOut) { ?><?=DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=<?=$c->getCollectionID()?>&ctask=check-out<?=$token?><? } else { ?>javascript:void(0);<? } ?>" class="btn primary <? if ($cantCheckOut) { ?> disabled <? } ?> launch-tooltip" <? if ($cantCheckOut) { ?>title="<?=t('Someone has already checked this page out for editing.')?>"<? } ?>><?=t('Edit this Page')?></a>';
 <? } ?>
 <? if ($cp->canAddSubpage()) { ?>
 	menuHTML += '<a id="ccm-toolbar-add-subpage" dialog-width="645" dialog-modal="false" dialog-append-buttons="true" dialog-height="345" dialog-title="<?=t('Add a Sub-Page')?>" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_collection_popup.php?cID=<?=$cID?>&ctask=add"class="btn"><?=t('Add a Sub-Page')?></a>';
@@ -262,6 +262,8 @@ $(function() {
 						btn = new ccm_statusBarItemButton();
 						btn.setLabel('<?=$act->getWorkflowProgressActionLabel()?>');
 						btn.setCSSClass('<?=$act->getWorkflowProgressActionStyleClass()?>');
+						btn.setInnerButtonLeftHTML('<?=$act->getWorkflowProgressActionStyleInnerButtonLeftHTML()?>');
+						btn.setInnerButtonRightHTML('<?=$act->getWorkflowProgressActionStyleInnerButtonRightHTML()?>');
 						<? if ($act->getWorkflowProgressActionURL() != '') { ?>
 							btn.setURL('<?=$act->getWorkflowProgressActionURL()?>');
 						<? } else { ?>
@@ -299,7 +301,7 @@ $(function() {
 						}
 						?>
 						btn1 = new ccm_statusBarItemButton();
-						btn1.setLabel('<?=$appLabel?>');
+						btn1.setLabel('<?=$appLabel?> <i class="icon-thumbs-up"></i>');
 						btn1.setURL('<?=DIR_REL . "/" . DISPATCHER_FILENAME . "?cID=" . $c->getCollectionID() . "&ctask=approve-recent" . $token?>');
 						item.addButton(btn1);
 					<? } ?>
@@ -311,7 +313,7 @@ $(function() {
 
 		ccm_statusBar.activate();		
 		
-		$(".tooltip").twipsy();
+		$(".launch-tooltip").twipsy();
 		ccm_activateToolbar();
 	<? } ?>
 	
