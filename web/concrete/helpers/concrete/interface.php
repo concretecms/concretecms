@@ -253,7 +253,7 @@ class ConcreteInterfaceHelper {
 		}
 		
 
-		$html = '<ul class="tabs" id="ccm-tabs-' . $tcn . '">';
+		$html = '<ul class="nav-tabs nav" id="ccm-tabs-' . $tcn . '">';
 		foreach($tabs as $t) {
 			$dt = $t[0];
 			$href = '#';
