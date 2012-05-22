@@ -265,7 +265,8 @@ $("input[name=vApprove]").click(function() {
 	
 	var cvID = $("input[type=checkbox]:checked").get(0).value;
 	jQuery.fn.dialog.showLoader();
-	$("#ccm-versions-container").load(CCM_TOOLS_PATH + '/versions.php?versions_reloaded=1&cID=<?=$c->getCollectionID()?>&cvID=' + cvID + '&vtask=approve<?=$token?>', function() {
+	$.get(CCM_TOOLS_PATH + '/versions.php?versions_reloaded=1&cID=<?=$c->getCollectionID()?>&cvID=' + cvID + '&vtask=approve<?=$token?>', function(r) {	
+		jQuery.fn.dialog.replaceTop(r);
 		jQuery.fn.dialog.hideLoader();
 	});
 	
@@ -274,7 +275,8 @@ $("input[name=vApprove]").click(function() {
 ccm_goToVersionPage = function(p, url) {
 	jQuery.fn.dialog.showLoader();
 	var dest = CCM_TOOLS_PATH + '/versions.php?versions_reloaded=1&cID=<?=$c->getCollectionID()?>&<?php echo PAGING_STRING?>' + p;
-	$("#ccm-versions-container").load(dest, function() {
+	$.get(dest, function(r) {
+		jQuery.fn.dialog.replaceTop(r);
 		jQuery.fn.dialog.hideLoader();
 	});
 	return false;
@@ -303,7 +305,8 @@ $("input[name=vRemove]").click(function() {
 		'cvIDs': cvIDStr
 	}
 	
-	$("#ccm-versions-container").load(CCM_TOOLS_PATH + '/versions.php?versions_reloaded=1', params, function() {
+	$.get(CCM_TOOLS_PATH + '/versions.php?versions_reloaded=1', params, function(r) {
+		jQuery.fn.dialog.replaceTop(r);
 		jQuery.fn.dialog.hideLoader();
 	});
 	
@@ -311,12 +314,9 @@ $("input[name=vRemove]").click(function() {
 
 
 </script>
-<div class="ccm-pane-controls">
-<div id="ccm-edit-collection">
 
 <p><?=t("The following is a list of all this page's versions. If you can edit a page you will automatically see its most recent version, but the approved version is what regular users will see.")?></p>
 
-<div class="ccm-form-area">
 
 
 	<? if ($isCheckedOut) { ?> 
@@ -324,22 +324,28 @@ $("input[name=vRemove]").click(function() {
 	<? } else { ?>
 	
 	
-	<form>
-	<?=t('Select')?>: <a id="ccm-version-select-none" href="#"><?=t('None')?></a> | <a id="ccm-version-select-old" href="#"><?=t('Old Versions')?></a>
+	<div class="btn-group" style="float: left">
+		<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+		<?=t('Select')?>
+		<span class="caret"></span>
+  		</a>
+		<ul class="dropdown-menu">
+		<li><a id="ccm-version-select-none" href="#"><?=t('None')?></a></li>
+		<li><a id="ccm-version-select-old" href="#"><?=t('Old Versions')?></a></li>
+		</ul>
+	
+	</div>
+	
+	<div class="btn-group" style="float: right">
 	<?
 	$ih = Loader::helper("concrete/dashboard");
-	if (!$ih->inDashboard($c)) { ?>
-		&nbsp;&nbsp;
-		<input class="btn" type="button" name="vCompare" value="<?=t('Compare')?>" disabled />
-	&nbsp;
-	<? } ?>
+	if (!$ih->inDashboard($c)) { ?><input class="btn" type="button" name="vCompare" value="<?=t('Compare')?>" disabled /><? } ?>
 	<input class="btn" type="button" name="vApprove" value="<?=t('Approve')?>" disabled />
-	
-	&nbsp;
 	<input class="btn" type="button" name="vRemove" value="<?=t('Remove')?>" disabled />
-	
-	</form>
-	<br/>
+	</div>
+
+	<br/><br/>
+
 	<table border="0" cellspacing="0" width="100%" class="zebra-striped" cellpadding="0" id="ccm-versions-list">
 	<tr>
 		<th>&nbsp;</th>
@@ -403,11 +409,7 @@ $("input[name=vRemove]").click(function() {
 <? 	}
 
 ?>
-</div>
 
-<div class="ccm-spacer">&nbsp;</div>
-
-</div>
 </div>
 
 <? if (!$_GET['versions_reloaded']) { ?>
