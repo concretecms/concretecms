@@ -20,12 +20,12 @@ ccm_statusBar = {
 						attribs += _attribs[k].key + '="' + _attribs[k].value + '" ';
 					}
 					if (buttons[j].getURL() != '') {
-						buttonStr += '<a href="' + buttons[j].getURL() + '" ' + attribs + ' class="btn ' + buttons[j].getCSSClass() + '">' + buttons[j].getLabel() + '</a>';
+						buttonStr += '<a href="' + buttons[j].getURL() + '" ' + attribs + ' class="btn btn-small ' + buttons[j].getCSSClass() + '">' + buttons[j].getLabel() + '</a>';
 					} else { 
-						buttonStr += '<input type="submit" ' + attribs + ' name="action_' + buttons[j].getAction() + '" class="btn ' + buttons[j].getCSSClass() + '" value="' + buttons[j].getLabel() + '" />';
+						buttonStr += '<button type="submit" ' + attribs + ' name="action_' + buttons[j].getAction() + '" class="btn-small btn ' + buttons[j].getCSSClass() + '">' + buttons[j].getLabel() + '</button>';
 					}
 				}
-				var line = '<form method="post" action="' + it.getAction() + '" id="ccm-status-bar-form-' + i + '" ' + (it.useAjaxForm ? 'class="ccm-status-bar-ajax-form"' : '') + '><div class="alert-message block-message ' + it.getCSSClass() + '"><span>' + it.getDescription() + '</span> <div class="ccm-page-status-bar-buttons">' + buttonStr + '</div></div></form>';
+				var line = '<form method="post" action="' + it.getAction() + '" id="ccm-status-bar-form-' + i + '" ' + (it.useAjaxForm ? 'class="ccm-status-bar-ajax-form"' : '') + '><div class="alert-message alert ' + it.getCSSClass() + '"><span>' + it.getDescription() + '</span> <div class="ccm-page-status-bar-buttons">' + buttonStr + '</div></div></form>';
 				d += line;
 			}
 			d += '</div>';

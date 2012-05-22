@@ -36,7 +36,7 @@ class DeletePagePageWorkflowRequest extends PageWorkflowRequest {
 	}
 	
 	public function getWorkflowRequestApproveButtonText() {
-		return t('Delete Page');
+		return t('Delete Page') . ' <i class="icon-white icon-trash"></i>';
 	}
 
 	public function approve(WorkflowProgress $wp) {
