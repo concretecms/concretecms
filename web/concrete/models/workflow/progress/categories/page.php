@@ -33,9 +33,13 @@ class PageWorkflowProgress extends WorkflowProgress {
 		$db->Execute('delete from PageWorkflowProgress where wpID = ?', array($this->wpID));
 	}
 	
-	public static function getList(Page $c) {
+	public static function getList(Page $c, $filters = array('wpIsCompleted', 0)) {
 		$db = Loader::db();
-		$r = $db->Execute('select wpID from PageWorkflowProgress where cID = ?', array($c->getCollectionID()));
+		$filter = '';
+		foreach($filters as $key => $value) {
+			$filter .= ' and ' . $key . ' = ' . $value . ' ';
+		}
+		$r = $db->Execute('select wp.wpID from PageWorkflowProgress pwp inner join WorkflowProgress wp on pwp.wpID = wp.wpID where cID = ? ' . $filter, array($c->getCollectionID()));
 		$list = array();
 		while ($row = $r->FetchRow()) {
 			$wp = PageWorkflowProgress::getByID($row['wpID']);
@@ -61,6 +65,7 @@ class PageWorkflowProgressList extends PageList {
 		$this->includeSystemPages();
 		parent::setBaseQuery(', pwp.wpID, wp.wpCurrentStatus');
 		$this->addToQuery('inner join PageWorkflowProgress pwp on p1.cID = pwp.cID inner join WorkflowProgress wp on wp.wpID = pwp.wpID');
+		$this->filter('wpIsCompleted', 0);
 	}
 
 	public function get($itemsToGet = 0, $offset = 0) {

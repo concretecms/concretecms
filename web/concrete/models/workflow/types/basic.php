@@ -94,7 +94,7 @@ class BasicWorkflow extends Workflow  {
 			$wp->addWorkflowProgressHistoryObject($hist);
 
 			$wpr = $req->runTask('cancel', $wp);
-			$wp->delete();
+			$wp->markCompleted();
 
 			Loader::model('workflow/types/basic/data');
 			$bdw = new BasicWorkflowProgressData($wp);
@@ -118,8 +118,9 @@ class BasicWorkflow extends Workflow  {
 			$this->notify($wp, $message, 'notify_on_basic_workflow_action');
 
 			$wpr = $req->runTask('approve', $wp);
-			$wp->delete();
+			$wp->markCompleted();
 
+			
 			$hist = new BasicWorkflowHistoryEntry();
 			$hist->setAction('approve');
 			$hist->setRequesterUserID($u->getUserID());

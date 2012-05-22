@@ -2945,8 +2945,15 @@
       <NOTNULL/>
       <DEFAULT value="0"/>
     </field>
+    <field name="wpIsCompleted" type="I1" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
     <index name="wrID">
       <col>wrID</col>
+    </index>
+    <index name="wpIsCompleted">
+      <col>wpIsCompleted</col>
     </index>
   </table>
   <table name="WorkflowTypes">

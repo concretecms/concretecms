@@ -176,6 +176,10 @@ abstract class WorkflowProgress extends Object {
 		$db->Execute('insert into WorkflowProgressHistory (wpID, object) values (?, ?)', array($this->wpID, serialize($obj)));
 	}
 
+	public function markCompleted() {
+		$db = Loader::db();
+		$db->Execute('update WorkflowProgress set wpIsCompleted = 1 where wpID = ?', array($this->wpID));
+	}
 	
 	public function getPendingWorkflowProgressList() {
 		$class = get_called_class();
