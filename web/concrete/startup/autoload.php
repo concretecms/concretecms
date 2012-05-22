@@ -21,6 +21,10 @@ function CoreAutoload($class) {
 		$class = substr($class, 0, strpos($class, 'AttributeType'));
 		$handle = $txt->uncamelcase($class);
 		$at = AttributeType::getByHandle($handle);
+	} else if (strpos($class, 'WorkflowHistoryEntry') > 0) {
+		$class = substr($class, 0, strpos($class, 'WorkflowHistoryEntry'));
+		$handle = $txt->uncamelcase($class);
+		$wt = WorkflowType::getByHandle($handle);
 	} else if (strpos($class, 'WorkflowRequest') > 0) {
 		$class = substr($class, 0, strpos($class, 'WorkflowRequest'));
 		$identifier = $txt->uncamelcase($class);

@@ -12,6 +12,8 @@ class WorkflowType extends Object {
 		if ($row['wftHandle']) {
 			$wt = new WorkflowType();
 			$wt->setPropertiesFromArray($row);
+			// make sure it is loaded
+			Loader::model('workflow/types/' . $row['wftHandle'], $wt->getPackageHandle());
 			return $wt;
 		}
 	}
@@ -66,7 +68,7 @@ class WorkflowType extends Object {
 		$db = Loader::db();
 		$wftID = $db->GetOne('select wftID from WorkflowTypes where wftHandle = ?', array($wftHandle));
 		if ($wftID > 0) {
-			return self::getByHandle($wftID);
+			return self::getByID($wftID);
 		}
 	}
 	

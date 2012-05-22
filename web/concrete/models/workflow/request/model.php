@@ -99,6 +99,10 @@ abstract class WorkflowRequest extends Object {
 	abstract public function getWorkflowRequestApproveButtonText();
 	abstract public function getWorkflowRequestApproveButtonClass();
 	abstract public function getWorkflowRequestApproveButtonInnerButtonRightHTML();
+
+	public function getWorkflowRequestAdditionalActions() {
+		return array();
+	}
 	
 	public function runTask($task, WorkflowProgress $wp) {
 		if (method_exists($this, $task)) {

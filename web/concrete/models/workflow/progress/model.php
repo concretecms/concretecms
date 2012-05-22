@@ -166,7 +166,10 @@ abstract class WorkflowProgress extends Object {
 	
 	public function getWorkflowProgressActions() {
 		$w = $this->getWorkflowObject();
-		return $w->getWorkflowProgressActions($this);
+		$req = $this->getWorkflowRequestObject();
+		$actions = $req->getWorkflowRequestAdditionalActions();
+		$actions = array_merge($actions, $w->getWorkflowProgressActions($this));
+		return $actions;
 	}
 	
 	abstract function getWorkflowProgressFormAction();
