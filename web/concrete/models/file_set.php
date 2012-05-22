@@ -1,4 +1,4 @@
-<?php
+<?php defined('C5_EXECUTE') or die("Access Denied.");
 
 
 	class FileSetList extends DatabaseItemList {
@@ -95,9 +95,11 @@
 			$db = Loader::db();
 			$db->Execute('update FileSetFiles set fsDisplayOrder = 0 where fsID = ?', $this->getFileSetID());
 			$i = 0;
-			foreach($files as $fID) {
-				$db->Execute('update FileSetFiles set fsDisplayOrder = ? where fsID = ? and fID = ?', array($i, $this->getFileSetID(), $fID));
-				$i++;
+			if (is_array($files)) { 
+				foreach($files as $fID) {
+					$db->Execute('update FileSetFiles set fsDisplayOrder = ? where fsID = ? and fID = ?', array($i, $this->getFileSetID(), $fID));
+					$i++;
+				}
 			}
 		}
 		

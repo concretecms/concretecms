@@ -133,7 +133,7 @@ $(function() {
 		
 	</div>
 	
-	<ul id="ccm-stack-list" class="icon-select-list icon-select-list-groups">
+	<ul id="ccm-stack-list" class="aicon-select-list aicon-select-list-groups">
 	<? if (count($stacks) > 0) { 
 		foreach($stacks as $s) { 
 			$as = Area::get($s, STACKS_AREA_NAME);

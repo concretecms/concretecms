@@ -285,7 +285,7 @@ ccm_alSelectPermissionsEntity = function(selector, id, name) {
 	var ap = p[p.length - 1];
 	$(ap).find('h3 span').html(name);
 	$(ap).find('input[type=hidden]').val(selector + '_' + id);
-	$(ap).find('input[type=radio]').each(function() {
+	$(ap).find('select').each(function() {
 		$(this).attr('name', $(this).attr('name') + '_' + selector + '_' + id);
 	});
 	$(ap).find('div.ccm-file-access-extensions input[type=checkbox]').each(function() {

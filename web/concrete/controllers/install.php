@@ -227,6 +227,7 @@ class InstallController extends Controller {
 	
 	public function reset() {
 		// remove site.php so that we can try again ?
+		return;
 		if (is_resource($this->fp)) {
 			fclose($this->fp);
 		}

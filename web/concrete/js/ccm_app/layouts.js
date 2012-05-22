@@ -72,14 +72,14 @@ function ccmLayout( cvalID, layout_id, area, locked ){
 			//the arHandle here should be encoded with encodeURIComponent(), but it leads to a double encoding issue in ccm.dialog.js 
 			html += '<li><a onclick="ccm_hideMenus()" class="ccm-menu-icon ccm-icon-edit-menu" dialog-title="' + ccmi18n.editAreaLayout + '" dialog-modal="false" dialog-width="550" dialog-height="280" dialog-append-buttons="true" id="menuEditLayout' + this.cvalID + '" href="' + CCM_TOOLS_PATH + '/edit_area_popup.php?cID=' + CCM_CID + '&arHandle=' + encodeURIComponent(this.area) + '&layoutID=' + this.layout_id + '&cvalID=' + this.cvalID +  '&atask=layout">' + ccmi18n.editAreaLayout + '</a></li>';
 
-			html += '<li><a onclick="ccm_hideMenus()" class="ccm-menu-icon ccm-icon-move-up" id="menuAreaLayoutMoveUp' + this.cvalID + '">' + ccmi18n.moveLayoutUp + '</a></li>';
+			html += '<li><a onclick="ccm_hideMenus()" href="javascript:void(0)" class="ccm-menu-icon ccm-icon-move-up" id="menuAreaLayoutMoveUp' + this.cvalID + '">' + ccmi18n.moveLayoutUp + '</a></li>';
 						
-			html += '<li><a onclick="ccm_hideMenus()" class="ccm-menu-icon ccm-icon-move-down" id="menuAreaLayoutMoveDown' + this.cvalID + '">' + ccmi18n.moveLayoutDown + '</a></li>';
+			html += '<li><a onclick="ccm_hideMenus()" href="javascript:void(0)" class="ccm-menu-icon ccm-icon-move-down" id="menuAreaLayoutMoveDown' + this.cvalID + '">' + ccmi18n.moveLayoutDown + '</a></li>';
 			
 			var lockText = (this.locked) ? ccmi18n.unlockAreaLayout : ccmi18n.lockAreaLayout ; 
-			html += '<li><a onclick="ccm_hideMenus()" class="ccm-menu-icon ccm-icon-lock-menu" id="menuAreaLayoutLock' + this.cvalID + '">' + lockText + '</a></li>';
+			html += '<li><a onclick="ccm_hideMenus()" href="javascript:void(0)" class="ccm-menu-icon ccm-icon-lock-menu" id="menuAreaLayoutLock' + this.cvalID + '">' + lockText + '</a></li>';
 			
-			html += '<li><a onclick="ccm_hideMenus()" class="ccm-menu-icon ccm-icon-delete-menu" dialog-append-buttons="true" id="menuAreaLayoutDelete' + this.cvalID + '">' + ccmi18n.deleteLayout + '</a></li>';
+			html += '<li><a onclick="ccm_hideMenus()" href="javascript:void(0)" class="ccm-menu-icon ccm-icon-delete-menu" dialog-append-buttons="true" id="menuAreaLayoutDelete' + this.cvalID + '">' + ccmi18n.deleteLayout + '</a></li>';
 			
 			html += '</ul>';
 			html += '</div></div></div>';
@@ -113,6 +113,7 @@ function ccmLayout( cvalID, layout_id, area, locked ){
 	
 		this.moving=1;
 		ccm_hideHighlighter();
+		jQuery.fn.dialog.showLoader();
 		this.highlightAreas(1);
 		this.servicesAjax = $.ajax({  
 			url: CCM_TOOLS_PATH + '/layout_services/?cID=' + CCM_CID + '&arHandle=' + encodeURIComponent(this.area) + '&layoutID=' + this.layout_id + '&cvalID=' + this.cvalID +  '&task=move&direction=' + direction,
@@ -123,10 +124,17 @@ function ccmLayout( cvalID, layout_id, area, locked ){
 				}else{    
 					//success
 					ccm_mainNavDisableDirectExit();  
+					location.reload();
 				}
 			}
 		});		
 		
+		// getting rid of AJAX movement because the block wrappers
+		// with layout versions are super brittle. they require
+		// a page reload if the version of the page is approved when
+		// the layouts are moved
+		
+		/*
 		var el = $('#ccm-layout-wrapper-'+this.cvalID);
 		var layoutObj = this;
 		if(direction=='down'){
@@ -153,6 +161,7 @@ function ccmLayout( cvalID, layout_id, area, locked ){
 			//at boundry
 			ccmAlert.hud( ccmi18n.moveLayoutAtBoundary, 4000, 'icon_move_up', ccmi18n.moveLayoutUp); 
 		}
+		*/
 	}
 	
 	this.lock=function(lock,twinLock){  

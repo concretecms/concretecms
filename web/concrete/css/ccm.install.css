@@ -1,6 +1,8 @@
 /* install check */
 
-table.requirements-table td {vertical-align:top !important; border-left: none !important}
+table.requirements-table td {vertical-align:top !important;}
+table.requirements-table img {max-width: none;}
+
 table td div.alert-message {margin-top: 12px;}
 table.requirements-table td img {width: 16px; height: 16px;}
 
@@ -21,13 +23,6 @@ table#sample-content-selector td {
 	display: none;
 }
 
-#install-progress-summary {
-	padding-left: 24px;
-	padding-top: 3px;
-	margin-bottom: 20px;
-	margin-top: 20px;
-	background: transparent url(../images/throbber_white_16.gif) no-repeat left 4px;
-}
 #install-success {display: none;}
 #install-progress-error-wrapper {display: none;}
 #ccm-test-request-tooltip {display: none;}

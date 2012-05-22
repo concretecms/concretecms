@@ -17,9 +17,6 @@ if (isset($successMessage)) { ?>
 
 <script type="text/javascript">
 $(function() {
-	$( "#install-progress-bar" ).progressbar({
-		value: 0
-	});
 	
 <? for ($i = 1; $i <= count($installRoutines); $i++) {
 	$routine = $installRoutines[$i-1]; ?>
@@ -41,9 +38,7 @@ $(function() {
 					$("#install-progress-errors").append('<div class="alert-message error">' + r.message + '</div>');
 					$("#install-progress-error-wrapper").fadeIn(300);
 				} else {
-					$( "#install-progress-bar" ).progressbar({
-						value: <?=$routine->getProgress()?>
-					});
+					$('#install-progress-bar div.bar').css('width', '<?=$routine->getProgress()?>%');
 					<? if ($i < count($installRoutines)) { ?>
 						ccm_installRoutine<?=$i+1?>();
 					<? } else { ?>
@@ -82,11 +77,19 @@ $(function() {
 
 <div id="install-progress-wrapper">
 
+<div class="alert-message info">
 <div id="install-progress-summary">
 <?=t('Beginning Installation')?>
 </div>
+</div>
 
-<div id="install-progress-bar"></div>
+<div id="install-progress-bar">
+
+<div class="progress progress-striped active">
+<div class="bar" style="width: 0%;"></div>
+</div>
+
+</div>
 
 </div>
 
@@ -117,7 +120,7 @@ $(function() {
 <h1><?=t('Install concrete5')?></h1>
 </div>
 
-<form action="<?=$this->url('/install', 'configure')?>" method="post">
+<form action="<?=$this->url('/install', 'configure')?>" method="post" class="form-horizontal">
 
 <div class="row">
 <div class="span8 columns">
@@ -126,9 +129,9 @@ $(function() {
 	
 	<fieldset>
 		<legend><?=t('Site Information')?></legend>
-		<div class="clearfix">
-		<label for="SITE"><?=t('Name Your Site')?>:</label>
-		<div class="input">
+		<div class="control-group">
+		<label for="SITE" class="control-label"><?=t('Name Your Site')?>:</label>
+		<div class="controls">
 			<?=$form->text('SITE', array('class' => 'xlarge'))?>
 		</div>
 		</div>
@@ -204,7 +207,7 @@ $(function() {
 		$uh = Loader::helper('concrete/urls');
 		?>
 		
-		<table class="zebra-striped" id="sample-content-selector">
+		<table class="table table-striped" id="sample-content-selector">
 		<tbody>
 		<? 
 		$availableSampleContent = StartingPointPackage::getAvailableList();
@@ -222,7 +225,7 @@ $(function() {
 		
 		</tbody>
 		</table>
-		
+		<br/>
 		<? if (!StartingPointPackage::hasCustomList()) { ?>
 			<div class="alert-message block-message info"><?=t('concrete5 veterans can choose "Empty Site," but otherwise we recommend starting with some sample content.')?></div>
 		<? } ?>
@@ -232,7 +235,7 @@ $(function() {
 </div>
 
 <div class="well">
-	<?=$form->submit('submit', t('Install concrete5'), array('class' => 'large primary'))?>
+	<button class="btn btn-large primary" type="submit"><i class="icon-thumbs-up icon-white"></i> <?=t('Install concrete5')?></button>
 </div>
 </form>
 
@@ -289,7 +292,7 @@ $(function() {
 <div class="row">
 <div class="span8 columns">
 
-<table class="zebra-striped requirements-table">
+<table class="requirements-table table">
 <tbody>
 <tr>
 	<td><? if ($phpVtest) { ?><img src="<?=ASSETS_URL_IMAGES?>/icons/success.png" /><? } else { ?><img src="<?=ASSETS_URL_IMAGES?>/icons/warning.png" /><? } ?></td>
@@ -319,7 +322,7 @@ $(function() {
 </div>
 <div class="span8 columns">
 
-<table class="requirements-table zebra-striped">
+<table class="requirements-table table">
 
 <tr>
 	<td><? if ($imageTest) { ?><img src="<?=ASSETS_URL_IMAGES?>/icons/success.png" /><? } else { ?><img src="<?=ASSETS_URL_IMAGES?>/icons/error.png" /><? } ?></td>
@@ -346,6 +349,7 @@ $(function() {
 </div>
 </div>
 
+<br/><br/>
 
 <h3><?=t('Testing Optional Items')?></h3>
 
@@ -353,7 +357,7 @@ $(function() {
 <div class="span8 columns">
 
 
-<table class="requirements-table zebra-striped">
+<table class="requirements-table table">
 <tbody>
 <tr>
 	<td><? if ($remoteFileUploadTest) { ?><img src="<?=ASSETS_URL_IMAGES?>/icons/success.png" /><? } else { ?><img src="<?=ASSETS_URL_IMAGES?>/icons/warning.png" /><? } ?></td>
@@ -365,7 +369,7 @@ $(function() {
 
 </div>
 <div class="span8 columns">
-<table class="requirements-table zebra-striped">
+<table class="requirements-table table">
 
 <tr>
 	<td><? if ($diffTest) { ?><img src="<?=ASSETS_URL_IMAGES?>/icons/success.png" /><? } else { ?><img src="<?=ASSETS_URL_IMAGES?>/icons/warning.png" /><? } ?></td>
@@ -381,7 +385,7 @@ $(function() {
 <div class="well" id="install-success">
 	<form method="post" action="<?=$this->url('/install','setup')?>">
 	<input type="hidden" name="locale" value="<?=$locale?>" />
-	<?=$form->submit('install', t('Continue to Installation'), array('class' => 'large primary'))?>
+	<a class="btn btn-large primary" href="javascript:void(0)" onclick="$(this).parent().submit()"><i class="icon-arrow-right icon-white"></i> <?=t('Continue to Installation')?></a>
 	</form>
 </div>
 
@@ -390,15 +394,13 @@ $(function() {
 	<div class="block-actions">
 	<form method="post" action="<?=$this->url('/install')?>">
 	<input type="hidden" name="locale" value="<?=$locale?>" />
-	<?=$form->submit('rerun', t('Run Tests'), array('class' => 'small'))?>
+	<a class="btn" href="javascript:void(0)" onclick="$(this).parent().submit()"><i class="icon-refresh"></i> <?=t('Run Tests')?></a>
 	</form>
 	</div>	
 </div>
 
 <div class="block-message alert-message info">
-<p>
 <?=t('Having trouble? Check the <a href="%s">installation help forums</a>, or <a href="%s">have us host a copy</a> for you.', 'http://www.concrete5.org/community/forums/installation', 'http://www.concrete5.org/services/hosting')?>
-</p>
 </div>
 
 <? } else { ?>

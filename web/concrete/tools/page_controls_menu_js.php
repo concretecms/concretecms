@@ -139,7 +139,7 @@ menuHTML += '</div>';
 <? } else { ?>
 
 menuHTML += '<div class="ccm-edit-overlay-actions">';
-<? if ($cp->canEditPageContents() || $cp->canEditPageContents()) { ?>
+<? if ($cp->canEditPageContents()) { ?>
 	menuHTML += '<a id="ccm-nav-check-out" href="<? if (!$cantCheckOut) { ?><?=DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=<?=$c->getCollectionID()?>&ctask=check-out<?=$token?><? } else { ?>javascript:void(0);<? } ?>" class="btn primary <? if ($cantCheckOut) { ?> disabled <? } ?> tooltip" <? if ($cantCheckOut) { ?>title="<?=t('Someone has already checked this page out for editing.')?>"<? } ?>><?=t('Edit this Page')?></a>';
 <? } ?>
 <? if ($cp->canAddSubpage()) { ?>

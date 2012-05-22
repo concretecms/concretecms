@@ -111,7 +111,9 @@ class ContentImporter {
 				if (isset($px->attributes)) {
 					foreach($px->attributes->children() as $attr) {
 						$ak = CollectionAttributeKey::getByHandle($attr['handle']);
-						$page->setAttribute((string) $attr['handle'], $ak->getController()->importValue($attr));
+						if (is_object($ak)) { 
+							$page->setAttribute((string) $attr['handle'], $ak->getController()->importValue($attr));
+						}
 					}
 				}
 			}
@@ -144,7 +146,9 @@ class ContentImporter {
 				if (isset($px->attributes)) {
 					foreach($px->attributes->children() as $attr) {
 						$ak = CollectionAttributeKey::getByHandle($attr['handle']);
-						$page->setAttribute((string) $attr['handle'], $ak->getController()->importValue($attr));
+						if (is_object($ak)) { 
+							$page->setAttribute((string) $attr['handle'], $ak->getController()->importValue($attr));
+						}
 					}
 				}
 				$page->reindex();
