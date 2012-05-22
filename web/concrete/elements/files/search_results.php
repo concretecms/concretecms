@@ -77,7 +77,7 @@ if (isset($_REQUEST['searchInstance'])) {
 			?>
 			<tr class="ccm-list-record <?=$striped?>" ccm-file-manager-instance="<?=$searchInstance?>" ccm-file-manager-can-admin="<?=($pf->canEditFilePermissions())?>" ccm-file-manager-can-duplicate="<?=$pf->canCopyFile()?>" ccm-file-manager-can-delete="<?=$pf->canDeleteFile()?>" ccm-file-manager-can-view="<?=$canViewInline?>" ccm-file-manager-can-replace="<?=$pf->canEditFileContents()?>" ccm-file-manager-can-edit="<?=$canEdit?>" fID="<?=$f->getFileID()?>" id="fID<?=$f->getFileID()?>">
 			<td class="ccm-file-list-cb" style="vertical-align: middle !important"><input type="checkbox" value="<?=$f->getFileID()?>" /></td>
-			<td><ul class="media-grid"><li class="ccm-file-list-thumbnail" fID="<?=$f->getFileID()?>"><a href="javascript:void(0)"><?=$fv->getThumbnail(1)?></a></li></ul>
+			<td class="ccm-file-list-thumbnail-wrapper"><ul class="thumbnails"><li class="ccm-file-list-thumbnail" fID="<?=$f->getFileID()?>"><a href="javascript:void(0)" class="thumbnail"><?=$fv->getThumbnail(1)?></a></li></ul>
 			
 			<? if ($fv->hasThumbnail(2)) { ?>
 				<div class="ccm-file-list-thumbnail-hover" id="fID<?=$f->getFileID()?>hoverThumbnail"><div><?=$fv->getThumbnail(2)?></div></div>
