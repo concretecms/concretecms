@@ -149,6 +149,7 @@ class BasicWorkflow extends Workflow  {
 	
 			$button2 = new WorkflowProgressApprovalAction();
 			$button2->setWorkflowProgressActionStyleClass($req->getWorkflowRequestApproveButtonClass());
+			$button2->setWorkflowProgressActionStyleInnerButtonRightHTML($req->getWorkflowRequestApproveButtonInnerButtonRightHTML());
 			$button2->setWorkflowProgressActionLabel($req->getWorkflowRequestApproveButtonText());
 	
 			$buttons[] = $button1;

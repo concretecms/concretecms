@@ -37,10 +37,18 @@ $noitems = true;
 		foreach($_attribs as $key => $value) {
 			$attribs .= $key . '="' . $value . '" ';
 		}
+		$br = '';
+		$bl = '';
+		if ($act->getWorkflowProgressActionStyleInnerButtonLeftHTML()) {
+			$bl = $act->getWorkflowProgressActionStyleInnerButtonLeftHTML() . ' ';
+		}
+		if ($act->getWorkflowProgressActionStyleInnerButtonRightHTML()) {
+			$br = ' ' . $act->getWorkflowProgressActionStyleInnerButtonRightHTML();
+		}
 		if ($act->getWorkflowProgressActionURL() != '') {
-			print '<a href="' . $act->getWorkflowProgressActionURL() . '&source=dashboard" ' . $attribs . ' class="btn ' . $act->getWorkflowProgressActionStyleClass() . '">' . $act->getWorkflowProgressActionLabel() . '</a> ';
+			print '<a href="' . $act->getWorkflowProgressActionURL() . '&source=dashboard" ' . $attribs . ' class="btn btn-mini ' . $act->getWorkflowProgressActionStyleClass() . '">' . $bl . $act->getWorkflowProgressActionLabel() . $br . '</a> ';
 		} else { 
-			print '<input type="submit" ' . $attribs . ' name="action_' . $act->getWorkflowProgressActionTask() . '" class="btn ' . $act->getWorkflowProgressActionStyleClass() . '" value="' . $act->getWorkflowProgressActionLabel() . '" /> ';
+			print '<button type="submit" ' . $attribs . ' name="action_' . $act->getWorkflowProgressActionTask() . '" class="btn btn-mini ' . $act->getWorkflowProgressActionStyleClass() . '">' . $bl . $act->getWorkflowProgressActionLabel() . $br . '</button> ';
 		}
 	 } ?>
 	</form>

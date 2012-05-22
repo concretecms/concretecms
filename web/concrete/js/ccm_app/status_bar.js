@@ -15,14 +15,22 @@ ccm_statusBar = {
 				var buttons = it.getButtons();
 				for (j = 0; j < buttons.length; j++) {
 					attribs = '';
+					var innerButtonLeft = '';
+					var innerButtonRight = '';
+					if (buttons[j].getInnerButtonLeftHTML() != '') {
+						innerButtonLeft = buttons[j].getInnerButtonLeftHTML() + ' ';
+					}
+					if (buttons[j].getInnerButtonRightHTML() != '') {
+						innerButtonRight = ' ' + buttons[j].getInnerButtonRightHTML();
+					}
 					var _attribs = buttons[j].getAttributes();
 					for (k in _attribs) {
 						attribs += _attribs[k].key + '="' + _attribs[k].value + '" ';
 					}
 					if (buttons[j].getURL() != '') {
-						buttonStr += '<a href="' + buttons[j].getURL() + '" ' + attribs + ' class="btn btn-small ' + buttons[j].getCSSClass() + '">' + buttons[j].getLabel() + '</a>';
+						buttonStr += '<a href="' + buttons[j].getURL() + '" ' + attribs + ' class="btn btn-small ' + buttons[j].getCSSClass() + '">' + innerButtonLeft + buttons[j].getLabel() + innerButtonRight + '</a>';
 					} else { 
-						buttonStr += '<button type="submit" ' + attribs + ' name="action_' + buttons[j].getAction() + '" class="btn-small btn ' + buttons[j].getCSSClass() + '">' + buttons[j].getLabel() + '</button>';
+						buttonStr += '<button type="submit" ' + attribs + ' name="action_' + buttons[j].getAction() + '" class="btn-small btn ' + buttons[j].getCSSClass() + '">' + innerButtonLeft + buttons[j].getLabel() + innerButtonRight + '</button>';
 					}
 				}
 				var line = '<form method="post" action="' + it.getAction() + '" id="ccm-status-bar-form-' + i + '" ' + (it.useAjaxForm ? 'class="ccm-status-bar-ajax-form"' : '') + '><div class="alert-message alert ' + it.getCSSClass() + '"><span>' + it.getDescription() + '</span> <div class="ccm-page-status-bar-buttons">' + buttonStr + '</div></div></form>';
@@ -96,6 +104,8 @@ ccm_statusBarItem = function() {
 ccm_statusBarItemButton = function() {
 	
 	this.css = '';
+	this.innerbuttonleft = '';
+	this.innerbuttonright = '';
 	this.label = '';
 	this.action = '';
 	this.url = '';
@@ -107,6 +117,14 @@ ccm_statusBarItemButton = function() {
 	
 	this.setCSSClass = function(css) {
 		this.css = css;
+	}
+
+	this.setInnerButtonLeftHTML = function(html) {
+		this.innerbuttonleft = html;
+	}
+
+	this.setInnerButtonRightHTML = function(html) {
+		this.innerbuttonright = html;
 	}
 	
 	this.setAction = function(action) {
@@ -135,6 +153,14 @@ ccm_statusBarItemButton = function() {
 	
 	this.getCSSClass = function() {
 		return this.css;
+	}
+	
+	this.getInnerButtonLeftHTML = function() {
+		return this.innerbuttonleft;
+	}
+
+	this.getInnerButtonRightHTML = function() {
+		return this.innerbuttonright;
 	}
 	
 	this.getLabel = function() {

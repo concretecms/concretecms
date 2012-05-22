@@ -49,6 +49,10 @@ class MovePagePageWorkflowRequest extends PageWorkflowRequest {
 	public function getWorkflowRequestApproveButtonClass() {
 		return 'info';
 	}
+
+	public function getWorkflowRequestApproveButtonInnerButtonRightHTML() {
+		return '<i class="icon-white icon-share-alt"></i>';
+	}	
 	
 	public function getWorkflowRequestApproveButtonText() {
 		return t('Approve Move');
