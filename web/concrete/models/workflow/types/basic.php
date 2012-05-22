@@ -44,7 +44,7 @@ class BasicWorkflow extends Workflow  {
 		$ux = UserInfo::getByID($bdw->getUserStartedID());
 		$req = $wp->getWorkflowRequestObject();
 		$description = $req->getWorkflowRequestDescriptionObject()->getHTML();
-		return t('On %s, user <strong>%s</strong> %s', date(DATE_APP_GENERIC_MDYT_FULL, strtotime($wp->getWorkflowProgressDateAdded())), $ux->getUserName(), $description);
+		return t('%s Submitted by <strong>%s</strong> on %s.', $description, $ux->getUserName(), date(DATE_APP_GENERIC_MDYT_FULL, strtotime($wp->getWorkflowProgressDateAdded())));
 	}
 
 	public function getWorkflowProgressStatusDescription(WorkflowProgress $wp) {
