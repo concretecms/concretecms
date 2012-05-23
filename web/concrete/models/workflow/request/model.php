@@ -106,8 +106,18 @@ abstract class WorkflowRequest extends Object {
 	
 	public function runTask($task, WorkflowProgress $wp) {
 		if (method_exists($this, $task)) {
-			$wpr = call_user_func_array(array($this, $task), array($wp));
-			return $wpr;
+			if ($task == 'approve') {
+				// we check to see if any other outstanding workflowprogress requests have this id
+				// if they don't we proceed
+				$db = Loader::db();
+				$num = $db->GetOne('select count(wpID) as total from WorkflowProgress where wpID <> ? and wrID = ? and wpIsCompleted = 0', array(
+					$wp->getWorkflowProgressID(), $this->getWorkflowRequestID()
+				));
+				if ($num == 0) {
+					$wpr = call_user_func_array(array($this, $task), array($wp));
+					return $wpr;
+				}
+			}
 		}
 	}
 
