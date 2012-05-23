@@ -30,7 +30,6 @@ class BasicWorkflowPermissionKey extends WorkflowPermissionKey {
 		if ($durationObject instanceof PermissionDuration) {
 			$pdID = $durationObject->getPermissionDurationID();
 		}
-		print_r($this->permissionObject);
 		$db->Replace('BasicWorkflowPermissionAssignments', array(
 			'wfID' => $this->permissionObject->getWorkflowID(),
 			'pkID' => $this->getPermissionKeyID(), 
