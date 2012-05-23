@@ -184,11 +184,11 @@ EOS;
 		if (isset($_REQUEST[$field])) {
 			$dt = $_REQUEST[$field];
 		} else if ($value != "") {
-			$dt = date('m/d/Y', strtotime($value));
+			$dt = date(DATE_APP_GENERIC_MDY, strtotime($value));
 		} else if ($value === '') {
 			$dt = '';
 		} else {
-			$dt = date('m/d/Y');
+			$dt = date(DATE_APP_GENERIC_MDY);
 		}
 		//$id = preg_replace("/[^0-9A-Za-z-]/", "_", $prefix);
 		$html = '';
