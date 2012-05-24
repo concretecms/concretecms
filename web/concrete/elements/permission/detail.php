@@ -24,7 +24,7 @@
 <div id="ccm-permission-access-types">
 <?
 $accessTypes = $permissionKey->getSupportedAccessTypes();
-Loader::element('permission/access_list', array('permissionKey' => $permissionKey, 'accessTypes' => $accessTypes)); ?>
+Loader::element('permission/access/list', array('permissionKey' => $permissionKey, 'accessTypes' => $accessTypes)); ?>
 </div>
 
 <? if ($permissionKey->hasCustomOptionsForm()) { ?>

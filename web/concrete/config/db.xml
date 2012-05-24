@@ -1,6 +1,46 @@
 <?xml version="1.0"?>
 <schema version="0.3">
 
+  <table name="PermissionAssignments">
+    <field name="paID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="pkID" type="I" size="10">
+      <KEY/>
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <index name="pkID">
+      <col>pkID</col>
+    </index>
+  </table>
+
+  <table name="PermissionAccess">
+    <field name="paID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="peID" type="I" size="10">
+      <KEY/>
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="pdID" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="accessType" type="I" size="4">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+  </table>
+
   <table name="BlockTypePermissionAssignments">
     <field name="peID" type="I" size="10">
       <KEY/>

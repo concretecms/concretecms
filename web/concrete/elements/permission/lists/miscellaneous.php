@@ -15,6 +15,9 @@ foreach($permissions as $pk) {
 <? } ?>
 </table>
 
+<?=Loader::element('permission/access/values_form', array('permissions' => $permissions)); ?>
+
+
 	<script type="text/javascript">
 	$(function() {
 		$('.dialog-launch').dialog();
