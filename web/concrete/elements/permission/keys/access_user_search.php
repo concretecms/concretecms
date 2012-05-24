@@ -1,7 +1,8 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?>
 
-<? $included = $permissionKey->getAssignmentList(); ?>
-<? $excluded = $permissionKey->getAssignmentList(PermissionKey::ACCESS_TYPE_EXCLUDE); ?>
+
+<? $included = $permissionAccess->getAccessListItems(PermissionKey::ACCESS_TYPE_INCLUDE); ?>
+<? $excluded = $permissionAccess->getAccessListItems(PermissionKey::ACCESS_TYPE_EXCLUDE); ?>
 <?
 Loader::model('search/group');
 $gl = new GroupSearch();
