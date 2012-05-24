@@ -281,7 +281,7 @@ abstract class PermissionKey extends Object {
 		} else { 
 			$accessType = ' and accessType = ' . $accessType;
 		}
-		return $peIDs . ' ' . $accessType . ' order by accessType desc'; // we order desc so that excludes come last (-1)
+		return $peIDs . ' ' . $accessType . ' group by pas.paID order by accessType desc'; // we order desc so that excludes come last (-1)
 	}
 	
 	public function delete() {
@@ -289,11 +289,35 @@ abstract class PermissionKey extends Object {
 		$db->Execute('delete from PermissionKeys where pkID = ?', array($this->getPermissionKeyID()));
 	}
 	
-	abstract public function getAssignmentList($accessType = false, $filterEntities = array());
-	abstract public function clearWorkflows();
+	public function getAccessList($accessType = false, $filterEntities = array()) {
+		$db = Loader::db();
+		$filterString = $this->buildAssignmentFilterString($accessType, $filterEntities);
+ 		$r = $db->Execute('select pas.paID from PermissionAssignments pas inner join PermissionAccess pa on pas.paID = pa.paID where pkID = ? ' . $filterString, array(
+ 			$this->getPermissionKeyID()
+ 		));
+ 		$list = array();
+ 		$class = str_replace('PermissionKey', 'PermissionAccess', get_class($this));
+ 		if (!class_exists($class)) {
+ 			$class = 'PermissionAccess';
+ 		}
+ 		while ($row = $r->FetchRow()) {
+ 			$ppa = new $class();
+ 			$list = array_merge($list, call_user_func_array(array($class, 'getAccessList'), array($row['paID'])));
+ 		}
+ 		
+ 		return $list;
+		
+	}
+	
+	public function getPermissionAccessID() {
+		$db = Loader::db();
+		return $db->GetOne('select paID from PermissionAssignments where pkID = ?', array($this->getPermissionKeyID()));
+	}
+	
+	/*abstract public function clearWorkflows();
 	abstract public function attachWorkflow(Workflow $wf);
 	abstract public function getWorkflows();
-	
+	*/
 	public function exportAccess($pxml) {
 		// by default we don't. but tasks do
 	}

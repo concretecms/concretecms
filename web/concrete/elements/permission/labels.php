@@ -1,6 +1,6 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?>
 <?
-$assignments = $pk->getAssignmentList(PagePermissionKey::ACCESS_TYPE_ALL);
+$assignments = $pk->getAccessList(PermissionKey::ACCESS_TYPE_ALL);
 
 $str = '';
 

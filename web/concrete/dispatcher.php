@@ -86,15 +86,16 @@
 	Loader::model('page');
 	Loader::model('page_theme');
 	Loader::model('composer_page');
-	Loader::model('permission/access_entity');
+	Loader::model('permission/access/model');
+	Loader::model('permission/access/entity');
 	Loader::model('permission/duration');
 	Loader::model('permission/category');
 	Loader::model('permission/key');
 	Loader::model('permission/assignment');
 	Loader::model('permissions');
 	Loader::model('permission/response');
-	Loader::model("permission/categories/task");
 	Loader::model("permission/categories/page");
+	Loader::model("permission/categories/task");
 	Loader::model("permission/categories/block_type");
 	Loader::model("permission/categories/file_set");
 	Loader::model("permission/categories/file");

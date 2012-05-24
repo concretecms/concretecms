@@ -19,10 +19,6 @@ if ($_REQUEST['message'] == 'custom_options_saved') { ?>
 </div>
 
 <? } ?>
-
-<div class="alert-message notice block-message">
-	<p><?=t('Note: Permission changes happen in realtime and are applied immediately.')?></p>
-</div>
 </div>
 <script type="text/javascript">
 $(function() {
