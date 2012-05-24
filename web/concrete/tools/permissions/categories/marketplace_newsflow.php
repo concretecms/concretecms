@@ -4,21 +4,28 @@ $p = new Permissions();
 if ($p->canAccessTaskPermissions()) { 
 
 	if ($_REQUEST['task'] == 'add_access_entity' && Loader::helper("validation/token")->validate('add_access_entity')) {
+		$pa = MarketplaceNewsflowPermissionAccess::getByID($_REQUEST['paID']);
 		$pk = MarketplaceNewsflowPermissionKey::getByID($_REQUEST['pkID']);
 		$pe = PermissionAccessEntity::getByID($_REQUEST['peID']);
 		$pd = PermissionDuration::getByID($_REQUEST['pdID']);
-		$pk->addAssignment($pe, $pd, $_REQUEST['accessType']);
+		$pa->addListITem($pe, $pd, $_REQUEST['accessType']);
 	}
 
 	if ($_REQUEST['task'] == 'remove_access_entity' && Loader::helper("validation/token")->validate('remove_access_entity')) {
-		$pk = MarketplaceNewsflowPermissionKey::getByID($_REQUEST['pkID']);
+		$pa = MarketplaceNewsflowPermissionAccess::getByID($_REQUEST['paID']);
 		$pe = PermissionAccessEntity::getByID($_REQUEST['peID']);
-		$pk->removeAssignment($pe);
+		$pa->removeListItem($pe);
 	}
 
 	if ($_REQUEST['task'] == 'save_permission' && Loader::helper("validation/token")->validate('save_permission')) {
+		$pa = MarketplaceNewsflowPermissionAccess::getByID($_REQUEST['paID']);
+		$pa->save($_POST);
+	}
+
+	if ($_REQUEST['task'] == 'display_access_cell' && Loader::helper("validation/token")->validate('display_access_cell')) {
+		$pa = MarketplaceNewsflowPermissionAccess::getByID($_REQUEST['paID']);
 		$pk = MarketplaceNewsflowPermissionKey::getByID($_REQUEST['pkID']);
-		$pk->savePermissionKey($_POST);
+		Loader::element('permission/labels', array('pk' => $pk, 'pa' => $pa));
 	}
 	
 }

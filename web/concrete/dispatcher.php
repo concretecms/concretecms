@@ -88,6 +88,7 @@
 	Loader::model('composer_page');
 	Loader::model('permission/access/model');
 	Loader::model('permission/access/entity');
+	Loader::model('permission/access/list_item');
 	Loader::model('permission/duration');
 	Loader::model('permission/category');
 	Loader::model('permission/key');

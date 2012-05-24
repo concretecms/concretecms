@@ -9,3 +9,8 @@ class SitemapPermissionAssignment extends PermissionAssignment {
 
 
 }
+
+class SitemapPermissionAccess extends PermissionAccess {
+
+
+}

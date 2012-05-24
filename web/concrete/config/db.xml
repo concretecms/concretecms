@@ -21,6 +21,19 @@
   <table name="PermissionAccess">
     <field name="paID" type="I" size="10">
       <KEY/>
+      <AUTOINCREMENT/>
+      <UNSIGNED/>
+    </field>
+    <field name="paIsInUse" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+  </table>
+
+  <table name="PermissionAccessList">
+    <field name="paID" type="I" size="10">
+      <KEY/>
       <DEFAULT value="0"/>
       <UNSIGNED/>
     </field>

@@ -1,6 +1,14 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?>
 <?
-$assignments = $pk->getAccessList(PermissionKey::ACCESS_TYPE_ALL);
+if (!isset($pa)) {
+	$pa = $pk->getPermissionAccessObject();
+}
+$assignments = array();
+$paID = 0;
+if (is_object($pa)) {
+	$paID = $pa->getPermissionAccessID();
+	$assignments = $pa->getAccessListItems(PermissionKey::ACCESS_TYPE_ALL);
+}
 
 $str = '';
 
@@ -31,3 +39,5 @@ if (count($assignments) > 0) {
 <? } else { ?>
 	<?=$str?>
 <? } ?>
+
+<input type="hidden" name="pkID[<?=$pk->getPermissionKeyID()?>]" value="<?=$paID?>" />

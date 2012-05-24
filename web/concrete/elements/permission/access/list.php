@@ -1,7 +1,7 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?>
 
 <? foreach($accessTypes as $accessType => $title) { 
-	$list = $permissionKey->getAccessList($accessType); 
+	$list = $permissionAccess->getAccessListItems($accessType); 
 	?>
 	<h3><?=$title?></h3>
 

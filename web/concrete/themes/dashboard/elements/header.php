@@ -141,9 +141,9 @@ print $dh->getDashboardAndSearchMenus();
 		<div class="ccm-ui" id="ccm-dashboard-result-message">
 			<div class="message alert-message info"><?=Loader::helper('text')->entities($message)?></div>
 		</div>
-	<? }
-	if (isset($success)) { ?>
-		<div class="ccm-ui" id="ccm-dashboard-result-success-message">
+	<? 
+	} else if (isset($success)) { ?>
+		<div class="ccm-ui" id="ccm-dashboard-result-message">
 			<div class="message alert-message success"><?=Loader::helper('text')->entities($success)?></div>
 		</div>
 	<? } ?>

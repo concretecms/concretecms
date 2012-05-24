@@ -267,46 +267,30 @@ abstract class PermissionKey extends Object {
 		return $valid;		
 	}
 
-	protected function buildAssignmentFilterString($accessType, $filterEntities) { 
-		$peIDs = '';
-		$filters = array();
-		if (count($filterEntities) > 0) {
-			foreach($filterEntities as $ent) {
-				$filters[] = $ent->getAccessEntityID();
-			}
-			$peIDs .= 'and peID in (' . implode($filters, ',') . ')';
-		}
-		if ($accessType == 0) {
-			$accessType = '';
-		} else { 
-			$accessType = ' and accessType = ' . $accessType;
-		}
-		return $peIDs . ' ' . $accessType . ' group by pas.paID order by accessType desc'; // we order desc so that excludes come last (-1)
-	}
-	
 	public function delete() {
 		$db = Loader::db();
 		$db->Execute('delete from PermissionKeys where pkID = ?', array($this->getPermissionKeyID()));
 	}
 	
-	public function getAccessList($accessType = false, $filterEntities = array()) {
+	public function clearPermissionAssignment() {
 		$db = Loader::db();
-		$filterString = $this->buildAssignmentFilterString($accessType, $filterEntities);
- 		$r = $db->Execute('select pas.paID from PermissionAssignments pas inner join PermissionAccess pa on pas.paID = pa.paID where pkID = ? ' . $filterString, array(
- 			$this->getPermissionKeyID()
- 		));
- 		$list = array();
- 		$class = str_replace('PermissionKey', 'PermissionAccess', get_class($this));
- 		if (!class_exists($class)) {
- 			$class = 'PermissionAccess';
- 		}
- 		while ($row = $r->FetchRow()) {
- 			$ppa = new $class();
- 			$list = array_merge($list, call_user_func_array(array($class, 'getAccessList'), array($row['paID'])));
- 		}
- 		
- 		return $list;
-		
+		$db->Execute('update PermissionAssignments set paID = 0 where pkID = ?', array($this->pkID));
+	}
+	
+	public function assignPermissionAccess(PermissionAccess $pa) {
+		$db = Loader::db();
+		$db->Replace('PermissionAssignments', array('paID' => $pa->getPermissionAccessID(), 'pkID' => $this->pkID), array('pkID'), true);
+	}
+
+	public function getPermissionAccessObject() {
+		$paID = $this->getPermissionAccessID();
+		if ($paID > 0) {
+	 		$class = str_replace('PermissionKey', 'PermissionAccess', get_class($this));
+	 		if (!class_exists($class)) {
+	 			$class = 'PermissionAccess';
+	 		}
+			return call_user_func_array(array($class, 'getByID'), array($paID));
+		}
 	}
 	
 	public function getPermissionAccessID() {
