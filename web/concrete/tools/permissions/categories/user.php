@@ -4,23 +4,30 @@ $p = new Permissions();
 if ($p->canAccessTaskPermissions()) { 
 
 	if ($_REQUEST['task'] == 'add_access_entity' && Loader::helper("validation/token")->validate('add_access_entity')) {
+		$pa = UserPermissionAccess::getByID($_REQUEST['paID']);
 		$pk = UserPermissionKey::getByID($_REQUEST['pkID']);
 		$pe = PermissionAccessEntity::getByID($_REQUEST['peID']);
 		$pd = PermissionDuration::getByID($_REQUEST['pdID']);
-		$pk->addAssignment($pe, $pd, $_REQUEST['accessType']);
+		$pa->addListITem($pe, $pd, $_REQUEST['accessType']);
 	}
 
 	if ($_REQUEST['task'] == 'remove_access_entity' && Loader::helper("validation/token")->validate('remove_access_entity')) {
-		$pk = UserPermissionKey::getByID($_REQUEST['pkID']);
+		$pa = UserPermissionAccess::getByID($_REQUEST['paID']);
 		$pe = PermissionAccessEntity::getByID($_REQUEST['peID']);
-		$pk->removeAssignment($pe);
+		$pa->removeListItem($pe);
 	}
 
 	if ($_REQUEST['task'] == 'save_permission' && Loader::helper("validation/token")->validate('save_permission')) {
-		$pk = UserPermissionKey::getByID($_REQUEST['pkID']);
-		$pk->savePermissionKey($_POST);
+		$pa = UserPermissionAccess::getByID($_REQUEST['paID']);
+		$pa->save($_POST);
 	}
 
+	if ($_REQUEST['task'] == 'display_access_cell' && Loader::helper("validation/token")->validate('display_access_cell')) {
+		$pa = UserPermissionAccess::getByID($_REQUEST['paID']);
+		$pk = UserPermissionKey::getByID($_REQUEST['pkID']);
+		Loader::element('permission/labels', array('pk' => $pk, 'pa' => $pa));
+	}
+	
 	if ($_REQUEST['task'] == 'save_workflows' && Loader::helper("validation/token")->validate('save_workflows')) {
 		$pk = UserPermissionKey::getByID($_REQUEST['pkID']);
 		$pk->clearWorkflows();
@@ -34,4 +41,3 @@ if ($p->canAccessTaskPermissions()) {
 	
 	
 }
-

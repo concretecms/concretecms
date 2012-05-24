@@ -168,7 +168,7 @@ class AccessUserSearchUserPermissionKey extends UserPermissionKey  {
 	
 }
 
-class AccessUserSearchUserPermissionAssignment extends UserPermissionAssignment {
+class AccessUserSearchUserPermissionAccessListItem extends PermissionAccessListItem {
 	
 	protected $customGroupArray = array();
 	protected $groupsAllowedPermission = 'N';

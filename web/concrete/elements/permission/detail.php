@@ -9,6 +9,7 @@ if ($_REQUEST['paID'] && $_REQUEST['paID'] > 0) {
 } else { 
 	$pa = PermissionAccess::create();
 }
+$pa->setPermissionKey($permissionKey);
 ?>
 
 <div class="ccm-ui" id="ccm-permission-detail">
@@ -21,12 +22,17 @@ if ($_REQUEST['paID'] && $_REQUEST['paID'] > 0) {
 <? Loader::element('permission/message_list'); ?>
 
 <? if ($permissionKey->hasCustomOptionsForm() || ($permissionKey->canPermissionKeyTriggerWorkflow() && count($workflows) > 0)) { ?>
-	<ul class="tabs" id="ccm-permission-detail-tabs">
-		<li class="active"><a href="#" data-tab="access-types"><?=t('Access')?></a></li>
-		<? if ($permissionKey->canPermissionKeyTriggerWorkflow() && count($workflows) > 0) { ?><li><a href="#" data-tab="workflow"><?=t('Workflow')?></a><? } ?></li>
-		<? if ($permissionKey->hasCustomOptionsForm()) { ?><li><a href="#" data-tab="custom-options"><?=t('Details')?></a><? } ?></li>
-	</ul>
-<div class="clearfix"></div>
+	<?
+	$tabs = array();
+	$tabs[] = array('access-types', t('Access'), true);
+	if ($permissionKey->canPermissionKeyTriggerWorkflow() && count($workflows) > 0) {
+		$tabs[] = array('workflow', t('Workflow'));
+	}
+	if ($permissionKey->hasCustomOptionsForm()) {
+		$tabs[] = array('custom-options', t('Details'));
+	}
+	?>
+	<?=Loader::helper('concrete/interface')->tabs($tabs);?>
 <? } ?>
 	
 <? if ($permissionKey->getPermissionKeyDescription()) { ?>
@@ -36,19 +42,19 @@ if ($_REQUEST['paID'] && $_REQUEST['paID'] > 0) {
 <? } ?>
 
 
-<div id="ccm-permission-access-types">
+<div id="ccm-tab-content-access-types" class="ccm-tab-content">
 <?
 $accessTypes = $permissionKey->getSupportedAccessTypes();
 Loader::element('permission/access/list', array('permissionAccess' => $pa, 'accessTypes' => $accessTypes)); ?>
 </div>
 
 <? if ($permissionKey->hasCustomOptionsForm()) { ?>
-<div id="ccm-permission-custom-options" style="display: none">
+<div id="ccm-tab-content-custom-options" class="ccm-tab-content">
 
 <? if ($permissionKey->getPackageID() > 0) { ?>
-	<? Loader::packageElement('permission/keys/' . $permissionKey->getPermissionKeyHandle(), $permissionKey->getPackageHandle(), array('permissionKey' => $permissionKey)); ?>
+	<? Loader::packageElement('permission/keys/' . $permissionKey->getPermissionKeyHandle(), $permissionKey->getPackageHandle(), array('permissionAccess' => $pa)); ?>
 <? } else { ?>
-	<? Loader::element('permission/keys/' . $permissionKey->getPermissionKeyHandle(), array('permissionKey' => $permissionKey)); ?>
+	<? Loader::element('permission/keys/' . $permissionKey->getPermissionKeyHandle(), array('permissionAccess' => $pa)); ?>
 <? } ?>
 
 </div>
@@ -64,7 +70,7 @@ Loader::element('permission/access/list', array('permissionAccess' => $pa, 'acce
 	}
 	?>
 		
-	<div id="ccm-permission-workflow" style="display: none">
+	<div id="ccm-tab-content-workflow" class="ccm-tab-content">
 			<h3><?=t('Attach a workflow to this permission?')?></h3>
 			<div class="clearfix">
 			<label><?=t('Workflow')?></label>
@@ -88,27 +94,6 @@ Loader::element('permission/access/list', array('permissionAccess' => $pa, 'acce
 
 <script type="text/javascript">
 $(function() {
-/*
-	$('#ccm-permission-detail-tabs a').unbind().click(function() {
-		$('#ccm-permission-detail-tabs li').removeClass('active');
-		$(this).parent().addClass('active');
-		$('#ccm-permission-access-types').hide();
-		$('#ccm-permission-custom-options').hide();
-		$('#ccm-permission-workflow').hide();
-		var tab = $(this).attr('data-tab');
-		$('#ccm-permission-' + tab).show();
-		$("#ccm-permission-detail").closest('.ui-dialog-content').jqdialog('option', 'buttons', false);
-		switch(tab) {
-			case 'custom-options':
-				$("#ccm-permission-detail").closest('.ui-dialog-content').parent().append('<div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix ccm-ui"></div>');
-				break;
-			case 'workflow':
-				$("#ccm-permission-detail").closest('.ui-dialog-content').parent().append('<div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix ccm-ui"><input type="submit" class="btn primary ccm-button-right" onclick="$(\'#ccm-permissions-workflow-form\').submit()" value="<?=t('Save')?>" /></div>');
-				break;
-		}
-		return false;
-	});
-	*/
 	
 	ccm_addAccessEntity = function(peID, pdID, accessType) {
 		jQuery.fn.dialog.closeTop();

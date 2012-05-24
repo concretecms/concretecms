@@ -2,14 +2,17 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 
 class PermissionAccess extends Object {
+	public function setPermissionKey($permissionKey) {
+		$this->pk = $permissionKey;
+	}
 	
 	public function getPermissionAccessID() {return $this->paID;}
 	public function isPermissionAccessInUse() {return $this->paIsInUse;}
 	public function getAccessListItems($accessType = false, $filterEntities = array()) {
-
+			
 		$db = Loader::db();
 		$class = get_called_class();
-		$class = str_replace('PermissionAccess', 'PermissionAccessListItem', $class);
+		$class = str_replace('PermissionKey', 'PermissionAccessListItem', get_class($this->pk));
 		if (!class_exists($class)) {
 			$class = 'PermissionAccessListItem';
 		}
