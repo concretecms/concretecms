@@ -1,6 +1,21 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?>
 
+<? 
+if ($_REQUEST['paID'] && $_REQUEST['paID'] > 0) { 
+	$pa = PermissionAccess::getByID($_REQUEST['paID']);
+	if ($pa->isPermissionAccessInUse()) {
+		$pa = $pa->duplicate();
+	}
+} else { 
+	$pa = PermissionAccess::create();
+}
+?>
+
 <div class="ccm-ui" id="ccm-permission-detail">
+<form id="ccm-permissions-detail-form" onsubmit="return ccm_submitPermissionsDetailForm()" method="post" action="<?=$permissionKey->getPermissionKeyToolsURL()?>">
+
+<input type="hidden" name="paID" value="<?=$pa->getPermissionAccessID()?>" />
+
 <? $workflows = Workflow::getList();?>
 
 <? Loader::element('permission/message_list'); ?>
@@ -24,12 +39,11 @@
 <div id="ccm-permission-access-types">
 <?
 $accessTypes = $permissionKey->getSupportedAccessTypes();
-Loader::element('permission/access/list', array('permissionKey' => $permissionKey, 'accessTypes' => $accessTypes)); ?>
+Loader::element('permission/access/list', array('permissionAccess' => $pa, 'accessTypes' => $accessTypes)); ?>
 </div>
 
 <? if ($permissionKey->hasCustomOptionsForm()) { ?>
 <div id="ccm-permission-custom-options" style="display: none">
-<form id="ccm-permissions-custom-options-form" onsubmit="return ccm_submitPermissionCustomOptionsForm()" method="post" action="<?=$permissionKey->getPermissionKeyToolsURL()?>">
 
 <? if ($permissionKey->getPackageID() > 0) { ?>
 	<? Loader::packageElement('permission/keys/' . $permissionKey->getPermissionKeyHandle(), $permissionKey->getPackageHandle(), array('permissionKey' => $permissionKey)); ?>
@@ -37,7 +51,6 @@ Loader::element('permission/access/list', array('permissionKey' => $permissionKe
 	<? Loader::element('permission/keys/' . $permissionKey->getPermissionKeyHandle(), array('permissionKey' => $permissionKey)); ?>
 <? } ?>
 
-</form>
 </div>
 
 <? } ?>
@@ -52,7 +65,6 @@ Loader::element('permission/access/list', array('permissionKey' => $permissionKe
 	?>
 		
 	<div id="ccm-permission-workflow" style="display: none">
-		<form id="ccm-permissions-workflow-form" onsubmit="return ccm_submitPermissionWorkflowForm()" method="post" action="<?=$permissionKey->getPermissionKeyToolsURL('save_workflows')?>">
 			<h3><?=t('Attach a workflow to this permission?')?></h3>
 			<div class="clearfix">
 			<label><?=t('Workflow')?></label>
@@ -64,15 +76,19 @@ Loader::element('permission/access/list', array('permissionKey' => $permissionKe
 			</ul>
 			</div>
 			</div>
-		</form>
 	</div>
 <? } ?>
 
+	<div class="dialog-buttons">
+		<a href="javascript:void(0)" class="btn" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel')?></a>
+		<button type="submit" class="btn primary ccm-button-right" class="btn primary" onclick="$('#ccm-permissions-detail-form').submit()"><?=t('Save')?> <i class="icon-ok-sign icon-white"></i></button>
+	</div>
+</form>
 </div>
 
 <script type="text/javascript">
 $(function() {
-
+/*
 	$('#ccm-permission-detail-tabs a').unbind().click(function() {
 		$('#ccm-permission-detail-tabs li').removeClass('active');
 		$(this).parent().addClass('active');
@@ -84,7 +100,7 @@ $(function() {
 		$("#ccm-permission-detail").closest('.ui-dialog-content').jqdialog('option', 'buttons', false);
 		switch(tab) {
 			case 'custom-options':
-				$("#ccm-permission-detail").closest('.ui-dialog-content').parent().append('<div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix ccm-ui"><input type="submit" class="btn primary ccm-button-right" onclick="$(\'#ccm-permissions-custom-options-form\').submit()" value="<?=t('Save')?>" /></div>');
+				$("#ccm-permission-detail").closest('.ui-dialog-content').parent().append('<div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix ccm-ui"></div>');
 				break;
 			case 'workflow':
 				$("#ccm-permission-detail").closest('.ui-dialog-content').parent().append('<div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix ccm-ui"><input type="submit" class="btn primary ccm-button-right" onclick="$(\'#ccm-permissions-workflow-form\').submit()" value="<?=t('Save')?>" /></div>');
@@ -92,6 +108,60 @@ $(function() {
 		}
 		return false;
 	});
+	*/
+	
+	ccm_addAccessEntity = function(peID, pdID, accessType) {
+		jQuery.fn.dialog.closeTop();
+		jQuery.fn.dialog.showLoader();
+		
+		$.get('<?=$permissionKey->getPermissionKeyToolsURL("add_access_entity")?>&paID=<?=$pa->getPermissionAccessID()?>&pdID=' + pdID + '&accessType=' + accessType + '&peID=' + peID, function(r) { 
+			$.get(ccm_permissionDialogURL + '?paID=<?=$pa->getPermissionAccessID()?>&message=entity_added&pkID=<?=$permissionKey->getPermissionKeyID()?>', function(r) { 
+				jQuery.fn.dialog.replaceTop(r);
+				jQuery.fn.dialog.hideLoader();
+			});
+		});
+	}
+	
+	ccm_deleteAccessEntityAssignment = function(peID) {
+		jQuery.fn.dialog.showLoader();
+		
+		$.get('<?=$permissionKey->getPermissionKeyToolsURL("remove_access_entity")?>&paID=<?=$pa->getPermissionAccessID()?>&peID=' + peID, function() { 
+			$.get(ccm_permissionDialogURL + '?paID=<?=$pa->getPermissionAccessID()?>&message=entity_removed&pkID=<?=$permissionKey->getPermissionKeyID()?>', function(r) { 
+				jQuery.fn.dialog.replaceTop(r);
+				jQuery.fn.dialog.hideLoader();
+			});
+		});
+	}
+
+	ccm_submitPermissionsDetailForm = function() {
+		jQuery.fn.dialog.showLoader();
+		$("#ccm-permissions-detail-form").ajaxSubmit(function(r) {
+			jQuery.fn.dialog.hideLoader();
+			jQuery.fn.dialog.closeTop();
+			// now we reload the permission key to use the new permission assignment
+			$('#ccm-permission-grid-cell-<?=$permissionKey->getPermissionKeyID()?>').load(
+				'<?=$permissionKey->getPermissionKeyToolsURL("display_access_cell")?>&paID=<?=$pa->getPermissionAccessID()?>', 				function() {
+					$('#ccm-permission-grid-name-<?=$permissionKey->getPermissionKeyID()?> a').attr('data-paID', '<?=$pa->getPermissionAccessID()?>');		
+				}
+			);
+		});
+		return false;
+	}
+	
+	/*
+	ccm_submitPermissionWorkflowForm = function() {
+		jQuery.fn.dialog.showLoader();
+		$("#ccm-permissions-workflow-form").ajaxSubmit(function(r) {
+			$.get(ccm_permissionDialogURL + '?message=workflows_saved&pkID=<?=$permissionKey->getPermissionKeyID()?>', function(r) { 
+				jQuery.fn.dialog.replaceTop(r);
+				jQuery.fn.dialog.hideLoader();
+			});
+		});
+		return false;
+	}
+	*/
+	
+	
 	
 	<? if (isset($_REQUEST['message']) && $_REQUEST['message'] == 'custom_options_saved') { ?>
 		$('a[data-tab=custom-options]').click();
