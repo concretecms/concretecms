@@ -35,35 +35,20 @@ class FilePermissionKey extends PermissionKey {
 			}
 		}
 	}
-	
-	public function copyFromFileSetToFile() {
+
+	public function copyFromPageToArea() {
 		$db = Loader::db();
-
-		if (isset($this->inheritedPermissions[$this->getPermissionKeyHandle()])) {
-			$inheritedPKID = $db->GetOne('select pkID from PermissionKeys where pkHandle = ?', array($this->inheritedPermissions[$this->getPermissionKeyHandle()]));
-			if (is_array($this->permissionObjectToCheck)) { 
-				$sets = array();
-				foreach($this->permissionObjectToCheck as $fs) {
-					$sets[] = $fs->getFileSetID();
-				}
-				$r = $db->Execute('select distinct peID, accessType, pdID from FileSetPermissionAssignments where fsID in (' . implode(',', $sets) . ') and pkID = ? and accessType <> ? ' . $filterString, array(
-					$inheritedPKID, FileSetPermissionKey::ACCESS_TYPE_MINE
-				));
-			} else {
-				$r = $db->Execute('select accessType, peID, pdID from FileSetPermissionAssignments where fsID = ? and pkID = ? and accessType <> ? ' . $filterString, array(
-					$this->permissionObjectToCheck->getFileSetID(), $inheritedPKID, FileSetPermissionKey::ACCESS_TYPE_MINE
-				));
-			}
-
-			while ($row = $r->FetchRow()) {
-				$db->Replace('FilePermissionAssignments', array(
-					'fID' => $this->permissionObject->getFileID(), 
-					'pkID' => $this->getPermissionKeyID(),
-					'accessType' => $row['accessType'],
-					'peID' => $row['peID']), array('fID', 'peID', 'pkID'), true);				
-			}
+		$paID = $this->getPermissionAccessID();
+		if ($paID) { 
+			$db = Loader::db();
+			$db->Replace('FilePermissionAssignments', array(
+				'fID' => $this->permissionObject->getFileID(), 
+				'pkID' => $this->getPermissionKeyID(),
+				'paID' => $paID), array('fID', 'paID', 'pkID'), true);				
 		}
 	}
+	
+	/*	
 	public function getAssignmentList($accessType = FilePermissionKey::ACCESS_TYPE_INCLUDE, $filterEntities = array()) {
 		$db = Loader::db();
 		$filterString = $this->buildAssignmentFilterString($accessType, $filterEntities);
@@ -127,6 +112,7 @@ class FilePermissionKey extends PermissionKey {
 		$db->Execute('delete from FilePermissionAssignments where fID = ? and peID = ? and pkID = ?', array($this->permissionObject->getFileID(), $pe->getAccessEntityID(), $this->getPermissionKeyID()));
 		
 	}
+	*/
 	
 	public function getPermissionKeyToolsURL($task = false) {
 		return parent::getPermissionKeyToolsURL($task) . '&fID=' . $this->getPermissionObject()->getFileID();
