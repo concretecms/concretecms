@@ -42,6 +42,20 @@ class PagePermissionKey extends PermissionKey {
 		return $workflows;
 	}
 
+	public function clearPermissionAssignment() {
+		$db = Loader::db();
+		$db->Execute('update PagePermissionAssignments set paID = 0 where pkID = ? and cID = ?', array($this->pkID, $this->getPermissionObject()->getPermissionsCollectionID()));
+	}
+	
+	public function assignPermissionAccess(PermissionAccess $pa) {
+		$db = Loader::db();
+		$db->Replace('PagePermissionAssignments', array('cID' => $this->getPermissionObject()->getPermissionsCollectionID(), 'paID' => $pa->getPermissionAccessID(), 'pkID' => $this->pkID), array('cID', 'pkID'), true);
+	}
+
+	public function getPermissionAccessID() {
+		$db = Loader::db();
+		return $db->GetOne('select paID from PagePermissionAssignments where cID = ? and pkID = ?', array($this->getPermissionObject()->getPermissionsCollectionID(), $this->getPermissionKeyID()));
+	}
 
 }
 

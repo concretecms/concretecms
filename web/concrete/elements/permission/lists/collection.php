@@ -10,7 +10,6 @@ if ($c->getCollectionInheritance() == 'OVERRIDE') {
 ?>
 <div class="ccm-ui">
 <form>
-
 <div class="ccm-pane-options" style="padding-bottom: 0px">
 <div class="clearfix">
 <label for="ccm-page-permissions-inherit"><?=t('Assign Permissions')?></label>
@@ -34,8 +33,8 @@ if ($c->getCollectionInheritance() == 'OVERRIDE') {
 </div>
 
 <? } ?>
+</form>
 </div>
-<br/>
 
 <?
 	  $cpc = $c->getPermissionsCollectionObject();
@@ -45,6 +44,9 @@ if ($c->getCollectionInheritance() == 'OVERRIDE') {
 
 
 <? defined('C5_EXECUTE') or die("Access Denied."); ?>
+
+<? $cat = PermissionKeyCategory::getByHandle('page'); ?>
+<form method="post" id="ccm-permission-list-form" action="<?=$cat->getToolsURL("save_permission_assignments")?>&cID=<?=$c->getCollectionID()?>">
 
 <table class="ccm-permission-grid">
 <?
@@ -59,6 +61,7 @@ foreach($permissions as $pk) {
 <? } ?>
 </table>
 
+</form>
 
 <script type="text/javascript">
 ccm_permissionLaunchDialog = function(link) {
@@ -85,6 +88,12 @@ ccm_permissionLaunchDialog = function(link) {
 
 
 </form>
+
+<div class="dialog-buttons">
+	<a href="javascript:void(0)" onclick="jQuery.fn.dialog.closeTop()" class="btn"><?=t('Cancel')?></a>
+	<button onclick="$('#ccm-permission-list-form').submit()" class="btn primary ccm-button-right"><?=t('Save')?> <i class="icon-ok-sign icon-white"></i></button>
+</div>
+
 </div>
 
 
@@ -105,6 +114,17 @@ ccm_pagePermissionsConfirmInheritanceChange = function() {
 
 
 $(function() {
+	$('#ccm-permission-list-form').ajaxForm({
+		beforeSubmit: function() {
+			jQuery.fn.dialog.showLoader();
+		},
+		
+		success: function(r) {
+			jQuery.fn.dialog.hideLoader();
+			jQuery.fn.dialog.closeTop();
+		}		
+	});
+	
 	inheritanceVal = $('#ccm-page-permissions-inherit').val();
 	$('#ccm-page-permissions-inherit').change(function() {
 		$('#dialog-buttons-start').addClass('dialog-buttons');
