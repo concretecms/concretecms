@@ -66,6 +66,7 @@ class PermissionAccess extends Object {
 		foreach($listItems as $li) {
 			$newPA->addListItem($li->getAccessEntityObject(), $li->getPermissionDurationObject(), $li->getAccessType());
 		}
+		$newPA->setPermissionKey($this->pk);
 		return $newPA;
 	}
 

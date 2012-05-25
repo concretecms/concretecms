@@ -75,6 +75,18 @@ class PermissionKeyCategory extends Object {
 		return $ak;
 	}
 	
+	public function getToolsURL($task = false) {
+		if (!$task) {
+			$task = 'save_permission';
+		}
+		$uh = Loader::helper('concrete/urls');
+		$akc = PermissionKeyCategory::getByID($this->getPermissionKeyCategoryID());
+		$url = $uh->getToolsURL('permissions/categories/' . $this->pkCategoryHandle, $akc->getPackageHandle());
+		$token = Loader::helper('validation/token')->getParameter($task);
+		$url .= '?' . $token . '&task=' . $task;
+		return $url;
+	}
+
 	public function getPermissionKeyCategoryID() {return $this->pkCategoryID;}
 	public function getPermissionKeyCategoryHandle() {return $this->pkCategoryHandle;}
 	public function getPackageID() {return $this->pkgID;}

@@ -88,4 +88,28 @@ if (count($pages) > 0) {
 			$c->setOverrideTemplatePermissions($_REQUEST['inherit']);
 		}
 	}		
+
+	if ($_REQUEST['task'] == 'display_access_cell' && Loader::helper("validation/token")->validate('display_access_cell')) {
+		$pk = PermissionKey::getByID($_REQUEST['pkID']);
+		$pa = PermissionAccess::getByID($_REQUEST['paID'], $pk);
+		Loader::element('permission/labels', array('pk' => $pk, 'pa' => $pa));
+	}
+
+	if ($_REQUEST['task'] == 'save_permission_assignments' && Loader::helper("validation/token")->validate('save_permission_assignments')) {
+		$permissions = PermissionKey::getList('page');
+		foreach($permissions as $pk) {
+			$paID = $_POST['pkID'][$pk->getPermissionKeyID()];
+			foreach($pages as $c) { 
+				$pk->setPermissionObject($c);
+				$pk->clearPermissionAssignment();
+				if ($paID > 0) {
+					$pa = PermissionAccess::getByID($paID, $pk);
+					if (is_object($pa)) {
+						$pk->assignPermissionAccess($pa);
+					}			
+				}
+			}
+		}
+	}
+
 }
