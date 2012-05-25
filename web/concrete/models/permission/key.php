@@ -293,8 +293,9 @@ abstract class PermissionKey extends Object {
 	public function assignPermissionAccess(PermissionAccess $pa) {
 		$db = Loader::db();
 		$db->Replace('PermissionAssignments', array('paID' => $pa->getPermissionAccessID(), 'pkID' => $this->pkID), array('pkID'), true);
+		$pa->markAsInUse();
 	}
-
+	
 	public function getPermissionAccessObject() {
 		$paID = $this->getPermissionAccessID();
 		return PermissionAccess::getByID($paID, $this);

@@ -61,7 +61,7 @@ class PermissionAccess extends Object {
 	
 	public function duplicate() {
 		$db = Loader::db();
-		$newPA = self::create();
+		$newPA = self::create($this->pk);
 		$listItems = $this->getAccessListItems();
 		foreach($listItems as $li) {
 			$newPA->addListItem($li->getAccessEntityObject(), $li->getPermissionDurationObject(), $li->getAccessType());
@@ -69,6 +69,12 @@ class PermissionAccess extends Object {
 		$newPA->setPermissionKey($this->pk);
 		return $newPA;
 	}
+
+	public function markAsInUse() {
+		$db = Loader::db();
+		$db->Execute('update PermissionAccess set paIsInUse = 1 where paID = ?', array($this->paID));
+	}
+
 
 	public function addListItem(PermissionAccessEntity $pae, $durationObject = false, $accessType = PermissionKey::ACCESS_TYPE_INCLUDE) {
 		$db = Loader::db();

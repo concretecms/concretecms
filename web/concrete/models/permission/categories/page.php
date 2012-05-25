@@ -50,6 +50,7 @@ class PagePermissionKey extends PermissionKey {
 	public function assignPermissionAccess(PermissionAccess $pa) {
 		$db = Loader::db();
 		$db->Replace('PagePermissionAssignments', array('cID' => $this->getPermissionObject()->getPermissionsCollectionID(), 'paID' => $pa->getPermissionAccessID(), 'pkID' => $this->pkID), array('cID', 'pkID'), true);
+		$pa->markAsInUse();
 	}
 
 	public function getPermissionAccessID() {
