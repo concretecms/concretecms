@@ -91,6 +91,7 @@ if (count($pages) > 0) {
 
 	if ($_REQUEST['task'] == 'display_access_cell' && Loader::helper("validation/token")->validate('display_access_cell')) {
 		$pk = PermissionKey::getByID($_REQUEST['pkID']);
+		$pk->setPermissionObject($c);
 		$pa = PermissionAccess::getByID($_REQUEST['paID'], $pk);
 		Loader::element('permission/labels', array('pk' => $pk, 'pa' => $pa));
 	}
