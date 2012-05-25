@@ -89,19 +89,19 @@ class AddFileFileSetPermissionAccess extends FileSetPermissionAccess {
 	public function save($args) {
 		parent::save();
 		$db = Loader::db();
-		$db->Execute('delete from FileSetPermissionFileTypeAssignments where paID = ?', array($this->getPermissionAccessID()));
-		$db->Execute('delete from FileSetPermissionFileTypeAssignmentsCustom where paID = ?', array($this->getPermissionAccessID()));
+		$db->Execute('delete from FileSetPermissionFileTypeAccessList where paID = ?', array($this->getPermissionAccessID()));
+		$db->Execute('delete from FileSetPermissionFileTypeAccessListCustom where paID = ?', array($this->getPermissionAccessID()));
 		if (is_array($args['fileTypesIncluded'])) { 
 			foreach($args['fileTypesIncluded'] as $peID => $permission) {
 				$v = array($this->getPermissionAccessID(), $peID, $permission);
-				$db->Execute('insert into FileSetPermissionFileTypeAssignments (paID, peID, permission) values (?, ?, ?)', $v);
+				$db->Execute('insert into FileSetPermissionFileTypeAccessList (paID, peID, permission) values (?, ?, ?)', $v);
 			}
 		}
 		
 		if (is_array($args['fileTypesExcluded'])) { 
 			foreach($args['fileTypesExcluded'] as $peID => $permission) {
 				$v = array($this->getPermissionAccessID(), $peID, $permission);
-				$db->Execute('insert into FileSetPermissionFileTypeAssignments (paID, peID, permission) values (?, ?, ?)', $v);
+				$db->Execute('insert into FileSetPermissionFileTypeAccessList (paID, peID, permission) values (?, ?, ?)', $v);
 			}
 		}
 
@@ -109,7 +109,7 @@ class AddFileFileSetPermissionAccess extends FileSetPermissionAccess {
 			foreach($args['extensionInclude'] as $peID => $extensions) {
 				foreach($extensions as $extension) { 
 					$v = array($this->getPermissionAccessID(), $peID, $extension);
-					$db->Execute('insert into FileSetPermissionFileTypeAssignmentsCustom (paID, peID, extension) values (?, ?, ?)', $v);
+					$db->Execute('insert into FileSetPermissionFileTypeAccessListCustom (paID, peID, extension) values (?, ?, ?)', $v);
 				}
 			}
 		}
@@ -118,7 +118,7 @@ class AddFileFileSetPermissionAccess extends FileSetPermissionAccess {
 			foreach($args['extensionExclude'] as $peID => $extensions) {
 				foreach($extensions as $extension) { 
 					$v = array($this->getPermissionAccessID(), $peID, $extension);
-					$db->Execute('insert into FileSetPermissionFileTypeAssignmentsCustom (paID, peID, extension) values (?, ?, ?)', $v);
+					$db->Execute('insert into FileSetPermissionFileTypeAccessListCustom (paID, peID, extension) values (?, ?, ?)', $v);
 				}
 			}
 		}

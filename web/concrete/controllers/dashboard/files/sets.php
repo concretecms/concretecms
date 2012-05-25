@@ -88,6 +88,20 @@ class DashboardFilesSetsController extends Controller {
 			// we are checking the checkbox for the first time
 			$copyPermissionsFromBase = true;
 		}		
+		if ($file_set->fsOverrideGlobalPermissions) {
+			$permissions = PermissionKey::getList('file_set');
+			foreach($permissions as $pk) {
+				$pk->setPermissionObject($file_set);
+				$paID = $_POST['pkID'][$pk->getPermissionKeyID()];
+				$pk->clearPermissionAssignment();
+				if ($paID > 0) {
+					$pa = PermissionAccess::getByID($paID, $pk);
+					if (is_object($pa)) {
+						$pk->assignPermissionAccess($pa);
+					}			
+				}		
+			}			
+		}
 		$file_set->fsOverrideGlobalPermissions = ($this->post('fsOverrideGlobalPermissions') == 1) ? 1 : 0;
 		$file_set->save();
 		

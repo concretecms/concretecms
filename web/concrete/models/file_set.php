@@ -250,8 +250,6 @@
 		public function resetPermissions() {
 			$db = Loader::db();
 			$db->Execute('delete from FileSetPermissionAssignments where fsID = ?', array($this->fsID));
-			$db->Execute('delete from FileSetPermissionFileTypeAssignments where fsID = ?', array($this->fsID));
-			$db->Execute('delete from FileSetPermissionFileTypeAssignmentsCustom where fsID = ?', array($this->fsID));
 		}
 		
 		public function acquireBaseFileSetPermissions() {
@@ -259,29 +257,14 @@
 
 			$db = Loader::db();
 
-			$q = "select fsID, peID, pdID, pkID, accessType from FileSetPermissionAssignments where fsID = 0";
+			$q = "select fsID, paID, pkID from FileSetPermissionAssignments where fsID = 0";
 			$r = $db->query($q);
 			while($row = $r->fetchRow()) {
-				$v = array($this->fsID, $row['peID'], $row['pdID'], $row['pkID'], $row['accessType']);
-				$q = "insert into FileSetPermissionAssignments (fsID, peID, pdID, pkID, accessType) values (?, ?, ?, ?, ?)";
+				$v = array($this->fsID, $row['paID'], $row['pkID']);
+				$q = "insert into FileSetPermissionAssignments (fsID, paID, pkID) values (?, ?, ?)";
 				$db->query($q, $v);
 			}
 	
-			$q = "select fsID, peID, permission from FileSetPermissionFileTypeAssignments where fsID = 0";
-			$r = $db->query($q);
-			while($row = $r->fetchRow()) {
-				$v = array($this->fsID, $row['peID'], $row['permission']);
-				$q = "insert into FileSetPermissionFileTypeAssignments (fsID, peID, permission) values (?, ?, ?)";
-				$db->query($q, $v);
-			}
-	
-			$q = "select fsID, peID, extension from FileSetPermissionFileTypeAssignmentsCustom where fsID = 0";
-			$r = $db->query($q);
-			while($row = $r->fetchRow()) {
-				$v = array($this->fsID, $row['peID'], $row['extension']);
-				$q = "insert into FileSetPermissionFileTypeAssignmentsCustom (fsID, peID, extension) values (?, ?, ?)";
-				$db->query($q, $v);
-			}
 		}
 		
 		public function assignPermissions($userOrGroup, $permissions = array(), $accessType = FileSetPermissionKey::ACCESS_TYPE_INCLUDE) {
