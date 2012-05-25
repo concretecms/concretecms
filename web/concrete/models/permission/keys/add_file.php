@@ -11,43 +11,6 @@ class AddFileFileSetPermissionKey extends FileSetPermissionKey  {
 		return $types;
 	}
 
-	public function savePermissionKey($args) {
-		$db = Loader::db();
-		$db->Execute('delete from FileSetPermissionFileTypeAssignments where fsID = ?', array($this->permissionObject->getFileSetID()));
-		$db->Execute('delete from FileSetPermissionFileTypeAssignmentsCustom where fsID = ?', array($this->permissionObject->getFileSetID()));
-		if (is_array($args['fileTypesIncluded'])) { 
-			foreach($args['fileTypesIncluded'] as $peID => $permission) {
-				$v = array($this->permissionObject->getFileSetID(), $peID, $permission);
-				$db->Execute('insert into FileSetPermissionFileTypeAssignments (fsID, peID, permission) values (?, ?, ?)', $v);
-			}
-		}
-		
-		if (is_array($args['fileTypesExcluded'])) { 
-			foreach($args['fileTypesExcluded'] as $peID => $permission) {
-				$v = array($this->permissionObject->getFileSetID(), $peID, $permission);
-				$db->Execute('insert into FileSetPermissionFileTypeAssignments (fsID, peID, permission) values (?, ?, ?)', $v);
-			}
-		}
-
-		if (is_array($args['extensionInclude'])) { 
-			foreach($args['extensionInclude'] as $peID => $extensions) {
-				foreach($extensions as $extension) { 
-					$v = array($this->permissionObject->getFileSetID(), $peID, $extension);
-					$db->Execute('insert into FileSetPermissionFileTypeAssignmentsCustom (fsID, peID, extension) values (?, ?, ?)', $v);
-				}
-			}
-		}
-
-		if (is_array($args['extensionExclude'])) { 
-			foreach($args['extensionExclude'] as $peID => $extensions) {
-				foreach($extensions as $extension) { 
-					$v = array($this->permissionObject->getFileSetID(), $peID, $extension);
-					$db->Execute('insert into FileSetPermissionFileTypeAssignmentsCustom (fsID, peID, extension) values (?, ?, ?)', $v);
-				}
-			}
-		}
-	}
-	
 	public function getAllowedFileExtensions() {
 		$u = new User();
 		$extensions = array();
@@ -85,22 +48,80 @@ class AddFileFileSetPermissionKey extends FileSetPermissionKey  {
 	}
 	
 
-	public function getAssignmentList($accessType = FileSetPermissionKey::ACCESS_TYPE_INCLUDE, $filterEntities = array()) {
+}
+
+class AddFileFileSetPermissionAccess extends FileSetPermissionAccess {
+
+	public function getAccessListItems($accessType = FileSetPermissionKey::ACCESS_TYPE_INCLUDE, $filterEntities = array()) {
 		$db = Loader::db();
-		$list = parent::getAssignmentList($accessType, $filterEntities);
+		$list = parent::getAccessListItems($accessType, $filterEntities);
 		foreach($list as $l) {
 			$pe = $l->getAccessEntityObject();
-			$permission = $db->GetOne('select permission from FileSetPermissionFileTypeAssignments where peID = ? and fsID = ?', array($pe->getAccessEntityID(), $this->permissionObject->getFileSetID()));
+			$permission = $db->GetOne('select permission from FileSetPermissionFileTypeAccessList where peID = ? and paID = ?', array($pe->getAccessEntityID(), $this->getPermissionAccessID()));
 			if ($permission != 'N' && $permission != 'C') {
 				$permission = 'A';
 			}
 			$l->setFileTypesAllowedPermission($permission);
 			if ($permission == 'C') { 
-				$extensions = $db->GetCol('select extension from FileSetPermissionFileTypeAssignmentsCustom where peID = ? and fsID = ?', array($pe->getAccessEntityID(), $this->permissionObject->getFileSetID()));
+				$extensions = $db->GetCol('select extension from FileSetPermissionFileTypeAccessListCustom where peID = ? and paID = ?', array($pe->getAccessEntityID(), $this->getPermissionAccessID()));
 				$l->setFileTypesAllowedArray($extensions);
 			}
 		}
 		return $list;
+	}
+
+	public function duplicate() {
+		$newPA = parent::duplicate();
+		$db = Loader::db();
+		$r = $db->Execute('select * from FileSetPermissionFileTypeAccessList where paID = ?', array($this->getPermissionAccessID()));
+		while ($row = $r->FetchRow()) {
+			$v = array($row['peID'], $newPA->getPermissionAccessID(), $row['permission']);
+			$db->Execute('insert into FileSetPermissionFileTypeAccessList (peID, paID, permission) values (?, ?, ?)', $v);
+		}
+		$r = $db->Execute('select * from FileSetPermissionFileTypeAccessListCustom where paID = ?', array($this->getPermissionAccessID()));
+		while ($row = $r->FetchRow()) {
+			$v = array($row['peID'], $newPA->getPermissionAccessID(), $row['extension']);
+			$db->Execute('insert into FileSetPermissionFileTypeAccessListCustom  (peID, paID, extension) values (?, ?, ?)', $v);
+		}
+		return $newPA;
+	}
+	
+	public function save($args) {
+		parent::save();
+		$db = Loader::db();
+		$db->Execute('delete from FileSetPermissionFileTypeAssignments where paID = ?', array($this->getPermissionAccessID()));
+		$db->Execute('delete from FileSetPermissionFileTypeAssignmentsCustom where paID = ?', array($this->getPermissionAccessID()));
+		if (is_array($args['fileTypesIncluded'])) { 
+			foreach($args['fileTypesIncluded'] as $peID => $permission) {
+				$v = array($this->getPermissionAccessID(), $peID, $permission);
+				$db->Execute('insert into FileSetPermissionFileTypeAssignments (paID, peID, permission) values (?, ?, ?)', $v);
+			}
+		}
+		
+		if (is_array($args['fileTypesExcluded'])) { 
+			foreach($args['fileTypesExcluded'] as $peID => $permission) {
+				$v = array($this->getPermissionAccessID(), $peID, $permission);
+				$db->Execute('insert into FileSetPermissionFileTypeAssignments (paID, peID, permission) values (?, ?, ?)', $v);
+			}
+		}
+
+		if (is_array($args['extensionInclude'])) { 
+			foreach($args['extensionInclude'] as $peID => $extensions) {
+				foreach($extensions as $extension) { 
+					$v = array($this->getPermissionAccessID(), $peID, $extension);
+					$db->Execute('insert into FileSetPermissionFileTypeAssignmentsCustom (paID, peID, extension) values (?, ?, ?)', $v);
+				}
+			}
+		}
+
+		if (is_array($args['extensionExclude'])) { 
+			foreach($args['extensionExclude'] as $peID => $extensions) {
+				foreach($extensions as $extension) { 
+					$v = array($this->getPermissionAccessID(), $peID, $extension);
+					$db->Execute('insert into FileSetPermissionFileTypeAssignmentsCustom (paID, peID, extension) values (?, ?, ?)', $v);
+				}
+			}
+		}
 	}
 
 }

@@ -1,7 +1,7 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?>
 
-<? $included = $permissionKey->getAssignmentList(); ?>
-<? $excluded = $permissionKey->getAssignmentList(PermissionKey::ACCESS_TYPE_EXCLUDE); ?>
+<? $included = $permissionAccess->getAccessListItems(); ?>
+<? $excluded = $permissionAccess->getAccessListItems(PermissionKey::ACCESS_TYPE_EXCLUDE); ?>
 <? $pageTypes = CollectionType::getList(); ?>
 <? $form = Loader::helper('form'); ?>
 
@@ -74,7 +74,7 @@
 
 <script type="text/javascript">
 $(function() {
-	$("#ccm-permissions-custom-options-form select").change(function() {
+	$("#ccm-tab-content-custom-options select").change(function() {
 		if ($(this).val() == 'C') {
 			$(this).parent().find('ul.page-type-list').show();
 		} else {

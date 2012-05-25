@@ -56,30 +56,46 @@ class AddBlockBlockTypePermissionKey extends BlockTypePermissionKey  {
 
 class AddBlockBlockTypePermissionAccess extends BlockTypePermissionAccess {
 
+	public function duplicate() {
+		$newPA = parent::duplicate();
+		$db = Loader::db();
+		$r = $db->Execute('select * from BlockTypePermissionBlockTypeAccessList where paID = ?', array($this->getPermissionAccessID()));
+		while ($row = $r->FetchRow()) {
+			$v = array($row['peID'], $newPA->getPermissionAccessID(), $row['permission']);
+			$db->Execute('insert into BlockTypePermissionBlockTypeAccessList (peID, paID, permission) values (?, ?, ?)', $v);
+		}
+		$r = $db->Execute('select * from BlockTypePermissionBlockTypeAccessListCustom where paID = ?', array($this->getPermissionAccessID()));
+		while ($row = $r->FetchRow()) {
+			$v = array($row['peID'], $newPA->getPermissionAccessID(), $row['btID']);
+			$db->Execute('insert into BlockTypePermissionBlockTypeAccessListCustom  (peID, paID, btID) values (?, ?, ?)', $v);
+		}
+		return $newPA;
+	}
+
 	public function save($args) {
 		parent::save();
 		$db = Loader::db();
-		$db->Execute('delete from BlockTypePermissionBlockTypeAssignments');
-		$db->Execute('delete from BlockTypePermissionBlockTypeAssignmentsCustom');
+		$db->Execute('delete from BlockTypePermissionBlockTypeAccessList where paID = ?', array($this->getPermissionAccessID()));
+		$db->Execute('delete from BlockTypePermissionBlockTypeAccessListCustom where paID = ?', array($this->getPermissionAccessID()));
 		if (is_array($args['blockTypesIncluded'])) { 
 			foreach($args['blockTypesIncluded'] as $peID => $permission) {
-				$v = array($peID, $permission);
-				$db->Execute('insert into BlockTypePermissionBlockTypeAssignments (peID, permission) values (?, ?)', $v);
+				$v = array($this->getPermissionAccessID(), $peID, $permission);
+				$db->Execute('insert into BlockTypePermissionBlockTypeAccessList (paID, peID, permission) values (?, ?, ?)', $v);
 			}
 		}
 		
 		if (is_array($args['blockTypesExcluded'])) { 
 			foreach($args['blockTypesExcluded'] as $peID => $permission) {
-				$v = array($peID, $permission);
-				$db->Execute('insert into BlockTypePermissionBlockTypeAssignments (peID, permission) values (?, ?)', $v);
+				$v = array($this->getPermissionAccessID(), $peID, $permission);
+				$db->Execute('insert into BlockTypePermissionBlockTypeAccessList (paID, peID, permission) values (?, ?, ?)', $v);
 			}
 		}
 
 		if (is_array($args['btIDInclude'])) { 
 			foreach($args['btIDInclude'] as $peID => $btIDs) {
 				foreach($btIDs as $btID) { 
-					$v = array($peID, $btID);
-					$db->Execute('insert into BlockTypePermissionBlockTypeAssignmentsCustom (peID, btID) values (?, ?)', $v);
+					$v = array($this->getPermissionAccessID(), $peID, $btID);
+					$db->Execute('insert into BlockTypePermissionBlockTypeAccessListCustom (paID, peID, btID) values (?, ?, ?)', $v);
 				}
 			}
 		}
@@ -87,8 +103,8 @@ class AddBlockBlockTypePermissionAccess extends BlockTypePermissionAccess {
 		if (is_array($args['btIDExclude'])) { 
 			foreach($args['btIDExclude'] as $peID => $btIDs) {
 				foreach($btIDs as $btID) { 
-					$v = array($peID, $btID);
-					$db->Execute('insert into BlockTypePermissionBlockTypeAssignmentsCustom (peID, btID) values (?, ?)', $v);
+					$v = array($this->getPermissionAccessID(), $peID, $btID);
+					$db->Execute('insert into BlockTypePermissionBlockTypeAccessListCustom (paID, peID, btID) values (?, ?, ?)', $v);
 				}
 			}
 		}
@@ -102,7 +118,7 @@ class AddBlockBlockTypePermissionAccess extends BlockTypePermissionAccess {
 			if ($this->permissionObjectToCheck instanceof Page && $l->getAccessType() == PermissionKey::ACCESS_TYPE_INCLUDE) {
 				$permission = 'A';
 			} else { 
-				$permission = $db->GetOne('select permission from BlockTypePermissionBlockTypeAssignments where peID = ?', array($pe->getAccessEntityID()));
+				$permission = $db->GetOne('select permission from BlockTypePermissionBlockTypeAccessList where paID = ? and peID = ?', array($this->getPermissionAccessID(), $pe->getAccessEntityID()));
 				if ($permission != 'N' && $permission != 'C') {
 					$permission = 'A';
 				}
@@ -110,7 +126,7 @@ class AddBlockBlockTypePermissionAccess extends BlockTypePermissionAccess {
 			}
 			$l->setBlockTypesAllowedPermission($permission);
 			if ($permission == 'C') { 
-				$btIDs = $db->GetCol('select btID from BlockTypePermissionBlockTypeAssignmentsCustom where peID = ?', array($pe->getAccessEntityID()));
+				$btIDs = $db->GetCol('select btID from BlockTypePermissionBlockTypeAccessListCustom where paID = ? and peID = ?', array($this->getPermissionAccessID(), $pe->getAccessEntityID()));
 				$l->setBlockTypesAllowedArray($btIDs);
 			}
 		}

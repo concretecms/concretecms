@@ -107,6 +107,22 @@ class AccessUserSearchUserPermissionKey extends UserPermissionKey  {
 
 class AccessUserSearchUserPermissionAccess extends PermissionAccess {
 
+	public function duplicate() {
+		$db = Loader::db();
+		$newPA = parent::duplicate();
+		$r = $db->Execute('select * from ' . $this->dbTableAccessList . ' where paID = ?', array($this->getPermissionAccessID()));
+		while ($row = $r->FetchRow()) {
+			$v = array($row['peID'], $newPA->getPermissionAccessID(), $row['permission']);
+			$db->Execute('insert into ' . $this->dbTableAccessList . ' (peID, paID, permission) values (?, ?, ?)', $v);
+		}
+		$r = $db->Execute('select * from ' . $this->dbTableAccessListCustom . ' where paID = ?', array($this->getPermissionAccessID()));
+		while ($row = $r->FetchRow()) {
+			$v = array($row['peID'], $newPA->getPermissionAccessID(), $row['gID']);
+			$db->Execute('insert into ' . $this->dbTableAccessListCustom . ' (peID, paID, gID) values (?, ?, ?)', $v);
+		}
+		return $newPA;
+	}
+	
 	public function getAccessListItems($accessType = PermissionKey::ACCESS_TYPE_INCLUDE, $filterEntities = array()) {
 		$db = Loader::db();
 		$list = parent::getAccessListItems($accessType, $filterEntities);
@@ -115,7 +131,7 @@ class AccessUserSearchUserPermissionAccess extends PermissionAccess {
 			if ($this->permissionObjectToCheck instanceof Page && $l->getAccessType() == PermissionKey::ACCESS_TYPE_INCLUDE) {
 				$permission = 'A';
 			} else { 
-				$permission = $db->GetOne('select permission from ' . $this->dbTableAssignments . ' where peID = ?', array($pe->getAccessEntityID()));
+				$permission = $db->GetOne('select permission from ' . $this->dbTableAccessList . ' where peID = ? and paID = ?', array($pe->getAccessEntityID(), $this->getPermissionAccessID()));
 				if ($permission != 'N' && $permission != 'C') {
 					$permission = 'A';
 				}
@@ -123,40 +139,40 @@ class AccessUserSearchUserPermissionAccess extends PermissionAccess {
 			}
 			$l->setGroupsAllowedPermission($permission);
 			if ($permission == 'C') { 
-				$gIDs = $db->GetCol('select gID from ' . $this->dbTableAssignmentsCustom . ' where peID = ?', array($pe->getAccessEntityID()));
+				$gIDs = $db->GetCol('select gID from ' . $this->dbTableAccessListCustom . ' where peID = ? and paID = ?', array($pe->getAccessEntityID(), $this->getPermissionAccessID()));
 				$l->setGroupsAllowedArray($gIDs);
 			}
 		}
 		return $list;
 	}
 
-	protected $dbTableAssignments = 'UserPermissionUserSearchAssignments';
-	protected $dbTableAssignmentsCustom = 'UserPermissionUserSearchAssignmentsCustom';
+	protected $dbTableAccessList = 'UserPermissionUserSearchAccessList';
+	protected $dbTableAccessListCustom = 'UserPermissionUserSearchAccessListCustom';
 
 	public function save($args) {
 		parent::save();
 		$db = Loader::db();
-		$db->Execute('delete from ' . $this->dbTableAssignments);
-		$db->Execute('delete from ' . $this->dbTableAssignmentsCustom);
+		$db->Execute('delete from ' . $this->dbTableAccessList . ' where paID = ?', array($this->getPermissionAccessID()));
+		$db->Execute('delete from ' . $this->dbTableAccessListCustom . ' where paID = ?', array($this->getPermissionAccessID()));
 		if (is_array($args['groupsIncluded'])) { 
 			foreach($args['groupsIncluded'] as $peID => $permission) {
-				$v = array($peID, $permission);
-				$db->Execute('insert into ' . $this->dbTableAssignments . ' (peID, permission) values (?, ?)', $v);
+				$v = array($peID, $this->getPermissionAccessID(), $permission);
+				$db->Execute('insert into ' . $this->dbTableAccessList . ' (peID, paID, permission) values (?, ?, ?)', $v);
 			}
 		}
 		
 		if (is_array($args['groupsExcluded'])) { 
 			foreach($args['groupsExcluded'] as $peID => $permission) {
-				$v = array($peID, $permission);
-				$db->Execute('insert into ' . $this->dbTableAssignments . ' (peID, permission) values (?, ?)', $v);
+				$v = array($peID, $this->getPermissionAccessID(), $permission);
+				$db->Execute('insert into ' . $this->dbTableAccessList . ' (peID, paID, permission) values (?, ?, ?)', $v);
 			}
 		}
 
 		if (is_array($args['gIDInclude'])) { 
 			foreach($args['gIDInclude'] as $peID => $gIDs) {
 				foreach($gIDs as $gID) { 
-					$v = array($peID, $gID);
-					$db->Execute('insert into ' . $this->dbTableAssignmentsCustom . ' (peID, gID) values (?, ?)', $v);
+				$v = array($peID, $this->getPermissionAccessID(), $gID);
+					$db->Execute('insert into ' . $this->dbTableAccessListCustom . ' (peID, paID, gID) values (?, ?, ?)', $v);
 				}
 			}
 		}
@@ -164,8 +180,8 @@ class AccessUserSearchUserPermissionAccess extends PermissionAccess {
 		if (is_array($args['gIDExclude'])) { 
 			foreach($args['gIDExclude'] as $peID => $gIDs) {
 				foreach($gIDs as $gID) { 
-					$v = array($peID, $gID);
-					$db->Execute('insert into ' . $this->dbTableAssignmentsCustom . ' (peID, gID) values (?, ?)', $v);
+				$v = array($peID, $this->getPermissionAccessID(), $gID);
+					$db->Execute('insert into ' . $this->dbTableAccessListCustom . ' (peID, paID, gID) values (?, ?, ?)', $v);
 				}
 			}
 		}
