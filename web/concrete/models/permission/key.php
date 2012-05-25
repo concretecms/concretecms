@@ -277,6 +277,19 @@ abstract class PermissionKey extends Object {
 		$db->Execute('update PermissionAssignments set paID = 0 where pkID = ?', array($this->pkID));
 	}
 	
+	/**
+	 * A shortcut for grabbing the current assignment and passing into that object
+	 */
+	public function getAccessListItems() {
+		$args = func_get_args();
+		$obj = $this->getPermissionAccessObject();
+		if (is_object($obj)) {
+			return call_user_func_array(array($obj, 'getAccessListItems'), $args);		
+		} else {
+			return array();
+		}
+	}
+	
 	public function assignPermissionAccess(PermissionAccess $pa) {
 		$db = Loader::db();
 		$db->Replace('PermissionAssignments', array('paID' => $pa->getPermissionAccessID(), 'pkID' => $this->pkID), array('pkID'), true);
@@ -284,13 +297,7 @@ abstract class PermissionKey extends Object {
 
 	public function getPermissionAccessObject() {
 		$paID = $this->getPermissionAccessID();
-		if ($paID > 0) {
-	 		$class = str_replace('PermissionKey', 'PermissionAccess', get_class($this));
-	 		if (!class_exists($class)) {
-	 			$class = 'PermissionAccess';
-	 		}
-			return call_user_func_array(array($class, 'getByID'), array($paID));
-		}
+		return PermissionAccess::getByID($paID, $this);
 	}
 	
 	public function getPermissionAccessID() {

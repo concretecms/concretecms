@@ -3,92 +3,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 class EditUserPropertiesUserPermissionKey extends UserPermissionKey  {
 
-	public function savePermissionKey($args) {
-		$db = Loader::db();
-		$db->Execute('delete from UserPermissionEditPropertyAssignments');
-		$db->Execute('delete from UserPermissionEditPropertyAttributeAssignmentsCustom');
-		if (is_array($args['propertiesIncluded'])) { 
-			foreach($args['propertiesIncluded'] as $peID => $attributePermission) {
-				$allowEditUName = 0;
-				$allowEditUEmail = 0;
-				$allowEditUPassword = 0;
-				$allowEditUAvatar = 0;
-				$allowEditUTimezone = 0;
-				$allowEditUDefaultLanguage = 0;
-				if (!empty($args['allowEditUName'][$peID])) {
-					$allowEditUName = $args['allowEditUName'][$peID];
-				}
-				if (!empty($args['allowEditUEmail'][$peID])) {
-					$allowEditUEmail = $args['allowEditUEmail'][$peID];
-				}
-				if (!empty($args['allowEditUPassword'][$peID])) {
-					$allowEditUPassword = $args['allowEditUPassword'][$peID];
-				}
-				if (!empty($args['allowEditUAvatar'][$peID])) {
-					$allowEditUAvatar = $args['allowEditUAvatar'][$peID];
-				}
-				if (!empty($args['allowEditUTimezone'][$peID])) {
-					$allowEditUTimezone = $args['allowEditUTimezone'][$peID];
-				}
-				if (!empty($args['allowEditUDefaultLanguage'][$peID])) {
-					$allowEditUDefaultLanguage = $args['allowEditUDefaultLanguage'][$peID];
-				}
-				$v = array($peID, $attributePermission, $allowEditUName, $allowEditUEmail, $allowEditUPassword, $allowEditUAvatar, $allowEditUTimezone, $allowEditUDefaultLanguage);
-				$db->Execute('insert into UserPermissionEditPropertyAssignments (peID, attributePermission, uName, uEmail, uPassword, uAvatar, uTimezone, uDefaultLanguage) values (?, ?, ?, ?, ?, ?, ?, ?)', $v);
-			}
-		}
-		
-		if (is_array($args['propertiesExcluded'])) { 
-			foreach($args['propertiesExcluded'] as $peID => $attributePermission) {
-				$allowEditUNameExcluded = 0;
-				$allowEditUEmailExcluded = 0;
-				$allowEditUPasswordExcluded = 0;
-				$allowEditUAvatarExcluded = 0;
-				$allowEditUTimezoneExcluded = 0;
-				$allowEditUDefaultLanguageExcluded = 0;
-				if (!empty($args['allowEditUNameExcluded'][$peID])) {
-					$allowEditUNameExcluded = $args['allowEditUNameExcluded'][$peID];
-				}
-				if (!empty($args['allowEditUEmailExcluded'][$peID])) {
-					$allowEditUEmailExcluded = $args['allowEditUEmailExcluded'][$peID];
-				}
-				if (!empty($args['allowEditUPasswordExcluded'][$peID])) {
-					$allowEditUPasswordExcluded = $args['allowEditUPasswordExcluded'][$peID];
-				}
-				if (!empty($args['allowEditUAvatarExcluded'][$peID])) {
-					$allowEditUAvatarExcluded = $args['allowEditUAvatarExcluded'][$peID];
-				}
-				if (!empty($args['allowEditUTimezoneExcluded'][$peID])) {
-					$allowEditUTimezoneExcluded = $args['allowEditUTimezoneExcluded'][$peID];
-				}
-				if (!empty($args['allowEditUDefaultLanguageExcluded'][$peID])) {
-					$allowEditUDefaultLanguageExcluded = $args['allowEditUDefaultLanguageExcluded'][$peID];
-				}
-				$v = array($peID, $attributePermission, $allowEditUNameExcluded, $allowEditUEmailExcluded, $allowEditUPasswordExcluded, $allowEditUAvatarExcluded, $allowEditUTimezoneExcluded, $allowEditUDefaultLanguageExcluded);
-				$db->Execute('insert into UserPermissionEditPropertyAssignments (peID, attributePermission, uName, uEmail, uPassword, uAvatar, uTimezone, uDefaultLanguage) values (?, ?, ?, ?, ?, ?, ?, ?)', $v);
-			}
-		}
-
-		if (is_array($args['akIDInclude'])) { 
-			foreach($args['akIDInclude'] as $peID => $akIDs) {
-				foreach($akIDs as $akID) { 
-					$v = array($peID, $akID);
-					$db->Execute('insert into UserPermissionEditPropertyAttributeAssignmentsCustom (peID, akID) values (?, ?)', $v);
-				}
-			}
-		}
-
-		if (is_array($args['akIDExclude'])) { 
-			foreach($args['akIDExclude'] as $peID => $akIDs) {
-				foreach($akIDs as $akID) { 
-					$v = array($peID, $akID);
-					$db->Execute('insert into UserPermissionEditPropertyAttributeAssignmentsCustom (peID, akID) values (?, ?)', $v);
-				}
-			}
-		}
-
-	}
-	
 	public function getMyAssignment() {
 		$u = new User();
 		$asl = new EditUserPropertiesUserPermissionAssignment();
@@ -184,46 +98,6 @@ class EditUserPropertiesUserPermissionKey extends UserPermissionKey  {
 		return $asl;
 	}
 
-	public function getAssignmentList($accessType = UserPermissionKey::ACCESS_TYPE_INCLUDE, $filterEntities = array()) {
-		$db = Loader::db();
-		$list = parent::getAssignmentList($accessType, $filterEntities);
-		$list = PermissionDuration::filterByActive($list);
-		foreach($list as $l) {
-			$pe = $l->getAccessEntityObject();
-			$prow = $db->GetRow('select attributePermission, uName, uPassword, uEmail, uAvatar, uTimezone, uDefaultLanguage from UserPermissionEditPropertyAssignments where peID = ?', array($pe->getAccessEntityID()));
-			if (is_array($prow) && $prow['attributePermission']) { 
-				$l->setAttributesAllowedPermission($prow['attributePermission']);
-				$l->setAllowEditUserName($prow['uName']);
-				$l->setAllowEditEmail($prow['uEmail']);
-				$l->setAllowEditPassword($prow['uPassword']);
-				$l->setAllowEditAvatar($prow['uAvatar']);
-				$l->setAllowEditTimezone($prow['uTimezone']);
-				$l->setAllowEditDefaultLanguage($prow['uDefaultLanguage']);
-				$attributePermission = $prow['attributePermission'];
-			} else if ($l->getAccessType() == UserPermissionKey::ACCESS_TYPE_INCLUDE) {
-				$l->setAttributesAllowedPermission('A');
-				$l->setAllowEditUserName(1);
-				$l->setAllowEditEmail(1);
-				$l->setAllowEditPassword(1);
-				$l->setAllowEditAvatar(1);
-				$l->setAllowEditTimezone(1);
-				$l->setAllowEditDefaultLanguage(1);
-			} else {
-				$l->setAttributesAllowedPermission('N');
-				$l->setAllowEditUserName(0);
-				$l->setAllowEditEmail(0);
-				$l->setAllowEditPassword(0);
-				$l->setAllowEditAvatar(0);
-				$l->setAllowEditTimezone(0);
-				$l->setAllowEditDefaultLanguage(0);
-			}
-			if ($attributePermission == 'C') { 
-				$akIDs = $db->GetCol('select akID from UserPermissionEditPropertyAttributeAssignmentsCustom where peID = ?', array($pe->getAccessEntityID()));
-				$l->setAttributesAllowedArray($akIDs);
-			}
-		}
-		return $list;
-	}
 
 	public function validate($obj = false) {
 		$u = new User();
@@ -263,7 +137,138 @@ class EditUserPropertiesUserPermissionKey extends UserPermissionKey  {
 	
 }
 
-class EditUserPropertiesUserPermissionAssignment extends UserPermissionAssignment {
+class EditUserPropertiesUserPermissionAccess extends UserPermissionAccess {
+	
+	public function save($args) {
+		parent::save();
+		$db = Loader::db();
+		$db->Execute('delete from UserPermissionEditPropertyAssignments');
+		$db->Execute('delete from UserPermissionEditPropertyAttributeAssignmentsCustom');
+		if (is_array($args['propertiesIncluded'])) { 
+			foreach($args['propertiesIncluded'] as $peID => $attributePermission) {
+				$allowEditUName = 0;
+				$allowEditUEmail = 0;
+				$allowEditUPassword = 0;
+				$allowEditUAvatar = 0;
+				$allowEditUTimezone = 0;
+				$allowEditUDefaultLanguage = 0;
+				if (!empty($args['allowEditUName'][$peID])) {
+					$allowEditUName = $args['allowEditUName'][$peID];
+				}
+				if (!empty($args['allowEditUEmail'][$peID])) {
+					$allowEditUEmail = $args['allowEditUEmail'][$peID];
+				}
+				if (!empty($args['allowEditUPassword'][$peID])) {
+					$allowEditUPassword = $args['allowEditUPassword'][$peID];
+				}
+				if (!empty($args['allowEditUAvatar'][$peID])) {
+					$allowEditUAvatar = $args['allowEditUAvatar'][$peID];
+				}
+				if (!empty($args['allowEditUTimezone'][$peID])) {
+					$allowEditUTimezone = $args['allowEditUTimezone'][$peID];
+				}
+				if (!empty($args['allowEditUDefaultLanguage'][$peID])) {
+					$allowEditUDefaultLanguage = $args['allowEditUDefaultLanguage'][$peID];
+				}
+				$v = array($peID, $attributePermission, $allowEditUName, $allowEditUEmail, $allowEditUPassword, $allowEditUAvatar, $allowEditUTimezone, $allowEditUDefaultLanguage);
+				$db->Execute('insert into UserPermissionEditPropertyAssignments (peID, attributePermission, uName, uEmail, uPassword, uAvatar, uTimezone, uDefaultLanguage) values (?, ?, ?, ?, ?, ?, ?, ?)', $v);
+			}
+		}
+		
+		if (is_array($args['propertiesExcluded'])) { 
+			foreach($args['propertiesExcluded'] as $peID => $attributePermission) {
+				$allowEditUNameExcluded = 0;
+				$allowEditUEmailExcluded = 0;
+				$allowEditUPasswordExcluded = 0;
+				$allowEditUAvatarExcluded = 0;
+				$allowEditUTimezoneExcluded = 0;
+				$allowEditUDefaultLanguageExcluded = 0;
+				if (!empty($args['allowEditUNameExcluded'][$peID])) {
+					$allowEditUNameExcluded = $args['allowEditUNameExcluded'][$peID];
+				}
+				if (!empty($args['allowEditUEmailExcluded'][$peID])) {
+					$allowEditUEmailExcluded = $args['allowEditUEmailExcluded'][$peID];
+				}
+				if (!empty($args['allowEditUPasswordExcluded'][$peID])) {
+					$allowEditUPasswordExcluded = $args['allowEditUPasswordExcluded'][$peID];
+				}
+				if (!empty($args['allowEditUAvatarExcluded'][$peID])) {
+					$allowEditUAvatarExcluded = $args['allowEditUAvatarExcluded'][$peID];
+				}
+				if (!empty($args['allowEditUTimezoneExcluded'][$peID])) {
+					$allowEditUTimezoneExcluded = $args['allowEditUTimezoneExcluded'][$peID];
+				}
+				if (!empty($args['allowEditUDefaultLanguageExcluded'][$peID])) {
+					$allowEditUDefaultLanguageExcluded = $args['allowEditUDefaultLanguageExcluded'][$peID];
+				}
+				$v = array($peID, $attributePermission, $allowEditUNameExcluded, $allowEditUEmailExcluded, $allowEditUPasswordExcluded, $allowEditUAvatarExcluded, $allowEditUTimezoneExcluded, $allowEditUDefaultLanguageExcluded);
+				$db->Execute('insert into UserPermissionEditPropertyAssignments (peID, attributePermission, uName, uEmail, uPassword, uAvatar, uTimezone, uDefaultLanguage) values (?, ?, ?, ?, ?, ?, ?, ?)', $v);
+			}
+		}
+
+		if (is_array($args['akIDInclude'])) { 
+			foreach($args['akIDInclude'] as $peID => $akIDs) {
+				foreach($akIDs as $akID) { 
+					$v = array($peID, $akID);
+					$db->Execute('insert into UserPermissionEditPropertyAttributeAssignmentsCustom (peID, akID) values (?, ?)', $v);
+				}
+			}
+		}
+
+		if (is_array($args['akIDExclude'])) { 
+			foreach($args['akIDExclude'] as $peID => $akIDs) {
+				foreach($akIDs as $akID) { 
+					$v = array($peID, $akID);
+					$db->Execute('insert into UserPermissionEditPropertyAttributeAssignmentsCustom (peID, akID) values (?, ?)', $v);
+				}
+			}
+		}
+	}
+
+	public function getAccessListItems($accessType = UserPermissionKey::ACCESS_TYPE_INCLUDE, $filterEntities = array()) {
+		$db = Loader::db();
+		$list = parent::getAccessListItems($accessType, $filterEntities);
+		$list = PermissionDuration::filterByActive($list);
+		foreach($list as $l) {
+			$pe = $l->getAccessEntityObject();
+			$prow = $db->GetRow('select attributePermission, uName, uPassword, uEmail, uAvatar, uTimezone, uDefaultLanguage from UserPermissionEditPropertyAssignments where peID = ?', array($pe->getAccessEntityID()));
+			if (is_array($prow) && $prow['attributePermission']) { 
+				$l->setAttributesAllowedPermission($prow['attributePermission']);
+				$l->setAllowEditUserName($prow['uName']);
+				$l->setAllowEditEmail($prow['uEmail']);
+				$l->setAllowEditPassword($prow['uPassword']);
+				$l->setAllowEditAvatar($prow['uAvatar']);
+				$l->setAllowEditTimezone($prow['uTimezone']);
+				$l->setAllowEditDefaultLanguage($prow['uDefaultLanguage']);
+				$attributePermission = $prow['attributePermission'];
+			} else if ($l->getAccessType() == UserPermissionKey::ACCESS_TYPE_INCLUDE) {
+				$l->setAttributesAllowedPermission('A');
+				$l->setAllowEditUserName(1);
+				$l->setAllowEditEmail(1);
+				$l->setAllowEditPassword(1);
+				$l->setAllowEditAvatar(1);
+				$l->setAllowEditTimezone(1);
+				$l->setAllowEditDefaultLanguage(1);
+			} else {
+				$l->setAttributesAllowedPermission('N');
+				$l->setAllowEditUserName(0);
+				$l->setAllowEditEmail(0);
+				$l->setAllowEditPassword(0);
+				$l->setAllowEditAvatar(0);
+				$l->setAllowEditTimezone(0);
+				$l->setAllowEditDefaultLanguage(0);
+			}
+			if ($attributePermission == 'C') { 
+				$akIDs = $db->GetCol('select akID from UserPermissionEditPropertyAttributeAssignmentsCustom where peID = ?', array($pe->getAccessEntityID()));
+				$l->setAttributesAllowedArray($akIDs);
+			}
+		}
+		return $list;
+	}
+}
+
+
+class EditUserPropertiesUserPermissionAccessListItem extends PermissionAccessListItem {
 	
 	protected $customAttributeKeyArray = array();
 	protected $attributesAllowedPermission = 'N';

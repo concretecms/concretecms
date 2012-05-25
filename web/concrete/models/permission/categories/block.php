@@ -172,8 +172,13 @@ class BlockPermissionKey extends PermissionKey {
 
 }
 
-class BlockPermissionAssignment extends PermissionAssignment {
+class BlockPermissionAccess extends PermissionAccess {
 
 
 
+}
+
+class BlockPermissionAccessListItem extends PermissionAccessListItem {
+	
+	
 }

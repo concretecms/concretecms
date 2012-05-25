@@ -1,12 +1,12 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
-class DashboardSystemPermissionsUsersController extends DashboardBaseController {
+class DashboardBlocksPermissionsController extends DashboardBaseController {
 	
 	public function save() {
 		if (Loader::helper('validation/token')->validate('save_permissions')) {
 			
 			$tp = new TaskPermission();
 			if ($tp->canAccessTaskPermissions()) {
-				$permissions = PermissionKey::getList('user');
+				$permissions = PermissionKey::getList('block_type');
 				foreach($permissions as $pk) {
 					$paID = $_POST['pkID'][$pk->getPermissionKeyID()];
 					$pk->clearPermissionAssignment();
@@ -17,7 +17,7 @@ class DashboardSystemPermissionsUsersController extends DashboardBaseController 
 						}			
 					}		
 				}
-				$this->redirect('/dashboard/system/permissions/users', 'updated');
+				$this->redirect('/dashboard/blocks/permissions', 'updated');
 			}
 			
 		} else {

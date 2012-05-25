@@ -65,7 +65,14 @@ class AddSubpagePagePermissionKey extends PagePermissionKey  {
 		}
 	}
 	
-	public function savePermissionKey($args) {
+
+	
+}
+
+class AddSubpagePagePermissionAccess extends PagePermissionAccess {
+
+	public function save($args) {
+		parent::save();
 		$db = Loader::db();
 		$db->Execute('delete from PagePermissionPageTypeAssignments where cID = ?', array($this->permissionObject->getCollectionID()));
 		$db->Execute('delete from PagePermissionPageTypeAssignmentsCustom where cID = ?', array($this->permissionObject->getCollectionID()));
@@ -112,9 +119,9 @@ class AddSubpagePagePermissionKey extends PagePermissionKey  {
 	}
 
 
-	public function getAssignmentList($accessType = PagePermissionKey::ACCESS_TYPE_INCLUDE, $filterEntities = array()) {
+	public function getAccessListItems($accessType = PagePermissionKey::ACCESS_TYPE_INCLUDE, $filterEntities = array()) {
 		$db = Loader::db();
-		$list = parent::getAssignmentList($accessType, $filterEntities);
+		$list = parent::getAccessListItems($accessType, $filterEntities);
 		$list = PermissionDuration::filterByActive($list);
 		foreach($list as $l) {
 			$pe = $l->getAccessEntityObject();
@@ -137,10 +144,9 @@ class AddSubpagePagePermissionKey extends PagePermissionKey  {
 		}
 		return $list;
 	}
-	
 }
 
-class AddSubpagePagePermissionAssignment extends PagePermissionAssignment {
+class AddSubpagePagePermissionAccessListItem extends PagePermissionAccessListItem {
 	
 	protected $customPageTypeArray = array();
 	protected $pageTypesAllowedPermission = 'N';

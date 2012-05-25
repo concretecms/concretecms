@@ -24,7 +24,8 @@ if (count($pages) > 0) {
 		$pd = PermissionDuration::getByID($_REQUEST['pdID']);
 		foreach($pages as $c) { 
 			$pk->setPermissionObject($c);
-			$pk->addAssignment($pe, $pd, $_REQUEST['accessType']);
+			$pa = PermissionAccess::getByID($_REQUEST['paID'], $pk);
+			$pa->addListItem($pe, $pd, $_REQUEST['accessType']);
 		}
 	}
 	
@@ -33,7 +34,8 @@ if (count($pages) > 0) {
 		$pe = PermissionAccessEntity::getByID($_REQUEST['peID']);
 		foreach($pages as $c) { 
 			$pk->setPermissionObject($c);
-			$pk->removeAssignment($pe);
+			$pa = PermissionAccess::getByID($_REQUEST['paID'], $pk);
+			$pa->removeListItem($pe);
 		}
 	}
 	
@@ -41,7 +43,8 @@ if (count($pages) > 0) {
 		$pk = PagePermissionKey::getByID($_REQUEST['pkID']);
 		foreach($pages as $c) { 
 			$pk->setPermissionObject($c);
-			$pk->savePermissionKey($_POST);
+			$pa = PermissionAccess::getByID($_REQUEST['paID'], $pk);
+			$pa->save($_POST);
 		}
 	}
 

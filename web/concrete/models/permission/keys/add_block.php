@@ -3,43 +3,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 class AddBlockBlockTypePermissionKey extends BlockTypePermissionKey  {
 
-	public function savePermissionKey($args) {
-		$db = Loader::db();
-		$db->Execute('delete from BlockTypePermissionBlockTypeAssignments');
-		$db->Execute('delete from BlockTypePermissionBlockTypeAssignmentsCustom');
-		if (is_array($args['blockTypesIncluded'])) { 
-			foreach($args['blockTypesIncluded'] as $peID => $permission) {
-				$v = array($peID, $permission);
-				$db->Execute('insert into BlockTypePermissionBlockTypeAssignments (peID, permission) values (?, ?)', $v);
-			}
-		}
-		
-		if (is_array($args['blockTypesExcluded'])) { 
-			foreach($args['blockTypesExcluded'] as $peID => $permission) {
-				$v = array($peID, $permission);
-				$db->Execute('insert into BlockTypePermissionBlockTypeAssignments (peID, permission) values (?, ?)', $v);
-			}
-		}
-
-		if (is_array($args['btIDInclude'])) { 
-			foreach($args['btIDInclude'] as $peID => $btIDs) {
-				foreach($btIDs as $btID) { 
-					$v = array($peID, $btID);
-					$db->Execute('insert into BlockTypePermissionBlockTypeAssignmentsCustom (peID, btID) values (?, ?)', $v);
-				}
-			}
-		}
-
-		if (is_array($args['btIDExclude'])) { 
-			foreach($args['btIDExclude'] as $peID => $btIDs) {
-				foreach($btIDs as $btID) { 
-					$v = array($peID, $btID);
-					$db->Execute('insert into BlockTypePermissionBlockTypeAssignmentsCustom (peID, btID) values (?, ?)', $v);
-				}
-			}
-		}
-	}
-
 	protected function getAllowedBlockTypeIDs() {
 
 		$u = new User();
@@ -88,9 +51,52 @@ class AddBlockBlockTypePermissionKey extends BlockTypePermissionKey  {
 		}
 	}	
 
-	public function getAssignmentList($accessType = PermissionKey::ACCESS_TYPE_INCLUDE, $filterEntities = array()) {
+	
+}
+
+class AddBlockBlockTypePermissionAccess extends BlockTypePermissionAccess {
+
+	public function save($args) {
+		parent::save();
 		$db = Loader::db();
-		$list = parent::getAssignmentList($accessType, $filterEntities);
+		$db->Execute('delete from BlockTypePermissionBlockTypeAssignments');
+		$db->Execute('delete from BlockTypePermissionBlockTypeAssignmentsCustom');
+		if (is_array($args['blockTypesIncluded'])) { 
+			foreach($args['blockTypesIncluded'] as $peID => $permission) {
+				$v = array($peID, $permission);
+				$db->Execute('insert into BlockTypePermissionBlockTypeAssignments (peID, permission) values (?, ?)', $v);
+			}
+		}
+		
+		if (is_array($args['blockTypesExcluded'])) { 
+			foreach($args['blockTypesExcluded'] as $peID => $permission) {
+				$v = array($peID, $permission);
+				$db->Execute('insert into BlockTypePermissionBlockTypeAssignments (peID, permission) values (?, ?)', $v);
+			}
+		}
+
+		if (is_array($args['btIDInclude'])) { 
+			foreach($args['btIDInclude'] as $peID => $btIDs) {
+				foreach($btIDs as $btID) { 
+					$v = array($peID, $btID);
+					$db->Execute('insert into BlockTypePermissionBlockTypeAssignmentsCustom (peID, btID) values (?, ?)', $v);
+				}
+			}
+		}
+
+		if (is_array($args['btIDExclude'])) { 
+			foreach($args['btIDExclude'] as $peID => $btIDs) {
+				foreach($btIDs as $btID) { 
+					$v = array($peID, $btID);
+					$db->Execute('insert into BlockTypePermissionBlockTypeAssignmentsCustom (peID, btID) values (?, ?)', $v);
+				}
+			}
+		}
+	}
+
+	public function getAccessListItems($accessType = PermissionKey::ACCESS_TYPE_INCLUDE, $filterEntities = array()) {
+		$db = Loader::db();
+		$list = parent::getAccessListItems($accessType, $filterEntities);
 		foreach($list as $l) {
 			$pe = $l->getAccessEntityObject();
 			if ($this->permissionObjectToCheck instanceof Page && $l->getAccessType() == PermissionKey::ACCESS_TYPE_INCLUDE) {
@@ -112,8 +118,7 @@ class AddBlockBlockTypePermissionKey extends BlockTypePermissionKey  {
 	}
 	
 }
-
-class AddBlockBlockTypePermissionAssignment extends BlockTypePermissionAssignment {
+class AddBlockBlockTypePermissionAccessListItem extends BlockTypePermissionAccessListItem {
 	
 	protected $customBlockTypeArray = array();
 	protected $blockTypesAllowedPermission = 'N';

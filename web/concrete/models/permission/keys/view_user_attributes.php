@@ -3,43 +3,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 class ViewUserAttributesUserPermissionKey extends UserPermissionKey  {
 
-	public function savePermissionKey($args) {
-		$db = Loader::db();
-		$db->Execute('delete from UserPermissionViewAttributeAssignments');
-		$db->Execute('delete from UserPermissionViewAttributeAssignmentsCustom');
-		if (is_array($args['viewAttributesIncluded'])) { 
-			foreach($args['viewAttributesIncluded'] as $peID => $permission) {
-				$v = array($peID, $permission);
-				$db->Execute('insert into UserPermissionViewAttributeAssignments (peID, permission) values (?, ?)', $v);
-			}
-		}
-		
-		if (is_array($args['viewAttributesExcluded'])) { 
-			foreach($args['viewAttributesExcluded'] as $peID => $permission) {
-				$v = array($peID, $permission);
-				$db->Execute('insert into UserPermissionViewAttributeAssignments (peID, permission) values (?, ?)', $v);
-			}
-		}
-
-		if (is_array($args['akIDInclude'])) { 
-			foreach($args['akIDInclude'] as $peID => $akIDs) {
-				foreach($akIDs as $akID) { 
-					$v = array($peID, $akID);
-					$db->Execute('insert into UserPermissionViewAttributeAssignmentsCustom (peID, akID) values (?, ?)', $v);
-				}
-			}
-		}
-
-		if (is_array($args['akIDExclude'])) { 
-			foreach($args['akIDExclude'] as $peID => $akIDs) {
-				foreach($akIDs as $akID) { 
-					$v = array($peID, $akID);
-					$db->Execute('insert into UserPermissionViewAttributeAssignmentsCustom (peID, akID) values (?, ?)', $v);
-				}
-			}
-		}
-	}
-
 	protected function getAllowedAttributeKeyIDs($list = false) {
 		if (!$list) {
 			$u = new User();
@@ -120,9 +83,53 @@ class ViewUserAttributesUserPermissionKey extends UserPermissionKey  {
 		}
 	}	
 
-	public function getAssignmentList($accessType = PermissionKey::ACCESS_TYPE_INCLUDE, $filterEntities = array()) {
+	
+}
+
+class ViewUserAttributesUserPermissionAccess extends UserPermissionAccess {
+
+	public function save($args) {
+		parent::save();
 		$db = Loader::db();
-		$list = parent::getAssignmentList($accessType, $filterEntities);
+		$db->Execute('delete from UserPermissionViewAttributeAssignments');
+		$db->Execute('delete from UserPermissionViewAttributeAssignmentsCustom');
+		if (is_array($args['viewAttributesIncluded'])) { 
+			foreach($args['viewAttributesIncluded'] as $peID => $permission) {
+				$v = array($peID, $permission);
+				$db->Execute('insert into UserPermissionViewAttributeAssignments (peID, permission) values (?, ?)', $v);
+			}
+		}
+		
+		if (is_array($args['viewAttributesExcluded'])) { 
+			foreach($args['viewAttributesExcluded'] as $peID => $permission) {
+				$v = array($peID, $permission);
+				$db->Execute('insert into UserPermissionViewAttributeAssignments (peID, permission) values (?, ?)', $v);
+			}
+		}
+
+		if (is_array($args['akIDInclude'])) { 
+			foreach($args['akIDInclude'] as $peID => $akIDs) {
+				foreach($akIDs as $akID) { 
+					$v = array($peID, $akID);
+					$db->Execute('insert into UserPermissionViewAttributeAssignmentsCustom (peID, akID) values (?, ?)', $v);
+				}
+			}
+		}
+
+		if (is_array($args['akIDExclude'])) { 
+			foreach($args['akIDExclude'] as $peID => $akIDs) {
+				foreach($akIDs as $akID) { 
+					$v = array($peID, $akID);
+					$db->Execute('insert into UserPermissionViewAttributeAssignmentsCustom (peID, akID) values (?, ?)', $v);
+				}
+			}
+		}
+	}
+
+
+	public function getAccessListItems($accessType = PermissionKey::ACCESS_TYPE_INCLUDE, $filterEntities = array()) {
+		$db = Loader::db();
+		$list = parent::getAccessListItems($accessType, $filterEntities);
 		foreach($list as $l) {
 			$pe = $l->getAccessEntityObject();
 			if ($this->permissionObjectToCheck instanceof Page && $l->getAccessType() == PermissionKey::ACCESS_TYPE_INCLUDE) {
@@ -142,10 +149,10 @@ class ViewUserAttributesUserPermissionKey extends UserPermissionKey  {
 		}
 		return $list;
 	}
-	
+
 }
 
-class ViewUserAttributesUserPermissionAssignment extends UserPermissionAssignment {
+class ViewUserAttributesUserPermissionAccessListItem extends UserPermissionAccessListItem {
 	
 	protected $customAttributeArray = array();
 	protected $attributesAllowedPermission = 'N';

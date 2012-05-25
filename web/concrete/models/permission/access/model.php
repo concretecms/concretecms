@@ -6,23 +6,23 @@ class PermissionAccess extends Object {
 		$this->pk = $permissionKey;
 	}
 	
+	public function getPermissionObject() {
+		return $this->pk->getPermissionObject();
+	}
+		
 	public function getPermissionAccessID() {return $this->paID;}
 	public function isPermissionAccessInUse() {return $this->paIsInUse;}
-	public function getAccessListItems($accessType = false, $filterEntities = array()) {
-			
+	
+	protected function deliverAccessListItems($q, $accessType, $filterEntities) {
 		$db = Loader::db();
-		$class = get_called_class();
 		$class = str_replace('PermissionKey', 'PermissionAccessListItem', get_class($this->pk));
 		if (!class_exists($class)) {
 			$class = 'PermissionAccessListItem';
 		}
-
 		$filterString = $this->buildAssignmentFilterString($accessType, $filterEntities);
- 		$r = $db->Execute('select peID, pdID, accessType from PermissionAccessList where paID = ? ' . $filterString, array(
- 			$this->getPermissionAccessID()
- 		));
+		$q = $q . ' ' . $filterString;
  		$list = array();
-
+ 		$r = $db->Execute($q);
 		while ($row = $r->FetchRow()) {
 			$obj = new $class();
 			$obj->setPropertiesFromArray($row);
@@ -35,7 +35,11 @@ class PermissionAccess extends Object {
 			$list[] = $obj;
 		}
  		return $list;
-		
+	}
+	
+	public function getAccessListItems($accessType = PermissionKey::ACCESS_TYPE_INCLUDE, $filterEntities = array()) {
+		$q = 'select peID, pdID, accessType from PermissionAccessList where paID = ' . $this->getPermissionAccessID();
+		return $this->deliverAccessListItems($q, $accessType, $filterEntities);
 	}
 
 	protected function buildAssignmentFilterString($accessType, $filterEntities) { 
@@ -87,20 +91,21 @@ class PermissionAccess extends Object {
 	
 	public function save() {}
 
-	public static function create() {
+	public static function create(PermissionKey $pk) {
 		$db = Loader::db();
 		$class = get_called_class();
 		$db->Execute('insert into PermissionAccess (paIsInUse) values (0)');
-		return call_user_func_array(array($class, 'getByID'), array($db->Insert_ID()));
+		return call_user_func_array(array($class, 'getByID'), array($db->Insert_ID(), $pk));
 	}
 	
-	public static function getByID($paID) {
+	public static function getByID($paID, PermissionKey $pk) {
 		$db = Loader::db();
 		$row = $db->GetRow('select * from PermissionAccess where paID = ?', array($paID));
 		if ($row['paID']) {
-			$class = get_called_class();
+			$class = str_replace('PermissionKey', 'PermissionAccess', get_class($pk));
 			$obj = new $class();
 			$obj->setPropertiesFromArray($row);
+			$obj->setPermissionKey($pk);
 			return $obj;
 		}
 	}

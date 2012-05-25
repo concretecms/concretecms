@@ -3,46 +3,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 class AccessUserSearchUserPermissionKey extends UserPermissionKey  {
 
-	protected $dbTableAssignments = 'UserPermissionUserSearchAssignments';
-	protected $dbTableAssignmentsCustom = 'UserPermissionUserSearchAssignmentsCustom';
-
-	public function savePermissionKey($args) {
-		$db = Loader::db();
-		$db->Execute('delete from ' . $this->dbTableAssignments);
-		$db->Execute('delete from ' . $this->dbTableAssignmentsCustom);
-		if (is_array($args['groupsIncluded'])) { 
-			foreach($args['groupsIncluded'] as $peID => $permission) {
-				$v = array($peID, $permission);
-				$db->Execute('insert into ' . $this->dbTableAssignments . ' (peID, permission) values (?, ?)', $v);
-			}
-		}
-		
-		if (is_array($args['groupsExcluded'])) { 
-			foreach($args['groupsExcluded'] as $peID => $permission) {
-				$v = array($peID, $permission);
-				$db->Execute('insert into ' . $this->dbTableAssignments . ' (peID, permission) values (?, ?)', $v);
-			}
-		}
-
-		if (is_array($args['gIDInclude'])) { 
-			foreach($args['gIDInclude'] as $peID => $gIDs) {
-				foreach($gIDs as $gID) { 
-					$v = array($peID, $gID);
-					$db->Execute('insert into ' . $this->dbTableAssignmentsCustom . ' (peID, gID) values (?, ?)', $v);
-				}
-			}
-		}
-
-		if (is_array($args['gIDExclude'])) { 
-			foreach($args['gIDExclude'] as $peID => $gIDs) {
-				foreach($gIDs as $gID) { 
-					$v = array($peID, $gID);
-					$db->Execute('insert into ' . $this->dbTableAssignmentsCustom . ' (peID, gID) values (?, ?)', $v);
-				}
-			}
-		}
-	}
-
 	protected function getAllowedGroupIDs($list = false) {
 
 		if (!$list) { 
@@ -143,9 +103,13 @@ class AccessUserSearchUserPermissionKey extends UserPermissionKey  {
 		}
 	}	
 
-	public function getAssignmentList($accessType = PermissionKey::ACCESS_TYPE_INCLUDE, $filterEntities = array()) {
+}
+
+class AccessUserSearchUserPermissionAccess extends PermissionAccess {
+
+	public function getAccessListItems($accessType = PermissionKey::ACCESS_TYPE_INCLUDE, $filterEntities = array()) {
 		$db = Loader::db();
-		$list = parent::getAssignmentList($accessType, $filterEntities);
+		$list = parent::getAccessListItems($accessType, $filterEntities);
 		foreach($list as $l) {
 			$pe = $l->getAccessEntityObject();
 			if ($this->permissionObjectToCheck instanceof Page && $l->getAccessType() == PermissionKey::ACCESS_TYPE_INCLUDE) {
@@ -165,9 +129,49 @@ class AccessUserSearchUserPermissionKey extends UserPermissionKey  {
 		}
 		return $list;
 	}
+
+	protected $dbTableAssignments = 'UserPermissionUserSearchAssignments';
+	protected $dbTableAssignmentsCustom = 'UserPermissionUserSearchAssignmentsCustom';
+
+	public function save($args) {
+		parent::save();
+		$db = Loader::db();
+		$db->Execute('delete from ' . $this->dbTableAssignments);
+		$db->Execute('delete from ' . $this->dbTableAssignmentsCustom);
+		if (is_array($args['groupsIncluded'])) { 
+			foreach($args['groupsIncluded'] as $peID => $permission) {
+				$v = array($peID, $permission);
+				$db->Execute('insert into ' . $this->dbTableAssignments . ' (peID, permission) values (?, ?)', $v);
+			}
+		}
+		
+		if (is_array($args['groupsExcluded'])) { 
+			foreach($args['groupsExcluded'] as $peID => $permission) {
+				$v = array($peID, $permission);
+				$db->Execute('insert into ' . $this->dbTableAssignments . ' (peID, permission) values (?, ?)', $v);
+			}
+		}
+
+		if (is_array($args['gIDInclude'])) { 
+			foreach($args['gIDInclude'] as $peID => $gIDs) {
+				foreach($gIDs as $gID) { 
+					$v = array($peID, $gID);
+					$db->Execute('insert into ' . $this->dbTableAssignmentsCustom . ' (peID, gID) values (?, ?)', $v);
+				}
+			}
+		}
+
+		if (is_array($args['gIDExclude'])) { 
+			foreach($args['gIDExclude'] as $peID => $gIDs) {
+				foreach($gIDs as $gID) { 
+					$v = array($peID, $gID);
+					$db->Execute('insert into ' . $this->dbTableAssignmentsCustom . ' (peID, gID) values (?, ?)', $v);
+				}
+			}
+		}
+	}
 	
 }
-
 class AccessUserSearchUserPermissionAccessListItem extends PermissionAccessListItem {
 	
 	protected $customGroupArray = array();

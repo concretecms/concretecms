@@ -426,6 +426,7 @@ class Area extends Object {
 				$b->setBlockActionCollectionID($stack->getCollectionID());
 			}
 			$p = new Permissions($b);
+
 			if ($c->isEditMode() && $this->showControls) {
 				$includeEditStrip = true;
 			}

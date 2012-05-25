@@ -1,7 +1,7 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?>
 
-<? $included = $permissionKey->getAssignmentList(); ?>
-<? $excluded = $permissionKey->getAssignmentList(PermissionKey::ACCESS_TYPE_EXCLUDE); ?>
+<? $included = $permissionAccess->getAccessListItems(PermissionKey::ACCESS_TYPE_INCLUDE); ?>
+<? $excluded = $permissionAccess->getAccessListItems(PermissionKey::ACCESS_TYPE_EXCLUDE); ?>
 <?
 Loader::model('search/group');
 $gl = new GroupSearch();
@@ -76,7 +76,7 @@ foreach($gIDs as $gID) {
 
 <script type="text/javascript">
 $(function() {
-	$("#ccm-permissions-custom-options-form select").change(function() {
+	$("#ccm-tab-content-custom-options select").change(function() {
 		if ($(this).val() == 'C') {
 			$(this).parent().find('ul.inputs-list').show();
 		} else {

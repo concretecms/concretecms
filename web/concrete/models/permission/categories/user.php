@@ -10,6 +10,7 @@ class UserPermissionAccessListItem extends PermissionAccessListItem {
 
 }
 
+class UserPermissionAssignment extends PermissionAssignment {}
 class UserPermissionAccess extends PermissionAccess {
 
 
