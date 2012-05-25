@@ -1411,30 +1411,16 @@
       <DEFAULT value="0"/>
       <UNSIGNED/>
     </field>
-    <field name="peID" type="I" size="10">
-      <KEY/>
-      <DEFAULT value="0"/>
-      <UNSIGNED/>
-    </field>
-    <field name="pdID" type="I" size="10">
-      <NOTNULL/>
-      <DEFAULT value="0"/>
-      <UNSIGNED/>
-    </field>
     <field name="pkID" type="I" size="10">
       <KEY/>
       <DEFAULT value="0"/>
       <UNSIGNED/>
     </field>
-    <field name="accessType" type="I" size="4">
-      <NOTNULL/>
+    <field name="paID" type="I" size="10">
+      <KEY/>
       <DEFAULT value="0"/>
+      <UNSIGNED/>
     </field>
-    <index name="cID">
-      <col>cID</col>
-      <col>pkID</col>
-      <col>accessType</col>
-    </index>
   </table>
 
   <table name="TaskPermissionAssignments">

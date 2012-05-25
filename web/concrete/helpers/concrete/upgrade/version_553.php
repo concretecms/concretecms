@@ -85,6 +85,12 @@ class ConcreteUpgradeVersion553Helper {
 			$d1a = SinglePage::add('/dashboard/system/permissions/users');
 			$d1a->update(array('cName'=>t('User Permissions')));
 		}
+		$sp = Page::getByPath('/dashboard/blocks/permissions');
+		if ($sp->isError()) {
+			$d1a = SinglePage::add('/dashboard/blocks/permissions');
+			$d1a->update(array('cName'=>t('Block &amp; Stack Permissions')));
+		}
+
 		$sp = Page::getByPath('/dashboard/system/permissions/advanced');
 		if ($sp->isError()) {
 			$d1b = SinglePage::add('/dashboard/system/permissions/advanced');

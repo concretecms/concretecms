@@ -4,8 +4,6 @@ Loader::model('permission/keys/access_user_search');
 
 class AssignUserGroupsUserPermissionKey extends AccessUserSearchUserPermissionKey  {
 	
-	protected $dbTableAssignments = 'UserPermissionAssignGroupAssignments';
-	protected $dbTableAssignmentsCustom = 'UserPermissionAssignGroupAssignmentsCustom';
 
 	public function validate($obj = false) {
 		$u = new User();
@@ -29,6 +27,13 @@ class AssignUserGroupsUserPermissionKey extends AccessUserSearchUserPermissionKe
 	
 }
 
-class AssignUserGroupsUserPermissionAssignment extends AccessUserSearchUserPermissionAssignment {
+class AssignUserGroupsUserPermissionAccess extends AccessUserSearchUserPermissionAccess {
+
+	protected $dbTableAssignments = 'UserPermissionAssignGroupAssignments';
+	protected $dbTableAssignmentsCustom = 'UserPermissionAssignGroupAssignmentsCustom';
+	
+}
+
+class AssignUserGroupsUserPermissionAccessListItem extends AccessUserSearchUserPermissionAccessListItem {
 	
 }

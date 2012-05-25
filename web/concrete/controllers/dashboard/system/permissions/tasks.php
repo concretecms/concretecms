@@ -13,7 +13,7 @@ class DashboardSystemPermissionsTasksController extends DashboardBaseController 
 					$paID = $_POST['pkID'][$pk->getPermissionKeyID()];
 					$pk->clearPermissionAssignment();
 					if ($paID > 0) {
-						$pa = PermissionAccess::getByID($paID);
+						$pa = PermissionAccess::getByID($paID, $pk);
 						if (is_object($pa)) {
 							$pk->assignPermissionAccess($pa);
 						}			

@@ -15,7 +15,7 @@ class BlockPermissionResponse extends PermissionResponse {
 		$gg = GroupPermissionAccessEntity::getOrCreate(Group::getByID(GUEST_GROUP_ID));
 		$accessEntities = array($gg);
 		$valid = false;
-		$list = $pk->getAssignmentList(PermissionKey::ACCESS_TYPE_ALL, $accessEntities);
+		$list = $pk->getAccessListItems(PermissionKey::ACCESS_TYPE_ALL, $accessEntities);
 		foreach($list as $l) {
 			if ($l->getAccessType() == PermissionKey::ACCESS_TYPE_INCLUDE) {
 				$valid = true;

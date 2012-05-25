@@ -214,6 +214,8 @@
 
         <page name="Stacks &amp; Blocks" path="/dashboard/blocks" filename="/dashboard/blocks/view.php" pagetype="" description="Manage sitewide content and administer block types." package="" />
         <page name="Stacks" path="/dashboard/blocks/stacks" filename="/dashboard/blocks/stacks/view.php" pagetype="" description="Share content across your site." package="" />
+        <page name="Block &amp; Stack Permissions" path="/dashboard/blocks/permissions" filename="/dashboard/blocks/permissions.php" pagetype="" description="Control who can add blocks and stacks on your site." package="">
+        </page>
         <page name="Stack List" path="/dashboard/blocks/stacks/list" filename="/dashboard/blocks/stacks/list/view.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="exclude_nav">

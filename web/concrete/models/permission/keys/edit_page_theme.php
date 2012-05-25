@@ -46,7 +46,13 @@ class EditPageThemePagePermissionKey extends PagePermissionKey  {
 		}
 	}
 	
-	public function savePermissionKey($args) {
+	
+}
+
+class EditPageThemePagePermissionAccess extends PagePermissionAccess {
+
+	public function save($args) {
+		parent::save();
 		$db = Loader::db();
 		$db->Execute('delete from PagePermissionThemeAssignments where cID = ?', array($this->permissionObject->getCollectionID()));
 		$db->Execute('delete from PagePermissionThemeAssignmentsCustom where cID = ?', array($this->permissionObject->getCollectionID()));
@@ -85,9 +91,9 @@ class EditPageThemePagePermissionKey extends PagePermissionKey  {
 	}
 
 
-	public function getAssignmentList($accessType = PagePermissionKey::ACCESS_TYPE_INCLUDE, $filterEntities = array()) {
+	public function getAccessListItems($accessType = PagePermissionKey::ACCESS_TYPE_INCLUDE, $filterEntities = array()) {
 		$db = Loader::db();
-		$list = parent::getAssignmentList($accessType, $filterEntities);
+		$list = parent::getAccessListItems($accessType, $filterEntities);
 		$list = PermissionDuration::filterByActive($list);
 		foreach($list as $l) {
 			$pe = $l->getAccessEntityObject();
@@ -107,10 +113,10 @@ class EditPageThemePagePermissionKey extends PagePermissionKey  {
 		}
 		return $list;
 	}
-	
+
 }
 
-class EditPageThemePagePermissionAssignment extends PagePermissionAssignment {
+class EditPageThemePagePermissionAccessListItem extends PagePermissionAccessListItem {
 	
 	protected $customThemeArray = array();
 	protected $themesAllowedPermission = 'N';
