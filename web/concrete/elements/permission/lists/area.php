@@ -41,6 +41,9 @@ if ($a->getAreaCollectionInheritID() != $c->getCollectionID() && $a->getAreaColl
 
 <?=Loader::element('permission/help');?>
 
+<? $cat = PermissionKeyCategory::getByHandle('area');?>
+
+<form method="post" id="ccm-permission-list-form" action="<?=$cat->getToolsURL("save_permission_assignments")?>&cID=<?=$c->getCollectionID()?>&arHandle=<?=$a->getAreaHandle()?>">
 <table class="ccm-permission-grid">
 
 <?
@@ -50,14 +53,48 @@ foreach($permissions as $pk) {
 
 ?>
 	<tr>
-	<td class="ccm-permission-grid-name"><strong><? if ($enablePermissions) { ?><a dialog-width="500" dialog-height="430" dialog-on-destroy="ccm_refreshAreaPermissions()" class="dialog-launch" dialog-title="<?=$pk->getPermissionKeyName()?>"  href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_area_popup?arHandle=<?=$a->getAreaHandle()?>&cID=<?=$c->getCollectionID()?>&atask=set_advanced_permissions&pkID=<?=$pk->getPermissionKeyID()?>"><? } ?><?=$pk->getPermissionKeyName()?><? if ($enablePermissions) { ?></a><? } ?></strong></td>
-	<td><?=Loader::element('permission/labels', array('pk' => $pk))?></td>
+
+	<td class="ccm-permission-grid-name" id="ccm-permission-grid-name-<?=$pk->getPermissionKeyID()?>"><strong><? if ($enablePermissions) { ?><a dialog-title="<?=$pk->getPermissionKeyName()?>" data-pkID="<?=$pk->getPermissionKeyID()?>" data-paID="<?=$pk->getPermissionAccessID()?>" onclick="ccm_permissionLaunchDialog(this)" href="javascript:void(0)"><? } ?><?=$pk->getPermissionKeyName()?><? if ($enablePermissions) { ?></a><? } ?></strong></td>
+	<td id="ccm-permission-grid-cell-<?=$pk->getPermissionKeyID()?>"><?=Loader::element('permission/labels', array('pk' => $pk))?></td>
 </tr>
 <? } ?>
 </table>
+</form>
+
+<? if ($enablePermissions) { ?>
+<div class="dialog-buttons">
+	<a href="javascript:void(0)" onclick="jQuery.fn.dialog.closeTop()" class="btn"><?=t('Cancel')?></a>
+	<button onclick="$('#ccm-permission-list-form').submit()" class="btn primary ccm-button-right"><?=t('Save')?> <i class="icon-ok-sign icon-white"></i></button>
+</div>
+<? } ?>
+
 </div>
 
 <script type="text/javascript">
+
+ccm_permissionLaunchDialog = function(link) {
+	jQuery.fn.dialog.open({
+		title: $(link).attr('dialog-title'),
+		href: '<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_area_popup?arHandle=<?=$a->getAreaHandle()?>&cID=<?=$c->getCollectionID()?>&atask=set_advanced_permissions&pkID=' + $(link).attr('data-pkID') + '&paID=' + $(link).attr('data-paID'),
+		modal: false,
+		width: 500,
+		height: 380
+	});		
+}
+
+$(function() {
+	$('#ccm-permission-list-form').ajaxForm({
+		beforeSubmit: function() {
+			jQuery.fn.dialog.showLoader();
+		},
+		
+		success: function(r) {
+			jQuery.fn.dialog.hideLoader();
+			jQuery.fn.dialog.closeTop();
+		}		
+	});
+});
+
 ccm_revertToPagePermissions = function() {
 	jQuery.fn.dialog.showLoader();
 	$.get('<?=$pk->getPermissionKeyToolsURL("revert_to_page_permissions")?>&arHandle=<?=urlencode($a->getAreaHandle())?>&cID=<?=$c->getCollectionID()?>', function() { 

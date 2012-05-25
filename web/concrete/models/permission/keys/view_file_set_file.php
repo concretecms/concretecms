@@ -14,4 +14,5 @@ class ViewFileSetFileFileSetPermissionKey extends FileSetPermissionKey  {
 
 }
 
-class ViewFileSetFileFileSetPermissionAssignment extends FileSetPermissionAssignment {}
+class ViewFileSetFileFileSetPermissionAccess extends FileSetPermissionAccess {}
+class ViewFileSetFileFileSetPermissionAccessListItem extends FileSetPermissionAccessListItem {}

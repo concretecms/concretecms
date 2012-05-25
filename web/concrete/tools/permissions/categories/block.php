@@ -24,9 +24,10 @@ if (is_object($a)) {
 		if ($_REQUEST['task'] == 'add_access_entity' && Loader::helper("validation/token")->validate('add_access_entity')) {
 			$pk = BlockPermissionKey::getByID($_REQUEST['pkID']);
 			$pk->setPermissionObject($b);
+			$pa = PermissionAccess::getByID($_REQUEST['paID'], $pk);
 			$pe = PermissionAccessEntity::getByID($_REQUEST['peID']);
 			$pd = PermissionDuration::getByID($_REQUEST['pdID']);
-			$pk->addAssignment($pe, $pd, $_REQUEST['accessType']);
+			$pa->addListItem($pe, $pd, $_REQUEST['accessType']);
 		}
 		
 		if ($_REQUEST['task'] == 'revert_to_area_permissions' && Loader::helper("validation/token")->validate('revert_to_area_permissions')) {
@@ -40,24 +41,50 @@ if (is_object($a)) {
 		if ($_REQUEST['task'] == 'remove_access_entity' && Loader::helper("validation/token")->validate('remove_access_entity')) {
 			$pk = BlockPermissionKey::getByID($_REQUEST['pkID']);
 			$pk->setPermissionObject($b);
+			$pa = PermissionAccess::getByID($_REQUEST['paID'], $pk);
 			$pe = PermissionAccessEntity::getByID($_REQUEST['peID']);
-			$pk->removeAssignment($pe);
+			$pa->removeListItem($pe);
 		}
 	
 		if ($_REQUEST['task'] == 'save_permission' && Loader::helper("validation/token")->validate('save_permission')) {
 			$pk = BlockPermissionKey::getByID($_REQUEST['pkID']);
 			$pk->setPermissionObject($b);
-			$pk->savePermissionKey($_POST);
+			$pa = PermissionAccess::getByID($_REQUEST['paID'], $pk);
+			$pa->save($_POST);
 		}
+
+		if ($_REQUEST['task'] == 'display_access_cell' && Loader::helper("validation/token")->validate('display_access_cell')) {
+			$pk = PermissionKey::getByID($_REQUEST['pkID']);
+			$pk->setPermissionObject($b);
+			$pa = PermissionAccess::getByID($_REQUEST['paID'], $pk);
+			Loader::element('permission/labels', array('pk' => $pk, 'pa' => $pa));
+		}
+
+		if ($_REQUEST['task'] == 'save_permission_assignments' && Loader::helper("validation/token")->validate('save_permission_assignments')) {
+			$permissions = PermissionKey::getList('block');
+			foreach($permissions as $pk) {
+				$paID = $_POST['pkID'][$pk->getPermissionKeyID()];
+				$pk->setPermissionObject($b);
+				$pk->clearPermissionAssignment();
+				if ($paID > 0) {
+					$pa = PermissionAccess::getByID($paID, $pk);
+					if (is_object($pa)) {
+						$pk->assignPermissionAccess($pa);
+					}			
+				}
+			}
+		}
+
 	}
 	if ($p->canScheduleGuestAccess()) { 
 		if ($_REQUEST['task'] == 'set_timed_guest_access' && Loader::helper("validation/token")->validate('set_timed_guest_access')) {
 			$b->doOverrideAreaPermissions();
 			$pk = PermissionKey::getByHandle('view_block');
 			$pk->setPermissionObject($b);
+			$pa = PermissionAccess::getByID($_REQUEST['paID'], $pk);
 			$pe = GroupPermissionAccessEntity::getOrCreate(Group::getByID(GUEST_GROUP_ID));
 			$pd = PermissionDuration::translateFromRequest();
-			$pk->addAssignment($pe, $pd, BlockPermissionKey::ACCESS_TYPE_INCLUDE);
+			$pa->addListItem($pe, $pd, BlockPermissionKey::ACCESS_TYPE_INCLUDE);
 		}
 	}
 }

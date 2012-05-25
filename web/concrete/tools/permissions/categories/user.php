@@ -8,7 +8,7 @@ if ($p->canAccessTaskPermissions()) {
 		$pa = PermissionAccess::getByID($_REQUEST['paID'], $pk);
 		$pe = PermissionAccessEntity::getByID($_REQUEST['peID']);
 		$pd = PermissionDuration::getByID($_REQUEST['pdID']);
-		$pa->addListITem($pe, $pd, $_REQUEST['accessType']);
+		$pa->addListItem($pe, $pd, $_REQUEST['accessType']);
 	}
 
 	if ($_REQUEST['task'] == 'remove_access_entity' && Loader::helper("validation/token")->validate('remove_access_entity')) {
