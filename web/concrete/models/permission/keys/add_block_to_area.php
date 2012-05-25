@@ -6,7 +6,7 @@ class AddBlockToAreaAreaPermissionKey extends AreaPermissionKey  {
 	public function copyFromPageToArea() {
 		$db = Loader::db();
 		$inheritedPKID = $db->GetOne('select pkID from PermissionKeys where pkHandle = ?', array('add_block'));
-		$r = $db->Execute('select peID, accessType from BlockTypePermissionAccessList where pkID = ?', array(
+		$r = $db->Execute('select peID, pa.paID from PermissionAssignments pa inner join PermissionAccessList pal on pa.paID = pal.paID where pkID = ?', array(
 			$inheritedPKID
 		));
 		if ($r) { 
@@ -15,30 +15,31 @@ class AddBlockToAreaAreaPermissionKey extends AreaPermissionKey  {
 					'cID' => $this->permissionObject->getCollectionID(), 
 					'arHandle' => $this->permissionObject->getAreaHandle(), 
 					'pkID' => $this->getPermissionKeyID(),
-					'accessType' => $row['accessType'],
-					'peID' => $row['peID']), array('cID', 'arHandle', 'peID', 'pkID'), true);
+					'paID' => $row['paID']
+				), array('cID', 'arHandle', 'pkID'), true);
 					
-				$rx = $db->Execute('select permission from BlockTypePermissionBlockTypeAssignments where peID = ?', array(
-						$row['peID']
+				$rx = $db->Execute('select permission from BlockTypePermissionBlockTypeAccessList where paID = ? and peID = ?', array(
+						$row['paID'], $row['peID']
 					));
 				while ($rowx = $rx->FetchRow()) {
-					$db->Replace('AreaPermissionBlockTypeAssignments', array(
-						'cID' => $this->permissionObject->getCollectionID(), 
-						'arHandle' => $this->permissionObject->getAreaHandle(), 
+					$db->Replace('AreaPermissionBlockTypeAccessList', array(
+						'peID' => $row['peID'],
 						'permission' => $rowx['permission'],
-						'peID' => $row['peID']
-					), array('cID', 'arHandle', 'peID'), true);				
+						'paID' => $row['paID']
+					), array('paID', 'peID'), true);				
 				}
-				$rx = $db->Execute('select btID from BlockTypePermissionBlockTypeAssignmentsCustom where peID = ?', array(
-						$row['peID']
+				$db->Execute('delete from AreaPermissionBlockTypeAccessListCustom where paID = ?', array(
+					$row['paID']
+				));
+				$rx = $db->Execute('select btID from BlockTypePermissionBlockTypeAccessListCustom where paID = ? and peID = ?', array(
+						$row['paID'], $row['peID']
 					));
 				while ($rowx = $rx->FetchRow()) {
-					$db->Replace('AreaPermissionBlockTypeAssignmentsCustom', array(
-						'cID' => $this->permissionObject->getCollectionID(), 
-						'arHandle' => $this->permissionObject->getAreaHandle(), 
+					$db->Replace('AreaPermissionBlockTypeAccessListCustom', array(
+						'paID' => $row['paID'],
 						'btID' => $rowx['btID'],
 						'peID' => $row['peID']
-					), array('cID', 'arHandle', 'peID', 'btID'), true);				
+					), array('paID', 'peID', 'btID'), true);				
 				}
 			}
 		}
@@ -159,7 +160,11 @@ class AddBlockToAreaAreaPermissionKey extends AreaPermissionKey  {
 	
 }
 
-class AddBlockToAreaAreaPermissionAssignment extends AreaPermissionAssignment {
+class AddBlockToAreaAreaPermissionAccess extends AreaPermissionAccess {
+
+}
+
+class AddBlockToAreaAreaPermissionAccessListItem extends AreaPermissionAccessListItem {
 	
 	protected $customBlockTypeArray = array();
 	protected $blockTypesAllowedPermission = 'N';

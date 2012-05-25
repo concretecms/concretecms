@@ -126,7 +126,8 @@ class AddFileFileSetPermissionAccess extends FileSetPermissionAccess {
 
 }
 
-class AddFileFileSetPermissionAssignment extends FileSetPermissionAssignment {
+
+class AddFileFileSetPermissionAccessListItem extends FileSetPermissionAccessListItem {
 	
 	protected $customFileTypesArray = array();
 	protected $fileTypesAllowedPermission = 'N';

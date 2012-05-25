@@ -32,7 +32,7 @@ class FileSetPermissionKey extends PermissionKey {
 		}
 		$accessEntities = $u->getUserAccessEntityObjects();
 		$valid = false;
-		$list = $this->getAssignmentList(PermissionKey::ACCESS_TYPE_ALL, $accessEntities);
+		$list = $this->getAccessListItems(PermissionKey::ACCESS_TYPE_ALL, $accessEntities);
 		$list = PermissionDuration::filterByActive($list);
 		foreach($list as $l) {
 			if ($l->getAccessType() == PermissionKey::ACCESS_TYPE_INCLUDE) {
@@ -48,49 +48,23 @@ class FileSetPermissionKey extends PermissionKey {
 		return $valid;		
 	}
 	
-	public function getAssignmentList($accessType = FileSetPermissionKey::ACCESS_TYPE_INCLUDE, $filterEntities = array()) {
+	public function getPermissionAccessID() {
 		$db = Loader::db();
-		$filterString = $this->buildAssignmentFilterString($accessType, $filterEntities);
- 		$r = $db->Execute('select peID, pdID, accessType from FileSetPermissionAssignments where fsID = ? and pkID = ? ' . $filterString, array(
+ 		$r = $db->GetOne('select paID from FileSetPermissionAssignments where fsID = ? and pkID = ?', array(
  			$this->permissionObjectToCheck->getFileSetID(), $this->getPermissionKeyID()
  		));
- 		$list = array();
- 		$class = str_replace('FileSetPermissionKey', 'FileSetPermissionAssignment', get_class($this));
- 		if (!class_exists($class)) {
- 			$class = 'FileSetPermissionAssignment';
- 		}
- 		while ($row = $r->FetchRow()) {
- 			$ppa = new $class();
- 			$ppa->setAccessType($row['accessType']);
- 			$ppa->loadPermissionDurationObject($row['pdID']);
- 			$ppa->loadAccessEntityObject($row['peID']);
-			$ppa->setPermissionObject($this->permissionObject);
-			$list[] = $ppa;
- 		}
- 		
- 		return $list;
+ 		return $r;
+	}
+
+	public function clearPermissionAssignment() {
+		$db = Loader::db();
+		$db->Execute('update FileSetPermissionAssignments set paID = 0 where pkID = ? and fsID = ?', array($this->pkID, $this->permissionObject->getFileSetID()));
 	}
 	
-	public function addAssignment(PermissionAccessEntity $pae, $durationObject = false, $accessType = FileSetPermissionKey::ACCESS_TYPE_INCLUDE) {
+	public function assignPermissionAccess(PermissionAccess $pa) {
 		$db = Loader::db();
-		$pdID = 0;
-		if ($durationObject instanceof PermissionDuration) {
-			$pdID = $durationObject->getPermissionDurationID();
-		}
-		
-		$db->Replace('FileSetPermissionAssignments', array(
-			'fsID' => $this->permissionObject->getFileSetID(),
-			'pkID' => $this->getPermissionKeyID(), 
-			'peID' => $pae->getAccessEntityID(),
-			'pdID' => $pdID,
-			'accessType' => $accessType
-		), array('fsID', 'peID', 'pkID'), false);
-	}
-	
-	public function removeAssignment(PermissionAccessEntity $pe) {
-		$db = Loader::db();
-		$db->Execute('delete from FileSetPermissionAssignments where fsID = ? and peID = ? and pkID = ?', array($this->permissionObject->getFileSetID(), $pe->getAccessEntityID(), $this->getPermissionKeyID()));
-		
+		$db->Replace('FileSetPermissionAssignments', array('fsID' => $this->getPermissionObject()->getFileSetID(), 'paID' => $pa->getPermissionAccessID(), 'pkID' => $this->pkID), array('fsID', 'pkID'), true);
+		$pa->markAsInUse();
 	}
 	
 	public function getPermissionKeyToolsURL($task = false) {
@@ -122,7 +96,12 @@ class FileSetPermissionKey extends PermissionKey {
 
 }
 
-class FileSetPermissionAssignment extends PermissionAssignment {
+class FileSetPermissionAccess extends PermissionAccess {
+
+
+}
+
+class FileSetPermissionAccessListItem extends PermissionAccessListItem {
 
 
 }

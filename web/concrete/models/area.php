@@ -250,8 +250,6 @@ class Area extends Object {
 		$db = Loader::db();
 		$v = array($this->getAreaHandle(), $this->getCollectionID());
 		$db->query("delete from AreaPermissionAssignments where arHandle = ? and cID = ?", $v);
-		$db->query("delete from AreaPermissionBlockTypeAssignments where arHandle = ? and cID = ?", $v);
-		$db->query("delete from AreaPermissionBlockTypeAssignmentsCustom where arHandle = ? and cID = ?", $v);
 		$db->query("update Areas set arOverrideCollectionPermissions = 0 where arID = ?", array($this->getAreaID()));
 		
 		// now we set rescan this area to determine where it -should- be inheriting from

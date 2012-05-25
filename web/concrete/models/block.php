@@ -467,14 +467,14 @@ class Block extends Object {
 				$ocID = $oc->getCollectionID();
 				$ocvID = $oc->getVersionID();
 
-				$qa = "select peID, pdID, pkID, accessType from BlockPermissionAssignments where bID = '{$this->bID}' and cID = '$ocID' and cvID='{$ocvID}'";
+				$qa = "select paID, pkID from BlockPermissionAssignments where bID = '{$this->bID}' and cID = '$ocID' and cvID='{$ocvID}'";
 				$ra = $db->query($qa);
 
 				if ($ra) {
 					while ($row_a = $ra->fetchRow()) {
 						$db->Replace('BlockPermissionAssignments', 
-							array('cID' => $cID, 'cvID' => $cvID, 'bID' => $this->bID, 'peID' => $row_a['peID'], 'pdID' => $row_a['pdID'], 'pkID' => $row_a['pkID'], 'accessType' => $row_a['accessType']),
-							array('cID', 'cvID', 'bID', 'peID', 'pkID'), true);
+							array('cID' => $cID, 'cvID' => $cvID, 'bID' => $this->bID, 'paID' => $row_a['paID'], 'pkID' => $row_a['pkID']),
+							array('cID', 'cvID', 'bID', 'paID', 'pkID'), true);
 					}
 					$ra->free();
 				}
@@ -524,13 +524,13 @@ class Block extends Object {
 		$ncID = $nc->getCollectionID();
 		$nvID = $nc->getVersionID();
 
-		$q = "select peID, pdID, pkID, accessType from BlockPermissionAssignments where cID = '$ocID' and bID = '{$this->bID}' and cvID = '{$ovID}'";
+		$q = "select paID, pkID from BlockPermissionAssignments where cID = '$ocID' and bID = '{$this->bID}' and cvID = '{$ovID}'";
 		$r = $db->query($q);
 		if ($r) {
 			while ($row = $r->fetchRow()) {
 				$db->Replace('BlockPermissionAssignments', 
-					array('cID' => $ncID, 'cvID' => $nvID, 'bID' => $newBID, 'peID' => $row['peID'], 'pdID' => $row['pdID'], 'pkID' => $row['pkID'], 'accessType' => $row['accessType']),
-					array('cID', 'cvID', 'bID', 'peID', 'pkID'), true);
+					array('cID' => $ncID, 'cvID' => $nvID, 'bID' => $newBID, 'paID' => $row['paID'], 'pkID' => $row['pkID']),
+					array('cID', 'cvID', 'bID', 'paID', 'pkID'), true);
 
 			}
 			$r->free();

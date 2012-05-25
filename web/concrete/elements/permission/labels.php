@@ -20,13 +20,13 @@ if (count($assignments) > 0) {
 		$pd = $as->getPermissionDurationObject();
 		if ($as->getAccessType() == PermissionKey::ACCESS_TYPE_EXCLUDE) {
 			if (is_object($pd)) {
-				$class = 'warning';
+				$class = 'label-warning';
 			} else {
-				$class = 'important';
+				$class = 'label-important';
 			}
 		} else { 
 			if (is_object($pd)) {
-				$class = 'notice';
+				$class = 'label-info';
 			}
 		}
 		$str .= '<span class="label ' . $class . '">' . $entity->getAccessEntityLabel() . '</span> ';
