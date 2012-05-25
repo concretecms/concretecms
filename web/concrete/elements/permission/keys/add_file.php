@@ -1,7 +1,7 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?>
 
-<? $included = $permissionKey->getAssignmentList(); ?>
-<? $excluded = $permissionKey->getAssignmentList(PermissionKey::ACCESS_TYPE_EXCLUDE); ?>
+<? $included = $permissionAccess->getAccessListItems(); ?>
+<? $excluded = $permissionAccess->getAccessListItems(PermissionKey::ACCESS_TYPE_EXCLUDE); ?>
 <?
 
 $extensions = Loader::helper('concrete/file')->getAllowedFileExtensions();
@@ -74,7 +74,7 @@ $extensions = Loader::helper('concrete/file')->getAllowedFileExtensions();
 
 <script type="text/javascript">
 $(function() {
-	$("#ccm-permissions-custom-options-form select").change(function() {
+	$("#ccm-tab-content-custom-options select").change(function() {
 		if ($(this).val() == 'C') {
 			$(this).parent().find('ul.inputs-list').show();
 		} else {

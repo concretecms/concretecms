@@ -54,34 +54,13 @@
     </field>
   </table>
 
-  <table name="BlockTypePermissionAssignments">
-    <field name="peID" type="I" size="10">
+
+  <table name="BlockTypePermissionBlockTypeAccessList">
+    <field name="paID" type="I" size="10">
       <KEY/>
       <DEFAULT value="0"/>
       <UNSIGNED/>
     </field>
-    <field name="pdID" type="I" size="10">
-      <NOTNULL/>
-      <DEFAULT value="0"/>
-      <UNSIGNED/>
-    </field>
-    <field name="pkID" type="I" size="10">
-      <KEY/>
-      <DEFAULT value="0"/>
-      <UNSIGNED/>
-    </field>
-    <field name="accessType" type="I" size="4">
-      <NOTNULL/>
-      <DEFAULT value="0"/>
-    </field>
-    <index name="pkID">
-      <col>pkID</col>
-      <col>accessType</col>
-    </index>
-  </table>
-
-
-  <table name="BlockTypePermissionBlockTypeAssignments">
     <field name="peID" type="I" size="10">
       <KEY/>
       <DEFAULT value="0"/>
@@ -93,7 +72,12 @@
     </field>
   </table>
 
-  <table name="BlockTypePermissionBlockTypeAssignmentsCustom">
+  <table name="BlockTypePermissionBlockTypeAccessListCustom">
+    <field name="paID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
     <field name="peID" type="I" size="10">
       <KEY/>
       <DEFAULT value="0"/>
@@ -106,7 +90,12 @@
     </field>
   </table>
 
-  <table name="UserPermissionUserSearchAssignments">
+  <table name="UserPermissionUserSearchAccessList">
+    <field name="paID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
     <field name="peID" type="I" size="10">
       <KEY/>
       <DEFAULT value="0"/>
@@ -118,7 +107,12 @@
     </field>
   </table>
 
-  <table name="UserPermissionUserSearchAssignmentsCustom">
+  <table name="UserPermissionUserSearchAccessListCustom">
+    <field name="paID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
     <field name="peID" type="I" size="10">
       <KEY/>
       <DEFAULT value="0"/>
@@ -131,7 +125,12 @@
     </field>
   </table>
 
-  <table name="UserPermissionAssignGroupAssignments">
+  <table name="UserPermissionAssignGroupAccessList">
+    <field name="paID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
     <field name="peID" type="I" size="10">
       <KEY/>
       <DEFAULT value="0"/>
@@ -143,7 +142,12 @@
     </field>
   </table>
 
-  <table name="UserPermissionAssignGroupAssignmentsCustom">
+  <table name="UserPermissionAssignGroupAccessListCustom">
+    <field name="paID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
     <field name="peID" type="I" size="10">
       <KEY/>
       <DEFAULT value="0"/>
@@ -157,14 +161,11 @@
   </table>
 
 
-  <table name="AreaPermissionBlockTypeAssignments">
-    <field name="cID" type="I" size="10">
+  <table name="AreaPermissionBlockTypeAccessList">
+    <field name="paID" type="I" size="10">
       <KEY/>
       <DEFAULT value="0"/>
       <UNSIGNED/>
-    </field>
-    <field name="arHandle" type="C" size="255">
-      <KEY/>
     </field>
     <field name="peID" type="I" size="10">
       <KEY/>
@@ -176,14 +177,11 @@
       <DEFAULT value="1"/>
     </field>
   </table>
-  <table name="AreaPermissionBlockTypeAssignmentsCustom">
-    <field name="cID" type="I" size="10">
+  <table name="AreaPermissionBlockTypeAccessListCustom">
+    <field name="paID" type="I" size="10">
       <KEY/>
       <DEFAULT value="0"/>
       <UNSIGNED/>
-    </field>
-    <field name="arHandle" type="C" size="255">
-      <KEY/>
     </field>
     <field name="peID" type="I" size="10">
       <KEY/>
@@ -206,30 +204,16 @@
     <field name="arHandle" type="C" size="255">
       <KEY/>
     </field>
-    <field name="peID" type="I" size="10">
-      <KEY/>
-      <DEFAULT value="0"/>
-      <UNSIGNED/>
-    </field>
-    <field name="pdID" type="I" size="10">
-      <NOTNULL/>
-      <DEFAULT value="0"/>
-      <UNSIGNED/>
-    </field>
     <field name="pkID" type="I" size="10">
       <KEY/>
       <DEFAULT value="0"/>
       <UNSIGNED/>
     </field>
-    <field name="accessType" type="I" size="4">
-      <NOTNULL/>
+    <field name="paID" type="I" size="10">
+      <KEY/>
       <DEFAULT value="0"/>
+      <UNSIGNED/>
     </field>
-    <index name="cID">
-      <col>cID</col>
-      <col>pkID</col>
-      <col>accessType</col>
-    </index>
   </table>
   
   <table name="BlockPermissionAssignments">
@@ -248,33 +232,16 @@
       <DEFAULT value="0"/>
       <UNSIGNED/>
     </field>
-    <field name="peID" type="I" size="10">
-      <KEY/>
-      <DEFAULT value="0"/>
-      <UNSIGNED/>
-    </field>
-    <field name="pdID" type="I" size="10">
-      <NOTNULL/>
-      <DEFAULT value="0"/>
-      <UNSIGNED/>
-    </field>
     <field name="pkID" type="I" size="10">
       <KEY/>
       <DEFAULT value="0"/>
       <UNSIGNED/>
     </field>
-    <field name="accessType" type="I" size="4">
-      <NOTNULL/>
+    <field name="paID" type="I" size="10">
+      <KEY/>
       <DEFAULT value="0"/>
+      <UNSIGNED/>
     </field>
-    <index name="cID">
-      <col>cID</col>
-      <col>cvID</col>
-      <col>bID</col>
-      <col>arHandle</col>
-      <col>pkID</col>
-      <col>accessType</col>
-    </index>
   </table>
   
   
@@ -1199,8 +1166,8 @@
       <NOTNULL/>
     </field>
   </table>
-  <table name="PagePermissionPageTypeAssignments">
-    <field name="cID" type="I" size="10">
+  <table name="PagePermissionPageTypeAccessList">
+    <field name="paID" type="I" size="10">
       <KEY/>
       <DEFAULT value="0"/>
       <UNSIGNED/>
@@ -1214,13 +1181,13 @@
       <NOTNULL/>
       <DEFAULT value="1"/>
     </field>
-    <field name="externalLink" type="I" size="1">
-      <UNSIGNED/>
-      <default value="0" />
+    <field name="externalLink" type="I1" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
     </field>
   </table>
-  <table name="PagePermissionPageTypeAssignmentsCustom">
-    <field name="cID" type="I" size="10">
+  <table name="PagePermissionPageTypeAccessListCustom">
+    <field name="paID" type="I" size="10">
       <KEY/>
       <DEFAULT value="0"/>
       <UNSIGNED/>
@@ -1237,8 +1204,8 @@
     </field>
   </table>
 
-  <table name="PagePermissionThemeAssignments">
-    <field name="cID" type="I" size="10">
+  <table name="PagePermissionThemeAccessList">
+    <field name="paID" type="I" size="10">
       <KEY/>
       <DEFAULT value="0"/>
       <UNSIGNED/>
@@ -1253,8 +1220,8 @@
       <DEFAULT value="1"/>
     </field>
   </table>
-  <table name="PagePermissionThemeAssignmentsCustom">
-    <field name="cID" type="I" size="10">
+  <table name="PagePermissionThemeAccessListCustom">
+    <field name="paID" type="I" size="10">
       <KEY/>
       <DEFAULT value="0"/>
       <UNSIGNED/>
@@ -1271,8 +1238,8 @@
     </field>
   </table>
 
-  <table name="PagePermissionPropertyAssignments">
-    <field name="cID" type="I" size="10">
+  <table name="PagePermissionPropertyAccessList">
+    <field name="paID" type="I" size="10">
       <KEY/>
       <DEFAULT value="0"/>
       <UNSIGNED/>
@@ -1307,8 +1274,8 @@
       <DEFAULT value="1"/>
     </field>
   </table>
-  <table name="PagePermissionPropertyAttributeAssignmentsCustom">
-    <field name="cID" type="I" size="10">
+  <table name="PagePermissionPropertyAttributeAccessListCustom">
+    <field name="paID" type="I" size="10">
       <KEY/>
       <DEFAULT value="0"/>
       <UNSIGNED/>
@@ -1325,7 +1292,12 @@
     </field>
   </table>
 
-  <table name="UserPermissionEditPropertyAssignments">
+  <table name="UserPermissionEditPropertyAccessList">
+    <field name="paID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
     <field name="peID" type="I" size="10">
       <KEY/>
       <DEFAULT value="0"/>
@@ -1362,8 +1334,8 @@
     </field>
   </table>
   
-  <table name="UserPermissionEditPropertyAttributeAssignmentsCustom">
-    <field name="cID" type="I" size="10">
+  <table name="UserPermissionEditPropertyAttributeAccessListCustom">
+    <field name="paID" type="I" size="10">
       <KEY/>
       <DEFAULT value="0"/>
       <UNSIGNED/>
@@ -1380,7 +1352,12 @@
     </field>
   </table>
   
-  <table name="UserPermissionViewAttributeAssignments">
+  <table name="UserPermissionViewAttributeAccessList">
+    <field name="paID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
     <field name="peID" type="I" size="10">
       <KEY/>
       <DEFAULT value="0"/>
@@ -1392,7 +1369,12 @@
     </field>
   </table>
   
-  <table name="UserPermissionViewAttributeAssignmentsCustom">
+  <table name="UserPermissionViewAttributeAccessListCustom">
+    <field name="paID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
     <field name="peID" type="I" size="10">
       <KEY/>
       <DEFAULT value="0"/>
@@ -1423,44 +1405,14 @@
     </field>
   </table>
 
-  <table name="TaskPermissionAssignments">
-    <field name="peID" type="I" size="10">
-      <KEY/>
-      <DEFAULT value="0"/>
-      <UNSIGNED/>
-    </field>
-    <field name="pdID" type="I" size="10">
-      <NOTNULL/>
-      <DEFAULT value="0"/>
-      <UNSIGNED/>
-    </field>
-    <field name="pkID" type="I" size="10">
-      <KEY/>
-      <DEFAULT value="0"/>
-      <UNSIGNED/>
-    </field>
-    <field name="accessType" type="I" size="4">
-      <NOTNULL/>
-      <DEFAULT value="0"/>
-    </field>
-    <index name="pkID">
-      <col>pkID</col>
-      <col>accessType</col>
-    </index>
-  </table>
   <table name="FileSetPermissionAssignments">
     <field name="fsID" type="I" size="10">
       <KEY/>
       <DEFAULT value="0"/>
       <UNSIGNED/>
     </field>
-    <field name="peID" type="I" size="10">
+    <field name="paID" type="I" size="10">
       <KEY/>
-      <DEFAULT value="0"/>
-      <UNSIGNED/>
-    </field>
-    <field name="pdID" type="I" size="10">
-      <NOTNULL/>
       <DEFAULT value="0"/>
       <UNSIGNED/>
     </field>
@@ -1469,19 +1421,10 @@
       <DEFAULT value="0"/>
       <UNSIGNED/>
     </field>
-    <field name="accessType" type="I" size="4">
-      <NOTNULL/>
-      <DEFAULT value="0"/>
-    </field>
-    <index name="fsID">
-      <col>fsID</col>
-      <col>pkID</col>
-      <col>accessType</col>
-    </index>
   </table>
 
-  <table name="FileSetPermissionFileTypeAssignments">
-    <field name="fsID" type="I" size="10">
+  <table name="FileSetPermissionFileTypeAccessList">
+    <field name="paID" type="I" size="10">
       <KEY/>
       <DEFAULT value="0"/>
       <UNSIGNED/>
@@ -1497,8 +1440,8 @@
     </field>
   </table>
   
-  <table name="FileSetPermissionFileTypeAssignmentsCustom">
-    <field name="fsID" type="I" size="10">
+  <table name="FileSetPermissionFileTypeAccessListCustom">
+    <field name="paID" type="I" size="10">
       <KEY/>
       <DEFAULT value="0"/>
       <UNSIGNED/>
@@ -2655,13 +2598,8 @@
       <DEFAULT value="0"/>
       <UNSIGNED/>
     </field>
-    <field name="peID" type="I" size="10">
+    <field name="paID" type="I" size="10">
       <KEY/>
-      <DEFAULT value="0"/>
-      <UNSIGNED/>
-    </field>
-    <field name="pdID" type="I" size="10">
-      <NOTNULL/>
       <DEFAULT value="0"/>
       <UNSIGNED/>
     </field>
@@ -2670,15 +2608,6 @@
       <DEFAULT value="0"/>
       <UNSIGNED/>
     </field>
-    <field name="accessType" type="I" size="4">
-      <NOTNULL/>
-      <DEFAULT value="0"/>
-    </field>
-    <index name="cID">
-      <col>fsID</col>
-      <col>pkID</col>
-      <col>accessType</col>
-    </index>
   </table>
   
   <table name="FileSets">
@@ -3073,30 +3002,16 @@
       <DEFAULT value="0"/>
       <UNSIGNED/>
     </field>
-    <field name="peID" type="I" size="10">
-      <KEY/>
-      <DEFAULT value="0"/>
-      <UNSIGNED/>
-    </field>
-    <field name="pdID" type="I" size="10">
-      <NOTNULL/>
-      <DEFAULT value="0"/>
-      <UNSIGNED/>
-    </field>
     <field name="pkID" type="I" size="10">
       <KEY/>
       <DEFAULT value="0"/>
       <UNSIGNED/>
     </field>
-    <field name="accessType" type="I" size="4">
-      <NOTNULL/>
+    <field name="paID" type="I" size="10">
+      <KEY/>
       <DEFAULT value="0"/>
+      <UNSIGNED/>
     </field>
-    <index name="wfID">
-      <col>wfID</col>
-      <col>pkID</col>
-      <col>accessType</col>
-    </index>
   </table>
 
 

@@ -6,7 +6,7 @@ class AddBlockToAreaAreaPermissionKey extends AreaPermissionKey  {
 	public function copyFromPageToArea() {
 		$db = Loader::db();
 		$inheritedPKID = $db->GetOne('select pkID from PermissionKeys where pkHandle = ?', array('add_block'));
-		$r = $db->Execute('select peID, accessType from BlockTypePermissionAssignments where pkID = ?', array(
+		$r = $db->Execute('select peID, accessType from BlockTypePermissionAccessList where pkID = ?', array(
 			$inheritedPKID
 		));
 		if ($r) { 

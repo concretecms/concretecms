@@ -62,7 +62,7 @@ class PermissionAccess extends Object {
 	public function duplicate() {
 		$db = Loader::db();
 		$newPA = self::create($this->pk);
-		$listItems = $this->getAccessListItems();
+		$listItems = $this->getAccessListItems(PermissionKey::ACCESS_TYPE_ALL);
 		foreach($listItems as $li) {
 			$newPA->addListItem($li->getAccessEntityObject(), $li->getPermissionDurationObject(), $li->getAccessType());
 		}
