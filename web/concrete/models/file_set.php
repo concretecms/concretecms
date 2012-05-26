@@ -284,9 +284,11 @@
 			}
 			
 			foreach($permissions as $pkHandle) { 
-				$pk = FileSetPermissionKey::getByHandle($pkHandle);
+				$pk = PagePermissionKey::getByHandle($pkHandle);
 				$pk->setPermissionObject($this);
-				$pk->addAssignment($pe, false, $accessType);
+				$pa = PermissionAccess::create($pk);			
+				$pa->addListItem($pe, false, $accessType);
+				$pk->assignPermissionAccess($pa);
 			}
 		}
 

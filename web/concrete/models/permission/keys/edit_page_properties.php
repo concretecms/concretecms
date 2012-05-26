@@ -4,9 +4,9 @@ defined('C5_EXECUTE') or die("Access Denied.");
 class EditPagePropertiesPagePermissionKey extends PagePermissionKey  {
 
 
-	public function getMyAssignment() {
+	public function getMyAccessList() {
 		$u = new User();
-		$asl = new EditPagePropertiesPagePermissionAssignment();
+		$asl = new EditPagePropertiesPagePermissionAccessListItem();
 		
 		$db = Loader::db();
 		$allAKIDs = $db->GetCol('select akID from AttributeKeys inner join AttributeKeyCategories on AttributeKeys.akCategoryID = AttributeKeyCategories.akCategoryID where akCategoryHandle = \'collection\'');
@@ -21,9 +21,9 @@ class EditPagePropertiesPagePermissionKey extends PagePermissionKey  {
 			$asl->setAttributesAllowedPermission('A');
 			return $asl;
 		}
-
+		
 		$accessEntities = $u->getUserAccessEntityObjects();
-		$list = $this->getAssignmentList(PagePermissionKey::ACCESS_TYPE_ALL, $accessEntities);
+		$list = $this->getAccessListItems(PagePermissionKey::ACCESS_TYPE_ALL, $accessEntities);
 		$list = PermissionDuration::filterByActive($list);
 		$properties = array();
 		
@@ -99,7 +99,7 @@ class EditPagePropertiesPagePermissionKey extends PagePermissionKey  {
 		if ($u->isSuperUser()) {
 			return true;
 		}
-		$asl = $this->getMyAssignment();
+		$asl = $this->getMyAccessList();
 		if (is_object($obj)) {
 			if ($obj instanceof CollectionAttributeKey) {
 				if ($asl->getAttributesAllowedPermission() == 'A') {

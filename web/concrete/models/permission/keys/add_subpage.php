@@ -10,7 +10,7 @@ class AddSubpagePagePermissionKey extends PagePermissionKey  {
 		}
 		
 		$accessEntities = $u->getUserAccessEntityObjects();
-		$list = $this->getAssignmentList(PagePermissionKey::ACCESS_TYPE_ALL, $accessEntities);
+		$list = $this->getAccessListItems(PagePermissionKey::ACCESS_TYPE_ALL, $accessEntities);
 		$canAddLinks = false;
 		foreach($list as $l) {
 			if (!$l->allowExternalLinks()) {
@@ -26,7 +26,7 @@ class AddSubpagePagePermissionKey extends PagePermissionKey  {
 
 		$u = new User();
 		$accessEntities = $u->getUserAccessEntityObjects();
-		$list = $this->getAssignmentList(PagePermissionKey::ACCESS_TYPE_ALL, $accessEntities);
+		$list = $this->getAccessListItems(PagePermissionKey::ACCESS_TYPE_ALL, $accessEntities);
 		$list = PermissionDuration::filterByActive($list);
 		
 		$db = Loader::db();
