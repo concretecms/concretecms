@@ -4,7 +4,7 @@ $c = $b->getBlockCollectionObject();
 $arHandle = $b->getAreaHandle();
 $pk = PermissionKey::getByHandle('view_block');
 $pk->setPermissionObject($b);
-$list = $pk->getAssignmentList();
+$list = $pk->getAccessListItems();
 foreach($list as $pa) { 
 	$pae = $pa->getAccessEntityObject(); 
 	if ($pae->getAccessEntityType() == 'G') {

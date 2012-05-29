@@ -35,18 +35,79 @@ class FilePermissionKey extends PermissionKey {
 			}
 		}
 	}
+	
+	public function getPermissionAccessObject() {
+		$permID = $this->getPermissionAccessID();
+		$perms = array();
+		if (is_array($permID)) {
+			foreach($permID as $paID) {
+				$pa = PermissionAccess::getByID($paID, $this);
+				if (is_object($pa)) {
+					$perms[] = $pa;
+				}
+			}
+			return PermissionAccess::createByMerge($perms);
+		} else {
+			return parent::getPermissionAccessObject();
+		}
+	}
+	
+	public function getPermissionAccessID() {
+		$db = Loader::db();
+		if ($this->permissionObjectToCheck instanceof File) { 
+ 			$r = $db->GetCol('select paID from FilePermissionAssignments where fID = ? and pkID = ?', array(
+ 			$this->permissionObject->getFileID(), $this->getPermissionKeyID()
+ 			));
+ 		} else if (is_array($this->permissionObjectToCheck)) { // sets
+			$sets = array();
+			foreach($this->permissionObjectToCheck as $fs) {
+				$sets[] = $fs->getFileSetID();
+			}
+			$inheritedPKID = $db->GetOne('select pkID from PermissionKeys where pkHandle = ?', array($this->inheritedPermissions[$this->getPermissionKeyHandle()]));
+			$r = $db->GetCol('select distinct paID from FileSetPermissionAssignments where fsID in (' . implode(',', $sets) . ') and pkID = ? ' . $filterString, array(
+				$inheritedPKID
+			));
+			Database::setDebug(false);
+		} else if ($this->permissionObjectToCheck instanceof FileSet && isset($this->inheritedPermissions[$this->getPermissionKeyHandle()])) { 
+			$inheritedPKID = $db->GetOne('select pkID from PermissionKeys where pkHandle = ?', array($this->inheritedPermissions[$this->getPermissionKeyHandle()]));
+			$r = $db->GetCol('select distinct paID from FileSetPermissionAssignments where fsID = ? and pkID = ?', array(
+				$this->permissionObjectToCheck->getFileSetID(), $inheritedPKID
+			));
+		} else {
+			return false;
+		}
+		
+		if (count($r) == 1) {
+			return $r[0];
+		}
+		if (count($r) > 1) {
+			return $r;
+		}
 
-	public function copyFromPageToArea() {
+	}
+
+	public function copyFromFileSetToFile() {
 		$db = Loader::db();
 		$paID = $this->getPermissionAccessID();
-		if ($paID) { 
+		if (is_array($paID)) {
+			// we have to merge the permissions access object into a new one.
+			$pa = PermissionAccess::create($this);
+			foreach($paID as $paID) {
+				$pax = PermissionAccess::getByID($paID, $this);
+				$pax->duplicate($pa);
+			}
+			$paID = $pa->getPermissionAccessID();
+		}
+		if ($paID) {
 			$db = Loader::db();
 			$db->Replace('FilePermissionAssignments', array(
 				'fID' => $this->permissionObject->getFileID(), 
 				'pkID' => $this->getPermissionKeyID(),
 				'paID' => $paID), array('fID', 'paID', 'pkID'), true);				
+
 		}
 	}
+	
 	
 	/*	
 	public function getAssignmentList($accessType = FilePermissionKey::ACCESS_TYPE_INCLUDE, $filterEntities = array()) {
@@ -143,7 +204,11 @@ class FilePermissionKey extends PermissionKey {
 
 }
 
-class FilePermissionAssignment extends PermissionAssignment {
+class FilePermissionAccessListItem extends PermissionAccessListItem {
+	
+}
+
+class FilePermissionAccess extends PermissionAccess {
 
 
 }

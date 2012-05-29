@@ -10,7 +10,7 @@ class DashboardSystemPermissionsSiteController extends DashboardBaseController {
 		$home = Page::getByID(1, "RECENT");
 		$pk = PermissionKey::getByHandle('view_page');
 		$pk->setPermissionObject($home);
-		$assignments = $pk->getAssignmentList();
+		$assignments = $pk->getAccessListItems();
 		foreach($assignments as $asi) {
 			$ae = $asi->getAccessEntityObject();
 			if ($ae->getAccessEntityType() == 'G' && $ae->getGroupObject()->getGroupID() == GUEST_GROUP_ID) {
@@ -31,7 +31,7 @@ class DashboardSystemPermissionsSiteController extends DashboardBaseController {
 
 		$pk = PermissionKey::getByHandle('edit_page_contents');
 		$pk->setPermissionObject($home);
-		$assignments = $pk->getAssignmentList();
+		$assignments = $pk->getAccessListItems();
 		foreach($assignments as $asi) {
 			$ae = $asi->getAccessEntityObject();
 			if ($ae->getAccessEntityType() == 'G') {

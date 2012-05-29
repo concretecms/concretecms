@@ -286,7 +286,10 @@
 			foreach($permissions as $pkHandle) { 
 				$pk = PagePermissionKey::getByHandle($pkHandle);
 				$pk->setPermissionObject($this);
-				$pa = PermissionAccess::create($pk);			
+				$pa = $pk->getPermissionAccessObject();
+				if (!is_object($pa)) {
+					$pa = PermissionAccess::create($pk);
+				}
 				$pa->addListItem($pe, false, $accessType);
 				$pk->assignPermissionAccess($pa);
 			}

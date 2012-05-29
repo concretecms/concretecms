@@ -91,7 +91,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				ob_start();
 			}
 			
-			Loader::element(DIRNAME_ATTRIBUTES . '/' . $view . '_header', array('type' => $this->attributeType));
+			@Loader::element(DIRNAME_ATTRIBUTES . '/' . $view . '_header', array('type' => $this->attributeType));
 			
 			$js = $this->attributeType->getAttributeTypeFileURL($view . '.js');
 			$css = $this->attributeType->getAttributeTypeFileURL($view . '.css');
@@ -123,7 +123,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				include($file);
 			}
 
-			Loader::element(DIRNAME_ATTRIBUTES . '/' . $view . '_footer', array('type' => $this->attributeType));
+			@Loader::element(DIRNAME_ATTRIBUTES . '/' . $view . '_footer', array('type' => $this->attributeType));
 			
 			if ($return) {
 				$contents = ob_get_contents();

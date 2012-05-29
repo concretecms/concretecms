@@ -2,6 +2,10 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 
 class PermissionAccess extends Object {
+	
+	protected $paID;
+	protected $paIDList = array();
+	
 	public function setPermissionKey($permissionKey) {
 		$this->pk = $permissionKey;
 	}
@@ -41,8 +45,23 @@ class PermissionAccess extends Object {
  		return $list;
 	}
 	
+	public static function createByMerge($permissions) {
+		$class = get_class($permissions[0]);
+		$p = new $class();
+		foreach($permissions as $px) {
+			$p->paIDList[] = $px->getPermissionAccessID();
+		}
+		$p->pk = $permissions[0]->pk;
+		$p->paID = -1;
+		return $p;
+	}
+	
 	public function getAccessListItems($accessType = PermissionKey::ACCESS_TYPE_INCLUDE, $filterEntities = array()) {
-		$q = 'select peID, pdID, accessType from PermissionAccessList where paID = ' . $this->getPermissionAccessID();
+		if (count($this->paIDList) > 0) {
+			$q = 'select peID, pdID, accessType from PermissionAccessList where paID in (' . implode(',', $this->paIDList) . ')';
+		} else {
+			$q = 'select peID, pdID, accessType from PermissionAccessList where paID = ' . $this->getPermissionAccessID();
+		}
 		return $this->deliverAccessListItems($q, $accessType, $filterEntities);
 	}
 
@@ -63,9 +82,11 @@ class PermissionAccess extends Object {
 		return $peIDs . ' ' . $accessType . ' order by accessType desc'; // we order desc so that excludes come last (-1)
 	}
 	
-	public function duplicate() {
+	public function duplicate($newPA = false) {
 		$db = Loader::db();
-		$newPA = self::create($this->pk);
+		if (!$newPA) {
+			$newPA = self::create($this->pk);
+		}
 		$listItems = $this->getAccessListItems(PermissionKey::ACCESS_TYPE_ALL);
 		foreach($listItems as $li) {
 			$newPA->addListItem($li->getAccessEntityObject(), $li->getPermissionDurationObject(), $li->getAccessType());

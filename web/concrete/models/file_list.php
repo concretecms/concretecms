@@ -213,7 +213,7 @@ class FileList extends DatabaseItemList {
 			foreach($fsIDs as $fsID) {
 				$fs = FileSet::getByID($fsID);
 				$pk->setPermissionObject($fs);
-				$list = $pk->getAssignmentList(PermissionKey::ACCESS_TYPE_ALL, $accessEntities);
+				$list = $pk->getAccessListItems(PermissionKey::ACCESS_TYPE_ALL, $accessEntities);
 				$list = PermissionDuration::filterByActive($list);
 				if (count($list) > 0) { 
 					foreach($list as $l) {
@@ -241,7 +241,7 @@ class FileList extends DatabaseItemList {
 		$fs = FileSet::getGlobal();
 		$fk = PermissionKey::getByHandle('search_file_set');
 		$fk->setPermissionObject($fs);
-		$list = $fk->getAssignmentList(PermissionKey::ACCESS_TYPE_ALL, $accessEntities);
+		$list = $fk->getAccessListItems(PermissionKey::ACCESS_TYPE_ALL, $accessEntities);
 		$list = PermissionDuration::filterByActive($list);
 		foreach($list as $l) {
 			if ($l->getAccessType() == FileSetPermissionKey::ACCESS_TYPE_MINE) {
@@ -391,7 +391,7 @@ class FileList extends DatabaseItemList {
 			$this->setBaseQuery();
 			$this->filter('fvIsApproved', 1);
 			$this->setupAttributeFilters("left join FileSearchIndexAttributes on (fv.fID = FileSearchIndexAttributes.fID)");
-			$this->setupFilePermissions();
+			//$this->setupFilePermissions();
 			$this->setupFileSetFilters();
 			$this->queryCreated=1;
 		}

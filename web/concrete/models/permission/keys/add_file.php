@@ -20,7 +20,7 @@ class AddFileFileSetPermissionKey extends FileSetPermissionKey  {
 		}
 	
 		$accessEntities = $u->getUserAccessEntityObjects();
-		$list = $this->getAssignmentList(FileSetPermissionKey::ACCESS_TYPE_ALL, $accessEntities);
+		$list = $this->getAccessListItems(FileSetPermissionKey::ACCESS_TYPE_ALL, $accessEntities);
 		$list = PermissionDuration::filterByActive($list);
 
 		foreach($list as $l) {
@@ -70,8 +70,8 @@ class AddFileFileSetPermissionAccess extends FileSetPermissionAccess {
 		return $list;
 	}
 
-	public function duplicate() {
-		$newPA = parent::duplicate();
+	public function duplicate($newPA = false) {
+		$newPA = parent::duplicate($newPA);
 		$db = Loader::db();
 		$r = $db->Execute('select * from FileSetPermissionFileTypeAccessList where paID = ?', array($this->getPermissionAccessID()));
 		while ($row = $r->FetchRow()) {

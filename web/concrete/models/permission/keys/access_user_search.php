@@ -8,7 +8,7 @@ class AccessUserSearchUserPermissionKey extends UserPermissionKey  {
 		if (!$list) { 
 			$u = new User();
 			$accessEntities = $u->getUserAccessEntityObjects();
-			$list = $this->getAssignmentList(PermissionKey::ACCESS_TYPE_ALL, $accessEntities);
+			$list = $this->getAccessListItems(PermissionKey::ACCESS_TYPE_ALL, $accessEntities);
 			$list = PermissionDuration::filterByActive($list);
 		}
 		
@@ -38,14 +38,14 @@ class AccessUserSearchUserPermissionKey extends UserPermissionKey  {
 	
 	public function getMyAssignment() {
 		$u = new User();
-		$asl = new AccessUserSearchUserPermissionAssignment();
+		$asl = new AccessUserSearchUserPermissionAccessListItem();
 		if ($u->isSuperUser()) {
 			$asl->setGroupsAllowedPermission('A');
 			return $asl;
 		}
 
 		$accessEntities = $u->getUserAccessEntityObjects();
-		$list = $this->getAssignmentList(UserPermissionKey::ACCESS_TYPE_ALL, $accessEntities);
+		$list = $this->getAccessListItems(UserPermissionKey::ACCESS_TYPE_ALL, $accessEntities);
 		$list = PermissionDuration::filterByActive($list);
 		
 		$u = new User();
@@ -107,9 +107,9 @@ class AccessUserSearchUserPermissionKey extends UserPermissionKey  {
 
 class AccessUserSearchUserPermissionAccess extends PermissionAccess {
 
-	public function duplicate() {
+	public function duplicate($newPA = false) {
 		$db = Loader::db();
-		$newPA = parent::duplicate();
+		$newPA = parent::duplicate($newPA);
 		$r = $db->Execute('select * from ' . $this->dbTableAccessList . ' where paID = ?', array($this->getPermissionAccessID()));
 		while ($row = $r->FetchRow()) {
 			$v = array($row['peID'], $newPA->getPermissionAccessID(), $row['permission']);

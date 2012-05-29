@@ -131,8 +131,8 @@ class EditPagePropertiesPagePermissionKey extends PagePermissionKey  {
 
 class EditPagePropertiesPagePermissionAccess extends PagePermissionAccess {
 
-	public function duplicate() {
-		$newPA = parent::duplicate();
+	public function duplicate($newPA = false) {
+		$newPA = parent::duplicate($newPA);
 		$db = Loader::db();
 		$r = $db->Execute('select * from PagePermissionPropertyAccessList where paID = ?', array($this->getPermissionAccessID()));
 		while ($row = $r->FetchRow()) {
