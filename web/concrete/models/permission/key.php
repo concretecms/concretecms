@@ -44,6 +44,14 @@ abstract class PermissionKey extends Object {
 		$this->permissionObject = $object;
 	}
 	
+	public function getPermissionObjectToCheck() {
+		if (is_object($this->permissionObjectToCheck)) {
+			return $this->permissionObjectToCheck;
+		} else {
+			return $this->permissionObject;
+		}
+	}
+	
 	public function getPermissionObject() {
 		return $this->permissionObject;
 	}
