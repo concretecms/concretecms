@@ -5,7 +5,7 @@ class EditUserPropertiesUserPermissionKey extends UserPermissionKey  {
 
 	public function getMyAssignment() {
 		$u = new User();
-		$asl = new EditUserPropertiesUserPermissionAssignment();
+		$asl = new EditUserPropertiesUserPermissionAccessListItem();
 		
 		$db = Loader::db();
 		$allAKIDs = $db->GetCol('select akID from UserAttributeKeys order by akID asc');
@@ -23,7 +23,7 @@ class EditUserPropertiesUserPermissionKey extends UserPermissionKey  {
 		}
 
 		$accessEntities = $u->getUserAccessEntityObjects();
-		$list = $this->getAssignmentList(UserPermissionKey::ACCESS_TYPE_ALL, $accessEntities);
+		$list = $this->getAccessListItems(UserPermissionKey::ACCESS_TYPE_ALL, $accessEntities);
 		$list = PermissionDuration::filterByActive($list);
 		$properties = array();
 		
@@ -139,8 +139,8 @@ class EditUserPropertiesUserPermissionKey extends UserPermissionKey  {
 
 class EditUserPropertiesUserPermissionAccess extends UserPermissionAccess {
 	
-	public function duplicate() {
-		$newPA = parent::duplicate();
+	public function duplicate($newPA = false) {
+		$newPA = parent::duplicate($newPA);
 		$db = Loader::db();
 		$r = $db->Execute('select * from UserPermissionEditPropertyAccessList where paID = ?', array($this->getPermissionAccessID()));
 		while ($row = $r->FetchRow()) {

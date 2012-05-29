@@ -6,7 +6,7 @@ if ($cp->canEditPagePermissions()) {
 		
 	$pk = PermissionKey::getByHandle('view_page');
 	$pk->setPermissionObject($c);
-	$assignments = $pk->getAssignmentList();
+	$assignments = $pk->getAccessListItems();
 	foreach($assignments as $asi) {
 		$ae = $asi->getAccessEntityObject();
 		$ae = $asi->getAccessEntityObject();
@@ -17,7 +17,7 @@ if ($cp->canEditPagePermissions()) {
 
 	$pk = PermissionKey::getByHandle('edit_page_contents');
 	$pk->setPermissionObject($c);
-	$assignments = $pk->getAssignmentList();
+	$assignments = $pk->getAccessListItems();
 	foreach($assignments as $asi) {
 		$ae = $asi->getAccessEntityObject();
 		$ae = $asi->getAccessEntityObject();

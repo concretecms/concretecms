@@ -50,7 +50,7 @@ class AddBlockToAreaAreaPermissionKey extends AreaPermissionKey  {
 
 		$u = new User();
 		$accessEntities = $u->getUserAccessEntityObjects();
-		$list = $this->getAssignmentList(AreaPermissionKey::ACCESS_TYPE_ALL, $accessEntities);
+		$list = $this->getAccessListItems(AreaPermissionKey::ACCESS_TYPE_ALL, $accessEntities);
 		$list = PermissionDuration::filterByActive($list);
 		
 		$db = Loader::db();
@@ -99,8 +99,8 @@ class AddBlockToAreaAreaPermissionKey extends AreaPermissionKey  {
 
 class AddBlockToAreaAreaPermissionAccess extends AreaPermissionAccess {
 
-	public function duplicate() {
-		$newPA = parent::duplicate();
+	public function duplicate($newPA = false) {
+		$newPA = parent::duplicate($newPA);
 		$db = Loader::db();
 		$r = $db->Execute('select * from AreaPermissionBlockTypeAccessList where paID = ?', array($this->getPermissionAccessID()));
 		while ($row = $r->FetchRow()) {

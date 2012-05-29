@@ -7,7 +7,7 @@ class EditPageThemePagePermissionKey extends PagePermissionKey  {
 
 		$u = new User();
 		$accessEntities = $u->getUserAccessEntityObjects();
-		$list = $this->getAssignmentList(PagePermissionKey::ACCESS_TYPE_ALL, $accessEntities);
+		$list = $this->getAccessListItems(PagePermissionKey::ACCESS_TYPE_ALL, $accessEntities);
 		$list = PermissionDuration::filterByActive($list);
 		
 		$db = Loader::db();
@@ -51,8 +51,8 @@ class EditPageThemePagePermissionKey extends PagePermissionKey  {
 
 class EditPageThemePagePermissionAccess extends PagePermissionAccess {
 
-	public function duplicate() {
-		$newPA = parent::duplicate();
+	public function duplicate($newPA = false) {
+		$newPA = parent::duplicate($newPA);
 		$db = Loader::db();
 		$r = $db->Execute('select * from PagePermissionThemeAccessList where paID = ?', array($this->getPermissionAccessID()));
 		while ($row = $r->FetchRow()) {

@@ -7,7 +7,7 @@ class ViewUserAttributesUserPermissionKey extends UserPermissionKey  {
 		if (!$list) {
 			$u = new User();
 			$accessEntities = $u->getUserAccessEntityObjects();
-			$list = $this->getAssignmentList(UserPermissionKey::ACCESS_TYPE_ALL, $accessEntities);
+			$list = $this->getAccessListItems(UserPermissionKey::ACCESS_TYPE_ALL, $accessEntities);
 			$list = PermissionDuration::filterByActive($list);
 		}
 		
@@ -43,7 +43,7 @@ class ViewUserAttributesUserPermissionKey extends UserPermissionKey  {
 		}
 
 		$accessEntities = $u->getUserAccessEntityObjects();
-		$list = $this->getAssignmentList(UserPermissionKey::ACCESS_TYPE_ALL, $accessEntities);
+		$list = $this->getAccessListItems(UserPermissionKey::ACCESS_TYPE_ALL, $accessEntities);
 		$list = PermissionDuration::filterByActive($list);
 
 		foreach($list as $l) {
@@ -126,8 +126,8 @@ class ViewUserAttributesUserPermissionAccess extends UserPermissionAccess {
 		}
 	}
 
-	public function duplicate() {
-		$newPA = parent::duplicate();
+	public function duplicate($newPA = false) {
+		$newPA = parent::duplicate($newPA);
 		$db = Loader::db();
 		$r = $db->Execute('select * from UserPermissionViewAttributeAccessList where paID = ?', array($this->getPermissionAccessID()));
 		while ($row = $r->FetchRow()) {

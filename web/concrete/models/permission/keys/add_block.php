@@ -7,7 +7,7 @@ class AddBlockBlockTypePermissionKey extends BlockTypePermissionKey  {
 
 		$u = new User();
 		$accessEntities = $u->getUserAccessEntityObjects();
-		$list = $this->getAssignmentList(PermissionKey::ACCESS_TYPE_ALL, $accessEntities);
+		$list = $this->getAccessListItems(PermissionKey::ACCESS_TYPE_ALL, $accessEntities);
 		$list = PermissionDuration::filterByActive($list);
 		
 		$db = Loader::db();
@@ -56,8 +56,8 @@ class AddBlockBlockTypePermissionKey extends BlockTypePermissionKey  {
 
 class AddBlockBlockTypePermissionAccess extends BlockTypePermissionAccess {
 
-	public function duplicate() {
-		$newPA = parent::duplicate();
+	public function duplicate($newPA = false) {
+		$newPA = parent::duplicate($newPA);
 		$db = Loader::db();
 		$r = $db->Execute('select * from BlockTypePermissionBlockTypeAccessList where paID = ?', array($this->getPermissionAccessID()));
 		while ($row = $r->FetchRow()) {
