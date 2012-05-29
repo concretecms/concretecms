@@ -9,6 +9,10 @@ class PermissionAccess extends Object {
 	public function getPermissionObject() {
 		return $this->pk->getPermissionObject();
 	}
+
+	public function getPermissionObjectToCheck() {
+		return $this->pk->getPermissionObjectToCheck();
+	}
 		
 	public function getPermissionAccessID() {return $this->paID;}
 	public function isPermissionAccessInUse() {return $this->paIsInUse;}
