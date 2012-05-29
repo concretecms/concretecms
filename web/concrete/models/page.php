@@ -287,7 +287,11 @@ class Page extends Collection {
 	}
 	
 	public function assignPermissions($userOrGroup, $permissions = array(), $accessType = PagePermissionKey::ACCESS_TYPE_INCLUDE) {
-		$this->setPermissionsToManualOverride();
+		if ($this->cInheritPermissionsFrom != 'OVERRIDE') { 
+			$this->setPermissionsToManualOverride();
+			$this->clearPagePermissions();
+		}
+		
 		if (is_array($userOrGroup)) { 
 			$pe = GroupCombinationPermissionAccessEntity::getOrCreate($userOrGroup);
 			// group combination
@@ -301,7 +305,10 @@ class Page extends Collection {
 		foreach($permissions as $pkHandle) { 
 			$pk = PagePermissionKey::getByHandle($pkHandle);
 			$pk->setPermissionObject($this);
-			$pa = PermissionAccess::create($pk);			
+			$pa = $pk->getPermissionAccessObject();
+			if (!is_object($pa)) {
+				$pa = PermissionAccess::create($pk);
+			}
 			$pa->addListItem($pe, false, $accessType);
 			$pk->assignPermissionAccess($pa);
 		}
@@ -320,11 +327,14 @@ class Page extends Collection {
 			$pkHandles[] = 'edit_page_contents';
 			$pkHandles[] = 'approve_page_versions';
 			$pkHandles[] = 'move_or_copy_page';
+			$pkHandles[] = 'preview_page_as_user';
+			$pkHandles[] = 'add_subpage';
 		}
 		if ($node['canAdmin'] == '1') {
 			$pkHandles[] = 'edit_page_speed_settings';
 			$pkHandles[] = 'edit_page_permissions';
 			$pkHandles[] = 'edit_page_theme';
+			$pkHandles[] = 'schedule_page_contents_guest_access';
 			$pkHandles[] = 'edit_page_type';
 			$pkHandles[] = 'delete_page';
 			$pkHandles[] = 'delete_page_versions';
