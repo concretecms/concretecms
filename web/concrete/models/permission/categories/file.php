@@ -91,7 +91,6 @@ class FilePermissionKey extends PermissionKey {
 			$r = $db->GetCol('select distinct paID from FileSetPermissionAssignments where fsID in (' . implode(',', $sets) . ') and pkID = ? ' . $filterString, array(
 				$inheritedPKID
 			));
-			Database::setDebug(false);
 		} else if ($this->permissionObjectToCheck instanceof FileSet && isset($this->inheritedPermissions[$this->getPermissionKeyHandle()])) { 
 			$inheritedPKID = $db->GetOne('select pkID from PermissionKeys where pkHandle = ?', array($this->inheritedPermissions[$this->getPermissionKeyHandle()]));
 			$r = $db->GetCol('select distinct paID from FileSetPermissionAssignments where fsID = ? and pkID = ?', array(
