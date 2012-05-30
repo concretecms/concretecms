@@ -88,7 +88,6 @@ if (is_object($a)) {
 			$pd = PermissionDuration::translateFromRequest();
 			$pa->addListItem($pe, $pd, BlockPermissionKey::ACCESS_TYPE_INCLUDE);
 			$pk->assignPermissionAccess($pa);
-			$pa->markAsInUse();
 		}
 	}
 }
