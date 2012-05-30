@@ -10,6 +10,9 @@ if (is_object($pa)) {
 	$assignments = $pa->getAccessListItems(PermissionKey::ACCESS_TYPE_ALL);
 }
 
+?>
+<div class="ccm-permission-access-line">
+<?
 $str = '';
 
 if (count($assignments) > 0) {
@@ -41,3 +44,28 @@ if (count($assignments) > 0) {
 <? } ?>
 
 <input type="hidden" name="pkID[<?=$pk->getPermissionKeyID()?>]" value="<?=$paID?>" />
+</div>
+
+<script type="text/javascript">
+$(function() {
+	$('.ccm-permission-access-line').draggable({
+		helper: 'clone'	
+	});
+	$('.ccm-permission-grid-cell').droppable({
+		accept: '.ccm-permission-access-line',
+		hoverClass: 'ccm-permissions-grid-cell-active',
+		drop: function(ev, ui) {
+			var paID = $(ui.draggable).find('input').val();
+			var pkID = $(this).attr('id').substring(25);
+
+			$(ui.draggable).clone().appendTo($('#ccm-permission-grid-cell-' + pkID).html(''));
+			$('#ccm-permission-grid-name-' + pkID + ' a').attr('data-paID', paID);	
+			$('#ccm-permission-grid-cell-' + pkID + ' input[type=hidden]').attr('name', 'pkID[' + pkID + ']');	
+			$('#ccm-permission-grid-cell-' + pkID + ' div.ccm-permission-access-line').draggable({
+				helper: 'clone'
+			});			
+		}
+		
+	});
+});
+</script>
