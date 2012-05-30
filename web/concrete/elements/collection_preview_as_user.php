@@ -8,24 +8,26 @@ $us = Loader::helper('form/user_selector'); ?>
 <div class="ccm-ui">
 <div class="ccm-pane-options">
 <div class="ccm-pane-options-permanent-search">
-<form id="ccm-collection-preview-as-user-form" method="get" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/pages/preview_as_user" target="ccm-collection-preview-as-user-frame">
+<form id="ccm-collection-preview-as-user-form" class="form-horizontal" method="get" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/pages/preview_as_user" target="ccm-collection-preview-as-user-frame">
 	<input type="hidden" name="cID" value="<?=$c->getCollectionID()?>" />
+	<div class="control-group">
+	
+	<label class="control-label"><?=t('Preview As')?></label>
+	<div class="controls">
+		<label class="radio inline"><input type="radio" value="guest" name="ccm-collection-preview-as" checked="checked" /> <?=t('Guest')?></label>
+		<label class="radio inline"><input type="radio" value="registered" name="ccm-collection-preview-as" /> <?=t('Registered User')?>
 
-	<div style="clear: both; width: auto; float: none; ">
-	<label><?=t('Preview As')?></label>	
-	<div class="input">
-	<label style="margin-right: 10px"><input type="radio" value="guest" name="ccm-collection-preview-as" checked="checked" /> <?=t('Guest')?>
-	</label>
-	<label>
-	<input type="radio" value="registered" name="ccm-collection-preview-as" /> <?=t('Registered User')?></label>
-	&nbsp;
+		</label>
+		
+		&nbsp;&nbsp;
 		<?=$us->quickSelect('customUser', $u->getUserName(), array('class' => 'span3', 'disabled' => 'disabled'))?>
+
 	</div>
 	</div>
 
-	<div style="clear: both; width: auto; float: none; padding-top: 10px">
+	<div class="control-group">
 	<?=$form->label('onDate_dt', t('On Date'))?>
-	<div class="input">
+	<div class="controls">
 		<?=$date->datetime('onDate')?>
 		<input type="submit" value="<?=t('Go')?>" class="btn" />
 	</div>

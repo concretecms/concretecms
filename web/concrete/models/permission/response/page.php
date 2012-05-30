@@ -80,7 +80,7 @@ class PagePermissionResponse extends PermissionResponse {
 	public function getAllTimedAssignmentsForPage() {
 		$db = Loader::db();
 		$assignments = array();
-		$r = $db->Execute('select peID, pkID, pdID from PagePermissionAssignments where pdID > 0 and cID = ?', array($this->object->getCollectionID()));
+		$r = $db->Execute('select peID, pkID, pdID from PagePermissionAssignments ppa inner join PermissionAccessList pal on ppa.paID = pal.paID where pdID > 0 and cID = ?', array($this->object->getCollectionID()));
 		while ($row = $r->FetchRow()) { 
 			$pk = PagePermissionKey::getByID($row['pkID']);
 			$pae = PermissionAccessEntity::getByID($row['peID']);
@@ -91,7 +91,7 @@ class PagePermissionResponse extends PermissionResponse {
 			$ppc->setPermissionKeyObject($pk);
 			$assignments[] = $ppc;
 		}
-		$r = $db->Execute('select peID, Areas.arHandle, pdID, pkID from AreaPermissionAssignments inner join Areas on Areas.arHandle = AreaPermissionAssignments.arHandle and Areas.cID = AreaPermissionAssignments.cID where pdID > 0 and Areas.cID = ? and Areas.arOverrideCollectionPermissions = 1', array($this->object->getCollectionID()));
+		$r = $db->Execute('select peID, Areas.arHandle, pdID, pkID from AreaPermissionAssignments apa inner join PermissionAccessList pal on apa.paID = pal.paID inner join Areas on Areas.arHandle = apa.arHandle and Areas.cID = apa.cID where pdID > 0 and Areas.cID = ? and Areas.arOverrideCollectionPermissions = 1', array($this->object->getCollectionID()));
 		while ($row = $r->FetchRow()) { 
 			$pk = AreaPermissionKey::getByID($row['pkID']);
 			$pae = PermissionAccessEntity::getByID($row['peID']);
@@ -105,7 +105,7 @@ class PagePermissionResponse extends PermissionResponse {
 			$assignments[] = $ppc;
 		}
 		$r = $db->Execute('select peID, cvb.cvID, cvb.bID, pdID, pkID from BlockPermissionAssignments bpa
-		inner join CollectionVersionBlocks cvb on cvb.cID = bpa.cID and cvb.cvID = bpa.cvID and cvb.bID = bpa.bID
+		inner join PermissionAccessList pal on bpa.paID = pal.paID inner join CollectionVersionBlocks cvb on cvb.cID = bpa.cID and cvb.cvID = bpa.cvID and cvb.bID = bpa.bID
 		where pdID > 0 and cvb.cID = ? and cvb.cvID = ? and cvb.cbOverrideAreaPermissions = 1', array($this->object->getCollectionID(), $this->object->getVersionID()));
 		while ($row = $r->FetchRow()) { 
 			$pk = BlockPermissionKey::getByID($row['pkID']);
