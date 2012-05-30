@@ -78,13 +78,17 @@ if (is_object($a)) {
 	}
 	if ($p->canScheduleGuestAccess()) { 
 		if ($_REQUEST['task'] == 'set_timed_guest_access' && Loader::helper("validation/token")->validate('set_timed_guest_access')) {
-			$b->doOverrideAreaPermissions();
+			if (!$b->overrideAreaPermissions()) {
+				$b->doOverrideAreaPermissions();
+			}
 			$pk = PermissionKey::getByHandle('view_block');
 			$pk->setPermissionObject($b);
-			$pa = PermissionAccess::getByID($_REQUEST['paID'], $pk);
+			$pa = PermissionAccess::create($pk);
 			$pe = GroupPermissionAccessEntity::getOrCreate(Group::getByID(GUEST_GROUP_ID));
 			$pd = PermissionDuration::translateFromRequest();
 			$pa->addListItem($pe, $pd, BlockPermissionKey::ACCESS_TYPE_INCLUDE);
+			$pk->assignPermissionAccess($pa);
+			$pa->markAsInUse();
 		}
 	}
 }
