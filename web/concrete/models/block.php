@@ -992,6 +992,8 @@ class Block extends Object {
 		$c = $this->getBlockCollectionObject();
 		$v = array($c->getCollectionID(), $c->getVersionID(), $this->bID, $this->arHandle);
 		$db->query("update CollectionVersionBlocks set cbOverrideAreaPermissions = 1 where cID = ? and (cvID = ? or cbIncludeAll = 1) and bID = ? and arHandle = ?", $v);
+		$v = array($c->getCollectionID(), $c->getVersionID(), $this->bID);
+		$db->query("delete from BlockPermissionAssignments where cID = ? and cvID = ? and bID = ?", $v);
 		
 		// copy permissions from the page to the area
 		$permissions = PermissionKey::getList('block');
