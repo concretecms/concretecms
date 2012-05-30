@@ -29,6 +29,11 @@ if (!$f->overrideFileSetPermissions()) { ?>
 
 
 <?=Loader::element('permission/help');?>
+
+<? $cat = PermissionKeyCategory::getByHandle('file');?>
+
+<form method="post" id="ccm-permission-list-form" action="<?=$cat->getToolsURL("save_permission_assignments")?>&fID=<?=$f->getFileID()?>">
+
 <table class="ccm-permission-grid">
 <?
 $permissions = PermissionKey::getList('file');
@@ -36,14 +41,47 @@ foreach($permissions as $pk) {
 	$pk->setPermissionObject($f);
 	?>
 	<tr>
-	<td class="ccm-permission-grid-name"><strong><? if ($enablePermissions) { ?><a dialog-width="500" dialog-height="380" dialog-on-destroy="ccm_refreshFilePermissions()" class="dialog-launch" dialog-title="<?=$pk->getPermissionKeyName()?>" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/permissions/dialogs/file?fID=<?=$f->getFileID()?>&pkID=<?=$pk->getPermissionKeyID()?>"><? } ?><?=$pk->getPermissionKeyName()?><? if ($enablePermissions) { ?></a><? } ?></td>
-	<td><?=Loader::element('permission/labels', array('pk' => $pk))?></td>
+	<td class="ccm-permission-grid-name" id="ccm-permission-grid-name-<?=$pk->getPermissionKeyID()?>"><strong><? if ($enablePermissions) { ?><a dialog-title="<?=$pk->getPermissionKeyName()?>" data-pkID="<?=$pk->getPermissionKeyID()?>" data-paID="<?=$pk->getPermissionAccessID()?>" onclick="ccm_permissionLaunchDialog(this)" href="javascript:void(0)"><? } ?><?=$pk->getPermissionKeyName()?><? if ($enablePermissions) { ?></a><? } ?></strong></td>
+	<td id="ccm-permission-grid-cell-<?=$pk->getPermissionKeyID()?>"><?=Loader::element('permission/labels', array('pk' => $pk))?></td>
 </tr>
 <? } ?>
 </table>
+</form>
+
+<? if ($enablePermissions) { ?>
+<div id="ccm-file-permissions-advanced-buttons" style="display: none">
+	<a href="javascript:void(0)" onclick="jQuery.fn.dialog.closeTop()" class="btn"><?=t('Cancel')?></a>
+	<button onclick="$('#ccm-permission-list-form').submit()" class="btn primary ccm-button-right"><?=t('Save')?> <i class="icon-ok-sign icon-white"></i></button>
+</div>
+<? } ?>
+
 </div>
 
 <script type="text/javascript">
+
+ccm_permissionLaunchDialog = function(link) {
+	jQuery.fn.dialog.open({
+		title: $(link).attr('dialog-title'),
+		href: '<?=REL_DIR_FILES_TOOLS_REQUIRED?>/permissions/dialogs/file?fID=<?=$f->getFileID()?>&pkID=' + $(link).attr('data-pkID') + '&paID=' + $(link).attr('data-paID'),
+		modal: false,
+		width: 500,
+		height: 380
+	});		
+}
+
+$(function() {
+	$('#ccm-permission-list-form').ajaxForm({
+		beforeSubmit: function() {
+			jQuery.fn.dialog.showLoader();
+		},
+		
+		success: function(r) {
+			jQuery.fn.dialog.hideLoader();
+			jQuery.fn.dialog.closeTop();
+		}		
+	});
+});
+
 ccm_revertToGlobalFilePermissions = function() {
 	jQuery.fn.dialog.showLoader();
 	$.get('<?=$pk->getPermissionKeyToolsURL("revert_to_global_file_permissions")?>&fID=<?=$f->getFileID()?>', function() { 
@@ -62,6 +100,7 @@ ccm_refreshFilePermissions = function() {
 	jQuery.fn.dialog.showLoader();
 	$.get('<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/permissions?fID=<?=$f->getFileID()?>', function(r) { 
 		jQuery.fn.dialog.replaceTop(r);
+		ccm_filePermissionsSetupButtons();
 		jQuery.fn.dialog.hideLoader();
 	});
 }

@@ -32,7 +32,7 @@ if ($_POST['task'] == 'set_location') {
 
 ?>
 
-<div class="ccm-ui">
+<div class="ccm-ui" id="ccm-file-permissions-dialog-wrapper">
 
 <ul class="tabs" id="ccm-file-permissions-tabs">
 	<? if (PERMISSIONS_MODEL != 'simple') { ?>
@@ -65,7 +65,9 @@ if ($_POST['task'] == 'set_location') {
 <?=$form->hidden('fID', $f->getFileID())?>
 <?=$form->text('fPassword', $f->getPassword(), array('style' => 'width: 250px'))?>
 
+<div id="ccm-file-password-buttons"  style="display: none">
 <?=$ih->button_js(t('Save Password'), 'ccm_alSubmitPasswordForm(\'' . $searchInstance . '\')', 'left', 'primary')?>
+</div>
 
 </form>
 
@@ -93,9 +95,9 @@ if (is_object($fsl)) { ?>
 <? } ?>
 </form>
 
-
+<div id="ccm-file-storage-buttons" style="display: none">
 <?=$ih->button_js(t('Save Location'), 'ccm_alSubmitStorageForm(\'' . $searchInstance . '\')', 'left', 'primary')?>
-
+</div>
 
 
 
@@ -105,21 +107,35 @@ if (is_object($fsl)) { ?>
 
 <script type="text/javascript">
 	
-<? if (PERMISSIONS_MODEL == 'simple') { ?>
-	var ccm_fpActiveTab = "ccm-file-password";
-<? } else { ?>
-	var ccm_fpActiveTab = "ccm-file-permissions-advanced";
-<? } ?>
-
 $("#ccm-file-permissions-tabs a").click(function() {
 	$("li.active").removeClass('active');
 	$("#" + ccm_fpActiveTab + "-tab").hide();
 	ccm_fpActiveTab = $(this).attr('id');
 	$(this).parent().addClass("active");
 	$("#" + ccm_fpActiveTab + "-tab").show();
+	ccm_filePermissionsSetupButtons();
 });
 
+ccm_filePermissionsSetupButtons = function() {
+	if ($("#" + ccm_fpActiveTab + "-buttons").length > 0) {
+		$("#ccm-file-permissions-dialog-wrapper").closest('.ui-dialog-content').jqdialog('option', 'buttons', [{}]);
+		$("#" + ccm_fpActiveTab + "-buttons").clone().show().appendTo($('#ccm-file-permissions-dialog-wrapper').closest('.ui-dialog').find('.ui-dialog-buttonpane').addClass('ccm-ui'));
+	} else {
+		$("#ccm-file-permissions-dialog-wrapper").closest('.ui-dialog-content').jqdialog('option', 'buttons', false);
+	}
+
+}
+
+var ccm_fpActiveTab;
+
 $(function() {
+<? if (PERMISSIONS_MODEL == 'simple') { ?>
+	ccm_fpActiveTab = "ccm-file-password";
+<? } else { ?>
+	ccm_fpActiveTab = "ccm-file-permissions-advanced";
+<? } ?>
+
+	ccm_filePermissionsSetupButtons();
 	ccm_setupGridStriping('ccmPermissionsTable');
 	$("#ccm-<?=$searchInstance?>-storage-form").submit(function() {
 		ccm_alSubmitStorageForm('<?=$searchInstance?>');

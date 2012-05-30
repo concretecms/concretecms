@@ -35,6 +35,30 @@ class FilePermissionKey extends PermissionKey {
 			}
 		}
 	}
+
+	public function validate() {
+		$u = new User();
+		if ($u->isSuperUser()) {
+			return true;
+		}
+		$accessEntities = $u->getUserAccessEntityObjects();
+		$valid = false;
+		$list = $this->getAccessListItems(PermissionKey::ACCESS_TYPE_ALL, $accessEntities);
+		$list = PermissionDuration::filterByActive($list);
+		foreach($list as $l) {
+			if ($l->getAccessType() == PermissionKey::ACCESS_TYPE_INCLUDE) {
+				$valid = true;
+			}
+			if ($l->getAccessType() == FileSetPermissionKey::ACCESS_TYPE_MINE) {
+				$valid = ($this->getPermissionObject()->getUserID() == $u->getUserID());
+			}
+			if ($l->getAccessType() == PermissionKey::ACCESS_TYPE_EXCLUDE) {
+				$valid = false;
+			}
+		}
+		return $valid;		
+	}
+	
 	
 	public function getPermissionAccessObject() {
 		$permID = $this->getPermissionAccessID();
@@ -107,73 +131,18 @@ class FilePermissionKey extends PermissionKey {
 
 		}
 	}
-	
-	
-	/*	
-	public function getAssignmentList($accessType = FilePermissionKey::ACCESS_TYPE_INCLUDE, $filterEntities = array()) {
+
+	public function clearPermissionAssignment() {
 		$db = Loader::db();
-		$filterString = $this->buildAssignmentFilterString($accessType, $filterEntities);
-		if ($this->permissionObjectToCheck instanceof File) { 
- 			$r = $db->Execute('select peID, pdID, accessType from FilePermissionAssignments where fID = ? and pkID = ? ' . $filterString, array(
- 			$this->permissionObject->getFileID(), $this->getPermissionKeyID()
- 			));
- 		} else if (is_array($this->permissionObjectToCheck)) { // sets
-			$sets = array();
-			foreach($this->permissionObjectToCheck as $fs) {
-				$sets[] = $fs->getFileSetID();
-			}
-			$inheritedPKID = $db->GetOne('select pkID from PermissionKeys where pkHandle = ?', array($this->inheritedPermissions[$this->getPermissionKeyHandle()]));
-			$r = $db->Execute('select distinct peID, accessType, pdID from FileSetPermissionAssignments where fsID in (' . implode(',', $sets) . ') and pkID = ? ' . $filterString, array(
-				$inheritedPKID
-			));
-		} else if ($this->permissionObjectToCheck instanceof FileSet && isset($this->inheritedPermissions[$this->getPermissionKeyHandle()])) { 
-			$inheritedPKID = $db->GetOne('select pkID from PermissionKeys where pkHandle = ?', array($this->inheritedPermissions[$this->getPermissionKeyHandle()]));
-			$r = $db->Execute('select accessType, peID, pdID from FileSetPermissionAssignments where fsID = ? and pkID = ? ' . $filterString, array(
-				$this->permissionObjectToCheck->getFileSetID(), $inheritedPKID
-			));
-		} else {
-			return array();
-		}
- 		
- 		$list = array();
- 		$class = str_replace('FilePermissionKey', 'FilePermissionAssignment', get_class($this));
- 		if (!class_exists($class)) {
- 			$class = 'FilePermissionAssignment';
- 		}
- 		while ($row = $r->FetchRow()) {
- 			$ppa = new $class();
- 			$ppa->setAccessType($row['accessType']);
- 			$ppa->loadPermissionDurationObject($row['pdID']);
- 			$ppa->loadAccessEntityObject($row['peID']);
-			$ppa->setPermissionObject($this->permissionObject);
-			$list[] = $ppa;
- 		}
- 		
- 		return $list;
+		$db->Execute('update FilePermissionAssignments set paID = 0 where pkID = ? and fID = ?', array($this->pkID, $this->permissionObject->getFileID()));
 	}
 	
-	public function addAssignment(PermissionAccessEntity $pae, $durationObject = false, $accessType = FilePermissionKey::ACCESS_TYPE_INCLUDE) {
+	public function assignPermissionAccess(PermissionAccess $pa) {
 		$db = Loader::db();
-		$pdID = 0;
-		if ($durationObject instanceof PermissionDuration) {
-			$pdID = $durationObject->getPermissionDurationID();
-		}
-		
-		$db->Replace('FilePermissionAssignments', array(
-			'fID' => $this->permissionObject->getFileID(),
-			'pkID' => $this->getPermissionKeyID(), 
-			'peID' => $pae->getAccessEntityID(),
-			'pdID' => $pdID,
-			'accessType' => $accessType
-		), array('fID', 'peID', 'pkID'), false);
+		$db->Replace('FilePermissionAssignments', array('fID' => $this->getPermissionObject()->getFileID(), 'paID' => $pa->getPermissionAccessID(), 'pkID' => $this->pkID), array('fID', 'pkID'), true);
+		$pa->markAsInUse();
 	}
 	
-	public function removeAssignment(PermissionAccessEntity $pe) {
-		$db = Loader::db();
-		$db->Execute('delete from FilePermissionAssignments where fID = ? and peID = ? and pkID = ?', array($this->permissionObject->getFileID(), $pe->getAccessEntityID(), $this->getPermissionKeyID()));
-		
-	}
-	*/
 	
 	public function getPermissionKeyToolsURL($task = false) {
 		return parent::getPermissionKeyToolsURL($task) . '&fID=' . $this->getPermissionObject()->getFileID();
