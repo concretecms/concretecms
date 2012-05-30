@@ -19,7 +19,7 @@ foreach($permissions as $pk) {
 	ccm_permissionLaunchDialog = function(link) {
 		jQuery.fn.dialog.open({
 			title: $(link).attr('dialog-title'),
-			href: '<?=REL_DIR_FILES_TOOLS_REQUIRED?>/permissions/dialogs/file_set?pkID=' + $(link).attr('data-pkID') + '&paID=' + $(link).attr('data-paID'),
+			href: '<?=REL_DIR_FILES_TOOLS_REQUIRED?>/permissions/dialogs/file_set?fsID=<?=$fs->getFileSetID()?>&pkID=' + $(link).attr('data-pkID') + '&paID=' + $(link).attr('data-paID'),
 			modal: false,
 			width: 500,
 			height: 380
