@@ -42,11 +42,11 @@ $languages = Localization::getAvailableInterfaceLanguages();
 				</tr>
                 <tr>
                     <td><?=t('Email Address')?> <span class="required">*</span></td>
-                    <td><?=t('User Avatar')?></td>
+                    <td><? if ($assignment->allowEditAvatar()) { ?><?=t('User Avatar')?><? } ?></td>
                 </tr>
                 <tr>
 					<td><input type="text" name="uEmail" autocomplete="off" value="<?=$th->entities($_POST['uEmail'])?>" style="width: 95%"></td>
-					<td><input type="file" name="uAvatar" style="width: 95%"/></td>
+					<td><? if ($assignment->allowEditAvatar()) { ?><input type="file" name="uAvatar" style="width: 95%"/><? } ?></td>
 				</tr>
                 
                 
