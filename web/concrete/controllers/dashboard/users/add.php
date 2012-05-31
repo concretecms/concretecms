@@ -93,8 +93,10 @@ class DashboardUsersAddController extends Controller {
 					if (is_object($uo)) {
 						
 						$av = Loader::helper('concrete/avatar'); 
-						if (is_uploaded_file($_FILES['uAvatar']['tmp_name'])) {
-							$uHasAvatar = $av->updateUserAvatar($_FILES['uAvatar']['tmp_name'], $uo->getUserID());
+						if ($assignment->allowEditAvatar()) {
+							if (is_uploaded_file($_FILES['uAvatar']['tmp_name'])) {
+								$uHasAvatar = $av->updateUserAvatar($_FILES['uAvatar']['tmp_name'], $uo->getUserID());
+							}
 						}
 						
 						foreach($aks as $uak) {
