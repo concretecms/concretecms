@@ -57,22 +57,6 @@ if (count($pages) > 0) {
 		}
 	}
 
-	if ($_REQUEST['task'] == 'save_workflows' && Loader::helper("validation/token")->validate('save_workflows')) {
-		$pk = PagePermissionKey::getByID($_REQUEST['pkID']);
-		foreach($pages as $c) { 
-			$pk->setPermissionObject($c);
-			$pk->clearWorkflows();
-			if (is_array($_POST['wfID'])) { 
-				foreach($_POST['wfID'] as $wfID) {
-					$wf = Workflow::getByID($wfID);
-					if (is_object($wf)) {
-						$pk->attachWorkflow($wf);
-					}
-				}
-			}
-		}
-	}
-	
 	if ($_REQUEST['task'] == 'change_permission_inheritance' && Loader::helper("validation/token")->validate('change_permission_inheritance')) {
 		foreach($pages as $c) { 
 			if ($c->getCollectionID() == HOME_CID) {
@@ -106,19 +90,20 @@ if (count($pages) > 0) {
 	}
 
 	if ($_REQUEST['task'] == 'save_permission_assignments' && Loader::helper("validation/token")->validate('save_permission_assignments')) {
+		$u = new User();
 		$permissions = PermissionKey::getList('page');
-		foreach($permissions as $pk) {
-			$paID = $_POST['pkID'][$pk->getPermissionKeyID()];
-			foreach($pages as $c) { 
-				$pk->setPermissionObject($c);
-				$pk->clearPermissionAssignment();
-				if ($paID > 0) {
-					$pa = PermissionAccess::getByID($paID, $pk);
-					if (is_object($pa)) {
-						$pk->assignPermissionAccess($pa);
-					}			
-				}
+		foreach($pages as $c) { 
+			$pkr = new ChangePagePermissionsPageWorkflowRequest();
+			$pkr->setRequestedPage($c);
+			$permissionSet = array();
+			foreach($permissions as $pk) {
+				$paID = $_POST['pkID'][$pk->getPermissionKeyID()];
+				$permissionSet[$pk->getPermissionKeyID()] = $paID;
 			}
+			$pkr->setPagePermissionSet($permissionSet);
+			$pkr->setRequesterUserID($u->getUserID());
+			$u->unloadCollectionEdit($c);
+			$response = $pkr->trigger();
 		}
 	}
 

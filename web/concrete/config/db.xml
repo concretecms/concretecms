@@ -29,6 +29,18 @@
       <DEFAULT value="0"/>
       <UNSIGNED/>
     </field>
+     <index name="accessType">
+      <col>accessType</col>
+    </index>
+    <index name="peID_accessType">
+      <col>peID</col>
+      <col>accessType</col>
+    </index>
+    <index name="paID_peID">
+      <col>paID</col>
+      <col>peID</col>
+    </index>
+
   </table>
 
   <table name="PermissionAccessList">

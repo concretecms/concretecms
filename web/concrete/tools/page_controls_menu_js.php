@@ -316,8 +316,7 @@ $(function() {
 		
 
 		ccm_statusBar.activate();		
-		
-		$(".launch-tooltip").twipsy();
+		$(".launch-tooltip").tooltip();
 		ccm_activateToolbar();
 	<? } ?>
 	

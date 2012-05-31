@@ -8,26 +8,30 @@ defined('C5_EXECUTE') or die("Access Denied.");
  *
  */
  
-class ApprovePagePageWorkflowRequest extends PageWorkflowRequest {
+class ChangePagePermissionsPageWorkflowRequest extends PageWorkflowRequest {
 	
 	const REQUEST_STATUS_NUM = 30;
 
 	public function __construct() {
-		$pk = PermissionKey::getByHandle('approve_page_versions');
+		$pk = PermissionKey::getByHandle('edit_page_permissions');
 		parent::__construct($pk);
 	}
 	
-	public function setRequestedVersionID($cvID) {
-		$this->cvID = $cvID;
+	public function setPagePermissionSet($set) {
+		$this->permissionSet = $set;
+	}
+
+	public function getPagePermissionSet() {
+		return $this->permissionSet;
 	}
 
 	public function getWorkflowRequestDescriptionObject() {
 		$d = new WorkflowDescription();
 		$c = Page::getByID($this->cID, 'ACTIVE');
 		$link = Loader::helper('navigation')->getLinkToCollection($c, true);
-		$d->setText(t("\"%s\" has pending changes and needs to be approved. View the page here: %s.", $c->getCollectionName(), $link));
-		$d->setHTML(t("Page Submitted for Approval."));
-		$d->setShortStatus(t("Pending Approval"));
+		$d->setText(t("\"%s\" has pending permission changes. View the page here: %s.", $c->getCollectionName(), $link));
+		$d->setHTML(t("Page Submitted for Permission Changes."));
+		$d->setShortStatus(t("Permission Changes"));
 		return $d;
 	}
 	
@@ -44,20 +48,19 @@ class ApprovePagePageWorkflowRequest extends PageWorkflowRequest {
 	}		
 	
 	public function getWorkflowRequestApproveButtonText() {
-		return t('Approve Page');
+		return t('Change Permissions');
 	}
 	
 	public function getWorkflowRequestAdditionalActions(WorkflowProgress $wp) {
-		
 		$buttons = array();
 		$c = Page::getByID($this->cID, 'ACTIVE');
 		$button = new WorkflowProgressAction();
-		$button->setWorkflowProgressActionLabel(t('View Active Version'));
-		$button->addWorkflowProgressActionButtonParameter('dialog-title', t('Preview Page'));
-		$button->addWorkflowProgressActionButtonParameter('dialog-width', '90%');
-		$button->addWorkflowProgressActionButtonParameter('dialog-height', '70%');
+		$button->setWorkflowProgressActionLabel(t('View Pending Permissions'));
+		$button->addWorkflowProgressActionButtonParameter('dialog-title', t('Pending Permissions'));
+		$button->addWorkflowProgressActionButtonParameter('dialog-width', '400');
+		$button->addWorkflowProgressActionButtonParameter('dialog-height', '360');
 		$button->setWorkflowProgressActionStyleInnerButtonLeftHTML('<i class="icon-eye-open"></i>');
-		$button->setWorkflowProgressActionURL(REL_DIR_FILES_TOOLS_REQUIRED . '/versions.php?cID=' . $this->cID . '&cvID=' . $c->getVersionID() . '&vtask=view_version');
+		$button->setWorkflowProgressActionURL(REL_DIR_FILES_TOOLS_REQUIRED . '/workflow/dialogs/change_page_permissions?wpID=' . $wp->getWorkflowProgressID());
 		$button->setWorkflowProgressActionStyleClass('dialog-launch');
 		$buttons[] = $button;
 		return $buttons;
@@ -65,8 +68,18 @@ class ApprovePagePageWorkflowRequest extends PageWorkflowRequest {
 
 	public function approve(WorkflowProgress $wp) {
 		$c = Page::getByID($this->getRequestedPageID());
-		$v = CollectionVersion::get($c, $this->cvID);
-		$v->approve(false);
+		$permissions = PermissionKey::getList('page');
+		foreach($permissions as $pk) {
+			$paID = $this->permissionSet[$pk->getPermissionKeyID()];
+			$pk->setPermissionObject($c);
+			$pk->clearPermissionAssignment();
+			if ($paID > 0) {
+				$pa = PermissionAccess::getByID($paID, $pk);
+				if (is_object($pa)) {
+					$pk->assignPermissionAccess($pa);
+				}			
+			}			
+		}
 		$wpr = new WorkflowProgressResponse();
 		$wpr->setWorkflowProgressResponseURL(BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $c->getCollectionID());
 		return $wpr;

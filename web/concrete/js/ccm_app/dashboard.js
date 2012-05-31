@@ -42,8 +42,8 @@ $(function() {
 		var id = $(this).attr('id') + '-content';
 		return $('#' + id).html();
 		
-	}, placement: 'below', html: true, trigger: 'manual'});
-	$('.tooltip').twipsy({placement: 'below'});
+	}, placement: 'bottom', html: true, trigger: 'manual'});
+	$('.launch-tooltip').tooltip({placement: 'bottom'});
 	if ($('#ccm-dashboard-result-message').length > 0) { 
 		if ($('.ccm-pane').length > 0) { 
 			var pclass = $('.ccm-pane').parent().attr('class');

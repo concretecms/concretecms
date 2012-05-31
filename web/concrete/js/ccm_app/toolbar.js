@@ -30,7 +30,7 @@ $(function() {
 	}
 	
 	ccm_togglePopover = function(e, link) {
-		if ($('#twipsy-holder .popover').is(':visible')) {
+		if ($('.popover').is(':visible')) {
 			$(link).popover('hide');	
 		} else {
 			$(link).popover('show');	
