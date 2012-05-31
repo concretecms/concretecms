@@ -294,9 +294,13 @@ $(function() {
 					<? if ($cp->canApprovePageVersions() && !$c->isCheckedOut()) { 
 						$pk = PagePermissionKey::getByHandle('approve_page_versions');
 						$pk->setPermissionObject($c);
-						if (count($pk->getWorkflows()) > 0) {
-							$appLabel = t('Submit for Approval');
-						} else { 
+						$pa = $pk->getPermissionAccessObject();
+						if (is_object($pa)) {
+							if (count($pa->getWorkflows()) > 0) {
+								$appLabel = t('Submit for Approval');
+							}
+						}
+						if (!$appLabel) {
 							$appLabel = t('Approve Version');
 						}
 						?>
