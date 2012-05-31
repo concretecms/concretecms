@@ -94,8 +94,7 @@ class ConcreteDashboardHelper {
 			}
 			
 			if (count($subpagesP) > 0 || is_object($upToPage)) { 
-				$relatedPages = '<div id="ccm-page-navigate-pages-content" style="display: none">';
-				$relatedPages .= '<ul class="ccm-navigate-page-menu">';
+				$relatedPages = '<ul id="ccm-page-navigate-pages-content" class="dropdown-menu">';
 		
 				foreach($subpagesP as $sc) { 
 		
@@ -113,15 +112,12 @@ class ConcreteDashboardHelper {
 					$relatedPages .= '<li><a href="' . $nh->getLinkToCollection($upToPage, false, true) . '">' . t('&lt; Back to %s', $upToPage->getCollectionName()) . '</a></li>';
 				}
 				$relatedPages .= '</ul>';
-				$relatedPages .= '</div>';
 				$navigateTitle = $parent->getCollectionName();
 			}
 		}
 		
 
 		$html = '<div class="ccm-pane-header">';
-		
-		$html .= $relatedPages;
 		
 		$class = 'ccm-icon-favorite';
 		$u = new User();
@@ -145,11 +141,11 @@ class ConcreteDashboardHelper {
 		}
 		
 		if (isset($relatedPages)) { 
-			$html .= '<li><a href="javascript:void(0)" onmouseover="ccm_togglePopover(event, this)" class="ccm-icon-navigate-pages" title="' . $navigateTitle . '" id="ccm-page-navigate-pages">' . t('Help') . '</a></li>';
+			$html .= '<li><a href="" class="ccm-icon-navigate-pages" data-toggle="dropdown" title="' . $navigateTitle . '" id="ccm-page-navigate-pages">' . t('Help') . '</a>' . $relatedPages . '</li>';
 		}
 		
 		if ($help) {
-			$html .= '<li><span style="display: none" id="ccm-page-help-content">' . $help . '</span><a href="javascript:void(0)" onclick="ccm_togglePopover(event, this)" class="ccm-icon-help" title="' . t('Help') . '" id="ccm-page-help">' . t('Help') . '</a></li>';
+			$html .= '<li><span style="display: none" id="ccm-page-help-content">' . $help . '</span><a href="javascript:void(0)" class="ccm-icon-help" title="' . t('Help') . '" id="ccm-page-help">' . t('Help') . '</a></li>';
 		}
 		if (Config::get('TOOLBAR_QUICK_NAV_BEHAVIOR') != 'disabled') {
 			$html .= '<li><a href="javascript:void(0)" id="ccm-add-to-quick-nav" onclick="ccm_toggleQuickNav(' . $c->getCollectionID() . ',\'' . $token . '\')" class="' . $class . '">' . t('Add to Favorites') . '</a></li>';

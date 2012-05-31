@@ -38,11 +38,12 @@ ccm_getDashboardBackgroundImageData = function(image, display) {
 
 $(function() {
 	ccm_activateToolbar();
-	$("#ccm-page-help,#ccm-page-navigate-pages").popover({content: function() {
+	
+	$("#ccm-page-help").popover({content: function() {
 		var id = $(this).attr('id') + '-content';
 		return $('#' + id).html();
 		
-	}, placement: 'bottom', html: true, trigger: 'manual'});
+	}, placement: 'bottom', html: true});
 	$('.launch-tooltip').tooltip({placement: 'bottom'});
 	if ($('#ccm-dashboard-result-message').length > 0) { 
 		if ($('.ccm-pane').length > 0) { 
