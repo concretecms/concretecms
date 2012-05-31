@@ -18,7 +18,7 @@
  */
 
 defined('C5_EXECUTE') or die("Access Denied.");
-class ConcreteUpgradeVersion553Helper {
+class ConcreteUpgradeVersion560Helper {
 
 	// The upgrade helper will automatically run through these prior to running run()
 	// and make sure they are either refreshed from db.xml or that they are created (from db.xml)
@@ -38,6 +38,9 @@ class ConcreteUpgradeVersion553Helper {
 		'AreaPermissionAssignments',
 		'BlockPermissionAssignments',
 		'PermissionKeys',
+		'PermissionAssignments',
+		'PermissionAccess',
+		'PermissionAccessList',
 		'PermissionKeyCategories',
 		'PermissionAccessEntities',
 		'PermissionAccessEntityUsers',
@@ -266,7 +269,7 @@ class ConcreteUpgradeVersion553Helper {
 					}
 					$spk->setPermissionObject($ax);
 					$spa = $spk->getPermissionAccessObject();
-					if (!is_object($pa)) {
+					if (!is_object($spa)) {
 						$spa = PermissionAccess::create($spk);
 					}
 
