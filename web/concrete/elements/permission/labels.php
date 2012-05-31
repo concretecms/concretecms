@@ -21,18 +21,22 @@ if (count($assignments) > 0) {
 		$as = $assignments[$i];
 		$entity = $as->getAccessEntityObject();
 		$pd = $as->getPermissionDurationObject();
+		$pdTitle = '';
+		
 		if ($as->getAccessType() == PermissionKey::ACCESS_TYPE_EXCLUDE) {
 			if (is_object($pd)) {
 				$class = 'label-warning';
+				$pdTitle = 'title="' . $pd->getTextRepresentation() . '"';
 			} else {
 				$class = 'label-important';
 			}
 		} else { 
 			if (is_object($pd)) {
 				$class = 'label-info';
+				$pdTitle = 'title="' . $pd->getTextRepresentation() . '"';
 			}
 		}
-		$str .= '<span class="label ' . $class . '">' . $entity->getAccessEntityLabel() . '</span> ';
+		$str .= '<span class="label ' . $class . '" ' . $pdTitle . '>' . $entity->getAccessEntityLabel() . '</span> ';
 	}
 }
 
@@ -48,6 +52,7 @@ if (count($assignments) > 0) {
 
 <script type="text/javascript">
 $(function() {
+	$('.ccm-permission-access-line span[title]').tooltip();
 	$('.ccm-permission-grid-cell .ccm-permission-access-line').draggable({
 		helper: 'clone'	
 	});

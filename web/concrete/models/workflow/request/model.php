@@ -103,7 +103,7 @@ abstract class WorkflowRequest extends Object {
 	abstract public function getWorkflowRequestApproveButtonClass();
 	abstract public function getWorkflowRequestApproveButtonInnerButtonRightHTML();
 
-	public function getWorkflowRequestAdditionalActions() {
+	public function getWorkflowRequestAdditionalActions(WorkflowProgress $wp) {
 		return array();
 	}
 	
