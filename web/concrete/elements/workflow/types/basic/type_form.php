@@ -3,22 +3,26 @@
 <table class="ccm-permission-grid">
 <?
 $permissions = PermissionKey::getList('basic_workflow');
+
 foreach($permissions as $pk) { 
 	$pk->setPermissionObject($workflow);
 	?>
 	<tr>
-	<td class="ccm-permission-grid-name"><strong><a dialog-width="500" dialog-height="380" dialog-on-destroy="ccm_refreshBasicWorkflowPermissions()" class="dialog-launch" dialog-title="<?=$pk->getPermissionKeyName()?>" href="<?=Loader::helper('concrete/urls')->getToolsURL('permissions/dialogs/basic_workflow')?>?wfID=<?=$workflow->getWorkflowID()?>&pkID=<?=$pk->getPermissionKeyID()?>"><?=$pk->getPermissionKeyName()?></a></td>
-	<td><?=Loader::element('permission/labels', array('pk' => $pk))?></td>
+	<td class="ccm-permission-grid-name" id="ccm-permission-grid-name-<?=$pk->getPermissionKeyID()?>"><strong><a dialog-title="<?=$pk->getPermissionKeyName()?>" data-pkID="<?=$pk->getPermissionKeyID()?>" data-paID="<?=$pk->getPermissionAccessID()?>" onclick="ccm_permissionLaunchDialog(this)" href="javascript:void(0)"><?=$pk->getPermissionKeyName()?></a></td>
+	<td id="ccm-permission-grid-cell-<?=$pk->getPermissionKeyID()?>" class="ccm-permission-grid-cell"><?=Loader::element('permission/labels', array('pk' => $pk))?></td>
 </tr>
 <? } ?>
 </table>
 
-<script type="text/javascript">
-$(function() {
-	$('.dialog-launch').dialog();
-});
 
-ccm_refreshBasicWorkflowPermissions = function() {
-	window.location.reload();
-}
-</script>
+	<script type="text/javascript">
+	ccm_permissionLaunchDialog = function(link) {
+		jQuery.fn.dialog.open({
+			title: $(link).attr('dialog-title'),
+			href: '<?=REL_DIR_FILES_TOOLS_REQUIRED?>/permissions/dialogs/basic_workflow?wfID=<?=$workflow->getWorkflowID()?>&pkID=' + $(link).attr('data-pkID') + '&paID=' + $(link).attr('data-paID'),
+			modal: false,
+			width: 500,
+			height: 380
+		});		
+	}
+	</script>

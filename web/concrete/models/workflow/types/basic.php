@@ -19,6 +19,21 @@ class BasicWorkflowHistoryEntry extends WorkflowHistoryEntry {
 
 class BasicWorkflow extends Workflow  {
 	
+	public function updateDetails($post) {
+		$permissions = PermissionKey::getList('basic_workflow');
+		foreach($permissions as $pk) {
+			$pk->setPermissionObject($this);
+			$paID = $post['pkID'][$pk->getPermissionKeyID()];
+			$pk->clearPermissionAssignment();
+			if ($paID > 0) {
+				$pa = PermissionAccess::getByID($paID, $pk);
+				if (is_object($pa)) {
+					$pk->assignPermissionAccess($pa);
+				}			
+			}		
+		}			
+	}
+	
 	public function delete() {
 		$db = Loader::db();
 		$db->Execute('delete from BasicWorkflowPermissionAssignments where wfID = ?', array($this->wfID));

@@ -27,6 +27,19 @@ class DashboardWorkflowListController extends DashboardBaseController {
 		$this->view();
 	}
 	
+	public function save_workflow_details() {
+		if (!Loader::helper('validation/token')->validate('save_workflow_details')) {
+			$this->error->add(Loader::helper('validation/token')->getErrorMessage());
+		}
+		if (!$this->error->has()) {
+			$wf = Workflow::getByID($this->post('wfID'));
+			$wf->updateDetails($this->post());
+			$this->view_detail($this->post('wfID'), 'workflow_updated');
+		} else {
+			$this->view_detail($this->post('wfID'));
+		}		
+	}
+	
 	public function view() {
 		$workflows = Workflow::getList();
 		$this->set('workflows', $workflows);
@@ -70,6 +83,9 @@ class DashboardWorkflowListController extends DashboardBaseController {
 		switch($message) {
 			case 'workflow_created':
 				$this->set('message', t('Workflow created successfully. You may now modify its properties.'));
+				break;
+			case 'workflow_updated':
+				$this->set('message', t('Workflow updated.'));
 				break;
 		}
 		

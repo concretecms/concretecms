@@ -2,52 +2,23 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 class BasicWorkflowPermissionKey extends WorkflowPermissionKey {
 	
-	public function getAssignmentList($accessType = BasicWorkflowPermissionKey::ACCESS_TYPE_INCLUDE, $filterEntities = array()) {
+	public function getPermissionAccessID() {
 		$db = Loader::db();
-		$filterString = $this->buildAssignmentFilterString($accessType, $filterEntities);
- 		$r = $db->Execute('select peID, pdID, accessType from BasicWorkflowPermissionAssignments where wfID = ? and pkID = ? ' . $filterString, array(
- 			$this->permissionObject->getWorkflowID(), $this->getPermissionKeyID()
+ 		$r = $db->GetOne('select paID from BasicWorkflowPermissionAssignments where wfID = ? and pkID = ?', array(
+ 			$this->getPermissionObject()->getWorkflowID(), $this->getPermissionKeyID()
  		));
- 		$list = array();
- 		$class = str_replace('BasicWorkflowPermissionKey', 'BasicWorkflowPermissionAssignment', get_class($this));
- 		if (!class_exists($class)) {
- 			$class = 'BasicWorkflowPermissionAssignment';
- 		}
- 		while ($row = $r->FetchRow()) {
- 			$ppa = new $class();
- 			$ppa->setAccessType($row['accessType']);
- 			$ppa->loadPermissionDurationObject($row['pdID']);
- 			$ppa->loadAccessEntityObject($row['peID']);
-			$list[] = $ppa;
- 		}
- 		
- 		return $list;
+ 		return $r;
 	}
 	
-	public function addAssignment(PermissionAccessEntity $pae, $durationObject = false, $accessType = BasicWorkflowPermissionKey::ACCESS_TYPE_INCLUDE) {
+	public function clearPermissionAssignment() {
 		$db = Loader::db();
-		$pdID = 0;
-		if ($durationObject instanceof PermissionDuration) {
-			$pdID = $durationObject->getPermissionDurationID();
-		}
-		$db->Replace('BasicWorkflowPermissionAssignments', array(
-			'wfID' => $this->permissionObject->getWorkflowID(),
-			'pkID' => $this->getPermissionKeyID(), 
-			'peID' => $pae->getAccessEntityID(),
-			'pdID' => $pdID,
-			'accessType' => $accessType
-		), array('wfID', 'peID', 'pkID'), false);
+		$db->Execute('update BasicWorkflowPermissionAssignments set paID = 0 where pkID = ? and wfID = ?', array($this->pkID, $this->getPermissionObject()->getWorkflowID()));
 	}
 	
-	public function clearAssignments() {
+	public function assignPermissionAccess(PermissionAccess $pa) {
 		$db = Loader::db();
-		$db->Execute('delete from BasicWorkflowPermissionAssignments where wfID = ? and pkID = ?', array($this->permissionObject->getWorkflowID(), $this->getPermissionKeyID()));
-	}
-	
-	public function removeAssignment(PermissionAccessEntity $pe) {
-		$db = Loader::db();
-		$db->Execute('delete from BasicWorkflowPermissionAssignments where wfID = ? and peID = ? and pkID = ?', array($this->permissionObject->getWorkflowID(), $pe->getAccessEntityID(), $this->getPermissionKeyID()));
-		
+		$db->Replace('BasicWorkflowPermissionAssignments', array('wfID' => $this->getPermissionObject()->getWorkflowID(), 'paID' => $pa->getPermissionAccessID(), 'pkID' => $this->pkID), array('wfID', 'pkID'), true);
+		$pa->markAsInUse();
 	}
 	
 	public function getPermissionKeyToolsURL($task = false) {
@@ -56,4 +27,8 @@ class BasicWorkflowPermissionKey extends WorkflowPermissionKey {
 
 }
 
-class BasicWorkflowPermissionAssignment extends PermissionAssignment {}
+class BasicWorkflowPermissionAccess extends PermissionAccess {
+
+	
+}
+class BasicWorkflowPermissionAccessListItem extends PermissionAccessListItem {}
