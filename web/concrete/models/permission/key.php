@@ -314,10 +314,7 @@ abstract class PermissionKey extends Object {
 		return $db->GetOne('select paID from PermissionAssignments where pkID = ?', array($this->getPermissionKeyID()));
 	}
 	
-	/*abstract public function clearWorkflows();
-	abstract public function attachWorkflow(Workflow $wf);
-	abstract public function getWorkflows();
-	*/
+
 	public function exportAccess($pxml) {
 		// by default we don't. but tasks do
 	}

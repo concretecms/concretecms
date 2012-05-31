@@ -65,7 +65,7 @@ Loader::element('permission/access/list', array('permissionAccess' => $pa, 'acce
 
 <? if ($permissionKey->canPermissionKeyTriggerWorkflow() && count($workflows) > 0) { ?>
 	<?
-	$selectedWorkflows = $permissionKey->getWorkflows();
+	$selectedWorkflows = $pa->getWorkflows();
 	$workflowIDs = array();
 	foreach($selectedWorkflows as $swf) {
 		$workflowIDs[] = $swf->getWorkflowID();

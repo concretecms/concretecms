@@ -115,22 +115,6 @@ class AreaPermissionKey extends PermissionKey {
 	}
 
 
-	/** 
-	 * No workflow functionality in areas
-	 * @private
-	 */
-	public function clearWorkflows() {}
-	
-	/** 
-	 * @private
-	 */
-	public function attachWorkflow(Workflow $wf) {}
-
-	/** 
-	 * @private
-	 */
-	public function getWorkflows() {return array();}
-
 }
 
 class AreaPermissionAccess extends PermissionAccess {

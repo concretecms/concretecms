@@ -2,12 +2,33 @@
 
 <? if (isset($wf)) { ?>
 
-<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper($wf->getWorkflowName(), false, false, false)?>
+<? if ($this->controller->getTask() == 'edit_details') { ?>
+
+<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Edit Workflow'), false, 'span12 offset2', false)?>
+<form method="post"  action="<?=$this->action('save_workflow_details')?>" method="post">
+<input type="hidden" name="wfID" value="<?=$wf->getWorkflowID()?>" />
+<?=Loader::helper('validation/token')->output('save_workflow_details')?>
+
+<div class="ccm-pane-body">
+	<? Loader::element("workflow/edit_type_form_required", array('workflow' => $wf)); ?>
+</div>
+<div class="ccm-pane-footer">
+	<a href="<?=$this->url('/dashboard/workflow/list/view_detail', $wf->getWorkflowID())?>" class="btn"><?=t("Cancel")?></a>
+	<input type="submit" name="submit" value="<?=t('Save')?>" class="ccm-button-right primary btn" />
+</div>
+</form>
+
+<?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(false);?>
+
+<? } else { ?>
+
+<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper($wf->getWorkflowName(), false, 'span12 offset2', false)?>
 
 <? Loader::element("workflow/type_form_required", array('workflow' => $wf)); ?>
 
 <?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(false);?>
 
+<? } ?>
 
 
 

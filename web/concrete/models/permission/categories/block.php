@@ -103,22 +103,6 @@ class BlockPermissionKey extends PermissionKey {
 		return parent::getPermissionKeyToolsURL($task) . '&cID=' . $c->getCollectionID() . '&cvID=' . $c->getVersionID() . '&bID=' . $b->getBlockID() . '&arHandle=' . $arHandle;
 	}
 
-	/** 
-	 * No workflow functionality in blocks
-	 * @private
-	 */
-	public function clearWorkflows() {}
-	
-	/** 
-	 * @private
-	 */
-	public function attachWorkflow(Workflow $wf) {}
-
-	/** 
-	 * @private
-	 */
-	public function getWorkflows() {return array();}
-
 }
 
 class BlockPermissionAccess extends PermissionAccess {

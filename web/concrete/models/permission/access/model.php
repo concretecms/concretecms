@@ -82,6 +82,29 @@ class PermissionAccess extends Object {
 		return $peIDs . ' ' . $accessType . ' order by accessType desc'; // we order desc so that excludes come last (-1)
 	}
 	
+	public function clearWorkflows() {
+		$db = Loader::db();
+		$db->Execute('delete from PermissionAccessWorkflows where paID = ?', array($this->getPermissionAccessID()));
+	}
+
+	public function attachWorkflow(Workflow $wf) {
+		$db = Loader::db();
+		$db->Replace('PermissionAccessWorkflows', array('paID' => $this->getPermissionAccessID(), 'wfID' => $wf->getWorkflowID()), array('paID', 'wfID'), true);
+	}	
+
+	public function getWorkflows() {
+		$db = Loader::db();
+		$r = $db->Execute('select wfID from PermissionAccessWorkflows where paID = ?', array($this->getPermissionAccessID()));
+		$workflows = array();
+		while ($row = $r->FetchRow()) {
+			$wf = Workflow::getByID($row['wfID']);
+			if (is_object($wf)) {
+				$workflows[] = $wf;
+			}
+		}
+		return $workflows;
+	}
+
 	public function duplicate($newPA = false) {
 		$db = Loader::db();
 		if (!$newPA) {
@@ -90,6 +113,10 @@ class PermissionAccess extends Object {
 		$listItems = $this->getAccessListItems(PermissionKey::ACCESS_TYPE_ALL);
 		foreach($listItems as $li) {
 			$newPA->addListItem($li->getAccessEntityObject(), $li->getPermissionDurationObject(), $li->getAccessType());
+		}
+		$workflows = $this->getWorkflows();
+		foreach($workflows as $wf) {
+			$newPA->attachWorkflow($wf);
 		}
 		$newPA->setPermissionKey($this->pk);
 		return $newPA;

@@ -81,15 +81,18 @@ abstract class WorkflowRequest extends Object {
 			throw new Exception(t('This permission key cannot start a workflow.'));
 		}
 		
-		$workflows = $pk->getWorkflows();
-		if (count($workflows) == 0) {
-			$defaultWorkflow = new EmptyWorkflow();
-			$wp = $this->addWorkflowProgress($defaultWorkflow);
-			return $wp->getWorkflowProgressResponseObject();
-		}
-
-		foreach($workflows as $wf) {
-			$this->addWorkflowProgress($wf);
+		$pa = $pk->getPermissionAccessObject();
+		if (is_object($pa)) {
+			$workflows = $pa->getWorkflows();
+			if (count($workflows) == 0) {
+				$defaultWorkflow = new EmptyWorkflow();
+				$wp = $this->addWorkflowProgress($defaultWorkflow);
+				return $wp->getWorkflowProgressResponseObject();
+			}
+	
+			foreach($workflows as $wf) {
+				$this->addWorkflowProgress($wf);
+			}
 		}
 	}
 	

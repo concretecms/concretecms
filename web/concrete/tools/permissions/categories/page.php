@@ -45,6 +45,15 @@ if (count($pages) > 0) {
 			$pk->setPermissionObject($c);
 			$pa = PermissionAccess::getByID($_REQUEST['paID'], $pk);
 			$pa->save($_POST);
+			$pa->clearWorkflows();
+			if (is_array($_POST['wfID'])) { 
+				foreach($_POST['wfID'] as $wfID) {
+					$wf = Workflow::getByID($wfID);
+					if (is_object($wf)) {
+						$pa->attachWorkflow($wf);
+					}
+				}
+			}
 		}
 	}
 

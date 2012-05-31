@@ -84,6 +84,11 @@ abstract class Workflow extends Object {
 		return $url;
 	}
 	
+	public function updateName($wfName) {
+		$db = Loader::db();
+		$db->Execute('update Workflows set wfName = ? where wfID = ?', array($wfName, $this->wfID));
+	}
+	
 	abstract public function start(WorkflowProgress $wp);
 	abstract public function getWorkflowProgressActions(WorkflowProgress $wp);
 	abstract public function getWorkflowProgressDescription(WorkflowProgress $wp);
