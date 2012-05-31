@@ -273,7 +273,7 @@ class FileList extends DatabaseItemList {
 		} else {
 			$vpPKID = $vpvPKID;
 		}
-		$pdIDs = $db->GetCol("select distinct pdID from PagePermissionAssignments where pkID in (?, ?) and pdID > 0", array($vpPKID, $vpvPKID));
+		$pdIDs = $db->GetCol("select distinct pdID from FilePermissionAssignments fpa inner join PermissionAccessList pal on fpa.paID = pal.paID where pkID in (?, ?) and pdID > 0", array($vpPKID, $vpvPKID));
 		$activePDIDs = array();
 		if (count($pdIDs) > 0) {
 			// then we iterate through all of them and find any that are active RIGHT NOW
@@ -287,81 +287,14 @@ class FileList extends DatabaseItemList {
 		$activePDIDs[] = 0;
 		
 		// exclude files where its overridden but I don't have the ability to read
-		$this->addToQuery('left join FilePermissionAssignments fpa2 on f.fID = fpa2.fID and fpa2.accessType = ' . FileSetPermissionKey::ACCESS_TYPE_INCLUDE . ' and pdID in (' . implode(',', $activePDIDs) . ')
-			and fpa2.peID in (' . implode(',', $peIDs) . ') and fpa2.pkID in (' . $vpPKID . ')');		
-		$this->filter(false, '(f.fOverrideSetPermissions = 0 or (f.fID = fpa2.fID and fpa2.fID is not null))');
+		$this->filter(false, "(f.fOverrideSetPermissions = 0 or (select count(fID) from FilePermissionAssignments fpa inner join PermissionAccessList fpal on fpa.paID = fpal.paID where fpa.fID = f.fID and fpal.accessType = " . PermissionKey::ACCESS_TYPE_INCLUDE . " and fpal.pdID in (" . implode(',', $activePDIDs) . ") and fpal.peID in (" . implode(',', $peIDs) . ") and (fpa.pkID = " . $vpPKID . ")) > 0)");
+
 		
 		// exclude detail files where read is excluded
-		$this->filter(false, "f.fID not in (select ff.fID from Files ff inner join FilePermissionAssignments fpaExclude on ff.fID = fpaExclude.fID where fOverrideSetPermissions = 1 and accessType = " . PermissionKey::ACCESS_TYPE_EXCLUDE . " and pdID in (" . implode(',', $activePDIDs) . ")
-			and fpaExclude.peID in (" . implode(',', $peIDs) . ") and fpaExclude.pkID in (" . $vpPKID . "," . $vpvPKID . "))");		
+		$this->filter(false, "f.fID not in (select ff.fID from Files ff inner join FilePermissionAssignments fpaExclude on ff.fID = fpaExclude.fID inner join PermissionAccessList palExclude on fpaExclude.paID = palExclude.paID where fOverrideSetPermissions = 1 and palExclude.accessType = " . PermissionKey::ACCESS_TYPE_EXCLUDE . " and palExclude.pdID in (" . implode(',', $activePDIDs) . ")
+			and palExclude.peID in (" . implode(',', $peIDs) . ") and fpaExclude.pkID in (" . $vpPKID . "," . $vpvPKID . "))");		
 	}
 	
-
-	/*
-	protected function setupFilePermissions() {
-		
-		$u = new User();
-		if ($this->permissionLevel == false || $u->isSuperUser()) {
-			return false;
-		}
-		$vs = FileSetPermissions::getOverriddenSets($this->permissionLevel, FilePermissions::PTYPE_ALL);
-		$nvs = FileSetPermissions::getOverriddenSets($this->permissionLevel, FilePermissions::PTYPE_NONE);
-		$vsm = FileSetPermissions::getOverriddenSets($this->permissionLevel, FilePermissions::PTYPE_MINE);
-		
-		// we remove all the items from nonviewableSets that appear in viewableSets because viewing trumps non-viewing
-		
-		for ($i = 0; $i < count($nvs); $i++) {
-			if (in_array($nvs[$i], $vs)) {
-				unset($nvs[$i]);
-			}
-		}
-
-		// we have $nvs, which is an array of sets of files that we CANNOT see
-		// first, we add -1 so that we are always dealing with an array that at least has one value, just for
-		// query writing sanity sake
-		$nvs[] = -1;
-		$vs[] = -1;
-		$vsm[] = -1;
-
-		//$this->debug();
-		
-		// this excludes all file that are found in sets that I can't find
-		$this->filter(false, '((select count(fID) from FileSetFiles where FileSetFiles.fID = f.fID and fsID in (' . implode(',',$nvs) . ')) = 0)');		
-
-		$uID = ($u->isRegistered()) ? $u->getUserID() : 0;
-		
-		// This excludes all files found in sets where I may only read mine, and I did not upload the file
-		$this->filter(false, '(f.uID = ' . $uID . ' or (select count(fID) from FileSetFiles where FileSetFiles.fID = f.fID and fsID in (' . implode(',',$vsm) . ')) = 0)');		
-		
-		$fp = FilePermissions::getGlobal();
-		if ($fp->getFileSearchLevel() == FilePermissions::PTYPE_MINE) {
-			// this means that we're only allowed to read files we've uploaded (unless, of course, those files are in previously covered sets)
-			$this->filter(false, '(f.uID = ' . $uID . ' or (select count(fID) from FileSetFiles where FileSetFiles.fID = f.fID and fsID in (' . implode(',',$vs) . ')) > 0)');		
-		}
-
-		// now we filter out files we directly don't have access to
-		$groups = $u->getUserGroups();
-		$groupIDs = array();
-		foreach($groups as $key => $value) {
-			$groupIDs[] = $key;
-		}
-		
-		$uID = -1;
-		if ($u->isRegistered()) {
-			$uID = $u->getUserID();
-		}
-		
-		if (PERMISSIONS_MODEL != 'simple') {
-			// There is a really stupid MySQL bug that, if the subquery returns null, the entire query is nullified
-			// So I have to do this query OUTSIDE of MySQL and give it to mysql
-			$db = Loader::db();
-			$fIDs = $db->GetCol("select Files.fID from Files inner join FilePermissions on FilePermissions.fID = Files.fID where fOverrideSetPermissions = 1 and (FilePermissions.gID in (" . implode(',', $groupIDs) . ") or FilePermissions.uID = {$uID}) having max(" . $this->permissionLevel. ") = 0");
-			if (count($fIDs) > 0) {
-				$this->filter(false, "(f.fID not in (" . implode(',', $fIDs) . "))");
-			}			
-		}
-	}
-	*/
 	
 	/** 
 	 * Returns an array of file objects based on current settings
@@ -391,7 +324,7 @@ class FileList extends DatabaseItemList {
 			$this->setBaseQuery();
 			$this->filter('fvIsApproved', 1);
 			$this->setupAttributeFilters("left join FileSearchIndexAttributes on (fv.fID = FileSearchIndexAttributes.fID)");
-			//$this->setupFilePermissions();
+			$this->setupFilePermissions();
 			$this->setupFileSetFilters();
 			$this->queryCreated=1;
 		}

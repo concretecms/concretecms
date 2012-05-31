@@ -6,7 +6,12 @@ class StackPermissionKey extends PagePermissionKey {
 
 }
 
-class StackPermissionAssignment extends PermissionAssignment {
+class StackPermissionAccess extends PermissionAccess {
+
+
+}
+
+class StackPermissionAccessListItem extends PermissionAccessListItem {
 
 
 }
