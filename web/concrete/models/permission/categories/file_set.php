@@ -71,28 +71,6 @@ class FileSetPermissionKey extends PermissionKey {
 		return parent::getPermissionKeyToolsURL($task) . '&fsID=' . $this->getPermissionObject()->getFileSetID();
 	}
 
-	public function clearWorkflows() {
-		$db = Loader::db();
-		$db->Execute('delete from FileSetPermissionWorkflows where fsID = ? and pkID = ?', array($this->getPermissionObject()->getFileSetID(), $this->getPermissionKeyID()));
-	}
-	
-	public function attachWorkflow(Workflow $wf) {
-		$db = Loader::db();
-		$db->Replace('FileSetPermissionWorkflows', array('fsID' => $this->getPermissionObject()->getFileSetID(), 'pkID' => $this->getPermissionKeyID(), 'wfID' => $wf->getWorkflowID()), array('fsID', 'pkID', 'wfID'), true);
-	}
-
-	public function getWorkflows() {
-		$db = Loader::db();
-		$r = $db->Execute('select wfID from FileSetPermissionWorkflows where fsID = ? and pkID = ?', array($this->getPermissionObject()->getFileSetID(), $this->getPermissionKeyID()));
-		$workflows = array();
-		while ($row = $r->FetchRow()) {
-			$wf = Workflow::getByID($row['wfID']);
-			if (is_object($wf)) {
-				$workflows[] = $wf;
-			}
-		}
-		return $workflows;
-	}
 
 }
 

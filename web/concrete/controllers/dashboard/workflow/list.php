@@ -33,6 +33,7 @@ class DashboardWorkflowListController extends DashboardBaseController {
 		}
 		if (!$this->error->has()) {
 			$wf = Workflow::getByID($this->post('wfID'));
+			$wf->updateName($this->post('wfName'));
 			$wf->updateDetails($this->post());
 			$this->view_detail($this->post('wfID'), 'workflow_updated');
 		} else {
@@ -74,6 +75,15 @@ class DashboardWorkflowListController extends DashboardBaseController {
 		}
 		$this->add();
 	}
+	
+	public function edit_details($wfID = false) {
+		$wf = Workflow::getByID($wfID);
+		if (!is_object($wf)) {
+			$this->redirect("/dashboard/workflow/list");
+		}
+		$this->set('wf', $wf);
+	}
+
 	
 	public function view_detail($wfID = false, $message = false) {
 		$wf = Workflow::getByID($wfID);

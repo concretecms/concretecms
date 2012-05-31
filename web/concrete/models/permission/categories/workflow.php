@@ -2,25 +2,9 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 abstract class WorkflowPermissionKey extends PermissionKey {
 
-	/** 
-	 * No workflow functionality in workflows.
-	 * @private
-	 */
-	public function clearWorkflows() {}
-	
-	/** 
-	 * @private
-	 */
-	public function attachWorkflow(Workflow $wf) {}
-
-	/** 
-	 * @private
-	 */
-	public function getWorkflows() {return array();}
-	
 	public function getCurrentlyActiveUsers() {
-		$included = $this->getAssignmentList(PermissionKey::ACCESS_TYPE_INCLUDE);
-		$excluded = $this->getAssignmentList(PermissionKey::ACCESS_TYPE_EXCLUDE);
+		$included = $this->getAccessListItems(PermissionKey::ACCESS_TYPE_INCLUDE);
+		$excluded = $this->getAccessListItems(PermissionKey::ACCESS_TYPE_EXCLUDE);
 		$included = PermissionDuration::filterByActive($included);
 		$excluded = PermissionDuration::filterByActive($excluded);
 		$users = array();
