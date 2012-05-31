@@ -238,7 +238,7 @@ abstract class PermissionKey extends Object {
 		$a = array($pkHandle, $pkName, $pkDescription, $pkCategoryID, $pkCanTriggerWorkflow, $pkgID);
 		$r = $db->query("insert into PermissionKeys (pkHandle, pkName, pkDescription, pkCategoryID, pkCanTriggerWorkflow, pkgID) values (?, ?, ?, ?, ?, ?)", $a);
 		
-		$category = AttributeKeyCategory::getByID($pkCategoryID);
+		$category = PermissionKeyCategory::getByID($pkCategoryID);
 		
 		if ($r) {
 			$pkID = $db->Insert_ID();

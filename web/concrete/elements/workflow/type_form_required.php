@@ -9,6 +9,10 @@ $type = $workflow->getWorkflowTypeObject();
 
 ?>
 
+<form method="post" action="<?=$this->action('save_workflow_details')?>">
+<?=Loader::helper('validation/token')->output('save_workflow_details');?>
+<input type="hidden" name="wfID" value="<?=$workflow->getWorkflowID()?>" />
+
 <div class="ccm-pane-body">
 
 <? if (is_object($workflow)) { ?>
@@ -48,4 +52,6 @@ if ($type->getPackageID() > 0) {
 if ($type->getPackageID() > 0) {
 	Loader::packageElement('workflow/types/' . $type->getWorkflowTypeHandle() . '/type_form_buttons', $type->getPackageHandle(), array('type' => $type, 'workflow' => $workflow));
 } ?>
+	<button type="submit" class="btn primary ccm-button-right" name="submit"><?=t('Save')?></button>
 </div>
+</form>
