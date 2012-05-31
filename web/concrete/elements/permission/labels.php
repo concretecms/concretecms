@@ -48,7 +48,7 @@ if (count($assignments) > 0) {
 
 <script type="text/javascript">
 $(function() {
-	$('.ccm-permission-access-line').draggable({
+	$('.ccm-permission-grid-cell .ccm-permission-access-line').draggable({
 		helper: 'clone'	
 	});
 	$('.ccm-permission-grid-cell').droppable({

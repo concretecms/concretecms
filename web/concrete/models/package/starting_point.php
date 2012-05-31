@@ -187,6 +187,8 @@ class StartingPointPackage extends Package {
 		// remove this line and uncomment the two above when done developing !!
 		//copy(DIR_CONFIG_SITE . '/site_install.php', DIR_CONFIG_SITE . '/site.php');
 		@chmod(DIR_CONFIG_SITE . '/site.php', FILE_PERMISSIONS_MODE);
+		Cache::flush();
+
 	}
 	
 	public function install_permissions() { 

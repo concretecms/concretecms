@@ -120,7 +120,7 @@ class PageList extends DatabaseItemList {
 		$activePDIDs = array();
 		$vpPKID = $db->GetOne('select pkID from PermissionKeys where pkHandle = \'view_page\'');
 		$vpvPKID = $db->GetOne('select pkID from PermissionKeys where pkHandle = \'view_page_versions\'');
-		$pdIDs = $db->GetCol("select distinct pdID from PagePermissionAssignments where pkID in (?, ?) and pdID > 0", array($vpPKID, $vpvPKID));
+		$pdIDs = $db->GetCol("select distinct pdID from PagePermissionAssignments ppa inner join PermissionAccessList pa on ppa.paID = pa.paID where pkID in (?, ?) and pdID > 0", array($vpPKID, $vpvPKID));
 		if (count($pdIDs) > 0) {
 			// then we iterate through all of them and find any that are active RIGHT NOW
 			foreach($pdIDs as $pdID) {
@@ -141,12 +141,12 @@ class PageList extends DatabaseItemList {
 		if ($this->displayOnlyApprovedPages) {
 			$cvIsApproved = ' and cv.cvIsApproved = 1';
 		}
-		
-		$this->filter(false, "((select count(cID) from PagePermissionAssignments ppa1 where ppa1.cID = {$cInheritPermissionsFromCID} and accessType = " . PermissionKey::ACCESS_TYPE_INCLUDE . " and pdID in (" . implode(',', $activePDIDs) . ")
-			and ppa1.peID in (" . implode(',', $peIDs) . ") and (ppa1.pkID = " . $vpPKID . $cvIsApproved . " or ppa1.pkID = " . $vpvPKID . ")) > 0
+
+		$this->filter(false, "((select count(cID) from PagePermissionAssignments ppa1 inner join PermissionAccessList pa1 on ppa1.paID = pa1.paID where ppa1.cID = {$cInheritPermissionsFromCID} and pa1.accessType = " . PermissionKey::ACCESS_TYPE_INCLUDE . " and pa1.pdID in (" . implode(',', $activePDIDs) . ")
+			and pa1.peID in (" . implode(',', $peIDs) . ") and (ppa1.pkID = " . $vpPKID . $cvIsApproved . " or ppa1.pkID = " . $vpvPKID . ")) > 0
 			or (p1.cPointerExternalLink !='' AND p1.cPointerExternalLink IS NOT NULL))");
-		$this->filter(false, "((select count(cID) from PagePermissionAssignments ppaExclude where ppaExclude.cID = {$cInheritPermissionsFromCID} and accessType = " . PermissionKey::ACCESS_TYPE_EXCLUDE . " and pdID in (" . implode(',', $activePDIDs) . ")
-			and ppaExclude.peID in (" . implode(',', $peIDs) . ") and (ppaExclude.pkID = " . $vpPKID . $cvIsApproved . " or ppaExclude.pkID = " . $vpvPKID . ")) = 0)");		
+		$this->filter(false, "((select count(cID) from PagePermissionAssignments ppaExclude inner join PermissionAccessList paExclude on ppaExclude.paID = paExclude.paID where ppaExclude.cID = {$cInheritPermissionsFromCID} and accessType = " . PermissionKey::ACCESS_TYPE_EXCLUDE . " and pdID in (" . implode(',', $activePDIDs) . ")
+			and paExclude.peID in (" . implode(',', $peIDs) . ") and (ppaExclude.pkID = " . $vpPKID . $cvIsApproved . " or ppaExclude.pkID = " . $vpvPKID . ")) = 0)");		
 	}
 
 	public function sortByRelevance() {

@@ -4,7 +4,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 class EditPagePropertiesPagePermissionKey extends PagePermissionKey  {
 
 
-	public function getMyAccessList() {
+	public function getMyAssignment() {
 		$u = new User();
 		$asl = new EditPagePropertiesPagePermissionAccessListItem();
 		
@@ -99,7 +99,7 @@ class EditPagePropertiesPagePermissionKey extends PagePermissionKey  {
 		if ($u->isSuperUser()) {
 			return true;
 		}
-		$asl = $this->getMyAccessList();
+		$asl = $this->getMyAssignment();
 		if (is_object($obj)) {
 			if ($obj instanceof CollectionAttributeKey) {
 				if ($asl->getAttributesAllowedPermission() == 'A') {

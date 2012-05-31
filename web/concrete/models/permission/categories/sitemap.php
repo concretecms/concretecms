@@ -5,12 +5,12 @@ class SitemapPermissionKey extends PermissionKey {
 
 }
 
-class SitemapPermissionAssignment extends PermissionAssignment {
+class SitemapPermissionAccess extends PermissionAccess {
 
 
 }
 
-class SitemapPermissionAccess extends PermissionAccess {
+class SitemapPermissionAccessListItem extends PermissionAccessListItem {
 
 
 }
