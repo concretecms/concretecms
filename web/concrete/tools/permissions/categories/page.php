@@ -62,24 +62,42 @@ if (count($pages) > 0) {
 			if ($c->getCollectionID() == HOME_CID) {
 				continue;
 			}
-			switch($_REQUEST['mode']) {
-				case 'PARENT':
-					$c->inheritPermissionsFromParent();
-					break;
-				case 'TEMPLATE':
-					$c->inheritPermissionsFromDefaults();
-					break;
-				default:
-					$c->setPermissionsToManualOverride();
-					break;
-			}			
+			
+			$pkr = new ChangePagePermissionsInheritancePageWorkflowRequest();
+			$pkr->setRequestedPage($c);
+			$pkr->setPagePermissionsInheritance($_REQUEST['mode']);
+			$pkr->setRequesterUserID($u->getUserID());
+			$response = $pkr->trigger();
 		}
+		$obj = new stdClass;
+		if ($response instanceof WorkflowProgressResponse) {
+			$obj->deferred = false;
+		} else {
+			$obj->deferred = true;
+		}
+		print Loader::helper('json')->encode($obj);
+		exit;		
+
 	}
 	
 	if ($_REQUEST['task'] == 'change_subpage_defaults_inheritance' && Loader::helper("validation/token")->validate('change_subpage_defaults_inheritance')) {
 		foreach($pages as $c) { 
-			$c->setOverrideTemplatePermissions($_REQUEST['inherit']);
+
+			$pkr = new ChangeSubpageDefaultsInheritancePageWorkflowRequest();
+			$pkr->setRequestedPage($c);
+			$pkr->setPagePermissionsInheritance($_REQUEST['inherit']);
+			$pkr->setRequesterUserID($u->getUserID());
+			$response = $pkr->trigger();
 		}
+		$obj = new stdClass;
+		if ($response instanceof WorkflowProgressResponse) {
+			$obj->deferred = false;
+		} else {
+			$obj->deferred = true;
+		}
+		print Loader::helper('json')->encode($obj);
+		exit;		
+
 	}		
 
 	if ($_REQUEST['task'] == 'display_access_cell' && Loader::helper("validation/token")->validate('display_access_cell')) {
@@ -105,6 +123,16 @@ if (count($pages) > 0) {
 			$u->unloadCollectionEdit($c);
 			$response = $pkr->trigger();
 		}
+		
+		$obj = new stdClass;
+		if ($response instanceof WorkflowProgressResponse) {
+			$obj->deferred = false;
+		} else {
+			$obj->deferred = true;
+		}
+		print Loader::helper('json')->encode($obj);
+		exit;		
+
 	}
 
 }
