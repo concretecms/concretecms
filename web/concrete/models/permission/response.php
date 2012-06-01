@@ -20,22 +20,12 @@ class PermissionResponse {
 	public function testForErrors() { }
 	
 	
-	public static function getResponse($handle, $args) {
-		$category = PermissionKeyCategory::getByHandle($handle);
-		if (is_object($category) && $category->getPackageID() > 0) { 
-			Loader::model('permission/response/' . $handle, $category->getPackageHandle());
-		} else {
-			Loader::model('permission/response/' . $handle);
-		}
+	public static function getResponse($object) {
+		$category = PermissionKeyCategory::getByHandle(Loader::helper('text')->uncamelcase(get_class($object)));
 		$txt = Loader::helper('text');
-		$className = $txt->camelcase($handle) . 'PermissionResponse';
-		if (class_exists($className)) { 
-			$c1 = $className;	
-		} else { 
-			$c1 = 'PermissionResponse';
-		}
+		$c1 = get_class($object) . 'PermissionResponse';
 		$pr = new $c1();
-		$pr->setPermissionObject($args);
+		$pr->setPermissionObject($object);
 		$pr->setPermissionCategoryObject($category);
 		return $pr;
 	}
