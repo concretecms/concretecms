@@ -53,16 +53,19 @@ class ChangePagePermissionsPageWorkflowRequest extends PageWorkflowRequest {
 	
 	public function getWorkflowRequestAdditionalActions(WorkflowProgress $wp) {
 		$buttons = array();
-		$c = Page::getByID($this->cID, 'ACTIVE');
-		$button = new WorkflowProgressAction();
-		$button->setWorkflowProgressActionLabel(t('View Pending Permissions'));
-		$button->addWorkflowProgressActionButtonParameter('dialog-title', t('Pending Permissions'));
-		$button->addWorkflowProgressActionButtonParameter('dialog-width', '400');
-		$button->addWorkflowProgressActionButtonParameter('dialog-height', '360');
-		$button->setWorkflowProgressActionStyleInnerButtonLeftHTML('<i class="icon-eye-open"></i>');
-		$button->setWorkflowProgressActionURL(REL_DIR_FILES_TOOLS_REQUIRED . '/workflow/dialogs/change_page_permissions?wpID=' . $wp->getWorkflowProgressID());
-		$button->setWorkflowProgressActionStyleClass('dialog-launch');
-		$buttons[] = $button;
+		$w = $wp->getWorkflowObject();
+		if ($w->canApproveWorkflowProgressObject($wp)) {
+			$c = Page::getByID($this->cID, 'ACTIVE');
+			$button = new WorkflowProgressAction();
+			$button->setWorkflowProgressActionLabel(t('View Pending Permissions'));
+			$button->addWorkflowProgressActionButtonParameter('dialog-title', t('Pending Permissions'));
+			$button->addWorkflowProgressActionButtonParameter('dialog-width', '400');
+			$button->addWorkflowProgressActionButtonParameter('dialog-height', '360');
+			$button->setWorkflowProgressActionStyleInnerButtonLeftHTML('<i class="icon-eye-open"></i>');
+			$button->setWorkflowProgressActionURL(REL_DIR_FILES_TOOLS_REQUIRED . '/workflow/dialogs/change_page_permissions?wpID=' . $wp->getWorkflowProgressID());
+			$button->setWorkflowProgressActionStyleClass('dialog-launch');
+			$buttons[] = $button;
+		}
 		return $buttons;
 	}
 
