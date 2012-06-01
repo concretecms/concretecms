@@ -8,6 +8,16 @@ function CoreAutoload($class) {
 	if ($class == 'DashboardBaseController') { 
 		Loader::controller('/dashboard/base');
 	}
+	if (strpos($class, 'PermissionResponse') > 0) {
+		$class = substr($class, 0, strpos($class, 'PermissionResponse'));
+		$handle = Loader::helper('text')->uncamelcase($class);
+		$category = PermissionKeyCategory::getByHandle($handle);
+		if (is_object($category) && $category->getPackageID() > 0) { 
+			Loader::model('permission/response/' . $handle, $category->getPackageHandle());
+		} else {
+			Loader::model('permission/response/' . $handle);
+		}
+	}	
 	if (strpos($class, 'BlockController') > 0) {
 		$class = substr($class, 0, strpos($class, 'BlockController'));
 		$handle = $txt->uncamelcase($class);
