@@ -138,6 +138,7 @@ abstract class WorkflowProgress extends Object {
 			$r = $wf->start($this);
 			$this->updateOnAction($wf);
 		}
+		return $r;
 	}
 	
 	public function updateOnAction(Workflow $wf) {

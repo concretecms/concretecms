@@ -108,15 +108,23 @@ ccm_pagePermissionsCancelInheritance = function() {
 
 ccm_pagePermissionsConfirmInheritanceChange = function() { 
 	jQuery.fn.dialog.showLoader();
-	$.get('<?=$pk->getPermissionKeyToolsURL("change_permission_inheritance")?>&cID=<?=$c->getCollectionID()?>&mode=' + $('#ccm-page-permissions-inherit').val(), function() { 
-		jQuery.fn.dialog.closeTop();
-		ccm_refreshPagePermissions();
+	$.getJSON('<?=$pk->getPermissionKeyToolsURL("change_permission_inheritance")?>&cID=<?=$c->getCollectionID()?>&mode=' + $('#ccm-page-permissions-inherit').val(), function(r) { 
+		if (r.deferred) {
+			jQuery.fn.dialog.closeAll();
+			jQuery.fn.dialog.hideLoader();
+			ccmAlert.hud(ccmi18n.setPermissionsDeferredMsg, 2000, 'success', ccmi18n_sitemap.setPagePermissions);
+		} else {
+			jQuery.fn.dialog.closeTop();
+			ccm_refreshPagePermissions();
+		}
 	});
 }
 
 
 $(function() {
 	$('#ccm-permission-list-form').ajaxForm({
+		dataType: 'json',
+		
 		beforeSubmit: function() {
 			jQuery.fn.dialog.showLoader();
 		},
@@ -124,6 +132,13 @@ $(function() {
 		success: function(r) {
 			jQuery.fn.dialog.hideLoader();
 			jQuery.fn.dialog.closeTop();
+			if (!r.deferred) {
+				ccmAlert.hud(ccmi18n_sitemap.setPagePermissionsMsg, 2000, 'success', ccmi18n_sitemap.setPagePermissions);
+			} else {
+				jQuery.fn.dialog.closeTop();
+				ccmAlert.hud(ccmi18n.setPermissionsDeferredMsg, 2000, 'success', ccmi18n_sitemap.setPagePermissions);
+			}
+
 		}		
 	});
 	
@@ -143,8 +158,14 @@ $(function() {
 	
 	$('#ccm-page-permissions-subpages-override-template-permissions').change(function() {
 		jQuery.fn.dialog.showLoader();
-		$.get('<?=$pk->getPermissionKeyToolsURL("change_subpage_defaults_inheritance")?>&cID=<?=$c->getCollectionID()?>&inherit=' + $(this).val(), function() { 
-			ccm_refreshPagePermissions();
+		$.getJSON('<?=$pk->getPermissionKeyToolsURL("change_subpage_defaults_inheritance")?>&cID=<?=$c->getCollectionID()?>&inherit=' + $(this).val(), function(r) { 
+			if (r.deferred) {
+				jQuery.fn.dialog.closeTop();
+				jQuery.fn.dialog.hideLoader();
+				ccmAlert.hud(ccmi18n.setPermissionsDeferredMsg, 2000, 'success', ccmi18n_sitemap.setPagePermissions);
+			} else {
+				ccm_refreshPagePermissions();
+			}
 		});
 	});
 	
