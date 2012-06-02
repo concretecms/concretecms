@@ -33,6 +33,8 @@ class BasicWorkflow extends Workflow  {
 			}		
 		}			
 	}
+
+	public function loadDetails() {}
 	
 	public function delete() {
 		$db = Loader::db();
