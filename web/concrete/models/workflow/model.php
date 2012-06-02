@@ -71,6 +71,7 @@ abstract class Workflow extends Object {
 			$obj = new $class();
 			$obj->load($wfID);
 			if ($obj->getWorkflowID() > 0) { 
+				$obj->loadDetails();
 				return $obj;
 			}
 		}
@@ -95,6 +96,7 @@ abstract class Workflow extends Object {
 	abstract public function getWorkflowProgressStatusDescription(WorkflowProgress $wp);
 	abstract public function canApproveWorkflowProgressObject(WorkflowProgress $wp);
 	abstract public function updateDetails($vars);
+	abstract public function loadDetails();
 }
 
 class EmptyWorkflow extends Workflow {
@@ -105,6 +107,7 @@ class EmptyWorkflow extends Workflow {
 		return $wpr;
 	}
 	public function updateDetails($vars) {}
+	public function loadDetails() {}
 	
 	public function canApproveWorkflowProgressObject(WorkflowProgress $wp) {
 		return false;
