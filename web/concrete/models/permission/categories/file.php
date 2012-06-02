@@ -70,7 +70,7 @@ class FilePermissionKey extends PermissionKey {
 
 }
 
-class FilePermissionTarget extends PermissionTarget {
+class FilePermissionAssignment extends PermissionAssignment {
 
 	protected $permissionObjectToCheck;
 	

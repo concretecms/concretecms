@@ -1,7 +1,28 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
 class BlockPermissionKey extends PermissionKey {
+
+	public function copyFromPageOrAreaToBlock() {
+		$paID = $this->getPermissionAccessID();
+		if ($paID) { 
+			$db = Loader::db();
+			$co = $this->permissionObject->getBlockCollectionObject();
+			$arHandle = $this->permissionObject->getAreaHandle();
+			$db->Replace('BlockPermissionAssignments', array(
+				'cID' => $co->getCollectionID(), 
+				'cvID' => $co->getVersionID(), 
+				'bID' => $this->permissionObject->getBlockID(), 
+				'pkID' => $this->getPermissionKeyID(),
+				'paID' => $paID), array('cID', 'cvID', 'bID', 'paID', 'pkID'), true);				
+		}
+	}
+		
+
+}
+
+class BlockPermissionAssignment extends PermissionAssignment {
 	
+		
 	protected $permissionObjectToCheck;
 	protected $inheritedAreaPermissions = array(
 		'view_block' => 'view_area',
@@ -38,37 +59,22 @@ class BlockPermissionKey extends PermissionKey {
 		}
 	}
 
-	public function copyFromPageOrAreaToBlock() {
-		$paID = $this->getPermissionAccessID();
-		if ($paID) { 
-			$db = Loader::db();
-			$co = $this->permissionObject->getBlockCollectionObject();
-			$arHandle = $this->permissionObject->getAreaHandle();
-			$db->Replace('BlockPermissionAssignments', array(
-				'cID' => $co->getCollectionID(), 
-				'cvID' => $co->getVersionID(), 
-				'bID' => $this->permissionObject->getBlockID(), 
-				'pkID' => $this->getPermissionKeyID(),
-				'paID' => $paID), array('cID', 'cvID', 'bID', 'paID', 'pkID'), true);				
-		}
-	}
-		
 	public function getPermissionAccessID() {
 		$db = Loader::db();
 		if ($this->permissionObjectToCheck instanceof Block) { 
 			$co = $this->permissionObjectToCheck->getBlockCollectionObject();
 			$arHandle = $this->permissionObjectToCheck->getAreaHandle();
 			$r = $db->GetOne('select paID from BlockPermissionAssignments where cID = ? and cvID = ? and bID = ? and pkID = ? ' . $filterString, array(
-				$co->getCollectionID(), $co->getVersionID(), $this->permissionObject->getBlockID(), $this->getPermissionKeyID()
+				$co->getCollectionID(), $co->getVersionID(), $this->permissionObject->getBlockID(), $this->pk->getPermissionKeyID()
 			));
-		} else if ($this->permissionObjectToCheck instanceof Area && isset($this->inheritedAreaPermissions[$this->getPermissionKeyHandle()])) { 
-			$inheritedPKID = $db->GetOne('select pkID from PermissionKeys where pkHandle = ?', array($this->inheritedAreaPermissions[$this->getPermissionKeyHandle()]));
+		} else if ($this->permissionObjectToCheck instanceof Area && isset($this->inheritedAreaPermissions[$this->pk->getPermissionKeyHandle()])) { 
+			$inheritedPKID = $db->GetOne('select pkID from PermissionKeys where pkHandle = ?', array($this->inheritedAreaPermissions[$this->pk->getPermissionKeyHandle()]));
 			$r = $db->GetOne('select paID from AreaPermissionAssignments where cID = ? and arHandle = ? and pkID = ? ' . $filterString, array(
 				$this->permissionObjectToCheck->getCollectionID(), $this->permissionObjectToCheck->getAreaHandle(), $inheritedPKID
 			));
-		} else if ($this->permissionObjectToCheck instanceof Page && isset($this->inheritedPagePermissions[$this->getPermissionKeyHandle()])) { 
+		} else if ($this->permissionObjectToCheck instanceof Page && isset($this->inheritedPagePermissions[$this->pk->getPermissionKeyHandle()])) { 
 			// this is a page
-			$inheritedPKID = $db->GetOne('select pkID from PermissionKeys where pkHandle = ?', array($this->inheritedPagePermissions[$this->getPermissionKeyHandle()]));
+			$inheritedPKID = $db->GetOne('select pkID from PermissionKeys where pkHandle = ?', array($this->inheritedPagePermissions[$this->pk->getPermissionKeyHandle()]));
 			$r = $db->GetOne('select paID from PagePermissionAssignments where cID = ? and pkID = ? ' . $filterString, array(
 				$this->permissionObjectToCheck->getPermissionsCollectionID(), $inheritedPKID
 			));
@@ -79,7 +85,7 @@ class BlockPermissionKey extends PermissionKey {
 	public function clearPermissionAssignment() {
 		$db = Loader::db();
 		$co = $this->permissionObject->getBlockCollectionObject();
-		$db->Execute('update BlockPermissionAssignments set paID = 0 where pkID = ? and bID = ? and cvID = ? and cID = ?', array($this->pkID, $this->permissionObject->getBlockID(), $co->getVersionID(), $co->getCollectionID()));
+		$db->Execute('update BlockPermissionAssignments set paID = 0 where pkID = ? and bID = ? and cvID = ? and cID = ?', array($this->pk->getPermissionKeyID(), $this->permissionObject->getBlockID(), $co->getVersionID(), $co->getCollectionID()));
 	}
 	
 	public function assignPermissionAccess(PermissionAccess $pa) {
@@ -91,7 +97,7 @@ class BlockPermissionKey extends PermissionKey {
 			'paID' => $pa->getPermissionAccessID(), 
 			'cvID' => $co->getVersionID(),
 			'bID' => $this->permissionObject->getBlockID(),
-			'pkID' => $this->pkID), array('cID', 'cvID', 'bID', 'pkID'), true);
+			'pkID' => $this->pk->getPermissionKeyID()), array('cID', 'cvID', 'bID', 'pkID'), true);
 		$pa->markAsInUse();
 	}
 	
@@ -103,6 +109,7 @@ class BlockPermissionKey extends PermissionKey {
 		return parent::getPermissionKeyToolsURL($task) . '&cID=' . $c->getCollectionID() . '&cvID=' . $c->getVersionID() . '&bID=' . $b->getBlockID() . '&arHandle=' . $arHandle;
 	}
 
+	
 }
 
 class BlockPermissionAccess extends PermissionAccess {

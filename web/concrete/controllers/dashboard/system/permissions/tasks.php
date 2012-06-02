@@ -11,11 +11,12 @@ class DashboardSystemPermissionsTasksController extends DashboardBaseController 
 				$permissions = array_merge($permissions, PermissionKey::getList('admin'));
 				foreach($permissions as $pk) {
 					$paID = $_POST['pkID'][$pk->getPermissionKeyID()];
-					$pk->clearPermissionAssignment();
+					$pt = $pk->getPermissionAssignmentObject();
+					$pt->clearPermissionAssignment();
 					if ($paID > 0) {
 						$pa = PermissionAccess::getByID($paID, $pk);
 						if (is_object($pa)) {
-							$pk->assignPermissionAccess($pa);
+							$pt->assignPermissionAccess($pa);
 						}			
 					}		
 				}

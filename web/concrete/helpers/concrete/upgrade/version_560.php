@@ -153,6 +153,7 @@ class ConcreteUpgradeVersion560Helper {
 			$co = Page::getByID($row['cID']);
 			if (is_object($co) && (!$co->isError())) { 
 				$pk->setPermissionObject($co);
+				$pt = $pk->getPermissionAssignmentObject();
 				$pa = $pk->getPermissionAccessObject();
 				if (!is_object($pa)) {
 					$pa = PermissionAccess::create($pk);
@@ -161,7 +162,7 @@ class ConcreteUpgradeVersion560Helper {
 					$pa->addListItem($pe, false, PagePermissionKey::ACCESS_TYPE_INCLUDE);	
 				}
 				$pa->save($args);
-				$pk->assignPermissionAccess($pa);
+				$pt->assignPermissionAccess($pa);
 			}
 		}
 	}
@@ -184,8 +185,9 @@ class ConcreteUpgradeVersion560Helper {
 				if (!$pe) {
 					continue;
 				}
+				$pt = $pk->getPermissionAssignmentObject();
 				$pa->addListItem($pe, false, FileSetPermissionKey::ACCESS_TYPE_INCLUDE);	
-				$pk->assignPermissionAccess($pa);
+				$pt->assignPermissionAccess($pa);
 			}			
 		}
 	}
@@ -211,6 +213,7 @@ class ConcreteUpgradeVersion560Helper {
 			}
 			if (is_object($fs)) { 
 				$pko->setPermissionObject($fs);
+				$pt = $pko->getPermissionAssignmentObject();
 				$pa = $pko->getPermissionAccessObject();
 				if (!is_object($pa)) {
 					$pa = PermissionAccess::create($pko);
@@ -228,7 +231,7 @@ class ConcreteUpgradeVersion560Helper {
 					}
 				}
 				$pa->save($args);
-				$pko->assignPermissionAccess($pa);
+				$pt->assignPermissionAccess($pa);
 			}
 		}
 	}
@@ -263,11 +266,13 @@ class ConcreteUpgradeVersion560Helper {
 				$ax = Area::getOrCreate($co, $row['arHandle']);
 				if (is_object($ax)) { 
 					$pk->setPermissionObject($ax);
+					$pt = $pk->getPermissionAssignmentObject();
 					$pa = $pk->getPermissionAccessObject();
 					if (!is_object($pa)) {
 						$pa = PermissionAccess::create($pk);
 					}
 					$spk->setPermissionObject($ax);
+					$spt = $pk->getPermissionAssignmentObject();
 					$spa = $spk->getPermissionAccessObject();
 					if (!is_object($spa)) {
 						$spa = PermissionAccess::create($spk);
@@ -279,8 +284,8 @@ class ConcreteUpgradeVersion560Helper {
 					}
 					$pa->save($args);
 					$spa->save($args);
-					$pk->assignPermissionAccess($pa);
-					$spk->assignPermissionAccess($spa);
+					$pt->assignPermissionAccess($pa);
+					$spt->assignPermissionAccess($spa);
 				}
 			}
 		}
@@ -351,12 +356,13 @@ class ConcreteUpgradeVersion560Helper {
 				$permissionsToApply = $permissionMap[$p];
 				foreach($permissionsToApply as $pko) {
 					$pko->setPermissionObject($ax);
+					$pt = $pko->getPermissionAssignmentObject();
 					$pa = $pko->getPermissionAccessObject();
 					if (!is_object($pa)) {
 						$pa = PermissionAccess::create($pko);
 					}
 					$pa->addListItem($pe, false, AreaPermissionKey::ACCESS_TYPE_INCLUDE);	
-					$pko->assignPermissionAccess($pa);
+					$pt->assignPermissionAccess($pa);
 				}
 			}
 		}
@@ -408,12 +414,13 @@ class ConcreteUpgradeVersion560Helper {
 				$permissionsToApply = $permissionMap[$p];
 				foreach($permissionsToApply as $pko) {
 					$pko->setPermissionObject($co);
+					$pt = $pko->getPermissionAssignmentObject();
 					$pa = $pko->getPermissionAccessObject();
 					if (!is_object($pa)) {
 						$pa = PermissionAccess::create($pko);
 					}
 					$pa->addListItem($pe, false, PagePermissionKey::ACCESS_TYPE_INCLUDE);	
-					$pko->assignPermissionAccess($pa);
+					$pt->assignPermissionAccess($pa);
 				}
 			}
 		}
@@ -473,12 +480,13 @@ class ConcreteUpgradeVersion560Helper {
 					$permissionsToApply = $permissionMap[$p];
 					foreach($permissionsToApply as $pko) {
 						$pko->setPermissionObject($fs);
+						$pt = $pko->getPermissionAssignmentObject();
 						$pa = $pko->getPermissionAccessObject();
 						if (!is_object($pa)) {
 							$pa = PermissionAccess::create($pko);
 						}
 						$pa->addListItem($pe, false, $accessType);	
-						$pko->assignPermissionAccess($pa);
+						$pt->assignPermissionAccess($pa);
 					}
 				}
 			}
@@ -518,12 +526,13 @@ class ConcreteUpgradeVersion560Helper {
 					$permissionsToApply = $permissionMap[$p];
 					foreach($permissionsToApply as $pko) {
 						$pko->setPermissionObject($f);
+						$pt = $pko->getPermissionAssignmentObject();
 						$pa = $pko->getPermissionAccessObject();
 						if (!is_object($pa)) {
 							$pa = PermissionAccess::create($pko);
 						}
 						$pa->addListItem($pe, false, $accessType);	
-						$pko->assignPermissionAccess($pa);
+						$pt->assignPermissionAccess($pa);
 					}
 				}
 			}
@@ -567,12 +576,13 @@ class ConcreteUpgradeVersion560Helper {
 					$permissionsToApply = $permissionMap[$p];
 					foreach($permissionsToApply as $pko) {
 						$pko->setPermissionObject($bo);
+						$pt = $pko->getPermissionAssignmentObject();
 						$pa = $pko->getPermissionAccessObject();
 						if (!is_object($pa)) {
 							$pa = PermissionAccess::create($pko);
 						}
 						$pa->addListItem($pe, false, BlockPermissionKey::ACCESS_TYPE_INCLUDE);	
-						$pko->assignPermissionAccess($pa);
+						$pt->assignPermissionAccess($pa);
 					}
 				}
 			}

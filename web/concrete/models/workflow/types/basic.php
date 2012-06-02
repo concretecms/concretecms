@@ -23,12 +23,13 @@ class BasicWorkflow extends Workflow  {
 		$permissions = PermissionKey::getList('basic_workflow');
 		foreach($permissions as $pk) {
 			$pk->setPermissionObject($this);
+			$pt = $pk->getPermissionAssignmentObject();
 			$paID = $post['pkID'][$pk->getPermissionKeyID()];
-			$pk->clearPermissionAssignment();
+			$pt->clearPermissionAssignment();
 			if ($paID > 0) {
 				$pa = PermissionAccess::getByID($paID, $pk);
 				if (is_object($pa)) {
-					$pk->assignPermissionAccess($pa);
+					$pt->assignPermissionAccess($pa);
 				}			
 			}		
 		}			

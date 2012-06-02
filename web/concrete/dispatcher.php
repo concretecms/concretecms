@@ -86,7 +86,6 @@
 	Loader::model('page');
 	Loader::model('page_theme');
 	Loader::model('composer_page');
-	Loader::model('permission/target');
 	Loader::model('permission/access/model');
 	Loader::model('permission/access/entity');
 	Loader::model('permission/access/list_item');

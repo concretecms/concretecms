@@ -85,14 +85,14 @@ $(function() {
 
 ccm_revertToAreaPermissions = function() {
 	jQuery.fn.dialog.showLoader();
-	$.get('<?=$pk->getPermissionKeyToolsURL("revert_to_area_permissions")?>&bID=<?=$b->getBlockID()?>&cvID=<?=$c->getVersionID()?>&arHandle=<?=urlencode($b->getAreaHandle())?>&cID=<?=$c->getCollectionID()?>', function() { 
+	$.get('<?=$pk->getPermissionAssignmentObject()->getPermissionKeyToolsURL("revert_to_area_permissions")?>&bID=<?=$b->getBlockID()?>&cvID=<?=$c->getVersionID()?>&arHandle=<?=urlencode($b->getAreaHandle())?>&cID=<?=$c->getCollectionID()?>', function() { 
 		ccm_refreshBlockPermissions();
 	});
 }
 
 ccm_setBlockPermissionsToOverride = function() {
 	jQuery.fn.dialog.showLoader();
-	$.get('<?=$pk->getPermissionKeyToolsURL("override_area_permissions")?>&bID=<?=$b->getBlockID()?>&cvID=<?=$c->getVersionID()?>&arHandle=<?=urlencode($b->getAreaHandle())?>&cID=<?=$c->getCollectionID()?>', function() { 
+	$.get('<?=$pk->getPermissionAssignmentObject()->getPermissionKeyToolsURL("override_area_permissions")?>&bID=<?=$b->getBlockID()?>&cvID=<?=$c->getVersionID()?>&arHandle=<?=urlencode($b->getAreaHandle())?>&cID=<?=$c->getCollectionID()?>', function() { 
 		ccm_refreshBlockPermissions();
 	});
 }

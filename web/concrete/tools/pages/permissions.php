@@ -91,7 +91,7 @@ $searchInstance = Loader::helper('text')->entities($_REQUEST['searchInstance']);
 			jQuery.fn.dialog.closeTop();
 			jQuery.fn.dialog.showLoader();
 			
-			$.get('<?=$pk->getPermissionKeyToolsURL("add_access_entity")?>&pdID=' + pdID + '&accessType=' + accessType + '&peID=' + peID, function(r) { 
+			$.get('<?=$pk->getPermissionAssignmentObject()->getPermissionKeyToolsURL("add_access_entity")?>&pdID=' + pdID + '&accessType=' + accessType + '&peID=' + peID, function(r) { 
 				$.get('<?=REL_DIR_FILES_TOOLS_REQUIRED?>/pages/permissions?subtask=set&message=entity_added&pkID=<?=$pk->getPermissionKeyID()?><?=$cIDStr?>', function(r) { 
 					jQuery.fn.dialog.replaceTop(r);
 					jQuery.fn.dialog.hideLoader();
@@ -101,7 +101,7 @@ $searchInstance = Loader::helper('text')->entities($_REQUEST['searchInstance']);
 
 		ccm_deleteAccessEntityAssignment = function(peID) {
 			jQuery.fn.dialog.showLoader();
-			$.get('<?=$pk->getPermissionKeyToolsURL("remove_access_entity")?>&peID=' + peID, function() { 
+			$.get('<?=$pk->getPermissionAssignmentObject()->getPermissionKeyToolsURL("remove_access_entity")?>&peID=' + peID, function() { 
 				$.get('<?=REL_DIR_FILES_TOOLS_REQUIRED?>/pages/permissions?subtask=set&message=entity_removed&pkID=<?=$pk->getPermissionKeyID()?><?=$cIDStr?>', function(r) { 
 					jQuery.fn.dialog.replaceTop(r);
 					jQuery.fn.dialog.hideLoader();
@@ -193,7 +193,7 @@ $searchInstance = Loader::helper('text')->entities($_REQUEST['searchInstance']);
 	
 	ccm_pagePermissionsConfirmInheritanceChange = function() { 
 		jQuery.fn.dialog.showLoader();
-		$.get('<?=$pk->getPermissionKeyToolsURL("change_permission_inheritance")?>&mode=' + $('#ccm-page-permissions-inherit').val(), function() { 
+		$.get('<?=$pk->getPermissionAssignmentObject()->getPermissionKeyToolsURL("change_permission_inheritance")?>&mode=' + $('#ccm-page-permissions-inherit').val(), function() { 
 			jQuery.fn.dialog.closeTop();
 			ccm_refreshPagePermissions();
 		});
@@ -221,7 +221,7 @@ $searchInstance = Loader::helper('text')->entities($_REQUEST['searchInstance']);
 		
 		$('#ccm-page-permissions-subpages-override-template-permissions').change(function() {
 			jQuery.fn.dialog.showLoader();
-			$.get('<?=$pk->getPermissionKeyToolsURL("change_subpage_defaults_inheritance")?>&inherit=' + $(this).val(), function() { 
+			$.get('<?=$pk->getPermissionAssignmentObject()->getPermissionKeyToolsURL("change_subpage_defaults_inheritance")?>&inherit=' + $(this).val(), function() { 
 				ccm_refreshPagePermissions();
 			});
 		});

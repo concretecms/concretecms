@@ -5,7 +5,7 @@ class PagePermissionKey extends PermissionKey {
 
 }
 
-class PagePermissionTarget extends PermissionTarget {
+class PagePermissionAssignment extends PermissionAssignment {
 
 	protected $multiplePageArray; // bulk operations
 	public function setMultiplePageArray($pages) {

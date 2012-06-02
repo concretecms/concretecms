@@ -108,7 +108,7 @@ ccm_pagePermissionsCancelInheritance = function() {
 
 ccm_pagePermissionsConfirmInheritanceChange = function() { 
 	jQuery.fn.dialog.showLoader();
-	$.getJSON('<?=$pk->getPermissionTargetObject()->getPermissionKeyToolsURL("change_permission_inheritance")?>&cID=<?=$c->getCollectionID()?>&mode=' + $('#ccm-page-permissions-inherit').val(), function(r) { 
+	$.getJSON('<?=$pk->getPermissionAssignmentObject()->getPermissionKeyToolsURL("change_permission_inheritance")?>&cID=<?=$c->getCollectionID()?>&mode=' + $('#ccm-page-permissions-inherit').val(), function(r) { 
 		if (r.deferred) {
 			jQuery.fn.dialog.closeAll();
 			jQuery.fn.dialog.hideLoader();
@@ -158,7 +158,7 @@ $(function() {
 	
 	$('#ccm-page-permissions-subpages-override-template-permissions').change(function() {
 		jQuery.fn.dialog.showLoader();
-		$.getJSON('<?=$pk->getPermissionTargetObject()->getPermissionKeyToolsURL("change_subpage_defaults_inheritance")?>&cID=<?=$c->getCollectionID()?>&inherit=' + $(this).val(), function(r) { 
+		$.getJSON('<?=$pk->getPermissionAssignmentObject()->getPermissionKeyToolsURL("change_subpage_defaults_inheritance")?>&cID=<?=$c->getCollectionID()?>&inherit=' + $(this).val(), function(r) { 
 			if (r.deferred) {
 				jQuery.fn.dialog.closeTop();
 				jQuery.fn.dialog.hideLoader();
