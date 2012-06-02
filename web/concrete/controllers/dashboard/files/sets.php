@@ -92,12 +92,13 @@ class DashboardFilesSetsController extends Controller {
 			$permissions = PermissionKey::getList('file_set');
 			foreach($permissions as $pk) {
 				$pk->setPermissionObject($file_set);
+				$pt = $pk->getPermissionAssignmentObject();
 				$paID = $_POST['pkID'][$pk->getPermissionKeyID()];
-				$pk->clearPermissionAssignment();
+				$pt->clearPermissionAssignment();
 				if ($paID > 0) {
 					$pa = PermissionAccess::getByID($paID, $pk);
 					if (is_object($pa)) {
-						$pk->assignPermissionAccess($pa);
+						$pt->assignPermissionAccess($pa);
 					}			
 				}		
 			}			

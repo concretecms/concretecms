@@ -61,10 +61,11 @@ class DashboardSystemPermissionsSiteController extends DashboardBaseController {
 				
 				$pk = PermissionKey::getByHandle('view_page');
 				$pk->setPermissionObject($home);
-				$pk->clearPermissionAssignment();
+				$pt = $pk->getPermissionAssignmentObject();
+				$pt->clearPermissionAssignment();
 				$pa = PermissionAccess::create($pk);
 				$pa->addListItem($viewObj);
-				$pk->assignPermissionAccess($pa);
+				$pt->assignPermissionAccess($pa);
 				
 				$editAccessEntities = array();
 				if (is_array($_POST['gID'])) {
@@ -92,12 +93,13 @@ class DashboardSystemPermissionsSiteController extends DashboardBaseController {
 				foreach($editPermissions as $pkHandle) { 
 					$pk = PermissionKey::getByHandle($pkHandle);
 					$pk->setPermissionObject($home);
-					$pk->clearPermissionAssignment();
+					$pt = $pk->getPermissionAssignmentObject();
+					$pt->clearPermissionAssignment();
 					$pa = PermissionAccess::create($pk);
 					foreach($editAccessEntities as $editObj) {
 						$pa->addListItem($editObj);
 					}
-					$pk->assignPermissionAccess($pa);
+					$pt->assignPermissionAccess($pa);
 				}
 
 				$this->redirect('/dashboard/system/permissions/site/', 'saved');

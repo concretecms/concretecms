@@ -966,7 +966,8 @@
 
 				$pk = PermissionKey::getByHandle('view_page');
 				$pk->setPermissionObject($c);
-				$pk->clearPermissionAssignment();
+				$pt = $pk->getPermissionAssignmentObject();
+				$pt->clearPermissionAssignment();
 				$pa = PermissionAccess::create($pk);
 				
 				if (is_array($_POST['readGID'])) {
@@ -974,7 +975,7 @@
 						$pa->addListItem(GroupPermissionAccessEntity::getOrCreate(Group::getByID($gID)));
 					}
 				}				
-				$pk->assignPermissionAccess($pa);
+				$pt->assignPermissionAccess($pa);
 				
 				$editAccessEntities = array();
 				if (is_array($_POST['editGID'])) {
@@ -1002,12 +1003,13 @@
 				foreach($editPermissions as $pkHandle) { 
 					$pk = PermissionKey::getByHandle($pkHandle);
 					$pk->setPermissionObject($c);
-					$pk->clearPermissionAssignment();
+					$pt = $pk->getPermissionAssignmentObject();
+					$pt->clearPermissionAssignment();
 					$pa = PermissionAccess::create($pk);
 					foreach($editAccessEntities as $editObj) {
 						$pa->addListItem($editObj);
 					}
-					$pk->assignPermissionAccess($pa);
+					$pt->assignPermissionAccess($pa);
 				}
 				
 				if ($_POST['rel'] == 'SITEMAP') { 

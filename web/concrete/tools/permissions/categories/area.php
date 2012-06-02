@@ -54,7 +54,7 @@ if (is_object($a)) {
 			foreach($permissions as $pk) {
 				$paID = $_POST['pkID'][$pk->getPermissionKeyID()];
 				$pk->setPermissionObject($ax);
-				$pt = $pk->getPermissionTargetObject();
+				$pt = $pk->getPermissionAssignmentObject();
 				$pt->clearPermissionAssignment();
 				if ($paID > 0) {
 					$pa = PermissionAccess::getByID($paID, $pk);

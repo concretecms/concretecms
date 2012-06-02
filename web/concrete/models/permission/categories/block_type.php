@@ -5,6 +5,11 @@ class BlockTypePermissionKey extends PermissionKey {
 	
 }
 
+class BlockTypePermissionAssignment extends PermissionAssignment {
+	
+	
+}
+
 class BlockTypePermissionAccess extends PermissionAccess {
 	
 	

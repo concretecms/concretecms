@@ -282,17 +282,17 @@ abstract class PermissionKey extends Object {
 	}
 
 	public function getPermissionAccessID() {
-		$targ = $this->getPermissionTargetObject();
+		$targ = $this->getPermissionAssignmentObject();
 		return $targ->getPermissionAccessID();
 	}
 	
-	public function getPermissionTargetObject() {
+	public function getPermissionAssignmentObject() {
 		if (is_object($this->permissionObject)) {
-			$class = Loader::helper('text')->camelcase(get_class($this->permissionObject) . 'PermissionTarget');
+			$class = Loader::helper('text')->camelcase(get_class($this->permissionObject) . 'PermissionAssignment');
 			$targ = new $class();
 			$targ->setPermissionObject($this->permissionObject);
 		} else {
-			$targ = new PermissionTarget();
+			$targ = new PermissionAssignment();
 		}
 		$targ->setPermissionKeyObject($this);
 		return $targ;

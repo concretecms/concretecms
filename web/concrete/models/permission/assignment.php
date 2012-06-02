@@ -1,37 +1,50 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-class PermissionAssignment extends Object {
+class PermissionAssignment {
 	
-	public function setAccessType($accessType) {
-		$this->accessType = $accessType;
+	protected $pk; // permissionkey
+	protected $permissionObject;
+	
+	public function setPermissionObject($po) {
+		$this->permissionObject = $po;
 	}
 	
-	public function getAccessType() {
-		return $this->accessType;
-	}
-	
-	public function loadPermissionDurationObject($pdID) {
-		if ($pdID > 0) { 
-			$pd = PermissionDuration::getByID($pdID);
-			$this->duration = $pd;
-		}
-	}
-
-	public function loadAccessEntityObject($peID) {
-		if ($peID > 0) { 
-			$pe = PermissionAccessEntity::getByID($peID);
-			$this->accessEntity = $pe;
-		}
-	}
-	
-	public function getAccessEntityObject() {return $this->accessEntity;}
-	public function getPermissionDurationObject() {return $this->duration;}
-	
-	public function setPermissionObject($object) {
-		$this->permissionObject = $object;
-	}
 	public function getPermissionObject() {
 		return $this->permissionObject;
 	}
 	
+	public function setPermissionKeyObject($pk) {
+		$this->pk = $pk;
+	}
+	
+	public function getPermissionKeyToolsURL($task = false) {
+		if (!$task) {
+			$task = 'save_permission';
+		}
+		$uh = Loader::helper('concrete/urls');
+		$akc = PermissionKeyCategory::getByID($this->pk->getPermissionKeyCategoryID());
+		$url = $uh->getToolsURL('permissions/categories/' . $akc->getPermissionKeyCategoryHandle(), $akc->getPackageHandle());
+		$token = Loader::helper('validation/token')->getParameter($task);
+		$url .= '?' . $token . '&task=' . $task . '&pkID=' . $this->pk->getPermissionKeyID();
+		return $url;
+	}
+	
+	public function clearPermissionAssignment() {
+		$db = Loader::db();
+		$db->Execute('update PermissionAssignments set paID = 0 where pkID = ?', array($this->pk->getPermissionKeyID()));
+	}
+	
+	public function assignPermissionAccess(PermissionAccess $pa) {
+		$db = Loader::db();
+		$db->Replace('PermissionAssignments', array('paID' => $pa->getPermissionAccessID(), 'pkID' => $this->pk->getPermissionKeyID()), array('pkID'), true);
+		$pa->markAsInUse();
+	}
+
+	public function getPermissionAccessID() {
+		$db = Loader::db();
+		$paID = $db->GetOne('select paID from PermissionAssignments where pkID = ?', array($this->pk->getPermissionKeyID()));
+		return $paID;
+	}
+
+
 }

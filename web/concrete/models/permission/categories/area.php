@@ -22,7 +22,7 @@ class AreaPermissionKey extends PermissionKey {
 
 }
 
-class AreaPermissionTarget extends PermissionTarget {
+class AreaPermissionAssignment extends PermissionAssignment {
 
 	protected $area;
 	protected $permissionObjectToCheck;

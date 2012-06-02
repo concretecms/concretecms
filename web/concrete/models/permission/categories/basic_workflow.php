@@ -2,22 +2,26 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 class BasicWorkflowPermissionKey extends WorkflowPermissionKey {
 	
+}
+
+class BasicWorkflowPermissionAssignment extends PermissionAssignment {
+	
 	public function getPermissionAccessID() {
 		$db = Loader::db();
  		$r = $db->GetOne('select paID from BasicWorkflowPermissionAssignments where wfID = ? and pkID = ?', array(
- 			$this->getPermissionObject()->getWorkflowID(), $this->getPermissionKeyID()
+ 			$this->getPermissionObject()->getWorkflowID(), $this->pk->getPermissionKeyID()
  		));
  		return $r;
 	}
 	
 	public function clearPermissionAssignment() {
 		$db = Loader::db();
-		$db->Execute('update BasicWorkflowPermissionAssignments set paID = 0 where pkID = ? and wfID = ?', array($this->pkID, $this->getPermissionObject()->getWorkflowID()));
+		$db->Execute('update BasicWorkflowPermissionAssignments set paID = 0 where pkID = ? and wfID = ?', array($this->pk->getPermissionKeyID(), $this->getPermissionObject()->getWorkflowID()));
 	}
 	
 	public function assignPermissionAccess(PermissionAccess $pa) {
 		$db = Loader::db();
-		$db->Replace('BasicWorkflowPermissionAssignments', array('wfID' => $this->getPermissionObject()->getWorkflowID(), 'paID' => $pa->getPermissionAccessID(), 'pkID' => $this->pkID), array('wfID', 'pkID'), true);
+		$db->Replace('BasicWorkflowPermissionAssignments', array('wfID' => $this->getPermissionObject()->getWorkflowID(), 'paID' => $pa->getPermissionAccessID(), 'pkID' => $this->pk->getPermissionKeyID()), array('wfID', 'pkID'), true);
 		$pa->markAsInUse();
 	}
 	
@@ -25,8 +29,8 @@ class BasicWorkflowPermissionKey extends WorkflowPermissionKey {
 		return parent::getPermissionKeyToolsURL($task) . '&wfID=' . $this->getPermissionObject()->getWorkflowID();
 	}
 
-}
 
+}
 class BasicWorkflowPermissionAccess extends PermissionAccess {
 
 	

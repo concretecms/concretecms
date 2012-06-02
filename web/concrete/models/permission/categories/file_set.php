@@ -14,16 +14,6 @@ class FileSetPermissionKey extends PermissionKey {
 		return $types;
 	}
 
-	public function setPermissionObject(FileSet $fs) {
-		$this->permissionObject = $fs;
-		
-		if ($fs->overrideGlobalPermissions()) {
-			$this->permissionObjectToCheck = $fs;
-		} else {
-			$fs = FileSet::getGlobal();
-			$this->permissionObjectToCheck = $fs;
-		}
-	}
 
 	public function validate() {
 		$u = new User();
@@ -48,30 +38,46 @@ class FileSetPermissionKey extends PermissionKey {
 		return $valid;		
 	}
 	
+
+
+}
+
+class FileSetPermissionAssignment extends PermissionAssignment {
+	
+	public function setPermissionObject(FileSet $fs) {
+		$this->permissionObject = $fs;
+		
+		if ($fs->overrideGlobalPermissions()) {
+			$this->permissionObjectToCheck = $fs;
+		} else {
+			$fs = FileSet::getGlobal();
+			$this->permissionObjectToCheck = $fs;
+		}
+	}
+
 	public function getPermissionAccessID() {
 		$db = Loader::db();
  		$r = $db->GetOne('select paID from FileSetPermissionAssignments where fsID = ? and pkID = ?', array(
- 			$this->permissionObjectToCheck->getFileSetID(), $this->getPermissionKeyID()
+ 			$this->permissionObjectToCheck->getFileSetID(), $this->pk->getPermissionKeyID()
  		));
  		return $r;
 	}
 
 	public function clearPermissionAssignment() {
 		$db = Loader::db();
-		$db->Execute('update FileSetPermissionAssignments set paID = 0 where pkID = ? and fsID = ?', array($this->pkID, $this->permissionObject->getFileSetID()));
+		$db->Execute('update FileSetPermissionAssignments set paID = 0 where pkID = ? and fsID = ?', array($this->pk->getPermissionKeyID(), $this->permissionObject->getFileSetID()));
 	}
 	
 	public function assignPermissionAccess(PermissionAccess $pa) {
 		$db = Loader::db();
-		$db->Replace('FileSetPermissionAssignments', array('fsID' => $this->getPermissionObject()->getFileSetID(), 'paID' => $pa->getPermissionAccessID(), 'pkID' => $this->pkID), array('fsID', 'pkID'), true);
+		$db->Replace('FileSetPermissionAssignments', array('fsID' => $this->getPermissionObject()->getFileSetID(), 'paID' => $pa->getPermissionAccessID(), 'pkID' => $this->pk->getPermissionKeyID()), array('fsID', 'pkID'), true);
 		$pa->markAsInUse();
 	}
 	
 	public function getPermissionKeyToolsURL($task = false) {
 		return parent::getPermissionKeyToolsURL($task) . '&fsID=' . $this->getPermissionObject()->getFileSetID();
 	}
-
-
+	
 }
 
 class FileSetPermissionAccess extends PermissionAccess {
