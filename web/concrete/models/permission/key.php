@@ -101,19 +101,6 @@ abstract class PermissionKey extends Object {
 		return PackageList::getHandle($this->pkgID);
 	}
 
-	public function getPermissionKeyToolsURL($task = false) {
-		if (!$task) {
-			$task = 'save_permission';
-		}
-		$uh = Loader::helper('concrete/urls');
-		$akc = PermissionKeyCategory::getByID($this->getPermissionKeyCategoryID());
-		$url = $uh->getToolsURL('permissions/categories/' . $this->pkCategoryHandle, $akc->getPackageHandle());
-		$token = Loader::helper('validation/token')->getParameter($task);
-		$url .= '?' . $token . '&task=' . $task . '&pkID=' . $this->getPermissionKeyID();
-		return $url;
-	}
-
-	
 	/** 
 	 * Returns a list of all permissions of this category
 	 */
@@ -280,10 +267,6 @@ abstract class PermissionKey extends Object {
 		$db->Execute('delete from PermissionKeys where pkID = ?', array($this->getPermissionKeyID()));
 	}
 	
-	public function clearPermissionAssignment() {
-		$db = Loader::db();
-		$db->Execute('update PermissionAssignments set paID = 0 where pkID = ?', array($this->pkID));
-	}
 	
 	/**
 	 * A shortcut for grabbing the current assignment and passing into that object
@@ -297,23 +280,28 @@ abstract class PermissionKey extends Object {
 			return array();
 		}
 	}
-	
-	public function assignPermissionAccess(PermissionAccess $pa) {
-		$db = Loader::db();
-		$db->Replace('PermissionAssignments', array('paID' => $pa->getPermissionAccessID(), 'pkID' => $this->pkID), array('pkID'), true);
-		$pa->markAsInUse();
+
+	public function getPermissionAccessID() {
+		$targ = $this->getPermissionTargetObject();
+		return $targ->getPermissionAccessID();
 	}
+	
+	public function getPermissionTargetObject() {
+		if (is_object($this->permissionObject)) {
+			$class = Loader::helper('text')->camelcase(get_class($this->permissionObject) . 'PermissionTarget');
+			$targ = new $class();
+			$targ->setPermissionObject($this->permissionObject);
+		} else {
+			$targ = new PermissionTarget();
+		}
+		$targ->setPermissionKeyObject($this);
+		return $targ;
+	}
+
 	
 	public function getPermissionAccessObject() {
-		$paID = $this->getPermissionAccessID();
-		return PermissionAccess::getByID($paID, $this);
+		return PermissionAccess::getByID($this->getPermissionAccessID(), $this);
 	}
-	
-	public function getPermissionAccessID() {
-		$db = Loader::db();
-		return $db->GetOne('select paID from PermissionAssignments where pkID = ?', array($this->getPermissionKeyID()));
-	}
-	
 
 	public function exportAccess($pxml) {
 		// by default we don't. but tasks do
