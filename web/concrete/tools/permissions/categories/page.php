@@ -42,7 +42,6 @@ if (count($pages) > 0) {
 	if ($_REQUEST['task'] == 'save_permission' && Loader::helper("validation/token")->validate('save_permission')) {
 		$pk = PagePermissionKey::getByID($_REQUEST['pkID']);
 		foreach($pages as $c) { 
-			$pk->setPermissionObject($c);
 			$pa = PermissionAccess::getByID($_REQUEST['paID'], $pk);
 			$pa->save($_POST);
 			$pa->clearWorkflows();

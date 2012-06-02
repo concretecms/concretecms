@@ -373,6 +373,7 @@ class Page extends Collection {
 		}
 	}
 	
+	
 	/**
 	 * Assign permissions to a page based on an array
 	 * <code>

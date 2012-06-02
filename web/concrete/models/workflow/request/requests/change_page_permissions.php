@@ -75,11 +75,12 @@ class ChangePagePermissionsPageWorkflowRequest extends PageWorkflowRequest {
 		foreach($permissions as $pk) {
 			$paID = $this->permissionSet[$pk->getPermissionKeyID()];
 			$pk->setPermissionObject($c);
-			$pk->clearPermissionAssignment();
+			$pt = $pk->getPermissionTargetObject();
+			$pt->clearPermissionAssignment();
 			if ($paID > 0) {
 				$pa = PermissionAccess::getByID($paID, $pk);
 				if (is_object($pa)) {
-					$pk->assignPermissionAccess($pa);
+					$pt->assignPermissionAccess($pa);
 				}			
 			}			
 		}

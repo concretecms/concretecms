@@ -2,6 +2,28 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 class AreaPermissionKey extends PermissionKey {
 	
+	public function copyFromPageToArea() {
+		$db = Loader::db();
+		$paID = $this->getPermissionAccessID();
+		if ($paID) { 
+			$db = Loader::db();
+			$db->Replace('AreaPermissionAssignments', array(
+				'cID' => $this->permissionObject->getCollectionID(), 
+				'arHandle' => $this->permissionObject->getAreaHandle(), 
+				'paID' => $paID,
+				'pkID' => $this->getPermissionKeyID()
+				),
+				array('cID', 'arHandle', 'pkID'), true);				
+		}
+	}
+	
+	
+
+
+}
+
+class AreaPermissionTarget extends PermissionTarget {
+
 	protected $area;
 	protected $permissionObjectToCheck;
 	protected $inheritedPermissions = array(
@@ -18,7 +40,7 @@ class AreaPermissionKey extends PermissionKey {
 		'add_block_to_area' => 'add_block',
 		'add_stack_to_area' => 'add_stack'
 	);
-	
+
 	public function setPermissionObject(Area $a) {
 		$ax = $a;
 		if ($a->isGlobalArea()) {
@@ -52,39 +74,23 @@ class AreaPermissionKey extends PermissionKey {
 			}
 		}
 	}
-	
-	public function copyFromPageToArea() {
-		$db = Loader::db();
-		$paID = $this->getPermissionAccessID();
-		if ($paID) { 
-			$db = Loader::db();
-			$db->Replace('AreaPermissionAssignments', array(
-				'cID' => $this->permissionObject->getCollectionID(), 
-				'arHandle' => $this->permissionObject->getAreaHandle(), 
-				'paID' => $paID,
-				'pkID' => $this->getPermissionKeyID()
-				),
-				array('cID', 'arHandle', 'pkID'), true);				
-		}
-	}
-	
-	
+
 	public function getPermissionAccessID() {
 		$db = Loader::db();
 
 		if ($this->permissionObjectToCheck instanceof Area) { 
 			$r = $db->GetOne('select paID from AreaPermissionAssignments where cID = ? and arHandle = ? and pkID = ? ' . $filterString, array(
-				$this->permissionObjectToCheck->getCollectionID(), $this->permissionObjectToCheck->getAreaHandle(), $this->getPermissionKeyID()
+				$this->permissionObjectToCheck->getCollectionID(), $this->permissionObjectToCheck->getAreaHandle(), $this->pk->getPermissionKeyID()
 			));
-		} else if (isset($this->inheritedPermissions[$this->getPermissionKeyHandle()])) { 
+		} else if (isset($this->inheritedPermissions[$this->pk->getPermissionKeyHandle()])) { 
 			// this is a page
-			$inheritedPKID = $db->GetOne('select pkID from PermissionKeys where pkHandle = ?', array($this->inheritedPermissions[$this->getPermissionKeyHandle()]));
+			$inheritedPKID = $db->GetOne('select pkID from PermissionKeys where pkHandle = ?', array($this->inheritedPermissions[$this->pk->getPermissionKeyHandle()]));
 			$r = $db->GetOne('select paID from PagePermissionAssignments where cID = ? and pkID = ? ' . $filterString, array(
 				$this->permissionObjectToCheck->getPermissionsCollectionID(), $inheritedPKID
 			));
-		} else if (isset($this->blockTypeInheritedPermissions[$this->getPermissionKeyHandle()])) { 
+		} else if (isset($this->blockTypeInheritedPermissions[$this->pk->getPermissionKeyHandle()])) { 
 			// this is a page
-			$inheritedPKID = $db->GetOne('select pkID from PermissionKeys where pkHandle = ?', array($this->blockTypeInheritedPermissions[$this->getPermissionKeyHandle()]));
+			$inheritedPKID = $db->GetOne('select pkID from PermissionKeys where pkHandle = ?', array($this->blockTypeInheritedPermissions[$this->pk->getPermissionKeyHandle()]));
 			$r = $db->GetOne('select paID from PermissionAssignments where pkID = ? ' . $filterString, array(
 				$inheritedPKID
 			));
@@ -103,19 +109,20 @@ class AreaPermissionKey extends PermissionKey {
 		$db = Loader::db();
 		$area = $this->getPermissionObject();
 		$c = $area->getAreaCollectionObject();
-		$db->Execute('update AreaPermissionAssignments set paID = 0 where pkID = ? and cID = ? and arHandle = ?', array($this->pkID, $c->getCollectionID(), $area->getAreaHandle()));
+		$db->Execute('update AreaPermissionAssignments set paID = 0 where pkID = ? and cID = ? and arHandle = ?', array($this->pk->getPermissionKeyID(), $c->getCollectionID(), $area->getAreaHandle()));
 	}
 	
 	public function assignPermissionAccess(PermissionAccess $pa) {
 		$db = Loader::db();
 		$db->Replace('AreaPermissionAssignments', array('cID' => $this->getPermissionObject()->getCollectionID(), 
 			'arHandle' => $this->getPermissionObject()->getAreaHandle(),
-			'paID' => $pa->getPermissionAccessID(), 'pkID' => $this->pkID), array('cID', 'arHandle', 'pkID'), true);
+			'paID' => $pa->getPermissionAccessID(), 'pkID' => $this->pk->getPermissionKeyID()), array('cID', 'arHandle', 'pkID'), true);
 		$pa->markAsInUse();
 	}
-
-
+	
+	
 }
+
 
 class AreaPermissionAccess extends PermissionAccess {
 
