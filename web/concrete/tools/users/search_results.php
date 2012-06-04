@@ -14,5 +14,7 @@ $columns = $cnt->get('columns');
 $users = $userList->getPage();
 $pagination = $userList->getPagination();
 
+$searchType = Loader::helper('text')->entities($_REQUEST['searchType']);
 
-Loader::element('users/search_results', array('columns' => $columns, 'users' => $users, 'userList' => $userList, 'searchType' => $_REQUEST['searchType'], 'pagination' => $pagination));
+
+Loader::element('users/search_results', array('columns' => $columns, 'users' => $users, 'userList' => $userList, 'searchType' => $searchType, 'pagination' => $pagination));

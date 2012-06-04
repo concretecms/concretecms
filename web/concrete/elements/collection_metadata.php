@@ -11,6 +11,7 @@ if ($cp->canAdminPage()) {
 	$ctArray = CollectionType::getList();
 }
 
+$approveImmediately = false;
 if ($_REQUEST['approveImmediately'] == 1) {
 	$approveImmediately = 1;
 }

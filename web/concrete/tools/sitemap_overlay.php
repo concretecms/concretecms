@@ -7,6 +7,10 @@ if (!$sh->canRead()) {
 }
 
 $args = $_REQUEST;
+foreach($args as $key => $value) {
+	$args[$key] = Loader::helper('text')->entities($value);
+}
+
 if (isset($select_mode)) {
 	$args['select_mode'] = $select_mode;
 }
