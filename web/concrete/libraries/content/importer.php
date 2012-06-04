@@ -452,7 +452,8 @@ class ContentImporter {
 							$pae = GroupPermissionAccessEntity::getOrCreate($g);
 							$pa = PermissionAccess::create($pkx);
 							$pa->addListItem($pae);
-							$pkx->assignPermissionAccess($pa);
+							$pt = $pkx->getPermissionAssignmentObject();
+							$pt->assignPermissionAccess($pa);
 						}
 					}
 				}

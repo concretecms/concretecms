@@ -291,7 +291,8 @@
 					$pa = PermissionAccess::create($pk);
 				}
 				$pa->addListItem($pe, false, $accessType);
-				$pk->assignPermissionAccess($pa);
+				$pt = $pk->getPermissionAssignmentObject();
+				$pt->assignPermissionAccess($pa);
 			}
 		}
 

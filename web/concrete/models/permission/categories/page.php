@@ -2,6 +2,16 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 class PagePermissionKey extends PermissionKey {
 	
+	public function validate() {
+		$c = $this->getPermissionObject();
+		$workflows = PageWorkflowProgress::getList($c);
+		if (count($workflows) > 0) {
+			
+		}
+		$obj = $this->getPermissionAccessObject();
+		
+		return parent::validate();
+	}	
 
 }
 

@@ -245,13 +245,7 @@ class ConcreteInterfaceHelper {
 	}
 	
 	public function tabs($tabs, $jstabs = true) {
-		static $tcn;
-		if (!isset($tcn)) {
-			$tcn = 1;
-		} else {
-			$tcn++;
-		}
-		
+		$tcn = rand(0, getrandmax());
 
 		$html = '<ul class="nav-tabs nav" id="ccm-tabs-' . $tcn . '">';
 		foreach($tabs as $t) {
