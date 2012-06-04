@@ -11,8 +11,12 @@ if (!$fp->canAddFiles()) {
 }
 
 $types = $fp->getAllowedFileExtensions();
-$searchInstance = $_REQUEST['searchInstance'];
-$ocID = $_REQUEST['ocID'];
+$searchInstance = Loader::helper('text')->entities($_REQUEST['searchInstance']);
+$ocID = 0;
+if (Loader::helper('validation/numbers')->integer($_REQUEST['ocID'])) {
+	$ocID = $_REQUEST['ocID'];
+}
+
 $types = $ch->serializeUploadFileExtensions($types);
 $valt = Loader::helper('validation/token');
 ?>
