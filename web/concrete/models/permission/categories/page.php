@@ -2,34 +2,19 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 class PagePermissionKey extends PermissionKey {
 
-	/*	
-	public function validate() {
-		$u = new User();
-		if ($u->isSuperUser()) {
-			return true;
-		}
-		
-		$c = $this->getPermissionObject();
-		$workflows = PageWorkflowProgress::getList($c);
-		$pae = $this->getPermissionAccessObjectForValidation($workflows);
-		if (is_object($pae)) {
-			return $pae->validate();
-		}
-
-		return false;
-	}*/
-	
+	protected $multiplePageArray; // bulk operations
+	public function setMultiplePageArray($pages) {
+		$this->multiplePageArray = $pages;
+	}
+	public function getMultiplePageArray() {
+		return $this->multiplePageArray;
+	}
 	
 
 }
 
 class PagePermissionAssignment extends PermissionAssignment {
 
-	protected $multiplePageArray; // bulk operations
-	public function setMultiplePageArray($pages) {
-		$this->multiplePageArray = $pages;
-	}
-	
 	public function getPermissionAccessObject() {
 		$db = Loader::db();
 		$paID = $db->GetOne('select paID from PagePermissionAssignments where cID = ? and pkID = ?', array($this->getPermissionObject()->getPermissionsCollectionID(), $this->pk->getPermissionKeyID()));
@@ -70,9 +55,10 @@ class PagePermissionAssignment extends PermissionAssignment {
 	}
 		
 	public function getPermissionKeyToolsURL($task = false) {
-		if (isset($this->multiplePageArray)) {
+		$pageArray = $this->pk->getMultiplePageArray();
+		if (is_array($pageArray) && count($pageArray) > 0) {
 			$cIDStr = '';
-			foreach($this->multiplePageArray as $sc) {
+			foreach($pageArray as $sc) {
 				$cIDStr .= '&cID[]=' . $sc->getCollectionID();
 			}
 			return parent::getPermissionKeyToolsURL($task) . $cIDStr;

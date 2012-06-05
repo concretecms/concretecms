@@ -57,6 +57,7 @@ if (count($pages) > 0) {
 	}
 
 	if ($_REQUEST['task'] == 'change_permission_inheritance' && Loader::helper("validation/token")->validate('change_permission_inheritance')) {
+		$deferred = false;
 		foreach($pages as $c) { 
 			if ($c->getCollectionID() == HOME_CID) {
 				continue;
@@ -67,19 +68,18 @@ if (count($pages) > 0) {
 			$pkr->setPagePermissionsInheritance($_REQUEST['mode']);
 			$pkr->setRequesterUserID($u->getUserID());
 			$response = $pkr->trigger();
+			if (!$response instanceof WorkflowProgressResponse) {
+				$deferred = true;
+			}
 		}
 		$obj = new stdClass;
-		if ($response instanceof WorkflowProgressResponse) {
-			$obj->deferred = false;
-		} else {
-			$obj->deferred = true;
-		}
+		$obj->deferred = $deferred;
 		print Loader::helper('json')->encode($obj);
 		exit;		
-
 	}
 	
 	if ($_REQUEST['task'] == 'change_subpage_defaults_inheritance' && Loader::helper("validation/token")->validate('change_subpage_defaults_inheritance')) {
+		$deferred = false;
 		foreach($pages as $c) { 
 
 			$pkr = new ChangeSubpageDefaultsInheritancePageWorkflowRequest();
@@ -87,13 +87,12 @@ if (count($pages) > 0) {
 			$pkr->setPagePermissionsInheritance($_REQUEST['inherit']);
 			$pkr->setRequesterUserID($u->getUserID());
 			$response = $pkr->trigger();
+			if (!$response instanceof WorkflowProgressResponse) {
+				$deferred = true;
+			}
 		}
 		$obj = new stdClass;
-		if ($response instanceof WorkflowProgressResponse) {
-			$obj->deferred = false;
-		} else {
-			$obj->deferred = true;
-		}
+		$obj->deferred = $deferred;
 		print Loader::helper('json')->encode($obj);
 		exit;		
 
@@ -109,6 +108,7 @@ if (count($pages) > 0) {
 	if ($_REQUEST['task'] == 'save_permission_assignments' && Loader::helper("validation/token")->validate('save_permission_assignments')) {
 		$u = new User();
 		$permissions = PermissionKey::getList('page');
+		$deferred = false;
 		foreach($pages as $c) { 
 			$pkr = new ChangePagePermissionsPageWorkflowRequest();
 			$pkr->setRequestedPage($c);
@@ -122,14 +122,13 @@ if (count($pages) > 0) {
 			$pkr->setRequesterUserID($u->getUserID());
 			$u->unloadCollectionEdit($c);
 			$response = $pkr->trigger();
+			if (!$response instanceof WorkflowProgressResponse) {
+				$deferred = true;
+			}
 		}
 		
 		$obj = new stdClass;
-		if ($response instanceof WorkflowProgressResponse) {
-			$obj->deferred = false;
-		} else {
-			$obj->deferred = true;
-		}
+		$obj->deferred = $deferred;
 		print Loader::helper('json')->encode($obj);
 		exit;		
 
