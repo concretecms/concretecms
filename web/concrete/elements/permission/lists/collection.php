@@ -50,11 +50,9 @@ if ($c->getCollectionInheritance() == 'OVERRIDE') {
 
 <table class="ccm-permission-grid">
 <?
-$permissionset = new PermissionSet();
 $permissions = PermissionKey::getList('page');
 foreach($permissions as $pk) { 
 	$pk->setPermissionObject($c);
-	$permissionset->addPermissionKey($pk);
 	?>
 	<tr>
 	<td class="ccm-permission-grid-name" id="ccm-permission-grid-name-<?=$pk->getPermissionKeyID()?>"><strong><? if ($editPermissions) { ?><a dialog-title="<?=$pk->getPermissionKeyName()?>" data-pkID="<?=$pk->getPermissionKeyID()?>" data-paID="<?=$pk->getPermissionAccessID()?>" onclick="ccm_permissionLaunchDialog(this)" href="javascript:void(0)"><? } ?><?=$pk->getPermissionKeyName()?><? if ($editPermissions) { ?></a><? } ?></td>
@@ -65,7 +63,7 @@ foreach($permissions as $pk) {
 <tr>
 	<td class="ccm-permission-grid-name" ></td>
 	<td>
-	<?=Loader::element('permission/clipboard', array('set' => $permissionset))?>
+	<?=Loader::element('permission/clipboard', array('pkCategory' => $cat))?>
 	</td>
 </tr>
 <? } ?>
