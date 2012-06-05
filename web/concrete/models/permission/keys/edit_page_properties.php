@@ -48,23 +48,23 @@ class EditPagePropertiesPagePermissionKey extends PagePermissionKey  {
 				$asl->setAllowEditPaths(1);
 			}		
 			
-			if ($l->getAccessType() == PagePermissionKey::ACCESS_TYPE_EXCLUDE && $l->allowEditName()) {
+			if ($l->getAccessType() == PagePermissionKey::ACCESS_TYPE_EXCLUDE && !$l->allowEditName()) {
 				$asl->setAllowEditName(0);
 				$excluded[] = 'name';
 			}
-			if ($l->getAccessType() == PagePermissionKey::ACCESS_TYPE_EXCLUDE && $l->allowEditDateTime()) {
+			if ($l->getAccessType() == PagePermissionKey::ACCESS_TYPE_EXCLUDE && !$l->allowEditDateTime()) {
 				$asl->setAllowEditDateTime(0);
 				$excluded[] = 'date';
 			}
-			if ($l->getAccessType() == PagePermissionKey::ACCESS_TYPE_EXCLUDE && $l->allowEditUserID()) {
+			if ($l->getAccessType() == PagePermissionKey::ACCESS_TYPE_EXCLUDE && !$l->allowEditUserID()) {
 				$asl->setAllowEditUserID(0);
 				$excluded[] = 'uID';
 			}
-			if ($l->getAccessType() == PagePermissionKey::ACCESS_TYPE_EXCLUDE && $l->allowEditDescription()) {
+			if ($l->getAccessType() == PagePermissionKey::ACCESS_TYPE_EXCLUDE && !$l->allowEditDescription()) {
 				$asl->setAllowEditDescription(0);
 				$excluded[] = 'description';
 			}
-			if ($l->getAccessType() == PagePermissionKey::ACCESS_TYPE_EXCLUDE && $l->allowEditPaths()) {
+			if ($l->getAccessType() == PagePermissionKey::ACCESS_TYPE_EXCLUDE && !$l->allowEditPaths()) {
 				$asl->setAllowEditPaths(0);
 				$excluded[] = 'paths';
 			}
@@ -239,7 +239,7 @@ class EditPagePropertiesPagePermissionAccess extends PagePermissionAccess {
 		$list = PermissionDuration::filterByActive($list);
 		foreach($list as $l) {
 			$pe = $l->getAccessEntityObject();
-			$prow = $db->GetRow('select attributePermission, name, publicDateTime, uID, description, paths from PagePermissionPropertyAccessList where peID = ? and paID = ?', array($pe->getAccessEntityID(), $this->getPermissionAccessID()));
+			$prow = $db->GetRow('select attributePermission, name, publicDateTime, uID, description, paths from PagePermissionPropertyAccessList where peID = ? and paID = ?', array($pe->getAccessEntityID(), $l->getPermissionAccessID()));
 			if (is_array($prow) && $prow['attributePermission']) { 
 				$l->setAttributesAllowedPermission($prow['attributePermission']);
 				$l->setAllowEditName($prow['name']);
@@ -264,7 +264,7 @@ class EditPagePropertiesPagePermissionAccess extends PagePermissionAccess {
 				$l->setAllowEditPaths(0);
 			}
 			if ($attributePermission == 'C') { 
-				$akIDs = $db->GetCol('select akID from PagePermissionPropertyAttributeAccessListCustom where peID = ? and paID = ?', array($pe->getAccessEntityID(), $this->getPermissionAccessID()));
+				$akIDs = $db->GetCol('select akID from PagePermissionPropertyAttributeAccessListCustom where peID = ? and paID = ?', array($pe->getAccessEntityID(), $l->getPermissionAccessID()));
 				$l->setAttributesAllowedArray($akIDs);
 			}
 		}

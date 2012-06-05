@@ -10,7 +10,13 @@ class SitemapPermissionAccess extends PermissionAccess {
 
 }
 
+class SinglePagePermissionAssignment extends PagePermissionAssignment {
+
+
+}
+
 class SitemapPermissionAccessListItem extends PermissionAccessListItem {
 
 
 }
+

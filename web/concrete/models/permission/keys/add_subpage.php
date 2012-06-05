@@ -141,7 +141,7 @@ class AddSubpagePagePermissionAccess extends PagePermissionAccess {
 		$list = PermissionDuration::filterByActive($list);
 		foreach($list as $l) {
 			$pe = $l->getAccessEntityObject();
-			$prow = $db->GetRow('select permission, externalLink from PagePermissionPageTypeAccessList where peID = ? and paID = ?', array($pe->getAccessEntityID(), $this->getPermissionAccessID()));
+			$prow = $db->GetRow('select permission, externalLink from PagePermissionPageTypeAccessList where peID = ? and paID = ?', array($pe->getAccessEntityID(), $l->getPermissionAccessID()));
 			if (is_array($prow) && $prow['permission']) { 
 				$l->setPageTypesAllowedPermission($prow['permission']);
 				$l->setAllowExternalLinks($prow['externalLink']);
@@ -154,7 +154,7 @@ class AddSubpagePagePermissionAccess extends PagePermissionAccess {
 				$l->setAllowExternalLinks(0);
 			}
 			if ($permission == 'C') { 
-				$ctIDs = $db->GetCol('select ctID from PagePermissionPageTypeAccessListCustom where peID = ? and paID = ?', array($pe->getAccessEntityID(), $this->getPermissionAccessID()));
+				$ctIDs = $db->GetCol('select ctID from PagePermissionPageTypeAccessListCustom where peID = ? and paID = ?', array($pe->getAccessEntityID(), $l->getPermissionAccessID()));
 				$l->setPageTypesAllowedArray($ctIDs);
 			}
 		}

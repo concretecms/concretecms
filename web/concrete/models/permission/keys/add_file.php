@@ -57,13 +57,13 @@ class AddFileFileSetPermissionAccess extends FileSetPermissionAccess {
 		$list = parent::getAccessListItems($accessType, $filterEntities);
 		foreach($list as $l) {
 			$pe = $l->getAccessEntityObject();
-			$permission = $db->GetOne('select permission from FileSetPermissionFileTypeAccessList where peID = ? and paID = ?', array($pe->getAccessEntityID(), $this->getPermissionAccessID()));
+			$permission = $db->GetOne('select permission from FileSetPermissionFileTypeAccessList where peID = ? and paID = ?', array($pe->getAccessEntityID(), $l->getPermissionAccessID()));
 			if ($permission != 'N' && $permission != 'C') {
 				$permission = 'A';
 			}
 			$l->setFileTypesAllowedPermission($permission);
-			if ($permission == 'C') { 
-				$extensions = $db->GetCol('select extension from FileSetPermissionFileTypeAccessListCustom where peID = ? and paID = ?', array($pe->getAccessEntityID(), $this->getPermissionAccessID()));
+			if ($permission == 'C') {
+				$extensions = $db->GetCol('select extension from FileSetPermissionFileTypeAccessListCustom where peID = ? and paID = ?', array($pe->getAccessEntityID(), $l->getPermissionAccessID()));
 				$l->setFileTypesAllowedArray($extensions);
 			}
 		}

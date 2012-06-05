@@ -3,6 +3,9 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 class PermissionAccessListItem extends Object {
 
+	public function getPermissionAccessID() {return $this->paID;}
+	public function setPermissionAccessID($paID) {$this->paID = $paID;}
+
 	public function setAccessType($accessType) {
 		$this->accessType = $accessType;
 	}

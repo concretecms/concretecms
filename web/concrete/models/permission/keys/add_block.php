@@ -118,7 +118,7 @@ class AddBlockBlockTypePermissionAccess extends BlockTypePermissionAccess {
 			if ($this->permissionObjectToCheck instanceof Page && $l->getAccessType() == PermissionKey::ACCESS_TYPE_INCLUDE) {
 				$permission = 'A';
 			} else { 
-				$permission = $db->GetOne('select permission from BlockTypePermissionBlockTypeAccessList where paID = ? and peID = ?', array($this->getPermissionAccessID(), $pe->getAccessEntityID()));
+				$permission = $db->GetOne('select permission from BlockTypePermissionBlockTypeAccessList where paID = ? and peID = ?', array($l->getPermissionAccessID(), $pe->getAccessEntityID()));
 				if ($permission != 'N' && $permission != 'C') {
 					$permission = 'A';
 				}
@@ -126,7 +126,7 @@ class AddBlockBlockTypePermissionAccess extends BlockTypePermissionAccess {
 			}
 			$l->setBlockTypesAllowedPermission($permission);
 			if ($permission == 'C') { 
-				$btIDs = $db->GetCol('select btID from BlockTypePermissionBlockTypeAccessListCustom where paID = ? and peID = ?', array($this->getPermissionAccessID(), $pe->getAccessEntityID()));
+				$btIDs = $db->GetCol('select btID from BlockTypePermissionBlockTypeAccessListCustom where paID = ? and peID = ?', array($l->getPermissionAccessID(), $pe->getAccessEntityID()));
 				$l->setBlockTypesAllowedArray($btIDs);
 			}
 		}

@@ -113,7 +113,7 @@ class EditPageThemePagePermissionAccess extends PagePermissionAccess {
 		$list = PermissionDuration::filterByActive($list);
 		foreach($list as $l) {
 			$pe = $l->getAccessEntityObject();
-			$prow = $db->GetRow('select permission from PagePermissionThemeAccessList where peID = ? and paID = ?', array($pe->getAccessEntityID(), $this->getPermissionAccessID()));
+			$prow = $db->GetRow('select permission from PagePermissionThemeAccessList where peID = ? and paID = ?', array($pe->getAccessEntityID(), $l->getPermissionAccessID()));
 			if (is_array($prow) && $prow['permission']) { 
 				$l->setThemesAllowedPermission($prow['permission']);
 				$permission = $prow['permission'];
@@ -123,7 +123,7 @@ class EditPageThemePagePermissionAccess extends PagePermissionAccess {
 				$l->setThemesAllowedPermission('N');
 			}
 			if ($permission == 'C') { 
-				$ptIDs = $db->GetCol('select ptID from PagePermissionThemeAccessListCustom where peID = ? and paID = ?', array($pe->getAccessEntityID(), $this->getPermissionAccessID()));
+				$ptIDs = $db->GetCol('select ptID from PagePermissionThemeAccessListCustom where peID = ? and paID = ?', array($pe->getAccessEntityID(), $l->getPermissionAccessID()));
 				$l->setThemesAllowedArray($ptIDs);
 			}
 		}

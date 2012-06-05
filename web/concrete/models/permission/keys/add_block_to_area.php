@@ -122,9 +122,9 @@ class AddBlockToAreaAreaPermissionAccess extends AreaPermissionAccess {
 		foreach($list as $l) {
 			$pe = $l->getAccessEntityObject();
 			if ($pobj instanceof Page) {
-				$permission = $db->GetOne('select permission from BlockTypePermissionBlockTypeAccessList where paID = ?', array($this->getPermissionAccessID()));
+				$permission = $db->GetOne('select permission from BlockTypePermissionBlockTypeAccessList where paID = ?', array($l->getPermissionAccessID()));
 			} else { 
-				$permission = $db->GetOne('select permission from AreaPermissionBlockTypeAccessList where paID = ?', array($this->getPermissionAccessID()));
+				$permission = $db->GetOne('select permission from AreaPermissionBlockTypeAccessList where paID = ?', array($l->getPermissionAccessID()));
 			}
 			if ($permission != 'N' && $permission != 'C') {
 				$permission = 'A';
@@ -132,9 +132,9 @@ class AddBlockToAreaAreaPermissionAccess extends AreaPermissionAccess {
 			$l->setBlockTypesAllowedPermission($permission);
 			if ($permission == 'C') { 
 				if ($pobj instanceof Area) { 
-					$btIDs = $db->GetCol('select btID from AreaPermissionBlockTypeAccessListCustom where paID = ?', array($this->getPermissionAccessID()));
+					$btIDs = $db->GetCol('select btID from AreaPermissionBlockTypeAccessListCustom where paID = ?', array($l->getPermissionAccessID()));
 				} else { 
-					$btIDs = $db->GetCol('select btID from BlockTypePermissionBlockTypeAccessListCustom where paID = ?', array($this->getPermissionAccessID()));
+					$btIDs = $db->GetCol('select btID from BlockTypePermissionBlockTypeAccessListCustom where paID = ?', array($l->getPermissionAccessID()));
 				}
 				$l->setBlockTypesAllowedArray($btIDs);
 			}

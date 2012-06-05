@@ -6,12 +6,12 @@ class BasicWorkflowPermissionKey extends WorkflowPermissionKey {
 
 class BasicWorkflowPermissionAssignment extends PermissionAssignment {
 	
-	public function getPermissionAccessID() {
+	public function getPermissionAccessObject() {
 		$db = Loader::db();
  		$r = $db->GetOne('select paID from BasicWorkflowPermissionAssignments where wfID = ? and pkID = ?', array(
  			$this->getPermissionObject()->getWorkflowID(), $this->pk->getPermissionKeyID()
  		));
- 		return $r;
+ 		return PermissionAccess::getByID($r, $this->pk);
 	}
 	
 	public function clearPermissionAssignment() {

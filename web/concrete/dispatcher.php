@@ -100,6 +100,7 @@
 	Loader::model("permission/categories/block_type");
 	Loader::model("permission/categories/file_set");
 	Loader::model("permission/categories/file");
+	Loader::model("permission/categories/stack");
 	Loader::model("permission/categories/area");
 	Loader::model("permission/categories/block");
 	Loader::model("permission/categories/user");

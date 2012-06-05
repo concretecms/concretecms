@@ -45,6 +45,27 @@ class PermissionAccess extends Object {
  		return $list;
 	}
 	
+	public function validate() {
+		$u = new User();
+		if ($u->isSuperUser()) {
+			return true;
+		}
+		$accessEntities = $u->getUserAccessEntityObjects();
+		$valid = false;
+		$list = $this->getAccessListItems(PermissionKey::ACCESS_TYPE_ALL, $accessEntities);
+		$list = PermissionDuration::filterByActive($list);
+		foreach($list as $l) {
+			if ($l->getAccessType() == PermissionKey::ACCESS_TYPE_INCLUDE) {
+				$valid = true;
+			}
+			if ($l->getAccessType() == PermissionKey::ACCESS_TYPE_EXCLUDE) {
+				$valid = false;
+			}
+		}
+		return $valid;		
+		
+	}
+	
 	public static function createByMerge($permissions) {
 		$class = get_class($permissions[0]);
 		$p = new $class();
@@ -58,9 +79,9 @@ class PermissionAccess extends Object {
 	
 	public function getAccessListItems($accessType = PermissionKey::ACCESS_TYPE_INCLUDE, $filterEntities = array()) {
 		if (count($this->paIDList) > 0) {
-			$q = 'select peID, pdID, accessType from PermissionAccessList where paID in (' . implode(',', $this->paIDList) . ')';
+			$q = 'select paID, peID, pdID, accessType from PermissionAccessList where paID in (' . implode(',', $this->paIDList) . ')';
 		} else {
-			$q = 'select peID, pdID, accessType from PermissionAccessList where paID = ' . $this->getPermissionAccessID();
+			$q = 'select paID, peID, pdID, accessType from PermissionAccessList where paID = ' . $this->getPermissionAccessID();
 		}
 		return $this->deliverAccessListItems($q, $accessType, $filterEntities);
 	}

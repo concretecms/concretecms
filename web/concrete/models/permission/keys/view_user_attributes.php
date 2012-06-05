@@ -150,7 +150,7 @@ class ViewUserAttributesUserPermissionAccess extends UserPermissionAccess {
 			if ($this->permissionObjectToCheck instanceof Page && $l->getAccessType() == PermissionKey::ACCESS_TYPE_INCLUDE) {
 				$permission = 'A';
 			} else { 
-				$permission = $db->GetOne('select permission from UserPermissionViewAttributeAccessList where paID = ? and peID = ?', array($this->getPermissionAccessID(), $pe->getAccessEntityID()));
+				$permission = $db->GetOne('select permission from UserPermissionViewAttributeAccessList where paID = ? and peID = ?', array($l->getPermissionAccessID(), $pe->getAccessEntityID()));
 				if ($permission != 'N' && $permission != 'C') {
 					$permission = 'A';
 				}
@@ -158,7 +158,7 @@ class ViewUserAttributesUserPermissionAccess extends UserPermissionAccess {
 			}
 			$l->setAttributesAllowedPermission($permission);
 			if ($permission == 'C') { 
-				$akIDs = $db->GetCol('select akID from UserPermissionViewAttributeAccessListCustom where paID = ? and peID = ?', array($this->getPermissionAccessID(), $pe->getAccessEntityID()));
+				$akIDs = $db->GetCol('select akID from UserPermissionViewAttributeAccessListCustom where paID = ? and peID = ?', array($l->getPermissionAccessID(), $pe->getAccessEntityID()));
 				$l->setAttributesAllowedArray($akIDs);
 			}
 		}

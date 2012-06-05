@@ -59,27 +59,29 @@ class BlockPermissionAssignment extends PermissionAssignment {
 		}
 	}
 
-	public function getPermissionAccessID() {
+	public function getPermissionAccessObject() {
 		$db = Loader::db();
 		if ($this->permissionObjectToCheck instanceof Block) { 
 			$co = $this->permissionObjectToCheck->getBlockCollectionObject();
 			$arHandle = $this->permissionObjectToCheck->getAreaHandle();
-			$r = $db->GetOne('select paID from BlockPermissionAssignments where cID = ? and cvID = ? and bID = ? and pkID = ? ' . $filterString, array(
+			$paID = $db->GetOne('select paID from BlockPermissionAssignments where cID = ? and cvID = ? and bID = ? and pkID = ? ' . $filterString, array(
 				$co->getCollectionID(), $co->getVersionID(), $this->permissionObject->getBlockID(), $this->pk->getPermissionKeyID()
 			));
+			$pae = PermissionAccess::getByID($paID, $this->pk);
 		} else if ($this->permissionObjectToCheck instanceof Area && isset($this->inheritedAreaPermissions[$this->pk->getPermissionKeyHandle()])) { 
-			$inheritedPKID = $db->GetOne('select pkID from PermissionKeys where pkHandle = ?', array($this->inheritedAreaPermissions[$this->pk->getPermissionKeyHandle()]));
-			$r = $db->GetOne('select paID from AreaPermissionAssignments where cID = ? and arHandle = ? and pkID = ? ' . $filterString, array(
-				$this->permissionObjectToCheck->getCollectionID(), $this->permissionObjectToCheck->getAreaHandle(), $inheritedPKID
-			));
+
+			$pk = PermissionKey::getByHandle($this->inheritedAreaPermissions[$this->pk->getPermissionKeyHandle()]);
+			$pk->setPermissionObject($this->permissionObjectToCheck);
+			$pae = $pk->getPermissionAccessObject();			
+
 		} else if ($this->permissionObjectToCheck instanceof Page && isset($this->inheritedPagePermissions[$this->pk->getPermissionKeyHandle()])) { 
-			// this is a page
-			$inheritedPKID = $db->GetOne('select pkID from PermissionKeys where pkHandle = ?', array($this->inheritedPagePermissions[$this->pk->getPermissionKeyHandle()]));
-			$r = $db->GetOne('select paID from PagePermissionAssignments where cID = ? and pkID = ? ' . $filterString, array(
-				$this->permissionObjectToCheck->getPermissionsCollectionID(), $inheritedPKID
-			));
+
+			$pk = PermissionKey::getByHandle($this->inheritedPagePermissions[$this->pk->getPermissionKeyHandle()]);
+			$pk->setPermissionObject($this->permissionObjectToCheck);
+			$pae = $pk->getPermissionAccessObject();			
+
 		}
-		return $r;
+		return $pae;
 	}
 
 	public function clearPermissionAssignment() {

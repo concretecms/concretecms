@@ -97,6 +97,10 @@ abstract class Workflow extends Object {
 	abstract public function canApproveWorkflowProgressObject(WorkflowProgress $wp);
 	abstract public function updateDetails($vars);
 	abstract public function loadDetails();
+	
+	public function getPermissionAccessObject() {
+		return false;
+	}
 }
 
 class EmptyWorkflow extends Workflow {
