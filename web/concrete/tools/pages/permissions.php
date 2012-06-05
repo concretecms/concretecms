@@ -59,58 +59,21 @@ $searchInstance = Loader::helper('text')->entities($_REQUEST['searchInstance']);
 	}
 
 	if ($_REQUEST['subtask'] == 'set' && $permissionsInherit == 'OVERRIDE') { ?>
-		<div id="ccm-page-permissions-list">
-		
-		<? $pk = PagePermissionKey::getByID($_REQUEST['pkID']);
-		$pk->setPermissionObject($pages[0]);
-		$pk->setMultiplePageArray($pages);
-		
-		?>
-		
-		<? if ($pk->getPermissionKeyDescription()) { ?>
-		<div class="dialog-help">
-		<?=$pk->getPermissionKeyDescription()?>
-		</div>
-		<? } ?>
-		
-		<? Loader::element('permission/message_list'); ?>
-		
-		<?
-		$accessTypes = $pk->getSupportedAccessTypes();
-		Loader::element('permission/access_list', array('permissionKey' => $pk, 'accessTypes' => $accessTypes)); ?>
-		
-		<? if ($pk->getPackageID() > 0) { ?>
-			<? Loader::packageElement('permission/keys/' . $pk->getPermissionKeyHandle(), $pk->getPackageHandle(), array('permissionKey' => $pk)); ?>
-		<? } else { ?>
-			<? Loader::element('permission/keys/' . $pk->getPermissionKeyHandle(), array('permissionKey' => $pk)); ?>
-		<? } ?>
-		</div>
-		
-		<script type="text/javascript">
-		ccm_addAccessEntity = function(peID, pdID, accessType) {
-			jQuery.fn.dialog.closeTop();
-			jQuery.fn.dialog.showLoader();
-			
-			$.get('<?=$pk->getPermissionAssignmentObject()->getPermissionKeyToolsURL("add_access_entity")?>&pdID=' + pdID + '&accessType=' + accessType + '&peID=' + peID, function(r) { 
-				$.get('<?=REL_DIR_FILES_TOOLS_REQUIRED?>/pages/permissions?subtask=set&message=entity_added&pkID=<?=$pk->getPermissionKeyID()?><?=$cIDStr?>', function(r) { 
-					jQuery.fn.dialog.replaceTop(r);
-					jQuery.fn.dialog.hideLoader();
-				});
-			});
-		}
-
-		ccm_deleteAccessEntityAssignment = function(peID) {
-			jQuery.fn.dialog.showLoader();
-			$.get('<?=$pk->getPermissionAssignmentObject()->getPermissionKeyToolsURL("remove_access_entity")?>&peID=' + peID, function() { 
-				$.get('<?=REL_DIR_FILES_TOOLS_REQUIRED?>/pages/permissions?subtask=set&message=entity_removed&pkID=<?=$pk->getPermissionKeyID()?><?=$cIDStr?>', function(r) { 
-					jQuery.fn.dialog.replaceTop(r);
-					jQuery.fn.dialog.hideLoader();
-				});
-			});
-		}
 		
 		
-		</script>	
+	<?
+	$pk = PagePermissionKey::getByID($_REQUEST['pkID']);
+	$pk->setPermissionObject($pages[0]);
+	$pk->setMultiplePageArray($pages);
+	
+	?>
+	
+	<? Loader::element("permission/detail", array('permissionKey' => $pk)); ?>
+	
+	
+	<script type="text/javascript">
+	var ccm_permissionDialogURL = '<?=REL_DIR_FILES_TOOLS_REQUIRED?>/pages/permissions?subtask=set<?=$cIDStr?>'; 
+	</script>
 
 	
 	
@@ -143,25 +106,52 @@ $searchInstance = Loader::helper('text')->entities($_REQUEST['searchInstance']);
 	</div>
 	
 	</div>
+	</form>
+	
 	<br/>
 	
 	
 	<? if ($permissionsInherit == 'OVERRIDE') { ?>
 
-	<?=Loader::element('permission/help');?>
-	
-	<table class="ccm-permission-grid">
-	<?
-	$permissions = PermissionKey::getList('page');
-	foreach($permissions as $pk) { 
-		$pk->setPermissionObject($c);
-		?>
-		<tr>
-		<td class="ccm-permission-grid-name"><strong><a dialog-width="500" dialog-height="380" dialog-on-destroy="ccm_refreshPagePermissions()" class="dialog-launch" dialog-title="<?=$pk->getPermissionKeyName()?>" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/pages/permissions?subtask=set&pkID=<?=$pk->getPermissionKeyID()?><?=$cIDStr?>"><?=$pk->getPermissionKeyName()?></a></td>
-		<td><?=Loader::element('permission/labels', array('pk' => $pk))?></td>
-	</tr>
-	<? } ?>
-	</table>
+<?=Loader::element('permission/help');?>
+
+<? $cat = PermissionKeyCategory::getByHandle('page'); ?>
+<form method="post" id="ccm-permission-list-form" action="<?=$cat->getToolsURL("save_permission_assignments")?><?=$cIDStr?>">
+
+<table class="ccm-permission-grid">
+<?
+$permissions = PermissionKey::getList('page');
+foreach($permissions as $pk) { 
+	$pk->setPermissionObject($c);
+	?>
+	<tr>
+	<td class="ccm-permission-grid-name" id="ccm-permission-grid-name-<?=$pk->getPermissionKeyID()?>"><strong><? if ($editPermissions) { ?><a dialog-title="<?=$pk->getPermissionKeyName()?>" data-pkID="<?=$pk->getPermissionKeyID()?>" data-paID="<?=$pk->getPermissionAccessID()?>" onclick="ccm_permissionLaunchDialog(this)" href="javascript:void(0)"><? } ?><?=$pk->getPermissionKeyName()?><? if ($editPermissions) { ?></a><? } ?></td>
+	<td id="ccm-permission-grid-cell-<?=$pk->getPermissionKeyID()?>" <? if ($editPermissions) { ?>class="ccm-permission-grid-cell"<? } ?>><?=Loader::element('permission/labels', array('pk' => $pk))?></td>
+</tr>
+<? } ?>
+</table>
+
+</form>
+
+<script type="text/javascript">
+ccm_permissionLaunchDialog = function(link) {
+	jQuery.fn.dialog.open({
+		title: $(link).attr('dialog-title'),
+		href: '<?=REL_DIR_FILES_TOOLS_REQUIRED?>/pages/permissions?subtask=set<?=$cIDStr?>&pkID=' + $(link).attr('data-pkID') + '&paID=' + $(link).attr('data-paID'),
+		modal: false,
+		width: 500,
+		height: 380
+	});		
+}
+</script>
+
+ <? if ($editPermissions) { ?>
+<div class="dialog-buttons">
+	<a href="javascript:void(0)" onclick="jQuery.fn.dialog.closeTop()" class="btn"><?=t('Cancel')?></a>
+	<button onclick="$('#ccm-permission-list-form').submit()" class="btn primary ccm-button-right"><?=t('Save')?> <i class="icon-ok-sign icon-white"></i></button>
+</div>
+<? } ?>
+
 	
 	<? } else { ?>
 		<? $pkl = PermissionKey::getList('page'); $pk = $pkl[0];?>
@@ -179,11 +169,9 @@ $searchInstance = Loader::helper('text')->entities($_REQUEST['searchInstance']);
 	
 	
 	</form>
-	
-	<? 
-		$pk->setMultiplePageArray($pages);
-	?>
-	
+	<? $pk->setPermissionObject($pages[0]); ?>
+	<? $pk->setMultiplePageArray($pages); ?>
+
 	<script type="text/javascript">
 	var inheritanceVal = '';
 	
@@ -193,14 +181,41 @@ $searchInstance = Loader::helper('text')->entities($_REQUEST['searchInstance']);
 	
 	ccm_pagePermissionsConfirmInheritanceChange = function() { 
 		jQuery.fn.dialog.showLoader();
-		$.get('<?=$pk->getPermissionAssignmentObject()->getPermissionKeyToolsURL("change_permission_inheritance")?>&mode=' + $('#ccm-page-permissions-inherit').val(), function() { 
-			jQuery.fn.dialog.closeTop();
-			ccm_refreshPagePermissions();
+		$.getJSON('<?=$pk->getPermissionAssignmentObject()->getPermissionKeyToolsURL("change_permission_inheritance")?>&mode=' + $('#ccm-page-permissions-inherit').val(), function(r) { 
+			if (r.deferred) {
+				jQuery.fn.dialog.closeAll();
+				jQuery.fn.dialog.hideLoader();
+				ccmAlert.hud(ccmi18n.setPermissionsDeferredMsg, 2000, 'success', ccmi18n_sitemap.setPagePermissions);
+			} else {
+				jQuery.fn.dialog.closeTop();
+				ccm_refreshPagePermissions();
+			}
 		});
 	}
 	
 	
 	$(function() {
+
+		$('#ccm-permission-list-form').ajaxForm({
+			dataType: 'json',
+			
+			beforeSubmit: function() {
+				jQuery.fn.dialog.showLoader();
+			},
+			
+			success: function(r) {
+				jQuery.fn.dialog.hideLoader();
+				jQuery.fn.dialog.closeTop();
+				if (!r.deferred) {
+					ccmAlert.hud(ccmi18n_sitemap.setPagePermissionsMsg, 2000, 'success', ccmi18n_sitemap.setPagePermissions);
+				} else {
+					jQuery.fn.dialog.closeTop();
+					ccmAlert.hud(ccmi18n.setPermissionsDeferredMsg, 2000, 'success', ccmi18n_sitemap.setPagePermissions);
+				}
+	
+			}		
+		});
+
 		inheritanceVal = $('#ccm-page-permissions-inherit').val();
 		$('#ccm-page-permissions-inherit').change(function() {
 			if ($(this).val() == '-1') { 
@@ -218,13 +233,20 @@ $searchInstance = Loader::helper('text')->entities($_REQUEST['searchInstance']);
 				});
 			}
 		});
-		
+
 		$('#ccm-page-permissions-subpages-override-template-permissions').change(function() {
 			jQuery.fn.dialog.showLoader();
-			$.get('<?=$pk->getPermissionAssignmentObject()->getPermissionKeyToolsURL("change_subpage_defaults_inheritance")?>&inherit=' + $(this).val(), function() { 
-				ccm_refreshPagePermissions();
+			$.getJSON('<?=$pk->getPermissionAssignmentObject()->getPermissionKeyToolsURL("change_subpage_defaults_inheritance")?>&inherit=' + $(this).val(), function(r) { 
+				if (r.deferred) {
+					jQuery.fn.dialog.closeTop();
+					jQuery.fn.dialog.hideLoader();
+					ccmAlert.hud(ccmi18n.setPermissionsDeferredMsg, 2000, 'success', ccmi18n_sitemap.setPagePermissions);
+				} else {
+					ccm_refreshPagePermissions();
+				}
 			});
 		});
+		
 		
 	});
 	
