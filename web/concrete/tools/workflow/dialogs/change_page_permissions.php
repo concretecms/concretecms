@@ -12,7 +12,9 @@ if (is_object($wp)) {
 <div class="ccm-ui">
 <table class="ccm-permission-grid table zebra-striped">
 
-<? foreach($req->getPagePermissionSet() as $pkID => $paID) { 
+<? 
+$ps = $req->getPagePermissionSet();
+foreach($ps->getPermissionAssignments() as $pkID => $paID) { 
 	$pk = PermissionKey::getByID($pkID);
 	$pk->setPermissionObject($c);
 ?>
