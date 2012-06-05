@@ -58,6 +58,16 @@ foreach($permissions as $pk) {
 	<td id="ccm-permission-grid-cell-<?=$pk->getPermissionKeyID()?>" <? if ($enablePermissions) { ?>class="ccm-permission-grid-cell"<? } ?>><?=Loader::element('permission/labels', array('pk' => $pk))?></td>
 </tr>
 <? } ?>
+
+<? if ($enablePermissions) { ?>
+<tr>
+	<td class="ccm-permission-grid-name" ></td>
+	<td>
+	<?=Loader::element('permission/clipboard', array('pkCategory' => $cat))?>
+	</td>
+</tr>
+<? } ?>
+
 </table>
 </form>
 
