@@ -27,23 +27,6 @@ class FilePermissionKey extends PermissionKey {
 	}
 	
 	
-	public function getPermissionAccessObject() {
-		$permID = $this->getPermissionAccessID();
-		$perms = array();
-		if (is_array($permID)) {
-			foreach($permID as $paID) {
-				$pa = PermissionAccess::getByID($paID, $this);
-				if (is_object($pa)) {
-					$perms[] = $pa;
-				}
-			}
-			return PermissionAccess::createByMerge($perms);
-		} else {
-			return parent::getPermissionAccessObject();
-		}
-	}
-	
-
 	public function copyFromFileSetToFile() {
 		$db = Loader::db();
 		$paID = $this->getPermissionAccessID();
@@ -84,7 +67,8 @@ class FilePermissionAssignment extends PermissionAssignment {
 		'delete_file' => 'delete_file_set_files'
 	);
 	
-	public function getPermissionAccessID() {
+
+	public function getPermissionAccessObject() {
 		$db = Loader::db();
 		if ($this->permissionObjectToCheck instanceof File) { 
  			$r = $db->GetCol('select paID from FilePermissionAssignments where fID = ? and pkID = ?', array(
@@ -109,12 +93,23 @@ class FilePermissionAssignment extends PermissionAssignment {
 		}
 		
 		if (count($r) == 1) {
-			return $r[0];
+			$permID = $r[0];
 		}
 		if (count($r) > 1) {
-			return $r;
+			$permID = $r;
 		}
 
+		if (is_array($permID)) {
+			foreach($permID as $paID) {
+				$pa = PermissionAccess::getByID($paID, $this->pk);
+				if (is_object($pa)) {
+					$perms[] = $pa;
+				}
+			}
+			return PermissionAccess::createByMerge($perms);
+		} else {
+			return PermissionAccess::getByID($permID, $this->pk);
+		}
 	}
 
 	public function setPermissionObject(File $f) {

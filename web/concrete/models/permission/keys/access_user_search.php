@@ -131,7 +131,7 @@ class AccessUserSearchUserPermissionAccess extends PermissionAccess {
 			if ($this->permissionObjectToCheck instanceof Page && $l->getAccessType() == PermissionKey::ACCESS_TYPE_INCLUDE) {
 				$permission = 'A';
 			} else { 
-				$permission = $db->GetOne('select permission from ' . $this->dbTableAccessList . ' where peID = ? and paID = ?', array($pe->getAccessEntityID(), $this->getPermissionAccessID()));
+				$permission = $db->GetOne('select permission from ' . $this->dbTableAccessList . ' where peID = ? and paID = ?', array($pe->getAccessEntityID(), $l->getPermissionAccessID()));
 				if ($permission != 'N' && $permission != 'C') {
 					$permission = 'A';
 				}
@@ -139,7 +139,7 @@ class AccessUserSearchUserPermissionAccess extends PermissionAccess {
 			}
 			$l->setGroupsAllowedPermission($permission);
 			if ($permission == 'C') { 
-				$gIDs = $db->GetCol('select gID from ' . $this->dbTableAccessListCustom . ' where peID = ? and paID = ?', array($pe->getAccessEntityID(), $this->getPermissionAccessID()));
+				$gIDs = $db->GetCol('select gID from ' . $this->dbTableAccessListCustom . ' where peID = ? and paID = ?', array($pe->getAccessEntityID(), $l->getPermissionAccessID()));
 				$l->setGroupsAllowedArray($gIDs);
 			}
 		}

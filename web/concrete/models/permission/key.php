@@ -247,19 +247,12 @@ abstract class PermissionKey extends Object {
 		if ($u->isSuperUser()) {
 			return true;
 		}
-		$accessEntities = $u->getUserAccessEntityObjects();
-		$valid = false;
-		$list = $this->getAccessListItems(PermissionKey::ACCESS_TYPE_ALL, $accessEntities);
-		$list = PermissionDuration::filterByActive($list);
-		foreach($list as $l) {
-			if ($l->getAccessType() == PermissionKey::ACCESS_TYPE_INCLUDE) {
-				$valid = true;
-			}
-			if ($l->getAccessType() == PermissionKey::ACCESS_TYPE_EXCLUDE) {
-				$valid = false;
-			}
+		$pae = $this->getPermissionAccessObject();
+		if (is_object($pae)) {
+			return $pae->validate();
+		} else {
+			return false;
 		}
-		return $valid;		
 	}
 
 	public function delete() {
@@ -280,11 +273,6 @@ abstract class PermissionKey extends Object {
 			return array();
 		}
 	}
-
-	public function getPermissionAccessID() {
-		$targ = $this->getPermissionAssignmentObject();
-		return $targ->getPermissionAccessID();
-	}
 	
 	public function getPermissionAssignmentObject() {
 		if (is_object($this->permissionObject)) {
@@ -300,7 +288,15 @@ abstract class PermissionKey extends Object {
 
 	
 	public function getPermissionAccessObject() {
-		return PermissionAccess::getByID($this->getPermissionAccessID(), $this);
+		$targ = $this->getPermissionAssignmentObject();
+		return $targ->getPermissionAccessObject();
+	}
+	
+	public function getPermissionAccessID() {
+		$pa = $this->getPermissionAccessObject();
+		if (is_object($pa)) {
+			return $pa->getPermissionAccessID();
+		}
 	}
 
 	public function exportAccess($pxml) {

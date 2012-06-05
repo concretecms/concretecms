@@ -14,3 +14,8 @@ class MarketplaceNewsflowPermissionAccess extends PermissionAccess {
 
 
 }
+
+class MarketplaceNewsflowPermissionAccessListItem extends PermissionAccessListItem {
+
+
+}

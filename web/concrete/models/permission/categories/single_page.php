@@ -10,3 +10,13 @@ class SinglePagePermissionAssignment extends PagePermissionAssignment {
 
 
 }
+
+class SinglePagePermissionAccess extends PagePermissionAccess {
+
+
+}
+
+class SinglePagePermissionAccessListItem extends PagePermissionAccessListItem {
+
+
+}

@@ -50,27 +50,27 @@ class EditUserPropertiesUserPermissionKey extends UserPermissionKey  {
 			if ($l->allowEditDefaultLanguage() && (!in_array('uDefaultLanguage', $excluded))) {
 				$asl->setAllowEditDefaultLanguage(1);
 			}
-			if ($l->getAccessType() == UserPermissionKey::ACCESS_TYPE_EXCLUDE && $l->allowEditUserName()) {
+			if ($l->getAccessType() == UserPermissionKey::ACCESS_TYPE_EXCLUDE && !$l->allowEditUserName()) {
 				$asl->setAllowEditUserName(0);
 				$excluded[] = 'uName';
 			}
-			if ($l->getAccessType() == UserPermissionKey::ACCESS_TYPE_EXCLUDE && $l->allowEditEmail()) {
+			if ($l->getAccessType() == UserPermissionKey::ACCESS_TYPE_EXCLUDE && !$l->allowEditEmail()) {
 				$asl->setAllowEditEmail(0);
 				$excluded[] = 'uEmail';
 			}
-			if ($l->getAccessType() == UserPermissionKey::ACCESS_TYPE_EXCLUDE && $l->allowEditPassword()) {
+			if ($l->getAccessType() == UserPermissionKey::ACCESS_TYPE_EXCLUDE && !$l->allowEditPassword()) {
 				$asl->setAllowEditPassword(0);
 				$excluded[] = 'uPassword';
 			}
-			if ($l->getAccessType() == UserPermissionKey::ACCESS_TYPE_EXCLUDE && $l->allowEditAvatar()) {
+			if ($l->getAccessType() == UserPermissionKey::ACCESS_TYPE_EXCLUDE && !$l->allowEditAvatar()) {
 				$asl->setAllowEditAvatar(0);
 				$excluded[] = 'uAvatar';
 			}
-			if ($l->getAccessType() == UserPermissionKey::ACCESS_TYPE_EXCLUDE && $l->allowEditTimezone()) {
+			if ($l->getAccessType() == UserPermissionKey::ACCESS_TYPE_EXCLUDE && !$l->allowEditTimezone()) {
 				$asl->setAllowEditTimezone(0);
 				$excluded[] = 'uTimezone';
 			}
-			if ($l->getAccessType() == UserPermissionKey::ACCESS_TYPE_EXCLUDE && $l->allowEditDefaultLanguage()) {
+			if ($l->getAccessType() == UserPermissionKey::ACCESS_TYPE_EXCLUDE && !$l->allowEditDefaultLanguage()) {
 				$asl->setAllowEditDefaultLanguage(0);
 				$excluded[] = 'uDefaultLanguage';
 			}

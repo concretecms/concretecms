@@ -55,12 +55,12 @@ class FileSetPermissionAssignment extends PermissionAssignment {
 		}
 	}
 
-	public function getPermissionAccessID() {
+	public function getPermissionAccessObject() {
 		$db = Loader::db();
  		$r = $db->GetOne('select paID from FileSetPermissionAssignments where fsID = ? and pkID = ?', array(
  			$this->permissionObjectToCheck->getFileSetID(), $this->pk->getPermissionKeyID()
  		));
- 		return $r;
+ 		return PermissionAccess::getByID($r, $this->pk);
 	}
 
 	public function clearPermissionAssignment() {

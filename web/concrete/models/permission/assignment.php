@@ -22,7 +22,13 @@ class PermissionAssignment {
 			$task = 'save_permission';
 		}
 		$uh = Loader::helper('concrete/urls');
-		$akc = PermissionKeyCategory::getByID($this->pk->getPermissionKeyCategoryID());
+		$class = substr(get_class($this), 0, strrpos(get_class($this), 'PermissionAssignment'));
+		$handle = Loader::helper('text')->uncamelcase($class);
+		if ($handle) {
+			$akc = PermissionKeyCategory::getByHandle($handle);
+		} else {
+			$akc = PermissionKeyCategory::getByID($this->pk->getPermissionKeyCategoryID());
+		}
 		$url = $uh->getToolsURL('permissions/categories/' . $akc->getPermissionKeyCategoryHandle(), $akc->getPackageHandle());
 		$token = Loader::helper('validation/token')->getParameter($task);
 		$url .= '?' . $token . '&task=' . $task . '&pkID=' . $this->pk->getPermissionKeyID();
@@ -40,11 +46,12 @@ class PermissionAssignment {
 		$pa->markAsInUse();
 	}
 
-	public function getPermissionAccessID() {
+	public function getPermissionAccessObject() {
 		$db = Loader::db();
 		$paID = $db->GetOne('select paID from PermissionAssignments where pkID = ?', array($this->pk->getPermissionKeyID()));
-		return $paID;
+		return PermissionAccess::getByID($paID, $this->pk);
 	}
+
 
 
 }
