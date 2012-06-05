@@ -112,12 +112,13 @@ if (count($pages) > 0) {
 		foreach($pages as $c) { 
 			$pkr = new ChangePagePermissionsPageWorkflowRequest();
 			$pkr->setRequestedPage($c);
-			$permissionSet = array();
+			$ps = new PermissionSet();
+			$ps->setPermissionKeyCategory('page');
 			foreach($permissions as $pk) {
 				$paID = $_POST['pkID'][$pk->getPermissionKeyID()];
-				$permissionSet[$pk->getPermissionKeyID()] = $paID;
+				$ps->addPermissionAssignment($pk->getPermissionKeyID(), $paID);
 			}
-			$pkr->setPagePermissionSet($permissionSet);
+			$pkr->setPagePermissionSet($ps);
 			$pkr->setRequesterUserID($u->getUserID());
 			$u->unloadCollectionEdit($c);
 			$response = $pkr->trigger();

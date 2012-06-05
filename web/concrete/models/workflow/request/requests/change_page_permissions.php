@@ -17,7 +17,7 @@ class ChangePagePermissionsPageWorkflowRequest extends PageWorkflowRequest {
 		parent::__construct($pk);
 	}
 	
-	public function setPagePermissionSet($set) {
+	public function setPagePermissionSet(PermissionSet $set) {
 		$this->permissionSet = $set;
 	}
 
@@ -72,8 +72,11 @@ class ChangePagePermissionsPageWorkflowRequest extends PageWorkflowRequest {
 	public function approve(WorkflowProgress $wp) {
 		$c = Page::getByID($this->getRequestedPageID());
 		$permissions = PermissionKey::getList('page');
+		$ps = $this->getPagePermissionSet();
+		$assignments = $ps->getPermissionAssignments();
+		
 		foreach($permissions as $pk) {
-			$paID = $this->permissionSet[$pk->getPermissionKeyID()];
+			$paID = $assignments[$pk->getPermissionKeyID()];
 			$pk->setPermissionObject($c);
 			$pt = $pk->getPermissionAssignmentObject();
 			$pt->clearPermissionAssignment();
