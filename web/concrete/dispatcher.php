@@ -95,6 +95,7 @@
 	Loader::model('permission/assignment');
 	Loader::model('permissions');
 	Loader::model('permission/response');
+	Loader::model('permission/set');
 	Loader::model("permission/categories/page");
 	Loader::model("permission/categories/task");
 	Loader::model("permission/categories/block_type");

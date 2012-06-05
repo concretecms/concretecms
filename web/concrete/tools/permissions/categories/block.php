@@ -88,7 +88,8 @@ if (is_object($a)) {
 			$pe = GroupPermissionAccessEntity::getOrCreate(Group::getByID(GUEST_GROUP_ID));
 			$pd = PermissionDuration::translateFromRequest();
 			$pa->addListItem($pe, $pd, BlockPermissionKey::ACCESS_TYPE_INCLUDE);
-			$pk->assignPermissionAccess($pa);
+			$pt = $pk->getPermissionAssignmentObject();
+			$pt->assignPermissionAccess($pa);
 		}
 	}
 }

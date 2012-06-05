@@ -75,7 +75,6 @@ class BlockPermissionAssignment extends PermissionAssignment {
 			$pae = $pk->getPermissionAccessObject();			
 
 		} else if ($this->permissionObjectToCheck instanceof Page && isset($this->inheritedPagePermissions[$this->pk->getPermissionKeyHandle()])) { 
-
 			$pk = PermissionKey::getByHandle($this->inheritedPagePermissions[$this->pk->getPermissionKeyHandle()]);
 			$pk->setPermissionObject($this->permissionObjectToCheck);
 			$pae = $pk->getPermissionAccessObject();			
