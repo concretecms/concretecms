@@ -33,8 +33,7 @@ class DateArchiveBlockController extends BlockController {
 		
 		$query = "SELECT MIN(cv.cvDatePublic) as firstPost 
 			FROM CollectionVersions cv 
-			INNER JOIN Pages p ON cv.cID = p.cID
-			INNER JOIN PageTypes pt ON p.ctID = pt.ctID
+			INNER JOIN PageTypes pt ON cv.ctID = pt.ctID
 			WHERE pt.ctHandle IN ('blog_entry') and cvIsApproved = 1";
 		$db = Loader::db();
 		$firstPost = $db->getOne($query);

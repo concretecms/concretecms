@@ -88,7 +88,7 @@
 			$cv = new CollectionVersion();
 			$db = Loader::db();
 			
-			$q = "select cvID, cvIsApproved, cvIsNew, cvHandle, cvName, cvDescription, cvDateCreated, cvDatePublic, cvAuthorUID, cvApproverUID, cvComments, ptID, CollectionVersions.ctID, ctHandle from CollectionVersions left join PageTypes on CollectionVersions.ctID = PageTypes.ctID where cID = ? and cvID = ?";
+			$q = "select cvID, cvIsApproved, cvIsNew, cvHandle, cvName, cvDescription, cvDateCreated, cvDatePublic, cvAuthorUID, cvApproverUID, cvComments, ptID, CollectionVersions.ctID, ctHandle, ctName from CollectionVersions left join PageTypes on CollectionVersions.ctID = PageTypes.ctID where cID = ? and cvID = ?";
 
 			$r = $db->query($q, array($c->getCollectionID(), $cvID));
 			if ($r) {
@@ -264,6 +264,13 @@
 						}
 					}
 				}
+			}
+
+			if ($c->getCollectionInheritance() == 'TEMPLATE') {
+				// we make sure to update the cInheritPermissionsFromCID value
+				$ct = CollectionType::getByID($c->getCollectionTypeID());
+				$masterC = $ct->getMasterTemplate();
+				$db->Execute('update Pages set cInheritPermissionsFromCID = ? where cID = ?', array($masterC->getCollectionID(), $c->getCollectioniD()));
 			}
 
 			Events::fire('on_page_version_approve', $c);
