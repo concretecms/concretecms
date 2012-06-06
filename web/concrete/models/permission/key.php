@@ -68,12 +68,18 @@ abstract class PermissionKey extends Object {
 			$pkgHandle = PackageList::getHandle($r['pkgID']);	
 			$file1 = DIR_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_MODELS . '/' . DIRNAME_PERMISSIONS . '/' . DIRNAME_KEYS . '/' . $r['pkHandle'] . '.php';
 			$file2 = DIR_PACKAGES_CORE . '/' . $pkgHandle . '/' . DIRNAME_MODELS . '/' . DIRNAME_PERMISSIONS . '/' . DIRNAME_KEYS . '/' . $r['pkHandle'] . '.php';
+			$file3 = DIR_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_MODELS . '/' . DIRNAME_PERMISSIONS . '/categories/' . $r['pkCategoryHandle'] . '.php';
+			$file4 = DIR_PACKAGES_CORE . '/' . $pkgHandle . '/' . DIRNAME_MODELS . '/' . DIRNAME_PERMISSIONS . '/categories/' . $r['pkCategoryHandle'] . '.php';
 			if (file_exists($file1)) {
 				require_once($file1);
 				$class = Loader::helper('text')->camelcase($r['pkHandle']) . $class;
 			} else if (file_exists($file2)) {
 				require_once($file2);
 				$class = Loader::helper('text')->camelcase($r['pkHandle']) . $class;
+			} else if (file_exists($file3)) {
+				require_once($file3);
+			} else if (file_exists($file4)) {
+				require_once($file4);
 			}			
 		} else {
 			$file1 = DIR_BASE . '/' . DIRNAME_MODELS . '/' . DIRNAME_PERMISSIONS . '/' . DIRNAME_KEYS . '/' . $r['pkHandle'] . '.php';

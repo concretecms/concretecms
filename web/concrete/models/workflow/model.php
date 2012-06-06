@@ -61,7 +61,7 @@ abstract class Workflow extends Object {
 		$this->setPropertiesFromArray($r);
 	}
 	
-	final static function getByID($wfID) {
+	public static function getByID($wfID) {
 		$db = Loader::db();
 		$r = $db->GetRow('select WorkflowTypes.wftHandle, WorkflowTypes.pkgID from Workflows inner join WorkflowTypes on Workflows.wftID = WorkflowTypes.wftID where Workflows.wfID = ?', array($wfID));
 		if ($r['wftHandle']) { 

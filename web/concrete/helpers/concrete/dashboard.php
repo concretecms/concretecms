@@ -97,6 +97,9 @@ class ConcreteDashboardHelper {
 				$relatedPages = '<ul id="ccm-page-navigate-pages-content" class="dropdown-menu">';
 		
 				foreach($subpagesP as $sc) { 
+					if ($sc->getAttribute('exclude_nav')) {
+						continue;
+					}
 		
 					if ($c->getCollectionPath() == $sc->getCollectionPath() || (strpos($c->getCollectionPath(), $sc->getCollectionPath()) == 0) && strpos($c->getCollectionPath(), $sc->getCollectionPath()) !== false) {
 						$class= 'nav-selected';
