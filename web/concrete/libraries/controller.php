@@ -102,7 +102,11 @@ class Controller {
 				}
 			}
 		} catch(Exception $e) {
-		
+         		// In case the controller contains the method __call we
+         		// forward all tasks to the class.
+		        if (in_array('__call', get_class_methods(get_class($this)))) {
+            			$foundTask = true;
+         		}
 		}
 			
 		if ($foundTask) {
