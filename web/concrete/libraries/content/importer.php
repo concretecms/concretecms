@@ -104,7 +104,7 @@ class ContentImporter {
 		Loader::model('single_page');
 		if (isset($sx->singlepages)) {
 			foreach($sx->singlepages->page as $px) {
-				$page = Page::getByPath($px['path']);
+				$page = Page::getByPath($px['path'], 'RECENT');
 				if (isset($px->area)) {
 					$this->importPageAreas($page, $px);
 				}
@@ -136,7 +136,7 @@ class ContentImporter {
 		if (isset($sx->pages)) {
 			foreach($sx->pages->page as $px) {
 				if ($px['path'] != '') {
-					$page = Page::getByPath($px['path']);
+					$page = Page::getByPath($px['path'], 'RECENT');
 				} else {
 					$page = Page::getByID(HOME_CID, 'RECENT');
 				}
@@ -174,15 +174,14 @@ class ContentImporter {
 					$data['pkgID'] = $pkg->getPackageID();
 				}
 				$args = array();
+				$ct = CollectionType::getByHandle($px['pagetype']);
 				if ($px['path'] == '') {
 					// home page
 					$page = $home;
-					$ct = CollectionType::getByHandle($px['pagetype']);
 					$args['ctID'] = $ct->getCollectionTypeID();
 				} else {
 					$page = Page::getByPath($px['path']);
 					if (!is_object($page) || ($page->isError())) {
-						$ct = CollectionType::getByHandle($px['pagetype']);
 						$lastSlash = strrpos((string) $px['path'], '/');
 						$parentPath = substr((string) $px['path'], 0, $lastSlash);
 						$data['cHandle'] = substr((string) $px['path'], $lastSlash + 1);
@@ -197,6 +196,7 @@ class ContentImporter {
 				}
 				$args['cName'] = $px['name'];
 				$args['cDescription'] = $px['description'];
+				$args['ctID'] = $ct->getCollectionTypeID();
 				$page->update($args);
 			}
 		}
@@ -212,10 +212,11 @@ class ContentImporter {
 						$btc = $bt->getController();
 						$btc->import($page, (string) $ax['name'], $bx);
 					} else if ($bx['mc-block-id'] != '') {
+					
 						// we find that block in the master collection block pool and alias it out
 						$bID = array_search((string) $bx['mc-block-id'], self::$mcBlockIDs);
 						if ($bID) {
-							$mc = Page::getByID($page->getMasterCollectionID());
+							$mc = Page::getByID($page->getMasterCollectionID(), 'RECENT');
 							$block = Block::getByID($bID, $mc, (string) $ax['name']);
 							$block->alias($page);
 						}
@@ -257,7 +258,7 @@ class ContentImporter {
 		if (isset($sx->pagetypes)) {
 			foreach($sx->pagetypes->pagetype as $ct) {
 				$ctr = CollectionType::getByHandle((string) $ct['handle']);
-				$mc = Page::getByID($ctr->getMasterCollectionID());
+				$mc = Page::getByID($ctr->getMasterCollectionID(), 'RECENT');
 				if (isset($ct->page)) {
 					$this->importPageAreas($mc, $ct->page);
 				}
@@ -265,19 +266,6 @@ class ContentImporter {
 					$ctr = CollectionType::getByHandle((string) $ct['handle']);
 					$ctr->importComposerSettings($ct->composer);
 				}
-				
-				// now, we copy all the content from these defaults out to the page that they're on.
-				/*
-				$r = $db->Execute('select arHandle, bID from CollectionVersionBlocks where cID = ?', array($ctr->getMasterCollectionID()));
-				$cs = $db->GetCol('select cID from Pages where ctID = ?', array($ctr->getCollectionTypeID()));
-				while ($row = $r->FetchRow()) {
-					$block = Block::getByID($row['bID'], $mc, $row['arHandle']);
-					foreach($cs as $cID) {
-						$newC = Page::getByID($cID, 'RECENT');
-						$block->alias($newC);
-					}
-				}
-				*/
 			}
 		}
 	}

@@ -59,7 +59,6 @@ $(function() {
 
 </script>
 
-
 <div class="page-header">
 <h1><?=t('Install concrete5')?></h1>
 </div>
@@ -116,6 +115,8 @@ $(function() {
 });
 </script>
 
+<div class="span14 offset1">
+
 <div class="page-header">
 <h1><?=t('Install concrete5')?></h1>
 </div>
@@ -123,7 +124,7 @@ $(function() {
 <form action="<?=$this->url('/install', 'configure')?>" method="post" class="form-horizontal">
 
 <div class="row">
-<div class="span8 columns">
+<div class="span7">
 
 	<input type="hidden" name="locale" value="<?=$locale?>" />
 	
@@ -162,7 +163,7 @@ $(function() {
 	</fieldset>
 
 </div>
-<div class="span8 columns">
+<div class="span7">
 
 	<fieldset>
 		<legend><?=t('Database Information')?></legend>
@@ -198,7 +199,7 @@ $(function() {
 </div>
 
 <div class="row">
-<div class="span16 columns">
+<div class="span14">
 
 <h3><?=t('Sample Content')?></h3>
 
@@ -217,8 +218,8 @@ $(function() {
 
 		<tr class="<? if ($this->post('SAMPLE_CONTENT') == $pkgHandle || (!$this->post('SAMPLE_CONTENT') && $pkgHandle == 'standard') || count($availableSampleContent) == 1) { ?>package-selected<? } ?>">
 			<td><?=$form->radio('SAMPLE_CONTENT', $pkgHandle, ($pkgHandle == 'standard' || count($availableSampleContent) == 1))?></td>
-			<td><img src="<?=$uh->getPackageIconURL($spl)?>" width="97" height="97" alt="<?=$spl->getPackageName()?>" /></td>
-			<td width="100%"><h4><?=$spl->getPackageName()?></h4><p><?=$spl->getPackageDescription()?></td>
+			<td class="sample-content-thumbnail"><img src="<?=$uh->getPackageIconURL($spl)?>" width="97" height="97" alt="<?=$spl->getPackageName()?>" /></td>
+			<td class="sample-content-description" width="100%"><h4><?=$spl->getPackageName()?></h4><p><?=$spl->getPackageDescription()?></td>
 		</tr>
 		
 		<? } ?>
@@ -238,6 +239,7 @@ $(function() {
 	<button class="btn btn-large primary" type="submit"><i class="icon-thumbs-up icon-white"></i> <?=t('Install concrete5')?></button>
 </div>
 </form>
+</div>
 
 <? } else if (isset($locale) || count($locales) == 0) { ?>
 
@@ -282,7 +284,7 @@ $(function() {
 });
 </script>
 
-
+<div class="span14 offset1">
 <div class="page-header">
 	<h1><?=t('Install concrete5')?></h1>
 </div>
@@ -290,7 +292,7 @@ $(function() {
 
 <h3><?=t('Testing Required Items')?></h3>
 <div class="row">
-<div class="span8 columns">
+<div class="span7 columns">
 
 <table class="requirements-table table">
 <tbody>
@@ -320,7 +322,7 @@ $(function() {
 </table>
 
 </div>
-<div class="span8 columns">
+<div class="span7 columns">
 
 <table class="requirements-table table">
 
@@ -354,7 +356,7 @@ $(function() {
 <h3><?=t('Testing Optional Items')?></h3>
 
 <div class="row">
-<div class="span8 columns">
+<div class="span7 columns">
 
 
 <table class="requirements-table table">
@@ -368,7 +370,7 @@ $(function() {
 </table>
 
 </div>
-<div class="span8 columns">
+<div class="span7 columns">
 <table class="requirements-table table">
 
 <tr>
@@ -402,9 +404,11 @@ $(function() {
 <div class="block-message alert-message info">
 <?=t('Having trouble? Check the <a href="%s">installation help forums</a>, or <a href="%s">have us host a copy</a> for you.', 'http://www.concrete5.org/community/forums/installation', 'http://www.concrete5.org/services/hosting')?>
 </div>
+</div>
 
 <? } else { ?>
 
+<div class="span14 offset1">
 
 <div class="page-header">
 	<h1><?=t('Install concrete5')?></h1>
@@ -429,6 +433,7 @@ $(function() {
 </fieldset>
 </form>
 
+</div>
 </div>
 
 <? } ?>

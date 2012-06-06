@@ -45,7 +45,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				$r->free();
 				if (is_array($row)) {
 					$ct = new CollectionType; 
-					$row['mcID'] = $db->GetOne("select cID from Pages where ctID = ? and cIsTemplate = 1", array($row['ctID']));
+					$row['mcID'] = $db->GetOne("select p.cID from Pages p inner join CollectionVersions cv on p.cID = cv.cID where ctID = ? and cIsTemplate = 1", array($row['ctID']));
 					$ct->setPropertiesFromArray($row);
 					$ct->setComposerProperties();
 				}					
@@ -84,7 +84,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				$row = $r->fetchRow();
 				$r->free();
 				if (is_array($row)) {
-					$row['mcID'] = $db->GetOne("select cID from Pages where ctID = ? and cIsTemplate = 1", array($row['ctID']));
+					$row['mcID'] = $db->GetOne("select p.cID from Pages p inner join CollectionVersions cv on p.cID = cv.cID where ctID = ? and cIsTemplate = 1", array($row['ctID']));
 					$ct = new CollectionType; 
 					$ct->setPropertiesFromArray($row);
 					$ct->setComposerProperties();
@@ -251,7 +251,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 			// the purpose for this class? Well, we get an array of collection type objects,
 			// we don't do a join because on big sites it's actually slower
-			$mcIDs = $db->GetAll("select cID, ctID from Pages where cIsTemplate = 1");
+			$mcIDs = $db->GetAll("select p.cID, cv.ctID from Pages p inner join CollectionVersions cv on p.cID = cv.cID where cIsTemplate = 1");
 			$masterCollectionIDs = array();
 			foreach($mcIDs as $mc) {
 				$masterCollectionIDs[$mc['ctID']] = $mc['cID'];
@@ -317,14 +317,14 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				// now that we've created the collection type, we create the master collection
 				$dh = Loader::helper('date');
 				$cDate = $dh->getSystemDateTime();
-				
+				$data['ctID'] = $ctID;
 				$cobj = Collection::add($data);
 				$cID = $cobj->getCollectionID();
 				
 				$mcName = ($data['cName']) ? $data['cName'] : "MC: {$data['ctName']}";
 				$mcDescription = $data['cDescription'] ? $data['cDescription'] : "Master Collection For {$data['ctName']}";
-				$v2 = array($cID, $ctID, 1, $pkgID);
-				$q2 = "insert into Pages (cID, ctID, cIsTemplate, pkgID) values (?, ?, ?, ?)";
+				$v2 = array($cID, 1, $pkgID);
+				$q2 = "insert into Pages (cID, cIsTemplate, pkgID) values (?, ?, ?)";
 				$r2 = $db->prepare($q2);
 				$res2 = $db->execute($r2, $v2);
 				if ($res2) {

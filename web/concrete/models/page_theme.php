@@ -651,9 +651,9 @@ class PageTheme extends Object {
 	}
 	
 	public function applyToSite() {
-		// applies the current theme to the entire site by overriding the theme on the home page
 		$db = Loader::db();
-		$r = $db->query("update Pages left join Packages on Pages.pkgID = Packages.pkgID set Pages.ptID = ? where cIsTemplate = 0 and (Packages.pkgHandle <> 'core' or pkgHandle is null or Pages.ctID > 0)", array($this->ptID));
+
+		$r = $db->query("update CollectionVersions inner join Pages on CollectionVersions.cID = Pages.cID left join Packages on Pages.pkgID = Packages.pkgID set CollectionVersions.ptID = ? where cIsTemplate = 0 and (Packages.pkgHandle <> 'core' or pkgHandle is null or CollectionVersions.ctID > 0)", array($this->ptID));
 		Cache::flush();
 	}
 	

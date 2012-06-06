@@ -19,7 +19,7 @@ class SinglePage extends Page {
 
 	public static function getListByPackage($pkg) {
 		$db = Loader::db();
-		$r = $db->Execute("select cID from Pages where ctID = 0 and cFilename is not null and pkgID = ?", $pkg->getPackageID());
+		$r = $db->Execute("select cID from Pages where cFilename is not null and pkgID = ?", $pkg->getPackageID());
 		$singlePages = array();
 		while ($row = $r->FetchRow()) {
 			$singlePages[] = SinglePage::getByID($row['cID']);
@@ -108,7 +108,7 @@ class SinglePage extends Page {
 	}
 
 	public static function getByID($cID, $version = 'RECENT') {
-		$where = "where Pages.cID = ? and Pages.ctID = 0 and Pages.cFilename is not null";
+		$where = "where Pages.cID = ? and Pages.cFilename is not null";
 		$c = new SinglePage;
 		$c->populatePage($cID, $where, $version);
 		return $c;
@@ -276,7 +276,7 @@ class SinglePage extends Page {
 	// returns all pages in the site that are "single" 
 	public static function getList() {
 		$db = Loader::db();
-		$r = $db->query("select Pages.cID from Pages inner join Collections on Pages.cID = Collections.cID where cFilename is not null and ctID = 0 order by cDateModified desc");
+		$r = $db->query("select Pages.cID from Pages inner join Collections on Pages.cID = Collections.cID where cFilename is not null order by cDateModified desc");
 		$pages = array();
 		while ($row = $r->fetchRow()) {
 			$p = new SinglePage;

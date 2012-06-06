@@ -64,7 +64,7 @@ class Page extends Collection {
 	protected function populatePage($cInfo, $where, $cvID) {
 		$db = Loader::db();
 		
-		$q0 = "select Pages.cID, Pages.pkgID, Pages.cPointerID, Pages.cPointerExternalLink, Pages.cIsActive, Pages.cIsSystemPage, Pages.cPointerExternalLinkNewWindow, Pages.cFilename, Collections.cDateAdded, Pages.cDisplayOrder, Collections.cDateModified, cInheritPermissionsFromCID, cInheritPermissionsFrom, cOverrideTemplatePermissions, cCheckedOutUID, cIsTemplate, uID, cPath, Pages.ctID, ctHandle, ctIcon, ptID, cParentID, cChildren, ctName, cCacheFullPageContent, cCacheFullPageContentOverrideLifetime, cCacheFullPageContentLifetimeCustom from Pages inner join Collections on Pages.cID = Collections.cID left join PageTypes on (PageTypes.ctID = Pages.ctID) left join PagePaths on (Pages.cID = PagePaths.cID and PagePaths.ppIsCanonical = 1) ";
+		$q0 = "select Pages.cID, Pages.pkgID, Pages.cPointerID, Pages.cPointerExternalLink, Pages.cIsActive, Pages.cIsSystemPage, Pages.cPointerExternalLinkNewWindow, Pages.cFilename, Collections.cDateAdded, Pages.cDisplayOrder, Collections.cDateModified, cInheritPermissionsFromCID, cInheritPermissionsFrom, cOverrideTemplatePermissions, cCheckedOutUID, cIsTemplate, uID, cPath, cParentID, cChildren, cCacheFullPageContent, cCacheFullPageContentOverrideLifetime, cCacheFullPageContentLifetimeCustom from Pages inner join Collections on Pages.cID = Collections.cID left join PagePaths on (Pages.cID = PagePaths.cID and PagePaths.ppIsCanonical = 1) ";
 		//$q2 = "select cParentID, cPointerID, cPath, Pages.cID from Pages left join PagePaths on (Pages.cID = PagePaths.cID and PagePaths.ppIsCanonical = 1) ";
 		
 		$v = array($cInfo);
@@ -283,7 +283,7 @@ class Page extends Collection {
 	 */
 	function isGeneratedCollection() {
 		// generated collections are collections without types, that have special cFilename attributes
-		return $this->cFilename != null && $this->ctID == 0;
+		return $this->cFilename != null && $this->vObj->ctID == 0;
 	}
 	
 	public function assignPermissions($userOrGroup, $permissions = array(), $accessType = PagePermissionKey::ACCESS_TYPE_INCLUDE) {
@@ -376,163 +376,6 @@ class Page extends Collection {
 	
 	
 	/**
-	 * Assign permissions to a page based on an array
-	 * <code>
-	 * $pxml->guests['canRead'] = 1;
-	 * $pxml->registered['canWrite'] = 1;
-	 * $pxml->group[0]['canWrite'] = 1;
-	 * $pxml->group[0]['canRead'] = 1;
-	 * </code>
-	 * @param array $permissionsArray
-	 */	
-	/*
-	function assignPermissionSet($permissionsArray) {
-		$db = Loader::db();
-		// first, we make sure to set this collection's permission inheritance to override
-		if ($this->getCollectionInheritance() != 'OVERRIDE') {
-			// now, if we were inheriting permissions from elsewhere, we'll grab those, copy them to this node, before we
-			// assign/add new permission
-			$v = array($this->getPermissionsCollectionID());
-			$q = "select cID, uID, gID, cgPermissions, cgStartDate, cgEndDate from PagePermissions where cID = ?";
-			$r = $db->query($q, $v);
-			while($row = $r->fetchRow()) {
-				$v = array($this->cID, $row['uID'], $row['gID'], $row['cgPermissions'], $row['cgStartDate'], $row['cgEndDate']);
-				$q = "insert into PagePermissions (cID, uID, gID, cgPermissions, cgStartDate, cgEndDate) values (?, ?, ?, ?, ?, ?)";
-				$db->query($q, $v);
-			}
-			$v = array($this->getPermissionsCollectionID());
-			$q = "select cID, uID, gID, ctID from PagePermissionPageTypes where cID = ?";
-			$r = $db->query($q, $v);
-			while($row = $r->fetchRow()) {
-				$v = array($this->cID, $row['uID'], $row['gID'], $row['ctID']);
-				$q = "insert into PagePermissionPageTypes (cID, uID, gID, ctID) values (?, ?, ?, ?)";
-				$db->query($q, $v);
-			}
-			// ack - we need to copy area permissions from that page as well
-			// wait, i'm not sure if we need to do this anymore. 
-			
-			$v = array($this->getPermissionsCollectionID());
-			$q = "select cID, arHandle, gID, uID, agPermissions from AreaGroups where cID = ?";
-			$r = $db->query($q, $v);
-			while($row = $r->fetchRow()) {
-				$v = array($this->cID, $row['arHandle'], $row['gID'], $row['uID'], $row['agPermissions']);
-				$q = "insert into AreaGroups (cID, arHandle, gID, uID, agPermissions) values (?, ?, ?, ?, ?)";
-				$db->query($q, $v);
-			}
-
-			$v = array($this->getPermissionsCollectionID());
-			$q = "select cID, arHandle, gID, uID, btID from AreaGroupBlockTypes where cID = ?";
-			$r = $db->query($q, $v);
-			while($row = $r->fetchRow()) {
-				$v = array($this->cID, $row['arHandle'], $row['gID'], $row['uID'], $row['btID']);
-				$q = "insert into AreaGroupBlockTypes (cID, arHandle, gID, uID, btID) values (?, ?, ?, ?, ?)";
-				$db->query($q, $v);
-			}
-			
-
-		}
-		// now that we're done copying, we set the collection to override
-		$q = "update Pages set cInheritPermissionsFromCID = {$this->cID}, cInheritPermissionsFrom = 'OVERRIDE' where cID = {$this->cID}";
-		$r = $db->query($q);
-		
-		$this->cInheritPermissionsFromCID = $this->cID;
-		$this->cInheritPermissionsFrom = 'OVERRIDE';
-		
-		// permissions format is read from XML into an array by simplexml
-		// this gets us something like this
-		// $pxml->guests['canRead'] = 1;
-		// $pxml->registered['canWrite'] = 1;
-		// $pxml->group[0]['canWrite'] = 1;
-		// $pxml->group[0]['canRead'] = 1;
-		
-		$px = $permissionsArray;
-		
-		// this is too verbose but i don't know of a good place to stash a reusable function :-( 
-		
-		// not sure if we want to ALWAYS remove permissions for everything then stack the new ones
-		// or not, so for now i'm commenting out the selective removal and removing everything
-		// THIS IS DUMB: If you want to turn off permissions for a group don't auto-delete them just make sure
-		// your permissions XML set's them to not be able to read
-		
-		//$db->query("delete from PagePermissions where cID = '{$this->cID}'");
-		
-		if (isset($px->guests)) {
-			$permissions = Permissions::buildPermissionsFromArray($px->guests);
-			$q = "delete from PagePermissions where cID = '{$this->cID}' and gID = " . GUEST_GROUP_ID;
-			$r = $db->query($q);
-			if ($permissions != '') {
-				$v = array($this->cID, GUEST_GROUP_ID, $permissions, $px->guests['cgStartDate'], $px->guests['cgEndDate']);
-				$q = "insert into PagePermissions (cID, gID, cgPermissions, cgStartDate, cgEndDate) values (?, ?, ?, ?, ?)";
-				$db->query($q, $v);
-			}
-			
-		}
-		if (isset($px->registered)) {
-			$permissions = Permissions::buildPermissionsFromArray($px->registered);
-			$q = "delete from PagePermissions where cID = '{$this->cID}' and gID = " . REGISTERED_GROUP_ID;
-			$r = $db->query($q);
-			if ($permissions != '') {
-				$v = array($this->cID, REGISTERED_GROUP_ID, $permissions, $px->registered['cgStartDate'], $px->registered['cgEndDate']);
-				$q = "insert into PagePermissions (cID, gID, cgPermissions, cgStartDate, cgEndDate) values (?, ?, ?, ?, ?)";
-				$db->query($q, $v);
-			}
-		}
-		if (isset($px->administrators)) {
-			$permissions = Permissions::buildPermissionsFromArray($px->administrators);
-			$q = "delete from PagePermissions where cID = '{$this->cID}' and gID = " . ADMIN_GROUP_ID;
-			$r = $db->query($q);
-			if ($permissions != '') {
-				$v = array($this->cID, ADMIN_GROUP_ID, $permissions, $px->administrators['cgStartDate'], $px->administrators['cgEndDate']);
-				$q = "insert into PagePermissions (cID, gID, cgPermissions, cgStartDate, cgEndDate) values (?, ?, ?, ?, ?)";
-				$db->query($q, $v);
-			}
-		}		
-		if (isset($px->group)) {
-			foreach($px->group as $g) {
-				
-				$permissions = Permissions::buildPermissionsFromArray($g);
-				$gID = $g['gID'];
-				if (isset($g['gName'])) {
-					$gID = $db->getOne("select gID from Groups where gName = ?", array($g['gName']));
-				}
-				
-				$q = "delete from PagePermissions where cID = '{$this->cID}' and gID = " . $gID;
-				$r = $db->query($q);
-				if ($permissions != '') {
-					$v = array($this->cID, $gID, $permissions, $g['cgStartDate'], $g['cgEndDate']);
-					$q = "insert into PagePermissions (cID, gID, cgPermissions, cgStartDate, cgEndDate) values (?, ?, ?, ?, ?)";
-					$db->query($q, $v);
-				}
-			
-			}
-		}
-		
-		if (isset($px->user)) {
-			foreach($px->user as $_u) {
-				
-				$permissions = Permissions::buildPermissionsFromArray($_u);
-				$uID = $_u['uID'];
-				if (isset($_u['uName'])) {
-					$uID = $db->getOne("select uID from Users where uName = ?", array($_u['uName']));
-				}
-				
-				$q = "delete from PagePermissions where cID = '{$this->cID}' and uID = " . $uID;
-				$r = $db->query($q);
-				if ($permissions != '') {
-					$v = array($this->cID, $uID, $permissions, $_u['cgStartDate'], $_u['cgEndDate']);
-					$q = "insert into PagePermissions (cID, uID, cgPermissions, cgStartDate, cgEndDate) values (?, ?, ?, ?, ?)";
-					$db->query($q, $v);
-				}
-			
-			}
-		}
-		
-		$this->refreshCache();
-	}
-	*/
-	
-
-	/**
 	 * Make an alias to a page
 	 * @param Collection $c
 	 * @return int $newCID
@@ -565,8 +408,8 @@ class Page extends Collection {
 		$cobj = parent::add($data);
 		$newCID = $cobj->getCollectionID();
 		
-		$v = array($newCID, $ctID, $cParentID, $uID, $this->getCollectionID());
-		$q = "insert into Pages (cID, ctID, cParentID, uID, cPointerID) values (?, ?, ?, ?, ?)";
+		$v = array($newCID, $cParentID, $uID, $this->getCollectionID());
+		$q = "insert into Pages (cID, cParentID, uID, cPointerID) values (?, ?, ?, ?)";
 		$r = $db->prepare($q);
 		
 		$res = $db->execute($r, $v);
@@ -622,7 +465,6 @@ class Page extends Collection {
 
 		$cParentID = $this->getCollectionID();
 		$uID = $u->getUserID();
-		$ctID = 0;
 				
 		$cDate = $dh->getSystemDateTime();
 		$cDatePublic = $dh->getSystemDateTime();
@@ -642,8 +484,8 @@ class Page extends Collection {
 			$newWindow = 0;
 		}
 		
-		$v = array($newCID, $ctID, $cParentID, $uID, $cLink, $newWindow);
-		$q = "insert into Pages (cID, ctID, cParentID, uID, cPointerExternalLink, cPointerExternalLinkNewWindow) values (?, ?, ?, ?, ?, ?)";
+		$v = array($newCID, $cParentID, $uID, $cLink, $newWindow);
+		$q = "insert into Pages (cID, cParentID, uID, cPointerExternalLink, cPointerExternalLinkNewWindow) values (?, ?, ?, ?, ?)";
 		$r = $db->prepare($q);
 		
 		$res = $db->execute($r, $v);
@@ -832,7 +674,7 @@ class Page extends Collection {
 	 * @return int
 	 */	
 	function getCollectionTypeID() {
-		return $this->ctID;
+		return $this->vObj->ctID;
 	}
 
 	/**
@@ -840,7 +682,7 @@ class Page extends Collection {
 	 * @return string
 	 */	
 	function getCollectionTypeHandle() {
-		return $this->ctHandle;
+		return $this->vObj->ctHandle;
 	}
 
 	/**
@@ -848,11 +690,11 @@ class Page extends Collection {
 	 * @return int
 	 */	
 	function getCollectionThemeID() {
-		if ($this->ptID < 1 && $this->cID != HOME_CID) {
+		if ($this->vObj->ptID < 1 && $this->cID != HOME_CID) {
 			$c = Page::getByID(HOME_CID);
 			return $c->getCollectionThemeID();
 		} else {
-			return $this->ptID;
+			return $this->vObj->ptID;
 		}	
 	}
 	
@@ -880,10 +722,10 @@ class Page extends Collection {
 	 * @return PageTheme
 	 */		
 	function getCollectionThemeObject() {
-		if ($this->ptID < 1) {
+		if ($this->vObj->ptID < 1) {
 			return PageTheme::getSiteTheme();
 		} else {
-			$pl = PageTheme::getByID($this->ptID);
+			$pl = PageTheme::getByID($this->vObj->ptID);
 			return $pl;
 		}		
 	}
@@ -1046,7 +888,7 @@ class Page extends Collection {
 	 */		
 	public function setTheme($pl) {
 		$db = Loader::db();
-		$db->query('update Pages set ptID = ? where cID = ?', array($pl->getThemeID(), $this->cID));
+		$db->query('update CollectionVersions set ptID = ? where cID = ? and cvID = ?', array($pl->getThemeID(), $this->cID, $this->vObj->getVersionID()));
 		parent::refreshCache();
 	}
 
@@ -1094,7 +936,7 @@ class Page extends Collection {
 	
 	function getMasterCollectionID() {
 		$db = Loader::db();
-		$q = "select cID from Pages where Pages.ctID = '{$this->ctID}' and cIsTemplate = 1";
+		$q = "select p.cID from Pages p inner join CollectionVersions on p.cID = CollectionVersions.cID where CollectionVersions.ctID = '{$this->vObj->ctID}' and cIsTemplate = 1";
 		$cID = $db->getOne($q);
 		if ($cID) {
 			return $cID;
@@ -1145,7 +987,7 @@ class Page extends Collection {
 
 	function _getNumChildren($cID,$oneLevelOnly=0, $sortColumn = 'cDisplayOrder asc') {
 		$db = Loader::db();
-		$q = "select cID from Pages left join Packages on Pages.pkgID = Packages.pkgID where cParentID = {$cID} and cIsTemplate = 0 and (Packages.pkgHandle <> 'core' or pkgHandle is null or Pages.ctID > 0) order by {$sortColumn}";
+		$q = "select cID from Pages where cParentID = {$cID} and cIsTemplate = 0 order by {$sortColumn}";
 		$r = $db->query($q);
 		if ($r) {
 			while ($row = $r->fetchRow()) {
@@ -1242,13 +1084,13 @@ class Page extends Collection {
 
 		} else {
 
-			$v = array($cName, $cHandle, $cDescription, $cDatePublic, $cvID, $this->cID);
-			$q = "update CollectionVersions set cvName = ?, cvHandle = ?, cvDescription = ?, cvDatePublic = ? where cvID = ? and cID = ?";
+			$v = array($cName, $cHandle, $ctID, $cDescription, $cDatePublic, $cvID, $this->cID);
+			$q = "update CollectionVersions set cvName = ?, cvHandle = ?, ctID = ?, cvDescription = ?, cvDatePublic = ? where cvID = ? and cID = ?";
 			$r = $db->prepare($q);
 			$res = $db->execute($r, $v);				
 		}
 
-		$db->query("update Pages set uID = ?, ctID = ?, pkgID = ?, cFilename = ?, cCacheFullPageContent = ?, cCacheFullPageContentLifetimeCustom = ?, cCacheFullPageContentOverrideLifetime = ? where cID = ?", array($uID, $ctID, $pkgID, $cFilename, $cCacheFullPageContent, $cCacheFullPageContentLifetimeCustom, $cCacheFullPageContentOverrideLifetime, $this->cID));
+		$db->query("update Pages set uID = ?, pkgID = ?, cFilename = ?, cCacheFullPageContent = ?, cCacheFullPageContentLifetimeCustom = ?, cCacheFullPageContentOverrideLifetime = ? where cID = ?", array($uID, $pkgID, $cFilename, $cCacheFullPageContent, $cCacheFullPageContentLifetimeCustom, $cCacheFullPageContentOverrideLifetime, $this->cID));
 
 		if ($rescanTemplatePermissions) {
 			if ($this->cInheritPermissionsFrom == 'TEMPLATE') {
@@ -1662,8 +1504,8 @@ class Page extends Collection {
 		$newC = $cobj->duplicate();
 		$newCID = $newC->getCollectionID();
 		
-		$v = array($newCID, $this->getCollectionTypeID(), $cParentID, $uID, $this->overrideTemplatePermissions(), $this->getPermissionsCollectionID(), $this->getCollectionInheritance(), $this->cFilename, $this->cPointerID, $this->cPointerExternalLink, $this->cPointerExternalLinkNewWindow, $this->ptID, $this->cDisplayOrder);
-		$q = "insert into Pages (cID, ctID, cParentID, uID, cOverrideTemplatePermissions, cInheritPermissionsFromCID, cInheritPermissionsFrom, cFilename, cPointerID, cPointerExternalLink, cPointerExternalLinkNewWindow, ptID, cDisplayOrder) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		$v = array($newCID, $cParentID, $uID, $this->overrideTemplatePermissions(), $this->getPermissionsCollectionID(), $this->getCollectionInheritance(), $this->cFilename, $this->cPointerID, $this->cPointerExternalLink, $this->cPointerExternalLinkNewWindow, $this->cDisplayOrder);
+		$q = "insert into Pages (cID, cParentID, uID, cOverrideTemplatePermissions, cInheritPermissionsFromCID, cInheritPermissionsFrom, cFilename, cPointerID, cPointerExternalLink, cPointerExternalLinkNewWindow, cDisplayOrder) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		$res = $db->query($q, $v);
 	
 		Loader::model('page_statistics');
@@ -2009,187 +1851,6 @@ class Page extends Collection {
 	}
 
 
-	/**
-	*
-	* @access private
-	*
-	**/
-	
-	function updateGroups($args = null) {
-		// All right, so here's how we do this. We iterate through the posted form arrays, storing and concatenating
-		// permission sets for each particular group. Then we delete all of the groups associated with this collectionblock
-		// and insert new ones
-		//$this->clearGroups();
-		$gIDArray = array();
-		$uIDArray = array();
-		
-		if (!is_array($args)) {
-			$args = $_POST; // legacy support
-		}
-		
-		if (is_array($args['collectionRead'])) {
-			foreach ($args['collectionRead'] as $ugID) {
-				if (strpos($ugID, 'uID') > -1) {
-					$uID = substr($ugID, 4);
-					$uIDArray[$uID] .= "r:";
-				} else {
-					$gID = substr($ugID, 4);
-					$gIDArray[$gID] .= "r:";
-				}
-			}
-		}
-
-		if (is_array($args['collectionReadVersions'])) {
-			foreach ($args['collectionReadVersions'] as $ugID) {
-				if (strpos($ugID, 'uID') > -1) {
-					$uID = substr($ugID, 4);
-					$uIDArray[$uID] .= "rv:";
-				} else {
-					$gID = substr($ugID, 4);
-					$gIDArray[$gID] .= "rv:";
-				}
-			}
-		}
-
-		if (is_array($args['collectionWrite'])) {
-			foreach($args['collectionWrite'] as $ugID) {
-				if (strpos($ugID, 'uID') > -1) {
-					$uID = substr($ugID, 4);
-					$uIDArray[$uID] .= "wa:db:";
-				} else {
-					$gID = substr($ugID, 4);
-					$gIDArray[$gID] .= "wa:db:";
-				}
-			}
-		}
-
-		if (is_array($args['collectionApprove'])) {
-			foreach($args['collectionApprove'] as $ugID) {
-				 if (strpos($ugID, 'uID') > -1) {
-					$uID = substr($ugID, 4);
-					$uIDArray[$uID] .= "av:";
-				} else {
-					$gID = substr($ugID, 4);
-					$gIDArray[$gID] .= "av:";
-				}
-			}
-		}
-
-		if (is_array($args['collectionDelete'])) {
-			foreach($args['collectionDelete'] as $ugID) {
-				 if (strpos($ugID, 'uID') > -1) {
-					$uID = substr($ugID, 4);
-					$uIDArray[$uID] .= "dc:";
-				} else {
-					$gID = substr($ugID, 4);
-					$gIDArray[$gID] .= "dc:";
-				}
-			}
-		}
-
-		if (is_array($args['collectionAddSubContent'])) {
-			foreach($args['collectionAddSubContent'] as $ugID) {
-				 if (strpos($ugID, 'uID') > -1) {
-					$uID = substr($ugID, 4);
-					$uIDArray[$uID] .= "as:";
-				} else {
-					$gID = substr($ugID, 4);
-					$gIDArray[$gID] .= "as:";
-				}
-			}
-		}
-
-		if (is_array($args['collectionAdmin'])) {
-			foreach($args['collectionAdmin'] as $ugID) {
-				 if (strpos($ugID, 'uID') > -1) {
-					$uID = substr($ugID, 4);
-					$uIDArray[$uID] .= "adm:";
-				} else {
-					$gID = substr($ugID, 4);
-					$gIDArray[$gID] .= "adm:";
-				}
-			}
-		}
-
-		$gCTArray = array();
-		$uCTArray = array();
-		if (is_array($args['collectionAddSubCollection'])) {
-			foreach($args['collectionAddSubCollection'] as $ctID => $ugArray) {
-				// this gets us the collection type that particular groups/users are given access to
-				foreach($ugArray as $ugID) {
-					if (strpos($ugID, 'uID') > -1) {
-						$uID = substr($ugID, 4);
-						$uCTArray[$uID][] = $ctID;
-					} else {
-						$gID = substr($ugID, 4);
-						$gCTArray[$gID][] = $ctID;
-					}
-				}
-			}
-		}
-
-		// now that we've gone through this and created an array of IDs, we're going to delete all permissions for this particular block
-		// in the database, before we add them back in
-
-		$db = Loader::db();
-
-		// now we iterate through, and add the permissions
-		$dt = Loader::helper('form/date_time');
-		$dh = Loader::helper('date');
-		foreach ($gIDArray as $gID => $perms) {
-			$cgStartDate = $dh->getSystemDateTime($dt->translate('cgStartDate_gID:' . $gID, $args));
-			$cgEndDate = $dh->getSystemDateTime($dt->translate('cgEndDate_gID:' . $gID, $args));
-			
-		   // since this can now be either groups or users, we have prepended gID or uID to each gID value
-			// we have to trim the trailing colon, if there is one
-			$permissions = (strrpos($perms, ':') == (strlen($perms) - 1)) ? substr($perms, 0, strlen($perms) - 1) : $perms;
-			$startDate = ($cgStartDate) ? $cgStartDate : null;
-			$endDate = ($cgEndDate) ? $cgEndDate : null;
-			$v = array($this->cID, $gID, $permissions, $startDate, $endDate);
-			$q = "insert into PagePermissions (cID, gID, cgPermissions, cgStartDate, cgEndDate) values (?, ?, ?, ?, ?)";
-			$r = $db->prepare($q);
-			$res = $db->execute($r, $v);
-		}
-
-		// iterate through and add user-level permissions
-		foreach ($uIDArray as $uID => $perms) {
-		   // since this can now be either groups or users, we have prepended gID or uID to each gID value
-			// we have to trim the trailing colon, if there is one
-			$permissions = (strrpos($perms, ':') == (strlen($perms) - 1)) ? substr($perms, 0, strlen($perms) - 1) : $perms;
-			$startDate = ($args['cgStartDate_uID:' . $uID]) ? $args['cgStartDate_uID:' . $uID] : null;
-			$endDate = ($args['cgEndDate_uID:' . $uID]) ? $args['cgEndDate_uID:' . $uID] : null;
-			$v = array($this->cID, $uID, $permissions, $startDate, $endDate);
-			$q = "insert into PagePermissions (cID, uID, cgPermissions, cgStartDate, cgEndDate) values (?, ?, ?, ?, ?)";
-			$r = $db->prepare($q);
-			$res = $db->execute($r, $v);
-		}
-
-		foreach($uCTArray as $uID => $uCTs) {
-			foreach($uCTs as $ctID) {
-				$v = array($this->cID, $uID, $ctID);
-				$q = "insert into PagePermissionPageTypes (cID, uID, ctID) values (?, ?, ?)";
-				$r = $db->query($q, $v);
-			}
-		}
-
-		foreach($gCTArray as $gID => $gCTs) {
-			foreach($gCTs as $ctID) {
-				$v = array($this->cID, $gID, $ctID);
-				$q = "insert into PagePermissionPageTypes (cID, gID, ctID) values (?, ?, ?)";
-				$r = $db->query($q, $v);
-			}
-		}
-
-		// now, if we're updating the permissions for a collection that has sub-collections, which inherit their
-		// permissions from the area of the site, we need to change their pointers
-
-		//we have to update the existing collection with the info for the new
-		//as well as all collections beneath it that are set to inherit from this parent
-		$this->updateGroupsSubCollection($this->getCollectionID());
-		Cache::delete("page_permission_set_guest", $this->getCollectionID());
-	}
-	
-
 	function _associateMasterCollectionBlocks($newCID, $masterCID) {
 		$mc = Page::getByID($masterCID, 'ACTIVE');
 		$nc = Page::getByID($newCID, 'RECENT');
@@ -2279,8 +1940,8 @@ class Page extends Collection {
 		$cDate = $dh->getSystemDateTime();
 		$cDatePublic = $dh->getSystemDateTime();
 		
-		$v = array($cID, $ctID, $cParentID, $uID, 'OVERRIDE', 1, 1, 0);
-		$q = "insert into Pages (cID, ctID, cParentID, uID, cInheritPermissionsFrom, cOverrideTemplatePermissions, cInheritPermissionsFromCID, cDisplayOrder) values (?, ?, ?, ?, ?, ?, ?, ?)";
+		$v = array($cID, $cParentID, $uID, 'OVERRIDE', 1, 1, 0);
+		$q = "insert into Pages (cID, cParentID, uID, cInheritPermissionsFrom, cOverrideTemplatePermissions, cInheritPermissionsFromCID, cDisplayOrder) values (?, ?, ?, ?, ?, ?, ?)";
 		$r = $db->prepare($q);
 		$res = $db->execute($r, $v);
 		$pc = Page::getByID($cID, 'RECENT');
@@ -2339,14 +2000,12 @@ class Page extends Collection {
 		$cDatePublic = ($data['cDatePublic']) ? $data['cDatePublic'] : null;		
 		
 		parent::refreshCache();
+		$data['ctID'] = $ct->getCollectionTypeID();
 		$cobj = parent::add($data);		
 		$cID = $cobj->getCollectionID();		
 		$ctID = $ct->getCollectionTypeID();
-		if (!$ctID) {
-			$ctID = 0;
-		}
 
-		$q = "select cID from Pages where ctID = '$ctID' and cIsTemplate = '1'";
+		$q = "select p.cID from Pages p inner join CollectionVersions cv on p.cID = cv.cID where cv.ctID = '$ctID' and cIsTemplate = '1'";
 		$masterCID = $db->getOne($q);
 		//$this->rescanChildrenDisplayOrder();
 		$cDisplayOrder = $this->getNextSubPageDisplayOrder();
@@ -2354,8 +2013,8 @@ class Page extends Collection {
 		$cInheritPermissionsFromCID = ($this->overrideTemplatePermissions()) ? $this->getPermissionsCollectionID() : $masterCID;
 		$cInheritPermissionsFrom = ($this->overrideTemplatePermissions()) ? "PARENT" : "TEMPLATE";
 		$ptID = $this->getCollectionThemeID();
-		$v = array($cID, $ctID, $cParentID, $uID, $cInheritPermissionsFrom, $this->overrideTemplatePermissions(), $cInheritPermissionsFromCID, $cDisplayOrder, $ptID, $pkgID);
-		$q = "insert into Pages (cID, ctID, cParentID, uID, cInheritPermissionsFrom, cOverrideTemplatePermissions, cInheritPermissionsFromCID, cDisplayOrder, ptID, pkgID) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		$v = array($cID, $cParentID, $uID, $cInheritPermissionsFrom, $this->overrideTemplatePermissions(), $cInheritPermissionsFromCID, $cDisplayOrder, $pkgID);
+		$q = "insert into Pages (cID, cParentID, uID, cInheritPermissionsFrom, cOverrideTemplatePermissions, cInheritPermissionsFromCID, cDisplayOrder, pkgID) values (?, ?, ?, ?, ?, ?, ?, ?)";
 		$r = $db->prepare($q);
 		$res = $db->execute($r, $v);
 

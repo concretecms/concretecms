@@ -88,7 +88,7 @@
 			$cv = new CollectionVersion();
 			$db = Loader::db();
 			
-			$q = "select cvID, cvIsApproved, cvIsNew, cvHandle, cvName, cvDescription, cvDateCreated, cvDatePublic, cvAuthorUID, cvApproverUID, cvComments from CollectionVersions where cID = ? and cvID = ?";
+			$q = "select cvID, cvIsApproved, cvIsNew, cvHandle, cvName, cvDescription, cvDateCreated, cvDatePublic, cvAuthorUID, cvApproverUID, cvComments, ptID, CollectionVersions.ctID, ctHandle from CollectionVersions left join PageTypes on CollectionVersions.ctID = PageTypes.ctID where cID = ? and cvID = ?";
 
 			$r = $db->query($q, array($c->getCollectionID(), $cvID));
 			if ($r) {
@@ -178,9 +178,9 @@
 			$versionComments = (!$versionComments) ? t("New Version %s", $newVID) : $versionComments;
 			
 			$dh = Loader::helper('date');
-			$v = array($this->cID, $newVID, $c->getCollectionName(), $c->getCollectionHandle(), $c->getCollectionDescription(), $c->getCollectionDatePublic(), $dh->getSystemDateTime(), $versionComments, $u->getUserID(), 1);
-			$q = "insert into CollectionVersions (cID, cvID, cvName, cvHandle, cvDescription, cvDatePublic, cvDateCreated, cvComments, cvAuthorUID, cvIsNew)
-				values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+			$v = array($this->cID, $newVID, $c->getCollectionName(), $c->getCollectionHandle(), $c->getCollectionDescription(), $c->getCollectionDatePublic(), $dh->getSystemDateTime(), $versionComments, $u->getUserID(), 1, $this->ptID, $this->ctID);
+			$q = "insert into CollectionVersions (cID, cvID, cvName, cvHandle, cvDescription, cvDatePublic, cvDateCreated, cvComments, cvAuthorUID, cvIsNew, ptID, ctID)
+				values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 				
 			$q2 = "select akID, avID from CollectionAttributeValues where cID = ? and cvID = ?";
 			$v2 = array($c->getCollectionID(), $this->getVersionID());

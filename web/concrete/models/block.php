@@ -355,7 +355,7 @@ class Block extends Object {
 		// gets a list of collections that include this block, along with area name, etc...
 		// used in the block_details.php page in the admin control panel
 		$db = Loader::db();
-		$q = "select DISTINCT Pages.cID from CollectionVersionBlocks inner join Pages on (CollectionVersionBlocks.cID = Pages.cID) inner join PageTypes on (Pages.ctID = PageTypes.ctID) inner join CollectionVersions on (CollectionVersions.cID = Pages.cID) where CollectionVersionBlocks.bID = '{$this->bID}'";
+		$q = "select DISTINCT Pages.cID from CollectionVersionBlocks inner join Pages on (CollectionVersionBlocks.cID = Pages.cID) inner join CollectionVersions on (CollectionVersions.cID = Pages.cID) where CollectionVersionBlocks.bID = '{$this->bID}'";
 		$r = $db->query($q);
 		$cArray = array();
 		if ($r) {
