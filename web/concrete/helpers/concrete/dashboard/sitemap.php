@@ -161,6 +161,7 @@ class ConcreteDashboardSitemapHelper {
 			$pl = new PageList();
 			$obj->keywords = $keywords;
 			$pl->filterByName($keywords);
+			$pl->ignoreAliases();
 			$pl->filterByPath($nc->getCollectionPath());
 			$pl->displayUnapprovedPages();
 			$pl->sortByDisplayOrder();

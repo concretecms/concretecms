@@ -71,7 +71,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		
 		public function getMasterTemplate() {
 			$db = Loader::db();
-			$cID = $db->getOne("select cID from Pages where cIsTemplate = 1 and ctID = ?", array($this->ctID));
+			$cID = $db->getOne("select p.cID from Pages p inner join CollectionVersions cv on p.cID = cv.cID where ctID = ? and cIsTemplate = 1", array($this->ctID));
 			return Page::getByID($cID, "RECENT");
 		}
 

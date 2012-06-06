@@ -666,7 +666,7 @@ class Page extends Collection {
 	 * @return string
 	 */	
 	function getCollectionTypeName() {
-		return $this->ctName;
+		return $this->vObj->ctName;
 	}
 
 	/**
@@ -1092,14 +1092,6 @@ class Page extends Collection {
 
 		$db->query("update Pages set uID = ?, pkgID = ?, cFilename = ?, cCacheFullPageContent = ?, cCacheFullPageContentLifetimeCustom = ?, cCacheFullPageContentOverrideLifetime = ? where cID = ?", array($uID, $pkgID, $cFilename, $cCacheFullPageContent, $cCacheFullPageContentLifetimeCustom, $cCacheFullPageContentOverrideLifetime, $this->cID));
 
-		if ($rescanTemplatePermissions) {
-			if ($this->cInheritPermissionsFrom == 'TEMPLATE') {
-				// we make sure to update the cInheritPermissionsFromCID value
-				$ct = CollectionType::getByID($ctID);
-				$masterC = $ct->getMasterTemplate();
-				$db->Execute('update Pages set cInheritPermissionsFromCID = ? where cID = ?', array($masterC->getCollectionID(), $this->getCollectioniD()));
-			}
-		}
 		// run any internal event we have for page update
 		// i don't think we need to do this because approve reindexes
 		//$this->reindex();
