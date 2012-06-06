@@ -26,6 +26,7 @@ class ConcreteUpgradeVersion560Helper {
 	// parse db.xml. Only the new files are affected
 	
 	public $dbRefreshTables = array(
+		'CollectionVersions',
 		'BlockTypes',
 		'BlockTypePermissionBlockTypeAccessList',
 		'BlockTypePermissionBlockTypeAccessListCustom',
@@ -123,6 +124,30 @@ class ConcreteUpgradeVersion560Helper {
 		$this->migrateAddFilePermissions();
 		$this->migrateFilePermissions();
 		$this->migrateTaskPermissions();		
+		$this->migrateThemes();		
+		$this->migratePageTypes();		
+	}
+	
+	protected function migrateThemes() {
+		try {
+			$db = Loader::db();
+			$r = $db->Execute('select cID, ptID from Pages where ptID > 0');
+			while ($row = $r->FetchRow()) {
+				$db->Execute('update CollectionVersions set ptID = ? where cID = ?', array($row['ptID'], $row['cID']));
+			}		
+		} catch(Exception $e) {}
+		
+	}
+	
+	protected function migratePageTypes() {
+		try {
+			$db = Loader::db();
+			$r = $db->Execute('select cID, ctID from Pages where ctID > 0');
+			while ($row = $r->FetchRow()) {
+				$db->Execute('update CollectionVersions set ctID = ? where cID = ?', array($row['ctID'], $row['cID']));
+			}		
+		} catch(Exception $e) {}
+		
 	}
 	
 	protected function migratePagePermissionPageTypes() {

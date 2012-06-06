@@ -29,16 +29,16 @@ class FileList extends DatabaseItemList {
 	}
 
 	/** 
-	 * Filters by type of collection (using the ID field)
-	 * @param mixed $ctID
+	 * Filters by file extension
+	 * @param mixed $extension
 	 */
 	public function filterByExtension($ext) {
 		$this->filter('fv.fvExtension', $ext, '=');
 	}
 
 	/** 
-	 * Filters by type of collection (using the ID field)
-	 * @param mixed $ctID
+	 * Filters by type of file
+	 * @param mixed $type
 	 */
 	public function filterByType($type) {
 		$this->filter('fv.fvType', $type, '=');

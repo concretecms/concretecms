@@ -772,9 +772,23 @@
     <field name="cvApproverUID" type="I" size="10">
       <UNSIGNED/>
     </field>
+    <field name="ptID" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="ctID" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+
     <field name="cvActivateDatetime" type="T"/>
     <index name="cvIsApproved">
       <col>cvIsApproved</col>
+    </index>
+    <index name="ctID">
+      <col>ctID</col>
     </index>
   </table>
   <table name="Collections">
@@ -2024,11 +2038,6 @@
       <DEFAULT value="0"/>
       <UNSIGNED/>
     </field>
-    <field name="ctID" type="I" size="10">
-      <NOTNULL/>
-      <DEFAULT value="0"/>
-      <UNSIGNED/>
-    </field>
     <field name="cIsTemplate" type="I" size="1">
       <NOTNULL/>
       <DEFAULT value="0"/>
@@ -2094,11 +2103,6 @@
       <DEFAULT value="0"/>
       <UNSIGNED/>
     </field>
-    <field name="ptID" type="I" size="10">
-      <NOTNULL/>
-      <DEFAULT value="0"/>
-      <UNSIGNED/>
-    </field>
     <field name="cCacheFullPageContent" type="I" size="4">
       <NOTNULL/>
       <DEFAULT value="-1"/>
@@ -2127,9 +2131,6 @@
     </index>
     <index name="uID">
       <col>uID</col>
-    </index>
-    <index name="ctID">
-      <col>ctID</col>
     </index>
     <index name="cPointerID">
       <col>cPointerID</col>

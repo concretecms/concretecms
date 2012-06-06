@@ -821,9 +821,9 @@
 				$nvc = $c->getVersionToModify();				
 				$data = array();
 				if (is_object($pl)) { 
-					$c->setTheme($pl);
+					$nvc->setTheme($pl);
 				}
-				
+
 				if (!$c->isGeneratedCollection()) {
 				
 					if ($_POST['ctID'] && $cp->canEditPageType()) {
