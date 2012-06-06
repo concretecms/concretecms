@@ -36,27 +36,39 @@
 
 	<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Add Workflow'), false, 'span12 offset2', false)?>
 
-	<form method="post" class="" action="<?=$this->action('submit_add')?>" id="ccm-attribute-type-form">
+	<form method="post" class="form-horizontal" action="<?=$this->action('submit_add')?>" id="ccm-attribute-type-form">
 	<?=Loader::helper('validation/token')->output('add_workflow')?>
 	<div class="ccm-pane-body">
 
-	<div class="clearfix">
+	<div class="control-group">
 	<?=$form->label('wfName', t('Name'))?>
-	<div class="input">
+	<div class="controls">
 		<?=$form->text('wfName', $wfName)?>
 		<span class="help-inline"><?=t('Required')?></span>
 	</div>
 	</div>
 
-	<div class="clearfix">
+	<div class="control-group">
 	<?=$form->label('wftID', t('Type'))?>
-	<div class="input">
+	<div class="controls">
 	
 	<?=$form->select('wftID', $types)?>
 	
 	</div>
 	</div>
-	
+
+	<? foreach($typeObjects as $type) { ?>
+		
+		<div style="display: none" class="ccm-workflow-type-form" id="ccm-workflow-type-<?=$type->getWorkflowTypeID()?>">
+			<? 
+			if ($type->getPackageID() > 0) { 
+				@Loader::packageElement('workflow/types/' . $type->getWorkflowTypeHandle()  . '/add_type_form', $type->getPackageHandle(), array('type' => $type));
+			} else {
+				@Loader::element('workflow/types/' . $type->getWorkflowTypeHandle() . '/add_type_form', array('type' => $type));
+			}
+			?>
+		</div>
+	<? } ?>
 
 	</div>
 	<div class="ccm-pane-footer">
@@ -64,6 +76,16 @@
 	<input type="submit" name="submit" value="<?=t('Add')?>" class="ccm-button-right primary btn" />
 	</div>	
 	</form>
+	
+	<script type="text/javascript">
+	$(function() {
+		$('select[name=wftID]').change(function() {
+			$('.ccm-workflow-type-form').hide();
+			$('#ccm-workflow-type-' + $(this).val()).show();
+		})
+		$('#ccm-workflow-type-' + $('select[name=wftID]').val()).show();
+	});
+	</script>
 	
 	<?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(false);?>
 

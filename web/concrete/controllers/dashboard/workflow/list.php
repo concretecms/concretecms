@@ -35,7 +35,7 @@ class DashboardWorkflowListController extends DashboardBaseController {
 			$wf = Workflow::getByID($this->post('wfID'));
 			$wf->updateName($this->post('wfName'));
 			$wf->updateDetails($this->post());
-			$this->view_detail($this->post('wfID'), 'workflow_updated');
+			$this->redirect('/dashboard/workflow/list', 'view_detail', $this->post('wfID'), 'workflow_updated');
 		} else {
 			$this->view_detail($this->post('wfID'));
 		}		
@@ -53,6 +53,7 @@ class DashboardWorkflowListController extends DashboardBaseController {
 			$types[$wl->getWorkflowTypeID()] = $wl->getWorkflowTypeName();
 		}
 		$this->set('types', $types);
+		$this->set('typeObjects', $list);
 	 }
 	
 	public function workflow_deleted() {
@@ -71,6 +72,7 @@ class DashboardWorkflowListController extends DashboardBaseController {
 		if (!$this->error->has()) { 
 			$type = WorkflowType::getByID($this->post('wftID'));
 			$wf = Workflow::add($type, $this->post('wfName'));
+			$wf->updateDetails($this->post());
 			$this->redirect('/dashboard/workflow/list/', 'view_detail', $wf->getWorkflowID(), 'workflow_created');
 		}
 		$this->add();

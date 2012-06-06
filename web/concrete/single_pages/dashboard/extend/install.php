@@ -86,7 +86,7 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
 		</div>
 		
 		
-		<? Loader::packageElement('dashboard/uninstall', $pkg->getPackageHandle()); ?>
+		<? @Loader::packageElement('dashboard/uninstall', $pkg->getPackageHandle()); ?>
 				
 		
 </div>
