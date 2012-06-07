@@ -1,5 +1,7 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?>
 
+<? $cat = PermissionKeyCategory::getByHandle('basic_workflow');?>
+
 <table class="ccm-permission-grid">
 <?
 $permissions = PermissionKey::getList('basic_workflow');

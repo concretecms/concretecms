@@ -1,5 +1,7 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?>
 
+<? $cat = PermissionKeyCategory::getByHandle('file_set');?>
+
 <table class="ccm-permission-grid">
 <?
 $permissions = PermissionKey::getList('file_set');

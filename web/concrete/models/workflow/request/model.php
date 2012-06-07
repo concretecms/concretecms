@@ -83,14 +83,18 @@ abstract class WorkflowRequest extends Object {
 		
 		$pa = $pk->getPermissionAccessObject();
 		$workflows = array();
+		$workflowsStarted = 0;
 		if (is_object($pa)) {
 			$workflows = $pa->getWorkflows();	
 			foreach($workflows as $wf) {
-				$this->addWorkflowProgress($wf);
+				if ($wf->validateTrigger($this)) {
+					$this->addWorkflowProgress($wf);
+					$workflowsStarted++;
+				}
 			}
 		}
 
-		if (count($workflows) == 0) {
+		if ($workflowsStarted == 0) {
 			$defaultWorkflow = new EmptyWorkflow();
 			$wp = $this->addWorkflowProgress($defaultWorkflow);
 			return $wp->getWorkflowProgressResponseObject();
