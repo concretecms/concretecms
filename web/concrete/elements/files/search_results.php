@@ -49,7 +49,7 @@ if (isset($_REQUEST['searchInstance'])) {
 	if (count($files) > 0) { ?>	
 		<table border="0" cellspacing="0" cellpadding="0" id="ccm-<?=$searchInstance?>-list" class="ccm-results-list">
 		<tr>
-			<th><input id="ccm-<?=$searchInstance?>-list-cb-all" type="checkbox" /></td>
+			<th><input id="ccm-<?=$searchInstance?>-list-cb-all" type="checkbox" /></th>
 			<th class="ccm-file-list-thumbnail-wrapper"><?=t('Thumbnail')?></th>
 
 			<th class="ccm-file-list-starred">&nbsp;</th>
