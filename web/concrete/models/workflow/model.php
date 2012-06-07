@@ -101,6 +101,9 @@ abstract class Workflow extends Object {
 	public function getPermissionAccessObject() {
 		return false;
 	}
+	public function validateTrigger(WorkflowRequest $req) {
+		return true;
+	}
 }
 
 class EmptyWorkflow extends Workflow {

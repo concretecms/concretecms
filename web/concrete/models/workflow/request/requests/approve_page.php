@@ -21,6 +21,10 @@ class ApprovePagePageWorkflowRequest extends PageWorkflowRequest {
 		$this->cvID = $cvID;
 	}
 
+	public function getRequestedVersionID() {
+		return $this->cvID;
+	}
+
 	public function getWorkflowRequestDescriptionObject() {
 		$d = new WorkflowDescription();
 		$c = Page::getByID($this->cID, 'ACTIVE');

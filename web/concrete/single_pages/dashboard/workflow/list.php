@@ -5,7 +5,7 @@
 <? if ($this->controller->getTask() == 'edit_details') { ?>
 
 <?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Edit Workflow'), false, 'span12 offset2', false)?>
-<form method="post"  action="<?=$this->action('save_workflow_details')?>" method="post">
+<form method="post"  action="<?=$this->action('save_workflow_details')?>" method="post" class="form-horizontal">
 <input type="hidden" name="wfID" value="<?=$wf->getWorkflowID()?>" />
 <?=Loader::helper('validation/token')->output('save_workflow_details')?>
 
