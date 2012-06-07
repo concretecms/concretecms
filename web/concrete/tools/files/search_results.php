@@ -14,7 +14,7 @@ $fileList = $cnt->getRequestedSearchResults();
 
 $files = $fileList->getPage();
 $pagination = $fileList->getPagination();
-$searchType = $_REQUEST['searchType'];
+$searchType = Loader::helper('text')->entities($_REQUEST['searchType']);
 $searchRequest = $cnt->get('searchRequest');
 $columns = $cnt->get('columns');
 

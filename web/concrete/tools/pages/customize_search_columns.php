@@ -15,7 +15,7 @@ $fldc = PageSearchColumnSet::getCurrent();
 $fldca = new PageSearchAvailableColumnSet();
 
 
-$searchInstance = $_REQUEST['searchInstance'];
+$searchInstance = Loader::helper('text')->entities($_REQUEST['searchInstance']);
 if ($_POST['task'] == 'update_columns') {
 	
 	$fdc = new PageSearchColumnSet();

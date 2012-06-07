@@ -139,22 +139,6 @@
 	top: 112px;
 	left: 282px;
 }
-input.colorpicker_none {
-	position: absolute;
-	left: 290px;
-	top: 145px;
-	width: 20px;
-	padding: 0px;
-	font-size: 10px; 
-}
-input.colorpicker_submit {
-	position: absolute;
-	left: 314px;
-	top: 145px;
-	width: 32px;
-	padding: 0px;
-	font-size: 10px; 
-}
 .colorpicker_focus {
 	background-position: center;
 }
@@ -185,4 +169,78 @@ div.ccm-color-swatch-wrapper  div.ccm-color-swatch div {
 	width: 28px;
 	height: 28px;
 	background: url(../images/widgets/colorpicker/select2.png) center;
-} 
+}
+
+// Colorpicker button generic styles
+input.colorpicker_none,
+input.colorpicker_submit{
+	cursor:pointer;
+	position:absolute;
+	display:inline-block;
+	padding:3px 0 5px 0;
+	text-shadow:0 1px 1px rgba(255, 255, 255, 0.75);
+	color:#ffffff;
+	font-size:10px;
+	line-height:13px;
+	border:1px solid #ccc;
+	*border:0;
+	border-bottom-color:#bbb;
+	-webkit-border-radius:4px;
+	-moz-border-radius:4px;
+	border-radius:4px;
+	-webkit-box-shadow:inset 0 1px 0 rgba(255, 255, 255, 0.2),0 1px 2px rgba(0, 0, 0, 0.05);
+	-moz-box-shadow:inset 0 1px 0 rgba(255, 255, 255, 0.2),0 1px 2px rgba(0, 0, 0, 0.05);
+	box-shadow:inset 0 1px 0 rgba(255, 255, 255, 0.2),0 1px 2px rgba(0, 0, 0, 0.05);
+	-webkit-transition:0.1s linear all;
+	-moz-transition:0.1s linear all;
+	-ms-transition:0.1s linear all;
+	-o-transition:0.1s linear all;
+	transition:0.1s linear all;
+}
+input.colorpicker_none:hover,
+input.colorpicker_submit:hover{background-position:0 -15px;color:#FFF;text-decoration:none;}
+input.colorpicker_none:focus,
+input.colorpicker_submit:focus{outline:0;}
+input.colorpicker_none:active,
+input.colorpicker_submit:active{
+	-webkit-box-shadow:inset 0 2px 4px rgba(0, 0, 0, 0.25),0 1px 2px rgba(0, 0, 0, 0.05);
+	-moz-box-shadow:inset 0 2px 4px rgba(0, 0, 0, 0.25),0 1px 2px rgba(0, 0, 0, 0.05);
+	box-shadow:inset 0 2px 4px rgba(0, 0, 0, 0.25),0 1px 2px rgba(0, 0, 0, 0.05);
+}
+:root input.colorpicker_none,
+:root input.colorpicker_submit{border-radius:0 \0;}
+
+.colorpicker input.colorpicker_none::-moz-focus-inner,.colorpicker input.colorpicker_submit::-moz-focus-inner{padding:0;border:0;}
+input.colorpicker_submit{
+	background-color:#0064cd;
+	background-repeat:repeat-x;
+	background-image:-khtml-gradient(linear, left top, left bottom, from(#049cdb), to(#0064cd));
+	background-image:-moz-linear-gradient(top, #049cdb, #0064cd);
+	background-image:-ms-linear-gradient(top, #049cdb, #0064cd);
+	background-image:-webkit-gradient(linear, left top, left bottom, color-stop(0%, #049cdb), color-stop(100%, #0064cd));
+	background-image:-webkit-linear-gradient(top, #049cdb, #0064cd);
+	background-image:-o-linear-gradient(top, #049cdb, #0064cd);
+	background-image:linear-gradient(top, #049cdb, #0064cd);
+	filter:~"progid:DXImageTransform.Microsoft.gradient(startColorstr='#049cdb', endColorstr='#0064cd', GradientType=0)";
+	text-shadow:0 -1px 0 rgba(0, 0, 0, 0.25);
+	border-color:#0064cd #0064cd #003f81;
+	border-color:rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);left:313px;top:141px;width:32px;
+}
+input.colorpicker_none{
+	background-color:#c43c35;
+	background-repeat:repeat-x;
+	background-image:-khtml-gradient(linear, left top, left bottom, from(#ee5f5b), to(#c43c35));
+	background-image:-moz-linear-gradient(top, #ee5f5b, #c43c35);
+	background-image:-ms-linear-gradient(top, #ee5f5b, #c43c35);
+	background-image:-webkit-gradient(linear, left top, left bottom, color-stop(0%, #ee5f5b), color-stop(100%, #c43c35));
+	background-image:-webkit-linear-gradient(top, #ee5f5b, #c43c35);
+	background-image:-o-linear-gradient(top, #ee5f5b, #c43c35);
+	background-image:linear-gradient(top, #ee5f5b, #c43c35);
+	filter:~"progid:DXImageTransform.Microsoft.gradient(startColorstr='#ee5f5b', endColorstr='#c43c35', GradientType=0)";
+	text-shadow:0 -1px 0 rgba(0, 0, 0, 0.25);
+	border-color:#c43c35 #c43c35 #882a25;
+	border-color:rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+	left:289px;top:141px;
+	width:20px;
+	padding:2px 0 6px 0;
+}

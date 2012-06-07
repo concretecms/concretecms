@@ -105,16 +105,16 @@ class ConcreteDashboardHelper {
 						$class = '';
 					}
 					
-					$relatedPages .= '<li class="' . $class . '"><a href="' . $nh->getLinkToCollection($sc, false, true) . '">' . $sc->getCollectionName() . '</a></li>';
+					$relatedPages .= '<li class="' . $class . '"><a href="' . $nh->getLinkToCollection($sc, false, true) . '">' . t($sc->getCollectionName()) . '</a></li>';
 				}
 		
 				if ($upToPage) { 
 					$relatedPages .= '<li class="ccm-menu-separator"></li>';
-					$relatedPages .= '<li><a href="' . $nh->getLinkToCollection($upToPage, false, true) . '">' . t('&lt; Back to %s', $upToPage->getCollectionName()) . '</a></li>';
+					$relatedPages .= '<li><a href="' . $nh->getLinkToCollection($upToPage, false, true) . '">' . t('&lt; Back to %s', t($upToPage->getCollectionName())) . '</a></li>';
 				}
 				$relatedPages .= '</ul>';
 				$relatedPages .= '</div>';
-				$navigateTitle = $parent->getCollectionName();
+				$navigateTitle = t($parent->getCollectionName());
 			}
 		}
 		
@@ -287,7 +287,7 @@ class ConcreteDashboardHelper {
 				
 				
 				<ul class="ccm-intelligent-search-results-list">
-					<li><a href="<?=View::url('/dashboard/home')?>"><?=t('Customize')?> <span><?=('Customize Dashboard Home')?></span></a></li>
+					<li><a href="<?=View::url('/dashboard/home')?>"><?=t('Customize')?> <span><?=t('Customize Dashboard Home')?></span></a></li>
 				</ul>
 				
 				</div>
