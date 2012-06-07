@@ -11,6 +11,7 @@ abstract class Workflow extends Object {
 	
 	protected $wfID = 0;
 	protected $allowedTasks = array('cancel', 'approve');
+	protected $restrictedToPermissionKeyHandles = array();
 	
 	public function getAllowedTasks() {return $this->allowedTasks;}
 	
@@ -18,6 +19,9 @@ abstract class Workflow extends Object {
 	public function getWorkflowName() {return $this->wfName;}
 	public function getWorkflowTypeObject() {
 		return WorkflowType::getByID($this->wftID);
+	}
+	public function getRestrictedToPermissionKeyHandles() {
+		return $this->restrictedToPermissionKeyHandles;
 	}
 	
 	public function delete() {
