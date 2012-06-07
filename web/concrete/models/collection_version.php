@@ -320,8 +320,8 @@
 			$c = Page::getByID($this->cID, $cvID);
 			$cID = $c->getCollectionID();
 			
-			$q = "select bID, arHandle from CollectionVersionBlocks where cID = '{$cID}' and cvID='{$cvID}'";
-			$r = $db->query($q);
+			$q = "select bID, arHandle from CollectionVersionBlocks where cID = ? and cvID = ?";
+			$r = $db->query($q, array($cID, $cvID));
 			if ($r) {
 				while ($row = $r->fetchRow()) {
 					if ($row['bID']) {

@@ -1,5 +1,6 @@
-<?
+<?php
 	defined('C5_EXECUTE') or die("Access Denied.");
+	
 	class RssDisplayerBlockController extends BlockController {
 		
 		protected $btTable = 'btRssDisplay';
@@ -34,11 +35,7 @@
 			);
 		}
 		
-		function __construct($obj = null) {		
-			parent::__construct($obj);
-		}
-		
-		function view(){ 
+		public function view(){ 
 			$fp = Loader::helper("feed");			
 			$feed = $fp->load($this->url); 
 			$feed->set_item_limit( intval($this->itemsToDisplay) );
@@ -52,7 +49,7 @@
 			$this->set('title', $this->title);
 		}
 		
-		function save($data) { 
+		public function save($data) { 
 			$args['url'] = isset($data['url']) ? $data['url'] : '';
 			$args['dateFormat'] = $data['dateFormat'];
 			$args['itemsToDisplay'] = (intval($data['itemsToDisplay'])>0) ? intval($data['itemsToDisplay']) : 5 ;
@@ -60,6 +57,20 @@
 			$args['launchInNewWindow'] = ($data['launchInNewWindow']==1) ? 1 : 0;
 			$args['title'] = isset($data['title']) ? $data['title'] : '';
 			parent::save($args);
+		}
+		
+		public function getSearchableContent() {
+			$fp = Loader::helper("feed");			
+			$feed = $fp->load($this->url); 
+			$feed->set_item_limit( intval($this->itemsToDisplay) );
+			$feed->init();
+			$feed->handle_content_type();
+			$posts = $feed->get_items();
+			$searchContent='';
+			foreach($posts as $item){
+			    $searchContent.=$item->get_title().' '.strip_tags($item->get_description()).' ';
+                        }
+                        return $searchContent;
 		}
 		
 	}

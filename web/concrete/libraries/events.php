@@ -65,6 +65,9 @@ class Events {
 			Events::extendPageType($ctHandle, 'on_page_view', $params);
 			Events::extendPageType($ctHandle, 'on_page_version_approve', $params);
 			Events::extendPageType($ctHandle, 'on_page_delete', $params);
+			Events::extendPageType($ctHandle, 'on_composer_publish', $params);
+			Events::extendPageType($ctHandle, 'on_composer_save_draft', $params);
+			Events::extendPageType($ctHandle, 'on_composer_delete_draft', $params);
 		} else {
 			$ce = Events::getInstance();
 			$class = Object::camelcase($ctHandle) . 'PageTypeController';

@@ -1,5 +1,10 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
+
+if (!Loader::helper('validation/numbers')->integer($_REQUEST['cID'])) {
+	die(t('Access Denied'));
+}
+
 $c = Page::getByID($_REQUEST['cID']); 
 $a = Area::get($c, $_GET['arHandle']);
 $ax = $a;

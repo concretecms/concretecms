@@ -12,7 +12,7 @@ class DownloadFileController extends Controller {
 
 	public function view($fID = 0, $rcID=NULL) {
 		// get the block
-		if ($fID > 0) {
+		if ($fID > 0 && Loader::helper('validation/numbers')->integer($fID)) {
 			$file = File::getByID($fID);			
 			if ($file instanceof File && $file->getFileID() > 0) {	
 				
@@ -35,28 +35,32 @@ class DownloadFileController extends Controller {
 	}
 	
 	public function view_inline($fID = 0) {
-		$file = File::getByID($fID);
-		$fp = new Permissions($file);
-		if (!$fp->canRead()) {
-			return false;
+		if ($fID > 0 && Loader::helper('validation/numbers')->integer($fID)) {
+			$file = File::getByID($fID);
+			$fp = new Permissions($file);
+			if (!$fp->canRead()) {
+				return false;
+			}
+			
+			$mimeType = $file->getMimeType();
+			$fc = Loader::helper('file');
+			$contents = $fc->getContents($file->getPath());
+			header("Content-type: $mimeType");
+			print $contents;
+			exit;
 		}
-		
-		$mimeType = $file->getMimeType();
-		$fc = Loader::helper('file');
-		$contents = $fc->getContents($file->getPath());
-		header("Content-type: $mimeType");
-		print $contents;
-		exit;
 	}
 	
 	public function submit_password($fID = 0) {
-		$f = File::getByID($fID);
-
-		if ($f->getPassword() == $_POST['password'])
-			return $this->download($f);
-		
-		$this->set('error', t("Password incorrect. Please try again."));
-		$this->view($fID);
+		if ($fID > 0 && Loader::helper('validation/numbers')->integer($fID)) {
+			$f = File::getByID($fID);
+	
+			if ($f->getPassword() == $_POST['password'])
+				return $this->download($f);
+			
+			$this->set('error', t("Password incorrect. Please try again."));
+			$this->view($fID);
+		}
 	}
 	
 	private function download($file,$rcID=NULL) {
