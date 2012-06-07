@@ -79,7 +79,8 @@ Loader::element('permission/access/list', array('permissionAccess' => $pa, 'acce
 			<div class="input">
 			<ul class="inputs-list">
 				<? foreach($workflows as $wf) { ?>
-					<li><label><input type="checkbox" name="wfID[]" value="<?=$wf->getWorkflowID()?>" <? if (in_array($wf->getWorkflowID(), $workflowIDs)) { ?> checked="checked" <? } ?> /> <span><?=$wf->getWorkflowName()?></span></label></li>
+					<li><label><input type="checkbox" name="wfID[]" value="<?=$wf->getWorkflowID()?>" <? if (count($wf->getRestrictedToPermissionKeyHandles()) > 0 && (!in_array($permissionKey->getPermissionKeyHandle(), $wf->getRestrictedToPermissionKeyHandles()))) { ?> disabled="disabled" <? } ?>
+					<? if (in_array($wf->getWorkflowID(), $workflowIDs)) { ?> checked="checked" <? } ?> /> <span><?=$wf->getWorkflowName()?></span></label></li>
 				<? } ?>
 			</ul>
 			</div>
@@ -147,20 +148,6 @@ $(function() {
 		});
 		return false;
 	}
-	
-	/*
-	ccm_submitPermissionWorkflowForm = function() {
-		jQuery.fn.dialog.showLoader();
-		$("#ccm-permissions-workflow-form").ajaxSubmit(function(r) {
-			$.get(ccm_permissionDialogURL + '?message=workflows_saved&pkID=<?=$permissionKey->getPermissionKeyID()?>', function(r) { 
-				jQuery.fn.dialog.replaceTop(r);
-				jQuery.fn.dialog.hideLoader();
-			});
-		});
-		return false;
-	}
-	*/
-	
 	
 	
 	<? if (isset($_REQUEST['message']) && $_REQUEST['message'] == 'custom_options_saved') { ?>
