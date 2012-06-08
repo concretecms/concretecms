@@ -12,14 +12,6 @@ class WorkflowProgressCategory extends Object {
 		}
 	}
 	
-	public function getWorkflowProgressObject($wpID) {
-		$db = Loader::db();
-		$wpID = $db->GetOne('select wpID from WorkflowProgress where wpID = ? and wpCategoryID = ?', array($wpID, $this->wpCategoryID));
-		if ($wpID) {
-			$class = Loader::helper("text")->camelcase($this->wpCategoryHandle) . 'WorkflowProgress';
-			return call_user_func_array(array($class, 'getByID'), array($wpID));
-		}
-	}
 	public static function getByHandle($wpCategoryHandle) {
 		$db = Loader::db();
 		$row = $db->GetRow('select wpCategoryID, wpCategoryHandle, pkgID from WorkflowProgressCategories where wpCategoryHandle = ?', array($wpCategoryHandle));
