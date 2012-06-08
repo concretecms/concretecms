@@ -19,12 +19,10 @@ class PageWorkflowProgress extends WorkflowProgress {
 		return $wp;
 	}
 	
-	public static function getByID($wpID) {
+	public function loadDetails() {
 		$db = Loader::db();
-		$wp = parent::getByID($wpID);
-		$row = $db->GetRow('select cID from PageWorkflowProgress where wpID = ?', array($wpID));
-		$wp->setPropertiesFromArray($row);
-		return $wp;
+		$row = $db->GetRow('select cID from PageWorkflowProgress where wpID = ?', array($this->wpID));
+		$this->setPropertiesFromArray($row);		
 	}
 	
 	public function delete() {

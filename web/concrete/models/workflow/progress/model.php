@@ -107,16 +107,17 @@ abstract class WorkflowProgress extends Object {
 			$wr->delete();
 		}
 	}
+	
 	public static function getByID($wpID) {
 		$db = Loader::db();
-		$r = $db->GetRow('select * from WorkflowProgress where wpID  = ?', array($wpID));
+		$r = $db->GetRow('select WorkflowProgress.*, WorkflowProgressCategories.wpCategoryHandle from WorkflowProgress inner join WorkflowProgressCategories on WorkflowProgress.wpCategoryID = WorkflowProgressCategories.wpCategoryID where wpID  = ?', array($wpID));
 		if (!is_array($r) && (!$r['wpID'])) { 
 			return false;
-		}
-		
-		$class = get_called_class();
+		}	
+		$class = Loader::helper("text")->camelcase($r['wpCategoryHandle']) . 'WorkflowProgress';
 		$wp = new $class;
 		$wp->setPropertiesFromArray($r);
+		$wp->loadDetails();
 		return $wp;
 	}
 
@@ -174,6 +175,7 @@ abstract class WorkflowProgress extends Object {
 	}
 	
 	abstract function getWorkflowProgressFormAction();
+	abstract function loadDetails();
 	
 	public function addWorkflowProgressHistoryObject($obj) {
 		$db = Loader::db();
