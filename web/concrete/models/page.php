@@ -118,6 +118,9 @@ class Page extends Collection {
 		
 	}		
 
+	public function getPermissionObjectIdentifier() {
+		return $this->getCollectionID();
+	}
 	/**
 	 * Returns 1 if the page is in edit mode
 	 * @return bool

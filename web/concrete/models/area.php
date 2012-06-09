@@ -50,6 +50,10 @@ class Area extends Object {
 		qualified Area object
 	*/
 
+	public function getPermissionObjectIdentifier() {
+		return $this->getAreaHandle();
+	}
+
 	function Area($arHandle) {
 		$this->arHandle = $arHandle;
 		$v = View::getInstance();

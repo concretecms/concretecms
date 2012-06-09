@@ -44,6 +44,10 @@ class Block extends Object {
 		
 		return $b;
 	}
+
+	public function getPermissionObjectIdentifier() {
+		return $this->getBlockID();
+	}
 	
 	public static function getByID($bID, $c = null, $a = null) {
 		if ($c == null && $a == null) {

@@ -26,6 +26,10 @@
 		protected $attributes = array();
 		public $customAreaStyles = array();
 		public $layoutStyles = array();
+
+		public function getPermissionObjectIdentifier() {
+			return $this->getCollectionID() . ':' . $this->getVersionID();
+		}
 		
 		/** 
 		 * Returns the actual cvID numerical value for a particular cID/cvID combo

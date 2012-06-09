@@ -42,6 +42,10 @@ class File extends Object {
 		return call_user_func_array(array($fv, $nm), $a);
 	}
 
+	public function getPermissionObjectIdentifier() {
+		return $this->getFileID();
+	}
+
 	public function getPath() {
 		$fv = $this->getVersion();
 		return $fv->getPath();

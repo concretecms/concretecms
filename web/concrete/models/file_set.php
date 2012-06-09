@@ -72,6 +72,10 @@
 			}
 			return $sets;
 		}
+
+		public function getPermissionObjectIdentifier() {
+			return $this->getFileSetID();
+		}
 		
 		public function getMySets($u = false) {
 			if ($u == false) {

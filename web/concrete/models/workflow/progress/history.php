@@ -40,7 +40,7 @@ class WorkflowProgressHistory extends Object {
 	
 	public static function getList(WorkflowProgress $wp) {
 		$db = Loader::db();
-		$r = $db->Execute('select wphID from WorkflowProgressHistory where wpID = ? order by timestamp asc', array($wp->getWorkflowProgressID()));
+		$r = $db->Execute('select wphID from WorkflowProgressHistory where wpID = ? order by timestamp desc', array($wp->getWorkflowProgressID()));
 		$class = get_called_class();		
 		$list = array();
 		while ($row = $r->FetchRow()) {
