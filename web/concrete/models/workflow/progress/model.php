@@ -111,10 +111,11 @@ abstract class WorkflowProgress extends Object {
 	public static function getByID($wpID) {
 		$db = Loader::db();
 		$r = $db->GetRow('select WorkflowProgress.*, WorkflowProgressCategories.wpCategoryHandle from WorkflowProgress inner join WorkflowProgressCategories on WorkflowProgress.wpCategoryID = WorkflowProgressCategories.wpCategoryID where wpID  = ?', array($wpID));
-		if (!is_array($r) && (!$r['wpID'])) { 
+		if (!is_array($r) || (!$r['wpID'])) { 
 			return false;
-		}	
+		}
 		$class = Loader::helper("text")->camelcase($r['wpCategoryHandle']) . 'WorkflowProgress';
+		
 		$wp = new $class;
 		$wp->setPropertiesFromArray($r);
 		$wp->loadDetails();

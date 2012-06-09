@@ -6,6 +6,7 @@ class PermissionResponse {
 	protected $allowedPermissions = array();
 	protected $customClassObjects = array();
 	protected $category;
+	static $cache = array();
 	
 	public function setPermissionObject($object) { 
 		$this->object = $object;
@@ -19,14 +20,35 @@ class PermissionResponse {
 	
 	public function testForErrors() { }
 	
+	public static function getFromCache($object) {
+		$cl = CacheLocal::get();
+		$identifier = 'PermissionResponse:' . get_class($object) . ':' . $object->getPermissionObjectIdentifier();
+		if (array_key_exists($identifier, $cl->cache)) {
+			return $cl->cache[$identifier];
+		}
+	}
+
+	public static function addToCache($object, PermissionResponse $pr) {
+		$cl = CacheLocal::get();
+		$identifier = 'PermissionResponse:' . get_class($object) . ':' . $object->getPermissionObjectIdentifier();
+		$cl->cache[$identifier] = $pr;
+	}
 	
 	public static function getResponse($object) {
+		$r = self::getFromCache($object);
+		if (is_object($r)) {
+			return $r;
+		}
+		
 		$category = PermissionKeyCategory::getByHandle(Loader::helper('text')->uncamelcase(get_class($object)));
 		$txt = Loader::helper('text');
 		$c1 = get_class($object) . 'PermissionResponse';
 		$pr = new $c1();
 		$pr->setPermissionObject($object);
 		$pr->setPermissionCategoryObject($category);
+		
+		self::addToCache($object, $pr);
+		
 		return $pr;
 	}
 	
