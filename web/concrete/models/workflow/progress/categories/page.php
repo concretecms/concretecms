@@ -62,6 +62,7 @@ class PageWorkflowProgressList extends PageList {
 	public function __construct() {
 		$this->includeInactivePages();
 		$this->includeSystemPages();
+		$this->displayUnapprovedPages();
 		$this->ignoreAliases();
 		parent::setBaseQuery(', pwp.wpID, wp.wpCurrentStatus');
 		$this->addToQuery('inner join PageWorkflowProgress pwp on p1.cID = pwp.cID inner join WorkflowProgress wp on wp.wpID = pwp.wpID');

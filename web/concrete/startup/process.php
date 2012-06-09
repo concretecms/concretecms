@@ -567,6 +567,7 @@
 				break;
 			case 'approve-recent':
 				if ($cp->canApprovePageVersions()) {
+					$u = new User();
 					$pkr = new ApprovePagePageWorkflowRequest();
 					$pkr->setRequestedPage($c);
 					$v = CollectionVersion::get($c, "RECENT");
@@ -938,10 +939,14 @@
 				$obj = new stdClass;
 
 				if (($_POST['rel'] == 'SITEMAP' || $_POST['approveImmediately']) && ($cp->canApprovePageVersions())) {
-					$v = CollectionVersion::get($c, "RECENT");
-					$v->approve(false);
+					$pkr = new ApprovePagePageWorkflowRequest();
 					$u = new User();
-					$u->unloadCollectionEdit();
+					$pkr->setRequestedPage($c);
+					$v = CollectionVersion::get($c, "RECENT");
+					$pkr->setRequestedVersionID($v->getVersionID());
+					$pkr->setRequesterUserID($u->getUserID());
+					$u->unloadCollectionEdit($c);
+					$response = $pkr->trigger();
 					$obj->rel = $_POST['rel'];
 					$obj->name = $v->getVersionName();
 				}
@@ -1055,11 +1060,15 @@
 					
 
 					if ($_POST['rel'] == 'SITEMAP') { 
-						if ($cp->canApprovePageVersions()) {
-							$v = CollectionVersion::get($nc, "RECENT");
-							$v->approve(false);
-						}
 						$u = new User();
+						if ($cp->canApprovePageVersions()) {
+							$pkr = new ApprovePagePageWorkflowRequest();
+							$pkr->setRequestedPage($nc);
+							$v = CollectionVersion::get($nc, "RECENT");
+							$pkr->setRequestedVersionID($v->getVersionID());
+							$pkr->setRequesterUserID($u->getUserID());
+							$response = $pkr->trigger();
+						}
 						$u->unloadCollectionEdit();
 
 						if ($_POST['mode'] == 'explore' ) {
