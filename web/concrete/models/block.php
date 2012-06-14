@@ -322,7 +322,9 @@ class Block extends Object {
 		
 		// ONLY ALLOWS ITEMS THAT START WITH "action_";
 		
-		return @$bc->{$method}();
+		if(method_exists($bc, $method)) {
+			return $bc->{$method}();
+		}
 	}
 	
 	public function getInstance() {		
