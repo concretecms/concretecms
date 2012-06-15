@@ -59,9 +59,14 @@ $(function() {
 
 </script>
 
+<div class="row">
+<div class="span14 offset1">
 <div class="page-header">
 <h1><?=t('Install concrete5')?></h1>
 </div>
+</div>
+</div>
+
 
 <div class="row">
 <div class="span10 offset3">
@@ -75,7 +80,6 @@ $(function() {
 </div>
 
 <div id="install-progress-wrapper">
-
 <div class="alert-message info">
 <div id="install-progress-summary">
 <?=t('Beginning Installation')?>
@@ -83,22 +87,18 @@ $(function() {
 </div>
 
 <div id="install-progress-bar">
-
 <div class="progress progress-striped active">
 <div class="bar" style="width: 0%;"></div>
 </div>
-
 </div>
 
 </div>
 
 <div id="install-progress-error-wrapper">
-
 <div id="install-progress-errors"></div>
 <div id="install-progress-back">
 <input type="button" class="btn" onclick="window.location.href='<?=$this->url('/install')?>'" value="<?=t('Back')?>" />
 </div>
-
 </div>
 </div>
 </div>
@@ -115,16 +115,21 @@ $(function() {
 });
 </script>
 
+<div class="row">
 <div class="span14 offset1">
 
 <div class="page-header">
 <h1><?=t('Install concrete5')?></h1>
 </div>
 
+</div>
+</div>
+
+
 <form action="<?=$this->url('/install', 'configure')?>" method="post" class="form-horizontal">
 
 <div class="row">
-<div class="span7">
+<div class="span7 offset1">
 
 	<input type="hidden" name="locale" value="<?=$locale?>" />
 	
@@ -195,11 +200,12 @@ $(function() {
 		<?=$form->text('DB_DATABASE', array('class' => 'xlarge'))?>
 	</div>
 	</div>
+	</fieldset>
 </div>
 </div>
 
 <div class="row">
-<div class="span14">
+<div class="span14 offset1">
 
 <h3><?=t('Sample Content')?></h3>
 
@@ -235,11 +241,18 @@ $(function() {
 </div>
 </div>
 
+<div class="row">
+<div class="span14 offset1">
+
 <div class="well">
 	<button class="btn btn-large primary" type="submit"><i class="icon-thumbs-up icon-white"></i> <?=t('Install concrete5')?></button>
 </div>
-</form>
+
 </div>
+</div>
+
+</form>
+
 
 <? } else if (isset($locale) || count($locales) == 0) { ?>
 
@@ -284,17 +297,21 @@ $(function() {
 });
 </script>
 
+<div class="row">
+
 <div class="span14 offset1">
 <div class="page-header">
 	<h1><?=t('Install concrete5')?></h1>
 </div>
 
-
 <h3><?=t('Testing Required Items')?></h3>
-<div class="row">
-<div class="span7 columns">
+</div>
+</div>
 
-<table class="requirements-table table">
+<div class="row">
+<div class="span7 offset1">
+
+<table class="table table-striped">
 <tbody>
 <tr>
 	<td><? if ($phpVtest) { ?><img src="<?=ASSETS_URL_IMAGES?>/icons/success.png" /><? } else { ?><img src="<?=ASSETS_URL_IMAGES?>/icons/warning.png" /><? } ?></td>
@@ -322,9 +339,9 @@ $(function() {
 </table>
 
 </div>
-<div class="span7 columns">
+<div class="span7">
 
-<table class="requirements-table table">
+<table class="table table-striped">
 
 <tr>
 	<td><? if ($imageTest) { ?><img src="<?=ASSETS_URL_IMAGES?>/icons/success.png" /><? } else { ?><img src="<?=ASSETS_URL_IMAGES?>/icons/error.png" /><? } ?></td>
@@ -351,15 +368,19 @@ $(function() {
 </div>
 </div>
 
-<br/><br/>
+
+<div class="row">
+<div class="span7 offset1">
 
 <h3><?=t('Testing Optional Items')?></h3>
 
+</div>
+</div>
+
 <div class="row">
-<div class="span7 columns">
+<div class="span7 offset1">
 
-
-<table class="requirements-table table">
+<table class="table table-striped">
 <tbody>
 <tr>
 	<td><? if ($remoteFileUploadTest) { ?><img src="<?=ASSETS_URL_IMAGES?>/icons/success.png" /><? } else { ?><img src="<?=ASSETS_URL_IMAGES?>/icons/warning.png" /><? } ?></td>
@@ -370,8 +391,8 @@ $(function() {
 </table>
 
 </div>
-<div class="span7 columns">
-<table class="requirements-table table">
+<div class="span7">
+<table class="table table-striped">
 
 <tr>
 	<td><? if ($diffTest) { ?><img src="<?=ASSETS_URL_IMAGES?>/icons/success.png" /><? } else { ?><img src="<?=ASSETS_URL_IMAGES?>/icons/warning.png" /><? } ?></td>
@@ -384,6 +405,8 @@ $(function() {
 </div>
 </div>
 
+<div class="row">
+<div class="span14 offset1">
 <div class="well" id="install-success">
 	<form method="post" action="<?=$this->url('/install','setup')?>">
 	<input type="hidden" name="locale" value="<?=$locale?>" />
@@ -405,14 +428,20 @@ $(function() {
 <?=t('Having trouble? Check the <a href="%s">installation help forums</a>, or <a href="%s">have us host a copy</a> for you.', 'http://www.concrete5.org/community/forums/installation', 'http://www.concrete5.org/services/hosting')?>
 </div>
 </div>
+</div>
 
 <? } else { ?>
 
+<div class="row">
 <div class="span14 offset1">
-
 <div class="page-header">
 	<h1><?=t('Install concrete5')?></h1>
 </div>
+</div>
+</div>
+
+<div class="row">
+<div class="span14 offset1">
 
 <div id="ccm-install-intro">
 
@@ -433,6 +462,7 @@ $(function() {
 </fieldset>
 </form>
 
+</div>
 </div>
 </div>
 

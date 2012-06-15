@@ -21,10 +21,6 @@ table#sample-content-selector td {
 	vertical-align: middle;
 }
 
-table#sample-content-selector td.sample-content-thumbnail, table#sample-content-selector td.sample-content-description {
-	border: 0px !important;
-}
-
 #success-message {
 	display: none;
 }
