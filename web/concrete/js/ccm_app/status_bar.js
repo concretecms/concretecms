@@ -33,7 +33,7 @@ ccm_statusBar = {
 						buttonStr += '<button type="submit" ' + attribs + ' name="action_' + buttons[j].getAction() + '" class="btn-small btn ' + buttons[j].getCSSClass() + '">' + innerButtonLeft + buttons[j].getLabel() + innerButtonRight + '</button>';
 					}
 				}
-				var line = '<form method="post" action="' + it.getAction() + '" id="ccm-status-bar-form-' + i + '" ' + (it.useAjaxForm ? 'class="ccm-status-bar-ajax-form"' : '') + '><div class="alert-message alert ' + it.getCSSClass() + '"><span>' + it.getDescription() + '</span> <div class="ccm-page-status-bar-buttons">' + buttonStr + '</div></div></form>';
+				var line = '<form method="post" action="' + it.getAction() + '" id="ccm-status-bar-form-' + i + '" ' + (it.useAjaxForm ? 'class="ccm-status-bar-ajax-form"' : '') + '><div class="alert-message alert ' + it.getCSSClass() + '"><button type="button" class="close" data-dismiss="alert">×</button><span>' + it.getDescription() + '</span> <div class="ccm-page-status-bar-buttons">' + buttonStr + '</div></div></form>';
 				d += line;
 			}
 			d += '</div>';
