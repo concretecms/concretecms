@@ -172,7 +172,7 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
 		<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Inspect Package'), false, 'span12 offset2', false);?>
 		
 		<div class="ccm-pane-body">
-			<table>
+			<table class="table table-bordered table-striped">
 			<tr>
 				<td class="ccm-marketplace-list-thumbnail"><img src="<?=$ci->getPackageIconURL($pkg)?>" /></td>
 				<td class="ccm-addon-list-description" style="width: 100%"><h3><?=$pkg->getPackageName()?> - <?=$pkg->getPackageVersion()?></a></h3><?=$pkg->getPackageDescription()?></td>
@@ -231,7 +231,7 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
 				</div>
 			<? } ?>
 
-			<table class="zebra-striped">
+			<table class="table table-bordered table-striped">
 		
 			<?	foreach ($pkgArray as $pkg) { ?>
 				<tr>
@@ -258,7 +258,7 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
 			
 		<? } else { ?>
 	
-			<table class="zebra-striped">
+			<table class="table table-bordered table-striped">
 			<? foreach ($purchasedBlocks as $pb) {
 				$file = $pb->getRemoteFileURL();
 				if (!empty($file)) {?>

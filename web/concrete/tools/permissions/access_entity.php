@@ -90,7 +90,7 @@ if ($_POST['task'] == 'save_permissions') {
 
 <p><?=t('Who gets access to this permission?')?></p>
 
-<table id="ccm-permissions-access-entity-members">
+<table id="ccm-permissions-access-entity-members" class="table table-bordered">
 <tr>
 	<th><div style="width: 16px"></div></th>
 	<th width="100%"><?=t("Name")?></th>

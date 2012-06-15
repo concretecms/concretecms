@@ -5,7 +5,7 @@
 	?>
 	<h3><?=$title?></h3>
 
-<table class="ccm-permission-access-list">
+<table class="ccm-permission-access-list table table-bordered">
 <tr>
 	<th colspan="3">
 		<div style="position: relative">

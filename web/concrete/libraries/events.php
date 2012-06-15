@@ -132,6 +132,7 @@ class Events {
 
 		$ce = Events::getInstance();
 		$events = $ce->registeredEvents[$event];
+
 		$eventReturn = false;
 		
 		if (is_array($events)) {
@@ -163,11 +164,18 @@ class Events {
 					$params = (is_array($ev[4])) ? $ev[4] : array();
 					
 					// now if args has any values we put them FIRST
-					$params = array_merge($args, $params);
-	
-					if (method_exists($ev[1], $ev[2])) {
-						// Note: DO NOT DO RETURN HERE BECAUSE THEN MULTIPLE EVENTS WON'T WORK
-						$eventReturn = call_user_func_array(array($ev[1], $ev[2]), $params);
+					if (is_array($args)) {
+						$params = array_merge($args, $params);
+					}
+
+					if ($ev[1] instanceof Closure) {
+						$func = $ev[1];
+						$eventReturn = call_user_func_array($func, $params);
+					} else {
+						if (method_exists($ev[1], $ev[2])) {
+							// Note: DO NOT DO RETURN HERE BECAUSE THEN MULTIPLE EVENTS WON'T WORK
+							$eventReturn = call_user_func_array(array($ev[1], $ev[2]), $params);
+						}
 					}
 				}
 			}
