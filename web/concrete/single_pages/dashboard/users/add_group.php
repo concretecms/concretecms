@@ -26,7 +26,7 @@ $form = Loader::helper('form');
 <div class="clearfix">
 <?=$form->label('gDescription', t('Description'))?>
 <div class="input">
-	<textarea name="gDescription" rows="6" class="span6"><?=$_POST['gDescription']?></textarea>
+	<?=$form->textarea('gDescription', array('rows' => 6, 'class' =>'span6'))?>
 </div>
 </div>
 </fieldset>
