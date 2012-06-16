@@ -10,7 +10,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
  
 class ChangeSubpageDefaultsInheritancePageWorkflowRequest extends PageWorkflowRequest {
 	
-	const REQUEST_STATUS_NUM = 30;
+	protected $wrStatusNum = 30;
 
 	public function __construct() {
 		$pk = PermissionKey::getByHandle('edit_page_permissions');

@@ -188,14 +188,6 @@ abstract class WorkflowProgress extends Object {
 		$db->Execute('update WorkflowProgress set wpIsCompleted = 1 where wpID = ?', array($this->wpID));
 	}
 	
-	public function getPendingWorkflowProgressList() {
-		$class = get_called_class();
-		$class = $class . 'List';
-		$list = new $class();
-		$list->filter('wpApproved', 0);
-		$list->sortBy('wpDateLastAction', 'desc');
-		return $list;
-	}
-	
+	abstract public function getPendingWorkflowProgressList();
 	
 }

@@ -59,9 +59,15 @@
         .remove()
     }
 
+    /*
     $.support.transition && $parent.hasClass('fade') ?
       $parent.on($.support.transition.end, removeElement) :
       removeElement()
+      */
+      
+     $parent.addClass('fade');
+     $parent.on($.support.transition.end, removeElement);
+      
   }
 
 

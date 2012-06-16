@@ -6,27 +6,46 @@ defined('C5_EXECUTE') or die("Access Denied.");
 * workaround until update to PHP 5.3 takes place
 * (Don't make more than one call in the same line, or it will break!!!).
 */
-if (!function_exists('get_called_class')):
-function get_called_class()
-{
-    $bt = debug_backtrace();
-    $l = count($bt) - 1;
-    $matches = array();
-    while(empty($matches) && $l > -1){
-        $lines = file($bt[$l]['file']);
-        $callerLine = $lines[$bt[$l]['line']-1];
-        preg_match('/([a-zA-Z0-9\_]+)::'.$bt[$l--]['function'].'/',
-        $callerLine,
-        $matches);
-    }
-    if (!isset($matches[1])) $matches[1]=NULL; //for notices
-    if ($matches[1] == 'self') {
-        $line = $bt[$l]['line']-1;
-        while ($line > 0 && strpos($lines[$line], 'class') === false) {
-            $line--;
-        }
-        preg_match('/class[\s]+(.+?)[\s]+/si', $lines[$line], $matches);
-    }
-    return $matches[1];
+if(!function_exists('get_called_class')) {
+	function get_called_class($bt = false,$l = 1) {
+		if (!$bt) $bt = debug_backtrace();
+		if (!isset($bt[$l])) throw new Exception("Cannot find called class -> stack level too deep.");
+		if (!isset($bt[$l]['type'])) {
+			throw new Exception ('type not set');
+		}
+		else switch ($bt[$l]['type']) {
+			case '::':
+				$lines = file($bt[$l]['file']);
+				$i = 0;
+				$callerLine = '';
+				do {
+					$i++;
+					$callerLine = $lines[$bt[$l]['line']-$i] . $callerLine;
+				} while (stripos($callerLine,$bt[$l]['function']) === false);
+				preg_match('/([a-zA-Z0-9\_]+)::'.$bt[$l]['function'].'/',
+							$callerLine,
+							$matches);
+				if (!isset($matches[1])) {
+					// must be an edge case.
+					throw new Exception ("Could not find caller class: originating method call is obscured.");
+				}
+				switch ($matches[1]) {
+					case 'self':
+					case 'parent':
+						return get_called_class($bt,$l+1);
+					default:
+						return $matches[1];
+				}
+				// won't get here.
+			case '->': switch ($bt[$l]['function']) {
+					case '__get':
+						// edge case -> get class of calling object
+						if (!is_object($bt[$l]['object'])) throw new Exception ("Edge case fail. __get called on non object.");
+						return get_class($bt[$l]['object']);
+					default: return $bt[$l]['class'];
+				}
+	
+			default: throw new Exception ("Unknown backtrace method type");
+		}
+	}
 }
-endif;

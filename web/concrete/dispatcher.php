@@ -24,6 +24,9 @@
 
 	## First we ensure that dispatcher is not being called directly
 	require(dirname(__FILE__) . '/startup/file_access_check.php');
+
+	## Called Class Fix for 5.2 ##	
+	require(dirname(__FILE__) . '/startup/get_called_class_check.php');
 	
 	## Load the database ##
 	Loader::database();
@@ -133,9 +136,6 @@
 
 	## Startup check, install ##	
 	require(dirname(__FILE__) . '/startup/magic_quotes_gpc_check.php');
-
-	## Called Class Fix for 5.2 ##	
-	require(dirname(__FILE__) . '/startup/get_called_class_check.php');
 
 	## Default routes for various content items ##
 	require(dirname(__FILE__) . '/config/theme_paths.php');

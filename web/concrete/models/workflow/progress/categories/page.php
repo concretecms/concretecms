@@ -52,6 +52,14 @@ class PageWorkflowProgress extends WorkflowProgress {
 	public function getWorkflowProgressFormAction() {
 		return REL_DIR_FILES_TOOLS_REQUIRED . '/' . DIRNAME_WORKFLOW . '/categories/page?task=save_workflow_progress&cID=' . $this->cID . '&wpID=' . $this->getWorkflowProgressID() . '&' . Loader::helper('validation/token')->getParameter('save_workflow_progress');
 	}
+
+	public function getPendingWorkflowProgressList() {
+		$list = new PageWorkflowProgressList();
+		$list->filter('wpApproved', 0);
+		$list->sortBy('wpDateLastAction', 'desc');
+		return $list;
+	}
+	
 	
 }
 
