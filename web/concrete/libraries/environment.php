@@ -57,7 +57,7 @@ class Environment {
 			DIR_LIBRARIES, DIR_FILES_EMAIL_TEMPLATES, DIR_MODELS, DIR_FILES_CONTENT, DIR_FILES_THEMES, DIR_FILES_TOOLS);
 		foreach($check as $loc) {
 			if (is_dir($loc)) {
-				$rc = new RecursiveDirectoryIterator($loc, FilesystemIterator::SKIP_DOTS);
+				$rc = new RecursiveDirectoryIterator($loc);
 				$rcd = new RecursiveIteratorIterator($rc);
 				$rgx = new RegexIterator($rcd, '/^.+\.php$/i', RecursiveRegexIterator::GET_MATCH);
 				foreach ($rgx as $r) {
@@ -68,7 +68,7 @@ class Environment {
 			}
 		}
 		if (is_dir(DIR_PACKAGES_CORE)) { 
-			$rc = new RecursiveDirectoryIterator(DIR_PACKAGES_CORE, FilesystemIterator::SKIP_DOTS);
+			$rc = new RecursiveDirectoryIterator(DIR_PACKAGES_CORE);
 			foreach ($rc as $r) {
 				if (substr($r->getFileName(), 0, 1) != '.') { 
 					$this->corePackages[] = $r->getFileName();

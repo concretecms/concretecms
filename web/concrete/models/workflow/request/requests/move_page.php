@@ -11,7 +11,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 class MovePagePageWorkflowRequest extends PageWorkflowRequest {
 	
 	protected $targetCID;
-	const REQUEST_STATUS_NUM = 50;
+	protected $wrStatusNum = 50;
 	
 	public function __construct() {
 		$pk = PermissionKey::getByHandle('move_or_copy_page');
