@@ -34,6 +34,7 @@
 	## We load the things that CANNOT be overridden
 	require_once(DIR_BASE_CORE . '/' . DIRNAME_LIBRARIES . '/object.php');
 	require_once(DIR_BASE_CORE . '/' . DIRNAME_LIBRARIES . '/cache.php');
+	require_once(DIR_BASE_CORE . '/' . DIRNAME_LIBRARIES . '/view.php');
 	require_once(DIR_BASE_CORE . '/' . DIRNAME_MODELS . '/config.php');
 	
 	## Startup cache ##
@@ -43,91 +44,12 @@
 	if (!$config_check_failed) { 
 		require(dirname(__FILE__) . '/config/app.php');
 	}
-	## Load required libraries ##
-	Loader::library('log');
-	Loader::library('localization');
-	Loader::library('request');
-	Loader::library('events');
-	Loader::library('model');
-	Loader::library('item_list');
-	Loader::library('view');
-	Loader::library('controller');
-	Loader::library('file/types');
-	Loader::library('block_view');
-	Loader::library('block_view_template');
-	Loader::library('block_controller');
-	Loader::library('attribute/view');
-	Loader::library('attribute/controller');
+
+	## Autoload settings
+	require(dirname(__FILE__) . '/startup/autoload.php');
 
 	set_exception_handler(array('View', 'defaultExceptionHandler'));
 	
-	## Autoload settings
-	if (C5_ENVIRONMENT_ONLY == false) {
-		require(dirname(__FILE__) . '/startup/autoload.php');
-	}
-	
-	## Load required models ##
-	Loader::model('area');
-	Loader::model('global_area');
-	Loader::model('attribute/key');
-	Loader::model('attribute/value');
-	Loader::model('attribute/category');
-	Loader::model('attribute/set');
-	Loader::model('attribute/type');
-	Loader::model('block');
-	Loader::model('custom_style');
-	Loader::model('file');
-	Loader::model('file_set');
-	Loader::model('file_version');
-	Loader::model('block_types');
-	Loader::model('collection');
-	Loader::model('collection_version');
-	Loader::model('collection_types');
-	Loader::model('groups');
-	Loader::model('layout');  
-	Loader::model('package');
-	Loader::model('page');
-	Loader::model('page_theme');
-	Loader::model('composer_page');
-	Loader::model('permission/access/model');
-	Loader::model('permission/access/entity');
-	Loader::model('permission/access/list_item');
-	Loader::model('permission/duration');
-	Loader::model('permission/category');
-	Loader::model('permission/key');
-	Loader::model('permission/assignment');
-	Loader::model('permissions');
-	Loader::model('permission/response');
-	Loader::model('permission/set');
-	Loader::model("permission/categories/page");
-	Loader::model("permission/categories/task");
-	Loader::model("permission/categories/block_type");
-	Loader::model("permission/categories/file_set");
-	Loader::model("permission/categories/file");
-	Loader::model("permission/categories/stack");
-	Loader::model("permission/categories/area");
-	Loader::model("permission/categories/block");
-	Loader::model("permission/categories/user");
-	Loader::model("permission/categories/sitemap");
-	Loader::model("permission/categories/admin");
-	Loader::model("permission/categories/marketplace_newsflow");
-	Loader::model("permission/categories/workflow");
-	Loader::model("permission/categories/basic_workflow");
-	Loader::model("workflow/model");
-	Loader::model("workflow/description");
-	Loader::model("workflow/progress/model");
-	Loader::model("workflow/progress/category");
-	Loader::model("workflow/progress/history");
-	Loader::model("workflow/progress/response");
-	Loader::model("workflow/progress/action");
-	Loader::model("workflow/progress/categories/page");
-	Loader::model("workflow/request/model");
-	Loader::model("workflow/request/categories/page");
-	Loader::model("workflow/type");
-	Loader::model('user');
-	Loader::model('userinfo');
-	Loader::model('stack/model');
-
 	## Set default permissions for new files and directories ##
 	require(dirname(__FILE__) . '/startup/file_permission_config.php');
 	
