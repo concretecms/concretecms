@@ -1150,3 +1150,26 @@ class Block extends Object {
 
 
 }
+
+/**
+ * An Active Record object attached to a particular block. Data is automatically loaded into this object unless the block is too complex.
+ *
+ * @package Blocks
+ * @category Concrete
+ * @author Andrew Embler <andrew@concrete5.org>
+ * @category Concrete
+ * @copyright  Copyright (c) 2003-2008 Concrete5. (http://www.concrete5.org)
+ * @license    http://www.concrete5.org/license/     MIT License
+ *
+ */
+	class BlockRecord extends ADOdb_Active_Record {
+		
+		public function __construct($tbl = null) {
+			if ($tbl) {
+				$db = Loader::db();
+				$this->_table = $tbl;
+				parent::__construct($tbl);
+			}
+		}
+		
+	}

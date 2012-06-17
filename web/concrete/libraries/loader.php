@@ -20,6 +20,8 @@
  
  class Loader {
 		
+		static $autoloadClasses = array();
+		
 		/** 
 		 * Loads a library file, either from the site's files or from Concrete's
 		 */
@@ -87,6 +89,50 @@
 		   }
 			$env = Environment::get();
 			require_once($env->getPath(DIRNAME_TOOLS . '/' . $file . '.php', $pkgHandle));
+		}
+		
+		/** 
+		 * Registers a component with concrete5's autoloader.
+		 */
+		public static function registerAutoload($classes) {
+			foreach($classes as $class => $data) {	
+				if (strpos($class, ',') > -1) {
+					$subclasses = explode(',', $class);
+					foreach($subclasses as $subclass) {
+						Loader::$autoloadClasses[$subclass] = $data;
+					}
+				} else {
+					Loader::$autoloadClasses[$class] = $data;
+				}
+			}				
+		}
+		
+		/** 
+		 * @private
+		 */
+		public static function autoload($class) {
+			$classes = Loader::$autoloadClasses;
+			$cl = $classes[$class];
+			if ($cl) {
+				call_user_func_array(array('Loader', $cl[0]), array($cl[1], $cl[2]));
+			} else {
+				/* lets handle some things slightly more dynamically */
+				$txt = Loader::helper('text');
+				if (strpos($class, 'BlockController') > 0) {
+					$class = substr($class, 0, strpos($class, 'BlockController'));
+					$handle = $txt->uncamelcase($class);
+					Loader::block($handle);
+				} else if (strpos($class, 'AttributeType') > 0) {
+					$class = substr($class, 0, strpos($class, 'AttributeType'));
+					$handle = $txt->uncamelcase($class);
+					$at = AttributeType::getByHandle($handle);
+				} else 	if (strpos($class, 'Helper') > 0) {
+					$class = substr($class, 0, strpos($class, 'Helper'));
+					$handle = $txt->uncamelcase($class);
+					$handle = preg_replace('/^site_/', '', $handle);
+					Loader::helper($handle);
+				}
+			}
 		}
 		
 		/** 
