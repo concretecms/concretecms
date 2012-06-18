@@ -13,6 +13,22 @@ class UserPermissionAccessEntity extends PermissionAccessEntity {
 		$html = '<a href="' . REL_DIR_FILES_TOOLS_REQUIRED . '/users/search_dialog?mode=choose_multiple" dialog-modal="false" dialog-width="90%" dialog-title="' . t('Add User') . '" class="dialog-launch" dialog-height="70%"">' . t('User') . '</a>';
 		return $html;		
 	}
+
+	public static function getAccessEntitiesForUser($user) {
+		$entities = array();
+		$db = Loader::db();
+		if ($user->isRegistered()) { 
+			// we find the peID for the current user, if one exists. This means that the user has special permissions set just for them.
+			$peID = $db->GetOne('select peID from PermissionAccessEntityUsers where uID = ?', array($user->getUserID()));
+			if ($peID > 0) {
+				$entity = PermissionAccessEntity::getByID($peID);
+				if (is_object($entity)) { 
+					$entities[] = $entity;
+				}
+			}
+		}
+		return $entities;		
+	}
 	
 	public static function getOrCreate(UserInfo $ui) {
 		$db = Loader::db();

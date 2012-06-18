@@ -51,6 +51,8 @@ class PagePermissionResponse extends PermissionResponse {
 		$dh = Loader::helper('concrete/dashboard');
 		if ($dh->canRead() ||
 		$this->canViewPageVersions() ||
+		$this->canPreviewPageAsUser() ||
+		$this->canEditPageSpeedSettings() ||
 		$this->canEditPageContents() || 
 		$this->canAddSubpage() ||
 		$this->canDeletePage() ||
