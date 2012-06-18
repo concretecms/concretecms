@@ -96,6 +96,16 @@ class PermissionKeyCategory extends Object {
 		$db = Loader::db();
 		$db->Execute('delete from PermissionKeyCategories where pkCategoryID = ?', array($this->pkCategoryID));
 	}
+
+	public function associateAccessEntityType(PermissionAccessEntityType $pt) {
+		$db = Loader::db();
+		$db->Execute('insert into PermissionAccessEntityTypeCategories (petID, pkCategoryID) values (?, ?)', array($pt->getAccessEntityTypeID(), $this->pkCategoryID));
+	}
+	
+	public function clearAccessEntityTypeCategories() {
+		$db = Loader::db();
+		$db->Execute('delete from PermissionAccessEntityTypeCategories where pkCategoryID = ?', $this->pkCategoryID);
+	}
 	
 	public static function getList() {
 		$db = Loader::db();

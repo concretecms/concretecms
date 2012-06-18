@@ -44,6 +44,8 @@ class ConcreteUpgradeVersion560Helper {
 		'PermissionAccessList',
 		'PermissionKeyCategories',
 		'PermissionAccessEntities',
+		'PermissionAccessEntityTypes',
+		'PermissionAccessEntityTypeCategories',
 		'PermissionAccessEntityUsers',
 		'PermissionAccessEntityGroups',
 		'PermissionDurationObjects',

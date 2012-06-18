@@ -1,0 +1,42 @@
+<?
+defined('C5_EXECUTE') or die("Access Denied.");
+
+class UserPermissionAccessEntity extends PermissionAccessEntity {
+
+	protected $user;
+	public function getUserObject() {return $this->user;}
+	
+	public function getAccessEntityUsers() {
+		return array($this->getUserObject());
+	}
+	public function getAccessEntityTypeLinkHTML() {
+		$html = '<a href="' . REL_DIR_FILES_TOOLS_REQUIRED . '/users/search_dialog?mode=choose_multiple" dialog-modal="false" dialog-width="90%" dialog-title="' . t('Add User') . '" class="dialog-launch" dialog-height="70%"">' . t('User') . '</a>';
+		return $html;		
+	}
+	
+	public static function getOrCreate(UserInfo $ui) {
+		$db = Loader::db();
+		$petID = $db->GetOne('select petID from PermissionAccessEntityTypes where petHandle = \'user\'');
+		$peID = $db->GetOne('select pae.peID from PermissionAccessEntities pae inner join PermissionAccessEntityUsers paeg on pae.peID = paeg.peID where petID = ? and paeg.uID = ?', 
+			array($petID, $ui->getUserID()));
+		if (!$peID) { 
+			$db->Execute("insert into PermissionAccessEntities (petID) values(?)", array($petID));
+			$peID = $db->Insert_ID();
+			$db->Execute('insert into PermissionAccessEntityUsers (peID, uID) values (?, ?)', array($peID, $ui->getUserID()));
+		}
+		return PermissionAccessEntity::getByID($peID);
+	}
+
+	public function load() {
+		$db = Loader::db();
+		$uID = $db->GetOne('select uID from PermissionAccessEntityUsers where peID = ?', array($this->peID));
+		if ($uID) {
+			$ui = UserInfo::getByID($uID);
+			if (is_object($ui)) {
+				$this->user = $ui;
+				$this->label .= $ui->getUserName();
+			}
+		}
+	}
+
+}

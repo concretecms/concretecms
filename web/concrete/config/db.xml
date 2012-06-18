@@ -1132,18 +1132,45 @@
       <UNSIGNED />
     </field>
   </table>
+  <table name="PermissionAccessEntityTypes">
+    <field name="petID" type="I" size="10">
+      <KEY/>
+      <AUTOINCREMENT/>
+      <UNSIGNED />
+    </field>
+    <field name="petHandle" type="C" size="255">
+      <NOTNULL/>
+    </field>
+    <field name="petName" type="C" size="255">
+      <NOTNULL/>
+    </field>
+    <field name="pkgID" type="I" size="10">
+      <UNSIGNED />
+    </field>
+  </table>
+  <table name="PermissionAccessEntityTypeCategories">
+    <field name="petID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="pkCategoryID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+  </table>
     <table name="PermissionAccessEntities">
     <field name="peID" type="I" size="10">
       <KEY/>
       <AUTOINCREMENT/>
       <UNSIGNED/>
     </field>
-    <field name="peType" type="C" size="1">
-      <NOTNULL/>
-      <DEFAULT value="G"/>
+    <field name="petID" type="I" size="10">
+      <UNSIGNED />
     </field>
-    <index name="peType">
-      <col>peType</col>
+    <index name="petID">
+      <col>petID</col>
     </index>
   </table>
     <table name="PermissionAccessEntityUsers">

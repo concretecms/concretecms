@@ -35,6 +35,7 @@
 	require_once(DIR_BASE_CORE . '/' . DIRNAME_LIBRARIES . '/object.php');
 	require_once(DIR_BASE_CORE . '/' . DIRNAME_LIBRARIES . '/cache.php');
 	require_once(DIR_BASE_CORE . '/' . DIRNAME_LIBRARIES . '/view.php');
+	require_once(DIR_BASE_CORE . '/' . DIRNAME_LIBRARIES . '/localization.php');
 	require_once(DIR_BASE_CORE . '/' . DIRNAME_MODELS . '/config.php');
 	
 	## Startup cache ##

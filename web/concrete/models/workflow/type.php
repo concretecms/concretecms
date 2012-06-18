@@ -12,8 +12,6 @@ class WorkflowType extends Object {
 		if ($row['wftHandle']) {
 			$wt = new WorkflowType();
 			$wt->setPropertiesFromArray($row);
-			// make sure it is loaded
-			Loader::model('workflow/types/' . $row['wftHandle'], $wt->getPackageHandle());
 			return $wt;
 		}
 	}

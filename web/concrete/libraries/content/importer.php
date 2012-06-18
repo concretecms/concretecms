@@ -35,6 +35,7 @@ class ContentImporter {
 		$this->importAttributeSets($sx);
 		$this->importThemes($sx);
 		$this->importPermissionCategories($sx);
+		$this->importPermissionAccessEntityTypes($sx);
 		$this->importTaskPermissions($sx);
 		$this->importPermissions($sx);
 		$this->importJobs($sx);
@@ -309,6 +310,25 @@ class ContentImporter {
 					foreach($at->categories->children() as $cat) {
 						$catobj = AttributeKeyCategory::getByHandle((string) $cat['handle']);
 						$catobj->associateAttributeKeyType($type);
+					}
+				}
+			}
+		}
+	}
+
+	protected function importPermissionAccessEntityTypes(SimpleXMLElement $sx) {
+		if (isset($sx->permissionaccessentitytypes)) {
+			foreach($sx->permissionaccessentitytypes->permissionaccessentitytype as $pt) {
+				$pkg = ContentImporter::getPackageObject($pt['package']);
+				$name = $pt['name'];
+				if (!$name) {
+					$name = Loader::helper('text')->unhandle($pt['handle']);
+				}
+				$type = PermissionAccessEntityType::add($pt['handle'], $name, $pkg);
+				if (isset($pt->categories)) {
+					foreach($pt->categories->children() as $cat) {
+						$catobj = PermissionKeyCategory::getByHandle((string) $cat['handle']);
+						$catobj->associateAccessEntityType($type);
 					}
 				}
 			}
