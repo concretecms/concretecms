@@ -10,7 +10,7 @@ if ($cp->canEditPagePermissions()) {
 	foreach($assignments as $asi) {
 		$ae = $asi->getAccessEntityObject();
 		$ae = $asi->getAccessEntityObject();
-		if ($ae->getAccessEntityType() == 'G') {
+		if ($ae->getAccessEntityTypeHandle() == 'group') {
 			$viewAccess[] = $ae->getGroupObject()->getGroupID();
 		}
 	}
@@ -21,7 +21,7 @@ if ($cp->canEditPagePermissions()) {
 	foreach($assignments as $asi) {
 		$ae = $asi->getAccessEntityObject();
 		$ae = $asi->getAccessEntityObject();
-		if ($ae->getAccessEntityType() == 'G') {
+		if ($ae->getAccessEntityTypeHandle() == 'group') {
 			$editAccess[] = $ae->getGroupObject()->getGroupID();
 		}
 	}

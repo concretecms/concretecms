@@ -26,7 +26,7 @@
  /* DROPDOWN CLASS DEFINITION
   * ========================= */
 
-  var toggle = '[data-toggle="dropdown"]'
+  var dd_toggle = '[data-toggle="dropdown"]'
     , Dropdown = function (element) {
         var $el = $(element).on('click.dropdown.data-api', this.toggle)
         $('html').on('click.dropdown.data-api', function () {
@@ -58,7 +58,7 @@
 
       isActive = $parent.hasClass('open')
 
-      clearMenus()
+      dd_clearMenus()
 
       if (!isActive) $parent.toggleClass('open')
 
@@ -67,8 +67,8 @@
 
   }
 
-  function clearMenus() {
-    $(toggle).parent().removeClass('open')
+  function dd_clearMenus() {
+    $(dd_toggle).parent().removeClass('open')
   }
 
 
@@ -91,10 +91,10 @@
    * =================================== */
 
   $(function () {
-    $('html').on('click.dropdown.data-api', clearMenus)
+    $('html').on('click.dropdown.data-api', dd_clearMenus)
     $('body')
       .on('click.dropdown', '.dropdown form', function (e) { e.stopPropagation() })
-      .on('click.dropdown.data-api', toggle, Dropdown.prototype.toggle)
+      .on('click.dropdown.data-api', dd_toggle, Dropdown.prototype.toggle)
   })
 
 }(window.jQuery);

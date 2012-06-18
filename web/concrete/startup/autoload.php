@@ -2,7 +2,6 @@
 
 $classes = array(
 	'Log' => array('library','log'),
-	'Localization' => array('library','localization'),
 	'Request' => array('library','request'),
 	'Events' => array('library','events'),
 	'Model' => array('library','model'),
@@ -38,7 +37,11 @@ $classes = array(
 	'PageTheme' => array('model','page_theme'),
 	'ComposerPage' => array('model','composer_page'),
 	'PermissionAccess' => array('model','permission/access/model'),
-	'PermissionAccessEntity,UserPermissionAccessEntity,GroupPermissionAccessEntity,GroupCombinationPermissionAccessEntity' => array('model','permission/access/entity'),
+	'PermissionAccessEntity' => array('model','permission/access/entity/model'),
+	'PermissionAccessEntityType' => array('model','permission/access/entity/type'),
+	'UserPermissionAccessEntity' => array('model','permission/access/entity/types/user'),
+	'GroupPermissionAccessEntity' => array('model','permission/access/entity/types/group'),
+	'GroupCombinationPermissionAccessEntity' => array('model','permission/access/entity/types/group_combination'),
 	'PermissionAccessListItem' => array('model','permission/access/list_item'),
 	'PermissionDuration' => array('model','permission/duration'),
 	'PermissionKeyCategory' => array('model','permission/category'),

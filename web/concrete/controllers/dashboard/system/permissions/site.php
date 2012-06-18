@@ -13,9 +13,9 @@ class DashboardSystemPermissionsSiteController extends DashboardBaseController {
 		$assignments = $pk->getAccessListItems();
 		foreach($assignments as $asi) {
 			$ae = $asi->getAccessEntityObject();
-			if ($ae->getAccessEntityType() == 'G' && $ae->getGroupObject()->getGroupID() == GUEST_GROUP_ID) {
+			if ($ae->getAccessEntityTypeHandle() == 'group' && $ae->getGroupObject()->getGroupID() == GUEST_GROUP_ID) {
 				$this->set('guestCanRead', true);
-			} else if ($ae->getAccessEntityType() == 'G' && $ae->getGroupObject()->getGroupID() == REGISTERED_GROUP_ID) {
+			} else if ($ae->getAccessEntityTypeHandle() == 'group' && $ae->getGroupObject()->getGroupID() == REGISTERED_GROUP_ID) {
 				$this->set('registeredCanRead', true);
 			}
 		}

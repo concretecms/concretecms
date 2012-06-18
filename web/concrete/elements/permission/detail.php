@@ -46,8 +46,9 @@ $tabs = array();
 
 <div id="ccm-tab-content-access-types" <? if (count($tabs) > 0) { ?>class="ccm-tab-content"<? } ?>>
 <?
+$pkCategoryHandle = $permissionKey->getPermissionKeyCategoryHandle();
 $accessTypes = $permissionKey->getSupportedAccessTypes();
-Loader::element('permission/access/list', array('permissionAccess' => $pa, 'accessTypes' => $accessTypes)); ?>
+Loader::element('permission/access/list', array('pkCategoryHandle' => $pkCategoryHandle, 'permissionAccess' => $pa, 'accessTypes' => $accessTypes)); ?>
 </div>
 
 <? if ($permissionKey->hasCustomOptionsForm()) { ?>

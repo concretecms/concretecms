@@ -572,12 +572,18 @@ ccm_setupGroupSearchPaging = function() {
 	});
 }
 
-ccm_setupGroupSearch = function() {
+ccm_setupGroupSearch = function(callback) {
 	$('div.ccm-group a').unbind();
+	if (callback) {
+		func = window[callback];
+	} else {
+		func = ccm_triggerSelectGroup;
+	}
+
 	$('div.ccm-group a').each(function(i) {
 		var gla = $(this);
 		$(this).click(function() {
-			ccm_triggerSelectGroup(gla.attr('group-id'), gla.attr('group-name'));
+			func(gla.attr('group-id'), gla.attr('group-name'));
 			$.fn.dialog.closeTop();
 			return false;
 		});

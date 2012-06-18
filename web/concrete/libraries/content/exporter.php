@@ -47,6 +47,9 @@ class ContentExporter {
 		
 		// now packages
 		PackageList::export($this->x);
+
+		// permission access entity types
+		PermissionAccessEntityType::exportList($this->x);
 		
 		// now task permissions
 		PermissionKey::exportList($this->x);

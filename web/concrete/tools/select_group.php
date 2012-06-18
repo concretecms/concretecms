@@ -94,7 +94,7 @@ if (!$tp->canAccessGroupSearch()) {
 	
 	<script type="text/javascript">
 	$(function() {
-		ccm_setupGroupSearch();
+		ccm_setupGroupSearch('<?=Loader::helper('text')->entities($_REQUEST['callback'])?>');
 	});
 	</script>
 <? } ?>

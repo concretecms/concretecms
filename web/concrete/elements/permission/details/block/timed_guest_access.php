@@ -7,7 +7,7 @@ $pk->setPermissionObject($b);
 $list = $pk->getAccessListItems();
 foreach($list as $pa) { 
 	$pae = $pa->getAccessEntityObject(); 
-	if ($pae->getAccessEntityType() == 'G') {
+	if ($pae->getAccessEntityTypeHandle() == 'group') {
 		if ($pae->getGroupObject()->getGroupID() == GUEST_GROUP_ID) {
 			$pd = $pa->getPermissionDurationObject();
 			if (!is_object($pd)) {

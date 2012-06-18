@@ -39,6 +39,7 @@ abstract class PermissionKey extends Object {
 	 */
 	public function getPermissionKeyID() {return $this->pkID;}
 	public function getPermissionKeyCategoryID() {return $this->pkCategoryID;}
+	public function getPermissionKeyCategoryHandle() {return $this->pkCategoryHandle;}
 	
 	public function setPermissionObject($object) {
 		$this->permissionObject = $object;
@@ -58,7 +59,7 @@ abstract class PermissionKey extends Object {
 
 	protected static function load($pkID) {
 		$db = Loader::db();
-		$r = $db->GetRow('select pkID, pkName, pkDescription, pkHandle, pkCategoryHandle, pkCanTriggerWorkflow, PermissionKeys.pkCategoryID, PermissionKeys.pkgID from PermissionKeys inner join PermissionKeyCategories on PermissionKeyCategories.pkCategoryID = PermissionKeys.pkCategoryID where pkID = ?', array($pkID));
+		$r = $db->GetRow('select pkID, pkName, pkDescription, pkHandle, pkCategoryHandle, pkCanTriggerWorkflow, PermissionKeys.pkCategoryID, pkCategoryHandle, PermissionKeys.pkgID from PermissionKeys inner join PermissionKeyCategories on PermissionKeyCategories.pkCategoryID = PermissionKeys.pkCategoryID where pkID = ?', array($pkID));
 		$class = Loader::helper('text')->camelcase($r['pkCategoryHandle']) . 'PermissionKey';
 		if (!is_array($r) && (!$r['pkID'])) { 
 			return false;
