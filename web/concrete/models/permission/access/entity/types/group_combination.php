@@ -14,6 +14,34 @@ class GroupCombinationPermissionAccessEntity extends PermissionAccessEntity {
 		return $html;
 	}
 
+	public static function getAccessEntitiesForUser($user) {	
+		// finally, the most brutal one. we find any combos that this group would specifically be in.
+		// first, we look for any combos that contain any of the groups this user is in. That way if there aren't any we can just skip it.
+		$db = Loader::db();
+		$ingids = array();
+		$db = Loader::db();
+		foreach($user->getUserGroups() as $key => $val) {
+			$ingids[] = $key;
+		}
+		$instr = implode(',',$ingids);
+		$entities = array();
+		if ($user->isRegistered()) { 
+			$peIDs = $db->GetCol('select distinct pae.peID from PermissionAccessEntities pae inner join PermissionAccessEntityTypes paet on pae.petID = paet.petID inner join PermissionAccessEntityGroups paeg on pae.peID = paeg.peID where petHandle = \'group_combination\' and paeg.gID in (' . $instr . ')');
+			// now for each one we check to see if it applies
+			foreach($peIDs as $peID) {
+				$r = $db->GetRow('select count(gID) as peGroups, (select count(UserGroups.gID) from UserGroups where uID = ? and gID in (select gID from PermissionAccessEntityGroups where peID = ?)) as uGroups from PermissionAccessEntityGroups where peID = ?', array(
+					$user->getUserID(), $peID, $peID));
+				if ($r['peGroups'] == $r['uGroups'] && $r['peGroups'] > 1) { 
+					$entity = PermissionAccessEntity::getByID($peID);
+					if (is_object($entity)) { 
+						$entities[] = $entity;
+					}
+				}
+			}
+		}
+		return $entities;
+	}
+
 	public static function getOrCreate($groups) {
 		$db = Loader::db();
 		$petID = $db->GetOne('select petID from PermissionAccessEntityTypes where petHandle = \'group_combination\'');

@@ -14,6 +14,27 @@ class GroupPermissionAccessEntity extends PermissionAccessEntity {
 		$html = '<a href="' . REL_DIR_FILES_TOOLS_REQUIRED . '/select_group?include_core_groups=1" class="dialog-launch" dialog-modal="false" dialog-title="' . t('Add Group') . '">' . t('Group') . '</a>';
 		return $html;
 	}
+
+	public static function getAccessEntitiesForUser($user) {
+		$entities = array();
+		$ingids = array();
+		$db = Loader::db();
+		foreach($user->getUserGroups() as $key => $val) {
+			$ingids[] = $key;
+		}
+		$instr = implode(',',$ingids);
+		$peIDs = $db->GetCol('select pae.peID from PermissionAccessEntities pae inner join PermissionAccessEntityTypes paet on pae.petID = paet.petID inner join PermissionAccessEntityGroups paeg on pae.peID = paeg.peID where petHandle = \'group\' and paeg.gID in (' . $instr . ')');
+		if (is_array($peIDs)) {
+			foreach($peIDs as $peID) { 
+				$entity = PermissionAccessEntity::getByID($peID);
+				if (is_object($entity)) { 
+					$entities[] = $entity;
+				}
+			}
+		}
+
+		return $entities;		
+	}
 	
 	public static function getOrCreate(Group $g) {
 		$db = Loader::db();

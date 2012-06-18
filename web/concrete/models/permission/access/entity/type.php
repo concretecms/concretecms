@@ -19,12 +19,12 @@ class PermissionAccessEntityType extends Object {
 		}
 	}
 	
-	public function getAccessEntityTypeLinkHTML() {
+	public function __call($method, $args) {
 		$obj = $this->getAccessEntityTypeClass();
 		$o = new $obj();
-		return $o->getAccessEntityTypeLinkHTML();		
+		return call_user_func_array(array($obj, $method), $args);
 	}
-
+	
 	public function getAccessEntityTypeToolsURL($task = false) {
 		if (!$task) {
 			$task = 'process';
