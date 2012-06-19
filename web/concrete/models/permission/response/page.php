@@ -53,6 +53,7 @@ class PagePermissionResponse extends PermissionResponse {
 		$this->canViewPageVersions() ||
 		$this->canPreviewPageAsUser() ||
 		$this->canEditPageSpeedSettings() ||
+		$this->canEditPageProperties() ||
 		$this->canEditPageContents() || 
 		$this->canAddSubpage() ||
 		$this->canDeletePage() ||

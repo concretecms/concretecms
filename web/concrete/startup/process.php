@@ -914,6 +914,10 @@
 				// First, we check out the attributes we need to clear.
 				$setAttribs = $nvc->getSetCollectionAttributes();
 				$processedAttributes = array();
+				$selectedAKIDs = $_POST['selectedAKIDs'];
+				if (!is_array($selectedAKIDs)) {
+					$selectedAKIDs = array();					
+				}
 				foreach($setAttribs as $ak) {
 					// do I have the ability to edit this attribute?
 					if (in_array($ak->getAttributeKeyID(), $asl->getAttributesAllowedArray())) {
@@ -927,7 +931,7 @@
 						$processedAttributes[] = $ak->getAttributeKeyID();
 					}					
 				}
-				$newAttributes = array_diff($_POST['selectedAKIDs'], $processedAttributes);
+				$newAttributes = array_diff($selectedAKIDs, $processedAttributes);
 				foreach($newAttributes as $akID) {
 					if ($akID > 0 && in_array($akID, $asl->getAttributesAllowedArray())) {
 						$ak = CollectionAttributeKey::getByID($akID);

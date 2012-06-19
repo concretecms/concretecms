@@ -22,8 +22,14 @@ class EditPagePropertiesPagePermissionKey extends PagePermissionKey  {
 			return $asl;
 		}
 		
+		$pae = $this->getPermissionAccessObject();
+		if (!is_object($pae)) {
+			return $asl;
+		}
+
 		$accessEntities = $u->getUserAccessEntityObjects();
-		$list = $this->getAccessListItems(PagePermissionKey::ACCESS_TYPE_ALL, $accessEntities);
+		$accessEntities = $pae->validateAndFilterAccessEntities($accessEntities);
+		$list = $pae->getAccessListItems(PagePermissionKey::ACCESS_TYPE_ALL, $accessEntities);
 		$list = PermissionDuration::filterByActive($list);
 		$properties = array();
 		
