@@ -190,11 +190,9 @@
     </workflowtypes>
 
     <permissionaccessentitytypes>
-        <permissionaccessentitytype handle="user" name="User" package="">
-			<categories>
+        <permissionaccessentitytype handle="group" name="Group" package="">
+        	<categories>
 		        <category handle="page" />
-		        <category handle="single_page" />
-		        <category handle="stack" />
 		        <category handle="user" />
 		        <category handle="file_set" />
 		        <category handle="file" />
@@ -207,11 +205,9 @@
 		        <category handle="basic_workflow" />
 			</categories>
         </permissionaccessentitytype>
-        <permissionaccessentitytype handle="group" name="Group" package="">
-        	<categories>
+        <permissionaccessentitytype handle="user" name="User" package="">
+			<categories>
 		        <category handle="page" />
-		        <category handle="single_page" />
-		        <category handle="stack" />
 		        <category handle="user" />
 		        <category handle="file_set" />
 		        <category handle="file" />
@@ -227,8 +223,6 @@
         <permissionaccessentitytype handle="group_combination" name="Group Combination" package="">
 			<categories>
 		        <category handle="page" />
-		        <category handle="single_page" />
-		        <category handle="stack" />
 		        <category handle="user" />
 		        <category handle="file_set" />
 		        <category handle="file" />
@@ -239,6 +233,11 @@
 		        <category handle="sitemap" />
 		        <category handle="marketplace_newsflow" />
 		        <category handle="basic_workflow" />
+			</categories>
+        </permissionaccessentitytype>
+        <permissionaccessentitytype handle="page_owner" name="Page Owner" package="">
+			<categories>
+		        <category handle="page" />
 			</categories>
         </permissionaccessentitytype>
     </permissionaccessentitytypes>

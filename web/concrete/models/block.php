@@ -46,7 +46,7 @@ class Block extends Object {
 	}
 
 	public function getPermissionObjectIdentifier() {
-		return $this->getBlockID();
+		return $this->cID . ':' . $this->getAreaHandle() . ':' . $this->bID;
 	}
 	
 	public static function getByID($bID, $c = null, $a = null) {
