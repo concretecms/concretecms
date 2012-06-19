@@ -51,7 +51,7 @@ class Area extends Object {
 	*/
 
 	public function getPermissionObjectIdentifier() {
-		return $this->getAreaHandle();
+		return $this->getCollectionID() . ':' . $this->getAreaHandle();
 	}
 
 	function Area($arHandle) {

@@ -45,6 +45,16 @@ class PermissionAccess extends Object {
  		return $list;
 	}
 	
+	public function validateAndFilterAccessEntities($accessEntities) {
+		$entities = array();
+		foreach($accessEntities as $ae) {
+			if ($ae->validate($this)) {
+				$entities[] = $ae;
+			}
+		}
+		return $entities;
+	}
+	
 	public function validate() {
 		$u = new User();
 		if ($u->isSuperUser()) {
@@ -52,6 +62,7 @@ class PermissionAccess extends Object {
 		}
 		$accessEntities = $u->getUserAccessEntityObjects();
 		$valid = false;
+		$accessEntities = $this->validateAndFilterAccessEntities($accessEntities);
 		$list = $this->getAccessListItems(PermissionKey::ACCESS_TYPE_ALL, $accessEntities);
 		$list = PermissionDuration::filterByActive($list);
 		foreach($list as $l) {

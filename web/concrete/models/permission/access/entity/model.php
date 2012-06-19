@@ -13,6 +13,10 @@ abstract class PermissionAccessEntity extends Object {
 	abstract public function getAccessEntityTypeLinkHTML();
 	abstract public static function getAccessEntitiesForUser($user);
 	
+	public function validate(PermissionAccess $pae) {
+		return true;	
+	}
+	
 	final static function getByID($peID) {
 		$db = Loader::db();
 		$r = $db->GetRow('select petID, peID from PermissionAccessEntities where peID = ?', array($peID));
