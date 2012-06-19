@@ -286,6 +286,7 @@ class Package extends Object {
 		Loader::model('system/antispam/library');
 		$items['attribute_categories'] = AttributeKeyCategory::getListByPackage($this);
 		$items['permission_categories'] = PermissionKeyCategory::getListByPackage($this);
+		$items['permission_access_entity_types'] = PermissionAccessEntityType::getListByPackage($this);
 		$items['attribute_keys'] = AttributeKey::getListByPackage($this);
 		$items['attribute_sets'] = AttributeSet::getListByPackage($this);
 		$items['page_types'] = CollectionType::getListByPackage($this);
@@ -319,6 +320,8 @@ class Package extends Object {
 			return $item->getCollectionPath();
 		} else if ($item instanceof AttributeType) {
 			return $item->getAttributeTypeName();
+		} else if ($item instanceof PermissionAccessEntityType) {
+			return $item->getAccessEntityTypeName();
 		} else if ($item instanceof PermissionKeyCategory) {
 			return $txt->unhandle($item->getPermissionKeyCategoryHandle());
 		} else if ($item instanceof AttributeKeyCategory) {
@@ -387,6 +390,7 @@ class Package extends Object {
 						case 'AttributeType':
 						case 'WorkflowType':
 						case 'PermissionKey':
+						case 'PermissionAccessEntityType':
 							$item->delete();
 							break;
 						default:

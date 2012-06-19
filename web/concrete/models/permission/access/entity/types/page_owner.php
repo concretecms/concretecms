@@ -3,9 +3,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 class PageOwnerPermissionAccessEntity extends PermissionAccessEntity {
 
-	public function getAccessEntityUsers() {}
-	
-	public function validate(PermissionAccess $pae) {
+	public function getAccessEntityUsers(PermissionAccess $pae) {
 		if ($pae instanceof PagePermissionAccess) {
 			$c = $pae->getPermissionObject();
 		} else if ($pae instanceof AreaPermissionAccess) {
@@ -15,11 +13,20 @@ class PageOwnerPermissionAccessEntity extends PermissionAccessEntity {
 			$c = $a->getAreaCollectionObject();
 		}
 		if (is_object($c)) {
-			$u = new User();
-			return $u->getUserID() == $c->getCollectionUserID();
+			$ui = UserInfo::getByID($c->getCollectionUserID());
+			$users = array($ui);
+			return $users;
 		}
+	}
 
-		return false;
+	public function validate(PermissionAccess $pae) {
+		$users = $this->getAccessEntityUsers($pae);
+		if (count($users) == 0) {
+			return false;
+		} else if (is_object($users[0])) {
+			$u = new User();
+			$users[0]->getUserID() == $u->getUserID();
+		}
 	}
 	
 	public function getAccessEntityTypeLinkHTML() {

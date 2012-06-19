@@ -73,7 +73,7 @@ class BasicWorkflow extends Workflow  {
 	protected function notify(WorkflowProgress $wp, $message, $permission, $parameters = array()) {
 		$nk = PermissionKey::getByHandle('notify_on_basic_workflow_entry');
 		$nk->setPermissionObject($this);
-		$users = $nk->getCurrentlyActiveUsers();
+		$users = $nk->getCurrentlyActiveUsers($wp);
 		$req = $wp->getWorkflowRequestObject();
 
 		foreach($users as $ui) {

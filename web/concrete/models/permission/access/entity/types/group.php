@@ -6,7 +6,7 @@ class GroupPermissionAccessEntity extends PermissionAccessEntity {
 	protected $group = false;
 	public function getGroupObject() {return $this->group;}
 
-	public function getAccessEntityUsers() {
+	public function getAccessEntityUsers(PermissionAccess $pa) {
 		return $this->group->getGroupMembers();
 	}
 	
