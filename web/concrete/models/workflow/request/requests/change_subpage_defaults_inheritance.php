@@ -29,12 +29,13 @@ class ChangeSubpageDefaultsInheritancePageWorkflowRequest extends PageWorkflowRe
 		$d = new WorkflowDescription();
 		$c = Page::getByID($this->cID, 'ACTIVE');
 		$link = Loader::helper('navigation')->getLinkToCollection($c, true);
-		$d->setText(t("\"%s\" has pending sub-page permission inhiterance changes. View the page here: %s.", $c->getCollectionName(), $link));
+		$d->setEmailDescription(t("\"%s\" has pending sub-page permission inhiterance changes. View the page here: %s.", $c->getCollectionName(), $link));
 		if ($this->inheritance == 0) {
-			$d->setHTML(t("Sub-pages pending change to inherit permissions from page type."));
+			$d->setInContextDescription(t("Sub-pages pending change to inherit permissions from page type."));
 		} else {
-			$d->setHTML(t("Sub-pages pending change to inherit permissions from parent."));
+			$d->setInContextDescription(t("Sub-pages pending change to inherit permissions from parent."));
 		}
+		$d->setDescription(t("<a href=\"%s\">%s</a> has pending sub-page permission inhiterance changes.", $link, $c->getCollectionName()));
 		$d->setShortStatus(t("Sub-Page Inheritance Changes"));
 		return $d;
 	}

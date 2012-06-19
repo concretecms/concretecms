@@ -159,7 +159,12 @@ if ($_REQUEST['approveImmediately'] == 1) {
 	     		<input type="text" name="ppURL-add-0" class="ccm-input-text" value="" id="ppID-add-0">
 		 		<a href="javascript:void(0)" class="ccm-meta-path-add"><?=t('Add Path')?></a>
 			</div>
+
 		</div>
+			<div class="input">
+		 		<p><?=t('Note: Additional page paths are not versioned. They will be available immediately.')?></p>
+			</div>			
+
 		<?php } ?>
 	
 	</div>

@@ -21,8 +21,9 @@ class DeletePagePageWorkflowRequest extends PageWorkflowRequest {
 		$d = new WorkflowDescription();
 		$c = Page::getByID($this->cID, 'ACTIVE');
 		$link = Loader::helper('navigation')->getLinkToCollection($c, true);
-		$d->setText(t("\"%s\" has been marked for deletion. View the page here: %s.", $c->getCollectionName(), $link));
-		$d->setHTML(t("This page has been marked for deletion. "));
+		$d->setEmailDescription(t("\"%s\" has been marked for deletion. View the page here: %s.", $c->getCollectionName(), $link));
+		$d->setInContextDescription(t("This page has been marked for deletion. "));
+		$d->setDescription(t("<a href=\"%s\">%s</a> has been marked for deletion. ", $link, $c->getCollectionName()));
 		$d->setShortStatus(t("Pending Delete"));
 		return $d;
 	}
