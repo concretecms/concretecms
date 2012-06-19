@@ -3,16 +3,13 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 class AddFileFileSetPermissionKey extends FileSetPermissionKey  {
 
-	public function getSupportedAccessTypes() {
-		$types = array(
-			self::ACCESS_TYPE_INCLUDE => t('Included'),
-			self::ACCESS_TYPE_EXCLUDE => t('Excluded')
-		);
-		return $types;
-	}
-
 	public function getAllowedFileExtensions() {
 		$u = new User();
+		$pae = $this->getPermissionAccessObject();
+		if (!is_object($pae)) {
+			return array();
+		}
+
 		$extensions = array();
 		if ($u->isSuperUser()) {
 			$extensions = Loader::helper('concrete/file')->getAllowedFileExtensions();
@@ -20,6 +17,7 @@ class AddFileFileSetPermissionKey extends FileSetPermissionKey  {
 		}
 	
 		$accessEntities = $u->getUserAccessEntityObjects();
+		$accessEntities = $pae->validateAndFilterAccessEntities($accessEntities);
 		$list = $this->getAccessListItems(FileSetPermissionKey::ACCESS_TYPE_ALL, $accessEntities);
 		$list = PermissionDuration::filterByActive($list);
 
