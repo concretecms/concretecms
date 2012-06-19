@@ -29,8 +29,9 @@ class ChangePagePermissionsPageWorkflowRequest extends PageWorkflowRequest {
 		$d = new WorkflowDescription();
 		$c = Page::getByID($this->cID, 'ACTIVE');
 		$link = Loader::helper('navigation')->getLinkToCollection($c, true);
-		$d->setText(t("\"%s\" has pending permission changes. View the page here: %s.", $c->getCollectionName(), $link));
-		$d->setHTML(t("Page Submitted for Permission Changes."));
+		$d->setEmailDescription(t("\"%s\" has pending permission changes. View the page here: %s.", $c->getCollectionName(), $link));
+		$d->setInContextDescription(t("Page Submitted for Permission Changes."));
+		$d->setDescription(t("<a href=\"%s\">%s</a> submitted for Permission Changes.", $link, $c->getCollectionName()));
 		$d->setShortStatus(t("Permission Changes"));
 		return $d;
 	}

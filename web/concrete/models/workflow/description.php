@@ -8,21 +8,29 @@ defined('C5_EXECUTE') or die("Access Denied.");
  *
  */
 class WorkflowDescription extends Object {  
-	
-	public function getText() {
+
+	public function getDescription() {
 		return $this->text;
 	}
 	
-	public function setText($text) {
+	public function setDescription($text) {
 		$this->text = $text;
 	}
-
-	public function setHTML($html) {
-		$this->html = $html;
+	
+	public function getEmailDescription() {
+		return $this->emailtext;
 	}
 	
-	public function getHTML() {
-		return $this->html;
+	public function setEmailDescription($text) {
+		$this->emailtext = $text;
+	}
+
+	public function setInContextDescription($html) {
+		$this->incontext = $html;
+	}
+	
+	public function getInContextDescription() {
+		return $this->incontext;
 	}
 	
 	public function setShortStatus($status) {

@@ -30,7 +30,7 @@ class WorkflowProgressHistory extends Object {
 		if ($this->object instanceof WorkflowRequest) {
 			$d = $this->object->getWorkflowRequestDescriptionObject();
 			$ui = UserInfo::getByID($this->object->getRequesterUserID());
-			return $d->getHTML() . ' ' . t('Originally requested by %s.', $ui->getUserName());
+			return $d->getDescription() . ' ' . t('Originally requested by %s.', $ui->getUserName());
 		}
 		if ($this->object instanceof WorkflowHistoryEntry) {
 			$d = $this->object->getWorkflowProgressHistoryDescription();
@@ -53,8 +53,10 @@ class WorkflowProgressHistory extends Object {
 	}
 }
 
-class WorkflowHistoryEntry {
-
+abstract class WorkflowHistoryEntry {
+	
+	abstract public function getWorkflowProgressHistoryDescription();
+	
 	public function setAction($action) {
 		$this->action = $action;
 	}

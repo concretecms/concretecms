@@ -8,12 +8,17 @@ class BasicWorkflowHistoryEntry extends WorkflowHistoryEntry {
 		$ux = UserInfo::getByID($uID);
 		switch($this->getAction()) {
 			case 'approve':
-				return t('Approved by %s', $ux->getUserName());
+				$d = t('Approved by %s', $ux->getUserName());
 				break;
 			case 'cancel':
-				return t('Denied by %s', $ux->getUserName());
+				$d = t('Denied by %s', $ux->getUserName());
 				break;
 		}		
+		if ($this->getWorkflowStepComments()) {
+			$d .= t(' with the comments "%s"', $this->getWorkflowStepComments());
+		}
+
+		return $d;
 	}
 }
 
@@ -52,16 +57,16 @@ class BasicWorkflow extends Workflow  {
 		$ui = UserInfo::getByID($req->getRequesterUserID());
 		
 		// let's get all the people who are set to be notified on entry
-		$message = t('On %s, user %s submitted the following request: %s', date(DATE_APP_GENERIC_MDYT_FULL, strtotime($wp->getWorkflowProgressDateAdded())), $ui->getUserName(), $req->getWorkflowRequestDescriptionObject()->getText());
+		$message = t('On %s, user %s submitted the following request: %s', date(DATE_APP_GENERIC_MDYT_FULL, strtotime($wp->getWorkflowProgressDateAdded())), $ui->getUserName(), $req->getWorkflowRequestDescriptionObject()->getEmailDescription());
 		$this->notify($wp, $message, 'notify_on_basic_workflow_entry');
 	}
 	
-	public function getWorkflowProgressDescription(WorkflowProgress $wp) {
+	public function getWorkflowProgressCurrentDescription(WorkflowProgress $wp) {
 		Loader::model('workflow/types/basic/data');
 		$bdw = new BasicWorkflowProgressData($wp);
 		$ux = UserInfo::getByID($bdw->getUserStartedID());
 		$req = $wp->getWorkflowRequestObject();
-		$description = $req->getWorkflowRequestDescriptionObject()->getHTML();
+		$description = $req->getWorkflowRequestDescriptionObject()->getInContextDescription();
 		return t('%s Submitted by <strong>%s</strong> on %s.', $description, $ux->getUserName(), date(DATE_APP_GENERIC_MDYT_FULL, strtotime($wp->getWorkflowProgressDateAdded())));
 	}
 
@@ -103,7 +108,7 @@ class BasicWorkflow extends Workflow  {
 			
 			$ux = UserInfo::getByID($bdw->getUserCompletedID());
 
-			$message = t("On %s, user %s cancelled the following request: \n\n---\n%s\n---\n\n", date(DATE_APP_GENERIC_MDYT_FULL, strtotime($bdw->getDateCompleted())), $ux->getUserName(), $req->getWorkflowRequestDescriptionObject()->getText());
+			$message = t("On %s, user %s cancelled the following request: \n\n---\n%s\n---\n\n", date(DATE_APP_GENERIC_MDYT_FULL, strtotime($bdw->getDateCompleted())), $ux->getUserName(), $req->getWorkflowRequestDescriptionObject()->getEmailDescription());
 			$this->notify($wp, $message, 'notify_on_basic_workflow_action');
 			
 			$hist = new BasicWorkflowHistoryEntry();
@@ -132,7 +137,7 @@ class BasicWorkflow extends Workflow  {
 			
 			$ux = UserInfo::getByID($bdw->getUserCompletedID());
 
-			$message = t("On %s, user %s approved the following request: \n\n---\n%s\n---\n\n", date(DATE_APP_GENERIC_MDYT_FULL, strtotime($bdw->getDateCompleted())), $ux->getUserName(), $req->getWorkflowRequestDescriptionObject()->getText());
+			$message = t("On %s, user %s approved the following request: \n\n---\n%s\n---\n\n", date(DATE_APP_GENERIC_MDYT_FULL, strtotime($bdw->getDateCompleted())), $ux->getUserName(), $req->getWorkflowRequestDescriptionObject()->getEmailDescription());
 			$this->notify($wp, $message, 'notify_on_basic_workflow_action');
 
 			$wpr = $req->runTask('approve', $wp);

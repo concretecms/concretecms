@@ -254,7 +254,7 @@ $(function() {
 					<? $wf = $wl->getWorkflowObject(); ?>
 					item = new ccm_statusBarItem();
 					item.setCSSClass('<?=$wr->getWorkflowRequestStyleClass()?>');
-					item.setDescription('<?=$wf->getWorkflowProgressDescription($wl)?>');
+					item.setDescription('<?=$wf->getWorkflowProgressCurrentDescription($wl)?>');
 					item.setAction('<?=$wl->getWorkflowProgressFormAction()?>');
 					item.enableAjaxForm();
 					<? $actions = $wl->getWorkflowProgressActions(); ?>
