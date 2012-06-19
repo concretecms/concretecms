@@ -18,6 +18,11 @@ abstract class PermissionKey extends Object {
 	 * Returns whether a permission key can start a workflow
 	 */
 	public function canPermissionKeyTriggerWorkflow() {return $this->pkCanTriggerWorkflow;}
+
+	/** 
+	 * Returns whether a permission key has a custom class.
+	 */
+	public function permissionKeyHasCustomClass() {return $this->pkHasCustomClass;}
 	
 	/** 
 	 * Returns the name for this permission key
@@ -59,40 +64,16 @@ abstract class PermissionKey extends Object {
 
 	protected static function load($pkID) {
 		$db = Loader::db();
-		$r = $db->GetRow('select pkID, pkName, pkDescription, pkHandle, pkCategoryHandle, pkCanTriggerWorkflow, PermissionKeys.pkCategoryID, pkCategoryHandle, PermissionKeys.pkgID from PermissionKeys inner join PermissionKeyCategories on PermissionKeyCategories.pkCategoryID = PermissionKeys.pkCategoryID where pkID = ?', array($pkID));
+		$r = $db->GetRow('select pkID, pkName, pkDescription, pkHandle, pkCategoryHandle, pkCanTriggerWorkflow, pkHasCustomClass, PermissionKeys.pkCategoryID, pkCategoryHandle, PermissionKeys.pkgID from PermissionKeys inner join PermissionKeyCategories on PermissionKeyCategories.pkCategoryID = PermissionKeys.pkCategoryID where pkID = ?', array($pkID));
 		$class = Loader::helper('text')->camelcase($r['pkCategoryHandle']) . 'PermissionKey';
 		if (!is_array($r) && (!$r['pkID'])) { 
 			return false;
 		}
 		
-		if ($r['pkgID'] > 0) {
-			$pkgHandle = PackageList::getHandle($r['pkgID']);	
-			$file1 = DIR_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_MODELS . '/' . DIRNAME_PERMISSIONS . '/' . DIRNAME_KEYS . '/' . $r['pkHandle'] . '.php';
-			$file2 = DIR_PACKAGES_CORE . '/' . $pkgHandle . '/' . DIRNAME_MODELS . '/' . DIRNAME_PERMISSIONS . '/' . DIRNAME_KEYS . '/' . $r['pkHandle'] . '.php';
-			$file3 = DIR_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_MODELS . '/' . DIRNAME_PERMISSIONS . '/categories/' . $r['pkCategoryHandle'] . '.php';
-			$file4 = DIR_PACKAGES_CORE . '/' . $pkgHandle . '/' . DIRNAME_MODELS . '/' . DIRNAME_PERMISSIONS . '/categories/' . $r['pkCategoryHandle'] . '.php';
-			if (file_exists($file1)) {
-				require_once($file1);
-				$class = Loader::helper('text')->camelcase($r['pkHandle']) . $class;
-			} else if (file_exists($file2)) {
-				require_once($file2);
-				$class = Loader::helper('text')->camelcase($r['pkHandle']) . $class;
-			} else if (file_exists($file3)) {
-				require_once($file3);
-			} else if (file_exists($file4)) {
-				require_once($file4);
-			}			
-		} else {
-			$file1 = DIR_BASE . '/' . DIRNAME_MODELS . '/' . DIRNAME_PERMISSIONS . '/' . DIRNAME_KEYS . '/' . $r['pkHandle'] . '.php';
-			$file2 = DIR_BASE_CORE . '/' . $pkgHandle . '/' . DIRNAME_MODELS . '/' . DIRNAME_PERMISSIONS . '/' . DIRNAME_KEYS . '/' . $r['pkHandle'] . '.php';
-			if (file_exists($file1)) {
-				require_once($file1);
-				$class = Loader::helper('text')->camelcase($r['pkHandle']) . $class;
-			} else if (file_exists($file2)) {
-				require_once($file2);
-				$class = Loader::helper('text')->camelcase($r['pkHandle']) . $class;
-			}			
+		if ($r['pkHasCustomClass']) {
+			$class = Loader::helper('text')->camelcase($r['pkHandle']) . $class;
 		}
+		
 		$pk = new $class();
 		$pk->setPropertiesFromArray($r);
 		return $pk;
@@ -187,7 +168,11 @@ abstract class PermissionKey extends Object {
 		if ($pk['can-trigger-workflow']) {
 			$pkCanTriggerWorkflow = 1;
 		}
-		$pkn = self::add($pkCategoryHandle, $pk['handle'], $pk['name'], $pk['description'], $pkCanTriggerWorkflow, $pkg);
+		$pkHasCustomClass = 0;
+		if ($pk['has-custom-class']) {
+			$pkHasCustomClass = 1;
+		}
+		$pkn = self::add($pkCategoryHandle, $pk['handle'], $pk['name'], $pk['description'], $pkCanTriggerWorkflow, $pkHasCustomClass, $pkg);
 		return $pkn;
 	}
 
@@ -212,7 +197,7 @@ abstract class PermissionKey extends Object {
 	/** 
 	 * Adds an permission key. 
 	 */
-	public function add($pkCategoryHandle, $pkHandle, $pkName, $pkDescription, $pkCanTriggerWorkflow, $pkg = false) {
+	public function add($pkCategoryHandle, $pkHandle, $pkName, $pkDescription, $pkCanTriggerWorkflow, $pkHasCustomClass, $pkg = false) {
 		
 		$vn = Loader::helper('validation/numbers');
 		$txt = Loader::helper('text');
@@ -228,9 +213,15 @@ abstract class PermissionKey extends Object {
 		} else {
 			$pkCanTriggerWorkflow = 0;
 		}
+
+		if ($pkHasCustomClass) {
+			$pkHasCustomClass = 1;
+		} else {
+			$$pkHasCustomClass = 0;
+		}
 		$pkCategoryID = $db->GetOne("select pkCategoryID from PermissionKeyCategories where pkCategoryHandle = ?", $pkCategoryHandle);
-		$a = array($pkHandle, $pkName, $pkDescription, $pkCategoryID, $pkCanTriggerWorkflow, $pkgID);
-		$r = $db->query("insert into PermissionKeys (pkHandle, pkName, pkDescription, pkCategoryID, pkCanTriggerWorkflow, pkgID) values (?, ?, ?, ?, ?, ?)", $a);
+		$a = array($pkHandle, $pkName, $pkDescription, $pkCategoryID, $pkCanTriggerWorkflow, $pkHasCustomClass, $pkgID);
+		$r = $db->query("insert into PermissionKeys (pkHandle, pkName, pkDescription, pkCategoryID, pkCanTriggerWorkflow, pkHasCustomClass, pkgID) values (?, ?, ?, ?, ?, ?, ?)", $a);
 		
 		$category = PermissionKeyCategory::getByID($pkCategoryID);
 		

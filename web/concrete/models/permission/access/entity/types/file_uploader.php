@@ -1,29 +1,27 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
 
-class PageOwnerPermissionAccessEntity extends PermissionAccessEntity {
+class FileUploaderPermissionAccessEntity extends PermissionAccessEntity {
 
 	public function getAccessEntityUsers() {}
 	
 	public function validate(PermissionAccess $pae) {
-		if ($pae instanceof PagePermissionAccess) {
-			$c = $pae->getPermissionObject();
-		} else if ($pae instanceof AreaPermissionAccess) {
-			$c = $pae->getPermissionObject()->getAreaCollectionObject();
-		} else if ($pae instanceof BlockPermissionAccess) {
-			$a = $pae->getPermissionObject()->getBlockAreaObject();
-			$c = $a->getAreaCollectionObject();
+		if ($pae instanceof FileSetPermissionAccess) {
+			return true;
 		}
-		if (is_object($c)) {
+		if ($pae instanceof FilePermissionAccess) {
+			$f = $pae->getPermissionObject();
+		}
+		if (is_object($f)) {
 			$u = new User();
-			return $u->getUserID() == $c->getCollectionUserID();
+			return $u->getUserID() == $f->getUserID();
 		}
 
 		return false;
 	}
 	
 	public function getAccessEntityTypeLinkHTML() {
-		$html = '<a href="javascript:void(0)" onclick="ccm_choosePermissionAccessEntityPageOwner()">' . t('Page Owner') . '</a>';
+		$html = '<a href="javascript:void(0)" onclick="ccm_choosePermissionAccessEntityFileUploader()">' . t('File Uploader') . '</a>';
 		return $html;		
 	}
 
@@ -31,8 +29,8 @@ class PageOwnerPermissionAccessEntity extends PermissionAccessEntity {
 		$entities = array();
 		$db = Loader::db();
 		if ($user->isRegistered()) { 
-			$pae = PageOwnerPermissionAccessEntity::getOrCreate();
-			$r = $db->GetOne('select cID from Pages where uID = ?', array($user->getUserID()));
+			$pae = FileUploaderPermissionAccessEntity::getOrCreate();
+			$r = $db->GetOne('select fID from Files where uID = ?', array($user->getUserID()));
 			if ($r > 0) {
 				$entities[] = $pae;
 			}
@@ -42,7 +40,7 @@ class PageOwnerPermissionAccessEntity extends PermissionAccessEntity {
 	
 	public static function getOrCreate() {
 		$db = Loader::db();
-		$petID = $db->GetOne('select petID from PermissionAccessEntityTypes where petHandle = \'page_owner\'');
+		$petID = $db->GetOne('select petID from PermissionAccessEntityTypes where petHandle = \'file_uploader\'');
 		$peID = $db->GetOne('select peID from PermissionAccessEntities where petID = ?', 
 			array($petID));
 		if (!$peID) { 
@@ -54,7 +52,7 @@ class PageOwnerPermissionAccessEntity extends PermissionAccessEntity {
 
 	public function load() {
 		$db = Loader::db();
-		$this->label = t('Page Owner');
+		$this->label = t('File Uploader');
 	}
 
 }

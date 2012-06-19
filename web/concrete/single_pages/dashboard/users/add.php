@@ -25,7 +25,7 @@ $languages = Localization::getAvailableInterfaceLanguages();
 
 	<div class="ccm-pane-body">
 	
-    	<table border="0" cellspacing="0" cellpadding="0" width="100%">
+    	<table class="table table-bordered">
             <thead>
                 <tr>
                     <th colspan="2"><?=t('User Information')?></th>
@@ -80,7 +80,7 @@ $languages = Localization::getAvailableInterfaceLanguages();
 
 	<? if (count($attribs) > 0) { ?>
 	
-        <table border="0" cellspacing="0" cellpadding="0" width="100%" class="zebra-striped">
+        <table class="table table-striped">
         	<thead>
 	        	<tr>
             		<th><?=t('Registration Data')?></th>
@@ -105,7 +105,7 @@ $languages = Localization::getAvailableInterfaceLanguages();
 	
 	<? } ?>
 
-		<table border="0" cellspacing="0" cellpadding="0" width="100%" class="inputs-list zebra-striped">
+		<table class="inputs-list table-striped table">
         	<thead>
 				<tr>
 					<th><?=t('Groups')?></th>

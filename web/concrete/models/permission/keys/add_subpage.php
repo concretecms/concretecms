@@ -9,7 +9,13 @@ class AddSubpagePagePermissionKey extends PagePermissionKey  {
 			return true;
 		}
 		
+		$pae = $this->getPermissionAccessObject();
+		if (!is_object($pae)) {
+			return array();
+		}
+		
 		$accessEntities = $u->getUserAccessEntityObjects();
+		$accessEntities = $pae->validateAndFilterAccessEntities($accessEntities);
 		$list = $this->getAccessListItems(PagePermissionKey::ACCESS_TYPE_ALL, $accessEntities);
 		$canAddLinks = false;
 		foreach($list as $l) {
@@ -25,7 +31,13 @@ class AddSubpagePagePermissionKey extends PagePermissionKey  {
 	protected function getAllowedPageTypeIDs() {
 
 		$u = new User();
+		$pae = $this->getPermissionAccessObject();
+		if (!is_object($pae)) {
+			return $asl;
+		}
+		
 		$accessEntities = $u->getUserAccessEntityObjects();
+		$accessEntities = $pae->validateAndFilterAccessEntities($accessEntities);
 		$list = $this->getAccessListItems(PagePermissionKey::ACCESS_TYPE_ALL, $accessEntities);
 		$list = PermissionDuration::filterByActive($list);
 		

@@ -8,16 +8,19 @@ class FilePermissionKey extends PermissionKey {
 		if ($u->isSuperUser()) {
 			return true;
 		}
+		$pae = $this->getPermissionAccessObject();
+		if (!is_object($pae)) {
+			return false;
+		}
+		
 		$accessEntities = $u->getUserAccessEntityObjects();
+		$accessEntities = $pae->validateAndFilterAccessEntities($accessEntities);
 		$valid = false;
 		$list = $this->getAccessListItems(PermissionKey::ACCESS_TYPE_ALL, $accessEntities);
 		$list = PermissionDuration::filterByActive($list);
 		foreach($list as $l) {
 			if ($l->getAccessType() == PermissionKey::ACCESS_TYPE_INCLUDE) {
 				$valid = true;
-			}
-			if ($l->getAccessType() == FileSetPermissionKey::ACCESS_TYPE_MINE) {
-				$valid = ($this->getPermissionObject()->getUserID() == $u->getUserID());
 			}
 			if ($l->getAccessType() == PermissionKey::ACCESS_TYPE_EXCLUDE) {
 				$valid = false;

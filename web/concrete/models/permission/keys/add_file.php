@@ -5,15 +5,16 @@ class AddFileFileSetPermissionKey extends FileSetPermissionKey  {
 
 	public function getAllowedFileExtensions() {
 		$u = new User();
-		$pae = $this->getPermissionAccessObject();
-		if (!is_object($pae)) {
-			return array();
-		}
 
 		$extensions = array();
 		if ($u->isSuperUser()) {
 			$extensions = Loader::helper('concrete/file')->getAllowedFileExtensions();
 			return $extensions;
+		}
+
+		$pae = $this->getPermissionAccessObject();
+		if (!is_object($pae)) {
+			return array();
 		}
 	
 		$accessEntities = $u->getUserAccessEntityObjects();
