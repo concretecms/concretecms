@@ -144,11 +144,16 @@ class PageList extends DatabaseItemList {
 			$cvIsApproved = ' and cv.cvIsApproved = 1';
 		}
 		
+		$uID = 0;
+		if ($u->isRegistered()) {
+			$uID = $u->getUserID();
+		}
+		
 		$this->filter(false, "((select count(cID) from PagePermissionAssignments ppa1 inner join PermissionAccessList pa1 on ppa1.paID = pa1.paID where ppa1.cID = {$cInheritPermissionsFromCID} and pa1.accessType = " . PermissionKey::ACCESS_TYPE_INCLUDE . " and pa1.pdID in (" . implode(',', $activePDIDs) . ")
-			and pa1.peID in (" . implode(',', $peIDs) . ") and (if(pa1.peID = " . $owpae->getAccessEntityID() . " and p1.uID <>" . $u->getUserID() . ", false, true)) and (ppa1.pkID = " . $vpPKID . $cvIsApproved . " or ppa1.pkID = " . $vpvPKID . ")) > 0
+			and pa1.peID in (" . implode(',', $peIDs) . ") and (if(pa1.peID = " . $owpae->getAccessEntityID() . " and p1.uID <>" . $uID . ", false, true)) and (ppa1.pkID = " . $vpPKID . $cvIsApproved . " or ppa1.pkID = " . $vpvPKID . ")) > 0
 			or (p1.cPointerExternalLink !='' AND p1.cPointerExternalLink IS NOT NULL))");
 		$this->filter(false, "((select count(cID) from PagePermissionAssignments ppaExclude inner join PermissionAccessList paExclude on ppaExclude.paID = paExclude.paID where ppaExclude.cID = {$cInheritPermissionsFromCID} and accessType = " . PermissionKey::ACCESS_TYPE_EXCLUDE . " and pdID in (" . implode(',', $activePDIDs) . ")
-			and paExclude.peID in (" . implode(',', $peIDs) . ") and (if(paExclude.peID = " . $owpae->getAccessEntityID() . " and p1.uID <>" . $u->getUserID() . ", false, true)) and (ppaExclude.pkID = " . $vpPKID . $cvIsApproved . " or ppaExclude.pkID = " . $vpvPKID . ")) = 0)");		
+			and paExclude.peID in (" . implode(',', $peIDs) . ") and (if(paExclude.peID = " . $owpae->getAccessEntityID() . " and p1.uID <>" . $uID . ", false, true)) and (ppaExclude.pkID = " . $vpPKID . $cvIsApproved . " or ppaExclude.pkID = " . $vpvPKID . ")) = 0)");		
 	}
 
 	public function sortByRelevance() {

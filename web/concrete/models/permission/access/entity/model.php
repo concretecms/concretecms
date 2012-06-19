@@ -9,7 +9,7 @@ abstract class PermissionAccessEntity extends Object {
 	public function getAccessEntityTypeHandle() {return $this->petHandle;}
 	public function getAccessEntityID() {return $this->peID;}
 	public function getAccessEntityLabel() {return $this->label;}
-	abstract public function getAccessEntityUsers();
+	abstract public function getAccessEntityUsers(PermissionAccess $pa);
 	abstract public function getAccessEntityTypeLinkHTML();
 	abstract public static function getAccessEntitiesForUser($user);
 	

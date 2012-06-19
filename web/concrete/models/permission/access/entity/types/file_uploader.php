@@ -3,7 +3,12 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 class FileUploaderPermissionAccessEntity extends PermissionAccessEntity {
 
-	public function getAccessEntityUsers() {}
+	public function getAccessEntityUsers(PermissionAccess $pa) {
+		$f = $pa->getPermissionObject();
+		if (is_object($f)) {
+			return UserInfo::getByID($f->getUserID());
+		}
+	}
 	
 	public function validate(PermissionAccess $pae) {
 		if ($pae instanceof FileSetPermissionAccess) {

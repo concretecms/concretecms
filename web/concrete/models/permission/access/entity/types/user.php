@@ -6,7 +6,7 @@ class UserPermissionAccessEntity extends PermissionAccessEntity {
 	protected $user;
 	public function getUserObject() {return $this->user;}
 	
-	public function getAccessEntityUsers() {
+	public function getAccessEntityUsers(PermissionAccess $pa) {
 		return array($this->getUserObject());
 	}
 	public function getAccessEntityTypeLinkHTML() {

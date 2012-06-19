@@ -68,7 +68,7 @@ class GroupCombinationPermissionAccessEntity extends PermissionAccessEntity {
 		return PermissionAccessEntity::getByID($peID);
 	}
 	
-	public function getAccessEntityUsers() {
+	public function getAccessEntityUsers(PermissionAccess $pa) {
 		$gl = new GroupList();
 		foreach($this->groups as $g) {
 			$gl->filterByGroupID($g->getGroupID());
