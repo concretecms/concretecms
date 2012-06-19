@@ -21,20 +21,20 @@
         <permissionkey handle="view_page" name="View" description="Can see a page exists and read its content." package="" category="page"/>
         <permissionkey handle="view_page_versions" name="View Versions" description="Can view the page versions dialog and read past versions of a page." package="" category="page"/>
         <permissionkey handle="preview_page_as_user" name="Preview Page As User" description="" package="" category="page"/>
-        <permissionkey handle="edit_page_properties" name="Edit Properties" package="" category="page"/>
+        <permissionkey handle="edit_page_properties" has-custom-class="true" name="Edit Properties" package="" category="page"/>
         <permissionkey handle="edit_page_contents" name="Edit Contents" package="" category="page"/>
         <permissionkey handle="edit_page_speed_settings" name="Edit Speed Settings" package="" category="page"/>
-        <permissionkey handle="edit_page_theme" name="Change Theme" package="" category="page"/>
+        <permissionkey handle="edit_page_theme" has-custom-class="true" name="Change Theme" package="" category="page"/>
         <permissionkey handle="edit_page_type" name="Change Page Type" package="" category="page"/>
         <permissionkey handle="edit_page_permissions" name="Edit Permissions" package="" can-trigger-workflow="true" category="page"/>
         <permissionkey handle="delete_page" name="Delete" package="" category="page" can-trigger-workflow="true" />
         <permissionkey handle="delete_page_versions" name="Delete Versions" package="" category="page" can-trigger-workflow="true" />
         <permissionkey handle="approve_page_versions" name="Approve Changes" package="" category="page" can-trigger-workflow="true" />
-        <permissionkey handle="add_subpage" name="Add Sub-Page" package="" category="page"/>
+        <permissionkey handle="add_subpage" has-custom-class="true" name="Add Sub-Page" package="" category="page"/>
         <permissionkey handle="move_or_copy_page" name="Move or Copy Page" package="" category="page" can-trigger-workflow="true" />
         <permissionkey handle="schedule_page_contents_guest_access" name="Schedule Guest Access" package="" category="page"/>
 		<!-- block types //-->
-        <permissionkey handle="add_block" name="Add Block to Page Area" package="" category="block_type">
+        <permissionkey handle="add_block" has-custom-class="true" name="Add Block to Page Area" package="" category="block_type">
             <access>
                 <group name="Administrators"/>
             </access>
@@ -48,7 +48,7 @@
 		<!-- areas //-->
         <permissionkey handle="view_area" name="View Area" package="" category="area"/>
         <permissionkey handle="edit_area_contents" name="Edit Area Contents" package="" category="area"/>
-        <permissionkey handle="add_block_to_area" name="Add Blocks to Area" package="" category="area"/>
+        <permissionkey handle="add_block_to_area" has-custom-class="true" name="Add Blocks to Area" package="" category="area"/>
         <permissionkey handle="add_stack_to_area" name="Add Stacks to Area" package="" category="area"/>
         <permissionkey handle="add_layout_to_area" name="Add Layouts to Area" package="" category="area"/>
         <permissionkey handle="edit_area_design" name="Edit Area Design" package="" category="area"/>
@@ -73,7 +73,7 @@
         <permissionkey handle="edit_file_set_permissions" name="Edit File Access" description="" package="" category="file_set"/>
         <permissionkey handle="delete_file_set" name="Delete File Set" description="" package="" category="file_set"/>
         <permissionkey handle="delete_file_set_files" name="Delete File" description="" package="" category="file_set"/>
-        <permissionkey handle="add_file" name="Add File" description="" package="" category="file_set"/>
+        <permissionkey handle="add_file" has-custom-class="true" name="Add File" description="" package="" category="file_set"/>
         <permissionkey handle="view_file" name="View Files" description="Can view and download files in the site." package="" category="file"/>
         <permissionkey handle="view_file_in_file_manager" name="View File in File Manager" description="Can access the file manager" package="" category="file"/>
         <permissionkey handle="edit_file_properties" name="Edit File Properties" description="Can edit a file's properties" package="" category="file"/>
@@ -88,19 +88,19 @@
         <permissionkey handle="notify_on_basic_workflow_action" name="Notify on Action" package="" category="basic_workflow" />
         		
         <!-- users //-->
-        <permissionkey handle="access_user_search" name="Access User Search" description="" package="" category="user">
+        <permissionkey handle="access_user_search" has-custom-class="true" name="Access User Search" description="" package="" category="user">
             <access>
                 <group name="Administrators"/>
             </access>
         </permissionkey>
         
-        <permissionkey handle="edit_user_properties" name="Edit User Details" package="" category="user">
+        <permissionkey handle="edit_user_properties" has-custom-class="true" name="Edit User Details" package="" category="user">
             <access>
                 <group name="Administrators"/>
             </access>
 		</permissionkey>
 
-        <permissionkey handle="view_user_attributes" name="View User Attributes" package="" category="user">
+        <permissionkey handle="view_user_attributes" has-custom-class="true" name="View User Attributes" package="" category="user">
             <access>
                 <group name="Administrators"/>
             </access>
@@ -134,7 +134,7 @@
             </access>
         </permissionkey>
 
-        <permissionkey handle="assign_user_groups" name="Assign Groups to User" description="" package="" category="user">
+        <permissionkey handle="assign_user_groups" has-custom-class="true" name="Assign Groups to User" description="" package="" category="user">
             <access>
                 <group name="Administrators"/>
             </access>
@@ -238,6 +238,12 @@
         <permissionaccessentitytype handle="page_owner" name="Page Owner" package="">
 			<categories>
 		        <category handle="page" />
+			</categories>
+        </permissionaccessentitytype>
+        <permissionaccessentitytype handle="file_uploader" name="File Uploader" package="">
+			<categories>
+		        <category handle="file_set" />
+		        <category handle="file" />
 			</categories>
         </permissionaccessentitytype>
     </permissionaccessentitytypes>

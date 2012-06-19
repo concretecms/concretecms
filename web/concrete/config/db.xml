@@ -1107,6 +1107,10 @@
     	<notnull />
 	    <DEFAULT value="0"/>
     </field>
+    <field name="pkHasCustomClass" type="I" size="1">
+    	<notnull />
+	    <DEFAULT value="0"/>
+    </field>
     <field name="pkDescription" type="C" size="255"></field>
     <field name="pkCategoryID" type="I" size="10">
       <UNSIGNED />

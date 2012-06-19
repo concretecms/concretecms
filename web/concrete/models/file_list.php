@@ -223,9 +223,10 @@ class FileList extends DatabaseItemList {
 						if ($l->getAccessType() == PermissionKey::ACCESS_TYPE_EXCLUDE) {
 							$nonviewableSets[] = $fs->getFileSetID();
 						}
+						/*
 						if ($l->getAccessType() == FileSetPermissionKey::ACCESS_TYPE_MINE) {
 							$myviewableSets[] = $fs->getFileSetID();
-						}
+						}*/
 					}
 				} else {
 					$nonviewableSets[] = $fs->getFileSetID();
@@ -244,9 +245,11 @@ class FileList extends DatabaseItemList {
 		$list = $fk->getAccessListItems(PermissionKey::ACCESS_TYPE_ALL, $accessEntities);
 		$list = PermissionDuration::filterByActive($list);
 		foreach($list as $l) {
+			/*
 			if ($l->getAccessType() == FileSetPermissionKey::ACCESS_TYPE_MINE) {
 				$valid = FileSetPermissionKey::ACCESS_TYPE_MINE;
-			}
+			}*/
+			
 			if ($l->getAccessType() == PermissionKey::ACCESS_TYPE_INCLUDE) {
 				$valid = PermissionKey::ACCESS_TYPE_INCLUDE;
 			}
@@ -258,11 +261,12 @@ class FileList extends DatabaseItemList {
 		$uID = ($u->isRegistered()) ? $u->getUserID() : 0;
 		// This excludes all files found in sets where I may only read mine, and I did not upload the file
 		$this->filter(false, '(f.uID = ' . $uID . ' or (select count(fID) from FileSetFiles where FileSetFiles.fID = f.fID and fsID in (' . implode(',',$myviewableSets) . ')) = 0)');		
+		/*
 		if ($valid == FileSetPermissionKey::ACCESS_TYPE_MINE) {
 			// this means that we're only allowed to read files we've uploaded (unless, of course, those files are in previously covered sets)
 			$this->filter(false, '(f.uID = ' . $uID . ' or (select count(fID) from FileSetFiles where FileSetFiles.fID = f.fID and fsID in (' . implode(',',$viewableSets) . ')) > 0)');		
 		}
-		
+		*/
 		// now we filter out files we directly don't have access to
 		// There is a really stupid MySQL bug that, if the subquery returns null, the entire query is nullified
 		// So I have to do this query OUTSIDE of MySQL and give it to mysql

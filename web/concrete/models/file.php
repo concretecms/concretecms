@@ -317,6 +317,15 @@ class File extends Object {
 				$row['avID']
 			));
 		}
+
+		$v = array($this->fID);
+		$q = "select fID, paID, pkID from FilePermissionAssignments where fID = ?";
+		$r = $db->query($q, $v);
+		while($row = $r->fetchRow()) {
+			$v = array($fIDNew, $row['paID'], $row['pkID']);
+			$q = "insert into FilePermissionAssignments (fID, paID, pkID) values (?, ?, ?)";
+			$db->query($q, $v);
+		}
 		
 		// return the new file object
 		return File::getByID($fIDNew);

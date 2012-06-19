@@ -2,41 +2,7 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 class FileSetPermissionKey extends PermissionKey {
 
-	const ACCESS_TYPE_MINE = 5;
 	protected $permissionObjectToCheck;
-	
-	public function getSupportedAccessTypes() {
-		$types = array(
-			self::ACCESS_TYPE_INCLUDE => t('Included'),
-			self::ACCESS_TYPE_MINE => t('Mine'),
-			self::ACCESS_TYPE_EXCLUDE => t('Excluded'),
-		);
-		return $types;
-	}
-
-
-	public function validate() {
-		$u = new User();
-		if ($u->isSuperUser()) {
-			return true;
-		}
-		$accessEntities = $u->getUserAccessEntityObjects();
-		$valid = false;
-		$list = $this->getAccessListItems(PermissionKey::ACCESS_TYPE_ALL, $accessEntities);
-		$list = PermissionDuration::filterByActive($list);
-		foreach($list as $l) {
-			if ($l->getAccessType() == PermissionKey::ACCESS_TYPE_INCLUDE) {
-				$valid = true;
-			}
-			if ($l->getAccessType() == FileSetPermissionKey::ACCESS_TYPE_MINE) {
-				$valid = true;
-			}
-			if ($l->getAccessType() == PermissionKey::ACCESS_TYPE_EXCLUDE) {
-				$valid = false;
-			}
-		}
-		return $valid;		
-	}
 	
 
 

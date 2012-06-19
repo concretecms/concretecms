@@ -6,7 +6,13 @@ class EditPageThemePagePermissionKey extends PagePermissionKey  {
 	protected function getAllowedThemeIDs() {
 
 		$u = new User();
+		$pae = $this->getPermissionAccessObject();
+		if (!is_object($pae)) {
+			return array();
+		}
+		
 		$accessEntities = $u->getUserAccessEntityObjects();
+		$accessEntities = $pae->validateAndFilterAccessEntities($accessEntities);
 		$list = $this->getAccessListItems(PagePermissionKey::ACCESS_TYPE_ALL, $accessEntities);
 		$list = PermissionDuration::filterByActive($list);
 		

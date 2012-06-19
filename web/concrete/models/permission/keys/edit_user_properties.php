@@ -22,7 +22,13 @@ class EditUserPropertiesUserPermissionKey extends UserPermissionKey  {
 			return $asl;
 		}
 
+		$pae = $this->getPermissionAccessObject();
+		if (!is_object($pae)) {
+			return $asl;
+		}
+		
 		$accessEntities = $u->getUserAccessEntityObjects();
+		$accessEntities = $pae->validateAndFilterAccessEntities($accessEntities);
 		$list = $this->getAccessListItems(UserPermissionKey::ACCESS_TYPE_ALL, $accessEntities);
 		$list = PermissionDuration::filterByActive($list);
 		$properties = array();
