@@ -49,7 +49,13 @@ class AddBlockToAreaAreaPermissionKey extends AreaPermissionKey  {
 	protected function getAllowedBlockTypeIDs() {
 
 		$u = new User();
+		$pae = $this->getPermissionAccessObject();
+		if (!is_object($pae)) {
+			return array();
+		}
+		
 		$accessEntities = $u->getUserAccessEntityObjects();
+		$accessEntities = $pae->validateAndFilterAccessEntities($accessEntities);
 		$list = $this->getAccessListItems(AreaPermissionKey::ACCESS_TYPE_ALL, $accessEntities);
 		$list = PermissionDuration::filterByActive($list);
 		
