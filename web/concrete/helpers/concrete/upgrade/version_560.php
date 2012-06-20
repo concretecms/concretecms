@@ -639,6 +639,22 @@ class ConcreteUpgradeVersion560Helper {
 				$pkx = WorkflowType::add($handle, $name);
 			}
 		}
+		if (isset($sx->permissionaccessentitytypes)) {
+			foreach($sx->permissionaccessentitytypes->permissionaccessentitytype as $pt) {
+				$name = $pt['name'];
+				if (!$name) {
+					$name = Loader::helper('text')->unhandle($pt['handle']);
+				}
+				$type = PermissionAccessEntityType::add($pt['handle'], $name);
+				if (isset($pt->categories)) {
+					foreach($pt->categories->children() as $cat) {
+						$catobj = PermissionKeyCategory::getByHandle((string) $cat['handle']);
+						$catobj->associateAccessEntityType($type);
+					}
+				}
+			}
+		}
+
 		$txt = Loader::helper('text');
 		foreach($sx->permissionkeys->permissionkey as $pk) {
 			$pkc = PermissionKeyCategory::getByHandle($pk['category']);

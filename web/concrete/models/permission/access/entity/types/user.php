@@ -38,6 +38,7 @@ class UserPermissionAccessEntity extends PermissionAccessEntity {
 		if (!$peID) { 
 			$db->Execute("insert into PermissionAccessEntities (petID) values(?)", array($petID));
 			$peID = $db->Insert_ID();
+			Config::save('ACCESS_ENTITY_UPDATED', time());
 			$db->Execute('insert into PermissionAccessEntityUsers (peID, uID) values (?, ?)', array($peID, $ui->getUserID()));
 		}
 		return PermissionAccessEntity::getByID($peID);

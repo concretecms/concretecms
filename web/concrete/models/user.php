@@ -87,6 +87,11 @@
 		}
 		
 		public function checkLogin() {
+			$aeu = Config::get('ACCESS_ENTITY_UPDATED');
+			if ($aeu && $aeu > $_SESSION['accessEntitiesUpdated']) {
+				User::refreshUserGroups();
+			}
+			
 			if ($_SESSION['uID'] > 0) {
 				$db = Loader::db();
 				$row = $db->GetRow("select uID, uIsActive from Users where uID = ? and uName = ?", array($_SESSION['uID'], $_SESSION['uName']));
@@ -339,6 +344,7 @@
 			} else {
 				$entities = PermissionAccessEntity::getForUser($this);
 				$_SESSION['accessEntities'] = $entities;
+				$_SESSION['accessEntitiesUpdated'] = time();
 			}
 			return $entities;
 		}

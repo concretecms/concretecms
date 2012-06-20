@@ -45,7 +45,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				$r->free();
 				if (is_array($row)) {
 					$ct = new CollectionType; 
-					$row['mcID'] = $db->GetOne("select p.cID from Pages p inner join CollectionVersions cv on p.cID = cv.cID where ctID = ? and cIsTemplate = 1", array($row['ctID']));
+					$row['mcID'] = $db->GetOne("select p.cID from Pages p inner join CollectionVersions cv on p.cID = cv.cID where cv.ctID = ? and cIsTemplate = 1", array($row['ctID']));
 					$ct->setPropertiesFromArray($row);
 					$ct->setComposerProperties();
 				}					
@@ -71,7 +71,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		
 		public function getMasterTemplate() {
 			$db = Loader::db();
-			$cID = $db->getOne("select p.cID from Pages p inner join CollectionVersions cv on p.cID = cv.cID where ctID = ? and cIsTemplate = 1", array($this->ctID));
+			$cID = $db->getOne("select p.cID from Pages p inner join CollectionVersions cv on p.cID = cv.cID where cv.ctID = ? and cIsTemplate = 1", array($this->ctID));
 			return Page::getByID($cID, "RECENT");
 		}
 
@@ -84,7 +84,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				$row = $r->fetchRow();
 				$r->free();
 				if (is_array($row)) {
-					$row['mcID'] = $db->GetOne("select p.cID from Pages p inner join CollectionVersions cv on p.cID = cv.cID where ctID = ? and cIsTemplate = 1", array($row['ctID']));
+					$row['mcID'] = $db->GetOne("select p.cID from Pages p inner join CollectionVersions cv on p.cID = cv.cID where cv.ctID = ? and cIsTemplate = 1", array($row['ctID']));
 					$ct = new CollectionType; 
 					$ct->setPropertiesFromArray($row);
 					$ct->setComposerProperties();

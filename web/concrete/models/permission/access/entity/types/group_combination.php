@@ -60,6 +60,7 @@ class GroupCombinationPermissionAccessEntity extends PermissionAccessEntity {
 		$peID = $db->GetOne($q, array($petID));
 		if (!$peID) { 
 			$db->Execute("insert into PermissionAccessEntities (petID) values (?)", array($petID));
+			Config::save('ACCESS_ENTITY_UPDATED', time());
 			$peID = $db->Insert_ID();
 			foreach($groups as $g) {
 				$db->Execute('insert into PermissionAccessEntityGroups (peID, gID) values (?, ?)', array($peID, $g->getGroupID()));
