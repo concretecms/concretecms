@@ -54,6 +54,7 @@ class PageOwnerPermissionAccessEntity extends PermissionAccessEntity {
 			array($petID));
 		if (!$peID) { 
 			$db->Execute("insert into PermissionAccessEntities (petID) values(?)", array($petID));
+			Config::save('ACCESS_ENTITY_UPDATED', time());
 			$peID = $db->Insert_ID();
 		}
 		return PermissionAccessEntity::getByID($peID);
