@@ -1,8 +1,6 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
 
-Loader::block('library_file');
-
 class HtmlBlockController extends BlockController {
 	
 	protected $btTable = 'btContentLocal';

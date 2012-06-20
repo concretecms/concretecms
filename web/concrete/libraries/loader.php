@@ -142,25 +142,10 @@
 		 * </code>
 		 */
 		public function block($bl) {
-			if (file_exists(DIR_FILES_BLOCK_TYPES . '/' . $bl . '/' . FILENAME_BLOCK_CONTROLLER)) {
-				require_once(DIR_FILES_BLOCK_TYPES . '/' . $bl . '/' . FILENAME_BLOCK_CONTROLLER);
-			} else if (file_exists(DIR_FILES_BLOCK_TYPES_CORE . '/' . $bl . '/' . FILENAME_BLOCK_CONTROLLER)) {
-				require_once(DIR_FILES_BLOCK_TYPES_CORE . '/' . $bl . '/' . FILENAME_BLOCK_CONTROLLER);
-			} else {
-				// we haven't found it anywhere so we need to try applications
-				// this is last because it's kind of a performance drain to run all the time
-				// but that will be less of a problem when we cache the block types request
-				$bt = BlockType::getByHandle($bl);
-				if (is_object($bt)) { 
-					$pkg = $bt->getPackageHandle();
-					
-					if (file_exists(DIR_PACKAGES . '/' . $pkg . '/' . DIRNAME_BLOCKS . '/' . $bl . '/' . FILENAME_BLOCK_CONTROLLER)) {
-						require_once(DIR_PACKAGES . '/' . $pkg . '/' . DIRNAME_BLOCKS . '/' . $bl . '/' . FILENAME_BLOCK_CONTROLLER);		
-					} else if (file_exists(DIR_PACKAGES_CORE . '/' . $pkg . '/' . DIRNAME_BLOCKS . '/' . $bl . '/' . FILENAME_BLOCK_CONTROLLER)) {
-						require_once(DIR_PACKAGES_CORE . '/' . $pkg . '/' . DIRNAME_BLOCKS . '/' . $bl . '/' . FILENAME_BLOCK_CONTROLLER);
-					}
-				}
-			}
+			$db = Loader::db();
+			$pkgHandle = $db->GetOne('select pkgHandle from Packages left join BlockTypes on BlockTypes.pkgID = Packages.pkgID where BlockTypes.btHandle = ?', array($bl));
+			$env = Environment::get();
+			require_once($env->getPath(DIRNAME_BLOCKS . '/' . $bl . '/' . FILENAME_BLOCK_CONTROLLER, $pkgHandle));
 		}
 		
 		/** 
@@ -278,14 +263,15 @@
 		 */
 		public function package($pkgHandle) {
 			// loads and instantiates the object
-			$dir = (is_dir(DIR_PACKAGES . '/' . $pkgHandle)) ? DIR_PACKAGES : DIR_PACKAGES_CORE;
-			if (file_exists($dir . '/' . $pkgHandle . '/' . FILENAME_PACKAGE_CONTROLLER)) {
-				require_once($dir . '/' . $pkgHandle . '/' . FILENAME_PACKAGE_CONTROLLER);
-				$class = Object::camelcase($pkgHandle) . "Package";
-				if (class_exists($class)) {
-					$cl = new $class;
-					return $cl;
-				}
+			$env = Environment::get();
+			$path = $env->getPath(FILENAME_PACKAGE_CONTROLLER, $pkgHandle);
+			if (file_exists($path)) {
+				require_once($path);
+			}
+			$class = Object::camelcase($pkgHandle) . "Package";
+			if (class_exists($class)) {
+				$cl = new $class;
+				return $cl;
 			}
 		}
 		
@@ -309,29 +295,20 @@
 		/** 
 		 * Gets the path to a particular page type controller
 		 */
-		public function pageTypeControllerPath($ctHandle) {
-			
+		public function pageTypeControllerPath($ctHandle) {			
 			Loader::model('collection_types');
 			$ct = CollectionType::getByHandle($ctHandle);
 			if (!is_object($ct)) {
 				return false;
-			}
+			}			
 			$pkgHandle = $ct->getPackageHandle();
-
-			if ($pkgHandle != '') {
-				$packageDir = (is_dir(DIR_PACKAGES . '/' . $pkgHandle)) ? DIR_PACKAGES : DIR_PACKAGES_CORE;
+			$env = Environment::get();
+			$path = $env->getPath(DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_TYPES . '/' . $ctHandle . '.php', $pkgHandle);
+			if (file_exists($path)) {
+				return $path;
 			}
-
-			if (file_exists(DIR_FILES_CONTROLLERS . "/" . DIRNAME_PAGE_TYPES . "/{$ctHandle}.php")) {
-				$path = DIR_FILES_CONTROLLERS . "/" . DIRNAME_PAGE_TYPES . "/{$ctHandle}.php";
-			} else if (isset($packageDir) && (file_exists($packageDir . '/' . $pkgHandle . '/' . DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_TYPES . '/' . $ctHandle . '.php'))) {
-				$path = $packageDir . '/' . $pkgHandle . '/' . DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_TYPES . '/' . $ctHandle . '.php';
-			} else if (file_exists(DIR_FILES_CONTROLLERS_REQUIRED . "/" . DIRNAME_PAGE_TYPES . "/{$ctHandle}.php")) {
-				$path = DIR_FILES_CONTROLLERS_REQUIRED . "/" . DIRNAME_PAGE_TYPES . "/{$ctHandle}.php";
-			}
-			
-			return $path;
 		}
+		
 		/** 
 		 * Loads a controller for either a page or view
 		 */
@@ -378,24 +355,15 @@
 					}
 				}
 			} else if ($item instanceof Block || $item instanceof BlockType) {
-				if (file_exists(DIR_FILES_BLOCK_TYPES . '/' . $item->getBlockTypeHandle() . '/' . FILENAME_BLOCK_CONTROLLER)) {
-					require_once(DIR_FILES_BLOCK_TYPES . "/" . $item->getBlockTypeHandle() . "/" . FILENAME_BLOCK_CONTROLLER);
-				} else if (file_exists(DIR_FILES_BLOCK_TYPES_CORE . '/' . $item->getBlockTypeHandle() . '/' . FILENAME_BLOCK_CONTROLLER)) {
-					require_once(DIR_FILES_BLOCK_TYPES_CORE . "/" . $item->getBlockTypeHandle() . "/" . FILENAME_BLOCK_CONTROLLER);
-				} else if ($item->getPackageID() > 0 && file_exists(DIR_PACKAGES . '/' . $item->getPackageHandle() . '/' . DIRNAME_BLOCKS . '/' . $item->getBlockTypeHandle() . '/' . FILENAME_BLOCK_CONTROLLER)) {
-					require_once(DIR_PACKAGES . '/' . $item->getPackageHandle() . '/' . DIRNAME_BLOCKS . '/' . $item->getBlockTypeHandle() . '/' . FILENAME_BLOCK_CONTROLLER);
-				} else if ($item->getPackageID() > 0 && file_exists(DIR_PACKAGES_CORE . '/' . $item->getPackageHandle() . '/' . DIRNAME_BLOCKS . '/' . $item->getBlockTypeHandle() . '/' . FILENAME_BLOCK_CONTROLLER)) {
-					require_once(DIR_PACKAGES_CORE . '/' . $item->getPackageHandle() . '/' . DIRNAME_BLOCKS . '/' . $item->getBlockTypeHandle() . '/' . FILENAME_BLOCK_CONTROLLER);
-				} 
+				
 				$class = Object::camelcase($item->getBlockTypeHandle()) . 'BlockController';
-				if (class_exists($class) && $item instanceof BlockType) {
+				if ($item instanceof BlockType) {
 					$controller = new $class($item);
 				}
 				
 				if ($item instanceof Block) {
 					$c = $item->getBlockCollectionObject();
-				}
-				
+				}				
 			}
 			
 			$controllerFile = $path . '.php';

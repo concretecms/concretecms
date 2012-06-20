@@ -1,5 +1,4 @@
 <?
-	Loader::block('library_file');
 	defined('C5_EXECUTE') or die("Access Denied.");	
 	class ImageBlockController extends BlockController {
 
