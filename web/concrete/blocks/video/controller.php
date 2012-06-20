@@ -7,7 +7,6 @@
 	 * @author Andrew Embler <andrew@concrete5.org>
 	 */
 	 
-	Loader::block('library_file');	
 	defined('C5_EXECUTE') or die("Access Denied.");
 	class VideoBlockController extends BlockController {
  
