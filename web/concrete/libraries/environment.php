@@ -86,7 +86,7 @@ class Environment {
 		$this->coreOverridesByPackage[$segment] = $pkgHandle;	
 	}
 	
-	protected function getRecord($segment, $pkgHandle = false) {
+	public function getRecord($segment, $pkgHandle = false) {
 		
 		if (!$this->overridesScanned) {
 			$this->getOverrides();
@@ -101,6 +101,7 @@ class Environment {
 		if (!in_array($segment, $this->coreOverrides) && !$pkgHandle && !array_key_exists($segment, $this->coreOverridesByPackage)) {
 			$obj->file = DIR_BASE_CORE . '/' . $segment;
 			$obj->url = ASSETS_URL . '/' . $segment;
+			$obj->override = false;
 			$this->cachedOverrides[$segment][''] = $obj;
 			return $obj;
 		}
@@ -108,6 +109,7 @@ class Environment {
 		if (in_array($segment, $this->coreOverrides)) {
 			$obj->file = DIR_BASE . '/' . $segment;
 			$obj->url = BASE_URL . DIR_REL . '/' . $segment;
+			$obj->override = true;
 			$this->cachedOverrides[$segment][''] = $obj;
 			return $obj;
 		} 
@@ -124,6 +126,7 @@ class Environment {
 			$obj->url = ASSETS_URL . '/' . DIRNAME_PACKAGES. '/' . $pkgHandle . '/' . $segment;
 		}
 		$obj->file = $dirp . '/' . $segment;
+		$obj->override = false;
 		$this->cachedOverrides[$segment][$pkgHandle] = $obj;
 		return $obj;		
 	}

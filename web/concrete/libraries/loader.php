@@ -198,7 +198,7 @@
 					return false;
 				}
 			}
-			
+			//$_dba->debug = true;
 			return $_dba;
 		}
 		
@@ -208,43 +208,21 @@
 		public function helper($file, $pkgHandle = false) {
 		
 			static $instances = array();
-			$class = false;		
-			
-			if ($pkgHandle != false) {
-				$class = Object::camelcase($pkgHandle . '_' . $file) . "Helper";
-				$dir = (is_dir(DIR_PACKAGES . '/' . $pkgHandle)) ? DIR_PACKAGES : DIR_PACKAGES_CORE;
-				require_once($dir . '/' . $pkgHandle . '/' . DIRNAME_HELPERS . '/' . $file . '.php');
-				if (!class_exists($class, false)) {
-					$class = Object::camelcase($file) . "Helper";
-				}
-			} else if (file_exists(DIR_HELPERS . '/' . $file . '.php')) {
-				// first we check if there's an object of the SAME kind in the core. If so, then we load the core first, then, we load the second one (site)
-				// and we hope the second one EXTENDS the first
-				if (file_exists(DIR_HELPERS_CORE . '/' . $file . '.php')) {
-					$class = "Site" . Object::camelcase($file) . "Helper";
-				} else {
-					$class = Object::camelcase($file) . "Helper";
-				}
-			} else {
-				$class = Object::camelcase($file) . "Helper";					
-			}
-			
+
+			$class = Object::camelcase($file) . "Helper";
+			$siteclass = "Site" . Object::camelcase($file) . "Helper";
+
 			if (array_key_exists($class, $instances)) {
             	$instance = $instances[$class];
-            } else {
-				if ($pkgHandle != false) {
-					// already handled by code above.
-				} else if (file_exists(DIR_HELPERS . '/' . $file . '.php')) {
-					// first we check if there's an object of the SAME kind in the core. If so, then we load the core first, then, we load the second one (site)
-					// and we hope the second one EXTENDS the first
-					if (file_exists(DIR_HELPERS_CORE . '/' . $file . '.php')) {
-						require_once(DIR_HELPERS_CORE . '/' . $file . '.php');
-						require_once(DIR_HELPERS . '/' . $file . '.php');
-					} else {
-						require_once(DIR_HELPERS . '/' . $file . '.php');
-					}
-				} else {
-					require_once(DIR_HELPERS_CORE . '/' . $file . '.php');
+			} else if (array_key_exists($siteclass, $instances)) {
+            	$instance = $instances[$siteclass];
+			} else {
+
+				$env = Environment::get();
+				$f1 = $env->getRecord(DIRNAME_HELPERS . '/' . $file . '.php', $pkgHandle);
+				require_once($f1->file);
+				if ($f1->override) {
+					$class = $siteclass;
 				}
 
 	            $instances[$class] = new $class();
@@ -369,41 +347,23 @@
 			$controllerFile = $path . '.php';
 
 			if ($path != '') {
-				if (file_exists(DIR_FILES_CONTROLLERS . $controllerFile)) {
-					require_once(DIR_FILES_CONTROLLERS . $controllerFile);
-					$include = true;
-				} else if (file_exists(DIR_FILES_CONTROLLERS . $path . '/' . FILENAME_COLLECTION_CONTROLLER)) {
-					require_once(DIR_FILES_CONTROLLERS . $path . '/' . FILENAME_COLLECTION_CONTROLLER);
-					$include = true;
-				} else if (is_object($item)) {
-					if ($item->getPackageID() > 0 && (file_exists(DIR_FILES_CONTROLLERS . $controllerFile))) {
-						require_once(DIR_FILES_CONTROLLERS . $controllerFile);
-						$include = true;
-					} else if ($item->getPackageID() > 0 && (file_exists(DIR_PACKAGES . '/' . $item->getPackageHandle() . '/' . DIRNAME_CONTROLLERS . $controllerFile))) {
-						require_once(DIR_PACKAGES . '/' . $item->getPackageHandle() . '/' . DIRNAME_CONTROLLERS . $controllerFile);
-						$include = true;
-					} else if ($item->getPackageID() > 0 && (file_exists(DIR_PACKAGES . '/' . $item->getPackageHandle() . '/' . DIRNAME_CONTROLLERS . $path . '/'. FILENAME_COLLECTION_CONTROLLER))) {
-						require_once(DIR_PACKAGES . '/' . $item->getPackageHandle() . '/' . DIRNAME_CONTROLLERS . $path . '/'. FILENAME_COLLECTION_CONTROLLER);
-						$include = true;
-					} else if ($item->getPackageID() > 0 && (file_exists(DIR_PACKAGES_CORE . '/' . $item->getPackageHandle() . '/' . DIRNAME_CONTROLLERS . $controllerFile))) {
-						require_once(DIR_PACKAGES_CORE . '/' . $item->getPackageHandle() . '/' . DIRNAME_CONTROLLERS . $controllerFile);
-						$include = true;
-					} else if ($item->getPackageID() > 0 && (file_exists(DIR_PACKAGES_CORE . '/' . $item->getPackageHandle() . '/' . DIRNAME_CONTROLLERS . $path . '/'. FILENAME_COLLECTION_CONTROLLER))) {
-						require_once(DIR_PACKAGES_CORE . '/' . $item->getPackageHandle() . '/' . DIRNAME_CONTROLLERS . $path . '/'. FILENAME_COLLECTION_CONTROLLER);
-						$include = true;
-					}
+				
+				$env = Environment::get();
+				$pkgHandle = false;
+				if (is_object($item)) {
+					$pkgHandle = $item->getPackageHandle();
 				}
 				
-				if (!$include) {
-					if (file_exists(DIR_FILES_CONTROLLERS_REQUIRED . $controllerFile)) {
-						require_once(DIR_FILES_CONTROLLERS_REQUIRED . $controllerFile);
-						$include = true;
-					} else if (file_exists(DIR_FILES_CONTROLLERS_REQUIRED . $path . '/' . FILENAME_COLLECTION_CONTROLLER)) {
-						require_once(DIR_FILES_CONTROLLERS_REQUIRED . $path . '/' . FILENAME_COLLECTION_CONTROLLER);
-						$include = true;
-					}
+				$f1 = $env->getPath(DIRNAME_CONTROLLERS . $path . '/' . FILENAME_COLLECTION_CONTROLLER, $pkgHandle);
+				$f2 = $env->getPath(DIRNAME_CONTROLLERS . $controllerFile, $pkgHandle);
+				if (file_exists($f2)) {
+					$include = true;
+					require_once($f2);
+				} else if (file_exists($f1)) {
+					$include = true;
+					require_once($f1);
 				}
-					
+				
 				if ($include) {
 					$class = Object::camelcase($path) . 'Controller';
 				}
