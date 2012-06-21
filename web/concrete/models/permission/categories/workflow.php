@@ -4,10 +4,10 @@ abstract class WorkflowPermissionKey extends PermissionKey {
 
 	public function getCurrentlyActiveUsers(WorkflowProgress $wp) {
 		$paa = $this->getPermissionAccessObject();
-		$paa->setWorkflowProgressObject($wp);
 		if (!$paa) {
 			return array();
 		}
+		$paa->setWorkflowProgressObject($wp);
 		$included = $this->getAccessListItems(PermissionKey::ACCESS_TYPE_INCLUDE);
 		$excluded = $this->getAccessListItems(PermissionKey::ACCESS_TYPE_EXCLUDE);
 		$included = PermissionDuration::filterByActive($included);
