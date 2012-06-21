@@ -28,24 +28,6 @@ class GenerateSitemapXml extends Job {
 	* @throws Exception Throws an exception in case of errors.
 	*/
 	public function run() {
-		if(!defined('SITEMAPXML_FILE')) {
-			/** The path (relative to the web root) of the sitemap.xml file to save [default value: 'sitemap.xml'].
-			* @var string
-			*/
-			define('SITEMAPXML_FILE', 'sitemap.xml');
-		}
-		if(!defined('SITEMAPXML_DEFAULT_CHANGEFREQ')) {
-			/** The default page change frequency [default value: 'weekly'; valid values: 'always', 'hourly', 'daily', 'weekly', 'monthly', 'yearly', 'never'].
-			* @var string
-			*/
-			define('SITEMAPXML_DEFAULT_CHANGEFREQ', 'weekly');
-		}
-		if(!defined('SITEMAPXML_DEFAULT_PRIORITY')) {
-			/** The default page priority [default value: 0.5; valid values from 0.0 to 1.0].
-			* @var float
-			*/
-			define('SITEMAPXML_DEFAULT_PRIORITY', 0.5);
-		}
 		try {
 			$db = Loader::db();
 			$instances = array(

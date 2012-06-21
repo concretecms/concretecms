@@ -529,4 +529,23 @@ define('MARKETPLACE_CONTENT_LATEST_THRESHOLD', 10800); // every three hours
 define('MARKETPLACE_DIRNAME_THEME_PREVIEW', 'previewable_themes');
 define('MARKETPLACE_THEME_PREVIEW_ASSETS_URL', CONCRETE5_ORG_URL ."/". MARKETPLACE_DIRNAME_THEME_PREVIEW);
 
+if(!defined('SITEMAPXML_FILE')) {
+	/** The path (relative to the web root) of the sitemap.xml file to save [default value: 'sitemap.xml'].
+	* @var string
+	*/
+	define('SITEMAPXML_FILE', 'sitemap.xml');
+}
+if(!defined('SITEMAPXML_DEFAULT_CHANGEFREQ')) {
+	/** The default page change frequency [default value: 'weekly'; valid values: 'always', 'hourly', 'daily', 'weekly', 'monthly', 'yearly', 'never'].
+	* @var string
+	*/
+	define('SITEMAPXML_DEFAULT_CHANGEFREQ', 'weekly');
+}
+if(!defined('SITEMAPXML_DEFAULT_PRIORITY')) {
+	/** The default page priority [default value: 0.5; valid values from 0.0 to 1.0].
+	* @var float
+	*/
+	define('SITEMAPXML_DEFAULT_PRIORITY', 0.5);
+}
+
 require_once(DIR_LIBRARIES_CORE . '/loader.php');
