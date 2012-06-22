@@ -162,6 +162,12 @@
             </access>
 		</permissionkey>
 
+        <permissionkey handle="empty_trash" name="Empty Trash" package="" category="admin">
+            <access>
+                <group name="Administrators"/>
+            </access>
+		</permissionkey>
+
         <permissionkey handle="uninstall_packages" name="Uninstall Packages" package="" category="marketplace_newsflow">
             <access>
                 <group name="Administrators"/>

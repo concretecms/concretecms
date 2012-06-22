@@ -100,6 +100,7 @@ class ConcreteDashboardSitemapHelper {
 		
 		$ct = CollectionType::getByID($c->getCollectionTypeID());
 		$isInTrash = $c->isInTrash();
+		
 		$canCompose = false;
 		if (is_object($ct)) {
 			if ($ct->isCollectionTypeIncludedInComposer()) {
@@ -110,6 +111,13 @@ class ConcreteDashboardSitemapHelper {
 			}
 		}
 		$isTrash = $c->getCollectionPath() == TRASH_PAGE_PATH;
+		if ($isTrash || $isInTrash) { 
+			$pk = PermissionKey::getByHandle('empty_trash');
+			if (!$pk->validate()) {
+				return false;
+			}
+		}
+		
 		$cIcon = $c->getCollectionIcon();
 		$cAlias = $c->isAlias();
 		$cPointerID = $c->getCollectionPointerID();

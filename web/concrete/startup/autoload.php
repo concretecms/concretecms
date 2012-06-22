@@ -37,6 +37,7 @@ $classes = array(
 	'FileAttributeKey,FileAttributeValue' => array('model','attribute/categories/file'),
 	'UserAttributeKey,UserAttributeValue' => array('model','attribute/categories/user'),
 	'Page' => array('model','page'),
+	'SinglePage' => array('model','single_page'),
 	'PageTheme' => array('model','page_theme'),
 	'ComposerPage' => array('model','composer_page'),
 	'PermissionAccess' => array('model','permission/access/model'),
