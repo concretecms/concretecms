@@ -1,8 +1,8 @@
 <?
 
 defined('C5_EXECUTE') or die("Access Denied.");
-$dh = Loader::helper('concrete/dashboard/sitemap');
-if (!$dh->canRead()) {
+$pk = PermissionKey::getByHandle('empty_trash');
+if (!$pk->validate()) {
 	die(t("Access Denied."));
 }
 

@@ -1,6 +1,5 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-Loader::model('permission/keys/access_user_search');
 
 class AssignUserGroupsUserPermissionKey extends AccessUserSearchUserPermissionKey  {
 	

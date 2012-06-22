@@ -84,7 +84,6 @@ class ContentImporter {
 	}
 	
 	protected function importSinglePageStructure(SimpleXMLElement $sx) {
-		Loader::model('single_page');
 		if (isset($sx->singlepages)) {
 			foreach($sx->singlepages->page as $p) {
 				$pkg = ContentImporter::getPackageObject($p['package']);
@@ -102,7 +101,6 @@ class ContentImporter {
 	}
 
 	protected function importSinglePageContent(SimpleXMLElement $sx) {
-		Loader::model('single_page');
 		if (isset($sx->singlepages)) {
 			foreach($sx->singlepages->page as $px) {
 				$page = Page::getByPath($px['path'], 'RECENT');
@@ -441,11 +439,6 @@ class ContentImporter {
 			foreach($sx->permissionkeys->permissionkey as $pk) {
 				$pkc = PermissionKeyCategory::getByHandle($pk['category']);
 				$pkg = ContentImporter::getPackageObject($pk['package']);
-				if (is_object($pkg)) {
-					Loader::model('permission/categories/' . $pkc->getPermissionKeyCategoryHandle(), $pkg->getPackageHandle());
-				} else {
-					Loader::model('permission/categories/' . $pkc->getPermissionKeyCategoryHandle());
-				}		
 				$txt = Loader::helper('text');
 				$className = $txt->camelcase($pkc->getPermissionKeyCategoryHandle());
 				$c1 = $className . 'PermissionKey';
