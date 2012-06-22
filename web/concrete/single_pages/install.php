@@ -245,7 +245,7 @@ $(function() {
 <div class="span14 offset1">
 
 <div class="well">
-	<button class="btn btn-large primary" type="submit"><i class="icon-thumbs-up icon-white"></i> <?=t('Install concrete5')?></button>
+	<button class="btn btn-large primary" type="submit"><?=t('Install concrete5')?> <i class="icon-thumbs-up icon-white"></i></button>
 </div>
 
 </div>
@@ -410,7 +410,7 @@ $(function() {
 <div class="well" id="install-success">
 	<form method="post" action="<?=$this->url('/install','setup')?>">
 	<input type="hidden" name="locale" value="<?=$locale?>" />
-	<a class="btn btn-large primary" href="javascript:void(0)" onclick="$(this).parent().submit()"><i class="icon-arrow-right icon-white"></i> <?=t('Continue to Installation')?></a>
+	<a class="btn btn-large primary" href="javascript:void(0)" onclick="$(this).parent().submit()"><?=t('Continue to Installation')?> <i class="icon-arrow-right icon-white"></i></a>
 	</form>
 </div>
 
@@ -419,7 +419,7 @@ $(function() {
 	<div class="block-actions">
 	<form method="post" action="<?=$this->url('/install')?>">
 	<input type="hidden" name="locale" value="<?=$locale?>" />
-	<a class="btn" href="javascript:void(0)" onclick="$(this).parent().submit()"><i class="icon-refresh"></i> <?=t('Run Tests')?></a>
+	<a class="btn" href="javascript:void(0)" onclick="$(this).parent().submit()"><?=t('Run Tests')?> <i class="icon-refresh"></i></a>
 	</form>
 	</div>	
 </div>

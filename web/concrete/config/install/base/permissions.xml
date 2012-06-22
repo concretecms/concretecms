@@ -85,7 +85,8 @@
         <!-- workflow //-->
         <permissionkey handle="approve_basic_workflow_action" name="Approve or Deny" description="" package="" category="basic_workflow" />        
         <permissionkey handle="notify_on_basic_workflow_entry" name="Notify on Entry" package="" category="basic_workflow" />
-        <permissionkey handle="notify_on_basic_workflow_action" name="Notify on Action" package="" category="basic_workflow" />
+        <permissionkey handle="notify_on_basic_workflow_approve" name="Notify on Approve" package="" category="basic_workflow" />
+        <permissionkey handle="notify_on_basic_workflow_deny" name="Notify on Deny" package="" category="basic_workflow" />
         		
         <!-- users //-->
         <permissionkey handle="access_user_search" has-custom-class="true" name="Access User Search" description="" package="" category="user">

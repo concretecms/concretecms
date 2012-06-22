@@ -109,7 +109,7 @@ class BasicWorkflow extends Workflow  {
 			$ux = UserInfo::getByID($bdw->getUserCompletedID());
 
 			$message = t("On %s, user %s cancelled the following request: \n\n---\n%s\n---\n\n", date(DATE_APP_GENERIC_MDYT_FULL, strtotime($bdw->getDateCompleted())), $ux->getUserName(), $req->getWorkflowRequestDescriptionObject()->getEmailDescription());
-			$this->notify($wp, $message, 'notify_on_basic_workflow_action');
+			$this->notify($wp, $message, 'notify_on_basic_workflow_deny');
 			
 			$hist = new BasicWorkflowHistoryEntry();
 			$hist->setAction('cancel');
@@ -138,7 +138,7 @@ class BasicWorkflow extends Workflow  {
 			$ux = UserInfo::getByID($bdw->getUserCompletedID());
 
 			$message = t("On %s, user %s approved the following request: \n\n---\n%s\n---\n\n", date(DATE_APP_GENERIC_MDYT_FULL, strtotime($bdw->getDateCompleted())), $ux->getUserName(), $req->getWorkflowRequestDescriptionObject()->getEmailDescription());
-			$this->notify($wp, $message, 'notify_on_basic_workflow_action');
+			$this->notify($wp, $message, 'notify_on_basic_workflow_approve');
 
 			$wpr = $req->runTask('approve', $wp);
 			$wp->markCompleted();

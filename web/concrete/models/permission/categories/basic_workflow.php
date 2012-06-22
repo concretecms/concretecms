@@ -31,7 +31,7 @@ class BasicWorkflowPermissionAssignment extends PermissionAssignment {
 
 
 }
-class BasicWorkflowPermissionAccess extends PermissionAccess {
+class BasicWorkflowPermissionAccess extends WorkflowPermissionAccess {
 
 	
 }
