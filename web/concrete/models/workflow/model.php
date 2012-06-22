@@ -24,6 +24,10 @@ abstract class Workflow extends Object {
 		return $this->restrictedToPermissionKeyHandles;
 	}
 	
+	public function getPermissionObjectIdentifier() {
+		return $this->getWorkflowID();
+	}
+
 	public function delete() {
 		$db = Loader::db();
 		$db->Execute('delete from Workflows where wfID = ?', array($this->wfID));

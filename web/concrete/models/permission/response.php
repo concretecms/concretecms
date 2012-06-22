@@ -20,22 +20,8 @@ class PermissionResponse {
 	
 	public function testForErrors() { }
 	
-	public static function getFromCache($object) {
-		$cl = CacheLocal::get();
-		$identifier = 'PermissionResponse:' . get_class($object) . ':' . $object->getPermissionObjectIdentifier();
-		if (array_key_exists($identifier, $cl->cache)) {
-			return $cl->cache[$identifier];
-		}
-	}
-
-	public static function addToCache($object, PermissionResponse $pr) {
-		$cl = CacheLocal::get();
-		$identifier = 'PermissionResponse:' . get_class($object) . ':' . $object->getPermissionObjectIdentifier();
-		$cl->cache[$identifier] = $pr;
-	}
-	
 	public static function getResponse($object) {
-		$r = self::getFromCache($object);
+		$r = PermissionCache::getResponse($object);
 		if (is_object($r)) {
 			return $r;
 		}
@@ -47,7 +33,7 @@ class PermissionResponse {
 		$pr->setPermissionObject($object);
 		$pr->setPermissionCategoryObject($category);
 		
-		self::addToCache($object, $pr);
+		PermissionCache::addResponse($object, $pr);
 		
 		return $pr;
 	}

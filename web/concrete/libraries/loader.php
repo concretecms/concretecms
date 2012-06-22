@@ -198,7 +198,6 @@
 					return false;
 				}
 			}
-			//$_dba->debug = true;
 			return $_dba;
 		}
 		
