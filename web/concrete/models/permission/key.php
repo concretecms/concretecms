@@ -62,9 +62,9 @@ abstract class PermissionKey extends Object {
 		return $this->permissionObject;
 	}
 
-	protected static function load($pkID) {
+	protected static function load($key, $loadBy = 'pkID') {
 		$db = Loader::db();
-		$r = $db->GetRow('select pkID, pkName, pkDescription, pkHandle, pkCategoryHandle, pkCanTriggerWorkflow, pkHasCustomClass, PermissionKeys.pkCategoryID, pkCategoryHandle, PermissionKeys.pkgID from PermissionKeys inner join PermissionKeyCategories on PermissionKeyCategories.pkCategoryID = PermissionKeys.pkCategoryID where pkID = ?', array($pkID));
+		$r = $db->GetRow('select pkID, pkName, pkDescription, pkHandle, pkCategoryHandle, pkCanTriggerWorkflow, pkHasCustomClass, PermissionKeys.pkCategoryID, pkCategoryHandle, PermissionKeys.pkgID from PermissionKeys inner join PermissionKeyCategories on PermissionKeyCategories.pkCategoryID = PermissionKeys.pkCategoryID where ' . $loadBy . ' = ?', array($key));
 		$class = Loader::helper('text')->camelcase($r['pkCategoryHandle']) . 'PermissionKey';
 		if (!is_array($r) && (!$r['pkID'])) { 
 			return false;
@@ -184,13 +184,9 @@ abstract class PermissionKey extends Object {
 	}
 
 	public static function getByHandle($pkHandle) {
-		$db = Loader::db();
-		$pkID = $db->GetOne('select pkID from PermissionKeys where pkHandle = ?', array($pkHandle));
-		if ($pkID) { 
-			$pk = self::load($pkID);
-			if ($pk->getPermissionKeyID() > 0) {
-				return $pk;
-			}
+		$pk = self::load($pkHandle, 'pkHandle');
+		if ($pk->getPermissionKeyID() > 0) {
+			return $pk;
 		}
 	}
 	
@@ -245,12 +241,21 @@ abstract class PermissionKey extends Object {
 		if ($u->isSuperUser()) {
 			return true;
 		}
+		
+		$r = PermissionCache::validate($this);
+		if ($r > -1) {
+			return $r;
+		}
+		
 		$pae = $this->getPermissionAccessObject();
 		if (is_object($pae)) {
-			return $pae->validate();
+			$valid = $pae->validate();
 		} else {
-			return false;
+			$valid = false;
 		}
+		
+		PermissionCache::addValidate($this, $valid);
+		return $valid;
 	}
 
 	public function delete() {

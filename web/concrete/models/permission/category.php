@@ -50,11 +50,6 @@ class PermissionKeyCategory extends Object {
 	}	
 
 	public function getPermissionKeyByHandle($pkHandle) {
-		if ($this->pkgID > 0) {
-			Loader::model('permission/categories/' . $this->pkCategoryHandle, $this->getPackageHandle());
-		} else {
-			Loader::model('permission/categories/' . $this->pkCategoryHandle);
-		}		
 		$txt = Loader::helper('text');
 		$className = $txt->camelcase($this->pkCategoryHandle);
 		$c1 = $className . 'PermissionKey';
