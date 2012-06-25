@@ -9,7 +9,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 * @access private 
 *
 */
-	class Object {
+	class Concrete5_Library_Object {
 	
 		public $error = '';
 		

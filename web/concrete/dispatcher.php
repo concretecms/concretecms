@@ -22,6 +22,9 @@
 	## Load the base config file ##
 	require(dirname(__FILE__) . '/config/base.php');
 
+	## Required Loading
+	require(dirname(__FILE__) . '/startup/required.php');
+
 	## First we ensure that dispatcher is not being called directly
 	require(dirname(__FILE__) . '/startup/file_access_check.php');
 
@@ -29,17 +32,12 @@
 	require(dirname(__FILE__) . '/startup/get_called_class_check.php');
 
 	require(dirname(__FILE__) . '/startup/localization.php');
-	
-	## Load the database ##
-	Loader::database();
 
 	## Autoload core classes
 	spl_autoload_register(array('Loader', 'autoloadCore'), true);
 
-	## We load the things that CANNOT be overridden
-	require_once(DIR_BASE_CORE . '/' . DIRNAME_CORE_CLASSES . '/' . DIRNAME_LIBRARIES . '/object.php');
-	require_once(DIR_BASE_CORE . '/' . DIRNAME_CORE_CLASSES . '/' . DIRNAME_LIBRARIES . '/cache.php');
-	require_once(DIR_BASE_CORE . '/' . DIRNAME_CORE_CLASSES . '/' . DIRNAME_MODELS . '/config.php');
+	## Load the database ##
+	Loader::database();
 	
 	## Startup cache ##
 	Cache::startup();

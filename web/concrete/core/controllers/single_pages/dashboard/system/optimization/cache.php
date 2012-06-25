@@ -1,7 +1,7 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
 
-class Concrete5_Dashboard_System_Optimization_Cache extends DashboardBaseController {
+class Concrete5_Controller_Dashboard_System_Optimization_Cache extends DashboardBaseController {
 	
 	public $helpers = array('form'); 
 	
