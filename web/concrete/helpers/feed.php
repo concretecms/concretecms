@@ -17,21 +17,6 @@
  */
 
 defined('C5_EXECUTE') or die("Access Denied.");
-class FeedHelper {
+class FeedHelper extends Concrete5_Helper_Feed {
 
-	public function __construct() {
-		Loader::library("3rdparty/simplepie");
-	}
-	
-	/**
-	 * Loads a newsfeed object.
-	 * @param string $feed
-	 * @return SimplePie $feed
-	 */
-	public function load($feed) {
-		$feed = new SimplePie($feed, DIR_FILES_CACHE);
-		return $feed;
-	}
-	
-	
 }

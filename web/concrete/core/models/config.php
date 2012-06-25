@@ -23,16 +23,16 @@ defined('C5_EXECUTE') or die("Access Denied.");
  *
  */
 
-class ConfigValue extends Object {
+class Concrete5_Model_ConfigValue extends Object {
 	
 	public $value;
 	public $timestamp; // datetime value was set
 	public $key;
 }
 
-class Config extends Object {
-	private $pkg = false;
-	private static $store;
+class Concrete5_Model_Config extends Object {
+	protected $pkg = false;
+	protected static $store;
 	
 	public static function setStore(ConfigStore $store)
 	{
@@ -42,7 +42,7 @@ class Config extends Object {
 	/**
 	 * @return ConfigStore
 	 */
-	private static function getStore()
+	protected static function getStore()
 	{
 		if (!self::$store) {
 			self::$store = new ConfigStore();
@@ -158,22 +158,22 @@ class Config extends Object {
  * @author Christiaan Baartse <anotherhero@gmail.com>
  * @category Concrete
  */
-class ConfigStore {
+class Concrete5_Model_ConfigStore {
 	/**
 	 * @var Database
 	 */
-	private $db;
+	protected $db;
 	
 	/**
 	 * @var array
 	 */
-	private $rows;
+	protected $rows;
 	
 	public function __construct() {
 		$this->load();
 	}
 	
-	private function load() {
+	protected function load() {
 		if (defined('ENABLE_CACHE') && (!ENABLE_CACHE)) {
 			// if cache has been explicitly disabled, we re-enable it anyway.
 			Cache::enableCache();
@@ -202,7 +202,7 @@ class ConfigStore {
 		}
 	}
 	
-	private function rowToConfigValue($row)
+	protected function rowToConfigValue($row)
 	{
 		$cv = new ConfigValue();
 		$cv->key = $row['cfKey'];
