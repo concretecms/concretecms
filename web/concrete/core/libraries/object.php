@@ -45,7 +45,20 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			return $r2;		
 		}
 
+		public function uncamelcase($string) {
+			$v = preg_split('/([A-Z])/', $string, false, PREG_SPLIT_DELIM_CAPTURE);
+			$a = array();
+			array_shift($v);
+			for($i = 0; $i < count($v); $i++) {
+				if ($i % 2) {
+					if (function_exists('mb_strtolower')) {
+						$a[] = mb_strtolower($v[$i - 1] . $v[$i], APP_CHARSET);
+					} else {
+						$a[] = strtolower($v[$i - 1] . $v[$i]);
+					}
+				}
+			}
+			return str_replace('__', '_', implode('_', $a));
+		}		
 	
 	}
-
-?>

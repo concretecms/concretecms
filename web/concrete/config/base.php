@@ -116,6 +116,7 @@ if (!defined('DIR_BASE_CORE')) {
 	define('DIR_BASE_CORE', dirname(__FILE__) . '/..');
 }
 
+define('DIRNAME_CORE_CLASSES', 'core');
 # if "concrete/" does NOT exist in DIR_BASE then we set multi_site to on
 if (!is_dir(DIR_BASE . '/' . DIRNAME_APP)) {
 	define("MULTI_SITE", 1);

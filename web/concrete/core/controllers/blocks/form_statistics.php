@@ -1,0 +1,59 @@
+<?php 
+defined('C5_EXECUTE') or die("Access Denied.");
+class Concrete5_Controller_Block_FormStatistics {
+
+	public static function getTotalSubmissions($date = null) {
+		$db = Loader::db();
+		if ($date != null) {
+			return $db->GetOne("select count(asID) from btFormAnswerSet where DATE_FORMAT(created, '%Y-%m-%d') = ?", array($date));
+		} else {
+			return $db->GetOne("select count(asID) from btFormAnswerSet");
+		}
+
+	}
+	
+	public static function loadSurveys($MiniSurvey){  
+		$db = Loader::db();
+		return $db->query('SELECT s.* FROM '.$MiniSurvey->btTable.' AS s, Blocks AS b, BlockTypes AS bt '.
+						  'WHERE s.bID=b.bID AND b.btID=bt.btID AND bt.btHandle="form" ' );
+	}
+	
+	public static $sortChoices=array('newest'=>'created DESC','chrono'=>'created');
+	
+	public static function buildAnswerSetsArray( $questionSet, $orderBy='', $limit='' ){
+		$db = Loader::db();
+		
+		if( strlen(trim($limit))>0 && !strstr(strtolower($limit),'limit')  )
+			$limit=' LIMIT '.$limit;
+			
+		if( strlen(trim($orderBy))>0 && array_key_exists($orderBy, self::$sortChoices) ){
+			 $orderBySQL=self::$sortChoices[$orderBy];
+		}else $orderBySQL=self::$sortChoices['newest'];
+		
+		//get answers sets
+		$sql='SELECT * FROM btFormAnswerSet AS aSet '.
+			 'WHERE aSet.questionSetId='.$questionSet.' ORDER BY '.$orderBySQL.' '.$limit;
+		$answerSetsRS=$db->query($sql);
+		//load answers into a nicer multi-dimensional array
+		$answerSets=array();
+		$answerSetIds=array(0);
+		while( $answer = $answerSetsRS->fetchRow() ){
+			//answer set id - question id
+			$answerSets[$answer['asID']]=$answer;
+			$answerSetIds[]=$answer['asID'];
+		}		
+		
+		//get answers
+		$sql='SELECT * FROM btFormAnswers AS a WHERE a.asID IN ('.join(',',$answerSetIds).')';
+		$answersRS=$db->query($sql);
+		
+		//load answers into a nicer multi-dimensional array 
+		while( $answer = $answersRS->fetchRow() ){
+			//answer set id - question id
+			$answerSets[$answer['asID']]['answers'][$answer['msqID']]=$answer;
+		}
+		return $answerSets;
+	}
+}
+
+

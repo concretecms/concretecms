@@ -107,6 +107,57 @@
 			}				
 		}
 		
+		public static function autoloadCore($class) {
+			$classes = Loader::$autoloadClasses;
+			if (preg_match('/^Concrete5_Library_(.*)/i', $class, $m)) {
+				$cl = $classes[$m[1]];
+				if ($cl) {
+					$file = $cl[1];
+				} else {
+					$file = Object::uncamelcase($m[1]);
+				}
+				require(DIR_BASE_CORE . '/' . DIRNAME_CORE_CLASSES . '/' . DIRNAME_LIBRARIES . '/' . $file . '.php');
+			}
+			if (preg_match('/^Concrete5_Model_(.*)/i', $class, $m)) {
+				$cl = $classes[$m[1]];
+				if ($cl) {
+					$file = $cl[1];
+				} else {
+					$file = Object::uncamelcase($m[1]);
+				}
+				require(DIR_BASE_CORE . '/' . DIRNAME_CORE_CLASSES . '/' . DIRNAME_MODELS . '/' . $file . '.php');
+			}
+			if (preg_match('/^Concrete5_Controller_Block_(.*)/i', $class, $m)) {
+				$file = Object::uncamelcase($m[1]);
+				require(DIR_BASE_CORE . '/' . DIRNAME_CORE_CLASSES . '/' . DIRNAME_CONTROLLERS . '/' . DIRNAME_BLOCKS . '/' . $file. '.php');
+			} else if (preg_match('/^Concrete5_Controller_PageType_(.*)/i', $class, $m)) {
+				$file = Object::uncamelcase($m[1]);
+				require(DIR_BASE_CORE . '/' . DIRNAME_CORE_CLASSES . '/' . DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_TYPES . '/' . $file. '.php');
+			} else if (preg_match('/^Concrete5_Controller_(.*)/i', $class, $m)) {
+				$cl = $classes[$m[1]];
+				if ($cl) {
+					$file = $cl[1];
+				} else {
+					$file = str_replace('_', '/', $m[1]);
+					$path = explode('/', $file);
+					if (count($path) > 0) {
+						$file = '';
+						for ($i = 0; $i < count($path); $i++) {
+							$p = $path[$i];
+							$file .= Object::uncamelcase($p);
+							if (($i + 1) < count($path)) {
+								$file .= '/';
+							}							
+						}
+					} else {
+						$file = Object::uncamelcase($file);				
+					}
+				}
+				require(DIR_BASE_CORE . '/' . DIRNAME_CORE_CLASSES . '/' . DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGES . '/' . $file . '.php');
+			}
+
+		}
+		
 		/** 
 		 * @private
 		 */
