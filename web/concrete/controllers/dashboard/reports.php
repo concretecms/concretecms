@@ -3,12 +3,7 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 Loader::block('form');
 
-class DashboardReportsController extends Controller {
+class DashboardReportsController extends Concrete5_Controller_Dashboard_Reports {
 
-	public function __construct() {
-		$this->redirect("/dashboard/reports/statistics");
-	}
 
 }
-
-?>

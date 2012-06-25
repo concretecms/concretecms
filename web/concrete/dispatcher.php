@@ -27,16 +27,19 @@
 
 	## Called Class Fix for 5.2 ##	
 	require(dirname(__FILE__) . '/startup/get_called_class_check.php');
+
+	require(dirname(__FILE__) . '/startup/localization.php');
 	
 	## Load the database ##
 	Loader::database();
 
+	## Autoload core classes
+	spl_autoload_register(array('Loader', 'autoloadCore'), true);
+
 	## We load the things that CANNOT be overridden
-	require_once(DIR_BASE_CORE . '/' . DIRNAME_LIBRARIES . '/object.php');
-	require_once(DIR_BASE_CORE . '/' . DIRNAME_LIBRARIES . '/cache.php');
-	require_once(DIR_BASE_CORE . '/' . DIRNAME_LIBRARIES . '/view.php');
-	require_once(DIR_BASE_CORE . '/' . DIRNAME_LIBRARIES . '/localization.php');
-	require_once(DIR_BASE_CORE . '/' . DIRNAME_MODELS . '/config.php');
+	require_once(DIR_BASE_CORE . '/' . DIRNAME_CORE_CLASSES . '/' . DIRNAME_LIBRARIES . '/object.php');
+	require_once(DIR_BASE_CORE . '/' . DIRNAME_CORE_CLASSES . '/' . DIRNAME_LIBRARIES . '/cache.php');
+	require_once(DIR_BASE_CORE . '/' . DIRNAME_CORE_CLASSES . '/' . DIRNAME_MODELS . '/config.php');
 	
 	## Startup cache ##
 	Cache::startup();
@@ -45,7 +48,6 @@
 	if (!$config_check_failed) { 
 		require(dirname(__FILE__) . '/config/app.php');
 	}
-
 	## Autoload settings
 	require(dirname(__FILE__) . '/startup/autoload.php');
 
