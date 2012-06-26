@@ -80,8 +80,9 @@ abstract class Concrete5_Model_PermissionKey extends Object {
 	}
 	
 	public function hasCustomOptionsForm() {
-		$file = Loader::helper('concrete/path')->getPath(DIRNAME_ELEMENTS . '/' . DIRNAME_PERMISSIONS . '/' . DIRNAME_KEYS . '/' . $this->pkHandle . '.php', $this->pkgID);
-		return $file != false;
+		$env = Environment::get();
+		$file = $env->getPath(DIRNAME_ELEMENTS . '/' . DIRNAME_PERMISSIONS . '/' . DIRNAME_KEYS . '/' . $this->pkHandle . '.php', $this->getPackageHandle());
+		return file_exists($file);
 	}
 	
 	public function getPackageID() { return $this->pkgID;}

@@ -137,7 +137,6 @@ class Concrete5_Library_Environment {
 	public function getPath($subpath, $pkgIdentifier = false) {
 		$r = $this->getRecord($subpath, $pkgIdentifier);
 		return $r->file;	
-		return false;
 	}
 	
 	/** 
@@ -146,7 +145,6 @@ class Concrete5_Library_Environment {
 	public function getURL($subpath, $pkgIdentifier = false) {
 		$r = $this->getRecord($subpath, $pkgIdentifier);
 		return $r->url;		
-		return false;
 	}
 
 }
