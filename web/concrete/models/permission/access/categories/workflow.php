@@ -1,13 +1,3 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-class WorkflowPermissionAccess extends PermissionAccess {
-	
-	public function setWorkflowProgressObject(WorkflowProgress $wp) {
-		$this->wp = $wp;
-	}
-	
-	public function getWorkflowProgressObject() {
-		return $this->wp;
-	}
-	
-}
+class WorkflowPermissionAccess extends Concrete5_Model_WorkflowPermissionAccess {}
