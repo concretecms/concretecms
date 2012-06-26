@@ -7,5 +7,4 @@ defined('C5_EXECUTE') or die("Access Denied.");
  * @license    http://www.concrete5.org/license/     MIT License
  *
  */
- 
-class ChangeSubpageDefaultsInheritancePageWorkflowRequest extends Concrete5_Model_ChangeSubpageDefaultsInheritancePageWorkflowRequest {}
+class EmptyWorkflow extends Concrete5_Model_EmptyWorkflow {}
