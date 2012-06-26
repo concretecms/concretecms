@@ -1,5 +1,41 @@
 <?
 
+	class Concrete5_Model_GroupList extends Object {
+
+		public $gArray = array();
+
+		/**
+		 * Get all groups should only really be run when you're sure there aren't a million groups in the system
+		 */
+		function GroupList($obj, $omitRequiredGroups = false, $getAllGroups = false) {
+			if ($getAllGroups) {
+				$db = Loader::db();
+				$minGID = ($omitRequiredGroups) ? 2 : 0;
+				$q = "select gID from Groups where gID > $minGID order by gID asc";	
+				$r = $db->Execute($q);
+				while ($row = $r->FetchRow()) {
+					$g = Group::getByID($row['gID']);
+					$g->setPermissionsForObject($obj);
+					if(!in_array($g,$this->gArray)) 
+						$this->gArray[] = $g;
+				}
+			} else {
+				$groups = $this->getRelevantGroups($obj, $omitRequiredGroups);
+				foreach($groups as $g) {
+					if(!$g) continue;
+					$g->setPermissionsForObject($obj);
+					if(!in_array($g,$this->gArray)) 
+						$this->gArray[] = $g;
+				}
+			}
+		}
+
+		function getGroupList() {
+			return $this->gArray;
+		}
+
+	}
+
 	class Concrete5_Model_Group extends Object {
 	
 		var $ctID;

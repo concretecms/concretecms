@@ -11,3 +11,4 @@
  */
 
 class Group extends Concrete5_Model_Group {}
+class GroupList extends Concrete5_Model_GroupList {}
