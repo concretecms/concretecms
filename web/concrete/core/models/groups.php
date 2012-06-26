@@ -7,7 +7,7 @@
 		/**
 		 * Get all groups should only really be run when you're sure there aren't a million groups in the system
 		 */
-		function GroupList($obj, $omitRequiredGroups = false, $getAllGroups = false) {
+		function __construct($obj, $omitRequiredGroups = false, $getAllGroups = false) {
 			if ($getAllGroups) {
 				$db = Loader::db();
 				$minGID = ($omitRequiredGroups) ? 2 : 0;
@@ -28,6 +28,40 @@
 						$this->gArray[] = $g;
 				}
 			}
+		}
+
+		protected function getRelevantGroups($obj, $omitRequiredGroups = false) {
+			$db = Loader::db();
+			if ($obj instanceof UserInfo) { 
+				$table = 'UserGroups';
+				$uID = $obj->getUserID();						
+				if ($uID) {
+					$where = "uID = {$uID}";
+				}
+			}
+
+			$groups = array();
+			if ($where) {
+				$q = "select distinct gID from $table where 1=1 and {$where} and gID > 0 order by gID asc";
+				$gs = $db->GetCol($q);
+
+				if (!$omitRequiredGroups) {
+					if (!in_array(GUEST_GROUP_ID, $gs)) {
+						$gs[] = GUEST_GROUP_ID;
+					}
+					if (!in_array(REGISTERED_GROUP_ID, $gs)) {
+						$gs[] = REGISTERED_GROUP_ID;
+					}
+				}
+
+				sort($gs);
+
+				foreach($gs as $gID) {
+					$g = Group::getByID( $gID );
+					$groups[] = $g;
+				}
+			}
+			return $groups;
 		}
 
 		function getGroupList() {
@@ -88,6 +122,26 @@
 				$members[] = $ui;
 			}
 			return $members;			
+		}
+
+		public function setPermissionsForObject($obj) {
+			$this->pObj = $obj;
+			$db = Loader::db();
+			if ($obj instanceof UserInfo) { 
+				$uID = $this->pObj->getUserID();						
+				if ($uID) {
+					$q = "select gID, ugEntered, UserGroups.type from UserGroups where gID = '{$this->gID}' and uID = {$uID}";
+					$r = $db->query($q);
+					if ($r) {
+						$row = $r->fetchRow();
+						if ($row['gID']) {
+							$this->inGroup = true;
+							$this->gDateTimeEntered = $row['ugEntered'];
+							$this->gMemberType = $row['type'];
+						}
+					}
+				}
+			}
 		}
 		
 		public function getGroupMembersNum($type = null) {
