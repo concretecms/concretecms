@@ -25,14 +25,3 @@ class AssignUserGroupsUserPermissionKey extends AccessUserSearchUserPermissionKe
 
 	
 }
-
-class AssignUserGroupsUserPermissionAccess extends AccessUserSearchUserPermissionAccess {
-
-	protected $dbTableAccessList = 'UserPermissionAssignGroupAccessList';
-	protected $dbTableAccessListCustom = 'UserPermissionAssignGroupAccessListCustom';
-	
-}
-
-class AssignUserGroupsUserPermissionAccessListItem extends AccessUserSearchUserPermissionAccessListItem {
-	
-}
