@@ -1,6 +1,6 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-class MarketplaceNewsflowPermissionAssignment extends PermissionAssignment {
+class MarketplaceNewsflowPermissionAssignment extends Concrete5_Model_MarketplaceNewsflowPermissionAssignment {
 
 
 }

@@ -1,13 +1,4 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-class PagePermissionKey extends PermissionKey {
-
-	protected $multiplePageArray; // bulk operations
-	public function setMultiplePageArray($pages) {
-		$this->multiplePageArray = $pages;
-	}
-	public function getMultiplePageArray() {
-		return $this->multiplePageArray;
-	}
-
+class PagePermissionKey extends Concrete5_Model_PagePermissionKey {
 }
