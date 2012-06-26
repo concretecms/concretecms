@@ -83,7 +83,6 @@ class ConcreteUpgradeVersion560Helper {
 			$bt->refresh();
 		}
 		
-		Loader::model('single_page');
 		$sp = Page::getByPath('/dashboard/system/permissions/users');
 		if ($sp->isError()) {
 			$d1a = SinglePage::add('/dashboard/system/permissions/users');
@@ -473,7 +472,6 @@ class ConcreteUpgradeVersion560Helper {
 		if (!in_array('FileSetPermissions', $tables)) {
 			return false;
 		}
-		Loader::model("file_set");
 		// permissions
 		
 		$permissionMap = array(
@@ -645,11 +643,15 @@ class ConcreteUpgradeVersion560Helper {
 				if (!$name) {
 					$name = Loader::helper('text')->unhandle($pt['handle']);
 				}
-				$type = PermissionAccessEntityType::add($pt['handle'], $name);
-				if (isset($pt->categories)) {
-					foreach($pt->categories->children() as $cat) {
-						$catobj = PermissionKeyCategory::getByHandle((string) $cat['handle']);
-						$catobj->associateAccessEntityType($type);
+				$handle = (string) $pt['handle'];
+				$patt = PermissionAccessEntityType::getByHandle($handle);
+				if (!is_object($patt)) {
+					$type = PermissionAccessEntityType::add($pt['handle'], $name);
+					if (isset($pt->categories)) {
+						foreach($pt->categories->children() as $cat) {
+							$catobj = PermissionKeyCategory::getByHandle((string) $cat['handle']);
+							$catobj->associateAccessEntityType($type);
+						}
 					}
 				}
 			}
@@ -658,7 +660,6 @@ class ConcreteUpgradeVersion560Helper {
 		$txt = Loader::helper('text');
 		foreach($sx->permissionkeys->permissionkey as $pk) {
 			$pkc = PermissionKeyCategory::getByHandle($pk['category']);
-			Loader::model('permission/categories/' . $pkc->getPermissionKeyCategoryHandle());
 			$className = $txt->camelcase($pkc->getPermissionKeyCategoryHandle());
 			$c1 = $className . 'PermissionKey';
 			$handle = (string) $pk['handle'];

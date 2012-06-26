@@ -1,7 +1,7 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
 
-class BasicPagePermissionAssignment extends PermissionAssignment {
+class Concrete5_Model_PagePermissionAssignment extends PermissionAssignment {
 
 	public function getPermissionAccessObject() {
 		$db = Loader::db();
