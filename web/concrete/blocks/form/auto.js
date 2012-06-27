@@ -161,7 +161,6 @@ var miniSurvey ={
 						
 						if(parseInt(jsonObj.bID)>0) 
 							miniSurvey.edit_qID = parseInt(qID) ;
-						scroll(0,165);
 					}
 			});
 	},	
