@@ -24,18 +24,18 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 class Concrete5_Library_BlockViewTemplate {
 
-	private $basePath = '';
+	protected $basePath = '';
 	
-	private $bFilename;
-	private $btHandle;
-	private $obj;
-	private $baseURL;
-	private $checkHeaderItems = true;
-	private $itemsToCheck = array(
+	protected $bFilename;
+	protected $btHandle;
+	protected $obj;
+	protected $baseURL;
+	protected $checkHeaderItems = true;
+	protected $itemsToCheck = array(
 		'CSS' => 'view.css', 
 		'JAVASCRIPT' => 'view.js'
 	);
-	private $render = FILENAME_BLOCK_VIEW;
+	protected $render = FILENAME_BLOCK_VIEW;
 	
 	public function __construct($obj) {
 		$this->btHandle = $obj->getBlockTypeHandle();
@@ -46,7 +46,7 @@ class Concrete5_Library_BlockViewTemplate {
 		$this->computeView();
 	}
 	
-	private function computeView() {
+	protected function computeView() {
 		$bFilename = $this->bFilename;
 		$obj = $this->obj;
 		
