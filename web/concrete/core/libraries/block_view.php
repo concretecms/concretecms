@@ -14,8 +14,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 	class Concrete5_Library_BlockView extends View {
 	
 		protected $block;
-		private $area;
-		private $blockObj;
+		protected $area;
+		protected $blockObj;
 		
 		/**
 		 * Includes a file from the core elements directory. Used by the CMS.

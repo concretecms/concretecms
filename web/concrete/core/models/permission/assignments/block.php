@@ -32,10 +32,14 @@ class Concrete5_Model_BlockPermissionAssignment extends PermissionAssignment {
 			$this->permissionObjectToCheck = $b;
 		} else {
 			$a = $b->getBlockAreaObject();
-			if ($a->overrideCollectionPermissions()) {
-				$this->permissionObjectToCheck = $a;
+			if (is_object($a)) {
+				if ($a->overrideCollectionPermissions()) {
+					$this->permissionObjectToCheck = $a;
+				} else {
+					$this->permissionObjectToCheck = $a->getAreaCollectionObject();			
+				}
 			} else { 
-				$this->permissionObjectToCheck = $a->getAreaCollectionObject();
+				$this->permissionObjectToCheck = Page::getCurrentPage();
 			}
 		}
 	}
