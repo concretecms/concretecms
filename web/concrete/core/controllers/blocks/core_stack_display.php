@@ -1,5 +1,15 @@
 <?
 	defined('C5_EXECUTE') or die("Access Denied.");
+/**
+ * The controller for the stack display block. This is an internal proxy block that is inserted when a stack's contents are displayed in a page.
+ *
+ * @package Blocks
+ * @subpackage Core Stack Display
+ * @author Andrew Embler <andrew@concrete5.org>
+ * @copyright  Copyright (c) 2003-2012 Concrete5. (http://www.concrete5.org)
+ * @license    http://www.concrete5.org/license/     MIT License
+ *
+ */
 	
 	class Concrete5_Controller_Block_CoreStackDisplay extends BlockController {
 

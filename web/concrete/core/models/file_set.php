@@ -301,52 +301,6 @@
 		}
 
 
-			
-			
-		/** 
-		 * legacy
-		 */
-		/*
-		public function setPermissions($obj, $canSearch, $canRead, $canWrite, $canAdmin, $canAdd, $extensions = array()) {
-			$fsID = $this->fsID;
-			$uID = 0;
-			$gID = 0;
-			$db = Loader::db();
-			if (is_a($obj, 'UserInfo')) {
-				$uID = $obj->getUserID();
-			} else {
-				$gID = $obj->getGroupID();
-			}
-			
-			if ($canSearch == FilePermissions::PTYPE_NONE) {
-				$canWrite = FilePermissions::PTYPE_NONE;
-				$canAdd = FilePermissions::PTYPE_NONE;
-				$canAdmin = FilePermissions::PTYPE_NONE;
-			}
-				
-			$db->Replace('FileSetPermissions', array(
-				'fsID' => $fsID,
-				'uID' => $uID, 
-				'gID' => $gID,
-				'canRead' => $canRead,
-				'canSearch' => $canSearch,
-				'canWrite' => $canWrite,
-				'canAdmin' => $canAdmin,
-				'canAdd' => $canAdd
-			), 
-			array('fsID', 'gID', 'uID'), true);
-			
-			$db->Execute("delete from FilePermissionFileTypes where fsID = ? and gID = ? and uID = ?", array($fsID, $uID, $gID));
-	
-			if ($canAdd == FilePermissions::PTYPE_CUSTOM && is_array($extensions)) {
-				foreach($extensions as $e) {
-					$db->Execute('insert into FilePermissionFileTypes (fsID, gID, uID, extension) values (?, ?, ?, ?)', array($fsID, $gID, $uID, $e));
-				}
-			}
-		}		
-	
-		*/
-	
 	}
 	
 	class Concrete5_Model_FileSetFile extends Model {

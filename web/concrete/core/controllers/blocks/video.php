@@ -1,13 +1,17 @@
 <?
-	/*
-	 * Functions for embedding video in your page. Can automatically determine width and height
-	 * of FLV files from standard metadata.
-	 * @author Tony Trupp <tony@concrete5.org>
-	 * @author Remo Laubacher <remo.laubacher@gmail.com>
-	 * @author Andrew Embler <andrew@concrete5.org>
-	 */
-	 
-	defined('C5_EXECUTE') or die("Access Denied.");
+defined('C5_EXECUTE') or die("Access Denied.");
+/**
+ * Functions for embedding video in your page. Can automatically determine width and height of FLV files from standard metadata.
+ *
+ * @package Blocks
+ * @subpackage Video
+ * @author Tony Trupp <tony@concrete5.org>
+ * @author Remo Laubacher <remo.laubacher@gmail.com>
+ * @author Andrew Embler <andrew@concrete5.org>
+ * @copyright  Copyright (c) 2003-2012 Concrete5. (http://www.concrete5.org)
+ * @license    http://www.concrete5.org/license/     MIT License
+ *
+ */
 	class Concrete5_Controller_Block_Video extends BlockController {
  
 		protected $btInterfaceWidth = 320;

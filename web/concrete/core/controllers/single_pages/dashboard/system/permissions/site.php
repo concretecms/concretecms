@@ -34,7 +34,7 @@ class Concrete5_Controller_Dashboard_System_Permissions_Site extends DashboardBa
 		$assignments = $pk->getAccessListItems();
 		foreach($assignments as $asi) {
 			$ae = $asi->getAccessEntityObject();
-			if ($ae->getAccessEntityType() == 'G') {
+		if ($ae->getAccessEntityTypeHandle() == 'group') {
 				$editAccess[] = $ae->getGroupObject()->getGroupID();
 			}
 		}

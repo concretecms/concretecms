@@ -1,25 +1,16 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
 /**
+ * An object that represents an option in a survey. 
+ *
  * @package Blocks
- * @subpackage BlockTypes
- * @copyright  Copyright (c) 2003-2008 Concrete5. (http://www.concrete5.org)
+ * @subpackage Survey
+ * @author Ryan Tyler <ryan@concrete5.org>
+ * @author Tony Trupp <tony@concrete5.org>
+ * @copyright  Copyright (c) 2003-2012 Concrete5. (http://www.concrete5.org)
  * @license    http://www.concrete5.org/license/     MIT License
  *
  */
-
-/**
- * An object that represents a survey option.
- *
- * @package Blocks
- * @subpackage BlockTypes
- * @author Andrew Embler <andrew@concrete5.org>
- * @category Concrete
- * @copyright  Copyright (c) 2003-2008 Concrete5. (http://www.concrete5.org)
- * @license    http://www.concrete5.org/license/     MIT License
- *
- */
-
 class Concrete5_Controller_Block_SurveyOption {
 
 	public $optionID, $optionName, $displayOrder;

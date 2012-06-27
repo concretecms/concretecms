@@ -1,6 +1,15 @@
 <?
 	defined('C5_EXECUTE') or die("Access Denied.");
-	
+/**
+ * The controller for the block that displays featured add-ons in the dashboard news overlay.
+ *
+ * @package Blocks
+ * @subpackage Dashboard Featured Add-On
+ * @author Andrew Embler <andrew@concrete5.org>
+ * @copyright  Copyright (c) 2003-2012 Concrete5. (http://www.concrete5.org)
+ * @license    http://www.concrete5.org/license/     MIT License
+ *
+ */
 	class Concrete5_Controller_Block_DashboardFeaturedAddon extends BlockController {
 
 		protected $btCacheBlockRecord = true;

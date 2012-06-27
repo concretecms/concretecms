@@ -1,4 +1,14 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
+/**
+ * A block for displaying and linking to search for tags in a page.
+ *
+ * @package Blocks
+ * @subpackage Tags
+ * @author Andrew Embler <andrew@concrete5.org>
+ * @copyright  Copyright (c) 2003-2012 Concrete5. (http://www.concrete5.org)
+ * @license    http://www.concrete5.org/license/     MIT License
+ *
+ */
 	
 class Concrete5_Controller_Block_Tags extends BlockController {
 
