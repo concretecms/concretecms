@@ -1,6 +1,15 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-
+/**
+ * A block controller for displaying HTML content on a page.
+ *
+ * @package Blocks
+ * @subpackage HTML
+ * @author Andrew Embler <andrew@concrete5.org>
+ * @copyright  Copyright (c) 2003-2012 Concrete5. (http://www.concrete5.org)
+ * @license    http://www.concrete5.org/license/     MIT License
+ *
+ */
 class Concrete5_Controller_Block_Html extends BlockController {
 	
 	protected $btTable = 'btContentLocal';

@@ -1,5 +1,16 @@
 <?
 	defined('C5_EXECUTE') or die("Access Denied.");
+/**
+ * Controller for the Google Maps block, which can display a map on a page.
+ *
+ * @package Blocks
+ * @subpackage Google Map
+ * @author Ryan Tyler <ryan@concrete5.org>
+ * @author Andrew Embler <andrew@concrete5.org>
+ * @copyright  Copyright (c) 2003-2012 Concrete5. (http://www.concrete5.org)
+ * @license    http://www.concrete5.org/license/     MIT License
+ *
+ */
 	class Concrete5_Controller_Block_GoogleMap extends BlockController {
 		
 		protected $btTable = 'btGoogleMap';

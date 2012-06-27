@@ -1,6 +1,15 @@
 <?
 	defined('C5_EXECUTE') or die("Access Denied.");
-	
+/**
+ * The controller for the Dashboard App Status block. It is added to the dashboard news page/overlay and handles display of available updates.
+ *
+ * @package Blocks
+ * @subpackage Dashboard App Status
+ * @author Andrew Embler <andrew@concrete5.org>
+ * @copyright  Copyright (c) 2003-2012 Concrete5. (http://www.concrete5.org)
+ * @license    http://www.concrete5.org/license/     MIT License
+ *
+ */	
 	class Concrete5_Controller_Block_DashboardAppStatus extends BlockController {
 
 		protected $btCacheBlockRecord = true;

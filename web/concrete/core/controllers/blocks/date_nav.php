@@ -1,6 +1,16 @@
 <?php 
 
 	defined('C5_EXECUTE') or die("Access Denied.");
+/**
+ * Controller for a block that allows date navigation. 
+ *
+ * @package Blocks
+ * @subpackage Date Navigation
+ * @author Andrew Embler <andrew@concrete5.org>
+ * @copyright  Copyright (c) 2003-2012 Concrete5. (http://www.concrete5.org)
+ * @license    http://www.concrete5.org/license/     MIT License
+ *
+ */
 	class Concrete5_Controller_Block_DateNav extends BlockController {
 
 		protected $btTable = 'btDateNav';

@@ -1,5 +1,15 @@
 <?
 	defined('C5_EXECUTE') or die("Access Denied.");
+/**
+ * The controller for the content block.
+ *
+ * @package Blocks
+ * @subpackage Content
+ * @author Andrew Embler <andrew@concrete5.org>
+ * @copyright  Copyright (c) 2003-2012 Concrete5. (http://www.concrete5.org)
+ * @license    http://www.concrete5.org/license/     MIT License
+ *
+ */
 	class Concrete5_Controller_Block_Content extends BlockController {
 		
 		protected $btTable = 'btContentLocal';

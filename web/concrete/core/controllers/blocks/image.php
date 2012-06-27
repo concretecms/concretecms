@@ -1,5 +1,18 @@
 <?
 	defined('C5_EXECUTE') or die("Access Denied.");	
+/**
+ * A block controller for displaying an image on a page.
+ *
+ * @package Blocks
+ * @subpackage Image
+ * @author Andrew Embler <andrew@concrete5.org>
+ * @author Tony Trupp <tony@concrete5.org>
+ * @author Ryan Tyler <ryan@concrete5.org>
+ * @author Jordan Lev
+ * @copyright  Copyright (c) 2003-2012 Concrete5. (http://www.concrete5.org)
+ * @license    http://www.concrete5.org/license/     MIT License
+ *
+ */
 	class Concrete5_Controller_Block_Image extends BlockController {
 
 		protected $btInterfaceWidth = 400;

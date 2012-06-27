@@ -185,7 +185,7 @@ if (isset($entry)) { ?>
 	}	
 		
 	ccm_composerLaunchPermissions = function(cID) {
-		var shref = CCM_TOOLS_PATH + '/edit_collection_popup?ctask=edit_permissions_composer&cID=<?=$entry->getCollectionID()?>';
+		var shref = CCM_TOOLS_PATH + '/edit_collection_popup?ctask=edit_permissions&cID=<?=$entry->getCollectionID()?>';
 		jQuery.fn.dialog.open({
 			title: '<?=t("Permissions")?>',
 			href: shref,

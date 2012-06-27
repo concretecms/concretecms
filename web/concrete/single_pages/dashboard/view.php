@@ -48,8 +48,13 @@ for ($i = 0; $i < count($categories); $i++) {
 	
 	</div>
 	
-	<? } ?>
+	<? } else { ?>
 	
+	<div class="ccm-dashboard-system-category-inner">
+		<div><a href="<?=Loader::helper('navigation')->getLinkToCollection($cat, false, true)?>"><?=t('Home')?></a></div>
+	</div>
+		
+	<? } ?>
 	</div>
 	
 	

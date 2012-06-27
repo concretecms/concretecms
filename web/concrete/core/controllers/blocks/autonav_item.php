@@ -1,26 +1,15 @@
 <?
-/**
- * @package Blocks
- * @subpackage BlockTypes
- * @category Concrete
- * @author Andrew Embler <andrew@concrete5.org>
- * @copyright  Copyright (c) 2003-2008 Concrete5. (http://www.concrete5.org)
- * @license    http://www.concrete5.org/license/     MIT License
- *
- */
-
+defined('C5_EXECUTE') or die("Access Denied.");
 /**
  * An object used by the Autonav Block to display navigation items in a tree
  *
  * @package Blocks
- * @subpackage BlockTypes
+ * @subpackage Auto-Nav
  * @author Andrew Embler <andrew@concrete5.org>
- * @category Concrete
- * @copyright  Copyright (c) 2003-2008 Concrete5. (http://www.concrete5.org)
+ * @copyright  Copyright (c) 2003-2012 Concrete5. (http://www.concrete5.org)
  * @license    http://www.concrete5.org/license/     MIT License
  *
  */
-	defined('C5_EXECUTE') or die("Access Denied.");
 	class Concrete5_Controller_Block_AutonavItem {
 
 		protected $level;

@@ -1,5 +1,17 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
+/**
+ * Displays a slideshow of images on a page.
+ *
+ * @package Blocks
+ * @subpackage Slideshow
+ * @author Ryan Tyler <ryan@concrete5.org>
+ * @author Andrew Embler <andrew@concrete5.org>
+ * @author Tony Trupp <tony@concrete5.org>
+ * @copyright  Copyright (c) 2003-2012 Concrete5. (http://www.concrete5.org)
+ * @license    http://www.concrete5.org/license/     MIT License
+ *
+ */
 class Concrete5_Controller_Block_Slideshow extends BlockController {
 	
 	protected $btTable = 'btSlideshow';

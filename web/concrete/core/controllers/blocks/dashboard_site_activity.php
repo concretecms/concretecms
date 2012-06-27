@@ -1,6 +1,15 @@
 <?
-	defined('C5_EXECUTE') or die("Access Denied.");
-	
+defined('C5_EXECUTE') or die("Access Denied.");
+/**
+ * The controller for the block that displays site activity, including statistics, in the dashboard.
+ *
+ * @package Blocks
+ * @subpackage Dashboard Site Activity
+ * @author Andrew Embler <andrew@concrete5.org>
+ * @copyright  Copyright (c) 2003-2012 Concrete5. (http://www.concrete5.org)
+ * @license    http://www.concrete5.org/license/     MIT License
+ *
+ */
 	class Concrete5_Controller_Block_DashboardSiteActivity extends BlockController {
 
 		protected $btCacheBlockRecord = true;

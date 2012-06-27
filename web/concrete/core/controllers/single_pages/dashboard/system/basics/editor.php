@@ -4,10 +4,6 @@ class Concrete5_Controller_Dashboard_System_Basics_Editor extends DashboardBaseC
 
 	public $helpers = array('form'); 
 
-	public function access_task_permissions() {
-		$this->addHeaderItem(Loader::helper('html')->javascript('ccm.dashboard.permissions.js'));	
-	}
-	
 	protected function getRewriteRules() {
 		$rewriteRules = "<IfModule mod_rewrite.c>\n";
 		$rewriteRules .= "RewriteEngine On\n";

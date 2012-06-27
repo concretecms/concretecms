@@ -1,5 +1,12 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
-	
+/**
+ * @package Blocks
+ * @subpackage Date Archive
+ * @author Andrew Embler <andrew@concrete5.org>
+ * @copyright  Copyright (c) 2003-2012 Concrete5. (http://www.concrete5.org)
+ * @license    http://www.concrete5.org/license/     MIT License
+ *
+ */	
 class Concrete5_Controller_Block_DateArchive extends BlockController {
 
 	protected $btTable = 'btDateArchive';

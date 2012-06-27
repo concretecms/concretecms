@@ -1,25 +1,17 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
 /**
- * @package Blocks
- * @subpackage BlockTypes
- * @copyright  Copyright (c) 2003-2008 Concrete5. (http://www.concrete5.org)
- * @license    http://www.concrete5.org/license/     MIT License
- *
- */
-
-/**
- * An object that represents a survey option.
+ * Returns all surveys in a site.
  *
  * @package Blocks
- * @subpackage BlockTypes
+ * @subpackage Survey
+ * @author Ryan Tyler <ryan@concrete5.org>
  * @author Andrew Embler <andrew@concrete5.org>
- * @category Concrete
- * @copyright  Copyright (c) 2003-2008 Concrete5. (http://www.concrete5.org)
+ * @author Tony Trupp <tony@concrete5.org>
+ * @copyright  Copyright (c) 2003-2012 Concrete5. (http://www.concrete5.org)
  * @license    http://www.concrete5.org/license/     MIT License
  *
  */
-
 class Concrete5_Controller_Block_SurveyList extends DatabaseItemList {
 	protected $itemsPerPage = 10;
 	protected $autoSortColumns = array('cvName', 'question', 'numberOfResponses', 'lastResponse');

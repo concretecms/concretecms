@@ -1,6 +1,16 @@
 <?
 
 	defined('C5_EXECUTE') or die("Access Denied.");
+/**
+ * Displays a list of pages based on various criteria.
+ *
+ * @package Blocks
+ * @subpackage Page List
+ * @author Andrew Embler <andrew@concrete5.org>
+ * @copyright  Copyright (c) 2003-2012 Concrete5. (http://www.concrete5.org)
+ * @license    http://www.concrete5.org/license/     MIT License
+ *
+ */
 	class Concrete5_Controller_Block_PageList extends BlockController {
 
 		protected $btTable = 'btPageList';

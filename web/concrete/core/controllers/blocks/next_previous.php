@@ -1,5 +1,15 @@
 <?php  defined('C5_EXECUTE') or die("Access Denied."); 
-
+/**
+ * Displays next and previous links based on the current area of the site where added.
+ *
+ * @package Blocks
+ * @subpackage Next/Previous
+ * @author Andrew Embler <andrew@concrete5.org>
+ * @author Tony Trupp <tony@concrete5.org>
+ * @copyright  Copyright (c) 2003-2012 Concrete5. (http://www.concrete5.org)
+ * @license    http://www.concrete5.org/license/     MIT License
+ *
+ */
 class Concrete5_Controller_Block_NextPrevious extends BlockController { 
 
 	protected $btTable = 'btNextPrevious';

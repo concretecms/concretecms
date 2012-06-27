@@ -1,10 +1,16 @@
 <?
-	defined('C5_EXECUTE') or die("Access Denied.");
-
-	
-	/** 
-	 * Manages indevidual guestbook entries
-	 */ 
+defined('C5_EXECUTE') or die("Access Denied.");
+/**
+ * An object for individual Guestbook responses.
+ *
+ * @package Blocks
+ * @subpackage Guestbook
+ * @author Ryan Tyler <ryan@concrete5.org>
+ * @author Andrew Embler <andrew@concrete5.org>
+ * @copyright  Copyright (c) 2003-2012 Concrete5. (http://www.concrete5.org)
+ * @license    http://www.concrete5.org/license/     MIT License
+ *
+ */
 	class Concrete5_Controller_Block_GuestbookEntry {
 		/**
 		 * blocks bID

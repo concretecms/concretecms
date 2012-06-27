@@ -1,6 +1,15 @@
 <?
 	defined('C5_EXECUTE') or die("Access Denied.");
-	
+/**
+ * Controller for a block that displays a file link on a page. 
+ *
+ * @package Blocks
+ * @subpackage File
+ * @author Andrew Embler <andrew@concrete5.org>
+ * @copyright  Copyright (c) 2003-2012 Concrete5. (http://www.concrete5.org)
+ * @license    http://www.concrete5.org/license/     MIT License
+ *
+ */	
 	class Concrete5_Controller_Block_File extends BlockController {
 
 		protected $btInterfaceWidth = 300;

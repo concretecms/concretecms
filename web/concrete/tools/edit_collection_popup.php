@@ -29,11 +29,6 @@ switch($_GET['ctask']) {
 		$toolSection = "permission/details/collection";
 		$canViewPane = $cp->canEditPagePermissions();
 		break;
-	case 'edit_permissions_composer':
-		$toolSection = "collection_permissions";
-		$canViewPane = $cp->canEditPagePermissions();
-		$additionalArgs['isComposer'] = true;
-		break;
 	case 'preview_page_as_user':
 		$toolSection = "collection_preview_as_user";
 		$canViewPane = ($cp->canPreviewPageAsUser() && PERMISSIONS_MODEL == 'advanced');
