@@ -3,7 +3,7 @@
 /** Creates the sitemap.xml file.
 * Uses the following defines: SITEMAPXML_FILE, SITEMAPXML_DEFAULT_CHANGEFREQ, SITEMAPXML_DEFAULT_PRIORITY.
 */
-class GenerateSitemapXml extends Job {
+class GenerateSitemap extends Job {
 	/** The end-of-line terminator.
 	* @var string
 	*/
