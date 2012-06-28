@@ -57,6 +57,7 @@
 			}
 			
 			if(is_object($fp)) {
+				$fp->on_start();
 				return $fp;
 			} else {
 				throw new Exception(t('Unable load external form block controller file: %s',$this->filename)); 
