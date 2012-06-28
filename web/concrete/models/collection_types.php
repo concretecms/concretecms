@@ -472,7 +472,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			Loader::model('file_list');
 			Loader::model('file_set');
 			$fileList = new FileList();
-			$fs = FileSet::getByName(t('Page Type Icons'));		
+			$fs = FileSet::getByName('Page Type Icons');		
 			if(!$fs) {
 				return $f->getDirectoryContents(DIR_FILES_COLLECTION_TYPE_ICONS);				
 			} else { 
