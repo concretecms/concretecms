@@ -191,7 +191,7 @@ class Concrete5_Model_PermissionAccess extends Object {
 	
 	public static function getByID($paID, PermissionKey $pk) {
 		$db = Loader::db();
-		$row = $db->GetRow('select * from PermissionAccess where paID = ?', array($paID));
+		$row = $db->GetRow('select paID, paIsInUse from PermissionAccess where paID = ?', array($paID));
 		if ($row['paID']) {
 			$class = str_replace('PermissionKey', 'PermissionAccess', get_class($pk));
 			$obj = new $class();
