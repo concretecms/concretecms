@@ -220,7 +220,7 @@ jQuery.fn.dialog.closeTop = function() {
 }
 
 jQuery.fn.dialog.closeAll = function() {
-	$(".ui-dialog-content").jqdialog('close');
+	$($(".ui-dialog-content").get().reverse()).jqdialog('close');
 }
 
 
