@@ -89,6 +89,7 @@ class Log {
 		if (!$this->session) {
 			$this->close();
 		}
+		return $this;
 	}
 
 	public static function addEntry($message, $namespace = false) {
