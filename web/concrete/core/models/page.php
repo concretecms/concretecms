@@ -119,7 +119,7 @@ class Concrete5_Model_Page extends Collection {
 	}		
 
 	public function getPermissionObjectIdentifier() {
-		return $this->getCollectionID();
+		return $this->getPermissionsCollectionID();
 	}
 	/**
 	 * Returns 1 if the page is in edit mode

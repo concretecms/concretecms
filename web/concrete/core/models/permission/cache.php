@@ -34,6 +34,7 @@ class Concrete5_Model_PermissionCache {
 
 	public static function addValidate(PermissionKey $pk, $valid) {
 		$cl = CacheLocal::get();
+		$object = $pk->getPermissionObject();
 		if (is_object($object)) {
 			$identifier = 'pk:' . $pk->getPermissionKeyHandle() . ':' . $object->getPermissionObjectIdentifier();
 		} else {
