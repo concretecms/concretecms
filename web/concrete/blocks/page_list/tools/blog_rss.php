@@ -27,7 +27,7 @@ if($_GET['bID'] && $_GET['cID'] && $nh->integer($_GET['bID']) && $nh->integer($_
 			<rss version="2.0">
 			  <channel>
 				<title><?=$controller->rssTitle?></title>
-				<link><?=BASE_URL.$rssUrl?></link>
+				<link><?=BASE_URL.Page::getCurrentPage()->getCollectionPath()?></link>
 				<description><?=$controller->rssDescription?></description> 
 	<?
 			for ($i = 0; $i < count($cArray); $i++ ) {
