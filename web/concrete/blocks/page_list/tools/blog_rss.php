@@ -33,14 +33,6 @@ if($_GET['bID'] && $_GET['cID'] && $nh->integer($_GET['bID']) && $nh->integer($_
 			for ($i = 0; $i < count($cArray); $i++ ) {
 				$cobj = $cArray[$i]; 
 				$title = $cobj->getCollectionName();
-                                $attribs = $cobj->getSetCollectionAttributes();
-                                $tags = Array();
-                                foreach($attribs as $attrib) {
-                                  $value_object = $cobj->getAttributeValueObject($attrib);
-                                  if ($value_object->getAttributeKey()->getAttributeKeyHandle() == "tags") {
-                                    $tags = preg_split('/\n/', $value_object->getValue()); 
-                                  }
-                                }
                                 ?>
 				<item>
 				  <title><?=htmlspecialchars($title);?></title>
@@ -55,6 +47,7 @@ if($_GET['bID'] && $_GET['cID'] && $nh->integer($_GET['bID']) && $nh->integer($_
 					?>
 				  ]]></description>
                                   <? 
+                                    $tags = preg_split('/\n/', $cobj->getAttribute('tags'));
                                     foreach($tags as $tag) {
                                       echo "<category>";
                                       echo $tag;
