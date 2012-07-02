@@ -32,7 +32,16 @@ if($_GET['bID'] && $_GET['cID'] && $nh->integer($_GET['bID']) && $nh->integer($_
 	<?
 			for ($i = 0; $i < count($cArray); $i++ ) {
 				$cobj = $cArray[$i]; 
-				$title = $cobj->getCollectionName(); ?>
+				$title = $cobj->getCollectionName();
+                                $attribs = $cobj->getSetCollectionAttributes();
+                                $tags = Array();
+                                foreach($attribs as $attrib) {
+                                  $value_object = $cobj->getAttributeValueObject($attrib);
+                                  if ($value_object->getAttributeKey()->getAttributeKeyHandle() == "tags") {
+                                    $tags = preg_split('/\n/', $value_object->getValue()); 
+                                  }
+                                }
+                                ?>
 				<item>
 				  <title><?=htmlspecialchars($title);?></title>
 				  <link>
@@ -45,6 +54,13 @@ if($_GET['bID'] && $_GET['cID'] && $nh->integer($_GET['bID']) && $nh->integer($_
 					$a->display($cobj);
 					?>
 				  ]]></description>
+                                  <? 
+                                    foreach($tags as $tag) {
+                                      echo "<category>";
+                                      echo $tag;
+                                      echo "</category>";
+                                    }
+                                  ?>
 				  <? /* <pubDate><?=$cobj->getCollectionDatePublic()?></pubDate>
 				  Wed, 23 Feb 2005 16:12:56 GMT  */ ?>
 				  <pubDate><?=date( 'D, d M Y H:i:s T',strtotime($cobj->getCollectionDatePublic())) ?></pubDate>
