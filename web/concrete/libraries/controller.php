@@ -102,11 +102,6 @@ class Controller {
 				}
 			}
 		} catch(Exception $e) {
-         		// In case the controller contains the method __call we
-         		// forward all tasks to the class.
-		        if (in_array('__call', get_class_methods(get_class($this)))) {
-            			$foundTask = true;
-         		}
 		}
 			
 		if ($foundTask) {
@@ -155,7 +150,19 @@ class Controller {
 				$do404 = false;
 			}
 		
-
+			if($do404==true) {
+			    if (in_array('__call', get_class_methods(get_class($this)))) {
+			        $this->task = $method;
+			        if (!is_array($this->parameters)) {
+			            $this->parameters = array();
+			            if (isset($taskparts[1])) {
+			                array_shift($taskparts);
+			                $this->parameters = $taskparts;
+			            }
+			        }
+			        $do404 = false;
+			    }
+			}
 
 			if ($do404) {
 				
