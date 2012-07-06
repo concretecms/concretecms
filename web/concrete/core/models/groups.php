@@ -83,10 +83,16 @@
 		*/
 		public static function getByID($gID) {
 			$db = Loader::db();
+			$g = CacheLocal::getEntry('group', $gID);
+			if (is_object($g)) { 
+				return $g;
+			}
+
 			$row = $db->getRow("select * from Groups where gID = ?", array($gID));
 			if (isset($row['gID'])) {
 				$g = new Group;
 				$g->setPropertiesFromArray($row);
+				CacheLocal::set('group', $gID, $g);
 				return $g;
 			}
 		}

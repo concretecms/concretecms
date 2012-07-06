@@ -73,7 +73,9 @@ class ConcreteUpgradeVersion560Helper {
 		'PageWorkflowProgress',
 		'PermissionAccessWorkflows',
 		'BasicWorkflowPermissionAssignments',
-		'BasicWorkflowProgressData'
+		'BasicWorkflowProgressData',
+		'GroupSets',
+		'GroupSetGroups'
 	);
 	
 	
@@ -81,6 +83,12 @@ class ConcreteUpgradeVersion560Helper {
 		$bt = BlockType::getByHandle('core_scrapbook_display');
 		if (is_object($bt)) {
 			$bt->refresh();
+		}
+
+		$sp = Page::getByPath('/dashboard/users/group_sets');
+		if ($sp->isError()) {
+			$d11 = SinglePage::add('/dashboard/users/group_sets');
+			$d11->update(array('cName'=>t('Group Sets')));
 		}
 		
 		$sp = Page::getByPath('/dashboard/system/permissions/users');
