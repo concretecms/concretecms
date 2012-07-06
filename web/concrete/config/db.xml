@@ -1051,46 +1051,7 @@
       <DEFAULT value="0"/>
     </field>
   </table>
- <table name="TaskPermissionUserGroups">
-    <field name="tpID" type="I" size="10">
-      <KEY/>
-      <DEFAULT value="0"/>
-      <UNSIGNED/>
-    </field>
-    <field name="gID" type="I" size="10">
-      <KEY/>
-      <DEFAULT value="0"/>
-      <UNSIGNED/>
-    </field>
-    <field name="uID" type="I" size="10">
-      <KEY/>
-      <DEFAULT value="0"/>
-      <UNSIGNED/>
-    </field>
-    <field name="canRead" type="I" size="1">
-      <NOTNULL/>
-      <DEFAULT value="0"/>
-    </field>
-  </table>
-  <table name="TaskPermissions">
-    <field name="tpID" type="I" size="10">
-  	  <KEY/>
-      <AUTOINCREMENT/>
-      <UNSIGNED/>
-    </field>
-    <field name="tpHandle" type="C" size="255"/>
-    <field name="tpName" type="C" size="255"/>
-    <field name="tpDescription" type="X"/>
-    <field name="pkgID" type="I" size="10">
-      <NOTNULL/>
-      <DEFAULT value="0"/>
-      <UNSIGNED/>
-    </field>
-    <index name="tpHandle">
-      <UNIQUE/>
-      <col>tpHandle</col>
-    </index>
-  </table>
+
   <table name="PermissionKeys">
     <field name="pkID" type="I" size="10">
       <KEY/>
@@ -1660,6 +1621,31 @@
     <index name="fOverrideSetPermissions">
       <col>fOverrideSetPermissions</col>
     </index>
+  </table>
+  <table name="GroupSetGroups">
+    <field name="gID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="gsID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+  </table>
+  <table name="GroupSets">
+    <field name="gsID" type="I" size="10">
+      <KEY/>
+      <AUTOINCREMENT/>
+      <UNSIGNED/>
+    </field>
+    <field name="gsName" type="C" size="255"/>
+    <field name="pkgID" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
   </table>
   <table name="Groups">
     <field name="gID" type="I" size="10">

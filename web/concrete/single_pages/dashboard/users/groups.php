@@ -59,19 +59,19 @@ $tp = new TaskPermission();
 if ($tp->canAccessGroupSearch()) { ?>
 
 <div class="ccm-pane-options">
+<form method="get" class="form-horizontal" action="<?=$this->url('/dashboard/users/groups')?>">
 <div class="ccm-pane-options-permanent-search">
-<form method="get" action="<?=$this->url('/dashboard/users/groups')?>">
-<div class="span7">
+<div class="span8">
 <? $form = Loader::helper('form'); ?>
 <?=$form->label('gKeywords', t('Keywords'))?>
-<div class="input">
+<div class="controls">
 	<input type="text" name="gKeywords" value="<?=htmlentities($_REQUEST['gKeywords'])?>"  />
 	<input class="btn" type="submit" value="<?=t('Search')?>" />
 </div>
 <input type="hidden" name="group_submit_search" value="1" />
 </div>
-</form>
 </div>
+</form>
 </div>
 <div class="ccm-pane-body <? if (!$gl->requiresPaging()) { ?> ccm-pane-body-footer <? } ?>">
 

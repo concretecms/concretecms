@@ -210,11 +210,11 @@
 		 * these need to be loaded before the models which need to be loaded before db() 
 		 */
 		public function database() {
-			require_once(DIR_BASE_CORE . '/libraries/3rdparty/adodb/adodb.inc.php');
-			require_once(DIR_BASE_CORE . '/libraries/3rdparty/adodb/adodb-exceptions.inc.php');
-			require_once(DIR_BASE_CORE . '/libraries/3rdparty/adodb/adodb-active-record.inc.php');
-			require_once(DIR_BASE_CORE . '/libraries/3rdparty/adodb/adodb-xmlschema03.inc.php');
-			require_once(DIR_BASE_CORE . '/libraries/database.php');
+			require(DIR_BASE_CORE . '/libraries/3rdparty/adodb/adodb.inc.php');
+			require(DIR_BASE_CORE . '/libraries/3rdparty/adodb/adodb-exceptions.inc.php');
+			require(DIR_BASE_CORE . '/libraries/3rdparty/adodb/adodb-active-record.inc.php');
+			require(DIR_BASE_CORE . '/libraries/3rdparty/adodb/adodb-xmlschema03.inc.php');
+			require(DIR_BASE_CORE . '/libraries/database.php');
 		}
 		
 		/** 

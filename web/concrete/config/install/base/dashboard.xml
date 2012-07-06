@@ -118,12 +118,28 @@
 				<attributekey handle="meta_keywords">
 					<value>new user</value>
 				</attributekey>
+				<attributekey handle="exclude_nav">
+					<value><![CDATA[1]]></value>
+				</attributekey>
 			</attributes>
         </page>
         <page name="Add Group" path="/dashboard/users/add_group" filename="/dashboard/users/add_group.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
 					<value>new user group, new group, group</value>
+				</attributekey>
+				<attributekey handle="exclude_nav">
+					<value><![CDATA[1]]></value>
+				</attributekey>
+			</attributes>
+        </page>
+        <page name="Group Sets" path="/dashboard/users/group_sets" filename="/dashboard/users/group_sets.php" pagetype="" description="" package="">
+			<attributes>
+				<attributekey handle="meta_keywords">
+					<value>group set</value>
+				</attributekey>
+				<attributekey handle="exclude_nav">
+					<value><![CDATA[1]]></value>
 				</attributekey>
 			</attributes>
         </page>
