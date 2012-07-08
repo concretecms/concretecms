@@ -98,14 +98,25 @@ class DashboardExtendInstallController extends Controller {
 						$tests = Package::mapError($tests);
 						$this->set('error', $tests);
 					} else {
+						$currentLocale = Localization::activeLocale();
+						if ($currentLocale != 'en_US') {
+							// Prevent the database records being stored in wrong language
+							Localization::changeLocale('en_US');
+						}
 						try {
 							$u = new User();
 							$p->install($this->post());
 							if ($u->isSuperUser() && $p->allowsFullContentSwap() && $this->post('pkgDoFullContentSwap')) { 
 								$p->swapContent($this->post());
 							}
+							if ($currentLocale != 'en_US') {
+								Localization::changeLocale($currentLocale);
+							}
 							$this->set('message', t('The package has been installed.'));
 						} catch(Exception $e) {
+							if ($currentLocale != 'en_US') {
+								Localization::changeLocale($currentLocale);
+							}
 							if ($p->showInstallOptionsScreen()) {
 								$this->set('showInstallOptionsScreen', true);
 								$this->set('pkg', $p);
