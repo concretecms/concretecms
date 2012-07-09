@@ -15,7 +15,7 @@ if (!$bObj->vHeight) {
 
 ?>
 
-<table id="videoBlockSetup" style="width:100%"> 
+<table id="videoBlockSetup" style="width:100%" class="table table-bordered"> 
 	<tr>
 		<th><?=t('Title')?></th>
 		<td><input type="text" style="width: 230px" name="title" value="<?=$bObj->title?>"/></td>

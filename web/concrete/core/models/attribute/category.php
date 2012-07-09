@@ -71,7 +71,7 @@ class Concrete5_Model_AttributeKeyCategory extends Object {
 
 	public function getUnassignedAttributeKeys() {
 		$db = Loader::db();
-		$r = $db->Execute('select AttributeKeys.akID from AttributeKeys left join AttributeSetKeys on AttributeKeys.akID = AttributeSetKeys.akID where asID is null and akCategoryID = ?', $this->akCategoryID);
+		$r = $db->Execute('select AttributeKeys.akID from AttributeKeys left join AttributeSetKeys on AttributeKeys.akID = AttributeSetKeys.akID where asID is null and akIsInternal = 0 and akCategoryID = ?', $this->akCategoryID);
 		$keys = array();
 		$cat = AttributeKeyCategory::getByID($this->akCategoryID);
 		while ($row = $r->FetchRow()) {

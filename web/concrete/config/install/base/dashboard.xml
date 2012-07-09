@@ -7,6 +7,9 @@
 				<attributekey handle="meta_keywords">
 					<value>blog, blogging</value>
 				</attributekey>
+				<attributekey handle="icon_dashboard">
+					<value>icon-book</value>
+				</attributekey>
 			</attributes>
         </page>
         <page name="Write" path="/dashboard/composer/write" filename="/dashboard/composer/write.php" pagetype="" description="" package="">
@@ -14,12 +17,18 @@
 				<attributekey handle="meta_keywords">
 					<value>new blog, write blog</value>
 				</attributekey>
+				<attributekey handle="icon_dashboard">
+					<value>icon-pencil</value>
+				</attributekey>
 			</attributes>
         </page>
         <page name="Drafts" path="/dashboard/composer/drafts" filename="/dashboard/composer/drafts.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
 					<value>blog drafts,composer</value>
+				</attributekey>
+				<attributekey handle="icon_dashboard">
+					<value>icon-book</value>
 				</attributekey>
 			</attributes>
         </page>

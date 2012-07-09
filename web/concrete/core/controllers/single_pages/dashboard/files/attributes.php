@@ -81,6 +81,9 @@ class Concrete5_Controller_Dashboard_Files_Attributes extends Controller {
 			$akID = $this->post('akID');
 		}
 		$key = FileAttributeKey::getByID($akID);
+		if (!is_object($key) || $key->isAttributeKeyInternal()) {
+			$this->redirect('/dashboard/files/attributes');
+		}
 		$type = $key->getAttributeType();
 		$this->set('key', $key);
 		$this->set('type', $type);

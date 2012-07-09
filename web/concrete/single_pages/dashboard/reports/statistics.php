@@ -11,7 +11,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 <h3><?=t('Recent Page Views')?></h3>
 
-<table id="ccm-site-statistics-visits" style="display: none">
+<table class="table" id="ccm-site-statistics-visits" style="display: none">
 <thead>
 <tr>
 	<td></td>
@@ -35,7 +35,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 <h3><?=t('Recent Registrations')?></h3>
 
-<table id="ccm-site-statistics-registrations" style="display: none">
+<table class="table"  id="ccm-site-statistics-registrations" style="display: none">
 <thead>
 <tr>
 	<td></td>
@@ -67,7 +67,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 <h3><?=t('Pages Created')?></h3>
 
-<table id="ccm-site-statistics-new-pages" style="display: none">
+<table class="table"  id="ccm-site-statistics-new-pages" style="display: none">
 <thead>
 <tr>
 	<td></td>
@@ -99,7 +99,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 <h3><?=t('Five Most Recent Downloads')?></h3>
 
-<table id="ccm-site-statistics-downloads">
+<table class="table"  id="ccm-site-statistics-downloads">
 <thead>
 <tr>
 	<th><?=t('File')?></th>

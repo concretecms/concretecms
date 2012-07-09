@@ -46,7 +46,7 @@ foreach ($surveys as $qsid => $survey) {
 
 if ($showTable) { ?>
 
-<table class="zebra-striped">
+<table class="table table-striped">
 	<thead>
 		<tr>
 			<th><?php echo t('Form')?></th>
@@ -103,7 +103,7 @@ if ($showTable) { ?>
 	<a id="ccm-export-results" href="<?=$this->action('excel', '?qsid=' . $questionSet)?>"><span></span><?=t('Export to Excel')?></a>
 </div>
 
-<table class="zebra-striped">
+<table class="table table-striped">
 	<thead>
 		<tr>
 			<? if($_REQUEST['sortBy']=='chrono') { ?>
