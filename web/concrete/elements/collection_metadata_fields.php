@@ -43,7 +43,6 @@ $usedKeysCombined = array_merge($requiredKeys, $usedKeys);
 		<? 
 		$setattribs = $as->getAttributeKeys();
 		foreach($setattribs as $ak) { 
-			$attribs[] = $ak;
 			if (!in_array($ak->getAttributeKeyID(), $allowedAKIDs)) {
 				continue;
 			}
@@ -63,7 +62,6 @@ $usedKeysCombined = array_merge($requiredKeys, $usedKeys);
 	<? }
 	
 	foreach($unsetattribs as $ak) { 
-		$attribs[] = $ak;
 		if (!in_array($ak->getAttributeKeyID(), $allowedAKIDs)) {
 			continue;
 		}
@@ -92,9 +90,13 @@ $usedKeysCombined = array_merge($requiredKeys, $usedKeys);
 </div>
 
 <? 
+	$attribs = CollectionAttributeKey::getList();
 	ob_start();
 
 	foreach($attribs as $ak) {
+		if (!in_array($ak->getAttributeKeyID(), $allowedAKIDs)) {
+			continue;
+		}
 		$caValue = $c->getAttributeValueObject($ak); ?>
 
 	

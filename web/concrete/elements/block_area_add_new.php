@@ -15,28 +15,6 @@ $form = Loader::helper('form');
 ?>
 
 <script type="text/javascript">
-<? if (ENABLE_MARKETPLACE_SUPPORT) { ?>
-
-function ccm_updateMarketplaceTab() {
-	if (!ccm_blocksLoaded) {
-		$("#ccm-add-marketplace-tab div.ccm-block-type-list").html('');
-		jQuery.fn.dialog.showLoader();
-		$.ajax({
-			url: CCM_TOOLS_PATH+'/marketplace/refresh_block',
-			type: 'POST',
-			data: {'arHandle': '<?=$a->getAreaHandle()?>'},
-			success: function(html) {
-				jQuery.fn.dialog.hideLoader();
-				$("#ccm-add-marketplace-tab div.ccm-block-type-list").html(html);
-			}
-		});
-		ccm_blocksLoaded = true;
-	}
-}
-
-var ccm_blocksLoaded = false;
-
-<? } ?>
 
 ccm_showBlockTypeDescription = function(btID) {
 	$("#ccm-bt-help" + btID).show();

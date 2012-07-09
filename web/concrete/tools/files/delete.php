@@ -60,7 +60,7 @@ $searchInstance = Loader::helper('text')->entities($_REQUEST['searchInstance']);
 
 	<form id="ccm-<?=$searchInstance?>-delete-form" method="post" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/delete">
 	<?=$form->hidden('task', 'delete_files')?>
-	<table border="0" cellspacing="0" cellpadding="0" width="100%" class="ccm-results-list">
+	<table border="0" cellspacing="0" cellpadding="0" width="100%" class="table table-bordered">
 	
 	<? foreach($files as $f) { 
 		$fp = new Permissions($f);
@@ -71,12 +71,6 @@ $searchInstance = Loader::helper('text')->entities($_REQUEST['searchInstance']);
 			<?=$form->hidden('fID[]', $f->getFileID())?>		
 			
 			<tr>
-				<td>
-				<div class="ccm-file-list-thumbnail">
-					<div class="ccm-file-list-thumbnail-image" fID="<?=$f->getFileID()?>"><table border="0" cellspacing="0" cellpadding="0" height="70" width="100%"><tr><td align="center" fID="<?=$f->getFileID()?>" style="padding: 0px"><?=$fv->getThumbnail(1)?></td></tr></table></div>
-				</div>
-				</td>
-		
 				<td><?=$fv->getType()?></td>
 				<td class="ccm-file-list-filename" width="100%"><div style="word-wrap: break-word; width: 150px"><?=$fv->getTitle()?></td>
 				<td><?=date(DATE_APP_DASHBOARD_SEARCH_RESULTS_FILES, strtotime($f->getDateAdded()))?></td>

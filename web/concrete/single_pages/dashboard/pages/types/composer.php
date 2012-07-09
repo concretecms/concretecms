@@ -17,35 +17,33 @@ $ctArray = CollectionType::getList();
 <? 
 if ($cap->canAccessComposer()) { ?>
 
-	<form method="post" action="<?=$this->action('save')?>">
+	<form class="form-vertical" method="post" action="<?=$this->action('save')?>">
 
 	<div class="ccm-pane-body">
 	<?=$form->hidden('ctID', $ct->getCollectionTypeID()); ?>
     
-        <table cellspacing="0" cellpadding="0" border="0">
+        <table class="table" cellspacing="0" cellpadding="0" border="0">
             <thead>
                 <tr>
                     <th class="header"><?=t('Included in Composer?')?></th>
                 </tr>
             </thead>
             <tbody>
-                <tr class="inputs-list">
-                    <td>
-                    
-                    	<label>
+                <tr>
+                    <td>                    
+                    	<label class="checkbox inline">
                         	<?=$form->checkbox('ctIncludeInComposer', 1, $ct->isCollectionTypeIncludedInComposer() == 1)?>
                             <span><?=t('Yes, include this page type in Composer.')?></span>
-                        </label>
-                        
+                        </label>                        
                     </td>
                 </tr>
 			</tbody>
 		</table>
         
-        <table cellspacing="0" cellpadding="0" border="0">
+        <table cellspacing="0" cellpadding="0" border="0" class="table">
             <thead>
                 <tr>
-                    <th class="subheader"><?=t('Composer Publishing Settings')?></th>
+                    <th class="header"><?=t('Composer Publishing Settings')?></th>
                 </tr>
 			</thead>
 			<tbody>
@@ -89,7 +87,7 @@ if ($cap->canAccessComposer()) { ?>
 			</tbody>
 		</table>
                 
-		<table cellspacing="0" cellpadding="0" border="0">
+		<table class="table" cellspacing="0" cellpadding="0" border="0">
             <thead>
                 <tr class="row-composer">
                     <th colspan="3" class="subheader"><?=t('Attributes to Display in Composer')?></th>
@@ -136,7 +134,7 @@ if ($cap->canAccessComposer()) { ?>
 			</tbody>
 		</table>
                 
-		<table cellspacing="0" cellpadding="0" border="0">
+		<table class="table" cellspacing="0" cellpadding="0" border="0">
             <thead>
 				<tr>
                     <th class="header"><?=t('Composer Content Order')?></th>

@@ -43,7 +43,7 @@ for ($i = 0; $i < count($categories); $i++) {
 	<? foreach($show as $subcat) { ?>
 	
 	<li>
-	<a href="<?=Loader::helper('navigation')->getLinkToCollection($subcat, false, true)?>"><?=t($subcat->getCollectionName())?></a>
+	<a href="<?=Loader::helper('navigation')->getLinkToCollection($subcat, false, true)?>"><i class="<?=$subcat->getAttribute('icon_dashboard')?>"></i> <?=t($subcat->getCollectionName())?></a>
 	</li>
 	
 	<? } ?>
@@ -52,7 +52,7 @@ for ($i = 0; $i < count($categories); $i++) {
 	<? } else { ?>
 	
 	<li>
-		<a href="<?=Loader::helper('navigation')->getLinkToCollection($cat, false, true)?>"><?=t('Home')?></a>
+		<a href="<?=Loader::helper('navigation')->getLinkToCollection($cat, false, true)?>"><i class="<?=$cat->getAttribute('icon_dashboard')?>"></i> <?=t('Home')?></a>
 	</li>
 			
 	<? } ?>

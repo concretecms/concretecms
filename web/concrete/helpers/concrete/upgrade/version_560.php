@@ -26,6 +26,7 @@ class ConcreteUpgradeVersion560Helper {
 	// parse db.xml. Only the new files are affected
 	
 	public $dbRefreshTables = array(
+		'AttributeKeys',
 		'CollectionVersions',
 		'BlockTypes',
 		'BlockTypePermissionBlockTypeAccessList',

@@ -29,8 +29,8 @@ if ($cp->canEditPagePermissions()) {
 	$gl->sortBy('gID', 'asc');
 	$gIDs = $gl->get();
 	$gArray = array();
-	foreach($gIDs as $gID) {
-		$gArray[] = Group::getByID($gID);
+	foreach($gIDs as $g) {
+		$gArray[] = Group::getByID($g['gID']);
 	}
 ?>
 

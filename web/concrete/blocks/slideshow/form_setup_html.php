@@ -15,7 +15,7 @@ $ah = Loader::helper('concrete/interface');
 </style>
 
 <div id="newImg">
-	<table cellspacing="0" cellpadding="0" border="0" width="100%">
+	<table cellspacing="0" cellpadding="0" border="0" width="100%" class="table table-bordered">
 	<tr>
 	<td>
 	<strong><?=t('Type')?></strong>

@@ -263,7 +263,7 @@ $("input[name=vCompare]").click(function() {
 
 $("input[name=vApprove]").click(function() {
 	
-	var cvID = $("input[type=checkbox]:checked").get(0).value;
+	var cvID = $("table#ccm-versions-list input[type=checkbox]:checked").get(0).value;
 	jQuery.fn.dialog.showLoader();
 	$.get(CCM_TOOLS_PATH + '/versions.php?versions_reloaded=1&cID=<?=$c->getCollectionID()?>&cvID=' + cvID + '&vtask=approve<?=$token?>', function(r) {	
 		jQuery.fn.dialog.replaceTop(r);
@@ -286,7 +286,7 @@ $("input[name=vRemove]").click(function() {
 
 	jQuery.fn.dialog.showLoader();
 	
-	var cvIDs = $("input[type=checkbox]:checked");
+	var cvIDs = $("table#ccm-versions-list input[type=checkbox]:checked");
 	var cvIDStr = '';
 	for (i = 0; i < cvIDs.length; i++) {
 		cvIDStr += "_";
