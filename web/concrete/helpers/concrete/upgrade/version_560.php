@@ -135,9 +135,54 @@ class ConcreteUpgradeVersion560Helper {
 		$this->migrateFilePermissions();
 		$this->migrateTaskPermissions();		
 		$this->migrateThemes();		
-		$this->migratePageTypes();		
+		$this->migratePageTypes();
+		$this->setupDashboardIcons();		
 	}
 	
+	protected function setupDashboardIcons() {
+		$cak = CollectionAttributeKey::getByHandle('icon_dashboard');
+		if (!is_object($cak)) {
+			$textt = AttributeType::getByHandle('text');
+			$cab4b = CollectionAttributeKey::add($textt, array('akHandle' => 'icon_dashboard', 'akName' => t('Dashboard Icon'), 'akIsInternal' => true));
+		}
+		
+		$iconArray = array(
+			'/dashboard/composer/write' => 'icon-pencil',
+			'/dashboard/composer/drafts' => 'icon-book',	
+			'/dashboard/sitemap/full' => 'icon-home',
+			'/dashboard/sitemap/explore' => 'icon-road',
+			'/dashboard/sitemap/search' => 'icon-search',
+			'/dashboard/files/search' => 'icon-picture',
+			'/dashboard/files/attributes' => 'icon-cog',
+			'/dashboard/files/sets' => 'icon-list-alt',
+			'/dashboard/files/add_set' => 'icon-plus-sign',
+			'/dashboard/users/search' => 'icon-user',
+			'/dashboard/users/groups' => 'icon-globe',
+			'/dashboard/users/attributes' => 'icon-cog',
+			'/dashboard/users/add' => 'icon-plus-sign',
+			'/dashboard/users/add_group' => 'icon-plus',
+			'/dashboard/users/group_sets' => 'icon-list',
+			'/dashboard/reports/statistics' => 'icon-signal',
+			'/dashboard/reports/forms' => 'icon-briefcase',
+			'/dashboard/reports/surveys' => 'icon-tasks',
+			'/dashboard/reports/logs' => 'icon-time',
+			'/dashboard/pages/themes' => 'icon-font',
+			'/dashboard/pages/types' => 'icon-file',
+			'/dashboard/pages/attributes' => 'icon-cog',
+			'/dashboard/pages/single' => 'icon-wrench',
+			'/dashboard/workflow/list' => 'icon-list',
+			'/dashboard/workflow/me' => 'icon-user',
+			'/dashboard/blocks/stacks' => 'icon-th',
+			'/dashboard/blocks/permissions' => 'icon-lock',
+			'/dashboard/blocks/types' => 'icon-wrench'
+		);
+		foreach($iconArray as $path => $icon) {
+			$sp = Page::getByPath($path);
+			if (is_object($sp) && (!$sp->isError())) {
+				$sp->setAttribute('icon_dashboard', $icon);
+			}
+		}
+	}
 	protected function migrateThemes() {
 		try {
 			$db = Loader::db();
