@@ -16,13 +16,13 @@ $pageTypeIconsFS = FileSet::getByName("Page Type Icons");
     
     <?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Add Page Type'), false, false, false);?>
 	
-    <form method="post" id="add_page_type" action="<?=$this->url('/dashboard/pages/types/add', 'do_add')?>">
+    <form method="post" class="form-horizontal" id="add_page_type" action="<?=$this->url('/dashboard/pages/types/add', 'do_add')?>">
 	<?=$valt->output('add_page_type')?>
     <?=$form->hidden('task', 'add'); ?>
 	
     <div class="ccm-pane-body">
     
-        <table border="0" cellspacing="0" cellpadding="0">
+        <table class="table" border="0" cellspacing="0" cellpadding="0">
             <thead>
                 <tr>
                     <th class="header"><?=t('Name')?> <span class="required">*</span></th>
@@ -41,7 +41,7 @@ $pageTypeIconsFS = FileSet::getByName("Page Type Icons");
 			</tbody>
 		</table>
         
-        <table border="0" cellspacing="0" cellpadding="0">
+        <table class="table" border="0" cellspacing="0" cellpadding="0">
             <thead>
                 <tr>
                     <th class="subheader">
@@ -80,7 +80,7 @@ $pageTypeIconsFS = FileSet::getByName("Page Type Icons");
                             }
                             $first = false;
                             ?>
-                            <label style="white-space: nowrap; margin: 10px 20px 10px 0; float:left;">
+                            <label class="checkbox inline">
                             <input type="radio" name="ctIcon" value="<?= $ic->getFileID() ?>" style="vertical-align: middle" <?=$checked?> />
                             <img src="<?= $fv->getRelativePath(); ?>" width="<?=COLLECTION_TYPE_ICON_WIDTH?>" height="<?=COLLECTION_TYPE_ICON_HEIGHT?>" style="vertical-align: middle" />
                             </label>
@@ -96,7 +96,7 @@ $pageTypeIconsFS = FileSet::getByName("Page Type Icons");
                             }
                             $first = false;
                             ?>
-                            <label style="white-space: nowrap; margin: 10px 20px 10px 0; float:left;">
+                            <label class="checkbox inline">
                             <input type="radio" name="ctIcon" value="<?= $ic ?>" style="vertical-align: middle" <?=$checked?> />
                                 <img src="<?=REL_DIR_FILES_COLLECTION_TYPE_ICONS.'/'.$ic;?>" width="<?=COLLECTION_TYPE_ICON_WIDTH?>" height="<?=COLLECTION_TYPE_ICON_HEIGHT?>" style="vertical-align: middle" />
                             </label>
@@ -109,7 +109,7 @@ $pageTypeIconsFS = FileSet::getByName("Page Type Icons");
 			</tbody>
 		</table>
         
-        <table border="0" cellspacing="0" cellpadding="0">
+        <table class="table" border="0" cellspacing="0" cellpadding="0">
             <thead>
                 <tr>
                     <th colspan="3" class="subheader"><?=t('Default Attributes to Display')?></th>
@@ -125,7 +125,7 @@ $pageTypeIconsFS = FileSet::getByName("Page Type Icons");
                     <? } ?>
                     
                         <td width="33%">
-                            <label>
+                            <label class="">
                                 <input type="checkbox" name="akID[]" value="<?=$ak->getAttributeKeyID()?>" />
                                 <span><?=$ak->getAttributeKeyName()?></span>
                             </label>

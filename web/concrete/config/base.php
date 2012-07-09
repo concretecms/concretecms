@@ -116,6 +116,7 @@ if (!defined('DIR_BASE_CORE')) {
 	define('DIR_BASE_CORE', dirname(__FILE__) . '/..');
 }
 
+define('DIRNAME_CORE_CLASSES', 'core');
 # if "concrete/" does NOT exist in DIR_BASE then we set multi_site to on
 if (!is_dir(DIR_BASE . '/' . DIRNAME_APP)) {
 	define("MULTI_SITE", 1);
@@ -535,6 +536,3 @@ if (!defined('MARKETPLACE_THEME_PREVIEW_URL')) {
 define('MARKETPLACE_CONTENT_LATEST_THRESHOLD', 10800); // every three hours
 define('MARKETPLACE_DIRNAME_THEME_PREVIEW', 'previewable_themes');
 define('MARKETPLACE_THEME_PREVIEW_ASSETS_URL', CONCRETE5_ORG_URL ."/". MARKETPLACE_DIRNAME_THEME_PREVIEW);
-
-require_once(DIR_LIBRARIES_CORE . '/loader.php');
-require_once(DIR_LIBRARIES_CORE . '/environment.php');

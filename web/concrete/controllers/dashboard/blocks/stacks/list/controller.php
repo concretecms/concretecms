@@ -2,12 +2,5 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 
 
-class DashboardBlocksStacksListController extends Controller {
-
-	public function on_start() {
-		// This node is not meant for people to snoop
-		$this->redirect('/');
-		exit;
-	}
-		
+class DashboardBlocksStacksListController extends Concrete5_Controller_Dashboard_Blocks_Stacks_List {
 }

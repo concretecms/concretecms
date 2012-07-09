@@ -1,12 +1,7 @@
 <?
 
 defined('C5_EXECUTE') or die("Access Denied.");
-class PageNotFoundController extends Controller {
+class PageNotFoundController extends Concrete5_Controller_PageNotFound {
 	
-	public $helpers = array('form');
-	
-	public function view() {
-		header("HTTP/1.0 404 Not Found");
-	}
 	
 }

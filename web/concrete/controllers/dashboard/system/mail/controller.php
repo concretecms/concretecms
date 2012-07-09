@@ -1,16 +1,6 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
 
-Loader::library('mail/importer');
+class DashboardSystemMailController extends Concrete5_Controller_Dashboard_System_Mail {
 
-class DashboardSystemMailController extends Controller {
-	protected $sendUndefinedTasksToView = false;
-	
-
-	public function view() {
-		$this->redirect('/dashboard/system/mail/method');
-	}
-			
 }
-
-?>

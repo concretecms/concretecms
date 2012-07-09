@@ -93,7 +93,7 @@ if ($tp->canBackup()) {
 		<?php
 		if (count($backups) > 0) {
 			?>
-			<table class="zebra-striped" cellspacing="1" cellpadding="0" border="0">
+			<table class="table table-striped" cellspacing="1" cellpadding="0" border="0">
 				<thead>
 					<tr>
 						<th><?= t('Date') ?></th>

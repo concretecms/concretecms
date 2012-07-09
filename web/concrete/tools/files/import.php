@@ -261,7 +261,7 @@ $(function() {
 <form id="ccm-file-manager-multiple-incoming" method="post" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/importers/incoming">
 	<input type="hidden" name="searchInstance" value="<?=$searchInstance?>" />
     <input type="hidden" name="ocID" value="<?=$ocID?>" />
-		<table id="incoming_file_table" width="100%" cellpadding="0" cellspacing="0">
+		<table id="incoming_file_table" class="table table-bordered" width="100%" cellpadding="0" cellspacing="0">
 			<tr>
 				<th width="10%" valign="middle" class="center theader"><input type="checkbox" id="check_all_imports" name="check_all_imports" onclick="ccm_alSelectMultipleIncomingFiles(this);" value="" /></td>
 				<th width="20%" valign="middle" class="center theader"></td>

@@ -334,6 +334,7 @@ class ConcreteDashboardHelper {
 				<ul>
 				
 				<?
+				$x = 0;
 				$ch2 = $page->getCollectionChildrenArray(true);
 				foreach($ch2 as $chi) {
 					$subpage = Page::getByID($chi); 
@@ -345,12 +346,16 @@ class ConcreteDashboardHelper {
 					if ($subpage->getAttribute('exclude_nav')) {
 						continue;
 					}
-			
+					$x++;
+					
 					?>
 					<li><a href="<?=Loader::helper('navigation')->getLinkToCollection($subpage, false, true)?>"><?=t($subpage->getCollectionName())?></a></li>
 					<? 
 				}
-				?>
+				
+				if ($x == 0) { ?>
+					<li><a href="<?=Loader::helper('navigation')->getLinkToCollection($page, false, true)?>"><?=t('Home')?></a></li>
+				<? } ?>
 				</ul>
 				
 				</div>
@@ -412,6 +417,7 @@ class ConcreteDashboardHelper {
 				<ul>
 				
 				<?
+				$x = 0;
 				$ch2 = $page->getCollectionChildrenArray(true);
 				foreach($ch2 as $chi) {
 					$subpage = Page::getByID($chi); 
@@ -422,12 +428,14 @@ class ConcreteDashboardHelper {
 					if ($subpage->getAttribute('exclude_nav')) {
 						continue;
 					}
-					
+					$x++;
 					?>
 					<li><a href="<?=Loader::helper('navigation')->getLinkToCollection($subpage, false, true)?>"><?=t($subpage->getCollectionName())?></a></li>
 					<? 
 				}
-				?>
+				if ($x == 0) { ?>
+					<li><a href="<?=Loader::helper('navigation')->getLinkToCollection($page, false, true)?>"><?=t('Home')?></a></li>
+				<? } ?>
 				</ul>
 				
 				</div>

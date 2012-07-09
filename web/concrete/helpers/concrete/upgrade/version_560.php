@@ -26,6 +26,7 @@ class ConcreteUpgradeVersion560Helper {
 	// parse db.xml. Only the new files are affected
 	
 	public $dbRefreshTables = array(
+		'AttributeKeys',
 		'CollectionVersions',
 		'BlockTypes',
 		'BlockTypePermissionBlockTypeAccessList',
@@ -73,7 +74,9 @@ class ConcreteUpgradeVersion560Helper {
 		'PageWorkflowProgress',
 		'PermissionAccessWorkflows',
 		'BasicWorkflowPermissionAssignments',
-		'BasicWorkflowProgressData'
+		'BasicWorkflowProgressData',
+		'GroupSets',
+		'GroupSetGroups'
 	);
 	
 	
@@ -82,8 +85,19 @@ class ConcreteUpgradeVersion560Helper {
 		if (is_object($bt)) {
 			$bt->refresh();
 		}
+
+		$sp = Page::getByPath('/dashboard/users/group_sets');
+		if ($sp->isError()) {
+			$d11 = SinglePage::add('/dashboard/users/group_sets');
+			$d11->update(array('cName'=>t('Group Sets')));
+		}
+
+		$sp = Page::getByPath('/dashboard/system/seo/bulk_seo_tool');
+		if ($sp->isError()) {
+			$d1a = SinglePage::add('/dashboard/system/seo/bulk_seo_tool');
+			$d1a->update(array('cName'=>t('Bulk SEO Updater')));
+		}
 		
-		Loader::model('single_page');
 		$sp = Page::getByPath('/dashboard/system/permissions/users');
 		if ($sp->isError()) {
 			$d1a = SinglePage::add('/dashboard/system/permissions/users');
@@ -127,9 +141,54 @@ class ConcreteUpgradeVersion560Helper {
 		$this->migrateFilePermissions();
 		$this->migrateTaskPermissions();		
 		$this->migrateThemes();		
-		$this->migratePageTypes();		
+		$this->migratePageTypes();
+		$this->setupDashboardIcons();		
 	}
 	
+	protected function setupDashboardIcons() {
+		$cak = CollectionAttributeKey::getByHandle('icon_dashboard');
+		if (!is_object($cak)) {
+			$textt = AttributeType::getByHandle('text');
+			$cab4b = CollectionAttributeKey::add($textt, array('akHandle' => 'icon_dashboard', 'akName' => t('Dashboard Icon'), 'akIsInternal' => true));
+		}
+		
+		$iconArray = array(
+			'/dashboard/composer/write' => 'icon-pencil',
+			'/dashboard/composer/drafts' => 'icon-book',	
+			'/dashboard/sitemap/full' => 'icon-home',
+			'/dashboard/sitemap/explore' => 'icon-road',
+			'/dashboard/sitemap/search' => 'icon-search',
+			'/dashboard/files/search' => 'icon-picture',
+			'/dashboard/files/attributes' => 'icon-cog',
+			'/dashboard/files/sets' => 'icon-list-alt',
+			'/dashboard/files/add_set' => 'icon-plus-sign',
+			'/dashboard/users/search' => 'icon-user',
+			'/dashboard/users/groups' => 'icon-globe',
+			'/dashboard/users/attributes' => 'icon-cog',
+			'/dashboard/users/add' => 'icon-plus-sign',
+			'/dashboard/users/add_group' => 'icon-plus',
+			'/dashboard/users/group_sets' => 'icon-list',
+			'/dashboard/reports/statistics' => 'icon-signal',
+			'/dashboard/reports/forms' => 'icon-briefcase',
+			'/dashboard/reports/surveys' => 'icon-tasks',
+			'/dashboard/reports/logs' => 'icon-time',
+			'/dashboard/pages/themes' => 'icon-font',
+			'/dashboard/pages/types' => 'icon-file',
+			'/dashboard/pages/attributes' => 'icon-cog',
+			'/dashboard/pages/single' => 'icon-wrench',
+			'/dashboard/workflow/list' => 'icon-list',
+			'/dashboard/workflow/me' => 'icon-user',
+			'/dashboard/blocks/stacks' => 'icon-th',
+			'/dashboard/blocks/permissions' => 'icon-lock',
+			'/dashboard/blocks/types' => 'icon-wrench'
+		);
+		foreach($iconArray as $path => $icon) {
+			$sp = Page::getByPath($path);
+			if (is_object($sp) && (!$sp->isError())) {
+				$sp->setAttribute('icon_dashboard', $icon);
+			}
+		}
+	}
 	protected function migrateThemes() {
 		try {
 			$db = Loader::db();
@@ -473,7 +532,6 @@ class ConcreteUpgradeVersion560Helper {
 		if (!in_array('FileSetPermissions', $tables)) {
 			return false;
 		}
-		Loader::model("file_set");
 		// permissions
 		
 		$permissionMap = array(
@@ -645,11 +703,15 @@ class ConcreteUpgradeVersion560Helper {
 				if (!$name) {
 					$name = Loader::helper('text')->unhandle($pt['handle']);
 				}
-				$type = PermissionAccessEntityType::add($pt['handle'], $name);
-				if (isset($pt->categories)) {
-					foreach($pt->categories->children() as $cat) {
-						$catobj = PermissionKeyCategory::getByHandle((string) $cat['handle']);
-						$catobj->associateAccessEntityType($type);
+				$handle = (string) $pt['handle'];
+				$patt = PermissionAccessEntityType::getByHandle($handle);
+				if (!is_object($patt)) {
+					$type = PermissionAccessEntityType::add($pt['handle'], $name);
+					if (isset($pt->categories)) {
+						foreach($pt->categories->children() as $cat) {
+							$catobj = PermissionKeyCategory::getByHandle((string) $cat['handle']);
+							$catobj->associateAccessEntityType($type);
+						}
 					}
 				}
 			}
@@ -658,7 +720,6 @@ class ConcreteUpgradeVersion560Helper {
 		$txt = Loader::helper('text');
 		foreach($sx->permissionkeys->permissionkey as $pk) {
 			$pkc = PermissionKeyCategory::getByHandle($pk['category']);
-			Loader::model('permission/categories/' . $pkc->getPermissionKeyCategoryHandle());
 			$className = $txt->camelcase($pkc->getPermissionKeyCategoryHandle());
 			$c1 = $className . 'PermissionKey';
 			$handle = (string) $pk['handle'];

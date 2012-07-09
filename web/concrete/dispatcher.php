@@ -22,21 +22,22 @@
 	## Load the base config file ##
 	require(dirname(__FILE__) . '/config/base.php');
 
+	## Required Loading
+	require(dirname(__FILE__) . '/startup/required.php');
+
 	## First we ensure that dispatcher is not being called directly
 	require(dirname(__FILE__) . '/startup/file_access_check.php');
 
 	## Called Class Fix for 5.2 ##	
 	require(dirname(__FILE__) . '/startup/get_called_class_check.php');
-	
+
+	require(dirname(__FILE__) . '/startup/localization.php');
+
+	## Autoload core classes
+	spl_autoload_register(array('Loader', 'autoloadCore'), true);
+
 	## Load the database ##
 	Loader::database();
-
-	## We load the things that CANNOT be overridden
-	require_once(DIR_BASE_CORE . '/' . DIRNAME_LIBRARIES . '/object.php');
-	require_once(DIR_BASE_CORE . '/' . DIRNAME_LIBRARIES . '/cache.php');
-	require_once(DIR_BASE_CORE . '/' . DIRNAME_LIBRARIES . '/view.php');
-	require_once(DIR_BASE_CORE . '/' . DIRNAME_LIBRARIES . '/localization.php');
-	require_once(DIR_BASE_CORE . '/' . DIRNAME_MODELS . '/config.php');
 	
 	## Startup cache ##
 	Cache::startup();
@@ -45,7 +46,6 @@
 	if (!$config_check_failed) { 
 		require(dirname(__FILE__) . '/config/app.php');
 	}
-
 	## Autoload settings
 	require(dirname(__FILE__) . '/startup/autoload.php');
 

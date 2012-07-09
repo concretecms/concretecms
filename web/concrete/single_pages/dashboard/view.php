@@ -4,58 +4,69 @@
 
 
 <?
-print '<div class="row">';
+print '<table style="border-spacing: 10px; border-collapse: separate" width="100%">';
 for ($i = 0; $i < count($categories); $i++) {
 	$cat = $categories[$i];
 	?>
 
 	
-	<? if ($i % 4 == 0) { ?>
-		</div>
-		<div class="row">
+	<? if ($i % 4 == 0 && $i > 0) { ?>
+		</tr>
+		<tr>
 	<? } ?>
 	
-	<div class="span-pane-fourth">
+	<? if ($i == 0) { ?>
+		<tr>
+	<? } ?>
 	
+	<td width="25%" class="well" style="vertical-align: top; padding: 10px 0px">
 
 
-	<div class="ccm-dashboard-system-category">
-	<h3><a href="<?=Loader::helper('navigation')->getLinkToCollection($cat, false, true)?>"><?=t($cat->getCollectionName())?></a></h3>
-	</div>
-	
+	<ul class="nav nav-list">
+	<li class="nav-header"><?=t($cat->getCollectionName())?></li>
+		
 	<?
 	$show = array();
 	$subcats = $cat->getCollectionChildrenArray(true);
 	foreach($subcats as $catID) {
 		$subcat = Page::getByID($catID, 'ACTIVE');
 		$catp = new Permissions($subcat);
-		if ($catp->canRead() && $subcat->getAttribute('exclude_nav') != 1) { 
+		if ($catp->canRead()) { 
 			$show[] = $subcat;
 		}
 	}
 	
 	if (count($show) > 0) { ?>
 	
-	<div class="ccm-dashboard-system-category-inner">
-	
 	<? foreach($show as $subcat) { ?>
 	
-	<div>
-	<a href="<?=Loader::helper('navigation')->getLinkToCollection($subcat, false, true)?>"><?=t($subcat->getCollectionName())?></a>
-	</div>
+	<li>
+	<a href="<?=Loader::helper('navigation')->getLinkToCollection($subcat, false, true)?>"><i class="<?=$subcat->getAttribute('icon_dashboard')?>"></i> <?=t($subcat->getCollectionName())?></a>
+	</li>
 	
 	<? } ?>
 	
-	</div>
 	
+	<? } else { ?>
+	
+	<li>
+		<a href="<?=Loader::helper('navigation')->getLinkToCollection($cat, false, true)?>"><i class="<?=$cat->getAttribute('icon_dashboard')?>"></i> <?=t('Home')?></a>
+	</li>
+		
 	<? } ?>
-	
-	</div>
+
+	</ul>
+
+	</td>
 	
 	
 <? } ?>
 
-</div>
+<? if ($i % 4 != 0 && $i > 0) { ?>
+	</tr>
+<? } ?>
+
+</table>
 </div>
 
 <div class="ccm-pane-footer">
