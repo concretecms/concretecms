@@ -2,19 +2,19 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 $form = Loader::helper('form');
 ?>
-<form id="ccm-marketplace-browser-form" method="get" action="<?=$action?>">
+<form id="ccm-marketplace-browser-form" method="get" action="<?=$action?>" class="form-horizontal">
 <div class="ccm-pane-options-permanent-search">
 	<?=Loader::helper('form')->hidden('_ccm_dashboard_external')?>
 	<div class="span4">
 	<?=$form->label('marketplaceRemoteItemKeywords', t('Keywords'))?>
-	<div class="input">
+	<div class="controls">
 		<?=$form->text('marketplaceRemoteItemKeywords', array('style' => 'width: 140px'))?>
 	</div>
 	</div>
 	
 	<div class="span4">
 	<?=$form->label('marketplaceRemoteItemSetID', t('Category'))?>
-	<div class="input">
+	<div class="controls">
 	<?=$form->select('marketplaceRemoteItemSetID', $sets, $selectedSet, array('style' => 'width: 150px'))?>
 	</div>
 	</div>
@@ -26,9 +26,9 @@ $form = Loader::helper('form');
 </div>
 <a href="javascript:void(0)" onclick="ccm_paneToggleOptions(this)" class="ccm-icon-option-<? if ($_REQUEST['marketplaceRemoteItemSortBy'] || $_REQUEST['marketplaceIncludeOnlyCompatibleAddons']) { ?>open<? } else{ ?>closed<? } ?>"><?=t('More Options')?></a>
 
-<div class="clearfix ccm-pane-options-content" <? if ($_REQUEST['marketplaceRemoteItemSortBy'] || $_REQUEST['marketplaceIncludeOnlyCompatibleAddons']) { ?>style="display: block" <? } ?>>
+<div class="control-group ccm-pane-options-content" <? if ($_REQUEST['marketplaceRemoteItemSortBy'] || $_REQUEST['marketplaceIncludeOnlyCompatibleAddons']) { ?>style="display: block" <? } ?>>
 	<br/>
-	<table class="zebra-striped ccm-search-advanced-fields">
+	<table class="table table-striped ccm-search-advanced-fields">
 	<tr>
 		<th colspan="2" width="100%"><?=t('Additional Filters')?></th>
 	</tr>

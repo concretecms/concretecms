@@ -6,7 +6,7 @@
 $today = Loader::helper('date')->getLocalDateTime('now', 'Y-m-d');
 if (count($drafts) > 0) { ?>
 
-<table class="zebra-striped">
+<table class="table table-striped">
 <tr>
 	<th width="60%"><?=t('Page Name')?></th>
 	<th width="20%"><?=t('Page Type')?></th>

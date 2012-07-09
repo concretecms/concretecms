@@ -59,19 +59,19 @@ $tp = new TaskPermission();
 if ($tp->canAccessGroupSearch()) { ?>
 
 <div class="ccm-pane-options">
+<form method="get" class="form-horizontal" action="<?=$this->url('/dashboard/users/groups')?>">
 <div class="ccm-pane-options-permanent-search">
-<form method="get" action="<?=$this->url('/dashboard/users/groups')?>">
-<div class="span7">
+<div class="span8">
 <? $form = Loader::helper('form'); ?>
 <?=$form->label('gKeywords', t('Keywords'))?>
-<div class="input">
+<div class="controls">
 	<input type="text" name="gKeywords" value="<?=htmlentities($_REQUEST['gKeywords'])?>"  />
 	<input class="btn" type="submit" value="<?=t('Search')?>" />
 </div>
 <input type="hidden" name="group_submit_search" value="1" />
 </div>
-</form>
 </div>
+</form>
 </div>
 <div class="ccm-pane-body <? if (!$gl->requiresPaging()) { ?> ccm-pane-body-footer <? } ?>">
 
@@ -114,7 +114,7 @@ foreach ($gResults as $g) { ?>
 <? } else { ?>
 
 <?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Edit Group'), false, false, false)?>
-<form method="post" id="update-group-form" action="<?=$this->url('/dashboard/users/groups/', 'update_group')?>">
+<form method="post"  class="form-horizontal" id="update-group-form" action="<?=$this->url('/dashboard/users/groups/', 'update_group')?>">
 <?=$valt->output('add_or_update_group')?>
 <div class="ccm-pane-body">
 	<?
@@ -138,53 +138,54 @@ foreach ($gResults as $g) { ?>
 	<? } ?>
 
 	<fieldset>
-	<div class="clearfix">
+	<div class="control-group">
 	<?=$form->label('gName', t('Name'))?>
-	<div class="input">
+	<div class="controls">
 		<input type="text" name="gName" class="span6" value="<?=Loader::helper('text')->entities(t($gName))?>" />
 	</div>
 	</div>
 	
-	<div class="clearfix">
+	<div class="control-group">
 	<?=$form->label('gDescription', t('Description'))?>
-	<div class="input">
+	<div class="controls">
 		<textarea name="gDescription" rows="6" class="span6"><?=Loader::helper("text")->entities($gDescription)?></textarea>
 	</div>
 	</div>
 	</fieldset>
 	<fieldset>
 	<legend><?=t("Group Expiration Options")?></legend>
-	<label></label>
-	<div class="input">
-	<ul class="inputs-list">
-		<li>
-		<label>
+	<div class="control-group">
+	<div class="controls">
+
+		<label class="checkbox">
 		<?=$form->checkbox('gUserExpirationIsEnabled', 1, $g->isGroupExpirationEnabled())?>
 		<span><?=t('Automatically remove users from this group')?></span></label>
-		<div style="padding-left: 15px; padding-top: 10px; padding-bottom: 10px">
-			<?=$form->select("gUserExpirationMethod", array(
+		
+	</div>
+	
+	<div class="controls" style="padding-left: 18px">
+		<?=$form->select("gUserExpirationMethod", array(
 			'SET_TIME' => t('at a specific date and time'),
 				'INTERVAL' => t('once a certain amount of time has passed')
 			
 		), $g->getGroupExpirationMethod(), array('disabled' => true));?>	
-		</div>	
-		</li>
-	</ul>
+	</div>	
 	</div>
 	
+	
 	<div id="gUserExpirationSetTimeOptions" style="display: none">
-	<div class="clearfix">
+	<div class="control-group">
 	<?=$form->label('gUserExpirationSetDateTime', t('Expiration Date'))?>
-	<div class="input">
+	<div class="controls">
 	<?=$date->datetime('gUserExpirationSetDateTime', $g->getGroupExpirationDateTime())?>
 	</div>
 	</div>
 	</div>
 	<div id="gUserExpirationIntervalOptions" style="display: none">
-	<div class="clearfix">
+	<div class="control-group">
 	<label><?=t('Accounts expire after')?></label>
-	<div class="input">
-	<table style="width: 1%; margin-bottom: 0px">
+	<div class="controls">
+	<table class="table table-condensed" style="width: auto">
 	<tr>
 	<?
 	$days = $g->getGroupExpirationIntervalDays();

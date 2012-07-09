@@ -1,10 +1,8 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-Loader::library('search');
 $sh = Loader::helper('concrete/dashboard/sitemap');
 
 if (isset($_REQUEST['reveal'])) {
-	$nc = new Collection($_REQUEST['reveal']);
 	$nc = Page::getByID($_REQUEST['reveal']);
 	$nh = Loader::helper('navigation');
 	$cArray = $nh->getTrailToCollection($nc);

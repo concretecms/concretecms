@@ -4,7 +4,7 @@ table#googleMapBlockSetup th {font-weight: bold; text-style: normal; padding-rig
 table#googleMapBlockSetup td{ font-size:12px; vertical-align:top; padding-bottom:8px;}
 </style> 
 
-<table id="googleMapBlockSetup" width="100%"> 
+<table id="googleMapBlockSetup" width="100%" class="table table-bordered"> 
 	<tr>
 		<th><?=t('Map Title')?>: <div class="note">(<?=t('Optional')?>)</div></th>
 		<td><input id="ccm_googlemap_block_title" name="title" value="<?=$mapObj->title?>" maxlength="255" type="text" style="width:80%"></td>

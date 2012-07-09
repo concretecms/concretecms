@@ -53,7 +53,7 @@ $alreadyActiveMessage = t('This theme is currently active on your site.');
 	
 	<h3><?=t('Currently Installed')?></h3>
 	
-	<table width="100%" border="0" cellspacing="0" cellpadding="0" class="zebra-striped">
+	<table width="100%" border="0" cellspacing="0" cellpadding="0" class="table">
 	<?
 	if (count($tArray) == 0) { ?>
 		
@@ -114,7 +114,7 @@ $alreadyActiveMessage = t('This theme is currently active on your site.');
 	<h3><?=t('Themes Available to Install')?></h3>
 	
 
-	<table>
+	<table class="table">
 		<tbody>
 		<? foreach ($tArray2 as $t) { ?>
             <tr>

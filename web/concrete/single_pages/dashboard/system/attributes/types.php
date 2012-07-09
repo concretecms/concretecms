@@ -8,7 +8,7 @@ $interface = Loader::helper('concrete/interface');
 
 echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Attribute Type Associations'), false, 'span12 offset2');?>
 <form method="post" class="" id="attribute_type_associations_form" action="<?=$this->action('save_attribute_type_associations')?>">
-	<table border="0" cellspacing="1" cellpadding="0" border="0" class="zebra-striped">
+	<table border="0" cellspacing="1" cellpadding="0" border="0" class="table">
 		<tr>
 			<th><?=t('Name')?></th>
 			<? foreach($categories as $cat) { ?>

@@ -40,9 +40,11 @@
 		</div>
 		</div>
 
-		<? if (PERMISSIONS_MODEL != 'simple') { 
-		
+		<? 
 		$fsp = new Permissions($fs);
+
+		if (PERMISSIONS_MODEL != 'simple') { 
+		
 		if ($fsp->canEditFileSetPermissions()) {
 
 		?>

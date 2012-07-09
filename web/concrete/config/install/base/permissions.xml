@@ -5,6 +5,7 @@
         <category handle="page" package=""/>
         <category handle="single_page" package=""/>
         <category handle="stack" package=""/>
+        <category handle="composer_page" package=""/>
         <category handle="user" package=""/>
         <category handle="file_set" package=""/>
         <category handle="file" package=""/>

@@ -112,9 +112,9 @@ if (is_object($key)) {
 <?=$valt->output('add_or_update_attribute')?>
 <? 
 if ($category->getPackageID() > 0) { 
-	Loader::packageElement('attribute/categories/' . $category->getAttributeKeyCategoryHandle(), $category->getPackageHandle(), array('key' => $key));
+	@Loader::packageElement('attribute/categories/' . $category->getAttributeKeyCategoryHandle(), $category->getPackageHandle(), array('key' => $key));
 } else {
-	Loader::element('attribute/categories/' . $category->getAttributeKeyCategoryHandle(), array('key' => $key));
+	@Loader::element('attribute/categories/' . $category->getAttributeKeyCategoryHandle(), array('key' => $key));
 }
 ?>
 <? $type->render('type_form', $key); ?>

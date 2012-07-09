@@ -158,11 +158,11 @@ if (is_object($uo)) {
 	
     
 	<div class="ccm-pane-body">
-    <form method="post" enctype="multipart/form-data" id="ccm-user-form" action="<?=$this->url('/dashboard/users/search?uID=' . intval($_GET['uID']) )?>">
+    <form method="post"  class="form-vertical" enctype="multipart/form-data" id="ccm-user-form" action="<?=$this->url('/dashboard/users/search?uID=' . intval($_GET['uID']) )?>">
 	<?=$valt->output('update_account_' . intval($_GET['uID']) )?>
 	<input type="hidden" name="_disableLogin" value="1">
 
-		<table border="0" cellspacing="0" cellpadding="0" width="100%">
+		<table class="table" border="0" cellspacing="0" cellpadding="0" width="100%">
             <thead>
                 <tr>
                     <th colspan="3"><?=t('User Information')?></th>
@@ -192,7 +192,7 @@ if (is_object($uo)) {
         
         
         
-		<table border="0" cellspacing="0" cellpadding="0" width="100%">
+		<table class="table" border="0" cellspacing="0" cellpadding="0" width="100%">
 	        <? if ($assignment->allowEditPassword()) { ?>
 
             	<tr>
@@ -266,7 +266,7 @@ if (is_object($uo)) {
 			</tbody>
 		</table>
     
-		<table border="0" cellspacing="0" cellpadding="0" class="zebra-striped">
+		<table border="0" cellspacing="0" cellpadding="0" class="table table-striped">
         	<thead>
             	<tr>
                 	<th>
@@ -314,7 +314,7 @@ if (is_object($uo)) {
 
 		</form>
 		
-		<table border="0" cellspacing="0" cellpadding="0" width="100%" class="zebra-striped inputs-list">
+		<table border="0" cellspacing="0" cellpadding="0" width="100%" class="table table-striped">
         	<thead>
             	<tr>
                 	<th colspan="3">

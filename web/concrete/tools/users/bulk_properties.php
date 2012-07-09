@@ -125,7 +125,7 @@ if (!isset($_REQUEST['reload'])) { ?>
 
 <div id="ccm-user-properties" class="ccm-ui">
 
-<table border="0" cellspacing="0" cellpadding="0" width="100%" class="zebra-striped inputs-list">
+<table border="0" cellspacing="0" cellpadding="0" width="100%" class="table table-striped">
 <thead>
 <tr>
 	<th colspan="3"><?=t('User Attributes')?></th>
