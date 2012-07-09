@@ -67,7 +67,7 @@ if (isset($help)) { ?>
 	<div class="<?=$cont->getBlockTypeWrapperClass();?>">
 <? } ?>
 
-<form method="post" action="<?=$action?>" class="validate" id="ccm-block-form" enctype="multipart/form-data">
+<form method="post" action="<?=$action?>" id="ccm-block-form" enctype="multipart/form-data" class="validate form-horizontal">
 
 <input type="hidden" name="ccm-block-form-method" value="REGULAR" />
 

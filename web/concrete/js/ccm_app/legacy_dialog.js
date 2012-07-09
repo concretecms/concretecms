@@ -160,7 +160,7 @@ jQuery.fn.dialog.replaceTop = function(r) {
 	if (typeof(r) == 'string') { 
 		$("#ccm-dialog-content" + nd).html(r);
 	} else {
-		var r2 = r.clone().appendTo('#ccm-dialog-content' + nd);
+		var r2 = r.clone(true, true).appendTo('#ccm-dialog-content' + nd);
 		if (r2.css('display') == 'none') {
 			r2.show();
 		}
