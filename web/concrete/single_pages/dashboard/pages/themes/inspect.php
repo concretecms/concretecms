@@ -27,7 +27,7 @@ $ci = Loader::helper('concrete/interface');
         
             <div class="span10">
                 <h5><?=t('Files in Theme')?></h5>
-                <table border="0" cellspacing="0" cellpadding="0" class="zebra-striped">            
+                <table border="0" cellspacing="0" cellpadding="0" class="table table-striped table-bordered">            
                     <thead>
                         <tr>
                             <th><?=t('File')?></th>

@@ -89,7 +89,7 @@ $form = Loader::helper('form');
 		<p><?=t('There are no mail importers. Mail importers poll email accounts for new messages and run actions on those messages.')?></p>
 	<? } else { ?>
 	
-	<table class="zebra-striped" border="0" cellspacing="1" cellpadding="0">
+	<table class="table table-striped" border="0" cellspacing="1" cellpadding="0">
 	<tr>
 		<td class="header"><?=t('Name')?></td>
 		<td class="header"><?=t('Server')?></td>

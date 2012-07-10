@@ -1,7 +1,7 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
 
-class Concrete5_Model_AdminPermissionAccessListItem extends Concrete5_Model_AdminPermissionAccessListItem {
+class AdminPermissionAccessListItem extends Concrete5_Model_AdminPermissionAccessListItem {
 
 
 }

@@ -32,6 +32,11 @@ class Concrete5_Model_AttributeKey extends Object {
 	public function isAttributeKeySearchable() {return $this->akIsSearchable;}
 
 	/** 
+	 * Returns whether the attribute key is internal 
+	 */
+	public function isAttributeKeyInternal() {return $this->akIsInternal;}
+
+	/** 
 	 * Returns whether the attribute key is indexed as a "keyword search" field. 
 	 */
 	public function isAttributeKeyContentIndexed() {return $this->akIsSearchableIndexed;}
@@ -59,9 +64,9 @@ class Concrete5_Model_AttributeKey extends Object {
 		$akunhandle = Loader::helper('text')->uncamelcase(get_class($this));
 		$akCategoryHandle = substr($akunhandle, 0, strpos($akunhandle, '_attribute_key'));
 		if ($akCategoryHandle != '') {
-			$row = $db->GetRow('select akID, akHandle, akName, AttributeKeys.akCategoryID, akIsEditable, akIsSearchable, akIsSearchableIndexed, akIsAutoCreated, akIsColumnHeader, AttributeKeys.atID, atHandle, AttributeKeys.pkgID from AttributeKeys inner join AttributeKeyCategories on AttributeKeys.akCategoryID = AttributeKeyCategories.akCategoryID inner join AttributeTypes on AttributeKeys.atID = AttributeTypes.atID where akID = ? and akCategoryHandle = ?', array($akID, $akCategoryHandle));
+			$row = $db->GetRow('select akID, akHandle, akName, AttributeKeys.akCategoryID, akIsInternal, akIsEditable, akIsSearchable, akIsSearchableIndexed, akIsAutoCreated, akIsColumnHeader, AttributeKeys.atID, atHandle, AttributeKeys.pkgID from AttributeKeys inner join AttributeKeyCategories on AttributeKeys.akCategoryID = AttributeKeyCategories.akCategoryID inner join AttributeTypes on AttributeKeys.atID = AttributeTypes.atID where akID = ? and akCategoryHandle = ?', array($akID, $akCategoryHandle));
 		} else {
-			$row = $db->GetRow('select akID, akHandle, akName, akCategoryID, akIsEditable, akIsSearchable, akIsSearchableIndexed, akIsAutoCreated, akIsColumnHeader, AttributeKeys.atID, atHandle, AttributeKeys.pkgID from AttributeKeys inner join AttributeTypes on AttributeKeys.atID = AttributeTypes.atID where akID = ?', array($akID));		
+			$row = $db->GetRow('select akID, akHandle, akName, akCategoryID, akIsEditable, akIsInternal, akIsSearchable, akIsSearchableIndexed, akIsAutoCreated, akIsColumnHeader, AttributeKeys.atID, atHandle, AttributeKeys.pkgID from AttributeKeys inner join AttributeTypes on AttributeKeys.atID = AttributeTypes.atID where akID = ?', array($akID));		
 		}
 		$this->setPropertiesFromArray($row);
 	}
@@ -190,7 +195,11 @@ class Concrete5_Model_AttributeKey extends Object {
 		if ($ak['package']) {
 			$pkg = Package::getByHandle($ak['package']);
 		}
-		$akn = self::add($akCategoryHandle, $type, array('akHandle' => $ak['handle'], 'akName' => $ak['name'], 'akIsSearchableIndexed' => $ak['indexed'], 'akIsSearchable' => $ak['searchable']), $pkg);
+		$akIsInternal = 0;
+		if ($ak['internal']) {
+			$akIsInternal = 1;
+		}
+		$akn = self::add($akCategoryHandle, $type, array('akHandle' => $ak['handle'], 'akName' => $ak['name'], 'akIsInternal' => $akIsInternal, 'akIsSearchableIndexed' => $ak['indexed'], 'akIsSearchable' => $ak['searchable']), $pkg);
 		$akn->getController()->importKey($ak);
 	}
 	
@@ -218,9 +227,13 @@ class Concrete5_Model_AttributeKey extends Object {
 		$_akIsSearchableIndexed = 1;
 		$_akIsAutoCreated = 1;
 		$_akIsEditable = 1;
+		$_akIsInternal = 0;
 		
 		if (!$akIsSearchable) {
 			$_akIsSearchable = 0;
+		}
+		if ($akIsInternal) {
+			$_akIsInternal = 1;
 		}
 		if (!$akIsSearchableIndexed) {
 			$_akIsSearchableIndexed = 0;
@@ -234,8 +247,8 @@ class Concrete5_Model_AttributeKey extends Object {
 		
 		$db = Loader::db();
 		$akCategoryID = $db->GetOne("select akCategoryID from AttributeKeyCategories where akCategoryHandle = ?", $akCategoryHandle);
-		$a = array($akHandle, $akName, $_akIsSearchable, $_akIsSearchableIndexed, $_akIsAutoCreated, $_akIsEditable, $atID, $akCategoryID, $pkgID);
-		$r = $db->query("insert into AttributeKeys (akHandle, akName, akIsSearchable, akIsSearchableIndexed, akIsAutoCreated, akIsEditable, atID, akCategoryID, pkgID) values (?, ?, ?, ?, ?, ?, ?, ?, ?)", $a);
+		$a = array($akHandle, $akName, $_akIsSearchable, $_akIsSearchableIndexed, $_akIsInternal, $_akIsAutoCreated, $_akIsEditable, $atID, $akCategoryID, $pkgID);
+		$r = $db->query("insert into AttributeKeys (akHandle, akName, akIsSearchable, akIsSearchableIndexed, akIsInternal, akIsAutoCreated, akIsEditable, atID, akCategoryID, pkgID) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", $a);
 		
 		$category = AttributeKeyCategory::getByID($akCategoryID);
 		

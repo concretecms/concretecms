@@ -12,7 +12,7 @@ class Concrete5_Model_PageOwnerPermissionAccessEntity extends PermissionAccessEn
 			$a = $pae->getPermissionObject()->getBlockAreaObject();
 			$c = $a->getAreaCollectionObject();
 		}
-		if (is_object($c)) {
+		if (is_object($c) && ($c instanceof Page)) {
 			$ui = UserInfo::getByID($c->getCollectionUserID());
 			$users = array($ui);
 			return $users;

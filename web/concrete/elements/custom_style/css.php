@@ -1,7 +1,7 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>	
 <div id="ccm-styleEditPane-css" class="ccm-styleEditPane" style="display:none">	 
 	<div style="clear:both">
-		<table class="ccm-style-property-table" border="0" cellspacing="0" cellpadding="0" width="100%">
+		<table class="ccm-style-property-table table" border="0" cellspacing="0" cellpadding="0" width="100%">
 			<tr>
 				<td style="width: 50%" valign="top">
 					<?php echo t('CSS ID')?>:

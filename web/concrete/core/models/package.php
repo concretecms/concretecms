@@ -265,6 +265,7 @@ class Concrete5_Model_Package extends Object {
 		$items['permission_access_entity_types'] = PermissionAccessEntityType::getListByPackage($this);
 		$items['attribute_keys'] = AttributeKey::getListByPackage($this);
 		$items['attribute_sets'] = AttributeSet::getListByPackage($this);
+		$items['group_sets'] = GroupSets::getListByPackage($this);
 		$items['page_types'] = CollectionType::getListByPackage($this);
 		$items['mail_importers'] = MailImporter::getListByPackage($this);
 		$items['configuration_values'] = Config::getListByPackage($this);
@@ -305,6 +306,8 @@ class Concrete5_Model_Package extends Object {
 		} else if ($item instanceof AttributeSet) {
 			$at = AttributeKeyCategory::getByID($item->getAttributeSetKeyCategoryID());
 			return t('%s (%s)', $item->getAttributeSetName(), $txt->unhandle($at->getAttributeKeyCategoryHandle()));
+		} else if ($item instanceof GroupSet) {
+			return $item->getGroupSetNAme();
 		} else if (is_a($item, 'AttributeKey')) {
 			$akc = AttributeKeyCategory::getByID($item->getAttributeKeyCategoryID());
 			return t(' %s (%s)', $txt->unhandle($item->getAttributeKeyHandle()), $txt->unhandle($akc->getAttributeKeyCategoryHandle()));
@@ -363,6 +366,7 @@ class Concrete5_Model_Package extends Object {
 						case 'AttributeKeyCategory':
 						case 'PermissionKeyCategory':
 						case 'AttributeSet':
+						case 'GroupSet':
 						case 'AttributeType':
 						case 'WorkflowType':
 						case 'PermissionKey':
