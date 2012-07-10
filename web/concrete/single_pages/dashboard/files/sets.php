@@ -4,7 +4,7 @@
 
 
 	<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('File Set'), false, 'span12 offset2', false)?>
-	<form method="post" id="file_sets_edit" action="<?=$this->url('/dashboard/files/sets', 'file_sets_edit')?>" onsubmit="return ccm_saveFileSetDisplayOrder()">
+	<form method="post" class="form-horizontal" id="file_sets_edit" action="<?=$this->url('/dashboard/files/sets', 'file_sets_edit')?>" onsubmit="return ccm_saveFileSetDisplayOrder()">
 		<?=$form->hidden('fsDisplayOrder', '')?>
 		<?=$validation_token->output('file_sets_edit');?>
 
@@ -33,9 +33,9 @@
 		}
 		</script>
 
-		<div class="clearfix">
+		<div class="control-group">
 		<?=$form->label('file_set_name', t('Name'))?>
-		<div class="input">
+		<div class="controls">
 			<?=$form->text('file_set_name',$fs->fsName, array('class' => 'span5'));?>	
 		</div>
 		</div>
@@ -49,12 +49,10 @@
 
 		?>
 		
-		<div class="clearfix">
+		<div class="control-group">
 		<?=$form->label('fsOverrideGlobalPermissions', t('Custom Permissions'))?>
-		<div class="input">
-		<ul class="inputs-list">
-			<li><label><?=$form->checkbox('fsOverrideGlobalPermissions', 1, $fs->overrideGlobalPermissions())?> <span><?=t('Enable custom permissions for this file set.')?></span></label></li>
-		</ul>
+		<div class="controls">
+			<label class="checkbox"><?=$form->checkbox('fsOverrideGlobalPermissions', 1, $fs->overrideGlobalPermissions())?> <span><?=t('Enable custom permissions for this file set.')?></span></label>
 		</div>
 		</div>
 		
@@ -151,32 +149,32 @@
 
 	<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('File Sets'), false, 'span12 offset2', false)?>
 	<div class="ccm-pane-options">
-	<div class="ccm-pane-options-permanent-search">
 		
-		<form id="ccm-file-set-search" method="get" action="<?=$this->url('/dashboard/files/sets')?>">
+		<form id="ccm-file-set-search" method="get" action="<?=$this->url('/dashboard/files/sets')?>" class="form-horizontal">
+		<div class="ccm-pane-options-permanent-search">
 
 		<div class="span5">
 		<?=$form->label('fsKeywords', t('Keywords'))?>
-		<div class="input">
+		<div class="controls">
 		<input type="text" id="fsKeywords" name="fsKeywords" value="<?=Loader::helper('text')->entities($_REQUEST['fsKeywords'])?>" class="span3" />
 		</div>
 		</div>
 
-		<div class="span4">
+		<div class="span5">
 		<?=$form->label('fsType', t('Type'))?>
-		<div class="input">
-		<select id="fsType" name="fsType" class="span3">
+		<div class="controls">
+		<select id="fsType" name="fsType" style="width: 130px">
 		<option value="<?=FileSet::TYPE_PUBLIC?>" <? if ($fsType != FileSet::TYPE_PRIVATE) { ?> selected <? } ?>><?=t('Public Sets')?></option>
 		<option value="<?=FileSet::TYPE_PRIVATE?>" <? if ($fsType == FileSet::TYPE_PRIVATE) { ?> selected <? } ?>><?=t('My Sets')?></option>
 		</select>
+		<input type="submit" class="btn" value="<?=t('Search')?>" />
 		</div>
 		</div>
 				
-		<input type="submit" class="btn" value="<?=t('Search')?>" />
 		<input type="hidden" name="group_submit_search" value="1" />
-		</form>
 
 	</div>
+		</form>
 	</div>
 	<div class="ccm-pane-body <? if (!$fsl->requiresPaging()) { ?> ccm-pane-body-footer <? } ?> ">
 

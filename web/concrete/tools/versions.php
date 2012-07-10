@@ -111,17 +111,19 @@
 					break;
 				case 'approve':
 					if ($cp->canApprovePageVersions() && !$isCheckedOut) {
+						$u = new User();
+						$pkr = new ApprovePagePageWorkflowRequest();
+						$pkr->setRequestedPage($c);
 						$v = CollectionVersion::get($c, $_GET['cvID']);
-						$v->approve();
-						header("Location: " . REL_DIR_FILES_TOOLS_REQUIRED . "/versions.php?forcereload=1&cID=" . $cID . "&cvID=" . $_GET['cvID']);
-						exit;
-					}
-					break;
-				case 'deny':
-					if ($cp->canApprovePageVersions() && !$isCheckedOut) {
-						$v = CollectionVersion::get($c, $_GET['cvID']);
-						if ($v->isApproved()) {
-							$v->deny();
+						$pkr->setRequestedVersionID($v->getVersionID());
+						$pkr->setRequesterUserID($u->getUserID());
+						$u->unloadCollectionEdit($c);
+						$response = $pkr->trigger();
+						if (!($response instanceof WorkflowProgressResponse)) {
+							header("Location: " . REL_DIR_FILES_TOOLS_REQUIRED . "/versions.php?forcereload=1&deferred=true&cID=" . $cID . "&cvID=" . $_GET['cvID']);
+							exit;
+						} else {
+							// we only get this response if we have skipped workflows and jumped straight in to an approve() step.
 							header("Location: " . REL_DIR_FILES_TOOLS_REQUIRED . "/versions.php?forcereload=1&cID=" . $cID . "&cvID=" . $_GET['cvID']);
 							exit;
 						}
@@ -146,6 +148,11 @@
 
 if (!$_GET['versions_reloaded']) { ?>
 	<div id="ccm-versions-container">
+	<? if ($_REQUEST['deferred']) { ?>
+		<div class="alert alert-info">
+			<?=t('<strong>Request Saved.</strong> You must complete the workflow before this change is active.')?>
+		</div>
+	<? } ?>
 <? } ?>
 
 <div class="ccm-pane-controls ccm-ui">
