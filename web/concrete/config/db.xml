@@ -1157,6 +1157,21 @@
       <col>uID</col>
     </index>
   </table>
+    <table name="PermissionAccessEntityGroupSets">
+    <field name="peID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="gsID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <index name="gsID">
+      <col>gsID</col>
+    </index>
+  </table>
 
   <table name="PermissionAccessEntityGroups">
     <field name="pegID" type="I" size="10">

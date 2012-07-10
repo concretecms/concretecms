@@ -228,6 +228,21 @@
 		        <category handle="basic_workflow" />
 			</categories>
         </permissionaccessentitytype>
+        <permissionaccessentitytype handle="group_set" name="Group Set" package="">
+			<categories>
+		        <category handle="page" />
+		        <category handle="user" />
+		        <category handle="file_set" />
+		        <category handle="file" />
+		        <category handle="area" />
+		        <category handle="block_type" />
+		        <category handle="block" />
+		        <category handle="admin" />
+		        <category handle="sitemap" />
+		        <category handle="marketplace_newsflow" />
+		        <category handle="basic_workflow" />
+			</categories>
+        </permissionaccessentitytype>
         <permissionaccessentitytype handle="group_combination" name="Group Combination" package="">
 			<categories>
 		        <category handle="page" />

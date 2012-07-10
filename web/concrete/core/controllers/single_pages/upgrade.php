@@ -254,7 +254,7 @@ class Concrete5_Controller_Upgrade extends Controller {
 		
 		if ($upgrade) {
 			$completeMessage .= '<div class="alert-message block-message success"><p>' . t('Upgrade to <b>%s</b> complete!', APP_VERSION) . '</p></div>';
-			//Config::save('SITE_APP_VERSION', APP_VERSION);
+			Config::save('SITE_APP_VERSION', APP_VERSION);
 		}
 		$this->set('completeMessage',$completeMessage);	
 		$this->set('message', $message);
