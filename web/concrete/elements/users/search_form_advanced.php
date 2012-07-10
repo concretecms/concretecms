@@ -6,6 +6,10 @@ $searchFields = array(
 	'is_active' => t('Activated Users')
 );
 
+if (PERMISSIONS_MODEL == 'advanced') { 
+	$searchFields['group_set'] = t('Group Set');
+}
+
 Loader::model('user_attributes');
 $searchFieldAttributes = UserAttributeKey::getSearchableList();
 foreach($searchFieldAttributes as $ak) {
@@ -29,6 +33,18 @@ foreach($searchFieldAttributes as $ak) {
 		<span class="ccm-search-option"  search-field="is_active">
 		<?=$form->select('active', array('0' => t('Inactive Users'), '1' => t('Active Users')), array('style' => 'vertical-align: middle'))?>
 		</span>
+		
+		<? if (PERMISSIONS_MODEL == 'advanced') { 
+			$gsl = new GroupSetList();
+			$groupsets = array();
+			foreach($gsl->get() as $gs) { 
+				$groupsets[$gs->getGroupSetID()] = $gs->getGroupSetName();
+			}
+		?>
+		<span class="ccm-search-option"  search-field="group_set">
+		<?=$form->select('gsID', $groupsets)?>
+		</span>
+		<? } ?>
 		
 		<? foreach($searchFieldAttributes as $sfa) { 
 			$sfa->render('search'); ?>

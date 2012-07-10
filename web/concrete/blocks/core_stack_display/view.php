@@ -7,8 +7,10 @@
 	} else {
 		$stack = Stack::getByID($stID, 'ACTIVE');
 	}
-	$ax = Area::get($stack, STACKS_AREA_NAME);
-	$axp = new Permissions($ax);
-	if ($axp->canRead()) {
-		$ax->display($stack);
+	if (is_object($stack)) { 
+		$ax = Area::get($stack, STACKS_AREA_NAME);
+		$axp = new Permissions($ax);
+		if ($axp->canRead()) {
+			$ax->display($stack);
+		}
 	}
