@@ -45,6 +45,9 @@
 		
 		public function on_page_view() {
 			$stack = Stack::getByID($this->stID);
+			if (!is_object($stack)) {
+				return false;
+			}
 			$p = new Permissions($stack);
 			if ($p->canViewPage()) {
 				$blocks = $stack->getBlocks();

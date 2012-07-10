@@ -57,14 +57,15 @@ ccm_menuObj<?=$id?>.height = <?=$btOriginal->getBlockTypeInterfaceHeight()+$heig
 <? } else if ($b->getBlockTypeHandle() == BLOCK_HANDLE_STACK_PROXY) { 
 	$bi = $b->getInstance();
 	$stack = Stack::getByID($bi->stID);
-	$sp = new Permissions($stack);
-	if ($sp->canWrite()) {
-	?>
-	ccm_menuObj<?=$id?>.canWriteStack =true;
-	ccm_menuObj<?=$id?>.stID = <?=$bi->stID?>;
-	<? } 
-} 
-
+	if (is_object($stack)) {
+		$sp = new Permissions($stack);
+		if ($sp->canWrite()) {
+		?>
+		ccm_menuObj<?=$id?>.canWriteStack =true;
+		ccm_menuObj<?=$id?>.stID = <?=$bi->stID?>;
+		<? } 
+	}
+}
 if ($b->getBlockTypeHandle() == BLOCK_HANDLE_STACK_PROXY) { ?>
 	ccm_menuObj<?=$id?>.canCopyToScrapbook = false;	
 <? } else { ?>

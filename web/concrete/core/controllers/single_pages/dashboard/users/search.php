@@ -263,6 +263,22 @@ class Concrete5_Controller_Dashboard_Users_Search extends Controller {
 								$userList->filterByDateAdded($dateTo, '<=');
 							}
 							break;
+						case "group_set":
+							$gsID = $_REQUEST['gsID'];
+							$gs = GroupSet::getByID($gsID);
+							$groupsetids = array(-1);
+							if (is_object($gs)) {
+								$groups = $gs->getGroups();
+							}
+							$userList->addToQuery('left join UserGroups ugs on u.uID = ugs.uID');
+							foreach($groups as $g) {
+								if ($pk->validate($g) && (!in_array($g->getGroupID(), $groupsetids))) {
+									$groupsetids[] = $g->getGroupID();
+								}								
+							}							
+							$instr = 'ugs.gID in (' . implode(',', $groupsetids) . ')';
+							$userList->filter(false, $instr);
+							break;
 
 						default:
 							$akID = $item;
