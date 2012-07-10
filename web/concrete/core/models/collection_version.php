@@ -37,11 +37,6 @@
 		public static function getNumericalVersionID($cID, $cvID) {
 			if ($cvID == 'RECENT' || $cvID == 'ACTIVE') {
 
-				$cvIDr = CacheLocal::getEntry('cvID', $cID . ':' . $cvID);
-				if ($cvIDr) {
-					return $cvIDr;
-				}
-				
 				// first, we make sure that the cID is for an actual page. If we're pointing to another page (an alias)
 				// we need to use THAT cID
 				$db = Loader::db();
@@ -61,7 +56,6 @@
 						break;
 				}
 				
-				CacheLocal::set('cvID', $cID . ':' . $cvID, $cvIDa);
 				return $cvIDa;
 			} else {
 				// cvID IS numerical
