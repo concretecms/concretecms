@@ -5,6 +5,7 @@ $searchFields = array(
 	'' => '** ' . t('Fields'),
 	'keywords' => t('Full Page Index'),
 	'date_added' => t('Date Added'),
+	'theme' => t('Theme'),
 	'last_modified' => t('Last Modified'),
 	'date_public' => t('Public Date'),
 	'owner' => t('Page Owner'),
@@ -79,6 +80,15 @@ foreach($searchFieldAttributes as $ak) {
 			</select>
 			<input type="text" name="cChildren" value="<?=$req['cChildren']?>" />
 		</span>
+		
+		<span class="ccm-search-option"  search-field="theme">
+			<select name="ptID">
+			<? $themes = PageTheme::getList(); ?>
+			<? foreach($themes as $pt) { ?>
+				<option value="<?=$pt->getThemeID()?>"><?=$pt->getThemeName()?></option>			
+			<? } ?>
+			</select>
+		</span>		
 		
 		<? foreach($searchFieldAttributes as $sfa) { 
 			$sfa->render('search'); ?>

@@ -85,6 +85,9 @@ class Concrete5_Controller_Dashboard_Sitemap_Search extends Controller {
 								$pageList->filterByUserID(-1);
 							}
 							break;
+						case 'theme':
+							$pageList->filter('ptID', $_REQUEST['ptID']);
+							break;
 						case 'parent':
 							if (isset($req['_cParentAll'])) {
 								$req['cParentAll'] = $req['_cParentAll'];
