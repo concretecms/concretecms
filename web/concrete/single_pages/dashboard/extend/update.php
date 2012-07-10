@@ -39,7 +39,7 @@ if (!$tp->canInstallPackages()) { ?>
 			<p><?=t('No updates for your add-ons are available.')?></p>
 		<? } else { ?>
 
-			<table>
+			<table class="table table-striped">
 			<? foreach($pkgRemote as $pkg) { 
 
 				$rpkg = MarketplaceRemoteItem::getByHandle($pkg->getPackageHandle());

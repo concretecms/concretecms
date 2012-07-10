@@ -2,7 +2,7 @@
 <div id="ccm-styleEditPane-fonts" class="ccm-styleEditPane">	
 	<div>
 	<h3><?php echo t('Fonts')?></h3>
-		<table class="ccm-style-property-table" border="0" cellspacing="0" cellpadding="0">
+		<table class="ccm-style-property-table table" border="0" cellspacing="0" cellpadding="0">
 			<tr>
 				<td>
 				<?=t('Face')?>:

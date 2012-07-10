@@ -5,7 +5,7 @@ class Concrete5_Model_FileUploaderPermissionAccessEntity extends PermissionAcces
 
 	public function getAccessEntityUsers(PermissionAccess $pa) {
 		$f = $pa->getPermissionObject();
-		if (is_object($f)) {
+		if (is_object($f) && ($f instanceof File)) {
 			return UserInfo::getByID($f->getUserID());
 		}
 	}

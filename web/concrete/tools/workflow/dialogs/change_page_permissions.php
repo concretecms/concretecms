@@ -10,7 +10,7 @@ if (is_object($wp)) {
 		?>
 
 <div class="ccm-ui">
-<table class="ccm-permission-grid table zebra-striped">
+<table class="ccm-permission-grid table table-striped">
 
 <? 
 $ps = $req->getPagePermissionSet();
