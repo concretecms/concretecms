@@ -57,8 +57,8 @@ class Concrete5_Model_ApprovePagePageWorkflowRequest extends PageWorkflowRequest
 		$buttons = array();
 		$c = Page::getByID($this->cID, 'ACTIVE');
 		$button = new WorkflowProgressAction();
-		$button->setWorkflowProgressActionLabel(t('View Active Version'));
-		$button->addWorkflowProgressActionButtonParameter('dialog-title', t('Preview Page'));
+		$button->setWorkflowProgressActionLabel(t('Compare Versions'));
+		$button->addWorkflowProgressActionButtonParameter('dialog-title', t('Compare Versions'));
 		$button->addWorkflowProgressActionButtonParameter('dialog-width', '90%');
 		$button->addWorkflowProgressActionButtonParameter('dialog-height', '70%');
 		$button->setWorkflowProgressActionStyleInnerButtonLeftHTML('<i class="icon-eye-open"></i>');
