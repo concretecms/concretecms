@@ -102,10 +102,9 @@ $backgroundImage = Loader::helper('concrete/dashboard')->getDashboardBackgroundI
 </div>
 <?
 $_ih = Loader::helper('concrete/interface');
-print $_ih->getQuickNavigationBar();
-
 $dh = Loader::helper('concrete/dashboard');
-print $dh->getDashboardAndSearchMenus();
+$html = $dh->getDashboardAndSearchMenus();
+print $dh->addQuickNavToMenus($html);
 ?>
 </div>
 <div id="ccm-dashboard-page">

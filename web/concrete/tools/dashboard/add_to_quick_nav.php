@@ -17,29 +17,22 @@ if ($ih->integer($_REQUEST['cID'])) {
 	}
 }
 
+$ish->clearInterfaceItemsCache();
+
 if ($canAdd) {
 	$u = new User();
 	$r = new stdClass;
 	if (Loader::helper('validation/token')->validate('access_quick_nav', $_REQUEST['token'])) {
-		$quicknav = unserialize($u->config('QUICK_NAV_BOOKMARKS'));
-		if (!is_array($quicknav)) {
-			$quicknav = array();
-		}
-		if (!in_array($c->getCollectionID(), $quicknav)) {
-			$quicknav[] = $c->getCollectionID();
+		$qn = ConcreteDashboardMenu::getMine();
+		if ($qn->contains($c)) {
+			$qn->remove($c);
 			$task = 'add';
-			$r->link = $ish->getQuickNavigationLinkHTML($c);
 		} else {
-			$tmpquicknav = $quicknav;
-			$quicknav = array();
-			foreach($tmpquicknav as $qid) {
-				if ($qid != $c->getCollectionID()) {
-					$quicknav[] = $qid;
-				}
-			}
+			$qn->add($c);
 			$task = 'remove';
 		}
-		$u->saveConfig('QUICK_NAV_BOOKMARKS', serialize($quicknav));
+		
+		$u->saveConfig('QUICK_NAV_BOOKMARKS', serialize($qn));
 		$r->success = true;
 		$r->result = $task;
 		print Loader::helper('json')->encode($r);

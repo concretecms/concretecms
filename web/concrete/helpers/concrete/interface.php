@@ -167,68 +167,7 @@ class ConcreteInterfaceHelper {
 		}
 		return false;
 	}
-	
-	public function getQuickNavigationBar() {
-		$c = Page::getCurrentPage();
-		if (!is_object($c) || Config::get('TOOLBAR_QUICK_NAV_BEHAVIOR') == 'disabled') {
-			return;
-		}
 		
-		if (!is_array($_SESSION['ccmQuickNavRecentPages'])) {
-			$_SESSION['ccmQuickNavRecentPages'] = array();
-		}
-		if (in_array($c->getCollectionID(), $_SESSION['ccmQuickNavRecentPages'])) {
-			unset($_SESSION['ccmQuickNavRecentPages'][array_search($c->getCollectionID(), $_SESSION['ccmQuickNavRecentPages'])]);
-			$_SESSION['ccmQuickNavRecentPages'] = array_values($_SESSION['ccmQuickNavRecentPages']);
-		}
-		
-		$_SESSION['ccmQuickNavRecentPages'][] = $c->getCollectionID();
-
-		if (count($_SESSION['ccmQuickNavRecentPages']) > 5) {
-			array_shift($_SESSION['ccmQuickNavRecentPages']);
-		}
-		
-		$html = '';
-		$class = '';
-		if (Config::get('TOOLBAR_QUICK_NAV_BEHAVIOR') == 'always') { 
-			$class = 'ccm-quick-nav-always';
-		}
-		$html .= '<div id="ccm-quick-nav" class="' . $class . '">';
-		$html .= '<ul id="ccm-quick-nav-favorites" class="pills">';
-		$u = new User();
-		$quicknav = unserialize($u->config('QUICK_NAV_BOOKMARKS'));
-		if (is_array($quicknav)) {
-			foreach($quicknav as $cID) {
-				$c = Page::getByID($cID);
-				$cp = new Permissions($c);
-				if ($cp->canViewPage() && is_object($c) && (!$c->isError())) {
-					$html .= '<li id="ccm-quick-nav-page-' . $c->getCollectionID() . '">' . $this->getQuickNavigationLinkHTML($c) . '</li>';
-				}
-			}
-		}
-		$html .= '</ul>';
-		if (count($_SESSION['ccmQuickNavRecentPages']) > 0) {
-			$html .= '<ul id="ccm-quick-nav-breadcrumb" class="pills">';
-			$i = 0;
-			foreach($_SESSION['ccmQuickNavRecentPages'] as $_cID) {
-				$_c = Page::getByID($_cID);
-				$name = t('(No Name)');
-				$divider = '';
-				if (isset($_SESSION['ccmQuickNavRecentPages'][$i+1])) {
-					$divider = '<span class="divider">/</span>';
-				}
-				if ($_c->getCollectionName()) {
-					$name = $_c->getCollectionName();
-				}
-				$html .= '<li><a id="ccm-recent-page-' . $_c->getCollectionID() . '" href="' . Loader::helper('navigation')->getLinkToCollection($_c) . '">' . t($name) . '</a>' . $divider . '</li>';
-				$i++;
-			}
-			$html .= '</ul>';
-		}
-		$html .= '</div>';
-		return $html;
-	}
-	
 	public function clearInterfaceItemsCache() {
 		$u = new User();
 		if ($u->isRegistered()) {

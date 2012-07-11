@@ -1,20 +1,11 @@
 ccm_closeDashboardPane = function(r) {
-	var accepter = $('#ccm-recent-page-' + CCM_CID);
+	var accepter = $('#ccm-nav-dashboard');
 	var l = $(r);
-	ccm_showQuickNav(function() { 
-		var title = l.parent().parent().parent().find('h3');
-		title.css('display','inline');
-		$(r).closest('div.ccm-pane').fadeOut(120, 'easeOutExpo');
-		title.effect("transfer", { to: accepter, 'easing': 'easeOutExpo'}, 600, function() {
-			accepter.hide().css('visibility','visible').fadeIn(240, 'easeInExpo');			
-			title.css('display','block');
-			ccm_quickNavTimer = setTimeout(function() {
-				ccm_hideQuickNav();
-			}, 1000);
-		});
-	});
+	var title = l.parent().parent().parent().find('h3');
+	title.css('display','inline');
+	$(r).closest('div.ccm-pane').fadeOut(120, 'easeOutExpo');
+	title.effect("transfer", { to: accepter, 'easing': 'easeOutExpo'}, 600);
 }
-
 
 ccm_getDashboardBackgroundImageData = function(image, display) {
 	$.getJSON(CCM_TOOLS_PATH + '/dashboard/get_image_data', {

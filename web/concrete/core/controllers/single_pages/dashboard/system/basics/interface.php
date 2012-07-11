@@ -5,7 +5,6 @@ class Concrete5_Controller_Dashboard_System_Basics_Interface extends DashboardBa
 
 	public function view() {
 		$this->set('DASHBOARD_BACKGROUND_IMAGE', Config::get('DASHBOARD_BACKGROUND_IMAGE'));
-		$this->set('TOOLBAR_QUICK_NAV_BEHAVIOR', Config::get('TOOLBAR_QUICK_NAV_BEHAVIOR'));
 		$imageObject = false;
 		if ($this->get('DASHBOARD_BACKGROUND_IMAGE') == 'custom') { 
 			$fID = Config::get('DASHBOARD_BACKGROUND_IMAGE_CUSTOM_FILE_ID');
@@ -31,7 +30,6 @@ class Concrete5_Controller_Dashboard_System_Basics_Interface extends DashboardBa
 					Config::save('DASHBOARD_BACKGROUND_IMAGE', $this->post('DASHBOARD_BACKGROUND_IMAGE'));
 					Config::save('DASHBOARD_BACKGROUND_IMAGE_CUSTOM_FILE_ID', $this->post('DASHBOARD_BACKGROUND_IMAGE_CUSTOM_FILE_ID'));
 				}
-				Config::save('TOOLBAR_QUICK_NAV_BEHAVIOR', $this->post('TOOLBAR_QUICK_NAV_BEHAVIOR'));
 				$this->redirect('/dashboard/system/basics/interface', 'settings_saved');
 			}
 		} else {
