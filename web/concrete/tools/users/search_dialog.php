@@ -13,7 +13,7 @@ $pagination = $userList->getPagination();
 $columns = $cnt->get('columns');
 
 if (!isset($mode)) {
-	$mode = $_REQUEST['mode'];
+	$mode = Loader::helper('text')->entities($_REQUEST['mode']);
 }
 
 ob_start();

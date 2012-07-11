@@ -18,5 +18,4 @@
  */
 
 defined('C5_EXECUTE') or die("Access Denied.");
-class ImageHelper extends Concrete5_Helper_Image {
-}
+class ImageHelper extends Concrete5_Helper_Image {}

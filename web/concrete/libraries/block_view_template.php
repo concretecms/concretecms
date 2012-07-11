@@ -21,5 +21,4 @@ defined('C5_EXECUTE') or die("Access Denied.");
  * @license    http://www.concrete5.org/license/     MIT License
  *
  */
-
 class BlockViewTemplate extends Concrete5_Library_BlockViewTemplate {}

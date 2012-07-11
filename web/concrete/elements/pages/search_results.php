@@ -5,13 +5,13 @@ if ($_REQUEST['searchDialog'] == 1) {
 }
 if (!isset($sitemap_select_mode)) {
 	if (isset($_REQUEST['sitemap_select_mode'])) {
-		$sitemap_select_mode = $_REQUEST['sitemap_select_mode'];
+		$sitemap_select_mode = Loader::helper('text')->entities($_REQUEST['sitemap_select_mode']);
 	}
 }
 
 if (!isset($sitemap_select_callback)) {
 	if (isset($_REQUEST['sitemap_select_callback'])) {
-		$sitemap_select_callback = $_REQUEST['sitemap_select_callback'];
+		$sitemap_select_callback = Loader::helper('text')->entities($_REQUEST['sitemap_select_callback']);
 	}
 }
 if (isset($_REQUEST['searchInstance'])) {

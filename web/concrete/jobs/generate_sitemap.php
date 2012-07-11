@@ -1,11 +1,3 @@
-<?
-/**
-*
-* Responsible for loading the indexed search class and initiating the reindex command.
-* @package Utilities
-*/
+<?php defined('C5_EXECUTE') or die('Access denied.');
 
-defined('C5_EXECUTE') or die("Access Denied.");
-class GenerateSitemap extends Concrete5_Job_GenerateSitemap {
-
-}
+class GenerateSitemap extends Concrete5_Job_GenerateSitemap {}

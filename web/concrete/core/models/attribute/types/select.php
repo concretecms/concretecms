@@ -285,8 +285,10 @@ class Concrete5_Controller_AttributeType_Select extends AttributeTypeController 
 		$this->load();
 		$options = $this->request('atSelectOptionID');
 		if ($this->akSelectAllowOtherValues) {
-			$options = $this->request('atSelectNewOption');
+			$options = array_filter((Array) $this->request('atSelectNewOption'));
 			if (is_array($options) && count($options) > 0) {
+				return true;
+			} else if (array_shift($this->request('atSelectOptionID')) != null) {
 				return true;
 			}
 		}

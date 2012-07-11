@@ -56,7 +56,7 @@ $disp .=  "var CCM_SECURITY_TOKEN = '" . $valt->generate() . "';"."\n";
 $disp .= "</script>"."\n";
 //require(DIR_FILES_ELEMENTS_CORE . '/header_required.php'); 
 $v->addHeaderItem($disp);
-Loader::element('header_required');
+Loader::element('header_required', array('disableTrackingCode' => true));
 $backgroundImage = Loader::helper('concrete/dashboard')->getDashboardBackgroundImage();
 ?>
 
@@ -139,11 +139,11 @@ print $dh->getDashboardAndSearchMenus();
 	
 	if (isset($message)) { ?>
 		<div class="ccm-ui" id="ccm-dashboard-result-message">
-			<div class="alert alert-info"><button type="button" class="close" data-dismiss="alert">×</button><?=Loader::helper('text')->entities($message)?></div>
+			<div class="alert alert-info"><button type="button" class="close" data-dismiss="alert">×</button><?=nl2br(Loader::helper('text')->entities($message))?></div>
 		</div>
 	<? 
 	} else if (isset($success)) { ?>
 		<div class="ccm-ui" id="ccm-dashboard-result-message">
-			<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert">×</button><?=Loader::helper('text')->entities($success)?></div>
+			<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert">×</button><?=nl2br(Loader::helper('text')->entities($success))?></div>
 		</div>
 	<? } ?>

@@ -29,7 +29,7 @@ var miniSurvey ={
 
 			$('#refreshButton').click( function(){ miniSurvey.refreshSurvey(); return false; } );
 			$('#addQuestion').click(   function(){ miniSurvey.addQuestion(); return false; } );
-			$('#editQuestion').click(  function(){ miniSurvey.addQuestion('Edit')   } );
+			$('#editQuestion').click(  function(){ miniSurvey.addQuestion('Edit'); return false; } );
 			$('#cancelEditQuestion').click(   function(){ $('#editQuestionForm').css('display','none') } );			
 			this.serviceURL+='cID='+this.cID+'&arHandle='+this.arHandle+'&bID='+this.bID+'&btID='+this.btID+'&';
 			miniSurvey.refreshSurvey();

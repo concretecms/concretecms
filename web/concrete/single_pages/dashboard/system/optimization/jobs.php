@@ -117,8 +117,8 @@ jQuery(function($) {
 	$jobrunning = true;?>class="running" <? } ?>>
 	<td><a class="run-task" title="<?=t('Run')?>" href="<?=BASE_URL.$this->url('/tools/required/jobs?auth='.$auth.'&jobId='.$job['jID'])?>" data-jobId="<?=$job['jID']?>"></a><span class="run-indicator"></span></td>
 	<td><?=$job['jID']?></td>
-	<td><?=$job['jName']?></td>
-	<td><?=$job['jDescription']?></td>
+	<td><?=t($job['jName'])?></td>
+	<td><?=t($job['jDescription'])?></td>
 	<td class="jDateLastRun"><?
 	if ($job['jStatus'] == 'RUNNING') {
 		$runtime = date(DATE_APP_GENERIC_TS, strtotime($job['jDateLastRun']));
@@ -132,7 +132,7 @@ jQuery(function($) {
 		echo $runtime;
 	}
 ?></td>
-	<td class="jLastStatusText"><?=$job['jLastStatusText']?></td>
+	<td class="jLastStatusText"><?=t($job['jLastStatusText'])?></td>
 	<td><?if(!$job['jNotUninstallable']):?>
 		<?=$ih->button(t('Remove'), $this->action('uninstall', $job['jID']), null, 'remove')?>
 	<?endif?></td>

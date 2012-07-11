@@ -37,6 +37,7 @@ class Concrete5_Library_Log {
 		if (!$this->session) {
 			$this->close();
 		}
+		return $this;
 	}
 
 	public static function addEntry($message, $namespace = false) {
