@@ -357,10 +357,6 @@ if (!defined('CACHE_LIFETIME')) {
 
 define('ON_WINDOWS', intval(substr(PHP_OS,0,3)=='WIN') );
 
-# Binaries used by the system
-# Currently unused
-# define('DIR_FILES_BIN', DIR_BASE_CORE . '/bin');
-define('DIR_FILES_BIN_HTMLDIFF', DIR_LIBRARIES_3RDPARTY_CORE . '/htmldiff.py');
 if (!defined('DIR_FILES_BIN_UNZIP')) {
 	 define('DIR_FILES_BIN_UNZIP', '/usr/bin/unzip');
 }

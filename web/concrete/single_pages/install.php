@@ -391,18 +391,6 @@ $(function() {
 </table>
 
 </div>
-<div class="span7">
-<table class="table table-striped">
-
-<tr>
-	<td><? if ($diffTest) { ?><img src="<?=ASSETS_URL_IMAGES?>/icons/success.png" /><? } else { ?><img src="<?=ASSETS_URL_IMAGES?>/icons/warning.png" /><? } ?></td>
-	<td width="100%"><?=t('Version Comparison Available')?>
-	</td>
-	<td><? if (!$diffTest) { ?><img src="<?=ASSETS_URL_IMAGES?>/icons/tooltip.png" class="launch-tooltip" title="<?=t('You must chmod 755 %s and disable PHP safe mode.', 'concrete/libraries/3rdparty/htmldiff.py')?>" /><? } ?></td>
-</tr>
-</tbody>
-</table>
-</div>
 </div>
 
 <div class="row">

@@ -176,7 +176,8 @@
 		
 		function createNew($versionComments) {
 			$db = Loader::db();
-			$newVID = $this->getVersionID() + 1;
+			$highestVID = $db->GetOne('select max(cvID) from CollectionVersions where cID = ?', array($this->cID));
+			$newVID = $highestVID + 1;
 			$c = Page::getByID($this->cID, $this->cvID);
 
 			$u = new User();

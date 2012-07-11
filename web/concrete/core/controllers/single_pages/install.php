@@ -108,15 +108,6 @@ class Concrete5_Controller_Install extends Controller {
 		// no longer need lucene
 		//$this->set('searchTest', function_exists('iconv') && function_exists('mb_strtolower') && (@preg_match('/\pL/u', 'a') == 1));
 		$this->set('remoteFileUploadTest', function_exists('iconv'));
-		// no longer need built-in gettext
-		//$this->set('langTest', Localization::isAvailable() && (!ini_get('safe_mode')));
-		$diffExecTest = is_executable(DIR_FILES_BIN_HTMLDIFF);
-		$diffSystem = (!ini_get('safe_mode'));
-		if ($diffExecTest && $diffSystem) {
-			$this->set('diffTest', true);
-		} else {
-			$this->set('diffTest', false);
-		}
 		
 		if (version_compare(PHP_VERSION, '5.2.0', '>=')) {
 			$phpVtest = true;

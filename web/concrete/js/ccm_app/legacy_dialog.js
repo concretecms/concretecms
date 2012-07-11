@@ -185,7 +185,7 @@ jQuery.fn.dialog.replaceTop = function(r) {
 		$("#ccm-dialog-content" + nd).parent().find('.ui-dialog-titlebar').append('<span class="ccm-dialog-help"><a href="javascript:void(0)" onclick="ccm_togglePopover(event, this)" title="' + helpText + '" class="ccm-menu-help-trigger">Help</a></span>');
 		$("#ccm-dialog-content" + nd).parent().find('.ui-dialog-titlebar .ccm-menu-help-trigger').popover({content: function() {
 			return helpContent;			
-		}, placement: 'below', html: true, trigger: 'manual'});
+		}, placement: 'bottom', html: true, trigger: 'manual'});
 	}
 }
 
