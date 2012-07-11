@@ -16,7 +16,6 @@ class Concrete5_Controller_Block_Survey extends BlockController {
 	protected $btTable = 'btSurvey';
 	protected $btInterfaceWidth = "420";
 	protected $btInterfaceHeight = "300";	
-	protected $btIncludeAll = 1;
 	protected $btExportTables = array('btSurvey','btSurveyOptions','btSurveyResults');
 	
 	public $options = array();

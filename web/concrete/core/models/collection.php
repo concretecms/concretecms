@@ -48,12 +48,12 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				// otherwise, we have to clone this version of the collection entirely,
 				// and return that collection.
 
-				$nc = $this->_cloneVersion($versionComments);
+				$nc = $this->cloneVersion($versionComments);
 				return $nc;
 			}
 		}
 
-		function _cloneVersion($versionComments) {
+		public function cloneVersion($versionComments) {
 			// first, we run the version object's createNew() command, which returns a new
 			// version object, which we can combine with our collection object, so we'll have
 			// our original collection object ($this), and a new collection object, consisting

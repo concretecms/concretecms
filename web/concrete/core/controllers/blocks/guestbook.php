@@ -15,7 +15,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		protected $btTable = 'btGuestBook';
 		protected $btInterfaceWidth = "350";
 		protected $btInterfaceHeight = "480";	
-		protected $btIncludeAll = 1;
 		protected $btWrapperClass = 'ccm-ui';
 		protected $btExportPageColumns = array('cID');
 		protected $btExportTables = array('btGuestBook', 'btGuestBookEntries');
