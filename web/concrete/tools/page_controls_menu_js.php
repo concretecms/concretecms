@@ -99,7 +99,7 @@ menuHTML += '</div>';
 $dh = Loader::helper('concrete/dashboard');
 ?>
 
-menuHTML += '<?=addslashes($dh->getDashboardAndSearchMenus())?>';
+menuHTML += '<?=addslashes($dh->addQuickNavToMenus($dh->getDashboardAndSearchMenus()))?>';
 
 menuHTML += '<div id="ccm-edit-overlay">';
 menuHTML += '<div class="ccm-edit-overlay-inner">';
@@ -190,8 +190,6 @@ menuHTML += '</div>';
 <? } ?>
 
 menuHTML += '</div>';
-menuHTML += '<?=addslashes($ish->getQuickNavigationBar())?>';
-
 <?
 	}
 	
