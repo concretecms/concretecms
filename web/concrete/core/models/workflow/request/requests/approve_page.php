@@ -62,7 +62,7 @@ class Concrete5_Model_ApprovePagePageWorkflowRequest extends PageWorkflowRequest
 		$button->addWorkflowProgressActionButtonParameter('dialog-width', '90%');
 		$button->addWorkflowProgressActionButtonParameter('dialog-height', '70%');
 		$button->setWorkflowProgressActionStyleInnerButtonLeftHTML('<i class="icon-eye-open"></i>');
-		$button->setWorkflowProgressActionURL(REL_DIR_FILES_TOOLS_REQUIRED . '/versions.php?cID=' . $this->cID . '&cvID=' . $c->getVersionID() . '&vtask=view_version');
+		$button->setWorkflowProgressActionURL(REL_DIR_FILES_TOOLS_REQUIRED . '/workflow/dialogs/approve_page_preview.php?wpID=' . $wp->getWorkflowProgressID());
 		$button->setWorkflowProgressActionStyleClass('dialog-launch');
 		$buttons[] = $button;
 		return $buttons;
