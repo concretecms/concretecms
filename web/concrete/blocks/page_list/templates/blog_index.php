@@ -8,7 +8,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 	$truncateChars = ($controller->truncateSummaries ? $controller->truncateChars : 0);
 	foreach ($cArray as $cobj):
 		$title = $cobj->getCollectionName();
-		$date = $cobj->getCollectionDatePublic('F j, Y');
+		$date = $cobj->getCollectionDatePublic(DATE_APP_GENERIC_MDY_FULL);
 		$author = $cobj->getVersionObject()->getVersionAuthorUserName();
 		$link = $nh->getLinkToCollection($cobj);
 		$firstClass = $isFirst ? 'first-entry' : '';
@@ -25,7 +25,9 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				<a href="<?php echo $link; ?>"><?php echo $title; ?></a>
 			</h3>
 			<h4>
-				Posted by <?php echo $author; ?> on <?php echo $date; ?>
+				<?php 
+				echo t('Posted by %s on %s',$author,$date);
+				?>
 			</h4>
 		</div>
 		<div class="excerpt">
@@ -37,7 +39,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		</div>
 		<div class="ccm-spacer"></div>
 		<div class="meta">
-			<?php echo $comments; ?> <a href="<?php echo $link; ?>">Read full post &raquo;</a>
+			<?php echo $comments; ?> <a href="<?php echo $link; ?>"><?php echo t('Read full post'); ?> &raquo;</a>
 		</div>
 	</div>
 	<hr class="blog-entry-divider"/>
@@ -68,8 +70,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			if ($summary->pages > 1):
 				$paginator = $pl->getPagination();
 			?>
-				<span class="pagination-left"><?php echo $paginator->getPrevious('&laquo; Newer Posts'); ?></span>
-				<span class="pagination-right"><?php echo $paginator->getNext('Older Posts &raquo;'); ?></span>
+				<span class="pagination-left">&laquo; <?php echo $paginator->getPrevious('Newer Posts'); ?></span>
+				<span class="pagination-right"><?php echo $paginator->getNext('Older Posts'); ?> &raquo;</span>
 				<?php echo $paginator->getPages(); ?>
 			<?php endif; ?>
 		</div>

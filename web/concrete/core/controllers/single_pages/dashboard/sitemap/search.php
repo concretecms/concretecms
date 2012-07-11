@@ -51,7 +51,7 @@ class Concrete5_Controller_Dashboard_Sitemap_Search extends Controller {
 			$pageList->filterByName($cvName);
 		}
 
-		if ($req['numResults']) {
+		if ($req['numResults'] && Loader::helper('validation/numbers')->integer($req['numResults'])) {
 			$pageList->setItemsPerPage($req['numResults']);
 		}
 
@@ -174,5 +174,3 @@ class Concrete5_Controller_Dashboard_Sitemap_Search extends Controller {
 		return $pageList;
 	}
 }
-
-?>

@@ -67,6 +67,7 @@
 			}
 			
 			if(is_object($fp)) {
+				$fp->on_start();
 				return $fp;
 			} else {
 				throw new Exception(t('Unable load external form block controller file: %s',$this->filename)); 
@@ -81,32 +82,5 @@
 			$cnt = $this->getControllerFile();
 			return $cnt->runTask($nm, $a);
 		}
-
-		public function add() {
-			$this->set('filenames', $this->getFormList());	
-		}
-		public function edit() {
-			$this->set('filenames', $this->getFormList());	
-		}
-		
-
-		public function getFormList() {
-				
-			$forms = array();
-			$fh = Loader::helper('file');
-			
-			if (file_exists(DIR_FILES_BLOCK_TYPES_FORMS_EXTERNAL)) {
-				$forms = array_merge($forms, $fh->getDirectoryContents(DIR_FILES_BLOCK_TYPES_FORMS_EXTERNAL));
-			}
-			if (file_exists(DIR_FILES_BLOCK_TYPES_FORMS_EXTERNAL_CORE)) {
-				$forms = array_merge($forms, $fh->getDirectoryContents(DIR_FILES_BLOCK_TYPES_FORMS_EXTERNAL_CORE));
-			}
-			
-			return $forms;
-		}
 			
 	}
-	
-	
-	
-?>

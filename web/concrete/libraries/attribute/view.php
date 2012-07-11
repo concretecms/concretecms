@@ -9,4 +9,4 @@ defined('C5_EXECUTE') or die("Access Denied.");
  * @license    http://www.concrete5.org/license/     MIT License
  *
  */
-	class AttributeTypeView extends Concrete5_Library_AttributeTypeView {}
+class AttributeTypeView extends Concrete5_Library_AttributeTypeView {}

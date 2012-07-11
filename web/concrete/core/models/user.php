@@ -71,7 +71,7 @@
 		protected static function regenerateSession() {
 			unset($_SESSION['dashboardMenus']);
 			unset($_SESSION['accessEntities']);
-			session_regenerate_id(true);
+			@session_regenerate_id(true);
 		}
 		
 		/**

@@ -14,6 +14,7 @@ $pk = PermissionKey::getByHandle('edit_page_properties');
 $pk->setPermissionObject($c);
 $asl = $pk->getMyAssignment();
 
+$approveImmediately = false;
 if ($_REQUEST['approveImmediately'] == 1) {
 	$approveImmediately = 1;
 }
