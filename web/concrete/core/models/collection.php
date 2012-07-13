@@ -685,14 +685,20 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		
 		public function refreshCache() {
 			$vo = $this->getVersionObject();
-			Cache::delete('page', $this->getCollectionID());
+			if (is_object($vo)) {
+				$vo->refreshCache();
+			} else {
+				Cache::delete('page_active', $this->getCollectionID());
+				Cache::delete('page_recent', $this->getCollectionID());
+			}
+			if ($this->getCollectionTypeHandle() == STACKS_PAGE_TYPE) {
+				Cache::delete('stack_active', $this->getCollectionID());
+				Cache::delete('stack_recent', $this->getCollectionID());
+			}
 			Cache::delete('page_path', $this->getCollectionID());
 			Cache::delete('request_path_page', $this->getCollectionPath()  );
 			Cache::delete('page_id_from_path', $this->getCollectionPath());
 			Cache::delete('page_content', $this->getCollectionID());
-			if (is_object($vo)) {
-				$vo->refreshCache();
-			}
 			$db = Loader::db();
 			$areas = $db->GetCol('select arHandle from Areas where cID = ?', array($this->getCollectionID()));
 			foreach($areas as $arHandle) {

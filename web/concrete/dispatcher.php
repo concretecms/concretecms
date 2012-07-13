@@ -131,12 +131,12 @@
 		$req = Request::get();
 		if ($req->getRequestCollectionPath() != '') {
 			if (ENABLE_LEGACY_CONTROLLER_URLS) {
-				$c = Page::getByPath($req->getRequestCollectionPath(), false);		
+				$c = Page::getByPath($req->getRequestCollectionPath(), 'ACTIVE');		
 			} else {
 				$c = $req->getRequestedPage();
 			}
 		} else {
-			$c = Page::getByID($req->getRequestCollectionID(), false);
+			$c = Page::getByID($req->getRequestCollectionID(), 'ACTIVE');
 		}
 	
 		$req = Request::get();
@@ -190,6 +190,7 @@
 	
 		if ($cp->canEditPageContents() || $cp->canEditPageProperties() || $cp->canViewPageVersions()) {
 			$cvID = ($_REQUEST['cvID']) ? $_REQUEST['cvID'] : "RECENT";
+			$vp = $c->loadVersionObject($cvID);
 		} else {
 			$cvID = "ACTIVE";
 		}
@@ -200,9 +201,8 @@
 			$v->disableLinks();
 		}
 		
-		$vp = $c->loadVersionObject($cvID);
 		// returns the $vp object, which we then check
-		if ($vp->isError()) {
+		if (is_object($vp) && $vp->isError()) {
 			// if we've gotten an error getting information about this particular collection
 			// than we load up the Content class, and get prepared to fire away
 			switch($vp->getError()) {

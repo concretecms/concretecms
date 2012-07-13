@@ -67,21 +67,11 @@
 			$db = Loader::db();
 			$cID = $this->cID;
 			$cvID = $this->cvID;
-			/*
-			$cvIDs = $db->GetCol("select cvID from CollectionVersions where cID = ?", $this->cID);
-			foreach($cvIDs as $cvID) {
-				Cache::delete('page', $cID . ':' . $cvID);
-				Cache::delete('collection_blocks', $cID . ':' . $cvID);
-			}*/
-			
-			Cache::delete('page', $cID . ':' . $cvID);
-			// I know this is very unnecessary because most pages aren't stacks, but this is the cleanest way to make this happen
-			// We will redo this so that you don't even need to cache data about pages that aren't the most recent or the active page, because how much data do you really need besides that?
-			Cache::delete('stack', $cID . ':' . $cvID); 			
-			Cache::delete('composerpage', $cID . ':' . $cvID); 			
+			Cache::delete('page_active', $cID);
+			Cache::delete('page_recent', $cID);
 			Cache::delete('collection_blocks', $cID . ':' . $cvID);
 			Events::fire('on_page_version_refresh_cache', $this);
-			
+
 		}
 		
 		public function get(&$c, $cvID) {

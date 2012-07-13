@@ -260,7 +260,7 @@
 		private function replaceCollectionID($match) {
 			$cID = $match[1];
 			if ($cID > 0) {
-				$c = Page::getByID($cID, 'APPROVED');
+				$c = Page::getByID($cID, 'ACTIVE');
 				return Loader::helper("navigation")->getLinkToCollection($c);
 			}
 		}

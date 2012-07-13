@@ -18,7 +18,9 @@ class Concrete5_Library_Cache {
 					'cache_id_prefix' => CACHE_ID		
 				);
 				$backendOptions = array(
+					'read_control' => false,
 					'cache_dir' => DIR_FILES_CACHE,
+					'hashed_directory_level' => 2,
 					'file_locking' => false
 				);
 				if (defined('CACHE_BACKEND_OPTIONS')) {
