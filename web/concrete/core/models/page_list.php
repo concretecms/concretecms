@@ -409,16 +409,12 @@ class Concrete5_Model_PageList extends DatabaseItemList {
 		
 		$r = parent::get($itemsToGet, $offset);
 		foreach($r as $row) {
-			$nc = $this->loadPageID($row['cID']);
+			$nc = $this->loadPageID($row['cID'], 'ACTIVE');
 			if (!$this->displayOnlyApprovedPages) {
 				$cp = new Permissions($nc);
 				if ($cp->canViewPageVersions()) {
 					$nc->loadVersionObject('RECENT');
-				} else {
-					$nc->loadVersionObject();
 				}
-			} else {
-				$nc->loadVersionObject();
 			}
 			$nc->setPageIndexScore($row['cIndexScore']);
 			$pages[] = $nc;

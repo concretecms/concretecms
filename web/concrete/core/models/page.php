@@ -108,6 +108,8 @@ class Concrete5_Model_Page extends Collection {
 			$this->loadError(COLLECTION_NOT_FOUND);
 		}
 		
+		$this->cHasLayouts = $db->GetOne('select count(cvalID) from CollectionVersionAreaLayouts where cID = ?', array($this->cID));
+		
 		$r = $db->Execute('select pkID, paID from PagePermissionAssignments where cID = ?', array($this->getPermissionsCollectionID()));
 		while ($row =  $r->FetchRow()) {
 			$this->permissionAssignments[$row['pkID']] = PermissionAccess::getByID($row['paID'], PermissionKey::getByID($row['pkID']));
