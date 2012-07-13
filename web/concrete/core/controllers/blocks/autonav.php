@@ -102,7 +102,7 @@
 			$r = $db->query("select cID from Pages where cParentID = ? order by cDisplayOrder asc", array($c->getCollectionID()));
 			$pages = array();
 			while ($row = $r->fetchRow()) {
-				$pages[] = Page::getByID($row['cID']);
+				$pages[] = Page::getByID($row['cID'], 'ACTIVE');
 			}
 			return $pages;
 		}
@@ -536,7 +536,7 @@
 					if ($cParentID != HOME_CID) {
 						$selectedPathCIDs[] = $cParentID; //Don't want home page in nav-path-selected
 					}
-					$inspectC = Page::getById($cParentID);
+					$inspectC = Page::getById($cParentID, 'ACTIVE');
 				}
 			}
 

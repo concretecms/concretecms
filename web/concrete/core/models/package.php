@@ -265,7 +265,7 @@ class Concrete5_Model_Package extends Object {
 		$items['permission_access_entity_types'] = PermissionAccessEntityType::getListByPackage($this);
 		$items['attribute_keys'] = AttributeKey::getListByPackage($this);
 		$items['attribute_sets'] = AttributeSet::getListByPackage($this);
-		$items['group_sets'] = GroupSets::getListByPackage($this);
+		$items['group_sets'] = GroupSet::getListByPackage($this);
 		$items['page_types'] = CollectionType::getListByPackage($this);
 		$items['mail_importers'] = MailImporter::getListByPackage($this);
 		$items['configuration_values'] = Config::getListByPackage($this);

@@ -37,24 +37,24 @@ class Concrete5_Model_Page extends Collection {
 	 * @return Page
 	 */
 	public static function getByID($cID, $versionOrig = 'RECENT', $class = 'Page') {
-		if ($versionOrig) {
-			$version = CollectionVersion::getNumericalVersionID($cID, $versionOrig);
-		}
-		$ca = new Cache();
-		$c = ($version > 0) ? $ca->get(strtolower($class), $cID . ':' . $version) : '';
-
-		if ($c instanceof $class) {
-			return $c;
+		
+		if ($versionOrig == 'RECENT' || $versionOrig == 'ACTIVE') {
+			$c = Cache::get(strtolower($class . '_' . $versionOrig), $cID);
+			if ($c instanceof $class) {
+				return $c;
+			}
 		}
 		
+		$version = CollectionVersion::getNumericalVersionID($cID, $versionOrig);
 		$where = "where Pages.cID = ?";
 		$c = new $class;
 		$c->populatePage($cID, $where, $version);
  
 		// must use cID instead of c->getCollectionID() because cID may be the pointer to another page		
-		if ($version > 0) {
-			$ca->set(strtolower($class), $cID . ':' . $version, $c);
+		if ($versionOrig == 'RECENT' || $versionOrig == 'ACTIVE') {
+			Cache::set(strtolower($class . '_' . $versionOrig), $cID, $c);
 		}
+		
 		return $c;
 	}
 	
@@ -107,7 +107,11 @@ class Concrete5_Model_Page extends Collection {
 		} else {
 			$this->loadError(COLLECTION_NOT_FOUND);
 		}
-	
+		
+		$r = $db->Execute('select pkID, paID from PagePermissionAssignments where cID = ?', array($this->getPermissionsCollectionID()));
+		while ($row =  $r->FetchRow()) {
+			$this->permissionAssignments[$row['pkID']] = PermissionAccess::getByID($row['paID'], PermissionKey::getByID($row['pkID']));
+		}
 
 		if ($cvID != false) {
 			// we don't do this on the front page
@@ -118,6 +122,10 @@ class Concrete5_Model_Page extends Collection {
 		
 	}		
 
+	public function getPermissionAccessObject(PermissionKey $pk) {
+		return $this->permissionAssignments[$pk->getPermissionKeyID()];
+	}
+	
 	public function getPermissionObjectIdentifier() {
 		return $this->getPermissionsCollectionID();
 	}
@@ -1171,7 +1179,6 @@ class Concrete5_Model_Page extends Collection {
 	function clearPagePermissions() {
 		$db = Loader::db();
 		$db->Execute("delete from PagePermissionAssignments where cID = '{$this->cID}'");
-		Cache::delete("page_permission_set_guest", $this->getCollectionID());
 	}
 
 	public function inheritPermissionsFromParent() {

@@ -180,7 +180,7 @@ class Concrete5_Library_Request {
 			$cPath = $r['cPath'];
 			$cID = $r['cID'];
 			$req->setCollectionPath($cPath);			
-			$c = Page::getByID($cID, false);
+			$c = Page::getByID($cID, 'ACTIVE');
 		} else {
 			$c = new Page();
 			$c->loadError(COLLECTION_NOT_FOUND);
