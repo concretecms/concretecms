@@ -696,6 +696,10 @@ class Concrete5_Model_Area extends Object {
 			return false;
 		}
 		
+		if (!$c->hasLayouts()) {
+			return array();
+		}
+		
 		$db = Loader::db();
 		$vals = array( intval($c->cID), $c->getVersionID(), $this->getAreaHandle() );
 		$sql = 'SELECT * FROM CollectionVersionAreaLayouts WHERE cID=? AND cvID=? AND arHandle=? ORDER BY position ASC, cvalID ASC';

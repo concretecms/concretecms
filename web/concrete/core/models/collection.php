@@ -163,6 +163,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			return $num;		
 		}
 				
+		public function hasLayouts() {
+			return $this->cHasLayouts;
+		}
+		
 		public function reindex($index = false, $actuallyDoReindex = true) {
 			if ($this->isAlias()) {
 				return false;

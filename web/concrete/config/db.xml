@@ -718,6 +718,9 @@
       <col>cvID</col> 
       <col>arHandle</col>
     </index> 
+	<index name="cID"> 
+	  <col>cID</col>
+    </index> 
   </table>  
   
   

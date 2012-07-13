@@ -77,7 +77,8 @@ class ConcreteUpgradeVersion560Helper {
 		'BasicWorkflowPermissionAssignments',
 		'BasicWorkflowProgressData',
 		'GroupSets',
-		'GroupSetGroups'
+		'GroupSetGroups',
+		'CollectionVersionAreaLayouts'
 	);
 	
 	
