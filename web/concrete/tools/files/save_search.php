@@ -8,7 +8,7 @@ if (!$fp->canAccessFileManager()) {
 	die(t("Access Denied."));
 }
 
-$searchInstance = Loader::helper('text')->entities($_REQUEST['searchInstance']);
+$searchInstance = Loader::helper('text')->alphanum($_REQUEST['searchInstance']);
 
 if ($_POST['task'] == 'save_search') {
 	Loader::model('file_set');
@@ -34,7 +34,7 @@ if ($_POST['task'] == 'save_search') {
 
 <form id="ccm-<?=$searchInstance?>-save-search-form" method="post" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/save_search" onsubmit="return ccm_alSaveSearch(this)">
 <?=$form->hidden('task', 'save_search')?>
-<?=$form->hidden('searchInstance', $searchInstance); ?>	
+<input type="hidden" name="searchInstance" value="<?=$searchInstance?>" />
 <? $ih = Loader::helper('concrete/interface')?>
 <p><?=t('Enter a name for this saved search file set.')?></p>
 <?=$form->text('fsName', array('style' => 'width: 200px'))?>
