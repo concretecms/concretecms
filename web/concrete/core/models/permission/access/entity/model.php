@@ -18,6 +18,10 @@ abstract class Concrete5_Model_PermissionAccessEntity extends Object {
 	}
 	
 	final static function getByID($peID) {
+		$obj = Cache::get('permission_access_entity', $peID);
+		if ($obj instanceof PermissionAccessEntity) {
+			return $obj;
+		}
 		$db = Loader::db();
 		$r = $db->GetRow('select petID, peID from PermissionAccessEntities where peID = ?', array($peID));
 		if (is_array($r)) {
@@ -29,7 +33,7 @@ abstract class Concrete5_Model_PermissionAccessEntity extends Object {
 			$obj->setPropertiesFromArray($r);
 			$obj->load();
 		}
-		
+		Cache::set('permission_access_entity', $peID, $obj);
 		return $obj;
 	}
 	
