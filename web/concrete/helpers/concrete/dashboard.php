@@ -473,8 +473,18 @@ class ConcreteDashboardMenu {
 	protected static function sortItems($a, $b) {
 		$subpatha = substr($a, 11); // /dashboard
 		$subpathb = substr($b, 11); // /dashboard
+		$segmentsa = explode('/', $subpatha);
+		$segmentsb = explode('/', $subpathb);
 		$segmenta = substr($subpatha, 0, strpos($subpatha, '/'));
 		$segmentb = substr($subpathb, 0, strpos($subpathb, '/'));
+		if (count($segmentsa) == 3 && count($segmentsb) == 3) {
+			$subpatha = $segmenta[0] . '/' . $segmenta[1];
+			$subpathb = $segmentb[0] . '/' . $segmentb[1];
+			$segmenta .= '/' . $segmentsa[1];
+			$segmentb .= '/' . $segmentsb[1];
+			
+		}
+
 		if (!$segmenta) {
 			$segmenta = $subpatha;
 		}
@@ -484,6 +494,7 @@ class ConcreteDashboardMenu {
 		$db = Loader::db();
 		$displayorderA = intval($db->GetOne('select cDisplayOrder from Pages p inner join PagePaths cp on p.cID = cp.cID where cPath = ?', array('/dashboard/' . $segmenta)));
 		$displayorderB = intval($db->GetOne('select cDisplayOrder from Pages p inner join PagePaths cp on p.cID = cp.cID where cPath = ?', array('/dashboard/' . $segmentb)));
+
 		if ($displayorderA > $displayorderB) {
 			return 1;
 		} else if ($displayorderA < $displayorderB) {
