@@ -47,6 +47,17 @@ class Concrete5_Library_Environment {
 	public function clearOverrideCache() {
 		Config::clear("ENVIRONMENT_CACHE");
 	}
+
+
+	/**
+	 * @access private
+	 */
+	protected $ignoreFiles = array('__MACOSX');
+	
+	public function reset() {
+		$this->ignoreFiles = array('__MACOSX');
+	}
+	
 	
 	/** 
 	 * Builds a list of all overrides
@@ -57,29 +68,52 @@ class Concrete5_Library_Environment {
 			DIR_LIBRARIES, DIR_FILES_EMAIL_TEMPLATES, DIR_MODELS, DIR_FILES_CONTENT, DIR_FILES_THEMES, DIR_FILES_TOOLS);
 		foreach($check as $loc) {
 			if (is_dir($loc)) {
-				$rc = new RecursiveDirectoryIterator($loc, RecursiveDirectoryIterator::FOLLOW_SYMLINKS);
-				$rcd = new RecursiveIteratorIterator($rc);
-				$rgx = new RegexIterator($rcd, '/^.+\.php$/i', RecursiveRegexIterator::GET_MATCH);
-				foreach ($rgx as $r) {
-					foreach($r as $r1) {
-						$this->coreOverrides[] = str_replace(DIR_BASE . '/', '', $r1);
-					}
+				$contents = $this->getDirectoryContents($loc, array(), true);
+				foreach($contents as $f) {
+					if (preg_match('/^.+\.php$/i', $f)) {
+						$this->coreOverrides[] = str_replace(DIR_BASE . '/', '', $f);
+					}				
 				}
 			}
+			
 		}
 		if (is_dir(DIR_PACKAGES_CORE)) { 
-			$rc = new RecursiveDirectoryIterator(DIR_PACKAGES_CORE, RecursiveDirectoryIterator::FOLLOW_SYMLINKS);
-			foreach ($rc as $r) {
-				if (substr($r->getFileName(), 0, 1) != '.') { 
-					$this->corePackages[] = $r->getFileName();
-				}
-			}
+			$this->corePackages = $this->getDirectoryContents(DIR_PACKAGES_CORE);
 		}
+
 		$this->overridesScanned = true;
 		if (ENABLE_OVERRIDE_CACHE && !$this->autoLoaded) {
 			Config::save('ENVIRONMENT_CACHE', serialize($this));
 		}		
 	}
+	
+	public function getDirectoryContents($dir, $ignoreFilesArray = array(), $recursive = false) {
+		$ignoreFiles = array_merge($this->ignoreFiles, $ignoreFilesArray);
+		$aDir = array();
+		if (is_dir($dir)) {
+			$handle = opendir($dir);
+			while(($file = readdir($handle)) !== false) {
+				if (substr($file, 0, 1) != '.' && (!in_array($file, $ignoreFiles))) {
+					if (is_dir($dir. "/" . $file)) {
+						if($recursive) {
+							$aDir = array_merge($aDir, $this->getDirectoryContents($dir. "/" . $file, $ignoreFiles, $recursive));
+							$file = $dir . "/" . $file;
+						}
+						$aDir[] = preg_replace("/\/\//si", "/", $file);
+					} else {
+						if ($recursive) { 
+							$file = $dir . "/" . $file;
+						}
+						$aDir[] = preg_replace("/\/\//si", "/", $file);
+					}
+				}
+			}
+			closedir($handle);
+		}
+		return $aDir;
+	
+	}
+	
 	
 	public function overrideCoreByPackage($segment, $pkg) {
 		$pkgHandle = $pkg->getPackageHandle();
