@@ -25,13 +25,18 @@ $(function() {
 		} else {
 			l.removeClass('ccm-icon-favorite').addClass('ccm-icon-favorite-selected');
 		}
-		$.getJSON(CCM_TOOLS_PATH + '/dashboard/add_to_quick_nav', {
+		var accepter = $('#ccm-nav-dashboard');
+		var title = l.parent().parent().parent().find('h3');
+		title.css('display','inline');
+		title.effect("transfer", { to: accepter, 'easing': 'easeOutExpo'}, 600);
+		$.get(CCM_TOOLS_PATH + '/dashboard/add_to_quick_nav', {
 			'cID': cID,
 			'token': token
 		}, function(r) {
-			if (r.result == 'add') { 
-			} else {
-			}
+			var div = $('<div />').html(r);
+			$('#ccm-intelligent-search-results').html(div.find('#ccm-intelligent-search-results').html());
+			$('#ccm-dashboard-overlay').html(div.find('#ccm-dashboard-overlay').html());
+			div = false;
 		});
 	}
 	

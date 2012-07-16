@@ -1,10 +1,5 @@
 ccm_closeDashboardPane = function(r) {
-	var accepter = $('#ccm-nav-dashboard');
-	var l = $(r);
-	var title = l.parent().parent().parent().find('h3');
-	title.css('display','inline');
 	$(r).closest('div.ccm-pane').fadeOut(120, 'easeOutExpo');
-	title.effect("transfer", { to: accepter, 'easing': 'easeOutExpo'}, 600);
 }
 
 ccm_getDashboardBackgroundImageData = function(image, display) {

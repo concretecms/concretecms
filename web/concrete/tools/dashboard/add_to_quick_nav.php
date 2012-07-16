@@ -33,9 +33,8 @@ if ($canAdd) {
 		}
 		
 		$u->saveConfig('QUICK_NAV_BOOKMARKS', serialize($qn));
-		$r->success = true;
-		$r->result = $task;
-		print Loader::helper('json')->encode($r);
+		
+		print $dh->getDashboardAndSearchMenus();
 		exit;
 	}
 }
