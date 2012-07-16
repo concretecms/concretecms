@@ -23,27 +23,9 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 class Concrete5_Helper_File {
 
-	/**
-	 * @access private
-	 */
-	protected $ignoreFiles = array('__MACOSX', DIRNAME_CONTROLLERS);
-	
-	public function reset() {
-		$this->ignoreFiles = array('__MACOSX', DIRNAME_CONTROLLERS);
-	}
-	
-	public function getDirectoryContents($dir, $ignoreFilesArray = array()) {
-		$this->ignoreFiles = array_merge($this->ignoreFiles, $ignoreFilesArray);
-		$aDir = array();
-		if (is_dir($dir)) {
-			$handle = opendir($dir);
-			while(($file = readdir($handle)) !== false) {
-				if (substr($file, 0, 1) != '.' && (!in_array($file, $this->ignoreFiles))) {
-					$aDir[] = $file;
-				}
-			}
-		}
-		return $aDir;
+	public function getDirectoryContents($dir, $ignoreFilesArray = array(), $recursive = false) {
+		$env = Environment::get();
+		return $env->getDirectoryContents($dir, $ignoreFilesArray, $recursive);
 	}
 	
 	/** 
