@@ -93,6 +93,15 @@ class Concrete5_Helper_Text {
 		return preg_replace($regex, '', $email);
 	}
 
+	/** 
+	 * Leaves only characters that are alpha-numeric
+	 * @param string $text
+	 * @return string
+	 */
+	public function alphanum($string) {
+		return preg_replace('/[^A-Za-z0-9]/', '', $string);
+	}
+	
 	/**
 	 * always use in place of htmlentites(), so it works with different langugages
 	 * @param string $v
