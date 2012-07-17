@@ -150,6 +150,7 @@ $(function() {
 	$(window).css('overflow', 'hidden');
 	$(window).unbind('keydown.blocktypes');
 	ccmBlockTypeMapKeys();
+	$('.ccm-block-type-help').tooltip();
 	$("#ccmBlockTypeSearch").get(0).focus();
 
 });
@@ -158,19 +159,24 @@ $(function() {
 
 
 <div id="ccm-add-tab" class="ccm-ui">
-	<div class="ccm-block-type-search-wrapper">
-
+	<div class="ccm-pane-options">
+		<div class="ccm-block-type-search-wrapper ccm-pane-options-permanent-search">
 
 		<form onsubmit="return ccmBlockTypeSearchFormCheckResults()">
-		<div class="ccm-block-type-search">
-		<a class="ccm-block-type-help" href="javascript:ccm_showBlockTypeDescriptions()" title="<?=t('Learn more about this block type.')?>" id="ccm-bt-help-trigger-all"><img src="<?=ASSETS_URL_IMAGES?>/icons/icon_header_help.png" width="17" height="20" /></a>
-		<?=$form->text('ccmBlockTypeSearch', array('tabindex' => 1, 'autocomplete' => 'off', 'style' => 'width: 168px'))?>
+		
+		
+		<a class="ccm-block-type-help" href="javascript:ccm_showBlockTypeDescriptions()" title="<?=t('Learn more about these block type.')?>" id="ccm-bt-help-trigger-all"><i class="icon-question-sign"></i></a>
+		
+		<i class="icon-search"></i>
+
+		<?=$form->text('ccmBlockTypeSearch', array('tabindex' => 1, 'autocomplete' => 'off', 'style' => 'margin-left: 10px; width: 168px'))?>
 		<a href="javascript:void(0)" id="ccm-block-type-clear-search" onclick="ccmBlockTypeSearchClear()"><img width="16" height="16" src="<?=ASSETS_URL_IMAGES?>/icons/remove.png" border="0" style="vertical-align: middle" /></a>
-		</div>
 		
 		</form>
 		
+		</div>
 	</div>
+	
 	
 	<ul id="ccm-block-type-list">
 	<? if (count($blockTypes) > 0) { 

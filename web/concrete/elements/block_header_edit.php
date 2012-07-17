@@ -43,6 +43,10 @@ $(function() {
 $hih = Loader::helper("concrete/interface/help");
 $blockTypes = $hih->getBlockTypes();
 $cont = $bt->getController();
+if ($b->getBlockTypeHandle() == BLOCK_HANDLE_SCRAPBOOK_PROXY) {
+	$bx = Block::getByID($b->getController()->getOriginalBlockID());
+	$cont = $bx->getController();
+}
 
 if (isset($blockTypes[$bt->getBlockTypeHandle()])) {
 	$help = $blockTypes[$bt->getBlockTypeHandle()];
