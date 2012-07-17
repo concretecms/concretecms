@@ -1,13 +1,14 @@
 <?
 	defined('C5_EXECUTE') or die("Access Denied.");
 ?>
-<div class="ccm-ui">
 <?
 $bo = Block::getByID($bOriginalID);
 $bv = new BlockView(); ?>
 	
-		<div class="alert-message block-message info" style="margin-bottom: 10px" ><p><?=t("This block was copied from another location. Editing it will create a new instance of it.")?></p></div>
-
+		<div class="ccm-ui">
+			<div class="alert alert-info"><?=t("This block was copied from another location. Editing it will create a new instance of it.")?></div>
+		</div>
+		
 	<?
 	
 	$bv->render($bo, 'edit', array(
@@ -16,4 +17,3 @@ $bv = new BlockView(); ?>
 		'proxyBlock' => $b
 	));
 ?>
-</div>

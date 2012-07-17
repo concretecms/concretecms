@@ -42,6 +42,15 @@ switch($_GET['atask']) {
 		$toolSection = "block_area_add_stack";
 		$canViewPane = $ap->canAddStacks();
 		break;
+	case 'add_stack_contents':
+		$toolSection = "block_area_add_stack_contents";
+		$stack = Stack::getByID($_REQUEST['stackID']);
+		$canViewPane = false;
+		if (is_object($stack)) {
+			$stp = new Permissions($stack);
+			$canViewPane = ($stp->canRead() && $ap->canAddStacks());
+		}
+		break;
 	case 'paste':
 		$toolSection = "block_area_add_scrapbook";
 		$canViewPane = $ap->canAddBlocks();

@@ -80,6 +80,7 @@
 	<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Stacks'), t('Stacks give you a central place to stash blocks, where you can control their order, permissions, and even version them.<br><br>Add stacks to your site and you can update them in one place.'), 'span14 offset1');?>
 		
 	<h4><?=t('Global Areas')?></h4>
+	<div class="ccm-stack-content-wrapper">
 	
 	<?
 	if (count($globalareas) > 0) { 
@@ -97,9 +98,11 @@
 		print '</p>';	
 	}
 	?>
+	
+	</div>
 		
 	<h4><?=t('Other Stacks')?></h4>
-	
+	<div class="ccm-stack-content-wrapper">
 	<?
 	if (count($useradded) > 0) { 
 		foreach($useradded as $st) { ?>
@@ -116,7 +119,7 @@
 		print '</p>';
 	}
 	?>
-		<br/>
+	</div>
 		<h3><?=t('Add Stack')?></h3>
 		<form method="post" class="form-stacked" style="padding-left: 0px" action="<?=$this->action('add_stack')?>">
 		<?=Loader::helper("validation/token")->output('add_stack')?>

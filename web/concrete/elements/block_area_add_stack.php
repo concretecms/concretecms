@@ -96,10 +96,10 @@ ccmStackSearchDoMapKeys = function(e) {
 	}
 }
 ccmStackSearchMapKeys = function() {
-	$(window).bind('keydown.blocktypes', ccmStackSearchDoMapKeys);
+	$(window).bind('keydown.stacks', ccmStackSearchDoMapKeys);
 }
 ccmStackSearchResetKeys = function() {
-	$(window).unbind('keydown.blocktypes');
+	$(window).unbind('keydown.stacks');
 }
 
 ccmStackAddToArea = function(stackID, arHandle) {
@@ -112,7 +112,7 @@ ccmStackAddToArea = function(stackID, arHandle) {
 
 $(function() {
 	$(window).css('overflow', 'hidden');
-	$(window).unbind('keydown.blocktypes');
+	$(window).unbind('keydown.stacks');
 	ccmStackSearchMapKeys();
 	$("#ccmStackSearch").get(0).focus();
 
@@ -121,16 +121,17 @@ $(function() {
 </script>
 
 
-<div id="ccm-add-tab">
-	<div class="ccm-block-type-search-wrapper ">
+<div id="ccm-add-tab" class="ccm-ui">
+	<div class="ccm-pane-options">
+		<div class="ccm-pane-options-permanent-search">
 
 		<form onsubmit="return ccmStackSearchFormCheckResults()">
-		<div class="ccm-block-type-search">
-		<?=$form->text('ccmStackSearch', array('tabindex' => 1, 'autocomplete' => 'off', 'style' => 'width: 168px'))?>
+		<i class="icon-search"></i>
+		<?=$form->text('ccmStackSearch', array('tabindex' => 1, 'autocomplete' => 'off', 'style' => 'margin-left: 10px; width: 168px'))?>
 		</div>
-		
 		</form>
-		
+
+		</div>		
 	</div>
 	
 	<ul id="ccm-stack-list" class="aicon-select-list aicon-select-list-groups">
@@ -141,7 +142,7 @@ $(function() {
 			if ($asp->canRead() && $ap->canAddStackToArea($s)) { 
 			?>	
 			<li class="ccm-stack-available">
-				<a onclick="ccmStackAddToArea(<?=$s->getCollectionID()?>, '<?=Loader::helper('text')->entities($a->getAreaHandle())?>')" href="javascript:void(0)"><?=$s->getCollectionName()?></a>
+				<a onclick="ccmStackSearchResetKeys()" dialog-on-destroy="ccmStackSearchMapKeys()" class="dialog-launch ccm-block-type-inner" dialog-on-close="ccm_blockWindowAfterClose()" dialog-append-buttons="true" dialog-modal="false" dialog-width="620" dialog-height="400" dialog-title="<?=$s->getCollectionName()?> <?=t('Contents')?>" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_area_popup.php?atask=add_stack_contents&cID=<?=$c->getCollectionID()?>&stackID=<?=$s->getCollectionID()?>&arHandle=<?=Loader::helper('text')->entities($a->getAreaHandle())?>"><?=$s->getCollectionName()?></a>
 			</li>
 			
 			<? } ?>

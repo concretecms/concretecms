@@ -44,7 +44,7 @@ ccm_menuObj<?=$id?>.arHandle = '<?=$a->getAreaHandle()?>';
 ccm_menuObj<?=$id?>.aID = <?=$a->getAreaID()?>;
 ccm_menuObj<?=$id?>.bID = <?=$bID?>;
 ccm_menuObj<?=$id?>.cID = <?=$cID?>;
-<? if ($p->canWrite() && $b->getBlockTypeHandle() != BLOCK_HANDLE_STACK_PROXY) { ?>
+<? if ($p->canWrite() && $btOriginal->getBlockTypeHandle() != BLOCK_HANDLE_STACK_PROXY) { ?>
 ccm_menuObj<?=$id?>.canWrite =true;
 <? if ($b->isEditable()) { ?>
 	ccm_menuObj<?=$id?>.hasEditDialog = true;
@@ -54,8 +54,12 @@ ccm_menuObj<?=$id?>.canWrite =true;
 ccm_menuObj<?=$id?>.btName = "<?=$btOriginal->getBlockTypeName()?>";
 ccm_menuObj<?=$id?>.width = <?=$btOriginal->getBlockTypeInterfaceWidth()?>;
 ccm_menuObj<?=$id?>.height = <?=$btOriginal->getBlockTypeInterfaceHeight()+$heightPlus ?>;
-<? } else if ($b->getBlockTypeHandle() == BLOCK_HANDLE_STACK_PROXY) { 
-	$bi = $b->getInstance();
+<? } else if ($btOriginal->getBlockTypeHandle() == BLOCK_HANDLE_STACK_PROXY) { 
+	if (is_object($_bo)) {
+		$bi = $_bo->getInstance();
+	} else { 
+		$bi = $b->getInstance();
+	}
 	$stack = Stack::getByID($bi->stID);
 	if (is_object($stack)) {
 		$sp = new Permissions($stack);
@@ -66,12 +70,9 @@ ccm_menuObj<?=$id?>.height = <?=$btOriginal->getBlockTypeInterfaceHeight()+$heig
 		<? } 
 	}
 }
-if ($b->getBlockTypeHandle() == BLOCK_HANDLE_STACK_PROXY) { ?>
-	ccm_menuObj<?=$id?>.canCopyToScrapbook = false;	
-<? } else { ?>
-	ccm_menuObj<?=$id?>.canCopyToScrapbook = true;
-<? } 
-if ($p->canEditBlockPermissions() && PERMISSIONS_MODEL != 'simple') { ?>
+?>
+ccm_menuObj<?=$id?>.canCopyToScrapbook = true;
+<? if ($p->canEditBlockPermissions() && PERMISSIONS_MODEL != 'simple') { ?>
 ccm_menuObj<?=$id?>.canModifyGroups = true;
 <? }
 if (PERMISSIONS_MODEL != 'simple' && $p->canGuestsViewThisBlock() && $p->canScheduleGuestAccess()) { ?>

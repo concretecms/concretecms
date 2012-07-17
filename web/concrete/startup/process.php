@@ -750,7 +750,23 @@
 								}
 							}
 						}
-					} 
+					} else if (isset($_REQUEST['bID'])) {
+					
+						$b = Block::getByID($_REQUEST['bID']);
+						$b->setBlockAreaObject($ax);
+						$bt = BlockType::getByHandle($b->getBlockTypeHandle());
+						if ($ap->canAddBlock($bt)) {
+							$btx = BlockType::getByHandle(BLOCK_HANDLE_SCRAPBOOK_PROXY);
+							$nvc = $cx->getVersionToModify();
+							if ($a->isGlobalArea()) {
+								$xvc = $c->getVersionToModify(); // we need to create a new version of THIS page as well.
+								$xvc->relateVersionEdits($nvc);
+							}
+							$data['bOriginalID'] = $_REQUEST['bID'];
+							$nb = $nvc->addBlock($btx, $ax, $data);
+							$nb->refreshCache();
+						}
+					}
 					
 					$obj = new stdClass;
 					$obj->aID = $a->getAreaID();
