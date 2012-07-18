@@ -110,17 +110,7 @@ ccm_getMarketplaceItemDetails = function(mpID) {
 			width: 820,
 			appendButtons: true,
 			modal: false,
-			height: 640,
-			onOpen: function() {
-	
-				$("#ccm-marketplace-item-screenshots").nivoSlider({
-					'controlNav': false,
-					'effect': 'fade',
-					'pauseOnHover': false,
-					'directionNav': false
-				});
-	
-			}
+			height: 640
 		});
 	}, 'get_item_details', mpID);
 }

@@ -91,11 +91,14 @@ jQuery.fn.dialog.open = function(obj) {
 		},
 		'escapeClose': true,
 		'title': obj.title,
+		/*
+		// no hide because it causes problems when closing and opening in rapid succession
 		hide: {
 			effect: 'fade',
 			duration: 75,
 			easing: 'easeOutExpo'
-		},
+		},*/
+		
 		'open': function() {
 			$("body").css("overflow", "hidden");
 		},
