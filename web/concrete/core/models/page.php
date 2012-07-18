@@ -109,12 +109,9 @@ class Concrete5_Model_Page extends Collection {
 		}
 		
 		$this->cHasLayouts = $db->GetOne('select count(cvalID) from CollectionVersionAreaLayouts where cID = ?', array($this->cID));
-		
-		$r = $db->Execute('select pkID, paID from PagePermissionAssignments where cID = ?', array($this->getPermissionsCollectionID()));
-		while ($row =  $r->FetchRow()) {
-			$this->permissionAssignments[$row['pkID']] = PermissionAccess::getByID($row['paID'], PermissionKey::getByID($row['pkID']));
-		}
 
+		$this->loadPermissionAssignments();
+				
 		if ($cvID != false) {
 			// we don't do this on the front page
 			$this->loadVersionObject($cvID);
@@ -122,7 +119,15 @@ class Concrete5_Model_Page extends Collection {
 		
 		unset($r);
 		
-	}		
+	}	
+	
+	protected function loadPermissionAssignments() {
+		$db = Loader::db();
+		$r = $db->Execute('select pkID, paID from PagePermissionAssignments where cID = ?', array($this->getPermissionsCollectionID()));
+		while ($row =  $r->FetchRow()) {
+			$this->permissionAssignments[$row['pkID']] = PermissionAccess::getByID($row['paID'], PermissionKey::getByID($row['pkID']));
+		}
+	}
 
 	public function getPermissionAccessObject(PermissionKey $pk) {
 		return $this->permissionAssignments[$pk->getPermissionKeyID()];
@@ -325,6 +330,7 @@ class Concrete5_Model_Page extends Collection {
 			$pa->addListItem($pe, false, $accessType);
 			$pt = $pk->getPermissionAssignmentObject();
 			$pt->assignPermissionAccess($pa);
+			$this->loadPermissionAssignments();
 		}
 		
 	}
@@ -385,6 +391,7 @@ class Concrete5_Model_Page extends Collection {
 				$this->assignPermissions(Group::getByID($u['uID']), $pkHandles);
 			}
 		}
+		$this->refreshCache();
 	}
 	
 	
@@ -1181,6 +1188,7 @@ class Concrete5_Model_Page extends Collection {
 	function clearPagePermissions() {
 		$db = Loader::db();
 		$db->Execute("delete from PagePermissionAssignments where cID = '{$this->cID}'");
+		$this->permissionAssignments = array();
 	}
 
 	public function inheritPermissionsFromParent() {

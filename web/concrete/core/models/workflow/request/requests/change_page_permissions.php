@@ -88,6 +88,7 @@ class Concrete5_Model_ChangePagePermissionsPageWorkflowRequest extends PageWorkf
 				}			
 			}			
 		}
+		$c->refreshCache();
 		$wpr = new WorkflowProgressResponse();
 		$wpr->setWorkflowProgressResponseURL(BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $c->getCollectionID());
 		return $wpr;

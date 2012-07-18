@@ -9,6 +9,7 @@ class Concrete5_Model_StackList extends PageList {
 		$this->ignorePermissions = true;
 		$this->addToQuery('inner join Stacks on Stacks.cID = p1.cID');
 		$this->filterByParentID($c->getCollectionID());
+		$this->sortBy('p1.cDisplayOrder', 'asc');
 	}
 	
 	public function filterByGlobalAreas() {
