@@ -123,11 +123,11 @@ $(function() {
 
 <div id="ccm-add-tab" class="ccm-ui">
 	<div class="ccm-pane-options">
-		<div class="ccm-pane-options-permanent-search">
+		<div class="ccm-block-type-search-wrapper ccm-pane-options-permanent-search">
 
 		<form onsubmit="return ccmStackSearchFormCheckResults()">
 		<i class="icon-search"></i>
-		<?=$form->text('ccmStackSearch', array('tabindex' => 1, 'autocomplete' => 'off', 'style' => 'margin-left: 10px; width: 168px'))?>
+		<?=$form->text('ccmStackSearch', array('tabindex' => 1, 'autocomplete' => 'off', 'style' => 'margin-left: 8px; width: 168px'))?>
 		</div>
 		</form>
 

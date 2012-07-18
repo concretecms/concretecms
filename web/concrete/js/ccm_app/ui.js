@@ -736,10 +736,8 @@ ccm_blockWindowAfterClose = function() {
 ccm_blockFormSubmit = function() {
 	if (typeof window.ccmValidateBlockForm == 'function') {
 		r = window.ccmValidateBlockForm();
-		if (!r) {
-			jQuery.fn.dialog.hideLoader();
-		}
 		if (ccm_isBlockError) {
+			jQuery.fn.dialog.hideLoader();
 			if(ccm_blockError) {
 				ccmAlert.notice(ccmi18n.error, ccm_blockError + '</ul>');
 			}
