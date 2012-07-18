@@ -9,6 +9,8 @@ if (!$fp->canEditFileContents()) {
 }
 ?>
 
+<script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/jquery.cropzoom.js"></script>
+
 <div class="ccm-ui">
 
 <div class="ccm-pane-options">
