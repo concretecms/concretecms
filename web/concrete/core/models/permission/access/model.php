@@ -91,10 +91,22 @@ class Concrete5_Model_PermissionAccess extends Object {
 	public function getAccessListItems($accessType = PermissionKey::ACCESS_TYPE_INCLUDE, $filterEntities = array()) {
 		if (count($this->paIDList) > 0) {
 			$q = 'select paID, peID, pdID, accessType from PermissionAccessList where paID in (' . implode(',', $this->paIDList) . ')';
+			return $this->deliverAccessListItems($q, $accessType, $filterEntities);
 		} else {
+			$filter = $accessType . ':';
+			foreach($filterEntities as $pae) {
+				$filter .= $pae->getAccessEntityID() . ':';
+			}
+			$filter = trim($filter, ':');
+			$items = CacheLocal::getEntry('permission_access_list_items', $this->getPermissionAccessID() . $filter);
+			if (is_array($items)) {
+				return $items;
+			}				
 			$q = 'select paID, peID, pdID, accessType from PermissionAccessList where paID = ' . $this->getPermissionAccessID();
+			$items = $this->deliverAccessListItems($q, $accessType, $filterEntities);
+			CacheLocal::set('permission_access_list_items', $this->getPermissionAccessID() . $filter, $items);
+			return $items;
 		}
-		return $this->deliverAccessListItems($q, $accessType, $filterEntities);
 	}
 
 	protected function buildAssignmentFilterString($accessType, $filterEntities) { 

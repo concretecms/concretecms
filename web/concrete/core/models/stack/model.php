@@ -7,10 +7,18 @@ class Concrete5_Model_Stack extends Page {
 	const ST_TYPE_USER_ADDED = 0;
 	const ST_TYPE_GLOBAL_AREA = 20;
 	
-	public function getStackName() {return $this->stName;}
-	public function getStackType() {return $this->stType;}
+	public function getStackName() {
+		$db = Loader::db();
+		return $db->GetOne('select stName from Stacks where cID = ?', array($this->getCollectionID()));
+	}
+	
+	public function getStackType() {
+		$db = Loader::db();
+		return $db->GetOne('select stType from Stacks where cID = ?', array($this->getCollectionID()));
+	}
+	
 	public function getStackTypeExportText() {
-		switch($this->stType) {
+		switch($this->getStackType()) {
 			case self::ST_TYPE_GLOBAL_AREA:
 				return 'global_area';
 				break;
@@ -67,8 +75,13 @@ class Concrete5_Model_Stack extends Page {
 	}
 	
 	public static function getByName($stackName, $cvID = 'RECENT') {
-		$db = Loader::db();
-		$cID = $db->GetOne('select cID from Stacks where stName = ?', array($stackName));
+		$cID = CacheLocal::getEntry('stack_by_name', $stackName);
+		if (!$cID) {
+			$db = Loader::db();
+			$cID = $db->GetOne('select cID from Stacks where stName = ?', array($stackName));
+			CacheLocal::set('stack_by_name', $stackName, $cID);
+		}
+		
 		if ($cID) {
 			return self::getByID($cID, $cvID);
 		}
@@ -100,10 +113,6 @@ class Concrete5_Model_Stack extends Page {
 	public static function getByID($cID, $cvID = 'RECENT') {
 		$db = Loader::db();
 		$c = parent::getByID($cID, $cvID, 'Stack');
-
-		$r = $db->GetRow('select stName, stType from Stacks where cID = ?', array($c->getCollectionID()));
-		$c->stName = $r['stName'];
-		$c->stType = $r['stType'];
 
 		if (self::isValidStack($c)) {
 			return $c;
