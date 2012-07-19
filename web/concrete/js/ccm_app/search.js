@@ -102,15 +102,17 @@ ccm_setupInPagePaginationAndSorting = function(searchType) {
 		return false;
 	});
 	$("div.ccm-pagination a").click(function() {
-		ccm_deactivateSearchResults(searchType);
-		var obj = $("#ccm-" + searchType + "-search-results");
-		if (obj.length == 0) {
-			obj = $("#ccm-search-results");
+		if (!($(this).parent().hasClass('disabled'))) { 
+			ccm_deactivateSearchResults(searchType);
+			var obj = $("#ccm-" + searchType + "-search-results");
+			if (obj.length == 0) {
+				obj = $("#ccm-search-results");
+			}
+			obj.load($(this).attr('href'), false, function() {
+				ccm_activateSearchResults(searchType);
+				$("div.ccm-dialog-content").attr('scrollTop', 0);
+			});
 		}
-		obj.load($(this).attr('href'), false, function() {
-			ccm_activateSearchResults(searchType);
-			$("div.ccm-dialog-content").attr('scrollTop', 0);
-		});
 		return false;
 	});
 	$(".ccm-pane-dialog-pagination").each(function() {

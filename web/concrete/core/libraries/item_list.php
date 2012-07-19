@@ -204,9 +204,17 @@ class Concrete5_Library_ItemList {
 		$paginator = $this->getPagination($script, $additionalVars);
 		if ($summary->pages > 1) {
 			$html .= '<div class="pagination ccm-pagination"><ul>';
-			$html .= '<li class="prev">' . $paginator->getPrevious() . '</li>';
+			$prevClass = 'prev';
+			$nextClass = 'next';
+			if (!$paginator->hasPreviousPage()) {
+				$prevClass = 'disabled';
+			}
+			if (!$paginator->hasNextPage()) {
+				$nextClass = 'disabled';
+			}
+			$html .= '<li class="' . $prevClass . '">' . $paginator->getPrevious() . '</li>';
 			$html .= $paginator->getPages('li');
-			$html .= '<li class="next">' . $paginator->getNext() . '</li>';
+			$html .= '<li class="' . $nextClass . '">' . $paginator->getNext() . '</li>';
 			$html .= '</ul></div>';
 		}
 		if (isset($html)) {

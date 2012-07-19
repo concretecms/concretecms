@@ -230,7 +230,7 @@ class Concrete5_Helper_Pagination {
 			if ($this->current_page==$i){ 
 			
 					if($wrapper == 'li'){
-						$pages.="<li class='$this->classCurrent'><a href=\"#\">".($i+1)."</a></li>";
+						$pages.="<li class='$this->classCurrent disabled' ><a href=\"#\">".($i+1)."</a></li>";
 					} else {
 						$pages.="<span class='$this->classCurrent'><a href=\"#\">".($i+1)."</a></span>";
 					}
