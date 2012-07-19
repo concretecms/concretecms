@@ -5,42 +5,32 @@ if (!$sh->canRead()) {
 	die(t('Access Denied. You do not have access to sitemap permissions.'));
 }
 
+$select_mode = Loader::helper('text')->entities($_REQUEST['sitemap_select_mode']);
+$callback = Loader::helper('text')->entities($_REQUEST['callback']);
+
+if (Loader::helper('validation/numbers')->integer($_REQUEST['cID'])) {
+	$cID = '&cID=' . $_REQUEST['cID'];
+}
+if ($callback) {
+	$callback = '&callback=' . $_REQUEST['callback'];
+}
+
 ?>
 <div class="ccm-ui" id="ccm-sitemap-search-selector">
-<script type="text/javascript">
-var ccm_ssActiveTab = "ccm-show-sitemap";
 
-$("#ccm-ss-tabs a").click(function() {
-	$("li.active").removeClass('active');
-	$("#" + ccm_ssActiveTab + "-tab").hide();
-	ccm_ssActiveTab = $(this).attr('id');
-	$(this).parent().addClass("active");
-	$("#" + ccm_ssActiveTab + "-tab").show();
-});
+<?=Loader::helper('concrete/interface')->tabs(array(
+	array('sitemap', t('Full Sitemap')),
+	array('explore', t('Flat View')),
+	array('search', t('Search'))
+));
+?>
 
-</script>
+<div id="ccm-tab-content-sitemap" <? if (!$sitemapSelected) { ?>style="display: none"<? } ?>></div>
 
-<ul class="tabs" id="ccm-ss-tabs">
-<li class="active"><a href="javascript:void(0)" id="ccm-show-sitemap" onclick="ccm_sitemapSearchSelectorHideBottom()"><?=t('Sitemap')?></a></li>
-<li><a href="javascript:void(0)" id="ccm-show-search" onclick="ccm_sitemapSearchSelectorShowBottom()"><?=t('Search')?></a></li>
-</ul>
+<div id="ccm-tab-content-explore" <? if (!$flatSelected) { ?>style="display: none"<? } ?>></div>
 
-<br/>
+<div id="ccm-tab-content-search" <? if (!$searchSelected) { ?>style="display: none"<? } ?>></div>
 
-<div id="ccm-show-sitemap-tab">
-<? $sitemapCombinedMode = true; ?>
-<? include(DIR_FILES_TOOLS_REQUIRED . '/sitemap_overlay.php'); ?>
-
-</div>
-
-<div id="ccm-show-search-tab" style="display: none">
-
-<? 
-$sitemap_select_mode = $select_mode;
-include(DIR_FILES_TOOLS_REQUIRED . '/pages/search_dialog.php'); ?>
-
-
-</div>
 </div>
 
 <script type="text/javascript">
@@ -54,6 +44,43 @@ ccm_sitemapSearchSelectorShowBottom = function() {
 
 
 $(function() {
+	var sst = jQuery.cookie('ccm-sitemap-selector-tab');
+	if (sst != 'explore' && sst != 'search') {
+		sst = 'sitemap';
+	}
+	$('a[data-tab=' + sst + ']').parent().addClass('active');
 	ccm_sitemapSearchSelectorHideBottom();
+	$('a[data-tab=sitemap]').click(function() {
+		jQuery.cookie('ccm-sitemap-selector-tab', 'sitemap', {path: '<?=DIR_REL?>/'});
+		ccm_sitemapSearchSelectorHideBottom();
+		if ($('#ccm-tab-content-sitemap').html() == '') { 
+			jQuery.fn.dialog.showLoader();
+			$('#ccm-tab-content-sitemap').load('<?=REL_DIR_FILES_TOOLS_REQUIRED?>/sitemap_overlay?display_mode=full&select_mode=<?=$select_mode?><?=$cID?><?=$callback?>', function() {
+				jQuery.fn.dialog.hideLoader();
+			});
+		}
+	});
+	$('a[data-tab=explore]').click(function() {
+		jQuery.cookie('ccm-sitemap-selector-tab', 'explore', {path: '<?=DIR_REL?>/'});
+		ccm_sitemapSearchSelectorHideBottom();
+		if ($('#ccm-tab-content-explore').html() == '') { 
+			jQuery.fn.dialog.showLoader();
+			$('#ccm-tab-content-explore').load('<?=REL_DIR_FILES_TOOLS_REQUIRED?>/sitemap_overlay?display_mode=explore&select_mode=<?=$select_mode?><?=$cID?><?=$callback?>', function() {
+				jQuery.fn.dialog.hideLoader();
+			});
+		}
+	});
+	$('a[data-tab=search]').click(function() {
+		jQuery.cookie('ccm-sitemap-selector-tab', 'search', {path: '<?=DIR_REL?>/'});
+		ccm_sitemapSearchSelectorShowBottom();
+		if ($('#ccm-tab-content-search').html() == '') { 
+			jQuery.fn.dialog.showLoader();
+			$('#ccm-tab-content-search').load('<?=REL_DIR_FILES_TOOLS_REQUIRED?>/pages/search_dialog?sitemap_select_mode=<?=$select_mode?><?=$cID?><?=$callback?>', function() {
+				jQuery.fn.dialog.hideLoader();
+			});
+		}
+	});
+
+	$('#ccm-sitemap-search-selector ul li.active a').click();
 });
 </script>

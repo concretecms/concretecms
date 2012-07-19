@@ -103,7 +103,10 @@ jQuery.fn.dialog.open = function(obj) {
 			$("body").css("overflow", "hidden");
 		},
 		'beforeClose': function() {
-			$("body").css("overflow", "auto");		
+			var nd = $(".ui-dialog").length;
+			if (nd == 1) {
+				$("body").css("overflow", "auto");		
+			}
 		},
 		'close': function(ev, u) {
 			$(this).jqdialog('destroy').remove();
