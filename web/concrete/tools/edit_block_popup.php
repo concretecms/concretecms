@@ -1,12 +1,14 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");  
 
-$c = Page::getByID($_REQUEST['cID']);
+$c = Page::getByID($_REQUEST['cID'], 'RECENT');
 $a = Area::get($c, $_REQUEST['arHandle']);
 if (!$a->isGlobalArea()) {
 	$b = Block::getByID($_REQUEST['bID'], $c, $a);
 } else {
-	$b = Block::getByID($_REQUEST['bID'], Stack::getByName($_REQUEST['arHandle']), STACKS_AREA_NAME);
+	$stack = Stack::getByName($_REQUEST['arHandle']);
+	$sc = Page::getByID($stack->getCollectionID(), 'RECENT');
+	$b = Block::getByID($_REQUEST['bID'], $sc, STACKS_AREA_NAME);
 	$b->setBlockAreaObject($a); // set the original area object
 	$isGlobalArea = true;
 }
