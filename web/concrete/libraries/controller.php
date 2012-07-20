@@ -441,7 +441,7 @@ class Controller {
 	 * Gets the array of items that have been set using set()
 	 * @return array
 	 */
-	public function getSets() { 
+	public final function getSets() { 
 		$loc = CacheLocal::get();
 		if (isset($loc->cache['controllerSets'])) {
 			return $loc->cache['controllerSets'];
