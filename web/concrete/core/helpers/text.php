@@ -20,46 +20,25 @@ defined('C5_EXECUTE') or die("Access Denied.");
 class Concrete5_Helper_Text { 
 	
 	/** 
-	 * Takes text and returns it in the "lowercase-and-dashed-with-no-punctuation" format
+	 * @access private
 	 * @param string $handle
-	 * @param bool $leaveSlashes
 	 * @return string $handle
 	 */
-	function sanitizeFileSystem($handle, $leaveSlashes=false) {
-		$handle = trim($handle);
-		$handle = str_replace(PAGE_PATH_SEPARATOR, '-', $handle);
-		$multi = array(
-			"ä"=>"ae",
-			"ö"=>"oe",
-			"ß"=>"ss",
-			"ü"=>"ue",
-			"æ"=>"ae",
-			"ø"=>"oe",
-			"å"=>"aa",
-			"é"=>"e",
-			"è"=>"e"	
-		);
-		$handle = str_replace(array_keys($multi), array_values($multi), $handle);
-
-		$searchNormal = array("/[&]/", "/[\s]+/", "/[^0-9A-Za-z-_.]/", "/-+/");
-		$searchSlashes = array("/[&]/", "/[\s]+/", "/[^0-9A-Za-z-_.\/]/", "/-+/");
-		$replace = array("and", "-", "", "-");
-		
-		$search = $searchNormal;
-		if ($leaveSlashes) {
-			$search = $searchSlashes;
-		}
-
-		$handle = preg_replace($search, $replace, $handle);
-		if (function_exists('mb_strtolower')) {
-			$handle = mb_strtolower($handle, APP_CHARSET);
-		} else {
-			$handle = strtolower($handle);
-		}
-		$handle = trim($handle, '-');
-		$handle = str_replace('-', PAGE_PATH_SEPARATOR, $handle);
+	public function sanitizeFileSystem($handle) {
+		return $this->urlify($handle);
+	}	
+	
+	/** 
+	 * Takes text and returns it in the "lowercase-and-dashed-with-no-punctuation" format
+	 * @param string $handle
+	 * @return string $handle
+	 */
+	public function urlify($handle) {
+		Loader::library('3rdparty/urlify');
+		$handle = URLify::filter($handle);
 		return $handle;
 	}
+		
 
 	/** 
 	 * Strips tags and optionally reduces string to specified length.

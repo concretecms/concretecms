@@ -59,7 +59,10 @@ class Concrete5_Controller_Dashboard_Composer_Write extends Controller {
 			
 			if (!$this->error->has()) {
 				
-				$data = array('cDatePublic' => Loader::helper('form/date_time')->translate('cDatePublic'), 'cHandle' => Loader::helper('text')->sanitizeFileSystem($this->post('cName')), 'cName' => $this->post('cName'), 'cDescription' => $this->post('cDescription'));
+				$handle = Loader::helper('text')->urlify($this->post('cName'));
+				$handle = str_replace('-', PAGE_PATH_SEPARATOR, $handle);		
+		
+				$data = array('cDatePublic' => Loader::helper('form/date_time')->translate('cDatePublic'), 'cHandle' => $handle, 'cName' => $this->post('cName'), 'cDescription' => $this->post('cDescription'));
 				$entry->getVersionToModify();
 				// this is a pain. we have to use composerpage::getbyid again because
 				// getVersionToModify is hard-coded to return a page object
