@@ -8,7 +8,7 @@ if (!$sh->canRead()) {
 $select_mode = Loader::helper('text')->entities($_REQUEST['sitemap_select_mode']);
 $callback = Loader::helper('text')->entities($_REQUEST['callback']);
 
-if (Loader::helper('validation/numbers')->integer($_REQUEST['cID'])) {
+if (Loader::helper('validation/numbers')->integer($_REQUEST['cID']) && $select_mode == 'move_copy_delete') {
 	$cID = '&cID=' . $_REQUEST['cID'];
 }
 if ($callback) {
