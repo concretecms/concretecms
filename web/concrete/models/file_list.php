@@ -73,7 +73,6 @@ class FileList extends DatabaseItemList {
 			if (count($sets) == 0) {
 				return false;
 			}
-			$db = Loader::db();
 			$setStr = implode(',', $sets);
 			$this->addToQuery("left join FileSetFiles fsfex on fsfex.fID = f.fID");
 			$this->filter(false, '(fsfex.fID is null or (select count(fID) from FileSetFiles where fID = fsfex.fID and fsID in (' . $setStr . ')) = 0)');
