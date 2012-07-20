@@ -491,7 +491,7 @@ class Concrete5_Model_Page extends Collection {
 		$handle = $this->getCollectionHandle();
 		
 		// make the handle out of the title
-		$handle = $dt->sanitizeFileSystem($cLink);
+		$handle = $dt->urlify($cLink);
 		$data['handle'] = $handle;
 		$data['name'] = $cName;
 		
@@ -1081,11 +1081,12 @@ class Concrete5_Model_Page extends Collection {
             $cHandle = $this->getCollectionHandle();
         } else if (!$data['cHandle']) {
             // make the handle out of the title
-            $cHandle = $txt->sanitizeFileSystem($cName);
+            $cHandle = $txt->urlify($cName);
+			$cHandle = str_replace('-', PAGE_PATH_SEPARATOR, $cHandle);		
         } else {
-            $cHandle = $txt->sanitizeFileSystem($data['cHandle']);
+            $cHandle = $txt->urlify($data['cHandle']);
+			$cHandle = str_replace('-', PAGE_PATH_SEPARATOR, $cHandle);		
         }
-		
 		$cName = $txt->sanitize($cName);
 		
 		// Update the non-canonical page paths
@@ -1155,15 +1156,20 @@ class Concrete5_Model_Page extends Collection {
 		}
 
 		// Third, fill in the cPath values from the user updated data.
+		Loader::library('3rdparty/urlify');
 		foreach ($newPaths as $key=>$val) {
 			if (!empty($val)) {
 				// Auto-prepend a slash if one is missing.
 				$val = trim($val, '/');
-				$val = $txt->sanitizeFileSystem($val, true);
-				if ($val{0} != '/') {
-					$val = '/' . $val;
+				$pathSegments = explode('/', $val);
+				$newVal = '/';
+				foreach($pathSegments as $pathSegment) {
+					$newVal .= URLify::filter($pathSegment) . '/';
 				}
-				$paths[$key] = $val;
+				$newVal = substr($newVal, 0, strlen($newVal) - 1);
+				$newVal = str_replace('-', PAGE_PATH_SEPARATOR, $newVal);
+
+				$paths[$key] = $newVal;
 			}
 		}
 		
@@ -2001,11 +2007,11 @@ class Concrete5_Model_Page extends Collection {
 		
 		if (!$data['cHandle']) {
 			// make the handle out of the title
-			$handle = $txt->sanitizeFileSystem($data['name']);
+			$handle = $txt->urlify($data['name']);
 		} else {
-			$handle = $txt->sanitizeFileSystem($data['cHandle']);
+			$handle = $txt->urlify($data['cHandle']);
 		}
-		
+		$handle = str_replace('-', PAGE_PATH_SEPARATOR, $handle);		
 		$data['handle'] = $handle;
 		$dh = Loader::helper('date');
 		$cDate = $dh->getSystemDateTime();
