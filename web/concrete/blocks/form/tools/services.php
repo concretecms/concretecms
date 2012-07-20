@@ -17,6 +17,11 @@ if($_GET['cID'] && $_GET['arHandle']){
 		// this really ought to be refactored
 		if (!$a->isGlobalArea()) {
 			$b = Block::getByID($_REQUEST['bID'], $c, $a);
+			if ($b->getBlockTypeHandle() == BLOCK_HANDLE_SCRAPBOOK_PROXY) {
+				$b = Block::getByID($b->getController()->getOriginalBlockID());
+				$b->setBlockAreaObject($a);
+				$b->loadNewCollection($c);
+			}
 		} else {
 			$b = Block::getByID($_REQUEST['bID'], Stack::getByName($a->getAreaHandle()), STACKS_AREA_NAME);
 			$b->setBlockAreaObject($a); // set the original area object
@@ -53,7 +58,7 @@ switch ($_GET['mode']){
 	case 'refreshSurvey':
 	default: 
 		$showEdit=(intval($_REQUEST['showEdit'])==1)?true:false; 
-		$miniSurvey->loadSurvey( intval($_GET['qsID']), $showEdit, intval($_GET['bID']), explode(',',$_GET['hide']), 1 ); 
+		$miniSurvey->loadSurvey( intval($_GET['qsID']), $showEdit, intval($b->getBlockID()), explode(',',$_GET['hide']), 1 ); 
 }
 
 ?>

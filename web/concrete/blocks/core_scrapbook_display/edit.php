@@ -5,6 +5,7 @@
 <?
 $bo = Block::getByID($bOriginalID);
 $bp = new Permissions($bo);
+$bo->setProxyBlock($b);
 if ($bp->canWrite()) {
 	$bv = new BlockView(); ?>
 	
@@ -14,8 +15,7 @@ if ($bp->canWrite()) {
 	
 	$bv->render($bo, 'edit', array(
 		'c' => $c,
-		'a' => $a,
-		'proxyBlock' => $b
+		'a' => $a
 	));
 } else { ?>
 	<div class="alert-message error"><?=t("You don't have access to edit the original instance of this block.")?></div>
