@@ -78,7 +78,8 @@ class ConcreteUpgradeVersion560Helper {
 		'BasicWorkflowProgressData',
 		'GroupSets',
 		'GroupSetGroups',
-		'CollectionVersionAreaLayouts'
+		'CollectionVersionAreaLayouts',
+		'Logs'
 	);
 	
 	
