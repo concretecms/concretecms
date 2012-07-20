@@ -82,7 +82,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		/** 
 		 * @access private
 		 */
-		public function getSets() {
+		public function getControllerSets() {
 			return BlockController::$sets[$this->identifier];		
 		}
 
