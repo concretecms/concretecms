@@ -1932,6 +1932,9 @@
       <DEFTIMESTAMP/>
     </field>
   	<field name="logText" type="X2" />
+    <field name="logUserID" type="I" size="10">
+      <UNSIGNED/>
+    </field>
     <field name="logIsInternal" type="I1" size="1">
       <NOTNULL/>
       <DEFAULT value="0"/>
