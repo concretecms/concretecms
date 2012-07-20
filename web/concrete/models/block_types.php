@@ -887,7 +887,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			
 			$ca = new Cache();
 			$ca->delete('blockTypeByID', $this->btID);
-			$ca->delete('blockTypeByHandle', $btHandle);		 	
+			$ca->delete('blockTypeByHandle', $this->btHandle);		 	
 			$ca->delete('blockTypeList', false);		 	
 			$db->Execute("delete from BlockTypes where btID = ?", array($this->btID));
 		}
