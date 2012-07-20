@@ -901,7 +901,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		 	$db = Loader::db();
 		 	$btHandle = $this->btHandle;
 		 	$btName = $this->btName;
-		 	$this->btDescription = $this->btDescription;
+		 	$btDescription = $this->btDescription;
 		 	if (isset($data['btHandle'])) {
 		 		$btHandle = $data['btHandle'];
 		 	}
