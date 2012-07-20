@@ -7,7 +7,7 @@ if (defined('DIRNAME_APP_UPDATED') && (!isset($GLOBALS['APP_UPDATED_PASSTHRU']) 
 	} else if(file_exists(DIRNAME_UPDATES . '/' . DIRNAME_APP_UPDATED . '/' . DIRNAME_APP . '/' . 'dispatcher.php')){
 		require(DIRNAME_UPDATES . '/' . DIRNAME_APP_UPDATED . '/' . DIRNAME_APP . '/' . 'dispatcher.php');
 	} else {
-		trigger_error(sprintf(_('Invalid "%s" defined. Please remove it from %s.'),'DIRNAME_APP_UPDATED', CONFIG_FILE), E_USER_ERROR);
+		die(sprintf('Invalid "%s" defined. Please remove it from %s.','DIRNAME_APP_UPDATED', CONFIG_FILE));
 	}
 	exit;
 }
