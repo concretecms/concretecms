@@ -7,7 +7,7 @@ $c = Page::getCurrentPage();
 	<h2><?php echo t('Display Title')?></h2>
 	<?php echo $form->text('title',$title);?>
 	<br/><br/>
-	<h2># of Months to display</h2>
+	<h2><?php echo t('# of Months to display')?></h2>
 	<?php echo $form->text('numMonths',$numMonths, array('size'=>3));?>
 </div>
 
