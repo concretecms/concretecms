@@ -30,7 +30,7 @@ class Controller {
 	protected $helperObjects = array();
 	protected $c; // collection
 	protected $task = false;
-	protected $parameters = array();
+	protected $parameters = false;
 	
 	
 	/**
@@ -430,7 +430,12 @@ class Controller {
 	 * Gets the array of parameters passed to the controller
 	 * @return array
 	 */
-	public function getParameters() { return $this->parameters;}
+	public function getControllerParameters() { 
+		if (is_array($this->parameters)) {
+			return $this->parameters;
+		}
+		return array();
+	}
 	
 	/** 
 	 * Gets the array of items that have been set using set()
