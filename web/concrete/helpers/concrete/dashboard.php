@@ -243,7 +243,7 @@ class ConcreteDashboardHelper {
 	}
 
 	public function getDashboardAndSearchMenus() {
-		
+
 		if (isset($_SESSION['dashboardMenus'])) {
 			return $_SESSION['dashboardMenus'];
 		}
@@ -369,8 +369,6 @@ class ConcreteDashboardHelper {
 			
 			<!--recent-->
 						
-			<a href="<?=View::url('/dashboard')?>" style="float: right; margin-right: 10px;" class="btn-mini btn"><?=t('View Full Dashboard')?></a>
-			<h3><?=t('Bookmarks')?></h3><br/>
 			
 			<? 
 			$currentHeader = false;
@@ -450,6 +448,11 @@ class ConcreteDashboardHelper {
 			</li>
 			<? } ?>
 			</ul>
+			</div>
+			</div>
+			<div id="ccm-dashboard-overlay-footer">
+			<div class="ccm-dashboard-overlay-inner">
+			<a href="<?=View::url('/dashboard')?>"><?=t('View Full Dashboard')?>  <i class="icon-arrow-right"></i></a>
 			</div>
 			</div>
 			</div>
@@ -539,23 +542,11 @@ class ConcreteDashboardDefaultMenu extends ConcreteDashboardMenu {
 	
 	public $items = array(
 		'/dashboard/composer/write',
-		'/dashboard/composer/drafts',
 		'/dashboard/sitemap/full',
-		'/dashboard/sitemap/explore',
 		'/dashboard/sitemap/search',
 		'/dashboard/files/search',
-		'/dashboard/files/sets',
-		'/dashboard/users/search',
-		'/dashboard/users/groups',
 		'/dashboard/reports/statistics',
-		'/dashboard/reports/forms',
-		'/dashboard/reports/surveys',
-		'/dashboard/pages/themes',
-		'/dashboard/pages/types',
-		'/dashboard/workflow/list',
-		'/dashboard/workflow/me',
-		'/dashboard/blocks/stacks',
-		'/dashboard/blocks/types'
+		'/dashboard/reports/forms'
 	);
 
 }

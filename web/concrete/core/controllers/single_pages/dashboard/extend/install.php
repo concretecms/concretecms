@@ -100,11 +100,12 @@ class Concrete5_Controller_Dashboard_Extend_Install extends Controller {
 					} else {
 						try {
 							$u = new User();
-							$p->install($this->post());
+							$pkg = $p->install($this->post());
 							if ($u->isSuperUser() && $p->allowsFullContentSwap() && $this->post('pkgDoFullContentSwap')) { 
 								$p->swapContent($this->post());
 							}
-							$this->set('message', t('The package has been installed.'));
+							$pkg = Package::getByHandle($p->getPackageHandle());
+							$this->redirect('/dashboard/extend/install', 'package_installed', $pkg->getPackageID());
 						} catch(Exception $e) {
 							if ($p->showInstallOptionsScreen()) {
 								$this->set('showInstallOptionsScreen', true);
@@ -122,6 +123,11 @@ class Concrete5_Controller_Dashboard_Extend_Install extends Controller {
 			$this->error->add(t('You do not have permission to install add-ons.'));
 			$this->set('error', $this->error);
 		}
+	}
+
+	public function package_installed($pkgID = 0) {
+		$this->set('message', t('The package has been installed.'));
+		$this->set('installedPKG', Package::getByID($pkgID));
 	}
 
     public function download($remoteMPID=null) {
