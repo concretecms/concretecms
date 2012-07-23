@@ -99,7 +99,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		
 		public function delete() {
 			$db = Loader::db();
-			$template_cID = $db->getOne("SELECT cID FROM Pages WHERE cIsTemplate = 1 and ctID = ?",array($this->ctID));
+			$template_cID = $db->getOne("SELECT Pages.cID FROM Pages inner join CollectionVersions cv on Pages.cID = cv.cID WHERE cIsTemplate = 1 and cv.ctID = ?",array($this->ctID));
 			
 			if($template_cID) {
 				$template = Page::getByID($template_cID);

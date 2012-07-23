@@ -910,7 +910,9 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			while ($row = $r->FetchRow()) {
 				$nc = Page::getByID($row['cID'], $row['cvID']);
 				$b = Block::getByID($row['bID'], $nc, $row['arHandle']);
-				$b->deleteBlock();
+				if (is_object($b)) {
+					$b->deleteBlock();
+				}
 			}
 			
 			$ca = new Cache();
