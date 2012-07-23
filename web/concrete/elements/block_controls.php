@@ -36,9 +36,10 @@
 	
 
 <script type="text/javascript">
+$(function() {
 <? $id = $bID . $a->getAreaID(); ?>
 
-ccm_menuObj<?=$id?> = new Object();
+var ccm_menuObj<?=$id?> = {};
 ccm_menuObj<?=$id?>.type = "BLOCK";
 ccm_menuObj<?=$id?>.arHandle = '<?=$a->getAreaHandle()?>';
 ccm_menuObj<?=$id?>.aID = <?=$a->getAreaID()?>;
@@ -102,6 +103,7 @@ if ($p->canWrite() && (!$a->isGlobalArea())) {  ?>
 if ($editMessage) { ?>
 ccm_menuObj<?=$id?>.editMessage = "<?=$editMessage?>";
 <? } ?>
-$(function() {ccm_menuInit(ccm_menuObj<?=$id?>)});
+ccm_menuInit(ccm_menuObj<?=$id?>);
+});
 
 </script>
