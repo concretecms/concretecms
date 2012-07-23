@@ -90,16 +90,41 @@ if (!$mode) {
 
 			?>
 		
-			<tr class="ccm-list-record <?=$striped?>">
-			<td class="ccm-user-list-cb" style="vertical-align: middle !important"><input type="checkbox" value="<?=$ui->getUserID()?>" user-email="<?=$ui->getUserEmail()?>" user-name="<?=$ui->getUserName()?>" /></td>
-			<? foreach($columns->getColumns() as $col) { ?>
-				<? if ($col->getColumnKey() == 'uName') { ?>
-					<td><a href="<?=$action?>"><?=$ui->getUserName()?></a></td>
-				<? } else { ?>
-					<td><?=$col->getColumnValue($ui)?></td>
-				<? } ?>
-			<? } ?>
-
+			<tr class="ccm-list-record <? echo $striped?>"><?
+				// Prevent anyone except the super user from editing the super user
+				$u = new User();
+				if (($u->getUserID() != USER_SUPER_ID) && ($ui->getUserID() == USER_SUPER_ID)){
+					?>
+					<td> </td>
+					<?
+				} else {
+					?>
+					<td class="ccm-user-list-cb" style="vertical-align: middle !important">
+						<input type="checkbox" value="<? echo $ui->getUserID()?>" user-email="<?= $ui->getUserEmail()?>" user-name="<?= $ui->getUserName()?>" />
+					</td>
+					<?
+				}
+				foreach($columns->getColumns() as $col) {
+					if ($col->getColumnKey() == 'uName') {
+						if (($u->getUserID() != USER_SUPER_ID) && ($ui->getUserID() == USER_SUPER_ID)){
+							?>
+							<td>
+								<?= $ui->getUserName()?>
+							</td>
+							<?
+						} else {
+							?>
+							<td>
+								<a href="<?= $action?>"><? echo $ui->getUserName()?></a>
+							</td>
+							<?
+						}
+					} else {
+						?>
+						<td><?= $col->getColumnValue($ui)?></td>
+						<?
+					}
+				} ?>
 			</tr>
 			<?
 		}
