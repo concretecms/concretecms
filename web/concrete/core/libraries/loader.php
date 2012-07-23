@@ -279,6 +279,11 @@
 				require_once($f1->file);
 				if ($f1->override) {
 					$class = $siteclass;
+				} else if ($pkgHandle) {
+					$pkgclass = Object::camelcase($pkgHandle . '_' . $file) . "Helper";
+					if (class_exists($pkgclass, false)) {
+						$class = $pkgclass;
+					}
 				}
 
 	            $instances[$class] = new $class();
