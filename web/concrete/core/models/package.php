@@ -162,6 +162,10 @@ class Concrete5_Model_Package extends Object {
 	public function hasInstallNotes() {
 		return file_exists($this->getPackagePath() . '/' . DIRNAME_ELEMENTS . '/' . DIRNAME_DASHBOARD . '/install.php');
 	}
+
+	public function hasInstallPostScreen() {
+		return file_exists($this->getPackagePath() . '/' . DIRNAME_ELEMENTS . '/' . DIRNAME_DASHBOARD . '/install_post.php');
+	}
 	
 	public function allowsFullContentSwap() {
 		return $this->pkgAllowsFullContentSwap;

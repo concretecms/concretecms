@@ -216,6 +216,28 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
 		
 		<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Add Functionality'), t('Install custom add-ons or those downloaded from the concrete5.org marketplace.'), 'span12 offset2');?>
 			
+		<? if (is_object($installedPKG) && $installedPKG->hasInstallPostScreen()) { ?>
+	
+			<div style="display: none">
+			<div id="ccm-install-post-notes"><div class="ccm-ui"><?=Loader::element('dashboard/install_post', false, $installedPKG->getPackageHandle())?>
+			<div class="dialog-buttons">
+				<a href="javascript:void(0)" onclick="jQuery.fn.dialog.closeAll()" class="btn ccm-button-right"><?=t('Ok')?></a>
+			</div>
+			</div>
+			</div>
+			</div>
+			
+			<script type="text/javascript">
+			$(function() { 
+				$('#ccm-install-post-notes').dialog({width: 500, modal: true, height: 400, title: "<?=t('Installation Notes')?>", buttons:[{}], 'open': function() {
+					$(this).parent().find('.ui-dialog-buttonpane').addClass("ccm-ui").html('');
+					$(this).find('.dialog-buttons').appendTo($(this).parent().find('.ui-dialog-buttonpane'));
+					$(this).find('.dialog-buttons').remove();
+				}});
+			});	
+			</script>
+		<? } ?>
+		
 		<h3><?=t('Currently Installed')?></h3>
 		<? if (count($pkgArray) > 0) { ?>
 			

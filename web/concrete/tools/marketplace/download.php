@@ -56,7 +56,12 @@ if (!$error->has() && $install) {
 if (!$error->has()) { ?>
 	<p>
 	<? if ($install) {
- 		echo t('The package was successfully installed.');
+		$_pkg = Package::getByHandle($p->getPackageHandle());
+		if ($_pkg->hasInstallPostScreen()) { 
+			Loader::element('dashboard/install_post', false, $_pkg->getPackageHandle());
+		} else {
+	 		echo t('The package was successfully installed.');
+	 	}
 	} else {
 		echo t('The package was successfully downloaded and decompressed on your server.');
 	} 

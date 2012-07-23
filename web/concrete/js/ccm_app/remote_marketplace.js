@@ -139,10 +139,10 @@ ccm_getMarketplaceItem = function(args) {
 				$.fn.dialog.open({
 					title: ccmi18n.community,
 					href:  CCM_TOOLS_PATH + '/marketplace/download?install=1&mpID=' + mpID,
-					width: 350,
+					width: 500,
 					appendButtons: true,
 					modal: false,
-					height: 240
+					height: 400
 				});
 			} else {
 				$.fn.dialog.open({
