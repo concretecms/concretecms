@@ -23,6 +23,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 	class Concrete5_Library_View extends Object {
 	
 		private $viewPath;
+		protected $pkgHandle;
 		
 		/**
 		 * controller used by this particular view
@@ -342,7 +343,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			}
 			extract($this->controller->getSets());
 			extract($this->controller->getHelperObjects());
-			include($this->themeDir . '/' . $file);
+			$env = Environment::get();
+			include($env->getPath(DIRNAME_THEMES . '/' . $this->getThemeHandle() . '/' . $file, $this->pkgHandle));
 		}
 
 	
@@ -538,45 +540,28 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		private function setThemeForView($pl, $filename, $wrapTemplateInTheme = false) {
 			// wrapTemplateInTheme gets set to true if we're passing the filename of a single page or page type file through 
 			$pkgID = 0;
+			$env = Environment::get();
 			if ($pl instanceof PageTheme) {
 				$this->ptHandle = $pl->getThemeHandle();
 				if ($pl->getPackageID() > 0) {
-					if (is_dir(DIR_PACKAGES . '/' . $pl->getPackageHandle())) {
-						$dirp = DIR_PACKAGES;
-						$url = DIR_REL;
-					} else {
-						$dirp = DIR_PACKAGES_CORE;
-						$url = ASSETS_URL;
-					}
-					$theme = $dirp . '/' . $pl->getPackageHandle() . '/' . DIRNAME_THEMES . '/' . $pl->getThemeHandle() . '/' . $filename;
-					if (!file_exists($theme)) {
-						if ($wrapTemplateInTheme) {
-							$theme = $dirp . '/' . $pl->getPackageHandle() . '/' . DIRNAME_THEMES . '/' . $pl->getThemeHandle() . '/' . FILENAME_THEMES_VIEW;
-						} else {
-							$theme = $dirp . '/' . $pl->getPackageHandle() . '/' . DIRNAME_THEMES . '/' . $pl->getThemeHandle() . '/' . FILENAME_THEMES_DEFAULT;
-						}
-					}
-					$themeDir = $dirp . '/' . $pl->getPackageHandle() . '/' . DIRNAME_THEMES . '/' . $pl->getThemeHandle();
-					$themePath = $url . '/' . DIRNAME_PACKAGES . '/' . $pl->getPackageHandle() . '/' . DIRNAME_THEMES . '/' . $pl->getThemeHandle();
 					$pkgID = $pl->getPackageID();
-				} else {
-					if (is_dir(DIR_FILES_THEMES . '/' . $pl->getThemeHandle())) {
-						$dir = DIR_FILES_THEMES;
-						$themePath = DIR_REL . '/' . DIRNAME_THEMES . '/' . $pl->getThemeHandle();
-					} else {
-						$dir = DIR_FILES_THEMES_CORE;
-						$themePath = ASSETS_URL . '/' . DIRNAME_THEMES . '/' . $pl->getThemeHandle();
-					}
-					$theme = $dir . '/' . $pl->getThemeHandle() . '/' . $filename;
-					if (!file_exists($theme)) {
-						if ($wrapTemplateInTheme) {
-							$theme = $dir . '/' . $pl->getThemeHandle() . '/' . FILENAME_THEMES_VIEW;
-						} else {
-							$theme = $dir . '/' . $pl->getThemeHandle() . '/' . FILENAME_THEMES_DEFAULT;
-						}
-					}
-					$themeDir = $dir . '/' . $pl->getThemeHandle();
+					$this->pkgHandle = $pl->getPackageHandle();
 				}
+			
+				$rec = $env->getRecord(DIRNAME_THEMES . '/' . $pl->getThemeHandle() . '/' . $filename, $this->pkgHandle);
+				if (!$rec->exists()) {
+					if ($wrapTemplateInTheme) {
+						$theme = $env->getPath(DIRNAME_THEMES . '/' . $pl->getThemeHandle() . '/' . FILENAME_THEMES_VIEW, $this->pkgHandle);
+					} else {
+						$theme = $env->getPath(DIRNAME_THEMES . '/' . $pl->getThemeHandle() . '/' . FILENAME_THEMES_DEFAULT, $this->pkgHandle);
+					}
+				} else {
+					$theme = $rec->file;
+				}
+				
+				$themeDir = $env->getPath(DIRNAME_THEMES . '/' . $pl->getThemeHandle(), $this->pkgHandle);
+				$themePath = $env->getURL(DIRNAME_THEMES . '/' . $pl->getThemeHandle(), $this->pkgHandle);
+
 			} else {
 				$this->ptHandle = $pl;
 				if (file_exists(DIR_FILES_THEMES . '/' . $pl . '/' . $filename)) {
@@ -718,44 +703,18 @@ defined('C5_EXECUTE') or die("Access Denied.");
 					$c = $view;
 					$this->c = $c;
 					
+					$env = Environment::get();
 					// $view is a page. It can either be a SinglePage or just a Page, but we're not sure at this point, unfortunately
 					if ($view->getCollectionTypeID() == 0 && $cFilename) {
 						$wrapTemplateInTheme = true;
-						if (file_exists(DIR_FILES_CONTENT. "{$cFilename}")) {
-							$content = DIR_FILES_CONTENT. "{$cFilename}";
-						} else if ($view->getPackageID() > 0) {
-							$file1 = DIR_PACKAGES . '/' . $view->getPackageHandle() . '/'. DIRNAME_PAGES . $cFilename;
-							$file2 = DIR_PACKAGES_CORE . '/' . $view->getPackageHandle() . '/'. DIRNAME_PAGES . $cFilename;
-							if (file_exists($file1)) {
-								$content = $file1;
-							} else if (file_exists($file2)) {
-								$content = $file2;
-							}
-						} else if (file_exists(DIR_FILES_CONTENT_REQUIRED . "{$cFilename}")) {
-							$content = DIR_FILES_CONTENT_REQUIRED. "{$cFilename}";
-						}
-						
-						$themeFilename = $c->getCollectionHandle() . '.php';
-						
+						$content = $env->getPath(DIRNAME_PAGES . '/' . $cFilename, $view->getPackageHandle());
+						$themeFilename = $c->getCollectionHandle() . '.php';						
 					} else {
-						if (file_exists(DIR_BASE . '/' . DIRNAME_PAGE_TYPES . '/' . $ctHandle . '.php')) {
-							$content = DIR_BASE . '/' . DIRNAME_PAGE_TYPES . '/' . $ctHandle . '.php';
+						$rec = $env->getRecord(DIRNAME_PAGE_TYPES . '/' . $ctHandle . '.php', $view->getPackageHandle());
+						if ($rec->exists()) {
 							$wrapTemplateInTheme = true;
-						} else if (file_exists(DIR_BASE_CORE. '/' . DIRNAME_PAGE_TYPES . '/' . $ctHandle . '.php')) {
-							$content = DIR_BASE_CORE . '/' . DIRNAME_PAGE_TYPES . '/' . $ctHandle . '.php';
-							$wrapTemplateInTheme = true;
-						} else if ($view->getPackageID() > 0) {
-							$file1 = DIR_PACKAGES . '/' . $view->getPackageHandle() . '/'. DIRNAME_PAGE_TYPES . '/' . $ctHandle . '.php';
-							$file2 = DIR_PACKAGES_CORE . '/' . $view->getPackageHandle() . '/'. DIRNAME_PAGE_TYPES . '/' . $ctHandle . '.php';
-							if (file_exists($file1)) {
-								$content = $file1;
-								$wrapTemplateInTheme = true;
-							} else if (file_exists($file2)) {
-								$content = $file2;
-								$wrapTemplateInTheme = true;
-							}
+							$content = $rec->file;
 						}
-						
 						$themeFilename = $ctHandle . '.php';
 					}
 					

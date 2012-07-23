@@ -130,7 +130,7 @@ class Concrete5_Library_Environment {
 			return $this->cachedOverrides[$segment][$pkgHandle];
 		}
 		
-		$obj = new stdClass;
+		$obj = new EnvironmentRecord();
 
 		if (!in_array($segment, $this->coreOverrides) && !$pkgHandle && !array_key_exists($segment, $this->coreOverridesByPackage)) {
 			$obj->file = DIR_BASE_CORE . '/' . $segment;
