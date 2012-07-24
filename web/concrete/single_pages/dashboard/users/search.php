@@ -373,18 +373,17 @@ if (is_object($uo)) {
 		
 		<?
 		$tp = new TaskPermission();
-		// Prevent anyone from being allowed to 'sign in as' the super user
-		if ( ($uo->getUserID() != $u->getUserID()) && ($uo->getUserID() != USER_SUPER_ID)) {
-			if ($tp->canSudo()) {
-
+		if ($uo->getUserID() != $u->getUserID()) {
+			if ($tp->canSudo()) { 
+			
 				$loginAsUserConfirm = t('This will end your current session and sign you in as %s', $uo->getUserName());
-
+				
 				print $ih->button_js(t('Sign In as User'), 'loginAsUser()', 'left');?>
 
 				<script type="text/javascript">
 				loginAsUser = function() {
-					if (confirm('<?=$loginAsUserConfirm?>')) {
-						location.href = "<?=$this->url('/dashboard/users/search', 'sign_in_as_user', $uo->getUserID(), $valt->generate('sudo'))?>";
+					if (confirm('<?=$loginAsUserConfirm?>')) { 
+						location.href = "<?=$this->url('/dashboard/users/search', 'sign_in_as_user', $uo->getUserID(), $valt->generate('sudo'))?>";				
 					}
 				}
 				</script>
