@@ -940,6 +940,7 @@ class FilePermissions extends Permissions {
 		
 		if ($adm) {
 			$this->permissions['canRead'] = FilePermissions::PTYPE_ALL;
+			$this->permissions['canSearch'] = FilePermissions::PTYPE_ALL;
 			$this->permissions['canWrite'] = FilePermissions::PTYPE_ALL;
 			$this->permissions['canAdmin'] = FilePermissions::PTYPE_ALL;
 		} else {
