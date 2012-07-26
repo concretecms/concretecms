@@ -683,14 +683,14 @@ class ConcreteUpgradeVersion560Helper {
 			$handle = (string) $pkc['handle'];
 			$pkca = PermissionKeyCategory::getByHandle($handle);
 			if (!is_object($pkca)) { 
-				$pkx = PermissionKeyCategory::add($pkc['handle']);
+				$pkx = PermissionKeyCategory::add((string) $pkc['handle']);
 			}
 		}
 		foreach($sx->workflowprogresscategories->category as $pkc) {
 			$handle = (string) $pkc['handle'];
 			$pkca = WorkflowProgressCategory::getByHandle($handle);
 			if (!is_object($pkca)) { 
-				$pkx = WorkflowProgressCategory::add($pkc['handle']);
+				$pkx = WorkflowProgressCategory::add((string) $pkc['handle']);
 			}
 		}
 		foreach($sx->workflowtypes->workflowtype as $wt) {
@@ -710,7 +710,7 @@ class ConcreteUpgradeVersion560Helper {
 				$handle = (string) $pt['handle'];
 				$patt = PermissionAccessEntityType::getByHandle($handle);
 				if (!is_object($patt)) {
-					$type = PermissionAccessEntityType::add($pt['handle'], $name);
+					$type = PermissionAccessEntityType::add((string) $pt['handle'], $name);
 					if (isset($pt->categories)) {
 						foreach($pt->categories->children() as $cat) {
 							$catobj = PermissionKeyCategory::getByHandle((string) $cat['handle']);
@@ -723,7 +723,7 @@ class ConcreteUpgradeVersion560Helper {
 
 		$txt = Loader::helper('text');
 		foreach($sx->permissionkeys->permissionkey as $pk) {
-			$pkc = PermissionKeyCategory::getByHandle($pk['category']);
+			$pkc = PermissionKeyCategory::getByHandle((string) $pk['category']);
 			$className = $txt->camelcase($pkc->getPermissionKeyCategoryHandle());
 			$c1 = $className . 'PermissionKey';
 			$handle = (string) $pk['handle'];
