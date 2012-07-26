@@ -71,7 +71,9 @@ class Concrete5_Controller_Install extends Controller {
 		if (file_exists(DIR_CONFIG_SITE . '/site.php')) {
 			throw new Exception(t('concrete5 is already installed.'));
 		}		
-
+		if (!isset($_COOKIE['CONCRETE5_INSTALL_TEST'])) {
+			setcookie('CONCRETE5_INSTALL_TEST', '1', 0, DIR_REL . '/');
+		}
 	}
 	
 	protected function testAndRunInstall() {

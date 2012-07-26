@@ -1,6 +1,7 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?> 
 
 <script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/bootstrap.tooltip.js"></script>
+<script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/jquery.cookie.js"></script>
 <script type="text/javascript">
 $(function() {
 	$(".launch-tooltip").tooltip({
@@ -272,9 +273,18 @@ $(function() {
 $(function() {
 	$(".ccm-test-js img").hide();
 	$("#ccm-test-js-success").show();
+	if ($.cookie('CONCRETE5_INSTALL_TEST')) {
+		$("#ccm-test-cookies-enabled-loading").attr('src', '<?=ASSETS_URL_IMAGES?>/icons/success.png');
+	} else {
+		$("#ccm-test-cookies-enabled-loading").attr('src', '<?=ASSETS_URL_IMAGES?>/icons/error.png');
+		$("#ccm-test-cookies-enabled-tooltip").show();
+		$("#install-errors").show();
+		showFormOnTestCompletion = false;
+	}
 	$("#ccm-test-request-loading").ajaxError(function(event, request, settings) {
 		$(this).attr('src', '<?=ASSETS_URL_IMAGES?>/icons/error.png');
 		$("#ccm-test-request-tooltip").show();
+		showFormOnTestCompletion = false;
 	});
 	$.getJSON('<?=$this->url("/install", "test_url", "20", "20")?>', function(json) {
 		// test url takes two numbers and adds them together. Basically we just need to make sure that
@@ -357,9 +367,15 @@ $(function() {
 </tr>
 <tr>
 	<td><? if ($fileWriteTest) { ?><img src="<?=ASSETS_URL_IMAGES?>/icons/success.png" /><? } else { ?><img src="<?=ASSETS_URL_IMAGES?>/icons/error.png" /><? } ?></td>
-	<td width="100%"><?=t('Web Server Access to Files and Configuration Directories')?>
+	<td width="100%"><?=t('Writable Files and Configuration Directories')?>
 	</td>
 	<td><? if (!$fileWriteTest) { ?><img src="<?=ASSETS_URL_IMAGES?>/icons/tooltip.png" class="launch-tooltip" title="<?=t('The config/, packages/ and files/ directories must be writable by your web server.')?>" /><? } ?></td>
+</tr>
+<tr>
+	<td><img id="ccm-test-cookies-enabled-loading"  src="<?=ASSETS_URL_IMAGES?>/dashboard/sitemap/loading.gif" /></td>
+	<td width="100%"><?=t('Cookies Enabled')?>
+	</td>
+	<td><img id="ccm-test-cookies-enabled-tooltip" src="<?=ASSETS_URL_IMAGES?>/icons/tooltip.png" class="launch-tooltip" title="<?=t('Cookies must be enabled in your browser to install concrete5.')?>" /></td>
 </tr>
 
 </tbody>

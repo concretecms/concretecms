@@ -2586,6 +2586,11 @@
       <DEFAULT value="0"/>
       <UNSIGNED/>
     </field>
+    <field name="uLastIP" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
     <field name="uPreviousLogin" type="I" size="10">
       <NOTNULL/>
       <DEFAULT value="0"/>
