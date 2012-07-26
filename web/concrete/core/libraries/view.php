@@ -559,9 +559,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 					$theme = $rec->file;
 				}
 				
-				$themeDir = $env->getPath(DIRNAME_THEMES . '/' . $pl->getThemeHandle(), $this->pkgHandle);
-				$themePath = $env->getURL(DIRNAME_THEMES . '/' . $pl->getThemeHandle(), $this->pkgHandle);
-
+				$themeDir = str_replace(FILENAME_THEMES_DEFAULT, '', $env->getPath(DIRNAME_THEMES . '/' . $pl->getThemeHandle() . '/' . FILENAME_THEMES_DEFAULT, $this->pkgHandle));
+				$themePath = str_replace(FILENAME_THEMES_DEFAULT, '', $env->getURL(DIRNAME_THEMES . '/' . $pl->getThemeHandle() . '/' . FILENAME_THEMES_DEFAULT, $this->pkgHandle));
 			} else {
 				$this->ptHandle = $pl;
 				if (file_exists(DIR_FILES_THEMES . '/' . $pl . '/' . $filename)) {
