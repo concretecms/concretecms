@@ -27,4 +27,5 @@ table#sample-content-selector td {
 
 #install-success {display: none;}
 #install-progress-error-wrapper {display: none;}
-#ccm-test-request-tooltip {display: none;}
+#ccm-test-cookies-enabled-tooltip, #ccm-test-request-tooltip {display: none;}
+
