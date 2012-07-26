@@ -79,7 +79,8 @@ class ConcreteUpgradeVersion560Helper {
 		'GroupSets',
 		'GroupSetGroups',
 		'CollectionVersionAreaLayouts',
-		'Logs'
+		'Logs',
+		'Users'
 	);
 	
 	
