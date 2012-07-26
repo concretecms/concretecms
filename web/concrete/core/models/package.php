@@ -580,6 +580,8 @@ class Concrete5_Model_Package extends Object {
 		$pkg = Package::getByID($db->Insert_ID());
 		Package::installDB($pkg->getPackagePath() . '/' . FILENAME_PACKAGE_DB);
 		PackageList::refreshCache();
+		$env = Environment::get();
+		$env->clearOverrideCache();
 		
 		return $pkg;
 	}
