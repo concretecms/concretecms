@@ -10,7 +10,9 @@ if (!defined('CONFIG_FILE')) {
 	define('CONFIG_FILE', DIR_CONFIG_SITE . '/site.php');
 }
 
-if (!@include(CONFIG_FILE)) {
+if (file_exists(CONFIG_FILE)) {
+	include(CONFIG_FILE);
+} else {
 	// nothing is installed
 	$config_check_failed = true;
 }
