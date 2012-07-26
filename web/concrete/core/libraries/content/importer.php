@@ -420,7 +420,7 @@ class Concrete5_Library_Content_Importer {
 		if (isset($sx->permissioncategories)) {
 			foreach($sx->permissioncategories->category as $pkc) {
 				$pkg = ContentImporter::getPackageObject($akc['package']);
-				$pkx = PermissionKeyCategory::add($pkc['handle'], $pkg);
+				$pkx = PermissionKeyCategory::add((string) $pkc['handle'], $pkg);
 			}
 		}
 	}
@@ -429,7 +429,7 @@ class Concrete5_Library_Content_Importer {
 		if (isset($sx->workflowprogresscategories)) {
 			foreach($sx->workflowprogresscategories->category as $wpc) {
 				$pkg = ContentImporter::getPackageObject($wpc['package']);
-				$wkx = WorkflowProgressCategory::add($wpc['handle'], $pkg);
+				$wkx = WorkflowProgressCategory::add((string) $wpc['handle'], $pkg);
 			}
 		}
 	}
