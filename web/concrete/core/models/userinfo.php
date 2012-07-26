@@ -94,7 +94,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		
 		private function get($where, $var) {
 			$db = Loader::db();
-			$q = "select Users.uID, Users.uLastLogin, Users.uIsValidated, Users.uPreviousLogin, Users.uIsFullRecord, Users.uNumLogins, Users.uDateAdded, Users.uIsActive, Users.uLastOnline, Users.uHasAvatar, Users.uName, Users.uEmail, Users.uPassword, Users.uTimezone from Users " . $where;
+			$q = "select Users.uID, Users.uLastLogin, Users.uLastIP, Users.uIsValidated, Users.uPreviousLogin, Users.uIsFullRecord, Users.uNumLogins, Users.uDateAdded, Users.uIsActive, Users.uLastOnline, Users.uHasAvatar, Users.uName, Users.uEmail, Users.uPassword, Users.uTimezone from Users " . $where;
 			$r = $db->query($q, array($var));
 			if ($r && $r->numRows() > 0) {
 				$ui = new UserInfo;
@@ -589,6 +589,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		
 		function getLastLogin() {
 			return $this->uLastLogin;
+		}
+
+		function getLastIPAddress() {
+			return long2ip($this->uLastIP);
 		}
 		
 		function getPreviousLogin() {

@@ -422,10 +422,10 @@ if (is_object($uo)) {
 		<div class="ccm-pane-body ccm-pane-body-footer" id="ccm-dashboard-user-body">
 		
 		<?=$av->outputUserAvatar($uo)?>
-		<h3><?=t('Basic Details')?></h3>
-		<p><strong><?=$uo->getUserName()?></strong>
+		<h3><?=t('Basic Details')?></h3><br/>
+		<p><strong><?=$uo->getUserName()?></strong></p>
 		<p><a href="mailto:<?=$uo->getUserEmail()?>"><?=$uo->getUserEmail()?></a></p>
-		<p><?=t('Account created on %s', $uo->getUserDateAdded('user'))?></p>
+		<p><?=t('Account created on %s. Last logged in from IP: %s.', date(DATE_APP_GENERIC_MDYT, strtotime($uo->getUserDateAdded('user'))), $uo->getLastIPAddress())?></p>
 		<?=(ENABLE_USER_TIMEZONES && strlen($uo->getUserTimezone())?"<p>".t('Timezone').": ".$uo->getUserTimezone() . '</p>':"")?>
 		<? if (USER_VALIDATE_EMAIL) { ?>
 			<p>
@@ -451,7 +451,7 @@ if (is_object($uo)) {
 		<?
 		$attribs = UserAttributeKey::getList(true);
 		if (count($attribs) > 0) { ?>
-		<h3><?=t('User Attributes')?></h3>
+		<h3><?=t('User Attributes')?></h3><br/>
 
 		<? 
 		for ($i = 0; $i < count($attribs); $i++) { 			
