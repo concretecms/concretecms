@@ -42,7 +42,7 @@ $v->addFooterItem($html->javascript('ccm.app.js'));
 $v->addFooterItem(Loader::helper('html')->javascript('tiny_mce/tiny_mce.js'));
 
 if (LANGUAGE != 'en') {
-	$v->addHeaderItem($html->javascript('i18n/ui.datepicker-'.LANGUAGE.'.js'));
+	$v->addFooterItem($html->javascript('i18n/ui.datepicker-'.LANGUAGE.'.js'));
 }
 
 // Require CSS

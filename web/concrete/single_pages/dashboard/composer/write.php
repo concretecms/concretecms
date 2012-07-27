@@ -280,9 +280,9 @@ if (isset($entry)) { ?>
 	
 	<? if (count($ctArray) > 0) { ?>
 	<h3><?=t('What type of page would you like to write?')?></h3>
-	<ul class="icon-select-list">
+	<ul class="item-select-list">
 	<? foreach($ctArray as $ct) { ?>
-		<li class="icon-select-page"><a href="<?=$this->url('/dashboard/composer/write', $ct->getCollectionTypeID())?>"><?=$ct->getCollectionTypeName()?></a></li>
+		<li class="item-select-page"><a href="<?=$this->url('/dashboard/composer/write', $ct->getCollectionTypeID())?>"><?=$ct->getCollectionTypeName()?></a></li>
 	<? } ?>
 	</ul>
 	<? } else { ?>

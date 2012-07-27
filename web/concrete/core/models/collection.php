@@ -699,6 +699,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				Cache::delete('stack_active', $this->getCollectionID());
 				Cache::delete('stack_recent', $this->getCollectionID());
 			}
+			if ($this instanceof ComposerPage) {
+				Cache::delete('composerpage_recent', $this->getCollectionID()  );
+				Cache::delete('composerpage_active', $this->getCollectionID()  );
+			}
 			Cache::delete('page_path', $this->getCollectionID());
 			Cache::delete('request_path_page', $this->getCollectionPath()  );
 			Cache::delete('page_id_from_path', $this->getCollectionPath());
