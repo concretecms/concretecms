@@ -36,9 +36,8 @@ if (!$dh->inDashboard()) {
 		$this->addHeaderItem('<script type="text/javascript">$(function() { ccm_doPageReindexing(); });</script>');
 	}
 	$cih = Loader::helper('concrete/interface');
-	if (ACTIVE_LOCALE != 'en_US') {
-		$dlocale = str_replace('_', '-', ACTIVE_LOCALE);
-		$this->addFooterItem($html->javascript('i18n/ui.datepicker-' . $dlocale . '.js'));
+	if (LANGUAGE != 'en') {
+		$this->addFooterItem($html->javascript('i18n/ui.datepicker-' . LANGUAGE . '.js'));
 		$this->addFooterItem('<script type="text/javascript">$(function() { jQuery.datepicker.setDefaults({dateFormat: \'yy-mm-dd\'}); });</script>');
 	}
 	if (!Config::get('SEEN_INTRODUCTION')) {

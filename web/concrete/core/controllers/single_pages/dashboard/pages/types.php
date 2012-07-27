@@ -18,7 +18,7 @@ class Concrete5_Controller_Dashboard_Pages_Types extends Controller {
 			$this->set('message', $valt->getErrorMessage());
 		} else {
 			// check to make sure we 
-			$pageCount = $db->getOne("SELECT COUNT(*) FROM Pages WHERE cIsTemplate = 0 and ctID = ?",array($ctID));
+			$pageCount = $db->getOne("SELECT COUNT(p.cID) from Pages p inner join CollectionVersions cv on p.cID = cv.cID WHERE cIsTemplate = 0 and cv.ctID = ?",array($ctID));
 				
 			if($pageCount == 0) {
 				$ct = CollectionType::getByID($ctID);
