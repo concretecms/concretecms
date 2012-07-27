@@ -23,6 +23,5 @@ $miniSurvey->frontEndMode=true;
 		</div>
 	<? } ?>
 	<input name="qsID" type="hidden" value="<?= intval($survey->questionSetId)?>" />
-	<input name="pURI" type="hidden" value="<?= $pURI ?>" />
 	<?php  $miniSurvey->loadSurvey( $survey->questionSetId, 0, intval($bID) );  ?> 
 </form>

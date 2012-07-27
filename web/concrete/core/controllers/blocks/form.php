@@ -84,11 +84,6 @@ class Concrete5_Controller_Block_Form extends BlockController {
 		$this->addFooterItem(Loader::helper('html')->javascript('jquery.ui.js'));
 	}
 	
-	public function view(){
-		$pURI = ($_REQUEST['pURI']) ? $_REQUEST['pURI'] : str_replace(array('&ccm_token='.$_REQUEST['ccm_token'],'&btask=passthru','&method=submit_form'),'',$_SERVER['REQUEST_URI']);
-		$this->set('pURI',  htmlentities( $pURI, ENT_COMPAT, APP_CHARSET));
-	}
-	
 	public function getDefaultThankYouMsg() {
 		return t("Thanks!");
 	}
@@ -392,8 +387,6 @@ class Concrete5_Controller_Block_Form extends BlockController {
 				$q="insert into {$this->btAnswersTablename} (msqID,asID,answer,answerLong) values (?,?,?,?)";
 				$db->query($q,$v);
 			}
-			$refer_uri=$_POST['pURI'];
-			if(!strstr($refer_uri,'?')) $refer_uri.='?';			
 			$foundSpam = false;
 			
 			$submittedData = '';
@@ -438,13 +431,15 @@ class Concrete5_Controller_Block_Form extends BlockController {
 				if(is_object($pg)) {
 					$this->redirect($pg->getCollectionPath());
 				} else { // page didn't exist, we'll just do the default action
-					header("Location: ".$refer_uri."&surveySuccess=1&qsid=".$this->questionSetId."#".$this->questionSetId);
+					$c = Page::getCurrentPage();
+					header("Location: ".Loader::helper('navigation')->getLinkToCollection($c, true)."?surveySuccess=1&qsid=".$this->questionSetId."#".$this->questionSetId);
 					exit;
 				}
 			}
 			
 			if(!$this->noSubmitFormRedirect){
-				header("Location: ".$refer_uri."&surveySuccess=1&qsid=".$this->questionSetId."#".$this->questionSetId);
+				$c = Page::getCurrentPage();
+				header("Location: ".Loader::helper('navigation')->getLinkToCollection($c, true)."?surveySuccess=1&qsid=".$this->questionSetId."#".$this->questionSetId);
 				die;
 			}
 		}
