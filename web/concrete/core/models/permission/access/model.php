@@ -55,12 +55,7 @@ class Concrete5_Model_PermissionAccess extends Object {
 		return $entities;
 	}
 	
-	public function validate() {
-		$u = new User();
-		if ($u->isSuperUser()) {
-			return true;
-		}
-		$accessEntities = $u->getUserAccessEntityObjects();
+	public function validateAccessEntities($accessEntities) {
 		$valid = false;
 		$accessEntities = $this->validateAndFilterAccessEntities($accessEntities);
 		$list = $this->getAccessListItems(PermissionKey::ACCESS_TYPE_ALL, $accessEntities);
@@ -73,8 +68,16 @@ class Concrete5_Model_PermissionAccess extends Object {
 				$valid = false;
 			}
 		}
-		return $valid;		
-		
+		return $valid;
+	}
+	
+	public function validate() {
+		$u = new User();
+		if ($u->isSuperUser()) {
+			return true;
+		}
+		$accessEntities = $u->getUserAccessEntityObjects();
+		return $this->validateAccessEntities($accessEntities);
 	}
 	
 	public static function createByMerge($permissions) {

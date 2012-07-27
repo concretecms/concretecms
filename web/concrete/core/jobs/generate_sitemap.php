@@ -37,7 +37,7 @@ class Concrete5_Job_GenerateSitemap extends Job {
 			$instances = array(
 				'navigation' => Loader::helper('navigation'),
 				'dashboard' => Loader::helper('concrete/dashboard'),
-				'guest_group' => Group::getByID(GUEST_GROUP_ID)
+				'view_page' => PermissionKey::getByHandle('view_page')
 			);
 			$rsPages = $db->query('SELECT cID FROM Pages WHERE (cID > 1) ORDER BY cID');
 			$relName = ltrim(SITEMAPXML_FILE, '\\/');
@@ -110,8 +110,15 @@ class Concrete5_Job_GenerateSitemap extends Job {
 		if($page->getAttribute('exclude_sitemapxml')) {
 			return false;
 		}
-		$instances['guest_group']->setPermissionsForObject($page);
-		if(!$instances['guest_group']->canRead()) {
+		$instances['view_page']->setPermissionObject($page);
+		$pa = $instances['view_page']->getPermissionAccessObject();
+		if (!is_object($pa)) {
+			return false;
+		}
+		
+		$guest = Group::getByID(GUEST_GROUP_ID);
+		$accessEntities[] = GroupPermissionAccessEntity::getOrCreate($guest);
+		if (!$pa->validateAccessEntities($accessEntities)) {
 			return false;
 		}
 		$lastmod = new DateTime($page->getCollectionDateLastModified());
