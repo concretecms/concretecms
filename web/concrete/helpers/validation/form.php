@@ -38,6 +38,7 @@
 		const VALID_UPLOADED_FILE = 20;
 		const VALID_UPLOADED_FILE_REQUIRED = 25;
 		const VALID_TOKEN = 30;
+		const VALID_CAPTCHA = 35;
 		const VALID_FIELD_INVALID = 99;
 
 		public function __construct() {
@@ -97,6 +98,20 @@
 			$this->fields[] = $obj;
 		}
 		
+		/** 
+		 * Adds captcha to the form validation routine
+		 */
+		public function addRequiredCaptcha($errorMsg) {
+			$obj = new stdClass;
+			$obj->message = $errorMsg;
+			$obj->validate = ValidationFormHelper::VALID_CAPTCHA;
+			$this->fields[] = $obj;
+		}
+
+
+		/** 
+		 * Adds a required validation token
+	 	 */		
 		public function addRequiredToken($value, $errorMsg = null) {
 			$obj = new stdClass;
 		 	$vt = Loader::helper('validation/token');
@@ -172,6 +187,12 @@
 					case ValidationFormHelper::VALID_TOKEN:
 						$vt = Loader::helper('validation/token');
 						if (!$vt->validate($f->value)) {
+							$this->fieldsInvalid[] = $f;
+						}
+						break;
+					case ValidationFormHelper::VALID_CAPTCHA:
+						$vc = Loader::helper('validation/captcha');
+						if (!$vc->check()) {
 							$this->fieldsInvalid[] = $f;
 						}
 						break;
