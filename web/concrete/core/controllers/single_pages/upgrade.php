@@ -208,8 +208,6 @@ class Concrete5_Controller_Upgrade extends Controller {
 		$runMessages = array();
 		$prepareMessages = array();
 		try {
-			$ca = new Cache();
-			$ca->flush();
 			$this->set_upgrades();
 			foreach($this->upgrades as $ugh) {
 				if (method_exists($ugh, 'prepare')) {
