@@ -125,12 +125,14 @@ class Concrete5_Model_Page extends Collection {
 		$db = Loader::db();
 		$r = $db->Execute('select pkID, paID from PagePermissionAssignments where cID = ?', array($this->getPermissionsCollectionID()));
 		while ($row =  $r->FetchRow()) {
-			$this->permissionAssignments[$row['pkID']] = PermissionAccess::getByID($row['paID'], PermissionKey::getByID($row['pkID']));
+			$pk = PermissionKey::getByID($row['pkID']);
+			$this->permissionAssignments[$row['pkID']] = PermissionAccess::getByID($row['paID'], $pk);
 		}
 	}
 
 	public function getPermissionAccessObject(PermissionKey $pk) {
-		return $this->permissionAssignments[$pk->getPermissionKeyID()];
+		$pa = $this->permissionAssignments[$pk->getPermissionKeyID()];
+		return $pa;
 	}
 	
 	public function getPermissionObjectIdentifier() {

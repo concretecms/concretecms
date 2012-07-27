@@ -98,13 +98,13 @@ class Concrete5_Model_PermissionAccess extends Object {
 				$filter .= $pae->getAccessEntityID() . ':';
 			}
 			$filter = trim($filter, ':');
-			$items = CacheLocal::getEntry('permission_access_list_items', $this->getPermissionAccessID() . $filter);
+			$items = CacheLocal::getEntry('permission_access_list_items', $this->getPermissionAccessID() . $filter . strtolower(get_class($this->pk)));
 			if (is_array($items)) {
 				return $items;
 			}				
 			$q = 'select paID, peID, pdID, accessType from PermissionAccessList where paID = ' . $this->getPermissionAccessID();
 			$items = $this->deliverAccessListItems($q, $accessType, $filterEntities);
-			CacheLocal::set('permission_access_list_items', $this->getPermissionAccessID() . $filter, $items);
+			CacheLocal::set('permission_access_list_items', $this->getPermissionAccessID() . $filter . strtolower(get_class($this->pk)), $items);
 			return $items;
 		}
 	}
