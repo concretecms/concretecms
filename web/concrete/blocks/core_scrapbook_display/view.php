@@ -3,7 +3,9 @@
 
 $area = $b->getBlockAreaObject();
 $b = Block::getByID($bOriginalID);
-$b->setBlockAreaObject($area);
-$c = Page::getCurrentPage();
-$b->loadNewCollection($c);
-$b->display();
+if (is_object($b)) {
+	$b->setBlockAreaObject($area);
+	$c = Page::getCurrentPage();
+	$b->loadNewCollection($c);
+	$b->display();
+}
