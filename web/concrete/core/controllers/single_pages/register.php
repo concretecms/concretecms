@@ -6,6 +6,8 @@ class Concrete5_Controller_Register extends Controller {
 	
 	public function __construct() {
 		if(!ENABLE_REGISTRATION) {
+			$cont = Loader::controller('/page_not_found');
+			$cont->view();
 			$this->render("/page_not_found");
 		}
 		parent::__construct();
