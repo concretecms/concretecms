@@ -273,7 +273,7 @@ $ih = Loader::helper('concrete/interface');
 			<input type="hidden" id="positionEdit" name="position" type="text" value="1000" />
 			
 			<div>
-				<?=$ih->button(t('Cancel'), '#', 'left', '', array('id' => 'cancelEditQuestion'))?>
+				<?=$ih->button(t('Cancel'), 'javascript:void(0)', 'left', '', array('id' => 'cancelEditQuestion'))?>
 				<?=$ih->button(t('Save Changes'), '#', 'right', 'primary', array('id' => 'editQuestion'))?>
 			</div>
 		</div>
