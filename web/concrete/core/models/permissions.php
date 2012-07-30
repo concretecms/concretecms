@@ -52,7 +52,7 @@ class Concrete5_Model_Permissions {
 			// handles task permissions
 			$permission = Loader::helper('text')->uncamelcase($f);
 		}
-		$r = false;
+
 		if (count($a) > 0) { 
 			if (is_object($this->response)) { 
 				$r = call_user_func_array(array($this->response, $f), $a);
@@ -65,8 +65,10 @@ class Concrete5_Model_Permissions {
 				$r = $this->response->{$f}();
 			} else {
 				$pk = PermissionKey::getByHandle($permission);
-				if(is_object($pk)) {
+				if (is_object($pk)) {
 					$r = $pk->validate();
+				} else {
+					throw new Exception(t('Unable to get permission key for %s', $permission));
 				}
 			}
 		}
