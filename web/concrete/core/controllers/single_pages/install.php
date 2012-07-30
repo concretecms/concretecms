@@ -1,3 +1,4 @@
+
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
 ini_set('display_errors', 1);
@@ -283,9 +284,6 @@ class Concrete5_Controller_Install extends Controller {
 					if (isset($setPermissionsModel)) {
 						$configuration .= "define('PERMISSIONS_MODEL', '" . addslashes($setPermissionsModel) . "');\n";
 					}
-					if (defined('ACTIVE_LOCALE') && ACTIVE_LOCALE != '' && ACTIVE_LOCALE != 'en_US') {
-						$configuration .= "define('LOCALE', '" . ACTIVE_LOCALE . "');\n";
-					}
 					$configuration .= "define('PASSWORD_SALT', '{$salt}');\n";
 					if (is_array($_POST['SITE_CONFIG'])) {
 						foreach($_POST['SITE_CONFIG'] as $key => $value) { 
@@ -305,6 +303,9 @@ class Concrete5_Controller_Install extends Controller {
 					$configuration .= "define('INSTALL_USER_PASSWORD_HASH', '" . User::encryptPassword($_POST['uPassword'], $salt) . "');\n";
 					$configuration .= "define('INSTALL_STARTING_POINT', '" . $this->post('SAMPLE_CONTENT') . "');\n";
 					$configuration .= "define('SITE', '" . addslashes($_POST['SITE']) . "');\n";
+					if (defined('ACTIVE_LOCALE') && ACTIVE_LOCALE != '' && ACTIVE_LOCALE != 'en_US') {
+						$configuration .= "define('ACTIVE_LOCALE', '" . ACTIVE_LOCALE . "');\n";
+					}
 					$res = fwrite($this->fpu, $configuration);
 					fclose($this->fpu);
 					chmod(DIR_CONFIG_SITE . '/site_install_user.php', 0700);
