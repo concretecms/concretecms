@@ -22,7 +22,10 @@ $u = new User();
 $ap = new Permissions($a);
 $cp = new Permissions($c);
 
-if ($a->areaAcceptsBlocks()) { ?>
+/* Show the controls area if we are in the advanced permissions model so that
+ * we can still edit area permissions even if we cannot add blocks to it.
+ */
+if ($a->areaAcceptsBlocks() || PERMISSIONS_MODEL == 'advanced') { ?>
 
 <? if (!$c->isArrangeMode()) { ?>
 	<script type="text/javascript">
@@ -30,22 +33,8 @@ if ($a->areaAcceptsBlocks()) { ?>
 	ccm_areaMenuObj<?=$a->getAreaID()?>.type = "AREA";
 	ccm_areaMenuObj<?=$a->getAreaID()?>.aID = <?=$a->getAreaID()?>;
 	ccm_areaMenuObj<?=$a->getAreaID()?>.arHandle = "<?=$arHandle?>";
-	ccm_areaMenuObj<?=$a->getAreaID()?>.canAddBlocks = <?=$ap->canAddBlocks()?>;
-	ccm_areaMenuObj<?=$a->getAreaID()?>.canAddStacks = <?=$ap->canAddStacks()?>;
-	ccm_areaMenuObj<?=$a->getAreaID()?>.canWrite = <?=$ap->canEditAreaContents()?>;
-	<? if ($ap->canEditAreaPermissions() && PERMISSIONS_MODEL != 'simple') { ?>
-		ccm_areaMenuObj<?=$a->getAreaID()?>.canModifyGroups = true;
-	<? } ?>
-	<? if ($ap->canAddLayoutToArea() && ENABLE_AREA_LAYOUTS == true && (!$a->isGlobalArea()) && (!$c->isMasterCollection())) { ?>
-		ccm_areaMenuObj<?=$a->getAreaID()?>.canLayout = true;
-	<? } else { ?>
-		ccm_areaMenuObj<?=$a->getAreaID()?>.canLayout = false;
-	<? } ?>
-	<? if ($ap->canEditAreaDesign() && ENABLE_CUSTOM_DESIGN == true && (!$c->isMasterCollection())) { ?>
-		ccm_areaMenuObj<?=$a->getAreaID()?>.canDesign = true;
-	<? } else { ?>
-		ccm_areaMenuObj<?=$a->getAreaID()?>.canDesign = false;
-	<? } ?>
+	ccm_areaMenuObj<?=$a->getAreaID()?>.maximumBlocks = <?=$a->maximumBlocks?>;
+    <? Loader::element('block_area_permissions_js', array('a' => $a, 'ap' => $ap, 'c' => $c, 'cp' => $cp)); ?> 
 	$(function() {ccm_menuInit(ccm_areaMenuObj<?=$a->getAreaID()?>)});
 	</script>
 	<? if ($a->isGlobalArea()) { ?>

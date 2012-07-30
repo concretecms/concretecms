@@ -206,9 +206,12 @@ class Concrete5_Model_StartingPointPackage extends Package {
 		
 		$fs->assignPermissions($g1, array('view_file_set_file'));
 		$fs->assignPermissions($g3, array('view_file_set_file', 'search_file_set', 'edit_file_set_file_properties', 'edit_file_set_file_contents', 'copy_file_set_files', 'edit_file_set_permissions', 'delete_file_set_files', 'delete_file_set', 'add_file'));
-
+		if (defined('ACTIVE_LOCALE') && ACTIVE_LOCALE != '' && ACTIVE_LOCALE != 'en_US') {
+			Config::save('SITE_LOCALE', ACTIVE_LOCALE);
+		}
 		Config::save('SITE', SITE);
 		Config::save('SITE_APP_VERSION', APP_VERSION);
+		
 		$u = new User();
 		$u->saveConfig('NEWSFLOW_LAST_VIEWED', 'FIRSTRUN');
 		

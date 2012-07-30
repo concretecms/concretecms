@@ -34,6 +34,7 @@
 
 		<?php 
 		$a = new GlobalArea('Header Nav');
+		$a->setBlockLimit(1);
 		$a->display();
 		?>
 		
@@ -41,6 +42,7 @@
 		
 			<?php 
 			$a = new Area('Header Image');
+			$a->setBlockLimit(1);
 			$a->display($c);
 			?>
 		

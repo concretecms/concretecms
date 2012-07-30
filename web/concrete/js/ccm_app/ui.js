@@ -128,6 +128,15 @@ ccm_showBlockMenu = function(obj, e) {
 
 }
 
+ccm_reloadAreaMenuPermissions = function(aID, cID) {
+    var config = window['ccm_areaMenuObj' + aID];
+    var action = CCM_TOOLS_PATH + '/reload_area_permissions_js.php' + 
+    '?arHandle=' + config.arHandle +
+ 	'&cID=' + cID +
+ 	'&maximumBlocks=' + config.maximumBlocks;
+ 	$.getScript( action );
+}
+
 ccm_openAreaAddBlock = function(arHandle, addOnly, cID) {
 	if (!addOnly) {	
 		addOnly = 0;
@@ -274,7 +283,8 @@ ccm_deleteBlock = function(cID, bID, aID, arHandle, msg) {
 			type: 'POST',
 			url: CCM_DISPATCHER_FILENAME,
 			data: 'cID=' + cID + '&ccm_token=' + CCM_SECURITY_TOKEN + '&isAjax=true&btask=remove&bID=' + bID + '&arHandle=' + arHandle
-		})
+		});
+		ccm_reloadAreaMenuPermissions(aID, cID);
 	}	
 }
 
@@ -329,6 +339,7 @@ ccm_parseBlockResponse = function(r, currentBlockID, task) {
 					}
 				}
 			);
+			ccm_reloadAreaMenuPermissions(resp.aID, cID);
 		}
 	} catch(e) { 
 		ccmAlert.notice(ccmi18n.error, r); 
