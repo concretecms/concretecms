@@ -3,7 +3,7 @@
  */
  
  /* Newsflow dialog - move into ccm.menus.css */
-div.newsflow {z-index:999;width:940px; /* height: 590px; overflow: hidden; */ min-height: 590px; margin: 0px auto 0px auto; position: relative; background-color:#ffffff; border:1px solid #666;  .border-radius(6px); -webkit-box-shadow:0 3px 7px rgba(0, 0, 0, 0.3);-moz-box-shadow:0 3px 7px rgba(0, 0, 0, 0.3);box-shadow:0 3px 7px rgba(0, 0, 0, 0.3);}
+div.newsflow {z-index:1001;width:940px; /* height: 590px; overflow: hidden; */ min-height: 590px; margin: 0px auto 0px auto; position: relative; background-color:#ffffff; border:1px solid #666;  .border-radius(6px); -webkit-box-shadow:0 3px 7px rgba(0, 0, 0, 0.3);-moz-box-shadow:0 3px 7px rgba(0, 0, 0, 0.3);box-shadow:0 3px 7px rgba(0, 0, 0, 0.3);}
 div.newsflow table.newsflow-layout td {vertical-align: top; padding: 12px; border-bottom: 1px solid #dedede; border-top: 0px !important; border-left: 0px !important; height: 125px; border-right: 1px solid #dedede; background-clip: padding-box;}
 div.newsflow table.newsflow-layout td:last-child {border-right: 0px;}
 div.newsflow table.newsflow-layout h3 {line-height: 20px; margin-bottom: 8px;}
@@ -21,9 +21,9 @@ div.newsflow table.newsflow-layout {margin-bottom: 0px; height: 592px; border: 0
 div.newsflow table.newsflow-layout td.newsflow-em1 {height: 1px; background-color: #f1f1f1;}
 div.newsflow table.newsflow-layout td.newsflow-column-quarter {height: 100%; width: 25%;}
 div.newsflow table.newsflow-layout td.newsflow-em1 hr {border-bottom-color: #d1d1d1;}
-div#newsflow-overlay {display: none; position: absolute; z-index: 95}
+div#newsflow-overlay {display: none; position: absolute; z-index: 1001}
 div#newsflow-overlay div.row {margin-left: 0px;}
-div.newsflow .ccm-pane-header-icons li {margin-left: 2px; position: relative; z-index: 300; }
+div.newsflow .ccm-pane-header-icons li {margin-left: 2px; position: relative; z-index: 1001; }
 div.newsflow .ccm-pane-header-icons {top: 2px; right: 2px}
 div#ccm-dashboard-welcome-back {margin: -13px -10px 0px -12px; overflow: hidden; color: #666; padding: 74px 30px 30px 145px; background: transparent url(../images/newsflow_logo_welcome_back.png) no-repeat 0 0}
 div#ccm-dashboard-welcome-back h1 {font-size: 48px; color: #666; }
@@ -41,7 +41,7 @@ div#newsflow-header {background-color: #f1f1f1; padding: 40px 30px 10px 60px; ba
 /*
 .newsflow-paging-previous, .newsflow-paging-next {width: 33px; .border-radius-right-only(4px); text-align: center; height: 100%; z-index: 10; position: absolute; top: 0px; background-clip: padding-box; }
 */
-.newsflow-paging-previous, .newsflow-paging-next {width: 33px; text-align: center; height: 100%; z-index: 10; position: absolute; top: 0px; background-clip: padding-box; }
+.newsflow-paging-previous, .newsflow-paging-next {width: 33px; text-align: center; height: 100%; z-index: 1001; position: absolute; top: 0px; background-clip: padding-box; }
 .newsflow-paging-previous {left: -65px; padding-left: 10px;}
 /*
 .newsflow-paging-previous:hover {background: transparent url(../images/bg_newsflow_previous.png) repeat-y top left; .border-radius-left-only(4px); }
@@ -64,7 +64,7 @@ td.newsflow-latest-edition-wrapper {
 
 /* panes (including dashboard) */ 
 .ccm-pane {position: relative;}
-.ccm-pane-header-icons {position: absolute; top: 15px; right:10px; z-index: 20}
+.ccm-pane-header-icons {position: absolute; top: 15px; right:10px; z-index: 1001}
 .ccm-pane-header-icons li {list-style-type: none; display: block; margin-left: 5px; width: 17px; height: 17px; border-radius: 3px; -moz-border-radius: 3px; -webkit-border-radius: 3px;  background-clip: padding-box; float: left}
 .ccm-pane-header-icons li:hover {background-color: #c3c3c3; }
 .ccm-pane-header-icons li a {display: block; width: 0px; height: 0px; padding-left: 17px; padding-top: 17px; overflow: hidden; background: transparent url(../images/icons_sprite.png) no-repeat top left}
