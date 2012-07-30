@@ -81,6 +81,9 @@ class Concrete5_Controller_Install extends Controller {
 		if (file_exists(DIR_CONFIG_SITE . '/site_install_user.php')) {
 			require(DIR_CONFIG_SITE . '/site_install.php');
 			@include(DIR_CONFIG_SITE . '/site_install_user.php');
+			if (defined('ACTIVE_LOCALE') && Localization::activeLocale() !== ACTIVE_LOCALE) {
+				Localization::changeLocale(ACTIVE_LOCALE);
+			}
 			$e = Loader::helper('validation/error');
 			$e = $this->validateDatabase($e);
 			if ($e->has()) {
