@@ -160,7 +160,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			return $this->template;
 		}
 		
-		public function getTemplatePath() {
+		public function getTemplateURL() {
 			$bvt = new BlockViewTemplate($this->blockObj);
 			return $bvt->getBaseURL();
 		}
