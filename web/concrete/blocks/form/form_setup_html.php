@@ -186,7 +186,16 @@ $ih = Loader::helper('concrete/interface');
 					</ul>
 				</div>
 			</div>
-			
+
+			<div class="clearfix">
+				<div id="emailSettings">
+					<?php print $form->label('send_notification_from', t('Send Form Email From From This Address'));?>
+					<div class="input send_notification_from">
+						<?php print $form->checkbox('send_notification_from', 1); ?>
+					</div>
+				</div>
+			</div>
+
 			<div class="clearfix">
 			<label></label>
 			<div class="input">
@@ -266,6 +275,13 @@ $ih = Loader::helper('concrete/interface');
 							<li><label> <?=$form->radio('requiredEdit', 0)?> <span><?=t('No')?> </span>
 							</label></li>
 						</ul>
+					</div>
+				</div>
+
+				<div id="emailSettingsEdit">
+					<?php print $form->label('send_notification_from', t('Send Form Email From From This Address'));?>
+					<div class="input send_notification_from">
+						<?php print $form->checkbox('send_notification_from', 1); ?>
 					</div>
 				</div>
 			</fieldset>
