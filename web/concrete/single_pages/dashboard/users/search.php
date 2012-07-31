@@ -384,7 +384,7 @@ if (is_object($uo)) {
 		<h3><?=t('Basic Details')?></h3>
 		<p><strong><?=$uo->getUserName()?></strong>
 		<p><a href="mailto:<?=$uo->getUserEmail()?>"><?=$uo->getUserEmail()?></a></p>
-		<p><?=t('Account created on %s', $uo->getUserDateAdded('user'))?></p>
+		<p><?=t('Account created on %s', $uo->getUserDateAdded('user', DATE_APP_GENERIC_MDYT_FULL))?></p>
 		<?=(ENABLE_USER_TIMEZONES && strlen($uo->getUserTimezone())?"<p>".t('Timezone').": ".$uo->getUserTimezone() . '</p>':"")?>
 		<? if (USER_VALIDATE_EMAIL) { ?>
 			<p>
