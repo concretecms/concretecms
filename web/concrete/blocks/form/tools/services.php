@@ -4,6 +4,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 $miniSurvey= new Minisurvey();
 $bID = $_GET['bID'];
 //Permissions Check
+$bID = $_REQUEST['bID'];
+
 if($_GET['cID'] && $_GET['arHandle']){
 	$c = Page::getByID($_GET['cID'], 'RECENT');
 	$a = Area::get($c, $_GET['arHandle']);  
