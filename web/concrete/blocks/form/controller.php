@@ -252,6 +252,11 @@ class FormBlockController extends BlockController {
 		foreach($rows as $row){
 			if( intval($row['required'])==1 ){
 				$notCompleted=0;
+				if ($row['inputType'] == 'email') {
+					if (!Loader::helper('validation/strings')->email($_POST['Question' . $row['msqID']])) {
+						$errors['emails'] = t('You must enter a valid email address.');
+					}
+				}
 				if($row['inputType']=='checkboxlist'){
 					$answerFound=0;
 					foreach($_POST as $key=>$val){
@@ -331,7 +336,7 @@ class FormBlockController extends BlockController {
 				$adminUserInfo=UserInfo::getByID(USER_SUPER_ID);
 				$formFormEmailAddress = $adminUserInfo->getUserEmail();
 			}
-
+			$replyToEmailAddress = $formFormEmailAddress;
 			//loop through each question and get the answers 
 			foreach( $rows as $row ){	
 				//save each answer
@@ -360,7 +365,7 @@ class FormBlockController extends BlockController {
 						if(is_array($settings) && array_key_exists('send_notification_from', $settings) && $settings['send_notification_from'] == 1) {
 							$email = $txt->email($answer);
 							if(!empty($email)) {
-								$formFormEmailAddress = $email;
+								$replyToEmailAddress = $email;
 							}
 						}
 					}
@@ -406,6 +411,7 @@ class FormBlockController extends BlockController {
 				$mh = Loader::helper('mail');
 				$mh->to( $this->recipientEmail ); 
 				$mh->from( $formFormEmailAddress ); 
+				$mh->replyto( $replyToEmailAddress ); 
 				$mh->addParameter('formName', $this->surveyName);
 				$mh->addParameter('questionSetId', $this->questionSetId);
 				$mh->addParameter('questionAnswerPairs', $questionAnswerPairs); 
@@ -642,8 +648,10 @@ class MiniSurvey{
 					$key='optionVals';
 					if($questionRow['inputType'] == 'email') {
 						$options = unserialize($val);
-						foreach($options as $o_key => $o_val) {
-							$val = $o_key."::".$o_val.";";
+						if (is_array($options)) {
+							foreach($options as $o_key => $o_val) {
+								$val = $o_key."::".$o_val.";";
+							}
 						}
 					}
 				}
