@@ -881,11 +881,11 @@ class Page extends Collection {
 		if(!$dateFormat) {
 			$dateFormat = 'Y-m-d H:i:s';
 		}
+		$dh = Loader::helper('date');
 		if(ENABLE_USER_TIMEZONES && $type == 'user') {
-			$dh = Loader::helper('date');
 			return $dh->getLocalDateTime($this->vObj->cvDatePublic, $dateFormat);
 		} else {
-			return date($dateFormat, strtotime($this->vObj->cvDatePublic));
+			return $dh->date($dateFormat, strtotime($this->vObj->cvDatePublic));
 		}
 	}
 
