@@ -105,7 +105,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			}
 
 			$this->controller->setupAndRun($view);
-			extract($this->controller->getControllerSets());
+			extract($this->controller->getSets());
 			extract($this->controller->getHelperObjects());
 			$atHandle = $this->attributeType->getAttributeTypeHandle();
 			
