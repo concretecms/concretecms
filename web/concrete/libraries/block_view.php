@@ -90,7 +90,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		public function inc($file, $args = array()) {
 			extract($args);
 			$base = $this->getBlockPath($file);
-			extract($this->controller->getControllerSets());
+			extract($this->controller->getSets());
 			extract($this->controller->getHelperObjects());
 
 			include($base . '/' . $file);
@@ -246,7 +246,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			if ($outputContent == false) {
 				$this->controller->setupAndRun($_action);
 			}
-			extract($this->controller->getControllerSets());
+			extract($this->controller->getSets());
 			extract($this->controller->getHelperObjects());
 			$headerItems = $this->controller->headerItems;
 			extract($args);

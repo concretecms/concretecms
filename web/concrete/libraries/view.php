@@ -409,7 +409,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			if (isset($this->c)) {
 				$c = $this->c;
 			}
-			extract($this->controller->getControllerSets());
+			extract($this->controller->getSets());
 			extract($this->controller->getHelperObjects());
 			include($this->themeDir . '/' . $file);
 		}
@@ -905,7 +905,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				// disconnect from our db and exit
 
 				$this->controller->on_before_render();
-				extract($this->controller->getControllerSets());
+				extract($this->controller->getSets());
 				extract($this->controller->getHelperObjects());
 
 				if ($content != false) {
