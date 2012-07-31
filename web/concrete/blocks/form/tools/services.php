@@ -4,6 +4,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 $miniSurvey= new Minisurvey();
 
 //Permissions Check
+$bID = $_REQUEST['bID'];
+
 if($_GET['cID'] && $_GET['arHandle']){
 	$c = Page::getByID($_GET['cID'], 'RECENT');
 	$a = Area::get($c, $_GET['arHandle']);  
@@ -21,6 +23,7 @@ if($_GET['cID'] && $_GET['arHandle']){
 				$b = Block::getByID($b->getController()->getOriginalBlockID());
 				$b->setBlockAreaObject($a);
 				$b->loadNewCollection($c);
+				$bID = $b->getBlockID();
 			}
 		} else {
 			$b = Block::getByID($_REQUEST['bID'], Stack::getByName($a->getAreaHandle()), STACKS_AREA_NAME);
@@ -58,7 +61,7 @@ switch ($_GET['mode']){
 	case 'refreshSurvey':
 	default: 
 		$showEdit=(intval($_REQUEST['showEdit'])==1)?true:false; 
-		$miniSurvey->loadSurvey( intval($_GET['qsID']), $showEdit, intval($b->getBlockID()), explode(',',$_GET['hide']), 1 ); 
+		$miniSurvey->loadSurvey( intval($_GET['qsID']), $showEdit, intval($bID), explode(',',$_GET['hide']), 1 ); 
 }
 
 ?>
