@@ -103,12 +103,17 @@ if (!defined('ENABLE_LEGACY_CONTROLLER_URLS')) {
 	define('ENABLE_LEGACY_CONTROLLER_URLS', false);
 }
 
+<<<<<<< HEAD
 if (!defined('ENABLE_PROGRESSIVE_PAGE_REINDEX')) {
 	define('ENABLE_PROGRESSIVE_PAGE_REINDEX', true);
 }
 
 if (!defined('ENABLE_APP_NEWS')) {
 	Config::getOrDefine('ENABLE_APP_NEWS', true);
+}
+
+if (!defined('FORBIDDEN_SHOW_LOGIN')) {
+	Config::getOrDefine('FORBIDDEN_SHOW_LOGIN', true); //show the login page instead of forbidden for non-logged in users
 }
 
 if (URL_REWRITING_ALL == true) {
