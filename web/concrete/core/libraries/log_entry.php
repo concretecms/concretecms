@@ -8,6 +8,7 @@ class Concrete5_Library_LogEntry extends Object {
 	public function getType() {return $this->logType;}
 	public function getText() {return $this->logText;}
 	public function getID() {return $this->logID;}
+	public function getUserID() { return $this->logUserID;}
 	
 	public function getTimestamp($type = 'system') {
 		if(ENABLE_USER_TIMEZONES && $type == 'user') {
