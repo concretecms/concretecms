@@ -777,6 +777,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 					// $view is a page. It can either be a SinglePage or just a Page, but we're not sure at this point, unfortunately
 					if ($view->getCollectionTypeID() == 0 && $cFilename) {
 						$wrapTemplateInTheme = true;
+						$cFilename = trim($cFilename, '/');
 						$content = $env->getPath(DIRNAME_PAGES . '/' . $cFilename, $view->getPackageHandle());
 						$themeFilename = $c->getCollectionHandle() . '.php';						
 					} else {
