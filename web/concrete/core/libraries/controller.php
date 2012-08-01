@@ -1,8 +1,5 @@
 <?
-
 defined('C5_EXECUTE') or die("Access Denied.");
-
-
 /**
  * @package Core
  * @category Concrete
@@ -21,7 +18,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
  * @license    http://www.concrete5.org/license/     MIT License
  *
  */
-
 class Concrete5_Library_Controller {
 
 	public $theme = null;
@@ -427,6 +423,17 @@ class Concrete5_Library_Controller {
 	 */
 	public function getTask() {return $this->task;}
 	
+	/**
+	 * Gets the array of parameters passed to the controller
+	 * @return array
+	 */
+	public function getControllerParameters() { 
+		if (is_array($this->parameters)) {
+			return $this->parameters;
+		}
+		return array();
+	}
+	
 	/** 
 	 * Gets the array of items that have been set using set()
 	 * @return array
@@ -463,5 +470,3 @@ class Concrete5_Library_Controller {
 		$v->outputFooterItems();
 	}
 }
-
-?>

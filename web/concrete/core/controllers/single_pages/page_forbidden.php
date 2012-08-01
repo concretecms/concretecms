@@ -16,7 +16,11 @@ class Concrete5_Controller_PageForbidden extends LoginController {
 			}
 		}
 		parent::view();
-		$this->render('/login');
+		$u = new User();
+		$logged = $u->isLoggedIn();
+		if(!$logged && FORBIDDEN_SHOW_LOGIN) { //if they are not logged in, and we show guests the login...
+			$this->render('/login');
+		}
 	}
 	
 }

@@ -645,12 +645,12 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		* @param string $type (system || user)
 		* @return string date formated like: 2009-01-01 00:00:00 
 		*/
-		function getUserDateAdded($type = 'system') {
+		function getUserDateAdded($type = 'system', $datemask = 'Y-m-d H:i:s') {
+			$dh = Loader::helper('date');
 			if(ENABLE_USER_TIMEZONES && $type == 'user') {
-				$dh = Loader::helper('date');
-				return $dh->getLocalDateTime($this->uDateAdded);
+				return $dh->getLocalDateTime($this->uDateAdded, $datemask);
 			} else {
-				return $this->uDateAdded;
+				return $dh->date($datemask, strtotime($this->uDateAdded));
 			}
 		}
 

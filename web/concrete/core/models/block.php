@@ -27,6 +27,7 @@ class Concrete5_Model_Block extends Object {
 	var $cID;
 	var $arHandle;
 	var $c;
+	protected $proxyBlock = false;
 
 	public static function populateManually($blockInfo, $c, $a) {
 		$b = new Block;
@@ -202,6 +203,15 @@ class Concrete5_Model_Block extends Object {
 	
 	}
 	
+	public function setProxyBlock($block) {
+		$this->proxyBlock = $block;
+	}
+	
+	public function getProxyBlock() {
+		return $this->proxyBlock;
+	}
+		
+
 	public function display( $view = 'view', $args = array()){
 		if ($this->getBlockTypeID() < 1) {
 			return ;
@@ -330,11 +340,18 @@ class Concrete5_Model_Block extends Object {
 		// pass this onto the blocktype's class
 		
 		$method = "action_" . $method;
-		
-		$btID = $this->getBlockTypeID();
+		if ($this->getBlockTypeHandle() == BLOCK_HANDLE_SCRAPBOOK_PROXY) {
+			$bOriginalID = $this->getController()->getOriginalBlockID();
+			$bo = Block::getByID($bOriginalID);
+			$btID = $bo->getBlockTypeID();
+			$b = $bo;
+		} else {
+			$btID = $this->getBlockTypeID();	
+			$b = $this;
+		}
 		$bt = BlockType::getByID($btID);
 		$class = $bt->getBlockTypeClass();
-		$bc = new $class($this);
+		$bc = new $class($b);
 		
 		// ONLY ALLOWS ITEMS THAT START WITH "action_";
 		

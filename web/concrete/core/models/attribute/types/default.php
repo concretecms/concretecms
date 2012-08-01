@@ -40,7 +40,6 @@ class Concrete5_Controller_AttributeType_Default extends AttributeTypeController
 	}
 	
 	public function saveForm($data) {
-		$db = Loader::db();
 		$this->saveValue($data['value']);
 	}
 	

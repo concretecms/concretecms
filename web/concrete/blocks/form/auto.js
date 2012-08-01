@@ -33,6 +33,7 @@ var miniSurvey ={
 			$('#cancelEditQuestion').click(   function(){ $('#editQuestionForm').css('display','none') } );			
 			this.serviceURL+='cID='+this.cID+'&arHandle='+this.arHandle+'&bID='+this.bID+'&btID='+this.btID+'&';
 			miniSurvey.refreshSurvey();
+			$('#emailSettings').hide();
 		},	
 	tabSetup: function(){
 		$('ul#ccm-formblock-tabs li a').each( function(num,el){ 
@@ -62,13 +63,21 @@ var miniSurvey ={
 			if(mode!='Edit') mode='';
 			if( radioButton.value=='select' || radioButton.value=='radios' || radioButton.value=='checkboxlist'){
 				 $('#answerOptionsArea'+mode).css('display','block');
-			}else $('#answerOptionsArea'+mode).css('display','none');			
+			}else $('#answerOptionsArea'+mode).css('display','none');
+
+			if( radioButton.value=='email') {
+				$('#emailSettings'+mode).show();
+			} else {
+				$('#emailSettings'+mode).hide();
+			}
 		},
 	settingsCheck : function(radioButton,mode){
 			if(mode!='Edit') mode='';
 			if( radioButton.value=='text'){
 				 $('#answerSettings'+mode).css('display','block');
-			}else $('#answerSettings'+mode).css('display','none');			
+			}else {
+				$('#answerSettings'+mode).css('display','none');
+			}
 		},
 	replytoCheck : function(radioButton,mode){
 			if(mode!='Edit') mode='';
@@ -95,7 +104,11 @@ var miniSurvey ={
 			postStr+='&position='+escape($('#position'+mode).val());
 			var form=document.getElementById('ccm-block-form'); 
 			postStr+='&inputType='+answerType;//$('input[name=answerType'+mode+']:checked').val()
-			postStr+='&msqID='+msqID+'&qsID='+parseInt(this.qsID);			
+			postStr+='&msqID='+msqID+'&qsID='+parseInt(this.qsID);
+			if(answerType == 'email') {
+				postStr+='&send_notification_from=';
+				postStr+= $('#send_notification_from').is(':checked') ? "1" : "0"
+			}
 			$.ajax({ 
 					type: "POST",
 					data: postStr,
@@ -162,15 +175,24 @@ var miniSurvey ={
 						} else {
 							$('#requiredEdit input[value=1]').prop('checked', false);
 							$('#requiredEdit input[value=0]').prop('checked', true);
-						} 
-						if (jsonObj.inputType == 'email' && parseInt(jsonObj.optionVals, 10) == 1) {
-							$('#answerReplytoEdit input[value=1]').prop('checked', true);
-							$('#answerReplytoEdit input[value=0]').prop('checked', false);
-						} else {
-							$('#answerReplytoEdit input[value=1]').prop('checked', false);
-							$('#answerReplytoEdit input[value=0]').prop('checked', true);
-						} 
-						
+						}
+
+						if(jsonObj.inputType == 'email') {
+							var options = jsonObj.optionVals.split(";");
+							for (var i = 0; i < options.length; i++) {
+								key_val = options[i].split('::');
+								if(key_val.length == 2) {
+									if (key_val[0] == 'send_notification_from') {
+										if (key_val[1] == 1) {
+											$('.send_notification_from input').prop('checked', true);
+										} else {
+											$('.send_notification_from input').prop('checked', false);
+										}
+									}
+								}
+							}
+						}
+
 						$('#msqID').val(jsonObj.msqID);    
 						$('#answerTypeEdit').val(jsonObj.inputType);
 						miniSurvey.optionsCheck($('#answerTypeEdit').get(0), 'Edit');

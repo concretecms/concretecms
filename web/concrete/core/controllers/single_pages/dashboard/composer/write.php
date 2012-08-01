@@ -59,9 +59,13 @@ class Concrete5_Controller_Dashboard_Composer_Write extends Controller {
 			
 			if (!$this->error->has()) {
 				
-				$handle = Loader::helper('text')->urlify($this->post('cName'));
+				if ($this->post('cHandle')) {
+					$handle = $this->post('cHandle');
+				} else {
+					$handle = Loader::helper('text')->urlify($this->post('cName'));
+				}
+
 				$handle = str_replace('-', PAGE_PATH_SEPARATOR, $handle);		
-		
 				$data = array('cDatePublic' => Loader::helper('form/date_time')->translate('cDatePublic'), 'cHandle' => $handle, 'cName' => $this->post('cName'), 'cDescription' => $this->post('cDescription'));
 				$entry->getVersionToModify();
 				// this is a pain. we have to use composerpage::getbyid again because
@@ -120,6 +124,7 @@ class Concrete5_Controller_Dashboard_Composer_Write extends Controller {
 			$this->set('entry', $entry);
 			$this->set("ct", $ct);
 			$this->set('name', $entry->getCollectionName());
+			$this->set('handle',$entry->getCollectionHandle());
 			$this->set('description', $entry->getCollectionDescription());
 			$this->set('cDatePublic', $entry->getCollectionDatePublic());
 			$this->set('contentitems', $ct->getComposerContentItems());

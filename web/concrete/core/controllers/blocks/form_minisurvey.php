@@ -51,7 +51,17 @@ class Concrete5_Controller_Block_FormMinisurvey {
 				}else{
 					$jsonVals['mode']='"Add"';
 				}
-			
+
+				//see if the 'send notification from' checkbox is checked and save this to the options field
+				if($values['inputType'] == 'email') {
+					$options = array();
+					if(array_key_exists('send_notification_from', $values) && $values['send_notification_from'] == 1) {
+						$options['send_notification_from'] = 1;
+					} else {
+						$options['send_notification_from'] = 0;
+					}
+					$values['options'] = serialize($options);
+				}
 				if( $pendingEditExists ){ 
 					$width = $height = 0;
 					if ($values['inputType'] == 'text'){
@@ -89,7 +99,18 @@ class Concrete5_Controller_Block_FormMinisurvey {
 			$questionRow=$questionRS->fetchRow();
 			$jsonPairs=array();
 			foreach($questionRow as $key=>$val){
-				if($key=='options') $key='optionVals';
+				if($key=='options') {
+					$key='optionVals';
+					if($questionRow['inputType'] == 'email') {
+						$options = unserialize($val);
+						if (is_array($options)) {
+							foreach($options as $o_key => $o_val) {
+								$val = $o_key."::".$o_val.";";
+							}
+						}
+					}
+				}
+
 				$jsonPairs[]=$key.':"'.str_replace(array("\r","\n"),'%%',addslashes($val)).'"';
 			}
 			echo '{'.join(',',$jsonPairs).'}';
@@ -251,7 +272,7 @@ class Concrete5_Controller_Block_FormMinisurvey {
 					return '<input name="Question'.$msqID.'" id="Question'.$msqID.'" type="tel" value="'.stripslashes(htmlspecialchars($val)).'" />';
 				case 'email':
 					$val=($_REQUEST['Question'.$msqID])?$_REQUEST['Question'.$msqID]:'';
-					return '<input name="Question'.$msqID.'" id="Question'.$msqID.'" type="email" value="'.stripslashes(htmlspecialchars($val)).'" />';
+					return '<input name="Question'.$msqID.'" id="Question'.$msqID.'" type="email" value="'.stripslashes(htmlspecialchars($val)).'" />';	
 				case 'date':
 					$val=($_REQUEST['Question'.$msqID])?$_REQUEST['Question'.$msqID]:'';
 					return $datetime->date('Question'.$msqID,($val!==''?$val:'now'));

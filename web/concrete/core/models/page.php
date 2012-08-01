@@ -830,11 +830,12 @@ class Concrete5_Model_Page extends Collection {
 		if(!$dateFormat) {
 			$dateFormat = 'Y-m-d H:i:s';
 		}
+		$dh = Loader::helper('date');
 		if(ENABLE_USER_TIMEZONES && $type == 'user') {
 			$dh = Loader::helper('date');
 			return $dh->getLocalDateTime($this->vObj->cvDatePublic, $dateFormat);
 		} else {
-			return date($dateFormat, strtotime($this->vObj->cvDatePublic));
+			return $dh->date($dateFormat, strtotime($this->vObj->cvDatePublic));
 		}
 	}
 
@@ -1319,74 +1320,6 @@ class Concrete5_Model_Page extends Collection {
 		}
 	}
 
-	/*
-	function updatePermissions($args = null) {
-		$db = Loader::db();
-		if (!is_array($args)) {
-			$args = $_POST; // legacy support
-		}
-		
-		if ($args['cInheritPermissionsFrom'] == 'OVERRIDE') {
-			// we're hitting manual override, which means we need to do permissions updates
-			if ($this->getPermissionsCollectionID() != $this->cID) {
-				// that means we're selecting override from some collection that _wasn't_ set to override
-				// we have to grab the existing area permissions for that collection, then, clear out any
-				// area permissions we might have (for some reason) and add them to this collection
-				$this->acquireAreaPermissions($this->getPermissionsCollectionID());
-			}
-			$v = array('OVERRIDE', $this->cID, $this->cID);
-			$q = "update Pages set cInheritPermissionsFrom = ?, cInheritPermissionsFromCID = ? where cID = ?";
-			$r = $db->query($q, $v);
-			$this->updateGroups($args);
-		} else {
-			// we're not overriding permissions so we don't do those updates
-			if ($args['cInheritPermissionsFrom'] == 'PARENT') {
-				$cpID = $this->getParentPermissionsCollectionID();
-				$this->updatePermissionsCollectionID($this->cID, $cpID);
-			} else if ($args['cInheritPermissionsFrom'] == 'TEMPLATE') {
-				$cpID = $this->getMasterCollectionID();
-				$this->updatePermissionsCollectionID($this->cID, $cpID);
-			} else {
-				$cpID = $this->getCollectionID();
-			}
-
-
-			$v = array($args['cInheritPermissionsFrom'], $cpID, $this->cID);
-			$q = "update Pages set cInheritPermissionsFrom = ?, cInheritPermissionsFromCID = ? where cID = ?";
-			$r = $db->query($q, $v);
-
-			$this->cInheritPermissionsFrom = $args['cInheritPermissionsFrom'];
-			$this->cInheritPermissionsFromCID = $cpID;
-
-			// we do this because we may be going from a manual override to inheritance, and we don't
-			// want any orphaned groups
-			// need to comment this out while i'm working on the new permissions model
-			//$this->clearGroups();
-		}
-
-		$cOverrideTemplatePermissions = ($args['cOverrideTemplatePermissions'] == 1) ? 1 : 0;
-
-		$v = array($cOverrideTemplatePermissions, $this->cID);
-		$q = "update Pages set cOverrideTemplatePermissions = ? where cID = ?";
-
-		$this->cOverrideTemplatePermissions = $cOverrideTemplatePermissions;
-		
-		$arHandles = $db->GetCol('select arHandle from Areas where cID = ?', $this->getCollectionID());
-		foreach($arHandles as $arHandle) {
-			$a = Area::getOrCreate($this, $arHandle);
-			$a->rescanAreaPermissionsChain();
-		}
-
-		$blocks = $this->getBlocks();
-		foreach($blocks as $b) {
-			$b->refreshCache();
-		}
-		
-		$db->query($q, $v);
-		parent::refreshCache();
-	}
-	*/
-	
 	public function __destruct() {
 		parent::__destruct();
 	}

@@ -108,7 +108,9 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		 */
 
 		public function addHeaderItem($item, $namespace = 'VIEW') {
-			$this->headerItems[$namespace][] = $item;
+			if ($this->resolveItemConflicts($item)) {
+				$this->headerItems[$namespace][] = $item;
+			}
 		}
 		
 		/** 
@@ -116,47 +118,116 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		 * @access private
 		 */
 		public function addFooterItem($item, $namespace = 'VIEW') {
-			$this->footerItems[$namespace][] = $item;
+			if ($this->resolveItemConflicts($item)) {
+				$this->footerItems[$namespace][] = $item;
+			}
+		}
+		
+		/**
+		 * Internal helper function for addHeaderItem() and addFooterItem().
+		 * Looks through header and footer items for anything of the same type
+		 * and having the same "unique handle" as the given item.
+		 *
+		 * HOW TO USE THIS FUNCTION:
+		 * When calling this function, just pass the first $item argument
+		 *  (the second optional argument is only for our own recursive use).
+		 * If we return FALSE, that means the given item should NOT be added to headerItems/footerItems.
+		 * If we return TRUE, then go ahead and add the item to headerItems/footerItems.
+		 *
+		 * NOTE: THIS FUNCTION HAS POTENTIAL SIDE-EFFECTS (IN ADDITION TO RETURN VALUE)...
+		 * ~If no duplicate is found, we return TRUE (with no side-effects).
+		 * ~If a duplicate is found and the given item has a HIGHER version than the found item,
+		 *  we return TRUE **AND** we remove the found duplicate from headerItems or footerItems!!
+		 * ~If a duplicate is found and the given item does NOT have a higher version than
+		 *  the found item, we return FALSE (with no side-effects).
+		 */
+		private function resolveItemConflicts($checkItem, &$againstItems = null) {
+			
+			//Only check items that have "unique handles"
+			if (empty($checkItem->handle)) {
+				return true;
+			}
+			
+			//Recursively check header items AND footer items
+			if (is_null($againstItems)) {
+				return ($this->resolveItemConflicts($checkItem, $this->headerItems) && $this->resolveItemConflicts($checkItem, $this->footerItems));
+			}
+			
+			//Loop through all items and check for duplicates
+			foreach ($againstItems as $itemNamespace => $namespaceItems) {
+				foreach ($namespaceItems as $itemKey => $againstItem) {
+					//Check the "unique handles"
+					if (!empty($againstItem->handle) && (strtolower($checkItem->handle['handle']) == strtolower($againstItem->handle['handle']))) {
+						//Check the item types (so js and css items can have the same handle without conflicting)
+						//Note that we consider both the JavaScript and InlineScript items to be the same "type".
+						$checkClass = get_class($checkItem);
+						$againstClass = get_class($againstItem);
+						if (($checkClass == $againstClass) || (!array_diff(array($checkClass, $againstClass), array('JavaScriptOutputObject', 'InlineScriptOutputObject')))) {
+							//Does the given item have a higher version than the existing found item?
+							if (version_compare($checkItem->handle['version'], $againstItem->handle['version'], '>')) {
+								//Yes (new item is higher) so remove old item
+								// and return true to indicate that the new item should be added.
+								unset($againstItems[$itemNamespace][$itemKey]); // bug note: if we didn't return in the next line, this would cause problems the next time the loop iterated!
+								return true;
+							} else {
+								//No (new item is not higher) so leave old item where it is
+								// and return false to indicate that the new item should *not* be added.
+								return false;
+							}
+						}
+					}
+				}
+			}
+			
+			//No duplicates found, so return true to indicate that it's okay to add the item.
+			return true;
 		}
 		
 		public function getHeaderItems() {
+			//Combine items from all namespaces into one list
 			$a1 = (is_array($this->headerItems['CORE'])) ? $this->headerItems['CORE'] : array();
 			$a2 = (is_array($this->headerItems['VIEW'])) ? $this->headerItems['VIEW'] : array();
 			$a3 = (is_array($this->headerItems['CONTROLLER'])) ? $this->headerItems['CONTROLLER'] : array();
 			
 			$items = array_merge($a1, $a2, $a3);
+			
+			//Remove exact string duplicates (items whose string representations are equal)
 			if (version_compare(PHP_VERSION, '5.2.9', '<')) {
 				$items = array_unique($items);
 			} else {
-				// stupid PHP
+				// stupid PHP (see http://php.net/array_unique#refsect1-function.array-unique-changelog )
 				$items = array_unique($items, SORT_STRING);
 			}
 			return $items;
 		}
 		
 		public function getFooterItems() {
+			//Combine items from all namespaces into one list
 			$a1 = (is_array($this->footerItems['CORE'])) ? $this->footerItems['CORE'] : array();
 			$a2 = (is_array($this->footerItems['VIEW'])) ? $this->footerItems['VIEW'] : array();
 			$a3 = (is_array($this->footerItems['CONTROLLER'])) ? $this->footerItems['CONTROLLER'] : array();
 			$a4 = (is_array($this->footerItems['SCRIPT'])) ? $this->footerItems['SCRIPT'] : array();
 			
 			$items = array_merge($a1, $a2, $a3, $a4);
+			
+			//Remove exact string duplicates (items whose string representations are equal)
 			if (version_compare(PHP_VERSION, '5.2.9', '<')) {
 				$items = array_unique($items);
 			} else {
-				// stupid PHP
+				// stupid PHP (see http://php.net/array_unique#refsect1-function.array-unique-changelog )
 				$items = array_unique($items, SORT_STRING);
 			}
 			
-			// also strip out anything that was in the header
+			//Also remove items having exact string duplicates in the header
 			$headerItems = $this->getHeaderItems();
-			$retitems = array();
+			$retItems = array();
 			foreach($items as $it) {
 				if (!in_array($it, $headerItems)) {
-					$retitems[] = $it;
+					$retItems[] = $it;
 				}
 			}
-			return $retitems;
+			
+			return $retItems;
 		}
 		
 		/** 
