@@ -50,11 +50,11 @@ $pageTypeIconsFS = FileSet::getByName("Page Type Icons");
                     <?
                         if (!is_object($pageTypeIconsFS)) {
                             print '<span style="margin-left: 4px; color: #aaa">';
-                            print t('(To add your own page type icons, create a file set named "%s" and add files to that set)', t('Page Type Icons'));
+                            print t('(To add your own page type icons, create a file set named "%s" and add files to that set)', 'Page Type Icons');
                             print '</span>';
                         } else {
                             print '<span style="margin-left: 4px; color: #aaa">';
-                            print t('(Pulling icons from file set "%s". Icons will be displayed at %s x %s.)', t('Page Type Icons'), COLLECTION_TYPE_ICON_WIDTH, COLLECTION_TYPE_ICON_HEIGHT);
+                            print t('(Pulling icons from file set "%s". Icons will be displayed at %s x %s.)', 'Page Type Icons', COLLECTION_TYPE_ICON_WIDTH, COLLECTION_TYPE_ICON_HEIGHT);
                             print '</span>';
                         }
                     ?>

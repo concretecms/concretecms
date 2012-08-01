@@ -3,7 +3,10 @@
 ?>
 <?
 $bo = Block::getByID($bOriginalID);
-$bv = new BlockView(); ?>
+$bp = new Permissions($bo);
+$bo->setProxyBlock($b);
+if ($bp->canWrite()) {
+	$bv = new BlockView(); ?>
 	
 		<div class="ccm-ui">
 			<div class="alert alert-info"><?=t("This block was copied from another location. Editing it will create a new instance of it.")?></div>
@@ -13,7 +16,6 @@ $bv = new BlockView(); ?>
 	
 	$bv->render($bo, 'edit', array(
 		'c' => $c,
-		'a' => $a,
-		'proxyBlock' => $b
+		'a' => $a
 	));
-?>
+} ?>

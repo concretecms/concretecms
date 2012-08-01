@@ -2,7 +2,7 @@
  * The toolbar used for the front-end of the site and the dashboard
  */
  
-div#ccm-toolbar {-webkit-box-shadow: 0px 2px 2px rgba(90,90,90,0.3);-moz-box-shadow: 0px 2px 2px rgba(90,90,90,0.3); box-shadow: 0px 2px 2px rgba(90,90,90,0.3); border-bottom: 1px solid #888;background: #eee url(../images/dashboard/bg_header.png) repeat-x scroll; position: fixed; top: 0px; left: 0px; height: 49px; width: 100%; z-index: 100}
+div#ccm-toolbar {-webkit-box-shadow: 0px 2px 2px rgba(90,90,90,0.3);-moz-box-shadow: 0px 2px 2px rgba(90,90,90,0.3); box-shadow: 0px 2px 2px rgba(90,90,90,0.3); border-bottom: 1px solid #888;background: #eee url(../images/dashboard/bg_header.png) repeat-x scroll; position: fixed; top: 0px; left: 0px; height: 49px; width: 100%; z-index: 999}
 
 ul#ccm-main-nav, ul#ccm-system-nav {font-size: 15px; font-weight: bold;}
 ul#ccm-main-nav a, ul#ccm-system-nav a {color: #666; font-weight: bold; text-decoration: none;}
@@ -40,7 +40,7 @@ ul#ccm-system-nav { margin: 0px; padding: 0px; margin: 0px 0px 0px 8px; position
 ul#ccm-system-nav li { border-right: 0px; border-left: 1px solid #c5c5c5; }
 
 /* Intelligent Search Results - will move into ccm.menus.css */
-div#ccm-intelligent-search-results {text-align: left; padding: 0px; z-index: 2000; background: transparent url(../images/bg_intelligent_search.png) repeat-y scroll; position: fixed; display: none; top: 50px; right: 103px; width: 430px; border-left: 1px solid #888; border-right: 1px solid #888; border-bottom: 1px solid #888; border-bottom-left-radius: 4px; border-bottom-right-radius: 4px; -webkit-box-shadow: 0px 2px 2px rgba(90,90,90,0.3);-moz-box-shadow: 0px 2px 2px rgba(90,90,90,0.3); box-shadow: 0px 2px 2px rgba(90,90,90,0.3);}
+div#ccm-intelligent-search-results {text-align: left; padding: 0px; z-index: 999; background: transparent url(../images/bg_intelligent_search.png) repeat-y scroll; position: fixed; display: none; top: 50px; right: 103px; width: 430px; border-left: 1px solid #888; border-right: 1px solid #888; border-bottom: 1px solid #888; border-bottom-left-radius: 4px; border-bottom-right-radius: 4px; -webkit-box-shadow: 0px 2px 2px rgba(90,90,90,0.3);-moz-box-shadow: 0px 2px 2px rgba(90,90,90,0.3); box-shadow: 0px 2px 2px rgba(90,90,90,0.3);}
 div#ccm-intelligent-search-results span {display: none;}
 div#ccm-intelligent-search-results div.ccm-intelligent-search-results-module-offsite {display: block;}
 div#ccm-intelligent-search-results div.ccm-intelligent-search-results-module-onsite {display: none;}
@@ -56,7 +56,7 @@ div#ccm-intelligent-search-results li a:hover {text-decoration: none;}
 div#ccm-intelligent-search-results li a.ccm-intelligent-search-result-selected {border-radius: 2px; -webkit-border-radius: 2px; -moz-border-radius: 2px; background-color: rgba(192,225,246,0.4); border: 1px solid rgba(117,185,240,0.4) !important; padding: 0px 14px 0px 14px; text-decoration: none;}
 
 /* Dashboard Overlay */
-div#ccm-dashboard-overlay {text-align: left; position: fixed; z-index: 2000; visibility: hidden; background: #fff; top: 50px; right: 103px; width: 580px; border-left: 1px solid #888; border-right: 1px solid #888; border-bottom: 1px solid #888; border-bottom-left-radius: 4px; border-bottom-right-radius: 4px; -webkit-box-shadow: 0px 2px 2px rgba(90,90,90,0.3);-moz-box-shadow: 0px 2px 2px rgba(90,90,90,0.3); box-shadow: 0px 2px 2px rgba(90,90,90,0.3);}
+div#ccm-dashboard-overlay {text-align: left; position: fixed; z-index: 999; visibility: hidden; background: #fff; top: 50px; right: 103px; width: 580px; border-left: 1px solid #888; border-right: 1px solid #888; border-bottom: 1px solid #888; border-bottom-left-radius: 4px; border-bottom-right-radius: 4px; -webkit-box-shadow: 0px 2px 2px rgba(90,90,90,0.3);-moz-box-shadow: 0px 2px 2px rgba(90,90,90,0.3); box-shadow: 0px 2px 2px rgba(90,90,90,0.3);}
 div#ccm-dashboard-overlay-footer {border-top: 1px solid #dfdfdf; position: relative; background-color: #f2f2f2; border-bottom-left-radius: 4px; border-bottom-right-radius: 4px; }
 div#ccm-dashboard-overlay-footer div.ccm-dashboard-overlay-inner {border-top: 1px solid #fff}
 div#ccm-dashboard-overlay-footer a {display: block; text-decoration: none; color: #999; .border-radius(5px); padding: 4px; font-size: 16px; text-align: center;}
@@ -78,7 +78,7 @@ div.ccm-dashboard-overlay-module ul {list-style-type: none; padding: 2px 0px 0px
 a#ccm-dashboard-overlay-packages-view-all {font-size: 11px; color: #aaa !important; position: absolute; top: 0px; right: 5px }
 
 /* Edit Menu */
-div#ccm-edit-overlay {text-align: left; position: fixed; z-index: 2000; display: none; background: #fff; top: 50px; left: 0px; width: 580px; border-left: 1px solid #888; border-right: 1px solid #888; border-bottom: 1px solid #888; border-bottom-left-radius: 4px; border-bottom-right-radius: 4px; -webkit-box-shadow: 0px 2px 2px rgba(90,90,90,0.3);-moz-box-shadow: 0px 2px 2px rgba(90,90,90,0.3); box-shadow: 0px 2px 2px rgba(90,90,90,0.3);}
+div#ccm-edit-overlay {text-align: left; position: fixed; z-index: 999; display: none; background: #fff; top: 50px; left: 0px; width: 580px; border-left: 1px solid #888; border-right: 1px solid #888; border-bottom: 1px solid #888; border-bottom-left-radius: 4px; border-bottom-right-radius: 4px; -webkit-box-shadow: 0px 2px 2px rgba(90,90,90,0.3);-moz-box-shadow: 0px 2px 2px rgba(90,90,90,0.3); box-shadow: 0px 2px 2px rgba(90,90,90,0.3);}
 div.ccm-edit-overlay-inner {padding: 20px;}
 div#ccm-edit-overlay-footer {border-top: 1px solid #dfdfdf; background-color: #f2f2f2; border-bottom-left-radius: 4px; border-bottom-right-radius: 4px; }
 div#ccm-edit-overlay-footer div.ccm-edit-overlay-inner {.clearfix(); border-top: 1px solid #fff}
@@ -95,9 +95,10 @@ div#ccm-notification h3 {font-size: 16px; font-weight: bold; margin: 2px 0px 2px
 img#ccm-notification-icon {margin-right: 6px; margin-top: 2px; opacity: 0.5}
 
 /* Quick Nav */
+/*
 div#ccm-quick-nav a {color: @linkColor;}
 div#ccm-quick-nav a:hover {color: #fff;}
-div#ccm-quick-nav {z-index: 99; .gradientBar(#EDF3F7, #D9EBF5); position: relative; display: none; .box-shadow(inset 0 1px 0 @white); border-bottom: 1px solid #A1C3DA; position: fixed; left: 0px; top: 50px; height: 32px; width: 100%; .clearfix();}
+div#ccm-quick-nav {z-index: 998; .gradientBar(#EDF3F7, #D9EBF5); position: relative; display: none; .box-shadow(inset 0 1px 0 @white); border-bottom: 1px solid #A1C3DA; position: fixed; left: 0px; top: 50px; height: 32px; width: 100%; .clearfix();}
 .ccm-quick-nav-always {visibility: visible !important; display: block !important;}
 div#ccm-quick-nav ul#ccm-quick-nav-favorites {position: absolute; top: 8px; left: 10px; margin: 0px; padding: 0px;}
 div#ccm-quick-nav ul#ccm-quick-nav-favorites li {
@@ -115,6 +116,8 @@ div#ccm-quick-nav ul#ccm-quick-nav-breadcrumb {
 }
 div#ccm-quick-nav ul {font-size: 12px;}
 div#ccm-quick-nav a {padding: 4px; line-height: 15px; .border-radius(6px);}
+*/
+
 .ui-effects-transfer {.border-radius(6px); border: 1px solid #000; z-index: 10000; background-color: rgba(255,255,255,0.4);  }
 
 /* Status Bar */

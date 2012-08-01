@@ -16,7 +16,7 @@
  * @package    Zend_Locale
  * @subpackage Format
  * @copyright  Copyright (c) 2005-2011 Zend Technologies USA Inc. (http://www.zend.com)
- * @version    $Id: Format.php 23775 2011-03-01 17:25:24Z ralph $
+ * @version    $Id: Format.php 23775-patched 2012-05-01 17:38:00Z patrickheck $
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 
@@ -747,13 +747,38 @@ class Zend_Locale_Format
                          'P' => 'ZZZZ', 'T' => 'z'   , 'Z' => 'X'   , 'c' => 'yyyy-MM-ddTHH:mm:ssZZZZ',
                          'r' => 'r'   , 'U' => 'U');
         $values = str_split($format);
+        $escaped = false;
+        $lastescaped = false;
+        $temp = array();
         foreach ($values as $key => $value) {
-            if (isset($convert[$value]) === true) {
-                $values[$key] = $convert[$value];
+            if (!$escaped && $value == '\\') {
+                $escaped = true;
+                continue;
+            }
+            if ($escaped) {
+            	if (!$lastescaped) {
+            		$temp[] = "'";
+            		$lastescaped = true;
+            	} 
+            	$temp[] = $value;
+            	$escaped = false;
+            } else { 
+            	if ($value == "'") {
+	                $temp[] = "''";
+	            } else {
+		            if ($lastescaped) {
+	            		$temp[] = "'";
+	            		$lastescaped = false;
+	            	    }
+		            if (isset($convert[$value]) === true) {
+		                $temp[] = $convert[$value];
+		            } else {
+		                $temp[] = $value;
+		            }
+	            }
             }
         }
-
-        return join($values);
+        return join($temp);
     }
 
     /**

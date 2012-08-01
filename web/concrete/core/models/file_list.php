@@ -1,5 +1,4 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
-Loader::model('attribute/categories/file');
 /**
 *
 * An object that allows a filtered list of files to be returned.
@@ -73,7 +72,6 @@ class Concrete5_Model_FileList extends DatabaseItemList {
 			if (count($sets) == 0) {
 				return false;
 			}
-			$db = Loader::db();
 			$setStr = implode(',', $sets);
 			$this->addToQuery("left join FileSetFiles fsfex on fsfex.fID = f.fID");
 			$this->filter(false, '(fsfex.fID is null or (select count(fID) from FileSetFiles where fID = fsfex.fID and fsID in (' . $setStr . ')) = 0)');

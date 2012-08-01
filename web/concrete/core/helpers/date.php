@@ -17,10 +17,6 @@
  */
 
 defined('C5_EXECUTE') or die("Access Denied.");
-
-// Load a compatiblity class for pre php 5.2 installs
-Loader::library('datetime_compat');
-
 class Concrete5_Helper_Date {
 
 	/** 
@@ -57,7 +53,11 @@ class Concrete5_Helper_Date {
 				}
 			}
 		}
-		return $datetime->format($mask);
+		if (Localization::activeLocale()) {
+			return $this->dateTimeFormatLocal($datetime,$mask);
+		} else {
+			return $datetime->format($mask);
+		}
 	}
 
 	/** 
@@ -104,7 +104,52 @@ class Concrete5_Helper_Date {
 		} else {
 			$datetime = new DateTime();
 		}
-		return $datetime->format($mask);
+		if (Localization::activeLocale()) {
+			return $this->dateTimeFormatLocal($datetime,$mask);
+		} else {
+			return $datetime->format($mask);
+		}
+	}
+	/**
+	 * Gets the localized date according to a specific mask
+	 * @param object $datetime A PHP DateTime Object
+	 * @param string $mask 
+	 * @return string 
+	 */
+	public function dateTimeFormatLocal(&$datetime,$mask) {
+		$locale = new Zend_Locale(Localization::activeLocale());
+
+		$date = new Zend_Date($datetime->format(DATE_ATOM),DATE_ATOM, $locale);
+		$date->setTimeZone($datetime->format("e"));
+		return $date->toString($mask);
+	}
+	
+	/** 
+	 * Subsitute for the native date() function that adds localized date support
+	 * This uses Zend's Date Object {@link http://framework.zend.com/manual/en/zend.date.constants.html#zend.date.constants.phpformats}
+	 * @param string $mask
+	 * @param int $timestamp
+	 * @return string
+	 */
+	public function date($mask,$timestamp=false) {
+		$loc = Localization::getInstance();
+		if ($timestamp === false) {
+			$timestamp = time();
+		}
+		
+		if ($loc->getLocale() == 'en_US') {
+			return date($mask, $timestamp);			
+		}		
+
+		$locale = new Zend_Locale(Localization::activeLocale());
+		Zend_Date::setOptions(array('format_type' => 'php'));
+		$cache = Cache::getLibrary();
+		if (is_object($cache)) {
+			Zend_Date::setOptions(array('cache'=>$cache));
+		} 
+		$date = new Zend_Date($timestamp, false, $locale);
+
+		return $date->toString($mask);
 	}
 
 	/**
@@ -167,7 +212,4 @@ class Concrete5_Helper_Date {
 		}
 		return $timeRemaining;
 	}//end timeSince
-
 }
-
-?>

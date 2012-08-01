@@ -22,12 +22,7 @@ $u = new User();
 $ap = new Permissions($a);
 $cp = new Permissions($c);
 
-/* Show the controls area if we are in the advanced permissions model so that
- * we can still edit area permissions even if we cannot add blocks to it.
- */
-if ($a->areaAcceptsBlocks() || PERMISSIONS_MODEL == 'advanced') { ?>
-
-<? if (!$c->isArrangeMode()) { ?>
+if (!$c->isArrangeMode()) { ?>
 	<script type="text/javascript">
 	ccm_areaMenuObj<?=$a->getAreaID()?> = new Object();
 	ccm_areaMenuObj<?=$a->getAreaID()?>.type = "AREA";
@@ -41,6 +36,5 @@ if ($a->areaAcceptsBlocks() || PERMISSIONS_MODEL == 'advanced') { ?>
 		<div id="a<?=$a->getAreaID()?>controls" class="ccm-add-block"><?=t('Add To Sitewide %s', $arHandle)?></div>
 	<? } else { ?>
 		<div id="a<?=$a->getAreaID()?>controls" class="ccm-add-block"><?=t('Add To %s', $arHandle)?></div>
-	<? } ?>
 	<? } ?>
 <? } ?>

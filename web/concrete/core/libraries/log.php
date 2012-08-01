@@ -81,9 +81,11 @@ class Concrete5_Library_Log {
 
 	
 	public function close() {
-		$v = array($this->log, htmlentities($this->sessionText, ENT_COMPAT, APP_CHARSET), $this->isInternal);
+		$u = new User();
+
+		$v = array($this->log, htmlentities($this->sessionText, ENT_COMPAT, APP_CHARSET), $this->isInternal, $u->getUserID());
 		$db = Loader::db();
-		$db->Execute("insert into Logs (logType, logText, logIsInternal) values (?, ?, ?)", $v);
+		$db->Execute("insert into Logs (logType, logText, logIsInternal, logUserID) values (?, ?, ?, ?)", $v);
 		$this->sessionText = '';
 	}
 	
@@ -121,9 +123,9 @@ class Concrete5_Library_Log {
 		}
 		if ($type != false) {
 			$v = array($type);
-			$r = $db->Execute('select logID from Logs where logType = ? ' . $kw . ' order by timestamp desc limit ' . $limit, $v);
+			$r = $db->Execute('select logID from Logs where logType = ? ' . $kw . ' order by timestamp desc, logID desc limit ' . $limit, $v);
 		} else {
-			$r = $db->Execute('select logID from Logs where 1=1 ' . $kw . ' order by timestamp desc limit ' . $limit);
+			$r = $db->Execute('select logID from Logs where 1=1 ' . $kw . ' order by timestamp desc, logID desc limit ' . $limit);
 		}
 		
 		$entries = array();

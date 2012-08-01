@@ -28,11 +28,14 @@
 		protected $translate;
 
 		public function __construct() {
+			Loader::library('3rdparty/Zend/Date');
 			Loader::library('3rdparty/Zend/Translate');
 			$this->setLocale(defined('ACTIVE_LOCALE') ? ACTIVE_LOCALE : 'en_US');
+			Zend_Date::setOptions(array('format_type' => 'php'));
 			$cache = Cache::getLibrary();
 			if (is_object($cache)) {
 				Zend_Translate::setCache($cache);
+				Zend_Date::setOptions(array('cache'=>$cache));
 			}
 		}
 		
