@@ -140,18 +140,8 @@ ccm_setupSortableColumnSelection = function(searchType) {
 
 ccm_checkSelectedAdvancedSearchField = function(searchType, fieldset) {
 	$("#ccm-" + searchType + "-search-field-set" + fieldset + " .ccm-search-option-type-date_time input").each(function() {
-		if ($(this).attr('id') == 'date_from') {
-			$(this).attr('id', 'date_from' + fieldset);
-		} else if ($(this).attr('id') == 'date_to') {
-			$(this).attr('id', 'date_to' + fieldset);
-		}
-	});
-
-	$("#ccm-" + searchType + "-search-field-set" + fieldset + " .ccm-search-option-type-date_time input").each(function() {
 		$(this).attr('id', $(this).attr('id') + fieldset);
 	});
-	
-	
 	$("#ccm-" + searchType + "-search-field-set" + fieldset + " .ccm-search-option-type-date_time input").datepicker({
 		showAnim: 'fadeIn'
 	});
