@@ -59,8 +59,11 @@ class DashboardComposerWriteController extends Controller {
 			}
 			
 			if (!$this->error->has()) {
-				
-				$data = array('cDatePublic' => Loader::helper('form/date_time')->translate('cDatePublic'), 'cHandle' => Loader::helper('text')->sanitizeFileSystem($this->post('cName')), 'cName' => $this->post('cName'), 'cDescription' => $this->post('cDescription'));
+				if ($this->post('cHandle')) {
+					$data = array('cDatePublic' => Loader::helper('form/date_time')->translate('cDatePublic'), 'cHandle' => Loader::helper('text')->sanitizeFileSystem($this->post('cHandle')), 'cName' => $this->post('cName'), 'cDescription' => $this->post('cDescription'));
+				} else {
+					$data = array('cDatePublic' => Loader::helper('form/date_time')->translate('cDatePublic'), 'cHandle' => Loader::helper('text')->sanitizeFileSystem($this->post('cName')), 'cName' => $this->post('cName'), 'cDescription' => $this->post('cDescription'));
+				}
 				$entry->getVersionToModify();
 				// this is a pain. we have to use composerpage::getbyid again because
 				// getVersionToModify is hard-coded to return a page object
@@ -118,6 +121,7 @@ class DashboardComposerWriteController extends Controller {
 			$this->set('entry', $entry);
 			$this->set("ct", $ct);
 			$this->set('name', $entry->getCollectionName());
+			$this->set('handle',$entry->getCollectionHandle());
 			$this->set('description', $entry->getCollectionDescription());
 			$this->set('cDatePublic', $entry->getCollectionDatePublic());
 			$this->set('contentitems', $ct->getComposerContentItems());
