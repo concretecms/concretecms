@@ -15,17 +15,19 @@ if (isset($entry)) { ?>
 	<legend><?=t("Basic Information")?></legend>
 	<div class="clearfix">
 		<?=$form->label('cName', t('Name'))?>
-		<div class="input"><?=$form->text('cName', Loader::helper("text")->entities($name), array('class' => 'span12'))?></div>		
+		<div class="input"><?=$form->text('cName', Loader::helper("text")->entities($name), array('class' => 'span9', 'onKeyUp' => "ccm_updateAddPageHandle()"))?></div>		
 	</div>
 
 	<div class="clearfix">
 		<?=$form->label('cHandle', t('URL Slug'))?>
-		<div class="input"><?=$form->text('cHandle', $handle, array('class' => 'span12'))?></div>		
+		<div class="input"><?=$form->text('cHandle', $handle, array('class' => 'span4'))?>
+		<img src="<?=ASSETS_URL_IMAGES?>/loader_intelligent_search.gif" width="43" height="11" id="ccm-url-slug-loader" style="display: none" />
+		</div>		
 	</div>
 
 	<div class="clearfix">
 		<?=$form->label('cDescription', t('Short Description'))?>
-		<div class="input"><?=$form->textarea('cDescription', Loader::helper("text")->entities($description), array('class' => 'span12', 'rows' => 5))?></div>		
+		<div class="input"><?=$form->textarea('cDescription', Loader::helper("text")->entities($description), array('class' => 'span9', 'rows' => 5))?></div>		
 	</div>
 
 	<div class="clearfix">
@@ -140,6 +142,22 @@ if (isset($entry)) { ?>
 	<script type="text/javascript">
 	var ccm_composerAutoSaveInterval = false;
 	var ccm_composerDoAutoSaveAllowed = true;
+	var ccm_composerAddPageTimer = false;
+
+	ccm_updateAddPageHandle = function() {
+		clearTimeout(ccm_composerAddPageTimer);
+		ccm_composerAddPageTimer = setTimeout(function() {
+			var val = $('#ccm-dashboard-composer-form input[name=cName]').val();
+			$('#ccm-url-slug-loader').show();
+			$.post('<?=REL_DIR_FILES_TOOLS_REQUIRED?>/pages/url_slug', {
+				'token': '<?=Loader::helper('validation/token')->generate('get_url_slug')?>',
+				'name': val
+			}, function(r) {
+				$('#ccm-url-slug-loader').hide();
+				$('#ccm-dashboard-composer-form input[name=cHandle]').val(r);
+			});
+		}, 150);
+	}
 	
 	ccm_composerDoAutoSave = function(callback) {
 		if (!ccm_composerDoAutoSaveAllowed) {
@@ -156,7 +174,7 @@ if (isset($entry)) { ?>
 			'success': function(r) {
 				$('input[name=autosave]').val('0');
 				ccm_composerLastSaveTime = new Date();
-				$("#composer-save-status").html('<div class="block-message alert-message info"><p><?=t("Page saved at ")?>' + r.time + '</p></div>');
+				$("#composer-save-status").html('<div class="alert alert-info"><?=t("Page saved at ")?>' + r.time + '</div>');
 				$(".ccm-composer-hide-on-approved").show();
 				if (callback) {
 					callback();
