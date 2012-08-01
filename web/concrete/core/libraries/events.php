@@ -202,14 +202,9 @@ class Concrete5_Library_Events {
 	 * @return number|number|number
 	 */
 	public static function comparePriority($a,$b) {
-		if($a['priority'] > $b['priority']) return 1;
-		if($a['priority'] < $b['priority']) return -1;
+		if($a[5] > $b[5]) return 1;
+		if($a[5] < $b[5]) return -1;
 		return 0;
 	}
 
 }
-
-
-
-	//	$controller = Loader::controller($this);
-//		$ret = $controller->runTask('on_page_delete', array($this));
