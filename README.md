@@ -6,11 +6,11 @@ http://www.concrete5.org
 
 # Installation Instructions for concrete5
 
-	1.	Make sure your config/ and packages/ directories are writable by a web server. (Note, this is the config/ directory and the packages/ directory in the root of the archive).
-	2.	Make sure files/ and its subdirectories are writable by the Apache process (or the world.)
-	3.	Create a new MySQL database and a MySQL user account with the following privileges on that database: INSERT, SELECT, UPDATE, DELETE, CREATE, DROP, ALTER
-	4.	Visit your Concrete5 site in your web browser. You should see an installation screen where you can specify your site's name, your base URL, and your database settings.
-	5.	concrete5 should be installed.
+	1. Make sure your config/, packages/ and files/ directories are writable by a web server. These directories are in the root of the archive. This can either be done by making the owner of the directories the web server user, or by making them world writable using chmod 777 (in Linux/OS X.)
+	2. Create a new MySQL database and a MySQL user account with the following privileges on that database: INSERT, SELECT, UPDATE, DELETE, CREATE, DROP, ALTER
+	3. Visit your Concrete5 site in your web browser. You should see an installation screen where you can specify your site's name, your base URL, and your database settings, and the rest of the information necessary to install concrete5.
+	4. Click through and wait for the installation to complete.
+	5. concrete5 should be installed.
 	
 # Documentation
 http://concrete5.org/documentation/
