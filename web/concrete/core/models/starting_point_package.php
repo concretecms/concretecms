@@ -211,7 +211,8 @@ class Concrete5_Model_StartingPointPackage extends Package {
 		}
 		Config::save('SITE', SITE);
 		Config::save('SITE_APP_VERSION', APP_VERSION);
-		
+		Config::save('SITE_INSTALLED_APP_VERSION', APP_VERSION);
+
 		$u = new User();
 		$u->saveConfig('NEWSFLOW_LAST_VIEWED', 'FIRSTRUN');
 		

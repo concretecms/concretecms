@@ -85,6 +85,10 @@ class ConcreteUpgradeVersion560Helper {
 	
 	
 	public function run() {
+		if (!Config::get('SITE_INSTALLED_APP_VERSION')) {
+			Config::save('SITE_INSTALLED_APP_VERSION', Config::get('SITE_APP_VERSION'));
+ 	 	}
+ 	 	 	 	
 		$bt = BlockType::getByHandle('core_scrapbook_display');
 		if (is_object($bt)) {
 			$bt->refresh();
