@@ -1,4 +1,3 @@
-
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
 ini_set('display_errors', 1);
