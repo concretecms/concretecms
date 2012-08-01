@@ -12,7 +12,7 @@ class Concrete5_Controller_Dashboard_System_Registration_Profiles extends Dashbo
 		$this->set('public_profiles',ENABLE_USER_PROFILES);
 		$this->set('gravatar_fallback', Config::get('GRAVATAR_FALLBACK'));
 		$this->set('gravatar_max_level', Config::get('GRAVATAR_MAX_LEVEL'));
-		$this->set('gravatar_level_options', array('g' => 'g', 'pg' => 'pg', 'r' => 'r', 'x' => 'x'));
+		$this->set('gravatar_level_options', array('g' => 'G', 'pg' => 'PG', 'r' => 'R', 'x' => 'X'));
 		$this->set('gravatar_image_set', Config::get('GRAVATAR_IMAGE_SET'));
 		$this->set('gravatar_set_options', array('404' => '404', 'mm' => 'mm', 'identicon' => 'identicon', 'monsterid' => 'monsterid', 'wavatar' => "wavatar"));
 

@@ -4,40 +4,38 @@
 $h = Loader::helper('concrete/interface');
 $form = Loader::helper('form');
 ?>
-    <form method="post" id="public-profiles-form" action="<?php echo $this->url('/dashboard/system/registration/profiles', 'update_profiles')?>">  
+    <form method="post" class="form-horizontal" id="public-profiles-form" action="<?php echo $this->url('/dashboard/system/registration/profiles', 'update_profiles')?>">  
     
     <div class="ccm-pane-body"> 
     	
-    	<div class="clearfix">
-            <label id="optionsCheckboxes" for="public_profiles"><strong><?php echo t('Profile Options')?></strong></label>
-            <div class="input">
-			  <ul class="inputs-list">
-			    <li>
-			      <label>
+    	<div class="control-group">
+            <label id="optionsCheckboxes" for="public_profiles" class="control-label"><?php echo t('Profile Options')?></label>
+            <div class="controls">
+			      <label class="checkbox">
 			        <input type="checkbox" id="public_profiles" name="public_profiles" value="1" <?php  if ($public_profiles) { ?> checked <?php  } ?> />
 			        <span><?php echo t('Enable public profiles.')?></span>
 			      </label>
-			    </li> 
-			  </ul>
 			</div>
 	 	</div>
-	 	<div class="clearfix">
+	 	<div class="control-group">
 	 		<?php print $form->label('gravatar_fallback', t('Fall Back To Gravar')); ?>
-	 		<div class="input">
-	 			<?php print $form->checkbox('gravatar_fallback', 1, $gravatar_fallback); ?> (<?php print t('Use image from <a href="http://gravatar.com" target="_blank">gravatar.com</a> if the user has not uploaded one');?>)
+	 		<div class="controls">
+	 		<label class="checkbox">
+	 			<?php print $form->checkbox('gravatar_fallback', 1, $gravatar_fallback); ?> <span><?php print t('Use image from <a href="http://gravatar.com" target="_blank">gravatar.com</a> if the user has not uploaded one')?></span>
+	 		</label>
 	 		</div>
 	 	</div>
 
 	 	<div id="gravatar-options">
-	 		<div class="clearfix">
+	 		<div class="control-group">
 		 		<?php print $form->label('gravatar_max_level', t('Maximum Gravatar Rating')); ?>
-		 		<div class="input">
+		 		<div class="controls">
 		 			<?php print $form->select('gravatar_max_level', $gravatar_level_options, $gravatar_max_level); ?>
 		 		</div>
 			</div>
-			<div class="clearfix">
+			<div class="control-group">
 		 		<?php print $form->label('gravatar_image_set', t('Gravatar Image Set')); ?>
-		 		<div class="input">
+		 		<div class="controls">
 		 			<?php print $form->select('gravatar_image_set', $gravatar_set_options, $gravatar_image_set); ?>
 		 		</div>
 		 	</div>
