@@ -342,6 +342,7 @@ selectLabel = function(e, node) {
 			'inTrash': node.attr('tree-node-intrash'), 
 			'select_mode': node.attr('sitemap-select-mode'), 
 			'instance_id': node.attr('sitemap-instance-id'), 
+			'canCompose': node.attr('tree-node-cancompose'), 
 			'canEditProperties': node.attr('tree-node-can-edit-properties'), 
 			'canEditSpeedSettings': node.attr('tree-node-can-edit-speed-settings'), 
 			'canEditPermissions': node.attr('tree-node-can-edit-permissions'), 
