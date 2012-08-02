@@ -1,4 +1,6 @@
-<? defined('C5_EXECUTE') or die("Access Denied."); ?> 
+<? defined('C5_EXECUTE') or die("Access Denied.");
+$this->controller->setHighlightColor("#EFE795");
+?>
 
 <? if (isset($error)) { ?>
 	<?=$error?><br/><br/>
