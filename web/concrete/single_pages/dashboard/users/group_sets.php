@@ -82,7 +82,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		
 				<div class="control-group">
 					<div class="controls">
-					<?php echo $form->submit('submit', t('Update Attributes'), array('class' => ''))?>
+					<?php echo $form->submit('submit', t('Update Groups'), array('class' => ''))?>
 					</div>
 				</div>
 			<?php } else { ?>
