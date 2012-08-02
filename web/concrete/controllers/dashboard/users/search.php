@@ -231,6 +231,7 @@ class DashboardUsersSearchController extends Controller {
 			}
 			
 			User::loginByUserID($uID);
+			Events::fire('on_user_login',$this);
 			$this->redirect('/');
 			
 		} catch(Exception $e) {
