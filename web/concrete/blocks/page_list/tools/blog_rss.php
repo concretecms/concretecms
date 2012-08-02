@@ -27,12 +27,13 @@ if($_GET['bID'] && $_GET['cID'] && $nh->integer($_GET['bID']) && $nh->integer($_
 			<rss version="2.0">
 			  <channel>
 				<title><?=$controller->rssTitle?></title>
-				<link><?=BASE_URL.$rssUrl?></link>
+				<link><?=BASE_URL.Page::getCurrentPage()->getCollectionPath()?></link>
 				<description><?=$controller->rssDescription?></description> 
 	<?
 			for ($i = 0; $i < count($cArray); $i++ ) {
 				$cobj = $cArray[$i]; 
-				$title = $cobj->getCollectionName(); ?>
+				$title = $cobj->getCollectionName();
+                                ?>
 				<item>
 				  <title><?=htmlspecialchars($title);?></title>
 				  <link>
@@ -45,6 +46,14 @@ if($_GET['bID'] && $_GET['cID'] && $nh->integer($_GET['bID']) && $nh->integer($_
 					$a->display($cobj);
 					?>
 				  ]]></description>
+                                  <? 
+                                    $tags = preg_split('/\n/', $cobj->getAttribute('tags'));
+                                    foreach($tags as $tag) {
+                                      echo "<category>";
+                                      echo $tag;
+                                      echo "</category>";
+                                    }
+                                  ?>
 				  <? /* <pubDate><?=$cobj->getCollectionDatePublic()?></pubDate>
 				  Wed, 23 Feb 2005 16:12:56 GMT  */ ?>
 				  <pubDate><?=date( 'D, d M Y H:i:s T',strtotime($cobj->getCollectionDatePublic())) ?></pubDate>
