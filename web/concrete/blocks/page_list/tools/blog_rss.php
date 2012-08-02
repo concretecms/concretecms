@@ -15,7 +15,7 @@ if($_GET['bID'] && $_GET['cID'] && $nh->integer($_GET['bID']) && $nh->integer($_
 		$rssUrl = $controller->getRssUrl($b);
 		
 		$bp = new Permissions($b);
-		if( $bp->canRead() && $controller->rss && ($b->getBlockFilename() == 'blog_index.php' || $b->getBlockFilename() == 'blog_index')) {
+		if( $bp->canRead() && $controller->rss && ($b->getBlockFilename() == 'blog_index_thumbnail.php' || $b->getBlockFilename() == 'blog_index.php' || $b->getBlockFilename() == 'blog_index')) {
 	
 			$cArray = $controller->getPages();
 			$nh = Loader::helper('navigation');
@@ -27,7 +27,7 @@ if($_GET['bID'] && $_GET['cID'] && $nh->integer($_GET['bID']) && $nh->integer($_
 			<rss version="2.0">
 			  <channel>
 				<title><?=$controller->rssTitle?></title>
-				<link><?=BASE_URL.Page::getCurrentPage()->getCollectionPath()?></link>
+				<link><?=Loader::helper('navigation')->getLinkToCollection($c, true)?></link>
 				<description><?=$controller->rssDescription?></description> 
 	<?
 			for ($i = 0; $i < count($cArray); $i++ ) {
@@ -48,11 +48,13 @@ if($_GET['bID'] && $_GET['cID'] && $nh->integer($_GET['bID']) && $nh->integer($_
 				  ]]></description>
                                   <? 
                                     $tags = preg_split('/\n/', $cobj->getAttribute('tags'));
-                                    foreach($tags as $tag) {
-                                      echo "<category>";
-                                      echo $tag;
-                                      echo "</category>";
-                                    }
+                                    if ($tags) {
+										foreach($tags as $tag) {
+										  echo "<category>";
+										  echo $tag;
+										  echo "</category>";
+										}
+									}
                                   ?>
 				  <? /* <pubDate><?=$cobj->getCollectionDatePublic()?></pubDate>
 				  Wed, 23 Feb 2005 16:12:56 GMT  */ ?>
