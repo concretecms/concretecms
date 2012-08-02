@@ -122,6 +122,11 @@ class ConcreteUpgradeVersion560Helper {
 			$d1a = SinglePage::add('/dashboard/workflow/me');
 			$d1a->update(array('cName'=>t('Waiting for Me')));
 		}
+		$sp = Page::getByPath('/dashboard/system/environment/proxy');
+		if ($sp->isError()) {
+			$d1a = SinglePage::add('/dashboard/system/environment/proxy');
+			$d1a->update(array('cName'=>t('Proxy Server')));
+		}
 		
 		// install the permissions from permissions.xml
 		$this->installPermissionsAndWorkflow();
