@@ -366,33 +366,54 @@ class ConcreteDashboardHelper {
 			</div>
 			<div id="ccm-dashboard-overlay-misc" <? if (count($packagepages) == 0)  { ?>class="ccm-dashboard-overlay-misc-rounded" <? } ?>>
 			<div class="ccm-dashboard-overlay-inner">
-			<ul>
-			<li><a href="<?=View::url('/dashboard/news')?>"><strong><?=t('News')?></strong></a> – <?=t('Learn about your site and concrete5.')?></li>
-			<?
+
+            <?
+
+			// Before we throw in a UL, we check permissions, etc. to see if any of the LI items need to be shown.
+			$systemNews = Page::getByPath('/dashboard/news');
+			$systemNewsP = new Permissions($systemNews);
+			$canAccessNews = $systemNewsP->canRead();
+
 			$systemSettings = Page::getByPath('/dashboard/system');
 			$systemSettingsP = new Permissions($systemSettings);
-			if ($systemSettingsP->canRead()) { ?>
-				<li><a href="<?=View::url('/dashboard/system')?>"><strong><?=t('System &amp; Settings')?></strong></a> – <?=t('Secure and setup your site.')?></li>
-			<? } ?>
-			<?
+			$canAccessSystem = $systemSettingsP->canRead();
+
 			$tpa = new TaskPermission();
-			if ($tpa->canInstallPackages()) { ?>
-				<li><a href="<?php echo View::url('/dashboard/extend') ?>"><strong><?php echo t("Extend concrete5") ?></strong></a> – 
-				<? if (ENABLE_MARKETPLACE_SUPPORT) { ?>
-				<?php echo sprintf(t('<a href="%s">Install</a>, <a href="%s">update</a> or download more <a href="%s">themes</a> and <a href="%s">add-ons</a>.'),
-					View::url('/dashboard/extend/install'),
-					View::url('/dashboard/extend/update'),
-					View::url('/dashboard/extend/themes'),
-					View::url('/dashboard/extend/add-ons')); ?>
-				<? } else { ?>
-				<?php echo sprintf(t('<a href="%s">Install</a> or <a href="%s">update</a> packages.'),
-					View::url('/dashboard/extend/install'),
-					View::url('/dashboard/extend/update'))?>
-					
-				<? } ?>
-			</li>
-			<? } ?>
-			</ul>
+			$canAccessExtend = $tpa->canInstallPackages();
+
+			// If any need to be shown then we proceed...
+			if($canAccessNews || $canAccessSystem || $canAccessExtend){ ?>
+
+                <ul>
+
+                <? if ($canAccessNews) { ?>
+                    <li><a href="<?=View::url('/dashboard/news')?>"><strong><?=t('News')?></strong></a> – <?=t('Learn about your site and concrete5.')?></li>
+                <? } ?>
+
+				<? if ($canAccessSystem) { ?>
+                    <li><a href="<?=View::url('/dashboard/system')?>"><strong><?=t('System &amp; Settings')?></strong></a> – <?=t('Secure and setup your site.')?></li>
+                <? } ?>
+
+                <? if ($canAccessExtend) { ?>
+                    <li><a href="<?php echo View::url('/dashboard/extend') ?>"><strong><?php echo t("Extend concrete5") ?></strong></a> – 
+                    <? if (ENABLE_MARKETPLACE_SUPPORT) { ?>
+                    <?php echo sprintf(t('<a href="%s">Install</a>, <a href="%s">update</a> or download more <a href="%s">themes</a> and <a href="%s">add-ons</a>.'),
+                        View::url('/dashboard/extend/install'),
+                        View::url('/dashboard/extend/update'),
+                        View::url('/dashboard/extend/themes'),
+                        View::url('/dashboard/extend/add-ons')); ?>
+                    <? } else { ?>
+					<?php echo sprintf(t('<a href="%s">Install</a> or <a href="%s">update</a> packages.'),
+                        View::url('/dashboard/extend/install'),
+                        View::url('/dashboard/extend/update'))?>
+                    <? } ?>
+					</li>
+                <? } ?>
+
+                </ul>
+
+            <? } ?>
+
 			</div>
 			</div>
 			<? if (count($packagepages) > 0) { ?>
