@@ -27,7 +27,9 @@ class Concrete5_Controller_Dashboard_Users_Group_Sets extends DashboardBaseContr
 				if (is_array($_POST['gID'])) {
 					foreach($_POST['gID'] as $gID) {
 						$g = Group::getByID($gID);
-						$gs->addGroup($g);
+						if(is_object($g)) {
+							$gs->addGroup($g);
+						}
 					}					
 				}
 				$this->redirect('dashboard/users/group_sets', 'set_added');
@@ -85,7 +87,9 @@ class Concrete5_Controller_Dashboard_Users_Group_Sets extends DashboardBaseContr
 				if (is_array($this->post('gID'))) {
 					foreach($_POST['gID'] as $gID) {
 						$g = Group::getByID($gID);
-						$gs->addGroup($g);
+						if(is_object($g)) {
+							$gs->addGroup($g);
+						}
 					}					
 				}
 				$this->redirect('dashboard/users/group_sets', 'set_updated');

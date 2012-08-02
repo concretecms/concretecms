@@ -22,7 +22,7 @@ if (!$tp->canAccessGroupSearch()) {
 	?>
 	<div id="ccm-list-wrapper">
 	
-	<? if (count($gl->getTotal()) > 0) { 
+	<? if ($gl->getTotal() > 0) { 
 	
 		foreach ($gl->get() as $gs) { ?>
 	
