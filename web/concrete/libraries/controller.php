@@ -175,6 +175,7 @@ class Controller {
 				$this->c = $c;
 				$cont = Loader::controller("/page_not_found");
 				$v->setController($cont);				
+				$cont->view();
 				$v->render('/page_not_found');
 			}
  		}
