@@ -23,6 +23,9 @@ print "var CCM_SECURITY_TOKEN = '" . $valt->generate() . "';";
 $dh = Loader::helper('concrete/dashboard');
 if (!$dh->inDashboard()) {
 	$this->addHeaderItem($html->css('ccm.app.css'));
+	if (MOBILE_THEME_IS_ACTIVE == true) {
+		$this->addHeaderItem($html->css('ccm.app.mobile.css'));
+	}
 	$this->addHeaderItem($html->css('jquery.ui.css'));
 	$this->addFooterItem('<div id="ccm-page-controls-wrapper"><div id="ccm-toolbar"></div></div>');
 	

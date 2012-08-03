@@ -5,6 +5,9 @@ header('Content-type: text/javascript');?>
 var menuHTML = '';
 
 <?
+Loader::library('3rdparty/mobile_detect');
+$md = new Mobile_Detect();
+
 if ($_REQUEST['cvID'] > 0) {
 	$c = Page::getByID($_REQUEST['cID'], $_REQUEST['cvID']);
 } else {
@@ -87,7 +90,7 @@ foreach($items as $ih) {
 ?>
 
 <? if ($dh->canRead()) { ?>
-	menuHTML += '<li><a class="ccm-icon-dashboard ccm-menu-icon" id="ccm-nav-dashboard" href="<?=View::url('/dashboard')?>"><?=t('Dashboard')?></a></li>';
+	menuHTML += '<li><a class="ccm-icon-dashboard ccm-menu-icon" id="ccm-nav-dashboard<? if ($md->isMobile()) { ?>-mobile<? } ?>" href="<?=View::url('/dashboard')?>"><?=t('Dashboard')?></a></li>';
 <? } ?>
 menuHTML += '<li id="ccm-nav-intelligent-search-wrapper"><input type="search" placeholder="<?=t('Intelligent Search')?>" id="ccm-nav-intelligent-search" tabindex="1" /></li>';
 menuHTML += '<li><a id="ccm-nav-sign-out" class="ccm-icon-sign-out ccm-menu-icon" href="<?=View::url('/login', 'logout')?>"><?=t('Sign Out')?></a></li>';
