@@ -4,7 +4,6 @@
 
 
 <?
-print '<table style="border-spacing: 10px; border-collapse: separate" width="100%">';
 for ($i = 0; $i < count($categories); $i++) {
 	$cat = $categories[$i];
 	?>
@@ -19,8 +18,8 @@ for ($i = 0; $i < count($categories); $i++) {
 		<tr>
 	<? } ?>
 	
-	<td width="25%" class="well" style="vertical-align: top; padding: 10px 0px">
-
+	<div class="dashboard-icon-list">
+	<div class="well">
 
 	<ul class="nav nav-list">
 	<li class="nav-header"><?=t($cat->getCollectionName())?></li>
@@ -56,8 +55,8 @@ for ($i = 0; $i < count($categories); $i++) {
 	<? } ?>
 
 	</ul>
-
-	</td>
+	</div>
+	</div>
 	
 	
 <? } ?>
@@ -66,7 +65,9 @@ for ($i = 0; $i < count($categories); $i++) {
 	</tr>
 <? } ?>
 
-</table>
+	<div class="clearfix">
+	</div>
+	
 </div>
 
 <div class="ccm-pane-footer">

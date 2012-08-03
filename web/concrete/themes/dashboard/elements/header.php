@@ -25,6 +25,9 @@ $dashboard = Page::getByPath("/dashboard");
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <?
+Loader::library('3rdparty/mobile_detect');
+$md = new Mobile_Detect();
+
 $html = Loader::helper('html');
 $v = View::getInstance();
 if (!isset($enableEditing) || $enableEditing == false) {
@@ -47,6 +50,13 @@ if (LANGUAGE != 'en') {
 
 // Require CSS
 $v->addHeaderItem($html->css('ccm.app.css'));
+if ($md->isMobile() == true) {
+	$v->addHeaderItem($html->css('ccm.app.mobile.css')); ?>
+	<meta name="viewport" content="width=device-width; initial-scale=1.0" />
+	<meta name="HandheldFriendly" content="true"/>
+	<meta name="MobileOptimized" content="320"/>
+	<?		
+}
 $v->addHeaderItem($html->css('ccm.dashboard.css'));
 $v->addHeaderItem($html->css('jquery.ui.css'));
 
@@ -59,7 +69,6 @@ $v->addHeaderItem($disp);
 Loader::element('header_required', array('disableTrackingCode' => true));
 $backgroundImage = Loader::helper('concrete/dashboard')->getDashboardBackgroundImage();
 ?>
-
 <script type="text/javascript">
 	$(function() {
 		<? if ($backgroundImage->image) { ?>
@@ -87,16 +96,18 @@ $backgroundImage = Loader::helper('concrete/dashboard')->getDashboardBackgroundI
 <div id="ccm-toolbar">
 <ul id="ccm-main-nav">
 <li id="ccm-logo-wrapper"><?=Loader::helper('concrete/interface')->getToolbarLogoSRC()?></li>
-<li><a class="ccm-icon-back ccm-menu-icon" href="<?=$this->url('/')?>"><?=t('Return to Website')?></a></li>
+<li><a class="ccm-icon-back ccm-menu-icon" href="<?=$this->url('/')?>"><? if ($md->isMobile()) { ?><?=t('Back')?><? } else { ?><?=t('Return to Website')?><? } ?></a></li>
 <? if (Loader::helper('concrete/interface')->showWhiteLabelMessage()) { ?>
 	<li id="ccm-white-label-message"><?=t('Powered by <a href="%s">concrete5</a>.', CONCRETE5_ORG_URL)?></li>
 <? } ?>
 </ul>
 
 <ul id="ccm-system-nav">
-<li><a class="ccm-icon-dashboard ccm-menu-icon" id="ccm-nav-dashboard" href="<?=$this->url('/dashboard')?>"><?=t('Dashboard')?></a></li>
+<li><a class="ccm-icon-dashboard ccm-menu-icon" id="ccm-nav-dashboard<? if ($md->isMobile()) { ?>-mobile<? } ?>" href="<?=$this->url('/dashboard')?>"><?=t('Dashboard')?></a></li>
 <li id="ccm-nav-intelligent-search-wrapper"><input type="search" placeholder="<?=t('Intelligent Search')?>" id="ccm-nav-intelligent-search" tabindex="1" /></li>
-<li><a id="ccm-nav-sign-out" class="ccm-icon-sign-out ccm-menu-icon" href="<?=$this->url('/login', 'logout')?>"><?=t('Sign Out')?></a></li>
+<? if ($md->isMobile() == false) { ?>
+	<li><a id="ccm-nav-sign-out" class="ccm-icon-sign-out ccm-menu-icon" href="<?=$this->url('/login', 'logout')?>"><?=t('Sign Out')?></a></li>
+<? } ?>
 </ul>
 
 </div>
@@ -111,7 +122,7 @@ print $dh->addQuickNavToMenus($html);
 
 <div id="ccm-dashboard-content">
 
-	<div class="ccm-dashboard-page-container">
+	<div class="container">
 
 
 	<? if (isset($error)) { ?>

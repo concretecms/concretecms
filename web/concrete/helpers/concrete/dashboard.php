@@ -50,9 +50,9 @@ class ConcreteDashboardHelper {
 		return $html;
 	}
 	
-	public function getDashboardPaneHeaderWrapper($title = false, $help = false, $span = 'span16', $includeDefaultBody = true, $navigatePages = array(), $upToPage = false) {
+	public function getDashboardPaneHeaderWrapper($title = false, $help = false, $span = 'span12', $includeDefaultBody = true, $navigatePages = array(), $upToPage = false) {
 		if (!$span) {
-			$span = 'span16';
+			$span = 'span12';
 		}
 		$html = '<div class="ccm-ui"><div class="row"><div class="' . $span . '"><div class="ccm-pane">';
 		$html .= self::getDashboardPaneHeader($title, $help, $navigatePages, $upToPage);

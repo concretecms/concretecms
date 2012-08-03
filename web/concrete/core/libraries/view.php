@@ -527,6 +527,36 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			
 			return $_action;
 		}
+
+		public function checkMobileView() {
+			if(isset($_COOKIE['ccmDisableMobileView']) && $_COOKIE['ccmDisableMobileView'] == true) {
+				define('MOBILE_THEME_IS_ACTIVE', false);
+				return false; // break out if we've said we don't want the mobile theme
+			}
+			
+			$page = Page::getCurrentPage();
+			if($page instanceof Page && $page->isAdminArea()) {
+				define('MOBILE_THEME_IS_ACTIVE', false);
+				return false; // no mobile theme for the dashboard
+			}
+			
+			Loader::library('3rdparty/mobile_detect');
+			$md = new Mobile_Detect();
+			if ($md->isMobile()) {
+				define('MOBILE_THEME_IS_ACTIVE',true);
+				$themeId = Config::get('MOBILE_THEME_ID');
+				if ($themeId > 0) {
+					$mobileTheme = PageTheme::getByID($themeId);
+					if($mobileTheme instanceof PageTheme) {
+						// we have to grab the instance of the view
+						// since on_page_view doesn't give it to us
+						$this->setTheme($mobileTheme);
+					}
+				}
+			} else {
+				define('MOBILE_THEME_IS_ACTIVE', false);
+			}
+		}
 		
 		/**
 		 * A shortcut to posting back to the current page with a task and optional parameters. Only works in the context of 
@@ -690,7 +720,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				}
 				
 				$wrapTemplateInTheme = false;
-
+				$this->checkMobileView();
 				Events::fire('on_start', $this);
 				
 				// Extract controller information from the view, and put it in the current context
