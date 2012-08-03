@@ -186,6 +186,7 @@ class Concrete5_Helper_Image {
 	 * Returns a path to the specified item, resized and/or cropped to meet max width and height. $obj can either be
 	 * a string (path) or a file object. 
 	 * Returns an object with the following properties: src, width, height
+	 * If IMAGE_HELPER_APPEND_ORIG_FID is defined and not false, then appends '_f'.$fID to the cache filename to aid backtracing
 	 * @param mixed $obj
 	 * @param int $maxWidth
 	 * @param int $maxHeight
@@ -194,14 +195,22 @@ class Concrete5_Helper_Image {
 	public function getThumbnail($obj, $maxWidth, $maxHeight, $crop = false) {
 		if ($obj instanceof File) {
 			$path = $obj->getPath();
+			if (defined('IMAGE_HELPER_APPEND_ORIG_FID') && IMAGE_HELPER_APPEND_ORIG_FID && IMAGE_HELPER_APPEND_ORIG_FID !== 'false'){
+				$fID = $obj->getFileID();
+			}
 		} else {
 			$path = $obj;
 		}		
 		
 		$fh = Loader::helper('file');
 		$prefix = ($crop ? 'cropped:' : ''); //Name cropped images different from resized images so they don't get mixed up in the cache
-		if (file_exists($path)) {
+		if (file_exists($path) && $fID) {
+			$filename = md5($prefix . $path . ':' . $maxWidth . ':' . $maxHeight . ':' . filemtime($path)) . '_f' . $fID . '.' . $fh->getExtension($path);
+		} else if (file_exists($path)){
 			$filename = md5($prefix . $path . ':' . $maxWidth . ':' . $maxHeight . ':' . filemtime($path)) . '.' . $fh->getExtension($path);
+		} else if ($fID){
+			// This may be redundant - don't know it can actually ever occur
+			$filename = md5($prefix . $path . ':' . $maxWidth . ':' . $maxHeight . ':') . '_f' . $fID . '.' . $fh->getExtension($path);
 		} else {
 			$filename = md5($prefix . $path . ':' . $maxWidth . ':' . $maxHeight . ':') . '.' . $fh->getExtension($path);
 		}
