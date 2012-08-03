@@ -28,9 +28,6 @@
 	## First we ensure that dispatcher is not being called directly
 	require(dirname(__FILE__) . '/startup/file_access_check.php');
 
-	## Called Class Fix for 5.2 ##	
-	require(dirname(__FILE__) . '/startup/get_called_class_check.php');
-
 	require(dirname(__FILE__) . '/startup/localization.php');
 
 	## Autoload core classes

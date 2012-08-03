@@ -69,8 +69,9 @@ abstract class Concrete5_Model_WorkflowProgress extends Object {
 	 */
 	public function getWorkflowRequestObject() {
 		if ($this->wrID > 0) { 
-			$cc = get_called_class();
-			$class = substr($cc, 0, strpos($cc, 'WorkflowProgress')) . 'WorkflowRequest';			
+			$cat = WorkflowProgressCategory::getByID($this->wpCategoryID);
+			$handle = $cat->getWorkflowProgressCategoryHandle();
+			$class = Loader::helper("text")->camelcase($handle) . 'WorkflowRequest';
 			$wr = call_user_func_array(array($class, 'getByID'), array($this->wrID));
 			if (is_object($wr)) {
 				$wr->setCurrentWorkflowProgressObject($this);
@@ -82,12 +83,9 @@ abstract class Concrete5_Model_WorkflowProgress extends Object {
 	/** 
 	 * Creates a WorkflowProgress object (which will be assigned to a Page, File, etc... in our system.
 	 */
-	public static function add(Workflow $wf, WorkflowRequest $wr) {
+	public static function add($wpCategoryHandle, Workflow $wf, WorkflowRequest $wr) {
 		$db = Loader::db();
 		$wpDateAdded = Loader::helper('date')->getLocalDateTime();
-		$class = get_called_class();
-		$class = str_replace('WorkflowProgress', '', $class);
-		$wpCategoryHandle = Loader::helper('text')->uncamelcase($class);
 		$wpCategoryID = $db->GetOne('select wpCategoryID from WorkflowProgressCategories where wpCategoryHandle = ?', array($wpCategoryHandle));
 		$db->Execute('insert into WorkflowProgress (wfID, wrID, wpDateAdded, wpCategoryID) values (?, ?, ?, ?)', array(
 			$wf->getWorkflowID(), $wr->getWorkflowRequestID(), $wpDateAdded, $wpCategoryID
@@ -177,6 +175,19 @@ abstract class Concrete5_Model_WorkflowProgress extends Object {
 	
 	abstract function getWorkflowProgressFormAction();
 	abstract function loadDetails();
+
+	public function getWorkflowProgressHistoryObjectByID($wphID) {
+		$class = get_class($this) . 'History';
+		$db = Loader::db();
+		$row = $db->GetRow('select * from WorkflowProgressHistory where wphID = ?', array($wphID));
+		if (is_array($row) && ($row['wphID'])) {
+			$obj = new $class();
+			$obj->setPropertiesFromArray($row);
+			$obj->object = @unserialize($row['object']);
+			return $obj;
+		}
+	}
+	
 	
 	public function addWorkflowProgressHistoryObject($obj) {
 		$db = Loader::db();

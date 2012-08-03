@@ -14,18 +14,6 @@ class Concrete5_Model_WorkflowProgressHistory extends Object {
 	public function getWorkflowProgressID() {return $this->wpID;}
 	public function getWorkflowProgressHistoryInnerObject() {return $this->object;}
 	
-	public static function getByID($wphID) {
-		$class = get_called_class();
-		$db = Loader::db();
-		$row = $db->GetRow('select * from WorkflowProgressHistory where wphID = ?', array($wphID));
-		if (is_array($row) && ($row['wphID'])) {
-			$obj = new $class();
-			$obj->setPropertiesFromArray($row);
-			$obj->object = @unserialize($row['object']);
-			return $obj;
-		}
-	}
-	
 	public function getWorkflowProgressHistoryDescription() {
 		if ($this->object instanceof WorkflowRequest) {
 			$d = $this->object->getWorkflowRequestDescriptionObject();
@@ -41,10 +29,9 @@ class Concrete5_Model_WorkflowProgressHistory extends Object {
 	public static function getList(WorkflowProgress $wp) {
 		$db = Loader::db();
 		$r = $db->Execute('select wphID from WorkflowProgressHistory where wpID = ? order by timestamp desc', array($wp->getWorkflowProgressID()));
-		$class = get_called_class();		
 		$list = array();
 		while ($row = $r->FetchRow()) {
-			$obj = call_user_func_array(array($class, 'getByID'), array($row['wphID']));
+			$obj = $wp->getWorkflowProgressHistoryObjectByID($row['wphID']);
 			if (is_object($obj)) {
 				$list[] = $obj;
 			}

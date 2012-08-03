@@ -199,9 +199,8 @@ class Concrete5_Model_PermissionAccess extends Object {
 
 	public static function create(PermissionKey $pk) {
 		$db = Loader::db();
-		$class = get_called_class();
 		$db->Execute('insert into PermissionAccess (paIsInUse) values (0)');
-		return call_user_func_array(array($class, 'getByID'), array($db->Insert_ID(), $pk));
+		return PermissionAccess::getByID($db->Insert_ID(), $pk);
 	}
 	
 	public static function getByID($paID, PermissionKey $pk) {

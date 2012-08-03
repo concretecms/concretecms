@@ -479,9 +479,11 @@
 							$pkr->setRequesterUserID($u->getUserID());
 							$u->unloadCollectionEdit($c);
 							$response = $pkr->trigger();
+							$obj->deferred = true;
 							if ($response instanceof WorkflowProgressResponse) {
 								// we only get this response if we have skipped workflows and jumped straight in to an approve() step.
 								$obj->refreshCID = $c->getCollectionParentID();
+								$obj->deferred = false;
 							}
 						}
 					}
