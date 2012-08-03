@@ -353,7 +353,17 @@ class Concrete5_Model_File extends Object {
 		
 		$fv = $f->addVersion($filename, $prefix, $data);
 		Events::fire('on_file_add', $f, $fv);
-			
+		
+		$entities = $u->getUserAccessEntityObjects();
+		$hasUploader = false;
+		foreach($entities as $obj) {
+			if ($obj instanceof FileUploaderPermissionAccessEntity) {
+				$hasUploader = true;
+			}
+		}
+		if (!$hasUploader) {
+			$u->refreshUserGroups();
+		}
 		return $fv;
 	}
 	
