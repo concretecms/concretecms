@@ -106,6 +106,7 @@ var ccmi18n_sitemap = {
 	deletePage: "<?=t('Delete')?>",
 	deletePages: "<?=t('Delete Pages')?>",
 	deletePageSuccessMsg: "<?=t('The page has been removed successfully.')?>",
+	deletePageSuccessDeferredMsg: "<?=t('Delete request saved. You must complete the workflow before the page is fully removed.')?>",
 	addPage: "<?=t('Add Page')?>",
 	moveCopyPage: "<?=t('Move/Copy')?>",
 	reorderPage: "<?=t('Change Page Order')?>",

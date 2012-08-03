@@ -12,7 +12,7 @@ class Concrete5_Model_PageWorkflowProgress extends WorkflowProgress {
 	protected $cID;
 
 	public static function add(Workflow $wf, PageWorkflowRequest $wr) {
-		$wp = parent::add($wf, $wr);
+		$wp = parent::add('page', $wf, $wr);
 		$db = Loader::db();
 		$db->Replace('PageWorkflowProgress', array('cID' => $wr->getRequestedPageID(), 'wpID' => $wp->getWorkflowProgressID()), array('cID', 'wpID'), true);
 		$wp->cID = $wr->getRequestedPageID();
