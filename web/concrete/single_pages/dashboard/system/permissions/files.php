@@ -6,7 +6,8 @@
 	<? $fs = FileSet::getGlobal(); ?>
 	
 	<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('File Permissions'), $help, 'span12 offset2', false)?>
-	<form method="post" action="<?=$this->action('save')?>">
+	<form method="post" action="<?=$this->action('save')?>" id="ccm-permission-list-form">
+	
 	<?=Loader::helper('validation/token')->output('save_permissions')?>
 	<div class="ccm-pane-body">
 	<?
