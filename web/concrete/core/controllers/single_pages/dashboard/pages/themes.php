@@ -25,7 +25,17 @@ class Concrete5_Controller_Dashboard_Pages_Themes extends Controller {
 		$this->set('activate', View::url('/dashboard/pages/themes', 'activate'));		
 		$this->set('install', View::url('/dashboard/pages/themes', 'install'));		
 	}
-
+	
+	public function save_mobile_theme() {
+		Config::save('MOBILE_THEME_ID', $this->post('MOBILE_THEME_ID'));
+		$this->redirect('/dashboard/pages/themes', 'mobile_theme_saved');
+	}
+	
+	public function mobile_theme_saved() {
+		$this->set('success', t('Mobile theme saved.'));
+		$this->view();
+	}
+	
 	public function on_start() {
 		$this->set('disableThirdLevelNav', true);
 	}
