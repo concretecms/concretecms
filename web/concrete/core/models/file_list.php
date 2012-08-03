@@ -238,6 +238,7 @@ class Concrete5_Model_FileList extends DatabaseItemList {
 		$fs = FileSet::getGlobal();
 		$fk = PermissionKey::getByHandle('search_file_set');
 		$fk->setPermissionObject($fs);
+		$accessEntities[] = $owpae;
 		$list = $fk->getAccessListItems(PermissionKey::ACCESS_TYPE_ALL, $accessEntities);
 		$list = PermissionDuration::filterByActive($list);
 		foreach($list as $l) {

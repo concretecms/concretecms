@@ -7,7 +7,7 @@
 $c = Page::getCurrentPage();
 $ocID = $c->getCollectionID();
 $fp = FilePermissions::getGlobal();
-if ($fp->canSearchFiles()) { ?>
+if ($fp->canAddFile() || $fp->canSearchFiles()) { ?>
 <div class="ccm-pane-options" id="ccm-<?=$searchInstance?>-pane-options">
 
 <div class="ccm-file-manager-search-form"><? Loader::element('files/search_form_advanced', array('searchInstance' => $searchInstance, 'searchRequest' => $searchRequest, 'searchType' => 'DASHBOARD')); ?></div>
