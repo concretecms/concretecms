@@ -158,6 +158,10 @@ class ConcreteInterfaceHelper {
 				return false;
 			}
 			
+			if (Config::get('SITE_MAINTENANCE_MODE')) {
+				return false;
+			}
+				
 			if (!$nf) {
 				return true;
 			}
