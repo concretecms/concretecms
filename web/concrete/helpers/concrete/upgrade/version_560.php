@@ -141,6 +141,7 @@ class ConcreteUpgradeVersion560Helper {
 			$d1a = SinglePage::add('/dashboard/system/environment/proxy');
 			$d1a->update(array('cName'=>t('Proxy Server')));
 		}
+
 		
 		// install the permissions from permissions.xml
 		$this->installPermissionsAndWorkflow();

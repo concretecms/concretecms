@@ -186,18 +186,16 @@ class Concrete5_Helper_Image {
 	 * Returns a path to the specified item, resized and/or cropped to meet max width and height. $obj can either be
 	 * a string (path) or a file object. 
 	 * Returns an object with the following properties: src, width, height
-	 * If IMAGE_HELPER_APPEND_ORIG_FID is defined and not false, then appends '_f'.$fID to the cache filename to aid backtracing
 	 * @param mixed $obj
 	 * @param int $maxWidth
 	 * @param int $maxHeight
 	 * @param bool $crop
 	 */
 	public function getThumbnail($obj, $maxWidth, $maxHeight, $crop = false) {
+		$fID = false;
 		if ($obj instanceof File) {
 			$path = $obj->getPath();
-			if (defined('IMAGE_HELPER_APPEND_ORIG_FID') && IMAGE_HELPER_APPEND_ORIG_FID && IMAGE_HELPER_APPEND_ORIG_FID !== 'false'){
-				$fID = $obj->getFileID();
-			}
+			$fID = $obj->getFileID();
 		} else {
 			$path = $obj;
 		}		
