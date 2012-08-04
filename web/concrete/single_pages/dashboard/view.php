@@ -8,16 +8,6 @@ for ($i = 0; $i < count($categories); $i++) {
 	$cat = $categories[$i];
 	?>
 
-	
-	<? if ($i % 4 == 0 && $i > 0) { ?>
-		</tr>
-		<tr>
-	<? } ?>
-	
-	<? if ($i == 0) { ?>
-		<tr>
-	<? } ?>
-	
 	<div class="dashboard-icon-list">
 	<div class="well">
 
@@ -59,10 +49,6 @@ for ($i = 0; $i < count($categories); $i++) {
 	</div>
 	
 	
-<? } ?>
-
-<? if ($i % 4 != 0 && $i > 0) { ?>
-	</tr>
 <? } ?>
 
 	<div class="clearfix">

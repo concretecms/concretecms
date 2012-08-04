@@ -4,22 +4,12 @@ $upToPage = Page::getByPath("/dashboard");
 <?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('System &amp; Settings'), false, false, true, -1, $upToPage); ?>
 
 <?
-print '<table style="border-spacing: 10px; border-collapse: separate" width="100%">';
 for ($i = 0; $i < count($categories); $i++) {
 	$cat = $categories[$i];
 	?>
 
-	
-	<? if ($i % 3 == 0 && $i > 0) { ?>
-		</tr>
-		<tr>
-	<? } ?>
-	
-	<? if ($i == 0) { ?>
-		<tr>
-	<? } ?>
-	
-	<td width="33%" class="well" style="vertical-align: top; padding: 10px 0px">
+	<div class="dashboard-icon-list">
+	<div class="well">
 
 
 	<ul class="nav nav-list">
@@ -59,14 +49,14 @@ for ($i = 0; $i < count($categories); $i++) {
 	
 	</ul>
 
-	</td>
+	</div>
+	</div>
 	
 <? } ?>
 
-<? if ($i % 3 != 0 && $i > 0) { ?>
-	</tr>
-<? } ?>
 
-</table>
+	<div class="clearfix">
+	</div>
+
 
 <?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper();?>
