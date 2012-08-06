@@ -543,17 +543,19 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			Loader::library('3rdparty/mobile_detect');
 			$md = new Mobile_Detect();
 			if ($md->isMobile()) {
-				define('MOBILE_THEME_IS_ACTIVE',true);
 				$themeId = Config::get('MOBILE_THEME_ID');
 				if ($themeId > 0) {
 					$mobileTheme = PageTheme::getByID($themeId);
 					if($mobileTheme instanceof PageTheme) {
+						define('MOBILE_THEME_IS_ACTIVE',true);
 						// we have to grab the instance of the view
 						// since on_page_view doesn't give it to us
 						$this->setTheme($mobileTheme);
 					}
 				}
-			} else {
+			}
+			
+			if (!defined('MOBILE_THEME_IS_ACTIVE')) {
 				define('MOBILE_THEME_IS_ACTIVE', false);
 			}
 		}

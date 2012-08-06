@@ -123,7 +123,7 @@ foreach($t1 as $value) {
 			
 		<? } ?>
 
-		<div class="span4">
+		<div class="span3">
 		<?=$form->label('fvKeywords', t('Keywords'))?>
 		<div class="controls">
 			<?=$form->text('fKeywords', $searchRequest['fKeywords'], array('style'=> 'width: 130px')); ?>
@@ -134,7 +134,7 @@ foreach($t1 as $value) {
 		<?
 		$s1 = FileSet::getMySets();
 		if (count($s1) > 0) { ?>
-		<div class="span5" >
+		<div class="span4" >
 			<?=$form->label('fsID', t('In Set(s)'))?>
 			<div class="input">
 				<select multiple name="fsID[]" class="chosen-select">
@@ -151,7 +151,7 @@ foreach($t1 as $value) {
 		<? } ?>
 		</div>
 		
-		<div class="span5">
+		<div class="span3">
 		<?=$form->label('numResults', t('# Per Page'))?>
 		<div class="input">
 			<?=$form->select('numResults', array(

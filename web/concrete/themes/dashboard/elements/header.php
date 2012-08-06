@@ -52,9 +52,6 @@ if (LANGUAGE != 'en') {
 $v->addHeaderItem($html->css('ccm.app.css'));
 if ($md->isMobile() == true) {
 	$v->addHeaderItem($html->css('ccm.app.mobile.css')); ?>
-	<meta name="viewport" content="width=device-width; initial-scale=0.6" />
-	<meta name="HandheldFriendly" content="true"/>
-	<meta name="MobileOptimized" content="500"/>
 	<?		
 }
 $v->addHeaderItem($html->css('ccm.dashboard.css'));
