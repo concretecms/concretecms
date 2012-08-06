@@ -17,9 +17,9 @@
 				if ($co->getBlock() != '') {
 					$bt = BlockType::getByHandle($co->getBlock());
 					if ($bt->getPackageID() > 0) {
-						@include($env->getPath(DIRNAME_BLOCKS . '/' . $bt->getBlockTypeHandle() . '/' . DIRNAME_BLOCK_TOOLS . '/' . $co->getFilename(), $co->getPackageHandle()));
+						include($env->getPath(DIRNAME_BLOCKS . '/' . $bt->getBlockTypeHandle() . '/' . DIRNAME_BLOCK_TOOLS . '/' . $co->getFilename(), $bt->getPackageHandle()));
 					} else {
-						@include($env->getPath(DIRNAME_BLOCKS . '/' . $bt->getBlockTypeHandle() . '/' . DIRNAME_BLOCK_TOOLS . '/' . $co->getFilename()));
+						include($env->getPath(DIRNAME_BLOCKS . '/' . $bt->getBlockTypeHandle() . '/' . DIRNAME_BLOCK_TOOLS . '/' . $co->getFilename()));
 					}
 				}
 				break;
