@@ -61,16 +61,16 @@
 		
 		public function getSearchableContent() {
 			$fp = Loader::helper("feed");			
-			$feed = $fp->load($this->url); 
+			$feed = $fp->load($this->url);
 			$feed->set_item_limit( intval($this->itemsToDisplay) );
 			$feed->init();
 			$feed->handle_content_type();
 			$posts = $feed->get_items();
 			$searchContent='';
-			foreach($posts as $item){
+			foreach($posts as $item) {
 			    $searchContent.=$item->get_title().' '.strip_tags($item->get_description()).' ';
-                        }
-                        return $searchContent;
+			}
+			return $searchContent;
 		}
 		
 	}

@@ -28,8 +28,10 @@ class FeedHelper {
 	 * @param string $feed
 	 * @return SimplePie $feed
 	 */
-	public function load($feed) {
-		$feed = new SimplePie($feed, DIR_FILES_CACHE);
+	public function load($feedurl) {
+		$feed = new SimplePie();
+		$feed->set_feed_url($feedurl);
+		$feed->set_cache_location(DIR_FILES_CACHE);
 		return $feed;
 	}
 	
