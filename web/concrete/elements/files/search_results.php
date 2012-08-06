@@ -21,10 +21,9 @@ if (isset($_REQUEST['searchInstance'])) {
 <? } ?>
 
 <div id="ccm-list-wrapper"><a name="ccm-<?=$searchInstance?>-list-wrapper-anchor"></a>
-	<div style="margin-bottom: 10px">
 		<? $form = Loader::helper('form'); ?>
-
-		<select id="ccm-<?=$searchInstance?>-list-multiple-operations" class="span3" disabled>
+	<div style="float: left; width: 200px; margin-bottom: 10px">
+		<select id="ccm-<?=$searchInstance?>-list-multiple-operations" class="" disabled>
 			<option value="">** <?=t('With Selected')?></option>
 			<option value="download"><?=t('Download')?></option>
 			<option value="sets"><?=t('Sets')?></option>
@@ -34,8 +33,9 @@ if (isset($_REQUEST['searchInstance'])) {
 			<option value="delete"><?=t('Delete')?></option>
 		</select>	
 		
+	</div>
+	<div style="float: right">
 		<? Loader::element('files/upload_single', array('searchInstance' => $searchInstance, 'ocID' => $ocID)); ?>
-
 	</div>
 
 <?

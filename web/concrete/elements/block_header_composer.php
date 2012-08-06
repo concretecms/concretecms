@@ -47,12 +47,10 @@ if ($b->getBlockName() != '') {
 ?>
 
 <? if ($displayEditLink) { ?>
-	<label><a href="javascript:void(0)" onclick="ccm_composerEditBlock(<?=$b->getBlockCollectionID()?>, <?=$b->getBlockID()?>, '<?=$b->getAreaHandle()?>', <?=$bt->getBlockTypeInterfaceWidth()?> , <?=$bt->getBlockTypeInterfaceHeight()?> )" ><?=$btName?></a></label>
+	<label class="control-label"><a href="javascript:void(0)" onclick="ccm_composerEditBlock(<?=$b->getBlockCollectionID()?>, <?=$b->getBlockID()?>, '<?=$b->getAreaHandle()?>', <?=$bt->getBlockTypeInterfaceWidth()?> , <?=$bt->getBlockTypeInterfaceHeight()?> )" ><?=$btName?></a></label>
 <? } else { ?>
-	<label><?=$btName?></label>
+	<label class="control-label"><?=$btName?></label>
 <? } ?>
 
-<div class="clearfix">
-
-<div class="input">
+<div class="controls">
 <? Loader::element('block_header', array('b' => $b))?>

@@ -61,7 +61,7 @@ $(function() {
 </script>
 
 <div class="row">
-<div class="span14 offset1">
+<div class="span10 offset1">
 <div class="page-header">
 <h1><?=t('Install concrete5')?></h1>
 </div>
@@ -70,7 +70,7 @@ $(function() {
 
 
 <div class="row">
-<div class="span10 offset3">
+<div class="span10 offset1">
 
 <div id="success-message">
 <?=$successMessage?>
@@ -117,7 +117,7 @@ $(function() {
 </script>
 
 <div class="row">
-<div class="span14 offset1">
+<div class="span10 offset1">
 
 <div class="page-header">
 <h1><?=t('Install concrete5')?></h1>
@@ -130,7 +130,7 @@ $(function() {
 <form action="<?=$this->url('/install', 'configure')?>" method="post" class="form-horizontal">
 
 <div class="row">
-<div class="span7 offset1">
+<div class="span5 offset1">
 
 	<input type="hidden" name="locale" value="<?=$locale?>" />
 	
@@ -169,7 +169,7 @@ $(function() {
 	</fieldset>
 
 </div>
-<div class="span7">
+<div class="span5">
 
 	<fieldset>
 		<legend><?=t('Database Information')?></legend>
@@ -206,7 +206,7 @@ $(function() {
 </div>
 
 <div class="row">
-<div class="span14 offset1">
+<div class="span10 offset1">
 
 <h3><?=t('Sample Content')?></h3>
 
@@ -243,7 +243,7 @@ $(function() {
 </div>
 
 <div class="row">
-<div class="span14 offset1">
+<div class="span10 offset1">
 
 <div class="well">
 	<button class="btn btn-large primary" type="submit"><?=t('Install concrete5')?> <i class="icon-thumbs-up icon-white"></i></button>
@@ -309,7 +309,7 @@ $(function() {
 
 <div class="row">
 
-<div class="span14 offset1">
+<div class="span10 offset1">
 <div class="page-header">
 	<h1><?=t('Install concrete5')?></h1>
 </div>
@@ -319,7 +319,7 @@ $(function() {
 </div>
 
 <div class="row">
-<div class="span7 offset1">
+<div class="span5 offset1">
 
 <table class="table table-striped">
 <tbody>
@@ -349,7 +349,7 @@ $(function() {
 </table>
 
 </div>
-<div class="span7">
+<div class="span5">
 
 <table class="table table-striped">
 
@@ -386,7 +386,7 @@ $(function() {
 
 
 <div class="row">
-<div class="span7 offset1">
+<div class="span10 offset1">
 
 <h3><?=t('Testing Optional Items')?></h3>
 
@@ -394,7 +394,7 @@ $(function() {
 </div>
 
 <div class="row">
-<div class="span7 offset1">
+<div class="span5 offset1">
 
 <table class="table table-striped">
 <tbody>
@@ -410,7 +410,7 @@ $(function() {
 </div>
 
 <div class="row">
-<div class="span14 offset1">
+<div class="span10 offset1">
 <div class="well" id="install-success">
 	<form method="post" action="<?=$this->url('/install','setup')?>">
 	<input type="hidden" name="locale" value="<?=$locale?>" />
@@ -437,7 +437,7 @@ $(function() {
 <? } else { ?>
 
 <div class="row">
-<div class="span14 offset1">
+<div class="span10 offset1">
 <div class="page-header">
 	<h1><?=t('Install concrete5')?></h1>
 </div>
@@ -445,7 +445,7 @@ $(function() {
 </div>
 
 <div class="row">
-<div class="span14 offset1">
+<div class="span10 offset1">
 
 <div id="ccm-install-intro">
 

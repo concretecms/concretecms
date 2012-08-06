@@ -1,8 +1,8 @@
 <? defined('C5_EXECUTE') or die("Access Denied.");?>
-<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Bookmark Icons'), false, 'span12 offset2')?>
+<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Bookmark Icons'), false, 'span10 offset1')?>
 
 
-	<form method="post" id="favicon-form" action="<?=$this->action('update_favicon')?>" enctype="multipart/form-data" >
+	<form method="post" class="form-horizontal" id="favicon-form" action="<?=$this->action('update_favicon')?>" enctype="multipart/form-data" >
 
 
 	<?=$this->controller->token->output('update_favicon')?>
@@ -15,15 +15,15 @@
 	if($favIconFID){
 		$f = File::getByID($favIconFID);
 		?>
-		<div class="clearfix">
+		<div class="control-group">
 		<label><?=t('Selected Icon')?></label>
-		<div class="input">
+		<div class="controls">
 			<img src="<?=$f->getRelativePath() ?>" />
 		</div>
 		</div>
-		<div class="clearfix">
+		<div class="control-group">
 		<label></label>
-		<div class="input">
+		<div class="controls">
 			<a href="javascript:void(0)" class="btn danger" onclick="removeFavIcon()"><?=t('Remove')?></a>
 		</div>
 		</div>
@@ -38,18 +38,18 @@
 	
 
 	
-		<div class="clearfix">
-			<label for="favicon_upload"><?=t('Upload File')?></label>
-			<div class="input">
+		<div class="control-group">
+			<label for="favicon_upload" class="control-label"><?=t('Upload File')?></label>
+			<div class="controls">
 				<input id="favicon_upload" type="file" class="input-file" name="favicon_file"/>
 				<div class="help-block"><?=t('Your image should be 16x16 pixels, and should be an gif or a png with a .ico file extension.')?></div>
 
 			</div>
 		</div>
 
-		<div class="clearfix">
-			<label></label>
-			<div class="input">
+		<div class="control-group">
+			<label class="control-label"></label>
+			<div class="controls">
 				<?
 				print $interface->submit(t('Upload'), 'favicon-form', 'left');
 				?>
@@ -66,7 +66,7 @@
 	
 	<br/><br/>
 
-	<form method="post" id="iphone-form" action="<?=$this->action('update_iphone_thumbnail')?>" enctype="multipart/form-data" >
+	<form method="post" id="iphone-form" class="form-horizontal" action="<?=$this->action('update_iphone_thumbnail')?>" enctype="multipart/form-data" >
 	<?=$this->controller->token->output('update_iphone_thumbnail')?>
 	<input id="remove-existing-iphone-thumbnail" name="remove_icon" type="hidden" value="0" />
 
@@ -79,15 +79,15 @@
 	if($favIconFID){
 		$f = File::getByID($favIconFID);
 		?>
-		<div class="clearfix">
-		<label><?=t('Selected Icon')?></label>
-		<div class="input">
+		<div class="control-group">
+		<label class="control-label"><?=t('Selected Icon')?></label>
+		<div class="controls">
 			<img src="<?=$f->getRelativePath() ?>" />
 		</div>
 		</div>
-		<div class="clearfix">
+		<div class="control-group">
 		<label></label>
-		<div class="input">
+		<div class="controls">
 			<a href="javascript:void(0)" class="btn danger" onclick="removeIphoneThumbnail()"><?=t('Remove')?></a>
 		</div>
 		</div>
@@ -101,18 +101,18 @@
 		
 	<? } else { ?>
 
-		<div class="clearfix">
-			<label for="favicon_upload"><?=t('Upload File')?></label>
-			<div class="input">
+		<div class="control-group">
+			<label for="favicon_upload" class="control-label"><?=t('Upload File')?></label>
+			<div class="controls">
 				<input id="favicon_upload" type="file" class="input-file" name="favicon_file"/>
 				<div class="help-block"><?=t('iPhone home screen icons should be 57x57 and be in the .png format.')?></div>
 
 			</div>
 		</div>
 
-		<div class="clearfix">
-			<label></label>
-			<div class="input">
+		<div class="control-group">
+			<label class="control-label"></label>
+			<div class="controls">
 				<?
 				print $interface->submit(t('Upload'), 'favicon-form', 'left');
 				?>

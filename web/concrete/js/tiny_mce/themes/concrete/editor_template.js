@@ -73,8 +73,9 @@
 			t.settings = s = extend({
 				theme_concrete_path : true,
 				theme_concrete_toolbar_location : 'top',
-				theme_concrete_buttons1 : "undo,redo,pastetext,pasteword,|,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,|,styleselect,formatselect",
-				theme_concrete_buttons2 : "bullist,numlist,|,outdent,indent,|,hr,charmap,|,forecolor,backcolor,|,link,unlink,anchor,|,image,cleanup,code",
+				theme_concrete_buttons1 : "undo,redo,pastetext,pasteword,|,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,|,styleselect",
+				theme_concrete_buttons2 : "formatselect,bullist,numlist,|,outdent,indent,|,hr,charmap,|,forecolor,backcolor,|,link,unlink,anchor",
+				theme_concrete_buttons3 : "image,cleanup,code",
 				theme_concrete_blockformats : "p,address,pre,h1,h2,h3,h4,h5,h6",
 				theme_concrete_toolbar_align : "left",
 				theme_concrete_fonts : "Andale Mono=andale mono,times;Arial=arial,helvetica,sans-serif;Arial Black=arial black,avant garde;Book Antiqua=book antiqua,palatino;Comic Sans MS=comic sans ms,sans-serif;Courier New=courier new,courier;Georgia=georgia,palatino;Helvetica=helvetica;Impact=impact,chicago;Symbol=symbol;Tahoma=tahoma,arial,helvetica,sans-serif;Terminal=terminal,monaco;Times New Roman=times new roman,times;Trebuchet MS=trebuchet ms,geneva;Verdana=verdana,geneva;Webdings=webdings;Wingdings=wingdings,zapf dingbats",

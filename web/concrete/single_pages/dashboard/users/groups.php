@@ -53,7 +53,7 @@ $gResults = $gl->getPage();
 
 ?>
 
-<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Groups'), false, 'span12 offset2', false)?>
+<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Groups'), false, 'span10 offset1', false)?>
 <?
 $tp = new TaskPermission();
 if ($tp->canAccessGroupSearch()) { ?>

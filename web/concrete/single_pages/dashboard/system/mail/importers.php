@@ -8,67 +8,67 @@ $form = Loader::helper('form');
 
 <? if ($this->controller->getTask() == 'edit_importer') { ?>
 
-<?php echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Edit Importer'), false, 'span12 offset2', false)?>
+<?php echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Edit Importer'), false, 'span8 offset2', false)?>
 <div class="ccm-pane-body">
 
-	<form method="post" id="mail-importer-form" action="<?=$this->url('/dashboard/system/mail/importers', 'save_importer')?>">
+	<form method="post" id="mail-importer-form" class="form-horizontal" action="<?=$this->url('/dashboard/system/mail/importers', 'save_importer')?>">
+			<?=$form->hidden('miID', $mi->getMailImporterID())?>
 		<fieldset>
 			<legend><?=t($mi->getMailImporterName())?> <?=t('Settings');?></legend>
-			<?=$form->hidden('miID', $mi->getMailImporterID())?>
 		
-			<div class="clearfix">
+			<div class="control-group">
 				<?=$form->label('miEmail',t('Email Address to Route Emails To'));?>
-				<div class="input">
+				<div class="controls">
 					<?=$form->text('miEmail', $mi->getMailImporterEmail())?>
 				</div>
 			</div>
 			
-			<div class="clearfix">
+			<div class="control-group">
 				<?=$form->label('miIsEnabled',t('Enabled'));?>
-				<div class="input">
+				<div class="controls">
 					<?=$form->select('miIsEnabled', $enabledVals, $mi->isMailImporterEnabled())?>
 				</div>
 			</div>	
 		</fieldset>
 		<fieldset>
 			<legend><?=t('POP Mail Server Authentication Settings')?></legend>
-			<div class="clearfix">
+			<div class="control-group">
 				<?=$form->label('miServer',t('Mail Server'));?>
-				<div class="input">
+				<div class="controls">
 					<?=$form->text('miServer', $mi->getMailImporterServer())?>
 				</div>
 			</div>
-			<div class="clearfix">
+			<div class="control-group">
 				<?=$form->label('miUsername',t('Username'));?>
-				<div class="input">
+				<div class="controls">
 					<?=$form->text('miUsername', $mi->getMailImporterUsername())?>
 				</div>
 			</div>
-			<div class="clearfix">
+			<div class="control-group">
 				<?=$form->label('miPassword',t('Password'));?>
-				<div class="input">
+				<div class="controls">
 					<?=$form->text('miPassword', $mi->getMailImporterPassword())?>
 				</div>
 			</div>
 			
-			<div class="clearfix">
+			<div class="control-group">
 				<?=$form->label('miEncryption',t('Encryption'));?>
-				<div class="input">
+				<div class="controls">
 					<?=$form->select('miEncryption', $secureVals, $mi->getMailImporterEncryption())?>
 				</div>
 			</div>
 			<? $port = $mi->getMailImporterPort() == 0 ? '' : $mi->getMailImporterPort(); ?>
 		
-			<div class="clearfix">
+			<div class="control-group">
 				<?=$form->label('miPort',t('Port (Leave blank for default)'));?>
-				<div class="input">
+				<div class="controls">
 					<?=$form->text('miPort', $port)?>
 				</div>
 			</div>
 
-			<div class="clearfix">
+			<div class="control-group">
 				<?=$form->label('miConnectionMethod', t('Connection Method'));?>
-				<div class="input">
+				<div class="controls">
 					<?=$form->select('miConnectionMethod', array('POP' => 'POP', 'IMAP' => 'IMAP'), $mi->getMailImporterConnectionMethod())?>
 				</div>
 			</div>
@@ -83,7 +83,7 @@ $form = Loader::helper('form');
 
 <? } else { ?>
 
-<?php echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Mail Importers'), false, 'span12 offset2')?>	
+<?php echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Mail Importers'), false, 'span8 offset2')?>	
 	<div class="ccm-pane-body">
 	<? if (count($importers) == 0) { ?>
 		<p><?=t('There are no mail importers. Mail importers poll email accounts for new messages and run actions on those messages.')?></p>

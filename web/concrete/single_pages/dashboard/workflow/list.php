@@ -4,7 +4,7 @@
 
 <? if ($this->controller->getTask() == 'edit_details') { ?>
 
-<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Edit Workflow'), false, 'span12 offset2', false)?>
+<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Edit Workflow'), false, 'span10 offset1', false)?>
 <form method="post"  action="<?=$this->action('save_workflow_details')?>" method="post" class="form-horizontal">
 <input type="hidden" name="wfID" value="<?=$wf->getWorkflowID()?>" />
 <?=Loader::helper('validation/token')->output('save_workflow_details')?>
@@ -22,7 +22,7 @@
 
 <? } else { ?>
 
-<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper($wf->getWorkflowName(), false, 'span12 offset2', false)?>
+<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper($wf->getWorkflowName(), false, 'span10 offset1', false)?>
 
 <? Loader::element("workflow/type_form_required", array('workflow' => $wf)); ?>
 
@@ -34,7 +34,7 @@
 
 <? } else if ($this->controller->getTask() == 'add' || $this->controller->getTask() == 'submit_add') { ?>
 
-	<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Add Workflow'), false, 'span12 offset2', false)?>
+	<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Add Workflow'), false, 'span10 offset1', false)?>
 
 	<form method="post" class="form-horizontal" action="<?=$this->action('submit_add')?>" id="ccm-attribute-type-form">
 	<?=Loader::helper('validation/token')->output('add_workflow')?>
@@ -91,7 +91,7 @@
 
 <? } else { ?>
 
-	<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Workflows'), false, 'span12 offset2')?>
+	<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Workflows'), false, 'span10 offset1')?>
 
 	<a href="<?=View::url('/dashboard/workflow/list', 'add')?>" style="float: right" class="btn primary"><?=t("Add Workflow")?></a>
 	

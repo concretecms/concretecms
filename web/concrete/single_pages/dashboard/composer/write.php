@@ -5,7 +5,7 @@
 if (isset($entry)) { ?>
 
 	<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(ucfirst($action) . ' ' . $ct->getCollectionTypeName(), false, false, false)?>
-	<form method="post" enctype="multipart/form-data" action="<?=$this->action('save')?>" id="ccm-dashboard-composer-form">
+	<form method="post" class="form-horizontal" enctype="multipart/form-data" action="<?=$this->action('save')?>" id="ccm-dashboard-composer-form">
 	<div class="ccm-pane-body">
 	
 
@@ -13,26 +13,26 @@ if (isset($entry)) { ?>
 	
 	<fieldset>
 	<legend><?=t("Basic Information")?></legend>
-	<div class="clearfix">
+	<div class="control-group">
 		<?=$form->label('cName', t('Name'))?>
-		<div class="input"><?=$form->text('cName', Loader::helper("text")->entities($name), array('class' => 'span9', 'onKeyUp' => "ccm_updateAddPageHandle()"))?></div>		
+		<div class="controls"><?=$form->text('cName', Loader::helper("text")->entities($name), array('class' => 'input-xlarge', 'onKeyUp' => "ccm_updateAddPageHandle()"))?></div>		
 	</div>
 
-	<div class="clearfix">
+	<div class="control-group">
 		<?=$form->label('cHandle', t('URL Slug'))?>
-		<div class="input"><?=$form->text('cHandle', $handle, array('class' => 'span4'))?>
+		<div class="controls"><?=$form->text('cHandle', $handle, array('class' => 'span3'))?>
 		<img src="<?=ASSETS_URL_IMAGES?>/loader_intelligent_search.gif" width="43" height="11" id="ccm-url-slug-loader" style="display: none" />
 		</div>		
 	</div>
 
-	<div class="clearfix">
+	<div class="control-group">
 		<?=$form->label('cDescription', t('Short Description'))?>
-		<div class="input"><?=$form->textarea('cDescription', Loader::helper("text")->entities($description), array('class' => 'span9', 'rows' => 5))?></div>		
+		<div class="controls"><?=$form->textarea('cDescription', Loader::helper("text")->entities($description), array('class' => 'input-xlarge', 'rows' => 5))?></div>		
 	</div>
 
-	<div class="clearfix">
+	<div class="control-group">
 		<?=$form->label('cDatePublic', t('Date Posted'))?>
-		<div class="input"><? 
+		<div class="controls"><? 
 		if ($this->controller->isPost()) { 	
 			$cDatePublic = Loader::helper('form/date_time')->translate('cDatePublic');
 		}
@@ -44,9 +44,7 @@ if (isset($entry)) { ?>
 	<? if ($entry->isComposerDraft()) { ?>
 	<fieldset>
 	<legend><?=t('Publish Location')?></legend>
-	<div class="clearfix">
-		<label></label>
-		<div class="input">
+	<div class="control-group">
 		<span id="ccm-composer-publish-location"><?
 		if ($entry->getComposerDraftPublishParentID() > 0) { 
 			print $this->controller->getComposerDraftPublishText($entry);
@@ -61,7 +59,7 @@ if (isset($entry)) { ?>
 	
 	<? } 
 	
-	?></div></div>
+	?></div>
 	</fieldset>
 	<? } ?>
 	
@@ -75,9 +73,9 @@ if (isset($entry)) { ?>
 				$value = $entry->getAttributeValueObject($ak);
 			}
 			?>
-			<div class="clearfix">
+			<div class="control-group">
 				<?=$ak->render('label');?>
-				<div class="input">
+				<div class="controls">
 					<?=$ak->render('composer', $value, true)?>
 				</div>
 			</div>
@@ -87,7 +85,7 @@ if (isset($entry)) { ?>
 			$b = $entry->getComposerBlockInstance($b);
 			?>
 		
-		<div class="clearfix">
+		<div class="control-group">
 		<?
 		if (is_object($b)) {
 			$bv = new BlockView();
@@ -102,7 +100,7 @@ if (isset($entry)) { ?>
 		<?
 		} ?>
 	<? }  ?>
-	
+	</fieldset>
 	
 
 	</div>
@@ -299,7 +297,7 @@ if (isset($entry)) { ?>
 	
 <? } else { ?>
 
-	<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Composer'), false, 'span14 offset1')?>
+	<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Composer'), false, 'span10 offset1')?>
 	
 	<? if (count($ctArray) > 0) { ?>
 	<h3><?=t('What type of page would you like to write?')?></h3>

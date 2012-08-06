@@ -12,7 +12,7 @@ $pkgArray = Package::getInstalledList();?>
 <?
 if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScreen && $tp->canInstallPackages()) { ?>
 
-<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Install %s', $pkg->getPackageName()), false, 'span12 offset2', false);?>
+<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Install %s', $pkg->getPackageName()), false, 'span10 offset1', false);?>
 <form method="post" action="<?=$this->action('install_package', $pkg->getPackageHandle())?>">
 <?=Loader::helper('validation/token')->output('install_options_selected')?>
 <div class="ccm-pane-body">
@@ -53,7 +53,7 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
 ?>
 <form method="post" class="form-stacked" id="ccm-uninstall-form" action="<?=$this->action('do_uninstall_package')?>" onsubmit="return confirm('<?=$removeBTConfirm?>')">
 
-<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Uninstall Package'), false, 'span12 offset2', false);?>
+<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Uninstall Package'), false, 'span10 offset1', false);?>
 <div class="ccm-pane-body">
 	
 	<?=$valt->output('uninstall')?>
@@ -169,7 +169,7 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
 	
 	if (is_object($pkg)) { ?>
 	
-		<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Inspect Package'), false, 'span12 offset2', false);?>
+		<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Inspect Package'), false, 'span10 offset1', false);?>
 		
 		<div class="ccm-pane-body">
 			<table class="table table-bordered table-striped">
@@ -214,7 +214,7 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
 	
 	 } else { ?>
 		
-		<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Add Functionality'), t('Install custom add-ons or those downloaded from the concrete5.org marketplace.'), 'span12 offset2');?>
+		<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Add Functionality'), t('Install custom add-ons or those downloaded from the concrete5.org marketplace.'), 'span10 offset1');?>
 			
 		<? if (is_object($installedPKG) && $installedPKG->hasInstallPostScreen()) { ?>
 	

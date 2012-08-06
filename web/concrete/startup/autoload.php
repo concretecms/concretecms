@@ -202,6 +202,7 @@ $classes = array(
 	'WorkflowType' => array('model','workflow/type'),
 	'User' => array('model','user'),
 	'UserInfo' => array('model','userinfo'),
+	'UserBannedIP' => array('model','user_banned_ip'),
 	'Stack' => array('model','stack/model'),
 	'StackList' => array('model','stack/list'),
 	'SystemAntispamLibrary' => array('model','system/antispam/library'),

@@ -7,51 +7,48 @@ $form = Loader::helper('form');
 ?>
 	
 
-	<?php echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('SMTP Method'), false, 'span12 offset2', false)?>
+	<?php echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('SMTP Method'), false, 'span8 offset2', false)?>
 	<div class="ccm-pane-body">
-	<form method="post" action="<?=$this->url('/dashboard/system/mail/method', 'save_settings')?>" id="mail-settings-form">
+	<form method="post" action="<?=$this->url('/dashboard/system/mail/method', 'save_settings')?>" class="form-horizontal" id="mail-settings-form">
 	<fieldset>
 	<legend><?=t('Send Mail Method')?></legend>
-	<div class="clearfix">
-	<label></label>
-	<div class="input">
-	<ul class="inputs-list">
-	<li><label><?=$form->radio('MAIL_SEND_METHOD', 'PHP_MAIL', MAIL_SEND_METHOD)?> <span><?=t('Default PHP Mail Function')?></span></label></li>
-	<li><label><?=$form->radio('MAIL_SEND_METHOD', 'SMTP', MAIL_SEND_METHOD)?> <span><?=t('External SMTP Server')?></span></label></li>
-	</ul>
+	<div class="control-group">
+	<div class="controls">
+	<label class="radio"><?=$form->radio('MAIL_SEND_METHOD', 'PHP_MAIL', MAIL_SEND_METHOD)?> <span><?=t('Default PHP Mail Function')?></span></label>
+	<label class="radio"><?=$form->radio('MAIL_SEND_METHOD', 'SMTP', MAIL_SEND_METHOD)?> <span><?=t('External SMTP Server')?></span></label>
 	</div>
 	<div>
 	</fieldset>
 	<fieldset id="ccm-settings-mail-smtp">
 		<legend><?=t('SMTP Settings')?></legend>
-			<div class="clearfix">
+			<div class="control-group">
 				<?=$form->label('MAIL_SEND_METHOD_SMTP_SERVER',t('Mail Server'));?>
-				<div class="input">
+				<div class="controls">
 					<?=$form->text('MAIL_SEND_METHOD_SMTP_SERVER', Config::get('MAIL_SEND_METHOD_SMTP_SERVER'))?>
 				</div>
 			</div>
-			<div class="clearfix">
+			<div class="control-group">
 				<?=$form->label('MAIL_SEND_METHOD_SMTP_USERNAME',t('Username'));?>
-				<div class="input">
+				<div class="controls">
 					<?=$form->text('MAIL_SEND_METHOD_SMTP_USERNAME', Config::get('MAIL_SEND_METHOD_SMTP_USERNAME'))?>
 				</div>
 			</div>
-			<div class="clearfix">
+			<div class="control-group">
 				<?=$form->label('MAIL_SEND_METHOD_SMTP_PASSWORD',t('Password'));?>
-				<div class="input">
+				<div class="controls">
 					<?=$form->text('MAIL_SEND_METHOD_SMTP_PASSWORD', Config::get('MAIL_SEND_METHOD_SMTP_PASSWORD'))?>
 				</div>
 			</div>
 			
-			<div class="clearfix">
+			<div class="control-group">
 				<?=$form->label('MAIL_SEND_METHOD_SMTP_ENCRYPTION',t('Encryption'));?>
-				<div class="input">
+				<div class="controls">
 					<?=$form->select('MAIL_SEND_METHOD_SMTP_ENCRYPTION', $secureVals, Config::get('MAIL_SEND_METHOD_SMTP_ENCRYPTION'))?>
 				</div>
 			</div>
-			<div class="clearfix">
+			<div class="control-group">
 				<?=$form->label('MAIL_SEND_METHOD_SMTP_PORT',t('Port (Leave blank for default)'));?>
-				<div class="input">
+				<div class="controls">
 					<?=$form->text('MAIL_SEND_METHOD_SMTP_PORT', Config::get('MAIL_SEND_METHOD_SMTP_PORT'))?>
 				</div>
 			</div>	

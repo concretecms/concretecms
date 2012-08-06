@@ -4,7 +4,7 @@
 	<? $help = ob_get_contents(); ?>
 	<? ob_end_clean(); ?>
 	
-	<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Task Permissions'), $help, 'span12 offset2', false)?>
+	<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Task Permissions'), $help, 'span8 offset2', false)?>
 	<form method="post" action="<?=$this->action('save')?>">
 	<?=Loader::helper('validation/token')->output('save_permissions')?>
 	<div class="ccm-pane-body">
