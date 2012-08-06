@@ -88,7 +88,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 $tp = new TaskPermission();
 if ($tp->canBackup()) {
 	?>
-	<?= Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Backup Database'), false, 'span14 offset1') ?>
+	<?= Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Backup Database'), false, 'span8 offset2') ?>
 		<h3><?=t('Existing Backups')?></h3>
 		<?php
 		if (count($backups) > 0) {
@@ -129,15 +129,17 @@ if ($tp->canBackup()) {
 			<h3><?=t('Create new Backup')?></h3>
 				<form method="post" action="<?= $this->action('run_backup') ?>">
 					<div class="ccm-buttons well">
-						<div style="float: left;"><?= $interface->submit(t("Run Backup"), false, "left") ?></div>
+						<?= $interface->submit(t("Run Backup"), false, "left") ?>
+						<br/><br/>
+						<div>
 						<? if ($crypt->isAvailable()) { ?>
-						<label><input type="checkbox" name="useEncryption" id="useEncryption" value="1" />
+						<label class="checkbox"><input type="checkbox" name="useEncryption" id="useEncryption" value="1" />
 									<span><?= t('Use Encryption') ?></span></label>
 								<? } else { ?>
-						<label><input type="checkbox" value="0" disabled />
+						<label class="checkbox"><input type="checkbox" value="0" disabled />
 									<span><?= t('Use Encryption') ?></span></label>
 								<? } ?>
-						<br class="clearfix" />
+						</div>
 					</div>
 				</form>
 		
@@ -148,7 +150,7 @@ if ($tp->canBackup()) {
 	<?= Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(); ?>
 	
 <? } else { ?>
-	<?= Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Backup'), false, 'span6 offset6') ?>
+	<?= Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Backup'), false, 'span8 offset2') ?>
 	<p><?= t('You do not have permission to create or administer backups.') ?></p>
 	<?= Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(); ?>
 <? } ?>

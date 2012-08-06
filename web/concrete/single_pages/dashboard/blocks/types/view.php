@@ -2,7 +2,7 @@
 
 <div class="ccm-ui">
 <div class="row">
-<div class="span12 offset2 columns">
+<div class="span10 offset1 columns">
 <div class="ccm-pane">
 <?=Loader::helper('concrete/dashboard')->getDashboardPaneHeader(t('Block Types'), t('Add custom block types, refresh the database tables of installed blocks, and uninstall blocks types from here.'));?>
 <? if ($this->controller->getTask() == 'inspect' || $this->controller->getTask() == 'refresh') { ?>

@@ -52,9 +52,9 @@ if (LANGUAGE != 'en') {
 $v->addHeaderItem($html->css('ccm.app.css'));
 if ($md->isMobile() == true) {
 	$v->addHeaderItem($html->css('ccm.app.mobile.css')); ?>
-	<meta name="viewport" content="width=device-width; initial-scale=1.0" />
+	<meta name="viewport" content="width=device-width; initial-scale=0.6" />
 	<meta name="HandheldFriendly" content="true"/>
-	<meta name="MobileOptimized" content="320"/>
+	<meta name="MobileOptimized" content="500"/>
 	<?		
 }
 $v->addHeaderItem($html->css('ccm.dashboard.css'));
@@ -70,6 +70,28 @@ Loader::element('header_required', array('disableTrackingCode' => true));
 $backgroundImage = Loader::helper('concrete/dashboard')->getDashboardBackgroundImage();
 ?>
 <script type="text/javascript">
+	var lastSizeCheck = 9999999;		
+	ccm_testFixForms = function() {
+		if ($(window).width() <= 560 && lastSizeCheck > 560) {
+			ccm_fixForms();
+		} else if ($(window).width() > 560 && lastSizeCheck <= 560) {
+			ccm_fixForms(true);
+		}
+		lastSizeCheck = $(window).width();
+	}
+	ccm_fixForms = function(horizontal) {
+		$('form').each(function() {
+			var f = $(this);
+			if (horizontal) {
+				if (f.attr('original-class') == 'form-horizontal') {
+					f.attr('class', '').addClass('form-horizontal');
+				}
+			} else {
+				f.removeClass('form-horizontal');
+			}
+		});
+	}
+
 	$(function() {
 		<? if ($backgroundImage->image) { ?>
 		    $.backstretch("<?=$backgroundImage->image?>" <? if (!$_SESSION['dashboardHasSeenImage']) { ?>,  {speed: 750}<? } ?>);
@@ -77,6 +99,14 @@ $backgroundImage = Loader::helper('concrete/dashboard')->getDashboardBackgroundI
 	    <? if ($backgroundImage->checkData) { ?>
 		    ccm_getDashboardBackgroundImageData('<?=$backgroundImage->filename?>', <? if ($backgroundImage->displayCaption) { ?> true <? } else { ?> false <? } ?>);
 		<? } ?>
+
+		$(window).on('resize', function() {
+			ccm_testFixForms();
+		});
+		$('form').each(function() {
+			$(this).attr('original-class', $(this).attr('class'));
+		});
+		ccm_testFixForms();
 	});
 </script>
 

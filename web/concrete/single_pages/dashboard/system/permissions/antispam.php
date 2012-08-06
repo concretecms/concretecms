@@ -1,5 +1,5 @@
 <? defined('C5_EXECUTE') or die("Access Denied.");?>
-<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Spam Control'), false, 'span12 offset2', (!is_object($activeLibrary) || (!$activeLibrary->hasOptionsForm())))?>
+<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Spam Control'), false, 'span10 offset1', (!is_object($activeLibrary) || (!$activeLibrary->hasOptionsForm())))?>
 <form method="post" id="site-form" action="<?=$this->action('update_library')?>">
 <? if (is_object($activeLibrary) && $activeLibrary->hasOptionsForm()) { ?>
 	<div class="ccm-pane-body">

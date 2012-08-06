@@ -27,7 +27,7 @@
 	div.ccm-block {border: 2px dotted #efefef; clear: both; overflow: hidden; margin: 0px 0px 4px 0px; padding: 2px}
 	</style>
 	
-	<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper($stack->getCollectionName(), false, 'span14 offset1', false)?>
+	<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper($stack->getCollectionName(), false, 'span10 offset1', false)?>
 	<div class="ccm-pane-options">
 		<a href="javascript:void(0)" onclick="ccm_stacksAddBlock()" class="btn small ccm-main-nav-edit-option"><?=t('Add Block')?></a>
 		<a class="btn small ccm-main-nav-edit-option" dialog-width="640" dialog-height="340" id="stackVersions" dialog-title="<?=t('Version History')?>" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/versions.php?rel=SITEMAP&cID=<?=$stack->getCollectionID()?>"><?=t('Version History')?></a>
@@ -77,7 +77,7 @@
 
 <? } else { ?>
 
-	<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Stacks'), t('Stacks give you a central place to stash blocks, where you can control their order, permissions, and even version them.<br><br>Add stacks to your site and you can update them in one place.'), 'span14 offset1');?>
+	<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Stacks'), t('Stacks give you a central place to stash blocks, where you can control their order, permissions, and even version them.<br><br>Add stacks to your site and you can update them in one place.'), 'span10 offset1');?>
 		
 	<h4><?=t('Global Areas')?></h4>
 	<div class="ccm-stack-content-wrapper">

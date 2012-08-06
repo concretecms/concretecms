@@ -405,7 +405,7 @@ class ConcreteDashboardHelper {
 
 					<? } ?>
 					
-						<li><i style="opacity: 0.2" class="<?=$p->getAttribute('icon_dashboard')?>"></i> <a href="<?=Loader::helper('navigation')->getLinkToCollection($p, false, true)?>"><?=$name?></a></li>
+						<li><a href="<?=Loader::helper('navigation')->getLinkToCollection($p, false, true)?>"><?=$name?></a></li>
 
 				
 				<? } ?>

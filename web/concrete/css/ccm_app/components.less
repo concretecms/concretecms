@@ -120,13 +120,25 @@ div.ccm-pane-dialog-pagination div.pagination, .ccm-pane-footer div.pagination {
 #ccm-dialog-loader-text {margin-bottom: 6px;}
 
 /* editor */
+/*
 div.ccm-editor-controls-right-cap { background:  transparent url(../images/bg_editor_concrete_controls_cap_right.png) no-repeat right; }
 div.ccm-editor-controls-left-cap { background:  transparent url(../images/bg_editor_concrete_controls_cap_left.png) no-repeat left; }
 div.ccm-editor-controls {margin: 0px 13px 0px 39px; background: transparent url(../images/bg_editor_controls_middle.png) repeat; padding: 0px 18px 8px 0px}
-div.ccm-editor-controls ul {display: block; list-style-type: none; height: 24px; margin: 0px !important; padding: 0px;}
-div.ccm-editor-controls ul li {float: left; font-size: 10px; color: #333; margin: 0px 20px 0px 0px !important; list-style-type: none; padding: 0px}
-div.ccm-editor-controls ul li a {color: #333; text-decoration: none; display: block; padding: 10px 0px 10px 12px; background: transparent url(../images/bg_editor_concrete_caret.png) no-repeat scroll left 14px; }
+*/
+
+div.ccm-editor-controls {
+	.border-radius(4px);
+	border: 2px solid #aaa;
+	background-color: #E4F3FD;
+	padding: 6px;
+	#gradient > .vertical(#F1FCFF,#D7E9F7);
+}
+
+div.ccm-editor-controls ul {display: block; list-style-type: none; margin: 0px !important; padding: 0px;}
+div.ccm-editor-controls ul li {display: inline-block; font-size: 10px; color: #333; margin: 0px 20px 0px 0px !important; list-style-type: none; padding: 0px}
+div.ccm-editor-controls ul li a {color: #333; text-decoration: none; display: block; padding: 0px 0px 0px 12px; background: transparent url(../images/bg_editor_concrete_caret.png) no-repeat scroll left 6px; }
 div.ccm-editor-controls ul li a:hover {text-decoration: underline}
+
 
 /* page selector in blocks */
 div.ccm-summary-selected-item {border: 1px solid #dedede; margin-top: 8px; margin-bottom: 8px; padding: 10px}

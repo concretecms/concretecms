@@ -3,7 +3,7 @@
 <? if ($this->controller->getTask() == 'view_detail') { ?>
 
 
-	<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('File Set'), false, 'span12 offset2', false)?>
+	<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('File Set'), false, 'span10 offset1', false)?>
 	<form method="post" class="form-horizontal" id="file_sets_edit" action="<?=$this->url('/dashboard/files/sets', 'file_sets_edit')?>" onsubmit="return ccm_saveFileSetDisplayOrder()">
 		<?=$form->hidden('fsDisplayOrder', '')?>
 		<?=$validation_token->output('file_sets_edit');?>
@@ -147,20 +147,20 @@
 <?php } else { ?>
 
 
-	<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('File Sets'), false, 'span12 offset2', false)?>
+	<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('File Sets'), false, 'span10 offset1', false)?>
 	<div class="ccm-pane-options">
 		
 		<form id="ccm-file-set-search" method="get" action="<?=$this->url('/dashboard/files/sets')?>" class="form-horizontal">
 		<div class="ccm-pane-options-permanent-search">
 
-		<div class="span5">
+		<div class="span4">
 		<?=$form->label('fsKeywords', t('Keywords'))?>
 		<div class="controls">
 		<input type="text" id="fsKeywords" name="fsKeywords" value="<?=Loader::helper('text')->entities($_REQUEST['fsKeywords'])?>" class="span3" />
 		</div>
 		</div>
 
-		<div class="span5">
+		<div class="span4">
 		<?=$form->label('fsType', t('Type'))?>
 		<div class="controls">
 		<select id="fsType" name="fsType" style="width: 130px">

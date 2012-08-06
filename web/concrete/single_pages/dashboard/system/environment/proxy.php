@@ -2,7 +2,7 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 $dh = Loader::helper('concrete/dashboard');
 
-echo $dh->getDashboardPaneHeaderWrapper(t('Proxy Server Settings'), t('Configures proxy server settings for your website'), 'span10 offset3', false);
+echo $dh->getDashboardPaneHeaderWrapper(t('Proxy Server Settings'), t('Configures proxy server settings for your website'), 'span6 offset3', false);
 ?>
 
 <form method="post" class="form-stacked" id="proxy-form"

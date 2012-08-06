@@ -18,7 +18,7 @@ $alreadyActiveMessage = t('This theme is currently active on your site.');
 	
 	?>
     
-    <?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Themes'), false, 'span12 offset2', false);?>
+    <?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Themes'), false, 'span10 offset1', false);?>
     
     <div class="ccm-pane-body">
     
@@ -49,7 +49,7 @@ $alreadyActiveMessage = t('This theme is currently active on your site.');
 	
 	?>
     
-    <?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Themes'), false, 'span12 offset2');?>
+    <?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Themes'), false, 'span10 offset1');?>
 	
 	<h3><?=t('Currently Installed')?></h3>
 	

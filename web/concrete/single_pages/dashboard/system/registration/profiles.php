@@ -1,5 +1,5 @@
 <? defined('C5_EXECUTE') or die("Access Denied.");?>
-<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Public Profiles'), t('Control the options available for Public Profiles.'), false, false);?>
+<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Public Profiles'), t('Control the options available for Public Profiles.'), 'span8 offset2', false);?>
 <?php
 $h = Loader::helper('concrete/interface');
 $form = Loader::helper('form');

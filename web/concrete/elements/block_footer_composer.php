@@ -3,4 +3,3 @@
 <? Loader::element('block_footer', array('b' => $b))?>
 
 </div>
-</div>

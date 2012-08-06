@@ -2,7 +2,7 @@
 
 <?php if ($this->controller->getTask() == 'export_database_schema') { ?>
 
-<?php echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Database XML'), false, 'span12 offset2', false)?>
+<?php echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Database XML'), false, 'span10 offset1', false)?>
 <div class="ccm-pane-body">
 <textarea style="width: 100%; height: 600px"><?php echo htmlentities($schema, ENT_COMPAT, APP_CHARSET)?></textarea>
 </div>
@@ -18,7 +18,7 @@
 
 <?php  if (ENABLE_DEVELOPER_OPTIONS) { ?>
 
-<?php echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Database XML'), false, 'span12 offset2', false)?>
+<?php echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Database XML'), false, 'span10 offset1', false)?>
 	
 	<form method="post" class="form-stacked" id="export-db-form" action="<?php echo $this->url('/dashboard/system/backup_restore/database', 'export_database_schema')?>">
 
@@ -91,7 +91,7 @@
 
 
 <?php  }else{ ?>
-<?php echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Database XML'), false, 'span12 offset2', false)?>
+<?php echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Database XML'), false, 'span10 offset1', false)?>
 <div class="ccm-pane-body ccm-pane-body-footer">
 <div class="alert-message block-message error">       
         <p><?php echo t('Developer options have been disabled in the config file.');?></p>

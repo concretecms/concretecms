@@ -102,7 +102,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 <? } else { ?>
  
-	<?php echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Group Sets'), false, 'span12 offset2');?>
+	<?php echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Group Sets'), false, 'span10 offset1');?>
 	<? if (PERMISSIONS_MODEL == 'advanced') { ?>
 	<form method="post" class="form-horizontal" action="<?php echo $this->action('add_set')?>">
 

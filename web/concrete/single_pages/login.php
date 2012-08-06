@@ -12,8 +12,12 @@ $(function() {
 <div class="alert-message block-message success"><p><?=$intro_msg?></p></div>
 <? } ?>
 
+<div class="row">
+<div class="span10 offset1">
 <div class="page-header">
 	<h1><?=t('Sign in to %s', SITE)?></h1>
+</div>
+</div>
 </div>
 
 <? if( $passwordChanged ){ ?>
@@ -30,15 +34,15 @@ $(function() {
 
 	<form method="post" action="<?=$this->url( '/login', 'change_password', $uHash )?>"> 
 
-		<div class="clearfix">
-		<label for="uPassword"><?=t('New Password')?></label>
-		<div class="input">
+		<div class="control-group">
+		<label for="uPassword" class="control-label"><?=t('New Password')?></label>
+		<div class="controls">
 			<input type="password" name="uPassword" id="uPassword" class="ccm-input-text">
 		</div>
 		</div>
-		<div class="clearfix">
-		<label for="uPasswordConfirm"><?=t('Confirm Password')?></label>
-		<div class="input">
+		<div class="control-group">
+		<label for="uPasswordConfirm"  class="control-label"><?=t('Confirm Password')?></label>
+		<div class="controls">
 			<input type="password" name="uPasswordConfirm" id="uPasswordConfirm" class="ccm-input-text">
 		</div>
 		</div>
@@ -153,32 +157,34 @@ $(function() {
 
 <? } else { ?>
 
-<form method="post" action="<?=$this->url('/login', 'do_login')?>">
+<form method="post" action="<?=$this->url('/login', 'do_login')?>" class="form-horizontal">
 
 <div class="row">
-<div class="span8 columns">
+<div class="span10 offset1">
+<div class="row">
+<div class="span5">
 
 <fieldset>
 	
 	<legend><?=t('User Account')?></legend>
 
-	<div class="clearfix">
+	<div class="control-group">
 	
-	<label for="uName"><? if (USER_REGISTRATION_WITH_EMAIL_ADDRESS == true) { ?>
+	<label for="uName" class="control-label"><? if (USER_REGISTRATION_WITH_EMAIL_ADDRESS == true) { ?>
 		<?=t('Email Address')?>
 	<? } else { ?>
 		<?=t('Username')?>
 	<? } ?></label>
-	<div class="input">
+	<div class="controls">
 		<input type="text" name="uName" id="uName" <?= (isset($uName)?'value="'.$uName.'"':'');?> class="ccm-input-text">
 	</div>
 	
 	</div>
-	<div class="clearfix">
+	<div class="control-group">
 
-	<label for="uPassword"><?=t('Password')?></label>
+	<label for="uPassword" class="control-label"><?=t('Password')?></label>
 	
-	<div class="input">
+	<div class="controls">
 		<input type="password" name="uPassword" id="uPassword" class="ccm-input-text" />
 	</div>
 	
@@ -190,9 +196,9 @@ $(function() {
 
 	<legend><?=t('OpenID')?></legend>
 
-	<div class="clearfix">
-		<label for="uOpenID"><?=t('Login with OpenID')?>:</label>
-		<div class="input">
+	<div class="control-group">
+		<label for="uOpenID" class="control-label"><?=t('Login with OpenID')?>:</label>
+		<div class="controls">
 			<input type="text" name="uOpenID" id="uOpenID" <?= (isset($uOpenID)?'value="'.$uOpenID.'"':'');?> class="ccm-input-openid">
 		</div>
 	</div>
@@ -200,52 +206,52 @@ $(function() {
 <? } ?>
 
 </div>
-<div class="span8 columns">
+<div class="span4 offset1">
 
 	<fieldset>
 
 	<legend><?=t('Options')?></legend>
 
 	<? if (isset($locales) && is_array($locales) && count($locales) > 0) { ?>
-		<div class="clearfix">
-			<label for="USER_LOCALE"><?=t('Language')?></label>
-			<div class="input"><?=$form->select('USER_LOCALE', $locales)?></div>
+		<div class="control-group">
+			<label for="USER_LOCALE" class="control-label"><?=t('Language')?></label>
+			<div class="controls"><?=$form->select('USER_LOCALE', $locales)?></div>
 		</div>
 	<? } ?>
 	
-	<div class="clearfix">
-		<label for="uMaintainLogin"><?=t('Remember Me')?></label>
-		<div class="input">
-		<ul class="inputs-list">
-			<li><label><?=$form->checkbox('uMaintainLogin', 1)?> <span><?=t('Remain logged in to website.')?></span></label></li>
-		</ul>
-		</div>
+	<div class="control-group">
+		<label class="checkbox"><?=$form->checkbox('uMaintainLogin', 1)?> <span><?=t('Remain logged in to website.')?></span></label>
 	</div>
 	<? $rcID = isset($_REQUEST['rcID']) ? Loader::helper('text')->entities($_REQUEST['rcID']) : $rcID; ?>
 	<input type="hidden" name="rcID" value="<?=$rcID?>" />
 	
 	</fieldset>
 </div>
-<div class="span16 columns">
+<div class="span10">
 	<div class="actions">
 	<?=$form->submit('submit', t('Sign In') . ' &gt;', array('class' => 'primary'))?>
 	</div>
 </div>
 </div>
+</div>
+</div>
 </form>
+
+<a name="forgot_password"></a>
+
+<form method="post" action="<?=$this->url('/login', 'forgot_password')?>" class="form-horizontal">
+<div class="row">
+<div class="span10 offset1">
 
 <h3><?=t('Forgot Your Password?')?></h3>
 
 <p><?=t("Enter your email address below. We will send you instructions to reset your password.")?></p>
 
-<a name="forgot_password"></a>
-
-<form method="post" action="<?=$this->url('/login', 'forgot_password')?>">
 <input type="hidden" name="rcID" value="<?=$rcID?>" />
 	
-	<div class="clearfix">
-		<label for="uEmail"><?=t('Email Address')?></label>
-		<div class="input">
+	<div class="control-group">
+		<label for="uEmail" class="control-label"><?=t('Email Address')?></label>
+		<div class="controls">
 			<input type="text" name="uEmail" value="" class="ccm-input-text" >
 		</div>
 	</div>
@@ -253,12 +259,14 @@ $(function() {
 	<div class="actions">
 		<?=$form->submit('submit', t('Reset and Email Password') . ' &gt;')?>
 	</div>
-	
+
+</div>
+</div>	
 </form>
 
 
 <? if (ENABLE_REGISTRATION == 1) { ?>
-<div class="clearfix">
+<div class="control-group">
 <h3><?=t('Not a Member')?></h3>
 <p><?=t('Create a user account for use on this website.')?></p>
 <div class="actions">
