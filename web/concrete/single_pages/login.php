@@ -266,11 +266,15 @@ $(function() {
 
 
 <? if (ENABLE_REGISTRATION == 1) { ?>
+<div class="row">
+<div class="span10 offset1">
 <div class="control-group">
 <h3><?=t('Not a Member')?></h3>
 <p><?=t('Create a user account for use on this website.')?></p>
 <div class="actions">
 <a class="btn" href="<?=$this->url('/register')?>"><?=t('Register here!')?></a>
+</div>
+</div>
 </div>
 </div>
 <? } ?>

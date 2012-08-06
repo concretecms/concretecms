@@ -1,11 +1,12 @@
 <?
 
 defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Controller_Dashboard_System extends Controller {
+class Concrete5_Controller_Dashboard_System extends DashboardBaseController {
 
 	public $helpers = array('form'); 
 	
 	public function view() {
+		$this->enableNativeMobile();
 		$categories = array();
 		$c = Page::getCurrentPage();
 		$children = $c->getCollectionChildrenArray(true);
