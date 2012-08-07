@@ -126,6 +126,12 @@ class Concrete5_Model_FileList extends DatabaseItemList {
 				}
 			}
 		}
+		
+		// add FileSetFiles if we had a file set filter but
+		// couldn't add it because it has been removed
+		if ($i == 0 && count($this->filteredFileSetIDs)>0) {
+			$this->addToQuery("inner join FileSetFiles fsfl on 1=2");
+		}		
 	}
 	
 	

@@ -84,7 +84,11 @@ class Concrete5_Controller_Block_Search extends BlockController {
 		}
 	}
 
-	/**
+	public function setHighlightColor($color) {
+		$this->hColor = $color;
+	}
+	
+	/** 
 	 * Used for localization. If we want to localize the name/description we have to include this
 	 */
 	public function getBlockTypeDescription() {
@@ -224,5 +228,3 @@ class Concrete5_Controller_Block_Search extends BlockController {
 	}
 
 }
-
-?>
