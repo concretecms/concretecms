@@ -1,6 +1,6 @@
 <?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Dashboard'), false, false, false); ?>
 
-<div class="ccm-pane-body">
+<div class="ccm-pane-body" style="padding-bottom: 0px">
 
 
 <?
@@ -9,7 +9,7 @@ for ($i = 0; $i < count($categories); $i++) {
 	?>
 
 	<div class="dashboard-icon-list">
-	<div class="well">
+	<div class="well" style="visibility: hidden">
 
 	<ul class="nav nav-list">
 	<li class="nav-header"><?=t($cat->getCollectionName())?></li>
@@ -51,8 +51,7 @@ for ($i = 0; $i < count($categories); $i++) {
 	
 <? } ?>
 
-	<div class="clearfix">
-	</div>
+	<div class="clearfix"></div>
 	
 </div>
 
@@ -88,6 +87,14 @@ for ($i = 0; $i < count($categories); $i++) {
 	<? } ?>
 	
 </div>
+<script type="text/javascript">
+$(function() {
+	ccm_dashboardEqualizeMenus();
+	$(window).resize(function() {
+		ccm_dashboardEqualizeMenus();
+	});
+});
+</script>
 
 
 <?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(false);?>
