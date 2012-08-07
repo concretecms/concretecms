@@ -56,6 +56,28 @@
 		public function on_page_view() {
 			$html = Loader::helper('html');
 			$this->addHeaderItem('<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>');
+         $this->addHeaderItem('<script type="text/javascript"> 
+            function googleMapInit' . $this->bID . '() { 
+               try{
+                  var latlng = new google.maps.LatLng(' . $this->latitude . ', ' . $this->longitude . ');
+                   var mapOptions = {
+                     zoom: ' . $this->zoom . ',
+                     center: latlng,
+                     mapTypeId: google.maps.MapTypeId.ROADMAP,
+                     streetViewControl: false,
+                     mapTypeControl: false
+                  };
+                   var map = new google.maps.Map(document.getElementById(\'googleMapCanvas' . $this->bID . '\'), mapOptions);
+                   var marker = new google.maps.Marker({
+                       position: latlng, 
+                       map: map
+                   });
+               }catch(e){alert(e.message)} 
+            }
+            $(function() {
+               googleMapInit' . $this->bID . '();
+            });            
+            </script>');
 		}
 		
 		
