@@ -8,7 +8,7 @@ $previewMode = false;
 $f = File::getByID($_REQUEST['fID']);
 
 $fp = new Permissions($f);
-if (!$fp->canRead()) {
+if (!$fp->canSearchFiles()) {
 	die(t("Access Denied."));
 }
 

@@ -179,23 +179,24 @@ EOS;
 	 * @param bool $includeActivation
 	 * @param bool $calendarAutoStart
 	 */
-	public function date($field, $value = null, $calendarAutoStart = true) {
+	public function date($field, $value = null, $calendarAutoStart = true, $uniqueID = "") {
 		$id = preg_replace("/[^0-9A-Za-z-]/", "_", $field);
+        	$unID = ($uniqueID != "") ? '_' . preg_replace("/[^0-9A-Za-z-]/", "_", $uniqueID) : '' ;
 		if (isset($_REQUEST[$field])) {
 			$dt = $_REQUEST[$field];
 		} else if ($value != "") {
-			$dt = date('m/d/Y', strtotime($value));
+			$dt = date(DATE_APP_GENERIC_MDY, strtotime($value));
 		} else if ($value === '') {
 			$dt = '';
 		} else {
-			$dt = date('m/d/Y');
+			$dt = date(DATE_APP_GENERIC_MDY);
 		}
 		//$id = preg_replace("/[^0-9A-Za-z-]/", "_", $prefix);
 		$html = '';
-		$html .= '<span class="ccm-input-date-wrapper" id="' . $id . '_dw"><input id="' . $id . '" name="' . $field . '" class="ccm-input-date" value="' . $dt . '"  /></span>';
+		$html .= '<span class="ccm-input-date-wrapper" id="' . $id . $unID . '_dw"><input id="' . $id . $unID . '" name="' . $field . '" class="ccm-input-date" value="' . $dt . '"  /></span>';
 
 		if ($calendarAutoStart) { 
-			$html .= '<script type="text/javascript">$(function() { $("#' . $id . '").datepicker({ dateFormat: \'' . DATE_APP_DATE_PICKER . '\', changeYear: true, showAnim: \'fadeIn\' }); });</script>';
+			$html .= '<script type="text/javascript">$(function() { $("#' . $id . $unID . '").datepicker({ dateFormat: \'' . DATE_APP_DATE_PICKER . '\', changeYear: true, showAnim: \'fadeIn\' }); });</script>';
 		}
 		return $html;
 	

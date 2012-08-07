@@ -28,11 +28,14 @@
 		protected $translate;
 
 		public function __construct() {
+			Loader::library('3rdparty/Zend/Date');
 			Loader::library('3rdparty/Zend/Translate');
 			$this->setLocale(defined('ACTIVE_LOCALE') ? ACTIVE_LOCALE : 'en_US');
+			Zend_Date::setOptions(array('format_type' => 'php'));
 			$cache = Cache::getLibrary();
 			if (is_object($cache)) {
 				Zend_Translate::setCache($cache);
+				Zend_Date::setOptions(array('cache'=>$cache));
 			}
 		}
 		
@@ -123,3 +126,28 @@
 		}
 	}
 
+/** Translate text (plural form).
+* @param string $singular The singular form.
+* @param string $plural The plural form.
+* @param int $number The number.
+* @param mixed ... Unlimited optional number of arguments: if specified they'll be used for printf
+* @return string Returns the translated text.
+* @example t2('%d child', '%d children', $n) will return translated '%d child' if $n is 1, translated '%d children' otherwise.
+* @example t2('%d child', '%d children', $n, $n) will return translated '1 child' if $n is 1, translated '2 children' if $n is 2.
+*/
+function t2($singular, $plural, $number) {
+	$zt = Localization::getTranslate();
+	if(is_object($zt)) {
+		$translated = $zt->plural($singular, $plural, $number);
+	} else {
+		$translated = ($number == 1) ? $singular : $plural;
+	}
+	if(func_num_args() == 3) {
+		return $translated;
+	}
+	$arg = array();
+	for($i = 3; $i < func_num_args(); $i++) {
+		$arg[] = func_get_arg($i);
+	}
+	return vsprintf($translated, $arg);
+}

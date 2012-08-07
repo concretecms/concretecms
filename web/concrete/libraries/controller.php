@@ -102,7 +102,6 @@ class Controller {
 				}
 			}
 		} catch(Exception $e) {
-		
 		}
 			
 		if ($foundTask) {
@@ -176,6 +175,7 @@ class Controller {
 				$this->c = $c;
 				$cont = Loader::controller("/page_not_found");
 				$v->setController($cont);				
+				$cont->view();
 				$v->render('/page_not_found');
 			}
  		}
@@ -437,6 +437,17 @@ class Controller {
 	 * @return string
 	 */
 	public function getTask() {return $this->task;}
+	
+	/**
+	 * Gets the array of parameters passed to the controller
+	 * @return array
+	 */
+	public function getControllerParameters() { 
+		if (is_array($this->parameters)) {
+			return $this->parameters;
+		}
+		return array();
+	}
 	
 	/** 
 	 * Gets the array of items that have been set using set()

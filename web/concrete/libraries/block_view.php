@@ -68,8 +68,14 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		 */
 		public function action($task, $extraParams = null) {
 			try {
-				if (is_object($this->block)) {
-					return $this->block->getBlockPassThruAction() . '&amp;method=' . $task . $extraParams;
+				if (is_object($this->block->getProxyBlock())) {
+					$b = $this->block->getProxyBlock();
+				} else {
+					$b = $this->block;
+				}
+				
+				if (is_object($b)) {
+					return $b->getBlockPassThruAction() . '&amp;method=' . $task . $extraParams;
 				}
 			} catch(Exception $e) {}
 		}
@@ -154,9 +160,17 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			return $this->template;
 		}
 		
+		public function getTemplateURL() {
+			$bvt = new BlockViewTemplate($this->blockObj);
+			return $bvt->getBaseURL();
+		}
 		
 		public function setBlockObject($obj) {
 			$this->blockObj = $obj;
+		}
+		
+		public function getBlockObject() {
+			return $this->blockObj;
 		}
 		
 		/** 

@@ -25,6 +25,7 @@ class LogEntry extends Object {
 	public function getType() {return $this->logType;}
 	public function getText() {return $this->logText;}
 	public function getID() {return $this->logID;}
+	public function getUserID() {return $this->logUserID;}
 	
 	public function getTimestamp($type = 'system') {
 		if(ENABLE_USER_TIMEZONES && $type == 'user') {
@@ -89,6 +90,7 @@ class Log {
 		if (!$this->session) {
 			$this->close();
 		}
+		return $this;
 	}
 
 	public static function addEntry($message, $namespace = false) {
@@ -132,9 +134,11 @@ class Log {
 
 	
 	public function close() {
-		$v = array($this->log, htmlentities($this->sessionText, ENT_COMPAT, APP_CHARSET), $this->isInternal);
+		$u = new User();
+
+		$v = array($this->log, htmlentities($this->sessionText, ENT_COMPAT, APP_CHARSET), $this->isInternal, $u->getUserID());
 		$db = Loader::db();
-		$db->Execute("insert into Logs (logType, logText, logIsInternal) values (?, ?, ?)", $v);
+		$db->Execute("insert into Logs (logType, logText, logIsInternal, logUserID) values (?, ?, ?, ?)", $v);
 		$this->sessionText = '';
 	}
 	
@@ -172,9 +176,9 @@ class Log {
 		}
 		if ($type != false) {
 			$v = array($type);
-			$r = $db->Execute('select logID from Logs where logType = ? ' . $kw . ' order by timestamp desc limit ' . $limit, $v);
+			$r = $db->Execute('select logID from Logs where logType = ? ' . $kw . ' order by timestamp desc, logID desc limit ' . $limit, $v);
 		} else {
-			$r = $db->Execute('select logID from Logs where 1=1 ' . $kw . ' order by timestamp desc limit ' . $limit);
+			$r = $db->Execute('select logID from Logs where 1=1 ' . $kw . ' order by timestamp desc, logID desc limit ' . $limit);
 		}
 		
 		$entries = array();

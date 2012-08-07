@@ -15,12 +15,17 @@ if (isset($entry)) { ?>
 	<legend><?=t("Basic Information")?></legend>
 	<div class="clearfix">
 		<?=$form->label('cName', t('Name'))?>
-		<div class="input"><?=$form->text('cName', $name, array('class' => 'span12'))?></div>		
+		<div class="input"><?=$form->text('cName', Loader::helper("text")->entities($name), array('class' => 'span12'))?></div>		
+	</div>
+
+	<div class="clearfix">
+		<?=$form->label('cHandle', t('URL Slug'))?>
+		<div class="input"><?=$form->text('cHandle', $handle, array('class' => 'span12'))?></div>		
 	</div>
 
 	<div class="clearfix">
 		<?=$form->label('cDescription', t('Short Description'))?>
-		<div class="input"><?=$form->textarea('cDescription', $description, array('class' => 'span12', 'rows' => 5))?></div>		
+		<div class="input"><?=$form->textarea('cDescription', Loader::helper("text")->entities($description), array('class' => 'span12', 'rows' => 5))?></div>		
 	</div>
 
 	<div class="clearfix">

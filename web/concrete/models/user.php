@@ -68,7 +68,7 @@
 		
 		protected static function regenerateSession() {
 			unset($_SESSION['dashboardMenus']);
-			session_regenerate_id(true);
+			@session_regenerate_id(true);
 		}
 		
 		/**
