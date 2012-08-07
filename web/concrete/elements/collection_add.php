@@ -132,14 +132,14 @@ $dh = Loader::helper('date');
 		alias = alias.replace(/[\s|.]+/gi, "<?=PAGE_PATH_SEPARATOR?>");
 		
 		// thanks fernandos
-        alias = alias.replace(/[\u00C4\u00E4]/gi, "ae");            // ï¿½ï¿½    
-        alias = alias.replace(/[\u00D6\u00F6]/gi, "oe");            // ï¿½ï¿½    
-        alias = alias.replace(/[\u00DF]/gi, "ss");                  // ï¿½    
-        alias = alias.replace(/[\u00DC\u00FC]/gi, "ue");            // ï¿½ï¿½
-        alias = alias.replace(/[\u00C6\u00E6]/gi, "ae");            // ï¿½ï¿½ 
-        alias = alias.replace(/[\u00D8\u00F8]/gi, "oe");            // ï¿½ 
-        alias = alias.replace(/[\u00C5\u00E5]/gi, "aa");            // ï¿½ï¿½    
-        alias = alias.replace(/[\u00E8\u00C8\u00E9\u00C9]/gi, "e"); // ï¿½ï¿½ï¿½ï¿½ 
+        alias = alias.replace(/[\u00C4\u00E4]/gi, "ae");            // €Š    
+        alias = alias.replace(/[\u00D6\u00F6]/gi, "oe");            // …š    
+        alias = alias.replace(/[\u00DF]/gi, "ss");                  // §    
+        alias = alias.replace(/[\u00DC\u00FC]/gi, "ue");            // †Ÿ
+        alias = alias.replace(/[\u00C6\u00E6]/gi, "ae");            // ®¾ 
+        alias = alias.replace(/[\u00D8\u00F8]/gi, "oe");            // ¿ 
+        alias = alias.replace(/[\u00C5\u00E5]/gi, "aa");            // Œ    
+        alias = alias.replace(/[\u00E8\u00C8\u00E9\u00C9]/gi, "e"); // ƒé 
 		
 		alias = alias.replace(/[^0-9A-Za-z]/gi, "<?=PAGE_PATH_SEPARATOR?>");
 		alias = alias.replace(/<?=PAGE_PATH_SEPARATOR?>+/gi, '<?=PAGE_PATH_SEPARATOR?>');
