@@ -1,4 +1,4 @@
-<?
+<?php
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
@@ -13,18 +13,15 @@ defined('C5_EXECUTE') or die("Access Denied.");
  *
  */
  
-/**
-*
-* The block type list object holds types of blocks, takes care of querying the file system for newly available
-* @author Andrew Embler <andrew@concrete5.org>
-* @copyright  Copyright (c) 2003-2008 Concrete5. (http://www.concrete5.org)
-* @license    http://www.concrete5.org/license/     MIT License
-* @package Blocks
-* @category Concrete
-*/	
 
 	class BlockTypeList extends Object {
-	
+			
+		/**
+		 * array of BlockType objects - should likely be considered a protected property
+		 * use getBlockTypeList instead of accessing this property directly
+		 * @see BlockTypeList::getBlockTypeList()
+		 * @var BlockType[] $btArray
+		 */
 		public $btArray = array();
 		
 		/**
@@ -42,6 +39,12 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			return $blockTypes;
 		}
 		
+		
+		/**
+		 * @todo comment this one
+		 * @param string $xml
+		 * @return void
+		 */
 		public static function exportList($xml) {
 			$attribs = BlockTypeList::getInstalledList();
 			$nxml = $xml->addChild('blocktypes');
@@ -52,6 +55,11 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			}
 		}
 		
+		/**
+		 * returns an array of Block Types used in the concrete5 Dashboard
+		 * @param Area $ap
+		 * @return BlockType[]
+		 */
 		public static function getDashboardBlockTypes($ap) {
 			$blockTypeIDs = $ap->getAddBlockTypes();
 			$db = Loader::db();
@@ -65,7 +73,12 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			return $blockTypes;
 		}
 		
-		function BlockTypeList($allowedBlocks = null) {
+		/**
+		 * BlockTypeList class constructor
+		 * @param array $allowedBlocks array of allowed BlockType id's if you'd like to limit the list to just those
+		 * @return BlockTypeList
+		 */
+		function __construct($allowedBlocks = null) {
 			$db = Loader::db();
 			$this->btArray = array();
 						
@@ -90,11 +103,20 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			return $this;
 		}
 		
-		function getBlockTypeList() {
+		/**
+		 * gets the array of BlockType objects
+		 * @return BlockType[]
+		 * @see BlockTypeList::getInstalledList()
+		 */
+		public function getBlockTypeList() {
 			return $this->btArray;
 		}
 
-		// This function only surveys the web/ directory - it's not looking at the package level.		
+		/**
+		 * Gets a list of block types that are not installed, used to get blocks that can be installed
+		 * This function only surveys the web/blocks directory - it's not looking at the package level.
+		 * @return BlockType[] 
+		 */
 		public static function getAvailableList() {
 			$blocktypes = array();
 			$dir = DIR_FILES_BLOCK_TYPES;
@@ -139,7 +161,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			return $blocktypes;
 		}
 
-			
+		/**
+		 * gets a list of installed BlockTypes
+		 * @return BlockType[]
+		 */	
 		public static function getInstalledList() {
 			$db = Loader::db();
 			$r = $db->query("select btID from BlockTypes order by btName asc");
@@ -153,9 +178,13 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			return $btArray;
 		}
 		
-		// not really sure why these have two different calls.
-		
-		function getBlockTypeArray() {
+		/**
+		 * Gets a list of installed BlockTypes 
+		 * - could be defined as static
+		 * @todo we have three duplicate functions getBlockTypeArray, getInstalledList, getBlockTypeList
+		 * @return BlockType[]
+		 */	
+		public function getBlockTypeArray() {
 			$db = Loader::db();
 			$q = "select btID from BlockTypes order by btID asc";
 			$r = $db->query($q);
@@ -172,7 +201,13 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			return $btArray;
 		}
 		
-		function getAreaBlockTypes(&$a, &$cp) {
+		/**
+		 * gets the block types that are allowed to be added to the given area - given the current user's permissions
+		 * @param Area
+		 * @param CollectionPermissions
+		 * @return BlockType[]
+		 */
+		public function getAreaBlockTypes(&$a, &$cp) {
 			$btl = new BlockTypeList();
 			$btlaTMP = $btl->getBlockTypeList();
 			$btla = array();
@@ -183,7 +218,12 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			return $btla;
 		}
 		
-		function getBlockTypeAddAction(&$a) {
+		/**
+		 * gets the form post action for the current block type given the area
+		 * @param Area $a
+		 * @return string
+		 */
+		public function getBlockTypeAddAction(&$a) {
 			$step = ($_REQUEST['step']) ? '&step=' . $_REQUEST['step'] : '';
 			$arHandle = urlencode($a->getAreaHandle());
 			$c = $a->getAreaCollectionObject();
@@ -193,7 +233,12 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			return $str;			
 		}
 		
-		function getBlockTypeAliasAction(&$a) {
+		/**
+		 * gets the form post action for the current block type given the area
+		 * @param Area $a
+		 * @return string
+		 */
+		public function getBlockTypeAliasAction(&$a) {
 			$step = ($_REQUEST['step']) ? '&step=' . $_REQUEST['step'] : '';
 			$arHandle = urlencode($a->getAreaHandle());
 			$c = $a->getAreaCollectionObject();
@@ -222,11 +267,31 @@ defined('C5_EXECUTE') or die("Access Denied.");
 * @category Concrete
 */		
 	class BlockType extends Object {
-		
+			
+		/**
+		 * @var array $addBTUArray
+		 */
 		public $addBTUArray = array();
+		
+		/**
+		 * @var array $addBTGArray
+		 */
 		public $addBTGArray = array();
+		
+		/**
+		 * @var BlockTypeController
+		 */
 		public $controller;
 		
+		/**
+		 * Gets the BlockType object for the given Block Type Handle
+		 * ex: 
+		 * <code><?php
+		 * $bt = BlockType::getByHandle('content'); // returns the BlockType object for the core Content block
+		 * ?></code
+		 * @param string $handle
+		 * @return BlockType
+		 */
 		public static function getByHandle($handle) {
 			$ca = new Cache();
 			$bt = $ca->get('blockTypeByHandle', $handle);
@@ -242,6 +307,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		}
 
 		/**
+		 * Gets the BlockType for a given Block Type ID
 		 * @param int $btID
 		 * @return BlockType
 		 */
@@ -260,7 +326,12 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			return $bt;
 		}
 		
-		private static function get($where, $properties) {
+		/**
+		 * internal method to query the BlockTypes table and get a BlockType object
+		 * @param string
+		 * @param array
+		 */
+		protected static function get($where, $properties) {
 			$db = Loader::db();
 			
 			$q = "SELECT btID, btName, btDescription, btHandle, pkgID, btActiveWhenAdded, btIsInternal, btCopyWhenPropagate, btIncludeAll, btInterfaceWidth, btInterfaceHeight from BlockTypes where {$where}";
@@ -276,24 +347,32 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		}
 		
 		/** 
+		 * if a the current BlockType is Internal or not - meaning one of the core built-in concrete5 blocks
 		 * @access private
+		 * @return boolean
 		 */
 		function isBlockTypeInternal() {return $this->btIsInternal;}
 		
 		/** 
-		 * Returns true if the block type is internal (and therefore cannot be removed)
+		 * Returns true if the block type is internal (and therefore cannot be removed) a core block
+		 * @return boolean
 		 */
 		public function isInternalBlockType() {
 			return $this->btIsInternal;
 		}
 		
 		/** 
-		 * Returns true if the block type ships with concrete5
+		 * Returns true if the block type ships with concrete5 by checking to see if it's in the concrete/blocks/ directory
+		 * @deprecated
 		 */
 		public function isCoreBlockType() {
 			return is_dir(DIR_FILES_BLOCK_TYPES_CORE . '/' . $this->getBlockTypeHandle());
 		}
 
+		/**
+		 * Determines if the block type has templates available
+		 * @return boolean
+		 */
 		public function hasAddTemplate() {
 			$bv = new BlockView();
 			$bv->setBlockObject($this);
@@ -305,14 +384,39 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		}
 		
 		
-		function getBlockTypeInterfaceWidth() {return $this->btInterfaceWidth;}
-		function getBlockTypeInterfaceHeight() {return $this->btInterfaceHeight;}
+		/**
+		 * returns the width in pixels that the block type's editing dialog will open in
+		 * @return int
+		 */
+		public function getBlockTypeInterfaceWidth() {return $this->btInterfaceWidth;}
+		
+		/**
+		 * returns the height in pixels that the block type's editing dialog will open in
+		 * @return int
+		 */
+		public function getBlockTypeInterfaceHeight() {return $this->btInterfaceHeight;}
+		
+		/**
+		 * returns the id of the BlockType's package if it's in a package
+		 * @return int
+		 */
 		public function getPackageID() {return $this->pkgID;}
+		
+		/**
+		 * returns the handle of the BlockType's package if it's in a package
+		 * @return string
+		 */
 		public function getPackageHandle() {
 			return PackageList::getHandle($this->pkgID);
 		}
 		
-		function canAddBlock($obj) {
+		
+		/**
+		 * determines if a user or group can add a block of the current BlockType
+		 * @param UserInfo|Group $obj
+		 * @return boolean
+		 */
+		public function canAddBlock($obj) {
 			switch(strtolower(get_class($obj))) {
 				case 'group':
 					return in_array($obj->getGroupID(), $this->addBTGArray);
@@ -324,7 +428,9 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		}
 		
 		/** 
-		 * Returns the number of unique instances of this block
+		 * Returns the number of unique instances of this block throughout the entire site
+		 * note - this count could include blocks in areas that are no longer rendered by the theme
+		 * @return int
 		 */
 		public function getCount() {
 			$db = Loader::db();
@@ -334,6 +440,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		
 		/**
 		 * Not a permissions call. Actually checks to see whether this block is not an internal one.
+		 * @return boolean
 		 */
 		public function canUnInstall() {
 			/*$cnt = $this->getCount();
@@ -344,10 +451,18 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			return (!$this->isBlockTypeInternal());
 		}
 		
+		/**
+		 * gets the BlockTypes description text
+		 * @return string
+		 */
 		function getBlockTypeDescription() {
 			return $this->btDescription;
 		}
 		
+		/**
+		 * Gets the custom templates available for the current BlockType
+		 * @return array an array of strings
+		 */
 		function getBlockTypeCustomTemplates() {
 			$btHandle = $this->getBlockTypeHandle();
 			$pkgHandle = $this->getPackageHandle();
@@ -388,6 +503,12 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			return $templates;
 		}
 
+		
+		/** 
+		 * gets the available composer templates 
+		 * used for editing instances of the BlockType while in the composer ui in the dashboard
+		 * @return array array of strings
+		 */
 		function getBlockTypeComposerTemplates() {
 			$btHandle = $this->getBlockTypeHandle();
 			$pkgHandle = $this->getPackageHandle();
@@ -408,6 +529,12 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			return $templates;
 		}
 		
+		/**
+		 * sets the permissions on the area??
+		 * @todo Documnetation?? not sure what type $cp is or how this is used?
+		 * @param Area $area
+		 * @param unknown $cp
+		 */
 		function setAreaPermissions(&$area, &$cp) {
 			$db = Loader::db();
 			if ($area->overrideCollectionPermissions()) {
@@ -460,7 +587,17 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			}
 		}
 
-		function installBlockTypeFromPackage($btHandle, $pkg, $btID = 0) {
+		
+		/**
+		 * installs a new BlockType from a package, 
+		 * typicaly called from a package controller's install() method durring package installation 
+		 * @todo Documentation how is the btID used, if you want to reserve/specify a btID??
+		 * @param string $btHandle the block Type's handle
+		 * @param Package $pkg
+		 * @param int $btID if it's an existing block type
+		 * @return void|string error message
+		 */
+		public function installBlockTypeFromPackage($btHandle, $pkg, $btID = 0) {
 			$dir1 = DIR_PACKAGES . '/' . $pkg->getPackageHandle() . '/' . DIRNAME_BLOCKS;
 			$dir2 = DIR_PACKAGES_CORE . '/' . $pkg->getPackageHandle() . '/' . DIRNAME_BLOCKS;
 			
@@ -485,6 +622,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			return BlockType::doInstallBlockType($btHandle, $bt, $dir, $btID);
 		}
 		
+		/**
+		 * refreshes the BlockType's database schema throws an Exception if error
+		 * @return void
+		 */
 		public function refresh() {
 			if ($this->getPackageID() > 0) {
 				$pkg = Package::getByID($this->getPackageID());
@@ -500,7 +641,13 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			}
 		}
 		
-		function installBlockType($btHandle, $btID = 0) {
+		/**
+		 * installs a core or root level BlockType (from /blocks or /concrete/blocks, not a package)
+		 * should likely be a static method
+		 * @param string $btHandle
+		 * @param int $btID btID if it's an existing block type
+		 */
+		public function installBlockType($btHandle, $btID = 0) {
 		
 			if ($btID == 0) {
 				// then we don't allow one to already exist
@@ -526,6 +673,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		
 		/** 
 		 * Renders a particular view of a block type, using the public $controller variable as the block type's controller
+		 * @param string template 'view' for the default
+		 * @return void
 		 */
 		public function render($view) {
 			$bv = new BlockView();
@@ -533,11 +682,22 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			$bv->render($this, $view);
 		}			
 		
+		/**
+		 * get's the block type controller
+		 * @return BlockTypeController
+		 */
 		public function getController() {
 			return $this->controller;
 		}
 		
-		private function doInstallBlockType($btHandle, $bt, $dir, $btID = 0) {
+		/**
+		 * installs a block type
+		 * @param string $btHandle
+		 * @param BlockType $bt
+		 * @param string $dir
+		 * @param int $btID
+		 */
+		protected function doInstallBlockType($btHandle, $bt, $dir, $btID = 0) {
 			$db = Loader::db();
 			
 			if (file_exists($dir . '/' . $btHandle . '/' . FILENAME_BLOCK_CONTROLLER)) {
@@ -553,12 +713,22 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				}
 				$bta = new $class;
 				
-				// first run the subclass methods. If they work then we install the block
+				//Attempt to run the subclass methods (install schema from db.xml, etc.)
 				$r = $bta->install($path);
-				if (!$r->result) {
+				
+				//Validate
+				if ($r === false) {
+					return t('Error: Block Type cannot be installed because no db.xml file can be found. Either create a db.xml file for this block type, or remove the $btTable variable from its controller.');
+				} else if (!$r->result && $r->message) {
 					return $r->message;
+				} else if (!$r->result && !$r->message) {
+					return t('Error: Block Type cannot be installed due to an unknown database error. Please check that the db.xml file for this block type is formatted correctly.');
+				} else if ($message = BlockType::validateInstalledDatabaseTable($bta->getBlockTypeDatabaseTable())) {
+					$db->Execute('DROP TABLE IF EXISTS ' . $bta->getBlockTypeDatabaseTable());
+					return $message;
 				}
 				
+				//Install the block
 				$btd = new BlockTypeDB();
 				$btd->btHandle = $btHandle;
 				$btd->btName = $bta->getBlockTypeName();
@@ -592,12 +762,34 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			}
 		}
 		
+		/**
+		 * Internal helper function for doInstallBlockType().
+		 * 
+		 * Checks if the database table with the given name
+		 * has at least 2 fields and one of those is called "btID".
+		 *
+		 * If valid, we return an empty string.
+		 * If not valid, we return an error message.
+		 * If passed an empty string, we return an empty string.
+		 */
+		private function validateInstalledDatabaseTable($btTable) {
+			$message = '';
+			if (!empty($btTable)) {
+				$fields = Loader::db()->MetaColumnNames($btTable);
+				if (count($fields) < 2) {
+					$message = t('Error: Block Type table must contain at least two fields.');
+				} else if (!in_array('bID', $fields)) {
+					$message = t('Error: Block Type table must contain a "bID" primary key field.');
+				}
+			}
+			return $message;
+		}
+		
 		/*
 		 * Returns a path to where the block type's files are located.
 		 * @access public
 		 * @return string $path
 		 */
-		 
 		public function getBlockTypePath() {
 			if ($this->getPackageID() > 0) {
 				$pkgHandle = $this->getPackageHandle();
@@ -612,6 +804,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			}
 			return $dir;	
 		}
+		
+/** @todo Continue documenting from here down **/
 		
 		 
 		/*
@@ -693,7 +887,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			
 			$ca = new Cache();
 			$ca->delete('blockTypeByID', $this->btID);
-			$ca->delete('blockTypeByHandle', $btHandle);		 	
+			$ca->delete('blockTypeByHandle', $this->btHandle);		 	
 			$ca->delete('blockTypeList', false);		 	
 			$db->Execute("delete from BlockTypes where btID = ?", array($this->btID));
 		}
@@ -707,7 +901,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		 	$db = Loader::db();
 		 	$btHandle = $this->btHandle;
 		 	$btName = $this->btName;
-		 	$this->btDescription = $this->btDescription;
+		 	$btDescription = $this->btDescription;
 		 	if (isset($data['btHandle'])) {
 		 		$btHandle = $data['btHandle'];
 		 	}

@@ -87,7 +87,7 @@ class SystemCaptchaLibrary extends Object {
 	
 	public function hasOptionsForm() {
 		$path = DIRNAME_SYSTEM . '/' . DIRNAME_SYSTEM_CAPTCHA . '/' . $this->sclHandle . '/' . FILENAME_FORM;
-		if (file_exists(DIR_ELEMENTS . '/' . $path)) {
+		if (file_exists(DIR_FILES_ELEMENTS . '/' . $path)) {
 			return true;
 		} else if ($this->pkgID > 0) {
 			$pkgHandle = $this->getPackageHandle();
@@ -99,8 +99,8 @@ class SystemCaptchaLibrary extends Object {
 				return true;
 			}
 		} else {
-			return file_exists(DIR_ELEMENTS . '/' . $path);
-		}
+			return file_exists(DIR_FILES_ELEMENTS_CORE . '/' . $path);
+ 		}
 		
 		return false;
 	}

@@ -156,6 +156,7 @@ class IndexedSearch {
 					continue;
 				}
 				$bi = $b->getInstance();
+				$bi->bActionCID = $c->getCollectionID();
 				if(method_exists($bi,'getSearchableContent')){
 					$searchableContent = $bi->getSearchableContent();  
 					if(strlen(trim($searchableContent))) 					

@@ -73,7 +73,6 @@ class FileList extends DatabaseItemList {
 			if (count($sets) == 0) {
 				return false;
 			}
-			$db = Loader::db();
 			$setStr = implode(',', $sets);
 			$this->addToQuery("left join FileSetFiles fsfex on fsfex.fID = f.fID");
 			$this->filter(false, '(fsfex.fID is null or (select count(fID) from FileSetFiles where fID = fsfex.fID and fsID in (' . $setStr . ')) = 0)');
@@ -128,6 +127,12 @@ class FileList extends DatabaseItemList {
 				}
 			}
 		}
+		
+		// add FileSetFiles if we had a file set filter but
+		// couldn't add it because it has been removed
+		if ($i == 0 && count($this->filteredFileSetIDs)>0) {
+			$this->addToQuery("inner join FileSetFiles fsfl on 1=2");
+		}		
 	}
 	
 	

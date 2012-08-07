@@ -23,8 +23,8 @@ $al = Loader::helper('concrete/asset_library');
 <div>
 	<div style="float: left; width: 50%"><?php echo $al->image('ccm-b-image-'.$bID, $this->field('fID'), t('Choose Image'), $bf); ?></div>
 	<div style="padding: 0 10px; float: left; margin-left: 10px; ">
-		<strong>Target Width</strong>: <?=$width?><br/>
-		<strong>Target Height</strong>: <?=$height?><br/>
+		<strong><?=t('Target Width')?></strong>: <?=$width?><br/>
+		<strong><?=t('Target Height')?></strong>: <?=$height?><br/>
 		<div id="ccm-image-composer-thumbnail-<?php echo $bID ?>" target-width="<?=$width?>" target-height="<?=$height?>" >
 		</div>
 		<div class="ccm-spacer"></div>
@@ -50,9 +50,9 @@ ccm_triggerSelectFileComplete = function(fID, af) {
 			dh = '<span style="color: #f00">' + dh + '</span>';
 			crop = true;
 		}
-		td.append('<strong>Actual Width</strong>: ' + dw + '<br/>');
-		td.append('<strong>Actual Height</strong>: ' + dh + '<br/>');
-		td.append('<a href="<?=$dialogurl?>?bID=' + af.substring(12) + '&width=' + tw + '&height=' + th + '&fID=' + fID + '" class="dialog-launch" dialog-modal="false" dialog-width="95%" dialog-height="460" dialog-title="Crop Image" class="dialog-launch" id="cropper-dialog-' + af.substring(12) + '">Crop + Upload Image</a>');		
+		td.append('<strong><?=t('Actual Width')?></strong>: ' + dw + '<br/>');
+		td.append('<strong><?=t('Actual Height')?></strong>: ' + dh + '<br/>');
+		td.append('<a href="<?=$dialogurl?>?bID=' + af.substring(12) + '&width=' + tw + '&height=' + th + '&fID=' + fID + '" class="dialog-launch" dialog-modal="false" dialog-width="95%" dialog-height="460" dialog-title="Crop Image" class="dialog-launch" id="cropper-dialog-' + af.substring(12) + '"><?=t('Crop + Upload Image')?></a>');
 		$("#cropper-dialog-" + af.substring(12)).dialog();
 		if(crop) {
 			$("#cropper-dialog-" + af.substring(12)).trigger('click');

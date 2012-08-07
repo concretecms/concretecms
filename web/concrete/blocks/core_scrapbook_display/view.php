@@ -2,8 +2,9 @@
 	defined('C5_EXECUTE') or die("Access Denied.");
 
 $area = $b->getBlockAreaObject();
-$b = Block::getByID($bOriginalID);
-$b->setBlockAreaObject($area);
+$_bx = Block::getByID($bOriginalID);
+$_bx->setBlockAreaObject($area);
 $c = Page::getCurrentPage();
-$b->loadNewCollection($c);
-$b->display();
+$_bx->setProxyBlock($b);
+$_bx->loadNewCollection($c);
+$_bx->display();

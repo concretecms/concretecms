@@ -383,7 +383,7 @@ class ContentImporter {
 						if ($ch->getName() == 'group') {
 							$g = Group::getByName($ch['name']);
 							if (!is_object($g)) {
-								$g = Group::add($g['name'], $g['description']);
+								$g = Group::add($ch['name'], $ch['description']);
 							}
 							$tpa->addAccess($g);
 						}

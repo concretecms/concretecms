@@ -158,7 +158,7 @@ class DashboardUsersSearchController extends Controller {
 			$userList->filterByKeywords($_GET['keywords']);
 		}	
 		
-		if ($_REQUEST['numResults']) {
+		if ($_REQUEST['numResults'] && Loader::helper('validation/numbers')->integer($_REQUEST['numResults'])) {
 			$userList->setItemsPerPage($_REQUEST['numResults']);
 		}
 		
@@ -231,6 +231,7 @@ class DashboardUsersSearchController extends Controller {
 			}
 			
 			User::loginByUserID($uID);
+			Events::fire('on_user_login',$this);
 			$this->redirect('/');
 			
 		} catch(Exception $e) {

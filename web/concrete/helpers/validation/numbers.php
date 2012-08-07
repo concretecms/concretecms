@@ -28,11 +28,11 @@ class ValidationNumbersHelper {
 	 * @return bool
 	 */
 	public function integer($data) {
-		if (is_int($data)) {
+		$id = (string) intval($data);
+		if ($id == $data && $id > 0) {
 			return true;
-		} else if (is_string($data) === true && is_numeric($data) === true) {
-			return (strpos($data, '.') === false);
 		}
+		return false;
 	}
 	
 }

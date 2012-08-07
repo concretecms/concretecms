@@ -1,15 +1,4 @@
-<?
-
-defined('C5_EXECUTE') or die("Access Denied.");
-
-/**
- * @package Pages
- * @category Concrete
- * @author Andrew Embler <andrew@concrete5.org>
- * @copyright  Copyright (c) 2003-2008 Concrete5. (http://www.concrete5.org)
- * @license    http://www.concrete5.org/license/     MIT License
- *
- */
+<?php defined('C5_EXECUTE') or die("Access Denied.");
 
 /**
  * An area object is used within templates to mark certain portions of pages as editable and containers of dynamic content
@@ -28,29 +17,91 @@ class Area extends Object {
 
 	/* area-specific attributes */
 
-	public $maximumBlocks = -1; // limits the number of blocks in the area
-	public $customTemplateArray = array(); // sets a custom template for all blocks in the area
-	public $firstRunBlockTypeHandle; // block type handle for the block to automatically activate on first_run
-	public $ratingThreshold = 0; // if set higher, any blocks that aren't rated high enough aren't seen (unless you have sufficient privs)
+	/**
+	 * limits the number of blocks in the area
+	 * @var int
+	*/
+	public $maximumBlocks = -1; // 
+	
+	/**
+	 * sets a custom template for all blocks in the area
+	 * @see Area::getCustomTemplates()
+	 * @var array
+	*/
+	public $customTemplateArray = array();
+	
+	/**
+	 * block type handle for the block to automatically activate on first_run
+	 * @var string
+	*/
+	public $firstRunBlockTypeHandle;
+	
+	/**
+	 * if set higher, any blocks that aren't rated high enough aren't seen (unless you have sufficient privs)
+	 * @var int
+	*/
+	public $ratingThreshold = 0; // 
+	
+	/**
+	 * @var boolean 
+	*/
 	public $showControls = true;
+	
+	
+	/**
+	 * @var array
+	*/
 	public $attributes = array();
 
+	/**
+	 * @var string
+	*/ 
 	public $enclosingStart = '';
-	public $enclosingStartHasReplacements = false; //Denotes if we should run sprintf() on blockWrapperStart
+	
+	/**
+	 * Denotes if we should run sprintf() on blockWrapperStart
+	 * @var boolean
+	*/
+	public $enclosingStartHasReplacements = false;
+	
+	/**
+	 * @var string
+	*/ 
 	public $enclosingEnd = '';
-	public $enclosingEndHasReplacements = false; //Denotes if we should run sprintf() on blockWrapperStartEnd
+	
+	/**
+	 * Denotes if we should run sprintf() on blockWrapperStartEnd
+	 * @var boolean
+	*/ 
+	public $enclosingEndHasReplacements = false;
 	
 	/* run-time variables */
 
-	public $totalBlocks = 0; // the number of blocks currently rendered in the area
-	public $areaBlocksArray; // not an array actually until it's set
-
-	/*
-		The constructor is used primarily on pages, to make an Area. We actually use Collection::getArea() when we want to interact with a fully
-		qualified Area object
+	/**
+	 * the number of blocks currently rendered in the area
+	 * @see Area::getTotalBlocksInArea()
+	 * @var int
 	*/
+	public $totalBlocks = 0;
+	
+	/**
+	 * Array of Blocks within the current area
+	 * not an array actually until it's set
+	 * @see Area::getAreaBlocksArray()
+	 * @var Block[]
+	 */
+	public $areaBlocksArray;
 
-	function Area($arHandle) {
+	/**
+	 * The constructor is used primarily on page templates to create areas of content that are editable within the cms.
+	 * ex: $a = new Area('Main'); $a->display($c)
+	 * We actually use Collection::getArea() when we want to interact with a fully
+	 * qualified Area object when dealing with a Page/Collection object
+	 *
+	 * @param string
+	 * @return void
+	*/
+	public function __construct($arHandle) {
 		$this->arHandle = $arHandle;
 		$v = View::getInstance();
 		if (!$v->editingEnabled()) {
@@ -58,53 +109,128 @@ class Area extends Object {
 		}
 	}
 
-	function getCollectionID() {return $this->cID;}
-	function getAreaCollectionObject() {return $this->c;}
-	function isGlobalArea() {return $this->arIsGlobal;}
-	function getAreaID() {return $this->arID;}
-	function getAreaHandle() {return $this->arHandle;}
-	function getCustomTemplates() {return $this->customTemplateArray;}
-	function setCustomTemplate($btHandle, $temp) {$this->customTemplateArray[$btHandle] = $temp;}
+
+	/**
+	 * returns the Collection's cID
+	 * @return int
+	*/
+	public function getCollectionID() {return $this->cID;}
+	
+	/**
+	 * returns the Collection object for the current Area
+	 * @return Collection
+	*/
+	public function getAreaCollectionObject() {return $this->c;}
+	
+	/**
+	 * whether or not it's a global area
+	 * @return bool
+	*/
+	public function isGlobalArea() {return $this->arIsGlobal;}
+	
+	/**
+	 * returns the arID of the current area
+	 * @return int
+	 */
+	public function getAreaID() {return $this->arID;}
+	
+	/**
+	 * returns the handle for the current area
+	 * @return string
+	*/
+	public function getAreaHandle() {return $this->arHandle;}
+	
+	/**
+	 * returns an array of custom templates
+	 * @return array
+	 */
+	public function getCustomTemplates() {return $this->customTemplateArray;}
+	
+	/**
+	 * sets a custom block template for blocks of a type specified by the btHandle
+	 * @param string $btHandle handle for the block type
+	 * @param string $temp string identifying the block template ex: breadcrumb
+	 */
+	public function setCustomTemplate($btHandle, $temp) {$this->customTemplateArray[$btHandle] = $temp;}
 	
 	/** 
 	 * Returns the total number of blocks in an area. 
 	 * @param Page $c must be passed if the display() method has not been run on the area object yet.
 	 */
-	function getTotalBlocksInArea($c = false) {
+	public function getTotalBlocksInArea($c = false) {
 		if (!is_array($this->areaBlocksArray) && is_object($c)) {
 			$this->getAreaBlocksArray($c);
 		}
 		return $this->totalBlocks; 
 		
 	}
-	function overrideCollectionPermissions() {return $this->arOverrideCollectionPermissions; }
-	function getAreaCollectionInheritID() {return $this->arInheritPermissionsFromAreaOnCID;}
+	
+	/**
+	 * check if the area has permissions that override the page's permissions
+	 * @return boolean
+	 */
+	public function overrideCollectionPermissions() {return $this->arOverrideCollectionPermissions; }
+	
+	/**
+	 * @return int
+	 */
+	public function getAreaCollectionInheritID() {return $this->arInheritPermissionsFromAreaOnCID;}
 	
 	/** 
 	 * Sets the total number of blocks an area allows. Does not limit by type.
+	 * @param int $num
+	 * @return void
 	 */
 	public function setBlockLimit($num) {
 		$this->maximumBlocks = $num;
 	}
 	
-	function setAttribute($attr, $val) {
+	/**
+	 * 
+	 * @param $attr
+	 * @param $val
+	 * @return void
+	 */
+	public function setAttribute($attr, $val) {
 		$this->attributes[$attr] = $val;
 	}
 	
-	function getAttribute($attr) {
+	/**
+	 * 
+	 * @param $attr
+	 * @return 
+	 */
+	public function getAttribute($attr) {
 		return $this->attributes[$attr];
 	}
 	
-	function disableControls() {
+	/**
+	 * disables controls for the current area
+	 * @return void
+	 */
+	public function disableControls() {
 		$this->showControls = false;
 	}
 
-	function areaAcceptsBlocks() {
+	
+	/**
+	 * determines if the current Area can accept additonal Blocks
+	 * @return boolean
+	 */
+	public function areaAcceptsBlocks() {
 		return (($this->maximumBlocks > $this->totalBlocks) || ($this->maximumBlocks == -1));
 	}
 
-	function getMaximumBlocks() {return $this->maximumBlocks;}
+	/**
+	 * gets the maximum allowed number of blocks, -1 if unlimited
+	 * @return int
+	 */
+	public function getMaximumBlocks() {return $this->maximumBlocks;}
 	
+	/**
+	 * 
+	 * @return string
+	 */
 	function getAreaUpdateAction($task = 'update', $alternateHandler = null) {
 		$valt = Loader::helper('validation/token');
 		$token = '&' . $valt->getParameter();
@@ -118,7 +244,14 @@ class Area extends Object {
 		return $str;
 	}
 
-	function get(&$c, $arHandle) {
+
+	/**
+	 * Gets the Area object for the given page and area handle
+	 * @param Page|Collection $c
+	 * @param string $arHandle
+	 * @return Area
+	 */
+	public static function get(&$c, $arHandle) {
 		if (!is_object($c)) {
 			return false;
 		}
@@ -150,7 +283,14 @@ class Area extends Object {
 		}
 	}
 
-	function getOrCreate(&$c, $arHandle, $arIsGlobal = 0) {
+	/**
+	 * Gets or creates if necessary an Area for the given Page, Handle 
+	 * @param Page|Collection $c
+	 * @param string $arHandle
+	 * @param boolean $arIsGlobal
+	 * @return Area
+	 */
+	public static function getOrCreate(&$c, $arHandle, $arIsGlobal = 0) {
 
 		/*
 			different than get(), getOrCreate() is called by the templates. If no area record exists for the
@@ -184,7 +324,12 @@ class Area extends Object {
 
 	}
 
-	function getAreaBlocksArray($c) {
+	/**
+	 * Get all of the blocks within the current area for a given page
+	 * @param Page|Collection $c
+	 * @return Block[]
+	 */
+	public function getAreaBlocksArray($c) {
 		if (is_array($this->areaBlocksArray)) {
 			return $this->areaBlocksArray;
 		}
@@ -220,7 +365,13 @@ class Area extends Object {
 		return $this->areaBlocksArray;
 	}
 
-	function getAddBlockTypes(&$c, &$ap) {
+	/**
+	 * determins based on permissions what types of blocks, if any can be added to this area
+	 * @param Page|Collection $c
+	 * @param AreaPermissions
+	 * @return boolean|BlockTypeList
+	 */
+	public function getAddBlockTypes(&$c, &$ap) {
 		if ($ap->canAddBlocks()) {
 			$bt = new BlockTypeList($ap->addBlockTypes);
 		} else {
@@ -229,6 +380,11 @@ class Area extends Object {
 		return $bt;
 	}
 	
+	/**
+	 * gets a list of all areas - no relation to the current page or area object
+	 * possibly could be set as a static method??
+	 * @return array
+	 */
 	public function getHandleList() {
 		$db = Loader::db();
 		$r = $db->Execute('select distinct arHandle from Areas order by arHandle asc');
@@ -242,11 +398,13 @@ class Area extends Object {
 		return $handles;
 	}
 	
+	/**
+	 * This function removes all permissions records for the current Area
+	 * and sets it to inherit from the Page permissions
+	 * @return void
+	*/
 	function revertToPagePermissions() {
-		// this function removes all permissions records for a particular area on this page
-		// and sets it to inherit from the page above
-		// this function will also need to ensure that pages below it do the same
-		
+			
 		$db = Loader::db();
 		$v = array($this->getAreaHandle(), $this->getCollectionID());
 		$db->query("delete from AreaGroups where arHandle = ? and cID = ?", $v);
@@ -269,14 +427,20 @@ class Area extends Object {
 		$a = Cache::delete('area', $this->getCollectionID() . ':' . $this->getAreaHandle());
 	}
 	
-	public function __destruct() {
+	/**
+	 * unsets the page object, automatically called
+	 *  @return void
+	 */
+	function __destruct() {
 		unset($this->c);
 	}
 	
-	function rescanAreaPermissionsChain() {
-		// works on the current area object to ensure that inheritance makes sense
-		// and that areas actually inherit their permissions correctly up the chain
-		// of collections. This needs to be run any time a page is moved, deleted, etc..
+	
+	/**
+	 * Rescans the current Area's permissions ensuring that it's enheriting permissions properly up the chain
+	 * @return void
+	 */
+	public function rescanAreaPermissionsChain() {
 		$db = Loader::db();
 		if ($this->overrideCollectionPermissions()) {
 			return false;
@@ -324,10 +488,13 @@ class Area extends Object {
 		Cache::delete('area', $this->getCollectionID() . ':' . $this->getAreaHandle());
 	}
 	
+	/**
+	 * works a lot like rescanAreaPermissionsChain() but it works down. This is typically only 
+	 * called when we update an area to have specific permissions, and all areas that are on pagesbelow it with the same 
+	 * handle, etc... should now inherit from it.
+	 * @return void
+	 */
 	function rescanSubAreaPermissions($cIDToCheck = null) {
-		// works a lot like rescanAreaPermissionsChain() but it works down. This is typically only 
-		// called when we update an area to have specific permissions, and all areas that are on pagesbelow it with the same 
-		// handle, etc... should now inherit from it.
 		$db = Loader::db();
 		if (!$cIDToCheck) {
 			$cIDToCheck = $this->getCollectionID();
@@ -343,9 +510,12 @@ class Area extends Object {
 		
 	}
 	
+	/**
+	 * similar to rescanSubAreaPermissions, but for those who have setup their pages to inherit master collection permissions
+	 * @see Area::rescanSubAreaPermissions()
+	 * @return void
+	 */
 	function rescanSubAreaPermissionsMasterCollection($masterCollection) {
-		// like above, but for those who have setup their pages to inherit master collection permissions
-		// this might make more sense in the collection class, but I'm putting it here
 		if (!$masterCollection->isMasterCollection()) {
 			return false;
 		}
@@ -358,6 +528,13 @@ class Area extends Object {
 		$db->query("update Areas, Pages set Areas.arInheritPermissionsFromAreaOnCID = " . $toSetCID . " where Areas.cID = Pages.cID and Areas.arHandle = ? and cInheritPermissionsFrom = ? and arOverrideCollectionPermissions = 0 and cInheritPermissionsFromCID = ?", $v);
 	}
 	
+	/**
+	 * display's the Area in the page
+	 * ex: $a = new Area('Main'); $a->display($c);
+	 * @param Page|Collection $c
+	 * @param Block[] $alternateBlockArray optional array of blocks to render instead of default behavior
+	 * @return void
+	 */
 	function display(&$c, $alternateBlockArray = null) {
 
 		if(!intval($c->cID)){
@@ -462,9 +639,11 @@ class Area extends Object {
 	}
 	
 	/**
+	 * outputs the block wrapers for each block
 	 * Internal helper function for display()
+	 * @return void
 	 */
-	private function outputBlockWrapper($isStart, &$block, $blockPositionInArea) {
+	protected function outputBlockWrapper($isStart, &$block, $blockPositionInArea) {
 		static $th = null;
 		$enclosing = $isStart ? $this->enclosingStart : $this->enclosingEnd;
 		$hasReplacements = $isStart ? $this->enclosingStartHasReplacements : $this->enclosingEndHasReplacements;
@@ -483,9 +662,11 @@ class Area extends Object {
 	}
 	
 	/** 
-	 * Load all layout grid objects for a collection 
+	 * Gets all layout grid objects for a collection
+	 * @param Page|Collection $c
+	 * @return Layout[]
 	 */	
-	function getAreaLayouts($c){ 
+	public function getAreaLayouts($c){ 
 		
 		if( !intval($c->cID) ){
 			//Invalid Collection
@@ -527,6 +708,7 @@ class Area extends Object {
 	
 	/** 
 	 * Exports the area to content format
+	 * @todo need more documentation export?
 	 */
 	public function export($p, $page) {
 		$area = $p->addChild('area');
@@ -548,6 +730,9 @@ class Area extends Object {
 	 *  %3$s -> Block/Stack Name
 	 *  %4$s -> Block position in area (first block is 1, second block is 2, etc.)
 	 *  %5$s -> 'odd' or 'even' (useful for "zebra stripes" CSS classes)
+	 * @param string $html
+	 * @param boolean $hasReplacements
+	 * @return void
 	 */
 	function setBlockWrapperStart($html, $hasReplacements = false) {
 		$this->enclosingStart = $html;
@@ -558,12 +743,20 @@ class Area extends Object {
 	 * Set HTML that automatically prints after any blocks contained within the area
 	 * Pass true for $hasReplacements if the $html contains sprintf replacements tokens.
 	 * See setBlockWrapperStart() comments for available tokens.
+	 * @param string $html
+	 * @param boolean $hasReplacements
+	 * @return void
 	 */
 	function setBlockWrapperEnd($html, $hasReplacements = false) {
 		$this->enclosingEnd = $html;
 		$this->enclosingEndHasReplacements = $hasReplacements;
 	}
 
+	/**
+	 * Does the work of updating the area content
+	 * retrieves data from formatted $_POST when saving blocks through the editing ui
+	 * @return void
+	 */
 	function update() {
 		$db = Loader::db();
 

@@ -193,7 +193,7 @@ class SelectAttributeTypeController extends AttributeTypeController  {
 				// check for duplicates
 				$existing = false;
 				foreach($options as $opt) {
-					if(strtolower(trim($newoption)) == strtolower(trim($opt->getSelectAttributeOptionValue()))) {
+					if(strtolower(trim($newoption)) == strtolower(trim($opt->getSelectAttributeOptionValue(false)))) {
 						$existing = $opt;
 						break;
 					}
@@ -285,8 +285,10 @@ class SelectAttributeTypeController extends AttributeTypeController  {
 		$this->load();
 		$options = $this->request('atSelectOptionID');
 		if ($this->akSelectAllowOtherValues) {
-			$options = $this->request('atSelectNewOption');
+			$options = array_filter((Array) $this->request('atSelectNewOption'));
 			if (is_array($options) && count($options) > 0) {
+				return true;
+			} else if (array_shift($this->request('atSelectOptionID')) != null) {
 				return true;
 			}
 		}
@@ -381,7 +383,7 @@ class SelectAttributeTypeController extends AttributeTypeController  {
 		if ($this->akSelectAllowMultipleValues && $this->akSelectAllowOtherValues) {
 			$options = $this->getOptions($_GET['term'] . '%');
 			foreach($options as $opt) {
-				$values[] = $opt->getSelectAttributeOptionValue();
+				$values[] = $opt->getSelectAttributeOptionValue(false);
 			}
 		}
 		print Loader::helper('json')->encode($values);

@@ -59,6 +59,10 @@ class SearchBlockController extends BlockController {
 				return @implode("&hellip;<wbr>", $body_string);
 		}
 	}
+
+	public function setHighlightColor($color) {
+		$this->hColor = $color;
+	}
 	
 	/** 
 	 * Used for localization. If we want to localize the name/description we have to include this
