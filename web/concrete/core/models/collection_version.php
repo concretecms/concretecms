@@ -64,14 +64,9 @@
 		}
 		
 		public function refreshCache() {
-			$db = Loader::db();
-			$cID = $this->cID;
-			$cvID = $this->cvID;
-			Cache::delete('page_active', $cID);
-			Cache::delete('page_recent', $cID);
-			Cache::delete('collection_blocks', $cID . ':' . $cvID);
+			$co = Page::getByID($this->cID, $this->cvID);
+			$co->refreshCache();
 			Events::fire('on_page_version_refresh_cache', $this);
-
 		}
 		
 		public function get(&$c, $cvID) {

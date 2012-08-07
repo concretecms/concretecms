@@ -130,11 +130,13 @@ ccm_showBlockMenu = function(obj, e) {
 
 ccm_reloadAreaMenuPermissions = function(aID, cID) {
     var config = window['ccm_areaMenuObj' + aID];
-    var action = CCM_TOOLS_PATH + '/reload_area_permissions_js.php' + 
-    '?arHandle=' + config.arHandle +
- 	'&cID=' + cID +
- 	'&maximumBlocks=' + config.maximumBlocks;
- 	$.getScript( action );
+    if (config) {
+		var action = CCM_TOOLS_PATH + '/reload_area_permissions_js.php' + 
+		'?arHandle=' + config.arHandle +
+		'&cID=' + cID +
+		'&maximumBlocks=' + config.maximumBlocks;
+		$.getScript( action );
+	}
 }
 
 ccm_openAreaAddBlock = function(arHandle, addOnly, cID) {
