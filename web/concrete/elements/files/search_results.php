@@ -1,7 +1,7 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?> 
 <?
 if (isset($_REQUEST['searchInstance'])) {
-	$searchInstance = $_REQUEST['searchInstance'];
+	$searchInstance = Loader::helper('text')->entities($_REQUEST['searchInstance']);
 }
 ?>
 <script type="text/javascript">

@@ -2,6 +2,7 @@
 <?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Public Profiles'), t('Control the options available for Public Profiles.'), false, false);?>
 <?php
 $h = Loader::helper('concrete/interface');
+$form = Loader::helper('form');
 ?>
     <form method="post" id="public-profiles-form" action="<?php echo $this->url('/dashboard/system/registration/profiles', 'update_profiles')?>">  
     
@@ -20,6 +21,28 @@ $h = Loader::helper('concrete/interface');
 			  </ul>
 			</div>
 	 	</div>
+	 	<div class="clearfix">
+	 		<?php print $form->label('gravatar_fallback', t('Fall Back To Gravar')); ?>
+	 		<div class="input">
+	 			<?php print $form->checkbox('gravatar_fallback', 1, $gravatar_fallback); ?> (<?php print t('Use image from <a href="http://gravatar.com" target="_blank">gravatar.com</a> if the user has not uploaded one');?>)
+	 		</div>
+	 	</div>
+
+	 	<div id="gravatar-options">
+	 		<div class="clearfix">
+		 		<?php print $form->label('gravatar_max_level', t('Maximum Gravatar Rating')); ?>
+		 		<div class="input">
+		 			<?php print $form->select('gravatar_max_level', $gravatar_level_options, $gravatar_max_level); ?>
+		 		</div>
+			</div>
+			<div class="clearfix">
+		 		<?php print $form->label('gravatar_image_set', t('Gravatar Image Set')); ?>
+		 		<div class="input">
+		 			<?php print $form->select('gravatar_image_set', $gravatar_set_options, $gravatar_image_set); ?>
+		 		</div>
+		 	</div>
+	 	</div>
+
 	</div>
 <div class="ccm-pane-footer">
 <? 
@@ -28,6 +51,22 @@ print $h->submit(t('Save'), 'public-profiles-form', 'right', 'primary');
 </div>
 </div>
 
-</form> 	
+</form>
+<script type="text/javascript">
+$(document).ready(function(){
+	$('#gravatar_fallback').change(function(){
+		if($(this).prop('checked') == true) {
+			$('#gravatar-options').css('display', 'block');
+		} else {
+			$('#gravatar-options').css('display', 'none');
+		}
+	})
+})
+</script>
+<style type="text/css">
+#gravatar-options {
+	display: <?php print $gravatar_fallback ? 'block' : 'none'; ?>;
+}
+</style>
 
 <?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(false);?>

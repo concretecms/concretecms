@@ -30,10 +30,10 @@ class DashboardSystemAttributesTypesController extends DashboardBaseController {
 		if ($mode != false) {
 			switch($mode) {
 				case 'associations_updated':
-					$this->set('message', 'Attribute Type Associations saved.');
+					$this->set('message', t('Attribute Type Associations saved.'));
 					break;
 				case 'attribute_type_added':
-					$this->set('message', 'Attribute Type added.');
+					$this->set('message', t('Attribute Type added.'));
 					break;
 			}
 		}

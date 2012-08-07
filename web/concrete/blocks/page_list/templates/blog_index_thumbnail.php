@@ -50,7 +50,7 @@
 			$btID = $b->getBlockTypeID();
 			$bt = BlockType::getByID($btID);
 			$uh = Loader::helper('concrete/urls');
-			$rssUrl = $controller->getRssUrl($b);
+			$rssUrl = $controller->getRssUrl($b, 'blog_rss');
 			?>
 			<div class="ccm-page-list-rss-icon">
 				<a href="<?php echo $rssUrl?>" target="_blank"><img src="<?php echo $uh->getBlockTypeAssetsURL($bt, 'rss.png')?>" width="14" height="14" /></a>

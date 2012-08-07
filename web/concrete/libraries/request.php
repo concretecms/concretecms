@@ -1,25 +1,21 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
 
 /**
- * @package Core
- * @category Concrete
- * @author Andrew Embler <andrew@concrete5.org>
- * @copyright  Copyright (c) 2003-2008 Concrete5. (http://www.concrete5.org)
- * @license    http://www.concrete5.org/license/     MIT License
- *
- */
-
-/**
- * An object that represents a particular request to the Concrete-powered website. The request object then determines what is being requested, based on the path, and presents itself to the rest of the dispatcher (which loads the page, etc...)
+ * An object that represents a particular request to the Concrete-powered website.
+ * The request object then determines what is being requested, based on the path, and
+ * presents itself to the rest of the dispatcher (which loads the page, etc...)
  * @package Core
  * @author Andrew Embler <andrew@concrete5.org>
  * @category Concrete
- * @copyright  Copyright (c) 2003-2008 Concrete5. (http://www.concrete5.org)
+ * @copyright  Copyright (c) 2003-2012 concrete5. (http://www.concrete5.org)
  * @license    http://www.concrete5.org/license/     MIT License
  *
  */
 class Request {
 
+	/**
+	 * @access private
+	 */
 	private $currentPage;
 	private $requestPath;
 	private $task;
@@ -32,11 +28,13 @@ class Request {
 	private $pkgHandle;
 	private $auxData;
 	
-	// parses the current request and returns an 
-	// object with tasks, tools, etc... defined in them
-	// for use in the dispatcher
-	// Thanks to Code Igniter for some of this code (in terms of getenv(), etc...)
-	
+	/**
+	 * Parses the current request and returns an object with tasks, tools, etc... 
+	 * defined in them for use in the dispatcher
+	 * Thanks to Code Igniter for some of this code (in terms of getenv(), etc...)
+	 * @param string $var Server variable that we parse to get the current path
+	 * @return bool|string
+	 */
 	private static function parsePathFromRequest($var) {
 		$path = (isset($_SERVER[$var])) ? $_SERVER[$var] : @getenv($var);
 		if (!$path) {
@@ -79,6 +77,11 @@ class Request {
 		return $path;
 	}
 	
+	/**
+	 * Request Constructor that we pass the requested path and then parse to get our tasks
+	 * @param string $path Requested path
+	 * @return void
+	 */
 	public function __construct($path) {
 		$this->requestPath = $path;
 		$this->parse();
@@ -116,9 +119,10 @@ class Request {
 	}
 	
 	/** 
-	 * our new MVC way of doing things. Parses the collection path using like to find
+	 * Our new MVC way of doing things. Parses the collection path using like to find
 	 * where the path stops and the parameters start. Enables us to use urls without a
 	 * task/param separator in them
+	 * @return Page
 	 */
 	public function getRequestedPage() {
 		$path = $this->getRequestCollectionPath();
@@ -164,6 +168,12 @@ class Request {
 		return $c;
 	}
 	
+	/**
+	 * This is where we parse the path to see if it is a tool or page and if its a page
+	 * get the task and parameters (if there are any)
+	 * @access private
+	 * @return void
+	 */
 	private function parse() {
 		
 		$path = $this->requestPath;
@@ -288,13 +298,15 @@ class Request {
 	
 	/** 
 	 * Gets the path of the current request
+	 * @return string
 	 */
 	public function getRequestPath() {
 		return $this->requestPath;
 	}
 
 	/** 
-	 * Gets the current collection path as contained in the current request 
+	 * Gets the current collection path as contained in the current request
+	 * @return string
 	 */
 	public function getRequestCollectionPath() {
 		// I think the regexps take care of the trimming for us but just to be sure..
@@ -322,7 +334,8 @@ class Request {
 	}
 
 	/** 
-	 * Gets the array of parameters for this current MVC task
+	 * Gets a string of parameters for this current MVC task
+	 * @return string
 	 */
 	public function getRequestTaskParameters() {
 		return $this->params;
@@ -338,6 +351,7 @@ class Request {
 	
 	/** 
 	 * Gets the include type of the current request
+	 * @return string
 	 */
 	public function getIncludeType() {
 		return $this->includeType;
@@ -345,6 +359,7 @@ class Request {
 
 	/** 
 	 * If the current request wants to include a file, this returns the filename it wants to include
+	 * @return string
 	 */
 	public function getFilename() {
 		return $this->filename;
@@ -352,13 +367,16 @@ class Request {
 	
 	/** 
 	 * Gets the block requested by the current request
+	 * @return string
 	 */
 	public function getBlock() {
 		return $this->btHandle;
 	}
 	
 	/** 
-	 * Auxiliary data is anything that the request specifies that doesn't really fit inside the request object, but gets passed along anyway
+	 * Auxiliary data is anything that the request specifies that doesn't really fit
+	 * inside the request object, but gets passed along anyway
+	 * @return stdClass
 	 */
 	public function getAuxiliaryData() {
 		return $this->auxData;
@@ -366,6 +384,7 @@ class Request {
 	
 	/** 
 	 * Gets the package requested by the current request
+	 * @return string
 	 */
 	public function getPackageHandle() {
 		return $this->pkgHandle;
@@ -375,23 +394,33 @@ class Request {
 	 * Sets the controller task, used when the Page object identifies
 	 * the actual path.
 	 * @param string $task the name of the task function
+	 * @return void
 	 */
 	public function setRequestTask($task) {
 		$this->task = $task;
 	}
 	
+	/**
+	 * Set the current page
+	 * @param Page $page
+	 * @return void
+	 */
 	public function setCurrentPage($page) {
 		$this->currentPage = $page;
 	}
 	
+	/**
+	 * Get the current page object
+	 * @return Page
+	 */
 	public function getCurrentPage() {
 		return $this->currentPage;
 	}
 	
 	/**
-	 * Sets the controller params, used when the Page object identifies
-	 * the actual path.
+	 * Sets the controller params, used when the Page object identifies the actual path.
 	 * @param string $params List of params, separated by "/"
+	 * @return void
 	 */
 	public function setRequestTaskParameters($params) {
 		$this->params = $params;
@@ -400,7 +429,8 @@ class Request {
 	/**
 	 * Sets the request path, used when the Page object identifies
 	 * the actual path.
-	 * @param string $path The path
+	 * @param string $path The path for the current collection
+	 * @return void
 	 */
 	public function setCollectionPath($path) {
 		$this->cPath = $path;
