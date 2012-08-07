@@ -713,10 +713,19 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				}
 				$bta = new $class;
 				
-				// first run the subclass methods. If they work then we install the block
+				//Attempt to run the subclass methods (install schema from db.xml, etc.)
 				$r = $bta->install($path);
-				if (!$r->result) {
+				
+				//Validate
+				if ($r === false) {
+					return t('Error: Block Type cannot be installed because no db.xml file can be found. Either create a db.xml file for this block type, or remove the $btTable variable from its controller.');
+				} else if (!$r->result && $r->message) {
 					return $r->message;
+				} else if (!$r->result && !$r->message) {
+					return t('Error: Block Type cannot be installed due to an unknown database error. Please check that the db.xml file for this block type is formatted correctly.');
+				} else if ($message = BlockType::validateInstalledDatabaseTable($bta->getBlockTypeDatabaseTable())) {
+					$db->Execute('DROP TABLE IF EXISTS ' . $bta->getBlockTypeDatabaseTable());
+					return $message;
 				}
 				
 				$currentLocale = Localization::activeLocale();
@@ -724,6 +733,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 					// Prevent the database records being stored in wrong language
 					Localization::changeLocale('en_US');
 				}
+
+				//Install the block
 				$btd = new BlockTypeDB();
 				$btd->btHandle = $btHandle;
 				$btd->btName = $bta->getBlockTypeName();
@@ -761,6 +772,29 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		}
 		
 		/**
+		 * Internal helper function for doInstallBlockType().
+		 * 
+		 * Checks if the database table with the given name
+		 * has at least 2 fields and one of those is called "btID".
+		 *
+		 * If valid, we return an empty string.
+		 * If not valid, we return an error message.
+		 * If passed an empty string, we return an empty string.
+		 */
+		private function validateInstalledDatabaseTable($btTable) {
+			$message = '';
+			if (!empty($btTable)) {
+				$fields = Loader::db()->MetaColumnNames($btTable);
+				if (count($fields) < 2) {
+					$message = t('Error: Block Type table must contain at least two fields.');
+				} else if (!in_array('bID', $fields)) {
+					$message = t('Error: Block Type table must contain a "bID" primary key field.');
+				}
+			}
+			return $message;
+		}
+		
+		/*
 		 * Returns a path to where the block type's files are located.
 		 * @access public
 		 * @return string $path
@@ -862,7 +896,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			
 			$ca = new Cache();
 			$ca->delete('blockTypeByID', $this->btID);
-			$ca->delete('blockTypeByHandle', $btHandle);		 	
+			$ca->delete('blockTypeByHandle', $this->btHandle);		 	
 			$ca->delete('blockTypeList', false);		 	
 			$db->Execute("delete from BlockTypes where btID = ?", array($this->btID));
 		}
@@ -876,7 +910,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		 	$db = Loader::db();
 		 	$btHandle = $this->btHandle;
 		 	$btName = $this->btName;
-		 	$this->btDescription = $this->btDescription;
+		 	$btDescription = $this->btDescription;
 		 	if (isset($data['btHandle'])) {
 		 		$btHandle = $data['btHandle'];
 		 	}

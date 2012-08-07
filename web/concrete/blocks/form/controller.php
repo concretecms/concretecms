@@ -252,6 +252,11 @@ class FormBlockController extends BlockController {
 		foreach($rows as $row){
 			if( intval($row['required'])==1 ){
 				$notCompleted=0;
+				if ($row['inputType'] == 'email') {
+					if (!Loader::helper('validation/strings')->email($_POST['Question' . $row['msqID']])) {
+						$errors['emails'] = t('You must enter a valid email address.');
+					}
+				}
 				if($row['inputType']=='checkboxlist'){
 					$answerFound=0;
 					foreach($_POST as $key=>$val){
@@ -325,6 +330,13 @@ class FormBlockController extends BlockController {
 			
 			$questionAnswerPairs=array();
 
+			if( strlen(FORM_BLOCK_SENDER_EMAIL)>1 && strstr(FORM_BLOCK_SENDER_EMAIL,'@') ){
+				$formFormEmailAddress = FORM_BLOCK_SENDER_EMAIL;
+			}else{
+				$adminUserInfo=UserInfo::getByID(USER_SUPER_ID);
+				$formFormEmailAddress = $adminUserInfo->getUserEmail();
+			}
+			$replyToEmailAddress = $formFormEmailAddress;
 			//loop through each question and get the answers 
 			foreach( $rows as $row ){	
 				//save each answer
@@ -348,6 +360,15 @@ class FormBlockController extends BlockController {
 				}elseif($row['inputType']=='email'){
 					$answerLong="";
 					$answer=$txt->sanitize($_POST['Question'.$row['msqID']]);
+					if(!empty($row['options'])) {
+						$settings = unserialize($row['options']);
+						if(is_array($settings) && array_key_exists('send_notification_from', $settings) && $settings['send_notification_from'] == 1) {
+							$email = $txt->email($answer);
+							if(!empty($email)) {
+								$replyToEmailAddress = $email;
+							}
+						}
+					}
 				}elseif($row['inputType']=='telephone'){
 					$answerLong="";
 					$answer=$txt->sanitize($_POST['Question'.$row['msqID']]);
@@ -383,19 +404,14 @@ class FormBlockController extends BlockController {
 				$db->Execute($q, $v);
 				$db->Execute('delete from {$this->btAnswersTablename} where asID = ?', array($this->lastAnswerSetId));
 			}
-			
 			if(intval($this->notifyMeOnSubmission)>0 && !$foundSpam){	
 				
-				if( strlen(FORM_BLOCK_SENDER_EMAIL)>1 && strstr(FORM_BLOCK_SENDER_EMAIL,'@') ){
-					$formFormEmailAddress = FORM_BLOCK_SENDER_EMAIL;  
-				}else{ 
-					$adminUserInfo=UserInfo::getByID(USER_SUPER_ID);
-					$formFormEmailAddress = $adminUserInfo->getUserEmail(); 
-				}  
+				
 				
 				$mh = Loader::helper('mail');
 				$mh->to( $this->recipientEmail ); 
 				$mh->from( $formFormEmailAddress ); 
+				$mh->replyto( $replyToEmailAddress ); 
 				$mh->addParameter('formName', $this->surveyName);
 				$mh->addParameter('questionSetId', $this->questionSetId);
 				$mh->addParameter('questionAnswerPairs', $questionAnswerPairs); 
@@ -580,7 +596,17 @@ class MiniSurvey{
 				}else{
 					$jsonVals['mode']='"Add"';
 				}
-			
+
+				//see if the 'send notification from' checkbox is checked and save this to the options field
+				if($values['inputType'] == 'email') {
+					$options = array();
+					if(array_key_exists('send_notification_from', $values) && $values['send_notification_from'] == 1) {
+						$options['send_notification_from'] = 1;
+					} else {
+						$options['send_notification_from'] = 0;
+					}
+					$values['options'] = serialize($options);
+				}
 				if( $pendingEditExists ){ 
 					$width = $height = 0;
 					if ($values['inputType'] == 'text'){
@@ -618,7 +644,18 @@ class MiniSurvey{
 			$questionRow=$questionRS->fetchRow();
 			$jsonPairs=array();
 			foreach($questionRow as $key=>$val){
-				if($key=='options') $key='optionVals';
+				if($key=='options') {
+					$key='optionVals';
+					if($questionRow['inputType'] == 'email') {
+						$options = unserialize($val);
+						if (is_array($options)) {
+							foreach($options as $o_key => $o_val) {
+								$val = $o_key."::".$o_val.";";
+							}
+						}
+					}
+				}
+
 				$jsonPairs[]=$key.':"'.str_replace(array("\r","\n"),'%%',addslashes($val)).'"';
 			}
 			echo '{'.join(',',$jsonPairs).'}';

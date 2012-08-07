@@ -37,14 +37,8 @@ class TextHelper {
 			"ø"=>"oe",
 			"å"=>"aa",
 			"é"=>"e",
-			"è"=>"e"
+			"è"=>"e"	
 		);
-		if (defined('SANITIZE_MULTI_ARRAY')) {
-			$_multi = unserialize(SANITIZE_MULTI_ARRAY);
-			if (is_array($_multi)) {
-				$multi = array_merge($multi, $_multi);
-			}
-		}
 		$handle = str_replace(array_keys($multi), array_values($multi), $handle);
 
 		$searchNormal = array("/[&]/", "/[\s]+/", "/[^0-9A-Za-z-_.]/", "/-+/");

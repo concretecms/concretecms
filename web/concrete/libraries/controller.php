@@ -30,7 +30,7 @@ class Controller {
 	protected $helperObjects = array();
 	protected $c; // collection
 	protected $task = false;
-	protected $parameters = array();
+	protected $parameters = false;
 	
 	
 	/**
@@ -102,7 +102,6 @@ class Controller {
 				}
 			}
 		} catch(Exception $e) {
-		
 		}
 			
 		if ($foundTask) {
@@ -151,7 +150,19 @@ class Controller {
 				$do404 = false;
 			}
 		
-
+			if($do404==true) {
+			    if (in_array('__call', get_class_methods(get_class($this)))) {
+			        $this->task = $method;
+			        if (!is_array($this->parameters)) {
+			            $this->parameters = array();
+			            if (isset($taskparts[1])) {
+			                array_shift($taskparts);
+			                $this->parameters = $taskparts;
+			            }
+			        }
+			        $do404 = false;
+			    }
+			}
 
 			if ($do404) {
 				
@@ -164,6 +175,7 @@ class Controller {
 				$this->c = $c;
 				$cont = Loader::controller("/page_not_found");
 				$v->setController($cont);				
+				$cont->view();
 				$v->render('/page_not_found');
 			}
  		}
@@ -430,7 +442,12 @@ class Controller {
 	 * Gets the array of parameters passed to the controller
 	 * @return array
 	 */
-	public function getParameters() { return $this->parameters;}
+	public function getControllerParameters() { 
+		if (is_array($this->parameters)) {
+			return $this->parameters;
+		}
+		return array();
+	}
 	
 	/** 
 	 * Gets the array of items that have been set using set()

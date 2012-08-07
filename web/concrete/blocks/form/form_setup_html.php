@@ -111,7 +111,6 @@ $ih = Loader::helper('concrete/interface');
 	
 	<input type="hidden" id="qsID" name="qsID" type="text" value="<?php echo intval($miniSurveyInfo['questionSetId'])?>" />
 	<input type="hidden" id="oldQsID" name="oldQsID" type="text" value="<?php echo intval($miniSurveyInfo['questionSetId'])?>" />
-	<input type="hidden" id="bID" name="bID" type="text" value="<?php echo intval($miniSurveyInfo['bID'])?>" />
 	<input type="hidden" id="msqID" name="msqID" type="text" value="<?php echo intval($msqID)?>" />
 	
 	<div id="ccm-formBlockPane-add" class="ccm-formBlockPane" style=" <?php echo (intval($miniSurveyInfo['bID'])==0)?'display:block':''?> ">
@@ -187,7 +186,16 @@ $ih = Loader::helper('concrete/interface');
 					</ul>
 				</div>
 			</div>
-			
+
+			<div class="clearfix">
+				<div id="emailSettings">
+					<?php print $form->label('send_notification_from', t('Send Form Email From From This Address'));?>
+					<div class="input send_notification_from">
+						<?php print $form->checkbox('send_notification_from', 1); ?>
+					</div>
+				</div>
+			</div>
+
 			<div class="clearfix">
 			<label></label>
 			<div class="input">
@@ -269,12 +277,19 @@ $ih = Loader::helper('concrete/interface');
 						</ul>
 					</div>
 				</div>
+
+				<div id="emailSettingsEdit">
+					<?php print $form->label('send_notification_from', t('Reply to this email address'));?>
+					<div class="input send_notification_from">
+						<?php print $form->checkbox('send_notification_from', 1); ?>
+					</div>
+				</div>
 			</fieldset>
 			
 			<input type="hidden" id="positionEdit" name="position" type="text" value="1000" />
 			
 			<div>
-				<?=$ih->button(t('Cancel'), '#', 'left', '', array('id' => 'cancelEditQuestion'))?>
+				<?=$ih->button(t('Cancel'), 'javascript:void(0)', 'left', '', array('id' => 'cancelEditQuestion'))?>
 				<?=$ih->button(t('Save Changes'), '#', 'right', 'primary', array('id' => 'editQuestion'))?>
 			</div>
 		</div>

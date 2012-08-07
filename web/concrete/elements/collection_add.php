@@ -4,6 +4,7 @@
 Loader::model('collection_attributes');
 Loader::model('collection_types');
 $dh = Loader::helper('date');
+
 ?>
 	
 <div class="ccm-ui">
@@ -130,43 +131,15 @@ $dh = Loader::helper('date');
 		alias = value.replace(/[&]/gi, "and");
 		alias = alias.replace(/[\s|.]+/gi, "<?=PAGE_PATH_SEPARATOR?>");
 		
-<?
-	// Default replace characters
-	// Upper case is replaced with the same sequence
-	$replace = array(
-		'ä' => 'ae',
-		'ö' => 'oe',
-		'ß' => 'ss',
-		'ü' => 'ue',
-		'æ' => 'ae',
-		'ø' => 'oe',
-		'å' => 'aa',
-		'é' => 'e',
-		'è' => 'e',
-		'ê' => 'e'
-	);
-	if (defined('SANITIZE_MULTI_ARRAY')) {
-		$_replace = unserialize(SANITIZE_MULTI_ARRAY);
-		if (is_array($_replace)) {
-			$replace = array_merge($replace, $_replace);
-		}
-	}
-	foreach ($replace as $ch => $rep) {
-		$iv = ord(utf8_decode($ch));
-		$hex = sprintf("%X", $iv);
-		
-		$find = '\u00' . $hex;
-		$clean = $ch;
-		$ch2 = mb_strtoupper($ch, 'UTF-8');
-		if ($ch2 != $ch && strlen($ch2) > 0) {
-			$iv = ord(utf8_decode($ch2));
-			$hex = sprintf("%X", $iv);
-			$find .= '\u00' . $hex;
-			$clean .= $ch2;
-		}
-		echo "\t\talias = alias.replace(/[".$find."]/gi, " . '"' . $rep . '");  // ' . $clean . "\n";
-	}
-?>
+		// thanks fernandos
+        alias = alias.replace(/[\u00C4\u00E4]/gi, "ae");            // ��    
+        alias = alias.replace(/[\u00D6\u00F6]/gi, "oe");            // ��    
+        alias = alias.replace(/[\u00DF]/gi, "ss");                  // �    
+        alias = alias.replace(/[\u00DC\u00FC]/gi, "ue");            // ��
+        alias = alias.replace(/[\u00C6\u00E6]/gi, "ae");            // �� 
+        alias = alias.replace(/[\u00D8\u00F8]/gi, "oe");            // � 
+        alias = alias.replace(/[\u00C5\u00E5]/gi, "aa");            // ��    
+        alias = alias.replace(/[\u00E8\u00C8\u00E9\u00C9]/gi, "e"); // ���� 
 		
 		alias = alias.replace(/[^0-9A-Za-z]/gi, "<?=PAGE_PATH_SEPARATOR?>");
 		alias = alias.replace(/<?=PAGE_PATH_SEPARATOR?>+/gi, '<?=PAGE_PATH_SEPARATOR?>');

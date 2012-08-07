@@ -52,7 +52,12 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				return $nc;
 			}
 		}
-
+      
+      function getNextVersionComments() {
+         $cvID = CollectionVersion::getNumericalVersionID($this->getCollectionID(), 'ACTIVE');
+         return t("Version %d", $cvID+1);
+      }
+      
 		function _cloneVersion($versionComments) {
 			// first, we run the version object's createNew() command, which returns a new
 			// version object, which we can combine with our collection object, so we'll have
@@ -417,10 +422,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
 					$s = Stack::getByName($garHandle, 'ACTIVE');
 				}
 				if (is_object($s)) {
-					$rs1 = $db->GetAll('select bID, csrID from CollectionVersionBlockStyles where cID = ? and cvID = ? and csrID > 0', array($s->getCollectionID(), $s->getVersionID()));
+					$rs1 = $db->GetAll('select bID, csrID, arHandle from CollectionVersionBlockStyles where cID = ? and cvID = ? and csrID > 0', array($s->getCollectionID(), $s->getVersionID()));
 					foreach($rs1 as $r) {
 						$csrID = $r['csrID'];
-						$arHandle = $txt->filterNonAlphaNum($garHandle);
+						$arHandle = $txt->filterNonAlphaNum($r['arHandle']);
 						$bID = $r['bID'];
 						$obj = CustomStyleRule::getByID($csrID);
 						if (is_object($obj)) {

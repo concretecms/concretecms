@@ -445,7 +445,12 @@
 		
 			if ($tc->isSystemPage() && (!$this->displaySystemPages)) {
 				if ($tc->getCollectionPath() == '/members' && Config::get('ENABLE_USER_PROFILES')) {
-					return true;
+					if ($this->displayUnavailablePages) {
+						return true;
+					} else {
+						$tcp = new Permissions($tc);
+						return $tcp->canRead();
+					}
 				}
 				
 				return false;
