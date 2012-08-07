@@ -25,7 +25,7 @@ class Concrete5_Controller_Dashboard_Reports_Logs extends Controller {
 		$paginator = Loader::helper('pagination');
 		
 		$total = Log::getTotal($_REQUEST['keywords'], $_REQUEST['logType']);
-		$paginator->init(intval($page), $total, $pageBase . '/%pageNum%/?keywords=' . $_REQUEST['keywords'] . '&logType=' . $_REQUEST['logType'], 10);
+		$paginator->init(intval($page), $total, $pageBase . '%pageNum%/?keywords=' . $_REQUEST['keywords'] . '&logType=' . $_REQUEST['logType'], 10);
 		$limit=$paginator->getLIMIT();
 
 		$types = Log::getTypeList();
