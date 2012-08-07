@@ -688,13 +688,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		}
 		
 		public function refreshCache() {
-			$vo = $this->getVersionObject();
-			if (is_object($vo)) {
-				$vo->refreshCache();
-			} else {
-				Cache::delete('page_active', $this->getCollectionID());
-				Cache::delete('page_recent', $this->getCollectionID());
-			}
+			Cache::delete('page_active', $this->getCollectionID());
+			Cache::delete('page_recent', $this->getCollectionID());
 			if ($this->getCollectionTypeHandle() == STACKS_PAGE_TYPE) {
 				Cache::delete('stack_active', $this->getCollectionID());
 				Cache::delete('stack_recent', $this->getCollectionID());
