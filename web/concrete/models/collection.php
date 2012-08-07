@@ -52,7 +52,12 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				return $nc;
 			}
 		}
-
+      
+      function getNextVersionComments() {
+         $cvID = CollectionVersion::getNumericalVersionID($this->getCollectionID(), 'ACTIVE');
+         return t("Version %d", $cvID+1);
+      }
+      
 		function _cloneVersion($versionComments) {
 			// first, we run the version object's createNew() command, which returns a new
 			// version object, which we can combine with our collection object, so we'll have
