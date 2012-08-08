@@ -35,14 +35,14 @@ class Concrete5_Helper_Form_Attribute {
 		if (is_object($this->obj)) {
 			$value = $this->obj->getAttributeValueObject($obj);
 		}
-		$html = '<div class="clearfix">';
+		$html = '<div class="control-group">';
 		if ($includeLabel) {
 			$html .= $obj->render('label', false, true);
 		}
 		if ($required) {
 			$html .= ' <span class="ccm-required">*</span>';
 		}
-		$html .= '<div class="input">';
+		$html .= '<div class="controls">';
 		$html .= $obj->render($template, $value, true);
 			
 		$html .= '</div></div>';
