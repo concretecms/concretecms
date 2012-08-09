@@ -18,7 +18,8 @@ class UpdateArchive extends Archive {
 }
 
 if (!ini_get('safe_mode')) {
-	@set_time_limit(240);
+	@set_time_limit(0);
+	ini_set('max_execution_time', 0);
 }
 
 class Concrete5_Controller_Dashboard_System_BackupRestore_Update extends DashboardBaseController { 	 

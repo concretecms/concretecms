@@ -22,7 +22,7 @@ $usedKeysCombined = array_merge($requiredKeys, $usedKeys);
 ?>
 
 <div class="row">
-<div id="ccm-attributes-column" class="span4 columns">
+<div id="ccm-attributes-column" class="span3">
 	<h6><?=t("All Attributes")?></h6>
 	<div class="ccm-block-type-search-wrapper ">
 
