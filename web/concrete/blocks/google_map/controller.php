@@ -44,6 +44,7 @@
 		
 		public function on_page_view() {
 			$html = Loader::helper('html');
+			$this->addHeaderItem('<style type="text/css">.googleMapCanvas{ width:100%; border:0px none; height: 400px;}</script>');
 			$this->addHeaderItem('<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>');
          $this->addHeaderItem('<script type="text/javascript"> 
             function googleMapInit' . $this->bID . '() { 
