@@ -78,7 +78,7 @@ $usedKeysCombined = array_merge($requiredKeys, $usedKeys);
 	</ul>
 	
 </div>
-<div class="span7">
+<div class="span5">
 <h6><?=t("Selected Attributes")?></h6>
 <div id="ccm-page-attributes-none" <? if (count($usedKeysCombined) > 0) { ?>style="display: none"<? } ?>>
 <div style="padding-top: 140px; width: 400px; text-align: center"><h3>

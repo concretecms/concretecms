@@ -474,6 +474,8 @@ class ConcreteUpgradeVersion560Helper {
 		if (!in_array('PagePermissions', $tables)) {
 			return false;
 		}
+		// first, we fix permissions that are set to override but are pointing to another page. They shouldn't do that.
+		$db->Execute('update Pages set cInheritPermissionsFromCID = cID where cInheritPermissionsFrom = "OVERRIDE"');
 		// permissions
 		$permissionMap = array(
 			'r' => array(PermissionKey::getByHandle('view_page')),
