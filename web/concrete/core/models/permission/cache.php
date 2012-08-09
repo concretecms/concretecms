@@ -4,21 +4,29 @@ class Concrete5_Model_PermissionCache {
 	
 	public static function getResponse($object) {
 		$cl = CacheLocal::get();
-		$identifier = 'pr:' . get_class($object) . ':' . $object->getPermissionObjectIdentifier();
-		if (array_key_exists($identifier, $cl->cache)) {
-			return $cl->cache[$identifier];
+		if ($cl->enabled) {
+			$identifier = 'pr:' . get_class($object) . ':' . $object->getPermissionObjectIdentifier();
+			if (array_key_exists($identifier, $cl->cache)) {
+				return $cl->cache[$identifier];
+			}
 		}
 	}
 
 	public static function addResponse($object, PermissionResponse $pr) {
 		$cl = CacheLocal::get();
-		$identifier = 'pr:' . get_class($object) . ':' . $object->getPermissionObjectIdentifier();
-		$cl->cache[$identifier] = $pr;
+		if ($cl->enabled) {
+			$identifier = 'pr:' . get_class($object) . ':' . $object->getPermissionObjectIdentifier();
+			$cl->cache[$identifier] = $pr;
+		}
 	}
 	
 	public function validate(PermissionKey $pk) {
-		$object = $pk->getPermissionObject();
 		$cl = CacheLocal::get();
+		if (!$cl->enabled) {
+			return -1;
+		}
+		
+		$object = $pk->getPermissionObject();
 		if (is_object($object)) {
 			$identifier = 'pk:' . $pk->getPermissionKeyHandle() . ':' . $object->getPermissionObjectIdentifier();
 		} else {
@@ -34,13 +42,15 @@ class Concrete5_Model_PermissionCache {
 
 	public static function addValidate(PermissionKey $pk, $valid) {
 		$cl = CacheLocal::get();
-		$object = $pk->getPermissionObject();
-		if (is_object($object)) {
-			$identifier = 'pk:' . $pk->getPermissionKeyHandle() . ':' . $object->getPermissionObjectIdentifier();
-		} else {
-			$identifier = 'pk:' . $pk->getPermissionKeyHandle();
+		if ($cl->enabled) {
+			$object = $pk->getPermissionObject();
+			if (is_object($object)) {
+				$identifier = 'pk:' . $pk->getPermissionKeyHandle() . ':' . $object->getPermissionObjectIdentifier();
+			} else {
+				$identifier = 'pk:' . $pk->getPermissionKeyHandle();
+			}
+			$cl->cache[$identifier] = $valid;
 		}
-		$cl->cache[$identifier] = $valid;
 	}
 	
 
