@@ -70,6 +70,7 @@
 		
 		protected static function regenerateSession() {
 			unset($_SESSION['dashboardMenus']);
+			unset($_SESSION['ccmQuickNavRecentPages']);
 			unset($_SESSION['accessEntities']);
 			@session_regenerate_id(true);
 		}
