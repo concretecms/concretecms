@@ -115,7 +115,7 @@ jQuery(function($) {
 <tr <? if ($job['jStatus'] == 'RUNNING') {
 	
 	$jobrunning = true;?>class="running" <? } ?>>
-	<td><a class="run-task" title="<?=t('Run')?>" href="<?=BASE_URL.$this->url('/tools/required/jobs?auth='.$auth.'&jobId='.$job['jID'])?>" data-jobId="<?=$job['jID']?>"></a><span class="run-indicator"></span></td>
+	<td><a class="run-task" title="<?=t('Run')?>" href="<?=BASE_URL.$this->url('/tools/required/jobs?auth='.$auth.'&jID='.$job['jID'])?>" data-jobId="<?=$job['jID']?>"></a><span class="run-indicator"></span></td>
 	<td><?=$job['jID']?></td>
 	<td><?=t($job['jName'])?></td>
 	<td><?=t($job['jDescription'])?></td>
