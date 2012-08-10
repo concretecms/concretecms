@@ -8,7 +8,7 @@ foreach($questionAnswerPairs as $questionAnswerPair){
 $formDisplayUrl=BASE_URL.DIR_REL.'/' . DISPATCHER_FILENAME . '/dashboard/reports/forms/?qsid='.$questionSetId;
 
 $body = t("
-There has been a submission of the form %s on through your concrete5 website.
+There has been a submission of the form %s through your concrete5 website.
 
 %s
 
