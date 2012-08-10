@@ -58,7 +58,7 @@ $usedKeysCombined = array_merge($requiredKeys, $usedKeys);
 	$unsetattribs = $category->getUnassignedAttributeKeys();
 	
 	if (count($sets) > 0 && count($unsetattribs) > 0) { ?>
-		<li class="item-select-list-header"><span><?=t('Other')?></span></li>
+		<li class="item-select-list-header ccm-attribute-available"><span><?=t('Other')?></span></li>
 	<? }
 	
 	foreach($unsetattribs as $ak) { 
