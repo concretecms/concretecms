@@ -60,22 +60,18 @@
 	} 
 	?>
 
-<?php  } 
-	
-	if ($paginate && $num > 0 && is_object($pl)) { 
+<?php  }
 
-		if ($pl->requiresPaging()) {
-		
-		$summary = $pl->getSummary();
-		$c = Page::getCurrentPage();
-		$pagination = $pl->getPagination();
-		if ($c->getCollectionID() == 1) { 
-			$base = DIR_REL . '/';
-		} else {
-			$base = Loader::helper('navigation')->getLinkToCollection($c);
-		}
-			
-		Loader::element('pagination',array('pagination'=>$pagination,'base'=>$base));
-	}
-}
-?>
+	if ($paginate && $num > 0 && is_object($pl)): ?>
+		<div id="pagination">
+			<?php
+			$summary = $pl->getSummary();
+			if ($summary->pages > 1):
+				$paginator = $pl->getPagination();
+			?>
+				<span class="pagination-left">&laquo; <?php echo $paginator->getPrevious('Newer Posts'); ?></span>
+				<span class="pagination-right"><?php echo $paginator->getNext('Older Posts'); ?> &raquo;</span>
+				<?php echo $paginator->getPages(); ?>
+			<?php endif; ?>
+		</div>
+	<?php endif; ?>
