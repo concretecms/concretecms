@@ -22,13 +22,13 @@ $dh = Loader::helper('date');
 
 		<div class="clearfix">
 			<?=$form->label('cName', t('Name'))?>
-			<div class="input"><input type="text" name="cName" value="" class="text span8" onKeyUp="ccm_updateAddPageHandle()" ></div>
+			<div class="input"><input type="text" name="cName" value="" class="text span6" onKeyUp="ccm_updateAddPageHandle()" ></div>
 		</div>
 
 		
 		<div class="clearfix">
 			<?=$form->label('cHandle', t('URL Slug'))?>
-			<div class="input"><input type="text" name="cHandle" class="span4" value="" id="cHandle">
+			<div class="input"><input type="text" name="cHandle" class="span3" value="" id="cHandle">
 			<img src="<?=ASSETS_URL_IMAGES?>/loader_intelligent_search.gif" width="43" height="11" id="ccm-url-slug-loader" style="display: none" />
 			</div>
 		</div>
@@ -46,7 +46,7 @@ $dh = Loader::helper('date');
 		<div class="clearfix">
 			<?=$form->label('cDescription', t('Description'))?>
 			<div class="input">
-			<textarea name="cDescription" rows="4" class="span8"></textarea>
+			<textarea name="cDescription" rows="4" class="span6"></textarea>
 			</div>
 		</div>	
 		<?
@@ -121,12 +121,14 @@ $dh = Loader::helper('date');
 		var dlog = $("#ccm-add-page-information").closest('.ui-dialog-content');
 		if (height > 256) {
 			height = height + 160;
-			if (height < 650) { 
-				dlog.dialog('option', 'height', height);
-			} else {
-				dlog.dialog('option', 'height', '650');
+			if ($(window).height() > 750) {
+				if (height < 650) { 
+					dlog.dialog('option', 'height', height);
+				} else {
+					dlog.dialog('option', 'height', '650');
+				}
+				dlog.dialog('option','position','center');
 			}
-			dlog.dialog('option','position','center');
 		} 
 	});
 	
