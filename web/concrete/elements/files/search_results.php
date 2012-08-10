@@ -37,6 +37,7 @@ if (isset($_REQUEST['searchInstance'])) {
 	<div style="float: right">
 		<? Loader::element('files/upload_single', array('searchInstance' => $searchInstance, 'ocID' => $ocID)); ?>
 	</div>
+	<div class="clearfix" style="height: 1px"></div>
 
 <?
 	$txt = Loader::helper('text');
