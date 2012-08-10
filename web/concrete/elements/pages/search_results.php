@@ -71,6 +71,7 @@ if (isset($_REQUEST['searchInstance'])) {
 
 		</tr>
 	<?
+		$h = Loader::helper('concrete/dashboard');
 		$dsh = Loader::helper('concrete/dashboard/sitemap');
 		foreach($pages as $cobj) {
 			$cpobj = new Permissions($cobj); 
@@ -99,6 +100,16 @@ if (isset($_REQUEST['searchInstance'])) {
 				'canAddSubpages'=>$canAddSubpages,
 				'canAddExternalLinks'=>$canAddExternalLinks
 			);
+
+			$canCompose = false;
+			$ct = CollectionType::getByID($cobj->getCollectionTypeID());
+			if (is_object($ct)) {
+				if ($ct->isCollectionTypeIncludedInComposer()) {
+					if ($canEditPageProperties && $h->canAccessComposer()) {
+						$canCompose = 1;
+					}
+				}
+			}
 			
 			?>
 			<tr class="ccm-list-record <?=$striped?>" 
@@ -109,6 +120,8 @@ if (isset($_REQUEST['searchInstance'])) {
 				sitemap-instance-id="<?=$searchInstance?>" 
 				sitemap-display-mode="search" 
 				cNumChildren="<?=$cobj->getNumChildren()?>" 
+				tree-node-cancompose="<?=$canCompose?>"
+				
 				cAlias="false"
 				<?=$dsh->getPermissionsNodes($permissionArray);?>>
 			<? if (!$searchDialog) { ?><td class="ccm-<?=$searchInstance?>-list-cb" style="vertical-align: middle !important"><input type="checkbox" value="<?=$cobj->getCollectionID()?>" /></td><? } ?>
