@@ -4,6 +4,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 class Concrete5_Controller_Dashboard_System_Environment_Info extends DashboardBaseController {	
 	
 	public function get_environment_info() {
+		$maxExecutionTime = ini_get('max_execution_time');
 		set_time_limit(5);
 		
 		$environmentMessage = '# ' . t('concrete5 Version') . "\n" . APP_VERSION . "\n\n";
@@ -126,9 +127,12 @@ class Concrete5_Controller_Dashboard_System_Environment_Info extends DashboardBa
 			}
 		}		
 		$environmentMessage = "\n# " . t('PHP Settings') . "\n";
-
+		$environmentMessage .= "max_execution_time - " . $maxExecutionTime . "\n";
 		foreach($phpinfo as $name => $section) {
 			foreach($section as $key => $val) {
+				if (preg_match('/.*max_execution_time*/', $key)) {
+					continue;
+				}
 				if (!preg_match('/.*limit.*/', $key) && !preg_match('/.*safe.*/', $key) && !preg_match('/.*max.*/', $key)) {
 					continue;
 				}
