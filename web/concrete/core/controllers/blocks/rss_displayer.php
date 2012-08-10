@@ -20,6 +20,7 @@
 		protected $btCacheBlockOutputOnPost = true;
 		protected $btWrapperClass = 'ccm-ui';
 		protected $btCacheBlockOutputForRegisteredUsers = true;
+		protected $btCacheBlockOutputLifetime = 3600;
 		
 		public $itemsToDisplay = "5";
 		public $showSummary = "1"; 
