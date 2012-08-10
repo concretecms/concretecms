@@ -98,14 +98,14 @@
 		public static function replaceImagePlaceHolderOnImport($match) {
 			$filename = $match[1];
 			$db = Loader::db();
-			$fID = $db->GetOne('select fID from FileVersions where filename = ?', array($filename));
+			$fID = $db->GetOne('select fID from FileVersions where fvFilename = ?', array($filename));
 			return '{CCM:FID_' . $fID . '}';
 		}
 		
 		public static function replaceFilePlaceHolderOnImport($match) {
 			$filename = $match[1];
 			$db = Loader::db();
-			$fID = $db->GetOne('select fID from FileVersions where filename = ?', array($filename));
+			$fID = $db->GetOne('select fID from FileVersions where fvFilename = ?', array($filename));
 			return '{CCM:FID_DL_' . $fID . '}';
 		}
 		
