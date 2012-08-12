@@ -528,12 +528,14 @@ class ConcreteUpgradeVersion560Helper {
 		}
 	}
 	
+	const ACCESS_TYPE_MINE = 3;
+	
 	protected function getFileSetPermissionsArray($row) {
 		$check = array('canRead', 'canWrite', 'canAdmin', 'canSearch');
 		$permissions = array();
 		foreach($check as $v) {
 			if ($row[$v] == 3) {
-				$permissions[$v] = FileSetPermissionKey::ACCESS_TYPE_MINE;
+				$permissions[$v] = self::ACCESS_TYPE_MINE;
 			}
 			if ($row[$v] == 10) {
 				$permissions[$v] = FileSetPermissionKey::ACCESS_TYPE_INCLUDE;
@@ -549,7 +551,7 @@ class ConcreteUpgradeVersion560Helper {
 			return false;
 		}
 		// permissions
-		
+		$fpe = FileUploaderPermissionAccessEntity::getOrCreate();
 		$permissionMap = array(
 			'canRead' => array(PermissionKey::getByHandle('view_file_set_file')),
 			'canSearch' => array(PermissionKey::getByHandle('search_file_set')),
@@ -578,6 +580,11 @@ class ConcreteUpgradeVersion560Helper {
 			$permissions = $this->getFileSetPermissionsArray($row);
 			if (is_object($fs)) { 
 				foreach($permissions as $p => $accessType) {
+					if ($accessType == self::ACCESS_TYPE_MINE) {
+						$_pe = $fpe;
+					} else { 
+						$_pe = $pe;
+					}
 					$permissionsToApply = $permissionMap[$p];
 					foreach($permissionsToApply as $pko) {
 						$pko->setPermissionObject($fs);
@@ -586,7 +593,7 @@ class ConcreteUpgradeVersion560Helper {
 						if (!is_object($pa)) {
 							$pa = PermissionAccess::create($pko);
 						}
-						$pa->addListItem($pe, false, $accessType);	
+						$pa->addListItem($_pe, false, FileSetPermissionKey::ACCESS_TYPE_INCLUDE);	
 						$pt->assignPermissionAccess($pa);
 					}
 				}
