@@ -161,7 +161,7 @@ class Concrete5_Helper_Pagination {
 		if($this->number_of_pages==1) return;		
 		//if not last page
 		if (!$this->hasNextPage())
-			 return '<a class="'.$this->classOff.'" href="#">'.$linkText.'</a>';
+			 return '<span class="'.$this->classOff.'" href="#">'.$linkText.'</span>';
 		 else{
 			$linkURL=str_replace("%pageNum%", $this->getNextInt()+1, $this->URL);
 			return '<a class="'.$this->classOn.'" href="'.$linkURL.'" '.$this->getJSFunctionCall($this->getNextInt()+1).'>'.$linkText.'</a>'; 	
@@ -180,7 +180,7 @@ class Concrete5_Helper_Pagination {
 		if($this->number_of_pages==1) return;
 		//if not first page
 		if ($this->current_page=="0") 
-			 return '<a class="'.$this->classOff.'" href="#">'.$linkText.'</a>';
+			 return '<span class="'.$this->classOff.'" href="#">'.$linkText.'</span>';
 		else{
 			$linkURL=str_replace("%pageNum%", $this->getPreviousInt()+1, $this->URL);
 			return '<a class="'.$this->classOn.'" href="'.$linkURL.'" '.$this->getJSFunctionCall($this->getPreviousInt()+1).'>'.$linkText.'</a>';
@@ -230,9 +230,9 @@ class Concrete5_Helper_Pagination {
 			if ($this->current_page==$i){ 
 			
 					if($wrapper == 'li'){
-						$pages.="<li class='$this->classCurrent disabled' ><a href=\"#\">".($i+1)."</a></li>";
+						$pages.="<li class=\"{$this->classCurrent} disabled\"><a href=\"#\">".($i+1)."</a></li>";
 					} else {
-						$pages.="<span class='$this->classCurrent'><a href=\"#\">".($i+1)."</a></span>";
+						$pages.="<span class=\"{$this->classCurrent}\"><strong>".($i+1)."</strong></span>";
 					}
 					
 			} else {
@@ -240,9 +240,9 @@ class Concrete5_Helper_Pagination {
 				   $linkURL=str_replace("%pageNum%", $i+1, $this->URL);
 				   
 					if($wrapper == 'li'){
-						$pages.="<li class='$this->classOn'><a href='$linkURL' ".$this->getJSFunctionCall($i+1).">".($i+1)."</a></li>";
+						$pages.="<li class=\"{$this->classOn}\"><a href=\"{$linkURL}\" ".$this->getJSFunctionCall($i+1).">".($i+1)."</a></li>";
 					} else {
-						$pages.="<span class='$this->classOn'><a href='$linkURL' ".$this->getJSFunctionCall($i+1).">".($i+1)."</a></span>";
+						$pages.="<span class=\"{$this->classOn}\"><a href=\"{$linkURL}\" ".$this->getJSFunctionCall($i+1).">".($i+1)."</a></span>";
 					}
 					
 			} //end if not current page
