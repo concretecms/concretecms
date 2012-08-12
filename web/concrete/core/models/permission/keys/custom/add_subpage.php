@@ -33,7 +33,7 @@ class Concrete5_Model_AddSubpagePagePermissionKey extends PagePermissionKey  {
 		$u = new User();
 		$pae = $this->getPermissionAccessObject();
 		if (!is_object($pae)) {
-			return $asl;
+			return array();
 		}
 		
 		$accessEntities = $u->getUserAccessEntityObjects();
