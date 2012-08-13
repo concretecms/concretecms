@@ -68,7 +68,7 @@ if (count($pages) > 0) {
 			$pkr->setPagePermissionsInheritance($_REQUEST['mode']);
 			$pkr->setRequesterUserID($u->getUserID());
 			$response = $pkr->trigger();
-			if (!$response instanceof WorkflowProgressResponse) {
+			if (!($response instanceof WorkflowProgressResponse)) {
 				$deferred = true;
 			}
 		}
@@ -87,7 +87,7 @@ if (count($pages) > 0) {
 			$pkr->setPagePermissionsInheritance($_REQUEST['inherit']);
 			$pkr->setRequesterUserID($u->getUserID());
 			$response = $pkr->trigger();
-			if (!$response instanceof WorkflowProgressResponse) {
+			if (!($response instanceof WorkflowProgressResponse)) {
 				$deferred = true;
 			}
 		}
@@ -122,7 +122,7 @@ if (count($pages) > 0) {
 			$pkr->setRequesterUserID($u->getUserID());
 			$u->unloadCollectionEdit($c);
 			$response = $pkr->trigger();
-			if (!$response instanceof WorkflowProgressResponse) {
+			if (!($response instanceof WorkflowProgressResponse)) {
 				$deferred = true;
 			}
 		}
