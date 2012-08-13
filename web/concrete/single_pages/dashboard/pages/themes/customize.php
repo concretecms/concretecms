@@ -339,7 +339,7 @@ $ih = Loader::helper('concrete/interface');
         
     <? // BEGIN No editable styles found for theme dialogue. ?>
     
-    <?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Customize Theme'), false, 'span12 offset2', false)?>
+    <?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Customize Theme'), false, 'span10 offset1', false)?>
     
         <div class="ccm-pane-body">
             <p style="margin-bottom:18px;"><?=t('This theme contains no styles that can be customized.')?></p>

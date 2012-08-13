@@ -2,16 +2,16 @@
 <?php
 $h = Loader::helper('concrete/interface');
 ?>	
-<form method="post" id="txt-editor-form" action="<?php echo $this->url('/dashboard/system/basics/editor', 'txt_editor_config')?>">
+<form method="post" id="txt-editor-form" class="form-horizontal" action="<?php echo $this->url('/dashboard/system/basics/editor', 'txt_editor_config')?>">
 <div class="ccm-pane-body">
 	<?php echo $this->controller->token->output('txt_editor_config')?>
 	
 	<div class="row">
-      <div class="span7">
+      <div class="span5">
       	<legend><h3><?=t('Toolbar Set')?></h3></legend>
-		<div class="clearfix">
+		<div class="control-group">
             <label id="optionsCheckboxes"></label>
-            <div class="input">
+            <div class="controls">
 			  <ul class="inputs-list">
 			    <li>
 			      <label>
@@ -42,7 +42,7 @@ $h = Loader::helper('concrete/interface');
           </div>
 
       </div>
-      <div class="span7">
+      <div class="span6">
       	<legend><h3><?=t('Editor Dimensions')?></h3></legend>
 
 			<div class="clearfix">
@@ -52,7 +52,7 @@ $h = Loader::helper('concrete/interface');
 						$textEditorWidth = 580;
 					}
 					?>
-				  <?=Loader::helper('form')->text('CONTENTS_TXT_EDITOR_WIDTH', $textEditorWidth, array('class' => 'span5'))?>
+				  <?=Loader::helper('form')->text('CONTENTS_TXT_EDITOR_WIDTH', $textEditorWidth, array('class' => 'span1'))?>
 				</div>
 			</div>
 			
@@ -63,7 +63,7 @@ $h = Loader::helper('concrete/interface');
 						$textEditorHeight = 380;
 					}
 					?>
-				  <?=Loader::helper('form')->text('CONTENTS_TXT_EDITOR_HEIGHT', $textEditorHeight, array('class' => 'span5'))?>
+				  <?=Loader::helper('form')->text('CONTENTS_TXT_EDITOR_HEIGHT', $textEditorHeight, array('class' => 'span1'))?>
 				</div>
 			</div>
  

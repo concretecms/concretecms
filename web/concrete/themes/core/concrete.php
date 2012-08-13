@@ -27,8 +27,11 @@ if (is_object($c)) {
 
 
 <div class="container">
-
+<div class="row">
+<div class="span10 offset1">
 <?php Loader::element('system_errors', array('format' => 'block', 'error' => $error)); ?>
+</div>
+</div>
 <?php print $innerContent ?>
 
 </div>

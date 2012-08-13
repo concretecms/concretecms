@@ -22,69 +22,32 @@
 	## Load the base config file ##
 	require(dirname(__FILE__) . '/config/base.php');
 
+	## Required Loading
+	require(dirname(__FILE__) . '/startup/required.php');
+
 	## First we ensure that dispatcher is not being called directly
 	require(dirname(__FILE__) . '/startup/file_access_check.php');
-	
+
+	require(dirname(__FILE__) . '/startup/localization.php');
+
+	## Autoload core classes
+	spl_autoload_register(array('Loader', 'autoloadCore'), true);
+
 	## Load the database ##
 	Loader::database();
-
-	## Startup cache ##
-	Loader::library('cache');	
-	Cache::startup();
 	
-	## Load required libraries ##
-	Loader::library('object');
-	Loader::library('log');
-	Loader::library('localization');
-	Loader::library('request');
-	Loader::library('events');
-	Loader::library('model');
-	Loader::library('item_list');
-	Loader::library('view');
-	Loader::library('controller');
-	Loader::library('file/types');
-	Loader::library('block_view');
-	Loader::library('block_view_template');
-	Loader::library('block_controller');
-	Loader::library('attribute/view');
-	Loader::library('attribute/controller');
+	## Startup cache ##
+	Cache::startup();
+
+	## User level config ##	
+	if (!$config_check_failed) { 
+		require(dirname(__FILE__) . '/config/app.php');
+	}
+	## Autoload settings
+	require(dirname(__FILE__) . '/startup/autoload.php');
 
 	set_exception_handler(array('View', 'defaultExceptionHandler'));
 	
-	## Autoload settings
-	if (C5_ENVIRONMENT_ONLY == false) {
-		require(dirname(__FILE__) . '/startup/autoload.php');
-	}
-	
-	## Load required models ##
-	Loader::model('area');
-	Loader::model('global_area');
-	Loader::model('attribute/key');
-	Loader::model('attribute/value');
-	Loader::model('attribute/category');
-	Loader::model('attribute/set');
-	Loader::model('attribute/type');
-	Loader::model('block');
-	Loader::model('custom_style');
-	Loader::model('file');
-	Loader::model('file_version');
-	Loader::model('block_types');
-	Loader::model('collection');
-	Loader::model('collection_version');
-	Loader::model('collection_types');
-	Loader::model('config');
-	Loader::model('groups');
-	Loader::model('layout');  
-	Loader::model('package');
-	Loader::model('page');
-	Loader::model('page_theme');
-	Loader::model('composer_page');
-	Loader::model('permissions');
-	Loader::model('user');
-	Loader::model('userinfo');
-	Loader::model('task_permission');
-	Loader::model('stack/model');
-
 	## Set default permissions for new files and directories ##
 	require(dirname(__FILE__) . '/startup/file_permission_config.php');
 	
@@ -105,9 +68,6 @@
 
 	# Startup check, install ##	
 	require(dirname(__FILE__) . '/startup/config_check_complete.php');
-
-	## User level config ##	
-	require(dirname(__FILE__) . '/config/app.php');
 
 	## Localization ##	
 	require(dirname(__FILE__) . '/config/localization.php');
@@ -168,12 +128,12 @@
 		$req = Request::get();
 		if ($req->getRequestCollectionPath() != '') {
 			if (ENABLE_LEGACY_CONTROLLER_URLS) {
-				$c = Page::getByPath($req->getRequestCollectionPath(), false);		
+				$c = Page::getByPath($req->getRequestCollectionPath(), 'ACTIVE');		
 			} else {
 				$c = $req->getRequestedPage();
 			}
 		} else {
-			$c = Page::getByID($req->getRequestCollectionID(), false);
+			$c = Page::getByID($req->getRequestCollectionID(), 'ACTIVE');
 		}
 	
 		$req = Request::get();
@@ -215,7 +175,7 @@
 			}
 		}
 
-		if (!$c->isActive() && (!$cp->canWrite())) {
+		if (!$c->isActive() && (!$cp->canViewPageVersions())) {
 			$v = View::getInstance();
 			$v->render('/page_not_found');
 		}
@@ -225,8 +185,9 @@
 		## version. We pass the function the collection object, as well as the collection permissions
 		## object, which the function will use to determine what version we get to see
 	
-		if ($cp->canWrite() || $cp->canReadVersions()) {
+		if ($cp->canEditPageContents() || $cp->canEditPageProperties() || $cp->canViewPageVersions()) {
 			$cvID = ($_REQUEST['cvID']) ? $_REQUEST['cvID'] : "RECENT";
+			$vp = $c->loadVersionObject($cvID);
 		} else {
 			$cvID = "ACTIVE";
 		}
@@ -237,16 +198,11 @@
 			$v->disableLinks();
 		}
 		
-		$vp = $c->loadVersionObject($cvID);
 		// returns the $vp object, which we then check
-		if ($vp->isError()) {
+		if (is_object($vp) && $vp->isError()) {
 			// if we've gotten an error getting information about this particular collection
 			// than we load up the Content class, and get prepared to fire away
 			switch($vp->getError()) {
-				case VERSION_NOT_RECENT:
-					// the collection is not the most recent version. We're not going to allow any writing to the collection
-					$cp->disableWrite();
-					break;
 				case COLLECTION_NOT_FOUND:
 					$v = View::getInstance();
 					$v->render('/page_not_found');

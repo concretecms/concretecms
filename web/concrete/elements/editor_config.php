@@ -23,6 +23,7 @@ if (!isset($editor_mode)) {
 	$txtEditorMode = $editor_mode;
 }
 
+$theme = PageTheme::getSiteTheme();
 ?> 
 <script language="javascript">
 $(function() {
@@ -36,6 +37,7 @@ $(function() {
 		relative_urls : false,
 		document_base_url: '<?=BASE_URL . DIR_REL?>/',
 		convert_urls: false,
+		content_css : "<?=$theme->getThemeEditorCSS()?>",
 		<?
 		if( $txtEditorMode=='CUSTOM' ){ ?>
 			//theme : "concrete",

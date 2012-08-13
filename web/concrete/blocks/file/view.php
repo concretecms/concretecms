@@ -1,7 +1,7 @@
 <?php  defined('C5_EXECUTE') or die("Access Denied.");
 	$f = $controller->getFileObject();
 	$fp = new Permissions($f);
-	if ($fp->canRead()) { 
+	if ($fp->canViewFile()) { 
 		$c = Page::getCurrentPage();
 		if($c instanceof Page) {
 			$cID = $c->getCollectionID();

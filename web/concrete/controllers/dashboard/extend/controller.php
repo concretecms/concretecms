@@ -1,10 +1,7 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-class DashboardExtendController extends Controller {
+class DashboardExtendController extends Concrete5_Controller_Dashboard_Extend {
 
-	public function view() {
-		$this->redirect('/dashboard/extend/install');
-	}
 
 	
 }

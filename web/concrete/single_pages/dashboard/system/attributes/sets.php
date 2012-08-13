@@ -3,7 +3,7 @@ $form = Loader::helper('form');
 $txt = Loader::helper('text');?>
 <?php if (in_array($this->controller->getTask(), array('update_set', 'update_set_attributes', 'edit', 'delete_set'))) { 
 
-	echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Edit Set'), false);?>
+	echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Edit Set'), false, 'span6 offset3');?>
 		
 		<div class="clearfix">
 		<div class="row">
@@ -114,7 +114,7 @@ $txt = Loader::helper('text');?>
 
 <?php } else if($this->controller->getTask() == 'category' || $this->controller->getTask() == 'add_set'){ ?>
 
-	<?php echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper($txt->unHandle($this->controller->category->getAttributeKeyCategoryHandle()).' '.t('Attribute Sets'), false, false);?>
+	<?php echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper($txt->unHandle($this->controller->category->getAttributeKeyCategoryHandle()).' '.t('Attribute Sets'), false, 'span6 offset3');?>
 	<form method="post" action="<?php echo $this->action('add_set')?>">
 
 
@@ -168,7 +168,7 @@ $txt = Loader::helper('text');?>
 	
 
 <?php } else { ?>
-	<?php echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Attribute Categories'), false);?>
+	<?php echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Attribute Categories'), false, 'span6 offset3');?>
 		<p><?php echo t('Attribute Categories are used to group different types of sets.')?></p>
 		<div class="">
 			<?php 

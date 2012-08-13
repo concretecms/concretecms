@@ -14,7 +14,7 @@ if ($_POST['task'] == 'edit_speed_settings') {
 		foreach($_POST['cID'] as $cID) {
 			$c = Page::getByID($cID);
 			$cp = new Permissions($c);
-			if ($cp->canAdminPage()) {
+			if ($cp->canEditPageSpeedSettings()) {
 				$data = array();
 				if ($_POST['cCacheFullPageContent'] > -2) { 
 					$data['cCacheFullPageContent'] = $_POST['cCacheFullPageContent'];
@@ -52,7 +52,7 @@ $cCacheFullPageContentOverrideLifetime = -2;
 $cCacheFullPageContentOverrideLifetimeCustomValue = -1;
 foreach($pages as $c) { 
 	$cp = new Permissions($c);
-	if ($cp->canAdminPage()) {
+	if ($cp->canEditPageSpeedSettings()) {
 		if ($c->getCollectionFullPageCaching() != $fullPageCaching && $fullPageCaching != -3) {
 			$fullPageCaching = -2;
 		} else {
@@ -72,7 +72,7 @@ foreach($pages as $c) {
 	}
 }
 
-$searchInstance = $_REQUEST['searchInstance'];
+$searchInstance = Loader::helper('text')->entities($_REQUEST['searchInstance']);
 
 ?>
 <div class="ccm-ui">

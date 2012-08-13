@@ -8,7 +8,7 @@ $previewMode = false;
 $f = File::getByID($_REQUEST['fID']);
 
 $fp = new Permissions($f);
-if (!$fp->canSearchFiles()) {
+if (!$fp->canViewFileInFileManager()) {
 	die(t("Access Denied."));
 }
 
@@ -22,18 +22,18 @@ if ($_REQUEST['task'] == 'preview_version') {
 	$previewMode = true;
 }
 
-if ($_POST['task'] == 'approve_version' && $fp->canWrite() && (!$previewMode)) {
+if ($_POST['task'] == 'approve_version' && $fp->canEditFileProperties() && (!$previewMode)) {
 	$fv->approve();
 	exit;
 }
 
-if ($_POST['task'] == 'delete_version' && $fp->canAdmin() && (!$previewMode)) {
+if ($_POST['task'] == 'delete_version' && $fp->canEditFileContents() && (!$previewMode)) {
 	$fv->delete();
 	exit;
 }
 
 
-if ($_POST['task'] == 'update_core' && $fp->canWrite() && (!$previewMode)) {
+if ($_POST['task'] == 'update_core' && $fp->canEditFileProperties() && (!$previewMode)) {
 	$fv = $f->getVersionToModify();
 
 	switch($_POST['attributeField']) {
@@ -57,7 +57,7 @@ if ($_POST['task'] == 'update_core' && $fp->canWrite() && (!$previewMode)) {
 	exit;
 }
 
-if ($_POST['task'] == 'update_extended_attribute' && $fp->canWrite() && (!$previewMode)) {
+if ($_POST['task'] == 'update_extended_attribute' && $fp->canEditFileProperties() && (!$previewMode)) {
 	$fv = $f->getVersionToModify();
 	$fakID = $_REQUEST['fakID'];
 	$value = '';
@@ -69,7 +69,7 @@ if ($_POST['task'] == 'update_extended_attribute' && $fp->canWrite() && (!$previ
 	exit;
 }
 
-if ($_POST['task'] == 'clear_extended_attribute' && $fp->canWrite() && (!$previewMode)) {
+if ($_POST['task'] == 'clear_extended_attribute' && $fp->canEditFileProperties() && (!$previewMode)) {
 	$fv = $f->getVersionToModify();
 	$fakID = $_REQUEST['fakID'];
 	$value = '';
@@ -90,7 +90,7 @@ function printCorePropertyRow($title, $field, $value, $formText) {
 		$text = htmlentities( $value, ENT_QUOTES, APP_CHARSET);
 	}
 
-	if ($fp->canWrite() && (!$previewMode)) {
+	if ($fp->canEditFileProperties() && (!$previewMode)) {
 	
 	$html = '
 	<tr class="ccm-attribute-editable-field">
@@ -134,7 +134,7 @@ function printFileAttributeRow($ak, $fv) {
 	} else {
 		$text = $value;
 	}
-	if ($ak->isAttributeKeyEditable() && $fp->canWrite() && (!$previewMode)) { 
+	if ($ak->isAttributeKeyEditable() && $fp->canEditFileProperties() && (!$previewMode)) { 
 	$type = $ak->getAttributeType();
 	
 	$html = '
@@ -194,7 +194,7 @@ $("#ccm-file-properties-tab-<?=$f->getFileID()?>-<?=$fv->getFileVersionID()?> ul
 <div class="ccm-file-properties-details-tab" id="ccm-file-properties-details-<?=$f->getFileID()?>-<?=$fv->getFileVersionID()?>-tab">
 
 <?
-if (!$previewMode) { 
+if (!$previewMode && $fp->canEditFileContents()) { 
 	$h = Loader::helper('concrete/interface');
 	$b1 = $h->button_js(t('Rescan'), 'ccm_alRescanFiles(' . $f->getFileID() . ')');
 	print $b1;
@@ -347,7 +347,7 @@ foreach($attribs as $at) {
 			<th><?=t('Comments')?></th>
 			<th><?=t('Creator')?></th>
 			<th><?=t('Added On')?></th>
-			<? if ($fp->canAdmin()) { ?>
+			<? if ($fp->canEditFileContents()) { ?>
 				<th>&nbsp;</th>
 			<? } ?>
 		</tr>
@@ -388,7 +388,7 @@ foreach($attribs as $at) {
 					</td>
 				<td><?=$fvv->getAuthorName()?></td>
 				<td><?=date(DATE_APP_FILE_VERSIONS, strtotime($fvv->getDateAdded()))?></td>
-				<? if ($fp->canAdmin()) { ?>
+				<? if ($fp->canEditFileContents()) { ?>
 					<? if ($fvv->getFileVersionID() == $fv->getFileVersionID()) { ?>
 						<td>&nbsp;</td>
 					<? } else { ?>

@@ -16,7 +16,7 @@ $closeWindowCID=(intval($rcID))?intval($rcID):$c->getCollectionID();
 
 <? if (!$b->getProxyBlock()) { ?>	
 	<div class="ccm-buttons dialog-buttons">
-	<a style="float: right" href="javascript:clickedButton = true;$('#ccm-form-submit-button').get(0).click()" class="btn primary"><?=t('Save')?></a>
+	<a style="float: right" href="javascript:clickedButton = true;$('#ccm-form-submit-button').get(0).click()" class="btn primary"><?=t('Save')?> <i class="icon-ok icon-white"></i></a>
 	<a style="float:left" href="javascript:void(0)" <? if ($replaceOnUnload) { ?>onclick="location.href='<?=DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=<?=$closeWindowCID ?><?=$step?>'; return true" class="btn"<? } else { ?>class="btn" onclick="ccm_blockWindowClose()" <? } ?>><?=t('Cancel')?></a>
 	</div>
 <? } ?>
@@ -31,6 +31,11 @@ $closeWindowCID=(intval($rcID))?intval($rcID):$c->getCollectionID();
 
 <? 
 $cont = $bt->getController();
+if ($b->getBlockTypeHandle() == BLOCK_HANDLE_SCRAPBOOK_PROXY) {
+	$bx = Block::getByID($b->getController()->getOriginalBlockID());
+	$cont = $bx->getController();
+}
+
 if ($cont->getBlockTypeWrapperClass() != '') { ?>
 </div>
 <? } ?>

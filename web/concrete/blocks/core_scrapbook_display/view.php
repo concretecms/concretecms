@@ -3,8 +3,10 @@
 
 $area = $b->getBlockAreaObject();
 $_bx = Block::getByID($bOriginalID);
-$_bx->setBlockAreaObject($area);
-$c = Page::getCurrentPage();
-$_bx->setProxyBlock($b);
-$_bx->loadNewCollection($c);
-$_bx->display();
+if (is_object($_bx)) {
+	$_bx->setBlockAreaObject($area);
+	$c = Page::getCurrentPage();
+	$_bx->setProxyBlock($b);
+	$_bx->loadNewCollection($c);
+	$_bx->display();
+}

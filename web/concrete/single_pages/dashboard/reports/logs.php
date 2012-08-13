@@ -49,14 +49,14 @@ $areEntries = count($entries) > 0 ? true : false;
         
 	<div class="ccm-pane-body <? if(!$paginator || !strlen($paginator->getPages())>0) { ?>ccm-pane-body-footer <? } ?>">
 
-        <table border="0" cellspacing="0" cellpadding="0" class="grid-list zebra-striped">
+        <table class="table table-bordered">
         	<thead>
                 <tr>
                     <th class="subheaderActive"><?=t('Date/Time')?></th>
                     <th class="subheader"><?=t('Type')?></th>
                     <th class="subheader"><?=t('User')?></th>
-                    <th class="subheader" style="position: relative">       <input class="btn error" style="position: absolute; top: 4px; right: 4px" type="button" onclick="if (confirm('<?=t("Are you sure you want to clear this log?")?>')) { location.href='<?=$this->url('/dashboard/reports/logs', 'clear', $valt->generate(), $_POST['logType'])?>'}" value="<?=t('Clear Log')?>" />
-<?=t('Text')?></th>
+                    <th class="subheader"><input style="float: right" class="btn error btn-mini" type="button" onclick="if (confirm('<?=t("Are you sure you want to clear this log?")?>')) { location.href='<?=$this->url('/dashboard/reports/logs', 'clear', $valt->generate(), $_POST['logType'])?>'}" value="<?=t('Clear Log')?>" /></th>
+					<?=t('Text')?></th>
                 </tr>
 			</thead>
             <tbody>
@@ -77,7 +77,7 @@ $areEntries = count($entries) > 0 ? true : false;
                     ?></strong></td>
                     <td style="width: 100%"><?=$th->makenice($ent->getText())?></td>
                 </tr>
-                <? } // END FOREACH ?>
+                <? } ?>
 			</tbody>
 		</table>
     

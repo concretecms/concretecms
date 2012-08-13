@@ -9,7 +9,7 @@ $(function() {
 });
 </script>
 
-<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Sitemap'), t('Sitemap flat view lets you page through particular long lists of pages.'), 'span14 offset1');?>
+<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Sitemap'), t('Sitemap flat view lets you page through particular long lists of pages.'), 'span10 offset1');?>
 
 <? if ($dh->canRead()) { ?>	
 	<div id="ccm-sitemap-message"></div>

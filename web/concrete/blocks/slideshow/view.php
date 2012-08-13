@@ -80,7 +80,7 @@ var ccmSlideShowHelper<?=intval($bID)?> = {
 	foreach($images as $imgInfo) {
 		$f = File::getByID($imgInfo['fID']);
 		$fp = new Permissions($f);
-		if ($fp->canRead()) {
+		if ($fp->canViewFile()) {
 			if(!$notFirst) echo ',';
 			$notFirst=0
 			?>

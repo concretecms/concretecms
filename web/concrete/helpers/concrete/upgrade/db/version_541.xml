@@ -92,17 +92,6 @@
     </field>
     <field name="cCheckedOutDatetime" type="T"/>
     <field name="cCheckedOutDatetimeLastEdit" type="T"/>
-    <field name="cPendingAction" type="C" size="6"/>
-    <field name="cPendingActionDatetime" type="T">
-      <NOTNULL/>
-      <DEFAULT value="0000-00-00 00:00:00"/>
-    </field>
-    <field name="cPendingActionUID" type="I" size="10">
-      <UNSIGNED/>
-    </field>
-    <field name="cPendingActionTargetCID" type="I" size="10">
-      <UNSIGNED/>
-    </field>
     <field name="cOverrideTemplatePermissions" type="I1" size="1">
       <NOTNULL/>
       <DEFAULT value="1"/>

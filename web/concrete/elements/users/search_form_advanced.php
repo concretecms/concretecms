@@ -6,6 +6,10 @@ $searchFields = array(
 	'is_active' => t('Activated Users')
 );
 
+if (PERMISSIONS_MODEL == 'advanced') { 
+	$searchFields['group_set'] = t('Group Set');
+}
+
 Loader::model('user_attributes');
 $searchFieldAttributes = UserAttributeKey::getSearchableList();
 foreach($searchFieldAttributes as $ak) {
@@ -30,27 +34,40 @@ foreach($searchFieldAttributes as $ak) {
 		<?=$form->select('active', array('0' => t('Inactive Users'), '1' => t('Active Users')), array('style' => 'vertical-align: middle'))?>
 		</span>
 		
+		<? if (PERMISSIONS_MODEL == 'advanced') { 
+			$gsl = new GroupSetList();
+			$groupsets = array();
+			foreach($gsl->get() as $gs) { 
+				$groupsets[$gs->getGroupSetID()] = $gs->getGroupSetName();
+			}
+		?>
+		<span class="ccm-search-option"  search-field="group_set">
+		<?=$form->select('gsID', $groupsets)?>
+		</span>
+		<? } ?>
+		
 		<? foreach($searchFieldAttributes as $sfa) { 
 			$sfa->render('search'); ?>
 		<? } ?>
 		
 	</div>
 	
-	<form method="get" id="ccm-user-advanced-search" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/users/search_results">
+	<form class="form-horizontal" method="get" id="ccm-user-advanced-search" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/users/search_results">
 	<?=$form->hidden('mode', $mode); ?>
 	<?=$form->hidden('searchType', $searchType); ?>
 	<input type="hidden" name="search" value="1" />
 	
 	<div class="ccm-pane-options-permanent-search">
 
-		<div class="span4">
+		<div class="span3">
 		<?=$form->label('keywords', t('Keywords'))?>
-		<div class="input">
+		<div class="controls">
 			<?=$form->text('keywords', $_REQUEST['keywords'], array('placeholder' => t('Username or Email'), 'style'=> 'width: 140px')); ?>
 		</div>
 		</div>
 				
 		<? 
+		$pk = PermissionKey::getByHandle('access_user_search');
 		Loader::model('search/group');
 		$gl = new GroupSearch();
 		$gl->setItemsPerPage(-1);
@@ -59,18 +76,21 @@ foreach($searchFieldAttributes as $ak) {
 
 		<div class="span4" >
 			<?=$form->label('gID', t('Group(s)'))?>
-			<div class="input">
-				<select multiple name="gID[]" class="chosen-select" style="width: 140px">
-					<? foreach($g1 as $g) { ?>
+			<div class="controls">
+				<select multiple name="gID[]" class="chosen-select" style="width: 200px">
+					<? foreach($g1 as $g) {
+						if ($pk->validate($g['gID'])) { ?>
 						<option value="<?=$g['gID']?>"  <? if (is_array($_REQUEST['gID']) && in_array($g['gID'], $_REQUEST['gID'])) { ?> selected="selected" <? } ?>><?=$g['gName']?></option>
-					<? } ?>
+					<? 
+						}
+					} ?>
 				</select>
 			</div>
 		</div>
 		
-		<div class="span5">
+		<div class="span3" style="width: 300px; white-space: nowrap">
 		<?=$form->label('numResults', t('# Per Page'))?>
-		<div class="input">
+		<div class="controls">
 			<?=$form->select('numResults', array(
 				'10' => '10',
 				'25' => '25',
@@ -87,10 +107,10 @@ foreach($searchFieldAttributes as $ak) {
 		
 	</div>
 
-	<a href="javascript:void(0)" onclick="ccm_paneToggleOptions(this)" class="ccm-icon-option-closed"><?=t('Advanced Search')?></a>
+	<a href="javascript:void(0)" onclick="ccm_paneToggleOptions(this)" class="ccm-icon-option-closed"><?=t('Advanced')?></a>
 	<div class="clearfix ccm-pane-options-content">
 		<br/>
-		<table class="zebra-striped ccm-search-advanced-fields" id="ccm-user-search-advanced-fields">
+		<table class="table table-bordered table-striped ccm-search-advanced-fields" id="ccm-user-search-advanced-fields">
 		<tr>
 			<th colspan="2" width="100%"><?=t('Additional Filters')?></th>
 			<th style="text-align: right; white-space: nowrap"><a href="javascript:void(0)" id="ccm-user-search-add-option" class="ccm-advanced-search-add-field"><span class="ccm-menu-icon ccm-icon-view"></span><?=t('Add')?></a></th>
@@ -116,7 +136,7 @@ foreach($searchFieldAttributes as $ak) {
 </form>	
 
 <script type="text/javascript">
-$(function() {
-	ccm_setupUserSearch();
+$(function() { 
+	ccm_setupUserSearch('<?=$searchInstance?>'); 
 });
 </script>

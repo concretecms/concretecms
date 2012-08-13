@@ -5,6 +5,7 @@ $searchFields = array(
 	'' => '** ' . t('Fields'),
 	'keywords' => t('Full Page Index'),
 	'date_added' => t('Date Added'),
+	'theme' => t('Theme'),
 	'last_modified' => t('Last Modified'),
 	'date_public' => t('Public Date'),
 	'owner' => t('Page Owner'),
@@ -55,10 +56,8 @@ foreach($searchFieldAttributes as $ak) {
 		</span>
 
 		<span class="ccm-search-option"  search-field="version_status">
-		<ul class="inputs-list">
-		<li><label><?=$form->radio('cvIsApproved', 0, false)?> <span><?=t('Unapproved')?></label></li>
-		<li><label><?=$form->radio('cvIsApproved', 1, false)?> <span><?=t('Approved')?></span></label></li>
-		</ul>
+		<label class="checkbox"><?=$form->radio('cvIsApproved', 0, false)?> <span><?=t('Unapproved')?></span></label>
+		<label class="checkbox"><?=$form->radio('cvIsApproved', 1, false)?> <span><?=t('Approved')?></span></label>
 		</span>
 			
 		<? if (!$searchDialog) { ?>
@@ -69,12 +68,8 @@ foreach($searchFieldAttributes as $ak) {
 		?>
 		
 		<br/><strong><?=t('Search All Children?')?></strong><br/>
-		<ul class="inputs-list">
-		<li><label><?=$form->radio('cParentAll', 0, false)?> <span><?=t('No')?></label></li>
-		<li><label><?=$form->radio('cParentAll', 1, false)?> <span><?=t('Yes')?></span></label></li>
-		</ul>
-		
-
+		<label class="checkbox"><?=$form->radio('cParentAll', 0, false)?> <span><?=t('No')?></span></label>
+		<label class="checkbox"><?=$form->radio('cParentAll', 1, false)?> <span><?=t('Yes')?></span></label>
 		</span>
 		<? } ?>
 		<span class="ccm-search-option"  search-field="num_children">
@@ -86,13 +81,22 @@ foreach($searchFieldAttributes as $ak) {
 			<input type="text" name="cChildren" value="<?=$req['cChildren']?>" />
 		</span>
 		
+		<span class="ccm-search-option"  search-field="theme">
+			<select name="ptID">
+			<? $themes = PageTheme::getList(); ?>
+			<? foreach($themes as $pt) { ?>
+				<option value="<?=$pt->getThemeID()?>"><?=$pt->getThemeName()?></option>			
+			<? } ?>
+			</select>
+		</span>		
+		
 		<? foreach($searchFieldAttributes as $sfa) { 
 			$sfa->render('search'); ?>
 		<? } ?>
 		
 	</div>
 
-	<form method="get" id="ccm-<?=$searchInstance?>-advanced-search" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/pages/search_results">
+	<form method="get" id="ccm-<?=$searchInstance?>-advanced-search" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/pages/search_results" class="form-horizontal">
 
 	<input type="hidden" name="searchInstance" value="<?=$searchInstance?>" />
 
@@ -116,16 +120,16 @@ foreach($searchFieldAttributes as $ak) {
 		}
 	?>
 
-		<div class="span4">
+		<div class="span3">
 		<?=$form->label('cvName', t('Page Name'))?>
-		<div class="input">
+		<div class="controls">
 			<?=$form->text('cvName', $searchRequest['cvName'], array('style'=> 'width: 120px')); ?>
 		</div>
 		</div>
 
-		<div class="span4">
+		<div class="span3">
 		<?=$form->label('ctID', t('Page Type'))?>
-		<div class="input">
+		<div class="controls">
 			<? 
 			Loader::model('collection_types');
 			$ctl = CollectionType::getList();
@@ -139,9 +143,9 @@ foreach($searchFieldAttributes as $ak) {
 		</div>
 		</div>
 
-		<div class="span5">
+		<div class="span3">
 		<?=$form->label('numResults', t('# Per Page'))?>
-		<div class="input">
+		<div class="controls">
 			<?=$form->select('numResults', array(
 				'10' => '10',
 				'25' => '25',
@@ -158,7 +162,7 @@ foreach($searchFieldAttributes as $ak) {
 	<a href="javascript:void(0)" onclick="ccm_paneToggleOptions(this)" class="ccm-icon-option-<? if (is_array($searchRequest['selectedSearchField']) && count($searchRequest['selectedSearchField']) > 1) { ?>open<? } else { ?>closed<? } ?>"><?=t('Advanced Search')?></a>
 	<div class="clearfix ccm-pane-options-content" <? if (is_array($searchRequest['selectedSearchField']) && count($searchRequest['selectedSearchField']) > 1) { ?>style="display: block" <? } ?>>
 		<br/>
-		<table class="zebra-striped ccm-search-advanced-fields" id="ccm-<?=$searchInstance?>-search-advanced-fields">
+		<table class="table-striped table ccm-search-advanced-fields" id="ccm-<?=$searchInstance?>-search-advanced-fields">
 		<tr>
 			<th colspan="2" width="100%"><?=t('Additional Filters')?></th>
 			<th style="text-align: right; white-space: nowrap"><a href="javascript:void(0)" id="ccm-<?=$searchInstance?>-search-add-option" class="ccm-advanced-search-add-field"><span class="ccm-menu-icon ccm-icon-view"></span><?=t('Add')?></a></th>
@@ -243,7 +247,7 @@ foreach($searchFieldAttributes as $ak) {
 						<br/><strong><?=t('Search All Children?')?></strong><br/>
 
 						<ul class="inputs-list">
-						<li><label><?=$form->radio('_cParentAll', 0, $searchRequest['cParentAll'])?> <span><?=t('No')?></label></li>
+						<li><label><?=$form->radio('_cParentAll', 0, $searchRequest['cParentAll'])?> <span><?=t('No')?></span></label></li>
 						<li><label><?=$form->radio('_cParentAll', 1, $searchRequest['cParentAll'])?> <span><?=t('Yes')?></span></label></li>
 						</ul>
 						</span>

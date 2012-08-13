@@ -4,7 +4,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 // HELPERS
 $bt = Loader::helper('concrete/interface');
 $valt = Loader::helper('validation/token');
-
+$form = Loader::helper("form");
 $alreadyActiveMessage = t('This theme is currently active on your site.');
 
 ?>
@@ -18,7 +18,7 @@ $alreadyActiveMessage = t('This theme is currently active on your site.');
 	
 	?>
     
-    <?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Themes'), false, 'span12 offset2', false);?>
+    <?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Themes'), false, 'span10 offset1', false);?>
     
     <div class="ccm-pane-body">
     
@@ -49,11 +49,11 @@ $alreadyActiveMessage = t('This theme is currently active on your site.');
 	
 	?>
     
-    <?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Themes'), false, 'span12 offset2');?>
+    <?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Themes'), false, 'span10 offset1');?>
 	
 	<h3><?=t('Currently Installed')?></h3>
 	
-	<table width="100%" border="0" cellspacing="0" cellpadding="0" class="zebra-striped">
+	<table width="100%" border="0" cellspacing="0" cellpadding="0" class="table">
 	<?
 	if (count($tArray) == 0) { ?>
 		
@@ -98,15 +98,33 @@ $alreadyActiveMessage = t('This theme is currently active on your site.');
                 </td>
             </tr>
             
-		<? } // END FOREACH ?>
+		<? } ?>
         
         </tbody>
         
-	<? } // END 'ELSE' INSTALLED LISTING ?>
+	<? } ?>
     
     </table>
     
-    <!-- END CURRENTLY INSTALLED -->
+    
+    <form method="post" action="<?=$this->action('save_mobile_theme')?>" class="form-horizontal">
+    <h3><?=t("Mobile Theme")?></h3>
+    <p><?=t("To use a separate theme for mobile browsers, specify it below.")?></p>
+    
+    <div class="control-group">
+    <?=$form->label('MOBILE_THEME_ID', t('Mobile Theme'))?>
+    <div class="controls">
+    	<? $themes[0] = t('** Same as website (default)'); ?>
+    	<? foreach($tArray as $pt) {
+    		$themes[$pt->getThemeID()] = $pt->getThemeName();
+    	} ?>
+    	<?=$form->select('MOBILE_THEME_ID', $themes, Config::get('MOBILE_THEME_ID'))?>
+    	<?=$form->submit('save_mobile_theme', t('Save'))?>
+    </div>
+    </div>
+    </form>
+    <br/><br/>
+    
     
 	<? 
 	if (count($tArray2) > 0) { ?>
@@ -114,7 +132,7 @@ $alreadyActiveMessage = t('This theme is currently active on your site.');
 	<h3><?=t('Themes Available to Install')?></h3>
 	
 
-	<table>
+	<table class="table">
 		<tbody>
 		<? foreach ($tArray2 as $t) { ?>
             <tr>

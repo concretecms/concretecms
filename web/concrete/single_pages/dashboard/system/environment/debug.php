@@ -1,6 +1,6 @@
 <? defined('C5_EXECUTE') or die("Access Denied.");?>
 
-<?php echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Debug Level'), false, 'span12 offset2', false)?>
+<?php echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Debug Level'), false, 'span6 offset3', false)?>
 
 <form method="post" class="form-stacked" id="debug-form" action="<?php echo $this->url('/dashboard/system/environment/debug', 'update_debug')?>">
 <div class="ccm-pane-body">

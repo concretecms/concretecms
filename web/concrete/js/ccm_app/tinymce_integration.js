@@ -53,10 +53,10 @@ ccm_editorSitemapOverlay = function() {
 
     $.fn.dialog.open({
         title: ccmi18n_sitemap.choosePage,
-        href: CCM_TOOLS_PATH + '/sitemap_overlay.php?sitemap_mode=select_page&callback=ccm_editorSelectSitemapNode',
-        width: '550',
+        href: CCM_TOOLS_PATH + '/sitemap_search_selector.php?sitemap_select_mode=select_page&callback=ccm_editorSelectSitemapNode',
+        width: '90%',
         modal: false,
-        height: '400'
+        height: '70%'
     });
 
     

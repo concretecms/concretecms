@@ -1,10 +1,8 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-Loader::library('search');
 $sh = Loader::helper('concrete/dashboard/sitemap');
 
 if (isset($_REQUEST['reveal'])) {
-	$nc = new Collection($_REQUEST['reveal']);
 	$nc = Page::getByID($_REQUEST['reveal']);
 	$nh = Loader::helper('navigation');
 	$cArray = $nh->getTrailToCollection($nc);
@@ -26,7 +24,7 @@ $listHTML = $sh->outputRequestHTML($instanceID, 'full', false, $nodes);
 		ccmSitemapLoad('<?=$instanceID?>', 'full');
 	});
 </script>
-<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Sitemap'), t('The sitemap allows you to view your site as a tree and easily organize its hierarchy.'), 'span14 offset1', false);?>
+<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Sitemap'), t('The sitemap allows you to view your site as a tree and easily organize its hierarchy.'), 'span10 offset1', false);?>
 <div class="ccm-pane-options">
 	<a href="javascript:void(0)" onclick="ccm_paneToggleOptions(this)" class="ccm-icon-option-<? if ($_SESSION['dsbSitemapShowSystem'] == 1) { ?>open<? } else { ?>closed<? } ?>"><?=t('Options')?></a>
 	<div class="ccm-pane-options-content" <? if ($_SESSION['dsbSitemapShowSystem'] == 1) { ?> style="display: block" <? } ?>>

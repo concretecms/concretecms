@@ -43,6 +43,10 @@ $(function() {
 $hih = Loader::helper("concrete/interface/help");
 $blockTypes = $hih->getBlockTypes();
 $cont = $bt->getController();
+if ($b->getBlockTypeHandle() == BLOCK_HANDLE_SCRAPBOOK_PROXY) {
+	$bx = Block::getByID($b->getController()->getOriginalBlockID());
+	$cont = $bx->getController();
+}
 
 if (isset($blockTypes[$bt->getBlockTypeHandle()])) {
 	$help = $blockTypes[$bt->getBlockTypeHandle()];
@@ -65,7 +69,7 @@ if (isset($help)) { ?>
 	<div class="<?=$cont->getBlockTypeWrapperClass();?>">
 <? } ?>
 
-<form method="post" id="ccm-block-form" class="validate" action="<?=$b->getBlockEditAction()?>&rcID=<?=intval($rcID)?>" enctype="multipart/form-data">
+<form method="post" id="ccm-block-form" class="validate form-horizontal" action="<?=$b->getBlockEditAction()?>&rcID=<?=intval($rcID)?>" enctype="multipart/form-data">
 
 <input type="hidden" name="ccm-block-form-method" value="REGULAR" />
 
