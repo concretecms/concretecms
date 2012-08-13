@@ -15,10 +15,17 @@ if ($_POST['task'] == 'delete_pages') {
 			$c = Page::getByID($cID);
 			$cp = new Permissions($c);
 			$children = $c->getNumChildren();
-			if ($children == 0 || $cp->canAdminPage()) {
-				$c->markPendingAction('DELETE');
-				if ($cp->canApproveCollection()) {
-					$c->delete();
+			if ($children == 0 || $cp->canDeletePage()) {
+				if ($cp->canApprovePageVersions()) { 
+					if (ENABLE_TRASH_CAN) {
+						$c->moveToTrash();
+					} else {
+						$c->delete();
+					}
+				} else { 
+					$pkr = new DeletePagePageWorkflowRequest();
+					$pkr->setRequestedPage($c);
+					$pkr->trigger();
 				}
 			} else {
 				$json['error'] = t('Unable to delete one or more pages.');
@@ -45,12 +52,12 @@ if (is_array($_REQUEST['cID'])) {
 $pcnt = 0;
 foreach($pages as $c) { 
 	$cp = new Permissions($c);
-	if ($cp->canDeleteCollection()) {
+	if ($cp->canDeletePage()) {
 		$pcnt++;
 	}
 }
 
-$searchInstance = $_REQUEST['searchInstance'];
+$searchInstance = Loader::helper('text')->entities($_REQUEST['searchInstance']);
 
 ?>
 <div class="ccm-ui">
@@ -63,7 +70,7 @@ $searchInstance = $_REQUEST['searchInstance'];
 
 	<form id="ccm-<?=$searchInstance?>-delete-form" method="post" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/pages/delete">
 	<?=$form->hidden('task', 'delete_pages')?>
-	<table border="0" cellspacing="0" cellpadding="0" width="100%" class="zebra-striped">
+	<table border="0" cellspacing="0" cellpadding="0" width="100%" class="table table-striped">
 	<tr>
 		<th><?=t('Name')?></th>
 		<th><?=t('Page Type')?></th>
@@ -74,7 +81,7 @@ $searchInstance = $_REQUEST['searchInstance'];
 	<? foreach($pages as $c) { 
 		$cp = new Permissions($c);
 		$c->loadVersionObject();
-		if ($cp->canDeleteCollection()) { ?>
+		if ($cp->canDeletePage()) { ?>
 		
 		<?=$form->hidden('cID[]', $c->getCollectionID())?>		
 		

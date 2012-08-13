@@ -25,6 +25,9 @@ $dashboard = Page::getByPath("/dashboard");
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <?
+Loader::library('3rdparty/mobile_detect');
+$md = new Mobile_Detect();
+
 $html = Loader::helper('html');
 $v = View::getInstance();
 if (!isset($enableEditing) || $enableEditing == false) {
@@ -42,11 +45,15 @@ $v->addFooterItem($html->javascript('ccm.app.js'));
 $v->addFooterItem(Loader::helper('html')->javascript('tiny_mce/tiny_mce.js'));
 
 if (LANGUAGE != 'en') {
-	$v->addHeaderItem($html->javascript('i18n/ui.datepicker-'.LANGUAGE.'.js'));
+	$v->addFooterItem($html->javascript('i18n/ui.datepicker-'.LANGUAGE.'.js'));
 }
 
 // Require CSS
 $v->addHeaderItem($html->css('ccm.app.css'));
+if ($md->isMobile() == true) {
+	$v->addHeaderItem($html->css('ccm.app.mobile.css')); ?>
+	<?		
+}
 $v->addHeaderItem($html->css('ccm.dashboard.css'));
 $v->addHeaderItem($html->css('jquery.ui.css'));
 
@@ -59,8 +66,29 @@ $v->addHeaderItem($disp);
 Loader::element('header_required', array('disableTrackingCode' => true));
 $backgroundImage = Loader::helper('concrete/dashboard')->getDashboardBackgroundImage();
 ?>
-
 <script type="text/javascript">
+	var lastSizeCheck = 9999999;		
+	ccm_testFixForms = function() {
+		if ($(window).width() <= 560 && lastSizeCheck > 560) {
+			ccm_fixForms();
+		} else if ($(window).width() > 560 && lastSizeCheck <= 560) {
+			ccm_fixForms(true);
+		}
+		lastSizeCheck = $(window).width();
+	}
+	ccm_fixForms = function(horizontal) {
+		$('form').each(function() {
+			var f = $(this);
+			if (horizontal) {
+				if (f.attr('original-class') == 'form-horizontal') {
+					f.attr('class', '').addClass('form-horizontal');
+				}
+			} else {
+				f.removeClass('form-horizontal');
+			}
+		});
+	}
+
 	$(function() {
 		<? if ($backgroundImage->image) { ?>
 		    $.backstretch("<?=$backgroundImage->image?>" <? if (!$_SESSION['dashboardHasSeenImage']) { ?>,  {speed: 750}<? } ?>);
@@ -68,6 +96,14 @@ $backgroundImage = Loader::helper('concrete/dashboard')->getDashboardBackgroundI
 	    <? if ($backgroundImage->checkData) { ?>
 		    ccm_getDashboardBackgroundImageData('<?=$backgroundImage->filename?>', <? if ($backgroundImage->displayCaption) { ?> true <? } else { ?> false <? } ?>);
 		<? } ?>
+
+		$(window).on('resize', function() {
+			ccm_testFixForms();
+		});
+		$('form').each(function() {
+			$(this).attr('original-class', $(this).attr('class'));
+		});
+		ccm_testFixForms();
 	});
 </script>
 
@@ -87,32 +123,33 @@ $backgroundImage = Loader::helper('concrete/dashboard')->getDashboardBackgroundI
 <div id="ccm-toolbar">
 <ul id="ccm-main-nav">
 <li id="ccm-logo-wrapper"><?=Loader::helper('concrete/interface')->getToolbarLogoSRC()?></li>
-<li><a class="ccm-icon-back ccm-menu-icon" href="<?=$this->url('/')?>"><?=t('Return to Website')?></a></li>
+<li><a class="ccm-icon-back ccm-menu-icon" href="<?=$this->url('/')?>"><? if ($md->isMobile()) { ?><?=t('Back')?><? } else { ?><?=t('Return to Website')?><? } ?></a></li>
 <? if (Loader::helper('concrete/interface')->showWhiteLabelMessage()) { ?>
 	<li id="ccm-white-label-message"><?=t('Powered by <a href="%s">concrete5</a>.', CONCRETE5_ORG_URL)?></li>
 <? } ?>
 </ul>
 
 <ul id="ccm-system-nav">
-<li><a class="ccm-icon-dashboard ccm-menu-icon" id="ccm-nav-dashboard" href="<?=$this->url('/dashboard')?>"><?=t('Dashboard')?></a></li>
+<li><a class="ccm-icon-dashboard ccm-menu-icon" id="ccm-nav-dashboard<? if ($md->isMobile()) { ?>-mobile<? } ?>" href="<?=$this->url('/dashboard')?>"><?=t('Dashboard')?></a></li>
 <li id="ccm-nav-intelligent-search-wrapper"><input type="search" placeholder="<?=t('Intelligent Search')?>" id="ccm-nav-intelligent-search" tabindex="1" /></li>
-<li><a id="ccm-nav-sign-out" class="ccm-icon-sign-out ccm-menu-icon" href="<?=$this->url('/login', 'logout')?>"><?=t('Sign Out')?></a></li>
+<? if ($md->isMobile() == false) { ?>
+	<li><a id="ccm-nav-sign-out" class="ccm-icon-sign-out ccm-menu-icon" href="<?=$this->url('/login', 'logout')?>"><?=t('Sign Out')?></a></li>
+<? } ?>
 </ul>
 
 </div>
 <?
 $_ih = Loader::helper('concrete/interface');
-print $_ih->getQuickNavigationBar();
-
 $dh = Loader::helper('concrete/dashboard');
-print $dh->getDashboardAndSearchMenus();
+$html = $dh->getDashboardAndSearchMenus();
+print $dh->addQuickNavToMenus($html);
 ?>
 </div>
 <div id="ccm-dashboard-page">
 
 <div id="ccm-dashboard-content">
 
-	<div class="ccm-dashboard-page-container">
+	<div class="container">
 
 
 	<? if (isset($error)) { ?>
@@ -139,6 +176,11 @@ print $dh->getDashboardAndSearchMenus();
 	
 	if (isset($message)) { ?>
 		<div class="ccm-ui" id="ccm-dashboard-result-message">
-			<div class="message alert-message info success"><?=nl2br(Loader::helper('text')->entities($message))?></div>
+			<div class="alert alert-info"><button type="button" class="close" data-dismiss="alert">×</button><?=nl2br(Loader::helper('text')->entities($message))?></div>
+		</div>
+	<? 
+	} else if (isset($success)) { ?>
+		<div class="ccm-ui" id="ccm-dashboard-result-message">
+			<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert">×</button><?=nl2br(Loader::helper('text')->entities($success))?></div>
 		</div>
 	<? } ?>

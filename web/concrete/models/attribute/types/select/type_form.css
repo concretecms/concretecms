@@ -1,4 +1,4 @@
-#attributeValuesWrap {margin-top:4px; width:400px}
+#attributeValuesWrap {margin-top:4px; width: 100%}
 #attributeValuesWrap .akSelectValueWrap{ margin-bottom:2px; border:1px solid #eee; padding:2px;}
 #attributeValuesWrap .akSelectValueWrap:hover{border:1px solid #ddd; }
 #attributeValuesWrap .akSelectValueWrap .leftCol{float:left; }

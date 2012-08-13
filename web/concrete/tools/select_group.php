@@ -6,6 +6,13 @@ $tp = new TaskPermission();
 if (!$tp->canAccessGroupSearch()) { 
 	echo(t("You have no access to groups."));
 } else { 	
+
+	if ($_REQUEST['filter'] == 'assign') { 
+		$pk = PermissionKey::getByHandle('assign_user_groups');
+		if (!$pk->validate()) {
+			die(t('You have no access to assign groups.'));
+		}
+	}
 	
 	if (!$_REQUEST['group_submit_search']) { ?>
 	<div id="ccm-group-search-wrapper">
@@ -16,6 +23,9 @@ if (!$tp->canAccessGroupSearch()) {
 	$gl = new GroupSearch();
 	if ($_REQUEST['include_core_groups'] == 1) {
 		$gl->includeAllGroups();
+	}
+	if ($_REQUEST['filter'] == 'assign') {
+		$gl->filterByAllowedPermission($pk);
 	}
 	if (isset($_GET['gKeywords'])) {
 		$gl->filterByKeywords($_GET['gKeywords']);
@@ -84,7 +94,7 @@ if (!$tp->canAccessGroupSearch()) {
 	
 	<script type="text/javascript">
 	$(function() {
-		ccm_setupGroupSearch();
+		ccm_setupGroupSearch('<?=Loader::helper('text')->entities($_REQUEST['callback'])?>');
 	});
 	</script>
 <? } ?>

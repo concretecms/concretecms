@@ -1,7 +1,7 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?>
 
 <div class="row">
-<div class="span14 offset1 columns">
+<div class="span12">
 <div class="ccm-pane">
 
 

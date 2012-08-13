@@ -80,7 +80,7 @@ if ($ctEditMode) {
 	
     <?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Edit Page Type').'<span class="label" style="position:relative;top:-3px;left:12px;">'.t('* required field').'</span>', false, false, false);?>
     
-    <form method="post" id="update_page_type" action="<?=$this->url('/dashboard/pages/types/')?>">
+    <form class="form-horizontal" method="post" id="update_page_type" action="<?=$this->url('/dashboard/pages/types/')?>">
 	<?=$valt->output('update_page_type')?>
     <?=$form->hidden('ctID', $_REQUEST['ctID']); ?>
     <?=$form->hidden('task', 'edit'); ?>
@@ -88,7 +88,7 @@ if ($ctEditMode) {
     
 	<div class="ccm-pane-body">
 		
-        <table border="0" cellspacing="0" cellpadding="0">
+        <table class="table" border="0" cellspacing="0" cellpadding="0">
             <thead>
                 <tr>
                     <th class="header"><?=t('Name')?> <span class="required">*</span></th>
@@ -107,7 +107,7 @@ if ($ctEditMode) {
 			</tbody>
 		</table>
         
-        <table border="0" cellspacing="0" cellpadding="0">
+        <table class="table" border="0" cellspacing="0" cellpadding="0">
             <thead>
                 <tr>
                     <th class="subheader">
@@ -141,7 +141,7 @@ if ($ctEditMode) {
                                     }
                                     $first = false;
                                     ?>
-                                    <label style="white-space: nowrap; margin: 10px 20px 10px 0; float:left;">
+                                    <label class="checkbox inline">
                                     <input type="radio" name="ctIcon" value="<?= $ic->getFileID() ?>" style="vertical-align: middle" <?=$checked?> />
                                     <img src="<?= $fv->getRelativePath(); ?>" width="<?=COLLECTION_TYPE_ICON_WIDTH?>" height="<?=COLLECTION_TYPE_ICON_HEIGHT?>" style="vertical-align: middle" />
                                     </label>
@@ -153,7 +153,7 @@ if ($ctEditMode) {
                                     }
                                     $first = false;
                                     ?>
-                                    <label style="white-space: nowrap; margin: 10px 20px 10px 0; float:left;">
+                                    <label class="checkbox inline">
                                     <input type="radio" name="ctIcon" value="<?= $ic ?>" style="vertical-align: middle" <?=$checked?> />
                                         <img src="<?=REL_DIR_FILES_COLLECTION_TYPE_ICONS.'/'.$ic;?>" width="<?=COLLECTION_TYPE_ICON_WIDTH?>" height="<?=COLLECTION_TYPE_ICON_HEIGHT?>" style="vertical-align: middle" />
                                     </label>
@@ -167,7 +167,7 @@ if ($ctEditMode) {
 			</tbody>
 		</table>
         
-        <table border="0" cellspacing="0" cellpadding="0">
+        <table class="table" border="0" cellspacing="0" cellpadding="0">
             <thead>
                 <tr>
                     <th colspan="3" class="subheader"><?= t('Default Attributes'); ?></th>
@@ -242,7 +242,7 @@ if ($ctEditMode) {
 		<br/><strong><?=t('No page types found.')?></strong><br/><br>
 	<? } else { ?>
 	
-	<table border="0" cellspacing="0" cellpadding="0" class="zebra-striped">
+	<table border="0" cellspacing="0" cellpadding="0" class="table table-bordered table-striped">
     	<thead>
             <tr>
                 <th width="100%"><?=t('Name')?></th>

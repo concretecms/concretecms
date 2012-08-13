@@ -60,7 +60,7 @@ $("#ccm-file-import-tabs a").click(function() {
 });
 </script>
 
-<div style="position: absolute; top: 115px; right: 15px;" id="ccm-file-add-multiple-outer"><span id="ccm-file-add-multiple-spanButtonPlaceHolder"></span></div>
+<div style="position: absolute; top: 107px; right: 15px;" id="ccm-file-add-multiple-outer"><span id="ccm-file-add-multiple-spanButtonPlaceHolder"></span></div>
 
 <div id="ccm-file-add-multiple-tab">
 	<div style="float: right">
@@ -191,7 +191,7 @@ $(function() {
 <form id="form1" action="<?=DISPATCHER_FILENAME?>" method="post" enctype="multipart/form-data">
 
 	
-		<table border="0" width="100%" cellspacing="0" cellpadding="0" id="ccm-file-add-multiple-list">
+		<table border="0" width="100%" cellspacing="0" cellpadding="0" id="ccm-file-add-multiple-list" class="table table-striped">
 		<tr>
 			<th colspan="2"><?=t('Upload Queue');?></th>
 		</tr>
@@ -265,7 +265,7 @@ $(function() {
 <form id="ccm-file-manager-multiple-incoming" method="post" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/importers/incoming">
 	<input type="hidden" name="searchInstance" value="<?=$searchInstance?>" />
     <input type="hidden" name="ocID" value="<?=$ocID?>" />
-		<table id="incoming_file_table" width="100%" cellpadding="0" cellspacing="0">
+		<table id="incoming_file_table" class="table table-bordered" width="100%" cellpadding="0" cellspacing="0">
 			<tr>
 				<th width="10%" valign="middle" class="center theader"><input type="checkbox" id="check_all_imports" name="check_all_imports" onclick="ccm_alSelectMultipleIncomingFiles(this);" value="" /></td>
 				<th width="20%" valign="middle" class="center theader"></td>

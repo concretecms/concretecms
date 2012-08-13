@@ -50,9 +50,8 @@ function FileProgress(file, targetID) {
 		this.fileProgressWrapper.appendChild(this.fileProgressElement2);
 		*/
 
-		$("#" + targetID).append('<tr id="' + this.fileProgressID + '"><td><div style="word-wrap: break-word; width: 150px">' + file.name + '</div></td><td width="100%"><div style="width: 250px !important" class="ccm-file-manager-progress-bar-pending">' + ccmi18n_filemanager.pending + '</div><div class="ccm-file-manager-progress-bar" style="display: none"></div></tr>');
+		$("#" + targetID).append('<tr id="' + this.fileProgressID + '"><td><div style="word-wrap: break-word; width: 150px">' + file.name + '</div></td><td width="100%"><div style="width: 250px !important" class="ccm-file-manager-progress-bar-pending">' + ccmi18n_filemanager.pending + '</div><div class="ccm-file-manager-progress-bar" style="display: none"><div class="progress progress-striped active"><div class="bar" style="width: 0%;"></div></div></div></tr>');
 		this.fileProgressWrapper = $("#" + this.fileProgressID).get(0);
-		$("#" + this.fileProgressID).find('div.ccm-file-manager-progress-bar').progressbar();
 		
 //		document.getElementById(targetID).appendChild(this.fileProgressWrapper);
 	} else {
@@ -95,7 +94,7 @@ FileProgress.prototype.reset = function () {
 };
 
 FileProgress.prototype.setProgress = function (percentage) {
-	$(this.fileProgressElement).progressbar('option', 'value', percentage);
+	$(this.fileProgressElement).find('.bar').css('width', percentage + "%");
 	this.appear();	
 };
 FileProgress.prototype.setComplete = function () {

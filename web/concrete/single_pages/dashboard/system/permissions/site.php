@@ -50,7 +50,7 @@ $form = Loader::helper('form');
 				<?foreach($gArray as $g):?>
 				<li>
 					<label>
-						<?=$form->checkbox('gID[]', $g->getGroupID(), $g->canWrite())?>
+						<?=$form->checkbox('gID[]', $g->getGroupID(), in_array($g->getGroupID(), $editAccess))?>
 						<span><?=$g->getGroupName()?></span>
 					</label>
 				</li>

@@ -16,40 +16,6 @@
  * @license    http://www.concrete5.org/license/     MIT License
  */
 defined('C5_EXECUTE') or die("Access Denied.");
-class JsonHelper {
-
-	
-	/** 
-	 * Decodes a JSON string
-	 * @param string $string
-	 * @return string
-	 */
-	public function decode($string) {
-		if (function_exists('json_decode')) {
-			return json_decode($string);
-		} else {
-			Loader::library('3rdparty/JSON/JSON');
-			$sjs = new Services_JSON();
-			return $sjs->decode($string);
-		}
-	}
-	
-	
-	/** 
-	 * Encodes a data structure into a JSON string
-	 * @param string $mixed
-	 * @return string
-	 */
-	public function encode($mixed) {
-		if (function_exists('json_encode')) {
-			return json_encode($mixed);
-		} else {
-			Loader::library('3rdparty/JSON/JSON');
-			$sjs = new Services_JSON();
-			return $sjs->encode($mixed);
-		}
-	}
-	
-
+class JsonHelper extends Concrete5_Helper_Json {
 
 }

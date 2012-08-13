@@ -12,7 +12,7 @@ function shutdownRescan() {
 	}
 }
 
-$searchInstance = $_REQUEST['searchInstance'];
+$searchInstance = Loader::helper('text')->entities($_REQUEST['searchInstance']);
 register_shutdown_function('shutdownRescan');
 
 $u = new User();
@@ -23,7 +23,7 @@ $fcnt = 0;
 if(is_array($_REQUEST['fID'])) foreach($_REQUEST['fID'] as $fID) {
 	$f = File::getByID($fID);
 	$fp = new Permissions($f);
-	if ($fp->canWrite()) {
+	if ($fp->canEditFileContents()) {
 		$fcnt++;
 		$fv = $f->getApprovedVersion();
 		$resp = $fv->refreshAttributes();

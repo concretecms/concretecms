@@ -1,6 +1,7 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?>
 
 <h1><?=t('Welcome Back')?></h1>
+<br/>
 
 <? if (version_compare($latest_version, APP_VERSION, '>')) { ?>
 <p><span class="label notice"><?=t('concrete5 Update')?></span> <?=t('The latest version of concrete5 is <strong>%s</strong>. You are currently running concrete5 version <strong>%s</strong>.', $latest_version, APP_VERSION)?> <a class="" href="<?=$this->url('/dashboard/system/backup_restore/update')?>"><?=t('Learn more and update.')?></a></p>

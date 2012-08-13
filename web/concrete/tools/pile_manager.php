@@ -16,7 +16,7 @@ if($scrapbookName) $scrapbookHelper->setDefault($scrapbookName);
 $c = Page::getByID($_REQUEST['cID']);
 // add a block to a pile	
 $cp = new Permissions($c);
-if (!$cp->canRead()) {
+if (!$cp->canViewPage()) {
 	exit;
 }
 
@@ -34,7 +34,7 @@ if (($_REQUEST['btask'] == 'add' || $_REQUEST['ctask'] == 'add') && $scrapbookNa
 			$b = Block::getByID($bi->getOriginalBlockID());
 		}
 		$ap = new Permissions($a);
-		if (!$ap->canRead()) {
+		if (!$ap->canViewArea()) {
 			exit;
 		}
 		$obj = &$b;
@@ -66,7 +66,7 @@ if (($_REQUEST['btask'] == 'add' || $_REQUEST['ctask'] == 'add') && $scrapbookNa
 		case 'add_contents':
 			$c = Page::getByID($_REQUEST['cID']);
 			$cp = new Permissions($c);
-			if (!$cp->canRead()) {
+			if (!$cp->canViewPage()) {
 				exit;
 			}
 			
@@ -96,12 +96,12 @@ if (($_REQUEST['btask'] == 'add' || $_REQUEST['ctask'] == 'add') && $scrapbookNa
 		case 'add_prepare':
 			$c = Page::getByID($_REQUEST['cID']);
 			$cp = new Permissions($c);
-			if (!$cp->canRead()) {
+			if (!$cp->canViewPage()) {
 				exit;
 			}
 			$a = Area::get($c, $_REQUEST['arHandle']);
 			$ap = new Permissions($a);
-			if (!$ap->canRead() || !$ap->canAddBlocks()) {
+			if (!$ap->canViewArea() || !$ap->canAddBlocks()) {
 				exit;
 			}
 			break;

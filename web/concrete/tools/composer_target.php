@@ -29,7 +29,7 @@ switch($ct->getCollectionTypeComposerPublishMethod()) {
 		?>
 	
 	<h1><?=t("Where do you want to publish this page?")?></h1>
-	<ul class="icon-select-list">
+	<ul class="item-select-list">
 	<? foreach($pages as $p) { 
 		$trail = $navigation->getTrailToCollection($p);
 		$crumbs = array();
@@ -40,7 +40,7 @@ switch($ct->getCollectionTypeComposerPublishMethod()) {
 			}
 		}
 		?>
-		<li class="icon-select-page"><a href="javascript:void(0)" onclick="<?=$function?>(<?=$p->getCollectionID()?>)"><?=$p->getCollectionName()?></a>
+		<li class="item-select-page"><a href="javascript:void(0)" onclick="<?=$function?>(<?=$p->getCollectionID()?>)"><?=$p->getCollectionName()?></a>
 			<div class="ccm-note" style="padding-left: 8px;"><?php echo implode(" &gt; ",$crumbs)?></div>
 		</li>
 	<? } ?>

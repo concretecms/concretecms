@@ -1,5 +1,5 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?>
-<?php echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Cache &amp; Speed Settings'), false, 'span12 offset2', false)?>
+<?php echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Cache &amp; Speed Settings'), false, 'span10 offset1', false)?>
 
 <form method="post" id="update-cache-form" action="<?php echo $this->url('/dashboard/system/optimization/cache', 'update_cache')?>">
     <div class="ccm-pane-body">
@@ -13,6 +13,18 @@
             </label>
             <label>
                 <input type="radio" name="ENABLE_CACHE" value="1" <?php  if (ENABLE_CACHE == true) { ?> checked <?php  } ?> />
+                <span><?php echo t('On - Helps speed up a live site.')?></span>
+            </label>
+        </div>
+
+        <h3><?php echo t('Overrides Cache')?></h3>
+    	<div class="clearfix inputs-list">
+            <label>
+                <input type="radio" name="ENABLE_OVERRIDE_CACHE" value="0" <?php  if (ENABLE_OVERRIDE_CACHE == false) { ?> checked <?php  } ?> />
+                <span><?php echo t('Off - Good for development.')?></span>
+            </label>
+            <label>
+                <input type="radio" name="ENABLE_OVERRIDE_CACHE" value="1" <?php  if (ENABLE_OVERRIDE_CACHE == true) { ?> checked <?php  } ?> />
                 <span><?php echo t('On - Helps speed up a live site.')?></span>
             </label>
         </div>

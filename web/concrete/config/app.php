@@ -12,6 +12,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
 if (!defined('ENABLE_CACHE')) {
 	Config::getOrDefine('ENABLE_CACHE', true); 
 }
+if (!defined('ENABLE_OVERRIDE_CACHE')) {
+	Config::getOrDefine('ENABLE_OVERRIDE_CACHE', false); 
+}
+
 if (!ENABLE_CACHE) {
 	Cache::disableCache();
 }

@@ -12,16 +12,19 @@ echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Sing
 		}?>
 		<form class="form-stacked" method="post" id="add_static_page_form" action="<?php echo $this->url('/dashboard/pages/single')?>">
 			<?php echo $this->controller->token->output('add_single_page')?>
-			<label for="pageURL"><?php echo t('The page you want to add is available at:')?></label>
+			<div class="control-group">
+			<label for="pageURL" class="control-label"><?php echo t('The page you want to add is available at:')?></label>
+			<div class="controls">
 			<div class="input-prepend">
-				<span class="add-on"><?php echo $base?>/</span>
+				<span class="add-on"><?php echo $base?>/</span><input type="text" name="pageURL" value="<?php echo $this->post('pageURL')?>" class="span4" />
 			</div>
-			<input type="text" name="pageURL" value="<?php echo $this->post('pageURL')?>" class="span5" />
-			<?php print $ih->submit(t('Add'), 'add_static_page_form', 'left');?>
+				<button class="btn" type="submit"?><?=t('Add')?></button>
+			</div>
+			</div>
 
 		</form>
 		<h3><?php echo t('Already Installed')?></h3>
-		<table border="0" cellspacing="1" cellpadding="0" class="zebra-striped">
+		<table border="0" cellspacing="1" cellpadding="0" class="table table-striped">
 			<thead>
 				<tr>
 					<th class="subheader" width="100%"><?php echo t('Name')?></th>

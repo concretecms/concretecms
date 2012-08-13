@@ -1,20 +1,6 @@
 ccm_closeDashboardPane = function(r) {
-	var accepter = $('#ccm-recent-page-' + CCM_CID);
-	var l = $(r);
-	ccm_showQuickNav(function() { 
-		var title = l.parent().parent().parent().find('h3');
-		title.css('display','inline');
-		$(r).closest('div.ccm-pane').fadeOut(120, 'easeOutExpo');
-		title.effect("transfer", { to: accepter, 'easing': 'easeOutExpo'}, 600, function() {
-			accepter.hide().css('visibility','visible').fadeIn(240, 'easeInExpo');			
-			title.css('display','block');
-			ccm_quickNavTimer = setTimeout(function() {
-				ccm_hideQuickNav();
-			}, 1000);
-		});
-	});
+	$(r).closest('div.ccm-pane').fadeOut(120, 'easeOutExpo');
 }
-
 
 ccm_getDashboardBackgroundImageData = function(image, display) {
 	$.getJSON(CCM_TOOLS_PATH + '/dashboard/get_image_data', {
@@ -36,14 +22,50 @@ ccm_getDashboardBackgroundImageData = function(image, display) {
 	});
 }
 
+ccm_dashboardEqualizeMenus = function() {
+	if ($(window).width() < 560) {
+		$('div.dashboard-icon-list div.well').css('visibility', 'visible');
+		return false;
+	}
+	var j = -1;
+	var i;
+	var pos = 0;
+	var menus = new Array();
+	$('ul.nav-list').each(function() {		
+		if ($(this).position().top != pos) {
+			j++;
+			menus[j] = new Array();
+		}
+		
+		menus[j].push($(this));
+		pos = $(this).position().top;
+	});
+	
+	for (i = 0; i < menus.length; i++) {
+		var h = 0;
+		for (j = 0; j < menus[i].length; j++) {
+			var mx = menus[i][j];
+			if (mx.height() > h) {
+				h = mx.height();
+			}
+		}	
+		for (j = 0; j < menus[i].length; j++) {
+			var mx = menus[i][j];
+			mx.css('height', h);
+		}
+	}
+	$('div.dashboard-icon-list div.well').css('visibility', 'visible');
+}
+
 $(function() {
 	ccm_activateToolbar();
-	$("#ccm-page-help,#ccm-page-navigate-pages").popover({content: function() {
+	
+	$("#ccm-page-help").popover({content: function() {
 		var id = $(this).attr('id') + '-content';
 		return $('#' + id).html();
 		
-	}, placement: 'below', html: true, trigger: 'manual'});
-	$('.tooltip').twipsy({placement: 'below'});
+	}, placement: 'bottom', html: true});
+	$('.launch-tooltip').tooltip({placement: 'bottom'});
 	if ($('#ccm-dashboard-result-message').length > 0) { 
 		if ($('.ccm-pane').length > 0) { 
 			var pclass = $('.ccm-pane').parent().attr('class');
