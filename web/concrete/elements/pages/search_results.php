@@ -19,7 +19,7 @@ if (isset($_REQUEST['searchInstance'])) {
 }
 ?>
 
-<div id="ccm-<?=$searchInstance?>-search-results" class="ccm-file-list">
+<div id="ccm-<?=$searchInstance?>-search-results" class="ccm-page-list">
 
 <? if (!$searchDialog) { ?>
 
