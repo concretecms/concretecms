@@ -212,9 +212,9 @@ class Concrete5_Library_ItemList {
 			if (!$paginator->hasNextPage()) {
 				$nextClass = 'disabled';
 			}
-			$html .= '<li class="' . $prevClass . '">' . $paginator->getPrevious() . '</li>';
+			$html .= '<li class="' . $prevClass . '">' . $paginator->getPrevious(false, 'a') . '</li>';
 			$html .= $paginator->getPages('li');
-			$html .= '<li class="' . $nextClass . '">' . $paginator->getNext() . '</li>';
+			$html .= '<li class="' . $nextClass . '">' . $paginator->getNext(false, 'a') . '</li>';
 			$html .= '</ul></div>';
 		}
 		if (isset($html)) {

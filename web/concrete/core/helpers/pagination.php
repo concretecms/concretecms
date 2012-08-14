@@ -154,14 +154,14 @@ class Concrete5_Helper_Pagination {
 		}
 	}
 	
-	function getNext($linkText = false){
+	function getNext($linkText = false, $wrapper = 'span'){
 		if (!$linkText) {
 			$linkText = t('Next') . ' &raquo;';
 		}
 		if($this->number_of_pages==1) return;		
 		//if not last page
 		if (!$this->hasNextPage())
-			 return '<span class="'.$this->classOff.'" href="#">'.$linkText.'</span>';
+			 return '<' . $wrapper . ' class="'.$this->classOff.'" href="#">'.$linkText.'</' . $wrapper . '>';
 		 else{
 			$linkURL=str_replace("%pageNum%", $this->getNextInt()+1, $this->URL);
 			return '<a class="'.$this->classOn.'" href="'.$linkURL.'" '.$this->getJSFunctionCall($this->getNextInt()+1).'>'.$linkText.'</a>'; 	
@@ -173,14 +173,14 @@ class Concrete5_Helper_Pagination {
 		return $this->current_page+1; 	
 	}			
 	
-	public function getPrevious($linkText = false){
+	public function getPrevious($linkText = false, $wrapper = 'span'){
 		if (!$linkText) {
 			$linkText = '&laquo; ' . t('Previous');
 		}
 		if($this->number_of_pages==1) return;
 		//if not first page
 		if ($this->current_page=="0") 
-			 return '<span class="'.$this->classOff.'" href="#">'.$linkText.'</span>';
+			 return '<' . $wrapper . ' class="'.$this->classOff.'" href="#">'.$linkText.'</' . $wrapper . '>';
 		else{
 			$linkURL=str_replace("%pageNum%", $this->getPreviousInt()+1, $this->URL);
 			return '<a class="'.$this->classOn.'" href="'.$linkURL.'" '.$this->getJSFunctionCall($this->getPreviousInt()+1).'>'.$linkText.'</a>';
