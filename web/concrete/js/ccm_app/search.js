@@ -53,11 +53,12 @@ ccm_deactivateSearchResults = function(searchType) {
 		obj = $("#ccm-search-fields-submit");
 	}
 	obj.attr('disabled', true);
-	var obj = $("#ccm-" + searchType + "-search-loading");
+	var obj = $("#ccm-" + searchType + "-search-results table.ccm-results-list");
 	if (obj.length == 0 || searchType == null) {
-		obj = $("#ccm-search-loading");
+		obj = $("#ccm-search-results");
 	}
-	obj.show();
+	obj.css('opacity', 0.4);
+	jQuery.fn.dialog.showLoader();
 }
 
 ccm_activateSearchResults = function(searchType) {
@@ -72,11 +73,12 @@ ccm_activateSearchResults = function(searchType) {
 		});
 	}
 	$('.dialog-launch').dialog();
-	var obj = $("#ccm-" + searchType + "-search-loading");
+	var obj = $("#ccm-" + searchType + "-search-results table.ccm-results-list");
 	if (obj.length == 0 || searchType == null) {
-		obj = $("#ccm-search-loading");
+		obj = $("#ccm-search-results");
 	}
-	obj.hide();
+	obj.css('opacity', 1);
+	jQuery.fn.dialog.hideLoader();
 	var obj = $("#ccm-" + searchType + "-search-fields-submit");
 	if (obj.length == 0 || searchType == null) {
 		obj = $("#ccm-search-fields-submit");

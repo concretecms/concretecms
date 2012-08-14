@@ -11,7 +11,7 @@ $dh = Loader::helper('date');
 
 <? if ($_REQUEST['ctID']) { ?>
 
-	<form method="post" action="<?=$c->getCollectionAction()?>" id="ccmAddPage" onsubmit="jQuery.fn.dialog.showLoader()">		
+	<form method="post" action="<?=$c->getCollectionAction()?>" id="ccmAddPage" onsubmit="jQuery.fn.dialog.showLoader()" class="dialog-form">		
 	<input type="hidden" name="rel" value="<?=$_REQUEST['rel']?>" />
 	<input type="hidden" name="ctID" value="<?=$_REQUEST['ctID']?>" />
 
@@ -117,6 +117,12 @@ $dh = Loader::helper('date');
 <script type="text/javascript">
 	
 	$(function() {
+		$('input[name=cName]').focus();
+		$('#ccmAddPage input, #ccmAddPage select').bind('keypress.addpage', function(e) {
+			if (e.keyCode == 13) {
+				$('#ccmAddPage').submit();
+			}
+		});
 		var height = $("#ccm-add-page-information").height();
 		var dlog = $("#ccm-add-page-information").closest('.ui-dialog-content');
 		if (height > 256) {

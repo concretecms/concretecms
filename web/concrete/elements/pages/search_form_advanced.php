@@ -155,7 +155,6 @@ foreach($searchFieldAttributes as $ak) {
 			), $searchRequest['numResults'], array('style' => 'width:65px'))?>
 		</div>
 		<?=$form->submit('ccm-search-pages', t('Search'), array('style' => 'margin-left: 10px'))?>
-		<img src="<?=ASSETS_URL_IMAGES?>/loader_intelligent_search.gif" width="43" height="11" class="ccm-search-loading" id="ccm-<?=$searchInstance?>-search-loading" />
 		</div>
 
 	</div>
