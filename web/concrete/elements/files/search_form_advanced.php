@@ -134,7 +134,7 @@ foreach($t1 as $value) {
 		<?
 		$s1 = FileSet::getMySets();
 		if (count($s1) > 0) { ?>
-		<div class="span4" >
+		<div class="span4" style="width: 280px">
 			<?=$form->label('fsID', t('In Set(s)'))?>
 			<div class="input">
 				<select multiple name="fsID[]" class="chosen-select">
