@@ -78,7 +78,7 @@ $usedKeysCombined = array_merge($requiredKeys, $usedKeys);
 	</ul>
 	
 </div>
-<div class="span5">
+<div class="span5" id="ccm-page-attributes-selected">
 <h6><?=t("Selected Attributes")?></h6>
 <div id="ccm-page-attributes-none" <? if (count($usedKeysCombined) > 0) { ?>style="display: none"<? } ?>>
 <div style="padding-top: 140px; width: 400px; text-align: center"><h3>
@@ -152,14 +152,20 @@ $('input[name=ccmSearchAttributeListField]').focus(function() {
 		$('#ccmSearchAttributeListField').liveUpdate('ccm-page-attribute-list', 'attributes');
 		ccmLiveSearchActive = true;
 	}
+	ccmMapUpAndDownArrows = true;
 });
 
 var ccmLiveSearchActive = false;
-ccmBlockTypeSearchResultsSelect = function(which, e) {
+var ccmMapUpAndDownArrows = true;
+$('#ccm-page-attributes-selected').find('input,select,textarea').focus(function() {
+	ccmMapUpAndDownArrows = false;
+});
+
+ccmPageAttributesSearchResultsSelect = function(which, e) {
 
 	e.preventDefault();
 	e.stopPropagation();
-//	$("input[name=ccmBlockTypeSearch]").blur();
+//	$("input[name=ccmPageAttributesSearch]").blur();
 
 	// find the currently selected item
 	var obj = $("li.ccm-item-selected");
@@ -205,15 +211,16 @@ ccmBlockTypeSearchResultsSelect = function(which, e) {
 }
 
 ccmPageAttributesDoMapKeys = function(e) {
-
-	if (e.keyCode == 40) {
-		ccmBlockTypeSearchResultsSelect('next', e);
-	} else if (e.keyCode == 38) {
-		ccmBlockTypeSearchResultsSelect('previous', e);
-	} else if (e.keyCode == 13) {
-		var obj = $("li.ccm-item-selected");
-		if (obj.length > 0) {
-			obj.find('a').click();
+	if (ccmMapUpAndDownArrows) {
+		if (e.keyCode == 40) {
+			ccmPageAttributesSearchResultsSelect('next', e);
+		} else if (e.keyCode == 38) {
+			ccmPageAttributesSearchResultsSelect('previous', e);
+		} else if (e.keyCode == 13) {
+			var obj = $("li.ccm-item-selected");
+			if (obj.length > 0) {
+				obj.find('a').click();
+			}
 		}
 	}
 }
