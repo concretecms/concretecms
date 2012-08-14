@@ -101,7 +101,6 @@ foreach($searchFieldAttributes as $ak) {
 		</div>
 
 		<?=$form->submit('ccm-search-users', t('Search'), array('style' => 'margin-left: 10px'))?>
-		<img src="<?=ASSETS_URL_IMAGES?>/loader_intelligent_search.gif" width="43" height="11" class="ccm-search-loading" id="ccm-user-search-loading" />
 
 		</div>
 		
