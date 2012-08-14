@@ -63,18 +63,6 @@ class Concrete5_Model_FileList extends DatabaseItemList {
 	public function filterBySet($fs) {
 		if ($fs != false) {
 			$this->filteredFileSetIDs[] = intval($fs->getFileSetID());
-		} else {
-			$s1 = FileSet::getMySets();
-			$sets = array();
-			foreach($s1 as $fs) {
-				$sets[] = $fs->getFileSetID();
-			}
-			if (count($sets) == 0) {
-				return false;
-			}
-			$setStr = implode(',', $sets);
-			$this->addToQuery("left join FileSetFiles fsfex on fsfex.fID = f.fID");
-			$this->filter(false, '(fsfex.fID is null or (select count(fID) from FileSetFiles where fID = fsfex.fID and fsID in (' . $setStr . ')) = 0)');
 		}
 	}
 
@@ -113,10 +101,18 @@ class Concrete5_Model_FileList extends DatabaseItemList {
 		$fsIDs = array_filter($fsIDs,'is_numeric');
 		
 		$db = Loader::db();
-		
 		$i = 0;
+		$_fsIDs = array();
 		if(is_array($fsIDs) && count($fsIDs)) {
 			foreach($fsIDs as $fsID) {
+				if($fsID > 0) {
+					$_fsIDs[] = $fsID;
+				}
+			}
+		}
+		
+		if (count($_fsIDs) > 1) {
+			foreach($_fsIDs as $fsID) {
 				if($fsID > 0) {
 					if ($i == 0) {
 						$this->addToQuery("left join FileSetFiles fsfl on fsfl.fID = f.fID");
@@ -125,6 +121,10 @@ class Concrete5_Model_FileList extends DatabaseItemList {
 					$i++;
 				}
 			}
+		} else if (count($_fsIDs) > 0) {
+			$this->addToQuery("inner join FileSetFiles fsfl on fsfl.fID = f.fID");
+			$this->filter('fsfl.fsID', $fsID);
+			$i++;
 		}
 		
 		// add FileSetFiles if we had a file set filter but
