@@ -273,6 +273,20 @@ class Concrete5_Library_DatabaseItemListColumnSet {
 	public function addColumn($col) {
 		$this->columns[] = $col;
 	}
+	
+	public function __wakeup() {
+		$i = 0;
+		foreach($this->columns as $col) {
+			if ($col instanceof DatabaseItemListAttributeKeyColumn) {
+				$ak = call_user_func(array($this->attributeClass, 'getByHandle'), substr($col->getColumnKey(), 3));
+				if (!is_object($ak)) {
+					unset($this->columns[$i]);
+				}
+			}
+			$i++;
+		}		
+	}
+	
 	public function getSortableColumns() {
 		$tmp = array();
 		$columns = $this->getColumns();

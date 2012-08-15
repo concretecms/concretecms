@@ -29,6 +29,11 @@ class Concrete5_Library_IndexedSearch {
 		return $areas;
 	}
 	
+	public function clearSearchIndex() {
+		$db = Loader::db();
+		$db->Execute('truncate table PageSearchIndex');
+	}
+	
 	public function reindexPage($page) {
 		$db = Loader::db();			
 		if (is_object($page) && ($page instanceof Collection) && ($page->getAttribute('exclude_search_index') != 1)) {

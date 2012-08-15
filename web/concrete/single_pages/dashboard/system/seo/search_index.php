@@ -27,6 +27,7 @@ echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Sear
 
 		</div>
 		<div class="ccm-pane-footer">
+			<button class="error btn ccm-button-left" name="reindex" value="1" onclick="return confirm('<?=t('Once the index is clear, you must reindex your site from the Automated Jobs page.')?>')"><?=t('Clear Search Index')?></button>
 			<?php
 			$ih = Loader::helper('concrete/interface');
 			print $ih->submit(t('Save'), 'ccm-search-index-manage', 'right', 'primary');
