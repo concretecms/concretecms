@@ -296,10 +296,9 @@ $(function() {
 	$("a.ccm-meta-path-del").click(function(ev) { ccmPathHelper.del(ev.target) });
 
 	$("#cHandle").blur(function() {
-		var oldCHandle = $("#oldCHandle").val();
 		$(".ccm-meta-path input").each(function() {
 			if ($(this).val() == "") {
-				$(this).val(oldCHandle);
+				$(this).val('<?=$c->getCollectionPath()?>');
 			}
 		});
 	});
