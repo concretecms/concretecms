@@ -24,17 +24,18 @@ class Concrete5_Model_ComposerPage extends Page {
 		}
 		$db->Execute('insert into ComposerDrafts (cID, cpPublishParentID) values (?, ?)', array($p->getCollectionID(), $targetPageID));
 		$entry = ComposerPage::getByID($p->getCollectionID());
-
-		// duplicate all composer blocks onto the new page and make them into new blocks
-		$blocks = $entry->getComposerBlocks();
-		foreach($blocks as $b) {
-			$b2 = Block::getByID($b->getBlockID(), $p, $b->getAreaHandle());
-			$nb = $b2->duplicate($p);
-			$b2->deleteBlock();
-			$b2 = $nb;
-		}					
-		
-		return $entry;		
+		if (is_object($entry)) {
+			// duplicate all composer blocks onto the new page and make them into new blocks
+			$blocks = $entry->getComposerBlocks();
+			foreach($blocks as $b) {
+				$b2 = Block::getByID($b->getBlockID(), $p, $b->getAreaHandle());
+				$nb = $b2->duplicate($p);
+				$b2->deleteBlock();
+				$b2 = $nb;
+			}					
+			
+			return $entry;		
+		}
 	}
 	
 	/** 

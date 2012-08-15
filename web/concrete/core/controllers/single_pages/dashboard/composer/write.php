@@ -229,7 +229,11 @@ class Concrete5_Controller_Dashboard_Composer_Write extends Controller {
 		} else {
 			// create a new page of this type
 			$entry = ComposerPage::createDraft($ct);
-			$this->redirect('/dashboard/composer/write', 'edit', $entry->getCollectionID());
+			if (is_object($entry)) {
+				$this->redirect('/dashboard/composer/write', 'edit', $entry->getCollectionID());
+			} else {
+				$this->redirect('/dashboard/composer/drafts');
+			}
 		}
 	}
 	
