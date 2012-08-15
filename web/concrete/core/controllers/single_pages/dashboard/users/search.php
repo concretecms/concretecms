@@ -163,10 +163,12 @@ class Concrete5_Controller_Dashboard_Users_Search extends Controller {
 				if (is_array($_POST['gID'])) {
 					foreach($_POST['gID'] as $gID) {
 						if ($gak->validate($gID)) {
-							$gIDs[] = $gID;
+							$gIDs[] = intval($gID);
 						}
 					}
 				}
+				
+				$gIDs = array_unique($gIDs, SORT_NUMERIC);
 
 				$uo->updateGroups($gIDs);
 
