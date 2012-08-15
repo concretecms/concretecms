@@ -62,6 +62,8 @@ if ($_REQUEST['approveImmediately'] == 1) {
 						jQuery.fn.dialog.closeTop();
 						if (r != null && r.rel == 'SITEMAP') {
 							ccmSitemapHighlightPageLabel(r.cID, r.name);
+						} else {
+							ccm_mainNavDisableDirectExit();
 						}
 						ccmAlert.hud(ccmi18n.savePropertiesMsg, 2000, 'success', ccmi18n.properties);
 					} catch(e) {
