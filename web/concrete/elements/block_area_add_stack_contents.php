@@ -6,6 +6,12 @@ $st = Stack::getByID($_REQUEST['stackID']);
 $blocks = $st->getBlocks(STACKS_AREA_NAME);
 if (count($blocks) == 0) { ?>
 	<p><?=t('There are no blocks in this stack.')?></p>
+	<div id="ccm-tab-content-add-stack">
+        <h3><?=t('Add Stack')?></h3>
+        <p><?=t('Add the entire stack to this page.')?></p>
+        <p><a class="btn primary" href="javascript:void(0)" onclick="ccmStackAddToArea(<?=$st->getCollectionID()?>, '<?=Loader::helper('text')->entities($a->getAreaHandle())?>')"><?=t("Add Stack")?></a></p>
+    </div>
+
 <? } else { ?>
 	
 	<?=Loader::helper('concrete/interface')->tabs(array(
