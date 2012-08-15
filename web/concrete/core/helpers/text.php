@@ -343,5 +343,3 @@ class Concrete5_Helper_Text {
 	}
 
 }
-
-?>

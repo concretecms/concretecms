@@ -98,15 +98,26 @@ class Concrete5_Controller_Dashboard_Extend_Install extends Controller {
 						$tests = Package::mapError($tests);
 						$this->set('error', $tests);
 					} else {
+						$currentLocale = Localization::activeLocale();
+						if ($currentLocale != 'en_US') {
+							// Prevent the database records being stored in wrong language
+							Localization::changeLocale('en_US');
+						}
 						try {
 							$u = new User();
 							$pkg = $p->install($this->post());
 							if ($u->isSuperUser() && $p->allowsFullContentSwap() && $this->post('pkgDoFullContentSwap')) { 
 								$p->swapContent($this->post());
 							}
+							if ($currentLocale != 'en_US') {
+								Localization::changeLocale($currentLocale);
+							}
 							$pkg = Package::getByHandle($p->getPackageHandle());
 							$this->redirect('/dashboard/extend/install', 'package_installed', $pkg->getPackageID());
 						} catch(Exception $e) {
+							if ($currentLocale != 'en_US') {
+								Localization::changeLocale($currentLocale);
+							}
 							if ($p->showInstallOptionsScreen()) {
 								$this->set('showInstallOptionsScreen', true);
 								$this->set('pkg', $p);
