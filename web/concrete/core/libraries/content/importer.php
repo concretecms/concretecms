@@ -346,7 +346,11 @@ class Concrete5_Library_Content_Importer {
 		if (isset($sx->themes)) {
 			foreach($sx->themes->theme as $th) {
 				$pkg = ContentImporter::getPackageObject($th['package']);
-				$pt = PageTheme::add($th['handle'], $pkg);
+				$ptHandle = (string) $th['handle'];
+				$pt = PageTheme::getByHandle($ptHandle);
+				if (!is_object($pt)) {
+					$pt = PageTheme::add($ptHandle, $pkg);
+				}
 				if ($th['activated'] == '1') {
 					$pt->applyToSite();
 				}
