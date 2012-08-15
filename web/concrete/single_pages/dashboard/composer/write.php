@@ -46,9 +46,8 @@ if (isset($entry)) { ?>
 	<legend><?=t('Publish Location')?></legend>
 	<div class="control-group">
 		<span id="ccm-composer-publish-location"><?
-		if ($entry->getComposerDraftPublishParentID() > 0) { 
-			print $this->controller->getComposerDraftPublishText($entry);
-		} ?>
+		print $this->controller->getComposerDraftPublishText($entry);
+		?>
 		</span>
 		
 		<? 

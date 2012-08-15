@@ -32,7 +32,7 @@ class Concrete5_Controller_Dashboard_Composer_Write extends Controller {
 				if ($entry->isComposerDraft()) { 
 					if ($ct->getCollectionTypeComposerPublishMethod() == 'CHOOSE' || $ct->getCollectionTypeComposerPublishMethod() == 'PAGE_TYPE') { 
 						$parent = Page::getByID($entry->getComposerDraftPublishParentID());
-						if (!is_object($parent) || $parent->isError()) {
+						if (!is_object($parent) || ($parent->isInTrash() || $parent->isError())) {
 							$this->error->add(t('Invalid parent page.'));
 						} else {
 							$cp = new Permissions($parent);
@@ -42,6 +42,9 @@ class Concrete5_Controller_Dashboard_Composer_Write extends Controller {
 						}
 					} else if ($ct->getCollectionTypeComposerPublishMethod() == 'PARENT') {
 						$parent = Page::getByID($ct->getCollectionTypeComposerPublishPageParentID());
+						if (!is_object($parent) || ($parent->isInTrash() || $parent->isError())) {
+							$this->error->add(t('Invalid parent page.'));
+						}
 					}
 				}
 			} else if ($this->post('ccm-submit-discard') && !$this->error->has()) {
@@ -183,8 +186,12 @@ class Concrete5_Controller_Dashboard_Composer_Write extends Controller {
 	}
 	
 	public function getComposerDraftPublishText($entry) {
-		$ppc = Page::getByID($entry->getComposerDraftPublishParentID());
-		return t('This page will be published beneath %s.', '<a target="_blank" href="' . Loader::helper('navigation')->getLinkToCollection($ppc) . '">' . $ppc->getCollectionName() . '</a>');
+		if ($entry->getComposerDraftPublishParentID() > 0) {
+			$ppc = Page::getByID($entry->getComposerDraftPublishParentID());
+			return t('This page will be published beneath %s.', '<a target="_blank" href="' . Loader::helper('navigation')->getLinkToCollection($ppc) . '">' . $ppc->getCollectionName() . '</a>');
+		} else {
+			return t('Unknown publishing location.');
+		}
 	}
 	
 	public function on_start() {

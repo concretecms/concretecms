@@ -59,7 +59,12 @@ class Concrete5_Model_ComposerPage extends Page {
 	}
 	
 	public function getComposerDraftPublishParentID() {
-		return $this->cpPublishParentID;
+		if ($this->cpPublishParentID > 0) {
+			$pc = Page::getByID($this->cpPublishParentID);
+			if (is_object($pc) && !$pc->isError() && !$pc->isInTrash()) {
+				return $this->cpPublishParentID;
+			}
+		}
 	}
 
 	public function setComposerDraftPublishParentID($cParentID) {
