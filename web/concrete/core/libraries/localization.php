@@ -40,12 +40,25 @@
 		}
 		
 		public function setLocale($locale) {
-			if ($locale != 'en_US' && is_dir(DIR_BASE . '/languages/' . $locale)) {
+			if ($locale == 'en_US' && isset($this->translate)) {
+				unset($this->translate);
+			} else if ($locale != 'en_US' && is_dir(DIR_BASE . '/languages/' . $locale)) {
+				$options = array('adapter' => 'gettext');
+				if (defined('TRANSLATE_OPTIONS')) {
+					$_options = unserialize(TRANSLATE_OPTIONS);
+					if (is_array($_options)) {
+						$options = array_merge($options, $_options);
+					}
+				}
+				$options = array_merge($options, array(
+					'content' => DIR_BASE . '/languages/' . $locale,
+					'locale' => $locale
+				));
 				if (!isset($this->translate)) {
-					$this->translate = new Zend_Translate('gettext', DIR_BASE . '/languages/' . $locale, $locale);
+					$this->translate = new Zend_Translate($options);
 				} else {
 					if (!in_array($locale, $this->translate->getList())) {
-						$this->translate->addTranslation(DIR_BASE . '/languages/' . $locale, $locale);
+						$this->translate->addTranslation($options);
 					}
 					$this->translate->setLocale($locale);
 				}

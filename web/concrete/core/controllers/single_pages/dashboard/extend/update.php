@@ -17,8 +17,16 @@ class Concrete5_Controller_Dashboard_Extend_Update extends Controller {
 					$this->set('error', $tests);
 				} else {
 					$p = Package::getByHandle($pkgHandle);
+					$currentLocale = Localization::activeLocale();
+					if ($currentLocale != 'en_US') {
+						// Prevent the database records being stored in wrong language
+						Localization::changeLocale('en_US');
+					}
 					try {
 						$p->upgradeCoreData();
+						if ($currentLocale != 'en_US') {
+							Localization::changeLocale($currentLocale);
+						}
 						$p->upgrade();
 						$this->set('message', t('The package has been updated successfully.'));
 					} catch(Exception $e) {
