@@ -32,18 +32,16 @@ class Concrete5_Controller_Dashboard_Composer_Write extends Controller {
 				if ($entry->isComposerDraft()) { 
 					if ($ct->getCollectionTypeComposerPublishMethod() == 'CHOOSE' || $ct->getCollectionTypeComposerPublishMethod() == 'PAGE_TYPE') { 
 						$parent = Page::getByID($entry->getComposerDraftPublishParentID());
-						if (!is_object($parent) || ($parent->isInTrash() || $parent->isError())) {
-							$this->error->add(t('Invalid parent page.'));
-						} else {
-							$cp = new Permissions($parent);
-							if (!$cp->canAddSubCollection($ct)) {
-								$this->error->add(t('You do not have permissions to add this page type in that location.'));
-							}
-						}
 					} else if ($ct->getCollectionTypeComposerPublishMethod() == 'PARENT') {
 						$parent = Page::getByID($ct->getCollectionTypeComposerPublishPageParentID());
-						if (!is_object($parent) || ($parent->isInTrash() || $parent->isError())) {
-							$this->error->add(t('Invalid parent page.'));
+					}
+					
+					if (!is_object($parent) || ($parent->isInTrash() || $parent->isError())) {
+						$this->error->add(t('Invalid parent page.'));
+					} else {
+						$cp = new Permissions($parent);
+						if (!$cp->canAddSubCollection($ct)) {
+							$this->error->add(t('You do not have permissions to add this page type in that location.'));
 						}
 					}
 				}
