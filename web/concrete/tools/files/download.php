@@ -7,7 +7,7 @@ $vh = Loader::helper('validation/identifier');
 $form = Loader::helper('form');
 
 $fp = FilePermissions::getGlobal();
-if (!$fp->canViewFile()) {
+if (!$fp->canSearchFileSet()) {
 	die(t("Access Denied."));
 }
 
