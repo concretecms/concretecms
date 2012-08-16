@@ -22,6 +22,7 @@ $this->inc('elements/header.php'); ?>
 	
 			<?php 
 			$a = new Area('Sidebar');
+			$a->setblockLimit(1);
 			$a->display($c);
 			?>
 			
