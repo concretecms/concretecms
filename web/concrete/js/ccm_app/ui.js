@@ -689,7 +689,7 @@ ccm_arrangeInit = function() {
 		$(this).addClass('ccm-move-mode');
 		$(this).sortable({
 			items: 'div.ccm-block-arrange',
-			connectWith: $("div.ccm-area"),
+			connectWith: $("div.ccm-area-move-enabled"),
 			accept: 'div.ccm-block-arrange',
 			opacity: 0.5,
 			stop: function() {

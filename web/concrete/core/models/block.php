@@ -355,7 +355,7 @@ class Concrete5_Model_Block extends Object {
 		
 		// ONLY ALLOWS ITEMS THAT START WITH "action_";
 		
-		if (method_exists($bc, $method)) {
+		if (is_callable(array($bc, $method))) {
 			return $bc->{$method}();
 		}
 	}
