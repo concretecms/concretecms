@@ -356,13 +356,11 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		 * @return void
 		 */
 		protected function load() {
-			// Event only fires if ENABLE_ON_BLOCK_LOAD_EVENT is set. Provides an opportunity to intercept and modify the loaded block data.
-			if (defined('ENABLE_ON_BLOCK_LOAD_EVENT') && ENABLE_ON_BLOCK_LOAD_EVENT && ENABLE_ON_BLOCK_LOAD_EVENT !== 'false'){
-				$ret = Events::fire('on_block_load', $this->record, $this->btHandle, $this->bID);
-				if ($ret && is_object($ret)){
-					$this->record = $ret;
-				}
+			$ret = Events::fire('on_block_load', $this->record, $this->btHandle, $this->bID);
+			if ($ret && is_object($ret)){
+				$this->record = $ret;
 			}
+
 			if (is_object($this->record)) {
 				foreach($this->record as $key => $value) {
 					$this->{$key} = $value;
