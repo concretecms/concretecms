@@ -46,7 +46,7 @@ class Concrete5_Library_Events {
 		return $instance;
 	}		
 
-	private $registeredEvents = array();
+	protected $registeredEvents = array();
 	
 	
 	/** 
