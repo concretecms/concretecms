@@ -175,6 +175,7 @@ class Concrete5_Model_Page extends Collection {
 		$db = Loader::db();
 		$q = "update Pages set cIsCheckedOut = 0, cCheckedOutUID = null, cCheckedOutDatetime = null, cCheckedOutDatetimeLastEdit = null where cID = '{$this->cID}'";
 		$r = $db->query($q);
+		$this->refreshCache();
 	}
 
 	/**
