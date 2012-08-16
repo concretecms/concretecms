@@ -33,8 +33,8 @@ if ($c->getCollectionInheritance() == 'OVERRIDE') {
 </div>
 
 <? } ?>
-</form>
 </div>
+</form>
 
 <?
 	  $cpc = $c->getPermissionsCollectionObject();
@@ -57,7 +57,7 @@ foreach($permissions as $pk) {
 	<tr>
 	<td class="ccm-permission-grid-name" id="ccm-permission-grid-name-<?=$pk->getPermissionKeyID()?>"><strong><? if ($editPermissions) { ?><a dialog-title="<?=$pk->getPermissionKeyName()?>" data-pkID="<?=$pk->getPermissionKeyID()?>" data-paID="<?=$pk->getPermissionAccessID()?>" onclick="ccm_permissionLaunchDialog(this)" href="javascript:void(0)"><? } ?><?=$pk->getPermissionKeyName()?><? if ($editPermissions) { ?></a><? } ?></td>
 	<td id="ccm-permission-grid-cell-<?=$pk->getPermissionKeyID()?>" <? if ($editPermissions) { ?>class="ccm-permission-grid-cell"<? } ?>><?=Loader::element('permission/labels', array('pk' => $pk))?></td>
-</tr>
+	</tr>
 <? } ?>
 <? if ($editPermissions) { ?>
 <tr>
@@ -84,7 +84,6 @@ ccm_permissionLaunchDialog = function(link) {
 </script>
 
 
-</div>
 
 <div id="ccm-page-permissions-confirm-dialog" style="display: none">
 <?=t('Changing this setting will affect this page immediately. Are you sure?')?>
@@ -94,8 +93,6 @@ ccm_permissionLaunchDialog = function(link) {
 </div>
 </div>
 
-
-</form>
 
  <? if ($editPermissions) { ?>
 <div class="dialog-buttons">
