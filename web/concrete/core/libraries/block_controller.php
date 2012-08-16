@@ -351,9 +351,16 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 		/** 
 		 * Loads the BlockRecord class based on its attribute names
+		 * If ENABLE_ON_BLOCK_LOAD_EVENT is set, fires 'on_block_load'. Event handlers have 
+		 * the opportunity to return a modified block record.
 		 * @return void
 		 */
 		protected function load() {
+			$ret = Events::fire('on_block_load', $this->record, $this->btHandle, $this->bID);
+			if ($ret && is_object($ret)){
+				$this->record = $ret;
+			}
+
 			if (is_object($this->record)) {
 				foreach($this->record as $key => $value) {
 					$this->{$key} = $value;
