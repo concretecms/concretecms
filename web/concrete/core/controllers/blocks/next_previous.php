@@ -36,8 +36,7 @@ class Concrete5_Controller_Block_NextPrevious extends BlockController {
 		
 		$args['showArrows'] = intval($args['showArrows']) ;
 		$args['loopSequence'] = intval($args['loopSequence']); 
-		$args['excludeSystemPages'] = intval($args['excludeSystemPages']); 
-		
+			
 		
 		parent::save($args);		
 	} 
@@ -73,43 +72,68 @@ class Concrete5_Controller_Block_NextPrevious extends BlockController {
 	}
 	
 	function getNextCollection(){
-		global $c; 
-		if(!$this->otherCollectionsLoaded) $this->loadOtherCollections();
-		foreach($this->otherCollections as $photoCollection){		
-			if(!$firstCollection) $firstCollection=$photoCollection;
-			if( $collectionFound ) return $photoCollection;
-			if( $photoCollection->cID == $c->cID ) $collectionFound=1; 
+		$page = false;
+		$db = Loader::db();
+		$cID = 1;
+		$currentPage = Page::getCurrentPage();
+		while ($cID > 0) {
+			if ($this->orderBy == 'display_asc') {
+				$cID = $db->GetOne('select cID from Pages where cDisplayOrder > ? and cParentID = ? order by cDisplayOrder asc', array($currentPage->getCollectionDisplayOrder(), $currentPage->getCollectionParentID()));
+			} else {
+				$cID = $db->GetOne('select Pages.cID from Pages inner join CollectionVersions cv on Pages.cID = cv.cID where cvIsApproved = 1 and cvDatePublic > ? and cParentID = ? order by cvDatePublic asc', array($currentPage->getCollectionDatePublic(), $currentPage->getCollectionParentID()));
+			}
+			if ($cID > 0) {
+				$page = Page::getByID($cID, 'RECENT');
+				$currentPage = $page;
+				$cp = new Permissions($page);
+				if ($cp->canRead() && $page->getAttribute('exclude_nav') != 1) {
+					break;
+				}
+			}
 		}
-		if($this->loopSequence) return $firstCollection;
+		if (!is_object($page) && $this->loopSequence) {
+			$c = Page::getCurrentPage();
+			$parent = Page::getByID($c->getCollectionParentID(), 'ACTIVE');
+			if ($this->orderBy == 'display_asc') {
+				return $parent->getFirstChild('cDisplayOrder asc');
+			} else {
+				return $parent->getFirstChild('cvDatePublic asc');
+			}
+		}
+		return $page;
 	}
 	
 	function getPreviousCollection(){
-		global $c; 
-		if(!$this->otherCollectionsLoaded) $this->loadOtherCollections();
-		foreach($this->otherCollections as $photoCollection){
-			if( $photoCollection->cID == $c->cID && $lastCollection ) return $lastCollection;
-			$lastCollection=$photoCollection;
+		$page = false;
+		$db = Loader::db();
+		$cID = 1;
+		$currentPage = Page::getCurrentPage();
+		while ($cID > 0) {
+			if ($this->orderBy == 'display_asc') {
+				$cID = $db->GetOne('select cID from Pages where cDisplayOrder < ? and cParentID = ? order by cDisplayOrder desc', array($currentPage->getCollectionDisplayOrder(), $currentPage->getCollectionParentID()));
+			} else {
+				$cID = $db->GetOne('select Pages.cID from Pages inner join CollectionVersions cv on Pages.cID = cv.cID where cvIsApproved = 1 and cvDatePublic < ? and cParentID = ? order by cvDatePublic desc', array($currentPage->getCollectionDatePublic(), $currentPage->getCollectionParentID()));
+			}
+			if ($cID > 0) {
+				$page = Page::getByID($cID, 'RECENT');
+				$currentPage = $page;
+				$cp = new Permissions($page);
+				if ($cp->canRead() && $page->getAttribute('exclude_nav') != 1) {
+					break;
+				}
+			}
 		}
-		if($this->loopSequence) return $lastCollection;
+		if (!is_object($page) && $this->loopSequence) {
+			$c = Page::getCurrentPage();
+			$parent = Page::getByID($c->getCollectionParentID(), 'ACTIVE');
+			if ($this->orderBy == 'display_asc') {
+				return $parent->getFirstChild('cDisplayOrder desc');
+			} else {
+				return $parent->getFirstChild('cvDatePublic desc');
+			}
+		}
+		
+		return $page;
 	}
 	
-	protected function loadOtherCollections(){
-		global $c; 
-		$pl = new PageList();
-
-        if ($this->orderBy == 'chrono_desc') {
-            $pl->sortByPublicDateDescending();
-        } else {
-    		$pl->sortByDisplayOrder();
-        }
-
-		$pl->filterByParentID( $c->cParentID );  
-		if($this->excludeSystemPages) $this->excludeSystemPages($pl);
-		$this->otherCollections = $pl->get(); 
-		$this->otherCollectionsLoaded=1;
-	}
-	
-	protected function excludeSystemPages($pageList){
-		$pageList->filter(false, "(p1.cIsSystemPage = 0 or p2.cIsSystemPage = 0)");	
-	}
 }
