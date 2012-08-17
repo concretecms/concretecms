@@ -51,9 +51,26 @@ class ConcreteDashboardHelper {
 	}
 	
 	public function getDashboardPaneHeaderWrapper($title = false, $help = false, $span = 'span12', $includeDefaultBody = true, $navigatePages = array(), $upToPage = false) {
-		if (!$span) {
-			$span = 'span12';
+		
+		$spantotal = 12;
+		$offset = preg_match('/offset([0-9]+)/i', $span, $offsetmatches);
+		if ($offset) {
+			$offsettotal = $offsetmatches[1];
+			$hasspan = preg_match('/span([0-9]+)/i', $span, $spanmatches);
+			if ($hasspan) {
+				$spantotal = $spanmatches[1];
+				$gridtotal = ($offsettotal * 2) + $spantotal;
+			}
 		}
+		
+		if ($gridtotal > 12) {
+			// we are working with legacy bootstrap 16-column grid
+			// we take the offset and then we subtract from the span
+			$spantotal = $spantotal - ($gridtotal - 12);
+			$spantotal .= ' offset' . $offsettotal;
+			$span = 'span' . $spantotal;
+		}
+		
 		$html = '<div class="ccm-ui"><div class="row"><div class="' . $span . '"><div class="ccm-pane">';
 		$html .= self::getDashboardPaneHeader($title, $help, $navigatePages, $upToPage);
 		if ($includeDefaultBody) {
