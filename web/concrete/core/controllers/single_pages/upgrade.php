@@ -25,6 +25,7 @@ class Concrete5_Controller_Upgrade extends Controller {
 		Cache::disableCache();
 		Cache::disableLocalCache();
 		$this->site_version = Config::get('SITE_APP_VERSION');
+		Database::ensureEncoding();
 	}
 	
 	public function view() {
