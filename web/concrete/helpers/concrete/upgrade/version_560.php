@@ -150,6 +150,7 @@ class ConcreteUpgradeVersion560Helper {
 		
 		// install the permissions from permissions.xml
 		$this->installPermissionsAndWorkflow();
+		$this->addGlobalBlockPermissions();
 		$this->migratePagePermissions();
 		$this->migratePagePermissionPageTypes();
 		$this->migrateAreaPermissions();
@@ -164,6 +165,24 @@ class ConcreteUpgradeVersion560Helper {
 		$this->setupDashboardIcons();		
 	}
 	
+	protected function addGlobalBlockPermissions() {
+		$adminGroup = Group::getByID(ADMIN_GROUP_ID);
+		$pae = GroupPermissionAccessEntity::getOrCreate($adminGroup);
+		$pk = PermissionKey::getByHandle("add_block");
+		$pt = $pk->getPermissionAssignmentObject();
+		$pt->clearPermissionAssignment();
+		$pa = PermissionAccess::create($pk);
+		$pa->addListItem($pae);
+		$pt->assignPermissionAccess($pa);
+
+		$pk = PermissionKey::getByHandle("add_stack");
+		$pt = $pk->getPermissionAssignmentObject();
+		$pt->clearPermissionAssignment();
+		$pa = PermissionAccess::create($pk);
+		$pa->addListItem($pae);
+		$pt->assignPermissionAccess($pa);
+	}
+
 	protected function setupDashboardIcons() {
 		$cak = CollectionAttributeKey::getByHandle('icon_dashboard');
 		if (!is_object($cak)) {
@@ -490,7 +509,9 @@ class ConcreteUpgradeVersion560Helper {
 				PermissionKey::getByHandle('preview_page_as_user'),
 				PermissionKey::getByHandle('edit_page_properties'),
 				PermissionKey::getByHandle('edit_page_contents'),
-				PermissionKey::getByHandle('move_or_copy_page')
+				PermissionKey::getByHandle('move_or_copy_page'),
+				PermissionKey::getByHandle('add_block_to_area'),
+				PermissionKey::getByHandle('add_stack_to_area'),
 			),
 			'adm' => array(
 				PermissionKey::getByHandle('edit_page_speed_settings'),
