@@ -876,10 +876,19 @@
 					}
 				
 				}
-				
-				if ($_POST['rel'] == 'SITEMAP') { 
+
+				if ($_POST['rel'] == 'SITEMAP' && ($cp->canApprovePageVersions())) {
+					$pkr = new ApprovePagePageWorkflowRequest();
+					$u = new User();
+					$pkr->setRequestedPage($c);
+					$v = CollectionVersion::get($c, "RECENT");
+					$pkr->setRequestedVersionID($v->getVersionID());
+					$pkr->setRequesterUserID($u->getUserID());
+					$u->unloadCollectionEdit($c);
+					$response = $pkr->trigger();
 					$obj = new stdClass;
-					$obj->rel = 'SITEMAP';
+					$obj->rel = $_POST['rel'];
+					$obj->name = $v->getVersionName();
 					$obj->cID = $c->getCollectionID();
 					print Loader::helper('json')->encode($obj);
 					exit;
