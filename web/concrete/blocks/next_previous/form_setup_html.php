@@ -46,10 +46,5 @@ defined('C5_EXECUTE') or die("Access Denied.");
           <option value="chrono_desc" <?php echo ($controller->orderBy=='chrono_desc') ? 'selected="selected"' : '' ?>><?=t('Chronological')?></option>
       </select>
 	</div> 
-    
-    <div class="ccm-block-field-group">
-	  <h2><?php  echo t('Exclude System Pages')?></h2>  
-      <input name="excludeSystemPages" type="checkbox" value="1" <?php echo intval($controller->excludeSystemPages)?'checked="checked"':'' ?> /> <?php echo t('yes') ?> 
-	</div>
-	
+    	
 </div> 
