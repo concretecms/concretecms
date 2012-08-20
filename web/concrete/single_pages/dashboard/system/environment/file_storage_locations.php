@@ -8,7 +8,7 @@
 			<div class="control-group">
 			<label class="control-label" for="DIR_FILES_UPLOADED"><?=t('Path')?></label>
 			<div class="controls">
-			<?=$form->text('DIR_FILES_UPLOADED', DIR_FILES_UPLOADED, array('rows'=>'2','class' => 'span6'))?>
+			<?=$form->text('DIR_FILES_UPLOADED', DIR_FILES_UPLOADED, array('rows'=>'2','class' => 'span5'))?>
 			</div>
 			</div>
 			
@@ -19,12 +19,12 @@
 			<div class="control-group">
 			<label for="fslName" class="control-label"><?=t('Location Name')?></label>
 			<div class="controls">
-			<?=$form->text('fslName', $fslName, array('class' => 'span6'))?>
+			<?=$form->text('fslName', $fslName, array('class' => 'span5'))?>
 			</div></div>
 			<div class="control-group">
 			<label for="fslDirectory" class="control-label"><?=t('Path')?></label>
 			<div class="controls">
-			<?=$form->text('fslDirectory', $fslDirectory, array('rows' => '2', 'class' => 'span6'))?>
+			<?=$form->text('fslDirectory', $fslDirectory, array('rows' => '2', 'class' => 'span5'))?>
 			</div></div>
 			</fieldset>
 	</div>
