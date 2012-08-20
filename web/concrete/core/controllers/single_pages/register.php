@@ -157,6 +157,7 @@ class Concrete5_Controller_Register extends Controller {
 					$mh->addParameter('uID', $process->getUserID());
 					$mh->addParameter('uEmail', $process->getUserEmail());
 					$attribs = UserAttributeKey::getRegistrationList();
+					$attribValues = array();
 					foreach($attribs as $ak) {
 						$attribValues[] = $ak->getAttributeKeyDisplayHandle() . ': ' . $process->getAttribute($ak->getAttributeKeyHandle(), 'display');		
 					}						
