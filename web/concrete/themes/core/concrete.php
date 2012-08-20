@@ -37,5 +37,7 @@ if (is_object($c)) {
 </div>
 </div>
 
+<? Loader::element('footer_required');?>
+
 </body>
 </html>
