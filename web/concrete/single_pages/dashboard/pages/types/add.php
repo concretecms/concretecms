@@ -31,11 +31,11 @@ $pageTypeIconsFS = FileSet::getByName("Page Type Icons");
             </thead>
             <tbody>
                 <tr>
-                    <td>
-                        <?=$form->text('ctName', $_POST['ctName'], array('class' => 'span9'))?>
+                    <td style="width: 60%">
+                        <?=$form->text('ctName', $_POST['ctName'], array('style' => 'width: 100%'))?>
                     </td>
                     <td>
-                        <?=$form->text('ctHandle', $_POST['ctHandle'], array('class' => 'span6'))?>
+                        <?=$form->text('ctHandle', $_POST['ctHandle'], array('style' => 'width: 100%'))?>
                     </td>
                 </tr>
 			</tbody>
