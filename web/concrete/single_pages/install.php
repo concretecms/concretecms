@@ -135,7 +135,7 @@ $(function() {
 	<input type="hidden" name="locale" value="<?=$locale?>" />
 	
 	<fieldset>
-		<legend><?=t('Site Information')?></legend>
+		<legend style="margin-bottom: 0px"><?=t('Site Information')?></legend>
 		<div class="control-group">
 		<label for="SITE" class="control-label"><?=t('Name Your Site')?>:</label>
 		<div class="controls">
@@ -146,7 +146,7 @@ $(function() {
 	</fieldset>
 	
 	<fieldset>
-		<legend><?=t('Administrator Information')?></legend>
+		<legend style="margin-bottom: 0px"><?=t('Administrator Information')?></legend>
 		<div class="clearfix">
 		<label for="uEmail"><?=t('Email Address')?>:</label>
 		<div class="input">
@@ -172,7 +172,7 @@ $(function() {
 <div class="span5">
 
 	<fieldset>
-		<legend><?=t('Database Information')?></legend>
+		<legend style="margin-bottom: 0px"><?=t('Database Information')?></legend>
 
 	<div class="clearfix">
 	<label for="DB_SERVER"><?=t('Server')?>:</label>
