@@ -885,37 +885,23 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		 *
 		 */
 		protected function _getClass() {
+
 			$btHandle = $this->btHandle;
 			$pkgHandle = $this->getPackageHandle();
-			if (file_exists(DIR_FILES_BLOCK_TYPES . "/{$btHandle}/" . FILENAME_BLOCK_CONTROLLER)) {
-				$classfile = DIR_FILES_BLOCK_TYPES . "/{$btHandle}/" . FILENAME_BLOCK_CONTROLLER;
-			} else if ($pkgHandle != null) {
-				if (file_exists(DIR_PACKAGES . "/{$pkgHandle}/" . DIRNAME_BLOCKS . "/{$btHandle}/" . FILENAME_BLOCK_CONTROLLER)) {
-					$classfile = DIR_PACKAGES . "/{$pkgHandle}/" . DIRNAME_BLOCKS . "/{$btHandle}/" . FILENAME_BLOCK_CONTROLLER;
-				} else if (file_exists(DIR_PACKAGES_CORE . "/{$pkgHandle}/" . DIRNAME_BLOCKS . "/{$btHandle}/" . FILENAME_BLOCK_CONTROLLER)) {
-					$classfile = DIR_PACKAGES_CORE . "/{$pkgHandle}/" . DIRNAME_BLOCKS . "/{$btHandle}/" . FILENAME_BLOCK_CONTROLLER;
-				}
-			} else {			
-				if (file_exists(DIR_FILES_BLOCK_TYPES_CORE . "/{$btHandle}/" . FILENAME_BLOCK_CONTROLLER)) {
-					$classfile = DIR_FILES_BLOCK_TYPES_CORE . "/{$btHandle}/" . FILENAME_BLOCK_CONTROLLER;
-				}
+			$env = Environment::get();
+			require_once($env->getPath(DIRNAME_BLOCKS . '/' . $this->btHandle . '/' . FILENAME_BLOCK_CONTROLLER, $pkgHandle));
+			
+			// takes the handle and performs some magic to get the class;
+			$btHandle = $this->getBlockTypeHandle();
+			// split by underscores or dashes
+			$words = preg_split('/\_|\-/', $btHandle);
+			for ($i = 0; $i < count($words); $i++) {
+				$words[$i] = ucfirst($words[$i]);
 			}
 			
-			if ($classfile) {
-				require_once($classfile);
-				
-				// takes the handle and performs some magic to get the class;
-				$btHandle = $this->getBlockTypeHandle();
-				// split by underscores or dashes
-				$words = preg_split('/\_|\-/', $btHandle);
-				for ($i = 0; $i < count($words); $i++) {
-					$words[$i] = ucfirst($words[$i]);
-				}
-				
-				$class = implode('', $words);
-				$class = $class . 'BlockController';
-				return $class;
-			}
+			$class = implode('', $words);
+			$class = $class . 'BlockController';
+			return $class;
 		}
 		
 		public function inc($file, $args = array()) {
