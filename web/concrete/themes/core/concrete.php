@@ -11,6 +11,9 @@ if (is_object($c)) {
 	print Loader::helper('html')->javascript('jquery.js');
 	$this->outputHeaderItems();
 }
+$this->addFooterItem(Loader::helper('html')->javascript('bootstrap.alert.js'));
+$this->addFooterItem(Loader::helper('html')->javascript('bootstrap.transitions.js'));
+
 ?>
 
 <!-- insert CSS for Default Concrete Theme //-->
