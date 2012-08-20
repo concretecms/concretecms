@@ -909,17 +909,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			$bt = $this;
 			global $c;
 			global $a;
-			if ($this->getPackageID() > 0) {
-				if (is_dir(DIR_PACKAGES . '/' . $this->getPackageHandle())) {
-					include(DIR_PACKAGES . '/' . $this->getPackageHandle() . '/' . DIRNAME_BLOCKS . '/' . $this->getBlockTypeHandle() . '/' . $file);
-				} else {
-					include(DIR_PACKAGES_CORE . '/' . $this->getPackageHandle() . '/' . DIRNAME_BLOCKS . '/' . $this->getBlockTypeHandle() . '/' . $file);
-				}
-			} else if (file_exists(DIR_FILES_BLOCK_TYPES . '/' . $this->getBlockTypeHandle() . '/' . $file)) {
-				include(DIR_FILES_BLOCK_TYPES . '/' . $this->getBlockTypeHandle() . '/' . $file);
-			} else {
-				include(DIR_FILES_BLOCK_TYPES_CORE . '/' . $this->getBlockTypeHandle() . '/' . $file);
-			}
+			$env = Environment::get();
+			include($env->getPath(DIRNAME_BLOCKS . '/' . $this->getBlockTypeHandle() . '/' . $file, $this->getPackageHandle()));
 		}
 		
 		public function getBlockTypeClass() {
