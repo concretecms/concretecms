@@ -35,16 +35,19 @@ class Concrete5_Library_Controller {
 	private $restrictedMethods = array();
 	
 	public function __construct() {
-
 		if (!isset($this->helpers)) {
 			$this->helpers[] = 'html';
 		}
 		foreach($this->helpers as $h) {
 			$$h = Loader::helper($h);
 			$this->helperObjects[(str_replace('/','_',$h))] = $$h;
-		}
-		
+		}		
 	}	
+	
+	public function __sleep() {
+		$this->helperObjects = array();
+		return get_object_vars($this);
+	}
 
 	/**
 	 * @access private
