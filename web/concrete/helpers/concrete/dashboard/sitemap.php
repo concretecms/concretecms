@@ -253,9 +253,9 @@ class ConcreteDashboardSitemapHelper {
 					$this->html .= '<li><a href="javascript:void(0)" onclick="ccmSitemapExploreNode(\'' . $instanceID . '\', \''. $display_mode . '\', \'' . $select_mode . '\',' . $t->getCollectionID() . ',\'' . $spID . '\')">' . $t->getCollectionName() . '</a></li>';
 				}
 			}
-			$cp = new Permissions($c);
+			$cnode = $this->getNode($c);
 			$this->html .= '<li class="ccm-sitemap-current-level-title">';
-			$this->html .= '<div sitemap-display-mode="' . $display_mode . '" sitemap-select-mode="' . $select_mode . '" sitemap-instance-id="' . $instanceID . '" class="tree-label" rel="' . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $c->getCollectionID() . '" tree-node-alias="0" ';
+			$this->html .= '<div sitemap-display-mode="' . $display_mode . '" ' . $this->getPermissionsNodes($cnode) . ' sitemap-select-mode="' . $select_mode . '" sitemap-instance-id="' . $instanceID . '" class="tree-label" rel="' . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $c->getCollectionID() . '" tree-node-alias="0" ';
 			$this->html .= 'selected-page-id="' . $this->selectedPageID . '" tree-node-children="' . $c->getNumChildren() . '" ';
 			$this->html .= 'tree-node-title="' . htmlspecialchars($c->getCollectionName()) . '" id="tree-label' . $c->getCollectionID() . '">';
 			$this->html .= '<span>' . $c->getCollectionName() . '</span></div></li>';
