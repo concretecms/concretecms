@@ -56,7 +56,7 @@ if (isset($_REQUEST['searchInstance'])) {
 	
 	if (count($pages) > 0) { ?>	
 		<table border="0" cellspacing="0" cellpadding="0" id="ccm-<?=$searchInstance?>-list" class="ccm-results-list">
-		<tr>
+		<tr class="ccm-results-list-header">
 			<? if (!$searchDialog) { ?><th><input id="ccm-<?=$searchInstance?>-list-cb-all" type="checkbox" /></th><? } ?>
 			<? if ($pageList->isIndexedSearch()) { ?>
 				<th class="<?=$pageList->getSearchResultsClass('cIndexScore')?>"><a href="<?=$pageList->getSortByURL('cIndexScore', 'desc', $bu, $soargs)?>"><?=t('Score')?></a></th>
