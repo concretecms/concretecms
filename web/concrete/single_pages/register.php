@@ -10,6 +10,8 @@
 <div class="ccm-form">
 
 <? 
+$attribs = UserAttributeKey::getRegistrationList();
+
 if($success) { ?>
 <div class="row">
 <div class="span10 offset1">
@@ -41,7 +43,7 @@ if($success) { ?>
 
 <form method="post" action="<?=$this->url('/register', 'do_register')?>" class="form-horizontal">
 <div class="row">
-<div class="span5 offset1">
+<div class="<? if (count($attribs) > 0) {?>span5<? } else {?>span10<? } ?> offset1">
 	<fieldset>
 		<legend><?=t('Your Details')?></legend>
 		<? if ($displayUserName) { ?>
@@ -74,12 +76,12 @@ if($success) { ?>
 
 	</fieldset>
 </div>
+<? if (count($attribs) > 0) { ?>
 <div class="span5">
 	<fieldset>
 		<legend><?=t('Options')?></legend>
 	<?
 	
-	$attribs = UserAttributeKey::getRegistrationList();
 	$af = Loader::helper('form/attribute');
 	
 	foreach($attribs as $ak) { ?> 
@@ -87,6 +89,7 @@ if($success) { ?>
 	<? }?>
 	</fieldset>
 </div>
+<? } ?>
 <div class="span10 offset1 ">
 	<? if (ENABLE_REGISTRATION_CAPTCHA) { ?>
 	
