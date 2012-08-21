@@ -1,6 +1,7 @@
 <? 
 Loader::model('pile');
 $ci = Loader::helper('concrete/urls');
+$ap = new Permissions($a);
 ?>
 	<div id="ccm-scrapbook-list">
 	<?
@@ -15,6 +16,9 @@ $ci = Loader::helper('concrete/urls');
 		if (is_object($item)) {
 			$bt = $item->getBlockTypeObject();
 			$btIcon = $ci->getBlockTypeIconURL($bt);
+			if (!$ap->canAddBlockToArea($bt)) {
+				continue;
+			}
 			?>			
 			<div class="ccm-scrapbook-list-item" id="ccm-pc-<?=$obj->getPileContentID()?>">
 				<div class="ccm-block-type">
