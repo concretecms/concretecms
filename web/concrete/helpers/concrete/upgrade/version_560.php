@@ -88,7 +88,9 @@ class ConcreteUpgradeVersion560Helper {
 		if (!Config::get('SITE_INSTALLED_APP_VERSION')) {
 			Config::save('SITE_INSTALLED_APP_VERSION', Config::get('SITE_APP_VERSION'));
  	 	}
- 	 	
+
+		BlockTypeList::resetBlockTypeDisplayOrder();
+
  	 	$th = PageTheme::getByHandle('greek_yogurt');
  	 	if(!is_object($th)) {
  	 		PageTheme::add('greek_yogurt');
