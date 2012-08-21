@@ -689,6 +689,9 @@
 						$cnt = $b->getController();
 						$ob = Block::getByID($cnt->getOriginalBlockID());
 						$ob->loadNewCollection($nvc);
+						if (!is_object($ax)) {
+							$ax = Area::getOrCreate($cx, $ax);
+						}
 						$ob->setBlockAreaObject($ax);
 						$nb = $ob->duplicate($nvc);
 						$nb->setAbsoluteBlockDisplayOrder($originalDisplayOrder);
