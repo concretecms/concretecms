@@ -14,10 +14,7 @@ class Concrete5_Controller_Block_DateArchive extends BlockController {
 	protected $btInterfaceHeight = "350";
 
 	protected $btExportPageColumns = array('targetCID');
-	
-	protected $btCacheBlockOutput = true;
-	protected $btCacheBlockOutputOnPost = false;
-	protected $btCacheBlockOutputForRegisteredUsers = false;
+	protected $btCacheBlockRecord = true;
 		
 	public $helpers =  array('navigation');	
 	
