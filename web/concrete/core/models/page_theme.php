@@ -611,7 +611,7 @@ class Concrete5_Model_PageTheme extends Object {
 
 	}
 	
-	private function install($dir, $ptHandle, $pkgID) {
+	protected function install($dir, $ptHandle, $pkgID) {
 		if (is_dir($dir)) {
 			$db = Loader::db();
 			$cnt = $db->getOne("select count(ptID) from PageThemes where ptHandle = ?", array($ptHandle));
@@ -622,6 +622,9 @@ class Concrete5_Model_PageTheme extends Object {
 			$ptName = $res->ptName;
 			$ptDescription = $res->ptDescription;
 			$db->query("insert into PageThemes (ptHandle, ptName, ptDescription, pkgID) values (?, ?, ?, ?)", array($ptHandle, $ptName, $ptDescription, $pkgID));
+
+			$env = Environment::get();
+			$env->clearOverrideCache();
 			
 			return PageTheme::getByID($db->Insert_ID());
 		}
@@ -672,6 +675,9 @@ class Concrete5_Model_PageTheme extends Object {
 		$db->query("delete from PageThemes where ptID = ?", array($this->ptID));
 		Cache::delete('page_theme_by_id', $this->ptID);
 		Cache::delete('page_theme_by_handle', $this->ptHandle);
+		$env = Environment::get();
+		$env->clearOverrideCache();
+
 	}
 
 }
