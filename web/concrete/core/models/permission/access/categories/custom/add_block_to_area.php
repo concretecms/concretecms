@@ -29,7 +29,7 @@ class Concrete5_Model_AddBlockToAreaAreaPermissionAccess extends AreaPermissionA
 			if ($pobj instanceof Page) {
 				$permission = $db->GetOne('select permission from BlockTypePermissionBlockTypeAccessList where paID = ?', array($l->getPermissionAccessID()));
 			} else { 
-				$permission = $db->GetOne('select permission from AreaPermissionBlockTypeAccessList where paID = ?', array($l->getPermissionAccessID()));
+				$permission = $db->GetOne('select permission from AreaPermissionBlockTypeAccessList where peID = ? and paID = ?', array($pe->getAccessEntityID(), $l->getPermissionAccessID()));
 			}
 			if ($permission != 'N' && $permission != 'C') {
 				$permission = 'A';
@@ -37,7 +37,7 @@ class Concrete5_Model_AddBlockToAreaAreaPermissionAccess extends AreaPermissionA
 			$l->setBlockTypesAllowedPermission($permission);
 			if ($permission == 'C') { 
 				if ($pobj instanceof Area) { 
-					$btIDs = $db->GetCol('select btID from AreaPermissionBlockTypeAccessListCustom where paID = ?', array($l->getPermissionAccessID()));
+					$btIDs = $db->GetCol('select btID from AreaPermissionBlockTypeAccessListCustom where peID = ? and paID = ?', array($pe->getAccessEntityID(), $l->getPermissionAccessID()));
 				} else { 
 					$btIDs = $db->GetCol('select btID from BlockTypePermissionBlockTypeAccessListCustom where paID = ?', array($l->getPermissionAccessID()));
 				}
