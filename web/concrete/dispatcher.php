@@ -25,6 +25,9 @@
 	## Required Loading
 	require(dirname(__FILE__) . '/startup/required.php');
 
+	## Setup timezone support
+	require(dirname(__FILE__) . '/startup/timezone.php'); // must be included before any date related functions are called (php 5.3 +)
+
 	## First we ensure that dispatcher is not being called directly
 	require(dirname(__FILE__) . '/startup/file_access_check.php');
 
@@ -51,9 +54,6 @@
 	## Set default permissions for new files and directories ##
 	require(dirname(__FILE__) . '/startup/file_permission_config.php');
 	
-	## Setup timzone support
-	require(dirname(__FILE__) . '/startup/timezone.php'); // must be included before any date related functions are called (php 5.3 +)
-
 	## Startup check, install ##	
 	require(dirname(__FILE__) . '/startup/magic_quotes_gpc_check.php');
 
