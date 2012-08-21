@@ -10,7 +10,7 @@ if ($tp->canInstallPackages()) {
 
 $pkgRemote = array();
 $pkgLocal = array();
-if (ENABLE_MARKETPLACE_SUPPORT) {
+if (ENABLE_MARKETPLACE_SUPPORT && is_object($mi)) {
 	if ($mi->isConnected()) { 
 		$pkgArray = Package::getInstalledList();
 		foreach($pkgArray as $pkg) {
