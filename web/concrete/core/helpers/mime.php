@@ -88,7 +88,8 @@ class Concrete5_Helper_Mime {
 			'video/mpeg'                    => 'mpg',
 			'video/quicktime'               => 'qt',
 			'video/x-m4v'                   => 'm4v',
-			'video/x-msvideo'               => 'avi'
+			'video/x-msvideo'               => 'avi',
+			'video/x-ms-wmv'				=> 'wmv'
 		);
 		
 	public function mimeFromExtension($extension) {
