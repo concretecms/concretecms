@@ -337,6 +337,10 @@ class Concrete5_Model_Package extends Object {
 		$items = $this->getPackageItems();
 
 		foreach($items as $k => $array) {
+			if (!is_array($array)) {
+				continue;
+			}
+			
 			foreach($array as $item) {
 				if (is_a($item, 'Job')) {
 					$item->uninstall();
