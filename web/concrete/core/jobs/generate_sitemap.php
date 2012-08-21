@@ -32,6 +32,9 @@ class Concrete5_Job_GenerateSitemap extends Job {
 	* @throws Exception Throws an exception in case of errors.
 	*/
 	public function run() {
+		Cache::disableCache();
+		Cache::disableLocalCache();
+		
 		try {
 			$db = Loader::db();
 			$instances = array(
