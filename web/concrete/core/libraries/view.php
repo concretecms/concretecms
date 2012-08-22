@@ -613,7 +613,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			// log if setup to do so
 			if (ENABLE_LOG_ERRORS) {
 				$l = new Log(LOG_TYPE_EXCEPTIONS, true, true);
-				$l->write(t('Exception Occurred: ') . $e->getMessage());
+				$l->write(t('Exception Occurred: ') . sprintf("%s:%d %s (%d)\n", $e->getFile(), $e->getLine(), $e->getMessage(), $e->getCode()));
 				$l->write($e->getTraceAsString());
 				$l->close();
 			}
