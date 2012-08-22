@@ -608,6 +608,7 @@ class Concrete5_Model_Area extends Object {
 		$blockPositionInArea = 1; //for blockWrapper output
 		
 		foreach ($blocksToDisplay as $b) {
+			$includeEditStrip = false;
 			$bv = new BlockView();
 			$bv->setAreaObject($ourArea); 
 			
@@ -621,7 +622,7 @@ class Concrete5_Model_Area extends Object {
 			}
 			$p = new Permissions($b);
 
-			if ($c->isEditMode() && $this->showControls) {
+			if ($c->isEditMode() && $this->showControls && $p->canViewEditInterface()) {
 				$includeEditStrip = true;
 			}
 
