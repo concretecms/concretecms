@@ -604,12 +604,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		 * @private 
 		 */
 		public static function defaultExceptionHandler($e) {
-			if (Config::get('SITE_DEBUG_LEVEL') == DEBUG_DISPLAY_ERRORS) {
-				View::renderError(t('An unexpected error occurred.'), $e->getMessage(), $e);		
-			} else {
-				View::renderError(t('An unexpected error occurred.'), t('An error occurred while processing this request.'), $e);
-			}
-			
 			// log if setup to do so
 			if (ENABLE_LOG_ERRORS) {
 				$l = new Log(LOG_TYPE_EXCEPTIONS, true, true);
@@ -617,6 +611,13 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				$l->write($e->getTraceAsString());
 				$l->close();
 			}
+
+			if (Config::get('SITE_DEBUG_LEVEL') == DEBUG_DISPLAY_ERRORS) {
+				View::renderError(t('An unexpected error occurred.'), $e->getMessage(), $e);		
+			} else {
+				View::renderError(t('An unexpected error occurred.'), t('An error occurred while processing this request.'), $e);
+			}
+
 		}
 
 		/**
@@ -708,271 +709,243 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		 * @return void
 		*/	
 		public function render($view, $args = null) { 
-			
-			try {			
-				if (is_array($args)) {
-					extract($args);
-				}
-	
-				// strip off a slash if there is one at the end
-				if (is_string($view)) {
-					if (substr($view, strlen($view) - 1) == '/') {
-						$view = substr($view, 0, strlen($view) - 1);
-					}
-				}
-				
-				$wrapTemplateInTheme = false;
-				$this->checkMobileView();
-				Events::fire('on_start', $this);
-				
-				// Extract controller information from the view, and put it in the current context
-				if (!isset($this->controller)) {
-					$this->controller = Loader::controller($view);
-					$this->controller->setupAndRun();
-				}
-
-				if ($this->controller->getRenderOverride() != '') {
-				   $view = $this->controller->getRenderOverride();
-				}
-				
-				// Determine which inner item to load, load it, and stick it in $innerContent
-				$content = false;
-								
-				ob_start();			
-				if ($view instanceof Page) {
-
-					$_pageBlocks = $view->getBlocks();
-					$_pageBlocksGlobal = $view->getGlobalBlocks();
-					$_pageBlocks = array_merge($_pageBlocks, $_pageBlocksGlobal);
-					if ($view->supportsPageCache($_pageBlocks, $this->controller)) {
-						$pageContent = $view->getFromPageCache();
-						if ($pageContent != false) {
-							Events::fire('on_before_render', $this);
-							if (defined('APP_CHARSET')) {
-								header("Content-Type: text/html; charset=" . APP_CHARSET);
-							}
-							print($pageContent);
-							Events::fire('on_render_complete', $this);
-							if (ob_get_level() == OB_INITIAL_LEVEL) {
 		
-								require(DIR_BASE_CORE . '/startup/shutdown.php');
-								exit;
-							}
-							return;
+			if (is_array($args)) {
+				extract($args);
+			}
+
+			// strip off a slash if there is one at the end
+			if (is_string($view)) {
+				if (substr($view, strlen($view) - 1) == '/') {
+					$view = substr($view, 0, strlen($view) - 1);
+				}
+			}
+			
+			$wrapTemplateInTheme = false;
+			$this->checkMobileView();
+			Events::fire('on_start', $this);
+			
+			// Extract controller information from the view, and put it in the current context
+			if (!isset($this->controller)) {
+				$this->controller = Loader::controller($view);
+				$this->controller->setupAndRun();
+			}
+
+			if ($this->controller->getRenderOverride() != '') {
+			   $view = $this->controller->getRenderOverride();
+			}
+			
+			// Determine which inner item to load, load it, and stick it in $innerContent
+			$content = false;
+							
+			ob_start();			
+			if ($view instanceof Page) {
+
+				$_pageBlocks = $view->getBlocks();
+				$_pageBlocksGlobal = $view->getGlobalBlocks();
+				$_pageBlocks = array_merge($_pageBlocks, $_pageBlocksGlobal);
+				if ($view->supportsPageCache($_pageBlocks, $this->controller)) {
+					$pageContent = $view->getFromPageCache();
+					if ($pageContent != false) {
+						Events::fire('on_before_render', $this);
+						if (defined('APP_CHARSET')) {
+							header("Content-Type: text/html; charset=" . APP_CHARSET);
 						}
+						print($pageContent);
+						Events::fire('on_render_complete', $this);
+						if (ob_get_level() == OB_INITIAL_LEVEL) {
+	
+							require(DIR_BASE_CORE . '/startup/shutdown.php');
+							exit;
+						}
+						return;
 					}
-					
-					foreach($_pageBlocks as $b1) {
-						$b1p = new Permissions($b1);
-						if ($b1p->canRead()) { 
-							$btc = $b1->getInstance();
-							// now we inject any custom template CSS and JavaScript into the header
-							if('Controller' != get_class($btc)){
-								$btc->outputAutoHeaderItems();
-							}
-							$btc->runTask('on_page_view', array($view));
+				}
+				
+				foreach($_pageBlocks as $b1) {
+					$b1p = new Permissions($b1);
+					if ($b1p->canRead()) { 
+						$btc = $b1->getInstance();
+						// now we inject any custom template CSS and JavaScript into the header
+						if('Controller' != get_class($btc)){
+							$btc->outputAutoHeaderItems();
 						}
+						$btc->runTask('on_page_view', array($view));
 					}
-					
-					// do we have any custom menu plugins?
-					$cp = new Permissions($view);
-					if ($cp->canViewToolbar()) { 
-						$ih = Loader::helper('concrete/interface/menu');
-						$_interfaceItems = $ih->getPageHeaderMenuItems();
-						foreach($_interfaceItems as $_im) {
-							$_controller = $_im->getController();
-							$_controller->outputAutoHeaderItems();
-						}
-						unset($_interfaceItems);
-						unset($_im);
-						unset($_controller);
+				}
+				
+				// do we have any custom menu plugins?
+				$cp = new Permissions($view);
+				if ($cp->canViewToolbar()) { 
+					$ih = Loader::helper('concrete/interface/menu');
+					$_interfaceItems = $ih->getPageHeaderMenuItems();
+					foreach($_interfaceItems as $_im) {
+						$_controller = $_im->getController();
+						$_controller->outputAutoHeaderItems();
 					}
 					unset($_interfaceItems);
 					unset($_im);
 					unset($_controller);
-					
-					
-					// now, we output all the custom style records for the design tab in blocks/areas on the page
-					$c = $this->getCollectionObject();
-					$view->outputCustomStyleHeaderItems(); 	
-					
-					$viewPath = $view->getCollectionPath();
-					$this->viewPath = $viewPath;
-					
-					$cFilename = $view->getCollectionFilename();
-					$ctHandle = $view->getCollectionTypeHandle();
-					$editMode = $view->isEditMode();
-					$c = $view;
-					$this->c = $c;
-					
-					$env = Environment::get();
-					// $view is a page. It can either be a SinglePage or just a Page, but we're not sure at this point, unfortunately
-					if ($view->getCollectionTypeID() == 0 && $cFilename) {
-						$wrapTemplateInTheme = true;
-						$cFilename = trim($cFilename, '/');
-						$content = $env->getPath(DIRNAME_PAGES . '/' . $cFilename, $view->getPackageHandle());
-						$themeFilename = $c->getCollectionHandle() . '.php';						
-					} else {
-						$rec = $env->getRecord(DIRNAME_PAGE_TYPES . '/' . $ctHandle . '.php', $view->getPackageHandle());
-						if ($rec->exists()) {
-							$wrapTemplateInTheme = true;
-							$content = $rec->file;
-						}
-						$themeFilename = $ctHandle . '.php';
-					}
-					
-					
-				} else if (is_string($view)) {
-					
-					// if we're passing a view but our render override is not null, that means that we're passing 
-					// a new view from within a controller. If that's the case, then we DON'T override the viewPath, we want to keep it
-					
-					// In order to enable editable 404 pages, other editable pages that we render without actually visiting
-					if (defined('DB_DATABASE') && $view == '/page_not_found') {
-						$pp = Page::getByPath($view);
-						if (!$pp->isError()) {
-							$this->c = $pp;
-						}
-					}
-					
-					$viewPath = $view;
-					if ($this->controller->getRenderOverride() != '' && $this->getCollectionObject() != null) {
-						// we are INSIDE a collection renderring a view. Which means we want to keep the viewPath that of the collection
-						$this->viewPath = $this->getCollectionObject()->getCollectionPath();
-					}
-					
-					// we're just passing something like "/login" or whatever. This will typically just be 
-					// internal Concrete stuff, but we also prepare for potentially having something in DIR_FILES_CONTENT (ie: the webroot)
-					if (file_exists(DIR_FILES_CONTENT . "/{$view}/" . FILENAME_COLLECTION_VIEW)) {
-						$content = DIR_FILES_CONTENT . "/{$view}/" . FILENAME_COLLECTION_VIEW;
-					} else if (file_exists(DIR_FILES_CONTENT . "/{$view}.php")) {
-						$content = DIR_FILES_CONTENT . "/{$view}.php";
-					} else if (file_exists(DIR_FILES_CONTENT_REQUIRED . "/{$view}/" . FILENAME_COLLECTION_VIEW)) {
-						$content = DIR_FILES_CONTENT_REQUIRED . "/{$view}/" . FILENAME_COLLECTION_VIEW;
-					} else if (file_exists(DIR_FILES_CONTENT_REQUIRED . "/{$view}.php")) {
-						$content = DIR_FILES_CONTENT_REQUIRED . "/{$view}.php";
-					} else if ($this->getCollectionObject() != null && $this->getCollectionObject()->isGeneratedCollection() && $this->getCollectionObject()->getPackageID() > 0) {
-						//This is a single_page associated with a package, so check the package views as well
-						$pagePkgPath = Package::getByID($this->getCollectionObject()->getPackageID())->getPackagePath();
-						if (file_exists($pagePkgPath . "/single_pages/{$view}/" . FILENAME_COLLECTION_VIEW)) {
-							$content = $pagePkgPath . "/single_pages/{$view}/" . FILENAME_COLLECTION_VIEW;
-						} else if (file_exists($pagePkgPath . "/single_pages/{$view}.php")) {
-							$content = $pagePkgPath . "/single_pages/{$view}.php";
-						}
-					}
+				}
+				unset($_interfaceItems);
+				unset($_im);
+				unset($_controller);
+				
+				
+				// now, we output all the custom style records for the design tab in blocks/areas on the page
+				$c = $this->getCollectionObject();
+				$view->outputCustomStyleHeaderItems(); 	
+				
+				$viewPath = $view->getCollectionPath();
+				$this->viewPath = $viewPath;
+				
+				$cFilename = $view->getCollectionFilename();
+				$ctHandle = $view->getCollectionTypeHandle();
+				$editMode = $view->isEditMode();
+				$c = $view;
+				$this->c = $c;
+				
+				$env = Environment::get();
+				// $view is a page. It can either be a SinglePage or just a Page, but we're not sure at this point, unfortunately
+				if ($view->getCollectionTypeID() == 0 && $cFilename) {
 					$wrapTemplateInTheme = true;
-					$themeFilename = $view . '.php';
+					$cFilename = trim($cFilename, '/');
+					$content = $env->getPath(DIRNAME_PAGES . '/' . $cFilename, $view->getPackageHandle());
+					$themeFilename = $c->getCollectionHandle() . '.php';						
+				} else {
+					$rec = $env->getRecord(DIRNAME_PAGE_TYPES . '/' . $ctHandle . '.php', $view->getPackageHandle());
+					if ($rec->exists()) {
+						$wrapTemplateInTheme = true;
+						$content = $rec->file;
+					}
+					$themeFilename = $ctHandle . '.php';
 				}
 				
 				
-				if (is_object($this->c)) {
-					$c = $this->c;
-					if (defined('DB_DATABASE') && $view == '/page_not_found') {
-						$view = $c;
-						$req = Request::get();
-						$req->setCurrentPage($c);
+			} else if (is_string($view)) {
+				
+				// if we're passing a view but our render override is not null, that means that we're passing 
+				// a new view from within a controller. If that's the case, then we DON'T override the viewPath, we want to keep it
+				
+				// In order to enable editable 404 pages, other editable pages that we render without actually visiting
+				if (defined('DB_DATABASE') && $view == '/page_not_found') {
+					$pp = Page::getByPath($view);
+					if (!$pp->isError()) {
+						$this->c = $pp;
 					}
 				}
 				
-				// Determine which outer item/theme to load
-				// obtain theme information for this collection
-				if (isset($this->themeOverride)) {
-					$theme = $this->themeOverride;
-				} else if ($this->controller->theme != false) {
-					$theme = $this->controller->theme;
-				} else if (($tmpTheme = $this->getThemeFromPath($viewPath)) != false) {
-					$theme = $tmpTheme;
-				} else if (is_object($this->c) && ($tmpTheme = $this->c->getCollectionThemeObject()) != false) {
-					$theme = $tmpTheme;
-				} else {
-					$theme = FILENAME_COLLECTION_DEFAULT_THEME;
-				}		
-				
-				$this->setThemeForView($theme, $themeFilename, $wrapTemplateInTheme);
-
-	
-				// finally, we include the theme (which was set by setTheme and will automatically include innerContent)
-				// disconnect from our db and exit
-
-				$this->controller->on_before_render();
-				extract($this->controller->getSets());
-				extract($this->controller->getHelperObjects());
-
-				if ($content != false) {
-					include($content);
-				}
-
-				$innerContent = ob_get_contents();
-				
-				if (ob_get_level() > OB_INITIAL_LEVEL) {
-					ob_end_clean();
+				$viewPath = $view;
+				if ($this->controller->getRenderOverride() != '' && $this->getCollectionObject() != null) {
+					// we are INSIDE a collection renderring a view. Which means we want to keep the viewPath that of the collection
+					$this->viewPath = $this->getCollectionObject()->getCollectionPath();
 				}
 				
-				Events::fire('on_before_render', $this);
-				
-				if (defined('APP_CHARSET')) {
-					header("Content-Type: text/html; charset=" . APP_CHARSET);
-				}
-				
-				if (file_exists($this->theme)) {
-					
-					ob_start();
-					include($this->theme);
-					$pageContent = ob_get_contents();
-					ob_end_clean();
-					
-					$ret = Events::fire('on_page_output', $pageContent);
-					if($ret != '') {
-						print $ret;
-					} else {
-						print $pageContent;
+				// we're just passing something like "/login" or whatever. This will typically just be 
+				// internal Concrete stuff, but we also prepare for potentially having something in DIR_FILES_CONTENT (ie: the webroot)
+				if (file_exists(DIR_FILES_CONTENT . "/{$view}/" . FILENAME_COLLECTION_VIEW)) {
+					$content = DIR_FILES_CONTENT . "/{$view}/" . FILENAME_COLLECTION_VIEW;
+				} else if (file_exists(DIR_FILES_CONTENT . "/{$view}.php")) {
+					$content = DIR_FILES_CONTENT . "/{$view}.php";
+				} else if (file_exists(DIR_FILES_CONTENT_REQUIRED . "/{$view}/" . FILENAME_COLLECTION_VIEW)) {
+					$content = DIR_FILES_CONTENT_REQUIRED . "/{$view}/" . FILENAME_COLLECTION_VIEW;
+				} else if (file_exists(DIR_FILES_CONTENT_REQUIRED . "/{$view}.php")) {
+					$content = DIR_FILES_CONTENT_REQUIRED . "/{$view}.php";
+				} else if ($this->getCollectionObject() != null && $this->getCollectionObject()->isGeneratedCollection() && $this->getCollectionObject()->getPackageID() > 0) {
+					//This is a single_page associated with a package, so check the package views as well
+					$pagePkgPath = Package::getByID($this->getCollectionObject()->getPackageID())->getPackagePath();
+					if (file_exists($pagePkgPath . "/single_pages/{$view}/" . FILENAME_COLLECTION_VIEW)) {
+						$content = $pagePkgPath . "/single_pages/{$view}/" . FILENAME_COLLECTION_VIEW;
+					} else if (file_exists($pagePkgPath . "/single_pages/{$view}.php")) {
+						$content = $pagePkgPath . "/single_pages/{$view}.php";
 					}
-					
-					if ($view instanceof Page) {
-						if ($view->supportsPageCache($_pageBlocks, $this->controller)) {
-							$view->addToPageCache($pageContent);
-						}
-					}
-					
-				} else {
-					throw new Exception(t('File %s not found. All themes need default.php and view.php files in them. Consult concrete5 documentation on how to create these files.', $this->theme));
 				}
-				
-				Events::fire('on_render_complete', $this);
-				
-				if (ob_get_level() == OB_INITIAL_LEVEL) {
-	
-					require(DIR_BASE_CORE . '/startup/shutdown.php');
-					exit;
-					
-				}
-				
-			} catch(ADODB_Exception $e) {
-				// if it's a database exception we go here.
-				if (Config::get('SITE_DEBUG_LEVEL') == DEBUG_DISPLAY_ERRORS) {
-					$this->renderError(t('An unexpected error occurred.'), $e->getMessage(), $e);		
-				} else {
-					$this->renderError(t('An unexpected error occurred.'), t('A database error occurred while processing this request.'), $e);
-				}
-				
-				// log if setup to do so
-				if (ENABLE_LOG_ERRORS) {
-					$l = new Log(LOG_TYPE_EXCEPTIONS, true, true);
-					$l->write(t('Exception Occurred: ') . $e->getMessage());
-					$l->write($e->getTraceAsString());
-					$l->close();
-				}
-			} catch (Exception $e) {
-				$this->renderError(t('An unexpected error occurred.'), $e->getMessage(), $e);
-				// log if setup to do so
-				if (ENABLE_LOG_ERRORS) {
-					$l = new Log(LOG_TYPE_EXCEPTIONS, true, true);
-					$l->write(t('Exception Occurred: ') . $e->getMessage());
-					$l->write($e->getTraceAsString());
-					$l->close();
+				$wrapTemplateInTheme = true;
+				$themeFilename = $view . '.php';
+			}
+			
+			
+			if (is_object($this->c)) {
+				$c = $this->c;
+				if (defined('DB_DATABASE') && $view == '/page_not_found') {
+					$view = $c;
+					$req = Request::get();
+					$req->setCurrentPage($c);
 				}
 			}
+			
+			// Determine which outer item/theme to load
+			// obtain theme information for this collection
+			if (isset($this->themeOverride)) {
+				$theme = $this->themeOverride;
+			} else if ($this->controller->theme != false) {
+				$theme = $this->controller->theme;
+			} else if (($tmpTheme = $this->getThemeFromPath($viewPath)) != false) {
+				$theme = $tmpTheme;
+			} else if (is_object($this->c) && ($tmpTheme = $this->c->getCollectionThemeObject()) != false) {
+				$theme = $tmpTheme;
+			} else {
+				$theme = FILENAME_COLLECTION_DEFAULT_THEME;
+			}		
+			
+			$this->setThemeForView($theme, $themeFilename, $wrapTemplateInTheme);
 
-		}
-		
+
+			// finally, we include the theme (which was set by setTheme and will automatically include innerContent)
+			// disconnect from our db and exit
+
+			$this->controller->on_before_render();
+			extract($this->controller->getSets());
+			extract($this->controller->getHelperObjects());
+
+			if ($content != false) {
+				include($content);
+			}
+
+			$innerContent = ob_get_contents();
+			
+			if (ob_get_level() > OB_INITIAL_LEVEL) {
+				ob_end_clean();
+			}
+			
+			Events::fire('on_before_render', $this);
+			
+			if (defined('APP_CHARSET')) {
+				header("Content-Type: text/html; charset=" . APP_CHARSET);
+			}
+			
+			if (file_exists($this->theme)) {
+				
+				ob_start();
+				include($this->theme);
+				$pageContent = ob_get_contents();
+				ob_end_clean();
+				
+				$ret = Events::fire('on_page_output', $pageContent);
+				if($ret != '') {
+					print $ret;
+				} else {
+					print $pageContent;
+				}
+				
+				if ($view instanceof Page) {
+					if ($view->supportsPageCache($_pageBlocks, $this->controller)) {
+						$view->addToPageCache($pageContent);
+					}
+				}
+				
+			} else {
+				throw new Exception(t('File %s not found. All themes need default.php and view.php files in them. Consult concrete5 documentation on how to create these files.', $this->theme));
+			}
+			
+			Events::fire('on_render_complete', $this);
+			
+			if (ob_get_level() == OB_INITIAL_LEVEL) {
+
+				require(DIR_BASE_CORE . '/startup/shutdown.php');
+				exit;
+				
+			}
+			
+		}		
 	}
