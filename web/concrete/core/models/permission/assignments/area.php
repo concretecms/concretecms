@@ -81,7 +81,7 @@ class Concrete5_Model_AreaPermissionAssignment extends PermissionAssignment {
 	public function getPermissionKeyToolsURL($task = false) {
 		$area = $this->getPermissionObject();
 		$c = $area->getAreaCollectionObject();
-		return parent::getPermissionKeyToolsURL($task) . '&cID=' . $c->getCollectionID() . '&arHandle=' . $area->getAreaHandle();
+		return parent::getPermissionKeyToolsURL($task) . '&cID=' . $c->getCollectionID() . '&arHandle=' . urlencode($area->getAreaHandle());
 	}
 
 	public function clearPermissionAssignment() {
