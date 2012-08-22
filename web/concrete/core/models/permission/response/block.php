@@ -9,6 +9,16 @@ class Concrete5_Model_BlockPermissionResponse extends PermissionResponse {
 	public function canAdmin() { return $this->validate('edit_block_permissions'); }
 	public function canAdminBlock() { return $this->validate('edit_block_permissions'); }
 	
+	public function canViewEditInterface() {
+		return ($this->canEditBlock() ||
+			$this->canEditBlockCustomTemplate() ||
+			$this->canDeleteBlock() ||
+			$this->canEditBlockDesign() ||
+			$this->canEditBlockPermissions() ||
+			$this->canScheduleGuestAccess()
+		);	
+	}
+	
 	public function canGuestsViewThisBlock() {
 		$pk = PermissionKey::getByHandle('view_block');
 		$pk->setPermissionObject($this->getPermissionObject());

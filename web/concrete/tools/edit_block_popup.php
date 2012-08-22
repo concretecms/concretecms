@@ -15,7 +15,7 @@ if (!$a->isGlobalArea()) {
 
 $bp = new Permissions($b);
 $ap = new Permissions($a);
-if ((!$bp->canWrite()) && (!$ap->canAddBlocks())) {
+if (!$bp->canViewEditInterface()) {
 	die(t("Access Denied."));
 } 
 
@@ -73,7 +73,7 @@ if (is_object($b)) {
 			}
 			break;
 		case 'view_edit_mode':
-			if ($bp->canWrite() || $ap->canAddBlocks()) {
+			if ($bp->canViewEditInterface()) {
 
 				$btc = $b->getInstance();
 				// now we inject any custom template CSS and JavaScript into the header
