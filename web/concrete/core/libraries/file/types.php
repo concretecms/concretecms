@@ -32,8 +32,8 @@ class Concrete5_Library_FileTypeList {
 		return $instance;
 	}
 	
-	private $types = array();
-	private $importerAttributes = array();
+	protected $types = array();
+	protected $importerAttributes = array();
 	
 	public function define($extension, $name, $type, $customImporter = false, $inlineFileViewer = false, $editor = false, $pkgHandle = false) {
 		$ext = explode(',', $extension);
@@ -113,7 +113,7 @@ class Concrete5_Library_FileType {
 	public function getView() {return $this->view;}	
 	public function getEditor() { return $this->editor;}
 	
-	private function mapGenericTypeText($type) {
+	protected function mapGenericTypeText($type) {
 		switch($type) {
 			case FileType::T_IMAGE:
 				return t('Image');
