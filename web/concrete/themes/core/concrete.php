@@ -40,7 +40,11 @@ $this->addFooterItem(Loader::helper('html')->javascript('bootstrap.transitions.j
 </div>
 </div>
 
-<? Loader::element('footer_required');?>
+<? 
+if (is_object($c)) {
+	Loader::element('footer_required');
+}
+?>
 
 </body>
 </html>
