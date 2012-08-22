@@ -53,7 +53,7 @@ $countries = array_merge(array('' => t('Choose Country')), $countries);
 ?>
 
 <div class="ccm-attribute-address-line ccm-attribute-address-country">
-<?=$f->label($this->field('country'), t('Country'), $country)?>
+<?=$f->label($this->field('country'), t('Country'))?>
 <?=$f->select($this->field('country'), $countries, $country); ?>
 </div>
 
