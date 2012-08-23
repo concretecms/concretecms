@@ -126,7 +126,16 @@ menuHTML += '<?=$valt->output('', true)?>';
 menuHTML += '<h4><?=t('Version Comments')?></h4>';
 menuHTML += '<p><input type="text" name="comments" id="ccm-check-in-comments" value="<?=addslashes($c->getNextVersionComments())?>" onclick="this.select()" style="width:520px"/></p>';
 <? if ($cp->canApprovePageVersions()) { ?>
-menuHTML += '<a href="javascript:void(0)" id="ccm-check-in-publish" class="btn primary" style="float: right"><span><?=t('Publish My Edits')?></span></a>';
+	<? 
+	$publishTitle = t('Publish My Edits');
+	$pk = PermissionKey::getByHandle('approve_page_versions');
+	$pk->setPermissionObject($c);
+	$pa = $pk->getPermissionAccessObject();
+	if (is_object($pa) && count($pa->getWorkflows()) > 0) {
+		$publishTitle = t('Submit to Workflow');
+	}
+?>
+menuHTML += '<a href="javascript:void(0)" id="ccm-check-in-publish" class="btn primary" style="float: right"><span><?=$publishTitle?></span></a>';
 <? } ?>
 menuHTML += '<a href="javascript:void(0)" id="ccm-check-in-preview" class="btn" style="float: right"><span><?=t('Preview My Edits')?></span></a>';
 menuHTML += '<a href="javascript:void(0)" id="ccm-check-in-discard" class="btn" style="float: left"><span><?=t('Discard My Edits')?></span></a>';
