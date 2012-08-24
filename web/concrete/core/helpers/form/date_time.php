@@ -33,6 +33,9 @@ class Concrete5_Helper_Form_DateTime {
 		}
 		
 		if (isset($arr[$field . '_dt'])) {
+            		if ($arr[$field . '_dt'] == '') {
+                		return '';
+			} 			
 			$dt = date('Y-m-d', strtotime($arr[$field . '_dt']));
 			if (DATE_FORM_HELPER_FORMAT_HOUR == '12') {
 				$str = $dt . ' ' . $arr[$field . '_h'] . ':' . $arr[$field . '_m'] . ' ' . $arr[$field . '_a'];
@@ -41,6 +44,9 @@ class Concrete5_Helper_Form_DateTime {
 			}
 			return date('Y-m-d H:i:s', strtotime($str));
 		} else if (isset($arr[$field])) {
+            		if ($arr[$field] == '') {
+                		return '';
+			}
 			$dt = date('Y-m-d', strtotime($arr[$field]));
 			return $dt;
 		} else {
@@ -185,7 +191,7 @@ EOS;
 			$dt = $_REQUEST[$field];
 		} else if ($value != "") {
 			$dt = date('m/d/Y', strtotime($value));
-		} else if ($value === '') {
+		} else if ($value == '') {
 			$dt = '';
 		} else {
 			$dt = date('m/d/Y');
