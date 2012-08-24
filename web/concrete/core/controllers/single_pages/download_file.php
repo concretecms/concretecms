@@ -78,11 +78,13 @@ class Concrete5_Controller_DownloadFile extends Controller {
 		}
 	}
 
-	public function force_download($fID,$rcID=NULL) {
-		$file = File::getByID($fID);
-		$file->trackDownload($rcID);
-		$ci = Loader::helper('file');
-		$ci->forceDownload($file->getPath());
+	public function force_download($fID=0,$rcID=NULL) {
+		if ($fID > 0 && Loader::helper('validation/numbers')->integer($fID)) {
+			$file = File::getByID($fID);
+			$file->trackDownload($rcID);
+			$ci = Loader::helper('file');
+			$ci->forceDownload($file->getPath());
+		}
 	}
 
 }
