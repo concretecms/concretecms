@@ -93,5 +93,5 @@ $(function() {
 </script>
 
 <? } else { ?>
-	<p>None.</p>
+	<p><?=t('None.')?></p>
 <? } ?>
