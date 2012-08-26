@@ -50,7 +50,7 @@ class ConcreteDashboardHelper {
 		return $html;
 	}
 	
-	public function getDashboardPaneHeaderWrapper($title = false, $help = false, $span = 'span12', $includeDefaultBody = true, $navigatePages = array(), $upToPage = false) {
+	public function getDashboardPaneHeaderWrapper($title = false, $help = false, $span = 'span12', $includeDefaultBody = true, $navigatePages = array(), $upToPage = false, $favorites = true) {
 		
 		$spantotal = 12;
 		$offset = preg_match('/offset([0-9]+)/i', $span, $offsetmatches);
@@ -72,14 +72,14 @@ class ConcreteDashboardHelper {
 		}
 		
 		$html = '<div class="ccm-ui"><div class="row"><div class="' . $span . '"><div class="ccm-pane">';
-		$html .= self::getDashboardPaneHeader($title, $help, $navigatePages, $upToPage);
+		$html .= self::getDashboardPaneHeader($title, $help, $navigatePages, $upToPage, $favorites);
 		if ($includeDefaultBody) {
 			$html .= '<div class="ccm-pane-body ccm-pane-body-footer">';
 		}
 		return $html;
 	}
 	
-	public function getDashboardPaneHeader($title = false, $help = false, $navigatePages = array(), $upToPage = false) {
+	public function getDashboardPaneHeader($title = false, $help = false, $navigatePages = array(), $upToPage = false, $favorites = true) {
 		$c = Page::getCurrentPage();
 		$vt = Loader::helper('validation/token');
 		$token = $vt->generate('access_quick_nav');
@@ -165,7 +165,11 @@ class ConcreteDashboardHelper {
 		if ($help) {
 			$html .= '<li><span style="display: none" id="ccm-page-help-content">' . $help . '</span><a href="javascript:void(0)" class="ccm-icon-help" title="' . t('Help') . '" id="ccm-page-help">' . t('Help') . '</a></li>';
 		}
+		
+		if ($favorites) {
 		$html .= '<li><a href="javascript:void(0)" id="ccm-add-to-quick-nav" onclick="ccm_toggleQuickNav(' . $c->getCollectionID() . ',\'' . $token . '\')" class="' . $class . '">' . t('Add to Favorites') . '</a></li>';
+		}
+
 		$html .= '<li><a href="javascript:void(0)" onclick="ccm_closeDashboardPane(this)" class="ccm-icon-close">' . t('Close') . '</a></li>';
 		$html .= '</ul>';
 		if (!$title) {
