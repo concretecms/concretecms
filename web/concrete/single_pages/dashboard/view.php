@@ -1,4 +1,4 @@
-<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Dashboard'), false, false, false); ?>
+<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Dashboard'), false, false, false, false, false, false); ?>
 
 <div class="ccm-pane-body" style="padding-bottom: 0px">
 
