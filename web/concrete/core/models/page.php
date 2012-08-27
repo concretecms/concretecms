@@ -125,6 +125,7 @@ class Concrete5_Model_Page extends Collection {
 		$r = $db->Execute('select pkID, paID from PagePermissionAssignments where cID = ?', array($this->getPermissionsCollectionID()));
 		while ($row =  $r->FetchRow()) {
 			$pk = PermissionKey::getByID($row['pkID']);
+			$pk->setPermissionObject($this);
 			$this->permissionAssignments[$row['pkID']] = PermissionAccess::getByID($row['paID'], $pk);
 		}
 	}

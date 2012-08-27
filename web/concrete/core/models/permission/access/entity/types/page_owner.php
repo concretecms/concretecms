@@ -25,7 +25,7 @@ class Concrete5_Model_PageOwnerPermissionAccessEntity extends PermissionAccessEn
 			return false;
 		} else if (is_object($users[0])) {
 			$u = new User();
-			$users[0]->getUserID() == $u->getUserID();
+			return $users[0]->getUserID() == $u->getUserID();
 		}
 	}
 	
