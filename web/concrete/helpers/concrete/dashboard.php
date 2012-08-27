@@ -456,9 +456,12 @@ class ConcreteDashboardHelper {
 
 			$tpa = new TaskPermission();
 			$canAccessExtend = $tpa->canInstallPackages();
+			$systemExtend = Page::getByPath('/dashboard/extend');
+			$systemExtendP = new Permissions($systemExtend);
+			$canViewExtend = $systemExtendP->canRead();
 
 			// If any need to be shown then we proceed...
-			if($canAccessNews || $canAccessSystem || $canAccessExtend){ ?>
+			if($canAccessNews || $canAccessSystem || ($canAccessExtend && $canViewExtend)){ ?>
 
                 <ul>
 
@@ -470,7 +473,7 @@ class ConcreteDashboardHelper {
                     <li><a href="<?=View::url('/dashboard/system')?>"><strong><?=t('System &amp; Settings')?></strong></a> – <?=t('Secure and setup your site.')?></li>
                 <? } ?>
 
-                <? if ($canAccessExtend) { ?>
+                <? if ($canAccessExtend && $canViewExtend) { ?>
                     <li><a href="<?php echo View::url('/dashboard/extend') ?>"><strong><?php echo t("Extend concrete5") ?></strong></a> – 
                     <? if (ENABLE_MARKETPLACE_SUPPORT) { ?>
                     <?php echo sprintf(t('<a href="%s">Install</a>, <a href="%s">update</a> or download more <a href="%s">themes</a> and <a href="%s">add-ons</a>.'),
