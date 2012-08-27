@@ -35,7 +35,7 @@
 		 */
 		public function model($mod, $pkgHandle = null) {
 			$env = Environment::get();
-			$r = Loader::legacyModel($mod);
+			$r = self::legacyModel($mod);
 			if (!$r) {
 				require_once($env->getPath(DIRNAME_MODELS . '/' . $mod . '.php', $pkgHandle));
 			}
@@ -44,15 +44,15 @@
 		protected function legacyModel($model) {
 			switch($model) {
 				case 'collection_attributes':
-					Loader::model('attribute/categories/collection');
+					self::model('attribute/categories/collection');
 					return true;
 					break;
 				case 'user_attributes':
-					Loader::model('attribute/categories/user');
+					self::model('attribute/categories/user');
 					return true;
 					break;
 				case 'file_attributes':
-					Loader::model('attribute/categories/file');
+					self::model('attribute/categories/file');
 					return true;
 					break;
 				default:
@@ -65,7 +65,7 @@
 		 * @access private
 		 */
 		public function packageElement($file, $pkgHandle, $args = null) {
-			Loader::element($file, $args, $pkgHandle);
+			self::element($file, $args, $pkgHandle);
 		}
 
 		/** 
@@ -99,16 +99,16 @@
 				if (strpos($class, ',') > -1) {
 					$subclasses = explode(',', $class);
 					foreach($subclasses as $subclass) {
-						Loader::$autoloadClasses[$subclass] = $data;
+						self::$autoloadClasses[$subclass] = $data;
 					}
 				} else {
-					Loader::$autoloadClasses[$class] = $data;
+					self::$autoloadClasses[$class] = $data;
 				}
 			}				
 		}
 		
 		protected static function getFileFromCorePath($found) {
-			$classes = Loader::$autoloadClasses;
+			$classes = self::$autoloadClasses;
 			$cl = $classes[$found];
 			if ($cl) {
 				$file = $cl[1];
@@ -168,17 +168,17 @@
 		 * @private
 		 */
 		public static function autoload($class) {
-			$classes = Loader::$autoloadClasses;
+			$classes = self::$autoloadClasses;
 			$cl = $classes[$class];
 			if ($cl) {
-				call_user_func_array(array('Loader', $cl[0]), array($cl[1], $cl[2]));
+				call_user_func_array(array(__CLASS__, $cl[0]), array($cl[1], $cl[2]));
 			} else {
 				/* lets handle some things slightly more dynamically */
-				$txt = Loader::helper('text');
+				$txt = self::helper('text');
 				if (strpos($class, 'BlockController') > 0) {
 					$class = substr($class, 0, strpos($class, 'BlockController'));
 					$handle = $txt->uncamelcase($class);
-					Loader::block($handle);
+					self::block($handle);
 				} else if (strpos($class, 'AttributeType') > 0) {
 					$class = substr($class, 0, strpos($class, 'AttributeType'));
 					$handle = $txt->uncamelcase($class);
@@ -187,7 +187,7 @@
 					$class = substr($class, 0, strpos($class, 'Helper'));
 					$handle = $txt->uncamelcase($class);
 					$handle = preg_replace('/^site_/', '', $handle);
-					Loader::helper($handle);
+					self::helper($handle);
 				}
 			}
 		}
@@ -195,11 +195,11 @@
 		/** 
 		 * Loads a block's controller/class into memory. 
 		 * <code>
-		 * <?php Loader::block('autonav'); ?>
+		 * <?php self::block('autonav'); ?>
 		 * </code>
 		 */
 		public function block($bl) {
-			$db = Loader::db();
+			$db = self::db();
 			$pkgHandle = $db->GetOne('select pkgHandle from Packages left join BlockTypes on BlockTypes.pkgID = Packages.pkgID where BlockTypes.btHandle = ?', array($bl));
 			$env = Environment::get();
 			require_once($env->getPath(DIRNAME_BLOCKS . '/' . $bl . '/' . FILENAME_BLOCK_CONTROLLER, $pkgHandle));
@@ -337,7 +337,7 @@
 		 * Gets the path to a particular page type controller
 		 */
 		public function pageTypeControllerPath($ctHandle) {			
-			Loader::model('collection_types');
+			self::model('collection_types');
 			$ct = CollectionType::getByHandle($ctHandle);
 			if (!is_object($ct)) {
 				return false;
@@ -358,7 +358,7 @@
 			$include = false;
 			
 			if (is_string($item)) {
-				$db = Loader::db();
+				$db = self::db();
 				if (is_object($db)) {
 					try {
 						$_item = Page::getByPath($item);
@@ -379,7 +379,7 @@
 				$c = $item;
 				if ($c->getCollectionTypeID() > 0) {					
 					$ctHandle = $c->getCollectionTypeHandle();
-					$path = Loader::pageTypeControllerPath($ctHandle, $item->getPackageHandle());
+					$path = self::pageTypeControllerPath($ctHandle, $item->getPackageHandle());
 					if ($path != false) {
 						require_once($path);
 						$class = Object::camelcase($ctHandle) . 'PageTypeController';
