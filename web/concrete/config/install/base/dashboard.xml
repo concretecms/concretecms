@@ -298,7 +298,7 @@
         </page>        
 
         <page name="Workflow" path="/dashboard/workflow" filename="/dashboard/workflow/view.php" pagetype="" description="" package=""/>
-        <page name="List" path="/dashboard/workflow/list" filename="/dashboard/workflow/list.php" pagetype="" description="" package="">
+        <page name="Workflow List" path="/dashboard/workflow/list" filename="/dashboard/workflow/list.php" pagetype="" description="" package="">
         	<attributes>
 				<attributekey handle="icon_dashboard">
 					<value>icon-list</value>
