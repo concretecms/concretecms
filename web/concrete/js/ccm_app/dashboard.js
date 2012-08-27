@@ -60,7 +60,9 @@ ccm_dashboardEqualizeMenus = function() {
 $(function() {
 	ccm_activateToolbar();
 	
-	$("#ccm-page-help").popover({content: function() {
+	$("#ccm-page-help").popover({
+		trigger: 'click',
+		content: function() {
 		var id = $(this).attr('id') + '-content';
 		return $('#' + id).html();
 		
