@@ -171,7 +171,7 @@
 			$classes = self::$autoloadClasses;
 			$cl = $classes[$class];
 			if ($cl) {
-				call_user_func_array(array('self', $cl[0]), array($cl[1], $cl[2]));
+				call_user_func_array(array(__CLASS__, $cl[0]), array($cl[1], $cl[2]));
 			} else {
 				/* lets handle some things slightly more dynamically */
 				$txt = self::helper('text');
