@@ -63,7 +63,7 @@ class Concrete5_Controller_DownloadFile extends Controller {
 		}
 	}
 
-	private function download($file,$rcID=NULL) {
+	protected function download($file,$rcID=NULL) {
 		//$mime_type = finfo_file(DIR_FILES_UPLOADED."/".$filename);
 		//header('Content-type: $mime_type');
 		// everything else lets just download

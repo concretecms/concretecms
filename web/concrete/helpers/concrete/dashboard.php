@@ -584,9 +584,11 @@ class ConcreteDashboardDefaultMenu extends ConcreteDashboardMenu {
 	
 	public $items = array(
 		'/dashboard/composer/write',
+		'/dashboard/composer/drafts',
 		'/dashboard/sitemap/full',
 		'/dashboard/sitemap/search',
 		'/dashboard/files/search',
+		'/dashboard/files/sets',
 		'/dashboard/reports/statistics',
 		'/dashboard/reports/forms'
 	);

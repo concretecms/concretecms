@@ -63,6 +63,20 @@ class Concrete5_Model_FileList extends DatabaseItemList {
 	public function filterBySet($fs) {
 		if ($fs != false) {
 			$this->filteredFileSetIDs[] = intval($fs->getFileSetID());
+		} else {
+			// this is what we do when we are filtering by files in NO sets.
+			$s1 = FileSet::getMySets();
+			$sets = array();
+			foreach($s1 as $fs) {
+				$sets[] = $fs->getFileSetID();
+			}
+			if (count($sets) == 0) {
+				return false;
+			}
+			$db = Loader::db();
+			$setStr = implode(',', $sets);
+			$this->addToQuery("left join FileSetFiles fsfex on fsfex.fID = f.fID");
+			$this->filter(false, '(fsfex.fID is null or (select count(fID) from FileSetFiles where fID = fsfex.fID and fsID in (' . $setStr . ')) = 0)');
 		}
 	}
 
