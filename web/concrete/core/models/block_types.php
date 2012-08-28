@@ -211,23 +211,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		}
 		
 		/**
-		 * gets the block types that are allowed to be added to the given area - given the current user's permissions
-		 * @param Area
-		 * @param CollectionPermissions
-		 * @return BlockType[]
-		 */
-		public function getAreaBlockTypes(&$a, &$cp) {
-			$btl = new BlockTypeList();
-			$btlaTMP = $btl->getBlockTypeList();
-			$btla = array();
-			foreach($btlaTMP as $bt) {
-				$bt->setAreaPermissions($a, $cp);
-				$btla[] = $bt;
-			}
-			return $btla;
-		}
-		
-		/**
 		 * gets the form post action for the current block type given the area
 		 * @param Area $a
 		 * @return string
@@ -558,64 +541,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			return $templates;
 		}
 		
-		/**
-		 * sets the permissions on the area??
-		 * @todo Documnetation?? not sure what type $cp is or how this is used?
-		 * @param Area $area
-		 * @param unknown $cp
-		 */
-		function setAreaPermissions(&$area, &$cp) {
-			$db = Loader::db();
-			if ($area->overrideCollectionPermissions()) {
-				$setBlocksVia = "AREA";
-			} else {
-				if ($area->getAreaCollectionInheritID() > 0) {
-					// see if the area/page we're supposed to be getting these from actually has a record
-					$arOverrideCollectionPermissions = $db->getOne("select arOverrideCollectionPermissions from Areas where cID = ? and arHandle = ?", array($area->getAreaCollectionInheritID(), $area->getAreaHandle()));
-					if ($arOverrideCollectionPermissions) {
-						$setBlocksVia = "AREA";
-					}
-				}
-				
-				if (!isset($setBlocksVia)) {
-					$setBlocksVia = "PAGE";
-				}				
-			}
-			
-			if ($setBlocksVia == "AREA") { 
-				$c = $area->getAreaCollectionObject();
-				$cpID = ($area->getAreaCollectionInheritID() > 0) ? $area->getAreaCollectionInheritID() : $c->getCollectionID();
-				$v = array($cpID, $area->getAreaHandle(), $this->getBlockTypeID());
-				$q = "select uID, gID from AreaGroupBlockTypes where cID = ? and arHandle = ? and btID = ?";
-				$r = $db->query($q, $v);
-				while ($row = $r->fetchRow()) {
-					if ($row['uID'] != 0) {
-						$this->addBTUArray[] = $row['uID'];
-					}
-					if ($row['gID'] != 0) {
-						$this->addBTGArray[] = $row['gID'];
-					}
-				}
-			} else {
-				$cID = $area->getCollectionID();
-				// we grab all the uID/gID combos from PagePermissions that can edit the page
-				// then we allow them to add all the blocks they want
-				$cInheritCID = $db->getOne('select cInheritPermissionsFromCID from Pages where cID = ?', array($cID));
-				
-				$v = array($cInheritCID);
-				$q = "select uID, gID, cgPermissions from PagePermissions where cID = ?";
-				$r = $db->query($q, $v);
-				while ($row = $r->fetchRow()) {
-					if ($row['uID'] != 0 && strpos($row['cgPermissions'], 'wa') !== false) {
-						$this->addBTUArray[] = $row['uID'];
-					}
-					if ($row['gID'] != 0 && strpos($row['cgPermissions'], 'wa') !== false) {
-						$this->addBTGArray[] = $row['gID'];
-					}
-				}
-			}
-		}
-		
 		function setBlockTypeDisplayOrder($displayOrder) {
 			$db = Loader::db();
 			
@@ -804,6 +729,11 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				
 				if ($btID > 0) {
 					$btd->btID = $btID;
+					$btDisplayOrder = $db->GetOne('select btDisplayOrder from BlockTypes where btID = ?', array($btID));
+					if (!$btDisplayOrder) {
+						$btDisplayOrder = 0;
+					}
+					$btd->btDisplayOrder = $btDisplayOrder;
 					$r = $btd->Replace();
 				} else {
 					if ($bta->isBlockTypeInternal()) {
