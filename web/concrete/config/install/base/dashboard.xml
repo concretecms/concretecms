@@ -116,7 +116,7 @@
         <page name="Members" path="/dashboard/users" filename="/dashboard/users/view.php" pagetype="" description="Add and manage the user accounts and groups on your website." package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
-					<value>users, groups, people, find, delete user, remove user, add user, change password, password</value>
+					<value>users, groups, people, find, delete user, remove user, change password, password</value>
 				</attributekey>
 			</attributes>
         </page>
@@ -236,13 +236,7 @@
 				</attributekey>
 			</attributes>
         </page>
-        <page name="Pages &amp; Themes" path="/dashboard/pages" filename="/dashboard/pages/view.php" pagetype="" description="Reskin your site." package="">
-			<attributes>
-				<attributekey handle="meta_keywords">
-					<value>page types, themes</value>
-				</attributekey>
-			</attributes>
-        </page>
+        <page name="Pages &amp; Themes" path="/dashboard/pages" filename="/dashboard/pages/view.php" pagetype="" description="Reskin your site." package=""></page>
         <page name="Themes" path="/dashboard/pages/themes" filename="/dashboard/pages/themes/view.php" pagetype="" description="Reskin your site." package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
@@ -532,7 +526,7 @@
         <page name="Cache &amp; Speed Settings" path="/dashboard/system/optimization/cache" filename="/dashboard/system/optimization/cache.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
-					<value>cache option, change cache, turn on cache, turn off cache, no cache, page cache, caching</value>
+					<value>cache option, change cache, override, turn on cache, turn off cache, no cache, page cache, caching</value>
 				</attributekey>
 			</attributes>
         </page>
