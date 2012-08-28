@@ -161,7 +161,7 @@ class ConcreteUpgradeVersion560Helper {
 			'/dashboard/files/attributes' => t('file, file attributes, title, attribute, description, rename'),
 			'/dashboard/files/sets' => t('files, category, categories'),
 			'/dashboard/files/add_set' => t('new file set'),
-			'/dashboard/users' => t('users, groups, people, find, delete user, remove user, add user, change password, password'),
+			'/dashboard/users' => t('users, groups, people, find, delete user, remove user, change password, password'),
 			'/dashboard/users/search' => t('find, search, people, delete user, remove user, change password, password'),
 			'/dashboard/users/groups' => t('user, group, people, permissions, access, expire'),
 			'/dashboard/users/attributes' => t('user attributes, user data, gather data, registration data'),
@@ -173,7 +173,7 @@ class ConcreteUpgradeVersion560Helper {
 			'/dashboard/reports/forms' => t('forms, questions, response, data'),
 			'/dashboard/reports/surveys' => t('questions, quiz, response'),
 			'/dashboard/reports/logs' => t('forms, log, error, email, mysql, exception, survey, history'),
-			'/dashboard/pages' => t('page types, themes'),
+			'/dashboard/pages' => t('themes'),
 			'/dashboard/pages/themes' => t('new theme, theme, active theme, change theme, template, css'),
 			'/dashboard/pages/themes/add' => t('theme'),
 			'/dashboard/pages/themes/inspect' => t('page types'),
@@ -202,7 +202,8 @@ class ConcreteUpgradeVersion560Helper {
 			'/dashboard/system/seo/bulk_seo_tool' => t('bulk, seo, change keywords, engine, optimization, search'),
 			'/dashboard/system/seo/tracking_codes' => t('traffic, statistics, google analytics, quant, pageviews, hits'),
 			'/dashboard/system/seo/statistics' => t('turn off statistics, tracking, statistics, pageviews, hits'),
-			'/dashboard/system/seo/search_index' => t('configure search, site search, search option')
+			'/dashboard/system/seo/search_index' => t('configure search, site search, search option'),
+			'/dashboard/system/optimization/cache' => t('cache option, change cache, override, turn on cache, turn off cache, no cache, page cache, caching')
 			);
 		foreach ($pageKeywords as $page => $keywords) {
 			$p = Page::getByPath($page, 'ACTIVE');
