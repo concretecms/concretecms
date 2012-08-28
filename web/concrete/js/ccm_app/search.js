@@ -53,11 +53,12 @@ ccm_deactivateSearchResults = function(searchType) {
 		obj = $("#ccm-search-fields-submit");
 	}
 	obj.attr('disabled', true);
-	var obj = $("#ccm-" + searchType + "-search-loading");
+	var obj = $("#ccm-" + searchType + "-search-results table.ccm-results-list");
 	if (obj.length == 0 || searchType == null) {
-		obj = $("#ccm-search-loading");
+		obj = $("#ccm-search-results");
 	}
-	obj.show();
+	obj.css('opacity', 0.4);
+	jQuery.fn.dialog.showLoader();
 }
 
 ccm_activateSearchResults = function(searchType) {
@@ -72,11 +73,12 @@ ccm_activateSearchResults = function(searchType) {
 		});
 	}
 	$('.dialog-launch').dialog();
-	var obj = $("#ccm-" + searchType + "-search-loading");
+	var obj = $("#ccm-" + searchType + "-search-results table.ccm-results-list");
 	if (obj.length == 0 || searchType == null) {
-		obj = $("#ccm-search-loading");
+		obj = $("#ccm-search-results");
 	}
-	obj.hide();
+	obj.css('opacity', 1);
+	jQuery.fn.dialog.hideLoader();
 	var obj = $("#ccm-" + searchType + "-search-fields-submit");
 	if (obj.length == 0 || searchType == null) {
 		obj = $("#ccm-search-fields-submit");
@@ -102,15 +104,17 @@ ccm_setupInPagePaginationAndSorting = function(searchType) {
 		return false;
 	});
 	$("div.ccm-pagination a").click(function() {
-		ccm_deactivateSearchResults(searchType);
-		var obj = $("#ccm-" + searchType + "-search-results");
-		if (obj.length == 0) {
-			obj = $("#ccm-search-results");
+		if (!($(this).parent().hasClass('disabled'))) { 
+			ccm_deactivateSearchResults(searchType);
+			var obj = $("#ccm-" + searchType + "-search-results");
+			if (obj.length == 0) {
+				obj = $("#ccm-search-results");
+			}
+			obj.load($(this).attr('href'), false, function() {
+				ccm_activateSearchResults(searchType);
+				$("div.ccm-dialog-content").attr('scrollTop', 0);
+			});
 		}
-		obj.load($(this).attr('href'), false, function() {
-			ccm_activateSearchResults(searchType);
-			$("div.ccm-dialog-content").attr('scrollTop', 0);
-		});
 		return false;
 	});
 	$(".ccm-pane-dialog-pagination").each(function() {
@@ -138,18 +142,8 @@ ccm_setupSortableColumnSelection = function(searchType) {
 
 ccm_checkSelectedAdvancedSearchField = function(searchType, fieldset) {
 	$("#ccm-" + searchType + "-search-field-set" + fieldset + " .ccm-search-option-type-date_time input").each(function() {
-		if ($(this).attr('id') == 'date_from') {
-			$(this).attr('id', 'date_from' + fieldset);
-		} else if ($(this).attr('id') == 'date_to') {
-			$(this).attr('id', 'date_to' + fieldset);
-		}
-	});
-
-	$("#ccm-" + searchType + "-search-field-set" + fieldset + " .ccm-search-option-type-date_time input").each(function() {
 		$(this).attr('id', $(this).attr('id') + fieldset);
 	});
-	
-	
 	$("#ccm-" + searchType + "-search-field-set" + fieldset + " .ccm-search-option-type-date_time input").datepicker({
 		showAnim: 'fadeIn'
 	});

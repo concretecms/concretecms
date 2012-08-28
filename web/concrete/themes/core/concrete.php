@@ -11,6 +11,9 @@ if (is_object($c)) {
 	print Loader::helper('html')->javascript('jquery.js');
 	$this->outputHeaderItems();
 }
+$this->addFooterItem(Loader::helper('html')->javascript('bootstrap.alert.js'));
+$this->addFooterItem(Loader::helper('html')->javascript('bootstrap.transitions.js'));
+
 ?>
 
 <!-- insert CSS for Default Concrete Theme //-->
@@ -27,12 +30,21 @@ if (is_object($c)) {
 
 
 <div class="container">
-
+<div class="row">
+<div class="span10 offset1">
 <?php Loader::element('system_errors', array('format' => 'block', 'error' => $error)); ?>
+</div>
+</div>
 <?php print $innerContent ?>
 
 </div>
 </div>
+
+<? 
+if (is_object($c)) {
+	Loader::element('footer_required');
+}
+?>
 
 </body>
 </html>

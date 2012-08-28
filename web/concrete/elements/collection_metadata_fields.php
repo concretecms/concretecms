@@ -2,6 +2,8 @@
 <?
 $attribs = array();
 
+$allowedAKIDs = $assignment->getAttributesAllowedArray();
+
 $requiredKeys = array();
 $usedKeys = array();
 if ($c->getCollectionTypeID() > 0 && !$c->isMasterCollection()) {
@@ -20,7 +22,7 @@ $usedKeysCombined = array_merge($requiredKeys, $usedKeys);
 ?>
 
 <div class="row">
-<div class="span4 columns">
+<div id="ccm-attributes-column" class="span3">
 	<h6><?=t("All Attributes")?></h6>
 	<div class="ccm-block-type-search-wrapper ">
 
@@ -35,17 +37,20 @@ $usedKeysCombined = array_merge($requiredKeys, $usedKeys);
 	$sets = $category->getAttributeSets();
 	?>
 
-	<ul id="ccm-page-attribute-list" class="icon-select-list">
+	<ul id="ccm-page-attribute-list" class="item-select-list">
 	<? foreach($sets as $as) { ?>
-		<li class="icon-select-list-header ccm-attribute-available"><span><?=$as->getAttributeSetName()?></span></li>
+		<li class="item-select-list-header ccm-attribute-available"><span><?=$as->getAttributeSetName()?></span></li>
 		<? 
 		$setattribs = $as->getAttributeKeys();
-		foreach($setattribs as $ak) { ?>
+		foreach($setattribs as $ak) { 
+			if (!in_array($ak->getAttributeKeyID(), $allowedAKIDs)) {
+				continue;
+			}
+			?>
 			
-			<li id="sak<?=$ak->getAttributeKeyID()?>" class="ccm-attribute-available <? if (in_array($ak->getAttributeKeyID(), $usedKeysCombined)) { ?>ccm-attribute-added<? } ?>"><a style="background-image: url('<?=$ak->getAttributeKeyIconSRC()?>')" href="javascript:void(0)" onclick="ccmShowAttributeKey(<?=$ak->getAttributeKeyID()?>)"><?=$ak->getAttributeKeyName()?></a></li>	
+			<li id="sak<?=$ak->getAttributeKeyID()?>" class="ccm-attribute-key ccm-attribute-available <? if (in_array($ak->getAttributeKeyID(), $usedKeysCombined)) { ?>ccm-attribute-added<? } ?>"><a style="background-image: url('<?=$ak->getAttributeKeyIconSRC()?>')" href="javascript:void(0)" onclick="ccmShowAttributeKey(<?=$ak->getAttributeKeyID()?>)"><?=$ak->getAttributeKeyName()?></a></li>	
 			
 		<? 
-			$attribs[] = $ak;
 		} 	
 		
 	} 
@@ -53,22 +58,27 @@ $usedKeysCombined = array_merge($requiredKeys, $usedKeys);
 	$unsetattribs = $category->getUnassignedAttributeKeys();
 	
 	if (count($sets) > 0 && count($unsetattribs) > 0) { ?>
-		<li class="icon-select-list-header"><span><?=t('Other')?></span></li>
+		<li class="item-select-list-header ccm-attribute-available"><span><?=t('Other')?></span></li>
 	<? }
 	
-	foreach($unsetattribs as $ak) { ?>
+	foreach($unsetattribs as $ak) { 
+		if (!in_array($ak->getAttributeKeyID(), $allowedAKIDs)) {
+			continue;
+		}
+
+	
+	?>
 		
-		<li id="sak<?=$ak->getAttributeKeyID()?>" class="ccm-attribute-available <? if (in_array($ak->getAttributeKeyID(), $usedKeysCombined)) { ?>ccm-attribute-added<? } ?>"><a style="background-image: url('<?=$ak->getAttributeKeyIconSRC()?>')" href="javascript:void(0)" onclick="ccmShowAttributeKey(<?=$ak->getAttributeKeyID()?>)"><?=$ak->getAttributeKeyName()?></a></li>	
+		<li id="sak<?=$ak->getAttributeKeyID()?>" class="ccm-attribute-key ccm-attribute-available <? if (in_array($ak->getAttributeKeyID(), $usedKeysCombined)) { ?>ccm-attribute-added<? } ?>"><a style="background-image: url('<?=$ak->getAttributeKeyIconSRC()?>')" href="javascript:void(0)" onclick="ccmShowAttributeKey(<?=$ak->getAttributeKeyID()?>)"><?=$ak->getAttributeKeyName()?></a></li>	
 	
 	<? 
-		$attribs[] = $ak;
 	} 	
 	
 	?>
 	</ul>
 	
 </div>
-<div class="span7">
+<div class="span5" id="ccm-page-attributes-selected">
 <h6><?=t("Selected Attributes")?></h6>
 <div id="ccm-page-attributes-none" <? if (count($usedKeysCombined) > 0) { ?>style="display: none"<? } ?>>
 <div style="padding-top: 140px; width: 400px; text-align: center"><h3>
@@ -80,20 +90,30 @@ $usedKeysCombined = array_merge($requiredKeys, $usedKeys);
 </div>
 
 <? 
+	$attribs = CollectionAttributeKey::getList();
 	ob_start();
 
 	foreach($attribs as $ak) {
+		if (!in_array($ak->getAttributeKeyID(), $allowedAKIDs)) {
+			continue;
+		}
 		$caValue = $c->getAttributeValueObject($ak); ?>
 
 	
 		<div class="form-stacked">
 		<div class="well" id="ak<?=$ak->getAttributeKeyID()?>" <? if (!in_array($ak->getAttributeKeyID(), $usedKeysCombined)) { ?> style="display: none" <? } ?>>
+		
+		<? if (in_array($ak->getAttributeKeyID(), $allowedAKIDs)) { ?> 
 		<input type="hidden" class="ccm-meta-field-selected" id="ccm-meta-field-selected<?=$ak->getAttributeKeyID()?>" name="selectedAKIDs[]" value="<? if (!in_array($ak->getAttributeKeyID(), $usedKeysCombined)) { ?>0<? } else { ?><?=$ak->getAttributeKeyID()?><? } ?>" />
 		
-			<a href="javascript:void(0)" class="ccm-meta-close" ccm-meta-name="<?=$ak->getAttributeKeyName()?>" id="ccm-remove-field-ak<?=$ak->getAttributeKeyID()?>" style="display:<?=(!in_array($ak->getAttributeKeyID(), $requiredKeys))?'block':'none'?>"><img src="<?=ASSETS_URL_IMAGES?>/icons/remove_minus.png" width="16" height="16" alt="<?=t('remove')?>" /></a>
+			<a href="javascript:void(0)" class="ccm-meta-close" ccm-meta-name="<?=$ak->getAttributeKeyName()?>" id="ccm-remove-field-ak<?=$ak->getAttributeKeyID()?>" style="display:<?=(!in_array($ak->getAttributeKeyID(), $requiredKeys) && !$ak->isAttributeKeyInternal())?'block':'none'?>"><img src="<?=ASSETS_URL_IMAGES?>/icons/remove_minus.png" width="16" height="16" alt="<?=t('remove')?>" /></a>
 
 			<label><?=$ak->getAttributeKeyName()?></label>
 			<?=$ak->render('form', $caValue); ?>
+		<? } else { ?>
+			<label><?=$ak->getAttributeKeyName()?></label>
+			<?=$c->getAttribute($ak->getAttributeKeyHandle())?>
+		<? } ?>
 		</div>
 		</div>
 		
@@ -132,29 +152,35 @@ $('input[name=ccmSearchAttributeListField]').focus(function() {
 		$('#ccmSearchAttributeListField').liveUpdate('ccm-page-attribute-list', 'attributes');
 		ccmLiveSearchActive = true;
 	}
+	ccmMapUpAndDownArrows = true;
 });
 
 var ccmLiveSearchActive = false;
-ccmBlockTypeSearchResultsSelect = function(which, e) {
+var ccmMapUpAndDownArrows = true;
+$('#ccm-page-attributes-selected').find('input,select,textarea').focus(function() {
+	ccmMapUpAndDownArrows = false;
+});
+
+ccmPageAttributesSearchResultsSelect = function(which, e) {
 
 	e.preventDefault();
 	e.stopPropagation();
-//	$("input[name=ccmBlockTypeSearch]").blur();
+//	$("input[name=ccmPageAttributesSearch]").blur();
 
 	// find the currently selected item
 	var obj = $("li.ccm-item-selected");
 	var foundblock = false;
 	if (obj.length == 0) {
-		$($("#ccm-page-attribute-list li.ccm-attribute-available:not(.icon-select-list-header)")[0]).addClass('ccm-item-selected');
+		$($("#ccm-page-attribute-list li.ccm-attribute-available:not(.item-select-list-header)")[0]).addClass('ccm-item-selected');
 	} else {
 		if (which == 'next') {
-			var nextObj = obj.nextAll('li.ccm-attribute-available:not(.icon-select-list-header)');
+			var nextObj = obj.nextAll('li.ccm-attribute-available:not(.item-select-list-header)');
 			if (nextObj.length > 0) {
 				obj.removeClass('ccm-item-selected');
 				$(nextObj[0]).addClass('ccm-item-selected');
 			}
 		} else if (which == 'previous') {
-			var prevObj = obj.prevAll('li.ccm-attribute-available:not(.icon-select-list-header)');
+			var prevObj = obj.prevAll('li.ccm-attribute-available:not(.item-select-list-header)');
 			if (prevObj.length > 0) {
 				obj.removeClass('ccm-item-selected');
 				$(prevObj[0]).addClass('ccm-item-selected');
@@ -185,15 +211,16 @@ ccmBlockTypeSearchResultsSelect = function(which, e) {
 }
 
 ccmPageAttributesDoMapKeys = function(e) {
-
-	if (e.keyCode == 40) {
-		ccmBlockTypeSearchResultsSelect('next', e);
-	} else if (e.keyCode == 38) {
-		ccmBlockTypeSearchResultsSelect('previous', e);
-	} else if (e.keyCode == 13) {
-		var obj = $("li.ccm-item-selected");
-		if (obj.length > 0) {
-			obj.find('a').click();
+	if (ccmMapUpAndDownArrows) {
+		if (e.keyCode == 40) {
+			ccmPageAttributesSearchResultsSelect('next', e);
+		} else if (e.keyCode == 38) {
+			ccmPageAttributesSearchResultsSelect('previous', e);
+		} else if (e.keyCode == 13) {
+			var obj = $("li.ccm-item-selected");
+			if (obj.length > 0) {
+				obj.find('a').click();
+			}
 		}
 	}
 }
@@ -253,15 +280,25 @@ $(function() {
 		});
 		
 	});
+	
+	// hide any attribute set headers that don't have any attributes
+	$('.item-select-list-header').each(function() {
+		if (!($(this).next().hasClass('ccm-attribute-key'))) {
+			$(this).remove();
+		}
+	});
+	
+	if ($('.ccm-attribute-key').length == 0) {
+		$('#ccm-attributes-column').hide();
+	}
 
 	$("a.ccm-meta-path-add").click(function(ev) { ccmPathHelper.add(ev.target) });
 	$("a.ccm-meta-path-del").click(function(ev) { ccmPathHelper.del(ev.target) });
 
 	$("#cHandle").blur(function() {
-		var oldCHandle = $("#oldCHandle").val();
 		$(".ccm-meta-path input").each(function() {
 			if ($(this).val() == "") {
-				$(this).val(oldCHandle);
+				$(this).val('<?=$c->getCollectionPath()?>');
 			}
 		});
 	});

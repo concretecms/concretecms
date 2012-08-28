@@ -1,5 +1,5 @@
 <? defined('C5_EXECUTE') or die("Access Denied.");?>
-<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Public Registration'), t('Control the options available for Public Registration.'), 'span10 offset3', false);?>
+<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Public Registration'), t('Control the options available for Public Registration.'), 'span6 offset3', false);?>
 <?php
 $h = Loader::helper('concrete/interface');
 ?>	
@@ -46,7 +46,7 @@ $h = Loader::helper('concrete/interface');
                  <li>
                 	<label><input type="checkbox" name="register_notification" value="1"<?php echo ($register_notification)?' checked="checked"':''?>/>
                 	<span><?php echo t('Send email when a user registers');?></span></label>
-                	<label class="notify_email"><span><?php echo t('Email address');?> </span><input class="span5" name="register_notification_email" type="text" value="<?php echo $register_notification_email;?>"/></label>
+                	<label class="notify_email"><span><?php echo t('Email address');?> </span><input class="span3" name="register_notification_email" type="text" value="<?php echo $register_notification_email;?>"/></label>
 			    </li>
 			    <li>
 			      <label>

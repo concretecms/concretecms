@@ -39,7 +39,7 @@ $ft->define('ra,ram', t('Realaudio'), FileType::T_AUDIO);
 $ft->define('wma', t('Windows Audio'), FileType::T_AUDIO);
 $ft->define('rtf', t('Rich Text'), FileType::T_DOCUMENT);
 $ft->define('js', t('JavaScript'), FileType::T_TEXT);
-$ft->define('pdf', t('PDF'), FileType::T_DOCUMENT, 'pdf');
+$ft->define('pdf', t('PDF'), FileType::T_DOCUMENT);
 $ft->define('psd', t('Photoshop'), FileType::T_IMAGE);
 $ft->define('mpeg,mpg', t('MPEG'), FileType::T_VIDEO);
 $ft->define('xla,xls,xlsx,xlt,xlw', t('MS Excel'), FileType::T_DOCUMENT);

@@ -4,10 +4,12 @@ $u = new User();
 $form = Loader::helper('form');
 $f = $fv->getFile();
 $fp = new Permissions($f);
-if (!$fp->canWrite()) {
+if (!$fp->canEditFileContents()) {
 	die(t("Access Denied."));
 }
 ?>
+
+<script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/jquery.cropzoom.js"></script>
 
 <div class="ccm-ui">
 
@@ -161,7 +163,7 @@ if (!$fp->canWrite()) {
 				highlight = new Array();
 				highlight.push(<?=$f->getFileID()?>);
 				jQuery.fn.dialog.closeTop();
-				ccm_alRefresh(highlight, '<?=$_REQUEST['searchInstance']?>');
+				ccm_alRefresh(highlight, '<?=Loader::helper('text')->entities($_REQUEST['searchInstance'])?>');
             });            
         });
        

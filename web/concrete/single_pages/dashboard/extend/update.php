@@ -10,7 +10,7 @@ if ($tp->canInstallPackages()) {
 
 $pkgRemote = array();
 $pkgLocal = array();
-if (ENABLE_MARKETPLACE_SUPPORT) {
+if (ENABLE_MARKETPLACE_SUPPORT && is_object($mi)) {
 	if ($mi->isConnected()) { 
 		$pkgArray = Package::getInstalledList();
 		foreach($pkgArray as $pkg) {
@@ -39,7 +39,7 @@ if (!$tp->canInstallPackages()) { ?>
 			<p><?=t('No updates for your add-ons are available.')?></p>
 		<? } else { ?>
 
-			<table>
+			<table class="table table-striped">
 			<? foreach($pkgRemote as $pkg) { 
 
 				$rpkg = MarketplaceRemoteItem::getByHandle($pkg->getPackageHandle());

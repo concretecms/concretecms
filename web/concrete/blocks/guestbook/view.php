@@ -10,7 +10,7 @@ if (!$dateFormat) {
 	$dateFormat = t('M jS, Y');
 }
 $posts = $controller->getEntries();
-$bp = $controller->getPermissionsObject(); 
+$bp = $controller->getPermissionObject(); 
 foreach($posts as $p) { ?>
 	<? if($p['approved'] || $bp->canWrite()) { ?>
     <div class="guestBook-entry<?php if ($c->getVersionObject()->getVersionAuthorUserName() == $u->getUserName()) {?> authorPost <?php }?>">

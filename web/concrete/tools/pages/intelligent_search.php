@@ -8,6 +8,8 @@ if (!$sh->canRead()) {
 }
 session_write_close();
 
+session_write_close();
+
 $keywords = $_REQUEST['q'];
 Loader::model('page_list');
 $pl = new PageList();

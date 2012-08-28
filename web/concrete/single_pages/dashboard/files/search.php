@@ -1,13 +1,10 @@
-<div class="ccm-ui">
-<div class="row">
+<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('File Manager'), array(t('Add, search, replace and modify the files for your website.'), 'http://www.concrete5.org/documentation/editors-guide/dashboard/file-manager/'), false, false);?>
 
-<div class="ccm-pane">
-<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeader(t('File Manager'), array(t('Add, search, replace and modify the files for your website.'), 'http://www.concrete5.org/documentation/editors-guide/dashboard/file-manager/'));?>
 <? 
 $c = Page::getCurrentPage();
 $ocID = $c->getCollectionID();
 $fp = FilePermissions::getGlobal();
-if ($fp->canSearchFiles()) { ?>
+if ($fp->canAddFile() || $fp->canSearchFiles()) { ?>
 <div class="ccm-pane-options" id="ccm-<?=$searchInstance?>-pane-options">
 
 <div class="ccm-file-manager-search-form"><? Loader::element('files/search_form_advanced', array('searchInstance' => $searchInstance, 'searchRequest' => $searchRequest, 'searchType' => 'DASHBOARD')); ?></div>
@@ -26,5 +23,4 @@ if ($fp->canSearchFiles()) { ?>
 
 <? } ?>
 
-</div>
-</div>
+<?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(false); ?>

@@ -10,6 +10,8 @@
 			<unsigned />
 			<notnull />
 		</field>
-
+		<index name="bOriginalID">
+		  <col>bOriginalID</col>
+		</index>
 	</table>
 </schema>

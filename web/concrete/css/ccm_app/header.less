@@ -34,13 +34,13 @@ ul#ccm-main-nav a, ul#ccm-system-nav a {display: block; padding-right: 10px; pad
 ul#ccm-main-nav a.ccm-header-nav-package-item, ul#ccm-system-nav a.ccm-header-nav-package-item {background-position: 8px center !important;}
 ul#ccm-system-nav a#ccm-nav-sign-out {padding-left: 10px; padding-right: 31px;}
 ul#ccm-system-nav li#ccm-nav-intelligent-search-wrapper:hover {cursor: pointer;}
-ul#ccm-system-nav input#ccm-nav-intelligent-search {margin: 14px 12px 0px 12px; height: 11px; width: 142px; background: #fff url(../images/icon_intelligent_search_mag.png) no-repeat scroll 3px 4px; padding-left: 16px; padding-top: 6px; padding-bottom: 4px}
+ul#ccm-system-nav input#ccm-nav-intelligent-search {margin: 14px 12px 0px 12px; font-size: 12px; height: 12px; width: 142px; background: #fff url(../images/icon_intelligent_search_mag.png) no-repeat scroll 3px 4px; padding-left: 16px;}
 
 ul#ccm-system-nav { margin: 0px; padding: 0px; margin: 0px 0px 0px 8px; position: fixed; top: 0px; right: 0px}
 ul#ccm-system-nav li { border-right: 0px; border-left: 1px solid #c5c5c5; }
 
 /* Intelligent Search Results - will move into ccm.menus.css */
-div#ccm-intelligent-search-results {text-align: left; padding: 0px; z-index: 999; background: transparent url(../images/bg_intelligent_search.png) repeat-y scroll; position: fixed; display: none; top: 50px; right: 103px; width: 430px; border-left: 1px solid #888; border-right: 1px solid #888; border-bottom: 1px solid #888; border-bottom-left-radius: 4px; border-bottom-right-radius: 4px; -webkit-box-shadow: 0px 2px 2px rgba(90,90,90,0.3);-moz-box-shadow: 0px 2px 2px rgba(90,90,90,0.3); box-shadow: 0px 2px 2px rgba(90,90,90,0.3);}
+div#ccm-intelligent-search-results {text-align: left; padding: 0px; z-index: 1002; background: transparent url(../images/bg_intelligent_search.png) repeat-y scroll; position: fixed; display: none; top: 50px; right: 103px; width: 430px; border-left: 1px solid #888; border-right: 1px solid #888; border-bottom: 1px solid #888; border-bottom-left-radius: 4px; border-bottom-right-radius: 4px; -webkit-box-shadow: 0px 2px 2px rgba(90,90,90,0.3);-moz-box-shadow: 0px 2px 2px rgba(90,90,90,0.3); box-shadow: 0px 2px 2px rgba(90,90,90,0.3);}
 div#ccm-intelligent-search-results span {display: none;}
 div#ccm-intelligent-search-results div.ccm-intelligent-search-results-module-offsite {display: block;}
 div#ccm-intelligent-search-results div.ccm-intelligent-search-results-module-onsite {display: none;}
@@ -59,17 +59,22 @@ div#ccm-intelligent-search-results li a.ccm-intelligent-search-result-selected {
 div#ccm-dashboard-overlay {text-align: left; position: fixed; z-index: 999; visibility: hidden; background: #fff; top: 50px; right: 103px; width: 580px; border-left: 1px solid #888; border-right: 1px solid #888; border-bottom: 1px solid #888; border-bottom-left-radius: 4px; border-bottom-right-radius: 4px; -webkit-box-shadow: 0px 2px 2px rgba(90,90,90,0.3);-moz-box-shadow: 0px 2px 2px rgba(90,90,90,0.3); box-shadow: 0px 2px 2px rgba(90,90,90,0.3);}
 div#ccm-dashboard-overlay-footer {border-top: 1px solid #dfdfdf; position: relative; background-color: #f2f2f2; border-bottom-left-radius: 4px; border-bottom-right-radius: 4px; }
 div#ccm-dashboard-overlay-footer div.ccm-dashboard-overlay-inner {border-top: 1px solid #fff}
+div#ccm-dashboard-overlay-footer a {display: block; text-decoration: none; color: #999; .border-radius(5px); padding: 4px; font-size: 16px; text-align: center;}
+div#ccm-dashboard-overlay-footer a:hover {background-color: #eaeaea;}
+div#ccm-dashboard-overlay-footer i {opacity: 0.3; margin-top: 2px;}
 div#ccm-dashboard-overlay-misc {border-top: 1px solid #dfdfdf; background-color: #fafafa;  }
 div#ccm-dashboard-overlay-misc li {list-style-type: none; margin-left: 0px;}
 div#ccm-dashboard-overlay-misc ul {margin: 0px;}
 div#ccm-dashboard-overlay-misc div.ccm-dashboard-overlay-inner {border-top: 1px solid #fff}
 .ccm-dashboard-overlay-misc-rounded {.border-radius-bottom-only(4px);}
-div.ccm-dashboard-overlay-inner {padding: 10px 0px 10px 10px; .clearfix()}
+div.ccm-dashboard-overlay-inner {padding: 10px 10px 10px 10px; .clearfix()}
 div.ccm-dashboard-overlay-module h1 {font-size: 13px; line-height: 15px; margin-bottom: 0px; }
 div.ccm-dashboard-overlay-module h1 a:hover {background-color: #eaeaea; text-decoration: none; padding: 2px !important; border-radius: 2px; -webkit-border-radius: 2px; -moz-border-radius: 2px; background-color: rgba(192,225,246,0.4); border: 1px solid rgba(117,185,240,0.4) !important; }
-div.ccm-dashboard-overlay-module h1 a, div.ccm-dashboard-overlay-module h1 a:hover {color: #333; padding: 3px; display: block}
+div.ccm-dashboard-overlay-module h1 a, div.ccm-dashboard-overlay-module h1 a:visited, div.ccm-dashboard-overlay-module h1 a:hover {color: #333; padding: 3px; display: block}
 div.ccm-dashboard-overlay-module {float: left; width: 120px; margin-right: 20px; margin-bottom: 10px;}
-div.ccm-dashboard-overlay-module ul {list-style-type: none; padding: 0px; margin: 3px 0px 10px 3px; font-size: 12px; border-top: 1px solid #d1d1d1}
+div.ccm-dashboard-overlay-module li a, div.ccm-dashboard-overlay-inner li a {color: @linkColor;}
+div.ccm-dashboard-overlay-module li {line-height: 18px;}
+div.ccm-dashboard-overlay-module ul {list-style-type: none; padding: 2px 0px 0px 0px; margin: 3px 0px 10px 0px; font-size: 12px; border-top: 1px solid #d1d1d1}
 a#ccm-dashboard-overlay-packages-view-all {font-size: 11px; color: #aaa !important; position: absolute; top: 0px; right: 5px }
 
 /* Edit Menu */
@@ -90,6 +95,9 @@ div#ccm-notification h3 {font-size: 16px; font-weight: bold; margin: 2px 0px 2px
 img#ccm-notification-icon {margin-right: 6px; margin-top: 2px; opacity: 0.5}
 
 /* Quick Nav */
+/*
+div#ccm-quick-nav a {color: @linkColor;}
+div#ccm-quick-nav a:hover {color: #fff;}
 div#ccm-quick-nav {z-index: 998; .gradientBar(#EDF3F7, #D9EBF5); position: relative; display: none; .box-shadow(inset 0 1px 0 @white); border-bottom: 1px solid #A1C3DA; position: fixed; left: 0px; top: 50px; height: 32px; width: 100%; .clearfix();}
 .ccm-quick-nav-always {visibility: visible !important; display: block !important;}
 div#ccm-quick-nav ul#ccm-quick-nav-favorites {position: absolute; top: 8px; left: 10px; margin: 0px; padding: 0px;}
@@ -108,4 +116,14 @@ div#ccm-quick-nav ul#ccm-quick-nav-breadcrumb {
 }
 div#ccm-quick-nav ul {font-size: 12px;}
 div#ccm-quick-nav a {padding: 4px; line-height: 15px; .border-radius(6px);}
+*/
+
 .ui-effects-transfer {.border-radius(6px); border: 1px solid #000; z-index: 10000; background-color: rgba(255,255,255,0.4);  }
+
+/* Status Bar */
+div#ccm-page-status-bar {z-index: 98; position: relative; display: block; position: fixed; left: 0px; top: 50px; height: 32px; width: 100%; .clearfix();}
+div#ccm-page-status-bar div.alert .close {right: -3px; top: -4px;}
+div.ccm-page-status-bar-buttons {position: absolute; top: 6px; right: 30px;}
+div.ccm-page-status-bar-buttons .btn {margin-left: 10px; font-size: 11px;}
+div#ccm-page-status-bar form {margin-bottom: 0px !important;}
+div#ccm-page-status-bar div.alert {padding: 12px; margin-bottom: 0px; position: relative;}

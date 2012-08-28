@@ -9,15 +9,16 @@ if (is_object($category) && $category->allowAttributeSets()) {
 }
 ?>
 
-<div class="ccm-pane-options ccm-pane-options-permanent-search">
+<div class="ccm-pane-options">
+<form class="form-horizontal">
+<div class="ccm-pane-options-permanent-search">
 
 	<? $form = Loader::helper('form'); ?>
 
 	<? if (count($sets) > 0) { ?>
-	<div class="span4">
-
+	<div class="span6">
 	<?=$form->label('asGroupAttributes', t('View'))?>
-	<div class="input">
+	<div class="controls">
 	<select class="span3" onchange="window.location.href='<?=Loader::helper('navigation')->getLinkToCollection($c)?>?asGroupAttributes=' + this.value" id="asGroupAttributes" name="asGroupAttributes">
 		<option value="1" <? if ($_REQUEST['asGroupAttributes'] !== '0') { ?> selected <? } ?>><?=t('Grouped by set')?></option>
 		<option value="0" <? if ($_REQUEST['asGroupAttributes'] === '0') { ?> selected <? } ?>><?=t('In one list')?></option>
@@ -27,6 +28,8 @@ if (is_object($category) && $category->allowAttributeSets()) {
 	
 	<? } ?>
 	<a href="<?=$this->url('/dashboard/system/attributes/sets', 'category', $category->getAttributeKeyCategoryID())?>" id="ccm-list-view-customize-top"><span class="ccm-menu-icon ccm-icon-properties"></span><?=t('Manage Sets')?></a>
+</div>
+</form>
 </div>
 
 <div class="ccm-pane-body">
@@ -55,11 +58,11 @@ if (count($attribs) > 0) { ?>
 		$setattribs = $as->getAttributeKeys();
 		if (count($setattribs) == 0) { ?>
 		
-			<p><?=t('No attributes defined.')?></p>
+			<div class="ccm-attribute-list-wrapper"><?=t('No attributes defined.')?></div>
 		
 		<? } else { ?>
 			
-			<div class="ccm-attribute-sortable-set-list" attribute-set-id="<?=$as->getAttributeSetID()?>" id="asID_<?=$as->getAttributeSetID()?>">			
+			<div class="ccm-attribute-sortable-set-list ccm-attribute-list-wrapper" attribute-set-id="<?=$as->getAttributeSetID()?>" id="asID_<?=$as->getAttributeSetID()?>">			
 			
 			<?
 			
@@ -83,7 +86,7 @@ if (count($attribs) > 0) { ?>
 		if (count($unsetattribs) > 0) { ?>
 		
 			<h3><?=t('Other')?></h3>
-		
+			<div class="ccm-attribute-list-wrapper">
 			<?
 			foreach($unsetattribs as $ak) { ?>
 	
@@ -93,6 +96,7 @@ if (count($attribs) > 0) { ?>
 	
 
 			<? } ?>
+			</div>
 		
 		<?
 		

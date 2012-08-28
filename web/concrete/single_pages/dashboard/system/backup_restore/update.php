@@ -4,7 +4,7 @@ $h = Loader::helper('concrete/dashboard');
 $ih = Loader::helper('concrete/interface');
 $form = Loader::helper('form');
 if ($downloadableUpgradeAvailable) { ?>
-	<?=$h->getDashboardPaneHeaderWrapper(t('Download Update'));?>
+	<?=$h->getDashboardPaneHeaderWrapper(t('Download Update'), false, 'span8 offset2');?>
 	<? if (!defined('MULTI_SITE') || MULTI_SITE == false) { ?>
 		<a href="<?=$this->action('check_for_updates')?>" class="btn" style="float: right"><?=t('Check For Updates')?></a>
 	<? } ?>
@@ -29,7 +29,7 @@ if ($downloadableUpgradeAvailable) { ?>
 		</form>
 	<?=$h->getDashboardPaneFooterWrapper();?>
 <? } else if (count($updates)) { ?>
-	<?=$h->getDashboardPaneHeaderWrapper(t('Install Local Update'),false,false,false);?>
+	<?=$h->getDashboardPaneHeaderWrapper(t('Install Local Update'),false,'span8 offset2',false);?>
 		<div class="ccm-pane-body">
 			<?print '<strong>' . t('Make sure you <a href="%s">backup your database</a> before updating.', $this->url('/dashboard/system/backup_restore/backup')) . '</strong><br/>';
 			$ih = Loader::helper('concrete/interface');
@@ -65,7 +65,7 @@ if ($downloadableUpgradeAvailable) { ?>
 	<?=$h->getDashboardPaneFooterWrapper(false);?>
 	<div class="clearfix">&nbsp;</div>
 <? } else { ?>
-	<?=$h->getDashboardPaneHeaderWrapper(t('Update concrete5'));?>
+	<?=$h->getDashboardPaneHeaderWrapper(t('Update concrete5'), false, 'span8 offset2');?>
 	<? if (!defined('MULTI_SITE') || MULTI_SITE == false) { ?>
 		<a href="<?=$this->action('check_for_updates')?>" class="btn" style="float: right"><?=t('Check For Updates')?></a>
 	<? } ?>

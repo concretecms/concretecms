@@ -8,11 +8,11 @@ $form = Loader::helper('form');
 
 $f = File::getByID($_REQUEST['fID']);
 $fp = new Permissions($f);
-if (!$fp->canWrite()) {
+if (!$fp->canEditFileContents()) {
 	die(t('Access Denied.'));
 }
 
-$searchInstance = $_REQUEST['searchInstance'];
+$searchInstance = Loader::helper('text')->entities($_REQUEST['searchInstance']);
 ?>
 
 <div class="ccm-ui">

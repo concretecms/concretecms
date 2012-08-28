@@ -12,7 +12,7 @@ $pkgArray = Package::getInstalledList();?>
 <?
 if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScreen && $tp->canInstallPackages()) { ?>
 
-<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Install %s', $pkg->getPackageName()), false, 'span12 offset2', false);?>
+<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Install %s', $pkg->getPackageName()), false, 'span10 offset1', false);?>
 <form method="post" action="<?=$this->action('install_package', $pkg->getPackageHandle())?>">
 <?=Loader::helper('validation/token')->output('install_options_selected')?>
 <div class="ccm-pane-body">
@@ -53,7 +53,7 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
 ?>
 <form method="post" class="form-stacked" id="ccm-uninstall-form" action="<?=$this->action('do_uninstall_package')?>" onsubmit="return confirm('<?=$removeBTConfirm?>')">
 
-<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Uninstall Package'), false, 'span12 offset2', false);?>
+<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Uninstall Package'), false, 'span10 offset1', false);?>
 <div class="ccm-pane-body">
 	
 	<?=$valt->output('uninstall')?>
@@ -86,7 +86,7 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
 		</div>
 		
 		
-		<? Loader::packageElement('dashboard/uninstall', $pkg->getPackageHandle()); ?>
+		<? @Loader::packageElement('dashboard/uninstall', $pkg->getPackageHandle()); ?>
 				
 		
 </div>
@@ -169,10 +169,10 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
 	
 	if (is_object($pkg)) { ?>
 	
-		<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Inspect Package'), false, 'span12 offset2', false);?>
+		<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Inspect Package'), false, 'span10 offset1', false);?>
 		
 		<div class="ccm-pane-body">
-			<table>
+			<table class="table table-bordered table-striped">
 			<tr>
 				<td class="ccm-marketplace-list-thumbnail"><img src="<?=$ci->getPackageIconURL($pkg)?>" /></td>
 				<td class="ccm-addon-list-description" style="width: 100%"><h3><?=$pkg->getPackageName()?> - <?=$pkg->getPackageVersion()?></a></h3><?=$pkg->getPackageDescription()?></td>
@@ -214,8 +214,30 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
 	
 	 } else { ?>
 		
-		<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Add Functionality'), t('Install custom add-ons or those downloaded from the concrete5.org marketplace.'), 'span12 offset2');?>
+		<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Add Functionality'), t('Install custom add-ons or those downloaded from the concrete5.org marketplace.'), 'span10 offset1');?>
 			
+		<? if (is_object($installedPKG) && $installedPKG->hasInstallPostScreen()) { ?>
+	
+			<div style="display: none">
+			<div id="ccm-install-post-notes"><div class="ccm-ui"><?=Loader::element('dashboard/install_post', false, $installedPKG->getPackageHandle())?>
+			<div class="dialog-buttons">
+				<a href="javascript:void(0)" onclick="jQuery.fn.dialog.closeAll()" class="btn ccm-button-right"><?=t('Ok')?></a>
+			</div>
+			</div>
+			</div>
+			</div>
+			
+			<script type="text/javascript">
+			$(function() { 
+				$('#ccm-install-post-notes').dialog({width: 500, modal: true, height: 400, title: "<?=t('Installation Notes')?>", buttons:[{}], 'open': function() {
+					$(this).parent().find('.ui-dialog-buttonpane').addClass("ccm-ui").html('');
+					$(this).find('.dialog-buttons').appendTo($(this).parent().find('.ui-dialog-buttonpane'));
+					$(this).find('.dialog-buttons').remove();
+				}});
+			});	
+			</script>
+		<? } ?>
+		
 		<h3><?=t('Currently Installed')?></h3>
 		<? if (count($pkgArray) > 0) { ?>
 			
@@ -231,7 +253,7 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
 				</div>
 			<? } ?>
 
-			<table class="zebra-striped">
+			<table class="table table-bordered table-striped">
 		
 			<?	foreach ($pkgArray as $pkg) { ?>
 				<tr>
@@ -258,7 +280,7 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
 			
 		<? } else { ?>
 	
-			<table class="zebra-striped">
+			<table class="table table-bordered table-striped">
 			<? foreach ($purchasedBlocks as $pb) {
 				$file = $pb->getRemoteFileURL();
 				if (!empty($file)) {?>

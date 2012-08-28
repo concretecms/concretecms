@@ -1,12 +1,12 @@
 <? defined('C5_EXECUTE') or die("Access Denied.");?>
-<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Site Name'), false, 'span12 offset2', false)?>
-<form method="post" id="site-form" action="<?=$this->action('update_sitename')?>">
+<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Site Name'), false, 'span10 offset1', false)?>
+<form method="post" class="form-horizontal" id="site-form" action="<?=$this->action('update_sitename')?>">
 <div class="ccm-pane-body">
 	<?=$this->controller->token->output('update_sitename')?>
-	<div class="clearfix">
+	<div class="control-group">
 	<?=$form->label('SITE', t('Site Name'))?>
-	<div class="input">
-	<?=$form->text('SITE', $site, array('class' => 'span8'))?>
+	<div class="controls">
+	<?=$form->text('SITE', $site, array('class' => 'span4'))?>
 	</div>
 	</div>
 </div>

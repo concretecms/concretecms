@@ -1,6 +1,6 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?>
 <div class="row">
-<div class="span12 offset2">
+<div class="span10 offset1">
 
 <div class="page-header">
 	<h1><?=t('Upgrade concrete5')?></h1>

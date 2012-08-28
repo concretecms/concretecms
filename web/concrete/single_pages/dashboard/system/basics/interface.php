@@ -1,5 +1,5 @@
 <? defined('C5_EXECUTE') or die("Access Denied.");?>
-<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Interface Settings'), false, 'span12 offset2', false)?>
+<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Interface Settings'), false, 'span10 offset1', false)?>
 <form method="post" action="<?=$this->action('save_interface_settings')?>" enctype="multipart/form-data" >
 <div class="ccm-pane-body">
 <?=Loader::helper('validation/token')->output('save_interface_settings')?>
@@ -40,19 +40,6 @@ $(function() {
 </script>
 
 <? } ?>
-
-<fieldset>
-
-<legend><?=t('Toolbar')?></legend>
-<div class="clearfix">
-<label><?=t('Quick Nav Behavior')?></label>
-<div class="input">
-<ul class="inputs-list">
-	<li><label><?=$form->radio('TOOLBAR_QUICK_NAV_BEHAVIOR', '', $TOOLBAR_QUICK_NAV_BEHAVIOR)?> <span><?=t('Show quick navigation bar when hovering over edit bar (default).')?></span></label></li>
-	<li><label><?=$form->radio('TOOLBAR_QUICK_NAV_BEHAVIOR', 'always', $TOOLBAR_QUICK_NAV_BEHAVIOR)?> <span><?=t('Always show quick navigation bar.')?></span></label></li>
-	<li><label><?=$form->radio('TOOLBAR_QUICK_NAV_BEHAVIOR', 'disabled', $TOOLBAR_QUICK_NAV_BEHAVIOR)?> <span><?=t('Disable quick navigation bar.')?></span></label></li>
-</ul>
-</fieldset>
 
 </div>
 <div class="ccm-pane-footer">

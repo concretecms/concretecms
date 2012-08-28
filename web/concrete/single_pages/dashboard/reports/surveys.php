@@ -15,7 +15,7 @@ if ($this->controller->getTask() == 'viewDetail') { ?>
     
           <div class="span10">
       
-            <table class="zebra-striped">
+            <table class="table table-striped">
               <thead>
                 <tr>
                     <th><?=t('Option')?></th>
@@ -66,7 +66,7 @@ if ($this->controller->getTask() == 'viewDetail') { ?>
 	<?= "<p>".t('You have not created any surveys.')."</p>" ?>
 	<? } else { ?>
 
-		<table class="zebra-striped ccm-results-list">
+		<table class="table table-striped">
         	<thead>
                 <tr>
                     <th class="<?=$surveyList->getSearchResultsClass('question')?>"><a href="<?=$surveyList->getSortByURL('question', 'asc')?>"><?=t('Name')?></a></th>

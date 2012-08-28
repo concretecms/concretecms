@@ -1,6 +1,6 @@
 <? 
 defined('C5_EXECUTE') or die("Access Denied.");
-$btl = $a->getAddBlockTypes($c, $ap );
+$btl = new BlockTypeList();
 $blockTypes = $btl->getBlockTypeList();
 $dsh = Loader::helper('concrete/dashboard');
 $dashboardBlockTypes = array();
@@ -15,28 +15,6 @@ $form = Loader::helper('form');
 ?>
 
 <script type="text/javascript">
-<? if (ENABLE_MARKETPLACE_SUPPORT) { ?>
-
-function ccm_updateMarketplaceTab() {
-	if (!ccm_blocksLoaded) {
-		$("#ccm-add-marketplace-tab div.ccm-block-type-list").html('');
-		jQuery.fn.dialog.showLoader();
-		$.ajax({
-			url: CCM_TOOLS_PATH+'/marketplace/refresh_block',
-			type: 'POST',
-			data: {'arHandle': '<?=$a->getAreaHandle()?>'},
-			success: function(html) {
-				jQuery.fn.dialog.hideLoader();
-				$("#ccm-add-marketplace-tab div.ccm-block-type-list").html(html);
-			}
-		});
-		ccm_blocksLoaded = true;
-	}
-}
-
-var ccm_blocksLoaded = false;
-
-<? } ?>
 
 ccm_showBlockTypeDescription = function(btID) {
 	$("#ccm-bt-help" + btID).show();
@@ -172,6 +150,7 @@ $(function() {
 	$(window).css('overflow', 'hidden');
 	$(window).unbind('keydown.blocktypes');
 	ccmBlockTypeMapKeys();
+	$('.ccm-block-type-help').tooltip();
 	$("#ccmBlockTypeSearch").get(0).focus();
 
 });
@@ -180,23 +159,31 @@ $(function() {
 
 
 <div id="ccm-add-tab" class="ccm-ui">
-	<div class="ccm-block-type-search-wrapper">
-
+	<div class="ccm-pane-options">
+		<div class="ccm-block-type-search-wrapper ccm-pane-options-permanent-search">
 
 		<form onsubmit="return ccmBlockTypeSearchFormCheckResults()">
-		<div class="ccm-block-type-search">
-		<a class="ccm-block-type-help" href="javascript:ccm_showBlockTypeDescriptions()" title="<?=t('Learn more about this block type.')?>" id="ccm-bt-help-trigger-all"><img src="<?=ASSETS_URL_IMAGES?>/icons/icon_header_help.png" width="17" height="20" /></a>
-		<?=$form->text('ccmBlockTypeSearch', array('tabindex' => 1, 'autocomplete' => 'off', 'style' => 'width: 168px'))?>
+		
+		
+		<a class="ccm-block-type-help" href="javascript:ccm_showBlockTypeDescriptions()" title="<?=t('Learn more about these block types.')?>" id="ccm-bt-help-trigger-all"><i class="icon-question-sign"></i></a>
+		
+		<i class="icon-search"></i>
+
+		<?=$form->text('ccmBlockTypeSearch', array('tabindex' => 1, 'autocomplete' => 'off', 'style' => 'margin-left: 8px; width: 168px'))?>
 		<a href="javascript:void(0)" id="ccm-block-type-clear-search" onclick="ccmBlockTypeSearchClear()"><img width="16" height="16" src="<?=ASSETS_URL_IMAGES?>/icons/remove.png" border="0" style="vertical-align: middle" /></a>
-		</div>
 		
 		</form>
 		
+		</div>
 	</div>
+	
 	
 	<ul id="ccm-block-type-list">
 	<? if (count($blockTypes) > 0) { 
 		foreach($blockTypes as $bt) { 
+			if (!$ap->canAddBlock($bt)) {
+				continue;
+			}
 			$btIcon = $ci->getBlockTypeIconURL($bt);
 			?>	
 			<li class="ccm-block-type ccm-block-type-available">

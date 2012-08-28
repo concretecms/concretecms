@@ -2,57 +2,39 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 
 Loader::model('collection_types');
+Loader::library('marketplace');
+$mi = Marketplace::getInstance();
+$tp = new TaskPermission();
+if ($mi->isConnected() && $tp->canInstallPackages()) { 
+	
+	$previewCID=intval($_REQUEST['previewCID']);
+	$themeCID=intval($_REQUEST['themeCID']);
+	$themeHandle=$_REQUEST['themeHandle'];
 
-$previewCID=intval($_REQUEST['previewCID']);
-$themeCID=intval($_REQUEST['themeCID']);
-$themeHandle=$_REQUEST['themeHandle'];
-$ctID=intval($_REQUEST['ctID']);
-$collectionType=CollectionType::getByID($ctID);
-if($collectionType) $ctHandle=$collectionType->getCollectionTypeHandle();
+	$postStr= '&themeHandle='.$themeHandle.'&ctID='.$ctID.'&ctHandle='.$ctHandle;
+	
+	if (!function_exists('curl_init')) { ?>
+		<div><?=t('curl must be enabled to preview external themes.')?></div>
+	<? }else{
+		$curl_handle = curl_init();
 
-$c = Page::getByID($previewCID,"RECENT");
-$cp = new Permissions($c);
-if(!$cp->canWrite()) throw new Exception(t("Access Denied."));
+		// Check to see if there are proxy settings
+		if (Config::get('HTTP_PROXY_HOST') != null) {
+			@curl_setopt($curl_handle, CURLOPT_PROXY, Config::get('HTTP_PROXY_HOST'));
+			@curl_setopt($curl_handle, CURLOPT_PROXYPORT, Config::get('HTTP_PROXY_PORT'));
 
-//$previewVersion=$previewCollection->getVersionObject();
-$previewVersionID=$c->getVersionID();
+			// Check if there is a username/password to access the proxy
+			if (Config::get('HTTP_PROXY_USER') != null) {
+				@curl_setopt($curl_handle, CURLOPT_PROXYUSERPWD, Config::get('HTTP_PROXY_USER') . ':' . Config::get('HTTP_PROXY_PWD'));
+			}
+		}
 
-$db=Loader::db();
-$previewBlocksData=$db->getAll('SELECT bID, arHandle FROM CollectionVersionBlocks AS cvb WHERE cvID=? AND cID=?',array($previewVersionID, $previewCID) );
-$areasBlocksHTML=array();
-//get collection areas / blocks HTML
-foreach($previewBlocksData as $previewBlockData){
-	if( !intval($previewBlockData['bID']) || !strlen($previewBlockData['arHandle']) ) continue; 
-	$b = Block::getByID( intval($previewBlockData['bID']) ); 
-	$bv = new BlockView();
-	ob_start();
-    $bv->render($b);
-	$blockHTML=ob_get_contents();
-	ob_end_clean();	
-	$areasBlocksHTML[$previewBlockData['arHandle']][]= $blockHTML;
+		curl_setopt($curl_handle, CURLOPT_URL, MARKETPLACE_THEME_PREVIEW_URL);
+		curl_setopt($curl_handle, CURLOPT_POSTFIELDS, $postStr);
+		//curl_setopt($curl_handle, CURLOPT_CONNECTTIMEOUT, $timeout);
+		curl_setopt($curl_handle, CURLOPT_RETURNTRANSFER, 1);
+		$contents = curl_exec($curl_handle);
+		curl_close($curl_handle);
+		echo $contents;
+	} 
 }
-
-$areasBlocksSerialized=serialize($areasBlocksHTML);
-$postStr='content='.urlencode($areasBlocksSerialized).'&themeHandle='.$themeHandle.'&ctID='.$ctID.'&ctHandle='.$ctHandle;
-
-if (!function_exists('curl_init')) { ?>
-	<div><?=t('curl must be enabled to preview external themes.')?></div>
-<? }else{
-	$curl_handle = curl_init();
-	curl_setopt($curl_handle, CURLOPT_URL, MARKETPLACE_THEME_PREVIEW_URL);
-	curl_setopt($curl_handle, CURLOPT_POSTFIELDS, $postStr);
-	//curl_setopt($curl_handle, CURLOPT_CONNECTTIMEOUT, $timeout);
-	curl_setopt($curl_handle, CURLOPT_RETURNTRANSFER, 1);
-	$contents = curl_exec($curl_handle);
-	curl_close($curl_handle);
-	echo $contents;
-} 
-/*
-foreach($areasBlocksHTML as $areaName=>$areaBlocksHTML){
-	echo '<br><br><strong>'.$areaName.'</strong>';
-	foreach($areaBlocksHTML as $areaBlockHTML){
-		echo $areaBlockHTML.'<br>';
-	}
-}
-*/
-?>

@@ -6,7 +6,7 @@ $ih = Loader::helper('concrete/interface');
 /* @var $form FormHelper */
 $form = Loader::helper('form');
 ?>
-<?=$h->getDashboardPaneHeaderWrapper(t('Tracking Codes'), false, false, false);?>
+<?=$h->getDashboardPaneHeaderWrapper(t('Tracking Codes'), false, 'span8 offset2', false);?>
 <form id="tracking-code-form" action="<?=$this->action('')?>" method="post">
 <div class="ccm-pane-body">
 	<?=$this->controller->token->output('update_tracking_code')?>

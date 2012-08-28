@@ -15,7 +15,7 @@ $ah = Loader::helper('concrete/interface');
 </style>
 
 <div id="newImg">
-	<table cellspacing="0" cellpadding="0" border="0" width="100%">
+	<table cellspacing="0" cellpadding="0" border="0" width="100%" class="table table-bordered">
 	<tr>
 	<td>
 	<strong><?=t('Type')?></strong>
@@ -50,7 +50,7 @@ $ah = Loader::helper('concrete/interface');
 		$fp = new Permissions($f);
 		$imgInfo['thumbPath'] = $f->getThumbnailSRC(1);
 		$imgInfo['fileName'] = $f->getTitle();
-		if ($fp->canRead()) { 
+		if ($fp->canViewFile()) { 
 			$this->inc('image_row_include.php', array('imgInfo' => $imgInfo));
 		}
 	}
