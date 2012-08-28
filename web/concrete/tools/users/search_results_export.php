@@ -1,18 +1,17 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
 ini_set('memory_limit', -1);
+set_time_limit(0);
 
 $tp = new TaskPermission();
 if (!$tp->canAccessUserSearch()) { 
 	die(t("You have no access to users."));
 }
 
-// no limit
-$_REQUEST['numResults'] = -1;
-
 $u = new User();
 $cnt = Loader::controller('/dashboard/users/search');
 $userList = $cnt->getRequestedSearchResults();
+$userList->setItemsPerPage(0);
 $users = $userList->getPage();
 
 header("Content-Type: application/vnd.ms-excel");
