@@ -73,7 +73,7 @@
         <page name="File Manager" path="/dashboard/files/search" filename="/dashboard/files/search.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
-					<value>files, add file, delete file, copy, move, alias, resize, crop, rename, images, title, attribute</value>
+					<value>add file, delete file, copy, move, alias, resize, crop, rename, images, title, attribute</value>
 				</attributekey>
 				<attributekey handle="icon_dashboard">
 					<value>icon-picture</value>
@@ -219,7 +219,7 @@
         <page name="Surveys" path="/dashboard/reports/surveys" filename="/dashboard/reports/surveys.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
-					<value>survey, questions, quiz, response</value>
+					<value>questions, quiz, response</value>
 				</attributekey>
 				<attributekey handle="icon_dashboard">
 					<value>icon-tasks</value>
@@ -256,11 +256,17 @@
         <page name="Add" path="/dashboard/pages/themes/add" filename="/dashboard/pages/themes/add.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
-					<value>add theme</value>
+					<value>theme</value>
 				</attributekey>
 			</attributes>
         </page>
-        <page name="Inspect" path="/dashboard/pages/themes/inspect" filename="/dashboard/pages/themes/inspect.php" pagetype="" description="" package=""/>
+        <page name="Inspect" path="/dashboard/pages/themes/inspect" filename="/dashboard/pages/themes/inspect.php" pagetype="" description="" package="">
+        	<attributes>
+				<attributekey handle="meta_keywords">
+					<value>page types</value>
+				</attributekey>
+			</attributes>
+		</page>
         <page name="Customize" path="/dashboard/pages/themes/customize" filename="/dashboard/pages/themes/customize.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
@@ -300,7 +306,13 @@
 			</attributes>
         </page>        
 
-        <page name="Workflow" path="/dashboard/workflow" filename="/dashboard/workflow/view.php" pagetype="" description="" package=""/>
+        <page name="Workflow" path="/dashboard/workflow" filename="/dashboard/workflow/view.php" pagetype="" description="" package="">
+        	<attributes>
+				<attributekey handle="meta_keywords">
+					<value>add workflow, remove workflow</value>
+				</attributekey>
+			</attributes>
+        </page>
         <page name="Workflow List" path="/dashboard/workflow/list" filename="/dashboard/workflow/list.php" pagetype="" description="" package="">
         	<attributes>
 				<attributekey handle="icon_dashboard">
@@ -315,7 +327,6 @@
 				</attributekey>
 			</attributes>        
         </page>
-
         <page name="Stacks &amp; Blocks" path="/dashboard/blocks" filename="/dashboard/blocks/view.php" pagetype="" description="Manage sitewide content and administer block types." package="" />
         <page name="Stacks" path="/dashboard/blocks/stacks" filename="/dashboard/blocks/stacks/view.php" pagetype="" description="Share content across your site." package="">
         	<attributes>
@@ -433,7 +444,7 @@
 			</attributes>
 			<attributes>
 				<attributekey handle="meta_keywords">
-					<value>dashboard,configuration</value>
+					<value>dashboard, configuration</value>
 				</attributekey>
 			</attributes>
         </page>
