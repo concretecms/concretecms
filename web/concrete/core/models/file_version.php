@@ -360,7 +360,7 @@ class Concrete5_Model_FileVersion extends Object {
 	}
 
 	/**
-	 * Returns a URL that can be used to download the file. This passes through the download_file single page, force_download method.
+	 * Returns a URL that can be used to download the file. This passes through the download_file single page.
 	 */
 	public function getDownloadURL() {
 		$c = Page::getCurrentPage();
@@ -369,8 +369,22 @@ class Concrete5_Model_FileVersion extends Object {
 		} else {
 			$cID = 0;
 		}
-		return BASE_URL . View::url('/download_file','force_download', $this->getFileID(),$cID);
+		return BASE_URL . View::url('/download_file',$this->getFileID(),$cID);
 	}
+	
+	/**
+	 * Returns a url that can be used to download a file, will force the download of all file types, even if your browser can display them.
+	 */
+	public function getForceDownloadURL() {
+		$c = Page::getCurrentPage();
+		if($c instanceof Page) {
+			$cID = $c->getCollectionID();
+		} else {
+			$cID = 0;
+		}
+		return BASE_URL . View::url('/download_file','force', $this->getFileID(),$cID);
+	}
+	
 
 	public function getRelativePath($fullurl = false) {
 		$f = Loader::helper('concrete/file');
