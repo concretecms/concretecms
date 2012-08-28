@@ -23,14 +23,14 @@ Loader::model('file_set');
 $s1 = FileSet::getMySets();
 
 $files = array();
-$searchInstance = $_REQUEST['searchInstance'];
+$searchInstance = Loader::helper('text')->entities($_REQUEST['searchInstance']);
 $extensions = array();
 
 if (is_array($_REQUEST['fID'])) {
 	foreach($_REQUEST['fID'] as $fID) {
 		$f = File::getByID($fID);
 		$fp = new Permissions($f);
-		if ($fp->canRead()) {
+		if ($fp->canViewFile()) {
 			$files[] = $f;
 			$extensions[] = strtolower($f->getExtension());
 		}
@@ -38,7 +38,7 @@ if (is_array($_REQUEST['fID'])) {
 } else {
 	$f = File::getByID($_REQUEST['fID']);
 	$fp = new Permissions($f);
-	if ($fp->canRead()) {
+	if ($fp->canViewFile()) {
 		$files[] = $f;
 		$extensions[] = strtolower($f->getExtension());
 	}

@@ -4,7 +4,7 @@
 	$file_set = FileSet::createAndGetSet('Starred Files',FileSet::TYPE_STARRED);
 	$f = File::getByID($_POST['file-id']);
 	$fp = new Permissions($f);
-	if (!$fp->canRead()) {
+	if (!$fp->canViewFile()) {
 		die(t("Access Denied."));
 	}
 

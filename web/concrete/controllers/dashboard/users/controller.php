@@ -1,13 +1,6 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
 
-class DashboardUsersController extends Controller {
+class DashboardUsersController extends Concrete5_Controller_Dashboard_Users {
 
-
-	public function __construct() { 
-		$this->redirect('/dashboard/users/search');	
-	}
-	
 }
-
-?>

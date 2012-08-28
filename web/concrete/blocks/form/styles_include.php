@@ -7,6 +7,7 @@ div#miniSurvey td.question{ }
 .spacer{ clear:both; font-size:1px } 
 #answerOptionsArea, #answerOptionsAreaEdit{display:none}
 #answerSettings, #answerSettingsEdit{display:none}
+#answerReplyto, #answerReplytoEdit{display:none}
 #editQuestionForm .formBlockSubmitButton{display:none}
 .formBlockQuestionMsg{ background:#FFFF99; padding:2px; margin:16px 0px; border:1px solid #ddd; display:none; }
 

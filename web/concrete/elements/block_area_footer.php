@@ -22,37 +22,19 @@ $u = new User();
 $ap = new Permissions($a);
 $cp = new Permissions($c);
 
-if ($a->areaAcceptsBlocks()) { ?>
-
-<? if (!$c->isArrangeMode()) { ?>
+if (!$c->isArrangeMode()) { ?>
 	<script type="text/javascript">
-	$(function() {
-		var ccm_areaMenuObj<?=$a->getAreaID()?> = {};
-		ccm_areaMenuObj<?=$a->getAreaID()?>.type = "AREA";
-		ccm_areaMenuObj<?=$a->getAreaID()?>.aID = <?=$a->getAreaID()?>;
-		ccm_areaMenuObj<?=$a->getAreaID()?>.arHandle = "<?=$arHandle?>";
-		ccm_areaMenuObj<?=$a->getAreaID()?>.canAddBlocks = <?=$ap->canAddBlocks()?>;
-		ccm_areaMenuObj<?=$a->getAreaID()?>.canWrite = <?=$ap->canWrite()?>;
-	<? if ($cp->canAdmin() && PERMISSIONS_MODEL != 'simple') { ?>
-		ccm_areaMenuObj<?=$a->getAreaID()?>.canModifyGroups = true;
-	<? } ?>
-	<? if ($ap->canWrite() && ENABLE_AREA_LAYOUTS == true && (!$a->isGlobalArea()) && (!$c->isMasterCollection())) { ?>
-		ccm_areaMenuObj<?=$a->getAreaID()?>.canLayout = true;
-	<? } else { ?>
-		ccm_areaMenuObj<?=$a->getAreaID()?>.canLayout = false;
-	<? } ?>
-	<? if ($ap->canWrite() && ENABLE_CUSTOM_DESIGN == true && (!$c->isMasterCollection())) { ?>
-		ccm_areaMenuObj<?=$a->getAreaID()?>.canDesign = true;
-	<? } else { ?>
-		ccm_areaMenuObj<?=$a->getAreaID()?>.canDesign = false;
-	<? } ?>
-		ccm_menuInit(ccm_areaMenuObj<?=$a->getAreaID()?>);
-	} );
+	ccm_areaMenuObj<?=$a->getAreaID()?> = new Object();
+	ccm_areaMenuObj<?=$a->getAreaID()?>.type = "AREA";
+	ccm_areaMenuObj<?=$a->getAreaID()?>.aID = <?=$a->getAreaID()?>;
+	ccm_areaMenuObj<?=$a->getAreaID()?>.arHandle = "<?=$arHandle?>";
+	ccm_areaMenuObj<?=$a->getAreaID()?>.maximumBlocks = <?=$a->maximumBlocks?>;
+    <? Loader::element('block_area_permissions_js', array('a' => $a, 'ap' => $ap, 'c' => $c, 'cp' => $cp)); ?> 
+	$(function() {ccm_menuInit(ccm_areaMenuObj<?=$a->getAreaID()?>)});
 	</script>
 	<? if ($a->isGlobalArea()) { ?>
 		<div id="a<?=$a->getAreaID()?>controls" class="ccm-add-block"><?=t('Add To Sitewide %s', $arHandle)?></div>
 	<? } else { ?>
 		<div id="a<?=$a->getAreaID()?>controls" class="ccm-add-block"><?=t('Add To %s', $arHandle)?></div>
-	<? } ?>
 	<? } ?>
 <? } ?>

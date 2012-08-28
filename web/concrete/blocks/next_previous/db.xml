@@ -18,8 +18,6 @@
 		
 		<field name="loopSequence" type="i"><default value="1"/></field>
 		
-		<field name="excludeSystemPages" type="i"><default value="1"/></field>
-		
 		<field name="orderBy" type="C" size="20"><default value="display_asc"/></field>
 		
 	</table>

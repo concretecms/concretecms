@@ -12,7 +12,7 @@ $fs = FileSet::getByID($_REQUEST['fsID']);
 if (!is_object($fs)) {
 	die(t('Invalid file set.'));
 }
-$searchInstance = $_REQUEST['searchInstance'];
+$searchInstance = Loader::helper('text')->entities($_REQUEST['searchInstance']);
 
 $fsp = new Permissions($fs);
 if ($fsp->canDeleteFileSet()) {
@@ -40,7 +40,7 @@ if ($fsp->canDeleteFileSet()) {
 	<?=$form->hidden('task', 'delete_file_set')?>
 	<?=$vt->output('delete_file_set');?>
 	<?=$form->hidden('fsID', $_REQUEST['fsID']); ?>	
-	<?=$form->hidden('searchInstance', $_REQUEST['searchInstance']); ?>	
+	<?=$form->hidden('searchInstance', $searchInstance); ?>	
 	<? $ih = Loader::helper('concrete/interface')?>
 
 <div class="dialog-buttons">
@@ -59,18 +59,18 @@ ccm_alDeleteFileSet = function(form) {
 		jQuery.fn.dialog.closeTop();
 		
 		<? if ($fs->getFileSetType() == FileSet::TYPE_SAVED_SEARCH) { ?>
-			if (ccm_alLaunchType['<?=$_REQUEST['searchInstance']?>'] == 'DASHBOARD') {
+			if (ccm_alLaunchType['<?=$searchInstance?>'] == 'DASHBOARD') {
 				window.location.href = "<?=View::url('/dashboard/files/search')?>";
 			} else {
-				var url = $("div#ccm-<?=$_REQUEST['searchInstance']?>-overlay-wrapper input[name=dialogAction]").val() + "&refreshDialog=1";
+				var url = $("div#ccm-<?=$searchInstance?>-overlay-wrapper input[name=dialogAction]").val() + "&refreshDialog=1";
 				$.get(url, function(resp) {
 					jQuery.fn.dialog.hideLoader();
-					$("div#ccm-<?=$_REQUEST['searchInstance']?>-overlay-wrapper").html(resp);
+					$("div#ccm-<?=$searchInstance?>-overlay-wrapper").html(resp);
 				});
 			}
 		<? } else { ?>
-			$("#ccm-<?=$_REQUEST['searchInstance']?>-sets-search-wrapper").load('<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/search_sets_reload', {'searchInstance': '<?=$_REQUEST['searchInstance']?>'}, function() {
-				ccm_alSetupFileSetSearch('<?=$_REQUEST['searchInstance']?>');
+			$("#ccm-<?=$searchInstance?>-sets-search-wrapper").load('<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/search_sets_reload', {'searchInstance': '<?=$searchInstance?>'}, function() {
+				ccm_alSetupFileSetSearch('<?=$searchInstance?>');
 			});
 		<? } ?>
 	});

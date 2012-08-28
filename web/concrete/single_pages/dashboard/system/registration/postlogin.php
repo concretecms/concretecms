@@ -1,5 +1,5 @@
 <? defined('C5_EXECUTE') or die("Access Denied.");?>
-<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Login Destination'), false, false, false);?>
+<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Login Destination'), false, 'span8 offset2', false);?>
 <?php
 $h = Loader::helper('concrete/interface');
 ?>

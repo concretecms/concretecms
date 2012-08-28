@@ -19,11 +19,14 @@ if (isset($_REQUEST['destCID'] ) && is_numeric($_REQUEST['destCID'])) {
 	$dc = Page::getByID($_REQUEST['destCID']);
 	$dcp = new Permissions($dc);
 }
+$u = new User();
+
 
 $canReadSource = true;
 $canAddSubContent = true;
 $canMoveCopyTo = true;
 $canCopyChildren = true;
+$canMoveCopyPages = true;
 if (isset($_REQUEST['origCID'] ) && strpos($_REQUEST['origCID'], ',') > -1) {
 	$ocs = explode(',', $_REQUEST['origCID']);
 	foreach($ocs as $ocID) {
@@ -36,14 +39,17 @@ foreach($originalPages as $oc) {
 	if (!$ocp->canRead()) {
 		$canReadSource = false;
 	}
+	if (!$ocp->canMoveOrCopyPage()) { 
+		$canMoveCopyPages = false;
+	}
 	$ct = CollectionType::getByID($oc->getCollectionTypeID());
-	if (!$dcp->canAddSubContent($ct)) {
+	if (!$dcp->canAddSubpage($ct)) {
 		$canAddSubContent = false;
 	}
 	if (!$oc->canMoveCopyTo($dc)) {
 		$canMoveCopyTo = false;
 	}	
-	if ((!$ocp->canAdminPage()) || ($oc->getCollectionPointerID() > 0)) {
+	if ((!$u->isSuperUser()) || ($oc->getCollectionPointerID() > 0)) {
 		$canCopyChildren = false;
 	}
 }
@@ -58,6 +64,8 @@ $json['message'] = false;
 
 if (!$canReadSource) {
 	$error = t("You cannot view the source page(s).");
+} else if (!$canMoveCopyPages) {
+	$error = t("You cannot move or copy the source page(s).");
 } else if (!$canAddSubContent) {
 	$error = t("You do not have sufficient privileges to add this page or these pages to this destination.");
 } else if (!$canMoveCopyTo) {
@@ -78,7 +86,7 @@ if (!$error) {
 					}
 					break;
 				case "COPY":
-					if ($_REQUEST['copyAll'] && $dcp->canAdminPage()) {
+					if ($_REQUEST['copyAll'] && $u->isSuperUser()) {
 						foreach($originalPages as $oc) {
 							$nc2 = $oc->duplicateAll($dc); // new collection is passed back
 							if (is_object($nc2)) {
@@ -103,15 +111,16 @@ if (!$error) {
 					foreach($originalPages as $oc) {
 						$ocp = new Permissions($oc);
 						$_SESSION['movePageSaveOldPagePath'] = $_REQUEST['saveOldPagePath'];
-						if ($dcp->canApproveCollection() && $ocp->canApproveCollection()) {
-							if ($_REQUEST['saveOldPagePath']) {
-								$nc2 = $oc->move($dc, true);
-							} else {
-								$nc2 = $oc->move($dc);
-							}
+						$pkr = new MovePagePageWorkflowRequest();
+						$pkr->setRequestedPage($oc);
+						$pkr->setRequestedTargetPage($dc);
+						$pkr->setSaveOldPagePath($_REQUEST['saveOldPagePath']);
+						$pkr->setRequesterUserID($u->getUserID());
+						$u->unloadCollectionEdit($oc);
+						$r = $pkr->trigger();
+						if ($r instanceof WorkflowProgressResponse) { 
 							$successMessage .= '"' . $oc->getCollectionName() . '" '.t('was moved beneath').' "' . $dc->getCollectionName() . '." ';
-						} else {
-							$oc->markPendingAction('MOVE', $dc);
+						} else { 
 							$successMessage .= t("Your request to move \"%s\" beneath \"%s\" has been stored. Someone with approval rights will have to activate the change.\n", $oc->getCollectionName() , $dc->getCollectionName() );
 						}
 					}

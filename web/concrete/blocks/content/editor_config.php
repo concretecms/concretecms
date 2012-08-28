@@ -17,7 +17,9 @@ tinyMCE.init({
 	document_base_url: '<?=BASE_URL . DIR_REL?>/',
 	convert_urls: false,
 	entity_encoding: 'raw',
-	content_css : "<?=$theme->getThemeEditorCSS()?>",
+	<? if (is_object($theme)) { ?>
+		content_css : "<?=$theme->getThemeEditorCSS()?>",
+	<? } ?>
 	<?
 	$txtEditorMode=Config::get('CONTENTS_TXT_EDITOR_MODE');
 	if( $txtEditorMode=='CUSTOM' ){ ?>

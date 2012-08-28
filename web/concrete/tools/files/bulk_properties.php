@@ -21,7 +21,7 @@ if (is_array($_REQUEST['fID'])) {
 	foreach($_REQUEST['fID'] as $fID) {
 		$f = File::getByID($fID);
 		$fp = new Permissions($f);
-		if ($fp->canRead()) {
+		if ($fp->canViewFile()) {
 			$files[] = $f;
 			$extensions[] = strtolower($f->getExtension()); 
 		}
@@ -29,7 +29,7 @@ if (is_array($_REQUEST['fID'])) {
 } else {
 	$f = File::getByID($_REQUEST['fID']);
 	$fp = new Permissions($f);
-	if ($fp->canRead()) {
+	if ($fp->canViewFile()) {
 		$files[] = $f;
 		$extensions[] = strtolower($f->getExtension()); 
 	}
@@ -78,7 +78,7 @@ foreach($files as $f){
 	}
 }
 
-if ($_POST['task'] == 'update_core' && $fp->canWrite() && (!$previewMode)) { 
+if ($_POST['task'] == 'update_core' && $fp->canEditFileProperties() && (!$previewMode)) { 
  
 	switch($_POST['attributeField']) {
 		case 'fvTitle':
@@ -110,7 +110,7 @@ if ($_POST['task'] == 'update_core' && $fp->canWrite() && (!$previewMode)) {
 	exit;
 }
 
-if ($_POST['task'] == 'update_extended_attribute' && $fp->canWrite() && (!$previewMode)) {
+if ($_POST['task'] == 'update_extended_attribute' && $fp->canEditFileProperties() && (!$previewMode)) {
 	$fv = $f->getVersionToModify();
 	$fakID = $_REQUEST['fakID'];
 	$value = ''; 
@@ -127,7 +127,7 @@ if ($_POST['task'] == 'update_extended_attribute' && $fp->canWrite() && (!$previ
 	exit;
 } 
 
-if ($_POST['task'] == 'clear_extended_attribute' && $fp->canWrite() && (!$previewMode)) {
+if ($_POST['task'] == 'clear_extended_attribute' && $fp->canEditFileProperties() && (!$previewMode)) {
 
 	$fv = $f->getVersionToModify();
 	$fakID = $_REQUEST['fakID'];
@@ -156,7 +156,7 @@ function printCorePropertyRow($title, $field, $value, $formText) {
 		$text = htmlentities( $value, ENT_QUOTES, APP_CHARSET);
 	}
 
-	if ($fp->canWrite() && (!$previewMode)) {
+	if ($fp->canEditFileProperties() && (!$previewMode)) {
 	
 	$hiddenFIDfields='';
 	foreach($files as $f) {
@@ -205,7 +205,7 @@ function printFileAttributeRow($ak, $fv, $value) {
 		$text = $value;
 	}
 
-	if ($ak->isAttributeKeyEditable() && $fp->canWrite() && (!$previewMode)) { 
+	if ($ak->isAttributeKeyEditable() && $fp->canEditFileProperties() && (!$previewMode)) { 
 	$type = $ak->getAttributeType();
 	$hiddenFIDfields='';
 	foreach($files as $f) {
@@ -271,9 +271,9 @@ table.ccm-grid th {width: 70px}
 <div class="ccm-ui">
 <? if ($_REQUEST['uploaded']) { ?>
 	<? if (count($_REQUEST['fID']) == 1) { ?>
-		<div class="block-message alert-message success"><a class="btn success small" style="float: right; margin-top: -5px" onclick="jQuery.fn.dialog.closeTop()"><?=t('Continue')?></a><p><?=t('1 file uploaded successfully.')?></p></div>
+		<div class="block-message alert-message success" style="padding-right: 14px !important"><a class="btn success btn-mini" style="float: right;" onclick="jQuery.fn.dialog.closeTop()"><?=t('Continue')?></a><?=t('1 file uploaded successfully.')?></div>
 	<? } else { ?>
-		<div class="block-message alert-message success"><a class="btn success small" style="float: right; margin-top: -5px" onclick="jQuery.fn.dialog.closeTop()"><?=t('Continue')?></a><p><?=t('%s files uploaded successfully.', count($_REQUEST['fID']))?></p></div>
+		<div class="block-message alert-message success" style="padding-right: 14px !important"><a class="btn success btn-mini" style="float: right;" onclick="jQuery.fn.dialog.closeTop()"><?=t('Continue')?></a><?=t('%s files uploaded successfully.', count($_REQUEST['fID']))?></div>
 	<? } ?>
 <? } ?>
 

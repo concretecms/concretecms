@@ -14,7 +14,7 @@ if (isset($error) && $error != '') {
 	?>
 	<? if ($format == 'block') { ?>
 	
-	<div class="alert-message error">
+	<div class="alert alert-error"><button type="button" class="close" data-dismiss="alert">×</button>
 	<?php foreach($_error as $e): ?>
 		<?php echo $e?><br/>
 	<?php endforeach; ?>

@@ -29,14 +29,18 @@ if (!$tp->canInstallPackages()) { ?>
 		<table class="ccm-marketplace-details-table">
 		<tr>
 			<td valign="top">
-				<div class="ccm-nivo-theme-default" id="ccm-marketplace-item-screenshots-wrapper">	
-				<div class="ribbon"></div>
-				<div id="ccm-marketplace-item-screenshots" class="nivoSlider">
+				<div id="ccm-marketplace-item-screenshots-wrapper">	
+				<div id="ccm-marketplace-item-screenshots">
 				<?
+				$i = 0;
+				
 				if (count($screenshots) > 0) { 
 					foreach($screenshots as $si) { ?>
-						<img src="<?=$si->src?>" width="<?=$si->width?>" height="<?=$si->height?>" />	
-					<? }
+						<img src="<?=$si->src?>" width="<?=$si->width?>" height="<?=$si->height?>" <? if ($i != 0) { ?>style="display: none" <? } ?> />	
+					<? 
+					$i++;
+					}
+					
 				} else { ?>
 					<div class="ccm-marketplace-item-screenshots-none">
 						<?=t('No screenshots')?>
@@ -118,3 +122,29 @@ if (!$tp->canInstallPackages()) { ?>
 <? } ?>
 
 </div>
+<script type="text/javascript">
+var marketplaceImages;
+$(function() {
+	clearInterval(marketplaceImages);
+	var currentImage = 0;
+	var totalImages = $('#ccm-marketplace-item-screenshots img').length;
+	if (totalImages > 1) {
+		var im = $('#ccm-marketplace-item-screenshots img').eq(0);
+		im.css('z-index', 10001);
+		$('#ccm-marketplace-item-screenshots img').not(im).css('z-index', 10000);
+		marketplaceImages = setInterval(function() {
+			var oim = $('#ccm-marketplace-item-screenshots img').eq(currentImage);
+			currentImage++;
+			if (currentImage == totalImages) {
+				currentImage = 0;
+			}
+			var nim = $('#ccm-marketplace-item-screenshots img').eq(currentImage);
+			nim.show();
+			oim.fadeOut(500, function() {
+				oim.css('z-index', 10000);
+				nim.css('z-index', 10001);
+			});
+		}, 5000);
+	}	
+});
+</script>

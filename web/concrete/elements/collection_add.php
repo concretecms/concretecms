@@ -11,7 +11,7 @@ $dh = Loader::helper('date');
 
 <? if ($_REQUEST['ctID']) { ?>
 
-	<form method="post" action="<?=$c->getCollectionAction()?>" id="ccmAddPage" onsubmit="jQuery.fn.dialog.showLoader()">		
+	<form method="post" action="<?=$c->getCollectionAction()?>" id="ccmAddPage" onsubmit="jQuery.fn.dialog.showLoader()" class="dialog-form">		
 	<input type="hidden" name="rel" value="<?=$_REQUEST['rel']?>" />
 	<input type="hidden" name="ctID" value="<?=$_REQUEST['ctID']?>" />
 
@@ -22,13 +22,15 @@ $dh = Loader::helper('date');
 
 		<div class="clearfix">
 			<?=$form->label('cName', t('Name'))?>
-			<div class="input"><input type="text" name="cName" value="" class="text span8" onKeyUp="makeAlias(this.value, 'cHandle')" ></div>
+			<div class="input"><input type="text" name="cName" value="" class="text span6" onKeyUp="ccm_updateAddPageHandle()" ></div>
 		</div>
 
 		
 		<div class="clearfix">
 			<?=$form->label('cHandle', t('URL Slug'))?>
-			<div class="input"><input type="text" name="cHandle" class="span8" value="" id="cHandle"></div>
+			<div class="input"><input type="text" name="cHandle" class="span3" value="" id="cHandle">
+			<img src="<?=ASSETS_URL_IMAGES?>/loader_intelligent_search.gif" width="43" height="11" id="ccm-url-slug-loader" style="display: none" />
+			</div>
 		</div>
 		
 		<div class="clearfix">		
@@ -44,7 +46,7 @@ $dh = Loader::helper('date');
 		<div class="clearfix">
 			<?=$form->label('cDescription', t('Description'))?>
 			<div class="input">
-			<textarea name="cDescription" rows="4" class="span8"></textarea>
+			<textarea name="cDescription" rows="4" class="span6"></textarea>
 			</div>
 		</div>	
 		<?
@@ -115,45 +117,43 @@ $dh = Loader::helper('date');
 <script type="text/javascript">
 	
 	$(function() {
+		$('input[name=cName]').focus();
+		$('#ccmAddPage input, #ccmAddPage select').bind('keypress.addpage', function(e) {
+			if (e.keyCode == 13) {
+				$('#ccmAddPage').submit();
+			}
+		});
 		var height = $("#ccm-add-page-information").height();
 		var dlog = $("#ccm-add-page-information").closest('.ui-dialog-content');
 		if (height > 256) {
 			height = height + 160;
-			if (height < 650) { 
-				dlog.dialog('option', 'height', height);
-			} else {
-				dlog.dialog('option', 'height', '650');
+			if ($(window).height() > 750) {
+				if (height < 650) { 
+					dlog.dialog('option', 'height', height);
+				} else {
+					dlog.dialog('option', 'height', '650');
+				}
+				dlog.dialog('option','position','center');
 			}
-			dlog.dialog('option','position','center');
 		} 
 	});
-	function makeAlias(value, formInputID) {
-		alias = value.replace(/[&]/gi, "and");
-		alias = alias.replace(/[\s|.]+/gi, "<?=PAGE_PATH_SEPARATOR?>");
-		
-		// thanks fernandos
-        alias = alias.replace(/[\u00C4\u00E4]/gi, "ae");            // Ää    
-        alias = alias.replace(/[\u00D6\u00F6]/gi, "oe");            // Öö    
-        alias = alias.replace(/[\u00DF]/gi, "ss");                  // ß    
-        alias = alias.replace(/[\u00DC\u00FC]/gi, "ue");            // Üü
-        alias = alias.replace(/[\u00C6\u00E6]/gi, "ae");            // Ææ 
-        alias = alias.replace(/[\u00D8\u00F8]/gi, "oe");            // ø 
-        alias = alias.replace(/[\u00C5\u00E5]/gi, "aa");            // Åå    
-        alias = alias.replace(/[\u00E8\u00C8\u00E9\u00C9]/gi, "e"); // éÉèÈ 
-		
-		alias = alias.replace(/[^0-9A-Za-z]/gi, "<?=PAGE_PATH_SEPARATOR?>");
-		alias = alias.replace(/<?=PAGE_PATH_SEPARATOR?>+/gi, '<?=PAGE_PATH_SEPARATOR?>');
-		if (alias.charAt(alias.length-1) == '<?=PAGE_PATH_SEPARATOR?>') {
-			alias = alias.substring(0,alias.length-1);
-		}
-		if (alias.charAt(0) == '<?=PAGE_PATH_SEPARATOR?>') {
-			alias = alias.substring(1,alias.length);
-		}
-		alias = alias.toLowerCase();
-		
-		formObj = document.getElementById(formInputID);
-		formObj.value = alias;
-	} 	
+	
+	var addPageTimer = false;
+	ccm_updateAddPageHandle = function() {
+		clearTimeout(addPageTimer);
+		addPageTimer = setTimeout(function() {
+			var val = $('#ccmAddPage input[name=cName]').val();
+			$('#ccm-url-slug-loader').show();
+			$.post('<?=REL_DIR_FILES_TOOLS_REQUIRED?>/pages/url_slug', {
+				'token': '<?=Loader::helper('validation/token')->generate('get_url_slug')?>',
+				'name': val
+			}, function(r) {
+				$('#ccm-url-slug-loader').hide();
+				$('#ccmAddPage input[name=cHandle]').val(r);
+			});
+		}, 150);
+	
+	}
 </script>
 
 
@@ -161,13 +161,13 @@ $dh = Loader::helper('date');
 <? } else {
 
 
-$ctArray = CollectionType::getList($c->getAllowedSubCollections());
+$ctArray = CollectionType::getList();
 $cp = new Permissions($c);
 
 $cnt = 0;
 for ($i = 0; $i < count($ctArray); $i++) {
 	$ct = $ctArray[$i];
-	if ($cp->canAddSubCollection($ct)) { 
+	if ($cp->canAddSubpage($ct)) { 
 		$cnt++;
 	}
 }
@@ -178,7 +178,7 @@ for ($i = 0; $i < count($ctArray); $i++) {
 			<ul id="ccm-select-page-type">
 				<? 
 				foreach($ctArray as $ct) { 
-					if ($cp->canAddSubCollection($ct)) { 
+					if ($cp->canAddSubpage($ct)) { 
 					$requiredKeys=array();
 					$aks = $ct->getAvailableAttributeKeys();
 					foreach($aks as $ak)

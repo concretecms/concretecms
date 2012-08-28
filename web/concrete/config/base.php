@@ -106,16 +106,17 @@ if (!defined('DB_CHARSET')) {
 }
 
 if (!defined("DB_COLLATE")) {
-	define('DB_COLLATE', '');
+	define('DB_COLLATE', 'utf8_unicode_ci');
 }
 
 define("LANGUAGE_DOMAIN_CORE", "messages");
 
 # Path to the core files shared between all concrete 5 installations
 if (!defined('DIR_BASE_CORE')) {
-	define('DIR_BASE_CORE', dirname(__FILE__) . '/..');
+	define('DIR_BASE_CORE', realpath(dirname(__FILE__) . '/..'));
 }
 
+define('DIRNAME_CORE_CLASSES', 'core');
 # if "concrete/" does NOT exist in DIR_BASE then we set multi_site to on
 if (!is_dir(DIR_BASE . '/' . DIRNAME_APP)) {
 	define("MULTI_SITE", 1);
@@ -163,6 +164,12 @@ define('DIRNAME_MODELS', 'models');
 define('DIRNAME_ATTRIBUTES', 'attribute');
 define('DIRNAME_ATTRIBUTE_TYPES', 'types');
 define('DIRNAME_LIBRARIES', 'libraries');
+define('DIRNAME_RESPONSE', 'response');
+define('DIRNAME_PERMISSIONS', 'permission');
+define('DIRNAME_WORKFLOW', 'workflow');
+define('DIRNAME_WORKFLOW_ASSIGNMENTS', 'assignments');
+define('DIRNAME_REQUESTS', 'requests');
+define('DIRNAME_KEYS', 'keys');
 define('DIRNAME_PAGE_TYPES', 'page_types');
 define('DIRNAME_ELEMENTS', 'elements');
 define('DIRNAME_LANGUAGES', 'languages');
@@ -271,6 +278,7 @@ define('DIRNAME_CONTROLLERS', 'controllers');
 define('DIR_FILES_CONTROLLERS_REQUIRED', DIR_BASE_CORE . '/controllers');
 define('FILENAME_ATTRIBUTE_CONTROLLER', 'controller.php');
 define('FILENAME_ATTRIBUTE_DB', 'db.xml');
+define('FILENAME_DB', 'db.xml');
 
 # Elements
 define('DIR_FILES_ELEMENTS', DIR_BASE . '/elements');
@@ -349,10 +357,6 @@ if (!defined('CACHE_LIFETIME')) {
 
 define('ON_WINDOWS', intval(substr(PHP_OS,0,3)=='WIN') );
 
-# Binaries used by the system
-# Currently unused
-# define('DIR_FILES_BIN', DIR_BASE_CORE . '/bin');
-define('DIR_FILES_BIN_HTMLDIFF', DIR_LIBRARIES_3RDPARTY_CORE . '/htmldiff.py');
 if (!defined('DIR_FILES_BIN_UNZIP')) {
 	 define('DIR_FILES_BIN_UNZIP', '/usr/bin/unzip');
 }
@@ -547,5 +551,3 @@ if(!defined('SITEMAPXML_DEFAULT_PRIORITY')) {
 	*/
 	define('SITEMAPXML_DEFAULT_PRIORITY', 0.5);
 }
-
-require_once(DIR_LIBRARIES_CORE . '/loader.php');

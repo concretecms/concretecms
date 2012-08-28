@@ -67,8 +67,8 @@
 	}
 	
 	autonavShowPane = function (pane){
-		$('ul#ccm-autonav-tabs li').each(function(num,el){ $(el).removeClass('ccm-nav-active') });
-		$(document.getElementById('ccm-autonav-tab-'+pane).parentNode).addClass('ccm-nav-active');
+		$('ul#ccm-autonav-tabs li').each(function(num,el){ $(el).removeClass('active') });
+		$(document.getElementById('ccm-autonav-tab-'+pane).parentNode).addClass('active');
 		$('div.ccm-autonavPane').each(function(num,el){ el.style.display='none'; });
 		$('#ccm-autonavPane-'+pane).css('display','block');
 		if(pane=='preview') reloadPreview(document.blockForm);

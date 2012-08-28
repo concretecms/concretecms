@@ -63,7 +63,6 @@ ccm_triggerSelectFileComplete = function(fID, af) {
 
 ThumbnailBuilder_onSaveCompleted = function(r) { 
 	r = eval('(' + r + ')');
-	console.log(r);
 	jQuery.fn.dialog.closeTop();
 	ccm_triggerSelectFile(r.fID, 'ccm-b-image-' + r.bID, false);
 }

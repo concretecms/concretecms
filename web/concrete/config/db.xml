@@ -1,20 +1,96 @@
 <?xml version="1.0"?>
 <schema version="0.3">
-  <table name="AreaGroupBlockTypes">
-    <field name="cID" type="I" size="10">
+
+  <table name="PermissionAssignments">
+    <field name="paID" type="I" size="10">
       <KEY/>
       <DEFAULT value="0"/>
       <UNSIGNED/>
     </field>
-    <field name="arHandle" type="C" size="255">
+    <field name="pkID" type="I" size="10">
       <KEY/>
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
     </field>
-    <field name="gID" type="I" size="10">
+    <index name="pkID">
+      <col>pkID</col>
+    </index>
+  </table>
+
+  <table name="PermissionAccess">
+    <field name="paID" type="I" size="10">
+      <KEY/>
+      <AUTOINCREMENT/>
+      <UNSIGNED/>
+    </field>
+    <field name="paIsInUse" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+     <index name="accessType">
+      <col>accessType</col>
+    </index>
+    <index name="peID_accessType">
+      <col>peID</col>
+      <col>accessType</col>
+    </index>
+    <index name="paID_peID">
+      <col>paID</col>
+      <col>peID</col>
+    </index>
+
+  </table>
+
+  <table name="PermissionAccessList">
+    <field name="paID" type="I" size="10">
       <KEY/>
       <DEFAULT value="0"/>
       <UNSIGNED/>
     </field>
-    <field name="uID" type="I" size="10">
+    <field name="peID" type="I" size="10">
+      <KEY/>
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="pdID" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="accessType" type="I" size="4">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+  </table>
+
+
+  <table name="BlockTypePermissionBlockTypeAccessList">
+    <field name="paID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="peID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="permission" type="C" size="1">
+      <NOTNULL/>
+      <DEFAULT value="1"/>
+    </field>
+  </table>
+
+  <table name="BlockTypePermissionBlockTypeAccessListCustom">
+    <field name="paID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="peID" type="I" size="10">
       <KEY/>
       <DEFAULT value="0"/>
       <UNSIGNED/>
@@ -25,7 +101,113 @@
       <UNSIGNED/>
     </field>
   </table>
-  <table name="AreaGroups">
+
+  <table name="UserPermissionUserSearchAccessList">
+    <field name="paID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="peID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="permission" type="C" size="1">
+      <NOTNULL/>
+      <DEFAULT value="1"/>
+    </field>
+  </table>
+
+  <table name="UserPermissionUserSearchAccessListCustom">
+    <field name="paID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="peID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="gID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+  </table>
+
+  <table name="UserPermissionAssignGroupAccessList">
+    <field name="paID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="peID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="permission" type="C" size="1">
+      <NOTNULL/>
+      <DEFAULT value="1"/>
+    </field>
+  </table>
+
+  <table name="UserPermissionAssignGroupAccessListCustom">
+    <field name="paID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="peID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="gID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+  </table>
+
+
+  <table name="AreaPermissionBlockTypeAccessList">
+    <field name="paID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="peID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="permission" type="C" size="1">
+      <NOTNULL/>
+      <DEFAULT value="1"/>
+    </field>
+  </table>
+  <table name="AreaPermissionBlockTypeAccessListCustom">
+    <field name="paID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="peID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="btID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+  </table>
+
+  <table name="AreaPermissionAssignments">
     <field name="cID" type="I" size="10">
       <KEY/>
       <DEFAULT value="0"/>
@@ -34,20 +216,47 @@
     <field name="arHandle" type="C" size="255">
       <KEY/>
     </field>
-    <field name="gID" type="I" size="10">
+    <field name="pkID" type="I" size="10">
       <KEY/>
       <DEFAULT value="0"/>
       <UNSIGNED/>
     </field>
-    <field name="uID" type="I" size="10">
+    <field name="paID" type="I" size="10">
       <KEY/>
       <DEFAULT value="0"/>
       <UNSIGNED/>
-    </field>
-    <field name="agPermissions" type="C" size="64">
-      <NOTNULL/>
     </field>
   </table>
+  
+  <table name="BlockPermissionAssignments">
+    <field name="cID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="cvID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="bID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="pkID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="paID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+  </table>
+  
+  
   <table name="Areas">
     <field name="arID" type="I" size="10">
       <KEY/>
@@ -155,6 +364,10 @@
       <DEFAULT value="0"/>
     </field>
     <field name="akIsAutoCreated" type="I1" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="akIsInternal" type="I1" size="1">
       <NOTNULL/>
       <DEFAULT value="0"/>
     </field>
@@ -295,6 +508,11 @@
       <NOTNULL/>
       <DEFAULT value="0"/>
     </field>
+    <field name="btDisplayOrder" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED />
+    </field>
     <field name="btInterfaceWidth" type="I" size="10">
       <NOTNULL/>
       <DEFAULT value="400"/>
@@ -387,34 +605,6 @@
       <DEFAULT value="0"/>
       <UNSIGNED/>
     </field>
-  </table>
-  <table name="CollectionVersionBlockPermissions">
-    <field name="cID" type="I" size="10">
-      <KEY/>
-      <DEFAULT value="0"/>
-      <UNSIGNED/>
-    </field>
-    <field name="cvID" type="I" size="10">
-      <KEY/>
-      <DEFAULT value="1"/>
-      <UNSIGNED/>
-    </field>
-    <field name="bID" type="I" size="10">
-      <KEY/>
-      <DEFAULT value="0"/>
-      <UNSIGNED/>
-    </field>
-    <field name="gID" type="I" size="10">
-      <KEY/>
-      <DEFAULT value="0"/>
-      <UNSIGNED/>
-    </field>
-    <field name="uID" type="I" size="10">
-      <KEY/>
-      <DEFAULT value="0"/>
-      <UNSIGNED/>
-    </field>
-    <field name="cbgPermissions" type="C" size="32"/>
   </table>
   <table name="CollectionVersionBlocks">
     <field name="cID" type="I" size="10">
@@ -528,6 +718,9 @@
       <col>cvID</col> 
       <col>arHandle</col>
     </index> 
+	<index name="cID"> 
+	  <col>cID</col>
+    </index> 
   </table>  
   
   
@@ -586,9 +779,23 @@
     <field name="cvApproverUID" type="I" size="10">
       <UNSIGNED/>
     </field>
+    <field name="ptID" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="ctID" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+
     <field name="cvActivateDatetime" type="T"/>
     <index name="cvIsApproved">
       <col>cvIsApproved</col>
+    </index>
+    <index name="ctID">
+      <col>ctID</col>
     </index>
   </table>
   <table name="Collections">
@@ -851,13 +1058,95 @@
       <DEFAULT value="0"/>
     </field>
   </table>
- <table name="TaskPermissionUserGroups">
-    <field name="tpID" type="I" size="10">
+
+  <table name="PermissionKeys">
+    <field name="pkID" type="I" size="10">
+      <KEY/>
+      <AUTOINCREMENT/>
+      <UNSIGNED />
+    </field>
+    <field name="pkHandle" type="C" size="255">
+      <NOTNULL/>
+    </field>
+    <field name="pkName" type="C" size="255">
+      <NOTNULL/>
+    </field>
+    <field name="pkCanTriggerWorkflow" type="I" size="1">
+    	<notnull />
+	    <DEFAULT value="0"/>
+    </field>
+    <field name="pkHasCustomClass" type="I" size="1">
+    	<notnull />
+	    <DEFAULT value="0"/>
+    </field>
+    <field name="pkDescription" type="C" size="255"></field>
+    <field name="pkCategoryID" type="I" size="10">
+      <UNSIGNED />
+    </field>
+    <field name="pkgID" type="I" size="10">
+      <UNSIGNED />
+    </field>
+    <index name="akHandle">
+      <UNIQUE/>
+      <col>pkHandle</col>
+    </index>
+  </table>
+  <table name="PermissionKeyCategories">
+    <field name="pkCategoryID" type="I" size="10">
+      <KEY/>
+      <AUTOINCREMENT/>
+      <UNSIGNED />
+    </field>
+    <field name="pkCategoryHandle" type="C" size="255">
+      <NOTNULL/>
+    </field>
+    <field name="pkgID" type="I" size="10">
+      <UNSIGNED />
+    </field>
+  </table>
+  <table name="PermissionAccessEntityTypes">
+    <field name="petID" type="I" size="10">
+      <KEY/>
+      <AUTOINCREMENT/>
+      <UNSIGNED />
+    </field>
+    <field name="petHandle" type="C" size="255">
+      <NOTNULL/>
+    </field>
+    <field name="petName" type="C" size="255">
+      <NOTNULL/>
+    </field>
+    <field name="pkgID" type="I" size="10">
+      <UNSIGNED />
+    </field>
+  </table>
+  <table name="PermissionAccessEntityTypeCategories">
+    <field name="petID" type="I" size="10">
       <KEY/>
       <DEFAULT value="0"/>
       <UNSIGNED/>
     </field>
-    <field name="gID" type="I" size="10">
+    <field name="pkCategoryID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+  </table>
+    <table name="PermissionAccessEntities">
+    <field name="peID" type="I" size="10">
+      <KEY/>
+      <AUTOINCREMENT/>
+      <UNSIGNED/>
+    </field>
+    <field name="petID" type="I" size="10">
+      <UNSIGNED />
+    </field>
+    <index name="petID">
+      <col>petID</col>
+    </index>
+  </table>
+    <table name="PermissionAccessEntityUsers">
+    <field name="peID" type="I" size="10">
       <KEY/>
       <DEFAULT value="0"/>
       <UNSIGNED/>
@@ -867,69 +1156,347 @@
       <DEFAULT value="0"/>
       <UNSIGNED/>
     </field>
-    <field name="canRead" type="I" size="1">
-      <NOTNULL/>
-      <DEFAULT value="0"/>
-    </field>
+    <index name="uID">
+      <col>uID</col>
+    </index>
   </table>
-  <table name="TaskPermissions">
-    <field name="tpID" type="I" size="10">
-  	  <KEY/>
+    <table name="PermissionAccessEntityGroupSets">
+    <field name="peID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="gsID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <index name="gsID">
+      <col>gsID</col>
+    </index>
+  </table>
+
+  <table name="PermissionAccessEntityGroups">
+    <field name="pegID" type="I" size="10">
+      <KEY/>
       <AUTOINCREMENT/>
       <UNSIGNED/>
     </field>
-    <field name="tpHandle" type="C" size="255"/>
-    <field name="tpName" type="C" size="255"/>
-    <field name="tpDescription" type="X"/>
-    <field name="pkgID" type="I" size="10">
+    <field name="peID" type="I" size="10">
       <NOTNULL/>
       <DEFAULT value="0"/>
       <UNSIGNED/>
     </field>
-    <index name="tpHandle">
-      <UNIQUE/>
-      <col>tpHandle</col>
+    <field name="gID" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <index name="gID">
+      <col>gID</col>
     </index>
   </table>
-  <table name="FileSetPermissions">
+  <table name="PermissionDurationObjects">
+    <field name="pdID" type="I" size="10">
+      <KEY/>
+      <AUTOINCREMENT/>
+      <UNSIGNED/>
+    </field>
+    <field name="pdObject" type="X">
+      <NOTNULL/>
+    </field>
+  </table>
+  <table name="PagePermissionPageTypeAccessList">
+    <field name="paID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="peID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="permission" type="C" size="1">
+      <NOTNULL/>
+      <DEFAULT value="1"/>
+    </field>
+    <field name="externalLink" type="I1" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+  </table>
+  <table name="PagePermissionPageTypeAccessListCustom">
+    <field name="paID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="peID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="ctID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+  </table>
+
+  <table name="PagePermissionThemeAccessList">
+    <field name="paID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="peID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="permission" type="C" size="1">
+      <NOTNULL/>
+      <DEFAULT value="1"/>
+    </field>
+  </table>
+  <table name="PagePermissionThemeAccessListCustom">
+    <field name="paID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="peID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="ptID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+  </table>
+
+  <table name="PagePermissionPropertyAccessList">
+    <field name="paID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="peID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="name" type="I" size="1">
+      <UNSIGNED/>
+      <default value="0" />
+    </field>
+    <field name="publicDateTime" type="I" size="1">
+      <UNSIGNED/>
+      <default value="0" />
+    </field>
+    <field name="uID" type="I" size="1">
+      <UNSIGNED/>
+      <default value="0" />
+    </field>
+    <field name="description" type="I" size="1">
+      <UNSIGNED/>
+      <default value="0" />
+    </field>
+    <field name="paths" type="I" size="1">
+      <UNSIGNED/>
+      <default value="0" />
+    </field>
+    <field name="attributePermission" type="C" size="1">
+      <NOTNULL/>
+      <DEFAULT value="1"/>
+    </field>
+  </table>
+  <table name="PagePermissionPropertyAttributeAccessListCustom">
+    <field name="paID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="peID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="akID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+  </table>
+
+  <table name="UserPermissionEditPropertyAccessList">
+    <field name="paID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="peID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="uName" type="I" size="1">
+      <UNSIGNED/>
+      <default value="0" />
+    </field>
+    <field name="uEmail" type="I" size="1">
+      <UNSIGNED/>
+      <default value="0" />
+    </field>
+    <field name="uPassword" type="I" size="1">
+      <UNSIGNED/>
+      <default value="0" />
+    </field>
+    <field name="uAvatar" type="I" size="1">
+      <UNSIGNED/>
+      <default value="0" />
+    </field>
+    <field name="uTimezone" type="I" size="1">
+      <UNSIGNED/>
+      <default value="0" />
+    </field>
+    <field name="uDefaultLanguage" type="I" size="1">
+      <UNSIGNED/>
+      <default value="0" />
+    </field>
+
+    <field name="attributePermission" type="C" size="1">
+      <NOTNULL/>
+      <DEFAULT value="1"/>
+    </field>
+  </table>
+  
+  <table name="UserPermissionEditPropertyAttributeAccessListCustom">
+    <field name="paID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="peID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="akID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+  </table>
+  
+  <table name="UserPermissionViewAttributeAccessList">
+    <field name="paID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="peID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="permission" type="C" size="1">
+      <NOTNULL/>
+      <DEFAULT value="1"/>
+    </field>
+  </table>
+  
+  <table name="UserPermissionViewAttributeAccessListCustom">
+    <field name="paID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="peID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="akID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+  </table>
+
+  <table name="PagePermissionAssignments">
+    <field name="cID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="pkID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="paID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+  </table>
+
+  <table name="FileSetPermissionAssignments">
     <field name="fsID" type="I" size="10">
       <KEY/>
       <DEFAULT value="0"/>
       <UNSIGNED/>
     </field>
-    <field name="gID" type="I" size="10">
+    <field name="paID" type="I" size="10">
       <KEY/>
       <DEFAULT value="0"/>
       <UNSIGNED/>
     </field>
-    <field name="uID" type="I" size="10">
+    <field name="pkID" type="I" size="10">
       <KEY/>
       <DEFAULT value="0"/>
       <UNSIGNED/>
     </field>
-    <field name="canRead" type="I" size="4"/>
-    <field name="canWrite" type="I" size="4"/>
-    <field name="canAdmin" type="I" size="4"/>
-    <field name="canAdd" type="I" size="4"/>
-    <field name="canSearch" type="I" size="3">
-      <UNSIGNED/>
-    </field>
-    <index name="canRead">
-      <col>canRead</col>
-    </index>
-    <index name="canWrite">
-      <col>canWrite</col>
-    </index>
-    <index name="canAdmin">
-      <col>canAdmin</col>
-    </index>
-    <index name="canSearch">
-      <col>canSearch</col>
-    </index>
-    <index name="canAdd">
-      <col>canAdd</col>
-    </index>
   </table>
+
+  <table name="FileSetPermissionFileTypeAccessList">
+    <field name="paID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="peID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="permission" type="C" size="1">
+      <NOTNULL/>
+      <DEFAULT value="1"/>
+    </field>
+  </table>
+  
+  <table name="FileSetPermissionFileTypeAccessListCustom">
+    <field name="paID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="peID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="extension" type="C" size="64">
+	     <KEY/>
+		<notnull />
+    </field>
+  </table>
+
   <table name="FileVersions">
     <opt platform="MYSQL">ENGINE=MYISAM</opt>
     <field name="fID" type="I" size="10">
@@ -1076,6 +1643,31 @@
     <index name="fOverrideSetPermissions">
       <col>fOverrideSetPermissions</col>
     </index>
+  </table>
+  <table name="GroupSetGroups">
+    <field name="gID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="gsID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+  </table>
+  <table name="GroupSets">
+    <field name="gsID" type="I" size="10">
+      <KEY/>
+      <AUTOINCREMENT/>
+      <UNSIGNED/>
+    </field>
+    <field name="gsName" type="C" size="255"/>
+    <field name="pkgID" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
   </table>
   <table name="Groups">
     <field name="gID" type="I" size="10">
@@ -1373,48 +1965,6 @@
       <col>cRequiresReindex</col>
 	</index>
   </table>
-  <table name="PagePermissionPageTypes">
-    <field name="cID" type="I" size="10">
-      <KEY/>
-      <DEFAULT value="0"/>
-      <UNSIGNED/>
-    </field>
-    <field name="gID" type="I" size="10">
-      <KEY/>
-      <DEFAULT value="0"/>
-      <UNSIGNED />
-    </field>
-    <field name="uID" type="I" size="10">
-      <KEY/>
-      <DEFAULT value="0"/>
-      <UNSIGNED/>
-    </field>
-    <field name="ctID" type="I" size="10">
-      <KEY/>
-      <DEFAULT value="0"/>
-      <UNSIGNED />
-    </field>
-  </table>
-  <table name="PagePermissions">
-    <field name="cID" type="I" size="10">
-      <KEY/>
-      <DEFAULT value="0"/>
-      <UNSIGNED/>
-    </field>
-    <field name="gID" type="I" size="10">
-      <KEY/>
-      <DEFAULT value="0"/>
-      <UNSIGNED/>
-    </field>
-    <field name="uID" type="I" size="10">
-      <KEY/>
-      <DEFAULT value="0"/>
-      <UNSIGNED />
-    </field>
-    <field name="cgPermissions" type="C" size="32"/>
-    <field name="cgStartDate" type="T"/>
-    <field name="cgEndDate" type="T"/>
-  </table>
   <table name="PageStatistics">
     <opt platform="MYSQL">ENGINE=MYISAM</opt>
     <field name="pstID" type="I8" size="20">
@@ -1527,11 +2077,6 @@
       <DEFAULT value="0"/>
       <UNSIGNED/>
     </field>
-    <field name="ctID" type="I" size="10">
-      <NOTNULL/>
-      <DEFAULT value="0"/>
-      <UNSIGNED/>
-    </field>
     <field name="cIsTemplate" type="I" size="1">
       <NOTNULL/>
       <DEFAULT value="0"/>
@@ -1549,17 +2094,6 @@
     </field>
     <field name="cCheckedOutDatetime" type="T"/>
     <field name="cCheckedOutDatetimeLastEdit" type="T"/>
-    <field name="cPendingAction" type="C" size="6"/>
-    <field name="cPendingActionDatetime" type="T">
-      <NOTNULL/>
-      <DEFAULT value="0000-00-00 00:00:00"/>
-    </field>
-    <field name="cPendingActionUID" type="I" size="10">
-      <UNSIGNED/>
-    </field>
-    <field name="cPendingActionTargetCID" type="I" size="10">
-      <UNSIGNED/>
-    </field>
     <field name="cOverrideTemplatePermissions" type="I1" size="1">
       <NOTNULL/>
       <DEFAULT value="1"/>
@@ -1608,11 +2142,6 @@
       <DEFAULT value="0"/>
       <UNSIGNED/>
     </field>
-    <field name="ptID" type="I" size="10">
-      <NOTNULL/>
-      <DEFAULT value="0"/>
-      <UNSIGNED/>
-    </field>
     <field name="cCacheFullPageContent" type="I" size="4">
       <NOTNULL/>
       <DEFAULT value="-1"/>
@@ -1641,9 +2170,6 @@
     </index>
     <index name="uID">
       <col>uID</col>
-    </index>
-    <index name="ctID">
-      <col>ctID</col>
     </index>
     <index name="cPointerID">
       <col>cPointerID</col>
@@ -2063,6 +2589,11 @@
       <DEFAULT value="0"/>
       <UNSIGNED/>
     </field>
+    <field name="uLastIP" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
     <field name="uPreviousLogin" type="I" size="10">
       <NOTNULL/>
       <DEFAULT value="0"/>
@@ -2120,6 +2651,24 @@
       <col>ipFrom</col>
     </index>
   </table>  
+  
+    <table name="FilePermissionAssignments">
+    <field name="fID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="paID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="pkID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+  </table>
   
   <table name="FileSets">
     <field name="fsID" type="I" size="10">
@@ -2365,4 +2914,181 @@
     </field>
     <field name="akDefaultCountry" type="C" size="12"/>
   </table>
+  <table name="WorkflowProgressCategories">
+    <field name="wpCategoryID" type="I" size="10">
+      <KEY/>
+      <AUTOINCREMENT/>
+      <UNSIGNED />
+    </field>
+    <field name="wpCategoryHandle" type="C" size="255">
+      <NOTNULL/>
+    </field>
+    <field name="pkgID" type="I" size="10">
+      <UNSIGNED />
+    </field>
+  </table>
+  <table name="WorkflowProgressHistory">
+    <field name="wphID" type="I" size="10">
+      <KEY/>
+      <AUTOINCREMENT/>
+      <UNSIGNED/>
+    </field>
+    <field name="wpID" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="timestamp" type="T">
+      <NOTNULL/>
+      <DEFTIMESTAMP />
+    </field>
+    <field name="object" type="X"/>
+  </table>
+  <table name="WorkflowProgress">
+    <field name="wpID" type="I" size="10">
+      <KEY/>
+      <AUTOINCREMENT/>
+      <UNSIGNED/>
+    </field>
+    <field name="wpCategoryID" type="I" size="10">
+      <UNSIGNED/>
+    </field>
+    <field name="wfID" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="wpApproved" type="I1" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <!-- 0, -1 or 1 //-->
+    </field>
+    <field name="wpDateAdded" type="T"/>
+    <field name="wpDateLastAction" type="T"/>
+    <field name="wpCurrentStatus" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="wrID" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="wpIsCompleted" type="I1" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <index name="wrID">
+      <col>wrID</col>
+    </index>
+    <index name="wpIsCompleted">
+      <col>wpIsCompleted</col>
+    </index>
+  </table>
+  <table name="WorkflowTypes">
+    <field name="wftID" type="I" size="10">
+      <KEY/>
+      <AUTOINCREMENT/>
+      <UNSIGNED/>
+    </field>
+    <field name="wftHandle" type="C" size="64">
+      <NOTNULL/>
+    </field>
+    <field name="wftName" type="C" size="128">
+      <NOTNULL/>
+    </field>
+    <field name="pkgID" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+  </table>
+  <table name="Workflows">
+    <field name="wfID" type="I" size="10">
+      <KEY/>
+      <AUTOINCREMENT/>
+      <UNSIGNED/>
+    </field>
+    <field name="wfName" type="C" size="255"/>
+    <field name="wftID" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <index name="wfName">
+      <UNIQUE/>
+      <col>wfName</col>
+    </index>
+  </table>
+
+  <table name="PermissionAccessWorkflows">
+    <field name="paID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="wfID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+  </table>
+  <table name="BasicWorkflowProgressData">
+    <field name="wpID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="uIDStarted" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="uIDCompleted" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="wpDateCompleted" type="T"/>
+  </table>
+
+  <table name="BasicWorkflowPermissionAssignments">
+    <field name="wfID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="pkID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="paID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+  </table>
+
+
+  <table name="WorkflowRequestObjects">
+    <field name="wrID" type="I" size="10">
+      <KEY/>
+      <AUTOINCREMENT/>
+      <UNSIGNED/>
+    </field>
+    <field name="wrObject" type="X"/>
+  </table>
+  <table name="PageWorkflowProgress">
+    <field name="cID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="wpID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+  </table>
+
   </schema>

@@ -21,10 +21,9 @@ if (isset($_REQUEST['searchInstance'])) {
 <? } ?>
 
 <div id="ccm-list-wrapper"><a name="ccm-<?=$searchInstance?>-list-wrapper-anchor"></a>
-	<div style="margin-bottom: 10px">
 		<? $form = Loader::helper('form'); ?>
-
-		<select id="ccm-<?=$searchInstance?>-list-multiple-operations" class="span3" disabled>
+	<div style="float: left; width: 200px; margin-bottom: 10px">
+		<select id="ccm-<?=$searchInstance?>-list-multiple-operations" class="" disabled>
 			<option value="">** <?=t('With Selected')?></option>
 			<option value="download"><?=t('Download')?></option>
 			<option value="sets"><?=t('Sets')?></option>
@@ -34,9 +33,11 @@ if (isset($_REQUEST['searchInstance'])) {
 			<option value="delete"><?=t('Delete')?></option>
 		</select>	
 		
-		<? Loader::element('files/upload_single', array('searchInstance' => $searchInstance, 'ocID' => $ocID)); ?>
-
 	</div>
+	<div style="float: right">
+		<? Loader::element('files/upload_single', array('searchInstance' => $searchInstance, 'ocID' => $ocID)); ?>
+	</div>
+	<div class="clearfix" style="height: 1px"></div>
 
 <?
 	$txt = Loader::helper('text');
@@ -72,12 +73,12 @@ if (isset($_REQUEST['searchInstance'])) {
 			$star_icon = ($f->isStarred() == 1) ? 'star_yellow.png' : 'star_grey.png';
 			$fv = $f->getApprovedVersion(); 
 			$canViewInline = $fv->canView() ? 1 : 0;
-			$canEdit = ($fv->canEdit() && $pf->canWrite()) ? 1 : 0;
+			$canEdit = ($fv->canEdit() && $pf->canEditFileContents()) ? 1 : 0;
 			$pfg = FilePermissions::getGlobal();
 			?>
-			<tr class="ccm-list-record <?=$striped?>" ccm-file-manager-instance="<?=$searchInstance?>" ccm-file-manager-can-admin="<?=($pf->canAdmin())?>" ccm-file-manager-can-duplicate="<?=($pfg->canAddFileType($f->getExtension()) && $pf->canWrite())?>" ccm-file-manager-can-delete="<?=$pf->canAdmin()?>" ccm-file-manager-can-view="<?=$canViewInline?>" ccm-file-manager-can-replace="<?=$pf->canWrite()?>" ccm-file-manager-can-edit="<?=$canEdit?>" fID="<?=$f->getFileID()?>" id="fID<?=$f->getFileID()?>">
+			<tr class="ccm-list-record <?=$striped?>" ccm-file-manager-instance="<?=$searchInstance?>" ccm-file-manager-can-admin="<?=($pf->canEditFilePermissions())?>" ccm-file-manager-can-duplicate="<?=$pf->canCopyFile()?>" ccm-file-manager-can-delete="<?=$pf->canDeleteFile()?>" ccm-file-manager-can-view="<?=$canViewInline?>" ccm-file-manager-can-replace="<?=$pf->canEditFileContents()?>" ccm-file-manager-can-edit="<?=$canEdit?>" fID="<?=$f->getFileID()?>" id="fID<?=$f->getFileID()?>">
 			<td class="ccm-file-list-cb" style="vertical-align: middle !important"><input type="checkbox" value="<?=$f->getFileID()?>" /></td>
-			<td><ul class="media-grid"><li class="ccm-file-list-thumbnail" fID="<?=$f->getFileID()?>"><a href="javascript:void(0)"><?=$fv->getThumbnail(1)?></a></li></ul>
+			<td class="ccm-file-list-thumbnail-wrapper"><ul class="thumbnails"><li class="ccm-file-list-thumbnail" fID="<?=$f->getFileID()?>"><a href="javascript:void(0)" class="thumbnail"><?=$fv->getThumbnail(1)?></a></li></ul>
 			
 			<? if ($fv->hasThumbnail(2)) { ?>
 				<div class="ccm-file-list-thumbnail-hover" id="fID<?=$f->getFileID()?>hoverThumbnail"><div><?=$fv->getThumbnail(2)?></div></div>
