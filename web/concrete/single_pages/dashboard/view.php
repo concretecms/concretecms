@@ -70,7 +70,9 @@ for ($i = 0; $i < count($categories); $i++) {
 	<? }
 	
 	$tpa = new TaskPermission();
-	if ($tpa->canInstallPackages()) { ?>
+	$extendPage = Page::getByPath('/dashboard/extend');
+	$extendPageP = new Permissions($extendPage);
+	if ($tpa->canInstallPackages() && $extendPageP->canRead()) { ?>
 		<div><a href="<?php echo View::url('/dashboard/extend') ?>"><strong><?php echo t("Extend concrete5") ?></strong></a> – 
 		<? if (ENABLE_MARKETPLACE_SUPPORT) { ?>
 		<?php echo sprintf(t('<a href="%s">Install</a>, <a href="%s">update</a> or download more <a href="%s">themes</a> and <a href="%s">add-ons</a>.'),

@@ -148,8 +148,68 @@ class ConcreteUpgradeVersion560Helper {
 			$d1a = SinglePage::add('/dashboard/system/environment/proxy');
 			$d1a->update(array('cName'=>t('Proxy Server')));
 		}
-
-		
+		// update meta keywords
+		$pageKeywords = array(
+			'/dashboard/composer' => t('new blog, write, write blog, blogging'),
+			'/dashboard/composer/write' => t('new blog, write, write blog, blogging'),
+			'/dashboard/composer/drafts' => t('blog drafts,composer'),
+			'/dashboard/sitemap/explore' => t('pages, add page, delete page, copy, move, alias, bulk'),
+			'/dashboard/sitemap/search' => t('find page, search page, search, find, pages, sitemap'),
+			'/dashboard/sitemap/full' => t('pages, add page, delete page, copy, move, alias'),
+			'/dashboard/sitemap/search' => t('find page, search page, search, find, pages, sitemap'),
+			'/dashboard/files' => t('add file, delete file, copy, move, alias, resize, crop, rename, images, title, attribute'),
+			'/dashboard/files/attributes' => t('file, file attributes, title, attribute, description, rename'),
+			'/dashboard/files/sets' => t('files, category, categories'),
+			'/dashboard/files/add_set' => t('new file set'),
+			'/dashboard/users' => t('users, groups, people, find, delete user, remove user, add user, change password, password'),
+			'/dashboard/users/search' => t('find, search, people, delete user, remove user, change password, password'),
+			'/dashboard/users/groups' => t('user, group, people, permissions, access, expire'),
+			'/dashboard/users/attributes' => t('user attributes, user data, gather data, registration data'),
+			'/dashboard/users/add' => t('new user, create'),
+			'/dashboard/users/add_group' => t('new user group, new group, group, create'),
+			'/dashboard/users/group_sets' => t('group set'),
+			'/dashboard/reports' => t('forms, log, error, email, mysql, exception, survey'),
+			'/dashboard/reports/statistics' => t('hits, pageviews, visitors, activity'),
+			'/dashboard/reports/forms' => t('forms, questions, response, data'),
+			'/dashboard/reports/surveys' => t('questions, quiz, response'),
+			'/dashboard/reports/logs' => t('forms, log, error, email, mysql, exception, survey, history'),
+			'/dashboard/pages' => t('page types, themes'),
+			'/dashboard/pages/themes' => t('new theme, theme, active theme, change theme, template, css'),
+			'/dashboard/pages/themes/add' => t('theme'),
+			'/dashboard/pages/themes/inspect' => t('page types'),
+			'/dashboard/pages/themes/customize' => t('custom theme, change theme, custom css, css'),
+			'/dashboard/pages/types' => t('page type defaults, global block, global area, starter, template'),
+			'/dashboard/pages/attributes' => t('page attributes, custom'),
+			'/dashboard/pages/single' => t('single, page, custom, application'),
+			'/dashboard/workflow' => t('add workflow, remove workflow'),
+			'/dashboard/blocks/stacks' => t('stacks, reusable content, scrapbook, copy, paste, paste block, copy block, site name, logo'),
+			'/dashboard/blocks/stacks/list' => t('edit stacks, view stacks, all stacks'),
+			'/dashboard/blocks/types' => t('block, refresh, custom'),
+			'/dashboard/extend' => t('add-on, addon, add on, package,applications, ecommerce, discussions, forums, themes, templates, blocks'),
+			'/dashboard/extend/install' => t('add-on, addon, ecommerce, install, discussions, forums, themes, templates, blocks'),
+			'/dashboard/extend/update' => t('update, upgrade'),
+			'/dashboard/extend/connect' => t('concrete5.org, my account, marketplace'),
+			'/dashboard/extend/themes' => t('buy theme, new theme, marketplace, template'),
+			'/dashboard/extend/add-ons' => t('buy addon, buy add on, buy add-on, purchase addon, purchase add on, purchase add-on, find addon, new addon, marketplace'),
+			'/dashboard/system' => t('dashboard, configuration'),
+			'/dashboard/system/basics/site_name' => t('website name, title'),
+			'/dashboard/system/basics/icons' => t('logo, favicon, iphone, icon, bookmark'),
+			'/dashboard/system/basics/editor' => t('tinymce, content block, fonts, editor, tinymce, content, overlay'),
+			'/dashboard/system/basics/multilingual' => t('translate, translation, internationalization, multilingual, translate'),
+			'/dashboard/system/basics/timezone' => t('timezone, profile, locale'),
+			'/dashboard/system/basics/interface' => t('interface, quick nav, dashboard background, background image'),
+			'/dashboard/system/seo' => t('vanity, pretty url, seo, pageview, view'),
+			'/dashboard/system/seo/bulk_seo_tool' => t('bulk, seo, change keywords, engine, optimization, search'),
+			'/dashboard/system/seo/tracking_codes' => t('traffic, statistics, google analytics, quant, pageviews, hits'),
+			'/dashboard/system/seo/statistics' => t('turn off statistics, tracking, statistics, pageviews, hits'),
+			'/dashboard/system/seo/search_index' => t('configure search, site search, search option')
+			);
+		foreach ($pageKeywords as $page => $keywords) {
+			$p = Page::getByPath($page, 'ACTIVE');
+			if (is_object($p) && !$p->isError()) {
+			$p->setAttribute('meta_keywords', $keywords);
+			}
+		}	
 		// install the permissions from permissions.xml
 		$this->installPermissionsAndWorkflow();
 		$this->addGlobalBlockPermissions();
