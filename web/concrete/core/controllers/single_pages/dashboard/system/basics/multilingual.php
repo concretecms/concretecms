@@ -28,7 +28,7 @@ class Concrete5_Controller_Dashboard_System_Basics_Multilingual extends Dashboar
 	}
 
 	public function interface_settings_saved() {
-		$this->set('message', t('Interface settings saved'));
+		$this->set('message', t('Interface settings saved. Please log out and in again to update all backend messages.'));
 		$this->view();
 	}
 	public function save_interface_language() {
