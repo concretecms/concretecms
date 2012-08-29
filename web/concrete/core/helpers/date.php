@@ -53,7 +53,7 @@ class Concrete5_Helper_Date {
 				}
 			}
 		}
-		if (Localization::activeLocale()) {
+		if (Localization::activeLocale() != 'en_US') {
 			return $this->dateTimeFormatLocal($datetime,$mask);
 		} else {
 			return $datetime->format($mask);
@@ -104,7 +104,7 @@ class Concrete5_Helper_Date {
 		} else {
 			$datetime = new DateTime();
 		}
-		if (Localization::activeLocale()) {
+		if (Localization::activeLocale() != 'en_US') {
 			return $this->dateTimeFormatLocal($datetime,$mask);
 		} else {
 			return $datetime->format($mask);
