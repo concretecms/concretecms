@@ -35,36 +35,36 @@
         <permissionkey handle="move_or_copy_page" name="Move or Copy Page" package="" category="page" can-trigger-workflow="true" />
         <permissionkey handle="schedule_page_contents_guest_access" name="Schedule Guest Access" package="" category="page"/>
 		<!-- block types //-->
-        <permissionkey handle="add_block" has-custom-class="true" name="Add Block to Page Area" package="" category="block_type">
+        <permissionkey handle="add_block" has-custom-class="true" name="Add Block" description="Can add a block to any area on the site. If someone is added here they can add blocks to any area (unless that area has permissions that override these global permissions.)" package="" category="block_type">
             <access>
                 <group name="Administrators"/>
             </access>
         </permissionkey>
-        <permissionkey handle="add_stack" name="Add Stack to Page Area" package="" category="block_type">
+        <permissionkey handle="add_stack" name="Add Stack" package="" description="Can add a stack or block from a stack to any area on the site. If someone is added here they can add stacks to any area (unless that area has permissions that override these global permissions.)" category="block_type">
             <access>
                 <group name="Administrators"/>
             </access>
         </permissionkey>
         
 		<!-- areas //-->
-        <permissionkey handle="view_area" name="View Area" package="" category="area"/>
-        <permissionkey handle="edit_area_contents" name="Edit Area Contents" package="" category="area"/>
-        <permissionkey handle="add_block_to_area" has-custom-class="true" name="Add Blocks to Area" package="" category="area"/>
-        <permissionkey handle="add_stack_to_area" name="Add Stacks to Area" package="" category="area"/>
-        <permissionkey handle="add_layout_to_area" name="Add Layouts to Area" package="" category="area"/>
-        <permissionkey handle="edit_area_design" name="Edit Area Design" package="" category="area"/>
-        <permissionkey handle="edit_area_permissions" name="Edit Area Permissions" package="" category="area"/>
-        <permissionkey handle="delete_area_contents" name="Delete Area Contents" package="" category="area"/>
-        <permissionkey handle="schedule_area_contents_guest_access" name="Schedule Guest Access" package="" category="area" />
+        <permissionkey handle="view_area" name="View Area" package="" description="Can view the area and its contents." category="area"/>
+        <permissionkey handle="edit_area_contents" name="Edit Area Contents" description="Can edit blocks within this area." package="" category="area"/>
+        <permissionkey handle="add_block_to_area" has-custom-class="true" name="Add Block to Area" description="Can add blocks to this area. This setting overrides the global Add Block permission for this area." package="" category="area"/>
+        <permissionkey handle="add_stack_to_area" name="Add Stack to Area" package="" description="Can add stacks to this area. This setting overrides the global Add Stack permission for this area." category="area"/>
+        <permissionkey handle="add_layout_to_area" name="Add Layouts to Area" package="" description="Controls whether users get the ability to add layouts to a particular area." category="area"/>
+        <permissionkey handle="edit_area_design" name="Edit Area Design" package="" description="Controls whether users see design controls and can modify an area's custom CSS." category="area"/>
+        <permissionkey handle="edit_area_permissions" name="Edit Area Permissions" package="" description="Controls whether users can access the permissions on an area. Custom area permissions could override those of the page." category="area"/>
+        <permissionkey handle="delete_area_contents" name="Delete Area Contents" package="" description="Controls whether users can delete blocks from this area." category="area"/>
+        <permissionkey handle="schedule_area_contents_guest_access" name="Schedule Guest Access" description="Controls whether users can schedule guest access permissions on blocks in this area. Guest Access is a shortcut for granting permissions just to the Guest Group." package="" category="area" />
 
 		<!-- blocks //-->
-        <permissionkey handle="view_block" name="View Block" package="" category="block"/>
-        <permissionkey handle="edit_block" name="Edit Block" package="" category="block"/>
-        <permissionkey handle="edit_block_custom_template" name="Change Custom Template" package="" category="block"/>
-        <permissionkey handle="delete_block" name="Delete Block" package="" category="block"/>
-        <permissionkey handle="edit_block_design" name="Edit Design" package="" category="block"/>
-        <permissionkey handle="edit_block_permissions" name="Edit Permissions" package="" category="block"/>
-        <permissionkey handle="schedule_guest_access" name="Schedule Guest Access" package="" category="block"/>
+        <permissionkey handle="view_block" name="View Block" package="" category="block" description="Controls whether users can view this block in the page." />
+        <permissionkey handle="edit_block" name="Edit Block" package="" category="block" description="Controls whether users can edit this block. This overrides any area or page permissions." />
+        <permissionkey handle="edit_block_custom_template" name="Change Custom Template" description="Controls whether users can change the custom template on this block. This overrides any area or page permissions." package="" category="block"/>
+        <permissionkey handle="delete_block" name="Delete Block" package="" category="block" description="Controls whether users can delete this block. This overrides any area or page permissions." />
+        <permissionkey handle="edit_block_design" name="Edit Design" package="" description="Controls whether users can set custom design properties or CSS on this block." category="block"/>
+        <permissionkey handle="edit_block_permissions" name="Edit Permissions" package="" category="block" description="Controls whether users can change permissions on this block, potentially granting themselves or others greater access." />
+        <permissionkey handle="schedule_guest_access" name="Schedule Guest Access" description="Controls whether users can schedule guest access permissions on this block. Guest Access is a shortcut for granting permissions just to the Guest Group." package="" category="block"/>
         <!-- files //-->
         <permissionkey handle="view_file_set_file" name="View Files" description="Can view and download files in the site." package="" category="file_set"/>
         <permissionkey handle="search_file_set" name="Search Files in File Manager" description="Can access the file manager" package="" category="file_set"/>

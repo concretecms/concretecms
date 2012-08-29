@@ -204,7 +204,6 @@ class ConcreteUpgradeVersion560Helper {
 			'/dashboard/system/seo/statistics' => t('turn off statistics, tracking, statistics, pageviews, hits'),
 			'/dashboard/system/seo/search_index' => t('configure search, site search, search option'),
 			'/dashboard/system/optimization' => t('cache option, change cache, turn on cache, turn off cache, no cache, page cache, caching'),
-			'/dashboard/system/optimization/cache' => t('cache option, change cache, override, turn on cache, turn off cache, no cache, page cache, caching'),
 			'/dashboard/system/optimization/clear_cache' => t('cache option, turn off cache, no cache, page cache, caching'),
 			'/dashboard/system/optimization/jobs' => t('index search, reindex search, build sitemap, sitemap.xml, clear old versions, page versions, remove old'),
 			'/dashboard/system/permissions' => t('/dashboard/system/permissions/site'),
