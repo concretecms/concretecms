@@ -46,10 +46,12 @@
 	if (!$config_check_failed) { 
 		require(dirname(__FILE__) . '/config/app.php');
 	}
+
 	## Autoload settings
 	require(dirname(__FILE__) . '/startup/autoload.php');
 
-	set_exception_handler(array('View', 'defaultExceptionHandler'));
+	## Exception handler
+	require(dirname(__FILE__) . '/startup/exceptions.php');
 	
 	## Set default permissions for new files and directories ##
 	require(dirname(__FILE__) . '/startup/file_permission_config.php');
