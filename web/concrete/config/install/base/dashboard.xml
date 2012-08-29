@@ -327,8 +327,6 @@
 				<attributekey handle="meta_keywords">
 					<value>stacks, reusable content, scrapbook, copy, paste, paste block, copy block, site name, logo</value>
 				</attributekey>
-			</attributes>
-        	<attributes>
 				<attributekey handle="icon_dashboard">
 					<value>icon-th</value>
 				</attributekey>
@@ -341,7 +339,6 @@
 					<value>icon-lock</value>
 				</attributekey>
 			</attributes>
-
         </page>
         <page name="Stack List" path="/dashboard/blocks/stacks/list" filename="/dashboard/blocks/stacks/list/view.php" pagetype="" description="" package="">
 			<attributes>
@@ -363,8 +360,6 @@
 				<attributekey handle="meta_keywords">
 					<value>block, refresh, custom</value>
 				</attributekey>
-			</attributes>
-        	<attributes>
 				<attributekey handle="icon_dashboard">
 					<value>icon-wrench</value>
 				</attributekey>
