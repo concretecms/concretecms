@@ -31,7 +31,7 @@
         <permissionkey handle="delete_page" name="Delete" package="" description="Ability to move this page to the site's Trash." category="page" can-trigger-workflow="true" />
         <permissionkey handle="delete_page_versions" name="Delete Versions" package="" description="Ability to remove old versions of this page." category="page" can-trigger-workflow="true" />
         <permissionkey handle="approve_page_versions" name="Approve Changes" package="" description="Can publish an unapproved version of the page." category="page" can-trigger-workflow="true" />
-        <permissionkey handle="add_subpage" has-custom-class="true" name="Add Sub-Page" description package="Can add a page beneath the current page." category="page"/>
+        <permissionkey handle="add_subpage" has-custom-class="true" name="Add Sub-Page" package="" description="Can add a page beneath the current page." category="page"/>
         <permissionkey handle="move_or_copy_page" name="Move or Copy Page" description="Can move or copy this page to another location." package="" category="page" can-trigger-workflow="true" />
         <permissionkey handle="schedule_page_contents_guest_access" name="Schedule Guest Access" description="Can control scheduled guest access to this page." package="" category="page"/>
 		<!-- block types //-->
