@@ -21,19 +21,19 @@
     <permissionkeys>
         <permissionkey handle="view_page" name="View" description="Can see a page exists and read its content." package="" category="page"/>
         <permissionkey handle="view_page_versions" name="View Versions" description="Can view the page versions dialog and read past versions of a page." package="" category="page"/>
-        <permissionkey handle="preview_page_as_user" name="Preview Page As User" description="" package="" category="page"/>
-        <permissionkey handle="edit_page_properties" has-custom-class="true" name="Edit Properties" package="" category="page"/>
-        <permissionkey handle="edit_page_contents" name="Edit Contents" package="" category="page"/>
-        <permissionkey handle="edit_page_speed_settings" name="Edit Speed Settings" package="" category="page"/>
-        <permissionkey handle="edit_page_theme" has-custom-class="true" name="Change Theme" package="" category="page"/>
-        <permissionkey handle="edit_page_type" name="Change Page Type" package="" category="page"/>
-        <permissionkey handle="edit_page_permissions" name="Edit Permissions" package="" can-trigger-workflow="true" category="page"/>
-        <permissionkey handle="delete_page" name="Delete" package="" category="page" can-trigger-workflow="true" />
-        <permissionkey handle="delete_page_versions" name="Delete Versions" package="" category="page" can-trigger-workflow="true" />
-        <permissionkey handle="approve_page_versions" name="Approve Changes" package="" category="page" can-trigger-workflow="true" />
-        <permissionkey handle="add_subpage" has-custom-class="true" name="Add Sub-Page" package="" category="page"/>
-        <permissionkey handle="move_or_copy_page" name="Move or Copy Page" package="" category="page" can-trigger-workflow="true" />
-        <permissionkey handle="schedule_page_contents_guest_access" name="Schedule Guest Access" package="" category="page"/>
+        <permissionkey handle="preview_page_as_user" name="Preview Page As User" description="Ability to see what this page will look like at a specific time in the future as a specific user." package="" category="page"/>
+        <permissionkey handle="edit_page_properties" has-custom-class="true" name="Edit Properties" description="Ability to change anything in the Page Properties menu." package="" category="page"/>
+        <permissionkey handle="edit_page_contents" name="Edit Contents" description="Ability to make edits to at least some of the content in the page. You can lock down different block areas and specific blocks by clicking Permissions on them as well. " package="" category="page"/>
+        <permissionkey handle="edit_page_speed_settings" name="Edit Speed Settings" description="Ability to change caching settings." package="" category="page"/>
+        <permissionkey handle="edit_page_theme" has-custom-class="true" name="Change Theme" description="Ability to change just the theme for this page." package="" category="page"/>
+        <permissionkey handle="edit_page_type" name="Change Page Type" description="Ability to change just the page type for this page, also check out Theme permissions." package="" category="page"/>
+        <permissionkey handle="edit_page_permissions" name="Edit Permissions" description="Ability to change permissions for this page. Warning: by granting this a user could give themselves more access." package="" can-trigger-workflow="true" category="page"/>
+        <permissionkey handle="delete_page" name="Delete" package="" description="Ability to move this page to the site's Trash." category="page" can-trigger-workflow="true" />
+        <permissionkey handle="delete_page_versions" name="Delete Versions" package="" description="Ability to remove old versions of this page." category="page" can-trigger-workflow="true" />
+        <permissionkey handle="approve_page_versions" name="Approve Changes" package="" description="Can publish an unapproved version of the page." category="page" can-trigger-workflow="true" />
+        <permissionkey handle="add_subpage" has-custom-class="true" name="Add Sub-Page" description package="Can add a page beneath the current page." category="page"/>
+        <permissionkey handle="move_or_copy_page" name="Move or Copy Page" description="Can move or copy this page to another location." package="" category="page" can-trigger-workflow="true" />
+        <permissionkey handle="schedule_page_contents_guest_access" name="Schedule Guest Access" description="Can control scheduled guest access to this page." package="" category="page"/>
 		<!-- block types //-->
         <permissionkey handle="add_block" has-custom-class="true" name="Add Block to Page Area" package="" category="block_type">
             <access>
@@ -68,26 +68,26 @@
         <!-- files //-->
         <permissionkey handle="view_file_set_file" name="View Files" description="Can view and download files in the site." package="" category="file_set"/>
         <permissionkey handle="search_file_set" name="Search Files in File Manager" description="Can access the file manager" package="" category="file_set"/>
-        <permissionkey handle="edit_file_set_file_properties" name="Edit File Properties" description="Can edit a file's properties" package="" category="file_set"/>
-        <permissionkey handle="edit_file_set_file_contents" name="Edit File Contents" description="Edit/Replace Files" package="" category="file_set"/>
-        <permissionkey handle="copy_file_set_files" name="Copy File" description="" package="" category="file_set"/>
-        <permissionkey handle="edit_file_set_permissions" name="Edit File Access" description="" package="" category="file_set"/>
-        <permissionkey handle="delete_file_set" name="Delete File Set" description="" package="" category="file_set"/>
-        <permissionkey handle="delete_file_set_files" name="Delete File" description="" package="" category="file_set"/>
-        <permissionkey handle="add_file" has-custom-class="true" name="Add File" description="" package="" category="file_set"/>
-        <permissionkey handle="view_file" name="View Files" description="Can view and download files in the site." package="" category="file"/>
-        <permissionkey handle="view_file_in_file_manager" name="View File in File Manager" description="Can access the file manager" package="" category="file"/>
-        <permissionkey handle="edit_file_properties" name="Edit File Properties" description="Can edit a file's properties" package="" category="file"/>
-        <permissionkey handle="edit_file_contents" name="Edit File Contents" description="Edit/Replace Files" package="" category="file"/>
-        <permissionkey handle="copy_file" name="Copy File" description="" package="" category="file"/>
-        <permissionkey handle="edit_file_permissions" name="Edit File Access" description="" package="" category="file"/>
-        <permissionkey handle="delete_file" name="Delete File" description="" package="" category="file"/>
+        <permissionkey handle="edit_file_set_file_properties" name="Edit File Properties" description="Can edit a file's properties." package="" category="file_set"/>
+        <permissionkey handle="edit_file_set_file_contents" name="Edit File Contents" description="Can edit or replace files in set." package="" category="file_set"/>
+        <permissionkey handle="copy_file_set_files" name="Copy File" description="Can copy files in file set." package="" category="file_set"/>
+        <permissionkey handle="edit_file_set_permissions" name="Edit File Access" description="Can edit access to file sets." package="" category="file_set"/>
+        <permissionkey handle="delete_file_set" name="Delete File Set" description="" package="Can delete file set." category="file_set"/>
+        <permissionkey handle="delete_file_set_files" name="Delete File" description="Can delete files in set." package="" category="file_set"/>
+        <permissionkey handle="add_file" has-custom-class="true" name="Add File" description="Can add files to set." package="" category="file_set"/>
+        <permissionkey handle="view_file" name="View Files" description="Can view and download files." package="" category="file"/>
+        <permissionkey handle="view_file_in_file_manager" name="View File in File Manager" description="Can access the File Manager." package="" category="file"/>
+        <permissionkey handle="edit_file_properties" name="Edit File Properties" description="Can edit a file's properties." package="" category="file"/>
+        <permissionkey handle="edit_file_contents" name="Edit File Contents" description="Can edit or replace files." package="" category="file"/>
+        <permissionkey handle="copy_file" name="Copy File" description="Can copy file." package="" category="file"/>
+        <permissionkey handle="edit_file_permissions" name="Edit File Access" description="Can edit access to file." package="" category="file"/>
+        <permissionkey handle="delete_file" name="Delete File" description="Can delete file." package="" category="file"/>
         
         <!-- workflow //-->
-        <permissionkey handle="approve_basic_workflow_action" name="Approve or Deny" description="" package="" category="basic_workflow" />        
-        <permissionkey handle="notify_on_basic_workflow_entry" name="Notify on Entry" package="" category="basic_workflow" />
-        <permissionkey handle="notify_on_basic_workflow_approve" name="Notify on Approve" package="" category="basic_workflow" />
-        <permissionkey handle="notify_on_basic_workflow_deny" name="Notify on Deny" package="" category="basic_workflow" />
+        <permissionkey handle="approve_basic_workflow_action" name="Approve or Deny" description="Grant ability to approve workflow." package="" category="basic_workflow" />        
+        <permissionkey handle="notify_on_basic_workflow_entry" name="Notify on Entry" description="Notify approvers that a change has entered the workflow." package="" category="basic_workflow" />
+        <permissionkey handle="notify_on_basic_workflow_approve" name="Notify on Approve" description="Notify approvers that a change has been approved." package="" category="basic_workflow" />
+        <permissionkey handle="notify_on_basic_workflow_deny" name="Notify on Deny" description="Notify approvers that a change has been denied." package="" category="basic_workflow" />
         		
         <!-- users //-->
         <permissionkey handle="access_user_search" has-custom-class="true" name="Access User Search" description="" package="" category="user">
