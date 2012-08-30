@@ -46,6 +46,7 @@ class Concrete5_Library_Environment {
 	
 	public function clearOverrideCache() {
 		Config::clear("ENVIRONMENT_CACHE");
+		$this->overridesScanned = false;
 	}
 
 
