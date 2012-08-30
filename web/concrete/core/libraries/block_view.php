@@ -36,14 +36,16 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		 */
 		public function action($task, $extraParams = null) {
 			try {
-				if (is_object($this->block->getProxyBlock())) {
-					$b = $this->block->getProxyBlock();
-				} else {
-					$b = $this->block;
-				}
-				
-				if (is_object($b)) {
-					return $b->getBlockPassThruAction() . '&amp;method=' . $task . $extraParams;
+				if (is_object($this->block)) {
+					if (is_object($this->block->getProxyBlock())) {
+						$b = $this->block->getProxyBlock();
+					} else {
+						$b = $this->block;
+					}
+					
+					if (is_object($b)) {
+						return $b->getBlockPassThruAction() . '&amp;method=' . $task . $extraParams;
+					}
 				}
 			} catch(Exception $e) {}
 		}
