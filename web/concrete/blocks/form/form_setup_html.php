@@ -46,10 +46,11 @@ $ih = Loader::helper('concrete/interface');
 				<?=$form->label('recipientEmail', t('Notify me by email when people submit this form'))?>
 				<div class="input">
 					<div class="input-prepend">
-						<label class="add-on" style="z-index: 2000">
+						<label>
+						<span class="add-on" style="z-index: 2000">
 							<?=$form->checkbox('notifyMeOnSubmission', 1, $miniSurveyInfo['notifyMeOnSubmission'] == 1, array('onclick' => "$('input[name=recipientEmail]').focus()"))?>
+						</span><?=$form->text('recipientEmail', $miniSurveyInfo['recipientEmail'], array('style' => 'z-index:2000;' ))?>
 						</label>
-						<?=$form->text('recipientEmail', $miniSurveyInfo['recipientEmail'])?>
 					</div>
 
 					<span class="help-block"><?=t('(Seperate multiple emails with a comma)')?></span>
