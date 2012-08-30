@@ -676,6 +676,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		 */
 		protected function doInstallBlockType($btHandle, $bt, $dir, $btID = 0) {
 			$db = Loader::db();
+			$env = Environment::get();
+			$env->clearOverrideCache();
 			
 			if (file_exists($dir . '/' . $btHandle . '/' . FILENAME_BLOCK_CONTROLLER)) {
 				$class = $bt->getBlockTypeClassFromHandle();
@@ -755,7 +757,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				$ca->delete('blockTypeByID', $btID);
 				$ca->delete('blockTypeByHandle', $btHandle);
 				$ca->delete('blockTypeList', false);		 	
-				
+
 				if (!$r) {
 					return $db->ErrorMsg();
 				}
