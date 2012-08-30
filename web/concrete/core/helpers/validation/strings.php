@@ -44,6 +44,14 @@ class Concrete5_Helper_Validation_Strings {
 		}
 	}
 	
+	/** 
+	 * Returns true if the passed field is a valid "handle" (e.g. only letters, numbers, or a _ symbol
+	 */
+	public function handle($handle) {
+		return !preg_match("/[^A-Za-z0-9\_]/", $handle);
+	}
+
+	
 	/**
 	 * Returns false if the string is empty (including trim())
 	 * @param string $field
