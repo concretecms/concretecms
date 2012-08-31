@@ -1381,7 +1381,10 @@ class Concrete5_Model_Page extends Collection {
 		if (!$this->isActive()) {
 			$this->activate();
 		}
+		
 		$this->rescanSystemPageStatus();
+		$this->cParentID = $newCParentID;
+		$this->movePageDisplayOrderToBottom();
 		// run any event we have for page move. Arguments are
 		// 1. current page being moved
 		// 2. former parent
