@@ -67,7 +67,7 @@ class ConcreteInterfaceHelpHelper {
 			'/dashboard/system/permissions/files' => t("Control how users interact with your site's File Manager, allowing or disallowing actions like search, upload, replace and more."),
 			'/dashboard/system/basics/editor' => t("Control which set of tools the content-editor toolbar includes (e.g., Simple, Advanced, Office), and the toolbar's spatial dimensions."),
 			'/dashboard/system/basics/multilingual' => t("View available language packs installed for the concrete5 Dashboard and editing interface."),
-			'/dashboard/system/basics/timezone' => t("Display information about your concrete5 site's users, on a public page."),
+			'/dashboard/system/basics/timezone' => t("Allow your users to specify their time zone. This setting is editable in the user profile and in the dashboard users section."),
 			'/dashboard/system/basics/icons' => t("Upload an image that will appear in the address bar when visitors go to your site and in the bookmark list if they bookmark it."),
 			'/dashboard/system/basics/site_name' => t("Even if you change your website's logo, the Site Name is used in some emails."),
 			'/dashboard/system/registration/public_registration' => t("Enable Public Registration to let visitors create new user accounts."),
