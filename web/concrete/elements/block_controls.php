@@ -73,10 +73,10 @@ ccm_menuObj<?=$id?>.height = <?=$btOriginal->getBlockTypeInterfaceHeight()+$heig
 }
 ?>
 ccm_menuObj<?=$id?>.canCopyToScrapbook = true;
-<? if ($p->canEditBlockPermissions() && PERMISSIONS_MODEL != 'simple') { ?>
+<? if ($p->canEditBlockPermissions() && PERMISSIONS_MODEL != 'simple' && (!$a->isGlobalArea())) { ?>
 ccm_menuObj<?=$id?>.canModifyGroups = true;
 <? }
-if (PERMISSIONS_MODEL != 'simple' && $p->canGuestsViewThisBlock() && $p->canScheduleGuestAccess()) { ?>
+if (PERMISSIONS_MODEL != 'simple' && $p->canGuestsViewThisBlock() && $p->canScheduleGuestAccess() && (!$a->isGlobalArea())) { ?>
 	ccm_menuObj<?=$id?>.canScheduleGuestAccess = true;
 <? }
 if ($p->canEditBlockDesign() && ENABLE_CUSTOM_DESIGN == true) { ?>
