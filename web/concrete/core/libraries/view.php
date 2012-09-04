@@ -844,19 +844,20 @@ defined('C5_EXECUTE') or die("Access Denied.");
 					$_pageBlocks = array_merge($_pageBlocks, $_pageBlocksGlobal);
 				}
 			}
-
-			foreach($_pageBlocks as $b1) {
-				$b1p = new Permissions($b1);
-				if ($b1p->canRead()) { 
-					$btc = $b1->getInstance();
-					// now we inject any custom template CSS and JavaScript into the header
-					if('Controller' != get_class($btc)){
-						$btc->outputAutoHeaderItems();
-					}
-					$btc->runTask('on_page_view', array($view));
-				}
-			}
 			
+			if (is_array($_pageBlocks)) {
+				foreach($_pageBlocks as $b1) {
+					$b1p = new Permissions($b1);
+					if ($b1p->canRead()) { 
+						$btc = $b1->getInstance();
+						// now we inject any custom template CSS and JavaScript into the header
+						if('Controller' != get_class($btc)){
+							$btc->outputAutoHeaderItems();
+						}
+						$btc->runTask('on_page_view', array($view));
+					}
+				}
+			}			
 			
 			// Determine which outer item/theme to load
 			// obtain theme information for this collection
