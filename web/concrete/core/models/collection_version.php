@@ -243,17 +243,14 @@
 			//}
 
 			// check for related version edits. This only gets applied when we edit global areas.
-			if ($this->isNew()) {
-				$r = $db->Execute('select cRelationID, cvRelationID from CollectionVersionRelatedEdits where cID = ? and cvID = ?', array($cID, $cvID));
-				while ($row = $r->FetchRow()) {
-					$cn = Page::getByID($row['cRelationID'], $row['cvRelationID']);
-					$cnp = new Permissions($cn);
-					if ($cnp->canApprovePageVersions()) {
-						$v = $cn->getVersionObject();
-						if ($v->isNew()) {
-							$v->approve();
-						}
-					}
+			$r = $db->Execute('select cRelationID, cvRelationID from CollectionVersionRelatedEdits where cID = ? and cvID = ?', array($cID, $cvID));
+			while ($row = $r->FetchRow()) {
+				$cn = Page::getByID($row['cRelationID'], $row['cvRelationID']);
+				$cnp = new Permissions($cn);
+				if ($cnp->canApprovePageVersions()) {
+					$v = $cn->getVersionObject();
+					$v->approve();
+					$r = $db->Execute('delete from CollectionVersionRelatedEdits where cID = ? and cvID = ? and cRelationID = ? and cvRelationID = ?', array($cID, $cvID, $row['cRelationID'], $row['cvRelationID']));
 				}
 			}
 
