@@ -105,6 +105,9 @@ class Concrete5_Model_SinglePage extends Page {
 		if ($pxml) {
 			$this->assignPermissionSet($pxml); // pass it an array
 		}
+		$env = Environment::get();
+		$env->clearOverrideCache();
+
 	}
 
 	public static function getByID($cID, $version = 'RECENT') {
@@ -176,7 +179,8 @@ class Concrete5_Model_SinglePage extends Page {
 			
 			$pathPrefix = $currentPath . '/';
 		}
-		
+		$env = Environment::get();
+		$env->clearOverrideCache();
 		return $newC;
 		
 	}
