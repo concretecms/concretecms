@@ -24,7 +24,7 @@ $(function() {
 
 	ccm_installRoutine<?=$i?> = function() {
 		<? if ($routine->getText() != '') { ?>
-			$("#install-progress-summary").html('<?=$routine->getText()?>');
+			$("#install-progress-summary").html('<?=addslashes($routine->getText())?>');
 		<? } ?>
 		$.ajax('<?=$this->url("/install", "run_routine", $installPackage, $routine->getMethod())?>', {
 			dataType: 'json',
