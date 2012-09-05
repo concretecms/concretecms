@@ -181,9 +181,6 @@
 				<attributekey handle="meta_keywords">
 					<value>group set</value>
 				</attributekey>
-				<attributekey handle="exclude_nav">
-					<value><![CDATA[1]]></value>
-				</attributekey>
 				<attributekey handle="icon_dashboard">
 					<value>icon-list</value>
 				</attributekey>

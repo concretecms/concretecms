@@ -9,5 +9,13 @@ class ConcreteUpgradeVersion5601Helper {
 	);
 	
 	
-	
+	public function run() {
+
+		$sp = Page::getByPath('/dashboard/users/group_sets');
+		if (is_object($sp) && (!$sp->isError())) {
+			$sp->setAttribute('exclude_nav', 0);
+		}
+
+	}
+		
 }
