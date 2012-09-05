@@ -57,6 +57,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			$row = $db->GetRow('select * from ComposerTypes where ctID = ?', array($this->getCollectionTypeID()));
 			if (is_array($row) && $row['ctID'] > 0) {
 				$this->ctIncludeInComposer = true;
+				$row['ctIcon'] = $this->ctIcon; // otherwise setpropertiesfromarray resets this.
 				$this->setPropertiesFromArray($row);
 			}
 		}
