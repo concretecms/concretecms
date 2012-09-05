@@ -147,7 +147,7 @@ class Concrete5_Library_Environment {
 			
 		if (in_array($segment, $this->coreOverrides)) {
 			$obj->file = DIR_BASE . '/' . $segment;
-			$obj->url = BASE_URL . DIR_REL . '/' . $segment;
+			$obj->url = DIR_REL . '/' . $segment;
 			$obj->override = true;
 			$this->cachedOverrides[$segment][''] = $obj;
 			return $obj;
@@ -159,7 +159,7 @@ class Concrete5_Library_Environment {
 
 		if (!in_array($pkgHandle, $this->corePackages)) {
 			$dirp = DIR_PACKAGES . '/' . $pkgHandle;		
-			$obj->url = BASE_URL . DIR_REL . '/' . DIRNAME_PACKAGES. '/' . $pkgHandle . '/' . $segment;
+			$obj->url = DIR_REL . '/' . DIRNAME_PACKAGES. '/' . $pkgHandle . '/' . $segment;
 		} else {
 			$dirp = DIR_PACKAGES_CORE . '/' . $pkgHandle;
 			$obj->url = ASSETS_URL . '/' . DIRNAME_PACKAGES. '/' . $pkgHandle . '/' . $segment;
