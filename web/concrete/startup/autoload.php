@@ -50,6 +50,7 @@ $classes = array(
 	'GroupSet' => array('model','group_set'),
 	'GroupSetList' => array('model','group_set_list'),
 	'Layout' => array('model','layout'),
+	'LayoutPreset' => array('model','layout_preset'),
 	'Package,PackageList' => array('model','package'),
 	'CollectionAttributeKey,CollectionAttributeValue' => array('model','attribute/categories/collection'),
 	'FileAttributeKey,FileAttributeValue' => array('model','attribute/categories/file'),
