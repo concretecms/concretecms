@@ -83,7 +83,7 @@ class Concrete5_Helper_Html {
 		}
 
 		$css->file .= (strpos($css->file, '?') > -1) ? '&amp;' : '?';
-		$css->file .= 'v=' . md5(APP_VERSION . PASSWORD_SALT);		
+		$css->file .= 'v=' . md5(APP_VERSION . PASSWORD_SALT . filemtime($css->file));		
 		// for the javascript addHeaderItem we need to have a full href available
 		$css->href = $css->file;
 		if (substr($css->file, 0, 4) != 'http') {
@@ -130,7 +130,7 @@ class Concrete5_Helper_Html {
 		}
 
 		$js->file .= (strpos($js->file, '?') > -1) ? '&amp;' : '?';
-		$js->file .= 'v=' . md5(APP_VERSION . PASSWORD_SALT);
+		$js->file .= 'v=' . md5(APP_VERSION . PASSWORD_SALT . filemtime($js->file));
 		
 		// for the javascript addHeaderItem we need to have a full href available
 		$js->href = $js->file;
