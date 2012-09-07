@@ -24,6 +24,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 	
 		private $viewPath;
 		protected $pkgHandle;
+		protected $disableContentInclude = false;
 		
 		/**
 		 * controller used by this particular view
@@ -641,6 +642,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 					}
 				} else {
 					$theme = $rec->file;
+					$this->disableContentInclude = true;
 				}
 				
 				$themeDir = str_replace('/' . FILENAME_THEMES_DEFAULT, '', $env->getPath(DIRNAME_THEMES . '/' . $pl->getThemeHandle() . '/' . FILENAME_THEMES_DEFAULT, $this->pkgHandle));
@@ -883,7 +885,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			extract($this->controller->getSets());
 			extract($this->controller->getHelperObjects());
 
-			if ($content != false) {
+			if ($content != false && (!$this->disableContentInclude)) {
 				include($content);
 			}
 
