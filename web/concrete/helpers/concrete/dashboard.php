@@ -103,10 +103,12 @@ class ConcreteDashboardHelper {
 			}
 			
 			$subpagesP = array();
-			foreach($subpages as $sc) {
-				$cp = new Permissions($sc);
-				if ($cp->canViewPage()) { 
-					$subpagesP[] = $sc;
+			if(is_array($subpages)) {
+				foreach($subpages as $sc) {
+					$cp = new Permissions($sc);
+					if ($cp->canViewPage()) { 
+						$subpagesP[] = $sc;
+					}
 				}
 			}
 			
