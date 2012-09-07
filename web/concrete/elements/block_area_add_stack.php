@@ -128,15 +128,15 @@ $(function() {
 		<form onsubmit="return ccmStackSearchFormCheckResults()">
 		<i class="icon-search"></i>
 		<?=$form->text('ccmStackSearch', array('tabindex' => 1, 'autocomplete' => 'off', 'style' => 'margin-left: 8px; width: 168px'))?>
-		</div>
 		</form>
-
+		
+		
 		</div>		
 	</div>
 	
-	<ul id="ccm-stack-list" class="item-select-list item-select-list-groups">
-	<? if (count($stacks) > 0) { 
-		foreach($stacks as $s) { 
+	<? if (count($stacks) > 0) { ?>
+		<ul id="ccm-stack-list" class="item-select-list item-select-list-groups">
+		<? foreach($stacks as $s) { 
 			$as = Area::get($s, STACKS_AREA_NAME);
 			$asp = new Permissions($as);
 			if ($asp->canRead() && $ap->canAddStackToArea($s)) { 
@@ -147,10 +147,11 @@ $(function() {
 			
 			<? } ?>
 			
-		<? }
+		<? } ?>
+		</ul>
+		<?
 	} else { ?>
 		<br/>
 		<p><?=t('No stacks can be added to this area.')?></p>
 	<? } ?>
-	</ul>
 </div>
