@@ -225,6 +225,7 @@ class Concrete5_Controller_Block_Search extends BlockController {
 		$this->set('paginator', $ipl->getPagination());
 		$this->set('results', $results);
 		$this->set('do_search', true);
+		$this->set('searchList', $ipl);
 	}
 
 }

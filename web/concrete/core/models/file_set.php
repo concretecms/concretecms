@@ -3,7 +3,6 @@
 
 	class Concrete5_Model_FileSetList extends DatabaseItemList {
 	
-		public $sets = array();	
 		protected $itemsPerPage = 10;
 		
 		public function filterByKeywords($kw) {
@@ -27,14 +26,15 @@
 		}
 		
 		public function get($itemsToGet = 0, $offset = 0) {
+			$sets = array();
 			$r = parent::get($itemsToGet, $offset);
 			foreach($r as $row) {
 				$fs = FileSet::getByID($row['fsID']);
 				if (is_object($fs)) {
-					$this->sets[] = $fs;
+					$sets[] = $fs;
 				}
 			}
-			return $this->sets;
+			return $sets;
 		}
 
 	}
