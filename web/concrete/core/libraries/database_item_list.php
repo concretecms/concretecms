@@ -198,8 +198,7 @@ class Concrete5_Library_DatabaseItemList extends ItemList {
 		return parent::getSortByURL($column, $dir, $baseURL, $additionalVars);
 	}
 	
-	protected function setupAttributeFilters($join) {
-		$db = Loader::db();
+	protected function setupAttributeFilters($join) {		
 		$i = 1;
 		$this->addToQuery($join);
 		foreach($this->attributeFilters as $caf) {
