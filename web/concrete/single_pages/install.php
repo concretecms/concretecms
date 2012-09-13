@@ -1,6 +1,6 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?> 
 
-<script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/bootstrap.tooltip.js"></script>
+<script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/bootstrap.js"></script>
 <script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/jquery.cookie.js"></script>
 <script type="text/javascript">
 $(function() {
