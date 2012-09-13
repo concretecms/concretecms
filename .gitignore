@@ -37,5 +37,9 @@ error_log
 .ftpquota
 /.idea/
 
-# ignore Aptana Project files
+# ignore Aptana and Eclipse project files
 .project
+
+# ignore Eclipse-specific files
+/.settings/
+/.buildpath
