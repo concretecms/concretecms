@@ -93,6 +93,7 @@ class Concrete5_Helper_Mime {
 		);
 		
 	public function mimeFromExtension($extension) {
+		$extension = strtolower($extension);
 		$mime = array_search($extension, MimeHelper::$mime_types_and_extensions);
 		return $mime;
 		
