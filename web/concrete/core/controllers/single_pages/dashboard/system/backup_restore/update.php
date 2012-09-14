@@ -61,7 +61,8 @@ class Concrete5_Controller_Dashboard_System_BackupRestore_Update extends Dashboa
 	
 	public function on_start() {
 		$this->error = Loader::helper('validation/error');
-		$this->secCheck();
+		$cnt = Loader::controller('/upgrade');
+		$cnt->secCheck();
 	}
 
 	public function on_before_render() {
@@ -118,21 +119,6 @@ class Concrete5_Controller_Dashboard_System_BackupRestore_Update extends Dashboa
 			}
 		}
 		$this->view();
-	}
-	
-	public function secCheck() {
-		$fh = Loader::helper('file');
-		$updates = $fh->getDirectoryContents(DIR_APP_UPDATES);
-		foreach($updates as $upd) {
-			if (is_dir(DIR_APP_UPDATES . '/' . $upd) && is_writable(DIR_APP_UPDATES . '/' . $upd)) {
-				if (file_exists(DIR_APP_UPDATES . '/' . $upd . '/' . DISPATCHER_FILENAME) && is_writable(DIR_APP_UPDATES . '/' . $upd . '/' . DISPATCHER_FILENAME)) {
-					unlink(DIR_APP_UPDATES . '/' . $upd . '/' . DISPATCHER_FILENAME);
-				}
-				if (!file_exists(DIR_APP_UPDATES . '/' . $upd . '/index.html')) {
-					touch(DIR_APP_UPDATES . '/' . $upd . '/index.html');
-				}
-			}
-		}
 	}
 	
 	public function do_update() {
