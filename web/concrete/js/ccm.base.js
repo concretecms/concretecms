@@ -90,3 +90,12 @@ ccm_disableLinks = function() {
 	td.style.zIndex = "1000";
 	document.body.appendChild(td);
 }
+
+ccm_enableUserProfileMenu = function() {
+	var container = $('#ccm-account-menu-container');
+	if (container.length == 0) {
+		var container = $('<div />').appendTo(document.body);
+	}
+	container.addClass('ccm-ui').attr('id', 'ccm-account-menu-container');
+	$('#ccm-account-menu').appendTo(container);
+}

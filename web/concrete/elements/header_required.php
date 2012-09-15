@@ -67,6 +67,11 @@ $html = Loader::helper('html');
 $this->addHeaderItem($html->css('ccm.base.css'), 'CORE');
 $this->addHeaderItem($html->javascript('jquery.js'), 'CORE');
 $this->addHeaderItem($html->javascript('ccm.base.js', false, true), 'CORE');
+if (defined('ENABLE_USER_PROFILES') && ENABLE_USER_PROFILES && $u->isRegistered()) {
+	$this->addFooterItem($html->javascript('bootstrap.js'));
+	$this->addHeaderItem($html->css('ccm.app.css'));
+	$this->addFooterItem('<script type="text/javascript">$(function() { ccm_enableUserProfileMenu(); });</script>');
+}
 
 $favIconFID=intval(Config::get('FAVICON_FID'));
 $appleIconFID =intval(Config::get('IPHONE_HOME_SCREEN_THUMBNAIL_FID'));

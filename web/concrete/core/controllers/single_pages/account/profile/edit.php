@@ -1,33 +1,21 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
 
-class Concrete5_Controller_Profile_Edit extends Controller {
-
-	public $helpers = array('html', 'form', 'date');
+class Concrete5_Controller_Account_Profile_Edit extends AccountController {
 	
-	public function __construct() {
-		$html = Loader::helper('html');
-		parent::__construct();
+	public function view() {
 		$u = new User();
-		if (!$u->isRegistered()) {
-			$this->set('intro_msg', t('You must sign in order to access this page!'));
-			Loader::controller('/login');
-			$this->render('/login');
+		$profile = UserInfo::getByID($u->getUserID());
+		if (is_object($profile)) {
+			$this->set('profile', $profile);
+		} else {
+			throw new Exception(t('You must be logged in to access this page.'));
 		}
-		$this->set('ui', UserInfo::getByID($u->getUserID()));
-		$this->set('av', Loader::helper('concrete/avatar'));
 	}
-	
-	public function on_start() {
-		$this->addHeaderItem(Loader::helper('html')->css('ccm.profile.css'));
-	}
-
-	public function save_complete() {
-		$this->set('message', t('Profile Information Saved.'));
-	}
-	
+		
 	public function save() { 
-		$ui = $this->get('ui');
+		$this->view();
+		$ui = $this->get('profile');
 
 		$uh = Loader::helper('concrete/user');
 		$th = Loader::helper('text');
@@ -37,9 +25,6 @@ class Concrete5_Controller_Profile_Edit extends Controller {
 	
 		$data = $this->post();
 		
-		/* 
-		 * Validation
-		*/
 		
 		// validate the user's email
 		$email = $this->post('uEmail');
@@ -101,5 +86,3 @@ class Concrete5_Controller_Profile_Edit extends Controller {
 		}
 	}
 }
-
-?>

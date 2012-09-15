@@ -23,7 +23,11 @@
 <!--start main container -->
 
 <div id="main-container" class="container_24">
+	
+	<div id="ccm-account-menu-container"></div>
 
+	<div id="main-container-inner">
+	
 	<div id="header">
 	
 	

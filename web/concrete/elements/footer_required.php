@@ -7,4 +7,6 @@ if (empty($disableTrackingCode) && (empty($_trackingCodePosition) || $_trackingC
 
 print $this->controller->outputFooterItems();
 
+// user profile menu
+Loader::element('account/menu');
 ?>
