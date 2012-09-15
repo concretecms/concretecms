@@ -48,3 +48,5 @@ div#ccm-overlay {
 
 .ccm-input-time-wrapper select {width: 55px !important; margin-right: 4px !important;}
 .ccm-input-date {width: 80px !important; margin-right: 4px !important;}
+
+#ccm-account-menu {position: absolute; top: 10px; right: 10px;}

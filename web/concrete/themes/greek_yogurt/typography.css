@@ -10,34 +10,34 @@ body#tinymce {
 	background-color: #fff;
 }
 
-div#main-container #header {
+div#main-container-inner #header {
 	padding-top: 55px;
 	/* customize_header-background */ background-color: #fff; /* customize_header-background */
 }	
 
 
-div#main-container {
+div#main-container-inner {
 	/* customize_main-background */ background-color: #fff; /* customize_main-background */
 }
 
-div#main-container #footer {
+div#main-container-inner #footer {
 	/* customize_footer-background */ background-color: #a0dbe3; /* customize_footer-background */
 	width: 960px;
 	min-height: 150px;
 }
 
-div#main-container #header ul li a {
+div#main-container-inner #header ul li a {
 	/* customize_nav-links */ color: #000; /* customize_nav-links */ 
 	padding: 10px;
 	text-decoration: none;
 }
 
-div#main-container #header ul li a:hover {
+div#main-container-inner #header ul li a:hover {
 	/* customize_nav-hover */ background-color: #a0dbe3; /* customize_nav-hover */
 	border-right: none;
 }
 
-div#main-container #header h1 a, div#main-container #header h1 a:link, div#main-container #header h1 a:visited, div#main-container #header h1 a:active, div#main-container #header h1 a:hover {
+div#main-container-inner #header h1 a, div#main-container-inner #header h1 a:link, div#main-container-inner #header h1 a:visited, div#main-container-inner #header h1 a:active, div#main-container-inner #header h1 a:hover {
 	/* customize_site-title */ color: #000; /* customize_site-title */
 	text-decoration: none;
 }
@@ -47,20 +47,20 @@ ul li a.nav-path-selected, ul li.nav-selected {
 }
 
 
-div#main-container a, div#main-container a:link, div#main-container a:visited, div#main-container a:active {
+div#main-container-inner a, div#main-container-inner a:link, div#main-container-inner a:visited, div#main-container-inner a:active {
 	/* customize_links */ color: #0099ff; /* customize_links */
 	text-decoration: none;
 }
 
-div#main-container h1, div#main-container h2, div#main-container h3, div#main-container h4, div#main-container h5, div#main-container h6 {
+div#main-container-inner h1, div#main-container-inner h2, div#main-container-inner h3, div#main-container-inner h4, div#main-container-inner h5, div#main-container-inner h6 {
 	/* customize_headings */ color: #000; /* customize_headings */
 }
 
-div#main-container .ccm-tags-display ul.ccm-tag-list li {
+div#main-container-inner .ccm-tags-display ul.ccm-tag-list li {
 	/* customize_tag-highlight */ background-color: #A0DBE3; /* customize_tag-highlight */
 }
 
-div#main-container, div#main-container ul li {
+div#main-container-inner, div#main-container-inner ul li {
 	/* customize_p-font */ font-family: 'Merriweather', Georgia, serif; line-height: 1.8em; font-size: 14px; /* customize_p-font */
 	/* customize_text */ color: #000; /* customize_text */
 
@@ -69,56 +69,56 @@ div#main-container, div#main-container ul li {
 /* text styles */
 
 
-div#main-container a:hover {
+div#main-container-inner a:hover {
 	text-decoration: underline;
 }
 
-div#main-container p {
+div#main-container-inner p {
 	margin-bottom: 20px;
 	margin-top: 20px;
 }
 
-div#main-container ul li {
+div#main-container-inner ul li {
 }
 
-div#main-container h1 {
+div#main-container-inner h1 {
 	font-size: 32px;
 	padding-top: 0px;
 	margin-bottom: 8px;
 }
 
-div#main-container h2 {
+div#main-container-inner h2 {
 	font-size: 28px;
 	padding-top: 0px;
 	line-height: 28px;
 	margin-bottom: 5px;
 }
 
-div#main-container h3 {
+div#main-container-inner h3 {
 	font-size: 22px;
 	padding-top: 6px;
 	line-height: 22px;
 	margin-bottom: 3px;
 }
 
-div#main-container h4 {
+div#main-container-inner h4 {
 	font-size: 20px;
 	padding-top: 8px;
 	line-height: 20px;
 	margin-bottom: 3px;
 }
 
-div#main-container h5 {
+div#main-container-inner h5 {
 	font-size: 16px;
 	margin-bottom: 3px;
 }
 
-div#main-container h6 {
+div#main-container-inner h6 {
 	font-size: 12px;
 	margin-bottom: 3px;
 }
 
-div#main-container hr {
+div#main-container-inner hr {
 	margin: 20px 0;
 }
 
@@ -135,7 +135,7 @@ div#main-container hr {
 
 /* site title styles */
 
-div#main-container #header h1 {
+div#main-container-inner #header h1 {
 	font-size: 28px;
 	margin-left: 45px;
 	padding-bottom: 55px;
@@ -146,7 +146,7 @@ div#main-container #header h1 {
 
 /* header list styles */
 
-div#main-container #header ul {
+div#main-container-inner #header ul {
 	float: right;
 	list-style-type: none;
 	margin-top: 14px;
@@ -154,7 +154,7 @@ div#main-container #header ul {
 	margin-right: 45px;
 }
 
-div#main-container #header ul li {
+div#main-container-inner #header ul li {
 	display: inline;
 	font-family: Helvetica, Arial, sans-serif;
 	font-size: 16px;

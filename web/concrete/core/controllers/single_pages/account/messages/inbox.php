@@ -1,7 +1,7 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
 Loader::controller('/profile/edit');
-class Concrete5_Controller_Profile_Messages extends ProfileEditController {
+class Concrete5_Controller_Account_Messages_Inbox extends Controller {
 	
 	public function __construct() {
 		parent::__construct();
