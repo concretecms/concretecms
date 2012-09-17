@@ -708,6 +708,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			Cache::delete('request_path_page', $this->getCollectionPath()  );
 			Cache::delete('page_id_from_path', $this->getCollectionPath());
 			Cache::delete('page_content', $this->getCollectionID());
+			$vo = $this->getVersionObject();
+			if (is_object($vo)) {
+				Cache::delete('collection_blocks', $this->getCollectionID() . ':' . $vo->getVersionID());
+			}
 			$db = Loader::db();
 			$areas = $db->GetCol('select arHandle from Areas where cID = ?', array($this->getCollectionID()));
 			foreach($areas as $arHandle) {
