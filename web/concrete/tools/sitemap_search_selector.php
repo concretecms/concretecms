@@ -10,7 +10,10 @@ $callback = Loader::helper('text')->entities($_REQUEST['callback']);
 
 if (Loader::helper('validation/numbers')->integer($_REQUEST['cID']) && $select_mode == 'move_copy_delete') {
 	$cID = '&cID=' . $_REQUEST['cID'];
+} else {
+	$cID = '';
 }
+
 if ($callback) {
 	$callback = '&callback=' . $_REQUEST['callback'];
 }
