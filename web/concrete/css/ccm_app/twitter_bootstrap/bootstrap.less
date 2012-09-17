@@ -1,5 +1,5 @@
 /*!
- * Bootstrap v2.0.3
+ * Bootstrap v2.1.1
  *
  * Copyright 2012 Twitter, Inc
  * Licensed under the Apache License v2.0
@@ -9,7 +9,9 @@
  */
 
 // CSS Reset
-@import "reset.less";
+.ccm-ui {
+	@import "reset.less";
+}
 
 // Core variables and mixins
 @import "variables.less"; // Modify this for custom colors, font-sizes, etc
@@ -22,43 +24,51 @@
 //@import "layouts.less";
 
 // Base CSS
-@import "type.less";
-@import "code.less";
+.ccm-ui {
+	@import "type.less";
+	@import "code.less";
+}
 @import "forms.less";
 @import "tables.less";
 
-// Components: common
-@import "sprites.less";
-@import "dropdowns.less";
-@import "wells.less";
-@import "component-animations.less";
-@import "close.less";
+.ccm-ui {
+	// Components: common
+	@import "sprites.less";
+	@import "dropdowns.less";
+	@import "wells.less";
+	@import "component-animations.less";
+	@import "close.less";
+}
+	// Components: Buttons & Alerts
+	@import "buttons.less";
+	@import "button-groups.less";
+	@import "alerts.less"; // Note: alerts share common CSS with buttons and thus have styles in buttons.less
 
-// Components: Buttons & Alerts
-@import "buttons.less";
-@import "button-groups.less";
-@import "alerts.less"; // Note: alerts share common CSS with buttons and thus have styles in buttons.less
+	// Components: Nav
+	@import "navs.less";
 
-// Components: Nav
-@import "navs.less";
-// commented out for performance
-//@import "navbar.less";
-@import "breadcrumbs.less";
-@import "pagination.less";
-@import "pager.less";
+.ccm-ui {
+	@import "navbar.less";
+	@import "breadcrumbs.less";
+	@import "pagination.less";
+	@import "pager.less";
 
-// Components: Popovers
-//@import "modals.less";
-@import "tooltip.less";
-@import "popovers.less";
+	// Components: Popovers
+	//@import "modals.less";
+	@import "tooltip.less";
+}
 
-// Components: Misc
-@import "thumbnails.less";
-@import "labels-badges.less";
-@import "progress-bars.less";
-@import "accordion.less";
-@import "carousel.less";
-@import "hero-unit.less";
+	@import "popovers.less";
 
-// Utility classes
-@import "utilities.less"; // Has to be last to override when necessary
+.ccm-ui {
+	// Components: Misc
+	@import "thumbnails.less";
+	@import "labels-badges.less";
+	@import "progress-bars.less";
+	@import "accordion.less";
+	@import "carousel.less";
+	@import "hero-unit.less";
+
+	// Utility classes
+	@import "utilities.less"; // Has to be last to override when necessary
+}
