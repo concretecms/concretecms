@@ -1,9 +1,9 @@
-// LABELS & BADGES
-// ---------------
+//
+// Labels and badges
+// --------------------------------------------------
+
 
 // Base classes
-.ccm-ui {
-
 .label,
 .badge {
   font-size: @baseFontSize * .846;
@@ -56,4 +56,17 @@ a {
   &-inverse[href]     { background-color: darken(@grayDark, 10%); }
 }
 
+// Quick fix for labels/badges in buttons
+.btn {
+  .label,
+  .badge {
+    position: relative;
+    top: -1px;
+  }
+}
+.btn-mini {
+  .label,
+  .badge {
+    top: 0;
+  }
 }

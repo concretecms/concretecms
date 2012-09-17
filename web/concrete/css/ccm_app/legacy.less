@@ -104,8 +104,8 @@
 	.popover {
 		&.below { .ccm-ui.popover.bottom; }
 		&.above { .ccm-ui.popover.top; }
-		&.above .arrow    { #popoverArrow > .top(); }
-  		&.below .arrow { #popoverArrow > .bottom(); }
+		&.above .arrow    { .ccm-ui.popover.top.arrow; }
+  		&.below .arrow { .ccm-ui.popover.bottom.arrow; }
   		
   		.title {
 			.ccm-ui.popover-title;
@@ -116,7 +116,7 @@
 		}
 		
 		.inner {
-			.ccm-ui.popover-inner;
+			.ccm-ui.popover-content;
 		}
 	}
 	
