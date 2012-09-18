@@ -6,9 +6,12 @@
 $this->addHeaderItem(Loader::helper("html")->css('ccm.default.theme.css'));
 $this->addHeaderItem(Loader::helper("html")->css('ccm.app.css'));
 
+$showLogo = true;
 if (is_object($c)) {
-	$v = View::getInstance();
-	$v->disableEditing();
+	if ($cp->canViewToolbar()) {
+		$showLogo = false;
+	}
+	
  	Loader::element('header_required');
 } else { 
 	print Loader::helper('html')->javascript('jquery.js');
@@ -21,8 +24,9 @@ $this->addFooterItem(Loader::helper('html')->javascript('bootstrap.js'));
 <body>
 <div class="ccm-ui">
 
-<div id="ccm-logo"><?=Loader::helper('concrete/interface')->getToolbarLogoSRC()?></div>
-
+<? if ($showLogo) { ?>
+	<div id="ccm-logo"><?=Loader::helper('concrete/interface')->getToolbarLogoSRC()?></div>
+<? } ?>
 
 
 

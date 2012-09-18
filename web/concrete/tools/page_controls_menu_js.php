@@ -91,6 +91,11 @@ foreach($items as $ih) {
 
 <? if ($dh->canRead()) { ?>
 	menuHTML += '<li><a class="ccm-icon-dashboard ccm-menu-icon" id="ccm-nav-dashboard<? if ($md->isMobile()) { ?>-mobile<? } ?>" href="<?=View::url('/dashboard')?>"><?=t('Dashboard')?></a></li>';
+<? } 
+
+if (defined('ENABLE_USER_PROFILES') && ENABLE_USER_PROFILES) { ?>
+	menuHTML += '<li id="ccm-nav-my-account"><a href="javascript:void(0)"  data-toggle="dropdown"><i class="icon-user"></i> <?=t("My Account")?></a>';
+	menuHTML += '</li>';
 <? } ?>
 menuHTML += '<li id="ccm-nav-intelligent-search-wrapper"><input type="search" placeholder="<?=t('Intelligent Search')?>" id="ccm-nav-intelligent-search" tabindex="1" /></li>';
 menuHTML += '<li><a id="ccm-nav-sign-out" class="ccm-icon-sign-out ccm-menu-icon" href="<?=View::url('/login', 'logout')?>"><?=t('Sign Out')?></a></li>';
@@ -211,10 +216,18 @@ $(function() {
 	<? if ($c->isEditMode()) { ?>
 		$(ccm_editInit);	
 	<? } ?>
-
-	<? 
+	
+	<?
 	if (!$dh->inDashboard()) { ?>
 		$("#ccm-page-controls-wrapper").html(menuHTML); 
+		<? if (defined('ENABLE_USER_PROFILES') && ENABLE_USER_PROFILES) { ?>
+		   $('#ccm-account-menu ul.dropdown-menu').appendTo('#ccm-nav-my-account');
+		   $('#ccm-nav-my-account a').hover(function() {
+				$(this).parent().addClass('open');
+		   });
+			$('#ccm-account-menu').remove();
+		<? } ?>
+		
 		<? if ($cantCheckOut) { ?>
 			item = new ccm_statusBarItem();
 			item.setCSSClass('info');

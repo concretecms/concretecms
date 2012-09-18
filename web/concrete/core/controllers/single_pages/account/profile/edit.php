@@ -80,7 +80,7 @@ class Concrete5_Controller_Account_Profile_Edit extends AccountController {
 			foreach($aks as $uak) {
 				$uak->saveAttributeForm($ui);				
 			}
-			$this->redirect("/profile/edit", "save_complete");
+			$this->redirect("/account/profile/public", "save_complete");
 		} else {
 			$this->set('error', $e);
 		}
