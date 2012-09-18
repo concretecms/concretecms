@@ -8,6 +8,11 @@ class Concrete5_Controller_Account_Messages_Inbox extends AccountController {
 		$this->task = 'view_mailbox';
 	}
 	
+	public function on_start() {
+		parent::on_start();
+		$this->set('vt', Loader::helper('validation/token'));
+	}
+	
 	protected function validateUser($uID) {
 		if ($uID > 0) { 
 			$ui = UserInfo::getByID($uID);
@@ -71,7 +76,7 @@ class Concrete5_Controller_Account_Messages_Inbox extends AccountController {
 			$this->set('author', $msg->getMessageAuthorObject());
 			$this->set('msg', $msg);
 			$this->set('box', $box);			
-			$this->set('backURL', View::url('/profile/messages', 'view_mailbox', $box));
+			$this->set('backURL', View::url('/account/messages/inbox', 'view_mailbox', $box));
 			$valt = Loader::helper('validation/token');
 			$token = $valt->generate('delete_message_' . $msgID);
 			$this->set('deleteURL', View::url('/profile/messages', 'delete_message', $box, $msgID, $token));
@@ -99,14 +104,14 @@ class Concrete5_Controller_Account_Messages_Inbox extends AccountController {
 	
 	public function write($uID) {
 		$this->validateUser($uID);
-		$this->set('backURL', View::url('/profile', 'view', $uID));
+		$this->set('backURL', View::url('/account/profile/public', 'view', $uID));
 	}
 
 	public function reply($boxID, $msgID) {
 		$msg = UserPrivateMessage::getByID($msgID);
 		$uID = $msg->getMessageRelevantUserID();
 		$this->validateUser($uID);
-		$this->set('backURL', View::url('/profile/messages', 'view_message', $boxID, $msgID));
+		$this->set('backURL', View::url('/account/messages/inbox', 'view_message', $boxID, $msgID));
 		$this->set('msgID', $msgID);
 		$this->set('box', $boxID);
 		$this->set('msg', $msg);
@@ -142,9 +147,9 @@ class Concrete5_Controller_Account_Messages_Inbox extends AccountController {
 				$this->error = $r;
 			} else {
 				if ($this->post('msgID') > 0) { 
-					$this->redirect('/profile/messages', 'reply_complete', $box, $msgID);
+					$this->redirect('/account/messages/inbox', 'reply_complete', $box, $msgID);
 				} else {
-					$this->redirect('/profile/messages', 'send_complete', $uID);
+					$this->redirect('/account/messages/inbox', 'send_complete', $uID);
 				}
 			}
 		} else {

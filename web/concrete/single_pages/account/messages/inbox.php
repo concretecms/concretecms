@@ -4,13 +4,6 @@
 <h1><?=t("Private Messages")?></h1>
 </div>
 
-<?=Loader::helper('concrete/interface')->tabs(array(
-	array($this->action('view_mailbox', 'inbox'), t('Inbox'), $mailbox == 'inbox'),
-	array($this->action('view_mailbox', 'sent'), t('Sent'), $mailbox == 'sent')
-), false)?>
-
-<div id="ccm-profile-wrapper">
-    <div id="ccm-profile-body">
     	<?=$error->output(); ?>
     	<? switch($this->controller->getTask()) { 
     		case 'view_message': ?>
@@ -58,6 +51,12 @@
     		<? 
     			break;
     		case 'view_mailbox': ?>
+
+			<?=Loader::helper('concrete/interface')->tabs(array(
+				array($this->action('view_mailbox', 'inbox'), t('Inbox'), $mailbox == 'inbox'),
+				array($this->action('view_mailbox', 'sent'), t('Sent'), $mailbox == 'sent')
+			), false)?>
+			
     		
 			<table class="ccm-profile-messages-list table-bordered table-striped table" border="0" cellspacing="0" cellpadding="0">
 			<thead>
@@ -103,15 +102,15 @@
     			break;
     		case 'reply_complete': ?>
     		
-    		<h2><?=t('Reply Sent.')?></h2>
-    		<a href="<?=$this->url('/profile/messages', 'view_message', $box, $msgID)?>"><?=t('Return to Message.')?></a>
+    		<h3><?=t('Reply Sent.')?></h3>
+    		<a href="<?=$this->url('/profile/messages', 'view_message', $box, $msgID)?>" class="btn"><?=t('Back to Message.')?></a>
     		
     		<?
     			break;
     		case 'send_complete': ?>
     		
-    		<h2><?=t('Message Sent.')?></h2>
-    		<a href="<?=$this->url('/profile', 'view', $recipient->getUserID())?>"><?=t('Return to Profile.')?></a>
+    		<h3><?=t('Message Sent.')?></h3>
+    		<a href="<?=$this->url('/account/profile/public', 'view', $recipient->getUserID())?>" class="btn"><?=t('Back to Profile.')?></a>
     		
     		<?
     			break;
@@ -125,8 +124,9 @@
     		case 'reply':
     		case 'write': ?>
 
-			<div id="ccm-profile-message-compose">
-				<form method="post" action="<?=$this->action('send')?>">
+			<div id="ccm-profile-message-compose" class="row">
+				<div class="span8 offset2">
+				<form method="post" action="<?=$this->action('send')?>" class="form-horizontal">
 				
 				<?=$form->hidden("uID", $recipient->getUserID())?>
 				<? if ($this->controller->getTask() == 'reply') { ?>
@@ -139,33 +139,38 @@
 				}
 				?>
 				
-				<h1><?=t('Send a Private Message')?></h1>
+				<h3><?=t('Send a Private Message')?></h3>
 				
-				<div class="ccm-profile-section">
-					<label><?=t('To')?></label>
-					<div><?=$recipient->getUserName()?></div>
-				</div>
-				
-				<div class="ccm-profile-detail">
-					<div class="ccm-profile-section">
-						<?=$form->label('subject', t('Subject'))?>
-						<div><?=$form->text('msgSubject', $subject)?></div>
-					</div>
-					
-					<div class="ccm-profile-section-bare">
-						<?=$form->label('body', t('Message'))?> <span class="ccm-required">*</span>
-						<div><?=$form->textarea('msgBody', $msgBody)?></div>
+				<div class="control-group">
+					<label class="control-label"><?=t("To")?></label>
+					<div class="controls">
+						<input disabled="disabled" type="text" value="<?=$recipient->getUserName()?>" class="span5" />
 					</div>
 				</div>
 				
-				<div class="ccm-profile-buttons">
-					<?=$form->submit('button_submit', t('Send Message'))?>
+				<div class="control-group">
+					<?=$form->label('subject', t('Subject'))?>
+					<div class="controls">
+						<?=$form->text('msgSubject', $subject, array('class' => 'span5'))?>
+					</div>
+				</div>
+				
+				<div class="control-group">
+					<?=$form->label('body', t('Message'))?>
+					<div class="controls">
+						<?=$form->textarea('msgBody', $msgBody, array('rows'=>8, 'class' => 'span5'))?>
+					</div>
+				</div>
+				
+				<div class="well">
+					<?=$form->submit('button_submit', t('Send Message'), array('class' => 'pull-right btn-primary'))?>
 					<?=$form->submit('button_cancel', t('Cancel'), array('onclick' => 'window.location.href=\'' . $backURL . '\'; return false'))?>
 				</div>
 				
 				<?=$vt->output('validate_send_message');?>
 				
 				</form>
+				</div>
 				
 			</div>    	    		
     		
@@ -209,7 +214,3 @@
     	} ?>
         
         
-    </div>
-	
-	<div class="ccm-spacer"></div>
-</div>
