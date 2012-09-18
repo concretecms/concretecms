@@ -1,6 +1,15 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?>
+
+<div class="page-header">
+<h1><?=t("Private Messages")?></h1>
+</div>
+
+<?=Loader::helper('concrete/interface')->tabs(array(
+	array($this->action('view_mailbox', 'inbox'), t('Inbox'), $mailbox == 'inbox'),
+	array($this->action('view_mailbox', 'sent'), t('Sent'), $mailbox == 'sent')
+), false)?>
+
 <div id="ccm-profile-wrapper">
-    <? Loader::element('profile/sidebar', array('profile'=> $ui)); ?>    
     <div id="ccm-profile-body">
     	<?=$error->output(); ?>
     	<? switch($this->controller->getTask()) { 
@@ -50,16 +59,16 @@
     			break;
     		case 'view_mailbox': ?>
     		
-    		<div><a href="<?=$this->url('/profile/messages')?>">&lt;&lt; <?=t('Back to Mailbox List')?></a></div><br/>
-    		
-			<table class="ccm-profile-messages-list" border="0" cellspacing="0" cellpadding="0">
+			<table class="ccm-profile-messages-list table-bordered table-striped table" border="0" cellspacing="0" cellpadding="0">
+			<thead>
 			<tr>
 				<th><? if ($mailbox == 'sent') { ?><?=t('To')?><? } else { ?><?=t('From')?><? } ?></th>
 				<th><?=t('Subject')?></th>
 				<th><?=t('Sent At')?></th>
 				<th><?=t('Status')?></th>
 			</tr>
-    		
+			</thead>
+			<tbody>    		
     		
     		
     		<?
@@ -84,6 +93,7 @@
 					<Td colspan="4"><?=t('No messages found.')?></td>
 				</tr>
 			<? } ?>
+			</tbody>
 			</table>
 			
 			
@@ -165,7 +175,7 @@
     		default: 
     			// the inbox and sent box and other controls ?>
     		
-    			<table class="ccm-profile-messages-list" border="0" cellspacing="0" cellpadding="0">
+    			<table class="table table-striped" border="0" cellspacing="0" cellpadding="0">
     			<tr>
     				<th class="ccm-profile-messages-item-name"><?=t('Mailbox')?></th>
     				<th><?=t('Messages')?></th>

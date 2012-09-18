@@ -1,28 +1,11 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-Loader::controller('/profile/edit');
-class Concrete5_Controller_Account_Messages_Inbox extends Controller {
-	
-	public function __construct() {
-		parent::__construct();
-	}
-	
-	public function on_start() {
-		parent::on_start();
-		$this->error = Loader::helper('validation/error');
-		$this->set('vt', Loader::helper('validation/token'));
-		$this->set('text', Loader::helper('text'));
-	}
+
+class Concrete5_Controller_Account_Messages_Inbox extends AccountController {
 	
 	public function view() {
-		$u = new User();
-		$ui = UserInfo::getByID($u->getUserID());
-		
-		$inbox = UserPrivateMessageMailbox::get($ui, UserPrivateMessageMailbox::MBTYPE_INBOX);
-		$sent = UserPrivateMessageMailbox::get($ui, UserPrivateMessageMailbox::MBTYPE_SENT);
-		
-		$this->set('inbox', $inbox);
-		$this->set('sent', $sent);
+		$this->view_mailbox('inbox');
+		$this->task = 'view_mailbox';
 	}
 	
 	protected function validateUser($uID) {
