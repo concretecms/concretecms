@@ -435,7 +435,7 @@ if (!defined('AVATAR_WIDTH') && !defined('AVATAR_HEIGHT')) {
 
 define('REL_DIR_FILES_AVATARS', REL_DIR_FILES_UPLOADED . '/avatars');
 if (!defined('AVATAR_NONE')) {
-	define('AVATAR_NONE', ASSETS_URL_IMAGES . '/spacer.gif');
+	define('AVATAR_NONE', ASSETS_URL_IMAGES . '/avatar_none.png');
 }
 define('REL_DIR_FILES_AVATARS_STOCK', REL_DIR_FILES_UPLOADED . '/stock_avatars');
 

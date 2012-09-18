@@ -57,7 +57,8 @@
 	</fieldset>
 	
 	<div class="form-actions">
-		<input type="submit" name="save" value="<?=t('Save')?>" class="btn btn-primary" />
+		<a href="<?=DIR_REL?>/" class="btn" /><?=t('Back to Home')?></a>
+		<input type="submit" name="save" value="<?=t('Save')?>" class="btn btn-primary pull-right" />
 	</div>
 	
 	</form>

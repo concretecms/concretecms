@@ -5,8 +5,8 @@ if (defined('ENABLE_USER_PROFILES') && ENABLE_USER_PROFILES && $u->isRegistered(
 
 <div style="display: none">
 <div class="btn-group" id="ccm-account-menu">
-  <button class="btn btn-inverse" data-toggle="dropdown"><?=t('My Account')?></button>
-  <button class="btn btn-inverse dropdown-toggle" data-toggle="dropdown">
+  <button class="btn" data-toggle="dropdown"><?=t('My Account')?></button>
+  <button class="btn dropdown-toggle" data-toggle="dropdown">
 	<span class="caret"></span>
   </button>
   <ul class="dropdown-menu">
