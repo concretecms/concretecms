@@ -40,7 +40,7 @@
 
 <div class="ccm-pane-body ccm-pane-body-footer" style="padding-top: 0px; margin-top: 0px">
 
-	<h3><?=t('Database Refresh')?></h3>
+		<h3 style="margin-top: 0px"><?=t('Database Refresh')?></h3>
 		<?php echo $this->controller->token->output('refresh_database_schema')?>
 		<?php  
 		$extra = array();

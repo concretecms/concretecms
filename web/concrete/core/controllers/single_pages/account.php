@@ -13,6 +13,11 @@ class Concrete5_Controller_Account extends Controller {
 		$this->addHeaderItem(Loader::helper('html')->css('ccm.account.css'));
 		$this->set('vt', Loader::helper('validation/token'));
 		$this->set('av', Loader::helper('concrete/avatar'));
+		
+		$c = Page::getCurrentPage();
+		if ($c->getCollectionPath() == '/account') {
+			$this->redirect('/account/profile/public');
+		}
 	}
 
 	public function on_before_render() {
