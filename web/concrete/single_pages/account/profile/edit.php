@@ -1,7 +1,7 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?>
 
-	<h1 class="page-header"><?=t('Edit Profile')?></h1>
 
+	<h1 class="page-header"><?=t('Edit Profile')?></h1>
 
 	<form method="post" action="<?php echo $this->action('save')?>" enctype="multipart/form-data">
 	<?php  $attribs = UserAttributeKey::getEditableInProfileList(); 

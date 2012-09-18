@@ -211,7 +211,8 @@ $classes = array(
 	'SystemCaptchaTypeController' => array('model','system/captcha/controller'),
 	'SecurimageSystemCaptchaTypeController' => array('model','system/captcha/types/securimage/controller'),
 	'DashboardBaseController' => array('controller', '/dashboard/base'),
-	'AccountController' => array('controller', '/account')
+	'AccountController' => array('controller', '/account'),
+	'AccountProfileEditController' => array('controller', '/account/profile/edit')
 );
 
 Loader::registerAutoload($classes);

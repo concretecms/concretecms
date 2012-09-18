@@ -33,7 +33,7 @@ $this->addFooterItem(Loader::helper('html')->javascript('bootstrap.js'));
 <div class="container">
 <div class="row">
 <div class="span12">
-<?php Loader::element('system_errors', array('format' => 'block', 'error' => $error)); ?>
+<?php Loader::element('system_errors', array('format' => 'block', 'error' => $error, 'success' => $success, 'message' => $message)); ?>
 </div>
 </div>
 <?php print $innerContent ?>
