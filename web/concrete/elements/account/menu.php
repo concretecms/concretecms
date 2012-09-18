@@ -39,7 +39,10 @@ if (defined('ENABLE_USER_PROFILES') && ENABLE_USER_PROFILES && $u->isRegistered(
 	}
 	?>
 	
-  </ul>
+	<li class="divider"></li>
+	<li><a href="<?=DIR_REL?>/"><i class="icon-home"></i> <?=t("Home")?></a></li>
+	<li><a href="<?=$this->url('/login', 'logout')?>"><i class="icon-remove"></i> <?=t("Sign Out")?></a></li>
+ </ul>
 </div>
 </div>
 

@@ -16,7 +16,7 @@
 <?				Loader::element('error_fatal', array('innerContent' => $innerContent, 
 					'titleContent' => $titleContent));
 ?>
-<p><a href="<?=DIR_REL?>" class="btn"><?=t('&lt; Back to Home')?></a></p>
+<p><a href="<?=DIR_REL?>/" class="btn"><?=t('&lt; Back to Home')?></a></p>
 </div>
 
 </body>

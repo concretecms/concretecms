@@ -8,11 +8,6 @@ class Concrete5_Controller_Account_Messages_Inbox extends AccountController {
 		$this->task = 'view_mailbox';
 	}
 	
-	public function on_start() {
-		parent::on_start();
-		$this->set('vt', Loader::helper('validation/token'));
-	}
-	
 	protected function validateUser($uID) {
 		if ($uID > 0) { 
 			$ui = UserInfo::getByID($uID);
@@ -66,7 +61,6 @@ class Concrete5_Controller_Account_Messages_Inbox extends AccountController {
 		$u = new User();
 		$ui = UserInfo::getByID($u->getUserID());
 		$mailbox = UserPrivateMessageMailbox::get($ui, $msgMailboxID);
-		
 		$msg = UserPrivateMessage::getByID($msgID, $mailbox);
 		if ($ui->canReadPrivateMessage($msg)) {
 			$msg->markAsRead();
@@ -79,7 +73,9 @@ class Concrete5_Controller_Account_Messages_Inbox extends AccountController {
 			$this->set('backURL', View::url('/account/messages/inbox', 'view_mailbox', $box));
 			$valt = Loader::helper('validation/token');
 			$token = $valt->generate('delete_message_' . $msgID);
-			$this->set('deleteURL', View::url('/profile/messages', 'delete_message', $box, $msgID, $token));
+			$this->set('deleteURL', View::url('/account/messages/inbox', 'delete_message', $box, $msgID, $token));
+		} else {
+			$this->redirect('/account/messages/inbox');
 		}
 	}
 	
@@ -97,7 +93,7 @@ class Concrete5_Controller_Account_Messages_Inbox extends AccountController {
 		$msg = UserPrivateMessage::getByID($msgID, $mailbox);
 		if ($ui->canReadPrivateMessage($msg) && (!$this->error->has())) {
 			$msg->delete();
-			$this->redirect('/profile/messages', 'view_mailbox', $box);
+			$this->redirect('/account/messages/inbox', 'view_mailbox', $box);
 		}
 		print $this->view();
 	}
