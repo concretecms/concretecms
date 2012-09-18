@@ -3,48 +3,54 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 class Concrete5_Controller_Account_Profile_Avatar extends AccountProfileEditController {
 	
-	public function __construct(){
-		parent::__construct();
+	public function view() {
+		parent::view();
 		$html = Loader::helper('html');
-		$this->set('av', Loader::helper('concrete/avatar'));
 		$this->addHeaderItem($html->javascript('swfobject.js'));
 	}
 
-	
+	public function on_start() {
+		$this->set('av', Loader::helper('concrete/avatar'));
+	}
+			
 	public function save_thumb(){
-		$ui = $this->get('ui');
-		if (!is_object($ui) || $ui->getUserID() < 1) {
+		$this->view();
+		$profile = $this->get('profile');
+		if (!is_object($profile) || $profile->getUserID() < 1) {
 			return false;
 		}
 		
 		if(isset($_POST['thumbnail']) && strlen($_POST['thumbnail'])) {
 			$thumb = base64_decode($_POST['thumbnail']);
-			$fp = fopen(DIR_FILES_AVATARS."/".$ui->getUserID().".jpg","w");
+			$fp = fopen(DIR_FILES_AVATARS."/".$profile->getUserID().".jpg","w");
 			if($fp) {
 				fwrite($fp,base64_decode($_POST['thumbnail']));
 				fclose($fp);
 				$data['uHasAvatar'] = 1;
-				$ui->update($data);
+				$profile->update($data);
 			}
 		}	
 
-		$this->redirect('/profile/avatar', 'saved');
+		$this->redirect('/account/profile/avatar', 'saved');
 	}
 	
 	public function saved() {
-		$this->set('message', 'Avatar updated!');
+		$this->set('success', 'Avatar updated!');
+		$this->view();
 	}
 
 	public function deleted() {
-		$this->set('message', 'Avatar removed.');
+		$this->set('success', 'Avatar removed.');
+		$this->view();
 	}
 	
 	public function delete(){ 
-		$ui = $this->get('ui');
+		$this->view();
+		$profile = $this->get('profile');
 		$av = $this->get('av');
 		
-		$av->removeAvatar($ui);
-		$this->redirect('/profile/avatar', 'deleted');
+		$av->removeAvatar($profile);
+		$this->redirect('/account/profile/avatar', 'deleted');
 	}
 
 }
