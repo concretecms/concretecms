@@ -8,10 +8,12 @@ $this->addHeaderItem(Loader::helper("html")->css('ccm.app.css'));
 
 $showLogo = true;
 if (is_object($c)) {
-	if ($cp->canViewToolbar()) {
-		$showLogo = false;
+	if (is_object($cp)) {
+		if ($cp->canViewToolbar()) {
+			$showLogo = false;
+		}
 	}
-	
+		
  	Loader::element('header_required');
 } else { 
 	print Loader::helper('html')->javascript('jquery.js');

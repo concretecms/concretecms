@@ -15,7 +15,7 @@
 		</div>
 	<? } else { ?>
 		<? if ($profile->getAttribute('profile_private_messages_enabled')) { ?>
-			<a href="#" class="btn btn-mini"><i class="icon-user"></i> <?=t('Connect')?></a>		
+			<a href="<?=$this->url('/account/messages/inbox', 'write', $profile->getUserID())?>" class="btn btn-mini"><i class="icon-user"></i> <?=t('Connect')?></a>		
 		<? } ?>
 	<? } ?>
 </div>
