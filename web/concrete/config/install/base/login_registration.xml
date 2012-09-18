@@ -13,12 +13,13 @@
         <page name="View Profile" path="/account/profile/public" filename="/account/profile/public.php" pagetype="" description="" package="" />
         <page name="Messages" path="/account/messages" filename="/account/messages/view.php" pagetype="" description="" package="" />
         <page name="Inbox" path="/account/messages/inbox" filename="/account/messages/inbox.php" pagetype="" description="" package="" />
+        <page name="Members" path="/account/members" filename="/account/members/view.php" pagetype="" description="" package="" />
+        <page name="Directory" path="/account/members/directory" filename="/account/members/directory.php" pagetype="" description="" package=""/>
         <page name="Page Not Found" path="/page_not_found" filename="/page_not_found.php" pagetype="" description="" package="" root="true" >
             <area name="Main"/>
         </page>
         <page name="Page Forbidden" path="/page_forbidden" filename="/page_forbidden.php" pagetype="" description="" package="" root="true" />
 		<page name="Download File" path="/download_file" filename="/download_file.php" pagetype="" description="" package=""/>
-        <page name="Members" path="/members" filename="/members.php" pagetype="" description="" package=""/>
 
     </singlepages>
 

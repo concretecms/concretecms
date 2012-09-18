@@ -13,3 +13,7 @@ div#ccm-private-message-detail{padding-left:30px;position:relative;}
 div#ccm-private-message-detail img.u-avatar{width:20px;height:20px;position:absolute;top:-2px;left:2px;}
 div#ccm-private-message-detail .btn-toolbar{position:absolute;top:0px;right:0px;margin-top:0px;}
 div#ccm-private-message-detail{position:relative;}
+#ccm-members-directory td.ccm-members-directory-avatar{width:80px;padding-right:20px;}
+td.ccm-members-directory-avatar img{border-radius:3px;border:1px solid #333;}
+#ccm-members-directory td{vertical-align:middle;}
+.ccm-members-directory-name a{font-weight:100;font-size:24px;}

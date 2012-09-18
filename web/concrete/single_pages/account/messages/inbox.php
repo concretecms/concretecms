@@ -117,15 +117,15 @@
     			break;
     		case 'reply_complete': ?>
     		
-    		<h3><?=t('Reply Sent.')?></h3>
-    		<a href="<?=$this->url('/profile/messages', 'view_message', $box, $msgID)?>" class="btn"><?=t('Back to Message.')?></a>
+    		<div class="alert alert-success"><?=t('Reply Sent.')?></div>
+    		<a href="<?=$this->url('/account/messages/inbox', 'view_message', $box, $msgID)?>" class="btn"><?=t('Back to Message')?></a>
     		
     		<?
     			break;
     		case 'send_complete': ?>
     		
-    		<h3><?=t('Message Sent.')?></h3>
-    		<a href="<?=$this->url('/account/profile/public', 'view', $recipient->getUserID())?>" class="btn"><?=t('Back to Profile.')?></a>
+    		<div class="alert alert-success"><?=t('Message Sent.')?></div>
+    		<a href="<?=$this->url('/account/profile/public', 'view', $recipient->getUserID())?>" class="btn"><?=t('Back to Profile')?></a>
     		
     		<?
     			break;

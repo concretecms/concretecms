@@ -2610,28 +2610,31 @@
       <col>uName</col>
     </index>
   </table>
-  
-  <table name="UsersFriends">
-    <field name="ufID" type="I" size="10">
+  <table name="UserRelationships">
+    <field name="uID" type="I" size="10">
       <KEY/>
-      <AUTOINCREMENT/>
+      <DEFAULT value="0"/>
       <UNSIGNED/>
-    </field>   
-    <field name="uID" type="I" size="10"> 
+    </field>
+    <field name="uRelatedID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
       <UNSIGNED/>
-    </field> 
-    <field name="status" type="C" size="64">
+    </field>
+    <field name="uType" type="C" size="4">
+      <KEY/>
+    </field>
+    <field name="timestamp" type="T">
       <NOTNULL/>
-    </field> 
-    <field name="friendUID" type="I" size="10">
-      <UNSIGNED/>
-    </field> 
-    <field name="uDateAdded" type="T">
-      <NOTNULL/>
-      <DEFAULT value="0000-00-00 00:00:00"/>
-    </field>		 
-  </table>   
-
+      <DEFAULT value="CURRENT_TIMESTAMP"/>
+    </field>
+    <index name="uID">
+      <col>uID</col>
+    </index>
+    <index name="uRelatedID">
+      <col>uRelatedID</col>
+    </index>
+  </table>
   <table name="SignupRequests">
     <field name="id" type="I" size="11">
       <KEY/>

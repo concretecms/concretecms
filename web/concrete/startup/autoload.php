@@ -40,7 +40,6 @@ $classes = array(
 	'UserPrivateMessage,UserPrivateMessageMailbox,UserPrivateMessageList,UserPrivateMessageLimit' => array('model', 'user_private_message'),
 	'PageStatistics' => array('model', 'page_statistics'),
 	'UserStatistics' => array('model', 'user_statistics'),
-	'UsersFriends' => array('model', 'users_friends'),
 	'BlockType,BlockTypeList' => array('model','block_types'),
 	'Collection' => array('model','collection'),
 	'CollectionVersion' => array('model','collection_version'),
