@@ -10,6 +10,7 @@ class Concrete5_Controller_Account_Profile_Avatar extends AccountProfileEditCont
 	}
 
 	public function on_start() {
+		parent::on_start();
 		$this->set('av', Loader::helper('concrete/avatar'));
 	}
 			
