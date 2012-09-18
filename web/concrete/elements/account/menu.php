@@ -1,7 +1,11 @@
 <? 
 defined('C5_EXECUTE') or die("Access Denied.");
 $u = new User();
-if (defined('ENABLE_USER_PROFILES') && ENABLE_USER_PROFILES && $u->isRegistered()) { ?>
+if (defined('ENABLE_USER_PROFILES') && ENABLE_USER_PROFILES && $u->isRegistered()) { 
+	$account = Page::getByPath('/account');
+	if (is_object($account) && !$account->isError()) {
+
+?>
 
 <div style="display: none">
 <div class="btn-group" id="ccm-account-menu">
@@ -9,9 +13,8 @@ if (defined('ENABLE_USER_PROFILES') && ENABLE_USER_PROFILES && $u->isRegistered(
   <button class="btn dropdown-toggle" data-toggle="dropdown">
 	<span class="caret"></span>
   </button>
-  <ul class="dropdown-menu">
+  <ul class="dropdown-menu pull-right">
   <?
-	$account = Page::getByPath('/account');
 	$children = $account->getCollectionChildrenArray(true);
 	foreach($children as $cID) {
 		$nc = Page::getByID($cID, 'ACTIVE');
@@ -46,5 +49,5 @@ if (defined('ENABLE_USER_PROFILES') && ENABLE_USER_PROFILES && $u->isRegistered(
 </div>
 </div>
 
-<?
+<?	}
 }

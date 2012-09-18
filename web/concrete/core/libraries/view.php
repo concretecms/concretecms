@@ -357,7 +357,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		 * @param $theme object, if null site theme is default
 		 * @return void
 		*/
-		public function setThemeByPath($path, $theme = NULL) {
+		public function setThemeByPath($path, $theme = NULL, $wrapper = FILENAME_THEMES_VIEW) {
 			if ($theme != VIEW_CORE_THEME && $theme != 'dashboard') { // this is a hack until we figure this code out.
 				if (is_string($theme)) {
 					$pageTheme = PageTheme::getByHandle($theme);
@@ -366,7 +366,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 					}
 				}
 			}
-			$this->themePaths[$path] = $theme;
+			$this->themePaths[$path] = array($theme, $wrapper);
 		}
 		
 		/**
@@ -619,11 +619,11 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		 * @access public
 		 * @param PageTheme object $pl
 		 * @param string $filename
-		 * @param boolean $wrapTemplateInTheme
+		 * @param boolean $outerFileWrapper
 		 * @return void
 		*/	
-		private function setThemeForView($pl, $filename, $wrapTemplateInTheme = false) {
-			// wrapTemplateInTheme gets set to true if we're passing the filename of a single page or page type file through 
+		private function setThemeForView($pl, $filename, $outerFileWrapper = false) {
+			// outerFileWrapper gets set to true if we're passing the filename of a single page or page type file through 
 			$pkgID = 0;
 			$env = Environment::get();
 			if ($pl instanceof PageTheme) {
@@ -635,8 +635,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			
 				$rec = $env->getRecord(DIRNAME_THEMES . '/' . $pl->getThemeHandle() . '/' . $filename, $this->pkgHandle);
 				if (!$rec->exists()) {
-					if ($wrapTemplateInTheme) {
-						$theme = $env->getPath(DIRNAME_THEMES . '/' . $pl->getThemeHandle() . '/' . FILENAME_THEMES_VIEW, $this->pkgHandle);
+					if ($outerFileWrapper) {
+						$theme = $env->getPath(DIRNAME_THEMES . '/' . $pl->getThemeHandle() . '/' . $outerFileWrapper, $this->pkgHandle);
 					} else {
 						$theme = $env->getPath(DIRNAME_THEMES . '/' . $pl->getThemeHandle() . '/' . FILENAME_THEMES_DEFAULT, $this->pkgHandle);
 					}
@@ -703,7 +703,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				}
 			}
 			
-			$wrapTemplateInTheme = false;
+			$outerFileWrapper = false;
 			$this->checkMobileView();
 			Events::fire('on_start', $this);
 			
@@ -778,14 +778,14 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				$env = Environment::get();
 				// $view is a page. It can either be a SinglePage or just a Page, but we're not sure at this point, unfortunately
 				if ($view->getCollectionTypeID() == 0 && $cFilename) {
-					$wrapTemplateInTheme = true;
+					$outerFileWrapper = FILENAME_THEMES_VIEW;
 					$cFilename = trim($cFilename, '/');
 					$content = $env->getPath(DIRNAME_PAGES . '/' . $cFilename, $view->getPackageHandle());
 					$themeFilename = $c->getCollectionHandle() . '.php';						
 				} else {
 					$rec = $env->getRecord(DIRNAME_PAGE_TYPES . '/' . $ctHandle . '.php', $view->getPackageHandle());
 					if ($rec->exists()) {
-						$wrapTemplateInTheme = true;
+						$outerFileWrapper = FILENAME_THEMES_VIEW;
 						$content = $rec->file;
 					}
 					$themeFilename = $ctHandle . '.php';
@@ -830,7 +830,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 						$content = $pagePkgPath . "/single_pages/{$view}.php";
 					}
 				}
-				$wrapTemplateInTheme = true;
+				$outerFileWrapper = FILENAME_THEMES_VIEW;
 				$themeFilename = $view . '.php';
 			}
 			
@@ -868,14 +868,15 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			} else if ($this->controller->theme != false) {
 				$theme = $this->controller->theme;
 			} else if (($tmpTheme = $this->getThemeFromPath($viewPath)) != false) {
-				$theme = $tmpTheme;
+				$theme = $tmpTheme[0];
+				$outerFileWrapper = $tmpTheme[1];
 			} else if (is_object($this->c) && ($tmpTheme = $this->c->getCollectionThemeObject()) != false) {
 				$theme = $tmpTheme;
 			} else {
 				$theme = FILENAME_COLLECTION_DEFAULT_THEME;
 			}		
 			
-			$this->setThemeForView($theme, $themeFilename, $wrapTemplateInTheme);
+			$this->setThemeForView($theme, $themeFilename, $outerFileWrapper);
 
 
 			// finally, we include the theme (which was set by setTheme and will automatically include innerContent)
