@@ -1,5 +1,8 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?>
 
+<div class="row">
+<div class="span8 offset2">
+
 <h1 class="page-header"><?=t('User Avatar')?></h1>
 <p><?php echo t('Change the picture attached to my posts.')?></p>
 
@@ -51,3 +54,6 @@
 			
 	   });
 		</script>
+
+</div>
+</div>

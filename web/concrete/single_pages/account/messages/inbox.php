@@ -1,5 +1,8 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?>
 
+<div class="row">
+<div class="span10 offset1">
+
 <div class="page-header">
 <h1><?=t("Private Messages")?></h1>
 </div>
@@ -8,44 +11,56 @@
     	<? switch($this->controller->getTask()) { 
     		case 'view_message': ?>
 
-    		<div><a href="<?=$this->url('/profile/messages', 'view_mailbox', $box)?>">&lt;&lt; <?=t('Back to Mailbox')?></a></div><br/>
+			<?=Loader::helper('concrete/interface')->tabs(array(
+				array($this->action('view_mailbox', 'inbox'), t('Inbox'), $box == 'inbox'),
+				array($this->action('view_mailbox', 'sent'), t('Sent'), $box == 'sent')
+			), false)?>
     		
-    		<h1><?=t('Message Details')?></h1>
-    		<form method="post" action="<?=$this->action('reply', $box, $msg->getMessageID())?>">
-    		<div class="ccm-profile-detail">
-				<div class="ccm-profile-section">
-					<table border="0" cellspacing="0" cellpadding="0">
-					<tr>
-						<td valign="top" class="ccm-profile-message-from"><a href="<?=$this->url('/profile', 'view', $msg->getMessageRelevantUserID())?>"><?=$av->outputUserAvatar($msg->getMessageRelevantUserObject())?></a>
-						<a href="<?=$this->url('/profile', 'view', $msg->getMessageRelevantUserID())?>"><?=$msg->getMessageRelevantUserName()?></a>
-
-						</td>
-						<td valign="top">
-							<h2><?=$subject?></h2>
-							<div><?=$dateAdded?></div>
-						</td>
-					</tr>
-					</table>
-					
-    			</div>
-    			
-   				<?=$msg->getFormattedMessageBody()?>
-    		</div>
-			<div class="ccm-profile-buttons">
-				<? if ($msg->getMessageAuthorID() != $ui->getUserID()) { ?>
+    		<div id="ccm-private-message-detail">
+				<a href="<?=$this->url('/account/profile/public', 'view', $msg->getMessageRelevantUserID())?>"><?=$av->outputUserAvatar($msg->getMessageRelevantUserObject())?></a>
+				<a href="<?=$this->url('/account/profile/public', 'view', $msg->getMessageRelevantUserID())?>"><?=$msg->getMessageRelevantUserName()?></a>
+				
+				<div id="ccm-private-message-actions">
+				
+				<div class="btn-toolbar">
+				
+				<div class="btn-group">
+				<a href="<?=$backURL?>" class="btn btn-small"><i class="icon-arrow-left"></i> <?=t('Back to Messages')?></a>
+				</div>
+				
+				<div class="btn-group">
+				<a class="btn btn-small dropdown-toggle" data-toggle="dropdown" href="#">
+				<i class="icon-cog"></i> <?=t('Action')?>
+				&nbsp;
+				<span class="caret"></span>
+				</a>
+				<ul class="dropdown-menu">
+				<? $u = new User(); ?>
+				<? if ($msg->getMessageAuthorID() != $u->getUserID()) { ?>
 					<? 
 					$mui = $msg->getMessageRelevantUserObject();
 					if (is_object($mui)) { 
 						if ($mui->getUserProfilePrivateMessagesEnabled()) { ?>
-							<?=$form->submit('button_submit', t('Reply'))?>
-						<? } 
-						
+							<li><a href="<?=$this->action('reply', $box, $msg->getMessageID())?>"><?=t('Reply')?></a>
+							<li class="divider"></li>
+						<? } 						
 					}?>
 				<? } ?>
-				<?=$form->submit('button_delete', t('Delete'), array('onclick' => 'if(confirm(\'' . t('Delete this message?') . '\')) { window.location.href=\'' . $deleteURL . '\'}; return false'))?>
-				<?=$form->submit('button_cancel', t('Back'), array('onclick' => 'window.location.href=\'' . $backURL . '\'; return false'))?>
+				<li><a href="javascript:void(0)" onclick="if(confirm('<?=t('Delete this message?')?>')) { window.location.href='<?=$deleteURL?>'}; return false"><?=t('Delete')?></a>
+				</ul>
+				</div>
+				</div>
+				
+				</div>
+				
+				<strong><?=$subject?></strong>
+				<time><?=$dateAdded?></time>
+				<br/><br/>
+				
+    			<div>
+   				<?=$msg->getFormattedMessageBody()?>
+   				</div>
 			</div>
-			</form>
 			    		
     		
     		<? 
@@ -58,7 +73,7 @@
 			), false)?>
 			
     		
-			<table class="ccm-profile-messages-list table-bordered table-striped table" border="0" cellspacing="0" cellpadding="0">
+			<table class="ccm-profile-messages-list table-striped table" border="0" cellspacing="0" cellpadding="0">
 			<thead>
 			<tr>
 				<th><? if ($mailbox == 'sent') { ?><?=t('To')?><? } else { ?><?=t('From')?><? } ?></th>
@@ -76,10 +91,10 @@
 					
 					<tr>
 						<td class="ccm-profile-message-from">
-						<a href="<?=$this->url('/profile', 'view', $msg->getMessageRelevantUserID())?>"><?=$av->outputUserAvatar($msg->getMessageRelevantUserObject())?></a>
-						<a href="<?=$this->url('/profile', 'view', $msg->getMessageRelevantUserID())?>"><?=$msg->getMessageRelevantUserName()?></a>
+						<a href="<?=$this->url('/account/profile/public', 'view', $msg->getMessageRelevantUserID())?>"><?=$av->outputUserAvatar($msg->getMessageRelevantUserObject())?></a>
+						<a href="<?=$this->url('/account/profile/public', 'view', $msg->getMessageRelevantUserID())?>"><?=$msg->getMessageRelevantUserName()?></a>
 						</td>
-						<td class="ccm-profile-messages-item-name"><a href="<?=$this->url('/profile/messages', 'view_message', $mailbox, $msg->getMessageID())?>"><?=$msg->getFormattedMessageSubject()?></a></td>
+						<td class="ccm-profile-messages-item-name"><a href="<?=$this->url('/account/messages/inbox', 'view_message', $mailbox, $msg->getMessageID())?>"><?=$msg->getFormattedMessageSubject()?></a></td>
 						<td style="white-space: nowrap"><?=$msg->getMessageDateAdded('user', t('F d, Y \a\t g:i A'))?></td>
 						<td><?=$msg->getMessageStatus()?></td>
 					</tr>
@@ -124,8 +139,7 @@
     		case 'reply':
     		case 'write': ?>
 
-			<div id="ccm-profile-message-compose" class="row">
-				<div class="span8 offset2">
+			<div id="ccm-profile-message-compose">
 				<form method="post" action="<?=$this->action('send')?>" class="form-horizontal">
 				
 				<?=$form->hidden("uID", $recipient->getUserID())?>
@@ -170,7 +184,6 @@
 				<?=$vt->output('validate_send_message');?>
 				
 				</form>
-				</div>
 				
 			</div>    	    		
     		
@@ -212,5 +225,9 @@
     		<?
     			break;
     	} ?>
+    	
+
+</div>
+</div>
         
         

@@ -1,5 +1,13 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?>
 
+<script type="text/javascript">
+$(function() {
+	$('i.icon-question-sign').parent().tooltip();
+});
+</script>
+
+<div class="row">
+<div class="span10 offset1">
 
 	<h1 class="page-header"><?=t('Edit Profile')?></h1>
 
@@ -43,7 +51,7 @@
 		<?php echo $form->label('uPasswordNew', t('New Password'))?>
 		<div class="controls">
 			<?php echo $form->password('uPasswordNew')?>
-			<small><?php echo t("Leave this blank to keep your current password.")?></small>
+			<a href="javascript:void(0)" title="<?=t("Leave blank to keep current password.")?>"><i class="icon-question-sign"></i></a>
 		</div>
 	</div>
 	
@@ -62,3 +70,6 @@
 	</div>
 	
 	</form>
+
+</div>
+</div>

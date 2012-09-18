@@ -1446,7 +1446,8 @@ ul#ccm-main-nav>li>a,ul#ccm-system-nav>li>a{color:#666;font-weight:bold;text-dec
 ul#ccm-main-nav a:hover,ul#ccm-system-nav a:hover{text-decoration:none;}
 ul#ccm-main-nav{border-left:1px solid #c5c5c5;padding:0px;margin:0px;position:fixed;top:0px;left:0px;}
 ul#ccm-main-nav>li,ul#ccm-system-nav>li{float:left;position:relative;border-right:1px solid #c5c5c5;padding:0px;line-height:12px;margin:0px 0px 0px 0px !important;padding:0px !important;list-style-type:none;height:49px;}
-ul#ccm-main-nav li i,ul#ccm-system-nav li i{position:absolute;top:16px;left:9px;}
+ul#ccm-main-nav>li>a>i,ul#ccm-system-nav>li>a>i{position:absolute;top:16px;left:9px;}
+ul#ccm-main-nav .dropdown-menu,ul#ccm-system-nav .dropdown-menu{font-size:12px;}
 li.ccm-system-nav-selected,ul#ccm-main-nav>li:hover,ul#ccm-system-nav>li:hover{background:transparent url(../images/dashboard/bg_header_active.png) repeat-x scroll !important;}
 li.ccm-nav-edit-mode-active{background:transparent url(../images/bg_header_editing_active.png) repeat-x scroll;}
 ul#ccm-main-nav li#ccm-logo-wrapper a{padding:0px;}
