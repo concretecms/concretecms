@@ -176,7 +176,14 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			$bp = new Permissions(Block::getByID($this->bID));
 			return $bp;
 		}
-		
+
+		/** 
+		 * @deprecated
+		 */
+		public function getPermissionsObject() {
+			return $this->getPermissionObject();
+		}
+				
 		/**
 		 * Automatically run when a block is duplicated. This most likely happens when a block is edited: a block is first duplicated, and then presented to the user to make changes.
 		 * @param int $newBlockID
