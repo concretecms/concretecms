@@ -21,7 +21,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
  *
  */
 
-	class Concrete5_Library_BlockController extends Concrete5_Library_Controller {
+	class Concrete5_Library_BlockController extends Controller {
 		
 		protected $record; // blockrecord
 		protected $helpers = array('form');
