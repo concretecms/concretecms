@@ -95,7 +95,6 @@
 				$this->cID = $c->getCollectionID();
 			}
 			
-			Loader::model('attribute/categories/collection');
 			if ($this->displayFeaturedOnly == 1) {
 				$cak = CollectionAttributeKey::getByHandle('is_featured');
 				if (is_object($cak)) {

@@ -187,6 +187,31 @@ class ConcreteInterfaceHelper {
 		}
 	}
 	
+	public function pagetabs($tabs) {
+		$tcn = rand(0, getrandmax());
+
+		$html = '<ul class="nav-tabs nav" id="ccm-tabs-' . $tcn . '">';
+		$c = Page::getCurrentPage();
+		foreach($tabs as $t) {
+			if (is_array($t)) {
+				$name = $t[1];
+				$_c = $t[0];
+			} else { 
+				$_c = $t;
+				$name = $t->getCollectionName();
+			}
+	
+			$href = Loader::helper('navigation')->getLinkToCollection($_c);
+			$active = false;
+			if (is_object($c) && $c->getCollectionID() == $_c->getCollectionID()) {
+				$active = true;
+			}
+			$html .= '<li class="' . (($active) ? 'active' : ''). '"><a href="' . $href . '">' . $name . '</a></li>';
+		}
+		$html .= '</ul>';
+		return $html;
+	}
+	
 	public function tabs($tabs, $jstabs = true) {
 		$tcn = rand(0, getrandmax());
 

@@ -41,10 +41,10 @@
 
 	<div class="ccm-pane-body ccm-pane-body-footer" style="margin-top: -25px">
 
-	<form method="get" class="form-stacked inline-form-fix" action="<?=$this->action('select_type')?>" id="ccm-attribute-type-form">
-	<div class="clearfix">
+	<form method="get" class="form-inline" action="<?=$this->action('select_type')?>" id="ccm-attribute-type-form">
+	<div class="control-group">
 	<?=$form->label('atID', t('Add Attribute'))?>
-	<div class="input">
+	<div class="controls">
 	
 	<?=$form->select('atID', $types)?>
 	<?=$form->submit('submit', t('Add'))?>
