@@ -136,6 +136,25 @@ foreach($t1 as $value) {
 		if (count($s1) > 0) { ?>
 		<div class="span4" style="width: 280px">
 			<?=$form->label('fsID', t('In Set(s)'))?>
+			<? if ($_REQUEST['fssID'] > 0) { ?>
+			
+				<div class="controls">
+					<? foreach($s1 as $s) { ?>
+						<? if (is_array($searchRequest['fsID']) && in_array($s->getFileSetID(), $searchRequest['fsID'])) { ?>
+						<label class="checkbox">
+						<input type="checkbox"  checked disabled><?=wordwrap($s->getFileSetName(), '23', '&shy;', true)?>
+						</label>
+						<? } ?>
+					<? } ?>
+					<? if (is_array($searchRequest['fsID']) && in_array(-1, $searchRequest['fsID'])) { ?>					
+					<label class="checkbox">
+					<input type="checkbox"  checked disabled><?=t('Files in no sets.')?>
+					</label>
+					<? } ?> 
+				</div>
+
+			<? } else { ?>
+			
 			<div class="input">
 				<select multiple name="fsID[]" class="chosen-select">
 					<optgroup label="<?=t('Sets')?>">
@@ -147,6 +166,8 @@ foreach($t1 as $value) {
 					</optgroup>
 				</select>
 			</div>
+			
+			<? } ?>
 		</div>
 		<? } ?>
 		</div>
