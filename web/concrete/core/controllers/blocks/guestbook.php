@@ -17,6 +17,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		protected $btInterfaceHeight = "480";	
 		protected $btWrapperClass = 'ccm-ui';
 		protected $btExportPageColumns = array('cID');
+		protected $btIncludeAll = true; // This has to be on otherwise duplicate() kills the entries.
 		protected $btExportTables = array('btGuestBook', 'btGuestBookEntries');
 
 		

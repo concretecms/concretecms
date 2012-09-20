@@ -164,8 +164,12 @@ class Concrete5_Controller_Upgrade extends Controller {
 			$ugvs[] = "version_560";
 		}
 
-		if (version_compare($sav, '5.6.1', '<')) { 
+		if (version_compare($sav, '5.6.0.1', '<')) { 
 			$ugvs[] = "version_5601";
+		}
+
+		if (version_compare($sav, '5.6.0.2', '<')) { 
+			$ugvs[] = "version_5602";
 		}
 
 		foreach($ugvs as $ugh) {
