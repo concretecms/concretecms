@@ -37,7 +37,7 @@
 			);
 		}
 		
-		function getPages($query = null) {
+		public function getPageList($query = null) {
 			Loader::model('page_list');
 			$db = Loader::db();
 			$bID = $this->bID;
@@ -124,8 +124,14 @@
 					$pl->filterByParentID($cParentID);
 				}
 			}
+			return $pl;
+		}
 
-			if ($num > 0) {
+		
+		public function getPages($query = NULL) {
+			$pl = $this->getPageList();
+			
+			if ($pl->getItemsPerPage() > 0) {
 				$pages = $pl->getPage();
 			} else {
 				$pages = $pl->get();
@@ -133,6 +139,8 @@
 			$this->set('pl', $pl);
 			return $pages;
 		}
+
+
 		
 		public function view() {
 			$cArray = $this->getPages();
