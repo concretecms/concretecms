@@ -11,7 +11,7 @@ $gl->sortBy('gID', 'asc');
 $gIDs = $gl->get();
 $gArray = array();
 foreach($gIDs as $gID) {
-	$groups[] = Group::getByID($gID);
+	$groups[] = Group::getByID($gID['gID']);
 }
 ?>
 <? $form = Loader::helper('form'); ?>
