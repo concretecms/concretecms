@@ -2,6 +2,7 @@
 // Grid system
 // --------------------------------------------------
 
+.ccm-ui {
 
 // Fixed (940px)
 #grid > .core(@gridColumnWidth, @gridGutterWidth);
@@ -10,7 +11,6 @@
 #grid > .fluid(@fluidGridColumnWidth, @fluidGridGutterWidth);
 
 // Reset utility classes due to specificity
-.ccm-ui {
 
 [class*="span"].hide,
 .row-fluid [class*="span"].hide {

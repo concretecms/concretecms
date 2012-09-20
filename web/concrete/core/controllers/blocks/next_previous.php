@@ -15,7 +15,7 @@ class Concrete5_Controller_Block_NextPrevious extends BlockController {
 	protected $btTable = 'btNextPrevious';
 	protected $btInterfaceWidth = "430";
 	protected $btInterfaceHeight = "400"; 
-	
+	protected $btCacheBlockRecord = true;
 	/** 
 	 * Used for localization. If we want to localize the name/description we have to include this
 	 */
