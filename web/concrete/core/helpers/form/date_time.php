@@ -190,11 +190,11 @@ EOS;
 		if (isset($_REQUEST[$field])) {
 			$dt = $_REQUEST[$field];
 		} else if ($value != "") {
-			$dt = date(DATE_APP_DATE_PICKER_VIEW, strtotime($value));
+			$dt = date(DATE_APP_GENERIC_MDY, strtotime($value));
 		} else if ($value == '') {
 			$dt = '';
 		} else {
-			$dt = date(DATE_APP_DATE_PICKER_VIEW);
+			$dt = date(DATE_APP_GENERIC_MDY);
 		}
 		//$id = preg_replace("/[^0-9A-Za-z-]/", "_", $prefix);
 		$html = '';
