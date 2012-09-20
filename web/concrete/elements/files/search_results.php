@@ -112,12 +112,13 @@ if (isset($_REQUEST['searchInstance'])) {
 	
 	<? } ?>
 	
-</div>
 <?
 	$fileList->displaySummary();
 ?>
 </div>
+
 <? if ($searchType == 'DASHBOARD') { ?>
+</div>
 <div class="ccm-pane-footer">
 	<? 	$fileList->displayPagingV2($bu, false, $soargs); ?>
 </div>
