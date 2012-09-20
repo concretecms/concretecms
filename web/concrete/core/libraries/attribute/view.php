@@ -116,6 +116,14 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			$file = $this->getIncludeFile($view);
 			
 			if ($view == 'composer' && !$file) {
+				$js = $this->attributeType->getAttributeTypeFileURL('form.js');
+				$css = $this->attributeType->getAttributeTypeFileURL('form.css');
+				if ($js != false) { 
+					$this->controller->addHeaderItem($html->javascript($js));
+				}
+				if ($css != false) { 
+					$this->controller->addHeaderItem($html->css($css));
+				}
 				$file = $this->getIncludeFile('form');
 			}
 			

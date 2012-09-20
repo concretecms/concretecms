@@ -49,7 +49,7 @@ $types = PendingAttributeType::getList(); ?>
 					<?
 					print $form->hidden("atHandle", $at->getAttributeTypeHandle());
 					?>
-					<p style="background-image: url(<?=$at->getAttributeTypeIconSRC()?>)" class="ccm-block-type-inner"><?=$ch->submit(t("Install"), 'submit', 'right', 'small')?><?=$at->getAttributeTypeName()?></p>
+					<p style="background-image: url(<?=$at->getAttributeTypeIconSRC()?>)" class="ccm-block-type-inner"><?=$ch->submit(t("Install"), 'submit', 'right', 'btn-small')?><?=$at->getAttributeTypeName()?></p>
 				</form>
 			</li>
 		<? } ?>
