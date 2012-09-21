@@ -1,3 +1,7 @@
+/** 
+ * Marketplace
+ */
+
 ccm_openThemeLauncher = function() {
 	jQuery.fn.dialog.closeTop();
 	jQuery.fn.dialog.showLoader();

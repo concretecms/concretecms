@@ -1,3 +1,7 @@
+/** 
+ * Toolbar
+ */
+
 $(function() {
 	if ($("#ccm-toolbar").length > 0) { 
 		ccm_intelligentSearchActivateResults();	

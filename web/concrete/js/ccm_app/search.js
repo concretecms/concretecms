@@ -1,3 +1,7 @@
+/** 
+ * Search
+ */
+ 
 var ccm_searchActivatePostFunction = new Array();
 
 ccm_setupAdvancedSearchFields = function(searchType) {

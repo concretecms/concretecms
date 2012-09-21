@@ -1,3 +1,7 @@
+/** 
+ * Status Bar 
+ */
+
 ccm_statusBar = {
 	
 	items: [],	

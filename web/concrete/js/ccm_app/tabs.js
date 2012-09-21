@@ -1,3 +1,7 @@
+/** 
+ * Tab
+ */
+
 ccm_activateTabBar = function(selector) {
 	$('#ccm-tab-content-' + selector.find('li[class=active] a').attr('data-tab')).show();
 	selector.find('a').unbind().click(function() {
