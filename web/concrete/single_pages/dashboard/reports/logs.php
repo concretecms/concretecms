@@ -28,22 +28,16 @@ $areEntries = count($entries) > 0 ? true : false;
     <? } else { ?>
     
     <div class="ccm-pane-options ccm-pane-options-permanent-search">
-    	<form method="post" id="ccm-log-search"  action="<?=$pageBase?>">
-        	<div class="row">
-                <div class="span5">
-                    <label for="keywords"><?=t('Keywords')?></label>
-                    <div class="input">
-                        <?=$form->text('keywords', $keywords, array('style'=>'width:180px;'))?>
-                    </div>
-                </div>
-                <div class="span6">
-                    <label for="logType"><?=t('Type')?></label>
-                    <div class="input">
-                        <?=$form->select('logType', $logTypes, array('style'=>'width:180px;'))?>
-                    <?=$form->submit('search',t('Search') )?>
-                    </div>
-                </div>
-            </div>
+    	<form class="form-inline" method="post" id="ccm-log-search"  action="<?=$pageBase?>">
+		<div class="control-inline">
+			<label for="keywords"><?=t('Keywords')?></label>
+			<?=$form->text('keywords', $keywords, array('style'=>'width:180px;'))?>
+		</div>
+		<div class="control-inline">
+			<label for="logType"><?=t('Type')?></label>
+			<?=$form->select('logType', $logTypes, array('style'=>'width:180px;'))?>
+			<?=$form->submit('search',t('Search') )?>
+		</div>
         </form>
     </div>
         

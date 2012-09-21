@@ -96,7 +96,7 @@ foreach($searchFieldAttributes as $ak) {
 		
 	</div>
 
-	<form method="get" id="ccm-<?=$searchInstance?>-advanced-search" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/pages/search_results" class="form-horizontal">
+	<form method="get" id="ccm-<?=$searchInstance?>-advanced-search" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/pages/search_results" class="form-inline">
 
 	<input type="hidden" name="searchInstance" value="<?=$searchInstance?>" />
 
@@ -120,16 +120,13 @@ foreach($searchFieldAttributes as $ak) {
 		}
 	?>
 
-		<div class="span3">
+		<div class="control-inline">
 		<?=$form->label('cvName', t('Page Name'))?>
-		<div class="controls">
-			<?=$form->text('cvName', $searchRequest['cvName'], array('style'=> 'width: 120px')); ?>
-		</div>
+		<?=$form->text('cvName', $searchRequest['cvName'], array('style'=> 'width: 120px')); ?>
 		</div>
 
-		<div class="span3">
+		<div class="control-inline">
 		<?=$form->label('ctID', t('Page Type'))?>
-		<div class="controls">
 			<? 
 			Loader::model('collection_types');
 			$ctl = CollectionType::getList();
@@ -141,11 +138,9 @@ foreach($searchFieldAttributes as $ak) {
 			print $form->select('ctID', $ctypes, $searchRequest['ctID'], array('style' => 'width:120px'))?>
 
 		</div>
-		</div>
 
-		<div class="span3">
+		<div class="control-inline">
 		<?=$form->label('numResults', t('# Per Page'))?>
-		<div class="controls">
 			<?=$form->select('numResults', array(
 				'10' => '10',
 				'25' => '25',
@@ -153,7 +148,6 @@ foreach($searchFieldAttributes as $ak) {
 				'100' => '100',
 				'500' => '500'
 			), $searchRequest['numResults'], array('style' => 'width:65px'))?>
-		</div>
 		<?=$form->submit('ccm-search-pages', t('Search'), array('style' => 'margin-left: 10px'))?>
 		</div>
 

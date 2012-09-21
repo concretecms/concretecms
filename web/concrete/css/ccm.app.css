@@ -1271,6 +1271,7 @@ td.newsflow-latest-edition-wrapper{background-color:#eef9fd;background-image:-mo
 .ccm-pane-options-permanent-search div.input{margin-left:10px;float:left;}
 .ccm-ui .form-horizontal .ccm-pane-options-permanent-search label.control-label{margin-left:0px;width:auto;}
 .ccm-ui .form-horizontal .ccm-pane-options-permanent-search div.input,.ccm-ui .form-horizontal .ccm-pane-options-permanent-search div.controls{margin-left:10px;float:left;}
+.ccm-ui .form-inline .control-inline{margin-right:10px;display:inline-block;}
 .ccm-pane-options ul.tabs li.active a{background-color:#f1f1f1;}
 .ccm-pane>form{margin-bottom:0px;}
 .ui-dialog #ccm-list-wrapper{margin-top:10px;}
