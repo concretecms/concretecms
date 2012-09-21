@@ -21,7 +21,7 @@ div.ccm-ui input[type="search"]::-webkit-search-decoration,div.ccm-ui input[type
 div.ccm-ui textarea{overflow:auto;vertical-align:top;}
 .clearfix{*zoom:1;}.clearfix:before,.clearfix:after{display:table;content:"";}
 .clearfix:after{clear:both;}
-.hide-text{font:a;color:transparent;text-shadow:none;background-color:transparent;border:0;}
+.hide-text{font:0/0 a;color:transparent;text-shadow:none;background-color:transparent;border:0;}
 .input-block-level{display:block;width:100%;min-height:28px;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;-ms-box-sizing:border-box;box-sizing:border-box;}
 .ccm-ui a{color:#0088cc;text-decoration:none;}
 .ccm-ui a:hover{color:#005580;text-decoration:underline;}
@@ -940,7 +940,7 @@ div.ccm-marketplace-results-image-hover{display:none;position:absolute;top:0px;l
 .ccm-marketplace-item-screenshots-none{color:#aaa;font-size:24px;padding-top:190px;height:210px;width:400px;text-align:center;}
 .ccm-marketplace-item-information{width:390px;}
 .ccm-marketplace-item-buttons{margin-top:10px;}
-.ccm-marketplace-item-information-more{background:transparent url(../images/marketplace_more_fade.png) repeat-x scroll;margin-bottom:-40px;z-index:5;top:-40px;padding-top:40px;position:relative;}
+.ccm-marketplace-item-information-more{background:transparent url(../images/marketplace_more_fade.png) repeat-x scroll;margin-bottom:-40px;z-index:5;position:relative;top:-40px;padding-top:40px;position:relative;}
 .ccm-marketplace-item-information-more a{color:#666;background-image:url(../images/icons_sprite_up_down.png);background-repeat:no-repeat;background-position:left 5px;padding-left:15px;display:block;}
 .ccm-marketplace-item-information-more a:hover{color:#666;}
 .ccm-marketplace-item-rating{margin-top:8px;margin-bottom:8px;}
@@ -1237,7 +1237,7 @@ div#ccm-toolbar{-webkit-box-shadow:0px 2px 2px rgba(90, 90, 90, 0.3);-moz-box-sh
 ul#ccm-main-nav,ul#ccm-system-nav{font-size:15px;font-weight:bold;}
 ul#ccm-main-nav a,ul#ccm-system-nav a{color:#666;font-weight:bold;text-decoration:none;}
 ul#ccm-main-nav a:hover,ul#ccm-system-nav a:hover{text-decoration:none;}
-ul#ccm-main-nav{border-left:1px solid #c5c5c5;padding:0px;margin:0px;position:fixed;top:0px;left:0px;}
+ul#ccm-main-nav{border-left:1px solid #c5c5c5;margin:0px;padding:0px;margin:0px;position:fixed;top:0px;left:0px;}
 ul#ccm-main-nav li,ul#ccm-system-nav li{float:left;border-right:1px solid #c5c5c5;padding:0px;line-height:12px;margin:0px 0px 0px 0px !important;padding:0px !important;list-style-type:none;height:49px;}
 li.ccm-system-nav-selected,ul#ccm-main-nav li:hover,ul#ccm-system-nav li:hover{background:transparent url(../images/dashboard/bg_header_active.png) repeat-x scroll !important;}
 li.ccm-nav-edit-mode-active{background:transparent url(../images/bg_header_editing_active.png) repeat-x scroll;}
