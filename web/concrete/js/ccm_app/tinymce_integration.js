@@ -1,3 +1,7 @@
+/** 
+ * TinyMCE
+ */
+
 var ccm_editorCurrentAuxTool = false;
 ccm_editorSetupImagePicker = function() {
 	tinyMCE.activeEditor.focus();
