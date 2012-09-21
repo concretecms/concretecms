@@ -1,3 +1,7 @@
+/** 
+ * UI
+ */
+
 var ccm_arrangeMode = false;
 var ccm_selectedDomID = false;
 var ccm_isBlockError = false;
