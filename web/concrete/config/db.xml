@@ -2626,7 +2626,7 @@
     </field>
     <field name="timestamp" type="T">
       <NOTNULL/>
-      <DEFAULT value="CURRENT_TIMESTAMP"/>
+      <DEFTIMESTAMP />
     </field>
     <index name="uID">
       <col>uID</col>

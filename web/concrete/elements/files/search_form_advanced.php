@@ -79,7 +79,7 @@ foreach($t1 as $value) {
 		
 	</div>
 
-	<form method="get" class="form-horizontal" id="ccm-<?=$searchInstance?>-advanced-search" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/search_results">
+	<form method="get" class="form-inline" id="ccm-<?=$searchInstance?>-advanced-search" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/search_results">
 	<? if ($_REQUEST['fType'] != false) { ?>
 		<div class="ccm-file-manager-pre-filter"><?=t('Only displaying %s files.', FileType::getGenericTypeText($_REQUEST['fType']))?></div>
 	<? } else if ($_REQUEST['fExtension'] != false) { ?>
@@ -111,49 +111,40 @@ foreach($t1 as $value) {
 				$savedSearches[$fss->getFileSetID()] = $fss->getFileSetName();
 			}
 		?>
-			<div class="control-group">
+			<div class="control-inline">
 			<?=$form->label('fssID', t('Saved Search'))?>
-			<div class="controls">
 				<?=$form->select('fssID', $savedSearches, $fssID, array('class' => 'span3', 'style' => 'vertical-align: middle'))?>
 				<? if ($_REQUEST['fssID'] > 0) { ?>
 					<a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/delete_set?fsID=<?=$_REQUEST['fssID']?>&searchInstance=<?=$searchInstance?>" class="ccm-file-set-delete-saved-search" dialog-append-buttons="true" dialog-title="<?=t('Delete File Set')?>" dialog-width="320" dialog-height="110" dialog-modal="false" style="vertical-align: middle"><img src="<?=ASSETS_URL_IMAGES?>/icons/delete_small.png" style="vertical-align: middle" width="16" height="16" border="0" /></a>
 				<? } ?>
 			</div>
-			</div>
 			
 		<? } ?>
 
-		<div class="span3">
+		<div class="control-inline">
 		<?=$form->label('fvKeywords', t('Keywords'))?>
-		<div class="controls">
-			<?=$form->text('fKeywords', $searchRequest['fKeywords'], array('style'=> 'width: 130px')); ?>
-		</div>
+		<?=$form->text('fKeywords', $searchRequest['fKeywords'], array('style'=> 'width: 130px')); ?>
 		</div>
 		
-		<div id="ccm-<?=$searchInstance?>-sets-search-wrapper">
+		<div id="ccm-<?=$searchInstance?>-sets-search-wrapper" class="control-inline">
 		<?
 		$s1 = FileSet::getMySets();
 		if (count($s1) > 0) { ?>
-		<div class="span4" style="width: 280px">
 			<?=$form->label('fsID', t('In Set(s)'))?>
-			<div class="input">
-				<select multiple name="fsID[]" class="chosen-select">
-					<optgroup label="<?=t('Sets')?>">
-					<? foreach($s1 as $s) { ?>
-						<option value="<?=$s->getFileSetID()?>"  <? if (is_array($searchRequest['fsID']) && in_array($s->getFileSetID(), $searchRequest['fsID'])) { ?> selected="selected" <? } ?>><?=wordwrap($s->getFileSetName(), '23', '&shy;', true)?></option>
-					<? } ?>
-					<optgroup label="<?=t('Other')?>">
-						<option value="-1" <? if (is_array($searchRequest['fsID']) && in_array(-1, $searchRequest['fsID'])) { ?> selected="selected" <? } ?>><?=t('Files in no sets.')?></option>
-					</optgroup>
-				</select>
-			</div>
-		</div>
+			<select multiple name="fsID[]" class="chosen-select">
+				<optgroup label="<?=t('Sets')?>">
+				<? foreach($s1 as $s) { ?>
+					<option value="<?=$s->getFileSetID()?>"  <? if (is_array($searchRequest['fsID']) && in_array($s->getFileSetID(), $searchRequest['fsID'])) { ?> selected="selected" <? } ?>><?=wordwrap($s->getFileSetName(), '23', '&shy;', true)?></option>
+				<? } ?>
+				<optgroup label="<?=t('Other')?>">
+					<option value="-1" <? if (is_array($searchRequest['fsID']) && in_array(-1, $searchRequest['fsID'])) { ?> selected="selected" <? } ?>><?=t('Files in no sets.')?></option>
+				</optgroup>
+			</select>
 		<? } ?>
 		</div>
 		
-		<div class="span3">
+		<div class="control-inline">
 		<?=$form->label('numResults', t('# Per Page'))?>
-		<div class="input">
 			<?=$form->select('numResults', array(
 				'10' => '10',
 				'25' => '25',
@@ -162,11 +153,8 @@ foreach($t1 as $value) {
 				'500' => '500'
 			), $searchRequest['numResults'], array('style' => 'width:65px'))?>
 
-		</div>
 		<?=$form->submit('ccm-search-files', t('Search'), array('style' => 'margin-left: 10px'))?>
-
 		</div>
-
 		
 	</div>
 	

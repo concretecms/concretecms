@@ -52,18 +52,16 @@ foreach($searchFieldAttributes as $ak) {
 		
 	</div>
 	
-	<form class="form-horizontal" method="get" id="ccm-user-advanced-search" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/users/search_results">
+	<form class="form-inline" method="get" id="ccm-user-advanced-search" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/users/search_results">
 	<?=$form->hidden('mode', $mode); ?>
 	<?=$form->hidden('searchType', $searchType); ?>
 	<input type="hidden" name="search" value="1" />
 	
 	<div class="ccm-pane-options-permanent-search">
 
-		<div class="span3">
+		<div class="control-inline">
 		<?=$form->label('keywords', t('Keywords'))?>
-		<div class="controls">
-			<?=$form->text('keywords', $_REQUEST['keywords'], array('placeholder' => t('Username or Email'), 'style'=> 'width: 140px')); ?>
-		</div>
+		<?=$form->text('keywords', $_REQUEST['keywords'], array('placeholder' => t('Username or Email'), 'style'=> 'width: 140px')); ?>
 		</div>
 				
 		<? 
@@ -74,9 +72,8 @@ foreach($searchFieldAttributes as $ak) {
 		$g1 = $gl->getPage();
 		?>		
 
-		<div class="span4" >
+		<div class="control-inline" >
 			<?=$form->label('gID', t('Group(s)'))?>
-			<div class="controls">
 				<select multiple name="gID[]" class="chosen-select" style="width: 200px">
 					<? foreach($g1 as $g) {
 						if ($pk->validate($g['gID'])) { ?>
@@ -85,12 +82,10 @@ foreach($searchFieldAttributes as $ak) {
 						}
 					} ?>
 				</select>
-			</div>
 		</div>
 		
-		<div class="span3" style="width: 300px; white-space: nowrap">
+		<div class="control-inline">
 		<?=$form->label('numResults', t('# Per Page'))?>
-		<div class="controls">
 			<?=$form->select('numResults', array(
 				'10' => '10',
 				'25' => '25',
@@ -98,7 +93,6 @@ foreach($searchFieldAttributes as $ak) {
 				'100' => '100',
 				'500' => '500'
 			), $_REQUEST['numResults'], array('style' => 'width:65px'))?>
-		</div>
 
 		<?=$form->submit('ccm-search-users', t('Search'), array('style' => 'margin-left: 10px'))?>
 
