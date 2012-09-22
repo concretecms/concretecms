@@ -21,6 +21,15 @@ class Concrete5_Controller_AttributeType_SocialLinks extends AttributeTypeContro
 	
 	public function form() {
 		$this->addHeaderItem(Loader::helper('html')->javascript("bootstrap.js"));
+		if ($this->isPost()) {
+			$data['service'] = $this->post('service');			
+			$data['serviceInfo'] = $this->post('serviceInfo');			
+		}
+		if (!is_array($data['service'])) {
+			$data['service'][] = 'facebook';
+			$data['serviceInfo'][] = '';
+		}
+		$this->set('data', $data);
 		$this->set('services', $this->getServices());
 	}
 }
