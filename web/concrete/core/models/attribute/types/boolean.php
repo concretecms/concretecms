@@ -50,6 +50,8 @@ class Concrete5_Controller_AttributeType_Boolean extends AttributeTypeController
 		$this->set('akCheckedByDefault', $this->akCheckedByDefault);
 	}
 
+	public function label() {}
+	
 	public function form() {
 
 		if (is_object($this->attributeValue)) {
@@ -63,7 +65,7 @@ class Concrete5_Controller_AttributeType_Boolean extends AttributeTypeController
 		}
 		
 		$cb = Loader::helper('form')->checkbox($this->field('value'), 1, $checked);
-		print $cb . ' <span>' . t('Yes') . '</span>';
+		print $cb . ' <span>' . $this->attributeKey->getAttributeKeyName() . '</span>';
 	}
 	
 	public function composer() {

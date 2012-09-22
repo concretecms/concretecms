@@ -7,8 +7,6 @@
 </div>
 </div>
 
-<div class="ccm-form">
-
 <? 
 $attribs = UserAttributeKey::getRegistrationList();
 
@@ -36,14 +34,14 @@ if($success) { ?>
             <?
 		break;
 	} ?>
-			</div>
+</div>
 </div>
 <? 
 } else { ?>
 
 <form method="post" action="<?=$this->url('/register', 'do_register')?>" class="form-horizontal">
 <div class="row">
-<div class="<? if (count($attribs) > 0) {?>span5<? } else {?>span10<? } ?> offset1">
+<div class="span10 offset1">
 	<fieldset>
 		<legend><?=t('Your Details')?></legend>
 		<? if ($displayUserName) { ?>
@@ -76,8 +74,10 @@ if($success) { ?>
 
 	</fieldset>
 </div>
+</div>
 <? if (count($attribs) > 0) { ?>
-<div class="span5">
+<div class="row">
+<div class="span10 offset1">
 	<fieldset>
 		<legend><?=t('Options')?></legend>
 	<?
@@ -89,9 +89,11 @@ if($success) { ?>
 	<? }?>
 	</fieldset>
 </div>
+</div>
 <? } ?>
-<div class="span10 offset1 ">
 	<? if (ENABLE_REGISTRATION_CAPTCHA) { ?>
+<div class="row">
+<div class="span10 offset1 ">
 	
 		<div class="control-group">
 			<?php $captcha = Loader::helper('validation/captcha'); ?>			
@@ -104,19 +106,18 @@ if($success) { ?>
 			</div>
 		</div>
 	
-		
-	<? } ?>
-
 </div>
+</div>
+		
+<? } ?>
+<div class="row">
 <div class="span10 offset1">
 	<div class="actions">
 	<?=$form->hidden('rcID', $rcID); ?>
 	<?=$form->submit('register', t('Register') . ' &gt;', array('class' => 'primary'))?>
 	</div>
 </div>
-	
 </div>
 </form>
-<? } ?>
 
-</div>
+<? } ?>
