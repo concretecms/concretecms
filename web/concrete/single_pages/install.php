@@ -77,7 +77,7 @@ $(function() {
 <?=$successMessage?>
 <br/><br/>
 <div class="well">
-<input type="button" class="btn large primary" onclick="window.location.href='<?=DIR_REL?>/'" value="<?=t('Continue to your site')?>" />
+<input type="button" class="btn btn-large btn-primary" onclick="window.location.href='<?=DIR_REL?>/'" value="<?=t('Continue to your site')?>" />
 </div>
 </div>
 
@@ -148,21 +148,21 @@ $(function() {
 	
 	<fieldset>
 		<legend style="margin-bottom: 0px"><?=t('Administrator Information')?></legend>
-		<div class="clearfix">
-		<label for="uEmail"><?=t('Email Address')?>:</label>
-		<div class="input">
+		<div class="control-group">
+		<label for="uEmail" class="control-label"><?=t('Email Address')?>:</label>
+		<div class="controls">
 			<?=$form->email('uEmail', array('class' => 'xlarge'))?>
 		</div>
 		</div>
-		<div class="clearfix">
-		<label for="uPassword"><?=t('Password')?>:</label>
-		<div class="input">
+		<div class="control-group">
+		<label for="uPassword" class="control-label"><?=t('Password')?>:</label>
+		<div class="controls">
 			<?=$form->password('uPassword', array('class' => 'xlarge'))?>
 		</div>
 		</div>
-		<div class="clearfix">
-		<label for="uPasswordConfirm"><?=t('Confirm Password')?>:</label>
-		<div class="input">
+		<div class="control-group">
+		<label for="uPasswordConfirm" class="control-label"><?=t('Confirm Password')?>:</label>
+		<div class="controls">
 			<?=$form->password('uPasswordConfirm', array('class' => 'xlarge'))?>
 		</div>
 		</div>
@@ -175,30 +175,30 @@ $(function() {
 	<fieldset>
 		<legend style="margin-bottom: 0px"><?=t('Database Information')?></legend>
 
-	<div class="clearfix">
-	<label for="DB_SERVER"><?=t('Server')?>:</label>
-	<div class="input">
+	<div class="control-group">
+	<label class="control-label" for="DB_SERVER"><?=t('Server')?>:</label>
+	<div class="controls">
 		<?=$form->text('DB_SERVER', array('class' => 'xlarge'))?>
 	</div>
 	</div>
 
-	<div class="clearfix">
-	<label for="DB_USERNAME"><?=t('MySQL Username')?>:</label>
-	<div class="input">
+	<div class="control-group">
+	<label class="control-label" for="DB_USERNAME"><?=t('MySQL Username')?>:</label>
+	<div class="controls">
 		<?=$form->text('DB_USERNAME', array('class' => 'xlarge'))?>
 	</div>
 	</div>
 
-	<div class="clearfix">
-	<label for="DB_PASSWORD"><?=t('MySQL Password')?>:</label>
-	<div class="input">
+	<div class="control-group">
+	<label class="control-label" for="DB_PASSWORD"><?=t('MySQL Password')?>:</label>
+	<div class="controls">
 		<?=$form->password('DB_PASSWORD', array('class' => 'xlarge'))?>
 	</div>
 	</div>
 
-	<div class="clearfix">
-	<label for="DB_DATABASE"><?=t('Database Name')?>:</label>
-	<div class="input">
+	<div class="control-group">
+	<label class="control-label" for="DB_DATABASE"><?=t('Database Name')?>:</label>
+	<div class="controls">
 		<?=$form->text('DB_DATABASE', array('class' => 'xlarge'))?>
 	</div>
 	</div>
@@ -450,12 +450,12 @@ $(function() {
 
 <div id="ccm-install-intro">
 
-<form method="post" action="<?=$this->url('/install', 'select_language')?>">
+<form method="post" class="form-horizontal" action="<?=$this->url('/install', 'select_language')?>">
 <fieldset>
-	<div class="clearfix">
+	<div class="control-group">
 	
-	<label for="locale"><?=t('Language')?></label>
-	<div class="input">
+	<label for="locale" class="control-label"><?=t('Language')?></label>
+	<div class="controls">
 		<?=$form->select('locale', $locales, 'en_US'); ?>
 	</div>
 	
