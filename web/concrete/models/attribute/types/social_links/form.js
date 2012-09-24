@@ -26,12 +26,13 @@ $(function() {
 			attr('title', opt.attr('data-tooltip-title')).
 			tooltip();
 			
-		if (opt.val() == 'other') {
+		/*if (opt.val() == 'other') {
 			$(this).parent().
 			find('.ccm-social-link-service-text-wrapper').
 			removeClass('input-prepend').
 			find('.ccm-social-link-service-add-on-wrapper').hide();
-		} else {
+		} else {*/
+		
 			$(this).parent().
 				find('.ccm-social-link-service-text-wrapper').
 				addClass('input-prepend').
@@ -39,7 +40,7 @@ $(function() {
 				find('i').
 				removeClass().
 				addClass('ccm-social-link-service-' + opt.val());
-		}
+		//}
 	});
 	$('.ccm-social-link-attribute-wrapper select').trigger('change');
 });

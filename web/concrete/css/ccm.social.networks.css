@@ -1,0 +1,161 @@
+/*  
+	Super Massive CSS-Sprite Social Media Icon Set 
+	by Brandon Setter
+	http://blog.brandonsetter.com
+	
+	License: 
+	Free to use for whatever you like. If you use them an optional link to http://blog.brandonsetter.com would be appreciated :)
+	Vector Icons Provided by: http://icondock.com and are free to use for whatever purposes.
+*
+*
+*
+*
+*
+*
+*/
+
+/** 
+ * Attribute display
+ */
+.ccm-social-link-attribute-display {
+	width: 100%;
+}
+
+.ccm-social-link-attribute-display td {
+	vertical-align: middle;
+	padding-left: 10px;
+}
+
+.ccm-social-link-attribute-display td.ccm-social-link-service-icon {
+	width: 1%;
+	padding-left: 0px;
+}
+
+/* Super Massive CSS-Sprite Social Media Icon Set Start */
+.socialicons 						{ list-style-type: none; }
+.socialicons .color i 						{ background: url('../images/icons_social_networks2.png') no-repeat 0 0; }
+.socialicons .bw i 							{ background: url('../images/icons_social_networks.png') no-repeat 0 0; }
+.socialicons a i				{ text-indent: -9999px; width: 32px; height: 33px; display: block; overflow: hidden; margin: 2px; }
+									
+									
+/* Each icon's sprite coordinates */
+.socialicons a i.stumbleupon 			{ background-position: 0 0; }
+.socialicons a i.stumbleupon:hover 	{ background-position: -38px 0; }
+.socialicons a i.digg 					{ background-position: 0 -36px; }
+.socialicons a i.digg:hover 			{ background-position: -38px -36px; }
+.socialicons a i.facebook 				{ background-position: 0 -73px; }
+.socialicons a i.facebook:hover 		{ background-position: -38px -73px; }
+.socialicons a i.twitter 				{ background-position: 0 -109px; }
+.socialicons a i.twitter:hover 		{ background-position: -38px -109px; }
+.socialicons a i.delicious 				{ background-position: 0 -146px; }
+.socialicons a i.delicious:hover 	{ background-position: -38px -146px; }
+.socialicons a i.flickr 					{ background-position: 0 -183px; }
+.socialicons a i.flickr:hover 		{ background-position: -38px -183px; }
+.socialicons a i.youtube 				{ background-position: 0 -219px; }
+.socialicons a i.youtube:hover 		{ background-position: -38px -219px; }
+.socialicons a i.skype 					{ background-position: 0 -256px; }
+.socialicons a i.skype:hover 		{ background-position: -38px -256px; }
+.socialicons a i.linkedin 				{ background-position: 0 -292px; }
+.socialicons a i.linkedin:hover 		{ background-position: -38px -292px; }
+.socialicons a i.vimeo 					{ background-position: 0 -329px; }
+.socialicons a i.vimeo:hover 		{ background-position: -38px -329px; }
+.socialicons a i.blogger 				{ background-position: 0 -365px; }
+.socialicons a i.blogger:hover 		{ background-position: -38px -365px; }
+.socialicons a i.tumblr 					{ background-position: 0 -402px; }
+.socialicons a i.tumblr:hover 		{ background-position: -38px -402px; }
+.socialicons a i.picasa 					{ background-position: 0 -438px; }
+.socialicons a i.picasa:hover 		{ background-position: -38px -438px; }
+.socialicons a i.wordpress 				{ background-position: 0 -475px; }
+.socialicons a i.wordpress:hover 	{ background-position: -38px -475px; }
+.socialicons a i.rss 					{ background-position: 0 -511px; }
+.socialicons a i.rss:hover 			{ background-position: -38px -511px; }
+.socialicons a i.mobileme 				{ background-position: 0 -548px; }
+.socialicons li mobileme:hover 		{ background-position: -38px -548px; }
+.socialicons a i.apple 					{ background-position: 0 -585px; }
+.socialicons a i.apple:hover 		{ background-position: -38px -585px; }
+.socialicons a i.gpluslight 				{ background-position: 0 -621px; }
+.socialicons a i.gpluslight:hover 	{ background-position: -38px -621px; }
+.socialicons a i.gplusdark 				{ background-position: 0 -694px; }
+.socialicons a i.gplusdark:hover 	{ background-position: -38px -694px; }
+.socialicons a i.twitterb 				{ background-position: 0 -658px; }
+.socialicons a i.twitterb:hover 		{ background-position: -38px -658px; }
+.socialicons a i.instagram 				{ background-position: 0 -731px; }
+.socialicons a i.instagram:hover 	{ background-position: -38px -731px; }
+.socialicons a i.myspace 				{ background-position: 0 -767px; }
+.socialicons a i.myspace:hover 		{ background-position: -38px -767px; }
+.socialicons a i.dribble 				{ background-position: 0 -803px; }
+.socialicons a i.dribble:hover 		{ background-position: -38px -803px; }
+.socialicons a i.blip 					{ background-position: 0 -838px; }
+.socialicons a i.blip:hover 			{ background-position: -38px -838px; }
+.socialicons a i.spotify 				{ background-position: 0 -874px; }
+.socialicons a i.spotify:hover 		{ background-position: -38px -874px; }
+.socialicons a i.grooveshark 			{ background-position: 0 -910px; }
+.socialicons a i.grooveshark:hover 	{ background-position: -38px -910px; }
+.socialicons a i.ichat 					{ background-position: 0 -946px; }
+.socialicons a i.ichat:hover 		{ background-position: -38px -946px; }
+.socialicons a i.github 					{ background-position: 0 -981px; }
+.socialicons a i.github:hover 		{ background-position: -38px -981px; }
+.socialicons a i.soundcloud 				{ background-position: 0 -1017px; }
+.socialicons a i.soundcloud:hover 	{ background-position: -38px -1017px; }
+.socialicons a i.pinterest 				{ background-position: 0 -1053px; }
+.socialicons a i.pinterest:hover 	{ background-position: -38px -1053px; }
+.socialicons a i.smugmug 				{ background-position: 0 -1088px; }
+.socialicons a i.smugmug:hover 		{ background-position: -38px -1088px; }
+.socialicons a i.virb 					{ background-position: 0 -1124px; }
+.socialicons a i.virb:hover 			{ background-position: -38px -1124px; }
+.socialicons a i.technorait 				{ background-position: 0 -1160px; }
+.socialicons a i.technorait:hover 	{ background-position: -38px -1160px; }
+.socialicons a i.slashdot 				{ background-position: 0 -1195px; }
+.socialicons a i.slashdot:hover 		{ background-position: -38px -1195px; }
+.socialicons a i.sharethis 				{ background-position: 0 -1231px; }
+.socialicons a i.sharethis:hover 	{ background-position: -38px -1231px; }
+.socialicons a i.posterous 				{ background-position: 0 -1267px; }
+.socialicons a i.posterous:hover 	{ background-position: -38px -1267px; }
+.socialicons a i.googleb 				{ background-position: 0 -1302px; }
+.socialicons a i.googleb:hover 		{ background-position: -38px -1302px; }
+.socialicons a i.reddit 					{ background-position: 0 -1338px; }
+.socialicons a i.reddit:hover 		{ background-position: -38px -1338px; }
+.socialicons a i.friendfollow 			{ background-position: 0 -1374px; }
+.socialicons a i.friendfollow:hover 	{ background-position: -38px -1374px; }
+.socialicons a i.designfloat 			{ background-position: 0 -1409px; }
+.socialicons a i.designfloat:hover 	{ background-position: -38px -1409px; }
+.socialicons a i.amazon 					{ background-position: 0 -1445px; }
+.socialicons a i.amazon:hover 		{ background-position: -38px -1445px; }
+.socialicons a i.netvibes 				{ background-position: 0 -1481px; }
+.socialicons a i.netvibes:hover 		{ background-position: -38px -1481px; }
+.socialicons a i.bing 					{ background-position: 0 -1516px; }
+.socialicons a i.bing:hover 			{ background-position: -38px -1516px; }
+.socialicons a i.yahoo 					{ background-position: 0 -1552px; }
+.socialicons a i.yahoo:hover 		{ background-position: -38px -1552px; }
+.socialicons a i.aim 					{ background-position: 0 -1588px; }
+.socialicons a i.aim:hover 			{ background-position: -38px -1588px; }
+.socialicons a i.email 					{ background-position: 0 -1623px; }
+.socialicons a i.email:hover 		{ background-position: -38px -1623px; }
+.socialicons a i.ebay 					{ background-position: 0 -1659px; }
+.socialicons a i.ebay:hover 			{ background-position: -38px -1659px; }
+.socialicons a i.paypal 					{ background-position: 0 -1695px; }
+.socialicons a i.paypal:hover 		{ background-position: -38px -1695px; }
+.socialicons a i.feedburner 				{ background-position: 0 -1730px; }
+.socialicons a i.feedburner:hover 	{ background-position: -38px -1730px; }
+.socialicons a i.podcast 				{ background-position: 0 -1766px; }
+.socialicons a i.podcast:hover 		{ background-position: -38px -1766px; }
+.socialicons a i.appstoreios 			{ background-position: 0 -1802px; }
+.socialicons a i.appstoreios:hover 	{ background-position: -38px -1802px; }
+.socialicons a i.itunes 					{ background-position: 0 -1837px; }
+.socialicons a i.itunes:hover 		{ background-position: -38px -1837px; }
+.socialicons a i.appstoremac 			{ background-position: 0 -1873px; }
+.socialicons a i.appstoremac:hover 	{ background-position: -38px -1873px; }
+.socialicons a i.yelp 					{ background-position: 0 -1909px; }
+.socialicons a i.yelp:hover 			{ background-position: -38px -1909px; }
+.socialicons a i.wthree 					{ background-position: 0 -1944px; }
+.socialicons a i.wthree:hover 		{ background-position: -38px -1944px; }
+.socialicons a i.etsy 					{ background-position: 0 -1980px; }
+.socialicons a i.etsy:hover 			{ background-position: -38px -1980px; }
+.socialicons a i.stackoverflow 			{ background-position: 0 -2016px; }
+.socialicons a i.stackoverflow:hover { background-position: -38px -2016px; }
+.socialicons a i.foursquare 				{ background-position: 0 -2051px; }
+.socialicons a i.foursquare:hover 	{ background-position: -38px -2051px; }
+.socialicons a i.quora 					{ background-position: 0 -2087px; }
+.socialicons a i.quora:hover 		{ background-position: -38px -2087px; }
+.socialicons a i.photobucket 			{ background-position: 0 -2123px; }
+.socialicons a i.photobucket:hover 	{ background-position: -38px -2123px; }
