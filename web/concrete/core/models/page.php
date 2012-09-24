@@ -1168,7 +1168,7 @@ class Concrete5_Model_Page extends Collection {
 				$pathSegments = explode('/', $val);
 				$newVal = '/';
 				foreach($pathSegments as $pathSegment) {
-					$newVal .= URLify::filter($pathSegment) . '/';
+					$newVal .= $pathSegment . '/';
 				}
 				$newVal = substr($newVal, 0, strlen($newVal) - 1);
 				$newVal = str_replace('-', PAGE_PATH_SEPARATOR, $newVal);
