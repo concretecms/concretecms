@@ -11,6 +11,10 @@
 	padding-right: 0px;
 }
 
+.ccm-social-link-attribute .input-prepend input {
+	border-left: 0px;
+}
+
 div.ccm-social-link-attribute .input-prepend .add-on {
 	background-color: #fff;
 }
@@ -45,4 +49,7 @@ div.ccm-social-link-attribute i.ccm-social-link-service-youtube {
 
 div.ccm-social-link-attribute i.ccm-social-link-service-flickr {
 	background-position: -19px -99px; 
+}
+div.ccm-social-link-attribute i.ccm-social-link-service-wthree {
+	background-position: -19px -1055px; 
 }
