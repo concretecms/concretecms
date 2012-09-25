@@ -2610,31 +2610,6 @@
       <col>uName</col>
     </index>
   </table>
-  <table name="UserRelationships">
-    <field name="uID" type="I" size="10">
-      <KEY/>
-      <DEFAULT value="0"/>
-      <UNSIGNED/>
-    </field>
-    <field name="uRelatedID" type="I" size="10">
-      <KEY/>
-      <DEFAULT value="0"/>
-      <UNSIGNED/>
-    </field>
-    <field name="uType" type="C" size="4">
-      <KEY/>
-    </field>
-    <field name="timestamp" type="T">
-      <NOTNULL/>
-      <DEFTIMESTAMP />
-    </field>
-    <index name="uID">
-      <col>uID</col>
-    </index>
-    <index name="uRelatedID">
-      <col>uRelatedID</col>
-    </index>
-  </table>
   <table name="SignupRequests">
     <field name="id" type="I" size="11">
       <KEY/>
