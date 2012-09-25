@@ -6,7 +6,7 @@
 	<h1><?=t('Upgrade concrete5')?></h1>
 </div>
 <p>
-<?=$message?>
+<?=$status?>
 </p>
 
 <? if($had_failures) { ?>

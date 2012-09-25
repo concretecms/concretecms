@@ -9,7 +9,7 @@
 			<? } ?>
 		</select>
 		<span class="ccm-social-link-service-text-wrapper">
-		<span class="ccm-social-link-service-add-on-wrapper"><span class="add-on"><i></i></span></span><input name="<?=$this->field('serviceInfo')?>[]" type="text" value="<?=$data['serviceInfo'][$i]?>" />
+		<span class="ccm-social-link-service-add-on-wrapper"><span class="add-on"><img src="<?=ASSETS_URL_IMAGES?>/icons/social/<?=$data['service'][$i]?>.png" width="16" height="16" /></span></span><input name="<?=$this->field('serviceInfo')?>[]" type="text" value="<?=$data['serviceInfo'][$i]?>" />
 		</span>
 		
 		<button type="button" class="ccm-social-link-attribute-remove-line btn btn-link"><i class="icon-remove"></i></button>

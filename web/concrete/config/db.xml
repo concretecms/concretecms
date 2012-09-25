@@ -2840,6 +2840,23 @@
       <DEFAULT value="0"/>
     </field>
   </table> 
+  <table name="atSocialLinks">
+    <field name="avsID" type="I" size="10">
+      <KEY/>
+      <AUTOINCREMENT/>
+      <UNSIGNED/>
+    </field>
+    <field name="avID" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="service" type="C" size="255"/>
+    <field name="serviceInfo" type="C" size="255"/>
+    <index name="avID">
+      <col>avID</col>
+    </index>
+  </table>
   <table name="atTextareaSettings">
     <field name="akID" type="I" size="10">
       <KEY/>

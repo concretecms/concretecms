@@ -40,7 +40,14 @@
         foreach($uaks as $ua) { ?>
 		<div>
 			<h4><?php echo $ua->getKeyName()?></h4>
-			<?php echo $profile->getAttribute($ua, 'displaySanitized', 'display'); ?>
+			<?php 
+			$r = $profile->getAttribute($ua, 'displaySanitized', 'display'); 
+			if ($r) {
+				print $r;
+			} else {
+				print t('None');
+			}
+			?>
 		</div>
         <?php  } ?>		
         

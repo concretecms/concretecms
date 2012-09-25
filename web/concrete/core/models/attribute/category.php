@@ -119,6 +119,7 @@ class Concrete5_Model_AttributeKeyCategory extends Object {
 	
 	public function associateAttributeKeyType($at) {
 		$db = Loader::db();
+		$db->Execute('delete from AttributeTypeCategories where atID = ? and akCategoryID = ?', array($at->getAttributeTypeID(), $this->akCategoryID));
 		$db->Execute('insert into AttributeTypeCategories (atID, akCategoryID) values (?, ?)', array($at->getAttributeTypeID(), $this->akCategoryID));
 	}
 	
