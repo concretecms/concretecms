@@ -1,11 +1,3 @@
-.ccm-social-link-service-text-wrapper i {
-	display: block;
-	width: 20px; 
-	height: 19px;
-	background: url('../../../../images/icons_social_networks.png') no-repeat 0 0; 
-	background-size: 38px 1188px;
-}
-
 .ccm-social-link-attribute .btn-link {
 	padding-left: 0px;
 	padding-right: 0px;
@@ -17,39 +9,4 @@
 
 div.ccm-social-link-attribute .input-prepend .add-on {
 	background-color: #fff;
-}
-
-div.ccm-social-link-attribute i.ccm-social-link-service-facebook {
-	background-position: -19px -39px; 
-}
-
-div.ccm-social-link-attribute i.ccm-social-link-service-pinterest {
-	background-position: -19px -571px; 
-}
-
-div.ccm-social-link-attribute i.ccm-social-link-service-myspace {
-	background-position: -19px -416px; 
-}
-
-div.ccm-social-link-attribute i.ccm-social-link-service-instagram {
-	background-position: -19px -397px; 
-}
-
-div.ccm-social-link-attribute i.ccm-social-link-service-googleplus {
-	background-position: -19px -376px; 
-}
-
-div.ccm-social-link-attribute i.ccm-social-link-service-twitter {
-	background-position: -19px -59px; 
-}
-
-div.ccm-social-link-attribute i.ccm-social-link-service-youtube {
-	background-position: -19px -118px; 
-}
-
-div.ccm-social-link-attribute i.ccm-social-link-service-flickr {
-	background-position: -19px -99px; 
-}
-div.ccm-social-link-attribute i.ccm-social-link-service-wthree {
-	background-position: -19px -1055px; 
 }

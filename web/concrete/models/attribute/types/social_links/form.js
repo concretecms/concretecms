@@ -25,22 +25,13 @@ $(function() {
 			tooltip('destroy').
 			attr('title', opt.attr('data-tooltip-title')).
 			tooltip();
-			
-		/*if (opt.val() == 'other') {
-			$(this).parent().
-			find('.ccm-social-link-service-text-wrapper').
-			removeClass('input-prepend').
-			find('.ccm-social-link-service-add-on-wrapper').hide();
-		} else {*/
-		
 			$(this).parent().
 				find('.ccm-social-link-service-text-wrapper').
 				addClass('input-prepend').
 				find('.ccm-social-link-service-add-on-wrapper').show().
-				find('i').
-				removeClass().
-				addClass('ccm-social-link-service-' + opt.val());
-		//}
+				find('img').
+				attr('src', CCM_IMAGE_PATH + "/icons/social/" + opt.val() + ".png");
+
 	});
 	$('.ccm-social-link-attribute-wrapper select').trigger('change');
 });

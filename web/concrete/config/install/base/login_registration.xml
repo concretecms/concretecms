@@ -10,6 +10,7 @@
         <page name="My Account" path="/account" filename="/account/view.php" pagetype="" description="" package="" root="true" />
         <page name="Profile" path="/account/profile" filename="/account/view.php" pagetype="" description="" package="" />
         <page name="Edit Profile" path="/account/profile/edit" filename="/account/profile/edit.php" pagetype="" description="" package="" />
+        <page name="Profile Picture" path="/account/profile/avatar" filename="/account/profile/avatar.php" pagetype="" description="" package="" />
         <page name="View Profile" path="/account/profile/public" filename="/account/profile/public.php" pagetype="" description="" package="" />
         <page name="Messages" path="/account/messages" filename="/account/messages/view.php" pagetype="" description="" package="" />
         <page name="Inbox" path="/account/messages/inbox" filename="/account/messages/inbox.php" pagetype="" description="" package="" />

@@ -104,7 +104,7 @@
         </attributekey>
         <attributekey handle="width" name="Width" package="" searchable="1" indexed="1" type="number" category="file"/>
         <attributekey handle="height" name="Height" package="" searchable="1" indexed="1" type="number" category="file"/>
-        <attributekey handle="account_profile_links" name="Personal Links" package="" searchable="1" type="social_links" category="user"/>
+        <attributekey handle="account_profile_links" name="Personal Links" package="" type="social_links" category="user"/>
     </attributekeys>
     <attributesets>
         <attributeset handle="page_header" name="Page Header" package="" locked="0" category="collection">

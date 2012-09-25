@@ -9,7 +9,7 @@
 			if ($u->isRegistered()) { ?>
 				<? 
 				if (Config::get("ENABLE_USER_PROFILES")) {
-					$userName = '<a href="' . $this->url('/profile') . '">' . $u->getUserName() . '</a>';
+					$userName = '<a href="' . $this->url('/account/profile/public') . '">' . $u->getUserName() . '</a>';
 				} else {
 					$userName = $u->getUserName();
 				}

@@ -8,10 +8,9 @@ class Concrete5_Controller_AttributeType_SocialLinks extends AttributeTypeContro
 		$services = array(
 			array('facebook', 'Facebook', t('Enter your Facebook username.'), 'http://facebook.com/'),
 			array('twitter', 'Twitter', t('Enter your Twitter username.'), 'http://twitter.com/'),
-			/* array('instagram', 'Instagram', t('Enter your Instagram username.')), */
 			array('pinterest', 'Pinterest', t('Enter your Pinterest username.'), 'http://pinterest.com/'),
 			array('youtube', 'Youtube', t('Enter your Youtube channel or profile URL.'), ''),
-			array('gplus', 'Google Plus', t('Enter your Google Plus profile URL.'), ''),
+			array('google-plus', 'Google Plus', t('Enter your Google Plus profile URL.'), ''),
 			array('flickr', 'Flickr', t('Enter your Flickr Profile URL.'), ''),
 			array('myspace', 'MySpace', t('Enter the full URL of your MySpace profile.'), ''),
 			array('wthree', 'Other', t('Enter the full URL of this website.'), '')
@@ -63,32 +62,52 @@ class Concrete5_Controller_AttributeType_SocialLinks extends AttributeTypeContro
 		$link .= $serviceInfo;
 		return $link;
 	}
+
+	public function deleteKey() {
+		$db = Loader::db();
+		$arr = $this->attributeKey->getAttributeValueIDList();
+		foreach($arr as $id) {
+			$db->Execute('delete from atSocialLinks where avID = ?', array($id));
+		}
+	}
+
+	public function deleteValue() {
+		$db = Loader::db();
+		$db->Execute('delete from atSocialLinks where avID = ?', array($this->getAttributeValueID()));
+	}
 	
 	protected function getServiceName($service, $serviceInfo) {
 		$services = $this->getServices();
 		foreach($services as $s) {
 			if ($s[0] == $service) {
+				if ($service == 'wthree') {
+					return $serviceInfo;
+				}
 				return $s[1];
 			}
 		}
 	}
 	
 	public function getDisplayValue() {
+		$html = '';
 		$services = $this->getValue();
 		if (count($services) == 0) {
-			print t('None');
+			$html .=  t('None');
 		} else {
-			$this->addHeaderItem(Loader::helper('html')->css('ccm.social.networks.css'));
-			print '<table class="ccm-social-link-attribute-display socialicons">';
+			$env = Environment::get();
+			$url = $env->getURL(DIRNAME_MODELS . '/' . DIRNAME_ATTRIBUTES . '/' . DIRNAME_ATTRIBUTE_TYPES . '/social_links/view.css');
+			$this->addHeaderItem(Loader::helper('html')->css($url));
+			$html .=  '<div class="ccm-social-link-attribute-display">';
 			foreach($services as $service => $serviceInfo) {
-				print '<tr>';
+				$html .= '<div class="ccm-social-link-service">';
 				$icon = $service;
-				print '<td class="ccm-social-link-service-icon"><a class="color" href="' . $this->getServiceLink($service, $serviceInfo) . '"><i class="' . $icon . '"></i></a></td>';
-				print '<td><a href="' . $this->getServiceLink($service, $serviceInfo) . '">' . $this->getServiceName($service, $serviceInfo) . '</a><td>';
-				print '</tr>';
+				$html .=  '<div class="ccm-social-link-service-icon"><a href="' . $this->getServiceLink($service, $serviceInfo) . '"><img src="' . ASSETS_URL_IMAGES . '/icons/social/' . $service . '.png" width="16" height="16" /></a></div>';
+				$html .=  '<div class="ccm-social-link-service-info"><a href="' . $this->getServiceLink($service, $serviceInfo) . '">' . $this->getServiceName($service, $serviceInfo) . '</a></div>';
+				$html .=  '</div>';
 			}
-			print '</table>';		
+			$html .=  '</div>';		
 		}
+		return $html;
 	}
 	
 	public function form() {
@@ -98,8 +117,6 @@ class Concrete5_Controller_AttributeType_SocialLinks extends AttributeTypeContro
 			$data['serviceInfo'] = $this->post('serviceInfo');			
 		} else {
 			$d = $this->getValue();
-			$data['service'] = array();
-			$data['serviceInfo'] = array();
 			foreach($d as $k => $v) {
 				$data['service'][] = $k;
 				$data['serviceInfo'][] = $v;
