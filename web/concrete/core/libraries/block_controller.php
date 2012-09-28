@@ -27,6 +27,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		protected $helpers = array('form');
 		protected static $sets;
 		
+		protected $block;
 		protected $btDescription = "";
 		protected $btName = "";
 		protected $btHandle = "";
@@ -327,14 +328,32 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		}
 
 		public function field($fieldName) {
-			return '_bf[' . $this->identifier . '][' . $fieldName . ']';
+			$field = '_bf[' . $this->identifier;
+			$b = $this->getBlockObject();
+			if (is_object($b)) {
+				$xc = $b->getBlockCollectionObject();
+				if (is_object($xc)) {
+					$field .= '_' . $xc->getCollectionID();
+				}
+			}
+			$field .= '][' . $fieldName . ']';
+			return $field;
 		}
 
 		public function post($field = false, $defaultValue = null) {
 			// the only post that matters is the one for this attribute's name space
 			$req = ($this->requestArray == false) ? $_POST : $this->requestArray;
 			if (is_array($req['_bf'])) {
-				$p = $req['_bf'][$this->identifier];
+				$identifier = $this->identifier;
+				$b = $this->getBlockObject();
+				if (is_object($b)) {
+					$xc = $b->getBlockCollectionObject();
+					if (is_object($xc)) {
+						$identifier .= '_' . $xc->getCollectionID();
+					}
+				}
+
+				$p = $req['_bf'][$identifier];
 				if ($field) {
 					return $p[$field];
 				}
@@ -446,7 +465,17 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		 * @return Block $b
 		 */
 		public function getBlockObject() {
+			if (is_object($this->block)) {
+				return $this->block;
+			}
 			return Block::getByID($this->bID);
+		}
+
+		/** 
+		 * Sets the block object for this controller
+		 */
+		public function setBlockObject($b) {
+			$this->block = $b;
 		}
 
 		/**
