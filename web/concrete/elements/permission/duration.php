@@ -71,7 +71,7 @@ $dt = Loader::helper('form/date_time');
 <div id="ccm-permissions-access-entity-dates" class="form-horizontal">
 
 <div class="control-group">
-<?=$form->label('pdStartDate_activate', t('From'))?>
+<?=$form->label('pdStartDate_activate', tc('Start date', 'From'))?>
 <div class="controls">
 	<?=$dt->datetime('pdStartDate', $pdStartDate, true);?>
 	<label class="checkbox inline"><?=$form->checkbox('pdStartDateAllDayActivate', 1, $pdStartDateAllDay)?> <?=t("All Day")?></label>
@@ -79,7 +79,7 @@ $dt = Loader::helper('form/date_time');
 </div>
 
 <div class="control-group">
-<?=$form->label('pdEndDate_activate', t('To'))?>
+<?=$form->label('pdEndDate_activate', tc('End date', 'To'))?>
 <div class="controls">
 	<?=$dt->datetime('pdEndDate', $pdEndDate, true);?>
 	<label class="checkbox inline"><?=$form->checkbox('pdEndDateAllDayActivate', 1, $pdEndDateAllDay)?> <?=t("All Day")?></label>
