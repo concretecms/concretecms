@@ -366,6 +366,7 @@ class Concrete5_Model_Block extends Object {
 		} else {
 			$this->instance = Loader::controller($this);
 		}		
+		$this->instance->setBlockObject($this);
 		return $this->instance;
 	}
 	
