@@ -1,5 +1,5 @@
 /** 
- * Marketplace
+ * Remote Marketplace
  */
 
 ccm_openThemeLauncher = function() {

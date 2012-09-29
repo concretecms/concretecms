@@ -256,21 +256,56 @@ class ConcreteUpgradeVersion560Helper {
 	}
 	
 	protected function addGlobalBlockPermissions() {
-		$adminGroup = Group::getByID(ADMIN_GROUP_ID);
-		$pae = GroupPermissionAccessEntity::getOrCreate($adminGroup);
-		$pk = PermissionKey::getByHandle("add_block");
-		$pt = $pk->getPermissionAssignmentObject();
-		$pt->clearPermissionAssignment();
-		$pa = PermissionAccess::create($pk);
-		$pa->addListItem($pae);
-		$pt->assignPermissionAccess($pa);
+		if (PERMISSIONS_MODEL == 'simple') {
+			// permissions
+			$db = Loader::db();
+			$permissionMap = array(
+				'wa' => array(
+					PermissionKey::getByHandle('add_block'),
+					PermissionKey::getByHandle('add_stack')
+				)
+			);
 
-		$pk = PermissionKey::getByHandle("add_stack");
-		$pt = $pk->getPermissionAssignmentObject();
-		$pt->clearPermissionAssignment();
-		$pa = PermissionAccess::create($pk);
-		$pa->addListItem($pae);
-		$pt->assignPermissionAccess($pa);
+			$r = $db->Execute('select * from PagePermissions where cID = 1');	
+			while ($row = $r->FetchRow()) {
+				$pe = $this->migrateAccessEntity($row);
+				if (!$pe) {
+					continue;
+				}
+				$permissions = $this->getPermissionsArray($row['cgPermissions']);
+				foreach($permissions as $p) {
+					$permissionsToApply = $permissionMap[$p];
+					if (is_array($permissionsToApply)) {
+						foreach($permissionsToApply as $pko) {
+							$pt = $pko->getPermissionAssignmentObject();
+							$pa = $pko->getPermissionAccessObject();
+							if (!is_object($pa)) {
+								$pa = PermissionAccess::create($pko);
+							}
+							$pa->addListItem($pe, false, PermissionKey::ACCESS_TYPE_INCLUDE);	
+							$pt->assignPermissionAccess($pa);
+						}
+					}
+				}
+			}
+			
+		} else {
+			$adminGroup = Group::getByID(ADMIN_GROUP_ID);
+			$pae = GroupPermissionAccessEntity::getOrCreate($adminGroup);
+			$pk = PermissionKey::getByHandle("add_block");
+			$pt = $pk->getPermissionAssignmentObject();
+			$pt->clearPermissionAssignment();
+			$pa = PermissionAccess::create($pk);
+			$pa->addListItem($pae);
+			$pt->assignPermissionAccess($pa);
+	
+			$pk = PermissionKey::getByHandle("add_stack");
+			$pt = $pk->getPermissionAssignmentObject();
+			$pt->clearPermissionAssignment();
+			$pa = PermissionAccess::create($pk);
+			$pa->addListItem($pae);
+			$pt->assignPermissionAccess($pa);
+		}
 	}
 
 	protected function setupDashboardIcons() {
@@ -452,6 +487,10 @@ class ConcreteUpgradeVersion560Helper {
 
 
 	protected function migrateAreaPermissionBlockTypes() {
+		if (PERMISSIONS_MODEL == 'simple') {
+			return;
+		}
+		
 		$db = Loader::db();
 		$tables = $db->MetaTables();
 		if (!in_array('AreaGroupBlockTypes', $tables)) {
@@ -535,6 +574,10 @@ class ConcreteUpgradeVersion560Helper {
 	}
 
 	protected function migrateAreaPermissions() {
+		if (PERMISSIONS_MODEL == 'simple') {
+			return;
+		}
+		
 		$db = Loader::db();
 		$tables = $db->MetaTables();
 		if (!in_array('AreaGroups', $tables)) {
@@ -591,18 +634,23 @@ class ConcreteUpgradeVersion560Helper {
 		// first, we fix permissions that are set to override but are pointing to another page. They shouldn't do that.
 		$db->Execute('update Pages set cInheritPermissionsFromCID = cID where cInheritPermissionsFrom = "OVERRIDE"');
 		// permissions
+		$waSet = array(
+			PermissionKey::getByHandle('preview_page_as_user'),
+			PermissionKey::getByHandle('edit_page_properties'),
+			PermissionKey::getByHandle('edit_page_contents'),
+			PermissionKey::getByHandle('move_or_copy_page'),
+			PermissionKey::getByHandle('add_block_to_area'),
+			PermissionKey::getByHandle('add_stack_to_area'),
+		);
+		if (PERMISSIONS_MODEL == 'simple') {
+			$waSet[] = PermissionKey::getByHandle('approve_page_versions');
+			$waSet[] = PermissionKey::getByHandle('delete_page_versions');
+			$waSet[] = PermissionKey::getByHandle('add_subpage');
+		}		
 		$permissionMap = array(
 			'r' => array(PermissionKey::getByHandle('view_page')),
 			'rv' => array(PermissionKey::getByHandle('view_page_versions')),
-			'wa' => array(
-				PermissionKey::getByHandle('view_page'),
-				PermissionKey::getByHandle('preview_page_as_user'),
-				PermissionKey::getByHandle('edit_page_properties'),
-				PermissionKey::getByHandle('edit_page_contents'),
-				PermissionKey::getByHandle('move_or_copy_page'),
-				PermissionKey::getByHandle('add_block_to_area'),
-				PermissionKey::getByHandle('add_stack_to_area'),
-			),
+			'wa' => $waSet,
 			'adm' => array(
 				PermissionKey::getByHandle('edit_page_speed_settings'),
 				PermissionKey::getByHandle('edit_page_theme'),
@@ -619,6 +667,7 @@ class ConcreteUpgradeVersion560Helper {
 			),
 			'db' => array(PermissionKey::getByHandle('edit_page_contents'))	
 		);
+		
 		
 		$r = $db->Execute('select * from PagePermissions order by cID asc');	
 		while ($row = $r->FetchRow()) {
@@ -763,6 +812,10 @@ class ConcreteUpgradeVersion560Helper {
 		}
 	}	
 	protected function migrateBlockPermissions() {
+		if (PERMISSIONS_MODEL == 'simple') {
+			return;
+		}
+		
 		$db = Loader::db();
 		$tables = $db->MetaTables();
 		if (!in_array('CollectionVersionBlockPermissions', $tables)) {

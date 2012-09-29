@@ -149,24 +149,6 @@ $ih = Loader::helper('concrete/interface');
 				</div>
 			</div>
 			
-			<div id="answerReplyto">
-				<div class="clearfix">
-					<?=$form->label('replyto', t('Reply to Email'))?>
-					<div class="input">
-						<ul class="inputs-list" id="replyto">
-							<li><label>
-								<?=$form->radio('replyto', 1)?>
-								<span><?=t('Yes')?></span>
-							</label></li>
-							<li><label>
-								<?=$form->radio('replyto', 0)?>
-								<span><?=t('No')?></span>
-							</label></li>
-						</ul>
-					</div>
-				</div>
-			</div>
-			
 			<div id="answerOptionsArea">
 				<div class="clearfix">
 					<?=$form->label('answerOptions', t('Answer Options'))?>
@@ -210,7 +192,7 @@ $ih = Loader::helper('concrete/interface');
 
 			<div class="clearfix">
 				<div id="emailSettings">
-					<?php print $form->label('send_notification_from', t('Send Form Email From From This Address'));?>
+					<?php print $form->label('send_notification_from', t('Send Form Email From This Address'));?>
 					<div class="input send_notification_from">
 						<?php print $form->checkbox('send_notification_from', 1); ?>
 					</div>
@@ -263,24 +245,6 @@ $ih = Loader::helper('concrete/interface');
 					</div>
 				</div>
 
-				<div id="answerReplytoEdit">
-					<div class="clearfix">
-						<?=$form->label('replytoEdit', t('Reply to Email'))?>
-						<div class="input">
-							<ul class="inputs-list" id="replytoEdit">
-								<li><label>
-									<?=$form->radio('replytoEdit', 1)?>
-									<span><?=t('Yes')?></span>
-								</label></li>
-								<li><label>
-									<?=$form->radio('replytoEdit', 0)?>
-									<span><?=t('No')?></span>
-								</label></li>
-							</ul>
-						</div>
-					</div>
-				</div>
-				
 				<div id="answerOptionsAreaEdit">
 					<div class="clearfix">
 						<?=$form->label('answerOptionsEdit', t('Answer Options'))?>

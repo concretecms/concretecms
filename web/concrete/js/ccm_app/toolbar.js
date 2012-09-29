@@ -214,6 +214,7 @@ $(function() {
 				}
 				*/
 				var posX = 30;
+
 				$("#ccm-edit-overlay").css('left', posX + "px");
 				$("#ccm-edit-overlay").fadeIn(160, 'easeOutExpo', function() {
 					$(this).find('a').click(function() {

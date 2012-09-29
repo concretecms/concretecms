@@ -21,12 +21,13 @@ defined('C5_EXECUTE') or die("Access Denied.");
  *
  */
 
-	class Concrete5_Library_BlockController extends Concrete5_Library_Controller {
+	class Concrete5_Library_BlockController extends Controller {
 		
 		protected $record; // blockrecord
 		protected $helpers = array('form');
 		protected static $sets;
 		
+		protected $block;
 		protected $btDescription = "";
 		protected $btName = "";
 		protected $btHandle = "";
@@ -176,7 +177,14 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			$bp = new Permissions(Block::getByID($this->bID));
 			return $bp;
 		}
-		
+
+		/** 
+		 * @deprecated
+		 */
+		public function getPermissionsObject() {
+			return $this->getPermissionObject();
+		}
+				
 		/**
 		 * Automatically run when a block is duplicated. This most likely happens when a block is edited: a block is first duplicated, and then presented to the user to make changes.
 		 * @param int $newBlockID
@@ -320,14 +328,32 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		}
 
 		public function field($fieldName) {
-			return '_bf[' . $this->identifier . '][' . $fieldName . ']';
+			$field = '_bf[' . $this->identifier;
+			$b = $this->getBlockObject();
+			if (is_object($b)) {
+				$xc = $b->getBlockCollectionObject();
+				if (is_object($xc)) {
+					$field .= '_' . $xc->getCollectionID();
+				}
+			}
+			$field .= '][' . $fieldName . ']';
+			return $field;
 		}
 
 		public function post($field = false, $defaultValue = null) {
 			// the only post that matters is the one for this attribute's name space
 			$req = ($this->requestArray == false) ? $_POST : $this->requestArray;
 			if (is_array($req['_bf'])) {
-				$p = $req['_bf'][$this->identifier];
+				$identifier = $this->identifier;
+				$b = $this->getBlockObject();
+				if (is_object($b)) {
+					$xc = $b->getBlockCollectionObject();
+					if (is_object($xc)) {
+						$identifier .= '_' . $xc->getCollectionID();
+					}
+				}
+
+				$p = $req['_bf'][$identifier];
 				if ($field) {
 					return $p[$field];
 				}
@@ -439,7 +465,17 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		 * @return Block $b
 		 */
 		public function getBlockObject() {
+			if (is_object($this->block)) {
+				return $this->block;
+			}
 			return Block::getByID($this->bID);
+		}
+
+		/** 
+		 * Sets the block object for this controller
+		 */
+		public function setBlockObject($b) {
+			$this->block = $b;
 		}
 
 		/**
