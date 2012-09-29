@@ -124,6 +124,9 @@ abstract class Concrete5_Model_WorkflowRequest extends Object {
 					$wpr = call_user_func_array(array($this, $task), array($wp));
 					return $wpr;
 				}
+			} else {
+				$wpr = call_user_func_array(array($this, $task), array($wp));
+				return $wpr;
 			}
 		}
 	}

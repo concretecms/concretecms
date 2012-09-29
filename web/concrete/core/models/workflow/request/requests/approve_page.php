@@ -52,6 +52,12 @@ class Concrete5_Model_ApprovePagePageWorkflowRequest extends PageWorkflowRequest
 		return t('Approve Page');
 	}
 	
+	public function trigger() {
+		$page = Page::getByID($this->cID, $this->cvID);
+		Events::fire('on_page_version_submit_approve', $page);
+		parent::trigger();
+	}
+
 	public function getWorkflowRequestAdditionalActions(WorkflowProgress $wp) {
 		
 		$buttons = array();
@@ -66,6 +72,12 @@ class Concrete5_Model_ApprovePagePageWorkflowRequest extends PageWorkflowRequest
 		$button->setWorkflowProgressActionStyleClass('dialog-launch');
 		$buttons[] = $button;
 		return $buttons;
+	}
+
+	public function cancel(WorkflowProgress $wp) {
+		$c = Page::getByID($this->getRequestedPageID(), $this->cvID);
+		Events::fire('on_page_version_deny', $c);
+		parent::cancel($wp);
 	}
 
 	public function approve(WorkflowProgress $wp) {
