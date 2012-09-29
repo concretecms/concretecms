@@ -35,9 +35,11 @@ class Concrete5_Controller_AttributeType_SocialLinks extends AttributeTypeContro
 		$db = Loader::db();
 		$db->Execute('delete from atSocialLinks where avID = ?', array($this->getAttributeValueID()));
 		foreach($values as $service => $serviceInfo) {
-			$service = Loader::helper('text')->entities($service);
-			$serviceInfo = Loader::helper('text')->entities($serviceInfo);			
-			$db->Execute('insert into atSocialLinks (avID, service, serviceInfo) values (?, ?, ?)', array($this->getAttributeValueID(), $service, $serviceInfo));
+			if ($serviceInfo) {
+				$service = Loader::helper('text')->entities($service);
+				$serviceInfo = Loader::helper('text')->entities($serviceInfo);			
+				$db->Execute('insert into atSocialLinks (avID, service, serviceInfo) values (?, ?, ?)', array($this->getAttributeValueID(), $service, $serviceInfo));
+			}
 		}
 	}
 	
@@ -91,9 +93,7 @@ class Concrete5_Controller_AttributeType_SocialLinks extends AttributeTypeContro
 	public function getDisplayValue() {
 		$html = '';
 		$services = $this->getValue();
-		if (count($services) == 0) {
-			$html .=  t('None');
-		} else {
+		if (count($services) > 0) {
 			$env = Environment::get();
 			$url = $env->getURL(DIRNAME_MODELS . '/' . DIRNAME_ATTRIBUTES . '/' . DIRNAME_ATTRIBUTE_TYPES . '/social_links/view.css');
 			$this->addHeaderItem(Loader::helper('html')->css($url));
