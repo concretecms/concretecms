@@ -20,7 +20,7 @@ if (!$f->overrideFileSetPermissions()) { ?>
 	?>
 
 	<div class="block-message alert-message notice">
-	<p><?=t("Permissions for this file currently override those of the area and page.")?></p>
+	<p><?=t("Permissions for this file currently override its sets and the global file permissions.")?></p>
 	<br/>
 	<a href="javascript:void(0)" class="btn small" onclick="ccm_revertToGlobalFilePermissions()"><?=t('Revert to File Set and Global Permissions')?></a>
 	</div>

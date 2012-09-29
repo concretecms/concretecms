@@ -131,15 +131,41 @@ foreach($t1 as $value) {
 		$s1 = FileSet::getMySets();
 		if (count($s1) > 0) { ?>
 			<?=$form->label('fsID', t('In Set(s)'))?>
-			<select multiple name="fsID[]" class="chosen-select">
-				<optgroup label="<?=t('Sets')?>">
-				<? foreach($s1 as $s) { ?>
-					<option value="<?=$s->getFileSetID()?>"  <? if (is_array($searchRequest['fsID']) && in_array($s->getFileSetID(), $searchRequest['fsID'])) { ?> selected="selected" <? } ?>><?=wordwrap($s->getFileSetName(), '23', '&shy;', true)?></option>
-				<? } ?>
-				<optgroup label="<?=t('Other')?>">
-					<option value="-1" <? if (is_array($searchRequest['fsID']) && in_array(-1, $searchRequest['fsID'])) { ?> selected="selected" <? } ?>><?=t('Files in no sets.')?></option>
-				</optgroup>
-			</select>
+
+			<? if ($_REQUEST['fssID'] > 0) { ?>
+			
+				<div class="controls">
+					<? foreach($s1 as $s) { ?>
+						<? if (is_array($searchRequest['fsID']) && in_array($s->getFileSetID(), $searchRequest['fsID'])) { ?>
+						<label class="checkbox">
+						<input type="checkbox"  checked disabled><?=wordwrap($s->getFileSetName(), '23', '&shy;', true)?>
+						</label>
+						<? } ?>
+					<? } ?>
+					<? if (is_array($searchRequest['fsID']) && in_array(-1, $searchRequest['fsID'])) { ?>					
+					<label class="checkbox">
+					<input type="checkbox"  checked disabled><?=t('Files in no sets.')?>
+					</label>
+					<? } ?> 
+				</div>
+
+			<? } else { ?>
+			
+			<div class="input">
+				<select multiple name="fsID[]" class="chosen-select">
+					<optgroup label="<?=t('Sets')?>">
+					<? foreach($s1 as $s) { ?>
+						<option value="<?=$s->getFileSetID()?>"  <? if (is_array($searchRequest['fsID']) && in_array($s->getFileSetID(), $searchRequest['fsID'])) { ?> selected="selected" <? } ?>><?=wordwrap($s->getFileSetName(), '23', '&shy;', true)?></option>
+					<? } ?>
+					<optgroup label="<?=t('Other')?>">
+						<option value="-1" <? if (is_array($searchRequest['fsID']) && in_array(-1, $searchRequest['fsID'])) { ?> selected="selected" <? } ?>><?=t('Files in no sets.')?></option>
+					</optgroup>
+				</select>
+			</div>
+			
+			<? } ?>
+		</div>
+
 		<? } ?>
 		</div>
 		

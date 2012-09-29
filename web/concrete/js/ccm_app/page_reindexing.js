@@ -1,5 +1,5 @@
 /** 
- * Reindexing
+ * Page Reindexing
  */
 
 ccm_doPageReindexing = function() {
