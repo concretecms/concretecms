@@ -4,7 +4,12 @@ defined('C5_EXECUTE') or die("Access Denied.");
 class Concrete5_Model_PagePermissionAssignment extends PermissionAssignment {
 
 	public function getPermissionAccessObject() {
-		return $this->getPermissionObject()->getPermissionAccessObject($this->pk);
+		$db = Loader::db();
+
+		$r = $db->GetOne('select paID from PagePermissionAssignments where cID = ? and pkID = ?', array($this->getPermissionObject()->getPermissionsCollectionID(), $this->pk->getPermissionKeyID()));
+		if ($r) {
+			return PermissionAccess::getByID($r, $this->pk);
+		}
 	}
 
 	public function clearPermissionAssignment() {
