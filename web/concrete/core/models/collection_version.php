@@ -89,9 +89,10 @@
 			}
 			
 			// load the attributes for a particular version object
+			/*
 			Loader::model('attribute/categories/collection');			
 			$cv->attributes = CollectionAttributeKey::getAttributes($c->getCollectionID(), $cvID);
-			
+			*/
 			$cv->cID = $c->getCollectionID();			
 			$cv->cvIsMostRecent = $cv->_checkRecent();
 			
@@ -103,10 +104,24 @@
 			return $cv;
 		}
 
-		public function getAttribute($ak) {
-			if (is_object($this->attributes)) {
-				return $this->attributes->getAttribute($ak);
+		public function getAttribute($ak, $c) {
+			if (is_object($ak)) {
+				$akHandle = $ak->getAttributeKeyHandle();
+			} else {
+				$akHandle = $ak;
 			}
+
+			if (!isset($this->attributes[$akHandle])) {
+				$this->attributes[$akHandle] = false;
+				$ak = CollectionAttributeKey::getByHandle($akHandle);
+				if (is_object($ak)) {
+					$av = $c->getAttributeValueObject($ak);
+					if (is_object($av)) {
+						$this->attributes[$akHandle] = $av->getValue();
+					}
+				}
+			}
+			return $this->attributes[$akHandle];
 		}
 
 		function isApproved() {return $this->cvIsApproved;}
