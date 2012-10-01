@@ -20,7 +20,40 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 class Concrete5_Helper_Image {
 
+	public $compression = null;
+
+	/**
+	 * Sets the compression level to the system default
+	 * @return void
+	 */
+	function __construct() {
+		$this->compression = $this->defaultJpegCompression();
+	}
+
+	/** 
+	 * Returns the default system value for JPEG image compression
+	 * @return int
+	 */
+	public function defaultJpegCompression(){
+		return defined('AL_THUMBNAIL_JPEG_COMPRESSION') ? AL_THUMBNAIL_JPEG_COMPRESSION : 80;	
+	}
 		
+	/**
+	 * Overrides the default or defined JPEG compression level per instance
+	 * of the image helper. This allows for a single-use for a particularly
+	 * low or high compression value. Passing a non-integer value will reset
+	 * to the default system setting (DEFINE or 80)
+	 * @param int $level the level of compression
+	 * @return void
+	 */
+	public function setJpegCompression($level) {
+		if (is_int($level)) {
+			$this->compression = min(max($level, 1), 100);
+		} else {
+			$this->compression = $this->defaultJpegCompression();
+		}
+	}
+
 	/**
 	 * Creates a new image given an original path, a new path, a target width and height.
 	 * Optionally crops image to exactly match given width and height.
@@ -169,7 +202,7 @@ class Concrete5_Helper_Image {
 						$res2 = imageGIF($image, $newPath);
 						break;
 					case IMAGETYPE_JPEG:
-						$res2 = imageJPEG($image, $newPath, $compression);
+						$res2 = imageJPEG($image, $newPath, $this->compression);
 						break;
 					case IMAGETYPE_PNG:
 						$res2 = imagePNG($image, $newPath);
@@ -200,7 +233,8 @@ class Concrete5_Helper_Image {
 		}		
 		
 		$fh = Loader::helper('file');
-		$prefix = ($crop ? 'cropped:' : ''); //Name cropped images different from resized images so they don't get mixed up in the cache
+		$prefix  = $this->compression . ':'; // Add prefix for compression level to serve the properly compressed images
+		$prefix .= ($crop ? 'cropped:' : ''); // Name cropped images different from resized images so they don't get mixed up in the cache
 		if (file_exists($path) && $fID) {
 			$filename = md5($prefix . $path . ':' . $maxWidth . ':' . $maxHeight . ':' . filemtime($path)) . '_f' . $fID . '.' . $fh->getExtension($path);
 		} else if (file_exists($path)){
