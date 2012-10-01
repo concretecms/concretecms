@@ -205,14 +205,20 @@ class Concrete5_Model_PermissionAccess extends Object {
 	
 	public static function getByID($paID, PermissionKey $pk) {
 		$db = Loader::db();
+		$pa = CacheLocal::getEntry('permission_access_object', $paID);
+		if (is_object($pa)) {
+			return $pa;
+		}
+
 		$row = $db->GetRow('select paID, paIsInUse from PermissionAccess where paID = ?', array($paID));
 		if ($row['paID']) {
 			$class = str_replace('PermissionKey', 'PermissionAccess', get_class($pk));
 			$obj = new $class();
 			$obj->setPropertiesFromArray($row);
 			$obj->setPermissionKey($pk);
-			return $obj;
 		}
+		CacheLocal::set('permission_access_object', $paID, $obj);
+		return $obj;
 	}
 	
 }
