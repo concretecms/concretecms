@@ -169,7 +169,6 @@ class Concrete5_Helper_Image {
 						$res2 = imageGIF($image, $newPath);
 						break;
 					case IMAGETYPE_JPEG:
-						$compression = defined('AL_THUMBNAIL_JPEG_COMPRESSION') ? AL_THUMBNAIL_JPEG_COMPRESSION : 80;
 						$res2 = imageJPEG($image, $newPath, $compression);
 						break;
 					case IMAGETYPE_PNG:
