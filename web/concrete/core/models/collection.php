@@ -28,8 +28,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		protected $attributes = array();
 		/* version specific stuff */
 
-		function loadVersionObject($cvID = "ACTIVE") {
-			$cvID = CollectionVersion::getNumericalVersionID($this->getCollectionID(), $cvID);
+		function loadVersionObject($cvID) {
 			$this->vObj = CollectionVersion::get($this, $cvID);
 			$vp = new Permissions($this->vObj);			
 			return $vp;
@@ -166,6 +165,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		}
 				
 		public function hasLayouts() {
+			if (!isset($this->hasLayouts)) {
+				$db = Loader::db();
+				$this->cHasLayouts = $db->GetOne('select count(cvalID) from CollectionVersionAreaLayouts where cID = ?', array($this->cID));
+			}
 			return $this->cHasLayouts;
 		}
 		
@@ -465,8 +468,9 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 	public function getAreaCustomStyleRule($area) {
 		$db = Loader::db();
-		
-		$csrID = $this->vObj->customAreaStyles[$area->getAreaHandle()];
+
+		$styles = $this->vObj->getCustomAreaStyles();		
+		$csrID = $styles[$area->getAreaHandle()];
 		
 		if ($csrID > 0) {
 			$txt = Loader::helper('text');
