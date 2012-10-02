@@ -36,24 +36,19 @@ class Concrete5_Model_Page extends Collection {
 	 * @param string $class
 	 * @return Page
 	 */
-	public static function getByID($cID, $versionOrig = 'RECENT', $class = 'Page') {
+	public static function getByID($cID, $version = 'RECENT', $class = 'Page') {
 		
-		if ($versionOrig == 'RECENT' || $versionOrig == 'ACTIVE') {
-			$c = Cache::get(strtolower($class . '_' . $versionOrig), $cID);
-			if ($c instanceof $class) {
-				return $c;
-			}
+		$c = CacheLocal::getEntry(strtolower($class . '_' . $version), $cID);
+		if ($c instanceof $class) {
+			return $c;
 		}
 		
-		$version = CollectionVersion::getNumericalVersionID($cID, $versionOrig);
 		$where = "where Pages.cID = ?";
 		$c = new $class;
 		$c->populatePage($cID, $where, $version);
  
 		// must use cID instead of c->getCollectionID() because cID may be the pointer to another page		
-		if ($versionOrig == 'RECENT' || $versionOrig == 'ACTIVE') {
-			Cache::set(strtolower($class . '_' . $versionOrig), $cID, $c);
-		}
+		CacheLocal::set(strtolower($class . '_' . $version), $cID, $c);
 		
 		return $c;
 	}
@@ -108,10 +103,7 @@ class Concrete5_Model_Page extends Collection {
 			$this->loadError(COLLECTION_NOT_FOUND);
 		}
 		
-		$this->cHasLayouts = $db->GetOne('select count(cvalID) from CollectionVersionAreaLayouts where cID = ?', array($this->cID));
-
-		if ($cvID != false) {
-			// we don't do this on the front page
+		if ($cvID != false && !$this->isError()) {
 			$this->loadVersionObject($cvID);
 		}
 		

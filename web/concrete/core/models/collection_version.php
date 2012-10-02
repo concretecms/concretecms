@@ -31,38 +31,6 @@
 			return $this->getCollectionID() . ':' . $this->getVersionID();
 		}
 		
-		/** 
-		 * Returns the actual cvID numerical value for a particular cID/cvID combo
-		 */
-		public static function getNumericalVersionID($cID, $cvID) {
-			if ($cvID == 'RECENT' || $cvID == 'ACTIVE') {
-
-				// first, we make sure that the cID is for an actual page. If we're pointing to another page (an alias)
-				// we need to use THAT cID
-				$db = Loader::db();
-				$_cID = $cID;
-				$cPointerID = $db->GetOne("select cPointerID from Pages where cID = ?", array($cID));
-				if ($cPointerID > 0) {
-					$_cID = $cPointerID;
-				}
-				
-				$v = array($_cID);
-				switch($cvID) {
-					case 'RECENT':
-						$cvIDa = $db->GetOne("select cvID from CollectionVersions where cID = ? order by cvID desc", $v);
-						break;
-					case 'ACTIVE':
-						$cvIDa = $db->GetOne("select cvID from CollectionVersions where cID = ? and cvIsApproved = 1", $v);
-						break;
-				}
-				
-				return $cvIDa;
-			} else {
-				// cvID IS numerical
-				return $cvID;
-			}
-		}
-		
 		public function refreshCache() {
 			$co = Page::getByID($this->cID, $this->cvID);
 			$co->refreshCache();
@@ -70,13 +38,24 @@
 		}
 		
 		public function get(&$c, $cvID) {
-			if (is_string($cvID)) {
-				$cvID = CollectionVersion::getNumericalVersionID($c->getCollectionID(), $cvID);
+			$db = Loader::db();
+
+			// we don't do this on the front page
+			if ($c->getCollectionPointerID()) {
+				$v = array($c->getCollectionPointerID());
+			} else {
+				$v = array($c->getCollectionID());
+			}
+			switch($cvID) {
+				case 'RECENT':
+					$cvID = $db->GetOne("select cvID from CollectionVersions where cID = ? order by cvID desc", $v);
+					break;
+				case 'ACTIVE':
+					$cvID = $db->GetOne("select cvID from CollectionVersions where cID = ? and cvIsApproved = 1", $v);
+					break;
 			}
 			
-			
 			$cv = new CollectionVersion();
-			$db = Loader::db();
 			
 			$q = "select cvID, cvIsApproved, cvIsNew, cvHandle, cvName, cvDescription, cvDateCreated, cvDatePublic, cvAuthorUID, cvApproverUID, cvComments, ptID, CollectionVersions.ctID, ctHandle, ctName from CollectionVersions left join PageTypes on CollectionVersions.ctID = PageTypes.ctID where cID = ? and cvID = ?";
 
@@ -89,17 +68,8 @@
 			}
 			
 			// load the attributes for a particular version object
-			/*
-			Loader::model('attribute/categories/collection');			
-			$cv->attributes = CollectionAttributeKey::getAttributes($c->getCollectionID(), $cvID);
-			*/
 			$cv->cID = $c->getCollectionID();			
 			$cv->cvIsMostRecent = $cv->_checkRecent();
-			
-			$r = $db->GetAll('select csrID, arHandle from CollectionVersionAreaStyles where cID = ? and cvID = ?', array($c->getCollectionID(), $cvID));
-			foreach($r as $styles) {
-				$cv->customAreaStyles[$styles['arHandle']] = $styles['csrID'];
-			}
 			
 			return $cv;
 		}
@@ -144,6 +114,18 @@
 				$db = Loader::db();
 				return $db->GetOne('select uName from Users where uID = ?', array($this->cvApproverUID));
 			}
+		}
+
+		public function getCustomAreaStyles() {
+			if (!isset($this->customAreaStyles)) {
+				$db = Loader::db();
+				$r = $db->GetAll('select csrID, arHandle from CollectionVersionAreaStyles where cID = ? and cvID = ?', array($c->getCollectionID(), $cvID));
+				$this->customAreaStyles = array();
+				foreach($r as $styles) {
+					$this->customAreaStyles[$styles['arHandle']] = $styles['csrID'];
+				}
+			}
+			return $this->customAreaStyles;
 		}
 		
 		/**
