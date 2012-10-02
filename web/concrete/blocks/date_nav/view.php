@@ -3,6 +3,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 global $c;
 $textHelper = Loader::helper("text"); 
+$dateHelper = Loader::helper("date"); 
 
 /*
 // now that we're in the specialized content file for this block type, 
@@ -79,7 +80,7 @@ foreach($postsByDate as $year=>$postsByMonth ){
 		
 		echo "\t <li class='month'> \r \n";
 		//$monthClosed=($currentMonth!=$month || $currentYear!=$year)?'closed':'';
-		echo "\t <div class='section trigger ".$monthClosed." month".$month.'_'.$year."'>".t(date($monthDisplayFormat,mktime(0,0,0,$month,1,$year)))."</div> \r \n"; 
+		echo "\t <div class='section trigger ".$monthClosed." month".$month.'_'.$year."'>".$dateHelper->date($monthDisplayFormat,mktime(0,0,0,$month,1,$year))."</div> \r \n"; 
 		
 		//print this months pages
 		//$monthClosed=($currentMonth!=$month || $currentYear!=$year)?'none':'';
