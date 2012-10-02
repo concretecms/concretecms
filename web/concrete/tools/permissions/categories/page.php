@@ -171,6 +171,69 @@ if (count($pages) > 0) {
 		}
 		exit;
 	}
+
+	if ($_REQUEST['task'] == 'bulk_remove_access' && Loader::helper('validation/token')->validate('bulk_remove_access')) {
+
+		$pkID = $_REQUEST['pkID'];
+		$pk = PermissionKey::getByID($pkID);
+
+		$u = new User();
+		$deferred = false;
+		
+		foreach($pages as $c) { 
+			$pa = $c->getPermissionAccessObject($pk);
+			$matches = array();
+			if (is_object($pa)) {
+				foreach($_REQUEST['listItem'] as $li) {
+					$lii = explode(':', $li);
+					$peID = $lii[0];
+					$accessType = $lii[1];
+					$pdID = $lii[2];
+
+
+					$listItems = $pa->getAccessListItems($accessType);
+					foreach($listItems as $as) {
+						$entity = $as->getAccessEntityObject();
+						$pd = $as->getPermissionDurationObject();
+						if ($entity->getAccessEntityID() == $peID && ((is_object($pd) && $pd->getPermissionDurationID() == $pdID) || (!is_object($pd) && $pdID == 0))) {
+							$matches[] = $as;
+						}
+					}
+				}
+				if (count($matches) > 0) {
+					$newpa = $pa->duplicate();
+					// remove the associated things.
+
+					$listItems = $newpa->getAccessListItems(PermissionKey::ACCESS_TYPE_ALL);
+					foreach($listItems as $li) {
+						foreach($matches as $as) {
+							$entity = $as->getAccessEntityObject();
+							$pd = $as->getPermissionDurationObject();
+							if ($entity->getAccessEntityID() == $peID &&
+								((is_object($pd) && $pd->getPermissionDurationID() == $pdID) || (!is_object($pd) && $pdID == 0))) {
+									$newpa->removeListItem($entity);
+							}
+						}
+					}
+				
+					$pkr = new ChangePagePermissionsPageWorkflowRequest();
+					$pkr->setRequestedPage($c);
+					$ps = new PermissionSet();
+					$ps->setPermissionKeyCategory('page');
+					$ps->addPermissionAssignment($pk->getPermissionKeyID(), $newpa->getPermissionAccessID());
+					$pkr->setPagePermissionSet($ps);
+					$pkr->setRequesterUserID($u->getUserID());
+					$u->unloadCollectionEdit($c);
+					$response = $pkr->trigger();
+					if (!($response instanceof WorkflowProgressResponse)) {
+						$deferred = true;
+					}
+				}
+			}
+		}	
+	
+		exit;
+	}
 }
 
 
