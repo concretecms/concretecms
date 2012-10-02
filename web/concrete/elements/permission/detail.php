@@ -143,7 +143,10 @@ $(function() {
 			// now we reload the permission key to use the new permission assignment
 			$('#ccm-permission-grid-cell-<?=$permissionKey->getPermissionKeyID()?>').load(
 				'<?=$permissionKey->getPermissionAssignmentObject()->getPermissionKeyToolsURL("display_access_cell")?>&paID=<?=$pa->getPermissionAccessID()?>', function() {
-					$('#ccm-permission-grid-name-<?=$permissionKey->getPermissionKeyID()?> a').attr('data-paID', '<?=$pa->getPermissionAccessID()?>');		
+					$('#ccm-permission-grid-name-<?=$permissionKey->getPermissionKeyID()?> a').attr('data-paID', '<?=$pa->getPermissionAccessID()?>');	
+					if (typeof(ccm_submitPermissionsDetailFormPost) != 'undefined') {
+						ccm_submitPermissionsDetailFormPost();
+					}
 				}
 			);
 		});
