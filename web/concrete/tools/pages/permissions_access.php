@@ -49,8 +49,10 @@ if ($_REQUEST['task'] == 'get_all_access_entities' && $pcnt > 0 && $permissionsI
 				$entity = $as->getAccessEntityObject();
 				$aepdID = $entity->getAccessEntityID() . $as->getAccessType();
 				$pd = $as->getPermissionDurationObject();
+				$pdID = 0;
 				if (is_object($pd)) {
 					$aepdID .= $pd->getPermissionDurationID();
+					$pdID = $pd->getPermissionDurationID();
 				}
 				if (in_array($aepdID, $paIDs)) {
 					continue;
@@ -71,7 +73,7 @@ if ($_REQUEST['task'] == 'get_all_access_entities' && $pcnt > 0 && $permissionsI
 						$pdTitle = 'title="' . $pd->getTextRepresentation() . '"';
 					}
 				}
-				print '<label class="checkbox"><input type="checkbox" /> <span class="label ' . $class . '" ' . $pdTitle . '>' . $entity->getAccessEntityLabel() . '</span></label>';
+				print '<label class="checkbox"><input type="checkbox" name="listItem[]" value="' . $entity->getAccessEntityID() . ':' . $as->getAccessType() . ':' . $pdID . '	" /> <span class="label ' . $class . '" ' . $pdTitle . '>' . $entity->getAccessEntityLabel() . '</span></label>';
 			}
 		}
 	}
@@ -183,6 +185,10 @@ if ($_REQUEST['task'] == 'remove') {
 					$("#ccm-permissions-bulk-access-form-buttons button").prop('disabled', false);
 					jQuery.fn.dialog.hideLoader();
 				});
+			});
+
+			$('#ccm-permissions-bulk-access-remove').on('hover', 'span.label', function() {
+				$(this).tooltip();
 			});
 
 			$(function() {
