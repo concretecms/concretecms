@@ -624,6 +624,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			return $this->uName;
 		}
 
+		public function getUserDisplayName() {
+			return $this->getUserName();
+		}
+
 		function getUserPassword() {
 			return $this->uPassword;
 		}

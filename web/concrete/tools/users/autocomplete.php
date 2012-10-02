@@ -14,7 +14,7 @@ if ($valt->validate('quick_user_select_' . $_REQUEST['key'], $_REQUEST['token'])
 	$users = $userList->get(7);
 	$userNames = array();
 	foreach($users as $ui) {
-		$userNames[] = $ui->getUserName();
+		$userNames[] = array('label' => $ui->getUserDisplayName(), 'value' => $ui->getUserID());
 	}
 	$jh = Loader::helper('json');
 	echo $jh->encode($userNames);
