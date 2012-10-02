@@ -72,12 +72,10 @@ class Concrete5_Model_ChangePagePermissionsPageWorkflowRequest extends PageWorkf
 
 	public function approve(WorkflowProgress $wp) {
 		$c = Page::getByID($this->getRequestedPageID());
-		$permissions = PermissionKey::getList('page');
 		$ps = $this->getPagePermissionSet();
-		$assignments = $ps->getPermissionAssignments();
-		
-		foreach($permissions as $pk) {
-			$paID = $assignments[$pk->getPermissionKeyID()];
+		$assignments = $ps->getPermissionAssignments();		
+		foreach($assignments as $pkID => $paID) {
+			$pk = PermissionKey::getByID($pkID);
 			$pk->setPermissionObject($c);
 			$pt = $pk->getPermissionAssignmentObject();
 			$pt->clearPermissionAssignment();
