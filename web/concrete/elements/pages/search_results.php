@@ -38,6 +38,8 @@ if (isset($_REQUEST['searchInstance'])) {
 			<option value="speed_settings"><?=t('Speed Settings')?></option>
 			<? if (PERMISSIONS_MODEL == 'advanced') { ?>
 				<option value="permissions"><?=t('Change Permissions')?></option>
+				<option value="permissions_add_access"><?=t('Change Permissions - Add Access')?></option>
+				<option value="permissions_remove_access"><?=t('Change Permissions - Remove Access')?></option>
 			<? } ?>
 			<option value="design"><?=t('Design')?></option>
 			<option value="delete"><?=t('Delete')?></option>

@@ -134,6 +134,43 @@ if (count($pages) > 0) {
 
 	}
 
+	if ($_REQUEST['task'] == 'bulk_add_access' && Loader::helper('validation/token')->validate('bulk_add_access')) {
+		if (is_array($_REQUEST['pkID'])) {
+			$pkID = key($_REQUEST['pkID']);
+			$pk = PermissionKey::getByID($pkID);
+			$newPAID = $_REQUEST['pkID'][$pkID];
+			$u = new User();
+			$deferred = false;
+			
+			foreach($pages as $c) { 
+				$pa = $c->getPermissionAccessObject($pk);
+				if (is_object($pa)) {
+					// that means that we have to take the current $pa object, and the new $pa object, and merge them together into 
+					// a third object, and try and assign that object
+					$orig = $pa->duplicate();
+					$newpa = PermissionAccess::getByID($newPAID, $pk);
+					$pa = $orig->duplicate($newpa);
+				} else {
+					// no current $pa object, which means we assign the new $pa object to this thing
+					$pk->setPermissionObject($c);
+					$pa = PermissionAccess::getByID($newPAID, $pk);
+				}
+				$pkr = new ChangePagePermissionsPageWorkflowRequest();
+				$pkr->setRequestedPage($c);
+				$ps = new PermissionSet();
+				$ps->setPermissionKeyCategory('page');
+				$ps->addPermissionAssignment($pk->getPermissionKeyID(), $pa->getPermissionAccessID());
+				$pkr->setPagePermissionSet($ps);
+				$pkr->setRequesterUserID($u->getUserID());
+				$u->unloadCollectionEdit($c);
+				$response = $pkr->trigger();
+				if (!($response instanceof WorkflowProgressResponse)) {
+					$deferred = true;
+				}
+			}		
+		}
+		exit;
+	}
 }
 
 
