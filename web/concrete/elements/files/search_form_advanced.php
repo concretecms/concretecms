@@ -130,7 +130,6 @@ foreach($t1 as $value) {
 		<?
 		$s1 = FileSet::getMySets();
 		if (count($s1) > 0) { ?>
-			<?=$form->label('fsID', t('In Set(s)'))?>
 
 			<? if ($_REQUEST['fssID'] > 0) { ?>
 			
@@ -164,7 +163,6 @@ foreach($t1 as $value) {
 			</div>
 			
 			<? } ?>
-		</div>
 
 		<? } ?>
 		</div>
