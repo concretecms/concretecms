@@ -880,6 +880,26 @@ ccm_sitemapSearchSetupCheckboxes = function(instance_id) {
 					title: ccmi18n_sitemap.pagePermissionsTitle				
 				});
 				break;
+			case 'permissions_add_access':
+				jQuery.fn.dialog.open({
+					width: 440,
+					height: 90,
+					modal: false,
+					appendButtons: true,
+					href: CCM_TOOLS_PATH + '/pages/permissions_access?task=add&' + cIDstring,
+					title: ccmi18n_sitemap.pagePermissionsTitle				
+				});
+				break;
+			case 'permissions_remove_access':
+				jQuery.fn.dialog.open({
+					width: 440,
+					height: 300,
+					modal: false,
+					appendButtons: true,
+					href: CCM_TOOLS_PATH + '/pages/permissions_access?task=remove&' + cIDstring,
+					title: ccmi18n_sitemap.pagePermissionsTitle				
+				});
+				break;
 			case "properties": 
 				jQuery.fn.dialog.open({
 					width: 630,
