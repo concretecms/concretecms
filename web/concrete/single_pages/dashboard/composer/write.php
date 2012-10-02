@@ -6,6 +6,8 @@ if (isset($entry)) { ?>
 
 	<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(ucfirst($action) . ' ' . $ct->getCollectionTypeName(), false, false, false)?>
 	<form method="post" class="form-horizontal" enctype="multipart/form-data" action="<?=$this->action('save')?>" id="ccm-dashboard-composer-form">
+	<input type="hidden" name="ccm-publish-draft" value="0" />
+
 	<div class="ccm-pane-body">
 	
 
@@ -200,7 +202,8 @@ if (isset($entry)) { ?>
 		$("input[name=cPublishParentID]").val(cID);
 		$(".ccm-composer-hide-on-no-target").show();
 		$("#ccm-composer-publish-location").load('<?=$this->action("select_publish_target")?>', {'entryID': <?=$entry->getCollectionID()?>, 'cPublishParentID': cID}, function() {
-		 	$("input[name=ccm-submit-publish]").click();
+			$('input[name=ccm-publish-draft]').val(1);
+			$('#ccm-dashboard-composer-form').submit();
 		});
 	}	
 		
@@ -260,6 +263,7 @@ if (isset($entry)) { ?>
 		
 		$("#ccm-submit-publish").click(function() {
 			ccm_composerIsPublishClicked = true;
+			$('input[name=ccm-publish-draft]').val(1);
 		});
 		
 		$("#ccm-dashboard-composer-form").submit(function() {
@@ -273,6 +277,7 @@ if (isset($entry)) { ?>
 				}
 				if (ccm_composerIsPublishClicked) {
 					ccm_composerIsPublishClicked = false;			
+					$('input[name=ccm-publish-draft]').val(0);
 	
 					<? if ($ct->getCollectionTypeComposerPublishMethod() == 'PAGE_TYPE' || $ct->getCollectionTypeComposerPublishMethod() == 'CHOOSE') { ?>
 						ccm_openComposerPublishTargetWindow(true);
