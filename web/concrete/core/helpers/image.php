@@ -48,7 +48,6 @@ class Concrete5_Helper_Image {
 	 */
 	public function setJpegCompression($level) {
 		if (is_int($level)) {
-			$this->compression = min(max($level, 1), 100);
 		} else {
 			$this->compression = $this->defaultJpegCompression();
 		}
