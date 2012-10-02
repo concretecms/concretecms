@@ -20,19 +20,20 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 class Concrete5_Helper_Image {
 
-	public $compression = null;
+	public $jpegCompression = 80;
 
 	/**
-	 * Sets the compression level to the system default
+	 * Resets the compression level to the system default
+	 * This method is automatically run when Loader::helper invokes this class
 	 * @return void
 	 */
-	function __construct() {
-		$this->compression = $this->defaultJpegCompression();
+	function reset() {
+		$this->jpegCompression = $this->defaultJpegCompression();
 	}
 
 	/** 
 	 * Returns the default system value for JPEG image compression
-	 * @return int
+	 * @return int from 1-100
 	 */
 	public function defaultJpegCompression(){
 		return defined('AL_THUMBNAIL_JPEG_COMPRESSION') ? AL_THUMBNAIL_JPEG_COMPRESSION : 80;	
@@ -44,13 +45,15 @@ class Concrete5_Helper_Image {
 	 * low or high compression value. Passing a non-integer value will reset
 	 * to the default system setting (DEFINE or 80)
 	 * @param int $level the level of compression
-	 * @return void
+	 * @return self
 	 */
 	public function setJpegCompression($level) {
 		if (is_int($level)) {
+			$this->jpegCompression = min(max($level, 0), 100);
 		} else {
-			$this->compression = $this->defaultJpegCompression();
+			$this->reset();
 		}
+		return $this;
 	}
 
 	/**
@@ -201,7 +204,7 @@ class Concrete5_Helper_Image {
 						$res2 = imageGIF($image, $newPath);
 						break;
 					case IMAGETYPE_JPEG:
-						$res2 = imageJPEG($image, $newPath, $this->compression);
+						$res2 = imageJPEG($image, $newPath, $this->jpegCompression);
 						break;
 					case IMAGETYPE_PNG:
 						$res2 = imagePNG($image, $newPath);
