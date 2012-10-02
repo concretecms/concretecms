@@ -90,7 +90,7 @@ class Concrete5_Controller_Dashboard_Composer_Write extends Controller {
 					$obj = new stdClass;
 					$dh = Loader::helper('date');
 					$obj->error = false;
-					$obj->time = $dh->getLocalDateTime('now','g:i a');
+					$obj->time = $dh->getLocalDateTime('now',DATE_APP_GENERIC_T);
 					$obj->timestamp =date('m/d/Y g:i a');
 					print $json->encode($obj);
 					exit;
