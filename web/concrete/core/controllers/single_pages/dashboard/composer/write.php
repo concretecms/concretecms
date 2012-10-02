@@ -24,7 +24,7 @@ class Concrete5_Controller_Dashboard_Composer_Write extends Controller {
 				$this->error->add($valt->getErrorMessage());
 			}
 			
-			if ($this->post("ccm-submit-publish")) {
+			if ($this->post("ccm-publish-draft")) {
 				if (!$vtex->notempty($this->post('cName'))) {
 					$this->error->add(t('You must provide a name for your page before you can publish it.'));
 				}
@@ -74,7 +74,7 @@ class Concrete5_Controller_Dashboard_Composer_Write extends Controller {
 				$entry = ComposerPage::getByID($entry->getCollectionID(), 'RECENT');
 				$entry->update($data);
 				$this->saveData($entry);
-				if ($this->post('ccm-submit-publish')) {
+				if ($this->post('ccm-publish-draft')) {
 					$v = CollectionVersion::get($entry, 'RECENT');
 					$v->approve();
 					if ($entry->isComposerDraft()) { 
