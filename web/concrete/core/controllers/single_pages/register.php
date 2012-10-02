@@ -4,6 +4,8 @@ class Concrete5_Controller_Register extends Controller {
 
 	public $helpers = array('form', 'html');
 	
+	protected $displayUserName = true;
+
 	public function __construct() {
 		if(!ENABLE_REGISTRATION) {
 			$cont = Loader::controller('/page_not_found');
@@ -16,14 +18,7 @@ class Concrete5_Controller_Register extends Controller {
 		$u = new User();
 		$this->set('u', $u);
 		
-		/*
-		if (USER_REGISTRATION_WITH_EMAIL_ADDRESS) {
-			$this->set('displayUserName', false);
-		} else {
-			$this->set('displayUserName', true);
-		}*/
-		
-		$this->set('displayUserName', true);
+		$this->set('displayUserName', $this->displayUserName);
 		
 	}
 	
@@ -68,7 +63,7 @@ class Concrete5_Controller_Register extends Controller {
 			$e->add(t("The email address %s is already in use. Please choose another.", $_POST['uEmail']));
 		}
 		
-		//if (USER_REGISTRATION_WITH_EMAIL_ADDRESS == false) {
+		if ($this->displayUserName) {
 			
 			if (strlen($username) < USER_USERNAME_MINIMUM) {
 				$e->add(t('A username must be between at least %s characters long.', USER_USERNAME_MINIMUM));
@@ -90,8 +85,9 @@ class Concrete5_Controller_Register extends Controller {
 			if (!$valc->isUniqueUsername($username)) {
 				$e->add(t("The username %s already exists. Please choose another", $username));
 			}		
-		//}
 		
+		}
+
 		if ($username == USER_SUPER) {
 			$e->add(t('Invalid Username'));
 		}

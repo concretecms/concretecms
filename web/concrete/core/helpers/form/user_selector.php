@@ -82,7 +82,8 @@ class Concrete5_Helper_Form_UserSelector {
 		</style>
 		<script type=\"text/javascript\">
 		$(function () {
-			$('.ccm-quick-user-selector input').unbind().autocomplete({source: '" . REL_DIR_FILES_TOOLS_REQUIRED . "/users/autocomplete?key=" . $key . "&token=" . $token . "'});
+			$('.ccm-quick-user-selector input').unbind().autocomplete({source: '" . REL_DIR_FILES_TOOLS_REQUIRED . "/users/autocomplete?key=" . $key . "&token=" . $token . "',
+			select: function(e, ui) { $(this).val(ui.item.label); return false;}});
 		} );
 		</script>";
 		$html .= '<span class="ccm-quick-user-selector">'.$form->text($key,$val, $args).'</span>';
