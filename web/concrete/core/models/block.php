@@ -461,12 +461,14 @@ class Concrete5_Model_Block extends Object {
 			$res = $db->execute($r, $v);
 			
 			// styles
+			$csr = $this->getBlockCustomStyleRule();
+
 			$db->Execute('insert into CollectionVersionBlockStyles (cID, cvID, bID, arHandle, csrID) values (?, ?, ?, ?, ?)', array(
 				$cID, 
 				$cvID,
 				$this->bID,
 				$this->getAreaHandle(),
-				$this->csrID
+				$this->getBlockCustomStyleRuleID()
 			));
 			if ($res) {
 				// now we grab the permissions from the block we're aliasing from
@@ -565,7 +567,7 @@ class Concrete5_Model_Block extends Object {
 		$res2 = $db->execute($r2, $v2);
 		$nb = Block::getByID($newBID, $nc, $this->arHandle);
 		
-		$v = array($ncID, $nvID, $newBID, $this->arHandle, $this->csrID);
+		$v = array($ncID, $nvID, $newBID, $this->arHandle, $this->getBlockCustomStyleRuleID());
 		$db->Execute('insert into CollectionVersionBlockStyles (cID, cvID, bID, arHandle, csrID) values (?, ?, ?, ?, ?)', $v);
 
 		
@@ -573,6 +575,20 @@ class Concrete5_Model_Block extends Object {
 	}
 	
 	public function getBlockCustomStyleRule() {
+		if ($this->getBlockCustomStyleRuleID() > 0) {
+			Loader::model('custom_style');
+			$txt = Loader::helper('text');
+			$csr = CustomStyleRule::getByID($this->getBlockCustomStyleRuleID());
+			$arHandle = $txt->filterNonAlphaNum($this->getAreaHandle());
+
+			if (is_object($csr)) {
+				$csr->setCustomStyleNameSpace('blockStyle' . $this->getBlockID() . $arHandle );
+				return $csr;
+			}
+		}
+	}
+	
+	public function getBlockCustomStyleRuleID() {
 		$db = Loader::db();
 		if (!isset($this->csrID)) {
 			$v = array(
@@ -583,20 +599,8 @@ class Concrete5_Model_Block extends Object {
 			);
 			$this->csrID = $db->GetOne('select csrID from CollectionVersionBlockStyles where cID = ? and cvID = ? and arHandle = ? and bID = ?', $v);
 		}
-		if ($this->csrID > 0) {
-			Loader::model('custom_style');
-			$txt = Loader::helper('text');
-			$csr = CustomStyleRule::getByID($csrID);
-			$arHandle = $txt->filterNonAlphaNum($this->getAreaHandle());
-
-			if (is_object($csr)) {
-				$csr->setCustomStyleNameSpace('blockStyle' . $this->getBlockID() . $arHandle );
-				return $csr;
-			}
-		}
+		return $this->csrID;
 	}
-	
-	public function getBlockCustomStyleRuleID() {return $this->csrID;}
 	
 	
 	public function resetBlockCustomStyle($updateAll = false) {
@@ -604,14 +608,14 @@ class Concrete5_Model_Block extends Object {
 		$c = $this->getBlockCollectionObject();
 		$cvID = $c->getVersionID();
 		if ($updateAll) {
-			$r = $db->Execute('select cID, cvID, bID, arHandle from CollectionVersionBlockStyles where bID = ? and csrID = ?', array($this->bID, $this->csrID));
+			$r = $db->Execute('select cID, cvID, bID, arHandle from CollectionVersionBlockStyles where bID = ? and csrID = ?', array($this->bID, $this->getBlockCustomStyleRuleID()));
 			while ($row = $r->FetchRow()) {
 				$c1 = Page::getByID($row['cID'], $row['cvID']);
 				$b1 = Block::getByID($row['bID'], $c1, $row['arHandle']);
 			}			
 			$db->Execute('delete from CollectionVersionBlockStyles where bID = ? and csrID = ?', array(
 				$this->bID,
-				$this->csrID
+				$this->getBlockCustomStyleRuleID()
 			));
 		} else {
 			$db->Execute('delete from CollectionVersionBlockStyles where cID = ? and cvID = ? and arHandle = ? and bID = ?', array(
