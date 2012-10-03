@@ -39,9 +39,6 @@
 	## Load the database ##
 	Loader::database();
 	
-	## Startup cache ##
-	Cache::startup();
-
 	## User level config ##	
 	if (!$config_check_failed) { 
 		require(dirname(__FILE__) . '/config/app.php');

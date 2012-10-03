@@ -279,7 +279,7 @@ class Concrete5_Model_AttributeKey extends Object {
 	}
 
 	public function refreshCache() {
-		Cache::delete(Loader::helper('text')->uncamelcase(get_class($this)), $this->getAttributeKeyID());
+
 	}
 	
 	/** 
@@ -328,7 +328,6 @@ class Concrete5_Model_AttributeKey extends Object {
 			$cnt = $at->getController();
 			$cnt->setAttributeKey($ak);
 			$cnt->saveKey($args);
-			$this->refreshCache();
 			$ak->updateSearchIndex($prevHandle);
 			return $ak;
 		}
@@ -487,7 +486,6 @@ class Concrete5_Model_AttributeKey extends Object {
 				}
 			}
 		}
-		$this->refreshCache();
 
 	}
 	

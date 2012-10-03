@@ -63,7 +63,7 @@ abstract class Concrete5_Model_PermissionKey extends Object {
 	}
 
 	protected static function load($key, $loadBy = 'pkID') {
-		$pk = Cache::get('permission_key', $key);
+		$pk = CacheLocal::getEntry('permission_key', $key);
 		if ($pk instanceof PermissionKey) {
 			return $pk;
 		}
@@ -82,8 +82,7 @@ abstract class Concrete5_Model_PermissionKey extends Object {
 		$pk = new $class();
 		$pk->setPropertiesFromArray($r);
 		
-		Cache::set('permission_key', $key, $pk);
-		
+		CacheLocal::set('permission_key', $key, $pk);		
 		return $pk;
 	}
 	
@@ -270,8 +269,6 @@ abstract class Concrete5_Model_PermissionKey extends Object {
 	public function delete() {
 		$db = Loader::db();
 		$db->Execute('delete from PermissionKeys where pkID = ?', array($this->getPermissionKeyID()));
-		Cache::delete('permission_key', $this->getPermissionKeyID());
-		Cache::delete('permission_key', $this->getPermissionKeyHandle());
 	}
 	
 	
