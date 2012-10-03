@@ -70,29 +70,30 @@ class Concrete5_Model_CollectionAttributeKey extends AttributeKey {
 	}
 	
 	public static function getByID($akID) {
-		$cak = Cache::get('collection_attribute_key', $akID);
-		if (is_object($cak)) {
-			return $cak;
-		}
-
 		$ak = new CollectionAttributeKey();
 		$ak->load($akID);
 		if ($ak->getAttributeKeyID() > 0) {
-			Cache::set('collection_attribute_key', $akID, $ak);
 			return $ak;	
 		}
 	}
 
 	public static function getByHandle($akHandle) {
+		$ak = CacheLocal::getEntry('collection_attribute_key_by_handle', $akHandle);
+		if (is_object($ak)) {
+			return $ak;
+		} else if ($ak == -1) {
+			return false;
+		}
+		
+		$ak = -1;
 		$db = Loader::db();
-		$q = "SELECT ak.akID 
-			FROM AttributeKeys ak
-			INNER JOIN AttributeKeyCategories akc ON ak.akCategoryID = akc.akCategoryID 
-			WHERE ak.akHandle = ?
-			AND akc.akCategoryHandle = 'collection'";
+		$q = "SELECT ak.akID FROM AttributeKeys ak INNER JOIN AttributeKeyCategories akc ON ak.akCategoryID = akc.akCategoryID  WHERE ak.akHandle = ? AND akc.akCategoryHandle = 'collection'";
 		$akID = $db->GetOne($q, array($akHandle));
-		$ak = CollectionAttributeKey::getByID($akID);
-		return $ak;	
+		if ($akID) {
+			$ak = CollectionAttributeKey::getByID($akID);
+		}
+		CacheLocal::set('collection_attribute_key_by_handle', $akHandle, $ak);
+		return $ak;
 	}
 	
 	public static function getList() {

@@ -27,6 +27,7 @@ class Concrete5_Model_Block extends Object {
 	var $cID;
 	var $arHandle;
 	var $c;
+	protected $csrID;
 	protected $proxyBlock = false;
 
 	public static function populateManually($blockInfo, $c, $a) {
@@ -105,12 +106,6 @@ class Concrete5_Model_Block extends Object {
 		
 		if (is_array($row)) {
 			$b->setPropertiesFromArray($row);
-			$b->csrID = $db->GetOne('select csrID from CollectionVersionBlockStyles where cID = ? and cvID = ? and arHandle = ? and bID = ?', array(
-				$cID, 
-				$cvID,
-				$b->arHandle,
-				$bID
-			));
 			$r->free();
 			
 			$bt = BlockType::getByID($b->getBlockTypeID());
@@ -592,8 +587,16 @@ class Concrete5_Model_Block extends Object {
 	
 	public function getBlockCustomStyleRule() {
 		$db = Loader::db();
-		$csrID = $this->csrID;
-		if ($csrID > 0) {
+		if (!isset($this->csrID)) {
+			$v = array(
+				$this->cID, 
+				$this->cvID,
+				$this->getAreaHandle(),
+				$this->bID
+			);
+			$this->csrID = $db->GetOne('select csrID from CollectionVersionBlockStyles where cID = ? and cvID = ? and arHandle = ? and bID = ?', $v);
+		}
+		if ($this->csrID > 0) {
 			Loader::model('custom_style');
 			$txt = Loader::helper('text');
 			$csr = CustomStyleRule::getByID($csrID);

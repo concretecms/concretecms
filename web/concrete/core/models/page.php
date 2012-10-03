@@ -21,11 +21,11 @@ class Concrete5_Model_Page extends Collection {
 	public static function getByPath($path, $version = 'RECENT') {
 		$path = rtrim($path, '/'); // if the path ends in a / remove it.
 
-		$cID = Cache::get('page_id_from_path', $path);
+		$cID = CacheLocal::getEntry('page_id_from_path', $path);
 		if ($cID == false) {
 			$db = Loader::db();
 			$cID = $db->GetOne("select cID from PagePaths where cPath = ?", array($path));
-			Cache::set("page_id_from_path", $path, $cID);
+			CacheLocal::set("page_id_from_path", $path, $cID);
 		}
 		return Page::getByID($cID, $version);
 	}
@@ -213,7 +213,6 @@ class Concrete5_Model_Page extends Collection {
 				}
 			}
 		}
-		Cache::delete('collection_blocks', $this->getCollectionID() . ':' . $this->getVersionID());
 	}
 
 	/**
@@ -573,10 +572,6 @@ class Concrete5_Model_Page extends Collection {
 			
 			$q = "delete from PagePaths where cID = ?";
 			$r = $db->query($q, $args);
-
-			Cache::delete('page', $this->getCollectionPointerOriginalID()  );
-			Cache::delete('page_path', $this->getCollectionPointerOriginalID()  );
-			Cache::delete('request_path_page', $this->getCollectionPointerOriginalID()  );
 
 			return $cIDRedir;
 		}
