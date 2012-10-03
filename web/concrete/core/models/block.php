@@ -56,7 +56,7 @@ class Concrete5_Model_Block extends Object {
 			$cID = 0;
 			$arHandle = "";
 			$cvID = 0;
-			$b = Cache::get('block', $bID);
+			$b = CacheLocal::getEntry('block', $bID);
 		} else {
 			if (is_object($a)) {
 				$arHandle = $a->getAreaHandle();
@@ -66,10 +66,7 @@ class Concrete5_Model_Block extends Object {
 			}
 			$cID = $c->getCollectionID();
 			$cvID = $c->getVersionID();
-			$b = Cache::get('block', $bID . ':' . $cID . ':' . $cvID . ':' . $arHandle);
-			if ($b instanceof Block) {
-				return $b;
-			}
+			$b = CacheLocal::getEntry('block', $bID . ':' . $cID . ':' . $cvID . ':' . $arHandle);
 		}
 
 		if ($b instanceof Block) {
@@ -95,9 +92,7 @@ class Concrete5_Model_Block extends Object {
 			$cvID = $vo->getVersionID();
 
 			$v = array($b->arHandle, $cID, $cvID, $bID);
-			$q = "select CollectionVersionBlocks.isOriginal, BlockTypes.pkgID, CollectionVersionBlocks.cbOverrideAreaPermissions, CollectionVersionBlocks.cbDisplayOrder,
-			Blocks.bIsActive, Blocks.bID, Blocks.btID, bName, bDateAdded, bDateModified, bFilename, btHandle, Blocks.uID from CollectionVersionBlocks inner join Blocks on (CollectionVersionBlocks.bID = Blocks.bID)
-			inner join BlockTypes on (Blocks.btID = BlockTypes.btID) where CollectionVersionBlocks.arHandle = ? and CollectionVersionBlocks.cID = ? and (CollectionVersionBlocks.cvID = ? or CollectionVersionBlocks.cbIncludeAll=1) and CollectionVersionBlocks.bID = ?";
+			$q = "select CollectionVersionBlocks.isOriginal, BlockTypes.pkgID, CollectionVersionBlocks.cbOverrideAreaPermissions, CollectionVersionBlocks.cbDisplayOrder, Blocks.bIsActive, Blocks.bID, Blocks.btID, bName, bDateAdded, bDateModified, bFilename, btHandle, Blocks.uID from CollectionVersionBlocks inner join Blocks on (CollectionVersionBlocks.bID = Blocks.bID) inner join BlockTypes on (Blocks.btID = BlockTypes.btID) where CollectionVersionBlocks.arHandle = ? and CollectionVersionBlocks.cID = ? and (CollectionVersionBlocks.cvID = ? or CollectionVersionBlocks.cbIncludeAll=1) and CollectionVersionBlocks.bID = ?";
 		
 		}
 
@@ -149,11 +144,10 @@ class Concrete5_Model_Block extends Object {
 			}
 			
 			if ($c != null || $a != null) {
-				$ca = new Cache();
-				$ca->set('block', $bID . ':' . $cID . ':' . $cvID . ':' . $arHandle, $b);
+				CacheLocal::set('block', $bID . ':' . $cID . ':' . $cvID . ':' . $arHandle, $b);
 			} else {
 				$ca = new Cache();
-				$ca->set('block', $bID, $b);
+				CacheLocal::set('block', $bID, $b);
 			}
 			return $b;				
 
