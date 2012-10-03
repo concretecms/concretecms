@@ -52,10 +52,11 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			}
 		}
 
-      public function getNextVersionComments() {
-         $cvID = CollectionVersion::getNumericalVersionID($this->getCollectionID(), 'ACTIVE');
-         return t("Version %d", $cvID+1);
-      }
+		public function getNextVersionComments() {
+			$c = Page::getByID($this->getCollectionID(), 'ACTIVE');
+			$cvID = $c->getVersionID();
+			return t("Version %d", $cvID);
+		}      
       
 
 		public function cloneVersion($versionComments) {
