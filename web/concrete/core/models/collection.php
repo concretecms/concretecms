@@ -747,8 +747,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			$v = array($this->getCollectionID(), $this->getVersionID());
 			$blocks = array();
 
-			$blockIDs = Cache::get('collection_blocks', $this->getCollectionID() . ':' . $this->getVersionID());		
-			
 			if (!is_array($blockIDs)) {
 				$db = Loader::db();
 				$q = "select Blocks.bID, CollectionVersionBlocks.arHandle from CollectionVersionBlocks inner join Blocks on (CollectionVersionBlocks.bID = Blocks.bID) inner join BlockTypes on (Blocks.btID = BlockTypes.btID) where CollectionVersionBlocks.cID = ? and (CollectionVersionBlocks.cvID = ? or CollectionVersionBlocks.cbIncludeAll=1) order by CollectionVersionBlocks.cbDisplayOrder asc";
@@ -759,7 +757,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 						$blockIDs[strtolower($bl['arHandle'])][] = $bl;
 					}
 				}
-				Cache::set('collection_blocks', $this->getCollectionID() . ':' . $this->getVersionID(), $blockIDs);
 			}
 			
 			if ($arHandle != false) {
@@ -816,7 +813,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 			$res = $db->Execute($q, $v);
 
-			Cache::delete('collection_blocks', $cID . ':' . $vObj->getVersionID());
 			
 			return Block::getByID($nb->getBlockID(), $this, $a);
 		}

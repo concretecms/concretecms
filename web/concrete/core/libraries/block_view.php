@@ -210,7 +210,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 						} else if (is_object($page)) {
 							$cID = $page->getCollectionID();
 						}
-						$outputContent = Cache::get('block_view_output', $cID . ':' . $obj->getBlockID() . ':' . $obj->getAreaHandle());
+						//$outputContent = Cache::get('block_view_output', $cID . ':' . $obj->getBlockID() . ':' . $obj->getAreaHandle());
 					}
 				}
 			}
@@ -326,7 +326,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 					} else if (is_object($page)) {
 						$cID = $page->getCollectionID();
 					}
-					Cache::set('block_view_output', $cID . ':' . $obj->getBlockID() . ':' . $obj->getAreaHandle(), $outputContent, $this->controller->getBlockTypeCacheOutputLifetime());
+//					Cache::set('block_view_output', $cID . ':' . $obj->getBlockID() . ':' . $obj->getAreaHandle(), $outputContent, $this->controller->getBlockTypeCacheOutputLifetime());
 				}
 			}
 			if (isset($footer)) {

@@ -34,7 +34,7 @@ class Concrete5_Model_PackageList extends Object {
 		if ($pkgID < 1) {
 			return false;
 		}
-		$packageList = Cache::get('packageHandleList', false);
+		$packageList = CacheLocal::getEntry('packageHandleList', false);
 		if (is_array($packageList)) {
 			return $packageList[$pkgID];
 		}
@@ -46,18 +46,16 @@ class Concrete5_Model_PackageList extends Object {
 			$packageList[$row['pkgID']] = $row['pkgHandle'];
 		}
 		
-		Cache::set('packageHandleList', false, $packageList);
+		CacheLocal::set('packageHandleList', false, $packageList);
 		return $packageList[$pkgID];
 	}
 	
 	public static function refreshCache() {
-		Cache::delete('pkgList', 1);
-		Cache::delete('pkgList', 0);
-		Cache::delete('packageHandleList', false);
+
 	}
 	
 	public static function get($pkgIsInstalled = 1) {
-		$pkgList = Cache::get('pkgList', $pkgIsInstalled);
+		$pkgList = CacheLocal::getEntry('pkgList', $pkgIsInstalled);
 		if ($pkgList != false) {
 			return $pkgList;
 		}
@@ -71,7 +69,7 @@ class Concrete5_Model_PackageList extends Object {
 			$list->add($pkg);
 		}
 		
-		Cache::set('pkgList', $pkgIsInstalled, $list);
+		CacheLocal::set('pkgList', $pkgIsInstalled, $list);
 
 		return $list;
 	}
@@ -393,7 +391,6 @@ class Concrete5_Model_Package extends Object {
 			}
 		}
 		$db->Execute("delete from Packages where pkgID = ?", array($this->pkgID));
-		PackageList::refreshCache();
 	}
 	
 	protected function validateClearSiteContents($options) {
@@ -583,10 +580,8 @@ class Concrete5_Model_Package extends Object {
 		
 		$pkg = Package::getByID($db->Insert_ID());
 		Package::installDB($pkg->getPackagePath() . '/' . FILENAME_PACKAGE_DB);
-		PackageList::refreshCache();
 		$env = Environment::get();
 		$env->clearOverrideCache();
-		
 		return $pkg;
 	}
 	
@@ -594,7 +589,6 @@ class Concrete5_Model_Package extends Object {
 		$db = Loader::db();
 		$v = array($vNum, $this->getPackageID());
 		$db->query("update Packages set pkgAvailableVersion = ? where pkgID = ?", $v);
-		PackageList::refreshCache();
 	}
 	
 	public function upgradeCoreData() {
@@ -602,7 +596,6 @@ class Concrete5_Model_Package extends Object {
 		$p1 = Loader::package($this->getPackageHandle());
 		$v = array($p1->getPackageName(), $p1->getPackageDescription(), $p1->getPackageVersion(), $this->getPackageID());
 		$db->query("update Packages set pkgName = ?, pkgDescription = ?, pkgVersion = ? where pkgID = ?", $v);
-		PackageList::refreshCache();
 	}
 	
 	public function upgrade() {
