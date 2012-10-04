@@ -9,19 +9,15 @@
  **/
 defined('C5_EXECUTE') or die("Access Denied."); 
 
-if (!defined('ENABLE_CACHE')) {
-	Config::getOrDefine('ENABLE_CACHE', true); 
-}
+// legacy
+define("ENABLE_CACHE", true);
+
 if (!defined('ENABLE_OVERRIDE_CACHE')) {
 	Config::getOrDefine('ENABLE_OVERRIDE_CACHE', false); 
 }
 
-if (!ENABLE_CACHE) {
-	Cache::disableCache();
-}
-
-if (ENABLE_CACHE) {
-	Config::getOrDefine('FULL_PAGE_CACHE_GLOBAL', 'blocks');	
+if (!defined('FULL_PAGE_CACHE_GLOBAL')) {
+	Config::getOrDefine('FULL_PAGE_CACHE_GLOBAL', false);	
 }
 
 if (!defined('STATISTICS_TRACK_PAGE_VIEWS')) {

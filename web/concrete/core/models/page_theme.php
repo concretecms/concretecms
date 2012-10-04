@@ -360,7 +360,9 @@ class Concrete5_Model_PageTheme extends Object {
 		// now we reset all cached css files in this theme
 		$sheets = $this->getStyleSheets();
 		foreach($sheets as $s) {
-			Cache::delete($this->getThemeHandle(), $s);
+			if (file_exists(DIR_FILES_CACHE . '/' . DIRNAME_CSS . '/' . $this->getThemeHandle() . '/' . $s)) {
+				unlink(DIR_FILES_CACHE . '/' . DIRNAME_CSS . '/' . $this->getThemeHandle() . '/' . $s);
+			}
 		}
 	}
 	
@@ -383,7 +385,9 @@ class Concrete5_Model_PageTheme extends Object {
 		// now we reset all cached css files in this theme
 		$sheets = $this->getStyleSheets();
 		foreach($sheets as $s) {
-			Cache::delete($this->getThemeHandle(), $s);
+			if (file_exists(DIR_FILES_CACHE . '/' . DIRNAME_CSS . '/' . $this->getThemeHandle() . '/' . $s)) {
+				unlink(DIR_FILES_CACHE . '/' . DIRNAME_CSS . '/' . $this->getThemeHandle() . '/' . $s);
+			}
 		}
 	}
 	

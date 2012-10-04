@@ -10,6 +10,7 @@ if (isset($au->theme) && isset($au->file)) {
 
 			if ($_REQUEST['mode'] == 'preview') {
 				$val = Cache::get('preview_theme_style', $pt->getThemeID(), false, true);
+				print_r($val);
 				if (is_array($val)) {
 					header("Content-Type: text/css");
 					$values = $pt->mergeStylesFromPost($val);
@@ -19,12 +20,20 @@ if (isset($au->theme) && isset($au->file)) {
 			}
 			$stat = filemtime($pt->getThemeDirectory() . '/' . $au->file);
 
-			$style = Cache::get(str_replace('-','_', $au->theme), $au->file, $stat);
-			
-			if ($style == '') {
+			$cacheFile = DIR_FILES_CACHE . '/' . DIRNAME_CSS . '/' . $au->theme . '/' . $au->file;
+			if (file_exists($cacheFile)) {
+				$style = file_get_contents($cacheFile);
+			} else {
 				$style = $pt->parseStyleSheet($au->file);
-				Cache::set(str_replace('-','_', $au->theme), $au->file, $style, CACHE_LIFETIME);
+				if (!file_exists(DIR_FILES_CACHE . '/' . DIRNAME_CSS)) {
+					@mkdir(DIR_FILES_CACHE . '/' . DIRNAME_CSS);
+				}
+				if (!file_exists(DIR_FILES_CACHE . '/' . DIRNAME_CSS . '/' . $au->theme)) {
+					@mkdir(DIR_FILES_CACHE . '/' . DIRNAME_CSS . '/' . $au->theme);
+				}
+				@file_put_contents($cacheFile, $style);
 			}
+
 			header("Content-Type: text/css");
 			header("Date: ". date("D, j M Y G:i:s", $stat) ." GMT");
 			header("Expires: ". gmdate("D, j M Y H:i:s", time() + DAY) ." GMT");

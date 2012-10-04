@@ -74,7 +74,6 @@ class Concrete5_Library_Cache {
 	
 	/** 
 	 * Inserts or updates an item to the cache
-	 * If $forceSet is true, we sidestep ENABLE_CACHE. This is for certain operations that
 	 * the cache must always be enabled for (getting remote data, etc..)
 	 */	
 	public function set($type, $id, $obj, $expire = false) {
@@ -99,7 +98,7 @@ class Concrete5_Library_Cache {
 	 * If $forceGet is true, we sidestep ENABLE_CACHE. This is for certain operations that
 	 * the cache must always be enabled for (getting remote data, etc..)
 	 */	
-	public function get($type, $id, $mustBeNewerThan = false, $forceGet = false) {
+	public function get($type, $id, $mustBeNewerThan = false) {
 		$loc = CacheLocal::get();
 		$key = Cache::key($type, $id);
 		if ($loc->enabled && array_key_exists($key, $loc->cache)) {
