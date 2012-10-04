@@ -346,7 +346,6 @@ define('DISPATCHER_FILENAME_CORE', 'dispatcher.php');
 
 if (defined('DIR_FILES_CACHE')) {
 	define('DIR_FILES_CACHE_DB', DIR_FILES_CACHE);
-	define('DIR_FILES_CACHE_PAGES', DIR_FILES_CACHE . '/lucene.pages');
 	$ADODB_ACTIVE_CACHESECS = 300;
 	$ADODB_CACHE_DIR = DIR_FILES_CACHE_DB;
 }
