@@ -157,9 +157,12 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		 */
 		public function save($args) {
 			//$argsMerged = array_merge($_POST, $args);
-			if ($this->record) {
-				$attribs = $this->record->getAttributeNames();
-				foreach($attribs as $key) {
+			if ($this->btTable) {
+				$db = Loader::db();
+				$columns = $db->GetCol('show columns from `' . $this->btTable . '`'); // I have no idea why getAttributeNames isn't working anymore.
+				$this->record = new BlockRecord($this->btTable);
+				$this->record->bID = $this->bID;
+				foreach($columns as $key) {
 					if (isset($args[$key])) {
 						$this->record->{$key} = $args[$key];
 					}
@@ -197,7 +200,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		 */
 		public function duplicate($newBID) {
 			if ($this->btTable) {
-				$newInstance = clone $this->record;
+				$ni = new BlockRecord($this->btTable);
+				$ni->bID = $this->bID;
+				$ni->Load('bID=' . $this->bID);
+				$newInstance = clone $ni;
 				$newInstance->bID = $newBID;
 				$newInstance->Insert();
 				return $newInstance;
@@ -423,6 +429,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				$this->bID = $b->getBlockID();
 				$this->btHandle = $obj->getBlockTypeHandle();
 				$this->bActionCID = $obj->getBlockActionCollectionID();
+				$this->btCachedBlockRecord = $obj->getBlockCachedRecord();
 				$this->load();
 			}
 			parent::__construct();

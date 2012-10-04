@@ -78,7 +78,7 @@ class Concrete5_Model_Block extends Object {
 		$b = new Block;
 		if ($c == null && $a == null) {
 			// just grab really specific block stuff
-			$q = "select bID, bIsActive, BlockTypes.btID, BlockTypes.btHandle, BlockTypes.pkgID, BlockTypes.btName, bName, bDateAdded, bDateModified, bFilename, Blocks.uID from Blocks inner join BlockTypes on (Blocks.btID = BlockTypes.btID) where bID = ?";
+			$q = "select bID, bIsActive, BlockTypes.btID, Blocks.btCachedBlockRecord, BlockTypes.btHandle, BlockTypes.pkgID, BlockTypes.btName, bName, bDateAdded, bDateModified, bFilename, Blocks.uID from Blocks inner join BlockTypes on (Blocks.btID = BlockTypes.btID) where bID = ?";
 			$b->isOriginal = 1;
 			$v = array($bID);				
 		} else {
@@ -92,7 +92,7 @@ class Concrete5_Model_Block extends Object {
 			$cvID = $vo->getVersionID();
 
 			$v = array($b->arHandle, $cID, $cvID, $bID);
-			$q = "select CollectionVersionBlocks.isOriginal, BlockTypes.pkgID, CollectionVersionBlocks.cbOverrideAreaPermissions, CollectionVersionBlocks.cbDisplayOrder, Blocks.bIsActive, Blocks.bID, Blocks.btID, bName, bDateAdded, bDateModified, bFilename, btHandle, Blocks.uID from CollectionVersionBlocks inner join Blocks on (CollectionVersionBlocks.bID = Blocks.bID) inner join BlockTypes on (Blocks.btID = BlockTypes.btID) where CollectionVersionBlocks.arHandle = ? and CollectionVersionBlocks.cID = ? and (CollectionVersionBlocks.cvID = ? or CollectionVersionBlocks.cbIncludeAll=1) and CollectionVersionBlocks.bID = ?";
+			$q = "select CollectionVersionBlocks.isOriginal, Blocks.btCachedBlockRecord, BlockTypes.pkgID, CollectionVersionBlocks.cbOverrideAreaPermissions, CollectionVersionBlocks.cbDisplayOrder, Blocks.bIsActive, Blocks.bID, Blocks.btID, bName, bDateAdded, bDateModified, bFilename, btHandle, Blocks.uID from CollectionVersionBlocks inner join Blocks on (CollectionVersionBlocks.bID = Blocks.bID) inner join BlockTypes on (Blocks.btID = BlockTypes.btID) where CollectionVersionBlocks.arHandle = ? and CollectionVersionBlocks.cID = ? and (CollectionVersionBlocks.cvID = ? or CollectionVersionBlocks.cbIncludeAll=1) and CollectionVersionBlocks.bID = ?";
 		
 		}
 
@@ -245,6 +245,10 @@ class Concrete5_Model_Block extends Object {
 			}
 		}
 		return false;
+	}
+	
+	public function getBlockCachedRecord() {
+		return $this->btCachedBlockRecord;
 	}
 	
 	public function inc($file) {
