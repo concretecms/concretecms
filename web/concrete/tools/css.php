@@ -10,7 +10,6 @@ if (isset($au->theme) && isset($au->file)) {
 
 			if ($_REQUEST['mode'] == 'preview') {
 				$val = Cache::get('preview_theme_style', $pt->getThemeID(), false, true);
-				print_r($val);
 				if (is_array($val)) {
 					header("Content-Type: text/css");
 					$values = $pt->mergeStylesFromPost($val);
