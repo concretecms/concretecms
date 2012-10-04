@@ -125,6 +125,7 @@ class Concrete5_Model_PermissionKeyCategory extends Object {
 		$db->Execute('insert into PermissionKeyCategories (pkCategoryHandle, pkgID) values (?, ?)', array($pkCategoryHandle, $pkgID));
 		$id = $db->Insert_ID();
 		
+		self::$categories = array();
 		return PermissionKeyCategory::getByID($id);
 	}
 	
