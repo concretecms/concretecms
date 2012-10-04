@@ -165,6 +165,11 @@ defined('C5_EXECUTE') or die("Access Denied.");
 					}
 				}
 				$this->record->Replace();
+				if ($this->cacheBlockRecord()) {
+					$record = serialize($this->record);
+					$db = Loader::db();
+					$db->Execute('update Blocks set btCachedBlockRecord = ? where bID = ?', array($record, $this->bID));
+				}
 			}
 		}
 		
@@ -377,11 +382,19 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 		/** 
 		 * Loads the BlockRecord class based on its attribute names
-		 * If ENABLE_ON_BLOCK_LOAD_EVENT is set, fires 'on_block_load'. Event handlers have 
-		 * the opportunity to return a modified block record.
 		 * @return void
 		 */
 		protected function load() {
+			if ($this->btTable) {
+				if ($this->btCacheBlockRecord && $this->btCachedBlockRecord) {
+					$this->record = unserialize($this->btCachedBlockRecord);
+				} else { 
+					$this->record = new BlockRecord($this->btTable);
+					$this->record->bID = $this->bID;
+					$this->record->Load('bID=' . $this->bID);
+				}
+			}
+
 			$ret = Events::fire('on_block_load', $this->record, $this->btHandle, $this->bID);
 			if ($ret && is_object($ret)){
 				$this->record = $ret;
@@ -406,17 +419,11 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			} else if ($obj instanceof Block) {
 				$b = $obj;
 				$this->identifier = 'BLOCK_' . $obj->getBlockID();
-			
 				// we either have a blockID passed, or nothing passed, if we're adding a block type				
 				$this->bID = $b->getBlockID();
-				if ($this->btTable) {
-					$this->record = new BlockRecord($this->btTable);
-					$this->record->bID = $this->bID;
-					$this->record->Load('bID=' . $this->bID);
-					$this->load();
-				}
 				$this->btHandle = $obj->getBlockTypeHandle();
 				$this->bActionCID = $obj->getBlockActionCollectionID();
+				$this->load();
 			}
 			parent::__construct();
 			$this->set('controller', $this);
@@ -444,9 +451,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			if ($method) {
 				$this->task = $method;
 			}
-			if ($this->btCacheBlockRecord) {
-				$this->load();
-			}
+
 			if (method_exists($this, 'on_start')) {
 				$this->on_start($method);
 			}

@@ -561,6 +561,7 @@
     <field name="uID" type="I" size="10">
       <UNSIGNED/>
     </field>
+    <field name="btCachedBlockRecord" type="X2"></field>
   </table> 
   <table name="CollectionAttributeValues">
     <field name="cID" type="I" size="10">

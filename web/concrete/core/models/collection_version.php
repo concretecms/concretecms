@@ -41,7 +41,7 @@
 			$db = Loader::db();
 
 			// we don't do this on the front page
-			if ($c->getCollectionPointerID()) {
+			if (($c instanceof Page) && $c->getCollectionPointerID()) {
 				$v = array($c->getCollectionPointerID());
 			} else {
 				$v = array($c->getCollectionID());
