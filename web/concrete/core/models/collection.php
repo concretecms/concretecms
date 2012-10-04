@@ -55,7 +55,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		public function getNextVersionComments() {
 			$c = Page::getByID($this->getCollectionID(), 'ACTIVE');
 			$cvID = $c->getVersionID();
-			return t("Version %d", $cvID);
+			return t("Version %d", $cvID + 1);
 		}      
       
 
