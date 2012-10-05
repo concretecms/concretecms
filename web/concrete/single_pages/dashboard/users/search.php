@@ -36,7 +36,7 @@ function printAttributeRow($ak, $uo, $assignment) {
 	
 	$html = '
 	<tr class="ccm-attribute-editable-field">
-		<td width="250" style="vertical-align:middle;"><a style="font-weight:bold; line-height:18px;" href="javascript:void(0)">' . $ak->getAttributeKeyDisplayHandle() . '</a></td>
+		<td width="250" style="vertical-align:middle;"><a style="font-weight:bold; line-height:18px;" href="javascript:void(0)">' . $ak->getAttributeKeyName() . '</a></td>
 		<td class="ccm-attribute-editable-field-central" style="vertical-align:middle;"><div class="ccm-attribute-editable-field-text">' . $text . '</div>
 		<form method="post" style="margin-bottom:0;" action="' . View::url('/dashboard/users/search', 'edit_attribute') . '">
 		<input type="hidden" name="uakID" value="' . $ak->getAttributeKeyID() . '" />
@@ -57,7 +57,7 @@ function printAttributeRow($ak, $uo, $assignment) {
 
 	$html = '
 	<tr>
-		<td width="250">' . $ak->getAttributeKeyDisplayHandle() . '</th>
+		<td width="250">' . $ak->getAttributeKeyName() . '</th>
 		<td class="ccm-attribute-editable-field-central" colspan="2">' . $text . '</td>
 	</tr>';	
 	}
