@@ -373,7 +373,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			return parent::post($field,$defaultValue);
 		}
 
-		
 		/**
 		 * Automatically run when a block is deleted. This removes the special data from the block's specific database table. If a block needs to do more than this this method should be overridden.
 		 * @return $void
@@ -381,7 +380,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		public function delete() {
 			if ($this->bID > 0) {
 				if ($this->btTable) {
-					$this->record->delete();
+					$ni = new BlockRecord($this->btTable);
+					$ni->bID = $this->bID;
+					$ni->Load('bID=' . $this->bID);
+					$ni->delete();
 				}
 			}
 		}

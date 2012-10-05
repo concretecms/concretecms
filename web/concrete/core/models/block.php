@@ -250,7 +250,32 @@ class Concrete5_Model_Block extends Object {
 	public function getBlockCachedRecord() {
 		return $this->btCachedBlockRecord;
 	}
-	
+
+
+	public function getBlockCachedOutput() {
+		$db = Loader::db();
+		$c = $this->getBlockCollectionObject();
+		$r = $db->GetRow('select btCachedBlockOutput, btCachedBlockOutputExpires from CollectionVersionBlocksOutputCache where cID = ? and cvID = ? and bID = ? and arHandle = ? ', array(
+			$c->getCollectionID(), $c->getVersionID(), $this->getBlockID(), $this->getAreaHandle()));
+		if ($r['btCachedBlockOutputExpires'] < time()) {
+			return false;
+		}
+
+		return $r['btCachedBlockOutput'];
+	}
+
+	public function setBlockCachedOutput($content, $lifetime) {
+		$db = Loader::db();
+		$c = $this->getBlockCollectionObject();
+
+		$btCachedBlockOutputExpires = strtotime('+5 years');
+		if ($lifetime > 0) {
+			$btCachedBlockOutputExpires = time() + $lifetime;
+		}
+		$db->Replace('CollectionVersionBlocksOutputCache', array('cID' => $c->getCollectionID(), 'cvID' => $c->getVersionID(), 'bID' => $this->getBlockID(), 'arHandle' => $this->getAreaHandle(), 'btCachedBlockOutput' => $content, 'btCachedBlockOutputExpires' => $btCachedBlockOutputExpires), 
+			array('cID', 'cvID', 'arHandle', 'bID'), true);
+	}
+
 	public function inc($file) {
 		$b = $this;
 		if (file_exists($this->getBlockPath() . '/' . $file)) {
@@ -395,13 +420,17 @@ class Concrete5_Model_Block extends Object {
 
 		$r = $db->prepare($q);
 		$res = $db->execute($r, $v);
-		
+
+		$cID = $this->getBlockCollectionID();
+		$c = $this->getBlockCollectionObject();
+		$v = array($c->getCollectionID(), $c->getVersionID(), $this->getAreaHandle(), $bID);
+		$db->Execute('update CollectionVersionBlocksOutputCache set btCachedBlockOutputExpires = 0 where cID = ? and cvID = ? and arHandle = ? and bID = ?', $v);
+
 		$btID = $this->getBlockTypeID();
 		$bt = BlockType::getByID($btID);
 		$class = $bt->getBlockTypeClass();
 		$bc = new $class($this);
 		$bc->save($data);
-		
 	}
 
 	function isActive() {
