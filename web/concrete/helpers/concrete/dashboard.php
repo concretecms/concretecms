@@ -238,14 +238,16 @@ class ConcreteDashboardHelper {
 
 			if (count($_SESSION['ccmQuickNavRecentPages']) > 0) { ?>
 				<ul class="breadcrumb">
-				<li><strong><?=t('Recent')?></strong> <span class="divider">:</span></li>
-				<? $i = 0;
-				foreach($_SESSION['ccmQuickNavRecentPages'] as $_cID) {
+				<li><strong><?=t('Recent')?></strong> <span class="divider" style="padding-right: 5px; padding-left: 3px;">:</span></li>
+				<?php
+				$i = 0;
+				$recentPages = array_reverse($_SESSION['ccmQuickNavRecentPages']); //display most-recent first
+				foreach($recentPages as $_cID) {
 					$_c = Page::getByID($_cID);
 					$name = t('(No Name)');
 					$divider = '';
 					if (isset($_SESSION['ccmQuickNavRecentPages'][$i+1])) {
-						$divider = '<span class="divider">/</span>';
+						$divider = '<span class="divider">|</span>';
 					}
 					if ($_c->getCollectionName()) {
 						$name = $_c->getCollectionName();
