@@ -47,7 +47,7 @@ if (count($assignments) > 0) {
 	<?=$str?>
 <? } ?>
 
-<input type="hidden" name="pkID[<?=$pk->getPermissionKeyID()?>]" value="<?=$paID?>" />
+<input type="hidden" name="pkID[<?=$pk->getPermissionKeyID()?>]" value="<?=$paID?>" data-pkID="<?=$pk->getPermissionKeyID()?>" />
 </div>
 
 <script type="text/javascript">
@@ -60,11 +60,14 @@ $(function() {
 		accept: '.ccm-permission-access-line',
 		hoverClass: 'ccm-permissions-grid-cell-active',
 		drop: function(ev, ui) {
+			var srcPKID = $(ui.draggable).find('input').attr('data-pkID');
+			$('#ccm-permission-grid-name-' + srcPKID + ' a').attr('data-duplicate', '1');
+			
 			var paID = $(ui.draggable).find('input').val();
 			var pkID = $(this).attr('id').substring(25);
 
 			$(ui.draggable).clone().appendTo($('#ccm-permission-grid-cell-' + pkID).html(''));
-			$('#ccm-permission-grid-name-' + pkID + ' a').attr('data-paID', paID);	
+			$('#ccm-permission-grid-name-' + pkID + ' a').attr('data-paID', paID).attr('data-duplicate', '1');
 			$('#ccm-permission-grid-cell-' + pkID + ' input[type=hidden]').attr('name', 'pkID[' + pkID + ']');	
 			$('#ccm-permission-grid-cell-' + pkID + ' div.ccm-permission-access-line').draggable({
 				helper: 'clone'
