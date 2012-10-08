@@ -83,9 +83,13 @@ foreach($permissions as $pk) {
 <script type="text/javascript">
 
 ccm_permissionLaunchDialog = function(link) {
+	var dupe = $(link).attr('data-duplicate');
+	if (dupe != 1) {
+		dupe = 0;
+	}
 	jQuery.fn.dialog.open({
 		title: $(link).attr('dialog-title'),
-		href: '<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_area_popup?arHandle=<?=$a->getAreaHandle()?>&cID=<?=$c->getCollectionID()?>&atask=set_advanced_permissions&pkID=' + $(link).attr('data-pkID') + '&paID=' + $(link).attr('data-paID'),
+		href: '<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_area_popup?arHandle=<?=$a->getAreaHandle()?>&cID=<?=$c->getCollectionID()?>&duplicate=' + dupe + '&atask=set_advanced_permissions&pkID=' + $(link).attr('data-pkID') + '&paID=' + $(link).attr('data-paID'),
 		modal: false,
 		width: 500,
 		height: 380
