@@ -143,16 +143,20 @@ if (count($pages) > 0) {
 			$deferred = false;
 			
 			foreach($pages as $c) { 
-				$pa = $c->getPermissionAccessObject($pk);
-				if (is_object($pa)) {
-					// that means that we have to take the current $pa object, and the new $pa object, and merge them together into 
-					// a third object, and try and assign that object
-					$orig = $pa->duplicate();
-					$newpa = PermissionAccess::getByID($newPAID, $pk);
-					$pa = $orig->duplicate($newpa);
+				if ($_REQUEST['paReplaceAll'] == 'add') {
+					$pa = $c->getPermissionAccessObject($pk);
+					if (is_object($pa)) {
+						// that means that we have to take the current $pa object, and the new $pa object, and merge them together into 
+						// a third object, and try and assign that object
+						$orig = $pa->duplicate();
+						$newpa = PermissionAccess::getByID($newPAID, $pk);
+						$pa = $orig->duplicate($newpa);
+					} else {
+						// no current $pa object, which means we assign the new $pa object to this thing
+						$pk->setPermissionObject($c);
+						$pa = PermissionAccess::getByID($newPAID, $pk);
+					}
 				} else {
-					// no current $pa object, which means we assign the new $pa object to this thing
-					$pk->setPermissionObject($c);
 					$pa = PermissionAccess::getByID($newPAID, $pk);
 				}
 				$pkr = new ChangePagePermissionsPageWorkflowRequest();
