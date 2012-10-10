@@ -106,6 +106,9 @@ class Concrete5_Controller_Dashboard_Sitemap_Search extends Controller {
 							}
 							$pageList->filterByIsApproved($req['cvIsApproved']);
 							break;
+						case 'permissions_inheritance':
+							$pageList->filter('cInheritPermissionsFrom', $req['cInheritPermissionsFrom']);
+							break;
 						case "date_public":
 							$dateFrom = $req['date_public_from'];
 							$dateTo = $req['date_public_to'];
