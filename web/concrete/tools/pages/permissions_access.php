@@ -99,7 +99,8 @@ if ($_REQUEST['task'] == 'remove') {
 			$cat = PermissionKeyCategory::getByHandle('page');?>
 
 
-		<form id="ccm-permissions-bulk-access-form" <? if ($task == 'bulk_add_access') { ?>class="form-inline"<? } ?> action="<?=$cat->getToolsURL($task)?>">
+		<form id="ccm-permissions-bulk-access-form" action="<?=$cat->getToolsURL($task)?>">
+
 
 			<? foreach($cIDs as $cID) { ?>
 				<input type="hidden" name="cID[]" value="<?=$cID?>" />
@@ -108,6 +109,8 @@ if ($_REQUEST['task'] == 'remove') {
 			<? if ($task == 'bulk_remove_access') { ?>
 				<div class="alert alert-warning"><strong><?=t('Warning:')?></strong> <?=t("Any users or groups selected will be removed from the permissions on the selected pages.")?></div>
 			<? } ?>
+
+			<div class="<? if ($task == 'bulk_add_access') { ?>form-inline<? } ?>">
 
 			<table class="ccm-permission-grid table">
 				<tr>
@@ -129,7 +132,19 @@ if ($_REQUEST['task'] == 'remove') {
 			</td>
 			</tr>
 			</table>
+		</div>
 
+			<? if ($task == 'bulk_add_access') { ?>
+			<div class="form-horizontal">
+			<div class="control-group">
+				<label class="control-label"><?=t('Permissions Should')?></label>
+				<div class="controls">
+				<label class="radio"><input type="radio" name="paReplaceAll" value="add" checked="checked" /> <span><?=t("Add To Existing Permissions")?></span></label>
+				<label class="radio"><input type="radio" name="paReplaceAll" value="replace" /> <span><?=t("Replace Permissions")?></span></label>
+				</div>
+			</div>
+			</div>
+			<? } ?>
 
 				<div id="ccm-permissions-bulk-access-form-buttons" class="dialog-buttons">
 					<button class="btn" type="button" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel')?></button>

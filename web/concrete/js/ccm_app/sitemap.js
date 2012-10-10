@@ -883,7 +883,7 @@ ccm_sitemapSearchSetupCheckboxes = function(instance_id) {
 			case 'permissions_add_access':
 				jQuery.fn.dialog.open({
 					width: 440,
-					height: 90,
+					height: 200,
 					modal: false,
 					appendButtons: true,
 					href: CCM_TOOLS_PATH + '/pages/permissions_access?task=add&' + cIDstring,
