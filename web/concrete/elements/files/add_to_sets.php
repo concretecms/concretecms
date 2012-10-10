@@ -124,6 +124,19 @@ $(function() {
 </script>
 
 
+	<div class="ccm-pane-options">
+		<div class="ccm-pane-options-permanent-search">
+
+		<form class="form-inline">
+		<i class="icon-search"></i>
+
+		<?=$form->text('fsAddToSearchName', $searchRequest['fsSearchName'], array('autocomplete' => 'off'))?>
+
+		</form>
+
+		</div>
+	</div>
+
 <? if (!$disableForm) { ?>
 	<form method="post" id="ccm-<?=$searchInstance?>-add-to-set-form" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/add_to/">
 	<?=$form->hidden('task', 'add_to_sets')?>
@@ -132,17 +145,13 @@ $(function() {
 	<? } ?>
 
 <? } ?>
-
-	<div class="clear"></div>
-	<div class="ccm-search-bar">
-		<?=$form->text('fsAddToSearchName', $searchRequest['fsSearchName'], array('autocomplete' => 'off'))?>
-	</div>
+	
 
 	
 	<? $s1 = FileSet::getMySets(); ?>
 	<? if (count($s1) > 0) { ?>
-	<div class="clearfix">
-		<ul class="inputs-list">
+	<div class="clearfix" style="padding-left: 5px; padding-top: 8px">
+		<ul class="inputs-list" id="ccm-file-search-add-to-sets-list">
 	
 	
 	<? foreach($sets as $s) { 
@@ -188,12 +197,10 @@ $(function() {
 
 <? if (!$disableForm) { ?>
 
-	<br/><br/>
-	<?
-	$h = Loader::helper('concrete/interface');
-	$b1 = $h->submit(t('Update'), false, 'left');
-	print $b1;
-	?>
+<div class="dialog-buttons">
+	<input type="button" value="<?=t('Update')?>" class="btn btn-primary pull-right" onclick="$('#ccm-<?=$searchInstance?>-add-to-set-form').submit()" />
+</div>
+
 	</form>
 	
 <? } ?>

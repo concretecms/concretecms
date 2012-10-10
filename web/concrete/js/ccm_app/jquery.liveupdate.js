@@ -88,7 +88,7 @@
 					var val = $(this).find('a,span').html().toLowerCase();
 					self.cache.push(val);
 				} else if (lutype == 'fileset') {
-					self.cache.push($(this).find('label').html().toLowerCase());
+					self.cache.push($(this).find('span').html().toLowerCase());
 				} else if (lutype == 'intelligent-search') {
 					var s = $(this).find('span').html();
 					if (s) {

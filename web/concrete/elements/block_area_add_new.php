@@ -162,7 +162,7 @@ $(function() {
 	<div class="ccm-pane-options">
 		<div class="ccm-block-type-search-wrapper ccm-pane-options-permanent-search">
 
-		<form onsubmit="return ccmBlockTypeSearchFormCheckResults()">
+		<form class="form-inline" onsubmit="return ccmBlockTypeSearchFormCheckResults()">
 		
 		
 		<a class="ccm-block-type-help" href="javascript:ccm_showBlockTypeDescriptions()" title="<?=t('Learn more about these block types.')?>" id="ccm-bt-help-trigger-all"><i class="icon-question-sign"></i></a>
