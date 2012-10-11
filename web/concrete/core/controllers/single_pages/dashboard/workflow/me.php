@@ -20,7 +20,21 @@ class Concrete5_Controller_Dashboard_Workflow_Me extends DashboardBaseController
 			if ($active) { 
 				$this->set('category', $cat);
 			}
-			$tabs[] = array(View::url('/dashboard/workflow/me/', 'view', $cat->getWorkflowProgressCategoryHandle()), t('%ss', Loader::helper('text')->unhandle($cat->getWorkflowProgressCategoryHandle())), $active);
+			switch($cat->getWorkflowProgressCategoryHandle()) {
+				case 'page':
+					$tabName = t('Pages');
+					break;
+				case 'file':
+					$tabName = t('Files');
+					break;
+				case 'user':
+					$tabName = t('Users');
+					break;
+				default:
+					$tabName = t(sprintf('%ss', Loader::helper('text')->unhandle($cat->getWorkflowProgressCategoryHandle())));
+					break;
+			}
+			$tabs[] = array(View::url('/dashboard/workflow/me/', 'view', $cat->getWorkflowProgressCategoryHandle()), $tabName, $active);
 		}
 		$this->set('tabs', $tabs);
 	}
