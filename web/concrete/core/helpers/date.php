@@ -174,40 +174,28 @@ class Concrete5_Helper_Date {
 			if ($diff>86400){
 					$diff=$diff+86400;
 					$days=date("z",$diff);
-					$timeRemaining=$days.' ';
-					if($days!=1) {
-						$timeRemaining.=t('days');
-					} else {
-						$timeRemaining.=t('day');
+					$timeRemaining = t2('%d day', '%d days', $days, $days);
+					if($precise==1) {
+						$timeRemaining .= ', '.t2('%d hour', '%d hours', $hours, $hours);
 					}
-					if($precise==1) $timeRemaining.=', '.$hours.' '.t('hours');
 				} else if ($diff>3600) {
-					$timeRemaining=$hours.' ';
-					if($hours!=1) {
-						$timeRemaining.=t('hours');
-					} else {
-						$timeRemaining.=t('hour');
+					$timeRemaining = t2('%d hour', '%d hours', $hours, $hours);
+					if($precise==1) {
+						$minutes = date("i", $diff);
+						$timeRemaining .= ', '.t2('%d minute', '%d minutes', $minutes, $minutes);
 					}
-					if($precise==1) $timeRemaining.=', '.date("i",$diff).' '.t('minutes');
 				}else if ($diff>60){
 					$minutes=date("i",$diff);
 					if(substr($minutes,0,1)=='0') $minutes=substr($minutes,1);
-					$timeRemaining=$minutes.' ';
-					if($minutes!=1) {
-						$timeRemaining.=t('minutes');
-					} else {
-						$timeRemaining.=t('minute');
+					$timeRemaining = t2('%d minute', '%d minutes', $minutes, $minutes);
+					if($precise==1) {
+						$seconds = date("s",$diff);
+						$timeRemaining .= ', '.t2('%d second', '%d seconds', $seconds, $seconds);
 					}
-					if($precise==1) $timeRemaining.=', '.date("s",$diff).' '.t('seconds');
 				}else{
 					$seconds=date("s",$diff);
 					if(substr($seconds,0,1)=='0') $seconds=substr($seconds,1);
-					$timeRemaining=$seconds.' ';
-					if($seconds!=1) {
-						$timeRemaining.=t('seconds');
-					} else {
-						$timeRemaining.=t('second');
-					}
+					$timeRemaining = t2('%d second', '%d seconds', $seconds, $seconds);
 				}
 		}
 		return $timeRemaining;
