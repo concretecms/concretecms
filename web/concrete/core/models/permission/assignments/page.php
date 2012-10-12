@@ -27,13 +27,14 @@ class Concrete5_Model_PagePermissionAssignment extends PermissionAssignment {
 	public function clearPermissionAssignment() {
 		$db = Loader::db();
 		$db->Execute('update PagePermissionAssignments set paID = 0 where pkID = ? and cID = ?', array($this->pk->getPermissionKeyID(), $this->getPermissionObject()->getPermissionsCollectionID()));
+		PermissionCache::clearAccessObject($this->pk, $this->getPermissionObject());
 	}
 
 	public function assignPermissionAccess(PermissionAccess $pa) {
 		$db = Loader::db();
 		$db->Replace('PagePermissionAssignments', array('cID' => $this->getPermissionObject()->getPermissionsCollectionID(), 'paID' => $pa->getPermissionAccessID(), 'pkID' => $this->pk->getPermissionKeyID()), array('cID', 'pkID'), true);
 		$pa->markAsInUse();
-		PermissionCache::clearAccessObject($this->pk, $this->getPermissionObject(), -1);
+		PermissionCache::clearAccessObject($this->pk, $this->getPermissionObject());
 	}
 		
 	public function getPermissionKeyToolsURL($task = false) {
