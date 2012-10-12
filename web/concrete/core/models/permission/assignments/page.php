@@ -33,6 +33,7 @@ class Concrete5_Model_PagePermissionAssignment extends PermissionAssignment {
 		$db = Loader::db();
 		$db->Replace('PagePermissionAssignments', array('cID' => $this->getPermissionObject()->getPermissionsCollectionID(), 'paID' => $pa->getPermissionAccessID(), 'pkID' => $this->pk->getPermissionKeyID()), array('cID', 'pkID'), true);
 		$pa->markAsInUse();
+		PermissionCache::clearAccessObject($this->pk, $this->getPermissionObject(), -1);
 	}
 		
 	public function getPermissionKeyToolsURL($task = false) {
