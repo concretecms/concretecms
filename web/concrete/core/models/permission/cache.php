@@ -61,7 +61,7 @@ class Concrete5_Model_PermissionCache {
 		}
 	}
 
-	public static function clearAccessObject(PermissionKey $pk, $object, $pa) {
+	public static function clearAccessObject(PermissionKey $pk, $object) {
 		$cl = CacheLocal::get();
 		if ($cl->enabled) {
 			$identifier = 'pk:' . $pk->getPermissionKeyHandle() . ':' . $object->getPermissionObjectIdentifier();
