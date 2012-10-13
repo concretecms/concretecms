@@ -502,9 +502,9 @@ class Concrete5_Model_Package extends Object {
 	public function mapError($testResults) {
 		$errorText[Package::E_PACKAGE_INSTALLED] = t("You've already installed that package.");
 		$errorText[Package::E_PACKAGE_NOT_FOUND] = t("Invalid Package.");
-		$errorText[Package::E_PACKAGE_VERSION] = t("This package requires Concrete version %s or greater.");
+		$errorText[Package::E_PACKAGE_VERSION] = t("This package requires concrete5 version %s or greater.");
 		$errorText[Package::E_PACKAGE_DOWNLOAD] = t("An error occurred while downloading the package.");
-		$errorText[Package::E_PACKAGE_SAVE] = t("Concrete was not able to save the package after download.");
+		$errorText[Package::E_PACKAGE_SAVE] = t("concrete5 was not able to save the package after download.");
 		$errorText[Package::E_PACKAGE_UNZIP] = t('An error occurred while trying to unzip the package.');
 		$errorText[Package::E_PACKAGE_INSTALL] = t('An error occurred while trying to install the package.');
 		$errorText[Package::E_PACKAGE_MIGRATE_BACKUP] = t('Unable to backup old package directory to %s', DIR_FILES_TRASH);
