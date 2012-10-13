@@ -270,11 +270,7 @@ table.ccm-grid th {width: 70px}
 </style>
 <div class="ccm-ui">
 <? if ($_REQUEST['uploaded']) { ?>
-	<? if (count($_REQUEST['fID']) == 1) { ?>
-		<div class="block-message alert-message success" style="padding-right: 14px !important"><a class="btn success btn-mini" style="float: right;" onclick="jQuery.fn.dialog.closeTop()"><?=t('Continue')?></a><?=t('1 file uploaded successfully.')?></div>
-	<? } else { ?>
-		<div class="block-message alert-message success" style="padding-right: 14px !important"><a class="btn success btn-mini" style="float: right;" onclick="jQuery.fn.dialog.closeTop()"><?=t('Continue')?></a><?=t('%s files uploaded successfully.', count($_REQUEST['fID']))?></div>
-	<? } ?>
+	<div class="block-message alert-message success" style="padding-right: 14px !important"><a class="btn success btn-mini" style="float: right;" onclick="jQuery.fn.dialog.closeTop()"><?=t('Continue')?></a><?=t2('%d file uploaded successfully.', '%d files uploaded successfully.', count($_REQUEST['fID']), count($_REQUEST['fID']))?></div>
 <? } ?>
 
 <ul class="tabs" id="ccm-file-manager-add-complete-tabs">
