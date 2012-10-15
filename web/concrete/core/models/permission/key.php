@@ -62,12 +62,27 @@ abstract class Concrete5_Model_PermissionKey extends Object {
 		return $this->permissionObject;
 	}
 
-	protected static function load($key, $loadBy = 'pkID') {
-		$pk = CacheLocal::getEntry('permission_key', $key);
-		if ($pk instanceof PermissionKey) {
-			return $pk;
+	public static function loadAll() {
+		$cl = new CacheLocal();
+		$db = Loader::db();
+		$permissionkeys = array();
+		$e = $db->Execute('select pkID, pkName, pkDescription, pkHandle, pkCategoryHandle, pkCanTriggerWorkflow, pkHasCustomClass, PermissionKeys.pkCategoryID, pkCategoryHandle, PermissionKeys.pkgID from PermissionKeys inner join PermissionKeyCategories on PermissionKeyCategories.pkCategoryID = PermissionKeys.pkCategoryID');
+		while ($r = $e->FetchRow()) {
+			$class = Loader::helper('text')->camelcase($r['pkCategoryHandle']) . 'PermissionKey';
+			if ($r['pkHasCustomClass']) {
+				$class = Loader::helper('text')->camelcase($r['pkHandle']) . $class;
+			}
+			$pk = new $class();
+			$pk->setPropertiesFromArray($r);
+
+			$permissionkeys[$r['pkHandle']] = $pk;
+			$permissionkeys[$r['pkID']] = $pk;
 		}
-		
+		CacheLocal::set('permission_keys', false, $permissionkeys);
+		return $permissionkeys;
+	}
+
+	protected static function load($key, $loadBy = 'pkID') {
 		$db = Loader::db();
 		$r = $db->GetRow('select pkID, pkName, pkDescription, pkHandle, pkCategoryHandle, pkCanTriggerWorkflow, pkHasCustomClass, PermissionKeys.pkCategoryID, pkCategoryHandle, PermissionKeys.pkgID from PermissionKeys inner join PermissionKeyCategories on PermissionKeyCategories.pkCategoryID = PermissionKeys.pkCategoryID where ' . $loadBy . ' = ?', array($key));
 		$class = Loader::helper('text')->camelcase($r['pkCategoryHandle']) . 'PermissionKey';
@@ -81,8 +96,6 @@ abstract class Concrete5_Model_PermissionKey extends Object {
 		
 		$pk = new $class();
 		$pk->setPropertiesFromArray($r);
-		
-		CacheLocal::set('permission_key', $key, $pk);		
 		return $pk;
 	}
 	
@@ -185,17 +198,13 @@ abstract class Concrete5_Model_PermissionKey extends Object {
 	}
 
 	public static function getByID($pkID) {
-		$pk = self::load($pkID);
-		if ($pk->getPermissionKeyID() > 0) {
-			return $pk;
-		}
+		$keys = CacheLocal::getEntry('permission_keys', false);
+		return $keys[$pkID];
 	}
 
 	public static function getByHandle($pkHandle) {
-		$pk = self::load($pkHandle, 'pkHandle');
-		if ($pk->getPermissionKeyID() > 0) {
-			return $pk;
-		}
+		$keys = CacheLocal::getEntry('permission_keys', false);
+		return $keys[$pkHandle];
 	}
 	
 	/** 
@@ -231,8 +240,8 @@ abstract class Concrete5_Model_PermissionKey extends Object {
 		
 		if ($r) {
 			$pkID = $db->Insert_ID();
-			$ak = self::load($pkID);
-			return $ak;
+			$keys = self::loadAll();
+			return $keys[$pkID];
 		}
 	}
 
@@ -269,6 +278,7 @@ abstract class Concrete5_Model_PermissionKey extends Object {
 	public function delete() {
 		$db = Loader::db();
 		$db->Execute('delete from PermissionKeys where pkID = ?', array($this->getPermissionKeyID()));
+		self::loadAll();
 	}
 	
 	
