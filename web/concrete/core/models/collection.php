@@ -166,11 +166,21 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		}
 				
 		public function hasLayouts() {
-			if (!isset($this->hasLayouts)) {
-				$db = Loader::db();
-				$this->cHasLayouts = $db->GetOne('select count(cvalID) from CollectionVersionAreaLayouts where cID = ?', array($this->cID));
+			$cHasLayouts = CacheLocal::getEntry('page_layouts', $this->cID . ':' . $this->cvID);
+			if ($cHasLayouts === -1) {
+				return false;
+			} else if ($cHasLayouts) {
+				return $cHasLayouts;
 			}
-			return $this->cHasLayouts;
+			$db = Loader::db();
+			$cHasLayouts = $db->GetOne('select count(cvalID) from CollectionVersionAreaLayouts where cID = ? and cvID = ?', array($this->cID, $this->cvID));
+			if (!$cHasLayouts) {
+				CacheLocal::set('page_layouts', $this->cID . ':' . $this->cvID, -1);
+			} else {
+				CacheLocal::set('page_layouts', $this->cID . ':' . $this->cvID, 1);
+			}
+
+			return $cHasLayouts;
 		}
 		
 		public function reindex($index = false, $actuallyDoReindex = true) {
@@ -238,7 +248,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			}
 			$ak->setAttribute($this, $value);
 			unset($ak);
-			$this->refreshCache();
 			$this->reindex();
 		}
 
@@ -248,7 +257,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			if (is_object($cav)) {
 				$cav->delete();
 			}
-			$this->refreshCache();
 			$this->reindex();
 		}
 		
@@ -492,7 +500,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			$this->getVersionID(),
 			$area->getAreaHandle()
 		));
-		$this->refreshCache();
 	}
 	
 	public function setAreaCustomStyle($area, $csr) {
@@ -501,7 +508,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			array('cID' => $this->getCollectionID(), 'cvID' => $this->getVersionID(), 'arHandle' => $area->getAreaHandle(), 'csrID' => $csr->getCustomStyleRuleID()),
 			array('cID', 'cvID', 'arHandle'), true
 		);
-		$this->refreshCache();
 	}
 	
 	
@@ -536,15 +542,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				$placeHolderLayout->setAreaObj($area);
 				$placeHolderLayout->setAreaNameNumber($nextNumber);   
 				$placeHolderLayoutAreaHandle = $placeHolderLayout->getCellAreaHandle(1);
-				//foreach($areaBlocks as $b){ 
-					//$newBlock=$b->duplicate($this); 
-					//$newBlock->move($this, $placeHolderLayoutArea); 
-					//$newBlock->refreshCacheAll(); 
-					//$b->delete();
-					//$b->move($this, $placeHolderLayoutArea); 
-					//$b->refreshCacheAll(); 
-					
-				//} 
 				$v = array( $placeHolderLayoutAreaHandle, $this->getCollectionID(), $this->getVersionID(), $area->getAreaHandle() );
 				$db->Execute('update CollectionVersionBlocks set arHandle=? WHERE cID=? AND cvID=? AND arHandle=?', $v);				
 				
@@ -561,7 +558,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		
 		$layout->setAreaNameNumber($nextNumber);
 		
-		$this->refreshCache();
 	}
 	
 	public function relateVersionEdits($oc) {
@@ -588,7 +584,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		$sql = 'UPDATE CollectionVersionAreaLayouts SET layoutID=? WHERE cvalID=?'; 
 		$db->query($sql,$vals);	 
 		
-		$this->refreshCache();		
 	}	
 	
 	
@@ -608,7 +603,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		
 		Layout::cleanupOrphans();	 
 			 
-		$this->refreshCache();
 	} 
 
 	function getCollectionTypeID() {
@@ -694,31 +688,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			
 		}
 		
-		public function refreshCache() {
-			Cache::delete('page_active', $this->getCollectionID());
-			Cache::delete('page_recent', $this->getCollectionID());
-			if ($this->getCollectionTypeHandle() == STACKS_PAGE_TYPE) {
-				Cache::delete('stack_active', $this->getCollectionID());
-				Cache::delete('stack_recent', $this->getCollectionID());
-			}
-			if ($this instanceof ComposerPage) {
-				Cache::delete('composerpage_recent', $this->getCollectionID()  );
-				Cache::delete('composerpage_active', $this->getCollectionID()  );
-			}
-			Cache::delete('page_path', $this->getCollectionID());
-			Cache::delete('request_path_page', $this->getCollectionPath()  );
-			Cache::delete('page_id_from_path', $this->getCollectionPath());
-			Cache::delete('page_content', $this->getCollectionID());
-			$vo = $this->getVersionObject();
-			if (is_object($vo)) {
-				Cache::delete('collection_blocks', $this->getCollectionID() . ':' . $vo->getVersionID());
-			}
-			$db = Loader::db();
-			$areas = $db->GetCol('select arHandle from Areas where cID = ?', array($this->getCollectionID()));
-			foreach($areas as $arHandle) {
-				Cache::delete('area', $this->getCollectionID() . ':' . $arHandle);
-			}
-		}
+		public function refreshCache() {}
 		
 		public function getGlobalBlocks() {
 			$db = Loader::db();

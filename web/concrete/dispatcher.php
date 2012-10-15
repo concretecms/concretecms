@@ -47,6 +47,9 @@
 	## Autoload settings
 	require(dirname(__FILE__) . '/startup/autoload.php');
 
+	## Load permissions and attributes
+	PermissionKey::loadAll();
+
 	## Exception handler
 	require(dirname(__FILE__) . '/startup/exceptions.php');
 	
