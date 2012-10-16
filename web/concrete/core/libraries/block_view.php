@@ -210,7 +210,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 						} else if (is_object($page)) {
 							$cID = $page->getCollectionID();
 						}
-						$outputContent = $obj->getBlockCachedOutput();
+						$outputContent = $obj->getBlockCachedOutput($this->area);
 					}
 				}
 			}
@@ -320,7 +320,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				print $outputContent;
 				
 				if ($useCache) {
-					$obj->setBlockCachedOutput($outputContent, $this->controller->getBlockTypeCacheOutputLifetime());
+					$obj->setBlockCachedOutput($outputContent, $this->controller->getBlockTypeCacheOutputLifetime(), $this->area);
 				}
 			}
 			if (isset($footer)) {
