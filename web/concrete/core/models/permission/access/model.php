@@ -203,18 +203,25 @@ class Concrete5_Model_PermissionAccess extends Object {
 		return PermissionAccess::getByID($db->Insert_ID(), $pk);
 	}
 	
-	public static function getByID($paID, PermissionKey $pk) {
+	public static function getByID($paID, PermissionKey $pk, $checkPA = true) {
 		$db = Loader::db();
 		$pa = CacheLocal::getEntry('permission_access_object', $paID);
 		if (is_object($pa)) {
 			return $pa;
 		}
-
-		$row = $db->GetRow('select paID, paIsInUse from PermissionAccess where paID = ?', array($paID));
-		if ($row['paID']) {
-			$class = str_replace('PermissionKey', 'PermissionAccess', get_class($pk));
+		$class = str_replace('PermissionKey', 'PermissionAccess', get_class($pk));
+		if ($checkPA) {
+			$row = $db->GetRow('select paID, paIsInUse from PermissionAccess where paID = ?', array($paID));
+			if ($row['paID']) {
+				$obj = new $class();
+				$obj->setPropertiesFromArray($row);
+			}
+		} else { // we got here from an assignment object so we already know its in use.
 			$obj = new $class();
-			$obj->setPropertiesFromArray($row);
+			$obj->paID = $paID;
+			$obj->paIsInUse = true;
+		}
+		if (is_object($obj)) {
 			$obj->setPermissionKey($pk);
 		}
 		CacheLocal::set('permission_access_object', $paID, $obj);

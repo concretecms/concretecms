@@ -714,11 +714,11 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		}
 		
 		public function getBlocks($arHandle = false) {
-			
-			$v = array($this->getCollectionID(), $this->getVersionID());
+			$blockIDs = CacheLocal::getEntry('collection_block_ids', $this->getCollectionID() . ':' . $this->getVersionID());
 			$blocks = array();
-
+		
 			if (!is_array($blockIDs)) {
+				$v = array($this->getCollectionID(), $this->getVersionID());
 				$db = Loader::db();
 				$q = "select Blocks.bID, CollectionVersionBlocks.arHandle from CollectionVersionBlocks inner join Blocks on (CollectionVersionBlocks.bID = Blocks.bID) inner join BlockTypes on (Blocks.btID = BlockTypes.btID) where CollectionVersionBlocks.cID = ? and (CollectionVersionBlocks.cvID = ? or CollectionVersionBlocks.cbIncludeAll=1) order by CollectionVersionBlocks.cbDisplayOrder asc";
 				$r = $db->GetAll($q, $v);
@@ -728,13 +728,14 @@ defined('C5_EXECUTE') or die("Access Denied.");
 						$blockIDs[strtolower($bl['arHandle'])][] = $bl;
 					}
 				}
+				CacheLocal::set('collection_block_ids', $this->getCollectionID() . ':'. $this->getVersionID(), $blockIDs);
 			}
 			
+
 			if ($arHandle != false) {
 				$blockIDsTmp = $blockIDs[strtolower($arHandle)];
 				$blockIDs = $blockIDsTmp;
 			} else {
-			
 				$blockIDsTmp = $blockIDs;
 				$blockIDs = array();
 				foreach($blockIDsTmp as $arHandle => $row) {

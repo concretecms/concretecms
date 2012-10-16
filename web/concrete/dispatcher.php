@@ -47,9 +47,6 @@
 	## Autoload settings
 	require(dirname(__FILE__) . '/startup/autoload.php');
 
-	## Load permissions and attributes
-	PermissionKey::loadAll();
-
 	## Exception handler
 	require(dirname(__FILE__) . '/startup/exceptions.php');
 	
@@ -70,6 +67,9 @@
 
 	# Startup check, install ##	
 	require(dirname(__FILE__) . '/startup/config_check_complete.php');
+
+	## Load permissions and attributes
+	PermissionKey::loadAll();
 
 	## Localization ##	
 	require(dirname(__FILE__) . '/config/localization.php');
