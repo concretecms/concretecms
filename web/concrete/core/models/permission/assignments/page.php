@@ -13,7 +13,7 @@ class Concrete5_Model_PagePermissionAssignment extends PermissionAssignment {
 			$db = Loader::db();
 			$r = $db->GetOne('select paID from PagePermissionAssignments where cID = ? and pkID = ?', array($this->getPermissionObject()->getPermissionsCollectionID(), $this->pk->getPermissionKeyID()));
 			if ($r) {
-				$pa = PermissionAccess::getByID($r, $this->pk);
+				$pa = PermissionAccess::getByID($r, $this->pk, false);
 			}
 			if (is_object($pa)) {
 				PermissionCache::addAccessObject($this->pk, $this->getPermissionObject(), $pa);

@@ -199,11 +199,17 @@ abstract class Concrete5_Model_PermissionKey extends Object {
 
 	public static function getByID($pkID) {
 		$keys = CacheLocal::getEntry('permission_keys', false);
+		if (!is_array($keys)) {
+			$keys = self::loadAll();
+		}
 		return $keys[$pkID];
 	}
 
 	public static function getByHandle($pkHandle) {
 		$keys = CacheLocal::getEntry('permission_keys', false);
+		if (!is_array($keys)) {
+			$keys = self::loadAll();
+		}
 		return $keys[$pkHandle];
 	}
 	
