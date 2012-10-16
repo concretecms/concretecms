@@ -252,11 +252,23 @@ class Concrete5_Model_Block extends Object {
 	}
 
 
-	public function getBlockCachedOutput() {
+	public function getBlockCachedOutput($area) {
 		$db = Loader::db();
-		$c = $this->getBlockCollectionObject();
+		
+		$arHandle = $this->getAreaHandle();
+		if ($this->isBlockInStack()) {
+			$arHandle = $area->getAreaHandle();
+			$cx = Page::getCurrentPage();
+			$cID = $cx->getCollectioniD();
+			$cvID = $cx->getVersionID();
+		} else {
+			$c = $this->getBlockCollectionObject();
+			$cID = $c->getCollectionID();
+			$cvID = $c->getVersionID();
+		}
+		
 		$r = $db->GetRow('select btCachedBlockOutput, btCachedBlockOutputExpires from CollectionVersionBlocksOutputCache where cID = ? and cvID = ? and bID = ? and arHandle = ? ', array(
-			$c->getCollectionID(), $c->getVersionID(), $this->getBlockID(), $this->getAreaHandle()));
+			$cID, $cvID, $this->getBlockID(), $arHandle));
 		if ($r['btCachedBlockOutputExpires'] < time()) {
 			return false;
 		}
@@ -264,7 +276,7 @@ class Concrete5_Model_Block extends Object {
 		return $r['btCachedBlockOutput'];
 	}
 
-	public function setBlockCachedOutput($content, $lifetime) {
+	public function setBlockCachedOutput($content, $lifetime, $area) {
 		$db = Loader::db();
 		$c = $this->getBlockCollectionObject();
 
@@ -272,7 +284,18 @@ class Concrete5_Model_Block extends Object {
 		if ($lifetime > 0) {
 			$btCachedBlockOutputExpires = time() + $lifetime;
 		}
-		$db->Replace('CollectionVersionBlocksOutputCache', array('cID' => $c->getCollectionID(), 'cvID' => $c->getVersionID(), 'bID' => $this->getBlockID(), 'arHandle' => $this->getAreaHandle(), 'btCachedBlockOutput' => $content, 'btCachedBlockOutputExpires' => $btCachedBlockOutputExpires), 
+
+		$arHandle = $this->getAreaHandle();
+		$cID = $c->getCollectionID();
+		$cvID = $c->getVersionID();
+		if ($this->isBlockInStack()) {
+			$arHandle = $area->getAreaHandle();
+			$cx = Page::getCurrentPage();
+			$cID = $cx->getCollectioniD();
+			$cvID = $cx->getVersionID();
+		}
+
+		$db->Replace('CollectionVersionBlocksOutputCache', array('cID' => $cID, 'cvID' => $cvID, 'bID' => $this->getBlockID(), 'arHandle' => $arHandle, 'btCachedBlockOutput' => $content, 'btCachedBlockOutputExpires' => $btCachedBlockOutputExpires), 
 			array('cID', 'cvID', 'arHandle', 'bID'), true);
 	}
 

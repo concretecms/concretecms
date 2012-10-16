@@ -37,31 +37,22 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		*/
 		public static function getByHandle($ctHandle) {
 			$db = Loader::db();
-			$q = "SELECT ctID, ctHandle, ctIsInternal, ctName, ctIcon, pkgID from PageTypes where ctHandle = ?";
+			$q = "SELECT PageTypes.ctID, ComposerTypes.ctID as ctIDc, ctHandle, ctIsInternal, ctName, ctIcon, pkgID, ctComposerPublishPageMethod, ctComposerPublishPageTypeID, ctComposerPublishPageParentID from PageTypes left join ComposerTypes on PageTypes.ctID = ComposerTypes.ctID where ctHandle = ?";
 			$r = $db->query($q, array($ctHandle));
 			if ($r) {
 				$row = $r->fetchRow();
 				$r->free();
 				if (is_array($row)) {
 					$ct = new CollectionType; 
-					$row['mcID'] = $db->GetOne("select p.cID from Pages p inner join CollectionVersions cv on p.cID = cv.cID where cv.ctID = ? and cIsTemplate = 1", array($row['ctID']));
 					$ct->setPropertiesFromArray($row);
-					$ct->setComposerProperties();
+					if ($row['ctIDc']) {
+						$this->ctIncludeInComposer = true;
+					}
 				}					
 			}
 			return $ct;
 		}
-		
-		public function setComposerProperties() {
-			$db = Loader::db();
-			$row = $db->GetRow('select * from ComposerTypes where ctID = ?', array($this->getCollectionTypeID()));
-			if (is_array($row) && $row['ctID'] > 0) {
-				$this->ctIncludeInComposer = true;
-				$row['ctIcon'] = $this->ctIcon; // otherwise setpropertiesfromarray resets this.
-				$this->setPropertiesFromArray($row);
-			}
-		}
-		
+
 		public function setPropertiesFromArray($row) {
 			if (!$row['ctIcon']) {
 				$row['ctIcon'] = FILENAME_COLLECTION_TYPE_DEFAULT_ICON;
@@ -84,16 +75,17 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			}
 
 			$db = Loader::db();
-			$q = "SELECT ctID, ctHandle, ctName, ctIsInternal, ctIcon, pkgID from PageTypes where PageTypes.ctID = ?";
+			$q = "SELECT PageTypes.ctID, ComposerTypes.ctID as ctIDc, ctHandle, ctIsInternal, ctName, ctIcon, pkgID, ctComposerPublishPageMethod, ctComposerPublishPageTypeID, ctComposerPublishPageParentID from PageTypes left join ComposerTypes on PageTypes.ctID = ComposerTypes.ctID where PageTypes.ctID = ?";
 			$r = $db->query($q, array($ctID));
 			if ($r) {
 				$row = $r->fetchRow();
 				$r->free();
 				if (is_array($row)) {
-					$row['mcID'] = $db->GetOne("select p.cID from Pages p inner join CollectionVersions cv on p.cID = cv.cID where cv.ctID = ? and cIsTemplate = 1", array($row['ctID']));
 					$ct = new CollectionType; 
 					$ct->setPropertiesFromArray($row);
-					$ct->setComposerProperties();
+					if ($row['ctIDc']) {
+						$ct->ctIncludeInComposer = true;
+					}
 				}
 			}
 			CacheLocal::set('collection_type_by_id', $ctID, $ct);
@@ -195,7 +187,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				$type->addAttribute('internal', $ct->isCollectionTypeInternal());
 				$type->addAttribute('icon', $ct->getCollectionTypeIcon());
 				$type->addAttribute('package', $ct->getPackageHandle());
-				$ct->setComposerProperties();
 				if ($ct->isCollectionTypeIncludedInComposer()) { 
 					$composer = $type->addChild('composer');
 					$composer->addAttribute('method', $ct->getCollectionTypeComposerPublishMethod());
@@ -578,7 +569,12 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		public function getCollectionTypeComposerPublishPageTypeID() {
 			return $this->ctComposerPublishPageTypeID;
 		}
-		public function getMasterCollectionID() { return $this->mcID; }
+		public function getMasterCollectionID() { 
+			$db = Loader::db();
+			$mcID = $db->GetOne("select p.cID from Pages p inner join CollectionVersions cv on p.cID = cv.cID where cv.ctID = ? and cIsTemplate = 1", array($this->ctID));
+			return $mcID;
+		}
+
 		public function getCollectionTypeIcon() {return $this->ctIcon;}
 		public function getPackageID() {return $this->pkgID;}
 		public function getPackageHandle() {
