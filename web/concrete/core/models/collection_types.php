@@ -46,7 +46,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 					$ct = new CollectionType; 
 					$ct->setPropertiesFromArray($row);
 					if ($row['ctIDc']) {
-						$this->ctIncludeInComposer = true;
+						$ct->ctIncludeInComposer = true;
 					}
 				}					
 			}

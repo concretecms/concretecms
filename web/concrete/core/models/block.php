@@ -29,6 +29,7 @@ class Concrete5_Model_Block extends Object {
 	var $c;
 	protected $csrID;
 	protected $proxyBlock = false;
+	protected $bIncludeInComposerIsSet = false;
 
 	public static function populateManually($blockInfo, $c, $a) {
 		$b = new Block;
@@ -111,37 +112,6 @@ class Concrete5_Model_Block extends Object {
 			}
 			
 			$b->instance = new $class($b);
-			
-			if ($c != null) {
-				$ct = CollectionType::getByID($c->getCollectionTypeID());
-				if (is_object($ct)) {
-					if ($ct->isCollectionTypeIncludedInComposer()) { 
-					
-						if ($c->isMasterCollection()) {
-							$ctID = $c->getCollectionTypeID();
-							$ccbID = $bID;
-						} else {
-							$tempBID = $b->getBlockID();
-							while ($tempBID != false && $tempBID != 0) {
-								$originalBID = $tempBID;
-								$tempBID = $db->GetOne('select distinct br.originalBID from BlockRelations br inner join CollectionVersionBlocks cvb on cvb.bID = br.bID where br.bID = ? and cvb.cID = ?', array($tempBID, $cID));
-							}
-							if ($originalBID && is_object($c)) {
-								$ctID = $c->getCollectionTypeID();
-								$ccbID = $originalBID;
-							}
-						}
-						
-						if ($ctID && $ccbID) {
-							$cb = $db->GetRow('select bID, ccFilename from ComposerContentLayout where ctID = ? and bID = ?', array($ctID, $ccbID));
-							if (is_array($cb) && $cb['bID'] == $ccbID) {
-								$b->bIncludeInComposer = 1;
-								$b->cbFilename = $cb['ccFilename'];
-							}
-						}
-					}
-				}
-			}
 			
 			if ($c != null || $a != null) {
 				CacheLocal::set('block', $bID . ':' . $cID . ':' . $cvID . ':' . $arHandle, $b);
@@ -338,8 +308,47 @@ class Concrete5_Model_Block extends Object {
 	}
 	
 	public function isBlockIncludedInComposer() {
+		if (!$this->bIncludeInComposerIsSet) {
+			$this->setBlockComposerProperties();
+		}
+
 		return $this->bIncludeInComposer;
 	}
+
+
+	protected function setBlockComposerProperties() {
+		$this->bIncludeInComposerIsSet = true;
+		if ($this->c != null) {
+			$ct = CollectionType::getByID($this->c->getCollectionTypeID());
+			if (is_object($ct)) {
+				if ($ct->isCollectionTypeIncludedInComposer()) { 				
+					if ($this->c->isMasterCollection()) {
+						$ctID = $this->c->getCollectionTypeID();
+						$ccbID = $this->bID;
+					} else {
+						$tempBID = $this->getBlockID();
+						while ($tempBID != false && $tempBID != 0) {
+							$originalBID = $tempBID;
+							$tempBID = $db->GetOne('select distinct br.originalBID from BlockRelations br inner join CollectionVersionBlocks cvb on cvb.bID = br.bID where br.bID = ? and cvb.cID = ?', array($tempBID, $this->c->getCollectionID()));
+						}
+						if ($originalBID && is_object($this->c)) {
+							$ctID = $this->c->getCollectionTypeID();
+							$ccbID = $originalBID;
+						}
+					}
+					
+					if ($ctID && $ccbID) {
+						$cb = $db->GetRow('select bID, ccFilename from ComposerContentLayout where ctID = ? and bID = ?', array($ctID, $ccbID));
+						if (is_array($cb) && $cb['bID'] == $ccbID) {
+							$this->bIncludeInComposer = 1;
+							$this->cbFilename = $cb['ccFilename'];
+						}
+					}
+				}
+			}
+		}
+	}
+
 
 	function loadNewCollection(&$c) {
 		$this->c = $c;
@@ -733,6 +742,9 @@ class Concrete5_Model_Block extends Object {
 	}
 
 	function getBlockComposerFilename() {
+		if (!$this->bIncludeInComposerIsSet) {
+			$this->setBlockComposerProperties();
+		}
 		return $this->cbFilename;
 	}
 
