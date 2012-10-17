@@ -37,6 +37,7 @@ foreach($files as $f) {
 	$resp[$i]['filePathInline'] = View::url('/download_file', 'view_inline', $f->getFileID());
 	$resp[$i]['filePath'] = View::url('/download_file', 'view', $f->getFileID());
 	$resp[$i]['title'] = $f->getTitle();
+	$resp[$i]['description'] = $f->getDescription();
 	$resp[$i]['fileName'] = $f->getFilename();
 	$resp[$i]['thumbnailLevel1'] = $f->getThumbnailSRC(1);
 	$resp[$i]['thumbnailLevel2'] = $f->getThumbnailSRC(2);
