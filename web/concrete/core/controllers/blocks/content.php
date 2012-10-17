@@ -130,8 +130,10 @@
 				array('ContentExporter', 'replaceFileWithPlaceHolderInMatch'),				
 				$content);
 
-
-			$record->addChild('content', '<![CDATA['.Loader::helper('text')->entities($content).']]>');
+			$cnode = $record->addChild('content');
+			$node = dom_import_simplexml($cnode);
+			$no = $node->ownerDocument;
+			$node->appendChild($no->createCDataSection($content));
 		}
 		
 		

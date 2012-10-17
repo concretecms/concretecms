@@ -607,12 +607,20 @@ class Concrete5_Model_Page extends Collection {
 		}
 	}
 	
-	public function export($pageNode) {
+	public function export($pageNode, $includePublicDate = false) {
 		$p = $pageNode->addChild('page');
 		$p->addAttribute('name', Loader::helper('text')->entities($this->getCollectionName()));
 		$p->addAttribute('path', $this->getCollectionPath());
+		if ($includePublicDate) {
+			$p->addAttribute('public-date', $this->getCollectionDatePUblic());
+		}
 		$p->addAttribute('filename', $this->getCollectionFilename());
 		$p->addAttribute('pagetype', $this->getCollectionTypeHandle());
+		$ui = UserInfo::getByID($this->getCollectionUserID());
+		if (!is_object($ui)) {
+			$ui = UserInfo::getByID(USER_SUPER_ID);
+		}
+		$p->addAttribute('user', $ui->getUserName());
 		$p->addAttribute('description', Loader::helper('text')->entities($this->getCollectionDescription()));
 		$p->addAttribute('package', $this->getPackageHandle());
 		if ($this->getCollectionParentID() == 0 && $this->isSystemPage()) {
@@ -1088,7 +1096,7 @@ class Concrete5_Model_Page extends Collection {
             $cHandle = $txt->urlify($cName);
 			$cHandle = str_replace('-', PAGE_PATH_SEPARATOR, $cHandle);		
         } else {
-            $cHandle = $txt->urlify($data['cHandle']);
+            $cHandle = $data['cHandle']; // we DON'T run urlify
 			$cHandle = str_replace('-', PAGE_PATH_SEPARATOR, $cHandle);		
         }
 		$cName = $txt->sanitize($cName);
@@ -1948,7 +1956,7 @@ class Concrete5_Model_Page extends Collection {
 			// make the handle out of the title
 			$handle = $txt->urlify($data['name']);
 		} else {
-			$handle = $txt->urlify($data['cHandle']);
+			$handle = $data['cHandle']; // we take it as it comes.
 		}
 		$handle = str_replace('-', PAGE_PATH_SEPARATOR, $handle);		
 		$data['handle'] = $handle;

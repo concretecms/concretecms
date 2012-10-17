@@ -39,7 +39,10 @@
 		public function export(SimpleXMLElement $blockNode) {			
 			$stack = Stack::getByID($this->stID);
 			if (is_object($stack)) {
-				$blockNode->addChild('stack', '<![CDATA[' . $stack->getCollectionName() . ']]>');
+				$cnode = $blockNode->addChild('stack');
+				$node = dom_import_simplexml($cnode);
+				$no = $node->ownerDocument;
+				$node->appendChild($no->createCDataSection($stack->getCollectionName()));
 			}
 		}
 		

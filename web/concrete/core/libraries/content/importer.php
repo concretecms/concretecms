@@ -168,6 +168,20 @@ class Concrete5_Library_Content_Importer {
 			foreach($nodes as $px) {
 				$pkg = ContentImporter::getPackageObject($px['package']);
 				$data = array();
+				$user = (string) $px['user'];
+				if ($user != '') {
+					$ui = UserInfo::getByUserName($user);
+					if (is_object($ui)) {
+						$data['uID'] = $ui->getUserID();
+					} else {
+						$data['uID'] = USER_SUPER_ID;
+					}	
+				}
+				$cDatePublic = (string) $px['public-date'];
+				if ($cDatePublic) {
+					$data['cDatePublic'] = $cDatePublic;
+				}
+
 				$data['pkgID'] = 0;
 				if (is_object($pkg)) {
 					$data['pkgID'] = $pkg->getPackageID();
@@ -190,9 +204,9 @@ class Concrete5_Library_Content_Importer {
 							$parent = Page::getByPath($parentPath);
 						}
 						$page = $parent->add($ct, $data);
-
 					}
 				}
+
 				$args['cName'] = $px['name'];
 				$args['cDescription'] = $px['description'];
 				$args['ctID'] = $ct->getCollectionTypeID();
