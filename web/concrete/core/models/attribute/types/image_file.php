@@ -23,8 +23,14 @@ class Concrete5_Controller_AttributeType_ImageFile extends AttributeTypeControll
 	
 	public function exportValue($akn) {
 		$av = $akn->addChild('value');
-		$av->addChild('fID', ContentExporter::replaceFileWithPlaceHolder($this->getValue()->getFileID()));
+		$fo = $this->getValue();
+		if (is_object($fo)) {
+			$av->addChild('fID', ContentExporter::replaceFileWithPlaceHolder($fo->getFileID()));
+		} else {
+			$av->addChild('fID', 0);
+		}
 	}
+
 	public function searchForm($list) {
 		$fileID = $this->request('value');
 		$list->filterByAttribute($this->attributeKey->getAttributeKeyHandle(), $fileID);
