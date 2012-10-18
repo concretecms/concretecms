@@ -26,6 +26,7 @@ $classes = array(
 	'AttributeTypeView' => array('library','attribute/view'),
 	'AttributeTypeController' => array('library','attribute/controller'),
 	'Marketplace' => array('library', 'marketplace'),
+	'Queue' => array('library','queue'),
 	'Area' => array('model','area'),
 	'GlobalArea' => array('model','global_area'),
 	'AttributeKey' => array('model','attribute/key'),
