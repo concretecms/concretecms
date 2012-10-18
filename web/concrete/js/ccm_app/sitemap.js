@@ -37,13 +37,13 @@ showPageMenu = function(obj, e) {
 		
 		if (obj.isTrash) {
 
-			html += '<li><a class="ccm-menu-icon ccm-icon-delete-menu" onclick="ccm_sitemapEmptyTrash(' + obj.instance_id + ',' + obj.cID + ')" href="javascript:void(0)">' + ccmi18n_sitemap.emptyTrash + '<\/a><\/li>';
+			html += '<li><a class="ccm-menu-icon ccm-icon-delete-menu" onclick="ccm_sitemapDeleteForever(' + obj.instance_id + ',' + obj.cID + ', true)" href="javascript:void(0)">' + ccmi18n_sitemap.emptyTrash + '<\/a><\/li>';
 		
 		} else if (obj.inTrash) {
 
 			html += '<li><a class="ccm-menu-icon ccm-icon-search-pages" onclick="ccm_previewInternalTheme(' + obj.cID + ', false, \'' + ccmi18n_sitemap.previewPage + '\')" href="javascript:void(0)">' + ccmi18n_sitemap.previewPage + '<\/a><\/li>';
 			html += '<li class=\"ccm-menu-separator\"><\/li>';
-			html += '<li><a class="ccm-menu-icon ccm-icon-delete-menu" onclick="ccm_sitemapDeleteForever(' + obj.instance_id + ',' + obj.cID + ')" href="javascript:void(0)">' + ccmi18n_sitemap.deletePageForever + '<\/a><\/li>';
+			html += '<li><a class="ccm-menu-icon ccm-icon-delete-menu" onclick="ccm_sitemapDeleteForever(' + obj.instance_id + ',' + obj.cID + ', false)" href="javascript:void(0)">' + ccmi18n_sitemap.deletePageForever + '<\/a><\/li>';
 		
 		} else if (obj.cAlias == 'LINK' || obj.cAlias == 'POINTER') {
 		
@@ -562,30 +562,23 @@ toggleSub = function(instanceID, nodeID, display_mode, select_mode) {
 	}
 }
 
-ccm_sitemapEmptyTrash = function(instance_id, nodeID) {
-	setLoading(nodeID);
-	$.getJSON(CCM_TOOLS_PATH + '/dashboard/sitemap_empty_trash.php', function(resp) {
-		// parse response
-		ccm_parseJSON(resp, function() {
-			closeSub(instance_id, nodeID, 'full', '');
-			removeLoading(nodeID);
-			var container = $("ul[tree-root-node-id=" + nodeID + "][sitemap-instance-id=" + instance_id + "]").parent();
-			container.find('img.tree-plus').remove();
-			container.find('span.ccm-sitemap-num-subpages').remove();
-			ccmAlert.hud(resp.message, 2000);
+ccm_sitemapDeleteForever = function(instance_id, nodeID, isTrash) {
+	var dialogTitle = (isTrash) ? ccmi18n_sitemap.emptyTrash : ccmi18n_sitemap.deletePages;
+	jQuery.fn.dialog.showLoader();
+	jQuery.get(CCM_TOOLS_PATH + '/dashboard/sitemap_delete_forever?cID=' + nodeID + '&instance_id=' + instance_id, function(r) {
+		jQuery.fn.dialog.hideLoader();
+		$('<div id="ccm-sitemap-delete-forever" />').appendTo(document.body).html(r).jqdialog({
+			autoOpen: false,
+			height: 100,
+			width: 400,
+			modal: true,
+			title: dialogTitle,		
+			closeOnEscape: false,
+			open: function(e, ui) {				
+				$('.ui-dialog-titlebar-close', this.parentNode).hide();
+			}
 		});
-	});
-}
-
-ccm_sitemapDeleteForever = function(instance_id, nodeID) {
-	setLoading(nodeID);
-	params = {'cID': nodeID};
-	$.getJSON(CCM_TOOLS_PATH + '/dashboard/sitemap_delete_forever.php', params, function(resp) {
-		// parse response
-		ccm_parseJSON(resp, function() {
-			deleteBranchFade(nodeID);
-			ccmAlert.hud(resp.message, 2000);
-		});
+		$("#ccm-sitemap-delete-forever").jqdialog('open');
 	});
 }
 

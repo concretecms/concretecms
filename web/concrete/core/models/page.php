@@ -606,7 +606,56 @@ class Concrete5_Model_Page extends Collection {
 			return $cIDRedir;
 		}
 	}
-	
+
+	protected function populateRecursivePages($pages, $cID, $level, $includeThisPage = true) {
+		$db = Loader::db();
+		$children = $db->GetCol('select cID from Pages where cParentID = ? order by cDisplayOrder asc', array($cID));
+		if ($includeThisPage) {	
+			$pages[] = array(
+				'cID' => $cID,
+				'level' => $level,
+				'total' => count($children)
+			);
+		}
+		$level++;
+		if (count($children) > 0) {
+			foreach($children as $cID) {
+				$pages = $this->populateRecursivePages($pages, $cID, $level);
+			}
+		}
+		return $pages;
+	}
+
+	protected function queueForDeletionSort($a, $b) {
+		if ($a['level'] > $b['level']) {
+			return -1;
+		}
+		if ($a['level'] < $b['level']) {
+			return 1;
+		}
+		return 0;
+	}
+
+
+	public function queueForDeletion() {
+		$pages = array();
+		$includeThisPage = true;
+		if ($this->getCollectionPath() == TRASH_PAGE_PATH) {
+			// we're in the trash. we can't delete the trash. we're skipping over the trash node.
+			$includeThisPage = false;
+		}
+		$pages = $this->populateRecursivePages($pages, $this->getCollectionID(), 0, $includeThisPage);
+		// now, since this is deletion, we want to order the pages by level, which
+		// should get us no funny business if the queue dies.
+		usort($pages, array('Page', 'queueForDeletionSort'));
+		$q = Queue::get('delete_page');
+		foreach($pages as $page) {
+			$q->send(serialize($page));
+		}
+		// now we have a list of items that are in the queue in order that they can be safely deleted.
+
+	}
+
 	public function export($pageNode, $includePublicDate = false) {
 		$p = $pageNode->addChild('page');
 		$p->addAttribute('name', Loader::helper('text')->entities($this->getCollectionName()));
