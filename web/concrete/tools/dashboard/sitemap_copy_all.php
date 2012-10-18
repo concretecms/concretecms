@@ -6,7 +6,10 @@ if (!$dh->canRead()) {
 }
 
 $q = Queue::get('copy_page');
-$isEmptyTrash = false;
+$includeParent = true;
+if ($_REQUEST['copyChildrenOnly']) {
+	$includeParent = false;
+}
 
 if ($_POST['process']) {
 	$obj = new stdClass;
@@ -38,7 +41,7 @@ if ($_POST['process']) {
 	if (is_object($oc) && !$oc->isError() && is_object($dc) && !$dc->isError()) { 
 		$u = new User();
 		if ($u->isSuperUser() && $oc->canMoveCopyTo($dc)) {
-			$oc->queueForDuplication($dc);
+			$oc->queueForDuplication($dc, $includeParent);
 			$totalItems = $q->count();
 		}
 	}
