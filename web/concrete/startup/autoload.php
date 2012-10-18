@@ -213,7 +213,8 @@ $classes = array(
 	'SecurimageSystemCaptchaTypeController' => array('model','system/captcha/types/securimage/controller'),
 	'DashboardBaseController' => array('controller', '/dashboard/base'),
 	'AccountController' => array('controller', '/account'),
-	'AccountProfileEditController' => array('controller', '/account/profile/edit')
+	'AccountProfileEditController' => array('controller', '/account/profile/edit'),
+	'Zend_Queue_Adapter_Concrete5' => array('library', 'Zend/Queue/Adapter/Concrete5')
 );
 
 Loader::registerAutoload($classes);
