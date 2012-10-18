@@ -6,10 +6,10 @@ class Zend_Queue_Adapter_Concrete5 extends Zend_Queue_Adapter_Db {
 	public function __construct($options, Zend_Queue $queue = null) {
 		parent::__construct($options, $queue);
 		$this->_queueTable->setOptions(
-			array(Zend_Db_Table_Abstract::NAME => 'QueueList')
+			array(Zend_Db_Table_Abstract::NAME => 'Queues')
 		);
 		$this->_messageTable->setOptions(
-			array(Zend_Db_Table_Abstract::NAME => 'QueueMessageList')
+			array(Zend_Db_Table_Abstract::NAME => 'QueueMessages')
 		);
 
 	}

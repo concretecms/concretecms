@@ -77,6 +77,14 @@ if (!defined('SITEMAP_APPROVE_IMMEDIATELY')) {
 	define('SITEMAP_APPROVE_IMMEDIATELY', true);
 }
 
+if (!defined('DELETE_PAGES_LIMIT')) {
+	define('DELETE_PAGES_LIMIT', 10); // number of pages to delete during one ajax request.
+}
+
+if (!defined('COPY_PAGES_LIMIT')) {
+	define('COPY_PAGES_LIMIT', 10); // number of pages to delete during one ajax request.
+}
+
 if (!defined('ENABLE_DEFINABLE_USER_ATTRIBUTES')) {
 	define('ENABLE_DEFINABLE_USER_ATTRIBUTES', true);
 }
