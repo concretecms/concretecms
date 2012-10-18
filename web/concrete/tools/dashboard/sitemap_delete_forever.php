@@ -10,18 +10,15 @@ $isEmptyTrash = false;
 
 if ($_POST['process']) {
 	$obj = new stdClass;
-	$obj->totalPages = $q->count();	
+	$obj->totalItems = $q->count();	
 	$js = Loader::helper('json');
 	$messages = $q->receive(DELETE_PAGES_LIMIT);
 	foreach($messages as $key => $p) {
 		// delete the page here
-		$q->deleteMessage($p);
 		$page = unserialize($p->body);
 		$c = Page::getByID($page['cID']);
-		$cp = new Permissions($c);
-		if ($cp->canDeletePage()) { 
-			$c->delete();
-		}
+		$c->delete();
+		$q->deleteMessage($p);
 	}
 	print $js->encode($obj);
 	exit;
@@ -34,58 +31,16 @@ if ($_POST['process']) {
 		$cp = new Permissions($c);
 		if ($cp->canDeletePage()) { 
 			$c->queueForDeletion();
-			$totalPages = $q->count();
+			$totalItems = $q->count();
 		}
 	}
 }
 ?>
 
 <div class="ccm-ui">
-	<div id="delete-progress-bar">
+	<div id="ccm-progressive-operation-progress-bar" data-total-items="<?=$totalItems?>">
 	<div class="progress progress-striped active">
 	<div class="bar" style="width: 0%;"></div>
 	</div>
 	</div>
 </div>
-
-<script type="text/javascript">
-$(function() {
-	ccm_deleteForeverLoop = function() {
-		$.ajax({
-			url: '<?=REL_DIR_FILES_TOOLS_REQUIRED?>/dashboard/sitemap_delete_forever',
-			dataType: 'json',
-			type: 'POST',
-			data: {
-				'process': true,
-				'cID': '<?=$_REQUEST['cID']?>'
-			},
-			success: function(r) {
-				var totalPagesLeft = r.totalPages;
-				// update the percentage
-				var pct = Math.round(((<?=$totalPages?> - totalPagesLeft) / <?=$totalPages?>) * 100);
-				$('#delete-progress-bar div.bar').width(pct + '%');
-				if (totalPagesLeft > 0) {
-					setTimeout(function() {
-						ccm_deleteForeverLoop();
-					}, 250);
-				} else {
-					setTimeout(function() {
-						// give the animation time to catch up.
-						<? if ($isEmptyTrash) { ?>
-							closeSub("<?=$_REQUEST['instance_id']?>", "<?=$_REQUEST['cID']?>", 'full', '');
-							var container = $("ul[tree-root-node-id=<?=$_REQUEST['cID']?>]").parent();
-							container.find('img.tree-plus').remove();
-							container.find('span.ccm-sitemap-num-subpages').remove();
-						<? } else { ?>
-							deleteBranchFade("<?=$_REQUEST['cID']?>");
-							ccmAlert.hud("<?=t('Page(s) deleted.')?>", 2000);
-						<? } ?>
-							$('#ccm-sitemap-delete-forever').dialog('close');
-					}, 1000);
-				}
-			}
-		});
-	}
-	ccm_deleteForeverLoop();		
-});
-</script>
