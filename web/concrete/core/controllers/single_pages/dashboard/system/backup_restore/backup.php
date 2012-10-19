@@ -31,8 +31,10 @@ class Concrete5_Controller_Dashboard_System_BackupRestore_Backup extends Dashboa
 			$arr_backupfileinfo = Array();
 			if (count($arr_bckups) > 0) {
 			 foreach ($arr_bckups as $bkupfile) {
-				preg_match('/[0-9]+/',$bkupfile,$timestamp);
-				$arr_backupfileinfo[] = Array("file" => $bkupfile,  "date" =>  date("Y-m-d H:i:s",$timestamp[0]));
+			 	// This will ignore files that do not match the created backup pattern of including a timestamp in the filename
+				if (preg_match("/_([\d]{10,})/", $bkupfile, $timestamp)){
+					$arr_backupfileinfo[] = Array("file" => $bkupfile,  "date" =>  date("Y-m-d H:i:s",$timestamp[1]));
+				}
 			 }
 			 $this->set('backups',$arr_backupfileinfo);
 			}
