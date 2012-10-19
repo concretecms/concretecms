@@ -476,6 +476,7 @@ activateLabels = function(instance_id, display_mode, select_mode) {
 
 ccm_triggerProgressiveOperation = function(url, params, dialogTitle, onComplete) {
 	jQuery.fn.dialog.showLoader();
+	$('#ccm-dialog-progress-bar').remove();
 	$.ajax({
 		url: url,
 		type: 'GET',
@@ -507,13 +508,13 @@ ccm_doProgressiveOperation = function(url, params, totalItems, onComplete) {
 		dataType: 'json',
 		type: 'POST',
 		data: params,
-		error:function(xhr, status) {
+		error:function(xhr, status, r) {
 			switch(status) {
 				case 'timeout':
 					var text = ccmi18n.requestTimeout;
 					break;
 				default:
-					var text = ccmi18n.generalRequestError;
+					var text = xhr.responseText;
 					break;
 			}
 			$('#ccm-dialog-progress-bar').dialog('option', 'height', 200);
@@ -547,6 +548,18 @@ ccm_doProgressiveOperation = function(url, params, totalItems, onComplete) {
 			}
 		}
 	});
+}
+
+ccm_refreshCopyOperations = function() {
+	var dialogTitle = ccmi18n_sitemap.copyProgressTitle;
+	ccm_triggerProgressiveOperation(
+		CCM_TOOLS_PATH + '/dashboard/sitemap_copy_all', 
+		{'process': true},
+		dialogTitle, function() {
+			$('.ui-dialog-content').dialog('close');
+			window.location.reload();
+		}
+	);
 }
 
 moveCopyAliasNode = function(reloadPage) {
