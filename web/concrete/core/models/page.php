@@ -579,27 +579,29 @@ class Concrete5_Model_Page extends Collection {
 		}
 	}
 
-	protected function populateRecursivePages($pages, $cID, $cParentID, $level, $includeThisPage = true) {
+	public function populateRecursivePages($pages, $pageRow, $cParentID, $level, $includeThisPage = true) {
 		$db = Loader::db();
-		$children = $db->GetCol('select cID from Pages where cParentID = ? order by cDisplayOrder asc', array($cID));
+		$children = $db->GetAll('select cID, cDisplayOrder from Pages where cParentID = ? order by cDisplayOrder asc', array($pageRow['cID']));
 		if ($includeThisPage) {	
 			$pages[] = array(
-				'cID' => $cID,
+				'cID' => $pageRow['cID'],
+				'cDisplayOrder' => $pageRow['cDisplayOrder'],
 				'cParentID' => $cParentID,
 				'level' => $level,
 				'total' => count($children)
 			);
 		}
 		$level++;
+		$cParentID = $pageRow['cID'];
 		if (count($children) > 0) {
-			foreach($children as $cIDSub) {
-				$pages = $this->populateRecursivePages($pages, $cIDSub, $cID, $level);
+			foreach($children as $pageRow) {
+				$pages = $this->populateRecursivePages($pages, $pageRow, $cParentID, $level);
 			}
 		}
 		return $pages;
 	}
 
-	protected function queueForDeletionSort($a, $b) {
+	public function queueForDeletionSort($a, $b) {
 		if ($a['level'] > $b['level']) {
 			return -1;
 		}
@@ -609,13 +611,25 @@ class Concrete5_Model_Page extends Collection {
 		return 0;
 	}
 
-	protected function queueForDuplicationSort($a, $b) {
+	public function queueForDuplicationSort($a, $b) {
 		if ($a['level'] > $b['level']) {
 			return 1;
 		}
 		if ($a['level'] < $b['level']) {
 			return -1;
 		}
+		if ($a['cDisplayOrder'] > $b['cDisplayOrder']) {
+			return 1;
+		}
+		if ($a['cDisplayOrder'] < $b['cDisplayOrder']) {
+			return -1;
+		}
+		if ($a['cID'] > $b['cID']) {
+			return 1;
+		}
+		if ($a['cID'] < $b['cID']) {
+			return -1;
+		}		
 		return 0;
 	}
 
@@ -626,7 +640,7 @@ class Concrete5_Model_Page extends Collection {
 			// we're in the trash. we can't delete the trash. we're skipping over the trash node.
 			$includeThisPage = false;
 		}
-		$pages = $this->populateRecursivePages($pages, $this->getCollectionID(), $this->getCollectionParentID(), 0, $includeThisPage);
+		$pages = $this->populateRecursivePages($pages, array('cID' => $this->getCollectionID()), $this->getCollectionParentID(), 0, $includeThisPage);
 		// now, since this is deletion, we want to order the pages by level, which
 		// should get us no funny business if the queue dies.
 		usort($pages, array('Page', 'queueForDeletionSort'));
@@ -638,7 +652,7 @@ class Concrete5_Model_Page extends Collection {
 
 	public function queueForDuplication($destination, $includeParent = true) {
 		$pages = array();
-		$pages = $this->populateRecursivePages($pages, $this->getCollectionID(), $this->getCollectionParentID(), 0, $includeParent);
+		$pages = $this->populateRecursivePages($pages, array('cID' => $this->getCollectionID()), $this->getCollectionParentID(), 0, $includeParent);
 		// now, since this is deletion, we want to order the pages by level, which
 		// should get us no funny business if the queue dies.
 		usort($pages, array('Page', 'queueForDuplicationSort'));
@@ -1502,10 +1516,6 @@ class Concrete5_Model_Page extends Collection {
 			// rescan the collection path
 			$nc2 = Page::getByID($newCID);
 
-			$db->Execute('insert into PageRelations (cID, originalCID, relationType) values (?, ?, ?)', array(
-				$newCID, $this->getCollectionID(), 'C'
-			));
-			
 			// now with any specific permissions - but only if this collection is set to override
 			if ($this->getCollectionInheritance() == 'OVERRIDE') {
 				$nc2->acquirePagePermissions($this->getPermissionsCollectionID());
@@ -1579,9 +1589,6 @@ class Concrete5_Model_Page extends Collection {
 		$q = "delete from Pages where cPointerID = '{$cID}'";
 		$r = $db->query($q);
 
-		$q = "delete from PageRelations where cID = '{$cID}'";
-		$r = $db->query($q);
-		
 		$q = "delete from Areas WHERE cID = '{$cID}'";
 		$r = $db->query($q);
 

@@ -36,8 +36,8 @@ mysqlaccess queue queue --superuser=root -H 127.0.0.1
 -- Table structure for table `message`
 --
 
-DROP TABLE IF EXISTS `message`;
-CREATE TABLE IF NOT EXISTS `message` (
+DROP TABLE IF EXISTS `QueueMessages`;
+CREATE TABLE IF NOT EXISTS `QueueMessages` (
   `message_id` bigint(20) unsigned NOT NULL auto_increment,
   `queue_id` int(10) unsigned NOT NULL,
   `handle` char(32) default NULL,
@@ -56,8 +56,8 @@ CREATE TABLE IF NOT EXISTS `message` (
 -- Table structure for table `queue`
 --
 
-DROP TABLE IF EXISTS `queue`;
-CREATE TABLE IF NOT EXISTS `queue` (
+DROP TABLE IF EXISTS `Queues`;
+CREATE TABLE IF NOT EXISTS `Queues` (
   `queue_id` int(10) unsigned NOT NULL auto_increment,
   `queue_name` varchar(100) NOT NULL,
   `timeout` smallint(5) unsigned NOT NULL default '30',

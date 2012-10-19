@@ -23,22 +23,35 @@ if ($_POST['process']) {
 		$oc = Page::getByID($page['cID']);
 		// this is the page we're going to copy.
 		// now we check to see if the parent ID of the current record has already been duplicated somewhere.
-		$newCID = $db->GetOne('select cID from PageRelations where originalCID = ? and relationType = ?', array($page['cParentID'], 'C'));
+		$newCID = $db->GetOne('select cID from QueuePageDuplicationRelations where originalCID = ? and queue_name = ?', array($page['cParentID'], 'copy_page'));
 		if ($newCID > 0) {
 			$dc = Page::getByID($newCID);
 		} else {
 			$dc = Page::getByID($page['destination']);
 		}
-		$oc->duplicate($dc);
+		$nc = $oc->duplicate($dc);
+		$ocID = $oc->getCollectionID();
+		$ncID = $nc->getCollectionID();
+		if ($oc->getCollectionPointerOriginalID() > 0) {
+			$ocID = $oc->getCollectionPointerOriginalID();
+		}
+		if ($nc->getCollectionPointerOriginalID() > 0) {
+			$ncID = $nc->getCollectionPointerOriginalID();
+		}		
+		$db->Execute('insert into QueuePageDuplicationRelations (cID, originalCID, queue_name) values (?, ?, ?)', array(
+			$ncID, $ocID, 'copy_page'
+		));
+			
 		$q->deleteMessage($p);
 	}
 	print $js->encode($obj);
 	if ($q->count() == 0) {
-		$db->Execute('truncate table PageRelations');
+		$q->deleteQueue('copy_page');
+		$db->Execute('truncate table QueuePageDuplicationRelations');
 	}
 	exit;
 
-} else {
+} else if ($q->count() == 0) {
 	$oc = Page::getByID($_REQUEST['origCID']);
 	$dc = Page::getByID($_REQUEST['destCID']);
 	if (is_object($oc) && !$oc->isError() && is_object($dc) && !$dc->isError()) { 
@@ -49,5 +62,5 @@ if ($_POST['process']) {
 		}
 	}
 }
-
+$totalItems = $q->count();
 Loader::element('progress_bar', array('totalItems' => $totalItems, 'totalItemsSummary' => t2("%d page", "%d pages", $totalItems)));
