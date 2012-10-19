@@ -484,7 +484,7 @@ ccm_triggerProgressiveOperation = function(url, params, dialogTitle, onComplete)
 			jQuery.fn.dialog.hideLoader();
 			$('<div id="ccm-dialog-progress-bar" />').appendTo(document.body).html(r).jqdialog({
 				autoOpen: false,
-				height: 100,
+				height: 200,
 				width: 400,
 				modal: true,
 				title: dialogTitle,		
@@ -526,6 +526,10 @@ ccm_doProgressiveOperation = function(url, params, totalItems, onComplete) {
 			var totalItemsLeft = r.totalItems;
 			// update the percentage
 			var pct = Math.round(((totalItems - totalItemsLeft) / totalItems) * 100);
+			$('#ccm-progressive-operation-status').html(1);
+			if ((totalItems - totalItemsLeft) > 0) {
+				$('#ccm-progressive-operation-status').html(totalItems - totalItemsLeft);
+			}
 			$('#ccm-progressive-operation-progress-bar div.bar').width(pct + '%');
 			if (totalItemsLeft > 0) {
 				setTimeout(function() {
