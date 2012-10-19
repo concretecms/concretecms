@@ -41,6 +41,23 @@ $listHTML = $sh->outputRequestHTML($instanceID, 'full', false, $nodes);
 	</div>
 </div>
 <div class="ccm-pane-body ccm-pane-body-footer">
+
+	<? $u = new User();
+	if ($u->isSuperUser()) {
+		if (Queue::exists('copy_page')) {
+		$q = Queue::get('copy_page');
+		if ($q->count() > 0) { ?>
+
+			<div style="position: relative" class="alert alert-warning">
+				<div style="position: absolute; top: 5px; right: 5px"><button class="btn btn-small" onclick="ccm_refreshCopyOperations()"><?=t('Resume Copy')?></button></div>
+				<?=t('Page copy operations pending.')?>
+			</div>
+
+		<? }
+	}
+
+	} ?>
+
 	<? if ($sh->canRead()) { ?>
 	
 		<div id="ccm-sitemap-message"></div>

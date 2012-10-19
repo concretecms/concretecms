@@ -20,9 +20,13 @@ if ($_POST['process']) {
 		$c->delete();
 		$q->deleteMessage($p);
 	}
+	if ($q->count() == 0) {
+		$q->deleteQueue('delete_page');
+	}
+
 	print $js->encode($obj);
 	exit;
-} else {
+} else if ($q->count() == 0) {
 	$c = Page::getByID($_REQUEST['cID']);
 	if ($c->getCollectionPath() == TRASH_PAGE_PATH) {
 		$isEmptyTrash = true;
@@ -31,9 +35,9 @@ if ($_POST['process']) {
 		$cp = new Permissions($c);
 		if ($cp->canDeletePage()) { 
 			$c->queueForDeletion();
-			$totalItems = $q->count();
 		}
 	}
 }
 
+$totalItems = $q->count();
 Loader::element('progress_bar', array('totalItems' => $totalItems, 'totalItemsSummary' => t2("%d page", "%d pages", $totalItems)));
