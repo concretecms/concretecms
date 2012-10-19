@@ -49,12 +49,5 @@ if ($_POST['process']) {
 		}
 	}
 }
-?>
 
-<div class="ccm-ui">
-	<div id="ccm-progressive-operation-progress-bar" data-total-items="<?=$totalItems?>">
-	<div class="progress progress-striped active">
-	<div class="bar" style="width: 0%;"></div>
-	</div>
-	</div>
-</div>
+Loader::element('progress_bar', array('totalItems' => $totalItems, 'totalItemsSummary' => t2("%d page", "%d pages", $totalItems)));

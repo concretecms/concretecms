@@ -36,6 +36,7 @@ function t2($singular, $plural, $number) {
 		$translated = $zt->plural($singular, $plural, $number);
 	} else {
 		$translated = ($number == 1) ? $singular : $plural;
+		$translated = vsprintf($translated, $number);
 	}
 	if(func_num_args() == 3) {
 		return $translated;
