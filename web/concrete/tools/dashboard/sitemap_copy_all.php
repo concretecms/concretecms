@@ -10,6 +10,7 @@ $includeParent = true;
 if ($_REQUEST['copyChildrenOnly']) {
 	$includeParent = false;
 }
+$db = Loader::db();
 
 if ($_POST['process']) {
 	$obj = new stdClass;
@@ -22,7 +23,6 @@ if ($_POST['process']) {
 		$oc = Page::getByID($page['cID']);
 		// this is the page we're going to copy.
 		// now we check to see if the parent ID of the current record has already been duplicated somewhere.
-		$db = Loader::db();
 		$newCID = $db->GetOne('select cID from PageRelations where originalCID = ? and relationType = ?', array($page['cParentID'], 'C'));
 		if ($newCID > 0) {
 			$dc = Page::getByID($newCID);
@@ -33,6 +33,9 @@ if ($_POST['process']) {
 		$q->deleteMessage($p);
 	}
 	print $js->encode($obj);
+	if ($q->count() == 0) {
+		$db->Execute('truncate table PageRelations');
+	}
 	exit;
 
 } else {
