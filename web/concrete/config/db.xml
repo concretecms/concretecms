@@ -3084,5 +3084,70 @@
       <UNSIGNED/>
     </field>
   </table>
+  
+    <table name="QueueMessages">
+    <field name="message_id" type="I" size="20">
+      <KEY/>
+      <AUTOINCREMENT/>
+      <UNSIGNED/>
+    </field>
+    <field name="queue_id" type="I" size="10">
+      <NOTNULL/>
+      <UNSIGNED/>
+    </field>
+    <field name="handle" type="C" size="32"/>
+    <field name="body" type="C" size="8192">
+      <NOTNULL/>
+    </field>
+    <field name="md5" type="C" size="32">
+      <NOTNULL/>
+    </field>
+    <field name="timeout" type="N" size="14">
+      <UNSIGNED/>
+    </field>
+    <field name="created" type="I" size="10">
+      <NOTNULL/>
+      <UNSIGNED/>
+    </field>
+    <index name="message_handle">
+      <UNIQUE/>
+      <col>handle</col>
+    </index>
+    <index name="message_queueid">
+      <col>queue_id</col>
+    </index>
+  </table>
+  <table name="Queues">
+    <field name="queue_id" type="I" size="10">
+      <KEY/>
+      <AUTOINCREMENT/>
+      <UNSIGNED/>
+    </field>
+    <field name="queue_name" type="C" size="100">
+      <NOTNULL/>
+    </field>
+    <field name="timeout" type="I" size="5">
+      <NOTNULL/>
+      <DEFAULT value="30"/>
+      <UNSIGNED/>
+    </field>
+  </table>
+  
+    <table name="QueuePageDuplicationRelations">
+    <field name="queue_name" type="C" size="255">
+      <NOTNULL/>
+    </field>
+    <field name="cID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="originalCID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+  </table>
+
 
   </schema>
