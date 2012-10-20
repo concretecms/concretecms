@@ -512,6 +512,10 @@
 			return ($cParentID) ? $cParentID : 0;
 		}
 		
+		public function excludeFromNavViaAttribute($c) {
+			return $c->getAttribute('exclude_nav');
+		}
+
 		/**
 		 * New and improved version of "generateNav()" function.
 		 * Use this unless you need to maintain backwards compatibility with older custom templates.
@@ -552,7 +556,7 @@
 				$_c = $ni->getCollectionObject();
 				$current_level = $ni->getLevel();
 
-				if ($_c->getAttribute('exclude_nav') && ($current_level <= $excluded_parent_level)) {
+				if ($this->excludeFromNavViaAttribute($_c) && ($current_level <= $excluded_parent_level)) {
 					$excluded_parent_level = $current_level;
 					$exclude_page = true;
 				} else if (($current_level > $excluded_parent_level) || ($current_level > $exclude_children_below_level)) {
