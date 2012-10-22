@@ -61,9 +61,9 @@ $(function() {
 		<? if($c->isSystemPage()) { ?>
 			<div class="alert alert-error"><?php echo t('Warning! This is a system page. Deleting it could potentially break your site. Please proceed with caution.') ?></div>
 		<? } ?>
-		<h3><?=t('Are you sure you wish to delete this page?')?></h3>
+		<h4><?=t('Are you sure you wish to delete this page?')?></h4>
 		<? if ($u->isSuperUser() && $numChildren > 0) { ?>
-			<h4><?=t2('This will remove %s child page.', 'This will remove %s child pages.', $numChildren, $numChildren)?></h4>
+			<h5><?=t('This will remove %s child page(s).', $numChildren)?></h5>
 		<? } ?>
 		
 		<? if (ENABLE_TRASH_CAN) { ?>
