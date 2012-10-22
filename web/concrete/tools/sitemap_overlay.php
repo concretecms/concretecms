@@ -6,10 +6,9 @@ if (!$sh->canRead()) {
 	die(t('Access Denied'));
 }
 
+$txt = Loader::helper('text');
 $args = $_REQUEST;
-foreach($args as $key => $value) {
-	$args[$key] = Loader::helper('text')->entities($value);
-}
+array_walk_recursive($args, array($txt, 'entities'));
 
 if (isset($select_mode)) {
 	$args['select_mode'] = $select_mode;
