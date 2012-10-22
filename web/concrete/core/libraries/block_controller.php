@@ -400,6 +400,12 @@ defined('C5_EXECUTE') or die("Access Denied.");
 					$this->record = new BlockRecord($this->btTable);
 					$this->record->bID = $this->bID;
 					$this->record->Load('bID=' . $this->bID);
+					if ($this->btCacheBlockRecord) {
+						// this is the first time we're loading
+						$record = serialize($this->record);
+						$db = Loader::db();
+						$db->Execute('update Blocks set btCachedBlockRecord = ? where bID = ?', array($record, $this->bID));
+					}
 				}
 			}
 
