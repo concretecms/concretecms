@@ -2,7 +2,7 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 $sh = Loader::helper('concrete/dashboard/sitemap');
 if (!$sh->canRead()) {
-	die(t('Access Denied. You do not have access to sitemap permissions.'));
+	die(t('Access Denied.') . ' ' . t('You do not have access to the sitemap.'));
 }
 
 $select_mode = Loader::helper('text')->entities($_REQUEST['sitemap_select_mode']);
