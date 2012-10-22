@@ -10,7 +10,6 @@ $isEmptyTrash = false;
 
 if ($_POST['process']) {
 	$obj = new stdClass;
-	$obj->totalItems = $q->count();	
 	$js = Loader::helper('json');
 	$messages = $q->receive(DELETE_PAGES_LIMIT);
 	foreach($messages as $key => $p) {
@@ -20,10 +19,10 @@ if ($_POST['process']) {
 		$c->delete();
 		$q->deleteMessage($p);
 	}
+	$obj->totalItems = $q->count();	
 	if ($q->count() == 0) {
 		$q->deleteQueue('delete_page');
 	}
-
 	print $js->encode($obj);
 	exit;
 } else if ($q->count() == 0) {

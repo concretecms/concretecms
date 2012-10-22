@@ -1472,6 +1472,14 @@ class Concrete5_Model_Page extends Collection {
 		PageStatistics::incrementParents($cID);
 		if (!$this->isActive()) {
 			$this->activate();
+			// if we're moving from the trash, we have to activate recursively
+			if ($this->isInTrash()) {
+				$pages = array();
+				$pages = $this->populateRecursivePages($pages, array('cID' => $this->getCollectionID()), $this->getCollectionParentID(), 0, false);
+				foreach($pages as $page) {
+					$db->Execute('update Pages set cIsActive = 1 where cID = ?', array($page['cID']));
+				}
+			}
 		}
 		
 		$this->rescanSystemPageStatus();
@@ -1664,6 +1672,12 @@ class Concrete5_Model_Page extends Collection {
 		$trash = Page::getByPath(TRASH_PAGE_PATH);
 		$this->move($trash);
 		$this->deactivate();
+		$pages = array();
+		$pages = $this->populateRecursivePages($pages, array('cID' => $this->getCollectionID()), $this->getCollectionParentID(), 0, false);
+		$db = Loader::db();
+		foreach($pages as $page) {
+			$db->Execute('update Pages set cIsActive = 0 where cID = ?', array($page['cID']));
+		}
 	}
 
 	function rescanChildrenDisplayOrder() {
