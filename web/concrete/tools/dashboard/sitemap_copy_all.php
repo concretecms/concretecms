@@ -14,7 +14,6 @@ $db = Loader::db();
 
 if ($_POST['process']) {
 	$obj = new stdClass;
-	$obj->totalItems = $q->count();	
 	$js = Loader::helper('json');
 	$messages = $q->receive(COPY_PAGES_LIMIT);
 	foreach($messages as $key => $p) {
@@ -44,6 +43,7 @@ if ($_POST['process']) {
 			
 		$q->deleteMessage($p);
 	}
+	$obj->totalItems = $q->count();	
 	print $js->encode($obj);
 	if ($q->count() == 0) {
 		$q->deleteQueue('copy_page');
