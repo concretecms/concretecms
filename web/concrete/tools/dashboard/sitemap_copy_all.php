@@ -52,13 +52,29 @@ if ($_POST['process']) {
 	exit;
 
 } else if ($q->count() == 0) {
-	$oc = Page::getByID($_REQUEST['origCID']);
+	if (isset($_REQUEST['origCID'] ) && strpos($_REQUEST['origCID'], ',') > -1) {
+		$ocs = explode(',', $_REQUEST['origCID']);
+		foreach($ocs as $ocID) {
+			$oc = Page::getByID($ocID);
+			if (is_object($oc) && !$oc->isError()) {
+				$originalPages[] = $oc;
+			}
+		}
+	} else {
+		$oc = Page::getByID($_REQUEST['origCID']);
+		if (is_object($oc) && !$oc->isError()) {
+			$originalPages[] = $oc;
+		}
+	}
+
 	$dc = Page::getByID($_REQUEST['destCID']);
-	if (is_object($oc) && !$oc->isError() && is_object($dc) && !$dc->isError()) { 
+	if (count($originalPages) > 0 && is_object($dc) && !$dc->isError()) { 
 		$u = new User();
 		if ($u->isSuperUser() && $oc->canMoveCopyTo($dc)) {
-			$oc->queueForDuplication($dc, $includeParent);
-			$totalItems = $q->count();
+			foreach($originalPages as $oc) {
+				$oc->queueForDuplication($dc, $includeParent);
+				$totalItems = $q->count();
+			}
 		}
 	}
 }
