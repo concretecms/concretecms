@@ -467,7 +467,7 @@
 			case 'delete':
 				if ($cp->canDeletePage() && $c->getCollectionID() != '1' && (!$c->isMasterCollection())) {
 					$children = $c->getNumChildren();
-					if ($children == 0 || $cp->canApprovePageVersions()) {
+					if ($children == 0 || $u->isSuperUser()) {
 						$obj = new stdClass;
 
 						if ($c->isExternalLink()) {

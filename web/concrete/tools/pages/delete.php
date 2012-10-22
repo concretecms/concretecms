@@ -16,17 +16,11 @@ if ($_POST['task'] == 'delete_pages') {
 			$cp = new Permissions($c);
 			$children = $c->getNumChildren();
 			if ($children == 0 || $cp->canDeletePage()) {
-				if ($cp->canApprovePageVersions()) { 
-					if (ENABLE_TRASH_CAN) {
-						$c->moveToTrash();
-					} else {
-						$c->delete();
-					}
-				} else { 
-					$pkr = new DeletePagePageWorkflowRequest();
-					$pkr->setRequestedPage($c);
-					$pkr->trigger();
-				}
+				$pkr = new DeletePagePageWorkflowRequest();
+				$pkr->setRequestedPage($c);
+				$pkr->setRequesterUserID($u->getUserID());
+				$u->unloadCollectionEdit($c);
+				$pkr->trigger();
 			} else {
 				$json['error'] = t('Unable to delete one or more pages.');
 			}
