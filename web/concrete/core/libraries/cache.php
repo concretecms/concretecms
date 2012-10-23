@@ -164,15 +164,18 @@ class Concrete5_Library_Cache {
 	 * Completely flushes the cache
 	 */	
 	public function flush() {
-		// clear the environment overrides cache
-		$env = Environment::get();
-		$env->clearOverrideCache();
-
-		// update the block cache
 		$db = Loader::db();
-		$db->Execute('update Blocks set btCachedBlockRecord = null');
-		$db->Execute('truncate table CollectionVersionBlocksOutputCache');
+		$r = $db->MetaTables();
 
+		if (in_array('Config', $r)) {
+			// clear the environment overrides cache
+			$env = Environment::get();
+			$env->clearOverrideCache();
+
+			$db->Execute('update Blocks set btCachedBlockRecord = null');
+			$db->Execute('truncate table CollectionVersionBlocksOutputCache');
+		}
+		
 		$loc = CacheLocal::get();
 		$loc->cache = array();
 
