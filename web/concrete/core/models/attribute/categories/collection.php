@@ -85,13 +85,12 @@ class Concrete5_Model_CollectionAttributeKey extends AttributeKey {
 			return false;
 		}
 		
-		$ak = -1;
-		$db = Loader::db();
-		$q = "SELECT ak.akID FROM AttributeKeys ak INNER JOIN AttributeKeyCategories akc ON ak.akCategoryID = akc.akCategoryID  WHERE ak.akHandle = ? AND akc.akCategoryHandle = 'collection'";
-		$akID = $db->GetOne($q, array($akHandle));
-		if ($akID) {
-			$ak = CollectionAttributeKey::getByID($akID);
+		$ak = new CollectionAttributeKey();
+		$ak->load($akHandle, 'akHandle');
+		if ($ak->getAttributeKeyID() < 1) {
+			$ak = -1;
 		}
+
 		CacheLocal::set('collection_attribute_key_by_handle', $akHandle, $ak);
 		return $ak;
 	}

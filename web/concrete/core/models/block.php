@@ -656,9 +656,19 @@ class Concrete5_Model_Block extends Object {
 	public function getBlockCustomStyleRuleID() {
 		$db = Loader::db();
 		if (!isset($this->csrID)) {
+			$co = $this->getBlockCollectionObject();
+			$csrCheck = CacheLocal::getEntry('csrCheck', $co->getCollectionID() . ':' . $co->getVersionID());
+			$csrObject = CacheLocal::getEntry('csrObject', $co->getCollectionID() . ':' . $co->getVersionID() . ':' . $this->getAreaHandle() . ':' . $this->getBlockID());
+			if (is_object($csrObject)) {
+				$this->csrID = $csrObject->getCustomStyleRuleID();
+				return $csrObject->getCustomStyleRuleID();
+			} else if ($csrCheck) {
+				return false;
+			}
+
 			$v = array(
-				$this->cID, 
-				$this->cvID,
+				$co->getCollectionID(), 
+				$co->getVersionID(),
 				$this->getAreaHandle(),
 				$this->bID
 			);

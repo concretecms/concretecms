@@ -30,8 +30,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 		function loadVersionObject($cvID) {
 			$this->vObj = CollectionVersion::get($this, $cvID);
-			$vp = new Permissions($this->vObj);			
-			return $vp;
 		}
 		
 		function getVersionToModify() {
@@ -402,6 +400,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		$db = Loader::db();
 		$csrs = array();
 		$txt = Loader::helper('text');
+		CacheLocal::set('csrCheck', $this->getCollectionID() . ':' . $this->getVersionID(), true);
+
 		$r1 = $db->GetAll('select bID, arHandle, csrID from CollectionVersionBlockStyles where cID = ? and cvID = ? and csrID > 0', array($this->getCollectionID(), $this->getVersionID()));
 		$r2 = $db->GetAll('select arHandle, csrID from CollectionVersionAreaStyles where cID = ? and cvID = ? and csrID > 0', array($this->getCollectionID(), $this->getVersionID()));
 		foreach($r1 as $r) {
@@ -412,8 +412,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			if (is_object($obj)) {
 				$obj->setCustomStyleNameSpace('blockStyle' . $bID . $arHandle);
 				$csrs[] = $obj;
+				CacheLocal::set('csrObject', $this->getCollectionID(). ':' . $this->getVersionID() . ':' . $r['arHandle']  . ':' . $r['bID'], $obj);
 			}
 		}
+
 		foreach($r2 as $r) {
 			$csrID = $r['csrID'];
 			$arHandle = $txt->filterNonAlphaNum($r['arHandle']);
@@ -421,6 +423,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			if (is_object($obj)) {
 				$obj->setCustomStyleNameSpace('areaStyle' . $arHandle);
 				$csrs[] = $obj;
+				CacheLocal::set('csrObject', $this->getCollectionID(). ':' . $this->getVersionID() . ':' . $r['arHandle'], $obj);
 			}
 		}
 		
@@ -434,6 +437,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				} else {
 					$s = Stack::getByName($garHandle, 'ACTIVE');
 				}
+				CacheLocal::set('csrCheck', $s->getCollectionID() . ':' . $s->getVersionID(), true);
 				if (is_object($s)) {
 					$rs1 = $db->GetAll('select bID, csrID, arHandle from CollectionVersionBlockStyles where cID = ? and cvID = ? and csrID > 0', array($s->getCollectionID(), $s->getVersionID()));
 					foreach($rs1 as $r) {
@@ -444,6 +448,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 						if (is_object($obj)) {
 							$obj->setCustomStyleNameSpace('blockStyle' . $bID . $arHandle);
 							$csrs[] = $obj;
+							CacheLocal::set('csrObject', $s->getCollectionID(). ':' . $s->getVersionID() . ':' . $r['arHandle'] . ':' . $r['bID'], $obj);
 						}
 					}
 				}

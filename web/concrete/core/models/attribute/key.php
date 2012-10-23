@@ -59,14 +59,14 @@ class Concrete5_Model_AttributeKey extends Object {
 	/** 
 	 * Loads the required attribute fields for this instantiated attribute
 	 */
-	protected function load($akID) {
+	protected function load($akIdentifier, $loadBy = 'akID') {
 		$db = Loader::db();
 		$akunhandle = Loader::helper('text')->uncamelcase(get_class($this));
 		$akCategoryHandle = substr($akunhandle, 0, strpos($akunhandle, '_attribute_key'));
 		if ($akCategoryHandle != '') {
-			$row = $db->GetRow('select akID, akHandle, akName, AttributeKeys.akCategoryID, akIsInternal, akIsEditable, akIsSearchable, akIsSearchableIndexed, akIsAutoCreated, akIsColumnHeader, AttributeKeys.atID, atHandle, AttributeKeys.pkgID from AttributeKeys inner join AttributeKeyCategories on AttributeKeys.akCategoryID = AttributeKeyCategories.akCategoryID inner join AttributeTypes on AttributeKeys.atID = AttributeTypes.atID where akID = ? and akCategoryHandle = ?', array($akID, $akCategoryHandle));
+			$row = $db->GetRow('select akID, akHandle, akName, AttributeKeys.akCategoryID, akIsInternal, akIsEditable, akIsSearchable, akIsSearchableIndexed, akIsAutoCreated, akIsColumnHeader, AttributeKeys.atID, atHandle, AttributeKeys.pkgID from AttributeKeys inner join AttributeKeyCategories on AttributeKeys.akCategoryID = AttributeKeyCategories.akCategoryID inner join AttributeTypes on AttributeKeys.atID = AttributeTypes.atID where ' . $loadBy . ' = ? and akCategoryHandle = ?', array($akIdentifier, $akCategoryHandle));
 		} else {
-			$row = $db->GetRow('select akID, akHandle, akName, akCategoryID, akIsEditable, akIsInternal, akIsSearchable, akIsSearchableIndexed, akIsAutoCreated, akIsColumnHeader, AttributeKeys.atID, atHandle, AttributeKeys.pkgID from AttributeKeys inner join AttributeTypes on AttributeKeys.atID = AttributeTypes.atID where akID = ?', array($akID));		
+			$row = $db->GetRow('select akID, akHandle, akName, akCategoryID, akIsEditable, akIsInternal, akIsSearchable, akIsSearchableIndexed, akIsAutoCreated, akIsColumnHeader, AttributeKeys.atID, atHandle, AttributeKeys.pkgID from AttributeKeys inner join AttributeTypes on AttributeKeys.atID = AttributeTypes.atID where ' . $loadBy . ' = ?', array($akIdentifier));		
 		}
 		$this->setPropertiesFromArray($row);
 	}
