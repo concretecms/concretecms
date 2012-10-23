@@ -678,6 +678,19 @@ class Concrete5_Model_Page extends Collection {
 		}
 	}
 
+	public function queueForDeletionRequest() {
+		$pages = array();
+		$includeThisPage = true;
+		$pages = $this->populateRecursivePages($pages, array('cID' => $this->getCollectionID()), $this->getCollectionParentID(), 0, $includeThisPage);
+		// now, since this is deletion, we want to order the pages by level, which
+		// should get us no funny business if the queue dies.
+		usort($pages, array('Page', 'queueForDeletionSort'));
+		$q = Queue::get('delete_page_request');
+		foreach($pages as $page) {
+			$q->send(serialize($page));
+		}
+	}
+
 	public function queueForDuplication($destination, $includeParent = true) {
 		$pages = array();
 		$pages = $this->populateRecursivePages($pages, array('cID' => $this->getCollectionID()), $this->getCollectionParentID(), 0, $includeParent);
