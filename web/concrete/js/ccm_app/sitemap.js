@@ -474,7 +474,7 @@ ccm_triggerProgressiveOperation = function(url, params, dialogTitle, onComplete)
 	$('#ccm-dialog-progress-bar').remove();
 	$.ajax({
 		url: url,
-		type: 'GET',
+		type: 'POST',
 		data: params, 
 		success: function(r) {
 			jQuery.fn.dialog.hideLoader();
@@ -497,6 +497,10 @@ ccm_triggerProgressiveOperation = function(url, params, dialogTitle, onComplete)
 }
 
 ccm_doProgressiveOperation = function(url, params, totalItems, onComplete) {
+	params.push({
+		'name': 'process',
+		'value': '1'
+	});
 	params['process'] = true;
 	$.ajax({
 		url: url,
@@ -549,7 +553,7 @@ ccm_refreshCopyOperations = function() {
 	var dialogTitle = ccmi18n_sitemap.copyProgressTitle;
 	ccm_triggerProgressiveOperation(
 		CCM_TOOLS_PATH + '/dashboard/sitemap_copy_all', 
-		{'process': true},
+		[],
 		dialogTitle, function() {
 			$('.ui-dialog-content').dialog('close');
 			window.location.reload();
@@ -586,7 +590,7 @@ moveCopyAliasNode = function(reloadPage) {
 		var dialogTitle = ccmi18n_sitemap.copyProgressTitle;
 		ccm_triggerProgressiveOperation(
 			CCM_TOOLS_PATH + '/dashboard/sitemap_copy_all', 
-			{'origCID': origCID, 'destCID': destCID},
+			[{'name': 'origCID', 'value': origCID}, {'name': 'destCID', 'value': destCID}],
 			dialogTitle, function() {
 				$('.ui-dialog-content').dialog('close');
 				openSub(instance_id, destParentID, display_mode, select_mode, function() {openSub(instance_id, destCID, display_mode, select_mode)});
@@ -664,7 +668,7 @@ ccm_sitemapDeleteForever = function(instance_id, nodeID, isTrash) {
 	var dialogTitle = (isTrash) ? ccmi18n_sitemap.emptyTrash : ccmi18n_sitemap.deletePages;
 	ccm_triggerProgressiveOperation(
 		CCM_TOOLS_PATH + '/dashboard/sitemap_delete_forever', 
-		{'cID': nodeID},
+		[{'name': 'cID', 'value': nodeID}],
 		dialogTitle,
 		function() {
 			if (isTrash) {
@@ -1056,6 +1060,30 @@ ccm_sitemapSelectDisplayMode = function(instance_id, display_mode, select_mode, 
 }
 
 ccm_sitemapDeletePages = function(searchInstance) {
+	var params = $('#ccm-' + searchInstance + '-delete-form').formToArray(true);
+	ccm_triggerProgressiveOperation(
+		CCM_TOOLS_PATH + '/pages/delete', 
+		params,
+		ccmi18n_sitemap.deletePages,
+		function() {
+			$('.ui-dialog-content').dialog('close');
+			ccm_deactivateSearchResults(searchInstance);
+			$("#ccm-" + searchInstance + "-advanced-search").ajaxSubmit(function(resp) {
+				ccm_parseAdvancedSearchResponse(resp, searchInstance);
+			});
+			if (isTrash) {
+				closeSub(instance_id, nodeID, 'full', '');
+				var container = $("ul[tree-root-node-id=" + nodeID + "]").parent();
+				container.find('img.tree-plus').remove();
+				container.find('span.ccm-sitemap-num-subpages').remove();
+			} else {
+				deleteBranchFade(nodeID);
+				ccmAlert.hud(ccmi18n_sitemap.deletePageSuccessMsg, 2000);
+			}
+		}
+	);
+
+	/*
 	$("#ccm-" + searchInstance + "-delete-form").ajaxSubmit(function(resp) {
 		ccm_parseJSON(resp, function() {	
 			jQuery.fn.dialog.closeTop();
@@ -1065,6 +1093,7 @@ ccm_sitemapDeletePages = function(searchInstance) {
 			});
 		});
 	});
+*/
 }
 
 ccm_sitemapUpdateDesign = function(searchInstance) {
