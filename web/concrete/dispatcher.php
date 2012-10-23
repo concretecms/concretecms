@@ -137,7 +137,7 @@
 		} else {
 			$c = Page::getByID($req->getRequestCollectionID(), 'ACTIVE');
 		}
-	
+
 		$req = Request::get();
 		$req->setCurrentPage($c);
 		
@@ -189,7 +189,8 @@
 	
 		if ($cp->canEditPageContents() || $cp->canEditPageProperties() || $cp->canViewPageVersions()) {
 			$cvID = ($_REQUEST['cvID']) ? $_REQUEST['cvID'] : "RECENT";
-			$vp = $c->loadVersionObject($cvID);
+			$c->loadVersionObject($cvID);
+			$vp = new Permissions($c->getVersionObject());
 		} else {
 			$cvID = "ACTIVE";
 		}
