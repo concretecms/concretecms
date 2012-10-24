@@ -40,8 +40,12 @@ class Concrete5_Model_Job extends Object {
 	public function getPackageHandle() {
 		return PackageList::getHandle($this->pkgID);
 	}
+
+	// optional queue functions
 	public function supportsQueue() {return $this->jSupportsQueue;}
-	
+	public function getJobQueueBatchSize() {return $this->jQueueBatchSize;}
+	public function addToQueue(Zend_Queue $q) {}
+	public function processQueueItem(Zend_Queue_Message $msg) {}
 	
 	//==========================================================
 	// JOB MANAGEMENT - do not override anything below this line 
@@ -60,6 +64,7 @@ class Concrete5_Model_Job extends Object {
 	public $jHandle='';
 	public $jNotUninstallable=0;
 	public $jSupportsQueue = false;
+	public $jQueueBatchSize = 50;
 	
 	/*
 	final public __construct(){
