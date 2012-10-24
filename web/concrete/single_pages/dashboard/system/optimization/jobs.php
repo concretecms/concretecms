@@ -40,8 +40,9 @@ jQuery(function($) {
 		}
 	});
 
-	function runTaskForRow(row, jobId, cb) {
+	function runTaskForRow(row, jobId, supportsQueue, cb) {
 		row.addClass('running');
+		alert('test' + supportsQueue);
 		$.ajax({ 
 			url: CCM_TOOLS_PATH + '/jobs?auth=<?=$auth?>&jID=' + jobId,
 			dataType: 'json',
@@ -62,7 +63,7 @@ jQuery(function($) {
 		e.preventDefault();
 		var $this = $(this),
 			row = $this.closest('tr');
-		runTaskForRow(row, $this.attr('data-jobId'));
+		runTaskForRow(row, $this.attr('data-jobId'), $this.attr('data-supports-queue'));
 	});
 
 	$('.run-all').bind('click', function(e) {
@@ -72,13 +73,14 @@ jQuery(function($) {
 			jobs = links.map(function() {
 					return {
 						jobId : $(this).attr('data-jobId'),
+						supportsQueue: $(this).attr('data-supports-queue'),
 						row : $(this).closest('tr')
 					};
 			}).get(),
 			next = function() {
 				var job = jobs.shift();
 				if (job) {
-					runTaskForRow(job.row, job.jobId, next);
+					runTaskForRow(job.row, job.jobId, job.supportsQueue, next);
 				} else {
 					table.removeClass('running');
 				}
@@ -111,11 +113,13 @@ jQuery(function($) {
 </thead>
 <tbody>
 <? $jobrunning = false; ?>
-<?foreach ($jobList as $job):?>
+<?foreach ($jobList as $job):
+	$j = Job::getByHandle($job['jHandle']);
+?>
 <tr <? if ($job['jStatus'] == 'RUNNING') {
 	
 	$jobrunning = true;?>class="running" <? } ?>>
-	<td><a class="run-task" title="<?=t('Run')?>" href="<?=BASE_URL.$this->url('/tools/required/jobs?auth='.$auth.'&jID='.$job['jID'])?>" data-jobId="<?=$job['jID']?>"></a><span class="run-indicator"></span></td>
+	<td><a class="run-task" title="<?=t('Run')?>" href="<?=BASE_URL.$this->url('/tools/required/jobs?auth='.$auth.'&jID='.$job['jID'])?>" data-supports-queue="<?=$j->supportsQueue()?>" data-jobId="<?=$job['jID']?>"></a><span class="run-indicator"></span></td>
 	<td><?=$job['jID']?></td>
 	<td><?=t($job['jName'])?></td>
 	<td><?=t($job['jDescription'])?></td>
