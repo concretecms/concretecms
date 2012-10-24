@@ -330,7 +330,7 @@ class Concrete5_Helper_Form {
 
 		foreach($optionValues as $k => $value) {
 			$selected = "";
-			if (strcmp($valueOrArray, $k) === 0 && !isset($_REQUEST[$_key]) || ($val !== false && $val == $k) || (is_array($_REQUEST[$_key]) && (in_array($k, $_REQUEST[$_key])))) {
+			if ((string)$valueOrArray == (string)$k  && !isset($_REQUEST[$_key]) || ($val !== false && $val == $k) || (is_array($_REQUEST[$_key]) && (in_array($k, $_REQUEST[$_key])))) {
 				$selected = 'selected="selected"';
 			}
 			$str .= '<option value="' . $k . '" ' . $selected . '>' . $value . '</option>';
