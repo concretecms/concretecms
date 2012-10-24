@@ -299,21 +299,17 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			$bt = CacheLocal::getEntry('blocktype', $handle);
 			if ($bt === -1) {
 				return false;
-			} else if (is_object($bt)) {
-				return $bt;
-			}
-
-			if (!is_object($bt)) {
+			} else if (!is_object($bt)) {
 				$where = 'btHandle = ?';
-				$bt = BlockType::get($where, array($handle));
+				$bt = BlockType::get($where, array($handle));			
 				if (is_object($bt)) {
-					$bt->controller = Loader::controller($bt);
 					CacheLocal::set('blocktype', $handle, $bt);
 				} else {
 					CacheLocal::set('blocktype', $handle, -1);
 				}
-				return $bt;
 			}
+			$bt->controller = Loader::controller($bt);
+			return $bt;
 		}
 
 		/**
@@ -325,21 +321,17 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			$bt = CacheLocal::getEntry('blocktype', $btID);
 			if ($bt === -1) {
 				return false;
-			} else if (is_object($bt)) {
-				return $bt;
-			}
-
-			if (!is_object($bt)) {
+			} else if (!is_object($bt)) {
 				$where = 'btID = ?';
 				$bt = BlockType::get($where, array($btID));			
 				if (is_object($bt)) {
-					$bt->controller = Loader::controller($bt);
 					CacheLocal::set('blocktype', $btID, $bt);
 				} else {
 					CacheLocal::set('blocktype', $btID, -1);
 				}
-				return $bt;
 			}
+			$bt->controller = Loader::controller($bt);
+			return $bt;
 		}
 		
 		

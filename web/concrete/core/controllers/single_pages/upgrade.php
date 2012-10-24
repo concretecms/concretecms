@@ -19,9 +19,6 @@ class Concrete5_Controller_Upgrade extends Controller {
 	public function on_start() {
 		$this->secCheck();
 		// if you just reverted, but didn't manually clear out your files - cache would be a prob here.
-		$ca = new Cache();
-		$ca->flush();
-		Cache::disableCache();
 		Cache::disableLocalCache();
 		$this->site_version = Config::get('SITE_APP_VERSION');
 		Database::ensureEncoding();

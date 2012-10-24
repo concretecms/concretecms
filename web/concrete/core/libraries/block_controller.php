@@ -134,6 +134,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		function render($view) {
 			$bv = new BlockView();
 			$bv->setController($this);
+			print_r($this);
 			// sometimes we need the block type available in here
 			if (is_object($this->getBlockObject())) {
 				$bt = BlockType::getByID($this->getBlockObject()->getBlockTypeID());
