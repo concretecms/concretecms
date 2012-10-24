@@ -410,7 +410,7 @@ class Concrete5_Model_Block extends Object {
 	}
 	
 	public function getInstance() {		
-		if ($this->instance->cacheBlockRecord() && is_object($this->instance->getBlockControllerData())) {
+		if (ENABLE_BLOCK_CACHE && $this->instance->cacheBlockRecord() && is_object($this->instance->getBlockControllerData())) {
 			$this->instance->__construct();
 		} else {
 			$this->instance = Loader::controller($this);

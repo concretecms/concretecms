@@ -95,8 +95,6 @@ class Concrete5_Library_Cache {
 	
 	/** 
 	 * Retrieves an item from the cache
-	 * If $forceGet is true, we sidestep ENABLE_CACHE. This is for certain operations that
-	 * the cache must always be enabled for (getting remote data, etc..)
 	 */	
 	public function get($type, $id, $mustBeNewerThan = false) {
 		$loc = CacheLocal::get();

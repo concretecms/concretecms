@@ -9,11 +9,12 @@
  **/
 defined('C5_EXECUTE') or die("Access Denied."); 
 
-// legacy
-define("ENABLE_CACHE", true);
-
 if (!defined('ENABLE_OVERRIDE_CACHE')) {
 	Config::getOrDefine('ENABLE_OVERRIDE_CACHE', false); 
+}
+
+if (!defined('ENABLE_BLOCK_CACHE')) {
+	Config::getOrDefine('ENABLE_BLOCK_CACHE', true); 
 }
 
 if (!defined('FULL_PAGE_CACHE_GLOBAL')) {

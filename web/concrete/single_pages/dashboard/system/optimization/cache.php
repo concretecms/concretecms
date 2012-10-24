@@ -5,14 +5,14 @@
     <div class="ccm-pane-body">
         <?php echo $this->controller->token->output('update_cache')?>
     
-        <h3><?php echo t('Basic Cache')?></h3>
+        <h3><?php echo t('Block Cache')?></h3>
     	<div class="clearfix inputs-list">
             <label>
-                <input type="radio" name="ENABLE_CACHE" value="0" <?php  if (ENABLE_CACHE == false) { ?> checked <?php  } ?> />
-                <span><?php echo t('Off - Good for development.')?></span>
+                <input type="radio" name="ENABLE_BLOCK_CACHE" value="0" <?php  if (ENABLE_BLOCK_CACHE == false) { ?> checked <?php  } ?> />
+                <span><?php echo t('Off - Good for development of custom blocks.')?></span>
             </label>
             <label>
-                <input type="radio" name="ENABLE_CACHE" value="1" <?php  if (ENABLE_CACHE == true) { ?> checked <?php  } ?> />
+                <input type="radio" name="ENABLE_BLOCK_CACHE" value="1" <?php  if (ENABLE_BLOCK_CACHE == true) { ?> checked <?php  } ?> />
                 <span><?php echo t('On - Helps speed up a live site.')?></span>
             </label>
         </div>

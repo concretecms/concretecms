@@ -168,7 +168,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 					}
 				}
 				$this->record->Replace();
-				if ($this->cacheBlockRecord()) {
+				if ($this->cacheBlockRecord() && ENABLE_BLOCK_CACHE) {
 					$record = serialize($this->record);
 					$db = Loader::db();
 					$db->Execute('update Blocks set btCachedBlockRecord = ? where bID = ?', array($record, $this->bID));
@@ -394,13 +394,13 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		 */
 		protected function load() {
 			if ($this->btTable) {
-				if ($this->btCacheBlockRecord && $this->btCachedBlockRecord) {
+				if ($this->btCacheBlockRecord && $this->btCachedBlockRecord && ENABLE_BLOCK_CACHE) {
 					$this->record = unserialize($this->btCachedBlockRecord);
 				} else { 
 					$this->record = new BlockRecord($this->btTable);
 					$this->record->bID = $this->bID;
 					$this->record->Load('bID=' . $this->bID);
-					if ($this->btCacheBlockRecord) {
+					if ($this->btCacheBlockRecord && ENABLE_BLOCK_CACHE) {
 						// this is the first time we're loading
 						$record = serialize($this->record);
 						$db = Loader::db();
