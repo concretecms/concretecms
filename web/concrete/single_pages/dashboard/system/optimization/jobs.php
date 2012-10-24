@@ -40,30 +40,51 @@ jQuery(function($) {
 		}
 	});
 
-	function runTaskForRow(row, jobId, supportsQueue, cb) {
+	function runTaskForRow(row, jobId, jobTitle, supportsQueue, cb) {
 		row.addClass('running');
-		alert('test' + supportsQueue);
-		$.ajax({ 
-			url: CCM_TOOLS_PATH + '/jobs?auth=<?=$auth?>&jID=' + jobId,
-			dataType: 'json',
-			cache: false,
-			success: function(json) {
-				row.removeClass('running green red');
-				row.find('.jLastStatusText').html(json.message);
-				row.find('.jDateLastRun').html(json.jDateLastRun);
-				row.addClass(json.error == 0 ? 'green' : 'red');
-				if (cb && $.isFunction(cb)) {
-					cb(row, json, jobId);
+		if (supportsQueue) {
+			ccm_triggerProgressiveOperation(
+				CCM_TOOLS_PATH + '/jobs', //?auth=<?=$auth?>&jID=' + jobId,
+				[
+					{'name': 'auth', 'value': '<?=$auth?>'},
+					{'name': 'jID', 'value': jobId}
+				],
+				jobTitle, function() {
+					$('.ui-dialog-content').dialog('close');
+					row.removeClass('running green red');
+					row.find('.jLastStatusText').html(json.message);
+					row.find('.jDateLastRun').html(json.jDateLastRun);
+					row.addClass(json.error == 0 ? 'green' : 'red');
+					if (cb && $.isFunction(cb)) {
+						cb(row, json, jobId);
+					}
+
 				}
-			}
-		});
+			);
+
+		} else { 
+			$.ajax({ 
+				url: CCM_TOOLS_PATH + '/jobs?auth=<?=$auth?>&jID=' + jobId,
+				dataType: 'json',
+				cache: false,
+				success: function(json) {
+					row.removeClass('running green red');
+					row.find('.jLastStatusText').html(json.message);
+					row.find('.jDateLastRun').html(json.jDateLastRun);
+					row.addClass(json.error == 0 ? 'green' : 'red');
+					if (cb && $.isFunction(cb)) {
+						cb(row, json, jobId);
+					}
+				}
+			});
+		}
 	}
 
 	$('.run-task[data-jobId]').bind('click', function(e) {
 		e.preventDefault();
 		var $this = $(this),
 			row = $this.closest('tr');
-		runTaskForRow(row, $this.attr('data-jobId'), $this.attr('data-supports-queue'));
+		runTaskForRow(row, $this.attr('data-jobId'), $this.attr('data-job-title'), $this.attr('data-supports-queue'));
 	});
 
 	$('.run-all').bind('click', function(e) {
@@ -74,13 +95,14 @@ jQuery(function($) {
 					return {
 						jobId : $(this).attr('data-jobId'),
 						supportsQueue: $(this).attr('data-supports-queue'),
+						jobTitle: $(this).attr('data-job-title'),
 						row : $(this).closest('tr')
 					};
 			}).get(),
 			next = function() {
 				var job = jobs.shift();
 				if (job) {
-					runTaskForRow(job.row, job.jobId, job.supportsQueue, next);
+					runTaskForRow(job.row, job.jobId, job.jobTitle, job.supportsQueue, next);
 				} else {
 					table.removeClass('running');
 				}
@@ -119,7 +141,7 @@ jQuery(function($) {
 <tr <? if ($job['jStatus'] == 'RUNNING') {
 	
 	$jobrunning = true;?>class="running" <? } ?>>
-	<td><a class="run-task" title="<?=t('Run')?>" href="<?=BASE_URL.$this->url('/tools/required/jobs?auth='.$auth.'&jID='.$job['jID'])?>" data-supports-queue="<?=$j->supportsQueue()?>" data-jobId="<?=$job['jID']?>"></a><span class="run-indicator"></span></td>
+	<td><a class="run-task" title="<?=t('Run')?>" href="<?=BASE_URL.$this->url('/tools/required/jobs?auth='.$auth.'&jID='.$job['jID'])?>" data-job-title="<?=$job['jName']?>" data-supports-queue="<?=$j->supportsQueue()?>" data-jobId="<?=$job['jID']?>"></a><span class="run-indicator"></span></td>
 	<td><?=$job['jID']?></td>
 	<td><?=t($job['jName'])?></td>
 	<td><?=t($job['jDescription'])?></td>
