@@ -68,84 +68,80 @@ global $c;
 
 	<div id="ccm-properties-cache-tab">
 		
-		<? if (!ENABLE_CACHE) {
-			print t('The cache has been disabled. Full page caching is not available.');
-		} else { ?>
-			<? $form = Loader::helper('form');?>
-			<?
-			switch(FULL_PAGE_CACHE_GLOBAL) {
-				case 'blocks':
-					$globalSetting = t('cache page if all blocks support it.');
-					$enableCache = 1;
-					break;
-				case 'all':
-					$globalSetting = t('enable full page cache.');
-					$enableCache = 1;
-					break;
-				case 0:
-					$globalSetting = t('disable full page cache.');
-					$enableCache = 0;
-					break;
-			}
-			switch(FULL_PAGE_CACHE_LIFETIME) {
-				case 'default':
-					$globalSettingLifetime = t('%s minutes', CACHE_LIFETIME / 60);
-					break;
-				case 'custom':
-					$custom = Config::get('FULL_PAGE_CACHE_LIFETIME_CUSTOM');
-					$globalSettingLifetime = t('%s minutes', $custom);
-					break;
-				case 'forever':
-					$globalSettingLifetime = t('Until manually cleared');
-					break;
-			}
-			?>
+		<? $form = Loader::helper('form');?>
+		<?
+		switch(FULL_PAGE_CACHE_GLOBAL) {
+			case 'blocks':
+				$globalSetting = t('cache page if all blocks support it.');
+				$enableCache = 1;
+				break;
+			case 'all':
+				$globalSetting = t('enable full page cache.');
+				$enableCache = 1;
+				break;
+			case 0:
+				$globalSetting = t('disable full page cache.');
+				$enableCache = 0;
+				break;
+		}
+		switch(FULL_PAGE_CACHE_LIFETIME) {
+			case 'default':
+				$globalSettingLifetime = t('%s minutes', CACHE_LIFETIME / 60);
+				break;
+			case 'custom':
+				$custom = Config::get('FULL_PAGE_CACHE_LIFETIME_CUSTOM');
+				$globalSettingLifetime = t('%s minutes', $custom);
+				break;
+			case 'forever':
+				$globalSettingLifetime = t('Until manually cleared');
+				break;
+		}
+		?>
 
-			<div class="clearfix">
-			<label><?=t('Full Page Caching')?></label>
+		<div class="clearfix">
+		<label><?=t('Full Page Caching')?></label>
 
-			<div class="input">
-			<ul class="inputs-list">
-			<li><label><?=$form->radio('cCacheFullPageContent', -1, $c->getCollectionFullPageCaching(), array('enable-cache' => $enableCache))?>
-			<span><?=t('Use global setting - %s', $globalSetting)?></span>
-			</label></li>
-			<li><label><?=$form->radio('cCacheFullPageContent', 0, $c->getCollectionFullPageCaching(), array('enable-cache' => 0))?>
-			<span><?=t('Do not cache this page.')?></span>
-			</label></li>
-			<li><label><?=$form->radio('cCacheFullPageContent', 1, $c->getCollectionFullPageCaching(), array('enable-cache' => 1))?>
-			<span><?=t('Cache this page.')?></span>
-			</label>
+		<div class="input">
+		<ul class="inputs-list">
+		<li><label><?=$form->radio('cCacheFullPageContent', -1, $c->getCollectionFullPageCaching(), array('enable-cache' => $enableCache))?>
+		<span><?=t('Use global setting - %s', $globalSetting)?></span>
+		</label></li>
+		<li><label><?=$form->radio('cCacheFullPageContent', 0, $c->getCollectionFullPageCaching(), array('enable-cache' => 0))?>
+		<span><?=t('Do not cache this page.')?></span>
+		</label></li>
+		<li><label><?=$form->radio('cCacheFullPageContent', 1, $c->getCollectionFullPageCaching(), array('enable-cache' => 1))?>
+		<span><?=t('Cache this page.')?></span>
+		</label>
+		</li>
+		</ul>
+		</div>
+		
+		</div>
+		
+		<div class="clearfix">
+		<label><?=t('Cache for how long?')?></label>
+		
+		<div class="ccm-properties-cache-lifetime input">
+		<ul class="inputs-list">
+			<? $val = ($c->getCollectionFullPageCachingLifetimeCustomValue() > 0 && $c->getCollectionFullPageCachingLifetime()) ? $c->getCollectionFullPageCachingLifetimeCustomValue() : ''; ?>
+			<li><label><span><input type="radio" name="cCacheFullPageContentOverrideLifetime" value="0" <? if ($c->getCollectionFullPageCachingLifetime() == '0') { ?> checked="checked" <? } ?> /> 
+			<?=t('Use global setting - %s', $globalSettingLifetime)?>
+			</span></label></li>
+			<li><label><span><?=$form->radio('cCacheFullPageContentOverrideLifetime', 'default', $c->getCollectionFullPageCachingLifetime())?> 
+			<?=t('Default - %s minutes', CACHE_LIFETIME / 60)?>
+			</span></label></li>
+			<li><label><span><?=$form->radio('cCacheFullPageContentOverrideLifetime', 'forever', $c->getCollectionFullPageCachingLifetime())?>
+			<?=t('Until manually cleared')?>
+			</span></label></li>
+			<li><label><span><?=$form->radio('cCacheFullPageContentOverrideLifetime', 'custom', $c->getCollectionFullPageCachingLifetime())?>
+			<?=t('Custom')?>
+			</span></label>
+			<div style="margin-top: 4px; margin-left: 16px">
+				<label><?=$form->text('cCacheFullPageContentLifetimeCustom', $val, array('style' => 'width: 40px'))?> <?=t('minutes')?></label>
+			</div>
 			</li>
-			</ul>
-			</div>
-			
-			</div>
-			
-			<div class="clearfix">
-			<label><?=t('Cache for how long?')?></label>
-			
-			<div class="ccm-properties-cache-lifetime input">
-			<ul class="inputs-list">
-				<? $val = ($c->getCollectionFullPageCachingLifetimeCustomValue() > 0 && $c->getCollectionFullPageCachingLifetime()) ? $c->getCollectionFullPageCachingLifetimeCustomValue() : ''; ?>
-				<li><label><span><input type="radio" name="cCacheFullPageContentOverrideLifetime" value="0" <? if ($c->getCollectionFullPageCachingLifetime() == '0') { ?> checked="checked" <? } ?> /> 
-				<?=t('Use global setting - %s', $globalSettingLifetime)?>
-				</span></label></li>
-				<li><label><span><?=$form->radio('cCacheFullPageContentOverrideLifetime', 'default', $c->getCollectionFullPageCachingLifetime())?> 
-				<?=t('Default - %s minutes', CACHE_LIFETIME / 60)?>
-				</span></label></li>
-				<li><label><span><?=$form->radio('cCacheFullPageContentOverrideLifetime', 'forever', $c->getCollectionFullPageCachingLifetime())?>
-				<?=t('Until manually cleared')?>
-				</span></label></li>
-				<li><label><span><?=$form->radio('cCacheFullPageContentOverrideLifetime', 'custom', $c->getCollectionFullPageCachingLifetime())?>
-				<?=t('Custom')?>
-				</span></label>
-				<div style="margin-top: 4px; margin-left: 16px">
-					<label><?=$form->text('cCacheFullPageContentLifetimeCustom', $val, array('style' => 'width: 40px'))?> <?=t('minutes')?></label>
-				</div>
-				</li>
-			</ul>
-			</div>
-		<? } ?>
+		</ul>
+		</div>
 	</div>	
 	
 	<input type="hidden" name="update_speed_settings" value="1" />
