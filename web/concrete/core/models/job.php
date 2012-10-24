@@ -41,6 +41,7 @@ class Concrete5_Model_Job extends Object {
 	public function getPackageHandle() {
 		return PackageList::getHandle($this->pkgID);
 	}
+	public function supportsQueue() {return $this->jSupportsQueue;}
 	
 	
 	//==========================================================
@@ -59,6 +60,7 @@ class Concrete5_Model_Job extends Object {
 	public $jDateLastRun=' default ';	
 	public $jHandle='';
 	public $jNotUninstallable=0;
+	public $jSupportsQueue = false;
 	
 	/*
 	final public __construct(){
