@@ -931,28 +931,6 @@
       <col>uID</col>
     </index>
   </table>
-  <table name="DashboardHomepage">
-    <field name="dbhID" type="I" size="10">
-      <KEY/>
-      <AUTOINCREMENT/>
-      <UNSIGNED/>
-    </field>
-    <field name="dbhModule" type="C" size="255">
-      <NOTNULL/>
-    </field>
-    <field name="dbhDisplayName" type="C" size="255"/>
-    <field name="dbhDisplayOrder" type="I" size="10">
-      <NOTNULL/>
-      <DEFAULT value="0"/>
-      <UNSIGNED/>
-    </field>
-    <field name="pkgID" type="I" size="10">
-      <NOTNULL/>
-      <DEFAULT value="0"/>
-      <UNSIGNED/>
-    </field>
-  </table>
-  
   <table name="DownloadStatistics">
     <field name="dsID" type="I" size="10">
       <KEY/>
