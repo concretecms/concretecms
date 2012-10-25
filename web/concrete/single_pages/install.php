@@ -1,6 +1,6 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?> 
 
-<script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/bootstrap.tooltip.js"></script>
+<script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/bootstrap.js"></script>
 <script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/jquery.cookie.js"></script>
 <script type="text/javascript">
 $(function() {
@@ -24,7 +24,7 @@ $(function() {
 
 	ccm_installRoutine<?=$i?> = function() {
 		<? if ($routine->getText() != '') { ?>
-			$("#install-progress-summary").html('<?=$routine->getText()?>');
+			$("#install-progress-summary").html('<?=addslashes($routine->getText())?>');
 		<? } ?>
 		$.ajax('<?=$this->url("/install", "run_routine", $installPackage, $routine->getMethod())?>', {
 			dataType: 'json',

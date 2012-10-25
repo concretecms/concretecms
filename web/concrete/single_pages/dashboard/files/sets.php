@@ -178,7 +178,7 @@
 	</div>
 	<div class="ccm-pane-body <? if (!$fsl->requiresPaging()) { ?> ccm-pane-body-footer <? } ?> ">
 
-		<a href="<?=View::url('/dashboard/files/add_set')?>" style="float: right;z-index:999;position:relative;top:-5px" class="btn primary"><?=t("Add File Set")?></a>
+		<a href="<?=View::url('/dashboard/files/add_set')?>" style="float: right; z-index: 5; position:relative;top:-5px" class="btn primary"><?=t("Add File Set")?></a>
 
 		<?=$fsl->displaySummary()?>
 	

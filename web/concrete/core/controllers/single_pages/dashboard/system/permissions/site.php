@@ -26,7 +26,7 @@ class Concrete5_Controller_Dashboard_System_Permissions_Site extends DashboardBa
 		$gIDs = $gl->get();
 		$gArray = array();
 		foreach($gIDs as $gID) {
-			$gArray[] = Group::getByID($gID);
+			$gArray[] = Group::getByID($gID['gID']);
 		}
 
 		$pk = PermissionKey::getByHandle('edit_page_contents');
@@ -34,7 +34,7 @@ class Concrete5_Controller_Dashboard_System_Permissions_Site extends DashboardBa
 		$assignments = $pk->getAccessListItems();
 		foreach($assignments as $asi) {
 			$ae = $asi->getAccessEntityObject();
-		if ($ae->getAccessEntityTypeHandle() == 'group') {
+			if ($ae->getAccessEntityTypeHandle() == 'group') {
 				$editAccess[] = $ae->getGroupObject()->getGroupID();
 			}
 		}
@@ -101,7 +101,25 @@ class Concrete5_Controller_Dashboard_System_Permissions_Site extends DashboardBa
 					}
 					$pt->assignPermissionAccess($pa);
 				}
+				$pkx = PermissionKey::getbyHandle('add_block');
+				$pt = $pkx->getPermissionAssignmentObject();
+				$pt->clearPermissionAssignment();
+				$pa = PermissionAccess::create($pkx);
+				foreach($editAccessEntities as $editObj) {
+					$pa->addListItem($editObj);
+				}
+				$pt->assignPermissionAccess($pa);
 
+				$pkx = PermissionKey::getbyHandle('add_stack');
+				$pt = $pkx->getPermissionAssignmentObject();
+				$pt->clearPermissionAssignment();
+				$pa = PermissionAccess::create($pkx);
+				foreach($editAccessEntities as $editObj) {
+					$pa->addListItem($editObj);
+				}
+				$pt->assignPermissionAccess($pa);
+				
+				Cache::flush();
 				$this->redirect('/dashboard/system/permissions/site/', 'saved');
 			} else {
 				$this->error->add($this->token->getErrorMessage());

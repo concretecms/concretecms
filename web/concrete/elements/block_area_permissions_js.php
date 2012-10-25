@@ -16,7 +16,7 @@ $cp = isset($cp) ? $cp : new Permissions($cp);
 ccm_areaMenuObj<?=$a->getAreaID()?>.canAddStacks = <?= (int) ($ap->canAddStacks() && $a->areaAcceptsBlocks()) ?>;
 ccm_areaMenuObj<?=$a->getAreaID()?>.canAddBlocks = <?= (int) ($ap->canAddBlockToArea() && $a->areaAcceptsBlocks()) ?>;
 ccm_areaMenuObj<?=$a->getAreaID()?>.canWrite = <?=$ap->canEditAreaContents()?>;
-<? if ($ap->canEditAreaPermissions() && PERMISSIONS_MODEL != 'simple') { ?>
+<? if ($ap->canEditAreaPermissions() && PERMISSIONS_MODEL != 'simple' && (!$a->isGlobalArea())) { ?>
     ccm_areaMenuObj<?=$a->getAreaID()?>.canModifyGroups = true;
 <? } ?>
 <? if ($ap->canAddLayoutToArea() && ENABLE_AREA_LAYOUTS == true && (!$a->isGlobalArea()) && (!$c->isMasterCollection()) && $a->areaAcceptsBlocks()) { ?>

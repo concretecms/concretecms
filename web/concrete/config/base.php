@@ -106,7 +106,7 @@ if (!defined('DB_CHARSET')) {
 }
 
 if (!defined("DB_COLLATE")) {
-	define('DB_COLLATE', 'utf8_unicode_ci');
+	define('DB_COLLATE', '');
 }
 
 define("LANGUAGE_DOMAIN_CORE", "messages");

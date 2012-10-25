@@ -73,7 +73,7 @@
         <page name="File Manager" path="/dashboard/files/search" filename="/dashboard/files/search.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
-					<value>files, add file, delete file, copy, move, alias, resize, crop, rename, images, title, attribute</value>
+					<value>add file, delete file, copy, move, alias, resize, crop, rename, images, title, attribute</value>
 				</attributekey>
 				<attributekey handle="icon_dashboard">
 					<value>icon-picture</value>
@@ -116,7 +116,7 @@
         <page name="Members" path="/dashboard/users" filename="/dashboard/users/view.php" pagetype="" description="Add and manage the user accounts and groups on your website." package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
-					<value>users, groups, people, find, delete user, remove user, add user, change password, password</value>
+					<value>users, groups, people, find, delete user, remove user, change password, password</value>
 				</attributekey>
 			</attributes>
         </page>
@@ -181,9 +181,6 @@
 				<attributekey handle="meta_keywords">
 					<value>group set</value>
 				</attributekey>
-				<attributekey handle="exclude_nav">
-					<value><![CDATA[1]]></value>
-				</attributekey>
 				<attributekey handle="icon_dashboard">
 					<value>icon-list</value>
 				</attributekey>
@@ -219,7 +216,7 @@
         <page name="Surveys" path="/dashboard/reports/surveys" filename="/dashboard/reports/surveys.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
-					<value>survey, questions, quiz, response</value>
+					<value>questions, quiz, response</value>
 				</attributekey>
 				<attributekey handle="icon_dashboard">
 					<value>icon-tasks</value>
@@ -236,13 +233,7 @@
 				</attributekey>
 			</attributes>
         </page>
-        <page name="Pages &amp; Themes" path="/dashboard/pages" filename="/dashboard/pages/view.php" pagetype="" description="Reskin your site." package="">
-			<attributes>
-				<attributekey handle="meta_keywords">
-					<value>page types, themes</value>
-				</attributekey>
-			</attributes>
-        </page>
+        <page name="Pages &amp; Themes" path="/dashboard/pages" filename="/dashboard/pages/view.php" pagetype="" description="Reskin your site." package=""></page>
         <page name="Themes" path="/dashboard/pages/themes" filename="/dashboard/pages/themes/view.php" pagetype="" description="Reskin your site." package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
@@ -256,11 +247,17 @@
         <page name="Add" path="/dashboard/pages/themes/add" filename="/dashboard/pages/themes/add.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
-					<value>add theme</value>
+					<value>theme</value>
 				</attributekey>
 			</attributes>
         </page>
-        <page name="Inspect" path="/dashboard/pages/themes/inspect" filename="/dashboard/pages/themes/inspect.php" pagetype="" description="" package=""/>
+        <page name="Inspect" path="/dashboard/pages/themes/inspect" filename="/dashboard/pages/themes/inspect.php" pagetype="" description="" package="">
+        	<attributes>
+				<attributekey handle="meta_keywords">
+					<value>page types</value>
+				</attributekey>
+			</attributes>
+		</page>
         <page name="Customize" path="/dashboard/pages/themes/customize" filename="/dashboard/pages/themes/customize.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
@@ -300,7 +297,13 @@
 			</attributes>
         </page>        
 
-        <page name="Workflow" path="/dashboard/workflow" filename="/dashboard/workflow/view.php" pagetype="" description="" package=""/>
+        <page name="Workflow" path="/dashboard/workflow" filename="/dashboard/workflow/view.php" pagetype="" description="" package="">
+        	<attributes>
+				<attributekey handle="meta_keywords">
+					<value>add workflow, remove workflow</value>
+				</attributekey>
+			</attributes>
+        </page>
         <page name="Workflow List" path="/dashboard/workflow/list" filename="/dashboard/workflow/list.php" pagetype="" description="" package="">
         	<attributes>
 				<attributekey handle="icon_dashboard">
@@ -315,15 +318,12 @@
 				</attributekey>
 			</attributes>        
         </page>
-
         <page name="Stacks &amp; Blocks" path="/dashboard/blocks" filename="/dashboard/blocks/view.php" pagetype="" description="Manage sitewide content and administer block types." package="" />
         <page name="Stacks" path="/dashboard/blocks/stacks" filename="/dashboard/blocks/stacks/view.php" pagetype="" description="Share content across your site." package="">
         	<attributes>
 				<attributekey handle="meta_keywords">
 					<value>stacks, reusable content, scrapbook, copy, paste, paste block, copy block, site name, logo</value>
 				</attributekey>
-			</attributes>
-        	<attributes>
 				<attributekey handle="icon_dashboard">
 					<value>icon-th</value>
 				</attributekey>
@@ -336,7 +336,6 @@
 					<value>icon-lock</value>
 				</attributekey>
 			</attributes>
-
         </page>
         <page name="Stack List" path="/dashboard/blocks/stacks/list" filename="/dashboard/blocks/stacks/list/view.php" pagetype="" description="" package="">
 			<attributes>
@@ -358,8 +357,6 @@
 				<attributekey handle="meta_keywords">
 					<value>block, refresh, custom</value>
 				</attributekey>
-			</attributes>
-        	<attributes>
 				<attributekey handle="icon_dashboard">
 					<value>icon-wrench</value>
 				</attributekey>
@@ -433,7 +430,7 @@
 			</attributes>
 			<attributes>
 				<attributekey handle="meta_keywords">
-					<value>dashboard,configuration</value>
+					<value>dashboard, configuration</value>
 				</attributekey>
 			</attributes>
         </page>
@@ -521,7 +518,7 @@
         <page name="Cache &amp; Speed Settings" path="/dashboard/system/optimization/cache" filename="/dashboard/system/optimization/cache.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
-					<value>cache option, change cache, turn on cache, turn off cache, no cache, page cache, caching</value>
+					<value>cache option, change cache, override, turn on cache, turn off cache, no cache, page cache, caching</value>
 				</attributekey>
 			</attributes>
         </page>

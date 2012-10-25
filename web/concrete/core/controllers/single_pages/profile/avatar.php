@@ -28,11 +28,7 @@ class Concrete5_Controller_Profile_Avatar extends ProfileEditController {
 				$ui->update($data);
 			}
 		}	
-		// remove the uploaded tmp image
-		if(strlen($_POST['tmp_avatar'])) {
-			unlink(DIR_FILES_CACHE . '/' . $_POST['tmp_avatar']);
-		}
-		
+
 		$this->redirect('/profile/avatar', 'saved');
 	}
 	

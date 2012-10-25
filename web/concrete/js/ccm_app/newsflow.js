@@ -61,6 +61,9 @@ ccm_getNewsflowOverlayWindow = function() {
 	}
 	return $ovl;
 }
+/** 
+ * Newsflow
+ */
 
 ccm_showNewsflowOverlayWindow = function(url, callback) {
 	

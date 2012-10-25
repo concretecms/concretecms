@@ -148,8 +148,96 @@ class ConcreteUpgradeVersion560Helper {
 			$d1a = SinglePage::add('/dashboard/system/environment/proxy');
 			$d1a->update(array('cName'=>t('Proxy Server')));
 		}
-
-		
+		// update meta keywords
+		$pageKeywords = array(
+			'/dashboard/composer' => t('new blog, write, write blog, blogging'),
+			'/dashboard/composer/write' => t('new blog, write, write blog, blogging'),
+			'/dashboard/composer/drafts' => t('blog drafts,composer'),
+			'/dashboard/sitemap/explore' => t('pages, add page, delete page, copy, move, alias, bulk'),
+			'/dashboard/sitemap/search' => t('find page, search page, search, find, pages, sitemap'),
+			'/dashboard/sitemap/full' => t('pages, add page, delete page, copy, move, alias'),
+			'/dashboard/sitemap/search' => t('find page, search page, search, find, pages, sitemap'),
+			'/dashboard/files' => t('add file, delete file, copy, move, alias, resize, crop, rename, images, title, attribute'),
+			'/dashboard/files/attributes' => t('file, file attributes, title, attribute, description, rename'),
+			'/dashboard/files/sets' => t('files, category, categories'),
+			'/dashboard/files/add_set' => t('new file set'),
+			'/dashboard/users' => t('users, groups, people, find, delete user, remove user, change password, password'),
+			'/dashboard/users/search' => t('find, search, people, delete user, remove user, change password, password'),
+			'/dashboard/users/groups' => t('user, group, people, permissions, access, expire'),
+			'/dashboard/users/attributes' => t('user attributes, user data, gather data, registration data'),
+			'/dashboard/users/add' => t('new user, create'),
+			'/dashboard/users/add_group' => t('new user group, new group, group, create'),
+			'/dashboard/users/group_sets' => t('group set'),
+			'/dashboard/reports' => t('forms, log, error, email, mysql, exception, survey'),
+			'/dashboard/reports/statistics' => t('hits, pageviews, visitors, activity'),
+			'/dashboard/reports/forms' => t('forms, questions, response, data'),
+			'/dashboard/reports/surveys' => t('questions, quiz, response'),
+			'/dashboard/reports/logs' => t('forms, log, error, email, mysql, exception, survey, history'),
+			'/dashboard/pages' => t('themes'),
+			'/dashboard/pages/themes' => t('new theme, theme, active theme, change theme, template, css'),
+			'/dashboard/pages/themes/add' => t('theme'),
+			'/dashboard/pages/themes/inspect' => t('page types'),
+			'/dashboard/pages/themes/customize' => t('custom theme, change theme, custom css, css'),
+			'/dashboard/pages/types' => t('page type defaults, global block, global area, starter, template'),
+			'/dashboard/pages/attributes' => t('page attributes, custom'),
+			'/dashboard/pages/single' => t('single, page, custom, application'),
+			'/dashboard/workflow' => t('add workflow, remove workflow'),
+			'/dashboard/blocks/stacks' => t('stacks, reusable content, scrapbook, copy, paste, paste block, copy block, site name, logo'),
+			'/dashboard/blocks/stacks/list' => t('edit stacks, view stacks, all stacks'),
+			'/dashboard/blocks/types' => t('block, refresh, custom'),
+			'/dashboard/extend' => t('add-on, addon, add on, package,applications, ecommerce, discussions, forums, themes, templates, blocks'),
+			'/dashboard/extend/install' => t('add-on, addon, ecommerce, install, discussions, forums, themes, templates, blocks'),
+			'/dashboard/extend/update' => t('update, upgrade'),
+			'/dashboard/extend/connect' => t('concrete5.org, my account, marketplace'),
+			'/dashboard/extend/themes' => t('buy theme, new theme, marketplace, template'),
+			'/dashboard/extend/add-ons' => t('buy addon, buy add on, buy add-on, purchase addon, purchase add on, purchase add-on, find addon, new addon, marketplace'),
+			'/dashboard/system' => t('dashboard, configuration'),
+			'/dashboard/system/basics/site_name' => t('website name, title'),
+			'/dashboard/system/basics/icons' => t('logo, favicon, iphone, icon, bookmark'),
+			'/dashboard/system/basics/editor' => t('tinymce, content block, fonts, editor, tinymce, content, overlay'),
+			'/dashboard/system/basics/multilingual' => t('translate, translation, internationalization, multilingual, translate'),
+			'/dashboard/system/basics/timezone' => t('timezone, profile, locale'),
+			'/dashboard/system/basics/interface' => t('interface, quick nav, dashboard background, background image'),
+			'/dashboard/system/seo' => t('vanity, pretty url, seo, pageview, view'),
+			'/dashboard/system/seo/bulk_seo_tool' => t('bulk, seo, change keywords, engine, optimization, search'),
+			'/dashboard/system/seo/tracking_codes' => t('traffic, statistics, google analytics, quant, pageviews, hits'),
+			'/dashboard/system/seo/statistics' => t('turn off statistics, tracking, statistics, pageviews, hits'),
+			'/dashboard/system/seo/search_index' => t('configure search, site search, search option'),
+			'/dashboard/system/optimization' => t('cache option, change cache, turn on cache, turn off cache, no cache, page cache, caching'),
+			'/dashboard/system/optimization/clear_cache' => t('cache option, turn off cache, no cache, page cache, caching'),
+			'/dashboard/system/optimization/jobs' => t('index search, reindex search, build sitemap, sitemap.xml, clear old versions, page versions, remove old'),
+			'/dashboard/system/permissions' => t('/dashboard/system/permissions/site'),
+			'/dashboard/system/permissions/files' => t('file options, file manager, upload, modify'),
+			'/dashboard/system/permissions/file_types' => t('security, files, media, extension, manager, upload'),
+			'/dashboard/system/permissions/tasks' => t('security, actions, administrator, admin, package, marketplace, search'),
+			'/dashboard/system/permissions/ip_blacklist' => t('security, lock ip, lock out, block ip, address, restrict, access'),
+			'/dashboard/system/permissions/captcha' => t('security, registration'),
+			'/dashboard/system/permissions/antispam' => t('antispam, block spam, security'),
+			'/dashboard/system/permissions/maintenance_mode' => t('lock site, under construction, hide, hidden'),
+			'/dashboard/system/registration' => t('profile, login, redirect, specific, dashboard, administrators'),
+			'/dashboard/system/registration/profiles' => t('member profile, member page,community, forums, social, avatar'),
+			'/dashboard/system/registration/public_registration' => t('signup, new user, community'),
+			'/dashboard/system/mail' => t('smtp, mail settings'),
+			'/dashboard/system/mail/method' => t('email server, mail settings, mail configuration, external, internal'),
+			'/dashboard/system/mail/importers' => t('email server, mail settings, mail configuration, private message, message system, import, email, message'),
+			'/dashboard/system/attributes' => t('attribute configuration'),
+			'/dashboard/system/environment/info' => t('overrides, override, system info, debug, support,help'),
+			'/dashboard/system/environment/debug' => t('errors, exceptions, develop, support, help'),
+			'/dashboard/system/environment/logging' => t('email, logging, logs, smtp, pop, errors, mysql, errors, log'),
+			'/dashboard/system/environment/file_storage_locations' => t('security, alternate storage, hide files'),
+			'/dashboard/system/environment/proxy' => t('network, proxy server'),
+			'/dashboard/system/backup_restore' => t('export, backup, database, sql, mysql, encryption, restore'),
+			'/dashboard/system/backup_restore/update' => t('upgrade, new version, update'),
+			'/dashboard/system/backup_restore/database' => t('export, database, xml, starting, points, schema, refresh, custom, tables'),
+			'/dashboard/system/seo/search_index' => t('configure search, site search, search option'),
+			'/dashboard/system/optimization/cache' => t('cache option, change cache, override, turn on cache, turn off cache, no cache, page cache, caching')
+			);
+		foreach ($pageKeywords as $page => $keywords) {
+			$p = Page::getByPath($page, 'ACTIVE');
+			if (is_object($p) && !$p->isError()) {
+			$p->setAttribute('meta_keywords', $keywords);
+			}
+		}	
 		// install the permissions from permissions.xml
 		$this->installPermissionsAndWorkflow();
 		$this->addGlobalBlockPermissions();
@@ -168,21 +256,56 @@ class ConcreteUpgradeVersion560Helper {
 	}
 	
 	protected function addGlobalBlockPermissions() {
-		$adminGroup = Group::getByID(ADMIN_GROUP_ID);
-		$pae = GroupPermissionAccessEntity::getOrCreate($adminGroup);
-		$pk = PermissionKey::getByHandle("add_block");
-		$pt = $pk->getPermissionAssignmentObject();
-		$pt->clearPermissionAssignment();
-		$pa = PermissionAccess::create($pk);
-		$pa->addListItem($pae);
-		$pt->assignPermissionAccess($pa);
+		if (PERMISSIONS_MODEL == 'simple') {
+			// permissions
+			$db = Loader::db();
+			$permissionMap = array(
+				'wa' => array(
+					PermissionKey::getByHandle('add_block'),
+					PermissionKey::getByHandle('add_stack')
+				)
+			);
 
-		$pk = PermissionKey::getByHandle("add_stack");
-		$pt = $pk->getPermissionAssignmentObject();
-		$pt->clearPermissionAssignment();
-		$pa = PermissionAccess::create($pk);
-		$pa->addListItem($pae);
-		$pt->assignPermissionAccess($pa);
+			$r = $db->Execute('select * from PagePermissions where cID = 1');	
+			while ($row = $r->FetchRow()) {
+				$pe = $this->migrateAccessEntity($row);
+				if (!$pe) {
+					continue;
+				}
+				$permissions = $this->getPermissionsArray($row['cgPermissions']);
+				foreach($permissions as $p) {
+					$permissionsToApply = $permissionMap[$p];
+					if (is_array($permissionsToApply)) {
+						foreach($permissionsToApply as $pko) {
+							$pt = $pko->getPermissionAssignmentObject();
+							$pa = $pko->getPermissionAccessObject();
+							if (!is_object($pa)) {
+								$pa = PermissionAccess::create($pko);
+							}
+							$pa->addListItem($pe, false, PermissionKey::ACCESS_TYPE_INCLUDE);	
+							$pt->assignPermissionAccess($pa);
+						}
+					}
+				}
+			}
+			
+		} else {
+			$adminGroup = Group::getByID(ADMIN_GROUP_ID);
+			$pae = GroupPermissionAccessEntity::getOrCreate($adminGroup);
+			$pk = PermissionKey::getByHandle("add_block");
+			$pt = $pk->getPermissionAssignmentObject();
+			$pt->clearPermissionAssignment();
+			$pa = PermissionAccess::create($pk);
+			$pa->addListItem($pae);
+			$pt->assignPermissionAccess($pa);
+	
+			$pk = PermissionKey::getByHandle("add_stack");
+			$pt = $pk->getPermissionAssignmentObject();
+			$pt->clearPermissionAssignment();
+			$pa = PermissionAccess::create($pk);
+			$pa->addListItem($pae);
+			$pt->assignPermissionAccess($pa);
+		}
 	}
 
 	protected function setupDashboardIcons() {
@@ -364,6 +487,10 @@ class ConcreteUpgradeVersion560Helper {
 
 
 	protected function migrateAreaPermissionBlockTypes() {
+		if (PERMISSIONS_MODEL == 'simple') {
+			return;
+		}
+		
 		$db = Loader::db();
 		$tables = $db->MetaTables();
 		if (!in_array('AreaGroupBlockTypes', $tables)) {
@@ -447,6 +574,10 @@ class ConcreteUpgradeVersion560Helper {
 	}
 
 	protected function migrateAreaPermissions() {
+		if (PERMISSIONS_MODEL == 'simple') {
+			return;
+		}
+		
 		$db = Loader::db();
 		$tables = $db->MetaTables();
 		if (!in_array('AreaGroups', $tables)) {
@@ -503,18 +634,23 @@ class ConcreteUpgradeVersion560Helper {
 		// first, we fix permissions that are set to override but are pointing to another page. They shouldn't do that.
 		$db->Execute('update Pages set cInheritPermissionsFromCID = cID where cInheritPermissionsFrom = "OVERRIDE"');
 		// permissions
+		$waSet = array(
+			PermissionKey::getByHandle('preview_page_as_user'),
+			PermissionKey::getByHandle('edit_page_properties'),
+			PermissionKey::getByHandle('edit_page_contents'),
+			PermissionKey::getByHandle('move_or_copy_page'),
+			PermissionKey::getByHandle('add_block_to_area'),
+			PermissionKey::getByHandle('add_stack_to_area'),
+		);
+		if (PERMISSIONS_MODEL == 'simple') {
+			$waSet[] = PermissionKey::getByHandle('approve_page_versions');
+			$waSet[] = PermissionKey::getByHandle('delete_page_versions');
+			$waSet[] = PermissionKey::getByHandle('add_subpage');
+		}		
 		$permissionMap = array(
 			'r' => array(PermissionKey::getByHandle('view_page')),
 			'rv' => array(PermissionKey::getByHandle('view_page_versions')),
-			'wa' => array(
-				PermissionKey::getByHandle('view_page'),
-				PermissionKey::getByHandle('preview_page_as_user'),
-				PermissionKey::getByHandle('edit_page_properties'),
-				PermissionKey::getByHandle('edit_page_contents'),
-				PermissionKey::getByHandle('move_or_copy_page'),
-				PermissionKey::getByHandle('add_block_to_area'),
-				PermissionKey::getByHandle('add_stack_to_area'),
-			),
+			'wa' => $waSet,
 			'adm' => array(
 				PermissionKey::getByHandle('edit_page_speed_settings'),
 				PermissionKey::getByHandle('edit_page_theme'),
@@ -531,6 +667,7 @@ class ConcreteUpgradeVersion560Helper {
 			),
 			'db' => array(PermissionKey::getByHandle('edit_page_contents'))	
 		);
+		
 		
 		$r = $db->Execute('select * from PagePermissions order by cID asc');	
 		while ($row = $r->FetchRow()) {
@@ -675,6 +812,10 @@ class ConcreteUpgradeVersion560Helper {
 		}
 	}	
 	protected function migrateBlockPermissions() {
+		if (PERMISSIONS_MODEL == 'simple') {
+			return;
+		}
+		
 		$db = Loader::db();
 		$tables = $db->MetaTables();
 		if (!in_array('CollectionVersionBlockPermissions', $tables)) {

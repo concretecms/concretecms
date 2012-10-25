@@ -206,6 +206,8 @@ if (count($pages) > 0) {
 								<?php echo $form->textarea('meta_keywords', $cobj->getAttribute('meta_keywords'), array('title' => $cID)); ?>
 							</div>
 								
+							<? if ($cobj->getCollectionID() != HOME_CID) { ?>
+							
 							<div style="margin-left: 30px;">
 								<strong><?php echo t('Slug'); ?></strong>
 								<br />
@@ -220,11 +222,12 @@ if (count($pages) > 0) {
 									$lastkey = array_pop(array_keys($tokens));
 									$tokens[$lastkey] = '<strong class="collectionPath">' . $tokens[$lastkey] . '</strong>';
 									$untokens = implode('/', $tokens);
-									echo BASE_URL . $untokens;
+									echo BASE_URL . DIR_REL . $untokens;
 								?>
 								</span>
 							</div>
-								
+							<? } ?>
+									
 							<div class="updateButton">
 								<br />
 								<br />

@@ -108,16 +108,16 @@ class Concrete5_Model_Page extends Collection {
 			$this->loadError(COLLECTION_NOT_FOUND);
 		}
 		
-		$this->cHasLayouts = $db->GetOne('select count(cvalID) from CollectionVersionAreaLayouts where cID = ?', array($this->cID));
-
-		$this->loadPermissionAssignments();
-		if ($cvID != false) {
-			// we don't do this on the front page
-			$this->loadVersionObject($cvID);
-		}
-		
+		if (!$this->isError()) {
+			$this->cHasLayouts = $db->GetOne('select count(cvalID) from CollectionVersionAreaLayouts where cID = ?', array($this->cID));
+	
+			$this->loadPermissionAssignments();
+			if ($cvID != false) {
+				// we don't do this on the front page
+				$this->loadVersionObject($cvID);
+			}
+		}		
 		unset($r);
-		
 	}	
 	
 	protected function loadPermissionAssignments() {
@@ -1168,7 +1168,7 @@ class Concrete5_Model_Page extends Collection {
 				$pathSegments = explode('/', $val);
 				$newVal = '/';
 				foreach($pathSegments as $pathSegment) {
-					$newVal .= URLify::filter($pathSegment) . '/';
+					$newVal .= $pathSegment . '/';
 				}
 				$newVal = substr($newVal, 0, strlen($newVal) - 1);
 				$newVal = str_replace('-', PAGE_PATH_SEPARATOR, $newVal);
@@ -1381,7 +1381,10 @@ class Concrete5_Model_Page extends Collection {
 		if (!$this->isActive()) {
 			$this->activate();
 		}
+		
 		$this->rescanSystemPageStatus();
+		$this->cParentID = $newCParentID;
+		$this->movePageDisplayOrderToBottom();
 		// run any event we have for page move. Arguments are
 		// 1. current page being moved
 		// 2. former parent

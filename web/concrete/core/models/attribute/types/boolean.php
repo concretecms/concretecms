@@ -67,9 +67,9 @@ class Concrete5_Controller_AttributeType_Boolean extends AttributeTypeController
 	}
 	
 	public function composer() {
-		print '<ul class="inputs-list"><li><label>';
+		print '<label class="checkbox">';
 		$this->form();
-		print '</label></li></ul>';
+		print '</label>';
 	}
 	
 	public function search() {

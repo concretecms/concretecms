@@ -94,18 +94,21 @@ class Concrete5_Model_PagePermissionResponse extends PermissionResponse {
 			$ppc->setPermissionKeyObject($pk);
 			$assignments[] = $ppc;
 		}
-		$r = $db->Execute('select peID, Areas.arHandle, pdID, pkID from AreaPermissionAssignments apa inner join PermissionAccessList pal on apa.paID = pal.paID inner join Areas on Areas.arHandle = apa.arHandle and Areas.cID = apa.cID where pdID > 0 and Areas.cID = ? and Areas.arOverrideCollectionPermissions = 1', array($this->object->getCollectionID()));
-		while ($row = $r->FetchRow()) { 
-			$pk = AreaPermissionKey::getByID($row['pkID']);
-			$pae = PermissionAccessEntity::getByID($row['peID']);
-			$area = Area::get($this->getPermissionObject(), $row['arHandle']);
-			$pk->setPermissionObject($area);
-			$pd = PermissionDuration::getByID($row['pdID']);
-			$ppc = new PageContentPermissionTimedAssignment();
-			$ppc->setDurationObject($pd);
-			$ppc->setAccessEntityObject($pae);
-			$ppc->setPermissionKeyObject($pk);
-			$assignments[] = $ppc;
+		$r = $db->Execute('select arHandle from Areas where cID = ? and arOverrideCollectionPermissions = 1', array($this->object->getCollectionID()));
+		while ($row = $r->FetchRow()) {
+			$r2 = $db->Execute('select peID, pdID, pkID from AreaPermissionAssignments apa inner join PermissionAccessList pal on apa.paID = pal.paID where pdID > 0 and cID = ? and arHandle = ?', array($this->object->getCollectionID(), $row['arHandle']));
+			while ($row2 = $r2->FetchRow()) { 
+				$pk = AreaPermissionKey::getByID($row2['pkID']);
+				$pae = PermissionAccessEntity::getByID($row2['peID']);
+				$area = Area::get($this->getPermissionObject(), $row['arHandle']);
+				$pk->setPermissionObject($area);
+				$pd = PermissionDuration::getByID($row2['pdID']);
+				$ppc = new PageContentPermissionTimedAssignment();
+				$ppc->setDurationObject($pd);
+				$ppc->setAccessEntityObject($pae);
+				$ppc->setPermissionKeyObject($pk);
+				$assignments[] = $ppc;
+			}
 		}
 		$r = $db->Execute('select peID, cvb.cvID, cvb.bID, pdID, pkID from BlockPermissionAssignments bpa
 		inner join PermissionAccessList pal on bpa.paID = pal.paID inner join CollectionVersionBlocks cvb on cvb.cID = bpa.cID and cvb.cvID = bpa.cvID and cvb.bID = bpa.bID

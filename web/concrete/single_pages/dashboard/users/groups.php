@@ -75,7 +75,7 @@ if ($tp->canAccessGroupSearch()) { ?>
 </div>
 <div class="ccm-pane-body <? if (!$gl->requiresPaging()) { ?> ccm-pane-body-footer <? } ?>">
 
-	<a href="<?php echo View::url('/dashboard/users/add_group')?>" style="float: right;z-index:999;position:relative;top:-5px"  class="btn primary"><?php echo t("Add Group")?></a>
+	<a href="<?php echo View::url('/dashboard/users/add_group')?>" style="float: right; position:relative;top:-5px"  class="btn primary"><?php echo t("Add Group")?></a>
 
 <? if (count($gResults) > 0) { 
 	$gl->displaySummary();

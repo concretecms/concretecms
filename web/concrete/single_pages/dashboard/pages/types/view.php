@@ -35,13 +35,19 @@ if ($_REQUEST['task'] == 'edit') {
 if ($_POST['update']) {
 	$ctName = Loader::helper("text")->entities($_POST['ctName']);
 	$ctHandle = Loader::helper('text')->entities($_POST['ctHandle']);
+	$vs = Loader::helper('validation/strings');
 	
 	$error = array();
 	if (!$ctHandle) {
 		$error[] = t("Handle required.");
+	} else if (!$vs->handle($ctHandle)) {
+		$error[] = t('Handles must contain only letters, numbers or the underscore symbol.');
 	}
+	
 	if (!$ctName) {
 		$error[] = t("Name required.");
+	} else if (!$vs->alphanum($ctName, true)) {
+		$error[] = t('Page type names can only contain letters, numbers and spaces.');
 	}
 	
 	if (!$valt->validate('update_page_type')) {
