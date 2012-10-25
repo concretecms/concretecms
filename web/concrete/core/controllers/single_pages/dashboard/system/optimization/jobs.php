@@ -39,13 +39,14 @@ class Concrete5_Controller_Dashboard_System_Optimization_Jobs extends DashboardB
 		$this->view();
 	}
 	
-	public function reset_running_jobs() {
-		Loader::model('job');
-		if (Loader::helper('validation/token')->validate('reset_running_jobs')) { 
-			Job::resetRunningJobs();
-			$this->redirect('/dashboard/system/optimization/jobs', 'reset_complete');
+	public function reset() {
+		$jobs = Job::getList();
+		foreach($jobs as $j) {
+			$j->reset();
 		}
+		$this->redirect('/dashboard/system/optimization/jobs', 'reset_complete');
 	}
+
 	public function reset_complete() {
 		$this->set('message', t('All running jobs have been reset.'));
 		$this->view();

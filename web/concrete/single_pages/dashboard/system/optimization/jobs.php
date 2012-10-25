@@ -10,66 +10,149 @@ $jh = Loader::helper('json');
 
 ?>
 <style type="text/css">
+#ccm-jobs-list td {
+	-webkit-transition-property: color, background-color;
+	-webkit-transition-duration: .9s, .9s;
+	-moz-transition-property: color, background-color;
+	-moz-transition-duration: .9s, .9s;
+	-o-transition-property: color, background-color;
+	-o-transition-duration: .9s, .9s;
+	-ms-transition-property: color, background-color;
+	-ms-transition-duration: .9s, .9s;
+	transition-property: color, background-color;
+	transition-duration: .9s, .9s;
+ }
+
+#ccm-jobs-list td button {
+ 	float: right;
+ }
+
+#ccm-jobs-list tr.error td {
+	color: #f00;
+}
+
+#ccm-jobs-list tr.success td {
+	color: #090;
+}
+
 </style>
 
 <?=$h->getDashboardPaneHeaderWrapper(t('Automated Jobs'), false, false);?>
 <? if (count($installedJobs) > 0) { ?>
 
-<table class="table table-striped" id="ccm-jobs-list">
+<table class="table" id="ccm-jobs-list">
 	<thead>
 	<tr>
 		<th><?=t('ID')?></th>
 		<th><?=t('Name')?></th>
 		<th><?=t('Last Run')?></th>
 		<th><?=t('Results of Last Run')?></th>
-		<th></th>
+		<td><a href="<?=$this->action('reset')?>" class="btn pull-right btn-mini"><?=t('Reset All Jobs')?></a></td>
 	</tr>
 	</thead>
 	<tbody>
 	<? foreach($installedJobs as $j) { ?>
-		<tr>
+		<tr class="<? if ($j->didFail()) { ?>error<? } ?> <? if ($j->getJobStatus() == 'RUNNING') {?>running<? } ?>">
 			<td><?=$j->getJobID()?></td>
 			<td><i class="icon-question-sign" title="<?=$j->getJobDescription()?>"></i> <?=$j->getJobName()?></td>
 			<td class="jDateLastRun"><?
 				if ($j->getJobStatus() == 'RUNNING') {
-					$runtime = date(DATE_APP_GENERIC_TS, strtotime($j->getJobDateLastRun()));
+					$runtime = date(DATE_APP_GENERIC_MDYT_FULL_SECONDS, strtotime($j->getJobDateLastRun()));
 					echo ("<strong>");
-					echo t("Currently Running (Since %s)", $runtime);					
+					echo t("Running since %s", $runtime);					
 					echo ("</strong>");
 				} else if($j->getJobDateLastRun() == '' || substr($j->getJobDateLastRun(), 0, 4) == '0000') {
 					echo t('Never');
 				} else {
-					$runtime = date(DATE_APP_GENERIC_MDY . t(' \a\t ') . DATE_APP_GENERIC_TS, strtotime($j->getJobDateLastRun()) );
+					$runtime = date(DATE_APP_GENERIC_MDYT_FULL_SECONDS, strtotime($j->getJobDateLastRun()) );
 					echo $runtime;
 				}
 			?></td>
 			<td class="jLastStatusText"><?=$j->getJobLastStatusText()?></td>
-			<td><button data-jID="<?=$j->getJobID()?>" data-jSupportsQueue="<?=$j->supportsQueue()?>" data-jName="<?=$j->getJobName()?>" class="btn-run-job btn"><i class="icon-play"></i> <?=t('Run')?></button></td>
+			<td class="ccm-jobs-button"><button data-jID="<?=$j->getJobID()?>" data-jSupportsQueue="<?=$j->supportsQueue()?>" data-jName="<?=$j->getJobName()?>" class="btn-run-job btn-small btn"><i class="icon-play"></i> <?=t('Run')?></button></td>
 		</tr>
 
 	<? } ?>
 	</tbody>
 </table>
-	
+
 <? } else { ?>
 	<p><?=t('You have no jobs installed.')?></p>
 <? } ?>
 
 <? if (count($availableJobs) > 0) { ?>
-	<h3><?=t('Awaiting Installation')?></h3>
-
+	<h4><?=t('Awaiting Installation')?></h4>
+	<table class="table table-striped">
+	<thead>
+		<tr> 
+			<th><?=t('Name')?></th>
+			<th><?=t('Description')?></th> 
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		<?foreach($availableJobs as $availableJobName => $job):?>
+		<tr> 
+			<td><?=$job->getJobName() ?></td>
+			<td><?=$job->getJobDescription() ?></td> 
+			<td><?if(!$job->invalid):?>
+				<a href="<?=$this->action('install', $job->jHandle)?>" class="btn btn-small pull-right"><?=t('Install')?></a>
+			<?endif?></td>
+		</tr>	
+		<?endforeach?>
+	</tbody>
+	</table>
 <? } ?>
 
 <script type="text/javascript">
-jQuery.fn.pulseRow = function() {
 
+var pulseRowInterval = false;
+
+jQuery.fn.showLoading = function() {
+	$(this).find('button').html('<i class="icon-refresh"></i> <?=t('Run')?>').prop('disabled', true);
+	var row = $(this);
+	row.removeClass('error success');
+
+	if (!row.attr('data-color')) {
+		row.find('td').css('background-color', '#ccc');
+	}
+	pulseRowInterval = setInterval(function() {
+		if (row.attr('data-color') == '#ccc') {
+			row.find('td').css('background-color', '#fff');
+			row.attr('data-color', '#fff');
+		} else {
+			row.find('td').css('background-color', '#ccc');
+			row.attr('data-color', '#ccc');
+		}			
+	}, 500);
+}
+
+jQuery.fn.hideLoading = function() {
+	$(this).find('button').html('<i class="icon-play"></i> <?=t('Run')?>').prop('disabled', false);
+	var row = $(this);
+	row.removeClass();
+	row.find('td').css('background-color', '');
+	row.attr('data-color', '');
+	clearInterval(pulseRowInterval);
+}
+
+jQuery.fn.processResponse = function(r) {
+	$(this).hideLoading();
+	if (r.error) {
+		$(this).addClass('error');
+	} else {
+		$(this).addClass('success');
+	}
+	$(this).find('.jDateLastRun').html(r.jDateLastRun);
+	$(this).find('.jLastStatusText').html(r.result);
 }
 
 $(function() {
+	$('tr.running').showLoading();
 	$('.icon-question-sign').tooltip();
 	$('.btn-run-job').on('click', $('#ccm-jobs-list'), function() {
 		var row = $(this).parent().parent();
-		row.pulseRow();
+		row.showLoading();
 		var jSupportsQueue = $(this).attr('data-jSupportsQueue');
 		var jID = $(this).attr('data-jID');
 		var jName = $(this).attr('data-jName');
@@ -81,12 +164,11 @@ $(function() {
 			ccm_triggerProgressiveOperation(
 				CCM_TOOLS_PATH + '/jobs/run_single',
 				params,
-				jName, function() {
+				jName, function(r) {
 					$('.ui-dialog-content').dialog('close');
-					//row.find('.jLastStatusText').html(json.message);
-					//row.find('.jDateLastRun').html(json.jDateLastRun);
-					row.removeClass().addClass('warning');
-	//				row.addClass(json.error == 0 ? 'green' : 'red');
+					row.processResponse(r);
+				}, function(r) {
+					row.processResponse(r);
 				}
 			);
 		} else {
@@ -96,7 +178,7 @@ $(function() {
 				dataType: 'json',
 				cache: false,
 				success: function(json) {
-					row.removeClass().addClass('success');
+					row.processResponse(json);
 				}
 			});
 		}

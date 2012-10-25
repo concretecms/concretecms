@@ -27,6 +27,7 @@ class ConcreteUpgradeVersion561Helper {
 		if (isset($columns['PTID'])) {
 			$db->Execute('alter table Pages drop column ptID');
 		}
+
 		if (isset($columns['CTID'])) {
 			$db->Execute('alter table Pages drop column ctID');
 		}
@@ -35,7 +36,6 @@ class ConcreteUpgradeVersion561Helper {
 		if (is_object($bt)) {
 			$bt->refresh();
 		}
-
 	}
 
 	
