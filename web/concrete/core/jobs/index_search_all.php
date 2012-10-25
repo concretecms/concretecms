@@ -39,16 +39,18 @@ class Concrete5_Job_IndexSearchAll extends QueueableJob {
 		while ($row = $r->FetchRow()) {
 			$q->send($row['cID']);
 		}
-
 	}
 	
 	public function finish(Zend_Queue $q) {
-
+		$db = Loader::db();
+		$total = $db->GetOne('select count(*) from PageSearchIndex');
+		return t('Index updated. %s pages indexed.', $total);
 	}
 
 	public function processQueueItem(Zend_Queue_Message $msg) {
 		$c = Page::getByID($msg->body, 'ACTIVE');
 		$cv = $c->getVersionObject();
+
 		if(!$cv->cvIsApproved) { 
 			continue;
 		}

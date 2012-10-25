@@ -10,5 +10,12 @@ class ConcreteUpgradeVersion562Helper {
 		'QueuePageDuplicationRelations'
 	);
 
+	public function run() {
+		$j = Job::getByHandle('index_search_all');
+		if (!is_object($j)) {
+			Job::installByHandle('index_search_all');
+		}
+	}
+
 
 }

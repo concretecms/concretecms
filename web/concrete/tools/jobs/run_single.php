@@ -19,25 +19,32 @@ if (Job::authenticateRequest($_REQUEST['auth'])) {
 if (is_object($job)) {
 	if ($job->supportsQueue()) {
 
-		$q = Queue::get('job_' . $job->getJobHandle());
+		$q = $job->getQueueObject();
+
 		if ($_POST['process']) {
 			$obj = new stdClass;
 			$js = Loader::helper('json');
-			$messages = $q->receive($job->getJobQueueBatchSize());
-			foreach($messages as $key => $p) {
-				$job->processQueueItem($p);
-				$q->deleteMessage($p);
-			}
-			$obj->totalItems = $q->count();	
-			if ($q->count() == 0) {
-				$job->finish($q);
-				$job->markCompleted();
-				$q->deleteQueue('job_' . $job->getJobHandle());
+			try {
+				$messages = $q->receive($job->getJobQueueBatchSize());
+				foreach($messages as $key => $p) {
+					$job->processQueueItem($p);
+					$q->deleteMessage($p);
+				}
+				$totalItems = $q->count();	
+				$obj->totalItems = $totalItems;
+				if ($q->count() == 0) {
+					$result = $job->finish($q);
+					$obj = $job->markCompleted(0, $result);
+					$obj->totalItems = $totalItems;
+				}
+			} catch(Exception $e) {
+				$obj = $job->markCompleted(Job::JOB_ERROR_EXCEPTION_GENERAL, $e->getMessage());
+				$obj->message = $obj->result; // needed for progressive library.
 			}
 			print $js->encode($obj);
 			exit;
 		} else if ($q->count() == 0) {
-			$job->markStarted();
+			$q = $job->markStarted();
 			$job->start($q);
 		}
 
@@ -46,8 +53,10 @@ if (is_object($job)) {
 
 		exit;
 
+	} else {
+		$r = $job->executeJob(); 	
+		print $json->encode($r);
 	}
-
 } else {
 	die(t('Access Denied'));
 }
