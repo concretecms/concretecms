@@ -446,7 +446,11 @@ class Concrete5_Controller_Login extends Controller {
 			
 			$mh = Loader::helper('mail');
 			//$mh->addParameter('uPassword', $oUser->resetUserPassword());
-			$mh->addParameter('uName', $oUser->getUserName());			
+            		if (USER_REGISTRATION_WITH_EMAIL_ADDRESS == true) {
+                		$mh->addParameter('uName', $em);
+            		} else {
+                		$mh->addParameter('uName', $oUser->getUserName());
+            		}			
 			$mh->to($oUser->getUserEmail());
 			
 			//generate hash that'll be used to authenticate user, allowing them to change their password
