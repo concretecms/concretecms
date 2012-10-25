@@ -23,48 +23,35 @@ defined('C5_EXECUTE') or die("Access Denied.");
 * @license http://www.opensource.org/licenses/mit-license.php MIT
 *
 */
-class Concrete5_Model_Job extends Object {
+abstract class Concrete5_Model_Job extends Object {
 
-	//Required Job Variables - Override these variables in your child job class
-	public $jName="Job base class";
-	public $jDescription="";
-
-	//you must override this method
-	function run(){
-		throw new Exception(t('Error: The Job::run() method must be overridden by your child Job class.'));
-	}	
+	abstract public function run();
+	abstract public function getJobName();
+	abstract public function getJobDescription();	
 	
-	public function getJobName() {return $this->jName;}
-	public function getJobDescription() {return $this->jDescription;}	
 	public function getJobHandle() {return $this->jHandle;}
+	public function getJobID() {return $this->jID;}
 	public function getPackageHandle() {
 		return PackageList::getHandle($this->pkgID);
 	}
 
-	// optional queue functions
-	public function supportsQueue() {return $this->jSupportsQueue;}
-	public function getJobQueueBatchSize() {return $this->jQueueBatchSize;}
-	public function addToQueue(Zend_Queue $q) {}
-	public function processQueueItem(Zend_Queue_Message $msg) {}
-	
+	public function supportsQueue() {return ($this instanceof QueueableJob);}
+
 	//==========================================================
 	// JOB MANAGEMENT - do not override anything below this line 
 	//==========================================================
 	
 	
 	//meta variables
-	public $errors=array();
 	protected $jobClassLocations=array();
 	
 	//Other Job Variables
 	public $jID=0;
 	public $jStatus='ENABLED';	
 	public $availableJStatus=array( 'ENABLED','RUNNING','DISABLED_ERROR','DISABLED' );
-	public $jDateLastRun=' default ';	
+	public $jDateLastRun;
 	public $jHandle='';
 	public $jNotUninstallable=0;
-	public $jSupportsQueue = false;
-	public $jQueueBatchSize = 50;
 	
 	/*
 	final public __construct(){
@@ -76,6 +63,9 @@ class Concrete5_Model_Job extends Object {
 		return array(DIR_FILES_JOBS, DIR_FILES_JOBS_CORE);
 	}
 
+	public function getJobDateLastRun() {return $this->jDateLastRun;}
+	public function getJobStatus() {return $this->jStatus;}
+	public function getJobLastStatusText() {return $this->jLastStatusText;}
 
 	// authenticateRequest checks against your site's salt and a custom auth field to make 
 	// sure that this is a request that is coming either from something cronned by the site owner
@@ -108,15 +98,42 @@ class Concrete5_Model_Job extends Object {
 	
 	public static function getList(){
 		$db = Loader::db();
-		$v=array();
-		$q = "SELECT * FROM Jobs ORDER BY jDateLastRun";
-		$rs = $db->query($q, $v);
-		return $rs;
+		$q = "SELECT jID FROM Jobs ORDER BY jDateLastRun";
+		$r = $db->Execute($q);
+		$jobs = array();
+		while ($row = $r->FetchRow()) {
+			$j = Job::getByID($row['jID']);
+			if (is_object($j)) {
+				$jobs[] = $j;
+			}
+		}
+		return $jobs;
 	}
 	
 	public static function resetRunningJobs() {
 		$db = Loader::db();
 		$db->Execute('update Jobs set jStatus = \'ENABLED\' where jStatus = \'RUNNING\'');
+	}
+
+	public function markStarted(){
+		Events::fire('on_before_job_execute', $this);
+		$db = Loader::db();
+		$timestampH =date('Y-m-d g:i:s A');
+		$timestamp=date('Y-m-d H:i:s');
+		$this->jDateLastRun = $timestampH; 
+		$rs = $db->query( "UPDATE Jobs SET jStatus='RUNNING', jDateLastRun=? WHERE jHandle=?", array( $timestamp, $this->jHandle ) );
+	}
+
+	public function markCompleted() {
+		$db = Loader::db();
+		$resultMsg= t('The Job was run successfully.');
+		$jStatus='ENABLED';
+		$timestamp=date('Y-m-d H:i:s');
+		$enum = 0;
+		$rs = $db->query( "UPDATE Jobs SET jStatus=?, jLastStatusText=? WHERE jHandle=?", array( $jStatus, $resultMsg, $this->jHandle ) );
+		$rs = $db->query( "INSERT INTO JobsLog (jID, jlMessage, jlTimestamp, jlError) VALUES(?,?,?,?)", array( $this->jID, $resultMsg, $timestamp, $enum ) );
+		Events::fire('on_job_execute', $this);
+		return $resultMsg;
 	}
 	
 	public static function getByID( $jID=0 ){
@@ -180,9 +197,10 @@ class Concrete5_Model_Job extends Object {
 	
 		//get existing jobs
 		$existingJobHandles=array();
-		$existingJobsRS = Job::getList();
-		while($existingJobsRow = $existingJobsRS->fetchRow() ) 
-			$existingJobHandles[]=$existingJobsRow['jHandle'];
+		$existingJobs = Job::getList();
+		foreach($existingJobs as $j) {
+			$existingJobHandles[] = $j->getJobHandle();
+		}
 	
 		if(!$includeConcreteDirJobs)
 			 $jobClassLocations = array( DIR_FILES_JOBS );
@@ -239,10 +257,9 @@ class Concrete5_Model_Job extends Object {
 
 	public static function runAllJobs(){
 		//loop through all installed jobs
-		$jobListRS=Job::getList();
-		while( $jobItem = $jobListRS->fetchRow() ){ 
-			$jobObj = Job::getJobObjByHandle($jobItem['jHandle']);
-			$jobObj->executeJob();
+		$jobs = Job::getList();
+		foreach($jobs as $j) {
+			$j->executeJob();
 		}
 	}
 	
