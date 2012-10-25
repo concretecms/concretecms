@@ -7,6 +7,106 @@ $ih = Loader::helper('concrete/interface');
 $form = Loader::helper('form');
 /* @var $jh JsonHelper */
 $jh = Loader::helper('json');
+
+?>
+<style type="text/css">
+</style>
+
+<?=$h->getDashboardPaneHeaderWrapper(t('Automated Jobs'), false, false);?>
+<? if (count($installedJobs) > 0) { ?>
+
+<table class="table table-striped" id="ccm-jobs-list">
+	<thead>
+	<tr>
+		<th><?=t('ID')?></th>
+		<th><?=t('Name')?></th>
+		<th><?=t('Last Run')?></th>
+		<th><?=t('Results of Last Run')?></th>
+		<th></th>
+	</tr>
+	</thead>
+	<tbody>
+	<? foreach($installedJobs as $j) { ?>
+		<tr>
+			<td><?=$j->getJobID()?></td>
+			<td><i class="icon-question-sign" title="<?=$j->getJobDescription()?>"></i> <?=$j->getJobName()?></td>
+			<td class="jDateLastRun"><?
+				if ($j->getJobStatus() == 'RUNNING') {
+					$runtime = date(DATE_APP_GENERIC_TS, strtotime($j->getJobDateLastRun()));
+					echo ("<strong>");
+					echo t("Currently Running (Since %s)", $runtime);					
+					echo ("</strong>");
+				} else if($j->getJobDateLastRun() == '' || substr($j->getJobDateLastRun(), 0, 4) == '0000') {
+					echo t('Never');
+				} else {
+					$runtime = date(DATE_APP_GENERIC_MDY . t(' \a\t ') . DATE_APP_GENERIC_TS, strtotime($j->getJobDateLastRun()) );
+					echo $runtime;
+				}
+			?></td>
+			<td class="jLastStatusText"><?=$j->getJobLastStatusText()?></td>
+			<td><button data-jID="<?=$j->getJobID()?>" data-jSupportsQueue="<?=$j->supportsQueue()?>" data-jName="<?=$j->getJobName()?>" class="btn-run-job btn"><i class="icon-play"></i> <?=t('Run')?></button></td>
+		</tr>
+
+	<? } ?>
+	</tbody>
+</table>
+	
+<? } else { ?>
+	<p><?=t('You have no jobs installed.')?></p>
+<? } ?>
+
+<? if (count($availableJobs) > 0) { ?>
+	<h3><?=t('Awaiting Installation')?></h3>
+
+<? } ?>
+
+<script type="text/javascript">
+jQuery.fn.pulseRow = function() {
+
+}
+
+$(function() {
+	$('.icon-question-sign').tooltip();
+	$('.btn-run-job').on('click', $('#ccm-jobs-list'), function() {
+		var row = $(this).parent().parent();
+		row.pulseRow();
+		var jSupportsQueue = $(this).attr('data-jSupportsQueue');
+		var jID = $(this).attr('data-jID');
+		var jName = $(this).attr('data-jName');
+		var params = [
+			{'name': 'auth', 'value': '<?=$auth?>'},
+			{'name': 'jID', 'value': jID}
+		];
+		if (jSupportsQueue) {
+			ccm_triggerProgressiveOperation(
+				CCM_TOOLS_PATH + '/jobs/run_single',
+				params,
+				jName, function() {
+					$('.ui-dialog-content').dialog('close');
+					//row.find('.jLastStatusText').html(json.message);
+					//row.find('.jDateLastRun').html(json.jDateLastRun);
+					row.removeClass().addClass('warning');
+	//				row.addClass(json.error == 0 ? 'green' : 'red');
+				}
+			);
+		} else {
+			$.ajax({ 
+				url: CCM_TOOLS_PATH + '/jobs/run_single',
+				data: params,
+				dataType: 'json',
+				cache: false,
+				success: function(json) {
+					row.removeClass().addClass('success');
+				}
+			});
+		}
+	});
+});
+</script>
+<?=$h->getDashboardPaneFooterWrapper();?>
+
+<?
+/*
 ?>
 <style type="text/css">
 .run-all, .run-task { height: 16px; width: 16px; display: block; }
@@ -201,3 +301,5 @@ jQuery(function($) {
 	</form>
 <? } ?></div>
 <?=$h->getDashboardPaneFooterWrapper(false);?>
+
+*/ ?>
