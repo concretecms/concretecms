@@ -41,7 +41,14 @@ if ($akk) { ?>
 if($c->getCollectionAttributeValue('exclude_search_index')) { ?>
     <meta name="robots" content="noindex" />
 <?php } ?>
-<meta name="generator" content="concrete5 - <?php echo APP_VERSION ?>" />
+<?php
+if (defined('HIDE_VERSION_NUMBER') && HIDE_VERSION_NUMBER) {
+    echo '<meta name="generator" content="concrete5" />';
+}    
+else {
+    echo '<meta name="generator" content="concrete5 - ' . APP_VERSION . '" />';
+}
+?>
 
 <?php $u = new User(); ?>
 <script type="text/javascript">
