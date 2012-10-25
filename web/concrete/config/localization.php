@@ -41,6 +41,10 @@ if (!defined('DATE_APP_GENERIC_MDYT_FULL')) {
 	define('DATE_APP_GENERIC_MDYT_FULL', t('F d, Y \a\t g:i A'));
 }
 
+if (!defined('DATE_APP_GENERIC_MDYT_FULL_SECONDS')) {
+	define('DATE_APP_GENERIC_MDYT_FULL_SECONDS', t('F d, Y \a\t g:i:s A'));
+}
+
 if (!defined('DATE_APP_GENERIC_MDYT')) {
 	define('DATE_APP_GENERIC_MDYT', t('n/j/Y \a\t g:i A'));
 }

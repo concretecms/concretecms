@@ -21,6 +21,11 @@ class ConcreteUpgradeVersion561Helper {
 		if (is_object($akc)) {
 			$akc->associateAttributeKeyType($tt);
 		}
+
+		$j = Job::getByHandle('index_search_all');
+		if (!is_object($j)) {
+			Job::installByHandle('index_search_all');
+		}
 	}
 		
 }

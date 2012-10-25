@@ -32,5 +32,29 @@ abstract class Concrete5_Model_QueueableJob extends Job {
 	abstract public function finish(Zend_Queue $q);
 	abstract public function processQueueItem(Zend_Queue_Message $msg);
 	public function run() {}
+
+	public function getQueueObject() {
+		return Queue::get('job_' . $this->getJobHandle(), array('timeout' => 1));
+	}
+
+	public function reset() {
+		parent::reset();
+		$q = $this->getQueueObject();
+		$q->deleteQueue();
+	}
+
+	public function markStarted() {
+		parent::markStarted();
+		return $this->getQueueObject();
+	}
+
+	public function markCompleted($code = 0, $message = false) {
+		$obj = parent::markCompleted($code, $message);
+		$q = $this->getQueueObject();
+		if (!$this->didFail()) {
+			$q->deleteQueue();
+		}
+		return $obj;
+	}
 	
 }
