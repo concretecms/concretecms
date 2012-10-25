@@ -8,7 +8,7 @@ $ih = Loader::helper('image');
     <?php  if( strlen($previousLinkText) > 0){ ?>
       <div class="ccm-next-previous-previouslink">
         <?php  if( is_object($previousCollection) ){ ?>
-          <a href="<?php echo View::url($previousCollection->getCollectionPath())?>"><?php echo $previousLinkText ?></a>
+          <a href="<?php echo Loader::helper('navigation')->getLinkToCollection($previousCollection)?>"><?php echo $previousLinkText ?></a>
         <?php  } else { ?>
           &nbsp;
         <?php  } ?>
@@ -18,7 +18,7 @@ $ih = Loader::helper('image');
     <?php  if( strlen($parentLinkText) > 0){ ?>
       <div class="ccm-next-previous-parentlink">
         <?php  if( is_object($parentCollection) && $parentLinkText){ ?>
-          <a href="<?php echo View::url($parentCollection->getCollectionPath())?>"><?php echo $parentLinkText ?></a>
+          <a href="<?php echo Loader::helper('navigation')->getLinkToCollection($parentCollection)?>"><?php echo $parentLinkText ?></a>
         <?php  } else { ?>
           &nbsp;
         <?php  } ?>
@@ -28,7 +28,7 @@ $ih = Loader::helper('image');
     <?php  if( strlen($nextLinkText) > 0){ ?>
       <div class="ccm-next-previous-nextlink">
         <?php  if( is_object($nextCollection) ){ ?>
-          <a href="<?php echo View::url($nextCollection->getCollectionPath())?>"><?php echo $nextLinkText ?></a>
+          <a href="<?php echo Loader::helper('navigation')->getLinkToCollection($nextCollection)?>"><?php echo $nextLinkText ?></a>
         <?php  } else { ?>
           &nbsp;
         <?php  } ?>

@@ -17,8 +17,7 @@ class Concrete5_Controller_Upgrade extends Controller {
 	public $upgrade_db = true;
 	
 	public function on_start() {
-		$cnt = Loader::controller('/dashboard/system/backup_restore/update');
-		$cnt->secCheck();
+		$this->secCheck();
 		// if you just reverted, but didn't manually clear out your files - cache would be a prob here.
 		$ca = new Cache();
 		$ca->flush();
@@ -26,6 +25,21 @@ class Concrete5_Controller_Upgrade extends Controller {
 		Cache::disableLocalCache();
 		$this->site_version = Config::get('SITE_APP_VERSION');
 		Database::ensureEncoding();
+	}
+
+	public function secCheck() {
+		$fh = Loader::helper('file');
+		$updates = $fh->getDirectoryContents(DIR_APP_UPDATES);
+		foreach($updates as $upd) {
+			if (is_dir(DIR_APP_UPDATES . '/' . $upd) && is_writable(DIR_APP_UPDATES . '/' . $upd)) {
+				if (file_exists(DIR_APP_UPDATES . '/' . $upd . '/' . DISPATCHER_FILENAME) && is_writable(DIR_APP_UPDATES . '/' . $upd . '/' . DISPATCHER_FILENAME)) {
+					unlink(DIR_APP_UPDATES . '/' . $upd . '/' . DISPATCHER_FILENAME);
+				}
+				if (!file_exists(DIR_APP_UPDATES . '/' . $upd . '/index.html')) {
+					touch(DIR_APP_UPDATES . '/' . $upd . '/index.html');
+				}
+			}
+		}
 	}
 	
 	public function view() {
@@ -148,6 +162,14 @@ class Concrete5_Controller_Upgrade extends Controller {
 		}
 		if (version_compare($sav, '5.6.0', '<')) { 
 			$ugvs[] = "version_560";
+		}
+
+		if (version_compare($sav, '5.6.0.1', '<')) { 
+			$ugvs[] = "version_5601";
+		}
+
+		if (version_compare($sav, '5.6.0.2', '<')) { 
+			$ugvs[] = "version_5602";
 		}
 
 		foreach($ugvs as $ugh) {

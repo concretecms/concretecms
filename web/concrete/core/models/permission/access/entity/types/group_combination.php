@@ -70,7 +70,7 @@ class Concrete5_Model_GroupCombinationPermissionAccessEntity extends PermissionA
 	}
 	
 	public function getAccessEntityUsers(PermissionAccess $pa) {
-		$gl = new GroupList();
+		$gl = new UserList();
 		foreach($this->groups as $g) {
 			$gl->filterByGroupID($g->getGroupID());
 		}

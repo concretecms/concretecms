@@ -1,4 +1,5 @@
 <?
+defined('C5_EXECUTE') or die("Access Denied.");
 
 /**
  * Helper functions for catching or stripping dirty words from content

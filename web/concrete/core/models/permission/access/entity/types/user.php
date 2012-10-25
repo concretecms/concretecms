@@ -51,7 +51,9 @@ class Concrete5_Model_UserPermissionAccessEntity extends PermissionAccessEntity 
 			$ui = UserInfo::getByID($uID);
 			if (is_object($ui)) {
 				$this->user = $ui;
-				$this->label .= $ui->getUserName();
+				$this->label = $ui->getUserName();
+			} else {
+				$this->label = t('(Deleted User)');
 			}
 		}
 	}

@@ -46,6 +46,7 @@ class Concrete5_Library_Environment {
 	
 	public function clearOverrideCache() {
 		Config::clear("ENVIRONMENT_CACHE");
+		$this->overridesScanned = false;
 	}
 
 
@@ -65,7 +66,7 @@ class Concrete5_Library_Environment {
 	protected function getOverrides() {
 		$check = array(DIR_FILES_BLOCK_TYPES, DIR_FILES_CONTROLLERS, DIR_FILES_ELEMENTS, DIR_HELPERS, 
 			DIR_FILES_JOBS, DIR_BASE . '/' . DIRNAME_CSS, DIR_BASE . '/' . DIRNAME_JAVASCRIPT, DIR_BASE . '/' . DIRNAME_LANGUAGES,
-			DIR_LIBRARIES, DIR_FILES_EMAIL_TEMPLATES, DIR_MODELS, DIR_FILES_CONTENT, DIR_FILES_THEMES, DIR_FILES_TOOLS);
+			DIR_LIBRARIES, DIR_FILES_EMAIL_TEMPLATES, DIR_MODELS, DIR_FILES_CONTENT, DIR_FILES_THEMES, DIR_FILES_TOOLS, DIR_BASE . '/' . DIRNAME_PAGE_TYPES);
 		foreach($check as $loc) {
 			if (is_dir($loc)) {
 				$contents = $this->getDirectoryContents($loc, array(), true);
@@ -146,7 +147,7 @@ class Concrete5_Library_Environment {
 			
 		if (in_array($segment, $this->coreOverrides)) {
 			$obj->file = DIR_BASE . '/' . $segment;
-			$obj->url = BASE_URL . DIR_REL . '/' . $segment;
+			$obj->url = DIR_REL . '/' . $segment;
 			$obj->override = true;
 			$this->cachedOverrides[$segment][''] = $obj;
 			return $obj;
@@ -158,7 +159,7 @@ class Concrete5_Library_Environment {
 
 		if (!in_array($pkgHandle, $this->corePackages)) {
 			$dirp = DIR_PACKAGES . '/' . $pkgHandle;		
-			$obj->url = BASE_URL . DIR_REL . '/' . DIRNAME_PACKAGES. '/' . $pkgHandle . '/' . $segment;
+			$obj->url = DIR_REL . '/' . DIRNAME_PACKAGES. '/' . $pkgHandle . '/' . $segment;
 		} else {
 			$dirp = DIR_PACKAGES_CORE . '/' . $pkgHandle;
 			$obj->url = ASSETS_URL . '/' . DIRNAME_PACKAGES. '/' . $pkgHandle . '/' . $segment;

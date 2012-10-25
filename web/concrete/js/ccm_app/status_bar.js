@@ -39,6 +39,13 @@ ccm_statusBar = {
 			d += '</div>';
 			$('#ccm-page-controls-wrapper').append(d);
 			$('#ccm-page-status-bar .dialog-launch').dialog();
+			$('#ccm-page-status-bar .alert').bind('closed', function() {
+				$(this).remove();
+				var visi = $('#ccm-page-status-bar .alert:visible').length;
+				if (visi == 0) {
+					$('#ccm-page-status-bar').remove();
+				}
+			});
 			$('#ccm-page-status-bar .ccm-status-bar-ajax-form').ajaxForm({
 				dataType: 'json',
 				beforeSubmit: function() {

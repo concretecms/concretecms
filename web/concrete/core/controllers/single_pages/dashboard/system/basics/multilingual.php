@@ -15,7 +15,7 @@ class Concrete5_Controller_Dashboard_System_Basics_Multilingual extends Dashboar
 		Zend_Locale_Data::setCache(Cache::getLibrary());
 		foreach($languages as $lang) {
 			$loc = new Zend_Locale($lang);
-			$locales[$lang] = Zend_Locale::getTranslation($loc->getLanguage(), 'language', ACTIVE_LOCALE);
+			$locales[$lang] = Zend_Locale::getTranslation($loc->getLanguage(), 'language', $lang);
 		}
 		$this->set('LANGUAGE_CHOOSE_ON_LOGIN', Config::get('LANGUAGE_CHOOSE_ON_LOGIN'));
 		$this->set('LANGUAGE_MULTILINGUAL_CONTENT_ENABLED', Config::get('LANGUAGE_MULTILINGUAL_CONTENT_ENABLED'));
@@ -28,7 +28,7 @@ class Concrete5_Controller_Dashboard_System_Basics_Multilingual extends Dashboar
 	}
 
 	public function interface_settings_saved() {
-		$this->set('message', t('Interface settings saved'));
+		$this->set('message', t('Interface settings saved. Please log out and in again to update all backend messages.'));
 		$this->view();
 	}
 	public function save_interface_language() {

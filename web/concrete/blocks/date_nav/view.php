@@ -98,10 +98,7 @@ foreach($postsByDate as $year=>$postsByMonth ){
 			
 			echo "\t\t <li class='monthsPage pageNode ".$selected." pageId".intval($page->getCollectionId())."' >"; 
 			
-			$pagePath=trim($page->getCollectionPath());
-			if( !strlen($pagePath) ) $pagePath='?cID='.$page->cID;
-			
-			echo "\t\t\t <a class=\"".$read."\" href=\"".View::url($pagePath)."\">"; 
+			echo "\t\t\t <a class=\"".$read."\" href=\"".Loader::helper('navigation')->getLinkToCollection($page)."\">"; 
 			if(!$controller->truncateTitles){
 				echo $title;
 			}else{

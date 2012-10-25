@@ -96,7 +96,7 @@ $(function() {
 		upload_url : "<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/importers/multiple",
 		post_params: {'ccm-session' : "<?php echo session_id(); ?>",'searchInstance': '<?=$searchInstance?>', 'ocID' : '<?=$ocID?>', 'ccm_token' : '<?=$valt->generate("upload")?>'},
 		file_size_limit : "<?=$umf?>",
-		file_types : "<?=$types?>",
+		/* file_types : "<?=$types?>", */
 		button_window_mode : SWFUpload.WINDOW_MODE.TRANSPARENT,
 		file_types_description : "<?php echo t('All Files') ?>",
 		file_upload_limit : 100,

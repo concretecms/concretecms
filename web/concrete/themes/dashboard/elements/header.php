@@ -41,6 +41,7 @@ $v->addFooterItem($html->javascript('jquery.ui.js'));
 $v->addFooterItem($html->javascript('jquery.form.js'));
 $v->addFooterItem($html->javascript('jquery.rating.js'));
 $v->addFooterItem('<script type="text/javascript" src="' . REL_DIR_FILES_TOOLS_REQUIRED . '/i18n_js"></script>'); 
+$v->addFooterItem($html->javascript('bootstrap.js'));
 $v->addFooterItem($html->javascript('ccm.app.js'));
 $v->addFooterItem(Loader::helper('html')->javascript('tiny_mce/tiny_mce.js'));
 

@@ -57,6 +57,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			$row = $db->GetRow('select * from ComposerTypes where ctID = ?', array($this->getCollectionTypeID()));
 			if (is_array($row) && $row['ctID'] > 0) {
 				$this->ctIncludeInComposer = true;
+				$row['ctIcon'] = $this->ctIcon; // otherwise setpropertiesfromarray resets this.
 				$this->setPropertiesFromArray($row);
 			}
 		}
@@ -338,7 +339,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			
 			$db = Loader::db();
 			$pages = array();
-			$r = $db->query("select Pages.cID, Collections.cDateAdded, Collections.cDateModified, max(cvID) as cvID, cvName from Pages inner join Collections on Collections.cID = Pages.cID inner join (select * from CollectionVersions order by cvID desc) as Foo on Pages.cID = Foo.cID where ctID = ? and cIsTemplate = 0 group by Foo.cID order by cvName asc;", array($this->getCollectionTypeID()));
+			$r = $db->query("select Pages.cID, Collections.cDateAdded, Collections.cDateModified, max(cvID) as cvID, cvName from Pages inner join Collections on Collections.cID = Pages.cID inner join (select * from CollectionVersions order by cvID desc) as cv on Pages.cID = cv.cID where cv.ctID = ? and cIsTemplate = 0 group by cv.cID order by cvName asc;", array($this->getCollectionTypeID()));
 			while ($row = $r->fetchRow()) {
 				$p = new Page;
 				$p->setPropertiesFromArray($row);

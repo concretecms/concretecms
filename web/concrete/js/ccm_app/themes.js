@@ -1,3 +1,7 @@
+/** 
+ * Theme JS
+ */
+
 function ccm_previewInternalTheme(cID, themeID,themeName){
 	var ctID=$("input[name=ctID]").val();
 	$.fn.dialog.open({

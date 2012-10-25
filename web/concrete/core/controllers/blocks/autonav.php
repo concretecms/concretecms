@@ -72,8 +72,12 @@
 
 			$c = Page::getCurrentPage();
 			if (is_object($c)) {
-			   $this->cID = $c->getCollectionID();
-			   $this->cParentID = $c->getCollectionParentID();
+				if ($c->getCollectionPointerOriginalID() > 0) {
+					$this->cID = $c->getCollectionPointerOriginalID();
+				} else {
+					$this->cID = $c->getCollectionID();
+				}
+				$this->cParentID = $c->getCollectionParentID();
 			}
 			
 			parent::__construct($obj);

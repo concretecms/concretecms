@@ -84,7 +84,10 @@ if (is_object($a)) {
 			}
 			$pk = PermissionKey::getByHandle('view_block');
 			$pk->setPermissionObject($b);
-			$pa = PermissionAccess::create($pk);
+			$pa = $pk->getPermissionAccessObject();
+			if (!is_object($pa)) {
+				$pa = PermissionAccess::create($pk);
+			}
 			$pe = GroupPermissionAccessEntity::getOrCreate(Group::getByID(GUEST_GROUP_ID));
 			$pd = PermissionDuration::translateFromRequest();
 			$pa->addListItem($pe, $pd, BlockPermissionKey::ACCESS_TYPE_INCLUDE);
