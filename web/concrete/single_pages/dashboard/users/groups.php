@@ -2,22 +2,6 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 $section = 'groups';
 
-function checkExpirationOptions($g) {
-	if ($_POST['gUserExpirationIsEnabled']) {
-		$date = Loader::helper('form/date_time');
-		switch($_POST['gUserExpirationMethod']) {
-			case 'SET_TIME':
-				$g->setGroupExpirationByDateTime($date->translate('gUserExpirationSetDateTime'), $_POST['gUserExpirationAction']);
-				break;
-			case 'INTERVAL':
-				$g->setGroupExpirationByInterval($_POST['gUserExpirationIntervalDays'], $_POST['gUserExpirationIntervalHours'], $_POST['gUserExpirationIntervalMinutes'], $_POST['gUserExpirationAction']);
-				break;
-		}
-	} else {
-		$g->removeGroupExpiration();
-	}
-}
-
 if ($_REQUEST['task'] == 'edit') {
 	$g = Group::getByID(intval($_REQUEST['gID']));
 	if (is_object($g)) { 		
@@ -148,6 +132,7 @@ foreach ($gResults as $g) { ?>
 	<? } ?>
 
 	<fieldset>
+		<legend><?=t('Group Details')?></legend>
 	<div class="control-group">
 	<?=$form->label('gName', t('Name'))?>
 	<div class="controls">
@@ -162,6 +147,51 @@ foreach ($gResults as $g) { ?>
 	</div>
 	</div>
 	</fieldset>
+
+	<? if (ENABLE_USER_PROFILES) { ?>
+	<fieldset>
+		<legend><?=t('Badge Details')?></legend>
+		<div class="control-group">
+		<div class="controls">
+		<label class="checkbox">
+		<?=$form->checkbox('gIsBadge', 1, $g->isGroupBadge())?>
+		<span><?=t('This group is a badge.')?> <i class="icon-question-sign" title="<?=t('Badges are publicly viewable in user profiles, and display pictures and a custom description. Badges can be automatically assigned or given out by administrators.')?>"></i> </span>
+		</label>
+		</div>
+		</div>
+		
+	<div id="gUserBadgeOptions" style="display: none">
+		<div class="control-group">
+			<label class="control-label"><?=t('Image')?></label>
+			<div class="controls">
+				<?
+
+				$af = Loader::helper('concrete/asset_library');
+				print $af->image('gBadgeFID', 'gBadgeFID', t('Choose Badge Image'), $g->getGroupBadgeImageObject());
+				?>
+
+			</div>
+		</div>
+
+		<div class="control-group">
+		<?=$form->label('gBadgeDescription', t('Badge Description'))?>
+		<div class="controls">
+			<?=$form->textarea('gBadgeDescription', $g->getGroupBadgeDescription(), array('rows' => 6, 'class' =>'span6'))?>
+		</div>
+		</div>
+
+		<div class="control-group">
+		<?=$form->label('gBadgeCommunityPointValue', t('Community Points'))?>
+		<div class="controls">
+			<?=$form->text('gBadgeCommunityPointValue', $g->getGroupBadgeCommunityPointValue(), array('class' => 'span1'))?>
+		</div>
+		</div>
+
+
+	</div>
+
+	</fieldset>
+	<? } ?>
 	<fieldset>
 	<legend><?=t("Group Expiration Options")?></legend>
 	<div class="control-group">
@@ -173,7 +203,7 @@ foreach ($gResults as $g) { ?>
 		
 	</div>
 	
-	<div class="controls" style="padding-left: 18px">
+	<div class="controls" style="">
 		<?=$form->select("gUserExpirationMethod", array(
 			'SET_TIME' => t('at a specific date and time'),
 				'INTERVAL' => t('once a certain amount of time has passed')
@@ -193,23 +223,30 @@ foreach ($gResults as $g) { ?>
 	</div>
 	<div id="gUserExpirationIntervalOptions" style="display: none">
 	<div class="control-group">
-	<label><?=t('Accounts expire after')?></label>
+	<label class="control-label"><?=t('Accounts expire after')?></label>
 	<div class="controls">
-	<table class="table table-condensed" style="width: auto">
+	<table class="table" style="width: auto">
 	<tr>
+		<th><?=t('Days')?></th>
+		<th><?=t('Hours')?></th>
+		<th><?=t('Minutes')?></th>
+	</tr>
+
+	<tr>
+
 	<?
 	$days = $g->getGroupExpirationIntervalDays();
 	$hours = $g->getGroupExpirationIntervalHours();
 	$minutes = $g->getGroupExpirationIntervalMinutes();
 	$style = 'width: 60px';
 	?>
-	<td valign="top"><strong><?=t('Days')?></strong><br/>
+	<td valign="top">
 	<?=$form->text('gUserExpirationIntervalDays', $days, array('style' => $style, 'class' => 'span1'))?>
 	</td>
-	<td valign="top"><strong><?=t('Hours')?></strong><br/>
+	<td valign="top">
 	<?=$form->text('gUserExpirationIntervalHours', $hours, array('style' => $style, 'class' => 'span1'))?>
 	</td>
-	<td valign="top"><strong><?=t('Minutes')?></strong><br/>
+	<td valign="top">
 	<?=$form->text('gUserExpirationIntervalMinutes', $minutes, array('style' => $style, 'class' => 'span1'))?>
 	</td>
 	</tr>
@@ -219,9 +256,9 @@ foreach ($gResults as $g) { ?>
 	</div>
 	
 	<div id="gUserExpirationAction" style="display: none">
-	<div class="clearfix">
+	<div class="control-group">
 	<?=$form->label('gUserExpirationAction', t('Expiration Action'))?>
-	<div class="input">
+	<div class="controls">
 	<?=$form->select("gUserExpirationAction", array(
 	'REMOVE' => t('Remove the user from this group'),
 		'DEACTIVATE' => t('Deactivate the user account'),
@@ -273,26 +310,15 @@ $(function() {
 	$("input[name=gUserExpirationIsEnabled]").click(ccm_checkGroupExpirationOptions);
 	$("select[name=gUserExpirationMethod]").change(ccm_checkGroupExpirationOptions);
 	ccm_checkGroupExpirationOptions();
-	/*
-	$("div#gUserExpirationIntervalOptions input").focus(function() {
-		if ($('input[name=gUserExpirationIntervalDays]').val() == '<?=t("Days")?>' &&
-			$('input[name=gUserExpirationIntervalHours]').val() == '<?=t("Hours")?>' &&
-			$('input[name=gUserExpirationIntervalMinutes]').val() == '<?=t("Minutes")?>') {
-			$("div#gUserExpirationIntervalOptions input").val("");
-			$("div#gUserExpirationIntervalOptions input").css('color', '#000');
+	$('input[name=gIsBadge]').on('click', function() {
+		if ($(this).is(':checked')) {
+			$('#gUserBadgeOptions').show();
+		} else {
+			$('#gUserBadgeOptions').hide();
 		}
-	});
-	$("div#gUserExpirationIntervalOptions input").blur(function() {
-		if ($('input[name=gUserExpirationIntervalDays]').val() == '' &&
-			$('input[name=gUserExpirationIntervalHours]').val() == '' &&
-			$('input[name=gUserExpirationIntervalMinutes]').val() == '') {
-			$('input[name=gUserExpirationIntervalDays]').val('<?=t("Days")?>');
-			$('input[name=gUserExpirationIntervalHours]').val('<?=t("Hours")?>');
-			$('input[name=gUserExpirationIntervalMinutes]').val('<?=t("Minutes")?>');
-			$("div#gUserExpirationIntervalOptions input").css('color', '#aaa');
-		}
-	});
-	*/
+	}).triggerHandler('click');
+	$('.icon-question-sign').tooltip();
+	
 });
 </script>
 

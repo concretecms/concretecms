@@ -1669,6 +1669,7 @@
       <UNSIGNED/>
     </field>
   </table>
+  
   <table name="Groups">
     <field name="gID" type="I" size="10">
       <KEY/>
@@ -1693,6 +1694,20 @@
       <UNSIGNED/>
     </field>
     <field name="gUserExpirationAction" type="C" size="20"/>
+    <field name="gIsBadge" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="gBadgeFID" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="gBadgeDescription" type="C" size="255"/>
+    <field name="gBadgeCommunityPointValue" type="I" size="11">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
     <index name="gName">
       <UNIQUE/>
       <col>gName</col>

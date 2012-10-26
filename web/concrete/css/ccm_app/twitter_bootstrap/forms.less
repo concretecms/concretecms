@@ -23,7 +23,6 @@ legend {
   display: block;
   width: 100%;
   padding: 0;
-  margin-bottom: @baseLineHeight;
   font-size: @baseFontSize * 1.5;
   line-height: @baseLineHeight * 2;
   color: @grayDark;
@@ -34,6 +33,14 @@ legend {
   small {
     font-size: @baseLineHeight * .75;
     color: @grayLight;
+  }
+}
+
+form {
+// Legend collapses margin on webkit, so set margin on first control-group
+  legend + .control-group {
+    margin-top: @baseLineHeight * 1.5;
+    -webkit-margin-top-collapse: separate;
   }
 }
 
@@ -598,11 +605,6 @@ input.search-query {
   margin-bottom: @baseLineHeight / 2;
 }
 
-// Legend collapses margin, so next element is responsible for spacing
-legend + .control-group {
-  margin-top: @baseLineHeight;
-  -webkit-margin-top-collapse: separate;
-}
 
 // Horizontal-specific styles
 // --------------------------

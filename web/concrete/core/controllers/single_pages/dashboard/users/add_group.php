@@ -19,6 +19,14 @@ class Concrete5_Controller_Dashboard_Users_AddGroup extends DashboardBaseControl
 		}
 	}
 
+	public function checkBadgeOptions($g) {
+		if ($_POST['gIsBadge']) {
+			$g->setBadgeOptions($this->post('gBadgeFID'), $this->post('gBadgeDescription'), $this->post('gBadgeCommunityPointValue'));
+		} else {
+			$g->clearBadgeOptions();
+		}
+	}
+
 	public function do_add() {
 		$txt = Loader::helper('text');
 		$valt = Loader::helper('validation/token');
@@ -32,6 +40,12 @@ class Concrete5_Controller_Dashboard_Users_AddGroup extends DashboardBaseControl
 		if (!$valt->validate('add_or_update_group')) {
 			$this->error->add($valt->getErrorMessage());
 		}
+
+		if ($_POST['gIsBadge']) {
+			if (!$this->post('gBadgeDescription')) {
+				$this->error->add(t('You must specify a description for this badge. It will be displayed publicly.'));
+			}
+		}
 		
 		$g1 = Group::getByName($gName);
 		if ($g1 instanceof Group) {
@@ -43,6 +57,7 @@ class Concrete5_Controller_Dashboard_Users_AddGroup extends DashboardBaseControl
 		if (!$this->error->has()) { 	
 			$g = Group::add($gName, $_POST['gDescription']);
 			$this->checkExpirationOptions($g);
+			$this->checkBadgeOptions($g);
 			$this->redirect('/dashboard/users/groups', 'group_added');
 		}	
 	}

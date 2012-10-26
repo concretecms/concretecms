@@ -29,11 +29,18 @@ class Concrete5_Controller_Dashboard_Users_Groups extends DashboardBaseControlle
 				$this->error->add(t('A group named "%s" already exists', $g1->getGroupName()));
 			}
 		}
+
+		if ($_POST['gIsBadge']) {
+			if (!$this->post('gBadgeDescription')) {
+				$this->error->add(t('You must specify a description for this badge. It will be displayed publicly.'));
+			}
+		}
 		
-		if (count($error) == 0) {
+		if (!$this->error->has()) {
 			$g->update($gName, $_POST['gDescription']);
 			$cnta = Loader::controller('/dashboard/users/add_group');
 			$cnta->checkExpirationOptions($g);
+			$cnta->checkBadgeOptions($g);
 			$this->redirect('/dashboard/users/groups', 'group_updated');
 		}	
 	}
