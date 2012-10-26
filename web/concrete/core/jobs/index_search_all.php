@@ -50,11 +50,9 @@ class Concrete5_Job_IndexSearchAll extends QueueableJob {
 	public function processQueueItem(Zend_Queue_Message $msg) {
 		$c = Page::getByID($msg->body, 'ACTIVE');
 		$cv = $c->getVersionObject();
-
-		if(!$cv->cvIsApproved) { 
-			continue;
+		if (is_object($cv)) {
+			$c->reindex($this->is, true);
 		}
-		$c->reindex($this->is, true);
 	}
 
 
