@@ -23,7 +23,7 @@ class ConcreteUpgradeVersion561Helper {
 			$akc->associateAttributeKeyType($tt);
 		}
 
-		$js = JobSet::getByHandle('Default');
+		$js = JobSet::getByName('Default');
 		if (!is_object($js)) {
 			$js = JobSet::add('Default');
 		}
@@ -31,7 +31,7 @@ class ConcreteUpgradeVersion561Helper {
 		$jobs = Job::getList();
 		foreach($jobs as $j) {
 			if (!$j->supportsQueue()) {
-				$j->addJob($j);	
+				$js->addJob($j);	
 			}
 		}
 
