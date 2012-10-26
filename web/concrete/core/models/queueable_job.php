@@ -57,4 +57,26 @@ abstract class Concrete5_Model_QueueableJob extends Job {
 		return $obj;
 	}
 	
+	/** 
+	 * Executejob for queueable jobs actually starts the queue, runs, and ends all in one function. This happens if we run a job in legacy mode.
+	 */
+
+	public function executeJob() {
+		$q = $this->markStarted();
+		$this->start($q);
+		try {
+			$messages = $q->receive(999999999999);
+			foreach($messages as $key => $p) {
+				$this->processQueueItem($p);
+				$q->deleteMessage($p);
+			}
+			$result = $this->finish($q);
+			$obj = $this->markCompleted(0, $result);
+		} catch(Exception $e) {
+			$obj = $this->markCompleted(Job::JOB_ERROR_EXCEPTION_GENERAL, $e->getMessage());
+			$obj->message = $obj->result; // needed for progressive library.
+		}
+		return $obj;
+	}
+
 }

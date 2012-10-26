@@ -46,6 +46,13 @@ class Concrete5_Model_JobSet extends Object {
 		return $list;
 	}
 	
+	public static function getDefault() {
+		$js = JobSet::getByID(self::DEFAULT_JOB_SET_ID);
+		if (is_object($js)) {
+			return $js;
+		}
+	}
+
 	public function getJobSetID() {return $this->jsID;}
 	public function getJobSetName() {return $this->jsName;}
 	public function getPackageID() {return $this->pkgID;}
