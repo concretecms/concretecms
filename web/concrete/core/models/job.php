@@ -45,7 +45,10 @@ abstract class Concrete5_Model_Job extends Object {
 			self::JOB_ERROR_EXCEPTION_GENERAL
 		));
 	}
-
+	public function canUninstall() {
+		return $this->jNotUninstallable != 1;
+	}
+	
 	public function supportsQueue() {return ($this instanceof QueueableJob);}
 
 	//==========================================================
