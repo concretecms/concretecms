@@ -39,6 +39,7 @@ class Concrete5_Library_Content_Importer {
 		$this->importTaskPermissions($sx);
 		$this->importPermissions($sx);
 		$this->importJobs($sx);
+		$this->importJobSets($sx);
 		// import bare page types first, then import structure, then page types blocks, attributes and composer settings, then page content, because we need the structure for certain attributes and stuff set in master collections (like composer)
 		$this->importPageTypesBase($sx);
 		$this->importPageStructure($sx);
@@ -394,6 +395,24 @@ class Concrete5_Library_Content_Importer {
 					Job::installByPackage($jx['handle'], $pkg);
 				} else {
 					Job::installByHandle($jx['handle']);				
+				}
+			}
+		}
+	}
+
+	protected function importJobSets(SimpleXMLElement $sx) {
+		if (isset($sx->jobsets)) {
+			foreach($sx->jobsets->jobset as $js) {
+				$pkg = ContentImporter::getPackageObject($js['package']);
+				$jso = JobSet::getByName((string) $js['name']);
+				if (!is_object($jso)) {
+					$jso = JobSet::add((string) $js['name']);
+				}
+				foreach($js->children() as $jsk) {
+					$j = Job::getByHandle((string) $jsk['handle']);
+					if (is_object($j)) { 	
+						$jso->addJob($j);
+					}
 				}
 			}
 		}

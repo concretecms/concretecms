@@ -7,4 +7,12 @@
         <job handle="process_email" package=""/>
         <job handle="remove_old_page_versions" package=""/>
     </jobs>
+    <jobsets>
+        <jobset name="Default" package="">
+            <job handle="index_search"/>
+            <job handle="generate_sitemap"/>
+            <job handle="process_email"/>
+            <job handle="remove_old_page_versions"/>
+        </jobset>
+    </jobsets>
 </concrete5-cif>

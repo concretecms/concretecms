@@ -7,8 +7,9 @@ class ConcreteUpgradeVersion561Helper {
 		'atSocialLinks',
 		'QueuePageDuplicationRelations',
 		'Queues',
-		'QueueMessages'
-
+		'QueueMessages',
+		'JobSets',
+		'JobSetJobs'
 	);
 	
 	
@@ -22,10 +23,23 @@ class ConcreteUpgradeVersion561Helper {
 			$akc->associateAttributeKeyType($tt);
 		}
 
+		$js = JobSet::getByHandle('Default');
+		if (!is_object($js)) {
+			$js = JobSet::add('Default');
+		}
+		$js->clearJobs();
+		$jobs = Job::getList();
+		foreach($jobs as $j) {
+			if (!$j->supportsQueue()) {
+				$j->addJob($j);	
+			}
+		}
+
 		$j = Job::getByHandle('index_search_all');
 		if (!is_object($j)) {
 			Job::installByHandle('index_search_all');
 		}
+
 	}
 		
 }
