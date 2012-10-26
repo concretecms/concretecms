@@ -30,6 +30,7 @@ $classes = array(
 	'AttributeType' => array('model','attribute/type'),
 	'Block,BlockRecord' => array('model','block'),
 	'Job' => array('model','job'),
+	'JobSet' => array('model','job_set'),
 	'QueueableJob' => array('model','queueable_job'),
 	'CustomStyleRule,CustomStylePreset' => array('model','custom_style'),
 	'File' => array('model','file'),
