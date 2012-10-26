@@ -63,6 +63,7 @@ class Concrete5_Controller_Install extends Controller {
 		}
 		require(DIR_BASE_CORE . '/config/file_types.php');
 		Cache::disableCache();
+		Cache::disableLocalCache();
 		$this->setRequiredItems();
 		$this->setOptionalItems();
 		Loader::model('package/starting_point');
