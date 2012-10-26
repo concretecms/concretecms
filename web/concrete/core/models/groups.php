@@ -236,6 +236,32 @@
 			}
 		}
 
+		public function isGroupBadge() {
+			return $this->gIsBadge;
+		}
+
+		public function getGroupBadgeDescription() {
+			return $this->gBadgeDescription;
+		}
+
+		public function getGroupBadgeCommunityPointValue() {
+			return $this->gBadgeCommunityPointValue;
+		}
+
+		public function getGroupBadgeImageID() {
+			return $this->gBadgeFID;
+		}
+
+		public function getGroupBadgeImageObject() {
+			$bf = false;
+			if ($this->gBadgeFID) {
+				$bf = File::getByID($this->gBadgeFID);
+				if (!is_object($bf) || $bf->isError()) {
+					unset($bf);
+				}
+			}
+			return $bf;
+		}
 
 		public function isGroupExpirationEnabled() {
 			return $this->gUserExpirationIsEnabled;
@@ -289,12 +315,22 @@
 				return $ng;
 			}
 		}
+
+		public function clearBadgeOptions() {
+			$db = Loader::db();
+			$db->Execute('update Groups set gIsBadge = 0, gBadgeFID = 0, gBadgeDescription = null, gBadgeCommunityPointValue = 0 where gID = ?', array($this->getGroupID()));
+		}
 		
 		public function removeGroupExpiration() {
 			$db = Loader::db();
 			$db->Execute('update Groups set gUserExpirationIsEnabled = 0, gUserExpirationMethod = null, gUserExpirationSetDateTime = null, gUserExpirationInterval = 0, gUserExpirationAction = null where gID = ?', array($this->getGroupID()));
 		}
 		
+		public function setBadgeOptions($gBadgeFID, $gBadgeDescription, $gBadgeCommunityPointValue) {
+			$db = Loader::db();
+			$db->Execute('update Groups set gIsBadge = 1, gBadgeFID = ?, gBadgeDescription = ?, gBadgeCommunityPointValue = ? where gID = ?', array($gBadgeFID, $gBadgeDescription, $gBadgeCommunityPointValue, $this->gID));
+		}
+
 		public function setGroupExpirationByDateTime($datetime, $action) {
 			$db = Loader::db();
 			$db->Execute('update Groups set gUserExpirationIsEnabled = 1, gUserExpirationMethod = \'SET_TIME\', gUserExpirationInterval = 0, gUserExpirationSetDateTime = ?, gUserExpirationAction = ? where gID = ?', array($datetime, $action, $this->gID));

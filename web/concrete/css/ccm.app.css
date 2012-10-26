@@ -82,7 +82,8 @@ body{margin:0;font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;font-size:
 .ccm-ui .pre-scrollable{max-height:340px;overflow-y:scroll;}
 .ccm-ui{}.ccm-ui form{margin:0 0 20px;}
 .ccm-ui fieldset{padding:0;margin:0;border:0;}
-.ccm-ui legend{display:block;width:100%;padding:0;margin-bottom:20px;font-size:19.5px;line-height:40px;color:#333333;border:0;border-bottom:1px solid #e5e5e5;}.ccm-ui legend small{font-size:15px;color:#999999;}
+.ccm-ui legend{display:block;width:100%;padding:0;font-size:19.5px;line-height:40px;color:#333333;border:0;border-bottom:1px solid #e5e5e5;}.ccm-ui legend small{font-size:15px;color:#999999;}
+.ccm-ui form legend+.control-group{margin-top:30px;-webkit-margin-top-collapse:separate;}
 .ccm-ui label,.ccm-ui input,.ccm-ui button,.ccm-ui select,.ccm-ui textarea{font-size:13px;font-weight:normal;line-height:20px;}
 .ccm-ui input,.ccm-ui button,.ccm-ui select,.ccm-ui textarea{font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;}
 .ccm-ui label{display:block;margin-bottom:5px;}
@@ -181,7 +182,6 @@ body{margin:0;font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;font-size:
 .ccm-ui .form-search .radio,.ccm-ui .form-search .checkbox,.ccm-ui .form-inline .radio,.ccm-ui .form-inline .checkbox{padding-left:0;margin-bottom:0;vertical-align:middle;}
 .ccm-ui .form-search .radio input[type="radio"],.ccm-ui .form-search .checkbox input[type="checkbox"],.ccm-ui .form-inline .radio input[type="radio"],.ccm-ui .form-inline .checkbox input[type="checkbox"]{float:left;margin-right:3px;margin-left:0;}
 .ccm-ui .control-group{margin-bottom:10px;}
-.ccm-ui legend+.control-group{margin-top:20px;-webkit-margin-top-collapse:separate;}
 .ccm-ui .form-horizontal .control-group{margin-bottom:20px;*zoom:1;}.ccm-ui .form-horizontal .control-group:before,.ccm-ui .form-horizontal .control-group:after{display:table;content:"";line-height:0;}
 .ccm-ui .form-horizontal .control-group:after{clear:both;}
 .ccm-ui .form-horizontal .control-label{float:left;width:160px;padding-top:5px;text-align:right;}
