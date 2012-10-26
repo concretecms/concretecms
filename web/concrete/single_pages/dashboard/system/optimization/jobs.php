@@ -53,9 +53,9 @@ $jh = Loader::helper('json');
 	<thead>
 	<tr>
 		<th><?=t('ID')?></th>
-		<th><?=t('Name')?></th>
+		<th style="width: 200px"><?=t('Name')?></th>
 		<th><?=t('Last Run')?></th>
-		<th><?=t('Results of Last Run')?></th>
+		<th style="width: 200px"><?=t('Results of Last Run')?></th>
 		<td><a href="<?=$this->action('reset')?>" class="btn pull-right btn-mini"><?=t('Reset All Jobs')?></a></td>
 	</tr>
 	</thead>
@@ -273,7 +273,11 @@ $jh = Loader::helper('json');
 var pulseRowInterval = false;
 
 jQuery.fn.showLoading = function() {
-	$(this).find('button').html('<i class="icon-refresh"></i> <?=t('Run')?>').prop('disabled', true);
+	if ($(this).find('button').attr('data-jSupportsQueue')) {
+		$(this).find('button').html('<i class="icon-refresh"></i> <?=t('View')?>');
+	} else {
+		$(this).find('button').html('<i class="icon-refresh"></i> <?=t('Run')?>').prop('disabled', true);
+	}
 	var row = $(this);
 	row.removeClass('error success');
 
