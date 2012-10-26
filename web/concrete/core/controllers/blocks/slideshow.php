@@ -59,7 +59,7 @@ class Concrete5_Controller_Block_Slideshow extends BlockController {
 		if (intval($this->fsID) < 1) {
 			return false;
 		}
-        Loader::helper('concrete/file');
+        	Loader::helper('concrete/file');
 		Loader::model('file_attributes');
 		Loader::library('file/types');
 		Loader::model('file_list');
@@ -102,7 +102,7 @@ class Concrete5_Controller_Block_Slideshow extends BlockController {
 			$images[] = $image;
 		}
 		$this->images = $images;
-	
+		$this->maxHeight = $maxHeight;
 	}
 
 	function loadImages(){
@@ -114,6 +114,7 @@ class Concrete5_Controller_Block_Slideshow extends BlockController {
 		$sql = "SELECT * FROM btSlideshowImg WHERE bID=".intval($this->bID).' ORDER BY '.$sortChoices[$this->playback];
 		$db = Loader::db();
 		$this->images=$db->getAll($sql); 
+		$this->maxHeight = $db->GetOne('SELECT max(imgHeight) FROM btSlideshowImg WHERE bID=?', array($this->bID));
 	}
 	
 	function delete(){
@@ -134,6 +135,7 @@ class Concrete5_Controller_Block_Slideshow extends BlockController {
 		$this->set('fadeDuration', $this->fadeDuration);
 		$this->set('duration', $this->duration);
 		$this->set('minHeight', $this->minHeight);
+		$this->set('maxHeight', $this->maxHeight);
 		$this->set('fsID', $this->fsID);
 		$this->set('fsName', $this->getFileSetName());
 		$this->set('images', $this->images);
