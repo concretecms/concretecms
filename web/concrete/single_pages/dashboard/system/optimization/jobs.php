@@ -11,6 +11,7 @@ $jh = Loader::helper('json');
 ?>
 <style type="text/css">
 #ccm-jobs-list td {
+	vertical-align: middle;
 	-webkit-transition-property: color, background-color;
 	-webkit-transition-duration: .9s, .9s;
 	-moz-transition-property: color, background-color;
@@ -38,6 +39,14 @@ $jh = Loader::helper('json');
 </style>
 
 <?=$h->getDashboardPaneHeaderWrapper(t('Automated Jobs'), false, false);?>
+
+<?=Loader::helper('concrete/interface')->tabs(array(
+	array('list', t('Jobs'), $jobListSelected),
+	array('sets', t('Job Sets'), $jobSetsSelected)
+));?>
+
+<div id="ccm-tab-content-list" <? if (!$jobListSelected) { ?>style="display: none" <? } ?>>
+
 <? if (count($installedJobs) > 0) { ?>
 
 <table class="table" id="ccm-jobs-list">
@@ -103,6 +112,161 @@ $jh = Loader::helper('json');
 	</tbody>
 	</table>
 <? } ?>
+</div>
+
+<div id="ccm-tab-content-sets" <? if (!$jobSetsSelected) { ?>style="display: none" <? } ?>>
+
+
+<?php if (in_array($this->controller->getTask(), array('update_set', 'update_set_jobs', 'edit_set', 'delete_set'))) { ?>
+
+
+		<div class="row">
+		<div class="span-pane-half">
+
+		<form class="form-vertical" method="post" action="<?php echo $this->action('update_set')?>">
+			
+			<input type="hidden" name="jsID" value="<?php echo $set->getJobSetID()?>" />
+
+			<?php echo Loader::helper('validation/token')->output('update_set')?>
+
+		<fieldset>
+			<legend><?=t('Details')?></legend>
+
+			<div class="control-group">
+				<?php echo $form->label('jsName', t('Name'))?>
+				<div class="controls">
+					<?php echo $form->text('jsName', $set->getJobSetName())?>
+				</div>
+			</div>
+
+			<div class="control-group">
+				<label></label>
+				<div class="controls">
+					<?php echo $form->submit('submit', t('Update Set'), array('class' => ''))?>
+				</div>
+			</div>
+		</fieldset>
+		</form>
+
+
+		<? if ($set->canDelete()) { ?>
+
+		<form method="post" action="<?php echo $this->action('delete_set')?>" class="form-vertical">
+		<fieldset>
+			<legend><?=t('Delete Set')?></legend>
+			<div class="control-group">
+			<div class="controls">
+				<p><?php echo t('Warning, this cannot be undone. No jobs will be deleted but they will no longer be grouped together.')?></p>
+			</div>
+			</div>
+			
+			<input type="hidden" name="jsID" value="<?php echo $set->getJobSetID()?>" />
+			<?php echo Loader::helper('validation/token')->output('delete_set')?>		
+			<div class="clearfix">
+				<?php echo $form->submit('submit', t('Delete Job Set'), array('class' => 'danger'))?>
+			</div>
+		</form>
+		<? } ?>
+		</div>
+
+		<div class="span-pane-half">
+	
+		<form class="form-vertical" method="post" action="<?php echo $this->action('update_set_jobs')?>">
+			<input type="hidden" name="jsID" value="<?php echo $set->getJobSetID()?>" />
+			<?php echo Loader::helper('validation/token')->output('update_set_jobs')?>
+
+		<fieldset>
+			<legend><?=t('Jobs')?></legend>
+			
+	
+			<?php 
+			$list = $set->getJobs();
+			if (count($installedJobs) > 0) { ?>
+	
+				<div class="control-group">
+					<div class="controls">
+	
+						<?php foreach($installedJobs as $g) { 	
+
+						?>
+								<label class="checkbox">
+									<?php echo $form->checkbox('jID[]', $g->getJobID(), $set->contains($g)) ?>
+									<span><?php echo $g->getJobName()?></span>
+								</label>
+						<?php } ?>
+					</div>
+				</div>
+		
+				<div class="control-group">
+					<div class="controls">
+					<?php echo $form->submit('submit', t('Update Jobs'), array('class' => ''))?>
+					</div>
+				</div>
+			<?php } else { ?>
+				<div class="control-group">
+					<div class="controls">
+						<p><?php echo t('No Jobs found.')?></p>
+					</div>
+				</div>
+			<?php } ?>
+		</fieldset>
+		</form>
+		</div>
+	</div>
+
+<? } else { ?>
+
+	<form method="post" class="form-horizontal" action="<?php echo $this->action('add_set')?>">
+
+
+	<?php if (count($jobSets) > 0) { ?>
+	
+		<div class="ccm-attribute-sortable-set-list">
+		
+			<?php foreach($jobSets as $j) { ?>
+				<div class="ccm-group" id="asID_<?php echo $j->getJobSetID()?>">
+					<a class="ccm-group-inner" href="<?php echo $this->url('/dashboard/system/optimization/jobs', 'edit_set', $j->getJobSetID())?>" style="background-image: url(<?php echo ASSETS_URL_IMAGES?>/icons/group.png)"><?php echo $j->getJobSetName()?></a>
+				</div>
+			<?php } ?>
+		</div>
+	
+	<?php } else { ?>
+		<p><?php echo t('You have not added any Job sets.')?></p>
+	<?php } ?>
+
+	<br/>
+	
+	<h4><?=t('Add Set')?></h4>
+
+	<?php echo Loader::helper('validation/token')->output('add_set')?>
+	<div class="control-group">
+		<?php echo $form->label('jsName', t('Name'))?>
+		<div class="controls">
+			<?php echo $form->text('jsName')?>
+		</div>
+	</div>
+
+	<div class="control-group">
+		<label class="control-label"><?=t('Jobs')?></label>
+		<div class="controls">
+		<? foreach($installedJobs as $j) { ?>
+			<label class="checkbox"><?=$form->checkbox('jID[]', $j->getJobID())?> <span><?=$j->getJobName()?></span></label>			
+		<? } ?>
+		</div>
+	</div>
+	
+	<div class="control-group">
+		<label></label>
+		<div class="controls">
+			<?php echo $form->submit('submit', t('Add Job Set'), array('class' => 'btn'))?>
+		</div>
+	</div>
+
+	</form>
+
+	<? } ?>
+</div>
+
 
 <script type="text/javascript">
 
