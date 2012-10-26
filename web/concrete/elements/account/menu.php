@@ -1,10 +1,24 @@
-<? 
-defined('C5_EXECUTE') or die("Access Denied.");
-$u = new User();
-if (defined('ENABLE_USER_PROFILES') && ENABLE_USER_PROFILES && $u->isRegistered()) { 
+<?php defined('C5_EXECUTE') or die("Access Denied.");
+do { 
+	
+	if (!(defined('ENABLE_USER_PROFILES') && ENABLE_USER_PROFILES)) {
+		break;
+	}
+	
+	$u = new User();
+	if (!$u->isRegistered()) {
+		 break;
+	}
+	
 	$account = Page::getByPath('/account');
-	if (is_object($account) && !$account->isError()) {
-
+	if (!is_object($account) || $account->isError()) {
+		 break; 
+	}
+	
+	$cp = new Permissions($account);
+	if(!$cp->canRead()) {
+		break; 
+	}
 ?>
 
 <div style="display: none">
@@ -49,5 +63,5 @@ if (defined('ENABLE_USER_PROFILES') && ENABLE_USER_PROFILES && $u->isRegistered(
 </div>
 </div>
 
-<?	}
-}
+<?
+} while(false);
