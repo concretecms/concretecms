@@ -546,7 +546,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				//} 
 				$v = array( $placeHolderLayoutAreaHandle, $this->getCollectionID(), $this->getVersionID(), $area->getAreaHandle() );
 				$db->Execute('update CollectionVersionBlocks set arHandle=? WHERE cID=? AND cvID=? AND arHandle=?', $v);				
-				
+				$db->Execute('update CollectionVersionBlockStyles set arHandle=? WHERE cID=? AND cvID=? AND arHandle=?', $v);
 				$nextNumber++; 
 			}
 			
