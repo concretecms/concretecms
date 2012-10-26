@@ -41,11 +41,13 @@ $jh = Loader::helper('json');
 <?=$h->getDashboardPaneHeaderWrapper(t('Automated Jobs'), false, false);?>
 
 <?=Loader::helper('concrete/interface')->tabs(array(
-	array('list', t('Jobs'), $jobListSelected),
-	array('sets', t('Job Sets'), $jobSetsSelected)
-));?>
+	array($this->action('view'), t('Jobs'), $jobListSelected),
+	array($this->action('view_sets'), t('Job Sets'), $jobSetsSelected)
+), false);?>
 
-<div id="ccm-tab-content-list" <? if (!$jobListSelected) { ?>style="display: none" <? } ?>>
+<? if (in_array($this->controller->getTask(), array('view', 'install', 'uninstall', 'job_installed', 'job_uninstalled', 'reset', 'reset_complete'))) { ?>
+
+<div id="ccm-tab-content-list">
 
 <? if (count($installedJobs) > 0) { ?>
 
@@ -57,6 +59,7 @@ $jh = Loader::helper('json');
 		<th><?=t('Last Run')?></th>
 		<th style="width: 200px"><?=t('Results of Last Run')?></th>
 		<td><a href="<?=$this->action('reset')?>" class="btn pull-right btn-mini"><?=t('Reset All Jobs')?></a></td>
+		<td></td>
 	</tr>
 	</thead>
 	<tbody>
@@ -78,12 +81,48 @@ $jh = Loader::helper('json');
 				}
 			?></td>
 			<td class="jLastStatusText"><?=$j->getJobLastStatusText()?></td>
-			<td class="ccm-jobs-button"><button data-jID="<?=$j->getJobID()?>" data-jSupportsQueue="<?=$j->supportsQueue()?>" data-jName="<?=$j->getJobName()?>" class="btn-run-job btn-small btn"><i class="icon-play"></i> <?=t('Run')?></button></td>
+			<td class="ccm-jobs-button">
+				<button data-jID="<?=$j->getJobID()?>" data-jSupportsQueue="<?=$j->supportsQueue()?>" data-jName="<?=$j->getJobName()?>" class="btn-run-job btn-small btn"><i class="icon-play"></i> <?=t('Run')?></button>
+			</td>
+			<td>
+				<a href="javascript:void(0)" class="ccm-automate-job-instructions" data-jSupportsQueue="<?=$j->supportsQueue()?>" data-jID="<?=$j->getJobID()?>" title="<?=t('Automate this Job')?>"><i class="icon-tasks"></i></a>
+				<? if ($j->canUninstall()) { ?>
+					<a href="<?=$this->action('uninstall', $j->getJobID())?>" title="<?=t('Remove this Job')?>"><i class="icon-trash"></i></a>
+				<? } ?>
+			</td>
 		</tr>
 
 	<? } ?>
 	</tbody>
 </table>
+
+
+<div style="display: none" id="ccm-jobs-automation-dialogs">
+
+<? foreach($installedJobs as $j) { ?>
+	<div id="jd<?=$j->getJobID()?>" class="ccm-ui">
+		<? if ($j->supportsQueue()) { ?>
+
+			<p><?=t('The "%s" job supports queueing, meaning it can be run in a couple different ways:', $j->getJobName())?></p>
+			<h4><?=t('No Queueing')?></h4>
+			<div><textarea style="width: 560px" rows="2" class="ccm-default-jobs-url"><?=BASE_URL . $this->url('/tools/required/jobs?auth=' . $auth . '&jID=' . $j->getJobID())?></textarea></div>
+			<div class="alert alert-info"><?=t('This will treat the job as though it were like any other concrete5 job. The entire job will be run at once.')?></div>
+
+			<h4><?=t('Queueing')?></h4>
+			<p><?=t("First, schedule this URL for when you'd like this job to run:")?></p>
+			<div><textarea style="width: 560px" rows="2" class="ccm-default-jobs-url"><?=BASE_URL . REL_DIR_FILES_TOOLS_REQUIRED . '/jobs/run_single?auth=' . $auth . '&jID=' . $j->getJobID()?></textarea></div>
+			<p><?=t('Then, make sure this URL is scheduled to run frequently, like every 3-5 minutes:')?></p>
+			<div><textarea style="width: 560px" rows="2" class="ccm-default-jobs-url"><?=BASE_URL . REL_DIR_FILES_TOOLS_REQUIRED . '/jobs/check_queue?auth=' . $auth?></textarea></div>
+			<div class="alert alert-info"><?=t('The first URL starts the process - the second ensures that it completes in batches.')?></div>
+
+		<? } else { ?>
+			<p><?=t('To run the "%s" job, automate the following URL using cron or a similar system:', $j->getJobName())?></p><br/>
+			<div><textarea style="width: 560px" rows="2" class="ccm-default-jobs-url"><?=BASE_URL . $this->url('/tools/required/jobs/run_single?auth=' . $auth . '&jID=' . $j->getJobID())?></textarea></div>
+		<? } ?>
+	</div>
+<? } ?>
+
+</div>
 
 <? } else { ?>
 	<p><?=t('You have no jobs installed.')?></p>
@@ -124,8 +163,9 @@ if (is_object($djs)) { ?>
 
 </div>
 
-<div id="ccm-tab-content-sets" <? if (!$jobSetsSelected) { ?>style="display: none" <? } ?>>
+<? } else { ?>
 
+<div id="ccm-tab-content-sets">
 
 <?php if (in_array($this->controller->getTask(), array('update_set', 'update_set_jobs', 'edit_set', 'delete_set'))) { ?>
 
@@ -230,6 +270,7 @@ if (is_object($djs)) { ?>
 		<div><input type="text" style="width: 700px" class="ccm-default-jobs-url" value="<?=BASE_URL . $this->url('/tools/required/jobs?auth=' . $auth . '&jsID=' . $set->getJobSetID())?>" /></div>
 		</div>
 
+
 <? } else { ?>
 
 	<form method="post" class="form-horizontal" action="<?php echo $this->action('add_set')?>">
@@ -282,6 +323,7 @@ if (is_object($djs)) { ?>
 
 	<? } ?>
 </div>
+<? } ?>
 
 
 <script type="text/javascript">
@@ -336,7 +378,20 @@ $(function() {
 	$('.ccm-default-jobs-url').on('click', function() {
 		$(this).get(0).select();
 	});
+	$('a.ccm-automate-job-instructions').on('click', $("#ccm-jobs-list"), function() {
+		var h = 200;
+		if ($(this).attr('data-jSupportsQueue')) {
+			h = 550;
+		}
+		$('#jd' + $(this).attr("data-jID")).jqdialog({
+			height: h,
+			width: 600,
+			modal: true,
+			title: '<?=t('Automation Instructions')?>'
+		});
+	});
 	$('.icon-question-sign').tooltip();
+	$('i[class=icon-tasks],i[class=icon-trash]').parent().tooltip();
 	$('.btn-run-job').on('click', $('#ccm-jobs-list'), function() {
 		var row = $(this).parent().parent();
 		row.showLoading();

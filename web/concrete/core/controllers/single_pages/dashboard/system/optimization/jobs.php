@@ -14,11 +14,15 @@ class Concrete5_Controller_Dashboard_System_Optimization_Jobs extends DashboardB
 		$this->set('jobListSelected', true);
 	}
 	
+	public function view_sets() {
+		$this->set('jobSetsSelected', true);
+	}
+
 	function install($handle = null) {
 		if ($handle) {
 			Loader::model("job");
 			Job::installByHandle($handle);
-			$this->set('message', t('Job succesfully installed.'));
+			$this->redirect('/dashboard/system/optimization/jobs', 'job_uninstalled');
 		} else {
 			$this->error->add(t('No job specified.'));
 		}
@@ -32,7 +36,7 @@ class Concrete5_Controller_Dashboard_System_Optimization_Jobs extends DashboardB
 			if ($job) {
 				if (!$job->jNotUninstallable) {
 					$job->uninstall();
-					$this->set('message', t('Job succesfully uninstalled.'));
+					$this->redirect('/dashboard/system/optimization/jobs', 'job_uninstalled');
 				} else {
 					$this->error->add(t('This job cannot be uninstalled.'));
 				}
@@ -42,6 +46,16 @@ class Concrete5_Controller_Dashboard_System_Optimization_Jobs extends DashboardB
 		} else {
 			$this->error->add(t('No job specified.'));
 		}
+		$this->view();
+	}
+
+	public function job_uninstalled() {
+		$this->set('message', t('Job succesfully uninstalled.'));
+		$this->view();
+	}
+
+	public function job_installed() {
+		$this->set('message', t('Job succesfully installed.'));
 		$this->view();
 	}
 	
