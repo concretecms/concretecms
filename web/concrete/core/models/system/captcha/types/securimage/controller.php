@@ -28,8 +28,8 @@ class Concrete5_Model_SecurimageSystemCaptchaTypeController extends SystemCaptch
 	 */ 
 	public function display() {
 	  $ci = Loader::helper('concrete/urls');
-	  echo '<div><img src="' . $ci->getToolsURL('captcha') . '?nocache=' .time(). '" alt="' .t('Captcha Code'). '" onclick="this.src = \'' . $ci->getToolsURL('captcha') . '?nocache=' .$time. '\'" class="ccm-captcha-image" /></div>';
-      echo '<br/><div>' . t('Click the image to see another captcha.') . '</div>';
+	  echo '<div><img src="' . $ci->getToolsURL('captcha') . '?nocache=' .time(). '" alt="' .t('Captcha Code'). '" onclick="this.src = \'' . $ci->getToolsURL('captcha') . '?nocache=\'+(new Date().getTime())" class="ccm-captcha-image" /></div>';
+	  echo '<br/><div>' . t('Click the image to see another captcha.') . '</div>';
 	}
 	
 	public function label() {
