@@ -18,14 +18,14 @@ class ConcreteUpgradeVersion562Helper {
 			Job::installByHandle('index_search_all');
 		}
 
-		$js = JobSet::getByHandle('Default');
+		$js = JobSet::getByName('Default');
 		if (!is_object($js)) {
 			$js = JobSet::add('Default');
 		}
 		$js->clearJobs();
 		$jobs = Job::getList();
 		foreach($jobs as $j) {
-			if (!$j->supportsQueue()) {
+			if (!$js->supportsQueue()) {
 				$j->addJob($j);	
 			}
 		}
