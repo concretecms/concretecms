@@ -3116,8 +3116,26 @@
       <UNSIGNED/>
     </field>
   </table>
-  
-    <table name="QueueMessages">
+
+  <table name="Queues">
+    <field name="queue_id" type="I" size="10">
+      <KEY/>
+      <AUTOINCREMENT/>
+      <UNSIGNED/>
+    </field>
+    <field name="queue_name" type="C" size="100">
+      <NOTNULL/>
+    </field>
+    <field name="timeout" type="I" size="5">
+      <NOTNULL/>
+      <DEFAULT value="30"/>
+      <UNSIGNED/>
+    </field>
+    <opt platform="mysql">TYPE=INNODB</opt>
+
+  </table>
+
+  <table name="QueueMessages">
     <field name="message_id" type="I" size="20">
       <KEY/>
       <AUTOINCREMENT/>
@@ -3126,6 +3144,9 @@
     <field name="queue_id" type="I" size="10">
       <NOTNULL/>
       <UNSIGNED/>
+		<CONSTRAINT platform="mysql">
+		, FOREIGN KEY (`queue_id`) REFERENCES `Queues` (`queue_id`) ON DELETE CASCADE ON UPDATE CASCADE      
+		</CONSTRAINT>
     </field>
     <field name="handle" type="C" size="32"/>
     <field name="body" type="C" size="8192">
@@ -3148,23 +3169,8 @@
     <index name="message_queueid">
       <col>queue_id</col>
     </index>
-  </table>
-  <table name="Queues">
-    <field name="queue_id" type="I" size="10">
-      <KEY/>
-      <AUTOINCREMENT/>
-      <UNSIGNED/>
-    </field>
-    <field name="queue_name" type="C" size="100">
-      <NOTNULL/>
-    </field>
-    <field name="timeout" type="I" size="5">
-      <NOTNULL/>
-      <DEFAULT value="30"/>
-      <UNSIGNED/>
-    </field>
-  </table>
-  
+    <opt platform="mysql">TYPE=INNODB</opt>
+  </table>  
     <table name="QueuePageDuplicationRelations">
     <field name="queue_name" type="C" size="255">
       <NOTNULL/>
