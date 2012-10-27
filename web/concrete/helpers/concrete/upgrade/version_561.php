@@ -5,6 +5,8 @@ class ConcreteUpgradeVersion561Helper {
 	
 	public $dbRefreshTables = array(
 		'atSocialLinks',
+		'UserPointActions',
+		'UserPointHistory',
 		'Groups',
 		'QueuePageDuplicationRelations',
 		'Queues',
