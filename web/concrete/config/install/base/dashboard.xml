@@ -186,6 +186,26 @@
 				</attributekey>
 			</attributes>
         </page>
+        <page name="Community Points" path="/dashboard/users/points" filename="/dashboard/users/points/view.php" pagetype="" package="">
+			<attributes>
+				<attributekey handle="meta_keywords">
+					<value>community, points, karma</value>
+				</attributekey>
+				<attributekey handle="icon_dashboard">
+					<value>icon-heart</value>
+				</attributekey>
+			</attributes>
+        </page>
+        <page name="Assign Points" path="/dashboard/users/points/assign" filename="/dashboard/users/points/assign.php" pagetype="" package="">
+        </page>
+        <page name="Community Point Actions" path="/dashboard/users/points/actions" filename="/dashboard/users/points/actions.php" pagetype="" package="">
+			<attributes>
+				<attributekey handle="meta_keywords">
+					<value>action, community actions</value>
+				</attributekey>
+			</attributes>
+        </page>
+
         <page name="Reports" path="/dashboard/reports" filename="/dashboard/reports.php" pagetype="" description="Get data from forms and logs." package="">
 			<attributes>
 				<attributekey handle="meta_keywords">

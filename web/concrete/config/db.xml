@@ -1803,6 +1803,49 @@
       <UNSIGNED/>
     </field>
   </table>
+<table name="UserPointHistory">
+	<field name="upID" type="I" size="11">
+	  <KEY/>
+	  <AUTOINCREMENT/>
+	</field>
+	<field name="upuID" type="I" size="11">
+		<NOTNULL/>
+		<DEFAULT value="0"/>
+	</field>
+	<field name="upaID" type="I" size="11">
+		<NULL/>
+		<DEFAULT value="0"/>
+	</field>
+	<field name="upPoints" type="I" size="11">
+		<NULL/>
+		<DEFAULT value="0"/>
+	</field>
+	<field name="upComments" type="C" size="255"/>
+	<field name="timestamp" type="T">
+		<NOTNULL/>
+		<DEFTIMESTAMP/>
+	</field>
+	<field name="object" type="X"/>
+	<index name="upuID">
+		<col>kpuID</col>
+	</index>
+</table>
+<table name="UserPointActions">
+	<field name="upaID" type="I" size="11">
+	  <KEY/>
+	  <AUTOINCREMENT/>
+	</field>
+	<field name="upaHandle" type="C" size="255"/>
+	<field name="upaName" type="C" size="255"/>
+	<field name="upaDefaultPoints" type="I" size="11">
+		<NOTNULL/>
+		<DEFAULT value="0"/>
+	</field>
+	<field name="gBadgeID" type="I" size="11">
+		<NOTNULL/>
+		<DEFAULT value="0"/>
+	</field>
+</table>  
   
   <table name="Layouts">
 		<field name="layoutID" type="I">
