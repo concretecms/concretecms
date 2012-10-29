@@ -94,13 +94,13 @@ class Concrete5_Controller_Dashboard_Users_Points_Actions extends DashboardBaseC
 	
 	
 	public function action_deleted() {
-		$this->set('message','User Point Action Deleted');
+		$this->set('message', t('Community Point Action Deleted'));
 		$this->view();
 	} 
 	
 	
 	public function action_saved() {
-		$this->set('message','User Point Action Saved');
+		$this->set('message', t('Community Point Action Saved'));
 		$this->view();
 	}
 

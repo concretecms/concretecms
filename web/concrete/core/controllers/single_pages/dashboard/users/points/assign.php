@@ -72,9 +72,9 @@ class Concrete5_Controller_Dashboard_Users_Points_Assign extends DashboardBaseCo
 			$this->upe->upuID = $ui->getUserID();
 		}
 		
-		if(!is_numeric($this->upe->upuID) || $this->upe->upuID <= 0) { $error->add('valid user required'); }
-		if(!is_numeric($this->upe->upaID) || $this->upe->upaID <= 0) { $error->add('action required'); }
-		if(!is_numeric($this->upe->upPoints)) { $error->add('points required'); }
+		if(!is_numeric($this->upe->upuID) || $this->upe->upuID <= 0) { $error->add(t('User Required')); }
+		if(!is_numeric($this->upe->upaID) || $this->upe->upaID <= 0) { $error->add(t('Action required')); }
+		if(!is_numeric($this->upe->upPoints)) { $error->add(t('Points Required')); }
 		if(!$error->has()) {
 			$this->upe->save();
 			$this->redirect('/dashboard/users/points/assign','entry_saved');

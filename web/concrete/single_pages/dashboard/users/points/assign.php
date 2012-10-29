@@ -1,4 +1,4 @@
-<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper('Assign Community Points', false, false, false, array(), Page::getByPath('/dashboard/users/points', 'ACTIVE'))?>
+<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Assign Community Points'), false, false, false, array(), Page::getByPath('/dashboard/users/points', 'ACTIVE'))?>
 <form method="post" action="<?=$this->action('save')?>" id="ccm-community-point-entry" class="form-horizontal">
 <div class="ccm-pane-body">
 	<?php if(isset($upID) && $upID > 0) {
