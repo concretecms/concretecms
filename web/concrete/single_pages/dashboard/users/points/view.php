@@ -5,23 +5,20 @@ Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Community
 	Page::getByPath('/dashboard/users/points/assign')
 
 ))?>
-<form class="form-horizontal" action="<?php echo $this->action('view')?>" method="get">
+<form class="form-inline" action="<?php echo $this->action('view')?>" method="get">
 <div class="ccm-pane-options">
-<div class="row">
-	<div class="span5">
-	<label class="control-label">Username</label>
-	<div class="controls">
-	<?php echo $form_user_selector->quickSelect('uName',$_GET['uName']);?>
-	</div>
-	</div>
+<div class="ccm-pane-options-permanent-search">
+
+<label class="control-label"><?=t('User')?></label>
+<?php echo $form_user_selector->quickSelect('uName',$_GET['uName']);?>
+
 	
-	<div class="span3">
-		<input type="submit" value="Search" class="btn" />
-		<a href="<?=View::url('/dashboard/users/points/assign')?>" class="btn primary">Add New</a>
-	</div>
-	
+<input type="submit" value="Search" class="btn" />
+<a href="<?=View::url('/dashboard/users/points/assign')?>" class="btn btn-primary"><?=t('Add')?></a>
+
 </div>
 </div>
+
 </form>
 <div class="ccm-pane-body ccm-pane-body-footer">
 
@@ -57,9 +54,9 @@ Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Community
 				<td><?php echo number_format($up['upPoints'])?></td>
 				<td><?php echo $up['timestamp'];?></td>
 				<td>
-					<?php echo $concrete_interface->button('Delete',View::url('/dashboard/users/points/','deleteEntry',$up['upID']),
-						'right', NULL, array(),"return confirm('Are you sure?')"); ?>
-					<?php echo $concrete_interface->button('Edit',View::url('/dashboard/users/points/assign',$up['upID']))?>
+					<?php echo $concrete_interface->button(t('Delete'),View::url('/dashboard/users/points/','deleteEntry',$up['upID']),
+						'right', NULL, array(),"return confirm('<?=t('Are you sure?')?>')"); ?>
+					<?php echo $concrete_interface->button(t('Edit'),View::url('/dashboard/users/points/assign',$up['upID']))?>
 				</td>
 			</tr>
 		<?php } ?>

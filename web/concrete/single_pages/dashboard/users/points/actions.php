@@ -80,9 +80,9 @@
 				<td><?= number_format($upa['upaDefaultPoints'])?></td>
 				<td><?php echo $upa['gName'];?></td>
 				<td>
-					<?php echo $concrete_interface->button('Delete',$this->action('delete',$upa['upaID']),
-						'right', NULL, array(),"return confirm('Are you sure?')"); ?>	
-					<?php echo $concrete_interface->button('Edit',$this->action($upa['upaID']))?>
+					<?php echo $concrete_interface->button(t('Delete'),$this->action('delete',$upa['upaID']),
+						'right', NULL, array(),"return confirm('<?=t('Are you sure?')?>')"); ?>	
+					<?php echo $concrete_interface->button(t('Edit'),$this->action($upa['upaID']))?>
 				</td>
 			</tr>
 		<?php } ?>
