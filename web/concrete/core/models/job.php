@@ -37,6 +37,7 @@ class Concrete5_Model_Job extends Object {
 	public function getJobName() {return $this->jName;}
 	public function getJobDescription() {return $this->jDescription;}	
 	public function getJobHandle() {return $this->jHandle;}
+	public function getJobID() {return $this->jID;}
 	public function getPackageHandle() {
 		return PackageList::getHandle($this->pkgID);
 	}
