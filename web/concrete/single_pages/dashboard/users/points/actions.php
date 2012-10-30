@@ -10,7 +10,12 @@
 	<div class="control-group">
 		<label class="control-label"><?php echo t('Action Handle');?></label>
 		<div class="controls">
-		<?php echo $form->text('upaHandle',$upaHandle);?>
+		<? $args = array();
+		if ($upaHasCustomClass) { 
+			$args['disabled'] = 'disabled';
+		}
+		?>
+		<?php echo $form->text('upaHandle',$upaHandle, $args);?>
 		</div>
 	</div>
 	
@@ -30,13 +35,10 @@
 	
 	<div class="control-group">
 		<!--  upaBadgeGroupID -->
-		<label class="control-label"><?php echo t('Group Associated')?></label>
-		<?php echo $form->hidden('gBadgeID',$gBadgeID)?>
+		<label class="control-label"><?php echo t('Badge Associated')?></label>
 		<div class="controls">
-		<label class="checkbox">
-		<span id="upaBadgeGroupName"><?php echo $upaBadgeGroupName?></span>
-		<a id="groupSelector" href="<?php echo REL_DIR_FILES_TOOLS_REQUIRED?>/user_group_selector.php?mode=groups" dialog-title="<?php echo t('Add Group')?>" dialog-modal="false"><?php echo t('Select Group')?></a>
-		</label>
+			<?=$form->select('gBadgeID', $badges, $gBadgeID)?>
+			<i class="icon-question-sign launch-tooltip" title="<?=t('If a badge is assigned to this action, the first time this user performs this action they will be granted the badge.')?>"></i>
 		</div>
 	</div>
 </div>
@@ -107,16 +109,3 @@ if ($upaID > 0) {
 <? } ?>
 
 <?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(false)?>
-
-<script type="text/javascript">
-$(function() {
-	$("#groupSelector").dialog();
-	ccm_triggerSelectGroup = function(gID, gName) {
-		$('#gBadgeID').val(gID);
-		$('#upaBadgeGroupName').text(gName);
-		
-		//var html = '<input type="checkbox" name="gIDs[]" value="' + gID + '" style="vertical-align: middle" checked="checked" /> ' + gName + '<br/>';
-		//$("#ccm-additional-groups").append(html);
-	}
-});
-</script>

@@ -43,6 +43,24 @@ class ConcreteUpgradeVersion561Helper {
 			Job::installByHandle('index_search_all');
 		}
 
+		$sp = Page::getByPath('/dashboard/users/points');
+		if ($sp->isError()) {
+			$sp = SinglePage::add('/dashboard/users/points');
+			$sp->update(array('cName'=>t('Community Points')));
+			$sp->setAttribute('icon_dashboard', 'icon-heart');
+		}
+
+		$sp = Page::getByPath('/dashboard/users/points/assign');
+		if ($sp->isError()) {
+			$sp = SinglePage::add('/dashboard/users/points/assign');
+			$sp->update(array('cName'=>t('Assign Points')));
+		}
+
+		$sp = Page::getByPath('/dashboard/users/points/actions');
+		if ($sp->isError()) {
+			$sp = SinglePage::add('/dashboard/users/points/actions');
+		}
+
 	}
 		
 }

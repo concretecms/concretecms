@@ -9,8 +9,7 @@ class Concrete5_Model_UserPointEntryList extends DatabaseItemList {
 	}
 	
 	protected function setBaseQuery() {
-		$this->setQuery('SELECT UserPointHistory.*, UserPointActions.upaHandle, 
-				UserPointActions.upaName, Groups.gName, Users.uName
+		$this->setQuery('SELECT UserPointHistory.upID
 			FROM UserPointHistory
 			LEFT JOIN UserPointActions ON UserPointActions.upaID = UserPointHistory.upaID
 			LEFT JOIN Groups ON UserPointActions.gBadgeID = Groups.gID
@@ -47,6 +46,17 @@ class Concrete5_Model_UserPointEntryList extends DatabaseItemList {
 	 */
 	public function filterByUserID($uID) {
 		$this->filter('UserPointHistory.upuID',$upaTypeID);
+	}
+
+	public function get($items = 0, $offset = 0) {
+		$resp = parent::get($items, $offset);
+		$entries = array();
+		foreach($resp as $r) {
+			$up = new UserPointEntry();
+			$up->load($r['upID']);
+			$entries[] = $up;
+		}
+		return $entries;
 	}
 	
 }

@@ -6,16 +6,11 @@
 class Concrete5_Model_UserPointAction extends Model {
 	public $_table = 'UserPointActions';
 	
-	const TYPE_HELP = 1;
-	//const TYPE_PROMOTION = 2;
-	//const TYPE_WORK = 3;
-
 	public $upaID;
 	public $upaHandle;
 	public $upaName;
 	public $upaDefaultPoints;
 	public $gBadgeID;
-	
 	
 	public function load($upaID) {
 		$db = Loader::db();
@@ -28,13 +23,39 @@ class Concrete5_Model_UserPointAction extends Model {
 	 */
 	public static function getByID($upaID) {
 		$db = Loader::db();
-		$upa = new UserPointAction();
 		$row = $db->getRow("SELECT * FROM UserPointActions WHERE upaID = ?",array($upaID));
-		$upa->setDataFromArray($row);
-		if($upa->upaID <= 0) {
-			$upa = false;
+		if ($row['upaID']) {
+			$class = 'UserPointAction';
+			if ($row['upaHasCustomClass']) {
+				$pkgHandle = false;
+				if ($row['pkgID']) {
+					$pkgHandle = PackageList::getHandle($row['pkgID']);
+				}
+				Loader::model('user_point/actions/' . $row['upaHandle'], $pkgHandle);
+				$class = Loader::helper('text')->camelcase($row['upaHandle']) . $class;
+			}
+			$upa = new $class();
+			$upa->setDataFromArray($row);
+			return $upa;
 		}
-		return $upa;
+	}
+
+
+	/** 
+	 * @param Package $pkg
+	 * @return array
+ 	 */
+	public static function getListByPackage($pkg) {
+		$db = Loader::db();
+		$upaIDs = $db->GetCol('select upaID from UserPointActions where pkgID = ? order by upaName asc', array($pkg->getPackageID()));
+		$actions = array();
+		foreach($upaIDs as $upaID) {
+			$action = UserPointAction::getByID($upaID);
+			if (is_object($action)) {
+				$actions[] = $action;
+			}
+		}
+		return $actions;
 	}
 	
 	/**
@@ -43,13 +64,47 @@ class Concrete5_Model_UserPointAction extends Model {
 	*/
 	public static function getByHandle($upaHandle) {
 		$db = Loader::db();
-		$upa = new UserPointAction();
 		$row = $db->getRow("SELECT * FROM UserPointActions WHERE upaHandle = ?",array($upaHandle));
-		$upa->setDataFromArray($row);
-		if($upa->upaID <= 0) {
-			$upa = false;
+		if ($row['upaID']) {
+			$class = 'UserPointAction';
+			if ($row['upaHasCustomClass']) {
+				$pkgHandle = false;
+				if ($row['pkgID']) {
+					$pkgHandle = PackageList::getHandle($row['pkgID']);
+				}
+				Loader::model('user_point/actions/' . $row['upaHandle'], $pkgHandle);
+				$class = Loader::helper('text')->camelcase($row['upaHandle']) . $class;
+			}
+			$upa = new $class();
+			$upa->setDataFromArray($row);
+			return $upa;
 		}
-		return $upa;
+	}
+
+	public static function add($upaHandle, $upaName, $upaDefaultPoints, $group, $pkg = false) {
+		$upa = new UserPointAction();
+		$upa->upaHandle = $upaHandle;
+		$upa->upaName = $upaName;
+		$upa->upaDefaultPoints = $upaDefaultPoints;
+		$upa->gBadgeID = 0;
+		$upa->upaHasCustomClass = 0;
+		if (is_object($group)){
+			$upa->gBadgeID = $group->getGroupID();
+		}
+		$upa->pkgID = 0;
+		$pkgHandle = false;
+		if (is_object($pkg)) {
+			$upa->pkgID = $pkg->getPackageID();
+			$pkgHandle = $pkg->getPackageHandle();
+		}
+
+		$env = Environment::get();
+		$r = $env->getRecord(DIRNAME_MODELS . '/' . DIRNAME_USER_POINTS . '/' . DIRNAME_ACTIONS . '/' . $upaHandle . '.php', $pkgHandle);
+		if ($r->exists()) {
+			$upa->upaHasCustomClass = 1;
+		}
+
+		$upa->save();
 	}
 
 	/**
@@ -69,6 +124,21 @@ class Concrete5_Model_UserPointAction extends Model {
 		}
 	}
 	
+	/** 
+	 * @return boolean
+	 */
+	public function hasCustomClass() {
+		return $this->upaHasCustomClass;
+	}
+
+	public function getPackageHandle() {
+		return PackageList::getHandle($this->pkgID);
+	}
+
+	public function getPackageID() {
+		return $this->pkgID;
+	}
+
 	/**
 	 * @return string
 	*/
@@ -111,6 +181,48 @@ class Concrete5_Model_UserPointAction extends Model {
 		return Group::getByID($this->getUserPointActionBadgeGroupID());
 	}
 	
+	public function addEntry($user, UserPointActionDescription $descr, $points = false, $date = null) {
+		if(is_object($user)) {
+			$user = UserInfo::getByID($user->getUserID());
+			$uID = $user->getUserID();
+		} else {
+			$uID = $user;
+		}
+		
+		if(!isset($uID) || $uID <= 0) {
+			return false;
+		}
+	
+		$g = $this->getUserPointActionBadgeGroupObject();
+		if($g instanceof Group) {
+			$user->enterGroup($g);
+		}
+		
+		if ($date == null) {
+			$date = date('Y-m-d H:i:s');
+		}
+		
+		if($points === false) {
+			$points = $this->getUserPointActionDefaultPoints();
+		}
 
+		
+		try {
+			$upe = new UserPointEntry();
+			$upe->upuID = $uID;
+			$upe->upaID = $this->upaID;
+			$upe->upPoints = $points;
+			$upe->timestamp = $date;
+			$descr = serialize($descr);
+			$upe->object = $descr;
+			$upe->save();
+			return $upe;
+		} catch(Exception $e) {
+			Log::addEntry("Error saving user point record: ".$e->getMessage(),'exceptions');
+			return false;
+		}
+		
+		return true;
+	}
 		
 }

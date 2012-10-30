@@ -199,6 +199,9 @@ define('DIRNAME_JAVASCRIPT', 'js');
 define('DIRNAME_IMAGES', 'images');
 define('DIRNAME_HELPERS', 'helpers');
 
+define('DIRNAME_USER_POINTS', 'user_point');
+define('DIRNAME_ACTIONS', 'actions');
+
 define('DIRNAME_SYSTEM_TYPES', 'types');
 define('DIRNAME_SYSTEM_CAPTCHA', 'captcha');
 define('DIRNAME_SYSTEM_ANTISPAM', 'antispam');

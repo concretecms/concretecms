@@ -36,20 +36,23 @@ Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Community
 				<th class="<?=$upEntryList->getSearchResultsClass('upaName')?>"><a href="<?=$upEntryList->getSortByURL('upaName', 'asc')?>"><?=t('Action')?></a></th>
 				<th class="<?=$upEntryList->getSearchResultsClass('upPoints')?>"><a href="<?=$upEntryList->getSortByURL('upPoints', 'asc')?>"><?=t('Points')?></a></th>
 				<th class="<?=$upEntryList->getSearchResultsClass('timestamp')?>"><a href="<?=$upEntryList->getSortByURL('timestamp', 'asc')?>"><?=t('Date Assigned')?></a></th>
+				<th><?=t("Details")?></th>
 				<th></th>
 			</tr>
 		<?php 
 		foreach($entries as $up) { ?>
 			<tr class="ccm-list-record <?=$striped?>">
-				<td><?php echo $up['uName'] ?></td>
-				<td>
-					<strong><?= $up['upaName']?></strong>
-				</td>
-				<td><?php echo number_format($up['upPoints'])?></td>
-				<td><?php echo date(DATE_APP_GENERIC_MDYT, strtotime($up['timestamp']));?></td>
+				<?
+				$ui = $up->getUserPointEntryUserObject();
+				$action = $up->getUserPointEntryActionObject();
+				?>
+				<td><? if (is_object($ui)) { ?><?php echo $ui->getUserName()?><? } ?></td>
+				<td><? if (is_object($action)) { ?><?=$action->getUserPointActionName()?><? } ?></td>
+				<td><?php echo number_format($up->getUserPointEntryValue())?></td>
+				<td><?php echo date(DATE_APP_GENERIC_MDYT, strtotime($up->getUserPointEntryTimestamp()));?></td>
+				<td><?=$up->getUserPointEntryDescription()?></td>
 				<td style="Text-align: right">
-					<?php echo $concrete_interface->button(t('Edit'),View::url('/dashboard/users/points/assign',$up['upID']), '', 'btn btn-small')?>
-					<?php echo $concrete_interface->button(t('Delete'),View::url('/dashboard/users/points/','deleteEntry',$up['upID']),
+					<?php echo $concrete_interface->button(t('Delete'),View::url('/dashboard/users/points/','deleteEntry',$up->getUserPointEntryID()),
 						'', 'btn btn-small', array(),"return confirm('<?=t('Are you sure?')?>')"); ?>
 				</td>
 			</tr>

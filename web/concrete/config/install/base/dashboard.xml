@@ -133,7 +133,7 @@
         <page name="User Groups" path="/dashboard/users/groups" filename="/dashboard/users/groups.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
-					<value>user, group, people, permissions, access, expire</value>
+					<value>user, group, people, permissions, access, expire, badges, achievements</value>
 				</attributekey>
 				<attributekey handle="icon_dashboard">
 					<value>icon-globe</value>

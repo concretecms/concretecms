@@ -12,6 +12,7 @@ class Concrete5_Controller_Dashboard_Users_Points_Assign extends DashboardBaseCo
 	
 	
 	public function on_start() {
+		parent::on_start();
 		$html = Loader::helper('html');
 	}
 	
@@ -39,27 +40,7 @@ class Concrete5_Controller_Dashboard_Users_Points_Assign extends DashboardBaseCo
 	}
 
 	public function save() {
-		$error = Loader::helper('validation/error');
-		
-		if($this->post('upID') > 0) { // load it up if we're editing
-			$this->upe->load($this->post('upID'));
-		}
-		
-		$attribs = $this->upe->getAttributeNames();
-		foreach($attribs as $key) {
-			$val =  $this->post($key);
-			if(isset($val)) {
-				$this->upe->{$key} = $val;
-			}
-		}
-		
-		if($this->post('manual_datetime') > 0) {
-			$dt = Loader::helper('form/date_time');
-			$this->upe->timestamp = $dt->translate('dtoverride');
-		} 
-		
-		
-		
+
 		$user = $this->post('upUser');
 		if(is_numeric($user)) {
 			// rolling as user id
@@ -68,21 +49,29 @@ class Concrete5_Controller_Dashboard_Users_Points_Assign extends DashboardBaseCo
 			$ui = UserInfo::getByUserName($user); 
 			// look up userID
 		}
-		if($ui && $ui->getUserID()) {
-			$this->upe->upuID = $ui->getUserID();
+
+		if (!is_object($ui)) { $this->error->add(t('User Required')); }
+		if (!$this->post('upaID')) { 
+			$this->error->add(t('Action Required'));
 		}
-		
-		if(!is_numeric($this->upe->upuID) || $this->upe->upuID <= 0) { $error->add(t('User Required')); }
-		if(!is_numeric($this->upe->upaID) || $this->upe->upaID <= 0) { $error->add(t('Action required')); }
-		if(!is_numeric($this->upe->upPoints)) { $error->add(t('Points Required')); }
-		if(!$error->has()) {
-			$this->upe->save();
+		if(!is_numeric($this->post('upPoints'))) { $this->error->add(t('Points Required')); }
+
+		if(!$this->error->has()) {
+			$action = UserPointAction::getByID($this->post('upaID'));
+			$obj = new UserPointActionDescription();
+			$obj->setComments($this->post('upComments'));
+			if($this->post('manual_datetime') > 0) {
+				$dt = Loader::helper('form/date_time');
+				$entry = $action->addEntry($ui, $obj, $this->post('upPoints'), $dt->translate('dtoverride'));
+			} else {
+				$entry = $action->addEntry($ui, $obj, $this->post('upPoints'));
+			}
 			$this->redirect('/dashboard/users/points/assign','entry_saved');
 		}else{
 			$this->set('error',$error);
 			$this->view();
 		}
-		
+
 		
 	}
 
