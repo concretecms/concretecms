@@ -37,7 +37,7 @@ class Concrete5_Controller_Dashboard_Users_Points extends DashboardBaseControlle
 				$entries->sortBy('UserPointHistory.timestamp', $_REQUEST['ccm_order_dir']);
 			break;
 			default:
-				$entries->sortBy('UserPointHistory.timestamp','DESC');
+				$entries->sortBy('timestamp','desc');
 			break;
 		}
 		
