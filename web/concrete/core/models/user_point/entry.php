@@ -133,20 +133,6 @@ class Concrete5_Model_UserPointEntry extends Model {
 	
 
 	public function save() {
-		if(!isset($this->upID) || $this->upID <= 0 ) {			
-			$user = UserInfo::getByID($this->upuID);
-			$actionObj = UserPointAction::getByID($this->upaID);
-			$this->updateUserAttributeUserPoints($user, $actionObj, $this->upPoints);
-		} elseif ($this->upID > 0) {
-			$oldupe = new UserPointEntry();
-			$oldupe->load($this->upID);
-			if($this->upPoints != $oldupe->upPoints) {
-				$user = UserInfo::getByID($this->upuID);
-				$actionObj = UserPointAction::getByID($this->upaID);
-				$this->updateUserAttributeUserPoints($user, $actionObj, $this->upPoints - $oldupe->upPoints);
-			}
-		}
-		
 		$dt = Loader::helper('date');
 		if(!isset($this->timestamp)) {
 			$this->timestamp = $dt->getSystemDateTime(); 
