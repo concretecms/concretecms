@@ -209,6 +209,7 @@ $classes = array(
 	'UserInfo' => array('model','userinfo'),
 	'UserPointActionList' => array('model','user_point/action_list'),
 	'UserPointAction' => array('model','user_point/action'),
+	'UserPointActionDescription' => array('model','user_point/action_description'),
 	'UserPointActivityList' => array('model','user_point/activity'),
 	'UserPointEntryList' => array('model','user_point/entry_list'),
 	'UserPointEntry' => array('model','user_point/entry'),

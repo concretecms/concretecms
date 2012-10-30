@@ -23,6 +23,7 @@ class Concrete5_Controller_Dashboard_Users_Points_Actions extends DashboardBaseC
 			$this->set('add_edit',t('Edit'));
 			$this->upa->load($upaID);		
 			$this->setAttribs($this->upa);
+			$this->set('upaHasCustomClass', $this->upa->hasCustomClass());
 			$g = $this->upa->getUserPointActionBadgeGroupObject();
 			if(is_object($g)) {
 				$this->set('upaBadgeGroupName',$g->getGroupName());
@@ -31,6 +32,12 @@ class Concrete5_Controller_Dashboard_Users_Points_Actions extends DashboardBaseC
 		}
 		
 		$actionList = $this->getActionList();
+		$badges = Group::getBadges();
+		$select = array('' => t('** None'));
+		foreach($badges as $g) {
+			$select[$g->getGroupID()] = $g->getGroupName();
+		}
+		$this->set('badges', $select);
 		$this->set('pagination',$actionList->getPagination());
 		$this->set('actionList',$actionList);
 		$this->set('actions',$actionList->get());
@@ -75,12 +82,20 @@ class Concrete5_Controller_Dashboard_Users_Points_Actions extends DashboardBaseC
 	public function save() {
 		if($this->post('upaID') > 0) {
 			$this->upa->load($this->post('upaID'));
+			if (!$this->upa->hasCustomClass()) {
+				$this->upa->upaHandle = $this->post('upaHandle');
+			}
+			$this->upa->upaName = $this->post('upaName');
+			$this->upa->upaDefaultPoints = $this->post('upaDefaultPoints');
+			$this->upa->gBadgeID = $this->post('gBadgeID');
+			if (!$this->upa->pkgID) {
+				// i hate this activerecord crap
+				$this->upa->pkgID = 0;
+			}
+			$this->upa->save();			
+		} else {
+			$upa = UserPointAction::add($this->post('upaHandle'), $this->post('upaName'), $this->post('upaDefaultPoints'), $this->post('gBadgeID'));
 		}
-		$attribs = $this->upa->getAttributeNames();
-		foreach($attribs as $key) {
-			$this->upa->{$key} = $this->post($key);
-		}
-		$this->upa->save();
 		
 		$this->redirect('/dashboard/users/points/actions','action_saved');
 	}	

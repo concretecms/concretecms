@@ -316,6 +316,17 @@
 			}
 		}
 
+		public static function getBadges() {
+			$gs = new GroupSearch();
+			$gs->filter('gIsBadge', 1);
+			$results = $gs->get();
+			$badges = array();
+			foreach($results as $gID) {
+				$badges[] = Group::getByID($gID);
+			}
+			return $badges;
+		}
+
 		public function clearBadgeOptions() {
 			$db = Loader::db();
 			$db->Execute('update Groups set gIsBadge = 0, gBadgeFID = 0, gBadgeDescription = null, gBadgeCommunityPointValue = 0 where gID = ?', array($this->getGroupID()));

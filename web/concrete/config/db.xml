@@ -1820,7 +1820,6 @@
 		<NULL/>
 		<DEFAULT value="0"/>
 	</field>
-	<field name="upComments" type="C" size="255"/>
 	<field name="timestamp" type="T">
 		<NOTNULL/>
 		<DEFTIMESTAMP/>
@@ -1841,6 +1840,15 @@
 		<NOTNULL/>
 		<DEFAULT value="0"/>
 	</field>
+    <field name="pkgID" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="upaHasCustomClass" type="I" size="1">
+    	<notnull />
+	    <DEFAULT value="0"/>
+    </field>
 	<field name="gBadgeID" type="I" size="11">
 		<NOTNULL/>
 		<DEFAULT value="0"/>

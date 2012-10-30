@@ -280,6 +280,7 @@ class Concrete5_Model_Package extends Object {
 		$items['attribute_types'] = AttributeType::getListByPackage($this);		
 		$items['captcha_libraries'] = SystemCaptchaLibrary::getListByPackage($this);		
 		$items['antispam_libraries'] = SystemAntispamLibrary::getListByPackage($this);		
+		$items['community_point_actions'] = UserPointAction::getListByPackage($this);		
 		$items['jobs'] = Job::getListByPackage($this);		
 		$items['workflow_types'] = WorkflowType::getListByPackage($this);		
 		ksort($items);
@@ -317,6 +318,8 @@ class Concrete5_Model_Package extends Object {
 			return t(' %s (%s)', $txt->unhandle($item->getAttributeKeyHandle()), $txt->unhandle($akc->getAttributeKeyCategoryHandle()));
 		} else if ($item instanceof ConfigValue) {
 			return ucwords(strtolower($txt->unhandle($item->key)));
+		} else if ($item instanceof UserPointAction) {
+			return $item->getUserPointActionName();
 		} else if ($item instanceof SystemAntispamLibrary) {
 			return $item->getSystemAntispamLibraryName();
 		} else if (is_a($item, 'PermissionKey')) {
@@ -371,6 +374,7 @@ class Concrete5_Model_Package extends Object {
 							$co->setPackageObject($this);
 							$co->clear($item->key);
 							break;
+						case 'UserPointAction':
 						case 'AttributeKeyCategory':
 						case 'PermissionKeyCategory':
 						case 'AttributeSet':
