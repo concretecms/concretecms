@@ -2,6 +2,8 @@
 
 class Concrete5_Model_UserPointEntryList extends DatabaseItemList {
 
+	protected $autoSortColumns = array('uName', 'upaName', 'upPoints', 'timestamp');
+
 	public function __construct() {
 		$this->setBaseQuery();
 	}

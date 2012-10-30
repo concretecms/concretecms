@@ -31,7 +31,7 @@
 	<div class="control-group">
 		<!--  upaBadgeGroupID -->
 		<label class="control-label"><?php echo t('Group Associated')?></label>
-		<?php echo $form->hidden('upaBadgeGroupID',$upaBadgeGroupID)?>
+		<?php echo $form->hidden('gBadgeID',$gBadgeID)?>
 		<div class="controls">
 		<label class="checkbox">
 		<span id="upaBadgeGroupName"><?php echo $upaBadgeGroupName?></span>
@@ -40,9 +40,15 @@
 		</div>
 	</div>
 </div>
+<? $label = t('Add');
+if ($upaID > 0) {
+	$label = t('Update');
+}
+?>
+
 <div class="ccm-pane-footer">
 	<a href="<?=$this->url('/dashboard/users/points/actions')?>" class="btn"><?=t('Back to List')?></a>
-	<button type="submit" class="ccm-button-right btn primary"><?=t('Add')?> <i class="icon-white icon-ok"></i></button>
+	<button type="submit" class="ccm-button-right btn primary"><?=$label?> <i class="icon-white icon-ok"></i></button>
 </div>
 </form>		
 <?php } else { ?>
@@ -59,12 +65,12 @@
 		$keywords = $_REQUEST['keywords'];
 		
 		if (count($actions) > 0) { ?>	
-			<table border="0" cellspacing="0" cellpadding="0" id="ccm-product-list" class="table">
+			<table border="0" cellspacing="0" cellpadding="0" class="ccm-results-list table">
 			<tr>
-				<th><a href="<?=$actionList->getSortByURL('upaName', 'asc')?>"><?=t('Action Name')?></a></th>
-				<th><a href="<?=$actionList->getSortByURL('upaHandle', 'asc')?>"><?=t('Action Handle')?></a></th>
-				<th><a href="<?=$actionList->getSortByURL('upaDefaultPoints', 'asc')?>"><?=t('Default Points')?></a></th>
-				<th><a href="<?=$actionList->getSortByURL('upaBadgeGroupID', 'asc')?>"><?=t('Group')?></a></th>
+				<th class="<?=$actionList->getSearchResultsClass('upaName')?>"><a href="<?=$actionList->getSortByURL('upaName', 'asc')?>"><?=t('Action Name')?></a></th>
+				<th class="<?=$actionList->getSearchResultsClass('upaHandle')?>"><a href="<?=$actionList->getSortByURL('upaHandle', 'asc')?>"><?=t('Action Handle')?></a></th>
+				<th class="<?=$actionList->getSearchResultsClass('upaDefaultPoints')?>"><a href="<?=$actionList->getSortByURL('upaDefaultPoints', 'asc')?>"><?=t('Default Points')?></a></th>
+				<th class="<?=$actionList->getSearchResultsClass('upaBadgeGroupID')?>"><a href="<?=$actionList->getSortByURL('upaBadgeGroupID', 'asc')?>"><?=t('Group')?></a></th>
 				<th></th>
 			</tr>
 		<?php 
@@ -74,15 +80,17 @@
 			} else if ($striped == '') { 
 				$striped = 'ccm-list-record-alt';
 			} ?>
-			<tr class="ccm-list-record <?=$striped?>">
+			<tr class="">
 				<td><?= $upa['upaName']?></td>
 				<td><?= $upa['upaHandle']?></td>
 				<td><?= number_format($upa['upaDefaultPoints'])?></td>
 				<td><?php echo $upa['gName'];?></td>
-				<td>
+				<td style="text-align: right">
+					<?php echo $concrete_interface->button(t('Edit'),$this->action($upa['upaID']), '', 'btn btn-small')?>
+
 					<?php echo $concrete_interface->button(t('Delete'),$this->action('delete',$upa['upaID']),
-						'right', NULL, array(),"return confirm('<?=t('Are you sure?')?>')"); ?>	
-					<?php echo $concrete_interface->button(t('Edit'),$this->action($upa['upaID']))?>
+						'', 'btn btn-small', array(),"return confirm('<?=t('Are you sure?')?>')"); ?>	
+
 				</td>
 			</tr>
 		<?php } ?>
@@ -104,7 +112,7 @@
 $(function() {
 	$("#groupSelector").dialog();
 	ccm_triggerSelectGroup = function(gID, gName) {
-		$('#upaBadgeGroupID').val(gID);
+		$('#gBadgeID').val(gID);
 		$('#upaBadgeGroupName').text(gName);
 		
 		//var html = '<input type="checkbox" name="gIDs[]" value="' + gID + '" style="vertical-align: middle" checked="checked" /> ' + gName + '<br/>';

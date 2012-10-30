@@ -32,31 +32,25 @@ Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Community
 		if (count($entries) > 0) { ?>	
 			<table border="0" cellspacing="0" cellpadding="0" id="ccm-product-list" class="ccm-results-list">
 			<tr>
-				<th><a href="<?=$upEntryList->getSortByURL('uName', 'asc')?>"><?=t('User')?></a></th>
-				<th><a href="<?=$upEntryList->getSortByURL('upaName', 'asc')?>"><?=t('Action')?></a></th>
-				<th><a href="<?=$upEntryList->getSortByURL('upPoints', 'asc')?>"><?=t('Points')?></a></th>
-				<th><a href="<?=$upEntryList->getSortByURL('timestamp', 'asc')?>"><?=t('Date Assigned')?></a></th>
+				<th class="<?=$upEntryList->getSearchResultsClass('uName')?>"><a href="<?=$upEntryList->getSortByURL('uName', 'asc')?>"><?=t('User')?></a></th>
+				<th class="<?=$upEntryList->getSearchResultsClass('upaName')?>"><a href="<?=$upEntryList->getSortByURL('upaName', 'asc')?>"><?=t('Action')?></a></th>
+				<th class="<?=$upEntryList->getSearchResultsClass('upPoints')?>"><a href="<?=$upEntryList->getSortByURL('upPoints', 'asc')?>"><?=t('Points')?></a></th>
+				<th class="<?=$upEntryList->getSearchResultsClass('timestamp')?>"><a href="<?=$upEntryList->getSortByURL('timestamp', 'asc')?>"><?=t('Date Assigned')?></a></th>
 				<th></th>
 			</tr>
 		<?php 
-		foreach($entries as $up) { 
-			if (!isset($striped) || $striped == 'ccm-list-record-alt') {
-				$striped = '';
-			} else if ($striped == '') { 
-				$striped = 'ccm-list-record-alt';
-			} ?>
+		foreach($entries as $up) { ?>
 			<tr class="ccm-list-record <?=$striped?>">
 				<td><?php echo $up['uName'] ?></td>
 				<td>
-					<strong><?php echo UserPointAction::getTypeNameFromID($up['upaTypeID']) ?> : <?= $up['upaName']?></strong><br/>
-					<div><?php echo nl2br($up['upComments']);?></div>
+					<strong><?= $up['upaName']?></strong>
 				</td>
 				<td><?php echo number_format($up['upPoints'])?></td>
-				<td><?php echo $up['timestamp'];?></td>
-				<td>
+				<td><?php echo date(DATE_APP_GENERIC_MDYT, strtotime($up['timestamp']));?></td>
+				<td style="Text-align: right">
+					<?php echo $concrete_interface->button(t('Edit'),View::url('/dashboard/users/points/assign',$up['upID']), '', 'btn btn-small')?>
 					<?php echo $concrete_interface->button(t('Delete'),View::url('/dashboard/users/points/','deleteEntry',$up['upID']),
-						'right', NULL, array(),"return confirm('<?=t('Are you sure?')?>')"); ?>
-					<?php echo $concrete_interface->button(t('Edit'),View::url('/dashboard/users/points/assign',$up['upID']))?>
+						'', 'btn btn-small', array(),"return confirm('<?=t('Are you sure?')?>')"); ?>
 				</td>
 			</tr>
 		<?php } ?>

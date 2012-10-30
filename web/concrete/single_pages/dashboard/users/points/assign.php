@@ -35,12 +35,9 @@
 	<div class="control-group">
 		<label class="control-label"><?php echo t('Override Timestamp');?></label>
 		<div class="controls">
-		<label class="checkbox">
-		<input type="checkbox" name="manual_datetime" id="manual_datetime" value="1"/>
-		<div id="manual_datetime_element" style="display:none">
-			<label>&nbsp;</label><?php echo $form_date_time->datetime('dtoverride',$timestamp);?>
+		<div class="checkbox">
+			<?php echo $form_date_time->datetime('dtoverride',$timestamp, true);?>
 		</div>
-		</label>
 		</div>
 	</div>
 </div>
@@ -48,5 +45,20 @@
 	<a href="<?=$this->url('/dashboard/users/points')?>" class="btn"><?=t('Back to List')?></a>
 	<button type="submit" class="ccm-button-right btn primary"><?=t('Assign')?> <i class="icon-white icon-ok"></i></button>
 </div>
-</form>		
+</form>
+
+<script type="text/javascript">
+$(function() {
+	
+	$('#upaID').change(function() {
+		var src = $('#upaID').attr('json-src')+'-/'+$('#upaID').val();
+		$.getJSON(src,function(j) {
+			$('#upPoints').val(j);
+		});
+	});
+
+	
+});
+
+</script>		
 <?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper()?>
