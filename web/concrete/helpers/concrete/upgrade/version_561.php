@@ -38,6 +38,11 @@ class ConcreteUpgradeVersion561Helper {
 			}
 		}
 
+		$action = UserPointAction::getByHandle('won_badge');
+		if (!is_object($action)) {
+			UserPointAction::add('won_badge', t('Won a Badge'), 5, false, true);
+		}
+
 		$j = Job::getByHandle('index_search_all');
 		if (!is_object($j)) {
 			Job::installByHandle('index_search_all');
