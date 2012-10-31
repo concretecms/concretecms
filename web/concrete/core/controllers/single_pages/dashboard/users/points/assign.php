@@ -75,13 +75,11 @@ class Concrete5_Controller_Dashboard_Users_Points_Assign extends DashboardBaseCo
 		
 	}
 
-	public function getUserPointActions($typeID = NULL) {
+	public function getUserPointActions() {
 		Loader::model('user_point/action_list');
 		$res = array(0=>t('-- None --'));
-		$upal = new UserPointActionList();		
-		if(isset($typeID) && $typeID > 0) {
-			$upal->filterByType($typeID);
-		}
+		$upal = new UserPointActionList();
+		$upal->filterByIsActive(1);		
 		$userPointActions = $upal->get(0);
 		if(is_array($userPointActions) && count($userPointActions)) {
 			foreach($userPointActions as $upa) {
@@ -92,8 +90,8 @@ class Concrete5_Controller_Dashboard_Users_Points_Assign extends DashboardBaseCo
 	}
 	
 	
-	public function getJsonActionSelectOptions($typeID) {
-		$actions = $this->getUserPointActions($typeID);
+	public function getJsonActionSelectOptions() {
+		$actions = $this->getUserPointActions();
 		$res = array();
 		foreach($actions as $key=>$value) {
 			$res[] = array('optionValue'=>$key,'optionDisplay'=>$value);

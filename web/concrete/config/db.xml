@@ -1849,6 +1849,10 @@
     	<notnull />
 	    <DEFAULT value="0"/>
     </field>
+    <field name="upaIsActive" type="I" size="1">
+    	<notnull />
+	    <DEFAULT value="1"/>
+    </field>
 	<field name="gBadgeID" type="I" size="11">
 		<NOTNULL/>
 		<DEFAULT value="0"/>

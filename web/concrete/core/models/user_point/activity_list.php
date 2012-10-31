@@ -25,7 +25,7 @@ class Concrete5_Model_UserPointActivityList extends DatabaseItemList {
 	public function filterByAction($upaID) {
 		$this->filter('upaID',$upaID);	
 	}
-	
+
 
 	
 }

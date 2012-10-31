@@ -118,6 +118,7 @@ class Concrete5_Model_UserPointAction extends Model {
 			$this->upaName = $data['upaName'];
 			$this->upaDefaultPoints = $data['upaDefaultPoints'];
 			$this->gBadgeID = $data['gBadgeID'];
+			$this->upaIsActive = $data['upaIsActive'];
 			return true;
 		} else {
 			return false;
@@ -173,7 +174,11 @@ class Concrete5_Model_UserPointAction extends Model {
 	public function getUserPointActionBadgeGroupID() {
 		return $this->gBadgeID;
 	}
-	
+
+	public function isUserPointActionActive() {
+		return $this->upaIsActive;
+	}
+
 	/**
 	 * @return Group
 	*/
@@ -181,7 +186,16 @@ class Concrete5_Model_UserPointAction extends Model {
 		return Group::getByID($this->getUserPointActionBadgeGroupID());
 	}
 	
+	public function addDetailedEntry($user, UserPointActionDescription $descr, $points = false, $date = null) {
+		$this->addEntry($user, $descr, $points, $date);
+	}
+
 	public function addEntry($user, UserPointActionDescription $descr, $points = false, $date = null) {
+
+		if (!$this->isUserPointActionActive()) {
+			return false;
+		}
+
 		if(is_object($user)) {
 			$user = UserInfo::getByID($user->getUserID());
 			$uID = $user->getUserID();
@@ -206,7 +220,6 @@ class Concrete5_Model_UserPointAction extends Model {
 			$points = $this->getUserPointActionDefaultPoints();
 		}
 
-		
 		try {
 			$upe = new UserPointEntry();
 			$upe->upuID = $uID;

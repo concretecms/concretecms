@@ -6,6 +6,15 @@
 	<?php 
 		echo $form->hidden('upaID',$upaID);
 	?>
+
+	<div class="control-group">
+		<label class="control-label"><?php echo t('Enabled');?></label>
+		<div class="controls">
+		<label class="checkbox">
+			<?=$form->checkbox('upaIsActive', 1, $upaIsActive == 1)?>
+		</label>
+		</div>
+	</div>
 	
 	<div class="control-group">
 		<label class="control-label"><?php echo t('Action Handle');?></label>
@@ -69,6 +78,7 @@ if ($upaID > 0) {
 		if (count($actions) > 0) { ?>	
 			<table border="0" cellspacing="0" cellpadding="0" class="ccm-results-list table">
 			<tr>
+				<th><?=t("Active")?></th>
 				<th class="<?=$actionList->getSearchResultsClass('upaName')?>"><a href="<?=$actionList->getSortByURL('upaName', 'asc')?>"><?=t('Action Name')?></a></th>
 				<th class="<?=$actionList->getSearchResultsClass('upaHandle')?>"><a href="<?=$actionList->getSortByURL('upaHandle', 'asc')?>"><?=t('Action Handle')?></a></th>
 				<th class="<?=$actionList->getSearchResultsClass('upaDefaultPoints')?>"><a href="<?=$actionList->getSortByURL('upaDefaultPoints', 'asc')?>"><?=t('Default Points')?></a></th>
@@ -83,6 +93,7 @@ if ($upaID > 0) {
 				$striped = 'ccm-list-record-alt';
 			} ?>
 			<tr class="">
+				<td style="text-align: center"><? if ($upa['upaIsActive']) { ?><i class="icon-ok"></i><? } ?></td>
 				<td><?= $upa['upaName']?></td>
 				<td><?= $upa['upaHandle']?></td>
 				<td><?= number_format($upa['upaDefaultPoints'])?></td>
