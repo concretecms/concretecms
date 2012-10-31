@@ -99,7 +99,7 @@ class Concrete5_Controller_Dashboard_Users_Points_Actions extends DashboardBaseC
 			
 			$this->upa->save();			
 		} else {
-			$upa = UserPointAction::add($this->post('upaHandle'), $this->post('upaName'), $this->post('upaDefaultPoints'), $this->post('gBadgeID'));
+			$upa = UserPointAction::add($this->post('upaHandle'), $this->post('upaName'), $this->post('upaDefaultPoints'), $this->post('gBadgeID'), $this->post('upaIsActive'));
 		}
 		
 		$this->redirect('/dashboard/users/points/actions','action_saved');

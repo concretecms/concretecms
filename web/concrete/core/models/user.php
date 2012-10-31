@@ -410,16 +410,36 @@
 			$dt = Loader::helper('date');
 			
 			if (is_object($g)) {
-				$gID = $g->getGroupID();
-				$db = Loader::db();
-				$db->Replace('UserGroups', array(
-					'uID' => $this->getUserID(),
-					'gID' => $g->getGroupID(),
-					'type' => $joinType,
-					'ugEntered' => $dt->getSystemDateTime()
-				),
-				array('uID', 'gID'), true);
-				Events::fire('on_user_enter_group', $this, $g);
+				if (!$this->inGroup($g)) {
+					$gID = $g->getGroupID();
+					$db = Loader::db();
+					$db->Replace('UserGroups', array(
+						'uID' => $this->getUserID(),
+						'gID' => $g->getGroupID(),
+						'type' => $joinType,
+						'ugEntered' => $dt->getSystemDateTime()
+					),
+					array('uID', 'gID'), true);
+
+					if ($g->isGroupBadge()) {
+						// award the karma for the badge
+						$action = UserPointAction::getByHandle('won_badge');
+						if (is_object($action)) {
+							$action->addDetailedEntry($this, $g);
+						}
+
+						$mh = Loader::helper('mail');
+						$ui = UserInfo::getByID($this->getUserID());
+						$mh->addParameter('badgeName', $g->getGroupName());
+						$mh->addParameter('uDisplayName', $ui->getUserDisplayName());
+						$mh->addParameter('uProfileURL', BASE_URL . View::url('/account/profile/public', 'view', $this->getUserID()));
+						$mh->to($ui->getUserEmail());
+						$mh->load('won_badge');
+						$mh->sendMail();						
+					}
+
+					Events::fire('on_user_enter_group', $this, $g);
+				}
 			}
 		}
 		

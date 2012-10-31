@@ -192,8 +192,45 @@ foreach ($gResults as $g) { ?>
 
 	</fieldset>
 	<? } ?>
+
 	<fieldset>
-	<legend><?=t("Group Expiration Options")?></legend>
+		<legend><?=t('Automation')?></legend>
+		<div class="control-group">
+		<div class="controls">
+		<label class="checkbox">
+		<?=$form->checkbox('gIsAutomated', 1, $g->isGroupAutomated())?>
+		<span><?=t('This group is automatically entered.')?> <i class="icon-question-sign" title="<?=t("Automated Groups aren't assigned by administrators. They are checked against code at certain times that determines whether users should enter them.")?>"></i> </span>
+		</label>
+		</div>
+		</div>
+		
+	<div id="gAutomationOptions" style="display: none">
+		<div class="control-group">
+		<label class="control-label"><?=t('Check Group')?></label>
+		<div class="controls">
+			<label class="checkbox">
+				<?=$form->checkbox('gCheckAutomationOnRegister', 1, $g->checkGroupAutomationOnRegister())?>
+				<span><?=t('When a user registers.')?></span>
+			</label>
+			<label class="checkbox">
+				<?=$form->checkbox('gCheckAutomationOnLogin', 1, $g->checkGroupAutomationOnLogin())?>
+				<span><?=t('When a user signs in.')?></span>
+			</label>
+			<label class="checkbox">
+				<?=$form->checkbox('gCheckAutomationOnJobRun', 1, $g->checkGroupAutomationOnJobRun())?>
+				<span><?=t('When the "Check Automated Users" Job runs.')?></span>
+			</label>
+		</div>
+		</div>
+
+		<div class="alert alert-info">
+			<?
+			$path = $g->getGroupAutomationControllerFile();
+			print t('Make sure a code file exists at %s', str_replace(array(DIR_BASE, DIR_BASE_CORE), '', $path));
+			?>
+		</div>
+	</div>
+
 	<div class="control-group">
 	<div class="controls">
 
@@ -315,6 +352,13 @@ $(function() {
 			$('#gUserBadgeOptions').show();
 		} else {
 			$('#gUserBadgeOptions').hide();
+		}
+	}).triggerHandler('click');
+	$('input[name=gIsAutomated]').on('click', function() {
+		if ($(this).is(':checked')) {
+			$('#gAutomationOptions').show();
+		} else {
+			$('#gAutomationOptions').hide();
 		}
 	}).triggerHandler('click');
 	$('.icon-question-sign').tooltip();

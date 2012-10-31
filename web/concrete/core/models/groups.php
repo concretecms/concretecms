@@ -252,6 +252,41 @@
 			return $this->gBadgeFID;
 		}
 
+		public function isGroupAutomated() {
+			return $this->gIsAutomated;
+		}
+
+		public function checkGroupAutomationOnRegister() {
+			return $this->gCheckAutomationOnRegister;
+		}
+
+		public function checkGroupAutomationOnLogin() {
+			return $this->gCheckAutomationOnLogin;
+		}
+
+		public function checkGroupAutomationOnJobRun() {
+			return $this->gCheckAutomationOnJobRun;
+		}
+
+		public function getGroupAutomationController() {
+			$handle = Loader::helper('text')->handle($this->getGroupName());
+			$handle = str_replace("-", "_", $handle);
+			$env = Environment::get();
+			$path = $env->getPath(DIRNAME_LIBRARIES . '/' . DIRNAME_GROUP . '/' . DIRNAME_GROUP_AUTOMATION . '/' . $handle . '.php', $this->getPackageHandle());
+			require_once($path);
+			$class = Loader::helper('text')->camelcase($handle) . 'GroupAutomationController';
+			$cl = new $class($this);
+			return $cl;
+		}
+
+		public function getGroupAutomationControllerFile() {
+			$handle = Loader::helper('text')->handle($this->getGroupName());
+			$handle = str_replace("-", "_", $handle);
+			$env = Environment::get();
+			$path = $env->getPath(DIRNAME_LIBRARIES . '/' . DIRNAME_GROUP . '/' . DIRNAME_GROUP_AUTOMATION . '/' . $handle . '.php', $this->getPackageHandle());
+			return $path;
+		}
+
 		public function getGroupBadgeImageObject() {
 			$bf = false;
 			if ($this->gBadgeFID) {
@@ -289,6 +324,12 @@
 		public function getGroupExpirationIntervalMinutes() {
 			return floor(($this->gUserExpirationInterval % 1440) % 60);
 		}
+
+		public function getPackageID() {return $this->pkgID;}
+
+		public function getPackageHandle() {
+			return PackageList::getHandle($this->pkgID);
+		}
 		
 		function update($gName, $gDescription) {
 			$db = Loader::db();
@@ -303,10 +344,14 @@
 			}
 		}
 		
-		function add($gName, $gDescription) {
+		function add($gName, $gDescription, $pkg = null) {
 			$db = Loader::db();
-			$v = array($gName, $gDescription);
-			$r = $db->prepare("insert into Groups (gName, gDescription) values (?, ?)");
+			$pkgID = 0;
+			if (is_object($pkg)) {
+				$pkgID = $pkg->getPackageID();
+			}
+			$v = array($gName, $gDescription, $pkgID);
+			$r = $db->prepare("insert into Groups (gName, gDescription, pkgID) values (?, ?, ?)");
 			$res = $db->Execute($r, $v);
 			
 			if ($res) {
@@ -327,11 +372,49 @@
 			return $badges;
 		}
 
+		protected function getAutomationControllers($column, $excludeUser = false) {
+			$gs = new GroupSearch();
+			$gs->filter($column, 1);
+			$excludeGIDs = array();
+			if (is_object($excludeUser)) {
+				$groups = $excludeUser->getUserGroups();
+				$groupKeys = array_keys($groups);
+				if (is_array($groupKeys)) {
+					$gs->filter(false, 'gID not in (' . implode(',', $groupKeys) . ')');
+				}
+			}
+			$results = $gs->get();
+			$controllers = array();
+			foreach($results as $gID) {
+				$group = Group::getByID($gID);
+				$controller = $group->getGroupAutomationController();
+				$controllers[] = $controller;
+			}
+			return $controllers;
+		}
+
+		public static function getAutomatedOnRegisterGroupControllers($u = false) {
+			return Group::getAutomationControllers('gCheckAutomationOnRegister', $u);
+		}
+
+		public static function getAutomatedOnLoginGroupControllers($u = false) {
+			return Group::getAutomationControllers('gCheckAutomationOnLogin', $u);
+		}
+
+		public static function getAutomatedOnJobRunGroupControllers() {
+			return Group::getAutomationControllers('gCheckAutomationOnJobRun');
+		}
+
 		public function clearBadgeOptions() {
 			$db = Loader::db();
 			$db->Execute('update Groups set gIsBadge = 0, gBadgeFID = 0, gBadgeDescription = null, gBadgeCommunityPointValue = 0 where gID = ?', array($this->getGroupID()));
 		}
-		
+
+		public function clearAutomationOptions() {
+			$db = Loader::db();
+			$db->Execute('update Groups set gIsAutomated = 0, gCheckAutomationOnRegister = 0, gCheckAutomationOnLogin = 0, gCheckAutomationOnJobRun = 0 where gID = ?', array($this->getGroupID()));
+		}
+				
 		public function removeGroupExpiration() {
 			$db = Loader::db();
 			$db->Execute('update Groups set gUserExpirationIsEnabled = 0, gUserExpirationMethod = null, gUserExpirationSetDateTime = null, gUserExpirationInterval = 0, gUserExpirationAction = null where gID = ?', array($this->getGroupID()));
@@ -340,6 +423,11 @@
 		public function setBadgeOptions($gBadgeFID, $gBadgeDescription, $gBadgeCommunityPointValue) {
 			$db = Loader::db();
 			$db->Execute('update Groups set gIsBadge = 1, gBadgeFID = ?, gBadgeDescription = ?, gBadgeCommunityPointValue = ? where gID = ?', array($gBadgeFID, $gBadgeDescription, $gBadgeCommunityPointValue, $this->gID));
+		}
+
+		public function setAutomationOptions($gCheckAutomationOnRegister, $gCheckAutomationOnLogin, $gCheckAutomationOnJobRun) {
+			$db = Loader::db();
+			$db->Execute('update Groups set gIsAutomated = 1, gCheckAutomationOnRegister = ?, gCheckAutomationOnLogin = ?, gCheckAutomationOnJobRun = ? where gID = ?', array($gCheckAutomationOnRegister, $gCheckAutomationOnLogin, $gCheckAutomationOnJobRun, $this->gID));
 		}
 
 		public function setGroupExpirationByDateTime($datetime, $action) {
