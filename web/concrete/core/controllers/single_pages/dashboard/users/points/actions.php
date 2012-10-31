@@ -92,6 +92,11 @@ class Concrete5_Controller_Dashboard_Users_Points_Actions extends DashboardBaseC
 				// i hate this activerecord crap
 				$this->upa->pkgID = 0;
 			}
+			$this->upa->upaIsActive = 0;
+			if ($this->post('upaIsActive')) {
+				$this->upa->upaIsActive = 1;
+			}
+			
 			$this->upa->save();			
 		} else {
 			$upa = UserPointAction::add($this->post('upaHandle'), $this->post('upaName'), $this->post('upaDefaultPoints'), $this->post('gBadgeID'));

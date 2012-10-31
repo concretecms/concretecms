@@ -10,5 +10,9 @@ class Concrete5_Model_UserPointActionList extends DatabaseItemList {
 		$this->setQuery('SELECT UserPointActions.*, Groups.gName FROM UserPointActions LEFT JOIN Groups ON Groups.gID = UserPointActions.gBadgeID');
 	}
 
+	public function filterByIsActive($active) {
+		$this->filter('upaIsActive', $active);
+	}
+	
 	
 }
