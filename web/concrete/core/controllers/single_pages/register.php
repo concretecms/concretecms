@@ -230,6 +230,13 @@ class Concrete5_Controller_Register extends Controller {
 				}
 				
 				$registerData['success']=1;
+
+				$groupControllers = Group::getAutomatedOnRegisterGroupControllers($u);
+				foreach($groupControllers as $ga) {
+					if ($ga->check($u)) {
+						$u->enterGroup($ga->getGroupObject());
+					}
+				}
 				
 				if($_REQUEST['format']!='JSON')
 					$this->redirect('/register', $redirectMethod, $rcID);				

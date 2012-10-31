@@ -150,6 +150,7 @@ class Concrete5_Model_StartingPointPackage extends Package {
 		
 		Loader::library('mail/importer');
 		MailImporter::add(array('miHandle' => 'private_message'));
+		UserPointAction::add('won_badge', t('Won a Badge'), 5, false, true);
 	}
 	
 	public function make_directories() {
