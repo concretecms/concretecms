@@ -43,6 +43,11 @@ class ConcreteUpgradeVersion561Helper {
 			Job::installByHandle('index_search_all');
 		}
 
+		$j = Job::getByHandle('check_automated_groups');
+		if (!is_object($j)) {
+			Job::installByHandle('check_automated_groups');
+		}
+
 		$sp = Page::getByPath('/dashboard/users/points');
 		if ($sp->isError()) {
 			$sp = SinglePage::add('/dashboard/users/points');

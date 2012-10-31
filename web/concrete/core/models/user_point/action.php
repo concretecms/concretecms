@@ -81,13 +81,18 @@ class Concrete5_Model_UserPointAction extends Model {
 		}
 	}
 
-	public static function add($upaHandle, $upaName, $upaDefaultPoints, $group, $pkg = false) {
+	public static function add($upaHandle, $upaName, $upaDefaultPoints, $group, $upaIsActive = true, $pkg = false) {
 		$upa = new UserPointAction();
 		$upa->upaHandle = $upaHandle;
 		$upa->upaName = $upaName;
 		$upa->upaDefaultPoints = $upaDefaultPoints;
 		$upa->gBadgeID = 0;
 		$upa->upaHasCustomClass = 0;
+		$upa->upaIsActive = $upaIsActive;
+		if (!$upaIsActive) {
+			$up->upaIsActive = 0;
+		}
+		
 		if (is_object($group)){
 			$upa->gBadgeID = $group->getGroupID();
 		}

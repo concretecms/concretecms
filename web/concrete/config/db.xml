@@ -1708,6 +1708,27 @@
       <NOTNULL/>
       <DEFAULT value="0"/>
     </field>
+    <field name="gIsAutomated" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="gCheckAutomationOnRegister" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="gCheckAutomationOnLogin" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="gCheckAutomationOnJobRun" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="pkgID" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
     <index name="gName">
       <UNIQUE/>
       <col>gName</col>

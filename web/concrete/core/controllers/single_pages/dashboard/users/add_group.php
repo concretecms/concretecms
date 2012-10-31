@@ -27,6 +27,15 @@ class Concrete5_Controller_Dashboard_Users_AddGroup extends DashboardBaseControl
 		}
 	}
 
+	public function checkAutomationOptions($g) {
+		if ($_POST['gIsAutomated']) {
+			$g->setAutomationOptions($this->post('gCheckAutomationOnRegister'), $this->post('gCheckAutomationOnLogin'), $this->post('gCheckAutomationOnJobRun'));
+		} else {
+			$g->clearAutomationOptions();
+		}
+	}
+
+
 	public function do_add() {
 		$txt = Loader::helper('text');
 		$valt = Loader::helper('validation/token');
@@ -58,6 +67,7 @@ class Concrete5_Controller_Dashboard_Users_AddGroup extends DashboardBaseControl
 			$g = Group::add($gName, $_POST['gDescription']);
 			$this->checkExpirationOptions($g);
 			$this->checkBadgeOptions($g);
+			$this->checkAutomationOptions($g);
 			$this->redirect('/dashboard/users/groups', 'group_added');
 		}	
 	}

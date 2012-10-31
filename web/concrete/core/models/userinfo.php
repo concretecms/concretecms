@@ -275,8 +275,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				$mh->addParameter('msgBody', $text);
 				$mh->addParameter('msgAuthor', $this->getUserName());
 				$mh->addParameter('msgDateCreated', $msgDateCreated);
-				$mh->addParameter('profileURL', BASE_URL . View::url('/profile', 'view', $this->getUserID()));
-				$mh->addParameter('profilePreferencesURL', BASE_URL . View::url('/profile/edit'));
+				$mh->addParameter('profileURL', BASE_URL . View::url('/account/profile/public', 'view', $this->getUserID()));
+				$mh->addParameter('profilePreferencesURL', BASE_URL . View::url('/account/profile/edit'));
 				$mh->to($recipient->getUserEmail());
 				
 				Loader::library('mail/importer');
@@ -483,8 +483,9 @@ defined('C5_EXECUTE') or die("Access Denied.");
 						unset($existingGIDArray[$key]);
 					} else {
 						// this item is new, so we add it.
-						$q = "insert into UserGroups (uID, gID, ugEntered) values ({$this->uID}, $gID, '{$datetime}')";
-						$r = $db->query($q);
+						$_ux = $this->getUserObject();
+						$g = Group::getByID($gID);
+						$_ux->enterGroup($g);
 					}
 				}
 			}

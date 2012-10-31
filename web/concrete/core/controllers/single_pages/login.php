@@ -194,6 +194,14 @@ class Concrete5_Controller_Login extends Controller {
 				$loginData['success']=1;
 				$loginData['msg']=t('Login Successful');	
 				$loginData['uID'] = intval($u->getUserID());
+
+				$groupControllers = Group::getAutomatedOnLoginGroupControllers($u);
+				foreach($groupControllers as $ga) {
+					if ($ga->check($u)) {
+						$u->enterGroup($ga->getGroupObject());
+					}
+				}
+
 			}
 
 			$loginData = $this->finishLogin($loginData);

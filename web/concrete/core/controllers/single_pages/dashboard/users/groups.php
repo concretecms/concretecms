@@ -41,6 +41,7 @@ class Concrete5_Controller_Dashboard_Users_Groups extends DashboardBaseControlle
 			$cnta = Loader::controller('/dashboard/users/add_group');
 			$cnta->checkExpirationOptions($g);
 			$cnta->checkBadgeOptions($g);
+			$cnta->checkAutomationOptions($g);
 			$this->redirect('/dashboard/users/groups', 'group_updated');
 		}	
 	}

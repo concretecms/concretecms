@@ -11,7 +11,7 @@
 		<label class="control-label"><?php echo t('Enabled');?></label>
 		<div class="controls">
 		<label class="checkbox">
-			<?=$form->checkbox('upaIsActive', 1, $upaIsActive == 1)?>
+			<?=$form->checkbox('upaIsActive', 1, ($upaIsActive == 1 || (!$upaID)))?>
 		</label>
 		</div>
 	</div>

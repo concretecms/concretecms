@@ -16,7 +16,7 @@ $form = Loader::helper('form');
 <div class="ccm-pane-body">
 <?=$valt->output('add_or_update_group')?>
 <fieldset>
-	<legend><?=t('Group Details')?></legend>
+	<legend><?=t('Details')?></legend>
 
 <div class="control-group">
 <?=$form->label('gName', t('Name'))?>
@@ -34,7 +34,7 @@ $form = Loader::helper('form');
 </fieldset>
 <? if (ENABLE_USER_PROFILES) { ?>
 <fieldset>
-	<legend><?=t('Badge Details')?></legend>
+	<legend><?=t('Badge')?></legend>
 	<div class="control-group">
 	<div class="controls">
 	<label class="checkbox">
@@ -76,14 +76,45 @@ $form = Loader::helper('form');
 
 </fieldset>
 <? } ?>
+
 <fieldset>
-<legend><?=t("Group Expiration Options")?></legend>
+	<legend><?=t('Automation')?></legend>
+	<div class="control-group">
+	<div class="controls">
+	<label class="checkbox">
+	<?=$form->checkbox('gIsAutomated', 1, false)?>
+	<span><?=t('This group is automatically entered.')?> <i class="icon-question-sign" title="<?=t("Automated Groups aren't assigned by administrators. They are checked against code at certain times that determines whether users should enter them.")?>"></i> </span>
+	</label>
+	</div>
+	</div>
+	
+<div id="gAutomationOptions" style="display: none">
+	<div class="control-group">
+	<label class="control-label"><?=t('Check Group')?></label>
+	<div class="controls">
+		<label class="checkbox">
+			<?=$form->checkbox('gCheckAutomationOnRegister', 1)?>
+			<span><?=t('When a user registers.')?></span>
+		</label>
+		<label class="checkbox">
+			<?=$form->checkbox('gCheckAutomationOnLogin', 1)?>
+			<span><?=t('When a user signs in.')?></span>
+		</label>
+		<label class="checkbox">
+			<?=$form->checkbox('gCheckAutomationOnJobRun', 1)?>
+			<span><?=t('When the "Check Automated Users" Job runs.')?></span>
+		</label>
+	</div>
+	</div>
+
+</div>
+
 
 <div class="control-group">
 	<div class="controls">
 	<label class="checkbox">
 	<?=$form->checkbox('gUserExpirationIsEnabled', 1, false)?>
-	<span><?=t('Automatically remove users from this group')?></span></label>
+	<span><?=t('Automatically remove users from this group.')?></span></label>
 	</div>
 	
 	<div class="controls" style="">
@@ -185,6 +216,13 @@ $(function() {
 			$('#gUserBadgeOptions').show();
 		} else {
 			$('#gUserBadgeOptions').hide();
+		}
+	}).triggerHandler('click');
+	$('input[name=gIsAutomated]').on('click', function() {
+		if ($(this).is(':checked')) {
+			$('#gAutomationOptions').show();
+		} else {
+			$('#gAutomationOptions').hide();
 		}
 	}).triggerHandler('click');
 	$('.icon-question-sign').tooltip();
