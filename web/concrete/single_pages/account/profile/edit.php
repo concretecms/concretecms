@@ -15,8 +15,8 @@ $(function() {
 	<?php  $attribs = UserAttributeKey::getEditableInProfileList(); 
 	if(is_array($attribs) && count($attribs)) { 
 	?>
-		<legend><?=t('Basic Information')?></legend>
 		<fieldset>
+		<legend><?=t('Basic Information')?></legend>
 		<div class="control-group">
 			<?php echo $form->label('uEmail', t('Email'))?>
 			<div class="controls">
@@ -45,8 +45,8 @@ $(function() {
 		</fieldset>
 	<?php  } ?>
 	
-	<legend><?=t('Change Password')?></legend>
 	<fieldset>
+	<legend><?=t('Change Password')?></legend>
 	<div class="control-group">
 		<?php echo $form->label('uPasswordNew', t('New Password'))?>
 		<div class="controls">

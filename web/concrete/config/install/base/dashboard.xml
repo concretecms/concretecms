@@ -189,7 +189,7 @@
         <page name="Community Points" path="/dashboard/users/points" filename="/dashboard/users/points/view.php" pagetype="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
-					<value>community, points, karma</value>
+					<value>community, points, karma, achievements</value>
 				</attributekey>
 				<attributekey handle="icon_dashboard">
 					<value>icon-heart</value>

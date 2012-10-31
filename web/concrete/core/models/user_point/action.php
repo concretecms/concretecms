@@ -214,6 +214,9 @@ class Concrete5_Model_UserPointAction extends Model {
 	
 		$g = $this->getUserPointActionBadgeGroupObject();
 		if($g instanceof Group) {
+			if ($user instanceof UserInfo) {
+				$user = User::getByUserID($user->getUserID());
+			}
 			$user->enterGroup($g);
 		}
 		

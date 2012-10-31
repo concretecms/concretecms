@@ -3,6 +3,10 @@
 .hide-text{font:0/0 a;color:transparent;text-shadow:none;background-color:transparent;border:0;}
 .input-block-level{display:block;width:100%;min-height:30px;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;}
 div#ccm-profile-header{position:relative;}
+div#ccm-profile-statistics-bar{font-weight:bold;font-size:13px;border-top:1px solid #cecece;border-bottom:1px solid #cecece;padding-top:8px;margin-top:20px;margin-bottom:20px;padding-bottom:8px;}
+div#ccm-profile-statistics-bar div.clearfix{padding-bottom:0px;}
+div.ccm-profile-statistics-item{float:left;margin-right:40px;}
+div.ccm-profile-badge-image{text-align:center;color:#aaa;font-size:80%;}
 div#ccm-profile-avatar{position:absolute;right:0px;bottom:10px;background:white;}
 div#ccm-profile-avatar img{border:1px solid #c2c2c2;border-radius:3px;}
 table.ccm-profile-messages-list td{vertical-align:middle !important;}

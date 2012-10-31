@@ -53,5 +53,10 @@ class Concrete5_Model_UserPointEntry extends Model {
 		return $ui;
 	}
 	
+	public static function getTotal($ui) {
+		$db = Loader::db();
+		$cnt = $db->GetOne('select sum(upPoints) as total from UserPointHistory where upuID = ?', array($ui->getUserID()));
+		return $cnt;
+	}
 
 }

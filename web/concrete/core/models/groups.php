@@ -149,7 +149,7 @@
 				}
 			}
 		}
-		
+
 		public function getGroupMembersNum($type = null) {
 			$db = Loader::db();
 			if ($type != null) {
@@ -186,8 +186,12 @@
 			return $this->inGroup;
 		}
 		
-		function getGroupDateTimeEntered() {
-			return $this->gDateTimeEntered;
+		function getGroupDateTimeEntered($user = false) {
+			if (!is_object($user)) {
+				return $this->gDateTimeEntered;
+			}
+			$db = Loader::db();
+			return $db->GetOne('select ugEntered from UserGroups where gID = ? and uID = ?', array($this->getGroupID(), $user->getUserID()));
 		}
 
 		function getGroupMemberType() {
@@ -366,8 +370,8 @@
 			$gs->filter('gIsBadge', 1);
 			$results = $gs->get();
 			$badges = array();
-			foreach($results as $gID) {
-				$badges[] = Group::getByID($gID);
+			foreach($results as $gr) {
+				$badges[] = Group::getByID($gr['gID']);
 			}
 			return $badges;
 		}
@@ -385,8 +389,8 @@
 			}
 			$results = $gs->get();
 			$controllers = array();
-			foreach($results as $gID) {
-				$group = Group::getByID($gID);
+			foreach($results as $gr) {
+				$group = Group::getByID($gr['gID']);
 				$controller = $group->getGroupAutomationController();
 				$controllers[] = $controller;
 			}

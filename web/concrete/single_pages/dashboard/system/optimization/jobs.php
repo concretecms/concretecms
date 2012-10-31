@@ -58,7 +58,7 @@ $jh = Loader::helper('json');
 		<th style="width: 200px"><?=t('Name')?></th>
 		<th><?=t('Last Run')?></th>
 		<th style="width: 200px"><?=t('Results of Last Run')?></th>
-		<td><a href="<?=$this->action('reset')?>" class="btn pull-right btn-mini"><?=t('Reset All Jobs')?></a></td>
+		<td style="width: 80px"><a href="<?=$this->action('reset')?>" class="btn pull-right btn-mini"><?=t('Reset All Jobs')?></a></td>
 		<td></td>
 	</tr>
 	</thead>
@@ -84,7 +84,7 @@ $jh = Loader::helper('json');
 			<td class="ccm-jobs-button">
 				<button data-jID="<?=$j->getJobID()?>" data-jSupportsQueue="<?=$j->supportsQueue()?>" data-jName="<?=$j->getJobName()?>" class="btn-run-job btn-small btn"><i class="icon-play"></i> <?=t('Run')?></button>
 			</td>
-			<td>
+			<td style="width: 40px">
 				<a href="javascript:void(0)" class="ccm-automate-job-instructions" data-jSupportsQueue="<?=$j->supportsQueue()?>" data-jID="<?=$j->getJobID()?>" title="<?=t('Automate this Job')?>"><i class="icon-tasks"></i></a>
 				<? if ($j->canUninstall()) { ?>
 					<a href="<?=$this->action('uninstall', $j->getJobID())?>" title="<?=t('Remove this Job')?>"><i class="icon-trash"></i></a>
@@ -342,6 +342,8 @@ jQuery.fn.showLoading = function() {
 	if (!row.attr('data-color')) {
 		row.find('td').css('background-color', '#ccc');
 	}
+	clearInterval(pulseRowInterval);
+	pulseRowInterval = false;
 	pulseRowInterval = setInterval(function() {
 		if (row.attr('data-color') == '#ccc') {
 			row.find('td').css('background-color', '#fff');
@@ -356,10 +358,11 @@ jQuery.fn.showLoading = function() {
 jQuery.fn.hideLoading = function() {
 	$(this).find('button').html('<i class="icon-play"></i> <?=t('Run')?>').prop('disabled', false);
 	var row = $(this);
+	clearInterval(pulseRowInterval);
+	pulseRowInterval = false;
 	row.removeClass();
 	row.find('td').css('background-color', '');
 	row.attr('data-color', '');
-	clearInterval(pulseRowInterval);
 }
 
 jQuery.fn.processResponse = function(r) {

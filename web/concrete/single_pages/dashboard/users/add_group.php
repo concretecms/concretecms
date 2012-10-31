@@ -102,7 +102,7 @@ $form = Loader::helper('form');
 		</label>
 		<label class="checkbox">
 			<?=$form->checkbox('gCheckAutomationOnJobRun', 1)?>
-			<span><?=t('When the "Check Automated Users" Job runs.')?></span>
+			<span><?=t('When the "Check Automated Groups" Job runs.')?></span>
 		</label>
 	</div>
 	</div>
