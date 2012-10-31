@@ -35,6 +35,7 @@ class Concrete5_Controller_Account_Profile_Public extends AccountController {
 		}
 
 		$this->set('profile', $profile);
+		$this->set('badges', $profile->getUserBadges());
 		$this->set('av', Loader::helper('concrete/avatar'));
 		$this->set('t', Loader::helper('text'));
 		$this->set('canEdit',$canEdit);

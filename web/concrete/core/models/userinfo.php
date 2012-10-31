@@ -91,6 +91,16 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				return $ui;
 			}
 		}
+
+		public function getUserBadges() {
+			$db = Loader::db();
+			$groups = array();
+			$r = $db->Execute('select g.gID from Groups g inner join UserGroups ug on g.gID = ug.gID where g.gIsBadge = 1 and ug.uID = ? order by ugEntered desc', array($this->getUserID()));
+			while ($row = $r->FetchRow()) {
+				$groups[] = Group::getByID($row['gID']);
+			}
+			return $groups;
+		}
 		
 		private function get($where, $var) {
 			$db = Loader::db();

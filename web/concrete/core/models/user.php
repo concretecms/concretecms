@@ -422,7 +422,7 @@
 					array('uID', 'gID'), true);
 
 					if ($g->isGroupBadge()) {
-						// award the karma for the badge
+
 						$action = UserPointAction::getByHandle('won_badge');
 						if (is_object($action)) {
 							$action->addDetailedEntry($this, $g);

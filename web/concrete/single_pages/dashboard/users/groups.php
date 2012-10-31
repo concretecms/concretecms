@@ -218,7 +218,7 @@ foreach ($gResults as $g) { ?>
 			</label>
 			<label class="checkbox">
 				<?=$form->checkbox('gCheckAutomationOnJobRun', 1, $g->checkGroupAutomationOnJobRun())?>
-				<span><?=t('When the "Check Automated Users" Job runs.')?></span>
+				<span><?=t('When the "Check Automated Groups" Job runs.')?></span>
 			</label>
 		</div>
 		</div>

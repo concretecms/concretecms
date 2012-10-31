@@ -1,5 +1,5 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?>
-<div class="page-header" id="ccm-profile-header">
+<div id="ccm-profile-header">
 
 <div id="ccm-profile-avatar">
 <? print Loader::helper('concrete/avatar')->outputUserAvatar($profile); ?>
@@ -23,17 +23,24 @@
 
 </div>
 
+<div id="ccm-profile-statistics-bar">
+	<div class="ccm-profile-statistics-item">
+		<i class="icon-time"></i> <?=t('Joined %s', date(DATE_APP_GENERIC_MDY_FULL, strtotime($profile->getUserDateAdded())))?>
+	</div>
+	<div class="ccm-profile-statistics-item">
+		<i class="icon-fire"></i> <?=number_format(UserPointEntry::getTotal($profile))?> <?=t('Community Points')?>
+	</div>
+	<div class="ccm-profile-statistics-item">
+		<i class="icon-bookmark"></i> <a href="#badges"><?=number_format(count($badges))?> <?=t2('Badge', 'Badges', count($badges))?></a>
+	</div>
+	<div class="clearfix"></div>
+</div>
 
 
 <div id="ccm-profile-wrapper">
 
 	<div id="ccm-profile-detail">
-		
-				
-		<div>		
-		<h4><?=t('Member Since')?></h4>
-		<?=date('M d, Y', strtotime($profile->getUserDateAdded()))?>
-		</div>
+
 
         <?php 
         $uaks = UserAttributeKey::getPublicProfileList();
@@ -50,6 +57,35 @@
 			?>
 		</div>
         <?php  } ?>		
+
+		<h4><?=t("Badges")?></h4>
+		<? if (count($badges) > 0) { ?>
+
+
+		<ul class="thumbnails">
+
+			<? foreach($badges as $ub) { 
+				$uf = $ub->getGroupBadgeImageObject();
+				if (is_object($uf)) { ?>
+
+			  <li class="span2">
+
+			    <div class="thumbnail launch-tooltip ccm-profile-badge-image" title="<?=$ub->getGroupBadgeDescription()?>">
+			      <div><img src="<?=$uf->getRelativePath()?>" /></div>
+			      <div><?=t("Awarded %s", date(DATE_APP_GENERIC_MDY, strtotime($ub->getGroupDateTimeEntered($profile))))?></div>
+			    </div>
+
+			</li>
+
+			    <? } ?>
+
+			<? } ?>
+
+		</ul>
+
+		<? } else { ?>
+			<p><?=t("This user hasn't won any badges.")?></p>
+		<? } ?>
         
 		
 		<?php  
@@ -62,3 +98,11 @@
 		
 	</div>	
 </div>
+
+<script type="text/javascript">
+$(function() {
+	$(".launch-tooltip").tooltip({
+		placement: 'bottom'
+	});
+});
+</script>
