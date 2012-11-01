@@ -4,8 +4,7 @@
 
 
 	<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('File Set'), false, 'span10 offset1', false)?>
-	<form method="post" class="form-horizontal" id="file_sets_edit" action="<?=$this->url('/dashboard/files/sets', 'file_sets_edit')?>" onsubmit="return ccm_saveFileSetDisplayOrder()">
-		<?=$form->hidden('fsDisplayOrder', '')?>
+	<form method="post" class="form-horizontal" id="file_sets_edit" action="<?=$this->url('/dashboard/files/sets', 'file_sets_edit')?>">
 		<?=$validation_token->output('file_sets_edit');?>
 
 	<div class="ccm-pane-body">
@@ -96,7 +95,8 @@
 			
 		<li id="fID_<?=$f->getFileID()?>">
 			<div>
-				<?=$f->getThumbnail(1)?>				
+				<?=$f->getThumbnail(1)?>	
+				<input type="hidden" name="fsDisplayOrder[]" value="<?=$f->getFileID()?>" />			
 				<span style="word-wrap: break-word"><?=$f->getTitle()?></span>
 			</div>
 		</li>
@@ -123,13 +123,7 @@
 	
 	
 	<script type="text/javascript">
-	
-	ccm_saveFileSetDisplayOrder = function() {
-		var fslist = $('.ccm-file-set-file-list').sortable('serialize');
-		$('input[name=fsDisplayOrder]').val(fslist);
-		return true;
-	}
-	
+
 	$(function() {
 		$(".ccm-file-set-file-list").sortable({
 			cursor: 'move',

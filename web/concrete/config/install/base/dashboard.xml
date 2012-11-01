@@ -198,7 +198,7 @@
         </page>
         <page name="Assign Points" path="/dashboard/users/points/assign" filename="/dashboard/users/points/assign.php" pagetype="" package="">
         </page>
-        <page name="Community Point Actions" path="/dashboard/users/points/actions" filename="/dashboard/users/points/actions.php" pagetype="" package="">
+        <page name="Actions" path="/dashboard/users/points/actions" filename="/dashboard/users/points/actions.php" pagetype="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
 					<value>action, community actions</value>
