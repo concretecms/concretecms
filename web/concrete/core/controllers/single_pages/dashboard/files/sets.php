@@ -106,8 +106,7 @@ class Concrete5_Controller_Dashboard_Files_Sets extends Controller {
 		$file_set->fsOverrideGlobalPermissions = ($this->post('fsOverrideGlobalPermissions') == 1) ? 1 : 0;
 		$file_set->save();
 		
-		parse_str($this->post('fsDisplayOrder'));
-		$file_set->updateFileSetDisplayOrder($fID);
+		$file_set->updateFileSetDisplayOrder($this->post('fsDisplayOrder'));
 
 		if ($file_set->fsOverrideGlobalPermissions == 0) {
 			$file_set->resetPermissions();		
