@@ -1,0 +1,18 @@
+#!/bin/bash
+
+git add web/concrete/js/bootstrap.js
+git add web/concrete/js/ccm.app.js
+git add web/concrete/js/image_editor.min.js
+git add web/concrete/js/image_editor/image_editor.js
+git add web/concrete/js/jquery.cookie.js
+
+
+git add web/concrete/css/jquery.ui.css
+git add web/concrete/css/jquery.rating.css
+git add web/concrete/css/ccm.default.theme.css
+git add web/concrete/css/ccm.dashboard.css
+git add web/concrete/css/ccm.dashboard.1200.css
+git add web/concrete/css/ccm.colorpicker.css
+git add web/concrete/css/ccm.app.mobile.css
+git add web/concrete/css/ccm.app.css
+
