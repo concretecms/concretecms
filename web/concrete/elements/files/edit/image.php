@@ -46,5 +46,3 @@ div.controls {
   box-shadow:-5px 0px 25px -5px black;
 }
 </style>
-
-<?php //print_R($fv->getURL());

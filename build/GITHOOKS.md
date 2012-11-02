@@ -22,11 +22,11 @@ Now, everytime you commit that script will run. This will compile the css and js
 If that's too fancy for you, we still suppport the previous method of compiling, just run `./build/js` and `./build/css` to compile your changes.
 If you'd like to ignore the git status and just compile the hell out of everything, just add a parameter; doesn't matter what ... just add one:
 
-    ./build/js DONTWORRYABOUTGIT
+    ./build/smart/js DONTWORRYABOUTGIT
 
 or
 
-    ./build/css duuurrr
+    ./build/smart/css duuurrr
 
 etc.
 
