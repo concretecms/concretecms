@@ -10,7 +10,7 @@ if (!$fp->canEditFileContents()) {
 ?>
 
 <script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/kinetic.js"></script>
-<script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/ccm_app/image.editor.js"></script>
+<script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/image_editor.min.js"></script>
 <div class='table'>
   <div class='Editor'>
   </div>
