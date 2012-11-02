@@ -3,11 +3,16 @@
 if $(pwd | grep "build$" &> /dev/null); then
     cd ..
 fi
+if $(pwd | grep "smart$" &> /dev/null); then
+    cd ../..
+fi
+
+./build/smart/sanitycheck $1
 
 echo "Building JavaScript";
-./build/smart/js
+./build/smart/js $1
 echo "Building CSS";
-./build/smart/css
+./build/smart/css $1
 echo "Adding changes";
 
 

@@ -1,4 +1,14 @@
 #!/bin/bash
+if $(pwd | grep "build$" &> /dev/null); then
+    cd ..
+fi
+if $(pwd | grep "smart$" &> /dev/null); then
+    cd ../..
+fi
+
+./build/smart/sanitycheck $1
+
+
 status=$(git status --porcelain 2> /dev/null)
 inp=$1
 function compile_less {

@@ -1,0 +1,22 @@
+#!/bin/bash
+if $(pwd | grep "build$" &> /dev/null); then
+    cd ..
+fi
+if $(pwd | grep "smart$" &> /dev/null); then
+    cd ../..
+fi
+function test {
+
+    # IF ./.git/ dir doesn't exist or ./web/concrete/ dir doesn't exist, or ./web/concrete/dispatcher.php doesn't exist, die.
+    if [ ! -d ".git" -o ! -d "web/concrete" -o ! -f "web/concrete/dispatcher.php" ]; then
+        echo "This looks all wrong, make sure you run this in the root directory of your concrete5 repo"
+        exit
+    fi
+}
+
+if [ ! $1 ]; then
+    echo 'testing'
+    test
+else
+    echo 'skip sanity check'
+fi
