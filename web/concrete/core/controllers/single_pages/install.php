@@ -113,12 +113,13 @@ class Concrete5_Controller_Install extends Controller {
 		// no longer need lucene
 		//$this->set('searchTest', function_exists('iconv') && function_exists('mb_strtolower') && (@preg_match('/\pL/u', 'a') == 1));
 		$this->set('remoteFileUploadTest', function_exists('iconv'));
-		
-		if (version_compare(PHP_VERSION, '5.2.0', '>=')) {
+		$phpVmin = '5.2.10';
+		if (version_compare(PHP_VERSION, $phpVmin, '>=')) {
 			$phpVtest = true;
 		} else {
 			$phpVtest = false;
 		}
+		$this->set('phpVmin',$phpVmin);
 		$this->set('phpVtest',$phpVtest);
 		
 	}
