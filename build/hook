@@ -1,14 +1,14 @@
 #!/bin/bash
 
-cd build/
+if $(pwd | grep "build$" &> /dev/null); then
+    cd ..
+fi
+
 echo "Building JavaScript";
-./js.sh
+./build/js
 echo "Building CSS";
-./css.sh
+./build/css
 echo "Adding changes";
-cd ..
-
-
 
 
 git add web/concrete/js/bootstrap.js
