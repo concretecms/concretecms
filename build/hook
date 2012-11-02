@@ -1,5 +1,16 @@
 #!/bin/bash
 
+cd build/
+echo "Building JavaScript";
+./js.sh
+echo "Building CSS";
+./css.sh
+echo "Adding changes";
+cd ..
+
+
+
+
 git add web/concrete/js/bootstrap.js
 git add web/concrete/js/ccm.app.js
 git add web/concrete/js/image_editor.min.js
