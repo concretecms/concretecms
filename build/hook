@@ -5,9 +5,9 @@ if $(pwd | grep "build$" &> /dev/null); then
 fi
 
 echo "Building JavaScript";
-./build/js
+./build/smart/js
 echo "Building CSS";
-./build/css
+./build/smart/css
 echo "Adding changes";
 
 
