@@ -51,7 +51,7 @@ ccm_showBlockMenu = function(obj, e) {
 		html += '<ul>';
 		//html += '<li class="header"></li>';
 		if (obj.canWrite && obj.hasEditDialog) {
-			html += (obj.editInline) ? '<li><a class="ccm-menu-icon ccm-icon-edit-menu" onclick="ccm_hideMenus()" id="menuEdit' + obj.bID + '-' + obj.aID + '" href="' + CCM_DISPATCHER_FILENAME + '?cID=' + obj.cID + '&bID=' + obj.bID + '&arHandle=' + encodeURIComponent(obj.arHandle) + '&btask=edit#_edit' + obj.bID + '">' + ccmi18n.editBlock + '</a></li>'
+			html += (obj.editInline) ? '<li><a class="ccm-menu-icon ccm-icon-edit-menu" onclick="ccm_hideMenus(); ccm_loadInlineEditor(\'' + encodeURIComponent(obj.arHandle) + '\',' + obj.aID + ',' + obj.bID + ')" id="menuEdit' + obj.bID + '-' + obj.aID + '">' + ccmi18n.editBlock + '</a></li>'
 				: '<li><a class="ccm-menu-icon ccm-icon-edit-menu" onclick="ccm_hideMenus()" dialog-title="' + ccmi18n.editBlock + ' ' + obj.btName + '" dialog-append-buttons="true" dialog-modal="false" dialog-on-close="ccm_blockWindowAfterClose()" dialog-width="' + obj.width + '" dialog-height="' + obj.height + '" id="menuEdit' + obj.bID + '-' + obj.aID + '" href="' + CCM_TOOLS_PATH + '/edit_block_popup.php?cID=' + obj.cID + '&bID=' + obj.bID + '&arHandle=' + encodeURIComponent(obj.arHandle) + '&btask=edit">' + ccmi18n.editBlock + '</a></li>';
 		}
 		if (obj.canWriteStack) {
@@ -130,6 +130,18 @@ ccm_showBlockMenu = function(obj, e) {
 	
 	ccm_fadeInMenu(bobj, e);
 
+}
+
+ccm_loadInlineEditor = function(arHandle, aID, bID) {
+
+	$.ajax({
+	type: 'POST',
+	url: CCM_TOOLS_PATH + '/blocks/inline_editor',
+	data: 'cID=' + CCM_CID + '&bID=' + bID + '&arHandle=' + arHandle + '&aID=' + aID,
+	success: function(r) {
+		ccm_hideHighlighter();
+		$('#b' + bID + '-' + aID).before(r).remove();
+	}});
 }
 
 ccm_reloadAreaMenuPermissions = function(aID, cID) {
