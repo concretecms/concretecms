@@ -1,7 +1,7 @@
 <?
 
 defined('C5_EXECUTE') or die("Access Denied.");
-class ConcreteUpgradeVersion561Helper {
+class ConcreteUpgradeVersion570Helper {
 	
 	public $dbRefreshTables = array(
 		'atSocialLinks',
@@ -9,14 +9,20 @@ class ConcreteUpgradeVersion561Helper {
 		'UserPointHistory',
 		'Groups',
 		'QueuePageDuplicationRelations',
-		'Queues',
-		'QueueMessages',
+		/*'Queues',*/
+		'BlockTypes',
+		/*'QueueMessages',*/
 		'JobSets',
 		'JobSetJobs'
 	);
 	
 	
 	public function run() {
+		$bt = BlockType::getByHandle('content');
+		if (is_object($bt)) {
+			$bt->refresh();
+		}
+
 		$tt = AttributeType::getByHandle('social_links');
 		if (!is_object($tt) || $tt->getAttributeTypeID() == 0) {
 			$tt = AttributeType::add('social_links', t('Social Link'));

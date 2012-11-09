@@ -32,6 +32,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		protected $btName = "";
 		protected $btHandle = "";
 		protected $btIsInternal = 0;
+		protected $btSupportsInlineEditing = 0;
 		protected $btActiveWhenAdded = 1;
 		protected $btCopyWhenPropagate = 0;
 		protected $btIncludeAll = 0;
@@ -556,6 +557,14 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		 */
 		public function isBlockTypeInternal() {
 			return $this->btIsInternal;
+		}
+		
+		/** 
+		 * Returns whether the block type supports inline editing mode.
+		 * @returns bool
+		 */
+		public function supportsInlineEditing() {
+			return $this->btSupportsInlineEditing;
 		}
 		
 		/** 

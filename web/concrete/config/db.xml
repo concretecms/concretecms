@@ -508,6 +508,10 @@
       <NOTNULL/>
       <DEFAULT value="0"/>
     </field>
+    <field name="btSupportsInlineEditing" type="I1" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
     <field name="btDisplayOrder" type="I" size="10">
       <NOTNULL/>
       <DEFAULT value="0"/>
