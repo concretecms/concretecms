@@ -20,6 +20,15 @@ ccm_onInlineEditCancel = function(onComplete) {
 	$.get(action, 		
 		function(r) { 
 			onComplete();
+			ccm_inlineEditMode = false;
+
+			$('div.ccm-block-edit-disabled').each(function() {
+				$(this).removeClass('ccm-block-edit-disabled');
+				$(this).addClass('ccm-block');
+			});
+
+			$('div.ccm-add-block').show();
+
 			$('#b<?=$bID?>-<?=$aID?>').before(r).remove();
 			ccm_mainNavDisableDirectExit();
 			jQuery.fn.dialog.hideLoader();

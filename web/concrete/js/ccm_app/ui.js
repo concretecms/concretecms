@@ -3,6 +3,7 @@
  */
 
 var ccm_arrangeMode = false;
+var ccm_inlineEditMode = false;
 var ccm_selectedDomID = false;
 var ccm_isBlockError = false;
 var ccm_activeMenu = false;
@@ -134,17 +135,21 @@ ccm_showBlockMenu = function(obj, e) {
 
 ccm_loadInlineEditor = function(arHandle, aID, bID) {
 
+	ccm_inlineEditMode = true;
+	ccm_hideHighlighter();
+
 	$('div.ccm-block').each(function() {
 		$(this).addClass('ccm-block-edit-disabled');
 		$(this).removeClass('ccm-block');
 	});
+
+	$('div.ccm-add-block').hide();
 
 	$.ajax({
 	type: 'POST',
 	url: CCM_TOOLS_PATH + '/blocks/inline_editor',
 	data: 'cID=' + CCM_CID + '&bID=' + bID + '&arHandle=' + arHandle + '&aID=' + aID,
 	success: function(r) {
-		ccm_hideHighlighter();
 		$('#b' + bID + '-' + aID).before(r).remove();
 	}});
 }
@@ -397,7 +402,7 @@ ccm_setupBlockForm = function(form, currentBlockID, task) {
 
 
 ccm_activate = function(obj, domID) { 
-	if (ccm_arrangeMode || ccm_activeMenu) {
+	if (ccm_arrangeMode || ccm_activeMenu || ccm_inlineEditMode) {
 		return false;
 	}
 	
