@@ -134,6 +134,11 @@ ccm_showBlockMenu = function(obj, e) {
 
 ccm_loadInlineEditor = function(arHandle, aID, bID) {
 
+	$('div.ccm-block').each(function() {
+		$(this).addClass('ccm-block-edit-disabled');
+		$(this).removeClass('ccm-block');
+	});
+
 	$.ajax({
 	type: 'POST',
 	url: CCM_TOOLS_PATH + '/blocks/inline_editor',
