@@ -185,7 +185,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 					$this->controller = Loader::controller($obj);
 				}
 			}
-			if (in_array($view, array('view', 'add', 'edit', 'composer', 'inline'))) {
+			if (in_array($view, array('view', 'add', 'edit', 'composer'))) {
 				$_action = $view;
 			} else {
 				$_action = 'view';
@@ -283,12 +283,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 					} else {
 						$header = DIR_FILES_ELEMENTS_CORE . '/block_header_view.php';
 						$footer = DIR_FILES_ELEMENTS_CORE . '/block_footer_view.php';										
-
-						if ($_action == 'inline') {
-							$header = DIR_FILES_ELEMENTS_CORE . '/block_header_inline.php';
-							$footer = DIR_FILES_ELEMENTS_CORE . '/block_footer_inline.php';										
-						}
-
 					}
 					break;
 				case 'add':

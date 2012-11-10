@@ -146,9 +146,9 @@ ccm_loadInlineEditor = function(arHandle, aID, bID) {
 	$('div.ccm-add-block').hide();
 
 	$.ajax({
-	type: 'POST',
-	url: CCM_TOOLS_PATH + '/blocks/inline_editor',
-	data: 'cID=' + CCM_CID + '&bID=' + bID + '&arHandle=' + arHandle + '&aID=' + aID,
+	type: 'GET',
+	url: CCM_TOOLS_PATH + '/edit_block_popup',
+	data: 'btask=edit&cID=' + CCM_CID + '&bID=' + bID + '&arHandle=' + arHandle + '&aID=' + aID,
 	success: function(r) {
 		$('#b' + bID + '-' + aID).before(r).remove();
 	}});
