@@ -6,6 +6,37 @@ $closeWindowCID=(intval($rcID))?intval($rcID):$c->getCollectionID();
 
 </div>
 
+<?
+$bt = $b->getBlockTypeObject();
+if ($bt->supportsInlineEditing()) { ?>
+
+<script type="text/javascript">
+ccm_onInlineEditCancel = function(onComplete) {
+	jQuery.fn.dialog.showLoader();
+	var action = CCM_TOOLS_PATH + '/edit_block_popup?cID=<?=$c->getCollectionID()?>&bID=<?=$b->getBlockID()?>&arHandle=<?=htmlspecialchars($a->getAreaHandle())?>&btask=view_edit_mode';	 
+	$.get(action, 		
+		function(r) { 
+			onComplete();
+			ccm_inlineEditMode = false;
+
+			$('div.ccm-block-edit-disabled').each(function() {
+				$(this).removeClass('ccm-block-edit-disabled');
+				$(this).addClass('ccm-block');
+			});
+
+			$('div.ccm-add-block').show();
+
+			$('#b<?=$b->getBlockID()?>-<?=$a->getAreaID()?>').before(r).remove();
+			ccm_mainNavDisableDirectExit();
+			jQuery.fn.dialog.hideLoader();
+		}
+	);
+}
+
+</script>
+
+<? } ?>
+
 <? global $c; ?>
 	
 	<? if (is_array($extraParams)) { // defined within the area/content classes 
@@ -14,7 +45,7 @@ $closeWindowCID=(intval($rcID))?intval($rcID):$c->getCollectionID();
 		<? } ?>
 	<? } ?>
 
-<? if (!$b->getProxyBlock()) { ?>	
+<? if (!$b->getProxyBlock() && !$bt->supportsInlineEditing()) { ?>	
 	<div class="ccm-buttons dialog-buttons">
 	<a style="float: right" href="javascript:clickedButton = true;$('#ccm-form-submit-button').get(0).click()" class="btn primary"><?=t('Save')?> <i class="icon-ok icon-white"></i></a>
 	<a style="float:left" href="javascript:void(0)" <? if ($replaceOnUnload) { ?>onclick="location.href='<?=DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=<?=$closeWindowCID ?><?=$step?>'; return true" class="btn"<? } else { ?>class="btn" onclick="ccm_blockWindowClose()" <? } ?>><?=t('Cancel')?></a>
