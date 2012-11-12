@@ -1,0 +1,36 @@
+#!/bin/bash
+if $(pwd | grep "build$" &> /dev/null); then
+    cd ..
+fi
+if $(pwd | grep "smart$" &> /dev/null); then
+    cd ../..
+fi
+
+./build/smart/sanitycheck $1
+
+
+status=$(git status --porcelain 2> /dev/null)
+inp=$1
+function compile_less {
+	input="web/concrete/css/ccm_app/build/$1.less"
+	search=$input
+	output="web/concrete/css/$1.css"
+	if [ $inp ]; then
+		search=''
+	fi
+    if $(echo "$status" | grep "$search" &> /dev/null); then
+    	echo "Compiling $1"
+    	lessc -x $input $output
+    fi
+}
+
+compile_less ccm.account
+compile_less jquery.ui
+compile_less jquery.rating
+compile_less ccm.default.theme
+compile_less ccm.dashboard
+compile_less ccm.dashboard.1200
+compile_less ccm.colorpicker
+compile_less ccm.app.mobile
+compile_less ccm.app
+
