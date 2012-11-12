@@ -77,8 +77,8 @@ if (isset($help) && !$bt->supportsInlineEditing()) { ?>
 	<input type="hidden" name="ccm-string-<?=$key?>" value="<?=$val?>" />
 <? } ?>
 
-<? if ($bt->supportsInlineEditing()) {
-	echo ('<div id="b' . $b->getBlockID() . '-' . $a->getAreaID() . '" custom-style="' . $b->getBlockCustomStyleRuleID() . '" class="ccm-block-edit-inline">');
-} else { ?>
-	<div id="ccm-block-fields">
+<? if (!$bt->supportsInlineEditing()) { ?>
+<div id="ccm-block-fields">
+<? } else { ?>
+<div>
 <? } ?>

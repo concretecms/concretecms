@@ -1,7 +1,8 @@
 .redactor_box {
 	position: relative;
-	border: 1px solid #ddd;
+	border: 1px solid rgba(0,0,0,0.2);
 	overflow: visible;
+	opacity: 1.0;
 }
 .redactor_box, .redactor_box textarea {
 	background-color: #fff;
@@ -48,7 +49,12 @@ body .redactor_box_fullscreen {
 	position: relative;
 	outline: none;
 	box-shadow: none !important;
+	/* concrete5 */
+	/*
 	padding: 15px !important;
+	*/
+
+	padding: px !important;
 	margin: 0 !important;
 	/* 
 	background: none;
@@ -59,7 +65,9 @@ body .redactor_box_fullscreen {
 	line-height: 1.45em !important;
 	white-space: normal;
 	*/
+	/* end concrete5 */
 }
+
 
 /* concrete5 Mod: make sure redactor doesn't overwrite our styles*/
 /*
@@ -235,6 +243,10 @@ body .redactor_box_fullscreen {
 	position: relative;
 	left: 0;
 	top: 0;
+	/* concrete5 */
+	visibility: visible !important;
+	/* end concrete5 */
+
 	margin: 0 !important;
 	padding: 0 !important;
 	padding-left: 2px !important;
