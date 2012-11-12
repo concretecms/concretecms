@@ -831,6 +831,7 @@
 							}
 
 							$obj->error = false;
+							$obj->btID = $nb->getBlockTypeID();
 							$obj->bID = $nb->getBlockID();
 							
 						} else {

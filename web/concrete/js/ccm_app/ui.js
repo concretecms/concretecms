@@ -135,22 +135,30 @@ ccm_showBlockMenu = function(obj, e) {
 
 ccm_loadInlineEditor = function(arHandle, aID, bID) {
 
-	ccm_inlineEditMode = true;
-	ccm_hideHighlighter();
-
-	$('div.ccm-block').each(function() {
-		$(this).addClass('ccm-block-edit-disabled');
-		$(this).removeClass('ccm-block');
-	});
-
-	$('div.ccm-add-block').hide();
+	jQuery.fn.dialog.showLoader();
+	ccm_enterInlineEditMode($('#b' + bID + '-' + aID));
 
 	$.ajax({
 	type: 'GET',
 	url: CCM_TOOLS_PATH + '/edit_block_popup',
 	data: 'btask=edit&cID=' + CCM_CID + '&bID=' + bID + '&arHandle=' + arHandle + '&aID=' + aID,
 	success: function(r) {
-		$('#b' + bID + '-' + aID).before(r).remove();
+		$('#b' + bID + '-' + aID).html(r);
+	}});
+}
+
+ccm_loadInlineEditorAdd = function(arHandle, aID, btID) {
+
+	jQuery.fn.dialog.showLoader();
+	ccm_enterInlineEditMode();
+
+	$.ajax({
+	type: 'GET',
+	url: CCM_TOOLS_PATH + '/add_block_popup',
+	data: 'btask=edit&cID=' + CCM_CID + '&arHandle=' + arHandle + '&btID=' + btID,
+	success: function(r) {
+		jQuery.fn.dialog.closeAll();
+		$('#a' + aID).append($('<div id="a' + aID + '-bt' + btID + '">' + r + '</div>'));
 	}});
 }
 
@@ -351,11 +359,13 @@ ccm_parseBlockResponse = function(r, currentBlockID, task) {
 						} else {
 							$("#a" + resp.aID).append(r);
 						}
+						console.log(resp);
+						// inline support.
+						$('#a' + resp.aID + '-bt' + resp.btID).remove();
 					} else {
 						$('#b' + currentBlockID + '-' + resp.aID).before(r).remove();
 					}
-					jQuery.fn.dialog.hideLoader();
-					ccm_mainNavDisableDirectExit();
+					ccm_exitInlineEditMode();
 					if (task == 'add') {
 						ccmAlert.hud(ccmi18n.addBlockMsg, 2000, 'add', ccmi18n.addBlock);
 						jQuery.fn.dialog.closeAll();
@@ -372,6 +382,31 @@ ccm_parseBlockResponse = function(r, currentBlockID, task) {
 	} catch(e) { 
 		ccmAlert.notice(ccmi18n.error, r); 
 	}
+}
+
+ccm_exitInlineEditMode = function() {
+	ccm_inlineEditMode = false;
+
+	$('div.ccm-block').removeClass('ccm-block-edit-disabled');
+	$('div.ccm-add-block').removeClass('ccm-block-edit-disabled');
+
+	ccm_mainNavDisableDirectExit();
+	jQuery.fn.dialog.hideLoader();
+
+}
+
+ccm_enterInlineEditMode = function(skipObj) {
+	ccm_inlineEditMode = true;
+	ccm_hideHighlighter();
+
+	$('div.ccm-block').addClass('ccm-block-edit-disabled');
+	$('div.ccm-add-block').addClass('ccm-block-edit-disabled');
+	if (skipObj) {
+		skipObj.removeClass('ccm-block-edit-disabled');
+	}
+
+	jQuery.fn.dialog.hideLoader();
+
 }
 
 ccm_mainNavDisableDirectExit = function(disableShow) {

@@ -2,7 +2,8 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 ?>
 
-<?=$controller->getContentEditMode()?>
+<div id="redactor-edit-content"><?=$controller->getContentEditMode()?></div>
+<textarea style="display: none" id="redactor-content" name="content"><?=$controller->getContentEditMode()?></textarea>
 
 <?
 print Loader::helper("html")->css('redactor.css');
@@ -13,9 +14,9 @@ print Loader::helper("html")->javascript('redactor.concrete5.js');
 
 <script type="text/javascript">
 $(function() {
-	$('.ccm-block-edit-inline').redactor({
+	$('#redactor-edit-content').redactor({
 		'plugins': [
-			'concrete5'
+			'concrete5inline'
 		]
 	});
 });

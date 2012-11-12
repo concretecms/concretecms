@@ -1,7 +1,7 @@
 // concrete5 Redactor functionality
 if (typeof RedactorPlugins === 'undefined') var RedactorPlugins = {};
 
-RedactorPlugins.concrete5 = {
+RedactorPlugins.concrete5inline = {
 
 	init: function() {
 		this.$toolbar.css({ position: 'fixed', width: '100%', zIndex: 1005, top: '50px', left: '0px' });
@@ -10,8 +10,12 @@ RedactorPlugins.concrete5 = {
 		$('#ccm-redactor-cancel-button').on('click', function() {
 			ccm_onInlineEditCancel(function() {
 				editor.destroyEditor();
-				$('.ccm-block-edit-inline').destroyEditor();
 			});
+		});
+		$('#ccm-redactor-save-button').on('click', function() {
+			$('#redactor-content').val(editor.getCode());
+			editor.destroyEditor();
+			$('#ccm-block-form').submit();
 		});
 	}
 
