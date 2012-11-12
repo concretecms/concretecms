@@ -239,7 +239,7 @@ class Concrete5_Model_UserPointAction extends Model {
 			$upe->save();
 			return $upe;
 		} catch(Exception $e) {
-			Log::addEntry("Error saving user point record: ".$e->getMessage(),'exceptions');
+			Log::addEntry(t("Error saving user point record: %s", $e->getMessage()),'exceptions');
 			return false;
 		}
 		
