@@ -158,7 +158,7 @@ ccm_loadInlineEditorAdd = function(arHandle, aID, btID) {
 	data: 'btask=edit&cID=' + CCM_CID + '&arHandle=' + arHandle + '&btID=' + btID,
 	success: function(r) {
 		jQuery.fn.dialog.closeAll();
-		$('#a' + aID).append($('<div id="a' + aID + '-bt' + btID + '">' + r + '</div>'));
+		$('#a' + aID).append($('<div id="a' + aID + '-bt' + btID + '" class="ccm-block-edit-inline-active">' + r + '</div>'));
 	}});
 }
 
@@ -402,7 +402,7 @@ ccm_enterInlineEditMode = function(skipObj) {
 	$('div.ccm-block').addClass('ccm-block-edit-disabled');
 	$('div.ccm-add-block').addClass('ccm-block-edit-disabled');
 	if (skipObj) {
-		skipObj.removeClass('ccm-block-edit-disabled');
+		skipObj.removeClass('ccm-block-edit-disabled').addClass('ccm-block-edit-inline-active');
 	}
 
 	jQuery.fn.dialog.hideLoader();
