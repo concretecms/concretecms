@@ -1,7 +1,12 @@
 .redactor_box {
 	position: relative;
-	overflow: visible;
+	/* concrete5 */ 
+	/*
+	border: 1px solid #ddd;
+	*/
 	opacity: 1.0;
+	/* end concrete5 */
+	overflow: visible;
 }
 .redactor_box, .redactor_box textarea {
 	background-color: #fff;
@@ -17,8 +22,6 @@ body .redactor_air {
 /*
 	Fullscreen
 */
-
-
 body .redactor_box_fullscreen {
     left: 0;
     position: fixed;
@@ -49,9 +52,55 @@ body .redactor_box_fullscreen {
 	padding: 15px !important;
 	background: #fff !important;
 	overflow: auto;
+	height: 200px;
+
+}
+
+.ccm-attribute-textarea-edit .redactor_box {
+	border: 1px solid #ccc;
 }
 
 /* end concrete5 */
+
+/* concrete5 comment out */
+/*
+.redactor_editor,
+.redactor_editor:focus,
+.redactor_editor div,
+.redactor_editor p,
+.redactor_editor ul,
+.redactor_editor ol,
+.redactor_editor table,
+.redactor_editor dl,
+.redactor_editor blockquote,
+.redactor_editor pre,
+.redactor_editor h1,
+.redactor_editor h2,
+.redactor_editor h3,
+.redactor_editor h4,
+.redactor_editor h5 {
+	font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif !important;
+}
+
+.redactor_editor code,
+.redactor_editor pre {
+	font-family: Menlo, Monaco, monospace, sans-serif !important;
+}
+
+.redactor_editor,
+.redactor_editor:focus,
+.redactor_editor div,
+.redactor_editor p,
+.redactor_editor ul,
+.redactor_editor ol,
+.redactor_editor table,
+.redactor_editor dl,
+.redactor_editor blockquote,
+.redactor_editor pre {
+	font-size: 15px !important;
+	line-height: 1.45em !important;
+}
+*/
 
 .redactor_editor, .redactor_editor:focus {
 	position: relative;
@@ -61,21 +110,16 @@ body .redactor_box_fullscreen {
 	/*
 	padding: 15px !important;
 	*/
-
 	padding: px !important;
 	margin: 0 !important;
 	/* 
 	background: none;
 	background: #fff !important;
 	overflow: auto;
-	font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif !important;
-	font-size: 15px !important;
-	line-height: 1.45em !important;
 	white-space: normal;
 	*/
 	/* end concrete5 */
 }
-
 
 /* concrete5 Mod: make sure redactor doesn't overwrite our styles*/
 /*
@@ -109,9 +153,6 @@ body .redactor_box_fullscreen {
 	background: none !important;
 	margin: 0 !important;
 	margin-bottom: 15px !important;
-	line-height: 1.45em !important;
-	font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif !important;
-	font-size: 15px !important;
 	border: none;
 }
 .redactor_editor iframe,
@@ -153,10 +194,6 @@ body .redactor_box_fullscreen {
 	border-bottom: 2px solid #000 !important;
 	font-weight: bold !important;
 }
-.redactor_editor code,
-.redactor_editor pre {
-	font-family: Menlo, Monaco, monospace, sans-serif !important;
-}
 .redactor_editor code {
 	background-color: #d8d7d7 !important;
 }
@@ -181,14 +218,12 @@ body .redactor_box_fullscreen {
 .redactor_editor h3,
 .redactor_editor h4,
 .redactor_editor h5 {
-	font-family: Helvetica, Arial, Verdana, Tahoma, sans-serif !important;
 	color: #000;
 	background: none;
 	margin: 0 !important;
 	padding: 0 !important;
 	font-weight: bold;
 }
-
 
 .redactor_editor h1 {
 	font-size: 36px !important;
@@ -215,6 +250,8 @@ body .redactor_box_fullscreen {
 	margin-bottom: 10px !important;
 }
 */
+/* end concrete5 */
+
 .redactor_editor.redactor_editor_wym {
 	background: #f6f6f6 !important;
 	padding: 5px 15px !important;
@@ -254,7 +291,6 @@ body .redactor_box_fullscreen {
 	/* concrete5 */
 	visibility: visible !important;
 	/* end concrete5 */
-
 	margin: 0 !important;
 	padding: 0 !important;
 	padding-left: 2px !important;
@@ -285,6 +321,7 @@ body .redactor_air .redactor_toolbar {
 	padding: 3px 1px;
 	padding-right: 0;
 	list-style: none !important;
+	outline: none;
 }
 .redactor_toolbar li.redactor_separator {
 	float: left;
@@ -304,9 +341,9 @@ body .redactor_air .redactor_toolbar {
 	/* concrete5 */
 	padding: 0px !important;
 	/* end concrete5 */
-
 	cursor: pointer;
 	zoom: 1;
+	outline: none;
 	text-decoration: none;
 }
 .redactor_toolbar li.redactor_btn_right {
@@ -330,6 +367,7 @@ body .redactor_air .redactor_toolbar {
 }
 
 .redactor_toolbar li a:hover {
+	/* concrete5 */
 	/*
 	border-color: #98a6ba;
 	background-color: #dde4ef;
@@ -337,11 +375,16 @@ body .redactor_air .redactor_toolbar {
 	border-color: #b2b2b2 !important;
 	border-radius: 2px !important;
 	background-color: #b2b2b2 !important;
+	/* end concrete5 */
+	outline: none;
 }
 .redactor_toolbar li a:active, .redactor_toolbar li a.redactor_act {
 	border-color: #b5b5b5;
 	background-color: #ddd;
+	outline: none;
 }
+
+/* concrete5 */
 
 #ccm-redactor-actions-buttons {
 	position: absolute;
@@ -352,6 +395,14 @@ body .redactor_air .redactor_toolbar {
 #ccm-redactor-save-button {
 	margin-left: 6px;
 }
+
+body .redactor_toolbar li a.redactor_btn_concrete5	 		{ 
+	background: url(../images/editor_dropdown_btn.png) no-repeat scroll;
+}
+
+
+/* end concrete5 */
+
 
 /*
 	BUTTONS
@@ -386,11 +437,6 @@ body .redactor_toolbar li a.redactor_btn_clips		 		{ background-position: -600px
 
 body .redactor_toolbar li a.redactor_btn_alignment	 		{ background-position: -625px; }
 
-/* concrete5 */
-body .redactor_toolbar li a.redactor_btn_concrete5	 		{ 
-	background: url(../images/editor_dropdown_btn.png) no-repeat scroll;
-}
-/* end concrete5 */
 /*
 	Toolbar classes
 */
@@ -612,10 +658,7 @@ body .redactor_toolbar li a.redactor_btn_concrete5	 		{
 #redactor_modal input[type="email"],
 #redactor_modal textarea {
 	position: relative;
-	/* concrete5 */
-	/* z-index: 2; */
-	/* end concrete5 */
-	
+	z-index: 2;
 	font-family: Helvetica, Arial, Tahoma, sans-serif;
 	height: 23px;
 	border: 1px solid #ccc;
