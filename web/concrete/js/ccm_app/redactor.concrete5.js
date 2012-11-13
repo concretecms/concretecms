@@ -34,14 +34,13 @@ RedactorPlugins.concrete5inline = {
 RedactorPlugins.concrete5 = {
 
 	init: function() {
-		var iobj = this;
+
 		this.addBtnBefore('html', 'concrete5', 'concrete5', false, {
 
 			insertLinkToPage:
 			{
 				title: ccmi18n_editor.insertLinkToPage,
 				callback: function(obj) {
-					var editor = obj.$editor;
 
 				    $.fn.dialog.open({
 				        title: ccmi18n_sitemap.choosePage,
@@ -51,16 +50,18 @@ RedactorPlugins.concrete5 = {
 				        height: '70%'
 				    });
 
-				    ccm_selectSitemapNode = function(cID, cName) {
-
-						var url = CCM_BASE_URL + CCM_DISPATCHER_FILENAME + '?cID=' + cID;		
-						var selectedText = editor.getSelected();
-
+				    ccm_selectSitemapNode = function(cID, cName) {				    
+						var url = CCM_BASE_URL + CCM_DISPATCHER_FILENAME + '?cID=' + cID;	
+						try {
+							selectedText = obj.$el.getSelected();
+						} catch (e) {
+							selectedText = obj.$editor.getSelected();
+						}
 						if (selectedText != '') {
-							editor.execCommand('inserthtml', '<a href="' + CCM_BASE_URL + CCM_DISPATCHER_FILENAME + '?cID=' + cID + '" title="' + cName + '">' + selectedText + '<\/a>');
+							obj.execCommand('inserthtml', '<a href="' + CCM_BASE_URL + CCM_DISPATCHER_FILENAME + '?cID=' + cID + '" title="' + cName + '">' + selectedText + '<\/a>');
 						} else {
 							var selectedText = '<a href="' + CCM_BASE_URL + CCM_DISPATCHER_FILENAME + '?cID=' + cID + '" title="' + cName + '">' + cName + '<\/a>';
-							editor.insertHtml(selectedText);
+							obj.insertHtml(selectedText);
 						}
 				    }
 
@@ -70,12 +71,11 @@ RedactorPlugins.concrete5 = {
 			{
 				title: ccmi18n_editor.insertImage,
 				callback: function(obj) {
-					var editor = obj.$editor;
-					iobj.saveSelection();
+					obj.saveSelection();
 					ccm_launchFileManager();
 					ccm_chooseAsset = function(res) {
-						iobj.restoreSelection();
-						editor.insertHtml('<img src="' + res.filePathInline + '" alt="' + res.title + '" width="' + res.width + '" height="' + res.height + '">');
+						obj.restoreSelection();
+						obj.insertHtml('<img src="' + res.filePathInline + '" alt="' + res.title + '" width="' + res.width + '" height="' + res.height + '">');
 					}
 				}
 			},
@@ -83,18 +83,23 @@ RedactorPlugins.concrete5 = {
 			{
 				title: ccmi18n_editor.insertLinkToFile,
 				callback: function(obj) {
-					var editor = obj.$editor;
-					iobj.saveSelection();
+					obj.saveSelection();
 					ccm_launchFileManager();
 					ccm_chooseAsset = function(res) {
-						iobj.restoreSelection();
-						var selectedText = editor.getSelected();
+						obj.restoreSelection();
+						try {
+							selectedText = obj.$el.getSelected();
+						} catch (e) {
+							selectedText = obj.$editor.getSelected();
+						}
+
 						if (selectedText != '') {
 							var html = '<a href="' + res.filePathInline + '">' + selectedText + '<\/a>';
+							obj.execCommand('inserthtml', html);
 						} else {
 							var html = '<a href="' + res.filePathInline + '">' + res.title + '<\/a>';
+							obj.insertHtml(html);
 						}
-						editor.insertHtml(html);
 					}
 				}
 			}

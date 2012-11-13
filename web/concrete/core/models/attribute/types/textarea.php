@@ -40,7 +40,7 @@ class Concrete5_Controller_AttributeType_Textarea extends DefaultAttributeTypeCo
 	}
 	
 	public function composer() {
-		$this->form('span4');
+		$this->form();
 	}
 
 	public function searchForm($list) {

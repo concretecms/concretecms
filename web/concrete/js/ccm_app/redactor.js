@@ -1,6 +1,6 @@
 /*
-	Redactor v8.1.1
-	Updated: October 18, 2012
+	Redactor v8.2.0
+	Updated: November 8, 2012
 
 	http://redactorjs.com/
 
@@ -10,8 +10,7 @@
 	Usage: $('#content').redactor();
 */
 
-// selection mechanism
-var _0xf6db=["(6(){11 49=24;11 14={50:6(8,10){5 10.58(8)\x2692},57:6(8,10){7(8.58!=12){5 8.58(10)\x2616}46{5 8.57(10)}},55:6(8,18,10,20){7(8===10){5 18\x3C=20}7(14.29(8)\x26\x2614.29(10)){5 14.50(8,10)}7(14.29(8)\x26\x26!14.29(10)){5!14.55(10,20,8,18)}7(!14.57(8,10)){5 14.50(8,10)}7(8.47.85\x3C=18){5 40}7(8.47[18]===10){5 0\x3C=20}5 14.50(8.47[18],10)},29:6(61){5(61!=12?61.93==3:40)},81:6(41){11 62=0;88(41=41.59){62++}5 62}};11 4=49.4=(6(){6 4(2){24.2=2}4.34.31=6(){5 4.31(24.2)};4.34.37=6(){5 4.37(24.2)};4.34.38=6(){5 4.38(24.2)};4.34.45=6(){5 4.45(24.2)};4.34.44=6(){5 4.44(24.2)};4.34.52=6(25,26,23,22){5 4.52(24.2,25,26,23,22)};4.34.51=6(){5 4.51(24.2)};5 4})();7(49.35){4.67=43;4.31=6(2){11 9;5(9=2.35())\x26\x26(9.63!=12)\x26\x26(9.36!=12)};4.37=6(2){11 9;7(!((9=2.35())\x26\x26(9.36!=12))){5 12}5[9.36,9.97]};4.38=6(2){11 9;7(!((9=2.35())\x26\x26(9.63!=12))){5 12}5[9.63,9.91]};4.45=6(2){11 8,10,18,20,27,28;7(!4.31(2)){5 12}27=4.37(2),8=27[0],18=27[1];28=4.38(2),10=28[0],20=28[1];7(14.55(8,18,10,20)){5[8,18]}5[10,20]};4.44=6(2){11 8,10,18,20,27,28;7(!4.31(2)){5 12}27=4.37(2),8=27[0],18=27[1];28=4.38(2),10=28[0],20=28[1];7(14.55(8,18,10,20)){5[10,20]}5[8,18]};4.52=6(2,25,26,23,22){11 9=2.35();7(!9){5}7(23==12){23=25}7(22==12){22=26}7(9.60\x26\x269.79){9.60(25,26);9.79(23,22)}46{54=2.15.56();54.106(25,26);54.107(23,22);71{9.73()}80(41){}9.98(54)}};4.51=6(2){71{11 9=2.35();7(!9){5}9.73()}80(41){}}}46 7(49.15.39){11 69=6(42,32,30){11 19,13,21,33,64;13=42.90(\x2789\x27);19=32.103();19.60(30);64=19.77();88(43){64.86(13,13.59);19.82(13);7(!(19.87((30?\x2766\x27:\x2783\x27),32)\x3E0\x26\x26(13.59!=12))){99}}7(19.87((30?\x2766\x27:\x2783\x27),32)===-1\x26\x2613.84){19.74((30?\x27100\x27:\x2778\x27),32);21=13.84;33=19.101.85}46{21=13.48;33=14.81(13)}13.48.72(13);5[21,33]};11 68=6(42,32,30,21,33){11 36,65,19,13,53;53=0;36=14.29(21)?21:21.47[33];65=14.29(21)?21.48:21;7(14.29(21)){53=33}13=42.90(\x2789\x27);65.86(13,36||12);19=42.76.75();19.82(13);13.48.72(13);32.74((30?\x2766\x27:\x2778\x27),19);5 32[30?\x27105\x27:\x27104\x27](\x27102\x27,53)};4.67=43;4.31=6(2){11 17;2.70();7(!2.15.39){5 40}17=2.15.39.56();5 17\x26\x2617.77().15===2.15};4.45=6(2){11 17;2.70();7(!4.31(2)){5 12}17=2.15.39.56();5 69(2.15,17,43)};4.44=6(2){11 17;2.70();7(!4.31(2)){5 12}17=2.15.39.56();5 69(2.15,17,40)};4.37=6(2){5 4.45(2)};4.38=6(2){5 4.44(2)};4.52=6(2,25,26,23,22){7(23==12){23=25}7(22==12){22=26}11 17=2.15.76.75();68(2.15,17,40,23,22);68(2.15,17,43,25,26);5 17.96()};4.51=6(2){5 2.15.39.95()}}46{4.67=40}}).94(24);","|","split","||win||Selection|return|function|if|n1|sel|n2|var|null|cursorNode|Dom|document||range|o1|cursor|o2|node|foco|focn|this|orgn|orgo|_ref|_ref2|isText|bStart|hasSelection|textRange|offset|prototype|getSelection|anchorNode|getOrigin|getFocus|selection|false|e|doc|true|getEnd|getStart|else|childNodes|parentNode|root|isPreceding|clearSelection|setSelection|textOffset|r|isCursorPreceding|createRange|contains|compareDocumentPosition|previousSibling|collapse|d|k|focusNode|parent|anchorParent|StartToStart|supported|moveBoundary|getBoundary|focus|try|removeChild|removeAllRanges|setEndPoint|createTextRange|body|parentElement|EndToEnd|extend|catch|getChildIndex|moveToElementText|StartToEnd|nextSibling|length|insertBefore|compareEndPoints|while|a|createElement|focusOffset|0x02|nodeType|call|empty|select|anchorOffset|addRange|break|EndToStart|text|character|duplicate|moveEnd|moveStart|setStart|setEnd","replace","","\x5Cw+","\x5Cb","g"];eval(function (p,a,c,k,e,d){e=function (c){return c;} ;if(!_0xf6db[5][_0xf6db[4]](/^/,String)){while(c--){d[c]=k[c]||c;} ;k=[function (e){return d[e];} ];e=function (){return _0xf6db[6];} ;c=1;} ;while(c--){if(k[c]){p=p[_0xf6db[4]]( new RegExp(_0xf6db[7]+e(c)+_0xf6db[7],_0xf6db[8]),k[c]);} ;} ;return p;} (_0xf6db[0],10,108,_0xf6db[3][_0xf6db[2]](_0xf6db[1]),0,{}));
+var rwindow, rdocument;
 
 if (typeof RELANG === 'undefined')
 {
@@ -119,6 +118,9 @@ var RLANG = {
 		// Options
 		this.opts = $.extend({
 
+			iframe: false,
+			css: false, // url
+
 			lang: 'en',
 			direction: 'ltr', // ltr or rtl
 
@@ -128,7 +130,6 @@ var RLANG = {
 			execCommandCallback: false, // function
 
 			plugins: false,
-
 			cleanup: true,
 
 			focus: false,
@@ -142,7 +143,7 @@ var RLANG = {
 			shortcuts: true,
 
 			mobile: true,
-			air: false,
+			air: false, // true or toolbar
 			wym: false,
 
 			convertLinks: true,
@@ -605,11 +606,20 @@ var RLANG = {
 			this.height = this.$el.css('height');
 			this.width = this.$el.css('width');
 
+			rdocument = this.document = document;
+			rwindow = this.window = window;
+
 			// mobile
 			if (this.opts.mobile === false && this.isMobile())
 			{
 				this.build(true);
 				return false;
+			}
+
+			// iframe
+			if (this.opts.iframe)
+			{
+				this.opts.autoresize = false;
 			}
 
 			// extend buttons
@@ -651,133 +661,146 @@ var RLANG = {
 				}, this));
 			}
 
-			// construct editor
-			this.build();
-
-			// air enable
-			this.enableAir();
-
-			// toolbar
-			this.buildToolbar();
-
-			// PLUGINS
-			if (typeof this.opts.plugins === 'object')
+			function afterBuild()
 			{
-				$.each(this.opts.plugins, $.proxy(function(i,s)
-				{
-					if (typeof RedactorPlugins[s] !== 'undefined')
-					{
-						$.extend(this, RedactorPlugins[s]);
+	      		// air enable
+				this.enableAir();
 
-						if (typeof RedactorPlugins[s].init !== 'undefined')
+				// toolbar
+				this.buildToolbar();
+
+				// PLUGINS
+				if (typeof this.opts.plugins === 'object')
+				{
+					$.each(this.opts.plugins, $.proxy(function(i,s)
+					{
+						if (typeof RedactorPlugins[s] !== 'undefined')
 						{
-							this.init();
+							$.extend(this, RedactorPlugins[s]);
+
+							if (typeof RedactorPlugins[s].init !== 'undefined')
+							{
+								this.init();
+							}
 						}
-					}
 
-				}, this));
-			}
-
-			// buttons response
-			if (this.opts.activeButtons !== false && this.opts.toolbar !== false)
-			{
-				var observeFormatting = $.proxy(function() { this.observeFormatting(); }, this);
-				this.$editor.click(observeFormatting).keyup(observeFormatting);
-			}
-
-			// paste
-			var oldsafari = false;
-			if ($.browser.webkit && navigator.userAgent.indexOf('Chrome') === -1)
-			{
-				var arr = $.browser.version.split('.');
-				if (arr[0] < 536) oldsafari = true;
-			}
-
-			if (this.isMobile(true) === false && oldsafari === false)
-			{
-				this.$editor.bind('paste', $.proxy(function(e)
-				{
-					if (this.opts.cleanup === false)
-					{
-						return true;
-					}
-
-					this.setBuffer();
-
-					if (this.opts.autoresize === true)
-					{
-						this.saveScroll = document.body.scrollTop;
-					}
-					else
-					{
-						this.saveScroll = this.$editor.scrollTop();
-					}
-
-					var frag = this.extractContent();
-
-					setTimeout($.proxy(function()
-					{
-						var pastedFrag = this.extractContent();
-						this.$editor.append(frag);
-
-						this.restoreSelection();
-
-						var html = this.getFragmentHtml(pastedFrag);
-						this.pasteCleanUp(html);
-
-					}, this), 1);
-
-				}, this));
-			}
-
-			// key handlers
-			this.keyup();
-			this.keydown();
-
-			// autosave
-			if (this.opts.autosave !== false)
-			{
-				this.autoSave();
-			}
-
-			// observers
-			this.observeImages();
-			this.observeTables();
-
-			// FF fix
-			if ($.browser.mozilla)
-			{
-				this.$editor.click($.proxy(function()
-				{
-					this.saveSelection();
-				}, this));
-
-				try
-				{
-					document.execCommand('enableObjectResizing', false, false);
-					document.execCommand('enableInlineTableEditing', false, false);
+					}, this));
 				}
-				catch (e) {}
+
+				// buttons response
+				if (this.opts.activeButtons !== false && this.opts.toolbar !== false)
+				{
+					var observeFormatting = $.proxy(function() { this.observeFormatting(); }, this);
+					this.$editor.click(observeFormatting).keyup(observeFormatting);
+				}
+
+				// paste
+				var oldsafari = false;
+				if ($.browser.webkit && navigator.userAgent.indexOf('Chrome') === -1)
+				{
+					var arr = $.browser.version.split('.');
+					if (arr[0] < 536) oldsafari = true;
+				}
+
+				if (this.isMobile(true) === false && oldsafari === false)
+				{
+					this.$editor.bind('paste', $.proxy(function(e)
+					{
+						if (this.opts.cleanup === false)
+						{
+							return true;
+						}
+
+						this.pasteRunning = true;
+
+						this.setBuffer();
+
+						if (this.opts.autoresize === true)
+						{
+							this.saveScroll = this.document.body.scrollTop;
+						}
+						else
+						{
+							this.saveScroll = this.$editor.scrollTop();
+						}
+
+						var frag = this.extractContent();
+
+						setTimeout($.proxy(function()
+						{
+							var pastedFrag = this.extractContent();
+							this.$editor.append(frag);
+
+							this.restoreSelection();
+
+							var html = this.getFragmentHtml(pastedFrag);
+							this.pasteCleanUp(html);
+							this.pasteRunning = false;
+
+						}, this), 1);
+
+					}, this));
+				}
+
+				// key handlers
+				this.keyup();
+				this.keydown();
+
+				// autosave
+				if (this.opts.autosave !== false)
+				{
+					this.autoSave();
+				}
+
+				// observers
+				this.observeImages();
+				this.observeTables();
+
+				// FF fix
+				if ($.browser.mozilla)
+				{
+					this.$editor.click($.proxy(function()
+					{
+						this.saveSelection();
+					}, this));
+
+					try
+					{
+						this.document.execCommand('enableObjectResizing', false, false);
+						this.document.execCommand('enableInlineTableEditing', false, false);
+					}
+					catch (e) {}
+				}
+
+				// focus
+				if (this.opts.focus)
+				{
+					setTimeout($.proxy(function(){
+						this.$editor.focus();
+					}, this), 1);
+				}
+
+				// fixed
+				if (this.opts.fixed)
+				{
+					this.observeScroll();
+					$(document).scroll($.proxy(this.observeScroll, this));
+				}
+
+				// callback
+				if (typeof this.opts.callback === 'function')
+				{
+					this.opts.callback(this);
+				}
+
+				if (this.opts.toolbar !== false)
+				{
+					this.$toolbar.find('a').attr('tabindex', '-1');
+				}
 			}
 
-			// focus
-			if (this.opts.focus)
-			{
-				this.$editor.focus();
-			}
-
-			// fixed
-			if (this.opts.fixed)
-			{
-				this.observeScroll();
-				$(document).scroll($.proxy(this.observeScroll, this));
-			}
-
-			// callback
-			if (typeof this.opts.callback === 'function')
-			{
-				this.opts.callback(this);
-			}
+			// construct editor
+		    this.build(false, afterBuild);
 
 		},
 		shortcuts: function(e, cmd)
@@ -791,7 +814,7 @@ var RLANG = {
 			{
 				var key = e.keyCode || e.which;
 
-				if ($.browser.mozilla)
+				if ($.browser.mozilla && !this.pasteRunning)
 				{
 					this.saveSelection();
 				}
@@ -909,10 +932,10 @@ var RLANG = {
 					e.preventDefault();
 
 					var html = $(current).parent().text();
-					this.insertNodeAtCaret(document.createTextNode('\r\n'));
+					this.insertNodeAtCaret(this.document.createTextNode('\r\n'));
 					if (html.search(/\s$/) == -1)
 					{
-						this.insertNodeAtCaret(document.createTextNode('\r\n'));
+						this.insertNodeAtCaret(this.document.createTextNode('\r\n'));
 					}
 					this.syncCode();
 
@@ -929,7 +952,7 @@ var RLANG = {
 					else
 					{
 						e.preventDefault();
-						this.insertNodeAtCaret(document.createTextNode('\t'));
+						this.insertNodeAtCaret(this.document.createTextNode('\t'));
 						this.syncCode();
 						return false;
 					}
@@ -946,7 +969,7 @@ var RLANG = {
 				}
 			}, this));
 		},
-		build: function(mobile)
+		build: function(mobile, whendone)
 		{
 			if (mobile !== true)
 			{
@@ -959,45 +982,82 @@ var RLANG = {
 					this.air = $('<div class="redactor_air" style="display: none;"></div>');
 				}
 
+				this.$content = null;
+
+				function initFrame()
+				{
+					this.$editor = this.$content.contents().find("body").attr('contenteditable', true).attr('dir', this.opts.direction);
+
+					rdocument = this.document = this.$editor[0].ownerDocument;
+					rwindow = this.window = this.document.defaultView || window;
+
+					if (this.opts.css !== false)
+					{
+						this.$content.contents().find('head').append('<link rel="stylesheet" href="' + this.opts.css + '" />');
+					}
+
+					this.$editor.html(html);
+
+					if (whendone)
+					{
+						whendone.call(this);
+						whendone = null;
+					}
+				}
+
 				// editor
 				this.textareamode = true;
 				if (this.$el.get(0).tagName === 'TEXTAREA')
 				{
-					this.$editor = $('<div></div>');
+					if(this.opts.iframe)
+					{
+						var me = this;
+						this.$content = $('<iframe style="width: 100%;" frameborder="0"></iframe>').load(function()
+						{
+							initFrame.call(me);
+						});
+					}
+					else
+					{
+						 this.$content = this.$editor = $('<div></div>');
+					}
 
 					var classlist = this.$el.get(0).className.split(/\s+/);
 					$.each(classlist, $.proxy(function(i,s)
 					{
-						this.$editor.addClass('redactor_' + s);
+						this.$content.addClass('redactor_' + s);
 					}, this));
 				}
 				else
 				{
 					this.textareamode = false;
-					this.$editor = this.$el;
+					this.$content = this.$editor = this.$el;
 					this.$el = $('<textarea name="' + this.$editor.attr('id') + '"></textarea>').css('height', this.height);
 				}
 
-				this.$editor.addClass('redactor_editor').attr('contenteditable', true).attr('dir', this.opts.direction);
+				if (this.$editor)
+				{
+					this.$editor.addClass('redactor_editor').attr('contenteditable', true).attr('dir', this.opts.direction);
+				}
 
 				if (this.opts.tabindex !== false)
 				{
-					this.$editor.attr('tabindex', this.opts.tabindex);
+					this.$content.attr('tabindex', this.opts.tabindex);
 				}
 
 				if (this.opts.minHeight !== false)
 				{
-					this.$editor.css('min-height', this.opts.minHeight + 'px');
+					this.$content.css('min-height', this.opts.minHeight + 'px');
 				}
 
 				if (this.opts.wym === true)
 				{
-					this.$editor.addClass('redactor_editor_wym');
+					this.$content.addClass('redactor_editor_wym');
 				}
 
 				if (this.opts.autoresize === false)
 				{
-					this.$editor.css('height', this.height);
+					this.$content.css('height', this.height);
 				}
 
 				// hide textarea
@@ -1011,7 +1071,7 @@ var RLANG = {
 					html = this.$el.val();
 					html = this.savePreCode(html);
 
-					this.$box.insertAfter(this.$el).append(this.$editor).append(this.$el);
+					this.$box.insertAfter(this.$el).append(this.$content).append(this.$el);
 				}
 				else
 				{
@@ -1019,17 +1079,18 @@ var RLANG = {
 					html = this.$editor.html();
 					html = this.savePreCode(html);
 
-					this.$box.insertAfter(this.$editor).append(this.$el).append(this.$editor);
+					this.$box.insertAfter(this.$content).append(this.$el).append(this.$editor);
 
 				}
-
-
 
 				// conver newlines to p
 				html = this.paragraphy(html);
 
 				// enable
-				this.$editor.html(html);
+				if (this.$editor)
+				{
+					this.$editor.html(html);
+				}
 
 				if (this.textareamode === false)
 				{
@@ -1045,6 +1106,11 @@ var RLANG = {
 					this.$el.hide();
 					this.$el.after(textarea);
 				}
+			}
+
+			if (whendone && this.$editor)
+			{
+				whendone.call(this);
 			}
 
 		},
@@ -1077,12 +1143,19 @@ var RLANG = {
 			var width = this.air.innerWidth();
 			var left = e.clientX;
 
-			if ($(document).width() < (left + width))
+			if ($(this.document).width() < (left + width))
 			{
 				left = left - width;
 			}
 
-			this.air.css({ left: left + 'px', top: (e.clientY + $(document).scrollTop() + 14) + 'px' }).show();
+			var top = e.clientY + $(document).scrollTop() + 14;
+			if (this.opts.iframe === true)
+			{
+				top = top + this.$box.position().top;
+				left = left + this.$box.position().left;
+			}
+
+			this.air.css({ left: left + 'px', top: top + 'px' }).show();
 		},
 		syncCode: function()
 		{
@@ -1122,16 +1195,16 @@ var RLANG = {
 		pasteHtmlAtCaret: function (html)
 		{
 			var sel, range;
-			if (document.getSelection)
+			if (this.document.getSelection)
 			{
-				sel = window.getSelection();
+				sel = this.window.getSelection();
 				if (sel.getRangeAt && sel.rangeCount)
 				{
 					range = sel.getRangeAt(0);
 					range.deleteContents();
-					var el = document.createElement("div");
+					var el = this.document.createElement("div");
 					el.innerHTML = html;
-					var frag = document.createDocumentFragment(), node, lastNode;
+					var frag = this.document.createDocumentFragment(), node, lastNode;
 					while (node = el.firstChild)
 					{
 						lastNode = frag.appendChild(node);
@@ -1148,9 +1221,9 @@ var RLANG = {
 					}
 				}
 			}
-			else if (document.selection && document.selection.type != "Control")
+			else if (this.document.selection && this.document.selection.type != "Control")
 			{
-				document.selection.createRange().pasteHTML(html);
+				this.document.selection.createRange().pasteHTML(html);
 			}
 		},
 
@@ -1182,6 +1255,11 @@ var RLANG = {
 			{
 				this.dropdowns[i].remove();
 				delete(this.dropdowns[i]);
+			}
+
+			if (this.opts.autosave !== false)
+			{
+				clearInterval(this.autosaveInterval);
 			}
 
 		},
@@ -1251,7 +1329,7 @@ var RLANG = {
 		},
 		observeScroll: function()
 		{
-			var scrolltop = $(document).scrollTop();
+			var scrolltop = $(this.document).scrollTop();
 			var boxtop = this.$box.offset().top;
 			var left = 0;
 
@@ -1260,8 +1338,8 @@ var RLANG = {
 				var width = '100%';
 				if (this.opts.fixedBox)
 				{
-					left = this.$editor.offset().left;
-					width = this.$editor.innerWidth();
+					left = this.$box.offset().left;
+					width = this.$box.innerWidth();
 				}
 
 				this.fixed = true;
@@ -1310,6 +1388,7 @@ var RLANG = {
 
 			try
 			{
+
 				var parent;
 
 				if (cmd === 'inserthtml')
@@ -1317,7 +1396,7 @@ var RLANG = {
 					if ($.browser.msie)
 					{
 						this.$editor.focus();
-						document.selection.createRange().pasteHTML(param);
+						this.document.selection.createRange().pasteHTML(param);
 					}
 					else
 					{
@@ -1341,8 +1420,14 @@ var RLANG = {
 				}
 				else if (cmd === 'JustifyLeft' || cmd === 'JustifyCenter' || cmd === 'JustifyRight' || cmd === 'JustifyFull')
 				{
-					parent = this.getParentNode();
+					parent = this.getCurrentNode();
 					var tag = $(parent).get(0).tagName;
+
+					if (this.opts.iframe === false && $(parent).parents('.redactor_editor').size() == 0)
+					{
+						return false;
+					}
+
 					var tagsArray = ['P', 'DIV', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'BLOCKQUOTE', 'TD'];
 					if ($.inArray(tag, tagsArray) != -1)
 					{
@@ -1377,7 +1462,7 @@ var RLANG = {
 				}
 				else if (cmd === 'formatblock' && param === 'blockquote')
 				{
-					parent = this.getParentNode();
+					parent = this.getCurrentNode();
 					if ($(parent).get(0).tagName === 'BLOCKQUOTE')
 					{
 						if ($.browser.msie)
@@ -1397,7 +1482,7 @@ var RLANG = {
 						{
 							var node = $('<p>' + $(parent).html() + '</p>');
 							$(parent2).replaceWith(node);
-							this.setFocusNode(node.get(0));
+							this.setSelection(node[0], 0, node[0], 0);
 						}
 						else
 						{
@@ -1476,7 +1561,7 @@ var RLANG = {
 				param = '<' + param + '>';
 			}
 
-			document.execCommand(cmd, false, param);
+			this.document.execCommand(cmd, false, param);
 		},
 
 		// FORMAT NEW LINE
@@ -1493,7 +1578,7 @@ var RLANG = {
 					var newElement = $('<p>').append(element.clone().get(0).childNodes);
 					element.replaceWith(newElement);
 					newElement.html('<br />');
-					this.setFocusNode(newElement.get(0));
+					this.setSelection(newElement[0], 0, newElement[0], 0);
 				}
 			}
 		},
@@ -1532,7 +1617,7 @@ var RLANG = {
 
 				var node = $(this.opts.emptyHtml).get(0);
 				this.$editor.html(node);
-				this.setFocusNode(node);
+				this.setSelection(node, 0, node, 0);
 
 				this.syncCode();
 				return false;
@@ -1634,7 +1719,7 @@ var RLANG = {
 			s = s.replace(/<\/p>/gi, '\n');
 			s = s.replace(/<\/div>/gi, '\n');
 
-			var tmp = document.createElement("div");
+			var tmp = this.document.createElement("div");
 			tmp.innerHTML = s;
 			return tmp.textContent||tmp.innerText;
 
@@ -1713,6 +1798,12 @@ var RLANG = {
 			html = html.replace(/<p><p>/gi, '<p>');
 			html = html.replace(/<\/p><\/p>/gi, '</p>');
 
+			// FF fix
+			if ($.browser.mozilla)
+			{
+				html = html.replace(/<br>$/gi, '');
+			}
+
 			this.pasteCleanUpInsert(html);
 
 		},
@@ -1723,7 +1814,7 @@ var RLANG = {
 
 			if (this.opts.autoresize === true)
 			{
-				$(document.body).scrollTop(this.saveScroll);
+				$(this.document.body).scrollTop(this.saveScroll);
 			}
 			else
 			{
@@ -1838,7 +1929,9 @@ var RLANG = {
 			if (this.opts.visual)
 			{
 				var height = this.$editor.innerHeight();
+
 				this.$editor.hide();
+				this.$content.hide();
 
 				html = this.$editor.html();
 				html = $.trim(this.formatting(html));
@@ -1860,6 +1953,7 @@ var RLANG = {
 
 				// set code
 				this.$editor.html(html).show();
+				this.$content.show();
 
 				if (this.$editor.html() === '')
 				{
@@ -1879,7 +1973,7 @@ var RLANG = {
 		// AUTOSAVE
 		autoSave: function()
 		{
-			setInterval($.proxy(function()
+			this.autosaveInterval = setInterval($.proxy(function()
 			{
 				$.ajax({
 					url: this.opts.autosave,
@@ -1913,7 +2007,7 @@ var RLANG = {
 			if (this.opts.air)
 			{
 				$(this.air).append(this.$toolbar);
-				$('body').prepend(this.air);
+				$('body').append(this.air);
 			}
 			else
 			{
@@ -2172,6 +2266,7 @@ var RLANG = {
 
 			$(document).one('click', hdlHideDropDown);
 			this.$editor.one('click', hdlHideDropDown);
+			this.$content.one('click', hdlHideDropDown);
 
 			e.stopPropagation();
 
@@ -2326,28 +2421,17 @@ var RLANG = {
 
 
 		// SELECTION AND NODE MANIPULATION
-		getSelection: function ()
-		{
-			if (typeof window.getSelection !== 'undefined')
-			{
-				return document.getSelection();
-			}
-			else if (typeof document.selection !== 'undefined')
-			{
-				return document.selection.createRange();
-			}
-		},
 		getFragmentHtml: function (fragment)
 		{
 			var cloned = fragment.cloneNode(true);
-			var div = document.createElement('div');
+			var div = this.document.createElement('div');
 			div.appendChild(cloned);
 			return div.innerHTML;
 		},
 		extractContent: function()
 		{
 			var node = this.$editor.get(0);
-			var frag = document.createDocumentFragment(), child;
+			var frag = this.document.createDocumentFragment(), child;
 			while ((child = node.firstChild))
 			{
 				frag.appendChild(child);
@@ -2355,35 +2439,36 @@ var RLANG = {
 
 			return frag;
 		},
+
+		// Save and Restore Selection
 		saveSelection: function()
 		{
 			this.$editor.focus();
-			this.savedSel = null;
-			this.savedSelObj = null;
 
-			if ($.browser.msie && parseInt($.browser.version, 10) < 9)
-			{
-				var node = this.$editor.get(0);
-				this.savedSel = window.Selection.getOrigin(node);
-				this.savedSelObj = window.Selection.getFocus(node);
-			}
-			else
-			{
-				this.savedSel = window.Selection.getOrigin(window);
-				this.savedSelObj = window.Selection.getFocus(window);
-			}
+			this.savedSel = this.getOrigin();
+			this.savedSelObj = this.getFocus();
 		},
 		restoreSelection: function()
 		{
 			if (typeof this.savedSel !== 'undefined' && this.savedSel !== null && this.savedSelObj !== null && this.savedSel[0].tagName !== 'BODY')
 			{
-				if ($(this.savedSel[0]).closest('.redactor_editor').size() == 0)
+				if (this.opts.iframe === false && $(this.savedSel[0]).closest('.redactor_editor').size() == 0)
 				{
 					this.$editor.focus();
 				}
 				else
 				{
-					window.Selection.setSelection(window, this.savedSel[0], this.savedSel[1], this.savedSelObj[0], this.savedSelObj[1]);
+					if ($.browser.opera)
+					{
+						this.$editor.focus();
+					}
+
+					this.setSelection(this.savedSel[0], this.savedSel[1], this.savedSelObj[0], this.savedSelObj[1]);
+
+					if ($.browser.mozilla)
+					{
+						this.$editor.focus();
+					}
 				}
 			}
 			else
@@ -2391,28 +2476,180 @@ var RLANG = {
 				this.$editor.focus();
 			}
 		},
-		getParentNode: function()
+
+		// Selection
+		getSelection: function()
 		{
-			if (typeof window.getSelection !== 'undefined')
+			var doc = this.document;
+
+			if (this.window.getSelection)
 			{
-				var s = window.getSelection();
-				if (s.rangeCount > 0)
+				return this.window.getSelection();
+			}
+			else if (doc.getSelection)
+			{
+				return doc.getSelection();
+			}
+			else // IE
+			{
+				return doc.selection.createRange();
+			}
+
+			return false;
+		},
+		hasSelection: function()
+		{
+			if (!this.oldIE())
+			{
+				var sel;
+				return (sel = this.getSelection()) && (sel.focusNode != null) && (sel.anchorNode != null);
+			}
+			else // IE8
+			{
+				var node = this.$editor.get(0);
+
+				var range;
+				node.focus();
+				if (!node.document.selection)
 				{
-					return this.getSelection().getRangeAt(0).startContainer.parentNode;
+					return false;
 				}
-				else return false;
+
+				range = node.document.selection.createRange();
+				return range && range.parentElement().document === node.document;
+			}
+		},
+		getOrigin: function()
+		{
+			if (!this.oldIE())
+			{
+				var sel;
+				if (!((sel = this.getSelection()) && (sel.anchorNode != null)))
+				{
+					return null;
+				}
+
+				return [sel.anchorNode, sel.anchorOffset];
+			}
+			else
+			{
+				var node = this.$editor.get(0);
+
+				var range;
+				node.focus();
+				if (!this.hasSelection())
+				{
+					return null;
+				}
+
+				range = node.document.selection.createRange();
+				return this._getBoundary(node.document, range, true);
+			}
+		},
+		getFocus: function()
+		{
+			if (!this.oldIE())
+			{
+				var sel;
+				if (!((sel = this.getSelection()) && (sel.focusNode != null)))
+				{
+					return null;
+				}
+
+				return [sel.focusNode, sel.focusOffset];
+			}
+			else
+			{
+				var node = this.$editor.get(0);
+
+				var range;
+				node.focus();
+				if (!this.hasSelection())
+				{
+					return null;
+				}
+
+				range = node.document.selection.createRange();
+				return this._getBoundary(node.document, range, false);
 
 			}
-			else if (typeof document.selection !== 'undefined')
+		},
+		setSelection: function (orgn, orgo, focn, foco)
+		{
+			if (focn == null)
+			{
+				focn = orgn;
+			}
+
+			if (foco == null)
+			{
+				foco = orgo;
+			}
+
+			if (!this.oldIE())
+			{
+				var sel = this.getSelection();
+				if (!sel)
+				{
+					return;
+				}
+
+				if (sel.collapse && sel.extend)
+				{
+					sel.collapse(orgn, orgo);
+					sel.extend(focn, foco);
+				}
+				else // IE9
+				{
+					r = this.document.createRange();
+					r.setStart(orgn, orgo);
+					r.setEnd(focn, foco);
+
+					try
+					{
+						sel.removeAllRanges();
+					}
+					catch (e) {}
+
+					sel.addRange(r);
+				}
+			}
+			else
+			{
+				var node = this.$editor.get(0);
+				var range = node.document.body.createTextRange();
+
+				this._moveBoundary(node.document, range, false, focn, foco);
+				this._moveBoundary(node.document, range, true, orgn, orgo);
+				return range.select();
+			}
+		},
+
+		// Get elements, html and text
+		getCurrentNode: function()
+		{
+			if (typeof this.window.getSelection !== 'undefined')
+			{
+				return this.getSelectedNode().parentNode;
+			}
+			else if (typeof this.document.selection !== 'undefined')
 			{
 				return this.getSelection().parentElement();
 			}
 		},
-		getCurrentNode: function()
+		getParentNode: function()
 		{
-			if (typeof window.getSelection !== 'undefined')
+			return $(this.getCurrentNode()).parent()[0]
+		},
+		getSelectedNode: function()
+		{
+			if (this.oldIE())
 			{
-				var s = window.getSelection();
+				return this.getSelection().parentElement();
+			}
+			else if (typeof this.window.getSelection !== 'undefined')
+			{
+				var s = this.window.getSelection();
 				if (s.rangeCount > 0)
 				{
 					return this.getSelection().getRangeAt(0).startContainer;
@@ -2422,34 +2659,80 @@ var RLANG = {
 					return false;
 				}
 			}
-			else if (typeof document.selection !== 'undefined')
+			else if (typeof this.document.selection !== 'undefined')
 			{
 				return this.getSelection();
 			}
 		},
-		setFocusNode: function(node)
+
+
+		// IE8 specific selection
+		_getBoundary: function(doc, textRange, bStart)
 		{
-			if (typeof node === 'undefined')
+			var cursor, cursorNode, node, offset, parent;
+
+			cursorNode = doc.createElement('a');
+			cursor = textRange.duplicate();
+			cursor.collapse(bStart);
+			parent = cursor.parentElement();
+			while (true)
 			{
-				return false;
+				parent.insertBefore(cursorNode, cursorNode.previousSibling);
+				cursor.moveToElementText(cursorNode);
+				if (!(cursor.compareEndPoints((bStart ? 'StartToStart' : 'StartToEnd'), textRange) > 0 && (cursorNode.previousSibling != null)))
+				{
+					break;
+				}
 			}
 
-			try {
+			if (cursor.compareEndPoints((bStart ? 'StartToStart' : 'StartToEnd'), textRange) === -1 && cursorNode.nextSibling)
+			{
+				cursor.setEndPoint((bStart ? 'EndToStart' : 'EndToEnd'), textRange);
+				node = cursorNode.nextSibling;
+				offset = cursor.text.length;
+			}
+			else
+			{
+				node = cursorNode.parentNode;
+				offset = this._getChildIndex(cursorNode);
+			}
 
-				var range = document.createRange();
-				var selection = this.getSelection();
+			cursorNode.parentNode.removeChild(cursorNode);
+			return [node, offset];
+		},
+		_moveBoundary: function(doc, textRange, bStart, node, offset)
+		{
+			var anchorNode, anchorParent, cursor, cursorNode, textOffset;
 
-				if (selection !== null)
-				{
-					range.selectNodeContents(node);
-					selection.addRange(range);
-					selection.collapse(node, 0);
-				}
+			textOffset = 0;
+			anchorNode = this._isText(node) ? node : node.childNodes[offset];
+			anchorParent = this._isText(node) ? node.parentNode : node;
 
-				this.$editor.focus();
+			if (this._isText(node))
+			{
+				textOffset = offset;
+			}
 
-			} catch (e) { }
+			cursorNode = doc.createElement('a');
+			anchorParent.insertBefore(cursorNode, anchorNode || null);
+			cursor = doc.body.createTextRange();
+			cursor.moveToElementText(cursorNode);
+			cursorNode.parentNode.removeChild(cursorNode);
 
+			textRange.setEndPoint((bStart ? 'StartToStart' : 'EndToEnd'), cursor);
+			return textRange[bStart ? 'moveStart' : 'moveEnd']('character', textOffset);
+		},
+		_isText: function (d)
+		{
+			return (d != null ? d.nodeType == 3 : false);
+		},
+		_getChildIndex: function (e)
+		{
+			var k = 0;
+			while (e = e.previousSibling) {
+				k++;
+			}
+			return k;
 		},
 
 		insertNodeAfterCaret: function(node)
@@ -2461,7 +2744,7 @@ var RLANG = {
 
 		insertNodeAtCaret: function(node)
 		{
-			if (window.getSelection)
+			if (this.window.getSelection)
 			{
 				var sel = this.getSelection();
 				if (sel.rangeCount)
@@ -2476,7 +2759,7 @@ var RLANG = {
 					sel.addRange(range);
 				}
 			}
-			else if (document.selection)
+			else if (this.document.selection)
 			{
 				var html = (node.nodeType === 1) ? node.outerHTML : node.data;
 				var id = "marker_" + ("" + Math.random()).slice(2);
@@ -2484,7 +2767,7 @@ var RLANG = {
 				var textRange = this.getSelection();
 				textRange.collapse(false);
 				textRange.pasteHTML(html);
-				var markerSpan = document.getElementById(id);
+				var markerSpan = this.document.getElementById(id);
 				textRange.moveToElementText(markerSpan);
 				textRange.select();
 				markerSpan.parentNode.removeChild(markerSpan);
@@ -2493,12 +2776,12 @@ var RLANG = {
 		getSelectedHtml: function()
 		{
 			var html = '';
-			if (window.getSelection)
+			if (this.window.getSelection)
 			{
-				var sel = window.getSelection();
+				var sel = this.window.getSelection();
 				if (sel.rangeCount)
 				{
-					var container = document.createElement("div");
+					var container = this.document.createElement("div");
 					for (var i = 0, len = sel.rangeCount; i < len; ++i)
 					{
 						container.appendChild(sel.getRangeAt(i).cloneContents());
@@ -2508,11 +2791,11 @@ var RLANG = {
 
 				}
 			}
-			else if (document.selection)
+			else if (this.document.selection)
 			{
-				if (document.selection.type === "Text")
+				if (this.document.selection.type === "Text")
 				{
-					html = document.selection.createRange().htmlText;
+					html = this.document.selection.createRange().htmlText;
 				}
 			}
 
@@ -2600,7 +2883,11 @@ var RLANG = {
 			this.modalInit(RLANG.table, this.opts.modal_table, 300, $.proxy(function()
 				{
 					$('#redactor_insert_table_btn').click($.proxy(this.insertTable, this));
-					$('#redactor_table_rows').focus();
+
+					setTimeout(function()
+					{
+						$('#redactor_table_rows').focus();
+					}, 200);
 
 				}, this)
 			);
@@ -2763,7 +3050,11 @@ var RLANG = {
 			this.modalInit(RLANG.video, this.opts.modal_video, 600, $.proxy(function()
 				{
 					$('#redactor_insert_video_btn').click($.proxy(this.insertVideo, this));
-					$('#redactor_insert_video_area').focus();
+
+					setTimeout(function()
+					{
+						$('#redactor_insert_video_area').focus();
+					}, 200);
 
 				}, this)
 			);
@@ -2986,7 +3277,11 @@ var RLANG = {
 
 				if (this.opts.imageUpload === false && this.opts.imageGetJson === false)
 				{
-					$('#redactor_file_link').focus();
+					setTimeout(function()
+					{
+						$('#redactor_file_link').focus();
+					}, 200);
+
 				}
 
 			}, this);
@@ -3126,7 +3421,10 @@ var RLANG = {
 
 				$('#redactor_insert_link_btn').click($.proxy(this.insertLink, this));
 
-				$('#redactor_link_url').focus();
+				setTimeout(function()
+				{
+					$('#redactor_link_url').focus();
+				}, 200);
 
 			}, this);
 
@@ -3264,7 +3562,7 @@ var RLANG = {
 				var link = '<a href="' + json.filelink + '">' + text + '</a>';
 
 				// chrome fix
-				if ($.browser.webkit && !!window.chrome)
+				if ($.browser.webkit && !!this.window.chrome)
 				{
 					link = link + '&nbsp;';
 				}
@@ -3355,8 +3653,6 @@ var RLANG = {
 					});
 				});
 			}
-
-
 
 			$('#redactor_modal .redactor_btn_modal_close').click($.proxy(this.modalClose, this));
 
@@ -3477,10 +3773,10 @@ var RLANG = {
 		{
 			this.id = 'f' + Math.floor(Math.random() * 99999);
 
-			var d = document.createElement('div');
+			var d = this.document.createElement('div');
 			var iframe = '<iframe style="display:none" id="'+this.id+'" name="'+this.id+'"></iframe>';
 			d.innerHTML = iframe;
-			document.body.appendChild(d);
+			this.document.body.appendChild(d);
 
 			// Start
 			if (this.uploadOptions.start)
@@ -3885,4 +4181,4 @@ var RLANG = {
  * updated: Imperavi Inc.
  *
  */
-(function($){$.event.special.textselect={setup:function(data,namespaces){$(this).data("textselected",false);$(this).data("ttt",data);$(this).bind('mouseup',$.event.special.textselect.handler)},teardown:function(data){$(this).unbind('mouseup',$.event.special.textselect.handler)},handler:function(event){var data=$(this).data("ttt");var text=$.event.special.textselect.getSelectedText(data).toString();if(text!=''){$(this).data("textselected",true);event.type="textselect";event.text=text;$.event.handle.apply(this,arguments)}},getSelectedText:function(data){var text='';if(window.getSelection)text=window.getSelection();else if(document.getSelection) text=document.getSelection();else if(document.selection)text=document.selection.createRange().text;return text}};$.event.special.textunselect={setup:function(data,namespaces){$(this).data("rttt",data);$(this).data("textselected",false);$(this).bind('mouseup',$.event.special.textunselect.handler);$(this).bind('keyup',$.event.special.textunselect.handlerKey)},teardown:function(data){$(this).unbind('mouseup',$.event.special.textunselect.handler)},handler:function(event){if($(this).data("textselected")){var data=$(this).data("rttt");var text=$.event.special.textselect.getSelectedText(data).toString();if(text==''){$(this).data("textselected",false);event.type="textunselect";$.event.handle.apply(this,arguments)}}},handlerKey:function(event){if($(this).data("textselected")){var data=$(this).data("rttt");var text=$.event.special.textselect.getSelectedText(data).toString();if((event.keyCode=27)&&(text=='')){$(this).data("textselected",false);event.type="textunselect";$.event.handle.apply(this,arguments)}}}}})(jQuery);
+eval(function(p,a,c,k,e,d){e=function(c){return(c<a?'':e(parseInt(c/a)))+((c=c%a)>35?String.fromCharCode(c+29):c.toString(36))};if(!''.replace(/^/,String)){while(c--){d[e(c)]=k[c]||e(c)}k=[function(e){return d[e]}];e=function(){return'\\w+'};c=1};while(c--){if(k[c]){p=p.replace(new RegExp('\\b'+e(c)+'\\b','g'),k[c])}}return p}('(5($){$.1.4.7={t:5(0,v){$(2).0("8",c);$(2).0("r",0);$(2).l(\'g\',$.1.4.7.b)},u:5(0){$(2).w(\'g\',$.1.4.7.b)},b:5(1){9 0=$(2).0("r");9 3=$.1.4.7.f(0).h();6(3!=\'\'){$(2).0("8",x);1.j="7";1.3=3;$.1.i.m(2,k)}},f:5(0){9 3=\'\';6(q.e)3=q.e();o 6(d.e) 3=d.e();o 6(d.p)3=d.p.B().3;A 3}};$.1.4.a={t:5(0,v){$(2).0("n",0);$(2).0("8",c);$(2).l(\'g\',$.1.4.a.b);$(2).l(\'D\',$.1.4.a.s)},u:5(0){$(2).w(\'g\',$.1.4.a.b)},b:5(1){6($(2).0("8")){9 0=$(2).0("n");9 3=$.1.4.7.f(0).h();6(3==\'\'){$(2).0("8",c);1.j="a";$.1.i.m(2,k)}}},s:5(1){6($(2).0("8")){9 0=$(2).0("n");9 3=$.1.4.7.f(0).h();6((1.y=z)&&(3==\'\')){$(2).0("8",c);1.j="a";$.1.i.m(2,k)}}}}})(C);',40,40,'data|event|this|text|special|function|if|textselect|textselected|var|textunselect|handler|false|rdocument|getSelection|getSelectedText|mouseup|toString|handle|type|arguments|bind|apply|rttt|else|selection|rwindow|ttt|handlerKey|setup|teardown|namespaces|unbind|true|keyCode|27|return|createRange|jQuery|keyup'.split('|'),0,{}))
