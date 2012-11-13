@@ -1,6 +1,5 @@
 .redactor_box {
 	position: relative;
-	border: 1px solid rgba(0,0,0,0.2);
 	overflow: visible;
 	opacity: 1.0;
 }
@@ -252,7 +251,10 @@ body .redactor_box_fullscreen {
 	padding-left: 2px !important;
 	line-height: 0 !important;
 	list-style: none !important;
-	font-size: 0;
+	/* concrete5 */
+	/* font-size: 0; */
+	font-size: 0px !important;
+	/* end concrete5 */
 	background: #f1f1f1;
 	background: -moz-linear-gradient(top,  #f1f1f1 0%, #e2e2e2 100%);
 	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f1f1f1), color-stop(100%,#e2e2e2));
@@ -291,6 +293,10 @@ body .redactor_air .redactor_toolbar {
 	display: block;
 	line-height: 0;
 	font-size: 0;
+	/* concrete5 */
+	padding: 0px !important;
+	/* end concrete5 */
+
 	cursor: pointer;
 	zoom: 1;
 	text-decoration: none;
@@ -331,8 +337,8 @@ body .redactor_air .redactor_toolbar {
 
 #ccm-redactor-actions-buttons {
 	position: absolute;
-	top: 0px;
-	right: 10px;
+	top: 2px;
+	right: 15px;
 }
 
 #ccm-redactor-save-button {
@@ -372,6 +378,11 @@ body .redactor_toolbar li a.redactor_btn_clips		 		{ background-position: -600px
 
 body .redactor_toolbar li a.redactor_btn_alignment	 		{ background-position: -625px; }
 
+/* concrete5 */
+body .redactor_toolbar li a.redactor_btn_concrete5	 		{ 
+	background: url(../images/editor_dropdown_btn.png) no-repeat scroll;
+}
+/* end concrete5 */
 /*
 	Toolbar classes
 */
