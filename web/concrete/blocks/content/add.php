@@ -9,7 +9,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 $(function() {
 	$('#redactor-edit-content').redactor({
 		'plugins': [
-			'concrete5inline'
+			'concrete5inline', 'concrete5'
 		]
 	});
 	$('#redactor-edit-content').setFocus();

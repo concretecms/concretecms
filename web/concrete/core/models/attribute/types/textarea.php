@@ -34,8 +34,8 @@ class Concrete5_Controller_AttributeType_Textarea extends DefaultAttributeTypeCo
 			$this->addHeaderItem(Loader::helper('html')->css('ccm.app.css'));
 			$this->addFooterItem(Loader::helper('html')->javascript('ccm.app.js'));
 			$this->addFooterItem('<script type="text/javascript" src="' . REL_DIR_FILES_TOOLS_REQUIRED . '/i18n_js"></script>'); 
-			print Loader::helper('form')->textarea($this->field('value'), $value, array('class' => $additionalClass . ' ccm-advanced-editor-' . $this->attributeKey->getAttributeKeyID()));
-			print '<script type="text/javascript">$(function() { $(".ccm-advanced-editor-' . $this->attributeKey->getAttributeKeyID() . '").redactor(); });</script>';
+			print '<div class="ccm-attribute-textarea-edit">' . Loader::helper('form')->textarea($this->field('value'), $value, array('class' => $additionalClass . ' ccm-advanced-editor-' . $this->attributeKey->getAttributeKeyID())) . '</div>';
+			print '<script type="text/javascript">$(function() { $(".ccm-advanced-editor-' . $this->attributeKey->getAttributeKeyID() . '").redactor({ plugins: [\'concrete5\']}); });</script>';
 		}
 	}
 	

@@ -22,8 +22,7 @@ $usedKeysCombined = array_merge($requiredKeys, $usedKeys);
 ?>
 
 <div class="row">
-<div id="ccm-attributes-column" class="span3">
-	<h6><?=t("All Attributes")?></h6>
+<div id="ccm-attributes-column" style="float: left; width: 240px; margin-left: 20px">
 	<div class="ccm-block-type-search-wrapper ">
 
 		<div class="ccm-block-type-search">
@@ -78,10 +77,9 @@ $usedKeysCombined = array_merge($requiredKeys, $usedKeys);
 	</ul>
 	
 </div>
-<div class="span5" id="ccm-page-attributes-selected">
-<h6><?=t("Selected Attributes")?></h6>
+<div style="float: left; margin-left: 10px; width: 610px" id="ccm-page-attributes-selected">
 <div id="ccm-page-attributes-none" <? if (count($usedKeysCombined) > 0) { ?>style="display: none"<? } ?>>
-<div style="padding-top: 140px; width: 400px; text-align: center"><h3>
+<div style="padding-top: 140px; width: 610px; text-align: center"><h3>
 	<? if ($c->isMasterCollection()) { ?>
 		<?=t('No attributes assigned. Any attributes you set here will automatically be set on pages when they are created.')?>
 	<? } else { ?>

@@ -44,6 +44,15 @@ body .redactor_box_fullscreen {
 	white-space: normal;
 }
 
+/* concrete5 */
+.ccm-attribute-textarea-edit .redactor_editor {
+	padding: 15px !important;
+	background: #fff !important;
+	overflow: auto;
+}
+
+/* end concrete5 */
+
 .redactor_editor, .redactor_editor:focus {
 	position: relative;
 	outline: none;
@@ -603,7 +612,10 @@ body .redactor_toolbar li a.redactor_btn_concrete5	 		{
 #redactor_modal input[type="email"],
 #redactor_modal textarea {
 	position: relative;
-	z-index: 2;
+	/* concrete5 */
+	/* z-index: 2; */
+	/* end concrete5 */
+	
 	font-family: Helvetica, Arial, Tahoma, sans-serif;
 	height: 23px;
 	border: 1px solid #ccc;
