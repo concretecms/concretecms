@@ -8,6 +8,10 @@
 	License: http://redactorjs.com/license/
 
 	Usage: $('#content').redactor();
+
+	concrete5 Notes:
+
+	Replace all redactor_dropdown with dropdown
 */
 
 var rwindow, rdocument;
@@ -2086,7 +2090,10 @@ var RLANG = {
 			// dropdown
 			if (key === 'backcolor' || key === 'fontcolor' || typeof(s.dropdown) !== 'undefined')
 			{
-				var dropdown = $('<div class="redactor_dropdown" style="display: none;">');
+				/* concrete5 */
+				//var dropdown = $('<div class="dropdown" style="display: none;">');
+				var dropdown = $('<ul class="dropdown-menu" style="display: none;">');
+				/* end concrete5 */
 
 				if (key === 'backcolor' || key === 'fontcolor')
 				{
@@ -2097,7 +2104,13 @@ var RLANG = {
 					dropdown = this.buildDropdown(dropdown, s.dropdown);
 				}
 
-				this.dropdowns.push(dropdown.appendTo($(document.body)));
+				/* concrete5 */
+				if ($('#redactor-dropdown-holder').length == 0) {
+					$(document.body).append('<div id="redactor-dropdown-holder" class="ccm-ui" />')
+				}
+				var ccmUI = $('#redactor-dropdown-holder');
+				this.dropdowns.push(dropdown.appendTo(ccmUI));
+				/* end concrete5 */
 
 				// observing dropdown
 				this.hdlShowDropDown = $.proxy(function(e) { this.showDropDown(e, dropdown, key); }, this);
@@ -2120,7 +2133,10 @@ var RLANG = {
 					var drop_a;
 					if (typeof d.name !== 'undefined' && d.name === 'separator')
 					{
-						drop_a = $('<a class="redactor_separator_drop">');
+						/* concrete5 */
+						//drop_a = $('<a class="redactor_separator_drop">');
+						drop_a = $('<li class="divider">');
+						/* end concrete5 */
 					}
 					else
 					{
@@ -2138,8 +2154,12 @@ var RLANG = {
 						{
 							$(drop_a).click($.proxy(function(e) { this[d.func](e); }, this));
 						}
-					}
+						/* concrete5 */
+						drop_a = $('<li />').append(drop_a);
+						/* end concrete5 */
 
+					}
+	
 					$(dropdown).append(drop_a);
 
 				}, this)
@@ -2175,7 +2195,11 @@ var RLANG = {
 				var color = this.opts.colors[i];
 
 				var swatch = $('<a rel="' + color + '" href="javascript:void(null);" class="redactor_color_link"></a>').css({ 'backgroundColor': color });
-				$(dropdown).append(swatch);
+				/* concrete5 */
+				// $(dropdown).append(swatch);
+				_swatch = $('<li class="redactor_color_link_swatch" />').append(swatch);
+				$(dropdown).append(_swatch);
+				/* end concrete5 */
 
 				var _self = this;
 				$(swatch).click(function()
@@ -2214,12 +2238,18 @@ var RLANG = {
 				elnone.click($.proxy(this.setColorNone, this));
 			}
 
-			$(dropdown).append(elnone);
+			/* concrete5 */
+			// $(dropdown).append(elnone);
+			$(dropdown).append('<li style="clear: both"></li>');
+			$(dropdown).append('<li class="divider"></li>');
+			_elnone = $('<li />').append(elnone);
+			$(dropdown).append(_elnone);
+			/* end concrete5 */
 
 			return dropdown;
 		},
 		setBackgroundNone: function()
-		{
+		{	
 			$(this.getParentNode()).css('background-color', 'transparent');
 			this.syncCode();
 		},
@@ -2274,7 +2304,10 @@ var RLANG = {
 		hideAllDropDown: function()
 		{
 			this.$toolbar.find('a.dropact').removeClass('redactor_act').removeClass('dropact');
-			$('.redactor_dropdown').hide();
+			/* concrete5 */
+			//$('.dropdown').hide();
+			$('.dropdown-menu').hide();
+			/* end concrete5 */
 		},
 		hideDropDown: function(e, dropdown, key)
 		{
