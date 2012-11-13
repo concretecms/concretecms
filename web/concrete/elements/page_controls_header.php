@@ -48,7 +48,6 @@ if (!$dh->inDashboard()) {
 		$this->addHeaderItem('<script type="text/javascript">$(function() { ccm_showAppIntroduction(); });</script>');
 		Config::save('SEEN_INTRODUCTION', 1);
 	}
-	$this->addFooterItem($html->javascript('tiny_mce/tiny_mce.js'));
 }
 
 $cID = ($c->isAlias()) ? $c->getCollectionPointerOriginalID() : $c->getCollectionID();
