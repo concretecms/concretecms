@@ -27,7 +27,6 @@ class Concrete5_Controller_AttributeType_Textarea extends DefaultAttributeTypeCo
 		if (is_object($this->attributeValue)) {
 			$value = $this->getAttributeValue()->getValue();
 		}
-		$this->addFooterItem(Loader::helper('html')->javascript('tiny_mce/tiny_mce.js'));
 		// switch display type here
 		if ($this->akTextareaDisplayMode == 'text' || $this->akTextareaDisplayMode == '') {
 			print Loader::helper('form')->textarea($this->field('value'), $value, array('class' => $additionalClass, 'rows' => 5));
@@ -35,12 +34,8 @@ class Concrete5_Controller_AttributeType_Textarea extends DefaultAttributeTypeCo
 			$this->addHeaderItem(Loader::helper('html')->css('ccm.app.css'));
 			$this->addFooterItem(Loader::helper('html')->javascript('ccm.app.js'));
 			$this->addFooterItem('<script type="text/javascript" src="' . REL_DIR_FILES_TOOLS_REQUIRED . '/i18n_js"></script>'); 
-			$editor_mode = strtoupper(str_replace('rich_text_', '', $this->akTextareaDisplayMode));
-			Loader::element('editor_config', array('editor_mode' => $editor_mode, 'editor_selector' => 'ccm-advanced-editor-' . $this->attributeKey->getAttributeKeyID()));
-			if (in_array($this->akTextareaDisplayMode, array('rich_text', 'rich_text_advanced', 'rich_text_office', 'rich_text_custom'))) {
-				Loader::element('editor_controls', array('mode'=>'full'));
-			}
 			print Loader::helper('form')->textarea($this->field('value'), $value, array('class' => $additionalClass . ' ccm-advanced-editor-' . $this->attributeKey->getAttributeKeyID()));
+			print '<script type="text/javascript">$(function() { $(".ccm-advanced-editor-' . $this->attributeKey->getAttributeKeyID() . '").redactor(); });</script>';
 		}
 	}
 	

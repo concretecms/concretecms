@@ -29,9 +29,10 @@ cat ../web/concrete/js/ccm_app/jquery.colorpicker.js \
 ../web/concrete/js/ccm_app/sitemap.js \
 ../web/concrete/js/ccm_app/status_bar.js \
 ../web/concrete/js/ccm_app/tabs.js \
-../web/concrete/js/ccm_app/tinymce_integration.js \
 ../web/concrete/js/ccm_app/ui.js \
 ../web/concrete/js/ccm_app/toolbar.js \
+../web/concrete/js/ccm_app/redactor.js \
+../web/concrete/js/ccm_app/redactor.concrete5.js \
 ../web/concrete/js/ccm_app/themes.js > ccm.app.tmp.js
 
 uglifyjs --no-seqs -o ../web/concrete/js/ccm.app.js ./ccm.app.tmp.js
