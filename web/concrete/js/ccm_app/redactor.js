@@ -266,22 +266,42 @@ var RLANG = {
 				'</form>' +
 				'<div id="redactor_tab3" class="redactor_tab" style="display: none;">' +
 					'<label>' + RLANG.image_web_link + '</label>' +
-					'<input type="text" name="redactor_file_link" id="redactor_file_link" class="redactor_input"  />' +
+					/* concrete5 */
+					'<input type="text" name="redactor_file_link" id="redactor_file_link" style="width: 500px" />' +
+					//'<input type="text" name="redactor_file_link" id="redactor_file_link" class="redactor_input"  />' +
+					/* end concrete5 */
 				'</div>' +
 				'</div>' +
+				/* concrete5 */
+				'<div class="dialog-buttons">' +
+					'<a href="javascript:void(null);" class="btn pull-left redactor_modal_btn redactor_btn_modal_close">' + RLANG.cancel + '</a>' +
+					'<input type="button" name="upload" class="btn pull-right btn-primary" id="redactor_upload_btn" value="' + RLANG.insert + '" />' +
+				'</div>',
+				/*
 				'<div id="redactor_modal_footer">' +
 					'<a href="javascript:void(null);" class="redactor_modal_btn redactor_btn_modal_close">' + RLANG.cancel + '</a>' +
 					'<input type="button" name="upload" class="redactor_modal_btn" id="redactor_upload_btn" value="' + RLANG.insert + '" />' +
-				'</div>',
+				'</div>',*/
+				/* end concrete5 */
 
 			modal_link: String() +
 				'<div id="redactor_modal_content">' +
 				'<form id="redactorInsertLinkForm" method="post" action="">' +
+					/* concrete5 */
+					'<ul class="nav nav-tabs" id="redactor_tabs">' +
+						'<li class="active"><a href="javascript:void(null);">URL</a></li>' +
+						'<li><a href="javascript:void(null);">Email</a></li>' +
+						'<li><a href="javascript:void(null);">' + RLANG.anchor + '</a></li>' +
+					'</ul>' +
+
+					/*
 					'<div id="redactor_tabs">' +
 						'<a href="javascript:void(null);" class="redactor_tabs_act">URL</a>' +
 						'<a href="javascript:void(null);">Email</a>' +
 						'<a href="javascript:void(null);">' + RLANG.anchor + '</a>' +
 					'</div>' +
+					*/
+					/* end concrete5 */
 					'<input type="hidden" id="redactor_tab_selected" value="1" />' +
 					'<div class="redactor_tab" id="redactor_tab1">' +
 						'<label>URL</label><input type="text" id="redactor_link_url" class="redactor_input"  />' +
@@ -298,10 +318,19 @@ var RLANG = {
 					'</div>' +
 				'</form>' +
 				'</div>' +
+				/* concrete5 */
+				/* 
 				'<div id="redactor_modal_footer">' +
 					'<a href="javascript:void(null);" class="redactor_modal_btn redactor_btn_modal_close">' + RLANG.cancel + '</a>' +
 					'<input type="button" class="redactor_modal_btn" id="redactor_insert_link_btn" value="' + RLANG.insert + '" />' +
-				'</div>',
+				'</div>', 
+				*/
+				'<div class="dialog-buttons">' +
+					'<a href="javascript:void(null);" class="btn pull-left redactor_btn_modal_close">' + RLANG.cancel + '</a>' +
+					'<input type="button" class="btn pull-right btn-primary" id="redactor_insert_link_btn" value="' + RLANG.insert + '" />' +
+				'</div>', 
+
+				/* end concrete5 */
 
 			modal_table: String() +
 				'<div id="redactor_modal_content">' +
@@ -322,10 +351,18 @@ var RLANG = {
 					'<textarea id="redactor_insert_video_area" style="width: 99%; height: 160px;"></textarea>' +
 				'</form>' +
 				'</div>'+
+				/* concrete5 */
+				'<div class="dialog-buttons">' +
+					'<a href="javascript:void(null);" class="btn pull-left redactor_btn_modal_close">' + RLANG.cancel + '</a>' +
+					'<input type="button" class="btn pull-right btn-primary" id="redactor_insert_video_btn" value="' + RLANG.insert + '" />' +
+				'</div>',
+				/*
 				'<div id="redactor_modal_footer">' +
 					'<a href="javascript:void(null);" class="redactor_modal_btn redactor_btn_modal_close">' + RLANG.cancel + '</a>' +
 					'<input type="button" class="redactor_modal_btn" id="redactor_insert_video_btn" value="' + RLANG.insert + '" />' +
 				'</div>',
+				*/
+				/* end concrete5 */
 
 			toolbar: {
 				html:
@@ -3318,7 +3355,7 @@ var RLANG = {
 				}
 
 			}, this);
-
+	
 			this.modalInit(RLANG.image, this.opts.modal_image, 610, callback);
 
 		},
@@ -3617,6 +3654,15 @@ var RLANG = {
 		// MODAL
 		modalInit: function(title, content, width, callback)
 		{
+			/* concrete5 */
+			td = $('<div class="ccm-ui" />').html(content);
+			jQuery.fn.dialog.open({
+				'title': title,
+				width: width,
+				height: 'auto',
+				element: td
+			});
+			/*
 			// modal overlay
 			if ($('#redactor_modal_overlay').size() === 0)
 			{
@@ -3664,16 +3710,21 @@ var RLANG = {
 			}
 
 			// tabs
+			*/
+			/* end concrete5 */
+
 			if ($('#redactor_tabs').size() !== 0)
 			{
 				var that = this;
+				/* concrete5 */
+
 				$('#redactor_tabs a').each(function(i,s)
 				{
 					i++;
 					$(s).click(function()
 					{
-						$('#redactor_tabs a').removeClass('redactor_tabs_act');
-						$(this).addClass('redactor_tabs_act');
+						$('#redactor_tabs li').removeClass('active');
+						$(this).parent().addClass('active');
 						$('.redactor_tab').hide();
 						$('#redactor_tab' + i).show();
 						$('#redactor_tab_selected').val(i);
@@ -3685,10 +3736,13 @@ var RLANG = {
 						}
 					});
 				});
+				/* end concrete5 */
 			}
-
-			$('#redactor_modal .redactor_btn_modal_close').click($.proxy(this.modalClose, this));
-
+			
+			/* concrete5 */
+			$('.redactor_btn_modal_close').click($.proxy(this.modalClose, this));
+			
+			/*
 			if (this.isMobile() === false)
 			{
 				$('#redactor_modal').css({ position: 'fixed', top: '-2000px', left: '50%', width: width + 'px', marginLeft: '-' + (width+60)/2 + 'px' }).show();
@@ -3700,6 +3754,8 @@ var RLANG = {
 			{
 				$('#redactor_modal').css({ position: 'fixed', width: '100%', height: '100%', top: '0', left: '0', margin: '0', minHeight: '300px' }).show();
 			}
+			*/
+			/* end concrete5 */
 
 			// callback
 			if (typeof callback === 'function')
@@ -3707,6 +3763,8 @@ var RLANG = {
 				callback();
 			}
 
+			/* concrete5 */
+			/*
 			if (this.isMobile() === false)
 			{
 				setTimeout(function()
@@ -3716,10 +3774,15 @@ var RLANG = {
 
 				}, 20);
 			}
+			*/
+			/* end concrete5 */
 
 		},
 		modalClose: function()
 		{
+			/* concrete5 */
+			jQuery.fn.dialog.closeTop();
+			/*
 			$('#redactor_modal_close').unbind('click', this.modalClose);
 			$('#redactor_modal').fadeOut('fast', $.proxy(function()
 			{
@@ -3741,17 +3804,28 @@ var RLANG = {
 			{
 				$(document.body).css('overflow', this.modalSaveBodyOveflow ? this.modalSaveBodyOveflow : 'visible');
 			}
-
+			*/
+			/* end concrete5 */
 			return false;
 
 		},
 		setModalTab: function(num)
 		{
+			/* concrete5 */
+			$('.redactor_tab').hide();
+			var tabs = $('#redactor_tabs li');
+			tabs.removeClass('active');
+			tabs.eq(num-1).addClass('active');
+			$('#redactor_tab' + num).show();
+
+			/*
 			$('.redactor_tab').hide();
 			var tabs = $('#redactor_tabs a');
 			tabs.removeClass('redactor_tabs_act');
 			tabs.eq(num-1).addClass('redactor_tabs_act');
 			$('#redactor_tab' + num).show();
+			*/
+			/* end concrete5 */
 		},
 
 		// UPLOAD
