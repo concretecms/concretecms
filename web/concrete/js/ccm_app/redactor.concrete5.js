@@ -35,76 +35,117 @@ RedactorPlugins.concrete5 = {
 
 	init: function() {
 
-		this.addBtnBefore('html', 'concrete5', 'concrete5', false, {
+		var plugin = this;
 
-			insertLinkToPage:
-			{
-				title: ccmi18n_editor.insertLinkToPage,
-				callback: function(obj) {
+		$.ajax({
+			'type': 'get',
+			'dataType': 'json',
+			'url': CCM_TOOLS_PATH + '/system_content_editor_snippets?ccm_token=' + CCM_SECURITY_TOKEN,
+			success: function(snippets) {
+				dropdownOptions = {
 
-				    $.fn.dialog.open({
-				        title: ccmi18n_sitemap.choosePage,
-				        href: CCM_TOOLS_PATH + '/sitemap_search_selector.php?sitemap_select_mode=select_page',
-				        width: '90%',
-				        modal: false,
-				        height: '70%'
-				    });
+					insertLinkToPage:
+					{
+						title: ccmi18n_editor.insertLinkToPage,
+						callback: function(obj) {
 
-				    ccm_selectSitemapNode = function(cID, cName) {				    
-						var url = CCM_BASE_URL + CCM_DISPATCHER_FILENAME + '?cID=' + cID;	
-						try {
-							selectedText = obj.$el.getSelected();
-						} catch (e) {
-							selectedText = obj.$editor.getSelected();
+						    $.fn.dialog.open({
+						        title: ccmi18n_sitemap.choosePage,
+						        href: CCM_TOOLS_PATH + '/sitemap_search_selector.php?sitemap_select_mode=select_page',
+						        width: '90%',
+						        modal: false,
+						        height: '70%'
+						    });
+
+						    ccm_selectSitemapNode = function(cID, cName) {				    
+								var url = CCM_BASE_URL + CCM_DISPATCHER_FILENAME + '?cID=' + cID;	
+								try {
+									selectedText = obj.$el.getSelected();
+								} catch (e) {
+									selectedText = obj.$editor.getSelected();
+								}
+								if (selectedText != '') {
+									obj.execCommand('inserthtml', '<a href="' + CCM_BASE_URL + CCM_DISPATCHER_FILENAME + '?cID=' + cID + '" title="' + cName + '">' + selectedText + '<\/a>');
+								} else {
+									var selectedText = '<a href="' + CCM_BASE_URL + CCM_DISPATCHER_FILENAME + '?cID=' + cID + '" title="' + cName + '">' + cName + '<\/a>';
+									obj.insertHtml(selectedText);
+								}
+						    }
+
 						}
-						if (selectedText != '') {
-							obj.execCommand('inserthtml', '<a href="' + CCM_BASE_URL + CCM_DISPATCHER_FILENAME + '?cID=' + cID + '" title="' + cName + '">' + selectedText + '<\/a>');
-						} else {
-							var selectedText = '<a href="' + CCM_BASE_URL + CCM_DISPATCHER_FILENAME + '?cID=' + cID + '" title="' + cName + '">' + cName + '<\/a>';
-							obj.insertHtml(selectedText);
+					},
+					insertImage:
+					{
+						title: ccmi18n_editor.insertImage,
+						callback: function(obj) {
+							obj.saveSelection();
+							ccm_launchFileManager();
+							ccm_chooseAsset = function(res) {
+								obj.restoreSelection();
+								obj.insertHtml('<img src="' + res.filePathInline + '" alt="' + res.title + '" width="' + res.width + '" height="' + res.height + '">');
+							}
 						}
-				    }
+					},
+					insertLinkToFile:
+					{
+						title: ccmi18n_editor.insertLinkToFile,
+						callback: function(obj) {
+							obj.saveSelection();
+							ccm_launchFileManager();
+							ccm_chooseAsset = function(res) {
+								obj.restoreSelection();
+								try {
+									selectedText = obj.$el.getSelected();
+								} catch (e) {
+									selectedText = obj.$editor.getSelected();
+								}
 
-				}
-			},
-			insertImage:
-			{
-				title: ccmi18n_editor.insertImage,
-				callback: function(obj) {
-					obj.saveSelection();
-					ccm_launchFileManager();
-					ccm_chooseAsset = function(res) {
-						obj.restoreSelection();
-						obj.insertHtml('<img src="' + res.filePathInline + '" alt="' + res.title + '" width="' + res.width + '" height="' + res.height + '">');
+								if (selectedText != '') {
+									var html = '<a href="' + res.filePathInline + '">' + selectedText + '<\/a>';
+									obj.execCommand('inserthtml', html);
+								} else {
+									var html = '<a href="' + res.filePathInline + '">' + res.title + '<\/a>';
+									obj.insertHtml(html);
+								}
+							}
+						}
+					},
+					'snippet_separator':
+					{
+						name: 'separator'
 					}
 				}
-			},
-			insertLinkToFile:
-			{
-				title: ccmi18n_editor.insertLinkToFile,
-				callback: function(obj) {
-					obj.saveSelection();
-					ccm_launchFileManager();
-					ccm_chooseAsset = function(res) {
-						obj.restoreSelection();
-						try {
-							selectedText = obj.$el.getSelected();
-						} catch (e) {
-							selectedText = obj.$editor.getSelected();
-						}
 
-						if (selectedText != '') {
-							var html = '<a href="' + res.filePathInline + '">' + selectedText + '<\/a>';
-							obj.execCommand('inserthtml', html);
-						} else {
-							var html = '<a href="' + res.filePathInline + '">' + res.title + '<\/a>';
+				plugin.snippetsByHandle = {};
+					
+				for (i = 0; i < snippets.length; i++) {
+
+					plugin.snippetsByHandle[snippets[i].scsHandle] = {
+						'scsHandle': snippets[i].scsHandle,
+						'scsName': snippets[i].scsName
+					}
+
+					dropdownOptions[snippets[i].scsHandle] = {
+						'title': snippets[i].scsName,
+						'callback': function(obj, e, option) {
+							var selectedSnippet = plugin.snippetsByHandle[option];
+							var html = String() + 
+								'<span class="ccm-content-editor-snippet" contenteditable="false" data-scsHandle="' + selectedSnippet.scsHandle + '">' + 
+								selectedSnippet.scsName + 
+								'</span>';
+
 							obj.insertHtml(html);
 						}
 					}
 				}
+
+
+				plugin.addBtnAfter('horizontalrule', 'concrete5', 'concrete5', false, dropdownOptions);
+				plugin.addBtnSeparatorBefore('concrete5');
+
 			}
 		});
-		this.addBtnSeparatorAfter('concrete5');
+
 		this.opts.observeImages = false;
 
 

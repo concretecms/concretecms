@@ -206,6 +206,11 @@
 				array('ContentBlockController', 'replaceDownloadFileID'),				
 				$text);
 			
+			// snippets
+			$snippets = SystemContentEditorSnippet::getActiveList();
+			foreach($snippets as $sn) {
+				$text = $sn->findAndReplace($text);
+			}
 			return $text;
 		}
 		

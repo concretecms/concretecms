@@ -13,7 +13,8 @@ class ConcreteUpgradeVersion570Helper {
 		'BlockTypes',
 		/*'QueueMessages',*/
 		'JobSets',
-		'JobSetJobs'
+		'JobSetJobs',
+		'SystemContentEditorSnippets'
 	);
 	
 	
@@ -75,6 +76,17 @@ class ConcreteUpgradeVersion570Helper {
 		$sp = Page::getByPath('/dashboard/users/points/actions');
 		if ($sp->isError()) {
 			$sp = SinglePage::add('/dashboard/users/points/actions');
+		}
+
+		$sns = SystemContentEditorSnippet::getByHandle('page_name');
+		if (!is_object($sns)) {
+			$sns = SystemContentEditorSnippet::add('page_name', t('Page Name'));
+			$sns->activate();
+		}
+		$sns = SystemContentEditorSnippet::getByHandle('user_name');
+		if (!is_object($sns)) {
+			$sns = SystemContentEditorSnippet::add('user_name', t('User Name'));
+			$sns->activate();
 		}
 
 	}

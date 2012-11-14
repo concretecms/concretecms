@@ -1915,6 +1915,22 @@
       <unsigned/>
     </field>
   </table>
+  <table name="SystemContentEditorSnippets">
+    <field name="scsHandle" type="C" size="64">
+      <key/>
+    </field>
+    <field name="scsName" type="C" size="255"/>
+    <field name="scsIsActive" type="I" size="1">
+      <notnull/>
+      <default value="0"/>
+    </field>
+    <field name="pkgID" type="I" size="10">
+      <notnull/>
+      <default value="0"/>
+      <unsigned/>
+    </field>
+  </table>
+
   <table name="SystemNotifications">
     <field name="snID" type="I" size="10">
       <key/>
