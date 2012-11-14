@@ -1,13 +1,28 @@
+<? defined('C5_EXECUTE') or die("Access Denied.");
+
+if (!isset($editor_selector)) {
+	$editor_selector = 'ccm-advanced-editor';
+}
+
+$options = "{
+	'plugins': ['concrete5']
+}";
+?>
+
+<script type="text/javascript">
+$(function() {
+	$('.<?=$editor_selector?>').redactor(<?=$options?>);
+});
+</script>
+
 <?
+/*
 $textEditorHeight=intval(Config::get('CONTENTS_TXT_EDITOR_HEIGHT'));
 $textEditorWidth = '100%';
 //else $textEditorWidth=  $textEditorWidth;
 if($textEditorHeight<100)  $textEditorHeight=380;
 else $textEditorHeight= $textEditorHeight-70;
 
-if (!isset($editor_selector)) {
-	$editor_selector = 'ccm-advanced-editor';
-}
 
 if (isset($editor_height)) {
 	$textEditorHeight = $editor_height;
@@ -94,3 +109,4 @@ $(function() {
 	});
 });
 </script>
+<? */
