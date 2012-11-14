@@ -922,7 +922,10 @@ body .redactor_box_fullscreen{left:0;position:fixed;overflow:hidden;top:0;width:
 .redactor_box textarea{font-family:Menlo,Monaco,monospace,sans-serif;font-size:13px;overflow:auto;resize:none;margin:0;padding:0;display:block;position:relative;z-index:1004;outline:none;border:none;width:100%;white-space:normal;}
 .redactor_editor{padding:15px !important;background:#fff !important;overflow:auto;height:200px;}
 .redactor_box{border:1px solid #ccc;}
-.redactor_editor,.redactor_editor:focus{position:relative;outline:none;box-shadow:none !important;padding:px !important;margin:0 !important;}
+.ccm-block-edit-inline-active .redactor_editor{padding:0px !important;background:none !important;height:auto !important;}
+.ccm-block-edit-inline-active .redactor_box{border:0px !important;}
+.ccm-content-editor-snippet{background-color:#efefef;border:1px solid #999;border-radius:3px;margin-left:3px;margin-right:3px;display:inline-block;padding:1px 3px 1px 3px;}
+.redactor_editor,.redactor_editor:focus{position:relative;outline:none;box-shadow:none !important;}
 .redactor_editor table{border-collapse:collapse;font-size:1em !important;}
 .redactor_editor table td{border:1px solid #ddd;padding:5px !important;vertical-align:top;}
 .redactor_editor table thead td{border-bottom:2px solid #000 !important;font-weight:bold !important;}
