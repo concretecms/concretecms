@@ -267,7 +267,7 @@ var RLANG = {
 				'<div id="redactor_tab3" class="redactor_tab" style="display: none;">' +
 					'<label>' + RLANG.image_web_link + '</label>' +
 					/* concrete5 */
-					'<input type="text" name="redactor_file_link" id="redactor_file_link" style="width: 500px" />' +
+					'<input type="text" name="redactor_file_link" id="redactor_file_link" style="width: 400px" />' +
 					//'<input type="text" name="redactor_file_link" id="redactor_file_link" class="redactor_input"  />' +
 					/* end concrete5 */
 				'</div>' +
@@ -306,7 +306,10 @@ var RLANG = {
 					'<div class="redactor_tab" id="redactor_tab1">' +
 						'<label>URL</label><input type="text" id="redactor_link_url" class="redactor_input"  />' +
 						'<label>' + RLANG.text + '</label><input type="text" class="redactor_input redactor_link_text" id="redactor_link_url_text" />' +
-						'<label><input type="checkbox" id="redactor_link_blank"> ' + RLANG.link_new_tab + '</label>' +
+						/* concrete5 */
+						//'<label><input type="checkbox" id="redactor_link_blank"> ' + RLANG.link_new_tab + '</label>' +
+						'<label class="checkbox"><input type="checkbox" id="redactor_link_blank"> <span>' + RLANG.link_new_tab + '</span></label>' +
+						/* end concrete5 */
 					'</div>' +
 					'<div class="redactor_tab" id="redactor_tab2" style="display: none;">' +
 						'<label>Email</label><input type="text" id="redactor_link_mailto" class="redactor_input" />' +
@@ -339,16 +342,28 @@ var RLANG = {
 					'<label>' + RLANG.columns + '</label>' +
 					'<input type="text" size="5" value="3" id="redactor_table_columns" />' +
 				'</div>' +
+				/* concrete5 */
+				/*
 				'<div id="redactor_modal_footer">' +
 					'<a href="javascript:void(null);" class="redactor_modal_btn redactor_btn_modal_close">' + RLANG.cancel + '</a>' +
 					'<input type="button" name="upload" class="redactor_modal_btn" id="redactor_insert_table_btn" value="' + RLANG.insert + '" />' +
 				'</div>',
+				*/
+				'<div class="dialog-buttons">' +
+					'<a href="javascript:void(null);" class="btn pull-left redactor_btn_modal_close">' + RLANG.cancel + '</a>' +
+					'<input type="button" name="upload" class="btn pull-right btn-primary" id="redactor_insert_table_btn" value="' + RLANG.insert + '" />' +
+				'</div>',
+
+				/* end concrete5 */
 
 			modal_video: String() +
 				'<div id="redactor_modal_content">' +
 				'<form id="redactorInsertVideoForm">' +
 					'<label>' + RLANG.video_html_code + '</label>' +
-					'<textarea id="redactor_insert_video_area" style="width: 99%; height: 160px;"></textarea>' +
+					/* concrete5 */
+					//'<textarea id="redactor_insert_video_area" style="width: 99%; height: 160px;"></textarea>' +
+					'<textarea id="redactor_insert_video_area" style="width: 500px; height: 160px;"></textarea>' +
+					/* end concrete5 */
 				'</form>' +
 				'</div>'+
 				/* concrete5 */
@@ -2949,7 +2964,8 @@ var RLANG = {
 		showTable: function()
 		{
 			this.saveSelection();
-
+			/* concrete5 */
+			/*
 			this.modalInit(RLANG.table, this.opts.modal_table, 300, $.proxy(function()
 				{
 					$('#redactor_insert_table_btn').click($.proxy(this.insertTable, this));
@@ -2961,6 +2977,19 @@ var RLANG = {
 
 				}, this)
 			);
+			*/
+			this.modalInit(RLANG.table, this.opts.modal_table, 200, $.proxy(function()
+				{
+					$('#redactor_insert_table_btn').click($.proxy(this.insertTable, this));
+
+					setTimeout(function()
+					{
+						$('#redactor_table_rows').focus();
+					}, 200);
+
+				}, this)
+			);
+			/* end concrete5 */
 		},
 		insertTable: function()
 		{
@@ -3117,7 +3146,19 @@ var RLANG = {
 		showVideo: function()
 		{
 			this.saveSelection();
-			this.modalInit(RLANG.video, this.opts.modal_video, 600, $.proxy(function()
+			/* concrete5 */
+			/*this.modalInit(RLANG.video, this.opts.modal_video, 600, $.proxy(function()
+				{
+					$('#redactor_insert_video_btn').click($.proxy(this.insertVideo, this));
+
+					setTimeout(function()
+					{
+						$('#redactor_insert_video_area').focus();
+					}, 200);
+
+				}, this)
+			);*/
+			this.modalInit(RLANG.video, this.opts.modal_video, 500, $.proxy(function()
 				{
 					$('#redactor_insert_video_btn').click($.proxy(this.insertVideo, this));
 
@@ -3128,6 +3169,7 @@ var RLANG = {
 
 				}, this)
 			);
+			/* end concrete5 */
 		},
 		insertVideo: function()
 		{
@@ -3355,8 +3397,10 @@ var RLANG = {
 				}
 
 			}, this);
-	
-			this.modalInit(RLANG.image, this.opts.modal_image, 610, callback);
+			/* concrete5 */
+			//this.modalInit(RLANG.image, this.opts.modal_image, 610, callback);
+			this.modalInit(RLANG.image, this.opts.modal_image, 400, callback);
+			/* end concrete5 */
 
 		},
 		imageSetThumb: function(e)
@@ -3497,9 +3541,11 @@ var RLANG = {
 				}, 200);
 
 			}, this);
-
-			this.modalInit(RLANG.link, this.opts.modal_link, 460, callback);
-
+			
+			/* concrete5 */
+			//this.modalInit(RLANG.link, this.opts.modal_link, 460, callback);
+			this.modalInit(RLANG.link, this.opts.modal_link, 200, callback);
+			/* end concrete5 */
 		},
 		insertLink: function()
 		{
