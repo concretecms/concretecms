@@ -1617,6 +1617,8 @@ div.ccm-add-block-global{border:1px solid rgba(0, 0, 0, 0.3);}
 div.ccm-add-block,div.ccm-add-block-global{padding:5px;margin:1px;font-size:11px;white-space:nowrap;font-weight:bold;border:1px solid rgba(0, 0, 0, 0.3);overflow:hidden;}
 div.ccm-block-edit-inline-active{border:1px solid rgba(0, 105, 185, 0.6);}
 div.ccm-block-edit-disabled{opacity:0.2 !important;transition:opacity 0.5s linear;-webkit-transition:opacity 0.5s linear;-moz-transition:opacity 0.5s linear;}
+div.ccm-block{transition:opacity 0.5s linear;-webkit-transition:opacity 0.5s linear;-moz-transition:opacity 0.5s linear;}
+div.ccm-add-block{transition:opacity 0.5s linear;-webkit-transition:opacity 0.5s linear;-moz-transition:opacity 0.5s linear;}
 div.ccm-add-block.selected{color:#369;text-decoration:underline;}
 div.ccm-move-mode{border:1px solid rgba(0, 0, 0, 0.3);min-height:20px;}
 div#ccm-highlighter{filter:alpha(opacity=60);background-image:url(../images/bg_trans.png);z-index:5;cursor:pointer;}
