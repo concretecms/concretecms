@@ -162,8 +162,8 @@ ccm_permissionLaunchDialog = function(link) {
 	<div id="ccm-page-permissions-confirm-dialog" style="display: none">
 	<?=t('Changing this setting will affect this page immediately. Are you sure?')?>
 	<div id="dialog-buttons-start">
-		<input type="button" class="btn" value="Cancel" onclick="jQuery.fn.dialog.closeTop()" />
-		<input type="button" class="btn error ccm-button-right" value="Ok" onclick="ccm_pagePermissionsConfirmInheritanceChange()" />
+		<input type="button" class="btn" value="<?=t('Cancel')?>" onclick="jQuery.fn.dialog.closeTop()" />
+		<input type="button" class="btn error ccm-button-right" value="<?=t('Ok')?>" onclick="ccm_pagePermissionsConfirmInheritanceChange()" />
 	</div>
 	</div>
 	
