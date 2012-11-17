@@ -20,9 +20,9 @@ class Concrete5_Helper_Json {
 
 	
 	/** 
-	 * Decodes a JSON string
+	 * Decodes a JSON string into a php variable
 	 * @param string $string
-	 * @return string
+	 * @return mixed
 	 */
 	public function decode($string) {
 		if (function_exists('json_decode')) {
@@ -37,7 +37,7 @@ class Concrete5_Helper_Json {
 	
 	/** 
 	 * Encodes a data structure into a JSON string
-	 * @param string $mixed
+	 * @param mixed $mixed
 	 * @return string
 	 */
 	public function encode($mixed) {
