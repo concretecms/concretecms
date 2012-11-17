@@ -80,7 +80,7 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
 		<h3><?=t('Move package to trash directory on server?')?></h3>
 		<ul class="inputs-list">
 		<li><label><?=Loader::helper('form')->checkbox('pkgMoveToTrash', 1)?>
-		<span><?=t('Yes, remove the package\'s directory from of the installation directory.')?></span></label>
+		<span><?=t('Yes, remove the package\'s directory from the installation directory.')?></span></label>
 		</li>
 		</ul>
 		</div>
