@@ -168,7 +168,7 @@ class Concrete5_Controller_Dashboard_Users_Search extends Controller {
 					}
 				}
 				
-				$gIDs = array_unique($gIDs, SORT_NUMERIC);
+				$gIDs = array_unique($gIDs);
 
 				$uo->updateGroups($gIDs);
 
