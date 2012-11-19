@@ -873,6 +873,9 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			$ca->delete('blockTypeByHandle', $this->btHandle);		 	
 			$ca->delete('blockTypeList', false);		 	
 			$db->Execute("delete from BlockTypes where btID = ?", array($this->btID));
+			
+			//Remove gaps in display order numbering (to avoid future sorting errors)
+			BlockTypeList::resetBlockTypeDisplayOrder('btDisplayOrder');
 		}
 		
 		/** 
