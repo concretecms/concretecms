@@ -482,7 +482,7 @@ if (!defined('SESSION')) {
 }
 
 # Variables/constants necessary for ADODB
-define('DB_TYPE', 'mysqlt');
+define('DB_TYPE', 'mysql');
 if (!defined('DB_USE_CACHE')) {
 	// caching now handled by our app, no longer by adodb
 	define('DB_USE_CACHE', false);
