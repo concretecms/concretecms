@@ -44,26 +44,26 @@ if (is_object($key)) {
 <fieldset>
 <legend><?=t('%s: Basic Details', $type->getAttributeTypeName())?></legend>
 
-<div class="clearfix">
+<div class="control-group">
 <?=$form->label('akHandle', t('Handle'))?>
-<div class="input">
+<div class="controls">
 	<?=$form->text('akHandle', $akHandle)?>
 	<span class="help-inline"><?=t('Required')?></span>
 </div>
 </div>
 
-<div class="clearfix">
+<div class="control-group">
 <?=$form->label('akName', t('Name'))?>
-<div class="input">
+<div class="controls">
 	<?=$form->text('akName', $akName)?>
 	<span class="help-inline"><?=t('Required')?></span>
 </div>
 </div>
 
 <? if ($category->allowAttributeSets() == AttributeKeyCategory::ASET_ALLOW_SINGLE) { ?>
-<div class="clearfix">
+<div class="control-group">
 <?=$form->label('asID', t('Set'))?>
-<div class="input">
+<div class="controls">
 	<?
 		$sel = array('0' => t('** None'));
 		$sets = $category->getAttributeSets();
@@ -76,10 +76,9 @@ if (is_object($key)) {
 </div>
 <? } ?>
 
-<div class="clearfix">
-<label><?=t('Searchable')?></label>
-<div class="input">
-<ul class="inputs-list">
+<div class="control-group">
+<label class="control-label"><?=t('Searchable')?></label>
+<div class="controls">
 <?php
 	$category_handle = $category->getAttributeKeyCategoryHandle();
 	$keyword_label = t('Content included in "Keyword Search".');
@@ -99,9 +98,8 @@ if (is_object($key)) {
 			break;
 	}
 	?>
-	<li><label><?=$form->checkbox('akIsSearchableIndexed', 1, $akIsSearchableIndexed)?> <span><?=$keyword_label?></span></label></li>
-	<li><label><?=$form->checkbox('akIsSearchable', 1, $akIsSearchable)?> <span><?=$advanced_label?></span></label></li>
-</ul>
+	<label class="checkbox"><?=$form->checkbox('akIsSearchableIndexed', 1, $akIsSearchableIndexed)?> <span><?=$keyword_label?></span></label>
+	<label class="checkbox"><?=$form->checkbox('akIsSearchable', 1, $akIsSearchable)?> <span><?=$advanced_label?></span></label>
 </div>
 </div>
 

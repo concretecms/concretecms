@@ -43,6 +43,7 @@ $v->addFooterItem($html->javascript('jquery.rating.js'));
 $v->addFooterItem('<script type="text/javascript" src="' . REL_DIR_FILES_TOOLS_REQUIRED . '/i18n_js"></script>'); 
 $v->addFooterItem($html->javascript('bootstrap.js'));
 $v->addFooterItem($html->javascript('ccm.app.js'));
+$v->addFooterItem($html->javascript('redactor.js'));
 
 if (LANGUAGE != 'en') {
 	$v->addFooterItem($html->javascript('i18n/ui.datepicker-'.LANGUAGE.'.js'));
@@ -56,6 +57,7 @@ if ($md->isMobile() == true) {
 }
 $v->addHeaderItem($html->css('ccm.dashboard.css'));
 $v->addHeaderItem($html->css('jquery.ui.css'));
+$v->addHeaderItem($html->css('redactor.css'));
 
 $valt = Loader::helper('validation/token');
 $disp = '<script type="text/javascript">'."\n";

@@ -5,6 +5,7 @@ class ConcreteUpgradeVersion570Helper {
 	
 	public $dbRefreshTables = array(
 		'atSocialLinks',
+		'atTextareaSettings',
 		'UserPointActions',
 		'UserPointHistory',
 		'Groups',
@@ -78,6 +79,12 @@ class ConcreteUpgradeVersion570Helper {
 			$sp = SinglePage::add('/dashboard/users/points/actions');
 		}
 
+		$this->upgradeRichTextEditor();
+
+	}
+
+	protected function upgradeRichTextEditor() {
+
 		$sns = SystemContentEditorSnippet::getByHandle('page_name');
 		if (!is_object($sns)) {
 			$sns = SystemContentEditorSnippet::add('page_name', t('Page Name'));
@@ -87,6 +94,23 @@ class ConcreteUpgradeVersion570Helper {
 		if (!is_object($sns)) {
 			$sns = SystemContentEditorSnippet::add('user_name', t('User Name'));
 			$sns->activate();
+		}
+
+		$db = Loader::db();
+		$r = $db->Execute('select * from atTextareaSettings order by akID asc');
+		while ($row = $r->FetchRow()) {
+			if ($row['akTextareaDisplayMode'] == 'text' || $row['akTextareaDisplayMode'] == 'rich_text_custom' || $row['akTextareaDisplayMode'] == 'rich_text' || $row['akTextareaDisplayMode'] == '') {
+				continue;
+			}
+			$options = array();
+			if ($row['akTextareaDisplayMode'] == 'rich_text_basic') {
+				$options[] = 'character_styles';
+				$options = serialize($options);
+				$db->Execute("update atTextareaSettings set akTextareaDisplayMode = 'rich_text_custom', akTextareaDisplayModeCustomOptions = ? where akID = ?", array($row['akID'], $options));
+			} else {
+				// we just set these all to the default rich text editor mode
+				$db->Execute("update atTextareaSettings set akTextareaDisplayMode = 'rich_text' where akID = ?", array($row['akID']));
+			}
 		}
 
 	}

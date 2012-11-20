@@ -2925,6 +2925,7 @@
       <unsigned/>
     </field>
     <field name="akTextareaDisplayMode" type="C" size="255"/>
+    <field name="akTextareaDisplayModeCustomOptions" type="X" />
   </table>
   <table name="atSelectOptions">
     <field name="ID" type="I" size="10">

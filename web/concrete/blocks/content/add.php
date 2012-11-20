@@ -6,6 +6,9 @@ defined('C5_EXECUTE') or die("Access Denied.");
 <textarea style="display: none" id="redactor-content" name="content"></textarea>
 
 <script type="text/javascript">
+
+var CCM_EDITOR_SECURITY_TOKEN = "<?=Loader::helper('validation/token')->generate('editor')?>";
+
 $(function() {
 	$('#redactor-edit-content').redactor({
 		'plugins': [
