@@ -9,6 +9,12 @@ rm bootstrap.tmp.js
 
 uglifyjs -o ../web/concrete/js/jquery.cookie.js ../web/concrete/js/ccm_app/jquery.cookie.js
 
+cat ../web/concrete/js/redactor/redactor.js \
+../web/concrete/js/redactor/redactor.concrete5.js > redactor.tmp.js
+
+uglifyjs -o ../web/concrete/js/redactor.js ./redactor.tmp.js
+rm redactor.tmp.js
+
 # Note: The order here is important
 
 cat ../web/concrete/js/ccm_app/jquery.colorpicker.js \
@@ -31,8 +37,6 @@ cat ../web/concrete/js/ccm_app/jquery.colorpicker.js \
 ../web/concrete/js/ccm_app/tabs.js \
 ../web/concrete/js/ccm_app/ui.js \
 ../web/concrete/js/ccm_app/toolbar.js \
-../web/concrete/js/ccm_app/redactor.js \
-../web/concrete/js/ccm_app/redactor.concrete5.js \
 ../web/concrete/js/ccm_app/themes.js > ccm.app.tmp.js
 
 uglifyjs --no-seqs -o ../web/concrete/js/ccm.app.js ./ccm.app.tmp.js
