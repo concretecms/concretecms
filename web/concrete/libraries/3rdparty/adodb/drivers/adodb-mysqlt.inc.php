@@ -21,6 +21,7 @@ include_once(ADODB_DIR."/drivers/adodb-mysql.inc.php");
 
 class ADODB_mysqlt extends ADODB_mysql {
 	var $databaseType = 'mysqlt';
+	var $dataProvider = 'mysqlt';
 	var $ansiOuter = true; // for Version 3.23.17 or later
 	var $hasTransactions = true;
 	var $autoRollback = true; // apparently mysql does not autorollback properly 
