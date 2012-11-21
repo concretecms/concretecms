@@ -469,7 +469,9 @@ class Concrete5_Model_Area extends Object {
 				// first, we temporarily set the arInheritPermissionsFromAreaOnCID to whatever the arInheritPermissionsFromAreaOnCID is set to
 				// in the immediate parent collection
 				$arInheritPermissionsFromAreaOnCID = $db->getOne("select a.arInheritPermissionsFromAreaOnCID from Pages c inner join Areas a on (c.cID = a.cID) where c.cID = ? and a.arHandle = ?", array($cIDToCheck, $this->getAreaHandle()));
-				$db->query("update Areas set arInheritPermissionsFromAreaOnCID = ? where arID = ?", array($arInheritPermissionsFromAreaOnCID, $this->getAreaID()));
+                                if ($arInheritPermissionsFromAreaOnCID > 0) {
+                                    $db->query("update Areas set arInheritPermissionsFromAreaOnCID = ? where arID = ?", array($arInheritPermissionsFromAreaOnCID, $this->getAreaID()));
+                                }
 				
 				// now we do the recursive rescan to see if any areas themselves override collection permissions
 
@@ -483,7 +485,7 @@ class Concrete5_Model_Area extends Object {
 				}
 				
 				if (is_array($row)) {
-					if ($row['arOverrideCollectionPermissions']) {
+					if ($row['arOverrideCollectionPermissions'] && $row['cID'] > 0) {
 						// then that means we have successfully found a parent area record that we can inherit from. So we set
 						// out current area to inherit from that COLLECTION ID (not area ID - from the collection ID)
 						$db->query("update Areas set arInheritPermissionsFromAreaOnCID = ? where arID = ?", array($row['cID'], $this->getAreaID()));
@@ -493,7 +495,7 @@ class Concrete5_Model_Area extends Object {
 			} else if ($areac->getCollectionInheritance() == 'TEMPLATE') {
 				 // we grab an area on the master collection (if it exists)
 				$doOverride = $db->getOne("select arOverrideCollectionPermissions from Pages c inner join Areas a on (c.cID = a.cID) where c.cID = ? and a.arHandle = ?", array($areac->getPermissionsCollectionID(), $this->getAreaHandle()));
-				if ($doOverride) {
+				if ($doOverride && $areac->getPermissionsCollectionID() > 0) {
 					$db->query("update Areas set arInheritPermissionsFromAreaOnCID = ? where arID = ?", array($areac->getPermissionsCollectionID(), $this->getAreaID()));
 					$this->arInheritPermissionsFromAreaOnCID = $areac->getPermissionsCollectionID();
 				}			
@@ -521,8 +523,10 @@ class Concrete5_Model_Area extends Object {
 		$r = $db->query("select Areas.arID, Areas.cID from Areas inner join Pages on (Areas.cID = Pages.cID) where Areas.arHandle = ? and cInheritPermissionsFrom = ? and arOverrideCollectionPermissions = 0 and cParentID = ?", $v);
 		while ($row = $r->fetchRow()) {
 			// these are all the areas we need to update.
-			$db->query("update Areas set arInheritPermissionsFromAreaOnCID = " . $this->getAreaCollectionInheritID() . " where arID = " . $row['arID']);
-			$this->rescanSubAreaPermissions($row['cID']);
+                        if ($this->getAreaCollectionInheritID() > 0) {
+                            $db->query("update Areas set arInheritPermissionsFromAreaOnCID = ? where arID = ?", array($this->getAreaCollectionInheritID(), $row['arID']));
+                            $this->rescanSubAreaPermissions($row['cID']);
+                        }
 		}
 		
 	}
