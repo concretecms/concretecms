@@ -648,6 +648,10 @@ class ADODB_Active_Record {
 				return $db->qstr($val);
 				break;
 			}
+                        else {
+                            return "''";
+                            break;
+                        }
 		default:
 			return $val;
 			break;
@@ -851,7 +855,7 @@ class ADODB_Active_Record {
 		elseif ($ADODB_ASSOC_CASE == 1) 
 			foreach($pkey as $k => $v)
 				$pkey[$k] = strtoupper($v);
-		$ok = $db->Replace($this->_table,$arr,$pkey, true);
+		$ok = $db->Replace($this->_table,$arr,$pkey);
 		if ($ok) {
 			$this->_saved = true; // 1= update 2=insert
 			if ($ok == 2) {
