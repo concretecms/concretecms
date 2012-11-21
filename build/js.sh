@@ -4,10 +4,10 @@ cat ../web/concrete/js/bootstrap/bootstrap.tooltip.js \
 ../web/concrete/js/bootstrap/bootstrap.transitions.js \
 ../web/concrete/js/bootstrap/bootstrap.alert.js > bootstrap.tmp.js
 
-uglifyjs -o ../web/concrete/js/bootstrap.js ./bootstrap.tmp.js 
+uglifyjs --no-copyright -o ../web/concrete/js/bootstrap.js ./bootstrap.tmp.js 
 rm bootstrap.tmp.js
 
-uglifyjs -o ../web/concrete/js/jquery.cookie.js ../web/concrete/js/ccm_app/jquery.cookie.js
+uglifyjs --no-copyright -o ../web/concrete/js/jquery.cookie.js ../web/concrete/js/ccm_app/jquery.cookie.js
 
 # Note: The order here is important
 
@@ -34,5 +34,5 @@ cat ../web/concrete/js/ccm_app/jquery.colorpicker.js \
 ../web/concrete/js/ccm_app/toolbar.js \
 ../web/concrete/js/ccm_app/themes.js > ccm.app.tmp.js
 
-uglifyjs --no-seqs -o ../web/concrete/js/ccm.app.js ./ccm.app.tmp.js 
+uglifyjs --no-copyright --no-seqs -o ../web/concrete/js/ccm.app.js ./ccm.app.tmp.js 
 rm ccm.app.tmp.js

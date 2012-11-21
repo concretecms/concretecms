@@ -281,6 +281,8 @@ class ConcreteUpgradeVersion560Helper {
 							$pa = $pko->getPermissionAccessObject();
 							if (!is_object($pa)) {
 								$pa = PermissionAccess::create($pko);
+							} else if ($pa->isPermissionKeyInUse()) {
+								$pa = $pa->duplicate();
 							}
 							$pa->addListItem($pe, false, PermissionKey::ACCESS_TYPE_INCLUDE);	
 							$pt->assignPermissionAccess($pa);
@@ -406,6 +408,8 @@ class ConcreteUpgradeVersion560Helper {
 				$pa = $pk->getPermissionAccessObject();
 				if (!is_object($pa)) {
 					$pa = PermissionAccess::create($pk);
+				} else if ($pa->isPermissionAccessInUse()) {
+					$pa = $pa->duplicate();
 				}
 				foreach($entities as $pe) {
 					$pa->addListItem($pe, false, PagePermissionKey::ACCESS_TYPE_INCLUDE);	
@@ -429,6 +433,8 @@ class ConcreteUpgradeVersion560Helper {
 				$pa = $pk->getPermissionAccessObject();
 				if (!is_object($pa)) {
 					$pa = PermissionAccess::create($pk);
+				} else if ($pa->isPermissionAccessInUse()) {
+					$pa = $pa->duplicate();
 				}
 				$pe = $this->migrateAccessEntity($row);
 				if (!$pe) {
@@ -466,6 +472,8 @@ class ConcreteUpgradeVersion560Helper {
 				$pa = $pko->getPermissionAccessObject();
 				if (!is_object($pa)) {
 					$pa = PermissionAccess::create($pko);
+				} else if ($pa->isPermissionAccessInUse()) {
+					$pa = $pa->duplicate();
 				}
 				$pa->addListItem($pe, false, FileSetPermissionKey::ACCESS_TYPE_INCLUDE);	
 				$args = array();
@@ -523,12 +531,16 @@ class ConcreteUpgradeVersion560Helper {
 					$pa = $pk->getPermissionAccessObject();
 					if (!is_object($pa)) {
 						$pa = PermissionAccess::create($pk);
+					} else if ($pa->isPermissionAccessInUse()) {
+						$pa = $pa->duplicate();
 					}
 					$spk->setPermissionObject($ax);
 					$spt = $pk->getPermissionAssignmentObject();
 					$spa = $spk->getPermissionAccessObject();
 					if (!is_object($spa)) {
 						$spa = PermissionAccess::create($spk);
+					} else if ($spa->isPermissionAccessInUse()) {
+						$spa = $spa->duplicate();
 					}
 
 					foreach($entities as $pe) {
@@ -617,6 +629,8 @@ class ConcreteUpgradeVersion560Helper {
 					$pa = $pko->getPermissionAccessObject();
 					if (!is_object($pa)) {
 						$pa = PermissionAccess::create($pko);
+					} else if ($pa->isPermissionAccessInUse()) {
+						$pa = $pa->duplicate();
 					}
 					$pa->addListItem($pe, false, AreaPermissionKey::ACCESS_TYPE_INCLUDE);	
 					$pt->assignPermissionAccess($pa);
@@ -685,6 +699,8 @@ class ConcreteUpgradeVersion560Helper {
 					$pa = $pko->getPermissionAccessObject();
 					if (!is_object($pa)) {
 						$pa = PermissionAccess::create($pko);
+					} else if ($pa->isPermissionAccessInUse()) {
+						$pa = $pa->duplicate();
 					}
 					$pa->addListItem($pe, false, PagePermissionKey::ACCESS_TYPE_INCLUDE);	
 					$pt->assignPermissionAccess($pa);
@@ -757,6 +773,8 @@ class ConcreteUpgradeVersion560Helper {
 						$pa = $pko->getPermissionAccessObject();
 						if (!is_object($pa)) {
 							$pa = PermissionAccess::create($pko);
+						} else if ($pa->isPermissionAccessInUse()) {
+							$pa = $pa->duplicate();
 						}
 						$pa->addListItem($_pe, false, FileSetPermissionKey::ACCESS_TYPE_INCLUDE);	
 						$pt->assignPermissionAccess($pa);
@@ -803,6 +821,8 @@ class ConcreteUpgradeVersion560Helper {
 						$pa = $pko->getPermissionAccessObject();
 						if (!is_object($pa)) {
 							$pa = PermissionAccess::create($pko);
+						} else if ($pa->isPermissionAccessInUse()) {
+							$pa = $pa->duplicate();
 						}
 						$pa->addListItem($pe, false, $accessType);	
 						$pt->assignPermissionAccess($pa);
@@ -844,6 +864,9 @@ class ConcreteUpgradeVersion560Helper {
 			}
 			$permissions = $this->getPermissionsArray($row['cbgPermissions']);
 			$co = Page::getByID($row['cID'], $row['cvID']);
+			if (!is_object($co) || $co->isError()) {
+				continue;
+			}
 			$arHandle = $db->GetOne('select arHandle from CollectionVersionBlocks cvb where cvb.cID = ? and 
 				cvb.cvID = ? and cvb.bID = ?', array($row['cID'], $row['cvID'], $row['bID']));
 			$a = Area::get($co, $arHandle);
@@ -857,6 +880,8 @@ class ConcreteUpgradeVersion560Helper {
 						$pa = $pko->getPermissionAccessObject();
 						if (!is_object($pa)) {
 							$pa = PermissionAccess::create($pko);
+						} else if ($pa->isPermissionAccessInUse()) {
+							$pa = $pa->duplicate();
 						}
 						$pa->addListItem($pe, false, BlockPermissionKey::ACCESS_TYPE_INCLUDE);	
 						$pt->assignPermissionAccess($pa);

@@ -55,7 +55,7 @@ class Concrete5_Job_GenerateSitemap extends Job {
 			if(!$hFile = fopen($osName, 'w')) {
 				throw new Exception(t('Cannot open file %s', $osName));
 			}
-			if(!@fprintf($hFile, '<?xml version="1.0" encoding="%s"?>' . self::EOL . '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">', APP_CHARSET)) {
+			if(!@fprintf($hFile, '<'.'?xml version="1.0" encoding="%s"?>' . self::EOL . '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">', APP_CHARSET)) {
 				throw new Exception(t('Error writing header of %s', $osName));
 			}
 			$addedPages = 0;
