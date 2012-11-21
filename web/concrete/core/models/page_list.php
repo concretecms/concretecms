@@ -385,8 +385,8 @@ class Concrete5_Model_PageList extends DatabaseItemList {
 		}
 	}
 	
-	protected function loadPageID($cID) {
-		return Page::getByID($cID);
+	protected function loadPageID($cID, $versionOrig = 'RECENT') {
+		return Page::getByID($cID, $versionOrig);
 	}
 	
 	public function getTotal() {
