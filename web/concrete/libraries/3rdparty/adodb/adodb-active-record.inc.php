@@ -851,8 +851,7 @@ class ADODB_Active_Record {
 		elseif ($ADODB_ASSOC_CASE == 1) 
 			foreach($pkey as $k => $v)
 				$pkey[$k] = strtoupper($v);
-				
-		$ok = $db->Replace($this->_table,$arr,$pkey);
+		$ok = $db->Replace($this->_table,$arr,$pkey, true);
 		if ($ok) {
 			$this->_saved = true; // 1= update 2=insert
 			if ($ok == 2) {
