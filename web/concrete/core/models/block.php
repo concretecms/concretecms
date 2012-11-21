@@ -527,15 +527,16 @@ class Concrete5_Model_Block extends Object {
 			$res = $db->execute($r, $v);
 			
 			// styles
-			$csr = $this->getBlockCustomStyleRule();
-
-			$db->Execute('insert into CollectionVersionBlockStyles (cID, cvID, bID, arHandle, csrID) values (?, ?, ?, ?, ?)', array(
-				$cID, 
-				$cvID,
-				$this->bID,
-				$this->getAreaHandle(),
-				$this->getBlockCustomStyleRuleID()
-			));
+			$csrID = $this->getBlockCustomStyleRuleID();
+            if ($csrID > 0) {
+                $db->Execute('insert into CollectionVersionBlockStyles (cID, cvID, bID, arHandle, csrID) values (?, ?, ?, ?, ?)', array(
+                        $cID, 
+                        $cvID,
+                        $this->bID,
+                        $this->getAreaHandle(),
+                        $csrID
+                ));
+            }
 			if ($res) {
 				// now we grab the permissions from the block we're aliasing from
 				$oc = $this->getBlockCollectionObject();
@@ -633,10 +634,11 @@ class Concrete5_Model_Block extends Object {
 		$res2 = $db->execute($r2, $v2);
 		$nb = Block::getByID($newBID, $nc, $this->arHandle);
 		
-		$v = array($ncID, $nvID, $newBID, $this->arHandle, $this->getBlockCustomStyleRuleID());
-		$db->Execute('insert into CollectionVersionBlockStyles (cID, cvID, bID, arHandle, csrID) values (?, ?, ?, ?, ?)', $v);
-
-		
+		$csrID = $this->getBlockCustomStyleRuleID()();
+        if ($csrID > 0) {
+            $v = array($ncID, $nvID, $newBID, $this->arHandle, $csrID);
+            $db->Execute('insert into CollectionVersionBlockStyles (cID, cvID, bID, arHandle, csrID) values (?, ?, ?, ?, ?)', $v);
+        }
 		return $nb;
 	}
 	
@@ -733,10 +735,13 @@ class Concrete5_Model_Block extends Object {
 				$b1->setBlockCustomStyle($csr, false);
 			}			
 		} else {
-			$db->Replace('CollectionVersionBlockStyles', 
-				array('cID' => $this->getBlockCollectionID(), 'cvID' => $cvID, 'arHandle' => $this->getAreaHandle(), 'bID' => $this->bID, 'csrID' => $csr->getCustomStyleRuleID()),
-				array('cID', 'cvID', 'bID', 'arHandle'), true
-			);
+            if ($csr->getCustomStyleRuleID() > 0) {
+                $db->Replace('CollectionVersionBlockStyles', 
+                        array('cID' => $this->getBlockCollectionID(), 'cvID' => $cvID, 'arHandle' => $this->getAreaHandle(), 'bID' => $this->bID, 'csrID' => $csr->getCustomStyleRuleID()),
+                        array('cID', 'cvID', 'bID', 'arHandle'), true
+                );
+                $this->refreshCache();
+            }
 		}
 	}
 
