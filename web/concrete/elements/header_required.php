@@ -5,7 +5,12 @@ global $cp;
 global $cvID;
 
 if (is_object($c)) {
-	$pageTitle = (!$pageTitle) ? $c->getCollectionName() : $pageTitle;
+	if(!(isset($pageTitle) && strlen($pageTitle))) {
+		$pageTitle = $c->getCollectionName();
+		if($c->isAdminArea()) {
+			$pageTitle = t($pageTitle);
+		}
+	}
 	$pageDescription = (!$pageDescription) ? $c->getCollectionDescription() : $pageDescription;
 	$cID = $c->getCollectionID(); 
 	$isEditMode = ($c->isEditMode()) ? "true" : "false";
