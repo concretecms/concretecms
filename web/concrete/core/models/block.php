@@ -634,7 +634,7 @@ class Concrete5_Model_Block extends Object {
 		$res2 = $db->execute($r2, $v2);
 		$nb = Block::getByID($newBID, $nc, $this->arHandle);
 		
-		$csrID = $this->getBlockCustomStyleRuleID()();
+		$csrID = $this->getBlockCustomStyleRuleID();
         if ($csrID > 0) {
             $v = array($ncID, $nvID, $newBID, $this->arHandle, $csrID);
             $db->Execute('insert into CollectionVersionBlockStyles (cID, cvID, bID, arHandle, csrID) values (?, ?, ?, ?, ?)', $v);
