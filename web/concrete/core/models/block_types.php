@@ -653,7 +653,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		 * @param string template 'view' for the default
 		 * @return void
 		 */
-		public function render($view) {
+		public function render($view = 'view') {
 			$bv = new BlockView();
 			$bv->setController($this->controller);
 			$bv->render($this, $view);
