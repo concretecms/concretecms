@@ -20,6 +20,20 @@ im.clone = function(namespace) {
     newim[i] = im[i];
   }
   newim.namespace = namespace;
-  namespaces['namespace'] = newim;
+  im.namespaces['namespace'] = newim;
   return newim;
+};
+
+
+im.addExtension = function(ns,js,elem) {
+  if (jQuery && elem instanceof jQuery) elem = elem[0];
+  elem.controlSet = function(im,js) {
+    this.im = im;
+    eval(js);
+    return this;
+  };
+  var newim = im.clone(ns);
+  var nso = elem.controlSet(newim,js);
+  im.controlSets[ns] = nso;
+  return nso;
 };

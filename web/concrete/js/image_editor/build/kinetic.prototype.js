@@ -13,3 +13,14 @@ Kinetic.Stage.prototype.loadCopy = function (copy) {
   }
   this.draw();
 };
+Kinetic.Image.prototype.getImageData = function() {
+  var canvas = new Kinetic.Canvas(this.attrs.image.width, this.attrs.image.height);
+  var context = canvas.getContext();
+  context.drawImage(this.attrs.image, 0, 0);
+  try {
+      var imageData = context.getImageData(0, 0, canvas.getWidth(), canvas.getHeight());
+      return imageData;
+  } catch(e) {
+      Kinetic.Global.warn('Unable to get imageData.');
+  }
+};

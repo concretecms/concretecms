@@ -1,190 +1,337 @@
-Kinetic.Stage.prototype.createCopy = function() {
-    var a = [], b = this.getChildren(), c;
-    for (c = 0; c < b.length; c++) {
-        a.push(b[c].clone());
-    }
-    return a;
+///////////////////////////////////////////////////////////////////////////////
+//                            kinetic.prototype.js                           //
+///////////////////////////////////////////////////////////////////////////////
+Kinetic.Stage.prototype.createCopy = function () {
+  var copy = [], children = this.getChildren(), i;
+  for (i = 0; i < children.length; i++) {
+    copy.push(children[i].clone());
+  }
+  return copy;
+};
+Kinetic.Stage.prototype.loadCopy = function (copy) {
+  var i;
+  this.removeChildren();
+  for (i = 0; i < copy.length; i++) {
+    this.add(copy[i]);
+  }
+  this.draw();
+};
+Kinetic.Image.prototype.getImageData = function() {
+  var canvas = new Kinetic.Canvas(this.attrs.image.width, this.attrs.image.height);
+  var context = canvas.getContext();
+  context.drawImage(this.attrs.image, 0, 0);
+  try {
+      var imageData = context.getImageData(0, 0, canvas.getWidth(), canvas.getHeight());
+      return imageData;
+  } catch(e) {
+      Kinetic.Global.warn('Unable to get imageData.');
+  }
 };
 
-Kinetic.Stage.prototype.loadCopy = function(a) {
-    var b;
-    this.removeChildren();
-    for (b = 0; b < a.length; b++) {
-        this.add(a[b]);
-    }
-    this.draw();
+
+///////////////////////////////////////////////////////////////////////////////
+//                               imageeditor.js                              //
+///////////////////////////////////////////////////////////////////////////////
+var ControlSet = function(im,js,controlSet) {
+  var Window = this;
+  Window.controlSet = controlSet;
+  Window.im = im;
+  Window.js = js;
+  eval(js);
+};
+var ImageEditor = function (settings) {
+  if (settings === undefined) return this;
+  var im         = this, x;
+  im.width       = settings.width;
+  im.height      = settings.height;
+  im.stage       = new Kinetic.Stage(settings);
+  im.editor      = new Kinetic.Layer();
+  im.namespaces  = {};
+  im.controlSets = {};
+
+  im.center = {
+    x: im.width / 2,
+    y: im.height / 2
+  };
+
+
+///////////////////////////////////////////////////////////////////////////////
+//                                 history.js                                //
+///////////////////////////////////////////////////////////////////////////////
+var History = function () {
+  var h = this;
+  h.history = [];
+  h.pointer = -1;
+  h.save = function () {
+    im.fire('beforehistorysave');
+    h.history = h.history.slice(0, h.pointer + 1);
+    h.history.push(im.stage.createCopy());
+    h.movePointer(1);
+    im.fire('historysave');
+  };
+  h.movePointer = function (diff) {
+    h.pointer += diff;
+    (h.pointer < 0 && (h.pointer = 0));
+    (h.pointer >= h.history.length && (h.pointer = h.history.length - 1));
+    return h.pointer;
+  };
+  h.render = function () {
+    im.fire('beforehistoryrender');
+    im.stage.loadCopy(h.history[h.pointer]);
+    im.fire('historyrender');
+  };
+  h.undo = function () {
+    im.fire('beforehistoryundo');
+    h.movePointer(-1);
+    h.render();
+    im.fire('historyundo');
+  };
+  h.redo = function () {
+    im.fire('beforehistoryredo');
+    h.movePointer(1);
+    h.render();
+    im.fire('historyredo');
+  };
+};
+im.history = new History();
+
+
+///////////////////////////////////////////////////////////////////////////////
+//                                 events.js                                 //
+///////////////////////////////////////////////////////////////////////////////
+// Handle event binding.
+im.bindEvent = im.bind = function (type, handler, elem) {
+  var element = elem || im.stage.getContainer();
+  if (element.addEventListener) {
+    element.addEventListener(type.toLowerCase(), handler, false);
+  } else {
+    element.attachEvent('on' + type.toLowerCase(), handler);
+  }
 };
 
-var ImageEditor = function(a) {
-    if (a === undefined) return this;
-    var b = this, c;
-    b.width = a.width;
-    b.height = a.height;
-    b.stage = new Kinetic.Stage(a);
-    b.editor = new Kinetic.Layer;
-    b.namespaces = {};
-    b.center = {
-        x: b.width / 2,
-        y: b.height / 2
-    };
-    var d = function() {
-        var a = this;
-        a.history = [];
-        a.pointer = -1;
-        a.save = function() {
-            b.fire("beforehistorysave");
-            a.history = a.history.slice(0, a.pointer + 1);
-            a.history.push(b.stage.createCopy());
-            a.movePointer(1);
-            b.fire("historysave");
-        };
-        a.movePointer = function(b) {
-            a.pointer += b;
-            a.pointer < 0 && (a.pointer = 0);
-            a.pointer >= a.history.length && (a.pointer = a.history.length - 1);
-            return a.pointer;
-        };
-        a.render = function() {
-            b.fire("beforehistoryrender");
-            b.stage.loadCopy(a.history[a.pointer]);
-            b.fire("historyrender");
-        };
-        a.undo = function() {
-            b.fire("beforehistoryundo");
-            a.movePointer(-1);
-            a.render();
-            b.fire("historyundo");
-        };
-        a.redo = function() {
-            b.fire("beforehistoryredo");
-            a.movePointer(1);
-            a.render();
-            b.fire("historyredo");
-        };
-    };
-    b.history = new d;
-    b.bindEvent = b.bind = function(a, c, d) {
-        var e = d || b.stage.getContainer();
-        if (e.addEventListener) {
-            e.addEventListener(a.toLowerCase(), c, false);
-        } else {
-            e.attachEvent("on" + a.toLowerCase(), c);
-        }
-    };
-    b.fireEvent = b.fire = b.trigger = function(a, c) {
-        var d, e = "ImageEditorEvent", f = b.stage.getContainer(), c = c || b;
-        if (document.createEvent) {
-            d = document.createEvent("HTMLEvents");
-            d.initEvent(a.toLowerCase(), true, true);
-        } else {
-            d = document.createEventObject();
-            d.eventType = a.toLowerCase();
-        }
-        d.eventName = e;
-        d.memo = c || {};
-        if (document.createEvent) {
-            f.dispatchEvent(d);
-        } else {
-            f.fireEvent("on" + d.eventType, d);
-        }
-        if (typeof f["on" + a.toLowerCase()] === "function") {
-            f["on" + a.toLowerCase()](d);
-        }
-    };
-    b.extend = function(a, c) {
-        b[a] = c;
-    };
-    b.alterCore = function(a, b) {
-        var c = c, d = "core", e;
-        if (c.namespace) {
-            var d = c.namespace;
-            c = window.c5_image_editor;
-        }
-        c[a] = b;
-        for (e in c.namespaces) {
-            c.namespaces[e][a] = b;
-        }
-    };
-    b.clone = function(a) {
-        var c = new ImageEditor, d;
-        for (d in b) {
-            c[d] = b[d];
-        }
-        c.namespace = a;
-        namespaces["namespace"] = c;
-        return c;
-    };
-    b.background = new Kinetic.Layer;
-    b.background.add(new Kinetic.Rect({
-        x: 0,
-        y: 0,
-        width: b.stage.getWidth(),
-        height: b.stage.getHeight(),
-        fill: "#eee"
-    }));
-    var e = function(a, b) {
-        return {
-            x: 2 * a,
-            y: -a + b
-        };
-    };
-    var f = Math.max(b.stage.getWidth(), b.stage.getHeight()) * 2;
-    for (c = -10; c <= f; c += 20) {
-        b.background.add(new Kinetic.Line({
-            points: [ e(c, 0), e(b.background.getWidth(), c) ],
-            stroke: "#e3e3e3"
-        }));
-    }
-    b.stage.add(b.background);
-    var g = new Image;
-    g.src = a.src;
-    g.onload = function() {
-        var a = {
-            x: b.center.x - g.width / 2,
-            y: b.center.y - g.width / 2
-        };
-        b.prettifier = new Kinetic.Layer;
-        b.Image = new Kinetic.Image({
-            image: g,
-            x: a.x,
-            y: a.y
-        });
-        b.Image.on("draw", function() {
-            b.fire("imagedraw");
-        });
-        b.editor.add(b.Image);
-        b.stage.add(b.editor);
-        b.fireEvent("imageload");
-    };
-    window.c5_image_editor = b;
-    return b;
+// Handle event firing
+im.fireEvent = im.fire = im.trigger = function (type, memo) {
+  var event, eventName = 'ImageEditorEvent', element = im.stage.getContainer(), memo = memo || im;
+  if (document.createEvent) {
+    event = document.createEvent("HTMLEvents");
+    event.initEvent(type.toLowerCase(), true, true);
+  } else {
+    event = document.createEventObject();
+    event.eventType = type.toLowerCase();
+  }
+  event.eventName = eventName;
+  event.memo = memo || { };
+
+  if (document.createEvent) {
+    element.dispatchEvent(event);
+  } else {
+    element.fireEvent("on" + event.eventType, event);
+  }
+  if (typeof element['on' + type.toLowerCase()] === 'function') { element['on' + type.toLowerCase()](event); }
 };
 
-$.fn.ImageEditor = function(a) {
-    a === undefined && (a = {});
-    a.imageload = $.fn.dialog.hideLoader;
-    var b = $(this);
-    a.container = b[0];
-    a.width === undefined && (a.width = b.width());
-    a.height === undefined && (a.height = b.height());
-    $.fn.dialog.showLoader();
-    var c = new ImageEditor(a);
-    c.bind("imageload", $.fn.dialog.hideLoader);
-    return c;
+
+///////////////////////////////////////////////////////////////////////////////
+//                                 extend.js                                 //
+///////////////////////////////////////////////////////////////////////////////
+im.extend = function(property,value) {
+  im[property] = value;
 };
 
+im.alterCore = function(property,value) {
+  var im = im, ns = 'core', i;
+  if (im.namespace) {
+    var ns = im.namespace;
+    im = window.c5_image_editor;
+  }
+  im[property] = value;
+  for (i in im.namespaces){
+    im.namespaces[i][property] = value;
+  }
+};
+
+im.clone = function(namespace) {
+  var newim = new ImageEditor(),i;
+  for (i in im) {
+    newim[i] = im[i];
+  }
+  newim.namespace = namespace;
+  im.namespaces['namespace'] = newim;
+  return newim;
+};
+
+
+im.addExtension = function(ns,js,elem) {
+  if (jQuery && elem instanceof jQuery) elem = elem[0];
+  elem.controlSet = function(im,js) {
+    this.im = im;
+    eval(js);
+    return this;
+  };
+  var newim = im.clone(ns);
+  var nso = elem.controlSet(newim,js);
+  im.controlSets[ns] = nso;
+  return nso;
+};
+
+
+///////////////////////////////////////////////////////////////////////////////
+//                               background.js                               //
+///////////////////////////////////////////////////////////////////////////////
+// Set up background
+im.background = new Kinetic.Layer();
+im.background.add(new Kinetic.Rect({
+  x: 0,
+  y: 0,
+  width: im.stage.getWidth(),
+  height: im.stage.getHeight(),
+  fill: '#eee'
+}));
+var getCoords = function (x, offset) {
+  return {x: 2 * x, y: -x + offset};
+};
+
+var to = Math.max(im.stage.getWidth(), im.stage.getHeight()) * 2;
+for (x = -10; x <= to; x += 20) {
+  im.background.add(new Kinetic.Line({
+    points: [getCoords(x, 0), getCoords(im.background.getWidth(), x)],
+    stroke: '#e3e3e3'
+  }));
+}
+im.stage.add(im.background);
+
+
+///////////////////////////////////////////////////////////////////////////////
+//                                  image.js                                 //
+///////////////////////////////////////////////////////////////////////////////
+var img = new Image();
+img.src = settings.src;
+img.onload = function () {
+  var center = {
+    x: im.center.x - (img.width / 2),
+    y: im.center.y - (img.height / 2)
+  };
+  im.prettifier = new Kinetic.Layer();
+  im.image = new Kinetic.Image({
+    image: img,
+    x: Math.round(center.x),
+    y: Math.round(center.y),
+    stroke: '#000'
+  });
+  im.image.on('draw',function(){im.fire('imagedraw');});
+  im.editor.add(im.image);
+  im.stage.add(im.editor);
+  im.imageData = im.image.getImageData();
+  im.fireEvent('imageload');
+};
+
+
+///////////////////////////////////////////////////////////////////////////////
+//                              control_sets.js                              //
+///////////////////////////////////////////////////////////////////////////////
+im.bind('imageload',function(){
+  var cs = settings.controlsets || {}, namespace,first;
+  for (namespace in cs) {
+    var myns = namespace;
+    if (!first) first = myns;
+    var running = 0;
+    $.ajax(cs[myns]['src'],{
+      dataType:'text',
+      cache:false,
+      myns:myns,
+      beforeSend:function(){running++;},
+      success:function(js){
+        running--;
+        var nso = im.addExtension(this.myns,js,cs[this.myns]['element']);
+        im.fire('controlsetload',nso);
+        if (0 == running) {
+          im.activeControlSet = first;
+          im.trigger('changecontrolset',first);
+        }
+      },
+      error: function(xhr, errDesc, exception) {
+        running--;
+        if (0 == running) {
+          im.activeControlSet = first;
+          im.trigger('changecontrolset',first);
+        }
+      }
+    });
+  }
+});
+im.bind('changecontrolset',function(e){
+  var active = $('div.controlset[data-namespace='+e.memo+']','div.controls')
+    .children('div.control').slideDown().end().children('h4').addClass('active').end();
+  $('div.controlset','div.controls').not(active)
+    .children('div.control').slideUp().end().children('h4').removeClass('active');
+});
+
+
+///////////////////////////////////////////////////////////////////////////////
+//                              jquerybinding.js                             //
+///////////////////////////////////////////////////////////////////////////////
+// End the ImageEditor object.
+  window.c5_image_editor = im; // Safe keeping
+  return im;
+};
+
+$('div.controlset').find('div.control').slideUp(0);
+$('div.controlset').find('h4').click(function(){
+  $('div.controlset').find('h4').not($(this)).removeClass('active');
+  var ns = $(this).parent().attr('data-namespace');
+  im.trigger('changecontrolset',ns);
+});
+$.fn.ImageEditor = function (settings) {
+  (settings === undefined && (settings = {}));
+  settings.imageload = $.fn.dialog.hideLoader;
+  var self = $(this);
+  settings.container = self[0];
+  if (self.height() == 0) {
+    setTimeout(function(){
+      self.ImageEditor(settings);
+    },50);
+    return;
+  }
+  (settings.width === undefined && (settings.width = self.width()));
+  (settings.height === undefined && (settings.height = self.height()));
+  $.fn.dialog.showLoader();
+  var im = new ImageEditor(settings);
+  im.bind('imageload', $.fn.dialog.hideLoader);
+  return im;
+};
+
+
+///////////////////////////////////////////////////////////////////////////////
+//                                 filters.js                                //
+///////////////////////////////////////////////////////////////////////////////
 ImageEditor.fn = ImageEditor.prototype;
-
 ImageEditor.fn.filters = {};
-
 ImageEditor.fn.filters.grayscale = Kinetic.Filters.Grayscale;
-
-ImageEditor.fn.filters.sepia = function(a) {
-    var b;
-    var c = a.data;
-    for (b = 0; b < c.length; b += 4) {
-        c[b] = c[b] * .393 + c[b + 1] * .769 + c[b + 2] * .189;
-        c[b + 1] = c[b] * .349 + c[b + 1] * .686 + c[b + 2] * .168;
-        c[b + 2] = c[b] * .272 + c[b + 1] * .534 + c[b + 2] * .131;
-    }
+ImageEditor.fn.filters.sepia = function (imageData) {
+  var i;
+  var data = imageData.data;
+  for (i = 0; i < data.length; i += 4) {
+    data[i]     = (data[i] * 0.393 + data[i + 1] * 0.769 + data[i + 2] * 0.189);
+    data[i + 1] = (data[i] * 0.349 + data[i + 1] * 0.686 + data[i + 2] * 0.168);
+    data[i + 2] = (data[i] * 0.272 + data[i + 1] * 0.534 + data[i + 2] * 0.131);
+  }
+};
+ImageEditor.fn.filters.brightness = function (imageData,ob) {
+	var adjustment = ob.level;
+	var d = imageData.data;
+	for (var i=0; i<d.length; i+=4) {
+		d[i] += adjustment;
+		d[i+1] += adjustment;
+		d[i+2] += adjustment;
+	}
+};
+ImageEditor.fn.filters.restore = function (imageData,ob) {
+	var adjustment = ob.level;
+  	var d = imageData.data;
+  	var g = ob.imageData.data;
+	for (var i=0; i<d.length; i+=4) {
+		d[i] = g[i];
+		d[i+1] = g[i+1];
+		d[i+2] = g[i+2];
+	}
 };
