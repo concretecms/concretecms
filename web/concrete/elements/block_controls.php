@@ -7,7 +7,11 @@
 		$cID = $b->getBlockCollectionID();
 		$c = $b->getBlockCollectionObject();
 	}
+	$editInline = 'false';
 	$btw = BlockType::getByID($b->getBlockTypeID());
+	if ($btw->supportsInlineEditing()) {
+		$editInline = 'true';
+	}
 	$btOriginal = $btw;
 	$bID = $b->getBlockID();
 	$heightPlus = 20;
@@ -16,6 +20,9 @@
 		$_bo = Block::getByID($_bi->getOriginalBlockID());
 		$btOriginal = BlockType::getByHandle($_bo->getBlockTypeHandle());
 		$heightPlus = 80;
+		if ($btOriginal->supportsInlineEditing()) {
+			$editInline = 'true';
+		}
 	}
 	$isAlias = $b->isAlias();
 	$u = new User();
@@ -41,6 +48,7 @@ $(function() {
 
 var ccm_menuObj<?=$id?> = {};
 ccm_menuObj<?=$id?>.type = "BLOCK";
+ccm_menuObj<?=$id?>.editInline = <?=$editInline?>;
 ccm_menuObj<?=$id?>.arHandle = '<?=$a->getAreaHandle()?>';
 ccm_menuObj<?=$id?>.aID = <?=$a->getAreaID()?>;
 ccm_menuObj<?=$id?>.bID = <?=$bID?>;

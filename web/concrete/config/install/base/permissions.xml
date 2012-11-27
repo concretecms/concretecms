@@ -188,11 +188,11 @@
 		</permissionkey>
         
 	</permissionkeys>
-    
+
 	<systemcaptcha>
 		<library handle="securimage" name="SecurImage (Default)" package="" activated="1"/>
 	</systemcaptcha>
-
+    
     <workflowtypes>
         <workflowtype handle="basic" name="Basic Workflow" package=""/>
     </workflowtypes>

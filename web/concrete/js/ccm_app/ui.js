@@ -3,6 +3,7 @@
  */
 
 var ccm_arrangeMode = false;
+var ccm_inlineEditMode = false;
 var ccm_selectedDomID = false;
 var ccm_isBlockError = false;
 var ccm_activeMenu = false;
@@ -51,7 +52,7 @@ ccm_showBlockMenu = function(obj, e) {
 		html += '<ul>';
 		//html += '<li class="header"></li>';
 		if (obj.canWrite && obj.hasEditDialog) {
-			html += (obj.editInline) ? '<li><a class="ccm-menu-icon ccm-icon-edit-menu" onclick="ccm_hideMenus()" id="menuEdit' + obj.bID + '-' + obj.aID + '" href="' + CCM_DISPATCHER_FILENAME + '?cID=' + obj.cID + '&bID=' + obj.bID + '&arHandle=' + encodeURIComponent(obj.arHandle) + '&btask=edit#_edit' + obj.bID + '">' + ccmi18n.editBlock + '</a></li>'
+			html += (obj.editInline) ? '<li><a class="ccm-menu-icon ccm-icon-edit-menu" onclick="ccm_hideMenus(); ccm_loadInlineEditor(' + obj.cID + ',\'' + encodeURIComponent(obj.arHandle) + '\',' + obj.aID + ',' + obj.bID + ')" id="menuEdit' + obj.bID + '-' + obj.aID + '">' + ccmi18n.editBlock + '</a></li>'
 				: '<li><a class="ccm-menu-icon ccm-icon-edit-menu" onclick="ccm_hideMenus()" dialog-title="' + ccmi18n.editBlock + ' ' + obj.btName + '" dialog-append-buttons="true" dialog-modal="false" dialog-on-close="ccm_blockWindowAfterClose()" dialog-width="' + obj.width + '" dialog-height="' + obj.height + '" id="menuEdit' + obj.bID + '-' + obj.aID + '" href="' + CCM_TOOLS_PATH + '/edit_block_popup.php?cID=' + obj.cID + '&bID=' + obj.bID + '&arHandle=' + encodeURIComponent(obj.arHandle) + '&btask=edit">' + ccmi18n.editBlock + '</a></li>';
 		}
 		if (obj.canWriteStack) {
@@ -130,6 +131,35 @@ ccm_showBlockMenu = function(obj, e) {
 	
 	ccm_fadeInMenu(bobj, e);
 
+}
+
+ccm_loadInlineEditor = function(cID, arHandle, aID, bID) {
+
+	jQuery.fn.dialog.showLoader();
+	ccm_enterInlineEditMode($('#b' + bID + '-' + aID));
+
+	$.ajax({
+	type: 'GET',
+	url: CCM_TOOLS_PATH + '/edit_block_popup',
+	data: 'btask=edit&cID=' + cID + '&bID=' + bID + '&arHandle=' + arHandle + '&aID=' + aID,
+	success: function(r) {
+		$('#b' + bID + '-' + aID).html(r);
+	}});
+}
+
+ccm_loadInlineEditorAdd = function(cID, arHandle, aID, btID) {
+
+	jQuery.fn.dialog.showLoader();
+	ccm_enterInlineEditMode();
+
+	$.ajax({
+	type: 'GET',
+	url: CCM_TOOLS_PATH + '/add_block_popup',
+	data: 'btask=edit&cID=' + cID + '&arHandle=' + arHandle + '&btID=' + btID,
+	success: function(r) {
+		jQuery.fn.dialog.closeAll();
+		$('#a' + aID).append($('<div id="a' + aID + '-bt' + btID + '" class="ccm-block-edit-inline-active">' + r + '</div>'));
+	}});
 }
 
 ccm_reloadAreaMenuPermissions = function(aID, cID) {
@@ -329,11 +359,13 @@ ccm_parseBlockResponse = function(r, currentBlockID, task) {
 						} else {
 							$("#a" + resp.aID).append(r);
 						}
+						console.log(resp);
+						// inline support.
+						$('#a' + resp.aID + '-bt' + resp.btID).remove();
 					} else {
 						$('#b' + currentBlockID + '-' + resp.aID).before(r).remove();
 					}
-					jQuery.fn.dialog.hideLoader();
-					ccm_mainNavDisableDirectExit();
+					ccm_exitInlineEditMode();
 					if (task == 'add') {
 						ccmAlert.hud(ccmi18n.addBlockMsg, 2000, 'add', ccmi18n.addBlock);
 						jQuery.fn.dialog.closeAll();
@@ -350,6 +382,31 @@ ccm_parseBlockResponse = function(r, currentBlockID, task) {
 	} catch(e) { 
 		ccmAlert.notice(ccmi18n.error, r); 
 	}
+}
+
+ccm_exitInlineEditMode = function() {
+	ccm_inlineEditMode = false;
+
+	$('div.ccm-block').removeClass('ccm-block-edit-disabled');
+	$('div.ccm-add-block').removeClass('ccm-block-edit-disabled');
+
+	ccm_mainNavDisableDirectExit();
+	jQuery.fn.dialog.hideLoader();
+
+}
+
+ccm_enterInlineEditMode = function(skipObj) {
+	ccm_inlineEditMode = true;
+	ccm_hideHighlighter();
+
+	$('div.ccm-block').addClass('ccm-block-edit-disabled');
+	$('div.ccm-add-block').addClass('ccm-block-edit-disabled');
+	if (skipObj) {
+		skipObj.removeClass('ccm-block-edit-disabled').addClass('ccm-block-edit-inline-active');
+	}
+
+	jQuery.fn.dialog.hideLoader();
+
 }
 
 ccm_mainNavDisableDirectExit = function(disableShow) {
@@ -380,7 +437,7 @@ ccm_setupBlockForm = function(form, currentBlockID, task) {
 
 
 ccm_activate = function(obj, domID) { 
-	if (ccm_arrangeMode || ccm_activeMenu) {
+	if (ccm_arrangeMode || ccm_activeMenu || ccm_inlineEditMode) {
 		return false;
 	}
 	

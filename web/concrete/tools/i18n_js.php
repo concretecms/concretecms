@@ -82,6 +82,14 @@ var ccmi18n = {
 	user_group_add: "<?=t('Add to Group')?>"
 }
 
+var ccmi18n_editor = {
+
+	insertLinkToFile: "<?=t('Insert Link to File')?>",
+	insertImage: "<?=t('Insert Image')?>",
+	insertLinkToPage: "<?=t('Link to Page')?>"
+
+}
+
 var ccmi18n_sitemap = {
 
 	visitExternalLink: "<?=t('Visit')?>",

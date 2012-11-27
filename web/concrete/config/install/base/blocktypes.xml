@@ -31,4 +31,9 @@
         <blocktype handle="youtube" package=""/>
     </blocktypes>
 
+	<systemcontenteditorsnippets>
+		<snippet handle="page_name" name="Page Name" package="" activated="1"/>
+		<snippet handle="user_name" name="User Name" package="" activated="1"/>
+	</systemcontenteditorsnippets>
+
 </concrete5-cif>

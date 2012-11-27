@@ -1,22 +1,30 @@
 <?
 
 defined('C5_EXECUTE') or die("Access Denied.");
-class ConcreteUpgradeVersion561Helper {
+class ConcreteUpgradeVersion570Helper {
 	
 	public $dbRefreshTables = array(
 		'atSocialLinks',
+		'atTextareaSettings',
 		'UserPointActions',
 		'UserPointHistory',
 		'Groups',
 		'QueuePageDuplicationRelations',
-		'Queues',
-		'QueueMessages',
+		/*'Queues',*/
+		'BlockTypes',
+		/*'QueueMessages',*/
 		'JobSets',
-		'JobSetJobs'
+		'JobSetJobs',
+		'SystemContentEditorSnippets'
 	);
 	
 	
 	public function run() {
+		$bt = BlockType::getByHandle('content');
+		if (is_object($bt)) {
+			$bt->refresh();
+		}
+
 		$tt = AttributeType::getByHandle('social_links');
 		if (!is_object($tt) || $tt->getAttributeTypeID() == 0) {
 			$tt = AttributeType::add('social_links', t('Social Link'));
@@ -69,6 +77,40 @@ class ConcreteUpgradeVersion561Helper {
 		$sp = Page::getByPath('/dashboard/users/points/actions');
 		if ($sp->isError()) {
 			$sp = SinglePage::add('/dashboard/users/points/actions');
+		}
+
+		$this->upgradeRichTextEditor();
+
+	}
+
+	protected function upgradeRichTextEditor() {
+
+		$sns = SystemContentEditorSnippet::getByHandle('page_name');
+		if (!is_object($sns)) {
+			$sns = SystemContentEditorSnippet::add('page_name', t('Page Name'));
+			$sns->activate();
+		}
+		$sns = SystemContentEditorSnippet::getByHandle('user_name');
+		if (!is_object($sns)) {
+			$sns = SystemContentEditorSnippet::add('user_name', t('User Name'));
+			$sns->activate();
+		}
+
+		$db = Loader::db();
+		$r = $db->Execute('select * from atTextareaSettings order by akID asc');
+		while ($row = $r->FetchRow()) {
+			if ($row['akTextareaDisplayMode'] == 'text' || $row['akTextareaDisplayMode'] == 'rich_text_custom' || $row['akTextareaDisplayMode'] == 'rich_text' || $row['akTextareaDisplayMode'] == '') {
+				continue;
+			}
+			$options = array();
+			if ($row['akTextareaDisplayMode'] == 'rich_text_basic') {
+				$options[] = 'character_styles';
+				$options = serialize($options);
+				$db->Execute("update atTextareaSettings set akTextareaDisplayMode = 'rich_text_custom', akTextareaDisplayModeCustomOptions = ? where akID = ?", array($row['akID'], $options));
+			} else {
+				// we just set these all to the default rich text editor mode
+				$db->Execute("update atTextareaSettings set akTextareaDisplayMode = 'rich_text' where akID = ?", array($row['akID']));
+			}
 		}
 
 	}

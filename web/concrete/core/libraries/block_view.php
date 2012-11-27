@@ -258,7 +258,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 						}
 						$template = $bvt->getTemplate();
 					}
-					
+
 					if ($view == 'composer') {
 						$displayEditLink = true;
 						$header = DIR_FILES_ELEMENTS_CORE . '/block_header_composer.php';

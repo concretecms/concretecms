@@ -1,9 +1,17 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-//$replaceOnUnload = 1;
-$bt->inc('editor_init.php');
 ?>
 
-<div style="text-align: center" id="ccm-editor-pane">
-<textarea id="ccm-content-<?=$b->getBlockID()?>-<?=$a->getAreaID()?>" class="advancedEditor ccm-advanced-editor" name="content" style="width: 580px; height: 380px"><?=htmlspecialchars($controller->getContentEditMode())?></textarea>
-</div>
+<div id="redactor-edit-content"><?=$controller->getContentEditMode()?></div>
+<textarea style="display: none" id="redactor-content" name="content"><?=$controller->getContentEditMode()?></textarea>
+
+<script type="text/javascript">
+var CCM_EDITOR_SECURITY_TOKEN = "<?=Loader::helper('validation/token')->generate('editor')?>";
+$(function() {
+	$('#redactor-edit-content').redactor({
+		'plugins': [
+			'concrete5inline', 'concrete5'
+		]
+	});
+});
+</script>
