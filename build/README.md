@@ -1,4 +1,4 @@
-g# Building Assets Required for concrete5
+# Building Assets Required for concrete5
 
 ## css.sh
 
