@@ -11,7 +11,11 @@ class Concrete5_Controller_AttributeType_Textarea extends DefaultAttributeTypeCo
 		if (!$akTextareaDisplayMode) {
 			$akTextareaDisplayMode = 'text';
 		}
-		$this->setDisplayMode($akTextareaDisplayMode);
+		$options = array();
+		if ($akTextareaDisplayMode == 'rich_text_custom') {
+			$options = $data['akTextareaDisplayModeCustomOptions'];
+		}
+		$this->setDisplayMode($akTextareaDisplayMode, $options);
 	}
 
 	public function getDisplaySanitizedValue() {
@@ -27,25 +31,82 @@ class Concrete5_Controller_AttributeType_Textarea extends DefaultAttributeTypeCo
 		if (is_object($this->attributeValue)) {
 			$value = $this->getAttributeValue()->getValue();
 		}
-		$this->addFooterItem(Loader::helper('html')->javascript('tiny_mce/tiny_mce.js'));
 		// switch display type here
 		if ($this->akTextareaDisplayMode == 'text' || $this->akTextareaDisplayMode == '') {
 			print Loader::helper('form')->textarea($this->field('value'), $value, array('class' => $additionalClass, 'rows' => 5));
 		} else {
-			$this->addHeaderItem(Loader::helper('html')->css('ccm.app.css'));
-			$this->addFooterItem(Loader::helper('html')->javascript('ccm.app.js'));
+			$this->addHeaderItem(Loader::helper('html')->css('redactor.css'));
+			$this->addHeaderItem(Loader::helper('html')->css('jquery.ui.css'));
+			$this->addFooterItem(Loader::helper('html')->javascript('jquery.ui.js')); // need it for redactor dialogs
+			$this->addFooterItem(Loader::helper('html')->javascript('redactor.js'));
 			$this->addFooterItem('<script type="text/javascript" src="' . REL_DIR_FILES_TOOLS_REQUIRED . '/i18n_js"></script>'); 
-			$editor_mode = strtoupper(str_replace('rich_text_', '', $this->akTextareaDisplayMode));
-			Loader::element('editor_config', array('editor_mode' => $editor_mode, 'editor_selector' => 'ccm-advanced-editor-' . $this->attributeKey->getAttributeKeyID()));
-			if (in_array($this->akTextareaDisplayMode, array('rich_text', 'rich_text_advanced', 'rich_text_office', 'rich_text_custom'))) {
-				Loader::element('editor_controls', array('mode'=>'full'));
+			print '<div class="ccm-attribute-textarea-edit">' . Loader::helper('form')->textarea($this->field('value'), $value, array('class' => $additionalClass . ' ccm-advanced-editor-' . $this->attributeKey->getAttributeKeyID())) . '</div>';
+			print '<script type="text/javascript">';
+			print 'var CCM_EDITOR_SECURITY_TOKEN = "' . Loader::helper('validation/token')->generate('editor') . '";';
+			print '$(function() { $(".ccm-advanced-editor-' . $this->attributeKey->getAttributeKeyID() . '").redactor({ ';
+			if ($this->akTextareaDisplayMode == 'rich_text' || ($this->akTextareaDisplayMode == 'rich_text_custom' && in_array('concrete5menu', $this->akTextareaDisplayModeCustomOptions))) {
+				print 'plugins: [\'concrete5\'], ';
 			}
-			print Loader::helper('form')->textarea($this->field('value'), $value, array('class' => $additionalClass . ' ccm-advanced-editor-' . $this->attributeKey->getAttributeKeyID()));
+			if ($this->akTextareaDisplayMode == 'rich_text_custom') {
+				print 'buttons: [';
+				$buttonGroups = array();
+
+				if (in_array('html', $this->akTextareaDisplayModeCustomOptions)) {
+					$buttonGroups[] = "'html'";
+				}
+				if (in_array('paragraph_styles', $this->akTextareaDisplayModeCustomOptions)) {
+					$buttonGroups[] = "'formatting'";
+				}
+				if (in_array('character_styles', $this->akTextareaDisplayModeCustomOptions)) {
+					$buttonGroups[] = "'bold', 'italic', 'underline', 'deleted'";
+				}
+				$listButtons = "'orderedlist', 'unorderedlist'";
+				$indentButtons = "'indent', 'outdent'";
+				$richButtons = array();
+				if (in_array('lists', $this->akTextareaDisplayModeCustomOptions) && in_array('indent', $this->akTextareaDisplayModeCustomOptions)) {
+					$buttonGroups[] = $listButtons . "," . $indentButtons;
+				} else {
+					if (in_array('lists', $this->akTextareaDisplayModeCustomOptions)) {
+						$buttonGroups[] = $listButtons;
+					} else {
+						$buttonGroups[] = $indentButtons;
+					}
+				}
+				if (in_array('image', $this->akTextareaDisplayModeCustomOptions)) {
+					$richButtons[] = "'image'";
+				}
+				if (in_array('video', $this->akTextareaDisplayModeCustomOptions)) {
+					$richButtons[] = "'video'";
+				}
+				if (in_array('table', $this->akTextareaDisplayModeCustomOptions)) {
+					$richButtons[] = "'table'";
+				}
+				if (in_array('link', $this->akTextareaDisplayModeCustomOptions)) {
+					$richButtons[] = "'link'";
+				}
+				if (count($richButtons) > 0) {
+					$buttonGroups[] = implode(",", $richButtons);
+				}	
+				if (in_array('color', $this->akTextareaDisplayModeCustomOptions)) {
+					$buttonGroups[] = "'fontcolor','backcolor'";
+				}
+				if (in_array('alignment', $this->akTextareaDisplayModeCustomOptions)) {
+					$buttonGroups[] = "'alignment'";
+				}
+				if (in_array('horizontalrule', $this->akTextareaDisplayModeCustomOptions)) {
+					$buttonGroups[] = "'horizontalrule'";
+				}
+
+				$buttons = implode(",'|',", $buttonGroups);
+				print $buttons;
+				print ']';
+			}
+			print '}); });</script>';
 		}
 	}
 	
 	public function composer() {
-		$this->form('span4');
+		$this->form();
 	}
 
 	public function searchForm($list) {
@@ -60,12 +121,17 @@ class Concrete5_Controller_AttributeType_Textarea extends DefaultAttributeTypeCo
 	}
 	
 
-	public function setDisplayMode($akTextareaDisplayMode) {
+	public function setDisplayMode($akTextareaDisplayMode, $akTextareaDisplayModeCustomOptions = array()) {
 		$db = Loader::db();
 		$ak = $this->getAttributeKey();
+		$akTextareaDisplayModeCustomOptionsValue = '';
+		if (is_array($akTextareaDisplayModeCustomOptions) && count($akTextareaDisplayModeCustomOptions) > 0) {
+			$akTextareaDisplayModeCustomOptionsValue = serialize($akTextareaDisplayModeCustomOptions);
+		}
 		$db->Replace('atTextareaSettings', array(
 			'akID' => $ak->getAttributeKeyID(), 
-			'akTextareaDisplayMode' => $akTextareaDisplayMode
+			'akTextareaDisplayMode' => $akTextareaDisplayMode,
+			'akTextareaDisplayModeCustomOptions' => $akTextareaDisplayModeCustomOptionsValue
 		), array('akID'), true);
 	}
 	
@@ -98,9 +164,15 @@ class Concrete5_Controller_AttributeType_Textarea extends DefaultAttributeTypeCo
 		}
 		
 		$db = Loader::db();
-		$row = $db->GetRow('select akTextareaDisplayMode from atTextareaSettings where akID = ?', $ak->getAttributeKeyID());
+		$row = $db->GetRow('select akTextareaDisplayMode, akTextareaDisplayModeCustomOptions from atTextareaSettings where akID = ?', $ak->getAttributeKeyID());
 		$this->akTextareaDisplayMode = $row['akTextareaDisplayMode'];
+		$this->akTextareaDisplayModeCustomOptions = array();
+		if ($row['akTextareaDisplayMode'] == 'rich_text_custom') {
+			$this->akTextareaDisplayModeCustomOptions = unserialize($row['akTextareaDisplayModeCustomOptions']);
+		}
+
 		$this->set('akTextareaDisplayMode', $this->akTextareaDisplayMode);
+		$this->set('akTextareaDisplayModeCustomOptions', $this->akTextareaDisplayModeCustomOptions);
 	}
 	
 	public function exportKey($akey) {

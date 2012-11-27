@@ -27,6 +27,7 @@ if (!$dh->inDashboard()) {
 		$this->addHeaderItem($html->css('ccm.app.mobile.css'));
 	}
 	$this->addHeaderItem($html->css('jquery.ui.css'));
+	$this->addHeaderItem($html->css('redactor.css'));
 	$this->addFooterItem('<div id="ccm-page-controls-wrapper"><div id="ccm-toolbar"></div></div>');
 	
 	$this->addFooterItem('<script type="text/javascript" src="' . REL_DIR_FILES_TOOLS_REQUIRED . '/i18n_js"></script>'); 
@@ -36,6 +37,7 @@ if (!$dh->inDashboard()) {
 	$this->addFooterItem($html->javascript('jquery.rating.js'));
 	$this->addFooterItem($html->javascript('bootstrap.js'));
 	$this->addFooterItem($html->javascript('ccm.app.js'));
+	$this->addFooterItem($html->javascript('redactor.js'));
 	if (ENABLE_PROGRESSIVE_PAGE_REINDEX && Config::get('DO_PAGE_REINDEX_CHECK')) {
 		$this->addHeaderItem('<script type="text/javascript">$(function() { ccm_doPageReindexing(); });</script>');
 	}
@@ -48,7 +50,6 @@ if (!$dh->inDashboard()) {
 		$this->addHeaderItem('<script type="text/javascript">$(function() { ccm_showAppIntroduction(); });</script>');
 		Config::save('SEEN_INTRODUCTION', 1);
 	}
-	$this->addFooterItem($html->javascript('tiny_mce/tiny_mce.js'));
 }
 
 $cID = ($c->isAlias()) ? $c->getCollectionPointerOriginalID() : $c->getCollectionID();

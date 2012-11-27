@@ -279,6 +279,7 @@ class Concrete5_Model_Package extends Object {
 		$items['single_pages'] = SinglePage::getListByPackage($this);
 		$items['attribute_types'] = AttributeType::getListByPackage($this);		
 		$items['captcha_libraries'] = SystemCaptchaLibrary::getListByPackage($this);		
+		$items['content_editor_snippets'] = SystemContentEditorSnippet::getListByPackage($this);		
 		$items['antispam_libraries'] = SystemAntispamLibrary::getListByPackage($this);		
 		$items['community_point_actions'] = UserPointAction::getListByPackage($this);		
 		$items['jobs'] = Job::getListByPackage($this);		
@@ -320,8 +321,12 @@ class Concrete5_Model_Package extends Object {
 			return ucwords(strtolower($txt->unhandle($item->key)));
 		} else if ($item instanceof UserPointAction) {
 			return $item->getUserPointActionName();
+		} else if ($item instanceof SystemCaptchaLibrary) {
+			return $item->getSystemCaptchaLibraryName();
 		} else if ($item instanceof SystemAntispamLibrary) {
 			return $item->getSystemAntispamLibraryName();
+		} else if ($item instanceof SystemContentEditorSnippet) {
+			return $item->getSystemContentEditorSnippetName();
 		} else if (is_a($item, 'PermissionKey')) {
 			return $item->getPermissionKeyName();			
 		} else if (is_a($item, 'Job')) {
@@ -360,6 +365,8 @@ class Concrete5_Model_Package extends Object {
 						case 'SinglePage':
 							@$item->delete(); // we suppress errors because sometimes the wrapper pages can delete first.
 							break;
+						case 'SystemCaptchaLibrary':
+						case 'SystemContentEditorSnippet':
 						case 'SystemAntispamLibrary':
 							$item->delete();
 							break;

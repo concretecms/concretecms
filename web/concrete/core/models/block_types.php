@@ -345,7 +345,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		protected static function get($where, $properties) {
 			$db = Loader::db();
 			
-			$q = "select btID, btName, btDescription, btHandle, pkgID, btActiveWhenAdded, btIsInternal, btCopyWhenPropagate, btIncludeAll, btDisplayOrder, btInterfaceWidth, btInterfaceHeight from BlockTypes where {$where}";
+			$q = "select btID, btName, btDescription, btHandle, pkgID, btActiveWhenAdded, btIsInternal, btSupportsInlineEditing, btCopyWhenPropagate, btIncludeAll, btDisplayOrder, btInterfaceWidth, btInterfaceHeight from BlockTypes where {$where}";
 			
 			$r = $db->query($q, $properties);
 			
@@ -364,6 +364,12 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		 * @return boolean
 		 */
 		function isBlockTypeInternal() {return $this->btIsInternal;}
+
+		/** 
+		 * if a the current BlockType supports inline editing or not
+		 * @return boolean
+		 */
+		function supportsInlineEditing() {return $this->btSupportsInlineEditing;}
 		
 		/** 
 		 * Returns true if the block type is internal (and therefore cannot be removed) a core block
@@ -722,6 +728,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				$btd->btCopyWhenPropagate = $bta->isCopiedWhenPropagated();
 				$btd->btIncludeAll = $bta->includeAll();
 				$btd->btIsInternal = $bta->isBlockTypeInternal();
+				$btd->btSupportsInlineEditing = $bta->supportsInlineEditing();
 				$btd->btInterfaceHeight = $bta->getInterfaceHeight();
 				$btd->btInterfaceWidth = $bta->getInterfaceWidth();
 				$btd->pkgID = $bt->getPackageID();

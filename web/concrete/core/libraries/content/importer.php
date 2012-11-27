@@ -50,6 +50,7 @@ class Concrete5_Library_Content_Importer {
 		$this->importPackages($sx);
 		$this->importConfigValues($sx);
 		$this->importSystemCaptchaLibraries($sx);
+		$this->importSystemContentEditorSnippets($sx);
 	}
 	
 	protected static function getPackageObject($pkgHandle) {
@@ -381,6 +382,18 @@ class Concrete5_Library_Content_Importer {
 				$scl = SystemCaptchaLibrary::add($th['handle'], $th['name'], $pkg);
 				if ($th['activated'] == '1') {
 					$scl->activate();
+				}
+			}
+		}
+	}
+
+	protected function importSystemContentEditorSnippets(SimpleXMLElement $sx) {
+		if (isset($sx->systemcontenteditorsnippets)) {
+			foreach($sx->systemcontenteditorsnippets->snippet as $th) {
+				$pkg = ContentImporter::getPackageObject($th['package']);
+				$scs = SystemContentEditorSnippet::add($th['handle'], $th['name'], $pkg);
+				if ($th['activated'] == '1') {
+					$scs->activate();
 				}
 			}
 		}
