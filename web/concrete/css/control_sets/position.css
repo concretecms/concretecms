@@ -1,0 +1,10 @@
+div.controls > div.position div.xslider,
+div.controls > div.position div.yslider {
+  width: 75%;
+  display: inline-block;
+}
+div.controls > div.position input.x,
+div.controls > div.position input.y {
+  width: 30px;
+  display: inline-block;
+}

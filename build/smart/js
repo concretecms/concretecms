@@ -1,11 +1,37 @@
 #!/bin/bash
 
-if $(pwd | grep "build$" &> /dev/null); then
-    cd ..
-fi
-if $(pwd | grep "smart$" &> /dev/null); then
-    cd ../..
-fi
+function InfoBlock {
+    # Throw an infoblock containing the filename in before we load the file
+    str=" $1 ";
+    len=${#str}
+    lwidth=$(( ( 76 - $len ) / 2 ));
+    rwidth=$(( ( 76 - $len ) - $lwidth ));
+    x=1
+    lstring=''
+    while [ $x -le $lwidth ]
+    do
+        lstring=$lstring' '
+        x=$(( $x + 1 ))
+    done
+    rstring=''
+    x=2
+    while [ $x -le $rwidth ]
+    do
+        rstring=$rstring' '
+        x=$(( $x + 1 ))
+    done
+    if [ ! $2 ]; then
+        echo ""
+        echo ""
+    fi
+    echo "///////////////////////////////////////////////////////////////////////////////"
+    echo "//$lstring$str$rstring//"
+    echo "///////////////////////////////////////////////////////////////////////////////"
+    echo ""
+}
+
+
+cd $(git rev-parse --show-toplevel)
 
 ./build/smart/sanitycheck $1
 
@@ -53,32 +79,37 @@ fi
 if $(echo "$status" | grep "$thisgrep" &> /dev/null); then
     echo "Building ccm.app.js"
     # Note: The order here is important
-    cat ./web/concrete/js/ccm_app/jquery.colorpicker.js \
-        ./web/concrete/js/ccm_app/jquery.hoverIntent.js \
-        ./web/concrete/js/ccm_app/jquery.liveupdate.js \
-        ./web/concrete/js/ccm_app/jquery.metadata.js \
-        ./web/concrete/js/ccm_app/chosen.jquery.js \
-        ./web/concrete/js/ccm_app/dashboard.js \
-        ./web/concrete/js/ccm_app/filemanager.js \
-        ./web/concrete/js/ccm_app/jquery.cookie.js \
-        ./web/concrete/js/ccm_app/layouts.js \
-        ./web/concrete/js/ccm_app/legacy_dialog.js \
-        ./web/concrete/js/ccm_app/newsflow.js \
-        ./web/concrete/js/ccm_app/page_reindexing.js \
-        ./web/concrete/js/ccm_app/quicksilver.js \
-        ./web/concrete/js/ccm_app/remote_marketplace.js \
-        ./web/concrete/js/ccm_app/search.js \
-        ./web/concrete/js/ccm_app/sitemap.js \
-        ./web/concrete/js/ccm_app/status_bar.js \
-        ./web/concrete/js/ccm_app/tabs.js \
-        ./web/concrete/js/ccm_app/tinymce_integration.js \
-        ./web/concrete/js/ccm_app/ui.js \
-        ./web/concrete/js/ccm_app/toolbar.js \
-        ./web/concrete/js/ccm_app/themes.js > ccm.app.tmp.js
+    function getFile {
+        file="./web/concrete/js/ccm_app/"$1
+        echo "$(InfoBlock $1)
+`cat $file`"
+    }
 
-    uglifyjs --no-seqs --no-squeeze -b -o ./web/concrete/js/ccm.app.pretty.js ./ccm.app.tmp.js
-    uglifyjs --no-seqs -o ./web/concrete/js/ccm.app.js ./ccm.app.tmp.js
-    rm ccm.app.tmp.js
+    INP="$(getFile 'jquery.colorpicker.js' 'first')
+$(getFile 'jquery.hoverIntent.js')
+$(getFile 'jquery.liveupdate.js')
+$(getFile 'jquery.metadata.js')
+$(getFile 'chosen.jquery.js')
+$(getFile 'dashboard.js')
+$(getFile 'filemanager.js')
+$(getFile 'jquery.cookie.js')
+$(getFile 'layouts.js')
+$(getFile 'legacy_dialog.js')
+$(getFile 'newsflow.js')
+$(getFile 'page_reindexing.js')
+$(getFile 'quicksilver.js')
+$(getFile 'remote_marketplace.js')
+$(getFile 'search.js')
+$(getFile 'sitemap.js')
+$(getFile 'status_bar.js')
+$(getFile 'tabs.js')
+$(getFile 'tinymce_integration.js')
+$(getFile 'ui.js')
+$(getFile 'toolbar.js')
+$(getFile 'themes.js')"
+
+    echo "$INP" > ./web/concrete/js/ccm.app.pretty.js
+    uglifyjs --no-seqs -o ./web/concrete/js/ccm.app.js ./web/concrete/js/ccm.app.pretty.js
 fi
 
 
@@ -89,21 +120,30 @@ if [ $1 ]; then
     thisgrep=''
 fi
 if $(echo "$status" | grep "$thisgrep" &> /dev/null); then
+    function getFile {
+        file="./web/concrete/js/image_editor/build/"$1
+        echo "$(InfoBlock $1 $2)
+`cat $file`"
+    }
     echo "Building image_editor.js"
-    cat ./web/concrete/js/image_editor/build/kinetic.prototype.js \
-        ./web/concrete/js/image_editor/build/imageeditor.js \
-        ./web/concrete/js/image_editor/build/history.js \
-        ./web/concrete/js/image_editor/build/events.js \
-        ./web/concrete/js/image_editor/build/extend.js \
-        ./web/concrete/js/image_editor/build/background.js \
-        ./web/concrete/js/image_editor/build/image.js \
-        ./web/concrete/js/image_editor/build/jquerybinding.js \
-        ./web/concrete/js/image_editor/build/filters.js > image_editor.tmp.js
+    INP="$(getFile 'kinetic.prototype.js' 'first')
+$(getFile 'imageeditor.js')
+$(getFile 'history.js')
+$(getFile 'events.js')
+$(getFile 'extend.js')
+$(getFile 'background.js')
+$(getFile 'image.js')
+$(getFile 'control_sets.js')
+$(getFile 'jquerybinding.js')
+$(getFile 'filters.js')"
 
-    uglifyjs --no-seqs --no-squeeze -b -o ./web/concrete/js/image_editor/image_editor.js ./image_editor.tmp.js
+    echo "$INP" > ./web/concrete/js/image_editor/image_editor.js
 
-    cat ./web/concrete/js/image_editor/build/kinetic.js \
-        ./web/concrete/js/image_editor/image_editor.js > image_editor.tmp.js
+    INP=`cat ./web/concrete/js/image_editor/build/kinetic.js`
+    INP=$INP"
+
+"`cat ./web/concrete/js/image_editor/image_editor.js`
+    echo "$INP" > image_editor.tmp.js
 
     uglifyjs --no-seqs -o ./web/concrete/js/image_editor.min.js ./image_editor.tmp.js
     rm image_editor.tmp.js
