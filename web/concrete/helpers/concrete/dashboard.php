@@ -141,7 +141,7 @@ class ConcreteDashboardHelper {
 		
 		$class = 'ccm-icon-favorite';
 		$qn = ConcreteDashboardMenu::getMine();
-		$quicknav = $qn->getItems();
+		$quicknav = $qn->getItems(false);
 		if (in_array($c->getCollectionPath(), $quicknav)) {
 			$class = 'ccm-icon-favorite-selected';	
 		}
@@ -513,8 +513,10 @@ class ConcreteDashboardHelper {
 class ConcreteDashboardMenu {
 	
 	protected $items;
-	public function getItems() {
-		usort($this->items, array('ConcreteDashboardMenu', 'sortItems'));
+	public function getItems($sort = true) {
+		if ($sort) {
+			usort($this->items, array('ConcreteDashboardMenu', 'sortItems'));
+		}
 		return $this->items;
 	}
 	
