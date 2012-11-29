@@ -348,6 +348,10 @@ class Concrete5_Controller_AttributeType_Select extends AttributeTypeController 
             $l = (is_object($l) && method_exists($l,'__toString')) ? $l->__toString() : $l;
             $str .= $l . "\n";
         }
+        // remove line break for empty list
+        if ($str == "\n") {
+            return '';
+        }
         return $str;
     }
 	
