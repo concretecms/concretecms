@@ -70,7 +70,7 @@ class Concrete5_Model_System_ImageEditor_ControlSet {
 	}
 	public static function load($arr) {
 		$obj = new SystemImageEditorControlSet;
-		foreach($arr as $key=>$val) {
+		foreach((array) $arr as $key=>$val) {
 			$obj->{$key} = $val;
 		}
 		return $obj;
@@ -100,6 +100,7 @@ class Concrete5_Model_System_ImageEditor_ControlSet {
 	public function getPackageObject() {
 		return Package::getByID($this->getPackageID());
 	}
+
 	/**
 	 * Basic management of these objects
 	 */

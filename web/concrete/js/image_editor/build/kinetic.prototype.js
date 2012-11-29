@@ -24,3 +24,14 @@ Kinetic.Image.prototype.getImageData = function() {
       Kinetic.Global.warn('Unable to get imageData.');
   }
 };
+
+Kinetic.Layer.prototype._cacheddraw = (new Kinetic.Layer).draw;
+Kinetic.Layer.prototype.draw = function() {
+  if (typeof im === 'undefined' || typeof im.trigger === 'undefined') {
+    return this._cacheddraw();
+  }
+  im.trigger('beforeredraw',this);
+  var draw = this._cacheddraw();
+  im.trigger('afterredraw',this);
+  return draw;
+};

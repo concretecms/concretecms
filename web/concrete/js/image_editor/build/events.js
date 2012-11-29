@@ -9,8 +9,8 @@ im.bindEvent = im.bind = function (type, handler, elem) {
 };
 
 // Handle event firing
-im.fireEvent = im.fire = im.trigger = function (type, memo) {
-  var event, eventName = 'ImageEditorEvent', element = im.stage.getContainer(), memo = memo || im;
+im.fireEvent = im.fire = im.trigger = function (type, data) {
+  var event, eventName = 'ImageEditorEvent', element = im.stage.getContainer(), data = data || im;
   if (document.createEvent) {
     event = document.createEvent("HTMLEvents");
     event.initEvent(type.toLowerCase(), true, true);
@@ -19,7 +19,7 @@ im.fireEvent = im.fire = im.trigger = function (type, memo) {
     event.eventType = type.toLowerCase();
   }
   event.eventName = eventName;
-  event.memo = memo || { };
+  event.eventData = data || { };
 
   if (document.createEvent) {
     element.dispatchEvent(event);
