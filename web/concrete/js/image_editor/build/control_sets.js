@@ -29,7 +29,7 @@ im.bind('imageload',function(){
   }
 });
 im.bind('changecontrolset',function(e){
-  var active = $('div.controlset[data-namespace='+e.memo+']','div.controls')
+  var active = $('div.controlset[data-namespace='+e.eventData+']','div.controls')
     .children('div.control').slideDown().end().children('h4').addClass('active').end();
   $('div.controlset','div.controls').not(active)
     .children('div.control').slideUp().end().children('h4').removeClass('active');

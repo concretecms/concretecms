@@ -79,6 +79,19 @@ class ConcreteUpgradeVersion570Helper {
 			$sp = SinglePage::add('/dashboard/users/points/actions');
 		}
 
+		// Install default control_sets
+		Loader::model('system/image_editor/control_set');
+
+		$position = Concrete5_Model_System_ImageEditor_ControlSet::getByHandle('position');
+		if ($position->getImageEditorControlSetHandle() != 'position')  {
+			Concrete5_Model_System_ImageEditor_ControlSet::add('position','Position');
+		}
+
+		$size = Concrete5_Model_System_ImageEditor_ControlSet::getByHandle('size');
+		if ($size->getImageEditorControlSetHandle() != 'size')  {
+			Concrete5_Model_System_ImageEditor_ControlSet::add('size','Size');
+		}
+
 		$this->upgradeRichTextEditor();
 
 	}
