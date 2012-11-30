@@ -391,7 +391,7 @@ class Concrete5_Model_Page extends Collection {
 		if (isset($px->user)) {
 			foreach($px->user as $u) {
 				$pkHandles = self::translatePermissionsXMLToKeys($px->administrators);
-				$this->assignPermissions(Group::getByID($u['uID']), $pkHandles);
+				$this->assignPermissions(UserInfo::getByID($u['uID']), $pkHandles);
 			}
 		}
 		$this->refreshCache();
