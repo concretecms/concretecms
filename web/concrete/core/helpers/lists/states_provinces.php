@@ -443,8 +443,5 @@ class Concrete5_Helper_Lists_StatesProvinces {
 	public function getCanadianProvinces() {
 		return $this->stateProvinces['CA'];
 	}
-	
 
 }
-
-?>
