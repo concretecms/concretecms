@@ -222,7 +222,7 @@ if (count($pages) > 0) {
 									$lastkey = array_pop(array_keys($tokens));
 									$tokens[$lastkey] = '<strong class="collectionPath">' . $tokens[$lastkey] . '</strong>';
 									$untokens = implode('/', $tokens);
-									echo BASE_URL . DIR_REL . $untokens;
+									?><a href="<?php echo $nh->getLinkToCollection($cobj); ?>" target="_blank"><?php echo BASE_URL . DIR_REL . $untokens; ?></a><?php
 								?>
 								</span>
 							</div>
