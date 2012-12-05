@@ -70,7 +70,7 @@ $th = Loader::helper('text');
 			float: left;
 		}
 		
-		span.url-path {
+		a.url-path {
 			word-wrap: break-word;
 			width: 300px;
 			display: block;
@@ -214,7 +214,6 @@ if (count($pages) > 0) {
 								<br />
 								<?php echo $form->text('collection_handle', $cobj->getCollectionHandle(), array('title' => $cID, 'class' => 'collectionHandle')); ?>
 								<br />
-								<span class="help-inline url-path">
 								<?php
 									Page::rescanCollectionPath($cID);
 									$path = $cobj->getCollectionPath();
@@ -222,9 +221,8 @@ if (count($pages) > 0) {
 									$lastkey = array_pop(array_keys($tokens));
 									$tokens[$lastkey] = '<strong class="collectionPath">' . $tokens[$lastkey] . '</strong>';
 									$untokens = implode('/', $tokens);
-									?><a href="<?php echo $nh->getLinkToCollection($cobj); ?>" target="_blank"><?php echo BASE_URL . DIR_REL . $untokens; ?></a><?php
+									?><a class="help-inline url-path" href="<?php echo $nh->getLinkToCollection($cobj); ?>" target="_blank"><?php echo BASE_URL . DIR_REL . $untokens; ?></a><?php
 								?>
-								</span>
 							</div>
 							<? } ?>
 									
