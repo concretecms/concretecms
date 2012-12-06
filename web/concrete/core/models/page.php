@@ -1475,6 +1475,8 @@ class Concrete5_Model_Page extends Collection {
 				$this->updatePermissionsCollectionID($this->getCollectionID(), $npID);
 			}
 		}
+
+		$oldParent = Page::getByID($this->getCollectionParentID(), 'RECENT');
 		
 		$db->query("update Collections set cDateModified = ? where cID = ?", array($cDateModified, $cID));
 		$v = array($newCParentID, $cID);
@@ -1503,7 +1505,6 @@ class Concrete5_Model_Page extends Collection {
 		// 2. former parent
 		// 3. new parent
 		
-		$oldParent = Page::getByID($this->getCollectionParentID(), 'RECENT');
 		$newParent = Page::getByID($newCParentID, 'RECENT');
 		
 		$oldParent->refreshCache();
