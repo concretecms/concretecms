@@ -8,12 +8,12 @@
 <? // I don't know why I need this ?>
 <? /*
 <?php if (isset($mode) && $mode == 'full') {?>
-<li><a href="#" onclick="setBookMark();ccmEditorSitemapOverlay();"><?=t('Insert Link to Page')?></a></li>
+<li><a href="#" onclick="setBookMark();ccmEditorSitemapOverlay(); return false"><?=t('Insert Link to Page')?></a></li>
 <?php } else {?>
 <li><a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/sitemap_overlay.php?sitemap_mode=select_page" onclick="setBookMark();" class="dialog-launch" dialog-modal="false" ><?=t('Insert Link to Page')?></a></li>
 <?php } ?>
 */ ?>
-<li><a href="#" onclick="ccm_editorSitemapOverlay();"><?=t('Insert Link to Page')?></a></li>
+<li><a href="#" onclick="ccm_editorSitemapOverlay(); return false"><?=t('Insert Link to Page')?></a></li>
 <?php
 $path = Page::getByPath('/dashboard/settings');
 $cp = new Permissions($path);
