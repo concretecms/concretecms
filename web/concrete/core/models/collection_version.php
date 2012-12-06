@@ -250,7 +250,7 @@
 				if ($cnp->canApprovePageVersions()) {
 					$v = $cn->getVersionObject();
 					$v->approve();
-					$r = $db->Execute('delete from CollectionVersionRelatedEdits where cID = ? and cvID = ? and cRelationID = ? and cvRelationID = ?', array($cID, $cvID, $row['cRelationID'], $row['cvRelationID']));
+					$db->Execute('delete from CollectionVersionRelatedEdits where cID = ? and cvID = ? and cRelationID = ? and cvRelationID = ?', array($cID, $cvID, $row['cRelationID'], $row['cvRelationID']));
 				}
 			}
 
