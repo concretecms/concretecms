@@ -6,14 +6,14 @@ class Concrete5_Controller_AttributeType_SocialLinks extends AttributeTypeContro
 	
 	public function getServices() {
 		$services = array(
-			array('facebook', 'Facebook', t('Enter your Facebook username.'), 'http://facebook.com/'),
-			array('twitter', 'Twitter', t('Enter your Twitter username.'), 'http://twitter.com/'),
-			array('pinterest', 'Pinterest', t('Enter your Pinterest username.'), 'http://pinterest.com/'),
-			array('youtube', 'Youtube', t('Enter your Youtube channel or profile URL.'), ''),
-			array('google-plus', 'Google Plus', t('Enter your Google Plus profile URL.'), ''),
-			array('flickr', 'Flickr', t('Enter your Flickr Profile URL.'), ''),
-			array('myspace', 'MySpace', t('Enter the full URL of your MySpace profile.'), ''),
-			array('wthree', 'Other', t('Enter the full URL of this website.'), '')
+			array('facebook', 'Facebook', t('http://facebook.com/username')),
+			array('twitter', 'Twitter', t('http://twitter.com/username')),
+			array('pinterest', 'Pinterest', t('http://pinterest.com/username')),
+			array('youtube', 'Youtube', t('Youtube channel or profile URL.')),
+			array('google-plus', 'Google Plus', t('Google Plus profile URL.')),
+			array('flickr', 'Flickr', t('Enter your Flickr Profile URL.')),
+			array('myspace', 'MySpace'),
+			array('wthree', 'Other')
 		);
 		return $services;	
 	}
@@ -54,6 +54,7 @@ class Concrete5_Controller_AttributeType_SocialLinks extends AttributeTypeContro
 	}
 	
 	protected function getServiceLink($service, $serviceInfo) {
+		/*
 		$link = '';
 		$services = $this->getServices();
 		foreach($services as $s) {
@@ -63,6 +64,14 @@ class Concrete5_Controller_AttributeType_SocialLinks extends AttributeTypeContro
 		}
 		$link .= $serviceInfo;
 		return $link;
+		*/
+
+		$link = $serviceInfo;
+		if (strpos($link, 'http://') === 0 || strpos($link, 'https://') === 0) {
+			return $link;
+		} else {
+			return 'http://' . $link;
+		}
 	}
 
 	public function deleteKey() {
