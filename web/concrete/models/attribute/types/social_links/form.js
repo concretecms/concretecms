@@ -20,17 +20,13 @@ $(function() {
 		$('button.ccm-social-link-attribute-remove-line').show();
 		$('button.ccm-social-link-attribute-remove-line:first').hide();
 					
+		$(this).parent().find('input').attr('placeholder', opt.attr('data-placeholder-text'));
 		$(this).parent().
-			find('input').
-			tooltip('destroy').
-			attr('title', opt.attr('data-tooltip-title')).
-			tooltip();
-			$(this).parent().
-				find('.ccm-social-link-service-text-wrapper').
-				addClass('input-prepend').
-				find('.ccm-social-link-service-add-on-wrapper').show().
-				find('img').
-				attr('src', CCM_IMAGE_PATH + "/icons/social/" + opt.val() + ".png");
+			find('.ccm-social-link-service-text-wrapper').
+			addClass('input-prepend').
+			find('.ccm-social-link-service-add-on-wrapper').show().
+			find('img').
+			attr('src', CCM_IMAGE_PATH + "/icons/social/" + opt.val() + ".png");
 
 	});
 	$('.ccm-social-link-attribute-wrapper select').trigger('change');
