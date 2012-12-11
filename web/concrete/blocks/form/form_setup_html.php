@@ -291,9 +291,9 @@ $ih = Loader::helper('concrete/interface');
 				</div>
 
 				<div id="emailSettingsEdit">
-					<?php print $form->label('send_notification_from', t('Reply to this email address'));?>
+					<?php print $form->label('send_notification_from_edit', t('Reply to this email address'));?>
 					<div class="input send_notification_from">
-						<?php print $form->checkbox('send_notification_from', 1); ?>
+						<?php print $form->checkbox('send_notification_from_edit', 1); ?>
 					</div>
 				</div>
 			</fieldset>
