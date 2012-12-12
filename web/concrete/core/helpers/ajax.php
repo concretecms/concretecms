@@ -12,7 +12,7 @@ class Concrete5_Helper_Ajax {
 		die();
 	}
 	
-	/** Sends an error the client and ends the execution.
+	/** Sends an error to the client and ends the execution.
 	* @param string|Exception $result The error to send to the client.
 	*/
 	public function sendError($error) {
