@@ -18,7 +18,7 @@ class Concrete5_Helper_Ajax {
 	public function sendError($error) {
 		@ob_end_clean();
 		header($_SERVER['SERVER_PROTOCOL'] . ' 400 Bad Request', true, 400);
-		header('Content-Type: text-plain; charset=' . APP_CHARSET, true);
+		header('Content-Type: text/plain; charset=' . APP_CHARSET, true);
 		echo ($error instanceof Exception) ? $error->getMessage() : $error;
 		die();
 	}
