@@ -64,7 +64,7 @@ class Concrete5_Model_FileVersion extends Object {
 
 	public function getAttribute($ak, $mode = false) {
 		$ak = (is_object($ak)) ? $ak->getAttributeKeyHandle() : $ak;
-		return $this->attributes->getAttribute($ak, $mode = false);
+		return $this->attributes->getAttribute($ak, $mode);
 	}
 
 
