@@ -157,8 +157,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 							
 							
 							$btID = $db->GetOne("select btID from BlockTypes where btHandle = ?", array($file));
-							$bt->installed = ($btID > 0);
-							$bt->btID = $btID;
+							$bt->installed = false;
+							$bt->btID = null;
 							
 							$blocktypes[] = $bt;
 							
