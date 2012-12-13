@@ -20,6 +20,7 @@ $classes = array(
 	'BlockController' => array('library','block_controller'),
 	'AttributeTypeView' => array('library','attribute/view'),
 	'AttributeTypeController' => array('library','attribute/controller'),
+	'Marketplace' => array('library', 'marketplace'),
 	'Area' => array('model','area'),
 	'GlobalArea' => array('model','global_area'),
 	'AttributeKey' => array('model','attribute/key'),
