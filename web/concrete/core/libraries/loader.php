@@ -31,6 +31,14 @@
 		}
 
 		/** 
+		 * Loads a job file, either from the site's files or from Concrete's
+		 */
+		public function job($job, $pkgHandle = null) {
+			$env = Environment::get();
+			require_once($env->getPath(DIRNAME_JOBS . '/' . $job . '.php', $pkgHandle));
+		}
+
+		/** 
 		 * Loads a model from either an application, the site, or the core Concrete directory
 		 */
 		public function model($mod, $pkgHandle = null) {
