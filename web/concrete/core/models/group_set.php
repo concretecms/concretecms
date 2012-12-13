@@ -31,13 +31,23 @@ class Concrete5_Model_GroupSet extends Object {
 			return $gs;
 		}
 	}
-	
+
+	public static function getByName($gsName) {
+		$db = Loader::db();
+		$row = $db->GetRow('select gsID, pkgID, gsName from GroupSets where gsName = ?', array($gsName));
+		if (isset($row['gsID'])) {
+			$gs = new GroupSet();
+			$gs->setPropertiesFromArray($row);
+			return $gs;
+		}
+	}  
+
 	public static function getListByPackage($pkg) {
 		$db = Loader::db();
 		$list = array();
 		$r = $db->Execute('select gsID from GroupSets where pkgID = ? order by gsID asc', array($pkg->getPackageID()));
 		while ($row = $r->FetchRow()) {
-			$list[] = GroupSets::getByID($row['gsID']);
+			$list[] = GroupSet::getByID($row['gsID']);
 		}
 		$r->Close();
 		return $list;
