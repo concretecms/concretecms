@@ -134,6 +134,10 @@ class Concrete5_Controller_Login extends Controller {
 		$loginData['success']=0;
 
 		try {
+			if(!$_COOKIE[SESSION]) {
+				throw new Exception(t('Your browser\'s cookie functionality is turned off. Please turn it on.'));
+			}
+		
 			if (!$ip->check()) {
 				throw new Exception($ip->getErrorMessage());
 			}
