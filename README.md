@@ -36,7 +36,7 @@ http://www.concrete5.org
 http://concrete5.org/documentation/
 
 ### Short Tags
-The concrete5 git repository currently uses php "short tags". Pull reqests should maintain this convention. Final release versions have short tags converted to long tags. _Note:_ This issue has thoroughly discussed. Currently the shed is red but may be painted green in the future.
+The concrete5 git repository currently uses php "short tags". Pull requests should maintain this convention. Final release versions have short tags converted to long tags. _Note:_ This issue has thoroughly discussed. Currently the shed is red but may be painted green in the future.
 
 If short tags are not enabled in your development environment you can enable them either
 * In `php.ini` add `short_open_tag = On`
