@@ -154,12 +154,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 							$bt->hasCustomViewTemplate = file_exists(DIR_FILES_BLOCK_TYPES . '/' . $file . '/' . FILENAME_BLOCK_VIEW);
 							$bt->hasCustomEditTemplate = file_exists(DIR_FILES_BLOCK_TYPES . '/' . $file . '/' . FILENAME_BLOCK_EDIT);
 							$bt->hasCustomAddTemplate = file_exists(DIR_FILES_BLOCK_TYPES . '/' . $file . '/' . FILENAME_BLOCK_ADD);
-							
-							
-							$btID = $db->GetOne("select btID from BlockTypes where btHandle = ?", array($file));
 							$bt->installed = false;
 							$bt->btID = null;
-							
 							$blocktypes[] = $bt;
 							
 						}
