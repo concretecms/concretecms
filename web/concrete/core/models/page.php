@@ -2302,5 +2302,34 @@ class Concrete5_Model_Page extends Collection {
 			return $c;
 		}
 	}
+	
+	/**
+	 * Returns the total number of page views for a specific page 
+	 */
+	public function getTotalPageViews($date = null) {	 
+		$db = Loader::db();
+		if ($date != null) {
+			return $db->GetOne("select count(pstID) from PageStatistics where date = ? AND cID = ?", array($date, $this->getCollectionID()));
+		} else {
+			return $db->GetOne("select count(pstID) from PageStatistics where cID = ?", array($this->getCollectionID()));
+		}
+	}
+	
+	/**
+	 * Gets a pages statistics 
+	 */
+	public function getPageStatistics($limit = 20){
+		$db = Loader::db();
+		$limitString = '';
+		if ($limit != false) {
+			$limitString = 'limit ' . $limit;
+		}
+		
+		if (is_object($this) && $this instanceof Page) { 
+			return $db->getAll("SELECT * FROM PageStatistics WHERE cID = ? ORDER BY timestamp desc {$limitString}", array($this->getCollectionID()));
+		} else {
+			return $db->getAll("SELECT * FROM PageStatistics ORDER BY timestamp desc {$limitString}");
+		}
+	}	
 
 }
