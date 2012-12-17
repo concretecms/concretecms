@@ -19,8 +19,6 @@ if ($fp->canAddFile() || $fp->canSearchFiles()) { ?>
 </div>	
 <div class="ccm-pane-footer"></div>
 
-</div>
-
 <? } ?>
 
 <?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(false); ?>
