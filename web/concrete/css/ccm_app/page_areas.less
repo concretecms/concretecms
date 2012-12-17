@@ -55,8 +55,31 @@ div.ccm-add-block, div.ccm-add-block-global {
 	white-space: nowrap;
 	font-weight: bold; 
 	border: 1px solid rgba(0,0,0,0.3);
-	overflow:hidden; 
 }
+
+.ccm-ui ul.dropdown-menu { 
+
+	li {
+
+	display: block !important;
+	
+	a {
+		color: @dropdownLinkColor !important;
+		text-decoration: none !important;
+		padding: 3px 20px !important;
+	}
+	font-family: @baseFontFamily !important;
+	font-size: @baseFontSize !important;
+	line-height: @baseLineHeight !important;
+	
+	}
+
+	.divider {margin: 9px 1px !important;}
+}
+.ccm-ui ul.dropdown-menu a:hover {
+  color: @dropdownLinkColorHover !important;
+  text-decoration: none !important;
+ }
 
 div.ccm-block-edit-inline-active {
 	border: 1px solid rgba(0,105,185,0.6);

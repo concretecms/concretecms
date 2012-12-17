@@ -37,7 +37,7 @@ div#main-container-inner #header ul li a:hover {
 	border-right: none;
 }
 
-div#main-container-inner #header h1 a, div#main-container-inner #header h1 a:link, div#main-container-inner #header h1 a:visited, div#main-container-inner #header h1 a:active, div#main-container-inner #header h1 a:hover {
+div#main-container-inner #header h1 a, div#main-container-inner #header h1 a, div#main-container-inner #header h1 a, div#main-container-inner #header h1 a, div#main-container-inner #header h1 a {
 	/* customize_site-title */ color: #000; /* customize_site-title */
 	text-decoration: none;
 }
@@ -47,7 +47,7 @@ ul li a.nav-path-selected, ul li.nav-selected {
 }
 
 
-div#main-container-inner a, div#main-container-inner a:link, div#main-container-inner a:visited, div#main-container-inner a:active {
+div#main-container-inner a {
 	/* customize_links */ color: #0099ff; /* customize_links */
 	text-decoration: none;
 }
@@ -190,7 +190,7 @@ div#footer #footer-inner p.footer-tag-line {
 	font-family: 'Merriweather', Georgia, serif;
 }
 
-div#footer #footer-inner a, div#footer #footer-inner a:link, div#footer #footer-inner a:visited, div#footer #footer-inner a:active {
+div#footer #footer-inner a {
 	text-decoration: none;
 }
 

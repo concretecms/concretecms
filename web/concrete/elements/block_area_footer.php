@@ -23,18 +23,35 @@ $ap = new Permissions($a);
 $cp = new Permissions($c);
 
 if (!$c->isArrangeMode()) { ?>
-	<script type="text/javascript">
-	ccm_areaMenuObj<?=$a->getAreaID()?> = new Object();
-	ccm_areaMenuObj<?=$a->getAreaID()?>.type = "AREA";
-	ccm_areaMenuObj<?=$a->getAreaID()?>.aID = <?=$a->getAreaID()?>;
-	ccm_areaMenuObj<?=$a->getAreaID()?>.arHandle = "<?=$arHandle?>";
-	ccm_areaMenuObj<?=$a->getAreaID()?>.maximumBlocks = <?=$a->maximumBlocks?>;
-    <? Loader::element('block_area_permissions_js', array('a' => $a, 'ap' => $ap, 'c' => $c, 'cp' => $cp)); ?> 
-	$(function() {ccm_menuInit(ccm_areaMenuObj<?=$a->getAreaID()?>)});
-	</script>
-	<? if ($a->isGlobalArea()) { ?>
-		<div id="a<?=$a->getAreaID()?>controls" class="ccm-add-block"><?=t('Add To Sitewide %s', $arHandle)?></div>
-	<? } else { ?>
-		<div id="a<?=$a->getAreaID()?>controls" class="ccm-add-block"><?=t('Add To %s', $arHandle)?></div>
+
+<div id="a<?=$a->getAreaID()?>controls" class="ccm-add-block ccm-ui">
+<div class="dropdown">
+	<button class="btn btn-mini dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
+
+	<? 
+	if ($a->isGlobalArea()) { ?><?=t('Sitewide %s', $arHandle)?><? } else { ?><?=$arHandle?><? } ?>
+	<ul class="dropdown-menu">
+	<? if ($ap->canAddBlockToArea() && $a->areaAcceptsBlocks()) { ?>
+		<li><a dialog-title="<?=t('Add New Block')?>" class="dialog-launch" dialog-modal="false" dialog-width="550" dialog-height="380" id="menuAddNewBlock<?=$a->getAreaID()?>" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_area_popup.php?cID=<?=$c->getCollectionID()?>&arHandle=<?=urlencode($a->getAreaHandle())?>&atask=add"><i class="icon-plus-sign"></i> <?=t("Add New Block")?></a></li>
+		<li><a dialog-title="<?=t('Paste from Clipboard')?>" class="dialog-launch" dialog-modal="false" dialog-width="550" dialog-height="380" id="menuAddPaste<?=$a->getAreaID()?>" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_area_popup.php?cID=<?=$c->getCollectionID()?>&arHandle=<?=urlencode($a->getAreaHandle())?>&atask=paste"><i class="icon-briefcase"></i> <?=t("Paste from Clipboard")?></a></li>
 	<? } ?>
+	<? if ($ap->canAddStacks() && $a->areaAcceptsBlocks()) { ?>
+		<li><a dialog-title="<?=t('Add from Stack')?>" class="dialog-launch" dialog-modal="false" dialog-width="550" dialog-height="380" id="menuAddNewStack<?=$a->getAreaID()?>" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_area_popup.php?cID=<?=$c->getCollectionID()?>&arHandle=<?=urlencode($a->getAreaHandle())?>&atask=add_from_stack"><i class="icon-list"></i> <?=t("Add Stack")?></a></li>
+	<? } ?>
+	<? if ($a->areaAcceptsBlocks() && ($ap->canAddBlockToArea() || $ap->canAddStacks())) { ?>
+		<li class="divider"></li>
+	<? } ?>
+	<? if ($ap->canEditAreaDesign() && ENABLE_CUSTOM_DESIGN == true && (!$c->isMasterCollection())) { ?>
+		<? $showDesign = true; ?>
+		<li><a dialog-title="<?=t('Custom Style')?>" class="dialog-launch" dialog-modal="false" dialog-width="475" dialog-height="500" id="menuAreaStyle<?=$a->getAreaID()?>" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_area_popup.php?cID=<?=$c->getCollectionID()?>&arHandle=<?=urlencode($a->getAreaHandle())?>&atask=design"><i class="icon-font"></i> <?=t("Edit Area Design")?></a></li>		
+	<? } ?>
+	<? if (isset($showDesign) && $showDesign && $ap->canEditAreaPermissions() && PERMISSIONS_MODEL != 'simple' && (!$a->isGlobalArea())) { ?>
+		<li class="divider"></li>
+		<li><a dialog-title="<?=t('Area Permissions')?>" class="dialog-launch" dialog-modal="false" dialog-width="425" dialog-height="430" id="menuAreaStyle<?=$a->getAreaID()?>" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_area_popup.php?cID=<?=$c->getCollectionID()?>&arHandle=<?=urlencode($a->getAreaHandle())?>&atask=groups"><i class="icon-lock"></i> <?=t("Permissions")?></a></li>		
+	<? } ?>
+
+	<!-- dropdown menu links -->
+	</ul>
+</div>
+</div>
 <? } ?>
