@@ -320,7 +320,7 @@ class ConcreteDashboardHelper {
 				
 				<?
 				if ($page->getCollectionPath() == '/dashboard/system') { ?>
-					<li><a href="<?=Loader::helper('navigation')->getLinkTocollection($page, false, true)?>"><?=t('View All')?><span><?=t($page->getCollectionName())?> <?=$page->getAttribute('meta_keywords')?></span></li>
+					<li><a href="<?=Loader::helper('navigation')->getLinkTocollection($page, false, true)?>"><?=t('View All')?></a><span><?=t($page->getCollectionName())?> <?=$page->getAttribute('meta_keywords')?></span></li>
 				<?				
 				}
 				
