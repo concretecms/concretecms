@@ -230,7 +230,7 @@ foreach($searchFieldAttributes as $ak) {
 						<? if ($req == 'version_status') { ?>
 							<span class="ccm-search-option"  search-field="version_status">
 							<ul class="inputs-list">
-							<li><label><?=$form->radio('_cvIsApproved', 0, $searchRequest['cvIsApproved'])?> <span><?=t('Unapproved')?></label></li>
+							<li><label><?=$form->radio('_cvIsApproved', 0, $searchRequest['cvIsApproved'])?> <span><?=t('Unapproved')?></span></label></li>
 							<li><label><?=$form->radio('_cvIsApproved', 1, $searchRequest['cvIsApproved'])?> <span><?=t('Approved')?></span></label></li>
 							</ul>
 							</span>
