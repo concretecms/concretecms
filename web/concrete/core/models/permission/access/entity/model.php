@@ -26,6 +26,9 @@ abstract class Concrete5_Model_PermissionAccessEntity extends Object {
 		$r = $db->GetRow('select petID, peID from PermissionAccessEntities where peID = ?', array($peID));
 		if (is_array($r)) {
 			$pt = PermissionAccessEntityType::getByID($r['petID']);
+			if (!is_object($pt)) {
+				return false;
+			}
 			$class = Loader::helper('text')->camelcase($pt->getAccessEntityTypeHandle());
 			$class .= 'PermissionAccessEntity';
 			$obj = new $class();

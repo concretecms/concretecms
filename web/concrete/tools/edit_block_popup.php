@@ -3,6 +3,9 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 $c = Page::getByID($_REQUEST['cID'], 'RECENT');
 $a = Area::get($c, $_REQUEST['arHandle']);
+if (!is_object($a)) {
+	die('Invalid Area');
+}
 if (!$a->isGlobalArea()) {
 	$b = Block::getByID($_REQUEST['bID'], $c, $a);
 } else {

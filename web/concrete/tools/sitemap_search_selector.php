@@ -15,7 +15,7 @@ if (Loader::helper('validation/numbers')->integer($_REQUEST['cID']) && $select_m
 }
 
 if ($callback) {
-	$callback = '&callback=' . $_REQUEST['callback'];
+	$callback = '&callback=' . addslashes($callback);
 }
 
 ?>

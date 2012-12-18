@@ -22,8 +22,9 @@ class Concrete5_Controller_Dashboard_Users_Group_Sets extends DashboardBaseContr
 			if (!trim($this->post('gsName'))) { 
 				$this->error->add(t("Specify a name for your group set."));
 			}
-			if (!$this->error->has()) {			
-				$gs = GroupSet::add($this->post('gsName'));
+			if (!$this->error->has()) {
+				$gsName = Loader::helper('text')->entities($this->post('gsName'));
+				$gs = GroupSet::add($gsName);
 				if (is_array($_POST['gID'])) {
 					foreach($_POST['gID'] as $gID) {
 						$g = Group::getByID($gID);
@@ -65,7 +66,8 @@ class Concrete5_Controller_Dashboard_Users_Group_Sets extends DashboardBaseContr
 			}
 			
 			if (!$this->error->has()) {
-				$as->updateGroupSetName($this->post('gsName'));
+				$gsName = Loader::helper('text')->entities($this->post('gsName'));
+				$as->updateGroupSetName($gsName);
 				$this->redirect('dashboard/users/group_sets', 'set_updated');
 			}
 			

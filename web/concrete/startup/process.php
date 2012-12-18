@@ -270,6 +270,9 @@
 							// which handles permissions and everything
 							$p = new Permissions($b);
 							if ($p->canViewBlock()) {
+								if (!is_object($b)) {
+									exit;
+								}
 								$action = $b->passThruBlock($_REQUEST['method']);
 							}
 						}

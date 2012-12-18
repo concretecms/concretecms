@@ -1917,7 +1917,7 @@ class Concrete5_Model_Page extends Collection {
 	* @return page
 	**/
 	
-	public function add($ct, $data) {
+	public function add(CollectionType $ct, $data) {
 		$db = Loader::db();
 		$txt = Loader::helper('text');
 		
