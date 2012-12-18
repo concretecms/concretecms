@@ -6,19 +6,19 @@ $dt = Loader::helper('form/date_time');
 if (!$tp->canAccessUserSearch() && !$tp->canAccessGroupSearch()) { 
 	die(t("Access Denied."));
 }
-
+$pae = false;
 if ($_REQUEST['peID']) {
 	$pae = PermissionAccessEntity::getByID($_REQUEST['peID']);
-} else {
+}
+if (!is_object($pae)) {
 	$pae = false;
 }
-if (!is_object('peID')) {
-	exit;
-}
 
+$pd = false;
 if ($_REQUEST['pdID']) {
 	$pd = PermissionDuration::getByID($_REQUEST['pdID']);
-} else {
+}
+if (!is_object($pd)) {
 	$pd = false;
 }
 
