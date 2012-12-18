@@ -12,6 +12,9 @@ if ($_REQUEST['peID']) {
 } else {
 	$pae = false;
 }
+if (!is_object('peID')) {
+	exit;
+}
 
 if ($_REQUEST['pdID']) {
 	$pd = PermissionDuration::getByID($_REQUEST['pdID']);
@@ -122,7 +125,7 @@ if ($_POST['task'] == 'save_permissions') {
 				ccmAlert.notice('<?=t("Error")?>', r.message);
 			} else {
 				if (typeof(ccm_addAccessEntity) == 'function') { 
-					ccm_addAccessEntity(r.peID, r.pdID, '<?=$_REQUEST["accessType"]?>');
+					ccm_addAccessEntity(r.peID, r.pdID, '<?=addslashes($_REQUEST["accessType"])?>');
 				} else {
 					alert(r.peID);
 					alert(r.pdID);

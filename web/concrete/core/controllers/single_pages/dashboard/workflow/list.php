@@ -71,6 +71,9 @@ class Concrete5_Controller_Dashboard_Workflow_List extends DashboardBaseControll
 		
 		if (!$this->error->has()) { 
 			$type = WorkflowType::getByID($this->post('wftID'));
+			if (!is_object($wf) || !($wf instanceof WorkflowType)) {
+				exit;
+			}
 			$wf = Workflow::add($type, $this->post('wfName'));
 			$wf->updateDetails($this->post());
 			$this->redirect('/dashboard/workflow/list/', 'view_detail', $wf->getWorkflowID(), 'workflow_created');

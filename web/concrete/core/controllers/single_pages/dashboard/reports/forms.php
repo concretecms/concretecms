@@ -159,7 +159,7 @@ class Concrete5_Controller_Dashboard_Reports_Forms extends Controller {
 			
 		//load requested survey response
 		if (!empty($_REQUEST['qsid'])) {
-			$questionSet = preg_replace('/[^[:alnum:]]/','',$_REQUEST['qsid']);
+			$questionSet = intval(preg_replace('/[^[:alnum:]]/','',$_REQUEST['qsid']));
 			
 			//get Survey Questions
 			$questionsRS = MiniSurvey::loadQuestions($questionSet);
