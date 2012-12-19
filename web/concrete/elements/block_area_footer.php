@@ -24,12 +24,19 @@ $cp = new Permissions($c);
 
 if (!$c->isArrangeMode()) { ?>
 
-<div id="a<?=$a->getAreaID()?>controls" class="ccm-add-block ccm-ui">
-<div class="dropdown">
-	<button class="btn btn-mini dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
+<div id="a<?=$a->getAreaID()?>controls" class="ccm-area-footer ccm-ui">
 
+<div class="ccm-area-footer-handle">
 	<? 
 	if ($a->isGlobalArea()) { ?><?=t('Sitewide %s', $arHandle)?><? } else { ?><?=$arHandle?><? } ?>
+</div>
+
+<div class="popover fade">
+	<div class="arrow"></div>
+	<div class="popover-inner">
+	<div class="popover-title"><?=t('Area')?></div>
+
+	
 	<ul class="dropdown-menu">
 	<? if ($ap->canAddBlockToArea() && $a->areaAcceptsBlocks()) { ?>
 		<li><a dialog-title="<?=t('Add New Block')?>" class="dialog-launch" dialog-modal="false" dialog-width="550" dialog-height="380" id="menuAddNewBlock<?=$a->getAreaID()?>" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_area_popup.php?cID=<?=$c->getCollectionID()?>&arHandle=<?=urlencode($a->getAreaHandle())?>&atask=add"><i class="icon-plus-sign"></i> <?=t("Add New Block")?></a></li>
@@ -54,6 +61,8 @@ if (!$c->isArrangeMode()) { ?>
 
 	<!-- dropdown menu links -->
 	</ul>
+	</div>
 </div>
+
 </div>
 <? } ?>

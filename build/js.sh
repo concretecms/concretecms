@@ -29,6 +29,7 @@ cat ../web/concrete/js/ccm_app/jquery.colorpicker.js \
 ../web/concrete/js/ccm_app/legacy_dialog.js \
 ../web/concrete/js/ccm_app/newsflow.js \
 ../web/concrete/js/ccm_app/page_reindexing.js \
+../web/concrete/js/ccm_app/areas.js \
 ../web/concrete/js/ccm_app/quicksilver.js \
 ../web/concrete/js/ccm_app/remote_marketplace.js \
 ../web/concrete/js/ccm_app/search.js \
