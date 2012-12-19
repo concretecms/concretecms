@@ -17,7 +17,9 @@ if ($bt->supportsInlineEditing()) { ?>
 
 <script type="text/javascript">
 ccm_onInlineEditCancel = function(onComplete) {
-	onComplete();
+	if (onComplete) {
+		onComplete();
+	}
 	ccm_exitInlineEditMode();
 	$('#a<?=$a->getAreaID()?>-bt<?=$bt->getBlockTypeID()?>').remove();
 }

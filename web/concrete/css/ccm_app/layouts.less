@@ -1,4 +1,86 @@
-/* LAYOUTS */
+#ccm-layouts-toolbar {
+	font-family: Helvetica, Arial, Verdana, Tahoma, sans-serif !important;
+	position: fixed;
+	left: 0;
+	top: 50px;
+	width: 100%;
+	visibility: visible !important;
+	margin: 0 !important;
+	padding: 0 !important;
+	padding-left: 2px !important;
+	line-height: 0 !important;
+	list-style: none !important;
+	font-size: 0px !important;
+	background: #f1f1f1;
+	#gradient > .vertical(#f1f1f1, #e2e2e2);	
+	overflow: hidden !important;
+	height: 32px !important;
+	border-bottom: 1px solid #bbb;
+
+	li {
+		float: left !important;
+		margin: 2px 0px 0px 0px !important;
+		padding: 3px 1px !important;
+		font-size: 11px !important;
+		padding-right: 0;
+		list-style: none !important;
+		outline: none;
+		font-family: Helvetica, Arial, Verdana, Tahoma, sans-serif !important;
+
+		select {
+			margin-left: 0px;
+		}
+
+	}
+
+	li.ccm-layouts-toolbar-separator {
+		float: left;
+		height: 34px;
+		border-left: 1px solid #d3d3d3;
+		border-right: 1px solid #f1f1f1;
+		padding: 0;
+		margin: 0 2px 0 3px !important;
+	}
+
+	.ccm-layouts-toolbar-save {
+		position: absolute;
+		top: 0px;
+		right: 15px;
+	}
+
+	#ccm-layouts-save-button {
+		margin-left: 6px;
+	}
+
+}
+
+#ccm-layouts-edit-mode {
+	
+	.clearfix();
+
+	.ccm-layout-column:first-child .ccm-layout-column-highlight {
+		border-left: 0px !important;
+	}
+
+	.ccm-layout-column {
+
+		float: left;
+
+		.ccm-layout-column-highlight {
+			min-height: 80px;
+			background-color: #B9E1FF;
+			border-left: 1px solid #6FB0DB;
+			border-right: 1px solid #6FB0DB;
+			border-collapse: collapse;
+		}
+
+	}
+
+}
+
+
+
+/*
 
 .ccm-layout.ccm-edit-mode div.ccm-layout-area-highlight { border-color: #1c1;  } 
 .ccm-layout-controls { position:relative; top:0px; left:0px; width:100%; height:auto; padding-top:4px; margin:auto; margin-top:2px }
@@ -8,11 +90,9 @@ width:99%; background: #f6f6f6 url(../images/slider_bg.png) repeat center; margi
 .ccm-layout-controls .ui-state-disabled a { cursor:default;  } 
 .ccm-layout-controls .ccm-layout-menu-button { width:14px; height:14px; position:absolute; left:0px; top:2px; background:url(../images/icons/add.png) no-repeat center; z-index:2; cursor:pointer;  }
 
-.ccm-layout.ccm-edit-mode .ccm-layout-cell{ /*overflow:hidden;*/ }
-.ccm-layout .ccm-layout-cell { /*border:0px none !important;*/ } 
-
 
 .ccm-layouts-block-arrange-placeholder { display:none; }
 .ccm-move-mode .ccm-layouts-block-arrange-placeholder { height:0px !important; min-height:0px; padding:0px !important; border:0px none; cursor:default; padding-top:4px !important; display:block; }
 
 
+*/

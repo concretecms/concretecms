@@ -50,6 +50,8 @@ if (!$c->isArrangeMode()) { ?>
 		<li><a dialog-title="<?=t('Area Permissions')?>" class="dialog-launch" dialog-modal="false" dialog-width="425" dialog-height="430" id="menuAreaStyle<?=$a->getAreaID()?>" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_area_popup.php?cID=<?=$c->getCollectionID()?>&arHandle=<?=urlencode($a->getAreaHandle())?>&atask=groups"><i class="icon-lock"></i> <?=t("Permissions")?></a></li>		
 	<? } ?>
 
+	<li><a dialog-title="<?=t('Add Layout')?>" class="dialog-launch" dialog-modal="false" dialog-width="400" dialog-height="300" id="menuLayout<?=$a->getAreaID()?>" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_area_popup.php?cID=<?=$c->getCollectionID()?>&arHandle=<?=urlencode($a->getAreaHandle())?>&atask=layout"><i class="icon-lock"></i> <?=t("ADD LAYOUT")?></a></li>		
+
 	<!-- dropdown menu links -->
 	</ul>
 </div>

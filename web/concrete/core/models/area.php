@@ -381,21 +381,6 @@ class Concrete5_Model_Area extends Object {
 	}
 
 	/**
-	 * determins based on permissions what types of blocks, if any can be added to this area
-	 * @param Page|Collection $c
-	 * @param AreaPermissions
-	 * @return boolean|BlockTypeList
-	 */
-	public function getAddBlockTypes(&$c, &$ap) {
-		if ($ap->canAddBlocks()) {
-			$bt = new BlockTypeList($ap->addBlockTypes);
-		} else {
-			$bt = false;
-		}
-		return $bt;
-	}
-	
-	/**
 	 * gets a list of all areas - no relation to the current page or area object
 	 * possibly could be set as a static method??
 	 * @return array
