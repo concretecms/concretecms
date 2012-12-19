@@ -44,30 +44,63 @@ div.ccm-global-area div.ccm-block-arrange {
 	opacity: 0.2;
 }
 
-div.ccm-add-block-global {
+div.ccm-area-footer-global div.ccm-area-footer-handle {
 	border: 1px solid rgba(0,0,0,0.3);
 }
 
-div.ccm-add-block, div.ccm-add-block-global {
+div.ccm-area-footer-handle {
 	padding: 5px;
 	margin: 1px;
 	font-size: 11px;
 	white-space: nowrap;
 	font-weight: bold; 
 	border: 1px solid rgba(0,0,0,0.3);
+	transition: opacity 0.5s linear;
+	-webkit-transition: opacity 0.5s linear;
+	-moz-transition: opacity 0.5s linear;
 }
 
-.ccm-ui ul.dropdown-menu { 
+div.ccm-area-footer-handle:hover {
+	border: 1px solid #8AD0FF;
+	cursor: pointer;
+}
+
+.ccm-ui div.popover ul.dropdown-menu { 
+
+	position: static; 
+	display: block;
+	float: none;
+	padding: 0px;
+	border: 0px;
+	-webkit-box-shadow: none !important;
+	-moz-box-shadow: none !important;
+	box-shadow: none !important;
+
+	li:last-child a {
+		.border-bottom-radius(4px);
+	}
 
 	li {
 
 	display: block !important;
 	
+
 	a {
 		color: @dropdownLinkColor !important;
 		text-decoration: none !important;
 		padding: 3px 20px !important;
 	}
+	a:hover {
+		#gradient > .vertical(#E2F3FF, #DDF1FF);	
+	
+		i {
+			background-image: url("../images/glyphicons-halflings.png");
+		}
+		
+	}
+
+
+
 	font-family: @baseFontFamily !important;
 	font-size: @baseFontSize !important;
 	line-height: @baseLineHeight !important;
@@ -76,8 +109,9 @@ div.ccm-add-block, div.ccm-add-block-global {
 
 	.divider {margin: 9px 1px !important;}
 }
-.ccm-ui ul.dropdown-menu a:hover {
-  color: @dropdownLinkColorHover !important;
+
+.ccm-ui div.popover ul.dropdown-menu a:hover {
+  color: @dropdownLinkColor !important;
   text-decoration: none !important;
  }
 
@@ -97,17 +131,6 @@ div.ccm-block {
 	transition: opacity 0.5s linear;
 	-webkit-transition: opacity 0.5s linear;
 	-moz-transition: opacity 0.5s linear;
-}
-
-div.ccm-add-block {
-	transition: opacity 0.5s linear;
-	-webkit-transition: opacity 0.5s linear;
-	-moz-transition: opacity 0.5s linear;
-}
-
-div.ccm-add-block.selected {
-	color: #369;
-	text-decoration: underline;
 }
 
 div.ccm-move-mode {

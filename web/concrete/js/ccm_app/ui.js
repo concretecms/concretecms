@@ -408,7 +408,6 @@ ccm_editInit = function() {
 		void(0);
 	}
 
-	/*
 	$(document.body).append('<div style="position: absolute; display:none" id="ccm-highlighter">&nbsp;</div>');
 	$(document).click(function() {ccm_hideMenus();});
 
@@ -416,7 +415,9 @@ ccm_editInit = function() {
 		ccm_hideMenus();
 		return false;	
 	});
-	*/
+
+	$('.ccm-area-footer').ccmarea();
+
 
 	$('a.dialog-launch').dialog();
 
