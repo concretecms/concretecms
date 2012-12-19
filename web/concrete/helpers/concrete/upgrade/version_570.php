@@ -10,6 +10,7 @@ class ConcreteUpgradeVersion570Helper {
 		'UserPointHistory',
 		'Groups',
 		'QueuePageDuplicationRelations',
+		'Areas',
 		/*'Queues',*/
 		'BlockTypes',
 		/*'QueueMessages',*/

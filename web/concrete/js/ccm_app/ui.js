@@ -274,7 +274,6 @@ ccm_parseBlockResponse = function(r, currentBlockID, task) {
 						} else {
 							$("#a" + resp.aID).append(r);
 						}
-						console.log(resp);
 						// inline support.
 						$('#a' + resp.aID + '-bt' + resp.btID).remove();
 					} else {

@@ -10,5 +10,9 @@
 			<unsigned />
 			<notnull />
 		</field>
+		<field name="spacing" type="I">
+			<unsigned />
+			<notnull />
+		</field>
 	</table>
 </schema>

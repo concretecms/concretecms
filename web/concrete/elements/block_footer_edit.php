@@ -16,7 +16,9 @@ ccm_onInlineEditCancel = function(onComplete) {
 	var action = CCM_TOOLS_PATH + '/edit_block_popup?cID=<?=$c->getCollectionID()?>&bID=<?=$b->getBlockID()?>&arHandle=<?=htmlspecialchars($a->getAreaHandle())?>&btask=view_edit_mode';	 
 	$.get(action, 		
 		function(r) { 
-			onComplete();
+			if (onComplete) {
+				onComplete();
+			}
 			ccm_exitInlineEditMode();
 			$('#b<?=$b->getBlockID()?>-<?=$a->getAreaID()?>').before(r).remove();
 		}

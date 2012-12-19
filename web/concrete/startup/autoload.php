@@ -23,6 +23,7 @@ $classes = array(
 	'Queue' => array('library','queue'),
 	'Area' => array('model','area'),
 	'GlobalArea' => array('model','global_area'),
+	'SubArea' => array('model','sub_area'),
 	'AttributeKey' => array('model','attribute/key'),
 	'AttributeValue,AttributeValueList' => array('model','attribute/value'),
 	'AttributeKeyCategory' => array('model','attribute/category'),
