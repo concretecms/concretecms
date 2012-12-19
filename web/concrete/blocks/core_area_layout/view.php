@@ -20,5 +20,3 @@
 <? } ?>
 
 </div>
-
-Columns <?=$columns?> Spacing <?=$spacing?>

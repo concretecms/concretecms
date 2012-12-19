@@ -416,7 +416,7 @@ ccm_editInit = function() {
 		return false;	
 	});
 
-	$('.ccm-area-footer').ccmarea();
+	$('.ccm-area-footer').ccmmenu();
 
 
 	$('a.dialog-launch').dialog();

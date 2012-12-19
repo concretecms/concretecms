@@ -305,7 +305,7 @@ class Concrete5_Model_Area extends Object {
 	 * @param boolean $arIsGlobal
 	 * @return Area
 	 */
-	public static function getOrCreate(&$c, $arHandle, $arIsGlobal = 0) {
+	public static function getOrCreate(&$c, $arHandle, $arIsGlobal = 0, $arParentID = 0) {
 
 		/*
 			different than get(), getOrCreate() is called by the templates. If no area record exists for the
@@ -326,7 +326,7 @@ class Concrete5_Model_Area extends Object {
 		if (!$arIsGlobal) {
 			$arIsGlobal = 0;
 		}
-		$db->Replace('Areas', array('cID' => $cID, 'arHandle' => $arHandle, 'arIsGlobal' => $arIsGlobal), array('arHandle', 'cID'), true);
+		$db->Replace('Areas', array('cID' => $cID, 'arHandle' => $arHandle, 'arIsGlobal' => $arIsGlobal, 'arParentID' => $arParentID), array('arHandle', 'cID'), true);
 		
 		if ($arIsGlobal) {
 			// we create a stack for it			
@@ -549,7 +549,7 @@ class Concrete5_Model_Area extends Object {
 			$stack = Stack::getByName($this->arHandle);
 		}		
 		$currentPage = Page::getCurrentPage();
-		$ourArea = self::getOrCreate($c, $this->arHandle, $this->arIsGlobal);
+		$ourArea = self::getOrCreate($c, $this->arHandle, $this->arIsGlobal, $this->arParentID);
 		if (count($this->customTemplateArray) > 0) {
 			$ourArea->customTemplateArray = $this->customTemplateArray;
 		}

@@ -1,6 +1,6 @@
 (function($) {
 
-	$.fn.ccmarea = function() {
+	$.fn.ccmmenu = function() {
 		return $.each($(this), function(i, this) {
 			var $this = $(this);
 			$this.find('.ccm-area-footer-handle').on('click', function(e) {
