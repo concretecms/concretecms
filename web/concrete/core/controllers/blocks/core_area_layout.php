@@ -15,6 +15,13 @@ class Concrete5_Controller_Block_CoreAreaLayout extends BlockController {
 			return t("Area Layout (Core)");
 		}
 
+		public function save($post) {
+			if (!$post['spacing']) {
+				$post['spacing'] = 0;
+			}
+			parent::save($post);
+		}
+		
 		public function on_page_view() {
 			$wrapper = 'ccm-layout-column-wrapper-' . $this->bID;
 			$width = (100 / $this->columns);

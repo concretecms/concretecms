@@ -12,6 +12,7 @@ class Concrete5_Model_SubArea extends Area {
 		$c = $parent->getAreaCollectionObject();
 		parent::__construct($arHandle);
 		$this->c = $c;
+		$this->arParentID = $parent->getAreaID();
 	}	
 
 

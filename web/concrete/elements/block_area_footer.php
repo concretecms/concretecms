@@ -34,9 +34,7 @@ if (!$c->isArrangeMode()) { ?>
 <div class="popover fade">
 	<div class="arrow"></div>
 	<div class="popover-inner">
-	<div class="popover-title"><?=t('Area')?></div>
-
-	
+	<div class="popover-title"><?=t('Area')?></div>	
 	<ul class="dropdown-menu">
 	<? if ($ap->canAddBlockToArea() && $a->areaAcceptsBlocks()) { ?>
 		<li><a dialog-title="<?=t('Add New Block')?>" class="dialog-launch" dialog-modal="false" dialog-width="550" dialog-height="380" id="menuAddNewBlock<?=$a->getAreaID()?>" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_area_popup.php?cID=<?=$c->getCollectionID()?>&arHandle=<?=urlencode($a->getAreaHandle())?>&atask=add"><i class="icon-plus-sign"></i> <?=t("Add New Block")?></a></li>
