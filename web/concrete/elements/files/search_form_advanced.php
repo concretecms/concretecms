@@ -19,6 +19,7 @@ if ($_REQUEST['fExtension'] != false) {
 }
 
 $html = Loader::helper('html');
+$text = Loader::helper('text');
 
 Loader::model('file_attributes');
 $searchFieldAttributes = FileAttributeKey::getSearchableList();
@@ -80,16 +81,42 @@ foreach($t1 as $value) {
 	</div>
 
 	<form method="get" class="form-horizontal" id="ccm-<?=$searchInstance?>-advanced-search" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/search_results">
-	<? if ($_REQUEST['fType'] != false) { ?>
-		<div class="ccm-file-manager-pre-filter"><?=t('Only displaying %s files.', FileType::getGenericTypeText($_REQUEST['fType']))?></div>
-	<? } else if ($_REQUEST['fExtension'] != false) { ?>
-		<div class="ccm-file-manager-pre-filter"><?=t('Only displaying files with extension .%s.', $_REQUEST['fExtension'])?></div>
+	<? if ($_REQUEST['fType'] != false) {
+		$showTypes = array();
+		if(is_array($_REQUEST['fType'])) {
+			foreach($_REQUEST['fType'] as $showTypeId) {
+				$showTypes[] = FileType::getGenericTypeText($showTypeId);
+			}
+		}
+		else {
+			$showTypes[] = FileType::getGenericTypeText($_REQUEST['fType']);
+		}
+		?>
+		<div class="ccm-file-manager-pre-filter"><?=t('Only displaying %s files.', implode(', ', $showTypes))?></div>
+	<? } else if ($_REQUEST['fExtension'] != false) {
+		if(is_array($_REQUEST['fExtension'])) {
+			$showExtensions = $_REQUEST['fExtension'];
+		}
+		else {
+			$showExtensions = array($_REQUEST['fExtension']);
+		}
+		?>
+		<div class="ccm-file-manager-pre-filter"><?=t('Only displaying files with extension .%s.', implode(', ', $showExtensions))?></div>
 	<? } ?>
 
 	<input type="hidden" name="submit_search" value="1" />
 	<?
-		print $form->hidden('fType'); 
-		print $form->hidden('fExtension'); 
+		foreach(array('fType', 'fExtension') as $filterName) {
+			$filterValues = '';
+			if(is_array($_REQUEST[$filterName])) {
+				foreach($_REQUEST[$filterName] as $filterValue) {
+					print '<input type="hidden" name="' . $filterName . '[]" value="' . $text->entities($filterValue) . '" />';
+				}
+			}
+			else {
+				print $form->hidden($filterName);
+			}
+		}
 		print $form->hidden('searchType', $searchType); 
 		print $form->hidden('ccm_order_dir', $searchRequest['ccm_order_dir']); 
 		print $form->hidden('ccm_order_by', $searchRequest['ccm_order_by']); 

@@ -124,8 +124,23 @@ ccm_alLaunchSelectorFileManager = function(selector) {
 	
 	var types = $('#' + selector + '-fm-display input.ccm-file-manager-filter');
 	if (types.length) {
+		var fields = {}, name;
 		for (i = 0; i < types.length; i++) {
-			filterStr += '&' + $(types[i]).attr('name') + '=' + $(types[i]).attr('value');		
+			name = $(types[i]).attr('name');
+			if(!(name in fields)) {
+				fields[name] = [];
+			}
+			fields[name].push($(types[i]).attr('value'));
+		}
+		for(name in fields) {
+			if(fields[name].length == 1) {
+				filterStr += "&" + name + "=" + encodeURIComponent(fields[name][0]);
+			}
+			else {
+				$.each(fields[name], function(i, value) {
+					filterStr += "&" + name + "[]=" + encodeURIComponent(value);
+				});
+			}
 		}
 	}
 	
