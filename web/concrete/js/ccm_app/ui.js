@@ -11,6 +11,7 @@ var ccm_blockError = false;
 
 ccm_menuInit = function(obj) {
 	
+	/*
 	if (CCM_EDIT_MODE && (!CCM_ARRANGE_MODE)) {
 		switch(obj.type) {
 			case "BLOCK":
@@ -19,7 +20,9 @@ ccm_menuInit = function(obj) {
 				});
 				break;
 		}
-	}	
+	}
+	*/
+
 }
 
 ccm_showBlockMenu = function(obj, e) {
@@ -188,8 +191,7 @@ ccm_openAreaAddBlock = function(arHandle, addOnly, cID) {
 
 
 ccm_hideHighlighter = function() {
-	$("#ccm-highlighter").css('display', 'none');
-	$('div.ccm-menu-hotspot-active').removeClass('ccm-menu-hotspot-active');
+
 }
 
 ccm_addError = function(err) {
@@ -367,7 +369,6 @@ ccm_activate = function(obj, domID) {
 	
 	offs = aobj.offset();
 
-	$("#ccm-highlighter").hide();
 	
 	$("#ccm-highlighter").css("width", aobj.outerWidth());
 	$("#ccm-highlighter").css("height", aobj.outerHeight());
@@ -408,17 +409,17 @@ ccm_editInit = function() {
 		void(0);
 	}
 
+	/*
 	$(document.body).append('<div style="position: absolute; display:none" id="ccm-highlighter">&nbsp;</div>');
 	$(document).click(function() {ccm_hideMenus();});
-
+	
 	$("div.ccm-menu a").bind('click.hide-menu', function(e) {
 		ccm_hideMenus();
 		return false;	
 	});
+	*/
 
 	$('.ccm-area-footer').ccmmenu();
-
-
 	$('a.dialog-launch').dialog();
 
 		
