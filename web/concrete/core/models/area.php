@@ -616,11 +616,6 @@ class Concrete5_Model_Area extends Object {
 					$this->outputBlockWrapper(true, $b, $blockPositionInArea);
 				}
 				if ($includeEditStrip) {
-					$bv->renderElement('block_controls', array(
-						'a' => $ourArea,
-						'b' => $b,
-						'p' => $p
-					));
 					$bv->renderElement('block_header', array(
 						'a' => $ourArea,
 						'b' => $b,
