@@ -14,5 +14,9 @@
 			<unsigned />
 			<notnull />
 		</field>
+		<field name="iscustom" type="I1">
+			<default value="0" />
+			<notnull />
+		</field>
 	</table>
 </schema>

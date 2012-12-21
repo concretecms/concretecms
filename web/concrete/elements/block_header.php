@@ -66,17 +66,11 @@ if ($isAlias) {
 
 ?>
 
-<div id="b<?=$b->getBlockID()?>-<?=$a->getAreaID()?>" custom-style="<?=$b->getBlockCustomStyleRuleID()?>" class="<?=$class?>" <? if ($btw->getBlockTypeHandle() != BLOCK_HANDLE_LAYOUT_PROXY) { ?>data-handle="block-menu" <? } ?>>
-
-<? if ($btw->getBlockTypeHandle() == BLOCK_HANDLE_LAYOUT_PROXY) { ?>
-<div class="ccm-ui">
-	<a href="javascript:void(0)" data-handle="block-menu" data-disable-highlight="true"><i class"icon-cog" /></i> Derpin</a>
-</div>
-<? } ?>
+<div id="b<?=$b->getBlockID()?>-<?=$a->getAreaID()?>" custom-style="<?=$b->getBlockCustomStyleRuleID()?>" class="<?=$class?>" <? if ($btw->getBlockTypeHandle() != BLOCK_HANDLE_LAYOUT_PROXY) { ?>data-handle="block-menu-b<?=$b->getBlockID()?>-<?=$a->getAreaID()?>" <? } ?>>
 
 <div class="ccm-ui">
 
-<div class="popover fade"  data-menu="block-menu">
+<div class="popover fade"  data-menu="block-menu-b<?=$b->getBlockID()?>-<?=$a->getAreaID()?>">
 	<div class="arrow"></div>
 	<div class="popover-inner">
 	<ul class="dropdown-menu">

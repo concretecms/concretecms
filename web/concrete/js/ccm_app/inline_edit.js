@@ -1,4 +1,6 @@
+
 /*
+* inline editor functions
 */
 
 ccm_loadInlineEditor = function(cID, arHandle, aID, bID) {
@@ -36,10 +38,15 @@ ccm_exitInlineEditMode = function(activeObj) {
 	$.fn.ccmmenu.enable();
 	$('div.ccm-block-edit').removeClass('ccm-block-edit-disabled');
 	$('div.ccm-area-footer-handle').removeClass('ccm-block-edit-disabled');
+	$('div.ccm-area-layout-control-bar').removeClass('ccm-block-edit-disabled');
 
 	jQuery.fn.dialog.hideLoader();
 	if (activeObj) {
 		activeObj.ccmmenu();
+		// if this is an area proxy there might be menus inside it
+		activeObj.find('.ccm-area-footer').ccmmenu();
+		activeObj.find('.ccm-block-edit').ccmmenu();
+		activeObj.find('.dialog-launch').dialog();
 	}
 }
 
@@ -49,6 +56,7 @@ ccm_enterInlineEditMode = function(activeObj) {
 
 	$('div.ccm-block-edit').addClass('ccm-block-edit-disabled');
 	$('div.ccm-area-footer-handle').addClass('ccm-block-edit-disabled');
+	$('div.ccm-area-layout-control-bar').addClass('ccm-block-edit-disabled');
 	if (activeObj) {
 		activeObj.removeClass('ccm-block-edit-disabled').addClass('ccm-block-edit-inline-active');
 	}
