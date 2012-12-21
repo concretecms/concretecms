@@ -17,9 +17,15 @@
 			var $menu = $this.find('[data-menu=' + $selector.attr('data-handle') + ']');
 			$this.$menu = $menu;
 
-			$selector.mousemove(function(e) {
-				$.fn.ccmmenu.over(e, $this);
-			});
+			if ($selector.attr('data-disable-highlight')) {
+				$selector.on('click', function(e) {
+					$.fn.ccmmenu.show(e, $this);
+				});
+			} else {
+				$selector.mousemove(function(e) {
+					$.fn.ccmmenu.over(e, $this);
+				});
+			}
 
 		});
 	}

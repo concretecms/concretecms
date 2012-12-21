@@ -243,7 +243,7 @@ ccm_editInit = function() {
 	});
 	*/
 
-	$('.ccm-area-footer,.ccm-block-edit').ccmmenu();
+	$('.ccm-area-footer,.ccm-block-edit,.ccm-block-edit-layout').ccmmenu();
 	$('a.dialog-launch').dialog();
 
 		
