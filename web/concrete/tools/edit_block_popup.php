@@ -109,11 +109,6 @@ if (is_object($b)) {
 				</script>
 				<? }
 				
-				$bv->renderElement('block_controls', array(
-					'a' => $a,
-					'b' => $b,
-					'p' => $bp
-				));
 				$bv->renderElement('block_header', array(
 					'a' => $a,
 					'b' => $b,
