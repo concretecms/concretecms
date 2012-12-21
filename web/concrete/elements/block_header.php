@@ -7,7 +7,12 @@ if (!is_object($a)) {
 
 $arHandle = $a->getAreaHandle();
 
-$class = 'ccm-block-edit';
+$btw = BlockType::getByID($b->getBlockTypeID());
+if ($btw->getBlockTypeHandle() == BLOCK_HANDLE_LAYOUT_PROXY) {
+	$class = 'ccm-block-edit-layout';
+} else {
+	$class = 'ccm-block-edit';
+}
 
 $class .= ($b->isAliasOfMasterCollection() || $b->getBlockTypeHandle() == BLOCK_HANDLE_SCRAPBOOK_PROXY) ? " ccm-block-alias" : "";
 
@@ -23,7 +28,6 @@ if ($a->isGlobalArea()) {
 	$c = $b->getBlockCollectionObject();
 }
 $editInline = false;
-$btw = BlockType::getByID($b->getBlockTypeID());
 if ($btw->supportsInlineEditing()) {
 	$editInline = true;
 }
@@ -62,7 +66,7 @@ if ($isAlias) {
 
 ?>
 
-<div id="b<?=$b->getBlockID()?>-<?=$a->getAreaID()?>" custom-style="<?=$b->getBlockCustomStyleRuleID()?>" class="<?=$class?>" data-handle="block-menu">
+<div id="b<?=$b->getBlockID()?>-<?=$a->getAreaID()?>" custom-style="<?=$b->getBlockCustomStyleRuleID()?>" class="<?=$class?>" <? if ($btw->getBlockTypeHandle() != BLOCK_HANDLE_LAYOUT_PROXY) { ?>data-handle="block-menu" <? } ?>>
 
 <div class="ccm-ui">
 
