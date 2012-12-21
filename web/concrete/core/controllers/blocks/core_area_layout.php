@@ -19,6 +19,9 @@ class Concrete5_Controller_Block_CoreAreaLayout extends BlockController {
 			if (!$post['spacing']) {
 				$post['spacing'] = 0;
 			}
+			if (!$post['iscustom']) {
+				$post['iscustom'] = 0;
+			}
 			parent::save($post);
 		}
 		

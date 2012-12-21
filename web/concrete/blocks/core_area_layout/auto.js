@@ -1,5 +1,5 @@
 ccm_layoutRefresh = function() {
-	var columns = $('#ccm-layouts-toolbar select[name=columns]').val();
+	var columns = parseInt($('#ccm-layouts-toolbar select[name=columns]').val());
 	if (columns < 2) {
 		$('#ccm-layouts-toolbar input[name=spacing]').prop('disabled', true);
 	} else {
@@ -22,6 +22,58 @@ ccm_layoutRefresh = function() {
 		$column.append($highlight);
 		$form.append($column);
 	}
+
+	if (columns > 1 && (!$('#ccm-layouts-toolbar input[name=isautomated]').is(':checked'))) {
+		var breaks = [];
+		var tw = $('#ccm-area-layout-active-control-bar').width();
+		var cw = tw / columns;
+		var sw = 0;
+
+		for (i = 1; i < columns; i++) {
+			sw += cw;
+			breaks.push(sw);
+		}
+
+		var $columns = $("#ccm-area-layout-active-control-bar").parent().find('#ccm-layouts-edit-mode .ccm-layout-column');
+		$("#ccm-area-layout-active-control-bar").slider({
+			min: 0,
+			max: tw,
+			step: 1,
+			values: breaks,
+			slide: function (e, ui) {
+				var lastvalue = 0,
+					proceed = true;
+
+				$.each(ui.values, function(i, value) {
+					if (value < lastvalue) {
+						proceed = false;
+					}
+					lastvalue = value;
+				});
+
+				if (proceed) {
+					lastvalue = 0;
+					$.each($columns, function(i, col) {
+
+						if ((i + 1) == $columns.length) {
+							// last column
+							var value = tw - lastvalue;
+						} else {
+							var value = ui.values[i] - lastvalue;
+						}
+
+						$(col).css('width', value + 'px');
+						lastvalue = ui.values[i];
+					});
+				} else {
+					return false;
+				}
+			}
+		});
+	} else {
+		$("#ccm-area-layout-active-control-bar").slider('destroy');
+	}
+
 }
 
 $(function() {
@@ -34,6 +86,10 @@ $(function() {
 		ccm_layoutRefresh();
 	});
 
+	$('#ccm-layouts-toolbar input[name=isautomated]').on('click', function() {
+		ccm_layoutRefresh();
+	});
+
 	ccm_layoutRefresh();
 
 	$('#ccm-layouts-cancel-button').on('click', function() {
@@ -43,4 +99,9 @@ $(function() {
 		$('#ccm-block-form').submit();
 	});
 
-});
+
+	$('#ccm-layouts-cancel-button').on('click', function() {
+		ccm_onInlineEditCancel();
+	});
+
+});x

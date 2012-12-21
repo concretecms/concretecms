@@ -19,10 +19,17 @@
 		<label for="columns"><?=t("Spacing")?></label>
 		<input name="spacing" id="spacing" style="width: 30px" value="<?=$spacing?>" />
 	</li>
+	<li class="ccm-layouts-toolbar-separator"></li>
+	<li>
+		<label style="vertical-align: middle"><?=t("Automatic Widths")?>
+		<input style="vertical-align: middle" type="checkbox" value="1" name="isautomated" <? if (!$iscustom) { ?>checked="checked" <? } ?> />
+		</label>
+	</li>
+
 	<li class="ccm-layouts-toolbar-save ccm-ui">
 		<button id="ccm-layouts-cancel-button" type="button" class="btn btn-mini"><?=t("Cancel")?></button>
 		<button id="ccm-layouts-save-button" type="button" class="btn btn-primary btn-mini">Save</button></li>
 	</li>
 </ul>
 
-<div id="ccm-layouts-edit-mode"></div>
+<div id="ccm-area-layout-active-control-bar" class="ccm-area-layout-control-bar"></div>

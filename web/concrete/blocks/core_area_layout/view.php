@@ -4,6 +4,17 @@
 	$c = Page::getCurrentPage();
 ?>
 
+<? if ($c->isEditMode()) {
+	$bp = new Permissions($b);
+	if ($bp->canEditBlock()) { ?>
+
+		<div class="ccm-area-layout-control-bar" data-handle="block-menu-b<?=$b->getBlockID()?>-<?=$a->getAreaID()?>"></div>
+
+	<? } ?>
+
+<? } ?>
+
+
 <div class="ccm-layout-column-wrapper" id="ccm-layout-column-wrapper-<?=$bID?>">
 
 <? for ($i = 1; $i <= $columns; $i++) { ?>

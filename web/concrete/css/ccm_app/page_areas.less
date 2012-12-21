@@ -66,6 +66,27 @@ div.ccm-area-footer-handle {
 	-moz-transition: opacity 0.5s linear;
 }
 
+div.ccm-area-layout-control-bar {
+	background: rgba(48,190,247,0.2);
+	.border-radius(4px);
+	height: 12px;
+	line-height: 12px;
+	margin-bottom: 6px;
+	margin-top: 10px;
+	position: relative;
+}
+
+div.ccm-area-layout-control-bar .ui-slider-handle {
+	top: -6px;
+}
+
+div.ccm-area-layout-control-bar i {
+	position: absolute;
+	top: -2px;
+	z-index: 10;
+	left: -2px;
+}
+
 .ccm-ui div.popover ul.dropdown-menu { 
 
 	position: static; 
@@ -80,6 +101,10 @@ div.ccm-area-footer-handle {
 
 	li:last-child a {
 		.border-bottom-radius(4px);
+	}
+
+	li:first-child a {
+		.border-top-radius(4px);
 	}
 
 	li {
