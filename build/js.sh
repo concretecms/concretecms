@@ -31,6 +31,7 @@ cat ../web/concrete/js/ccm_app/jquery.colorpicker.js \
 ../web/concrete/js/ccm_app/page_reindexing.js \
 ../web/concrete/js/ccm_app/in_context_menu.js \
 ../web/concrete/js/ccm_app/quicksilver.js \
+../web/concrete/js/ccm_app/inline_edit.js \
 ../web/concrete/js/ccm_app/remote_marketplace.js \
 ../web/concrete/js/ccm_app/search.js \
 ../web/concrete/js/ccm_app/sitemap.js \

@@ -63,7 +63,6 @@
 			$bv->setAreaObject($a); 
 			$p = new Permissions($b);
 			if ($p->canViewBlock()) {
-				$bv->renderElement('block_controls', array( 'a' => $a, 'b' => $b, 'p' => $p ));
 				$bv->renderElement('block_header', array( 'a' => $a, 'b' => $b, 'p' => $p ));
 				$bv->render($b);
 				$bv->renderElement('block_footer');

@@ -1,63 +1,96 @@
 (function($) {
 
 	$.fn.ccmmenu = function() {
-		if ($('#ccm-highlighter').length == 0) {
-			$(document.body).append($("<div />", {'id': 'ccm-highlighter'}));
-		}
-		$.fn.ccmmenu.$highlighter = $('#ccm-highlighter');
+		
+		$.fn.ccmmenu.enable();
 
 		return $.each($(this), function(i, this) {
 			var $this = $(this), 
 				$selector;
 
-			if ($this.hasClass('ccm-menu-handle')) {
+			if ($this.attr('data-handle')) {
 				$selector = $this;
 			} else {
-				$selector = $this.find('.ccm-menu-handle');
+				$selector = $this.find('[data-handle]');
 			}
 
-			$selector.on('click', function(e) {
-				
-			});
+			var $menu = $this.find('[data-menu=' + $selector.attr('data-handle') + ']');
+			$this.$menu = $menu;
 
-			$selector.hover(function(e) {
-				$.fn.ccmmenu.over(e, $this, function() {
-					$.fn.ccmmenu.activate(e, $this)
-				});
-			});
-
-			$.fn.ccmmenu.$highlighter.on('mouseout', function(e) {
-				$.fn.ccmmenu.out(e, $this);
-			});
-
-			$.fn.ccmmenu.$highlighter.on('mouseover', function(e) {
+			$selector.mousemove(function(e) {
 				$.fn.ccmmenu.over(e, $this);
 			});
 
 		});
 	}
 
-	$.fn.ccmmenu.out = function(e, $this) {
+
+	$.fn.ccmmenu.out = function(e) {
+		if (!$.fn.ccmmenu.isactive) {
+			$.fn.ccmmenu.$highlighter.css("opacity", 0);
+		}
+	}
+
+	$.fn.ccmmenu.enable = function() {
+		$.fn.ccmmenu.isenabled = true;
+		$(document.body).append($("<div />", {'id': 'ccm-highlighter'}));
+		$.fn.ccmmenu.$highlighter = $('#ccm-highlighter');
+
+		$.fn.ccmmenu.$highlighter.on('mouseout.highlighter', function(e) {
+			$.fn.ccmmenu.out(e);
+		});
+
+		$.fn.ccmmenu.$highlighter.on('mouseover.highlighter', function(e) {
+			$.fn.ccmmenu.over(e);
+		});
+
+		$.fn.ccmmenu.$highlighter.on('click.highlighter', function(e) {
+			$.fn.ccmmenu.show(e, $.fn.ccmmenu.$overmenu);
+		});
+	}
+
+	$.fn.ccmmenu.disable = function() {
+		$.fn.ccmmenu.isenabled = false;
+		$.fn.ccmmenu.$highlighter.remove();
+	}
+
+	$.fn.ccmmenu.over = function(e, $this) {
+
+		if ($.fn.ccmmenu.isenabled && (!$.fn.ccmmenu.isactive)) {
+
+			if ($this) {
+
+				var offset = $this.offset();
+				$.fn.ccmmenu.$highlighter.css('width', $this.outerWidth())
+				.css('height', $this.outerHeight())
+				.css('top', offset.top)
+				.css('left', offset.left);
+
+				$.fn.ccmmenu.$overmenu = $this;
+			}
+
+			$.fn.ccmmenu.$highlighter.css('opacity', '0.6');
+		}
+	}
+
+	$.fn.ccmmenu.hide = function() {
+		$.fn.ccmmenu.isactive = false;
 		$.fn.ccmmenu.$highlighter.css("opacity", 0);
+		$(document.body).unbind('click.disableccmmenu');
+		$('div.popover').css('opacity', 0).hide();
 	}
 
-	$.fn.ccmmenu.over = function(e, $this, clickfunction) {
+	$.fn.ccmmenu.show = function(e, $this) {
 
-		var offset = $this.offset();
-		$.fn.ccmmenu.$highlighter.css('width', $this.outerWidth())
-		.css('height', $this.outerHeight())
-		.css('top', offset.top)
-		.css('left', offset.left)
-		.css('opacity', '0.6');
+		e.stopPropagation();
 
-		$.fn.ccmmenu.$highlighter.on('click', clickfunction);
-	}
+		$.fn.ccmmenu.isactive = true;
 
-	$.fn.ccmmenu.activate = function(e, $this) {
-		$('div.popover').css('opacity', 0);
-		var $pp = $this.find('div.popover');
+		var $pp = $this.$menu;
+
 		var posX = e.pageX + 2;
 		var posY = e.pageY + 2;
+
 
 		$pp.css('opacity', 0).show();
 		var mheight = $pp.height(),
@@ -77,11 +110,16 @@
 
 		$pp.css("top", posY + "px");
 		$pp.css("left", posX + "px");				
-		$pp.css('opacity', 1);
+		$pp.show().css('opacity', 1);
 
 		$pp.find('a').click(function() {
-			$pp.css('opacity', 0);
+			$.fn.ccmmenu.hide();
 		});
+
+		$(document.body).on('click.disableccmmenu', function() {
+			$.fn.ccmmenu.hide();
+		});
+
 	}
 
 

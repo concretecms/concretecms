@@ -19,8 +19,9 @@ ccm_onInlineEditCancel = function(onComplete) {
 			if (onComplete) {
 				onComplete();
 			}
-			ccm_exitInlineEditMode();
 			$('#b<?=$b->getBlockID()?>-<?=$a->getAreaID()?>').before(r).remove();
+			ccm_exitInlineEditMode($('#b<?=$b->getBlockID()?>-<?=$a->getAreaID()?>'));
+
 		}
 	);
 }
