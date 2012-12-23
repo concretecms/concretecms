@@ -19,10 +19,22 @@ class Concrete5_Controller_Block_CoreAreaLayout extends BlockController {
 			if (!$post['spacing']) {
 				$post['spacing'] = 0;
 			}
-			if (!$post['iscustom']) {
+			if (!$post['isautomated']) {
+				$post['iscustom'] = 1;
+			} else {
 				$post['iscustom'] = 0;
 			}
+
 			parent::save($post);
+
+			if ($post['iscustom']) {
+				$db = Loader::db();
+				$db->Execute('delete from btCoreAreaLayoutCustomColumns where bID = ?', array($this->bID));
+				for ($i = 0; $i < $post['columns']; $i++) {
+					$width = (isset($post['width'][$i])) ? $post['width'][$i] : 0;
+					$db->Execute('insert into btCoreAreaLayoutCustomColumns (bID, columnIndex, width) values (?, ?, ?)', array($this->bID, $i, $width));
+				}
+			}
 		}
 		
 		public function on_page_view() {
