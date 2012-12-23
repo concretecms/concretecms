@@ -19,4 +19,25 @@
 			<notnull />
 		</field>
 	</table>
+	<table name="btCoreAreaLayoutCustomColumns">
+    <field name="bID" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="layoutColumnID" type="I" size="10">
+      <KEY/>
+      <AUTOINCREMENT/>
+      <UNSIGNED/>
+    </field>
+    <field name="columnIndex" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="width" type="C" size="64">
+      <NOTNULL/>
+    </field>
+  </table>
+
 </schema>

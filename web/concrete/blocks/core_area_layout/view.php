@@ -17,12 +17,12 @@
 
 <div class="ccm-layout-column-wrapper" id="ccm-layout-column-wrapper-<?=$bID?>">
 
-<? for ($i = 1; $i <= $columns; $i++) { ?>
+<? for ($i = 0; $i < $columns; $i++) { ?>
 
 	<div class="ccm-layout-column" id="ccm-layout-column-<?=$i?>">
 		<div class="ccm-layout-column-inner">
 			<? 
-			$as = new SubArea("Column $i", $a);
+			$as = new SubArea("Column " . ($i + 1), $a);
 			$as->display($c);
 			?>
 		</div>

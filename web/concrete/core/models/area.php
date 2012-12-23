@@ -326,6 +326,9 @@ class Concrete5_Model_Area extends Object {
 		if (!$arIsGlobal) {
 			$arIsGlobal = 0;
 		}
+		if (!$arParentID) {
+			$arParentID = 0;
+		}
 		$db->Replace('Areas', array('cID' => $cID, 'arHandle' => $arHandle, 'arIsGlobal' => $arIsGlobal, 'arParentID' => $arParentID), array('arHandle', 'cID'), true);
 		
 		if ($arIsGlobal) {

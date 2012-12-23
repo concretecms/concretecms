@@ -7,21 +7,41 @@ ccm_layoutRefresh = function() {
 	}
 	var $form = $('#ccm-layouts-edit-mode');
 	var spacing = $('#ccm-layouts-toolbar input[name=spacing]').val();
-	$form.html('');
 	for (i = 0; i < columns; i++) {
+		if ($('#ccm-edit-layout-column-' + i).length > 0) {
+			continue;
+		}
+
 		var $column = $('<div />').attr('class', 'ccm-layout-column');
-		var width = (100 / columns) + '%';
-		$column.css('width', width);		
+		$column.attr('id', 'ccm-edit-layout-column-' + i);
 		var $highlight = $('<div />').attr('class', 'ccm-layout-column-highlight');
+		$highlight.append($('<input />', {'name': 'width[' + i + ']', 'type': 'hidden', 'id': 'ccm-edit-layout-column-width-'+ i}));
+		$column.append($highlight);
+		$form.append($column);
+	}
+
+	// now we remove unused columns
+	var $realcolumns = $('#ccm-layouts-edit-mode .ccm-layout-column');
+	if (columns < $realcolumns.length) {
+		for (i = columns; i < $realcolumns.length; i++ ){
+			$('#ccm-edit-layout-column-' + i).remove();
+		}
+	}
+	
+	// now we handle spacing
+	for (i = 0; i < columns; i++) {
+		$highlight = $('#ccm-edit-layout-column-' + i + ' .ccm-layout-column-highlight');
 		if (i > 0) {
 			$highlight.css('margin-left', (spacing / 2) + 'px');
 		}
 		if ((i + 1) < columns) {
 			$highlight.css('margin-right', (spacing / 2) + 'px');
 		}
-		$column.append($highlight);
-		$form.append($column);
+		$column = $('#ccm-edit-layout-column-' + i);
+		var width = (100 / columns) + '%';
+		$column.css('width', width);		
 	}
+
 
 	if (columns > 1 && (!$('#ccm-layouts-toolbar input[name=isautomated]').is(':checked'))) {
 		var breaks = [];
@@ -61,7 +81,7 @@ ccm_layoutRefresh = function() {
 						} else {
 							var value = ui.values[i] - lastvalue;
 						}
-
+						$(col).find('#ccm-edit-layout-column-width-' + i).val(value);
 						$(col).css('width', value + 'px');
 						lastvalue = ui.values[i];
 					});
@@ -104,4 +124,4 @@ $(function() {
 		ccm_onInlineEditCancel();
 	});
 
-});x
+});
