@@ -29,6 +29,7 @@ ccm_layoutRefresh = function() {
 	}
 	
 	// now we handle spacing
+	var columnwidths = [];
 	for (i = 0; i < columns; i++) {
 		$highlight = $('#ccm-edit-layout-column-' + i + ' .ccm-layout-column-highlight');
 		if (i > 0) {
@@ -38,21 +39,35 @@ ccm_layoutRefresh = function() {
 			$highlight.css('margin-right', (spacing / 2) + 'px');
 		}
 		$column = $('#ccm-edit-layout-column-' + i);
-		var width = (100 / columns) + '%';
+		if ($column.attr('data-width')) {
+			var width = $column.attr('data-width') + 'px';
+			columnwidths.push(parseInt($column.attr('data-width')));
+		} else {
+			var width = (100 / columns) + '%';
+		}
 		$column.css('width', width);		
 	}
 
 
 	if (columns > 1 && (!$('#ccm-layouts-toolbar input[name=isautomated]').is(':checked'))) {
 		var breaks = [];
-		var tw = $('#ccm-area-layout-active-control-bar').width();
-		var cw = tw / columns;
 		var sw = 0;
-
-		for (i = 1; i < columns; i++) {
-			sw += cw;
-			breaks.push(sw);
+		var tw = $('#ccm-area-layout-active-control-bar').width();
+		if (columnwidths.length > 0) {
+			// we have custom column widths
+			for (i = 0; i < (columnwidths.length - 1); i++) {
+				sw += columnwidths[i];
+				breaks.push(sw);
+			}
+		} else {
+			var cw = tw / columns;
+			for (i = 1; i < columns; i++) {
+				sw += cw;
+				breaks.push(sw);
+			}
 		}
+
+		console.log(breaks);
 
 		var $columns = $("#ccm-area-layout-active-control-bar").parent().find('#ccm-layouts-edit-mode .ccm-layout-column');
 		$("#ccm-area-layout-active-control-bar").slider({

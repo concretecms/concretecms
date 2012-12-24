@@ -10,7 +10,7 @@
 		<label for="columns"><?=t("Columns")?></label>
 		<select name="columns" id="columns">
 			<? for ($i = $minColumns; $i <= $maxColumns; $i++) { ?>
-				<option value="<?=$i?>" <? if ($columns == $i) { ?> selected <? } ?>><?=$i?></option>
+				<option value="<?=$i?>" <? if (is_array($columns) && (count($columns) == $i)) { ?> selected <? } ?>><?=$i?></option>
 			<? } ?>
 		</select>
 	</li>

@@ -11,6 +11,8 @@ class ConcreteUpgradeVersion570Helper {
 		'Groups',
 		'QueuePageDuplicationRelations',
 		'Areas',
+		'AreaLayouts',
+		'AreaLayoutColumns',
 		/*'Queues',*/
 		'BlockTypes',
 		/*'QueueMessages',*/
@@ -23,6 +25,13 @@ class ConcreteUpgradeVersion570Helper {
 	public function run() {
 		$bt = BlockType::getByHandle('content');
 		if (is_object($bt)) {
+			$bt->refresh();
+		}
+
+		$bt = BlockType::getByHandle('core_area_layout');
+		if (!is_object($bt)) {
+			$bt->install();
+		} else {
 			$bt->refresh();
 		}
 
