@@ -299,6 +299,43 @@
       <unsigned/>
     </field>
   </table>
+<table name="AreaLayouts">
+	<field name="arLayoutID" type="I">
+		<key />
+		<unsigned />
+	    <autoincrement/>
+	</field>
+	<field name="arLayoutSpacing" type="I">
+		<unsigned />
+		<notnull />
+		<default value="0" />
+	</field>
+	<field name="arLayoutIsCustom" type="I1">
+		<unsigned />
+		<notnull />
+		<default value="0" />
+	</field>
+</table>
+<table name="AreaLayoutColumns">
+	<field name="arLayoutColumnID" type="I">
+		<key />
+		<unsigned />
+		<autoincrement/>
+	</field>
+	<field name="arLayoutID" type="I">
+		<unsigned />
+		<notnull />
+		<default value="0" />
+	</field>
+	<field name="arLayoutColumnIndex" type="I">
+		<unsigned />
+		<notnull />
+		<default value="0" />
+	</field>
+	<field name="arLayoutColumnWidth" type="C" size="64">
+	  <NOTNULL/>
+	</field>
+</table>
   <table name="AttributeSets">
     <field name="asID" type="I" size="10">
       <key/>

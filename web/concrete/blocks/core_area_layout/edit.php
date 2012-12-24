@@ -6,14 +6,13 @@
 
 <div id="ccm-layouts-edit-mode">
 
-<? for ($i = 0; $i < $columns; $i++) { ?>
-
-	<div class="ccm-layout-column" id="ccm-edit-layout-column-<?=$i?>">
+<? foreach($columns as $col) { ?>
+	<? $i = $col->getAreaLayoutColumnIndex(); ?>
+	<div class="ccm-layout-column" id="ccm-edit-layout-column-<?=$i?>" <? if ($iscustom) { ?>data-width="<?=$col->getAreaLayoutColumnWidth()?>" <? } ?>>
 		<div class="ccm-layout-column-inner ccm-layout-column-highlight">
 			<input type="hidden" name="width[<?=$i?>]" value="" id="ccm-edit-layout-column-width-<?=$i?>" />
 			<? 
-			$arHandle = 'Column ' . ($i + 1);
-			$as = new SubArea($arHandle, $a);
+			$as = new SubArea($col->getAreaLayoutColumnIndex(), $a);
 			$as->disableControls();
 			$as->display($c);
 			?>

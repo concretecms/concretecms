@@ -5,39 +5,12 @@
 			<key />
 			<unsigned />
 			<notnull />
-		</field>
-		<field name="columns" type="I">
-			<unsigned />
-			<notnull />
-		</field>
-		<field name="spacing" type="I">
-			<unsigned />
-			<notnull />
-		</field>
-		<field name="iscustom" type="I1">
 			<default value="0" />
+		</field>
+		<field name="arLayoutID" type="I">
+			<unsigned />
 			<notnull />
+			<default value="0" />
 		</field>
 	</table>
-	<table name="btCoreAreaLayoutCustomColumns">
-    <field name="bID" type="I" size="10">
-      <NOTNULL/>
-      <DEFAULT value="0"/>
-      <UNSIGNED/>
-    </field>
-    <field name="layoutColumnID" type="I" size="10">
-      <KEY/>
-      <AUTOINCREMENT/>
-      <UNSIGNED/>
-    </field>
-    <field name="columnIndex" type="I" size="10">
-      <NOTNULL/>
-      <DEFAULT value="0"/>
-      <UNSIGNED/>
-    </field>
-    <field name="width" type="C" size="64">
-      <NOTNULL/>
-    </field>
-  </table>
-
 </schema>
