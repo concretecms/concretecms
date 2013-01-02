@@ -63,6 +63,9 @@
 	## Load session handlers
 	require($cdir . '/startup/session.php');
 
+	## Required Loading
+	require($cdir . '/startup/check_page_cache.php');
+
 	## Startup check ##
 	require($cdir . '/startup/encoding_check.php');
 

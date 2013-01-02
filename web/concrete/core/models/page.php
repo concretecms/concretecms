@@ -1941,22 +1941,6 @@ class Concrete5_Model_Page extends Collection {
 		return $pc;
 	}
 	
-	public function addToPageCache($content) {
-		Cache::set('page_content', $this->getCollectionID(), $content, $this->getCollectionFullPageCachingLifetimeValue());
-	}
-	
-	public function getFromPageCache() {
-		return Cache::get('page_content', $this->getCollectionID());
-	}
-	
-	public function renderFromCache() {
-		$content = Cache::get('page_content', $this->getCollectionID());
-		if ($content != false) {
-			print $content;
-			exit;
-		}
-	}
-
 	public function getCollectionFullPageCaching() {
 		return $this->cCacheFullPageContent;
 	}
@@ -1985,65 +1969,14 @@ class Concrete5_Model_Page extends Collection {
 				$lifetime = CACHE_LIFETIME;
 			}
 		}
+
+		if (!$lifetime) {
+			// we have no value, which means forever, but we need a numerical value for page caching
+			$lifetime = 31536000;
+		}
 		
 		return $lifetime;
 	}
-	
-	public function supportsPageCache($blocks, $controller = false) {
-		$u = new User();
-		
-		$allowedControllerActions = array('view');
-		if (is_object($controller)) {
-			if (!in_array($controller->getTask(), $allowedControllerActions)) {
-				return false;
-			}
-		}
-
-		if ($this->cCacheFullPageContent == 0) {
-			return false;
-		}
-		
-		
-		if ($u->isRegistered() || $_SERVER['REQUEST_METHOD'] == 'POST') {
-			return false;
-		}
-		
-		// test get variables
-		$allowedGetVars = array('cid');
-		if (is_array($_GET)) {
-			foreach($_GET as $key => $value) {
-				if (!in_array(strtolower($key), $allowedGetVars)) {
-					return false;
-				}
-			}
-		}		
-		
-		if ($this->cCacheFullPageContent == 1 || FULL_PAGE_CACHE_GLOBAL === 'all') {
-			// this cache page at the page level
-			// this overrides any global settings
-			return true;
-		}
-		
-		if (FULL_PAGE_CACHE_GLOBAL !== 'blocks') {
-			// we are NOT specifically caching this page, and we don't 
-			return false;
-		}
-		
-		if ($this->isGeneratedCollection()) {
-			return false;
-		}	
-
-		if (is_array($blocks)) {
-			foreach($blocks as $b) {
-				$controller = $b->getInstance();
-				if (!$controller->cacheBlockOutput()) {
-					return false;
-				}
-			}
-		}
-		return true;
-	}
-		
 	
 	public function addStatic($data) {
 		$db = Loader::db();

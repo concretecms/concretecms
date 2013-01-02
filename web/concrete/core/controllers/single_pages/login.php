@@ -6,7 +6,8 @@ class Concrete5_Controller_Login extends Controller {
 	public $helpers = array('form');
 	private $openIDReturnTo;
 	protected $locales = array();
-
+	protected $supportsPageCache = true;
+	
 	public function on_start() {
 		$this->error = Loader::helper('validation/error');
 		if (USER_REGISTRATION_WITH_EMAIL_ADDRESS) {

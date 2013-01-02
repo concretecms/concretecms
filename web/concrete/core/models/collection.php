@@ -203,6 +203,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				
 				$index->reindexPage($this);
 				$db->Replace('PageSearchIndex', array('cID' => $this->getCollectionID(), 'cRequiresReindex' => 0), array('cID'), false);
+
+				$cache = PageCache::getLibrary();
+				$cache->delete($this);
+
 			} else { 			
 				$db = Loader::db();
 				Config::save('DO_PAGE_REINDEX_CHECK', true);
