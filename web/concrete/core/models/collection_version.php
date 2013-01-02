@@ -32,8 +32,6 @@
 		}
 		
 		public function refreshCache() {
-			$co = Page::getByID($this->cID, $this->cvID);
-			$co->refreshCache();
 			Events::fire('on_page_version_refresh_cache', $this);
 		}
 		

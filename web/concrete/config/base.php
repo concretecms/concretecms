@@ -337,6 +337,14 @@ if (!defined('DIR_FILES_CACHE')) {
 	define('DIR_FILES_CACHE', DIR_BASE . '/files/cache');
 }
 
+if (!defined('DIR_FILES_PAGE_CACHE')) {
+	define('DIR_FILES_PAGE_CACHE', DIR_BASE . '/files/cache/pages');
+}
+
+if (!defined('PAGE_CACHE_LIBRARY')) {
+	define('PAGE_CACHE_LIBRARY', 'file');
+}
+
 if (!defined('CACHE_ID')) {
 	define('CACHE_ID', md5(str_replace(array('https://', 'http://'), '', BASE_URL) . DIR_REL));
 }
