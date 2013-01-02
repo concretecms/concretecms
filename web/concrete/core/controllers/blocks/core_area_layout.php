@@ -41,6 +41,9 @@ class Concrete5_Controller_Block_CoreAreaLayout extends BlockController {
 		}
 
 		public function view() {
+			$b = $this->getBlockObject();
+			$a = $b->getBlockAreaObject();
+			$this->arLayout->setAreaObject($a);
 			$this->set('columns', $this->arLayout->getAreaLayoutColumns());
 		}
 

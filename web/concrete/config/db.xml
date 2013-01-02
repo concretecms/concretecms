@@ -332,6 +332,11 @@
 		<notnull />
 		<default value="0" />
 	</field>
+	<field name="arID" type="I">
+		<unsigned />
+		<notnull />
+		<default value="0" />
+	</field>
 	<field name="arLayoutColumnWidth" type="C" size="64">
 	  <NOTNULL/>
 	</field>

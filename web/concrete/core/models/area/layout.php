@@ -14,6 +14,14 @@ class Concrete5_Model_AreaLayout extends Object {
 		}
 	}	
 
+	public function setAreaObject(Area $a) {
+		$this->area = $a;
+	}
+
+	public function getAreaObject() {
+		return $this->area;
+	}
+
 	public function getAreaLayoutID() {
 		return $this->arLayoutID;
 	}
@@ -33,6 +41,7 @@ class Concrete5_Model_AreaLayout extends Object {
 		while ($row = $r->FetchRow()) {
 			$column = AreaLayoutColumn::getByID($row['arLayoutColumnID']);
 			if (is_object($column)) {
+				$column->setAreaLayoutObject($this);
 				$columns[] = $column;
 			}
 		}
