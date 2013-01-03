@@ -4,6 +4,8 @@
 
 ?>
 
+<div id="ccm-area-layout-active-control-bar" class="ccm-area-layout-control-bar"></div>
+
 <div id="ccm-layouts-edit-mode">
 
 <? foreach($columns as $col) { ?>

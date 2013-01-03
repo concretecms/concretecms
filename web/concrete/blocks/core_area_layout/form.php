@@ -31,5 +31,3 @@
 		<button id="ccm-layouts-save-button" type="button" class="btn btn-primary btn-mini">Save</button></li>
 	</li>
 </ul>
-
-<div id="ccm-area-layout-active-control-bar" class="ccm-area-layout-control-bar"></div>
