@@ -5,7 +5,6 @@ $classes = array(
 	'Request' => array('library','request'),
 	'Localization' => array('library','localization'),
 	'PageCache' => array('library', 'page_cache/library'),
-	'PageCacheResponse' => array('library', 'page_cache/response'),
 	'PageCacheRecord' => array('library', 'page_cache/record'),
 	'FilePageCache' => array('library', 'page_cache/types/file'),
 	'View' => array('library','view'),

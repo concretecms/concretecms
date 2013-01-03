@@ -33,6 +33,9 @@ abstract class Concrete5_Library_PageCache {
 
 	public function shouldAddToCache(View $v) {
 		$c = $v->getCollectionObject();
+		if (!is_object($c)) {
+			return false;
+		}
 		$u = new User();
 
 		$allowedControllerActions = array('view');

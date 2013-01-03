@@ -26,24 +26,8 @@
 	## Required Loading
 	require($cdir . '/startup/required.php');
 
-	## Setup timezone support
-	require($cdir . '/startup/timezone.php'); // must be included before any date related functions are called (php 5.3 +)
-
-	## First we ensure that dispatcher is not being called directly
-	require($cdir . '/startup/file_access_check.php');
-
-	require($cdir . '/startup/localization.php');
-
 	## Autoload core classes
 	spl_autoload_register(array('Loader', 'autoloadCore'), true);
-
-	## Load the database ##
-	Loader::database();
-
-	## User level config ##
-	if (!$config_check_failed) {
-		require($cdir . '/config/app.php');
-	}
 
 	## Autoload settings
 	require($cdir . '/startup/autoload.php');
@@ -63,8 +47,26 @@
 	## Load session handlers
 	require($cdir . '/startup/session.php');
 
-	## Required Loading
-	require($cdir . '/startup/check_page_cache.php');
+	## Early loading full page cache
+	if (!$config_check_failed) {
+		require($cdir . '/startup/check_page_cache.php');
+	}
+	
+	## Setup timezone support
+	require($cdir . '/startup/timezone.php'); // must be included before any date related functions are called (php 5.3 +)
+
+	## First we ensure that dispatcher is not being called directly
+	require($cdir . '/startup/file_access_check.php');
+
+	require($cdir . '/startup/localization.php');
+
+	## Load the database ##
+	Loader::database();
+
+	## User level config ##
+	if (!$config_check_failed) {
+		require($cdir . '/config/app.php');
+	}
 
 	## Startup check ##
 	require($cdir . '/startup/encoding_check.php');
