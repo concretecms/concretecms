@@ -337,6 +337,10 @@ if (!defined('DIR_FILES_CACHE')) {
 	define('DIR_FILES_CACHE', DIR_BASE . '/files/cache');
 }
 
+if (!defined('FILENAME_ENVIRONMENT_CACHE')) {
+	define('FILENAME_ENVIRONMENT_CACHE', 'environment.cache');
+}
+
 if (!defined('DIR_FILES_PAGE_CACHE')) {
 	define('DIR_FILES_PAGE_CACHE', DIR_BASE . '/files/cache/pages');
 }
