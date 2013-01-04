@@ -1,6 +1,9 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-global $c;
+if ($_REQUEST['reload_and_remove_cache']) { 
+	$cache = PageCache::getLibrary();
+	$cache->delete($c);
+}
 
 ?>
 
@@ -31,6 +34,15 @@ global $c;
 		}
 		
 		$(function() {
+			$('#ccm-button-remove-page-from-cache').on('click', function() {
+				jQuery.fn.dialog.showLoader();
+				$.get('<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_collection_popup?cID=<?=$c->getCollectionID()?>&ctask=edit_speed_settings&reload_and_remove_cache=1', function(r) { 
+					jQuery.fn.dialog.replaceTop(r);
+					jQuery.fn.dialog.hideLoader();
+				});
+			});
+
+
 			$("input[name=cCacheFullPageContent]").click(function() {
 				ccm_settingsSetupCacheForm(true);
 			});
@@ -101,7 +113,21 @@ global $c;
 		?>
 
 		<div class="clearfix">
-		<label><?=t('Full Page Caching')?></label>
+
+		<?
+		$ncv = Page::getByID($c->getCollectionID(), 'ACTIVE');
+		$cache = PageCache::getLibrary();
+		$rec = $cache->getRecord($ncv);
+		if (is_object($rec)) { ?>
+			<div class="alert alert-success">
+				<?=t('This page currently exists in the full page cache. It expires %s.', Loader::helper('date')->date('m/d/Y g:i a', $rec->getCacheRecordExpiration()))?>
+				&nbsp;&nbsp;<button type="button" class="btn btn-mini" id="ccm-button-remove-page-from-cache"><?=t('Remove')?></button>
+			</div>
+		<? } else { ?>
+			<div class="alert alert-info"><?=t('This page is not currently in the full page cache.')?></div>
+		<? } ?>
+
+		<label><?=t('Enable Cache')?></label>
 
 		<div class="input">
 		<ul class="inputs-list">
@@ -148,7 +174,9 @@ global $c;
 </form>
 </div>
 
+<? if (!$_REQUEST['reload_and_remove_cache']) { ?>
 	<div class="dialog-buttons">
 	<a href="javascript:void(0)" onclick="jQuery.fn.dialog.closeTop();" class="ccm-button-left btn"><?=t('Cancel')?></a>
 	<a href="javascript:void(0)" class="btn primary ccm-button-right" onclick="$('#ccmSpeedSettingsForm').submit()"><?=t('Save')?></a>
 	</div>
+<? } ?>

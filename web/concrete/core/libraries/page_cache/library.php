@@ -116,7 +116,7 @@ abstract class Concrete5_Library_PageCache {
 	}
 	*/
 
-	abstract public function getRecord(Request $req);
+	abstract public function getRecord($mixed);
 	abstract public function set(Page $c, $content);
 	abstract public function deleteByCacheRecord(PageCacheRecord $rec);
 	abstract public function delete(Page $c);
