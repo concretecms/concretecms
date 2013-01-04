@@ -4,8 +4,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 class Concrete5_Library_FilePageCache extends PageCache {
 
-	public function getRecord(Request $req) {
-		$file = $this->getCacheFile($req);
+	public function getRecord($mixed) {
+		$file = $this->getCacheFile($mixed);
 		if (file_exists($file)) {
 			$contents = file_get_contents($file);
 			$record = @unserialize($contents);
