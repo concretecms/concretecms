@@ -86,11 +86,13 @@ global $c;
 		}
 		switch(FULL_PAGE_CACHE_LIFETIME) {
 			case 'default':
-				$globalSettingLifetime = t('%s minutes', CACHE_LIFETIME / 60);
+				$time = time() - CACHE_LIFETIME;
+				$globalSettingLifetime = Loader::helper('date')->timeSince($time);
 				break;
 			case 'custom':
 				$custom = Config::get('FULL_PAGE_CACHE_LIFETIME_CUSTOM');
-				$globalSettingLifetime = t('%s minutes', $custom);
+				$time = time() - $custom;
+				$globalSettingLifetime = Loader::helper('date')->timeSince($time);
 				break;
 			case 'forever':
 				$globalSettingLifetime = t('Until manually cleared');
@@ -126,9 +128,6 @@ global $c;
 			<? $val = ($c->getCollectionFullPageCachingLifetimeCustomValue() > 0 && $c->getCollectionFullPageCachingLifetime()) ? $c->getCollectionFullPageCachingLifetimeCustomValue() : ''; ?>
 			<li><label><span><input type="radio" name="cCacheFullPageContentOverrideLifetime" value="0" <? if ($c->getCollectionFullPageCachingLifetime() == '0') { ?> checked="checked" <? } ?> /> 
 			<?=t('Use global setting - %s', $globalSettingLifetime)?>
-			</span></label></li>
-			<li><label><span><?=$form->radio('cCacheFullPageContentOverrideLifetime', 'default', $c->getCollectionFullPageCachingLifetime())?> 
-			<?=t('Default - %s minutes', CACHE_LIFETIME / 60)?>
 			</span></label></li>
 			<li><label><span><?=$form->radio('cCacheFullPageContentOverrideLifetime', 'forever', $c->getCollectionFullPageCachingLifetime())?>
 			<?=t('Until manually cleared')?>
