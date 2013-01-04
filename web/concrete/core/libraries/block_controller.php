@@ -41,7 +41,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		protected $btHasRendered = false;
 		protected $btCacheBlockRecord = false;
 		protected $btCacheBlockOutput = false;
-		protected $btCacheBlockOutputLifetime = CACHE_LIFETIME;
+		protected $btCacheBlockOutputLifetime = 0; //until manually updated or cleared
 		protected $btCacheBlockOutputOnPost = false;
 		protected $btCacheBlockOutputForRegisteredUsers = false;
 		

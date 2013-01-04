@@ -363,7 +363,7 @@ if (defined('DIR_FILES_CACHE')) {
 }
 
 if (!defined('CACHE_LIFETIME')) {
-	define('CACHE_LIFETIME', null);
+	define('CACHE_LIFETIME', 21600); // 6 hours
 }
 
 define('ON_WINDOWS', intval(substr(PHP_OS,0,3)=='WIN') );
