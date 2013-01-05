@@ -291,8 +291,12 @@ abstract class Concrete5_Model_PermissionKey extends Object {
 	public function getPermissionAssignmentObject() {
 		if (is_object($this->permissionObject)) {
 			$class = Loader::helper('text')->camelcase(get_class($this->permissionObject) . 'PermissionAssignment');
-			if (!class_exists($class) && $this->permissionObject instanceof Page) {
-				$class = 'PagePermissionAssignment';
+			if (!class_exists($class)) {
+				if ($this->permissionObject instanceof Page) {
+					$class = 'PagePermissionAssignment';
+				} else if ($this->permissionObject instanceof Area) {
+					$class = 'AreaPermissionAssignment';
+				}
 			}
 			$targ = new $class();
 			$targ->setPermissionObject($this->permissionObject);
