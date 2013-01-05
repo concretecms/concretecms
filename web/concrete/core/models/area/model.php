@@ -2,26 +2,8 @@
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
-/**
- * @package Pages
- * @category Concrete
- * @author Andrew Embler <andrew@concrete5.org>
- * @copyright  Copyright (c) 2003-2008 Concrete5. (http://www.concrete5.org)
- * @license    http://www.concrete5.org/license/     MIT License
- *
- */
-
-/**
- * An area object is used within templates to mark certain portions of pages as editable and containers of dynamic content
- *
- * @package Pages
- * @author Andrew Embler <andrew@concrete5.org>
- * @category Concrete
- * @copyright  Copyright (c) 2003-2008 Concrete5. (http://www.concrete5.org)
- * @license    http://www.concrete5.org/license/     MIT License
- *
- */
 class Concrete5_Model_Area extends Object {
+
 
 	public $cID, $arID, $arHandle;
 	public $c;
@@ -40,30 +22,12 @@ class Concrete5_Model_Area extends Object {
 	 * @var array
 	*/
 	public $customTemplateArray = array();
-	
-	/**
-	 * block type handle for the block to automatically activate on first_run
-	 * @var string
-	*/
-	public $firstRunBlockTypeHandle;
-	
-	/**
-	 * if set higher, any blocks that aren't rated high enough aren't seen (unless you have sufficient privs)
-	 * @var int
-	*/
-	public $ratingThreshold = 0; // 
-	
+		
 	/**
 	 * @var boolean 
 	*/
 	public $showControls = true;
 	
-	
-	/**
-	 * @var array
-	*/
-	public $attributes = array();
-
 	/**
 	 * @var string
 	*/ 
@@ -86,22 +50,15 @@ class Concrete5_Model_Area extends Object {
 	*/ 
 	public $enclosingEndHasReplacements = false;
 	
-	/* run-time variables */
-
-	/**
-	 * the number of blocks currently rendered in the area
-	 * @see Area::getTotalBlocksInArea()
-	 * @var int
-	*/
-	public $totalBlocks = 0;
-	
 	/**
 	 * Array of Blocks within the current area
-	 * not an array actually until it's set
 	 * @see Area::getAreaBlocksArray()
 	 * @var Block[]
 	 */
-	public $areaBlocksArray;
+	public $areaBlocksArray = array();
+	
+	protected $arIsLoaded = false;
+
 
 	/**
 	 * The constructor is used primarily on page templates to create areas of content that are editable within the cms.
@@ -129,7 +86,11 @@ class Concrete5_Model_Area extends Object {
 	 * returns the Collection's cID
 	 * @return int
 	*/
-	public function getCollectionID() {return $this->cID;}
+	public function getCollectionID() {
+		if (is_object($this->c)) {
+			return $this->c->getCollectionID();
+		}
+	}
 	
 	/**
 	 * returns the Collection object for the current Area
@@ -141,7 +102,7 @@ class Concrete5_Model_Area extends Object {
 	 * whether or not it's a global area
 	 * @return bool
 	*/
-	public function isGlobalArea() {return $this->arIsGlobal;}
+	public function isGlobalArea() {return false;}
 	
 	/**
 	 * returns the arID of the current area
@@ -173,10 +134,14 @@ class Concrete5_Model_Area extends Object {
 	 * @param Page $c must be passed if the display() method has not been run on the area object yet.
 	 */
 	public function getTotalBlocksInArea($c = false) {
-		if (!is_array($this->areaBlocksArray) && is_object($c)) {
-			$this->getAreaBlocksArray($c);
+		if (!$c) {
+			$c = $this->c;
 		}
-		return $this->totalBlocks; 
+		if (!$this->arIsLoaded) {
+			$this->load($c, $this->arHandle);
+		}
+
+		return count($this->areaBlocksArray);
 		
 	}
 	
@@ -201,39 +166,19 @@ class Concrete5_Model_Area extends Object {
 	}
 	
 	/**
-	 * 
-	 * @param $attr
-	 * @param $val
-	 * @return void
-	 */
-	public function setAttribute($attr, $val) {
-		$this->attributes[$attr] = $val;
-	}
-	
-	/**
-	 * 
-	 * @param $attr
-	 * @return 
-	 */
-	public function getAttribute($attr) {
-		return $this->attributes[$attr];
-	}
-	
-	/**
 	 * disables controls for the current area
 	 * @return void
 	 */
 	public function disableControls() {
 		$this->showControls = false;
 	}
-
 	
 	/**
 	 * determines if the current Area can accept additonal Blocks
 	 * @return boolean
 	 */
 	public function areaAcceptsBlocks() {
-		return (($this->maximumBlocks > $this->totalBlocks) || ($this->maximumBlocks == -1));
+		return (($this->maximumBlocks > count($this->areaBlocksArray)) || ($this->maximumBlocks == -1));
 	}
 
 	/**
@@ -266,119 +211,53 @@ class Concrete5_Model_Area extends Object {
 	 * @param string $arHandle
 	 * @return Area
 	 */
-	public static function get(&$c, $arHandle) {
+
+	final public static function get(&$c, $arHandle) {
 		if (!is_object($c)) {
 			return false;
-		}
-		
-		$ca = new Cache();
-		$a = Cache::get('area', $c->getCollectionID() . ':' . $arHandle);
-		if ($a instanceof Area) {
-			return $a;
 		}
 		
 		$db = Loader::db();
 		// First, we verify that this is a legitimate area
 		$v = array($c->getCollectionID(), $arHandle);
-		$q = "select arID, arOverrideCollectionPermissions, arInheritPermissionsFromAreaOnCID, arIsGlobal from Areas where cID = ? and arHandle = ?";
+		$q = "select arID, arHandle, cID, arOverrideCollectionPermissions, arInheritPermissionsFromAreaOnCID, arIsGlobal, arParentID from Areas where cID = ? and arHandle = ?";
 		$arRow = $db->getRow($q, $v);
 		if ($arRow['arID'] > 0) {
-			$area = new Area($arHandle);
-
-			$area->arID = $arRow['arID'];
-			$area->arOverrideCollectionPermissions = $arRow['arOverrideCollectionPermissions'];
-			$area->arIsGlobal = $arRow['arIsGlobal'];
-			$area->arInheritPermissionsFromAreaOnCID = $arRow['arInheritPermissionsFromAreaOnCID'];
-			$area->cID = $c->getCollectionID();
-			$area->c = &$c;
-			
-			Cache::set('area', $c->getCollectionID() . ':' . $arHandle, $area);
-			
-			return $area;
+			if ($arRow['arIsGlobal']) {
+				$obj = new GlobalArea($arHandle);
+			} else if ($arRow['arParentID']) {
+				$arParentHandle = $db->GetOne('select arHandle from Areas where arID = ?', array($arRow['arParentID']));
+				$parent = Area::get($c, $arParentHandle);
+				$obj = new SubArea($arHandle, $parent);
+			} else {
+				$obj = new Area($arHandle);
+			}
+			$obj->setPropertiesFromArray($arRow);
+			$obj->c = $c;
+			return $obj;
 		}
 	}
 
-	/**
-	 * Gets or creates if necessary an Area for the given Page, Handle 
-	 * @param Page|Collection $c
-	 * @param string $arHandle
-	 * @param boolean $arIsGlobal
-	 * @return Area
+	/** 
+	 * Creates an area in the database. I would like to make this static but PHP pre 5.3 sucks at this stuff.
 	 */
-	public static function getOrCreate(&$c, $arHandle, $arIsGlobal = 0, $arParentID = 0) {
-
-		/*
-			different than get(), getOrCreate() is called by the templates. If no area record exists for the
-			permissions cID / handle combination, we create one. This is to make our lives easier
-		*/
-
-		$area = self::get($c, $arHandle);
-		if (is_object($area)) {
-			if ($area->isGlobalArea() == $arIsGlobal) {
-				return $area;
-			} else if (!$area->isGlobalArea() && !$arIsGlobal) {
-				return $area;
-			}
-		}
-		
-		$cID = $c->getCollectionID();
+	public function create($c, $arHandle) {
 		$db = Loader::db();
-		if (!$arIsGlobal) {
-			$arIsGlobal = 0;
-		}
-		if (!$arParentID) {
-			$arParentID = 0;
-		}
-		$db->Replace('Areas', array('cID' => $cID, 'arHandle' => $arHandle, 'arIsGlobal' => $arIsGlobal, 'arParentID' => $arParentID), array('arHandle', 'cID'), true);
-		
-		if ($arIsGlobal) {
-			// we create a stack for it			
-			Stack::getOrCreateGlobalArea($arHandle);
-		}
-
-		$area = self::get($c, $arHandle); // we're assuming the insert succeeded
+		$db->Replace('Areas', array('cID' => $c->getCollectionID(), 'arHandle' => $arHandle), array('arHandle', 'cID'), true);
+		$area = self::get($c, $arHandle);
 		$area->rescanAreaPermissionsChain();
 		return $area;
-
 	}
 
+	
 	/**
 	 * Get all of the blocks within the current area for a given page
 	 * @param Page|Collection $c
 	 * @return Block[]
 	 */
-	public function getAreaBlocksArray($c) {
-		if (is_array($this->areaBlocksArray)) {
-			return $this->areaBlocksArray;
-		}
-
-		$this->cID = $c->getCollectionID();
-		$this->c = $c;
-		$this->areaBlocksArray = array();
-		
-		if ($this->arIsGlobal) {
-			$blocks = array();
-			$cp = new Permissions($c);
-			if ($cp->canViewPageVersions()) {
-				$c = Stack::getByName($this->arHandle);
-			} else {
-				$c = Stack::getByName($this->arHandle, 'ACTIVE');
-			}
-			if (is_object($c)) {
-				$blocks = $c->getBlocks(STACKS_AREA_NAME);
-				$globalArea = self::get($c, STACKS_AREA_NAME);
-			}
-		} else {
-			$blocks = $c->getBlocks($this->arHandle);
-		}
-		foreach($blocks as $ab) {
-			if ($this->arIsGlobal && is_object($globalArea)) {
-				$ab->setBlockAreaObject($globalArea);
-			} else {
-				$ab->setBlockAreaObject($this);
-			}
-			$this->areaBlocksArray[] = $ab;
-			$this->totalBlocks++;
+	public function getAreaBlocksArray($c = false) {
+		if (!$this->arIsLoaded) {
+			$this->load($c);
 		}
 		return $this->areaBlocksArray;
 	}
@@ -427,9 +306,6 @@ class Concrete5_Model_Area extends Object {
 			// now we scan sub areas
 			$this->rescanSubAreaPermissions();
 		}
-		
-		$ca = new Cache();
-		$a = Cache::delete('area', $this->getCollectionID() . ':' . $this->getAreaHandle());
 	}
 	
 	public function __destruct() {
@@ -485,8 +361,6 @@ class Concrete5_Model_Area extends Object {
 				}			
 			}
 		}
-		
-		Cache::delete('area', $this->getCollectionID() . ':' . $this->getAreaHandle());
 	}
 	
 	/**
@@ -533,7 +407,46 @@ class Concrete5_Model_Area extends Object {
 		$v = array($this->getAreaHandle(), 'TEMPLATE', $masterCollection->getCollectionID());
 		$db->query("update Areas, Pages set Areas.arInheritPermissionsFromAreaOnCID = " . $toSetCID . " where Areas.cID = Pages.cID and Areas.arHandle = ? and cInheritPermissionsFrom = ? and arOverrideCollectionPermissions = 0 and cInheritPermissionsFromCID = ?", $v);
 	}
+
+	public static function getOrCreate($c, $arHandle) {
+		$area = Area::get($c, $arHandle);
+		if (!is_object($area)) {
+			$a = new Area($arHandle);
+			$area = $a->create($c, $arHandle);
+		}
+		return $area;
+	}
+
+	protected function load($c) {
+		if (!$this->arIsLoaded) {
+			// replaces the current empty object with the passed object.
+			$area = self::get($c, $this->arHandle);
+			if (!is_object($area)) {
+				$area = $this->create($c, $this->arHandle);
+			}
+			$this->c = $c;
+			$this->areaBlocksArray = $this->getAreaBlocks();
+			$this->arIsLoaded = true;
+			$this->arID = $area->getAreaID();
+		}
+	}
 	
+	protected function getAreaBlocks() {
+		$blocksTmp = $this->c->getBlocks($this->arHandle);
+		$currentPage = Page::getCurrentPage();
+		$blocks = array();
+		foreach($blocksTmp as $ab) {
+			$ab->setBlockAreaObject($this);
+			if ($currentPage->getCollectionID() != $this->c->getCollectionID()) {
+				// this is useful for rendering areas from one page
+				// onto the next and including interactive elements
+				$ab->setBlockActionCollectionID($this->c->getCollectionID());
+			}
+			$blocks[] = $ab;
+		}
+		return $blocks;
+	}
+
 	/**
 	 * displays the Area in the page
 	 * ex: $a = new Area('Main'); $a->display($c);
@@ -541,91 +454,53 @@ class Concrete5_Model_Area extends Object {
 	 * @param Block[] $alternateBlockArray optional array of blocks to render instead of default behavior
 	 * @return void
 	 */
-	function display(&$c, $alternateBlockArray = null) {
+	function display($c, $alternateBlockArray = null) {
 
-		if(!intval($c->cID)){
-			//Invalid Collection
+		if (!is_object($c) || $c->isError()) {
 			return false;
 		}
-		
-		if ($this->arIsGlobal) {
-			$stack = Stack::getByName($this->arHandle);
-		}		
-		$currentPage = Page::getCurrentPage();
-		$ourArea = self::getOrCreate($c, $this->arHandle, $this->arIsGlobal, $this->arParentID);
-		if (count($this->customTemplateArray) > 0) {
-			$ourArea->customTemplateArray = $this->customTemplateArray;
-		}
-		if (count($this->attributes) > 0) {
-			$ourArea->attributes = $this->attributes;
-		}
-		if ($this->maximumBlocks > -1) {
-			$ourArea->maximumBlocks = $this->maximumBlocks;
-		}
-		$ap = new Permissions($ourArea);
+
+		$this->load($c);
+		$ap = new Permissions($this);
 		if (!$ap->canViewArea()) {
 			return false;
 		}
 		
-		$blocksToDisplay = ($alternateBlockArray) ? $alternateBlockArray : $ourArea->getAreaBlocksArray($c, $ap);
-		$this->totalBlocks = $ourArea->getTotalBlocksInArea();
-		$u = new User();
+		$blocksToDisplay = ($alternateBlockArray) ? $alternateBlockArray : $this->getAreaBlocksArray();
 		
+		$u = new User();
 		$bv = new BlockView();
 		
-		// now, we iterate through these block groups (which are actually arrays of block objects), and display them on the page
-		
+		// now, we iterate through these block groups (which are actually arrays of block objects), and display them on the page		
 		if ($this->showControls && $c->isEditMode() && $ap->canViewAreaControls()) {
-			$bv->renderElement('block_area_header', array('a' => $ourArea));	
+			$bv->renderElement('block_area_header', array('a' => $this));	
 		}
+		$bv->renderElement('block_area_header_view', array('a' => $this));	
 
-		$bv->renderElement('block_area_header_view', array('a' => $ourArea));	
+		$blockPositionInArea = 1; //for blockWrapper output		
 
-		//display layouts tied to this area 
-		//Might need to move this to a better position  
-		$areaLayouts = $this->getAreaLayouts($c);
-		if(is_array($areaLayouts) && count($areaLayouts)){ 
-			foreach($areaLayouts as $layout){
-				$layout->display($c,$this);  
-			}
-			if($this->showControls && ($c->isArrangeMode() || $c->isEditMode())) {
-				echo '<div class="ccm-layouts-block-arrange-placeholder ccm-block-arrange"></div>';
-			}
-		}
-		
-		$blockPositionInArea = 1; //for blockWrapper output
-		
 		foreach ($blocksToDisplay as $b) {
 			$includeEditStrip = false;
 			$bv = new BlockView();
-			$bv->setAreaObject($ourArea); 
-			
-			// this is useful for rendering areas from one page
-			// onto the next and including interactive elements
-			if ($currentPage->getCollectionID() != $c->getCollectionID()) {
-				$b->setBlockActionCollectionID($c->getCollectionID());
-			}
-			if ($this->arIsGlobal && is_object($stack)) {
-				$b->setBlockActionCollectionID($stack->getCollectionID());
+			$bv->setAreaObject($this); 
+			if (isset($this->bActionCIDOverride)) {
+				$b->setBlockActionCollectionID($this->bActionCIDOverride);
 			}
 			$p = new Permissions($b);
-
 			if ($c->isEditMode() && $this->showControls && $p->canViewEditInterface()) {
 				$includeEditStrip = true;
 			}
-
 			if ($p->canViewBlock()) {
 				if (!$c->isEditMode()) {
 					$this->outputBlockWrapper(true, $b, $blockPositionInArea);
 				}
 				if ($includeEditStrip) {
 					$bv->renderElement('block_header', array(
-						'a' => $ourArea,
+						'a' => $this,
 						'b' => $b,
 						'p' => $p
 					));
 				}
-
 				$bv->render($b);
 				if ($includeEditStrip) {
 					$bv->renderElement('block_footer');
@@ -633,15 +508,14 @@ class Concrete5_Model_Area extends Object {
 				if (!$c->isEditMode()) {
 					$this->outputBlockWrapper(false, $b, $blockPositionInArea);
 				}
-			}
-			
+			}			
 			$blockPositionInArea++;
 		}
 
-		$bv->renderElement('block_area_footer_view', array('a' => $ourArea));	
+		$bv->renderElement('block_area_footer_view', array('a' => $this));	
 
 		if ($this->showControls && $c->isEditMode() && $ap->canViewAreaControls()) {
-			$bv->renderElement('block_area_footer', array('a' => $ourArea));	
+			$bv->renderElement('block_area_footer', array('a' => $this));	
 		}
 	}
 	
@@ -669,62 +543,12 @@ class Concrete5_Model_Area extends Object {
 	}
 	
 	/** 
-	 * Gets all layout grid objects for a collection
-	 * @param Page|Collection $c
-	 * @return Layout[]
-	 */	
-	public function getAreaLayouts($c){ 
-		
-		if( !intval($c->cID) ){
-			//Invalid Collection
-			return false;
-		}
-		
-		if (!$c->hasLayouts()) {
-			return array();
-		}
-		
-		$db = Loader::db();
-		$vals = array( intval($c->cID), $c->getVersionID(), $this->getAreaHandle() );
-		$sql = 'SELECT * FROM CollectionVersionAreaLayouts WHERE cID=? AND cvID=? AND arHandle=? ORDER BY position ASC, cvalID ASC';
-		$rows = $db->getArray($sql,$vals); 
-		
-		$layouts=array();
-		$i=0;
-		if(is_array($rows)) foreach($rows as $row){  
-			$layout = Layout::getById( intval($row['layoutID']) );
-			if( is_object($layout) ){  
-				
-				$i++; 
-			
-				//check position is correct, update if not 
-				if( $i != $row['position'] || $renumbering ){  
-					$renumbering=1;
-					$db->query( 'UPDATE CollectionVersionAreaLayouts SET position=? WHERE cvalID=?' , array($i, $row['cvalID']) ); 
-				}
-				$layout->position=$i; 
-				
-				$layout->cvalID = intval($row['cvalID']); 
-				
-				$layout->setAreaObj( $this );
-				
-				$layout->setAreaNameNumber( intval($row['areaNameNumber']) );
-				
-				$layouts[]=$layout; 
-			} 
-		}
-		
-		return $layouts; 
-	}
-	
-	/** 
 	 * Exports the area to content format
 	 * @todo need more documentation export?
 	 */
 	public function export($p, $page) {
 		$area = $p->addChild('area');
 		$area->addAttribute('name', $this->getAreaHandle());
-		
 		$blocks = $page->getBlocks($this->getAreaHandle());
 		foreach($blocks as $bl) {
 			$bl->export($area);
@@ -788,10 +612,6 @@ class Concrete5_Model_Area extends Object {
 		} else {
 			$this->rescanSubAreaPermissions();
 		}
-
-		$a = Cache::delete('area', $this->getCollectionID() . ':' . $this->getAreaHandle());
-
 	}
-	
 
 }
