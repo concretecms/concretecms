@@ -2,13 +2,12 @@
 	defined('C5_EXECUTE') or die("Access Denied.");
 	$maxColumns = 12;
 	$minColumns = 1;
-
 ?>
 
 <ul id="ccm-layouts-toolbar">
 	<li>
 		<label for="columns"><?=t("Columns")?></label>
-		<select name="columns" id="columns">
+		<select name="columns" id="columns" <? if ($controller->getTask() == 'edit') { ?> disabled="disabled" <? } ?>>
 			<? for ($i = $minColumns; $i <= $maxColumns; $i++) { ?>
 				<option value="<?=$i?>" <? if (is_array($columns) && (count($columns) == $i)) { ?> selected <? } ?>><?=$i?></option>
 			<? } ?>
