@@ -272,7 +272,8 @@
       <notnull/>
       <default value="0"/>
       <unsigned/>
-    </field>    <index name="arIsGlobal">
+    </field>    
+    <index name="arIsGlobal">
       <col>arIsGlobal</col>
     </index>
     <index name="cID">
