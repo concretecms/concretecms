@@ -483,9 +483,6 @@ class Concrete5_Model_Area extends Object {
 			$includeEditStrip = false;
 			$bv = new BlockView();
 			$bv->setAreaObject($this); 
-			if (isset($this->bActionCIDOverride)) {
-				$b->setBlockActionCollectionID($this->bActionCIDOverride);
-			}
 			$p = new Permissions($b);
 			if ($c->isEditMode() && $this->showControls && $p->canViewEditInterface()) {
 				$includeEditStrip = true;
