@@ -885,6 +885,12 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			
 			if (file_exists($this->theme)) {
 				
+				$cache = PageCache::getLibrary();
+				$shouldAddToCache = $cache->shouldAddToCache($this);
+				if ($shouldAddToCache) {
+					$cache->outputCacheHeaders($c);
+				}
+
 				ob_start();
 				include($this->theme);
 				$pageContent = ob_get_contents();
@@ -899,7 +905,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				}
 
 				$cache = PageCache::getLibrary();
-				if ($cache->shouldAddToCache($this)) {
+				if ($shouldAddToCache) {
 					$cache->set($c, $pageContent);
 				}
 

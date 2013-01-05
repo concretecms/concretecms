@@ -31,6 +31,15 @@ abstract class Concrete5_Library_PageCache {
 		return true;
 	}
 
+	public function outputCacheHeaders(Page $c) {
+		$lifetime = $c->getCollectionFullPageCachingLifetimeValue();
+		$expires = time() + $lifetime;
+
+		header('Pragma: public');
+		header('Cache-Control: max-age=' . $expires);
+		header('Expires: ' . gmdate('D, d M Y H:i:s', time() + $expires) . ' GMT');
+	}
+
 	public function shouldAddToCache(View $v) {
 		$c = $v->getCollectionObject();
 		if (!is_object($c)) {
@@ -87,13 +96,13 @@ abstract class Concrete5_Library_PageCache {
 			if ($mixed->getCollectionPath() != '') {
 				return urlencode(trim($mixed->getCollectionPath(), '/'));
 			} else if ($mixed->getCollectionID() == HOME_CID) {
-				return HOME_CID;
+				return '!' . HOME_CID;
 			}			
 		} else if ($mixed instanceof Request) {
 			if ($mixed->getRequestPath() != '') {
 				return urlencode(trim($mixed->getRequestPath(), '/'));
 			} else if ($mixed->getRequestCollectionID() == HOME_CID) {
-				return HOME_CID;
+				return '!' . HOME_CID;
 			}			
 		} else if ($mixed instanceof PageCacheRecord) {
 			return $mixed->getCacheRecordKey();
@@ -118,8 +127,8 @@ abstract class Concrete5_Library_PageCache {
 
 	abstract public function getRecord($mixed);
 	abstract public function set(Page $c, $content);
-	abstract public function deleteByCacheRecord(PageCacheRecord $rec);
-	abstract public function delete(Page $c);
+	abstract public function purgeByRecord(PageCacheRecord $rec);
+	abstract public function purge(Page $c);
 	abstract public function flush();
 
 }
