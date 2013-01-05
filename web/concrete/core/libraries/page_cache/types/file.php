@@ -34,7 +34,7 @@ class Concrete5_Library_FilePageCache extends PageCache {
 		}
 	}
 
-	public function deleteByCacheRecord(PageCacheRecord $rec) {
+	public function purgeByRecord(PageCacheRecord $rec) {
 		$file = $this->getCacheFile($rec);
 		if ($file && file_exists($file)) {
 			unlink($file);

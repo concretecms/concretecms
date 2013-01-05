@@ -2,12 +2,16 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 if ($_REQUEST['reload_and_remove_cache']) { 
 	$cache = PageCache::getLibrary();
-	$cache->delete($c);
+	$cache->purge($c);
 }
 
 ?>
 
 <div class="ccm-ui">
+
+<? if ($_REQUEST['reload_and_remove_cache']) { ?>
+<div class="alert alert-success"><?=t('Purge attempt complete.')?></div>
+<? } ?>
 
 <form method="post" id="ccmSpeedSettingsForm" action="<?=$c->getCollectionAction()?>">
 
@@ -115,16 +119,24 @@ if ($_REQUEST['reload_and_remove_cache']) {
 		<div class="clearfix">
 
 		<?
-		$ncv = Page::getByID($c->getCollectionID(), 'ACTIVE');
-		$cache = PageCache::getLibrary();
-		$rec = $cache->getRecord($ncv);
-		if (is_object($rec)) { ?>
-			<div class="alert alert-success">
-				<?=t('This page currently exists in the full page cache. It expires %s.', Loader::helper('date')->date('m/d/Y g:i a', $rec->getCacheRecordExpiration()))?>
-				&nbsp;&nbsp;<button type="button" class="btn btn-mini" id="ccm-button-remove-page-from-cache"><?=t('Remove')?></button>
-			</div>
-		<? } else { ?>
-			<div class="alert alert-info"><?=t('This page is not currently in the full page cache.')?></div>
+		if (!$_REQUEST['reload_and_remove_cache']) {
+
+			$ncv = Page::getByID($c->getCollectionID(), 'ACTIVE');
+			$cache = PageCache::getLibrary();
+			$rec = $cache->getRecord($ncv);
+			if ($rec instanceof PageCacheRecord) { ?>
+				<div class="alert alert-success">
+					<?=t('This page currently exists in the full page cache. It expires %s.', Loader::helper('date')->date('m/d/Y g:i a', $rec->getCacheRecordExpiration()))?>
+					&nbsp;&nbsp;<button type="button" class="btn btn-mini" id="ccm-button-remove-page-from-cache"><?=t('Purge')?></button>
+				</div>
+			<? } else if ($rec instanceof UnknownPageCacheRecord) { ?>
+				<div class="alert alert-info">
+					<?=t('This page <strong>may</strong> exist in the page cache.')?>
+					&nbsp;&nbsp;<button type="button" class="btn btn-mini" id="ccm-button-remove-page-from-cache"><?=t('Purge')?></button>
+				</div>
+			<? } else { ?>
+				<div class="alert alert-info"><?=t('This page is not currently in the full page cache.')?></div>
+			<? } ?>
 		<? } ?>
 
 		<label><?=t('Enable Cache')?></label>

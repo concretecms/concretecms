@@ -43,7 +43,7 @@ class Concrete5_Library_PageCacheRecord {
 		} else {
 			// invalidate and kill this record.
 			$cache = PageCache::getLibrary();
-			$cache->deleteByCacheRecord($this);
+			$cache->purgeByRecord($this);
 		}
 	}
 	

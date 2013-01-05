@@ -6,6 +6,7 @@ $classes = array(
 	'Localization' => array('library','localization'),
 	'PageCache' => array('library', 'page_cache/library'),
 	'PageCacheRecord' => array('library', 'page_cache/record'),
+	'UnknownPageCacheRecord' => array('library', 'page_cache/unknown_record'),
 	'FilePageCache' => array('library', 'page_cache/types/file'),
 	'View' => array('library','view'),
 	'Events' => array('library','events'),
