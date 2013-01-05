@@ -234,3 +234,10 @@ if (!defined('UPLOAD_FILE_EXTENSIONS_ALLOWED')) {
 } else {
 	define('UPLOAD_FILE_EXTENSIONS_CONFIGURABLE', false);
 }
+<<<<<<< HEAD
+=======
+
+if (!defined('SEO_EXCLUDE_WORDS')) {
+	Config::getOrDefine('SEO_EXCLUDE_WORDS', 'a, an, as, at, before, but, by, for, from, is, in, into, like, of, off, on, onto, per, since, than, the, this, that, to, up, via, with');
+}
+>>>>>>> 0a5729a... finished up the seo excluded words
