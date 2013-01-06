@@ -42,6 +42,11 @@ class Concrete5_Model_AreaLayoutColumn extends Object {
 		return $this->arLayoutColumnWidth;
 	}
 
+	public function setAreaLayoutColumnWidth($width) {
+		$this->arLayoutColumnWidth = $width;
+		$db = Loader::db();
+		$db->Execute('update AreaLayoutColumns set arLayoutColumnWidth = ? where arLayoutColumnID = ?', array($width, $this->arLayoutColumnID));
+	}
 
 	public function display($c) {
 		$layout = $this->getAreaLayoutObject();

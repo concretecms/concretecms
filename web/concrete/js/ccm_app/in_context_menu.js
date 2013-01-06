@@ -14,27 +14,29 @@ $.fn.ccmmenu = function() {
 		var $this = $(obj), 
 			$selector;
 
-		if ($this.attr('data-handle')) {
-			$selector = $this;
-		} else {
-			$selector = $this.find('[data-handle]');
+		if (!$this.prop('has-menu')) {
+			$this.prop('has-menu', true);
+			if ($this.attr('data-handle')) {
+				$selector = $this;
+			} else {
+				$selector = $this.find('[data-handle]');
+			}
+
+			var $menu = $this.find('[data-menu=' + $selector.attr('data-handle') + ']');
+			$this.$menu = $menu;
+
+			if ($selector.attr('data-disable-highlight')) {
+				$selector.on('click', function(e) {
+					if ($.fn.ccmmenu.isenabled) {
+						$.fn.ccmmenu.show(e, $this);
+					}
+				});
+			} else {
+				$selector.mousemove(function(e) {
+					$.fn.ccmmenu.over(e, $this, $selector);
+				});
+			}
 		}
-
-		var $menu = $this.find('[data-menu=' + $selector.attr('data-handle') + ']');
-		$this.$menu = $menu;
-
-		if ($selector.attr('data-disable-highlight')) {
-			$selector.on('click', function(e) {
-				if ($.fn.ccmmenu.isenabled) {
-					$.fn.ccmmenu.show(e, $this);
-				}
-			});
-		} else {
-			$selector.mousemove(function(e) {
-				$.fn.ccmmenu.over(e, $this, $selector);
-			});
-		}
-
 	});
 }
 

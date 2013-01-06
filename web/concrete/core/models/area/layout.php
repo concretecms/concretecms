@@ -62,6 +62,28 @@ class Concrete5_Model_AreaLayout extends Object {
 		}
 	}
 
+	public function setAreaLayoutColumnSpacing($spacing) {
+		if (!$spacing) {
+			$spacing = 0;
+		}
+		$db = Loader::db();
+		$db->Execute('update AreaLayouts set arLayoutSpacing = ? where arLayoutID = ?', array($spacing, $this->arLayoutID));
+		$this->arLayoutSpacing = $spacing;
+	}
+
+	public function enableAreaLayoutCustomColumnWidths() {
+		$db = Loader::db();
+		$db->Execute('update AreaLayouts set arLayoutIsCustom = ? where arLayoutID = ?', array(1, $this->arLayoutID));
+		$this->arLayoutIsCustom = true;
+	}
+
+	public function disableAreaLayoutCustomColumnWidths() {
+		$db = Loader::db();
+		$db->Execute('update AreaLayouts set arLayoutIsCustom = ? where arLayoutID = ?', array(0, $this->arLayoutID));
+		$this->arLayoutIsCustom = false;
+	}
+
+
 	public static function add($spacing = 0, $iscustom = false) {
 		if (!$spacing) {
 			$spacing = 0; // just in case
