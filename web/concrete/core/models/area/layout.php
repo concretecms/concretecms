@@ -103,4 +103,13 @@ class Concrete5_Model_AreaLayout extends Object {
 		}
 	}
 
+	public function delete() {
+		$columns = $this->getAreaLayoutColumns();
+		foreach($columns as $col) {
+			$col->delete();
+		}
+		$db = Loader::db();
+		$db->Execute('delete from AreaLayouts where arLayoutID = ?', array($this->arLayoutID));
+	}
+
 }
