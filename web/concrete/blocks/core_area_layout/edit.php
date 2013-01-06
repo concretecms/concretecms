@@ -4,6 +4,7 @@
 
 ?>
 
+<input type="hidden" name="arLayoutID" value="<?=$controller->arLayout->getAreaLayoutID()?>" />
 <div id="ccm-area-layout-active-control-bar" class="ccm-area-layout-control-bar"></div>
 
 <div id="ccm-layouts-edit-mode">

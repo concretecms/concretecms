@@ -19,6 +19,13 @@ class Concrete5_Controller_Block_CoreAreaLayout extends BlockController {
 			$this->arLayout = AreaLayout::getByID($this->arLayoutID);
 		}
 
+		public function getAreaLayoutObject() {
+			if (!is_object($this->arLayout)) {
+				$this->on_start();
+			}
+			return $this->arLayout;
+		}
+
 		public function save($post) {
 			if (!$post['arLayoutID']) {
 				// we are adding a new layout 
@@ -35,9 +42,24 @@ class Concrete5_Controller_Block_CoreAreaLayout extends BlockController {
 					$ar->addLayoutColumn($width);
 				}
 				$values = array('arLayoutID' => $ar->getAreaLayoutID());
+				parent::save($values);
+			} else {
+				$arLayout = AreaLayout::getByID($post['arLayoutID']);
+				// save spacing
+				$arLayout->setAreaLayoutColumnSpacing($post['spacing']);
+				if ($post['isautomated']) {
+					$arLayout->disableAreaLayoutCustomColumnWidths();
+				} else {
+					$arLayout->enableAreaLayoutCustomColumnWidths();
+					$columns = $arLayout->getAreaLayoutColumns();
+					for ($i = 0; $i < count($columns); $i++) {
+						$col = $columns[$i];
+						$width = ($post['width'][$i]) ? $post['width'][$i] : 0;
+						$col->setAreaLayoutColumnWidth($width);
+					}
+				}
 			}
 
-			parent::save($values);
 		}
 
 		public function view() {
@@ -54,52 +76,7 @@ class Concrete5_Controller_Block_CoreAreaLayout extends BlockController {
 		}
 
 		public function on_page_view() {
-			$this->on_start();
-			$wrapper = 'ccm-layout-column-wrapper-' . $this->bID;
-			$columns = $this->arLayout->getAreaLayoutColumns();
-			if (count($columns) > 0) {
-				$margin = ($this->arLayout->getAreaLayoutSpacing() / 2);
-				if ($this->arLayout->hasAreaLayoutCustomColumnWidths()) {
-					$css = '';
-					foreach($columns as $col) {
-						$arLayoutColumnIndex = $col->getAreaLayoutColumnIndex();
-						$width = $col->getAreaLayoutColumnWidth();
-						if ($width) {
-							$width .= 'px';
-						}
-
-						$css .= "#{$wrapper} div#ccm-layout-column-{$arLayoutColumnIndex} { width: {$width}; }\n";
-					}
-
-				} else {
-					$width = (100 / count($columns));
-					$css = <<<EOL
-
-					#{$wrapper} div.ccm-layout-column {
-						width: {$width}%;
-					}
-EOL;
-				
-				}
-
-				$css .= <<<EOL
-
-				#{$wrapper} div.ccm-layout-column-inner {
-					margin-right: {$margin}px;
-					margin-left: {$margin}px;
-				}
-
-				#{$wrapper} div.ccm-layout-column:first-child div.ccm-layout-column-inner {
-					margin-left: 0px;
-				}
-
-				#{$wrapper} div.ccm-layout-column:last-child div.ccm-layout-column-inner  {
-					margin-right: 0px;
-				}
-EOL;
-
-				$this->addHeaderItem('<style type="text/css">' . $css  . '</style>');
-			}
+			$this->addHeaderItem(Loader::helper('html')->css(REL_DIR_FILES_TOOLS_REQUIRED . '/area/layout.css?bID=' . $this->bID));
 		}
 
 

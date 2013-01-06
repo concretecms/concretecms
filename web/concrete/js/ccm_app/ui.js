@@ -81,7 +81,7 @@ ccm_deleteBlock = function(cID, bID, aID, arHandle, msg) {
 		// got to grab the message too, eventually
 		ccm_hideHighlighter();
 		$d = $("#b" + bID + '-' + aID);
-		$d.hide();
+		$d.hide().remove();
 		ccmAlert.hud(ccmi18n.deleteBlockMsg, 2000, 'delete_small', ccmi18n.deleteBlock);
 		$.ajax({
 			type: 'POST',
@@ -132,6 +132,7 @@ ccm_parseBlockResponse = function(r, currentBlockID, task) {
 					} else {
 						$('#b' + currentBlockID + '-' + resp.aID).before(r).remove();
 					}
+					ccm_editMenuInit();
 					ccm_exitInlineEditMode();
 					if (task == 'add') {
 						ccmAlert.hud(ccmi18n.addBlockMsg, 2000, 'add', ccmi18n.addBlock);
@@ -235,20 +236,12 @@ ccm_editInit = function() {
 		void(0);
 	}
 
-	/*
-	$(document.body).append('<div style="position: absolute; display:none" id="ccm-highlighter">&nbsp;</div>');
-	$(document).click(function() {ccm_hideMenus();});
-	
-	$("div.ccm-menu a").bind('click.hide-menu', function(e) {
-		ccm_hideMenus();
-		return false;	
-	});
-	*/
+	ccm_editMenuInit();
+}
 
-	$('.ccm-area-footer,.ccm-block-edit,.ccm-block-edit-layout').ccmmenu();
+ccm_editMenuInit = function() {
 	$('a.dialog-launch').dialog();
-
-		
+	$('.ccm-area-footer,.ccm-block-edit,.ccm-block-edit-layout').ccmmenu();
 }
 
 ccm_triggerSelectUser = function(uID, uName, uEmail) {

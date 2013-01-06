@@ -1,9 +1,0 @@
-div.ccm-layout-column {
-	float: left;
-}
-
-/* clearfix */
-
-div.ccm-layout-column-wrapper {*zoom:1;}
-div.ccm-layout-column-wrapper:before, div.ccm-layout-column-wrapper:after {display:table;content:"";line-height:0;}
-div.ccm-layout-column-wrapper:after {clear:both;}
