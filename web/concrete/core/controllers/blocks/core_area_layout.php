@@ -26,6 +26,14 @@ class Concrete5_Controller_Block_CoreAreaLayout extends BlockController {
 			return $this->arLayout;
 		}
 
+		public function delete() {
+			if (!is_object($this->arLayout)) {
+				$this->on_start();
+			}
+			$this->arLayout->delete();
+			parent::delete();
+		}
+
 		public function save($post) {
 			if (!$post['arLayoutID']) {
 				// we are adding a new layout 

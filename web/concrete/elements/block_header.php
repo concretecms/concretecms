@@ -107,7 +107,7 @@ if ($isAlias) {
 	<? } ?>
 
 	<? if ($p->canDeleteBlock()) {  ?>
-		<li><a href="javascript:void(0)" onclick="ccm_deleteBlock('<?=$cID?>','<?=$bID?>','<?=$aID?>','<?=urlencode($arHandle)?>')"><i class="icon-trash"></i> <?=t("Delete")?></a></li>		
+		<li><a href="javascript:void(0)" onclick="ccm_deleteBlock('<?=$cID?>','<?=$bID?>','<?=$aID?>','<?=urlencode($arHandle)?>', '<?=$deleteMessage?>')"><i class="icon-trash"></i> <?=t("Delete")?></a></li>		
 	<? } ?>
 
 	<? if ($canDesign && $p->canEditBlockCustomTemplate()) { ?>

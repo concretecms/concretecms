@@ -19,5 +19,15 @@ class Concrete5_Model_SubArea extends Area {
 	}	
 
 
-
+	public function delete() {
+		$db = Loader::db();
+		$blocks = $this->getAreaBlocksArray();
+		foreach($blocks as $b) {
+			$bp = new Permissions($b);
+			if ($bp->canDeleteBlock()) {
+				$b->deleteBlock();
+			}
+		}
+		$db->Execute('delete from Areas where arID = ?', array($this->arID));
+	}
 }

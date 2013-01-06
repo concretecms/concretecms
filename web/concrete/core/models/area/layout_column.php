@@ -34,6 +34,16 @@ class Concrete5_Model_AreaLayoutColumn extends Object {
 		return $this->arID;
 	}
 
+	public function getAreaObject() {
+		$db = Loader::db();
+		$row = $db->GetRow('select cID, arHandle from Areas where arID = ?', array($this->arID));
+		if ($row['cID'] && $row['arHandle']) {
+			$c = Page::getByID($row['cID']);
+			$area = Area::get($c, $row['arHandle']);
+			return $area;
+		}
+	}
+
 	public function getAreaLayoutColumnID() {
 		return $this->arLayoutColumnID;
 	}
@@ -59,5 +69,13 @@ class Concrete5_Model_AreaLayoutColumn extends Object {
 		}
 	}
 
+	public function delete() {
+		$db = Loader::db();
+		$area = $this->getAreaObject();
+		if ($area instanceof SubArea) {
+			$area->delete();
+		}
+		$db->Execute("delete from AreaLayoutColumns where arLayoutColumnID = ?", array($this->arLayoutColumnID));
+	}
 
 }

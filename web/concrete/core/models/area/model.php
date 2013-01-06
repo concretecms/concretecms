@@ -256,6 +256,9 @@ class Concrete5_Model_Area extends Object {
 	 * @return Block[]
 	 */
 	public function getAreaBlocksArray($c = false) {
+		if (!$c) {
+			$c = $this->c;
+		}
 		if (!$this->arIsLoaded) {
 			$this->load($c);
 		}
