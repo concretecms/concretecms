@@ -46,7 +46,7 @@ class Concrete5_Library_FilePageCache extends PageCache {
 		$fh->removeAll(DIR_FILES_PAGE_CACHE);
 	}
 
-	public function delete(Page $c) {
+	public function purge(Page $c) {
 		$file = $this->getCacheFile($c);
 		if ($file && file_exists($file)) {
 			unlink($file);
