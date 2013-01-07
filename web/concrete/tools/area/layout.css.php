@@ -30,13 +30,13 @@ EOL;
 				$margin = ($arLayout->getAreaLayoutSpacing() / 2);
 				if ($arLayout->hasAreaLayoutCustomColumnWidths()) {
 					foreach($columns as $col) {
-						$arLayoutColumnIndex = $col->getAreaLayoutColumnIndex();
+						$arLayoutColumnID = $col->getAreaLayoutColumnID();
 						$width = $col->getAreaLayoutColumnWidth();
 						if ($width) {
 							$width .= 'px';
 						}
 
-						$css .= "#{$wrapper} div#ccm-layout-column-{$arLayoutColumnIndex} { width: {$width}; }\n";
+						$css .= "#{$wrapper} div#ccm-layout-column-{$arLayoutColumnID} { width: {$width}; }\n";
 					}
 
 				} else {
