@@ -3,8 +3,6 @@
 /** 
  * UI
  */
-
-var ccm_arrangeMode = false;
 var ccm_inlineEditMode = false;
 var ccm_selectedDomID = false;
 var ccm_isBlockError = false;
@@ -177,57 +175,6 @@ ccm_setupBlockForm = function(form, currentBlockID, task) {
 	
 }
 
-
-
-ccm_activate = function(obj, domID) { 
-	if (ccm_arrangeMode || ccm_activeMenu || ccm_inlineEditMode) {
-		return false;
-	}
-	
-
-	
-	if (ccm_selectedDomID) {
-		$(ccm_selectedDomID).removeClass('ccm-menu-hotspot-active');
-	}
-	
-	aobj = $(domID);
-	aobj.addClass('ccm-menu-hotspot-active');
-	ccm_selectedDomID = domID;
-	
-	offs = aobj.offset();
-
-	
-	$("#ccm-highlighter").css("width", aobj.outerWidth());
-	$("#ccm-highlighter").css("height", aobj.outerHeight());
-	$("#ccm-highlighter").css("top", offs.top);
-	$("#ccm-highlighter").css("left", offs.left);
-	$("#ccm-highlighter").fadeIn(120, 'easeOutExpo');
-	/*
-	$("#ccmMenuHighlighter").mouseover(
-		function() {clearTimeout(ccm_deactivateTimer)}
-	);
-	*/
-	$("#ccm-highlighter").mouseout(function(e) {
-		if (!ccm_activeMenu) {
-			if (!e.target) {
-				ccm_hideHighlighter();
-			} else if ($(e.toElement).parents('div.ccm-menu').length == 0) {
-				ccm_hideHighlighter();
-			}
-		}
-	});
-	
-	$("#ccm-highlighter").unbind('click');
-	$("#ccm-highlighter").click(
-		function(e) {
-			switch(obj.type) {
-				case "BLOCK":
-					ccm_showBlockMenu(obj, e);
-					break;
-			}
-		}
-	);
-}
 
 ccm_editInit = function() {
 
@@ -455,10 +402,10 @@ ccm_saveArrangement = function(cID) {
  		success: function(msg) {
  			$("div.ccm-area").removeClass('ccm-move-mode');
 			$('div.ccm-block-arrange').each(function() {
-				$(this).addClass('ccm-block');
+				$(this).addClass('ccm-block-edit');
 				$(this).removeClass('ccm-block-arrange');
 			});
-			ccm_arrangeMode = false;
+			$.fn.ccmmenu.enable();
 			$(".ccm-main-nav-edit-option").fadeIn(300);
 			ccmAlert.hud(ccmi18n.arrangeBlockMsg, 2000, 'up_down', ccmi18n.arrangeBlock);
  		}});
@@ -467,13 +414,11 @@ ccm_saveArrangement = function(cID) {
 ccm_arrangeInit = function() {
 	//$(document.body).append('<img src="' + CCM_IMAGE_PATH + '/topbar_throbber.gif" width="16" height="16" id="ccm-topbar-loader" />');
 	
-	ccm_arrangeMode = true;
+	$.fn.ccmmenu.disable();
 	
-	ccm_hideHighlighter();
-	
-	$('div.ccm-block').each(function() {
+	$('div.ccm-block-edit').each(function() {
 		$(this).addClass('ccm-block-arrange');
-		$(this).removeClass('ccm-block');
+		$(this).removeClass('ccm-block-edit');
 	});
 	
 	$(".ccm-main-nav-edit-option").fadeOut(300, function() {
