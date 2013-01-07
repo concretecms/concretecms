@@ -32,8 +32,8 @@
 	## Autoload settings
 	require($cdir . '/startup/autoload.php');
 
-	if (file_exists(DIR_CONFIG_SITE . '/autoload.php')) {
-		require(DIR_CONFIG_SITE . '/autoload.php');
+	if (file_exists(DIR_CONFIG_SITE . '/site_post_autoload.php')) {
+		require(DIR_CONFIG_SITE . '/site_post_autoload.php');
 	}
 
 	## Exception handler
