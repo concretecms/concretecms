@@ -244,4 +244,188 @@ ccm_submitEditablePropertiesGrid = function(trow) {
 	});
 }
 
+ccm_triggerSelectUser = function(uID, uName, uEmail) {
+	alert(uID);
+	alert(uName);
+	alert(uEmail);
+}
+
+ccm_triggerSelectGroup = function(gID, gName) {
+	alert(gID);
+	alert(gName);
+}
+
+ccm_setupUserSearch = function(searchInstance) {
+	$(".chosen-select").chosen();	
+	
+	$("#ccm-user-list-cb-all").click(function() {
+		if ($(this).prop('checked') == true) {
+			$('.ccm-list-record td.ccm-user-list-cb input[type=checkbox]').attr('checked', true);
+			$("#ccm-user-list-multiple-operations").attr('disabled', false);
+		} else {
+			$('.ccm-list-record td.ccm-user-list-cb input[type=checkbox]').attr('checked', false);
+			$("#ccm-user-list-multiple-operations").attr('disabled', true);
+		}
+	});
+	$("td.ccm-user-list-cb input[type=checkbox]").click(function(e) {
+		if ($("td.ccm-user-list-cb input[type=checkbox]:checked").length > 0) {
+			$("#ccm-user-list-multiple-operations").attr('disabled', false);
+		} else {
+			$("#ccm-user-list-multiple-operations").attr('disabled', true);
+		}
+	});
+	
+	// if we're not in the dashboard, add to the multiple operations select menu
+
+	$("#ccm-user-list-multiple-operations").change(function() {
+		var action = $(this).val();
+		switch(action) {
+			case 'choose':
+				var idstr = '';
+				$("td.ccm-user-list-cb input[type=checkbox]:checked").each(function() {
+					ccm_triggerSelectUser($(this).val(), $(this).attr('user-name'), $(this).attr('user-email'));
+				});
+				jQuery.fn.dialog.closeTop();
+				break;
+			case "properties": 
+				uIDstring = '';
+				$("td.ccm-user-list-cb input[type=checkbox]:checked").each(function() {
+					uIDstring=uIDstring+'&uID[]='+$(this).val();
+				});
+				jQuery.fn.dialog.open({
+					width: 630,
+					height: 450,
+					modal: false,
+					href: CCM_TOOLS_PATH + '/users/bulk_properties?' + uIDstring,
+					title: ccmi18n.properties				
+				});
+				break;
+			case "activate": 
+				uIDstring = '';
+				$("td.ccm-user-list-cb input[type=checkbox]:checked").each(function() {
+					uIDstring=uIDstring+'&uID[]='+$(this).val();
+				});
+				jQuery.fn.dialog.open({
+					width: 630,
+					height: 450,
+					modal: false,
+					href: CCM_TOOLS_PATH + '/users/bulk_activate?searchInstance='+ searchInstance + '&' + uIDstring,
+					title: ccmi18n.user_activate				
+				});
+				break;
+			case "deactivate": 
+				uIDstring = '';
+				$("td.ccm-user-list-cb input[type=checkbox]:checked").each(function() {
+					uIDstring=uIDstring+'&uID[]='+$(this).val();
+				});
+				jQuery.fn.dialog.open({
+					width: 630,
+					height: 450,
+					modal: false,
+					href: CCM_TOOLS_PATH + '/users/bulk_deactivate?searchInstance='+ searchInstance + '&' + uIDstring,
+					title: ccmi18n.user_deactivate
+				});
+				break;
+			case "group_add": 
+				uIDstring = '';
+				$("td.ccm-user-list-cb input[type=checkbox]:checked").each(function() {
+					uIDstring=uIDstring+'&uID[]='+$(this).val();
+				});
+				jQuery.fn.dialog.open({
+					width: 630,
+					height: 450,
+					modal: false,
+					href: CCM_TOOLS_PATH + '/users/bulk_group_add?searchInstance='+ searchInstance + '&' + uIDstring,
+					title: ccmi18n.user_group_add		
+				});
+				break;
+			case "group_remove": 
+				uIDstring = '';
+				$("td.ccm-user-list-cb input[type=checkbox]:checked").each(function() {
+					uIDstring=uIDstring+'&uID[]='+$(this).val();
+				});
+				jQuery.fn.dialog.open({
+					width: 630,
+					height: 450,
+					modal: false,
+					href: CCM_TOOLS_PATH + '/users/bulk_group_remove?searchInstance='+ searchInstance + '&' + uIDstring,
+					title: ccmi18n.user_group_remove				
+				});
+				break;
+			case "delete": 
+				uIDstring = '';
+				$("td.ccm-user-list-cb input[type=checkbox]:checked").each(function() {
+					uIDstring=uIDstring+'&uID[]='+$(this).val();
+				});
+				jQuery.fn.dialog.open({
+					width: 630,
+					height: 450,
+					modal: false,
+					href: CCM_TOOLS_PATH + '/users/bulk_delete?searchInstance='+ searchInstance + '&' + uIDstring,
+					title: ccmi18n.user_delete				
+				});
+				break;
+		}
+		
+		$(this).get(0).selectedIndex = 0;
+	});
+
+}
+
+
+ccm_setupGroupSearchPaging = function() {
+	$("div#ccm-group-paging").each(function() {
+		$(this).closest('.ui-dialog-content').dialog('option', 'buttons', [{}]);
+		$(this).closest('.ui-dialog').find('.ui-dialog-buttonpane .ccm-pane-dialog-pagination').remove();
+		$(this).appendTo($(this).closest('.ui-dialog').find('.ui-dialog-buttonpane').addClass('ccm-ui'));
+	});
+}
+
+ccm_setupGroupSearch = function(callback) {
+	$('div.ccm-group a').unbind();
+	if (callback) {
+		func = window[callback];
+	} else {
+		func = ccm_triggerSelectGroup;
+	}
+
+	$('div.ccm-group a').each(function(i) {
+		var gla = $(this);
+		$(this).click(function() {
+			func(gla.attr('group-id'), gla.attr('group-name'));
+			$.fn.dialog.closeTop();
+			return false;
+		});
+	});	
+	$("#ccm-group-search").ajaxForm({
+		beforeSubmit: function() {
+			$("#ccm-group-search-wrapper").html("");	
+		},
+		success: function(resp) {
+			$("#ccm-group-search-wrapper").html(resp);	
+		}
+	});
+	
+	/* setup paging */
+	ccm_setupGroupSearchPaging();
+	$("div#ccm-group-paging a").click(function() {
+		$("#ccm-group-search-wrapper").html("");	
+		$.ajax({
+			type: "GET",
+			url: $(this).attr('href'),
+			success: function(resp) {
+				//$("#ccm-dialog-throbber").css('visibility','hidden');
+				$("#ccm-group-search-wrapper").html(resp);
+			}
+		});
+		return false;
+	});
+}
+
+if (typeof(ccm_selectSitemapNode) != 'function') {
+	ccm_selectSitemapNode = function(cID, cName) {
+		alert(cID);
+		alert(cName);
+	}
+}
 
