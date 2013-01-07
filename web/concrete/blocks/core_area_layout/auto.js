@@ -67,14 +67,30 @@ ccm_layoutRefresh = function() {
 			}
 		}
 
-		console.log(breaks);
-
 		var $columns = $("#ccm-area-layout-active-control-bar").parent().find('#ccm-layouts-edit-mode .ccm-layout-column');
-		$("#ccm-area-layout-active-control-bar").slider({
+		$("#ccm-area-layout-active-control-bar").css('height', '12px').slider({
 			min: 0,
 			max: tw,
 			step: 1,
 			values: breaks,
+			create: function(e, ui) {
+				var createoffset = 0;
+				var breakwidths = [];
+
+				$.each($columns, function(i, col) {
+					var bw = breaks[i];
+					if ((i + 1) == $columns.length) {
+						// last column
+						var value = tw - createoffset;
+					} else {
+						var value = bw - createoffset;
+					}
+					var value = Math.floor(value);
+					$(col).find('#ccm-edit-layout-column-width-' + i).val(value);
+					createoffset = bw;
+				});
+
+			},
 			slide: function (e, ui) {
 				var lastvalue = 0,
 					proceed = true;
@@ -96,6 +112,7 @@ ccm_layoutRefresh = function() {
 						} else {
 							var value = ui.values[i] - lastvalue;
 						}
+						var value = Math.floor(value);
 						$(col).find('#ccm-edit-layout-column-width-' + i).val(value);
 						$(col).css('width', value + 'px');
 						lastvalue = ui.values[i];
@@ -106,6 +123,10 @@ ccm_layoutRefresh = function() {
 			}
 		});
 	} else {
+		if ($("#ccm-area-layout-active-control-bar").hasClass('ccm-area-layout-control-bar-add')) {
+			$('#ccm-area-layout-active-control-bar').css('height', '0px');
+		}
+
 		$("#ccm-area-layout-active-control-bar").slider('destroy');
 	}
 
