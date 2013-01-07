@@ -1,4 +1,7 @@
-
+/** 
+ * File Manager
+ */
+ 
 var ccm_totalAdvancedSearchFields = 0;
 var ccm_alLaunchType = new Array();
 var ccm_alActiveAssetField = "";
