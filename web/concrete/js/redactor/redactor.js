@@ -2358,7 +2358,7 @@ var RLANG = {
 			this.$toolbar.find('a.dropact').removeClass('redactor_act').removeClass('dropact');
 			/* concrete5 */
 			//$('.dropdown').hide();
-			$('.dropdown-menu').hide();
+			$('#redactor-dropdown-holder .dropdown-menu').hide();
 			/* end concrete5 */
 		},
 		hideDropDown: function(e, dropdown, key)

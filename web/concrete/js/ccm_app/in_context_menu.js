@@ -49,7 +49,9 @@ $.fn.ccmmenu.out = function(e) {
 
 $.fn.ccmmenu.enable = function() {
 	$.fn.ccmmenu.isenabled = true;
-	$(document.body).append($("<div />", {'id': 'ccm-highlighter'}));
+	if ($("#ccm-highlighter").length == 0) {
+		$(document.body).append($("<div />", {'id': 'ccm-highlighter'}));
+	}
 	$.fn.ccmmenu.$highlighter = $('#ccm-highlighter');
 
 	$.fn.ccmmenu.$highlighter.on('mouseout.highlighter', function(e) {
