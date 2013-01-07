@@ -21,7 +21,7 @@
 	<div class="ccm-layout-column" id="ccm-layout-column-<?=$col->getAreaLayoutColumnIndex()?>">
 		<div class="ccm-layout-column-inner">
 			<? 
-			$col->display($c);
+			$col->display();
 			?>
 		</div>
 	</div>

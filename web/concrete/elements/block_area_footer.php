@@ -26,10 +26,7 @@ if (!$c->isArrangeMode()) { ?>
 
 <div id="a<?=$a->getAreaID()?>controls" class="ccm-area-footer ccm-ui">
 
-<div class="ccm-area-footer-handle" data-handle="area-menu-a<?=$a->getAreaID()?>">
-	<? 
-	if ($a->isGlobalArea()) { ?><?=t('Sitewide %s', $arHandle)?><? } else { ?><?=$arHandle?><? } ?>
-</div>
+<div class="ccm-area-footer-handle" data-handle="area-menu-a<?=$a->getAreaID()?>"><?=$a->getAreaDisplayName()?></div>
 
 <div class="popover fade" data-menu="area-menu-a<?=$a->getAreaID()?>">
 	<div class="arrow"></div>

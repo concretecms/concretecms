@@ -15,9 +15,7 @@
 		<div class="ccm-layout-column-inner ccm-layout-column-highlight">
 			<input type="hidden" name="width[<?=$i?>]" value="" id="ccm-edit-layout-column-width-<?=$i?>" />
 			<? 
-			$as = new SubArea($col->getAreaLayoutColumnIndex(), $a);
-			$as->disableControls();
-			$as->display($c);
+			$col->display(true);
 			?>
 		</div>
 	</div>

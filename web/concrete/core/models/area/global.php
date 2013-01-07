@@ -15,6 +15,10 @@ class Concrete5_Model_GlobalArea extends Area {
 		$area->rescanAreaPermissionsChain();
 		return $area;
 	}
+
+	public function getAreaDisplayName() {
+		return t('Sitewide %s', $this->getAreaHandle());
+	}
 	
 	public function getAreaBlocks() {
 		$cp = new Permissions($this->c);

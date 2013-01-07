@@ -58,7 +58,19 @@ class Concrete5_Model_Area extends Object {
 	public $areaBlocksArray = array();
 	
 	protected $arIsLoaded = false;
+	protected $arDisplayName;
 
+	public function setAreaDisplayName($arDisplayName) {
+		$this->arDisplayName = $arDisplayName;
+	}
+
+	public function getAreaDisplayName() {
+		if (isset($this->arDisplayName)) {
+			return $this->arDisplayName;
+		} else {
+			return $this->arHandle;
+		}
+	}
 
 	/**
 	 * The constructor is used primarily on page templates to create areas of content that are editable within the cms.
