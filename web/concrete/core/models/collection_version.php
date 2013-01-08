@@ -31,86 +31,73 @@
 			return $this->getCollectionID() . ':' . $this->getVersionID();
 		}
 		
-		/** 
-		 * Returns the actual cvID numerical value for a particular cID/cvID combo
-		 */
-		public static function getNumericalVersionID($cID, $cvID) {
-			if ($cvID == 'RECENT' || $cvID == 'ACTIVE') {
-
-				// first, we make sure that the cID is for an actual page. If we're pointing to another page (an alias)
-				// we need to use THAT cID
-				$db = Loader::db();
-				$_cID = $cID;
-				$cPointerID = $db->GetOne("select cPointerID from Pages where cID = ?", array($cID));
-				if ($cPointerID > 0) {
-					$_cID = $cPointerID;
-				}
-				
-				$v = array($_cID);
-				switch($cvID) {
-					case 'RECENT':
-						$cvIDa = $db->GetOne("select cvID from CollectionVersions where cID = ? order by cvID desc", $v);
-						break;
-					case 'ACTIVE':
-						$cvIDa = $db->GetOne("select cvID from CollectionVersions where cID = ? and cvIsApproved = 1", $v);
-						break;
-				}
-				
-				return $cvIDa;
-			} else {
-				// cvID IS numerical
-				return $cvID;
-			}
-		}
-		
 		public function refreshCache() {
-			$co = Page::getByID($this->cID, $this->cvID);
-			$co->refreshCache();
 			Events::fire('on_page_version_refresh_cache', $this);
 		}
 		
 		public function get(&$c, $cvID) {
-			if (is_string($cvID)) {
-				$cvID = CollectionVersion::getNumericalVersionID($c->getCollectionID(), $cvID);
-			}
-			
-			
-			$cv = new CollectionVersion();
 			$db = Loader::db();
-			
-			$q = "select cvID, cvIsApproved, cvIsNew, cvHandle, cvName, cvDescription, cvDateCreated, cvDatePublic, cvAuthorUID, cvApproverUID, cvComments, ptID, CollectionVersions.ctID, ctHandle, ctName from CollectionVersions left join PageTypes on CollectionVersions.ctID = PageTypes.ctID where cID = ? and cvID = ?";
 
-			$r = $db->query($q, array($c->getCollectionID(), $cvID));
-			if ($r) {
-				$row = $r->fetchRow();					
-				if ($row) {
-					$cv->setPropertiesFromArray($row);
-				}
+			if (($c instanceof Page) && $c->getCollectionPointerID()) {
+				$v = array($c->getCollectionPointerID());
+			} else {
+				$v = array($c->getCollectionID());
 			}
 			
+			
+			$q = "select cvID, cvIsApproved, cvIsNew, cvHandle, cvName, cvDescription, cvDateCreated, cvDatePublic, cvAuthorUID, cvApproverUID, cvComments, ptID, CollectionVersions.ctID, ctHandle, ctName from CollectionVersions left join PageTypes on CollectionVersions.ctID = PageTypes.ctID where cID = ?";
+			if ($cvID == 'ACTIVE') {
+				$q .= ' and cvIsApproved = 1';
+			} else if ($cvID == 'RECENT') {
+				$q .= ' order by cvID desc';
+			} else {
+				$v[] = $cvID;
+				$q .= ' and cvID = ?';
+			}
+
+			$row = $db->GetRow($q, $v);
+			$cv = new CollectionVersion();
+
+			if (is_array($row) && $row['cvID']) {
+				$cv->setPropertiesFromArray($row);
+			}
+
 			// load the attributes for a particular version object
-			Loader::model('attribute/categories/collection');			
-			$cv->attributes = CollectionAttributeKey::getAttributes($c->getCollectionID(), $cvID);
-			
 			$cv->cID = $c->getCollectionID();			
-			$cv->cvIsMostRecent = $cv->_checkRecent();
-			
-			$r = $db->GetAll('select csrID, arHandle from CollectionVersionAreaStyles where cID = ? and cvID = ?', array($c->getCollectionID(), $cvID));
-			foreach($r as $styles) {
-				$cv->customAreaStyles[$styles['arHandle']] = $styles['csrID'];
-			}
-			
 			return $cv;
 		}
 
-		public function getAttribute($ak) {
-			if (is_object($this->attributes)) {
-				return $this->attributes->getAttribute($ak);
+		public function getAttribute($ak, $c) {
+			if (is_object($ak)) {
+				$akHandle = $ak->getAttributeKeyHandle();
+			} else {
+				$akHandle = $ak;
 			}
+
+			if (!isset($this->attributes[$akHandle])) {
+				$this->attributes[$akHandle] = false;
+				$ak = CollectionAttributeKey::getByHandle($akHandle);
+				if (is_object($ak)) {
+					$av = $c->getAttributeValueObject($ak);
+					if (is_object($av)) {
+						$this->attributes[$akHandle] = $av->getValue();
+					}
+				}
+			}
+			return $this->attributes[$akHandle];
 		}
 
 		function isApproved() {return $this->cvIsApproved;}
-		function isMostRecent() {return $this->cvIsMostRecent;}
+		function isMostRecent() {
+			if (!isset($this->isMostRecent)) {
+				$cID = $this->cID;
+				$db = Loader::db();
+				$q = "select cvID from CollectionVersions where cID = '{$cID}' order by cvID desc";
+				$cvID = $db->getOne($q);
+				$this->isMostRecent = ($cvID == $this->cvID);
+			}
+			return $this->isMostRecent;
+		}
 		function isNew() {return $this->cvIsNew;}
 		function getVersionID() {return $this->cvID;}
 		function getCollectionID() {return $this->cID;}
@@ -129,6 +116,18 @@
 				$db = Loader::db();
 				return $db->GetOne('select uName from Users where uID = ?', array($this->cvApproverUID));
 			}
+		}
+
+		public function getCustomAreaStyles() {
+			if (!isset($this->customAreaStyles)) {
+				$db = Loader::db();
+				$r = $db->GetAll('select csrID, arHandle from CollectionVersionAreaStyles where cID = ? and cvID = ?', array($c->getCollectionID(), $cvID));
+				$this->customAreaStyles = array();
+				foreach($r as $styles) {
+					$this->customAreaStyles[$styles['arHandle']] = $styles['csrID'];
+				}
+			}
+			return $this->customAreaStyles;
 		}
 		
 		/**
@@ -192,17 +191,6 @@
 			return $nv;
 		}
 		
-		function _checkRecent() {
-			// basically checks to see if this version is the most recent version. You're not allowed to edit
-			// versions that are not the most recent.
-			
-			$cID = $this->cID;
-			
-			$db = Loader::db();
-			$q = "select cvID from CollectionVersions where cID = '{$cID}' order by cvID desc";
-			$cvID = $db->getOne($q);
-			return ($cvID == $this->cvID);
-		}
 		
 		function approve($doReindexImmediately = true) {
 			$db = Loader::db();

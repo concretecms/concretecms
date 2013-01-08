@@ -28,8 +28,8 @@ class Concrete5_Library_Environment {
 	public static function get() {
 		static $env;
 		if (!isset($env)) {
-			if (ENABLE_OVERRIDE_CACHE) { 
-				$r = Config::get('ENVIRONMENT_CACHE');
+			if (file_exists(DIR_FILES_CACHE . '/' . FILENAME_ENVIRONMENT_CACHE)) { 
+				$r = @file_get_contents(DIR_FILES_CACHE . '/' . FILENAME_ENVIRONMENT_CACHE);
 				if ($r) {
 					$en = @unserialize($r);
 					if ($en instanceof Environment) {
@@ -44,8 +44,16 @@ class Concrete5_Library_Environment {
 		return $env;
 	}
 	
+	public static function saveCachedEnvironmentObject() {
+		if (!file_exists(DIR_FILES_CACHE . '/' . FILENAME_ENVIRONMENT_CACHE)) {
+			$env = new Environment();
+			$env->getOverrides();
+			@file_put_contents(DIR_FILES_CACHE . '/' . FILENAME_ENVIRONMENT_CACHE, serialize($env));
+		}
+	}
+
 	public function clearOverrideCache() {
-		Config::clear("ENVIRONMENT_CACHE");
+		@unlink(DIR_FILES_CACHE . '/' . FILENAME_ENVIRONMENT_CACHE);
 		$this->overridesScanned = false;
 	}
 
@@ -83,9 +91,6 @@ class Concrete5_Library_Environment {
 		}
 
 		$this->overridesScanned = true;
-		if (ENABLE_OVERRIDE_CACHE && !$this->autoLoaded) {
-			Config::save('ENVIRONMENT_CACHE', serialize($this));
-		}		
 	}
 	
 	public function getDirectoryContents($dir, $ignoreFilesArray = array(), $recursive = false) {

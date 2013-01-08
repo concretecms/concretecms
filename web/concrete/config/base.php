@@ -337,6 +337,18 @@ if (!defined('DIR_FILES_CACHE')) {
 	define('DIR_FILES_CACHE', DIR_BASE . '/files/cache');
 }
 
+if (!defined('FILENAME_ENVIRONMENT_CACHE')) {
+	define('FILENAME_ENVIRONMENT_CACHE', 'environment.cache');
+}
+
+if (!defined('DIR_FILES_PAGE_CACHE')) {
+	define('DIR_FILES_PAGE_CACHE', DIR_BASE . '/files/cache/pages');
+}
+
+if (!defined('PAGE_CACHE_LIBRARY')) {
+	define('PAGE_CACHE_LIBRARY', 'file');
+}
+
 if (!defined('CACHE_ID')) {
 	define('CACHE_ID', md5(str_replace(array('https://', 'http://'), '', BASE_URL) . DIR_REL));
 }
@@ -346,13 +358,12 @@ define('DISPATCHER_FILENAME_CORE', 'dispatcher.php');
 
 if (defined('DIR_FILES_CACHE')) {
 	define('DIR_FILES_CACHE_DB', DIR_FILES_CACHE);
-	define('DIR_FILES_CACHE_PAGES', DIR_FILES_CACHE . '/lucene.pages');
 	$ADODB_ACTIVE_CACHESECS = 300;
 	$ADODB_CACHE_DIR = DIR_FILES_CACHE_DB;
 }
 
 if (!defined('CACHE_LIFETIME')) {
-	define('CACHE_LIFETIME', null);
+	define('CACHE_LIFETIME', 21600); // 6 hours
 }
 
 define('ON_WINDOWS', intval(substr(PHP_OS,0,3)=='WIN') );
