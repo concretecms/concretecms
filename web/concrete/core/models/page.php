@@ -1077,9 +1077,9 @@ class Concrete5_Model_Page extends Collection {
 
 		$db->query("update Pages set uID = ?, pkgID = ?, cFilename = ?, cCacheFullPageContent = ?, cCacheFullPageContentLifetimeCustom = ?, cCacheFullPageContentOverrideLifetime = ? where cID = ?", array($uID, $pkgID, $cFilename, $cCacheFullPageContent, $cCacheFullPageContentLifetimeCustom, $cCacheFullPageContentOverrideLifetime, $this->cID));
 
-		// run any internal event we have for page update
-		// i don't think we need to do this because approve reindexes
-		//$this->reindex();
+		$cache = PageCache::getLibrary();
+		$cache->purge($this);
+
 		$ret = Events::fire('on_page_update', $this);
 	}
 	
@@ -1511,6 +1511,10 @@ class Concrete5_Model_Page extends Collection {
 				}
 			}
 		}
+
+		$cache = PageCache::getLibrary();
+		$cache->purge($this);
+
 	}
 	
 	public function moveToTrash() {
