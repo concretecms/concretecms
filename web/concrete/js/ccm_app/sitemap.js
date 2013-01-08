@@ -149,7 +149,7 @@ cancelReorder = function() {
 	if (tr_reorderMode) {
 		//$('img.handle').removeClass('moveable');
 		tr_reorderMode = false;
-		$('li.tree-node').draggable('destroy');
+		$('li.tree-node[draggable=true]').draggable('destroy');
 		if (!tr_moveCopyMode) {
 			hideSitemapMessage();
 		}

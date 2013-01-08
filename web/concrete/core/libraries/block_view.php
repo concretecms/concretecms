@@ -198,7 +198,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			$page = Page::getCurrentPage();
 			
 			if ($view == 'view') {
-				if ($this->controller->cacheBlockOutput() && ($obj instanceof Block) && (!$obj->isBlockInStack())) {
+				if (ENABLE_BLOCK_CACHE && $this->controller->cacheBlockOutput() && ($obj instanceof Block)) {
 					if ((!$u->isRegistered() || ($this->controller->cacheBlockOutputForRegisteredUsers())) &&
 						(($_SERVER['REQUEST_METHOD'] != 'POST' || ($this->controller->cacheBlockOutputOnPost() == true)))) {
 							$useCache = true;
@@ -210,7 +210,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 						} else if (is_object($page)) {
 							$cID = $page->getCollectionID();
 						}
-						$outputContent = Cache::get('block_view_output', $cID . ':' . $obj->getBlockID() . ':' . $obj->getAreaHandle());
+						$outputContent = $obj->getBlockCachedOutput($this->area);
 					}
 				}
 			}
@@ -320,13 +320,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				print $outputContent;
 				
 				if ($useCache) {
-					$cID = 0;
-					if (is_object($this->area)) {
-						$cID = $this->area->getCollectionID();
-					} else if (is_object($page)) {
-						$cID = $page->getCollectionID();
-					}
-					Cache::set('block_view_output', $cID . ':' . $obj->getBlockID() . ':' . $obj->getAreaHandle(), $outputContent, $this->controller->getBlockTypeCacheOutputLifetime());
+					$obj->setBlockCachedOutput($outputContent, $this->controller->getBlockTypeCacheOutputLifetime(), $this->area);
 				}
 			}
 			if (isset($footer)) {

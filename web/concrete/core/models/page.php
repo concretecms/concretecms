@@ -21,11 +21,11 @@ class Concrete5_Model_Page extends Collection {
 	public static function getByPath($path, $version = 'RECENT') {
 		$path = rtrim($path, '/'); // if the path ends in a / remove it.
 
-		$cID = Cache::get('page_id_from_path', $path);
+		$cID = CacheLocal::getEntry('page_id_from_path', $path);
 		if ($cID == false) {
 			$db = Loader::db();
 			$cID = $db->GetOne("select cID from PagePaths where cPath = ?", array($path));
-			Cache::set("page_id_from_path", $path, $cID);
+			CacheLocal::set("page_id_from_path", $path, $cID);
 		}
 		return Page::getByID($cID, $version);
 	}
@@ -36,24 +36,19 @@ class Concrete5_Model_Page extends Collection {
 	 * @param string $class
 	 * @return Page
 	 */
-	public static function getByID($cID, $versionOrig = 'RECENT', $class = 'Page') {
+	public static function getByID($cID, $version = 'RECENT', $class = 'Page') {
 		
-		if ($versionOrig == 'RECENT' || $versionOrig == 'ACTIVE') {
-			$c = Cache::get(strtolower($class . '_' . $versionOrig), $cID);
-			if ($c instanceof $class) {
-				return $c;
-			}
+		$c = CacheLocal::getEntry('page', $cID . ':' . $cvID);
+		if ($c instanceof $class) {
+			return $c;
 		}
 		
-		$version = CollectionVersion::getNumericalVersionID($cID, $versionOrig);
 		$where = "where Pages.cID = ?";
 		$c = new $class;
 		$c->populatePage($cID, $where, $version);
  
 		// must use cID instead of c->getCollectionID() because cID may be the pointer to another page		
-		if ($versionOrig == 'RECENT' || $versionOrig == 'ACTIVE') {
-			Cache::set(strtolower($class . '_' . $versionOrig), $cID, $c);
-		}
+		CacheLocal::set('page', $cID . ':' . $cvID, $c);
 		
 		return $c;
 	}
@@ -108,33 +103,14 @@ class Concrete5_Model_Page extends Collection {
 			$this->loadError(COLLECTION_NOT_FOUND);
 		}
 		
-		if (!$this->isError()) {
-			$this->cHasLayouts = $db->GetOne('select count(cvalID) from CollectionVersionAreaLayouts where cID = ?', array($this->cID));
-	
-			$this->loadPermissionAssignments();
-			if ($cvID != false) {
-				// we don't do this on the front page
-				$this->loadVersionObject($cvID);
-			}
-		}		
+		if ($cvID != false && !$this->isError()) {
+			$this->loadVersionObject($cvID);
+		}
+		
 		unset($r);
 	}	
 	
-	protected function loadPermissionAssignments() {
-		$db = Loader::db();
-		$r = $db->Execute('select pkID, paID from PagePermissionAssignments where cID = ?', array($this->getPermissionsCollectionID()));
-		while ($row =  $r->FetchRow()) {
-			$pk = PermissionKey::getByID($row['pkID']);
-			$pk->setPermissionObject($this);
-			$this->permissionAssignments[$row['pkID']] = PermissionAccess::getByID($row['paID'], $pk);
-		}
-	}
 
-	public function getPermissionAccessObject(PermissionKey $pk) {
-		$pa = $this->permissionAssignments[$pk->getPermissionKeyID()];
-		return $pa;
-	}
-	
 	public function getPermissionObjectIdentifier() {
 		return $this->getPermissionsCollectionID();
 	}
@@ -175,7 +151,6 @@ class Concrete5_Model_Page extends Collection {
 		$db = Loader::db();
 		$q = "update Pages set cIsCheckedOut = 0, cCheckedOutUID = null, cCheckedOutDatetime = null, cCheckedOutDatetimeLastEdit = null where cID = '{$this->cID}'";
 		$r = $db->query($q);
-		$this->refreshCache();
 	}
 
 	/**
@@ -237,7 +212,6 @@ class Concrete5_Model_Page extends Collection {
 				}
 			}
 		}
-		Cache::delete('collection_blocks', $this->getCollectionID() . ':' . $this->getVersionID());
 	}
 
 	/**
@@ -322,7 +296,7 @@ class Concrete5_Model_Page extends Collection {
 			// group;
 			$pe = GroupPermissionAccessEntity::getOrCreate($userOrGroup);
 		}
-		
+
 		foreach($permissions as $pkHandle) { 
 			$pk = PagePermissionKey::getByHandle($pkHandle);
 			$pk->setPermissionObject($this);
@@ -333,7 +307,6 @@ class Concrete5_Model_Page extends Collection {
 			$pa->addListItem($pe, false, $accessType);
 			$pt = $pk->getPermissionAssignmentObject();
 			$pt->assignPermissionAccess($pa);
-			$this->loadPermissionAssignments();
 		}
 		
 	}
@@ -394,7 +367,6 @@ class Concrete5_Model_Page extends Collection {
 				$this->assignPermissions(UserInfo::getByID($u['uID']), $pkHandles);
 			}
 		}
-		$this->refreshCache();
 	}
 	
 	
@@ -446,7 +418,6 @@ class Concrete5_Model_Page extends Collection {
 		$v2 = array($newCID, $cPath . '/' . $handle);
 		$db->query($q2, $v2);
 		
-		$c->refreshCache();
 
 		return $newCID;
 	}
@@ -468,7 +439,6 @@ class Concrete5_Model_Page extends Collection {
 			}
 			$db->query("update CollectionVersions set cvName = ? where cID = ?", array($cName, $this->cID));
 			$db->query("update Pages set cPointerExternalLink = ?, cPointerExternalLinkNewWindow = ? where cID = ?", array($cLink, $newWindow, $this->cID));
-			$this->refreshCache();
 		}
 	}
 
@@ -576,8 +546,6 @@ class Concrete5_Model_Page extends Collection {
 		$cIDRedir = $this->getCollectionPointerID();
 		$cPointerExternalLink = $this->getCollectionPointerExternalLink();
 		
-		parent::refreshCache();
-
 		if ($cPointerExternalLink != '') {
 			$this->delete();
 		} else if ($cIDRedir > 0) {
@@ -598,10 +566,6 @@ class Concrete5_Model_Page extends Collection {
 			
 			$q = "delete from PagePaths where cID = ?";
 			$r = $db->query($q, $args);
-
-			Cache::delete('page', $this->getCollectionPointerOriginalID()  );
-			Cache::delete('page_path', $this->getCollectionPointerOriginalID()  );
-			Cache::delete('request_path_page', $this->getCollectionPointerOriginalID()  );
 
 			return $cIDRedir;
 		}
@@ -913,7 +877,6 @@ class Concrete5_Model_Page extends Collection {
 	public function setTheme($pl) {
 		$db = Loader::db();
 		$db->query('update CollectionVersions set ptID = ? where cID = ? and cvID = ?', array($pl->getThemeID(), $this->cID, $this->vObj->getVersionID()));
-		parent::refreshCache();
 	}
 
 	/**
@@ -923,7 +886,6 @@ class Concrete5_Model_Page extends Collection {
 		$db = Loader::db();
 		if ($this->cID) {
 			$db->query("update Pages set cOverrideTemplatePermissions = 0 where cID = {$this->cID}");
-			$this->refreshCache();
 		}
 	}
 
@@ -934,7 +896,6 @@ class Concrete5_Model_Page extends Collection {
 		$db = Loader::db();
 		if ($this->cID) {
 			$db->query("update Pages set cOverrideTemplatePermissions = 1 where cID = {$this->cID}");
-			$this->refreshCache();
 		}
 	}
 
@@ -1036,7 +997,6 @@ class Concrete5_Model_Page extends Collection {
 		$vo = $this->getVersionObject();
 		$cvID = $vo->getVersionID();
 		$this->markModified();
-		parent::refreshCache();
 		
 		$cName = $this->getCollectionName();
 		$cDescription = $this->getCollectionDescription();
@@ -1117,10 +1077,9 @@ class Concrete5_Model_Page extends Collection {
 
 		$db->query("update Pages set uID = ?, pkgID = ?, cFilename = ?, cCacheFullPageContent = ?, cCacheFullPageContentLifetimeCustom = ?, cCacheFullPageContentOverrideLifetime = ? where cID = ?", array($uID, $pkgID, $cFilename, $cCacheFullPageContent, $cCacheFullPageContentLifetimeCustom, $cCacheFullPageContentOverrideLifetime, $this->cID));
 
-		// run any internal event we have for page update
-		// i don't think we need to do this because approve reindexes
-		//$this->reindex();
-		parent::refreshCache();
+		$cache = PageCache::getLibrary();
+		$cache->purge($this);
+
 		$ret = Events::fire('on_page_update', $this);
 	}
 	
@@ -1251,13 +1210,6 @@ class Concrete5_Model_Page extends Collection {
 			$a = Area::getOrCreate($this, $arHandle);
 			$a->rescanAreaPermissionsChain();
 		}
-
-		$blocks = $this->getBlocks();
-		foreach($blocks as $b) {
-			$b->refreshCache();
-		}
-		
-		parent::refreshCache();
 	}
 	
 	public function setOverrideTemplatePermissions($cOverrideTemplatePermissions) {
@@ -1266,7 +1218,6 @@ class Concrete5_Model_Page extends Collection {
 		$q = "update Pages set cOverrideTemplatePermissions = ? where cID = ?";
 		$db->Execute($q, $v);
 		$this->cOverrideTemplatePermissions = $cOverrideTemplatePermissions;
-		$this->refreshCache();
 	}
 
 	function updatePermissionsCollectionID($cParentIDString, $npID) {
@@ -1354,7 +1305,6 @@ class Concrete5_Model_Page extends Collection {
 		$cID = ($this->getCollectionPointerOriginalID() > 0) ? $this->getCollectionPointerOriginalID() : $this->cID;
 
 		PageStatistics::decrementParents($cID);
-		parent::refreshCache();
 		
 		$cDateModified = $dh->getSystemDateTime();
 		if ($this->getPermissionsCollectionID() != $this->getCollectionID() && $this->getPermissionsCollectionID() != $this->getMasterCollectionID()) {
@@ -1393,9 +1343,6 @@ class Concrete5_Model_Page extends Collection {
 		$oldParent = Page::getByID($this->getCollectionParentID(), 'RECENT');
 		$newParent = Page::getByID($newCParentID, 'RECENT');
 		
-		$oldParent->refreshCache();
-		$newParent->refreshCache();
-
 		$ret = Events::fire('on_page_move', $this, $oldParent, $newParent);
 
 		// now that we've moved the collection, we rescan its path
@@ -1470,7 +1417,6 @@ class Concrete5_Model_Page extends Collection {
 		
 		if ($res) {
 			// rescan the collection path
-			$nc->refreshCache();
 			$nc2 = Page::getByID($newCID);
 			
 			// now with any specific permissions - but only if this collection is set to override
@@ -1518,7 +1464,6 @@ class Concrete5_Model_Page extends Collection {
 			return false;
 		}
 
-		parent::refreshCache();
 		parent::delete();
 		
 		$cID = $this->getCollectionID();
@@ -1566,6 +1511,10 @@ class Concrete5_Model_Page extends Collection {
 				}
 			}
 		}
+
+		$cache = PageCache::getLibrary();
+		$cache->purge($this);
+
 	}
 	
 	public function moveToTrash() {
@@ -1625,7 +1574,6 @@ class Concrete5_Model_Page extends Collection {
 		if(!intval($cID)) $cID=$this->getCollectionID();
 		$db = Loader::db();
 		$db->query("update Pages set cDisplayOrder = ? where cID = ?", array($do, $cID));
-		$this->refreshCache();
 	}
 	
 	public function movePageDisplayOrderToTop() {
@@ -1709,7 +1657,6 @@ class Concrete5_Model_Page extends Collection {
 			if ($res3) {
 				$np = Page::getByID($cID, $row['cvID']);
 				$np->rescanSystemPageStatus();
-				$np->refreshCache();
 				return $newPath;
 			}
 		}
@@ -1738,7 +1685,6 @@ class Concrete5_Model_Page extends Collection {
 	public function moveToRoot() {
 		$db = Loader::db();
 		$db->Execute('update Pages set cParentID = 0 where cID = ?', array($this->getCollectionID()));
-		$this->refreshCache();
 	}
 
 	public function rescanSystemPages() {
@@ -1755,13 +1701,11 @@ class Concrete5_Model_Page extends Collection {
 	public function deactivate() {
 		$db = Loader::db();
 		$db->Execute('update Pages set cIsActive = 0 where cID = ?', array($this->getCollectionID()));
-		$this->refreshCache();
 	}
 
 	public function activate() {
 		$db = Loader::db();
 		$db->Execute('update Pages set cIsActive = 1 where cID = ?', array($this->getCollectionID()));
-		$this->refreshCache();
 	}
 	
 	public function isActive() {
@@ -1956,7 +1900,6 @@ class Concrete5_Model_Page extends Collection {
 		$cDate = $dh->getSystemDateTime();
 		$cDatePublic = ($data['cDatePublic']) ? $data['cDatePublic'] : null;		
 		
-		parent::refreshCache();
 		$data['ctID'] = $ct->getCollectionTypeID();
 		$cobj = parent::add($data);		
 		$cID = $cobj->getCollectionID();		
@@ -2002,22 +1945,6 @@ class Concrete5_Model_Page extends Collection {
 		return $pc;
 	}
 	
-	public function addToPageCache($content) {
-		Cache::set('page_content', $this->getCollectionID(), $content, $this->getCollectionFullPageCachingLifetimeValue());
-	}
-	
-	public function getFromPageCache() {
-		return Cache::get('page_content', $this->getCollectionID());
-	}
-	
-	public function renderFromCache() {
-		$content = Cache::get('page_content', $this->getCollectionID());
-		if ($content != false) {
-			print $content;
-			exit;
-		}
-	}
-
 	public function getCollectionFullPageCaching() {
 		return $this->cCacheFullPageContent;
 	}
@@ -2046,65 +1973,14 @@ class Concrete5_Model_Page extends Collection {
 				$lifetime = CACHE_LIFETIME;
 			}
 		}
+
+		if (!$lifetime) {
+			// we have no value, which means forever, but we need a numerical value for page caching
+			$lifetime = 31536000;
+		}
 		
 		return $lifetime;
 	}
-	
-	public function supportsPageCache($blocks, $controller = false) {
-		$u = new User();
-		
-		$allowedControllerActions = array('view');
-		if (is_object($controller)) {
-			if (!in_array($controller->getTask(), $allowedControllerActions)) {
-				return false;
-			}
-		}
-
-		if ($this->cCacheFullPageContent == 0) {
-			return false;
-		}
-		
-		
-		if ($u->isRegistered() || $_SERVER['REQUEST_METHOD'] == 'POST') {
-			return false;
-		}
-		
-		// test get variables
-		$allowedGetVars = array('cid');
-		if (is_array($_GET)) {
-			foreach($_GET as $key => $value) {
-				if (!in_array(strtolower($key), $allowedGetVars)) {
-					return false;
-				}
-			}
-		}		
-		
-		if ($this->cCacheFullPageContent == 1 || FULL_PAGE_CACHE_GLOBAL === 'all') {
-			// this cache page at the page level
-			// this overrides any global settings
-			return true;
-		}
-		
-		if (FULL_PAGE_CACHE_GLOBAL !== 'blocks') {
-			// we are NOT specifically caching this page, and we don't 
-			return false;
-		}
-		
-		if ($this->isGeneratedCollection()) {
-			return false;
-		}	
-
-		if (is_array($blocks)) {
-			foreach($blocks as $b) {
-				$controller = $b->getInstance();
-				if (!$controller->cacheBlockOutput()) {
-					return false;
-				}
-			}
-		}
-		return true;
-	}
-		
 	
 	public function addStatic($data) {
 		$db = Loader::db();
@@ -2123,7 +1999,6 @@ class Concrete5_Model_Page extends Collection {
 		$uID = USER_SUPER_ID;
 		$data['uID'] = $uID;
 		$cIsSystemPage = 0;
-		parent::refreshCache();
 		$cobj = parent::add($data);		
 		$cID = $cobj->getCollectionID();
 		

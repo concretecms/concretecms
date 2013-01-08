@@ -561,7 +561,34 @@
     <field name="uID" type="I" size="10">
       <UNSIGNED/>
     </field>
+    <field name="btCachedBlockRecord" type="X2"></field>
   </table> 
+  <table name="CollectionVersionBlocksOutputCache">
+    <field name="cID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="cvID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="1"/>
+      <UNSIGNED/>
+    </field>
+    <field name="bID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="arHandle" type="C" size="255">
+      <KEY/>
+    </field>
+    <field name="btCachedBlockOutput" type="X2" />
+    <field name="btCachedBlockOutputExpires" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+  </table>
   <table name="CollectionAttributeValues">
     <field name="cID" type="I" size="10">
       <KEY/>
@@ -904,28 +931,6 @@
       <col>uID</col>
     </index>
   </table>
-  <table name="DashboardHomepage">
-    <field name="dbhID" type="I" size="10">
-      <KEY/>
-      <AUTOINCREMENT/>
-      <UNSIGNED/>
-    </field>
-    <field name="dbhModule" type="C" size="255">
-      <NOTNULL/>
-    </field>
-    <field name="dbhDisplayName" type="C" size="255"/>
-    <field name="dbhDisplayOrder" type="I" size="10">
-      <NOTNULL/>
-      <DEFAULT value="0"/>
-      <UNSIGNED/>
-    </field>
-    <field name="pkgID" type="I" size="10">
-      <NOTNULL/>
-      <DEFAULT value="0"/>
-      <UNSIGNED/>
-    </field>
-  </table>
-  
   <table name="DownloadStatistics">
     <field name="dsID" type="I" size="10">
       <KEY/>

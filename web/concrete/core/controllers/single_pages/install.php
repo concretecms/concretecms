@@ -7,7 +7,6 @@ if (!ini_get('safe_mode')) {
 
 date_default_timezone_set(@date_default_timezone_get());
 
-define('ENABLE_CACHE', false);
 define('UPLOAD_FILE_EXTENSIONS_ALLOWED','*.flv;*.jpg;*.gif;*.jpeg;*.ico;*.docx;*.xla;*.png;*.psd;*.swf;*.doc;*.txt;*.xls;*.xlsx;*.csv;*.pdf;*.tiff;*.rtf;*.m4a;*.mov;*.wmv;*.mpeg;*.mpg;*.wav;*.avi;*.m4v;*.mp4;*.mp3;*.qt;*.ppt;*.pptx;*.kml;*.xml');
 if (!defined('DIR_FILES_UPLOADED')) {
 	define('DIR_FILES_UPLOADED', DIR_FILES_UPLOADED_STANDARD);
@@ -64,6 +63,7 @@ class Concrete5_Controller_Install extends Controller {
 		}
 		require(DIR_BASE_CORE . '/config/file_types.php');
 		Cache::disableCache();
+		Cache::disableLocalCache();
 		$this->setRequiredItems();
 		$this->setOptionalItems();
 		Loader::model('package/starting_point');
