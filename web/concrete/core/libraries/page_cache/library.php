@@ -36,8 +36,9 @@ abstract class Concrete5_Library_PageCache {
 		$expires = time() + $lifetime;
 
 		header('Pragma: public');
-		header('Cache-Control: max-age=' . $expires);
-		header('Expires: ' . gmdate('D, d M Y H:i:s', time() + $expires) . ' GMT');
+		header('Cache-Control: s-maxage=' . $lifetime);
+		header('Cache-Control: max-age=' . $lifetime);
+		header('Expires: ' . gmdate('D, d M Y H:i:s', $expires) . ' GMT');
 	}
 
 	public function shouldAddToCache(View $v) {
