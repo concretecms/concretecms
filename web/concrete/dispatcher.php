@@ -78,6 +78,9 @@
 	# Startup check, install ##
 	require($cdir . '/startup/config_check_complete.php');
 
+	## Package events
+	require($cdir . '/startup/packages.php');
+
 	## Load permissions and attributes
 	PermissionKey::loadAll();
 
@@ -115,9 +118,6 @@
 	if (file_exists(DIR_CONFIG_SITE . '/site_file_types.php')) {
 		@include(DIR_CONFIG_SITE . '/site_file_types.php');
 	}
-
-	## Package events
-	require($cdir . '/startup/packages.php');
 
 	## Add additional core menu options
 	require($cdir . '/startup/optional_menu_buttons.php');
