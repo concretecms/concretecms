@@ -130,6 +130,66 @@ class Concrete5_Controller_Login extends Controller {
 		$this->error->add(t('This user is inactive. Please contact us regarding this account.'));
 	}
 	
+	public function authenticate($type) {
+		try {
+			$at = AuthenticationType::getByHandle($type);
+			$at->controller->authenticate();
+			$db = Loader::db();
+			$u = new User();
+			$u->setLastAuthType($at);
+			Events::fire('on_user_login',$this);
+			$this->chooseRedirect();
+		} catch (exception $e) {
+			$this->error->add($e->getMessage());
+		}
+		$this->view();
+	}
+
+	public function chooseRedirect() {
+		$dash = Page::getByPath("/dashboard", "RECENT");
+		$dbp = new Permissions($dash);
+
+		//should administrator be redirected to dashboard?  defaults to yes if not set.
+		$adminToDash=intval(Config::get('LOGIN_ADMIN_TO_DASHBOARD'));
+		$u = new User(); // added for the required registration attribute change above. We recalc the user and make sure they're still logged in
+		if ($u->isRegistered()) {
+			if ($u->config('NEWSFLOW_LAST_VIEWED') == 'FIRSTRUN') {
+				$u->saveConfig('NEWSFLOW_LAST_VIEWED', 0);
+			}
+
+			if ($loginData['redirectURL']) {
+				//make double secretly sure there's no caching going on
+				header("Cache-Control: no-store, no-cache, must-revalidate");
+				header("Pragma: no-cache");
+				header('Expires: Fri, 30 Oct 1998 14:19:41 GMT'); //in the past
+				$this->externalRedirect( $loginData['redirectURL'] );
+			} elseif ($dbp->canRead() && $adminToDash) {
+				$this->redirect('/dashboard');
+			} else {
+				//options set in dashboard/users/registration
+				$login_redirect_cid=intval(Config::get('LOGIN_REDIRECT_CID'));
+				$login_redirect_mode=Config::get('LOGIN_REDIRECT');
+
+				//redirect to user profile
+				if ($login_redirect_mode=='PROFILE' && ENABLE_USER_PROFILES) {
+					$this->redirect( '/profile/', $u->uID );
+
+				//redirect to custom page
+				} elseif ($login_redirect_mode=='CUSTOM' && $login_redirect_cid > 0) {
+					$redirectTarget = Page::getByID( $login_redirect_cid );
+					if (intval($redirectTarget->cID)>0) $this->redirect( $redirectTarget->getCollectionPath());
+					else $this->redirect('/');
+
+				//redirect home
+				} else $this->redirect('/');
+			}
+		} else {
+			$this->error->add('User is not registered. Check your authentication controller.');
+			$u->logout();
+		}
+	}
+
+
 	public function do_login() { 
 		$ip = Loader::helper('validation/ip');
 		$vs = Loader::helper('validation/strings');
@@ -307,52 +367,9 @@ class Concrete5_Controller_Login extends Controller {
 		}
 		*/
 		
-		$dash = Page::getByPath("/dashboard", "RECENT");
-		$dbp = new Permissions($dash);
 		
 		Events::fire('on_user_login',$this);
-		
-		//End JSON Login
-		if($_REQUEST['format']=='JSON') 
-			return $loginData;		
-		
-		//should administrator be redirected to dashboard?  defaults to yes if not set. 
-		$adminToDash=intval(Config::get('LOGIN_ADMIN_TO_DASHBOARD'));  	
-		
-		//Full page login, standard redirection	
-		$u = new User(); // added for the required registration attribute change above. We recalc the user and make sure they're still logged in
-		if ($u->isRegistered()) { 
-			if ($u->config('NEWSFLOW_LAST_VIEWED') == 'FIRSTRUN') {
-				$u->saveConfig('NEWSFLOW_LAST_VIEWED', 0);
-			}
-			
-			if ($loginData['redirectURL']) {
-				//make double secretly sure there's no caching going on
-				header("Cache-Control: no-store, no-cache, must-revalidate");
-				header("Pragma: no-cache");
-				header('Expires: Fri, 30 Oct 1998 14:19:41 GMT'); //in the past		
-				$this->externalRedirect( $loginData['redirectURL'] );
-			}else if ( $dbp->canRead() && $adminToDash ) {
-				$this->redirect('/dashboard');
-			} else {
-				//options set in dashboard/users/registration
-				$login_redirect_cid=intval(Config::get('LOGIN_REDIRECT_CID'));
-				$login_redirect_mode=Config::get('LOGIN_REDIRECT');		
-				
-				//redirect to user profile
-				if( $login_redirect_mode=='PROFILE' && ENABLE_USER_PROFILES ){ 			
-					$this->redirect( '/profile/', $u->uID ); 				
-					
-				//redirect to custom page	
-				}elseif( $login_redirect_mode=='CUSTOM' && $login_redirect_cid > 0 ){ 
-					$redirectTarget = Page::getByID( $login_redirect_cid ); 
-					if(intval($redirectTarget->cID)>0) $this->redirect( $redirectTarget->getCollectionPath() );
-					else $this->redirect('/');		
-							
-				//redirect home
-				}else $this->redirect('/');
-			}
-		}
+
 	}
 
 	public function password_sent() {
