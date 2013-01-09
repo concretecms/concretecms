@@ -348,4 +348,24 @@ class MailImportedMessage {
 	
 	public function getDataObject() {return $this->dataObject;}
 	
+	
+	
+	/** 
+	 * checks to see if the message is a bounce or delivery failure
+	 * @return boolean
+	*/
+	public function isSendError() {
+		$message = $this->getOriginalMessageObject();
+		$headers = $message->getHeaders();
+		$isSendError = false;
+		if(is_array($headers) && count($headers)) {
+			foreach(array_keys($headers) as $key) {
+				if(strstr($key, 'x-fail') !== false) {
+					$isSendError = true; 
+					break;
+				}
+			}
+		}
+		return $isSendError;
+	}
 }
