@@ -171,6 +171,8 @@ define('DIRNAME_PACKAGES', 'packages');
 define('DIRNAME_MODELS', 'models');
 define('DIRNAME_ATTRIBUTES', 'attribute');
 define('DIRNAME_ATTRIBUTE_TYPES', 'types');
+define('DIRNAME_AUTHENTICATION', 'authentication');
+define('DIRNAME_AUTHENTICATION_TYPES', 'types');
 define('DIRNAME_LIBRARIES', 'libraries');
 define('DIRNAME_RESPONSE', 'response');
 define('DIRNAME_PERMISSIONS', 'permission');
@@ -293,6 +295,8 @@ define('DIRNAME_CONTROLLERS', 'controllers');
 define('DIR_FILES_CONTROLLERS_REQUIRED', DIR_BASE_CORE . '/controllers');
 define('FILENAME_ATTRIBUTE_CONTROLLER', 'controller.php');
 define('FILENAME_ATTRIBUTE_DB', 'db.xml');
+define('FILENAME_AUTHENTICATION_CONTROLLER', 'controller.php');
+define('FILENAME_AUTHENTICATION_DB', 'db.xml');
 define('FILENAME_DB', 'db.xml');
 
 # Elements
