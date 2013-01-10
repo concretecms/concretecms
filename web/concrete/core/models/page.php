@@ -38,7 +38,7 @@ class Concrete5_Model_Page extends Collection {
 	 */
 	public static function getByID($cID, $version = 'RECENT', $class = 'Page') {
 		
-		$c = CacheLocal::getEntry('page', $cID . ':' . $cvID);
+		$c = CacheLocal::getEntry('page', $cID . ':' . $version);
 		if ($c instanceof $class) {
 			return $c;
 		}
@@ -48,7 +48,7 @@ class Concrete5_Model_Page extends Collection {
 		$c->populatePage($cID, $where, $version);
  
 		// must use cID instead of c->getCollectionID() because cID may be the pointer to another page		
-		CacheLocal::set('page', $cID . ':' . $cvID, $c);
+		CacheLocal::set('page', $cID . ':' . $version, $c);
 		
 		return $c;
 	}
