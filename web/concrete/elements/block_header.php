@@ -9,9 +9,9 @@ $arHandle = $a->getAreaHandle();
 
 $btw = BlockType::getByID($b->getBlockTypeID());
 if ($btw->getBlockTypeHandle() == BLOCK_HANDLE_LAYOUT_PROXY) {
-	$class = 'ccm-block-edit-layout';
+	$class = 'ccm-block-edit-layout ccm-block-arrangeable';
 } else {
-	$class = 'ccm-block-edit';
+	$class = 'ccm-block-edit ccm-block-arrangeable';
 }
 
 $class .= ($b->isAliasOfMasterCollection() || $b->getBlockTypeHandle() == BLOCK_HANDLE_SCRAPBOOK_PROXY) ? " ccm-block-alias" : "";

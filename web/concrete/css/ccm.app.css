@@ -1547,7 +1547,7 @@ div.ccm-area-layout-control-bar i{position:absolute;top:-2px;z-index:10;left:-2p
 div.ccm-block-edit-inline-active{outline:1px solid rgba(0, 105, 185, 0.6);}
 div.ccm-block-edit-disabled{opacity:0.2 !important;transition:opacity 0.5s linear;-webkit-transition:opacity 0.5s linear;-moz-transition:opacity 0.5s linear;}
 div.ccm-block-edit{transition:opacity 0.5s linear;-webkit-transition:opacity 0.5s linear;-moz-transition:opacity 0.5s linear;}
-div.ccm-move-mode{outline:1px solid rgba(0, 0, 0, 0.3);min-height:20px;}
+div.ccm-move-mode{outline:1px solid rgba(0, 0, 0, 0.7);min-height:20px;}
 div#ccm-highlighter{background:#000;opacity:0;z-index:5;height:0px;width:0px;position:absolute;cursor:pointer;transition:opacity 0.1s linear;-webkit-transition:opacity 0.1s linear;-moz-transition:opacity 0.1s linear;}
 div.ccm-edit-mode-disabled-item{background:#ddd;color:#aaa;outline:1px solid #888;text-align:center;font-size:14px;font-family:Helvetica Neue, Arial, Helvetica;font-weight:bold;padding:0px;line-height:21px;}
 ul.redactor_toolbar{visibility:hidden;}

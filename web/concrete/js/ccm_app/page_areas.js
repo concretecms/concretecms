@@ -259,6 +259,7 @@ ccm_saveArrangement = function(cID) {
 				$(this).addClass('ccm-block-edit');
 				$(this).removeClass('ccm-block-arrange');
 			});
+			$('div.ccm-area-footer').show();
 			$.fn.ccmmenu.enable();
 			$(".ccm-main-nav-edit-option").fadeIn(300);
 			ccmAlert.hud(ccmi18n.arrangeBlockMsg, 2000, 'up_down', ccmi18n.arrangeBlock);
@@ -270,11 +271,13 @@ ccm_arrangeInit = function() {
 	
 	$.fn.ccmmenu.disable();
 	
-	$('div.ccm-block-edit').each(function() {
+	$('div.ccm-block-arrangeable').each(function() {
 		$(this).addClass('ccm-block-arrange');
 		$(this).removeClass('ccm-block-edit');
 	});
 	
+	$('div.ccm-area-footer').hide();
+
 	$(".ccm-main-nav-edit-option").fadeOut(300, function() {
 		$(".ccm-main-nav-arrange-option").fadeIn(300);
 	});
