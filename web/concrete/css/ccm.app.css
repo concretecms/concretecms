@@ -1527,7 +1527,7 @@ ul#ccm-select-marketplace-theme li .desc{font-size:10px;}
 div.ccm-block-alias{outline:1px solid rgba(0, 0, 0, 0.3);}
 div.ccm-block-stack{outline:1px solid rgba(8, 144, 248, 0.3);}
 div.ccm-block-edit-disabled,div.ccm-block-arrange,div.ccm-block-edit{margin:1px 1px 3px 1px;outline:1px solid rgba(255, 0, 0, 0.4);overflow:hidden;}
-div.ccm-block-edit-layout{overflow:hidden;}
+div.ccm-block-edit-layout{overflow:hidden;outline:0px !important;}
 div.ccm-menu-hotspot-active{outline:1px solid black !important;}
 div.ccm-block-arrange{min-height:20px;max-height:200px;overflow:hidden;}
 div.ccm-area div.ccm-block-arrange:hover{cursor:move;outline:1px solid #000;}
