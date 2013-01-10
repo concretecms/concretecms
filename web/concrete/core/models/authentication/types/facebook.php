@@ -1,37 +1,29 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
 
-class Concrete5_Controller_AuthenticationType_Concrete extends AuthenticationTypeController {
+Loader::library('3rdparty/Zend/Oauth/consumer');
+class Concrete5_Controller_AuthenticationType_Facebook extends AuthenticationTypeController {
 
 	public function authenticate() {
-		$post = $this->post();
-
-		if (!isset($post['uName']) || !isset($post['uPassword'])) {
-			throw new Exception('Please provide both username and password.');
-		}
-		$uName = $post['uName'];
-		$uPassword = $post['uPassword'];
-
-		$user = new User($uName,$uPassword);
-		if (!is_object($user) || !($user instanceof User) || $user->isError()) {
-			switch($user->getError()) {
-				case USER_NON_VALIDATED:
-					throw new Exception(t('This account has not yet been validated. Please check the email associated with this account and follow the link it contains.'));
-					break;
-				case USER_INVALID:
-					if (USER_REGISTRATION_WITH_EMAIL_ADDRESS) {
-						throw new Exception(t('Invalid email address or password.'));
-					} else {
-						throw new Exception(t('Invalid username or password.'));
-					}
-					break;
-				case USER_INACTIVE:
-					throw new Exception(t('This user is inactive. Please contact us regarding this account.'));
-					break;
-			}
-		}
 		if ($post['uMaintainLogin']) {
 			$user->setAuthTypeCookie('concrete');
 		}
+	}
+
+	public function view() {
+		$config = array(
+			'callbackUrl' => BASE_URL.view::url("/login","callback","facebook","callback"),
+			'siteUrl' => 'http://twitter.com/oauth',
+			'consumerKey' => 'gg3DsFTW9OU9eWPnbuPzQ',
+			'consumerSecret' => 'tFB0fyWLSMf74lkEu9FTyoHXcazOWpbrAjTCCK48A'
+		);
+		$consumer = new Zend_Oauth_Consumer($config);
+
+		$this->set('consumer',$consumer);
+	}
+
+	public function callback() {
+		print_r($_REQUEST);
+		exit;
 	}
 
 	public function deauthenticate(User $u) {
@@ -66,8 +58,6 @@ class Concrete5_Controller_AuthenticationType_Concrete extends AuthenticationTyp
 		return md5($o);
 	}
 
-	public function view() {}
-
 	public function buildHash(User $u,$test=1) {
 		if ($test>10) {
 			// This should only ever happen if by some stroke of divine intervention,
@@ -86,6 +76,7 @@ class Concrete5_Controller_AuthenticationType_Concrete extends AuthenticationTyp
 		}
 		return $token;
 	}
+
 
 	public function isAuthenticated(User $u) {
 		return ($u->isLoggedIn());

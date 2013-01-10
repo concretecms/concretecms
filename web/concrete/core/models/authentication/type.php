@@ -187,6 +187,19 @@ class Concrete5_Model_AuthenticationType extends Object {
 		return false;
 	}
 	
+	public function renderForm() {
+		$form = $this->mapAuthenticationTypeFilePath('form.php');
+		if ($form) {
+			ob_start();
+			$this->controller->view();
+			extract($this->controller->getSets());
+			require_once($form);
+			$out = ob_get_contents();
+			ob_end_clean();
+			echo $out;
+		}
+	}
+
 	protected function loadController() { 
 		// local scope
 		$atHandle = $this->authTypeHandle;

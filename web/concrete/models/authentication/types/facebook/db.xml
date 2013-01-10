@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<schema version="0.3">
+	<table name="authTypeFacebookSettings">
+		<field name="ID" type="I">
+			<key />
+			<unsigned />
+			<autoincrement />
+		</field>
+		<field name='setting' type="C" size='255' />
+		<field name='value' type="C" size='255' />
+		<index name="akHandle">
+			<UNIQUE/>
+			<col>setting</col>
+		</index>
+	</table>
+	<table name="authTypeFacebookAccessTokens">
+		<field name="ID" type="I">
+			<key />
+			<unsigned />
+			<autoincrement />
+		</field>
+		<field name='token' type="C" size='255' />
+		<field name='tokenSecret' type="C" size='255' />
+		<field name='accessToken ' type="C" size='255' />
+		<field name="uID" type="I" size='10' />
+	</table>
+	<table name="authTypeFacebookCookieTokens">
+		<field name="ID" type="I">
+			<key />
+			<unsigned />
+			<autoincrement />
+		</field>
+		<field name='token' type="C" size='32' />
+		<field name="uID" type="I" size='10' />
+		<field name="validThrough" type="I" size='10' />
+		<index name="akHandle">
+			<UNIQUE/>
+			<col>token</col>
+		</index>
+	</table>
+</schema>
