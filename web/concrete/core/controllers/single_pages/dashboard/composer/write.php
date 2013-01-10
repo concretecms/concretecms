@@ -81,11 +81,8 @@ class Concrete5_Controller_Dashboard_Composer_Write extends Controller {
 					Cache::disableLocalCache();
 
 					if ($entry->isComposerDraft()) { 
-						$pkr = new MovePagePageWorkflowRequest();
-						$pkr->setRequestedPage($entry);
-						$pkr->setRequestedTargetPage($parent);
-						$pkr->setRequesterUserID($u->getUserID());
-						$pkr->trigger();
+
+						$entry->move($parent);
 	
 						$v = CollectionVersion::get($entry, 'RECENT');
 						$pkr = new ApprovePagePageWorkflowRequest();
