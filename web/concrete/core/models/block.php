@@ -318,6 +318,7 @@ class Concrete5_Model_Block extends Object {
 
 	protected function setBlockComposerProperties() {
 		$this->bIncludeInComposerIsSet = true;
+		$db = Loader::db();
 		if ($this->c != null) {
 			$ct = CollectionType::getByID($this->c->getCollectionTypeID());
 			if (is_object($ct)) {

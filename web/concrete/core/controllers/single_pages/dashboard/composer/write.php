@@ -74,13 +74,29 @@ class Concrete5_Controller_Dashboard_Composer_Write extends Controller {
 				$entry = ComposerPage::getByID($entry->getCollectionID(), 'RECENT');
 				$entry->update($data);
 				$this->saveData($entry);
+				$u = new User();
 				if ($this->post('ccm-publish-draft')) {
-					$v = CollectionVersion::get($entry, 'RECENT');
-					$v->approve();
+		
+					Cache::disableCache();
+					Cache::disableLocalCache();
+
 					if ($entry->isComposerDraft()) { 
-						$entry->move($parent);
+						$pkr = new MovePagePageWorkflowRequest();
+						$pkr->setRequestedPage($entry);
+						$pkr->setRequestedTargetPage($parent);
+						$pkr->setRequesterUserID($u->getUserID());
+						$pkr->trigger();
+	
+						$v = CollectionVersion::get($entry, 'RECENT');
+						$pkr = new ApprovePagePageWorkflowRequest();
+						$pkr->setRequestedPage($entry);
+						$pkr->setRequestedVersionID($v->getVersionID());
+						$pkr->setRequesterUserID($u->getUserID());
+						$pkr->trigger();
+
 						Events::fire('on_composer_publish', $entry);
 						$entry->markComposerPageAsPublished();
+
 					}
 					$this->redirect('?cID=' . $entry->getCollectionID());
 				} else if ($this->post('autosave')) { 
