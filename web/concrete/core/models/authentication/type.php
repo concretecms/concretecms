@@ -215,3 +215,8 @@ class Concrete5_Model_AuthenticationType extends Object {
 	
 }
 
+/**
+ * Fatal authentication error, for things that you cannot possibly recover from.
+ */
+class AuthenticationTypeFailureException extends exception {}
+

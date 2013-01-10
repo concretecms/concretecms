@@ -52,7 +52,7 @@ class Concrete5_Controller_LoginOauth extends Controller {
 			$this->set('error', $this->error);
 		}
 	}
-	
+
 	public function view() {}
 	
 	public function account_deactivated() {
@@ -64,7 +64,18 @@ class Concrete5_Controller_LoginOauth extends Controller {
 		if (!method_exists($at->controller, $method)) {
 			throw new exception('Invalid method.');
 		}
-		call_user_method($method, $at->controller);
+		try {
+			$message = call_user_method($method, $at->controller);
+			if (trim($message)) {
+				$this->set('message',$message);
+			}
+		} catch (exception $e) {
+			if ($e instanceof AuthenticationTypeFailureException) {
+				// Throw again if this is a big`n
+				throw $e;
+			}
+			$this->error->add($e->getMessage());
+		}
 	}
 
 	public function authenticate($type) {
