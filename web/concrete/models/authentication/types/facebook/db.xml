@@ -8,34 +8,22 @@
 		</field>
 		<field name='setting' type="C" size='255' />
 		<field name='value' type="C" size='255' />
-		<index name="akHandle">
+		<index name="settingKey">
 			<UNIQUE/>
 			<col>setting</col>
 		</index>
 	</table>
-	<table name="authTypeFacebookAccessTokens">
-		<field name="ID" type="I">
-			<key />
-			<unsigned />
-			<autoincrement />
-		</field>
-		<field name='token' type="C" size='255' />
-		<field name='tokenSecret' type="C" size='255' />
-		<field name='accessToken ' type="C" size='255' />
+	<table name="authTypeFacebookUserMap">
 		<field name="uID" type="I" size='10' />
-	</table>
-	<table name="authTypeFacebookCookieTokens">
-		<field name="ID" type="I">
-			<key />
-			<unsigned />
-			<autoincrement />
-		</field>
-		<field name='token' type="C" size='32' />
-		<field name="uID" type="I" size='10' />
-		<field name="validThrough" type="I" size='10' />
-		<index name="akHandle">
+		<field name="fbUserID" type="C" size='255' />
+
+		<index name="User">
 			<UNIQUE/>
-			<col>token</col>
+			<col>uID</col>
+		</index>
+		<index name="fbUser">
+			<UNIQUE/>
+			<col>fbUserID</col>
 		</index>
 	</table>
 </schema>
