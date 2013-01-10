@@ -69,6 +69,10 @@ if (!defined('SITEMAP_PAGES_LIMIT')) {
 	define('SITEMAP_PAGES_LIMIT', 100);
 }
 
+if (!defined('SITEMAP_APPROVE_IMMEDIATELY')) {
+	define('SITEMAP_APPROVE_IMMEDIATELY', true);
+}
+
 if (!defined('ENABLE_DEFINABLE_USER_ATTRIBUTES')) {
 	define('ENABLE_DEFINABLE_USER_ATTRIBUTES', true);
 }

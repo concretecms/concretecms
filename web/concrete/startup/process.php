@@ -1117,7 +1117,7 @@
 
 					if ($_POST['rel'] == 'SITEMAP') { 
 						$u = new User();
-						if ($cp->canApprovePageVersions()) {
+						if ($cp->canApprovePageVersions() && SITEMAP_APPROVE_IMMEDIATELY) {
 							$pkr = new ApprovePagePageWorkflowRequest();
 							$pkr->setRequestedPage($nc);
 							$v = CollectionVersion::get($nc, "RECENT");
