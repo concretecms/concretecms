@@ -90,7 +90,7 @@ $(function() {
 	
 	?>
 
-		<form method="post" action="<?=$this->url('/login', 'do_login')?>">
+		<form method="post" action="<?=$this->url('/login', 'authenticate', 'concrete')?>">
 			<p><?=t('The OpenID account returned an email address already registered on this site. To join this OpenID to the existing user account, login below:')?></p>
 			<label for="uEmail"><?=t('Email Address')?></label><br/>
 			<div><strong><?=$ui->getUserEmail()?></strong></div>
@@ -127,7 +127,7 @@ $(function() {
 
 	<p><?=t('You must provide the following information before you may login.')?></p>
 	
-<form method="post" action="<?=$this->url('/login', 'do_login')?>">
+<form method="post" action="<?=$this->url('/login', 'authenticate', 'concrete')?>">
 	<? 
 	$attribs = UserAttributeKey::getRegistrationList();
 	$af = Loader::helper('form/attribute');
@@ -157,7 +157,7 @@ $(function() {
 
 <? } else { ?>
 
-<form method="post" action="<?=$this->url('/login', 'do_login')?>" class="form-horizontal">
+<form method="post" action="<?=$this->url('/login', 'authenticate', 'concrete')?>">
 
 <div class="row">
 <div class="span10 offset1">

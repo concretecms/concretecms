@@ -261,15 +261,23 @@
 		function getUserTimezone() {
 			return $this->uTimezone;
 		}
-		
+
+		function unloadAuthenticationTypes() {
+			$ats = AuthenticationType::getList();
+			foreach ($ats as $at) {
+				$at->controller->deauthenticate($this);
+			}
+		}
+
 		function logout() {
 			// First, we check to see if we have any collection in edit mode
 			$this->unloadCollectionEdit();
+			$this->unloadAuthenticationTypes();
 			@session_unset();
 			@session_destroy();
 			Events::fire('on_user_logout');
-			if ($_COOKIE['ccmUserHash']) {
-				setcookie("ccmUserHash", "", 315532800, DIR_REL . '/');
+			if ($_COOKIE['ccmAuthUserHash']) {
+				setcookie("ccmAuthUserHash", "", 315532800, DIR_REL . '/');
 			}
 		}
 		
@@ -282,6 +290,27 @@
 					User::loginByUserID($_uID);
 				}
 			}
+		}
+
+		function verifyAuthTypeCookie() {
+			if ($_COOKIE['ccmAuthUserHash']) {
+				list($_uID, $authType, $uHash) = explode(':', $_COOKIE['ccmAuthUserHash']);
+				$at = AuthenticationType::getByHandle($authType);
+				$u = User::getByUserID($_uID);
+				if ($u->isError()) {
+					return;
+				}
+				if ($at->controller->verifyHash($u,$uHash)) {
+					User::loginByUserID($_uID);
+				}
+			}
+		}
+
+		function setAuthTypeCookie($authType) {
+			$cookie = array($this->getUserID(),$authType);
+			$at = AuthenticationType::getByHandle($authType);
+			$cookie[] = $at->controller->buildHash($this);
+			setcookie("ccmAuthUserHash", implode(':',$cookie), time() + 1209600, DIR_REL . '/');
 		}
 		
 		function setUserForeverCookie() {
@@ -305,6 +334,16 @@
 				}
 			}
 			return $ugtmp;
+		}
+
+		public function setLastAuthType(AuthenticationType $at) {
+			$db = Loader::db();
+			$db->Execute('UPDATE Users SET uLastAuthTypeID=? WHERE uID=?', array($at->getAuthenticationTypeID(), $this->getUserID()));
+		}
+
+		public function getLastAuthType() {
+			$db = Loader::db();
+			return $db->getOne('SELECT uLastAuthTypeID FROM Users WHERE uID=?', array($this->getUserID()));
 		}
 		
 		/** 
