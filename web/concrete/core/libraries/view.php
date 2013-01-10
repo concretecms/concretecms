@@ -97,8 +97,35 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		public function getStyleSheet($stylesheet) {
 			if ($this->isPreview()) {
 				return REL_DIR_FILES_TOOLS . '/css/' . DIRNAME_THEMES . '/' . $this->getThemeHandle() . '/' . $stylesheet . '?mode=preview&time=' . time();
-			} else {
-				return REL_DIR_FILES_TOOLS . '/css/' . DIRNAME_THEMES . '/' . $this->getThemeHandle() . '/' . $stylesheet;
+			}
+			// first we take the uncached file
+			$file = $this->getThemePath() . '/' . $stylesheet;
+			$cacheFile = DIR_FILES_CACHE . '/' . DIRNAME_CSS . '/' . $this->getThemeHandle() . '/' . $stylesheet;
+			if (file_exists($cacheFile) && file_exists($this->getThemeDirectory() . '/' . $stylesheet)) {
+				if (filemtime($cacheFile) > filemtime($this->getThemeDirectory() . '/' . $stylesheet)) {
+					return REL_DIR_FILES_CACHE . '/' . DIRNAME_CSS . '/' . $this->getThemeHandle() . '/' . $stylesheet;
+				}
+			}
+
+			if (file_exists($this->getThemeDirectory() . '/' . $stylesheet)) {
+
+				$pt = PageTheme::getByHandle($this->getThemeHandle());
+				if (!file_exists(DIR_FILES_CACHE . '/' . DIRNAME_CSS)) {
+					@mkdir(DIR_FILES_CACHE . '/' . DIRNAME_CSS);
+				}
+				if (!file_exists(DIR_FILES_CACHE . '/' . DIRNAME_CSS . '/' . $this->getThemeHandle())) {
+					@mkdir(DIR_FILES_CACHE . '/' . DIRNAME_CSS . '/' . $this->getThemeHandle());
+				}
+				if (file_exists($pt->getThemeDirectory() . '/' . $stylesheet)) {
+					$fh = Loader::helper('file');
+					$stat = filemtime($pt->getThemeDirectory() . '/' . $stylesheet);
+					if (!file_exists(dirname($cacheFile))) {
+						mkdir(dirname($cacheFile), DIRECTORY_PERMISSIONS_MODE, true);
+					}
+					$style = $pt->parseStyleSheet($stylesheet);
+					file_put_contents($cacheFile, $style);
+					return REL_DIR_FILES_CACHE . '/' . DIRNAME_CSS . '/' . $this->getThemeHandle() . '/' . $stylesheet;
+				}
 			}
 		}
 

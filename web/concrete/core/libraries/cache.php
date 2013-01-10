@@ -165,6 +165,12 @@ class Concrete5_Library_Cache {
 		$db = Loader::db();
 		$r = $db->MetaTables();
 
+		// flush the CSS cache
+		if (is_dir(DIR_FILES_CACHE . '/' . DIRNAME_CSS)) {
+			$fh = Loader::helper("file");
+			$fh->removeAll(DIR_FILES_CACHE . '/' . DIRNAME_CSS);
+		}
+		
 		if (in_array('Config', $r)) {
 			// clear the environment overrides cache
 			$env = Environment::get();
