@@ -488,6 +488,28 @@
       <unsigned/>
     </field>
   </table>
+  <table name="AuthenticationTypes">
+    <field name="authTypeID" type="I" size="10">
+      <KEY/>
+      <AUTOINCREMENT/>
+      <UNSIGNED />
+    </field>
+    <field name="authTypeHandle" type="C" size="255">
+      <NOTNULL/>
+    </field>
+    <field name="authTypeName" type="C" size="255">
+      <NOTNULL/>
+    </field>
+    <field name="authTypeIsEnabled" type="I" size="1">
+      <NOTNULL/>
+    </field>
+    <field name="authTypeDisplayOrder" type="I" size="10">
+      <UNSIGNED />
+    </field>
+    <field name="pkgID" type="I" size="10">
+      <UNSIGNED />
+    </field>
+  </table>
   <table name="BlockRelations">
     <field name="brID" type="I" size="10">
       <key/>
@@ -2765,6 +2787,11 @@
       <notnull/>
       <default value="0"/>
       <unsigned/>
+    </field>
+    <field name="uLastAuthTypeID" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
     </field>
     <field name="uTimezone" type="C" size="255"></field>
     <field name="uDefaultLanguage" type="C" size="32"/>
