@@ -16,9 +16,22 @@
 			<div class='facebookUserInfo'>
 				<a href='<?=$uinf['link']?>'><img style='float:left;margin-right:10px' src='<?=$controller->getUserImagePath($u)?>'></a>
 				<h4><?=$uinf['name']?></h4>
-				<p><strong>Email:</strong> <?=$uinf['email']?></p>
-				<p><strong>Gender:</strong> <?=$uinf['gender']?></p>
-				<p><strong>Age:</strong> <?=$age?></p>
+				<?php
+				if ($uinf['email']) {
+					?>
+					<p><strong>Email:</strong> <?=$uinf['email']?></p>
+					<?php
+				}
+				if ($uinf['gender']) {
+					?>
+					<p><strong>Gender:</strong> <?=$uinf['gender']?></p>
+					<?php
+				}
+				if ($age) {
+					?>
+					<p><strong>Age:</strong> <?=$age?></p>
+					<?php
+				} ?>
 			</div>
 		</div>
 		<script type="text/javascript">

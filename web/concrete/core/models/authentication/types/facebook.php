@@ -34,7 +34,7 @@ class Concrete5_Controller_AuthenticationType_Facebook extends AuthenticationTyp
 			throw new Exception('<h2>Oh No!</h2>The email used by your facebook account is already in use!<br>Please login to your concrete5 account and then use the facebook login to tie your accounts together.');
 		}
 		$u->setLastAuthType(AuthenticationType::getByHandle('facebook'));
-		Loader::controller('/login_oauth')->chooseRedirect();
+		Loader::controller('/login')->chooseRedirect();
 	}
 
 	public function config($key,$value=false) {
@@ -130,14 +130,14 @@ class Concrete5_Controller_AuthenticationType_Facebook extends AuthenticationTyp
 		$consumer = $this->getConsumer();
 		$params = array(
 		  'scope' => 'email,user_birthday,user_location,user_photos,user_status,user_website',
-		  'redirect_uri' => BASE_URL.view::url('/login_oauth','callback','facebook'),
+		  'redirect_uri' => BASE_URL.view::url('/login','callback','facebook'),
 		  'display' => 'popup'
 		);
 		$loginUrl = $consumer->getLoginUrl($params);
 		$u = new User;
 		$this->set('loggedin',$u->isLoggedIn());
 		$this->set('loginUrl',$loginUrl);
-		$this->set('statusURI',View::url("/login_oauth","callback","facebook","status"));
+		$this->set('statusURI',View::url("/login","callback","facebook","status"));
 	}
 
 	public function getUserImagePath($u) {
@@ -173,6 +173,7 @@ class Concrete5_Controller_AuthenticationType_Facebook extends AuthenticationTyp
 			} catch (exception $e) {
 				if ($u->isLoggedIn()) {
 					$this->mapUserByFacebookUser($fbuser);
+					$this->updateFacebookUserInfo();
 					$this->setSession(2); // User has been successfully attached.
 				}
 				$fbuserarr = $consumer->api('/me');

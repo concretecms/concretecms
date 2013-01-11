@@ -130,8 +130,10 @@ class Concrete5_Model_StartingPointPackage extends Package {
 
 	public function add_users() {
 		// Firstly, install the core authentication types
-		AuthenticationType::add('concrete','Concrete5');
-		AuthenticationType::add('facebook','Facebook');
+		$cba = AuthenticationType::add('concrete','Concrete5');
+		$fba = AuthenticationType::add('facebook','Facebook');
+
+		$fba->disable();
 		// insert the default groups
 		// create the groups our site users
 		// have to add these in the right order so their IDs get set

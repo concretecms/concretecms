@@ -1,5 +1,4 @@
-<?
-
+<?php
 defined('C5_EXECUTE') or die("Access Denied.");
 Loader::library('authentication/open_id');
 
@@ -52,90 +51,42 @@ class Concrete5_Controller_Login extends Controller {
 			$this->set('error', $this->error);
 		}
 	}
-	
-	public function complete_openid_email() {
-		$email = $this->post('uEmail');
-		$vals = Loader::helper('validation/strings');
-		$valc = Loader::helper('concrete/validation');
-		if (!$vals->email($email)) {
-			$this->error->add(t('Invalid email address provided.'));
-		} else if (!$valc->isUniqueEmail($email)) {
-			$this->error->add(t("The email address %s is already in use. Please choose another.", $_POST['uEmail']));
-		}	
-	
-		if (!$this->error->has()) {
-			// complete the openid record with the provided email
-			if (isset($_SESSION['uOpenIDRequested'])) {
-				$oa = new OpenIDAuth();
-				$ui = $oa->registerUser($_SESSION['uOpenIDRequested'], $email);
-				User::loginByUserID($ui->getUserID());
-				$oa->reinstatePreviousRequest();
-				$this->finishLogin();
-			}
-		}
-	}
-	
-	public function view() {
-		$this->clearOpenIDSession();
-	}
-	
-	private function clearOpenIDSession() {
-		unset($_SESSION['uOpenIDError']);
-		unset($_SESSION['uOpenIDRequested']);
-		unset($_SESSION['uOpenIDExistingUser']);
-	}
-	
-	public function complete_openid() {
-		$v = Loader::helper('validation/numbers');
-		$oa = new OpenIDAuth();
-		$oa->setReturnURL($this->openIDReturnTo);
-		$oa->complete();
-		$response = $oa->getResponse();
-		if ($response->code == OpenIDAuth::E_CANCEL) {
-        	$this->error->add(t('OpenID Verification Cancelled'));
-        	$this->clearOpenIDSession();
-        } else if ($response->code == OpenIDAuth::E_FAILURE) {
-        	$this->error->add(t('OpenID Authentication Failed: %s', $response->message));
-        	$this->clearOpenIDSession();
-        } else {
-        	switch($response->code) {
-        		case OpenIDAuth::S_USER_CREATED:
-        		case OpenIDAuth::S_USER_AUTHENTICATED:
-					if ($v->integer($response->message)) {
-						User::loginByUserID($response->message);
-						$this->set('uOpenID', $response->openid);
-						$oa->reinstatePreviousRequest();
-						$this->finishLogin();
-					}
-        			break;
-        		case OpenIDAuth::E_REGISTRATION_EMAIL_INCOMPLETE:
-        			// we don't have an email address, but the account is valid
-					// valid display identifier comes back in message
-					$_SESSION['uOpenIDRequested'] = $response->message;
-					$_SESSION['uOpenIDError'] = OpenIDAuth::E_REGISTRATION_EMAIL_INCOMPLETE;
-					break; 
-				case OpenIDAuth::E_REGISTRATION_EMAIL_EXISTS:
-					// an email address came back with us from the openid server
-					// but that email already exists
-					$_SESSION['uOpenIDRequested'] = $response->openid;
-					$_SESSION['uOpenIDExistingUser'] = $response->user;
-					$_SESSION['uOpenIDError'] = OpenIDAuth::E_REGISTRATION_EMAIL_EXISTS;
-					break;
-        	}
-		}
-		$this->set('oa', $oa);		
-	}
+
+	public function view() {}
 	
 	public function account_deactivated() {
 		$this->error->add(t('This user is inactive. Please contact us regarding this account.'));
 	}
 	
+	public function callback($type,$method='callback') {
+		$at = AuthenticationType::getByHandle($type);
+		if (!method_exists($at->controller, $method)) {
+			throw new exception('Invalid method.');
+		}
+		try {
+			$message = call_user_method($method, $at->controller);
+			if (trim($message)) {
+				$this->set('message',$message);
+			}
+		} catch (exception $e) {
+			if ($e instanceof AuthenticationTypeFailureException) {
+				// Throw again if this is a big`n
+				throw $e;
+			}
+			$this->error->add($e->getMessage());
+		}
+	}
+
 	public function authenticate($type) {
 		try {
 			$at = AuthenticationType::getByHandle($type);
 			$at->controller->authenticate();
 			$db = Loader::db();
 			$u = new User();
+			if ($u->getUserID() == 1 && $type != 'concrete') {
+				$u->logout();
+				throw new exception('You can only identify as the root user using the concrete login.');
+			}
 			$u->setLastAuthType($at);
 			Events::fire('on_user_login',$this);
 			$this->chooseRedirect();
@@ -146,6 +97,9 @@ class Concrete5_Controller_Login extends Controller {
 	}
 
 	public function chooseRedirect() {
+		if (!$this->error) {
+			$this->error = Loader::helper('validation/error');
+		}
 		$dash = Page::getByPath("/dashboard", "RECENT");
 		$dbp = new Permissions($dash);
 
@@ -189,189 +143,6 @@ class Concrete5_Controller_Login extends Controller {
 		}
 	}
 
-
-	public function do_login() { 
-		$ip = Loader::helper('validation/ip');
-		$vs = Loader::helper('validation/strings');
-		
-		$loginData['success']=0;
-		
-		try {
-			if (!$ip->check()) {				
-				throw new Exception($ip->getErrorMessage());
-			}
-			if (OpenIDAuth::isEnabled() && $vs->notempty($this->post('uOpenID'))) {
-				$oa = new OpenIDAuth();
-				$oa->setReturnURL($this->openIDReturnTo);
-				$return = $oa->request($this->post('uOpenID'));
-				$resp = $oa->getResponse();
-				if ($resp->code == OpenIDAuth::E_INVALID_OPENID) {
-					throw new Exception(t('Invalid OpenID.'));
-				}
-			}
-			
-			if ((!$vs->notempty($this->post('uName'))) || (!$vs->notempty($this->post('uPassword')))) {
-				if (USER_REGISTRATION_WITH_EMAIL_ADDRESS) {
-					throw new Exception(t('An email address and password are required.'));
-				} else {
-					throw new Exception(t('A username and password are required.'));
-				}
-			}
-			
-			$u = new User($this->post('uName'), $this->post('uPassword'));
-			if ($u->isError()) {
-				switch($u->getError()) {
-					case USER_NON_VALIDATED:
-						throw new Exception(t('This account has not yet been validated. Please check the email associated with this account and follow the link it contains.'));
-						break;
-					case USER_INVALID:
-						if (USER_REGISTRATION_WITH_EMAIL_ADDRESS) {
-							throw new Exception(t('Invalid email address or password.'));
-						} else {
-							throw new Exception(t('Invalid username or password.'));						
-						}
-						break;
-					case USER_INACTIVE:
-						throw new Exception(t('This user is inactive. Please contact us regarding this account.'));
-						break;
-				}
-			} else {
-			
-				if (OpenIDAuth::isEnabled() && $_SESSION['uOpenIDExistingUser'] > 0) {
-					$oa = new OpenIDAuth();
-					if ($_SESSION['uOpenIDExistingUser'] == $u->getUserID()) {
-						// the account we logged in with is the same as the existing user from the open id. that means
-						// we link the account to open id and keep the user logged in.
-						$oa->linkUser($_SESSION['uOpenIDRequested'], $u);
-					} else {
-						// The user HAS logged in. But the account they logged into is NOT the same as the one
-						// that links to their OpenID. So we log them out and tell them so.
-						$u->logout();
-						throw new Exception(t('This account does not match the email address provided.'));
-					}
-				}
-				
-				$loginData['success']=1;
-				$loginData['msg']=t('Login Successful');	
-				$loginData['uID'] = intval($u->getUserID());
-
-				$groupControllers = Group::getAutomatedOnLoginGroupControllers($u);
-				foreach($groupControllers as $ga) {
-					if ($ga->check($u)) {
-						$u->enterGroup($ga->getGroupObject());
-					}
-				}
-
-			}
-
-			$loginData = $this->finishLogin($loginData);
-			
-		} catch(Exception $e) {
-			$ip->logSignupRequest();
-			if ($ip->signupRequestThreshholdReached()) {
-				$ip->createIPBan();
-			}
-			$this->error->add($e);
-			$loginData['error']=$e->getMessage();
-		}
-		
-		if( $_REQUEST['format']=='JSON' ){
-			$jsonHelper=Loader::helper('json'); 
-			echo $jsonHelper->encode($loginData);
-			die;
-		}	
-	}
-
-	protected function finishLogin( $loginData=array() ) {
-		$u = new User();
-		if ($this->post('uMaintainLogin')) {
-			$u->setUserForeverCookie();
-		}
-		
-		if (count($this->locales) > 0) {
-			if (Config::get('LANGUAGE_CHOOSE_ON_LOGIN') && $this->post('USER_LOCALE') != '') {
-				$u->setUserDefaultLanguage($this->post('USER_LOCALE'));
-			}
-		}		
-		
-		// Verify that the user has filled out all
-		// required items that are required on register
-		// That means users logging in after new user attributes
-		// have been created and required will be prompted here to 
-		// finish their profile
-		
-		$this->set('invalidRegistrationFields', false);
-		Loader::model('attribute/categories/user');
-		$ui = UserInfo::getByID($u->getUserID());
-		$aks = UserAttributeKey::getRegistrationList();
-
-		$unfilledAttributes = array();
-		foreach($aks as $uak) {
-			if ($uak->isAttributeKeyRequiredOnRegister()) {
-				$av = $ui->getAttributeValueObject($uak);
-				if (!is_object($av)) {
-					$unfilledAttributes[] = $uak;
-				}
-			}
-		}
-
-		if ($this->post('completePartialProfile')) { 
-			foreach($unfilledAttributes as $uak) { 
-				$e1 = $uak->validateAttributeForm();
-				if ($e1 == false) {
-					$this->error->add(t('The field "%s" is required', $uak->getAttributeKeyName()));
-				} else if ($e1 instanceof ValidationErrorHelper) {
-					$this->error->add($e1);
-				}
-			}
-	
-			if (!$this->error->has()) { 
-				// the user has needed to complete a partial profile, and they have done so,
-				// and they have no errors. So we save our profile data against the account.
-				foreach($unfilledAttributes as $uak) { 
-					$uak->saveAttributeForm($ui);
-					$unfilledAttributes = array();
-				}
-			}
-		}
-		
-		if (count($unfilledAttributes) > 0) { 
-			$u->logout();
-			$this->set('invalidRegistrationFields', true);
-			$this->set('unfilledAttributes', $unfilledAttributes);
-		}
-		$txt = Loader::helper('text');
-		$rcID = $this->post('rcID');
-		$nh = Loader::helper('validation/numbers');
-
-		//set redirect url
-		if ($nh->integer($rcID)) {
-			$nh = Loader::helper('navigation');
-			$rc = Page::getByID($rcID);
-			$url = $nh->getLinkToCollection($rc, true);
-			$loginData['redirectURL'] = $url;
-		}elseif( strlen($rcID) ){
-			$rcID = trim($rcID, '/');
-			
-			$nc2 = Page::getByPath('/' . $rcID);
-			if (is_object($nc2) && !$nc2->isError()) {
-				$loginData['redirectURL'] = BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '/' . $rcID;
-			}
-		}
-		
-		/*
-		//full page login redirect (non-ajax login)
-		if( strlen($loginData['redirectURL']) && $_REQUEST['format']!='JSON' ){ 
-			header('Location: ' . $loginData['redirectURL']);
-			exit;	
-		}
-		*/
-		
-		
-		Events::fire('on_user_login',$this);
-
-	}
-
 	public function password_sent() {
 		$this->set('intro_msg', $this->getPasswordSentMsg() );
 	}
@@ -403,7 +174,6 @@ class Concrete5_Controller_Login extends Controller {
 		}
 	}
 	
-	// responsible for validating a user's email address
 	public function change_password($uHash = '') {
 		$db = Loader::db();
 		$h = Loader::helper('validation/identifier');
