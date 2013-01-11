@@ -1,5 +1,4 @@
 <?
-
 defined('C5_EXECUTE') or die("Access Denied.");
 Loader::library('authentication/open_id');
 
@@ -84,6 +83,10 @@ class Concrete5_Controller_LoginOauth extends Controller {
 			$at->controller->authenticate();
 			$db = Loader::db();
 			$u = new User();
+			if ($u->getUserID() == 1 && $type != 'concrete') {
+				$u->logout();
+				throw new exception('You can only identify as the root user using the concrete login.');
+			}
 			$u->setLastAuthType($at);
 			Events::fire('on_user_login',$this);
 			$this->chooseRedirect();
@@ -94,6 +97,9 @@ class Concrete5_Controller_LoginOauth extends Controller {
 	}
 
 	public function chooseRedirect() {
+		if (!$this->error) {
+			$this->error = Loader::helper('validation/error');
+		}
 		$dash = Page::getByPath("/dashboard", "RECENT");
 		$dbp = new Permissions($dash);
 

@@ -90,7 +90,7 @@
 		
 		<?php  
 			$a = new Area('Main'); 
-			$a->setAttribute('profile', $profile); 
+			//$a->setAttribute('profile', $profile); 
 			$a->setBlockWrapperStart('<div class="ccm-profile-body-item">');
 			$a->setBlockWrapperEnd('</div>');
 			$a->display($c); 

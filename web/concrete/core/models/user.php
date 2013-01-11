@@ -343,7 +343,8 @@
 
 		public function getLastAuthType() {
 			$db = Loader::db();
-			return $db->getOne('SELECT uLastAuthTypeID FROM Users WHERE uID=?', array($this->getUserID()));
+			$id = $db->getOne('SELECT uLastAuthTypeID FROM Users WHERE uID=?', array($this->getUserID()));
+			return intval($id);
 		}
 		
 		/** 

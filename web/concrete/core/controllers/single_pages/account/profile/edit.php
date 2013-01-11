@@ -12,6 +12,26 @@ class Concrete5_Controller_Account_Profile_Edit extends AccountController {
 			throw new Exception(t('You must be logged in to access this page.'));
 		}
 	}
+
+	public function callback($type,$method='callback') {
+		$at = AuthenticationType::getByHandle($type);
+		$this->view();
+		if (!method_exists($at->controller, $method)) {
+			throw new exception('Invalid method.');
+		}
+		try {
+			$message = call_user_method($method, $at->controller);
+			if (trim($message)) {
+				$this->set('message',$message);
+			}
+		} catch (exception $e) {
+			if ($e instanceof AuthenticationTypeFailureException) {
+				// Throw again if this is a big`n
+				throw $e;
+			}
+			$this->error->add($e->getMessage());
+		}
+	}
 		
 	public function save() { 
 		$this->view();
