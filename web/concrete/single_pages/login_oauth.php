@@ -16,19 +16,25 @@ $form = Loader::helper('form');
 		<div class="page-header">
 			<h1><?=t('Sign in to %s', SITE)?></h1>
 		</div>
-		<ul class="nav nav-tabs">
-			<?php
-			$first = true;
-			foreach ($activeAuths as $auth) {
-				?>
-				<li<?=$first?" class='active'":''?>>
-					<a data-authType='<?=$auth->getAuthenticationTypeHandle()?>' href='#<?=$auth->getAuthenticationTypeHandle()?>'><?=$auth->getAuthenticationTypeName()?></a>
-				</li>
-				<?php
-				$first = false;
-			}
+		<?php
+		if (count($activeAuths) > 1) {
 			?>
-		</ul>
+			<ul class="nav nav-tabs">
+				<?php
+				$first = true;
+				foreach ($activeAuths as $auth) {
+					?>
+					<li<?=$first?" class='active'":''?>>
+						<a data-authType='<?=$auth->getAuthenticationTypeHandle()?>' href='#<?=$auth->getAuthenticationTypeHandle()?>'><?=$auth->getAuthenticationTypeName()?></a>
+					</li>
+					<?php
+					$first = false;
+				}
+				?>
+			</ul>
+			<?php
+		}
+		?>
 		<div class='authTypes row'>
 			<?php
 			$first = true;
