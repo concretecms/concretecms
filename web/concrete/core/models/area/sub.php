@@ -14,6 +14,25 @@ class Concrete5_Model_SubArea extends Area {
 		return $area;
 	}
 
+	public function getSubAreaParentPermissionsObject() {
+		$db = Loader::db();
+		$arParentID = $this->arParentID;
+		if ($arParentID == 0) {
+			return false;
+		}
+
+		while ($arParentID > 0) {
+			$row = $db->GetRow('select arID, arHandle, arParentID, arOverrideCollectionPermissions from Areas where arID = ?', array($arParentID));
+			$arParentID = $row['arParentID'];
+			if ($row['arOverrideCollectionPermissions']) {
+				break;
+			}
+		}
+
+		$a = Area::get($this->c, $row['arHandle']);
+		return $a;
+	}
+
 	public function __construct($arHandle, Area $parent) {
 		$arHandle = $parent->getAreaHandle() . self::AREA_SUB_DELIMITER . $arHandle;
 		$this->arParentID = $parent->getAreaID();
