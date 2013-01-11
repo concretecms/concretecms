@@ -32,6 +32,9 @@ class Concrete5_Model_BlockPermissionAssignment extends PermissionAssignment {
 			$this->permissionObjectToCheck = $b;
 		} else {
 			$a = $b->getBlockAreaObject();
+			if ($a instanceof SubArea && !$a->overrideCollectionPermissions()) {
+				$a = $a->getSubAreaParentPermissionsObject();
+			}
 			if (is_object($a)) {
 				if ($a->overrideCollectionPermissions()) {
 					$this->permissionObjectToCheck = $a;

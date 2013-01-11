@@ -461,6 +461,8 @@ class Concrete5_Model_Area extends Object {
 			$this->c = $c;
 			$this->areaBlocksArray = $this->getAreaBlocks();
 			$this->arIsLoaded = true;
+			$this->arOverrideCollectionPermissions = $area->overrideCollectionPermissions();
+			$this->arInheritPermissionsFromAreaOnCID = $area->getAreaCollectionInheritID();
 			$this->arID = $area->getAreaID();
 		}
 	}
