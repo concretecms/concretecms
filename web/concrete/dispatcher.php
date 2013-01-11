@@ -78,6 +78,9 @@
 	# Startup check, install ##
 	require($cdir . '/startup/config_check_complete.php');
 
+	# Must come before packages 
+	require($cdir . '/startup/tools_upgrade_check.php');
+
 	## Package events
 	require($cdir . '/startup/packages.php');
 
@@ -106,8 +109,6 @@
 	if (file_exists(DIR_CONFIG_SITE . '/site_post_restricted.php')) {
 		require(DIR_CONFIG_SITE . '/site_post_restricted.php');
 	}
-
-	require($cdir . '/startup/tools_upgrade_check.php');
 
 	## Specific site routes for various content items (if they exist) ##
 	if (file_exists(DIR_CONFIG_SITE . '/site_theme_paths.php')) {
