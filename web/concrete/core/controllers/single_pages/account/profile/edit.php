@@ -19,6 +19,11 @@ class Concrete5_Controller_Account_Profile_Edit extends AccountController {
 		if (!method_exists($at->controller, $method)) {
 			throw new exception('Invalid method.');
 		}
+		if ($method != 'callback') {
+			if (!is_array($at->controller->apiMethods) || !in_array($method,$at->controller->apiMethods)) {
+				throw new Exception("Invalid method.");
+			}
+		}
 		try {
 			$message = call_user_method($method, $at->controller);
 			if (trim($message)) {

@@ -72,6 +72,11 @@ class Concrete5_Controller_Login extends Controller {
 		if (!method_exists($at->controller, $method)) {
 			throw new exception('Invalid method.');
 		}
+		if ($method != 'callback') {
+			if (!is_array($at->controller->apiMethods) || !in_array($method,$at->controller->apiMethods)) {
+				throw new Exception("Invalid method.");
+			}
+		}
 		try {
 			$params = func_get_args();
 			if (count($params) > 2) {
