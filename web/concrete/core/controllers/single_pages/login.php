@@ -58,13 +58,29 @@ class Concrete5_Controller_Login extends Controller {
 		$this->error->add(t('This user is inactive. Please contact us regarding this account.'));
 	}
 	
+
+	/**
+	 * Concrete5_Controller_Login::callback
+	 * Call an AuthenticationTypeController method throw a uri.
+	 * Use: /login/TYPE/METHOD/PARAM1/.../PARAMn
+	 *
+	 * @param $type		AuthenticationTypeHandle
+	 * @param $method	Method to be ran, defaults to "callback"
+	 */
 	public function callback($type,$method='callback') {
 		$at = AuthenticationType::getByHandle($type);
 		if (!method_exists($at->controller, $method)) {
 			throw new exception('Invalid method.');
 		}
 		try {
-			$message = call_user_method($method, $at->controller);
+			$params = func_get_args();
+			if (count($params) > 2) {
+				array_shift($params);
+				array_shift($params);
+				$message = call_user_method_array($method, $at->controller,$params);
+			} else {
+				$message = call_user_method($method, $at->controller);
+			}
 			if (trim($message)) {
 				$this->set('message',$message);
 			}
@@ -77,6 +93,12 @@ class Concrete5_Controller_Login extends Controller {
 		}
 	}
 
+	/**
+	 * Concrete5_Controller_Login::authenticate
+	 * Authenticate the user using a specific authentication type.
+	 *
+	 * @param $type	AuthenticationType handle
+	 */
 	public function authenticate($type) {
 		try {
 			$at = AuthenticationType::getByHandle($type);

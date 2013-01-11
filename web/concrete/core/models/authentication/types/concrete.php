@@ -20,7 +20,7 @@ class Concrete5_Controller_AuthenticationType_Concrete extends AuthenticationTyp
 				case USER_INVALID:
 					if (USER_REGISTRATION_WITH_EMAIL_ADDRESS) {
 						throw new Exception(t('Invalid email address or password.'));
-					} else {
+					} else { 
 						throw new Exception(t('Invalid username or password.'));
 					}
 					break;
