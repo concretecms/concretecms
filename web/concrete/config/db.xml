@@ -282,6 +282,9 @@
     <index name="arHandle">
       <col>arHandle</col>
     </index>
+    <index name="arParentID">
+      <col>arParentID</col>
+    </index>
   </table>
   <table name="AttributeSetKeys">
     <field name="akID" type="I" size="10">

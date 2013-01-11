@@ -15,44 +15,44 @@ class Concrete5_Controller_Block_CoreAreaLayout extends BlockController {
 			return t("Area Layout (Core)");
 		}
 
-		public function on_start() {
-			$this->arLayout = AreaLayout::getByID($this->arLayoutID);
+		public function duplicate($newBID) {
+			$ar = AreaLayout::getByID($this->arLayoutID);
+			$nr = $ar->duplicate();
+			$this->record->arLayoutID = $nr->getAreaLayoutID();
+			parent::duplicate($newBID);
 		}
 
 		public function getAreaLayoutObject() {
-			if (!is_object($this->arLayout)) {
-				$this->on_start();
+			if ($this->arLayoutID) {
+				$arLayout = AreaLayout::getByID($this->arLayoutID);
+				return $arLayout;
 			}
-			return $this->arLayout;
 		}
 
 		public function delete() {
-			if (!is_object($this->arLayout)) {
-				$this->on_start();
-			}
-			$this->arLayout->delete();
+			$arLayout = $this->getAreaLayoutObject();
+			$arLayout->delete();
 			parent::delete();
 		}
 
 		public function save($post) {
-			if (!$post['arLayoutID']) {
+			$db = Loader::db();
+			$arLayoutID = $db->GetOne('select arLayoutID from btCoreAreaLayout where bID = ?', array($this->bID));
+			if (!$arLayoutID) {
 				// we are adding a new layout 
-
 			
 				if (!$post['isautomated']) {
 					$iscustom = 1;
 				} else {
 					$iscustom = 0;
 				}
-				$ar = AreaLayout::add($post['spacing'], $iscustom);
+				$arLayout = AreaLayout::add($post['spacing'], $iscustom);
 				for ($i = 0; $i < $post['columns']; $i++) {
 					$width = ($post['width'][$i]) ? $post['width'][$i] : 0;
-					$ar->addLayoutColumn($width);
+					$arLayout->addLayoutColumn($width);
 				}
-				$values = array('arLayoutID' => $ar->getAreaLayoutID());
-				parent::save($values);
 			} else {
-				$arLayout = AreaLayout::getByID($post['arLayoutID']);
+				$arLayout = AreaLayout::getByID($arLayoutID);
 				// save spacing
 				$arLayout->setAreaLayoutColumnSpacing($post['spacing']);
 				if ($post['isautomated']) {
@@ -67,14 +67,20 @@ class Concrete5_Controller_Block_CoreAreaLayout extends BlockController {
 					}
 				}
 			}
-
+			$values = array('arLayoutID' => $arLayout->getAreaLayoutID());
+			parent::save($values);
 		}
 
 		public function view() {
 			$b = $this->getBlockObject();
 			$a = $b->getBlockAreaObject();
-			$this->arLayout->setAreaObject($a);
-			$this->set('columns', $this->arLayout->getAreaLayoutColumns());
+			$this->arLayout = $this->getAreaLayoutObject();
+			if (is_object($this->arLayout)) {
+				$this->arLayout->setAreaObject($a);
+				$this->set('columns', $this->arLayout->getAreaLayoutColumns());
+			} else {
+				$this->set('columns', array());
+			}
 		}
 
 		public function edit() {
