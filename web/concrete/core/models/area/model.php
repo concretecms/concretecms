@@ -303,7 +303,7 @@ class Concrete5_Model_Area extends Object {
 	 */
 	public function getHandleList() {
 		$db = Loader::db();
-		$r = $db->Execute('select distinct arHandle from Areas order by arHandle asc');
+		$r = $db->Execute('select distinct arHandle from Areas where arParentID = 0 order by arHandle asc');
 		$handles = array();
 		while ($row = $r->FetchRow()) {
 			$handles[] = $row['arHandle'];

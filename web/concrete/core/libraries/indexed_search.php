@@ -6,11 +6,7 @@ class Concrete5_Library_IndexedSearch {
 	public $searchReindexTimeout = PAGE_SEARCH_INDEX_LIFETIME;
 
 	private $cPathSections = array();
-	private $searchableAreaNamesManual = array();
-	
-	public function addSearchableArea($arr) {
-		$this->searchableAreaNamesManual[] = $arr;
-	}
+	private $searchableAreaNames;
 	
 	public function getSearchableAreaAction() {
 		$action = Config::get('SEARCH_INDEX_AREA_METHOD');
@@ -33,6 +29,32 @@ class Concrete5_Library_IndexedSearch {
 		$db = Loader::db();
 		$db->Execute('truncate table PageSearchIndex');
 	}
+
+	public function matchesArea($arHandle) {
+		if (!isset($this->arHandles)) {
+			$searchableAreaNamesInitial=$this->getSavedSearchableAreas();
+			if ($this->getSearchableAreaAction() == 'blacklist') {
+				$areas = Area::getHandleList();
+				foreach($areas as $arHandle) {
+					if (!in_array($arHandle, $searchableAreaNamesInitial)) {
+						$this->searchableAreaNames[] = $arHandle;
+					}
+				}
+			} else {
+				$this->searchableAreaNames = $searchableAreaNamesInitial;
+			}
+		}
+
+		foreach($this->searchableAreaNames as $sarHandle) {
+			if (preg_match('/^' . $sarHandle . Concrete5_Model_SubArea::AREA_SUB_DELIMITER . '.+/i', $arHandle)) {
+				return true;
+			} else if (in_array($arHandle, $this->searchableAreaNames)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
 	
 	public function reindexPage($page) {
 		$db = Loader::db();			
@@ -53,26 +75,6 @@ class Concrete5_Library_IndexedSearch {
 	}	
 	
 	public function getBodyContentFromPage($c) {
-		$searchableAreaNamesInitial=$this->getSavedSearchableAreas();
-		foreach($this->searchableAreaNamesManual as $sm) {
-			$searchableAreaNamesInitial[] = $sm;
-		}
-		
-		$searchableAreaNames = array();
-		if ($this->getSearchableAreaAction() == 'blacklist') {
-			$areas = Area::getHandleList();
-			foreach($areas as $arHandle) {
-				if (!in_array($arHandle, $searchableAreaNamesInitial)) {
-					$searchableAreaNames[] = $arHandle;
-				}
-			}
-		} else {
-			$searchableAreaNames = $searchableAreaNamesInitial;
-		}		
-		
-		if (count($searchableAreaNames) == 0) {
-			return false;
-		}
 		
 		$text = '';
 
@@ -81,7 +83,7 @@ class Concrete5_Library_IndexedSearch {
 		$db = Loader::db();
 		$r = $db->Execute('select bID, arHandle from CollectionVersionBlocks where cID = ? and cvID = ?', array($c->getCollectionID(), $c->getVersionID()));
 		while ($row = $r->FetchRow()) {
-			if (in_array($row['arHandle'], $searchableAreaNames)) {
+			if ($this->matchesArea($row['arHandle'])) {
 				$b = Block::getByID($row['bID'], $c, $row['arHandle']);
 				if (!is_object($b)) {
 					continue;
