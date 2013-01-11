@@ -149,12 +149,31 @@ class Concrete5_Model_Area extends Object {
 		if (!$c) {
 			$c = $this->c;
 		}
-		if (!$this->arIsLoaded) {
-			$this->load($c, $this->arHandle);
-		}
 
-		return count($this->areaBlocksArray);
-		
+		// exclude the area layout proxy block from counting.
+		$db = Loader::db();
+		$r = $db->GetOne('select count(b.bID) from CollectionVersionBlocks cvb inner join Blocks b on cvb.bID = b.bID inner join BlockTypes bt on b.btID = bt.btID where cID = ? and cvID = ? and arHandle = ? and btHandle <> ?',
+			array($c->getCollectionID(), $c->getVersionID(), $this->arHandle, BLOCK_HANDLE_LAYOUT_PROXY));
+
+		// now grab sub-blocks.
+		// NOTE: this will only traverse one level. Deal with it.
+		$arHandles = $db->GetCol('select arHandle from Areas where arParentID = ?', array($this->arID));
+		if (is_array($arHandles) && count($arHandles) > 0) {
+			$v = array($c->getCollectionID(), $c->getVersionID());
+			$q = 'select count(bID) from CollectionVersionBlocks where cID = ? and cvID = ? and arHandle in (';
+			for ($i = 0; $i < count($arHandles); $i++) {
+				$arHandle = $arHandles[$i];
+				$v[] = $arHandle;
+				$q .= '?';
+				if (($i+1) < count($arHandles)) {
+					$q .= ',';
+				}
+			}
+			$q .= ')';
+			$sr = $db->GetOne($q, $v);
+			$r += $sr;
+		}
+		return $r;
 	}
 	
 	/**
