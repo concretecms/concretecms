@@ -1,10 +1,13 @@
 <?php defined('C5_EXECUTE') or die('Access denied.') ?>
 
-<center>
-	<button class='btn primary authFacebookLogin'>
-		<?=t('Login with Facebook')?>
-	</button>
-</center>
+<div style='margin-left:20px;background:#3B5998'>
+	<h3 style='color:white;padding:0 10px 0'>
+		facebook
+		<button style='margin-top:5px' class='btn ccm-button-right authFacebookLogin'>
+			<?=t('Login with Facebook')?>
+		</button>
+	</h3>
+</div>
 <script type="text/javascript">
 	$('button.authFacebookLogin').click(function(){
 		var login = window.open('<?=$loginUrl?>','Login with Facebook',"width=500,height=300");
