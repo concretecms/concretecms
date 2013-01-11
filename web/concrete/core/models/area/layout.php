@@ -48,6 +48,21 @@ class Concrete5_Model_AreaLayout extends Object {
 		return $columns;
 	}
 
+	public function duplicate() {
+		$db = Loader::db();
+		$v = array($this->arLayoutSpacing, $this->arLayoutIsCustom);
+		$db->Execute('insert into AreaLayouts (arLayoutSpacing, arLayoutIsCustom) values (?, ?)', $v);
+		$newAreaLayoutID = $db->Insert_ID();
+		if ($newAreaLayoutID) {
+			$columns = $this->getAreaLayoutColumns();
+			foreach($columns as $col) {
+				$v = array($newAreaLayoutID, $col->getAreaLayoutColumnIndex(), 0, $col->getAreaLayoutColumnWidth());
+				$db->Execute('insert into AreaLayoutColumns (arLayoutID, arLayoutColumnIndex, arID, arLayoutColumnWidth) values (?, ?, ?, ?)', $v);
+			}
+			return AreaLayout::getByID($newAreaLayoutID);
+		}
+	}
+
 	public function addLayoutColumn($width = 0) {
 		if (!$width) {
 			$width = 0; // just in case

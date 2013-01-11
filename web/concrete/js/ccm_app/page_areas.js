@@ -89,20 +89,6 @@ ccm_resetBlockErrors = function() {
 	ccm_blockError = "";
 }
 
-/** 
- * Areas and area permissions
- */
-
-ccm_reloadAreaMenuPermissions = function(aID, cID) {
-    var config = window['ccm_areaMenuObj' + aID];
-    if (config) {
-		var action = CCM_TOOLS_PATH + '/reload_area_permissions_js.php' + 
-		'?arHandle=' + config.arHandle +
-		'&cID=' + cID +
-		'&maximumBlocks=' + config.maximumBlocks;
-		$.getScript( action );
-	}
-}
 
 /** 
  * Blocks
@@ -150,7 +136,6 @@ ccm_deleteBlock = function(cID, bID, aID, arHandle, msg) {
 			url: CCM_DISPATCHER_FILENAME,
 			data: 'cID=' + cID + '&ccm_token=' + CCM_SECURITY_TOKEN + '&isAjax=true&btask=remove&bID=' + bID + '&arHandle=' + arHandle
 		});
-		ccm_reloadAreaMenuPermissions(aID, cID);
 	}	
 }
 
@@ -200,7 +185,6 @@ ccm_parseBlockResponse = function(r, currentBlockID, task) {
 					}
 				}
 			);
-			ccm_reloadAreaMenuPermissions(resp.aID, cID);
 		}
 	} catch(e) { 
 		ccmAlert.notice(ccmi18n.error, r); 
@@ -259,6 +243,7 @@ ccm_saveArrangement = function(cID) {
 				$(this).addClass('ccm-block-edit');
 				$(this).removeClass('ccm-block-arrange');
 			});
+			$('div.ccm-area-footer').show();
 			$.fn.ccmmenu.enable();
 			$(".ccm-main-nav-edit-option").fadeIn(300);
 			ccmAlert.hud(ccmi18n.arrangeBlockMsg, 2000, 'up_down', ccmi18n.arrangeBlock);
@@ -270,11 +255,13 @@ ccm_arrangeInit = function() {
 	
 	$.fn.ccmmenu.disable();
 	
-	$('div.ccm-block-edit').each(function() {
+	$('div.ccm-block-arrangeable').each(function() {
 		$(this).addClass('ccm-block-arrange');
 		$(this).removeClass('ccm-block-edit');
 	});
 	
+	$('div.ccm-area-footer').hide();
+
 	$(".ccm-main-nav-edit-option").fadeOut(300, function() {
 		$(".ccm-main-nav-arrange-option").fadeIn(300);
 	});
