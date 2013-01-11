@@ -2,7 +2,17 @@
 <div class="ccm-ui">
 	<? 
 $enablePermissions = false;
-if ($a->getAreaCollectionInheritID() != $c->getCollectionID() && $a->getAreaCollectionInheritID() > 0) {
+if ($a instanceof SubArea && (!$a->overrideCollectionPermissions())) { ?>
+
+	<div class="block-message alert-message notice">
+	<p>
+	<?=t("The following area permissions are inherited from a parent area. ")?>
+	</p>
+	<br/>
+	<a href="javascript:void(0)" class="btn small" onclick="ccm_setAreaPermissionsToOverride()"><?=t('Override Permissions')?></a>
+	</div>
+		
+<? } else if ($a->getAreaCollectionInheritID() != $c->getCollectionID() && $a->getAreaCollectionInheritID() > 0) {
 		$pc = $c->getPermissionsCollectionObject(); 
 		$areac = Page::getByID($a->getAreaCollectionInheritID());
 		?>

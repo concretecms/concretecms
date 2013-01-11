@@ -27,6 +27,9 @@ class Concrete5_Model_AreaPermissionAssignment extends PermissionAssignment {
 			$a = Area::get($cx, STACKS_AREA_NAME);
 		}
 
+		if ($a instanceof SubArea && !$a->overrideCollectionPermissions()) {
+			$a = $a->getSubAreaParentPermissionsObject();
+		}
 		$this->permissionObject = $a;
 		
 		// if the area overrides the collection permissions explicitly (with a one on the override column) we check
@@ -39,7 +42,7 @@ class Concrete5_Model_AreaPermissionAssignment extends PermissionAssignment {
 				// reverted that area to the page's permissions, there won't be any permissions, and we 
 				// won't see anything. so we have to check
 				$areac = Page::getByID($a->getAreaCollectionInheritID());
-				$inheritArea = Area::get($areac, $a->getAreaHandlE());
+				$inheritArea = Area::get($areac, $a->getAreaHandle());
 				if ($inheritArea->overrideCollectionPermissions()) {
 					// okay, so that area is still around, still has set permissions on it. So we
 					// pass our current area to our grouplist, userinfolist objects, knowing that they will 
@@ -57,8 +60,7 @@ class Concrete5_Model_AreaPermissionAssignment extends PermissionAssignment {
 	public function getPermissionAccessObject() {
 		$db = Loader::db();
 		
-		if ($this->permissionObjectToCheck instanceof Area) { 
-		
+		if ($this->permissionObjectToCheck instanceof Area) {		
 			$r = $db->GetOne('select paID from AreaPermissionAssignments where cID = ? and arHandle = ? and pkID = ? ' . $filterString, array(
 				$this->permissionObjectToCheck->getCollectionID(), $this->permissionObjectToCheck->getAreaHandle(), $this->pk->getPermissionKeyID()
 			));
