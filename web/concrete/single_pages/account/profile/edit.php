@@ -44,7 +44,29 @@ $(function() {
 		} ?>
 		</fieldset>
 	<?php  } ?>
-	
+	<?php
+	$ats = AuthenticationType::getActiveListSorted();
+	$count = 0;
+	$displayAts = array();
+	foreach ($ats as $at) {
+		if (method_exists($at->controller, 'hook')) {
+			$count++;
+			$displayAts[] = $at;
+		}
+	}
+	if ($count) {
+		?>
+		<fieldset>
+			<legend><?=t('Authentication Types')?></legend>
+			<?php
+			foreach ($displayAts as $at) {
+				$at->renderHook();
+			}
+			?>
+		</fieldset>
+		<?php
+	}
+	?>
 	<fieldset>
 	<legend><?=t('Change Password')?></legend>
 	<div class="control-group">

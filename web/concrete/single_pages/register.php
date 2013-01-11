@@ -38,86 +38,95 @@ if($success) { ?>
 </div>
 <? 
 } else { ?>
+	<form method="post" action="<?=$this->url('/register', 'do_register')?>" class="form-horizontal">
+		<div class="row">
+			<div class="span10 offset1">
+				<fieldset>
+					<legend><?=t('Your Details')?></legend>
+					<?php
+					if ($displayUserName) { 
+						?>
+						<div class="control-group">
+							<?=$form->label('uName',t('Username'))?>
+							<div class="controls">
+								<?=$form->text('uName')?>
+							</div>
+						</div>
+						<?php
+					}
+					?>
+					<div class="control-group">
+						<?=$form->label('uEmail',t('Email Address'))?>
+						<div class="controls">
+							<?=$form->text('uEmail')?>
+						</div>
+					</div>
+					<div class="control-group">
+						<?=$form->label('uPassword',t('Password'))?>
+						<div class="controls">
+							<?=$form->password('uPassword')?>
+						</div>
+					</div>
+					<div class="control-group">
+						<?=$form->label('uPasswordConfirm',t('Confirm Password'))?>
+						<div class="controls">
+							<?=$form->password('uPasswordConfirm')?>
+						</div>
+					</div>
 
-<form method="post" action="<?=$this->url('/register', 'do_register')?>" class="form-horizontal">
-<div class="row">
-<div class="span10 offset1">
-	<fieldset>
-		<legend><?=t('Your Details')?></legend>
-		<? if ($displayUserName) { ?>
-				<div class="control-group">
-				<?= $form->label('uName',t('Username')); ?>
-				<div class="controls">
-					<?= $form->text('uName'); ?>
+				</fieldset>
+			</div>
+		</div>
+		<?php
+		if (count($attribs) > 0) {
+			?>
+			<div class="row">
+				<div class="span10 offset1">
+					<fieldset>
+						<legend><?=t('Options')?></legend>
+						<?php
+						$af = Loader::helper('form/attribute');
+						foreach($attribs as $ak) {
+							echo $af->display($ak, $ak->isAttributeKeyRequiredOnRegister());
+						}
+						?>
+					</fieldset>
 				</div>
 			</div>
+			<?php
+		}
+		if (ENABLE_REGISTRATION_CAPTCHA) {
+			?>
+			<div class="row">
+				<div class="span10 offset1 ">
+
+					<div class="control-group">
+						<?php
+						$captcha = Loader::helper('validation/captcha');			
+						echo $captcha->label();
+						?>
+						<div class="controls">
+							<?php
+							$captcha->showInput(); 
+							$captcha->display();
+							?>
+						</div>
+					</div>
+
+				</div>
+			</div>
+				
 		<? } ?>
-	
-		<div class="control-group">
-			<?php echo $form->label('uEmail',t('Email Address')); ?>
-			<div class="controls">
-				<?php echo $form->text('uEmail'); ?>
+		<div class="row">
+			<div class="span10 offset1">
+				<div class="actions">
+					<?=$form->hidden('rcID', $rcID); ?>
+					<?=$form->submit('register', t('Register') . ' &gt;', array('class' => 'primary'))?>
+				</div>
 			</div>
 		</div>
-		<div class="control-group">
-			<?php echo $form->label('uPassword',t('Password')); ?>
-			<div class="controls">
-				<?php echo $form->password('uPassword'); ?>
-			</div>
-		</div>
-		<div class="control-group">
-			<?php echo $form->label('uPasswordConfirm',t('Confirm Password')); ?>
-			<div class="controls">
-				<?php echo $form->password('uPasswordConfirm'); ?>
-			</div>
-		</div>
+	</form>
 
-	</fieldset>
-</div>
-</div>
-<? if (count($attribs) > 0) { ?>
-<div class="row">
-<div class="span10 offset1">
-	<fieldset>
-		<legend><?=t('Options')?></legend>
-	<?
-	
-	$af = Loader::helper('form/attribute');
-	
-	foreach($attribs as $ak) { ?> 
-			<?= $af->display($ak, $ak->isAttributeKeyRequiredOnRegister());	?>
-	<? }?>
-	</fieldset>
-</div>
-</div>
-<? } ?>
-	<? if (ENABLE_REGISTRATION_CAPTCHA) { ?>
-<div class="row">
-<div class="span10 offset1 ">
-	
-		<div class="control-group">
-			<?php $captcha = Loader::helper('validation/captcha'); ?>			
-			<?=$captcha->label()?>
-			<div class="controls">
-			<?
-		  	  $captcha->showInput(); 
-			  $captcha->display();
-		  	  ?>
-			</div>
-		</div>
-	
-</div>
-</div>
-		
-<? } ?>
-<div class="row">
-<div class="span10 offset1">
-	<div class="actions">
-	<?=$form->hidden('rcID', $rcID); ?>
-	<?=$form->submit('register', t('Register') . ' &gt;', array('class' => 'primary'))?>
-	</div>
-</div>
-</div>
-</form>
-
-<? } ?>
+	<?php
+}
+?>

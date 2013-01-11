@@ -9,6 +9,11 @@ class Concrete5_Model_AuthenticationType extends Object {
 	public function getAuthenticationTypePackageID() {return $this->pkgID;}
 	public function isEnabled() {return !!$this->getAuthenticationTypeStatus();}
 	public function getController() {return $this->controller;}
+
+	public function setAuthenticationTypeDisplayOrder($order) {
+		$db = Loader::db();
+		$db->Execute('UPDATE AuthenticationTypes SET authTypeDisplayOrder=? WHERE authTypeID=?',array($order,$this->getAuthenticationTypeID()));
+	}
 	
 	public static function getByID($authTypeID) {
 		$db = Loader::db();
@@ -22,7 +27,7 @@ class Concrete5_Model_AuthenticationType extends Object {
 	}
 	
 	public static function load($arr) {
-		$extract = array('authTypeID','authTypeName','authTypeHandle','authTypeHandle','authTypeName','authTypeDisplayOrder','pkgID');
+		$extract = array('authTypeID','authTypeName','authTypeHandle','authTypeHandle','authTypeName','authTypeDisplayOrder','authTypeIsEnabled','pkgID');
 		$obj = new AuthenticationType;
 		foreach ($extract as $key) {
 			if (!isset($arr[$key])) {
@@ -34,10 +39,10 @@ class Concrete5_Model_AuthenticationType extends Object {
 		return $obj;
 	}
 
-	public static function getList() {
+	public static function getList($sorted=false) {
 		$list = array();
 		$db = Loader::db();
-		$q = $db->query("SELECT * FROM AuthenticationTypes");
+		$q = $db->query("SELECT * FROM AuthenticationTypes".($sorted?" ORDER BY authTypeDisplayOrder":""));
 		while ($row = $q->fetchRow()) {
 			$list[] = AuthenticationType::load($row);
 		}
@@ -55,13 +60,16 @@ class Concrete5_Model_AuthenticationType extends Object {
 	}
 
 	public function disable() {
+		if ($this->getAuthenticationTypeID() == 1) {
+			throw new Exception('The core concrete5 authentication cannot be disabled.');
+		}
 		$db = Loader::db();
-		$db->Execute('UPDATE AuthenticationTypes SET authTypeHandle=0');
+		$db->Execute('UPDATE AuthenticationTypes SET authTypeIsEnabled=0 WHERE AuthTypeID=?',array($this->getAuthenticationTypeID()));
 	}
 
 	public function enable() {
 		$db = Loader::db();
-		$db->Execute('UPDATE AuthenticationTypes SET authTypeHandle=1');
+		$db->Execute('UPDATE AuthenticationTypes SET authTypeIsEnabled=1 WHERE AuthTypeID=?',array($this->getAuthenticationTypeID()));
 	}
 
 	public function toggle() {
@@ -187,13 +195,41 @@ class Concrete5_Model_AuthenticationType extends Object {
 		return false;
 	}
 	
+	public function renderTypeForm() {
+		$form = $this->mapAuthenticationTypeFilePath('type_form.php');
+		if ($form) {
+			ob_start();
+			$this->controller->edit();
+			extract($this->controller->getSets());
+			require_once($this->mapAuthenticationTypeFilePath('type_form.php')); // We use the $this method to prevent extract overwrite.
+			$out = ob_get_contents();
+			ob_end_clean();
+			echo $out;
+		} else {
+			echo "<p>".t("This authentication type does not require any customization.")."</p>";
+		}
+	}
+
 	public function renderForm() {
 		$form = $this->mapAuthenticationTypeFilePath('form.php');
 		if ($form) {
 			ob_start();
 			$this->controller->view();
 			extract($this->controller->getSets());
-			require_once($form);
+			require_once($this->mapAuthenticationTypeFilePath('form.php'));
+			$out = ob_get_contents();
+			ob_end_clean();
+			echo $out;
+		}
+	}
+
+	public function renderHook() {
+		$form = $this->mapAuthenticationTypeFilePath('hook.php');
+		if ($form) {
+			ob_start();
+			$this->controller->hook();
+			extract($this->controller->getSets());
+			require_once($this->mapAuthenticationTypeFilePath('hook.php'));
 			$out = ob_get_contents();
 			ob_end_clean();
 			echo $out;

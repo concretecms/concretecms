@@ -34,22 +34,29 @@ class ConcreteAvatarHelper {
 	* @return string $str
 	*/
 	function outputUserAvatar($uo, $suppressNone = false, $aspectRatio = 1.0) {	
-		if (is_object($uo) && $uo->hasAvatar()) {
-			if (file_exists(DIR_FILES_AVATARS . '/' . $uo->getUserID() . '.jpg')) {
-				$size = DIR_FILES_AVATARS . '/' . $uo->getUserID() . '.jpg';
-				$src = REL_DIR_FILES_AVATARS . '/' . $uo->getUserID() . '.jpg';
+		if (is_object($uo)) {
+			$ati = $this->getAuthTypeImagePath($uo);
+			if ($uo->hasAvatar()) {
+				if (file_exists(DIR_FILES_AVATARS . '/' . $uo->getUserID() . '.jpg')) {
+					$size = DIR_FILES_AVATARS . '/' . $uo->getUserID() . '.jpg';
+					$src = REL_DIR_FILES_AVATARS . '/' . $uo->getUserID() . '.jpg';
+				} else {
+					// legacy
+					$size = DIR_FILES_AVATARS . '/' . $uo->getUserID() . '.gif';
+					$src = REL_DIR_FILES_AVATARS . '/' . $uo->getUserID() . '.gif';
+				}
+				if (file_exists($size)) {
+					$isize = getimagesize($size);
+					$isize[0] = round($isize[0]*$aspectRatio);
+					$isize[1] = round($isize[1]*$aspectRatio);
+					
+					$str = '<img class="u-avatar" src="' . $src . '" width="' . $isize[0] . '" height="' . $isize[1] . '" alt="' . $uo->getUserName() . '" />';
+					return $str;
+				}
 			} else {
-				// legacy
-				$size = DIR_FILES_AVATARS . '/' . $uo->getUserID() . '.gif';
-				$src = REL_DIR_FILES_AVATARS . '/' . $uo->getUserID() . '.gif';
-			}
-			if (file_exists($size)) {
-				$isize = getimagesize($size);
-				$isize[0] = round($isize[0]*$aspectRatio);
-				$isize[1] = round($isize[1]*$aspectRatio);
-				
-				$str = '<img class="u-avatar" src="' . $src . '" width="' . $isize[0] . '" height="' . $isize[1] . '" alt="' . $uo->getUserName() . '" />';
-				return $str;
+				if ($ati) {
+					return "<img class='u-authType-avatar' src='$ati'>";
+				}
 			}
 		}
 
@@ -61,6 +68,21 @@ class ConcreteAvatarHelper {
 			return $this->outputNoAvatar($aspectRatio);
 		}
 	}
+
+	public function getAuthTypeImagePath($uo) {
+		$lat = $uo->getUserObject()->getLastAuthType();
+		if ($lat > 1) {
+			try {
+				$at = AuthenticationType::getByID($lat);
+				if (method_exists($at->controller, 'getUserImagePath')) {
+					$uimgpath = $at->controller->getUserImagePath($uo);
+					return $uimgpath;
+				}
+			} catch(Exception $e) {}
+		}
+		return false;
+	}
+
 	/**
 	* gets the image path for a users avatar
 	* @param user object $uo

@@ -12,7 +12,8 @@ class Concrete5_Controller_AuthenticationType_Facebook extends AuthenticationTyp
 	public function status() {
 		$u = new User();
 		if (!isset($_SESSION['authFacebookStatus'])) {
-			$this->redirect('/login_oauth');
+			return;
+			throw new exception('Something went wrong, please try again.');
 		}
 		$status = $_SESSION['authFacebookStatus'];
 		unset($_SESSION['authFacebookStatus']);
@@ -29,8 +30,21 @@ class Concrete5_Controller_AuthenticationType_Facebook extends AuthenticationTyp
 			return "Successfully attached this facebook account to your user account.";
 		} else if ($status == 4) {
 			throw new Exception('This facebook account is already attached to your '.SITE.' account.');
+		} else if ($status == 5) {
+			throw new Exception('<h2>Oh No!</h2>The email used by your facebook account is already in use!<br>Please login to your concrete5 account and then use the facebook login to tie your accounts together.');
 		}
+		$u->setLastAuthType(AuthenticationType::getByHandle('facebook'));
 		Loader::controller('/login_oauth')->chooseRedirect();
+	}
+
+	public function config($key,$value=false) {
+		$db = Loader::db();
+		if (!$value) {
+			return $db->getOne('SELECT value FROM authTypeFacebookSettings WHERE setting=?',array($key));
+		}
+		$db->execute('DELETE FROM authTypeFacebookSettings WHERE setting=?',array($key));
+		$db->execute('INSERT IGNORE INTO authTypeFacebookSettings (setting,value) VALUES (?,?)',array($key,$value));
+		return $value;
 	}
 
 	public function getUserByFacebookUser($fbu) {
@@ -41,11 +55,64 @@ class Concrete5_Controller_AuthenticationType_Facebook extends AuthenticationTyp
 		}
 		return User::getByUserID($uid);
 	}
+
+	public function getFacebookUserByUser($uid) {
+		$db = Loader::db();
+		$fbuid = $db->getOne('SELECT fbUserID FROM authTypeFacebookUserMap WHERE uID=?',array($uid));
+		if (!$fbuid) {
+			throw new Exception('This user is not tied to a facebook account.');
+		}
+		return $fbuid;
+	}
+
 	public function mapUserByFacebookUser($fbu) {
 		$u = new User;
 		$db = Loader::db();
-		$db->execute('DELETE FROM authTypeFacebookUserMap WHERE uID=?',array($u->getUserId()));
+		$db->execute('DELETE FROM authTypeFacebookUserMap WHERE fbUserID=? OR uID=?',array($fbu,$u->getUserID()));
 		$db->execute('INSERT INTO authTypeFacebookUserMap (fbUserID,uID) VALUES (?,?)',array($fbu,$u->getUserID()));
+	}
+
+	public function detachUser() {
+		$user = new User();
+		$db = Loader::db();
+		$db->execute('DELETE FROM authTypeFacebookUserMap WHERE uID=?',array($user->getUserID()));
+		die(1);
+	}
+
+	public function updateFacebookUserInfo() {
+		$db = Loader::db();
+		try {
+			$u = new User();
+			$fbuserarr = $this->getConsumer()->api('/me');
+			$arr = array('name','first_name','last_name','link','username','birthday','gender','email','timezone','locale','verified','updated_time');
+			$dbarr = array();
+			$dbarr[] = $u->getUserID();
+			foreach($arr as $key) {
+				$dbarr[] = $fbuserarr[$key];
+			}
+			$db->execute('DELETE FROM authTypeFacebookUserData WHERE uID=?',array($u->getUserID()));
+			$db->execute('INSERT INTO authTypeFacebookUserData VALUES ('.str_repeat('?,', count($arr)).'?)',
+				$dbarr);
+		} catch (Exception $e) {
+			echo $e->getMessage();
+		}
+	}
+
+	public function getFacebookUserInfo() {
+		$u = new User();
+		if (is_object($u) && $u->isLoggedIn()) {
+			$db = Loader::db();
+			return $db->query('SELECT * FROM authTypeFacebookUserData WHERE uID=?',array($u->getUserID()))->fetchRow();
+		}
+	}
+
+	public function hook() {
+		$u = new User();
+		$this->set('controller',$this);
+		$this->set('form',Loader::helper('form'));
+		$this->set('u',$u);
+		$this->view();
+		$this->set('statusURI',View::url("/account/profile/edit","callback","facebook","status"));
 	}
 
 	public function getConsumer() {
@@ -53,8 +120,8 @@ class Concrete5_Controller_AuthenticationType_Facebook extends AuthenticationTyp
 			return $this->_consumer;
 		}
 		$config = array();
-		$config['appId'] = '267802466681488';
-		$config['secret'] = 'a8ae7654d2c4d812f7c20b3bb8f4e915';
+		$config['appId'] = $this->config('apikey');
+		$config['secret'] = $this->config('apisecret');
 		$this->_consumer = new Facebook($config);
 		return $this->getConsumer();
 	}
@@ -62,18 +129,38 @@ class Concrete5_Controller_AuthenticationType_Facebook extends AuthenticationTyp
 	public function view() {
 		$consumer = $this->getConsumer();
 		$params = array(
-		  'scope' => 'read_stream, friends_likes',
+		  'scope' => 'email,user_birthday,user_location,user_photos,user_status,user_website',
 		  'redirect_uri' => BASE_URL.view::url('/login_oauth','callback','facebook'),
 		  'display' => 'popup'
 		);
 		$loginUrl = $consumer->getLoginUrl($params);
-
 		$u = new User;
 		$this->set('loggedin',$u->isLoggedIn());
 		$this->set('loginUrl',$loginUrl);
 		$this->set('statusURI',View::url("/login_oauth","callback","facebook","status"));
 	}
 
+	public function getUserImagePath($u) {
+		$id = $this->getFacebookUserByUser($u->getUserID());
+		return "http://graph.facebook.com/$id/picture?type=normal";
+	}
+
+	public function edit() {
+		$this->set('form',Loader::helper('form'));
+		$this->set('apikey',$this->config('apikey'));
+		$this->set('apisecret',$this->config('apisecret'));
+	}
+
+	public function saveAuthenticationType($args) {
+		$this->config('apisecret',$args['apisecret']);
+		$this->config('apikey',$args['apikey']);
+	}
+
+	/**
+	 * Callback, you get to this page either through
+	 * site/login/callback/facebook, or
+	 * site/login/callback/facebook/callback
+	 */
 	public function callback() {
 		$this->view();
 		$consumer = $this->getConsumer();
@@ -86,22 +173,51 @@ class Concrete5_Controller_AuthenticationType_Facebook extends AuthenticationTyp
 			} catch (exception $e) {
 				if ($u->isLoggedIn()) {
 					$this->mapUserByFacebookUser($fbuser);
-					$_SESSION['authFacebookStatus'] = 2; // User has been successfully attached.
-					exit;
+					$this->setSession(2); // User has been successfully attached.
 				}
-				$_SESSION['authFacebookStatus'] = 1; // User not tied to FB user.
-				exit;
+				$fbuserarr = $consumer->api('/me');
+				$username = $fbuserarr['username'];
+				$mutedUname = $username;
+				$append = 1;
+				while (UserInfo::getByUserName($mutedUname)) {
+					// This is a heavy handed way to do this, but it must be done.
+					$mutedUname = $username.'_'.$append++;
+				}
+				if (UserInfo::getByEmail($fbuserarr['email'])) {
+					$this->setSession(5); // Email already in use.
+				}
+				$data['uName'] = $mutedUname;
+				$data['uPassword'] = $this->genString();
+				$data['uPasswordConfirm'] = $data['uPassword'];
+				$data['uEmail'] = $fbuserarr['email'];
+				try {
+					$process = UserInfo::register($data);
+				} catch (exception $e) {
+					exit; // This will default to the generic "something broke" message.
+				}
+				if (!$process) {
+					exit; // This will default to the generic "something broke" message.
+				}
+				User::loginByUserID($process->uID);
+				$this->mapUserByFacebookUser($consumer->getUser());
+				$this->updateFacebookUserInfo();
+				$this->setSession(3);
 			}
 			if ($u->isLoggedIn()) {
-				$_SESSION['authFacebookStatus'] = 4; // Already mapped to this user.
-				exit;
+				$this->mapUserByFacebookUser($fbuser);
+				$this->setSession(2); // User has been successfully attached.
 			}
 			User::loginByUserID($user->getUserID());
-			$_SESSION['authFacebookStatus'] = 3; // Good to go.
+			$this->updateFacebookUserInfo();
+			$this->setSession(3); // Good to go.
 		}
-		exit;
+		exit; // just in case.
 	}
 
+	private function setSession($var=3) {
+		$_SESSION['authFacebookStatus'] = $var;
+		exit;
+	}
 
 	public function deauthenticate(User $u) {}
 

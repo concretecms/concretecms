@@ -2,7 +2,7 @@
 
 <center>
 	<button class='btn primary authFacebookLogin'>
-		<?=$loggedin?t('Attach your facebook account to this concrete5 account'):t('Login with Facebook')?>
+		<?=t('Login with Facebook')?>
 	</button>
 </center>
 <script type="text/javascript">
