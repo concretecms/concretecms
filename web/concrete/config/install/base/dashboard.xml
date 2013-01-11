@@ -619,7 +619,7 @@
 			</attributes>
         </page>
 
-		  <page name="Login &amp; Registration" path="/dashboard/system/registration" filename="/dashboard/system/registration/view.php" pagetype="" description="Change login behaviors and setup public profiles." package=""/>
+		 <page name="Login &amp; Registration" path="/dashboard/system/registration" filename="/dashboard/system/registration/view.php" pagetype="" description="Change login behaviors and setup public profiles." package=""/>
         <page name="Login Destination" path="/dashboard/system/registration/postlogin" filename="/dashboard/system/registration/postlogin.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
@@ -638,6 +638,13 @@
 			<attributes>
 				<attributekey handle="meta_keywords">
 					<value>signup, new user, community</value>
+				</attributekey>
+			</attributes>
+        </page>
+        <page name="Authentication Types" path="/dashboard/system/registration/authentication_types" filename="/dashboard/system/registration/authentication_types.php" pagetype="" description="" package="">
+			<attributes>
+				<attributekey handle="meta_keywords">
+					<value>auth, authentication, types, oauth, facebook, login, registration</value>
 				</attributekey>
 			</attributes>
         </page>
