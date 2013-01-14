@@ -955,9 +955,15 @@ class Concrete5_Model_Page extends Collection {
 	 * @param string $sortColumn
 	 * @return Page
 	 */
-	public function getFirstChild($sortColumn = 'cDisplayOrder asc') {
+	public function getFirstChild($sortColumn = 'cDisplayOrder asc', $excludeSystemPages = false) {
+		if ($excludeSystemPages) {
+			$systemPages = ' and cIsSystemPage = 0';
+		} else {
+			$systemPages = '';
+		}
+		
 		$db = Loader::db();
-		$cID = $db->GetOne("select Pages.cID from Pages inner join CollectionVersions on Pages.cID = CollectionVersions.cID where cvIsApproved = 1 and cParentID = ? order by {$sortColumn}", array($this->cID));
+		$cID = $db->GetOne("select Pages.cID from Pages inner join CollectionVersions on Pages.cID = CollectionVersions.cID where cvIsApproved = 1 and cParentID = ? " . $systemPages . " order by {$sortColumn}", array($this->cID));
 		if ($cID > 1) {
 			return Page::getByID($cID, "ACTIVE");
 		}
