@@ -15,6 +15,10 @@ class ConcreteUpgradeVersion561Helper {
 			$sp = SinglePage::add('/dashboard/system/seo/excluded');
 			$sp->update(array('cName'=>t('Excluded URL Word List')));
 		}
+		$bt = BlockType::getByHandle('next_previous');
+		if (is_object($bt)) {
+			$bt->refresh();
+		}
 	}
 
 	
