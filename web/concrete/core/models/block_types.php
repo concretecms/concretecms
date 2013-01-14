@@ -69,15 +69,12 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		 * @param Area $ap
 		 * @return BlockType[]
 		 */
-		public static function getDashboardBlockTypes($ap) {
-			$blockTypeIDs = $ap->getAddBlockTypes();
+		public static function getDashboardBlockTypes() {
 			$db = Loader::db();
 			$btIDs = $db->GetCol('select btID from BlockTypes where btHandle like "dashboard_%" order by btDisplayOrder asc, btID asc');
 			$blockTypes = array();
 			foreach($btIDs as $btID) {
-				if (in_array($btID, $blockTypeIDs)) {
-					$blockTypes[] = BlockType::getByID($btID);
-				}
+				$blockTypes[] = BlockType::getByID($btID);
 			}
 			return $blockTypes;
 		}
