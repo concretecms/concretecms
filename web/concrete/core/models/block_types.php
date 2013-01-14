@@ -124,6 +124,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		 * @return BlockType[] 
 		 */
 		public static function getAvailableList() {
+			$env = Environment::get();
+			$env->clearOverrideCache();
 			$blocktypes = array();
 			$dir = DIR_FILES_BLOCK_TYPES;
 			$db = Loader::db();
