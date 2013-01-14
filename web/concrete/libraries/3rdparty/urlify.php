@@ -111,7 +111,7 @@ class URLify {
 	 * @return array
 	 * @author Ryan Tyler ryan@concrete5.org
 	*/
-	protected function get_removed_list() {
+	public function get_removed_list() {
 		$remove_list = Config::get('SEO_EXCLUDE_WORDS');
 		if(isset($remove_list)) {
 			if(strlen($remove_list)) {
@@ -129,6 +129,10 @@ class URLify {
 		}
 	}
 
+
+	public function get_original_removed_list() {
+		return self::$remove_list;
+	}
 
 	/**
 	 * Initializes the character map.
