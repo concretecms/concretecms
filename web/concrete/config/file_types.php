@@ -21,6 +21,7 @@ $ft->define('tif,tiff', t('TIFF'), FileType::T_IMAGE, 'image');
 $ft->define('htm,html', t('HTML'), FileType::T_IMAGE);
 $ft->define('swf', t('Flash'), FileType::T_IMAGE, 'image');
 $ft->define('ico', t('Icon'), FileType::T_IMAGE);
+$ft->define('svg', t('SVG'), FileType::T_IMAGE);
 $ft->define('asf,wmv', t('Windows Video'), FileType::T_VIDEO, false, 'video');
 $ft->define('mov,qt', t('Quicktime'), FileType::T_VIDEO, false, 'video');
 $ft->define('avi', t('AVI'), FileType::T_VIDEO, false, 'video');
