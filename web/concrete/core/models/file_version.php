@@ -63,8 +63,23 @@ class Concrete5_Model_FileVersion extends Object {
 	 */
 
 	public function getAttribute($ak, $mode = false) {
-		$ak = (is_object($ak)) ? $ak->getAttributeKeyHandle() : $ak;
-		return $this->attributes->getAttribute($ak, $mode);
+		if (is_object($ak)) {
+			$akHandle = $ak->getAttributeKeyHandle();
+		} else {
+			$akHandle = $ak;
+		}
+
+		if (!isset($this->attributes[$akHandle . $mode])) {
+			$this->attributes[$akHandle . $mode] = false;
+			$ak = FileAttributeKey::getByHandle($akHandle);
+			if (is_object($ak)) {
+				$av = $this->getAttributeValueObject($ak);
+				if (is_object($av)) {
+					$this->attributes[$akHandle . $mode] = $av->getValue($mode);
+				}
+			}
+		}
+		return $this->attributes[$akHandle . $mode];
 	}
 
 
@@ -73,12 +88,6 @@ class Concrete5_Model_FileVersion extends Object {
 		$fh = Loader::helper('file');
 		$ext = $fh->getExtension($this->fvFilename);
 		return $h->mimeFromExtension($ext);
-	}
-
-	public function populateAttributes() {
-		// load the attributes for a particular version object
-		Loader::model('attribute/categories/file');
-		$this->attributes = FileAttributeKey::getAttributes($this->fID, $this->fvID);
 	}
 
 	public function getSize() {

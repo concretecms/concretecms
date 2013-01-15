@@ -439,12 +439,13 @@ class Concrete5_Model_File extends Object {
 	 * @return FileVersion
 	 */
 	public function getVersion($fvID = null) {
+
 		if ($fvID == null) {
 			$fvID = $this->fvID; // approved version
 		}
-		
-		if (is_object($fv)) {
-			return $fv;
+
+		if (is_object($this->fv)) {
+			return $this->fv;
 		}
 		
 		$db = Loader::db();
@@ -454,8 +455,8 @@ class Concrete5_Model_File extends Object {
 		$fv = new FileVersion();
 		$row['fslID'] = $this->fslID;
 		$fv->setPropertiesFromArray($row);
-		$fv->populateAttributes();
 		
+		$this->fv = $fv;
 		return $fv;
 	}
 	
