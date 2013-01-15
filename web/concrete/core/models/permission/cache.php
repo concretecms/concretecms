@@ -19,6 +19,26 @@ class Concrete5_Model_PermissionCache {
 			$cl->cache[$identifier] = $pr;
 		}
 	}
+
+	public static function getPermissionAccessObject($paID, PermissionKey $pk) {
+		$cl = CacheLocal::get();
+		if ($cl->enabled) {
+			$class = str_replace('PermissionKey', 'PermissionAccess', get_class($pk));
+			$identifier = 'pao:' . $class . ':' . $paID;
+			if (array_key_exists($identifier, $cl->cache)) {
+				return $cl->cache[$identifier];
+			}
+		}
+	}
+
+	public static function addPermissionAccessObject($paID, PermissionKey $pk, $obj) {
+		$cl = CacheLocal::get();
+		if ($cl->enabled) {
+			$class = str_replace('PermissionKey', 'PermissionAccess', get_class($pk));
+			$identifier = 'pao:' . $class . ':' . $paID;
+			$cl->cache[$identifier] = $obj;
+		}
+	}
 	
 	public function validate(PermissionKey $pk) {
 		$cl = CacheLocal::get();

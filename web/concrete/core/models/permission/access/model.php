@@ -205,7 +205,7 @@ class Concrete5_Model_PermissionAccess extends Object {
 	
 	public static function getByID($paID, PermissionKey $pk, $checkPA = true) {
 		$db = Loader::db();
-		$pa = CacheLocal::getEntry('permission_access_object', $paID);
+		$pa = PermissionCache::getPermissionAccessObject($paID, $pk);
 		if (is_object($pa)) {
 			return $pa;
 		}
@@ -224,7 +224,7 @@ class Concrete5_Model_PermissionAccess extends Object {
 		if (is_object($obj)) {
 			$obj->setPermissionKey($pk);
 		}
-		CacheLocal::set('permission_access_object', $paID, $obj);
+		PermissionCache::addPermissionAccessObject($paID, $pk, $obj);
 		return $obj;
 	}
 	
