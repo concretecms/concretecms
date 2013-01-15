@@ -164,18 +164,18 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		}
 				
 		public function hasLayouts() {
-			$cHasLayouts = CacheLocal::getEntry('page_layouts', $this->cID . ':' . $this->cvID);
+			$cHasLayouts = CacheLocal::getEntry('page_layouts', $this->getCollectionID() . ':' . $this->vObj->getVersionID());
 			if ($cHasLayouts === -1) {
 				return false;
 			} else if ($cHasLayouts) {
 				return $cHasLayouts;
 			}
 			$db = Loader::db();
-			$cHasLayouts = $db->GetOne('select count(cvalID) from CollectionVersionAreaLayouts where cID = ? and cvID = ?', array($this->cID, $this->cvID));
+			$cHasLayouts = $db->GetOne('select count(cvalID) from CollectionVersionAreaLayouts where cID = ? and cvID = ?', array($this->cID, $this->vObj->getVersionID()));
 			if (!$cHasLayouts) {
-				CacheLocal::set('page_layouts', $this->cID . ':' . $this->cvID, -1);
+				CacheLocal::set('page_layouts', $this->getCollectionID() . ':' . $this->vObj->getVersionID(), -1);
 			} else {
-				CacheLocal::set('page_layouts', $this->cID . ':' . $this->cvID, 1);
+				CacheLocal::set('page_layouts', $this->getCollectionID() . ':' . $this->vObj->getVersionID(), 1);
 			}
 
 			return $cHasLayouts;
