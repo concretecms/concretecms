@@ -161,7 +161,7 @@ class Concrete5_Helper_Pagination {
 		if($this->number_of_pages==1) return;		
 		//if not last page
 		if (!$this->hasNextPage())
-			 return '<' . $wrapper . ' class="'.$this->classOff.'" href="#">'.$linkText.'</' . $wrapper . '>';
+			 return '<' . $wrapper . ' class="'.$this->classOff.'"' . ($wrapper == 'a' ? ' href="#"':'') . '>'.$linkText.'</' . $wrapper . '>';
 		 else{
 			$linkURL=str_replace("%pageNum%", $this->getNextInt()+1, $this->URL);
 			return '<a class="'.$this->classOn.'" href="'.$linkURL.'" '.$this->getJSFunctionCall($this->getNextInt()+1).'>'.$linkText.'</a>'; 	
@@ -180,7 +180,7 @@ class Concrete5_Helper_Pagination {
 		if($this->number_of_pages==1) return;
 		//if not first page
 		if ($this->current_page=="0") 
-			 return '<' . $wrapper . ' class="'.$this->classOff.'" href="#">'.$linkText.'</' . $wrapper . '>';
+			 return '<' . $wrapper . ' class="'.$this->classOff.'"' . ($wrapper == 'a' ? ' href="#"':'') . '>'.$linkText.'</' . $wrapper . '>';
 		else{
 			$linkURL=str_replace("%pageNum%", $this->getPreviousInt()+1, $this->URL);
 			return '<a class="'.$this->classOn.'" href="'.$linkURL.'" '.$this->getJSFunctionCall($this->getPreviousInt()+1).'>'.$linkText.'</a>';
