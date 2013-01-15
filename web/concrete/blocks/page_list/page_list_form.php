@@ -35,7 +35,7 @@
 	  <input <? if (!is_object($cadf)) { ?> disabled <? } ?> type="checkbox" name="displayFeaturedOnly" value="1" <? if ($displayFeaturedOnly == 1) { ?> checked <? } ?> style="vertical-align: middle" />
 	  <?=t('Featured pages only.')?>
 		<? if (!is_object($cadf)) { ?>
-			 <?=t('(<strong>Note</strong>: You must create the "is_featured" page attribute first.)');?></span>
+			 <?=t('(<strong>Note</strong>: You must create the "is_featured" page attribute first.)');?>
 		<? } ?>
 		<br/>
 		<input type="checkbox" name="displayAliases" value="1" <? if ($displayAliases == 1) { ?> checked <? } ?> />
