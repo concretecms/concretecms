@@ -3,6 +3,8 @@
 Loader::library('3rdparty/facebook/facebook');
 class Concrete5_Controller_AuthenticationType_Facebook extends AuthenticationTypeController {
 
+	public $apiMethods = array('callback','status','detachUser');
+
 	public function authenticate() {
 		if ($post['uMaintainLogin']) {
 			$user->setAuthTypeCookie('concrete');
