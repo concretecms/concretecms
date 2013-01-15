@@ -9,6 +9,8 @@ rm bootstrap.tmp.js
 
 uglifyjs -o ../web/concrete/js/jquery.cookie.js ../web/concrete/js/ccm_app/jquery.cookie.js
 
+uglifyjs -o ../web/concrete/js/ccm.profile.js ../web/concrete/js/ccm_profile/base.js
+
 cat ../web/concrete/js/redactor/redactor.js \
 ../web/concrete/js/redactor/redactor.concrete5.js > redactor.tmp.js
 

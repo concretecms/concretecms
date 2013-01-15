@@ -167,14 +167,9 @@ ccm_sitemapExitEditMode = function(cID) {
 
 searchSubPages = function(cID) {
 	$("#ccm-tree-search-trigger" + cID).hide();
-	if (ccm_animEffects) {
-		$("#ccm-tree-search" + cID).fadeIn(200, function() {
-			$("#ccm-tree-search" + cID + " input").get(0).focus();
-		});
-	} else {
-		$("#ccm-tree-search" + cID).show();
+	$("#ccm-tree-search" + cID).fadeIn(200, function() {
 		$("#ccm-tree-search" + cID + " input").get(0).focus();
-	}
+	});
 }
 
 activateReorder = function() {
@@ -227,16 +222,12 @@ activateReorder = function() {
 
 deleteBranchFade = function(nodeID) {
 	// hides branch and its drop zone
-	if (ccm_animEffects) {
-		$("#tree-node" + nodeID).fadeOut(300, function() {
-			$("#tree-node" + nodeID).remove();
-		});
-		$("#tree-dz" + nodeID).fadeOut(300, function() {
-			$("#tree-dz" + nodeID).remove();
-		});
-	} else {
-		deleteBranchDirect(nodeID);
-	}	
+	$("#tree-node" + nodeID).fadeOut(300, function() {
+		$("#tree-node" + nodeID).remove();
+	});
+	$("#tree-dz" + nodeID).fadeOut(300, function() {
+		$("#tree-dz" + nodeID).remove();
+	});
 }
 
 deleteBranchDirect = function(nodeID) {
