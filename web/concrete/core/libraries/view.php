@@ -120,11 +120,15 @@ defined('C5_EXECUTE') or die("Access Denied.");
 					$fh = Loader::helper('file');
 					$stat = filemtime($pt->getThemeDirectory() . '/' . $stylesheet);
 					if (!file_exists(dirname($cacheFile))) {
-						mkdir(dirname($cacheFile), DIRECTORY_PERMISSIONS_MODE, true);
+						@mkdir(dirname($cacheFile), DIRECTORY_PERMISSIONS_MODE, true);
 					}
 					$style = $pt->parseStyleSheet($stylesheet);
-					file_put_contents($cacheFile, $style);
-					return REL_DIR_FILES_CACHE . '/' . DIRNAME_CSS . '/' . $this->getThemeHandle() . '/' . $stylesheet;
+					$r = @file_put_contents($cacheFile, $style);
+					if ($r) {
+						return REL_DIR_FILES_CACHE . '/' . DIRNAME_CSS . '/' . $this->getThemeHandle() . '/' . $stylesheet;
+					} else {
+						return $this->getThemePath() . '/' . $stylesheet;
+					}
 				}
 			}
 		}
