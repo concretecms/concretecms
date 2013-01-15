@@ -17,3 +17,4 @@
 	<?=$form->select('akTextareaDisplayMode', $akTextareaDisplayModeOptions, $akTextareaDisplayMode)?>
 </div>
 </div>
+</fieldset>
