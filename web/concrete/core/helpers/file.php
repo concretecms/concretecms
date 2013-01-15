@@ -91,12 +91,15 @@ class Concrete5_Helper_File {
 	 * @param string $source Directory
 	 */
 	public function removeAll($source) {
-		foreach (glob($source) as $file) {
-			if (is_dir($file)) {
-				$this->removeAll("$file/*");
-				rmdir($file);
-			} else {
-				unlink($file);
+		$r = @glob($source);
+		if (is_array($r)) {
+			foreach($r as $file) {
+				if (is_dir($file)) {
+					$this->removeAll("$file/*");
+					rmdir($file);
+				} else {
+					unlink($file);
+				}
 			}
 		}
 	}
