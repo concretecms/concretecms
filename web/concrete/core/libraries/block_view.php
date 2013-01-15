@@ -204,12 +204,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 							$useCache = true;
 					}
 					if ($useCache) {
-						$cID = 0;
-						if (is_object($this->area)) {
-							$cID = $this->area->getCollectionID();
-						} else if (is_object($page)) {
-							$cID = $page->getCollectionID();
-						}
 						$outputContent = $obj->getBlockCachedOutput($this->area);
 					}
 				}
