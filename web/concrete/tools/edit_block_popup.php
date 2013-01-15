@@ -129,6 +129,7 @@ if (is_object($b)) {
 					'b' => $b,
 					'p' => $bp
 				));
+				$bv->setAreaObject($a);
 				$bv->render($b);
 				$bv->renderElement('block_footer');
 			}
