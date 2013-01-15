@@ -70,6 +70,7 @@ if (defined('ENABLE_USER_PROFILES') && ENABLE_USER_PROFILES && $u->isRegistered(
 	$this->addFooterItem($html->javascript('bootstrap.js'));
 	$this->addFooterItem($html->javascript('ccm.profile.js'));
 	$this->addHeaderItem($html->css('ccm.app.css'));
+	$this->addHeaderItem($html->css('ccm.account.css'));
 	$this->addFooterItem('<script type="text/javascript">$(function() { ccm_enableUserProfileMenu(); });</script>');
 }
 
