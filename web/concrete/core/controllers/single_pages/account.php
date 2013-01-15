@@ -10,7 +10,6 @@ class Concrete5_Controller_Account extends Controller {
 			$this->render("/page_not_found");
 		}
 		$this->error = Loader::helper('validation/error');
-		$this->addHeaderItem(Loader::helper('html')->css('ccm.account.css'));
 		$this->set('vt', Loader::helper('validation/token'));
 		$this->set('av', Loader::helper('concrete/avatar'));
 		

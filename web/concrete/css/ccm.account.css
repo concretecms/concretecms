@@ -21,3 +21,4 @@ div#ccm-private-message-detail{position:relative;}
 td.ccm-members-directory-avatar img{border-radius:3px;border:1px solid #333;}
 #ccm-members-directory td{vertical-align:middle;}
 .ccm-members-directory-name a{font-weight:100;font-size:24px;}
+#ccm-account-menu{position:absolute;top:10px;right:10px;}
