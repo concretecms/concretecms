@@ -90,7 +90,7 @@ if (is_object($basePostPage) && $basePostPage->isError()) {
 					<label>
 						<input id="ccm-searchBlock-externalTarget" name="externalTarget" type="checkbox" value="1" <?=(strlen($searchObj->resultsURL) || $basePostPage !== NULL)?'checked':''?> />
 						<?=t('Post to Another Page Elsewhere')?>
-					<label>
+					</label>
 				</li>
 				<li id="ccm-searchBlock-resultsURL-wrap" style=" <?=(strlen($searchObj->resultsURL) || $basePostPage !== NULL)?'':'display:none'?>" >
 					<?
