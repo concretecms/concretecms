@@ -65,7 +65,7 @@ if ($_POST['task'] == 'save_permissions') {
 
 <div class="btn-group">
 	<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-	<i class="icon-plus-sign" /> <?=t('Select')?>
+	<i class="icon-plus-sign"></i> <?=t('Select')?>
 	<span class="caret"></span>
 		</a>
 	<ul class="dropdown-menu">
