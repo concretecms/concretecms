@@ -53,6 +53,25 @@ class Concrete5_Model_PermissionAccessEntityType extends Object {
 		return $list;
 	}
 
+	public static function inUse($petHandle) {
+		$inUse = CacheLocal::getEntry('permission_access_entity_type_in_use', $petHandle);
+		if ($inUse !== null) {
+			return $inUse;
+		}
+
+		$db = Loader::db();
+		$q = "select pal.paID from PermissionAccessList pal inner join PermissionAccessEntities pae on pal.peID = pae.peID inner join PermissionAccessEntityTypes paet on pae.petID = paet.petID where paet.petHandle = ?";
+		$paID = $db->GetOne($q, array($petHandle));
+		if ($paID) {
+			$inUse = 1;
+		} else {
+			$inUse = 0;
+		}
+
+		CacheLocal::set('permission_access_entity_type_in_use', $petHandle, $inUse);
+		return $inUse;
+	}
+
 	public function getPackageID() { return $this->pkgID;}
 	public function getPackageHandle() {
 		return PackageList::getHandle($this->pkgID);
