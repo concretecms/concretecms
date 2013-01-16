@@ -482,7 +482,7 @@ class Concrete5_Model_File extends Object {
 		$db = Loader::db();
 		$limitString = '';
 		if ($limit != false) {
-			$limitString = 'limit ' . $limit;
+			$limitString = 'limit ' . intval($limit);
 		}
 		
 		if (is_object($this) && $this instanceof File) { 
