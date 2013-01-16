@@ -48,6 +48,9 @@ $ft->define('pps,ppt,pptx,pot', t('MS Powerpoint'), FileType::T_DOCUMENT);
 $ft->define('tar', t('TAR Archive'), FileType::T_APPLICATION);
 $ft->define('zip', t('Zip Archive'), FileType::T_APPLICATION);
 $ft->define('gz,gzip', t('GZip Archive'), FileType::T_APPLICATION);
+$ft->define('ogg', t('OGG'), FileType::T_VIDEO);
+$ft->define('ogv', t('OGG Video'), FileType::T_VIDEO);
+$ft->define('webm', t('WebM'), FileType::T_VIDEO);
 
 $ft->defineImporterAttribute('width', t('Width'), 'NUMBER', false);
 $ft->defineImporterAttribute('height', t('Height'), 'NUMBER', false);
