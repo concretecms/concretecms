@@ -168,6 +168,7 @@ $searchInstance = Loader::helper('text')->entities($_REQUEST['searchInstance']);
 			</li>
 		</ul>
 		</div>
+		</div>
 	</div>	
 	</form>
 	<div class="dialog-buttons">
