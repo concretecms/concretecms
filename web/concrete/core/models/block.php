@@ -265,8 +265,10 @@ class Concrete5_Model_Block extends Object {
 			$cvID = $cx->getVersionID();
 		}
 
-		$db->Replace('CollectionVersionBlocksOutputCache', array('cID' => $cID, 'cvID' => $cvID, 'bID' => $this->getBlockID(), 'arHandle' => $arHandle, 'btCachedBlockOutput' => $content, 'btCachedBlockOutputExpires' => $btCachedBlockOutputExpires), 
-			array('cID', 'cvID', 'arHandle', 'bID'), true);
+		if ($arHandle && $cID && $cvID) {
+			$db->Replace('CollectionVersionBlocksOutputCache', array('cID' => $cID, 'cvID' => $cvID, 'bID' => $this->getBlockID(), 'arHandle' => $arHandle, 'btCachedBlockOutput' => $content, 'btCachedBlockOutputExpires' => $btCachedBlockOutputExpires), 
+				array('cID', 'cvID', 'arHandle', 'bID'), true);
+		}
 	}
 
 	public function inc($file) {
