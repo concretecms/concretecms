@@ -6,7 +6,8 @@ class ConcreteUpgradeVersion561Helper {
 	
 	public $dbRefreshTables = array(
 		'Blocks',
-		'CollectionVersionBlocksOutputCache'
+		'CollectionVersionBlocksOutputCache',
+		'PermissionAccessList'
 	);
 
 	public function run() {
