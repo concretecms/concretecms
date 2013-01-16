@@ -115,7 +115,7 @@ class Concrete5_Model_Page extends Collection {
 		// this is a hack but it's a really good one for performance
 		// if the permission access entity for page owner exists in the database, then we return the collection ID. Otherwise, we just return the permission collection id
 		// this is because page owner is the ONLY thing that makes it so we can't use getPermissionsCollectionID, and for most sites that will DRAMATICALLY reduce the number of querie.s
-		if (PermissionAccessEntityType::inUse('page_owner')) {
+		if (PAGE_PERMISSION_IDENTIFIER_USE_COLLECTION_ID) {
 			return $this->getCollectionID();
 		} else {
 			return $this->getPermissionsCollectionID();
