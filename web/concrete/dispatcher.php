@@ -193,7 +193,6 @@
 			$v->render('/page_not_found');
 		}
 
-
 		## If there's no error, then we build the collection, but first we load it with the appropriate
 		## version. We pass the function the collection object, as well as the collection permissions
 		## object, which the function will use to determine what version we get to see
@@ -201,10 +200,9 @@
 		if ($cp->canEditPageContents() || $cp->canEditPageProperties() || $cp->canViewPageVersions()) {
 			$cvID = ($_REQUEST['cvID']) ? $_REQUEST['cvID'] : "RECENT";
 			$c->loadVersionObject($cvID);
-			$vp = new Permissions($c->getVersionObject());
-		} else {
-			$cvID = "ACTIVE";
 		}
+
+		$vp = new Permissions($c->getVersionObject());
 
 		if ($_REQUEST['ccm-disable-controls'] == true || intval($cvID) > 0) {
 			$v = View::getInstance();
