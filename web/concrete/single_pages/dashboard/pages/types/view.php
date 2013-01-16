@@ -32,61 +32,22 @@ if ($_REQUEST['task'] == 'edit') {
 	}
 }
 
-if ($_POST['update']) {
-	$ctName = Loader::helper("text")->entities($_POST['ctName']);
-	$ctHandle = Loader::helper('text')->entities($_POST['ctHandle']);
-	$vs = Loader::helper('validation/strings');
-	
-	$error = array();
-	if (!$ctHandle) {
-		$error[] = t("Handle required.");
-	} else if (!$vs->handle($ctHandle)) {
-		$error[] = t('Handles must contain only letters, numbers or the underscore symbol.');
-	}
-	
-	if (!$ctName) {
-		$error[] = t("Name required.");
-	} else if (!$vs->alphanum($ctName, true)) {
-		$error[] = t('Page type names can only contain letters, numbers and spaces.');
-	}
-	
-	if (!$valt->validate('update_page_type')) {
-		$error[] = $valt->getErrorMessage();
-	}
-	
-	$akIDArray = $_POST['akID'];
-	if (!is_array($akIDArray)) {
-		$akIDArray = array();
-	}
-	
-	if (count($error) == 0) {
-		try {
-			if (is_object($ct)) {
-				$ct->update($_POST);
-				$this->controller->redirect('/dashboard/pages/types', 'page_type_updated');
-			}		
-			exit;
-		} catch(Exception $e1) {
-			$error[] = $e1->getMessage();
-		}
-	}
-}
-
-if ($_REQUEST['updated']) {
-	$message = t('Page Type updated.');
-}
-
-
 ?>
 
 <?
 if ($ctEditMode) { 
 	$ct->populateAvailableAttributeKeys();
+
+        $akIDArray = $_POST['akID'];
+        if (!is_array($akIDArray)) {
+            $akIDArray = array();
+        }
+
 	?>
 	
     <?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Edit Page Type').'<span class="label" style="position:relative;top:-3px;left:12px;">'.t('* required field').'</span>', false, false, false);?>
     
-    <form class="form-horizontal" method="post" id="update_page_type" action="<?=$this->url('/dashboard/pages/types/')?>">
+    <form class="form-horizontal" method="post" id="update_page_type" action="<?=$this->url('/dashboard/pages/types/', 'update')?>">
 	<?=$valt->output('update_page_type')?>
     <?=$form->hidden('ctID', $_REQUEST['ctID']); ?>
     <?=$form->hidden('task', 'edit'); ?>
