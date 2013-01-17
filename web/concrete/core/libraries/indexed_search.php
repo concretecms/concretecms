@@ -98,6 +98,7 @@ class Concrete5_Library_IndexedSearch {
 			}		
 		}
 		
+		$text .= Events::fire('on_page_body_index', $c);
 		return $text;
 	}
 	
