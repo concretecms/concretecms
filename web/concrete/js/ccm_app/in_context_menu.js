@@ -96,7 +96,10 @@ $.fn.ccmmenu.over = function(e, $this, $selector) {
 }
 
 $.fn.ccmmenu.hide = function(e) {
-	e.stopPropagation();
+	if (e) {
+		e.stopPropagation();
+	}
+	
 	$.fn.ccmmenu.isactive = false;
 	$.fn.ccmmenu.$highlighter.css("opacity", 0);
 	$(document.body).unbind('click.disableccmmenu');
