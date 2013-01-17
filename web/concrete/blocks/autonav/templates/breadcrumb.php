@@ -1,5 +1,5 @@
 <? defined('C5_EXECUTE') or die(_("Access Denied."));
-$navItems = $controller->getNavItems();
+$navItems = $controller->getNavItems(true);
 
 for ($i = 0; $i < count($navItems); $i++) {
 	$ni = $navItems[$i];
