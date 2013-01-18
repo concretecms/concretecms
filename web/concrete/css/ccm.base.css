@@ -24,19 +24,5 @@ div.pagination ul strong, div.pagination ul span.ltgray {
 .ccm-error {font-weight: bold; color: #f00}
 .ccm-required {font-weight: bold; color: #3975AD}
 
-div#ccm-overlay {
-	position: fixed;
-	z-index:99;
-	top: 0px;
-	left: 0px;
-	background-color:#000;
-	filter:alpha(opacity=70);
-	-moz-opacity: 0.7;
-	opacity: 0.7;
-	height:100%;
-	width:100%;
-	display: none;
-} 
-
 .ccm-input-time-wrapper select {width: 55px !important; margin-right: 4px !important;}
 .ccm-input-date {width: 80px !important; margin-right: 4px !important;}

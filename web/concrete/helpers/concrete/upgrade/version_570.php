@@ -18,6 +18,7 @@ class ConcreteUpgradeVersion570Helper {
 		/*'QueueMessages',*/
 		'JobSets',
 		'JobSetJobs',
+		'PageThemes',
 		'SystemContentEditorSnippets'
 	);
 	

@@ -1,152 +1,5 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-
-/**
- *
- * A page theme editable style object corresponds to a style in a stylesheet that is able to be manipulated through the dashboard.
- * @package Pages
- * @subpackage Themes
- */
-class Concrete5_Model_PageThemeEditableStyle extends Object {
-	
-	const TSTYPE_COLOR = 1;
-	const TSTYPE_FONT = 10;
-	const TSTYPE_CUSTOM = 20;
-	
-	public function getHandle() {return $this->ptsHandle;}
-	public function getOriginalValue() {return $this->ptsOriginalValue;}
-	public function getValue() {return $this->ptsValue;}
-	public function getProperty() {
-		// the original property that the stylesheet defines, like background-color, etc...
-		return $this->ptsProperty;
-	}
-	
-	public function getType() {return $this->ptsType;}
-	public function getName() {
-		$h = Loader::helper('text');
-		return $h->unhandle($this->ptsHandle);
-	}
-	
-	public function __construct($value = '') {
-		if ($value) {
-			$this->ptsValue = trim($value);
-			$this->ptsOriginalValue = trim($value);
-			$this->ptsProperty = substr($this->ptsValue, 0, strpos($this->ptsValue, ':'));
-			$this->ptsValue = substr($this->ptsValue, strpos($this->ptsValue, ':') + 1);
-			$this->ptsValue = trim(str_replace(';', '', $this->ptsValue));
-		}
-	}
-}
-
-/** 
- * A class specifically for editable fonts
- */
-class Concrete5_Model_PageThemeEditableStyleFont extends Concrete5_Model_PageThemeEditableStyle {
-	
-	public function getFamily() {return $this->family;}
-	public function getSize() {return $this->size;}
-	public function getWeight() {return $this->weight;}
-	public function getStyle() {return $this->style;}
-	
-	public function __construct($value) {
-		parent::__construct($value);
-		
-		// value is pretty rigid. Has to be "font: normal normal 18px Book Antiqua"
-		// so font: $weight $
-		
-		$expl = explode(' ', $this->ptsValue);
-		$this->style = trim($expl[0]);
-		$this->weight = trim($expl[1]);
-		$this->size = preg_replace('/[^0-9]/', '', trim($expl[2]));
-		$this->family = trim($expl[3]);
-		if (count($expl) > 4) {
-			for ($i = 4; $i < count($expl); $i++) {
-				$this->family .= ' ' . trim($expl[$i]);
-			}
-		}
-		
-	}
-	
-	public function getShortValue() {
-		return $this->style . '|' . $this->weight . '|' . $this->size . '|' . $this->family;
-	}
-}
-
-
-/**
-*
-* When activating a theme, any file within the theme is loaded into the system as a Page Theme File. At that point
-* the file can then be used to create a new page type. 
-* @package Pages
-* @subpackage Themes
-*/
-class Concrete5_Model_PageThemeFile {
-	
-	protected $filename;
-	protected $type;
-	
-	/**
-	 * Type of page corresponding to the view template (used by single pages in this theme). Typically that means this template file is "view.php"
-	 */
-	const TFTYPE_VIEW = 1;
-	
-	/**
-	 * Type of page corresponding to the default page type. If a page type doesn't have a template in a particular theme, default is used. 
-	 */
-	const TFTYPE_DEFAULT = 2;
-
-	/**
-	 * If this is used to designate what type of template this is, this means it corresponds to a single page like "login.php"
-	 */
-	const TFTYPE_SINGLE_PAGE = 3;
-	
-	/**
-	 * This is a template for a new page type - one that hasn't been previously created in the system.
-	 */
-	const TFTYPE_PAGE_TYPE_NEW = 4;
-	
-	/**
-	 * This is a template for a page type that already exists in the system.
-	 */
-	const TFTYPE_PAGE_TYPE_EXISTING = 5;
-	
-	/** 
-	 * Sets the filename of this object to the passed parameter.
-	 * @params string $filename
-	 * @return void
-	 */
-	public function setFilename($filename) { $this->filename = $filename;}
-	
-	/**
-	 * Sets the type of file for this object to one of the constants.
-	 * @params string $type
-	 * @return void
-	 */
-	public function setType($type) { $this->type = $type; }
-	
-	
-	/** 
-	 * Gets the filename for this theme file object.
-	 * @return string $filename
-	 */
-	public function getFilename() { return $this->filename;}
-	
-	/**
-	 * Gets the type of file for this object.
-	 * @return string $type
-	 */
-	public function getType() {return $this->type;}
-	
-	/**
-	 * Returns just the part of the filename prior to the extension
-	 * @return string $handle
-	 */
-	public function getHandle() {
-		return substr($this->filename, 0, strpos($this->filename, '.'));
-	}
-	
-}
-
 /**
 *
 * A page's theme is a pointer to a directory containing templates, CSS files and optionally PHP includes, images and JavaScript files. 
@@ -163,7 +16,8 @@ class Concrete5_Model_PageTheme extends Object {
 	protected $ptThumbnail;
 	protected $ptHandle;
 	protected $ptURL;
-	
+	protected $ptGridFrameworkHandle = false;
+
 	const E_THEME_INSTALLED = 1;
 	const THEME_EXTENSION = ".php";
 	const FILENAME_TYPOGRAPHY_CSS = "typography.css";	
@@ -199,6 +53,15 @@ class Concrete5_Model_PageTheme extends Object {
 	public static function getInstalledHandles() {
 		$db = Loader::db();
 		return $db->GetCol("select ptHandle from PageThemes");
+	}
+
+	public function supportsGridFramework() {
+		return $this->ptGridFrameworkHandle != false;
+	}
+
+	public function getThemeGridFrameworkObject() {
+		$pt = PageThemeGridFramework::getByHandle($this->ptGridFrameworkHandle);
+		return $pt;
 	}
 
 	public static function getAvailableThemes($filterInstalled = true) {
@@ -482,42 +345,27 @@ class Concrete5_Model_PageTheme extends Object {
 	 * @return PageTheme
 	 */
 	public function getByID($ptID) {
-		$pt = Cache::get('page_theme_by_id', $ptID);
-		if ($pt instanceof PageTheme) {
-			return $pt;
-		}
-		
 		$where = 'ptID = ?';
 		$args = array($ptID);
 		$pt = PageTheme::populateThemeQuery($where, $args);
-		Cache::set('page_theme_by_id', $ptID, $pt);
 		return $pt;
 	}
 	
 	protected function populateThemeQuery($where, $args) {
 		$db = Loader::db();
-		$row = $db->GetRow("select ptID, ptHandle, ptDescription, pkgID, ptName from PageThemes where {$where}", $args);
+		$row = $db->GetRow("select ptID, ptHandle, ptDescription, pkgID, ptName, ptHasCustomClass from PageThemes where {$where}", $args);
 		if ($row['ptID']) {
-			$pl = new PageTheme;
+			if ($row['ptHasCustomClass']) {
+				$class = Loader::helper('text')->camelcase($row['ptHandle']) . 'PageTheme';
+			} else {
+				$class = 'PageTheme';
+			}
+			$pl = new $class();
 			$pl->setPropertiesFromArray($row);
 			$pkgHandle = $pl->getPackageHandle();
-			
-			if ($row['pkgID'] > 0) {
-				if (is_dir(DIR_PACKAGES . '/' . $pkgHandle)) {
-					$pl->ptDirectory = DIR_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_THEMES . '/' . $row['ptHandle'];
-					$url = BASE_URL . DIR_REL;
-				} else {
-					$pl->ptDirectory = DIR_PACKAGES_CORE . '/' . $pkgHandle . '/' . DIRNAME_THEMES . '/' . $row['ptHandle'];
-					$url = ASSETS_URL;
-				}
-				$pl->ptURL = $url . '/' . DIRNAME_PACKAGES  . '/' . $pkgHandle . '/' . DIRNAME_THEMES . '/' . $row['ptHandle'];
-			} else if (is_dir(DIR_FILES_THEMES . '/' . $row['ptHandle'])) {
-				$pl->ptDirectory = DIR_FILES_THEMES . '/' . $row['ptHandle'];
-				$pl->ptURL = BASE_URL . DIR_REL . '/' . DIRNAME_THEMES . '/' . $row['ptHandle'];
-			} else {
-				$pl->ptDirectory = DIR_FILES_THEMES_CORE . '/' . $row['ptHandle'];
-				$pl->ptURL = ASSETS_URL . '/' . DIRNAME_THEMES . '/' . $row['ptHandle'];
-			}
+			$env = Environment::get();
+			$pl->ptDirectory = $env->getPath(DIRNAME_THEMES . '/' . $row['ptHandle'], $pkgHandle);			
+			$pl->ptURL = $env->getURL(DIRNAME_THEMES . '/' . $row['ptHandle'], $pkgHandle);	
 			return $pl;
 		}
 	}
@@ -626,7 +474,22 @@ class Concrete5_Model_PageTheme extends Object {
 			$env = Environment::get();
 			$env->clearOverrideCache();
 			
-			return PageTheme::getByID($db->Insert_ID());
+			$pt = PageTheme::getByID($db->Insert_ID());
+			$pt->updateThemeCustomClass();
+			return $pt;
+		}
+	}
+
+	public function updateThemeCustomClass() {
+		$env = Environment::get();
+		$db = Loader::db();
+		$r = $env->getRecord(DIRNAME_MODELS . '/' . DIRNAME_THEMES . '/' . $this->ptHandle . '.php', $this->getPackageHandle());
+		if ($r->exists()) {
+			$db->Execute("update PageThemes set ptHasCustomClass = 1 where ptID = ?", array($this->ptID));
+			$this->ptHasCustomClass = true;
+		} else {
+			$db->Execute("update PageThemes set ptHasCustomClass = 0 where ptID = ?", array($this->ptID));
+			$this->ptHasCustomClass = false;
 		}
 	}
 	
@@ -636,6 +499,10 @@ class Concrete5_Model_PageTheme extends Object {
 	public function getPackageHandle() {
 		return PackageList::getHandle($this->pkgID);
 	}
+	/** 
+	 * Returns whether a theme has a custom class.
+	 */
+	public function hasCustomClass() {return $this->ptHasCustomClass;}
 	public function getThemeHandle() {return $this->ptHandle;}
 	public function getThemeDescription() {return $this->ptDescription;}
 	public function getThemeDirectory() {return $this->ptDirectory;}
