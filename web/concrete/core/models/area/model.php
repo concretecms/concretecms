@@ -59,11 +59,20 @@ class Concrete5_Model_Area extends Object {
 	
 	protected $arIsLoaded = false;
 	protected $arDisplayName;
+	protected $arGridColumnSpan;
 
 	public function setAreaDisplayName($arDisplayName) {
 		$this->arDisplayName = $arDisplayName;
 	}
 
+	public function setAreaGridColumnSpan($cspan) {
+		$this->arGridColumnSpan = $cspan;
+	}
+
+	public function getAreaGridColumnSpan() {
+		return $this->arGridColumnSpan;
+	}
+	
 	public function getAreaDisplayName() {
 		if (isset($this->arDisplayName)) {
 			return $this->arDisplayName;

@@ -483,6 +483,18 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		}
 
 		/**
+		 * Gets the Area object attached to this controller's instance
+		 * @return Area $a
+		 */
+		public function getAreaObject() {
+			return $this->area;
+		}
+
+		public function setAreaObject($a) {
+			$this->area = $a;
+		}
+
+		/**
 		 * @access private
 		 * @todo Make block's uninstallable
 		 */

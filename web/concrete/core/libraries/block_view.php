@@ -190,7 +190,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			} else {
 				$_action = 'view';
 			}
-			
+
 			$u = new User();
 			
 			$outputContent = false;
@@ -214,13 +214,22 @@ defined('C5_EXECUTE') or die("Access Denied.");
 					}
 				}
 			}
+
+			extract($args);
+			if ($a instanceof Area) {
+				$this->controller->setAreaObject($a);
+			} else {
+				$this->controller->setAreaObject($this->area);
+			}
+
 			if ($outputContent == false) {
 				$this->controller->setupAndRun($_action);
 			}
+
 			extract($this->controller->getSets());
 			extract($this->controller->getHelperObjects());
 			$headerItems = $this->controller->headerItems;
-			extract($args);
+			
 			
 			if ($this->controller->getRenderOverride() != '') { 
 				$_filename = $this->controller->getRenderOverride() . '.php';
