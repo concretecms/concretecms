@@ -89,6 +89,21 @@ class Concrete5_Controller_Block_CoreAreaLayout extends BlockController {
 			$this->set('iscustom', $this->arLayout->hasAreaLayoutCustomColumnWidths());
 		}
 
+		public function add() {
+			$maxColumns = 12; // normally
+			// now we check our active theme and see if it has other plans
+			$c = Page::getCurrentPage();
+			$pt = $c->getCollectionThemeObject();
+			if (is_object($pt) && $pt->supportsGridFramework() && is_object($this->area) && $this->area->getAreaGridColumnSpan()) {
+				$this->set('enableThemeGrid', true);
+				$this->set('themeGridMaxColumns', $this->area->getAreaGridColumnSpan());
+			} else {
+				$this->set('enableThemeGrid', false);
+			}
+			
+			$this->set('maxColumns', $maxColumns);
+		}
+
 		public function on_page_view() {
 			$this->addHeaderItem(Loader::helper('html')->css(REL_DIR_FILES_TOOLS_REQUIRED . '/area/layout.css?bID=' . $this->bID));
 		}

@@ -1,10 +1,23 @@
 <?
 	defined('C5_EXECUTE') or die("Access Denied.");
-	$maxColumns = 12;
 	$minColumns = 1;
 ?>
 
 <ul id="ccm-layouts-toolbar">
+	<li>
+		<label for="themeGridColumns"><?=t("Columns")?></label>
+		<select name="themeGridColumns" id="themeGridColumns" <? if ($controller->getTask() == 'edit') { ?> disabled="disabled" <? } ?>>
+			<? for ($i = $minColumns; $i <= $themeGridMaxColumns; $i++) { ?>
+				<option value="<?=$i?>" <? if (is_array($columns) && (count($columns) == $i)) { ?> selected <? } ?>><?=$i?></option>
+			<? } ?>
+		</select>
+	</li>
+
+
+
+
+
+
 	<li>
 		<label for="columns"><?=t("Columns")?></label>
 		<select name="columns" id="columns" <? if ($controller->getTask() == 'edit') { ?> disabled="disabled" <? } ?>>
