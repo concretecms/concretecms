@@ -45,7 +45,8 @@ if (!$c->isArrangeMode()) { ?>
 
 	<?
 		$showAreaDesign = ($ap->canEditAreaDesign() && ENABLE_CUSTOM_DESIGN == true);
-		$showAreaLayouts = ($ap->canAddLayoutToArea() && ENABLE_AREA_LAYOUTS == true);			
+		$showAreaLayouts = ($ap->canAddLayoutToArea() && ENABLE_AREA_LAYOUTS == true);		
+		$canEditAreaPermissions = ($ap->canEditAreaPermissions() && PERMISSIONS_MODEL != 'simple' && (!$a->isGlobalArea()));	
 	?>
 
 	<? if ($showAreaDesign || $showAreaLayouts) { ?>
@@ -61,10 +62,12 @@ if (!$c->isArrangeMode()) { ?>
 			} ?>
 			<li><a dialog-title="<?=t('Add Layout')?>" onclick="ccm_loadInlineEditorAdd(<?=$c->getCollectionID()?>, '<?=htmlspecialchars($arHandle)?>', <?=$a->getAreaID()?>, <?=$areaLayoutBT->getBlockTypeID()?>, <?=$params?>)" id="menuLayout<?=$a->getAreaID()?>" href="javascript:void(0)"><i class="icon-th"></i> <?=t("Add Layout")?></a></li>		
 		<? } ?>
-		<li class="divider"></li>
+		<? if ($canEditAreaPermissions) { ?>
+			<li class="divider"></li>
+		<? } ?>
 	<? } ?>
 
-	<? if ($ap->canEditAreaPermissions() && PERMISSIONS_MODEL != 'simple' && (!$a->isGlobalArea())) { ?>
+	<? if ($canEditAreaPermissions) { ?>
 		<li><a dialog-title="<?=t('Area Permissions')?>" class="dialog-launch" dialog-modal="false" dialog-width="425" dialog-height="430" id="menuAreaStyle<?=$a->getAreaID()?>" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_area_popup.php?cID=<?=$c->getCollectionID()?>&arHandle=<?=urlencode($a->getAreaHandle())?>&atask=groups"><i class="icon-lock"></i> <?=t("Permissions")?></a></li>		
 	<? } ?>
 

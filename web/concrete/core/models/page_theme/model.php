@@ -60,8 +60,10 @@ class Concrete5_Model_PageTheme extends Object {
 	}
 
 	public function getThemeGridFrameworkObject() {
-		$pt = PageThemeGridFramework::getByHandle($this->ptGridFrameworkHandle);
-		return $pt;
+		if ($this->ptGridFrameworkHandle) {
+			$pt = PageThemeGridFramework::getByHandle($this->ptGridFrameworkHandle);
+			return $pt;
+		}
 	}
 
 	public static function getAvailableThemes($filterInstalled = true) {
