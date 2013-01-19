@@ -1,3 +1,4 @@
+
 ccm_layoutRefresh = function() {
 	var columns = parseInt($('#ccm-layouts-toolbar select[name=columns]').val());
 	if (columns < 2) {
@@ -132,8 +133,79 @@ ccm_layoutRefresh = function() {
 
 }
 
-$(function() {
+ccm_gridTypeRefresh = function() {
+	var $ust = $('#ccm-layouts-toolbar select[name=useThemeGrid]');
+	if ($ust.length) {
+		if ($ust.val() == 1) {
+			$('#ccm-layouts-toolbar li[data-grid-control=layout]').hide();
+			$('#ccm-layouts-toolbar li[data-grid-control=page-theme]').show();
+		} else {
+			$('#ccm-layouts-toolbar li[data-grid-control=page-theme]').hide();
+			$('#ccm-layouts-toolbar li[data-grid-control=layout]').show();
+		}
+	}
+}
 
+ccm_themeGridGetColumnSpans = function(totalColumns) {
+	$('#ccm-layouts-edit-mode').html('');
+	var maxColumnSize = parseInt($('#ccm-layouts-toolbar select[name=themeGridColumns] option:last-child').val());
+	var rowSpan = Math.ceil(maxColumnSize / totalColumns);
+	// create the starting array
+	var spanArray = [];
+	for (i = 0; i < totalColumns; i++) {
+		spanArray[i] = rowSpan;
+	}
+	var rowSpanTotal = rowSpan * totalColumns;
+	for (i = 0; i < (rowSpanTotal - maxColumnSize); i++) {
+		var index = spanArray.length - i - 1;
+		spanArray[index]--;
+	}
+
+	var columnClasses = [];
+	for (i = 0; i < spanArray.length; i++) {
+		columnClasses[i] = {};
+		columnClasses[i].cssClass = ccm_themeGridSettings.columnClasses[spanArray[i]-1];
+		columnClasses[i].value = spanArray[i];
+	}
+
+	return columnClasses;
+}
+
+ccm_themeGridRefresh = function() {
+	var columns = parseInt($('#ccm-layouts-toolbar select[name=themeGridColumns]').val());
+	var $form = $('#ccm-layouts-edit-mode');
+	var row = ccm_themeGridSettings.rowStartHTML;
+	var columnSpans = ccm_themeGridGetColumnSpans(columns);
+	$.each(columnSpans, function(i, spanInfo) {
+
+		// get the class at the starting rowspan
+		var columnHTML = '<div class="' + spanInfo.cssClass + ' ccm-theme-grid-column"><div class="ccm-layout-column-highlight"><input type="hidden" id="ccm-edit-layout-column-span-' + i + '" name="span[' + i + ']" value="' + spanInfo.value + '" /></div></div>';
+		// now, sometimes we might need to set the next column to a smaller amount
+		row += columnHTML;
+
+	});
+
+	row += ccm_themeGridSettings.rowEndHTML;
+	$form.append(row);
+
+	//	$highlight.append($('<input />', {'name': 'width[' + i + ']', 'type': 'hidden', 'id': 'ccm-edit-layout-column-width-'+ i}));
+	//		$column.append($highlight);
+}
+
+
+ccm_initLayouts = function() {
+
+	// theme grid chooser
+	$('#ccm-layouts-toolbar select[name=useThemeGrid]').change(function() {
+		ccm_gridTypeRefresh();
+	});
+
+	// theme grid layout controls
+	$('#ccm-layouts-toolbar select[name=themeGridColumns]').change(function() {
+		ccm_themeGridRefresh();
+	});
+
+	// free-form layout controls
 	$('#ccm-layouts-toolbar select[name=columns]').change(function() {
 		ccm_layoutRefresh();
 	});
@@ -146,7 +218,12 @@ $(function() {
 		ccm_layoutRefresh();
 	});
 
-	ccm_layoutRefresh();
+	ccm_gridTypeRefresh();
+	if ($('#ccm-layouts-toolbar select[name=useThemeGrid]').val() == 1) {
+		ccm_themeGridRefresh();
+	} else {
+		ccm_layoutRefresh();
+	}
 
 	$('#ccm-layouts-cancel-button').on('click', function() {
 		ccm_onInlineEditCancel();
@@ -160,4 +237,4 @@ $(function() {
 		ccm_onInlineEditCancel();
 	});
 
-});
+}

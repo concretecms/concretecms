@@ -95,12 +95,15 @@ class Concrete5_Controller_Block_CoreAreaLayout extends BlockController {
 			$c = Page::getCurrentPage();
 			$pt = $c->getCollectionThemeObject();
 			if (is_object($pt) && $pt->supportsGridFramework() && is_object($this->area) && $this->area->getAreaGridColumnSpan()) {
+				$gf = $pt->getThemeGridFrameworkObject();
 				$this->set('enableThemeGrid', true);
+				$this->set('themeGridName', $gf->getPageThemeGridFrameworkName());
+				$this->Set('themeGridFramework', $gf);
 				$this->set('themeGridMaxColumns', $this->area->getAreaGridColumnSpan());
 			} else {
 				$this->set('enableThemeGrid', false);
 			}
-			
+
 			$this->set('maxColumns', $maxColumns);
 		}
 
