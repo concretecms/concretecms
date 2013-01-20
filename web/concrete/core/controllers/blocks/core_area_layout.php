@@ -40,16 +40,23 @@ class Concrete5_Controller_Block_CoreAreaLayout extends BlockController {
 			$arLayoutID = $db->GetOne('select arLayoutID from btCoreAreaLayout where bID = ?', array($this->bID));
 			if (!$arLayoutID) {
 				// we are adding a new layout 
-			
-				if (!$post['isautomated']) {
-					$iscustom = 1;
+				if ($post['useThemeGrid']) {
+					$arLayout = AreaLayout::add(false, false, true);
+					for ($i = 0; $i < $post['themeGridColumns']; $i++) {
+						$span = ($post['span'][$i]) ? $post['span'][$i] : 0;
+						$arLayout->addLayoutColumn($span);
+					}
 				} else {
-					$iscustom = 0;
-				}
-				$arLayout = AreaLayout::add($post['spacing'], $iscustom);
-				for ($i = 0; $i < $post['columns']; $i++) {
-					$width = ($post['width'][$i]) ? $post['width'][$i] : 0;
-					$arLayout->addLayoutColumn($width);
+					if (!$post['isautomated']) {
+						$iscustom = 1;
+					} else {
+						$iscustom = 0;
+					}
+					$arLayout = AreaLayout::add($post['spacing'], $iscustom);
+					for ($i = 0; $i < $post['columns']; $i++) {
+						$width = ($post['width'][$i]) ? $post['width'][$i] : 0;
+						$arLayout->addLayoutColumn($width);
+					}
 				}
 			} else {
 				$arLayout = AreaLayout::getByID($arLayoutID);

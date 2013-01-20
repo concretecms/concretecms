@@ -34,6 +34,10 @@ class Concrete5_Model_AreaLayout extends Object {
 		return $this->arLayoutIsCustom;
 	}
 
+	public function isAreaLayoutUsingThemeGridFramework() {
+		return $this->arLayoutUsesThemeGridFramework;
+	}
+
 	public function getAreaLayoutColumns() {
 		$db = Loader::db();
 		$r = $db->Execute('select arLayoutColumnID from AreaLayoutColumns where arLayoutID = ? order by arLayoutColumnIndex asc', array($this->arLayoutID));
@@ -99,7 +103,7 @@ class Concrete5_Model_AreaLayout extends Object {
 	}
 
 
-	public static function add($spacing = 0, $iscustom = false) {
+	public static function add($spacing = 0, $iscustom = false, $usegrid = false) {
 		if (!$spacing) {
 			$spacing = 0; // just in case
 		}
@@ -109,8 +113,14 @@ class Concrete5_Model_AreaLayout extends Object {
 			$iscustom = 1;
 		}
 
+		if (!$usegrid) {
+			$arLayoutUsesThemeGridFramework = 0;
+		} else {
+			$arLayoutUsesThemeGridFramework = 1;
+		}
+
 		$db = Loader::db();
-		$db->Execute('insert into AreaLayouts (arLayoutSpacing, arLayoutIsCustom) values (?, ?)', array($spacing, $iscustom));
+		$db->Execute('insert into AreaLayouts (arLayoutSpacing, arLayoutIsCustom, arLayoutUsesThemeGridFramework) values (?, ?, ?)', array($spacing, $iscustom, $arLayoutUsesThemeGridFramework));
 		$arLayoutID = $db->Insert_ID();
 		if ($arLayoutID) {
 			$ar = AreaLayout::getByID($arLayoutID);
