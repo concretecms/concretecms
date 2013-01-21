@@ -4,15 +4,37 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 class Concrete5_Model_AreaLayout extends Object {
 
+	protected $gf;
+
 	public static function getByID($arLayoutID) {
 		$db = Loader::db();
 		$row = $db->GetRow('select * from AreaLayouts where arLayoutID = ?', array($arLayoutID));
 		if (is_array($row) && $row['arLayoutID']) {
 			$al = new AreaLayout();
 			$al->setPropertiesFromArray($row);
+
+
+			$c = Page::getCurrentPage();
+			if (is_object($c)) {
+				$pt = $c->getCollectionThemeObject();
+				if (is_object($pt) && $pt->supportsGridFramework()) {
+					$gf = $pt->getThemeGridFrameworkObject();
+					$al->setThemeGridFrameworkObject($gf);
+				}
+			}
+
 			return $al;
 		}
 	}	
+
+	public function setThemeGridFrameworkObject($gf) {
+		$this->gf = $gf;
+	}
+
+	public function getThemeGridFrameworkObject() {
+		return $this->gf;
+	}
+
 
 	public function setAreaObject(Area $a) {
 		$this->area = $a;
