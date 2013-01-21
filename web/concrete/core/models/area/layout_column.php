@@ -14,6 +14,18 @@ class Concrete5_Model_AreaLayoutColumn extends Object {
 		}
 	}	
 
+	public function getAreaLayoutColumnClass() {
+		if ($this->arLayout->isAreaLayoutUsingThemeGridFramework()) {
+			$gf = $this->arLayout->getThemeGridFrameworkObject();
+			if (is_object($gf)) {
+				// the width parameter of the column becomes the span
+				$span = $this->arLayoutColumnWidth;
+				return $gf->getPageThemeGridFrameworkColumnClassForSpan($span);
+			}
+		}
+		return 'ccm-layout-column';
+	}
+
 	public function setAreaLayoutObject($arLayout) {
 		$this->arLayout = $arLayout;
 	}

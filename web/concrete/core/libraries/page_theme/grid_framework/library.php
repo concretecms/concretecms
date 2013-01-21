@@ -18,5 +18,10 @@ abstract class Concrete5_Library_PageThemeGridFramework {
 	
 	abstract public function getPageThemeGridFrameworkColumnClasses();
 
+	public function getPageThemeGridFrameworkColumnClassForSpan($span) {
+		$span = $span - 1;
+		$classes = $this->getPageThemeGridFrameworkColumnClasses();
+		return $classes[$span];
+	}
 
 }

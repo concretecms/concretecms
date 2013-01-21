@@ -85,6 +85,11 @@ class Concrete5_Controller_Block_CoreAreaLayout extends BlockController {
 			if (is_object($this->arLayout)) {
 				$this->arLayout->setAreaObject($a);
 				$this->set('columns', $this->arLayout->getAreaLayoutColumns());
+				if ($this->arLayout->isAreaLayoutUsingThemeGridFramework()) {
+					$this->render('view_grid');
+				} else {
+					$this->render('view');
+				}
 			} else {
 				$this->set('columns', array());
 			}
