@@ -93,7 +93,13 @@ if ($isAlias) {
 	} else if ($p->canEditBlock() && $b->isEditable()) { ?>
 
 		<? if ($editInline) { ?>
-			<li><a href="javascript:void(0)" onclick="ccm_loadInlineEditor('<?=$cID?>','<?=urlencode($arHandle)?>','<?=$aID?>','<?=$bID?>')"><i class="icon-pencil"></i> <?=t("Edit Block")?></a></li>		
+			<? $params = 'false'; ?>
+
+			<? if ($a->getAreaGridColumnSpan() > 0) {
+				$params = '{arGridColumnSpan: ' . $a->getAreaGridColumnSpan() . '}';
+			} ?>
+
+			<li><a href="javascript:void(0)" onclick="ccm_loadInlineEditor('<?=$cID?>','<?=urlencode($arHandle)?>','<?=$aID?>','<?=$bID?>', <?=$params?>)"><i class="icon-pencil"></i> <?=t("Edit Block")?></a></li>		
 		<? } else { ?>
 			<li><a class="dialog-launch" dialog-title="<?=t('Edit %s', $btOriginal->getBlockTypeName())?>" dialog-modal="false" dialog-on-close="ccm_blockWindowAfterClose()" dialog-width="<?=$btOriginal->getBlockTypeInterfaceWidth()?>" dialog-height="<?=$btOriginal->getBlockTypeInterfaceHeight() + $heightPlus?>" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_block_popup?cID=<?=$cID?>&amp;bID=<?=$bID?>&amp;arHandle=<?=urlencode($arHandle)?>&amp;btask=edit" ><i class="icon-pencil"></i> <?=t("Edit Block")?></a></li>		
 		<? } ?>
