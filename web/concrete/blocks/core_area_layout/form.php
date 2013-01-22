@@ -7,27 +7,50 @@
 	<? if ($enableThemeGrid) { ?>
 	<li>
 		<label for="useThemeGrid"><?=t("Grid Type")?></label>
+		<? if ($controller->getTask() == 'edit') { ?>
+		<select name="useThemeGrid" id="useThemeGrid" style="width: auto !important" disabled="disabled">
+			<option value="1"><?=$themeGridName?></option>
+		</select>
+		<? } else { ?>
+
 		<select name="useThemeGrid" id="useThemeGrid" style="width: auto !important">
 			<option value="1"><?=$themeGridName?></option>
 			<option value="0"><?=t('Free-Form Layout')?></option>
 		</select>
+
+		<? } ?>
+
 	</li>
 	<li data-grid-control="page-theme" class="ccm-page-theme-grid-framework">
 		<label for="themeGridColumns"><?=t("Columns")?></label>
-		<select name="themeGridColumns" id="themeGridColumns" <? if ($controller->getTask() == 'edit') { ?> disabled="disabled" <? } ?>>
+		<? if ($controller->getTask() == 'edit') { ?>
+		<select name="themeGridColumns" id="themeGridColumns" disabled="disabled">
+			<option value="<?=$columnsNum?>"><?=$columnsNum?></option>
+		</select>
+		<? } else { ?>
+		
+		<select name="themeGridColumns" id="themeGridColumns">
 			<? for ($i = $minColumns; $i <= $themeGridMaxColumns; $i++) { ?>
 				<option value="<?=$i?>" <? if (is_array($columns) && (count($columns) == $i)) { ?> selected <? } ?>><?=$i?></option>
 			<? } ?>
 		</select>
+		<? } ?>
 	</li>
 	<? } ?>
 	<li data-grid-control="layout">
 		<label for="columns"><?=t("Columns")?></label>
-		<select name="columns" id="columns" <? if ($controller->getTask() == 'edit') { ?> disabled="disabled" <? } ?>>
+
+		<? if ($controller->getTask() == 'edit') { ?>
+		<select name="columns" id="columns" disabled="disabled">
+			<option value="<?=$columnsNum?>"><?=$columnsNum?></option>
+		</select>
+		<? } else { ?>
+		<select name="columns" id="columns">
 			<? for ($i = $minColumns; $i <= $maxColumns; $i++) { ?>
 				<option value="<?=$i?>" <? if (is_array($columns) && (count($columns) == $i)) { ?> selected <? } ?>><?=$i?></option>
 			<? } ?>
 		</select>
+		<? } ?>
 	</li>
 	<li data-grid-control="layout" class="ccm-layouts-toolbar-separator"></li>
 	<li data-grid-control="layout" >

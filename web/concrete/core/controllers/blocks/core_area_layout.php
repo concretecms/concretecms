@@ -99,6 +99,21 @@ class Concrete5_Controller_Block_CoreAreaLayout extends BlockController {
 			$this->view();
 			$this->set('spacing', $this->arLayout->getAreaLayoutSpacing());
 			$this->set('iscustom', $this->arLayout->hasAreaLayoutCustomColumnWidths());
+			// since we set a render override in view() we have to explicitly declare edit
+			$this->render('edit');
+			$this->set('enableThemeGrid', $this->arLayout->isAreaLayoutUsingThemeGridFramework());
+			if ($this->arLayout->isAreaLayoutUsingThemeGridFramework()) {
+				$c = Page::getCurrentPage();
+				$pt = $c->getCollectionThemeObject();
+				$gf = $pt->getThemeGridFrameworkObject();
+				$this->set('themeGridFramework', $gf);
+				$this->set('themeGridName', $gf->getPageThemeGridFrameworkName());
+				$this->render("edit_grid");
+			} else {
+				$this->render('edit');
+			}
+			$this->set('columnsNum', count($this->arLayout->getAreaLayoutColumns()));
+
 		}
 
 		public function add() {
@@ -110,18 +125,21 @@ class Concrete5_Controller_Block_CoreAreaLayout extends BlockController {
 				$gf = $pt->getThemeGridFrameworkObject();
 				$this->set('enableThemeGrid', true);
 				$this->set('themeGridName', $gf->getPageThemeGridFrameworkName());
-				$this->Set('themeGridFramework', $gf);
+				$this->set('themeGridFramework', $gf);
 				$this->set('themeGridMaxColumns', $this->area->getAreaGridColumnSpan());
 			} else {
 				$this->set('enableThemeGrid', false);
 			}
-
 			$this->set('maxColumns', $maxColumns);
 		}
 
 		public function on_page_view() {
-			$this->addHeaderItem(Loader::helper('html')->css(REL_DIR_FILES_TOOLS_REQUIRED . '/area/layout.css?bID=' . $this->bID));
+			$ar = AreaLayout::getByID($this->arLayoutID);
+			if (is_object($ar) && !$ar->isAreaLayoutUsingThemeGridFramework()) {
+				$this->addHeaderItem(Loader::helper('html')->css(REL_DIR_FILES_TOOLS_REQUIRED . '/area/layout.css?bID=' . $this->bID));
+			}
 		}
+
 
 
 	}

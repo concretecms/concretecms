@@ -3,7 +3,21 @@
 * inline editor functions
 */
 
-ccm_loadInlineEditor = function(cID, arHandle, aID, bID) {
+ccm_loadInlineEditor = function(cID, arHandle, aID, bID, params) {
+
+	var postData = [
+		{name: 'btask', value: 'edit'},
+		{name: 'cID', value: cID},
+		{name: 'arHandle', value: arHandle},
+		{name: 'aID', value: aID},
+		{name: 'bID', value: bID}
+	];
+
+	if (params) {
+		for (var prop in params) {
+			postData.push({name: prop, value: params[prop]});
+		}
+	}
 
 	jQuery.fn.dialog.showLoader();
 	ccm_enterInlineEditMode($('#b' + bID + '-' + aID));
@@ -11,7 +25,7 @@ ccm_loadInlineEditor = function(cID, arHandle, aID, bID) {
 	$.ajax({
 	type: 'GET',
 	url: CCM_TOOLS_PATH + '/edit_block_popup',
-	data: 'btask=edit&cID=' + cID + '&bID=' + bID + '&arHandle=' + arHandle + '&aID=' + aID,
+	data: postData,
 	success: function(r) {
 		$('#b' + bID + '-' + aID).html(r);
 		jQuery.fn.dialog.hideLoader();

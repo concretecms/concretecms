@@ -146,6 +146,12 @@ if (is_object($b)) {
 			break;
 		case 'edit': 			
 			if ($bp->canWrite()) {
+		
+				// Handle special posted area parameters here
+				if (isset($_REQUEST['arGridColumnSpan'])) {
+					$a->setAreaGridColumnSpan(intval($_REQUEST['arGridColumnSpan']));
+				}
+
 				$bv->render($b, 'edit', array(
 					'c' => $c,
 					'a' => $a, 
