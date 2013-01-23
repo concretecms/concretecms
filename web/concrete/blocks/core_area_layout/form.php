@@ -77,6 +77,7 @@ ccm_themeGridSettings.columnClasses = [];
 <? if ($enableThemeGrid) { ?>
 
 	ccm_themeGridSettings.rowStartHTML = '<?=addslashes($themeGridFramework->getPageThemeGridFrameworkRowStartHTML())?>';
+	ccm_themeGridSettings.maxColumns = '<?=$controller->getAreaObject()->getAreaGridColumnSpan()?>';
 	ccm_themeGridSettings.rowEndHTML = '<?=addslashes($themeGridFramework->getPageThemeGridFrameworkRowEndHTML())?>';
 	<? foreach($themeGridFramework->getPageThemeGridFrameworkColumnClasses() as $col => $class) { ?>
 		ccm_themeGridSettings.columnClasses[<?=$col?>] = '<?=$class?>';

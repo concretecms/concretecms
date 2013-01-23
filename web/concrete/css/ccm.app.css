@@ -1520,7 +1520,9 @@ ul#ccm-select-marketplace-theme li .desc{font-size:10px;}
 #ccm-layouts-toolbar li.ccm-layouts-toolbar-separator{float:left;height:34px;border-left:1px solid #d3d3d3;border-right:1px solid #f1f1f1;padding:0;margin:0 2px 0 3px !important;}
 #ccm-layouts-toolbar .ccm-layouts-toolbar-save{position:absolute;top:0px;right:15px;}
 #ccm-layouts-toolbar #ccm-layouts-save-button{margin-left:6px;}
-#ccm-layouts-edit-mode{position:relative;*zoom:1;}#ccm-layouts-edit-mode:before,#ccm-layouts-edit-mode:after{display:table;content:"";line-height:0;}
+#ccm-theme-grid-holder-temp{position:absolute;z-index:-9999;visibility:hidden;bottom:0px;left:0px;}
+#ccm-theme-grid-edit-mode-row-wrapper{position:relative;}
+#ccm-layouts-edit-mode{*zoom:1;}#ccm-layouts-edit-mode:before,#ccm-layouts-edit-mode:after{display:table;content:"";line-height:0;}
 #ccm-layouts-edit-mode:after{clear:both;}
 #ccm-layouts-edit-mode .ccm-layout-column:first-child .ccm-layout-column-highlight{border-left:0px !important;}
 #ccm-layouts-edit-mode .ccm-layout-column{float:left;}

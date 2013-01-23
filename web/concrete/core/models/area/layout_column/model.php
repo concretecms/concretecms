@@ -2,28 +2,17 @@
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
-class Concrete5_Model_AreaLayoutColumn extends Object {
+abstract class Concrete5_Model_AreaLayoutColumn extends Object {
 
-	public static function getByID($arLayoutColumnID) {
+	abstract static public function getByID($arLayoutColumnID);
+	abstract public function getAreaLayoutColumnClass();
+
+	protected function loadBasicInformation($arLayoutColumnID) {
 		$db = Loader::db();
 		$row = $db->GetRow('select * from AreaLayoutColumns where arLayoutColumnID = ?', array($arLayoutColumnID));
 		if (is_array($row) && $row['arLayoutColumnID']) {
-			$al = new AreaLayoutColumn();
-			$al->setPropertiesFromArray($row);
-			return $al;
+			$this->setPropertiesFromArray($row);
 		}
-	}	
-
-	public function getAreaLayoutColumnClass() {
-		if ($this->arLayout->isAreaLayoutUsingThemeGridFramework()) {
-			$gf = $this->arLayout->getThemeGridFrameworkObject();
-			if (is_object($gf)) {
-				// the width parameter of the column becomes the span
-				$span = $this->arLayoutColumnWidth;
-				return $gf->getPageThemeGridFrameworkColumnClassForSpan($span);
-			}
-		}
-		return 'ccm-layout-column';
 	}
 
 	public function setAreaLayoutObject($arLayout) {
@@ -58,16 +47,6 @@ class Concrete5_Model_AreaLayoutColumn extends Object {
 
 	public function getAreaLayoutColumnID() {
 		return $this->arLayoutColumnID;
-	}
-
-	public function getAreaLayoutColumnWidth() {
-		return $this->arLayoutColumnWidth;
-	}
-
-	public function setAreaLayoutColumnWidth($width) {
-		$this->arLayoutColumnWidth = $width;
-		$db = Loader::db();
-		$db->Execute('update AreaLayoutColumns set arLayoutColumnWidth = ? where arLayoutColumnID = ?', array($width, $this->arLayoutColumnID));
 	}
 
 	public function display($disableControls = false) {

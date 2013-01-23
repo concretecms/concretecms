@@ -65,7 +65,12 @@ class Concrete5_Model_AreaLayout extends Object {
 		$r = $db->Execute('select arLayoutColumnID from AreaLayoutColumns where arLayoutID = ? order by arLayoutColumnIndex asc', array($this->arLayoutID));
 		$columns = array();
 		while ($row = $r->FetchRow()) {
-			$column = AreaLayoutColumn::getByID($row['arLayoutColumnID']);
+			if ($this->isAreaLayoutUsingThemeGridFramework) {
+				$column = AreaLayoutThemeGridColumn::getByID($row['arLayoutColumnID']);
+			} else {
+				$column = AreaLayoutCustomColumn::getByID($row['arLayoutColumnID']);
+			}
+
 			if (is_object($column)) {
 				$column->setAreaLayoutObject($this);
 				$columns[] = $column;
@@ -74,6 +79,7 @@ class Concrete5_Model_AreaLayout extends Object {
 		return $columns;
 	}
 
+	/*
 	public function duplicate() {
 		$db = Loader::db();
 		$v = array($this->arLayoutSpacing, $this->arLayoutIsCustom);
@@ -88,6 +94,7 @@ class Concrete5_Model_AreaLayout extends Object {
 			return AreaLayout::getByID($newAreaLayoutID);
 		}
 	}
+	*/
 
 	public function addLayoutColumn($width = 0) {
 		if (!$width) {

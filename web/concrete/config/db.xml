@@ -350,6 +350,31 @@
 	  <NOTNULL/>
 	</field>
 </table>
+<table name="AreaLayoutCustomColumns">
+  <field name="arLayoutColumnID" type="I">
+    <key />
+    <unsigned />
+    <autoincrement/>
+  </field>
+  <field name="arLayoutColumnWidth" type="C" size="64">
+    <NOTNULL/>
+  </field>
+</table>
+<table name="AreaLayoutThemeGridColumns">
+  <field name="arLayoutColumnID" type="I">
+    <key />
+    <unsigned />
+    <autoincrement/>
+  </field>
+  <field name="arLayoutColumnSpan" type="I">
+    <unsigned />
+    <default value="0" />
+  </field>
+  <field name="arLayoutColumnOffset" type="I">
+    <unsigned />
+    <default value="0" />
+  </field>
+</table>
   <table name="AttributeSets">
     <field name="asID" type="I" size="10">
       <key/>

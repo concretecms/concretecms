@@ -13,6 +13,8 @@ class ConcreteUpgradeVersion570Helper {
 		'Areas',
 		'AreaLayouts',
 		'AreaLayoutColumns',
+		'AreaLayoutCustomColumns',
+		'AreaLayoutThemeGridColumns',
 		/*'Queues',*/
 		'BlockTypes',
 		/*'QueueMessages',*/

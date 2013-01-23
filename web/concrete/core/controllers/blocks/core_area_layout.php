@@ -41,10 +41,13 @@ class Concrete5_Controller_Block_CoreAreaLayout extends BlockController {
 			if (!$arLayoutID) {
 				// we are adding a new layout 
 				if ($post['useThemeGrid']) {
-					$arLayout = AreaLayout::add(false, false, true);
+					$arLayout = ThemeGridAreaLayout::add();
 					for ($i = 0; $i < $post['themeGridColumns']; $i++) {
 						$span = ($post['span'][$i]) ? $post['span'][$i] : 0;
-						$arLayout->addLayoutColumn($span);
+						$offset = ($post['offset'][$i]) ? $post['offset'][$i] : 0;
+						$column = $arLayout->addLayoutColumn();
+						$column->setAreaLayoutColumnSpan($span);
+						$column->setAreaLayoutColumnOffset($offset);
 					}
 				} else {
 					if (!$post['isautomated']) {
@@ -52,13 +55,15 @@ class Concrete5_Controller_Block_CoreAreaLayout extends BlockController {
 					} else {
 						$iscustom = 0;
 					}
-					$arLayout = AreaLayout::add($post['spacing'], $iscustom);
+					$arLayout = CustomAreaLayout::add($post['spacing'], $iscustom);
 					for ($i = 0; $i < $post['columns']; $i++) {
 						$width = ($post['width'][$i]) ? $post['width'][$i] : 0;
-						$arLayout->addLayoutColumn($width);
+						$column = $arLayout->addLayoutColumn();
+						$column->setAreaLayoutColumnWidth($width);
 					}
 				}
 			} else {
+
 				$arLayout = AreaLayout::getByID($arLayoutID);
 				// save spacing
 				$arLayout->setAreaLayoutColumnSpacing($post['spacing']);
