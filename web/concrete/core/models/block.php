@@ -226,7 +226,7 @@ class Concrete5_Model_Block extends Object {
 		$db = Loader::db();
 		
 		$arHandle = $this->getAreaHandle();
-		if ($this->isBlockInStack()) {
+		if ($this->isBlockInStack() && is_object($area)) {
 			$arHandle = $area->getAreaHandle();
 			$cx = Page::getCurrentPage();
 			$cID = $cx->getCollectioniD();
@@ -258,7 +258,7 @@ class Concrete5_Model_Block extends Object {
 		$arHandle = $this->getAreaHandle();
 		$cID = $c->getCollectionID();
 		$cvID = $c->getVersionID();
-		if ($this->isBlockInStack()) {
+		if ($this->isBlockInStack() && is_object($area)) {
 			$arHandle = $area->getAreaHandle();
 			$cx = Page::getCurrentPage();
 			$cID = $cx->getCollectioniD();
