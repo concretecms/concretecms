@@ -31,6 +31,26 @@ class Concrete5_Model_ThemeGridAreaLayoutColumn extends AreaLayoutColumn {
 		}
 	}
 
+	// this returns offsets in the form of spans
+	public function getAreaLayoutColumnOffsetEditClass() {
+		$gf = $this->arLayout->getThemeGridFrameworkObject();
+		if (is_object($gf)) {
+			return $gf->getPageThemeGridFrameworkColumnClassForSpan($this->arLayoutColumnOffset);
+		}
+	}
+
+	public function getAreaLayoutColumnOffsetClass() {
+		$gf = $this->arLayout->getThemeGridFrameworkObject();
+		if (is_object($gf)) {
+			// the width parameter of the column becomes the span
+			if ($gf->hasPageThemeGridFrameworkOffsetClasses()) { 
+				return $gf->getPageThemeGridFrameworkColumnClassForOffset($this->arLayoutColumnOffset);
+			} else {
+				return $gf->getPageThemeGridFrameworkColumnClassForSpan($this->arLayoutColumnOffset);
+			}
+		}
+	}
+
 	public function delete() {
 		$db = Loader::db();
 		$db->Execute("delete from AreaLayoutThemeGridColumns where arLayoutColumnID = ?", array($this->arLayoutColumnID));

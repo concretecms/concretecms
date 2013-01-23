@@ -68,6 +68,10 @@
 		<button id="ccm-layouts-cancel-button" type="button" class="btn btn-mini"><?=t("Cancel")?></button>
 		<button id="ccm-layouts-save-button" type="button" class="btn btn-primary btn-mini">Save</button></li>
 	</li>
+
+	<? if ($controller->getTask() == 'add') { ?>
+		<input name="arLayoutMaxColumns" type="hidden" value="<?=$controller->getAreaObject()->getAreaGridColumnSpan()?>" />
+	<? } ?>
 </ul>
 
 <script type="text/javascript">
@@ -77,7 +81,11 @@ ccm_themeGridSettings.columnClasses = [];
 <? if ($enableThemeGrid) { ?>
 
 	ccm_themeGridSettings.rowStartHTML = '<?=addslashes($themeGridFramework->getPageThemeGridFrameworkRowStartHTML())?>';
+	<? if ($controller->getTask() == 'add') { ?>
 	ccm_themeGridSettings.maxColumns = '<?=$controller->getAreaObject()->getAreaGridColumnSpan()?>';
+	<? } else { ?>
+	ccm_themeGridSettings.maxColumns = '<?=$maxColumns?>';
+	<? } ?>
 	ccm_themeGridSettings.rowEndHTML = '<?=addslashes($themeGridFramework->getPageThemeGridFrameworkRowEndHTML())?>';
 	<? foreach($themeGridFramework->getPageThemeGridFrameworkColumnClasses() as $col => $class) { ?>
 		ccm_themeGridSettings.columnClasses[<?=$col?>] = '<?=$class?>';

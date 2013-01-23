@@ -5,10 +5,14 @@ defined('C5_EXECUTE') or die("Access Denied.");
 class Concrete5_Model_ThemeGridAreaLayout extends AreaLayout {
 
 	protected $arLayoutType = 'theme_grid';
-	
+	protected $arLayoutMaxColumns;
 	protected $gf;
 
 	protected function loadDetails() {
+		$db = Loader::db();
+		$row = $db->GetRow('select arLayoutMaxColumns from AreaLayouts where arLayoutID = ?', array($this->arLayoutID));
+		$this->setPropertiesFromArray($row);
+
 		$c = Page::getCurrentPage();
 		if (is_object($c)) {
 			$pt = $c->getCollectionThemeObject();
@@ -67,6 +71,19 @@ class Concrete5_Model_ThemeGridAreaLayout extends AreaLayout {
 		}
 	}
 	*/
+
+	public function setAreaLayoutMaxColumns($max) {
+		if (!$max) {
+			$max = 0;
+		}
+		$db = Loader::db();
+		$db->Execute('update AreaLayouts set arLayoutMaxColumns = ? where arLayoutID = ?', array($max, $this->arLayoutID));
+		$this->arLayoutMaxColumns = $max;
+	}
+
+	public function getAreaLayoutMaxColumns() {
+		return $this->arLayoutMaxColumns;
+	}
 
 	public function addLayoutColumn() {
 		$columnID = parent::addLayoutColumn();

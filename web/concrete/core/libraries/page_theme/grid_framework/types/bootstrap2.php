@@ -29,8 +29,25 @@ class Concrete5_Library_Bootstrap2PageThemeGridFramework extends PageThemeGridFr
 			'span11',
 			'span12'
 		);
-		return $columns;
-		
+		return $columns;	
+	}
+
+	public function getPageThemeGridFrameworkColumnOffsetClasses() {
+		$offsets = array(
+			'offset1',
+			'offset2',
+			'offset3',
+			'offset4',
+			'offset5',
+			'offset6',
+			'offset7',
+			'offset8',
+			'offset9',
+			'offset10',
+			'offset11',
+			'offset12'
+		);
+		return $offsets;	
 	}
 
 }
