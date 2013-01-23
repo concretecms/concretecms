@@ -42,6 +42,7 @@ class Concrete5_Controller_Block_CoreAreaLayout extends BlockController {
 				// we are adding a new layout 
 				if ($post['useThemeGrid']) {
 					$arLayout = ThemeGridAreaLayout::add();
+					$arLayout->setAreaLayoutMaxColumns($post['arLayoutMaxColumns']);
 					for ($i = 0; $i < $post['themeGridColumns']; $i++) {
 						$span = ($post['span'][$i]) ? $post['span'][$i] : 0;
 						$offset = ($post['offset'][$i]) ? $post['offset'][$i] : 0;
@@ -66,16 +67,28 @@ class Concrete5_Controller_Block_CoreAreaLayout extends BlockController {
 
 				$arLayout = AreaLayout::getByID($arLayoutID);
 				// save spacing
-				$arLayout->setAreaLayoutColumnSpacing($post['spacing']);
-				if ($post['isautomated']) {
-					$arLayout->disableAreaLayoutCustomColumnWidths();
-				} else {
-					$arLayout->enableAreaLayoutCustomColumnWidths();
+				if ($arLayout->isAreaLayoutUsingThemeGridFramework()) {
 					$columns = $arLayout->getAreaLayoutColumns();
 					for ($i = 0; $i < count($columns); $i++) {
 						$col = $columns[$i];
-						$width = ($post['width'][$i]) ? $post['width'][$i] : 0;
-						$col->setAreaLayoutColumnWidth($width);
+						$span = ($post['span'][$i]) ? $post['span'][$i] : 0;
+						$offset = ($post['offset'][$i]) ? $post['offset'][$i] : 0;
+						$col->setAreaLayoutColumnSpan($span);
+						$col->setAreaLayoutColumnOffset($offset);
+					}
+
+				} else {
+					$arLayout->setAreaLayoutColumnSpacing($post['spacing']);
+					if ($post['isautomated']) {
+						$arLayout->disableAreaLayoutCustomColumnWidths();
+					} else {
+						$arLayout->enableAreaLayoutCustomColumnWidths();
+						$columns = $arLayout->getAreaLayoutColumns();
+						for ($i = 0; $i < count($columns); $i++) {
+							$col = $columns[$i];
+							$width = ($post['width'][$i]) ? $post['width'][$i] : 0;
+							$col->setAreaLayoutColumnWidth($width);
+						}
 					}
 				}
 			}
@@ -102,19 +115,19 @@ class Concrete5_Controller_Block_CoreAreaLayout extends BlockController {
 
 		public function edit() {
 			$this->view();
-			$this->set('spacing', $this->arLayout->getAreaLayoutSpacing());
-			$this->set('iscustom', $this->arLayout->hasAreaLayoutCustomColumnWidths());
 			// since we set a render override in view() we have to explicitly declare edit
-			$this->render('edit');
 			$this->set('enableThemeGrid', $this->arLayout->isAreaLayoutUsingThemeGridFramework());
 			if ($this->arLayout->isAreaLayoutUsingThemeGridFramework()) {
 				$c = Page::getCurrentPage();
 				$pt = $c->getCollectionThemeObject();
 				$gf = $pt->getThemeGridFrameworkObject();
 				$this->set('themeGridFramework', $gf);
+				$this->set('maxColumns', $this->arLayout->getAreaLayoutMaxColumns());
 				$this->set('themeGridName', $gf->getPageThemeGridFrameworkName());
 				$this->render("edit_grid");
 			} else {
+				$this->set('spacing', $this->arLayout->getAreaLayoutSpacing());
+				$this->set('iscustom', $this->arLayout->hasAreaLayoutCustomColumnWidths());
 				$this->render('edit');
 			}
 			$this->set('columnsNum', count($this->arLayout->getAreaLayoutColumns()));

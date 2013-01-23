@@ -198,7 +198,7 @@ ccm_themeGridRefresh = function() {
 		$.each(columnSpans, function(i, spanInfo) {
 
 			// get the class at the starting rowspan
-			var columnHTML = '<div id="ccm-edit-layout-column-' + i + '" class="' + spanInfo.cssClass + ' ccm-theme-grid-column"><div class="ccm-layout-column-highlight"><input type="hidden" id="ccm-edit-layout-column-span-' + i + '" name="span[' + i + ']" value="' + spanInfo.value + '" /></div></div>';
+			var columnHTML = '<div id="ccm-edit-layout-column-' + i + '" class="' + spanInfo.cssClass + ' ccm-theme-grid-column" data-offset="0" data-span="' + spanInfo.value + '"><div class="ccm-layout-column-highlight"><input type="hidden" id="ccm-edit-layout-column-offset-' + i + '" name="offset[' + i + ']" value="0" /><input type="hidden" id="ccm-edit-layout-column-span-' + i + '" name="span[' + i + ']" value="' + spanInfo.value + '" /></div></div>';
 			// now, sometimes we might need to set the next column to a smaller amount
 			row += columnHTML;
 
@@ -211,7 +211,6 @@ ccm_themeGridRefresh = function() {
 	}
 
 	if (columns > 1) {
-
 		// set the breakpoints
 
 		var breaks = [];
@@ -236,6 +235,7 @@ ccm_themeGridRefresh = function() {
 		var sw = 0;
 		var validStartPoints = [];
 		var validEndPoints = [];
+
 		var maxColumns = ccm_themeGridSettings.maxColumns;
 		var minColumnClass = ccm_themeGridSettings.columnClasses[0];
 
@@ -353,14 +353,21 @@ ccm_themeGridRefreshDimensions = function() {
 	$offsets.remove();
 	$.each($columns, function(i, col) {
 		var $col = $(col);
-		$col.removeClass().addClass('ccm-theme-grid-column ccm-theme-grid-column-edit-mode');
+		var isedit = $(col).hasClass('ccm-theme-grid-column-edit-mode');
+		$col.removeClass().addClass('ccm-theme-grid-column');
+		if (isedit) {
+			$col.addClass('ccm-theme-grid-column-edit-mode');
+		}
 		if ($col.attr('data-span')) {
 			var spandex = parseInt($col.attr('data-span')) - 1;
 			$col.addClass(ccm_themeGridSettings.columnClasses[spandex]);
+			// change the span value inside
+			$('#ccm-edit-layout-column-span-' + i).val(parseInt($col.attr('data-span')));
 		}
 		if ($col.attr('data-offset')) {
 			var offdex = parseInt($col.attr('data-offset')) - 1;
 			$('<div />', {'data-offset-column': true}).addClass('ccm-theme-grid-offset-column').addClass(ccm_themeGridSettings.columnClasses[offdex]).insertBefore($col);
+			$('#ccm-edit-layout-column-offset-' + i).val(parseInt($col.attr('data-offset')));
 		}
 
 	});

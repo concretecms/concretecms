@@ -20,7 +20,10 @@
 <?=$gf->getPageThemeGridFrameworkRowStartHTML()?>
 
 <? foreach($columns as $col) { ?>
-	<div class="<?=$col->getAreaLayoutColumnClass()?>" id="ccm-layout-column-<?=$col->getAreaLayoutColumnID()?>">
+	<? if ($col->getAreaLayoutColumnOffset() > 0 && (!$gf->hasPageThemeGridFrameworkOffsetClasses())) { ?>
+		<div class="ccm-theme-grid-offset-column <?=$col->getAreaLayoutColumnOffsetClass()?>"></div>
+	<? } ?>
+	<div class="<?=$col->getAreaLayoutColumnClass()?><? if ($gf->hasPageThemeGridFrameworkOffsetClasses()) { ?> <?=$col->getAreaLayoutColumnOffsetClass()?><? } ?>" id="ccm-layout-column-<?=$col->getAreaLayoutColumnID()?>">
 		<div class="ccm-layout-column-inner">
 			<? 
 			$col->display();
