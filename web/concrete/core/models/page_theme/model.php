@@ -485,7 +485,7 @@ class Concrete5_Model_PageTheme extends Object {
 	public function updateThemeCustomClass() {
 		$env = Environment::get();
 		$db = Loader::db();
-		$r = $env->getRecord(DIRNAME_MODELS . '/' . DIRNAME_THEMES . '/' . $this->ptHandle . '.php', $this->getPackageHandle());
+		$r = $env->getRecord(DIRNAME_MODELS . '/' . DIRNAME_PAGE_THEME . '/' . DIRNAME_PAGE_THEME_CUSTOM . '/' . $this->ptHandle . '.php', $this->getPackageHandle());
 		if ($r->exists()) {
 			$db->Execute("update PageThemes set ptHasCustomClass = 1 where ptID = ?", array($this->ptID));
 			$this->ptHasCustomClass = true;

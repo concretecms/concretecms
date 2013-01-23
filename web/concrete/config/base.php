@@ -181,6 +181,8 @@ define('DIRNAME_WORKFLOW_ASSIGNMENTS', 'assignments');
 define('DIRNAME_REQUESTS', 'requests');
 define('DIRNAME_KEYS', 'keys');
 define('DIRNAME_PAGE_TYPES', 'page_types');
+define('DIRNAME_PAGE_THEME', 'page_theme');
+define('DIRNAME_PAGE_THEME_CUSTOM', 'custom');
 define('DIRNAME_ELEMENTS', 'elements');
 define('DIRNAME_LANGUAGES', 'languages');
 define('DIRNAME_JOBS', 'jobs');

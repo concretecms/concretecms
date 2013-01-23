@@ -147,7 +147,6 @@ ccm_gridTypeRefresh = function() {
 }
 
 ccm_themeGridGetColumnSpans = function(totalColumns) {
-	$('#ccm-layouts-edit-mode').html('');
 	var maxColumnSize = parseInt($('#ccm-layouts-toolbar select[name=themeGridColumns] option:last-child').val());
 	var rowSpan = Math.ceil(maxColumnSize / totalColumns);
 	// create the starting array
@@ -171,13 +170,30 @@ ccm_themeGridGetColumnSpans = function(totalColumns) {
 	return columnClasses;
 }
 
+ccm_themeGridSliderFindNearest = function(value, values) {
+
+	var nearest = null;
+	var diff = null;
+	for (var i = 0; i < values.length; i++) {
+		if ((values[i] <= value) || (values[i] >= value)) {
+			var newDiff = Math.abs(value - values[i]);
+			if (diff == null || newDiff < diff) {
+				nearest = values[i];
+				diff = newDiff;
+			}
+		}
+	}
+	return nearest;
+}
+
 ccm_themeGridRefresh = function() {
 	var columns = parseInt($('#ccm-layouts-toolbar select[name=themeGridColumns]').val());
 
-	if (!($('#ccm-layouts-edit-mode .ccm-theme-grid-column-edit-mode').length)) {
+	if (!($('.ccm-theme-grid-column-edit-mode').length)) {
 		$('#ccm-layouts-edit-mode').html('');
 		var $form = $('#ccm-layouts-edit-mode');
 		var row = ccm_themeGridSettings.rowStartHTML;
+		row += '<div id="ccm-theme-grid-edit-mode-row-wrapper">';
 		var columnSpans = ccm_themeGridGetColumnSpans(columns);
 		$.each(columnSpans, function(i, spanInfo) {
 
@@ -188,126 +204,167 @@ ccm_themeGridRefresh = function() {
 
 		});
 
+		row += '</div>';
 		row += ccm_themeGridSettings.rowEndHTML;
 		$form.append(row);
 
 	}
 
-	var breaks = [];
-	var sw = 0;
-	for (i = 0; i < columns; i++) {
+	if (columns > 1) {
 
-		$column = $('#ccm-edit-layout-column-' + i);
+		// set the breakpoints
 
-		if (i == 0) {
-			// this is the first column so we only get the end
-			breaks.push(parseInt($column.width()));
-		} else if ((i + 1) == columns) {
-			breaks.push(parseInt($column.position().left));
-		} else {
-			breaks.push(parseInt($column.position().left));
-			breaks.push(parseInt($column.width() + $column.position().left));
-		}
+		var breaks = [];
+		for (i = 0; i < columns; i++) {
 
-	}
-	var tw = $('#ccm-area-layout-active-control-bar').width();
+			$column = $('#ccm-edit-layout-column-' + i);
 
-
-	$("#ccm-area-layout-active-control-bar").css('height', '12px').slider({
-		min: 0,
-		max: tw,
-		step: 1,
-		values: breaks,
-
-		slide: function (e, ui) {
-			var index = $(ui.handle).index();
-
-			if ((index % 2) == 0) {
-				$innercolumn = $('#ccm-edit-layout-column-' + index);
-				$innercolumn.attr('class', 'ccm-theme-grid-column ccm-theme-grid-column-edit-mode span1');
+			if (i == 0) {
+				// this is the first column so we only get the end
+				breaks.push(parseInt($column.width()));
+			} else if ((i + 1) == columns) {
+				breaks.push(parseInt($column.position().left));
 			} else {
-				console.log('start');
-
+				breaks.push(parseInt($column.position().left));
+				breaks.push(parseInt($column.width() + $column.position().left));
 			}
 
 		}
 
-	});
+		// set the valid widths
+		var tw = $('#ccm-area-layout-active-control-bar').width();
+		var sw = 0;
+		var validStartPoints = [];
+		var validEndPoints = [];
+		var maxColumns = ccm_themeGridSettings.maxColumns;
+		var minColumnClass = ccm_themeGridSettings.columnClasses[0];
 
-	/*
-
-	if (columnwidths.length > 0) {
-		// we have custom column widths
-		for (i = 0; i < (columnwidths.length - 1); i++) {
-			sw += columnwidths[i];
-			breaks.push(sw);
+		$('<div />', {'id': 'ccm-theme-grid-temp'}).appendTo(document.body);
+		var columnHTML = '';
+		for (i = 1; i <= maxColumns; i++) {
+			columnHTML += '<div class="' + minColumnClass + '"></div>'
 		}
-	} else {
-		var cw = tw / columns;
-		for (i = 1; i < columns; i++) {
-			sw += cw;
-			breaks.push(sw);
+		$('#ccm-theme-grid-temp').append($(ccm_themeGridSettings.rowStartHTML + columnHTML + ccm_themeGridSettings.rowEndHTML));
+		var marginModifier = 0;
+		for (i = 0; i < maxColumns; i++) {
+			var $column = $($('#ccm-theme-grid-temp .' + minColumnClass).get(i));
+			if (i == 0) {
+				var pl = $column.position().left;
+				if (pl < 0) {
+					marginModifier = Math.abs(pl); // handle stupid grids that have negative margin starters
+				}
+			}
+			// handle the START of every column
+			validStartPoints.push(parseInt($column.position().left + marginModifier));
+
+			// handle the END of every column
+			validEndPoints.push(parseInt($column.width() + $column.position().left + marginModifier));
+
 		}
-	}
 
-	var $columns = $("#ccm-area-layout-active-control-bar").parent().find('#ccm-layouts-edit-mode .ccm-layout-column');
-	$("#ccm-area-layout-active-control-bar").css('height', '12px').slider({
-		min: 0,
-		max: tw,
-		step: 1,
-		values: breaks,
-		create: function(e, ui) {
-			var createoffset = 0;
-			var breakwidths = [];
+		$('#ccm-theme-grid-temp').remove();
 
-			$.each($columns, function(i, col) {
-				var bw = breaks[i];
-				if ((i + 1) == $columns.length) {
-					// last column
-					var value = tw - createoffset;
+		var themeGridSlider = $("#ccm-area-layout-active-control-bar").css('height', '12px').slider({
+			min: 0,
+			max: tw,
+			step: 1,
+			values: breaks,
+
+			slide: function (e, ui) {
+				var index = $(ui.handle).index();
+				var pointsToCheck;
+
+				if ((index % 2) == 0) {
+					pointsToCheck = validEndPoints;
 				} else {
-					var value = bw - createoffset;
+					pointsToCheck = validStartPoints;
 				}
-				var value = Math.floor(value);
-				$(col).find('#ccm-edit-layout-column-width-' + i).val(value);
-				createoffset = bw;
-			});
 
-		},
-		slide: function (e, ui) {
-			var lastvalue = 0,
-				proceed = true;
-
-			$.each(ui.values, function(i, value) {
-				if (value < lastvalue) {
-					proceed = false;
-				}
-				lastvalue = value;
-			});
-
-			if (proceed) {
-				lastvalue = 0;
-				$.each($columns, function(i, col) {
-
-					if ((i + 1) == $columns.length) {
-						// last column
-						var value = tw - lastvalue;
-					} else {
-						var value = ui.values[i] - lastvalue;
+				var oldValue = themeGridSlider.slider('values', index);
+				var newValue = ccm_themeGridSliderFindNearest(ui.value, pointsToCheck);
+				// now we determine whether we CAN go there or is it going to encroach upon another point.
+				var proceed = true;
+				$.each(ui.values, function(i, value) {
+					if (newValue >= value && index < i) {
+						proceed = false;
+					} else if (newValue <= value && index > i) {
+						proceed = false;
 					}
-					var value = Math.floor(value);
-					$(col).find('#ccm-edit-layout-column-width-' + i).val(value);
-					$(col).css('width', value + 'px');
-					lastvalue = ui.values[i];
 				});
-			} else {
+
+				if (proceed) {
+					themeGridSlider.slider('values', index, newValue);
+					if (oldValue != newValue) {
+						if ((index % 2) == 0) {
+							var i = Math.floor(index / 2);
+							// we are a righthand handle
+							$innercolumn = $('#ccm-edit-layout-column-' + i);
+							var span = parseInt($innercolumn.attr('data-span'));
+							var $offsetcolumn = $innercolumn.nextAll('.ccm-theme-grid-column:first');
+							var offset = $offsetcolumn.attr('data-offset');
+							if (offset) {
+								offset = parseInt(offset);
+							} else {
+								offset = 0;
+							}
+							if (newValue > oldValue) { // we are making the column bigger
+								span++;
+								offset--;
+							} else {
+								span--;
+								offset++;
+							}
+						} else {
+							// we are a righthand handle
+							var i = Math.ceil(index / 2);
+							$innercolumn = $('#ccm-edit-layout-column-' + i);
+							var span = parseInt($innercolumn.attr('data-span'));
+							var $offsetcolumn = $innercolumn;
+							var offset = $offsetcolumn.attr('data-offset');
+							if (offset) {
+								offset = parseInt(offset);
+							} else {
+								offset = 0;
+							}
+							if (newValue < oldValue) { // we are making the column bigger
+								span++;
+								offset--;
+							} else {
+								span--;
+								offset++;
+							}
+						}
+						$offsetcolumn.attr('data-offset', offset);
+						$innercolumn.attr('data-span', span);
+						ccm_themeGridRefreshDimensions();
+					}
+				}
 				return false;
+
 			}
-		}
-	});
-	*/
+
+		});
+	}
 }
 
+ccm_themeGridRefreshDimensions = function() {
+	var $columns = $('#ccm-layouts-edit-mode .ccm-theme-grid-column');
+	var $offsets = $('#ccm-layouts-edit-mode .ccm-theme-grid-offset-column');
+	$offsets.remove();
+	$.each($columns, function(i, col) {
+		var $col = $(col);
+		$col.removeClass().addClass('ccm-theme-grid-column ccm-theme-grid-column-edit-mode');
+		if ($col.attr('data-span')) {
+			var spandex = parseInt($col.attr('data-span')) - 1;
+			$col.addClass(ccm_themeGridSettings.columnClasses[spandex]);
+		}
+		if ($col.attr('data-offset')) {
+			var offdex = parseInt($col.attr('data-offset')) - 1;
+			$('<div />', {'data-offset-column': true}).addClass('ccm-theme-grid-offset-column').addClass(ccm_themeGridSettings.columnClasses[offdex]).insertBefore($col);
+		}
+
+	});
+}
 
 ccm_initLayouts = function() {
 

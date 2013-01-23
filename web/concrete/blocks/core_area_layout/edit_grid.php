@@ -6,15 +6,18 @@
 
 <input type="hidden" name="arLayoutID" value="<?=$controller->arLayout->getAreaLayoutID()?>" />
 
+<div id="ccm-layouts-edit-mode">
+
 <?=$themeGridFramework->getPageThemeGridFrameworkRowStartHTML()?>
 
-<div id="ccm-layouts-edit-mode">
+<div id="ccm-theme-grid-edit-mode-row-wrapper">
 
 <? foreach($columns as $col) { ?>
 	<? $i = $col->getAreaLayoutColumnIndex(); ?>
-	<div class="ccm-theme-grid-column ccm-theme-grid-column-edit-mode <?=$col->getAreaLayoutColumnClass()?>" id="ccm-edit-layout-column-<?=$i?>" data-span="<?=$col->getAreaLayoutColumnWidth()?>">
+	<div class="ccm-theme-grid-column ccm-theme-grid-column-edit-mode <?=$col->getAreaLayoutColumnClass()?>" id="ccm-edit-layout-column-<?=$i?>" data-offset="<?=$col->getAreaLayoutColumnOffset()?>" data-span="<?=$col->getAreaLayoutColumnSpan()?>">
 		<div class="ccm-layout-column-inner ccm-layout-column-highlight">
-			<input type="hidden" name="width[<?=$i?>]" value="<?=$col->getAreaLayoutColumnWidth()?>" id="ccm-edit-layout-column-width-<?=$i?>" />
+			<input type="hidden" name="span[<?=$i?>]" value="<?=$col->getAreaLayoutColumnSpan()?>" id="ccm-edit-layout-column-span-<?=$i?>" />
+			<input type="hidden" name="offset[<?=$i?>]" value="<?=$col->getAreaLayoutColumnOffset()?>" id="ccm-edit-layout-column-offset-<?=$i?>" />
 			<? 
 			$col->display(true);
 			?>
@@ -25,3 +28,5 @@
 </div>
 
 <?=$themeGridFramework->getPageThemeGridFrameworkRowEndHTML()?>
+
+</div>
