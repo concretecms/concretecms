@@ -133,7 +133,8 @@ class Concrete5_Model_CollectionAttributeKey extends AttributeKey {
 			$args = array('akHandle' => $fargs[0], 'akName' => $fargs[1], 'akIsSearchable' => $fargs[2]);
 		}
 
-	
+		CacheLocal::delete('collection_attribute_key_by_handle', $args['akHandle']);
+
 		$ak = parent::add('collection', $at, $args, $pkg);
 		return $ak;
 	}

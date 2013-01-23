@@ -189,6 +189,9 @@ class Concrete5_Model_UserAttributeKey extends AttributeKey {
 	}
 	
 	public function add($type, $args, $pkg = false) {
+
+		CacheLocal::delete('user_attribute_key_by_handle', $args['akHandle']);
+
 		$ak = parent::add('user', $type, $args, $pkg);
 		
 		extract($args);
