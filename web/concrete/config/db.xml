@@ -351,9 +351,9 @@
 		<notnull />
 		<default value="0" />
 	</field>
-	<field name="arLayoutColumnWidth" type="C" size="64">
-	  <NOTNULL/>
-	</field>
+  <field name="arLayoutColumnDisplayID" type="I">
+    <default value="0" />
+  </field>
 </table>
 <table name="AreaLayoutCustomColumns">
   <field name="arLayoutColumnID" type="I">

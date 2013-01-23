@@ -15,6 +15,15 @@ class Concrete5_Model_CustomAreaLayoutColumn extends AreaLayoutColumn {
 		}
 	}	
 
+	public function duplicate($newAreaLayout) {
+		$areaLayoutColumnID = parent::duplicate($newAreaLayout);
+		$db = Loader::db();
+		$v = array($areaLayoutColumnID, $this->arLayoutColumnWidth);
+		$db->Execute('insert into AreaLayoutCustomColumns (arLayoutColumnID, arLayoutColumnWidth) values (?, ?)', $v);
+		$newAreaLayoutColumn = CustomAreaLayoutColumn::getByID($areaLayoutColumnID);
+		return $newAreaLayoutColumn;
+	}
+
 	public function getAreaLayoutColumnClass() {
 		return 'ccm-layout-column';
 	}

@@ -15,6 +15,16 @@ class Concrete5_Model_ThemeGridAreaLayoutColumn extends AreaLayoutColumn {
 		}
 	}	
 
+	public function duplicate($newAreaLayout) {
+		$areaLayoutColumnID = parent::duplicate($newAreaLayout);
+		$db = Loader::db();
+		$v = array($areaLayoutColumnID, $this->arLayoutColumnSpan, $this->arLayoutColumnOffset);
+		$db->Execute('insert into AreaLayoutThemeGridColumns (arLayoutColumnID, arLayoutColumnSpan, arLayoutColumnOffset) values (?, ?, ?)', $v);
+		$newAreaLayoutColumn = ThemeGridAreaLayoutColumn::getByID($areaLayoutColumnID);
+		return $newAreaLayoutColumn;
+	}
+
+
 	public function getAreaLayoutColumnSpan() {
 		return $this->arLayoutColumnSpan;
 	}
