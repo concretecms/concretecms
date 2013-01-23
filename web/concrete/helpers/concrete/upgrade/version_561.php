@@ -20,6 +20,15 @@ class ConcreteUpgradeVersion561Helper {
 		if (is_object($bt)) {
 			$bt->refresh();
 		}
+
+		$db = Loader::db();
+		$columns = $db->MetaColumns('Pages');
+		if (isset($columns['PTID'])) {
+			$db->Execute('alter table Pages drop column ptID');
+		}
+		if (isset($columns['CTID'])) {
+			$db->Execute('alter table Pages drop column ctID');
+		}
 	}
 
 	
