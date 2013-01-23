@@ -157,6 +157,7 @@ class Concrete5_Model_FileAttributeKey extends AttributeKey {
 	}
 
 	public function add($at, $args, $pkg = false) {
+		CacheLocal::delete('file_attribute_key_by_handle', $args['akHandle']);
 		$ak = parent::add('file', $at, $args, $pkg);
 		return $ak;
 	}

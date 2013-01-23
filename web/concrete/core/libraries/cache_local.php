@@ -25,7 +25,14 @@ class Concrete5_Library_CacheLocal {
 			return $loc->cache[$key];
 		}
 	}
-			
+		
+	public static function delete($type, $id) {
+		$loc = CacheLocal::get();
+		$key = Cache::key($type, $id);
+		if ($loc->enabled && array_key_exists($key, $loc->cache)) {
+			unset($loc->cache[$key]);
+		}
+	}	
 	
 	public static function set($type, $id, $object) {
 		$loc = CacheLocal::get();
