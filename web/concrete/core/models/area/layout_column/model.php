@@ -35,6 +35,14 @@ abstract class Concrete5_Model_AreaLayoutColumn extends Object {
 		return $this->arID;
 	}
 
+	protected function duplicate($newAreaLayout) {
+		$db = Loader::db();
+		$v = array($newAreaLayout->getAreaLayoutID(), $this->arLayoutColumnIndex, $this->arID, $this->arLayoutColumnDisplayID);
+		$db->Execute('insert into AreaLayoutColumns (arLayoutID, arLayoutColumnIndex, arID, arLayoutColumnDisplayID) values (?, ?, ?, ?)', $v);
+		$newAreaLayoutColumnID = $db->Insert_ID();
+		return $newAreaLayoutColumnID;
+	}
+
 	public function getAreaObject() {
 		$db = Loader::db();
 		$row = $db->GetRow('select cID, arHandle from Areas where arID = ?', array($this->arID));
@@ -48,11 +56,16 @@ abstract class Concrete5_Model_AreaLayoutColumn extends Object {
 	public function getAreaLayoutColumnID() {
 		return $this->arLayoutColumnID;
 	}
+	
+	// unique but doesn't change between version edits on a given page.
+	public function getAreaLayoutColumnDisplayID() {
+		return $this->arLayoutColumnDisplayID;
+	}
 
 	public function display($disableControls = false) {
 		$layout = $this->getAreaLayoutObject();
 		$a = $layout->getAreaObject();
-		$as = new SubArea($this->getAreaLayoutID() . ' : ' . $this->getAreaLayoutColumnIndex(), $a);
+		$as = new SubArea($this->getAreaLayoutColumnDisplayID(), $a);
 		$as->setAreaDisplayName(t('Column %s', $this->getAreaLayoutColumnIndex() + 1));
 		if ($disableControls) {
 			$as->disableControls();

@@ -51,31 +51,21 @@ abstract class Concrete5_Model_AreaLayout extends Object {
 		return $columns;
 	}
 
-	/*
-	public function duplicate() {
-		$db = Loader::db();
-		$v = array($this->arLayoutSpacing, $this->arLayoutIsCustom);
-		$db->Execute('insert into AreaLayouts (arLayoutSpacing, arLayoutIsCustom) values (?, ?)', $v);
-		$newAreaLayoutID = $db->Insert_ID();
-		if ($newAreaLayoutID) {
-			$columns = $this->getAreaLayoutColumns();
-			foreach($columns as $col) {
-				$v = array($newAreaLayoutID, $col->getAreaLayoutColumnIndex(), 0, $col->getAreaLayoutColumnWidth());
-				$db->Execute('insert into AreaLayoutColumns (arLayoutID, arLayoutColumnIndex, arID, arLayoutColumnWidth) values (?, ?, ?, ?)', $v);
-			}
-			return AreaLayout::getByID($newAreaLayoutID);
-		}
-	}
-	*/
-
 	protected function addLayoutColumn() {
 		$db = Loader::db();
+		$arLayoutColumnDisplayID = $db->GetOne('select max(arLayoutColumnDisplayID) as arLayoutColumnDisplayID from AreaLayoutColumns');
+		if ($arLayoutColumnDisplayID) {
+			$arLayoutColumnDisplayID++;
+		} else {
+			$arLayoutColumnDisplayID = 1;
+		}
 		$index = $db->GetOne('select count(arLayoutColumnID) from AreaLayoutColumns where arLayoutID = ?', array($this->arLayoutID));
-		$db->Execute('insert into AreaLayoutColumns (arLayoutID, arLayoutColumnIndex) values (?, ?)', array($this->arLayoutID, $index));
+		$db->Execute('insert into AreaLayoutColumns (arLayoutID, arLayoutColumnIndex, arLayoutColumnDisplayID) values (?, ?, ?)', array($this->arLayoutID, $index, $arLayoutColumnDisplayID));
 		$arLayoutColumnID = $db->Insert_ID();
 		return $arLayoutColumnID;
 	}
 
+	abstract public function duplicate();
 	abstract static public function add();
 
 	public function delete() {

@@ -55,22 +55,20 @@ class Concrete5_Model_ThemeGridAreaLayout extends AreaLayout {
 		return $this->arLayoutUsesThemeGridFramework;
 	}
 
-	/*
 	public function duplicate() {
 		$db = Loader::db();
-		$v = array($this->arLayoutSpacing, $this->arLayoutIsCustom);
-		$db->Execute('insert into AreaLayouts (arLayoutSpacing, arLayoutIsCustom) values (?, ?)', $v);
+		$v = array($this->arLayoutMaxColumns, 1);
+		$db->Execute('insert into AreaLayouts (arLayoutMaxColumns, arLayoutUsesThemeGridFramework) values (?, ?)', $v);
 		$newAreaLayoutID = $db->Insert_ID();
 		if ($newAreaLayoutID) {
+			$newAreaLayout = AreaLayout::getByID($newAreaLayoutID);
 			$columns = $this->getAreaLayoutColumns();
 			foreach($columns as $col) {
-				$v = array($newAreaLayoutID, $col->getAreaLayoutColumnIndex(), 0, $col->getAreaLayoutColumnWidth());
-				$db->Execute('insert into AreaLayoutColumns (arLayoutID, arLayoutColumnIndex, arID, arLayoutColumnWidth) values (?, ?, ?, ?)', $v);
+				$col->duplicate($newAreaLayout);
 			}
-			return AreaLayout::getByID($newAreaLayoutID);
+			return $newAreaLayout;
 		}
 	}
-	*/
 
 	public function setAreaLayoutMaxColumns($max) {
 		if (!$max) {
