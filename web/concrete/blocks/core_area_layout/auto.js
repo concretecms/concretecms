@@ -51,6 +51,7 @@ ccm_layoutRefresh = function() {
 		$column.css('width', width);		
 	}
 
+	$("#ccm-area-layout-active-control-bar").slider('destroy');
 
 	if (columns > 1 && (!$('#ccm-layouts-toolbar input[name=isautomated]').is(':checked'))) {
 		var breaks = [];
@@ -129,8 +130,6 @@ ccm_layoutRefresh = function() {
 		if ($("#ccm-area-layout-active-control-bar").hasClass('ccm-area-layout-control-bar-add')) {
 			$('#ccm-area-layout-active-control-bar').css('height', '0px');
 		}
-
-		$("#ccm-area-layout-active-control-bar").slider('destroy');
 	}
 
 }
@@ -211,6 +210,8 @@ ccm_themeGridRefresh = function() {
 		$form.append(row);
 
 	}
+
+	$("#ccm-area-layout-active-control-bar").slider('destroy');
 
 	if (columns > 1) {
 		// set the breakpoints
@@ -346,6 +347,10 @@ ccm_themeGridRefresh = function() {
 			}
 
 		});
+	} else {
+		if ($("#ccm-area-layout-active-control-bar").hasClass('ccm-area-layout-control-bar-add')) {
+			$('#ccm-area-layout-active-control-bar').css('height', '0px');
+		}
 	}
 }
 
