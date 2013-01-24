@@ -25,6 +25,7 @@
 		padding-right: 0;
 		list-style: none !important;
 		outline: none;
+		line-height: 11px !important;
 		font-family: Helvetica, Arial, Verdana, Tahoma, sans-serif !important;
 
 		select {
@@ -33,11 +34,24 @@
 
 		label, input, select {
 			margin-left: 2px !important;
+			vertical-align: middle !important;
 			display: inline !important;
-			height: 18px !important;
-			padding: 1px !important;
-			line-height: 11px !important;
+			margin-top: 0px !important;
 			font-size: 11px !important;
+		}
+
+		select {
+			height: 18px !important;
+		}
+
+		label {
+			line-height: 24px !important; 
+		}
+
+		input[type=text] {
+			height: 11px !important;
+			line-height: 11px !important;
+			padding: 1px !important;
 		}
 
 	}
@@ -45,10 +59,11 @@
 	li.ccm-layouts-toolbar-separator {
 		float: left;
 		height: 34px;
-		border-left: 1px solid #d3d3d3;
-		border-right: 1px solid #f1f1f1;
-		padding: 0;
-		margin: 0 2px 0 3px !important;
+		border-left: 1px solid #d3d3d3 !important;
+		border-right: 1px solid #f1f1f1 !important;
+		padding: 0px !important;
+		width: 0px !important;
+		margin: 0 5px 0 5px !important;
 	}
 
 	.ccm-layouts-toolbar-save {

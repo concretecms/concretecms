@@ -21,6 +21,7 @@
 		<? } ?>
 
 	</li>
+	<li data-grid-control="page-theme" class="ccm-layouts-toolbar-separator"></li>
 	<li data-grid-control="page-theme" class="ccm-page-theme-grid-framework">
 		<label for="themeGridColumns"><?=t("Columns")?></label>
 		<? if ($controller->getTask() == 'edit') { ?>
@@ -36,6 +37,7 @@
 		</select>
 		<? } ?>
 	</li>
+	<li data-grid-control="layout" class="ccm-layouts-toolbar-separator"></li>
 	<? } ?>
 	<li data-grid-control="layout">
 		<label for="columns"><?=t("Columns")?></label>
@@ -55,13 +57,12 @@
 	<li data-grid-control="layout" class="ccm-layouts-toolbar-separator"></li>
 	<li data-grid-control="layout" >
 		<label for="columns"><?=t("Spacing")?></label>
-		<input name="spacing" id="spacing" style="width: 30px" value="<?=$spacing?>" />
+		<input name="spacing" id="spacing" type="text" style="width: 20px" value="<?=$spacing?>" />
 	</li>
 	<li data-grid-control="layout" class="ccm-layouts-toolbar-separator"></li>
 	<li data-grid-control="layout" >
-		<label style="vertical-align: middle"><?=t("Automatic Widths")?>
-		<input style="vertical-align: middle" type="checkbox" value="1" name="isautomated" <? if (!$iscustom) { ?>checked="checked" <? } ?> />
-		</label>
+		<label><?=t("Automatic Widths")?></label>
+		<input type="checkbox" value="1" name="isautomated" <? if (!$iscustom) { ?>checked="checked" <? } ?> />
 	</li>
 
 	<li class="ccm-layouts-toolbar-save ccm-ui">

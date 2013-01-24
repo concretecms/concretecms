@@ -122,7 +122,7 @@ $.fn.ccmmenu.show = function(e, $this) {
 	var mheight = $pp.height(),
 		mwidth = $pp.width();
 
-	if ($(window).height() < e.clientY + mheight) {
+	if ($(window).height() < (e.clientY + mheight + 30)) {
 		posY = posY - mheight - 10;
 		posX = posX - (mwidth / 2);
 		$pp.removeClass('bottom');
