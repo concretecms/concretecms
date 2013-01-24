@@ -3,8 +3,10 @@ ccm_layoutRefresh = function() {
 	var columns = parseInt($('#ccm-layouts-toolbar select[name=columns]').val());
 	if (columns < 2) {
 		$('#ccm-layouts-toolbar input[name=spacing]').prop('disabled', true);
+		$('#ccm-layouts-toolbar input[name=isautomated]').prop('disabled', true);
 	} else {
 		$('#ccm-layouts-toolbar input[name=spacing]').prop('disabled', false);
+		$('#ccm-layouts-toolbar input[name=isautomated]').prop('disabled', false);
 	}
 	var $form = $('#ccm-layouts-edit-mode');
 	var spacing = $('#ccm-layouts-toolbar input[name=spacing]').val();
