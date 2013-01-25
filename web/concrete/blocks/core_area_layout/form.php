@@ -4,63 +4,38 @@
 ?>
 
 <ul id="ccm-layouts-toolbar">
-	<? if ($enableThemeGrid) { ?>
-	<li>
+	<li data-grid-form-view="choosetype">
 		<label for="useThemeGrid"><?=t("Grid Type")?></label>
-		<? if ($controller->getTask() == 'edit') { ?>
-		<select name="useThemeGrid" id="useThemeGrid" style="width: auto !important" disabled="disabled">
-			<option value="1"><?=$themeGridName?></option>
-		</select>
-		<? } else { ?>
-
 		<select name="useThemeGrid" id="useThemeGrid" style="width: auto !important">
 			<option value="1"><?=$themeGridName?></option>
 			<option value="0"><?=t('Free-Form Layout')?></option>
 		</select>
-
-		<? } ?>
-
 	</li>
-	<li data-grid-control="page-theme" class="ccm-layouts-toolbar-separator"></li>
-	<li data-grid-control="page-theme" class="ccm-page-theme-grid-framework">
+	<li data-grid-form-view="choosetype" class="ccm-layouts-toolbar-separator"></li>
+	<li data-grid-form-view="themegrid" class="ccm-page-theme-grid-framework">
 		<label for="themeGridColumns"><?=t("Columns")?></label>
-		<? if ($controller->getTask() == 'edit') { ?>
-		<select name="themeGridColumns" id="themeGridColumns" disabled="disabled">
-			<option value="<?=$columnsNum?>"><?=$columnsNum?></option>
-		</select>
-		<? } else { ?>
 		
 		<select name="themeGridColumns" id="themeGridColumns">
 			<? for ($i = $minColumns; $i <= $themeGridMaxColumns; $i++) { ?>
-				<option value="<?=$i?>" <? if (is_array($columns) && (count($columns) == $i)) { ?> selected <? } ?>><?=$i?></option>
+				<option value="<?=$i?>" <? if ($columnsNum == $i) { ?> selected <? } ?>><?=$i?></option>
 			<? } ?>
 		</select>
-		<? } ?>
 	</li>
-	<li data-grid-control="layout" class="ccm-layouts-toolbar-separator"></li>
-	<? } ?>
-	<li data-grid-control="layout">
+	<li data-grid-form-view="custom">
 		<label for="columns"><?=t("Columns")?></label>
-
-		<? if ($controller->getTask() == 'edit') { ?>
-		<select name="columns" id="columns" disabled="disabled">
-			<option value="<?=$columnsNum?>"><?=$columnsNum?></option>
-		</select>
-		<? } else { ?>
 		<select name="columns" id="columns">
 			<? for ($i = $minColumns; $i <= $maxColumns; $i++) { ?>
-				<option value="<?=$i?>" <? if (is_array($columns) && (count($columns) == $i)) { ?> selected <? } ?>><?=$i?></option>
+				<option value="<?=$i?>" <? if ($columnsNum == $i) { ?> selected <? } ?>><?=$i?></option>
 			<? } ?>
 		</select>
-		<? } ?>
 	</li>
-	<li data-grid-control="layout" class="ccm-layouts-toolbar-separator"></li>
-	<li data-grid-control="layout" >
+	<li data-grid-form-view="custom" class="ccm-layouts-toolbar-separator"></li>
+	<li data-grid-form-view="custom" >
 		<label for="columns"><?=t("Spacing")?></label>
 		<input name="spacing" id="spacing" type="text" style="width: 20px" value="<?=$spacing?>" />
 	</li>
-	<li data-grid-control="layout" class="ccm-layouts-toolbar-separator"></li>
-	<li data-grid-control="layout" >
+	<li data-grid-form-view="custom" class="ccm-layouts-toolbar-separator"></li>
+	<li data-grid-form-view="custom" >
 		<label><?=t("Automatic Widths")?></label>
 		<input type="checkbox" value="1" name="isautomated" <? if (!$iscustom) { ?>checked="checked" <? } ?> />
 	</li>
@@ -76,26 +51,51 @@
 </ul>
 
 <script type="text/javascript">
-var ccm_themeGridSettings = {};
-ccm_themeGridSettings.columnClasses = [];
+<? 
 
-<? if ($enableThemeGrid) { ?>
+if ($controller->getTask() == 'edit') {
+	$editing = 'true';
+} else {
+	$editing = 'false';
+}
 
-	ccm_themeGridSettings.rowStartHTML = '<?=addslashes($themeGridFramework->getPageThemeGridFrameworkRowStartHTML())?>';
-	<? if ($controller->getTask() == 'add') { ?>
-	ccm_themeGridSettings.maxColumns = '<?=$controller->getAreaObject()->getAreaGridColumnSpan()?>';
-	<? } else { ?>
-	ccm_themeGridSettings.maxColumns = '<?=$maxColumns?>';
-	<? } ?>
-	ccm_themeGridSettings.rowEndHTML = '<?=addslashes($themeGridFramework->getPageThemeGridFrameworkRowEndHTML())?>';
-	<? foreach($themeGridFramework->getPageThemeGridFrameworkColumnClasses() as $col => $class) { ?>
-		ccm_themeGridSettings.columnClasses[<?=$col?>] = '<?=$class?>';
-	<? } ?>
-<? } ?>
+if ($enableThemeGrid && $controller->getTask() == 'add') {
+	$formview = 'choosetype';
+} else if ($enableThemeGrid) {
+	$formview = 'themegrid';
+} else {
+	$formview = 'custom';
+}
+
+
+
+?>
 
 $(function() {
-	ccm_initLayouts();
+	$('#ccm-layouts-edit-mode').ccmlayout({
+		'editing': <?=$editing?>,
+		'formview': '<?=$formview?>',
+		<? if ($enableThemeGrid) { ?>
+		'rowstart':  '<?=addslashes($themeGridFramework->getPageThemeGridFrameworkRowStartHTML())?>',
+		'rowend': '<?=addslashes($themeGridFramework->getPageThemeGridFrameworkRowEndHTML())?>',
+		<? if ($controller->getTask() == 'add') { ?>
+		'maxcolumns': '<?=$controller->getAreaObject()->getAreaGridColumnSpan()?>',
+		<? } else { ?>
+		'maxcolumns': '<?=$themeGridMaxColumns?>',
+		<? } ?>
+		'gridColumnClasses': [
+			<? $classes = $themeGridFramework->getPageThemeGridFrameworkColumnClasses();?>
+			<? for ($i = 0; $i < count($classes); $i++) { 
+				$class = $classes[$i];?>
+				'<?=$class?>' <? if (($i + 1) < count($classes)) { ?>, <? } ?>
+
+			<? } ?>
+		]
+		<? } ?>
+	});
 });
+
+
 </script>
 
 <div id="ccm-area-layout-active-control-bar" class="ccm-area-layout-control-bar ccm-area-layout-control-bar-<?=$controller->getTask()?>"></div>
