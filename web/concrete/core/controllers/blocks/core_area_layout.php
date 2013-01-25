@@ -114,6 +114,7 @@ class Concrete5_Controller_Block_CoreAreaLayout extends BlockController {
 		}
 
 		public function edit() {
+			$this->addHeaderItem(Loader::helper('html')->javascript('ccm.layouts.js'));
 			$this->view();
 			// since we set a render override in view() we have to explicitly declare edit
 			$this->set('enableThemeGrid', $this->arLayout->isAreaLayoutUsingThemeGridFramework());
@@ -122,12 +123,13 @@ class Concrete5_Controller_Block_CoreAreaLayout extends BlockController {
 				$pt = $c->getCollectionThemeObject();
 				$gf = $pt->getThemeGridFrameworkObject();
 				$this->set('themeGridFramework', $gf);
-				$this->set('maxColumns', $this->arLayout->getAreaLayoutMaxColumns());
+				$this->set('themeGridMaxColumns', $this->arLayout->getAreaLayoutMaxColumns());
 				$this->set('themeGridName', $gf->getPageThemeGridFrameworkName());
 				$this->render("edit_grid");
 			} else {
 				$this->set('spacing', $this->arLayout->getAreaLayoutSpacing());
 				$this->set('iscustom', $this->arLayout->hasAreaLayoutCustomColumnWidths());
+				$this->set('maxColumns', 12);
 				$this->render('edit');
 			}
 			$this->set('columnsNum', count($this->arLayout->getAreaLayoutColumns()));
@@ -135,6 +137,7 @@ class Concrete5_Controller_Block_CoreAreaLayout extends BlockController {
 		}
 
 		public function add() {
+			$this->addHeaderItem(Loader::helper('html')->javascript('ccm.layouts.js'));
 			$maxColumns = 12; // normally
 			// now we check our active theme and see if it has other plans
 			$c = Page::getCurrentPage();
@@ -148,6 +151,7 @@ class Concrete5_Controller_Block_CoreAreaLayout extends BlockController {
 			} else {
 				$this->set('enableThemeGrid', false);
 			}
+			$this->set('columnsNum', 1);
 			$this->set('maxColumns', $maxColumns);
 		}
 

@@ -48,6 +48,8 @@ cat ../web/concrete/js/ccm_app/jquery.colorpicker.js \
 uglifyjs --no-seqs -o ../web/concrete/js/ccm.app.js ./ccm.app.tmp.js
 rm ccm.app.tmp.js
 
+uglifyjs -o ../web/concrete/js/ccm.layouts.js ../web/concrete/js/layouts/layouts.js
+
 
 cat ../web/concrete/js/image_editor/build/kinetic.prototype.js \
     ../web/concrete/js/image_editor/build/imageeditor.js \
