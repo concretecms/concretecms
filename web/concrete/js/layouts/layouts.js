@@ -29,6 +29,7 @@
 
 		this.$element = $(element);
 		this.$toolbar = $(this.options.toolbar);
+		this.$toolbar.prependTo(document.body);
 
 		this._setupDOM();
 		if (this.options.formview == 'choosetype') {
@@ -85,9 +86,13 @@
 	CCMLayout.prototype._setupFormSaveAndCancel = function() {
 		var obj = this;
 		this.$cancelbtn.on('click', function() {
-			ccm_onInlineEditCancel();
+			ccm_onInlineEditCancel(function() {
+				obj.$toolbar.remove();
+			});
 		});
 		this.$savebtn.on('click', function() {
+			// move the toolbar back into the form so it submits. so great.
+			obj.$toolbar.hide().prependTo('#ccm-block-form');
 			$('#ccm-block-form').submit();
 		});
 	}
