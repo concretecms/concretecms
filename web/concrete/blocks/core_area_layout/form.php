@@ -42,7 +42,13 @@
 
 	<li class="ccm-layouts-toolbar-save ccm-ui">
 		<button id="ccm-layouts-cancel-button" type="button" class="btn btn-mini"><?=t("Cancel")?></button>
-		<button id="ccm-layouts-save-button" type="button" class="btn btn-primary btn-mini">Save</button></li>
+		<div class="btn-group" id="ccm-layouts-save-button-group">
+		  <a class="btn btn-primary btn-mini" href="javascript:void(0)" id="ccm-layouts-save-button"><? if ($controller->getTask() == 'add') { ?><?=t('Add Layout')?><? } else { ?><?=t('Update Layout')?><? } ?></a>
+		  <a class="btn btn-primary btn-mini dropdown-toggle" data-toggle="dropdown" href="#"><span class="caret"></span></a>
+		  <ul class="dropdown-menu pull-right">
+		    <li><a href="#"><i class="icon-pencil"></i> <?=t("Save Settings as Preset")?></a></li>
+		  </ul>
+		</div>
 	</li>
 
 	<? if ($controller->getTask() == 'add') { ?>

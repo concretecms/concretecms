@@ -56,7 +56,9 @@ if ($canAliasBlockOut) {
 $isAlias = $b->isAlias();
 $u = new User();
 $numChildren = (!$isAlias) ? $b->getNumChildren() : 0;
-if ($isAlias) {
+if ($b->getBlockTypeHandle() == BLOCK_HANDLE_LAYOUT_PROXY) {
+	$deleteMessage = t('Do you want to delete this layout? This will remove all blocks inside it.');
+} else if ($isAlias) {
 	$deleteMessage = t('Do you want to delete this block?');
 } else if ($numChildren) {
 	$deleteMessage = t('Do you want to delete this block? This item is an original. If you delete it, you will delete all blocks aliased to it');
@@ -99,14 +101,20 @@ if ($isAlias) {
 				$params = '{arGridColumnSpan: ' . $a->getAreaGridColumnSpan() . '}';
 			} ?>
 
-			<li><a href="javascript:void(0)" onclick="ccm_loadInlineEditor('<?=$cID?>','<?=urlencode($arHandle)?>','<?=$aID?>','<?=$bID?>', <?=$params?>)"><i class="icon-pencil"></i> <?=t("Edit Block")?></a></li>		
+			<? if ($b->getBlockTypeHandle() == BLOCK_HANDLE_LAYOUT_PROXY) { ?>
+				<li><a href="javascript:void(0)" onclick="ccm_loadInlineEditor('<?=$cID?>','<?=urlencode($arHandle)?>','<?=$aID?>','<?=$bID?>', <?=$params?>)"><i class="icon-pencil"></i> <?=t("Edit Layout")?></a></li>		
+			<? } else { ?>
+				<li><a href="javascript:void(0)" onclick="ccm_loadInlineEditor('<?=$cID?>','<?=urlencode($arHandle)?>','<?=$aID?>','<?=$bID?>', <?=$params?>)"><i class="icon-pencil"></i> <?=t("Edit Block")?></a></li>		
+				<? } ?>
 		<? } else { ?>
 			<li><a class="dialog-launch" dialog-title="<?=t('Edit %s', $btOriginal->getBlockTypeName())?>" dialog-modal="false" dialog-on-close="ccm_blockWindowAfterClose()" dialog-width="<?=$btOriginal->getBlockTypeInterfaceWidth()?>" dialog-height="<?=$btOriginal->getBlockTypeInterfaceHeight() + $heightPlus?>" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_block_popup?cID=<?=$cID?>&amp;bID=<?=$bID?>&amp;arHandle=<?=urlencode($arHandle)?>&amp;btask=edit" ><i class="icon-pencil"></i> <?=t("Edit Block")?></a></li>		
 		<? } ?>
 
 	<? } ?>
 
+	<? if ($b->getBlockTypeHandle() != BLOCK_HANDLE_LAYOUT_PROXY) { ?>
 	<li><a href="javascript:void(0)" onclick="ccm_addToScrapbook('<?=$cID?>','<?=$bID?>', '<?=urlencode($arHandle)?>')"><i class="icon-heart"></i> <?=t("Copy to Clipboard")?></a></li>		
+	<? } ?>
 
 	<? if ($p->canEditBlock() && (!$a->isGlobalArea())) {  ?>
 		<li><a href="javascript:void(0)" onclick="ccm_arrangeInit()"><i class="icon-move"></i> <?=t("Move")?></a></li>		
@@ -116,35 +124,37 @@ if ($isAlias) {
 		<li><a href="javascript:void(0)" onclick="ccm_deleteBlock('<?=$cID?>','<?=$bID?>','<?=$aID?>','<?=urlencode($arHandle)?>', '<?=$deleteMessage?>')"><i class="icon-trash"></i> <?=t("Delete")?></a></li>		
 	<? } ?>
 
-	<? if ($canDesign && $p->canEditBlockCustomTemplate()) { ?>
-		<li class="divider"></li>
+	<? if ($b->getBlockTypeHandle() != BLOCK_HANDLE_LAYOUT_PROXY) { ?>
 
-		<? if ($canDesign) { ?>
-			<li><a class="dialog-launch" dialog-title="<?=t('Custom Style')?>" dialog-modal="false" dialog-width="475" dialog-height="500" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_block_popup?cID=<?=$cID?>&amp;bID=<?=$bID?>&amp;arHandle=<?=urlencode($arHandle)?>&amp;btask=block_css&amp;modal=true" ><i class="icon-font"></i> <?=t("Design")?></a></li>		
+		<? if ($canDesign && $p->canEditBlockCustomTemplate()) { ?>
+			<li class="divider"></li>
+
+			<? if ($canDesign) { ?>
+				<li><a class="dialog-launch" dialog-title="<?=t('Custom Style')?>" dialog-modal="false" dialog-width="475" dialog-height="500" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_block_popup?cID=<?=$cID?>&amp;bID=<?=$bID?>&amp;arHandle=<?=urlencode($arHandle)?>&amp;btask=block_css&amp;modal=true" ><i class="icon-font"></i> <?=t("Design")?></a></li>		
+			<? } ?>
+
+			<? if ($p->canEditBlockCustomTemplate()) { ?>
+				<li><a class="dialog-launch" dialog-title="<?=t('Custom Template')?>" dialog-modal="false" dialog-width="300" dialog-height="275" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_block_popup?cID=<?=$cID?>&amp;bID=<?=$bID?>&amp;arHandle=<?=urlencode($arHandle)?>&amp;btask=template&amp;modal=true" ><i class="icon-file"></i> <?=t("Custom Template")?></a></li>		
+			<? } ?>
 		<? } ?>
 
-		<? if ($p->canEditBlockCustomTemplate()) { ?>
-			<li><a class="dialog-launch" dialog-title="<?=t('Custom Template')?>" dialog-modal="false" dialog-width="300" dialog-height="275" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_block_popup?cID=<?=$cID?>&amp;bID=<?=$bID?>&amp;arHandle=<?=urlencode($arHandle)?>&amp;btask=template&amp;modal=true" ><i class="icon-file"></i> <?=t("Custom Template")?></a></li>		
+		<? if ($canModifyGroups || $canScheduleGuestAccess || $canAliasBlockOut || $canSetupComposer) { ?>
+			<li class="divider"></li>
+			<? if ($canModifyGroups) { ?>
+				<li><a class="dialog-launch" dialog-title="<?=t('Block Permissions')?>" dialog-modal="false" dialog-width="350" dialog-height="420" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_block_popup?cID=<?=$cID?>&amp;bID=<?=$bID?>&amp;arHandle=<?=urlencode($arHandle)?>&amp;btask=groups" ><i class="icon-lock"></i> <?=t("Permissions")?></a></li>		
+			<? } ?>
+			<? if ($canScheduleGuestAccess) { ?>
+				<li><a class="dialog-launch" dialog-title="<?=t('Schedule Guest Access')?>" dialog-modal="false" dialog-width="500" dialog-height="220" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_block_popup?cID=<?=$cID?>&amp;bID=<?=$bID?>&amp;arHandle=<?=urlencode($arHandle)?>&amp;btask=guest_timed_access" ><i class="icon-time"></i> <?=t("Schedule Guest Access")?></a></li>		
+			<? } ?>
+			<? if ($canAliasBlockOut) { ?>
+				<li><a class="dialog-launch" dialog-title="<?=t('Setup on Child Pages')?>" dialog-modal="false" dialog-width="550" dialog-height="450" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_block_popup?cID=<?=$cID?>&amp;bID=<?=$bID?>&amp;arHandle=<?=urlencode($arHandle)?>&amp;btask=child_pages" ><i class="icon-arrow-right"></i> <?=t("Setup on Child Pages")?></a></li>		
+			<? } ?>
+			<? if ($canSetupComposer) { ?>
+				<li><a class="dialog-launch" dialog-title="<?=t('Composer Settings')?>" dialog-modal="false" dialog-width="500" dialog-height="220" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_block_popup?cID=<?=$cID?>&amp;bID=<?=$bID?>&amp;arHandle=<?=urlencode($arHandle)?>&amp;btask=composer" ><i class="icon-cog"></i> <?=t("Composer Settings")?></a></li>		
+			<? } ?>
+
 		<? } ?>
 	<? } ?>
-
-	<? if ($canModifyGroups || $canScheduleGuestAccess || $canAliasBlockOut || $canSetupComposer) { ?>
-		<li class="divider"></li>
-		<? if ($canModifyGroups) { ?>
-			<li><a class="dialog-launch" dialog-title="<?=t('Block Permissions')?>" dialog-modal="false" dialog-width="350" dialog-height="420" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_block_popup?cID=<?=$cID?>&amp;bID=<?=$bID?>&amp;arHandle=<?=urlencode($arHandle)?>&amp;btask=groups" ><i class="icon-lock"></i> <?=t("Permissions")?></a></li>		
-		<? } ?>
-		<? if ($canScheduleGuestAccess) { ?>
-			<li><a class="dialog-launch" dialog-title="<?=t('Schedule Guest Access')?>" dialog-modal="false" dialog-width="500" dialog-height="220" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_block_popup?cID=<?=$cID?>&amp;bID=<?=$bID?>&amp;arHandle=<?=urlencode($arHandle)?>&amp;btask=guest_timed_access" ><i class="icon-time"></i> <?=t("Schedule Guest Access")?></a></li>		
-		<? } ?>
-		<? if ($canAliasBlockOut) { ?>
-			<li><a class="dialog-launch" dialog-title="<?=t('Setup on Child Pages')?>" dialog-modal="false" dialog-width="550" dialog-height="450" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_block_popup?cID=<?=$cID?>&amp;bID=<?=$bID?>&amp;arHandle=<?=urlencode($arHandle)?>&amp;btask=child_pages" ><i class="icon-arrow-right"></i> <?=t("Setup on Child Pages")?></a></li>		
-		<? } ?>
-		<? if ($canSetupComposer) { ?>
-			<li><a class="dialog-launch" dialog-title="<?=t('Composer Settings')?>" dialog-modal="false" dialog-width="500" dialog-height="220" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_block_popup?cID=<?=$cID?>&amp;bID=<?=$bID?>&amp;arHandle=<?=urlencode($arHandle)?>&amp;btask=composer" ><i class="icon-cog"></i> <?=t("Composer Settings")?></a></li>		
-		<? } ?>
-
-	<? } ?>
-
 
 
 	</ul>
