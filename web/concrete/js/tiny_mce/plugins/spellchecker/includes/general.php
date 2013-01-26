@@ -7,12 +7,7 @@
  * @copyright Copyright © 2007, Moxiecode Systems AB, All rights reserved.
  */
 
-if(defined("E_DEPRECATED")) {
-	error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED); // E_DEPRECATED required for php 5.3.0 because of depreciated function calls in 3rd party libs (adodb).
-} else {
-	error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT);
-}
-
+@error_reporting(E_ALL ^ E_NOTICE);
 $config = array();
 
 require_once(dirname(__FILE__) . "/../classes/utils/Logger.php");
@@ -30,7 +25,7 @@ if (isset($config['general.engine']))
  * @param String $default_value Default value to return if value not found.
  * @return String request value by name without magic quoting or default value.
  */
-function getRequestParam($name, $default_value = false, $sanitize = false) {
+function getRequestParam($name, $default_value = false) {
 	if (!isset($_REQUEST[$name]))
 		return $default_value;
 
@@ -38,12 +33,12 @@ function getRequestParam($name, $default_value = false, $sanitize = false) {
 		$newarray = array();
 
 		foreach ($_REQUEST[$name] as $name => $value)
-			$newarray[formatParam($name, $sanitize)] = formatParam($value, $sanitize);
+			$newarray[$name] = $value;
 
 		return $newarray;
 	}
 
-	return formatParam($_REQUEST[$name], $sanitize);
+	return $_REQUEST[$name];
 }
 
 function &getLogger() {
