@@ -15,6 +15,7 @@ $classes = array(
 	'DatabaseItemList,DatabaseItemListColumnSet' => array('library','database_item_list'),
 	'Controller' => array('library','controller'),
 	'FileType,FileTypeList' => array('library','file/types'),
+	'FileImporter' => array('library', 'file/importer'),
 	'BlockView' => array('library','block_view'),
 	'MailImporter' => array('library','mail/importer'),
 	'Archive' => array('library','archive'),
