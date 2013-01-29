@@ -81,14 +81,15 @@
 	# Must come before packages 
 	require($cdir . '/startup/tools_upgrade_check.php');
 
+	## Localization ##
+	## This MUST be run before packages start - since they check ACTIVE_LOCALE which is defined here ##
+	require($cdir . '/config/localization.php');
+
 	## Package events
 	require($cdir . '/startup/packages.php');
 
 	## Load permissions and attributes
 	PermissionKey::loadAll();
-
-	## Localization ##
-	require($cdir . '/config/localization.php');
 
 	## File types ##
 	## Note: these have to come after config/localization.php ##
