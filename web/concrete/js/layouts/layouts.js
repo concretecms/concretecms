@@ -547,13 +547,47 @@ CCMLayout.prototype._showCustomSlider = function() {
 
 
 // public methods
-CCMLayout.launchPresets = function() {
+CCMLayout.launchPresets = function(selector, token) {
 	jQuery.fn.dialog.open({
-		width: 360,
-		height: 300,
+		width: 280,
+		height: 200,
 		modal: false,
-		href: CCM_TOOLS_PATH + '/layouts/presets',
-		title: ccmi18n.areaLayoutPresets				
+		href: CCM_TOOLS_PATH + '/area/layout_presets?ccm_token=' + token,
+		title: ccmi18n.areaLayoutPresets, 
+		onOpen: function() {
+			$('#ccm-layout-save-preset-form select').on('change', function(r) {
+				if ($(this).val() == '-1') {
+					$('#ccm-layout-save-preset-name').show().focus();
+				} else {
+					$('#ccm-layout-save-preset-name').hide();
+				}
+			}).trigger('change');
+
+			$('#ccm-layout-save-preset-form').on('submit', function() {
+
+				$.fn.dialog.showLoader();
+				
+				var data = $(selector).data('ccmlayout');
+				var formdata = data.$toolbar.find('select, input').serializeArray().concat(data.$element.find('input').serializeArray());
+
+				return false;
+
+				/*
+				r = $toolbar.serializeArray();
+				
+				Query.fn.dialog.showLoader();
+
+				jQuery.fn.dialog.closeTop();
+				jQuery.fn.dialog.hideLoader();
+				return false;
+
+				*/
+
+
+			});
+		}
 	});
+
+
 
 }

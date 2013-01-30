@@ -330,6 +330,18 @@
     <default value="0" />
   </field>
 </table>
+<table name="AreaLayoutPresets">
+  <field name="arLayoutPresetID" type="I">
+    <key />
+    <unsigned />
+      <autoincrement/>
+  </field>
+  <field name="arLayoutID" type="I">
+    <unsigned />
+    <notnull />
+    <default value="0" />
+  </field>
+</table>
 <table name="AreaLayoutColumns">
 	<field name="arLayoutColumnID" type="I">
 		<key />
