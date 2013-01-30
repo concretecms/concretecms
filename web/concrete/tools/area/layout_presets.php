@@ -2,9 +2,19 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 if (Loader::helper('validation/token')->validate('layout_presets')) { 
 
+	if ($_POST['submit']) {
 
+		$cnt = new CoreAreaLayoutBlockController();
+		$arLayout = $cnt->addFromPost($_POST);
+		if (is_object($arLayout)) {
+			$preset = AreaLayoutPreset::add($arLayout, $_POST['arLayoutPresetName']);
+			if (is_object($preset)) {
+				print_r($preset);
+			}
+		}
 
-
+		exit;
+	}
 
 $presets = array('-1' => t('** New'));
 	?>

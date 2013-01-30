@@ -39,30 +39,7 @@ class Concrete5_Controller_Block_CoreAreaLayout extends BlockController {
 			$db = Loader::db();
 			$arLayoutID = $db->GetOne('select arLayoutID from btCoreAreaLayout where bID = ?', array($this->bID));
 			if (!$arLayoutID) {
-				// we are adding a new layout 
-				if ($post['useThemeGrid']) {
-					$arLayout = ThemeGridAreaLayout::add();
-					$arLayout->setAreaLayoutMaxColumns($post['arLayoutMaxColumns']);
-					for ($i = 0; $i < $post['themeGridColumns']; $i++) {
-						$span = ($post['span'][$i]) ? $post['span'][$i] : 0;
-						$offset = ($post['offset'][$i]) ? $post['offset'][$i] : 0;
-						$column = $arLayout->addLayoutColumn();
-						$column->setAreaLayoutColumnSpan($span);
-						$column->setAreaLayoutColumnOffset($offset);
-					}
-				} else {
-					if (!$post['isautomated']) {
-						$iscustom = 1;
-					} else {
-						$iscustom = 0;
-					}
-					$arLayout = CustomAreaLayout::add($post['spacing'], $iscustom);
-					for ($i = 0; $i < $post['columns']; $i++) {
-						$width = ($post['width'][$i]) ? $post['width'][$i] : 0;
-						$column = $arLayout->addLayoutColumn();
-						$column->setAreaLayoutColumnWidth($width);
-					}
-				}
+				$arLayout = $this->addFromPost($post);
 			} else {
 
 				$arLayout = AreaLayout::getByID($arLayoutID);
@@ -94,6 +71,34 @@ class Concrete5_Controller_Block_CoreAreaLayout extends BlockController {
 			}
 			$values = array('arLayoutID' => $arLayout->getAreaLayoutID());
 			parent::save($values);
+		}
+
+		public function addFromPost($post) {
+			// we are adding a new layout 
+			if ($post['useThemeGrid']) {
+				$arLayout = ThemeGridAreaLayout::add();
+				$arLayout->setAreaLayoutMaxColumns($post['arLayoutMaxColumns']);
+				for ($i = 0; $i < $post['themeGridColumns']; $i++) {
+					$span = ($post['span'][$i]) ? $post['span'][$i] : 0;
+					$offset = ($post['offset'][$i]) ? $post['offset'][$i] : 0;
+					$column = $arLayout->addLayoutColumn();
+					$column->setAreaLayoutColumnSpan($span);
+					$column->setAreaLayoutColumnOffset($offset);
+				}
+			} else {
+				if (!$post['isautomated']) {
+					$iscustom = 1;
+				} else {
+					$iscustom = 0;
+				}
+				$arLayout = CustomAreaLayout::add($post['spacing'], $iscustom);
+				for ($i = 0; $i < $post['columns']; $i++) {
+					$width = ($post['width'][$i]) ? $post['width'][$i] : 0;
+					$column = $arLayout->addLayoutColumn();
+					$column->setAreaLayoutColumnWidth($width);
+				}
+			}
+			return $arLayout;
 		}
 
 		public function view() {

@@ -5,28 +5,30 @@
 	top: 50px;
 	width: 100%;
 	z-index: 1000;
-	visibility: visible !important;
-	margin: 0 !important;
-	padding: 0 !important;
-	padding-left: 2px !important;
-	line-height: 0 !important;
-	list-style: none !important;
-	font-size: 0px !important;
+	visibility: visible;
+	margin: 0;
+	padding: 0;
+	padding-left: 2px;
+	line-height: 0;
+	list-style: none;
 	background: #f1f1f1;
 	#gradient > .vertical(#f1f1f1, #e2e2e2);	
-	height: 32px !important;
+	height: 34px;
 	border-bottom: 1px solid #bbb;
 
 	> li {
-		float: left !important;
-		margin: 2px 0px 0px 0px !important;
-		padding: 3px 1px !important;
-		font-size: 11px !important;
-		padding-right: 0;
-		list-style: none !important;
+		float: left;
+		list-style: none;
 		outline: none;
-		line-height: 11px !important;
+		padding-right: 0;
+	}
+
+	> li.toolbar-text-cell {
 		font-family: Helvetica, Arial, Verdana, Tahoma, sans-serif !important;
+		margin: 2px 0px 0px 0px;
+		padding: 3px 1px;
+		font-size: 11px;
+		line-height: 11px;
 
 		select {
 			width: 60px !important;
@@ -54,7 +56,38 @@
 			line-height: 11px !important;
 			padding: 1px !important;
 		}
+	}
+	
+	> li.toolbar-icon-cell > a {
+		width: 25px;
+		height: 25px;
+		margin: 4px 0px 0px 2px;
+		border: 1px solid transparent;
+		display: block;
+		line-height: 0;
+		padding: 0px;
+		cursor: pointer;
+		zoom: 1;
+		outline: none;
+		text-decoration: none;
 
+		i {
+			margin-top: 5px !important;
+			margin-left: 5px !important;
+		}
+	}
+
+	> li.toolbar-icon-cell > a:hover {
+		border-color: #b2b2b2 !important;
+		border-radius: 2px !important;
+		background-color: #b2b2b2 !important;
+		outline: none;
+	}
+
+	> li.toolbar-icon-cell > a:active {
+		border-color: #b5b5b5;
+		background-color: #ddd;
+		outline: none;
 	}
 
 	li.ccm-layouts-toolbar-separator {
@@ -69,7 +102,7 @@
 
 	.ccm-layouts-toolbar-save {
 		position: absolute;
-		top: 0px;
+		top: 5px;
 		right: 15px;
 	}
 
