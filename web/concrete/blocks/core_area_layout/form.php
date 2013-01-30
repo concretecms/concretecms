@@ -46,7 +46,7 @@
 		  <button class="btn btn-primary btn-mini" type="button" id="ccm-layouts-save-button"><? if ($controller->getTask() == 'add') { ?><?=t('Add Layout')?><? } else { ?><?=t('Update Layout')?><? } ?></button>
 		  <a class="btn btn-primary btn-mini dropdown-toggle" data-toggle="dropdown" href="#"><span class="caret"></span></a>
 		  <ul class="dropdown-menu pull-right">
-		    <li><a href="javascript:void(0)" onclick="CCMLayout.launchPresets()"><i class="icon-pencil"></i> <?=t("Save Settings as Preset")?></a></li>
+		    <li><a href="javascript:void(0)" onclick="CCMLayout.launchPresets('#ccm-layouts-edit-mode', '<?=Loader::helper('validation/token')->generate('layout_presets')?>')"><i class="icon-pencil"></i> <?=t("Save Settings as Preset")?></a></li>
 		  </ul>
 		</div>
 	</li>

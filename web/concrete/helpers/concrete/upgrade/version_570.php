@@ -12,6 +12,7 @@ class ConcreteUpgradeVersion570Helper {
 		'QueuePageDuplicationRelations',
 		'Areas',
 		'AreaLayouts',
+		'AreaLayoutPresets',
 		'AreaLayoutColumns',
 		'AreaLayoutCustomColumns',
 		'AreaLayoutThemeGridColumns',

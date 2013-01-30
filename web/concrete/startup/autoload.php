@@ -22,6 +22,7 @@ $classes = array(
 	'AttributeTypeController' => array('library','attribute/controller'),
 	'Queue' => array('library','queue'),
 	'Area' => array('model','area/model'),
+	'AreaLayoutPreset' => array('model','area/layout/preset'),
 	'AreaLayoutColumn' => array('model','area/layout_column/model'),
 	'CustomAreaLayoutColumn' => array('model','area/layout_column/custom'),
 	'ThemeGridAreaLayoutColumn' => array('model','area/layout_column/theme_grid'),
