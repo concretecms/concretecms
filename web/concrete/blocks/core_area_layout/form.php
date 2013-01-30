@@ -1,10 +1,22 @@
 <?
 	defined('C5_EXECUTE') or die("Access Denied.");
 	$minColumns = 1;
+
+	$presets = AreaLayoutPreset::getList();
 ?>
 
-<ul id="ccm-layouts-toolbar">
-	<li data-grid-form-view="choosetype">
+<ul id="ccm-layouts-toolbar" class="ccm-ui">
+	<? if (count($presets) > 0) { ?>
+		<li class="toolbar-icon-cell"><a class="toolbar-icon dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)"><i class="icon-bookmark"></i></a>
+		  <ul class="dropdown-menu">
+		  	<? foreach($presets as $pr) { ?>
+			    <li><a href="javascript:void(0)"><?=$pr->getAreaLayoutPresetName()?></a></li>
+			<? } ?>
+		  </ul>
+		</li>
+		<li class="ccm-layouts-toolbar-separator"></li>
+	<? } ?>
+	<li class="toolbar-text-cell" data-grid-form-view="choosetype">
 		<label for="useThemeGrid"><?=t("Grid Type")?></label>
 		<select name="useThemeGrid" id="useThemeGrid" style="width: auto !important">
 			<option value="1"><?=$themeGridName?></option>
@@ -12,7 +24,7 @@
 		</select>
 	</li>
 	<li data-grid-form-view="choosetype" class="ccm-layouts-toolbar-separator"></li>
-	<li data-grid-form-view="themegrid" class="ccm-page-theme-grid-framework">
+	<li data-grid-form-view="themegrid" class="toolbar-text-cell">
 		<label for="themeGridColumns"><?=t("Columns")?></label>
 		
 		<select name="themeGridColumns" id="themeGridColumns">
@@ -21,7 +33,7 @@
 			<? } ?>
 		</select>
 	</li>
-	<li data-grid-form-view="custom">
+	<li data-grid-form-view="custom" class="toolbar-text-cell">
 		<label for="columns"><?=t("Columns")?></label>
 		<select name="columns" id="columns">
 			<? for ($i = $minColumns; $i <= $maxColumns; $i++) { ?>
@@ -30,17 +42,17 @@
 		</select>
 	</li>
 	<li data-grid-form-view="custom" class="ccm-layouts-toolbar-separator"></li>
-	<li data-grid-form-view="custom" >
+	<li data-grid-form-view="custom" class="toolbar-text-cell">
 		<label for="columns"><?=t("Spacing")?></label>
 		<input name="spacing" id="spacing" type="text" style="width: 20px" value="<?=$spacing?>" />
 	</li>
 	<li data-grid-form-view="custom" class="ccm-layouts-toolbar-separator"></li>
-	<li data-grid-form-view="custom" >
+	<li data-grid-form-view="custom" class="toolbar-text-cell">
 		<label><?=t("Automatic Widths")?></label>
 		<input type="checkbox" value="1" name="isautomated" <? if (!$iscustom) { ?>checked="checked" <? } ?> />
 	</li>
 
-	<li class="ccm-layouts-toolbar-save ccm-ui">
+	<li class="ccm-layouts-toolbar-save">
 		<button id="ccm-layouts-cancel-button" type="button" class="btn btn-mini"><?=t("Cancel")?></button>
 		<div class="btn-group" id="ccm-layouts-save-button-group">
 		  <button class="btn btn-primary btn-mini" type="button" id="ccm-layouts-save-button"><? if ($controller->getTask() == 'add') { ?><?=t('Add Layout')?><? } else { ?><?=t('Update Layout')?><? } ?></button>

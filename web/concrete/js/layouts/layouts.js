@@ -548,11 +548,12 @@ CCMLayout.prototype._showCustomSlider = function() {
 
 // public methods
 CCMLayout.launchPresets = function(selector, token) {
+	var url = CCM_TOOLS_PATH + '/area/layout_presets?ccm_token=' + token;
 	jQuery.fn.dialog.open({
 		width: 280,
 		height: 200,
 		modal: false,
-		href: CCM_TOOLS_PATH + '/area/layout_presets?ccm_token=' + token,
+		href: url,
 		title: ccmi18n.areaLayoutPresets, 
 		onOpen: function() {
 			$('#ccm-layout-save-preset-form select').on('change', function(r) {
@@ -568,22 +569,24 @@ CCMLayout.launchPresets = function(selector, token) {
 				$.fn.dialog.showLoader();
 				
 				var data = $(selector).data('ccmlayout');
-				var formdata = data.$toolbar.find('select, input').serializeArray().concat(data.$element.find('input').serializeArray());
+				var formdata = data.$toolbar.find('select, input').serializeArray().
+				concat(data.$element.find('input').serializeArray()).
+				concat($('#ccm-layout-save-preset-form').serializeArray());
+			
+				formdata.push({'name': 'submit', 'value': 1});
+
+				$.ajax({
+					url: url,
+					type: 'POST',
+					data: formdata, 
+					success: function(r) {
+						alert(r);
+						$.fn.dialog.hideLoader();
+
+					}
+				});
 
 				return false;
-
-				/*
-				r = $toolbar.serializeArray();
-				
-				Query.fn.dialog.showLoader();
-
-				jQuery.fn.dialog.closeTop();
-				jQuery.fn.dialog.hideLoader();
-				return false;
-
-				*/
-
-
 			});
 		}
 	});
