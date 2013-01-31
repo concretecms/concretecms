@@ -55,13 +55,6 @@ switch($_GET['atask']) {
 		$toolSection = "block_area_add_scrapbook";
 		$canViewPane = $ap->canAddBlocks();
 		break;
-	case 'layout':
-		$originalLayoutId = (intval($_REQUEST['originalLayoutID'])) ? intval($_REQUEST['originalLayoutID']) : intval($_REQUEST['layoutID']);
-		$args['refreshAction'] = REL_DIR_FILES_TOOLS_REQUIRED . '/edit_area_popup?atask=layout&cID=' . $c->getCollectionID() . '&arHandle=' . $a->getAreaHandle() . '&refresh=1&originalLayoutID='.$originalLayoutId.'&cvalID='.$_REQUEST['cvalID'];
-		$toolSection = "block_area_layout";
-		$canViewPane = $ap->canAddLayoutToArea();
-		$args['action'] = $a->getAreaUpdateAction('layout').'&originalLayoutID='.$originalLayoutId.'&cvalID='.intval($_REQUEST['cvalID']);
-		break;
 	case 'design':
 		$toolSection = 'custom_style';
 		$args['style'] = $c->getAreaCustomStyleRule($a);
