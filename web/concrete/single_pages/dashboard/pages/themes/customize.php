@@ -237,7 +237,7 @@ $ih = Loader::helper('concrete/interface');
                 afp.attr('font-panel-weight', weight);
                 afp.attr('font-panel-size', size);
                 afp.attr('font-panel-style', style);
-                afp.attr('font-panel-font', '"'+font+'"');
+                afp.attr('font-panel-font', font);
                 var selectedString = style + '|' + weight + '|' + size + '|' + font;
                 $("#input_" + afp.attr('id')).val(selectedString);
                 $("#customize-form").get(0).submit()
@@ -251,7 +251,7 @@ $ih = Loader::helper('concrete/interface');
                 $('div#jquery-font-panel-list-fonts div').removeClass('font-panel-list-selected');
                 $(this).addClass("font-panel-list-selected");
             });
-            $('div#jquery-font-panel-list-fonts div[font-panel-font=' + font + ']').addClass('font-panel-list-selected');
+            $('div#jquery-font-panel-list-fonts div[font-panel-font="' + font + '"]').addClass('font-panel-list-selected');
         },
     
         setupSizes: function(size) {
