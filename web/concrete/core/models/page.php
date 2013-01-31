@@ -109,7 +109,6 @@ class Concrete5_Model_Page extends Collection {
 		}
 		
 		if (!$this->isError()) {
-			$this->cHasLayouts = $db->GetOne('select count(cvalID) from CollectionVersionAreaLayouts where cID = ?', array($this->cID));
 	
 			$this->loadPermissionAssignments();
 			if ($cvID != false) {
