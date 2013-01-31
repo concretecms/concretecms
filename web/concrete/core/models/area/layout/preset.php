@@ -42,5 +42,12 @@ class Concrete5_Model_AreaLayoutPreset extends Object {
 	public function getAreaLayoutObject() {
 		return AreaLayout::getByID($this->arLayoutID);
 	}
+	public function updateAreaLayoutObject(AreaLayout $arLayout) {
+		$db = Loader::db();
+		$db->Execute('update AreaLayoutPresets set arLayoutID = ? where arLayoutPresetID = ?', array(
+			$arLayout->getAreaLayoutID(), $this->arLayoutPresetID
+		));
+		$this->arLayoutID = $arLayout->getAreaLayoutID();
+	}
 
 }

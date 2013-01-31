@@ -30,6 +30,7 @@ var CCMLayout = function(element, options) {
 	this.$toolbar.prependTo(document.body);
 
 	this._setupDOM();
+	this._activatePresets();
 	if (this.options.formview == 'choosetype') {
 		this._setupToolbarView(true);
 	} else {
@@ -55,6 +56,58 @@ var CCMLayout = function(element, options) {
 			break;
 	}
 
+}
+
+CCMLayout.prototype._activatePresets = function() {
+	var obj = this;
+	var $presets = this.$toolbar.find('.ccm-dropdown-area-layout-presets a');
+	if ($presets.length > 0 && (!this.options.editing)) {
+		this.$toolbar.find('li[data-area-presets-view=presets]').show();
+		$presets.on('click', function() {
+			var arLayoutPresetID = $(this).attr('data-area-layout-preset-id');
+			jQuery.fn.dialog.showLoader();
+			var url = CCM_TOOLS_PATH + '/area/layout_presets?arLayoutPresetID=' + arLayoutPresetID + '&task=get_area_layout&ccm_token=' + CCM_SECURITY_TOKEN;
+			$.getJSON(url, function(r) {
+				// set theme grid option
+				if (parseInt(r.arLayout.arLayoutUsesThemeGridFramework)) {
+					obj.$usethemegrid.val(1);
+					obj.$selectgridcolumns.val(r.arLayout.arLayoutNumColumns);
+				} else {
+					obj.$usethemegrid.val(0);
+				}
+
+				obj.$selectcolumnscustom.find('option[value=' + r.arLayout.arLayoutNumColumns + ']').prop('selected', true);
+				obj.$customspacing.val(r.arLayout.arLayoutSpacing);
+				if (parseInt(r.arLayout.arLayoutIsCustom)) {
+					obj.$customautomated.prop('checked', false);
+				} else {
+					obj.$customautomated.prop('checked', true);
+				}
+
+
+				obj._updateChooseTypeForm();
+				if (parseInt(r.arLayout.arLayoutUsesThemeGridFramework)) {
+					obj._buildThemeGridGridFromPresetColumns(r.arLayoutColumns);
+				} else {
+					obj._updateCustomView();
+					// have to try and draw columns
+					if (parseInt(r.arLayout.arLayoutIsCustom)) {
+						$.each(r.arLayoutColumns, function(i, column) {
+							obj.columnwidths.push(parseInt(column.arLayoutColumnWidth));
+							var $column = $(obj.$element.find('.ccm-layout-column').get(i));
+							$column.css('width', column.arLayoutColumnWidth + 'px');
+							$('#ccm-edit-layout-column-width-' + i).val(column.arLayoutColumnWidth);
+						});
+						obj._showCustomSlider();
+					}
+				}
+
+				jQuery.fn.dialog.hideLoader();
+			});
+		});
+	} else {
+		this.$toolbar.find('li[data-area-presets-view=presets]').hide();
+	}		
 }
 
 // private methods
@@ -181,7 +234,33 @@ CCMLayout.prototype._updateThemeGridView = function() {
 	if (this.columns > 1) {
 		this._showThemeGridSlider();
 	}
+}
 
+CCMLayout.prototype._buildThemeGridGridFromPresetColumns = function(arLayoutColumns) {
+	this.$element.html('');
+	var obj = this;
+	var row = this.options.rowstart;
+	row += '<div id="ccm-theme-grid-edit-mode-row-wrapper">';
+	$.each(arLayoutColumns, function(i, column) {
+		var columnHTML = '<div id="ccm-edit-layout-column-' + i + '" class="ccm-theme-grid-column" ' + 
+		'data-offset="' + column.arLayoutColumnOffset + '" data-span="' + column.arLayoutColumnSpan + '"><div class="ccm-layout-column-highlight">' +
+		'<input type="hidden" id="ccm-edit-layout-column-offset-' + i + '" name="offset[' + i + ']" value="' + column.arLayoutColumnOffset + 
+		'" /><input type="hidden" id="ccm-edit-layout-column-span-' + i + '" name="span[' + i + ']" value="' + column.arLayoutColumnSpan + 
+		'" /></div></div>';
+
+		// now, sometimes we might need to set the next column to a smaller amount
+		row += columnHTML;
+	});
+	row += '</div>';
+	row += this.options.rowend;
+	this.$element.append(row);
+
+	this.columns = arLayoutColumns.length;
+	this.maxcolumns = parseInt(this.$selectgridcolumns.find(' option:last-child').val());
+
+	this._resetSlider();
+	this._redrawThemeGrid();
+	this._showThemeGridSlider();
 }
 
 // This actually takes care of drawing the grid.
@@ -544,7 +623,14 @@ CCMLayout.prototype._showCustomSlider = function() {
 
 }
 
-
+CCMLayout.prototype._updatePresets = function(r) {
+	var $dd = this.$toolbar.find('.ccm-dropdown-area-layout-presets');
+	$dd.html('');
+	$.each(r, function(i, preset) {
+		$dd.append('<li><a href="javascript:void(0)" data-area-layout-preset-id=' + preset.arLayoutPresetID + '">' + preset.arLayoutPresetName + '</a></li>');
+	});
+	this._activatePresets();
+}
 
 // public methods
 CCMLayout.launchPresets = function(selector, token) {
@@ -559,8 +645,10 @@ CCMLayout.launchPresets = function(selector, token) {
 			$('#ccm-layout-save-preset-form select').on('change', function(r) {
 				if ($(this).val() == '-1') {
 					$('#ccm-layout-save-preset-name').show().focus();
+					$('#ccm-layout-save-preset-override').hide();
 				} else {
 					$('#ccm-layout-save-preset-name').hide();
+					$('#ccm-layout-save-preset-override').show();
 				}
 			}).trigger('change');
 
@@ -572,17 +660,18 @@ CCMLayout.launchPresets = function(selector, token) {
 				var formdata = data.$toolbar.find('select, input').serializeArray().
 				concat(data.$element.find('input').serializeArray()).
 				concat($('#ccm-layout-save-preset-form').serializeArray());
-			
+
 				formdata.push({'name': 'submit', 'value': 1});
 
 				$.ajax({
 					url: url,
 					type: 'POST',
 					data: formdata, 
+					dataType: 'json',
 					success: function(r) {
-						alert(r);
 						$.fn.dialog.hideLoader();
-
+						$.fn.dialog.closeAll();
+						data._updatePresets(r);
 					}
 				});
 
