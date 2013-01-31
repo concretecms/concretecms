@@ -237,7 +237,7 @@ $ih = Loader::helper('concrete/interface');
                 afp.attr('font-panel-weight', weight);
                 afp.attr('font-panel-size', size);
                 afp.attr('font-panel-style', style);
-                afp.attr('font-panel-font', font);
+                afp.attr('font-panel-font', '"'+font+'"');
                 var selectedString = style + '|' + weight + '|' + size + '|' + font;
                 $("#input_" + afp.attr('id')).val(selectedString);
                 $("#customize-form").get(0).submit()
