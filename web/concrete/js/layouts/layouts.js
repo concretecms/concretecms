@@ -2,7 +2,7 @@
  * Free-Form Layouts
  */
 
-// plugin
+// plugins
 jQuery.fn.ccmlayout = function(options) {
 	return this.each(function()	{
 		var $obj = $(this);
@@ -12,6 +12,26 @@ jQuery.fn.ccmlayout = function(options) {
 		}
 	});
 };
+
+jQuery.fn.ccmlayoutpresetdelete = function(options) {
+	return this.each(function()	{
+		$(this).on('click', function() {
+			var arLayoutPresetID = $(this).attr('data-area-layout-preset-id');
+			jQuery.fn.dialog.showLoader();
+			var url = CCM_TOOLS_PATH + '/area/layout_presets?arLayoutPresetID=' + arLayoutPresetID + '&task=submit_delete&ccm_token=' + options.token;
+			$.get(url, function(r) {
+				jQuery.fn.dialog.replaceTop(r);
+				$('.delete-area-layout-preset').ccmlayoutpresetdelete(options);
+				var url = CCM_TOOLS_PATH + '/area/layout_presets?task=get_list_json&ccm_token=' + options.token;
+				$.getJSON(url, function(r) {
+					var data = $(options.selector).data('ccmlayout');
+					data._updatePresets(r);
+					jQuery.fn.dialog.hideLoader();
+				});
+			});
+		});
+	});
+}
 
 // initialization
 var CCMLayout = function(element, options) {
@@ -60,7 +80,7 @@ var CCMLayout = function(element, options) {
 
 CCMLayout.prototype._activatePresets = function() {
 	var obj = this;
-	var $presets = this.$toolbar.find('.ccm-dropdown-area-layout-presets a');
+	var $presets = this.$toolbar.find('.ccm-dropdown-area-layout-presets li:not(.ccm-dropdown-area-layout-presets-manage) a');
 	if ($presets.length > 0 && (!this.options.editing)) {
 		this.$toolbar.find('li[data-area-presets-view=presets]').show();
 		$presets.on('click', function() {
@@ -625,16 +645,19 @@ CCMLayout.prototype._showCustomSlider = function() {
 
 CCMLayout.prototype._updatePresets = function(r) {
 	var $dd = this.$toolbar.find('.ccm-dropdown-area-layout-presets');
-	$dd.html('');
+	$dd.find('li:not(.ccm-dropdown-area-layout-presets-manage)').remove();
 	$.each(r, function(i, preset) {
-		$dd.append('<li><a href="javascript:void(0)" data-area-layout-preset-id=' + preset.arLayoutPresetID + '">' + preset.arLayoutPresetName + '</a></li>');
+		$dd.prepend('<li><a href="javascript:void(0)" data-area-layout-preset-id=' + preset.arLayoutPresetID + '">' + preset.arLayoutPresetName + '</a></li>');
 	});
 	this._activatePresets();
 }
 
 // public methods
-CCMLayout.launchPresets = function(selector, token) {
+CCMLayout.launchPresets = function(selector, token, task) {
 	var url = CCM_TOOLS_PATH + '/area/layout_presets?ccm_token=' + token;
+	if (task) {
+		url += '&task=' + task;
+	}
 	jQuery.fn.dialog.open({
 		width: 280,
 		height: 200,
@@ -651,6 +674,8 @@ CCMLayout.launchPresets = function(selector, token) {
 					$('#ccm-layout-save-preset-override').show();
 				}
 			}).trigger('change');
+
+			$('.delete-area-layout-preset').ccmlayoutpresetdelete({'selector': selector, 'token': token});
 
 			$('#ccm-layout-save-preset-form').on('submit', function() {
 

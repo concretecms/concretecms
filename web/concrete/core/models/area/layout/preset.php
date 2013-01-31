@@ -36,6 +36,14 @@ class Concrete5_Model_AreaLayoutPreset extends Object {
 		}
 	}
 
+	public function delete() {
+		$db = Loader::db();
+		$db->Execute('delete from AreaLayoutPresets where arLayoutPresetID = ?', array(
+			$this->arLayoutPresetID
+		));
+	}
+
+
 	public function getAreaLayoutPresetID() {return $this->arLayoutPresetID;}
 	public function getAreaLayoutPresetName() {return $this->arLayoutPresetName;}
 	public function getAreaLayoutID() {return $this->arLayoutID;}

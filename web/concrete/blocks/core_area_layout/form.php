@@ -11,6 +11,8 @@
 	  	<? foreach($presets as $pr) { ?>
 		    <li><a href="javascript:void(0)" data-area-layout-preset-id="<?=$pr->getAreaLayoutPresetID()?>"><?=$pr->getAreaLayoutPresetName()?></a></li>
 		<? } ?>
+		<li class="ccm-dropdown-area-layout-presets-manage divider"></li>
+		<li class="ccm-dropdown-area-layout-presets-manage"><a href="javascript:void(0)" onclick="CCMLayout.launchPresets('#ccm-layouts-edit-mode', '<?=Loader::helper('validation/token')->generate('layout_presets')?>', 'delete')"><?=t('Manage Presets')?></a></li>
 	  </ul>
 	</li>
 	<li data-area-presets-view="presets" class="ccm-layouts-toolbar-separator"></li>
@@ -52,6 +54,11 @@
 
 	<li class="ccm-layouts-toolbar-save">
 		<button id="ccm-layouts-cancel-button" type="button" class="btn btn-mini"><?=t("Cancel")?></button>
+		<?
+		$pk = PermissionKey::getByHandle('manage_layout_presets');
+		if (!$pk->validate()) { ?>
+		  <button class="btn btn-primary btn-mini" type="button" id="ccm-layouts-save-button"><? if ($controller->getTask() == 'add') { ?><?=t('Add Layout')?><? } else { ?><?=t('Update Layout')?><? } ?></button>
+		<? } else { ?>
 		<div class="btn-group" id="ccm-layouts-save-button-group">
 		  <button class="btn btn-primary btn-mini" type="button" id="ccm-layouts-save-button"><? if ($controller->getTask() == 'add') { ?><?=t('Add Layout')?><? } else { ?><?=t('Update Layout')?><? } ?></button>
 		  <a class="btn btn-primary btn-mini dropdown-toggle" data-toggle="dropdown" href="#"><span class="caret"></span></a>
@@ -59,6 +66,7 @@
 		    <li><a href="javascript:void(0)" onclick="CCMLayout.launchPresets('#ccm-layouts-edit-mode', '<?=Loader::helper('validation/token')->generate('layout_presets')?>')"><i class="icon-pencil"></i> <?=t("Save Settings as Preset")?></a></li>
 		  </ul>
 		</div>
+		<? } ?>
 	</li>
 
 	<? if ($controller->getTask() == 'add') { ?>
