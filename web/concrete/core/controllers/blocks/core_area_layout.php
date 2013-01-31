@@ -86,7 +86,7 @@ class Concrete5_Controller_Block_CoreAreaLayout extends BlockController {
 					$column->setAreaLayoutColumnOffset($offset);
 				}
 			} else {
-				if (!$post['isautomated']) {
+				if ((!$post['isautomated']) && $post['columns'] > 1) {
 					$iscustom = 1;
 				} else {
 					$iscustom = 0;
