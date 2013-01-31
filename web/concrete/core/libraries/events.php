@@ -96,7 +96,7 @@ class Concrete5_Library_Events {
 	 * $param int $priority
 	 * @return void
 	 */
-	public static function extend($event, $class, $method, $filename, $params = array(), $priority = 5) {
+	public static function extend($event, $class, $method='', $filename='', $params = array(), $priority = 5) {
 		Events::enableEvents();
 		$ce = Events::getInstance();
 		$ce->registeredEvents[$event][] = array(
