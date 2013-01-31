@@ -6,16 +6,14 @@
 ?>
 
 <ul id="ccm-layouts-toolbar" class="ccm-ui">
-	<? if (count($presets) > 0) { ?>
-		<li class="toolbar-icon-cell"><a class="toolbar-icon dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)"><i class="icon-bookmark"></i></a>
-		  <ul class="dropdown-menu">
-		  	<? foreach($presets as $pr) { ?>
-			    <li><a href="javascript:void(0)"><?=$pr->getAreaLayoutPresetName()?></a></li>
-			<? } ?>
-		  </ul>
-		</li>
-		<li class="ccm-layouts-toolbar-separator"></li>
-	<? } ?>
+	<li data-area-presets-view="presets" class="toolbar-icon-cell"><a class="toolbar-icon dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)"><i class="icon-bookmark"></i></a>
+	  <ul class="dropdown-menu ccm-dropdown-area-layout-presets">
+	  	<? foreach($presets as $pr) { ?>
+		    <li><a href="javascript:void(0)" data-area-layout-preset-id="<?=$pr->getAreaLayoutPresetID()?>"><?=$pr->getAreaLayoutPresetName()?></a></li>
+		<? } ?>
+	  </ul>
+	</li>
+	<li data-area-presets-view="presets" class="ccm-layouts-toolbar-separator"></li>
 	<li class="toolbar-text-cell" data-grid-form-view="choosetype">
 		<label for="useThemeGrid"><?=t("Grid Type")?></label>
 		<select name="useThemeGrid" id="useThemeGrid" style="width: auto !important">

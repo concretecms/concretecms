@@ -14,6 +14,7 @@ abstract class Concrete5_Model_AreaLayout extends Object {
 				$al = new CustomAreaLayout();
 			}
 			$al->setPropertiesFromArray($row);
+			$al->arLayoutNumColumns = $db->GetOne('select count(arLayoutColumnID) as totalColumns from AreaLayoutColumns where arLayoutID = ?', array($arLayoutID));
 			$al->loadDetails();
 			return $al;
 		}
@@ -34,6 +35,10 @@ abstract class Concrete5_Model_AreaLayout extends Object {
 
 	public function isAreaLayoutUsingThemeGridFramework() {
 		return $this->arLayoutUsesThemeGridFramework;
+	}
+
+	public function getAreaLayoutNumColumns() {
+		return $this->arLayoutNumColumns;
 	}
 
 	public function getAreaLayoutColumns() {

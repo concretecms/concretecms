@@ -1,23 +1,48 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
+
+if ($_GET['task'] == 'get_area_layout' && Loader::helper('validation/token')->validate()) {
+	$existingPreset = AreaLayoutPreset::getByID($_GET['arLayoutPresetID']);
+	if (is_object($existingPreset)) {
+		$r = new stdClass;
+		$arLayout = $existingPreset->getAreaLayoutObject();
+		$r->arLayout = $arLayout;
+		$r->arLayoutColumns = $arLayout->getAreaLayoutColumns();
+		print Loader::helper('json')->encode($r);
+		exit;
+	}
+}
+
 if (Loader::helper('validation/token')->validate('layout_presets')) { 
 
 	if ($_POST['submit']) {
-
+		
 		$cnt = new CoreAreaLayoutBlockController();
 		$arLayout = $cnt->addFromPost($_POST);
 		if (is_object($arLayout)) {
-			$preset = AreaLayoutPreset::add($arLayout, $_POST['arLayoutPresetName']);
-			if (is_object($preset)) {
-				print_r($preset);
+			if ($_POST['arLayoutPresetID'] == '-1') {
+				$preset = AreaLayoutPreset::add($arLayout, $_POST['arLayoutPresetName']);
+			} else {
+				$existingPreset = AreaLayoutPreset::getByID($_POST['arLayoutPresetID']);
+				if (is_object($existingPreset)) {
+					$existingPreset->updateAreaLayoutObject($arLayout);
+				}
 			}
 		}
 
+		print Loader::helper('json')->encode(AreaLayoutPreset::getList());
 		exit;
 	}
 
-$presets = array('-1' => t('** New'));
-	?>
+$presetlist = AreaLayoutPreset::getList();
+$presets = array();
+$presets['-1'] = t('** New');
+foreach($presetlist as $preset) {
+	$presets[$preset->getAreaLayoutPresetID()] = $preset->getAreaLayoutPresetName();
+}
+
+
+?>
 
 <div class="ccm-ui">
 
@@ -25,18 +50,20 @@ $presets = array('-1' => t('** New'));
 	<?=Loader::helper('validation/token')->output('layout_presets')?>
 
 	<div class="control-group">
-		<label class="control-label" for="arLayoutPresetID"><?=t('Preset')?></label>
+		<label class="control-label" for="arLayoutPresetID"><?=t('Save as Preset')?></label>
 		<div class="controls">
 			<?=Loader::helper('form')->select('arLayoutPresetID', $presets, array('style' => 'width: 300px'))?>
 		</div>
 	</div>
 
 	<div class="control-group" id="ccm-layout-save-preset-name">
-		<label class="control-label" for="arLayoutPresetName"><?=t('Name')?></label>
+		<label class="control-label" for="arLayoutPresetName"><?=t('New Preset Name')?></label>
 		<div class="controls">
 			<input type="text" name="arLayoutPresetName" id="arLayoutPresetName" class="span4" />
 		</div>
 	</div>
+
+	<div class="alert alert-warning" id="ccm-layout-save-preset-override"><?=t('Note: this will override the selected preset with the new preset. It will not update any layouts already in use.')?></div>
 
 	<div class="dialog-buttons">
 		<button class="btn pull-left" onclick="jQuery.fn.dialog.closeTop()"><?=t("Cancel")?></button>
