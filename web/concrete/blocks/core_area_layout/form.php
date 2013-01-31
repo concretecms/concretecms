@@ -32,6 +32,10 @@
 				<option value="<?=$i?>" <? if ($columnsNum == $i) { ?> selected <? } ?>><?=$i?></option>
 			<? } ?>
 		</select>
+		<? if ($controller->getTask() == 'edit') { 
+			// we need this to actually go through the form in edit mode, for layout presets to be saveable in edit mode. ?>
+			<input type="hidden" name="themeGridColumns" value="<?=$columnsNum?>" />
+		<? } ?>
 	</li>
 	<li data-grid-form-view="custom" class="toolbar-text-cell">
 		<label for="columns"><?=t("Columns")?></label>
@@ -40,6 +44,10 @@
 				<option value="<?=$i?>" <? if ($columnsNum == $i) { ?> selected <? } ?>><?=$i?></option>
 			<? } ?>
 		</select>
+		<? if ($controller->getTask() == 'edit') { 
+			// we need this to actually go through the form in edit mode, for layout presets to be saveable in edit mode. ?>
+			<input type="hidden" name="columns" value="<?=$columnsNum?>" />
+		<? } ?>
 	</li>
 	<li data-grid-form-view="custom" class="ccm-layouts-toolbar-separator"></li>
 	<li data-grid-form-view="custom" class="toolbar-text-cell">

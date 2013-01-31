@@ -686,7 +686,7 @@ CCMLayout.launchPresets = function(selector, token, task) {
 				concat(data.$element.find('input').serializeArray()).
 				concat($('#ccm-layout-save-preset-form').serializeArray());
 
-				formdata.push({'name': 'submit', 'value': 1});
+				formdata.push({'name': 'submit', 'value': 1});	
 
 				$.ajax({
 					url: url,
