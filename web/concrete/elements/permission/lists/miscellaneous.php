@@ -1,6 +1,6 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?>
 
-<table class="ccm-permission-grid">
+<table class="ccm-permission-grid table table-striped">
 <?
 $permissions = PermissionKey::getList('sitemap');
 $permissions = array_merge($permissions, PermissionKey::getList('marketplace_newsflow'));

@@ -16,6 +16,10 @@ table tr.package-selected td {
 	background-color: #D1EED1 !important;
 }
 
+table#sample-content-selector td.sample-content-thumbnail {
+	width: 97px;
+}
+
 table#sample-content-selector td {
 	cursor: pointer;
 	vertical-align: middle;

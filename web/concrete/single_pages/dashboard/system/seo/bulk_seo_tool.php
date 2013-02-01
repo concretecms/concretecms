@@ -131,7 +131,7 @@ if (count($pages) > 0) {
 			$cID = $cobj->getCollectionID();
 			$stripe = ($i % 2?'stripe':'');
 			?>
-			<div class="ccm-results-list">
+			<div class="ccm-results-list table table-condensed">
 				<div class="rowHolder <?php echo $stripe; ?> ccm-seoRow-<?php echo $cID; ?>" style="float: left;">
 					<form id="seoForm<?php echo $cID; ?>" action="<?php echo View::url('/dashboard/system/seo/page_data/', 'saveRecord')?>" method="post" class="pageForm">
 						<div class="headingsContainer">

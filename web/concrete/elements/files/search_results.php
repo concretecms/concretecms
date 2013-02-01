@@ -48,7 +48,7 @@ if (isset($_REQUEST['searchInstance'])) {
 	$bu = REL_DIR_FILES_TOOLS_REQUIRED . '/files/search_results';
 	
 	if (count($files) > 0) { ?>	
-		<table border="0" cellspacing="0" cellpadding="0" id="ccm-<?=$searchInstance?>-list" class="ccm-results-list">
+		<table border="0" cellspacing="0" cellpadding="0" id="ccm-<?=$searchInstance?>-list" class="table table-condensed ccm-results-list">
 		<tr>
 			<th><input id="ccm-<?=$searchInstance?>-list-cb-all" type="checkbox" /></th>
 			<th class="ccm-file-list-thumbnail-wrapper"><?=t('Thumbnail')?></th>

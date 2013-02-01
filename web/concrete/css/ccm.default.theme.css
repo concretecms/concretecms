@@ -34,6 +34,7 @@
 .row-fluid:after{clear:both;}
 .row-fluid [class*="span"]{display:block;width:100%;min-height:30px;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;float:left;margin-left:2.127659574468085%;*margin-left:2.074468085106383%;}
 .row-fluid [class*="span"]:first-child{margin-left:0;}
+.row-fluid .controls-row [class*="span"]+[class*="span"]{margin-left:2.127659574468085%;}
 .row-fluid .span12{width:100%;*width:99.94680851063829%;}
 .row-fluid .span11{width:91.48936170212765%;*width:91.43617021276594%;}
 .row-fluid .span10{width:82.97872340425532%;*width:82.92553191489361%;}
@@ -76,10 +77,6 @@
 .container:after{clear:both;}
 .container-fluid{padding-right:20px;padding-left:20px;*zoom:1;}.container-fluid:before,.container-fluid:after{display:table;content:"";line-height:0;}
 .container-fluid:after{clear:both;}
-body{padding:0px;margin:0px;background-color:#fff;line-height:24px;}
-body,div,td,input{font-family:"Helvetica Neue",Arial,Helvetica,sans-serif;}
-h1{color:#888;margin:0px 0px 30px 0px;border-bottom:1px dotted #888;padding-bottom:10px;font-size:32px;}
-h2{color:#303030;margin:0px 0px 10px 0px;font-size:18px;}
 div#ccm-logo{background:url(../images/bg_header.png) repeat-x;padding-bottom:5px;}
 div#ccm-theme-wrapper{width:640px;margin:0px auto 0px auto;background:#fff;padding:20px;}
 div.container{padding-top:50px;}

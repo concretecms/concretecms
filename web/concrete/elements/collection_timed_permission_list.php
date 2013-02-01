@@ -5,7 +5,7 @@
 $assignments = $cp->getAllTimedAssignmentsForPage();
 if (count($assignments) > 0) { ?>
 
-<table class="ccm-permission-grid">
+<table class="ccm-permission-grid table table-striped">
 <?
 foreach($assignments as $ppc) {
 	$pk = $ppc->getPermissionKeyObject();

@@ -95,7 +95,7 @@ class Concrete5_Helper_Form_UserSelector {
 	public function selectMultipleUsers($fieldName) {
 		
 		$html = '';
-		$html .= '<table id="ccmUserSelect' . $fieldName . '" class="ccm-results-list" cellspacing="0" cellpadding="0" border="0">';
+		$html .= '<table id="ccmUserSelect' . $fieldName . '" class="ccm-results-list table table-condensed" cellspacing="0" cellpadding="0" border="0">';
 		$html .= '<tr>';
 		$html .= '<th>' . t('Username') . '</th>';
 		$html .= '<th>' . t('Email Address') . '</th>';
