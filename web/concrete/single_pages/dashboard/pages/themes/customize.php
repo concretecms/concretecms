@@ -251,7 +251,7 @@ $ih = Loader::helper('concrete/interface');
                 $('div#jquery-font-panel-list-fonts div').removeClass('font-panel-list-selected');
                 $(this).addClass("font-panel-list-selected");
             });
-            $('div#jquery-font-panel-list-fonts div[font-panel-font=' + font + ']').addClass('font-panel-list-selected');
+            $('div#jquery-font-panel-list-fonts div[font-panel-font="' + font + '"]').addClass('font-panel-list-selected');
         },
     
         setupSizes: function(size) {
