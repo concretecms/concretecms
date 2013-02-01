@@ -13,6 +13,7 @@ if (is_object($trash) && !$trash->isError()) {
 	$pl = new PageList();
 	$pl->filterByParentID($trash->getCollectionID());
 	$pl->includeInactivePages();
+	$pl->displayUnapprovedPages();
 	$pages = $pl->get();	
 	foreach($pages as $pc) {
 		$cp = new Permissions($pc);
