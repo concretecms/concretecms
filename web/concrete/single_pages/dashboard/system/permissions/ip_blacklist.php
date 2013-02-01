@@ -23,7 +23,7 @@ $h = Loader::helper('concrete/dashboard');?>
 				<?php echo $form->radio('ip_ban_lock_ip_how_long_type', $ip_ban_lock_ip_how_long_type_forever, $ip_ban_lock_ip_how_long_type)?> <?php echo t('Forever')?>					
 			</div>
 			<h4><?php echo t('Automatically Banned IP Addresses')?></h4>
-			<table id="ip-blacklist" class="ccm-results-list" width="100%" cellspacing="1" cellpadding="0" border="0">	
+			<table id="ip-blacklist" class="ccm-results-list table table-condensed" width="100%" cellspacing="1" cellpadding="0" border="0">	
 				<thead>
 				<tr>
 					<th><?php echo $form->checkbox('ip_ban_select_all',1,false)?> <?php echo t('IP')?></th>

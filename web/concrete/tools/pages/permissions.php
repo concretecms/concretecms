@@ -118,7 +118,7 @@ $searchInstance = Loader::helper('text')->entities($_REQUEST['searchInstance']);
 <? $cat = PermissionKeyCategory::getByHandle('page'); ?>
 <form method="post" id="ccm-permission-list-form" action="<?=$cat->getToolsURL("save_permission_assignments")?><?=$cIDStr?>">
 
-<table class="ccm-permission-grid">
+<table class="ccm-permission-grid table table-striped">
 <?
 $permissions = PermissionKey::getList('page');
 foreach($permissions as $pk) { 

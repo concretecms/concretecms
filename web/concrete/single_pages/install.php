@@ -31,13 +31,13 @@ $(function() {
 			dataType: 'json',
 			error: function(r) {
 				$("#install-progress-wrapper").hide();
-				$("#install-progress-errors").append('<div class="alert-message error">' + r.responseText + '</div>');
+				$("#install-progress-errors").append('<div class="alert alert-error">' + r.responseText + '</div>');
 				$("#install-progress-error-wrapper").fadeIn(300);
 			},
 			success: function(r) {
 				if (r.error) {
 					$("#install-progress-wrapper").hide();
-					$("#install-progress-errors").append('<div class="alert-message error">' + r.message + '</div>');
+					$("#install-progress-errors").append('<div class="alert alert-error">' + r.message + '</div>');
 					$("#install-progress-error-wrapper").fadeIn(300);
 				} else {
 					$('#install-progress-bar div.bar').css('width', '<?=$routine->getProgress()?>%');
@@ -82,7 +82,7 @@ $(function() {
 </div>
 
 <div id="install-progress-wrapper">
-<div class="alert-message info">
+<div class="alert alert-info">
 <div id="install-progress-summary">
 <?=t('Beginning Installation')?>
 </div>
@@ -227,7 +227,7 @@ $(function() {
 		<tr class="<? if ($this->post('SAMPLE_CONTENT') == $pkgHandle || (!$this->post('SAMPLE_CONTENT') && $pkgHandle == 'standard') || count($availableSampleContent) == 1) { ?>package-selected<? } ?>">
 			<td><?=$form->radio('SAMPLE_CONTENT', $pkgHandle, ($pkgHandle == 'standard' || count($availableSampleContent) == 1))?></td>
 			<td class="sample-content-thumbnail"><img src="<?=$uh->getPackageIconURL($spl)?>" width="97" height="97" alt="<?=$spl->getPackageName()?>" /></td>
-			<td class="sample-content-description" width="100%"><h4><?=$spl->getPackageName()?></h4><p><?=$spl->getPackageDescription()?></td>
+			<td class="sample-content-description"><h4><?=$spl->getPackageName()?></h4><p><?=$spl->getPackageDescription()?></td>
 		</tr>
 		
 		<? } ?>
@@ -236,7 +236,7 @@ $(function() {
 		</table>
 		<br/>
 		<? if (!StartingPointPackage::hasCustomList()) { ?>
-			<div class="alert-message block-message info"><?=t('concrete5 veterans can choose "Empty Site," but otherwise we recommend starting with some sample content.')?></div>
+			<div class="alert alert-info"><?=t('concrete5 veterans can choose "Empty Site," but otherwise we recommend starting with some sample content.')?></div>
 		<? } ?>
 
 	
@@ -247,7 +247,7 @@ $(function() {
 <div class="span10 offset1">
 
 <div class="well">
-	<button class="btn btn-large primary" type="submit"><?=t('Install concrete5')?> <i class="icon-thumbs-up icon-white"></i></button>
+	<button class="btn btn-large btn-primary" type="submit"><?=t('Install concrete5')?> <i class="icon-thumbs-up icon-white"></i></button>
 </div>
 
 </div>
@@ -322,7 +322,7 @@ $(function() {
 <div class="row">
 <div class="span5 offset1">
 
-<table class="table table-striped">
+<table class="table table-striped requirements-table">
 <tbody>
 <tr>
 	<td><? if ($phpVtest) { ?><img src="<?=ASSETS_URL_IMAGES?>/icons/success.png" /><? } else { ?><img src="<?=ASSETS_URL_IMAGES?>/icons/warning.png" /><? } ?></td>
@@ -352,7 +352,7 @@ $(function() {
 </div>
 <div class="span5">
 
-<table class="table table-striped">
+<table class="table table-striped requirements-table">
 
 <tr>
 	<td><? if ($imageTest) { ?><img src="<?=ASSETS_URL_IMAGES?>/icons/success.png" /><? } else { ?><img src="<?=ASSETS_URL_IMAGES?>/icons/error.png" /><? } ?></td>
@@ -397,7 +397,7 @@ $(function() {
 <div class="row">
 <div class="span5 offset1">
 
-<table class="table table-striped">
+<table class="table table-striped requirements-table">
 <tbody>
 <tr>
 	<td><? if ($remoteFileUploadTest) { ?><img src="<?=ASSETS_URL_IMAGES?>/icons/success.png" /><? } else { ?><img src="<?=ASSETS_URL_IMAGES?>/icons/warning.png" /><? } ?></td>
@@ -415,11 +415,11 @@ $(function() {
 <div class="well" id="install-success">
 	<form method="post" action="<?=$this->url('/install','setup')?>">
 	<input type="hidden" name="locale" value="<?=$locale?>" />
-	<a class="btn btn-large primary" href="javascript:void(0)" onclick="$(this).parent().submit()"><?=t('Continue to Installation')?> <i class="icon-arrow-right icon-white"></i></a>
+	<a class="btn btn-large btn-primary" href="javascript:void(0)" onclick="$(this).parent().submit()"><?=t('Continue to Installation')?> <i class="icon-arrow-right icon-white"></i></a>
 	</form>
 </div>
 
-<div class="block-message alert-message error" id="install-errors">
+<div class="alert alert-error" id="install-errors">
 	<p><?=t('There are problems with your installation environment. Please correct them and click the button below to re-run the pre-installation tests.')?></p>
 	<div class="block-actions">
 	<form method="post" action="<?=$this->url('/install')?>">
@@ -429,7 +429,7 @@ $(function() {
 	</div>	
 </div>
 
-<div class="block-message alert-message info">
+<div class="alert alert-info">
 <?=t('Having trouble? Check the <a href="%s">installation help forums</a>, or <a href="%s">have us host a copy</a> for you.', 'http://www.concrete5.org/community/forums/installation', 'http://www.concrete5.org/services/hosting')?>
 </div>
 </div>
@@ -461,7 +461,7 @@ $(function() {
 	
 	</div>
 	
-	<div class="actions">
+	<div class="form-actions">
 	<?=$form->submit('submit', t('Choose Language'))?>
 	</div>
 </fieldset>

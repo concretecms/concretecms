@@ -54,7 +54,7 @@ if ($a instanceof SubArea && (!$a->overrideCollectionPermissions())) { ?>
 <? $cat = PermissionKeyCategory::getByHandle('area');?>
 
 <form method="post" id="ccm-permission-list-form" action="<?=$cat->getToolsURL("save_permission_assignments")?>&cID=<?=$c->getCollectionID()?>&arHandle=<?=$a->getAreaHandle()?>">
-<table class="ccm-permission-grid">
+<table class="ccm-permission-grid table table-striped">
 
 <?
 $permissions = PermissionKey::getList('area');

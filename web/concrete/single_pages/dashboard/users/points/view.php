@@ -30,7 +30,7 @@ Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Community
 		$keywords = $_REQUEST['keywords'];
 		
 		if (count($entries) > 0) { ?>	
-			<table border="0" cellspacing="0" cellpadding="0" id="ccm-product-list" class="ccm-results-list">
+			<table border="0" cellspacing="0" cellpadding="0" id="ccm-product-list" class="table table-condensed ccm-results-list">
 			<tr>
 				<th class="<?=$upEntryList->getSearchResultsClass('uName')?>"><a href="<?=$upEntryList->getSortByURL('uName', 'asc')?>"><?=t('User')?></a></th>
 				<th class="<?=$upEntryList->getSearchResultsClass('upaName')?>"><a href="<?=$upEntryList->getSortByURL('upaName', 'asc')?>"><?=t('Action')?></a></th>

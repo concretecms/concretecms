@@ -2,7 +2,7 @@
 
 <? $cat = PermissionKeyCategory::getByHandle('basic_workflow');?>
 
-<table class="ccm-permission-grid">
+<table class="ccm-permission-grid table table-striped">
 <?
 $permissions = PermissionKey::getList('basic_workflow');
 

@@ -1,5 +1,4 @@
-
-lessc -x ../web/concrete/css/ccm_app/build/ccm.account.less ../web/concrete/css/ccm.account.css
+	
 lessc -x ../web/concrete/css/ccm_app/build/redactor.less ../web/concrete/css/redactor.css
 lessc -x ../web/concrete/css/ccm_app/build/jquery.ui.less ../web/concrete/css/jquery.ui.css
 lessc -x ../web/concrete/css/ccm_app/build/jquery.rating.less ../web/concrete/css/jquery.rating.css
@@ -9,3 +8,4 @@ lessc -x ../web/concrete/css/ccm_app/build/ccm.dashboard.1200.less ../web/concre
 lessc -x ../web/concrete/css/ccm_app/build/ccm.colorpicker.less ../web/concrete/css/ccm.colorpicker.css
 lessc -x ../web/concrete/css/ccm_app/build/ccm.app.mobile.less ../web/concrete/css/ccm.app.mobile.css
 lessc -x ../web/concrete/css/ccm_app/build/ccm.app.less ../web/concrete/css/ccm.app.css
+lessc -x ../web/concrete/css/ccm_app/build/ccm.account.less ../web/concrete/css/ccm.account.css

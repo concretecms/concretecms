@@ -6,7 +6,7 @@ $items = $list->get();
 if (count($items) > 0) { ?>
 
 <div id="ccm-workflow-waiting-for-me-wrapper">
-<table class="ccm-results-list" id="ccm-workflow-waiting-for-me">
+<table class="ccm-results-list table table-condensed" id="ccm-workflow-waiting-for-me">
 <tr>
 	<th class="<?=$list->getSearchResultsClass('cvName')?>"><a href="<?=$list->getSortByURL('cvName', 'asc')?>"><?=t('Page Name')?></a></th>
 	<th><?=t('URL')?></th>

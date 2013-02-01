@@ -1,12 +1,3 @@
-cat ../web/concrete/js/bootstrap/bootstrap-tooltip.js \
-../web/concrete/js/bootstrap/bootstrap-popover.js \
-../web/concrete/js/bootstrap/bootstrap-dropdown.js \
-../web/concrete/js/bootstrap/bootstrap-transition.js \
-../web/concrete/js/bootstrap/bootstrap-alert.js > bootstrap.tmp.js
-
-uglifyjs -o ../web/concrete/js/bootstrap.js ./bootstrap.tmp.js
-rm bootstrap.tmp.js
-
 uglifyjs -o ../web/concrete/js/jquery.cookie.js ../web/concrete/js/ccm_app/jquery.cookie.js
 
 uglifyjs -o ../web/concrete/js/ccm.profile.js ../web/concrete/js/ccm_profile/base.js

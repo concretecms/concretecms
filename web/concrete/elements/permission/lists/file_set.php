@@ -2,7 +2,7 @@
 
 <? $cat = PermissionKeyCategory::getByHandle('file_set');?>
 
-<table class="ccm-permission-grid">
+<table class="ccm-permission-grid table table-striped">
 <?
 $permissions = PermissionKey::getList('file_set');
 
