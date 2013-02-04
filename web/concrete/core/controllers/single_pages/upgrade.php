@@ -198,26 +198,23 @@ class Concrete5_Controller_Upgrade extends Controller {
 		}
 	}
 	
-	protected function xmlAppend($element1, $element2) {
-		$to = dom_import_simplexml($element1);
-		$from = dom_import_simplexml($element2);
-		$to->appendChild($to->ownerDocument->importNode($from, true));
-	}
-
 	protected function refreshDatabaseTables($tables) { 
 		$dbxml = simplexml_load_file(DIR_BASE_CORE . '/config/db.xml');
 		
 		$output = new SimpleXMLElement("<schema></schema>");
 		$output->addAttribute('version', '0.3');
 		
+		$th = Loader::helper("text");
+
 		foreach($dbxml->table as $t) {
 			$name = (string) $t['name'];
 			if (in_array($name, $tables)) {
-				$this->xmlAppend($output, $t);
+				$th->appendXML($output, $t);
 			}
 		}
 		
 		$xml = $output->asXML();
+
 		if ($xml) {
 			$file = Loader::helper('file')->getTemporaryDirectory() . '/tmpupgrade_' . time() . '.xml';
 			@file_put_contents($file, $xml);
