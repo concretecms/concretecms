@@ -4,14 +4,14 @@
  * Helper class for sanitizing input and escaping output.
  * @package Helpers
  * @category Concrete 
- * @subpackage Validation
+ * @subpackage Security
  * @author Chris Rosser <chris@bluefuton.com>
  * @copyright  Copyright (c) 2003-2008 Concrete5. (http://www.concrete5.org)
  * @license    http://www.concrete5.org/license/     MIT License
  */
 
-class Concrete5_Helper_Security 
-{
+class Concrete5_Helper_Security {
+
     public static function sanitizeString($string)
     {
         return filter_var($string, FILTER_SANITIZE_STRING);
@@ -30,10 +30,5 @@ class Concrete5_Helper_Security
     public static function sanitizeEmail($email)
     {
         return filter_var($email, FILTER_VALIDATE_EMAIL);
-    }
-
-    public static function escapeHTML($string)
-    {
-        return htmlspecialchars($string, ENT_COMPAT, 'UTF-8');
     }
 }
