@@ -1,25 +1,25 @@
 <?
 	defined('C5_EXECUTE') or die("Access Denied.");
 	class Concrete5_Library_Localization {
-	
+
 		public function init() {
 			$loc = Localization::getInstance();
 			$loc->getTranslate();
 		}
-		
+
 		public static function getInstance() {
 			static $loc;
-			if (!isset($loc)) {			
+			if (!isset($loc)) {
 				$loc = new Localization();
 			}
 			return $loc;
 		}
-		
+
 		public static function changeLocale($locale) {
 			$loc = Localization::getInstance();
 			$loc->setLocale($locale);
 		}
-		
+
 		public static function activeLocale() {
 			$loc = Localization::getInstance();
 			return $loc->getLocale();
@@ -32,7 +32,7 @@
 			Loader::library('3rdparty/Zend/Translate');
 			$locale = defined('ACTIVE_LOCALE') ? ACTIVE_LOCALE : 'en_US';
 			$this->setLocale($locale);
-			if ($locale != 'en_US') {
+			if (ENABLE_TRANSLATE_LOCALE_EN_US || $locale != 'en_US') {
 				Zend_Date::setOptions(array('format_type' => 'php'));
 				$cache = Cache::getLibrary();
 				if (is_object($cache)) {
@@ -41,11 +41,11 @@
 				}
 			}
 		}
-		
+
 		public function setLocale($locale) {
-			if ($locale == 'en_US' && isset($this->translate)) {
+			if (!ENABLE_TRANSLATE_LOCALE_EN_US && $locale == 'en_US' && isset($this->translate)) {
 				unset($this->translate);
-			} else if ($locale != 'en_US' && is_dir(DIR_BASE . '/languages/' . $locale)) {
+			} else if ((ENABLE_TRANSLATE_LOCALE_EN_US || $locale != 'en_US') && is_dir(DIR_BASE . '/languages/' . $locale)) {
 				$options = array('adapter' => 'gettext');
 				if (defined('TRANSLATE_OPTIONS')) {
 					$_options = unserialize(TRANSLATE_OPTIONS);
@@ -67,7 +67,7 @@
 				}
 			}
 		}
-		
+
 		public function getLocale() {
 			return isset($this->translate) ? $this->translate->getLocale() : 'en_US';
 		}
@@ -88,21 +88,21 @@
 				$this->translate = new Zend_Translate(array('adapter' => 'gettext', 'content' => DIR_LANGUAGES_SITE_INTERFACE . '/' . $language . '.mo', 'locale' => $language, 'disableNotices' => true));
 			}
 		}
-		
+
 		public static function getTranslate() {
 			$loc = Localization::getInstance();
 			return $loc->getActiveTranslateObject();
 		}
-	
+
 		public static function getAvailableInterfaceLanguages() {
 			$languages = array();
 			$fh = Loader::helper('file');
-			
+
 			if (file_exists(DIR_LANGUAGES)) {
 				$contents = $fh->getDirectoryContents(DIR_LANGUAGES);
 				foreach($contents as $con) {
 					if (is_dir(DIR_LANGUAGES . '/' . $con) && file_exists(DIR_LANGUAGES . '/' . $con . '/LC_MESSAGES/messages.mo')) {
-						$languages[] = $con;					
+						$languages[] = $con;
 					}
 				}
 			}
@@ -110,14 +110,14 @@
 				$contents = $fh->getDirectoryContents(DIR_LANGUAGES_CORE);
 				foreach($contents as $con) {
 					if (is_dir(DIR_LANGUAGES_CORE . '/' . $con) && file_exists(DIR_LANGUAGES_CORE . '/' . $con . '/LC_MESSAGES/messages.mo') && (!in_array($con, $languages))) {
-						$languages[] = $con;					
+						$languages[] = $con;
 					}
 				}
 			}
-			
+
 			return $languages;
 		}
-	
+
 
 	}
 
