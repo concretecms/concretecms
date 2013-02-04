@@ -41,7 +41,7 @@ class Concrete5_Job_RemoveOldPageVersions extends Job {
 		$versionCount = 0;
 		if(count($pages) == 0) {
 			$cfg->save('OLD_VERSION_JOB_PAGE_NUM',0);
-			return t("All pages have been processes, starting from beginning on next run.");
+			return t("All pages have been processed, starting from beginning on next run.");
 		}
 		foreach($pages as $page) {
 			if($page instanceof Page) {
