@@ -28,6 +28,12 @@ class Concrete5_Helper_Date {
 	public function getLocalDateTime($systemDateTime = 'now', $mask = NULL) {
 		if(!isset($mask) || !strlen($mask)) {
 			$mask = 'Y-m-d H:i:s';
+			if (Localization::activeLocale() != 'en_US') {
+				// When locale is not 'en_US', Zend_Date object is used to
+				// convert the time to date string. And it requires different
+				// format for the mask (check the constants in Zend_Date object).
+				$mask = 'Y-MM-dd HH:mm:ss';
+			}
 		}
 		
 		$req = Request::get();
