@@ -27,6 +27,9 @@ if ($controller->hasVoted()) { ?>
 			$graphColors[]=array_pop($availableChartColors);
 			$totalVotes+=intval($opt->getResults());
 		}
+		foreach ($optionResults as &$value){
+			$value=round($value/$totalVotes*100,0);
+		}		
 		?>
 		
 		<strong><?=t("Question")?>: <?=$controller->getQuestion()?></strong>
