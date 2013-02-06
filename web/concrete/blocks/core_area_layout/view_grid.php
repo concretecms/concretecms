@@ -9,7 +9,7 @@
 <? if ($c->isEditMode()) {
 	$bp = new Permissions($b);
 	if ($bp->canEditBlock()) { ?>
-		<div class="ccm-area-layout-control-bar" data-handle="block-menu-b<?=$b->getBlockID()?>-<?=$a->getAreaID()?>"></div>
+		<div class="ccm-area-layout-control-bar" id="ccm-area-layout-control-bar-<?=$b->getBlockID()?>-<?=$a->getAreaID()?>"></div>
 	<? } ?>
 
 <? } ?>

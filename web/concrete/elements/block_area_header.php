@@ -1,2 +1,2 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?>
-<div id="a<?=$a->getAreaID()?>" data-cID="<?=$a->getCollectionID()?>" data-area-handle="<?=$a->getAreaHandle()?>" class="ccm-area">
+<div id="a<?=$a->getAreaID()?>" data-cID="<?=$a->getCollectionID()?>" data-menu-disable-highlight="true" data-menu="area-menu-a<?=$a->getAreaID()?>" data-menu-handle="area-menu-footer-<?=$a->getAreaID()?>" class="ccm-area">

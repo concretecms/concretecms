@@ -28,9 +28,9 @@ if ($a instanceof SubArea) {
 
 <div class="<?=$class?> ccm-ui">
 
-<div class="ccm-area-footer-handle" data-handle="area-menu-a<?=$a->getAreaID()?>"><?=$a->getAreaDisplayName()?></div>
+<div class="ccm-area-footer-handle" id="area-menu-footer-<?=$a->getAreaID()?>"><?=$a->getAreaDisplayName()?></div>
 
-<div class="popover fade" data-menu="area-menu-a<?=$a->getAreaID()?>">
+<div class="popover fade" id="area-menu-a<?=$a->getAreaID()?>">
 	<div class="arrow"></div>
 	<div class="popover-inner">
 	<ul class="dropdown-menu">
