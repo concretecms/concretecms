@@ -1,7 +1,6 @@
 <? 
 defined('C5_EXECUTE') or die("Access Denied.");
 ?>
-</div>
 
 <? 
 
@@ -14,17 +13,20 @@ defined('C5_EXECUTE') or die("Access Denied.");
 // note, we're also passed an area & collection object from the original function
 
 $arHandle = $a->getAreaHandle();
-$arHandleTrunc = strtolower(preg_replace("/[^0-9A-Za-z]/", "", $a->getAreaHandle()));
-
 $c = $a->getAreaCollectionObject();
 $cID = $c->getCollectionID();
 $u = new User();
 $ap = new Permissions($a);
 $cp = new Permissions($c);
 
-if (!$c->isArrangeMode()) { ?>
+$class = 'ccm-area-footer';
+if ($a instanceof SubArea) {
+	$class = 'ccm-sub-area-footer';
+}
 
-<div id="a<?=$a->getAreaID()?>controls" class="ccm-area-footer ccm-ui">
+?>
+
+<div class="<?=$class?> ccm-ui">
 
 <div class="ccm-area-footer-handle" data-handle="area-menu-a<?=$a->getAreaID()?>"><?=$a->getAreaDisplayName()?></div>
 
@@ -71,12 +73,9 @@ if (!$c->isArrangeMode()) { ?>
 		<li><a dialog-title="<?=t('Area Permissions')?>" class="dialog-launch" dialog-modal="false" dialog-width="425" dialog-height="430" id="menuAreaStyle<?=$a->getAreaID()?>" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_area_popup.php?cID=<?=$c->getCollectionID()?>&arHandle=<?=urlencode($a->getAreaHandle())?>&atask=groups"><i class="icon-lock"></i> <?=t("Permissions")?></a></li>		
 	<? } ?>
 
-
-
 	<!-- dropdown menu links -->
 	</ul>
 	</div>
 </div>
-
 </div>
-<? } ?>
+</div>
