@@ -12,30 +12,24 @@ $.fn.ccmmenu = function() {
 
 	return $.each($(this), function(i, obj) {
 		var $this = $(obj), 
-			$selector;
+			$menulauncher;
 
 		if (!$this.prop('has-menu')) {
 			$this.prop('has-menu', true);
-			if ($this.attr('data-handle')) {
-				$selector = $this;
+			$this.prop('disable-highlight', $this.attr('data-menu-disable-highlight'));
+
+			if (!$this.attr('data-menu-handle')) {
+				$menulauncher = $this;
 			} else {
-				$selector = $this.find('[data-handle]');
+				$menulauncher = $('#' + $this.attr('data-menu-handle'));
 			}
 
-			var $menu = $this.find('[data-menu=' + $selector.attr('data-handle') + ']');
+			var $menu = $('#' + $this.attr('data-menu'));
 			$this.$menu = $menu;
 
-			if ($selector.attr('data-disable-highlight')) {
-				$selector.on('click', function(e) {
-					if ($.fn.ccmmenu.isenabled) {
-						$.fn.ccmmenu.show(e, $this);
-					}
-				});
-			} else {
-				$selector.mousemove(function(e) {
-					$.fn.ccmmenu.over(e, $this, $selector);
-				});
-			}
+			$menulauncher.mousemove(function(e) {
+				$.fn.ccmmenu.over(e, $this, $menulauncher);
+			});
 		}
 	});
 }
@@ -44,6 +38,7 @@ $.fn.ccmmenu = function() {
 $.fn.ccmmenu.out = function(e) {
 	if (!$.fn.ccmmenu.isactive) {
 		$.fn.ccmmenu.$highlighter.css("opacity", 0);
+		$('.ccm-menu-item-active').removeClass('ccm-menu-item-active');
 	}
 }
 
@@ -52,7 +47,11 @@ $.fn.ccmmenu.enable = function() {
 	if ($("#ccm-highlighter").length == 0) {
 		$(document.body).append($("<div />", {'id': 'ccm-highlighter'}));
 	}
+	if ($("#ccm-popover-menu-container").length == 0) {
+		$(document.body).append($("<div />", {'id': 'ccm-popover-menu-container', 'class': 'ccm-ui'}));
+	}
 	$.fn.ccmmenu.$highlighter = $('#ccm-highlighter');
+	$.fn.ccmmenu.$holder = $('#ccm-popover-menu-container');
 
 	$.fn.ccmmenu.$highlighter.on('mouseout.highlighter', function(e) {
 		$.fn.ccmmenu.out(e);
@@ -72,26 +71,32 @@ $.fn.ccmmenu.disable = function() {
 	$.fn.ccmmenu.$highlighter.remove();
 }
 
-$.fn.ccmmenu.over = function(e, $this, $selector) {
+$.fn.ccmmenu.over = function(e, $this, $menulauncher) {
 
 	if ($.fn.ccmmenu.isenabled && (!$.fn.ccmmenu.isactive)) {
 
-		if ($selector) {
+		$('.ccm-menu-item-active').removeClass('ccm-menu-item-active');
 
-			var offset = $selector.offset();
-			$.fn.ccmmenu.$highlighter.css('width', $selector.outerWidth())
-			.css('height', $selector.outerHeight())
+		if ($menulauncher) {
+
+			var offset = $menulauncher.offset();
+			$.fn.ccmmenu.$highlighter.css('width', $menulauncher.outerWidth())
+			.css('height', $menulauncher.outerHeight())
 			.css('top', offset.top)
 			.css('left', offset.left)
-			.css('border-top-left-radius', $selector.css('border-top-left-radius'))
-			.css('border-bottom-left-radius', $selector.css('border-bottom-left-radius'))
-			.css('border-top-right-radius', $selector.css('border-top-right-radius'))
-			.css('border-bottom-right-radius', $selector.css('border-bottom-right-radius'));
+			.css('border-top-left-radius', $menulauncher.css('border-top-left-radius'))
+			.css('border-bottom-left-radius', $menulauncher.css('border-bottom-left-radius'))
+			.css('border-top-right-radius', $menulauncher.css('border-top-right-radius'))
+			.css('border-bottom-right-radius', $menulauncher.css('border-bottom-right-radius'));
 
 			$.fn.ccmmenu.$overmenu = $this;
 		}
-
-		$.fn.ccmmenu.$highlighter.css('opacity', '0.6');
+		$.fn.ccmmenu.$overmenu.addClass('ccm-menu-item-active');
+		if ($.fn.ccmmenu.$overmenu.prop('disable-highlight')) {
+			$.fn.ccmmenu.$highlighter.css('opacity', 0);
+		} else {
+			$.fn.ccmmenu.$highlighter.css('opacity', '0.2');
+		}
 	}
 }
 
@@ -102,6 +107,8 @@ $.fn.ccmmenu.hide = function(e) {
 	
 	$.fn.ccmmenu.isactive = false;
 	$.fn.ccmmenu.$highlighter.css("opacity", 0);
+	$.fn.ccmmenu.$holder.html('');
+	$('.ccm-menu-item-active').removeClass('ccm-menu-item-active');
 	$(document.body).unbind('click.disableccmmenu');
 	$('div.popover').css('opacity', 0).hide();
 }
@@ -111,12 +118,11 @@ $.fn.ccmmenu.show = function(e, $this) {
 	e.stopPropagation();
 
 	$.fn.ccmmenu.isactive = true;
-
-	var $pp = $this.$menu;
+	$.fn.ccmmenu.$holder.html('');
+	var $pp = $this.$menu.clone().appendTo($.fn.ccmmenu.$holder);
 
 	var posX = e.pageX + 2;
 	var posY = e.pageY + 2;
-
 
 	$pp.css('opacity', 0).show();
 	var mheight = $pp.height(),

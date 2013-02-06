@@ -22,7 +22,9 @@ ccm_editInit = function() {
 
 ccm_editMenuInit = function() {
 	$('a.dialog-launch').dialog();
-	$('.ccm-area-footer,.ccm-block-edit,.ccm-block-edit-layout').ccmmenu();
+	$('.ccm-area').ccmmenu();
+	$('.ccm-block-edit').ccmmenu();
+	$('.ccm-block-edit-layout').ccmmenu();
 }
 
 ccm_goToSitemapNode = function(cID, cName) {
