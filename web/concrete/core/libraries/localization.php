@@ -32,8 +32,10 @@
 			Loader::library('3rdparty/Zend/Translate');
 			$locale = defined('ACTIVE_LOCALE') ? ACTIVE_LOCALE : 'en_US';
 			$this->setLocale($locale);
+			// Zend_Date format type needs to always be php also in the cases
+			// when the locale gets changed after constructing the class.
+			Zend_Date::setOptions(array('format_type' => 'php'));
 			if ($locale != 'en_US') {
-				Zend_Date::setOptions(array('format_type' => 'php'));
 				$cache = Cache::getLibrary();
 				if (is_object($cache)) {
 					Zend_Translate::setCache($cache);
