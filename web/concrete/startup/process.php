@@ -479,6 +479,19 @@
 					exit;
 				}
 				break;
+			case 'create-draft':
+				if ($cp->canAddSubpage()) {
+
+					$parent = Page::getByPath(COMPOSER_DRAFTS_PAGE_PATH);
+					$data['cvIsApproved'] = 0;
+					$ct = CollectionType::getByHandle('full');
+					$p = $parent->add($ct, $data);
+					$p->deactivate();
+					
+					header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?mode=edit&ctask=check-out-first&cID=' . $p->getCollectionID() . $token);
+					exit;
+				}
+				break;
 			case 'approve-recent':
 				if ($cp->canApprovePageVersions()) {
 					$u = new User();

@@ -1,191 +1,53 @@
 /** 
- * The concrete5 in-page editing UI
+ * Blocks
  */
- 
-#ccm-dashboard-composer-form div.ccm-block-stack,
-#ccm-dashboard-composer-form div.ccm-block-alias,
-#ccm-dashboard-composer-form div.ccm-block-global,
-#ccm-dashboard-composer-form div.ccm-block-edit {
-	margin: 0px;
-	padding: 0px;
-	border: 0px;
-}
 
- div.ccm-block-alias {
-	outline: 1px solid rgba(0,0,0,0.3);
-}
-
-div.ccm-block-stack {
-	outline: 1px solid rgba(8,144,248,0.3);
-}
-
-div.ccm-block-edit-disabled, div.ccm-block-arrange, div.ccm-block-edit {
-	margin: 1px 0px 3px 0px;
-	outline: 1px solid rgba(255,0,0,0.4);
-	overflow: hidden;
-}
-
-div.ccm-block-edit-layout {
-	/*
-	overflow: hidden;
-	*/
-	outline: 0px !important;
-}
-
-div.ccm-menu-hotspot-active {
-	outline: 1px solid black !important;
-}
-
-div.ccm-block-arrange {
-	min-height: 20px;
-	max-height: 200px;
-	overflow: hidden;
-}
-
-div.ccm-area div.ccm-block-arrange:hover {
-	cursor: move;
-	outline: 1px solid #000;
-}
-
-div.ccm-global-area div.ccm-block-arrange {
-	opacity: 0.2;
-}
-
-div.ccm-area-footer-global div.ccm-area-footer-handle {
-	outline: 1px solid rgba(0,0,0,0.3);
-}
-
-div.ccm-area-footer-handle {
-	padding: 5px;
-	margin: 1px;
-	font-size: 11px;
-	white-space: nowrap;
-	font-weight: bold; 
-	outline: 1px solid rgba(0,0,0,0.3);
-	transition: opacity 0.5s linear;
-	-webkit-transition: opacity 0.5s linear;
-	-moz-transition: opacity 0.5s linear;
-}
-
-div.ccm-area-layout-control-bar {
-	background: rgba(48,190,247,0.2);
-	.border-radius(4px);
-	height: 12px;
-	line-height: 12px;
-	margin-bottom: 6px;
-	margin-top: 10px;
-	position: relative;
-}
-
-div.ccm-area-layout-control-bar-add {
-	height: 0px;
-	overflow: hidden;
-}
-
-div.ccm-area-layout-control-bar .ui-slider-handle {
-	top: -6px;
-}
-
-div.ccm-area-layout-control-bar i {
-	position: absolute;
-	top: -2px;
-	z-index: 10;
-	left: -2px;
-}
-
-.ccm-ui div.popover ul.dropdown-menu { 
-
-	position: static; 
-	display: block;
-	margin: 0px !important;
-	float: none !important;
-	padding: 0px;
-	border: 0px;
-	-webkit-box-shadow: none !important;
-	-moz-box-shadow: none !important;
-	box-shadow: none !important;
-
-	li:last-child a {
-		.border-bottom-radius(4px);
-	}
-
-	li:first-child a {
-		.border-top-radius(4px);
-	}
-
-	li {
-
-	display: block !important;
-	
-
-	a {
-		color: @dropdownLinkColor !important;
-		text-decoration: none !important;
-		padding: 3px 12px !important;
-	}
-	a:hover {
-		#gradient > .vertical(#E2F3FF, #DDF1FF);	
-	
-		i {
-			background-image: url("../images/glyphicons-halflings.png");
-		}
-		
-	}
-
-
-
-	font-family: @baseFontFamily !important;
-	font-size: @baseFontSize !important;
-	line-height: @baseLineHeight !important;
-	
-	}
-
-	.divider {margin: 9px 1px !important;}
-}
-
-.ccm-ui div.popover ul.dropdown-menu a:hover {
-  color: @dropdownLinkColor !important;
-  text-decoration: none !important;
- }
-
-div.ccm-block-edit-inline-active {
-	outline: 1px solid rgba(0,105,185,0.6);
-}
-
-div.ccm-block-edit-disabled {
-	opacity: 0.2 !important;
-	transition: opacity 0.5s linear;
-	-webkit-transition: opacity 0.5s linear;
-	-moz-transition: opacity 0.5s linear;
-
-}
-
-div.ccm-block-edit {
-	transition: opacity 0.5s linear;
-	-webkit-transition: opacity 0.5s linear;
-	-moz-transition: opacity 0.5s linear;
-}
-
-div.ccm-move-mode {
-	outline: 1px solid rgba(0,0,0,0.7);
-	min-height: 20px;
-}
-
-div#ccm-highlighter {
-	background: #000;
-	opacity: 0;
-	z-index: 5;
-	height: 0px;
-	width: 0px;
-	position: absolute;
+div.ccm-block-edit {-webkit-transition: box-shadow 0.1s ease-in-out, opacity 0.2s linear; box-shadow: 0px 0px 2px 2px rgba(0,0,0,0);}
+div.ccm-block-edit-active {box-shadow: 0px 0px 2px 2px #94D5FA;}
+div.ccm-block-edit, div.ccm-area {
 	cursor: pointer;
-	transition: opacity 0.1s linear;
-	-webkit-transition: opacity 0.1s linear;
-	-moz-transition: opacity 0.1s linear;
+	position: relative;
+	opacity: 1;
 }
 
-div.ccm-edit-mode-disabled-item{background: #ddd; color:#aaa; outline:1px solid #888; text-align:center; font-size:14px; font-family: Helvetica Neue, Arial, Helvetica; font-weight: bold; padding:0px; line-height:21px}
 
-/* keep redactor from popping in weird */
-ul.redactor_toolbar {visibility: hidden;}
+/* Area Menu */
+div.ccm-area-footer-handle {font-weight: lighter; color: #fff; padding: 5px 0px 0px 10px}
+div.ccm-area-footer {
+	opacity: 0; 
+	-webkit-transition: opacity 0.1s ease-in-out; 
+	background-color: #444;
+	border-left: 1px solid #999; border-bottom: 1px solid #999; border-right: 1px solid #999;
+	border-bottom-left-radius: 4px;
+	border-bottom-right-radius: 4px;
+	position: absolute;
+	bottom: -33px;
+	height: 30px;
+	width: 100%;
+}
 
+div.ccm-sub-area-footer {
+	opacity: 0; 
+	-webkit-transition: opacity 0.1s ease-in-out; 
+	background-color: #888;
+	border-top-left-radius: 4px;
+	border-top-right-radius: 4px;
+	position: absolute;
+	bottom: 0px;
+	height: 30px;
+	width: 100%;
+}
+
+div.ccm-area-active {
+	box-shadow: 0px 0px 2px 2px rgba(0,0,0,0.5); 
+}
+div.ccm-area-active > div.ccm-area-footer, div.ccm-area-active > div.ccm-sub-area-footer {display: block; opacity: 1;}
+
+div.ccm-area-drag-active {
+	-webkit-transition: all 0.1s ease-in-out; 
+	box-shadow: 0px 0px 2px 2px rgba(255,0,0,0.2); 
+}
+div.ccm-area-drag-over {
+	-webkit-transition: all 0.1s ease-in-out; 
+	box-shadow: 0px 0px 2px 2px rgba(255,0,0,0.4); 
+}
