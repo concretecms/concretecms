@@ -1,0 +1,107 @@
+.ccm-sub-toolbar {
+	font-family: Helvetica, Arial, Verdana, Tahoma, sans-serif !important;
+	position: fixed;
+	left: 0;
+	top: 50px;
+	width: 100%;
+	z-index: 1000;
+	visibility: visible;
+	margin: 0 !important;
+	padding: 0 !important;
+	padding-left: 2px;
+	line-height: 0;
+	list-style: none;
+	background: #f1f1f1;
+	#gradient > .vertical(#f1f1f1, #e2e2e2);	
+	height: 34px;
+	border-bottom: 1px solid #bbb;
+
+	> li {
+		float: left;
+		list-style: none;
+		outline: none;
+		padding-right: 0;
+	}
+
+	> li.ccm-sub-toolbar-text-cell {
+		font-family: Helvetica, Arial, Verdana, Tahoma, sans-serif !important;
+		margin: 2px 0px 0px 0px;
+		padding: 3px 1px;
+		font-size: 11px;
+		line-height: 11px;
+
+		select {
+			width: 60px !important;
+		}
+
+		label, input, select {
+			margin-left: 2px !important;
+			vertical-align: middle !important;
+			display: inline !important;
+			margin-top: 0px !important;
+			font-size: 11px !important;
+			margin-bottom: 0px !important;
+		}
+
+		select {
+			height: 18px !important;
+		}
+
+		label {
+			line-height: 24px !important; 
+		}
+
+		input[type=text] {
+			height: 11px !important;
+			line-height: 11px !important;
+			padding: 1px !important;
+		}
+	}
+	
+	> li.ccm-sub-toolbar-icon-cell > a {
+		width: 25px;
+		height: 25px;
+		margin: 4px 0px 0px 2px;
+		border: 1px solid transparent;
+		display: block;
+		line-height: 0;
+		padding: 0px;
+		cursor: pointer;
+		zoom: 1;
+		outline: none;
+		text-decoration: none;
+
+		i {
+			margin-top: 5px !important;
+			margin-left: 5px !important;
+		}
+	}
+
+	> li.ccm-sub-toolbar-icon-cell > a:hover {
+		border-color: #b2b2b2 !important;
+		border-radius: 2px !important;
+		background-color: #b2b2b2 !important;
+		outline: none;
+	}
+
+	> li.ccm-sub-toolbar-icon-cell > a:active {
+		border-color: #b5b5b5;
+		background-color: #ddd;
+		outline: none;
+	}
+
+	li.ccm-sub-toolbar-separator {
+		float: left;
+		height: 34px;
+		border-left: 1px solid #d3d3d3 !important;
+		border-right: 1px solid #f1f1f1 !important;
+		padding: 0px !important;
+		width: 0px !important;
+		margin: 0 5px 0 5px !important;
+	}
+
+	.btn-group {
+		display: inline-block;
+	}
+
+}

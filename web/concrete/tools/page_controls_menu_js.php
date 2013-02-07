@@ -170,7 +170,7 @@ menuHTML += '<?=t('Page last edited on %s', $c->getCollectionDateLastModified(DA
 
 menuHTML += '</div>';
 
-<? if (!$cantCheckOut) { ?>
+<? if (!$cantCheckOut && !$c->isEditMode()) { ?>
 
 menuHTML += '<div id="ccm-edit-overlay-footer">';
 menuHTML += '<div class="ccm-edit-overlay-inner">';
@@ -210,6 +210,46 @@ menuHTML += '</div>';
 	}
 	
 } ?>
+
+<? if ($c->isEditMode()) { ?>
+	menuHTML += '<ul class="ccm-sub-toolbar" id="ccm-edit-page-sub-toolbar">';
+	<? if ($cp->canEditPageProperties()) { ?>
+		menuHTML += '<li class="ccm-sub-toolbar-icon-cell"><a dialog-width="850" title="<?=t('Edit Properties')?>" dialog-height="450" dialog-append-buttons="true" dialog-modal="false" class="dialog-launch" dialog-title="<?=t('Page Properties')?>" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_collection_popup.php?<? if ($cp->canApprovePageVersions() && (!$c->isEditMode())) { ?>approveImmediately=1<? } ?>&cID=<?=$c->getCollectionID()?>&ctask=edit_metadata"><i class="icon-cog"></i></a></li>';
+	<? } ?>
+	<? if ($cp->canEditPageTheme() || $cp->canEditPageType()) { ?>
+		menuHTML += '<li class="ccm-sub-toolbar-icon-cell"><a class="dialog-launch" title="<?=t('Change Theme or Page Type')?>" dialog-width="610" dialog-height="405" dialog-modal="false" dialog-title="<?=t('Design')?>" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_collection_popup.php?cID=<?=$cID?>&ctask=set_theme"><i class="icon-font"></i></a></li>';
+	<? } ?>
+	<? if ($cp->canEditPageProperties()) { ?>
+		menuHTML += '<li class="ccm-sub-toolbar-icon-cell"><a class="dialog-launch" title="<?=t('Add Block')?>" dialog-width="640" dialog-height="400" dialog-modal="false" dialog-title="<?=t('Add Block')?>" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/add_block"><i class="icon-plus"></i></a></li>';
+	<? } ?>
+	<? if ($cp->canEditPageTheme() || $cp->canEditPageType() || $cp->canEditPageProperties()) { ?>
+		menuHTML += '<li class="ccm-sub-toolbar-separator"></li>';
+	<? } ?>
+	<? if ($cp->canViewPageVersions()) { ?>
+		menuHTML += '<li class="ccm-sub-toolbar-icon-cell"><a class="dialog-launch" dialog-width="640" dialog-height="340" dialog-modal="false" title="<?=t('Page Versions')?>" dialog-title="<?=t('Page Versions')?>" id="menuVersions<?=$cID?>" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/versions.php?cID=<?=$cID?>"><i class="icon-th-list"></i></a></li>';
+	<? } ?>
+	<? if ($cp->canEditPageSpeedSettings()) { ?>
+		menuHTML += '<li class="ccm-sub-toolbar-icon-cell"><a class="dialog-launch" dialog-width="550" dialog-height="280" dialog-modal="false" title="<?=t('Speed Settings')?>" dialog-title="<?=t('Speed Settings')?>" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_collection_popup.php?&cID=<?=$cID?>&ctask=edit_speed_settings"><i class="icon-fire"></i></a></li>';
+	<? } ?>
+	<? if ($cp->canEditPagePermissions()) { ?>
+		menuHTML += '<li class="ccm-sub-toolbar-icon-cell"><a class="dialog-launch" title="<?=t('Page Permissions')?>" dialog-width="420" dialog-height="630" dialog-modal="false" dialog-title="<?=t('Permissions')?>" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_collection_popup.php?&cID=<?=$cID?>&ctask=edit_permissions"><i class="icon-lock"></i> </a></li>';
+	<? } ?>
+	<? if (($cp->canPreviewPageAsUser() && PERMISSIONS_MODEL == 'advanced')) { ?>
+		menuHTML += '<li class="ccm-sub-toolbar-icon-cell"><a class="dialog-launch" dialog-width="90%" dialog-height="70%" title="<?=t('Preview as User')?>" dialog-append-buttons="true" dialog-modal="false" dialog-title="<?=t('View Page as Someone Else')?>" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_collection_popup.php?cID=<?=$c->getCollectionID()?>&ctask=preview_page_as_user"><i class="icon-eye-open"></i></a></li>';
+	<? } ?>
+	<? if ($cp->canViewPageVersions() || $cp->canEditPageSpeedSettings() || $cp->canEditPagePermissions() || ($cp->canPreviewPageAsUser && PERMISSIONS_MODEL == 'advanced')) { ?>
+		menuHTML += '<li class="ccm-sub-toolbar-separator"></li>';
+		<? } ?>
+	<? if ($cp->canMoveOrCopyPage()) { ?>
+		menuHTML += '<li class="ccm-sub-toolbar-icon-cell"><a class="dialog-launch" title="<?=t('Move/Copy')?>" ialog-width="90%" dialog-height="70%" dialog-modal="false" dialog-title="<?=t('Move/Copy Page')?>" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/sitemap_search_selector?sitemap_select_mode=move_copy_delete&cID=<?=$cID?>"><i class="icon-share-alt"></i></a></li>';
+	<? } ?>
+	<? if ($cp->canDeletePage()) { ?>
+		menuHTML += '<li class="ccm-sub-toolbar-icon-cell"><a class="dialog-launch" title="<?=t('Delete Page')?>" dialog-width="360" dialog-height="150" dialog-modal="false" dialog-title="<?=t('Delete Page')?>" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_collection_popup.php?&cID=<?=$cID?>&ctask=delete"><i class="icon-trash"></i></a></li>';
+	<? } ?>
+	menuHTML += '</ul>';
+
+<? } ?>
+
 
 $(function() {
 	<? if ($c->isEditMode()) { ?>
