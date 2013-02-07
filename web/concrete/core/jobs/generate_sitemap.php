@@ -127,11 +127,12 @@ class Concrete5_Job_GenerateSitemap extends Job {
 		$lastmod = new DateTime($page->getCollectionDateLastModified());
 		$changefreq = $page->getAttribute('sitemap_changefreq');
 		$priority = $page->getAttribute('sitemap_priority');
+		$url = SITEMAPXML_BASE_URL . $instances['navigation']->getLinkToCollection($page);
 		if(!@fprintf(
 			$hFile,
 			"%1\$s\t<url>%1\$s\t\t<loc>%2\$s</loc>%1\$s\t\t<lastmod>%3\$s</lastmod>%1\$s\t\t<changefreq>%4\$s</changefreq>%1\$s\t\t<priority>%5\$s</priority>%1\$s\t</url>",
 			self::EOL,
-			$instances['navigation']->getCollectionURL($page),
+			$url,
 			$lastmod->format(DateTime::ATOM),
 			htmlspecialchars(($changefreq == '') ? SITEMAPXML_DEFAULT_CHANGEFREQ : $changefreq),
 			htmlspecialchars(($priority == '') ? SITEMAPXML_DEFAULT_PRIORITY : $priority)

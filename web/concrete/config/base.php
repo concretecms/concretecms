@@ -570,3 +570,9 @@ if(!defined('SITEMAPXML_DEFAULT_PRIORITY')) {
 	*/
 	define('SITEMAPXML_DEFAULT_PRIORITY', 0.5);
 }
+if(!defined('SITEMAPXML_BASE_URL')) {
+	/** The base url for building the page urls, will use the BASE_URL constant if not defined
+	* @var string
+	*/
+	define('SITEMAPXML_BASE_URL', BASE_URL);
+}
