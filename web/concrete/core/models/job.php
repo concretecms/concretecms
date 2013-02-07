@@ -95,16 +95,15 @@ abstract class Concrete5_Model_Job extends Object {
 	}
 	
 	public static function exportList($xml) {
-		$jl = self::getList();
-		if ($jl->numRows() > 0) {
+		$jobs = self::getList();
+		if (count($jobs) > 0) {
 			$jx = $xml->addChild('jobs');
-			while($r = $jl->FetchRow()) {
-				$j = Job::getByID($r['jID']);
+			foreach($jobs as $j) { 
 				$ch = $jx->addChild('job');
 				$ch->addAttribute('handle',$j->getJobHandle());
 				$ch->addAttribute('package',$j->getPackageHandle());
 			}
-		}	
+		}
 	}
 
 	// Job Retrieval 
