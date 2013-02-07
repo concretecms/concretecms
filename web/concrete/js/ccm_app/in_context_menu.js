@@ -61,8 +61,8 @@ $.fn.ccmmenu.enable = function() {
 		$.fn.ccmmenu.over(e);
 	});
 
-	$.fn.ccmmenu.$highlighter.on('click.highlighter', function(e) {
-		$.fn.ccmmenu.show(e, $.fn.ccmmenu.$overmenu);
+	$.fn.ccmmenu.$highlighter.unbind('click.highlighter').on('click.highlighter', function(e) {
+		$.fn.ccmmenu.showmenu(e, $.fn.ccmmenu.$overmenu);
 	});
 }
 
@@ -113,13 +113,14 @@ $.fn.ccmmenu.hide = function(e) {
 	$('div.popover').css('opacity', 0).hide();
 }
 
-$.fn.ccmmenu.show = function(e, $this) {
+$.fn.ccmmenu.showmenu = function(e, $this) {
 
 	e.stopPropagation();
 
 	$.fn.ccmmenu.isactive = true;
-	$.fn.ccmmenu.$holder.html('');
-	var $pp = $this.$menu.clone().appendTo($.fn.ccmmenu.$holder);
+
+	var $pp = $this.$menu.clone(true, true);
+	$pp.appendTo($.fn.ccmmenu.$holder);
 
 	var posX = e.pageX + 2;
 	var posY = e.pageY + 2;

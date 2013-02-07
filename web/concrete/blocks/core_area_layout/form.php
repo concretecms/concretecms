@@ -5,8 +5,8 @@
 	$presets = AreaLayoutPreset::getList();
 ?>
 
-<ul id="ccm-layouts-toolbar" class="ccm-ui">
-	<li data-area-presets-view="presets" class="toolbar-icon-cell"><a class="toolbar-icon dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)"><i class="icon-bookmark"></i></a>
+<ul id="ccm-layouts-toolbar" class="ccm-sub-toolbar ccm-ui">
+	<li data-area-presets-view="presets" class="ccm-sub-toolbar-icon-cell"><a class="toolbar-icon dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)"><i class="icon-bookmark"></i></a>
 	  <ul class="dropdown-menu ccm-dropdown-area-layout-presets">
 	  	<? foreach($presets as $pr) { ?>
 		    <li><a href="javascript:void(0)" data-area-layout-preset-id="<?=$pr->getAreaLayoutPresetID()?>"><?=$pr->getAreaLayoutPresetName()?></a></li>
@@ -15,16 +15,16 @@
 		<li class="ccm-dropdown-area-layout-presets-manage"><a href="javascript:void(0)" onclick="CCMLayout.launchPresets('#ccm-layouts-edit-mode', '<?=Loader::helper('validation/token')->generate('layout_presets')?>', 'delete')"><?=t('Manage Presets')?></a></li>
 	  </ul>
 	</li>
-	<li data-area-presets-view="presets" class="ccm-layouts-toolbar-separator"></li>
-	<li class="toolbar-text-cell" data-grid-form-view="choosetype">
+	<li data-area-presets-view="presets" class="ccm-sub-toolbar-separator"></li>
+	<li class="ccm-sub-toolbar-text-cell" data-grid-form-view="choosetype">
 		<label for="useThemeGrid"><?=t("Grid Type")?></label>
 		<select name="useThemeGrid" id="useThemeGrid" style="width: auto !important">
 			<option value="1"><?=$themeGridName?></option>
 			<option value="0"><?=t('Free-Form Layout')?></option>
 		</select>
 	</li>
-	<li data-grid-form-view="choosetype" class="ccm-layouts-toolbar-separator"></li>
-	<li data-grid-form-view="themegrid" class="toolbar-text-cell">
+	<li data-grid-form-view="choosetype" class="ccm-sub-toolbar-separator"></li>
+	<li data-grid-form-view="themegrid" class="ccm-sub-toolbar-text-cell">
 		<label for="themeGridColumns"><?=t("Columns")?></label>
 		
 		<select name="themeGridColumns" id="themeGridColumns">
@@ -37,7 +37,7 @@
 			<input type="hidden" name="themeGridColumns" value="<?=$columnsNum?>" />
 		<? } ?>
 	</li>
-	<li data-grid-form-view="custom" class="toolbar-text-cell">
+	<li data-grid-form-view="custom" class="ccm-sub-toolbar-text-cell">
 		<label for="columns"><?=t("Columns")?></label>
 		<select name="columns" id="columns">
 			<? for ($i = $minColumns; $i <= $maxColumns; $i++) { ?>
@@ -49,13 +49,13 @@
 			<input type="hidden" name="columns" value="<?=$columnsNum?>" />
 		<? } ?>
 	</li>
-	<li data-grid-form-view="custom" class="ccm-layouts-toolbar-separator"></li>
-	<li data-grid-form-view="custom" class="toolbar-text-cell">
+	<li data-grid-form-view="custom" class="ccm-sub-toolbar-separator"></li>
+	<li data-grid-form-view="custom" class="ccm-sub-toolbar-text-cell">
 		<label for="columns"><?=t("Spacing")?></label>
 		<input name="spacing" id="spacing" type="text" style="width: 20px" value="<?=$spacing?>" />
 	</li>
-	<li data-grid-form-view="custom" class="ccm-layouts-toolbar-separator"></li>
-	<li data-grid-form-view="custom" class="toolbar-text-cell">
+	<li data-grid-form-view="custom" class="ccm-sub-toolbar-separator"></li>
+	<li data-grid-form-view="custom" class="ccm-sub-toolbar-text-cell">
 		<label><?=t("Automatic Widths")?></label>
 		<input type="checkbox" value="1" name="isautomated" <? if (!$iscustom) { ?>checked="checked" <? } ?> />
 	</li>
