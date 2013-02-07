@@ -37,4 +37,36 @@
 		<snippet handle="user_name" name="User Name" package="" activated="1"/>
 	</systemcontenteditorsnippets>
 
+    <blocktypesets>
+        <blocktypeset handle="basic" name="Basic" package="">
+            <blocktype handle="content"/>
+            <blocktype handle="html"/>
+            <blocktype handle="image"/>
+            <blocktype handle="file"/>
+        </blocktypeset>
+        <blocktypeset handle="navigation" name="Navigation" package="">
+            <blocktype handle="autonav"/>
+            <blocktype handle="page_list"/>
+            <blocktype handle="next_previous"/>
+            <blocktype handle="date_nav"/>
+            <blocktype handle="tags"/>
+            <blocktype handle="rss_displayer"/>
+        </blocktypeset>
+        <blocktypeset handle="form" name="Forms" package="">
+            <blocktype handle="form"/>
+            <blocktype handle="search"/>
+            <blocktype handle="external_form"/>
+        </blocktypeset>
+        <blocktypeset handle="social" name="Social Networking" package="">
+            <blocktype handle="survey"/>
+        </blocktypeset>
+        <blocktypeset handle="multimedia" name="Multimedia" package="">
+            <blocktype handle="slideshow"/>
+            <blocktype handle="video"/>
+            <blocktype handle="youtube"/>
+            <blocktype handle="google_map"/>
+            <blocktype handle="flash_content"/>
+        </blocktypeset>
+    </blocktypesets>
+
 </concrete5-cif>

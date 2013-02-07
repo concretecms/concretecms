@@ -220,7 +220,7 @@ menuHTML += '</div>';
 		menuHTML += '<li class="ccm-sub-toolbar-icon-cell"><a class="dialog-launch" title="<?=t('Change Theme or Page Type')?>" dialog-width="610" dialog-height="405" dialog-modal="false" dialog-title="<?=t('Design')?>" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_collection_popup.php?cID=<?=$cID?>&ctask=set_theme"><i class="icon-font"></i></a></li>';
 	<? } ?>
 	<? if ($cp->canEditPageProperties()) { ?>
-		menuHTML += '<li class="ccm-sub-toolbar-icon-cell"><a class="dialog-launch" title="<?=t('Add Block')?>" dialog-width="640" dialog-height="400" dialog-modal="false" dialog-title="<?=t('Add Block')?>" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/add_block"><i class="icon-plus"></i></a></li>';
+		menuHTML += '<li class="ccm-sub-toolbar-icon-cell"><a class="dialog-launch" title="<?=t('Add Block')?>" dialog-width="640" dialog-height="400" dialog-modal="false" dialog-title="<?=t('Add Block')?>" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/pages/add_block"><i class="icon-plus"></i></a></li>';
 	<? } ?>
 	<? if ($cp->canEditPageTheme() || $cp->canEditPageType() || $cp->canEditPageProperties()) { ?>
 		menuHTML += '<li class="ccm-sub-toolbar-separator"></li>';

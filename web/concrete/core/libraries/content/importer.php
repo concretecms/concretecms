@@ -27,6 +27,7 @@ class Concrete5_Library_Content_Importer {
 		$this->importSinglePageStructure($sx);
 		$this->importStacksStructure($sx);
 		$this->importBlockTypes($sx);
+		$this->importBlockTypeSets($sx);
 		$this->importAttributeCategories($sx);
 		$this->importAttributeTypes($sx);
 		$this->importWorkflowTypes($sx);
@@ -551,6 +552,21 @@ class Concrete5_Library_Content_Importer {
 					$ak = $akc->getAttributeKeyByHandle((string) $ask['handle']);
 					if (is_object($ak)) { 	
 						$set->addKey($ak);
+					}
+				}
+			}
+		}
+	}
+
+	protected function importBlockTypeSets(SimpleXMLElement $sx) {
+		if (isset($sx->blocktypesets)) {
+			foreach($sx->blocktypesets->blocktypeset as $bts) {
+				$pkg = ContentImporter::getPackageObject($bts['package']);
+				$set = BlockTypeSet::add((string) $bts['handle'], (string) $bts['name'], $pkg);
+				foreach($bts->children() as $btk) {
+					$bt = BlockType::getByHandle((string) $btk['handle']);
+					if (is_object($bt)) { 	
+						$set->addBlockType($bt);
 					}
 				}
 			}

@@ -8,6 +8,8 @@ class ConcreteUpgradeVersion570Helper {
 		'atTextareaSettings',
 		'UserPointActions',
 		'UserPointHistory',
+		'BlockTypeSetBlockTypes',
+		'BlockTypeSets',
 		'Groups',
 		'QueuePageDuplicationRelations',
 		'Areas',
