@@ -6,7 +6,9 @@ class Concrete5_Helper_Ajax {
 	* @param mixed $result
 	*/
 	public function sendResult($result) {
-		@ob_end_clean();
+		if(@ob_get_length()) {
+			@ob_end_clean();
+		}
 		header('Content-Type: application/json; charset=' . APP_CHARSET, true);
 		echo Loader::helper('json')->encode($result);
 		die();
@@ -16,7 +18,9 @@ class Concrete5_Helper_Ajax {
 	* @param string|Exception $result The error to send to the client.
 	*/
 	public function sendError($error) {
-		@ob_end_clean();
+		if(@ob_get_length()) {
+			@ob_end_clean();
+		}
 		header($_SERVER['SERVER_PROTOCOL'] . ' 400 Bad Request', true, 400);
 		header('Content-Type: text/plain; charset=' . APP_CHARSET, true);
 		echo ($error instanceof Exception) ? $error->getMessage() : $error;
