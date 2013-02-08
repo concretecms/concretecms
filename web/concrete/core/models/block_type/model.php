@@ -155,7 +155,17 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			return false;
 		}
 		
-		
+		public function getBlockTypeSets() {
+			$db = Loader::db();
+			$list = array();
+			$r = $db->Execute('select btsID from BlockTypeSetBlockTypes where btID = ? order by displayOrder asc', array($this->getBlockTypeID()));
+			while ($row = $r->FetchRow()) {
+				$list[] = BlockTypeSet::getByID($row['btsID']);
+			}
+			$r->Close();
+			return $list;
+		}
+
 		/**
 		 * returns the width in pixels that the block type's editing dialog will open in
 		 * @return int
