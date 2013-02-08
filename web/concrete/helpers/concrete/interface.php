@@ -212,7 +212,7 @@ class ConcreteInterfaceHelper {
 		return $html;
 	}
 	
-	public function tabs($tabs, $jstabs = true) {
+	public function tabs($tabs, $jstabs = true, $callback = 'ccm_activateTabBar') {
 		$tcn = rand(0, getrandmax());
 
 		$html = '<ul class="nav-tabs nav" id="ccm-tabs-' . $tcn . '">';
@@ -227,7 +227,7 @@ class ConcreteInterfaceHelper {
 		}
 		$html .= '</ul>';
 		if ($jstabs) { 
-			$html .= '<script type="text/javascript">$(function() { ccm_activateTabBar($(\'#ccm-tabs-' . $tcn . '\'));});</script>';
+			$html .= '<script type="text/javascript">$(function() { ' . $callback . '($(\'#ccm-tabs-' . $tcn . '\'));});</script>';
 		}
 		return $html;
 	}

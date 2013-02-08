@@ -5,7 +5,7 @@ $blockTypes = $btl->getBlockTypeList();
 $dsh = Loader::helper('concrete/dashboard');
 $dashboardBlockTypes = array();
 if ($dsh->inDashboard()) {
-	$dashboardBlockTypes = BlockTypeList::getDashboardBlockTypes($ap);
+	$dashboardBlockTypes = BlockTypeList::getDashboardBlockTypes();
 }
 $blockTypes = array_merge($blockTypes, $dashboardBlockTypes);
 $ci = Loader::helper('concrete/urls');

@@ -51,6 +51,7 @@
             <blocktype handle="date_nav"/>
             <blocktype handle="tags"/>
             <blocktype handle="rss_displayer"/>
+            <blocktype handle="date_archive"/>
         </blocktypeset>
         <blocktypeset handle="form" name="Forms" package="">
             <blocktype handle="form"/>
@@ -59,6 +60,7 @@
         </blocktypeset>
         <blocktypeset handle="social" name="Social Networking" package="">
             <blocktype handle="survey"/>
+            <blocktype handle="guestbook" />
         </blocktypeset>
         <blocktypeset handle="multimedia" name="Multimedia" package="">
             <blocktype handle="slideshow"/>
