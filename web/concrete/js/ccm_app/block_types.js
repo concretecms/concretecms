@@ -20,7 +20,8 @@ ccm_activateBlockTypeOverlay = function() {
 	if ($('#ccm-block-types-dragging').length == 0) {
 		$('<div id="ccm-block-types-dragging" />').appendTo(document.body);
 	}
-
+	// remove any old add block type placeholders
+	$('#ccm-add-new-block-placeholder').remove();
 	if (!ccmLiveSearchActive) {
 		$('#ccm-block-type-search input').liveUpdate('ccm-overlay-block-types');
 		ccmLiveSearchActive = true;
@@ -35,10 +36,13 @@ ccm_activateBlockTypeOverlay = function() {
 		}
 	});
 
+	var ccm_blockTypeDropped = false;
+
 	$('div.ccm-area').sortable({
 		connectWith: 'div.ccm-area',
 		placeholder: "ccm-block-type-drop-holder",
 		receive: function(e, ui) {
+			ccm_blockTypeDropped = true;
 			var cID = $(this).attr('data-cID');
 			var aID = $(this).attr('data-aID');
 			var btID = $(ui.helper).attr('data-btID');
@@ -56,6 +60,7 @@ ccm_activateBlockTypeOverlay = function() {
 					onClose: function() {
 						ccm_blockWindowAfterClose();
 						jQuery.fn.dialog.closeAll();
+						var ccm_blockTypeDropped = false;
 					},
 					modal: false,
 					width: parseInt($(ui.helper).attr('data-dialog-width')),
@@ -64,7 +69,7 @@ ccm_activateBlockTypeOverlay = function() {
 					href: CCM_TOOLS_PATH + '/add_block_popup?cID=' + cID + '&btID=' + btID + '&arHandle=' + encodeURIComponent(arHandle)
 				});
 			}
-			$('div.ccm-area .ccm-overlay-draggable-block-type').remove();
+			$('div.ccm-area .ccm-overlay-draggable-block-type').replaceWith($('<div />', {'id': 'ccm-add-new-block-placeholder'}));
 			$('.ccm-area-drag-active').removeClass('ccm-area-drag-active');
 		}
 	});
@@ -83,6 +88,12 @@ ccm_activateBlockTypeOverlay = function() {
 				$('.ui-widget-overlay').remove();
 				$sortables.addClass('ccm-area-drag-active');
 				$('#ccm-block-types-dragging a').css('background-color', '#4FDAFF');
+			},
+			stop: function() {
+				if (!ccm_blockTypeDropped) {
+					// this got cancelled without a receive.
+					jQuery.fn.dialog.closeAll();
+				}
 			},
 			connectToSortable: $sortables
 		});
