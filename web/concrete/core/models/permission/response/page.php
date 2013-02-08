@@ -22,7 +22,10 @@ class Concrete5_Model_PagePermissionResponse extends PermissionResponse {
 		$pk->setPermissionObject($this->object);
 		return $pk->validate($ct);
 	}
-	
+	public function canAddBlockType($bt) {
+		return false;
+	}
+
 	public function canEditPageProperties($obj = false) {
 		if ($this->object->isExternalLink()) {
 			return $this->canDeletePage();
