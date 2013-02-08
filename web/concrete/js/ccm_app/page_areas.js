@@ -163,6 +163,9 @@ ccm_parseBlockResponse = function(r, currentBlockID, task) {
 			$.get(action, 		
 				function(r) { 
 					if (task == 'add') {
+						$('#ccm-add-new-block-placeholder').before(r).remove();
+						ccm_saveAreaArrangement(cID, resp.arHandle);
+						/*
 						if ($("#a" + resp.aID + " div.ccm-area-styles-a"+ resp.aID).length > 0) {
 							$("#a" + resp.aID + " div.ccm-area-styles-a"+ resp.aID).append(r);
 						} else {
@@ -170,6 +173,8 @@ ccm_parseBlockResponse = function(r, currentBlockID, task) {
 						}
 						// inline support.
 						$('#a' + resp.aID + '-bt' + resp.btID).remove();
+						*/
+
 					} else {
 						$('#b' + currentBlockID + '-' + resp.aID).before(r).remove();
 					}
@@ -251,6 +256,51 @@ ccm_saveArrangement = function(cID) {
 			ccmAlert.hud(ccmi18n.arrangeBlockMsg, 2000, 'up_down', ccmi18n.arrangeBlock);
  		}});
 }
+
+ccm_saveAreaArrangement = function(cID, arHandle) {
+	
+	if (!cID) {
+		cID = CCM_CID;
+	}
+
+	var serial = '';
+	var $area = $('div.ccm-area[data-area-handle=' + arHandle + ']');
+	areaStr = '&area[' + $area.attr('id').substring(1) + '][]=';
+	bArray = $area.sortable('toArray');
+	for (i = 0; i < bArray.length; i++ ) {
+		if (bArray[i] != '' && bArray[i].substring(0, 1) == 'b') {
+			// make sure to only go from b to -, meaning b28-9 becomes "28"
+			var bID = bArray[i].substring(1, bArray[i].indexOf('-'));
+			var bObj = $('#' + bArray[i]);
+			if (bObj.attr('custom-style')) {
+				bID += '-' + bObj.attr('custom-style');
+			}
+			serial += areaStr + bID;
+		}
+	}
+	console.log(serial);
+
+	/*
+		*/
+		/*
+ 	$.ajax({
+ 		type: 'POST',
+ 		url: CCM_DISPATCHER_FILENAME,
+ 		data: 'cID=' + cID + '&ccm_token=' + CCM_SECURITY_TOKEN + '&btask=ajax_do_arrange' + serial,
+ 		success: function(msg) {
+ 			$("div.ccm-area").removeClass('ccm-move-mode');
+			$('div.ccm-block-arrange').each(function() {
+				$(this).addClass('ccm-block-edit');
+				$(this).removeClass('ccm-block-arrange');
+			});
+			$('div.ccm-area-footer').show();
+			$.fn.ccmmenu.enable();
+			$(".ccm-main-nav-edit-option").fadeIn(300);
+			ccmAlert.hud(ccmi18n.arrangeBlockMsg, 2000, 'up_down', ccmi18n.arrangeBlock);
+ 		}});
+*/
+}
+
 
 ccm_arrangeInit = function() {
 	//$(document.body).append('<img src="' + CCM_IMAGE_PATH + '/topbar_throbber.gif" width="16" height="16" id="ccm-topbar-loader" />');
