@@ -37,27 +37,6 @@ cd $(git rev-parse --show-toplevel)
 
 status=$(git status --porcelain 2> /dev/null)
 
-
-
-# Bootstrap.js
-thisgrep=''
-thisgrep='web/concrete/js/bootstrap/bootstrap'
-if [ $1 ]; then
-    thisgrep=''
-fi
-if $(echo "$status" | grep "$thisgrep" &> /dev/null); then
-    echo "Building bootstrap.js"
-    cat ./web/concrete/js/bootstrap/bootstrap-tooltip.js \
-        ./web/concrete/js/bootstrap/bootstrap-popover.js \
-        ./web/concrete/js/bootstrap/bootstrap-dropdown.js \
-        ./web/concrete/js/bootstrap/bootstrap-transition.js \
-        ./web/concrete/js/bootstrap/bootstrap-alert.js > bootstrap.tmp.js
-
-    uglifyjs -o ./web/concrete/js/bootstrap.js ./bootstrap.tmp.js
-    rm bootstrap.tmp.js
-fi
-
-
 # jQuery Cookie
 thisgrep=''
 thisgrep='web/concrete/js/ccm_app/jquery.cookie.js'
@@ -77,18 +56,18 @@ if [ $1 ]; then
     thisgrep=''
 fi
 if $(echo "$status" | grep "$thisgrep" &> /dev/null); then
-    echo "Building jquery.cookie.js"
+    echo "Building ccm.profile.js"
     uglifyjs -o ./web/concrete/js/ccm.profile.js ./web/concrete/js/ccm_profile/base.js
 fi
 
 # Redactor
 thisgrep=''
-thisgrep='web/concrete/js/ccm.profile.js'
+thisgrep='web/concrete/js/redactor/'
 if [ $1 ]; then
     thisgrep=''
 fi
 if $(echo "$status" | grep "$thisgrep" &> /dev/null); then
-    echo "Building jquery.cookie.js"
+    echo "Building redactor"
     cat ./web/concrete/js/redactor/redactor.js \
         ./web/concrete/js/redactor/redactor.concrete5.js > redactor.tmp.js
     uglifyjs -o ./web/concrete/js/redactor.js ./redactor.tmp.js
