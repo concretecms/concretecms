@@ -104,13 +104,14 @@ $.fn.ccmmenu.hide = function(e) {
 	if (e) {
 		e.stopPropagation();
 	}
-	
-	$.fn.ccmmenu.isactive = false;
-	$.fn.ccmmenu.$highlighter.css("opacity", 0);
-	$.fn.ccmmenu.$holder.html('');
-	$('.ccm-menu-item-active').removeClass('ccm-menu-item-active');
-	$(document.body).unbind('click.disableccmmenu');
-	$('div.popover').css('opacity', 0).hide();
+	if ($.fn.ccmmenu.$highlighter) {
+		$.fn.ccmmenu.isactive = false;
+		$.fn.ccmmenu.$highlighter.css("opacity", 0);
+		$.fn.ccmmenu.$holder.html('');
+		$('.ccm-menu-item-active').removeClass('ccm-menu-item-active');
+		$(document.body).unbind('click.disableccmmenu');
+		$('div.popover').css('opacity', 0).hide();
+	}
 }
 
 $.fn.ccmmenu.showmenu = function(e, $this) {

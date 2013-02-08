@@ -55,6 +55,9 @@ print $ih->tabs($tabs, true, 'ccm_activateBlockTypeTabs');
 <ul id="ccm-overlay-block-types">
 
 <? foreach($blockTypes as $bt) { 
+	if (!$cp->canAddBlockType($bt)) {
+		continue;
+	}
 	$btsets = $bt->getBlockTypeSets();
 	$sets = '';
 	foreach($btsets as $set) {
