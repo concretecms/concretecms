@@ -23,6 +23,13 @@ class Concrete5_Model_PagePermissionResponse extends PermissionResponse {
 		return $pk->validate($ct);
 	}
 	public function canAddBlockType($bt) {
+		$list = Area::getListOnPage($this->object);
+		foreach($list as $la) {
+			$lap = new Permissions($la);
+			if ($lap->canAddBlockToArea($bt)) {
+				return true;
+			}
+		}
 		return false;
 	}
 
