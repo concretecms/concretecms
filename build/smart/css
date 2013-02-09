@@ -20,7 +20,7 @@ function compile_less {
     fi
 }
 
-compile_less ccm.account
+compile_less redactor
 compile_less jquery.ui
 compile_less jquery.rating
 compile_less ccm.default.theme
@@ -29,4 +29,4 @@ compile_less ccm.dashboard.1200
 compile_less ccm.colorpicker
 compile_less ccm.app.mobile
 compile_less ccm.app
-
+compile_less ccm.account
