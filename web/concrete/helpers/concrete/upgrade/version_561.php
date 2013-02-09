@@ -29,6 +29,12 @@ class ConcreteUpgradeVersion561Helper {
 		if (isset($columns['CTID'])) {
 			$db->Execute('alter table Pages drop column ctID');
 		}
+
+		$bt = BlockType::getByHandle('search');
+		if (is_object($bt)) {
+			$bt->refresh();
+		}
+
 	}
 
 	
