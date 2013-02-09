@@ -237,6 +237,8 @@ ccm_saveArrangement = function(cID) {
 		}
 	});
 
+	console.log(serial);
+	/*
  	$.ajax({
  		type: 'POST',
  		url: CCM_DISPATCHER_FILENAME,
@@ -252,6 +254,7 @@ ccm_saveArrangement = function(cID) {
 			$(".ccm-main-nav-edit-option").fadeIn(300);
 			ccmAlert.hud(ccmi18n.arrangeBlockMsg, 2000, 'up_down', ccmi18n.arrangeBlock);
  		}});
+ 	*/
 }
 
 ccm_saveAreaArrangement = function(cID, arHandle) {
@@ -295,12 +298,15 @@ ccm_arrangeInit = function() {
 	$('div.ccm-area-footer').hide();
 
 	$("div.ccm-area").each(function() {
+
+		var acceptedtypes = $(this).attr('data-accepts-block-types').split(' ');
+		var blocktypes = $('div.ccm-block-edit').filter(function() {
+			return $.inArray($(this).attr('data-block-type-handle'), acceptedtypes) > -1;
+		});
 		var cID = $(this).attr('cID');
-		$(this).addClass('ccm-move-mode');
 		$(this).sortable({
-			items: 'div.ccm-block-arrange-enabled',
+			items: 'div.ccm-block-edit',
 			connectWith: $("div.ccm-area"),
-			accept: 'div.ccm-block-arrange',
 			opacity: 0.5,
 			placeholder: "ccm-block-type-drop-holder",
 			opacity: 0.4,
@@ -308,7 +314,11 @@ ccm_arrangeInit = function() {
 				ccm_saveArrangement(cID);
 			}
 		});
+		$(this).droppable({
+			accept: blocktypes
+		});
 	});
+
 }
 
 ccm_blockWindowClose = function() {

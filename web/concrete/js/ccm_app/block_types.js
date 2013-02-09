@@ -77,8 +77,7 @@ ccm_activateBlockTypeOverlay = function() {
 	$('#ccm-overlay-block-types a').each(function() {
 		var $li = $(this);
 		$li.css('cursor', 'move');
-//		var $sortables = $('div.ccm-area[data-accepts-block-types~=' + $li.attr('data-block-type-handle') + ']');
-		var $sortables = $('div.ccm-area');
+		var $sortables = $('div.ccm-area[data-accepts-block-types~=' + $li.attr('data-block-type-handle') + ']');
 		$li.draggable({
 			helper: 'clone',
 			appendTo: $('#ccm-block-types-dragging'),
@@ -93,6 +92,7 @@ ccm_activateBlockTypeOverlay = function() {
 				if (!ccm_blockTypeDropped) {
 					// this got cancelled without a receive.
 					jQuery.fn.dialog.closeAll();
+					$('.ccm-area-drag-active').removeClass('ccm-area-drag-active');
 				}
 			},
 			connectToSortable: $sortables
