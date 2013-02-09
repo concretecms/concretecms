@@ -9,8 +9,8 @@ uglifyjs -o ../web/concrete/js/redactor.js ./redactor.tmp.js
 rm redactor.tmp.js
 
 # Note: The order here is important
-
-cat ../web/concrete/js/ccm_app/jquery.colorpicker.js \
+cat ../web/concrete/js/ccm_app/pubsub.js \
+../web/concrete/js/ccm_app/jquery.colorpicker.js \
 ../web/concrete/js/ccm_app/jquery.hoverIntent.js \
 ../web/concrete/js/ccm_app/jquery.liveupdate.js \
 ../web/concrete/js/ccm_app/jquery.metadata.js \

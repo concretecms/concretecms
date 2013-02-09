@@ -43,3 +43,6 @@ error_log
 # ignore Eclipse-specific files
 /.settings/
 /.buildpath
+
+# ignore built pretty ccm.app.js
+/web/concrete/js/ccm.app.pretty.js
