@@ -52,7 +52,7 @@ ccm_triggerSelectFileComplete = function(fID, af) {
 		}
 		td.append('<strong><?=t('Actual Width')?></strong>: ' + dw + '<br/>');
 		td.append('<strong><?=t('Actual Height')?></strong>: ' + dh + '<br/>');
-		td.append('<a href="<?=$dialogurl?>?bID=' + af.substring(12) + '&width=' + tw + '&height=' + th + '&fID=' + fID + '" class="dialog-launch" dialog-modal="false" dialog-width="95%" dialog-height="460" dialog-title="Crop Image" class="dialog-launch" id="cropper-dialog-' + af.substring(12) + '"><?=t('Crop + Upload Image')?></a>');
+		td.append('<a href="<?=$dialogurl?>?bID=' + af.substring(12) + '&width=' + tw + '&height=' + th + '&fID=' + fID + '" class="dialog-launch" dialog-modal="false" dialog-width="95%" dialog-height="460" dialog-title="<?php echo t("Crop Image")?>" class="dialog-launch" id="cropper-dialog-' + af.substring(12) + '"><?=t('Crop + Upload Image')?></a>');
 		$("#cropper-dialog-" + af.substring(12)).dialog();
 		if(crop) {
 			$("#cropper-dialog-" + af.substring(12)).trigger('click');
