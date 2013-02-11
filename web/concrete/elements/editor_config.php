@@ -84,7 +84,7 @@ $(function() {
 			editor_selector : "<?=$editor_selector?>",
 			spellchecker_languages : "+English=en",
 			theme : "simple",
-			plugins: "paste,inlinepopups,spellchecker,safari,advlink",
+			plugins: "paste,inlinepopups,spellchecker,safari,advlink"
 		<? }else{ //simple ?>
 			theme : "concrete", 
 			plugins: "paste,inlinepopups,spellchecker,safari,advlink,advimage,advhr",
