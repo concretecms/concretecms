@@ -49,7 +49,9 @@ cat ../web/concrete/js/image_editor/build/kinetic.prototype.js \
     ../web/concrete/js/image_editor/build/events.js \
     ../web/concrete/js/image_editor/build/extend.js \
     ../web/concrete/js/image_editor/build/background.js \
+    ../web/concrete/js/image_editor/build/imagestage.js \
     ../web/concrete/js/image_editor/build/image.js \
+    ../web/concrete/js/image_editor/build/actions.js \
     ../web/concrete/js/image_editor/build/jquerybinding.js \
     ../web/concrete/js/image_editor/build/filters.js > image_editor.tmp.js
 

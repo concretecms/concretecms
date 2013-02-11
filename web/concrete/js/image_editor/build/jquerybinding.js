@@ -7,7 +7,7 @@ $('div.controlset').find('div.control').slideUp(0);
 $('div.controlset').find('h4').click(function(){
   $('div.controlset').find('h4').not($(this)).removeClass('active');
   var ns = $(this).parent().attr('data-namespace');
-  im.trigger('changecontrolset',ns);
+  im.trigger('ChangeActiveAction',"ControlSet_"+ns);
 });
 $.fn.ImageEditor = function (settings) {
   (settings === undefined && (settings = {}));

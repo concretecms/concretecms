@@ -1,13 +1,12 @@
 // Handle selection
-im.bind('changecontrolset',function(e){
-	console.log(e);
-	if (e.eventData != 'position') {
+im.bind('ChangeActiveAction',function(e){
+	if (e.eventData != im.namespace) {
 		im.image.setDraggable(false);
 	} else {
 		im.image.setDraggable(true);
 	}
 });
-me = $(this);
+var me = $(this);
 
 var sliderx = $('div.xslider',me).slider({
 	step: 1,
@@ -65,6 +64,7 @@ $('button.center',me).click(function(e){
 		duration:.2,
 		callback: function(){
 			im.trigger('imagemove');
+			im.trigger('imagechange');
 		}
 	})
 })

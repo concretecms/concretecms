@@ -3,9 +3,9 @@ im.stage.add(im.controls);
 im.controls.hide()
 im.controls.moveToBottom();
 im.controls.draw();
-im.bind('changecontrolset',function(e){
+im.bind('ChangeActiveAction',function(e){
   if (e.eventData != im.namespace) {
-    im.controls.hide()
+    im.controls.hide();
     im.controls.moveToBottom();
     im.controls.draw();
   } else {

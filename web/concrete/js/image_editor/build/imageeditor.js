@@ -1,11 +1,7 @@
-var ControlSet = function(im,js,controlSet) {
-  var Window = this;
-  Window.controlSet = controlSet;
-  Window.im = im;
-  Window.js = js;
-  eval(js);
-};
+
 var ImageEditor = function (settings) {
+  "use strict";
+
   if (settings === undefined) return this;
   var im         = this, x;
   im.width       = settings.width;
@@ -14,6 +10,8 @@ var ImageEditor = function (settings) {
   im.editor      = new Kinetic.Layer();
   im.namespaces  = {};
   im.controlSets = {};
+  im.components  = {};
+  im.filters     = {};
 
   im.center = {
     x: im.width / 2,

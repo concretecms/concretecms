@@ -25,7 +25,7 @@ im.clone = function(namespace) {
 };
 
 
-im.addExtension = function(ns,js,elem) {
+im.addControlSet = function(ns,js,elem) {
   if (jQuery && elem instanceof jQuery) elem = elem[0];
   elem.controlSet = function(im,js) {
     this.im = im;
@@ -35,5 +35,29 @@ im.addExtension = function(ns,js,elem) {
   var newim = im.clone(ns);
   var nso = elem.controlSet(newim,js);
   im.controlSets[ns] = nso;
+  return nso;
+};
+
+im.addFilter = function(ns,js) {
+  var filter = function(im,js) {
+    this.im = im;
+    eval(js);
+    return this;
+  };
+  var newim = im.clone(ns);
+  var nso = new filter(newim,js);
+  im.filters[ns] = nso;
+  return nso;
+};
+
+im.addComponent = function(ns,js) {
+  var component = function(im,js) {
+    this.im = im;
+    eval(js);
+    return this;
+  };
+  var newim = im.clone(ns);
+  var nso = new component(newim,js);
+  im.components[ns] = nso;
   return nso;
 };

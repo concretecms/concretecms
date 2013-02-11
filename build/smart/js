@@ -144,7 +144,7 @@ $(getFile 'extend.js')
 $(getFile 'background.js')
 $(getFile 'imagestage.js')
 $(getFile 'image.js')
-$(getFile 'control_sets.js')
+$(getFile 'actions.js')
 $(getFile 'jquerybinding.js')
 $(getFile 'filters.js')"
 
