@@ -42,6 +42,12 @@ class Concrete5_Controller_Dashboard_System_BackupRestore_Database extends Dashb
 				}
 			}
 			
+			if (!$this->post('refresh_local_schema') && !$this->post('refresh_global_schema')) {
+				$e = Loader::helper('validation/error');
+				$e->add(t('You must choose an option to refresh.'));
+				$this->set('error', $e);
+			}
+
 			$msg = trim($msg);
 			$this->set('message', $msg);
 
