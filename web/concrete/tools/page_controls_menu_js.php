@@ -124,7 +124,7 @@ menuHTML += '<form method="post" id="ccm-check-in" action="<?=DIR_REL?>/<?=DISPA
 <? $valt = Loader::helper('validation/token'); ?>
 menuHTML += '<?=$valt->output('', true)?>';
 menuHTML += '<h4><?=t('Version Comments')?></h4>';
-menuHTML += '<p><input type="text" name="comments" id="ccm-check-in-comments" value="<?=addslashes($c->getNextVersionComments())?>" onclick="this.select()" style="width:520px"/></p>';
+menuHTML += '<p><input type="text" name="comments" id="ccm-check-in-comments" style="width:520px"/></p>';
 <? if ($cp->canApprovePageVersions()) { ?>
 	<? 
 	$publishTitle = t('Publish My Edits');
