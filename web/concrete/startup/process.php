@@ -28,11 +28,18 @@
 			case 'ajax_do_arrange': /* called via ajax */
 				if ($cp->canEditPageContents()) {
 					$nvc = $c->getVersionToModify();
-					$nvc->processArrangement($_POST['area']);
+					$r = $nvc->processArrangement($_POST['area']);
+					if (!is_object($r)) {
+						$r = new stdClass;
+						$r->error = false;
+					}
+				} else {
+					$r = new stdClass;
+					$r->error = true;
+					$r->message = t('Access Denied');
 				}
-				
+				print Loader::helper('json')->encode($r);
 				exit;
-				
 				break;
 			case 'remove':
 				$a = Area::get($c, $_REQUEST['arHandle']);

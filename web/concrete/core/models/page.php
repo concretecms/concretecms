@@ -192,7 +192,12 @@ class Concrete5_Model_Page extends Collection {
 				// this is a serialized area;
 				$arHandle = $db->getOne("select arHandle from Areas where arID = ?", array($arID));
 				$startDO = 0;
-				
+
+				if (PERMISSIONS_MODEL == 'advanced') { // for performance sake
+					$ao = Area::getOrCreate($this, $arHandle);
+					$ap = new Permissions($ao);
+				}
+
 				foreach($blocks as $bIdentifier) {
 
 					$bID = 0;
@@ -203,6 +208,18 @@ class Concrete5_Model_Page extends Collection {
 					$csrID = $bd2[1];
 
 					if (intval($bID) > 0) {
+	
+						if (PERMISSIONS_MODEL == 'advanced') { // for performance sake
+							$b = Block::getByID($bID);
+							$bt = $b->getBlockTypeObject();
+							if (!$ap->canAddBlockToArea($bt)) {
+								$obj = new stdClass;
+								$obj->error = true;
+								$obj->message = t('You may not add %s to area %s.', $bt->getBlockTypeName(), $arHandle);
+								return $obj;
+							}
+						}
+
 						$v = array($startDO, $arHandle, $bID, $this->getCollectionID(), $this->getVersionID());
 						try {
 							$db->query("update CollectionVersionBlocks set cbDisplayOrder = ?, arHandle = ? where bID = ? and cID = ? and (cvID = ? or cbIncludeAll = 1)", $v);
