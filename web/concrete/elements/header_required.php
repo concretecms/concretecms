@@ -42,11 +42,11 @@ if($c->getCollectionAttributeValue('exclude_search_index')) { ?>
     <meta name="robots" content="noindex" />
 <?php } ?>
 <?php
-if (defined('HIDE_VERSION_NUMBER') && HIDE_VERSION_NUMBER) {
-    echo '<meta name="generator" content="concrete5" />';
+if (defined('APP_VERSION_DISPLAY_IN_HEADER') && APP_VERSION_DISPLAY_IN_HEADER) {
+    echo '<meta name="generator" content="concrete5 - ' . APP_VERSION . '" />';
 }    
 else {
-    echo '<meta name="generator" content="concrete5 - ' . APP_VERSION . '" />';
+    echo '<meta name="generator" content="concrete5" />';
 }
 ?>
 
