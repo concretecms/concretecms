@@ -636,7 +636,6 @@ class Concrete5_Model_Page extends Collection {
 	public static function getCollectionPathFromID($cID) {
 		$db = Loader::db();
 		$path = $db->GetOne("select cPath from PagePaths inner join CollectionVersions on (PagePaths.cID = CollectionVersions.cID and CollectionVersions.cvIsApproved = 1) where PagePaths.cID = ?", array($cID));
-		$path .= '/';
 		return $path;
 	}
 
