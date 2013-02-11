@@ -323,6 +323,19 @@ class Concrete5_Model_Area extends Object {
 		return $handles;
 	}
 	
+	public function getListOnPage(Page $c) {
+		$db = Loader::db();
+		$r = $db->Execute('select arHandle from Areas where cID = ?', array($c->getCollectionID()));
+		$areas = array();
+		while ($row = $r->FetchRow()) {
+			$area = Area::get($c, $row['arHandle']);
+			if (is_object($area)) {
+				$areas[] = $area;
+			}
+		}
+		return $areas;
+	}
+
 	/**
 	 * This function removes all permissions records for the current Area
 	 * and sets it to inherit from the Page permissions
