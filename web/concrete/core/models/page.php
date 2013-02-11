@@ -212,7 +212,7 @@ class Concrete5_Model_Page extends Collection {
 						if (PERMISSIONS_MODEL == 'advanced') { // for performance sake
 							$b = Block::getByID($bID);
 							$bt = $b->getBlockTypeObject();
-							if (!$ap->canAddBlockToArea($bt)) {
+							if (!$ap->canAddBlockToArea($bt) && (!$bt->isBlockTypeInternal())) {
 								$obj = new stdClass;
 								$obj->error = true;
 								$obj->message = t('You may not add %s to area %s.', $bt->getBlockTypeName(), $arHandle);
