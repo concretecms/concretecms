@@ -43,14 +43,10 @@ Kinetic.Layer.prototype.draw = function() {
 ///////////////////////////////////////////////////////////////////////////////
 //                               imageeditor.js                              //
 ///////////////////////////////////////////////////////////////////////////////
-var ControlSet = function(im,js,controlSet) {
-  var Window = this;
-  Window.controlSet = controlSet;
-  Window.im = im;
-  Window.js = js;
-  eval(js);
-};
+
 var ImageEditor = function (settings) {
+  "use strict";
+
   if (settings === undefined) return this;
   var im         = this, x;
   im.width       = settings.width;
@@ -59,6 +55,8 @@ var ImageEditor = function (settings) {
   im.editor      = new Kinetic.Layer();
   im.namespaces  = {};
   im.controlSets = {};
+  im.components  = {};
+  im.filters     = {};
 
   im.center = {
     x: im.width / 2,
@@ -113,32 +111,13 @@ im.history = new History();
 // Handle event binding.
 im.bindEvent = im.bind = function (type, handler, elem) {
   var element = elem || im.stage.getContainer();
-  if (element.addEventListener) {
-    element.addEventListener(type.toLowerCase(), handler, false);
-  } else {
-    element.attachEvent('on' + type.toLowerCase(), handler);
-  }
+  ccm_event.sub(type,handler,element);
 };
 
 // Handle event firing
-im.fireEvent = im.fire = im.trigger = function (type, data) {
-  var event, eventName = 'ImageEditorEvent', element = im.stage.getContainer(), data = data || im;
-  if (document.createEvent) {
-    event = document.createEvent("HTMLEvents");
-    event.initEvent(type.toLowerCase(), true, true);
-  } else {
-    event = document.createEventObject();
-    event.eventType = type.toLowerCase();
-  }
-  event.eventName = eventName;
-  event.eventData = data || { };
-
-  if (document.createEvent) {
-    element.dispatchEvent(event);
-  } else {
-    element.fireEvent("on" + event.eventType, event);
-  }
-  if (typeof element['on' + type.toLowerCase()] === 'function') { element['on' + type.toLowerCase()](event); }
+im.fireEvent = im.fire = im.trigger = function (type, data, elem) {
+  var element = im.stage.getContainer() || elem;
+  ccm_event.pub(type,data,element);
 };
 
 
@@ -172,7 +151,7 @@ im.clone = function(namespace) {
 };
 
 
-im.addExtension = function(ns,js,elem) {
+im.addControlSet = function(ns,js,elem) {
   if (jQuery && elem instanceof jQuery) elem = elem[0];
   elem.controlSet = function(im,js) {
     this.im = im;
@@ -182,6 +161,30 @@ im.addExtension = function(ns,js,elem) {
   var newim = im.clone(ns);
   var nso = elem.controlSet(newim,js);
   im.controlSets[ns] = nso;
+  return nso;
+};
+
+im.addFilter = function(ns,js) {
+  var filter = function(im,js) {
+    this.im = im;
+    eval(js);
+    return this;
+  };
+  var newim = im.clone(ns);
+  var nso = new filter(newim,js);
+  im.filters[ns] = nso;
+  return nso;
+};
+
+im.addComponent = function(ns,js) {
+  var component = function(im,js) {
+    this.im = im;
+    eval(js);
+    return this;
+  };
+  var newim = im.clone(ns);
+  var nso = new component(newim,js);
+  im.components[ns] = nso;
   return nso;
 };
 
@@ -291,40 +294,73 @@ img.onload = function () {
 
 
 ///////////////////////////////////////////////////////////////////////////////
-//                              control_sets.js                              //
+//                                 actions.js                                //
 ///////////////////////////////////////////////////////////////////////////////
 im.bind('imageload',function(){
-  var cs = settings.controlsets || {}, namespace,first;
+  var cs = settings.controlsets || {}, filters = settings.filters || {}, components = settings.components || {}, namespace, firstcs, firstf, firstc;
   for (namespace in cs) {
-    var myns = namespace;
-    if (!first) first = myns;
+    var myns = "ControlSet_" + namespace;
+    console.log(myns);
+    if (!firstcs) firstcs = myns;
     var running = 0;
-    $.ajax(cs[myns]['src'],{
+    $.ajax(cs[namespace]['src'],{
       dataType:'text',
       cache:false,
+      namespace:namespace,
       myns:myns,
       beforeSend:function(){running++;},
       success:function(js){
         running--;
-        var nso = im.addExtension(this.myns,js,cs[this.myns]['element']);
-        im.fire('controlsetload',nso);
+        var nso = im.addControlSet(this.myns,js,cs[this.namespace]['element']);
+        console.log(nso);
+        im.fire('controlSetLoad',nso);
         if (0 == running) {
-          im.activeControlSet = first;
-          im.trigger('changecontrolset',first);
+          im.activeControlSet = firstcs;
+          im.trigger('ChangeActiveAction',firstcs);
         }
       },
       error: function(xhr, errDesc, exception) {
         running--;
         if (0 == running) {
-          im.activeControlSet = first;
-          im.trigger('changecontrolset',first);
+          im.activeControlSet = firstcs;
+          im.trigger('ChangeActiveAction',firstcs);
         }
       }
     });
   }
+  for (namespace in filters) {
+    var myns = "Filter_" + namespace;
+    if (!firstf) firstf = myns;
+    $.ajax(filters[namespace]['src'],{
+      dataType:'text',
+      cache:false,
+      namespace:namespace,
+      myns:myns,
+      success:function(js){
+        var nso = im.addFilter(this.myns,js,cs[this.namespace]['element']);
+        im.fire('filterLoad',nso);
+      }
+    });
+  }
+  for (namespace in components) {
+    var myns = "Component_" + namespace;
+    if (!firstc) firstc = myns;
+    var running = 0;
+    $.ajax(components[namespace]['src'],{
+      dataType:'text',
+      cache:false,
+      namespace:namespace,
+      myns:myns,
+      success:function(js){
+        var nso = im.addComponent(this.myns,js,cs[this.namespace]['element']);
+        im.fire('componentLoad',nso);
+      }
+    });
+  }
 });
-im.bind('changecontrolset',function(e){
-  var active = $('div.controlset[data-namespace='+e.eventData+']','div.controls')
+im.bind('ChangeActiveAction',function(e){
+  var ns = e.eventData.substr(11);
+  var active = $('div.controlset[data-namespace='+ns+']','div.controls')
     .children('div.control').slideDown().end().children('h4').addClass('active').end();
   $('div.controlset','div.controls').not(active)
     .children('div.control').slideUp().end().children('h4').removeClass('active');
@@ -343,7 +379,7 @@ $('div.controlset').find('div.control').slideUp(0);
 $('div.controlset').find('h4').click(function(){
   $('div.controlset').find('h4').not($(this)).removeClass('active');
   var ns = $(this).parent().attr('data-namespace');
-  im.trigger('changecontrolset',ns);
+  im.trigger('ChangeActiveAction',"ControlSet_"+ns);
 });
 $.fn.ImageEditor = function (settings) {
   (settings === undefined && (settings = {}));
