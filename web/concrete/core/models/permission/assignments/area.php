@@ -62,7 +62,9 @@ class Concrete5_Model_AreaPermissionAssignment extends PermissionAssignment {
 			$r = $db->GetOne('select paID from AreaPermissionAssignments where cID = ? and arHandle = ? and pkID = ? ' . $filterString, array(
 				$this->permissionObjectToCheck->getCollectionID(), $this->permissionObjectToCheck->getAreaHandle(), $this->pk->getPermissionKeyID()
 			));
-			return PermissionAccess::getByID($r, $this->pk, false);
+			if ($r) {
+				return PermissionAccess::getByID($r, $this->pk, false);
+			}
 		} else if (isset($this->inheritedPermissions[$this->pk->getPermissionKeyHandle()])) { 
 			// this is a page
 			$pk = PermissionKey::getByHandle($this->inheritedPermissions[$this->pk->getPermissionKeyHandle()]);
