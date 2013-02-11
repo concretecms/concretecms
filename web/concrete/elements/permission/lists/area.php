@@ -10,8 +10,13 @@ if ($a->getAreaCollectionInheritID() != $c->getCollectionID() && $a->getAreaColl
 
 		<div class="block-message alert-message notice">
 		<p>
-		<?=t("The following area permissions are inherited from an area set on ")?>
-		<a href="<?=DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=<?=$areac->getCollectionID()?>"><?=$areac->getCollectionName()?></a>. 
+		<? if ($areac->isMasterCollection()) { ?>
+			<? $ctName = $areac->getCollectionTypeName(); ?>
+			<?=t("The following area permissions are inherited from an area set in <strong>%s</strong> defaults.", $ctName)?>
+		<? } else { ?>
+			<?=t("The following area permissions are inherited from an area set on ")?>
+			<a href="<?=DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=<?=$areac->getCollectionID()?>"><?=$areac->getCollectionName()?></a>. 
+		<? } ?>
 		</p>
 		<br/>
 		<a href="javascript:void(0)" class="btn small" onclick="ccm_setAreaPermissionsToOverride()"><?=t('Override Permissions')?></a>
