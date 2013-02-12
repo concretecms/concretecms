@@ -1,10 +1,11 @@
 im.bind('imageload',function(){
-  var cs = settings.controlsets || {}, filters = settings.filters || {}, components = settings.components || {}, namespace, firstcs, firstf, firstc;
+  var cs = settings.controlsets || {}, filters = settings.filters || {}, components = settings.components || {}, namespace, firstcs;
+  var running = 0;
+  im.fire('LoadingControlSets');
   for (namespace in cs) {
     var myns = "ControlSet_" + namespace;
     console.log(myns);
     if (!firstcs) firstcs = myns;
-    var running = 0;
     $.ajax(cs[namespace]['src'],{
       dataType:'text',
       cache:false,
@@ -18,6 +19,7 @@ im.bind('imageload',function(){
         im.fire('controlSetLoad',nso);
         if (0 == running) {
           im.activeControlSet = firstcs;
+          im.trigger('ControlSetsLoaded');
           im.trigger('ChangeActiveAction',firstcs);
         }
       },
@@ -25,25 +27,35 @@ im.bind('imageload',function(){
         running--;
         if (0 == running) {
           im.activeControlSet = firstcs;
+          im.trigger('ControlSetsLoaded');
           im.trigger('ChangeActiveAction',firstcs);
         }
       }
     });
   }
+});
+im.bind('ControlSetsLoaded',function(){ // do this when the control sets finish loading.
+  console.log('Loaded');
+  var filters = settings.filters || {}, components = settings.components || {}, namespace, firstf, firstc;
+  im.fire('LoadingFilters');
   for (namespace in filters) {
     var myns = "Filter_" + namespace;
+    var name = filters[namespace].name;
     if (!firstf) firstf = myns;
-    $.ajax(filters[namespace]['src'],{
+    $.ajax(filters[namespace].src,{
       dataType:'text',
       cache:false,
       namespace:namespace,
       myns:myns,
+      name:name,
       success:function(js){
-        var nso = im.addFilter(this.myns,js,cs[this.namespace]['element']);
+        var nso = im.addFilter(this.myns,js);
+        nso.name = this.name;
         im.fire('filterLoad',nso);
       }
     });
   }
+  im.fire('LoadingComponents');
   for (namespace in components) {
     var myns = "Component_" + namespace;
     if (!firstc) firstc = myns;

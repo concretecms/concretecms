@@ -1,7 +1,6 @@
-ImageEditor.fn = ImageEditor.prototype;
-ImageEditor.fn.filters = {};
-ImageEditor.fn.filters.grayscale = Kinetic.Filters.Grayscale;
-ImageEditor.fn.filters.sepia = function (imageData) {
+ImageEditor.prototype.filter = {};
+ImageEditor.prototype.filter.grayscale = Kinetic.Filters.Grayscale;
+ImageEditor.prototype.filter.sepia = function (imageData) {
   var i;
   var data = imageData.data;
   for (i = 0; i < data.length; i += 4) {
@@ -10,7 +9,7 @@ ImageEditor.fn.filters.sepia = function (imageData) {
     data[i + 2] = (data[i] * 0.272 + data[i + 1] * 0.534 + data[i + 2] * 0.131);
   }
 };
-ImageEditor.fn.filters.brightness = function (imageData,ob) {
+ImageEditor.prototype.filter.brightness = function (imageData,ob) {
 	var adjustment = ob.level;
 	var d = imageData.data;
 	for (var i=0; i<d.length; i+=4) {
@@ -19,7 +18,7 @@ ImageEditor.fn.filters.brightness = function (imageData,ob) {
 		d[i+2] += adjustment;
 	}
 };
-ImageEditor.fn.filters.restore = function (imageData,ob) {
+ImageEditor.prototype.filter.restore = function (imageData,ob) {
 	var adjustment = ob.level;
   	var d = imageData.data;
   	var g = ob.imageData.data;

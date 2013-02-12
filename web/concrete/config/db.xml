@@ -2062,6 +2062,58 @@
       <default value="0"/>
     </field>
   </table>
+  <table name="SystemImageEditorFilters">
+    <field name="scsID" type="I" size="10">
+      <key/>
+      <notnull/>
+      <autoincrement/>
+      <unsigned/>
+    </field>
+    <field name="scsHandle" type="C" size="255">
+      <notnull/>
+      <default value=""/>
+    </field>
+    <field name="scsDisplayName" type="C" size="255">
+      <notnull/>
+      <default value=""/>
+    </field>
+    <field name="scsDisplayOrder" type="I" size="10">
+      <notnull/>
+      <unsigned/>
+      <default value="0"/>
+    </field>
+    <field name="pkgID" type="I" size="10">
+      <notnull/>
+      <unsigned/>
+      <default value="0"/>
+    </field>
+  </table>
+  <table name="SystemImageEditorComponents">
+    <field name="scsID" type="I" size="10">
+      <key/>
+      <notnull/>
+      <autoincrement/>
+      <unsigned/>
+    </field>
+    <field name="scsHandle" type="C" size="255">
+      <notnull/>
+      <default value=""/>
+    </field>
+    <field name="scsDisplayName" type="C" size="255">
+      <notnull/>
+      <default value=""/>
+    </field>
+    <field name="scsDisplayOrder" type="I" size="10">
+      <notnull/>
+      <unsigned/>
+      <default value="0"/>
+    </field>
+    <field name="pkgID" type="I" size="10">
+      <notnull/>
+      <unsigned/>
+      <default value="0"/>
+    </field>
+  </table>
   <table name="Packages">
     <field name="pkgID" type="I" size="10">
       <key/>
