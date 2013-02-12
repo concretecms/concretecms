@@ -15,7 +15,7 @@
 	<script type="text/javascript">
 	
 	$(function(){ 
-		<? if( intval($layout->cvalID) ){ ?>var<? } ?> ccmLayout<?=intval($layout->cvalID) ?> = new ccmLayout( <?=intval($layout->cvalID) ?>, <?=intval($layout->layoutID) ?>, "<?= $layout->getAreaHandle() ?>", <?=intval($layout->locked) ?> );
+		<? if( intval($layout->cvalID) ){ ?>var<? } ?> ccmLayout<?=intval($layout->cvalID) ?> = new ccmLayout( <?=intval($layout->areaNameNumber) ?>, <?=intval($layout->cvalID) ?>, <?=intval($layout->layoutID) ?>, "<?= $layout->getAreaHandle() ?>", <?=intval($layout->locked) ?> );
 		ccmLayout<?=intval($layout->cvalID) ?>.init(); 
 		
 	});
