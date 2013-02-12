@@ -482,11 +482,6 @@ class Concrete5_Library_Content_Importer {
 				$akc = AttributeKeyCategory::getByHandle($ak['category']);
 				$pkg = ContentImporter::getPackageObject($ak['package']);
 				$type = AttributeType::getByHandle($ak['type']);
-				if (is_object($pkg)) {
-					Loader::model('attribute/categories/' . $akc->getAttributeKeyCategoryHandle(), $pkg->getPackageHandle());
-				} else {
-					Loader::model('attribute/categories/' . $akc->getAttributeKeyCategoryHandle());
-				}		
 				$txt = Loader::helper('text');
 				$className = $txt->camelcase($akc->getAttributeKeyCategoryHandle());
 				$c1 = $className . 'AttributeKey';
