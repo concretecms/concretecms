@@ -336,7 +336,7 @@ class Concrete5_Library_Content_Importer {
 	protected function importPackages(SimpleXMLElement $sx) {
 		if (isset($sx->packages)) {
 			foreach($sx->packages->package as $p) {
-				$pkg = Loader::package($p['handle']);
+				$pkg = Loader::package((string) $p['handle']);
 				$pkg->install();
 			}
 		}
