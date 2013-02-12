@@ -3,12 +3,13 @@
 // use as an object: 
 // var myLayout = new ccmLayout();
 
-function ccmLayout( cvalID, layout_id, area, locked ){
+function ccmLayout( areaNameNumber, cvalID, layout_id, area, locked ){
 	
 	this.layout_id = layout_id;
 	this.cvalID = cvalID;
 	this.locked = locked;
 	this.area = area;
+	this.areaNameNumber = areaNameNumber;
 	
 	this.init = function(){ 
 	
@@ -113,10 +114,10 @@ function ccmLayout( cvalID, layout_id, area, locked ){
 	
 		this.moving=1;
 		ccm_hideHighlighter();
-		jQuery.fn.dialog.showLoader();
+		//jQuery.fn.dialog.showLoader();
 		this.highlightAreas(1);
 		this.servicesAjax = $.ajax({  
-			url: CCM_TOOLS_PATH + '/layout_services/?cID=' + CCM_CID + '&arHandle=' + encodeURIComponent(this.area) + '&layoutID=' + this.layout_id + '&cvalID=' + this.cvalID +  '&task=move&direction=' + direction,
+			url: CCM_TOOLS_PATH + '/layout_services/?cID=' + CCM_CID + '&arHandle=' + encodeURIComponent(this.area) + '&layoutID=' + this.layout_id + '&cvalID=' + this.cvalID +  '&task=move&direction=' + direction + '&areaNameNumber=' + this.areaNameNumber,
 			success: function(response){  
 				eval('var jObj='+response); 
 				if(parseInt(jObj.success)!=1){ 
@@ -124,17 +125,11 @@ function ccmLayout( cvalID, layout_id, area, locked ){
 				}else{    
 					//success
 					ccm_mainNavDisableDirectExit();  
-					location.reload();
+					//location.reload();
 				}
 			}
 		});		
 		
-		// getting rid of AJAX movement because the block wrappers
-		// with layout versions are super brittle. they require
-		// a page reload if the version of the page is approved when
-		// the layouts are moved
-		
-		/*
 		var el = $('#ccm-layout-wrapper-'+this.cvalID);
 		var layoutObj = this;
 		if(direction=='down'){
@@ -161,7 +156,6 @@ function ccmLayout( cvalID, layout_id, area, locked ){
 			//at boundry
 			ccmAlert.hud( ccmi18n.moveLayoutAtBoundary, 4000, 'icon_move_up', ccmi18n.moveLayoutUp); 
 		}
-		*/
 	}
 	
 	this.lock=function(lock,twinLock){  
@@ -259,7 +253,7 @@ function ccmLayout( cvalID, layout_id, area, locked ){
 		 
 		var cvalID = this.cvalID;
 		this.servicesAjax = $.ajax({ 
-			url: CCM_TOOLS_PATH + '/layout_services/?cID=' + CCM_CID + '&arHandle=' + encodeURIComponent(this.area) + '&layoutID=' + this.layout_id +  '&task=delete&deleteBlocks='+parseInt(deleteBlocks),
+			url: CCM_TOOLS_PATH + '/layout_services/?cID=' + CCM_CID + '&arHandle=' + encodeURIComponent(this.area) + '&layoutID=' + this.layout_id +  '&task=delete&deleteBlocks='+parseInt(deleteBlocks)+'&areaNameNumber='+this.areaNameNumber,
 			success: function(response){  
 				eval('var jObj='+response); 
 				if(parseInt(jObj.success)!=1){ 
