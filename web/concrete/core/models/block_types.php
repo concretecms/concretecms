@@ -290,25 +290,30 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		 * ex: 
 		 * <code><?php
 		 * $bt = BlockType::getByHandle('content'); // returns the BlockType object for the core Content block
-		 * ?></code
+		 * ?></code>
 		 * @param string $handle
-		 * @return BlockType
+		 * @return BlockType|false
 		 */
 		public static function getByHandle($handle) {
 			$bt = CacheLocal::getEntry('blocktype', $handle);
 			if ($bt === -1) {
 				return false;
-			} else if (!is_object($bt)) {
-				$where = 'btHandle = ?';
-				$bt = BlockType::get($where, array($handle));			
-				if (is_object($bt)) {
-					CacheLocal::set('blocktype', $handle, $bt);
-				} else {
-					CacheLocal::set('blocktype', $handle, -1);
-				}
 			}
-			$bt->controller = Loader::controller($bt);
-			return $bt;
+
+			if (is_object($bt)) {
+				$bt->controller = Loader::controller($bt);
+				return $bt;
+			}
+
+			$bt = BlockType::get('btHandle = ?', array($handle));
+			if (is_object($bt)) {
+				CacheLocal::set('blocktype', $handle, $bt);
+				$bt->controller = Loader::controller($bt);
+				return $bt;
+			}
+
+			CacheLocal::set('blocktype', $handle, -1);
+			return false;
 		}
 
 		/**
