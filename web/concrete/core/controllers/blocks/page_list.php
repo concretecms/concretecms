@@ -86,9 +86,7 @@
 
 			$num = (int) $row['num'];
 			
-			if ($num > 0) {
-				$pl->setItemsPerPage($num);
-			}
+			$pl->setItemsPerPage($num);			
 
 			$c = Page::getCurrentPage();
 			if (is_object($c)) {
