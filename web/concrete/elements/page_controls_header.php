@@ -10,7 +10,7 @@ if (isset($cp)) {
 
 ?>
 
-<style type="text/css">body {margin-top: 49px !important;} </style>
+<style type="text/css">html {margin-top: 49px !important;} </style>
 
 <script type="text/javascript">
 <?
