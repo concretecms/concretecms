@@ -209,7 +209,11 @@ class ConcreteDashboardHelper {
 			} else if ($imageSetting == 'none') {
 				$image = '';
 			} else { 
-				$image = DASHBOARD_BACKGROUND_FEED . '/' . $filename;
+				if (isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] == 'on')) {
+					$image = DASHBOARD_BACKGROUND_FEED_SECURE . '/' . $filename;
+				} else {
+					$image = DASHBOARD_BACKGROUND_FEED . '/' . $filename;
+				}
 				$obj->displayCaption = true;
 			}
 		}

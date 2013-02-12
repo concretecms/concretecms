@@ -532,6 +532,7 @@ define('MARKETPLACE_URL_CONNECT_TOKEN_NEW', CONCRETE5_ORG_URL.'/marketplace/conn
 define('MARKETPLACE_REMOTE_ITEM_LIST_WS', CONCRETE5_ORG_URL.'/marketplace/');
 
 define('DASHBOARD_BACKGROUND_FEED', 'http://backgroundimages.concrete5.org/wallpaper');
+define('DASHBOARD_BACKGROUND_FEED_SECURE', 'https://backgroundimages.concrete5.org/wallpaper');
 if (!defined('DASHBOARD_BACKGROUND_INFO')) { 
 	define('DASHBOARD_BACKGROUND_INFO', 'http://backgroundimages.concrete5.org/get_image_data.php');
 }
