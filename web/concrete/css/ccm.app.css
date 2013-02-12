@@ -1459,7 +1459,8 @@ ul#ccm-overlay-block-types .ccm-block-type-available{display:block;}
 .ccm-layouts-toolbar-save{position:absolute;top:5px;right:15px;}
 #ccm-layouts-save-button{margin-left:6px;}
 div#ccm-highlighter{background:#000;opacity:0;z-index:5;height:0px;width:0px;position:absolute;cursor:pointer;transition:opacity 0.1s ease-in-out;-webkit-transition:opacity 0.1s ease-in-out;-moz-transition:opacity 0.1s ease-in-out;}
-div.ccm-block-edit,div.ccm-area{-webkit-transition:box-shadow 0.1s ease-in-out,opacity 0.1s linear;box-shadow:0px 0px 2px 0px rgba(0, 0, 0, 0);cursor:pointer;position:relative;opacity:1;min-height:1px;}
+div.ccm-block-edit,div.ccm-area{-webkit-transition:box-shadow 0.1s ease-in-out,opacity 0.1s linear;box-shadow:0px 0px 2px 0px rgba(0, 0, 0, 0);cursor:pointer;position:relative;opacity:1;min-height:1px;*zoom:1;}div.ccm-block-edit:before,div.ccm-area:before,div.ccm-block-edit:after,div.ccm-area:after{display:table;content:"";line-height:0;}
+div.ccm-block-edit:after,div.ccm-area:after{clear:both;}
 div.ccm-block-edit.ccm-menu-item-active{box-shadow:0px 0px 2px 0px #94D5FA;}
 div.ccm-block-edit.ccm-block-arrange-enabled{-webkit-transition:box-shadow 0.2s ease-in-out;box-shadow:0px 0px 2px 2px rgba(0, 0, 0, 0);cursor:move;}
 div.ccm-block-edit.ccm-block-arrange-enabled:hover{box-shadow:0px 0px 2px 2px rgba(0, 0, 0, 0.3);}
