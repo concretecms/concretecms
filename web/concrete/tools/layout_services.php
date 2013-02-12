@@ -60,7 +60,7 @@ if ( !$validLayout || !$cp->canEditPageContents() || !$ap->canAddLayoutToArea() 
 			$direction = $_REQUEST['direction']; 
 			for($i=0; $i<count($layouts); $i++){  
 				$layout=$layouts[$i]; 
-				if($layout->getLayoutID()==$_REQUEST['layoutID'] ){
+				if($layout->cvalID == $cvalID){
 					if( $direction=='up' && $i>0 ){
 						$prevLayout=$layouts[$i-1];
 						$layout->position = $prevLayout->position;
