@@ -206,6 +206,7 @@ ccm_activateEditablePropertiesGrid = function() {
 		});
 		
 		trow.find('.ccm-attribute-editable-field-save-button').parent().click(function() {
+			trow.find('form input[name=task]').val('update_extended_attribute');
 			ccm_submitEditablePropertiesGrid(trow);
 		});
 

@@ -24,7 +24,6 @@
 		var $cvIsApproved;
 		var $cID;
 		protected $attributes = array();
-		public $customAreaStyles = array();
 		public $layoutStyles = array();
 
 		public function getPermissionObjectIdentifier() {
@@ -121,7 +120,7 @@
 		public function getCustomAreaStyles() {
 			if (!isset($this->customAreaStyles)) {
 				$db = Loader::db();
-				$r = $db->GetAll('select csrID, arHandle from CollectionVersionAreaStyles where cID = ? and cvID = ?', array($c->getCollectionID(), $cvID));
+				$r = $db->GetAll('select csrID, arHandle from CollectionVersionAreaStyles where cID = ? and cvID = ?', array($this->getCollectionID(), $this->cvID));
 				$this->customAreaStyles = array();
 				foreach($r as $styles) {
 					$this->customAreaStyles[$styles['arHandle']] = $styles['csrID'];
