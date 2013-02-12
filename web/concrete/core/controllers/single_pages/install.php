@@ -107,12 +107,6 @@ class Concrete5_Controller_Install extends Controller {
 		$this->set('mysqlTest', function_exists('mysql_connect'));
 		$this->set('xmlTest', function_exists('xml_parse') && function_exists('simplexml_load_file'));
 		$this->set('fileWriteTest', $this->testFileWritePermissions());	
-	}
-	
-	private function setOptionalItems() {
-		// no longer need lucene
-		//$this->set('searchTest', function_exists('iconv') && function_exists('mb_strtolower') && (@preg_match('/\pL/u', 'a') == 1));
-		$this->set('remoteFileUploadTest', function_exists('iconv'));
 		$phpVmin = '5.2.4';
 		if (version_compare(PHP_VERSION, $phpVmin, '>=')) {
 			$phpVtest = true;
@@ -121,11 +115,16 @@ class Concrete5_Controller_Install extends Controller {
 		}
 		$this->set('phpVmin',$phpVmin);
 		$this->set('phpVtest',$phpVtest);
-		
+	}
+
+	private function setOptionalItems() {
+		// no longer need lucene
+		//$this->set('searchTest', function_exists('iconv') && function_exists('mb_strtolower') && (@preg_match('/\pL/u', 'a') == 1));
+		$this->set('remoteFileUploadTest', function_exists('iconv'));
 	}
 	
 	public function passedRequiredItems() {
-		if ($this->get('imageTest') && $this->get('mysqlTest') && $this->get('fileWriteTest') && $this->get('xmlTest')) {
+		if ($this->get('imageTest') && $this->get('mysqlTest') && $this->get('fileWriteTest') && $this->get('xmlTest') && $this->get('phpVtest')) {
 			return true;
 		}
 	}
