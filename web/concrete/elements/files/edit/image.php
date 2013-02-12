@@ -9,8 +9,10 @@ if (!$fp->canEditFileContents()) {
 }
 
 Loader::model('system/image_editor/control_set');
+Loader::model('system/image_editor/filter');
 
 $controlsets = SystemImageEditorControlSet::getList();
+$filters = SystemImageEditorFilter::getList();
 
 ?>
 <link rel="stylesheet" href="<?=ASSETS_URL_CSS?>/image_editor/image_editor.css?f=5">
@@ -25,7 +27,7 @@ $controlsets = SystemImageEditorControlSet::getList();
       echo "<link rel='stylesheet' href='/concrete/css/control_sets/{$handle}.css?d=".sha1(rand(1,500000))."'>
           <div class='controlset {$handle}'".
            " data-namespace='{$handle}'".
-           " data-src='/concrete/js/control_sets/{$handle}.js'>".
+           " data-src='/concrete/js/image_editor/control_sets/{$handle}.js'>".
               "<h4>".$controlset->getImageEditorControlSetName()."</h4>".
               "<div class='control'>";
                 echo Loader::element('control_sets/'.$handle,1);
@@ -39,13 +41,22 @@ $controlsets = SystemImageEditorControlSet::getList();
 
 <script>
 $(function(){
-  var settings = {src:'<?=$fv->getURL()?>',controlsets:{}};
+  var settings = {src:'<?=$fv->getURL()?>',controlsets:{},filters:{},components:{},debug:true};
   $('div.controlset','div.controls').each(function(){
     settings.controlsets[$(this).attr('data-namespace')] = {
       src:$(this).attr('data-src'),
       element: $(this).children('div.control')
     }
   });
+  settings.filters = <?php
+    $fnames = array();
+    foreach ($filters as $filter) {
+      $handle = $filter->getImageEditorFilterHandle();
+      $fnames[$handle] = array("src"=>"/concrete/js/image_editor/filters/{$handle}.js","name"=>$filter->getImageEditorFilterName());
+    }
+    echo Loader::helper('json')->encode($fnames);
+  ?>;
+  console.log(settings);
   window.im = $('div.Editor').ImageEditor(settings);
 })
 </script>

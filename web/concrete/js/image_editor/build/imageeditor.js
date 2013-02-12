@@ -1,7 +1,6 @@
 
 var ImageEditor = function (settings) {
   "use strict";
-
   if (settings === undefined) return this;
   var im         = this, x;
   im.width       = settings.width;
@@ -12,6 +11,8 @@ var ImageEditor = function (settings) {
   im.controlSets = {};
   im.components  = {};
   im.filters     = {};
+  if (console === undefined || settings.debug != true) 
+    console = {log:function(){}}; // Debug output.
 
   im.center = {
     x: im.width / 2,
