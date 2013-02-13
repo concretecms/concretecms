@@ -18,6 +18,7 @@ class Concrete5_Controller_Dashboard_System_Seo_BulkSeoTool extends Controller {
 	}
 	
 	public function saveRecord() {
+		$text = Loader::helper('text');
         $success = false;
         $success = 'success';
         $cID = $this->post('cID');
@@ -31,11 +32,10 @@ class Concrete5_Controller_Dashboard_System_Seo_BulkSeoTool extends Controller {
     	$c->setAttribute('meta_keywords',$this->post('meta_keywords'));
         $cHandle = $this->post('collection_handle');
         $c->update(array('cHandle'=>$cHandle));
-        $c = Page::getByID($cID);
         $c->rescanCollectionPath();
-        $cHandle = $c->getCollectionHandle();
-        $newPath = $c->getCollectionPathFromID($cID);
-        $result = array('success'=>$success, 'cID'=>$cID, 'cHandle'=>$cHandle, 'newPath' => $cHandle);
+        $newPath = Page::getCollectionPathFromID($cID);
+		$newHandle = $text->urlify($cHandle);
+        $result = array('success'=>$success, 'cID'=>$cID, 'cHandle'=>$newHandle, 'newPath' => $newHandle);
         echo Loader::helper('json')->encode($result);
         exit;
     }
@@ -81,7 +81,7 @@ class Concrete5_Controller_Dashboard_System_Seo_BulkSeoTool extends Controller {
 		}
 
 		$keywords = htmlentities($req['keywords'], ENT_QUOTES, APP_CHARSET);
-		$pageList->filterByKeywords($keywords);
+		$pageList->filterByKeywords($keywords, true);
 
 		if ($req['numResults']) {
 			$pageList->setItemsPerPage($req['numResults']);
