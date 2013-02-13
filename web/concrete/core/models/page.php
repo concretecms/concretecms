@@ -1683,6 +1683,14 @@ class Concrete5_Model_Page extends Collection {
 	}
 	
 	public function moveToTrash() {
+	
+		// run any internal event we have for page trashing
+		$ret = Events::fire('on_page_trash', $this);
+
+		if ($ret < 0) {
+			return false;
+		}
+		
 		$trash = Page::getByPath(TRASH_PAGE_PATH);
 		$this->move($trash);
 		$this->deactivate();
