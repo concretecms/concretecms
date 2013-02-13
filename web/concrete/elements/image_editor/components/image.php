@@ -1,0 +1,1 @@
+<?=Loader::helper('concrete/assets')->image();?>

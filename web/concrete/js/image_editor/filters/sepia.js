@@ -13,7 +13,7 @@ im.bind('filterChange',function(e){
 
 		console.log('applyFilter');
 		$.fn.dialog.showLoader();
-		im.image.applyFilter(im.filter.grayscale,{},function(){
+		im.image.applyFilter(im.filter.sepia,{},function(){
 			$.fn.dialog.hideLoader();
 			im.fire('filterApplied', me);
 			im.fire('SepiaFilterDidFinish');

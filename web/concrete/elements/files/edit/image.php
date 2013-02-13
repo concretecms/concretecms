@@ -9,32 +9,59 @@ if (!$fp->canEditFileContents()) {
 }
 
 Loader::model('system/image_editor/control_set');
+Loader::model('system/image_editor/component');
 Loader::model('system/image_editor/filter');
 
 $controlsets = SystemImageEditorControlSet::getList();
+$components = SystemImageEditorComponent::getList();
 $filters = SystemImageEditorFilter::getList();
 
 ?>
-<link rel="stylesheet" href="<?=ASSETS_URL_CSS?>/image_editor/image_editor.css?f=5">
+<link rel="stylesheet" href="<?=ASSETS_URL_CSS?>/ccm.image_editor.css?f=81">
 <script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/image_editor.min.js"></script>
 <div class='table ccm-ui'>
   <div class='Editor'></div>
   <div class='controls'>
-    <?php
-    if (!$controlsets) echo "&nbsp;";
-    foreach($controlsets as $controlset) {
-      $handle = $controlset->getImageEditorControlSetHandle();
-      echo "<link rel='stylesheet' href='/concrete/css/control_sets/{$handle}.css?d=".sha1(rand(1,500000))."'>
-          <div class='controlset {$handle}'".
-           " data-namespace='{$handle}'".
-           " data-src='/concrete/js/image_editor/control_sets/{$handle}.js'>".
-              "<h4>".$controlset->getImageEditorControlSetName()."</h4>".
-              "<div class='control'>";
-                echo Loader::element('control_sets/'.$handle,1);
-              echo "</div>".
-            "</div>";
-    }
-    ?>
+    <ul class='nav nav-tabs'>
+      <li class='active'><a href='#'>Edit</a></li>
+      <li><a href='#'>Add</a></li>
+    </ul>
+    <div class='editorcontrols'>
+      <div class='control-sets'>
+        <?php
+        if (!$controlsets) echo "&nbsp;";
+        foreach($controlsets as $controlset) {
+          $handle = $controlset->getImageEditorControlSetHandle();
+          echo "<link rel='stylesheet' href='/concrete/css/image_editor/control_sets/{$handle}.css?d=".sha1(rand(1,500000))."'>
+              <div class='controlset {$handle}'".
+               " data-namespace='{$handle}'".
+               " data-src='/concrete/js/image_editor/control_sets/{$handle}.js'>".
+                  "<h4>".$controlset->getImageEditorControlSetName()."</h4>".
+                  "<div class='control'><div class='contents'>";
+                    echo Loader::element('image_editor/control_sets/'.$handle,1);
+                  echo "</div></div>".
+                "</div>";
+        }
+        ?>
+      </div>
+      <div class='components'>
+        <?php
+        if (!$components) echo "&nbsp;";
+        foreach($components as $component) {
+          $handle = $component->getImageEditorControlSetHandle();
+          echo "<link rel='stylesheet' href='/concrete/css/image_editor/components/{$handle}.css?d=".sha1(rand(1,500000))."'>
+              <div class='component {$handle}'".
+               " data-namespace='{$handle}'".
+               " data-src='/concrete/js/image_editor/components/{$handle}.js'>".
+                  "<h4>".$component->getImageEditorControlSetName()."</h4>".
+                  "<div class='control'><div class='contents'>";
+                    echo Loader::element('image_editor/components/'.$handle,1);
+                  echo "</div></div>".
+                "</div>";
+        }
+        ?>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -45,7 +72,7 @@ $(function(){
   $('div.controlset','div.controls').each(function(){
     settings.controlsets[$(this).attr('data-namespace')] = {
       src:$(this).attr('data-src'),
-      element: $(this).children('div.control')
+      element: $(this).children('div.control').children('div.contents')
     }
   });
   settings.filters = <?php

@@ -17,12 +17,17 @@ div.Editor {
   width:75%;
   overflow-x:hidden;
 }
+
 div.controls {
   width:25%;
   background:white;
   position:relative;
   box-shadow:-5px 0px 25px -5px black;
   overflow-x:hidden;
+  ul.nav {
+    padding-left: 20px;
+    padding-top: 10px;
+  }
   div.controlset {
     h4 {
       padding:20px 40px 20px;
@@ -35,9 +40,12 @@ div.controls {
       }
     }
     div.control {
-      padding:20px;
+      padding:0 20px;
       background:#f5f5f5;
       box-shadow:0 12px 20px -15px black inset,0 -7px 20px -15px black inset;
+      > div.contents {
+        padding:20px 0;
+      }
     }
   }
 }

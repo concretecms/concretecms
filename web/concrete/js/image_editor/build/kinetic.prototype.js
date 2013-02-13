@@ -35,3 +35,16 @@ Kinetic.Layer.prototype.draw = function() {
   im.trigger('afterredraw',this);
   return draw;
 };
+
+Kinetic.Text.prototype.rasterize = function(e) {
+  var layer = this.parent;
+  var me = this;
+  this.toImage({
+    callback:function(img){
+      var rasterizedImage = new Kinetic.Image({image:img,x:me.getPosition().x,y:me.getPosition().y});
+      me.remove();
+      layer.add(rasterizedImage).draw();
+      e.callback(rasterizedImage);
+    }
+  });
+};
