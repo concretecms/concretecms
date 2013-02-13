@@ -81,6 +81,7 @@ if (!$tp->canInstallPackages()) { ?>
 		<h2><?=t('Details')?></h2>
 		<p><?=$mri->getBody()?></p>	
 		</div>
+		</div>
 	<?
 		if ($mri->purchaseRequired()) {
 			$buttonText = t('Purchase - %s', '$' . $mri->getPrice());
