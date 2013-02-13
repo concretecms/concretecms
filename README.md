@@ -22,7 +22,7 @@
 
 This is the development distribution of concrete5. It is bleeding edge. The latest development build can be downloaded from https://github.com/concrete5/concrete5/zipball/master. 
 
-For the latest fully supported release, check out http://www.concrete5.org/developers/downloads/
+For the latest fully supported release, check out http://www.concrete5.org/download/
 
 # Installation Instructions for concrete5
 
