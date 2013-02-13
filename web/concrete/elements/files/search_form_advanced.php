@@ -161,6 +161,7 @@ foreach($t1 as $value) {
 					<? foreach($s1 as $s) { ?>
 						<option value="<?=$s->getFileSetID()?>"  <? if (is_array($searchRequest['fsID']) && in_array($s->getFileSetID(), $searchRequest['fsID'])) { ?> selected="selected" <? } ?>><?=wordwrap($s->getFileSetName(), '23', '&shy;', true)?></option>
 					<? } ?>
+					</optgroup>
 					<optgroup label="<?=t('Other')?>">
 						<option value="-1" <? if (is_array($searchRequest['fsID']) && in_array(-1, $searchRequest['fsID'])) { ?> selected="selected" <? } ?>><?=t('Files in no sets.')?></option>
 					</optgroup>

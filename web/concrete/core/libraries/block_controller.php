@@ -41,7 +41,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		protected $btHasRendered = false;
 		protected $btCacheBlockRecord = false;
 		protected $btCacheBlockOutput = false;
-		protected $btCacheBlockOutputLifetime = CACHE_LIFETIME;
+		protected $btCacheBlockOutputLifetime = 0; //until manually updated or cleared
 		protected $btCacheBlockOutputOnPost = false;
 		protected $btCacheBlockOutputForRegisteredUsers = false;
 		
@@ -157,14 +157,22 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		 */
 		public function save($args) {
 			//$argsMerged = array_merge($_POST, $args);
-			if ($this->record) {
-				$attribs = $this->record->getAttributeNames();
-				foreach($attribs as $key) {
+			if ($this->btTable) {
+				$db = Loader::db();
+				$columns = $db->GetCol('show columns from `' . $this->btTable . '`'); // I have no idea why getAttributeNames isn't working anymore.
+				$this->record = new BlockRecord($this->btTable);
+				$this->record->bID = $this->bID;
+				foreach($columns as $key) {
 					if (isset($args[$key])) {
 						$this->record->{$key} = $args[$key];
 					}
 				}
 				$this->record->Replace();
+				if ($this->cacheBlockRecord() && ENABLE_BLOCK_CACHE) {
+					$record = serialize($this->record);
+					$db = Loader::db();
+					$db->Execute('update Blocks set btCachedBlockRecord = ? where bID = ?', array($record, $this->bID));
+				}
 			}
 		}
 		
@@ -192,7 +200,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		 */
 		public function duplicate($newBID) {
 			if ($this->btTable) {
-				$newInstance = clone $this->record;
+				$ni = new BlockRecord($this->btTable);
+				$ni->bID = $this->bID;
+				$ni->Load('bID=' . $this->bID);
+				$newInstance = clone $ni;
 				$newInstance->bID = $newBID;
 				$newInstance->Insert();
 				return $newInstance;
@@ -362,7 +373,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			return parent::post($field,$defaultValue);
 		}
 
-		
 		/**
 		 * Automatically run when a block is deleted. This removes the special data from the block's specific database table. If a block needs to do more than this this method should be overridden.
 		 * @return $void
@@ -370,18 +380,35 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		public function delete() {
 			if ($this->bID > 0) {
 				if ($this->btTable) {
-					$this->record->delete();
+					$ni = new BlockRecord($this->btTable);
+					$ni->bID = $this->bID;
+					$ni->Load('bID=' . $this->bID);
+					$ni->delete();
 				}
 			}
 		}
 
 		/** 
 		 * Loads the BlockRecord class based on its attribute names
-		 * If ENABLE_ON_BLOCK_LOAD_EVENT is set, fires 'on_block_load'. Event handlers have 
-		 * the opportunity to return a modified block record.
 		 * @return void
 		 */
 		protected function load() {
+			if ($this->btTable) {
+				if ($this->btCacheBlockRecord && $this->btCachedBlockRecord && ENABLE_BLOCK_CACHE) {
+					$this->record = unserialize($this->btCachedBlockRecord);
+				} else { 
+					$this->record = new BlockRecord($this->btTable);
+					$this->record->bID = $this->bID;
+					$this->record->Load('bID=' . $this->bID);
+					if ($this->btCacheBlockRecord && ENABLE_BLOCK_CACHE) {
+						// this is the first time we're loading
+						$record = serialize($this->record);
+						$db = Loader::db();
+						$db->Execute('update Blocks set btCachedBlockRecord = ? where bID = ?', array($record, $this->bID));
+					}
+				}
+			}
+
 			$ret = Events::fire('on_block_load', $this->record, $this->btHandle, $this->bID);
 			if ($ret && is_object($ret)){
 				$this->record = $ret;
@@ -406,17 +433,12 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			} else if ($obj instanceof Block) {
 				$b = $obj;
 				$this->identifier = 'BLOCK_' . $obj->getBlockID();
-			
 				// we either have a blockID passed, or nothing passed, if we're adding a block type				
 				$this->bID = $b->getBlockID();
-				if ($this->btTable) {
-					$this->record = new BlockRecord($this->btTable);
-					$this->record->bID = $this->bID;
-					$this->record->Load('bID=' . $this->bID);
-					$this->load();
-				}
 				$this->btHandle = $obj->getBlockTypeHandle();
 				$this->bActionCID = $obj->getBlockActionCollectionID();
+				$this->btCachedBlockRecord = $obj->getBlockCachedRecord();
+				$this->load();
 			}
 			parent::__construct();
 			$this->set('controller', $this);
@@ -444,9 +466,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			if ($method) {
 				$this->task = $method;
 			}
-			if ($this->btCacheBlockRecord) {
-				$this->load();
-			}
+
 			if (method_exists($this, 'on_start')) {
 				$this->on_start($method);
 			}

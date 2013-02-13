@@ -24,7 +24,7 @@ $(function() {
 				} else {
 		 			ccmAlert.hud(ccmi18n_sitemap.deletePageSuccessMsg, 2000, 'delete_small', ccmi18n_sitemap.deletePage);
 					<? if ($_REQUEST['display_mode'] == 'explore') { ?>
-						ccmSitemapExploreNode('<?=$_REQUEST['instance_id']?>', 'explore', '<?=$_REQUEST['select_mode']?>', resp.cParentID);
+						ccmSitemapExploreNode('<?=$_REQUEST['instance_id']?>', 'explore', '<?=$_REQUEST['select_mode']?>', r.cParentID);
 					<? } else { ?>
 						deleteBranchFade(r.cID);
 					<? } ?>

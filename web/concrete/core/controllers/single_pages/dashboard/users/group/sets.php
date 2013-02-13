@@ -22,8 +22,12 @@ class Concrete5_Controller_Dashboard_Users_Group_Sets extends DashboardBaseContr
 			if (!trim($this->post('gsName'))) { 
 				$this->error->add(t("Specify a name for your group set."));
 			}
-			if (!$this->error->has()) {			
-				$gs = GroupSet::add($this->post('gsName'));
+			$gsName = trim($this->post('gsName'));
+			if (!Loader::helper('validation/strings')->alphanum($gsName, true)) {
+				$this->error->add(t('Set Names must only include alphanumerics and spaces.'));
+			}
+			if (!$this->error->has()) {
+				$gs = GroupSet::add($gsName);
 				if (is_array($_POST['gID'])) {
 					foreach($_POST['gID'] as $gID) {
 						$g = Group::getByID($gID);
@@ -64,8 +68,12 @@ class Concrete5_Controller_Dashboard_Users_Group_Sets extends DashboardBaseContr
 				}
 			}
 			
+			$gsName = trim($this->post('gsName'));
+			if (!Loader::helper('validation/strings')->alphanum($gsName, true)) {
+				$this->error->add(t('Set Names must only include alphanumerics and spaces.'));
+			}
 			if (!$this->error->has()) {
-				$as->updateGroupSetName($this->post('gsName'));
+				$as->updateGroupSetName($gsName);
 				$this->redirect('dashboard/users/group_sets', 'set_updated');
 			}
 			

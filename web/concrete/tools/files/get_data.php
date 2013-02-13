@@ -7,7 +7,7 @@ if (!$fp->canAccessFileManager()) {
 	die(t("Access Denied."));
 }
 
-$respw = array();
+$resp = array();
 
 $fileIDs = array();
 $files = array();

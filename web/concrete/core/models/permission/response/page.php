@@ -48,6 +48,14 @@ class Concrete5_Model_PagePermissionResponse extends PermissionResponse {
 	
 	// convenience function
 	public function canViewToolbar() {
+		$u = new User();
+		if (!$u->isRegistered()) {
+			return false;
+		}
+		if ($u->isSuperUser()) {
+			return true;
+		}
+
 		$dh = Loader::helper('concrete/dashboard');
 		if ($dh->canRead() ||
 		$this->canViewPageVersions() ||

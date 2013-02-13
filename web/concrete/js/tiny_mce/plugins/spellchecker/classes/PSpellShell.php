@@ -2,6 +2,7 @@
 /**
  * $Id: editor_plugin_src.js 201 2007-02-12 15:56:56Z spocke $
  *
+ * @package MCManager.includes
  * @author Moxiecode
  * @copyright Copyright © 2004-2007, Moxiecode Systems AB, All rights reserved.
  */
@@ -37,13 +38,13 @@ class PSpellShell extends SpellChecker {
 			$matches = array();
 
 			// Skip this line.
-			if (strpos($dstr, "@") === 0)
+			if ($dstr[0] == "@")
 				continue;
 
-			preg_match("/\& ([^ ]+) .*/i", $dstr, $matches);
+			preg_match("/(\&|#) ([^ ]+) .*/i", $dstr, $matches);
 
-			if (!empty($matches[1]))
-				$returnData[] = utf8_encode(trim($matches[1]));
+			if (!empty($matches[2]))
+				$returnData[] = utf8_encode(trim($matches[2]));
 		}
 
 		return $returnData;
@@ -81,7 +82,7 @@ class PSpellShell extends SpellChecker {
 			$matches = array();
 
 			// Skip this line.
-			if (strpos($dstr, "@") === 0)
+			if ($dstr[0] == "@")
 				continue;
 
 			preg_match("/\&[^:]+:(.*)/i", $dstr, $matches);
@@ -102,10 +103,14 @@ class PSpellShell extends SpellChecker {
 	function _getCMD($lang) {
 		$this->_tmpfile = tempnam($this->_config['PSpellShell.tmp'], "tinyspell");
 
-		if(preg_match("#win#i", php_uname()))
-			return $this->_config['PSpellShell.aspell'] . " -a --lang=". escapeshellarg($lang) . " --encoding=utf-8 -H < " . $this->_tmpfile . " 2>&1";
+		$file = $this->_tmpfile;
+		$lang = preg_replace("/[^-_a-z]/", "", strtolower($lang));
+		$bin  = $this->_config['PSpellShell.aspell'];
 
-		return "cat ". $this->_tmpfile ." | " . $this->_config['PSpellShell.aspell'] . " -a --encoding=utf-8 -H --lang=". escapeshellarg($lang);
+		if (preg_match("#win#i", php_uname()))
+			return "$bin -a --lang=$lang --encoding=utf-8 -H < $file 2>&1";
+
+		return "cat $file | $bin -a --lang=$lang --encoding=utf-8 -H";
 	}
 }
 

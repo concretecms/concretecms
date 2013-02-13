@@ -13,9 +13,14 @@ class Concrete5_Controller_Dashboard_Files_AddSet extends Controller {
 			return;
 		}
 		
-		if (!$this->post('file_set_name')) {
+		if (!trim($this->post('file_set_name'))) {
 			$this->set('error', array(t('Please Enter a Name')));
-			return;		
+			return;
+		}
+		$setName = trim($this->post('file_set_name'));
+		if (!Loader::helper('validation/strings')->alphanum($setName, true)) {
+			$this->set('error', array(t('Set Names must only include alphanumerics and spaces.')));
+			return;
 		}
 		
 		//print('<pre>');print_r(get_included_files());print('</pre>');
@@ -24,7 +29,7 @@ class Concrete5_Controller_Dashboard_Files_AddSet extends Controller {
 		//AS: Adodb Active record is complaining a ?/value array mismatch unless
 		//we explicatly set the primary key ID field to null		
 		$file_set->fsID		= null;
-		$file_set->fsName 	= $this->post('file_set_name');
+		$file_set->fsName 	= $setName;
 		$file_set->fsType 	= FileSet::TYPE_PUBLIC;
 		$file_set->uID		= $u->getUserID();
 		$file_set->fsOverrideGlobalPermissions = ($this->post('fsOverrideGlobalPermissions') == 1) ? 1 : 0;

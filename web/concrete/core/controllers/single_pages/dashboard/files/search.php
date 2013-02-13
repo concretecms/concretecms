@@ -58,7 +58,7 @@ class Concrete5_Controller_Dashboard_Files_Search extends Controller {
 		}
 
 		if ($req['numResults']) {
-			$fileList->setItemsPerPage($req['numResults']);
+			$fileList->setItemsPerPage(intval($req['numResults']));
 		}
 		
 		if ((isset($req['fsIDNone']) && $req['fsIDNone'] == 1) || (is_array($req['fsID']) && in_array(-1, $req['fsID']))) { 
@@ -142,7 +142,7 @@ class Concrete5_Controller_Dashboard_Files_Search extends Controller {
 			}
 		}
 		if (isset($req['numResults'])) {
-			$fileList->setItemsPerPage($req['numResults']);
+			$fileList->setItemsPerPage(intval($req['numResults']));
 		}
 		return $fileList;
 	}

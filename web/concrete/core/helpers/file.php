@@ -85,7 +85,25 @@ class Concrete5_Helper_File {
 			chmod($target, $mode);
 		}
 	}
-	
+
+	/** 
+	 * Removes all files from within a specified directory
+	 * @param string $source Directory
+	 */
+	public function removeAll($source) {
+		$r = @glob($source);
+		if (is_array($r)) {
+			foreach($r as $file) {
+				if (is_dir($file)) {
+					$this->removeAll("$file/*");
+					rmdir($file);
+				} else {
+					unlink($file);
+				}
+			}
+		}
+	}
+
 	/** 
 	 * Takes a path to a file and sends it to the browser, streaming it, and closing the HTTP connection afterwards. Basically a force download method
 	 * @param stings $file

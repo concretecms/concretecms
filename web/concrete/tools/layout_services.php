@@ -56,21 +56,32 @@ if ( !$validLayout || !$cp->canEditPageContents() || !$ap->canAddLayoutToArea() 
 			$cvalID=intval($_REQUEST['cvalID']);
 			$layout = Layout::getByID($_REQUEST['layoutID']);
 			$db = Loader::db();
-			$layouts = $a->getAreaLayouts($nvc);
 			$direction = $_REQUEST['direction']; 
-			for($i=0; $i<count($layouts); $i++){  
-				$layout=$layouts[$i]; 
-				if($layout->getLayoutID()==$_REQUEST['layoutID'] ){
+			
+			// Get array of layouts for the current (published) page
+			//$oldLayouts = $a->getAreaLayouts($c);
+			
+			// Get array of layouts for the working (unsaved) page
+			$newLayouts = $a->getAreaLayouts($nvc);
+			
+			// Iterate through layouts, looking for the one we need to change
+			for($i=0; $i<count($newLayouts); $i++){  
+				$layout=$newLayouts[$i];
+				// Check if this layout is the one we need to change
+				if ($layout->areaNameNumber==$_REQUEST['areaNameNumber']){
+					// If so, adjust the position values
 					if( $direction=='up' && $i>0 ){
-						$prevLayout=$layouts[$i-1];
+						$prevLayout=$newLayouts[$i-1];
 						$layout->position = $prevLayout->position;
 						$prevLayout->position = $prevLayout->position+1;
 						$vals = array( $prevLayout->position, intval($prevLayout->cvalID) );
 						$sql = 'UPDATE CollectionVersionAreaLayouts SET position=? WHERE cvalID=? ';  
 						$db->query($sql,$vals);
 						$siblingMoved=1;
-					}elseif($direction=='down' && ($i+1)<count($layouts)){
-						$nextLayout=$layouts[$i+1];
+
+						
+					}elseif($direction=='down' && ($i+1)<count($newLayouts)){
+						$nextLayout=$newLayouts[$i+1];
 						$layout->position = $nextLayout->position;
 						$nextLayout->position = $nextLayout->position-1; 
 						$vals = array( $nextLayout->position, intval($nextLayout->cvalID) );
@@ -84,8 +95,10 @@ if ( !$validLayout || !$cp->canEditPageContents() || !$ap->canAddLayoutToArea() 
 										
 					} 
 					break;
+				
 				} 
 			} 
+			$layouts = $a->getAreaLayouts($nvc);
 			$jsonData['success'] = 1; 
 			break;	 
 			
@@ -95,9 +108,30 @@ if ( !$validLayout || !$cp->canEditPageContents() || !$ap->canAddLayoutToArea() 
 			break;
 
 		case 'delete':  
-			$nvc->deleteAreaLayout( $a, $layout, intval($_REQUEST['deleteBlocks'])); 
+			$areaNameNumber=$_REQUEST['areaNameNumber'];
+			if ($areaNameNumber){
+				$db = Loader::db();
+				$vals = array( $nvc->getCollectionID(), $nvc->getVersionID(), $a->getAreaHandle(), $areaNameNumber );
+				
+				$db->Execute('delete from CollectionVersionAreaLayouts WHERE cID = ? AND cvID = ? AND arHandle = ? AND areaNameNumber = ?', $vals ); 
+				
+				//also delete this layouts blocks
+				$layout->setAreaObj($a);
+				//we'll try to grab more areas than necessary, just incase the layout size had been reduced at some point. 
+				//error_log ('$layoutNameNumber: ' . $layout->getAreaNameNumber() . ' ' . print_r($_REQUEST,true));
+				$layout->areaNameNumber=$areaNameNumber;
+				$maxCell = $layout->getMaxCellNumber()+20; 
+				for( $i=1; $i<=$maxCell; $i++ ){ 
+					if(intval($_REQUEST['deleteBlocks'])) $layout->deleteCellsBlocks($nvc,$i);  
+					else $layout->moveCellsBlocksToParent($nvc,$i);  
+				}
+				
+				Layout::cleanupOrphans();	 
+					 
+				$nvc->refreshCache();
 			$jsonData['refreshPage'] = (intval($_REQUEST['deleteBlocks']))?0:1;  
 			$jsonData['success'] = 1; 
+			}
 			break;	
 			
 		case 'deletePreset':

@@ -40,12 +40,7 @@ class Concrete5_Model_Stack extends Page {
 	}
 	
 	protected static function isValidStack($stack) {
-		$parent = Page::getByPath(STACKS_PAGE_PATH);
-		if ($stack->getCollectionParentID() != $parent->getCollectionID()) {
-			return false;
-		}
-		
-		return true;
+		return $stack->getCollectionTypeHandle() == STACKS_PAGE_TYPE;
 	}
 
 	public static function addStack($stackName, $type = self::ST_TYPE_USER_ADDED) {

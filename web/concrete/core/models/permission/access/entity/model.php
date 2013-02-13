@@ -18,7 +18,7 @@ abstract class Concrete5_Model_PermissionAccessEntity extends Object {
 	}
 	
 	final static function getByID($peID) {
-		$obj = Cache::get('permission_access_entity', $peID);
+		$obj = CacheLocal::getEntry('permission_access_entity', $peID);
 		if ($obj instanceof PermissionAccessEntity) {
 			return $obj;
 		}
@@ -26,6 +26,9 @@ abstract class Concrete5_Model_PermissionAccessEntity extends Object {
 		$r = $db->GetRow('select petID, peID from PermissionAccessEntities where peID = ?', array($peID));
 		if (is_array($r)) {
 			$pt = PermissionAccessEntityType::getByID($r['petID']);
+			if (!is_object($pt)) {
+				return false;
+			}
 			$class = Loader::helper('text')->camelcase($pt->getAccessEntityTypeHandle());
 			$class .= 'PermissionAccessEntity';
 			$obj = new $class();
@@ -33,7 +36,7 @@ abstract class Concrete5_Model_PermissionAccessEntity extends Object {
 			$obj->setPropertiesFromArray($r);
 			$obj->load();
 		}
-		Cache::set('permission_access_entity', $peID, $obj);
+		CacheLocal::set('permission_access_entity', $peID, $obj);
 		return $obj;
 	}
 	

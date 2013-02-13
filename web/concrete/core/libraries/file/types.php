@@ -12,7 +12,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
  */
 
 /**
-
  * @package Core
  * @subpackage Files
  * @author Andrew Embler <andrew@concrete5.org>

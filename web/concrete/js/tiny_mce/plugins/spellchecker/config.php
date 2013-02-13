@@ -1,4 +1,9 @@
 <?php
+/**
+ * config.php
+ *
+ * @package MCManager.includes
+ */
 	// General settings
 	$config['general.engine'] = 'GoogleSpell';
 	//$config['general.engine'] = 'PSpell';

@@ -66,21 +66,51 @@ class Concrete5_Controller_Dashboard_Composer_Write extends Controller {
 					$handle = Loader::helper('text')->urlify($this->post('cName'));
 				}
 
-				$handle = str_replace('-', PAGE_PATH_SEPARATOR, $handle);		
-				$data = array('cDatePublic' => Loader::helper('form/date_time')->translate('cDatePublic'), 'cHandle' => $handle, 'cName' => $this->post('cName'), 'cDescription' => $this->post('cDescription'));
+				$handle = str_replace('-', PAGE_PATH_SEPARATOR, $handle);
+
+				$data = array();
+				$pk = PermissionKey::getByHandle('edit_page_properties');
+				$pk->setPermissionObject($entry);
+				$asl = $pk->getMyAssignment();
+				if ($asl->allowEditName()) { 
+					$data['cName'] = $this->post('cName');
+				}
+				if ($asl->allowEditDescription()) { 
+					$data['cDescription'] = $this->post('cDescription');
+				}
+				if ($asl->allowEditPaths()) { 
+					$data['cHandle'] = $handle;
+				}
+				if ($asl->allowEditDateTime()) { 
+					$data['cDatePublic'] = Loader::helper('form/date_time')->translate('cDatePublic');
+				}
+
 				$entry->getVersionToModify();
 				// this is a pain. we have to use composerpage::getbyid again because
 				// getVersionToModify is hard-coded to return a page object
 				$entry = ComposerPage::getByID($entry->getCollectionID(), 'RECENT');
 				$entry->update($data);
-				$this->saveData($entry);
+				$this->saveData($entry, $asl);
+				$u = new User();
 				if ($this->post('ccm-publish-draft')) {
-					$v = CollectionVersion::get($entry, 'RECENT');
-					$v->approve();
+		
+					Cache::disableCache();
+					Cache::disableLocalCache();
+
 					if ($entry->isComposerDraft()) { 
+
 						$entry->move($parent);
+	
+						$v = CollectionVersion::get($entry, 'RECENT');
+						$pkr = new ApprovePagePageWorkflowRequest();
+						$pkr->setRequestedPage($entry);
+						$pkr->setRequestedVersionID($v->getVersionID());
+						$pkr->setRequesterUserID($u->getUserID());
+						$pkr->trigger();
+
 						Events::fire('on_composer_publish', $entry);
 						$entry->markComposerPageAsPublished();
+
 					}
 					$this->redirect('?cID=' . $entry->getCollectionID());
 				} else if ($this->post('autosave')) { 
@@ -132,7 +162,7 @@ class Concrete5_Controller_Dashboard_Composer_Write extends Controller {
 		}
 	}
 	
-	protected function saveData($p) {
+	protected function saveData($p, $permissionsAssignment) {
 		$ct = CollectionType::getByID($p->getCollectionTypeID());
 		$blocks = $p->getComposerBlocks();
 		
@@ -149,8 +179,11 @@ class Concrete5_Controller_Dashboard_Composer_Write extends Controller {
 				
 		Loader::model("attribute/categories/collection");
 		$aks = $ct->getComposerAttributeKeys();
+		$allowedAKIDs = $permissionsAssignment->getAttributesAllowedArray();
 		foreach($aks as $cak) {
-			$cak->saveAttributeForm($p);				
+			if (in_array($cak->getAttributeKeyID(), $allowedAKIDs)) {
+				$cak->saveAttributeForm($p);				
+			}
 		}	
 	}
 	

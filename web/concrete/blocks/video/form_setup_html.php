@@ -9,7 +9,7 @@ table#videoBlockSetup .note{ font-size:10px; color:#999999; font-weight:normal }
 <div class="clearfix">
 <?=$form->label('ccm-block-video-width', t('Width'))?>
 <div class="input">
-	<input type="text" style="width: 40px" id="ccm-block-video-width" name="width" value="<?=$width?>"/></td>
+	<input type="text" style="width: 40px" id="ccm-block-video-width" name="width" value="<?=$width?>"/>
 </div>
 </div>
 

@@ -174,32 +174,19 @@ class Concrete5_Model_ConfigStore {
 	}
 	
 	protected function load() {
-		if (defined('ENABLE_CACHE') && (!ENABLE_CACHE)) {
-			// if cache has been explicitly disabled, we re-enable it anyway.
-			Cache::enableCache();
+		$this->rows = array();
+		$this->db = Loader::db();
+		if (!$this->db) {
+			return;
 		}
-		$val = Cache::get('config_options', 'all');
-		if ($val) {
-			$this->rows = $val;
-		} else {
-			$this->rows = array();
-			$this->db = Loader::db();
-			if (!$this->db) {
-				return;
+		$r = $this->db->Execute('select * from Config where uID = 0 order by cfKey asc');
+		while ($row = $r->FetchRow()) {
+			if (!$row['pkgID']) {
+				$row['pkgID'] = 0;
 			}
-			$r = $this->db->Execute('select * from Config where uID = 0 order by cfKey asc');
-			while ($row = $r->FetchRow()) {
-				if (!$row['pkgID']) {
-					$row['pkgID'] = 0;
-				}
-				$this->rows["{$row['cfKey']}.{$row['pkgID']}"] = $row;
-			}
-			$r->Close();
-			Cache::set('config_options', 'all', $this->rows);
+			$this->rows["{$row['cfKey']}.{$row['pkgID']}"] = $row;
 		}
-		if (defined('ENABLE_CACHE') && (!ENABLE_CACHE)) {
-			Cache::disableCache();
-		}
+		$r->Close();
 	}
 	
 	protected function rowToConfigValue($row)
@@ -261,15 +248,6 @@ class Concrete5_Model_ConfigStore {
 			"replace into Config (cfKey, timestamp, cfValue, pkgID) values (?, ?, ?, ?)",
 			array($cfKey, $timestamp, $cfValue, $pkgID)
 		);
-		if (defined('ENABLE_CACHE') && (!ENABLE_CACHE)) {
-			// if cache has been explicitly disabled, we re-enable it anyway.
-			Cache::enableCache();
-		}
-		Cache::set('config_options', 'all', $this->rows);
-		if (defined('ENABLE_CACHE') && (!ENABLE_CACHE)) {
-			// if cache has been explicitly disabled, we re-enable it anyway.
-			Cache::disableCache();
-		}
 	}
 	
 	public function delete($cfKey, $pkgID = null) {
@@ -290,15 +268,6 @@ class Concrete5_Model_ConfigStore {
 				"delete from Config where cfKey = ?",
 				array($cfKey)
 			);
-		}
-		if (defined('ENABLE_CACHE') && (!ENABLE_CACHE)) {
-			// if cache has been explicitly disabled, we re-enable it anyway.
-			Cache::enableCache();
-		}
-		Cache::set('config_options', 'all', $this->rows);
-		if (defined('ENABLE_CACHE') && (!ENABLE_CACHE)) {
-			// if cache has been explicitly disabled, we re-enable it anyway.
-			Cache::disableCache();
 		}
 	}
 	
