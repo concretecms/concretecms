@@ -37,11 +37,10 @@ class Concrete5_Library_Events {
 	/** 
 	 * Returns an instance of the systemwide Events object.
 	 */
-	public function getInstance() {
+	public static function getInstance() {
 		static $instance;
 		if (!isset($instance)) {
-			$v = __CLASS__;
-			$instance = new $v;
+			$instance = new Events;
 		}
 		return $instance;
 	}		
