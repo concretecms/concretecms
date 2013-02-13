@@ -37,7 +37,9 @@ class Concrete5_Helper_Navigation {
 			$link = DIR_REL . $dispatcher . $cObj->getCollectionPath() . '/';
 		} else {
 			$_cID = ($cObj->getCollectionPointerID() > 0) ? $cObj->getCollectionPointerOriginalID() : $cObj->getCollectionID();
-			if ($_cID > 1) {
+			if( $cObj->isExternalLink() && $appendBaseURL == false){
+    		    $link = $cObj->getCollectionPointerExternalLink();
+			}else if ($_cID > 1) {
 				$link = DIR_REL . $dispatcher . '?cID=' . $_cID;
 			} else {
 				$link = DIR_REL . '/';
