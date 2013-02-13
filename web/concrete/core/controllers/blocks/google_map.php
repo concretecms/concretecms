@@ -74,7 +74,8 @@
 						   position: latlng, 
 						   map: map
 					   });
-				   }catch(e){alert(e.message)} 
+				   }catch(e){
+				   $("#googleMapCanvas'. $this->bID .'").replaceWith("<p>Unable to display map: "+e.message+"</p>")}
 				}
 				$(function() {
 					var t;
