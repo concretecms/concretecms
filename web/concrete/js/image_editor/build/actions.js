@@ -4,7 +4,7 @@ im.bind('imageload',function(){
   im.fire('LoadingControlSets');
   for (namespace in cs) {
     var myns = "ControlSet_" + namespace;
-    console.log(myns);
+    log(myns);
     if (!firstcs) firstcs = myns;
     $.ajax(cs[namespace]['src'],{
       dataType:'text',
@@ -13,30 +13,29 @@ im.bind('imageload',function(){
       myns:myns,
       beforeSend:function(){running++;},
       success:function(js){
+        if (im === undefined) {
+          im
+        }
         running--;
         var nso = im.addControlSet(this.myns,js,cs[this.namespace]['element']);
-        console.log(nso);
+        log(nso);
         im.fire('controlSetLoad',nso);
         if (0 == running) {
-          im.activeControlSet = firstcs;
           im.trigger('ControlSetsLoaded');
-          im.trigger('ChangeActiveAction',firstcs);
         }
       },
       error: function(xhr, errDesc, exception) {
         running--;
         if (0 == running) {
-          im.activeControlSet = firstcs;
           im.trigger('ControlSetsLoaded');
-          im.trigger('ChangeActiveAction',firstcs);
         }
       }
     });
   }
 });
 im.bind('ControlSetsLoaded',function(){ // do this when the control sets finish loading.
-  console.log('Loaded');
-  var filters = settings.filters || {}, components = settings.components || {}, namespace, firstf, firstc;
+  log('Loaded');
+  var filters = settings.filters || {}, components = settings.components || {}, namespace, firstf, firstc ;
   im.fire('LoadingFilters');
   for (namespace in filters) {
     var myns = "Filter_" + namespace;
@@ -73,9 +72,22 @@ im.bind('ControlSetsLoaded',function(){ // do this when the control sets finish 
   }
 });
 im.bind('ChangeActiveAction',function(e){
-  var ns = e.eventData.substr(11);
-  var active = $('div.controlset[data-namespace='+ns+']','div.controls')
-    .children('div.control').slideDown().end().children('h4').addClass('active').end();
-  $('div.controlset','div.controls').not(active)
-    .children('div.control').slideUp().end().children('h4').removeClass('active');
+  var ns = e.eventData;
+  if (ns === im.activeControlSet) return;
+  for (var ons in im.controlSets) {
+    if (ons !== ns) $(im.controlSets[ons]).slideUp();
+  }
+  im.activeControlSet = ns;
+  if (!ns) return;
+  var cs = $(im.controlSets[ns]),
+      height = cs.show().height();
+  cs.hide().height(height).slideDown(function(){$(this).height('');});
+});
+
+im.bind('ChangeNavTab',function(e) {
+  im.trigger('ChangeActiveAction');
+  switch(e.eventData) {
+    case 'add':
+
+  }
 });

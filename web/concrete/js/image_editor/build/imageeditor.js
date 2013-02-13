@@ -11,10 +11,22 @@ var ImageEditor = function (settings) {
   im.controlSets = {};
   im.components  = {};
   im.filters     = {};
-  if (console === undefined || settings.debug != true) 
-    console = {log:function(){}}; // Debug output.
 
   im.center = {
     x: im.width / 2,
     y: im.height / 2
   };
+  var log = function() {
+    if (settings.debug === true && console !== undefined) {
+      var args = arguments;
+      if (args.length == 1) args = args[0];
+      console.log(args);
+    }
+  }
+  var error = function() {
+    if (console !== undefined) {
+      var args = arguments;
+      if (args.length == 1) args = args[0];
+      console.error(args);
+    }
+  }

@@ -39,6 +39,19 @@ Kinetic.Layer.prototype.draw = function() {
   return draw;
 };
 
+Kinetic.Text.prototype.rasterize = function(e) {
+  var layer = this.parent;
+  var me = this;
+  this.toImage({
+    callback:function(img){
+      var rasterizedImage = new Kinetic.Image({image:img,x:me.getPosition().x,y:me.getPosition().y});
+      me.remove();
+      layer.add(rasterizedImage).draw();
+      e.callback(rasterizedImage);
+    }
+  });
+};
+
 
 ///////////////////////////////////////////////////////////////////////////////
 //                               imageeditor.js                              //
@@ -56,13 +69,25 @@ var ImageEditor = function (settings) {
   im.controlSets = {};
   im.components  = {};
   im.filters     = {};
-  if (console === undefined || settings.debug != true) 
-    console = {log:function(){}}; // Debug output.
 
   im.center = {
     x: im.width / 2,
     y: im.height / 2
   };
+  var log = function() {
+    if (settings.debug === true && console !== undefined) {
+      var args = arguments;
+      if (args.length == 1) args = args[0];
+      console.log(args);
+    }
+  }
+  var error = function() {
+    if (console !== undefined) {
+      var args = arguments;
+      if (args.length == 1) args = args[0];
+      console.error(args);
+    }
+  }
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -156,7 +181,16 @@ im.addControlSet = function(ns,js,elem) {
   if (jQuery && elem instanceof jQuery) elem = elem[0];
   elem.controlSet = function(im,js) {
     this.im = im;
-    eval(js);
+    try {
+      eval(js);
+    } catch(e) {
+      var pos = e.stack.replace(/[\S\s]+at HTMLDivElement.eval.+?<anonymous>:(\d+:\d+)[\S\s]+/,'$1').split(':');
+      var jsstack = js.split("\n");
+      var error = "Parse error at line #"+pos[0]+" char #"+pos[1]+" within "+ns;
+      error += "\n"+jsstack[parseInt(pos[0])-1];
+      error += "\n"+(new Array(parseInt(pos[1])).join(" "))+"^";
+      error(error);
+    }
     return this;
   };
   var newim = im.clone(ns);
@@ -303,7 +337,7 @@ im.bind('imageload',function(){
   im.fire('LoadingControlSets');
   for (namespace in cs) {
     var myns = "ControlSet_" + namespace;
-    console.log(myns);
+    log(myns);
     if (!firstcs) firstcs = myns;
     $.ajax(cs[namespace]['src'],{
       dataType:'text',
@@ -312,30 +346,29 @@ im.bind('imageload',function(){
       myns:myns,
       beforeSend:function(){running++;},
       success:function(js){
+        if (im === undefined) {
+          im
+        }
         running--;
         var nso = im.addControlSet(this.myns,js,cs[this.namespace]['element']);
-        console.log(nso);
+        log(nso);
         im.fire('controlSetLoad',nso);
         if (0 == running) {
-          im.activeControlSet = firstcs;
           im.trigger('ControlSetsLoaded');
-          im.trigger('ChangeActiveAction',firstcs);
         }
       },
       error: function(xhr, errDesc, exception) {
         running--;
         if (0 == running) {
-          im.activeControlSet = firstcs;
           im.trigger('ControlSetsLoaded');
-          im.trigger('ChangeActiveAction',firstcs);
         }
       }
     });
   }
 });
 im.bind('ControlSetsLoaded',function(){ // do this when the control sets finish loading.
-  console.log('Loaded');
-  var filters = settings.filters || {}, components = settings.components || {}, namespace, firstf, firstc;
+  log('Loaded');
+  var filters = settings.filters || {}, components = settings.components || {}, namespace, firstf, firstc ;
   im.fire('LoadingFilters');
   for (namespace in filters) {
     var myns = "Filter_" + namespace;
@@ -372,11 +405,24 @@ im.bind('ControlSetsLoaded',function(){ // do this when the control sets finish 
   }
 });
 im.bind('ChangeActiveAction',function(e){
-  var ns = e.eventData.substr(11);
-  var active = $('div.controlset[data-namespace='+ns+']','div.controls')
-    .children('div.control').slideDown().end().children('h4').addClass('active').end();
-  $('div.controlset','div.controls').not(active)
-    .children('div.control').slideUp().end().children('h4').removeClass('active');
+  var ns = e.eventData;
+  if (ns === im.activeControlSet) return;
+  for (var ons in im.controlSets) {
+    if (ons !== ns) $(im.controlSets[ons]).slideUp();
+  }
+  im.activeControlSet = ns;
+  if (!ns) return;
+  var cs = $(im.controlSets[ns]),
+      height = cs.show().height();
+  cs.hide().height(height).slideDown(function(){$(this).height('');});
+});
+
+im.bind('ChangeNavTab',function(e) {
+  im.trigger('ChangeActiveAction');
+  switch(e.eventData) {
+    case 'add':
+
+  }
 });
 
 
@@ -387,13 +433,6 @@ im.bind('ChangeActiveAction',function(e){
   window.c5_image_editor = im; // Safe keeping
   return im;
 };
-
-$('div.controlset').find('div.control').slideUp(0);
-$('div.controlset').find('h4').click(function(){
-  $('div.controlset').find('h4').not($(this)).removeClass('active');
-  var ns = $(this).parent().attr('data-namespace');
-  im.trigger('ChangeActiveAction',"ControlSet_"+ns);
-});
 $.fn.ImageEditor = function (settings) {
   (settings === undefined && (settings = {}));
   settings.imageload = $.fn.dialog.hideLoader;
@@ -409,6 +448,18 @@ $.fn.ImageEditor = function (settings) {
   (settings.height === undefined && (settings.height = self.height()));
   $.fn.dialog.showLoader();
   var im = new ImageEditor(settings);
+
+  $('div.controls').children('ul.nav').children().click(function(){
+    if ($(this).hasClass('active')) return false;
+    im.trigger('ChangeNavTab',$(this).text().toLowerCase());
+    return false;
+  });
+  $('div.controlset').find('div.control').children('div.contents').slideUp(0);
+  $('div.controlset').find('h4').click(function(){
+    $('div.controlset').find('h4').not($(this)).removeClass('active');
+    var ns = $(this).parent().attr('data-namespace');
+    im.trigger('ChangeActiveAction',"ControlSet_"+ns);
+  });
   im.bind('imageload', $.fn.dialog.hideLoader);
   return im;
 };
