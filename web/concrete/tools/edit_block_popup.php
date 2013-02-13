@@ -3,6 +3,9 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 $c = Page::getByID($_REQUEST['cID'], 'RECENT');
 $a = Area::get($c, $_REQUEST['arHandle']);
+if (!is_object($a)) {
+	die('Invalid Area');
+}
 if (!$a->isGlobalArea()) {
 	$b = Block::getByID($_REQUEST['bID'], $c, $a);
 } else {
@@ -11,6 +14,13 @@ if (!$a->isGlobalArea()) {
 	$b = Block::getByID($_REQUEST['bID'], $sc, STACKS_AREA_NAME);
 	$b->setBlockAreaObject($a); // set the original area object
 	$isGlobalArea = true;
+}
+
+if (!is_object($b)) {
+	echo '<div class="ccm-ui"><div class="alert alert-error">';
+	echo(t("Unable to retrieve block object. If this block has been moved please reload the page."));
+	echo '</div></div';
+	exit;
 }
 
 $bp = new Permissions($b);
@@ -119,6 +129,7 @@ if (is_object($b)) {
 					'b' => $b,
 					'p' => $bp
 				));
+				$bv->setAreaObject($a);
 				$bv->render($b);
 				$bv->renderElement('block_footer');
 			}

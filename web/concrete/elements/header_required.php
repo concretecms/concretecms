@@ -1,11 +1,17 @@
 <?php 
 defined('C5_EXECUTE') or die("Access Denied.");
-global $c;
-global $cp;
-global $cvID;
+$c = $this->getCollectionObject();
+if (is_object($c)) {
+	$cp = new Permissions($c);
+}
 
 if (is_object($c)) {
-	$pageTitle = (!$pageTitle) ? $c->getCollectionName() : $pageTitle;
+	if(!(isset($pageTitle) && strlen($pageTitle))) {
+		$pageTitle = $c->getCollectionName();
+		if($c->isAdminArea()) {
+			$pageTitle = t($pageTitle);
+		}
+	}
 	$pageDescription = (!$pageDescription) ? $c->getCollectionDescription() : $pageDescription;
 	$cID = $c->getCollectionID(); 
 	$isEditMode = ($c->isEditMode()) ? "true" : "false";

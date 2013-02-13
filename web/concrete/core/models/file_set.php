@@ -288,7 +288,7 @@
 			}
 			
 			foreach($permissions as $pkHandle) { 
-				$pk = PagePermissionKey::getByHandle($pkHandle);
+				$pk = PermissionKey::getByHandle($pkHandle);
 				$pk->setPermissionObject($this);
 				$pa = $pk->getPermissionAccessObject();
 				if (!is_object($pa)) {

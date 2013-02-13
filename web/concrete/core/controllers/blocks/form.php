@@ -442,23 +442,17 @@ class Concrete5_Controller_Block_Form extends BlockController {
 				//echo $mh->body.'<br>';
 				@$mh->sendMail(); 
 			} 
-			//$_REQUEST=array();	
 			
-			if($this->redirectCID > 0) {
-				$pg = Page::getByID($this->redirectCID);
-				if(is_object($pg)) {
-					$this->redirect($pg->getCollectionPath());
-				} else { // page didn't exist, we'll just do the default action
-					$c = Page::getCurrentPage();
-					header("Location: ".Loader::helper('navigation')->getLinkToCollection($c, true)."?surveySuccess=1&qsid=".$this->questionSetId."#".$this->questionSetId);
-					exit;
+			if (!$this->noSubmitFormRedirect) {
+				if ($this->redirectCID > 0) {
+					$pg = Page::getByID($this->redirectCID);
+					if (is_object($pg) && $pg->cID) {
+						$this->redirect($pg->getCollectionPath());
+					}
 				}
-			}
-			
-			if(!$this->noSubmitFormRedirect){
 				$c = Page::getCurrentPage();
 				header("Location: ".Loader::helper('navigation')->getLinkToCollection($c, true)."?surveySuccess=1&qsid=".$this->questionSetId."#".$this->questionSetId);
-				die;
+				exit;
 			}
 		}
 	}		

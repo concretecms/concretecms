@@ -27,7 +27,9 @@ class Concrete5_Model_Block extends Object {
 	var $cID;
 	var $arHandle;
 	var $c;
+	protected $csrID;
 	protected $proxyBlock = false;
+	protected $bIncludeInComposerIsSet = false;
 
 	public static function populateManually($blockInfo, $c, $a) {
 		$b = new Block;
@@ -55,7 +57,7 @@ class Concrete5_Model_Block extends Object {
 			$cID = 0;
 			$arHandle = "";
 			$cvID = 0;
-			$b = Cache::get('block', $bID);
+			$b = CacheLocal::getEntry('block', $bID);
 		} else {
 			if (is_object($a)) {
 				$arHandle = $a->getAreaHandle();
@@ -65,10 +67,7 @@ class Concrete5_Model_Block extends Object {
 			}
 			$cID = $c->getCollectionID();
 			$cvID = $c->getVersionID();
-			$b = Cache::get('block', $bID . ':' . $cID . ':' . $cvID . ':' . $arHandle);
-			if ($b instanceof Block) {
-				return $b;
-			}
+			$b = CacheLocal::getEntry('block', $bID . ':' . $cID . ':' . $cvID . ':' . $arHandle);
 		}
 
 		if ($b instanceof Block) {
@@ -80,7 +79,7 @@ class Concrete5_Model_Block extends Object {
 		$b = new Block;
 		if ($c == null && $a == null) {
 			// just grab really specific block stuff
-			$q = "select bID, bIsActive, BlockTypes.btID, BlockTypes.btHandle, BlockTypes.pkgID, BlockTypes.btName, bName, bDateAdded, bDateModified, bFilename, Blocks.uID from Blocks inner join BlockTypes on (Blocks.btID = BlockTypes.btID) where bID = ?";
+			$q = "select bID, bIsActive, BlockTypes.btID, Blocks.btCachedBlockRecord, BlockTypes.btHandle, BlockTypes.pkgID, BlockTypes.btName, bName, bDateAdded, bDateModified, bFilename, Blocks.uID from Blocks inner join BlockTypes on (Blocks.btID = BlockTypes.btID) where bID = ?";
 			$b->isOriginal = 1;
 			$v = array($bID);				
 		} else {
@@ -94,9 +93,7 @@ class Concrete5_Model_Block extends Object {
 			$cvID = $vo->getVersionID();
 
 			$v = array($b->arHandle, $cID, $cvID, $bID);
-			$q = "select CollectionVersionBlocks.isOriginal, BlockTypes.pkgID, CollectionVersionBlocks.cbOverrideAreaPermissions, CollectionVersionBlocks.cbDisplayOrder,
-			Blocks.bIsActive, Blocks.bID, Blocks.btID, bName, bDateAdded, bDateModified, bFilename, btHandle, Blocks.uID from CollectionVersionBlocks inner join Blocks on (CollectionVersionBlocks.bID = Blocks.bID)
-			inner join BlockTypes on (Blocks.btID = BlockTypes.btID) where CollectionVersionBlocks.arHandle = ? and CollectionVersionBlocks.cID = ? and (CollectionVersionBlocks.cvID = ? or CollectionVersionBlocks.cbIncludeAll=1) and CollectionVersionBlocks.bID = ?";
+			$q = "select CollectionVersionBlocks.isOriginal, Blocks.btCachedBlockRecord, BlockTypes.pkgID, CollectionVersionBlocks.cbOverrideAreaPermissions, CollectionVersionBlocks.cbDisplayOrder, Blocks.bIsActive, Blocks.bID, Blocks.btID, bName, bDateAdded, bDateModified, bFilename, btHandle, Blocks.uID from CollectionVersionBlocks inner join Blocks on (CollectionVersionBlocks.bID = Blocks.bID) inner join BlockTypes on (Blocks.btID = BlockTypes.btID) where CollectionVersionBlocks.arHandle = ? and CollectionVersionBlocks.cID = ? and (CollectionVersionBlocks.cvID = ? or CollectionVersionBlocks.cbIncludeAll=1) and CollectionVersionBlocks.bID = ?";
 		
 		}
 
@@ -105,12 +102,6 @@ class Concrete5_Model_Block extends Object {
 		
 		if (is_array($row)) {
 			$b->setPropertiesFromArray($row);
-			$b->csrID = $db->GetOne('select csrID from CollectionVersionBlockStyles where cID = ? and cvID = ? and arHandle = ? and bID = ?', array(
-				$cID, 
-				$cvID,
-				$b->arHandle,
-				$bID
-			));
 			$r->free();
 			
 			$bt = BlockType::getByID($b->getBlockTypeID());
@@ -122,43 +113,11 @@ class Concrete5_Model_Block extends Object {
 			
 			$b->instance = new $class($b);
 			
-			if ($c != null) {
-				$ct = CollectionType::getByID($c->getCollectionTypeID());
-				if (is_object($ct)) {
-					if ($ct->isCollectionTypeIncludedInComposer()) { 
-					
-						if ($c->isMasterCollection()) {
-							$ctID = $c->getCollectionTypeID();
-							$ccbID = $bID;
-						} else {
-							$tempBID = $b->getBlockID();
-							while ($tempBID != false && $tempBID != 0) {
-								$originalBID = $tempBID;
-								$tempBID = $db->GetOne('select distinct br.originalBID from BlockRelations br inner join CollectionVersionBlocks cvb on cvb.bID = br.bID where br.bID = ? and cvb.cID = ?', array($tempBID, $cID));
-							}
-							if ($originalBID && is_object($c)) {
-								$ctID = $c->getCollectionTypeID();
-								$ccbID = $originalBID;
-							}
-						}
-						
-						if ($ctID && $ccbID) {
-							$cb = $db->GetRow('select bID, ccFilename from ComposerContentLayout where ctID = ? and bID = ?', array($ctID, $ccbID));
-							if (is_array($cb) && $cb['bID'] == $ccbID) {
-								$b->bIncludeInComposer = 1;
-								$b->cbFilename = $cb['ccFilename'];
-							}
-						}
-					}
-				}
-			}
-			
 			if ($c != null || $a != null) {
-				$ca = new Cache();
-				$ca->set('block', $bID . ':' . $cID . ':' . $cvID . ':' . $arHandle, $b);
+				CacheLocal::set('block', $bID . ':' . $cID . ':' . $cvID . ':' . $arHandle, $b);
 			} else {
 				$ca = new Cache();
-				$ca->set('block', $bID, $b);
+				CacheLocal::set('block', $bID, $b);
 			}
 			return $b;				
 
@@ -258,6 +217,60 @@ class Concrete5_Model_Block extends Object {
 		return false;
 	}
 	
+	public function getBlockCachedRecord() {
+		return $this->btCachedBlockRecord;
+	}
+
+
+	public function getBlockCachedOutput($area) {
+		$db = Loader::db();
+		
+		$arHandle = $this->getAreaHandle();
+		if ($this->isBlockInStack() && is_object($area)) {
+			$arHandle = $area->getAreaHandle();
+			$cx = Page::getCurrentPage();
+			$cID = $cx->getCollectioniD();
+			$cvID = $cx->getVersionID();
+		} else {
+			$c = $this->getBlockCollectionObject();
+			$cID = $c->getCollectionID();
+			$cvID = $c->getVersionID();
+		}
+		
+		$r = $db->GetRow('select btCachedBlockOutput, btCachedBlockOutputExpires from CollectionVersionBlocksOutputCache where cID = ? and cvID = ? and bID = ? and arHandle = ? ', array(
+			$cID, $cvID, $this->getBlockID(), $arHandle));
+		if ($r['btCachedBlockOutputExpires'] < time()) {
+			return false;
+		}
+
+		return $r['btCachedBlockOutput'];
+	}
+
+	public function setBlockCachedOutput($content, $lifetime, $area) {
+		$db = Loader::db();
+		$c = $this->getBlockCollectionObject();
+
+		$btCachedBlockOutputExpires = strtotime('+5 years');
+		if ($lifetime > 0) {
+			$btCachedBlockOutputExpires = time() + $lifetime;
+		}
+
+		$arHandle = $this->getAreaHandle();
+		$cID = $c->getCollectionID();
+		$cvID = $c->getVersionID();
+		if ($this->isBlockInStack() && is_object($area)) {
+			$arHandle = $area->getAreaHandle();
+			$cx = Page::getCurrentPage();
+			$cID = $cx->getCollectioniD();
+			$cvID = $cx->getVersionID();
+		}
+
+		if ($arHandle && $cID && $cvID) {
+			$db->Replace('CollectionVersionBlocksOutputCache', array('cID' => $cID, 'cvID' => $cvID, 'bID' => $this->getBlockID(), 'arHandle' => $arHandle, 'btCachedBlockOutput' => $content, 'btCachedBlockOutputExpires' => $btCachedBlockOutputExpires), 
+				array('cID', 'cvID', 'arHandle', 'bID'), true);
+		}
+	}
+
 	public function inc($file) {
 		$b = $this;
 		if (file_exists($this->getBlockPath() . '/' . $file)) {
@@ -279,7 +292,6 @@ class Concrete5_Model_Block extends Object {
 		$db->query("delete from BlockPermissionAssignments where cID = ? and cvID = ? and bID = ?", $v);
 		$v[] = $this->arHandle;
 		$db->query("update CollectionVersionBlocks set cbOverrideAreaPermissions = 0 where cID = ? and (cvID = ? or cbIncludeAll=1) and bID = ? and arHandle = ?", $v);
-		$this->refreshCache();
 	 }
 	 
 	public function getBlockPath() {
@@ -298,8 +310,48 @@ class Concrete5_Model_Block extends Object {
 	}
 	
 	public function isBlockIncludedInComposer() {
+		if (!$this->bIncludeInComposerIsSet) {
+			$this->setBlockComposerProperties();
+		}
+
 		return $this->bIncludeInComposer;
 	}
+
+
+	protected function setBlockComposerProperties() {
+		$this->bIncludeInComposerIsSet = true;
+		$db = Loader::db();
+		if ($this->c != null) {
+			$ct = CollectionType::getByID($this->c->getCollectionTypeID());
+			if (is_object($ct)) {
+				if ($ct->isCollectionTypeIncludedInComposer()) { 				
+					if ($this->c->isMasterCollection()) {
+						$ctID = $this->c->getCollectionTypeID();
+						$ccbID = $this->bID;
+					} else {
+						$tempBID = $this->getBlockID();
+						while ($tempBID != false && $tempBID != 0) {
+							$originalBID = $tempBID;
+							$tempBID = $db->GetOne('select distinct br.originalBID from BlockRelations br inner join CollectionVersionBlocks cvb on cvb.bID = br.bID where br.bID = ? and cvb.cID = ?', array($tempBID, $this->c->getCollectionID()));
+						}
+						if ($originalBID && is_object($this->c)) {
+							$ctID = $this->c->getCollectionTypeID();
+							$ccbID = $originalBID;
+						}
+					}
+					
+					if ($ctID && $ccbID) {
+						$cb = $db->GetRow('select bID, ccFilename from ComposerContentLayout where ctID = ? and bID = ?', array($ctID, $ccbID));
+						if (is_array($cb) && $cb['bID'] == $ccbID) {
+							$this->bIncludeInComposer = 1;
+							$this->cbFilename = $cb['ccFilename'];
+						}
+					}
+				}
+			}
+		}
+	}
+
 
 	function loadNewCollection(&$c) {
 		$this->c = $c;
@@ -361,7 +413,7 @@ class Concrete5_Model_Block extends Object {
 	}
 	
 	public function getInstance() {		
-		if ($this->instance->cacheBlockRecord() && is_object($this->instance->getBlockControllerData())) {
+		if (ENABLE_BLOCK_CACHE && $this->instance->cacheBlockRecord() && is_object($this->instance->getBlockControllerData())) {
 			$this->instance->__construct();
 		} else {
 			$this->instance = Loader::controller($this);
@@ -403,14 +455,17 @@ class Concrete5_Model_Block extends Object {
 
 		$r = $db->prepare($q);
 		$res = $db->execute($r, $v);
-		
+
+		$cID = $this->getBlockCollectionID();
+		$c = $this->getBlockCollectionObject();
+		$v = array($c->getCollectionID(), $c->getVersionID(), $this->getAreaHandle(), $bID);
+		$db->Execute('update CollectionVersionBlocksOutputCache set btCachedBlockOutputExpires = 0 where cID = ? and cvID = ? and arHandle = ? and bID = ?', $v);
+
 		$btID = $this->getBlockTypeID();
 		$bt = BlockType::getByID($btID);
 		$class = $bt->getBlockTypeClass();
 		$bc = new $class($this);
 		$bc->save($data);
-		
-		$this->refreshCache();
 	}
 
 	function isActive() {
@@ -421,14 +476,12 @@ class Concrete5_Model_Block extends Object {
 		$db = Loader::db();
 		$q = "update Blocks set bIsActive = 0 where bID = '{$this->bID}'";
 		$db->query($q);
-		$this->refreshCache();
 	}
 
 	function activate() {
 		$db = Loader::db();
 		$q = "update Blocks set bIsActive = 1 where bID = '{$this->bID}'";
 		$db->query($q);
-		$this->refreshCache();
 	}
 
 	public function getPackageID() {return $this->pkgID;}
@@ -450,7 +503,6 @@ class Concrete5_Model_Block extends Object {
 			//$res = $db->execute($r, $v);
 			$this->bName=$name;
 		}
-		$this->refreshCache();
 	}
 
 	function alias($c) {	
@@ -477,12 +529,14 @@ class Concrete5_Model_Block extends Object {
 			$res = $db->execute($r, $v);
 			
 			// styles
+			$csr = $this->getBlockCustomStyleRule();
+
 			$db->Execute('insert into CollectionVersionBlockStyles (cID, cvID, bID, arHandle, csrID) values (?, ?, ?, ?, ?)', array(
 				$cID, 
 				$cvID,
 				$this->bID,
 				$this->getAreaHandle(),
-				$this->csrID
+				$this->getBlockCustomStyleRuleID()
 			));
 			if ($res) {
 				// now we grab the permissions from the block we're aliasing from
@@ -515,7 +569,6 @@ class Concrete5_Model_Block extends Object {
 
 		$newBlockDisplayOrder = $nc->getCollectionAreaDisplayOrder($area->getAreaHandle());
 
-		Cache::delete('collection_blocks', $nc->getCollectionID() . ':' . $nc->getVersionID());
 		
 		$v = array($nc->getCollectionID(), $nc->getVersionID(), $area->getAreaHandle(), $newBlockDisplayOrder, $cID, $bID, $this->arHandle);
 		$db->Execute('update CollectionVersionBlocks set cID = ?, cvID = ?, arHandle = ?, cbDisplayOrder = ? where cID = ? and bID = ? and arHandle = ? and isOriginal = 1', $v);
@@ -582,21 +635,18 @@ class Concrete5_Model_Block extends Object {
 		$res2 = $db->execute($r2, $v2);
 		$nb = Block::getByID($newBID, $nc, $this->arHandle);
 		
-		$v = array($ncID, $nvID, $newBID, $this->arHandle, $this->csrID);
+		$v = array($ncID, $nvID, $newBID, $this->arHandle, $this->getBlockCustomStyleRuleID());
 		$db->Execute('insert into CollectionVersionBlockStyles (cID, cvID, bID, arHandle, csrID) values (?, ?, ?, ?, ?)', $v);
 
-		Cache::delete('collection_blocks', $ncID . ':' . $nvID);
 		
 		return $nb;
 	}
 	
 	public function getBlockCustomStyleRule() {
-		$db = Loader::db();
-		$csrID = $this->csrID;
-		if ($csrID > 0) {
+		if ($this->getBlockCustomStyleRuleID() > 0) {
 			Loader::model('custom_style');
 			$txt = Loader::helper('text');
-			$csr = CustomStyleRule::getByID($csrID);
+			$csr = CustomStyleRule::getByID($this->getBlockCustomStyleRuleID());
 			$arHandle = $txt->filterNonAlphaNum($this->getAreaHandle());
 
 			if (is_object($csr)) {
@@ -606,7 +656,29 @@ class Concrete5_Model_Block extends Object {
 		}
 	}
 	
-	public function getBlockCustomStyleRuleID() {return $this->csrID;}
+	public function getBlockCustomStyleRuleID() {
+		$db = Loader::db();
+		if (!isset($this->csrID)) {
+			$co = $this->getBlockCollectionObject();
+			$csrCheck = CacheLocal::getEntry('csrCheck', $co->getCollectionID() . ':' . $co->getVersionID());
+			$csrObject = CacheLocal::getEntry('csrObject', $co->getCollectionID() . ':' . $co->getVersionID() . ':' . $this->getAreaHandle() . ':' . $this->getBlockID());
+			if (is_object($csrObject)) {
+				$this->csrID = $csrObject->getCustomStyleRuleID();
+				return $csrObject->getCustomStyleRuleID();
+			} else if ($csrCheck) {
+				return false;
+			}
+
+			$v = array(
+				$co->getCollectionID(), 
+				$co->getVersionID(),
+				$this->getAreaHandle(),
+				$this->bID
+			);
+			$this->csrID = $db->GetOne('select csrID from CollectionVersionBlockStyles where cID = ? and cvID = ? and arHandle = ? and bID = ?', $v);
+		}
+		return $this->csrID;
+	}
 	
 	
 	public function resetBlockCustomStyle($updateAll = false) {
@@ -614,15 +686,14 @@ class Concrete5_Model_Block extends Object {
 		$c = $this->getBlockCollectionObject();
 		$cvID = $c->getVersionID();
 		if ($updateAll) {
-			$r = $db->Execute('select cID, cvID, bID, arHandle from CollectionVersionBlockStyles where bID = ? and csrID = ?', array($this->bID, $this->csrID));
+			$r = $db->Execute('select cID, cvID, bID, arHandle from CollectionVersionBlockStyles where bID = ? and csrID = ?', array($this->bID, $this->getBlockCustomStyleRuleID()));
 			while ($row = $r->FetchRow()) {
 				$c1 = Page::getByID($row['cID'], $row['cvID']);
 				$b1 = Block::getByID($row['bID'], $c1, $row['arHandle']);
-				$b1->refreshCache();
 			}			
 			$db->Execute('delete from CollectionVersionBlockStyles where bID = ? and csrID = ?', array(
 				$this->bID,
-				$this->csrID
+				$this->getBlockCustomStyleRuleID()
 			));
 		} else {
 			$db->Execute('delete from CollectionVersionBlockStyles where cID = ? and cvID = ? and arHandle = ? and bID = ?', array(
@@ -631,7 +702,6 @@ class Concrete5_Model_Block extends Object {
 				$this->getAreaHandle(),
 				$this->bID
 			));
-			$this->refreshCache();
 		}
 	}
 	
@@ -657,7 +727,6 @@ class Concrete5_Model_Block extends Object {
 				array('cID' => $this->getBlockCollectionID(), 'cvID' => $cvID, 'arHandle' => $this->getAreaHandle(), 'bID' => $this->bID, 'csrID' => $csr->getCustomStyleRuleID()),
 				array('cID', 'cvID', 'bID', 'arHandle'), true
 			);
-			$this->refreshCache();
 		}
 	}
 
@@ -686,6 +755,9 @@ class Concrete5_Model_Block extends Object {
 	}
 
 	function getBlockComposerFilename() {
+		if (!$this->bIncludeInComposerIsSet) {
+			$this->setBlockComposerProperties();
+		}
 		return $this->cbFilename;
 	}
 
@@ -850,7 +922,6 @@ class Concrete5_Model_Block extends Object {
 			return false;
 		}
 
-		$this->refreshCache();
 
 		$cID = $this->cID;
 		$c = $this->getBlockCollectionObject();
@@ -946,7 +1017,6 @@ class Concrete5_Model_Block extends Object {
 		$q = "update CollectionVersionBlocks set cbDisplayOrder = ? where bID = ? and cID = ? and (cvID = ? or cbIncludeAll=1) and arHandle = ?";
 		$r = $db->query($q, array($do, $bID, $cID, $cvID, $arHandle));
 		
-		$this->refreshCache();
 	}
 	
 	function setBlockDisplayOrder($i) {
@@ -965,7 +1035,6 @@ class Concrete5_Model_Block extends Object {
 
 		$c = $this->getBlockCollectionObject();
 		$cvID = $c->getVersionID();
-		$this->refreshCache();
 
 		switch($i) {
 			case '1':
@@ -1025,7 +1094,6 @@ class Concrete5_Model_Block extends Object {
 			$pk->setPermissionObject($this);
 			$pk->copyFromPageOrAreaToBlock();
 		}		
-		$this->refreshCache();
 	}
 	
 
@@ -1043,6 +1111,7 @@ class Concrete5_Model_Block extends Object {
 	 * Removes a cached version of the block 
 	 */
 	public function refreshCache() {
+		/*
 		// if the block is a global block, we need to delete all cached versions that reference it.
 		if ($this->bIsGlobal) {
 			$this->refreshCacheAll();
@@ -1075,9 +1144,11 @@ class Concrete5_Model_Block extends Object {
 				}
 			}
 		}
+		*/
 	}
 	
 	public function refreshCacheAll() {
+		/*
 		$db = Loader::db();
 		$rows=$db->getAll( 'SELECT cID, cvID, arHandle FROM CollectionVersionBlocks WHERE bID='.intval($this->getBlockID()) ); 
 		foreach($rows as $row){
@@ -1086,6 +1157,7 @@ class Concrete5_Model_Block extends Object {
 			Cache::delete('collection_blocks', $row['cID'] . ':' . $row['cvID']);
 			Cache::delete('block', $this->getBlockID());
 		}
+		*/
 	}
 	
 	public function export($node, $exportType = 'full') {
@@ -1139,7 +1211,6 @@ class Concrete5_Model_Block extends Object {
 		$q = "update Blocks set bName = ?, bFilename = ?, bDateModified = ? where bID = ?";
 		$r = $db->prepare($q);
 		$res = $db->execute($r, $v);
-		$this->refreshCache();
 		
 	}
 
@@ -1164,7 +1235,6 @@ class Concrete5_Model_Block extends Object {
 			} else {
 				$db->Execute('delete from ComposerContentLayout where ctID = ? and bID = ?', array($ctID, $this->getBlockID()));
 			}
-			$this->refreshCache();
 		}		
 	}
 

@@ -17,9 +17,10 @@
 
 // Grid system and page structure
 @import "scaffolding.less";
-@import "grid.less";
 // no use for these on the front-end
+//@import "grid.less";
 //@import "layouts.less";
+@import "grid_frontend.less"; // NOTE: remove this in 5.7! This is a temporary fix for items that have spans in 5.6.1 on the frontend.
 
 // Base CSS
 @import "type.less";

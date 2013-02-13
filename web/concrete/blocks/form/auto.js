@@ -98,7 +98,13 @@ var miniSurvey ={
 			postStr+='&msqID='+msqID+'&qsID='+parseInt(this.qsID);
 			if(answerType == 'email') {
 				postStr+='&send_notification_from=';
-				postStr+= $('#send_notification_from').is(':checked') ? "1" : "0"
+                		if (mode == 'Edit') {
+                    			fieldID = "#send_notification_from_edit";
+                		}
+                		else {
+                    			fieldID = "#send_notification_from";
+                		}
+				postStr+= $(fieldID).is(':checked') ? "1" : "0"
 			}
 			$.ajax({ 
 					type: "POST",

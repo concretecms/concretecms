@@ -336,7 +336,7 @@ class Concrete5_Library_Content_Importer {
 	protected function importPackages(SimpleXMLElement $sx) {
 		if (isset($sx->packages)) {
 			foreach($sx->packages->package as $p) {
-				$pkg = Loader::package($p['handle']);
+				$pkg = Loader::package((string) $p['handle']);
 				$pkg->install();
 			}
 		}
@@ -482,11 +482,6 @@ class Concrete5_Library_Content_Importer {
 				$akc = AttributeKeyCategory::getByHandle($ak['category']);
 				$pkg = ContentImporter::getPackageObject($ak['package']);
 				$type = AttributeType::getByHandle($ak['type']);
-				if (is_object($pkg)) {
-					Loader::model('attribute/categories/' . $akc->getAttributeKeyCategoryHandle(), $pkg->getPackageHandle());
-				} else {
-					Loader::model('attribute/categories/' . $akc->getAttributeKeyCategoryHandle());
-				}		
 				$txt = Loader::helper('text');
 				$className = $txt->camelcase($akc->getAttributeKeyCategoryHandle());
 				$c1 = $className . 'AttributeKey';

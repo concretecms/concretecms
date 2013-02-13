@@ -500,6 +500,13 @@
 				</attributekey>
 			</attributes>
         </page>
+        <page name="Excluded URL Word List" path="/dashboard/system/seo/excluded" filename="/dashboard/system/seo/excluded.php" pagetype="" description="" package="">
+			<attributes>
+				<attributekey handle="meta_keywords">
+					<value>pretty, slug</value>
+				</attributekey>
+			</attributes>
+        </page>
         <page name="Statistics" path="/dashboard/system/seo/statistics" filename="/dashboard/system/seo/statistics.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">

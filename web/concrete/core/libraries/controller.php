@@ -27,7 +27,7 @@ class Concrete5_Library_Controller {
 	protected $c; // collection
 	protected $task = false;
 	protected $parameters = false;
-	
+	protected $supportsPageCache = false;	
 	
 	/**
 	 * Items in here CANNOT be called through the URL
@@ -394,6 +394,13 @@ class Concrete5_Library_Controller {
 	 */	
 	public function isValidExternalUrl($url){
 		return true;
+	}
+	
+	/** 
+	 * Whether a particular single page controller supports full page caching
+	 */
+	public function supportsPageCache() {
+		return $this->supportsPageCache;
 	}
 	
 	/** 

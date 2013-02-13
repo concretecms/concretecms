@@ -28,7 +28,7 @@ if (isset($_POST['ccm-session'])) {
 	session_id($_REQUEST['sessionIDOverride']);
 }
 
-if (isset($_COOKIE[SESSION]) && strlen($_COOKIE[SESSION]) > 32) {
+if (isset($_COOKIE[SESSION]) && strlen($_COOKIE[SESSION]) > 128) {
 	unset($_COOKIE[SESSION]);
 }
 

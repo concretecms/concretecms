@@ -22,7 +22,7 @@
 	
 	if ($_GET['vtask'] == 'view_versions') { ?>
 		
-		<div class="ccm-ui">
+		<div class="ccm-ui" style="height: 100%">
 		
 		<? 
 		$ih = Loader::helper('concrete/interface');
@@ -40,7 +40,7 @@
 
 		foreach($_REQUEST['cvID'] as $cvID) { ?>
 		
-		<div id="ccm-tab-content-view-version-<?=$cvID?>" style="display: <?=$display?>">
+		<div id="ccm-tab-content-view-version-<?=$cvID?>" style="display: <?=$display?>; height: 100%">
 		<iframe border="0" id="v<?=time()?>" frameborder="0" height="100%" width="100%" src="<?=BASE_URL . DIR_REL?>/<?=DISPATCHER_FILENAME?>?cvID=<?=$cvID?>&cID=<?=$_REQUEST['cID']?>&vtask=view_versions" />
 		</div>
 		
@@ -349,7 +349,7 @@ $("button[name=vRemove]").click(function() {
 		<th style="vertical-align: middle"><?=t('Creator')?></th>
 		<th style="vertical-align: middle"><?=t('Approver')?></th>
 		<th style="vertical-align: middle"><?=t('Created')?></th>
-		<th style="white-space: nowrap">
+		<th style="white-space: nowrap; width: 145px;">
 	<div class="btn-group" style="float: right; white-space: nowrap">
 	<?
 	$ih = Loader::helper("concrete/dashboard");

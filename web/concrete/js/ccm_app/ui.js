@@ -291,6 +291,9 @@ ccm_deleteBlock = function(cID, bID, aID, arHandle, msg) {
 			data: 'cID=' + cID + '&ccm_token=' + CCM_SECURITY_TOKEN + '&isAjax=true&btask=remove&bID=' + bID + '&arHandle=' + arHandle
 		});
 		ccm_reloadAreaMenuPermissions(aID, cID);
+		if (typeof window.ccm_parseBlockResponsePost == 'function') {
+			ccm_parseBlockResponsePost({});
+		}
 	}	
 }
 
@@ -659,16 +662,19 @@ ccm_saveArrangement = function(cID) {
  	$.ajax({
  		type: 'POST',
  		url: CCM_DISPATCHER_FILENAME,
+ 		dataType: 'json',
  		data: 'cID=' + cID + '&ccm_token=' + CCM_SECURITY_TOKEN + '&btask=ajax_do_arrange' + serial,
- 		success: function(msg) {
- 			$("div.ccm-area").removeClass('ccm-move-mode');
-			$('div.ccm-block-arrange').each(function() {
-				$(this).addClass('ccm-block');
-				$(this).removeClass('ccm-block-arrange');
+ 		success: function(r) {
+ 			ccm_parseJSON(r, function() {
+	 			$("div.ccm-area").removeClass('ccm-move-mode');
+				$('div.ccm-block-arrange').each(function() {
+					$(this).addClass('ccm-block');
+					$(this).removeClass('ccm-block-arrange');
+				});
+				ccm_arrangeMode = false;
+				$(".ccm-main-nav-edit-option").fadeIn(300);
+				ccmAlert.hud(ccmi18n.arrangeBlockMsg, 2000, 'up_down', ccmi18n.arrangeBlock);
 			});
-			ccm_arrangeMode = false;
-			$(".ccm-main-nav-edit-option").fadeIn(300);
-			ccmAlert.hud(ccmi18n.arrangeBlockMsg, 2000, 'up_down', ccmi18n.arrangeBlock);
  		}});
 }
 

@@ -24,7 +24,7 @@
 			
 			<div class="clear"></div>
 			<p class="footer-copyright">&copy;<?php echo date('Y')?> <?php echo SITE?>.</p>
-			<p class="footer-tag-line"><?=t('Built with <a href="http://www.concrete5.org/" alt="Free Content Management System" target="_blank">concrete5 - an open source CMS')?></a></p>
+			<p class="footer-tag-line"><?=t('Built with <a href="http://www.concrete5.org/" alt="Free Content Management System" target="_blank">concrete5 - an open source CMS</a>')?></p>
 	
 		</div>
 	

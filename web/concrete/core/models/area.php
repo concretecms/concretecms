@@ -271,8 +271,7 @@ class Concrete5_Model_Area extends Object {
 			return false;
 		}
 		
-		$ca = new Cache();
-		$a = Cache::get('area', $c->getCollectionID() . ':' . $arHandle);
+		$a = CacheLocal::getEntry('area', $c->getCollectionID() . ':' . $arHandle);
 		if ($a instanceof Area) {
 			return $a;
 		}
@@ -292,7 +291,7 @@ class Concrete5_Model_Area extends Object {
 			$area->cID = $c->getCollectionID();
 			$area->c = &$c;
 			
-			Cache::set('area', $c->getCollectionID() . ':' . $arHandle, $area);
+			CacheLocal::set('area', $c->getCollectionID() . ':' . $arHandle, $area);
 			
 			return $area;
 		}
@@ -440,8 +439,6 @@ class Concrete5_Model_Area extends Object {
 			$this->rescanSubAreaPermissions();
 		}
 		
-		$ca = new Cache();
-		$a = Cache::delete('area', $this->getCollectionID() . ':' . $this->getAreaHandle());
 	}
 	
 	public function __destruct() {
@@ -498,7 +495,6 @@ class Concrete5_Model_Area extends Object {
 			}
 		}
 		
-		Cache::delete('area', $this->getCollectionID() . ':' . $this->getAreaHandle());
 	}
 	
 	/**
@@ -806,7 +802,6 @@ class Concrete5_Model_Area extends Object {
 			$this->rescanSubAreaPermissions();
 		}
 
-		$a = Cache::delete('area', $this->getCollectionID() . ':' . $this->getAreaHandle());
 
 	}
 	

@@ -9,6 +9,9 @@ $c = Page::getByID($_REQUEST['cID']);
 $a = Area::get($c, $_GET['arHandle']);
 $ax = $a;
 $cx = $c;
+if (!is_object($a)) {
+	die('Invalid Area');
+}
 if ($a->isGlobalArea()) {
 	$cx = Stack::getByName($a->getAreaHandle());
 	$ax = Area::get($cx, STACKS_AREA_NAME);
@@ -57,10 +60,10 @@ switch($_GET['atask']) {
 		break;
 	case 'layout':
 		$originalLayoutId = (intval($_REQUEST['originalLayoutID'])) ? intval($_REQUEST['originalLayoutID']) : intval($_REQUEST['layoutID']);
-		$args['refreshAction'] = REL_DIR_FILES_TOOLS_REQUIRED . '/edit_area_popup?atask=layout&cID=' . $c->getCollectionID() . '&arHandle=' . $a->getAreaHandle() . '&refresh=1&originalLayoutID='.$originalLayoutId.'&cvalID='.$_REQUEST['cvalID'];
+		$args['refreshAction'] = REL_DIR_FILES_TOOLS_REQUIRED . '/edit_area_popup?atask=layout&cID=' . $c->getCollectionID() . '&arHandle=' . $a->getAreaHandle() . '&refresh=1&originalLayoutID='.$originalLayoutId.'&cvalID='.$_REQUEST['cvalID'].'&areaNameNumber='.intval($_REQUEST['areaNameNumber']);
 		$toolSection = "block_area_layout";
 		$canViewPane = $ap->canAddLayoutToArea();
-		$args['action'] = $a->getAreaUpdateAction('layout').'&originalLayoutID='.$originalLayoutId.'&cvalID='.intval($_REQUEST['cvalID']);
+		$args['action'] = $a->getAreaUpdateAction('layout').'&originalLayoutID='.$originalLayoutId.'&cvalID='.intval($_REQUEST['cvalID']).'&areaNameNumber='.intval($_REQUEST['areaNameNumber']);
 		break;
 	case 'design':
 		$toolSection = 'custom_style';

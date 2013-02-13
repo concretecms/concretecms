@@ -48,20 +48,21 @@ class Concrete5_Model_UserAttributeKey extends AttributeKey {
 	}
 	
 	public static function getByID($akID) {
-		$ak = Cache::get('user_attribute_key', $akID);
-		if (is_object($ak)) {
-			return $ak;
-		}
-		
 		$ak = new UserAttributeKey();
 		$ak->load($akID);
 		if ($ak->getAttributeKeyID() > 0) {
-			Cache::set('user_attribute_key', $akID, $ak);
 			return $ak;	
 		}
 	}
 
 	public static function getByHandle($akHandle) {
+		$ak = CacheLocal::getEntry('user_attribute_key_by_handle', $akHandle);
+		if (is_object($ak)) {
+			return $ak;
+		} else if ($ak == -1) {
+			return false;
+		}
+		$ak = -1;
 		$db = Loader::db();
 		
 		$q = "SELECT ak.akID 
@@ -70,8 +71,11 @@ class Concrete5_Model_UserAttributeKey extends AttributeKey {
 			WHERE ak.akHandle = ?
 			AND akc.akCategoryHandle = 'user'";
 		$akID = $db->GetOne($q, array($akHandle));
-		
-		$ak = UserAttributeKey::getByID($akID);
+		if ($akID > 0) {
+			$ak = UserAttributeKey::getByID($akID);
+		}
+
+		CacheLocal::set('user_attribute_key_by_handle', $akHandle, $ak);
 		return $ak;
 	}
 
@@ -185,6 +189,9 @@ class Concrete5_Model_UserAttributeKey extends AttributeKey {
 	}
 	
 	public function add($type, $args, $pkg = false) {
+
+		CacheLocal::delete('user_attribute_key_by_handle', $args['akHandle']);
+
 		$ak = parent::add('user', $type, $args, $pkg);
 		
 		extract($args);
