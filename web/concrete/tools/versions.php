@@ -349,7 +349,7 @@ $("button[name=vRemove]").click(function() {
 		<th style="vertical-align: middle"><?=t('Creator')?></th>
 		<th style="vertical-align: middle"><?=t('Approver')?></th>
 		<th style="vertical-align: middle"><?=t('Created')?></th>
-		<th style="white-space: nowrap">
+		<th style="white-space: nowrap; width: 145px;">
 	<div class="btn-group" style="float: right; white-space: nowrap">
 	<?
 	$ih = Loader::helper("concrete/dashboard");
