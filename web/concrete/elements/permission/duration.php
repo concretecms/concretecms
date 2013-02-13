@@ -197,6 +197,9 @@ foreach($list['format']['wide'] as $key => $value) { ?>
 
 </div>
 
+</div>
+</div>
+
 <script type="text/javascript">
 ccm_accessEntityCalculateRepeatOptions = function() {
 	// get the difference between start date and end date
