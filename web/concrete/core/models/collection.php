@@ -722,7 +722,12 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			return $blocks;
 		}
 		
-		public function getBlocks($arHandle = false) {
+		/**
+		 * List the block IDs in a collection or area within a collection
+		 * @param string $arHandle. If specified, returns just the blocks in an area
+		 * @return array
+		 */
+		public function getBlockIDs($arHandle = false) {
 			$blockIDs = CacheLocal::getEntry('collection_block_ids', $this->getCollectionID() . ':' . $this->getVersionID());
 			$blocks = array();
 		
@@ -754,8 +759,19 @@ defined('C5_EXECUTE') or die("Access Denied.");
 						}
 					}
 				}
-			}		
+			}
+			return $blockIDs;
+		}
 			
+		/**
+		 * List the blocks in a collection or area within a collection
+		 * @param string $arHandle. If specified, returns just the blocks in an area
+		 * @return array
+		 */
+		public function getBlocks($arHandle = false) {
+
+			$blockIDs = $this->getBlockIDs($arHandle);
+
 			$blocks = array();
 			if (is_array($blockIDs)) {
 				foreach($blockIDs as $row) {
@@ -767,6 +783,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			}
 			return $blocks;
 		}
+
 		
 		public function addBlock($bt, $a, $data) {
 			$db = Loader::db();
