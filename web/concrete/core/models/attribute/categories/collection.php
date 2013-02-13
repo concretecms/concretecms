@@ -92,6 +92,11 @@ class Concrete5_Model_CollectionAttributeKey extends AttributeKey {
 		}
 
 		CacheLocal::set('collection_attribute_key_by_handle', $akHandle, $ak);
+
+		if ($ak === -1) {
+			return false;
+		}
+
 		return $ak;
 	}
 	

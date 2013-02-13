@@ -293,20 +293,22 @@ class ConcreteUpgradeVersion560Helper {
 			
 		} else {
 			$adminGroup = Group::getByID(ADMIN_GROUP_ID);
-			$pae = GroupPermissionAccessEntity::getOrCreate($adminGroup);
-			$pk = PermissionKey::getByHandle("add_block");
-			$pt = $pk->getPermissionAssignmentObject();
-			$pt->clearPermissionAssignment();
-			$pa = PermissionAccess::create($pk);
-			$pa->addListItem($pae);
-			$pt->assignPermissionAccess($pa);
-	
-			$pk = PermissionKey::getByHandle("add_stack");
-			$pt = $pk->getPermissionAssignmentObject();
-			$pt->clearPermissionAssignment();
-			$pa = PermissionAccess::create($pk);
-			$pa->addListItem($pae);
-			$pt->assignPermissionAccess($pa);
+			if ($adminGroup) {
+				$pae = GroupPermissionAccessEntity::getOrCreate($adminGroup);
+				$pk = PermissionKey::getByHandle("add_block");
+				$pt = $pk->getPermissionAssignmentObject();
+				$pt->clearPermissionAssignment();
+				$pa = PermissionAccess::create($pk);
+				$pa->addListItem($pae);
+				$pt->assignPermissionAccess($pa);
+
+				$pk = PermissionKey::getByHandle("add_stack");
+				$pt = $pk->getPermissionAssignmentObject();
+				$pt->clearPermissionAssignment();
+				$pa = PermissionAccess::create($pk);
+				$pa->addListItem($pae);
+				$pt->assignPermissionAccess($pa);
+			}
 		}
 	}
 
