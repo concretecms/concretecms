@@ -12,10 +12,11 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 
 */
 
-
+/*
 $v = View::getInstance();
 
-$v->setThemeByPath('/login', "greek_yogurt");
-$v->setThemeByPath('/page_not_found', "greek_yogurt");
-$v->setThemeByPath('/page_forbidden', "greek_yogurt");
-$v->setThemeByPath('/register', "greek_yogurt");
+$v->setThemeByPath('/login', "yourtheme");
+$v->setThemeByPath('/page_forbidden', "yourtheme");
+$v->setThemeByPath('/register', "yourtheme");
+
+*/
