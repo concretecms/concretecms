@@ -164,9 +164,9 @@ class Concrete5_Model_Area extends Object {
 	/**
 	 * sets a custom block template for blocks of a type specified by the btHandle
 	 * @param string $btHandle handle for the block type
-	 * @param string $temp string identifying the block template ex: breadcrumb
+	 * @param string $view string identifying the block template ex: 'templates/breadcrumb.php'
 	 */
-	public function setCustomTemplate($btHandle, $temp) {$this->customTemplateArray[$btHandle] = $temp;}
+	public function setCustomTemplate($btHandle, $view) {$this->customTemplateArray[$btHandle] = $view;}
 	
 	/** 
 	 * Returns the total number of blocks in an area. 
