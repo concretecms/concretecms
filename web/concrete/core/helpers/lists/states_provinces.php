@@ -507,32 +507,22 @@ class Concrete5_Helper_Lists_StatesProvinces {
 
 	);
 
-	protected $stateProvincesFromEvent;
-
 	public function __construct() {
 		$this->stateProvinces['GB'] = $this->stateProvinces['UK'];
+		$stateProvincesFromEvent = Events::fire('on_get_states_provinces_list', $this->stateProvinces);
+		if(is_array($stateProvincesFromEvent)) {
+			$this->stateProvinces = $stateProvincesFromEvent;
+		}
+		foreach(array_keys($this->stateProvinces) as $country) {
+			asort($this->stateProvinces[$country]);
+		}
 	}
 
 	/** Returns the list of States/Provinces for some countries (States/Provinces are sorted alphabetically).
 	* @return array Returns an array whose keys are the country codes and the values are arrays (with keys: State/Province code, values: State/Province names)
 	*/
 	public function getAll() {
-		if(!isset($this->stateProvincesFromEvent)) {
-			$stateProvincesFromEvent = Events::fire('on_get_states_provinces_list', $this->stateProvinces);
-			if(is_array($stateProvincesFromEvent)) {
-				foreach(array_keys($stateProvincesFromEvent) as $country) {
-					asort($stateProvincesFromEvent[$country]);
-				}
-				$this->stateProvincesFromEvent = $stateProvincesFromEvent;
-			}
-			else {
-				$this->stateProvincesFromEvent = false;
-				foreach(array_keys($this->stateProvinces) as $country) {
-					asort($this->stateProvinces[$country]);
-				}
-			}
-		}
-		return is_array($this->stateProvincesFromEvent) ? $this->stateProvincesFromEvent : $this->stateProvinces;
+		return $this->stateProvinces;
 	}
 
 	/** Returns the name of a specified State/Province in a specified Country.
@@ -541,9 +531,8 @@ class Concrete5_Helper_Lists_StatesProvinces {
 	* @return string|void Returns the State/Province name (if found), or nothing if not found.
 	*/
 	public function getStateProvinceName($code, $country) {
-		$stateProvinces = $this->getAll();
-		if(isset($stateProvinces[$country]) && isset($stateProvinces[$country][$code])) {
-			return $stateProvinces[$country][$code];
+		if(isset($this->stateProvinces[$country]) && isset($this->stateProvinces[$country][$code])) {
+			return $this->stateProvinces[$country][$code];
 		}
 	}
 
@@ -552,9 +541,8 @@ class Concrete5_Helper_Lists_StatesProvinces {
 	* @return array|void If the Country is supported, the function returns an array (whose keys are the States/Provinces codes and the values are their names); returns nothing if $country is not supported.
 	*/
 	public function getStateProvinceArray($country) {
-		$statesProvinces = $this->getAll();
-		if(isset($statesProvinces[$country])) {
-			return $statesProvinces[$country];
+		if(isset($this->stateProvinces[$country])) {
+			return $this->stateProvinces[$country];
 		}
 	}
 
