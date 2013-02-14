@@ -848,12 +848,14 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		}
 		
 		public function getBlockTypeClass() {
-			$btHandle = $this->getBlockTypeHandle();
-			return $this->_getClass($btHandle);
+			return $this->_getClass();
 		}
 		
+		/**
+		 * Deprecated -- use getBlockTypeClass() instead.
+		 */
 		public function getBlockTypeClassFromHandle() {
-			return $this->_getClass();
+			return $this->getBlockTypeClass();
 		}
 		
 		/** 
