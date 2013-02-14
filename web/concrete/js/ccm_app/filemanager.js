@@ -205,7 +205,7 @@ ccm_alSetupSetsForm = function(searchInstance) {
 	$('#fsAddToSearchName').liveUpdate('ccm-file-search-add-to-sets-list', 'fileset');
 
 	// Setup the tri-state checkboxes
-	$(".ccm-file-set-add-cb a").each(function() {
+	$('.ccm-file-set-add-cb a').each(function() {
 		var cb = $(this);
 		var startingState = cb.attr("ccm-tri-state-startup");
 		$(this).click(function() {
@@ -228,7 +228,7 @@ ccm_alSetupSetsForm = function(searchInstance) {
 			}
 			
 			$(this).attr('ccm-tri-state-selected', toSetState);
-			$(this).find('input').val(toSetState);
+			$(this).parent().find('input').val(toSetState);
 			$(this).find('img').attr('src', CCM_IMAGE_PATH + '/checkbox_state_' + toSetState + '.png');
 		});
 	});
