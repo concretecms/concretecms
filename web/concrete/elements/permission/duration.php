@@ -203,6 +203,10 @@ foreach($list['format']['wide'] as $key => $value) { ?>
 <script type="text/javascript">
 ccm_accessEntityCalculateRepeatOptions = function() {
 	// get the difference between start date and end date
+	if (!$("#pdStartDate_activate").is(':checked')) {
+		return false;
+	}
+       
 	var sdf = ($("#pdStartDate_dt").datepicker('option', 'dateFormat'));
 	var sdfr = $.datepicker.parseDate(sdf, $("#pdStartDate_dt").val());
 	var edf = ($("#pdEndDate_dt").datepicker('option', 'dateFormat'));
