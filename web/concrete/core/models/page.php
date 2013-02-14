@@ -512,6 +512,7 @@ class Concrete5_Model_Page extends Collection {
 		Loader::model('page_statistics');		
 		PageStatistics::incrementParents($newCID);
 
+		Page::getByID($newCID)->movePageDisplayOrderToBottom();
 		return $newCID;
 
 	}
