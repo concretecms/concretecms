@@ -141,7 +141,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 						if (is_dir($fdir) && !in_array($file, $btHandles) && file_exists($fdir . '/' . FILENAME_BLOCK_CONTROLLER)) {
 							$bt = new BlockType;
 							$bt->btHandle = $file;
-							$class = $bt->getBlockTypeClassFromHandle($file);
+							$class = $bt->getBlockTypeClass();
 							
 							require_once($fdir . '/' . FILENAME_BLOCK_CONTROLLER);
 							if (!class_exists($class)) {
@@ -682,7 +682,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			$env->clearOverrideCache();
 			
 			if (file_exists($dir . '/' . $btHandle . '/' . FILENAME_BLOCK_CONTROLLER)) {
-				$class = $bt->getBlockTypeClassFromHandle();
+				$class = $bt->getBlockTypeClass();
 				
 				$path = $dir . '/' . $btHandle;
 				if (!class_exists($class)) {
