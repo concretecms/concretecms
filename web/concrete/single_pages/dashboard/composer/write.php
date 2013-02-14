@@ -181,7 +181,7 @@ if (isset($entry)) {
 		if (!ccm_composerDoAutoSaveAllowed) {
 			return false;
 		}
-		
+		$('#ccm-submit-save').attr('disabled',true);
 		$('input[name=autosave]').val('1');
 		try {
 			tinyMCE.triggerSave(true, true);
@@ -194,11 +194,13 @@ if (isset($entry)) {
 				ccm_composerLastSaveTime = new Date();
 				$("#composer-save-status").html('<div class="alert alert-info"><?=t("Page saved at ")?>' + r.time + '</div>');
 				$(".ccm-composer-hide-on-approved").show();
+				$('#ccm-submit-save').attr('disabled',false);
 				if (callback) {
 					callback();
 				}
 			}
 		});
+		
 	}
 	
 	ccm_composerLaunchPreview = function() {
