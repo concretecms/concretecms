@@ -22,6 +22,28 @@ ccm_getDashboardBackgroundImageData = function(image, display) {
 	});
 }
 
+var lastSizeCheck = 9999999;		
+ccm_testFixForms = function() {
+	if ($(window).width() <= 560 && lastSizeCheck > 560) {
+		ccm_fixForms();
+	} else if ($(window).width() > 560 && lastSizeCheck <= 560) {
+		ccm_fixForms(true);
+	}
+	lastSizeCheck = $(window).width();
+}
+ccm_fixForms = function(horizontal) {
+	$('form').each(function() {
+		var f = $(this);
+		if (horizontal) {
+			if (f.attr('original-class') == 'form-horizontal') {
+				f.attr('class', '').addClass('form-horizontal');
+			}
+		} else {
+			f.removeClass('form-horizontal');
+		}
+	});
+}
+
 ccm_dashboardEqualizeMenus = function() {
 	if ($(window).width() < 560) {
 		$('div.dashboard-icon-list div.well').css('visibility', 'visible');
