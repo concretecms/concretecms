@@ -35,12 +35,6 @@ class Concrete5_Controller_Block_Survey extends BlockController {
 		parent::__construct($obj);
 		$c = Page::getCurrentPage();
 		
-		if ($obj instanceof Block) {
-			if ($obj->isBlockInStack()) {
-				$c = $obj->getBlockCollectionObject();
-			}
-		}
-		
 		if (is_object($c)) {
 			$this->cID = $c->getCollectionID();
 		}
