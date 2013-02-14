@@ -10,7 +10,7 @@
 		}
 
 		public static function getInstance() {
-			if (null == self::$loc) {
+			if (null === self::$loc) {
 				self::$loc = new self;
 			}
 			return self::$loc;
