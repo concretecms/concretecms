@@ -153,8 +153,9 @@ class Concrete5_Controller_Register extends Controller {
 						}
 					}
 					
-					$mh->addParameter('uName', $process->getUserName());
-					$mh->addParameter('uID', $process->getUserID());
+					$mh->addParameter('uID',    $process->getUserID());
+					$mh->addParameter('user',   $process);
+					$mh->addParameter('uName',  $process->getUserName());
 					$mh->addParameter('uEmail', $process->getUserEmail());
 					$attribs = UserAttributeKey::getRegistrationList();
 					$attribValues = array();
