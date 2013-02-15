@@ -114,11 +114,11 @@ class Concrete5_Model_Page extends Collection {
 	public function getPermissionObjectIdentifier() {
 		// this is a hack but it's a really good one for performance
 		// if the permission access entity for page owner exists in the database, then we return the collection ID. Otherwise, we just return the permission collection id
-		// this is because page owner is the ONLY thing that makes it so we can't use getPermissionsCollectionID, and for most sites that will DRAMATICALLY reduce the number of querie.s
-		if (PAGE_PERMISSION_IDENTIFIER_USE_COLLECTION_ID) {
-			return $this->getCollectionID();
-		} else {
+		// this is because page owner is the ONLY thing that makes it so we can't use getPermissionsCollectionID, and for most sites that will DRAMATICALLY reduce the number of queries.
+		if (PAGE_PERMISSION_IDENTIFIER_USE_PERMISSION_COLLECTION_ID) {
 			return $this->getPermissionsCollectionID();
+		} else {
+			return $this->getCollectionID();
 		}
 	}
 

@@ -81,6 +81,9 @@
 	# Must come before packages 
 	require($cdir . '/startup/tools_upgrade_check.php');
 
+	## Determines whether we can use the more efficient permission local caching
+	require($cdir . '/startup/permission_cache_check.php');
+
 	## Localization ##
 	## This MUST be run before packages start - since they check ACTIVE_LOCALE which is defined here ##
 	require($cdir . '/config/localization.php');
