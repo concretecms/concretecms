@@ -3293,7 +3293,7 @@
       <default value="30"/>
       <unsigned/>
     </field>
-    <opt platform="MYSQL">ENGINE=INNODB</opt>
+    <opt platform="mysql">ENGINE=INNODB</opt>
   </table>
   <table name="QueueMessages">
     <field name="message_id" type="I" size="20">
@@ -3329,7 +3329,7 @@
     <index name="message_queueid">
       <col>queue_id</col>
     </index>
-    <opt platform="MYSQL">ENGINE=INNODB</opt>
+    <opt platform="mysql">ENGINE=INNODB</opt>
   </table>
   <table name="QueuePageDuplicationRelations">
     <field name="queue_name" type="C" size="255">

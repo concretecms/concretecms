@@ -34,7 +34,17 @@ class Concrete5_Model_PageList extends DatabaseItemList {
 			} else {
 				$this->filterByAttribute($attrib, $a[0]);
 			}
-		}			
+		}		
+        if (substr($nm, 0, 6) == 'sortBy') {
+			$txt = Loader::helper('text');
+			$attrib = $txt->uncamelcase(substr($nm, 6));
+            if (count($a) == 1) {
+                $this->sortBy($attrib, $a[0]);
+            }
+            else {
+                $this->sortBy($attrib);                
+            }
+        }
 	}
 	
 	public function includeInactivePages() {

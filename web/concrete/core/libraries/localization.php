@@ -3,7 +3,7 @@
 	class Concrete5_Library_Localization {
 	
 		public function init() {
-			$loc = self::getInstance();
+			$loc = Localization::getInstance();
 			$loc->getTranslate();
 		}
 		
@@ -16,12 +16,12 @@
 		}
 		
 		public static function changeLocale($locale) {
-			$loc = self::getInstance();
+			$loc = Localization::getInstance();
 			$loc->setLocale($locale);
 		}
 		
 		public static function activeLocale() {
-			$loc = self::getInstance();
+			$loc = Localization::getInstance();
 			return $loc->getLocale();
 		}
 
@@ -87,7 +87,7 @@
 		}
 		
 		public static function getTranslate() {
-			$loc = self::getInstance();
+			$loc = Localization::getInstance();
 			return $loc->getActiveTranslateObject();
 		}
 	

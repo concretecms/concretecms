@@ -27,6 +27,7 @@ class Concrete5_Helper_Mail {
 	protected $data = array();
 	protected $subject = '';
 	public $body = '';
+	protected $attachments = array();
 	protected $template; 
 	protected $bodyHTML = false;
 	
@@ -44,6 +45,7 @@ class Concrete5_Helper_Mail {
 		$this->bcc = array();
 		$this->from = array();
 		$this->data = array();
+		$this->attachments = array();
 		$this->subject = '';
 		$this->body = '';
 		$this->template; 
@@ -97,10 +99,54 @@ class Concrete5_Helper_Mail {
 	 * @param string $val
 	 * @return void
 	 */
+
 	public function addParameter($key, $val) {
 		$this->data[$key] = $val;
 	}
 	
+	/**
+	 * Add attachment to send with an email.
+	 *
+	 * Sample Code:
+	 * $attachment = $mailHelper->addAttachment($fileObject);
+	 * $attachment->filename = "CustomFilename";
+	 * $mailHelper->send();
+	 * 
+	 * @param File $fob File to attach
+	 * @return StdClass Pointer to the attachment
+	 */
+	public function addAttachment(File $fob) {
+		$fv = $fob->getVersion();
+		$path = $fob->getPath();
+		$name = $fv->getFileName();
+		$type = false;
+		if (!function_exists('mime_content_type')) {
+			function mime_content_type($path) {
+				return false;
+			}
+		}
+		$type = @mime_content_type($path); // This is deprecated. Should be stable until php5.6
+		if (!$type) {
+			$mt = Loader::helper('mime');
+			$ext = preg_replace('/^.+\.([^\.]+)$/','\1',$path);
+			$type = $mt->mimeFromExtension($ext);
+		}
+		$contents = @file_get_contents($path);
+		if (!$contents) {
+			throw new Exception(t('Unable to get the file contents for attachment.'));
+		}
+
+		$file = new StdClass();
+		$file->object = $fob;
+		$file->type = $type;
+		$file->path = $path;
+		$file->filename = $name;
+		$file->contents = $contents;
+		unset($contents);
+		$this->attachments[] = $file;
+		return $file; // Returns a pointer
+	}
+
 	/** 
 	 * Loads an email template from the /mail/ directory
 	 * @param string $template 
@@ -340,6 +386,18 @@ class Concrete5_Helper_Mail {
 					$mail->addBcc($bcc[0], $bcc[1]);
 				}
 			}
+
+			if(is_array($this->attachments) && count($this->attachments)) {
+				foreach($this->attachments as $att) {
+					$natt = $mail->createAttachment($att->contents);
+					$fob = $att->object;
+					unset($att->object);
+					unset($att->contents);
+					foreach ((array) $att as $key => $value) {
+						$natt->{$key} = $value;
+					}
+				}
+			}
 			
 			$mail->setBodyText($this->body);
 			if ($this->bodyHTML != false) {
@@ -387,15 +445,7 @@ class Concrete5_Helper_Mail {
 		
 		// clear data if applicable
 		if ($resetData) {
-			$this->to = array();
-			$this->cc = array();
-			$this->bcc = array();
-			$this->replyto = array();
-			$this->from = array();
-			$this->template = '';
-			$this->subject = '';
-			$this->body = '';
-			$this->bodyHTML = '';
+			$this->reset();
 		}
 	}
 	

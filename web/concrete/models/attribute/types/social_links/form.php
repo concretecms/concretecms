@@ -5,7 +5,7 @@
 	<div class="ccm-social-link-attribute control-group form-inline">
 		<select name="<?=$this->field('service')?>[]" class="ccm-social-link-service-selector">
 			<? foreach($services as $s) { ?>
-				<option value="<?=$s[0]?>" data-tooltip-title="<?=$s[2]?>" <? if ($s[0] == $data['service'][$i]) { ?> selected="selected" <? } ?>><?=$s[1]?></option>
+				<option value="<?=$s[0]?>" data-placeholder-text="<?=$s[2]?>" <? if ($s[0] == $data['service'][$i]) { ?> selected="selected" <? } ?>><?=$s[1]?></option>
 			<? } ?>
 		</select>
 		<span class="ccm-social-link-service-text-wrapper">

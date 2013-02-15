@@ -29,6 +29,7 @@ class ConcreteUpgradeVersion570Helper {
 	
 	
 	public function run() {
+
 		$bt = BlockType::getByHandle('content');
 		if (is_object($bt)) {
 			$bt->refresh();
