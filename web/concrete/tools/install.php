@@ -1,15 +1,45 @@
 <?php
 Loader::model('system/image_editor/control_set');
+Loader::model('system/image_editor/component');
+Loader::model('system/image_editor/filter');
 
-$position = Concrete5_Model_System_ImageEditor_ControlSet::getByHandle('position');
+$position = SystemImageEditorControlSet::getByHandle('position');
 if ($position->getImageEditorControlSetHandle() != 'position')  {
-	Concrete5_Model_System_ImageEditor_ControlSet::add('position','Position');
+	SystemImageEditorControlSet::add('position','Position');
 }
-$size = Concrete5_Model_System_ImageEditor_ControlSet::getByHandle('size');
+$size = SystemImageEditorControlSet::getByHandle('size');
 if ($size->getImageEditorControlSetHandle() != 'size')  {
-	Concrete5_Model_System_ImageEditor_ControlSet::add('size','Size');
+	SystemImageEditorControlSet::add('size','Size');
 }
-$filters = Concrete5_Model_System_ImageEditor_ControlSet::getByHandle('filter');
-if ($size->getImageEditorControlSetHandle() != 'filter')  {
-	Concrete5_Model_System_ImageEditor_ControlSet::add('filter','Filters');
+$crop = SystemImageEditorControlSet::getByHandle('crop');
+if ($crop->getImageEditorControlSetHandle() != 'crop')  {
+	SystemImageEditorControlSet::add('crop','Crop');
+}
+$filters = SystemImageEditorControlSet::getByHandle('filter');
+if ($filters->getImageEditorControlSetHandle() != 'filter')  {
+	SystemImageEditorControlSet::add('filter','Filters');
+}
+
+//Components
+$text = SystemImageEditorComponent::getByHandle('text');
+if ($text->getImageEditorComponentHandle() != 'text')  {
+	SystemImageEditorComponent::add('text','Text');
+}
+$image = SystemImageEditorComponent::getByHandle('image');
+if ($image->getImageEditorComponentHandle() != 'image')  {
+	SystemImageEditorComponent::add('image','Image');
+}
+
+// Filters
+$grayscale = SystemImageEditorFilter::getByHandle('grayscale');
+if ($grayscale->getImageEditorFilterHandle() != 'grayscale')  {
+	SystemImageEditorFilter::add('grayscale','Gray Scale');
+}
+$sepia = SystemImageEditorFilter::getByHandle('sepia');
+if ($sepia->getImageEditorFilterHandle() != 'sepia')  {
+	SystemImageEditorFilter::add('sepia','Sepia');
+}
+$blur = SystemImageEditorFilter::getByHandle('blur');
+if ($blur->getImageEditorFilterHandle() != 'blur')  {
+	SystemImageEditorFilter::add('gaussian_blur','Gaussian Blur');
 }

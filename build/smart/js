@@ -31,6 +31,7 @@ function InfoBlock {
 }
 
 
+cd $(dirname $0)
 cd $(git rev-parse --show-toplevel)
 
 ./build/smart/sanitycheck $1
@@ -140,6 +141,8 @@ if $(echo "$status" | grep "$thisgrep" &> /dev/null); then
 $(getFile 'imageeditor.js')
 $(getFile 'history.js')
 $(getFile 'events.js')
+$(getFile 'controls.js')
+$(getFile 'save.js')
 $(getFile 'extend.js')
 $(getFile 'background.js')
 $(getFile 'imagestage.js')
@@ -157,5 +160,5 @@ $(getFile 'filters.js')"
     echo "$INP" > image_editor.tmp.js
 
     uglifyjs --no-seqs -o ./web/concrete/js/image_editor.min.js ./image_editor.tmp.js
-    rm image_editor.tmp.js
+    #rm image_editor.tmp.js
 fi

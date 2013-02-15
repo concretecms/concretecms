@@ -1,6 +1,11 @@
 var img = new Image();
 img.src = settings.src;
 img.onload = function () {
+  if (!im.strictSize) {
+    im.saveWidth = img.width;
+    im.saveHeight = img.height;
+    im.adjustSavers();
+  }
   var center = {
     x: im.center.x - (img.width / 2),
     y: im.center.y - (img.height / 2)
@@ -16,5 +21,5 @@ img.onload = function () {
   im.editor.add(im.image);
   im.stage.add(im.editor);
   im.imageData = im.image.getImageData();
-  im.fireEvent('imageload');
+  im.fire('imageload');
 };

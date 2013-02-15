@@ -5,6 +5,12 @@ Kinetic.Stage.prototype.createCopy = function () {
   }
   return copy;
 };
+Kinetic.Stage.prototype.getScaledWidth = function() {
+  return Math.ceil(this.getWidth() / this.getScale().x);
+};
+Kinetic.Stage.prototype.getScaledHeight = function() {
+  return Math.ceil(this.getHeight() / this.getScale().y);
+};
 Kinetic.Stage.prototype.loadCopy = function (copy) {
   var i;
   this.removeChildren();
@@ -34,4 +40,17 @@ Kinetic.Layer.prototype.draw = function() {
   var draw = this._cacheddraw();
   im.trigger('afterredraw',this);
   return draw;
+};
+
+Kinetic.Text.prototype.rasterize = function(e) {
+  var layer = this.parent;
+  var me = this;
+  this.toImage({
+    callback:function(img){
+      var rasterizedImage = new Kinetic.Image({image:img,x:me.getPosition().x,y:me.getPosition().y});
+      me.remove();
+      layer.add(rasterizedImage).draw();
+      e.callback(rasterizedImage);
+    }
+  });
 };

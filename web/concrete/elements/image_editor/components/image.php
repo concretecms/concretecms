@@ -1,0 +1,1 @@
+<?=Loader::helper('concrete/asset_library')->file('addImageToImageEditor','','Select Image');?>
