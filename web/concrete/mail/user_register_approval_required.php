@@ -1,22 +1,62 @@
 <?
-
 defined('C5_EXECUTE') or die("Access Denied.");
 
-$subject = SITE . " " . t("Registration - Approval Required");
-$body = t("
+$subject = SITE.' '.t("Registration - Approval Required");
 
-A new user has registered on your website. This account must be approved before it is active and may login.
+/**
+ * HTML BODY START
+ */
+ob_start()
 
-User Name: %s
-Email Address: %s
-", $uName, $uEmail);
+?>
+<h2><?= t('Registration Approval Required') ?></h2>
+<?= t('A new user has registered on your website. This account must be approved before it is active and may login.') ?><br />
+<?= t('User Name') ?>: <b><?= $uName ?></b><br />
+<?= t('Email') ?>: <b><?= $uEmail ?></b><br />
+<br />
+<?= t('You may approve or remove this user account here:') ?><br />
+<a href="<?= BASE_URL.View::url('/dashboard/users/search?uID='.$uID) ?>"><?= BASE_URL.View::url('/dashboard/users/search?uID='.$uID) ?></a>
+<? if($attribs): ?>
+	<ul>
+	<? foreach($attribs as $item): ?>
+		<li><?= $item ?></li>
+	<? endforeach ?>
+	</ul>
+<? endif ?>
+<?
 
-foreach($attribs as $item) {
-	$body .= $item . "\n";
-}
+$bodyHTML = ob_get_clean();
+/**
+ * HTML BODY END
+ *
+ * ======================
+ *
+ * PLAIN TEXT BODY START
+ */
+ob_start();
 
-$body .= t("
+?>
+<?= t('Registration Approval Required') ?>
 
-You may approve or remove this user account here:
+<?= t('A new user has registered on your website. This account must be approved before it is active and may login.') ?>
 
-%s", BASE_URL . View::url('/dashboard/users/search?uID=' . $uID));
+<?= t('User Name') ?>: <?= $uName ?>
+
+<?= t('Email Address') ?>: <?= $uEmail ?>
+
+<? if($attribs): ?>
+	<? foreach($attribs as $item): ?>
+		<?= $item ?>
+
+	<? endforeach ?>
+<? endif ?>
+
+<?= t('You may approve or remove this user account here') ?>:
+
+<?= BASE_URL . View::url('/dashboard/users/search?uID=' . $uID) ?>
+<?
+
+$body = ob_get_clean();
+/**
+ * PLAIN TEXT BODY END
+ */
