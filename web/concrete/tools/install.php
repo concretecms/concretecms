@@ -1,5 +1,6 @@
 <?php
 Loader::model('system/image_editor/control_set');
+Loader::model('system/image_editor/component');
 Loader::model('system/image_editor/filter');
 
 $position = SystemImageEditorControlSet::getByHandle('position');
@@ -18,6 +19,18 @@ $filters = SystemImageEditorControlSet::getByHandle('filter');
 if ($filters->getImageEditorControlSetHandle() != 'filter')  {
 	SystemImageEditorControlSet::add('filter','Filters');
 }
+
+//Components
+$text = SystemImageEditorComponent::getByHandle('text');
+if ($text->getImageEditorComponentHandle() != 'text')  {
+	SystemImageEditorComponent::add('text','Text');
+}
+$image = SystemImageEditorComponent::getByHandle('image');
+if ($image->getImageEditorComponentHandle() != 'image')  {
+	SystemImageEditorComponent::add('image','Image');
+}
+
+// Filters
 $grayscale = SystemImageEditorFilter::getByHandle('grayscale');
 if ($grayscale->getImageEditorFilterHandle() != 'grayscale')  {
 	SystemImageEditorFilter::add('grayscale','Gray Scale');

@@ -17,10 +17,13 @@ $components = SystemImageEditorComponent::getList();
 $filters = SystemImageEditorFilter::getList();
 
 ?>
-<link rel="stylesheet" href="<?=ASSETS_URL_CSS?>/ccm.image_editor.css?f=81">
+<link rel="stylesheet" href="<?=ASSETS_URL_CSS?>/ccm.image_editor.css?f=<?=sha1(filemtime(".".ASSETS_URL_CSS."/ccm.image_editor.css"))?>">
 <script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/image_editor.min.js"></script>
 <div class='table ccm-ui'>
-  <div class='Editor'></div>
+  <div class='editorcontainer'>
+    <div class='Editor'></div>
+    <div class='bottomBar'></div>
+  </div>
   <div class='controls'>
     <ul class='nav nav-tabs'>
       <li class='active'><a href='#'>Edit</a></li>
@@ -48,12 +51,12 @@ $filters = SystemImageEditorFilter::getList();
         <?php
         if (!$components) echo "&nbsp;";
         foreach($components as $component) {
-          $handle = $component->getImageEditorControlSetHandle();
+          $handle = $component->getImageEditorComponentHandle();
           echo "<link rel='stylesheet' href='/concrete/css/image_editor/components/{$handle}.css?d=".sha1(rand(1,500000))."'>
               <div class='component {$handle}'".
                " data-namespace='{$handle}'".
                " data-src='/concrete/js/image_editor/components/{$handle}.js'>".
-                  "<h4>".$component->getImageEditorControlSetName()."</h4>".
+                  "<h4>".$component->getImageEditorComponentName()."</h4>".
                   "<div class='control'><div class='contents'>";
                     echo Loader::element('image_editor/components/'.$handle,1);
                   echo "</div></div>".
@@ -75,6 +78,12 @@ $(function(){
       element: $(this).children('div.control').children('div.contents')
     }
   });
+  $('div.component','div.controls').each(function(){
+    settings.components[$(this).attr('data-namespace')] = {
+      src:$(this).attr('data-src'),
+      element: $(this).children('div.control').children('div.contents')
+    }
+  });
   settings.filters = <?php
     $fnames = array();
     foreach ($filters as $filter) {
@@ -84,6 +93,6 @@ $(function(){
     echo Loader::helper('json')->encode($fnames);
   ?>;
   console.log(settings);
-  window.im = $('div.Editor').ImageEditor(settings);
+  window.im = $('div.Editor').height($('div.Editor').height()-30).ImageEditor(settings);
 })
 </script>

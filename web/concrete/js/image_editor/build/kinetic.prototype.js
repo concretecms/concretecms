@@ -5,6 +5,12 @@ Kinetic.Stage.prototype.createCopy = function () {
   }
   return copy;
 };
+Kinetic.Stage.prototype.getScaledWidth = function() {
+  return Math.ceil(this.getWidth() / this.getScale().x);
+};
+Kinetic.Stage.prototype.getScaledHeight = function() {
+  return Math.ceil(this.getHeight() / this.getScale().y);
+};
 Kinetic.Stage.prototype.loadCopy = function (copy) {
   var i;
   this.removeChildren();

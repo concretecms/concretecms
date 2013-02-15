@@ -1,48 +1,82 @@
-var imageStage = new Kinetic.Rect({
-  x:im.center.x,
-  y:im.center.y,
-  width:0,
-  height:0,
-  fill:'#ccc',
-  stroke:'#777',
-  strokeWidth:1
+var me = $(this);
+
+im.savers = new Kinetic.Layer();
+
+
+var savercolor = "rgba(0,0,0,.7)",
+saverTopLeft = new Kinetic.Rect({
+  x:0,
+  y:0,
+  fill:savercolor,
+  width:Math.floor(im.stage.getScaledWidth()/2),
+  height:Math.floor(im.stage.getScaledHeight()/2)
+}),
+saverBottomLeft = new Kinetic.Rect({
+  x:0,
+  y:Math.floor(im.stage.getScaledHeight()/2),
+  fill:savercolor,
+  width:Math.floor(im.stage.getScaledWidth()/2),
+  height:Math.ceil(im.stage.getScaledHeight()/2)
+}),
+saverTopRight = new Kinetic.Rect({
+  x:Math.floor(im.stage.getScaledWidth()/2),
+  y:0,
+  fill:savercolor,
+  width:Math.ceil(im.stage.getScaledWidth()/2),
+  height:Math.floor(im.stage.getScaledHeight()/2)
+}),
+saverBottomRight = new Kinetic.Rect({
+  x:Math.floor(im.stage.getScaledWidth()/2),
+  y:Math.floor(im.stage.getScaledHeight()/2),
+  fill:savercolor,
+  width:Math.ceil(im.stage.getScaledWidth()/2),
+  height:Math.ceil(im.stage.getScaledHeight()/2)
 });
-im.imageStage = imageStage;
 
-im.imageStage._setheight = im.imageStage.setHeight;
-im.imageStage._setwidth = im.imageStage.setWidth;
-im.imageStage._setx = im.imageStage.setX;
-im.imageStage._sety = im.imageStage.setY;
-im.imageStage.setWidth = function(width) {
-  this._setwidth(width);
-  this._setx(im.center.x - Math.floor(width/2));
+im.adjustSavers = function() {
+  log("Adjusting");
+  var startx = Math.round(im.center.x - (im.saveWidth / 2)),
+      posx = startx + im.saveWidth,
+      starty = Math.round(im.center.y - (im.saveHeight / 2)),
+      posy = starty + im.saveHeight;
 
-  im.trigger('imageStageUpdate',this);
-  this.parent.draw();
-}
-im.imageStage.setHeight = function(height) {
-  this._setheight(height);
-  this._sety(im.center.y - Math.floor(height/2));
+  if (posy < starty) {
+    var inter = posy;
+    posy = starty;
+    starty = inter;
+  }
+  if (posx < startx) {
+    var inter = posx;
+    posx = startx;
+    startx = inter;
+  }
 
-  im.trigger('imageStageUpdate',this);
-  this.parent.draw();
-}
-im.imageStage.setX = function(x) {
-  this._setx(x);
-  this._setwidth(Math.abs(x - im.center.x) * 2);
-  im.trigger('imageStageUpdate',this);
-  this.parent.draw();
-}
-im.imageStage.setY = function(y) {
-  this._sety(y);
-  this._setheight(Math.abs(y - im.center.y) * 2);
-  im.trigger('imageStageUpdate',this);
-  this.parent.draw();
-}
+  saverTopLeft.setWidth(startx);
+  saverTopLeft.setHeight(posy);
 
-im.imageStageLayer = new Kinetic.Layer();
-im.imageStageLayer.add(imageStage);
-im.imageStage.setWidth(settings.imageStageWidth || Math.floor(im.stage.getWidth() / 2));
-im.imageStage.setHeight(settings.imageStageHeight || Math.floor(im.stage.getHeight() / 2));
+  saverTopRight.setX(startx);
+  saverTopRight.setWidth(im.stage.getScaledWidth()-startx);
+  saverTopRight.setHeight(starty);
 
-im.stage.add(im.imageStageLayer);
+  saverBottomLeft.setWidth(posx);
+  saverBottomLeft.setY(posy);
+  saverBottomLeft.setHeight(im.stage.getScaledHeight()-posy);
+
+  saverBottomRight.setY(starty);
+  saverBottomRight.setX(posx);
+  saverBottomRight.setWidth(im.stage.getScaledWidth()-posx);
+  saverBottomRight.setHeight(im.stage.getScaledHeight()-starty);
+
+  im.fire('saveSizeChange');
+
+  im.savers.draw();
+};
+
+im.savers.add(saverTopLeft);
+im.savers.add(saverTopRight);
+im.savers.add(saverBottomLeft);
+im.savers.add(saverBottomRight);
+
+im.stage.add(im.savers);
+
+im.adjustSavers();
