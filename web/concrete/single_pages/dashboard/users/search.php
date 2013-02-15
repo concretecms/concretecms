@@ -90,6 +90,20 @@ if (intval($_GET['uID'])) {
 					throw new Exception(t('Invalid token.  Unable to activate user.'));
 				}else{		
 					$uo->activate();
+					$mh = Loader::helper('mail');
+					$mh->to($uo->getUserEmail());
+					$mh->load('user_registered_approval_complete');
+					if(defined('EMAIL_ADDRESS_REGISTER_NOTIFICATION_FROM')) {
+						$mh->from(EMAIL_ADDRESS_REGISTER_NOTIFICATION_FROM, t('Website Registration Notification'));
+					} else {
+						$adminUser = UserInfo::getByID(USER_SUPER_ID);
+						$mh->from($adminUser->getUserEmail(), t('Website Registration Notification'));
+					}
+					$mh->addParameter('uID',    $uo->getUserID());
+					$mh->addParameter('user',   $uo);
+					$mh->addParameter('uName',  $uo->getUserName());
+					$mh->addParameter('uEmail', $uo->getUserEmail());
+					$mh->sendMail();
 					$uo = UserInfo::getByID(intval($_GET['uID']));
 					$this->controller->redirect('/dashboard/users/search?uID=' . intval($_GET['uID']) . '&activated=1');
 				}
