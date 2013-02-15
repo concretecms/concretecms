@@ -38,9 +38,9 @@ im.bind('imageload',function(){
       beforeSend:function(){running++;},
       success:function(js){
         running--;
-        var nso = im.addControlSet(this.myns,js,cs[this.namespace]['element']);
+        var nso = im.addComponent(this.myns,js,components[this.namespace]['element']);
         log(nso);
-        im.fire('controlSetLoad',nso);
+        im.fire('ComponentLoad',nso);
         if (0 == running) {
           im.trigger('ComponentsLoaded');
         }
@@ -80,19 +80,48 @@ im.bind('ChangeActiveAction',function(e){
   var ns = e.eventData;
   if (ns === im.activeControlSet) return;
   for (var ons in im.controlSets) {
-    if (ons !== ns) $(im.controlSets[ons]).slideUp();
+    if (ons !== ns) getElem(im.controlSets[ons]).slideUp();
   }
   im.activeControlSet = ns;
   if (!ns) return;
   var cs = $(im.controlSets[ns]),
       height = cs.show().height();
+  if (cs.length == 0) return;
+  cs.hide().height(height).slideDown(function(){$(this).height('');});
+});
+
+im.bind('ChangeActiveComponent',function(e){
+  var ns = e.eventData;
+  if (ns === im.activeComponent) return;
+  for (var ons in im.components) {
+    if (ons !== ns) getElem(im.components[ons]).slideUp();
+  }
+  im.activeComponent = ns;
+  if (!ns) return;
+  var cs = $(im.components[ns]),
+      height = cs.show().height();
+  if (cs.length == 0) return;
   cs.hide().height(height).slideDown(function(){$(this).height('');});
 });
 
 im.bind('ChangeNavTab',function(e) {
-  im.trigger('ChangeActiveAction');
+  console.log('changenavtab',e);
+  im.trigger('ChangeActiveAction',e.eventData);
+  var parent = getElem('div.editorcontrols');
   switch(e.eventData) {
     case 'add':
-
+      parent.children('div.control-sets').hide();
+      parent.children('div.components').show();
+      break;
+    case 'edit':
+      parent.children('div.components').hide();
+      parent.children('div.control-sets').show();
+      break;
   }
+});
+
+
+im.bind('ClickedElement',function(e) {
+  im.activeElement = e.eventData();
+  im.fire('ChangeActiveElement');
 });

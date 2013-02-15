@@ -1,1 +1,1 @@
-<?=Loader::helper('concrete/asset_library')->file('addImageToImageEditor','','Select Image');?>
+<?=Loader::helper('concrete/asset_library')->file("addImageToImageEditor_$editorid",'','Select Image');?>
