@@ -1,5 +1,6 @@
 #!/bin/bash
 
+cd $(dirname $0)
 cd $(git rev-parse --show-toplevel)
 
 ./build/smart/sanitycheck $1
@@ -8,7 +9,7 @@ cd $(git rev-parse --show-toplevel)
 status=$(git status --porcelain 2> /dev/null)
 inp=$1
 function compile_less {
-	input="web/concrete/css/ccm_app/build/$1.less"
+	input="web/concrete/css/$2/build/$1.less"
 	search=$input
 	output="web/concrete/css/$1.css"
 	if [ $inp ]; then
@@ -20,13 +21,15 @@ function compile_less {
     fi
 }
 
-compile_less redactor
-compile_less jquery.ui
-compile_less jquery.rating
-compile_less ccm.default.theme
-compile_less ccm.dashboard
-compile_less ccm.dashboard.1200
-compile_less ccm.colorpicker
-compile_less ccm.app.mobile
-compile_less ccm.app
-compile_less ccm.account
+
+compile_less redactor ccm_app
+compile_less jquery.ui ccm_app
+compile_less jquery.rating ccm_app
+compile_less ccm.default.theme ccm_app
+compile_less ccm.dashboard ccm_app
+compile_less ccm.dashboard.1200 ccm_app
+compile_less ccm.colorpicker ccm_app
+compile_less ccm.app.mobile ccm_app
+compile_less ccm.app ccm_app
+compile_less ccm.account ccm_app
+compile_less ccm.image_editor image_editor

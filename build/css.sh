@@ -9,3 +9,5 @@ lessc -x ../web/concrete/css/ccm_app/build/ccm.colorpicker.less ../web/concrete/
 lessc -x ../web/concrete/css/ccm_app/build/ccm.app.mobile.less ../web/concrete/css/ccm.app.mobile.css
 lessc -x ../web/concrete/css/ccm_app/build/ccm.app.less ../web/concrete/css/ccm.app.css
 lessc -x ../web/concrete/css/ccm_app/build/ccm.account.less ../web/concrete/css/ccm.account.css
+
+lessc -x ../web/concrete/css/image_editor/build/ccm.image_editor.less ../web/concrete/css/ccm.image_editor.css

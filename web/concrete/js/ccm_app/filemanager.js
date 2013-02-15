@@ -9,6 +9,7 @@ var ccm_alProcessorTarget = "";
 var ccm_alDebug = false;
 
 ccm_triggerSelectFile = function(fID, af) {
+	ccm_event.publish('FileManagerFileSelected',arguments);
 	if (af == null) {
 		var af = ccm_alActiveAssetField;
 	}
@@ -122,6 +123,7 @@ ccm_activateFileSelectors = function() {
 }
 
 ccm_alLaunchSelectorFileManager = function(selector) {
+	ccm_event.publish('launchFileManager',selector);
 	ccm_alActiveAssetField = selector;
 	var filterStr = "";
 	
