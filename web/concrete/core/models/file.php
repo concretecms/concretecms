@@ -428,6 +428,13 @@ class Concrete5_Model_File extends Object {
 	public function delete() {
 		// first, we remove all files from the drive
 		$db = Loader::db();
+		
+		// fire an on_page_delete event
+		$ret = Events::fire('on_file_delete', $this);
+		if ($ret < 0) {
+			return false;
+		}
+		
 		$pathbase = false;
 		$r = $db->GetAll('select fvFilename, fvPrefix from FileVersions where fID = ?', array($this->fID));
 		$h = Loader::helper('concrete/file');

@@ -26,8 +26,7 @@ class Concrete5_Job_ProcessEmail extends Job {
 			foreach($messages as $me) {
 				if ($me->validate()) {
 					$mi->process($me);
-					$mi->cleanup($me);
-				} else {
+				} elseif(!$me->isSendError()) {
 					$mh = Loader::helper('mail');
 					$mh->to($me->getOriginalSender());
 					$mh->from($mi->getMailImporterEmail());
@@ -36,8 +35,9 @@ class Concrete5_Job_ProcessEmail extends Job {
 					$mh->load('mail_importer_error');
 					$mh->sendMail();
 				}
+				$mi->cleanup($me);
 			}
-		}		
+		}
 	}
 }
 

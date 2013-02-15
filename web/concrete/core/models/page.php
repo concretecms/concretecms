@@ -1474,6 +1474,8 @@ class Concrete5_Model_Page extends Collection {
 				$this->updatePermissionsCollectionID($this->getCollectionID(), $npID);
 			}
 		}
+
+		$oldParent = Page::getByID($this->getCollectionParentID(), 'RECENT');
 		
 		$db->query("update Collections set cDateModified = ? where cID = ?", array($cDateModified, $cID));
 		$v = array($newCParentID, $cID);
@@ -1502,7 +1504,6 @@ class Concrete5_Model_Page extends Collection {
 		// 2. former parent
 		// 3. new parent
 		
-		$oldParent = Page::getByID($this->getCollectionParentID(), 'RECENT');
 		$newParent = Page::getByID($newCParentID, 'RECENT');
 		
 		$oldParent->refreshCache();
@@ -1681,6 +1682,14 @@ class Concrete5_Model_Page extends Collection {
 	}
 	
 	public function moveToTrash() {
+	
+		// run any internal event we have for page trashing
+		$ret = Events::fire('on_page_move_to_trash', $this);
+
+		if ($ret < 0) {
+			return false;
+		}
+		
 		$trash = Page::getByPath(TRASH_PAGE_PATH);
 		$this->move($trash);
 		$this->deactivate();
@@ -2300,5 +2309,34 @@ class Concrete5_Model_Page extends Collection {
 			return $c;
 		}
 	}
+	
+	/**
+	 * Returns the total number of page views for a specific page 
+	 */
+	public function getTotalPageViews($date = null) {	 
+		$db = Loader::db();
+		if ($date != null) {
+			return $db->GetOne("select count(pstID) from PageStatistics where date = ? AND cID = ?", array($date, $this->getCollectionID()));
+		} else {
+			return $db->GetOne("select count(pstID) from PageStatistics where cID = ?", array($this->getCollectionID()));
+		}
+	}
+	
+	/**
+	 * Gets a pages statistics 
+	 */
+	public function getPageStatistics($limit = 20){
+		$db = Loader::db();
+		$limitString = '';
+		if ($limit != false) {
+			$limitString = 'limit ' . $limit;
+		}
+		
+		if (is_object($this) && $this instanceof Page) { 
+			return $db->getAll("SELECT * FROM PageStatistics WHERE cID = ? ORDER BY timestamp desc {$limitString}", array($this->getCollectionID()));
+		} else {
+			return $db->getAll("SELECT * FROM PageStatistics ORDER BY timestamp desc {$limitString}");
+		}
+	}	
 
 }

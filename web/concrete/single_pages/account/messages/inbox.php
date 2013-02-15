@@ -7,7 +7,6 @@
 <h1><?=t("Private Messages")?></h1>
 </div>
 
-    	<?=$error->output(); ?>
     	<? switch($this->controller->getTask()) { 
     		case 'view_message': ?>
 
