@@ -1,5 +1,5 @@
 // Handle event binding.
-im.bindEvent = im.bind = function (type, handler, elem) {
+im.bindEvent = im.bind = im.on = function (type, handler, elem) {
   var element = elem || im.stage.getContainer();
   ccm_event.sub(type,handler,element);
 };

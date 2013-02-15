@@ -19,36 +19,39 @@ im.cropperTopLeft = new Kinetic.Rect({
   x:0,
   y:0,
   fill:croppercolor,
-  width:Math.floor(im.stage.getWidth()/2),
-  height:Math.floor(im.stage.getHeight()/2)
+  width:Math.floor(im.stage.getScaledWidth()/2),
+  height:Math.floor(im.stage.getScaledHeight()/2)
 });
 im.cropperBottomLeft = new Kinetic.Rect({
   x:0,
-  y:Math.floor(im.stage.getHeight()/2),
+  y:Math.floor(im.stage.getScaledHeight()/2),
   fill:croppercolor,
-  width:Math.floor(im.stage.getWidth()/2),
-  height:Math.ceil(im.stage.getHeight()/2)
+  width:Math.floor(im.stage.getScaledWidth()/2),
+  height:Math.ceil(im.stage.getScaledHeight()/2)
 });
 im.cropperTopRight = new Kinetic.Rect({
-  x:Math.floor(im.stage.getWidth()/2),
+  x:Math.floor(im.stage.getScaledWidth()/2),
   y:0,
   fill:croppercolor,
-  width:Math.ceil(im.stage.getWidth()/2),
-  height:Math.floor(im.stage.getHeight()/2)
+  width:Math.ceil(im.stage.getScaledWidth()/2),
+  height:Math.floor(im.stage.getScaledHeight()/2)
 });
 im.cropperBottomRight = new Kinetic.Rect({
-  x:Math.floor(im.stage.getWidth()/2),
-  y:Math.floor(im.stage.getHeight()/2),
+  x:Math.floor(im.stage.getScaledWidth()/2),
+  y:Math.floor(im.stage.getScaledHeight()/2),
   fill:croppercolor,
-  width:Math.ceil(im.stage.getWidth()/2),
-  height:Math.ceil(im.stage.getHeight()/2)
+  width:Math.ceil(im.stage.getScaledWidth()/2),
+  height:Math.ceil(im.stage.getScaledHeight()/2)
 });
 
 var adjustCroppers = function() {
   var startx = im.start.x,
-      posx = startx + im.width,
+      posx = im.adjuster.getPosition().x + 5,
       starty = im.start.y,
-      posy = starty + im.height;
+      posy = im.adjuster.getPosition().y + 5;
+
+  im.width = posx - startx;
+  im.height = posy - starty;
 
   if (posy < starty) {
     var inter = posy;
@@ -70,17 +73,17 @@ var adjustCroppers = function() {
   im.cropperTopLeft.setHeight(posy);
 
   im.cropperTopRight.setX(startx);
-  im.cropperTopRight.setWidth(im.stage.getWidth()-startx);
+  im.cropperTopRight.setWidth(im.stage.getScaledWidth()-startx);
   im.cropperTopRight.setHeight(starty);
 
   im.cropperBottomLeft.setWidth(posx);
   im.cropperBottomLeft.setY(posy);
-  im.cropperBottomLeft.setHeight(im.stage.getHeight()-posy);
+  im.cropperBottomLeft.setHeight(im.stage.getScaledHeight()-posy);
 
   im.cropperBottomRight.setY(starty);
   im.cropperBottomRight.setX(posx);
-  im.cropperBottomRight.setWidth(im.stage.getWidth()-posx);
-  im.cropperBottomRight.setHeight(im.stage.getHeight()-starty);
+  im.cropperBottomRight.setWidth(im.stage.getScaledWidth()-posx);
+  im.cropperBottomRight.setHeight(im.stage.getScaledHeight()-starty);
 
   im.croppers.parent.draw();
 };
@@ -96,7 +99,6 @@ im.width = im.image.getWidth();
 im.height = im.image.getHeight();
 im.start = {x:im.image.getX(),y:im.image.getY()};
 
-adjustCroppers();
 
 
 var startpos, startstart;
@@ -115,16 +117,8 @@ im.dragger.on('dragmove',function(e){
   im.start.x = startstart.x - offset.x;
   im.start.y = startstart.y - offset.y;
 
-  if (Math.abs(im.start.y - im.image.getY()) < 5) {
-    im.start.y = im.image.getY();
-  }
-  
-  if (Math.abs(im.start.x - im.image.getX()) < 5) {
-    im.start.x = im.image.getX();
-  }
-
-  im.adjuster.setX(im.start.x + im.width);
-  im.adjuster.setY(im.start.y + im.height);
+  im.adjuster.setX(im.start.x + im.width - 5);
+  im.adjuster.setY(im.start.y + im.height - 5);
 
   adjustCroppers();
 });
@@ -139,8 +133,8 @@ im.bind('ChangeActiveAction',function(e){
     im.height = im.image.getHeight();
     im.start = {x:im.image.getX(),y:im.image.getY()};
 
-    im.adjuster.setX(im.start.x + im.width);
-    im.adjuster.setY(im.start.y + im.height);
+    im.adjuster.setX(im.start.x + im.width - 5);
+    im.adjuster.setY(im.start.y + im.height - 5);
     adjustCroppers();
 
 
@@ -149,13 +143,16 @@ im.bind('ChangeActiveAction',function(e){
   }
 });
 
-im.adjuster = new Kinetic.Rect({
+im.crosshair.onload = function() {
+  im.adjuster.setImage(im.crosshair);
+};
+
+im.adjuster = new Kinetic.Image({
   x:im.start.x + im.dragger.width,
   y:im.start.y + im.dragger.height,
-  width:10,
-  height:10,
-  stroke:"black",
-  fill:"white",
+  width:11,
+  height:11,
+  image:im.crosshair,
   draggable:true
 });
 im.croppers.add(im.adjuster);
@@ -164,13 +161,19 @@ im.croppers.add(im.adjuster);
 var adjuststart, adjuststartstart;
 im.adjuster.on('dragstart',function(){
   adjuststart = im.adjuster.getPosition();
+  adjuststart.x -= 5;
+  adjuststart.y -= 5;
   adjuststartstart = {width:im.width,height:im.height};
+});
+im.adjuster.on('dragend',function(e){
+  im.adjuster.setX(im.start.x + im.width - 5);
+  im.adjuster.setY(im.start.y + im.height - 5);
 });
 im.adjuster.on('dragmove',function(e){
   var newpos = im.adjuster.getPosition(),
       offset = {
-    x:adjuststart.x - newpos.x,
-    y:adjuststart.y - newpos.y
+    x:adjuststart.x - newpos.x + 5,
+    y:adjuststart.y - newpos.y + 5
   };
 
   im.width = adjuststartstart.width - offset.x;
@@ -179,11 +182,15 @@ im.adjuster.on('dragmove',function(e){
   adjustCroppers();
 });
 
-
+im.on('stageChanged',function(){
+  adjustCroppers();
+});
 
 var cropToCroppers = function() {
-  var newx = im.image.getX() - im.start.x,
-      newy = im.image.getY() - im.start.y
+  var oldScale = im.stage.getScale();
+  im.stage.setScale(1);
+  var newx = im.image.getX() - im.dragger.getX(),
+      newy = im.image.getY() - im.dragger.getY()
   im.image.setX(newx);
   im.image.setY(newy);
   im.image.disableStroke();
@@ -194,13 +201,18 @@ var cropToCroppers = function() {
     callback:function(img) {
       im.image.enableStroke();
       im.image.setImage(img);
-      im.image.setWidth(img.width);
-      im.image.setHeight(img.height);
-      im.image.setX(im.start.x);
-      im.image.setY(im.start.y);
-      im.image.parent.draw();
+      im.image.setWidth(im.dragger.getWidth());
+      im.image.setHeight(im.dragger.getHeight());
+      im.image.setX(im.dragger.getX());
+      im.image.setY(im.dragger.getY());
+      im.stage.setScale(oldScale);
+
+      im.fire('imageChange');
+      im.stage.draw();
     }
   });
 };
 
 me.find('button.crop').click(cropToCroppers);
+
+adjustCroppers();

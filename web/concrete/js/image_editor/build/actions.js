@@ -4,8 +4,6 @@ im.bind('imageload',function(){
   im.fire('LoadingControlSets');
   for (namespace in cs) {
     var myns = "ControlSet_" + namespace;
-    log(myns);
-    if (!firstcs) firstcs = myns;
     $.ajax(cs[namespace]['src'],{
       dataType:'text',
       cache:false,
@@ -13,9 +11,6 @@ im.bind('imageload',function(){
       myns:myns,
       beforeSend:function(){running++;},
       success:function(js){
-        if (im === undefined) {
-          im
-        }
         running--;
         var nso = im.addControlSet(this.myns,js,cs[this.namespace]['element']);
         log(nso);
@@ -28,6 +23,32 @@ im.bind('imageload',function(){
         running--;
         if (0 == running) {
           im.trigger('ControlSetsLoaded');
+        }
+      }
+    });
+  }
+  im.fire('LoadingComponents');
+  for (namespace in components) {
+    var myns = "Component_" + namespace;
+    $.ajax(components[namespace]['src'],{
+      dataType:'text',
+      cache:false,
+      namespace:namespace,
+      myns:myns,
+      beforeSend:function(){running++;},
+      success:function(js){
+        running--;
+        var nso = im.addControlSet(this.myns,js,cs[this.namespace]['element']);
+        log(nso);
+        im.fire('controlSetLoad',nso);
+        if (0 == running) {
+          im.trigger('ComponentsLoaded');
+        }
+      },
+      error: function(xhr, errDesc, exception) {
+        running--;
+        if (0 == running) {
+          im.trigger('ComponentsLoaded');
         }
       }
     });
@@ -51,22 +72,6 @@ im.bind('ControlSetsLoaded',function(){ // do this when the control sets finish 
         var nso = im.addFilter(this.myns,js);
         nso.name = this.name;
         im.fire('filterLoad',nso);
-      }
-    });
-  }
-  im.fire('LoadingComponents');
-  for (namespace in components) {
-    var myns = "Component_" + namespace;
-    if (!firstc) firstc = myns;
-    var running = 0;
-    $.ajax(components[namespace]['src'],{
-      dataType:'text',
-      cache:false,
-      namespace:namespace,
-      myns:myns,
-      success:function(js){
-        var nso = im.addComponent(this.myns,js,cs[this.namespace]['element']);
-        im.fire('componentLoad',nso);
       }
     });
   }
