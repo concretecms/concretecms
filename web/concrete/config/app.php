@@ -235,6 +235,3 @@ if (!defined('UPLOAD_FILE_EXTENSIONS_ALLOWED')) {
 if (!defined('SEO_EXCLUDE_WORDS')) {
 	Config::getOrDefine('SEO_EXCLUDE_WORDS', 'a, an, as, at, before, but, by, for, from, is, in, into, like, of, off, on, onto, per, since, than, the, this, that, to, up, via, with');
 }
-
-// determining whether we can use page permissions getPermissionCollectionID as our permission object identifier
-define('PAGE_PERMISSION_IDENTIFIER_USE_COLLECTION_ID', PagePermissionAccess::usePermissionCollectionIDForIdentifier());
