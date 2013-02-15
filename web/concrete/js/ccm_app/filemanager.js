@@ -9,7 +9,6 @@ var ccm_alProcessorTarget = "";
 var ccm_alDebug = false;
 
 ccm_triggerSelectFile = function(fID, af) {
-	ccm_event.publish('FileManagerFileSelected',arguments);
 	if (af == null) {
 		var af = ccm_alActiveAssetField;
 	}
@@ -40,6 +39,7 @@ ccm_triggerSelectFile = function(fID, af) {
 		if (typeof(ccm_triggerSelectFileComplete)  == 'function') {
 			ccm_triggerSelectFileComplete(fID, af);
 		}
+		ccm_event.publish('FileManagerFileSelected',{fID:fID, af:af});
 	});
 	var vobj = $('#' + af + "-fm-value");
 	vobj.attr('value', fID);
@@ -47,9 +47,7 @@ ccm_triggerSelectFile = function(fID, af) {
 }
 
 ccm_alGetFileData = function(fID, onComplete) {
-	$.getJSON(CCM_TOOLS_PATH + '/files/get_data.php?fID=' + fID, function(resp) {
-		onComplete(resp);
-	});
+	$.getJSON(CCM_TOOLS_PATH + '/files/get_data.php?fID=' + fID, onComplete);
 }
 
 ccm_clearFile = function(e, af) {
@@ -123,7 +121,6 @@ ccm_activateFileSelectors = function() {
 }
 
 ccm_alLaunchSelectorFileManager = function(selector) {
-	ccm_event.publish('launchFileManager',selector);
 	ccm_alActiveAssetField = selector;
 	var filterStr = "";
 	
@@ -143,6 +140,9 @@ ccm_launchFileManager = function(filters) {
 		width: '90%',
 		height: '70%',
 		appendButtons: true,
+		onOpen: function(){
+			ccm_event.publish('launchFileManager',ccm_alActiveAssetField);
+		},
 		modal: false,
 		href: CCM_TOOLS_PATH + "/files/search_dialog?ocID=" + CCM_CID + "&search=1" + filters,
 		title: ccmi18n_filemanager.title

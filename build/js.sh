@@ -47,6 +47,7 @@ cat ../web/concrete/js/image_editor/build/kinetic.prototype.js \
     ../web/concrete/js/image_editor/build/imageeditor.js \
     ../web/concrete/js/image_editor/build/history.js \
     ../web/concrete/js/image_editor/build/events.js \
+    ../web/concrete/js/image_editor/build/elements.js \
     ../web/concrete/js/image_editor/build/controls.js \
     ../web/concrete/js/image_editor/build/save.js \
     ../web/concrete/js/image_editor/build/extend.js \

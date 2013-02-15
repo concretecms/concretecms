@@ -18,8 +18,8 @@ img.onload = function () {
     stroke: '#000'
   });
   im.image.on('draw',function(){im.fire('imagedraw');});
-  im.editor.add(im.image);
-  im.stage.add(im.editor);
   im.imageData = im.image.getImageData();
   im.fire('imageload');
+  im.addElement(im.image,'image');
+  im.setActiveElement(im.image);
 };
