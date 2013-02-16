@@ -18,5 +18,5 @@ $save_url = $url->getBlockTypeToolsUrl($bt)."/composer_save?bID=" . $_REQUEST['b
 <object type="application/x-shockwave-flash" data="<?php echo ASSETS_URL_FLASH?>/thumbnail_editor_3.swf" width="100%" height="500" id="ccm-image-composer-thumbnail-crop">
 <param name="wmode" value="transparent">
 <param name="quality" value="high">
-<param name="flashvars" value="tint=0&amp;backgroundColor=#FFFFFF&amp;upload=true&amp;webcam=false&amp;width=<?=$_GET['width']?>&amp;height=<?=$_GET['height']?>&amp;image=<?=$f->getRelativePath()?>&amp;save=<?=urlencode($save_url)?>">
+<param name="flashvars" value="tint=0&amp;backgroundColor=#FFFFFF&amp;upload=true&amp;webcam=false&amp;width=<?=htmlspecialchars($_GET['width'])?>&amp;height=<?=htmlspecialchars($_GET['height'])?>&amp;image=<?=$f->getRelativePath()?>&amp;save=<?=urlencode($save_url)?>">
 </object>

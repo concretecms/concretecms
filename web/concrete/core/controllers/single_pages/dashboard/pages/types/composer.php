@@ -1,6 +1,6 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Controller_Dashboard_Pages_Types_Composer extends Controller {
+class Concrete5_Controller_Dashboard_Pages_Types_Composer extends DashboardBaseController {
 
 	protected $ct = false;
 	
@@ -38,6 +38,7 @@ class Concrete5_Controller_Dashboard_Pages_Types_Composer extends Controller {
 	public function view($ctID = false, $action = false) { 
 		$this->verify($ctID);
 		$this->set('contentitems', $this->ct->getComposerContentItems());
+		$this->set('disableThirdLevelNav', true);
 		if ($action == 'updated') {
 			$this->set('message', t('Composer settings updated.'));
 		}
@@ -49,7 +50,11 @@ class Concrete5_Controller_Dashboard_Pages_Types_Composer extends Controller {
 			switch($this->post('ctComposerPublishPageMethod')) {
 				case 'PARENT':
 					$page = Page::getByID($this->post('ctComposerPublishPageParentID'));
-					$this->ct->saveComposerPublishTargetPage($page);
+					if($page->isError()) {
+						$this->error->add(t('Parent page not selected'));
+					} else {
+						$this->ct->saveComposerPublishTargetPage($page);
+					}
 					break;
 				case 'PAGE_TYPE':
 					$ct = CollectionType::getByID($this->post('ctComposerPublishPageTypeID'));
@@ -59,18 +64,16 @@ class Concrete5_Controller_Dashboard_Pages_Types_Composer extends Controller {
 					$this->ct->saveComposerPublishTargetAll();					
 					break;
 			}
-			$this->ct->saveComposerAttributeKeys($this->post('composerAKID'));
-			$this->redirect('/dashboard/pages/types/composer', 'view', $this->ct->getCollectionTypeID(), 'updated');
-
+			if(!$this->error->has()) {
+				$this->ct->saveComposerAttributeKeys($this->post('composerAKID'));
+				$this->redirect('/dashboard/pages/types/composer', 'view', $this->ct->getCollectionTypeID(), 'updated');
+			} else {
+				$this->view($this->ct->getCollectionTypeID());
+			}
 		} else {
 			$this->ct->resetComposerData();
 			$this->redirect("/dashboard/pages/types", "clear_composer");
 		}
 	}
 	
-	public function on_start() {
-		$this->set('disableThirdLevelNav', true);
-	}
-	
-
 }

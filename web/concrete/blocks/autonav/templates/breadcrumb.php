@@ -1,8 +1,9 @@
 <? defined('C5_EXECUTE') or die(_("Access Denied."));
-$navItems = $controller->getNavItems();
+$navItems = $controller->getNavItems(true);
 
-foreach ($navItems as $ni) {
-	if (!$ni->isFirst) {
+for ($i = 0; $i < count($navItems); $i++) {
+	$ni = $navItems[$i];
+	if ($i > 0) {
 		echo ' <span class="ccm-autonav-breadcrumb-sep">&gt;</span> ';
 	}
 	

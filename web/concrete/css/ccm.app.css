@@ -21,8 +21,8 @@
 @media print{.ccm-ui *{text-shadow:none !important;color:#000 !important;background:transparent !important;box-shadow:none !important;} .ccm-ui a,.ccm-ui a:visited{text-decoration:underline;} .ccm-ui a[href]:after{content:" (" attr(href) ")";} .ccm-ui abbr[title]:after{content:" (" attr(title) ")";} .ccm-ui .ir a:after,.ccm-ui a[href^="javascript:"]:after,.ccm-ui a[href^="#"]:after{content:"";} .ccm-ui pre,.ccm-ui blockquote{border:1px solid #999;page-break-inside:avoid;} .ccm-ui thead{display:table-header-group;} .ccm-ui tr,.ccm-ui img{page-break-inside:avoid;} .ccm-ui img{max-width:100% !important;} @page {margin:0.5cm;}.ccm-ui p,.ccm-ui h2,.ccm-ui h3{orphans:3;widows:3;} .ccm-ui h2,.ccm-ui h3{page-break-after:avoid;}}
 .clearfix{*zoom:1;}.clearfix:before,.clearfix:after{display:table;content:"";line-height:0;}
 .clearfix:after{clear:both;}
-.hide-text{font:0/0 a;color:transparent;text-shadow:none;background-color:transparent;border:0;}
-.input-block-level{display:block;width:100%;min-height:30px;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;}
+.ccm-ui .hide-text{font:0/0 a;color:transparent;text-shadow:none;background-color:transparent;border:0;}
+.ccm-ui .input-block-level{display:block;width:100%;min-height:30px;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;}
 body{margin:0;font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;font-size:14px;line-height:20px;color:#333333;background-color:#ffffff;}
 a{color:#0088cc;text-decoration:none;}
 a:hover{color:#005580;text-decoration:underline;}
@@ -1202,7 +1202,7 @@ table.ccm-permission-grid{border:0px;}
 table.ccm-permission-grid td.ccm-permission-grid-name{text-align:right;width:auto;white-space:nowrap;}
 table.ccm-permission-grid td{width:100%;border-left:0px !important;border-right:0px !important;}
 div.ccm-block-field-group{margin-bottom:10px;border-bottom:1px dotted #aaa;padding-bottom:10px;}
-rou div.ccm-block-field-group h2{margin-bottom:6px;}
+div.ccm-block-field-group h2{margin-bottom:6px;}
 ul#ccm-block-type-list{padding:2px 0px 0px 0px;margin:8px 0px 16px 0px;}
 ul#ccm-block-type-list li{margin-left:0px;list-style-type:none;display:none !important;}
 .ccm-block-type a.ccm-scrapbook-delete{top:8px;right:10px;position:absolute;}

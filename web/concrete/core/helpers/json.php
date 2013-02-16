@@ -20,10 +20,9 @@ class Concrete5_Helper_Json {
 
 	
 	/** 
-	 * Decodes a JSON string
-	 * @param string $string The string to be decoded.
-	 * @param bool $assoc When true, returned objects will be converted into associative arrays (default: false). 
-	 * @return string
+	 * Decodes a JSON string into a php variable
+	 * @param string $string
+	 * @return mixed
 	 */
 	public function decode($string, $assoc = false) {
 		if (function_exists('json_decode')) {
@@ -38,7 +37,7 @@ class Concrete5_Helper_Json {
 	
 	/** 
 	 * Encodes a data structure into a JSON string
-	 * @param string $mixed
+	 * @param mixed $mixed
 	 * @return string
 	 */
 	public function encode($mixed) {

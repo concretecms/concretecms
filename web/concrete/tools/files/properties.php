@@ -209,7 +209,7 @@ if (!$previewMode && $fp->canEditFileContents()) {
 <h4><?=t('Basic Properties')?></h4>
 <table border="0" cellspacing="0" cellpadding="0" class="ccm-grid">
 <tr>
-	<td><strong><?=t('ID')?></strong></strong></td>
+	<td><strong><?=t('ID')?></strong></td>
 	<td width="100%" colspan="2"><?=$fv->getFileID()?> <span style="color: #afafaf">(<?=t('Version')?> <?=$fv->getFileVersionID()?>)</span></td>
 </tr>
 <tr>

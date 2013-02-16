@@ -43,7 +43,7 @@ class Concrete5_Model_ComposerPage extends Page {
 	 */
 	protected static function isValidComposerPage($entry) {
 		$ct = CollectionType::getByID($entry->getCollectionTypeID());
-		if (!$ct->isCollectionTypeIncludedInComposer()) {
+		if (!is_object($ct) || !$ct->isCollectionTypeIncludedInComposer()) {
 			return false;
 		}
 		$cp = new Permissions($entry);

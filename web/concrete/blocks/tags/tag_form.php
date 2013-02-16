@@ -49,7 +49,7 @@ if(!$ak instanceof CollectionAttributeKey) {?>
 
 </div>
 
-<div id="ccm-tagsPane-advanced" class="ccm-tagsPane" style="display:none";>
+<div id="ccm-tagsPane-advanced" class="ccm-tagsPane" style="display:none">
 	<div class="clearfix">
 	<label><?=t('Link Tags to Page')?></label>
 	<div class="input">

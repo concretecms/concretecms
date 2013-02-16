@@ -51,15 +51,5 @@ $customOptions = array(
 	</div>
 	</div>
 </div>
-
-<script type="text/javascript">
-$(function() {
-	$('select[name=akTextareaDisplayMode]').on('change', function() {
-		if ($(this).val() == 'rich_text_custom') {
-			$('#akTextareaDisplayModeCustomOptionsWrapper').show();
-		} else {
-			$('#akTextareaDisplayModeCustomOptionsWrapper').hide();
-		}
-	}).trigger('change');
-});
-</script>
+</div>
+</fieldset>

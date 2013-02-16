@@ -268,7 +268,7 @@ abstract class Concrete5_Model_Job extends Object {
 					}
 					closedir($dh);
 				}
-			}else throw new Exception( t('Error: Invalid Jobs Directory %s', $jobClassLocation) );
+			}
 		}
 		
 		return $jobObjs;

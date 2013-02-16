@@ -19,7 +19,8 @@ $db = Loader::db();
 <script>
 jQuery(function($) {
 	var deleteResponse = (<?=$json->encode(t('Are you sure you want to delete this form submission?'))?>),
-		deleteForm = (<?=$json->encode(t('Are you sure you want to delete this form and its form submissions?'))?>);
+		deleteForm = (<?=$json->encode(t('Are you sure you want to delete this form and its form submissions?'))?>),
+		deleteFormAnswers = (<?=$json->encode(t('Are you sure you want to delete this form submissions?'))?>);
 	$('.delete-response').live('click', function(e) {
 		if (!confirm(deleteResponse)) {
 			e.preventDefault();
@@ -30,8 +31,37 @@ jQuery(function($) {
 			e.preventDefault();
 		}
 	});
+	$('.delete-form-answers').live('click', function(e) {
+		if (!confirm(deleteFormAnswers)) {
+			e.preventDefault();
+		}
+	});
 });
 </script>
+<style>
+	::-webkit-scrollbar {
+	-webkit-appearance: none;
+	width: 7px;
+	height: 6px;
+}
+::-webkit-scrollbar-thumb {
+	border-radius: 4px;
+	background-color: rgba(0,0,0,.5);
+	-webkit-box-shadow: 0 0 1px rgba(255,255,255,.5);
+}
+
+#wide-content-notification {
+	margin-left: 5px;
+	display: none;
+	color: #aaa;
+}
+
+.form-results-container {
+	width: 100%;
+	overflow: auto;
+}
+
+</style>
 <?if(!isset($questionSet)):?>
 <?=$h->getDashboardPaneHeaderWrapper(t('Form Results'));?>
 <?
@@ -80,6 +110,7 @@ if ($showTable) { ?>
 			<td>
 				<?=$ih->button(t('View Responses'), DIR_REL . '/index.php?cID=' . $c->getCollectionID().'&qsid='.$qsid, 'left', 'small')?>
 				<?=$ih->button(t('Open Page'), $url, 'left', 'small')?>
+				<?=$ih->button(t('Delete Submissions'), $this->action('').'?qsID='.$qsid.'&action=deleteFormAnswers', 'left', 'small error delete-form-answers')?>
 				<?if(!$in_use):?>
 				<?=$ih->button(t('Delete'), $this->action('').'?bID='.$survey['bID'].'&qsID='.$qsid.'&action=deleteForm', 'left', 'small error delete-form')?>
 				<?endif?>
@@ -96,77 +127,87 @@ if ($showTable) { ?>
 <?=$h->getDashboardPaneHeaderWrapper(t('Responses to %s', $surveys[$questionSet]['surveyName']), false, false, false);?>
 <div class="ccm-pane-body <? if(!$paginator || !strlen($paginator->getPages())>0){ ?> ccm-pane-body-footer <? } ?>">
 <?if(count($answerSets) == 0):?>
-<div><?=t('No one has yet submitted this form.')?></div>
-<?else:?>
+	<div><?=t('No one has yet submitted this form.')?></div>
+	<?else:?>
 
-<div class="ccm-list-action-row">
-	<a id="ccm-export-results" href="<?=$this->action('excel', '?qsid=' . $questionSet)?>"><span></span><?=t('Export to Excel')?></a>
-</div>
+	<div class="ccm-list-action-row">
+		<a id="ccm-export-results" href="<?=$this->action('excel', '?qsid=' . $questionSet)?>"><span></span><?=t('Export to Excel')?></a>
+	</div>
 
-<table class="table table-striped">
-	<thead>
-		<tr>
-			<? if($_REQUEST['sortBy']=='chrono') { ?>
-			<th class="header headerSortDown">
-				<a href="<?=$text->entities($urlhelper->unsetVariable('sortBy'))?>">
-			<? } else { ?>
-			<th class="header headerSortUp">
-				<a href="<?=$text->entities($urlhelper->setVariable('sortBy', 'chrono'))?>">
-			<? } ?>		
-				<?=t('Date')?>
-				</a>
-			</th>
-			<th><?=t('User')?></th>
-<?foreach($questions as $question):?>
-			<th><?=$question['question']?></th>
-<?endforeach?>
-			<th><?=t('Actions')?></th>
-		</tr>	
-	</thead>
-	<tbody>
-<?foreach($answerSets as $answerSetId => $answerSet):?>
-		<tr>
-			<td>
-<?=$dh->getSystemDateTime($answerSet['created'])?></td>
-			<td><?
-			if ($answerSet['uID'] > 0) { 
-				$ui = UserInfo::getByID($answerSet['uID']);
-				if (is_object($ui)) {
-					print $ui->getUserName().' ';
-				}
-				print t('(User ID: %s)', $answerSet['uID']);
+	<div class="form-results-container">
+		<script>
+		$(document).ready(function(){
+			if($('.form-results-container')[0].scrollWidth > $('.ccm-pane-body').width()) {
+				$('#wide-content-notification').show();
 			}
-			?></td>
-<?foreach($questions as $questionId => $question):
-			if ($question['inputType'] == 'fileupload') {
-				$fID = (int) $answerSet['answers'][$questionId]['answer'];
-				$file = File::getByID($fID);
-				if ($fID && $file) {
-					$fileVersion = $file->getApprovedVersion();
-					echo '<td><a href="' . $fileVersion->getRelativePath() .'">'.
-						$text->entities($fileVersion->getFileName()).'</a></td>';
-				} else {
-					echo '<td>'.t('File not found').'</td>';
-				}
-			} else if($question['inputType'] == 'text') {
-				echo '<td>'.$text->entities($answerSet['answers'][$questionId]['answerLong']).'</td>';
-			} else {
-				echo '<td>'.$text->entities($answerSet['answers'][$questionId]['answer']).'</td>';
-			}
-			
-endforeach?>
-			<td>
-				<?=$ih->button(
-					t("Delete"),
-					$this->action('').'?qsid='.$answerSet['questionSetId'].'&asid='.$answerSet['asID'].'&action=deleteResponse',
-					'left',
-					'danger delete-response small'
-				)?>
-			</td>
-		</tr>
-<?endforeach?>
-	</tbody>
-</table>
+		});
+		</script>
+		<p id="wide-content-notification"><?php echo t('* Scroll right to view full results'); ?></p>
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<? if($_REQUEST['sortBy']=='chrono') { ?>
+					<th class="header headerSortDown">
+						<a href="<?=$text->entities($urlhelper->unsetVariable('sortBy'))?>">
+					<? } else { ?>
+					<th class="header headerSortUp">
+						<a href="<?=$text->entities($urlhelper->setVariable('sortBy', 'chrono'))?>">
+					<? } ?>
+						<?=t('Date')?>
+						</a>
+					</th>
+					<th><?=t('User')?></th>
+		<?foreach($questions as $question):?>
+					<th><?=$question['question']?></th>
+		<?endforeach?>
+					<th><?=t('Actions')?></th>
+				</tr>
+			</thead>
+			<tbody>
+		<?foreach($answerSets as $answerSetId => $answerSet):?>
+				<tr>
+					<td>
+		<?=$dh->getSystemDateTime($answerSet['created'])?></td>
+					<td><?
+					if ($answerSet['uID'] > 0) {
+						$ui = UserInfo::getByID($answerSet['uID']);
+						if (is_object($ui)) {
+							print $ui->getUserName().' ';
+						}
+						print t('(User ID: %s)', $answerSet['uID']);
+					}
+					?></td>
+		<?foreach($questions as $questionId => $question):
+					if ($question['inputType'] == 'fileupload') {
+						$fID = (int) $answerSet['answers'][$questionId]['answer'];
+						$file = File::getByID($fID);
+						if ($fID && $file) {
+							$fileVersion = $file->getApprovedVersion();
+							echo '<td><a href="' . $fileVersion->getRelativePath() .'">'.
+								$text->entities($fileVersion->getFileName()).'</a></td>';
+						} else {
+							echo '<td>'.t('File not found').'</td>';
+						}
+					} else if($question['inputType'] == 'text') {
+						echo '<td>'.$text->entities($answerSet['answers'][$questionId]['answerLong']).'</td>';
+					} else {
+						echo '<td>'.$text->entities($answerSet['answers'][$questionId]['answer']).'</td>';
+					}
+
+		endforeach?>
+					<td>
+						<?=$ih->button(
+							t("Delete"),
+							$this->action('').'?qsid='.$answerSet['questionSetId'].'&asid='.$answerSet['asID'].'&action=deleteResponse',
+							'left',
+							'danger delete-response small'
+						)?>
+					</td>
+				</tr>
+		<?endforeach?>
+			</tbody>
+		</table>
+	</div>
 </div>
 <? if($paginator && strlen($paginator->getPages())>0){ ?>	 
 <div class="ccm-pane-footer">

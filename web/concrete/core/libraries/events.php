@@ -37,11 +37,10 @@ class Concrete5_Library_Events {
 	/** 
 	 * Returns an instance of the systemwide Events object.
 	 */
-	public function getInstance() {
+	public static function getInstance() {
 		static $instance;
 		if (!isset($instance)) {
-			$v = __CLASS__;
-			$instance = new $v;
+			$instance = new Events;
 		}
 		return $instance;
 	}		
@@ -74,7 +73,7 @@ class Concrete5_Library_Events {
 			$method = $event;
 			$filename = Loader::pageTypeControllerPath($ctHandle);
 			$ce->registeredEvents[$event][] = array(
-				self::EVENT_TYPE_PAGETYPE,
+				Events::EVENT_TYPE_PAGETYPE,
 				$class,
 				$method,
 				$filename,
@@ -96,18 +95,18 @@ class Concrete5_Library_Events {
 	 * $param int $priority
 	 * @return void
 	 */
-	public static function extend($event, $class, $method, $filename, $params = array(), $priority = 5) {
+	public static function extend($event, $class, $method='', $filename='', $params = array(), $priority = 5) {
 		Events::enableEvents();
 		$ce = Events::getInstance();
 		$ce->registeredEvents[$event][] = array(
-			self::EVENT_TYPE_GLOBAL,
+			Events::EVENT_TYPE_GLOBAL,
 			$class,
 			$method,
 			$filename,
 			$params,
 			$priority
 		);
-		self::sortByPriority();
+		Events::sortByPriority();
 	}
 	
 	/** 
@@ -139,7 +138,7 @@ class Concrete5_Library_Events {
 			foreach($events as $ev) {
 				$type = $ev[0];
 				$proceed = true;
-				if ($type == self::EVENT_TYPE_PAGETYPE) {
+				if ($type == Events::EVENT_TYPE_PAGETYPE) {
 					// then the first argument in the event fire() method will be the page
 					// that this applies to. We check to see if the page type is the right type
 					$proceed = false;

@@ -12,9 +12,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
  * @license    http://www.concrete5.org/license/     MIT License
  *
  */
- 
-
-/**
+ /**
  *
  * @access private
  */	
@@ -53,22 +51,30 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		 * ex: 
 		 * <code><?php
 		 * $bt = BlockType::getByHandle('content'); // returns the BlockType object for the core Content block
-		 * ?></code
+		 * ?></code>
 		 * @param string $handle
-		 * @return BlockType
+		 * @return BlockType|false
 		 */
 		public static function getByHandle($handle) {
-			$ca = new Cache();
-			$bt = $ca->get('blockTypeByHandle', $handle);
-			if (!is_object($bt)) {
-				$where = 'btHandle = ?';
-				$bt = BlockType::get($where, array($handle));
-				$ca->set('blockTypeByHandle', $handle, $bt);
+			$bt = CacheLocal::getEntry('blocktype', $handle);
+			if ($bt === -1) {
+				return false;
 			}
+
 			if (is_object($bt)) {
 				$bt->controller = Loader::controller($bt);
 				return $bt;
 			}
+
+			$bt = BlockType::get('btHandle = ?', array($handle));
+			if (is_object($bt)) {
+				CacheLocal::set('blocktype', $handle, $bt);
+				$bt->controller = Loader::controller($bt);
+				return $bt;
+			}
+
+			CacheLocal::set('blocktype', $handle, -1);
+			return false;
 		}
 
 		/**
@@ -77,19 +83,22 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		 * @return BlockType
 		 */
 		public static function getByID($btID) {
-			$ca = new Cache();
-			$bt = $ca->get('blockTypeByID', $btID);
-			if (!is_object($bt)) {
+			$bt = CacheLocal::getEntry('blocktype', $btID);
+			if ($bt === -1) {
+				return false;
+			} else if (!is_object($bt)) {
 				$where = 'btID = ?';
 				$bt = BlockType::get($where, array($btID));			
-				$ca->set('blockTypeByID', $btID, $bt);
+				if (is_object($bt)) {
+					CacheLocal::set('blocktype', $btID, $bt);
+				} else {
+					CacheLocal::set('blocktype', $btID, -1);
+				}
 			}
-			if (is_object($bt)) {
-				$bt->controller = Loader::controller($bt);
-				return $bt;
-			}
+			$bt->controller = Loader::controller($bt);
 			return $bt;
 		}
+		
 		
 		/**
 		 * internal method to query the BlockTypes table and get a BlockType object
@@ -423,7 +432,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		 * @param string template 'view' for the default
 		 * @return void
 		 */
-		public function render($view) {
+		public function render($view = 'view') {
 			$bv = new BlockView();
 			$bv->setController($this->controller);
 			$bv->render($this, $view);
@@ -450,7 +459,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			$env->clearOverrideCache();
 			
 			if (file_exists($dir . '/' . $btHandle . '/' . FILENAME_BLOCK_CONTROLLER)) {
-				$class = $bt->getBlockTypeClassFromHandle();
+				$class = $bt->getBlockTypeClass();
 				
 				$path = $dir . '/' . $btHandle;
 				if (!class_exists($class)) {
@@ -617,12 +626,14 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		}
 		
 		public function getBlockTypeClass() {
-			$btHandle = $this->getBlockTypeHandle();
-			return $this->_getClass($btHandle);
+			return $this->_getClass();
 		}
 		
+		/**
+		 * Deprecated -- use getBlockTypeClass() instead.
+		 */
 		public function getBlockTypeClassFromHandle() {
-			return $this->_getClass();
+			return $this->getBlockTypeClass();
 		}
 		
 		/** 
@@ -644,6 +655,9 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			$ca->delete('blockTypeByHandle', $this->btHandle);		 	
 			$ca->delete('blockTypeList', false);		 	
 			$db->Execute("delete from BlockTypes where btID = ?", array($this->btID));
+			
+			//Remove gaps in display order numbering (to avoid future sorting errors)
+			BlockTypeList::resetBlockTypeDisplayOrder('btDisplayOrder');
 		}
 		
 		/** 

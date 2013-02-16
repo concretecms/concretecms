@@ -40,8 +40,6 @@ class Concrete5_Controller_Dashboard_Sitemap_Search extends Controller {
 		$req = $pageList->getSearchRequest();
 		$pageList->displayUnapprovedPages();
 
-		$pageList->sortBy('cDateModified', 'desc');
-
 		$columns = PageSearchColumnSet::getCurrent();
 		$this->set('columns', $columns);
 		

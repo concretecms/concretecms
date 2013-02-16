@@ -74,8 +74,8 @@ class Concrete5_Model_BasicWorkflow extends Workflow  {
 		return $req->getWorkflowRequestDescriptionObject()->getShortStatus();
 	}
 
-	protected function notify(WorkflowProgress $wp, $message, $permission, $parameters = array()) {
-		$nk = PermissionKey::getByHandle('notify_on_basic_workflow_entry');
+	protected function notify(WorkflowProgress $wp, $message, $permission = 'notify_on_basic_workflow_entry', $parameters = array()) {
+		$nk = PermissionKey::getByHandle($permission);
 		$nk->setPermissionObject($this);
 		$users = $nk->getCurrentlyActiveUsers($wp);
 		$req = $wp->getWorkflowRequestObject();

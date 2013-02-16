@@ -18,7 +18,7 @@ $form = Loader::helper('form');
 			</div>
 	 	</div>
 	 	<div class="control-group">
-	 		<?php print $form->label('gravatar_fallback', t('Fall Back To Gravar')); ?>
+	 		<?php print $form->label('gravatar_fallback', t('Fall Back To Gravatar')); ?>
 	 		<div class="controls">
 	 		<label class="checkbox">
 	 			<?php print $form->checkbox('gravatar_fallback', 1, $gravatar_fallback); ?> <span><?php print t('Use image from <a href="http://gravatar.com" target="_blank">gravatar.com</a> if the user has not uploaded one')?></span>
@@ -46,7 +46,6 @@ $form = Loader::helper('form');
 <? 
 print $h->submit(t('Save'), 'public-profiles-form', 'right', 'primary');
 ?>
-</div>
 </div>
 
 </form>

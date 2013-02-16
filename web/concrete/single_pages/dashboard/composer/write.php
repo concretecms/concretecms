@@ -2,7 +2,14 @@
 
 <?
 
-if (isset($entry)) { ?>
+if (isset($entry)) { 
+
+	$pk = PermissionKey::getByHandle('edit_page_properties');
+	$pk->setPermissionObject($entry);
+	$asl = $pk->getMyAssignment();
+	$allowedAKIDs = $asl->getAttributesAllowedArray();
+
+	?>
 
 	<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(ucfirst($action) . ' ' . $ct->getCollectionTypeName(), false, false, false)?>
 	<form method="post" class="form-horizontal" enctype="multipart/form-data" action="<?=$this->action('save')?>" id="ccm-dashboard-composer-form">
@@ -15,23 +22,30 @@ if (isset($entry)) { ?>
 	
 	<fieldset>
 	<legend><?=t("Basic Information")?></legend>
+	<? if ($asl->allowEditName()) { ?>
 	<div class="control-group">
 		<?=$form->label('cName', t('Name'))?>
 		<div class="controls"><?=$form->text('cName', Loader::helper("text")->entities($name), array('class' => 'input-xlarge', 'onKeyUp' => "ccm_updateAddPageHandle()"))?></div>		
 	</div>
-
+	<? } ?>
+	
+	<? if ($asl->allowEditPaths()) { ?>
 	<div class="control-group">
 		<?=$form->label('cHandle', t('URL Slug'))?>
 		<div class="controls"><?=$form->text('cHandle', $handle, array('class' => 'span3'))?>
 		<img src="<?=ASSETS_URL_IMAGES?>/loader_intelligent_search.gif" width="43" height="11" id="ccm-url-slug-loader" style="display: none" />
 		</div>		
 	</div>
+	<? } ?>
 
+	<? if ($asl->allowEditDescription()) { ?>
 	<div class="control-group">
 		<?=$form->label('cDescription', t('Short Description'))?>
 		<div class="controls"><?=$form->textarea('cDescription', Loader::helper("text")->entities($description), array('class' => 'input-xlarge', 'rows' => 5))?></div>		
 	</div>
+	<? } ?>
 
+	<? if ($asl->allowEditDateTime()) { ?>
 	<div class="control-group">
 		<?=$form->label('cDatePublic', t('Date Posted'))?>
 		<div class="controls"><? 
@@ -40,7 +54,8 @@ if (isset($entry)) { ?>
 		}
 		?><?=Loader::helper('form/date_time')->datetime('cDatePublic', $cDatePublic)?></div>		
 	</div>
-	
+<? } ?>
+
 	</fieldset>
 	
 	<? if ($entry->isComposerDraft()) { ?>
@@ -70,6 +85,10 @@ if (isset($entry)) { ?>
 	foreach($contentitems as $ci) {
 		if ($ci instanceof AttributeKey) { 
 			$ak = $ci;
+			if (!in_array($ak->getAttributeKeyID(), $allowedAKIDs)) {
+				continue;
+			}
+			
 			if (is_object($entry)) {
 				$value = $entry->getAttributeValueObject($ak);
 			}
@@ -116,7 +135,7 @@ if (isset($entry)) { ?>
 	$pp = new Permissions($entry);
 	?>
 		<?=Loader::helper('concrete/interface')->submit(t('Publish Page'), 'publish', 'right', 'primary')?>
-		<? if (PERMISSIONS_MODEL != 'simple' && $pp->canAdmin()) { ?>
+		<? if (PERMISSIONS_MODEL != 'simple' && $pp->canEditPagePermissions()) { ?>
 			<?=Loader::helper('concrete/interface')->button_js(t('Permissions'), 'javascript:ccm_composerLaunchPermissions()', 'left', 'primary ccm-composer-hide-on-no-target')?>
 		<? } ?>
 	<? } else { ?>
@@ -162,7 +181,7 @@ if (isset($entry)) { ?>
 		if (!ccm_composerDoAutoSaveAllowed) {
 			return false;
 		}
-		
+		$('#ccm-submit-save').attr('disabled',true);
 		$('input[name=autosave]').val('1');
 		try {
 			tinyMCE.triggerSave(true, true);
@@ -175,11 +194,13 @@ if (isset($entry)) { ?>
 				ccm_composerLastSaveTime = new Date();
 				$("#composer-save-status").html('<div class="alert alert-info"><?=t("Page saved at ")?>' + r.time + '</div>');
 				$(".ccm-composer-hide-on-approved").show();
+				$('#ccm-submit-save').attr('disabled',false);
 				if (callback) {
 					callback();
 				}
 			}
 		});
+		
 	}
 	
 	ccm_composerLaunchPreview = function() {
@@ -202,8 +223,8 @@ if (isset($entry)) { ?>
 		$("input[name=cPublishParentID]").val(cID);
 		$(".ccm-composer-hide-on-no-target").show();
 		$("#ccm-composer-publish-location").load('<?=$this->action("select_publish_target")?>', {'entryID': <?=$entry->getCollectionID()?>, 'cPublishParentID': cID}, function() {
-			$('input[name=ccm-publish-draft]').val(1);
-			$('#ccm-dashboard-composer-form').submit();
+		 	$("input[name=ccm-publish-draft]").val(1);
+		 	$('#ccm-dashboard-composer-form').submit();
 		});
 	}	
 		

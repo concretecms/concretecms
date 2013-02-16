@@ -27,6 +27,9 @@ if ($controller->hasVoted()) { ?>
 			$graphColors[]=array_pop($availableChartColors);
 			$totalVotes+=intval($opt->getResults());
 		}
+		foreach ($optionResults as &$value){
+			$value=round($value/$totalVotes*100,0);
+		}		
 		?>
 		
 		<strong><?=t("Question")?>: <?=$controller->getQuestion()?></strong>
@@ -46,7 +49,7 @@ if ($controller->hasVoted()) { ?>
 					<? $i++; ?>
 			<? } ?>
 			</table>
-			<div class="note" style="margin-top:8px"><?=intval($totalVotes)?> <?=(intval($totalVotes)==1)?t('Vote'):t('Votes')?></div>
+			<div class="note" style="margin-top:8px"><?=t2('%d Vote', '%d Votes', intval($totalVotes), intval($totalVotes))?></div>
 		</div>
 		<?
 		//&chl= join('|',$optionNamesAbbrev) 

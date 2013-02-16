@@ -37,7 +37,7 @@
 			);
 		}
 		
-		public function getPageList($query = null) {
+		public function getPageList() {
 			Loader::model('page_list');
 			$db = Loader::db();
 			$bID = $this->bID;
@@ -86,9 +86,7 @@
 
 			$num = (int) $row['num'];
 			
-			if ($num > 0) {
-				$pl->setItemsPerPage($num);
-			}
+			$pl->setItemsPerPage($num);			
 
 			$c = Page::getCurrentPage();
 			if (is_object($c)) {
@@ -127,7 +125,7 @@
 		}
 
 		
-		public function getPages($query = NULL) {
+		public function getPages() {
 			$pl = $this->getPageList();
 			
 			if ($pl->getItemsPerPage() > 0) {

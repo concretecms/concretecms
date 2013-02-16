@@ -77,7 +77,7 @@ if ($forceImageToMatchDimensions && $maxWidth && $maxHeight) {
 </div>
 
 <div>
-<h4><?=t('Constrain Image Dimensions')?></h4>
+<h4><?=t('Constrain Image Dimensions')?></h4><br/>
 <? if ($maxWidth == 0) { 
 	$maxWidth = '';
 } 

@@ -19,6 +19,4 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 class ListsCountriesHelper extends Concrete5_Helper_Lists_Countries {
 
-
-
 }
