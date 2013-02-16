@@ -125,7 +125,7 @@ class Concrete5_Helper_Form_DateTime {
 			} else {
 				$selected = '';
 			}
-			$html .= '<option value="' . sprintf('%02d', $i) . '"' . $selected . '>' . sprintf('%02d', $i) . '</option>';
+			$html .= '<option value="' . sprintf('%02d', $i) . '" ' . $selected . '>' . sprintf('%02d', $i) . '</option>';
 		}
 		$html .= '</select>';
 		if (DATE_FORM_HELPER_FORMAT_HOUR == '12') {

@@ -32,8 +32,8 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
 	<label><?=t("Swap Site Contents")?></label>
 	<div class="input">
 		<ul class="inputs-list">
-			<li><label><input type="radio" name="pkgDoFullContentSwap" value="0" checked="checked" <?=$disabled?> /> <span><?=t('No. Do <strong>not</strong> remove any content or files from this website.')?></span></li>
-			<li><label><input type="radio" name="pkgDoFullContentSwap" value="1" <?=$disabled?> /> <span><?=t('Yes. Reset site content with the content found in this package')?></span></li>
+			<li><label><input type="radio" name="pkgDoFullContentSwap" value="0" checked="checked" <?=$disabled?> /> <span><?=t('No. Do <strong>not</strong> remove any content or files from this website.')?></span></label></li>
+			<li><label><input type="radio" name="pkgDoFullContentSwap" value="1" <?=$disabled?> /> <span><?=t('Yes. Reset site content with the content found in this package')?></span></label></li>
 		</ul>
 	</div>
 	</div>
@@ -80,7 +80,7 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
 		<h3><?=t('Move package to trash directory on server?')?></h3>
 		<ul class="inputs-list">
 		<li><label><?=Loader::helper('form')->checkbox('pkgMoveToTrash', 1)?>
-		<span><?=t('Yes, remove the package\'s directory from of the installation directory.')?></span></label>
+		<span><?=t('Yes, remove the package\'s directory from the installation directory.')?></span></label>
 		</li>
 		</ul>
 		</div>
@@ -175,7 +175,7 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
 			<table class="table table-bordered table-striped">
 			<tr>
 				<td class="ccm-marketplace-list-thumbnail"><img src="<?=$ci->getPackageIconURL($pkg)?>" /></td>
-				<td class="ccm-addon-list-description" style="width: 100%"><h3><?=$pkg->getPackageName()?> - <?=$pkg->getPackageVersion()?></a></h3><?=$pkg->getPackageDescription()?></td>
+				<td class="ccm-addon-list-description" style="width: 100%"><h3><?=$pkg->getPackageName()?> - <?=$pkg->getPackageVersion()?></h3><?=$pkg->getPackageDescription()?></td>
 			</tr>				
 			</table>
 		
@@ -258,7 +258,7 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
 			<?	foreach ($pkgArray as $pkg) { ?>
 				<tr>
 					<td class="ccm-marketplace-list-thumbnail"><img src="<?=$ci->getPackageIconURL($pkg)?>" /></td>
-					<td class="ccm-addon-list-description"><h3><?=$pkg->getPackageName()?> - <?=$pkg->getPackageVersion()?></a></h3><?=$pkg->getPackageDescription()?>
+					<td class="ccm-addon-list-description"><h3><?=$pkg->getPackageName()?> - <?=$pkg->getPackageVersion()?></h3><?=$pkg->getPackageDescription()?>
 
 					</td>
 					<td class="ccm-marketplace-list-install-button"><?=$ch->button(t("Edit"), View::url('/dashboard/extend/install', 'inspect_package', $pkg->getPackageID()), "")?></td>					

@@ -82,7 +82,7 @@ class Concrete5_Library_DatabaseItemList extends ItemList {
 						}
 						$q .= ') ';
 					} else {
-						$q .= 'and 1 = 2';
+						$q .= 'and 1 = 2 ';
 					}
 				} else { 
 					$comp = (is_null($value) && stripos($comp, 'is') === false) ? (($comp == '!=' || $comp == '<>') ? 'IS NOT' : 'IS') : $comp;

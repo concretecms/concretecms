@@ -58,8 +58,11 @@ abstract class Concrete5_Model_Workflow extends Object {
 	
 	public static function add(WorkflowType $wt, $name) {
 		$db = Loader::db();
-		$db->Execute('insert into Workflows (wftID, wfName) values (?, ?)', array($wt->getWorkflowTypeID(), $name));
-		$wfID = $db->Insert_ID();
+		$wfID = $db->getOne('SELECT wfID FROM Workflows WHERE wfName=?',array($name));
+		if (!$wfID) {
+			$db->Execute('insert into Workflows (wftID, wfName) values (?, ?)', array($wt->getWorkflowTypeID(), $name));
+			$wfID = $db->Insert_ID();
+		}
 		return self::getByID($wfID);
 	}
 	
@@ -74,6 +77,9 @@ abstract class Concrete5_Model_Workflow extends Object {
 		$r = $db->GetRow('select WorkflowTypes.wftHandle, WorkflowTypes.pkgID from Workflows inner join WorkflowTypes on Workflows.wftID = WorkflowTypes.wftID where Workflows.wfID = ?', array($wfID));
 		if ($r['wftHandle']) { 
 			$class = Loader::helper('text')->camelcase($r['wftHandle']) . 'Workflow';
+			if (!class_exists($class)) {
+				exit;
+			}
 			$obj = new $class();
 			$obj->load($wfID);
 			if ($obj->getWorkflowID() > 0) { 

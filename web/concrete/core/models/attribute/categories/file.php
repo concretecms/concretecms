@@ -52,32 +52,21 @@ class Concrete5_Model_FileAttributeKey extends AttributeKey {
 			return $av->{$method}();
 		}
 	}
-	
-	public static function getByID($akID) {
-		$fak = Cache::get('file_attribute_key', $akID);
-		if (is_object($fak)) {
-			return $fak;
-		}
-		
-		$ak = new FileAttributeKey();
-		$ak->load($akID);
-		if ($ak->getAttributeKeyID() > 0) {
-			Cache::set('file_attribute_key', $akID, $ak);
-			return $ak;	
-		}	
-	}
 
 	public static function getByHandle($akHandle) {
+		$ak = CacheLocal::getEntry('file_attribute_key_by_handle', $akHandle);
+		if (is_object($ak)) {
+			return $ak;
+		} else if ($ak == -1) {
+			return false;
+		}
+		
+		$ak = -1;
 		$db = Loader::db();
-		$q = "SELECT ak.akID 
-			FROM AttributeKeys ak
-			INNER JOIN AttributeKeyCategories akc ON ak.akCategoryID = akc.akCategoryID 
-			WHERE ak.akHandle = ?
-			AND akc.akCategoryHandle = 'file'";
+		$q = "SELECT ak.akID FROM AttributeKeys ak INNER JOIN AttributeKeyCategories akc ON ak.akCategoryID = akc.akCategoryID  WHERE ak.akHandle = ? AND akc.akCategoryHandle = 'file'";
 		$akID = $db->GetOne($q, array($akHandle));
 		if ($akID > 0) {
-			$ak = FileAttributeKey::getByID($akID);
-			return $ak;
+			$ak = self::getByID($akID);
 		} else {
 			 // else we check to see if it's listed in the initial registry
 			 $ia = FileTypeList::getImporterAttribute($akHandle);
@@ -91,11 +80,22 @@ class Concrete5_Model_FileAttributeKey extends AttributeKey {
 					'akIsAutoCreated' => 1,
 					'akIsEditable' => $ia->akIsEditable
 				);
-			 	return FileAttributeKey::add($at, $args);
+			 	$ak = FileAttributeKey::add($at, $args);
 			 }
-		}	
+		}
+		CacheLocal::set('file_attribute_key_by_handle', $akHandle, $ak);
+		return $ak;
+	}
+
+	public static function getByID($akID) {
+		$ak = new FileAttributeKey();
+		$ak->load($akID);
+		if ($ak->getAttributeKeyID() > 0) {
+			return $ak;	
+		}
 	}
 	
+
 	public static function getList() {
 		return parent::getList('file');	
 	}
@@ -150,15 +150,14 @@ class Concrete5_Model_FileAttributeKey extends AttributeKey {
 		), array('fID', 'fvID', 'akID'));
 		$f->logVersionUpdate(FileVersion::UT_EXTENDED_ATTRIBUTE, $this->getAttributeKeyID());
 		$fo = $f->getFile();
-		$fo->refreshCache();
 		$fo->reindex();
-		$f->populateAttributes();
 		unset($av);
 		unset($fo);
 		unset($f);
 	}
 
 	public function add($at, $args, $pkg = false) {
+		CacheLocal::delete('file_attribute_key_by_handle', $args['akHandle']);
 		$ak = parent::add('file', $at, $args, $pkg);
 		return $ak;
 	}

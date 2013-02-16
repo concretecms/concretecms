@@ -7,7 +7,7 @@ if (!$dh->canRead()) {
 }
 
 if (isset($_REQUEST['selectedPageID'])) {
-	$dh->setSelectedPageID($_REQUEST['selectedPageID']);
+	$dh->setSelectedPageID(intval($_REQUEST['selectedPageID']));
 }
 
 if (isset($_REQUEST['task']) && $_REQUEST['task'] == 'save_sitemap_display_mode') {
@@ -67,5 +67,9 @@ if ($_REQUEST['mode'] == 'move_copy_delete') {
 }
 
 $js = Loader::helper('json');
-print $dh->outputRequestHTML($_REQUEST['instance_id'], $_REQUEST['display_mode'], $_REQUEST['select_mode'], $nodes);
+$th= Loader::helper('text');
+$instance_id = addslashes($th->entities($_REQUEST['instance_id']));
+$display_mode = addslashes($th->entities($_REQUEST['display_mode']));
+$select_mode = addslashes($th->entities($_REQUEST['select_mode']));
+print $dh->outputRequestHTML($instance_id, $display_mode, $select_mode, $nodes);
 $dh->clearOneTimeActiveNodes();

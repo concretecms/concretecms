@@ -1,9 +1,6 @@
 <?
 
 defined('C5_EXECUTE') or die("Access Denied.");
-Loader::model('file');
-Loader::model('file_version');
-
 /**
  * @package Core
  * @category Concrete
@@ -152,7 +149,4 @@ class Concrete5_Library_FileImporter {
 		$fr->refreshCache();
 		return $fv;
 	}
-	
-	
-
 }

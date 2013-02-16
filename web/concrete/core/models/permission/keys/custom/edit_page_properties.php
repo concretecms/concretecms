@@ -4,12 +4,16 @@ defined('C5_EXECUTE') or die("Access Denied.");
 class Concrete5_Model_EditPagePropertiesPagePermissionKey extends PagePermissionKey  {
 
 
+	protected function getAllAttributeKeyIDs() {
+		$db = Loader::db();
+		$allAKIDs = $db->GetCol('select akID from AttributeKeys inner join AttributeKeyCategories on AttributeKeys.akCategoryID = AttributeKeyCategories.akCategoryID where akCategoryHandle = \'collection\'');
+		return $allAKIDs;
+	}
+
 	public function getMyAssignment() {
 		$u = new User();
 		$asl = new EditPagePropertiesPagePermissionAccessListItem();
 		
-		$db = Loader::db();
-		$allAKIDs = $db->GetCol('select akID from AttributeKeys inner join AttributeKeyCategories on AttributeKeys.akCategoryID = AttributeKeyCategories.akCategoryID where akCategoryHandle = \'collection\'');
 
 		if ($u->isSuperUser()) {
 			$asl->setAllowEditName(1);
@@ -17,7 +21,7 @@ class Concrete5_Model_EditPagePropertiesPagePermissionKey extends PagePermission
 			$asl->setAllowEditUserID(1);
 			$asl->setAllowEditDescription(1);
 			$asl->setAllowEditPaths(1);
-			$asl->setAttributesAllowedArray($allAKIDs);
+			$asl->setAttributesAllowedArray($this->getAllAttributeKeyIDs());
 			$asl->setAttributesAllowedPermission('A');
 			return $asl;
 		}
@@ -36,6 +40,9 @@ class Concrete5_Model_EditPagePropertiesPagePermissionKey extends PagePermission
 		$excluded = array();
 		$akIDs = array();
 		$u = new User();
+		if (count($list) > 0) {
+			$allAKIDs = $this->getAllAttributeKeyIDs();
+		}
 		foreach($list as $l) {
 
 			if ($l->allowEditName() && (!in_array('name', $excluded))) {

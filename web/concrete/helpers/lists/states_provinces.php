@@ -19,6 +19,4 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 class ListsStatesProvincesHelper extends Concrete5_Helper_Lists_StatesProvinces {
 	
-	
-
 }

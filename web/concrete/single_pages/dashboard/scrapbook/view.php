@@ -207,13 +207,7 @@ $(function(){ GlobalScrapbook.init(); });
 			</div>
 			</div>
 
-
-
-			
 			</form>
-			</td>
-		</tr>
-		</table>
 		
 		
 		<div class="ccm-spacer"></div>			

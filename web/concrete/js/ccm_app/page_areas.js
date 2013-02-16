@@ -135,6 +135,9 @@ ccm_deleteBlock = function(cID, bID, aID, arHandle, msg) {
 			url: CCM_DISPATCHER_FILENAME,
 			data: 'cID=' + cID + '&ccm_token=' + CCM_SECURITY_TOKEN + '&isAjax=true&btask=remove&bID=' + bID + '&arHandle=' + arHandle
 		});
+		if (typeof window.ccm_parseBlockResponsePost == 'function') {
+			ccm_parseBlockResponsePost({});
+		}
 	}	
 }
 
