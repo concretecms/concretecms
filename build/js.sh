@@ -21,7 +21,6 @@ cat ../web/concrete/js/ccm_app/pubsub.js \
 ../web/concrete/js/ccm_app/chosen.jquery.js \
 ../web/concrete/js/ccm_app/base.js \
 ../web/concrete/js/ccm_app/ui.js \
-../web/concrete/js/ccm_app/dashboard.js \
 ../web/concrete/js/ccm_app/filemanager.js \
 ../web/concrete/js/ccm_app/jquery.cookie.js \
 ../web/concrete/js/ccm_app/legacy_dialog.js \
