@@ -235,7 +235,7 @@ class Concrete5_Helper_Image {
 		}		
 		
 		$fh = Loader::helper('file');
-		$prefix  = $this->compression . ':'; // Add prefix for compression level to serve the properly compressed images
+		$prefix  = $this->jpegCompression . ':'; // Add prefix for compression level to serve the properly compressed images
 		$prefix .= ($crop ? 'cropped:' : ''); // Name cropped images different from resized images so they don't get mixed up in the cache
 		if (file_exists($path) && $fID) {
 			$filename = md5($prefix . $path . ':' . $maxWidth . ':' . $maxHeight . ':' . filemtime($path)) . '_f' . $fID . '.' . $fh->getExtension($path);
