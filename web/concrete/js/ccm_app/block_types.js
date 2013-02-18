@@ -83,12 +83,15 @@ ccm_activateBlockTypeOverlay = function() {
 			appendTo: $('#ccm-block-types-dragging'),
 			revert: false,
 			start: function(e, ui) {
+				$('#ccm-block-types-wrapper').parent().jqdialog('option', 'closeOnEscape', false);
+				$.fn.ccmmenu.disable();
 				$('#ccm-overlay-block-types').parent().parent().parent().fadeOut(100);
 				$('.ui-widget-overlay').remove();
 				$sortables.addClass('ccm-area-drag-active');
 				$('#ccm-block-types-dragging a').css('background-color', '#4FDAFF');
 			},
 			stop: function() {
+				$.fn.ccmmenu.enable();
 				if (!ccm_blockTypeDropped) {
 					// this got cancelled without a receive.
 					jQuery.fn.dialog.closeAll();

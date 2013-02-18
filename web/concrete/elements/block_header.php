@@ -68,7 +68,7 @@ if ($b->getBlockTypeHandle() == BLOCK_HANDLE_LAYOUT_PROXY) {
 
 ?>
 
-<div id="b<?=$b->getBlockID()?>-<?=$a->getAreaID()?>" custom-style="<?=$b->getBlockCustomStyleRuleID()?>" class="<?=$class?>" data-block-type-handle="<?=$btw->getBlockTypeHandle()?>" data-menu="block-menu-b<?=$b->getBlockID()?>-<?=$a->getAreaID()?>" <? if ($btw->getBlockTypeHandle() == BLOCK_HANDLE_LAYOUT_PROXY) { ?> data-menu-handle="ccm-area-layout-control-bar-<?=$b->getBlockID()?>-<?=$a->getAreaID()?>"<? } ?>>
+<div custom-style="<?=$b->getBlockCustomStyleRuleID()?>" data-block-id="<?=$b->getBlockID()?>" class="<?=$class?>" data-block-type-handle="<?=$btw->getBlockTypeHandle()?>" data-menu="block-menu-b<?=$b->getBlockID()?>-<?=$a->getAreaID()?>" <? if ($btw->getBlockTypeHandle() == BLOCK_HANDLE_LAYOUT_PROXY) { ?> data-menu-handle="ccm-area-layout-control-bar-<?=$b->getBlockID()?>-<?=$a->getAreaID()?>"<? } ?>>
 
 <div class="ccm-ui">
 

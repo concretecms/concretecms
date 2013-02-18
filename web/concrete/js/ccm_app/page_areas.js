@@ -211,7 +211,6 @@ ccm_setupBlockForm = function(form, currentBlockID, task) {
 			ccm_parseBlockResponse(r, currentBlockID, task);
 		}
 	});
-	
 }
 
 ccm_saveArrangement = function(cID) {
@@ -224,40 +223,22 @@ ccm_saveArrangement = function(cID) {
 	var serial = '';
 	$('div.ccm-area').each(function() {
 		areaStr = '&area[' + $(this).attr('id').substring(1) + '][]=';
-		
-		bArray = $(this).sortable('toArray');
-
+		bArray = $(this).sortable('toArray', {'attribute': 'data-block-id'});
 		for (i = 0; i < bArray.length; i++ ) {
-			if (bArray[i] != '' && bArray[i].substring(0, 1) == 'b') {
-				// make sure to only go from b to -, meaning b28-9 becomes "28"
-				var bID = bArray[i].substring(1, bArray[i].indexOf('-'));
-				var bObj = $('#' + bArray[i]);
-				if (bObj.attr('custom-style')) {
-					bID += '-' + bObj.attr('custom-style');
-				}
-				serial += areaStr + bID;
-			}
+			var bID = bArray[i];
+			serial += areaStr + bID;
 		}
 	});
-
-	console.log(serial);
-	/*
+	console.log('cID=' + cID + '&ccm_token=' + CCM_SECURITY_TOKEN + '&btask=ajax_do_arrange' + serial);
  	$.ajax({
  		type: 'POST',
  		url: CCM_DISPATCHER_FILENAME,
  		data: 'cID=' + cID + '&ccm_token=' + CCM_SECURITY_TOKEN + '&btask=ajax_do_arrange' + serial,
  		success: function(msg) {
- 			$("div.ccm-area").removeClass('ccm-move-mode');
-			$('div.ccm-block-arrange').each(function() {
-				$(this).addClass('ccm-block-edit');
-				$(this).removeClass('ccm-block-arrange');
-			});
-			$('div.ccm-area-footer').show();
-			$.fn.ccmmenu.enable();
 			$(".ccm-main-nav-edit-option").fadeIn(300);
+ 			$("div.ccm-area").sortable('destroy');
 			ccmAlert.hud(ccmi18n.arrangeBlockMsg, 2000, 'up_down', ccmi18n.arrangeBlock);
  		}});
- 	*/
 }
 
 ccm_saveAreaArrangement = function(cID, arHandle) {
@@ -290,7 +271,6 @@ ccm_saveAreaArrangement = function(cID, arHandle) {
 }
 
 ccm_arrangeInit = function() {
-	//$(document.body).append('<img src="' + CCM_IMAGE_PATH + '/topbar_throbber.gif" width="16" height="16" id="ccm-topbar-loader" />');
 	
 	$.fn.ccmmenu.disable();
 	
@@ -298,8 +278,8 @@ ccm_arrangeInit = function() {
 		$(this).addClass('ccm-block-arrange-enabled');
 	});
 	
-	$('div.ccm-area-footer').hide();
-
+	var $dropelement;
+	
 	$('div.ccm-area').sortable({
 		items: 'div.ccm-block-edit',
 		connectWith: 'div.ccm-area',
@@ -309,29 +289,39 @@ ccm_arrangeInit = function() {
 			$(this).addClass('ccm-area-drag-over');
 			var w = $(this).width();
 			$(ui.helper).css('width', w + 'px');
-			$(ui.helper).find('.thumbnail').hide();
-			$(ui.helper).find('.ccm-block-type-name').show().css('opacity', 1);
 			return true;
 		},
 		out: function() {
 			$(this).removeClass('ccm-area-drag-over');
+		},
+		receive: function(e, ui) {
+			$dropelement = ui.item;
 		}
-	});
 
+	});
 	$('div.ccm-block-edit').each(function() {
 		var $li = $(this);
 		var $sortables = $('div.ccm-area[data-accepts-block-types~=' + $li.attr('data-block-type-handle') + ']');
 		$li.draggable({
 			helper: function() {
-				var $d =  $('<div class="ccm-block-type-dragging" />').html($(this).html());
-				$('<div class="ccm-block-type-name">' + $d.find('img').attr('data-original-title') + '</div>').appendTo($d);
+				var w = $(this).width();
+				var h = $(this).height();
+				var $d =  $('<div />', {'class': 'ccm-block-type-dragging'}).css('width', w).css('height', h);
 				return $d;
 			},
 			start: function(e, ui) {
 				$sortables.addClass('ccm-area-drag-active');
 			},
-			stop: function() {
-				$sortables.removeClass('ccm-area-drag-active')
+			stop: function(e, ui) {
+				if ($dropelement) {
+					$dropelement.remove();
+					$dropelement = false;
+				}
+				$sortables.removeClass('ccm-area-drag-active');
+	 			$("div.ccm-block-edit").removeClass('ccm-block-arrange-enabled');
+	 			$('div.ccm-block-edit').draggable().draggable('destroy').ccmmenu();
+	 			$.fn.ccmmenu.enable();
+				ccm_saveArrangement();
 			},
 			connectToSortable: $sortables
 		});
