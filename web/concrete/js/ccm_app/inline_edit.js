@@ -20,16 +20,24 @@ ccm_loadInlineEditor = function(cID, arHandle, aID, bID, params) {
 	}
 
 	jQuery.fn.dialog.showLoader();
-	ccm_enterInlineEditMode($('#b' + bID + '-' + aID));
+	ccm_enterInlineEditMode($('[data-block-id=' + bID + '][data-area-id=' + aID + ']'));
 
 	$.ajax({
 	type: 'GET',
 	url: CCM_TOOLS_PATH + '/edit_block_popup',
 	data: postData,
 	success: function(r) {
-		$('#b' + bID + '-' + aID).html(r);
+		$('[data-block-id=' + bID + '][data-area-id=' + aID + ']').html(r);
 		jQuery.fn.dialog.hideLoader();
 	}});
+}
+
+ccm_loadInlineEditorFromLink = function(link) {
+	var cID = $(link).attr('data-cID');
+	var aID = $(link).attr('data-aID');
+	var arHandle = $(link).attr('data-area-handle');
+	var bID = $(link).attr('data-bID');
+	ccm_loadInlineEditor(cID, arHandle, aID, bID);
 }
 
 ccm_loadInlineEditorAdd = function(cID, arHandle, aID, btID, params) {
@@ -66,6 +74,7 @@ ccm_exitInlineEditMode = function(activeObj) {
 	$('div.ccm-block-edit').removeClass('ccm-block-edit-disabled');
 	$('div.ccm-area-footer-handle').removeClass('ccm-block-edit-disabled');
 	$('div.ccm-area-layout-control-bar').removeClass('ccm-block-edit-disabled');
+	$('#ccm-edit-page-sub-toolbar').show();
 
 	jQuery.fn.dialog.hideLoader();
 	if (activeObj) {
@@ -80,6 +89,7 @@ ccm_exitInlineEditMode = function(activeObj) {
 ccm_enterInlineEditMode = function(activeObj) {
 	
 	$.fn.ccmmenu.disable();
+	$('#ccm-edit-page-sub-toolbar').hide();
 
 	$('div.ccm-block-edit').addClass('ccm-block-edit-disabled');
 	$('div.ccm-area-footer-handle').addClass('ccm-block-edit-disabled');

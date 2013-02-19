@@ -68,7 +68,7 @@ if ($b->getBlockTypeHandle() == BLOCK_HANDLE_LAYOUT_PROXY) {
 
 ?>
 
-<div custom-style="<?=$b->getBlockCustomStyleRuleID()?>" data-block-id="<?=$b->getBlockID()?>" class="<?=$class?>" data-block-type-handle="<?=$btw->getBlockTypeHandle()?>" data-menu="block-menu-b<?=$b->getBlockID()?>-<?=$a->getAreaID()?>" <? if ($btw->getBlockTypeHandle() == BLOCK_HANDLE_LAYOUT_PROXY) { ?> data-menu-handle="ccm-area-layout-control-bar-<?=$b->getBlockID()?>-<?=$a->getAreaID()?>"<? } ?>>
+<div custom-style="<?=$b->getBlockCustomStyleRuleID()?>" data-area-id="<?=$a->getAreaID()?>" data-block-id="<?=$b->getBlockID()?>" class="<?=$class?>" data-block-type-handle="<?=$btw->getBlockTypeHandle()?>" data-menu="block-menu-b<?=$b->getBlockID()?>-<?=$a->getAreaID()?>" <? if ($btw->getBlockTypeHandle() == BLOCK_HANDLE_LAYOUT_PROXY) { ?> data-menu-handle="ccm-area-layout-control-bar-<?=$b->getBlockID()?>-<?=$a->getAreaID()?>"<? } ?>>
 
 <div class="ccm-ui">
 
@@ -102,9 +102,9 @@ if ($b->getBlockTypeHandle() == BLOCK_HANDLE_LAYOUT_PROXY) {
 			} ?>
 
 			<? if ($b->getBlockTypeHandle() == BLOCK_HANDLE_LAYOUT_PROXY) { ?>
-				<li><a href="javascript:void(0)" onclick="ccm_loadInlineEditor('<?=$cID?>','<?=htmlspecialchars($arHandle)?>','<?=$aID?>','<?=$bID?>', <?=$params?>)"><i class="icon-pencil"></i> <?=t("Edit Layout")?></a></li>		
+				<li><a href="javascript:void(0)" data-bID="<?=$bID?>" data-aID="<?=$aID?>" data-area-handle="<?=htmlspecialchars($arHandle)?>" data-cID="<?=$cID?>" onclick="ccm_loadInlineEditorFromLink(this)"><i class="icon-pencil"></i> <?=t("Edit Layout")?></a></li>		
 			<? } else { ?>
-				<li><a href="javascript:void(0)" onclick="ccm_loadInlineEditor('<?=$cID?>','<?=htmlspecialchars($arHandle)?>','<?=$aID?>','<?=$bID?>', <?=$params?>)"><i class="icon-pencil"></i> <?=t("Edit Block")?></a></li>		
+				<li><a href="javascript:void(0)" data-bID="<?=$bID?>" data-aID="<?=$aID?>" data-area-handle="<?=htmlspecialchars($arHandle)?>" data-cID="<?=$cID?>" onclick="ccm_loadInlineEditorFromLink(this)"><i class="icon-pencil"></i> <?=t("Edit Block")?></a></li>		
 				<? } ?>
 		<? } else { ?>
 			<li><a class="dialog-launch" dialog-title="<?=t('Edit %s', $btOriginal->getBlockTypeName())?>" dialog-modal="false" dialog-on-close="ccm_blockWindowAfterClose()" dialog-width="<?=$btOriginal->getBlockTypeInterfaceWidth()?>" dialog-height="<?=$btOriginal->getBlockTypeInterfaceHeight() + $heightPlus?>" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_block_popup?cID=<?=$cID?>&amp;bID=<?=$bID?>&amp;arHandle=<?=htmlspecialchars($arHandle)?>&amp;btask=edit" ><i class="icon-pencil"></i> <?=t("Edit Block")?></a></li>		

@@ -127,7 +127,7 @@ ccm_deleteBlock = function(cID, bID, aID, arHandle, msg) {
 	if (confirm(msg)) {
 		ccm_mainNavDisableDirectExit();
 		// got to grab the message too, eventually
-		$d = $("#b" + bID + '-' + aID);
+		$d = $('[data-block-id=' + bID + '][data-area-id=' + aID + ']');
 		$d.hide().remove();
 		ccmAlert.hud(ccmi18n.deleteBlockMsg, 2000, 'delete_small', ccmi18n.deleteBlock);
 		$.ajax({
@@ -163,20 +163,11 @@ ccm_parseBlockResponse = function(r, currentBlockID, task) {
 			$.get(action, 		
 				function(r) { 
 					if (task == 'add') {
+						console.log(resp);
 						$('#ccm-add-new-block-placeholder').before(r).remove();
 						ccm_saveAreaArrangement(cID, resp.arHandle);
-						/*
-						if ($("#a" + resp.aID + " div.ccm-area-styles-a"+ resp.aID).length > 0) {
-							$("#a" + resp.aID + " div.ccm-area-styles-a"+ resp.aID).append(r);
-						} else {
-							$("#a" + resp.aID).append(r);
-						}
-						// inline support.
-						$('#a' + resp.aID + '-bt' + resp.btID).remove();
-						*/
-
 					} else {
-						$('#b' + currentBlockID + '-' + resp.aID).before(r).remove();
+						$('[data-block-id=' + currentBlockID + '][data-area-id=' + resp.aID + ']').before(r).remove();
 					}
 					ccm_editMenuInit();
 					ccm_exitInlineEditMode();
@@ -319,7 +310,8 @@ ccm_arrangeInit = function() {
 				}
 				$sortables.removeClass('ccm-area-drag-active');
 	 			$("div.ccm-block-edit").removeClass('ccm-block-arrange-enabled');
-	 			$('div.ccm-block-edit').draggable().draggable('destroy').ccmmenu();
+	 			$('div.ccm-block-edit').draggable().draggable('destroy');
+	 			ccm_editMenuInit();
 	 			$.fn.ccmmenu.enable();
 				ccm_saveArrangement();
 			},
