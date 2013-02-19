@@ -63,7 +63,13 @@ ccm_loadInlineEditorAdd = function(cID, arHandle, aID, btID, params) {
 	data: postData,
 	success: function(r) {
 		jQuery.fn.dialog.closeAll();
-		$('#a' + aID).append($('<div id="a' + aID + '-bt' + btID + '" class="ccm-block-edit-inline-active">' + r + '</div>'));
+		if ($('#ccm-add-new-block-placeholder').length > 0) {
+			var obj = $('#ccm-add-new-block-placeholder');
+		} else {
+			var obj = $('#a' + aID);
+		}
+
+		obj.append($('<div id="a' + aID + '-bt' + btID + '" class="ccm-block-edit-inline-active">' + r + '</div>'));
 		jQuery.fn.dialog.hideLoader();
 	}});
 }
@@ -71,6 +77,7 @@ ccm_loadInlineEditorAdd = function(cID, arHandle, aID, btID, params) {
 ccm_exitInlineEditMode = function(activeObj) {
 
 	$.fn.ccmmenu.enable();
+	$('div.ccm-block-edit-inline-active').remove();
 	$('div.ccm-block-edit').removeClass('ccm-block-edit-disabled');
 	$('div.ccm-area-footer-handle').removeClass('ccm-block-edit-disabled');
 	$('div.ccm-area-layout-control-bar').removeClass('ccm-block-edit-disabled');

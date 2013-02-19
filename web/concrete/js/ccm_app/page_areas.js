@@ -163,9 +163,12 @@ ccm_parseBlockResponse = function(r, currentBlockID, task) {
 			$.get(action, 		
 				function(r) { 
 					if (task == 'add') {
-						console.log(resp);
-						$('#ccm-add-new-block-placeholder').before(r).remove();
-						ccm_saveAreaArrangement(cID, resp.arHandle);
+						if ($('#ccm-add-new-block-placeholder').length > 0) {
+							$('#ccm-add-new-block-placeholder').before(r).remove();
+							ccm_saveAreaArrangement(cID, resp.arHandle);
+						} else {
+							$("#a" + resp.aID + " div.ccm-area-footer").before(r);
+						}
 					} else {
 						$('[data-block-id=' + currentBlockID + '][data-area-id=' + resp.aID + ']').before(r).remove();
 					}
@@ -220,7 +223,6 @@ ccm_saveArrangement = function(cID) {
 			serial += areaStr + bID;
 		}
 	});
-	console.log('cID=' + cID + '&ccm_token=' + CCM_SECURITY_TOKEN + '&btask=ajax_do_arrange' + serial);
  	$.ajax({
  		type: 'POST',
  		url: CCM_DISPATCHER_FILENAME,
@@ -241,17 +243,11 @@ ccm_saveAreaArrangement = function(cID, arHandle) {
 	var serial = '';
 	var $area = $('div.ccm-area[data-area-handle=' + arHandle + ']');
 	areaStr = '&area[' + $area.attr('id').substring(1) + '][]=';
-	bArray = $area.sortable('toArray');
+
+	bArray = $area.sortable('toArray', {'attribute': 'data-block-id'});
 	for (i = 0; i < bArray.length; i++ ) {
-		if (bArray[i] != '' && bArray[i].substring(0, 1) == 'b') {
-			// make sure to only go from b to -, meaning b28-9 becomes "28"
-			var bID = bArray[i].substring(1, bArray[i].indexOf('-'));
-			var bObj = $('#' + bArray[i]);
-			if (bObj.attr('custom-style')) {
-				bID += '-' + bObj.attr('custom-style');
-			}
-			serial += areaStr + bID;
-		}
+		var bID = bArray[i];
+		serial += areaStr + bID;
 	}
 
  	$.ajax({
