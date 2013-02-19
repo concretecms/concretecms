@@ -1,4 +1,4 @@
-a.ccm-overlay-draggable-block-type {
+ul#ccm-overlay-block-types a, a.ccm-overlay-draggable-block-type {
 	display: block;
 	height: 100px;
 	width: 100px; 
@@ -28,7 +28,12 @@ a.ccm-overlay-draggable-block-type {
 	}
 }
 
-a.ccm-overlay-draggable-block-type:hover {
+ul#ccm-overlay-block-types a.ccm-overlay-clickable-block-type:hover {
+	cursor: pointer;
+	background-color: #4FDAFF !important;
+}
+
+ul#ccm-overlay-block-types a:hover, a.ccm-overlay-draggable-block-type:hover {
 	text-decoration: none;
 }
 

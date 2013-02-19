@@ -11,6 +11,12 @@ if (!$cp->canEditPageContents()) {
 	die(t('Access Denied'));
 }
 
+if (isset($_REQUEST['arHandle'])) {
+	// we are launching this from a specific area, so we check permissions against that.
+	$a = Area::get($c, $_REQUEST['arHandle']);
+	$ap = new Permissions($a);
+}
+
 $btl = new BlockTypeList();
 $blockTypes = $btl->getBlockTypeList();
 $dsh = Loader::helper('concrete/dashboard');
@@ -55,9 +61,12 @@ print $ih->tabs($tabs, true, 'ccm_activateBlockTypeTabs');
 <ul id="ccm-overlay-block-types">
 
 <? foreach($blockTypes as $bt) { 
-	if (!$cp->canAddBlockType($bt)) {
+	if ($a instanceof Area && (!$ap->canAddBlockToArea($bt))) {
+		continue;
+	} else if (!$cp->canAddBlockType($bt)) {
 		continue;
 	}
+
 	$btsets = $bt->getBlockTypeSets();
 	$sets = '';
 	foreach($btsets as $set) {
@@ -69,7 +78,7 @@ print $ih->tabs($tabs, true, 'ccm_activateBlockTypeTabs');
 	?>
 
 	<li data-block-type-sets="<?=$sets?>">
-		<a class="ccm-overlay-draggable-block-type" data-block-type-handle="<?=$bt->getBlockTypeHandle()?>" data-dialog-title="<?=t('Add %s', $bt->getBlockTypeName())?>" data-dialog-width="<?=$bt->getBlockTypeInterfaceWidth()?>" data-dialog-height="<?=$bt->getBlockTypeInterfaceHeight()?>" data-has-add-template="<?=$bt->hasAddTemplate()?>" data-supports-inline-editing="<?=$bt->supportsInlineEditing()?>" data-btID="<?=$bt->getBlockTypeID()?>" href="javascript:void(0)"><p><img src="<?=$btIcon?>" /><span><?=$bt->getBlockTypeName()?></span></p></a>
+		<a <? if (!($a instanceof Area)) { ?> class="ccm-overlay-draggable-block-type" <? } else { ?> class="ccm-overlay-clickable-block-type" data-aID="<?=$a->getAreaID()?>" data-area-handle="<?=$a->getAreaHandle()?>" <? } ?> data-cID="<?=$c->getCollectionID()?>" data-block-type-handle="<?=$bt->getBlockTypeHandle()?>" data-dialog-title="<?=t('Add %s', $bt->getBlockTypeName())?>" data-dialog-width="<?=$bt->getBlockTypeInterfaceWidth()?>" data-dialog-height="<?=$bt->getBlockTypeInterfaceHeight()?>" data-has-add-template="<?=$bt->hasAddTemplate()?>" data-supports-inline-editing="<?=$bt->supportsInlineEditing()?>" data-btID="<?=$bt->getBlockTypeID()?>" href="javascript:void(0)"><p><img src="<?=$btIcon?>" /><span><?=$bt->getBlockTypeName()?></span></p></a>
 	</li>
 	
 <? } ?>

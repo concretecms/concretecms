@@ -37,10 +37,6 @@ if ($a->isGlobalArea()) {
 } 
 
 switch($_GET['atask']) {
-	case 'add':
-		$toolSection = "block_area_add_new";
-		$canViewPane = $ap->canAddBlocks();
-		break;
 	case 'add_from_stack':
 		$toolSection = "block_area_add_stack";
 		$canViewPane = $ap->canAddStacks();
