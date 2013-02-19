@@ -1,4 +1,17 @@
 // Handle selection
+im.bind('changeActiveElement',function(e){
+	im.activeElement.setDraggable(true);
+	console.log('checking if bound');
+	if (im.activeElement.isBound !== true) {
+		console.log('it isn\'t');
+		im.activeElement.on('dragmove',function(e){im.trigger('activeElementDragMove',e)});
+		im.activeElement.isBound = true;
+	}
+	updateSliders();
+});
+im.bind('beforeChangeActiveElement',function(e){
+	im.activeElement.setDraggable(false);
+});
 im.bind('ChangeActiveAction',function(e){
 	if (e.eventData != im.namespace) {
 		im.activeElement.setDraggable(false);
@@ -20,7 +33,7 @@ var sliderx = $('div.xslider',me).slider({
 	},
 	slide: function(ev,e){
 		im.activeElement.setX(e.value);
-		im.trigger('imagechange');
+		im.trigger('activeElementMove');
 	}
 });
 var slidery = $('div.yslider',me).slider({
@@ -35,9 +48,26 @@ var slidery = $('div.yslider',me).slider({
 	},
 	slide: function(ev,e){
 		im.activeElement.setY(e.value);
-		im.trigger('imagechange');
+		im.trigger('activeElementMove');
 	}
 });
+
+var updateSliders = function() {
+	var max = {x:im.stage.getWidth(),y:im.stage.getHeight()},
+		min = {x:-im.activeElement.getWidth(),y:-im.activeElement.getHeight()},
+		cur = {x:im.activeElement.getX(),y:im.activeElement.getY()};
+	sliderx.slider("option", "min", min.x);
+	sliderx.slider("option", "max", max.x);
+	sliderx.slider('value',cur.x);
+	$('input.x',me).val(cur.x);
+
+	slidery.slider("option", "min", min.y);
+	slidery.slider("option", "max", max.y);
+	slidery.slider('value',cur.y);
+	$('input.y',me).val(cur.y);
+};
+
+updateSliders();
 
 $('input.y',me).keyup(function(e){
 	var m = $(this);
@@ -45,7 +75,7 @@ $('input.y',me).keyup(function(e){
 	if (e.keyCode == 38) v++;
 	if (e.keyCode == 40) v--;
 	im.activeElement.setY(v);
-	im.trigger('imagechange');
+	im.trigger('activeElementMove');
 	e.preventDefault();
 });
 $('input.x',me).keyup(function(e){
@@ -54,8 +84,16 @@ $('input.x',me).keyup(function(e){
 	if (e.keyCode == 38) v++;
 	if (e.keyCode == 40) v--;
 	im.activeElement.setX(v);
-	im.trigger('imagechange');
+	im.trigger('activeElementMove');
 	e.preventDefault();
+});
+$('button.up',me).click(function(e) {
+	im.activeElement.parent.moveUp();
+});
+$('button.down',me).click(function(e) {
+	// Don't go below the savers
+	if (im.activeElement.parent.getZIndex() - im.savers.getZIndex() == 1) return;
+	im.activeElement.parent.moveDown();
 });
 $('button.center',me).click(function(e){
 	im.activeElement.transitionTo({
@@ -63,22 +101,22 @@ $('button.center',me).click(function(e){
 		y:Math.round(im.height / 2 - im.activeElement.getHeight()/2),
 		duration:.2,
 		callback: function(){
-			im.trigger('imagemove');
-			im.trigger('imagechange');
+			im.trigger('activeElementMove');
 		}
 	})
 })
 im.activeElement.on('dragend',function(e){
 	var x = im.activeElement.getX(), y = im.activeElement.getY();
-	im.trigger('imagemove');
-	im.trigger('imagechange');
+	im.trigger('activeElementDragMove');
+	im.trigger('activeElementMove');
 })
 im.activeElement.on('dragstart',function(e){
-	im.trigger('imagemove');
+	im.trigger('activeElementDragMove');
 })
 // Use our API, not kinetics.
-im.activeElement.on('dragmove',function(e){im.trigger('imagemove',{change:false});});
-im.bind('imagechange',function(e){
+im.activeElement.on('dragmove',function(e){im.trigger('activeElementDragMove',e)});
+
+im.bind('activeElementMove',function(e){
 	var x = im.activeElement.getX(), y = im.activeElement.getY(),
 		height=im.activeElement.getHeight(),width=im.activeElement.getWidth();
 

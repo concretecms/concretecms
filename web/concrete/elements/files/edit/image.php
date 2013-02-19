@@ -95,7 +95,7 @@ $(function(){
     }
     echo Loader::helper('json')->encode($fnames);
   ?>;
-  console.log(settings);
-  window.im = $('div#<?=$editorid?>.Editor').closest('.ui-dialog-content').css('padding',0).end().height($('div.Editor').height()-30).ImageEditor(settings);
+  var editor = $('div#<?=$editorid?>.Editor');
+  window.im = editor.closest('.ui-dialog-content').css('padding',0).end().ImageEditor(settings);
 })
 </script>
