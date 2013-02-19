@@ -9,7 +9,6 @@ var ImageEditor = function (settings) {
   im.saveHeight    = settings.saveHeight || round(im.height / 2);
   im.strictSize    = (settings.saveWidth !== undefined ? true : false);
   im.stage         = new Kinetic.Stage(settings);
-  im.editor        = new Kinetic.Layer();
   im.namespaces    = {};
   im.controlSets   = {};
   im.components    = {};
@@ -25,6 +24,11 @@ var ImageEditor = function (settings) {
   im.center = {
     x: Math.round(im.width / 2),
     y: Math.round(im.height / 2)
+  };
+
+  im.centerOffset = {
+    x: im.center.x,
+    y: im.center.y
   };
 
   var getElem = function(selector) {

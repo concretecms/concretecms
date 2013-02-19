@@ -73,7 +73,6 @@ var ImageEditor = function (settings) {
   im.saveHeight    = settings.saveHeight || round(im.height / 2);
   im.strictSize    = (settings.saveWidth !== undefined ? true : false);
   im.stage         = new Kinetic.Stage(settings);
-  im.editor        = new Kinetic.Layer();
   im.namespaces    = {};
   im.controlSets   = {};
   im.components    = {};
@@ -89,6 +88,11 @@ var ImageEditor = function (settings) {
   im.center = {
     x: Math.round(im.width / 2),
     y: Math.round(im.height / 2)
+  };
+
+  im.centerOffset = {
+    x: im.center.x,
+    y: im.center.y
   };
 
   var getElem = function(selector) {
@@ -176,19 +180,25 @@ im.addElement = function(object,type) {
 	object.setX(im.center.x - Math.round(object.getWidth() / 2));
 	object.setY(im.center.y - Math.round(object.getHeight() / 2));
 
+	object.elementType = type;
+
 	object.on('click',function(){
-		im.setActiveElement(this);
+		log('clicked Element',this);
+		im.fire('ClickedElement',this);
 	});
 	im.stage.add(layer);
 	im.fire('newObject',{object:object,type:type});
 	im.stage.draw();
 };
 im.setActiveElement = function(element) {
-	im.trigger('beforeActiveElementChange',im.activeElement);
-	im.activeElement = element;
-	im.trigger('activeElementChange',element);
+	im.trigger('beforeChangeActiveElement',im.activeElement);
+	im.alterCore('activeElement',element);
+	im.trigger('changeActiveElement',element);
 	im.stage.draw();
 };
+im.bind('ClickedElement',function(e) {
+  im.setActiveElement(e.eventData);
+});
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -208,28 +218,36 @@ zoom.out.appendTo(controlBar);
 zoom.in.click(function(e){im.fire('zoomInClick',e)});
 zoom.out.click(function(e){im.fire('zoomOutClick',e)});
 
-var minScale = 1/3, maxScale = 3, stepScale = 1/3;
+var scale = getElem('<span></span>').addClass('scale').text('100%');
+im.on('stageChanged',function(e){
+	scale.text(Math.round(im.scale * 10000)/100 + "%");
+});
+scale.appendTo(controlBar);
 
-im.stage.setDraggable();
+var minScale = 0, maxScale = 3000, stepScale = 1/4;
+
 im.on('zoomInClick',function(e){
-	im.scale += stepScale;
+	im.scale += (im.scale * stepScale);
 	if (im.scale > maxScale) im.scale = maxScale;
-	if (Math.abs(im.scale - Math.round(im.scale)) < stepScale / 2) im.scale = Math.round(im.scale);
+	if (im.scale > stepScale && (Math.abs(im.scale - Math.round(im.scale)) % 1) < stepScale / 2) im.scale = Math.round(im.scale);
 	im.stage.setScale(im.scale);
+	im.stage.setX(Math.round((im.stage.getWidth() - (im.stage.getWidth() * im.scale))/2));
+	im.stage.setY(Math.round((im.stage.getHeight() - (im.stage.getHeight() * im.scale))/2));
 	im.fire('stageChanged');
 	im.stage.draw();
 });
 im.on('zoomOutClick',function(e){
-	im.scale -= stepScale;
+	im.scale -= (im.scale * stepScale);
 	if (im.scale < minScale) im.scale = minScale;
-	if (Math.abs(im.scale - Math.round(im.scale)) < stepScale / 2) im.scale = Math.round(im.scale);
+	if (im.scale > stepScale && (Math.abs(im.scale - Math.round(im.scale)) % 1) < stepScale / 2) im.scale = Math.round(im.scale);
 	im.stage.setScale(im.scale);
+	im.centerOffset.x = Math.round((im.stage.getWidth() - (im.stage.getWidth() * im.scale))/2);
+	im.centerOffset.y = Math.round((im.stage.getHeight() - (im.stage.getHeight() * im.scale))/2);
+	im.stage.setX(Math.round((im.stage.getWidth() - (im.stage.getWidth() * im.scale))/2));
+	im.stage.setY(Math.round((im.stage.getHeight() - (im.stage.getHeight() * im.scale))/2));
 	im.fire('stageChanged');
 	im.stage.draw();
 });
-
-
-
 
 // Save
 var saveSize = {};
@@ -244,6 +262,11 @@ saveSize.area.append(getElem('<span> x </span>'));
 saveSize.height.appendTo(saveSize.area);
 saveSize.area.appendTo(controlBar);
 
+var saveButton = $('<button/>').addClass('btn').addClass('btn-primary').text('Save');
+saveButton.appendTo(saveSize.area);
+saveButton.click(function(){im.save()});
+
+
 if (im.strictSize) {
 	saveSize.both.attr('disabled','true');
 } else {
@@ -252,22 +275,22 @@ if (im.strictSize) {
 		if (e.keyCode == 8 || e.keyCode == 37 || e.keyCode == 39) return true;
 
 		if (e.keyCode == 38) {
-			var newval = parseInt(getElem(this).val()) + 1;
-			getElem(this).val(Math.min(5000,newval)).change();
+			var newval = parseInt($(this).val()) + 1;
+			$(this).val(Math.min(5000,newval)).change();
 		}
 		if (e.keyCode == 40) {
-			var newval = parseInt(getElem(this).val()) - 1;
-			getElem(this).val(Math.max(0,newval)).change();
+			var newval = parseInt($(this).val()) - 1;
+			$(this).val(Math.max(0,newval)).change();
 		}
 		var key = String.fromCharCode(e.keyCode);
 		if (!key.match(/\d/)) {
 			return false;
 		}
-		var amnt = "" + getElem(this).val() + key;
+		var amnt = "" + $(this).val() + key;
 		if (amnt > 5000) {
 			amnt = 5000;
 		}
-		getElem(this).val(amnt).change();
+		$(this).val(amnt).change();
 
 		return false;
 	}).keyup(function(e){
@@ -299,26 +322,49 @@ im.bind('saveSizeChange',function(){
 //                                  save.js                                  //
 ///////////////////////////////////////////////////////////////////////////////
 im.save = function() {
-  var oldScale = im.stage.getScale();
+  im.savers.hide();
+  im.background.hide();
   im.stage.setScale(1);
-  var newx = im.image.getX() - im.dragger.getX(),
-      newy = im.image.getY() - im.dragger.getY()
-  im.image.setX(newx);
-  im.image.setY(newy);
-  im.image.disableStroke();
 
-  im.image.toImage({
-    width:im.width,
-    height:im.height,
-    callback:function(img) {
-      im.image.enableStroke();
-      im.image.setImage(img);
-      im.image.setX(im.dragger.getX());
-      im.image.setY(im.dragger.getY());
-      im.stage.setScale(oldScale);
+  im.fire('ChangeActiveAction');
+  im.fire('changeActiveComponent');
+
+  $(im.stage.getContainer()).hide();
+
+  var startx = Math.round(im.center.x - (im.saveWidth / 2)),
+      starty = Math.round(im.center.y - (im.saveHeight / 2)),
+      oldx = im.stage.getX(),
+      oldy = im.stage.getY(),
+      oldwidth = im.stage.getWidth(),
+      oldheight = im.stage.getHeight();
+
+  im.stage.setX(-startx);
+  im.stage.setY(-starty);
+  im.stage.setWidth(im.saveWidth);
+  im.stage.setHeight(im.saveHeight);
+  im.stage.draw();
+
+
+  $.fn.dialog.showLoader();
+  im.stage.toDataURL({
+    width:im.saveWidth,
+    height:im.saveHeight,
+    callback:function(data){
+      var img = $('<img/>').attr('src',data);
+      $.fn.dialog.open({element:img});
+      $.fn.dialog.hideLoader();
+      im.savers.show();
+      im.background.show();
+      im.stage.setX(oldx);
+      im.stage.setY(oldy);
+      im.stage.setWidth(oldwidth);
+      im.stage.setHeight(oldheight);
+      im.stage.setScale(im.scale);
       im.stage.draw();
+      $(im.stage.getContainer()).show();
+
     }
-  });
+  })
 };
 
 
@@ -326,28 +372,35 @@ im.save = function() {
 //                                 extend.js                                 //
 ///////////////////////////////////////////////////////////////////////////////
 im.extend = function(property,value) {
-  im[property] = value;
+  this[property] = value;
 };
 
 im.alterCore = function(property,value) {
-  var im = im, ns = 'core', i;
+  var nim = im, ns = 'core', i;
   if (im.namespace) {
-    var ns = im.namespace;
-    im = window.c5_image_editor;
+    var ns = nim.namespace;
+    nim = im.realIm;
   }
   im[property] = value;
-  for (i in im.namespaces){
-    im.namespaces[i][property] = value;
+  for (i in im.controlSets){
+    log('updating '+property+' on '+i);
+    im.controlSets[i].im.extend(property,value);
+  }
+  for (i in im.filters){
+    im.filters[i].im.extend(property,value);
+  }
+  for (i in im.components){
+    im.components[i].im.extend(property,value);
   }
 };
 
 im.clone = function(namespace) {
   var newim = new ImageEditor(),i;
+  newim.realIm = im;
   for (i in im) {
     newim[i] = im[i];
   }
   newim.namespace = namespace;
-  im.namespaces['namespace'] = newim;
   return newim;
 };
 
@@ -419,27 +472,22 @@ im.background = new Kinetic.Layer();
 im.stage.add(im.background);
 
 im.buildBackground = function() {
-  var i,children = im.background.getChildren();
-  for (var i in children) {
-    children[i].remove();
-  }
-
-  im.background.add(new Kinetic.Rect({
-    x: 0,
-    y: 0,
-    width: im.stage.getScaledWidth(),
-    height: im.stage.getScaledHeight(),
-    fill: '#eee'
-  }));
+  var z = im.background.getZIndex();
+  im.background.destroy();
+  if (im.scale < .25) return;
+  im.background = new Kinetic.Layer();
+  im.stage.add(im.background);
+  im.background.setZIndex(z);
 
   var getCoords = function (x, offset) {
-    return {x: 2 * x, y: -x + offset};
+    // slope = 1
+    return {x: x, y: -x + offset};
   };
 
-  var to = Math.max(im.stage.getScaledWidth(), im.stage.getScaledHeight()) * 2;
+  var to = Math.max(im.stage.getWidth() * 2, im.stage.getHeight() * 2, im.stage.getScaledWidth() * 2, im.stage.getScaledHeight() * 2);
   for (x = -to; x <= to; x += 20) {
     im.background.add(new Kinetic.Line({
-      points: [getCoords(x, 0), getCoords(im.background.getWidth(), x)],
+      points: [getCoords(-to, x), getCoords(to, x)],
       stroke: '#e3e3e3'
     }));
   }
@@ -455,8 +503,32 @@ im.on('stageChanged',im.buildBackground);
 ///////////////////////////////////////////////////////////////////////////////
 var me = $(this);
 
-im.savers = new Kinetic.Layer();
 
+im.stage.getTotalDimensions = function() {
+  var minY = Math.round((im.saveHeight / 2 - im.center.y) * im.scale);
+  var maxY = minY + im.stage.getHeight() - (im.saveHeight * im.scale);
+
+  var minX = Math.round((im.saveWidth / 2 - im.center.x) * im.scale);
+  var maxX = minX + im.stage.getWidth() - (im.saveWidth * im.scale);
+
+  return {
+    min: {
+      x: minX,
+      y: minY
+    },
+    max: {
+      x: maxX,
+      y: maxY
+    },
+    width:maxX-minX,
+    height:maxY-minY,
+    visibleWidth:maxX-minX + im.stage.getScaledWidth(),
+    visibleHeight:maxY-minY + im.stage.getScaledHeight()
+  };
+};
+
+
+im.savers = new Kinetic.Layer();
 
 var savercolor = "rgba(0,0,0,.7)",
 saverTopLeft = new Kinetic.Rect({
@@ -488,12 +560,27 @@ saverBottomRight = new Kinetic.Rect({
   height:Math.ceil(im.stage.getScaledHeight()/2)
 });
 
+saverTopLeft.position = 'topleft';
+saverTopRight.position = 'topright';
+saverBottomLeft.position = 'bottomleft';
+saverBottomRight.position = 'bottomright';
+
 im.adjustSavers = function() {
   log("Adjusting");
+
+  var dimensions = im.stage.getTotalDimensions();
   var startx = Math.round(im.center.x - (im.saveWidth / 2)),
-      posx = startx + im.saveWidth,
+      posx = Math.round(startx + im.saveWidth),
       starty = Math.round(im.center.y - (im.saveHeight / 2)),
-      posy = starty + im.saveHeight;
+      posy = Math.round(starty + im.saveHeight),
+      width = dimensions.visibleWidth,
+      height = dimensions.visibleHeight,
+      stagex = -im.stage.getTotalDimensions().max.x - im.stage.getScaledWidth(),
+      stagey = -im.stage.getTotalDimensions().max.y - im.stage.getScaledHeight();
+
+
+  if (stagex > startx) stagex = startx;
+  if (stagey > starty) stagey = starty;
 
   if (posy < starty) {
     var inter = posy;
@@ -506,21 +593,25 @@ im.adjustSavers = function() {
     startx = inter;
   }
 
-  saverTopLeft.setWidth(startx);
-  saverTopLeft.setHeight(posy);
+  saverTopLeft.setX(stagex);
+  saverTopLeft.setY(stagey);
+  saverTopLeft.setWidth(startx - stagex);
+  saverTopLeft.setHeight(posy - stagey);
 
   saverTopRight.setX(startx);
-  saverTopRight.setWidth(im.stage.getScaledWidth()-startx);
-  saverTopRight.setHeight(starty);
+  saverTopRight.setY(stagey);
+  saverTopRight.setWidth(width - startx);
+  saverTopRight.setHeight(starty - stagey);
 
-  saverBottomLeft.setWidth(posx);
+  saverBottomLeft.setX(stagex);
   saverBottomLeft.setY(posy);
-  saverBottomLeft.setHeight(im.stage.getScaledHeight()-posy);
+  saverBottomLeft.setWidth(posx - stagex);
+  saverBottomLeft.setHeight(height - posy);
 
-  saverBottomRight.setY(starty);
   saverBottomRight.setX(posx);
-  saverBottomRight.setWidth(im.stage.getScaledWidth()-posx);
-  saverBottomRight.setHeight(im.stage.getScaledHeight()-starty);
+  saverBottomRight.setY(starty);
+  saverBottomRight.setWidth(width - posx);
+  saverBottomRight.setHeight(height - starty);
 
   im.fire('saveSizeChange');
 
@@ -535,6 +626,27 @@ im.savers.add(saverBottomRight);
 im.stage.add(im.savers);
 
 im.adjustSavers();
+
+
+im.bind('stageChanged',im.adjustSavers);
+
+im.stage.setDragBoundFunc(function(ret) {
+
+  var dim = im.stage.getTotalDimensions();
+
+  var maxx = Math.max(dim.max.x,dim.min.x),
+      minx = Math.min(dim.max.x,dim.min.x),
+      maxy = Math.max(dim.max.y,dim.min.y),
+      miny = Math.min(dim.max.y,dim.min.y);
+
+  if (ret.x > maxx) ret.x = maxx;
+  if (ret.x < minx) ret.x = minx;
+  if (ret.y > maxy) ret.y = maxy;
+  if (ret.y < miny) ret.y = miny;
+
+  return ret;
+});
+im.stage.setDraggable(true);
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -552,14 +664,11 @@ img.onload = function () {
     x: im.center.x - (img.width / 2),
     y: im.center.y - (img.height / 2)
   };
-  im.prettifier = new Kinetic.Layer();
   im.image = new Kinetic.Image({
     image: img,
     x: Math.round(center.x),
-    y: Math.round(center.y),
-    stroke: '#000'
+    y: Math.round(center.y)
   });
-  im.image.on('draw',function(){im.fire('imagedraw');});
   im.imageData = im.image.getImageData();
   im.fire('imageload');
   im.addElement(im.image,'image');
@@ -628,7 +737,7 @@ im.bind('imageload',function(){
 });
 im.bind('ControlSetsLoaded',function(){ // do this when the control sets finish loading.
   log('Loaded');
-  var filters = settings.filters || {}, components = settings.components || {}, namespace, firstf, firstc ;
+  var filters = settings.filters || {}, components = settings.components || {}, namespace, firstf, firstc;
   im.fire('LoadingFilters');
   for (namespace in filters) {
     var myns = "Filter_" + namespace;
@@ -655,11 +764,12 @@ im.bind('ChangeActiveAction',function(e){
     if (ons !== ns) getElem(im.controlSets[ons]).slideUp();
   }
   im.activeControlSet = ns;
+  im.alterCore('activeControlSet',ns);
   if (!ns) return;
   var cs = $(im.controlSets[ns]),
       height = cs.show().height();
   if (cs.length == 0) return;
-  cs.hide().height(height).slideDown(function(){$(this).height('');});
+  cs.hide().height(height).slideDown(function(){$(this).height('')});
 });
 
 im.bind('ChangeActiveComponent',function(e){
@@ -669,16 +779,18 @@ im.bind('ChangeActiveComponent',function(e){
     if (ons !== ns) getElem(im.components[ons]).slideUp();
   }
   im.activeComponent = ns;
+  im.alterCore('activeComponent',ns);
   if (!ns) return;
   var cs = $(im.components[ns]),
       height = cs.show().height();
   if (cs.length == 0) return;
-  cs.hide().height(height).slideDown(function(){$(this).height('');});
+  cs.hide().height(height).slideDown(function(){$(this).height('')});
 });
 
 im.bind('ChangeNavTab',function(e) {
   console.log('changenavtab',e);
   im.trigger('ChangeActiveAction',e.eventData);
+  im.trigger('ChangeActiveComponent',e.eventData);
   var parent = getElem('div.editorcontrols');
   switch(e.eventData) {
     case 'add':
@@ -693,17 +805,12 @@ im.bind('ChangeNavTab',function(e) {
 });
 
 
-im.bind('ClickedElement',function(e) {
-  im.activeElement = e.eventData();
-  im.fire('ChangeActiveElement');
-});
-
-
 ///////////////////////////////////////////////////////////////////////////////
 //                              jquerybinding.js                             //
 ///////////////////////////////////////////////////////////////////////////////
 // End the ImageEditor object.
   window.c5_image_editor = im; // Safe keeping
+  window.im = im;
   return im;
 };
 $.fn.ImageEditor = function (settings) {
@@ -717,6 +824,7 @@ $.fn.ImageEditor = function (settings) {
     },50);
     return;
   }
+  self.height(self.height()-31);
   (settings.width === undefined && (settings.width = self.width()));
   (settings.height === undefined && (settings.height = self.height()));
   $.fn.dialog.showLoader();
@@ -737,12 +845,13 @@ $.fn.ImageEditor = function (settings) {
     im.trigger('ChangeActiveAction',"ControlSet_"+ns);
   });
 
-  $('div.component',context).find('div.control').children('div.contents').slideUp(0)
+  $('div.component',context).find('div.control').children('div.contents').slideUp(0).hide()
   .end().end().find('h4').click(function(){
     $('div.component',context).children('h4').not($(this)).removeClass('active');
     var ns = $(this).parent().attr('data-namespace');
     im.trigger('ChangeActiveComponent',"Component_"+ns);
   });
+  $('div.components').hide();
 
   im.bind('imageload', $.fn.dialog.hideLoader);
   return im;

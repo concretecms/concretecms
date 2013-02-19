@@ -56,7 +56,7 @@ im.bind('imageload',function(){
 });
 im.bind('ControlSetsLoaded',function(){ // do this when the control sets finish loading.
   log('Loaded');
-  var filters = settings.filters || {}, components = settings.components || {}, namespace, firstf, firstc ;
+  var filters = settings.filters || {}, components = settings.components || {}, namespace, firstf, firstc;
   im.fire('LoadingFilters');
   for (namespace in filters) {
     var myns = "Filter_" + namespace;
@@ -83,11 +83,12 @@ im.bind('ChangeActiveAction',function(e){
     if (ons !== ns) getElem(im.controlSets[ons]).slideUp();
   }
   im.activeControlSet = ns;
+  im.alterCore('activeControlSet',ns);
   if (!ns) return;
   var cs = $(im.controlSets[ns]),
       height = cs.show().height();
   if (cs.length == 0) return;
-  cs.hide().height(height).slideDown(function(){$(this).height('');});
+  cs.hide().height(height).slideDown(function(){$(this).height('')});
 });
 
 im.bind('ChangeActiveComponent',function(e){
@@ -97,16 +98,18 @@ im.bind('ChangeActiveComponent',function(e){
     if (ons !== ns) getElem(im.components[ons]).slideUp();
   }
   im.activeComponent = ns;
+  im.alterCore('activeComponent',ns);
   if (!ns) return;
   var cs = $(im.components[ns]),
       height = cs.show().height();
   if (cs.length == 0) return;
-  cs.hide().height(height).slideDown(function(){$(this).height('');});
+  cs.hide().height(height).slideDown(function(){$(this).height('')});
 });
 
 im.bind('ChangeNavTab',function(e) {
   console.log('changenavtab',e);
   im.trigger('ChangeActiveAction',e.eventData);
+  im.trigger('ChangeActiveComponent',e.eventData);
   var parent = getElem('div.editorcontrols');
   switch(e.eventData) {
     case 'add':
@@ -118,10 +121,4 @@ im.bind('ChangeNavTab',function(e) {
       parent.children('div.control-sets').show();
       break;
   }
-});
-
-
-im.bind('ClickedElement',function(e) {
-  im.activeElement = e.eventData();
-  im.fire('ChangeActiveElement');
 });

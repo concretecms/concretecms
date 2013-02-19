@@ -24,6 +24,11 @@ if ($filters->getImageEditorControlSetHandle() != 'filter') {
 	echo "Add Filter Control Set\n";
 	SystemImageEditorControlSet::add('filter','Filters');
 }
+$text = SystemImageEditorControlSet::getByHandle('text');
+if ($text->getImageEditorControlSetHandle() != 'text') {
+	echo "Add Text Control Set\n";
+	SystemImageEditorControlSet::add('text','Text');
+}
 
 // Components
 $text = SystemImageEditorComponent::getByHandle('text');

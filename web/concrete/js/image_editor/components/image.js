@@ -5,7 +5,6 @@ ccm_event.bind('FileManagerFileSelected',function(e){
 		ccm_alGetFileData(e.eventData.fID,function(data){
 			var img = new Image;
 			img.onload = function(){
-				console.log('image loaded');
 				var image = new Kinetic.Image({
 					width:img.width,
 					height:img.height,
@@ -16,7 +15,6 @@ ccm_event.bind('FileManagerFileSelected',function(e){
 				im.addElement(image,'image');
 				$.fn.dialog.hideLoader();
 			};
-			console.log('changing source');
 			img.src = data[0].filePathDirect;
 		});
 	}
