@@ -441,8 +441,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				} else {
 					$s = Stack::getByName($garHandle, 'ACTIVE');
 				}
-				CacheLocal::set('csrCheck', $s->getCollectionID() . ':' . $s->getVersionID(), true);
 				if (is_object($s)) {
+					CacheLocal::set('csrCheck', $s->getCollectionID() . ':' . $s->getVersionID(), true);
 					$rs1 = $db->GetAll('select bID, csrID, arHandle from CollectionVersionBlockStyles where cID = ? and cvID = ? and csrID > 0', array($s->getCollectionID(), $s->getVersionID()));
 					foreach($rs1 as $r) {
 						$csrID = $r['csrID'];
