@@ -103,14 +103,16 @@
 // CSS image replacement
 // -------------------------
 // Source: https://github.com/h5bp/html5-boilerplate/commit/aa0396eae757
-.hide-text {
-  font: 0/0 a;
-  color: transparent;
-  text-shadow: none;
-  background-color: transparent;
-  border: 0;
-}
 
+.ccm-ui {
+  .hide-text {
+    font: 0/0 a;
+    color: transparent;
+    text-shadow: none;
+    background-color: transparent;
+    border: 0;
+  }
+}
 
 // FONTS
 // --------------------------------------------------
@@ -151,14 +153,15 @@
 // --------------------------------------------------
 
 // Block level inputs
-.input-block-level {
-  display: block;
-  width: 100%;
-  min-height: @inputHeight; // Make inputs at least the height of their button counterpart (base line-height + padding + border)
-  .box-sizing(border-box); // Makes inputs behave like true block-level elements
+
+.ccm-ui {
+  .input-block-level {
+    display: block;
+    width: 100%;
+    min-height: @inputHeight; // Make inputs at least the height of their button counterpart (base line-height + padding + border)
+    .box-sizing(border-box); // Makes inputs behave like true block-level elements
+  }
 }
-
-
 
 // Mixin for form field states
 .formFieldState(@textColor: #555, @borderColor: #ccc, @backgroundColor: #f5f5f5) {
@@ -634,7 +637,7 @@
       width: 100%;
       .clearfix();
       [class*="span"] {
-        .input-block-level();
+        .ccm-ui.input-block-level();
         float: left;
         margin-left: @fluidGridGutterWidth;
         *margin-left: @fluidGridGutterWidth - (.5 / @gridRowWidth * 100 * 1%);

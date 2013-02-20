@@ -33,6 +33,11 @@ class Concrete5_Helper_Navigation {
 				$dispatcher = '/' . DISPATCHER_FILENAME;
 			}
 		}
+		if ($cObj->isExternalLink() && $appendBaseURL == false) {
+			$link = $cObj->getCollectionPointerExternalLink();
+			return $link;
+		}
+		
 		if ($cObj->getCollectionPath() != null) {
 			$link = DIR_REL . $dispatcher . $cObj->getCollectionPath() . '/';
 		} else {

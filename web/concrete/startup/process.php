@@ -28,11 +28,18 @@
 			case 'ajax_do_arrange': /* called via ajax */
 				if ($cp->canEditPageContents()) {
 					$nvc = $c->getVersionToModify();
-					$nvc->processArrangement($_POST['area']);
+					$r = $nvc->processArrangement($_POST['area']);
+					if (!is_object($r)) {
+						$r = new stdClass;
+						$r->error = false;
+					}
+				} else {
+					$r = new stdClass;
+					$r->error = true;
+					$r->message = t('Access Denied');
 				}
-				
+				print Loader::helper('json')->encode($r);
 				exit;
-				
 				break;
 			case 'remove':
 				$a = Area::get($c, $_REQUEST['arHandle']);
@@ -270,6 +277,9 @@
 							// which handles permissions and everything
 							$p = new Permissions($b);
 							if ($p->canViewBlock()) {
+								if (!is_object($b)) {
+									exit;
+								}
 								$action = $b->passThruBlock($_REQUEST['method']);
 							}
 						}
@@ -1040,7 +1050,7 @@
 
 					if ($_POST['rel'] == 'SITEMAP') { 
 						$u = new User();
-						if ($cp->canApprovePageVersions()) {
+						if ($cp->canApprovePageVersions() && SITEMAP_APPROVE_IMMEDIATELY) {
 							$pkr = new ApprovePagePageWorkflowRequest();
 							$pkr->setRequestedPage($nc);
 							$v = CollectionVersion::get($nc, "RECENT");

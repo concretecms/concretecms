@@ -59,7 +59,7 @@ $ih = Loader::helper('concrete/interface');
 		if (isset($customST)) { ?>
 		<div class="ccm-theme-style-attribute <? if ($useSlots) { ?>ccm-theme-style-slots<? } ?>">
 			<span class="ccm-theme-style-attribute-name"><?=t('Add Your CSS')?></span>
-			<?=$form->hidden('input_theme_style_' . $customST->getHandle() . '_' . $customST->getType(), $customST->getOriginalValue())?>
+			<?=$form->hidden('input_theme_style_' . $customST->getHandle() . '_' . $customST->getType(), htmlentities($customST->getOriginalValue(), ENT_QUOTES, APP_CHARSET))?>
 			<div class="ccm-theme-style-custom <? if ($useSlots) { ?>ccm-theme-style-slot-1<? } ?>" id="theme_style_<?=$customST->getHandle()?>_<?=$customST->getType()?>"><div></div></div>
 		</div>
 		<? } ?>
@@ -251,7 +251,7 @@ $ih = Loader::helper('concrete/interface');
                 $('div#jquery-font-panel-list-fonts div').removeClass('font-panel-list-selected');
                 $(this).addClass("font-panel-list-selected");
             });
-            $('div#jquery-font-panel-list-fonts div[font-panel-font=' + font + ']').addClass('font-panel-list-selected');
+            $('div#jquery-font-panel-list-fonts div[font-panel-font="' + font + '"]').addClass('font-panel-list-selected');
         },
     
         setupSizes: function(size) {

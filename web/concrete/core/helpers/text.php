@@ -342,4 +342,18 @@ class Concrete5_Helper_Text {
 		return $result;
 	}
 
+	/** 
+	 * Appends a SimpleXMLElement to a SimpleXMLElement
+	 */
+	public function appendXML($root, $new) {
+		$node = $root->addChild($new->getName(), (string) $new);
+		foreach($new->attributes() as $attr => $value) {
+			$node->addAttribute($attr, $value);
+		}
+		foreach($new->children() as $ch) {
+			$this->appendXML($node, $ch);
+		}
+	}
+
+
 }

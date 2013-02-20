@@ -42,7 +42,7 @@
 			<label for="favicon_upload" class="control-label"><?=t('Upload File')?></label>
 			<div class="controls">
 				<input id="favicon_upload" type="file" class="input-file" name="favicon_file"/>
-				<div class="help-block"><?=t('Your image should be 16x16 pixels, and should be an gif or a png with a .ico file extension.')?></div>
+				<div class="help-block"><?=t('Your image should be 16x16 pixels, and should be a gif or a png with a .ico file extension.')?></div>
 
 			</div>
 		</div>

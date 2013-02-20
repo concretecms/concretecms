@@ -20,7 +20,7 @@
 		protected $btCacheBlockOutputOnPost = true;
 		protected $btSupportsInlineEditing = true;
 		protected $btCacheBlockOutputForRegisteredUsers = true;
-		protected $btCacheBlockOutputLifetime = CACHE_LIFETIME;
+		protected $btCacheBlockOutputLifetime = 0; //until manually updated or cleared
 		
 		public function getBlockTypeDescription() {
 			return t("HTML/WYSIWYG Editor Content.");

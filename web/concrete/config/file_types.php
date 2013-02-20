@@ -21,6 +21,7 @@ $ft->define('tif,tiff', t('TIFF'), FileType::T_IMAGE, 'image');
 $ft->define('htm,html', t('HTML'), FileType::T_IMAGE);
 $ft->define('swf', t('Flash'), FileType::T_IMAGE, 'image');
 $ft->define('ico', t('Icon'), FileType::T_IMAGE);
+$ft->define('svg', t('SVG'), FileType::T_IMAGE);
 $ft->define('asf,wmv', t('Windows Video'), FileType::T_VIDEO, false, 'video');
 $ft->define('mov,qt', t('Quicktime'), FileType::T_VIDEO, false, 'video');
 $ft->define('avi', t('AVI'), FileType::T_VIDEO, false, 'video');
@@ -47,6 +48,9 @@ $ft->define('pps,ppt,pptx,pot', t('MS Powerpoint'), FileType::T_DOCUMENT);
 $ft->define('tar', t('TAR Archive'), FileType::T_APPLICATION);
 $ft->define('zip', t('Zip Archive'), FileType::T_APPLICATION);
 $ft->define('gz,gzip', t('GZip Archive'), FileType::T_APPLICATION);
+$ft->define('ogg', t('OGG'), FileType::T_AUDIO);
+$ft->define('ogv', t('OGG Video'), FileType::T_VIDEO);
+$ft->define('webm', t('WebM'), FileType::T_VIDEO);
 
 $ft->defineImporterAttribute('width', t('Width'), 'NUMBER', false);
 $ft->defineImporterAttribute('height', t('Height'), 'NUMBER', false);

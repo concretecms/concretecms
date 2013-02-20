@@ -25,6 +25,7 @@ div.ccm-block-edit, div.ccm-area {
 	position: relative;
 	opacity: 1;
 	min-height: 1px;
+	.clearfix();
 }
 
 div.ccm-block-edit.ccm-menu-item-active {
@@ -39,6 +40,16 @@ div.ccm-block-edit.ccm-block-arrange-enabled {
 
 div.ccm-block-edit.ccm-block-arrange-enabled:hover {
 	box-shadow: 0px 0px 2px 2px rgba(0,0,0,0.3);
+}
+
+/** 
+ * sorting blocks in page
+ */
+div.ccm-block-type-dragging {
+	opacity: 0.5;
+	background: #efefef;
+	border: 1px solid #aaa;
+	box-shadow: 0px 0px 2px 0px rgba(0,0,0,0);
 }
 
 /** 
@@ -68,7 +79,15 @@ div.ccm-area-footer, div.ccm-sub-area-footer {
 	background-color: #444;
 	width: 100%;
 	position: absolute;
+	z-index: 4; /* less than the highlighter z-index */
 	bottom: -30px;
+}
+
+div.ccm-area.ccm-global-area {
+
+	> div.ccm-area-footer {
+		background-color: #2F94BD;
+	}
 }
 
 div.ccm-area.ccm-menu-item-active {
@@ -83,8 +102,17 @@ div.ccm-area.ccm-menu-item-active {
 	}	
 }
 div.ccm-area-drag-active {
-	-webkit-transition: all 0.1s ease-in-out; 
+	-webkit-transition: box-shadow 0.5s ease-in-out; 
 	box-shadow: 0px 0px 2px 2px rgba(255,0,0,0.4); 
+	min-height: 10px;
+
+	div.ccm-area-footer {
+		opacity: 0.5;
+	}
+
+	div.ccm-sub-area-footer {
+		opacity: 0.5;
+	}
 }
 div.ccm-area-drag-over {
 	-webkit-transition: all 0.1s ease-in-out; 
@@ -93,8 +121,7 @@ div.ccm-area-drag-over {
 
 .ccm-block-type-drop-holder {
 	display: block;
-	height: 10px;
-	box-shadow: 0px 0px 2px 2px rgba(0,0,0,1.0);
+	box-shadow: 0px 0px 0px 2px rgba(0,0,0,1.0);
 }
 
 

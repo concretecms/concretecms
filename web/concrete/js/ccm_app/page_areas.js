@@ -127,7 +127,7 @@ ccm_deleteBlock = function(cID, bID, aID, arHandle, msg) {
 	if (confirm(msg)) {
 		ccm_mainNavDisableDirectExit();
 		// got to grab the message too, eventually
-		$d = $("#b" + bID + '-' + aID);
+		$d = $('[data-block-id=' + bID + '][data-area-id=' + aID + ']');
 		$d.hide().remove();
 		ccmAlert.hud(ccmi18n.deleteBlockMsg, 2000, 'delete_small', ccmi18n.deleteBlock);
 		$.ajax({
@@ -135,6 +135,9 @@ ccm_deleteBlock = function(cID, bID, aID, arHandle, msg) {
 			url: CCM_DISPATCHER_FILENAME,
 			data: 'cID=' + cID + '&ccm_token=' + CCM_SECURITY_TOKEN + '&isAjax=true&btask=remove&bID=' + bID + '&arHandle=' + arHandle
 		});
+		if (typeof window.ccm_parseBlockResponsePost == 'function') {
+			ccm_parseBlockResponsePost({});
+		}
 	}	
 }
 
@@ -160,20 +163,14 @@ ccm_parseBlockResponse = function(r, currentBlockID, task) {
 			$.get(action, 		
 				function(r) { 
 					if (task == 'add') {
-						$('#ccm-add-new-block-placeholder').before(r).remove();
-						ccm_saveAreaArrangement(cID, resp.arHandle);
-						/*
-						if ($("#a" + resp.aID + " div.ccm-area-styles-a"+ resp.aID).length > 0) {
-							$("#a" + resp.aID + " div.ccm-area-styles-a"+ resp.aID).append(r);
+						if ($('#ccm-add-new-block-placeholder').length > 0) {
+							$('#ccm-add-new-block-placeholder').before(r).remove();
+							ccm_saveAreaArrangement(cID, resp.arHandle);
 						} else {
-							$("#a" + resp.aID).append(r);
+							$("#a" + resp.aID + " div.ccm-area-footer").before(r);
 						}
-						// inline support.
-						$('#a' + resp.aID + '-bt' + resp.btID).remove();
-						*/
-
 					} else {
-						$('#b' + currentBlockID + '-' + resp.aID).before(r).remove();
+						$('[data-block-id=' + currentBlockID + '][data-area-id=' + resp.aID + ']').before(r).remove();
 					}
 					ccm_editMenuInit();
 					ccm_exitInlineEditMode();
@@ -208,7 +205,6 @@ ccm_setupBlockForm = function(form, currentBlockID, task) {
 			ccm_parseBlockResponse(r, currentBlockID, task);
 		}
 	});
-	
 }
 
 ccm_saveArrangement = function(cID) {
@@ -221,40 +217,21 @@ ccm_saveArrangement = function(cID) {
 	var serial = '';
 	$('div.ccm-area').each(function() {
 		areaStr = '&area[' + $(this).attr('id').substring(1) + '][]=';
-		
-		bArray = $(this).sortable('toArray');
-
+		bArray = $(this).sortable('toArray', {'attribute': 'data-block-id'});
 		for (i = 0; i < bArray.length; i++ ) {
-			if (bArray[i] != '' && bArray[i].substring(0, 1) == 'b') {
-				// make sure to only go from b to -, meaning b28-9 becomes "28"
-				var bID = bArray[i].substring(1, bArray[i].indexOf('-'));
-				var bObj = $('#' + bArray[i]);
-				if (bObj.attr('custom-style')) {
-					bID += '-' + bObj.attr('custom-style');
-				}
-				serial += areaStr + bID;
-			}
+			var bID = bArray[i];
+			serial += areaStr + bID;
 		}
 	});
-
-	console.log(serial);
-	/*
  	$.ajax({
  		type: 'POST',
  		url: CCM_DISPATCHER_FILENAME,
  		data: 'cID=' + cID + '&ccm_token=' + CCM_SECURITY_TOKEN + '&btask=ajax_do_arrange' + serial,
  		success: function(msg) {
- 			$("div.ccm-area").removeClass('ccm-move-mode');
-			$('div.ccm-block-arrange').each(function() {
-				$(this).addClass('ccm-block-edit');
-				$(this).removeClass('ccm-block-arrange');
-			});
-			$('div.ccm-area-footer').show();
-			$.fn.ccmmenu.enable();
 			$(".ccm-main-nav-edit-option").fadeIn(300);
+ 			$("div.ccm-area").sortable('destroy');
 			ccmAlert.hud(ccmi18n.arrangeBlockMsg, 2000, 'up_down', ccmi18n.arrangeBlock);
  		}});
- 	*/
 }
 
 ccm_saveAreaArrangement = function(cID, arHandle) {
@@ -266,17 +243,11 @@ ccm_saveAreaArrangement = function(cID, arHandle) {
 	var serial = '';
 	var $area = $('div.ccm-area[data-area-handle=' + arHandle + ']');
 	areaStr = '&area[' + $area.attr('id').substring(1) + '][]=';
-	bArray = $area.sortable('toArray');
+
+	bArray = $area.sortable('toArray', {'attribute': 'data-block-id'});
 	for (i = 0; i < bArray.length; i++ ) {
-		if (bArray[i] != '' && bArray[i].substring(0, 1) == 'b') {
-			// make sure to only go from b to -, meaning b28-9 becomes "28"
-			var bID = bArray[i].substring(1, bArray[i].indexOf('-'));
-			var bObj = $('#' + bArray[i]);
-			if (bObj.attr('custom-style')) {
-				bID += '-' + bObj.attr('custom-style');
-			}
-			serial += areaStr + bID;
-		}
+		var bID = bArray[i];
+		serial += areaStr + bID;
 	}
 
  	$.ajax({
@@ -287,7 +258,6 @@ ccm_saveAreaArrangement = function(cID, arHandle) {
 }
 
 ccm_arrangeInit = function() {
-	//$(document.body).append('<img src="' + CCM_IMAGE_PATH + '/topbar_throbber.gif" width="16" height="16" id="ccm-topbar-loader" />');
 	
 	$.fn.ccmmenu.disable();
 	
@@ -295,30 +265,55 @@ ccm_arrangeInit = function() {
 		$(this).addClass('ccm-block-arrange-enabled');
 	});
 	
-	$('div.ccm-area-footer').hide();
+	var $dropelement;
+	
+	$('div.ccm-area').sortable({
+		items: 'div.ccm-block-edit',
+		connectWith: 'div.ccm-area',
+		placeholder: "ccm-block-type-drop-holder",
+		opacity: 0.4,
+		over: function(e, ui) {
+			$(this).addClass('ccm-area-drag-over');
+			var w = $(this).width();
+			$(ui.helper).css('width', w + 'px');
+			return true;
+		},
+		out: function() {
+			$(this).removeClass('ccm-area-drag-over');
+		},
+		receive: function(e, ui) {
+			$dropelement = ui.item;
+		}
 
-	$("div.ccm-area").each(function() {
-
-		var acceptedtypes = $(this).attr('data-accepts-block-types').split(' ');
-		var blocktypes = $('div.ccm-block-edit').filter(function() {
-			return $.inArray($(this).attr('data-block-type-handle'), acceptedtypes) > -1;
-		});
-		var cID = $(this).attr('cID');
-		$(this).sortable({
-			items: 'div.ccm-block-edit',
-			connectWith: $("div.ccm-area"),
-			opacity: 0.5,
-			placeholder: "ccm-block-type-drop-holder",
-			opacity: 0.4,
-			stop: function() {
-				ccm_saveArrangement(cID);
-			}
-		});
-		$(this).droppable({
-			accept: blocktypes
+	});
+	$('div.ccm-block-edit').each(function() {
+		var $li = $(this);
+		var $sortables = $('div.ccm-area[data-accepts-block-types~=' + $li.attr('data-block-type-handle') + ']');
+		$li.draggable({
+			helper: function() {
+				var w = $(this).width();
+				var h = $(this).height();
+				var $d =  $('<div />', {'class': 'ccm-block-type-dragging'}).css('width', w).css('height', h);
+				return $d;
+			},
+			start: function(e, ui) {
+				$sortables.addClass('ccm-area-drag-active');
+			},
+			stop: function(e, ui) {
+				if ($dropelement) {
+					$dropelement.remove();
+					$dropelement = false;
+				}
+				$sortables.removeClass('ccm-area-drag-active');
+	 			$("div.ccm-block-edit").removeClass('ccm-block-arrange-enabled');
+	 			$('div.ccm-block-edit').draggable().draggable('destroy');
+	 			ccm_editMenuInit();
+	 			$.fn.ccmmenu.enable();
+				ccm_saveArrangement();
+			},
+			connectToSortable: $sortables
 		});
 	});
-
 }
 
 ccm_blockWindowClose = function() {

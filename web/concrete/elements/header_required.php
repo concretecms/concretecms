@@ -1,11 +1,17 @@
 <?php 
 defined('C5_EXECUTE') or die("Access Denied.");
-global $c;
-global $cp;
-global $cvID;
+$c = $this->getCollectionObject();
+if (is_object($c)) {
+	$cp = new Permissions($c);
+}
 
 if (is_object($c)) {
-	$pageTitle = (!$pageTitle) ? $c->getCollectionName() : $pageTitle;
+	if(!(isset($pageTitle) && strlen($pageTitle))) {
+		$pageTitle = $c->getCollectionName();
+		if($c->isAdminArea()) {
+			$pageTitle = t($pageTitle);
+		}
+	}
 	$pageDescription = (!$pageDescription) ? $c->getCollectionDescription() : $pageDescription;
 	$cID = $c->getCollectionID(); 
 	$isEditMode = ($c->isEditMode()) ? "true" : "false";
@@ -41,7 +47,14 @@ if ($akk) { ?>
 if($c->getCollectionAttributeValue('exclude_search_index')) { ?>
     <meta name="robots" content="noindex" />
 <?php } ?>
-<meta name="generator" content="concrete5 - <?php echo APP_VERSION ?>" />
+<?php
+if (defined('APP_VERSION_DISPLAY_IN_HEADER') && APP_VERSION_DISPLAY_IN_HEADER) {
+    echo '<meta name="generator" content="concrete5 - ' . APP_VERSION . '" />';
+}    
+else {
+    echo '<meta name="generator" content="concrete5" />';
+}
+?>
 
 <?php $u = new User(); ?>
 <script type="text/javascript">

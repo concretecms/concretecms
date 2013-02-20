@@ -60,29 +60,31 @@ class Concrete5_Model_AddBlockToAreaAreaPermissionKey extends AreaPermissionKey 
 		$list = PermissionDuration::filterByActive($list);
 		
 		$db = Loader::db();
-		$dsh = Loader::helper('concrete/dashboard');
-		if ($dsh->inDashboard()) {
-			$allBTIDs = $db->GetCol('select btID from BlockTypes');
-		} else { 
-			$allBTIDs = $db->GetCol('select btID from BlockTypes where btIsInternal = 0');
-		}
-		$btIDs = array();
-		foreach($list as $l) {
-			if ($l->getBlockTypesAllowedPermission() == 'N') {
-				$btIDs = array();
+		$btIDs = array();		
+		if (count($list) > 0) {
+			$dsh = Loader::helper('concrete/dashboard');
+			if ($dsh->inDashboard()) {
+				$allBTIDs = $db->GetCol('select btID from BlockTypes');
+			} else { 
+				$allBTIDs = $db->GetCol('select btID from BlockTypes where btIsInternal = 0');
 			}
-			if ($l->getBlockTypesAllowedPermission() == 'C') {
-				if ($l->getAccessType() == AreaPermissionKey::ACCESS_TYPE_EXCLUDE) {
-					$btIDs = array_values(array_diff($btIDs, $l->getBlockTypesAllowedArray()));
-				} else { 
-					$btIDs = array_unique(array_merge($btIDs, $l->getBlockTypesAllowedArray()));
+			foreach($list as $l) {
+				if ($l->getBlockTypesAllowedPermission() == 'N') {
+					$btIDs = array();
+				}
+				if ($l->getBlockTypesAllowedPermission() == 'C') {
+					if ($l->getAccessType() == AreaPermissionKey::ACCESS_TYPE_EXCLUDE) {
+						$btIDs = array_values(array_diff($btIDs, $l->getBlockTypesAllowedArray()));
+					} else { 
+						$btIDs = array_unique(array_merge($btIDs, $l->getBlockTypesAllowedArray()));
+					}
+				}
+				if ($l->getBlockTypesAllowedPermission() == 'A') {
+					$btIDs = $allBTIDs;
 				}
 			}
-			if ($l->getBlockTypesAllowedPermission() == 'A') {
-				$btIDs = $allBTIDs;
-			}
 		}
-		
+
 		return $btIDs;
 	}
 	

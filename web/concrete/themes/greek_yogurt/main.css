@@ -105,7 +105,8 @@ div.ccm-profile-attribute div.input div{
    margin-bottom: 7px;
 }
 
-div.ccm-profile-attribute input, select {
+div.ccm-profile-attribute input,
+div.ccm-profile-attribute select {
    margin-left:16px;
 }
 

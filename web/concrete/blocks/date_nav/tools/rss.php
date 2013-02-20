@@ -19,7 +19,7 @@ if($_GET['bID']) {
 		$nh = Loader::helper('navigation');
 
 		header('Content-type: text/xml');
-		echo "<?php xml version=\"1.0\"?>\n";
+		echo "<" . "?" . "xml version=\"1.0\"?>\n";
 
 ?>
 		<rss version="2.0">

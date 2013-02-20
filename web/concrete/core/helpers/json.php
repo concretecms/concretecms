@@ -20,16 +20,16 @@ class Concrete5_Helper_Json {
 
 	
 	/** 
-	 * Decodes a JSON string
+	 * Decodes a JSON string into a php variable
 	 * @param string $string
-	 * @return string
+	 * @return mixed
 	 */
-	public function decode($string) {
+	public function decode($string, $assoc = false) {
 		if (function_exists('json_decode')) {
-			return json_decode($string);
+			return json_decode($string, $assoc);
 		} else {
 			Loader::library('3rdparty/JSON/JSON');
-			$sjs = new Services_JSON();
+			$sjs = new Services_JSON($assoc ? SERVICES_JSON_LOOSE_TYPE : 0);
 			return $sjs->decode($string);
 		}
 	}
@@ -37,7 +37,7 @@ class Concrete5_Helper_Json {
 	
 	/** 
 	 * Encodes a data structure into a JSON string
-	 * @param string $mixed
+	 * @param mixed $mixed
 	 * @return string
 	 */
 	public function encode($mixed) {
