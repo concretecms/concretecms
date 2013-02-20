@@ -28,11 +28,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		protected $attributes = array();
 		/* version specific stuff */
 
-		function loadVersionObject($cvID = "ACTIVE") {
-			$cvID = CollectionVersion::getNumericalVersionID($this->getCollectionID(), $cvID);
+		function loadVersionObject($cvID) {
 			$this->vObj = CollectionVersion::get($this, $cvID);
-			$vp = new Permissions($this->vObj);			
-			return $vp;
 		}
 		
 		function getVersionToModify() {
@@ -53,10 +50,11 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			}
 		}
 
-      public function getNextVersionComments() {
-         $cvID = CollectionVersion::getNumericalVersionID($this->getCollectionID(), 'ACTIVE');
-         return t("Version %d", $cvID+1);
-      }
+		public function getNextVersionComments() {
+			$c = Page::getByID($this->getCollectionID(), 'ACTIVE');
+			$cvID = $c->getVersionID();
+			return t("Version %d", $cvID + 1);
+		}      
       
 
 		public function cloneVersion($versionComments) {
@@ -109,17 +107,13 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		
 		public function getAttribute($akHandle) {
 			if (is_object($this->vObj)) {
-				return $this->vObj->getAttribute($akHandle);
+				return $this->vObj->getAttribute($akHandle, $this);
 			}
 		}
 		
 		public function getCollectionAttributeValue($ak) {
 			if (is_object($this->vObj)) {
-				if (is_object($ak)) {
-					return $this->vObj->getAttribute($ak->getAttributeKeyHandle());
-				} else {
-					return $this->vObj->getAttribute($ak);
-				}
+				return $this->vObj->getAttribute($ak, $this);
 			}
 		}
 
@@ -174,6 +168,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				
 				$index->reindexPage($this);
 				$db->Replace('PageSearchIndex', array('cID' => $this->getCollectionID(), 'cRequiresReindex' => 0), array('cID'), false);
+
+				$cache = PageCache::getLibrary();
+				$cache->purge($this);
+
 			} else { 			
 				$db = Loader::db();
 				Config::save('DO_PAGE_REINDEX_CHECK', true);
@@ -217,7 +215,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			}
 			$ak->setAttribute($this, $value);
 			unset($ak);
-			$this->refreshCache();
 			$this->reindex();
 		}
 
@@ -227,7 +224,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			if (is_object($cav)) {
 				$cav->delete();
 			}
-			$this->refreshCache();
 			$this->reindex();
 		}
 		
@@ -373,6 +369,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		$db = Loader::db();
 		$csrs = array();
 		$txt = Loader::helper('text');
+		CacheLocal::set('csrCheck', $this->getCollectionID() . ':' . $this->getVersionID(), true);
+
 		$r1 = $db->GetAll('select bID, arHandle, csrID from CollectionVersionBlockStyles where cID = ? and cvID = ? and csrID > 0', array($this->getCollectionID(), $this->getVersionID()));
 		$r2 = $db->GetAll('select arHandle, csrID from CollectionVersionAreaStyles where cID = ? and cvID = ? and csrID > 0', array($this->getCollectionID(), $this->getVersionID()));
 		foreach($r1 as $r) {
@@ -383,8 +381,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			if (is_object($obj)) {
 				$obj->setCustomStyleNameSpace('blockStyle' . $bID . $arHandle);
 				$csrs[] = $obj;
+				CacheLocal::set('csrObject', $this->getCollectionID(). ':' . $this->getVersionID() . ':' . $r['arHandle']  . ':' . $r['bID'], $obj);
 			}
 		}
+
 		foreach($r2 as $r) {
 			$csrID = $r['csrID'];
 			$arHandle = $txt->filterNonAlphaNum($r['arHandle']);
@@ -392,6 +392,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			if (is_object($obj)) {
 				$obj->setCustomStyleNameSpace('areaStyle' . $arHandle);
 				$csrs[] = $obj;
+				CacheLocal::set('csrObject', $this->getCollectionID(). ':' . $this->getVersionID() . ':' . $r['arHandle'], $obj);
 			}
 		}
 		
@@ -405,6 +406,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				} else {
 					$s = Stack::getByName($garHandle, 'ACTIVE');
 				}
+				CacheLocal::set('csrCheck', $s->getCollectionID() . ':' . $s->getVersionID(), true);
 				if (is_object($s)) {
 					$rs1 = $db->GetAll('select bID, csrID, arHandle from CollectionVersionBlockStyles where cID = ? and cvID = ? and csrID > 0', array($s->getCollectionID(), $s->getVersionID()));
 					foreach($rs1 as $r) {
@@ -415,6 +417,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 						if (is_object($obj)) {
 							$obj->setCustomStyleNameSpace('blockStyle' . $bID . $arHandle);
 							$csrs[] = $obj;
+							CacheLocal::set('csrObject', $s->getCollectionID(). ':' . $s->getVersionID() . ':' . $r['arHandle'] . ':' . $r['bID'], $obj);
 						}
 					}
 				}
@@ -440,8 +443,9 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 	public function getAreaCustomStyleRule($area) {
 		$db = Loader::db();
-		
-		$csrID = $this->vObj->customAreaStyles[$area->getAreaHandle()];
+
+		$styles = $this->vObj->getCustomAreaStyles();		
+		$csrID = $styles[$area->getAreaHandle()];
 		
 		if ($csrID > 0) {
 			$txt = Loader::helper('text');
@@ -462,7 +466,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			$this->getVersionID(),
 			$area->getAreaHandle()
 		));
-		$this->refreshCache();
 	}
 	
 	public function setAreaCustomStyle($area, $csr) {
@@ -471,10 +474,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			array('cID' => $this->getCollectionID(), 'cvID' => $this->getVersionID(), 'arHandle' => $area->getAreaHandle(), 'csrID' => $csr->getCustomStyleRuleID()),
 			array('cID', 'cvID', 'arHandle'), true
 		);
-		$this->refreshCache();
 	}
-	
-	
 	
 	public function relateVersionEdits($oc) {
 		$db = Loader::db();
@@ -574,31 +574,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			
 		}
 		
-		public function refreshCache() {
-			Cache::delete('page_active', $this->getCollectionID());
-			Cache::delete('page_recent', $this->getCollectionID());
-			if ($this->getCollectionTypeHandle() == STACKS_PAGE_TYPE) {
-				Cache::delete('stack_active', $this->getCollectionID());
-				Cache::delete('stack_recent', $this->getCollectionID());
-			}
-			if ($this instanceof ComposerPage) {
-				Cache::delete('composerpage_recent', $this->getCollectionID()  );
-				Cache::delete('composerpage_active', $this->getCollectionID()  );
-			}
-			Cache::delete('page_path', $this->getCollectionID());
-			Cache::delete('request_path_page', $this->getCollectionPath()  );
-			Cache::delete('page_id_from_path', $this->getCollectionPath());
-			Cache::delete('page_content', $this->getCollectionID());
-			$vo = $this->getVersionObject();
-			if (is_object($vo)) {
-				Cache::delete('collection_blocks', $this->getCollectionID() . ':' . $vo->getVersionID());
-			}
-			$db = Loader::db();
-			$areas = $db->GetCol('select arHandle from Areas where cID = ?', array($this->getCollectionID()));
-			foreach($areas as $arHandle) {
-				Cache::delete('area', $this->getCollectionID() . ':' . $arHandle);
-			}
-		}
+		public function refreshCache() {}
 		
 		public function getGlobalBlocks() {
 			$db = Loader::db();
@@ -623,14 +599,17 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			return $blocks;
 		}
 		
-		public function getBlocks($arHandle = false) {
-			
-			$v = array($this->getCollectionID(), $this->getVersionID());
+		/**
+		 * List the block IDs in a collection or area within a collection
+		 * @param string $arHandle. If specified, returns just the blocks in an area
+		 * @return array
+		 */
+		public function getBlockIDs($arHandle = false) {
+			$blockIDs = CacheLocal::getEntry('collection_block_ids', $this->getCollectionID() . ':' . $this->getVersionID());
 			$blocks = array();
-
-			$blockIDs = Cache::get('collection_blocks', $this->getCollectionID() . ':' . $this->getVersionID());		
-			
+		
 			if (!is_array($blockIDs)) {
+				$v = array($this->getCollectionID(), $this->getVersionID());
 				$db = Loader::db();
 				$q = "select Blocks.bID, CollectionVersionBlocks.arHandle from CollectionVersionBlocks inner join Blocks on (CollectionVersionBlocks.bID = Blocks.bID) inner join BlockTypes on (Blocks.btID = BlockTypes.btID) where CollectionVersionBlocks.cID = ? and (CollectionVersionBlocks.cvID = ? or CollectionVersionBlocks.cbIncludeAll=1) order by CollectionVersionBlocks.cbDisplayOrder asc";
 				$r = $db->GetAll($q, $v);
@@ -640,14 +619,14 @@ defined('C5_EXECUTE') or die("Access Denied.");
 						$blockIDs[strtolower($bl['arHandle'])][] = $bl;
 					}
 				}
-				Cache::set('collection_blocks', $this->getCollectionID() . ':' . $this->getVersionID(), $blockIDs);
+				CacheLocal::set('collection_block_ids', $this->getCollectionID() . ':'. $this->getVersionID(), $blockIDs);
 			}
 			
+
 			if ($arHandle != false) {
 				$blockIDsTmp = $blockIDs[strtolower($arHandle)];
 				$blockIDs = $blockIDsTmp;
 			} else {
-			
 				$blockIDsTmp = $blockIDs;
 				$blockIDs = array();
 				foreach($blockIDsTmp as $arHandle => $row) {
@@ -657,8 +636,19 @@ defined('C5_EXECUTE') or die("Access Denied.");
 						}
 					}
 				}
-			}		
+			}
+			return $blockIDs;
+		}
 			
+		/**
+		 * List the blocks in a collection or area within a collection
+		 * @param string $arHandle. If specified, returns just the blocks in an area
+		 * @return array
+		 */
+		public function getBlocks($arHandle = false) {
+
+			$blockIDs = $this->getBlockIDs($arHandle);
+
 			$blocks = array();
 			if (is_array($blockIDs)) {
 				foreach($blockIDs as $row) {
@@ -670,6 +660,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			}
 			return $blocks;
 		}
+
 		
 		public function addBlock($bt, $a, $data) {
 			$db = Loader::db();
@@ -697,7 +688,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 			$res = $db->Execute($q, $v);
 
-			Cache::delete('collection_blocks', $cID . ':' . $vObj->getVersionID());
 			
 			return Block::getByID($nb->getBlockID(), $this, $a);
 		}

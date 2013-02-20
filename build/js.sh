@@ -5,6 +5,10 @@ uglifyjs -o ../web/concrete/js/ccm.profile.js ../web/concrete/js/ccm_profile/bas
 cat ../web/concrete/js/redactor/redactor.js \
 ../web/concrete/js/redactor/redactor.concrete5.js > redactor.tmp.js
 
+cat ../web/concrete/js/ccm_app/dashboard.js > ccm.dashboard.tmp.js
+uglifyjs --no-copyright --no-seqs -o ../web/concrete/js/ccm.dashboard.js ./ccm.dashboard.tmp.js 
+rm ccm.dashboard.tmp.js
+
 uglifyjs -o ../web/concrete/js/redactor.js ./redactor.tmp.js
 rm redactor.tmp.js
 
@@ -17,7 +21,6 @@ cat ../web/concrete/js/ccm_app/pubsub.js \
 ../web/concrete/js/ccm_app/chosen.jquery.js \
 ../web/concrete/js/ccm_app/base.js \
 ../web/concrete/js/ccm_app/ui.js \
-../web/concrete/js/ccm_app/dashboard.js \
 ../web/concrete/js/ccm_app/filemanager.js \
 ../web/concrete/js/ccm_app/jquery.cookie.js \
 ../web/concrete/js/ccm_app/legacy_dialog.js \

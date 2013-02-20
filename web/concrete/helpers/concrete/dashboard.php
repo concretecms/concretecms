@@ -103,10 +103,12 @@ class ConcreteDashboardHelper {
 			}
 			
 			$subpagesP = array();
-			foreach($subpages as $sc) {
-				$cp = new Permissions($sc);
-				if ($cp->canViewPage()) { 
-					$subpagesP[] = $sc;
+			if(is_array($subpages)) {
+				foreach($subpages as $sc) {
+					$cp = new Permissions($sc);
+					if ($cp->canViewPage()) { 
+						$subpagesP[] = $sc;
+					}
 				}
 			}
 			
@@ -141,7 +143,7 @@ class ConcreteDashboardHelper {
 		
 		$class = 'ccm-icon-favorite';
 		$qn = ConcreteDashboardMenu::getMine();
-		$quicknav = $qn->getItems();
+		$quicknav = $qn->getItems(false);
 		if (in_array($c->getCollectionPath(), $quicknav)) {
 			$class = 'ccm-icon-favorite-selected';	
 		}
@@ -207,7 +209,11 @@ class ConcreteDashboardHelper {
 			} else if ($imageSetting == 'none') {
 				$image = '';
 			} else { 
-				$image = DASHBOARD_BACKGROUND_FEED . '/' . $filename;
+				if (isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] == 'on')) {
+					$image = DASHBOARD_BACKGROUND_FEED_SECURE . '/' . $filename;
+				} else {
+					$image = DASHBOARD_BACKGROUND_FEED . '/' . $filename;
+				}
 				$obj->displayCaption = true;
 			}
 		}
@@ -238,14 +244,16 @@ class ConcreteDashboardHelper {
 
 			if (count($_SESSION['ccmQuickNavRecentPages']) > 0) { ?>
 				<ul class="breadcrumb">
-				<li><strong><?=t('Recent')?></strong> <span class="divider">:</span></li>
-				<? $i = 0;
-				foreach($_SESSION['ccmQuickNavRecentPages'] as $_cID) {
+				<li><strong><?=t('Recent')?></strong> <span class="divider" style="padding-right: 5px; padding-left: 3px;">:</span></li>
+				<?php
+				$i = 0;
+				$recentPages = array_reverse($_SESSION['ccmQuickNavRecentPages']); //display most-recent first
+				foreach($recentPages as $_cID) {
 					$_c = Page::getByID($_cID);
 					$name = t('(No Name)');
 					$divider = '';
 					if (isset($_SESSION['ccmQuickNavRecentPages'][$i+1])) {
-						$divider = '<span class="divider">/</span>';
+						$divider = '<span class="divider">|</span>';
 					}
 					if ($_c->getCollectionName()) {
 						$name = $_c->getCollectionName();
@@ -318,7 +326,7 @@ class ConcreteDashboardHelper {
 				
 				<?
 				if ($page->getCollectionPath() == '/dashboard/system') { ?>
-					<li><a href="<?=Loader::helper('navigation')->getLinkTocollection($page, false, true)?>"><?=t('View All')?><span><?=t($page->getCollectionName())?> <?=$page->getAttribute('meta_keywords')?></span></li>
+					<li><a href="<?=Loader::helper('navigation')->getLinkTocollection($page, false, true)?>"><?=t('View All')?></a><span><?=t($page->getCollectionName())?> <?=$page->getAttribute('meta_keywords')?></span></li>
 				<?				
 				}
 				
@@ -513,8 +521,10 @@ class ConcreteDashboardHelper {
 class ConcreteDashboardMenu {
 	
 	protected $items;
-	public function getItems() {
-		usort($this->items, array('ConcreteDashboardMenu', 'sortItems'));
+	public function getItems($sort = true) {
+		if ($sort) {
+			usort($this->items, array('ConcreteDashboardMenu', 'sortItems'));
+		}
 		return $this->items;
 	}
 	

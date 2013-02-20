@@ -42,24 +42,26 @@ class Concrete5_Model_AddSubpagePagePermissionKey extends PagePermissionKey  {
 		$list = PermissionDuration::filterByActive($list);
 		
 		$db = Loader::db();
-		$allCTIDs = $db->GetCol('select ctID from PageTypes where ctIsInternal = 0');
 		$ctIDs = array();
-		foreach($list as $l) {
-			if ($l->getPageTypesAllowedPermission() == 'N') {
-				$ctIDs = array();
-			}
-			if ($l->getPageTypesAllowedPermission() == 'C') {
-				if ($l->getAccessType() == PagePermissionKey::ACCESS_TYPE_EXCLUDE) {
-					$ctIDs = array_values(array_diff($ctIDs, $l->getPageTypesAllowedArray()));
-				} else { 
-					$ctIDs = array_unique(array_merge($ctIDs, $l->getPageTypesAllowedArray()));
+		if (count($list) > 0) {
+			$allCTIDs = $db->GetCol('select ctID from PageTypes where ctIsInternal = 0');
+			foreach($list as $l) {
+				if ($l->getPageTypesAllowedPermission() == 'N') {
+					$ctIDs = array();
+				}
+				if ($l->getPageTypesAllowedPermission() == 'C') {
+					if ($l->getAccessType() == PagePermissionKey::ACCESS_TYPE_EXCLUDE) {
+						$ctIDs = array_values(array_diff($ctIDs, $l->getPageTypesAllowedArray()));
+					} else { 
+						$ctIDs = array_unique(array_merge($ctIDs, $l->getPageTypesAllowedArray()));
+					}
+				}
+				if ($l->getPageTypesAllowedPermission() == 'A') {
+					$ctIDs = $allCTIDs;
 				}
 			}
-			if ($l->getPageTypesAllowedPermission() == 'A') {
-				$ctIDs = $allCTIDs;
-			}
 		}
-		
+				
 		return $ctIDs;
 	}
 	

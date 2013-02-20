@@ -70,29 +70,34 @@ class Concrete5_Model_CollectionAttributeKey extends AttributeKey {
 	}
 	
 	public static function getByID($akID) {
-		$cak = Cache::get('collection_attribute_key', $akID);
-		if (is_object($cak)) {
-			return $cak;
-		}
-
 		$ak = new CollectionAttributeKey();
 		$ak->load($akID);
 		if ($ak->getAttributeKeyID() > 0) {
-			Cache::set('collection_attribute_key', $akID, $ak);
 			return $ak;	
 		}
 	}
 
 	public static function getByHandle($akHandle) {
-		$db = Loader::db();
-		$q = "SELECT ak.akID 
-			FROM AttributeKeys ak
-			INNER JOIN AttributeKeyCategories akc ON ak.akCategoryID = akc.akCategoryID 
-			WHERE ak.akHandle = ?
-			AND akc.akCategoryHandle = 'collection'";
-		$akID = $db->GetOne($q, array($akHandle));
-		$ak = CollectionAttributeKey::getByID($akID);
-		return $ak;	
+		$ak = CacheLocal::getEntry('collection_attribute_key_by_handle', $akHandle);
+		if (is_object($ak)) {
+			return $ak;
+		} else if ($ak == -1) {
+			return false;
+		}
+		
+		$ak = new CollectionAttributeKey();
+		$ak->load($akHandle, 'akHandle');
+		if ($ak->getAttributeKeyID() < 1) {
+			$ak = -1;
+		}
+
+		CacheLocal::set('collection_attribute_key_by_handle', $akHandle, $ak);
+
+		if ($ak === -1) {
+			return false;
+		}
+
+		return $ak;
 	}
 	
 	public static function getList() {
@@ -133,7 +138,8 @@ class Concrete5_Model_CollectionAttributeKey extends AttributeKey {
 			$args = array('akHandle' => $fargs[0], 'akName' => $fargs[1], 'akIsSearchable' => $fargs[2]);
 		}
 
-	
+		CacheLocal::delete('collection_attribute_key_by_handle', $args['akHandle']);
+
 		$ak = parent::add('collection', $at, $args, $pkg);
 		return $ak;
 	}
@@ -180,10 +186,16 @@ class Concrete5_Model_CollectionAttributeValue extends AttributeValue {
 		));
 		
 		// Before we run delete() on the parent object, we make sure that attribute value isn't being referenced in the table anywhere else
+		// Note: we're going to keep these around and not delete them. We'll just clean this up with an optimize job later on - this'll speed up page deletion by a ton.
+		
+		/*
 		$num = $db->GetOne('select count(avID) from CollectionAttributeValues where avID = ?', array($this->getAttributeValueID()));
 		if ($num < 1) {
 			parent::delete();
 		}
+		*/
+
+
 		
 	}
 }

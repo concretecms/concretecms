@@ -141,6 +141,11 @@ class Concrete5_Controller_Dashboard_Reports_Forms extends Controller {
 			$this->deleteForm($_REQUEST['bID'], $_REQUEST['qsID']);
 		}	
 		
+		if( $_REQUEST['action'] == 'deleteFormAnswers' ){
+			$this->deleteFormAnswers($_REQUEST['qsID']);
+            $this->redirect('/dashboard/reports/forms');
+		}	
+		
 		if( $_REQUEST['action'] == 'deleteResponse' ){
 			$this->deleteAnswers($_REQUEST['asid']);
 		}		
@@ -159,7 +164,7 @@ class Concrete5_Controller_Dashboard_Reports_Forms extends Controller {
 			
 		//load requested survey response
 		if (!empty($_REQUEST['qsid'])) {
-			$questionSet = preg_replace('/[^[:alnum:]]/','',$_REQUEST['qsid']);
+			$questionSet = intval(preg_replace('/[^[:alnum:]]/','',$_REQUEST['qsid']));
 			
 			//get Survey Questions
 			$questionsRS = MiniSurvey::loadQuestions($questionSet);
@@ -206,8 +211,8 @@ class Concrete5_Controller_Dashboard_Reports_Forms extends Controller {
 		$q = 'DELETE FROM btFormAnswerSet WHERE asID = ?';		
 		$r = $db->query($q, $v);
 	}
-	//DELETE FORMS AND ALL SUBMISSIONS
-	private function deleteForm($bID, $qsID){
+	//DELETE A FORM ANSWERS
+	private function deleteFormAnswers($qsID){
 		$db = Loader::db();
 		$v = array(intval($qsID));
 		$q = 'SELECT asID FROM btFormAnswerSet WHERE questionSetId = ?';
@@ -217,6 +222,10 @@ class Concrete5_Controller_Dashboard_Reports_Forms extends Controller {
 			$asID = $row['asID'];
 			$this->deleteAnswers($asID);
 		}
+	}
+	//DELETE FORMS AND ALL SUBMISSIONS
+	private function deleteForm($bID, $qsID){
+		$this->deleteFormAnswers($qsID);
 		
 		$v = array(intval($bID));
 		$q = 'DELETE FROM btFormQuestions WHERE bID = ?';		

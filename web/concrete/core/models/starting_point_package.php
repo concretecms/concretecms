@@ -44,12 +44,6 @@ class Concrete5_Model_StartingPointPackage extends Package {
 	}
 	
 	public function precache() {
-		$c = Page::getByID(HOME_CID);
-		$blocks = $c->getBlocks();
-		foreach($blocks as $b) {
-			$bi = $b->getInstance();
-			$bi->setupAndRun('view');
-		}
 		$c = Page::getByPath('/dashboard/home');
 		$blocks = $c->getBlocks();
 		foreach($blocks as $b) {

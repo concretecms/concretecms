@@ -1,3 +1,18 @@
+Version 2.0.6.1 (2012-11-20)
+	Fixed security issue with google spellchecker.
+Version 2.0.6 (2011-09-29)
+	Fixed incorrect position of suggestion menu.
+	Fixed handling of mispelled words with no suggestions in PSpellShell engine.
+	Fixed PSpellShell command on Windows.
+	Fixed bug where Javascript error is produced when enchant_dict_suggest() returns unexpected result.
+Version 2.0.5 (2011-03-24)
+	Merged with the latest TinyMCE spellchecker version.
+Version 2.0.4 (2010-12-20)
+	Fixed issue with the JSON class not having the correct number of parameters to ord calls.
+Version 2.0.3 (2010-04-19)
+	Added standalone support. Will use native spellchecker for supported browsers.
+	Added @package phpdoc comments. Patch contributed by Jacob Santos.
+	Fixed some PHP missing function issue.
 Version 2.0.2 (2008-04-30)
 	Added new EnchantSpell engine class contributed by Michel Weimerskirch.
 	Added new general.remote_rpc_url option, enables you to proxy requests to another server.

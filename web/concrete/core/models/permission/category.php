@@ -2,44 +2,34 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 class Concrete5_Model_PermissionKeyCategory extends Object {
 
+	protected static $categories;
+
 	public static function getByID($pkCategoryID) {
-		$categories = Cache::get('permission_key_categories', false);
-		if (is_array($categories) && $categories[$pkCategoryID] instanceof PermissionKeyCategory) {
-			return $categories[$pkCategoryID];
+		if (!self::$categories) {
+			self::populateCategories();
 		}
-		
+
+		return self::$categories[$pkCategoryID];
+	}
+
+	protected function populateCategories() {
 		$db = Loader::db();
-		$row = $db->GetRow('select pkCategoryID, pkCategoryHandle, pkgID from PermissionKeyCategories where pkCategoryID = ?', array($pkCategoryID));
-		if (isset($row['pkCategoryID'])) {
+		self::$categories = array();
+		$r = $db->Execute('select pkCategoryID, pkCategoryHandle, pkgID from PermissionKeyCategories');
+		while ($row = $r->FetchRow()) {
 			$pkc = new PermissionKeyCategory();
 			$pkc->setPropertiesFromArray($row);
-			self::cache($categories, $pkc);
-			return $pkc;
+			self::$categories[$pkc->getPermissionKeyCategoryID()] = $pkc;
+			self::$categories[$pkc->getPermissionKeyCategoryHandle()] = $pkc;
 		}
-	}
-	
-	protected static function cache($categories, PermissionKeyCategory $pkc) {
-		if (!is_array($categories)) {
-			$categories = array();
-		}
-		$categories[$pkc->getPermissionKeyCategoryID()] = $pkc;
-		$categories[$pkc->getPermissionKeyCategoryHandle()] = $pkc;
-		Cache::set('permission_key_categories', false, $categories);
 	}
 	
 	public static function getByHandle($pkCategoryHandle) {
-		$categories = Cache::get('permission_key_categories', false);
-		if (is_array($categories) && $categories[$pkCategoryHandle] instanceof PermissionKeyCategory) {
-			return $categories[$pkCategoryHandle];
+		if (!self::$categories) {
+			self::populateCategories();
 		}
-		$db = Loader::db();
-		$row = $db->GetRow('select pkCategoryID, pkCategoryHandle, pkgID from PermissionKeyCategories where pkCategoryHandle = ?', array($pkCategoryHandle));
-		if (isset($row['pkCategoryID'])) {
-			$pkc = new PermissionKeyCategory();
-			$pkc->setPropertiesFromArray($row);
-			self::cache($categories, $pkc);
-			return $pkc;
-		}
+
+		return self::$categories[$pkCategoryHandle];
 	}
 	
 	public function handleExists($pkHandle) {
@@ -105,7 +95,6 @@ class Concrete5_Model_PermissionKeyCategory extends Object {
 	public function delete() {
 		$db = Loader::db();
 		$db->Execute('delete from PermissionKeyCategories where pkCategoryID = ?', array($this->pkCategoryID));
-		Cache::delete('permission_key_categories', false);
 	}
 
 	public function associateAccessEntityType(PermissionAccessEntityType $pt) {
@@ -135,8 +124,8 @@ class Concrete5_Model_PermissionKeyCategory extends Object {
 		}
 		$db->Execute('insert into PermissionKeyCategories (pkCategoryHandle, pkgID) values (?, ?)', array($pkCategoryHandle, $pkgID));
 		$id = $db->Insert_ID();
-		Cache::delete('permission_key_categories', false);
 		
+		self::$categories = array();
 		return PermissionKeyCategory::getByID($id);
 	}
 	

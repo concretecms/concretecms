@@ -203,6 +203,7 @@
 				$f_id = $f_id->getFileID();
 			}			
 			$file_set_file = FileSetFile::createAndGetFile($f_id,$this->fsID);
+			Events::fire('on_file_added_to_set', $f_id, $this->getFileSetID());
 			return $file_set_file;
 		}
 		
@@ -221,6 +222,7 @@
 			$db->Execute('DELETE FROM FileSetFiles 
 			WHERE fID = ? 
 			AND   fsID = ?', array($f_id, $this->getFileSetID()));
+			Events::fire('on_file_removed_from_set', $f_id, $this->getFileSetID());
 		}
 
 		/**
@@ -288,7 +290,7 @@
 			}
 			
 			foreach($permissions as $pkHandle) { 
-				$pk = PagePermissionKey::getByHandle($pkHandle);
+				$pk = PermissionKey::getByHandle($pkHandle);
 				$pk->setPermissionObject($this);
 				$pa = $pk->getPermissionAccessObject();
 				if (!is_object($pa)) {

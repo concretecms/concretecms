@@ -22,7 +22,7 @@ if (isset($_REQUEST['fID']) && is_array($_REQUEST['fID'])) {
 	$files = '';
 	$filenames = array();
 	foreach($_REQUEST['fID'] as $fID) {
-		$f = File::getByID($fID);
+		$f = File::getByID(intval($fID));
 		$fp = new Permissions($f);
 		if ($fp->canViewFile()) {
 			if (!in_array(basename($f->getPath()), $filenames)) {
@@ -35,9 +35,9 @@ if (isset($_REQUEST['fID']) && is_array($_REQUEST['fID'])) {
 	exec(DIR_FILES_BIN_ZIP . ' -j \'' . addslashes($filename) . '\' ' . $files);
 	$ci->forceDownload($filename);	
 
-} else {
+} else if($_REQUEST['fID']) {
 	
-	$f = File::getByID($_REQUEST['fID']);
+	$f = File::getByID(intval($_REQUEST['fID']));
 	$fp = new Permissions($f);
 	if ($fp->canViewFile()) {
 		if (isset($_REQUEST['fvID'])) {

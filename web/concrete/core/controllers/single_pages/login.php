@@ -7,15 +7,20 @@ class Concrete5_Controller_Login extends Controller {
 	public $helpers = array('form');
 	private $openIDReturnTo;
 	protected $locales = array();
+	protected $supportsPageCache = true;
 	
 	public function on_start() {
 		$this->error = Loader::helper('validation/error');
-		if (USER_REGISTRATION_WITH_EMAIL_ADDRESS == true) {
+		if (USER_REGISTRATION_WITH_EMAIL_ADDRESS) {
 			$this->set('uNameLabel', t('Email Address'));
 		} else {
 			$this->set('uNameLabel', t('Username'));
 		}
-		
+
+		if(!$_COOKIE[SESSION]) {
+			throw new Exception(t('Your browser\'s cookie functionality is turned off. Please turn it on.'));
+		}
+
 		$txt = Loader::helper('text');
 		if (strlen($_GET['uName'])) { // pre-populate the username if supplied, if its an email address with special characters the email needs to be urlencoded first,
 		   $this->set("uName",trim($txt->email($_GET['uName'])));
@@ -268,7 +273,11 @@ class Concrete5_Controller_Login extends Controller {
 			
 			$mh = Loader::helper('mail');
 			//$mh->addParameter('uPassword', $oUser->resetUserPassword());
-			$mh->addParameter('uName', $oUser->getUserName());			
+			if (USER_REGISTRATION_WITH_EMAIL_ADDRESS) {
+				$mh->addParameter('uName', $oUser->getUserEmail());
+			} else {
+				$mh->addParameter('uName', $oUser->getUserName());			
+			}
 			$mh->to($oUser->getUserEmail());
 			
 			//generate hash that'll be used to authenticate user, allowing them to change their password

@@ -120,7 +120,6 @@ if ($_POST['task'] == 'update_extended_attribute' && $fp->canEditFileProperties(
 		$fv=$f->getVersionToModify();
 		$ak->saveAttributeForm($fv);
 	}
-	$fv->populateAttributes();
 	$val = $fv->getAttributeValueObject($ak);
 	print $val->getValue('display');
 	
@@ -138,7 +137,6 @@ if ($_POST['task'] == 'clear_extended_attribute' && $fp->canEditFileProperties()
 		$fv=$f->getVersionToModify();
 		$fv->clearAttribute($ak);
 	}
-	$fv->populateAttributes();
 	$val = $fv->getAttributeValueObject($ak);
 
 	print '<div class="ccm-attribute-field-none">' . t('None') . '</div>';
