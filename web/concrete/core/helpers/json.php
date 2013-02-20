@@ -22,14 +22,15 @@ class Concrete5_Helper_Json {
 	/** 
 	 * Decodes a JSON string into a php variable
 	 * @param string $string
+	 * @param bool $assoc [default: false] When true, returned objects will be converted into associative arrays, when false they'll be converted into stdClass instances. 
 	 * @return mixed
 	 */
-	public function decode($string) {
+	public function decode($string, $assoc = false) {
 		if (function_exists('json_decode')) {
-			return json_decode($string);
+			return json_decode($string, $assoc);
 		} else {
 			Loader::library('3rdparty/JSON/JSON');
-			$sjs = new Services_JSON();
+			$sjs = new Services_JSON($assoc ? SERVICES_JSON_LOOSE_TYPE : 0);
 			return $sjs->decode($string);
 		}
 	}
