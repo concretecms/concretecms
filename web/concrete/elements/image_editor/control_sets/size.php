@@ -1,1 +1,1 @@
-stuff
+<label>Lock Ratio: <input type='checkbox' checked/></label>

@@ -161,5 +161,5 @@ $(getFile 'filters.js')"
     echo "$INP" > image_editor.tmp.js
 
     uglifyjs --no-seqs -o ./web/concrete/js/image_editor.min.js ./image_editor.tmp.js
-    rm image_editor.tmp.js
+    #rm image_editor.tmp.js
 fi

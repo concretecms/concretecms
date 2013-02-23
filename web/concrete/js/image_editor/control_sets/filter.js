@@ -1,4 +1,5 @@
 var me = $(this);
+me.parent().parent().hide();
 
 im.bind('ChangeActiveAction',function(e){
   if (e.eventData != im.namespace) {
@@ -6,6 +7,13 @@ im.bind('ChangeActiveAction',function(e){
   } else {
   	// Me
   }
+});
+im.bind('ChangeActiveElement',function(e){
+	if (im.activeElement.elementType != 'image') {
+		me.parent().parent().slideUp();
+		return;
+	}
+	me.parent().parent().slideDown();
 });
 
 

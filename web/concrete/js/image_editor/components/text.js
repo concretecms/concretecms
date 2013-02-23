@@ -36,6 +36,16 @@ im.bind('changeActiveComponent',function(e){
 			this.parent.draw();
 		};
 
+		im.text.oldDrawFunc = im.text.getDrawFunc();
+		var dragger = im.textDragger;
+		im.text.setDrawFunc(function(canvas) {
+			dragger.setWidth(this.getWidth());
+			dragger.setHeight(this.getHeight());
+			dragger.setX(this.getX());
+			dragger.setY(this.getY());
+			this.oldDrawFunc(canvas);
+		});
+
 		im.textGroup.getWidth = function() {
 			return this.textElement.getWidth();
 		};
@@ -45,6 +55,7 @@ im.bind('changeActiveComponent',function(e){
 
 		im.text.setFontSize(15);
 		im.addElement(im.textGroup,'text');
+		im.textGroup.elementType = 'text';
 		im.setActiveElement(im.textGroup);
 	} else {
 		im.selected = false;
@@ -57,11 +68,7 @@ im.textArea = $('textarea',me);
 im.textArea.keyup(function(){im.fire(changeTextEvent)}); // Use our api.
 
 im.bind(changeTextEvent,function(e){
-	console.log('textchanged',im.textArea.val());
+	if (!im.selected) return;
 	im.text.setText(im.textArea.val());
-	im.textDragger.setWidth(im.text.getWidth());
-	im.textDragger.setHeight(im.text.getHeight());
-	im.textDragger.setX(im.text.getX());
-	im.textDragger.setY(im.text.getY());
 	im.text.parent.draw();
 });

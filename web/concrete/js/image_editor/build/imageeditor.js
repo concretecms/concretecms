@@ -19,6 +19,10 @@ var ImageEditor = function (settings) {
   im.editorContext = $(im.stage.getContainer()).parent();
   im.domContext    = im.editorContext.parent();
 
+  im.showLoader = $.fn.dialog.showLoader;
+  im.hideLoader = $.fn.dialog.hideLoader;
+  im.stage.im = im;
+  im.stage.elementType = 'stage';
   im.crosshair.src = '/concrete/images/image_editor/crosshair.png';
 
   im.center = {
