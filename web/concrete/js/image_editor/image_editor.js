@@ -584,8 +584,9 @@ im.buildBackground = function() {
   // Todo, make this more efficient, as this is not a sound algorithm.
   // This should only draw in the visible space.
   if (im.scale < .25) return;
-  var to = Math.max(dimensions.visibleWidth * 2 / im.scale);
-  for (x = dimensions.min.x; x <= to; x += 20) {
+  var to = dimensions.max.x + dimensions.visibleHeight + dimensions.visibleWidth;
+  if (im.scale > 1) to *= im.scale;
+  for (x = -(dimensions.max.x + dimensions.visibleHeight); x <= to; x += 20) {
     im.background.add(new Kinetic.Line({
       points: [getCoords(-to, x), getCoords(to, x)],
       stroke: '#e3e3e3'
