@@ -17,19 +17,19 @@ im.save = function() {
 
   im.stage.setX(-startx);
   im.stage.setY(-starty);
-  im.stage.setWidth(im.saveWidth);
-  im.stage.setHeight(im.saveHeight);
+  im.stage.setWidth(Math.max(im.stage.getWidth(),im.saveWidth));
+  im.stage.setHeight(Math.max(im.stage.getHeight(),im.saveHeight));
   im.stage.draw();
 
 
-  $.fn.dialog.showLoader();
+  im.showLoader('Saving..');
   im.stage.toDataURL({
     width:im.saveWidth,
     height:im.saveHeight,
     callback:function(data){
       var img = $('<img/>').attr('src',data);
       $.fn.dialog.open({element:img});
-      $.fn.dialog.hideLoader();
+      im.hideLoader();
       im.savers.show();
       im.background.show();
       im.stage.setX(oldx);
@@ -39,7 +39,6 @@ im.save = function() {
       im.stage.setScale(im.scale);
       im.stage.draw();
       $(im.stage.getContainer()).show();
-
     }
   })
 };

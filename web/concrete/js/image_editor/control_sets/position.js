@@ -1,15 +1,19 @@
 // Handle selection
 im.bind('changeActiveElement',function(e){
 	im.activeElement.setDraggable(true);
-	console.log('checking if bound');
+	if (im.activeElement.elementType == 'stage') {
+		me.parent().parent().slideUp();
+		return;
+	}
+	me.parent().parent().slideDown();
 	if (im.activeElement.isBound !== true) {
-		console.log('it isn\'t');
 		im.activeElement.on('dragmove',function(e){im.trigger('activeElementDragMove',e)});
 		im.activeElement.isBound = true;
 	}
 	updateSliders();
 });
 im.bind('beforeChangeActiveElement',function(e){
+	if (im.activeElement.elementType == 'stage') return;
 	im.activeElement.setDraggable(false);
 });
 im.bind('ChangeActiveAction',function(e){
@@ -20,6 +24,7 @@ im.bind('ChangeActiveAction',function(e){
 	}
 });
 var me = $(this);
+me.parent().parent().slideUp();
 
 var sliderx = $('div.xslider',me).slider({
 	step: 1,
@@ -125,5 +130,9 @@ im.bind('activeElementMove',function(e){
 	slidery.slider('value',y);
 	$('input.x',me).val(x);
 	$('input.y',me).val(y);
-	im.activeElement.parent.draw();
+	if (im.activeElement.parent) {
+		im.activeElement.parent.draw();
+	} else if (typeof im.activeElement.draw == 'function') {
+		im.activeElement.draw();
+	}
 });

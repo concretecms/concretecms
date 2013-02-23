@@ -1,6 +1,9 @@
 ///////////////////////////////////////////////////////////////////////////////
 //                            kinetic.prototype.js                           //
 ///////////////////////////////////////////////////////////////////////////////
+/////////////////////////////
+//      Kinetic.Stage      //
+/////////////////////////////
 Kinetic.Stage.prototype.createCopy = function () {
   var copy = [], children = this.getChildren(), i;
   for (i = 0; i < children.length; i++) {
@@ -14,6 +17,34 @@ Kinetic.Stage.prototype.getScaledWidth = function() {
 Kinetic.Stage.prototype.getScaledHeight = function() {
   return Math.ceil(this.getHeight() / this.getScale().y);
 };
+Kinetic.Stage.prototype.getSaveWidth = function() {
+  return this.im.saveWidth;
+};
+Kinetic.Stage.prototype.getSaveHeight = function() {
+  return this.im.saveHeight;
+};
+Kinetic.Stage.prototype.getTotalDimensions = function() {
+  var minY = (this.getSaveHeight() / 2 - this.im.center.y) * this.getScale().y;
+  var maxY = minY + this.getHeight() - (this.getSaveHeight() * this.getScale().y);
+
+  var minX = (this.getSaveWidth() / 2 - this.im.center.x) * this.getScale().x;
+  var maxX = minX + this.getWidth() - (this.getSaveWidth() * this.getScale().x);
+
+  return {
+    min: {
+      x: minX,
+      y: minY
+    },
+    max: {
+      x: maxX,
+      y: maxY
+    },
+    width:this.getScaledWidth(),
+    height:this.getScaledHeight(),
+    visibleWidth:Math.max(this.getSaveWidth(),this.getScaledWidth() * 2 - this.getSaveWidth()),
+    visibleHeight:Math.max(this.getSaveHeight(),this.getScaledHeight() * 2 - this.getSaveHeight())
+  };
+};
 Kinetic.Stage.prototype.loadCopy = function (copy) {
   var i;
   this.removeChildren();
@@ -22,6 +53,10 @@ Kinetic.Stage.prototype.loadCopy = function (copy) {
   }
   this.draw();
 };
+
+/////////////////////////////
+//      Kinetic.Image      //
+/////////////////////////////
 Kinetic.Image.prototype.getImageData = function() {
   var canvas = new Kinetic.Canvas(this.attrs.image.width, this.attrs.image.height);
   var context = canvas.getContext();
@@ -34,6 +69,9 @@ Kinetic.Image.prototype.getImageData = function() {
   }
 };
 
+/////////////////////////////
+//      Kinetic.Layer      //
+/////////////////////////////
 Kinetic.Layer.prototype._cacheddraw = (new Kinetic.Layer).draw;
 Kinetic.Layer.prototype.draw = function() {
   if (typeof im === 'undefined' || typeof im.trigger === 'undefined') {
@@ -45,6 +83,9 @@ Kinetic.Layer.prototype.draw = function() {
   return draw;
 };
 
+/////////////////////////////
+//       Kinetic.Text      //
+/////////////////////////////
 Kinetic.Text.prototype.rasterize = function(e) {
   var layer = this.parent;
   var me = this;
@@ -83,6 +124,10 @@ var ImageEditor = function (settings) {
   im.editorContext = $(im.stage.getContainer()).parent();
   im.domContext    = im.editorContext.parent();
 
+  im.showLoader = $.fn.dialog.showLoader;
+  im.hideLoader = $.fn.dialog.hideLoader;
+  im.stage.im = im;
+  im.stage.elementType = 'stage';
   im.crosshair.src = '/concrete/images/image_editor/crosshair.png';
 
   im.center = {
@@ -175,29 +220,44 @@ im.fireEvent = im.fire = im.trigger = function (type, data, elem) {
 //                                elements.js                                //
 ///////////////////////////////////////////////////////////////////////////////
 im.addElement = function(object,type) {
-	var layer = new Kinetic.Layer();
-	layer.add(object);
-	object.setX(im.center.x - Math.round(object.getWidth() / 2));
-	object.setY(im.center.y - Math.round(object.getHeight() / 2));
+  var layer = new Kinetic.Layer();
+  layer.add(object);
+  object.setX(im.center.x - Math.round(object.getWidth() / 2));
+  object.setY(im.center.y - Math.round(object.getHeight() / 2));
 
-	object.elementType = type;
+  object.elementType = type;
 
-	object.on('click',function(){
-		log('clicked Element',this);
-		im.fire('ClickedElement',this);
-	});
-	im.stage.add(layer);
-	im.fire('newObject',{object:object,type:type});
-	im.stage.draw();
+  object.on('click',function(){
+    im.fire('ClickedElement',this);
+  });
+  im.stage.add(layer);
+  im.fire('newObject',{object:object,type:type});
+  im.stage.draw();
 };
 im.setActiveElement = function(element) {
-	im.trigger('beforeChangeActiveElement',im.activeElement);
-	im.alterCore('activeElement',element);
-	im.trigger('changeActiveElement',element);
-	im.stage.draw();
+  if (im.activeElement == element) return;
+
+  if (element === im.stage) {
+    im.trigger('ChangeActiveAction','ControlSet_Position');
+  }
+  im.trigger('beforeChangeActiveElement',im.activeElement);
+  im.alterCore('activeElement',element);
+  im.trigger('changeActiveElement',element);
+  im.stage.draw();
 };
 im.bind('ClickedElement',function(e) {
+  if (e.eventData.getWidth() > im.stage.getScaledWidth() || e.eventData.getHeight() > im.stage.getScaledHeight()) {
+    im.setActiveElement(im.stage);
+    return;
+  }
+
   im.setActiveElement(e.eventData);
+});
+
+im.bind('stageChanged',function(e){
+  if (im.activeElement.getWidth() > im.stage.getScaledWidth() || im.activeElement .getHeight() > im.stage.getScaledHeight()) {
+    im.setActiveElement(im.stage);
+  }
 });
 
 
@@ -220,33 +280,54 @@ zoom.out.click(function(e){im.fire('zoomOutClick',e)});
 
 var scale = getElem('<span></span>').addClass('scale').text('100%');
 im.on('stageChanged',function(e){
-	scale.text(Math.round(im.scale * 10000)/100 + "%");
+  scale.text(Math.round(im.scale * 10000)/100 + "%");
 });
 scale.appendTo(controlBar);
 
 var minScale = 0, maxScale = 3000, stepScale = 1/4;
 
 im.on('zoomInClick',function(e){
-	im.scale += (im.scale * stepScale);
-	if (im.scale > maxScale) im.scale = maxScale;
-	if (im.scale > stepScale && (Math.abs(im.scale - Math.round(im.scale)) % 1) < stepScale / 2) im.scale = Math.round(im.scale);
-	im.stage.setScale(im.scale);
-	im.stage.setX(Math.round((im.stage.getWidth() - (im.stage.getWidth() * im.scale))/2));
-	im.stage.setY(Math.round((im.stage.getHeight() - (im.stage.getHeight() * im.scale))/2));
-	im.fire('stageChanged');
-	im.stage.draw();
+
+  var adjustment = (im.scale * stepScale);
+  im.scale += adjustment;
+
+  if (im.scale > stepScale && (Math.abs(im.scale - Math.round(im.scale)) % 1) < stepScale / 2) im.scale = Math.round(im.scale);
+  im.scale = Math.round(im.scale * 1000) / 1000;
+  im.alterCore('scale',im.scale);
+
+  im.stage.setScale(im.scale);
+
+  im.stage.setX(im.stage.getX() + (-.5 * adjustment * im.stage.getWidth()));
+  im.stage.setY(im.stage.getY() + (-.5 * adjustment * im.stage.getHeight()));
+  
+  var pos = (im.stage.getDragBoundFunc())({x:im.stage.getX(),y:im.stage.getY()});
+  im.stage.setX(pos.x);
+  im.stage.setY(pos.y);
+
+
+  im.fire('stageChanged');
+  im.stage.draw();
 });
 im.on('zoomOutClick',function(e){
-	im.scale -= (im.scale * stepScale);
-	if (im.scale < minScale) im.scale = minScale;
-	if (im.scale > stepScale && (Math.abs(im.scale - Math.round(im.scale)) % 1) < stepScale / 2) im.scale = Math.round(im.scale);
-	im.stage.setScale(im.scale);
-	im.centerOffset.x = Math.round((im.stage.getWidth() - (im.stage.getWidth() * im.scale))/2);
-	im.centerOffset.y = Math.round((im.stage.getHeight() - (im.stage.getHeight() * im.scale))/2);
-	im.stage.setX(Math.round((im.stage.getWidth() - (im.stage.getWidth() * im.scale))/2));
-	im.stage.setY(Math.round((im.stage.getHeight() - (im.stage.getHeight() * im.scale))/2));
-	im.fire('stageChanged');
-	im.stage.draw();
+
+  var adjustment = (im.scale * stepScale);
+  im.scale -= adjustment;
+
+  if (im.scale > stepScale && (Math.abs(im.scale - Math.round(im.scale)) % 1) < stepScale / 2) im.scale = Math.round(im.scale);
+  im.scale = Math.round(im.scale * 1000) / 1000;
+  im.alterCore('scale',im.scale);
+
+  im.stage.setScale(im.scale);
+
+  im.stage.setX(im.stage.getX() - (-.5 * adjustment * im.stage.getWidth()));
+  im.stage.setY(im.stage.getY() - (-.5 * adjustment * im.stage.getHeight()));
+  
+  var pos = (im.stage.getDragBoundFunc())({x:im.stage.getX(),y:im.stage.getY()});
+  im.stage.setX(pos.x);
+  im.stage.setY(pos.y);
+
+  im.fire('stageChanged');
+  im.stage.draw();
 });
 
 // Save
@@ -268,53 +349,53 @@ saveButton.click(function(){im.save()});
 
 
 if (im.strictSize) {
-	saveSize.both.attr('disabled','true');
+  saveSize.both.attr('disabled','true');
 } else {
-	saveSize.both.keydown(function(e){
-		log(e.keyCode);
-		if (e.keyCode == 8 || e.keyCode == 37 || e.keyCode == 39) return true;
+  saveSize.both.keydown(function(e){
+    log(e.keyCode);
+    if (e.keyCode == 8 || e.keyCode == 37 || e.keyCode == 39) return true;
 
-		if (e.keyCode == 38) {
-			var newval = parseInt($(this).val()) + 1;
-			$(this).val(Math.min(5000,newval)).change();
-		}
-		if (e.keyCode == 40) {
-			var newval = parseInt($(this).val()) - 1;
-			$(this).val(Math.max(0,newval)).change();
-		}
-		var key = String.fromCharCode(e.keyCode);
-		if (!key.match(/\d/)) {
-			return false;
-		}
-		var amnt = "" + $(this).val() + key;
-		if (amnt > 5000) {
-			amnt = 5000;
-		}
-		$(this).val(amnt).change();
+    if (e.keyCode == 38) {
+      var newval = parseInt($(this).val()) + 1;
+      $(this).val(Math.min(5000,newval)).change();
+    }
+    if (e.keyCode == 40) {
+      var newval = parseInt($(this).val()) - 1;
+      $(this).val(Math.max(0,newval)).change();
+    }
+    var key = String.fromCharCode(e.keyCode);
+    if (!key.match(/\d/)) {
+      return false;
+    }
+    var amnt = "" + $(this).val() + key;
+    if (amnt > 5000) {
+      amnt = 5000;
+    }
+    $(this).val(amnt).change();
 
-		return false;
-	}).keyup(function(e){
-		if (e.keyCode == 8) im.fire('editedSize');
-	}).change(function(){
-		im.fire('editedSize');
-	});
+    return false;
+  }).keyup(function(e){
+    if (e.keyCode == 8) im.fire('editedSize');
+  }).change(function(){
+    im.fire('editedSize');
+  });
 }
 
 
 im.bind('editedSize',function(){
-	im.saveWidth = parseInt(saveSize.width.val());
-	im.saveHeight = parseInt(saveSize.height.val());
+  im.saveWidth = parseInt(saveSize.width.val());
+  im.saveHeight = parseInt(saveSize.height.val());
 
-	if (isNaN(im.saveWidth)) im.saveWidth = 0;
-	if (isNaN(im.saveHeight)) im.saveHeight = 0;
+  if (isNaN(im.saveWidth)) im.saveWidth = 0;
+  if (isNaN(im.saveHeight)) im.saveHeight = 0;
 
-	im.trigger('saveSizeChange');
-	im.adjustSavers();
+  im.trigger('saveSizeChange');
+  im.buildBackground();
 });
 
 im.bind('saveSizeChange',function(){
-	saveSize.width.val(im.saveWidth);
-	saveSize.height.val(im.saveHeight);
+  saveSize.width.val(im.saveWidth);
+  saveSize.height.val(im.saveHeight);
 });
 
 
@@ -340,19 +421,19 @@ im.save = function() {
 
   im.stage.setX(-startx);
   im.stage.setY(-starty);
-  im.stage.setWidth(im.saveWidth);
-  im.stage.setHeight(im.saveHeight);
+  im.stage.setWidth(Math.max(im.stage.getWidth(),im.saveWidth));
+  im.stage.setHeight(Math.max(im.stage.getHeight(),im.saveHeight));
   im.stage.draw();
 
 
-  $.fn.dialog.showLoader();
+  im.showLoader('Saving..');
   im.stage.toDataURL({
     width:im.saveWidth,
     height:im.saveHeight,
     callback:function(data){
       var img = $('<img/>').attr('src',data);
       $.fn.dialog.open({element:img});
-      $.fn.dialog.hideLoader();
+      im.hideLoader();
       im.savers.show();
       im.background.show();
       im.stage.setX(oldx);
@@ -362,7 +443,6 @@ im.save = function() {
       im.stage.setScale(im.scale);
       im.stage.draw();
       $(im.stage.getContainer()).show();
-
     }
   })
 };
@@ -383,7 +463,6 @@ im.alterCore = function(property,value) {
   }
   im[property] = value;
   for (i in im.controlSets){
-    log('updating '+property+' on '+i);
     im.controlSets[i].im.extend(property,value);
   }
   for (i in im.filters){
@@ -474,7 +553,6 @@ im.stage.add(im.background);
 im.buildBackground = function() {
   var z = im.background.getZIndex();
   im.background.destroy();
-  if (im.scale < .25) return;
   im.background = new Kinetic.Layer();
   im.stage.add(im.background);
   im.background.setZIndex(z);
@@ -484,8 +562,30 @@ im.buildBackground = function() {
     return {x: x, y: -x + offset};
   };
 
-  var to = Math.max(im.stage.getWidth() * 2, im.stage.getHeight() * 2, im.stage.getScaledWidth() * 2, im.stage.getScaledHeight() * 2);
-  for (x = -to; x <= to; x += 20) {
+  var dimensions = im.stage.getTotalDimensions();
+  im.totalBackground = new Kinetic.Rect({
+    x:dimensions.min.x - dimensions.width,
+    y:dimensions.min.y - dimensions.height,
+    width:to,
+    height:to,
+    fill:'#ccc'
+  });
+
+  im.saveArea = new Kinetic.Rect({
+    width:im.saveWidth,
+    height:im.saveHeight,
+    x:Math.floor(im.center.x - (im.saveWidth / 2)),
+    y:Math.floor(im.center.y - (im.saveHeight / 2)),
+    fill:'white'
+  })
+
+  im.background.add(im.totalBackground);
+  im.background.add(im.saveArea);
+  // Todo, make this more efficient, as this is not a sound algorithm.
+  // This should only draw in the visible space.
+  if (im.scale < .25) return;
+  var to = Math.max(dimensions.visibleWidth * 2 / im.scale);
+  for (x = dimensions.min.x; x <= to; x += 20) {
     im.background.add(new Kinetic.Line({
       points: [getCoords(-to, x), getCoords(to, x)],
       stroke: '#e3e3e3'
@@ -501,148 +601,28 @@ im.on('stageChanged',im.buildBackground);
 ///////////////////////////////////////////////////////////////////////////////
 //                               imagestage.js                               //
 ///////////////////////////////////////////////////////////////////////////////
-var me = $(this);
 
-
-im.stage.getTotalDimensions = function() {
-  var minY = Math.round((im.saveHeight / 2 - im.center.y) * im.scale);
-  var maxY = minY + im.stage.getHeight() - (im.saveHeight * im.scale);
-
-  var minX = Math.round((im.saveWidth / 2 - im.center.x) * im.scale);
-  var maxX = minX + im.stage.getWidth() - (im.saveWidth * im.scale);
-
-  return {
-    min: {
-      x: minX,
-      y: minY
-    },
-    max: {
-      x: maxX,
-      y: maxY
-    },
-    width:maxX-minX,
-    height:maxY-minY,
-    visibleWidth:maxX-minX + im.stage.getScaledWidth(),
-    visibleHeight:maxY-minY + im.stage.getScaledHeight()
-  };
-};
-
-
-im.savers = new Kinetic.Layer();
-
-var savercolor = "rgba(0,0,0,.7)",
-saverTopLeft = new Kinetic.Rect({
-  x:0,
-  y:0,
-  fill:savercolor,
-  width:Math.floor(im.stage.getScaledWidth()/2),
-  height:Math.floor(im.stage.getScaledHeight()/2)
-}),
-saverBottomLeft = new Kinetic.Rect({
-  x:0,
-  y:Math.floor(im.stage.getScaledHeight()/2),
-  fill:savercolor,
-  width:Math.floor(im.stage.getScaledWidth()/2),
-  height:Math.ceil(im.stage.getScaledHeight()/2)
-}),
-saverTopRight = new Kinetic.Rect({
-  x:Math.floor(im.stage.getScaledWidth()/2),
-  y:0,
-  fill:savercolor,
-  width:Math.ceil(im.stage.getScaledWidth()/2),
-  height:Math.floor(im.stage.getScaledHeight()/2)
-}),
-saverBottomRight = new Kinetic.Rect({
-  x:Math.floor(im.stage.getScaledWidth()/2),
-  y:Math.floor(im.stage.getScaledHeight()/2),
-  fill:savercolor,
-  width:Math.ceil(im.stage.getScaledWidth()/2),
-  height:Math.ceil(im.stage.getScaledHeight()/2)
-});
-
-saverTopLeft.position = 'topleft';
-saverTopRight.position = 'topright';
-saverBottomLeft.position = 'bottomleft';
-saverBottomRight.position = 'bottomright';
-
-im.adjustSavers = function() {
-  log("Adjusting");
-
-  var dimensions = im.stage.getTotalDimensions();
-  var startx = Math.round(im.center.x - (im.saveWidth / 2)),
-      posx = Math.round(startx + im.saveWidth),
-      starty = Math.round(im.center.y - (im.saveHeight / 2)),
-      posy = Math.round(starty + im.saveHeight),
-      width = dimensions.visibleWidth,
-      height = dimensions.visibleHeight,
-      stagex = -im.stage.getTotalDimensions().max.x - im.stage.getScaledWidth(),
-      stagey = -im.stage.getTotalDimensions().max.y - im.stage.getScaledHeight();
-
-
-  if (stagex > startx) stagex = startx;
-  if (stagey > starty) stagey = starty;
-
-  if (posy < starty) {
-    var inter = posy;
-    posy = starty;
-    starty = inter;
-  }
-  if (posx < startx) {
-    var inter = posx;
-    posx = startx;
-    startx = inter;
-  }
-
-  saverTopLeft.setX(stagex);
-  saverTopLeft.setY(stagey);
-  saverTopLeft.setWidth(startx - stagex);
-  saverTopLeft.setHeight(posy - stagey);
-
-  saverTopRight.setX(startx);
-  saverTopRight.setY(stagey);
-  saverTopRight.setWidth(width - startx);
-  saverTopRight.setHeight(starty - stagey);
-
-  saverBottomLeft.setX(stagex);
-  saverBottomLeft.setY(posy);
-  saverBottomLeft.setWidth(posx - stagex);
-  saverBottomLeft.setHeight(height - posy);
-
-  saverBottomRight.setX(posx);
-  saverBottomRight.setY(starty);
-  saverBottomRight.setWidth(width - posx);
-  saverBottomRight.setHeight(height - starty);
-
-  im.fire('saveSizeChange');
-
-  im.savers.draw();
-};
-
-im.savers.add(saverTopLeft);
-im.savers.add(saverTopRight);
-im.savers.add(saverBottomLeft);
-im.savers.add(saverBottomRight);
-
-im.stage.add(im.savers);
-
-im.adjustSavers();
-
-
-im.bind('stageChanged',im.adjustSavers);
 
 im.stage.setDragBoundFunc(function(ret) {
 
+
   var dim = im.stage.getTotalDimensions();
 
-  var maxx = Math.max(dim.max.x,dim.min.x),
-      minx = Math.min(dim.max.x,dim.min.x),
-      maxy = Math.max(dim.max.y,dim.min.y),
-      miny = Math.min(dim.max.y,dim.min.y);
+  var maxx = Math.max(dim.max.x,dim.min.x)-1,
+      minx = Math.min(dim.max.x,dim.min.x)+1,
+      maxy = Math.max(dim.max.y,dim.min.y)-1,
+      miny = Math.min(dim.max.y,dim.min.y)+1;
+
+  ret.x = Math.floor(ret.x);
+  ret.y = Math.floor(ret.y);
 
   if (ret.x > maxx) ret.x = maxx;
   if (ret.x < minx) ret.x = minx;
   if (ret.y > maxy) ret.y = maxy;
   if (ret.y < miny) ret.y = miny;
+
+  ret.x = Math.floor(ret.x);
+  ret.y = Math.floor(ret.y);
 
   return ret;
 });
@@ -658,7 +638,7 @@ img.onload = function () {
   if (!im.strictSize) {
     im.saveWidth = img.width;
     im.saveHeight = img.height;
-    im.adjustSavers();
+    im.buildBackground();
   }
   var center = {
     x: im.center.x - (img.width / 2),
@@ -680,8 +660,9 @@ img.onload = function () {
 //                                 actions.js                                //
 ///////////////////////////////////////////////////////////////////////////////
 im.bind('imageload',function(){
-  var cs = settings.controlsets || {}, filters = settings.filters || {}, components = settings.components || {}, namespace, firstcs;
+  var cs = settings.controlsets || {}, filters = settings.filters || {}, namespace, firstcs;
   var running = 0;
+  log('Loading ControlSets');
   im.fire('LoadingControlSets');
   for (namespace in cs) {
     var myns = "ControlSet_" + namespace;
@@ -708,7 +689,12 @@ im.bind('imageload',function(){
       }
     });
   }
+});
+
+im.bind('ControlSetsLoaded',function(){
   im.fire('LoadingComponents');
+  var components = settings.components || {}, namespace, running = 0;
+  log('Loading Components');
   for (namespace in components) {
     var myns = "Component_" + namespace;
     $.ajax(components[namespace]['src'],{
@@ -735,9 +721,10 @@ im.bind('imageload',function(){
     });
   }
 });
-im.bind('ControlSetsLoaded',function(){ // do this when the control sets finish loading.
-  log('Loaded');
-  var filters = settings.filters || {}, components = settings.components || {}, namespace, firstf, firstc;
+
+im.bind('ComponentsLoaded',function(){ // do this when the control sets finish loading.
+  log('Loading Filters');
+  var filters = settings.filters || {}, namespace, firstf, firstc;
   im.fire('LoadingFilters');
   for (namespace in filters) {
     var myns = "Filter_" + namespace;
@@ -809,6 +796,10 @@ im.bind('ChangeNavTab',function(e) {
 //                              jquerybinding.js                             //
 ///////////////////////////////////////////////////////////////////////////////
 // End the ImageEditor object.
+
+  
+  im.setActiveElement(im.stage);
+
   window.c5_image_editor = im; // Safe keeping
   window.im = im;
   return im;

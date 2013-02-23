@@ -41,6 +41,11 @@ if ($image->getImageEditorComponentHandle() != 'image') {
 	echo "Add Image Component\n";
 	SystemImageEditorComponent::add('image','Image');
 }
+$shape = SystemImageEditorComponent::getByHandle('shape');
+if ($shape->getImageEditorComponentHandle() != 'shape') {
+	echo "Add shape Component\n";
+	SystemImageEditorComponent::add('shape','Shape');
+}
 
 // Filters
 $grayscale = SystemImageEditorFilter::getByHandle('grayscale');

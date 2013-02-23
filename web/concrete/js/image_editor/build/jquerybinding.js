@@ -1,4 +1,8 @@
 // End the ImageEditor object.
+
+  
+  im.setActiveElement(im.stage);
+
   window.c5_image_editor = im; // Safe keeping
   window.im = im;
   return im;

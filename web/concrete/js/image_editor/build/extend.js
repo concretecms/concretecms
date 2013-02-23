@@ -10,7 +10,6 @@ im.alterCore = function(property,value) {
   }
   im[property] = value;
   for (i in im.controlSets){
-    log('updating '+property+' on '+i);
     im.controlSets[i].im.extend(property,value);
   }
   for (i in im.filters){

@@ -1,3 +1,9 @@
+<div class='font'>
+	<label>Font: <input/></label>
+</div>
+<div class='value'>
+	<label>Value: <input/></label>
+</div>
 <p class='color'>
 	<label>Color: <input /></label>
 </p>

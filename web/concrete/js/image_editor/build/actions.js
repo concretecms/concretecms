@@ -1,6 +1,7 @@
 im.bind('imageload',function(){
-  var cs = settings.controlsets || {}, filters = settings.filters || {}, components = settings.components || {}, namespace, firstcs;
+  var cs = settings.controlsets || {}, filters = settings.filters || {}, namespace, firstcs;
   var running = 0;
+  log('Loading ControlSets');
   im.fire('LoadingControlSets');
   for (namespace in cs) {
     var myns = "ControlSet_" + namespace;
@@ -27,7 +28,12 @@ im.bind('imageload',function(){
       }
     });
   }
+});
+
+im.bind('ControlSetsLoaded',function(){
   im.fire('LoadingComponents');
+  var components = settings.components || {}, namespace, running = 0;
+  log('Loading Components');
   for (namespace in components) {
     var myns = "Component_" + namespace;
     $.ajax(components[namespace]['src'],{
@@ -54,9 +60,10 @@ im.bind('imageload',function(){
     });
   }
 });
-im.bind('ControlSetsLoaded',function(){ // do this when the control sets finish loading.
-  log('Loaded');
-  var filters = settings.filters || {}, components = settings.components || {}, namespace, firstf, firstc;
+
+im.bind('ComponentsLoaded',function(){ // do this when the control sets finish loading.
+  log('Loading Filters');
+  var filters = settings.filters || {}, namespace, firstf, firstc;
   im.fire('LoadingFilters');
   for (namespace in filters) {
     var myns = "Filter_" + namespace;
