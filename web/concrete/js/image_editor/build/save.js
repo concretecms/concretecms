@@ -1,5 +1,4 @@
 im.save = function() {
-  im.savers.hide();
   im.background.hide();
   im.stage.setScale(1);
 
@@ -30,7 +29,6 @@ im.save = function() {
       var img = $('<img/>').attr('src',data);
       $.fn.dialog.open({element:img});
       im.hideLoader();
-      im.savers.show();
       im.background.show();
       im.stage.setX(oldx);
       im.stage.setY(oldy);

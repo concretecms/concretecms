@@ -403,7 +403,6 @@ im.bind('saveSizeChange',function(){
 //                                  save.js                                  //
 ///////////////////////////////////////////////////////////////////////////////
 im.save = function() {
-  im.savers.hide();
   im.background.hide();
   im.stage.setScale(1);
 
@@ -434,7 +433,6 @@ im.save = function() {
       var img = $('<img/>').attr('src',data);
       $.fn.dialog.open({element:img});
       im.hideLoader();
-      im.savers.show();
       im.background.show();
       im.stage.setX(oldx);
       im.stage.setY(oldy);
@@ -563,12 +561,13 @@ im.buildBackground = function() {
   };
 
   var dimensions = im.stage.getTotalDimensions();
+  var to = dimensions.max.x + dimensions.visibleHeight + dimensions.visibleWidth;
   im.totalBackground = new Kinetic.Rect({
-    x:dimensions.max.x + dimensions.width,
-    y:dimensions.max.y + dimensions.height,
+    x:dimensions.max.x - dimensions.width,
+    y:dimensions.max.y - dimensions.height,
     width:to,
     height:to,
-    fill:'#ccc'
+    fill:'#aaa'
   });
 
   im.saveArea = new Kinetic.Rect({
@@ -640,6 +639,7 @@ img.onload = function () {
   if (!im.strictSize) {
     im.saveWidth = img.width;
     im.saveHeight = img.height;
+    im.fire('saveSizeChange');
     im.buildBackground();
   }
   var center = {

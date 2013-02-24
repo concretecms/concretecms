@@ -15,12 +15,13 @@ im.buildBackground = function() {
   };
 
   var dimensions = im.stage.getTotalDimensions();
+  var to = dimensions.max.x + dimensions.visibleHeight + dimensions.visibleWidth;
   im.totalBackground = new Kinetic.Rect({
-    x:dimensions.max.x + dimensions.width,
-    y:dimensions.max.y + dimensions.height,
+    x:dimensions.max.x - dimensions.width,
+    y:dimensions.max.y - dimensions.height,
     width:to,
     height:to,
-    fill:'#ccc'
+    fill:'#aaa'
   });
 
   im.saveArea = new Kinetic.Rect({
