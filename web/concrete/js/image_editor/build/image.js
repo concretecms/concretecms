@@ -18,5 +18,4 @@ img.onload = function () {
   im.imageData = im.image.getImageData();
   im.fire('imageload');
   im.addElement(im.image,'image');
-  im.setActiveElement(im.image);
 };

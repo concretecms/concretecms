@@ -23,4 +23,5 @@ im.stage.setDragBoundFunc(function(ret) {
 
   return ret;
 });
+im.setActiveElement(im.stage);
 im.stage.setDraggable(true);

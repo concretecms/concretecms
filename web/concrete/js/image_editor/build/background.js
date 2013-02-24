@@ -16,8 +16,8 @@ im.buildBackground = function() {
 
   var dimensions = im.stage.getTotalDimensions();
   im.totalBackground = new Kinetic.Rect({
-    x:dimensions.min.x - dimensions.width,
-    y:dimensions.min.y - dimensions.height,
+    x:dimensions.max.x + dimensions.width,
+    y:dimensions.max.y + dimensions.height,
     width:to,
     height:to,
     fill:'#ccc'
