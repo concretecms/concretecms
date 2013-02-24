@@ -4,6 +4,7 @@ img.onload = function () {
   if (!im.strictSize) {
     im.saveWidth = img.width;
     im.saveHeight = img.height;
+    im.fire('saveSizeChange');
     im.buildBackground();
   }
   var center = {
