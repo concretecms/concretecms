@@ -564,8 +564,8 @@ im.buildBackground = function() {
 
   var dimensions = im.stage.getTotalDimensions();
   im.totalBackground = new Kinetic.Rect({
-    x:dimensions.min.x - dimensions.width,
-    y:dimensions.min.y - dimensions.height,
+    x:dimensions.max.x + dimensions.width,
+    y:dimensions.max.y + dimensions.height,
     width:to,
     height:to,
     fill:'#ccc'
@@ -627,6 +627,7 @@ im.stage.setDragBoundFunc(function(ret) {
 
   return ret;
 });
+im.setActiveElement(im.stage);
 im.stage.setDraggable(true);
 
 
@@ -653,7 +654,6 @@ img.onload = function () {
   im.imageData = im.image.getImageData();
   im.fire('imageload');
   im.addElement(im.image,'image');
-  im.setActiveElement(im.image);
 };
 
 
