@@ -21,6 +21,7 @@ $classes = array(
 	'Archive' => array('library','archive'),
 	'Conversation' => array('model','conversation/model'),
 	'ConversationMessage' => array('model','conversation/message/model'),
+	'ConversationMessageList' => array('model','conversation/message/list'),
 	'ContentImporter' => array('library','content/importer'),
 	'ContentExporter' => array('library','content/exporter'),
 	'BlockViewTemplate' => array('library','block_view_template'),

@@ -65,8 +65,15 @@ $ui = UserInfo::getByID($u->getUserID());
 	<? foreach($messages as $m) {
 		Loader::element('conversation/message', array('message' => $m, 'enablePosting' => $enablePosting));
 	} ?>
-	
+
 	</div>
+
+	<? if ($totalPages > $currentPage) { ?>
+	<div class="ccm-conversation-load-more-messages">
+		<button class="btn btn-large" type="button" data-load-page="conversation-message-list" data-total-pages="<?=$totalPages?>" data-next-page="<?=$currentPage + 1?>" ><?=t('Load More')?></button>
+	</div>
+	<? } ?>
+
 
 </div>
 

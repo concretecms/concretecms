@@ -28,15 +28,20 @@ var CCMConversation = function(element, options) {
 	obj.$element = $(element);
 
 	obj.options = $.extend({
-		'method': 'ajax'
+		'method': 'ajax',
+		'paginate': false,
+		'itemsPerPage': -1
 	}, options);
 
 	var enablePosting = (obj.options.posttoken != '') ? 1 : 0;
+	var paginate = (obj.options.paginate) ? 1 : 0;
 
 	if (obj.options.method == 'ajax') {
 		obj.$element.load(CCM_TOOLS_PATH + '/conversations/view_ajax', {
 			'cnvID': obj.options.cnvID,
-			'enablePosting': enablePosting
+			'enablePosting': enablePosting,
+			'itemsPerPage': obj.options.itemsPerPage,
+			'paginate': paginate
 		}, function(r) {
 			obj._init();
 		});
@@ -47,12 +52,18 @@ var CCMConversation = function(element, options) {
 
 CCMConversation.prototype._init = function() {
 	var obj = this;
+	var paginate = (obj.options.paginate) ? 1 : 0;
+	var enablePosting = (obj.options.posttoken != '') ? 1 : 0;
+
 	obj.$replyholder = obj.$element.find('div.ccm-conversation-add-reply');
 	obj.$deleteholder = obj.$element.find('div.ccm-conversation-delete-message');
 	obj.$messagelist = obj.$element.find('div.ccm-conversation-message-list');
 	obj.$messagecnt = obj.$element.find('.ccm-conversation-message-count');
 	obj.$postbuttons = obj.$element.find('button[data-submit=conversation-message]');
 	obj.$sortselect = obj.$element.find('select[data-sort=conversation-message-list]');
+	obj.$loadmore = obj.$element.find('[data-load-page=conversation-message-list]');
+	obj.$messages = obj.$element.find('div.ccm-conversation-messages');
+
 	obj.$postbuttons.unbind().on('click', function() {
 		obj._submitForm($(this));
 		return false;
@@ -89,14 +100,46 @@ CCMConversation.prototype._init = function() {
 		});
 		return false;
 	});
+
 	obj.$sortselect.unbind().on('change', function() {
 		obj.$messagelist.load(CCM_TOOLS_PATH + '/conversations/view_ajax', {
 			'cnvID': obj.options.cnvID,
 			'task': 'get_messages',
+			'enablePosting': enablePosting,
+			'itemsPerPage': obj.options.itemsPerPage,
+			'paginate': paginate,
 			'orderBy': $(this).val()
 		}, function(r) {
 			obj._init();
 		});
+	});
+
+	obj.$loadmore.unbind().on('click', function() {
+		var nextPage = parseInt(obj.$loadmore.attr('data-next-page'));
+		var totalPages = parseInt(obj.$loadmore.attr('data-total-pages'));
+		var data = {
+			'cnvID': obj.options.cnvID,
+			'itemsPerPage': obj.options.itemsPerPage,
+			'enablePosting': enablePosting,
+			'page': nextPage,
+			'orderBy': obj.$sortselect.val()
+		};
+
+		$.ajax({
+			type: 'post',
+			data: data,
+			url: CCM_TOOLS_PATH + '/conversations/message_page',
+			success: function(html) {
+				obj.$messages.append(html);
+				if ((nextPage + 1) > totalPages) {
+					obj.$loadmore.hide();
+				} else {
+					obj.$loadmore.attr('data-next-page', nextPage + 1);
+				}
+				obj._init();
+			}
+		});
+
 	});
 }
 
@@ -162,7 +205,7 @@ CCMConversation.prototype._addMessageFromJSON = function($form, json) {
 				obj.$replyholder.appendTo(obj.$element);
 				obj.$replyholder.hide();
 			} else {
-				obj.$element.find('.ccm-conversation-messages').prepend(html);
+				obj.$messages.prepend(html);
 				obj.$element.find('.ccm-conversation-no-messages').hide();
 			}
 
@@ -188,9 +231,6 @@ CCMConversation.prototype._submitForm = function($btn) {
 	var parentID = $btn.attr('data-post-parent-id');
 
 	formArray.push({
-		'name': 'task',
-		'value': 'add'
-	}, {
 		'name': 'token',
 		'value': obj.options.posttoken
 	}, {
@@ -204,7 +244,7 @@ CCMConversation.prototype._submitForm = function($btn) {
 		dataType: 'json',
 		type: 'post',
 		data: formArray,
-		url: CCM_TOOLS_PATH + '/conversations/messages',
+		url: CCM_TOOLS_PATH + '/conversations/add_message',
 		success: function(r) {
 			if (!r) {
 				obj._handlePostError($form);

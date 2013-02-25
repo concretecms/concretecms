@@ -21,37 +21,12 @@ class Concrete5_Model_Conversation extends Object {
 		return Conversation::getByID($db->Insert_ID());
 	}
 
-	public function getMessages($orderBy = 'date_asc') {
-		$this->populateMessages($orderBy);
-		return $this->messages;
-	}
-
 	public function getConversationMessagesTotal() {
 		$db = Loader::db();
 		$cnt = $db->GetOne('select count(cnvMessageID) from ConversationMessages where cnvID = ? and cnvIsMessageDeleted = 0', array($this->cnvID));
 		return $cnt;
 	}
 	
-	protected function populateMessages($orderBy, $cnvMessageParentID = 0) {
-		$db = Loader::db();
-		$v = array($this->cnvID, $cnvMessageParentID);
-		switch($orderBy) {
-			case 'date_desc':
-				$r = $db->Execute('select cnvMessageID from ConversationMessages where cnvID = ? and cnvMessageParentID = ? order by cnvMessageDateCreated desc', $v);
-				break;
-			default:
-				$r = $db->Execute('select cnvMessageID from ConversationMessages where cnvID = ? and cnvMessageParentID = ? order by cnvMessageDateCreated asc', $v);
-				break;
-		}
-		$messages = array();
-		while ($row = $r->FetchRow()) {
-			$msg = ConversationMessage::getByID($row['cnvMessageID']);
-			if (is_object($msg)) {
-				$this->messages[] = $msg;
-				$this->populateMessages($orderBy, $msg->getConversationMessageID());
-			}
-		}
-	}
 
 	public function addMessage($cnvMessageSubject, $cnvMessageBody, $parentMessage = false, $user = false) {
 		$db = Loader::db();
