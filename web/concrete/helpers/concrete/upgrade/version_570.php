@@ -17,6 +17,8 @@ class ConcreteUpgradeVersion570Helper {
 		'AreaLayoutPresets',
 		'AreaLayoutColumns',
 		'AreaLayoutCustomColumns',
+		'Conversations',
+		'ConversationMessages',
 		'AreaLayoutThemeGridColumns',
 		/*'Queues',*/
 		'BlockTypes',
@@ -36,6 +38,13 @@ class ConcreteUpgradeVersion570Helper {
 		}
 
 		$bt = BlockType::getByHandle('core_area_layout');
+		if (!is_object($bt)) {
+			$bt->install();
+		} else {
+			$bt->refresh();
+		}
+
+		$bt = BlockType::getByHandle('core_conversation');
 		if (!is_object($bt)) {
 			$bt->install();
 		} else {

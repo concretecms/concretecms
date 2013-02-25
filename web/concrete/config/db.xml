@@ -1,5 +1,51 @@
 <?xml version="1.0"?>
 <schema version="0.3">
+  <table name="Conversations">
+    <field name="cnvID" type="I" size="10">
+      <key/>
+      <autoincrement/>
+      <unsigned/>
+    </field>
+    <field name="cnvDateCreated" type="D">
+      <notnull/>
+    </field>
+  </table>
+  <table name="ConversationMessages">
+    <field name="cnvMessageID" type="I" size="10">
+      <KEY/>
+      <AUTOINCREMENT/>
+      <UNSIGNED/>
+    </field>
+    <field name="cnvID" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="uID" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="cnvMessageLevel" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="cnvMessageParentID" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="cnvMessageDateCreated" type="T"/>
+    <field name="cnvMessageSubject" type="X"/>
+    <field name="cnvMessageBody" type="X"/>
+    <index name="cnvID">
+      <col>cnvID</col>
+    </index>
+    <index name="cnvMessageParentID">
+      <col>cnvMessageParentID</col>
+    </index>
+  </table>
   <table name="PermissionAssignments">
     <field name="paID" type="I" size="10">
       <key/>

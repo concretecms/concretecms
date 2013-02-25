@@ -72,6 +72,23 @@
 				print '</ul>';
 			}
 		}
+
+		/** 
+		 * Outputs the the error as a JSON object.
+		 */
+		public function outputJSON() {
+			if ($this->has()) {
+				$js = Loader::helper('json');
+				$obj = new stdClass;
+				$obj->error = true;
+				$obj->messages = array();
+				foreach($this->getList() as $error) {
+					$obj->messages[] = $error;
+				}
+				print $js->encode($obj);
+			}
+		}
+
 	}
 	
 ?>

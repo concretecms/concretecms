@@ -5,12 +5,16 @@ uglifyjs -o ../web/concrete/js/ccm.profile.js ../web/concrete/js/ccm_profile/bas
 cat ../web/concrete/js/redactor/redactor.js \
 ../web/concrete/js/redactor/redactor.concrete5.js > redactor.tmp.js
 
+uglifyjs -o ../web/concrete/js/redactor.js ./redactor.tmp.js
+rm redactor.tmp.js
+
 cat ../web/concrete/js/ccm_app/dashboard.js > ccm.dashboard.tmp.js
 uglifyjs --no-copyright --no-seqs -o ../web/concrete/js/ccm.dashboard.js ./ccm.dashboard.tmp.js 
 rm ccm.dashboard.tmp.js
 
-uglifyjs -o ../web/concrete/js/redactor.js ./redactor.tmp.js
-rm redactor.tmp.js
+cat ../web/concrete/js/ccm_app/conversations.js > ccm.conversations.tmp.js
+uglifyjs --no-copyright --no-seqs -o ../web/concrete/js/ccm.conversations.js ./ccm.conversations.tmp.js 
+rm ccm.conversations.tmp.js
 
 # Note: The order here is important
 cat ../web/concrete/js/ccm_app/pubsub.js \

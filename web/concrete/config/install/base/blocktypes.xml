@@ -5,6 +5,7 @@
         <blocktype handle="core_area_layout" package=""/>
         <blocktype handle="core_scrapbook_display" package=""/>
         <blocktype handle="core_stack_display" package=""/>
+        <blocktype handle="core_conversation" package=""/>
         <blocktype handle="dashboard_featured_addon" package=""/>
         <blocktype handle="dashboard_featured_theme" package=""/>
         <blocktype handle="dashboard_newsflow_latest" package=""/>
@@ -18,7 +19,6 @@
         <blocktype handle="flash_content" package=""/>
         <blocktype handle="form" package=""/>
         <blocktype handle="google_map" package=""/>
-        <blocktype handle="guestbook" package=""/>
         <blocktype handle="html" package=""/>
         <blocktype handle="image" package=""/>
         <blocktype handle="next_previous" package=""/>
@@ -60,7 +60,7 @@
         </blocktypeset>
         <blocktypeset handle="social" name="Social Networking" package="">
             <blocktype handle="survey"/>
-            <blocktype handle="guestbook" />
+            <blocktype handle="core_conversation" />
         </blocktypeset>
         <blocktypeset handle="multimedia" name="Multimedia" package="">
             <blocktype handle="slideshow"/>
