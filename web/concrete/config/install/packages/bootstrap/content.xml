@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<concrete5-cif version="1.0">
+    <themes>
+        <theme handle="twitter_bootstrap" package="" activated="1"/>
+    </themes>
+    <pagetypes>
+        <pagetype icon="full.png" handle="full" name="Page" package="" />
+    </pagetypes>
+    <pages>
+	<page name="Home" path="" filename="" pagetype="full" description="" package="">
+	</page>
+    </pages>
+</concrete5-cif>
