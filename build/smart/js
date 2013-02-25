@@ -141,6 +141,7 @@ if $(echo "$status" | grep "$thisgrep" &> /dev/null); then
 $(getFile 'imageeditor.js')
 $(getFile 'history.js')
 $(getFile 'events.js')
+$(getFile 'elements.js')
 $(getFile 'controls.js')
 $(getFile 'save.js')
 $(getFile 'extend.js')

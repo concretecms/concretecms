@@ -3,27 +3,45 @@ im.background = new Kinetic.Layer();
 im.stage.add(im.background);
 
 im.buildBackground = function() {
-  var i,children = im.background.getChildren();
-  for (var i in children) {
-    children[i].remove();
-  }
-
-  im.background.add(new Kinetic.Rect({
-    x: 0,
-    y: 0,
-    width: im.stage.getScaledWidth(),
-    height: im.stage.getScaledHeight(),
-    fill: '#eee'
-  }));
+  var z = im.background.getZIndex();
+  im.background.destroy();
+  im.background = new Kinetic.Layer();
+  im.stage.add(im.background);
+  im.background.setZIndex(z);
 
   var getCoords = function (x, offset) {
-    return {x: 2 * x, y: -x + offset};
+    // slope = 1
+    return {x: x, y: -x + offset};
   };
 
-  var to = Math.max(im.stage.getScaledWidth(), im.stage.getScaledHeight()) * 2;
-  for (x = -to; x <= to; x += 20) {
+  var dimensions = im.stage.getTotalDimensions();
+  var to = dimensions.max.x + dimensions.visibleHeight + dimensions.visibleWidth;
+  im.totalBackground = new Kinetic.Rect({
+    x:dimensions.max.x - dimensions.width,
+    y:dimensions.max.y - dimensions.height,
+    width:to,
+    height:to,
+    fill:'#aaa'
+  });
+
+  im.saveArea = new Kinetic.Rect({
+    width:im.saveWidth,
+    height:im.saveHeight,
+    x:Math.floor(im.center.x - (im.saveWidth / 2)),
+    y:Math.floor(im.center.y - (im.saveHeight / 2)),
+    fill:'white'
+  })
+
+  im.background.add(im.totalBackground);
+  im.background.add(im.saveArea);
+  // Todo, make this more efficient, as this is not a sound algorithm.
+  // This should only draw in the visible space.
+  if (im.scale < .25) return;
+  var to = dimensions.max.x + dimensions.visibleHeight + dimensions.visibleWidth;
+  if (im.scale > 1) to *= im.scale;
+  for (x = -(dimensions.max.x + dimensions.visibleHeight); x <= to; x += 20) {
     im.background.add(new Kinetic.Line({
-      points: [getCoords(x, 0), getCoords(im.background.getWidth(), x)],
+      points: [getCoords(-to, x), getCoords(to, x)],
       stroke: '#e3e3e3'
     }));
   }

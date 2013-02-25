@@ -1,5 +1,8 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
+
+$editorid = substr(sha1(time()),0,5); // Just enough entropy.
+
 $u = new User();
 $form = Loader::helper('form');
 $f = $fv->getFile();
@@ -21,7 +24,7 @@ $filters = SystemImageEditorFilter::getList();
 <script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/image_editor.min.js"></script>
 <div class='table ccm-ui'>
   <div class='editorcontainer'>
-    <div class='Editor'></div>
+    <div id='<?=$editorid?>' class='Editor'></div>
     <div class='bottomBar'></div>
   </div>
   <div class='controls'>
@@ -41,7 +44,7 @@ $filters = SystemImageEditorFilter::getList();
                " data-src='/concrete/js/image_editor/control_sets/{$handle}.js'>".
                   "<h4>".$controlset->getImageEditorControlSetName()."</h4>".
                   "<div class='control'><div class='contents'>";
-                    echo Loader::element('image_editor/control_sets/'.$handle,1);
+                    echo Loader::element('image_editor/control_sets/'.$handle,array('editorid'=>$editorid));
                   echo "</div></div>".
                 "</div>";
         }
@@ -58,7 +61,7 @@ $filters = SystemImageEditorFilter::getList();
                " data-src='/concrete/js/image_editor/components/{$handle}.js'>".
                   "<h4>".$component->getImageEditorComponentName()."</h4>".
                   "<div class='control'><div class='contents'>";
-                    echo Loader::element('image_editor/components/'.$handle,1);
+                    echo Loader::element('image_editor/components/'.$handle,array('editorid'=>$editorid));
                   echo "</div></div>".
                 "</div>";
         }
@@ -92,7 +95,7 @@ $(function(){
     }
     echo Loader::helper('json')->encode($fnames);
   ?>;
-  console.log(settings);
-  window.im = $('div.Editor').height($('div.Editor').height()-30).ImageEditor(settings);
+  var editor = $('div#<?=$editorid?>.Editor');
+  window.im = editor.closest('.ui-dialog-content').css('padding',0).end().ImageEditor(settings);
 })
 </script>

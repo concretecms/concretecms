@@ -32,6 +32,9 @@ var Kinetic={};(function(){Kinetic.version="4.3.2",Kinetic.Filters={},Kinetic.Pl
 ///////////////////////////////////////////////////////////////////////////////
 //                            kinetic.prototype.js                           //
 ///////////////////////////////////////////////////////////////////////////////
+/////////////////////////////
+//      Kinetic.Stage      //
+/////////////////////////////
 Kinetic.Stage.prototype.createCopy = function () {
   var copy = [], children = this.getChildren(), i;
   for (i = 0; i < children.length; i++) {
@@ -45,6 +48,34 @@ Kinetic.Stage.prototype.getScaledWidth = function() {
 Kinetic.Stage.prototype.getScaledHeight = function() {
   return Math.ceil(this.getHeight() / this.getScale().y);
 };
+Kinetic.Stage.prototype.getSaveWidth = function() {
+  return this.im.saveWidth;
+};
+Kinetic.Stage.prototype.getSaveHeight = function() {
+  return this.im.saveHeight;
+};
+Kinetic.Stage.prototype.getTotalDimensions = function() {
+  var minY = (this.getSaveHeight() / 2 - this.im.center.y) * this.getScale().y;
+  var maxY = minY + this.getHeight() - (this.getSaveHeight() * this.getScale().y);
+
+  var minX = (this.getSaveWidth() / 2 - this.im.center.x) * this.getScale().x;
+  var maxX = minX + this.getWidth() - (this.getSaveWidth() * this.getScale().x);
+
+  return {
+    min: {
+      x: minX,
+      y: minY
+    },
+    max: {
+      x: maxX,
+      y: maxY
+    },
+    width:this.getScaledWidth(),
+    height:this.getScaledHeight(),
+    visibleWidth:Math.max(this.getSaveWidth(),this.getScaledWidth() * 2 - this.getSaveWidth()),
+    visibleHeight:Math.max(this.getSaveHeight(),this.getScaledHeight() * 2 - this.getSaveHeight())
+  };
+};
 Kinetic.Stage.prototype.loadCopy = function (copy) {
   var i;
   this.removeChildren();
@@ -53,6 +84,10 @@ Kinetic.Stage.prototype.loadCopy = function (copy) {
   }
   this.draw();
 };
+
+/////////////////////////////
+//      Kinetic.Image      //
+/////////////////////////////
 Kinetic.Image.prototype.getImageData = function() {
   var canvas = new Kinetic.Canvas(this.attrs.image.width, this.attrs.image.height);
   var context = canvas.getContext();
@@ -65,6 +100,9 @@ Kinetic.Image.prototype.getImageData = function() {
   }
 };
 
+/////////////////////////////
+//      Kinetic.Layer      //
+/////////////////////////////
 Kinetic.Layer.prototype._cacheddraw = (new Kinetic.Layer).draw;
 Kinetic.Layer.prototype.draw = function() {
   if (typeof im === 'undefined' || typeof im.trigger === 'undefined') {
@@ -76,6 +114,9 @@ Kinetic.Layer.prototype.draw = function() {
   return draw;
 };
 
+/////////////////////////////
+//       Kinetic.Text      //
+/////////////////////////////
 Kinetic.Text.prototype.rasterize = function(e) {
   var layer = this.parent;
   var me = this;
@@ -97,28 +138,43 @@ Kinetic.Text.prototype.rasterize = function(e) {
 var ImageEditor = function (settings) {
   "use strict";
   if (settings === undefined) return this;
-  var im         = this, x, round = function(float){return Math.round(float)};
-  im.width       = settings.width;
-  im.height      = settings.height;
-  im.saveWidth   = settings.saveWidth || round(im.width / 2);
-  im.saveHeight  = settings.saveHeight || round(im.height / 2);
-  im.strictSize  = (settings.saveWidth !== undefined ? true : false);
-  im.stage       = new Kinetic.Stage(settings);
-  im.editor      = new Kinetic.Layer();
-  im.namespaces  = {};
-  im.controlSets = {};
-  im.components  = {};
-  im.filters     = {};
-  im.scale       = 1;
-  im.crosshair   = new Image();
+  var im           = this, x, round = function(float){return Math.round(float)};
+  im.width         = settings.width;
+  im.height        = settings.height;
+  im.saveWidth     = settings.saveWidth || round(im.width / 2);
+  im.saveHeight    = settings.saveHeight || round(im.height / 2);
+  im.strictSize    = (settings.saveWidth !== undefined ? true : false);
+  im.stage         = new Kinetic.Stage(settings);
+  im.namespaces    = {};
+  im.controlSets   = {};
+  im.components    = {};
+  im.filters       = {};
+  im.scale         = 1;
+  im.crosshair     = new Image();
+  im.uniqid        = im.stage.getContainer().id;
+  im.editorContext = $(im.stage.getContainer()).parent();
+  im.domContext    = im.editorContext.parent();
 
+  im.showLoader = $.fn.dialog.showLoader;
+  im.hideLoader = $.fn.dialog.hideLoader;
+  im.stage.im = im;
+  im.stage.elementType = 'stage';
   im.crosshair.src = '/concrete/images/image_editor/crosshair.png';
 
   im.center = {
-    x: im.width / 2,
-    y: im.height / 2
+    x: Math.round(im.width / 2),
+    y: Math.round(im.height / 2)
   };
-  var log = function() {
+
+  im.centerOffset = {
+    x: im.center.x,
+    y: im.center.y
+  };
+
+  var getElem = function(selector) {
+    return $(selector, im.domContext);
+  },
+  log = function() {
     if (settings.debug === true && console !== undefined) {
       var args = arguments;
       if (args.length == 1) args = args[0];
@@ -192,15 +248,60 @@ im.fireEvent = im.fire = im.trigger = function (type, data, elem) {
 
 
 ///////////////////////////////////////////////////////////////////////////////
+//                                elements.js                                //
+///////////////////////////////////////////////////////////////////////////////
+im.addElement = function(object,type) {
+  var layer = new Kinetic.Layer();
+  layer.add(object);
+  object.setX(im.center.x - Math.round(object.getWidth() / 2));
+  object.setY(im.center.y - Math.round(object.getHeight() / 2));
+
+  object.elementType = type;
+
+  object.on('click',function(){
+    im.fire('ClickedElement',this);
+  });
+  im.stage.add(layer);
+  im.fire('newObject',{object:object,type:type});
+  im.stage.draw();
+};
+im.setActiveElement = function(element) {
+  if (im.activeElement == element) return;
+
+  if (element === im.stage) {
+    im.trigger('ChangeActiveAction','ControlSet_Position');
+  }
+  im.trigger('beforeChangeActiveElement',im.activeElement);
+  im.alterCore('activeElement',element);
+  im.trigger('changeActiveElement',element);
+  im.stage.draw();
+};
+im.bind('ClickedElement',function(e) {
+  if (e.eventData.getWidth() > im.stage.getScaledWidth() || e.eventData.getHeight() > im.stage.getScaledHeight()) {
+    im.setActiveElement(im.stage);
+    return;
+  }
+
+  im.setActiveElement(e.eventData);
+});
+
+im.bind('stageChanged',function(e){
+  if (im.activeElement.getWidth() > im.stage.getScaledWidth() || im.activeElement .getHeight() > im.stage.getScaledHeight()) {
+    im.setActiveElement(im.stage);
+  }
+});
+
+
+///////////////////////////////////////////////////////////////////////////////
 //                                controls.js                                //
 ///////////////////////////////////////////////////////////////////////////////
 // Zoom
-var controlBar = $(im.stage.getContainer()).parent().children('.bottomBar');
+var controlBar = getElem(im.stage.getContainer()).parent().children('.bottomBar');
 
 var zoom = {};
 
-zoom.in = $("<span><i class='icon-plus'></i></span>");
-zoom.out = $("<span><i class='icon-minus'></i></span>");
+zoom.in = getElem("<span><i class='icon-plus'></i></span>");
+zoom.out = getElem("<span><i class='icon-minus'></i></span>");
 
 zoom.in.appendTo(controlBar);
 zoom.out.appendTo(controlBar);
@@ -208,90 +309,124 @@ zoom.out.appendTo(controlBar);
 zoom.in.click(function(e){im.fire('zoomInClick',e)});
 zoom.out.click(function(e){im.fire('zoomOutClick',e)});
 
-var minScale = 1/3, maxScale = 3, stepScale = 1/3;
+var scale = getElem('<span></span>').addClass('scale').text('100%');
+im.on('stageChanged',function(e){
+  scale.text(Math.round(im.scale * 10000)/100 + "%");
+});
+scale.appendTo(controlBar);
 
-im.stage.setDraggable();
+var minScale = 0, maxScale = 3000, stepScale = 1/4;
+
 im.on('zoomInClick',function(e){
-	im.scale += stepScale;
-	if (im.scale > maxScale) im.scale = maxScale;
-	if (Math.abs(im.scale - Math.round(im.scale)) < stepScale / 2) im.scale = Math.round(im.scale);
-	im.stage.setScale(im.scale);
-	im.fire('stageChanged');
-	im.stage.draw();
+
+  var adjustment = (im.scale * stepScale);
+  im.scale += adjustment;
+
+  if (im.scale > stepScale && (Math.abs(im.scale - Math.round(im.scale)) % 1) < stepScale / 2) im.scale = Math.round(im.scale);
+  im.scale = Math.round(im.scale * 1000) / 1000;
+  im.alterCore('scale',im.scale);
+
+  im.stage.setScale(im.scale);
+
+  im.stage.setX(im.stage.getX() + (-.5 * adjustment * im.stage.getWidth()));
+  im.stage.setY(im.stage.getY() + (-.5 * adjustment * im.stage.getHeight()));
+  
+  var pos = (im.stage.getDragBoundFunc())({x:im.stage.getX(),y:im.stage.getY()});
+  im.stage.setX(pos.x);
+  im.stage.setY(pos.y);
+
+
+  im.fire('stageChanged');
+  im.stage.draw();
 });
 im.on('zoomOutClick',function(e){
-	im.scale -= stepScale;
-	if (im.scale < minScale) im.scale = minScale;
-	if (Math.abs(im.scale - Math.round(im.scale)) < stepScale / 2) im.scale = Math.round(im.scale);
-	im.stage.setScale(im.scale);
-	im.fire('stageChanged');
-	im.stage.draw();
+
+  var adjustment = (im.scale * stepScale);
+  im.scale -= adjustment;
+
+  if (im.scale > stepScale && (Math.abs(im.scale - Math.round(im.scale)) % 1) < stepScale / 2) im.scale = Math.round(im.scale);
+  im.scale = Math.round(im.scale * 1000) / 1000;
+  im.alterCore('scale',im.scale);
+
+  im.stage.setScale(im.scale);
+
+  im.stage.setX(im.stage.getX() - (-.5 * adjustment * im.stage.getWidth()));
+  im.stage.setY(im.stage.getY() - (-.5 * adjustment * im.stage.getHeight()));
+  
+  var pos = (im.stage.getDragBoundFunc())({x:im.stage.getX(),y:im.stage.getY()});
+  im.stage.setX(pos.x);
+  im.stage.setY(pos.y);
+
+  im.fire('stageChanged');
+  im.stage.draw();
 });
-
-
-
 
 // Save
 var saveSize = {};
 
-saveSize.width = $('<input/>');
-saveSize.height = $('<input/>');
+saveSize.width = getElem('<input/>');
+saveSize.height = getElem('<input/>');
 saveSize.both = saveSize.height.add(saveSize.width).width(32);
 
-saveSize.area = $('<span/>').css({float:'right',margin:'-5px 14px 0 0'});
+saveSize.area = getElem('<span/>').css({float:'right',margin:'-5px 14px 0 0'});
 saveSize.width.appendTo(saveSize.area);
-saveSize.area.append($('<span> x </span>'));
+saveSize.area.append(getElem('<span> x </span>'));
 saveSize.height.appendTo(saveSize.area);
 saveSize.area.appendTo(controlBar);
 
+var saveButton = $('<button/>').addClass('btn').addClass('btn-primary').text('Save');
+saveButton.appendTo(saveSize.area);
+saveButton.click(function(){im.save()});
+
+
 if (im.strictSize) {
-	saveSize.both.attr('disabled','true');
+  saveSize.both.attr('disabled','true');
 } else {
-	saveSize.both.keydown(function(e){
-		log(e.keyCode);
-		if (e.keyCode == 8 || e.keyCode == 37 || e.keyCode == 39) return true;
+  saveSize.both.keydown(function(e){
+    log(e.keyCode);
+    if (e.keyCode == 8 || e.keyCode == 37 || e.keyCode == 39) return true;
 
-		if (e.keyCode == 38) {
-			var newval = parseInt($(this).val()) + 1;
-			$(this).val(Math.min(5000,newval)).change();
-		}
-		if (e.keyCode == 40) {
-			var newval = parseInt($(this).val()) - 1;
-			$(this).val(Math.max(0,newval)).change();
-		}
-		var key = String.fromCharCode(e.keyCode);
-		if (!key.match(/\d/)) {
-			return false;
-		}
-		var amnt = "" + $(this).val() + key;
-		if (amnt > 5000) {
-			amnt = 5000;
-		}
-		$(this).val(amnt).change();
+    if (e.keyCode == 38) {
+      var newval = parseInt($(this).val()) + 1;
+      $(this).val(Math.min(5000,newval)).change();
+    }
+    if (e.keyCode == 40) {
+      var newval = parseInt($(this).val()) - 1;
+      $(this).val(Math.max(0,newval)).change();
+    }
+    var key = String.fromCharCode(e.keyCode);
+    if (!key.match(/\d/)) {
+      return false;
+    }
+    var amnt = "" + $(this).val() + key;
+    if (amnt > 5000) {
+      amnt = 5000;
+    }
+    $(this).val(amnt).change();
 
-		return false;
-	}).keyup(function(e){
-		if (e.keyCode == 8) im.fire('editedSize');
-	}).change(function(){
-		im.fire('editedSize');
-	});
+    return false;
+  }).keyup(function(e){
+    if (e.keyCode == 8) im.fire('editedSize');
+  }).change(function(){
+    im.fire('editedSize');
+  });
 }
 
 
 im.bind('editedSize',function(){
-	im.saveWidth = parseInt(saveSize.width.val());
-	im.saveHeight = parseInt(saveSize.height.val());
+  im.saveWidth = parseInt(saveSize.width.val());
+  im.saveHeight = parseInt(saveSize.height.val());
 
-	if (isNaN(im.saveWidth)) im.saveWidth = 0;
-	if (isNaN(im.saveHeight)) im.saveHeight = 0;
+  if (isNaN(im.saveWidth)) im.saveWidth = 0;
+  if (isNaN(im.saveHeight)) im.saveHeight = 0;
 
-	im.trigger('saveSizeChange');
-	im.adjustSavers();
+  im.trigger('saveSizeChange');
+  im.buildBackground();
 });
 
 im.bind('saveSizeChange',function(){
-	saveSize.width.val(im.saveWidth);
-	saveSize.height.val(im.saveHeight);
+  saveSize.width.val(im.saveWidth);
+  saveSize.height.val(im.saveHeight);
 });
 
 
@@ -299,26 +434,46 @@ im.bind('saveSizeChange',function(){
 //                                  save.js                                  //
 ///////////////////////////////////////////////////////////////////////////////
 im.save = function() {
-  var oldScale = im.stage.getScale();
+  im.background.hide();
   im.stage.setScale(1);
-  var newx = im.image.getX() - im.dragger.getX(),
-      newy = im.image.getY() - im.dragger.getY()
-  im.image.setX(newx);
-  im.image.setY(newy);
-  im.image.disableStroke();
 
-  im.image.toImage({
-    width:im.width,
-    height:im.height,
-    callback:function(img) {
-      im.image.enableStroke();
-      im.image.setImage(img);
-      im.image.setX(im.dragger.getX());
-      im.image.setY(im.dragger.getY());
-      im.stage.setScale(oldScale);
+  im.fire('ChangeActiveAction');
+  im.fire('changeActiveComponent');
+
+  $(im.stage.getContainer()).hide();
+
+  var startx = Math.round(im.center.x - (im.saveWidth / 2)),
+      starty = Math.round(im.center.y - (im.saveHeight / 2)),
+      oldx = im.stage.getX(),
+      oldy = im.stage.getY(),
+      oldwidth = im.stage.getWidth(),
+      oldheight = im.stage.getHeight();
+
+  im.stage.setX(-startx);
+  im.stage.setY(-starty);
+  im.stage.setWidth(Math.max(im.stage.getWidth(),im.saveWidth));
+  im.stage.setHeight(Math.max(im.stage.getHeight(),im.saveHeight));
+  im.stage.draw();
+
+
+  im.showLoader('Saving..');
+  im.stage.toDataURL({
+    width:im.saveWidth,
+    height:im.saveHeight,
+    callback:function(data){
+      var img = $('<img/>').attr('src',data);
+      $.fn.dialog.open({element:img});
+      im.hideLoader();
+      im.background.show();
+      im.stage.setX(oldx);
+      im.stage.setY(oldy);
+      im.stage.setWidth(oldwidth);
+      im.stage.setHeight(oldheight);
+      im.stage.setScale(im.scale);
       im.stage.draw();
+      $(im.stage.getContainer()).show();
     }
-  });
+  })
 };
 
 
@@ -326,28 +481,34 @@ im.save = function() {
 //                                 extend.js                                 //
 ///////////////////////////////////////////////////////////////////////////////
 im.extend = function(property,value) {
-  im[property] = value;
+  this[property] = value;
 };
 
 im.alterCore = function(property,value) {
-  var im = im, ns = 'core', i;
+  var nim = im, ns = 'core', i;
   if (im.namespace) {
-    var ns = im.namespace;
-    im = window.c5_image_editor;
+    var ns = nim.namespace;
+    nim = im.realIm;
   }
   im[property] = value;
-  for (i in im.namespaces){
-    im.namespaces[i][property] = value;
+  for (i in im.controlSets){
+    im.controlSets[i].im.extend(property,value);
+  }
+  for (i in im.filters){
+    im.filters[i].im.extend(property,value);
+  }
+  for (i in im.components){
+    im.components[i].im.extend(property,value);
   }
 };
 
 im.clone = function(namespace) {
   var newim = new ImageEditor(),i;
+  newim.realIm = im;
   for (i in im) {
     newim[i] = im[i];
   }
   newim.namespace = namespace;
-  im.namespaces['namespace'] = newim;
   return newim;
 };
 
@@ -419,27 +580,45 @@ im.background = new Kinetic.Layer();
 im.stage.add(im.background);
 
 im.buildBackground = function() {
-  var i,children = im.background.getChildren();
-  for (var i in children) {
-    children[i].remove();
-  }
-
-  im.background.add(new Kinetic.Rect({
-    x: 0,
-    y: 0,
-    width: im.stage.getScaledWidth(),
-    height: im.stage.getScaledHeight(),
-    fill: '#eee'
-  }));
+  var z = im.background.getZIndex();
+  im.background.destroy();
+  im.background = new Kinetic.Layer();
+  im.stage.add(im.background);
+  im.background.setZIndex(z);
 
   var getCoords = function (x, offset) {
-    return {x: 2 * x, y: -x + offset};
+    // slope = 1
+    return {x: x, y: -x + offset};
   };
 
-  var to = Math.max(im.stage.getScaledWidth(), im.stage.getScaledHeight()) * 2;
-  for (x = -to; x <= to; x += 20) {
+  var dimensions = im.stage.getTotalDimensions();
+  var to = dimensions.max.x + dimensions.visibleHeight + dimensions.visibleWidth;
+  im.totalBackground = new Kinetic.Rect({
+    x:dimensions.max.x - dimensions.width,
+    y:dimensions.max.y - dimensions.height,
+    width:to,
+    height:to,
+    fill:'#aaa'
+  });
+
+  im.saveArea = new Kinetic.Rect({
+    width:im.saveWidth,
+    height:im.saveHeight,
+    x:Math.floor(im.center.x - (im.saveWidth / 2)),
+    y:Math.floor(im.center.y - (im.saveHeight / 2)),
+    fill:'white'
+  })
+
+  im.background.add(im.totalBackground);
+  im.background.add(im.saveArea);
+  // Todo, make this more efficient, as this is not a sound algorithm.
+  // This should only draw in the visible space.
+  if (im.scale < .25) return;
+  var to = dimensions.max.x + dimensions.visibleHeight + dimensions.visibleWidth;
+  if (im.scale > 1) to *= im.scale;
+  for (x = -(dimensions.max.x + dimensions.visibleHeight); x <= to; x += 20) {
     im.background.add(new Kinetic.Line({
-      points: [getCoords(x, 0), getCoords(im.background.getWidth(), x)],
+      points: [getCoords(-to, x), getCoords(to, x)],
       stroke: '#e3e3e3'
     }));
   }
@@ -453,88 +632,33 @@ im.on('stageChanged',im.buildBackground);
 ///////////////////////////////////////////////////////////////////////////////
 //                               imagestage.js                               //
 ///////////////////////////////////////////////////////////////////////////////
-var me = $(this);
-
-im.savers = new Kinetic.Layer();
 
 
-var savercolor = "rgba(0,0,0,.7)",
-saverTopLeft = new Kinetic.Rect({
-  x:0,
-  y:0,
-  fill:savercolor,
-  width:Math.floor(im.stage.getScaledWidth()/2),
-  height:Math.floor(im.stage.getScaledHeight()/2)
-}),
-saverBottomLeft = new Kinetic.Rect({
-  x:0,
-  y:Math.floor(im.stage.getScaledHeight()/2),
-  fill:savercolor,
-  width:Math.floor(im.stage.getScaledWidth()/2),
-  height:Math.ceil(im.stage.getScaledHeight()/2)
-}),
-saverTopRight = new Kinetic.Rect({
-  x:Math.floor(im.stage.getScaledWidth()/2),
-  y:0,
-  fill:savercolor,
-  width:Math.ceil(im.stage.getScaledWidth()/2),
-  height:Math.floor(im.stage.getScaledHeight()/2)
-}),
-saverBottomRight = new Kinetic.Rect({
-  x:Math.floor(im.stage.getScaledWidth()/2),
-  y:Math.floor(im.stage.getScaledHeight()/2),
-  fill:savercolor,
-  width:Math.ceil(im.stage.getScaledWidth()/2),
-  height:Math.ceil(im.stage.getScaledHeight()/2)
+im.stage.setDragBoundFunc(function(ret) {
+
+
+  var dim = im.stage.getTotalDimensions();
+
+  var maxx = Math.max(dim.max.x,dim.min.x)-1,
+      minx = Math.min(dim.max.x,dim.min.x)+1,
+      maxy = Math.max(dim.max.y,dim.min.y)-1,
+      miny = Math.min(dim.max.y,dim.min.y)+1;
+
+  ret.x = Math.floor(ret.x);
+  ret.y = Math.floor(ret.y);
+
+  if (ret.x > maxx) ret.x = maxx;
+  if (ret.x < minx) ret.x = minx;
+  if (ret.y > maxy) ret.y = maxy;
+  if (ret.y < miny) ret.y = miny;
+
+  ret.x = Math.floor(ret.x);
+  ret.y = Math.floor(ret.y);
+
+  return ret;
 });
-
-im.adjustSavers = function() {
-  log("Adjusting");
-  var startx = Math.round(im.center.x - (im.saveWidth / 2)),
-      posx = startx + im.saveWidth,
-      starty = Math.round(im.center.y - (im.saveHeight / 2)),
-      posy = starty + im.saveHeight;
-
-  if (posy < starty) {
-    var inter = posy;
-    posy = starty;
-    starty = inter;
-  }
-  if (posx < startx) {
-    var inter = posx;
-    posx = startx;
-    startx = inter;
-  }
-
-  saverTopLeft.setWidth(startx);
-  saverTopLeft.setHeight(posy);
-
-  saverTopRight.setX(startx);
-  saverTopRight.setWidth(im.stage.getScaledWidth()-startx);
-  saverTopRight.setHeight(starty);
-
-  saverBottomLeft.setWidth(posx);
-  saverBottomLeft.setY(posy);
-  saverBottomLeft.setHeight(im.stage.getScaledHeight()-posy);
-
-  saverBottomRight.setY(starty);
-  saverBottomRight.setX(posx);
-  saverBottomRight.setWidth(im.stage.getScaledWidth()-posx);
-  saverBottomRight.setHeight(im.stage.getScaledHeight()-starty);
-
-  im.fire('saveSizeChange');
-
-  im.savers.draw();
-};
-
-im.savers.add(saverTopLeft);
-im.savers.add(saverTopRight);
-im.savers.add(saverBottomLeft);
-im.savers.add(saverBottomRight);
-
-im.stage.add(im.savers);
-
-im.adjustSavers();
+im.setActiveElement(im.stage);
+im.stage.setDraggable(true);
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -546,24 +670,21 @@ img.onload = function () {
   if (!im.strictSize) {
     im.saveWidth = img.width;
     im.saveHeight = img.height;
-    im.adjustSavers();
+    im.fire('saveSizeChange');
+    im.buildBackground();
   }
   var center = {
     x: im.center.x - (img.width / 2),
     y: im.center.y - (img.height / 2)
   };
-  im.prettifier = new Kinetic.Layer();
   im.image = new Kinetic.Image({
     image: img,
     x: Math.round(center.x),
-    y: Math.round(center.y),
-    stroke: '#000'
+    y: Math.round(center.y)
   });
-  im.image.on('draw',function(){im.fire('imagedraw');});
-  im.editor.add(im.image);
-  im.stage.add(im.editor);
   im.imageData = im.image.getImageData();
   im.fire('imageload');
+  im.addElement(im.image,'image');
 };
 
 
@@ -571,8 +692,9 @@ img.onload = function () {
 //                                 actions.js                                //
 ///////////////////////////////////////////////////////////////////////////////
 im.bind('imageload',function(){
-  var cs = settings.controlsets || {}, filters = settings.filters || {}, components = settings.components || {}, namespace, firstcs;
+  var cs = settings.controlsets || {}, filters = settings.filters || {}, namespace, firstcs;
   var running = 0;
+  log('Loading ControlSets');
   im.fire('LoadingControlSets');
   for (namespace in cs) {
     var myns = "ControlSet_" + namespace;
@@ -599,7 +721,12 @@ im.bind('imageload',function(){
       }
     });
   }
+});
+
+im.bind('ControlSetsLoaded',function(){
   im.fire('LoadingComponents');
+  var components = settings.components || {}, namespace, running = 0;
+  log('Loading Components');
   for (namespace in components) {
     var myns = "Component_" + namespace;
     $.ajax(components[namespace]['src'],{
@@ -610,9 +737,9 @@ im.bind('imageload',function(){
       beforeSend:function(){running++;},
       success:function(js){
         running--;
-        var nso = im.addControlSet(this.myns,js,cs[this.namespace]['element']);
+        var nso = im.addComponent(this.myns,js,components[this.namespace]['element']);
         log(nso);
-        im.fire('controlSetLoad',nso);
+        im.fire('ComponentLoad',nso);
         if (0 == running) {
           im.trigger('ComponentsLoaded');
         }
@@ -626,9 +753,10 @@ im.bind('imageload',function(){
     });
   }
 });
-im.bind('ControlSetsLoaded',function(){ // do this when the control sets finish loading.
-  log('Loaded');
-  var filters = settings.filters || {}, components = settings.components || {}, namespace, firstf, firstc ;
+
+im.bind('ComponentsLoaded',function(){ // do this when the control sets finish loading.
+  log('Loading Filters');
+  var filters = settings.filters || {}, namespace, firstf, firstc;
   im.fire('LoadingFilters');
   for (namespace in filters) {
     var myns = "Filter_" + namespace;
@@ -652,20 +780,46 @@ im.bind('ChangeActiveAction',function(e){
   var ns = e.eventData;
   if (ns === im.activeControlSet) return;
   for (var ons in im.controlSets) {
-    if (ons !== ns) $(im.controlSets[ons]).slideUp();
+    if (ons !== ns) getElem(im.controlSets[ons]).slideUp();
   }
   im.activeControlSet = ns;
+  im.alterCore('activeControlSet',ns);
   if (!ns) return;
   var cs = $(im.controlSets[ns]),
       height = cs.show().height();
-  cs.hide().height(height).slideDown(function(){$(this).height('');});
+  if (cs.length == 0) return;
+  cs.hide().height(height).slideDown(function(){$(this).height('')});
+});
+
+im.bind('ChangeActiveComponent',function(e){
+  var ns = e.eventData;
+  if (ns === im.activeComponent) return;
+  for (var ons in im.components) {
+    if (ons !== ns) getElem(im.components[ons]).slideUp();
+  }
+  im.activeComponent = ns;
+  im.alterCore('activeComponent',ns);
+  if (!ns) return;
+  var cs = $(im.components[ns]),
+      height = cs.show().height();
+  if (cs.length == 0) return;
+  cs.hide().height(height).slideDown(function(){$(this).height('')});
 });
 
 im.bind('ChangeNavTab',function(e) {
-  im.trigger('ChangeActiveAction');
+  console.log('changenavtab',e);
+  im.trigger('ChangeActiveAction',e.eventData);
+  im.trigger('ChangeActiveComponent',e.eventData);
+  var parent = getElem('div.editorcontrols');
   switch(e.eventData) {
     case 'add':
-
+      parent.children('div.control-sets').hide();
+      parent.children('div.components').show();
+      break;
+    case 'edit':
+      parent.children('div.components').hide();
+      parent.children('div.control-sets').show();
+      break;
   }
 });
 
@@ -674,7 +828,12 @@ im.bind('ChangeNavTab',function(e) {
 //                              jquerybinding.js                             //
 ///////////////////////////////////////////////////////////////////////////////
 // End the ImageEditor object.
+
+  
+  im.setActiveElement(im.stage);
+
   window.c5_image_editor = im; // Safe keeping
+  window.im = im;
   return im;
 };
 $.fn.ImageEditor = function (settings) {
@@ -688,22 +847,35 @@ $.fn.ImageEditor = function (settings) {
     },50);
     return;
   }
+  self.height(self.height()-31);
   (settings.width === undefined && (settings.width = self.width()));
   (settings.height === undefined && (settings.height = self.height()));
   $.fn.dialog.showLoader();
   var im = new ImageEditor(settings);
 
-  $('div.controls').children('ul.nav').children().click(function(){
+  var context = im.domContext;
+  $('div.controls',context).children('ul.nav').children().click(function(){
     if ($(this).hasClass('active')) return false;
+    $('div.controls',context).children('ul.nav').children().removeClass('active');
+    $(this).addClass('active');
     im.trigger('ChangeNavTab',$(this).text().toLowerCase());
     return false;
   });
-  $('div.controlset').find('div.control').children('div.contents').slideUp(0);
-  $('div.controlset').find('h4').click(function(){
-    $('div.controlset').find('h4').not($(this)).removeClass('active');
+  $('div.controlset',context).find('div.control').children('div.contents').slideUp(0)
+  .end().end().find('h4').click(function(){
+    $('div.controlset',context).find('h4').not($(this)).removeClass('active');
     var ns = $(this).parent().attr('data-namespace');
     im.trigger('ChangeActiveAction',"ControlSet_"+ns);
   });
+
+  $('div.component',context).find('div.control').children('div.contents').slideUp(0).hide()
+  .end().end().find('h4').click(function(){
+    $('div.component',context).children('h4').not($(this)).removeClass('active');
+    var ns = $(this).parent().attr('data-namespace');
+    im.trigger('ChangeActiveComponent',"Component_"+ns);
+  });
+  $('div.components').hide();
+
   im.bind('imageload', $.fn.dialog.hideLoader);
   return im;
 };

@@ -1,3 +1,6 @@
+/////////////////////////////
+//      Kinetic.Stage      //
+/////////////////////////////
 Kinetic.Stage.prototype.createCopy = function () {
   var copy = [], children = this.getChildren(), i;
   for (i = 0; i < children.length; i++) {
@@ -11,6 +14,34 @@ Kinetic.Stage.prototype.getScaledWidth = function() {
 Kinetic.Stage.prototype.getScaledHeight = function() {
   return Math.ceil(this.getHeight() / this.getScale().y);
 };
+Kinetic.Stage.prototype.getSaveWidth = function() {
+  return this.im.saveWidth;
+};
+Kinetic.Stage.prototype.getSaveHeight = function() {
+  return this.im.saveHeight;
+};
+Kinetic.Stage.prototype.getTotalDimensions = function() {
+  var minY = (this.getSaveHeight() / 2 - this.im.center.y) * this.getScale().y;
+  var maxY = minY + this.getHeight() - (this.getSaveHeight() * this.getScale().y);
+
+  var minX = (this.getSaveWidth() / 2 - this.im.center.x) * this.getScale().x;
+  var maxX = minX + this.getWidth() - (this.getSaveWidth() * this.getScale().x);
+
+  return {
+    min: {
+      x: minX,
+      y: minY
+    },
+    max: {
+      x: maxX,
+      y: maxY
+    },
+    width:this.getScaledWidth(),
+    height:this.getScaledHeight(),
+    visibleWidth:Math.max(this.getSaveWidth(),this.getScaledWidth() * 2 - this.getSaveWidth()),
+    visibleHeight:Math.max(this.getSaveHeight(),this.getScaledHeight() * 2 - this.getSaveHeight())
+  };
+};
 Kinetic.Stage.prototype.loadCopy = function (copy) {
   var i;
   this.removeChildren();
@@ -19,6 +50,10 @@ Kinetic.Stage.prototype.loadCopy = function (copy) {
   }
   this.draw();
 };
+
+/////////////////////////////
+//      Kinetic.Image      //
+/////////////////////////////
 Kinetic.Image.prototype.getImageData = function() {
   var canvas = new Kinetic.Canvas(this.attrs.image.width, this.attrs.image.height);
   var context = canvas.getContext();
@@ -31,6 +66,9 @@ Kinetic.Image.prototype.getImageData = function() {
   }
 };
 
+/////////////////////////////
+//      Kinetic.Layer      //
+/////////////////////////////
 Kinetic.Layer.prototype._cacheddraw = (new Kinetic.Layer).draw;
 Kinetic.Layer.prototype.draw = function() {
   if (typeof im === 'undefined' || typeof im.trigger === 'undefined') {
@@ -42,6 +80,9 @@ Kinetic.Layer.prototype.draw = function() {
   return draw;
 };
 
+/////////////////////////////
+//       Kinetic.Text      //
+/////////////////////////////
 Kinetic.Text.prototype.rasterize = function(e) {
   var layer = this.parent;
   var me = this;
