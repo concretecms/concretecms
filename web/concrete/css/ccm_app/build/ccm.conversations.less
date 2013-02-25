@@ -70,6 +70,11 @@ div.ccm-conversation-message-list {
 
 }
 
+div.ccm-conversation-dialog {
+	div.ui-dialog-buttonset {
+		float: none !important;
+	}
+}
 
 div.ccm-conversation-message {
 	position: relative;	
@@ -100,6 +105,8 @@ div.ccm-conversation-message {
 		ul {
 			float: right;
 			list-style-type: none;
+			margin: 0px;
+			padding: 0px;
 			
 			li {
 				display: inline-block;
@@ -113,6 +120,10 @@ div.ccm-conversation-message {
 
 	}
 
+}
+
+div.ccm-conversation-mesage-deleted {
+	.opacity(30);
 }
 
 div.ccm-conversation-message:hover {

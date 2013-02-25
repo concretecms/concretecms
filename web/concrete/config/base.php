@@ -608,3 +608,7 @@ if(!defined('SITEMAPXML_BASE_URL')) {
 if(!defined('APP_VERSION_DISPLAY_IN_HEADER')) {
 	define('APP_VERSION_DISPLAY_IN_HEADER', true);
 }
+
+if (!defined('USER_DELETED_CONVERSATION_ID')) {
+	define('USER_DELETED_CONVERSATION_ID', 0);
+}

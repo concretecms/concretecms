@@ -28,7 +28,7 @@ class Concrete5_Model_Conversation extends Object {
 
 	public function getConversationMessagesTotal() {
 		$db = Loader::db();
-		$cnt = $db->GetOne('select count(cnvMessageID) from ConversationMessages where cnvID = ?', array($this->cnvID));
+		$cnt = $db->GetOne('select count(cnvMessageID) from ConversationMessages where cnvID = ? and cnvIsMessageDeleted = 0', array($this->cnvID));
 		return $cnt;
 	}
 	

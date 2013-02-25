@@ -64,10 +64,30 @@ CCMConversation.prototype._init = function() {
 		return false;
 	});
 	obj.$element.find('a[data-submit=delete-conversation-message]').unbind().on('click', function() {
-		obj.$deleteholder.dialog({
+		var $link = $(this);
+		obj.$deletedialog = obj.$deleteholder.clone();
+		obj.$deletedialog.dialog({
 			modal: true,
-			title: obj.$deleteholder.attr('data-dialog-title')
+			dialogClass: 'ccm-conversation-dialog',
+			title: obj.$deleteholder.attr('data-dialog-title'),
+			buttons: [
+				{
+					'text': obj.$deleteholder.attr('data-cancel-button-title'),
+					'class': 'btn pull-left',
+					'click': function() {
+						obj.$deletedialog.dialog('close');
+					}
+				},
+				{
+					'text': obj.$deleteholder.attr('data-confirm-button-title'),
+					'class': 'btn pull-right btn-danger',
+					'click': function() {
+						obj._deleteMessage($link.attr('data-conversation-message-id'));
+					}
+				}
+			]
 		});
+		return false;
 	});
 	obj.$sortselect.unbind().on('change', function() {
 		obj.$messagelist.load(CCM_TOOLS_PATH + '/conversations/view_ajax', {
@@ -89,6 +109,32 @@ CCMConversation.prototype._handlePostError = function($form, messages) {
 		s += m + '<br>';
 	});
 	$form.find('div.ccm-conversation-errors').html(s).show();
+}
+
+CCMConversation.prototype._deleteMessage = function(msgID) {
+
+	var obj = this;
+	var	formArray = [{
+		'name': 'cnvMessageID',
+		'value': msgID
+	}];
+
+	$.ajax({
+		type: 'post',
+		data: formArray,
+		url: CCM_TOOLS_PATH + '/conversations/delete_message',
+		success: function(html) {
+			
+			var $parent = $('div[data-conversation-message-id=' + msgID + ']');
+			
+			if ($parent.length) {
+				$parent.after(html).remove();
+			}
+			obj._init();
+			obj._updateCount();
+			obj.$deletedialog.dialog('close');
+		}
+	});
 }
 
 CCMConversation.prototype._addMessageFromJSON = function($form, json) {
