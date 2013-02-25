@@ -69,7 +69,11 @@
 		}
 		
 		protected static function regenerateSession() {
-			unset($_SESSION['dashboardMenus']);
+			foreach(array_keys($_SESSION) as $sessionKey) {
+				if(strpos($sessionKey, 'dashboardMenus') === 0) {
+					unset($_SESSION[$sessionKey]);
+				}
+			}
 			unset($_SESSION['ccmQuickNavRecentPages']);
 			unset($_SESSION['accessEntities']);
 			@session_regenerate_id(true);
