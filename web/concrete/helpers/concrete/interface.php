@@ -175,7 +175,11 @@ class ConcreteInterfaceHelper {
 	public function clearInterfaceItemsCache() {
 		$u = new User();
 		if ($u->isRegistered()) {
-			unset($_SESSION['dashboardMenus']);
+			foreach(array_keys($_SESSION) as $sessionKey) {
+				if(strpos($sessionKey, 'dashboardMenus') === 0) {
+					unset($_SESSION[$sessionKey]);
+				}
+			}
 		}
 	}
 	
@@ -183,7 +187,7 @@ class ConcreteInterfaceHelper {
 		$u = new User();
 		if ($u->isRegistered()) {
 			$ch = Loader::helper('concrete/dashboard');
-			$_SESSION['dashboardMenus'] = $ch->getDashboardAndSearchMenus();
+			$_SESSION['dashboardMenus'.Localization::activeLocale()] = $ch->getDashboardAndSearchMenus();
 		}
 	}
 	
