@@ -8,8 +8,13 @@ class Concrete5_Model_Conversation_Message extends Object {
 	public function getConversationID() {return $this->cnvID;}
 	public function getConversationMessageLevel() {return $this->cnvMessageLevel;}
 	public function getConversationMessageParentID() {return $this->cnvMessageParentID;}
+	public function isConversationMessageDeleted() {return $this->cnvIsMessageDeleted;}
 	public function getConversationMessageBodyOutput() {
-		return $this->cnvMessageBody;
+		if ($this->cnvIsMessageDeleted) {
+			return t('This message has been deleted.');
+		} else {
+			return $this->cnvMessageBody;
+		}
 	}
 	public function getConversationMessageUserObject() {
 		return UserInfo::getByID($this->uID);
@@ -32,6 +37,19 @@ class Concrete5_Model_Conversation_Message extends Object {
 			$cnv->setPropertiesFromArray($r);
 			return $cnv;
 		}
+	}
+
+	public function delete() {
+		$db = Loader::db();
+		$db->Execute('update ConversationMessages set uID = ?, cnvMessageSubject = null, cnvMessageBody = null, cnvIsMessageDeleted = 1 where cnvMessageID = ?', array(
+			USER_DELETED_CONVERSATION_ID,
+			$this->cnvMessageID
+		));
+
+		$this->cnvIsMessageDeleted = true;
+		$this->cnvMessageSubject = null;
+		$this->cnvMessageBody = null;
+		$this->uID = USER_DELETED_CONVERSATION_ID;
 	}
 
 }

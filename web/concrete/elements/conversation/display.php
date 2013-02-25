@@ -43,7 +43,7 @@ $ui = UserInfo::getByID($u->getUserID());
 
 <div class="ccm-conversation-message-list">
 
-	<div class="ccm-conversation-delete-message" data-dialog-title="<?=t('Delete Message')?>">
+	<div class="ccm-conversation-delete-message" data-dialog-title="<?=t('Delete Message')?>" data-cancel-button-title="<?=t('Cancel')?>" data-confirm-button-title="<?=t('Delete Message')?>">
 		<?=t('Remove this message? Replies to it will not be removed.')?>
 	</div>
 
