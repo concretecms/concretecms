@@ -213,6 +213,7 @@ jQuery.fn.dialog.showLoader = function(text) {
 		$("body").append("<div id='ccm-dialog-loader-wrapper' class='ccm-ui'><div class='progress progress-striped active' style='width: 300px'><div class='bar' style='width: 100%;'></div></div></div>");//add loader to the page
 	}
 	if (text != null) {
+		$('#ccm-dialog-loader-text',$('#ccm-dialog-loader-wrapper')).remove();
 		$("<div />").attr('id', 'ccm-dialog-loader-text').html(text).prependTo($("#ccm-dialog-loader-wrapper"));
 	}
 

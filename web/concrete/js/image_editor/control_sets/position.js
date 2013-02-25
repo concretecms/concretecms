@@ -1,51 +1,86 @@
 // Handle selection
+im.bind('changeActiveElement',function(e){
+	im.activeElement.setDraggable(true);
+	if (im.activeElement.elementType == 'stage') {
+		me.parent().parent().slideUp();
+		return;
+	}
+	me.parent().parent().slideDown();
+	if (im.activeElement.isBound !== true) {
+		im.activeElement.on('dragmove',function(e){im.trigger('activeElementDragMove',e)});
+		im.activeElement.isBound = true;
+	}
+	updateSliders();
+});
+im.bind('beforeChangeActiveElement',function(e){
+	if (im.activeElement.elementType == 'stage') return;
+	im.activeElement.setDraggable(false);
+});
 im.bind('ChangeActiveAction',function(e){
 	if (e.eventData != im.namespace) {
-		im.image.setDraggable(false);
+		im.activeElement.setDraggable(false);
 	} else {
-		im.image.setDraggable(true);
+		im.activeElement.setDraggable(true);
 	}
 });
 var me = $(this);
+me.parent().parent().slideUp();
 
 var sliderx = $('div.xslider',me).slider({
 	step: 1,
 	range: "min",
-	min:-im.image.getWidth(),
+	min:-im.activeElement.getWidth(),
 	max:im.width,
-	value:Math.round(im.image.getX()),
+	value:Math.round(im.activeElement.getX()),
 	animate: true,
 	create: function(ev,e){
-		$('input.x',me).val(im.image.getX());
+		$('input.x',me).val(im.activeElement.getX());
 	},
 	slide: function(ev,e){
-		im.image.setX(e.value);
-		im.trigger('imagechange');
+		im.activeElement.setX(e.value);
+		im.trigger('activeElementMove');
 	}
 });
 var slidery = $('div.yslider',me).slider({
 	step: 1,
 	range: "min",
-	min:-im.image.getHeight(),
+	min:-im.activeElement.getHeight(),
 	max:im.height,
-	value:Math.round(im.image.getY()),
+	value:Math.round(im.activeElement.getY()),
 	animate: true,
 	create: function(ev,e){
-		$('input.y',me).val(im.image.getY());
+		$('input.y',me).val(im.activeElement.getY());
 	},
 	slide: function(ev,e){
-		im.image.setY(e.value);
-		im.trigger('imagechange');
+		im.activeElement.setY(e.value);
+		im.trigger('activeElementMove');
 	}
 });
+
+var updateSliders = function() {
+	var max = {x:im.stage.getWidth(),y:im.stage.getHeight()},
+		min = {x:-im.activeElement.getWidth(),y:-im.activeElement.getHeight()},
+		cur = {x:im.activeElement.getX(),y:im.activeElement.getY()};
+	sliderx.slider("option", "min", min.x);
+	sliderx.slider("option", "max", max.x);
+	sliderx.slider('value',cur.x);
+	$('input.x',me).val(cur.x);
+
+	slidery.slider("option", "min", min.y);
+	slidery.slider("option", "max", max.y);
+	slidery.slider('value',cur.y);
+	$('input.y',me).val(cur.y);
+};
+
+updateSliders();
 
 $('input.y',me).keyup(function(e){
 	var m = $(this);
 	v = parseInt(Number(m.val().replace(/[^0-9\.\-]/g,'')));
 	if (e.keyCode == 38) v++;
 	if (e.keyCode == 40) v--;
-	im.image.setY(v);
-	im.trigger('imagechange');
+	im.activeElement.setY(v);
+	im.trigger('activeElementMove');
 	e.preventDefault();
 });
 $('input.x',me).keyup(function(e){
@@ -53,39 +88,51 @@ $('input.x',me).keyup(function(e){
 	v = parseInt(Number(m.val().replace(/[^0-9\.\-]/g,'')));
 	if (e.keyCode == 38) v++;
 	if (e.keyCode == 40) v--;
-	im.image.setX(v);
-	im.trigger('imagechange');
+	im.activeElement.setX(v);
+	im.trigger('activeElementMove');
 	e.preventDefault();
 });
+$('button.up',me).click(function(e) {
+	im.activeElement.parent.moveUp();
+});
+$('button.down',me).click(function(e) {
+	// Don't go below the savers
+	if (im.activeElement.parent.getZIndex() - im.savers.getZIndex() == 1) return;
+	im.activeElement.parent.moveDown();
+});
 $('button.center',me).click(function(e){
-	im.image.transitionTo({
-		x:Math.round(im.width / 2 - im.image.getWidth()/2),
-		y:Math.round(im.height / 2 - im.image.getHeight()/2),
+	im.activeElement.transitionTo({
+		x:Math.round(im.width / 2 - im.activeElement.getWidth()/2),
+		y:Math.round(im.height / 2 - im.activeElement.getHeight()/2),
 		duration:.2,
 		callback: function(){
-			im.trigger('imagemove');
-			im.trigger('imagechange');
+			im.trigger('activeElementMove');
 		}
 	})
 })
-im.image.on('dragend',function(e){
-	var x = im.image.getX(), y = im.image.getY();
-	im.trigger('imagemove');
-	im.trigger('imagechange');
+im.activeElement.on('dragend',function(e){
+	var x = im.activeElement.getX(), y = im.activeElement.getY();
+	im.trigger('activeElementDragMove');
+	im.trigger('activeElementMove');
 })
-im.image.on('dragstart',function(e){
-	im.trigger('imagemove');
+im.activeElement.on('dragstart',function(e){
+	im.trigger('activeElementDragMove');
 })
 // Use our API, not kinetics.
-im.image.on('dragmove',function(e){im.trigger('imagemove',{change:false});});
-im.bind('imagechange',function(e){
-	var x = im.image.getX(), y = im.image.getY(),
-		height=im.image.getHeight(),width=im.image.getWidth();
+im.activeElement.on('dragmove',function(e){im.trigger('activeElementDragMove',e)});
+
+im.bind('activeElementMove',function(e){
+	var x = im.activeElement.getX(), y = im.activeElement.getY(),
+		height=im.activeElement.getHeight(),width=im.activeElement.getWidth();
 
 	// Update Sliders
 	sliderx.slider('value',x);
 	slidery.slider('value',y);
 	$('input.x',me).val(x);
 	$('input.y',me).val(y);
-	im.image.parent.draw();
+	if (im.activeElement.parent) {
+		im.activeElement.parent.draw();
+	} else if (typeof im.activeElement.draw == 'function') {
+		im.activeElement.draw();
+	}
 });

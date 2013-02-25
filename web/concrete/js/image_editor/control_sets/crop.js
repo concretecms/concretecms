@@ -1,7 +1,21 @@
 var me = $(this);
 
+me.parent().parent().slideUp();
+
+im.bind('changeActiveElement',function(e){
+  if (im.activeElement.elementType != 'image') {
+    me.parent().parent().slideUp();
+  } else {
+    me.parent().parent().slideDown();
+  }
+});
+
 im.controls = new Kinetic.Layer();
 im.croppers = new Kinetic.Group();
+
+
+var scaledWidth = Math.max(im.stage.getWidth(),im.stage.getScaledWidth()),
+    scaledHeight = Math.max(im.stage.getHeight(),im.stage.getScaledHeight());
 
 im.dragger = new Kinetic.Rect({
   x:0,
@@ -19,39 +33,46 @@ im.cropperTopLeft = new Kinetic.Rect({
   x:0,
   y:0,
   fill:croppercolor,
-  width:Math.floor(im.stage.getScaledWidth()/2),
-  height:Math.floor(im.stage.getScaledHeight()/2)
+  width:Math.floor(scaledWidth/2),
+  height:Math.floor(scaledHeight/2)
 });
 im.cropperBottomLeft = new Kinetic.Rect({
   x:0,
-  y:Math.floor(im.stage.getScaledHeight()/2),
+  y:Math.floor(scaledHeight/2),
   fill:croppercolor,
-  width:Math.floor(im.stage.getScaledWidth()/2),
-  height:Math.ceil(im.stage.getScaledHeight()/2)
+  width:Math.floor(scaledWidth/2),
+  height:Math.ceil(scaledHeight/2)
 });
 im.cropperTopRight = new Kinetic.Rect({
-  x:Math.floor(im.stage.getScaledWidth()/2),
+  x:Math.floor(scaledWidth/2),
   y:0,
   fill:croppercolor,
-  width:Math.ceil(im.stage.getScaledWidth()/2),
-  height:Math.floor(im.stage.getScaledHeight()/2)
+  width:Math.ceil(scaledWidth/2),
+  height:Math.floor(scaledHeight/2)
 });
 im.cropperBottomRight = new Kinetic.Rect({
-  x:Math.floor(im.stage.getScaledWidth()/2),
-  y:Math.floor(im.stage.getScaledHeight()/2),
+  x:Math.floor(scaledWidth/2),
+  y:Math.floor(scaledHeight/2),
   fill:croppercolor,
-  width:Math.ceil(im.stage.getScaledWidth()/2),
-  height:Math.ceil(im.stage.getScaledHeight()/2)
+  width:Math.ceil(scaledWidth/2),
+  height:Math.ceil(scaledHeight/2)
 });
 
-var adjustCroppers = function() {
+im.adjustCroppers = function() {
+
+  var dimensions = im.stage.getTotalDimensions();
+  scaledWidth = Math.max(im.stage.getWidth(),im.stage.getScaledWidth());
+  scaledHeight = Math.max(im.stage.getHeight(),im.stage.getScaledHeight());
   var startx = im.start.x,
       posx = im.adjuster.getPosition().x + 5,
       starty = im.start.y,
-      posy = im.adjuster.getPosition().y + 5;
+      posy = im.adjuster.getPosition().y + 5,
+      stagex = -im.stage.getTotalDimensions().max.x - im.stage.getScaledWidth(),
+      stagey = -im.stage.getTotalDimensions().max.y - im.stage.getScaledHeight();
 
-  im.width = posx - startx;
-  im.height = posy - starty;
+
+  if (stagex > startx) stagex = startx;
+  if (stagey > starty) stagey = starty;
 
   if (posy < starty) {
     var inter = posy;
@@ -69,25 +90,34 @@ var adjustCroppers = function() {
   im.dragger.setX(startx);
   im.dragger.setY(starty);
 
-  im.cropperTopLeft.setWidth(startx);
-  im.cropperTopLeft.setHeight(posy);
+  im.adjuster.setScale(im.stage.getScaledWidth()/im.stage.getWidth());
+  im.adjuster.setX(im.start.x + im.width - (5 * im.adjuster.getScale().x));
+  im.adjuster.setY(im.start.y + im.height - (5 * im.adjuster.getScale().y));
+  im.adjuster.parent.draw();
+
+  im.cropperTopLeft.setX(stagex);
+  im.cropperTopLeft.setY(stagey);
+  im.cropperTopLeft.setWidth(startx - stagex);
+  im.cropperTopLeft.setHeight(posy - stagey);
 
   im.cropperTopRight.setX(startx);
-  im.cropperTopRight.setWidth(im.stage.getScaledWidth()-startx);
-  im.cropperTopRight.setHeight(starty);
+  im.cropperTopRight.setY(stagey);
+  im.cropperTopRight.setWidth(scaledWidth - startx);
+  im.cropperTopRight.setHeight(starty - stagey);
 
-  im.cropperBottomLeft.setWidth(posx);
+  im.cropperBottomLeft.setX(stagex);
   im.cropperBottomLeft.setY(posy);
-  im.cropperBottomLeft.setHeight(im.stage.getScaledHeight()-posy);
+  im.cropperBottomLeft.setWidth(posx - stagex);
+  im.cropperBottomLeft.setHeight(scaledHeight - posy);
 
-  im.cropperBottomRight.setY(starty);
   im.cropperBottomRight.setX(posx);
-  im.cropperBottomRight.setWidth(im.stage.getScaledWidth()-posx);
-  im.cropperBottomRight.setHeight(im.stage.getScaledHeight()-starty);
+  im.cropperBottomRight.setY(starty);
+  im.cropperBottomRight.setWidth(scaledWidth - posx);
+  im.cropperBottomRight.setHeight(scaledHeight - starty);
 
-  im.croppers.parent.draw();
+  im.stage.draw();
 };
-
+var adjustCroppers = im.adjustCroppers;
 im.croppers.add(im.cropperTopLeft);
 im.croppers.add(im.cropperTopRight);
 im.croppers.add(im.cropperBottomLeft);
@@ -95,9 +125,9 @@ im.croppers.add(im.cropperBottomRight);
 
 im.controls.add(im.croppers);
 
-im.width = im.image.getWidth();
-im.height = im.image.getHeight();
-im.start = {x:im.image.getX(),y:im.image.getY()};
+im.width = im.activeElement.getWidth();
+im.height = im.activeElement.getHeight();
+im.start = {x:im.activeElement.getX(),y:im.activeElement.getY()};
 
 
 
@@ -117,8 +147,8 @@ im.dragger.on('dragmove',function(e){
   im.start.x = startstart.x - offset.x;
   im.start.y = startstart.y - offset.y;
 
-  im.adjuster.setX(im.start.x + im.width - 5);
-  im.adjuster.setY(im.start.y + im.height - 5);
+  im.adjuster.setX(im.start.x + im.width - (5 * im.adjuster.getScale().x));
+  im.adjuster.setY(im.start.y + im.height - (5 * im.adjuster.getScale().x));
 
   adjustCroppers();
 });
@@ -129,12 +159,12 @@ im.bind('ChangeActiveAction',function(e){
     im.stage.draw();
   } else {
 
-    im.width = im.image.getWidth();
-    im.height = im.image.getHeight();
-    im.start = {x:im.image.getX(),y:im.image.getY()};
+    im.width = im.activeElement.getWidth();
+    im.height = im.activeElement.getHeight();
+    im.start = {x:im.activeElement.getX(),y:im.activeElement.getY()};
 
-    im.adjuster.setX(im.start.x + im.width - 5);
-    im.adjuster.setY(im.start.y + im.height - 5);
+    im.adjuster.setX(im.start.x + im.width - (5 * im.adjuster.getScale().x));
+    im.adjuster.setY(im.start.y + im.height - (5 * im.adjuster.getScale().x));
     adjustCroppers();
 
 
@@ -166,14 +196,14 @@ im.adjuster.on('dragstart',function(){
   adjuststartstart = {width:im.width,height:im.height};
 });
 im.adjuster.on('dragend',function(e){
-  im.adjuster.setX(im.start.x + im.width - 5);
-  im.adjuster.setY(im.start.y + im.height - 5);
+  im.adjuster.setX(im.start.x + im.width - (5 * im.adjuster.getScale().x));
+  im.adjuster.setY(im.start.y + im.height - (5 * im.adjuster.getScale().x));
 });
 im.adjuster.on('dragmove',function(e){
   var newpos = im.adjuster.getPosition(),
       offset = {
-    x:adjuststart.x - newpos.x + 5,
-    y:adjuststart.y - newpos.y + 5
+    x:Math.round(adjuststart.x - newpos.x + (5 * im.adjuster.getScale().x)),
+    y:Math.round(adjuststart.y - newpos.y + (5 * im.adjuster.getScale().x))
   };
 
   im.width = adjuststartstart.width - offset.x;
@@ -184,28 +214,41 @@ im.adjuster.on('dragmove',function(e){
 
 im.on('stageChanged',function(){
   adjustCroppers();
+  im.adjuster.setScale(im.scale);
+  im.adjuster.parent.draw();
 });
 
 var cropToCroppers = function() {
-  var oldScale = im.stage.getScale();
-  im.stage.setScale(1);
-  var newx = im.image.getX() - im.dragger.getX(),
-      newy = im.image.getY() - im.dragger.getY()
-  im.image.setX(newx);
-  im.image.setY(newy);
-  im.image.disableStroke();
+  var oldScale = im.stage.getScale(),
+      oldx = im.stage.getX(),
+      oldy = im.stage.getY();
 
-  im.image.toImage({
+  im.stage.setScale(1);
+  im.stage.setX(0);
+  im.stage.setY(0);
+
+  var newx = Math.round(im.activeElement.getX() - im.dragger.getX()),
+      newy = Math.round(im.activeElement.getY() - im.dragger.getY());
+
+  im.activeElement.setX(newx);
+  im.activeElement.setY(newy);
+  im.activeElement.setCrop({x:0,y:0,width:im.width,height:im.height});
+  im.activeElement.setHeight(im.height);
+  im.activeElement.setWidth(im.width);
+
+  im.activeElement.toImage({
     width:im.width,
     height:im.height,
     callback:function(img) {
-      im.image.enableStroke();
-      im.image.setImage(img);
-      im.image.setWidth(im.dragger.getWidth());
-      im.image.setHeight(im.dragger.getHeight());
-      im.image.setX(im.dragger.getX());
-      im.image.setY(im.dragger.getY());
+      im.activeElement.setImage(img);
+      im.activeElement.setCrop();
+      im.activeElement.setWidth(im.width);
+      im.activeElement.setHeight(im.height);
+      im.activeElement.setX(im.dragger.getX());
+      im.activeElement.setY(im.dragger.getY());
       im.stage.setScale(oldScale);
+      im.stage.setX(oldx);
+      im.stage.setY(oldy);
 
       im.fire('imageChange');
       im.stage.draw();
@@ -214,5 +257,4 @@ var cropToCroppers = function() {
 };
 
 me.find('button.crop').click(cropToCroppers);
-
-adjustCroppers();
+//adjustCroppers();

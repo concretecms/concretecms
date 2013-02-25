@@ -20,13 +20,21 @@ div.editorcontainer {
     height:100%;
   }
   div.bottomBar {
-    height: 23px;
+    height: 25px;
     padding: 6px 10px 0 10px;
     background: white;
     bottom: 0;
     position: absolute;
     width: 75%;
     box-shadow:0 0 15px -5px black;
+    border-bottom-left-radius: 5px;
+    -moz-border-bottom-left-radius: 5px;
+    -webkit-border-bottom-left-radius: 5px;
+    -o-border-bottom-left-radius: 5px;
+    span.scale {
+      position: absolute;
+      margin-top: -2px;
+    }
   }
 }
 
@@ -40,7 +48,7 @@ div.controls {
     padding-left: 20px;
     padding-top: 10px;
   }
-  div.controlset {
+  div.controlset, div.component {
     h4 {
       padding:20px 40px 20px;
       margin:0;
