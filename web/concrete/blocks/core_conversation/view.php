@@ -1,5 +1,8 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?>
 <?
+$paginate = ($paginate) ? 'true' : 'false';
+$itemsPerPage = ($paginate) ? $itemsPerPage : -1;
+
 if (is_object($conversation)) {
 ?>
 
@@ -12,7 +15,9 @@ if (is_object($conversation)) {
 $(function() { 
 	$('div[data-conversation-id=<?=$conversation->getConversationID()?>]').ccmconversation({
 		'cnvID': <?=$conversation->getConversationID()?>,
-		'posttoken': '<?=$posttoken?>'
+		'posttoken': '<?=$posttoken?>',
+		'paginate': <?=$paginate?>,
+		'itemsPerPage': <?=$itemsPerPage?>
 	});
 });
 </script>

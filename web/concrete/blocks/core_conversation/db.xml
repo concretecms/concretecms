@@ -10,5 +10,15 @@
 		<field name="enablePosting" type="I">
 			<default value="1"/>
 		</field>
+		<field name="paginate" type="I1">
+			<unsigned />
+			<notnull />
+			<default value="1" />
+		</field>
+		<field name="itemsPerPage" type="I2">
+			<unsigned />
+			<notnull />
+			<default value="50" />
+		</field>
 	</table>
 </schema>
