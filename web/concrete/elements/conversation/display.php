@@ -8,6 +8,7 @@ $u = new User();
 $ui = UserInfo::getByID($u->getUserID());
 ?>
 
+
 <? if ($displayForm) { ?>
 
 <h4><?=t('Add Message')?></h4>
@@ -41,6 +42,11 @@ $ui = UserInfo::getByID($u->getUserID());
 <? } ?>
 
 <div class="ccm-conversation-message-list">
+
+	<div class="ccm-conversation-delete-message" data-dialog-title="<?=t('Delete Message')?>">
+		<?=t('Remove this message? Replies to it will not be removed.')?>
+	</div>
+
 
 	<div class="ccm-conversation-messages-header">
 		<select class="ccm-sort-conversations" data-sort="conversation-message-list">

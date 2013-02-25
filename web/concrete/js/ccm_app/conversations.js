@@ -48,6 +48,7 @@ var CCMConversation = function(element, options) {
 CCMConversation.prototype._init = function() {
 	var obj = this;
 	obj.$replyholder = obj.$element.find('div.ccm-conversation-add-reply');
+	obj.$deleteholder = obj.$element.find('div.ccm-conversation-delete-message');
 	obj.$messagelist = obj.$element.find('div.ccm-conversation-message-list');
 	obj.$messagecnt = obj.$element.find('.ccm-conversation-message-count');
 	obj.$postbuttons = obj.$element.find('button[data-submit=conversation-message]');
@@ -63,8 +64,10 @@ CCMConversation.prototype._init = function() {
 		return false;
 	});
 	obj.$element.find('a[data-submit=delete-conversation-message]').unbind().on('click', function() {
-		alert('hey');
-		return false;
+		obj.$deleteholder.dialog({
+			modal: true,
+			title: obj.$deleteholder.attr('data-dialog-title')
+		});
 	});
 	obj.$sortselect.unbind().on('change', function() {
 		obj.$messagelist.load(CCM_TOOLS_PATH + '/conversations/view_ajax', {
