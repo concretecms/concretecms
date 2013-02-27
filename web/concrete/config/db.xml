@@ -1,5 +1,50 @@
 <?xml version="1.0"?>
 <schema version="0.3">
+  <table name="Aggregators">
+    <field name="agID" type="I" size="10">
+      <key/>
+      <autoincrement/>
+      <unsigned/>
+    </field>
+    <field name="agDateCreated" type="D">
+      <notnull/>
+    </field>
+  </table>
+    <table name="AggregatorDataSources">
+    <field name="agsID" type="I" size="10">
+      <key/>
+      <autoincrement/>
+      <unsigned/>
+    </field>
+    <field name="agsName" type="C" size="255"/>
+    <field name="agsHandle" type="C" size="255">
+      <notnull/>
+    </field>
+    <field name="pkgID" type="I" size="10">
+      <notnull/>
+      <default value="0"/>
+      <unsigned/>
+    </field>
+    <field name="agsDisplayOrder" type="I" size="10">
+      <notnull/>
+      <default value="0"/>
+      <unsigned/>
+    </field>
+  </table>
+  <table name="AggregatorConfiguredDataSources">
+    <field name="acsID" type="I" size="10">
+      <key/>
+      <autoincrement/>
+      <unsigned/>
+    </field>
+    <field name="agID" type="I" size="10">
+      <unsigned/>
+    </field>
+    <field name="agsID" type="I" size="10">
+      <unsigned/>
+    </field>
+   <field name="acdObject" type="X2"></field>
+  </table>
   <table name="Conversations">
     <field name="cnvID" type="I" size="10">
       <key/>

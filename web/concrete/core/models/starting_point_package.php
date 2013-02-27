@@ -26,13 +26,14 @@ class Concrete5_Model_StartingPointPackage extends Package {
 		new StartingPointInstallRoutine('add_home_page', 23, t('Creating home page.')),
 		new StartingPointInstallRoutine('install_attributes', 25, t('Installing attributes.')),
 		new StartingPointInstallRoutine('install_blocktypes', 30, t('Adding block types.')),
-		new StartingPointInstallRoutine('install_themes', 35, t('Adding themes.')),
-		new StartingPointInstallRoutine('install_jobs', 38, t('Installing automated jobs.')),
-		new StartingPointInstallRoutine('install_dashboard', 40, t('Installing dashboard.')),
-		new StartingPointInstallRoutine('install_required_single_pages', 50, t('Installing login and registration pages.')),
-		new StartingPointInstallRoutine('install_config', 55, t('Configuring site.')),
-		new StartingPointInstallRoutine('import_files', 58, t('Importing files.')),
-		new StartingPointInstallRoutine('install_content', 65, t('Adding pages and content.')),
+		new StartingPointInstallRoutine('install_aggregator', 33, t('Adding aggregator data sources.')),
+		new StartingPointInstallRoutine('install_themes', 38, t('Adding themes.')),
+		new StartingPointInstallRoutine('install_jobs', 40, t('Installing automated jobs.')),
+		new StartingPointInstallRoutine('install_dashboard', 45, t('Installing dashboard.')),
+		new StartingPointInstallRoutine('install_required_single_pages', 55, t('Installing login and registration pages.')),
+		new StartingPointInstallRoutine('install_config', 60, t('Configuring site.')),
+		new StartingPointInstallRoutine('import_files', 65, t('Importing files.')),
+		new StartingPointInstallRoutine('install_content', 70, t('Adding pages and content.')),
 		new StartingPointInstallRoutine('set_site_permissions', 80, t('Setting up site permissions.')),
 		new StartingPointInstallRoutine('precache', 85, t('Prefetching information.')),
 		new StartingPointInstallRoutine('finish', 95, t('Finishing.'))
@@ -61,6 +62,11 @@ class Concrete5_Model_StartingPointPackage extends Package {
 	public function install_dashboard() {
 		$ci = new ContentImporter();
 		$ci->importContentFile(DIR_BASE_CORE. '/config/install/base/dashboard.xml');
+	}
+
+	public function install_aggregator() {
+		$ci = new ContentImporter();
+		$ci->importContentFile(DIR_BASE_CORE. '/config/install/base/aggregator.xml');
 	}
 
 	public function install_required_single_pages() {

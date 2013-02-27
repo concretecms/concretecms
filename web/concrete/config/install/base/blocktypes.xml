@@ -6,6 +6,7 @@
         <blocktype handle="core_scrapbook_display" package=""/>
         <blocktype handle="core_stack_display" package=""/>
         <blocktype handle="core_conversation" package=""/>
+        <blocktype handle="core_aggregator" package=""/>
         <blocktype handle="dashboard_featured_addon" package=""/>
         <blocktype handle="dashboard_featured_theme" package=""/>
         <blocktype handle="dashboard_newsflow_latest" package=""/>
@@ -46,6 +47,7 @@
         </blocktypeset>
         <blocktypeset handle="navigation" name="Navigation" package="">
             <blocktype handle="autonav"/>
+            <blocktype handle="core_aggregator"/>
             <blocktype handle="page_list"/>
             <blocktype handle="next_previous"/>
             <blocktype handle="date_nav"/>
