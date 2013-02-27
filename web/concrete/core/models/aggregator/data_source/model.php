@@ -3,7 +3,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 abstract class Concrete5_Model_AggregatorDataSource extends Object {
 
 	abstract public function createConfigurationObject(Aggregator $ag, $post);
-	abstract public function getAggregatorItems(AggregatorDataSourceConfiguration $configuration);
+	abstract public function createAggregatorItems(AggregatorDataSourceConfiguration $configuration);
 	
 	public function configure(Aggregator $ag, $post) {
 		$db = Loader::db();

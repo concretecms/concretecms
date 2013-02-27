@@ -8,7 +8,7 @@ class Concrete5_Model_RssFeedAggregatorDataSource extends AggregatorDataSource {
 		return $o;
 	}
 
-	public function getAggregatorItems(AggregatorDataSourceConfiguration $configuration) {
+	public function createAggregatorItems(AggregatorDataSourceConfiguration $configuration) {
 		
 	}
 	
