@@ -3,6 +3,7 @@
 if ($controller->getTask() == 'add') {
 	$enablePosting = 1;
 	$paginate = 1;
+	$itemsPerPage = 20;
 }
 ?>
 

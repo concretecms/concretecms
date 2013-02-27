@@ -65,6 +65,9 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				$conversation = Conversation::getByID($cnvID);
 			}
 			$values = $post;
+			if (!$values['itemsPerPage']) {
+				$values['itemsPerPage'] = 0;
+			}
 			$values['cnvID'] = $conversation->getConversationID();
 			parent::save($values);
 		}
