@@ -21,6 +21,20 @@ class Concrete5_Model_Aggregator extends Object {
 		return Aggregator::getByID($db->Insert_ID());
 	}
 
+
+	public function getAggregatorItems() {
+		$db = Loader::db();
+		$r = $db->Execute('select agiID from AggregatorItems where agID = ?', array($this->agID));
+		$list = array();
+		while ($row = $r->FetchRow()) {
+			$item = AggregatorItem::getByID($row['agiID']);
+			if (is_object($item)) {
+				$list[] = $item;
+			}
+		}
+		return $list;
+	}
+
 	public function getConfiguredAggregatorDataSources() {
 		$db = Loader::db();
 		$r = $db->Execute('select acsID from AggregatorConfiguredDataSources where agID = ?', array($this->agID));
@@ -52,5 +66,11 @@ class Concrete5_Model_Aggregator extends Object {
 		}
 	}
 
+	public function clearAggregatorItems() {
+		$items = $this->getAggregatorItems();
+		foreach($items as $it) {
+			$it->delete();
+		}
+	}
 
 }

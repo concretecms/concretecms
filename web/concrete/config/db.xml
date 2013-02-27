@@ -6,8 +6,29 @@
       <autoincrement/>
       <unsigned/>
     </field>
-    <field name="agDateCreated" type="D">
+    <field name="agDateCreated" type="T">
       <notnull/>
+    </field>
+  </table>
+  <table name="AggregatorItems">
+    <field name="agiID" type="I" size="10">
+      <key/>
+      <autoincrement/>
+      <unsigned/>
+    </field>
+    <field name="agID" type="I" size="10">
+      <unsigned/>
+    </field>
+    <field name="agsID" type="I" size="10">
+      <unsigned/>
+    </field>
+    <field name="agiDateTimeCreated" type="T">
+      <notnull/>
+    </field>
+    <field name="agiPublicDateTime" type="T">
+      <notnull/>
+    </field>
+    <field name="agiTitle" type="X">
     </field>
   </table>
     <table name="AggregatorDataSources">
@@ -51,7 +72,7 @@
       <autoincrement/>
       <unsigned/>
     </field>
-    <field name="cnvDateCreated" type="D">
+    <field name="cnvDateCreated" type="T">
       <notnull/>
     </field>
   </table>

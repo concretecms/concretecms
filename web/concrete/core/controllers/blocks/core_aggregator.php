@@ -68,6 +68,7 @@ class Concrete5_Controller_Block_CoreAggregator extends BlockController {
 		public function view() {
 			if ($this->agID) {
 				$aggregator = Aggregator::getByID($this->agID);
+				$aggregator->clearAggregatorItems();
 				$aggregator->generateAggregatorItems();
 			}
 		}
