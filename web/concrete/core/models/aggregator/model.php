@@ -48,7 +48,7 @@ class Concrete5_Model_Aggregator extends Object {
 		$configuredDataSources = $this->getConfiguredAggregatorDataSources();
 		foreach($configuredDataSources as $configuration) {
 			$dataSource = $configuration->getAggregatorDataSourceObject();
-			$items = $dataSource->getAggregatorItems($configuration);
+			$items = $dataSource->createAggregatorItems($configuration);
 		}
 	}
 
