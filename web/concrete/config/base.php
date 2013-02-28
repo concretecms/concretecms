@@ -417,6 +417,12 @@ if (!defined('DIRNAME_AGGREGATOR_DATA_SOURCES')) {
 if (!defined('FILENAME_AGGREGATOR_DATA_SOURCE_OPTIONS')) {
 	 define('FILENAME_AGGREGATOR_DATA_SOURCE_OPTIONS', 'options.php');
 }
+if (!defined('FILENAME_AGGREGATOR_DATA_SOURCE_OPTIONS')) {
+	 define('FILENAME_AGGREGATOR_DATA_SOURCE_OPTIONS', 'options.php');
+}
+if (!defined('DIRNAME_AGGREGATOR_GRID_TILES')) {
+	 define('DIRNAME_AGGREGATOR_GRID_TILES', 'tiles');
+}
 
 # Asset library constants 
 define('AL_THUMBNAIL_WIDTH', '60');

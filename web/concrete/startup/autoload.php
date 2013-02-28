@@ -31,6 +31,7 @@ $classes = array(
 	'Queue' => array('library','queue'),
 	'Aggregator' => array('model','aggregator/model'),
 	'AggregatorItem' => array('model','aggregator/item/model'),
+	'AggregatorItemList' => array('model','aggregator/item/list'),
 	'PageAggregatorItem' => array('model','aggregator/item/types/page'),
 	'RssFeedAggregatorItem' => array('model','aggregator/item/types/rss_feed'),
 	'AggregatorDataSource' => array('model','aggregator/data_source/model'),

@@ -2,7 +2,6 @@
 <concrete5-cif version="1.0">
     <aggregatorsources>
         <aggregatorsource handle="page" name="Site Page" package="" />
-        <aggregatorsource handle="twitter" name="Twitter" package="" />
         <aggregatorsource handle="rss_feed" name="RSS Feed" package="" />
     </aggregatorsources>
 </concrete5-cif>

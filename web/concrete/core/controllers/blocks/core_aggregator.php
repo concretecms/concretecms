@@ -65,11 +65,37 @@ class Concrete5_Controller_Block_CoreAggregator extends BlockController {
 			parent::save($values);
 		}
 
+		public function on_page_view() {
+			if ($this->agID) {
+				$aggregator = Aggregator::getByID($this->agID);
+				if (is_object($aggregator)) {
+					$this->addHeaderItem(Loader::helper('html')->css('ccm.aggregator.css'));
+					$this->addFooterItem(Loader::helper('html')->javascript('jquery.gridster.js'));
+				}
+			}
+		}
+
+		public function delete() {
+			parent::delete();
+			if ($this->agID) {
+				$aggregator = Aggregator::getByID($this->agID);
+				if (is_object($aggregator)) {
+					$aggregator->delete();
+				}
+			}
+		}
+
 		public function view() {
 			if ($this->agID) {
 				$aggregator = Aggregator::getByID($this->agID);
-				$aggregator->clearAggregatorItems();
-				$aggregator->generateAggregatorItems();
+				if (is_object($aggregator)) {
+					$list = new AggregatorItemList($aggregator);
+					$list->sortByDateDescending();
+					$items = $list->getPage();
+					$this->set('aggregator', $aggregator);
+					$this->set('itemList', $list);
+					$this->set('items', $items);
+				}
 			}
 		}
 

@@ -94,7 +94,7 @@ if (is_object($b)) {
 				
 				$v = View::getInstance();
 				
-				$items = $v->getHeaderItems();
+				$items = array_merge($v->getHeaderItems(), $v->getFooterItems());
 				$csr = $b->getBlockCustomStyleRule(); 
 				if (is_object($csr)) { 
 					$styleHeader = '#'.$csr->getCustomStyleRuleCSSID(1).' {'. $csr->getCustomStyleRuleText(). "}";  ?>
