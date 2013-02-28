@@ -11,6 +11,17 @@ class Concrete5_Model_PageAggregatorDataSource extends AggregatorDataSource {
 	}
 	
 	public function createAggregatorItems(AggregatorDataSourceConfiguration $configuration) {
+		$pl = new PageList();
+		$pl->ignoreAliases();
+		$pl->ignorePermissions();
+		$ctIDs = $configuration->getCollectionTypeIDs();
+		if (count($ctIDs) > 0) {
+			$pl->filterByCollectionTypeIDs($ctIDs);
+		}
+		$pages = $pl->get();
+		foreach($pages as $c) {
+			$item = PageAggregatorItem::add($configuration, $c);
+		}
 
 	}
 

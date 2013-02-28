@@ -76,6 +76,30 @@
       <notnull/>
     </field>
   </table>
+   <table name="agPage">
+    <field name="agiID" type="I" size="10">
+      <key/>
+      <unsigned/>
+    </field>
+    <field name="cID" type="I" size="10">
+      <unsigned />
+    </field>
+  </table>
+   <table name="agRssFeed">
+    <field name="agiID" type="I" size="10">
+      <key/>
+      <unsigned/>
+    </field>
+    <field name="title" type="X">
+
+    </field>
+    <field name="description" type="X">
+
+    </field>
+    <field name="url" type="X">
+
+    </field>
+  </table>
   <table name="ConversationMessages">
     <field name="cnvMessageID" type="I" size="10">
       <KEY/>
