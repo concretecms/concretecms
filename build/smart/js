@@ -183,6 +183,5 @@ $(getFile 'filters.js')"
     echo "$INP" > image_editor.tmp.js
 
     uglifyjs --no-seqs -o ./web/concrete/js/image_editor.min.js ./image_editor.tmp.js
-    #scp ./web/concrete/js/image_editor.min.js korvinte@korvinte.host10.getconcrete5.com:/home/korvinte/www/concrete/js/image_editor.min.js
-    #rm image_editor.tmp.js
+    rm image_editor.tmp.js
 fi
