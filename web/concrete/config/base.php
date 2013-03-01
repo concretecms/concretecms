@@ -361,7 +361,7 @@ define('REL_DIR_FILES_UPLOADED_THUMBNAILS_LEVEL2', DIR_REL . '/files/thumbnails/
 define('REL_DIR_FILES_UPLOADED_THUMBNAILS_LEVEL3', DIR_REL . '/files/thumbnails/level3');
 define('REL_DIR_FILES_CACHE', REL_DIR_FILES_UPLOADED . '/cache');
 
-#Cache
+# Cache
 if (!defined('DIR_FILES_CACHE')) {
 	define('DIR_FILES_CACHE', DIR_BASE . '/files/cache');
 }
@@ -406,6 +406,23 @@ if (!defined('DIR_FILES_BIN_ZIP')) {
 	 define('DIR_FILES_BIN_ZIP', '/usr/bin/zip');
 }
 if(!defined('DIR_FILES_BIN_ASPELL')) define('DIR_FILES_BIN_ASPELL', '/usr/bin/aspell'); // spellchecker
+
+# Aggregator
+if (!defined('DIRNAME_AGGREGATOR')) {
+	 define('DIRNAME_AGGREGATOR', 'aggregator');
+}
+if (!defined('DIRNAME_AGGREGATOR_DATA_SOURCES')) {
+	 define('DIRNAME_AGGREGATOR_DATA_SOURCES', 'data_sources');
+}
+if (!defined('FILENAME_AGGREGATOR_DATA_SOURCE_OPTIONS')) {
+	 define('FILENAME_AGGREGATOR_DATA_SOURCE_OPTIONS', 'options.php');
+}
+if (!defined('FILENAME_AGGREGATOR_DATA_SOURCE_OPTIONS')) {
+	 define('FILENAME_AGGREGATOR_DATA_SOURCE_OPTIONS', 'options.php');
+}
+if (!defined('DIRNAME_AGGREGATOR_GRID_TILES')) {
+	 define('DIRNAME_AGGREGATOR_GRID_TILES', 'tiles');
+}
 
 # Asset library constants 
 define('AL_THUMBNAIL_WIDTH', '60');
@@ -607,4 +624,8 @@ if(!defined('SITEMAPXML_BASE_URL')) {
 
 if(!defined('APP_VERSION_DISPLAY_IN_HEADER')) {
 	define('APP_VERSION_DISPLAY_IN_HEADER', true);
+}
+
+if (!defined('USER_DELETED_CONVERSATION_ID')) {
+	define('USER_DELETED_CONVERSATION_ID', 0);
 }

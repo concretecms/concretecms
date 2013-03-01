@@ -28,6 +28,7 @@ class Concrete5_Library_Content_Importer {
 		$this->importStacksStructure($sx);
 		$this->importBlockTypes($sx);
 		$this->importBlockTypeSets($sx);
+		$this->importAggregatorDataSources($sx);
 		$this->importAttributeCategories($sx);
 		$this->importAttributeTypes($sx);
 		$this->importWorkflowTypes($sx);
@@ -549,6 +550,15 @@ class Concrete5_Library_Content_Importer {
 						$set->addKey($ak);
 					}
 				}
+			}
+		}
+	}
+
+	protected function importAggregatorDataSources(SimpleXMLElement $sx) {
+		if (isset($sx->aggregatorsources)) {
+			foreach($sx->aggregatorsources->aggregatorsource as $ags) {
+				$pkg = ContentImporter::getPackageObject($ags['package']);
+				$source = AggregatorDataSource::add((string) $ags['handle'], (string) $ags['name'], $pkg);
 			}
 		}
 	}

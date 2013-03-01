@@ -39,6 +39,9 @@ class Concrete5_Library_Content_Exporter {
 		// now block type sets (including user)
 		BlockTypeSet::exportList($this->x);
 
+		// aggregator
+		AggregatorDataSource::exportList($this->x);
+
 		// now attribute keys (including user)
 		AttributeKey::exportList($this->x);
 

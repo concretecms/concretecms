@@ -296,33 +296,7 @@
 													<block mc-block-id="EjT8GZha"/>
 												</area>
 											</page>
-			<page name="Guestbook" path="/about/guestbook" filename="" pagetype="right_sidebar" description="" package="">
-				<area name="Sidebar">
-					<block type="core_stack_display" name="">
-						<stack><![CDATA[Side Nav]]></stack>
-					</block>
-				</area>
-				<area name="Main">
-					<block type="guestbook" name="">
-						<data table="btGuestBook">
-							<record>
-								<requireApproval><![CDATA[0]]></requireApproval>
-								<title><![CDATA[Tell us what you think]]></title>
-								<dateFormat><![CDATA[M jS, Y]]></dateFormat>
-								<displayGuestBookForm><![CDATA[1]]></displayGuestBookForm>
-								<displayCaptcha><![CDATA[1]]></displayCaptcha>
-								<authenticationRequired><![CDATA[0]]></authenticationRequired>
-								<notifyEmail><![CDATA[]]></notifyEmail>
-							</record>
-						</data>
-						<data table="btGuestBookEntries"/>
-					</block>
-				</area>
-				<area name="HeaderImage"/>
-				<area name="Header Image">
-					<block mc-block-id="v0zvw8ct"/>
-				</area>
-			</page>
+
 			<page name="Contact Us" path="/about/contact-us" filename="" pagetype="left_sidebar" description="" package="">
 				<area name="Sidebar">
 					<block type="core_stack_display" name="">
