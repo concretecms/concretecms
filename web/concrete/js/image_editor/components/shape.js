@@ -16,8 +16,8 @@ me.find('button').click(function(){
 		stroke = me.find('input.stroke').val();
 	if (type == 'rect') {
 		var rect =  new Kinetic.Rect({
-			width:Math.round(im.saveWidth / 2),
-			height:Math.round(im.saveHeight / 2),
+			width:Math.min(Math.round(im.stage.getScaledWidth() / 2), Math.round(im.saveWidth / 2)),
+			height:Math.min(Math.round(im.stage.getScaledHeight() / 2), Math.round(im.saveHeight / 2)),
 			x:0,
 			y:0,
 			fill:fill,
@@ -26,8 +26,8 @@ me.find('button').click(function(){
 		im.addElement(rect,'shape');
 	} else {
 		var star =  new Kinetic.Star({
-			width:Math.round(im.saveWidth / 2),
-			height:Math.round(im.saveHeight / 2),
+			width:Math.min(Math.round(im.stage.getScaledWidth() / 2), Math.round(im.saveWidth / 2)),
+			height:Math.min(Math.round(im.stage.getScaledHeight() / 2), Math.round(im.saveHeight / 2)),
 			x:0,
 			y:0,
 			fill:fill,

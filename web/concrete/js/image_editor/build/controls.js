@@ -13,54 +13,69 @@ zoom.in.click(function(e){im.fire('zoomInClick',e)});
 zoom.out.click(function(e){im.fire('zoomOutClick',e)});
 
 var scale = getElem('<span></span>').addClass('scale').text('100%');
-im.on('stageChanged',function(e){
+im.on('scaleChange',function(e){
   scale.text(Math.round(im.scale * 10000)/100 + "%");
 });
+scale.click(function(){
+  im.scale = 1;
+  im.stage.setScale(im.scale);
+  var pos = (im.stage.getDragBoundFunc())({x:im.stage.getX(),y:im.stage.getY()});
+  im.stage.setX(pos.x);
+  im.stage.setY(pos.y);
+  im.fire('scaleChange');
+  im.buildBackground();
+  im.stage.draw();
+})
 scale.appendTo(controlBar);
 
-var minScale = 0, maxScale = 3000, stepScale = 1/4;
+var minScale = 0, maxScale = 3000, stepScale = 5/6;
 
 im.on('zoomInClick',function(e){
-
-  var adjustment = (im.scale * stepScale);
-  im.scale += adjustment;
-
-  if (im.scale > stepScale && (Math.abs(im.scale - Math.round(im.scale)) % 1) < stepScale / 2) im.scale = Math.round(im.scale);
+  var centerx = (-im.stage.getX() + (im.stage.getWidth() / 2)) / im.scale, 
+      centery = (-im.stage.getY() + (im.stage.getHeight() / 2)) / im.scale;
+  
+  im.scale /= stepScale;
   im.scale = Math.round(im.scale * 1000) / 1000;
   im.alterCore('scale',im.scale);
 
-  im.stage.setScale(im.scale);
+  var ncenterx = (-im.stage.getX() + (im.stage.getWidth() / 2)) / im.scale, 
+      ncentery = (-im.stage.getY() + (im.stage.getHeight() / 2)) / im.scale;
+    
+  im.stage.setX(im.stage.getX() - (centerx - ncenterx) * im.scale);
+  im.stage.setY(im.stage.getY() - (centery - ncentery) * im.scale);
 
-  im.stage.setX(im.stage.getX() + (-.5 * adjustment * im.stage.getWidth()));
-  im.stage.setY(im.stage.getY() + (-.5 * adjustment * im.stage.getHeight()));
+  im.stage.setScale(im.scale);
   
   var pos = (im.stage.getDragBoundFunc())({x:im.stage.getX(),y:im.stage.getY()});
   im.stage.setX(pos.x);
   im.stage.setY(pos.y);
 
-
-  im.fire('stageChanged');
+  im.fire('scaleChange');
+  im.buildBackground();
   im.stage.draw();
 });
 im.on('zoomOutClick',function(e){
-
-  var adjustment = (im.scale * stepScale);
-  im.scale -= adjustment;
-
-  if (im.scale > stepScale && (Math.abs(im.scale - Math.round(im.scale)) % 1) < stepScale / 2) im.scale = Math.round(im.scale);
+  var centerx = (-im.stage.getX() + (im.stage.getWidth() / 2)) / im.scale, 
+      centery = (-im.stage.getY() + (im.stage.getHeight() / 2)) / im.scale;
+  
+  im.scale *= stepScale;
   im.scale = Math.round(im.scale * 1000) / 1000;
   im.alterCore('scale',im.scale);
 
-  im.stage.setScale(im.scale);
+  var ncenterx = (-im.stage.getX() + (im.stage.getWidth() / 2)) / im.scale, 
+      ncentery = (-im.stage.getY() + (im.stage.getHeight() / 2)) / im.scale;
+    
+  im.stage.setX(im.stage.getX() - (centerx - ncenterx) * im.scale);
+  im.stage.setY(im.stage.getY() - (centery - ncentery) * im.scale);
 
-  im.stage.setX(im.stage.getX() - (-.5 * adjustment * im.stage.getWidth()));
-  im.stage.setY(im.stage.getY() - (-.5 * adjustment * im.stage.getHeight()));
+  im.stage.setScale(im.scale);
   
   var pos = (im.stage.getDragBoundFunc())({x:im.stage.getX(),y:im.stage.getY()});
   im.stage.setX(pos.x);
   im.stage.setY(pos.y);
 
-  im.fire('stageChanged');
+  im.fire('scaleChange');
+  im.buildBackground();
   im.stage.draw();
 });
 
@@ -85,36 +100,10 @@ saveButton.click(function(){im.save()});
 if (im.strictSize) {
   saveSize.both.attr('disabled','true');
 } else {
-  saveSize.both.keydown(function(e){
-    log(e.keyCode);
-    if (e.keyCode == 8 || e.keyCode == 37 || e.keyCode == 39) return true;
-
-    if (e.keyCode == 38) {
-      var newval = parseInt($(this).val()) + 1;
-      $(this).val(Math.min(5000,newval)).change();
-    }
-    if (e.keyCode == 40) {
-      var newval = parseInt($(this).val()) - 1;
-      $(this).val(Math.max(0,newval)).change();
-    }
-    var key = String.fromCharCode(e.keyCode);
-    if (!key.match(/\d/)) {
-      return false;
-    }
-    var amnt = "" + $(this).val() + key;
-    if (amnt > 5000) {
-      amnt = 5000;
-    }
-    $(this).val(amnt).change();
-
-    return false;
-  }).keyup(function(e){
-    if (e.keyCode == 8) im.fire('editedSize');
-  }).change(function(){
+  saveSize.both.keyup(function(){
     im.fire('editedSize');
   });
 }
-
 
 im.bind('editedSize',function(){
   im.saveWidth = parseInt(saveSize.width.val());
@@ -131,3 +120,7 @@ im.bind('saveSizeChange',function(){
   saveSize.width.val(im.saveWidth);
   saveSize.height.val(im.saveHeight);
 });
+
+im.setCursor = function(cursor) {
+  $(im.stage.getContainer()).css('cursor',cursor);
+};

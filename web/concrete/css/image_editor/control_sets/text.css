@@ -1,1 +1,12 @@
-text.js
+div.controlset.text button.fontname {
+	width:290px;
+	font-family:"Roboto Condensed";
+}
+div.controlset.text button.color {
+	width:37px;
+	background:black;
+}
+div.controlset.text textarea {
+	width:313px;
+	height:80px;
+}

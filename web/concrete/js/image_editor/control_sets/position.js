@@ -1,11 +1,12 @@
 // Handle selection
+im.selected = false;
 im.bind('changeActiveElement',function(e){
-	im.activeElement.setDraggable(true);
+	if (im.selected) im.activeElement.setDraggable(true);
 	if (im.activeElement.elementType == 'stage') {
-		me.parent().parent().slideUp();
+		im.disable();
 		return;
 	}
-	me.parent().parent().slideDown();
+	im.enable();
 	if (im.activeElement.isBound !== true) {
 		im.activeElement.on('dragmove',function(e){im.trigger('activeElementDragMove',e)});
 		im.activeElement.isBound = true;
@@ -18,13 +19,17 @@ im.bind('beforeChangeActiveElement',function(e){
 });
 im.bind('ChangeActiveAction',function(e){
 	if (e.eventData != im.namespace) {
-		im.activeElement.setDraggable(false);
+		im.selected = false;
+		if (im.activeElement.elementType != 'stage') {
+			im.activeElement.setDraggable(false);
+		}
 	} else {
+		im.selected = true;
 		im.activeElement.setDraggable(true);
 	}
 });
 var me = $(this);
-me.parent().parent().slideUp();
+im.disable();
 
 var sliderx = $('div.xslider',me).slider({
 	step: 1,
@@ -94,10 +99,11 @@ $('input.x',me).keyup(function(e){
 });
 $('button.up',me).click(function(e) {
 	im.activeElement.parent.moveUp();
+  	im.foreground.moveToTop();
 });
 $('button.down',me).click(function(e) {
 	// Don't go below the savers
-	if (im.activeElement.parent.getZIndex() - im.savers.getZIndex() == 1) return;
+	if (im.activeElement.parent.getZIndex() - im.background.getZIndex() == 1) return;
 	im.activeElement.parent.moveDown();
 });
 $('button.center',me).click(function(e){

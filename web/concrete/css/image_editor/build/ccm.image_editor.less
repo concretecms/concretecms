@@ -38,29 +38,54 @@ div.editorcontainer {
   }
 }
 
+div.slideOut {
+  ul.slideOutList {
+    margin:0;
+    list-style-type: none;
+    li {
+      padding:30px 20px;
+      font-size:20px;
+      &:hover {
+        background:skyblue;
+      }
+    }
+  }
+}
+
 div.controls {
   width:25%;
   background:white;
   position:relative;
   box-shadow:-5px 0px 25px -5px black;
   overflow-x:hidden;
+  box-shadow: 0 0 25px -5px black;
+  z-index: 1;
   ul.nav {
     padding-left: 20px;
     padding-top: 10px;
   }
   div.controlset, div.component {
+    &.disabled {
+      h4 {
+        color:#ccc;
+        background:#eee;
+        cursor:auto;
+      }
+    }
     h4 {
       padding:20px 40px 20px;
       margin:0;
+      cursor:pointer;
       background:white;
       border-bottom:solid 1px #ddd;
-      color:#ddd;
+      color:#aaa;
       &.active {
         color:#333;
+        cursor:auto;
       }
     }
     div.control {
-      padding:0 20px;
+      padding:0 30px;
       background:#f5f5f5;
       box-shadow:0 12px 20px -15px black inset,0 -7px 20px -15px black inset;
       > div.contents {

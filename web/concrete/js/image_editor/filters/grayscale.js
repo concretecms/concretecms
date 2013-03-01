@@ -14,12 +14,12 @@ im.bind('filterChange',function(e){
 		me.label.click();
 
 		setTimeout(function(){
-			im.image.applyFilter(im.filter.grayscale,{},function(){
+			im.activeElement.applyFilter(im.filter.grayscale,{},function(){
 				$.fn.dialog.hideLoader();
 				im.fire('filterApplied', me);
 				im.fire('GrayscaleFilterDidFinish');
 				console.log('derp');
-				im.image.parent.draw();
+				im.activeElement.parent.draw();
 			});
 			// Apply Filter
 		}, 10);
