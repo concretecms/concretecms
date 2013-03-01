@@ -271,7 +271,9 @@ class Concrete5_Model_Package extends Object {
 		$items['page_types'] = CollectionType::getListByPackage($this);
 		$items['mail_importers'] = MailImporter::getListByPackage($this);
 		$items['configuration_values'] = Config::getListByPackage($this);
+		$items['aggregator_data_sources'] = AggregatorDataSource::getListByPackage($this);
 		$items['block_types'] = BlockTypeList::getByPackage($this);
+		$items['block_type_sets'] = BlockTypeSet::getListByPackage($this);
 		$items['page_themes'] = PageTheme::getListByPackage($this);
 		$items['permissions'] = PermissionKey::getListByPackage($this);
 		$items['single_pages'] = SinglePage::getListByPackage($this);
@@ -293,6 +295,10 @@ class Concrete5_Model_Package extends Object {
 			return $item->getBlockTypeName();
 		} else if ($item instanceof PageTheme) {
 			return $item->getThemeName();
+		} else if ($item instanceof AggregatorDataSource) {
+			return $item->getAggregatorDataSourceName();
+		} else if ($item instanceof BlockTypeSet) {
+			return $item->getBlockTypeSetName();
 		} else if ($item instanceof CollectionType) {
 			return $item->getCollectionTypeName();
 		} else if ($item instanceof MailImporter) {
@@ -355,6 +361,8 @@ class Concrete5_Model_Package extends Object {
 				} else {
 					switch(get_class($item)) {
 						case 'BlockType':
+						case 'AggregatorDataSource':
+						case 'BlockTypeSet':
 							$item->delete();	
 							break;
 						case 'PageTheme':

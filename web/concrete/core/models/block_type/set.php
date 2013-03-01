@@ -182,13 +182,5 @@ class Concrete5_Model_BlockTypeSet extends Object {
 			$do++;
 		}
 	}
-
-	public function updateAttributesDisplayOrder($uats) {
-		$db = Loader::db();
-		for ($i = 0; $i < count($uats); $i++) {
-			$v = array($this->getBlockTypeSetID(), $uats[$i]);
-			$db->query("update BlockTypeSetBlockTypes set displayOrder = {$i} where btsID = ? and btID = ?", $v);
-		}
-	}
 		
 }
