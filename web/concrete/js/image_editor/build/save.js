@@ -4,6 +4,7 @@ im.save = function() {
     im.activeElement.releaseStroke();
   }
   im.stage.setScale(1);
+  im.setActiveElement(im.stage);
 
   im.fire('ChangeActiveAction');
   im.fire('changeActiveComponent');

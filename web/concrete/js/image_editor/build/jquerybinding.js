@@ -65,7 +65,7 @@ $.fn.slideOut = function(time,callback) {
   var me = $(this),
       startWidth = me.width(), 
       totalWidth = 300;
-  me.css('overflow-y','scroll');
+  me.css('overflow-y','auto');
   if (startWidth == totalWidth) {
     me.animate({width:totalWidth},0,callback);
     return this;

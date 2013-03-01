@@ -405,11 +405,6 @@ im.setActiveElement = function(element) {
   im.stage.draw();
 };
 im.bind('ClickedElement',function(e) {
-  if (e.eventData.getWidth() > im.stage.getScaledWidth() || e.eventData.getHeight() > im.stage.getScaledHeight()) {
-    im.setActiveElement(im.stage);
-    return;
-  }
-
   im.setActiveElement(e.eventData);
 });
 
@@ -560,6 +555,7 @@ im.save = function() {
     im.activeElement.releaseStroke();
   }
   im.stage.setScale(1);
+  im.setActiveElement(im.stage);
 
   im.fire('ChangeActiveAction');
   im.fire('changeActiveComponent');
@@ -641,11 +637,9 @@ im.addControlSet = function(ns,js,elem) {
   if (jQuery && elem instanceof jQuery) elem = elem[0];
   elem.controlSet = function(im,js) {
     im.disable = function() {
-      warn('Disabling',im.namespace);
       $(elem).parent().parent().addClass('disabled');
     };
     im.enable = function() {
-      warn('Enabling',im.namespace);
       $(elem).parent().parent().removeClass('disabled');
     };
     this.im = im;
@@ -653,13 +647,13 @@ im.addControlSet = function(ns,js,elem) {
     try {
       eval(js);
     } catch(e) {
-      error(e);
+      console.error(e);
       var pos = e.stack.replace(/[\S\s]+at HTMLDivElement.eval.+?<anonymous>:(\d+:\d+)[\S\s]+/,'$1').split(':');
       var jsstack = js.split("\n");
       var error = "Parse error at line #"+pos[0]+" char #"+pos[1]+" within "+ns;
       error += "\n"+jsstack[parseInt(pos[0])-1];
       error += "\n"+(new Array(parseInt(pos[1])).join(" "))+"^";
-      error(error);
+      console.error(error);
     }
     return this;
   };
@@ -672,7 +666,25 @@ im.addControlSet = function(ns,js,elem) {
 im.addFilter = function(ns,js) {
   var filter = function(im,js) {
     this.im = im;
-    eval(js);
+    try {
+      eval(js);
+    } catch(e) {
+      console.error(e);
+      window.lastError = e;
+      var pos = e.stack.replace(/[\S\s]+at HTMLDivElement.eval.+?<anonymous>:(\d+:\d+)[\S\s]+/,'$1').split(':');
+      if (e.count != 2) {
+        console.error(e.message);
+        console.error(e.stack);
+
+      } else {
+        var jsstack = js.split("\n");
+        var error = "Parse error at line #"+pos[0]+" char #"+pos[1]+" within "+ns;
+        console.log(pos);
+        error += "\n"+jsstack[parseInt(pos[0])-1];
+        error += "\n"+(new Array(parseInt(pos[1])).join(" "))+"^";
+        console.error(error);
+      }
+    }
     return this;
   };
   var newim = im.clone(ns);
@@ -685,11 +697,9 @@ im.addComponent = function(ns,js,elem) {
   if (jQuery && elem instanceof jQuery) elem = elem[0];
   elem.component = function(im,js) {
     im.disable = function() {
-      warn('Disabling',im.namespace);
       $(this).parent().parent().addClass('disabled');
     };
     im.enable = function() {
-      warn('Enabling',im.namespace);
       $(this).parent().parent().removeClass('disabled');
     };
     this.im = im;
@@ -1264,7 +1274,7 @@ $.fn.slideOut = function(time,callback) {
   var me = $(this),
       startWidth = me.width(), 
       totalWidth = 300;
-  me.css('overflow-y','scroll');
+  me.css('overflow-y','auto');
   if (startWidth == totalWidth) {
     me.animate({width:totalWidth},0,callback);
     return this;
@@ -1306,6 +1316,14 @@ ImageEditor.prototype = ImageEditor.fn = {
         d[i] += adjustment;
         d[i+1] += adjustment;
         d[i+2] += adjustment;
+      }
+    },
+    invert: function (imageData,ob) {
+      var d = imageData.data;
+      for (var i=0; i<d.length; i+=4) {
+        d[i] = 255 - d[i];
+        d[i+1] = 255 - d[i+1];
+        d[i+2] = 255 - d[i+2];
       }
     },
     restore: function (imageData,ob) {
