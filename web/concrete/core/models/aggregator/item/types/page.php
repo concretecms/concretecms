@@ -29,4 +29,19 @@ class Concrete5_Model_PageAggregatorItem extends AggregatorItem {
 		return $this->page;
 	}
 
+	public function getAggregatorItemSizeX() {
+		if ($this->page->getAttribute('is_featured')) {
+			return 4;
+		}
+
+		return 1;
+	}
+	
+	public function getAggregatorItemSizeY() {
+		if ($this->page->getAttribute('is_featured')) {
+			return 1;
+		}
+		
+		return 1;
+	}
 }

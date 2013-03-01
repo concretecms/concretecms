@@ -15,6 +15,7 @@ class ConcreteUpgradeVersion570Helper {
 		'UserPointActions',
 		'UserPointHistory',
 		'BlockTypeSetBlockTypes',
+		'Features',
 		'BlockTypeSets',
 		'Groups',
 		'QueuePageDuplicationRelations',
@@ -25,6 +26,7 @@ class ConcreteUpgradeVersion570Helper {
 		'AreaLayoutCustomColumns',
 		'Conversations',
 		'ConversationMessages',
+		'CollectionVersionFeatures',
 		'AreaLayoutThemeGridColumns',
 		/*'Queues',*/
 		'BlockTypes',

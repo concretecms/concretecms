@@ -129,6 +129,7 @@ ccm_deleteBlock = function(cID, bID, aID, arHandle, msg) {
 		// got to grab the message too, eventually
 		$d = $('[data-block-id=' + bID + '][data-area-id=' + aID + ']');
 		$d.hide().remove();
+		$.fn.ccmmenu.resethighlighter();
 		ccmAlert.hud(ccmi18n.deleteBlockMsg, 2000, 'delete_small', ccmi18n.deleteBlock);
 		$.ajax({
 			type: 'POST',

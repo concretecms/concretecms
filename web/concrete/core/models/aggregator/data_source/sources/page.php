@@ -16,7 +16,7 @@ class Concrete5_Model_PageAggregatorDataSource extends AggregatorDataSource {
 		$pl->ignorePermissions();
 		$ctIDs = $configuration->getCollectionTypeIDs();
 		if (count($ctIDs) > 0) {
-			$pl->filterByCollectionTypeIDs($ctIDs);
+			$pl->filterByCollectionTypeID($ctIDs);
 		}
 		$pages = $pl->get();
 		foreach($pages as $c) {

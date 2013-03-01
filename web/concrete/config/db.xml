@@ -1,5 +1,18 @@
 <?xml version="1.0"?>
 <schema version="0.3">
+    <table name="Features">
+    <field name="feID" type="I" size="10">
+      <key/>
+      <autoincrement/>
+      <unsigned/>
+    </field>
+    <field name="feHandle" type="C" size="255">
+      <notnull/>
+    </field>
+    <field name="pkgID" type="I" size="10">
+      <unsigned/>
+    </field>
+  </table>
   <table name="Aggregators">
     <field name="agID" type="I" size="10">
       <key/>
@@ -882,7 +895,27 @@
       <DEFAULT value="0"/>
       <UNSIGNED/>
     </field>
->>>>>>> master
+  </table>
+  <table name="CollectionVersionFeatures">
+    <field name="cID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="cvID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="1"/>
+      <UNSIGNED/>
+    </field>
+    <field name="feID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <index name="cIDcvID">
+      <col>cID</col>
+      <col>cvID</col>
+    </index>
   </table>
   <table name="CollectionAttributeValues">
     <field name="cID" type="I" size="10">

@@ -247,7 +247,20 @@ class Concrete5_Model_PageList extends DatabaseItemList {
 	 */
 	public function filterByCollectionTypeID($ctID) {
 		$this->filterByCT = true;
-		$this->filter("pt.ctID", $ctID);
+		$db = Loader::db();
+		if (is_array($ctID)) {
+			$cth = '(';
+			for ($i = 0; $i < count($ctID); $i++) {
+				if ($i > 0) {
+					$cth .= ',';
+				}
+				$cth .= $db->quote($ctID[$i]);
+			}
+			$cth .= ')';
+			$this->filter(false, "(pt.ctID in {$cth})");
+		} else {
+			$this->filter("pt.ctID", $ctID);
+		}
 	}
 
 	/** 

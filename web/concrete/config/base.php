@@ -423,6 +423,10 @@ if (!defined('FILENAME_AGGREGATOR_DATA_SOURCE_OPTIONS')) {
 if (!defined('DIRNAME_AGGREGATOR_GRID_TILES')) {
 	 define('DIRNAME_AGGREGATOR_GRID_TILES', 'tiles');
 }
+if (!defined('FILENAME_AGGREGATOR_VIEW')) {
+	 define('FILENAME_AGGREGATOR_VIEW', 'view.php');
+}
+
 
 # Asset library constants 
 define('AL_THUMBNAIL_WIDTH', '60');
