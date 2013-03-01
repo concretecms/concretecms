@@ -1,4 +1,17 @@
 /////////////////////////////
+//      Kinetic.Node       //
+/////////////////////////////
+Kinetic.Node.prototype.closest = function(type) {
+  var active = this.parent;
+  while (active !== undefined) {
+    if (active.nodeType === type) return active;
+    active = active.parent;
+  }
+  return false;
+};
+
+
+/////////////////////////////
 //      Kinetic.Stage      //
 /////////////////////////////
 Kinetic.Stage.prototype.createCopy = function () {
@@ -50,6 +63,7 @@ Kinetic.Stage.prototype.loadCopy = function (copy) {
   }
   this.draw();
 };
+Kinetic.Stage.prototype.elementType = 'stage';
 
 /////////////////////////////
 //      Kinetic.Image      //
@@ -74,11 +88,18 @@ Kinetic.Layer.prototype.draw = function() {
   if (typeof im === 'undefined' || typeof im.trigger === 'undefined') {
     return this._cacheddraw();
   }
-  im.trigger('beforeredraw',this);
+  //im.trigger('beforeredraw',this);
   var draw = this._cacheddraw();
-  im.trigger('afterredraw',this);
+  //im.trigger('afterredraw',this);
   return draw;
 };
+Kinetic.Layer.prototype.elementType = 'layer';
+
+
+/////////////////////////////
+//      Kinetic.Group      //
+/////////////////////////////
+Kinetic.Group.prototype.elementType = 'group';
 
 /////////////////////////////
 //       Kinetic.Text      //
@@ -95,3 +116,30 @@ Kinetic.Text.prototype.rasterize = function(e) {
     }
   });
 };
+
+
+
+
+
+
+
+
+// Rebuild:
+Kinetic.Global.extend(Kinetic.Container, Kinetic.Node);
+Kinetic.Global.extend(Kinetic.Shape, Kinetic.Node);
+Kinetic.Global.extend(Kinetic.Group, Kinetic.Container);
+Kinetic.Global.extend(Kinetic.Layer, Kinetic.Container);
+Kinetic.Global.extend(Kinetic.Stage, Kinetic.Container);
+Kinetic.Global.extend(Kinetic.Circle, Kinetic.Shape);
+Kinetic.Global.extend(Kinetic.Ellipse, Kinetic.Shape);
+Kinetic.Global.extend(Kinetic.Image, Kinetic.Shape);
+Kinetic.Global.extend(Kinetic.Line, Kinetic.Shape);
+Kinetic.Global.extend(Kinetic.Path, Kinetic.Shape);
+Kinetic.Global.extend(Kinetic.Polygon, Kinetic.Shape);
+Kinetic.Global.extend(Kinetic.Rect, Kinetic.Shape);
+Kinetic.Global.extend(Kinetic.RegularPolygon, Kinetic.Shape);
+Kinetic.Global.extend(Kinetic.Sprite, Kinetic.Shape);
+Kinetic.Global.extend(Kinetic.Star, Kinetic.Shape);
+Kinetic.Global.extend(Kinetic.Text, Kinetic.Shape);
+Kinetic.Global.extend(Kinetic.TextPath, Kinetic.Shape);
+Kinetic.Global.extend(Kinetic.Wedge, Kinetic.Shape);

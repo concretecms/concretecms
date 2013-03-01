@@ -149,6 +149,7 @@ $(getFile 'background.js')
 $(getFile 'imagestage.js')
 $(getFile 'image.js')
 $(getFile 'actions.js')
+$(getFile 'slideOut.js')
 $(getFile 'jquerybinding.js')
 $(getFile 'filters.js')"
 
@@ -161,5 +162,6 @@ $(getFile 'filters.js')"
     echo "$INP" > image_editor.tmp.js
 
     uglifyjs --no-seqs -o ./web/concrete/js/image_editor.min.js ./image_editor.tmp.js
+    #scp ./web/concrete/js/image_editor.min.js korvinte@korvinte.host10.getconcrete5.com:/home/korvinte/www/concrete/js/image_editor.min.js
     #rm image_editor.tmp.js
 fi

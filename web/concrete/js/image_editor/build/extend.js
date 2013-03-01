@@ -34,7 +34,16 @@ im.clone = function(namespace) {
 im.addControlSet = function(ns,js,elem) {
   if (jQuery && elem instanceof jQuery) elem = elem[0];
   elem.controlSet = function(im,js) {
+    im.disable = function() {
+      warn('Disabling',im.namespace);
+      $(elem).parent().parent().addClass('disabled');
+    };
+    im.enable = function() {
+      warn('Enabling',im.namespace);
+      $(elem).parent().parent().removeClass('disabled');
+    };
     this.im = im;
+    warn('Loading ControlSet',im);
     try {
       eval(js);
     } catch(e) {
@@ -69,7 +78,16 @@ im.addFilter = function(ns,js) {
 im.addComponent = function(ns,js,elem) {
   if (jQuery && elem instanceof jQuery) elem = elem[0];
   elem.component = function(im,js) {
+    im.disable = function() {
+      warn('Disabling',im.namespace);
+      $(this).parent().parent().addClass('disabled');
+    };
+    im.enable = function() {
+      warn('Enabling',im.namespace);
+      $(this).parent().parent().removeClass('disabled');
+    };
     this.im = im;
+    warn('Loading component',im);
     try {
       eval(js);
     } catch(e) {

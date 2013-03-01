@@ -1,1 +1,12 @@
-text.css
+div.component.text button.fontname {
+	width:290px;
+	font-family:"Roboto Condensed";
+}
+div.component.text button.color {
+	width:37px;
+	background:black;
+}
+div.component.text textarea {
+	width:313px;
+	height:80px;
+}

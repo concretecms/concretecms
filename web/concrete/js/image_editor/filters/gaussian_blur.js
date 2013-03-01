@@ -8,11 +8,11 @@ im.bind('filterFullyLoaded',function(e){
 
 		me.applybutton.click(function(){
 			$.fn.dialog.showLoader();
-			im.image.applyFilter(blur,{radius:parseInt(me.radius.val())},function(){
+			im.activeElement.applyFilter(blur,{radius:parseInt(me.radius.val())},function(){
 				$.fn.dialog.hideLoader();
 				im.fire('filterApplied', me);
 				im.fire('SepiaFilterDidFinish');
-				im.image.parent.draw();
+				im.activeElement.parent.draw();
 			});
 		});
 
