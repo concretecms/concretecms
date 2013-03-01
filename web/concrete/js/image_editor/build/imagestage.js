@@ -61,4 +61,4 @@ im.fit = function(wh,scale) {
     height = im.saveHeight;
   }
   return {width:width,height:height};
-}
+};

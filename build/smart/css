@@ -23,11 +23,13 @@ function compile_less {
 
 
 compile_less redactor ccm_app
+compile_less ccm.aggregator ccm_app
 compile_less jquery.ui ccm_app
 compile_less jquery.rating ccm_app
 compile_less ccm.default.theme ccm_app
 compile_less ccm.dashboard ccm_app
 compile_less ccm.dashboard.1200 ccm_app
+compile_less ccm.conversations ccm_app
 compile_less ccm.colorpicker ccm_app
 compile_less ccm.app.mobile ccm_app
 compile_less ccm.app ccm_app
