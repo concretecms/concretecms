@@ -47,6 +47,9 @@ jQuery.fn.dialog.close = function(num) {
 
 jQuery.fn.dialog.open = function(obj) {
 	jQuery.fn.dialog.showLoader();
+	if (typeof($.fn.ccmmenu) != 'undefined') {
+		$.fn.ccmmenu.hide();
+	}
 	var nd = $(".ui-dialog").length;
 	nd++;
 	$('body').append('<div id="ccm-dialog-content' + nd + '" style="display: none"></div>');

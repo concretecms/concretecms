@@ -42,6 +42,16 @@ $.fn.ccmmenu.out = function(e) {
 	}
 }
 
+/** 
+ * Called especially after a delete, makes sure we're not screwing about with dom elements
+ * that aren't there anymore
+ */
+
+$.fn.ccmmenu.resethighlighter = function() {
+	$.fn.ccmmenu.disable();
+	$.fn.ccmmenu.enable();
+}
+
 $.fn.ccmmenu.enable = function() {
 	$.fn.ccmmenu.isenabled = true;
 	if ($("#ccm-highlighter").length == 0) {
@@ -118,6 +128,10 @@ $.fn.ccmmenu.showmenu = function(e, $this) {
 
 	e.stopPropagation();
 
+	if ($.fn.ccmmenu.isactive) {
+		$('div.popover').css('opacity', 0).hide();
+	}
+
 	$.fn.ccmmenu.isactive = true;
 
 	var $pp = $this.$menu.clone(true, true);
@@ -150,7 +164,7 @@ $.fn.ccmmenu.showmenu = function(e, $this) {
 		$.fn.ccmmenu.hide(e);
 	});
 
-	$(document.body).on('click.disableccmmenu', function(e) {
+	$(window).on('click.disableccmmenu', function(e) {
 		$.fn.ccmmenu.hide(e);
 	});
 

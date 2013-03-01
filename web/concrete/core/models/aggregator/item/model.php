@@ -40,6 +40,17 @@ abstract class Concrete5_Model_AggregatorItem extends Object {
 
 	public function render() {
 		$dataSource = $this->getAggregatorDataSourceHandle();
-		Loader::element(DIRNAME_AGGREGATOR . '/' . DIRNAME_AGGREGATOR_GRID_TILES . '/' . $dataSource . '/' . '1x1', array('item' => $this));
+		$env = Environment::get();
+		// we can't just use Loader::element because it strips off .php of the filename. Lame.
+		$path = $env->getPath(DIRNAME_ELEMENTS . '/' . DIRNAME_AGGREGATOR . '/' . DIRNAME_AGGREGATOR_GRID_TILES . '/' . $dataSource . '/' . FILENAME_AGGREGATOR_VIEW);
+		$item = $this; // we have to define this so $item is defined in the include.
+		include($path);
+	}
+
+	public function getAggregatorItemSizeX() {
+		return 1;
+	}
+	public function getAggregatorItemSizeY() {
+		return 1;
 	}
 }

@@ -4,4 +4,7 @@
         <aggregatorsource handle="page" name="Site Page" package="" />
         <aggregatorsource handle="rss_feed" name="RSS Feed" package="" />
     </aggregatorsources>
+    <features>
+        <feature handle="conversation" />
+    </features>
 </concrete5-cif>

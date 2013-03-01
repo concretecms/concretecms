@@ -16,7 +16,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		protected $btTable = 'btCoreConversation';
 		protected $conversation;
 		protected $btWrapperClass = 'ccm-ui';
-
+		protected $btFeatures = array(
+			'conversation'
+		);
+		
 		public function getBlockTypeDescription() {
 			return t("Displays conversations on a page.");
 		}

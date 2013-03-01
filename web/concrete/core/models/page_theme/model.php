@@ -540,7 +540,36 @@ class Concrete5_Model_PageTheme extends Object {
 		$db->query("delete from PageThemes where ptID = ?", array($this->ptID));
 		$env = Environment::get();
 		$env->clearOverrideCache();
+	}
 
+	public function getThemeAggregatorGridItemMargin() {
+		if ($this->supportsGridFramework()) {
+			$gf = $this->getThemeGridFrameworkObject();
+			if (method_exists($gf, 'getAggregatorGridItemMargin')) {
+				return call_user_func(array($gf, 'getAggregatorGridItemMargin'));
+			}
+		}
+		return 1;
+	}
+
+	public function getThemeAggregatorGridItemWidth() {
+		if ($this->supportsGridFramework()) {
+			$gf = $this->getThemeGridFrameworkObject();
+			if (method_exists($gf, 'getAggregatorGridItemWidth')) {
+				return call_user_func(array($gf, 'getAggregatorGridItemWidth'));
+			}
+		}
+		return 150;
+	}
+
+	public function getThemeAggregatorGridItemHeight() {
+		if ($this->supportsGridFramework()) {
+			$gf = $this->getThemeGridFrameworkObject();
+			if (method_exists($gf, 'getAggregatorGridItemHeight')) {
+				return call_user_func(array($gf, 'getAggregatorGridItemHeight'));
+			}
+		}
+		return 150;
 	}
 
 }

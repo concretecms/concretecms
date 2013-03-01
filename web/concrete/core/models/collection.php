@@ -667,7 +667,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			
 			// first we add the block to the system
 			$nb = $bt->add($data, $this, $a);
-			
+
 			// now that we have a block, we add it to the collectionversions table
 			
 			$arHandle = (is_object($a)) ? $a->getAreaHandle() : $a;
@@ -688,10 +688,24 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 			$res = $db->Execute($q, $v);
 
+			$controller = $nb->getController();
+			$features = $controller->getBlockTypeFeatureObjects();
+			if (count($features) > 0) {
+				foreach($features as $fe) {
+					$this->addFeature($fe);
+				}
+			}
 			
 			return Block::getByID($nb->getBlockID(), $this, $a);
 		}
 		
+		public function addFeature(Feature $fe) {
+			$db = Loader::db();
+			$db->Replace('CollectionVersionFeatures', 
+				array('cID' => $this->getCollectionID(), 'cvID' => $this->getVersionID(), 'feID' => $fe->getFeatureID()),
+				array('cID', 'cvID', 'feID'), true);
+		}
+
 		public function add($data) {
 			$db = Loader::db();
 			$dh = Loader::helper('date');
