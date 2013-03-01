@@ -79,7 +79,7 @@ if [ $1 ]; then
 fi
 if $(echo "$status" | grep "$thisgrep" &> /dev/null); then
     echo "Building ccm.profile.js"
-    uglifyjs --no-copyright --no-seqs -o ./web/concrete/js/ccm.profile.js ./web/concrete/js/ccm_profile/base.js
+    uglifyjs -o ./web/concrete/js/ccm.profile.js ./web/concrete/js/ccm_profile/base.js
 fi
 
 # Redactor
@@ -92,7 +92,7 @@ if $(echo "$status" | grep "$thisgrep" &> /dev/null); then
     echo "Building redactor"
     cat ./web/concrete/js/redactor/redactor.js \
         ./web/concrete/js/redactor/redactor.concrete5.js > redactor.tmp.js
-    uglifyjs --no-copyright --no-seqs -o ./web/concrete/js/redactor.js ./redactor.tmp.js
+    uglifyjs --no-copyright --no-seqs -o  ./web/concrete/js/redactor.js ./redactor.tmp.js
     rm redactor.tmp.js
 fi
 

@@ -89,11 +89,6 @@ im.setActiveElement = function(element) {
   im.stage.draw();
 };
 im.bind('ClickedElement',function(e) {
-  if (e.eventData.getWidth() > im.stage.getScaledWidth() || e.eventData.getHeight() > im.stage.getScaledHeight()) {
-    im.setActiveElement(im.stage);
-    return;
-  }
-
   im.setActiveElement(e.eventData);
 });
 

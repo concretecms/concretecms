@@ -1,41 +1,43 @@
 <textarea class='text'></textarea>
 <div class="btn-group" style='width:100%'>
-  <button class="btn fontname" type="button">Roboto Condensed</button>
-  <button class="btn color" type="button"></button>
+  <button class="btn fontname" type="button">Open Sans</button>
+  <button class="btn color" type="button">&nbsp;</button>
 </div>
 <br>
 <br>
-<div class="btn-group" data-toggle="buttons-radio">
-  <button class="btn active" type="button"><i class='icon-align-left'> </i></button>
-  <button class="btn" type="button"><i class='icon-align-center'> </i></button>
-  <button class="btn" type="button"><i class='icon-align-right'> </i></button>
+<div class="btn-group alignment" data-toggle="buttons-radio">
+  <button class="btn active" type="button" data-alignment='left'><i class='icon-align-left'> </i></button>
+  <button class="btn" type="button" data-alignment='center'><i class='icon-align-center'> </i></button>
+  <button class="btn" type="button" data-alignment='right'><i class='icon-align-right'> </i></button>
 </div>
-<div class="btn-group">
-  <button class="btn" type="button"><strong>B</strong></button>
-  <button class="btn" type="button"><i>I</i></button>
+<div class="btn-group style" data-toggle="buttons-checkbox">
+  <button class="btn" type="button" data-style="bold"><strong>B</strong></button>
+  <button class="btn" type="button" data-style="italic"><i>I</i></button>
 </div>
 <?php
 $fonts = array(
+	"Open Sans",
 	"Roboto Condensed",
 	"Patrick Hand SC",
 	"Sintony",
 	"Tauri",
-	"Molle",
-	"Roboto Condensed",
-	"Patrick Hand SC",
-	"Sintony",
-	"Tauri",
-	"Molle",
-	"Roboto Condensed",
-	"Patrick Hand SC",
-	"Sintony",
-	"Tauri",
-	"Molle",
-	"Skranji"
+	"Skranji",
+	"Josefin Slab",
+	"Arvo",
+	"Lato",
+	"Vollkorn",
+	"Abril Fatface",
+	"Ubuntu",
+	"PT Serif",
+	"PT Sans",
+	"Old Standard TT",
+	"Droid Sans",
+	"Prociono",
+	"Oleo Script Swash Caps"
 );
-$fontsArg = str_replace(' ','+',implode('|',$fonts));
+$fontsArg = str_replace(' ','+',implode(':400,700,400italic,700italic|',$fonts));
 ?>
-<link href='http://fonts.googleapis.com/css?family=<?=$fontsArg?>' rel='stylesheet' type='text/css'>
+<link href='//fonts.googleapis.com/css?family=<?=$fontsArg?>' rel='stylesheet' type='text/css'>
 <script class='font-slideout' type="imageeditor/template">
 	<ul class='slideOutList'>
 		<?php
@@ -49,3 +51,14 @@ $fontsArg = str_replace(' ','+',implode('|',$fonts));
 		?>
 	</ul>
 </script>
+
+<div class='settingslider sizeSlider'>
+	<span>Size</span><br>
+	<div class='slider'></div>
+	<input>
+</div>
+<div class='settingslider lineHeightSlider'>
+	<span>Line Height</span><br>
+	<div class='slider'></div>
+	<input>
+</div>

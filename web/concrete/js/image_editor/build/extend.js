@@ -35,11 +35,9 @@ im.addControlSet = function(ns,js,elem) {
   if (jQuery && elem instanceof jQuery) elem = elem[0];
   elem.controlSet = function(im,js) {
     im.disable = function() {
-      warn('Disabling',im.namespace);
       $(elem).parent().parent().addClass('disabled');
     };
     im.enable = function() {
-      warn('Enabling',im.namespace);
       $(elem).parent().parent().removeClass('disabled');
     };
     this.im = im;
@@ -47,13 +45,13 @@ im.addControlSet = function(ns,js,elem) {
     try {
       eval(js);
     } catch(e) {
-      error(e);
+      console.error(e);
       var pos = e.stack.replace(/[\S\s]+at HTMLDivElement.eval.+?<anonymous>:(\d+:\d+)[\S\s]+/,'$1').split(':');
       var jsstack = js.split("\n");
       var error = "Parse error at line #"+pos[0]+" char #"+pos[1]+" within "+ns;
       error += "\n"+jsstack[parseInt(pos[0])-1];
       error += "\n"+(new Array(parseInt(pos[1])).join(" "))+"^";
-      error(error);
+      console.error(error);
     }
     return this;
   };
@@ -66,7 +64,25 @@ im.addControlSet = function(ns,js,elem) {
 im.addFilter = function(ns,js) {
   var filter = function(im,js) {
     this.im = im;
-    eval(js);
+    try {
+      eval(js);
+    } catch(e) {
+      console.error(e);
+      window.lastError = e;
+      var pos = e.stack.replace(/[\S\s]+at HTMLDivElement.eval.+?<anonymous>:(\d+:\d+)[\S\s]+/,'$1').split(':');
+      if (e.count != 2) {
+        console.error(e.message);
+        console.error(e.stack);
+
+      } else {
+        var jsstack = js.split("\n");
+        var error = "Parse error at line #"+pos[0]+" char #"+pos[1]+" within "+ns;
+        console.log(pos);
+        error += "\n"+jsstack[parseInt(pos[0])-1];
+        error += "\n"+(new Array(parseInt(pos[1])).join(" "))+"^";
+        console.error(error);
+      }
+    }
     return this;
   };
   var newim = im.clone(ns);
@@ -79,11 +95,9 @@ im.addComponent = function(ns,js,elem) {
   if (jQuery && elem instanceof jQuery) elem = elem[0];
   elem.component = function(im,js) {
     im.disable = function() {
-      warn('Disabling',im.namespace);
       $(this).parent().parent().addClass('disabled');
     };
     im.enable = function() {
-      warn('Enabling',im.namespace);
       $(this).parent().parent().removeClass('disabled');
     };
     this.im = im;
