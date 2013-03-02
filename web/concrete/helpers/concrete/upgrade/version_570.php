@@ -16,6 +16,7 @@ class ConcreteUpgradeVersion570Helper {
 		'UserPointHistory',
 		'BlockTypeSetBlockTypes',
 		'Features',
+		'FeatureTypes',
 		'BlockTypeSets',
 		'Groups',
 		'QueuePageDuplicationRelations',

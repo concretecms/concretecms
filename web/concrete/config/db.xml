@@ -1,18 +1,26 @@
 <?xml version="1.0"?>
 <schema version="0.3">
-    <table name="Features">
-    <field name="feID" type="I" size="10">
+    <table name="FeatureTypes">
+    <field name="ftID" type="I" size="10">
       <key/>
       <autoincrement/>
       <unsigned/>
     </field>
-    <field name="feHandle" type="C" size="255">
+    <field name="ftHandle" type="C" size="255">
       <notnull/>
     </field>
     <field name="pkgID" type="I" size="10">
       <unsigned/>
     </field>
   </table>
+    <table name="Features">
+    <field name="feID" type="I" size="10">
+      <key/>
+      <autoincrement/>
+      <unsigned/>
+    </field>
+  </table>
+
   <table name="Aggregators">
     <field name="agID" type="I" size="10">
       <key/>

@@ -63,3 +63,8 @@ if ($blur->getImageEditorFilterHandle() != 'gaussian_blur') {
 	echo "Add Blur Filter\n";
 	SystemImageEditorFilter::add('gaussian_blur','Gaussian Blur');
 }
+$vignette = SystemImageEditorFilter::getByHandle('vignette');
+if ($vignette->getImageEditorFilterHandle() != 'vignette') {
+	echo "Add Vignette Filter\n";
+	SystemImageEditorFilter::add('vignette','Vignette');
+}

@@ -1,6 +1,15 @@
 /////////////////////////////
-//      Kinetic.Stage      //
+//      Kinetic.Node       //
 /////////////////////////////
+Kinetic.Node.prototype.closest = function(e) {
+    var t = this.parent;
+    while (t !== undefined) {
+        if (t.nodeType === e) return t;
+        t = t.parent;
+    }
+    return false;
+};
+
 Kinetic.Stage.prototype.createCopy = function() {
     var e = [], t = this.getChildren(), n;
     for (n = 0; n < t.length; n++) {
@@ -55,6 +64,8 @@ Kinetic.Stage.prototype.loadCopy = function(e) {
     this.draw();
 };
 
+Kinetic.Stage.prototype.elementType = "stage";
+
 Kinetic.Image.prototype.getImageData = function() {
     var e = new Kinetic.Canvas(this.attrs.image.width, this.attrs.image.height);
     var t = e.getContext();
@@ -73,11 +84,13 @@ Kinetic.Layer.prototype.draw = function() {
     if (typeof im === "undefined" || typeof im.trigger === "undefined") {
         return this._cacheddraw();
     }
-    im.trigger("beforeredraw", this);
     var e = this._cacheddraw();
-    im.trigger("afterredraw", this);
     return e;
 };
+
+Kinetic.Layer.prototype.elementType = "layer";
+
+Kinetic.Group.prototype.elementType = "group";
 
 Kinetic.Text.prototype.rasterize = function(e) {
     var t = this.parent;
@@ -95,6 +108,42 @@ Kinetic.Text.prototype.rasterize = function(e) {
         }
     });
 };
+
+Kinetic.Global.extend(Kinetic.Container, Kinetic.Node);
+
+Kinetic.Global.extend(Kinetic.Shape, Kinetic.Node);
+
+Kinetic.Global.extend(Kinetic.Group, Kinetic.Container);
+
+Kinetic.Global.extend(Kinetic.Layer, Kinetic.Container);
+
+Kinetic.Global.extend(Kinetic.Stage, Kinetic.Container);
+
+Kinetic.Global.extend(Kinetic.Circle, Kinetic.Shape);
+
+Kinetic.Global.extend(Kinetic.Ellipse, Kinetic.Shape);
+
+Kinetic.Global.extend(Kinetic.Image, Kinetic.Shape);
+
+Kinetic.Global.extend(Kinetic.Line, Kinetic.Shape);
+
+Kinetic.Global.extend(Kinetic.Path, Kinetic.Shape);
+
+Kinetic.Global.extend(Kinetic.Polygon, Kinetic.Shape);
+
+Kinetic.Global.extend(Kinetic.Rect, Kinetic.Shape);
+
+Kinetic.Global.extend(Kinetic.RegularPolygon, Kinetic.Shape);
+
+Kinetic.Global.extend(Kinetic.Sprite, Kinetic.Shape);
+
+Kinetic.Global.extend(Kinetic.Star, Kinetic.Shape);
+
+Kinetic.Global.extend(Kinetic.Text, Kinetic.Shape);
+
+Kinetic.Global.extend(Kinetic.TextPath, Kinetic.Shape);
+
+Kinetic.Global.extend(Kinetic.Wedge, Kinetic.Shape);
 
 var ImageEditor = function(settings) {
     "use strict";
@@ -117,6 +166,7 @@ var ImageEditor = function(settings) {
     im.uniqid = im.stage.getContainer().id;
     im.editorContext = $(im.stage.getContainer()).parent();
     im.domContext = im.editorContext.parent();
+    im.controlContext = im.domContext.children("div.controls");
     im.showLoader = $.fn.dialog.showLoader;
     im.hideLoader = $.fn.dialog.hideLoader;
     im.stage.im = im;
@@ -138,12 +188,23 @@ var ImageEditor = function(settings) {
             if (e.length == 1) e = e[0];
             console.log(e);
         }
+    }, warn = function() {
+        if (settings.debug === true && console !== undefined) {
+            var e = arguments;
+            if (e.length == 1) e = e[0];
+            console.warn(e);
+        }
     }, error = function() {
         if (console !== undefined) {
             var e = arguments;
             if (e.length == 1) e = e[0];
             console.error(e);
         }
+    };
+    im.stage._setDraggable = im.stage.setDraggable;
+    im.stage.setDraggable = function(e) {
+        warn("setting draggable to " + e);
+        return im.stage._setDraggable(e);
     };
     var History = function() {
         var e = this;
@@ -182,33 +243,97 @@ var ImageEditor = function(settings) {
     };
     im.history = new History;
     im.bindEvent = im.bind = im.on = function(e, t, n) {
+        warn("Binding", e, t, n);
         var r = n || im.stage.getContainer();
         ccm_event.sub(e, t, r);
     };
     im.fireEvent = im.fire = im.trigger = function(e, t, n) {
+        warn("Sending", e, t, n);
         var r = im.stage.getContainer() || n;
         ccm_event.pub(e, t, r);
     };
     im.addElement = function(e, t) {
         var n = new Kinetic.Layer;
+        n.elementType = n;
         n.add(e);
         e.setX(im.center.x - Math.round(e.getWidth() / 2));
         e.setY(im.center.y - Math.round(e.getHeight() / 2));
+        e.doppelganger = e.clone();
+        if (t == "image") e.doppelganger.setImage("");
+        e.doppelganger.doppelganger = e;
+        e.doppelganger.setDrawHitFunc(function() {
+            return false;
+        });
+        e.doppelganger.setFill("transparent");
+        e.doppelganger.elementType = "StokeClone";
+        e.doppelganger.setStroke("blue");
+        e.doppelganger.setStrokeWidth(5);
+        e.doppelganger._drawFunc = e.getDrawFunc();
+        e.doppelganger.setDrawFunc(function(e) {
+            this.setStrokeWidth(3 / im.scale);
+            this.setPosition(this.doppelganger.getPosition());
+            this.setSize(this.doppelganger.getSize());
+            this.setRotation(this.doppelganger.getRotation());
+            this.setRotationDeg(this.doppelganger.getRotationDeg());
+            this._drawFunc(e);
+        });
         e.elementType = t;
         e.on("click", function() {
             im.fire("ClickedElement", this);
+        });
+        e._drawFunc = e.getDrawFunc();
+        e.setDrawFunc(function(t) {
+            for (var n in this.attrs) {
+                if (n == "drawFunc") continue;
+                this.doppelganger.attrs[n] = this.attrs[n];
+            }
+            this.doppelganger.setSize(this.getSize());
+            this.doppelganger.setPosition(this.getPosition());
+            this.doppelganger.setDrawHitFunc(function() {
+                return false;
+            });
+            this.doppelganger.setFill("transparent");
+            this.doppelganger.elementType = "StokeClone";
+            this.doppelganger.setStroke("blue");
+            this.doppelganger.setStrokeWidth(5);
+            if (this.elementType == "image") this.doppelganger.setImage("");
+            im.foreground.draw();
+            e._drawFunc(t);
+        });
+        e.on("mouseover", function() {
+            this.hovered = true;
+            im.setCursor("pointer");
+        });
+        e.on("mouseout", function() {
+            if (this.hovered == true) {
+                im.setCursor("");
+                this.hovered = false;
+            }
         });
         im.stage.add(n);
         im.fire("newObject", {
             object: e,
             type: t
         });
+        im.foreground.moveToTop();
         im.stage.draw();
     };
+    im.on("backgroundBuilt", function() {
+        if (im.activeElement !== undefined && im.activeElement.doppelganger !== undefined) {
+            im.foreground.add(im.activeElement.doppelganger);
+        }
+    });
     im.setActiveElement = function(e) {
         if (im.activeElement == e) return;
-        if (e === im.stage) {
+        if (im.activeElement !== undefined && im.activeElement.doppelganger !== undefined) {
+            im.activeElement.doppelganger.remove();
+        }
+        if (e === im.stage || e.nodeType == "Stage") {
             im.trigger("ChangeActiveAction", "ControlSet_Position");
+            $("div.control-sets", im.controlContext).find("h4.active").removeClass("active");
+        } else if (e.doppelganger !== undefined) {
+            im.foreground.add(e.doppelganger);
+            im.foreground.draw();
         }
         im.trigger("beforeChangeActiveElement", im.activeElement);
         im.alterCore("activeElement", e);
@@ -216,10 +341,6 @@ var ImageEditor = function(settings) {
         im.stage.draw();
     };
     im.bind("ClickedElement", function(e) {
-        if (e.eventData.getWidth() > im.stage.getScaledWidth() || e.eventData.getHeight() > im.stage.getScaledHeight()) {
-            im.setActiveElement(im.stage);
-            return;
-        }
         im.setActiveElement(e.eventData);
     });
     im.bind("stageChanged", function(e) {
@@ -240,45 +361,60 @@ var ImageEditor = function(settings) {
         im.fire("zoomOutClick", e);
     });
     var scale = getElem("<span></span>").addClass("scale").text("100%");
-    im.on("stageChanged", function(e) {
+    im.on("scaleChange", function(e) {
         scale.text(Math.round(im.scale * 1e4) / 100 + "%");
     });
-    scale.appendTo(controlBar);
-    var minScale = 0, maxScale = 3e3, stepScale = 1 / 4;
-    im.on("zoomInClick", function(e) {
-        var t = im.scale * stepScale;
-        im.scale += t;
-        if (im.scale > stepScale && Math.abs(im.scale - Math.round(im.scale)) % 1 < stepScale / 2) im.scale = Math.round(im.scale);
-        im.scale = Math.round(im.scale * 1e3) / 1e3;
-        im.alterCore("scale", im.scale);
+    scale.click(function() {
+        im.scale = 1;
         im.stage.setScale(im.scale);
-        im.stage.setX(im.stage.getX() + -.5 * t * im.stage.getWidth());
-        im.stage.setY(im.stage.getY() + -.5 * t * im.stage.getHeight());
-        var n = im.stage.getDragBoundFunc()({
+        var e = im.stage.getDragBoundFunc()({
             x: im.stage.getX(),
             y: im.stage.getY()
         });
-        im.stage.setX(n.x);
-        im.stage.setY(n.y);
-        im.fire("stageChanged");
+        im.stage.setX(e.x);
+        im.stage.setY(e.y);
+        im.fire("scaleChange");
+        im.buildBackground();
+        im.stage.draw();
+    });
+    scale.appendTo(controlBar);
+    var minScale = 0, maxScale = 3e3, stepScale = 5 / 6;
+    im.on("zoomInClick", function(e) {
+        var t = (-im.stage.getX() + im.stage.getWidth() / 2) / im.scale, n = (-im.stage.getY() + im.stage.getHeight() / 2) / im.scale;
+        im.scale /= stepScale;
+        im.scale = Math.round(im.scale * 1e3) / 1e3;
+        im.alterCore("scale", im.scale);
+        var r = (-im.stage.getX() + im.stage.getWidth() / 2) / im.scale, i = (-im.stage.getY() + im.stage.getHeight() / 2) / im.scale;
+        im.stage.setX(im.stage.getX() - (t - r) * im.scale);
+        im.stage.setY(im.stage.getY() - (n - i) * im.scale);
+        im.stage.setScale(im.scale);
+        var s = im.stage.getDragBoundFunc()({
+            x: im.stage.getX(),
+            y: im.stage.getY()
+        });
+        im.stage.setX(s.x);
+        im.stage.setY(s.y);
+        im.fire("scaleChange");
+        im.buildBackground();
         im.stage.draw();
     });
     im.on("zoomOutClick", function(e) {
-        var t = im.scale * stepScale;
-        im.scale -= t;
-        if (im.scale > stepScale && Math.abs(im.scale - Math.round(im.scale)) % 1 < stepScale / 2) im.scale = Math.round(im.scale);
+        var t = (-im.stage.getX() + im.stage.getWidth() / 2) / im.scale, n = (-im.stage.getY() + im.stage.getHeight() / 2) / im.scale;
+        im.scale *= stepScale;
         im.scale = Math.round(im.scale * 1e3) / 1e3;
         im.alterCore("scale", im.scale);
+        var r = (-im.stage.getX() + im.stage.getWidth() / 2) / im.scale, i = (-im.stage.getY() + im.stage.getHeight() / 2) / im.scale;
+        im.stage.setX(im.stage.getX() - (t - r) * im.scale);
+        im.stage.setY(im.stage.getY() - (n - i) * im.scale);
         im.stage.setScale(im.scale);
-        im.stage.setX(im.stage.getX() - -.5 * t * im.stage.getWidth());
-        im.stage.setY(im.stage.getY() - -.5 * t * im.stage.getHeight());
-        var n = im.stage.getDragBoundFunc()({
+        var s = im.stage.getDragBoundFunc()({
             x: im.stage.getX(),
             y: im.stage.getY()
         });
-        im.stage.setX(n.x);
-        im.stage.setY(n.y);
-        im.fire("stageChanged");
+        im.stage.setX(s.x);
+        im.stage.setY(s.y);
+        im.fire("scaleChange");
+        im.buildBackground();
         im.stage.draw();
     });
     var saveSize = {};
@@ -301,30 +437,7 @@ var ImageEditor = function(settings) {
     if (im.strictSize) {
         saveSize.both.attr("disabled", "true");
     } else {
-        saveSize.both.keydown(function(e) {
-            log(e.keyCode);
-            if (e.keyCode == 8 || e.keyCode == 37 || e.keyCode == 39) return true;
-            if (e.keyCode == 38) {
-                var t = parseInt($(this).val()) + 1;
-                $(this).val(Math.min(5e3, t)).change();
-            }
-            if (e.keyCode == 40) {
-                var t = parseInt($(this).val()) - 1;
-                $(this).val(Math.max(0, t)).change();
-            }
-            var n = String.fromCharCode(e.keyCode);
-            if (!n.match(/\d/)) {
-                return false;
-            }
-            var r = "" + $(this).val() + n;
-            if (r > 5e3) {
-                r = 5e3;
-            }
-            $(this).val(r).change();
-            return false;
-        }).keyup(function(e) {
-            if (e.keyCode == 8) im.fire("editedSize");
-        }).change(function() {
+        saveSize.both.keyup(function() {
             im.fire("editedSize");
         });
     }
@@ -340,9 +453,16 @@ var ImageEditor = function(settings) {
         saveSize.width.val(im.saveWidth);
         saveSize.height.val(im.saveHeight);
     });
+    im.setCursor = function(e) {
+        $(im.stage.getContainer()).css("cursor", e);
+    };
     im.save = function() {
         im.background.hide();
+        if (im.activeElement !== undefined && typeof im.activeElement.releaseStroke == "function") {
+            im.activeElement.releaseStroke();
+        }
         im.stage.setScale(1);
+        im.setActiveElement(im.stage);
         im.fire("ChangeActiveAction");
         im.fire("changeActiveComponent");
         $(im.stage.getContainer()).hide();
@@ -359,7 +479,7 @@ var ImageEditor = function(settings) {
             callback: function(e) {
                 var t = $("<img/>").attr("src", e);
                 $.fn.dialog.open({
-                    element: t
+                    element: $(t).width(250)
                 });
                 im.hideLoader();
                 im.background.show();
@@ -405,17 +525,24 @@ var ImageEditor = function(settings) {
     im.addControlSet = function(ns, js, elem) {
         if (jQuery && elem instanceof jQuery) elem = elem[0];
         elem.controlSet = function(im, js) {
+            im.disable = function() {
+                $(elem).parent().parent().addClass("disabled");
+            };
+            im.enable = function() {
+                $(elem).parent().parent().removeClass("disabled");
+            };
             this.im = im;
+            warn("Loading ControlSet", im);
             try {
                 eval(js);
             } catch (e) {
-                error(e);
+                console.error(e);
                 var pos = e.stack.replace(/[\S\s]+at HTMLDivElement.eval.+?<anonymous>:(\d+:\d+)[\S\s]+/, "$1").split(":");
                 var jsstack = js.split("\n");
                 var error = "Parse error at line #" + pos[0] + " char #" + pos[1] + " within " + ns;
                 error += "\n" + jsstack[parseInt(pos[0]) - 1];
                 error += "\n" + (new Array(parseInt(pos[1]))).join(" ") + "^";
-                error(error);
+                console.error(error);
             }
             return this;
         };
@@ -427,7 +554,24 @@ var ImageEditor = function(settings) {
     im.addFilter = function(ns, js) {
         var filter = function(im, js) {
             this.im = im;
-            eval(js);
+            try {
+                eval(js);
+            } catch (e) {
+                console.error(e);
+                window.lastError = e;
+                var pos = e.stack.replace(/[\S\s]+at HTMLDivElement.eval.+?<anonymous>:(\d+:\d+)[\S\s]+/, "$1").split(":");
+                if (e.count != 2) {
+                    console.error(e.message);
+                    console.error(e.stack);
+                } else {
+                    var jsstack = js.split("\n");
+                    var error = "Parse error at line #" + pos[0] + " char #" + pos[1] + " within " + ns;
+                    console.log(pos);
+                    error += "\n" + jsstack[parseInt(pos[0]) - 1];
+                    error += "\n" + (new Array(parseInt(pos[1]))).join(" ") + "^";
+                    console.error(error);
+                }
+            }
             return this;
         };
         var newim = im.clone(ns);
@@ -438,7 +582,14 @@ var ImageEditor = function(settings) {
     im.addComponent = function(ns, js, elem) {
         if (jQuery && elem instanceof jQuery) elem = elem[0];
         elem.component = function(im, js) {
+            im.disable = function() {
+                $(this).parent().parent().addClass("disabled");
+            };
+            im.enable = function() {
+                $(this).parent().parent().removeClass("disabled");
+            };
             this.im = im;
+            warn("Loading component", im);
             try {
                 eval(js);
             } catch (e) {
@@ -458,21 +609,24 @@ var ImageEditor = function(settings) {
         return nso;
     };
     im.background = new Kinetic.Layer;
+    im.foreground = new Kinetic.Layer;
     im.stage.add(im.background);
+    im.stage.add(im.foreground);
+    im.bgimage = new Image;
+    im.bgimage.src = "/concrete/images/testbg.png";
     im.buildBackground = function() {
-        var e = im.background.getZIndex();
+        var e = (new Date).getTime();
+        var t = im.background.getZIndex();
         im.background.destroy();
         im.background = new Kinetic.Layer;
+        im.foreground.destroy();
+        im.foreground = new Kinetic.Layer;
         im.stage.add(im.background);
-        im.background.setZIndex(e);
-        var t = function(e, t) {
-            return {
-                x: e,
-                y: -e + t
-            };
-        };
+        im.stage.add(im.foreground);
+        im.background.setZIndex(t);
+        im.foreground.moveToTop();
         var n = im.stage.getTotalDimensions();
-        var r = n.max.x + n.visibleHeight + n.visibleWidth;
+        var r = (n.max.x + n.visibleHeight + n.visibleWidth) * 2;
         im.totalBackground = new Kinetic.Rect({
             x: n.max.x - n.width,
             y: n.max.y - n.height,
@@ -483,22 +637,61 @@ var ImageEditor = function(settings) {
         im.saveArea = new Kinetic.Rect({
             width: im.saveWidth,
             height: im.saveHeight,
+            fillPatternImage: im.bgimage,
+            fillPatternOffset: [ 0, 0 ],
+            fillPatternScale: 1 / im.scale,
+            fillPatternX: 0,
+            fillPatternY: 0,
+            fillPatternRepeat: "repeat",
             x: Math.floor(im.center.x - im.saveWidth / 2),
-            y: Math.floor(im.center.y - im.saveHeight / 2),
-            fill: "white"
+            y: Math.floor(im.center.y - im.saveHeight / 2)
         });
         im.background.add(im.totalBackground);
         im.background.add(im.saveArea);
-        if (im.scale < .25) return;
-        var r = n.max.x + n.visibleHeight + n.visibleWidth;
-        if (im.scale > 1) r *= im.scale;
-        for (x = -(n.max.x + n.visibleHeight); x <= r; x += 20) {
-            im.background.add(new Kinetic.Line({
-                points: [ t(-r, x), t(r, x) ],
-                stroke: "#e3e3e3"
-            }));
-        }
-        im.background.draw();
+        var i = function(e) {
+            var t = im.saveHeight + 2;
+            var n = im.saveWidth + 2;
+            var r = [ {
+                x: e + im.center.x - n / 2,
+                y: im.center.y + t / 2
+            } ];
+            r[1] = {
+                x: r[0].x + t,
+                y: r[0].y - t
+            };
+            return r;
+        }, s = function(e) {
+            var t = im.saveHeight + 2;
+            var n = im.saveWidth + 2;
+            var r = [ {
+                x: e + im.center.x - n / 2,
+                y: im.center.y + t / 2
+            } ];
+            r[1] = {
+                x: r[0].x - t,
+                y: r[0].y - t
+            };
+            return r;
+        };
+        im.background.on("click", function() {
+            im.setActiveElement(im.stage);
+        });
+        var n = im.stage.getTotalDimensions();
+        var o = im.saveArea.clone();
+        o.setFillPatternImage("");
+        o.setDrawHitFunc(function() {
+            return false;
+        });
+        o.setStroke("rgba(0,0,0,.5)");
+        o.setStrokeWidth(Math.max(n.visibleWidth, n.visibleHeight) / 2);
+        o.setX(o.getX() - o.getStrokeWidth() / 2);
+        o.setWidth(o.getWidth() + o.getStrokeWidth());
+        o.setY(o.getY() - o.getStrokeWidth() / 2);
+        o.setHeight(o.getHeight() + o.getStrokeWidth());
+        im.foreground.add(o);
+        warn("Building background took " + ((new Date).getTime() - e) / 1e3 + " seconds.");
+        im.fire("backgroundBuilt");
+        im.stage.draw();
     };
     im.buildBackground();
     im.on("stageChanged", im.buildBackground);
@@ -517,32 +710,79 @@ var ImageEditor = function(settings) {
     });
     im.setActiveElement(im.stage);
     im.stage.setDraggable(true);
-    var img = new Image;
-    img.src = settings.src;
-    img.onload = function() {
-        if (!im.strictSize) {
-            im.saveWidth = img.width;
-            im.saveHeight = img.height;
-            im.fire("saveSizeChange");
-            im.buildBackground();
-        }
-        var e = {
-            x: im.center.x - img.width / 2,
-            y: im.center.y - img.height / 2
-        };
-        im.image = new Kinetic.Image({
-            image: img,
-            x: Math.round(e.x),
-            y: Math.round(e.y)
+    im.on("imageLoad", function() {
+        var e = 100;
+        var t = im.stage.getWidth() - e * 2, n = im.stage.getHeight() - e * 2;
+        if (im.saveWidth < t && im.saveHeight < n) return;
+        var r = Math.max(im.saveWidth / t, im.saveHeight / n);
+        im.scale = 1 / r;
+        im.scale = Math.round(im.scale * 1e3) / 1e3;
+        im.alterCore("scale", im.scale);
+        im.stage.setScale(im.scale);
+        im.stage.setX((im.stage.getWidth() - im.stage.getWidth() * im.stage.getScale().x) / 2);
+        im.stage.setY((im.stage.getHeight() - im.stage.getHeight() * im.stage.getScale().y) / 2);
+        var i = im.stage.getDragBoundFunc()({
+            x: im.stage.getX(),
+            y: im.stage.getY()
         });
-        im.imageData = im.image.getImageData();
-        im.fire("imageload");
-        im.addElement(im.image, "image");
+        im.stage.setX(i.x);
+        im.stage.setY(i.y);
+        im.fire("scaleChange");
+        im.fire("stageChanged");
+        im.buildBackground();
+    });
+    im.fit = function(e, t) {
+        if (t === false) {
+            return {
+                width: im.saveWidth,
+                height: im.saveHeight
+            };
+        }
+        var n = e.height, r = e.width;
+        if (r > im.saveWidth) {
+            n /= r / im.saveWidth;
+            r = im.saveWidth;
+        }
+        if (n > im.saveHeight) {
+            r /= n / im.saveHeight;
+            n = im.saveHeight;
+        }
+        return {
+            width: r,
+            height: n
+        };
     };
+    if (settings.src) {
+        im.showLoader("Loading Image..");
+        var img = new Image;
+        img.src = settings.src;
+        img.onload = function() {
+            if (!im.strictSize) {
+                im.saveWidth = img.width;
+                im.saveHeight = img.height;
+                im.fire("saveSizeChange");
+                im.buildBackground();
+            }
+            var e = {
+                x: im.center.x - img.width / 2,
+                y: im.center.y - img.height / 2
+            };
+            var t = new Kinetic.Image({
+                image: img,
+                x: Math.round(e.x),
+                y: Math.round(e.y)
+            });
+            im.fire("imageload");
+            im.addElement(t, "image");
+        };
+    } else {
+        im.fire("imageload");
+    }
     im.bind("imageload", function() {
         var e = settings.controlsets || {}, t = settings.filters || {}, n, r;
         var i = 0;
         log("Loading ControlSets");
+        im.showLoader("Loading Control Sets..");
         im.fire("LoadingControlSets");
         for (n in e) {
             var s = "ControlSet_" + n;
@@ -574,6 +814,7 @@ var ImageEditor = function(settings) {
     });
     im.bind("ControlSetsLoaded", function() {
         im.fire("LoadingComponents");
+        im.showLoader("Loading Components..");
         var e = settings.components || {}, t, n = 0;
         log("Loading Components");
         for (t in e) {
@@ -606,22 +847,34 @@ var ImageEditor = function(settings) {
     });
     im.bind("ComponentsLoaded", function() {
         log("Loading Filters");
-        var e = settings.filters || {}, t, n, r;
+        im.showLoader("Loading Filters..");
+        var e = settings.filters || {}, t, n, r, i = 0;
         im.fire("LoadingFilters");
         for (t in e) {
-            var i = "Filter_" + t;
-            var s = e[t].name;
-            if (!n) n = i;
+            var s = "Filter_" + t;
+            var o = e[t].name;
+            if (!n) n = s;
+            i++;
             $.ajax(e[t].src, {
                 dataType: "text",
                 cache: false,
                 namespace: t,
-                myns: i,
-                name: s,
+                myns: s,
+                name: o,
                 success: function(e) {
                     var t = im.addFilter(this.myns, e);
                     t.name = this.name;
                     im.fire("filterLoad", t);
+                    i--;
+                    if (0 == i) {
+                        im.trigger("FiltersLoaded");
+                    }
+                },
+                error: function(e, t, n) {
+                    i--;
+                    if (0 == i) {
+                        im.trigger("FiltersLoaded");
+                    }
                 }
             });
         }
@@ -630,11 +883,15 @@ var ImageEditor = function(settings) {
         var t = e.eventData;
         if (t === im.activeControlSet) return;
         for (var n in im.controlSets) {
+            getElem(im.controlSets[n]);
             if (n !== t) getElem(im.controlSets[n]).slideUp();
         }
         im.activeControlSet = t;
         im.alterCore("activeControlSet", t);
-        if (!t) return;
+        if (!t) {
+            $("div.control-sets", im.controlContext).find("h4.active").removeClass("active");
+            return;
+        }
         var r = $(im.controlSets[t]), i = r.show().height();
         if (r.length == 0) return;
         r.hide().height(i).slideDown(function() {
@@ -657,7 +914,7 @@ var ImageEditor = function(settings) {
         });
     });
     im.bind("ChangeNavTab", function(e) {
-        console.log("changenavtab", e);
+        log("changenavtab", e);
         im.trigger("ChangeActiveAction", e.eventData);
         im.trigger("ChangeActiveComponent", e.eventData);
         var t = getElem("div.editorcontrols");
@@ -672,6 +929,51 @@ var ImageEditor = function(settings) {
             break;
         }
     });
+    im.bind("FiltersLoaded", function() {
+        im.hideLoader();
+    });
+    im.slideOut = $("<div/>").addClass("slideOut").css({
+        width: 0,
+        "float": "right",
+        height: "100%",
+        "overflow-x": "hidden",
+        right: im.controlContext.width() - 1,
+        position: "absolute",
+        background: "white",
+        "box-shadow": "black -20px 0 20px -25px"
+    });
+    im.slideOutContents = $("<div/>").appendTo(im.slideOut).width(300);
+    im.showSlideOut = function(e, t) {
+        im.slideOut.css("border-right", "solid 1px #eee");
+        if (im.slideOut.hasClass("active")) {
+            im.slideOut.addClass("sliding");
+            im.slideOut.slideIn(300, function() {
+                im.slideOutContents.replaceWith(e.width(300));
+                im.slideOutContents = e;
+                im.slideOut.slideOut(300, function() {
+                    im.slideOut.removeClass("sliding");
+                    typeof t === "function" && t();
+                });
+            });
+        } else {
+            im.slideOutContents.replaceWith(e.width(300));
+            im.slideOutContents = e;
+            im.slideOut.addClass("active").addClass("sliding");
+            im.slideOut.slideOut(300, function() {
+                im.slideOut.removeClass("sliding");
+                typeof t === "function" && t();
+            });
+        }
+    };
+    im.hideSlideOut = function(e) {
+        im.slideOut.addClass("sliding");
+        im.slideOut.slideIn(300, function() {
+            im.slideOut.css("border-right", "0");
+            im.slideOut.removeClass("active").removeClass("sliding");
+            typeof e === "function" && e();
+        });
+    };
+    im.controlContext.after(im.slideOut);
     im.setActiveElement(im.stage);
     window.c5_image_editor = im;
     window.im = im;
@@ -695,6 +997,12 @@ $.fn.ImageEditor = function(e) {
     $.fn.dialog.showLoader();
     var n = new ImageEditor(e);
     var r = n.domContext;
+    n.on("ChangeActiveAction", function(e) {
+        if (!e.eventData) $("h4.active", r).removeClass("active");
+    });
+    n.on("ChangeActiveComponent", function(e) {
+        if (!e.eventData) $("h4.active", r).removeClass("active");
+    });
     $("div.controls", r).children("ul.nav").children().click(function() {
         if ($(this).hasClass("active")) return false;
         $("div.controls", r).children("ul.nav").children().removeClass("active");
@@ -703,11 +1011,14 @@ $.fn.ImageEditor = function(e) {
         return false;
     });
     $("div.controlset", r).find("div.control").children("div.contents").slideUp(0).end().end().find("h4").click(function() {
+        if ($(this).parent().hasClass("disabled")) return;
+        $(this).addClass("active");
         $("div.controlset", r).find("h4").not($(this)).removeClass("active");
         var e = $(this).parent().attr("data-namespace");
         n.trigger("ChangeActiveAction", "ControlSet_" + e);
     });
     $("div.component", r).find("div.control").children("div.contents").slideUp(0).hide().end().end().find("h4").click(function() {
+        $(this).addClass("active");
         $("div.component", r).children("h4").not($(this)).removeClass("active");
         var e = $(this).parent().attr("data-namespace");
         n.trigger("ChangeActiveComponent", "Component_" + e);
@@ -717,37 +1028,74 @@ $.fn.ImageEditor = function(e) {
     return n;
 };
 
-ImageEditor.prototype.filter = {};
-
-ImageEditor.prototype.filter.grayscale = Kinetic.Filters.Grayscale;
-
-ImageEditor.prototype.filter.sepia = function(e) {
-    var t;
-    var n = e.data;
-    for (t = 0; t < n.length; t += 4) {
-        n[t] = n[t] * .393 + n[t + 1] * .769 + n[t + 2] * .189;
-        n[t + 1] = n[t] * .349 + n[t + 1] * .686 + n[t + 2] * .168;
-        n[t + 2] = n[t] * .272 + n[t + 1] * .534 + n[t + 2] * .131;
+$.fn.slideOut = function(e, t) {
+    var n = $(this), r = n.width(), i = 300;
+    n.css("overflow-y", "auto");
+    if (r == i) {
+        n.animate({
+            width: i
+        }, 0, t);
+        return this;
     }
+    n.width(r).animate({
+        width: i
+    }, e || 300, t || function() {});
+    return this;
 };
 
-ImageEditor.prototype.filter.brightness = function(e, t) {
-    var n = t.level;
-    var r = e.data;
-    for (var i = 0; i < r.length; i += 4) {
-        r[i] += n;
-        r[i + 1] += n;
-        r[i + 2] += n;
+$.fn.slideIn = function(e, t) {
+    var n = $(this);
+    n.css("overflow-y", "hidden");
+    if (n.width() === 0) {
+        n.animate({
+            width: 0
+        }, 0, t);
+        return this;
     }
+    n.animate({
+        width: 0
+    }, e || 300, t || function() {});
+    return this;
 };
 
-ImageEditor.prototype.filter.restore = function(e, t) {
-    var n = t.level;
-    var r = e.data;
-    var i = t.imageData.data;
-    for (var s = 0; s < r.length; s += 4) {
-        r[s] = i[s];
-        r[s + 1] = i[s + 1];
-        r[s + 2] = i[s + 2];
+ImageEditor.prototype = ImageEditor.fn = {
+    filter: {
+        grayscale: Kinetic.Filters.Grayscale,
+        sepia: function(e) {
+            var t;
+            var n = e.data;
+            for (t = 0; t < n.length; t += 4) {
+                n[t] = n[t] * .393 + n[t + 1] * .769 + n[t + 2] * .189;
+                n[t + 1] = n[t] * .349 + n[t + 1] * .686 + n[t + 2] * .168;
+                n[t + 2] = n[t] * .272 + n[t + 1] * .534 + n[t + 2] * .131;
+            }
+        },
+        brightness: function(e, t) {
+            var n = t.level;
+            var r = e.data;
+            for (var i = 0; i < r.length; i += 4) {
+                r[i] += n;
+                r[i + 1] += n;
+                r[i + 2] += n;
+            }
+        },
+        invert: function(e, t) {
+            var n = e.data;
+            for (var r = 0; r < n.length; r += 4) {
+                n[r] = 255 - n[r];
+                n[r + 1] = 255 - n[r + 1];
+                n[r + 2] = 255 - n[r + 2];
+            }
+        },
+        restore: function(e, t) {
+            var n = t.level;
+            var r = e.data;
+            var i = t.imageData.data;
+            for (var s = 0; s < r.length; s += 4) {
+                r[s] = i[s];
+                r[s + 1] = i[s + 1];
+                r[s + 2] = i[s + 2];
+            }
+        }
     }
 };

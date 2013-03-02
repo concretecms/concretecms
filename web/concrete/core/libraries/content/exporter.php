@@ -31,7 +31,7 @@ class Concrete5_Library_Content_Exporter {
 		AttributeKeyCategory::exportList($this->x);
 
 		// Features
-		Feature::exportList($this->x);
+		FeatureType::exportList($this->x);
 
 		// attribute types
 		AttributeType::exportList($this->x);
