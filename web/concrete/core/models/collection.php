@@ -102,6 +102,15 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			
 			return $nc;
 		}
+
+		public function getFeatureAssignments() {
+			if (is_object($this->vObj)) {
+				return CollectionVersionFeatureAssignment::getList($this);
+			} else {
+				return array();
+			}
+		}
+
 		
 		/* attribute stuff */
 		
