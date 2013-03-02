@@ -3,7 +3,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 abstract class Concrete5_Model_FeatureAssignment extends Object {
 
 	abstract public function loadDetails();
-
+	abstract public static function getList($mixed);
+	
 	public static function add(FeatureCategory $fc, FeatureDetail $fd) {
 		$db = Loader::db();
 		$db->Execute('insert into FeatureAssignments (fcID, fdObject) values (?, ?)', array(
@@ -27,5 +28,11 @@ abstract class Concrete5_Model_FeatureAssignment extends Object {
 			return $fa;
 		}
 	}
+
+	public function delete() {
+		$db = Loader::db();
+		$db->Execute('delete from FeatureAssignments where faID = ?', array($this->getFeatureAssignmentID()));
+	}
+
 		
 }
