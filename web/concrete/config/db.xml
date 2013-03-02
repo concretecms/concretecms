@@ -1,26 +1,42 @@
 <?xml version="1.0"?>
 <schema version="0.3">
-    <table name="FeatureTypes">
-    <field name="ftID" type="I" size="10">
-      <key/>
-      <autoincrement/>
-      <unsigned/>
-    </field>
-    <field name="ftHandle" type="C" size="255">
-      <notnull/>
-    </field>
-    <field name="pkgID" type="I" size="10">
-      <unsigned/>
-    </field>
-  </table>
     <table name="Features">
     <field name="feID" type="I" size="10">
       <key/>
       <autoincrement/>
       <unsigned/>
     </field>
+    <field name="feHandle" type="C" size="255">
+      <notnull/>
+    </field>
+    <field name="pkgID" type="I" size="10">
+      <unsigned/>
+    </field>
   </table>
-
+    <table name="FeatureCategories">
+    <field name="fcID" type="I" size="10">
+      <key/>
+      <autoincrement/>
+      <unsigned/>
+    </field>
+    <field name="fcHandle" type="C" size="255">
+      <notnull/>
+    </field>
+    <field name="pkgID" type="I" size="10">
+      <unsigned/>
+    </field>
+  </table>
+    <table name="FeatureAssignments">
+    <field name="faID" type="I" size="10">
+      <key/>
+      <autoincrement/>
+      <unsigned/>
+    </field>
+    <field name="fcID" type="I" size="10">
+      <unsigned/>
+    </field>
+   <field name="fdObject" type="X2"></field>
+  </table>
   <table name="Aggregators">
     <field name="agID" type="I" size="10">
       <key/>
@@ -904,7 +920,7 @@
       <UNSIGNED/>
     </field>
   </table>
-  <table name="CollectionVersionFeatures">
+  <table name="CollectionVersionFeatureAssignments">
     <field name="cID" type="I" size="10">
       <KEY/>
       <DEFAULT value="0"/>
@@ -915,7 +931,7 @@
       <DEFAULT value="1"/>
       <UNSIGNED/>
     </field>
-    <field name="feID" type="I" size="10">
+    <field name="faID" type="I" size="10">
       <KEY/>
       <DEFAULT value="0"/>
       <UNSIGNED/>

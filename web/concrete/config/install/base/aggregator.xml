@@ -4,7 +4,10 @@
         <aggregatorsource handle="page" name="Site Page" package="" />
         <aggregatorsource handle="rss_feed" name="RSS Feed" package="" />
     </aggregatorsources>
-    <featuretypes>
-        <featuretype handle="conversation" />
-    </featuretypes>
+    <features>
+        <feature handle="conversation" />
+    </features>
+    <featurecategories>
+        <featurecategory handle="collection_version" />
+    </featurecategories>
 </concrete5-cif>

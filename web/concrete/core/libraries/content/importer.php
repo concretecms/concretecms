@@ -29,7 +29,8 @@ class Concrete5_Library_Content_Importer {
 		$this->importBlockTypes($sx);
 		$this->importBlockTypeSets($sx);
 		$this->importAggregatorDataSources($sx);
-		$this->importFeatureTypes($sx);
+		$this->importFeatures($sx);
+		$this->importFeatureCategories($sx);
 		$this->importAttributeCategories($sx);
 		$this->importAttributeTypes($sx);
 		$this->importWorkflowTypes($sx);
@@ -516,16 +517,24 @@ class Concrete5_Library_Content_Importer {
 		}
 	}
 
-	protected function importFeatureTypes(SimpleXMLElement $sx) {
-		if (isset($sx->featuretypes)) {
-			foreach($sx->featuretypes->featuretype as $fea) {
+	protected function importFeatures(SimpleXMLElement $sx) {
+		if (isset($sx->features)) {
+			foreach($sx->features->feature as $fea) {
 				$pkg = ContentImporter::getPackageObject($fea['package']);
-				$fx = FeatureType::add($fea['handle'], $pkg);
+				$fx = Feature::add($fea['handle'], $pkg);
+			}
+		}
+	}
+
+	protected function importFeatureCategories(SimpleXMLElement $sx) {
+		if (isset($sx->featurecategories)) {
+			foreach($sx->featurecategories->featurecategory as $fea) {
+				$pkg = ContentImporter::getPackageObject($fea['package']);
+				$fx = FeatureCategory::add($fea['handle'], $pkg);
 			}
 		}
 	}
 	
-
 	protected function importAttributeCategories(SimpleXMLElement $sx) {
 		if (isset($sx->attributecategories)) {
 			foreach($sx->attributecategories->category as $akc) {
