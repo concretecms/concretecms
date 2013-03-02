@@ -10,13 +10,13 @@ defined('C5_EXECUTE') or die("Access Denied.");
  * @license    http://www.concrete5.org/license/     MIT License
  *
  */
-	class Concrete5_Controller_Block_CoreConversation extends BlockController implements ConversationFeatureTypeInterface {
+	class Concrete5_Controller_Block_CoreConversation extends BlockController implements ConversationFeatureInterface {
 
 		protected $btCacheBlockRecord = true;
 		protected $btTable = 'btCoreConversation';
 		protected $conversation;
 		protected $btWrapperClass = 'ccm-ui';
-		protected $btFeatureTypes = array(
+		protected $btFeatures = array(
 			'conversation'
 		);
 		
