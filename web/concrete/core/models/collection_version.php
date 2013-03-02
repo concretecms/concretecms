@@ -316,6 +316,11 @@
 				}
 			}
 			
+			$features = CollectionVersionFeatureAssignment::getList($this);
+			foreach($features as $fa) {
+				$fa->delete();
+			}
+
 			$r = $db->Execute('select avID, akID from CollectionAttributeValues where cID = ? and cvID = ?', array($cID, $cvID));
 			Loader::model('attribute/categories/collection');			
 			while ($row = $r->FetchRow()) {
