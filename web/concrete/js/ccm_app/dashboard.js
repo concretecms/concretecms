@@ -92,9 +92,11 @@ $(function() {
 	.click(function(e) {
 		e.stopPropagation();
 	});
-	$(document).click(function() {
-		$ccmPageHelp.data('popover').hide();
-	});
+	if ($ccmPageHelp.length) {
+		$(document).click(function() {
+			$ccmPageHelp.data('popover').hide();
+		});
+	}
 	$('.launch-tooltip').tooltip({placement: 'bottom'});
 	if ($('#ccm-dashboard-result-message').length > 0) { 
 		if ($('.ccm-pane').length > 0) { 
