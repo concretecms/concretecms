@@ -1,5 +1,5 @@
 var me  = $(this), selected = false, locked = true, ratio = 1;
-me.parent().parent().hide()
+im.disable();
 im.myControls = new Kinetic.Layer();
 var locker = me.find('input');
 locker.click(function(){
@@ -22,12 +22,12 @@ im.on('changeActiveAction',function(e){
 im.on('changeActiveElement',function(e){
   locked = true;
   if (im.activeElement.elementType === 'stage' || im.activeElement.elementType === 'text') {
-    me.parent().parent().slideUp();
+    im.disable();
   } else {
-    me.parent().parent().slideDown();
+    im.enable();
   }
   if (!selected) return;
-  ratio = im.activeElement.getWidth() / im.activeElement.getHeight();
+  ratio = im.activeElement.getHeight() / im.activeElement.getWidth();
   im.adjust();
 });
 
@@ -49,6 +49,7 @@ im.adjust = function() {
 
 var startpos = {x:0,y:0,width:0,height:0};
 control.on('dragstart',function(){
+  ratio = im.activeElement.getHeight() / im.activeElement.getWidth();
   startpos.x = control.getX();
   startpos.y = control.getY();
   startpos.width = im.activeElement.getWidth();
@@ -71,5 +72,10 @@ control.on('dragmove',function(){
   im.activeElement.setHeight(newHeight);
   im.stage.draw();
 });
+
+control.on('mouseover',function(){
+  im.setCursor('pointer');
+});
+
 control.on('dragend',im.adjust);
 control.on('click',im.adjust);

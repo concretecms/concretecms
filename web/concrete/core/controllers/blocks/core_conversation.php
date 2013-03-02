@@ -10,13 +10,13 @@ defined('C5_EXECUTE') or die("Access Denied.");
  * @license    http://www.concrete5.org/license/     MIT License
  *
  */
-	class Concrete5_Controller_Block_CoreConversation extends BlockController {
+	class Concrete5_Controller_Block_CoreConversation extends BlockController implements ConversationFeatureTypeInterface {
 
 		protected $btCacheBlockRecord = true;
 		protected $btTable = 'btCoreConversation';
 		protected $conversation;
 		protected $btWrapperClass = 'ccm-ui';
-		protected $btFeatures = array(
+		protected $btFeatureTypes = array(
 			'conversation'
 		);
 		
@@ -28,11 +28,13 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			return t("Conversation");
 		}
 
-		protected function getConversationObject() {
+		public function getConversationObject() {
 			if (!isset($this->conversation)) {
-				if ($this->cnvID) {
-					$this->conversation = Conversation::getByID($this->cnvID);
-				}
+				// i don't know why this->cnvid isn't sticky in some cases, leading us to query
+				// every damn time
+				$db = Loader::db();
+				$cnvID = $db->GetOne('select cnvID from btCoreConversation where bID = ?', array($this->bID));
+				$this->conversation = Conversation::getByID($cnvID);
 			}
 			return $this->conversation;
 		}

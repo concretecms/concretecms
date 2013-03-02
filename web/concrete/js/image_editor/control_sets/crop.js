@@ -1,12 +1,11 @@
 var me = $(this);
 
-me.parent().parent().slideUp();
-
+im.disable();
 im.bind('changeActiveElement',function(e){
   if (im.activeElement.elementType != 'image') {
-    me.parent().parent().slideUp();
+    im.disable();
   } else {
-    me.parent().parent().slideDown();
+    im.enable();
   }
 });
 
@@ -131,9 +130,10 @@ im.start = {x:im.activeElement.getX(),y:im.activeElement.getY()};
 
 
 
-var startpos, startstart;
+var startpos, startstart, adjStart;
 im.dragger.on('dragstart',function(e){
   startpos = im.dragger.getPosition();
+  adjStart = im.adjuster.getPosition();
   startstart = {x:startpos.x,y:startpos.y};
 });
 
@@ -219,6 +219,8 @@ im.on('stageChanged',function(){
 });
 
 var cropToCroppers = function() {
+  im.width  = im.dragger.getWidth();
+  im.height = im.dragger.getHeight();
   var oldScale = im.stage.getScale(),
       oldx = im.stage.getX(),
       oldy = im.stage.getY();
@@ -230,20 +232,27 @@ var cropToCroppers = function() {
   var newx = Math.round(im.activeElement.getX() - im.dragger.getX()),
       newy = Math.round(im.activeElement.getY() - im.dragger.getY());
 
-  im.activeElement.setX(newx);
-  im.activeElement.setY(newy);
-  im.activeElement.setCrop({x:0,y:0,width:im.width,height:im.height});
-  im.activeElement.setHeight(im.height);
-  im.activeElement.setWidth(im.width);
+  im.showLoader('cropping...');
+
+  var overridestroke = im.activeElement.getStroke();
+  var overridestrokewidth = im.activeElement.getStrokeWidth() * im.scale;
+  var overridedasharray = im.activeElement.getDashArray();
+  for (var i in overridedasharray) {
+    overridedasharray[i] *= im.scale;
+  }
+  im.activeElement.releaseStroke(false);
 
   im.activeElement.toImage({
+    x:im.dragger.getX(),
+    y:im.dragger.getY(),
     width:im.width,
     height:im.height,
     callback:function(img) {
+      im.activeElement.overrideStroke(overridestroke,overridestrokewidth,overridedasharray,false);
       im.activeElement.setImage(img);
       im.activeElement.setCrop();
-      im.activeElement.setWidth(im.width);
-      im.activeElement.setHeight(im.height);
+      im.activeElement.setWidth(im.dragger.getWidth());
+      im.activeElement.setHeight(im.dragger.getHeight());
       im.activeElement.setX(im.dragger.getX());
       im.activeElement.setY(im.dragger.getY());
       im.stage.setScale(oldScale);
@@ -251,6 +260,7 @@ var cropToCroppers = function() {
       im.stage.setY(oldy);
 
       im.fire('imageChange');
+      im.hideLoader();
       im.stage.draw();
     }
   });

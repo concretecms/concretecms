@@ -1,1 +1,27 @@
-text.css
+div.component.text button.fontname {
+	width:269px;
+	font-family:"Roboto Condensed";
+}
+div.component.text button.color {
+	width:37px;
+	background:black;
+}
+div.component.text textarea {
+	width:292px;
+	height:80px;
+}
+div.component.text div.settingslider {
+	margin-top: 20px;
+}
+div.component.text div.settingslider span {
+	color:#666666;
+}
+div.component.text div.settingslider div.slider {
+	width: 240px;
+	margin-right:9px;
+	display:inline-block;
+}
+div.component.text div.settingslider input {
+	width: 45px;
+	text-align:center;
+}

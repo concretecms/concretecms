@@ -369,6 +369,7 @@
 				} else {
 					return this;
 				}
+				options.change = change;
 				options.origColor = options.color;
 				return this.each(function () {
 					if (!$(this).data('colorpickerId')) {

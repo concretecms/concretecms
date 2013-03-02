@@ -51,8 +51,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		protected $btExportPageTypeColumns = array();
 		
 		protected $btWrapperClass = '';
-		protected $btFeatures = array();
-		protected $btFeatureObjects;
+		protected $btFeatureTypes = array();
+		protected $btFeatureTypeObjects;
 		
 		public $headerItems = array();
 		
@@ -221,17 +221,17 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			return $this->btTable;
 		}
 		
-		public function getBlockTypeFeatureObjects() {
-			if (!isset($this->btFeatureObjects)) {
-				$this->btFeatureObjects = array();
-				foreach($this->btFeatures as $feHandle) {
-					$fe = Feature::getByHandle($feHandle);
-					if (is_object($fe)) {
-						$this->btFeatureObjects[] = $fe;
+		public function getBlockTypeFeatureTypeObjects() {
+			if (!isset($this->btFeatureTypeObjects)) {
+				$this->btFeatureTypeObjects = array();
+				foreach($this->btFeatureTypes as $ftHandle) {
+					$ft = FeatureType::getByHandle($ftHandle);
+					if (is_object($ft)) {
+						$this->btFeatureTypeObjects[] = $ft;
 					}
 				}
 			}
-			return $this->btFeatureObjects;
+			return $this->btFeatureTypeObjects;
 		}
 
 		public function export(SimpleXMLElement $blockNode) {

@@ -2,6 +2,7 @@ im.bind('imageload',function(){
   var cs = settings.controlsets || {}, filters = settings.filters || {}, namespace, firstcs;
   var running = 0;
   log('Loading ControlSets');
+  im.showLoader('Loading Control Sets..');
   im.fire('LoadingControlSets');
   for (namespace in cs) {
     var myns = "ControlSet_" + namespace;
@@ -32,6 +33,7 @@ im.bind('imageload',function(){
 
 im.bind('ControlSetsLoaded',function(){
   im.fire('LoadingComponents');
+  im.showLoader('Loading Components..');
   var components = settings.components || {}, namespace, running = 0;
   log('Loading Components');
   for (namespace in components) {
@@ -63,12 +65,14 @@ im.bind('ControlSetsLoaded',function(){
 
 im.bind('ComponentsLoaded',function(){ // do this when the control sets finish loading.
   log('Loading Filters');
-  var filters = settings.filters || {}, namespace, firstf, firstc;
+  im.showLoader('Loading Filters..');
+  var filters = settings.filters || {}, namespace, firstf, firstc, active = 0;
   im.fire('LoadingFilters');
   for (namespace in filters) {
     var myns = "Filter_" + namespace;
     var name = filters[namespace].name;
     if (!firstf) firstf = myns;
+    active++;
     $.ajax(filters[namespace].src,{
       dataType:'text',
       cache:false,
@@ -79,6 +83,16 @@ im.bind('ComponentsLoaded',function(){ // do this when the control sets finish l
         var nso = im.addFilter(this.myns,js);
         nso.name = this.name;
         im.fire('filterLoad',nso);
+        active--;
+        if (0 == active) {
+          im.trigger('FiltersLoaded');
+        }
+      },
+      error: function(xhr, errDesc, exception) {
+        active--;
+        if (0 == active) {
+          im.trigger('FiltersLoaded');
+        }
       }
     });
   }
@@ -87,11 +101,15 @@ im.bind('ChangeActiveAction',function(e){
   var ns = e.eventData;
   if (ns === im.activeControlSet) return;
   for (var ons in im.controlSets) {
+    getElem(im.controlSets[ons]);
     if (ons !== ns) getElem(im.controlSets[ons]).slideUp();
   }
   im.activeControlSet = ns;
   im.alterCore('activeControlSet',ns);
-  if (!ns) return;
+  if (!ns) {
+    $('div.control-sets',im.controlContext).find('h4.active').removeClass('active');
+    return;
+  }
   var cs = $(im.controlSets[ns]),
       height = cs.show().height();
   if (cs.length == 0) return;
@@ -114,7 +132,7 @@ im.bind('ChangeActiveComponent',function(e){
 });
 
 im.bind('ChangeNavTab',function(e) {
-  console.log('changenavtab',e);
+  log('changenavtab',e);
   im.trigger('ChangeActiveAction',e.eventData);
   im.trigger('ChangeActiveComponent',e.eventData);
   var parent = getElem('div.editorcontrols');
@@ -128,4 +146,9 @@ im.bind('ChangeNavTab',function(e) {
       parent.children('div.control-sets').show();
       break;
   }
+});
+
+
+im.bind('FiltersLoaded',function(){
+  im.hideLoader();
 });

@@ -689,10 +689,11 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			$res = $db->Execute($q, $v);
 
 			$controller = $nb->getController();
-			$features = $controller->getBlockTypeFeatureObjects();
-			if (count($features) > 0) {
-				foreach($features as $fe) {
-					$this->addFeature($fe);
+			$featureTypes = $controller->getBlockTypeFeatureTypeObjects();
+			if (count($featureTypes) > 0) {
+				foreach($featureTypes as $ft) {
+					$fd = $ft->getFeatureDetailObject($controller);	
+					$fe = CollectionVersionFeature::add($fd, $this);
 				}
 			}
 			

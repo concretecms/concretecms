@@ -16,11 +16,11 @@ im.bind('filterChange',function(e){
 			// Just apply, there is no variation.
 
 			console.log('applyFilter');
-			im.image.applyFilter(im.filter.sepia,{},function(){
+			im.activeElement.applyFilter(im.filter.sepia,{},function(){
 				im.hideLoader();
 				im.fire('filterApplied', me);
 				im.fire('SepiaFilterDidFinish');
-				im.image.parent.draw();
+				im.activeElement.parent.draw();
 			});
 			// Apply Filter
 		},10); // Allow loader to show

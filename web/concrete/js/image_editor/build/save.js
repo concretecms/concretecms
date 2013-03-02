@@ -1,6 +1,10 @@
 im.save = function() {
   im.background.hide();
+  if (im.activeElement !== undefined && typeof im.activeElement.releaseStroke == 'function') {
+    im.activeElement.releaseStroke();
+  }
   im.stage.setScale(1);
+  im.setActiveElement(im.stage);
 
   im.fire('ChangeActiveAction');
   im.fire('changeActiveComponent');
@@ -27,7 +31,7 @@ im.save = function() {
     height:im.saveHeight,
     callback:function(data){
       var img = $('<img/>').attr('src',data);
-      $.fn.dialog.open({element:img});
+      $.fn.dialog.open({element:$(img).width(250)});
       im.hideLoader();
       im.background.show();
       im.stage.setX(oldx);

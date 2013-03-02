@@ -29,7 +29,7 @@ class Concrete5_Library_Content_Importer {
 		$this->importBlockTypes($sx);
 		$this->importBlockTypeSets($sx);
 		$this->importAggregatorDataSources($sx);
-		$this->importFeatures($sx);
+		$this->importFeatureTypes($sx);
 		$this->importAttributeCategories($sx);
 		$this->importAttributeTypes($sx);
 		$this->importWorkflowTypes($sx);
@@ -516,11 +516,11 @@ class Concrete5_Library_Content_Importer {
 		}
 	}
 
-	protected function importFeatures(SimpleXMLElement $sx) {
-		if (isset($sx->features)) {
-			foreach($sx->features->feature as $fea) {
+	protected function importFeatureTypes(SimpleXMLElement $sx) {
+		if (isset($sx->featuretypes)) {
+			foreach($sx->featuretypes->featuretype as $fea) {
 				$pkg = ContentImporter::getPackageObject($fea['package']);
-				$fx = Feature::add($fea['handle'], $pkg);
+				$fx = FeatureType::add($fea['handle'], $pkg);
 			}
 		}
 	}
