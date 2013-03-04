@@ -213,7 +213,7 @@ if ($_REQUEST['task'] == 'remove') {
 		<? } else { ?>
 			$('#ccm-permissions-bulk-access-form select').on('change', function() {
 				$('.ccm-permission-grid-cell-value').attr('id', 'ccm-permission-grid-cell-' + $(this).val());
-			});
+			}).trigger('change');
 		<? } ?>
 		</script>
 
