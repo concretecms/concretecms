@@ -101,7 +101,7 @@ abstract class Concrete5_Model_AggregatorDataSource extends Object {
 			$agsDisplayOrder++;
 		}
 		
-		$db->Execute('insert into AggregatorDataSources (agsHandle, agsName, pkgID) values (?, ?, ?)', array($agsHandle, $agsName, $pkgID));
+		$db->Execute('insert into AggregatorDataSources (agsHandle, agsName, agsDisplayOrder, pkgID) values (?, ?, ?, ?)', array($agsHandle, $agsName, $agsDisplayOrder, $pkgID));
 		$id = $db->Insert_ID();
 		
 		$ags = AggregatorDataSource::getByID($id);

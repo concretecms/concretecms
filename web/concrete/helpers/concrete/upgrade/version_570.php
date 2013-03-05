@@ -9,6 +9,8 @@ class ConcreteUpgradeVersion570Helper {
 		'agRssFeed',
 		'Aggregators',
 		'AggregatorItems',
+		'AggregatorItemTemplates',
+		'AggregatorItemTemplateFeatures',
 		'AggregatorDataSources',
 		'AggregatorConfiguredDataSources',
 		'atTextareaSettings',

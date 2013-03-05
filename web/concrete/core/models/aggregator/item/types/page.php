@@ -1,7 +1,45 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Model_PageAggregatorItem extends AggregatorItem {
+class Concrete5_Model_PageAggregatorItem extends AggregatorItem implements TitleFeatureInterface, DateTimeFeatureInterface, LinkFeatureInterface {
 
+	public function getAggregatorItemExtendedFeatures() {
+		$assignments = $this->page->getFeatureAssignments();
+		$features = array();
+		foreach($assignments as $as) {
+			$detail = $as->getFeatureDetailObject();
+			$features[] = $detail->getFeatureHandle();
+		}
+		return $features;
+	}
+
+	protected $features = array(
+		'title', 'date_time', 'link'
+	);
+
+	public function getFeatureDataTitle() {
+		return $this->page->getCollectionName();
+	}
+
+	public function getFeatureDataDateTime() {
+		return $this->page->getCollectionDatePublic();
+	}
+	
+	public function getFeatureDataLink() {
+		return Loader::helper('navigation')->getLinkToCollection($this->page);
+	}
+
+	public function getAggregatorItemExtendedFeatureDetailObjects($feHandle) {
+		$assignments = $this->page->getFeatureAssignments();
+		$objects = array();
+		foreach($assignments as $as) {
+			$detail = $as->getFeatureDetailObject();
+			if ($detail->getFeatureHandle() == $feHandle) {
+				$objects[] = $detail;
+			}
+		}
+		return $objects;
+	}
+	
 	public static function add(AggregatorDataSourceConfiguration $configuration, Page $c) {
 		$aggregator = $configuration->getAggregatorObject();
 		$item = parent::add($aggregator, $configuration->getAggregatorDataSourceObject(), $c->getCollectionDatePublic(), $c->getCollectionName());
@@ -10,7 +48,9 @@ class Concrete5_Model_PageAggregatorItem extends AggregatorItem {
 			$item->getAggregatorItemID(),
 			$c->getCollectionID()
 		));
+		$item->setDefaultAggregatorItemTemplate();
 	}
+
 
 	public function delete() {
 		parent::delete();
@@ -28,20 +68,7 @@ class Concrete5_Model_PageAggregatorItem extends AggregatorItem {
 	public function getCollectionObject() {
 		return $this->page;
 	}
-
-	public function getAggregatorItemSizeX() {
-		if ($this->page->getAttribute('is_featured')) {
-			return 4;
-		}
-
-		return 1;
-	}
 	
-	public function getAggregatorItemSizeY() {
-		if ($this->page->getAttribute('is_featured')) {
-			return 1;
-		}
-		
-		return 1;
-	}
+
+
 }

@@ -37,6 +37,8 @@
     </field>
    <field name="fdObject" type="X2"></field>
   </table>
+
+
   <table name="Aggregators">
     <field name="agID" type="I" size="10">
       <key/>
@@ -66,6 +68,39 @@
       <notnull/>
     </field>
     <field name="agiTitle" type="X">
+    </field>
+    <field name="agtID" type="I" size="10">
+      <unsigned/>
+      <notnull />
+      <default value="0" />
+    </field>
+  </table>
+  <table name="AggregatorItemTemplates">
+    <field name="agtID" type="I" size="10">
+      <key/>
+      <autoincrement/>
+      <unsigned/>
+    </field>
+    <field name="agtHandle" type="C" size="255">
+      <notnull/>
+    </field>
+    <field name="agtName" type="X">
+    </field>
+    <field name="pkgID" type="I" size="10">
+      <unsigned/>
+    </field>
+  </table>
+  <table name="AggregatorItemTemplateFeatures">
+    <field name="afeID" type="I" size="10">
+      <key/>
+      <autoincrement/>
+      <unsigned/>
+    </field>
+    <field name="agtID" type="I" size="10">
+      <unsigned/>
+    </field>
+    <field name="feID" type="I" size="10">
+      <unsigned/>
     </field>
   </table>
     <table name="AggregatorDataSources">
@@ -129,6 +164,9 @@
     </field>
     <field name="title" type="X">
 
+    </field>
+    <field name="datetime" type="T">
+      <notnull/>
     </field>
     <field name="description" type="X">
 

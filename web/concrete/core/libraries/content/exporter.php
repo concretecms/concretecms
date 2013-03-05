@@ -45,6 +45,7 @@ class Concrete5_Library_Content_Exporter {
 
 		// aggregator
 		AggregatorDataSource::exportList($this->x);
+		AggregatorItemTemplate::exportList($this->x);
 
 		// now attribute keys (including user)
 		AttributeKey::exportList($this->x);
