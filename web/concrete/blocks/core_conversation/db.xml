@@ -20,5 +20,23 @@
 			<notnull />
 			<default value="50" />
 		</field>
+		<field name="displayMode" type="C" size="255">
+			<notnull />
+			<default value="threaded" />
+		</field>
+		<field name="orderBy" type="C" size="255">
+			<notnull />
+			<default value="date_desc" />
+		</field>
+		<field name="enableOrdering" type="I1">
+			<unsigned />
+			<notnull />
+			<default value="1" />
+		</field>
+		<field name="enableCommentRating" type="I1">
+			<unsigned />
+			<notnull />
+			<default value="1" />
+		</field>
 	</table>
 </schema>
