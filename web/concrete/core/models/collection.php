@@ -28,7 +28,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		protected $attributes = array();
 		/* version specific stuff */
 
-		function loadVersionObject($cvID) {
+		function loadVersionObject($cvID = 'ACTIVE') {
 			$this->vObj = CollectionVersion::get($this, $cvID);
 		}
 		
