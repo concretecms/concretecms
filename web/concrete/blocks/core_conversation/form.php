@@ -10,6 +10,31 @@ if ($controller->getTask() == 'add') {
 <fieldset>
 	<legend><?=t('Message List')?></legend>
 	<div class="control-group">
+		<label class="control-label"><?=t('Display Mode')?></label>
+		<div class="controls">
+			<label class="radio">
+				<?=$form->radio('displayMode', 0, $displayMode)?>
+				<span><?=t('Threaded')?></span>
+			</label>
+			<label class="radio">
+				<?=$form->radio('displayMode', 1, $displayMode)?>
+				<span><?=t('Flat')?></span>
+			</label>
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label"><?=t('Ordering')?></label>
+		<div class="controls">
+			<?=$form->select('orderBy', array('0' => 'Newest First', '1' => 'Earliest First', '2' => 'Highest Rated'), $orderBy)?>
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label"><?=t('Display Ordering Option in Page')?></label>
+		<div class="controls">
+		<?=$form->checkbox('enableOrdering', 1, $enableOrdering)?>
+		</div>
+	</div>
+	<div class="control-group">
 		<label class="control-label"><?=t('Paginate Message List')?></label>
 		<div class="controls">
 			<label class="radio">
