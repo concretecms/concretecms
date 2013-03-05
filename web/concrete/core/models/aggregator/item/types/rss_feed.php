@@ -1,9 +1,9 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Model_RssFeedAggregatorItem extends AggregatorItem implements TitleFeatureInterface, DateTimeFeatureInterface, LinkFeatureInterface, BodyFeatureInterface {
+class Concrete5_Model_RssFeedAggregatorItem extends AggregatorItem implements TitleFeatureInterface, DateTimeFeatureInterface, LinkFeatureInterface, DescriptionFeatureInterface {
 
 	protected $features = array(
-		'title', 'date_time', 'link', 'body'
+		'title', 'date_time', 'link', 'description'
 	);
 
 	public function getAggregatorItemExtendedFeatures() {
@@ -24,10 +24,6 @@ class Concrete5_Model_RssFeedAggregatorItem extends AggregatorItem implements Ti
 	
 	public function getFeatureDataLink() {
 		return $this->url;
-	}
-
-	public function getFeatureDataBody() {
-		return $this->description;
 	}
 
 	public function getFeatureDataDescription() {return $this->description;}

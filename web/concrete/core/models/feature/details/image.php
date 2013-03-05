@@ -2,13 +2,12 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 class Concrete5_Model_ImageFeatureDetail extends FileFeatureDetail {
 
-	protected $feHandle = 'image';
-
+	// we have to dupe this because of PHP 5.2's stupidity and our inability to get called class.
 	public static function get($mixed) {
 		$fd = new ImageFeatureDetail();
-		$fd->setFileID($mixed->getFileID());
+		$file = $mixed->getFeatureDataFileObject();
+		$fd->setFileID($file->getFileID());
 		return $fd;
 	}
-
 
 }

@@ -522,7 +522,7 @@ class Concrete5_Library_Content_Importer {
 		if (isset($sx->features)) {
 			foreach($sx->features->feature as $fea) {
 				$pkg = ContentImporter::getPackageObject($fea['package']);
-				$fx = Feature::add($fea['handle'], $pkg);
+				$fx = Feature::add((string) $fea['handle'], (string) $fea['score'], $pkg);
 			}
 		}
 	}
@@ -588,7 +588,11 @@ class Concrete5_Library_Content_Importer {
 		if (isset($sx->aggregatoritemtemplates)) {
 			foreach($sx->aggregatoritemtemplates->aggregatoritemtemplate as $at) {
 				$pkg = ContentImporter::getPackageObject($at['package']);
-				$template = AggregatorItemTemplate::add((string) $at['handle'], (string) $at['name'], $pkg);
+				$agtHasCustomClass = false;
+				if ($at['has-custom-class']) {
+					$agtHasCustomClass = true;
+				}
+				$template = AggregatorItemTemplate::add((string) $at['handle'], (string) $at['name'], $agtHasCustomClass, $pkg);
 				foreach($at->children() as $fe) {
 					$feo = Feature::getByHandle((string) $fe['handle']);
 					if (is_object($feo)) { 	

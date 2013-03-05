@@ -1,19 +1,18 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Model_PageAggregatorItem extends AggregatorItem implements TitleFeatureInterface, DateTimeFeatureInterface, LinkFeatureInterface, BodyFeatureInterface {
+class Concrete5_Model_PageAggregatorItem extends AggregatorItem implements TitleFeatureInterface, DateTimeFeatureInterface, LinkFeatureInterface, DescriptionFeatureInterface {
 
 	public function getAggregatorItemExtendedFeatures() {
 		$assignments = $this->page->getFeatureAssignments();
 		$features = array();
 		foreach($assignments as $as) {
-			$detail = $as->getFeatureDetailObject();
-			$features[] = $detail->getFeatureHandle();
+			$features[] = $as->getFeatureDetailHandle();
 		}
 		return $features;
 	}
 
 	protected $features = array(
-		'title', 'date_time', 'link', 'body'
+		'title', 'date_time', 'link', 'description'
 	);
 
 	public function getFeatureDataTitle() {
@@ -28,7 +27,7 @@ class Concrete5_Model_PageAggregatorItem extends AggregatorItem implements Title
 		return Loader::helper('navigation')->getLinkToCollection($this->page);
 	}
 
-	public function getFeatureDataBody() {
+	public function getFeatureDataDescription() {
 		return $this->page->getCollectionDescription();
 	}
 
@@ -36,9 +35,11 @@ class Concrete5_Model_PageAggregatorItem extends AggregatorItem implements Title
 		$assignments = $this->page->getFeatureAssignments();
 		$objects = array();
 		foreach($assignments as $as) {
-			$detail = $as->getFeatureDetailObject();
-			if ($detail->getFeatureHandle() == $feHandle) {
-				$objects[] = $detail;
+			if ($as->getFeatureDetailHandle() == $feHandle) {
+				$detail = $as->getFeatureDetailObject();
+				if (is_object($detail)) {
+					$objects[] = $detail;
+				}
 			}
 		}
 		return $objects;
