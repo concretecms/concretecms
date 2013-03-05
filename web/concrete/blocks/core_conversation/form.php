@@ -13,11 +13,11 @@ if ($controller->getTask() == 'add') {
 		<label class="control-label"><?=t('Display Mode')?></label>
 		<div class="controls">
 			<label class="radio">
-				<?=$form->radio('displayMode', 0, $displayMode)?>
+				<?=$form->radio('displayMode', 'threaded', $displayMode)?>
 				<span><?=t('Threaded')?></span>
 			</label>
 			<label class="radio">
-				<?=$form->radio('displayMode', 1, $displayMode)?>
+				<?=$form->radio('displayMode', 'flat', $displayMode)?>
 				<span><?=t('Flat')?></span>
 			</label>
 		</div>
@@ -25,7 +25,7 @@ if ($controller->getTask() == 'add') {
 	<div class="control-group">
 		<label class="control-label"><?=t('Ordering')?></label>
 		<div class="controls">
-			<?=$form->select('orderBy', array('0' => 'Newest First', '1' => 'Earliest First', '2' => 'Highest Rated'), $orderBy)?>
+			<?=$form->select('orderBy', array('date_desc' => 'Newest First', 'date_asc' => 'Earliest First', 'rating' => 'Highest Rated'), $orderBy)?>
 		</div>
 	</div>
 	<div class="control-group">
@@ -45,7 +45,7 @@ if ($controller->getTask() == 'add') {
 				<?=$form->radio('paginate', 1, $paginate)?>
 				<span><?=t('Yes, display only a sub-set of messages at a time.')?></span>
 			</label>
-		</div>
+		</div> 
 	</div>
 	<div class="control-group" data-row="itemsPerPage">
 		<label class="control-label"><?=t('Messages Per Page')?></label>
