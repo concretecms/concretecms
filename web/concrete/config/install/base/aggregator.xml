@@ -10,8 +10,15 @@
         <feature handle="date_time" />
         <feature handle="image" />
         <feature handle="conversation" />
+        <feature handle="body" />
     </features>
     <aggregatoritemtemplates>
+        <aggregatoritemtemplate handle="title_body" name="Title Date &amp; Body" package="">
+            <feature handle="body" />
+            <feature handle="date_time" />
+            <feature handle="link" />
+            <feature handle="title" />
+        </aggregatoritemtemplate>
         <aggregatoritemtemplate handle="title_date" name="Title &amp; Date" package="">
             <feature handle="date_time" />
             <feature handle="link" />

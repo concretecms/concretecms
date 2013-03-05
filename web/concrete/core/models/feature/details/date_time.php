@@ -13,5 +13,11 @@ class Concrete5_Model_DateTimeFeatureDetail extends FeatureDetail {
 		return $this->datetime;
 	}
 
+	public static function get($mixed) {
+		$fd = new DateTimeFeatureDetail();
+		$fd->setDateTime($mixed->getFeatureDataDateTime());
+		return $fd;
+	}
+
 
 }

@@ -15,4 +15,10 @@ class Concrete5_Model_TitleFeatureDetail extends FeatureDetail {
 	}
 
 
+	public static function get($mixed) {
+		$fd = new TitleFeatureDetail();
+		$fd->setTitle($mixed->getFeatureDataTitle());
+		return $fd;
+	}
+
 }
