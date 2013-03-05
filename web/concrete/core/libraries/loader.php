@@ -183,19 +183,18 @@
 			if ($cl) {
 				call_user_func_array(array(__CLASS__, $cl[0]), array($cl[1], $cl[2]));
 			} else {
-				/* lets handle some things slightly more dynamically */
-				$txt = self::helper('text');
+				/* lets handle some things slightly more dynamically */				
 				if (strpos($class, 'BlockController') > 0) {
 					$class = substr($class, 0, strpos($class, 'BlockController'));
-					$handle = $txt->uncamelcase($class);
+					$handle = Object::uncamelcase($class);
 					self::block($handle);
 				} else if (strpos($class, 'AttributeType') > 0) {
 					$class = substr($class, 0, strpos($class, 'AttributeType'));
-					$handle = $txt->uncamelcase($class);
+					$handle = Object::uncamelcase($class);
 					$at = AttributeType::getByHandle($handle);
 				} else 	if (strpos($class, 'Helper') > 0) {
 					$class = substr($class, 0, strpos($class, 'Helper'));
-					$handle = $txt->uncamelcase($class);
+					$handle = Object::uncamelcase($class);
 					$handle = preg_replace('/^site_/', '', $handle);
 					self::helper($handle);
 				}
