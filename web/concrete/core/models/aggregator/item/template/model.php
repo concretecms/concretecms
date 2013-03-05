@@ -4,9 +4,12 @@ class Concrete5_Model_AggregatorItemTemplate extends Object {
 
 	public static function getByID($agtID) {
 		$db = Loader::db();
-		$row = $db->GetRow('select AggregatorItemTemplates.agtID, agtHandle, pkgID, agtName, count(AggregatorItemTemplateFeatures.afeID) as afeTotal from AggregatorItemTemplates left join AggregatorItemTemplateFeatures on AggregatorItemTemplates.agtID = AggregatorItemTemplateFeatures.agtID where AggregatorItemTemplates.agtID = ?', array($agtID));
+		$row = $db->GetRow('select AggregatorItemTemplates.agtID, agtHandle, agtHasCustomClass, pkgID, agtName from AggregatorItemTemplates where AggregatorItemTemplates.agtID = ?', array($agtID));
 		if (isset($row['agtID'])) {
-			$class = Loader::helper('text')->camelcase($row['agtHandle']) . 'AggregatorItemTemplate';
+			$class = 'AggregatorItemTemplate';
+			if ($row['agtHasCustomClass']) {
+				$class = Loader::helper('text')->camelcase($row['agtHandle']) . $class;
+			}
 			$agt = new $class();
 			$agt->setPropertiesFromArray($row);
 			return $agt;
@@ -15,9 +18,12 @@ class Concrete5_Model_AggregatorItemTemplate extends Object {
 	
 	public static function getByHandle($agtHandle) {
 		$db = Loader::db();
-		$row = $db->GetRow('select agtID, agtHandle, pkgID, agtName from AggregatorItemTemplates where agtHandle = ?', array($agtHandle));
+		$row = $db->GetRow('select agtID, agtHandle, pkgID, agtHasCustomClass, agtName from AggregatorItemTemplates where agtHandle = ?', array($agtHandle));
 		if (isset($row['agtID'])) {
-			$class = Loader::helper('text')->camelcase($row['agtHandle']) . 'AggregatorItemTemplate';
+			$class = 'AggregatorItemTemplate';
+			if ($row['agtHasCustomClass']) {
+				$class = Loader::helper('text')->camelcase($row['agtHandle']) . $class;
+			}
 			$agt = new $class();
 			$agt->setPropertiesFromArray($row);
 			return $agt;
@@ -55,8 +61,8 @@ class Concrete5_Model_AggregatorItemTemplate extends Object {
 	public function getAggregatorItemTemplateID() {return $this->agtID;}
 	public function getAggregatorItemTemplateHandle() {return $this->agtHandle;}
 	public function getAggregatorItemTemplateName() {return $this->agtName;}
-	public function getAggregatorItemTemplateFeaturesTotal() {return $this->afeTotal;}
 	public function getPackageID() {return $this->pkgID;}
+	public function aggregatorItemTemplateHasCustomClass() {return $this->agtHasCustomClass;}
 	public function getPackageHandle() {return PackageList::getHandle($this->pkgID);}
 
 	public function addAggregatorItemTemplateFeature($fe) {
@@ -67,9 +73,15 @@ class Concrete5_Model_AggregatorItemTemplate extends Object {
 		}
 	}
 
+	public function getAggregatorTemplateFeaturesTotalScore() {
+		$db = Loader::db();
+		$score = $db->GetOne('select sum(feScore) from Features fe inner join AggregatorItemTemplateFeatures af on af.feID = fe.feID where af.agtID = ?', array($this->getAggregatorItemTemplateID()));
+		return $score;
+	}
+
 	public function getAggregatorItemTemplateFeatureObjects() {
 		$db = Loader::db();
-		$r = $db->Execute('select feID from AggregatorItemTemplateFeatures where agtID = ?', $this->getAggregatorItemTemplateID());
+		$r = $db->Execute('select feID from AggregatorItemTemplateFeatures where agtID = ?', array($this->getAggregatorItemTemplateID()));
 		$features = array();
 		while ($row = $r->FetchRow()) {
 			$fe = Feature::getByID($row['feID']);
@@ -80,14 +92,14 @@ class Concrete5_Model_AggregatorItemTemplate extends Object {
 		return $features;		
 	}
 
-	public static function add($agtHandle, $agtName, $pkg = false) {
+	public static function add($agtHandle, $agtName, $agtHasCustomClass = false, $pkg = false) {
 		$db = Loader::db();
 		$pkgID = 0;
 		if (is_object($pkg)) {
 			$pkgID = $pkg->getPackageID();
 		}
 
-		$db->Execute('insert into AggregatorItemTemplates (agtHandle, agtName, pkgID) values (?, ?, ?)', array($agtHandle, $agtName, $pkgID));
+		$db->Execute('insert into AggregatorItemTemplates (agtHandle, agtName, agtHasCustomClass, pkgID) values (?, ?, ?, ?)', array($agtHandle, $agtName, $agtHasCustomClass, $pkgID));
 		$id = $db->Insert_ID();
 		
 		$agt = AggregatorItemTemplate::getByID($id);
@@ -97,12 +109,17 @@ class Concrete5_Model_AggregatorItemTemplate extends Object {
 
 	public function export($axml) {
 		$agt = $axml->addChild('aggregatoritemtemplate');
-		$agt->addAttribute('handle',$this->getAggregatorDataSourceHandle());
-		$agt->addAttribute('name', $this->getAggregatorDataSourceName());
+		$agt->addAttribute('handle',$this->getAggregatorItemTemplateHandle());
+		$agt->addAttribute('name', $this->getAggregatorItemTemplateName());
+		if ($this->aggregatorItemTemplateHasCustomClass()) {
+			$agt->addAttribute('has-custom-class', true);
+		} else {
+			$agt->addAttribute('has-custom-class', false);
+		}
 		$agt->addAttribute('package', $this->getPackageHandle());
 		$features = $this->getAggregatorItemTemplateFeatureObjects();
 		foreach($features as $fe) {
-			$fe->export($agt);
+			$fe->export($agt, false);
 		}
 		return $agt;
 	}

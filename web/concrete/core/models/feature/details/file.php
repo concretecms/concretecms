@@ -1,28 +1,28 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Model_FileFeatureDetail extends FileFeatureDetail {
+class Concrete5_Model_FileFeatureDetail extends FeatureDetail {
 
-	protected $feHandle = 'file';
 	protected $fID;
-	protected $fObject;
 
 	public function setFileID($fID) {
 		$this->fID = $fID;
-		$this->fObject = File::getByID($fID);
-	}
-
-	public function getFileObject() {
-		return $this->fObject;
 	}
 
 	public function getFileID() {
 		return $this->fID;
 	}
 
+	public function getFileObject() {
+		return File::getByID($this->fID);
+	}
+	
 	public static function get($mixed) {
 		$fd = new FileFeatureDetail();
-		$fd->setFileID($mixed->getFileID());
+		$file = $mixed->getFeatureDataFileObject();
+		$fd->setFileID($file->getFileID());
 		return $fd;
 	}
+
+
 
 }

@@ -13,7 +13,7 @@
  * @license    http://www.concrete5.org/license/     MIT License
  *
  */
-	class Concrete5_Controller_Block_Image extends BlockController {
+	class Concrete5_Controller_Block_Image extends BlockController implements ImageFeatureInterface {
 
 		protected $btInterfaceWidth = 400;
 		protected $btInterfaceHeight = 550;
@@ -24,6 +24,9 @@
 		protected $btCacheBlockOutputForRegisteredUsers = true;
 		protected $btWrapperClass = 'ccm-ui';
 		protected $btExportFileColumns = array('fID','fOnstateID');
+		protected $btFeatures = array(
+			'image'
+		);
 
 		/** 
 		 * Used for localization. If we want to localize the name/description we have to include this
@@ -41,7 +44,14 @@
 				'image-required' => t('You must select an image.')
 			);
 		}
-	
+
+		public function getFeatureDataFileObject() {
+			// i don't know why this->fID isn't sticky in some cases, leading us to query
+			// every damn time
+			$db = Loader::db();
+			$cnvID = $db->GetOne('select fID from btContentImage where bID = ?', array($this->bID));
+			return File::getByID($cnvID);
+		}
 	
 		function getFileID() {return $this->fID;}
 		function getFileOnstateID() {return $this->fOnstateID;}

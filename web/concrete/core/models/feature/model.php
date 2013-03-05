@@ -9,7 +9,7 @@ class Concrete5_Model_Feature extends Object {
 
 	public static function getByID($feID) {
 		$db = Loader::db();
-		$row = $db->GetRow('select feID, feHandle, pkgID from Features where feID = ?', array($feID));
+		$row = $db->GetRow('select feID, feScore, feHandle, pkgID from Features where feID = ?', array($feID));
 		if (isset($row['feID'])) {
 			$fe = new Feature;
 			$fe->setPropertiesFromArray($row);
@@ -19,7 +19,7 @@ class Concrete5_Model_Feature extends Object {
 	
 	public static function getByHandle($feHandle) {
 		$db = Loader::db();
-		$row = $db->GetRow('select feID, feHandle, pkgID from Features where feHandle = ?', array($feHandle));
+		$row = $db->GetRow('select feID, feScore, feHandle, pkgID from Features where feHandle = ?', array($feHandle));
 		if (isset($row['feID'])) {
 			$fe = new Feature;
 			$fe->setPropertiesFromArray($row);
@@ -57,17 +57,21 @@ class Concrete5_Model_Feature extends Object {
 	
 	public function getFeatureID() {return $this->feID;}
 	public function getFeatureHandle() {return $this->feHandle;}
+	public function getFeatureScore() {return $this->feScore;}
 	public function getPackageID() {return $this->pkgID;}
 	public function getPackageHandle() {return PackageList::getHandle($this->pkgID);}
 
-	public static function add($feHandle, $pkg = false) {
+	public static function add($feHandle, $feScore = 1, $pkg = false) {
 		$db = Loader::db();
 		$pkgID = 0;
 		if (is_object($pkg)) {
 			$pkgID = $pkg->getPackageID();
 		}
+		if (!$feScore) {
+			$feScore = 1;
+		}
 	
-		$db->Execute('insert into Features (feHandle, pkgID) values (?, ?)', array($feHandle, $pkgID));
+		$db->Execute('insert into Features (feHandle, feScore, pkgID) values (?, ?, ?)', array($feHandle, $feScore, $pkgID));
 		$id = $db->Insert_ID();
 		
 		$fe = Feature::getByID($id);
@@ -75,10 +79,13 @@ class Concrete5_Model_Feature extends Object {
 	}
 
 
-	public function export($fxml) {
+	public function export($fxml, $full = true) {
 		$fe = $fxml->addChild('feature');
 		$fe->addAttribute('handle',$this->getFeatureHandle());
-		$fe->addAttribute('package', $this->getPackageHandle());
+		if ($full) {
+			$fe->addAttribute('score',$this->getFeatureScore());
+			$fe->addAttribute('package', $this->getPackageHandle());
+		}
 		return $fe;
 	}
 

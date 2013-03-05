@@ -49,10 +49,12 @@ abstract class Concrete5_Model_AggregatorItem extends Object {
 		return AggregatorItem::getByID($db->Insert_ID());
 	}
 
-	protected function sortMatchedAggregatorItemTemplatesByFeaturesDescending($a, $b) {
-		if ($a->getAggregatorItemTemplateFeaturesTotal() > $b->getAggregatorItemTemplateFeaturesTotal()) {
+	protected function sortByFeatureScore($a, $b) {
+		$ascore = $a->getAggregatorTemplateFeaturesTotalScore();
+		$bscore = $b->getAggregatorTemplateFeaturesTotalScore();
+		if ($ascore > $bscore) {
 			return -1;
-		} else if ($a->getAggregatorItemTemplateFeaturesTotal() < $b->getAggregatorItemTemplateFeaturesTotal()) {
+		} else if ($ascore < $bscore) {
 			return 1;
 		} else {
 			return 0;
@@ -74,8 +76,7 @@ abstract class Concrete5_Model_AggregatorItem extends Object {
 				$matched[] = AggregatorItemTemplate::getByID($row['agtID']);
 			}
 		}
-
-		usort($matched, array($this, 'sortMatchedAggregatorItemTemplatesByFeaturesDescending'));
+		usort($matched, array($this, 'sortByFeatureScore'));
 		if (is_object($matched[0])) {
 			$this->setAggregatorItemTemplateID($matched[0]->getAggregatorItemTemplateID());
 		}

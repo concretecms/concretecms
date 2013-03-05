@@ -16,7 +16,12 @@ abstract class Concrete5_Model_FeatureAssignment extends Object {
 
 	public function getFeatureAssignmentID() {return $this->faID;}
 	public function getFeatureDetailObject() {return $this->fdObject;}
-
+	public function getFeatureDetailHandle() {
+		$o = $this->getFeatureDetailObject();
+		$handle = substr(get_class($o), 0, strpos(get_class($o), 'FeatureDetail'));
+		return Loader::helper('text')->uncamelcase($handle);
+	}
+	
 	public static function getByID($faID) {
 		$db = Loader::db();
 		$r = $db->GetRow('select faID, fa.fcID, fdObject, fc.fcHandle from FeatureAssignments fa inner join FeatureCategories fc on fa.fcID = fc.fcID where faID = ?', array($faID));

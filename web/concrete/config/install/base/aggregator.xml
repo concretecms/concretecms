@@ -5,16 +5,16 @@
         <aggregatorsource handle="rss_feed" name="RSS Feed" package="" />
     </aggregatorsources>
     <features>
-        <feature handle="title" />
-        <feature handle="link" />
-        <feature handle="date_time" />
-        <feature handle="image" />
-        <feature handle="conversation" />
-        <feature handle="body" />
+        <feature handle="title" score="1" />
+        <feature handle="link" score="1" />
+        <feature handle="date_time" score="1" />
+        <feature handle="image" score="6" />
+        <feature handle="conversation" score="3" />
+        <feature handle="description" score="1" />
     </features>
     <aggregatoritemtemplates>
-        <aggregatoritemtemplate handle="title_body" name="Title Date &amp; Body" package="">
-            <feature handle="body" />
+        <aggregatoritemtemplate handle="title_description" name="Title Date &amp; Description" package="">
+            <feature handle="description" />
             <feature handle="date_time" />
             <feature handle="link" />
             <feature handle="title" />
@@ -24,13 +24,13 @@
             <feature handle="link" />
             <feature handle="title" />
         </aggregatoritemtemplate>
-        <aggregatoritemtemplate handle="title_date_comments" name="Title, Date &amp; Comments" package="">
+        <aggregatoritemtemplate handle="title_date_comments" name="Title, Date &amp; Comments" package="" has-custom-class="true">
             <feature handle="date_time" />
             <feature handle="link" />
             <feature handle="title" />
             <feature handle="conversation" />
         </aggregatoritemtemplate>
-        <aggregatoritemtemplate handle="thumbnail" name="Thumbnail Only" package="">
+        <aggregatoritemtemplate handle="thumbnail" name="Thumbnail Only" package="" has-custom-class="true">
             <feature handle="link" />
             <feature handle="image" />
         </aggregatoritemtemplate>
