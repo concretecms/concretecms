@@ -17,6 +17,13 @@ class Concrete5_Model_ConversationFeatureDetail extends FeatureDetail {
 		return Conversation::getByID($this->cnvID);
 	}
 	
+	public static function get($mixed) {
+		$fd = new ConversationFeatureDetail();
+		$conversation = $mixed->getConversationObject();
+		$fd->setConversationID($conversation->getConversationID());
+		return $fd;
+	}
+
 
 
 }

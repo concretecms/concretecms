@@ -19,4 +19,10 @@ class Concrete5_Model_FileFeatureDetail extends FileFeatureDetail {
 		return $this->fID;
 	}
 
+	public static function get($mixed) {
+		$fd = new FileFeatureDetail();
+		$fd->setFileID($mixed->getFileID());
+		return $fd;
+	}
+
 }

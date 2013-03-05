@@ -14,5 +14,10 @@ class Concrete5_Model_LinkFeatureDetail extends FeatureDetail {
 		return $this->link;
 	}
 
+	public static function get($mixed) {
+		$fd = new LinkFeatureDetail();
+		$fd->setItemLink($mixed->getFeatureDataLink());
+		return $fd;
+	}
 
 }

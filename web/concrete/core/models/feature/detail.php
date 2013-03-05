@@ -8,5 +8,6 @@ abstract class Concrete5_Model_FeatureDetail extends Object {
 		return $this->feHandle;
 	}
 
+	abstract public static function get($mixed);
 		
 }

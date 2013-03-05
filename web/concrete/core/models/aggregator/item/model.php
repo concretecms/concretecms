@@ -52,7 +52,7 @@ abstract class Concrete5_Model_AggregatorItem extends Object {
 	protected function sortMatchedAggregatorItemTemplatesByFeaturesDescending($a, $b) {
 		if ($a->getAggregatorItemTemplateFeaturesTotal() > $b->getAggregatorItemTemplateFeaturesTotal()) {
 			return -1;
-		} else if ($a->getAggregatorItemTemplateFeaturesTotal() > $b->getAggregatorItemTemplateFeaturesTotal()) {
+		} else if ($a->getAggregatorItemTemplateFeaturesTotal() < $b->getAggregatorItemTemplateFeaturesTotal()) {
 			return 1;
 		} else {
 			return 0;

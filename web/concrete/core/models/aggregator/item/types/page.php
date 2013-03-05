@@ -1,6 +1,6 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Model_PageAggregatorItem extends AggregatorItem implements TitleFeatureInterface, DateTimeFeatureInterface, LinkFeatureInterface {
+class Concrete5_Model_PageAggregatorItem extends AggregatorItem implements TitleFeatureInterface, DateTimeFeatureInterface, LinkFeatureInterface, BodyFeatureInterface {
 
 	public function getAggregatorItemExtendedFeatures() {
 		$assignments = $this->page->getFeatureAssignments();
@@ -13,7 +13,7 @@ class Concrete5_Model_PageAggregatorItem extends AggregatorItem implements Title
 	}
 
 	protected $features = array(
-		'title', 'date_time', 'link'
+		'title', 'date_time', 'link', 'body'
 	);
 
 	public function getFeatureDataTitle() {
@@ -26,6 +26,10 @@ class Concrete5_Model_PageAggregatorItem extends AggregatorItem implements Title
 	
 	public function getFeatureDataLink() {
 		return Loader::helper('navigation')->getLinkToCollection($this->page);
+	}
+
+	public function getFeatureDataBody() {
+		return $this->page->getCollectionDescription();
 	}
 
 	public function getAggregatorItemExtendedFeatureDetailObjects($feHandle) {

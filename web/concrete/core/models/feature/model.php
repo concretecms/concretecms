@@ -1,15 +1,17 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-abstract class Concrete5_Model_Feature extends Object {
+class Concrete5_Model_Feature extends Object {
 
-	abstract public function getFeatureDetailObject($mixed);
+	public function getFeatureDetailObject($mixed) {
+		$class = Loader::helper('text')->camelcase($this->feHandle) . 'FeatureDetail';
+		return call_user_func_array(array($class, 'get'), array($mixed));
+	}
 
 	public static function getByID($feID) {
 		$db = Loader::db();
 		$row = $db->GetRow('select feID, feHandle, pkgID from Features where feID = ?', array($feID));
 		if (isset($row['feID'])) {
-			$class = Loader::helper('text')->camelcase($row['feHandle']) . 'Feature';
-			$fe = new $class();
+			$fe = new Feature;
 			$fe->setPropertiesFromArray($row);
 			return $fe;
 		}
@@ -19,8 +21,7 @@ abstract class Concrete5_Model_Feature extends Object {
 		$db = Loader::db();
 		$row = $db->GetRow('select feID, feHandle, pkgID from Features where feHandle = ?', array($feHandle));
 		if (isset($row['feID'])) {
-			$class = Loader::helper('text')->camelcase($row['feHandle']) . 'Feature';
-			$fe = new $class();
+			$fe = new Feature;
 			$fe->setPropertiesFromArray($row);
 			return $fe;
 		}
