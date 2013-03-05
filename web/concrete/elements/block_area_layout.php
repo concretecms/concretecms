@@ -133,10 +133,12 @@ if(!$layout ){
 	
 	
 	
-	<div class="ccm-buttons dialog-buttons">
-		<a href="#" class="btn ccm-button-left cancel" onclick="jQuery.fn.dialog.closeTop(); return false"><?=t('Cancel')?></a>
-		<a href="javascript:void(0)" onclick="$('#ccmAreaLayoutForm').submit()" class="ccm-button-right accept btn primary"><?=intval($layout->layoutID)?t('Save Changes'):t('Add')?></a>
-	</div>	 
+	<? if(!$_REQUEST['refresh']) { ?>
+		<div class="ccm-buttons dialog-buttons">
+			<a href="#" class="btn ccm-button-left cancel" onclick="jQuery.fn.dialog.closeTop(); return false"><?=t('Cancel')?></a>
+			<a href="javascript:void(0)" onclick="$('#ccmAreaLayoutForm').submit()" class="ccm-button-right accept btn primary"><?=intval($layout->layoutID)?t('Save Changes'):t('Add')?></a>
+		</div>
+	<? } ?>
 	
 
 </form>
