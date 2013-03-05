@@ -89,6 +89,11 @@ class Concrete5_Controller_Block_CoreAggregator extends BlockController {
 			if ($this->agID) {
 				$aggregator = Aggregator::getByID($this->agID);
 				if (is_object($aggregator)) {
+					// this is just here to make this easier;
+					$aggregator->clearAggregatorItems();
+					$aggregator->generateAggregatorItems();
+					// remove above.
+
 					$list = new AggregatorItemList($aggregator);
 					$list->sortByDateDescending();
 					$items = $list->getPage();

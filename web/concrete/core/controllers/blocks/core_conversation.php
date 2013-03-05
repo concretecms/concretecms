@@ -28,6 +28,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			return t("Conversation");
 		}
 
+		public function getFeatureDataConversationObject() {
+			return $this->getConversationObject();
+		}
+		
 		public function getConversationObject() {
 			if (!isset($this->conversation)) {
 				// i don't know why this->cnvid isn't sticky in some cases, leading us to query

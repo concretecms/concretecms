@@ -171,6 +171,9 @@
 			$q = "insert into CollectionVersions (cID, cvID, cvName, cvHandle, cvDescription, cvDatePublic, cvDateCreated, cvComments, cvAuthorUID, cvIsNew, ptID, ctID)
 				values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 				
+			$r = $db->prepare($q);
+			$res = $db->execute($r, $v);
+
 			$q2 = "select akID, avID from CollectionAttributeValues where cID = ? and cvID = ?";
 			$v2 = array($c->getCollectionID(), $this->getVersionID());
 			$r2 = $db->query($q2, $v2);
@@ -179,9 +182,14 @@
 				$recordExists = intval($db->getOne('SELECT count(*) FROM CollectionAttributeValues WHERE cID=? AND cvID=? AND akID=? AND avID=?',$v3))?1:0;
 				if(!$recordExists) $db->query("insert into CollectionAttributeValues (cID, cvID, akID, avID) values (?, ?, ?, ?)", $v3); 
 			}
-			
-			$r = $db->prepare($q);
-			$res = $db->execute($r, $v);
+
+			$q3 = "select faID from CollectionVersionFeatureAssignments where cID = ? and cvID = ?";
+			$v3 = array($c->getCollectionID(), $this->getVersionID());
+			$r3 = $db->query($q3, $v3);
+			while ($row3 = $r3->fetchRow()) {
+				$v3 = array(intval($c->getCollectionID()), $newVID, $row3['faID']);
+				$db->query("insert into CollectionVersionFeatureAssignments (cID, cvID, faID) values (?, ?, ?)", $v3); 
+			}
 			
 			$nv = CollectionVersion::get($c, $newVID);
 			Events::fire('on_page_version_add', $c, $nv);

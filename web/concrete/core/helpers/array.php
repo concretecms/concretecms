@@ -97,4 +97,16 @@ class Concrete5_Helper_Array {
 		} 
 		return $tmp; 
 	} 
+
+	/** 
+	 * Returns whether $a is a proper subset of $b
+	 */
+	public function subset($a, $b) {
+		if (count(array_diff(array_merge($a,$b), $b)) == 0) {
+	        return true;
+    	} else {
+			return false;
+		}
+	}
+
 }

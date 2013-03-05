@@ -5,8 +5,29 @@
         <aggregatorsource handle="rss_feed" name="RSS Feed" package="" />
     </aggregatorsources>
     <features>
+        <feature handle="title" />
+        <feature handle="link" />
+        <feature handle="date_time" />
+        <feature handle="image" />
         <feature handle="conversation" />
     </features>
+    <aggregatoritemtemplates>
+        <aggregatoritemtemplate handle="title_date" name="Title &amp; Date" package="">
+            <feature handle="date_time" />
+            <feature handle="link" />
+            <feature handle="title" />
+        </aggregatoritemtemplate>
+        <aggregatoritemtemplate handle="title_date_comments" name="Title, Date &amp; Comments" package="">
+            <feature handle="date_time" />
+            <feature handle="link" />
+            <feature handle="title" />
+            <feature handle="conversation" />
+        </aggregatoritemtemplate>
+        <aggregatoritemtemplate handle="thumbnail" name="Thumbnail Only" package="">
+            <feature handle="link" />
+            <feature handle="image" />
+        </aggregatoritemtemplate>
+    </aggregatoritemtemplates>
     <featurecategories>
         <featurecategory handle="collection_version" />
     </featurecategories>

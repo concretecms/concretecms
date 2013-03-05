@@ -28,9 +28,10 @@ class Concrete5_Library_Content_Importer {
 		$this->importStacksStructure($sx);
 		$this->importBlockTypes($sx);
 		$this->importBlockTypeSets($sx);
-		$this->importAggregatorDataSources($sx);
 		$this->importFeatures($sx);
 		$this->importFeatureCategories($sx);
+		$this->importAggregatorDataSources($sx);
+		$this->importAggregatorItemTemplates($sx);
 		$this->importAttributeCategories($sx);
 		$this->importAttributeTypes($sx);
 		$this->importWorkflowTypes($sx);
@@ -582,6 +583,22 @@ class Concrete5_Library_Content_Importer {
 			}
 		}
 	}
+
+	protected function importAggregatorItemTemplates(SimpleXMLElement $sx) {
+		if (isset($sx->aggregatoritemtemplates)) {
+			foreach($sx->aggregatoritemtemplates->aggregatoritemtemplate as $at) {
+				$pkg = ContentImporter::getPackageObject($at['package']);
+				$template = AggregatorItemTemplate::add((string) $at['handle'], (string) $at['name'], $pkg);
+				foreach($at->children() as $fe) {
+					$feo = Feature::getByHandle((string) $fe['handle']);
+					if (is_object($feo)) { 	
+						$template->addAggregatorItemTemplateFeature($feo);
+					}
+				}
+			}
+		}
+	}
+
 
 	protected function importBlockTypeSets(SimpleXMLElement $sx) {
 		if (isset($sx->blocktypesets)) {

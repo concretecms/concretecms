@@ -24,6 +24,7 @@ abstract class Concrete5_Model_FeatureAssignment extends Object {
 			$class = Loader::helper('text')->camelcase($r['fcHandle']) . 'FeatureAssignment';
 			$fa = new $class();
 			$fa->setPropertiesFromArray($r);
+			$fa->fdObject = @unserialize($r['fdObject']);
 			$fa->loadDetails();
 			return $fa;
 		}
