@@ -593,10 +593,22 @@ class Concrete5_Library_Content_Importer {
 			foreach($sx->aggregatoritemtemplates->aggregatoritemtemplate as $at) {
 				$pkg = ContentImporter::getPackageObject($at['package']);
 				$agtHasCustomClass = false;
+				$agtForceDefault = false;
+				$agtFixedSlotWidth = 0;
+				$agtFixedSlotHeight = 0;
 				if ($at['has-custom-class']) {
 					$agtHasCustomClass = true;
 				}
-				$template = AggregatorItemTemplate::add((string) $at['handle'], (string) $at['name'], $agtHasCustomClass, $pkg);
+				if ($at['force-default']) {
+					$agtForceDefault = true;
+				}
+				if ($at['fixed-slot-width']) {
+					$agtFixedSlotWidth = (string) $at['fixed-slot-width'];
+				}
+				if ($at['fixed-slot-height']) {
+					$agtFixedSlotHeight = (string) $at['fixed-slot-height'];
+				}
+				$template = AggregatorItemTemplate::add((string) $at['handle'], (string) $at['name'], $agtFixedSlotWidth, $agtFixedSlotHeight, $agtHasCustomClass, $agtForceDefault, $pkg);
 				foreach($at->children() as $fe) {
 					$feo = Feature::getByHandle((string) $fe['handle']);
 					if (is_object($feo)) { 	

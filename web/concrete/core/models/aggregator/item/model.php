@@ -4,6 +4,8 @@ abstract class Concrete5_Model_AggregatorItem extends Object {
 
 	abstract public function loadDetails();
 
+	protected $feHandles;
+
 	public function getAggregatorItemID() {return $this->agiID;}
 	public function getAggregatorDataSourceHandle() {return $this->agsHandle;}
 	public function getAggregatorItemPublicDateTime() {return $this->agiPublicDateTime;}
@@ -13,15 +15,29 @@ abstract class Concrete5_Model_AggregatorItem extends Object {
 	public function getAggregatorItemSlotHeight() {	return $this->agiSlotHeight; }
 
 	public function getAggregatorItemFeatureHandles() {
-		$db = Loader::db();
-		$handles = $db->GetCol('select distinct feHandle from AggregatorItemFeatureAssignments afa inner join FeatureAssignments fa on afa.faID = fa.faID inner join Features fe on fa.feID = fe.feID where agiID = ?', array($this->agiID));
-		return $handles;
+		if (!isset($this->feHandles)) {
+			$db = Loader::db();
+			$this->feHandles = $db->GetCol('select distinct feHandle from AggregatorItemFeatureAssignments afa inner join FeatureAssignments fa on afa.faID = fa.faID inner join Features fe on fa.feID = fe.feID where agiID = ?', array($this->agiID));
+		}
+		return $this->feHandles;
 	}
 
 	public function setAggregatorItemTemplateID($agtID) {
 		$db = Loader::db();
 		$db->Execute('update AggregatorItems set agtID = ? where agiID = ?', array($agtID, $this->agiID));
 		$this->agtID = $agtID;
+	}
+
+	public function setAggregatorItemSlotWidth($agiSlotWidth) {
+		$db = Loader::db();
+		$db->Execute('update AggregatorItems set agiSlotWidth = ? where agiID = ?', array($agiSlotWidth, $this->agiID));
+		$this->agiSlotWidth = $agiSlotWidth;
+	}
+
+	public function setAggregatorItemSlotHeight($agiSlotHeight) {
+		$db = Loader::db();
+		$db->Execute('update AggregatorItems set agiSlotHeight = ? where agiID = ?', array($agiSlotHeight, $this->agiID));
+		$this->agiSlotHeight = $agiSlotHeight;
 	}
 
 	public static function getByID($agiID) {
@@ -75,6 +91,12 @@ abstract class Concrete5_Model_AggregatorItem extends Object {
 		}
 	}
 
+	protected function weightByFeatureScore($a, $b) {
+		$ascore = $a->getAggregatorTemplateFeaturesTotalScore();
+		$bscore = $b->getAggregatorTemplateFeaturesTotalScore();
+		return mt_rand(0, ($ascore+$bscore)) > $ascore ? 1 : -1;
+	}
+
 	public function setDefaultAggregatorItemTemplate() {
 		$arr = Loader::helper('array');
 		$db = Loader::db();
@@ -87,9 +109,19 @@ abstract class Concrete5_Model_AggregatorItem extends Object {
 				$matched[] = AggregatorItemTemplate::getByID($row['agtID']);
 			}
 		}
+
 		usort($matched, array($this, 'sortByFeatureScore'));
-		if (is_object($matched[0])) {
-			$this->setAggregatorItemTemplateID($matched[0]->getAggregatorItemTemplateID());
+		if (is_object($matched[0]) && $matched[0]->aggregatorItemTemplateIsAlwaysDefault()) {
+			$template = $matched[0];
+		} else {
+			// we do some fun randomization math.
+			usort($matched, array($this, 'weightByFeatureScore'));
+			$template = $matched[0];
+		}
+		if (is_object($template)) {
+			$this->setAggregatorItemTemplateID($template->getAggregatorItemTemplateID());
+			$this->setAggregatorItemSlotWidth($template->getAggregatorItemTemplateSlotWidth($this));
+			$this->setAggregatorItemSlotHeight($template->getAggregatorItemTemplateSlotHeight($this));
 		}
 	}
 
@@ -101,12 +133,14 @@ abstract class Concrete5_Model_AggregatorItem extends Object {
 
 	public function render() {
 		$t = AggregatorItemTemplate::getByID($this->agtID);
-		$data = $t->getAggregatorItemTemplateData($this);
-		$env = Environment::get();
-		extract($data);
-		// we can't just use Loader::element because it strips off .php of the filename. Lame.
-		$path = $env->getPath(DIRNAME_ELEMENTS . '/' . DIRNAME_AGGREGATOR . '/' . DIRNAME_AGGREGATOR_ITEM_TEMPLATES . '/' . $this->getAggregatorItemTemplateHandle() . '/' . FILENAME_AGGREGATOR_VIEW);
-		include($path);
+		if (is_object($t)) {
+			$data = $t->getAggregatorItemTemplateData($this);
+			$env = Environment::get();
+			extract($data);
+			// we can't just use Loader::element because it strips off .php of the filename. Lame.
+			$path = $env->getPath(DIRNAME_ELEMENTS . '/' . DIRNAME_AGGREGATOR . '/' . DIRNAME_AGGREGATOR_ITEM_TEMPLATES . '/' . $this->getAggregatorItemTemplateHandle() . '/' . FILENAME_AGGREGATOR_VIEW);
+			include($path);
+		}
 	}
 
 }

@@ -30,4 +30,27 @@ class Concrete5_Model_ImageFeatureDetail extends FeatureDetail {
 	public function getWidth() {return $this->width;}
 	public function getHeight() {return $this->height;}
 
+
+	public function getAggregatorItemSuggestedSlotHeight() {
+		if ($this->getHeight() < 240) {
+			return 1;
+		} else if ($this->getHeight() < 360) {
+			return 2;
+		}
+
+		// no suggestion
+		return 0;	
+	}
+
+	public function getAggregatorItemSuggestedSlotWidth() {
+		if ($this->getWidth() < 240) {
+			return 1;
+		} else if ($this->getWidth() < 360) {
+			return 2;
+		}
+
+		// no suggestion
+		return 0;	
+
+	}
 }

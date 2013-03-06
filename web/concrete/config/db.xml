@@ -122,6 +122,18 @@
       <notnull/>
       <default value="0"/>
     </field>
+    <field name="agtFixedSlotWidth" type="I" size="10">
+      <unsigned/>
+      <default value="0" />
+    </field>
+    <field name="agtFixedSlotHeight" type="I" size="10">
+      <unsigned/>
+      <default value="0" />
+    </field>
+  <field name="agtForceDefault" type="I" size="10">
+      <unsigned/>
+      <default value="0" />
+    </field>    
     <field name="pkgID" type="I" size="10">
       <unsigned/>
     </field>
