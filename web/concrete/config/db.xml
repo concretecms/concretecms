@@ -80,6 +80,14 @@
     </field>
     <field name="agiTitle" type="X">
     </field>
+    <field name="agiSlotWidth" type="I" size="10">
+      <unsigned/>
+      <default value="1" />
+    </field>
+    <field name="agiSlotHeight" type="I" size="10">
+      <unsigned/>
+      <default value="1" />
+    </field>
     <field name="agtID" type="I" size="10">
       <unsigned/>
       <notnull />

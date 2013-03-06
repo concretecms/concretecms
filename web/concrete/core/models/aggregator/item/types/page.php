@@ -2,43 +2,7 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 class Concrete5_Model_PageAggregatorItem extends AggregatorItem {
 
-	/*
-	protected $features = array(
-		'title', 'date_time', 'link', 'description'
-	);
-
-	public function getFeatureDataTitle() {
-		return $this->page->getCollectionName();
-	}
-
-	public function getFeatureDataDateTime() {
-		return $this->page->getCollectionDatePublic();
-	}
 	
-	public function getFeatureDataLink() {
-		return Loader::helper('navigation')->getLinkToCollection($this->page);
-	}
-
-	public function getFeatureDataDescription() {
-		return $this->page->getCollectionDescription();
-	}
-
-	public function getAggregatorItemExtendedFeatureDetailObjects($feHandle) {
-		$assignments = $this->page->getFeatureAssignments();
-		$objects = array();
-		foreach($assignments as $as) {
-			if ($as->getFeatureDetailHandle() == $feHandle) {
-				$detail = $as->getFeatureDetailObject();
-				if (is_object($detail)) {
-					$objects[] = $detail;
-				}
-			}
-		}
-		return $objects;
-	}
-	*/
-
-
 	public static function add(AggregatorDataSourceConfiguration $configuration, Page $c) {
 		$aggregator = $configuration->getAggregatorObject();
 		$item = parent::add($aggregator, $configuration->getAggregatorDataSourceObject(), $c->getCollectionDatePublic(), $c->getCollectionName());
@@ -70,12 +34,6 @@ class Concrete5_Model_PageAggregatorItem extends AggregatorItem {
 		$row = $db->GetRow('select cID from agPage where agiID = ?', array($this->getAggregatorItemID()));
 		$this->setPropertiesFromArray($row);
 		$this->page = Page::getByID($row['cID'], 'ACTIVE');
-		/* $assignments = $this->page->getFeatureAssignments();
-		foreach($assignments as $as) {
-			$this->features[] = $as->getFeatureDetailHandle();
-		}
-		$this->features = array_unique($this->features);
-		*/
 	}
 
 	public function getCollectionObject() {
