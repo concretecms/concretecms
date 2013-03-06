@@ -90,8 +90,8 @@ class Concrete5_Controller_Block_CoreAggregator extends BlockController {
 				$aggregator = Aggregator::getByID($this->agID);
 				if (is_object($aggregator)) {
 					// this is just here to make this easier;
-					$aggregator->clearAggregatorItems();
-					$aggregator->generateAggregatorItems();
+					//$aggregator->clearAggregatorItems();
+					//$aggregator->generateAggregatorItems();
 					// remove above.
 
 					$list = new AggregatorItemList($aggregator);

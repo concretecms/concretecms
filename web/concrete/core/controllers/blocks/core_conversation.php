@@ -28,7 +28,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			return t("Conversation");
 		}
 
-		public function getFeatureDataConversationObject() {
+		public function getConversationFeatureDetailConversationObject() {
 			return $this->getConversationObject();
 		}
 		

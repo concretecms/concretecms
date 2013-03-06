@@ -1,16 +1,8 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Model_PageAggregatorItem extends AggregatorItem implements TitleFeatureInterface, DateTimeFeatureInterface, LinkFeatureInterface, DescriptionFeatureInterface {
+class Concrete5_Model_PageAggregatorItem extends AggregatorItem {
 
-	public function getAggregatorItemExtendedFeatures() {
-		$assignments = $this->page->getFeatureAssignments();
-		$features = array();
-		foreach($assignments as $as) {
-			$features[] = $as->getFeatureDetailHandle();
-		}
-		return $features;
-	}
-
+	/*
 	protected $features = array(
 		'title', 'date_time', 'link', 'description'
 	);
@@ -44,7 +36,9 @@ class Concrete5_Model_PageAggregatorItem extends AggregatorItem implements Title
 		}
 		return $objects;
 	}
-	
+	*/
+
+
 	public static function add(AggregatorDataSourceConfiguration $configuration, Page $c) {
 		$aggregator = $configuration->getAggregatorObject();
 		$item = parent::add($aggregator, $configuration->getAggregatorDataSourceObject(), $c->getCollectionDatePublic(), $c->getCollectionName());
@@ -53,6 +47,14 @@ class Concrete5_Model_PageAggregatorItem extends AggregatorItem implements Title
 			$item->getAggregatorItemID(),
 			$c->getCollectionID()
 		));
+		$item->addFeatureAssignment('title', $c->getCollectionName());
+		$item->addFeatureAssignment('date_time', $c->getCollectionDatePublic());
+		$item->addFeatureAssignment('link', Loader::helper('navigation')->getLinkToCollection($c));
+		$item->addFeatureAssignment('description', $c->getCollectionDescription());
+		$assignments = $c->getFeatureAssignments();
+		foreach($assignments as $fa) {
+			$item->copyFeatureAssignment($fa);
+		}
 		$item->setDefaultAggregatorItemTemplate();
 	}
 
@@ -68,6 +70,12 @@ class Concrete5_Model_PageAggregatorItem extends AggregatorItem implements Title
 		$row = $db->GetRow('select cID from agPage where agiID = ?', array($this->getAggregatorItemID()));
 		$this->setPropertiesFromArray($row);
 		$this->page = Page::getByID($row['cID'], 'ACTIVE');
+		/* $assignments = $this->page->getFeatureAssignments();
+		foreach($assignments as $as) {
+			$this->features[] = $as->getFeatureDetailHandle();
+		}
+		$this->features = array_unique($this->features);
+		*/
 	}
 
 	public function getCollectionObject() {

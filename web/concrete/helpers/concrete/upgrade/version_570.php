@@ -6,7 +6,6 @@ class ConcreteUpgradeVersion570Helper {
 	public $dbRefreshTables = array(
 		'atSocialLinks',
 		'agPage',
-		'agRssFeed',
 		'Aggregators',
 		'AggregatorItems',
 		'AggregatorItemTemplates',

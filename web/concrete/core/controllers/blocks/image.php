@@ -45,7 +45,7 @@
 			);
 		}
 
-		public function getFeatureDataFileObject() {
+		public function getImageFeatureDetailFileObject() {
 			// i don't know why this->fID isn't sticky in some cases, leading us to query
 			// every damn time
 			$db = Loader::db();

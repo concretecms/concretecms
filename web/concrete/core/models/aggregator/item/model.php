@@ -3,10 +3,13 @@ defined('C5_EXECUTE') or die("Access Denied.");
 abstract class Concrete5_Model_AggregatorItem extends Object {
 
 	abstract public function loadDetails();
-	abstract public function getAggregatorItemExtendedFeatures();
+	
+	/*
+
 	abstract public function getAggregatorItemExtendedFeatureDetailObjects($feHandle);
 
 	protected $features = array();
+	*/
 
 	public function getAggregatorItemID() {return $this->agiID;}
 	public function getAggregatorDataSourceHandle() {return $this->agsHandle;}
@@ -15,7 +18,9 @@ abstract class Concrete5_Model_AggregatorItem extends Object {
 	public function getAggregatorItemTemplateHandle() {return $this->agtHandle;}
 
 	public function getAggregatorItemFeatureHandles() {
-		return array_unique(array_merge($this->features, $this->getAggregatorItemExtendedFeatures()));
+		$db = Loader::db();
+		$handles = $db->GetCol('select distinct feHandle from AggregatorItemFeatureAssignments afa inner join FeatureAssignments fa on afa.faID = fa.faID inner join Features fe on fa.feID = fe.feID where agiID = ?', array($this->agiID));
+		return $handles;
 	}
 
 	public function setAggregatorItemTemplateID($agtID) {
@@ -49,6 +54,18 @@ abstract class Concrete5_Model_AggregatorItem extends Object {
 		return AggregatorItem::getByID($db->Insert_ID());
 	}
 
+	public function addFeatureAssignment($feHandle, $mixed) {
+		$f = Feature::getbyHandle($feHandle);
+		$fd = $f->getFeatureDetailObject($mixed);
+		$as = AggregatorItemFeatureAssignment::add($f, $fd, $this);
+		return $as;
+	}
+
+	public function copyFeatureAssignment(FeatureAssignment $fa) {
+		$db = Loader::db();
+		$db->Replace('AggregatorItemFeatureAssignments', array('faID' => $fa->getFeatureAssignmentID(), 'agiID' => $this->getAggregatorItemID()), array('agiID', 'faID',), true);
+	}
+
 	protected function sortByFeatureScore($a, $b) {
 		$ascore = $a->getAggregatorTemplateFeaturesTotalScore();
 		$bscore = $b->getAggregatorTemplateFeaturesTotalScore();
@@ -62,9 +79,6 @@ abstract class Concrete5_Model_AggregatorItem extends Object {
 	}
 
 	public function setDefaultAggregatorItemTemplate() {
-
-		$this->loadDetails(); // since this runs after adding but before data is properly loaded
-
 		$arr = Loader::helper('array');
 		$db = Loader::db();
 		$myFeatureHandles = $this->getAggregatorItemFeatureHandles();
@@ -85,6 +99,7 @@ abstract class Concrete5_Model_AggregatorItem extends Object {
 	public function delete() {
 		$db = Loader::db();
 		$db->Execute('delete from AggregatorItems where agiID = ?', array($this->agiID));
+		$db->Execute('delete from AggregatorItemFeatureAssignments where agiID = ?', array($this->agiID));
 	}
 
 	public function render() {

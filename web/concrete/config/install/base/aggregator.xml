@@ -8,8 +8,8 @@
         <feature handle="title" score="1" />
         <feature handle="link" score="1" />
         <feature handle="date_time" score="1" />
-        <feature handle="image" score="6" />
-        <feature handle="conversation" score="3" />
+        <feature handle="image" score="6" has-custom-class="true" />
+        <feature handle="conversation" score="6" has-custom-class="true" />
         <feature handle="description" score="1" />
     </features>
     <aggregatoritemtemplates>
@@ -30,12 +30,13 @@
             <feature handle="title" />
             <feature handle="conversation" />
         </aggregatoritemtemplate>
-        <aggregatoritemtemplate handle="thumbnail" name="Thumbnail Only" package="" has-custom-class="true">
+        <aggregatoritemtemplate handle="thumbnail" name="Thumbnail Only" package="">
             <feature handle="link" />
             <feature handle="image" />
         </aggregatoritemtemplate>
     </aggregatoritemtemplates>
     <featurecategories>
         <featurecategory handle="collection_version" />
+        <featurecategory handle="aggregator_item" />
     </featurecategories>
 </concrete5-cif>

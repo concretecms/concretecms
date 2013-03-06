@@ -3,15 +3,23 @@ defined('C5_EXECUTE') or die("Access Denied.");
 class Concrete5_Model_Feature extends Object {
 
 	public function getFeatureDetailObject($mixed) {
-		$class = Loader::helper('text')->camelcase($this->feHandle) . 'FeatureDetail';
-		return call_user_func_array(array($class, 'get'), array($mixed));
+		$class = 'FeatureDetail';
+		if ($this->feHasCustomClass) {
+			$class = Loader::helper('text')->camelcase($this->feHandle) . $class;
+		}
+		$o = new $class($mixed);
+		return $o;
 	}
 
 	public static function getByID($feID) {
 		$db = Loader::db();
-		$row = $db->GetRow('select feID, feScore, feHandle, pkgID from Features where feID = ?', array($feID));
+		$row = $db->GetRow('select feID, feScore, feHasCustomClass, feHandle, pkgID from Features where feID = ?', array($feID));
 		if (isset($row['feID'])) {
-			$fe = new Feature;
+			$class = 'Feature';
+			if ($row['feHasCustomClass']) {
+				$class = Loader::helper('text')->camelcase($row['feHandle']) . $class;
+			}
+			$fe = new $class;
 			$fe->setPropertiesFromArray($row);
 			return $fe;
 		}
@@ -19,9 +27,13 @@ class Concrete5_Model_Feature extends Object {
 	
 	public static function getByHandle($feHandle) {
 		$db = Loader::db();
-		$row = $db->GetRow('select feID, feScore, feHandle, pkgID from Features where feHandle = ?', array($feHandle));
+		$row = $db->GetRow('select feID, feScore, feHandle, feHasCustomClass, pkgID from Features where feHandle = ?', array($feHandle));
 		if (isset($row['feID'])) {
-			$fe = new Feature;
+			$class = 'Feature';
+			if ($row['feHasCustomClass']) {
+				$class = Loader::helper('text')->camelcase($row['feHandle']) . $class;
+			}
+			$fe = new $class;
 			$fe->setPropertiesFromArray($row);
 			return $fe;
 		}
@@ -58,10 +70,11 @@ class Concrete5_Model_Feature extends Object {
 	public function getFeatureID() {return $this->feID;}
 	public function getFeatureHandle() {return $this->feHandle;}
 	public function getFeatureScore() {return $this->feScore;}
+	public function hasFeatureCustomClass() {return $this->feHasCustomClass;}
 	public function getPackageID() {return $this->pkgID;}
 	public function getPackageHandle() {return PackageList::getHandle($this->pkgID);}
 
-	public static function add($feHandle, $feScore = 1, $pkg = false) {
+	public static function add($feHandle, $feScore = 1, $feHasCustomClass = false, $pkg = false) {
 		$db = Loader::db();
 		$pkgID = 0;
 		if (is_object($pkg)) {
@@ -70,8 +83,13 @@ class Concrete5_Model_Feature extends Object {
 		if (!$feScore) {
 			$feScore = 1;
 		}
+		if ($feHasCustomClass) {
+			$feHasCustomClass = 1;
+		} else {
+			$feHasCustomClass = 0;
+		}
 	
-		$db->Execute('insert into Features (feHandle, feScore, pkgID) values (?, ?, ?)', array($feHandle, $feScore, $pkgID));
+		$db->Execute('insert into Features (feHandle, feScore, feHasCustomClass, pkgID) values (?, ?, ?, ?)', array($feHandle, $feScore, $feHasCustomClass, $pkgID));
 		$id = $db->Insert_ID();
 		
 		$fe = Feature::getByID($id);
@@ -84,6 +102,7 @@ class Concrete5_Model_Feature extends Object {
 		$fe->addAttribute('handle',$this->getFeatureHandle());
 		if ($full) {
 			$fe->addAttribute('score',$this->getFeatureScore());
+			$fe->addAttribute('has-custom-class', $this->hasFeatureCustomClass());
 			$fe->addAttribute('package', $this->getPackageHandle());
 		}
 		return $fe;

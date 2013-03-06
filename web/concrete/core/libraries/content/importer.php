@@ -521,8 +521,12 @@ class Concrete5_Library_Content_Importer {
 	protected function importFeatures(SimpleXMLElement $sx) {
 		if (isset($sx->features)) {
 			foreach($sx->features->feature as $fea) {
+				$feHasCustomClass = false;
+				if ($fea['has-custom-class']) {
+					$feHasCustomClass = true;
+				}
 				$pkg = ContentImporter::getPackageObject($fea['package']);
-				$fx = Feature::add((string) $fea['handle'], (string) $fea['score'], $pkg);
+				$fx = Feature::add((string) $fea['handle'], (string) $fea['score'], $feHasCustomClass, $pkg);
 			}
 		}
 	}

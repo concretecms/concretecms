@@ -146,12 +146,18 @@ class Concrete5_Model_AggregatorItemTemplate extends Object {
 	}
 
 	public function getAggregatorItemTemplateData(AggregatorItem $item) {
-		$features = $this->getAggregatorItemTemplateFeatureObjects();
+		$assignments = AggregatorItemFeatureAssignment::getList($item);
 		$data = array();
-		foreach($features as $f) {
-			$method = 'getFeatureData' . Loader::helper('text')->camelcase($f->getFeatureHandle());
-			if (method_exists($item, $method)) {
-				$data[$f->getFeatureHandle()] = call_user_func(array($item, $method));
+		foreach($assignments as $as) {
+			$fd = $as->getFeatureDetailObject();
+			$key = $as->getFeatureDetailHandle();
+			if (is_array($data[$key])) {
+				$data[$key][] = $fd;
+			} else if (array_key_exists($key, $data)) {
+				$tmp = $data[$key];
+				$data[$key] = array($tmp, $fd);
+			} else {
+				$data[$key] = $fd;
 			}
 		}
 		return $data;
