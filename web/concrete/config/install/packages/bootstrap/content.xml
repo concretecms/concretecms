@@ -4,7 +4,10 @@
         <theme handle="twitter_bootstrap" package="" activated="1"/>
     </themes>
     <pagetypes>
-        <pagetype icon="full.png" handle="full" name="Page" package="" />
+        <pagetype icon="main.png" handle="full" name="Page" package="" />
+    </pagetypes>
+    <pagetypes>
+        <pagetype icon="main.png" handle="two_column" name="Two Column" package="" />
     </pagetypes>
     <pages>
 	<page name="Home" path="" filename="" pagetype="full" description="" package="">
