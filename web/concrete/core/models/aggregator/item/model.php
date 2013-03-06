@@ -3,19 +3,14 @@ defined('C5_EXECUTE') or die("Access Denied.");
 abstract class Concrete5_Model_AggregatorItem extends Object {
 
 	abstract public function loadDetails();
-	
-	/*
-
-	abstract public function getAggregatorItemExtendedFeatureDetailObjects($feHandle);
-
-	protected $features = array();
-	*/
 
 	public function getAggregatorItemID() {return $this->agiID;}
 	public function getAggregatorDataSourceHandle() {return $this->agsHandle;}
 	public function getAggregatorItemPublicDateTime() {return $this->agiPublicDateTime;}
 	public function getAggregatorItemTemplateID() {return $this->agtID;}
 	public function getAggregatorItemTemplateHandle() {return $this->agtHandle;}
+	public function getAggregatorItemSlotWidth() { return $this->agiSlotWidth; 	}
+	public function getAggregatorItemSlotHeight() {	return $this->agiSlotHeight; }
 
 	public function getAggregatorItemFeatureHandles() {
 		$db = Loader::db();
@@ -41,15 +36,17 @@ abstract class Concrete5_Model_AggregatorItem extends Object {
 		}
 	}
 
-	public static function add(Aggregator $ag, AggregatorDataSource $ags, $agiPublicDateTime, $agiTitle) {
+	public static function add(Aggregator $ag, AggregatorDataSource $ags, $agiPublicDateTime, $agiTitle, $agiSlotWidth = 1, $agiSlotHeight = 1) {
 		$db = Loader::db();
 		$agiDateTimeCreated = Loader::helper('date')->getSystemDateTime();
-		$r = $db->Execute('insert into AggregatorItems (agID, agsID, agiDateTimeCreated, agiPublicDateTime, agiTitle) values (?, ?, ?, ?, ?)', array(
+		$r = $db->Execute('insert into AggregatorItems (agID, agsID, agiDateTimeCreated, agiPublicDateTime, agiTitle, agiSlotWidth, agiSlotHeight) values (?, ?, ?, ?, ?, ?, ?)', array(
 			$ag->getAggregatorID(),
 			$ags->getAggregatorDataSourceID(), 
 			$agiDateTimeCreated,
 			$agiPublicDateTime, 
-			$agiTitle
+			$agiTitle,
+			$agiSlotWidth,
+			$agiSlotHeight
 		));
 		return AggregatorItem::getByID($db->Insert_ID());
 	}
@@ -112,10 +109,4 @@ abstract class Concrete5_Model_AggregatorItem extends Object {
 		include($path);
 	}
 
-	public function getAggregatorItemSizeX() {
-		return 1;
-	}
-	public function getAggregatorItemSizeY() {
-		return 1;
-	}
 }

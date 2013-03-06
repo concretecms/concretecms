@@ -2,30 +2,6 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 class Concrete5_Model_RssFeedAggregatorItem extends AggregatorItem {
 
-	/*
-	protected $features = array(
-		'title', 'date_time', 'link', 'description'
-	);
-
-	public function getAggregatorItemExtendedFeatureDetailObjects($feHandle) {
-		return false;
-	}
-
-	public function getFeatureDataTitle() {
-		return $this->title;
-	}
-
-	public function getFeatureDataDateTime() {
-		return $this->datetime;
-	}
-	
-	public function getFeatureDataLink() {
-		return $this->url;
-	}
-
-	public function getFeatureDataDescription() {return $this->description;}
-	*/
-
 	public function loadDetails() {}
 
 	public static function add(AggregatorDataSourceConfiguration $configuration, $post) {

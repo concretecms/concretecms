@@ -4,7 +4,7 @@
 <div data-aggregator-id="<?=$aggregator->getAggregatorID()?>" class="ccm-aggregator-grid gridster">
   <ul>
   	<? foreach($items as $item) { ?>
-    <li data-row="1" data-col="1" data-sizex="<?=$item->getAggregatorItemSizeX()?>" data-sizey="<?=$item->getAggregatorItemSizeY()?>"><?
+    <li data-row="1" data-col="1" data-sizex="<?=$item->getAggregatorItemSlotWidth()?>" data-sizey="<?=$item->getAggregatorItemSlotHeight()?>"><?
     	$item->render();
     ?></li>
   	<? } ?>
