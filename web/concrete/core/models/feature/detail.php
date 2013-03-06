@@ -15,5 +15,12 @@ class Concrete5_Model_FeatureDetail extends Object {
 	public function __toString() {
 		return $this->getValue();
 	}
-		
+	
+	public function getAggregatorItemSuggestedSlotWidth() {
+		return 0;
+	}
+
+	public function getAggregatorItemSuggestedSlotHeight() {
+		return 0;
+	}
 }

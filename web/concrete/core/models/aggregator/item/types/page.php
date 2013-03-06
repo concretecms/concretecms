@@ -15,6 +15,9 @@ class Concrete5_Model_PageAggregatorItem extends AggregatorItem {
 		$item->addFeatureAssignment('date_time', $c->getCollectionDatePublic());
 		$item->addFeatureAssignment('link', Loader::helper('navigation')->getLinkToCollection($c));
 		$item->addFeatureAssignment('description', $c->getCollectionDescription());
+		if ($c->getAttribute('is_featured')) {
+			$item->addFeatureAssignment('featured', 1);
+		}
 		$assignments = $c->getFeatureAssignments();
 		foreach($assignments as $fa) {
 			$item->copyFeatureAssignment($fa);
