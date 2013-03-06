@@ -97,7 +97,7 @@ abstract class Concrete5_Model_FeatureCategory extends Object {
 
 	public function delete() {
 		$db = Loader::db();
-		$db->Execute('delete from FeatureCategorys where fcID = ?', array($this->fcID));
+		$db->Execute('delete from FeatureCategories where fcID = ?', array($this->fcID));
 	}
 	
 		

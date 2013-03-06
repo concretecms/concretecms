@@ -702,7 +702,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			if (count($features) > 0) {
 				foreach($features as $fe) {
 					$fd = $fe->getFeatureDetailObject($controller);	
-					$fc = CollectionVersionFeatureAssignment::add($fd, $this);
+					$fc = CollectionVersionFeatureAssignment::add($fe, $fd, $this);
 				}
 			}
 			

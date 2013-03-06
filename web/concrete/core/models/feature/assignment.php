@@ -5,26 +5,26 @@ abstract class Concrete5_Model_FeatureAssignment extends Object {
 	abstract public function loadDetails();
 	abstract public static function getList($mixed);
 	
-	public static function add(FeatureCategory $fc, FeatureDetail $fd) {
+	public static function add(Feature $fe, FeatureCategory $fc, FeatureDetail $fd) {
 		$db = Loader::db();
-		$db->Execute('insert into FeatureAssignments (fcID, fdObject) values (?, ?)', array(
+		$db->Execute('insert into FeatureAssignments (fcID, feID, fdObject) values (?, ?, ?)', array(
 			$fc->getFeatureCategoryID(),
+			$fe->getFeatureID(),
 			serialize($fd)
 		));
 		return FeatureAssignment::getByID($db->Insert_ID());
 	}
 
 	public function getFeatureAssignmentID() {return $this->faID;}
+	public function getFeatureID() {return $this->feID;}
 	public function getFeatureDetailObject() {return $this->fdObject;}
 	public function getFeatureDetailHandle() {
-		$o = $this->getFeatureDetailObject();
-		$handle = substr(get_class($o), 0, strpos(get_class($o), 'FeatureDetail'));
-		return Loader::helper('text')->uncamelcase($handle);
+		return $this->feHandle;
 	}
 	
 	public static function getByID($faID) {
 		$db = Loader::db();
-		$r = $db->GetRow('select faID, fa.fcID, fdObject, fc.fcHandle from FeatureAssignments fa inner join FeatureCategories fc on fa.fcID = fc.fcID where faID = ?', array($faID));
+		$r = $db->GetRow('select faID, fa.fcID, fdObject, fe.feHandle, fc.fcHandle from FeatureAssignments fa inner join FeatureCategories fc on fa.fcID = fc.fcID inner join Features fe on fa.feID = fe.feID where faID = ?', array($faID));
 		if (is_array($r) && $r['faID'] == $faID) {
 			$class = Loader::helper('text')->camelcase($r['fcHandle']) . 'FeatureAssignment';
 			$fa = new $class();

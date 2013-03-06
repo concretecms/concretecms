@@ -1,13 +1,33 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Model_ImageFeatureDetail extends FileFeatureDetail {
+class Concrete5_Model_ImageFeatureDetail extends FeatureDetail {
 
-	// we have to dupe this because of PHP 5.2's stupidity and our inability to get called class.
-	public static function get($mixed) {
-		$fd = new ImageFeatureDetail();
-		$file = $mixed->getFeatureDataFileObject();
-		$fd->setFileID($file->getFileID());
-		return $fd;
+	protected $path;
+	protected $width;
+	protected $height;
+
+	public function __construct($mixed) {
+		if (is_object($mixed)) {
+			$f = $mixed->getImageFeatureDetailFileObject();
+			if (is_object($f)) {
+				$this->path = $f->getRelativePath();
+				$this->width = $f->getAttribute('width');
+				$this->height = $f->getAttribute('height');
+			}
+		} else {
+			$this->path = $mixed;
+			$r = @getimagesize($this->path);
+			if ($r[0]) {
+				$this->width = $r[0];
+			}
+			if ($r[1]) {
+				$this->height = $r[1];
+			}
+		}
 	}
+
+	public function getPath() {return $this->path;}
+	public function getWidth() {return $this->width;}
+	public function getHeight() {return $this->height;}
 
 }

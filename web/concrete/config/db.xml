@@ -13,6 +13,10 @@
       <notnull/>
       <default value="1" />
     </field>
+    <field name="feHasCustomClass" type="I" size="1">
+      <notnull/>
+      <default value="0"/>
+    </field>
     <field name="pkgID" type="I" size="10">
       <unsigned/>
     </field>
@@ -34,6 +38,9 @@
     <field name="faID" type="I" size="10">
       <key/>
       <autoincrement/>
+      <unsigned/>
+    </field>
+    <field name="feID" type="I" size="10">
       <unsigned/>
     </field>
     <field name="fcID" type="I" size="10">
@@ -77,6 +84,19 @@
       <unsigned/>
       <notnull />
       <default value="0" />
+    </field>
+  </table>
+  <table name="AggregatorItemFeatureAssignments">
+    <field name="agfaID" type="I" size="10">
+      <key/>
+      <autoincrement/>
+      <unsigned/>
+    </field>
+    <field name="agiID" type="I" size="10">
+      <unsigned/>
+    </field>
+    <field name="faID" type="I" size="10">
+      <unsigned/>
     </field>
   </table>
   <table name="AggregatorItemTemplates">
@@ -163,24 +183,6 @@
     </field>
     <field name="cID" type="I" size="10">
       <unsigned />
-    </field>
-  </table>
-   <table name="agRssFeed">
-    <field name="agiID" type="I" size="10">
-      <key/>
-      <unsigned/>
-    </field>
-    <field name="title" type="X">
-
-    </field>
-    <field name="datetime" type="T">
-      <notnull/>
-    </field>
-    <field name="description" type="X">
-
-    </field>
-    <field name="url" type="X">
-
     </field>
   </table>
   <table name="ConversationMessages">

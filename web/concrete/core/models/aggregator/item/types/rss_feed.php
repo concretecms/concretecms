@@ -1,15 +1,12 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Model_RssFeedAggregatorItem extends AggregatorItem implements TitleFeatureInterface, DateTimeFeatureInterface, LinkFeatureInterface, DescriptionFeatureInterface {
+class Concrete5_Model_RssFeedAggregatorItem extends AggregatorItem {
 
+	/*
 	protected $features = array(
 		'title', 'date_time', 'link', 'description'
 	);
 
-	public function getAggregatorItemExtendedFeatures() {
-		return array();
-	}
-	
 	public function getAggregatorItemExtendedFeatureDetailObjects($feHandle) {
 		return false;
 	}
@@ -27,32 +24,35 @@ class Concrete5_Model_RssFeedAggregatorItem extends AggregatorItem implements Ti
 	}
 
 	public function getFeatureDataDescription() {return $this->description;}
+	*/
 
-	public function loadDetails() {
-		$db = Loader::db();
-		$row = $db->GetRow('select title, datetime, description, url from agRssFeed where agiID = ?', array($this->getAggregatorItemID()));
-		$this->setPropertiesFromArray($row);
-	}
+	public function loadDetails() {}
 
 	public static function add(AggregatorDataSourceConfiguration $configuration, $post) {
 		$aggregator = $configuration->getAggregatorObject();
 		$item = parent::add($aggregator, $configuration->getAggregatorDataSourceObject(), $post->get_date('Y-m-d H:i:s'), $post->get_title());
 		$db = Loader::db();
-		$db->Execute('insert into agRssFeed (agiID, title, datetime, description, url) values (?, ?, ?, ?, ?)', array(
-			$item->getAggregatorItemID(),
-			$post->get_title(),
-			$post->get_date('Y-m-d H:i:s'),
-			$post->get_description(),
-			$post->get_link()
-		));
+		$thumbnail = null;
+		$enclosures = $post->get_enclosures();
+		if (is_array($enclosures)) {
+			foreach($enclosures as $e) {
+				if ($e->get_medium() == 'image') {
+					$thumbnail = $e->get_link();
+					break;
+				}
+			}
+		}
+
+
+		$item->addFeatureAssignment('title', $post->get_title());
+		$item->addFeatureAssignment('date_time', $post->get_date('Y-m-d H:i:s'));
+		$item->addFeatureAssignment('link', $post->get_link());
+		$item->addFeatureAssignment('description', strip_tags($post->get_description()));
+		if ($thumbnail) {
+			$item->addFeatureAssignment('image', $thumbnail);
+		}
 		$item->setDefaultAggregatorItemTemplate();
 
-	}
-
-	public function delete() {
-		parent::delete();
-		$db = Loader::db();
-		$db->Execute('delete from agRssFeed where agiID = ?', array($this->getAggregatorItemID()));
 	}
 
 }

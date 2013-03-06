@@ -6,9 +6,9 @@ class Concrete5_Model_CollectionVersionFeatureAssignment extends FeatureAssignme
 			
 	}
 
-	public static function add(FeatureDetail $fd, Collection $page) {
+	public static function add(Feature $fe, FeatureDetail $fd, Collection $page) {
 		$fc = FeatureCategory::getByHandle('collection_version');
-		$fa = parent::add($fc, $fd);
+		$fa = parent::add($fe, $fc, $fd);
 		$db = Loader::db();
 		$db->Execute('insert into CollectionVersionFeatureAssignments (cID, cvID, faID) values (?, ?, ?)', array(
 			$page->getCollectionID(),
