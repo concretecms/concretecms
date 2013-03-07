@@ -73,6 +73,4 @@ class Concrete5_Model_Conversation_Message_List extends ItemList {
 			}
 		}
 	}
-
-
 }
