@@ -30,18 +30,21 @@ var CCMConversation = function(element, options) {
 	obj.options = $.extend({
 		'method': 'ajax',
 		'paginate': false,
-		'itemsPerPage': -1
-	}, options);
+		'itemsPerPage': -1,
+		'orderBy': false
+		}, options);
 
 	var enablePosting = (obj.options.posttoken != '') ? 1 : 0;
 	var paginate = (obj.options.paginate) ? 1 : 0;
+	var orderBy = (obj.options.orderBy);
 
 	if (obj.options.method == 'ajax') {
 		obj.$element.load(CCM_TOOLS_PATH + '/conversations/view_ajax', {
 			'cnvID': obj.options.cnvID,
 			'enablePosting': enablePosting,
 			'itemsPerPage': obj.options.itemsPerPage,
-			'paginate': paginate
+			'paginate': paginate,
+			'orderBy': orderBy
 		}, function(r) {
 			obj._init();
 		});

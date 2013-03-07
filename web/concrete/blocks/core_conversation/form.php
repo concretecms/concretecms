@@ -25,7 +25,7 @@ if ($controller->getTask() == 'add') {
 	<div class="control-group">
 		<label class="control-label"><?=t('Ordering')?></label>
 		<div class="controls">
-			<?=$form->select('orderBy', array('date_desc' => 'Newest First', 'date_asc' => 'Earliest First', 'rating' => 'Highest Rated'), $orderBy)?>
+			<?=$form->select('orderBy', array('date_asc' => 'Earliest First', 'date_desc' => 'Most Recent First', 'rating' => 'Highest Rated'), $orderBy)?>
 		</div>
 	</div>
 	<div class="control-group">

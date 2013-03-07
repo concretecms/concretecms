@@ -6,6 +6,7 @@ if (is_object($cnv)) {
 
 	$enablePosting = ($_POST['enablePosting'] == 1) ? true : false;
 	$paginate = ($_POST['paginate'] == 1) ? true : false;
+	//$orderBy = ($_POST['orderBy']);
 
 	switch($_POST['task']) {
 		case 'get_messages':
@@ -18,6 +19,12 @@ if (is_object($cnv)) {
 	switch($_POST['orderBy']) {
 		case 'date_desc':
 			$ml->sortByDateDescending();
+			break;
+		case 'date_asc':
+			$ml->sortByDateAscending();
+			break;
+		case 'rating':
+			$ml->sortByRating();
 			break;
 	}
 

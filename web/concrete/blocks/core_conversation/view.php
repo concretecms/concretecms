@@ -17,9 +17,9 @@ $(function() {
 		'cnvID': <?=$conversation->getConversationID()?>,
 		'posttoken': '<?=$posttoken?>',
 		'paginate': <?=$paginate?>,
-		'itemsPerPage': <?=$itemsPerPage?>
+		'itemsPerPage': <?=$itemsPerPage?>,
+		'orderBy' : '<?=$orderBy?>'
 	});
 });
 </script>
-
 <? } ?>
