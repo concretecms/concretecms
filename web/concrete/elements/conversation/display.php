@@ -52,6 +52,7 @@ $ui = UserInfo::getByID($u->getUserID());
 		<select class="ccm-sort-conversations" data-sort="conversation-message-list">
 			<option value="date_asc" <? if ($orderBy == 'date_asc') { ?>selected="selected"<? } ?>><?=t('Earliest First')?></option>
 			<option value="date_desc" <? if ($orderBy == 'date_desc') { ?>selected="selected"<? } ?>><?=t('Most Recent First')?></option>
+			<option value="rating" <? if ($orderBy == 'rating') { ?>selected="selected"<? } ?>><?=t('Highest Rated')?></option>
 		</select>
 
 		<? Loader::element('conversation/count_header', array('conversation' => $conversation))?>
