@@ -39,7 +39,7 @@ abstract class Concrete5_Model_Workflow extends Object {
 			)
 			as $row
 		) {
-			$wfp = WorkflowProgess::getByID($row['wpID']);
+			$wfp = WorkflowProgress::getByID($row['wpID']);
 			if ($wfp) {
 				$wfp->delete();
 			}
