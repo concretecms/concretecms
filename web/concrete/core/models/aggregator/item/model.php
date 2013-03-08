@@ -8,6 +8,7 @@ abstract class Concrete5_Model_AggregatorItem extends Object {
 
 	public function getAggregatorItemID() {return $this->agiID;}
 	public function getAggregatorDataSourceHandle() {return $this->agsHandle;}
+	public function getAggregatorDataSourceID() {return $this->agsID;}
 	public function getAggregatorItemPublicDateTime() {return $this->agiPublicDateTime;}
 	public function getAggregatorItemTemplateID() {return $this->agtID;}
 	public function getAggregatorItemTemplateHandle() {return $this->agtHandle;}
@@ -65,6 +66,24 @@ abstract class Concrete5_Model_AggregatorItem extends Object {
 			$agiSlotHeight
 		));
 		return AggregatorItem::getByID($db->Insert_ID());
+	}
+
+
+	public function duplicate(Aggregator $aggregator) {
+		$db = Loader::db();
+		$db->Execute('insert into AggregatorItems (agID, agsID, agiDateTimeCreated, agiPublicDateTime, agiTitle, agiSlotWidth, agiSlotHeight, agtID) 
+			values (?, ?, ?, ?, ?, ?, ?, ?)', array(
+				$aggregator->getAggregatorID(), $this->getAggregatorDataSourceID(), $this->agiDateTimeCreated, $this->agiPublicDateTime, 
+				$this->agiTitle, $this->agiSlotWidth, $this->agiSlotHeight, $this->agtID
+			)
+		);
+
+		$item = AggregatorItem::getByID($db->Insert_ID());
+
+		$assignments = AggregatorItemFeatureAssignment::getList($this);
+		foreach($assignments as $as) {
+			$item->copyFeatureAssignment($as);
+		}
 	}
 
 	public function addFeatureAssignment($feHandle, $mixed) {

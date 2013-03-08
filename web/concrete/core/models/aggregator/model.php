@@ -55,6 +55,20 @@ class Concrete5_Model_Aggregator extends Object {
 		}
 	}
 
+	public function duplicate() {
+		$db = Loader::db();
+		$newag = Aggregator::add();
+		// dupe data sources
+		foreach($this->getConfiguredAggregatorDataSources() as $source) {
+			$source->duplicate($newag);
+		}
+		// dupe items
+		foreach($this->getAggregatorItems() as $item) {
+			$item->duplicate($newag);
+		}
+		return $newag;
+	}
+
 	/** 
 	 * Runs through all active aggregator data sources, creates AggregatorItem objects
 	 */

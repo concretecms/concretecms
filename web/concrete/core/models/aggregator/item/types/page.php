@@ -25,6 +25,14 @@ class Concrete5_Model_PageAggregatorItem extends AggregatorItem {
 		$item->setAutomaticAggregatorItemTemplate();
 	}
 
+	public function duplicate(Aggregator $aggregator) {
+		$item = parent::duplicate($aggregator);
+		$db->Execute('insert into agPage (agiID, cID) values (?, ?)', array(
+			$item->getAggregatorItemID(), $this->page->getCollectionID()
+		));
+		return $item;
+	}
+
 
 	public function delete() {
 		parent::delete();
