@@ -8,7 +8,7 @@ class Concrete5_Model_Conversation_Message_List_Threaded extends ItemList {
 
 	public function __construct(Conversation $cnv) {
 		$this->cnvID = $cnv->getConversationID();
-		$this->populateMessages();
+		$this->messages = $this->getMessages();
 	}
 
 	public function sortByDateDescending() {
@@ -24,21 +24,44 @@ class Concrete5_Model_Conversation_Message_List_Threaded extends ItemList {
 	}
 	
 	public function get($num = 0, $offset = 0) {
-		usort($this->items, array($this, 'sortItems'));
+		$messages = $this->sortThreadedArrays($this->messages);
+		// now we turn the threaded messages array into the flat items array
+		$this->flattenMessages($messages);
 		return parent::get($num, $offset);
 	}
 
-	protected function populateMessages($cnvMessageParentID = 0) {
+	protected function sortThreadedArrays($messages) {
+		usort($messages, array($this, 'sortItems'));
+		foreach($messages as $m) {
+			if (is_array($m->messages) && count($m->messages)) {
+				$m->messages = $this->sortThreadedArrays($m->messages);
+			}
+		}
+		return $messages;
+	}
+
+	protected function flattenMessages($messages) {
+		foreach($messages as $m) {
+			$this->items[] = $m;
+			if (is_array($m->messages) && count($m->messages)) {
+				$this->flattenMessages($m->messages);
+			}
+		}
+	}
+
+	protected function getMessages($cnvMessageParentID = 0) {
 		$db = Loader::db();
 		$v = array($this->cnvID, $cnvMessageParentID);
 		$r = $db->Execute('select cnvMessageID from ConversationMessages where cnvID = ? and cnvMessageParentID = ?', $v);
+		$messages = array();
 		while ($row = $r->FetchRow()) {
 			$msg = ConversationMessage::getByID($row['cnvMessageID']);
 			if (is_object($msg)) {
-				$this->items[] = $msg;
-				$this->populateMessages($msg->getConversationMessageID());
+				$msg->messages = $this->getMessages($msg->getConversationMessageID());
+				$messages[] = $msg;
 			}
 		}
+		return $messages;
 	}
 
 	protected function sortItems($a, $b) {
