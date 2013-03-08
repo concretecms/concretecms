@@ -31,17 +31,21 @@ var CCMConversation = function(element, options) {
 		'method': 'ajax',
 		'paginate': false,
 		'itemsPerPage': -1
-	}, options);
+		}, options);
 
 	var enablePosting = (obj.options.posttoken != '') ? 1 : 0;
 	var paginate = (obj.options.paginate) ? 1 : 0;
+	var orderBy = (obj.options.orderBy);
+	var enableOrdering = (obj.options.enableOrdering);
 
 	if (obj.options.method == 'ajax') {
 		obj.$element.load(CCM_TOOLS_PATH + '/conversations/view_ajax', {
 			'cnvID': obj.options.cnvID,
 			'enablePosting': enablePosting,
 			'itemsPerPage': obj.options.itemsPerPage,
-			'paginate': paginate
+			'paginate': paginate,
+			'orderBy': orderBy,
+			'enableOrdering': enableOrdering
 		}, function(r) {
 			obj._init();
 		});
@@ -108,7 +112,8 @@ CCMConversation.prototype._init = function() {
 			'enablePosting': enablePosting,
 			'itemsPerPage': obj.options.itemsPerPage,
 			'paginate': paginate,
-			'orderBy': $(this).val()
+			'orderBy': $(this).val(),
+			'enableOrdering': obj.options.enableOrdering
 		}, function(r) {
 			obj._init();
 		});
