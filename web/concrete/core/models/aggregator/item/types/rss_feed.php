@@ -27,7 +27,7 @@ class Concrete5_Model_RssFeedAggregatorItem extends AggregatorItem {
 		if ($thumbnail) {
 			$item->addFeatureAssignment('image', $thumbnail);
 		}
-		$item->setDefaultAggregatorItemTemplate();
+		$item->setAutomaticAggregatorItemTemplate();
 
 	}
 

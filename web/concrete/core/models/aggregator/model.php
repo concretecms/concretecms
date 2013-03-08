@@ -76,6 +76,7 @@ class Concrete5_Model_Aggregator extends Object {
 	public function delete() {
 		$db = Loader::db();
 		$db->Execute('delete from Aggregators where agID = ?', array($this->getAggregatorID()));
+		$this->clearConfiguredAggregatorDataSources();
 		$this->clearAggregatorItems();
 	}
 

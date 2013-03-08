@@ -94,6 +94,12 @@ class Concrete5_Controller_Block_CoreAggregator extends BlockController {
 					//$aggregator->generateAggregatorItems();
 					// remove above.
 
+					// reset the template and slot widths on every view
+					$items = $aggregator->getAggregatorItems();
+					foreach($items as $it) {
+						$it->setAutomaticAggregatorItemTemplate();
+					}
+
 					$list = new AggregatorItemList($aggregator);
 					$list->sortByDateDescending();
 					$items = $list->getPage();

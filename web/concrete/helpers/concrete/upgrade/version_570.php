@@ -16,6 +16,7 @@ class ConcreteUpgradeVersion570Helper {
 		'UserPointActions',
 		'UserPointHistory',
 		'BlockTypeSetBlockTypes',
+		'BlockFeatureAssignments',
 		'Features',
 		'FeatureCategories',
 		'FeatureAssignments',

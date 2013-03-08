@@ -519,8 +519,6 @@ class Concrete5_Model_Block extends Object {
 		$cID = $c->getCollectionID();
 		$v = array($cID, $cvID, $this->bID, $this->getAreaHandle());
 
-		Cache::delete('collection_blocks', $cID . ':' . $cvID);
-
 		$q = "select count(bID) from CollectionVersionBlocks where cID = ? and cvID = ? and bID = ? and arHandle = ?";
 		$total = $db->getOne($q, $v);
 		if ($total == 0) {
@@ -544,6 +542,19 @@ class Concrete5_Model_Block extends Object {
 				$oc = $this->getBlockCollectionObject();
 				$ocID = $oc->getCollectionID();
 				$ocvID = $oc->getVersionID();
+
+				$qf = "select faID from BlockFeatureAssignments where bID = ? and cID = ? and cvID = ?";
+				$rf = $db->query($qf, array($this->bID, $ocID, $ocvID));
+
+				if ($rf) {
+					while ($rowf = $rf->fetchRow()) {
+						$db->Replace('BlockFeatureAssignments', 
+							array('cID' => $cID, 'cvID' => $cvID, 'bID' => $this->bID, 'faID' => $rowf['faID']),
+							array('cID', 'cvID', 'bID', 'faID'), true);
+					}
+					$rf->free();
+				}
+
 
 				$qa = "select paID, pkID from BlockPermissionAssignments where bID = '{$this->bID}' and cID = '$ocID' and cvID='{$ocvID}'";
 				$ra = $db->query($qa);
@@ -935,11 +946,6 @@ class Concrete5_Model_Block extends Object {
 		if (($c instanceof Page && $c->isMasterCollection() && !$this->isAlias()) || $forceDelete) {
 			// forceDelete is used by the administration console
 
-			$r = $db->Execute('select cID, cvID from CollectionVersionBlocks where bID = ?', array($bID));
-			while ($row = $r->FetchRow()) {
-				Cache::delete('collection_blocks', $row['cID'] . ':' . $row['cvID']);
-			}
-
 			// this is an original. We're deleting it, and everything else having to do with it
 			$q = "delete from CollectionVersionBlocks where bID = '$bID'";
 			$r = $db->query($q);
@@ -963,6 +969,15 @@ class Concrete5_Model_Block extends Object {
 			
 			$q = "delete from CollectionVersionBlockStyles where cID = '$cID' and cvID = '$cvID' and bID = '$bID' and arHandle = '$arHandle'";
 			$r = $db->query($q);				
+		}
+
+		// delete any feature assignments that have been attached to this block to the collection version
+		$faIDs = $db->GetCol('select faID from BlockFeatureAssignments where cID = ? and cvID = ? and bID = ?', array(
+			$cID, $cvID, $bID
+		));
+		foreach($faIDs as $faID) {
+			$fa = FeatureAssignment::getByID($faID, $c);
+			$fa->delete();
 		}
 
 		//then, we see whether or not this block is aliased to anything else

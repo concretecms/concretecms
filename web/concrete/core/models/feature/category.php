@@ -2,6 +2,8 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 abstract class Concrete5_Model_FeatureCategory extends Object {
 
+	abstract public function assignmentIsInUse(FeatureAssignment $fa);
+	
 	public static function getByID($fcID) {
 		$db = Loader::db();
 		$row = $db->GetRow('select fcID, fcHandle, pkgID from FeatureCategories where fcID = ?', array($fcID));

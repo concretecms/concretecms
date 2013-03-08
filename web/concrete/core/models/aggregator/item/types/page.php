@@ -22,7 +22,7 @@ class Concrete5_Model_PageAggregatorItem extends AggregatorItem {
 		foreach($assignments as $fa) {
 			$item->copyFeatureAssignment($fa);
 		}
-		$item->setDefaultAggregatorItemTemplate();
+		$item->setAutomaticAggregatorItemTemplate();
 	}
 
 
