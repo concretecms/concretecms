@@ -10,6 +10,31 @@ if ($controller->getTask() == 'add') {
 <fieldset>
 	<legend><?=t('Message List')?></legend>
 	<div class="control-group">
+		<label class="control-label"><?=t('Display Mode')?></label>
+		<div class="controls">
+			<label class="radio">
+				<?=$form->radio('displayMode', 'threaded', $displayMode)?>
+				<span><?=t('Threaded')?></span>
+			</label>
+			<label class="radio">
+				<?=$form->radio('displayMode', 'flat', $displayMode)?>
+				<span><?=t('Flat')?></span>
+			</label>
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label"><?=t('Ordering')?></label>
+		<div class="controls">
+			<?=$form->select('orderBy', array('date_asc' => 'Earliest First', 'date_desc' => 'Most Recent First', 'rating' => 'Highest Rated'), $orderBy)?>
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label"><?=t('Display Ordering Option in Page')?></label>
+		<div class="controls">
+		<?=$form->checkbox('enableOrdering', 1, $enableOrdering)?>
+		</div>
+	</div>
+	<div class="control-group">
 		<label class="control-label"><?=t('Paginate Message List')?></label>
 		<div class="controls">
 			<label class="radio">
@@ -20,7 +45,7 @@ if ($controller->getTask() == 'add') {
 				<?=$form->radio('paginate', 1, $paginate)?>
 				<span><?=t('Yes, display only a sub-set of messages at a time.')?></span>
 			</label>
-		</div>
+		</div> 
 	</div>
 	<div class="control-group" data-row="itemsPerPage">
 		<label class="control-label"><?=t('Messages Per Page')?></label>

@@ -23,7 +23,15 @@ class Concrete5_Model_Conversation_Message_List extends ItemList {
 	public function sortByDateDescending() {
 		$this->sortBy('date', 'desc');
 	}
-
+	
+	public function sortByDateAscending() {
+		$this->sortBy('date', 'asc');
+	}
+	
+	public function sortByRating() {
+		$this->sortBy('date', 'asc');
+	}
+	
 	public function get($num = 0, $offset = 0) {
 		usort($this->items, array($this, 'sortItems'));
 		return parent::get($num, $offset);
@@ -65,6 +73,4 @@ class Concrete5_Model_Conversation_Message_List extends ItemList {
 			}
 		}
 	}
-
-
 }

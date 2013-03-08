@@ -3,7 +3,7 @@
 $cnv = Conversation::getByID($_POST['cnvID']);
 if (is_object($cnv)) {
 	$displayForm = true;
-
+	$enableOrdering = ($_POST['enableOrdering'] == 1) ? true : false;
 	$enablePosting = ($_POST['enablePosting'] == 1) ? true : false;
 	$paginate = ($_POST['paginate'] == 1) ? true : false;
 
@@ -18,6 +18,12 @@ if (is_object($cnv)) {
 	switch($_POST['orderBy']) {
 		case 'date_desc':
 			$ml->sortByDateDescending();
+			break;
+		case 'date_asc':
+			$ml->sortByDateAscending();
+			break;
+		case 'rating':
+			$ml->sortByRating();
 			break;
 	}
 
@@ -37,7 +43,8 @@ if (is_object($cnv)) {
 		'enablePosting' => $enablePosting,
 		'currentPage' => 1,
 		'totalPages' => $totalPages,
-		'orderBy' => $_POST['orderBy']
+		'orderBy' => $_POST['orderBy'],
+		'enableOrdering' => $enableOrdering
 	);
 
 	Loader::element('conversation/display', $args);
