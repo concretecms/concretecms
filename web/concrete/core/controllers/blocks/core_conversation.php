@@ -77,6 +77,12 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			if (!$values['itemsPerPage']) {
 				$values['itemsPerPage'] = 0;
 			}
+			if (!$values['enableOrdering']) {
+				$values['enableOrdering'] = 0;
+			}
+			if (!$values['enableCommentRating']) {
+				$values['enableCommentRating'] = 0;
+			}
 			$values['cnvID'] = $conversation->getConversationID();
 			parent::save($values);
 		}

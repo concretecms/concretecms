@@ -4,6 +4,7 @@ if ($controller->getTask() == 'add') {
 	$enablePosting = 1;
 	$paginate = 1;
 	$itemsPerPage = 20;
+	$displayMode = 'threaded';
 }
 ?>
 
@@ -32,6 +33,12 @@ if ($controller->getTask() == 'add') {
 		<label class="control-label"><?=t('Display Ordering Option in Page')?></label>
 		<div class="controls">
 		<?=$form->checkbox('enableOrdering', 1, $enableOrdering)?>
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label"><?=t('Enable Comment Rating')?></label>
+		<div class="controls">
+		<?=$form->checkbox('enableCommentRating', 1, $enableCommentRating)?>
 		</div>
 	</div>
 	<div class="control-group">
