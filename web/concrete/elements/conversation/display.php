@@ -63,7 +63,7 @@ $ui = UserInfo::getByID($u->getUserID());
 
 	<div class="ccm-conversation-no-messages well well-small" <? if (count($messages) > 0) { ?>style="display: none" <? } ?>><?=t('No messages in this conversation.')?></div>
 
-	<div class="ccm-conversation-messages">
+	<div class="ccm-conversation-messages ccm-conversation-<?=$displayMode?>">
 
 	<? foreach($messages as $m) {
 		Loader::element('conversation/message', array('message' => $m, 'enablePosting' => $enablePosting));
