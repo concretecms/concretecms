@@ -5,8 +5,21 @@ if (is_object($cnv)) {
 	$enablePosting = ($_POST['enablePosting'] == 1) ? true : false;
 	$enableOrdering = ($_POST['enableOrdering'] == 1) ? true : false;
 	$currentPage = (Loader::helper('validation/numbers')->integer($_POST['page'])) ? $_POST['page'] : 1;
+
+	if (in_array($_POST['displayMode'], array('flat'))) {
+		$displayMode = $_POST['displayMode'];
+	} else {
+		$displayMode = 'threaded';
+	}
 	
-	$ml = new ConversationMessageList($cnv);
+	switch($displayMode) {
+		case 'flat':
+			$ml = new ConversationMessageList($cnv);
+			break;
+		default: // threaded
+			$ml = new ConversationMessageThreadedList($cnv);
+			break;
+	}
 
 	switch($_POST['orderBy']) {
 		case 'date_desc':
@@ -26,7 +39,7 @@ if (is_object($cnv)) {
 	$totalPages = $summary->pages;
 
 	foreach($ml->getPage($currentPage) as $message) {
-		Loader::element('conversation/message', array('message' => $message, 'enablePosting' => $enablePosting));
+		Loader::element('conversation/message', array('message' => $message, 'enablePosting' => $enablePosting, 'displayMode' => $displayMode));
 	}
 
 }

@@ -16,6 +16,7 @@ $(function() {
 	$('div[data-conversation-id=<?=$conversation->getConversationID()?>]').ccmconversation({
 		'cnvID': <?=$conversation->getConversationID()?>,
 		'posttoken': '<?=$posttoken?>',
+		'displayMode': '<?=$displayMode?>',
 		'paginate': <?=$paginate?>,
 		'itemsPerPage': <?=$itemsPerPage?>,
 		'orderBy': '<?=$orderBy?>',
