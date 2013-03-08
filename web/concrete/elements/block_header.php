@@ -68,7 +68,9 @@ if ($b->getBlockTypeHandle() == BLOCK_HANDLE_LAYOUT_PROXY) {
 
 ?>
 
-<div custom-style="<?=$b->getBlockCustomStyleRuleID()?>" data-area-id="<?=$a->getAreaID()?>" data-block-id="<?=$b->getBlockID()?>" class="<?=$class?>" data-block-type-handle="<?=$btw->getBlockTypeHandle()?>" data-menu="block-menu-b<?=$b->getBlockID()?>-<?=$a->getAreaID()?>" <? if ($btw->getBlockTypeHandle() == BLOCK_HANDLE_LAYOUT_PROXY) { ?> data-menu-handle="ccm-area-layout-control-bar-<?=$b->getBlockID()?>-<?=$a->getAreaID()?>"<? } ?>>
+<div custom-style="<?=$b->getBlockCustomStyleRuleID()?>" data-area-id="<?=$a->getAreaID()?>" data-block-id="<?=$b->getBlockID()?>" class="<?=$class?>" data-block-type-handle="<?=$btw->getBlockTypeHandle()?>" data-menu="block-menu-b<?=$b->getBlockID()?>-<?=$a->getAreaID()?>" 
+		<? if ($btw->getBlockTypeHandle() == BLOCK_HANDLE_AGGREGATOR) { ?> data-menu-handle="ccm-aggregator-control-bar-<?=$b->getBlockID()?>-<?=$a->getAreaID()?>"<? } ?>
+		<? if ($btw->getBlockTypeHandle() == BLOCK_HANDLE_LAYOUT_PROXY) { ?> data-menu-handle="ccm-area-layout-control-bar-<?=$b->getBlockID()?>-<?=$a->getAreaID()?>"<? } ?>>
 
 <div class="ccm-ui">
 

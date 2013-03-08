@@ -1,6 +1,19 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?>
 
 
+<?
+$a = $b->getBlockAreaObject();
+$c = Page::getCurrentPage();
+if ($c->isEditMode()) {
+  $bp = new Permissions($b);
+  if ($bp->canEditBlock()) { ?>
+
+    <div class="ccm-aggregator-control-bar" id="ccm-aggregator-control-bar-<?=$b->getBlockID()?>-<?=$a->getAreaID()?>"></div>
+
+  <? } ?>
+
+<? } ?>
+
 <div data-aggregator-id="<?=$aggregator->getAggregatorID()?>" class="ccm-aggregator-grid gridster">
   <ul>
   	<? foreach($items as $item) { ?>

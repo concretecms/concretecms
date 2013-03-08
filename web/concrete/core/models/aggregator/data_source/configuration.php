@@ -19,6 +19,22 @@ class Concrete5_Model_AggregatorDataSourceConfiguration extends Object {
 		}
 	}
 
+	public function duplicate(Aggregator $aggregator) {
+		$db = Loader::db();
+		$agsID = $this->getAggregatorDataSourceID();
+		// unset the items we don't want in our serialized object
+		$this->dataSource = null;
+		unset($this->agID);
+		unset($this->acsID);
+		unset($this->agsID);
+		$acdObject = serialize($this);
+		$db->Execute('insert into AggregatorConfiguredDataSources (agsID, agID, acdObject) values (?, ?, ?)', array(
+			$agsID,
+			$aggregator->getAggregatorID(),
+			$acdObject
+		));
+	}
+
 	public function __call($method, $args) {
 		return call_user_func_array(array($this->dataSource, $method), $args);
 	}

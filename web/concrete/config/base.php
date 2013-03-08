@@ -408,6 +408,7 @@ if (!defined('DIR_FILES_BIN_ZIP')) {
 if(!defined('DIR_FILES_BIN_ASPELL')) define('DIR_FILES_BIN_ASPELL', '/usr/bin/aspell'); // spellchecker
 
 # Aggregator
+define('BLOCK_HANDLE_AGGREGATOR', 'core_aggregator');
 if (!defined('DIRNAME_AGGREGATOR')) {
 	 define('DIRNAME_AGGREGATOR', 'aggregator');
 }
