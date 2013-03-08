@@ -7,13 +7,26 @@ if (is_object($cnv)) {
 	$enablePosting = ($_POST['enablePosting'] == 1) ? true : false;
 	$paginate = ($_POST['paginate'] == 1) ? true : false;
 
+	if (in_array($_POST['displayMode'], array('flat'))) {
+		$displayMode = $_POST['displayMode'];
+	} else {
+		$displayMode = 'threaded';
+	}
+	
 	switch($_POST['task']) {
 		case 'get_messages':
 			$displayForm = false;
 			break;
 	}
 
-	$ml = new ConversationMessageList($cnv);
+	switch($displayMode) {
+		case 'flat':
+			$ml = new ConversationMessageList($cnv);
+			break;
+		default: // threaded
+			$ml = new ConversationMessageThreadedList($cnv);
+			break;
+	}
 
 	switch($_POST['orderBy']) {
 		case 'date_desc':
@@ -39,6 +52,7 @@ if (is_object($cnv)) {
 	$args = array(
 		'conversation' => $cnv,
 		'messages' => $ml->getPage(),
+		'displayMode' => $displayMode,
 		'displayForm' => $displayForm,
 		'enablePosting' => $enablePosting,
 		'currentPage' => 1,

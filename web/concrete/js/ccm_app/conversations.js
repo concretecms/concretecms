@@ -29,6 +29,7 @@ var CCMConversation = function(element, options) {
 
 	obj.options = $.extend({
 		'method': 'ajax',
+		'displayMode': 'threaded',
 		'paginate': false,
 		'itemsPerPage': -1
 		}, options);
@@ -44,6 +45,7 @@ var CCMConversation = function(element, options) {
 			'enablePosting': enablePosting,
 			'itemsPerPage': obj.options.itemsPerPage,
 			'paginate': paginate,
+			'displayMode': obj.options.displayMode,
 			'orderBy': orderBy,
 			'enableOrdering': enableOrdering
 		}, function(r) {
@@ -110,11 +112,13 @@ CCMConversation.prototype._init = function() {
 			'cnvID': obj.options.cnvID,
 			'task': 'get_messages',
 			'enablePosting': enablePosting,
+			'displayMode': obj.options.displayMode,
 			'itemsPerPage': obj.options.itemsPerPage,
 			'paginate': paginate,
 			'orderBy': $(this).val(),
 			'enableOrdering': obj.options.enableOrdering
 		}, function(r) {
+			obj.$replyholder.appendTo(obj.$element);
 			obj._init();
 		});
 	});
@@ -125,6 +129,7 @@ CCMConversation.prototype._init = function() {
 		var data = {
 			'cnvID': obj.options.cnvID,
 			'itemsPerPage': obj.options.itemsPerPage,
+			'displayMode': obj.options.displayMode,
 			'enablePosting': enablePosting,
 			'page': nextPage,
 			'orderBy': obj.$sortselect.val()
@@ -194,6 +199,9 @@ CCMConversation.prototype._addMessageFromJSON = function($form, json) {
 	}, {
 		'name': 'enablePosting',
 		'value': enablePosting
+	},  {
+		'name': 'displayMode',
+		'value': obj.options.displayMode
 	}];
 
 	$.ajax({

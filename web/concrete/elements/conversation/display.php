@@ -41,7 +41,7 @@ $ui = UserInfo::getByID($u->getUserID());
 
 <? } ?>
 
-<div class="ccm-conversation-message-list">
+<div class="ccm-conversation-message-list ccm-conversation-messages-<?=$displayMode?>">
 
 	<div class="ccm-conversation-delete-message" data-dialog-title="<?=t('Delete Message')?>" data-cancel-button-title="<?=t('Cancel')?>" data-confirm-button-title="<?=t('Delete Message')?>">
 		<?=t('Remove this message? Replies to it will not be removed.')?>
@@ -63,10 +63,10 @@ $ui = UserInfo::getByID($u->getUserID());
 
 	<div class="ccm-conversation-no-messages well well-small" <? if (count($messages) > 0) { ?>style="display: none" <? } ?>><?=t('No messages in this conversation.')?></div>
 
-	<div class="ccm-conversation-messages ccm-conversation-<?=$displayMode?>">
+	<div class="ccm-conversation-messages">
 
 	<? foreach($messages as $m) {
-		Loader::element('conversation/message', array('message' => $m, 'enablePosting' => $enablePosting));
+		Loader::element('conversation/message', array('message' => $m, 'enablePosting' => $enablePosting, 'displayMode' => $displayMode));
 	} ?>
 
 	</div>

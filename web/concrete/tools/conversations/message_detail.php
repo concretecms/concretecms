@@ -8,9 +8,16 @@ if ($_POST['enablePosting']) {
 } else {
 	$enablePosting = false;
 }
+
+if (in_array($_POST['displayMode'], array('flat'))) {
+	$displayMode = $_POST['displayMode'];
+} else {
+	$displayMode = 'threaded';
+}
+
 if (Loader::helper('validation/numbers')->integer($_POST['cnvMessageID']) && $_POST['cnvMessageID'] > 0) {
 	$message = ConversationMessage::getByID($_POST['cnvMessageID']);
 	if (is_object($message)) { 
-		Loader::element('conversation/message', array('message' => $message, 'enablePosting' => $enablePosting));
+		Loader::element('conversation/message', array('message' => $message, 'displayMode' => $displayMode, 'enablePosting' => $enablePosting));
 	}
 }

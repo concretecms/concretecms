@@ -18,7 +18,7 @@ if ($message->isConversationMessageDeleted()) {
 		<? if (!$message->isConversationMessageDeleted()) { ?>
 		<ul>
 			<li class="ccm-conversation-message-admin-control"><a href="#" data-submit="delete-conversation-message" data-conversation-message-id="<?=$message->getConversationMessageID()?>"><?=t('Delete')?></a></li>
-			<? if ($enablePosting) { ?>
+			<? if ($enablePosting && $displayMode == 'threaded') { ?>
 				<li><a href="#" data-toggle="conversation-reply" data-post-parent-id="<?=$message->getConversationMessageID()?>"><?=t('Reply')?></a></li>
 			<? } ?>
 		</ul>
