@@ -76,7 +76,7 @@ abstract class Concrete5_Model_AggregatorItem extends Object {
 
 	public function copyFeatureAssignment(FeatureAssignment $fa) {
 		$db = Loader::db();
-		$db->Replace('AggregatorItemFeatureAssignments', array('faID' => $fa->getFeatureAssignmentID(), 'agiID' => $this->getAggregatorItemID()), array('agiID', 'faID',), true);
+		return AggregatorItemFeatureAssignment::add($fa->getFeatureObject(), $fa->getFeatureDetailObject(), $this);
 	}
 
 	protected function sortByFeatureScore($a, $b) {
@@ -97,7 +97,7 @@ abstract class Concrete5_Model_AggregatorItem extends Object {
 		return mt_rand(0, ($ascore+$bscore)) > $ascore ? 1 : -1;
 	}
 
-	public function setDefaultAggregatorItemTemplate() {
+	public function setAutomaticAggregatorItemTemplate() {
 		$arr = Loader::helper('array');
 		$db = Loader::db();
 		$myFeatureHandles = $this->getAggregatorItemFeatureHandles();
@@ -128,7 +128,10 @@ abstract class Concrete5_Model_AggregatorItem extends Object {
 	public function delete() {
 		$db = Loader::db();
 		$db->Execute('delete from AggregatorItems where agiID = ?', array($this->agiID));
-		$db->Execute('delete from AggregatorItemFeatureAssignments where agiID = ?', array($this->agiID));
+		$assignments = AggregatorItemFeatureAssignment::getList($this);
+		foreach($assignments as $as) {
+			$as->delete();
+		}
 	}
 
 	public function render() {

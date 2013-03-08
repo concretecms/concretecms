@@ -1009,6 +1009,34 @@
       <col>cvID</col>
     </index>
   </table>
+  <table name="BlockFeatureAssignments">
+    <field name="cID" type="I" size="10">
+      <key/>
+      <default value="0"/>
+      <unsigned/>
+    </field>
+    <field name="cvID" type="I" size="10">
+      <key/>
+      <default value="0"/>
+      <unsigned/>
+    </field>
+    <field name="bID" type="I" size="10">
+      <key/>
+      <default value="0"/>
+      <unsigned/>
+    </field>
+    <field name="faID" type="I" size="10">
+      <key/>
+      <default value="0"/>
+      <unsigned/>
+    </field>
+      <index name="ccvbID">
+      <col>cID</col>
+      <col>cvID</col>
+      <col>bID</col>
+    </index>
+
+  </table>
   <table name="CollectionAttributeValues">
     <field name="cID" type="I" size="10">
       <key/>

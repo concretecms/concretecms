@@ -702,7 +702,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			if (count($features) > 0) {
 				foreach($features as $fe) {
 					$fd = $fe->getFeatureDetailObject($controller);	
-					$fc = CollectionVersionFeatureAssignment::add($fe, $fd, $this);
+					$fa = CollectionVersionFeatureAssignment::add($fe, $fd, $this);
+					$db->Execute('insert into BlockFeatureAssignments (cID, cvID, bID, faID) values (?, ?, ?, ?)', array(
+						$this->getCollectionID(), $this->getVersionID(), $nb->getBlockID(), $fa->getFeatureAssignmentID()
+					));
 				}
 			}
 			
