@@ -43,8 +43,4 @@ ccm_onInlineEditCancel = function(onComplete) {
 	<input type="hidden" name="processBlock" value="1">
 </form>
 
-<? 
-$cont = $bt->getController();
-if ($cont->getBlockTypeWrapperClass() != '') { ?>
 </div>
-<? } ?>

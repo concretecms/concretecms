@@ -59,7 +59,7 @@ if ($b->getBlockTypeHandle() == BLOCK_HANDLE_SCRAPBOOK_PROXY) {
 	$bx = Block::getByID($b->getController()->getOriginalBlockID());
 	$cont = $bx->getController();
 }
+?>
 
-if ($cont->getBlockTypeWrapperClass() != '') { ?>
 </div>
-<? } ?>
+

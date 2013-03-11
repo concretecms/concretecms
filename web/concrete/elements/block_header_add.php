@@ -63,11 +63,9 @@ if (isset($help) && !$bt->supportsInlineEditing()) { ?>
 	?></div>
 <? } ?>
 
-<? if ($cont->getBlockTypeWrapperClass() != '') { ?>
-	<div class="<?=$cont->getBlockTypeWrapperClass();?>">
-<? } ?>
+<div class="ccm-ui">
 
-<form method="post" action="<?=$action?>" id="ccm-block-form" enctype="multipart/form-data" class="validate form-horizontal">
+<form method="post" action="<?=$action?>" id="ccm-block-form" enctype="multipart/form-data" class="validate">
 
 <input type="hidden" name="ccm-block-form-method" value="REGULAR" />
 
