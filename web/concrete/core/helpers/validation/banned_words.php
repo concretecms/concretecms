@@ -31,7 +31,7 @@ class Concrete5_Helper_Validation_BannedWords {
 		$lines = file($file);
 		$out = array();
 		foreach ($lines as $line) {
-			$aline = explode(",",$line);
+			$aline = explode(",",str_rot13($line));
 			$oline = array();
 			foreach ($aline as $val) {
 			$oline[] = trim($val);
