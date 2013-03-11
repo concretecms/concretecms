@@ -7,22 +7,13 @@ foreach($ctArray as $ct) {
 }
 
 if (is_object($configuration)) { 
-	$ctIDs = $configuration->getCollectionTypeIDs();
+	$ctID = $configuration->getCollectionTypeID();
 }
 
 ?>
-<fieldset>
-	<div class="control-group">
-		<label class="control-label"><?=t('Limit By Page Type')?></label>
-		<div class="controls">
-			<?=$form->selectMultiple('ctIDs', $types, $ctIDs)?>
-		</div>
+<div class="control-group">
+	<label class="control-label"><?=t('Limit By Page Type')?></label>
+	<div class="controls" data-select="page">
+		<?=$form->select($source->optionFormKey('ctID'), $types, $ctID)?>
 	</div>
-</fieldset>
-
-
-<script type="text/javascript">
-$(function() {
-	$('#ctIDs').chosen();
-});
-</script>
+</div>

@@ -4,8 +4,8 @@ class Concrete5_Model_PageAggregatorDataSource extends AggregatorDataSource {
 
 	public function createConfigurationObject(Aggregator $ag, $post) {
 		$o = new PageAggregatorDataSourceConfiguration();
-		if (is_array($post['ctIDs'])) {
-			$o->setCollectionTypeIDs($post['ctIDs']);
+		if ($post['ctID']) {
+			$o->setCollectionTypeID($post['ctID']);
 		}
 		return $o;
 	}
@@ -14,9 +14,9 @@ class Concrete5_Model_PageAggregatorDataSource extends AggregatorDataSource {
 		$pl = new PageList();
 		$pl->ignoreAliases();
 		$pl->ignorePermissions();
-		$ctIDs = $configuration->getCollectionTypeIDs();
-		if (count($ctIDs) > 0) {
-			$pl->filterByCollectionTypeID($ctIDs);
+		$ctID = $configuration->getCollectionTypeID();
+		if ($ctID > 0) {
+			$pl->filterByCollectionTypeID($ctID);
 		}
 		$pages = $pl->get();
 		foreach($pages as $c) {

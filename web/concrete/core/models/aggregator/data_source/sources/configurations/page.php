@@ -2,14 +2,14 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 class Concrete5_Model_PageAggregatorDataSourceConfiguration extends AggregatorDataSourceConfiguration {
 	
-	protected $ctIDs = array();
+	protected $ctID;
 
-	public function setCollectionTypeIDs($ctIDs) {
-		$this->ctIDs = $ctIDs;
+	public function setCollectionTypeID($ctID) {
+		$this->ctID = $ctID;
 	}
 
-	public function getCollectionTypeIDs() {
-		return $this->ctIDs;
+	public function getCollectionTypeID() {
+		return $this->ctID;
 	}
 
 }

@@ -2,7 +2,7 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 class Concrete5_Model_Aggregator_Item_List extends DatabaseItemList {
 
-	protected $itemsPerPage = 20;
+	protected $itemsPerPage = 40;
 
 	public function __construct(Aggregator $ag) {
 		$this->setQuery('select agiID from AggregatorItems');
@@ -23,8 +23,6 @@ class Concrete5_Model_Aggregator_Item_List extends DatabaseItemList {
 			}
 		}
 		return $items;
-	}	
-
-
+	}
 
 }

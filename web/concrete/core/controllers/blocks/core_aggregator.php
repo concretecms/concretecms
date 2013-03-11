@@ -26,10 +26,7 @@ class Concrete5_Controller_Block_CoreAggregator extends BlockController {
 			$activeSources = array();
 			if ($this->agID) {
 				$aggregator = Aggregator::getByID($this->agID);
-				$configuredSources = $aggregator->getConfiguredAggregatorDataSources();
-				foreach($configuredSources as $source) {
-					$activeSources[$source->getAggregatorDataSourceID()] = $source;
-				}
+				$activeSources = $aggregator->getConfiguredAggregatorDataSources();
 			}
 			$availableSources = AggregatorDataSource::getList();
 			$this->set('availableSources', $availableSources);
@@ -50,18 +47,33 @@ class Concrete5_Controller_Block_CoreAggregator extends BlockController {
 			$agID = $db->GetOne('select agID from btCoreAggregator where bID = ?', array($this->bID));
 			if (!$agID) {
 				$ag = Aggregator::add();
+				$task = 'add';
+			} else {
+				$ag = Aggregator::getByID($agID);
+				$task = 'edit';
+			}
 
+			if ($task == 'add' || $_POST['rescanAggregatorItems']) {
 				$ag->clearConfiguredAggregatorDataSources();
-				if (is_array($this->post('source'))) {
-					foreach($this->post('source') as $agsID) {
+				$sources = $this->post('agsID');
+				foreach($sources as $key => $agsID) {
+					$key = (string) $key; // because PHP is stupid
+					if ($key != '_ags_') {
 						$ags = AggregatorDataSource::getByID($agsID);
-						$agc = $ags->configure($ag, $this->post());	
+						$ags->setOptionFormKey($key);
+						$post = $ags->getOptionFormRequestData();
+						$agc = $ags->configure($ag, $post);	
 					}
 				}
+				if ($_POST['rescanAggregatorItems']) {
+					$ag->clearAggregatorItems();
+				}
 				$ag->generateAggregatorItems();
-				$values = array('agID' => $ag->getAggregatorID());
-				parent::save($values);
 			}
+
+			$values = array('agID' => $ag->getAggregatorID());
+			parent::save($values);
+
 		}
 
 		public function on_page_view() {

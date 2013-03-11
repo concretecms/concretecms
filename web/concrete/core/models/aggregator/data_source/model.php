@@ -5,6 +5,8 @@ abstract class Concrete5_Model_AggregatorDataSource extends Object {
 	abstract public function createConfigurationObject(Aggregator $ag, $post);
 	abstract public function createAggregatorItems(AggregatorDataSourceConfiguration $configuration);
 	
+	protected $optionFormKey = '_ags_';
+
 	public function configure(Aggregator $ag, $post) {
 		$db = Loader::db();
 		$o = $this->createConfigurationObject($ag, $post);
@@ -25,6 +27,18 @@ abstract class Concrete5_Model_AggregatorDataSource extends Object {
 		}
 	}
 	
+	public function setOptionFormKey($key) {
+		$this->optionFormKey = $key;
+	}
+
+	public function optionFormKey($name) {
+		return 'ags[' . $this->optionFormKey . '][' . $name . ']';
+	}
+
+	public function getOptionFormRequestData() {
+		return $_REQUEST['ags'][$this->optionFormKey];
+	}
+
 	public static function getByHandle($agsHandle) {
 		$db = Loader::db();
 		$row = $db->GetRow('select agsID, agsHandle, pkgID, agsName from AggregatorDataSources where agsHandle = ?', array($agsHandle));
