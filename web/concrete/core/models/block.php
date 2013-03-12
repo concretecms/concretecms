@@ -518,8 +518,6 @@ class Concrete5_Model_Block extends Object {
 		$cID = $c->getCollectionID();
 		$v = array($cID, $cvID, $this->bID, $this->getAreaHandle());
 
-		Cache::delete('collection_blocks', $cID . ':' . $cvID);
-
 		$q = "select count(bID) from CollectionVersionBlocks where cID = ? and cvID = ? and bID = ? and arHandle = ?";
 		$total = $db->getOne($q, $v);
 		if ($total == 0) {
@@ -669,12 +667,20 @@ class Concrete5_Model_Block extends Object {
 				return false;
 			}
 
+			$arHandle = $this->getAreaHandle();
+			$a = $this->getBlockAreaObject();
+			if ($a->isGlobalArea()) {
+				// then we need to check against the global area name. We currently have the wrong area handle passed in
+				$arHandle = STACKS_AREA_NAME;
+			}
+
 			$v = array(
 				$co->getCollectionID(), 
 				$co->getVersionID(),
-				$this->getAreaHandle(),
+				$arHandle,
 				$this->bID
 			);
+
 			$this->csrID = $db->GetOne('select csrID from CollectionVersionBlockStyles where cID = ? and cvID = ? and arHandle = ? and bID = ?', $v);
 		}
 		return $this->csrID;
@@ -933,11 +939,6 @@ class Concrete5_Model_Block extends Object {
 		// regardless
 		if (($c instanceof Page && $c->isMasterCollection() && !$this->isAlias()) || $forceDelete) {
 			// forceDelete is used by the administration console
-
-			$r = $db->Execute('select cID, cvID from CollectionVersionBlocks where bID = ?', array($bID));
-			while ($row = $r->FetchRow()) {
-				Cache::delete('collection_blocks', $row['cID'] . ':' . $row['cvID']);
-			}
 
 			// this is an original. We're deleting it, and everything else having to do with it
 			$q = "delete from CollectionVersionBlocks where bID = '$bID'";
