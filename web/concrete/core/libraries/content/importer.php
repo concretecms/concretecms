@@ -28,6 +28,7 @@ class Concrete5_Library_Content_Importer {
 		$this->importStacksStructure($sx);
 		$this->importBlockTypes($sx);
 		$this->importBlockTypeSets($sx);
+		$this->importConversationEditors($sx);
 		$this->importFeatures($sx);
 		$this->importFeatureCategories($sx);
 		$this->importAggregatorDataSources($sx);
@@ -374,6 +375,18 @@ class Concrete5_Library_Content_Importer {
 				}
 				if ($th['activated'] == '1') {
 					$pt->applyToSite();
+				}
+			}
+		}
+	}
+
+	protected function importConversationEditors(SimpleXMLElement $sx) {
+		if (isset($sx->conversationeditors)) {
+			foreach($sx->conversationeditors->editor as $th) {
+				$pkg = ContentImporter::getPackageObject($th['package']);
+				$ce = ConversationEditor::add((string) $th['handle'], (string) $th['name'], $pkg);
+				if ($th['activated'] == '1') {
+					$ce->activate();
 				}
 			}
 		}

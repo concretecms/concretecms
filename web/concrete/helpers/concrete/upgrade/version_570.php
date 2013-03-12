@@ -31,6 +31,7 @@ class ConcreteUpgradeVersion570Helper {
 		'AreaLayoutCustomColumns',
 		'Conversations',
 		'ConversationMessages',
+		'ConversationEditors',
 		'AreaLayoutThemeGridColumns',
 		/*'Queues',*/
 		'BlockTypes',
