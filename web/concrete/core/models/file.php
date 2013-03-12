@@ -443,7 +443,7 @@ class Concrete5_Model_File extends Object {
 		if ($fvID == null) {
 			$fvID = $this->fvID; // approved version
 		}
-		$fv = CacheLocal::getEntry('file_versions', $this->getFileID() . ':' . $fvID);
+		$fv = CacheLocal::getEntry('file', $this->getFileID() . ':' . $fvID);
 		if ($fv === -1) {
 			return false;
 		}
@@ -459,7 +459,7 @@ class Concrete5_Model_File extends Object {
 		$row['fslID'] = $this->fslID;
 		$fv->setPropertiesFromArray($row);
 		
-		CacheLocal::set('file_versions', $this->getFileID() . ':' . $fvID, $fv);
+		CacheLocal::set('file', $this->getFileID() . ':' . $fvID, $fv);
 		return $fv;
 	}
 	
