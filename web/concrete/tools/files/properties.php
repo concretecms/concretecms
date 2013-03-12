@@ -126,7 +126,7 @@ function printFileAttributeRow($ak, $fv) {
 	$vo = $fv->getAttributeValueObject($ak);
 	$value = '';
 	if (is_object($vo)) {
-		$value = $vo->getValue('display');
+		$value = $vo->getValue('displaySanitized');
 	}
 	
 	if ($value == '') {
