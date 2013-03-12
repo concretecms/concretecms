@@ -36,7 +36,7 @@ $(function() {
 			var div = $('<div />').html(r);
 			$('#ccm-intelligent-search-results').html(div.find('#ccm-intelligent-search-results').html());
 			$('#ccm-dashboard-overlay').html(div.find('#ccm-dashboard-overlay').html());
-			div = false;
+			$('#ccm-nav-intelligent-search').data('liveUpdate').setupCache();
 		});
 	}
 	
