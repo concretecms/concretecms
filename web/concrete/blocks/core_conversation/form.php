@@ -7,6 +7,7 @@ if ($controller->getTask() == 'add') {
 	$displayMode = 'threaded';
 }
 ?>
+<div class="form-horizontal">
 
 <fieldset>
 	<legend><?=t('Message List')?></legend>
@@ -78,6 +79,7 @@ if ($controller->getTask() == 'add') {
 		</div>
 	</div>
 </fieldset>
+</div>
 
 <script type="text/javascript">
 $(function() {

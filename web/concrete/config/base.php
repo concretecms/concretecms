@@ -631,6 +631,18 @@ if(!defined('APP_VERSION_DISPLAY_IN_HEADER')) {
 	define('APP_VERSION_DISPLAY_IN_HEADER', true);
 }
 
+
+// conversations
+if (!defined('DIRNAME_CONVERSATIONS')) {
+	define('DIRNAME_CONVERSATIONS', 'conversation');
+}
+if (!defined('DIRNAME_CONVERSATION_EDITORS')) {
+	define('DIRNAME_CONVERSATION_EDITORS', 'editors');
+}
 if (!defined('USER_DELETED_CONVERSATION_ID')) {
 	define('USER_DELETED_CONVERSATION_ID', 0);
 }
+if (!defined('FILENAME_CONVERSATION_EDITOR_OPTIONS')) {
+	 define('FILENAME_CONVERSATION_EDITOR_OPTIONS', 'options.php');
+}
+

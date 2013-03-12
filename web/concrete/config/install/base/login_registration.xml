@@ -24,4 +24,8 @@
 
     </singlepages>
 
+    <conversationeditors>
+        <editor handle="plain_text" name="Plain Text" package="" activated="1"/>
+    </conversationeditors>
+
 </concrete5-cif>
