@@ -443,11 +443,14 @@ class Concrete5_Model_File extends Object {
 		if ($fvID == null) {
 			$fvID = $this->fvID; // approved version
 		}
-
-		if (is_object($this->fv)) {
-			return $this->fv;
+		$fv = CacheLocal::getEntry('file_versions', $this->getFileID() . ':' . $fvID);
+		if ($fv === -1) {
+			return false;
 		}
-		
+		if ($fv) {
+			return $fv;
+		}
+
 		$db = Loader::db();
 		$row = $db->GetRow("select * from FileVersions where fvID = ? and fID = ?", array($fvID, $this->fID));
 		$row['fvAuthorName'] = $db->GetOne("select uName from Users where uID = ?", array($row['fvAuthorUID']));
@@ -456,7 +459,7 @@ class Concrete5_Model_File extends Object {
 		$row['fslID'] = $this->fslID;
 		$fv->setPropertiesFromArray($row);
 		
-		$this->fv = $fv;
+		CacheLocal::set('file_versions', $this->getFileID() . ':' . $fvID, $fv);
 		return $fv;
 	}
 	
