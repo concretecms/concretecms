@@ -238,7 +238,7 @@ ccm_submitEditablePropertiesGrid = function(trow) {
 		// resp is new HTML to display in the div
 		trow.find('.ccm-attribute-editable-field-loading').hide();
 		trow.find('.ccm-attribute-editable-field-save-button').show();
-		trow.find('.ccm-attribute-editable-field-text').text(resp);
+		trow.find('.ccm-attribute-editable-field-text').html(resp);
 		trow.find('.ccm-attribute-editable-field-form').hide();
 		trow.find('.ccm-attribute-editable-field-save-button').hide();
 		trow.find('.ccm-attribute-editable-field-text').show();
