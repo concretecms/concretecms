@@ -28,7 +28,6 @@ if ($controller->hasVoted()) { ?>
 			$totalVotes+=intval($opt->getResults());
 		}
 		foreach ($optionResults as &$value){
-			$value = 0;
 			if($totalVotes) {
 				$value=round($value/$totalVotes*100,0);
 			}
