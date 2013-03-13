@@ -20,6 +20,18 @@ var CCMToolbar = function() {
 
 				$(element).find('.dialog-launch').dialog();
 
+				$(document.body).on('click', function() {
+					$('.ccm-toolbar-hover-menu').hide();
+				});
+
+				$(element).on('click', function(e) {
+					e.stopPropagation(); // so we don't close menus if we click on the toolbar buttons themselves.
+				});
+
+				$($(element).find('.ccm-toolbar-hover-menu a')).on('click', function() {
+					$('.ccm-toolbar-hover-menu').hide();
+				});
+
 			}
 		}
 	}
