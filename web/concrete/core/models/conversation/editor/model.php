@@ -4,18 +4,18 @@ abstract class Concrete5_Model_ConversationEditor extends Object {
 
 	abstract public function getConversationEditorHeaderItems();
 	abstract public function formatConversationMessageBody($cnvMessageBody);
-	
+
 	public function outputConversationEditorAddMessageForm() {
 		$env = Environment::get();
 		$editor = $this;
-		$path = $env->getPath(DIRNAME_ELEMENTS . '/' . DIRNAME_CONVERSATIONS . '/' . DIRNAME_CONVERSATION_EDITOR . '/' . $this->cnvEditorHandle . '/' . FILENAME_CONVERSATION_EDITOR_FORM_MESSAGE);
+		$path = $env->getPath(DIRNAME_ELEMENTS . '/' . DIRNAME_CONVERSATIONS . '/' . DIRNAME_CONVERSATION_EDITOR . '/' . $this->cnvEditorHandle . '/' . FILENAME_CONVERSATION_EDITOR_FORM_MESSAGE, $this->getPackageHandle());
 		include($path);		
 	}
 
 	public function outputConversationEditorReplyMessageForm() {
 		$env = Environment::get();
 		$editor = $this;
-		$path = $env->getPath(DIRNAME_ELEMENTS . '/' . DIRNAME_CONVERSATIONS . '/' . DIRNAME_CONVERSATION_EDITOR . '/' . $this->cnvEditorHandle . '/' . FILENAME_CONVERSATION_EDITOR_FORM_REPLY);
+		$path = $env->getPath(DIRNAME_ELEMENTS . '/' . DIRNAME_CONVERSATIONS . '/' . DIRNAME_CONVERSATION_EDITOR . '/' . $this->cnvEditorHandle . '/' . FILENAME_CONVERSATION_EDITOR_FORM_REPLY, $this->getPackageHandle());
 		include($path);		
 	}
 
@@ -114,7 +114,7 @@ abstract class Concrete5_Model_ConversationEditor extends Object {
 		
 	public function hasOptionsForm() {
 		$env = Environment::get();
-		$rec = $env->getRecord(DIRNAME_ELEMENTS . '/' . DIRNAME_CONVERSATIONS . '/' . DIRNAME_CONVERSATION_EDITOR . '/' . $this->cnvEditorHandle . '/' . FILENAME_CONVERSATION_EDITOR_OPTIONS);
+		$rec = $env->getRecord(DIRNAME_ELEMENTS . '/' . DIRNAME_CONVERSATIONS . '/' . DIRNAME_CONVERSATION_EDITOR . '/' . $this->cnvEditorHandle . '/' . FILENAME_CONVERSATION_EDITOR_OPTIONS, $this->getPackageHandle());
 		return $rec->exists();
 	}	
 	
