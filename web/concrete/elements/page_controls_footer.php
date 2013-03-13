@@ -31,6 +31,17 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
 		}
 	}
 
+
+	if ($c->isEditMode()) { 
+		if ($vo->isNew()) {
+			$publishToggle = '#ccm-exit-edit-mode-comment';
+		} else {
+			$publishToggle = '#ccm-exit-edit-mode-direct';
+		}
+	} else {
+		$publishToggle = '#ccm-toolbar-menu-page-edit';
+	}
+
 	?>
 
 	<div id="ccm-page-controls-wrapper" class="ccm-ui">
@@ -38,15 +49,32 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
 			<ul>
 				<li class="ccm-logo pull-left"><span><?=Loader::helper('concrete/interface')->getToolbarLogoSRC()?></span></li>
 				<? if (!$pageInUseBySomeoneElse) { ?>
-				<li class="ccm-toolbar-page-edit pull-left"><a data-toggle="ccm-toolbar-hover-menu" data-toggle-menu="#ccm-toolbar-menu-page-edit" href="<? if (!$c->isEditMode()) { ?><?=DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=<?=$c->getCollectionID()?>&ctask=check-out<?=$token?><? } else { ?>javascript:void(0);<? } ?>"><i class="glyphicon glyphicon-pencil"></i></a>
+				<li class="ccm-toolbar-page-edit pull-left"><a data-toggle="ccm-toolbar-hover-menu" data-toggle-menu="<?=$publishToggle?>" href="<? if (!$c->isEditMode()) { ?><?=DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=<?=$c->getCollectionID()?>&ctask=check-out<?=$token?><? } else { ?>javascript:void(0);<? } ?>"><i class="glyphicon glyphicon-pencil"></i></a>
 
 				<? if ($c->isEditMode()) { ?>
 
-				<div id="ccm-toolbar-menu-page-edit" class="ccm-toolbar-hover-menu dropdown-menu">
-					<div class="ccm-toolbar-hover-menu-inner">
-
+				<div id="ccm-exit-edit-mode-comment" class="ccm-toolbar-hover-menu dropdown-menu">
+					<form method="post" action="<?=DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=<?=$c->getCollectionID()?>&ctask=check-in">
+					<div id="ccm-exit-edit-mode-comment-form">
+						<?=$valt->output()?>
+						<textarea name="comments" placeholder="<?=t('Write a Version Comment')?>"></textarea>
+						<input type="hidden" name="approve" value="PREVIEW" id="ccm-approve-field" />
 					</div>
+					<div id="ccm-exit-edit-mode-publish-menu">
+						<!--<a href=""><i class="glyphicon glyphicon-time"></i></a>//-->
+						<ul>
+							<li class="ccm-exit-edit-mode-publish"><a href="#" data-publish-action="approve"><?=t('Publish Now')?></a></li>
+							<li><a href="#"><?=t('Save as Draft')?></a></li>
+							<li class="ccm-exit-edit-mode-discard"><a href="#" data-publish-action="discard"><?=t('Discard Edits')?></a></li>
+						</ul>
+					</div>
+					</form>
+
 				</div>
+
+				<ul id="ccm-exit-edit-mode-direct" class="ccm-toolbar-hover-menu dropdown-menu">
+					<li><a href="javascript:void(0)" onclick="window.location.href='<?=DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=<?=$c->getCollectionID()?>&ctask=check-in<?=$token?>'" id="ccm-nav-exit-edit-direct"><?=t('Exit Edit Mode')?></a>
+				</ul>
 
 				<? } else { ?>
 
@@ -60,7 +88,6 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
 				</ul>
 
 				<? } ?>
-
 
 				</li>
 				<li class="ccm-toolbar-page-settings pull-left"><a href="#" onclick="return false" data-toggle="ccm-toolbar-hover-menu" data-toggle-menu="#ccm-toolbar-menu-page-settings"><i class="glyphicon glyphicon-cog"></i></a>
