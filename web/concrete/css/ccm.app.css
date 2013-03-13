@@ -1155,16 +1155,23 @@ div#ccm-toolbar>ul>li>a:hover{color:#333;background-color:#dddddd;background-ima
 div#ccm-toolbar>ul li.ccm-logo span{padding:12px 14px 0px 14px;height:36px;display:block;}
 div#ccm-toolbar>ul>li.pull-right:last-child{border-left:1px solid #ccc;}
 div#ccm-toolbar>ul li.ccm-toolbar-search{background-color:#fff;padding:0px;height:47px;width:280px;white-space:nowrap;border-right:1px solid #ccc;color:#c8c8c8;position:relative;}div#ccm-toolbar>ul li.ccm-toolbar-search i.glyphicon-search{position:absolute;top:16px;left:16px;}
-div#ccm-toolbar>ul li.ccm-toolbar-search input{border:0px;margin-left:40px;height:47px;-webkit-border-radius:0px;-moz-border-radius:0px;border-radius:0px;-ms-border-radius:0px;-webkit-box-shadow:none;box-shadow:none;width:210px;}
-div#ccm-toolbar>ul li.ccm-toolbar-search input:focus{-webkit-appearance:none !important;outline:none !important;}
 div#ccm-toolbar>ul li.ccm-toolbar-page-edit>a:hover{background-color:#b5eeb5;background-image:-moz-linear-gradient(top, #c2ffc2, #b5eeb5);background-image:-webkit-gradient(linear, 0 0, 0 100%, from(#c2ffc2), to(#b5eeb5));background-image:-webkit-linear-gradient(top, #c2ffc2, #b5eeb5);background-image:-o-linear-gradient(top, #c2ffc2, #b5eeb5);background-image:linear-gradient(to bottom, #c2ffc2, #b5eeb5);background-repeat:repeat-x;filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffc2ffc2', endColorstr='#ffb5eeb5', GradientType=0);border-left:1px solid #98c898;border-right:1px solid #98c898;}
 div#ccm-toolbar>ul li.ccm-toolbar-page-edit>a{border-left:1px solid #ccc;}
+div#ccm-toolbar input[type=search]{margin-left:40px;height:47px;width:210px;}
+div#ccm-toolbar input[type=search],div#ccm-toolbar textarea{border:0px;-webkit-border-radius:0px;-moz-border-radius:0px;border-radius:0px;-ms-border-radius:0px;-webkit-box-shadow:none;box-shadow:none;}
+div#ccm-toolbar input[type=search]:focus,div#ccm-toolbar textarea:focus{-webkit-appearance:none !important;outline:none !important;}
 div#ccm-toolbar .ccm-toolbar-hover-menu{color:#999;}div#ccm-toolbar .ccm-toolbar-hover-menu a{color:#999;}
 div#ccm-toolbar .ccm-toolbar-hover-menu a:hover{background-color:#fff !important;background-image:none;color:#000;}
-div#ccm-toolbar .ccm-toolbar-hover-menu div.ccm-toolbar-hover-menu-inner{padding:0px 20px;}
 div#ccm-toolbar .ccm-toolbar-hover-menu li.ccm-toolbar-hover-menu-edit{padding:0px;margin:-5px 0px -9px 0px;}div#ccm-toolbar .ccm-toolbar-hover-menu li.ccm-toolbar-hover-menu-edit a{padding:10px 20px;color:#00cc66;}
 div#ccm-toolbar .ccm-toolbar-hover-menu li.ccm-toolbar-hover-menu-edit a:hover{background-color:#9f9 !important;}
 div#ccm-toolbar .dropdown-menu{border-top-right-radius:0px;border-top-left-radius:0px;border-top:0px;}
+div#ccm-toolbar #ccm-exit-edit-mode-comment{background-color:#f8f8f8;padding:0px;}
+div#ccm-toolbar #ccm-exit-edit-mode-publish-menu{border-top:1px solid #ccc;margin:0px;padding-top:9px;padding-bottom:9px;}div#ccm-toolbar #ccm-exit-edit-mode-publish-menu ul{margin:0px;}
+div#ccm-toolbar #ccm-exit-edit-mode-publish-menu li{padding:0px;list-style-type:none;}div#ccm-toolbar #ccm-exit-edit-mode-publish-menu li a{padding:3px 20px;display:block;}
+div#ccm-toolbar #ccm-exit-edit-mode-publish-menu li a:hover{text-decoration:none;background-color:#f8f8f8 !important;}
+div#ccm-toolbar #ccm-exit-edit-mode-publish-menu li.ccm-exit-edit-mode-publish a:hover{color:#09f;}
+div#ccm-toolbar #ccm-exit-edit-mode-publish-menu li.ccm-exit-edit-mode-discard a:hover{color:#f66;}
+div#ccm-toolbar #ccm-exit-edit-mode-comment-form{padding:0px;background-color:#fff;}div#ccm-toolbar #ccm-exit-edit-mode-comment-form textarea{padding:20px;font-size:12px;font-size:1.2rem;width:300px;height:100px;}
 span.ccm-dialog-help{position:absolute;right:32px;top:18px;display:block;width:16px;height:16px;border-radius:3px;-moz-border-radius:3px;-webkit-border-radius:3px;background-clip:padding-box;}
 span.ccm-dialog-help:hover{background-color:#c3c3c3;}
 span.ccm-dialog-help a{display:block;width:0px;height:0px;padding-left:16px;padding-top:16px;overflow:hidden;background:transparent url(../images/icons_sprite.png) no-repeat top left;background-position:-21px -2377px !important;}

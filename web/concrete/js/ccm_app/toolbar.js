@@ -32,6 +32,18 @@ var CCMToolbar = function() {
 					$('.ccm-toolbar-hover-menu').hide();
 				});
 
+				$(element).find('#ccm-exit-edit-mode-publish-menu a').on('click', function() {
+					switch($(this).data('publish-action')) {
+						case 'approve':
+							$('#ccm-approve-field').val('APPROVE');
+							break;
+						case 'discard':
+							$('#ccm-approve-field').val('DISCARD');
+							break;
+					}
+
+					$('#ccm-exit-edit-mode-comment form').submit();
+				});
 			}
 		}
 	}
