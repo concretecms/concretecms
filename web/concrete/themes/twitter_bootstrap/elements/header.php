@@ -5,7 +5,7 @@
 
 <? 
 $this->addHeaderItem(Loader::helper('html')->css($this->getThemePath() . '/bootstrap.css'));
-$this->addFooterItem(Loader::helper('html')->javascript($this->getThemePath() . '/bootstrap.min.js'));
+//$this->addFooterItem(Loader::helper('html')->javascript($this->getThemePath() . '/bootstrap.min.js'));
 
 Loader::element('header_required'); ?>
 	

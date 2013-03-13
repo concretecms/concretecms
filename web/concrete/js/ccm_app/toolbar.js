@@ -4,7 +4,7 @@
 
 var CCMToolbar = function() {
 
-	var element = '#ccm-toolbar';
+	var element = '#ccm-page-controls-wrapper';
 
 	return {
 		start: function() {
@@ -20,11 +20,11 @@ var CCMToolbar = function() {
 
 				$(element).find('.dialog-launch').dialog();
 
-				$(document.body).on('click', function() {
+				$(window).on('click', function() {
 					$('.ccm-toolbar-hover-menu').hide();
 				});
 
-				$(element).on('click', function(e) {
+				$(element).find('#ccm-toolbar').on('click', function(e) {
 					e.stopPropagation(); // so we don't close menus if we click on the toolbar buttons themselves.
 				});
 
@@ -44,6 +44,15 @@ var CCMToolbar = function() {
 
 					$('#ccm-exit-edit-mode-comment form').submit();
 				});
+
+				$('#ccm-page-status-bar .alert').bind('closed', function() {
+					$(this).remove();
+					var visi = $('#ccm-page-status-bar .alert:visible').length;
+					if (visi == 0) {
+						$('#ccm-page-status-bar').remove();
+					}
+				});
+
 			}
 		}
 	}
