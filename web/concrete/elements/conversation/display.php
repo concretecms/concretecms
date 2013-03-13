@@ -6,6 +6,9 @@ if (!is_array($messages)) {
 }
 $u = new User();
 $ui = UserInfo::getByID($u->getUserID());
+
+$editor = ConversationEditor::getActive();
+
 ?>
 
 
@@ -19,7 +22,7 @@ $ui = UserInfo::getByID($u->getUserID());
 		<div class="ccm-conversation-avatar"><? print Loader::helper('concrete/avatar')->outputUserAvatar($ui)?></div>
 		<div class="ccm-conversation-message-form">
 			<div class="ccm-conversation-errors alert alert-error"></div>
-			<textarea name="cnvMessageBody"></textarea>
+			<? $editor->outputConversationEditorAddMessageForm(); ?>
 			<button type="button" data-post-parent-id="0" data-submit="conversation-message" class="pull-right btn btn-submit btn-small"><?=t('Post')?> <i class="icon-bullhorn"></i></button>
 		</div>
 		</form>
@@ -30,7 +33,7 @@ $ui = UserInfo::getByID($u->getUserID());
 		<div class="ccm-conversation-avatar"><? print Loader::helper('concrete/avatar')->outputUserAvatar($ui)?></div>
 		<div class="ccm-conversation-message-form">
 			<div class="ccm-conversation-errors alert alert-error"></div>
-			<textarea name="cnvMessageBody"></textarea>
+			<? $editor->outputConversationEditorReplyMessageForm(); ?>
 			<button type="button" data-submit="conversation-message" class="pull-right btn btn-submit btn-small"><?=t('Post')?> <i class="icon-bullhorn"></i></button>
 		</div>
 		</form>
