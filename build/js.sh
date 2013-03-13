@@ -41,7 +41,6 @@ cat ../web/concrete/js/ccm_app/pubsub.js \
 ../web/concrete/js/ccm_app/search.js \
 ../web/concrete/js/ccm_app/sitemap.js \
 ../web/concrete/js/ccm_app/custom_style.js \
-../web/concrete/js/ccm_app/status_bar.js \
 ../web/concrete/js/ccm_app/tabs.js \
 ../web/concrete/js/ccm_app/page_areas.js \
 ../web/concrete/js/ccm_app/toolbar.js \

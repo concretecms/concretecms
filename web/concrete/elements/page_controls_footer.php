@@ -48,8 +48,8 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
 		<div id="ccm-toolbar">
 			<ul>
 				<li class="ccm-logo pull-left"><span><?=Loader::helper('concrete/interface')->getToolbarLogoSRC()?></span></li>
-				<? if (!$pageInUseBySomeoneElse) { ?>
-				<li class="ccm-toolbar-page-edit pull-left"><a data-toggle="ccm-toolbar-hover-menu" data-toggle-menu="<?=$publishToggle?>" href="<? if (!$c->isEditMode()) { ?><?=DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=<?=$c->getCollectionID()?>&ctask=check-out<?=$token?><? } else { ?>javascript:void(0);<? } ?>"><i class="glyphicon glyphicon-pencil"></i></a>
+				<? if (!$pageInUseBySomeoneElse && $c->getCollectionPointerID() == 0) { ?>
+				<li class="<? if ($c->isEditMode()) { ?> ccm-toolbar-page-edit-mode-active <? } ?> ccm-toolbar-page-edit pull-left"><a data-toggle="ccm-toolbar-hover-menu" data-toggle-menu="<?=$publishToggle?>" href="<? if (!$c->isEditMode()) { ?><?=DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=<?=$c->getCollectionID()?>&ctask=check-out<?=$token?><? } else { ?>javascript:void(0);<? } ?>"><i class="glyphicon glyphicon-pencil"></i></a>
 
 				<? if ($c->isEditMode()) { ?>
 
@@ -148,7 +148,31 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
 			</ul>
 
 		</div>
-	</div>
 
+
+	<? if ($pageInUseBySomeoneElse) { ?>
+		<div id="ccm-page-status-bar">
+			<div class="alert alert-info"><button type="button" class="close" data-dismiss="alert">×</button> <span><?= t("%s is currently editing this page.", $c->getCollectionCheckedOutUserName())?></span></div>
+		</div>
+	<? } ?>
+
+	<? if ($c->getCollectionPointerID() > 0) { ?>
+
+		<div id="ccm-page-status-bar">
+			<div class="alert alert-info">
+				<button type="button" class="close" data-dismiss="alert">×</button>
+				<span><?= t("This page is an alias of one that actually appears elsewhere.")?></span>
+				<div class="ccm-page-status-bar-buttons">
+					<a href="<?=DIR_REL . "/" . DISPATCHER_FILENAME . "?cID=" . $c->getCollectionID()?>" class="btn btn-mini"><?=t('View/Edit Original')?></a>
+					<? if ($canApprovePageVersions) { ?>
+						<a href="<?=DIR_REL . "/" . DISPATCHER_FILENAME . "?cID=" . $c->getCollectionPointerOriginalID() . "&ctask=remove-alias" . $token?>" class="btn btn-mini btn-danger"><?=t('Remove Alias')?></a>
+					<? } ?>
+				</div>
+			</div>
+		</div>
+
+	<? } ?>
+	
+	</div>
 
 <? }
