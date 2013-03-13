@@ -18,6 +18,8 @@ div#ccm-toolbar {
 
 		> li {
 
+			position: relative; 
+
 			> a {
 				display: block;
 				height: 32px;
@@ -81,14 +83,14 @@ div#ccm-toolbar {
 			}
 		}
 		li.ccm-toolbar-page-edit {
-			a:hover {
+			> a:hover {
 				background-color: #b5eeb5;
 				#gradient .vertical(#c2ffc2, #b5eeb5);
 				border-left: 1px solid #98c898;
 				border-right: 1px solid #98c898;
 			}
 
-			a {
+			> a {
 				border-left: 1px solid #ccc;
 			}
 		}
@@ -106,6 +108,30 @@ div#ccm-toolbar {
 			background-image: none;
 			color: #000;
 		}
+
+		div.ccm-toolbar-hover-menu-inner { // for those items that are bigger and more complex than list elements
+			padding: 0px 20px;
+		}
+
+		li.ccm-toolbar-hover-menu-edit {
+			
+			padding: 0px;
+			margin: -5px 0px -9px 0px;
+
+			a {
+				padding: 10px 20px;
+				color: #00cc66;
+			}
+			a:hover {
+				background-color: #9f9 !important;
+			}
+		}
+	}
+
+	.dropdown-menu {
+		.border-top-radius(0px);
+		border-top: 0px;
+
 	}
 
 
