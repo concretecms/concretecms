@@ -4,9 +4,9 @@ ul#ccm-overlay-block-types a, a.ccm-overlay-draggable-block-type {
 	width: 100px; 
 	line-height: 100px;
 	text-align: center;
-	background-color: @wellBackground;
-	border: 1px solid darken(@wellBackground, 7%);
-	.border-radius(@baseBorderRadius);
+	background-color: @well-background;
+	border: 1px solid darken(@well-background, 7%);
+	.border-radius(@border-radius-base);
 	.box-shadow(inset 0 1px 1px rgba(0,0,0,.05));
 	-webkit-transition: background-color ease-in-out 0.5s;
 
@@ -18,8 +18,8 @@ ul#ccm-overlay-block-types a, a.ccm-overlay-draggable-block-type {
 		text-align: center;
 		display: block;
 		color: @gray;
-		font-size: @fontSizeMini;
-		line-height: @fontSizeSmall;
+		font-size: @font-size-mini;
+		line-height: @font-size-small;
 		font-weight: lighter;
 	}
 
@@ -65,7 +65,7 @@ ul#ccm-overlay-block-types {
 		input {
 			height: 16px;
 			line-height: 16px;
-			font-size: @fontSizeMini;
+			font-size: @font-size-mini;
 			width: 120px;
 		}
 	}

@@ -28,7 +28,6 @@ if (!$dh->inDashboard()) {
 	}
 	$this->addHeaderItem($html->css('jquery.ui.css'));
 	$this->addHeaderItem($html->css('redactor.css'));
-	$this->addFooterItem('<div id="ccm-page-controls-wrapper"><div id="ccm-toolbar"></div></div>');
 	
 	$this->addFooterItem('<script type="text/javascript" src="' . REL_DIR_FILES_TOOLS_REQUIRED . '/i18n_js"></script>'); 
 	$this->addHeaderItem($html->javascript('jquery.js'));
@@ -51,13 +50,6 @@ if (!$dh->inDashboard()) {
 		Config::save('SEEN_INTRODUCTION', 1);
 	}
 }
-
-$cID = ($c->isAlias()) ? $c->getCollectionPointerOriginalID() : $c->getCollectionID();
-$btask = '';
-if (Loader::helper('validation/strings')->alphanum($_REQUEST['btask'])) {
-	$btask = $_REQUEST['btask'];
-}
-$this->addFooterItem('<script type="text/javascript" src="' . REL_DIR_FILES_TOOLS_REQUIRED . '/page_controls_menu_js?cID=' . $cID . '&amp;cvID=' . $cvID . '&amp;btask=' . $btask . '&amp;ts=' . time() . '"></script>'); 
 
 	}
 	
