@@ -13,7 +13,8 @@ class Concrete5_Model_Conversation_Message extends Object {
 		if ($this->cnvIsMessageDeleted) {
 			return t('This message has been deleted.');
 		} else {
-			return $this->cnvMessageBody;
+			$editor = ConversationEditor::getActive();
+			return $editor->formatConversationMessageBody($this->cnvMessageBody);
 		}
 	}
 	public function getConversationMessageUserObject() {
