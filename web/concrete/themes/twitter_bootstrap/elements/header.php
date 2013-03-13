@@ -3,12 +3,12 @@
 <html lang="en">
 <head>
 
-<? Loader::element('header_required'); ?>
-	
-<!-- Site Header Content //-->
-<link rel="stylesheet" media="screen" type="text/css" href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.2.2/css/bootstrap.min.css" />
-<script type="text/javascript" src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.2.2/js/bootstrap.min.js"></script>
+<? 
+$this->addHeaderItem(Loader::helper('html')->css($this->getThemePath() . '/bootstrap.css'));
+$this->addFooterItem(Loader::helper('html')->javascript($this->getThemePath() . '/bootstrap.min.js'));
 
+Loader::element('header_required'); ?>
+	
 </head>
 <body>
 

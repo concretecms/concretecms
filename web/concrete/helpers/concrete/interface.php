@@ -135,14 +135,14 @@ class ConcreteInterfaceHelper {
 			$src = WHITE_LABEL_LOGO_SRC;
 		}
 		if (!$src) {
-			$filename = 'logo_menu.png';
+			$filename = 'logo.png';
 			if (file_exists(DIR_BASE . '/' . DIRNAME_IMAGES . '/' . $filename)) {
 				$src = DIR_REL . '/' . DIRNAME_IMAGES . '/' . $filename;
 				$d = getimagesize(DIR_BASE . '/' . DIRNAME_IMAGES . '/' . $filename);
 				$dimensions = $d[3];
 			} else {
 				$src = ASSETS_URL_IMAGES . '/' . $filename;
-				$dimensions = 'width="49" height="49"';
+				$dimensions = 'width="23" height="23"';
 			}
 		}
 		return '<img id="ccm-logo" src="' . $src . '" ' . $dimensions . ' alt="' . $alt . '" title="' . $alt . '" />';
