@@ -6,7 +6,11 @@ $valt = Loader::helper('validation/token');
 $token = '&' . $valt->getParameter();
 $cID = $c->getCollectionID();
 
-if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) { 
+$workflowList = PageWorkflowProgress::getList($c);
+
+$canViewToolbar = $cp->canViewToolbar();
+
+if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) { 
 
 	$canEditPageProperties = $cp->canEditPageProperties();
 	$canPreviewPageAsUser = $cp->canPreviewPageAsUser();
@@ -63,7 +67,18 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
 					<div id="ccm-exit-edit-mode-publish-menu">
 						<!--<a href=""><i class="glyphicon glyphicon-time"></i></a>//-->
 						<ul>
-							<li class="ccm-exit-edit-mode-publish"><a href="#" data-publish-action="approve"><?=t('Publish Now')?></a></li>
+							<? if ($canApprovePageVersions) { ?>
+								<? 
+								$publishTitle = t('Publish My Edits');
+								$pk = PermissionKey::getByHandle('approve_page_versions');
+								$pk->setPermissionObject($c);
+								$pa = $pk->getPermissionAccessObject();
+								if (is_object($pa) && count($pa->getWorkflows()) > 0) {
+									$publishTitle = t('Submit to Workflow');
+								}
+							?>
+								<li class="ccm-exit-edit-mode-publish"><a href="#" data-publish-action="approve"><?=$publishTitle?></a></li>
+							<? } ?>
 							<li><a href="#"><?=t('Save as Draft')?></a></li>
 							<li class="ccm-exit-edit-mode-discard"><a href="#" data-publish-action="discard"><?=t('Discard Edits')?></a></li>
 						</ul>
@@ -171,8 +186,94 @@ if (isset($cp) && $cp->canViewToolbar() && (!$dh->inDashboard())) {
 			</div>
 		</div>
 
-	<? } ?>
+	<? }
+
+	if ($c->isMasterCollection()) { ?>
+
+		<div id="ccm-page-status-bar">
+			<div class="alert alert-info"><button type="button" class="close" data-dismiss="alert">×</button> <span><?= t('Page Defaults for %s Page Type. All edits take effect immediately.', $c->getCollectionTypeName()) ?></span></div>
+		</div>
+
+	<? }
 	
+	$hasPendingPageApproval = false;
+	
+	if ($canViewToolbar) { ?>
+		<? if (is_array($workflowList)) { ?>
+			<div id="ccm-page-status-bar">
+			<? foreach($workflowList as $i => $wl) { ?>
+				<? $wr = $wl->getWorkflowRequestObject(); 
+				$wrk = $wr->getWorkflowRequestPermissionKeyObject(); 
+				if ($wrk->getPermissionKeyHandle() == 'approve_page_versions') {
+					$hasPendingPageApproval = true;
+				}
+				?>
+				<? $wf = $wl->getWorkflowObject(); ?>
+				<form method="post" action="<?=$wl->getWorkflowProgressFormAction()?>" id="ccm-status-bar-form-<?=$i?>" class="ccm-status-bar-ajax-form">
+					<div class="alert alert-<?=$wr->getWorkflowRequestStyleClass()?>"><button type="button" class="close" data-dismiss="alert">×</button> <span><?=$wf->getWorkflowProgressCurrentDescription($wl)?></span>
+					<? $actions = $wl->getWorkflowProgressActions(); ?>
+					<? if (count($actions) > 0) { ?>
+						<div class="ccm-page-status-bar-buttons">
+						<? foreach($actions as $act) { ?>
+							<? if ($act->getWorkflowProgressActionURL() != '') { ?>
+								<a href="<?=$act->getWorkflowProgressActionURL()?>" 
+							<? } else { ?>
+								<button type="submit" name="action_<?=$act->getWorkflowProgressActionTask()?>" 
+							<? } ?>
+
+							<? if (count($act->getWorkflowProgressActionExtraButtonParameters()) > 0) { ?>
+								<? foreach($act->getWorkflowProgressActionExtraButtonParameters() as $key => $value) { ?>
+									<?=$key?>="<?=$value?>" 
+								<? } ?>
+							<? } ?>
+
+							 class="btn btn-mini <?=$act->getWorkflowProgressActionStyleClass()?>"><?=$act->getWorkflowProgressActionStyleInnerButtonLeftHTML()?> <?=$act->getWorkflowProgressActionLabel()?> <?=$act->getWorkflowProgressActionStyleInnerButtonRightHTML()?>
+							<? if ($act->getWorkflowProgressActionURL() != '') { ?>
+								</a>
+							<? } else { ?>
+								</button>
+							<? } ?>
+						<? } ?>
+						</div>
+					<? } ?>	
+					</div>				
+				</form>
+				<? } ?>
+			</div>
+		<? } ?>
+	<? }
+
+	if (!$c->getCollectionPointerID() && !$hasPendingPageApproval) {
+		if (is_object($vo)) {
+			if (!$vo->isApproved() && !$c->isEditMode()) { ?>
+
+			<div id="ccm-page-status-bar">
+				<div class="alert alert-info">
+					<button type="button" class="close" data-dismiss="alert">×</button>
+					<span><?= t("This page is pending approval.")?></span>
+					<? if ($canApprovePageVersions && !$c->isCheckedOut()) { ?>
+					<div class="ccm-page-status-bar-buttons">
+						<?
+						$pk = PagePermissionKey::getByHandle('approve_page_versions');
+						$pk->setPermissionObject($c);
+						$pa = $pk->getPermissionAccessObject();
+						if (is_object($pa)) {
+							if (count($pa->getWorkflows()) > 0) {
+								$appLabel = t('Submit for Approval');
+							}
+						}
+						if (!$appLabel) {
+							$appLabel = t('Approve Version');
+						}
+						?>
+						<a href="<?=DIR_REL . "/" . DISPATCHER_FILENAME . "?cID=" . $c->getCollectionID() . "&ctask=approve-recent" . $token?>" class="btn btn-mini"><?=$appLabel?> <i class="glyphicon glyphicon-thumbs-up"></i></a>
+					</div>
+					<? } ?>
+				</div>
+			</div>
+			<? }
+		}
+	} ?>		
 	</div>
 
 <? }

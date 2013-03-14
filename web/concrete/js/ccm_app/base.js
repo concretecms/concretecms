@@ -48,3 +48,12 @@ ccm_addHeaderItem = function(item, type) {
 		}
 	}
 }
+
+//legacy menu hide
+ccm_hideMenus = function() {
+	/* 1st, hide all items w/the css menu class */
+	ccm_activeMenu = false;
+	$("div.ccm-menu").hide();
+	$("div.ccm-menu").css('visibility', 'hidden');
+	$("div.ccm-menu").show();
+}

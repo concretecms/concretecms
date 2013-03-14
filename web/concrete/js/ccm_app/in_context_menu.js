@@ -15,6 +15,7 @@ $.fn.ccmmenu = function() {
 			$menulauncher;
 
 		if (!$this.prop('has-menu')) {
+			$this.find('.dialog-launch').dialog();
 			$this.prop('has-menu', true);
 			$this.prop('disable-highlight', $this.attr('data-menu-disable-highlight'));
 
