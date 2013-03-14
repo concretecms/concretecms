@@ -20,7 +20,7 @@ var CCMToolbar = function() {
 
 				$(element).find('.dialog-launch').dialog();
 
-				$(window).on('click', function() {
+				$(document.body).on('click', function() {
 					$('.ccm-toolbar-hover-menu').hide();
 				});
 
@@ -53,10 +53,20 @@ var CCMToolbar = function() {
 					}
 				});
 
+				$('#ccm-page-status-bar .ccm-status-bar-ajax-form').ajaxForm({
+					dataType: 'json',
+					beforeSubmit: function() {
+						jQuery.fn.dialog.showLoader();
+					},
+					success: function(r) {
+						if (r.redirect) {
+							window.location.href = r.redirect;
+						}
+					}
+				});
+
 			}
 		}
 	}
 
 }();
-
-CCMToolbar.start();

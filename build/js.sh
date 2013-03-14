@@ -36,13 +36,12 @@ cat ../web/concrete/js/ccm_app/pubsub.js \
 ../web/concrete/js/ccm_app/in_context_menu.js \
 ../web/concrete/js/ccm_app/block_types.js \
 ../web/concrete/js/ccm_app/quicksilver.js \
-../web/concrete/js/ccm_app/inline_edit.js \
 ../web/concrete/js/ccm_app/remote_marketplace.js \
 ../web/concrete/js/ccm_app/search.js \
 ../web/concrete/js/ccm_app/sitemap.js \
 ../web/concrete/js/ccm_app/custom_style.js \
 ../web/concrete/js/ccm_app/tabs.js \
-../web/concrete/js/ccm_app/page_areas.js \
+../web/concrete/js/ccm_app/edit_page.js \
 ../web/concrete/js/ccm_app/toolbar.js \
 ../web/concrete/js/ccm_app/themes.js > ccm.app.tmp.js
 

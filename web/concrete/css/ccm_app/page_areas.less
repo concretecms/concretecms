@@ -16,182 +16,46 @@ div#ccm-highlighter {
 }
 
 /** 
- * Blocks and areas in edit mode
- */
-div.ccm-block-edit, div.ccm-area {
-	-webkit-transition: box-shadow 0.1s ease-in-out, opacity 0.1s linear; 
-	box-shadow: 0px 0px 2px 0px rgba(0,0,0,0);
-	cursor: pointer;
-	position: relative;
-	opacity: 1;
-	min-height: 1px;
-	.clearfix();
-}
-
-div.ccm-block-edit.ccm-menu-item-active {
-	box-shadow: 0px 0px 2px 0px #94D5FA; 
-}
-
-div.ccm-block-edit.ccm-block-arrange-enabled {
-	-webkit-transition: box-shadow 0.2s ease-in-out; 
-	box-shadow: 0px 0px 2px 2px rgba(0,0,0,0);
-	cursor: move;
-}
-
-div.ccm-block-edit.ccm-block-arrange-enabled:hover {
-	box-shadow: 0px 0px 2px 2px rgba(0,0,0,0.3);
-}
-
-/** 
- * sorting blocks in page
- */
-div.ccm-block-type-dragging {
-	opacity: 0.5;
-	background: #efefef;
-	border: 1px solid #aaa;
-	box-shadow: 0px 0px 2px 0px rgba(0,0,0,0);
-}
-
-/** 
  * Areas
- */
+  */
 
-div.ccm-area {
-	min-height: 2px;
-}
 
-div.ccm-area-footer-handle {
-	font-weight: lighter; 
-	font-family: @font-family-sans-serif;
-	font-size: @font-size-small;
-	line-height: @font-size-small;
-	color: #fff; 
-	padding: 8px 0px 0px 10px;
-	padding-top: 8px; 
-	padding-left: 10px;
-	height: 22px;
-}
+div.ccm-area[data-total-blocks="0"] {
+	
+	div.ccm-area-footer-handle {
 
-div.ccm-area-footer, div.ccm-sub-area-footer {
-	opacity: 0; 
-	-webkit-transition: opacity 0.1s ease-in-out; 
-	height: 30px;
-	background-color: #444;
-	width: 100%;
-	position: absolute;
-	z-index: 4; /* less than the highlighter z-index */
-	bottom: -30px;
-}
+		span {
+			opacity: 0;
+		}
 
-div.ccm-area.ccm-global-area {
-
-	> div.ccm-area-footer {
-		background-color: #2F94BD;
+		border: 1px solid #e7e7e7;
+		.border-radius(2px);
+		padding: 15px 20px;
+		color: #0c6;
 	}
 }
 
-div.ccm-area.ccm-menu-item-active {
-	box-shadow: 0px 0px 2px 0px rgba(0,0,0,0.4); 
-
-	> div.ccm-area-footer {
-		display: block; opacity: 1;
-	}	
-
-	> div.ccm-sub-area-footer {
-		display: block; opacity: 1;
-	}	
-}
-div.ccm-area-drag-active {
-	-webkit-transition: box-shadow 0.5s ease-in-out; 
-	box-shadow: 0px 0px 2px 2px rgba(255,0,0,0.4); 
-	min-height: 10px;
-
-	div.ccm-area-footer {
-		opacity: 0.5;
-	}
-
-	div.ccm-sub-area-footer {
-		opacity: 0.5;
+/** 
+ * Hovering over areas
+ */
+div.ccm-menu-item-active {
+	div.ccm-area-footer-handle {
+		span {
+			opacity: 1 !important;
+		}
 	}
 }
-div.ccm-area-drag-over {
-	-webkit-transition: all 0.1s ease-in-out; 
-	box-shadow: 0px 0px 2px 2px rgba(255,0,0,0.8); 
-}
-
-.ccm-block-type-drop-holder {
-	display: block;
-	box-shadow: 0px 0px 0px 2px rgba(0,0,0,1.0);
-}
 
 
 
-/** 
- * Layouts
- */
-div.ccm-area-layout-control-bar {
-	background: rgba(48,190,247,0.2);
-	.border-radius(4px);
-	height: 12px;
-	line-height: 12px;
-	margin-bottom: 6px;
-	margin-top: 10px;
-	position: relative;
-}
-
-div.ccm-block-edit-layout {
-	min-height: 50px;
-}
-
-div.ccm-area-layout-control-bar-add {
-	height: 0px;
-	overflow: hidden;
-}
-
-div.ccm-area-layout-control-bar .ui-slider-handle {
-	top: -6px;
-}
-
-div.ccm-area-layout-control-bar i {
-	position: absolute;
-	top: -2px;
-	z-index: 10;
-	left: -2px;
-}
-
-/** 
- * Aggregator
- */
-div.ccm-aggregator-control-bar {
-	background: rgba(48,190,247,0.2);
-	.border-radius(4px);
-	height: 12px;
-	line-height: 12px;
-	margin-bottom: 6px;
-	margin-top: 10px;
-	position: relative;
-}
 
 
-/** 
- * Inline CSS tweaks
- */
-div.ccm-block-edit-inline-active {
-	outline: 1px solid rgba(0,105,185,0.6);
-}
 
-div.ccm-block-edit-disabled {
-	opacity: 0.2 !important;
-	transition: opacity 0.5s linear;
-	-webkit-transition: opacity 0.5s linear;
-	-moz-transition: opacity 0.5s linear;
-
-}
 
 /** 
  * In page menus
  */
-.ccm-ui div.popover ul.dropdown-menu { 
+#ccm-popover-menu-container div.popover ul.dropdown-menu { 
 
 	position: static; 
 	display: block;
@@ -217,17 +81,14 @@ div.ccm-block-edit-disabled {
 	
 
 	a {
-		color: @dropdown-link-color !important;
 		text-decoration: none !important;
 		padding: 3px 12px !important;
+		color: #999;
 	}
 	a:hover {
-		#gradient > .vertical(#E2F3FF, #DDF1FF);	
-	
-		i {
-			background-image: url("../images/glyphicons-halflings.png");
-		}
-		
+		color: #000;	
+		background-image: none !important;
+		background-color: transparent !important;
 	}
 
 
