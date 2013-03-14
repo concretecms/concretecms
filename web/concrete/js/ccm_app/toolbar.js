@@ -20,7 +20,7 @@ var CCMToolbar = function() {
 
 				$(element).find('.dialog-launch').dialog();
 
-				$(document.body).on('click', function() {
+				$(document).on('click.ccm-toolbar', function() {
 					$('.ccm-toolbar-hover-menu').hide();
 				});
 
