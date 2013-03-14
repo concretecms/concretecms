@@ -46,6 +46,8 @@ $v->addFooterItem($html->javascript('ccm.app.js'));
 $v->addFooterItem($html->javascript('redactor.js'));
 $v->addFooterItem($html->javascript('ccm.dashboard.js'));
 
+$this->addFooterItem('<script type="text/javascript">$(function() { CCMToolbar.start(); });</script>');
+
 if (ENABLE_PROGRESSIVE_PAGE_REINDEX && Config::get('DO_PAGE_REINDEX_CHECK')) {
 	$v->addFooterItem('<script type="text/javascript">$(function() { ccm_doPageReindexing(); });</script>');
 }
@@ -83,6 +85,8 @@ $backgroundImage = Loader::helper('concrete/dashboard')->getDashboardBackgroundI
 		    ccm_getDashboardBackgroundImageData('<?=$backgroundImage->filename?>', <? if ($backgroundImage->displayCaption) { ?> true <? } else { ?> false <? } ?>);
 		<? } ?>
 
+		<? /*
+
 		$(window).on('resize', function() {
 			ccm_testFixForms();
 		});
@@ -90,11 +94,17 @@ $backgroundImage = Loader::helper('concrete/dashboard')->getDashboardBackgroundI
 			$(this).attr('original-class', $(this).attr('class'));
 		});
 		ccm_testFixForms();
+		*/
+		?>
+
 	});
 </script>
 
 </head>
 <body>
+
+<div id="ccm-dashboard-page">
+
 
 <? if (!$_SESSION['dashboardHasSeenImage']) { 
 	$_SESSION['dashboardHasSeenImage'] = true;
@@ -107,31 +117,34 @@ $backgroundImage = Loader::helper('concrete/dashboard')->getDashboardBackgroundI
 <div class="ccm-ui">
 
 <div id="ccm-toolbar">
-<ul id="ccm-main-nav">
-<li id="ccm-logo-wrapper"><?=Loader::helper('concrete/interface')->getToolbarLogoSRC()?></li>
-<li><a class="ccm-icon-back ccm-menu-icon" href="<?=$this->url('/')?>"><? if ($md->isMobile()) { ?><?=t('Back')?><? } else { ?><?=t('Return to Website')?><? } ?></a></li>
-<? if (Loader::helper('concrete/interface')->showWhiteLabelMessage()) { ?>
-	<li id="ccm-white-label-message"><?=t('Powered by <a href="%s">concrete5</a>.', CONCRETE5_ORG_URL)?></li>
-<? } ?>
-</ul>
+	<ul>
+		<li class="ccm-logo pull-left"><span><?=Loader::helper('concrete/interface')->getToolbarLogoSRC()?></span></li>
 
-<ul id="ccm-system-nav">
-<li><a class="ccm-icon-dashboard ccm-menu-icon" id="ccm-nav-dashboard<? if ($md->isMobile()) { ?>-mobile<? } ?>" href="<?=$this->url('/dashboard')?>"><?=t('Dashboard')?></a></li>
-<li id="ccm-nav-intelligent-search-wrapper"><input type="search" placeholder="<?=t('Intelligent Search')?>" id="ccm-nav-intelligent-search" tabindex="1" /></li>
-<? if ($md->isMobile() == false) { ?>
-	<li><a id="ccm-nav-sign-out" class="ccm-icon-sign-out ccm-menu-icon" href="<?=$this->url('/login', 'logout')?>"><?=t('Sign Out')?></a></li>
-<? } ?>
-</ul>
+		<li class="ccm-toolbar-account pull-left"><a href="<?=DIR_REL?>/"><i class="glyphicon glyphicon-arrow-left"></i></a>
+		<li class="ccm-toolbar-account pull-right"><a href="#" data-toggle="ccm-toolbar-hover-menu" data-toggle-menu="#ccm-toolbar-menu-user"><i class="glyphicon glyphicon-user"></i></a>
+		
+		<ul id="ccm-toolbar-menu-user" class="ccm-toolbar-hover-menu dropdown-menu">
+		  <li><a href="<?=$this->url('/account')?>"><?=t('Account')?></a></li>
+		  <li><a href="<?=$this->url('/account/messages/inbox')?>"><?=t('Inbox')?></a></li>
+		  <li><a href="<?=$this->url('/login', 'logout')?>">Sign Out</a></li>
+		</ul>
+
+		</li>
+		<li class="ccm-toolbar-dashboard pull-right"><a href="<?=$this->url('/dashboard')?>" data-toggle="ccm-toolbar-hover-menu" data-toggle-menu="#ccm-toolbar-menu-dashboard"><i class="glyphicon glyphicon-briefcase"></i></a>
+
+		<?
+		$dh = Loader::helper('concrete/dashboard');
+		print $dh->addQuickNavToMenus($dh->getDashboardAndSearchMenus());
+		?>
+
+		</li>
+
+		<li class="ccm-toolbar-search pull-right"><i class="glyphicon glyphicon-search"></i> <input type="search" id="ccm-nav-intelligent-search" tabindex="1" /></li>
+
+	</ul>
 
 </div>
-<?
-$_ih = Loader::helper('concrete/interface');
-$dh = Loader::helper('concrete/dashboard');
-$html = $dh->getDashboardAndSearchMenus();
-print $dh->addQuickNavToMenus($html);
-?>
-</div>
-<div id="ccm-dashboard-page">
+
 
 <div id="ccm-dashboard-content">
 

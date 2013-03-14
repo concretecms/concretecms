@@ -4,7 +4,7 @@
 
 var CCMToolbar = function() {
 
-	var $toolbar = $('#ccm-page-controls-wrapper');
+	var $toolbar = $('#ccm-toolbar');
 	var $searchInput = $('#ccm-nav-intelligent-search');
 	var $searchResults = $('#ccm-intelligent-search-results');
 	var remotesearchquery, ajaxtimer;
@@ -124,33 +124,6 @@ var CCMToolbar = function() {
 		});
 	}
 
-	setupDashboardDropdown = function() {
-		$("#ccm-nav-dashboard").hoverIntent(function() {
-			clearTimeout(ccm_hideToolbarMenusTimer);
-			$(".ccm-system-nav-selected").removeClass('ccm-system-nav-selected');
-			$(this).parent().addClass('ccm-system-nav-selected');
-			$("#ccm-nav-intelligent-search").val('');
-			$("#ccm-intelligent-search-results").fadeOut(90, 'easeOutExpo');
-	
-			if ($('#ccm-edit-overlay').is(':visible')) {
-				$('#ccm-edit-overlay').fadeOut(90, 'easeOutExpo');
-				$(window).unbind('click.ccm-edit');
-			}
-	
-			/*if ($('#ccm-dashboard-overlay').is(':visible')) {
-				$(".ccm-system-nav-selected").removeClass('ccm-system-nav-selected');
-				$('#ccm-dashboard-overlay').fadeOut(90, 'easeOutExpo');
-				$(window).unbind('click.dashboard-nav');
-			} else {*/
-				$("#ccm-dashboard-overlay").fadeIn(160, 'easeOutExpo');
-				$(window).bind('click.dashboard-nav', function() {
-					$(".ccm-system-nav-selected").removeClass('ccm-system-nav-selected');
-					$('#ccm-dashboard-overlay').fadeOut(90, 'easeOutExpo');
-					$(window).unbind('click.dashboard-nav');
-				});
-			//}
-			return false;
-		}, function() {});}
 
 	doRemoteSearchCall = function(query) {	
 		query = jQuery.trim(query);
@@ -258,8 +231,11 @@ var CCMToolbar = function() {
 				setupToolbarMenus();				
 				setupStatusBar();
 				setupIntelligentSearch();
-				setupDashboardDropdown();
 
+				// make sure that dashboard dropdown doesn't get dismissed if you mis-click inside it;
+				$('#ccm-toolbar-menu-dashboard').on('click', function(e) {
+					e.stopPropagation();
+				});
 			}
 		}
 	}
