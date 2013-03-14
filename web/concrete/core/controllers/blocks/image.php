@@ -38,6 +38,55 @@
 		public function getBlockTypeName() {
 			return t("Image");
 		}		
+
+		public function view() {
+			//$c = Page::getCurrentPage();
+			$bID = $this->bID;
+			
+			$f = $this->getFileObject();
+			$fullPath = $f->getPath();
+			$relPath = $f->getRelativePath();			
+			$size = @getimagesize($fullPath);
+			//if (empty($size)) {
+				//echo t( 'Image Not Found. ');
+				 //return '';
+				//maybe Log::addEntry('Image not found for area bla on page bla/bla/bla');
+			//}	
+			
+			if ($this->maxWidth == $size[0] && $this->maxHeight == $size[1]) {
+				$sizeStr = $size[3];
+			} else if (!$this->forceImageToMatchDimensions && ($this->maxWidth > 0 || $this->maxHeight > 0)) { 
+				$mw = $this->maxWidth > 0 ? $this->maxWidth : $size[0];
+				$mh = $this->maxHeight > 0 ? $this->maxHeight : $size[1];
+				$ih = Loader::helper('image');
+				$thumb = $ih->getThumbnail($f, $mw, $mh);
+				$sizeStr = ' width="' . $thumb->width . '" height="' . $thumb->height . '"';
+				$relPath = $thumb->src;
+			} else {
+				$sizeStr = $size[3];
+			}
+
+			if($this->fOnstateID != 0) {
+				$fos = $this->getFileOnstateObject();
+				$fullPathOnstate = $f->getPath();
+				$sizehover = @getimagesize($fullPathOnstate);
+
+				if ($this->maxWidth == $sizehover[0] && $this->maxHeight == $sizehover[1]) {
+					$relPathHover = $fos->getRelativePath();
+				} else if (!$this->forceImageToMatchDimensions && ($this->maxWidth > 0 || $this->maxHeight > 0)) {
+					$thumbHover = $ih->getThumbnail($fos, $mw, $mh);				
+					$relPathHover = $thumbHover->src;
+				} else {
+					$relPathHover = $fos->getRelativePath();
+				}
+
+			}
+			$this->set('relPath',$relPath);
+			$this->set('relPathHover',$relPathHover);
+			$this->set('sizeStr',$sizeStr);
+			$this->set('altText',$altText);
+		}
+
 		
 		public function getJavaScriptStrings() {
 			return array(
@@ -99,7 +148,9 @@
 			parent::save($args);
 		}
 
-		function getContentAndGenerate($align = false, $style = false, $id = null) {
+
+		//DEPRECATED.
+		public function getContentAndGenerate($align = false, $style = false, $id = null) {
 			$c = Page::getCurrentPage();
 			$bID = $this->bID;
 			
