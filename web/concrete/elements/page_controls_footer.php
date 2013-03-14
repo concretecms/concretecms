@@ -64,7 +64,7 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
 						<textarea name="comments" placeholder="<?=t('Write a Version Comment')?>"></textarea>
 						<input type="hidden" name="approve" value="PREVIEW" id="ccm-approve-field" />
 					</div>
-					<div id="ccm-exit-edit-mode-publish-menu">
+					<div id="ccm-exit-edit-mode-publish-menu" class="ccm-toolbar-hover-menu-footer">
 						<!--<a href=""><i class="glyphicon glyphicon-time"></i></a>//-->
 						<ul>
 							<? if ($canApprovePageVersions) { ?>
@@ -153,7 +153,13 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
 
 				</li>
 				<? if ($dh->canRead()) { ?>
-					<li class="ccm-toolbar-dashboard pull-right"><a href="<?=$this->url('/dashboard')?>" data-toggle="ccm-toolbar-hover-menu" data-toggle-menu="#ccm-toolbar-menu-dashboard"><i class="glyphicon glyphicon-briefcase"></i></a></li>
+					<li class="ccm-toolbar-dashboard pull-right"><a href="<?=$this->url('/dashboard')?>" data-toggle="ccm-toolbar-hover-menu" data-toggle-menu="#ccm-toolbar-menu-dashboard"><i class="glyphicon glyphicon-briefcase"></i></a>
+
+					<?
+					print $dh->addQuickNavToMenus($dh->getDashboardAndSearchMenus());
+					?>
+
+					</li>
 				<? } ?>
 				<li class="ccm-toolbar-search pull-right"><i class="glyphicon glyphicon-search"></i> <input type="search" id="ccm-nav-intelligent-search" tabindex="1" /></li>
 				<? if ($c->isEditMode() && $cp->canEditPageContents()) { ?>
@@ -163,7 +169,6 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
 			</ul>
 
 		</div>
-
 
 	<? if ($pageInUseBySomeoneElse) { ?>
 		<div id="ccm-page-status-bar">
