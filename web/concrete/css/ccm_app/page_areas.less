@@ -3,24 +3,45 @@
  */
 
 div#ccm-highlighter {
-	background: #000;
 	opacity: 0;
 	z-index: 5;
 	height: 0px;
 	width: 0px;
 	position: absolute;
 	cursor: pointer;
-	transition: opacity 0.1s ease-in-out;
-	-webkit-transition: opacity 0.1s ease-in-out;
-	-moz-transition: opacity 0.1s ease-in-out;
 }
+
+/** 
+ * Blocks
+ */
+
+div.ccm-block-edit {
+	position: relative;
+	opacity: 1;
+	.clear_float();
+}
+
+div.ccm-block-edit.ccm-menu-item-active {
+	outline: 2px solid #59ec59;
+	outline-offset: 10px;
+	.border-radius(10px);
+}
+
 
 /** 
  * Areas
   */
 
 
+div.ccm-area-footer, div.ccm-sub-area-footer {
+	opacity: 0; 
+}
+
 div.ccm-area[data-total-blocks="0"] {
+	
+	div.ccm-area-footer {
+		opacity: 1;
+	}
 	
 	div.ccm-area-footer-handle {
 
