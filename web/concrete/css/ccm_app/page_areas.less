@@ -11,6 +11,7 @@ div#ccm-highlighter {
 	cursor: pointer;
 }
 
+
 /** 
  * Blocks
  */
@@ -24,7 +25,6 @@ div.ccm-block-edit {
 div.ccm-block-edit.ccm-menu-item-active {
 	outline: 2px solid #59ec59;
 	outline-offset: 10px;
-	.border-radius(10px);
 }
 
 
@@ -32,15 +32,23 @@ div.ccm-block-edit.ccm-menu-item-active {
  * Areas
   */
 
+div.ccm-area.ccm-parent-menu-item-active {
+	outline: 1px solid #e6e6e6;
+	outline-offset: 18px;
+}
+
 
 div.ccm-area-footer, div.ccm-sub-area-footer {
 	opacity: 0; 
+	display: none;
 }
 
 div.ccm-area[data-total-blocks="0"] {
 	
 	div.ccm-area-footer {
 		opacity: 1;
+		display: block;
+		margin-top: 20px;
 	}
 	
 	div.ccm-area-footer-handle {

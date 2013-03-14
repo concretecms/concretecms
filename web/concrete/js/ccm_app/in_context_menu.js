@@ -123,7 +123,8 @@ $.fn.ccmmenu.hide = function(e) {
 		$.fn.ccmmenu.$highlighter.css("opacity", 0);
 		$.fn.ccmmenu.$holder.html('');
 		$('.ccm-menu-item-active').removeClass('ccm-menu-item-active');
-		$(document.body).unbind('click.disableccmmenu');
+		$('.ccm-parent-menu-item-active').removeClass('ccm-parent-menu-item-active');
+		$(document).unbind('click.disableccmmenu');
 		$('div.popover').css('opacity', 0).hide();
 	}
 }
@@ -168,7 +169,7 @@ $.fn.ccmmenu.showmenu = function(e, $this) {
 		$.fn.ccmmenu.hide(e);
 	});
 
-	$(window).on('click.disableccmmenu', function(e) {
+	$(document).on('click.disableccmmenu', function(e) {
 		$.fn.ccmmenu.hide(e);
 	});
 
