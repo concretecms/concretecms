@@ -39,6 +39,7 @@ $.fn.ccmmenu = function() {
 $.fn.ccmmenu.out = function(e) {
 	if (!$.fn.ccmmenu.isactive) {
 		$.fn.ccmmenu.$highlighter.css("opacity", 0);
+		$('.ccm-parent-menu-item-active').removeClass('ccm-parent-menu-item-active');
 		$('.ccm-menu-item-active').removeClass('ccm-menu-item-active');
 	}
 }
@@ -87,6 +88,7 @@ $.fn.ccmmenu.over = function(e, $this, $menulauncher) {
 	if ($.fn.ccmmenu.isenabled && (!$.fn.ccmmenu.isactive)) {
 
 		$('.ccm-menu-item-active').removeClass('ccm-menu-item-active');
+		$('.ccm-parent-menu-item-active').removeClass('ccm-parent-menu-item-active');
 
 		if ($menulauncher) {
 
@@ -103,6 +105,7 @@ $.fn.ccmmenu.over = function(e, $this, $menulauncher) {
 			$.fn.ccmmenu.$overmenu = $this;
 		}
 		$.fn.ccmmenu.$overmenu.addClass('ccm-menu-item-active');
+		$.fn.ccmmenu.$overmenu.parent().addClass('ccm-parent-menu-item-active');
 		if ($.fn.ccmmenu.$overmenu.prop('disable-highlight')) {
 			$.fn.ccmmenu.$highlighter.css('opacity', 0);
 		} else {
