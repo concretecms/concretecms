@@ -31,6 +31,20 @@ abstract class Concrete5_Model_Workflow extends Object {
 	public function delete() {
 		$db = Loader::db();
 		$db->Execute('delete from Workflows where wfID = ?', array($this->wfID));
+
+		foreach (
+			$db->GetArray(
+				'select wpID from WorkflowProgress where wfID = ?',
+				array($this->wfID)
+			)
+			as $row
+		) {
+			$wfp = WorkflowProgress::getByID($row['wpID']);
+			if ($wfp) {
+				$wfp->delete();
+			}
+		}
+
 	}
 
 	// by default the basic workflow just passes the status num from the request
