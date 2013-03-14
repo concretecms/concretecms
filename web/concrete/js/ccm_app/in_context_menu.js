@@ -41,6 +41,7 @@ $.fn.ccmmenu.out = function(e) {
 		$.fn.ccmmenu.$highlighter.css("opacity", 0);
 		$('.ccm-parent-menu-item-active').removeClass('ccm-parent-menu-item-active');
 		$('.ccm-menu-item-active').removeClass('ccm-menu-item-active');
+		$.fn.ccmmenu.$highlighter.removeClass('ccm-highlighter-clicked');
 	}
 }
 
@@ -74,6 +75,7 @@ $.fn.ccmmenu.enable = function() {
 	});
 
 	$.fn.ccmmenu.$highlighter.unbind('click.highlighter').on('click.highlighter', function(e) {
+		$.fn.ccmmenu.$highlighter.addClass('ccm-highlighter-clicked');
 		$.fn.ccmmenu.showmenu(e, $.fn.ccmmenu.$overmenu);
 	});
 }
@@ -89,14 +91,21 @@ $.fn.ccmmenu.over = function(e, $this, $menulauncher) {
 
 		$('.ccm-menu-item-active').removeClass('ccm-menu-item-active');
 		$('.ccm-parent-menu-item-active').removeClass('ccm-parent-menu-item-active');
+		$.fn.ccmmenu.$highlighter.removeClass('ccm-highlighter-clicked');
 
 		if ($menulauncher) {
 
+			// we offset this because we're using outlines in the page and we want the highlighter to show up over the items.
 			var offset = $menulauncher.offset();
-			$.fn.ccmmenu.$highlighter.css('width', $menulauncher.outerWidth())
-			.css('height', $menulauncher.outerHeight())
-			.css('top', offset.top)
-			.css('left', offset.left)
+			var t = offset.top - 10;
+			var l = offset.left - 10;
+			var w = $menulauncher.outerWidth() + 20;
+			var h = $menulauncher.outerHeight() + 20;
+
+			$.fn.ccmmenu.$highlighter.css('width', w)
+			.css('height', h)
+			.css('top', t)
+			.css('left', l)
 			.css('border-top-left-radius', $menulauncher.css('border-top-left-radius'))
 			.css('border-bottom-left-radius', $menulauncher.css('border-bottom-left-radius'))
 			.css('border-top-right-radius', $menulauncher.css('border-top-right-radius'))
@@ -124,6 +133,7 @@ $.fn.ccmmenu.hide = function(e) {
 		$.fn.ccmmenu.$holder.html('');
 		$('.ccm-menu-item-active').removeClass('ccm-menu-item-active');
 		$('.ccm-parent-menu-item-active').removeClass('ccm-parent-menu-item-active');
+		$.fn.ccmmenu.$highlighter.removeClass('ccm-highlighter-clicked');
 		$(document).unbind('click.disableccmmenu');
 		$('div.popover').css('opacity', 0).hide();
 	}

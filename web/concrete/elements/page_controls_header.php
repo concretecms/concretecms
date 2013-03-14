@@ -37,8 +37,9 @@ if (!$dh->inDashboard()) {
 	$this->addFooterItem($html->javascript('bootstrap.js'));
 	$this->addFooterItem($html->javascript('ccm.app.js'));
 	$this->addFooterItem($html->javascript('redactor.js'));
+	$this->addFooterItem('<script type="text/javascript">$(function() { CCMToolbar.start(); });</script>');
 	if ($c->isEditMode()) {
-		$this->addHeaderItem('<script type="text/javascript">$(function() { CCMEditMode.start(); CCMToolbar.start(); });</script>');
+		$this->addFooterItem('<script type="text/javascript">$(function() { CCMEditMode.start(); });</script>');
 	}
 	if (ENABLE_PROGRESSIVE_PAGE_REINDEX && Config::get('DO_PAGE_REINDEX_CHECK')) {
 		$this->addHeaderItem('<script type="text/javascript">$(function() { ccm_doPageReindexing(); });</script>');
