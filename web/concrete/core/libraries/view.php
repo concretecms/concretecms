@@ -952,11 +952,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			Events::fire('on_render_complete', $this);
 			
 			if (ob_get_level() == OB_INITIAL_LEVEL) {
-
+				require(DIR_BASE_CORE . '/startup/jobs.php');
 				require(DIR_BASE_CORE . '/startup/shutdown.php');
 				exit;
-				
 			}
 			
-		}		
+		}
 	}

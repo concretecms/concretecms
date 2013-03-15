@@ -188,5 +188,34 @@ class Concrete5_Controller_Dashboard_System_Optimization_Jobs extends DashboardB
 		} else {
 			$this->error->add($this->token->getErrorMessage());
 		}
-	}	
+	}
+
+	public function update_job_schedule() {
+		$jID = $this->post('jID');
+		$J = Job::getByID($jID);
+		$J->setSchedule($this->post('isScheduled'), $this->post('unit'), $this->post('value'));
+		
+		$this->redirect('/dashboard/system/optimization/jobs', 'job_scheduled');
+	}
+	
+	public function job_scheduled() {
+		$this->set('success', t('Job schedule updated successfully.'));
+		$this->view();
+	}
+	
+	
+	public function update_set_schedule() {
+		$jsID = $this->post('jsID');
+		$S = JobSet::getByID($jsID);
+		$S->setSchedule($this->post('isScheduled'), $this->post('unit'), $this->post('value'));
+		
+		$this->redirect('/dashboard/system/optimization/jobs', 'set_scheduled');
+	}
+	
+	public function set_scheduled() {
+		$this->set('success', t('Job Set schedule updated successfully.'));
+		$this->view();
+	}
+	
+	
 }

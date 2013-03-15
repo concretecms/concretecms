@@ -1698,6 +1698,18 @@
       <NOTNULL/>
       <DEFAULT value="0"/>
     </field>
+    <field name="isScheduled" type="I2" size="1">
+      <notnull/>
+      <default value="0"/>
+    </field>
+    <field name="scheduledInterval" type="C" size="255">
+      <notnull/>
+      <default value="days"/>
+    </field>
+    <field name="scheduledValue" type="I" size="10">
+      <notnull/>
+      <default value="0"/>
+    </field>
   </table>
   <table name="JobsLog">
     <field name="jlID" type="I" size="10">
@@ -1751,6 +1763,42 @@
       <NOTNULL/>
       <DEFAULT value="0"/>
       <UNSIGNED/>
+    </field>
+    <field name="jDateLastRun" type="T"></field>
+    <field name="isScheduled" type="I2" size="1">
+      <notnull/>
+      <default value="0"/>
+    </field>
+    <field name="scheduledInterval" type="C" size="255">
+      <notnull/>
+      <default value="days"/>
+    </field>
+    <field name="scheduledValue" type="I" size="10">
+      <notnull/>
+      <default value="0"/>
+    </field>
+  </table>
+  <table name="UserPointHistory">
+    <field name="upID" type="I" size="11">
+      <key/>
+      <autoincrement/>
+    </field>
+    <field name="upuID" type="I" size="11">
+      <notnull/>
+      <default value="0"/>
+    </field>
+    <field name="upaID" type="I" size="11">
+      <null/>
+      <default value="0"/>
+    </field>
+    <field name="upPoints" type="I" size="11">
+      <null/>
+      <default value="0"/>
+    </field>
+    <field name="timestamp" type="T">
+      <notnull/>
+      <deftimestamp/>
+>>>>>>> 4946ec7... automatic running and scheduling of jobs without cron.
     </field>
   </table>
   

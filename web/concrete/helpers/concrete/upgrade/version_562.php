@@ -8,6 +8,7 @@ class ConcreteUpgradeVersion562Helper {
 		'Queues',
 		'QueueMessages',
 		'QueuePageDuplicationRelations',
+		'Jobs',
 		'JobSets',
 		'JobSetJobs'
 	);
