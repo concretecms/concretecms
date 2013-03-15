@@ -38,6 +38,59 @@
 		public function getBlockTypeName() {
 			return t("Image");
 		}		
+
+		public function view() {
+			//$c = Page::getCurrentPage();
+			$bID = $this->bID;
+			
+			$f = File::getByID($this->fID);
+			$fullPath = $f->getPath();
+			$relPath = $f->getRelativePath();			
+			$size = @getimagesize($fullPath);
+			//if (empty($size)) {
+				//echo t( 'Image Not Found. ');
+				 //return '';
+				//maybe Log::addEntry('Image not found for area bla on page bla/bla/bla');
+			//}	
+
+			
+			if ($this->maxWidth == $size[0] && $this->maxHeight == $size[1]) {
+				$sizeStr = $size[3];
+			} else if (!$this->forceImageToMatchDimensions && ($this->maxWidth > 0 || $this->maxHeight > 0)) { 
+				$ih = Loader::helper('image');
+				$thumb = $ih->getThumbnail($f, $this->maxWidth, $this->maxHeight);
+				$sizeStr = ' width="' . $thumb->width . '" height="' . $thumb->height . '"';
+				$relPath = $thumb->src;
+			} else {
+				$sizeStr = $size[3];
+			}
+
+			if($this->fOnstateID > 0) {
+				$fos = File::getByID($this->fOnstateID);
+				$fullPathOnstate = $f->getPath();
+				$sizehover = @getimagesize($fullPathOnstate);
+
+				if ($this->maxWidth == $sizehover[0] && $this->maxHeight == $sizehover[1]) {
+					$relPathHover = $fos->getRelativePath();
+				} else if (!$this->forceImageToMatchDimensions && ($this->maxWidth > 0 || $this->maxHeight > 0)) {
+					$thumbHover = $ih->getThumbnail($fos, $mw, $mh);				
+					$relPathHover = $thumbHover->src;
+				} else {
+					$relPathHover = $fos->getRelativePath();
+				}
+
+			}
+
+			//var_dump($relPath);
+			$this->set('linkURL',$this->getLinkURL());
+			
+
+			$this->set('relPath',$relPath);
+			$this->set('relPathHover',$relPathHover);
+			$this->set('sizeStr',$sizeStr);
+			$this->set('altText',$altText);
+		}
+
 		
 		public function getJavaScriptStrings() {
 			return array(
@@ -55,14 +108,14 @@
 	
 		function getFileID() {return $this->fID;}
 		function getFileOnstateID() {return $this->fOnstateID;}
-		function getFileOnstateObject() {
-			if ($this->fOnstateID > 0) {
+		public function getFileObject() {
+			if($this->fOnstateID) {
 				return File::getByID($this->fOnstateID);
 			}
 		}
-		function getFileObject() {
+		public function getFileOnstateObject() {
 			return File::getByID($this->fID);
-		}		
+		}
 		function getAltText() {return $this->altText;}
 		function getExternalLink() {return $this->externalLink;}
 		function getInternalLinkCID() {return $this->internalLinkCID;}
@@ -78,9 +131,9 @@
 		}
 		
 		public function save($args) {		
+			$args['fID'] = ($args['fID'] != '') ? $args['fID'] : 0;
 			$args['fOnstateID'] = ($args['fOnstateID'] != '') ? $args['fOnstateID'] : 0;
 			$args['forceImageToMatchDimensions'] = ($args['forceImageToMatchDimensions']) ? 1 : 0;
-			$args['fID'] = ($args['fID'] != '') ? $args['fID'] : 0;
 			$args['maxWidth'] = (intval($args['maxWidth']) > 0) ? intval($args['maxWidth']) : 0;
 			$args['maxHeight'] = (intval($args['maxHeight']) > 0) ? intval($args['maxHeight']) : 0;
 			switch (intval($args['linkType'])) {
@@ -99,7 +152,9 @@
 			parent::save($args);
 		}
 
-		function getContentAndGenerate($align = false, $style = false, $id = null) {
+
+		//DEPRECATED.
+		public function getContentAndGenerate($align = false, $style = false, $id = null) {
 			$c = Page::getCurrentPage();
 			$bID = $this->bID;
 			
