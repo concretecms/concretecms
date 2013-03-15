@@ -98,20 +98,19 @@ class Concrete5_Controller_Dashboard_Composer_Write extends Controller {
 					Cache::disableLocalCache();
 
 					if ($entry->isComposerDraft()) { 
-
 						$entry->move($parent);
-	
-						$v = CollectionVersion::get($entry, 'RECENT');
-						$pkr = new ApprovePagePageWorkflowRequest();
-						$pkr->setRequestedPage($entry);
-						$pkr->setRequestedVersionID($v->getVersionID());
-						$pkr->setRequesterUserID($u->getUserID());
-						$pkr->trigger();
-
-						Events::fire('on_composer_publish', $entry);
-						$entry->markComposerPageAsPublished();
-
 					}
+	
+					$v = CollectionVersion::get($entry, 'RECENT');
+					$pkr = new ApprovePagePageWorkflowRequest();
+					$pkr->setRequestedPage($entry);
+					$pkr->setRequestedVersionID($v->getVersionID());
+					$pkr->setRequesterUserID($u->getUserID());
+					$pkr->trigger();
+
+					Events::fire('on_composer_publish', $entry);
+					$entry->markComposerPageAsPublished();
+
 					$this->redirect('?cID=' . $entry->getCollectionID());
 				} else if ($this->post('autosave')) { 
 					// this is done by javascript. we refresh silently and send a json success back
