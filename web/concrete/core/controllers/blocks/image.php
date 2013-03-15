@@ -38,7 +38,13 @@
 		public function getBlockTypeName() {
 			return t("Image");
 		}		
-
+		
+		public function on_page_view() {
+			if($this->fOnstateID > 0) {
+				$this->addHeaderItem('<style type="text/css"> img.ccm-image-block.alternate { display:none; } </style>');
+			}
+		}
+		
 		public function view() {
 			//$c = Page::getCurrentPage();
 			$bID = $this->bID;
