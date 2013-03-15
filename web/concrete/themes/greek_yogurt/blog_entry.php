@@ -45,20 +45,15 @@ $nav = Loader::helper('navigation');
 			?>
 			
 			<div id="main-content-post-author">
-			
-				<?php 
-				$u = new User();
-				if ($u->isRegistered()) { ?>
-					<?php  
-					if (Config::get("ENABLE_USER_PROFILES")) {
-						$userName = '<a href="' . $this->url('/profile') . '">' . $u->getUserName() . '</a>';
-					} else {
-						$userName = $u->getUserName();
-					}
-				}
-				?>
-
-				<p><?php echo t('Posted by:');?> <span class="post-author"><?php  echo $userName; ?> at <a href="<?php $c->getLinkToCollection;?>"><?php echo $c->getCollectionDatePublic('g:i a')?> on <?php echo $c->getCollectionDatePublic('F jS, Y')?></a></span>
+			<?php
+			$uID = $c->getVersionObject()->getVersionAuthorUserID();
+			$username = $c->getVersionObject()->getVersionAuthorUserName();
+			if (Config::get("ENABLE_USER_PROFILES")) {
+				$profileLink= '<a href="' . $this->url('/profile/view/') . $uID . '/' . '">' . $username . '</a>';
+			}else{ 
+				$profileLink = $username;
+			} ?>
+				<p><?php echo t('Posted by:');?> <span class="post-author"><?php  echo $profileLink; ?> at <a href="<?php $c->getLinkToCollection;?>"><?php echo $c->getCollectionDatePublic('g:i a')?> on <?php echo $c->getCollectionDatePublic('F jS, Y')?></a></span>
 					<div id="main-content-post-footer-share">
 						<p>Share:
 						<a href="mailto:?subject=<?php echo $c->getCollectionName(); ?>&body=<?php echo $nav->getLinkToCollection($c, true); ?>"><img class="main-content-post-footer-share-email" src="<?php echo $this->getThemePath(); ?>/images/icon_email.png" alt="Email" /></a>
