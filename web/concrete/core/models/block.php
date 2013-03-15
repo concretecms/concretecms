@@ -668,20 +668,24 @@ class Concrete5_Model_Block extends Object {
 			}
 
 			$arHandle = $this->getAreaHandle();
-			$a = $this->getBlockAreaObject();
-			if ($a->isGlobalArea()) {
-				// then we need to check against the global area name. We currently have the wrong area handle passed in
-				$arHandle = STACKS_AREA_NAME;
+			if ($arHandle) {
+				$a = $this->getBlockAreaObject();
+				if ($a->isGlobalArea()) {
+					// then we need to check against the global area name. We currently have the wrong area handle passed in
+					$arHandle = STACKS_AREA_NAME;
+				}
+
+				$v = array(
+					$co->getCollectionID(), 
+					$co->getVersionID(),
+					$arHandle,
+					$this->bID
+				);
+
+				$this->csrID = $db->GetOne('select csrID from CollectionVersionBlockStyles where cID = ? and cvID = ? and arHandle = ? and bID = ?', $v);
+			} else {
+				$this->csrID = 0;
 			}
-
-			$v = array(
-				$co->getCollectionID(), 
-				$co->getVersionID(),
-				$arHandle,
-				$this->bID
-			);
-
-			$this->csrID = $db->GetOne('select csrID from CollectionVersionBlockStyles where cID = ? and cvID = ? and arHandle = ? and bID = ?', $v);
 		}
 		return $this->csrID;
 	}
