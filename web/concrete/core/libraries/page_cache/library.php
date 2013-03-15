@@ -10,6 +10,10 @@ abstract class Concrete5_Library_PageCache {
 		if (defined('APP_CHARSET')) {
 			header("Content-Type: text/html; charset=" . APP_CHARSET);
 		}
+		foreach ($record->getCacheRecordHeaders() as $header) {
+			header($header);
+		}
+
 		print($record->getCacheRecordContent());
 	}
 
@@ -32,13 +36,23 @@ abstract class Concrete5_Library_PageCache {
 	}
 
 	public function outputCacheHeaders(Page $c) {
-		$lifetime = $c->getCollectionFullPageCachingLifetimeValue();
-		$expires = time() + $lifetime;
+		foreach ($this->getCacheHeaders($c) as $header) {
+			header($header);
+		}
+	}
 
-		header('Pragma: public');
-		header('Cache-Control: s-maxage=' . $lifetime);
-		header('Cache-Control: max-age=' . $lifetime);
-		header('Expires: ' . gmdate('D, d M Y H:i:s', $expires) . ' GMT');
+	public function getCacheHeaders(Page $c) {
+		$lifetime = $c->getCollectionFullPageCachingLifetimeValue();
+		$expires  = gmdate('D, d M Y H:i:', time() + $lifetime) . ' GMT';
+
+		$headers  = array(
+			'Pragma: public',
+			'Cache-Control: s-maxage=' . $lifetime,
+			'Cache-Control: max-age='  . $lifetime,
+			'Expires: '                . $expires
+		);
+
+		return $headers;
 	}
 
 	public function shouldAddToCache(View $v) {
