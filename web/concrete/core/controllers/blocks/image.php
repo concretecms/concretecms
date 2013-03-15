@@ -43,10 +43,11 @@
 			//$c = Page::getCurrentPage();
 			$bID = $this->bID;
 			
-			$f = $this->getFileObject();
+			$f = File::getByID($this->fID);
 			$fullPath = $f->getPath();
 			$relPath = $f->getRelativePath();			
 			$size = @getimagesize($fullPath);
+			var_dump($size);
 			//if (empty($size)) {
 				//echo t( 'Image Not Found. ');
 				 //return '';
@@ -56,18 +57,16 @@
 			if ($this->maxWidth == $size[0] && $this->maxHeight == $size[1]) {
 				$sizeStr = $size[3];
 			} else if (!$this->forceImageToMatchDimensions && ($this->maxWidth > 0 || $this->maxHeight > 0)) { 
-				$mw = $this->maxWidth > 0 ? $this->maxWidth : $size[0];
-				$mh = $this->maxHeight > 0 ? $this->maxHeight : $size[1];
 				$ih = Loader::helper('image');
-				$thumb = $ih->getThumbnail($f, $mw, $mh);
+				$thumb = $ih->getThumbnail($f, $this->maxWidth, $this->maxHeight);
 				$sizeStr = ' width="' . $thumb->width . '" height="' . $thumb->height . '"';
 				$relPath = $thumb->src;
 			} else {
 				$sizeStr = $size[3];
 			}
 
-			if($this->fOnstateID != 0) {
-				$fos = $this->getFileOnstateObject();
+			if($this->fOnstateID > 0) {
+				$fos = File::getByID($this->fOnstateID);
 				$fullPathOnstate = $f->getPath();
 				$sizehover = @getimagesize($fullPathOnstate);
 
@@ -79,6 +78,7 @@
 				} else {
 					$relPathHover = $fos->getRelativePath();
 				}
+				
 
 			}
 			$this->set('relPath',$relPath);
@@ -104,14 +104,6 @@
 	
 		function getFileID() {return $this->fID;}
 		function getFileOnstateID() {return $this->fOnstateID;}
-		function getFileOnstateObject() {
-			if ($this->fOnstateID > 0) {
-				return File::getByID($this->fOnstateID);
-			}
-		}
-		function getFileObject() {
-			return File::getByID($this->fID);
-		}		
 		function getAltText() {return $this->altText;}
 		function getExternalLink() {return $this->externalLink;}
 		function getInternalLinkCID() {return $this->internalLinkCID;}
