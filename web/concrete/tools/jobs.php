@@ -29,6 +29,7 @@ if (Job::authenticateRequest($_REQUEST['auth'])) {
 
 	if (is_object($js)) {
 		$jobs = $js->getJobs();
+		$js->markStarted();
 		foreach($jobs as $j) {
 			$obj = $j->executeJob();
 			$r->results[] = $obj;
