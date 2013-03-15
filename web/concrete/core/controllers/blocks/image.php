@@ -47,12 +47,12 @@
 			$fullPath = $f->getPath();
 			$relPath = $f->getRelativePath();			
 			$size = @getimagesize($fullPath);
-			var_dump($size);
 			//if (empty($size)) {
 				//echo t( 'Image Not Found. ');
 				 //return '';
 				//maybe Log::addEntry('Image not found for area bla on page bla/bla/bla');
 			//}	
+
 			
 			if ($this->maxWidth == $size[0] && $this->maxHeight == $size[1]) {
 				$sizeStr = $size[3];
@@ -78,9 +78,11 @@
 				} else {
 					$relPathHover = $fos->getRelativePath();
 				}
-				
 
 			}
+
+			var_dump($relPath);
+
 			$this->set('relPath',$relPath);
 			$this->set('relPathHover',$relPathHover);
 			$this->set('sizeStr',$sizeStr);
@@ -104,6 +106,14 @@
 	
 		function getFileID() {return $this->fID;}
 		function getFileOnstateID() {return $this->fOnstateID;}
+		public function getFileObject() {
+			if($this->fOnstateID) {
+				return File::getByID($this->fOnstateID);
+			}
+		}
+		public function getFileOnstateObject() {
+			return File::getByID($this->fID);
+		}
 		function getAltText() {return $this->altText;}
 		function getExternalLink() {return $this->externalLink;}
 		function getInternalLinkCID() {return $this->internalLinkCID;}
@@ -119,9 +129,9 @@
 		}
 		
 		public function save($args) {		
+			$args['fID'] = ($args['fID'] != '') ? $args['fID'] : 0;
 			$args['fOnstateID'] = ($args['fOnstateID'] != '') ? $args['fOnstateID'] : 0;
 			$args['forceImageToMatchDimensions'] = ($args['forceImageToMatchDimensions']) ? 1 : 0;
-			$args['fID'] = ($args['fID'] != '') ? $args['fID'] : 0;
 			$args['maxWidth'] = (intval($args['maxWidth']) > 0) ? intval($args['maxWidth']) : 0;
 			$args['maxHeight'] = (intval($args['maxHeight']) > 0) ? intval($args['maxHeight']) : 0;
 			switch (intval($args['linkType'])) {
