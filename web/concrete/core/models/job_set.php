@@ -4,19 +4,26 @@ class Concrete5_Model_JobSet extends Object {
 	
 	const DEFAULT_JOB_SET_ID = 1;
 	
+	public $jDateLastRun;
+	public $isScheduled = 0;
+	public $scheduledInterval = 'days'; // hours|days|weeks|months
+	public $scheduledValue = 0;
+	
 	public static function getList() {
 		$db = Loader::db();
-		$r = $db->Execute('select jsID from JobSets order by jsName asc');
+		$r = $db->Execute('select jsID, pkgID, jsName, jDateLastRun, isScheduled, scheduledInterval, scheduledValue from JobSets order by jsName asc');
 		$list = array();
 		while ($row = $r->FetchRow()) {
-			$list[] = JobSet::getByID($row['jsID']);
+			$js = new JobSet();
+			$js->setPropertiesFromArray($row);
+			$list[] = $js;
 		}
 		return $list;
 	}	
 
 	public static function getByID($jsID) {
 		$db = Loader::db();
-		$row = $db->GetRow('select jsID, pkgID, jsName from JobSets where jsID = ?', array($jsID));
+		$row = $db->GetRow('SELECT jsID, pkgID, jsName, jDateLastRun, isScheduled, scheduledInterval, scheduledValue FROM JobSets WHERE jsID = ?', array($jsID));
 		if (isset($row['jsID'])) {
 			$js = new JobSet();
 			$js->setPropertiesFromArray($row);
@@ -26,7 +33,7 @@ class Concrete5_Model_JobSet extends Object {
 
 	public static function getByName($jsName) {
 		$db = Loader::db();
-		$row = $db->GetRow('select jsID, pkgID, jsName from JobSets where jsName = ?', array($jsName));
+		$row = $db->GetRow('SELECT jsID, pkgID, jsName, jDateLastRun, isScheduled, scheduledInterval, scheduledValue FROM JobSets WHERE jsName = ?', array($jsName));
 		if (isset($row['jsID'])) {
 			$js = new JobSet();
 			$js->setPropertiesFromArray($row);
@@ -101,6 +108,14 @@ class Concrete5_Model_JobSet extends Object {
 		return $jobs;		
 	}
 	
+	public function markStarted(){
+		$db = Loader::db();
+		$timestamp=date('Y-m-d H:i:s');
+		$this->jDateLastRun = $timestamp;
+		$rs = $db->query( "UPDATE JobSets SET jDateLastRun=? WHERE jsID=?", array( $timestamp, $this->getJobSetID() ) );
+	}
+	
+	
 	public function contains(Job $j) {
 		$db = Loader::db();
 		$r = $db->GetOne('select count(jID) from JobSetJobs where jsID = ? and jID = ?', array($this->getJobSetID(), $j->getJobID()));
@@ -121,5 +136,51 @@ class Concrete5_Model_JobSet extends Object {
 		$db = Loader::db();
 		$db->Execute('delete from JobSetJobs where jsID = ? and jID = ?', array($this->getJobSetID(), $j->getJobID()));
 	}
+	
+	public function isScheduledForNow() {
+		if(!$this->isScheduled) {
+			return false;
+		}
 		
+		if($this->scheduledValue <= 0) {
+			return false;
+		}
+		
+		$last_run = strtotime($this->jDateLastRun);
+		$seconds = 1;
+		switch($this->scheduledInterval) {
+			case "hours":
+				$seconds = 60*60;
+				break;
+			case "days":
+				$seconds = 60*60*24;
+				break;
+			case "weeks":
+				$seconds = 60*60*24*7;
+				break;
+			case "months":
+				$seconds = 60*60*24*7*30;
+				break;
+		}
+		$gap = $this->scheduledValue * $seconds;
+		if($last_run < (time() - $gap) ) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	public function setSchedule($scheduled, $interval, $value) {
+		$this->isScheduled = ($scheduled?true:false);
+		$this->scheduledInterval = $interval;
+		$this->scheduledValue = $value;
+		if($this->getJobSetID()) {
+			$db = Loader::db();
+			$db->query("UPDATE JobSets SET isScheduled = ?, scheduledInterval = ?, scheduledValue = ? WHERE jsID = ?",
+			array($this->isScheduled, $this->scheduledInterval, $this->scheduledValue, $this->getJobSetID()));
+			return true;
+		} else {
+			return false;
+		}
+	}
 }

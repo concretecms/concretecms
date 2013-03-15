@@ -45,7 +45,7 @@ $jh = Loader::helper('json');
 	array($this->action('view_sets'), t('Job Sets'), $jobSetsSelected)
 ), false);?>
 
-<? if (in_array($this->controller->getTask(), array('view', 'install', 'uninstall', 'job_installed', 'job_uninstalled', 'reset', 'reset_complete'))) { ?>
+<? if (in_array($this->controller->getTask(), array('view', 'install', 'uninstall', 'job_installed', 'job_uninstalled', 'reset', 'reset_complete', 'job_scheduled'))) { ?>
 
 <div id="ccm-tab-content-list">
 
@@ -71,7 +71,7 @@ $jh = Loader::helper('json');
 				if ($j->getJobStatus() == 'RUNNING') {
 					$runtime = date(DATE_APP_GENERIC_MDYT_FULL_SECONDS, strtotime($j->getJobDateLastRun()));
 					echo ("<strong>");
-					echo t("Running since %s", $runtime);					
+					echo t("Running since %s", $runtime);
 					echo ("</strong>");
 				} else if($j->getJobDateLastRun() == '' || substr($j->getJobDateLastRun(), 0, 4) == '0000') {
 					echo t('Never');
@@ -101,24 +101,57 @@ $jh = Loader::helper('json');
 
 <? foreach($installedJobs as $j) { ?>
 	<div id="jd<?=$j->getJobID()?>" class="ccm-ui">
-		<? if ($j->supportsQueue()) { ?>
-
-			<p><?=t('The "%s" job supports queueing, meaning it can be run in a couple different ways:', $j->getJobName())?></p>
-			<h4><?=t('No Queueing')?></h4>
-			<div><textarea style="width: 560px" rows="2" class="ccm-default-jobs-url"><?=BASE_URL . $this->url('/tools/required/jobs?auth=' . $auth . '&jID=' . $j->getJobID())?></textarea></div>
-			<div class="alert alert-info"><?=t('This will treat the job as though it were like any other concrete5 job. The entire job will be run at once.')?></div>
-
-			<h4><?=t('Queueing')?></h4>
-			<p><?=t("First, schedule this URL for when you'd like this job to run:")?></p>
-			<div><textarea style="width: 560px" rows="2" class="ccm-default-jobs-url"><?=BASE_URL . REL_DIR_FILES_TOOLS_REQUIRED . '/jobs/run_single?auth=' . $auth . '&jID=' . $j->getJobID()?></textarea></div>
-			<p><?=t('Then, make sure this URL is scheduled to run frequently, like every 3-5 minutes:')?></p>
-			<div><textarea style="width: 560px" rows="2" class="ccm-default-jobs-url"><?=BASE_URL . REL_DIR_FILES_TOOLS_REQUIRED . '/jobs/check_queue?auth=' . $auth?></textarea></div>
-			<div class="alert alert-info"><?=t('The first URL starts the process - the second ensures that it completes in batches.')?></div>
-
-		<? } else { ?>
-			<p><?=t('To run the "%s" job, automate the following URL using cron or a similar system:', $j->getJobName())?></p><br/>
-			<div><textarea style="width: 560px" rows="2" class="ccm-default-jobs-url"><?=BASE_URL . $this->url('/tools/required/jobs/run_single?auth=' . $auth . '&jID=' . $j->getJobID())?></textarea></div>
-		<? } ?>
+		<form action="<?=$this->action('update_job_schedule')?>" method="post">
+			<?=$form->hidden('jID', $j->getJobID());?>
+			<h4><?=t('Run Job')?></h4>
+			
+			<label class="radio">
+				<input type="radio" name="isScheduled" class="ccm-jobs-automation-schedule-type" value="1" <?=($j->isScheduled?'checked="checked"':'')?> />
+				<?=t('When people browse to the page.  (which runs after the main rendering request of the page.)')?>
+			</label>
+			<fieldset class="ccm-jobs-automation-schedule-auto" <?=($j->isScheduled?'':'style="display: none;"')?>>
+				<div class="well">
+					<div class="clearfix">
+						<label><?php  echo t('Run this Job Every')?></label>
+						<div class="input">
+							<?php echo $form->text('value',$j->scheduledValue,array('class'=>'span2'))?>
+							<?php echo $form->select('unit', array('hours'=>'Hours', 'days'=>'Days', 'weeks'=>'Weeks', 'months'=>'Months'), $j->scheduledInterval, array('class'=>'span2'))?>
+						</div>
+					</div>
+				</div>
+			</fieldset>
+			
+			<label class="radio">
+				<input type="radio" name="isScheduled" class="ccm-jobs-automation-schedule-type" value="0" <?=($j->isScheduled?'':'checked="checked"')?> />
+				<?=t('Through Cron')?>
+			</label>
+			<fieldset class="ccm-jobs-automation-schedule-cron" <?=($j->isScheduled?'style="display: none;"':'')?>>
+				<div class="well">
+					<? if ($j->supportsQueue()) { ?>
+						<p><?=t('The "%s" job supports queueing, meaning it can be run in a couple different ways:', $j->getJobName())?></p>
+						<h4><?=t('No Queueing')?></h4>
+						<div><textarea style="width: 560px" rows="2" class="ccm-default-jobs-url"><?=BASE_URL . $this->url('/tools/required/jobs?auth=' . $auth . '&jID=' . $j->getJobID())?></textarea></div>
+						<div class="alert alert-info"><?=t('This will treat the job as though it were like any other concrete5 job. The entire job will be run at once.')?></div>
+			
+						<h4><?=t('Queueing')?></h4>
+						<p><?=t("First, schedule this URL for when you'd like this job to run:")?></p>
+						<div><textarea style="width: 560px" rows="2" class="ccm-default-jobs-url"><?=BASE_URL . REL_DIR_FILES_TOOLS_REQUIRED . '/jobs/run_single?auth=' . $auth . '&jID=' . $j->getJobID()?></textarea></div>
+						<p><?=t('Then, make sure this URL is scheduled to run frequently, like every 3-5 minutes:')?></p>
+						<div><textarea style="width: 560px" rows="2" class="ccm-default-jobs-url"><?=BASE_URL . REL_DIR_FILES_TOOLS_REQUIRED . '/jobs/check_queue?auth=' . $auth?></textarea></div>
+						<div class="alert alert-info"><?=t('The first URL starts the process - the second ensures that it completes in batches.')?></div>
+			
+					<? } else { ?>
+						<p><?=t('To run the "%s" job, automate the following URL using cron or a similar system:', $j->getJobName())?></p><br/>
+						<div><textarea style="width: 560px" rows="2" class="ccm-default-jobs-url"><?=BASE_URL . $this->url('/tools/required/jobs/run_single?auth=' . $auth . '&jID=' . $j->getJobID())?></textarea></div>
+					<? } ?>	
+				</div>
+			</fieldset>
+			<div class="ccm-pane-footer">
+				<div class="ccm-buttons">
+					<input type="submit" value="Save" class="btn ccm-button-v2 primary ccm-button-v2-right">
+				</div>	
+			</div>
+		</form>
 	</div>
 <? } ?>
 
@@ -265,9 +298,37 @@ if (is_object($djs)) { ?>
 	</div>
 
 		<div class="well">
-		<h4><?=t('Automation Instructions')?></h4>
-		<p><?=t('To run all the jobs in this Job Set, schedule this URL using cron or a similar system:', $set->getJobSetID())?></p>
-		<div><input type="text" style="width: 700px" class="ccm-default-jobs-url" value="<?=BASE_URL . $this->url('/tools/required/jobs?auth=' . $auth . '&jsID=' . $set->getJobSetID())?>" /></div>
+			<h4><?=t('Automation Instructions')?></h4>
+			<form action="<?=$this->action('update_set_schedule');?>" method="post">
+				<?=$form->hidden('jsID',$set->getJobSetID()); ?>
+			<label class="radio">
+				<input type="radio" name="isScheduled" class="ccm-jobs-automation-schedule-type" value="1" <?=($set->isScheduled?'checked="checked"':'')?> />
+				<?=t('When people browse to the page.  (which runs after the main rendering request of the page.)')?>
+			</label>
+			<fieldset class="ccm-jobs-automation-schedule-auto" <?=($set->isScheduled?'':'style="display: none;"')?>>
+				<div class="clearfix">
+					<label><?php  echo t('Run this Job Every')?></label>
+					<div class="input">
+						<?php echo $form->text('value',$set->scheduledValue,array('class'=>'span2'))?>
+						<?php echo $form->select('unit', array('hours'=>'Hours', 'days'=>'Days', 'weeks'=>'Weeks', 'months'=>'Months'), $set->scheduledInterval, array('class'=>'span2'))?>
+					</div>
+				</div>
+			</fieldset>
+			
+			<label class="radio">
+				<input type="radio" name="isScheduled" class="ccm-jobs-automation-schedule-type" value="0" <?=($set->isScheduled?'':'checked="checked"')?> />
+				<?=t('Through Cron')?>
+			</label>
+			<fieldset class="ccm-jobs-automation-schedule-cron" <?=($set->isScheduled?'style="display: none;"':'')?>>
+				<p><?=t('To run all the jobs in this Job Set, schedule this URL using cron or a similar system:', $set->getJobSetID())?></p>
+				<div><textarea style="width: 560px" rows="2" class="ccm-default-jobs-url"><?=BASE_URL . $this->url('/tools/required/jobs?auth=' . $auth . '&jsID=' . $set->getJobSetID())?></textarea></div>
+			</fieldset>
+			<div class="control-group">
+				<div class="controls">
+				<?php echo $form->submit('submit', t('Update Schedule'), array('class' => ''))?>
+				</div>
+			</div>
+			</form>
 		</div>
 
 
@@ -382,13 +443,10 @@ $(function() {
 		$(this).get(0).select();
 	});
 	$('a.ccm-automate-job-instructions').on('click', $("#ccm-jobs-list"), function() {
-		var h = 200;
-		if ($(this).attr('data-jSupportsQueue')) {
-			h = 550;
-		}
+		//if ($(this).attr('data-jSupportsQueue')) { }
 		$('#jd' + $(this).attr("data-jID")).jqdialog({
-			height: h,
-			width: 600,
+			height: 550,
+			width: 650,
 			modal: true,
 			title: '<?=t('Automation Instructions')?>'
 		});
@@ -426,6 +484,16 @@ $(function() {
 					row.processResponse(json);
 				}
 			});
+		}
+	});
+	
+	$('.ccm-jobs-automation-schedule-type').click(function() {
+		if($(this).val() == 1) {
+			$(this).parent().siblings('.ccm-jobs-automation-schedule-cron').hide();
+			$(this).parent().siblings('.ccm-jobs-automation-schedule-auto').show();
+		} else {
+			$(this).parent().siblings('.ccm-jobs-automation-schedule-auto').hide();
+			$(this).parent().siblings('.ccm-jobs-automation-schedule-cron').show();
 		}
 	});
 });

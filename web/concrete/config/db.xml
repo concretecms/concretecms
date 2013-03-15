@@ -2175,6 +2175,18 @@
       <notnull/>
       <default value="0"/>
     </field>
+    <field name="isScheduled" type="I2" size="1">
+      <notnull/>
+      <default value="0"/>
+    </field>
+    <field name="scheduledInterval" type="C" size="255">
+      <notnull/>
+      <default value="days"/>
+    </field>
+    <field name="scheduledValue" type="I" size="10">
+      <notnull/>
+      <default value="0"/>
+    </field>
   </table>
   <table name="JobsLog">
     <field name="jlID" type="I" size="10">
@@ -2228,6 +2240,19 @@
       <notnull/>
       <default value="0"/>
       <unsigned/>
+    </field>
+    <field name="jDateLastRun" type="T"></field>
+    <field name="isScheduled" type="I2" size="1">
+      <notnull/>
+      <default value="0"/>
+    </field>
+    <field name="scheduledInterval" type="C" size="255">
+      <notnull/>
+      <default value="days"/>
+    </field>
+    <field name="scheduledValue" type="I" size="10">
+      <notnull/>
+      <default value="0"/>
     </field>
   </table>
   <table name="UserPointHistory">
