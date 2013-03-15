@@ -81,7 +81,9 @@
 
 			}
 
-			var_dump($relPath);
+			//var_dump($relPath);
+			$this->set('linkURL',$this->getLinkURL());
+			
 
 			$this->set('relPath',$relPath);
 			$this->set('relPathHover',$relPathHover);
