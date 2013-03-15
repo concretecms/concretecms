@@ -67,6 +67,10 @@ abstract class Concrete5_Model_Job extends Object {
 	public $jHandle='';
 	public $jNotUninstallable=0;
 	
+	public $isScheduled = 0;
+	public $scheduledInterval = 'days'; // hours|days|weeks|months
+	public $scheduledValue = 0;
+	
 	/*
 	final public __construct(){
 		//$this->jHandle="example_job_file.php";		
@@ -110,9 +114,14 @@ abstract class Concrete5_Model_Job extends Object {
 	// Job Retrieval 
 	// ==============
 	
-	public static function getList(){
+	public static function getList($scheduledOnly = false){
 		$db = Loader::db();
-		$q = "SELECT jID FROM Jobs ORDER BY jDateLastRun";
+		
+		if($scheduledOnly) {
+			$q = "SELECT jID FROM Jobs WHERE isScheduled = 1 ORDER BY jDateLastRun";
+		} else {
+			$q = "SELECT jID FROM Jobs ORDER BY jDateLastRun";
+		}
 		$r = $db->Execute($q);
 		$jobs = array();
 		while ($row = $r->FetchRow()) {
@@ -376,6 +385,53 @@ abstract class Concrete5_Model_Job extends Object {
 	public static function clearLog() {
 		$db = Loader::db();
 		$db->Execute("delete from JobsLog");
+	}
+	
+	
+	public function isScheduledForNow() {
+		if(!$this->isScheduled) {
+			return false;
+		}
+		if($this->scheduledValue <= 0) {
+			return false;
+		}
+		
+		$last_run = strtotime($this->jDateLastRun);
+		$seconds = 1;
+		switch($this->scheduledInterval) {
+			case "hours":
+				$seconds = 60*60;
+				break;
+			case "days":
+				$seconds = 60*60*24;
+				break;
+			case "weeks":
+				$seconds = 60*60*24*7;
+				break;
+			case "months":
+				$seconds = 60*60*24*7*30;
+				break;
+		}
+		$gap = $this->scheduledValue * $seconds;
+		if($last_run < (time() - $gap) ) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	public function setSchedule($scheduled, $interval, $value) {
+		$this->isScheduled = ($scheduled?true:false);
+		$this->scheduledInterval = $interval;
+		$this->scheduledValue = $value;
+		if($this->getJobID()) {
+			$db = Loader::db();
+			$db->query("UPDATE Jobs SET isScheduled = ?, scheduledInterval = ?, scheduledValue = ? WHERE jID = ?",
+			array($this->isScheduled, $this->scheduledInterval, $this->scheduledValue, $this->getJobID()));
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 }
