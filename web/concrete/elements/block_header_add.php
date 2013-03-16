@@ -33,7 +33,7 @@ if (is_array($headerItems[$identifier])) {
 
 $(function() {
 	$('#ccm-block-form').each(function() {
-		ccm_setupBlockForm($(this), false, 'add');
+		CCMEditMode.setupBlockForm($(this), false, 'add');
 	});
 });
 

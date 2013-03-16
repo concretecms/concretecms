@@ -20,7 +20,6 @@ div.ccm-highlighter-clicked {
  * Blocks AND areas
  */
 div.ccm-block-edit, div.ccm-area {
-	cursor: pointer;
 	position: relative;
 	opacity: 1;
 	.clearfix();
@@ -54,6 +53,7 @@ div.ccm-block-edit.ccm-menu-item-active {
 div.ccm-area {
 	margin-bottom: 50px;
 }
+div.ccm-area:hover,
 div.ccm-area.ccm-parent-menu-item-active,
 div.ccm-area.ccm-menu-item-active {
 	outline: 1px solid #e6e6e6;
@@ -71,6 +71,7 @@ div.ccm-area-footer {
 	position: absolute;
 	z-index: 4; /* less than the highlighter z-index */
 	bottom: -50px;
+	padding-top: 15px;
 
 	div.ccm-area-footer-handle {
 		display: inline-block;
