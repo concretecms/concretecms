@@ -87,7 +87,7 @@ $editor->cnvObject = $args['conversation'];
 
 <? if ($displayForm && ($displayPostingForm == 'bottom')) { ?>
 
-<h4><?=t('Add Message')?></h4>
+	<h4><?=t('Add Message')?></h4>
 
 <? if ($enablePosting) { ?>
 	<div class="ccm-conversation-add-new-message">

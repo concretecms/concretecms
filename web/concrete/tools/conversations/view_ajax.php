@@ -5,7 +5,6 @@ if (is_object($cnv)) {
 	$enableOrdering = ($_POST['enableOrdering'] == 1) ? true : false;
 	$enablePosting = ($_POST['enablePosting'] == 1) ? true : false;
 	$paginate = ($_POST['paginate'] == 1) ? true : false;
-	//$displayPostingForm = ($_POST['displayPostingForm']);
 	
 	
 	if (in_array($_POST['displayMode'], array('flat'))) {

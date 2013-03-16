@@ -55,5 +55,4 @@ class Concrete5_Model_Conversation extends Object {
 
 
 
-
 }
