@@ -30,59 +30,65 @@ $ih = Loader::helper('concrete/interface');
 $ci = Loader::helper('concrete/urls');
 ?>
 
-
 <script type="text/javascript">
 
 $(function() {
-	ccm_activateBlockTypeOverlay();
+	CCMEditMode.activateBlockTypesOverlay();
 });
 </script>
 
-<div class="ccm-ui" id="ccm-block-types-wrapper">
+<div class="ccm-ui" id="ccm-dialog-block-types">
+
+<div id="ccm-dialog-block-types-sets">
 
 <form class="form-inline" id="ccm-block-type-search">
-	<i class="icon-search"></i> <input type="search" />
+	<i class="glyphicon glyphicon-search"></i> <input type="search" />
 </form>
 
+	<ul>
 <?
 $tabs = array();
 $sets = BlockTypeSet::getList();
-for ($i = 0; $i < count($sets); $i++) {
-	$bts = $sets[$i];
-	$tabs[] = array($bts->getBlockTypeSetHandle(), $bts->getBlockTypeSetName(), $i == 0);
-}
-if ($dsh->inDashboard()) {
-	$tabs[] = array('dashboard', t('Dashboard'));
-}
-
-print $ih->tabs($tabs, true, 'ccm_activateBlockTypeTabs');
-?>
-
-<ul id="ccm-overlay-block-types">
-
-<? foreach($blockTypes as $bt) { 
-	if ($a instanceof Area && (!$ap->canAddBlockToArea($bt))) {
-		continue;
-	} else if (!$cp->canAddBlockType($bt)) {
-		continue;
-	}
-
-	$btsets = $bt->getBlockTypeSets();
-	$sets = '';
-	foreach($btsets as $set) {
-		$sets .= $set->getBlockTypeSetHandle() . ' ';
-	}
-	$sets = trim($sets);
-	$btIcon = $ci->getBlockTypeIconURL($bt);
-
-	?>
-
-	<li data-block-type-sets="<?=$sets?>">
-		<a <? if (!($a instanceof Area)) { ?> class="ccm-overlay-draggable-block-type" <? } else { ?> class="ccm-overlay-clickable-block-type" data-aID="<?=$a->getAreaID()?>" data-area-handle="<?=$a->getAreaHandle()?>" <? } ?> data-cID="<?=$c->getCollectionID()?>" data-block-type-handle="<?=$bt->getBlockTypeHandle()?>" data-dialog-title="<?=t('Add %s', $bt->getBlockTypeName())?>" data-dialog-width="<?=$bt->getBlockTypeInterfaceWidth()?>" data-dialog-height="<?=$bt->getBlockTypeInterfaceHeight()?>" data-has-add-template="<?=$bt->hasAddTemplate()?>" data-supports-inline-editing="<?=$bt->supportsInlineEditing()?>" data-btID="<?=$bt->getBlockTypeID()?>" href="javascript:void(0)"><p><img src="<?=$btIcon?>" /><span><?=$bt->getBlockTypeName()?></span></p></a>
-	</li>
-	
+for ($i = 0; $i < count($sets); $i++) { 
+	$set = $sets[$i];?>
+	<li><a href="#" data-tab="<?=$set->getBlockTypeSetHandle()?>"><?=$set->getBlockTypeSetName()?></a></li>
 <? } ?>
 
 </ul>
+
+</div>
+
+<div id="ccm-dialog-block-types-list">
+	
+	<ul id="ccm-overlay-block-types">
+
+	<? foreach($blockTypes as $bt) { 
+		if ($a instanceof Area && (!$ap->canAddBlockToArea($bt))) {
+			continue;
+		} else if (!$cp->canAddBlockType($bt)) {
+			continue;
+		}
+
+		$btsets = $bt->getBlockTypeSets();
+		$sets = '';
+		foreach($btsets as $set) {
+			$sets .= $set->getBlockTypeSetHandle() . ' ';
+		}
+		$sets = trim($sets);
+		$btIcon = $ci->getBlockTypeIconURL($bt);
+
+		?>
+
+		<li data-block-type-sets="<?=$sets?>">
+			<a <? if (!($a instanceof Area)) { ?> class="ccm-overlay-draggable-block-type" <? } else { ?> class="ccm-overlay-clickable-block-type" data-aID="<?=$a->getAreaID()?>" data-area-handle="<?=$a->getAreaHandle()?>" <? } ?> data-cID="<?=$c->getCollectionID()?>" data-block-type-handle="<?=$bt->getBlockTypeHandle()?>" data-dialog-title="<?=t('Add %s', $bt->getBlockTypeName())?>" data-dialog-width="<?=$bt->getBlockTypeInterfaceWidth()?>" data-dialog-height="<?=$bt->getBlockTypeInterfaceHeight()?>" data-has-add-template="<?=$bt->hasAddTemplate()?>" data-supports-inline-editing="<?=$bt->supportsInlineEditing()?>" data-btID="<?=$bt->getBlockTypeID()?>" href="javascript:void(0)"><p><img src="<?=$btIcon?>" /><span><?=$bt->getBlockTypeName()?></span></p></a>
+		</li>
+		
+	<? } ?>
+
+	</ul>
+
+
+</div>
+
 
 </div>

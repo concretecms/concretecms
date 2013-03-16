@@ -1,3 +1,81 @@
+div#ccm-dialog-block-types {
+
+	margin: -20px -20px;
+	.clear_float();
+	position: relative;
+	min-height: 100%;
+
+	div#ccm-dialog-block-types-sets {
+		width: 195px;
+		float: left;
+
+		ul {
+			list-style-type: none;
+			margin-left: 20px; 
+			li {
+				padding: 0px 0px 15px 0px;
+				
+				a {
+					display: block;
+					color: #999;
+				}
+
+				a.active, a:hover {
+					text-decoration: none;
+					color: #333;
+				}
+			}
+		}
+	}
+
+	div#ccm-dialog-block-types-list {
+		float: left;
+		width: 460px;
+		margin-left: 40px;
+		height: 405px;
+		padding-top: 30px;
+		overflow: scroll;
+	}
+
+	#ccm-block-type-search {
+		background-color: #fff;
+		padding: 0px;
+		height: 47px;
+		width: 193px;
+		white-space: nowrap;
+		color: #c8c8c8;
+		position: relative;
+		border-bottom: 1px solid #dadada;
+		margin-bottom: 15px;
+
+		input {
+			margin-left: 30px;
+			height: 43px;
+			padding: 10px 0px 0px 10px;
+			width: 160px;
+			border: 0px;
+			.border-radius(0px);
+			.box-shadow(none);
+		}
+
+		input:focus {
+			-webkit-appearance: none !important;
+			outline: none !important;
+		}
+
+		i.glyphicon-search {
+			position: absolute;
+			top: 20px;
+			left: 20px;
+		}
+
+	}
+}
+
+.ui-dialog-content-block-types {
+	background: transparent url(../images/bg_add_block_overlay.png) repeat-y !important;
+}
+
 ul#ccm-overlay-block-types a, a.ccm-overlay-draggable-block-type {
 	display: block;
 	height: 100px;
@@ -44,7 +122,7 @@ ul#ccm-overlay-block-types {
 	li {
 		list-style-type: none; 
 		float: left; 
-		margin: 0px 4px 4px 0px;
+		margin: 0px 40px 40px 0px;
 		position: relative;
 		display: none;
 	}
@@ -53,23 +131,3 @@ ul#ccm-overlay-block-types {
 		display: block;
 	}
 }
-
-#ccm-block-types-wrapper {
-	position: relative;
-
-	#ccm-block-type-search {
-		position: absolute;
-		top: 5px;
-		right: 0px;
-
-		input {
-			height: 16px;
-			line-height: 16px;
-			font-size: @font-size-mini;
-			width: 120px;
-		}
-	}
-}
-
-
-	
