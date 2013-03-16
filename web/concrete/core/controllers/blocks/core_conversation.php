@@ -87,6 +87,12 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			if (!$values['enableCommentRating']) {
 				$values['enableCommentRating'] = 0;
 			}
+			if (!$values['displayPostingForm']) {
+				$values['displayPostingForm'] = 0;
+			}
+			if (!$values['insertNewMessages']) {
+				$values['insertNewMessages'] = 0;
+			}
 			$values['cnvID'] = $conversation->getConversationID();
 			parent::save($values);
 		}

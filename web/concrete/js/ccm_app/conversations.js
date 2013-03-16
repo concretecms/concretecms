@@ -256,6 +256,7 @@
 
 					obj.publish('conversationAddMessageFromJSON',{json:json,form:$form});
 					obj.updateCount();
+					window.location = '#cnvMessage' + json.cnvMessageID; 
 				}
 			});
 		},
