@@ -28,7 +28,7 @@ ccm_doAddBlockType = function(cID, aID, arHandle, $link, fromdrag) {
 	} else {
 		jQuery.fn.dialog.open({
 			onClose: function() {
-				ccm_blockWindowAfterClose();
+				$(document).trigger('blockWindowClose');
 				if (fromdrag) {
 					jQuery.fn.dialog.closeAll();
 					var ccm_blockTypeDropped = false;

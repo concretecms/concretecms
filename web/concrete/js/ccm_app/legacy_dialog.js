@@ -113,6 +113,12 @@ jQuery.fn.dialog.open = function(obj) {
 		
 		'open': function() {
 			$("body").css("overflow", "hidden");
+			var overlays = $('.ui-widget-overlay').length;
+			$('.ui-widget-overlay').each(function(i, obj) {
+				if ((i + 1) < overlays) {
+					$(this).css('opacity', 0);
+				}
+			});
 		},
 		'beforeClose': function() {
 			var nd = $(".ui-dialog").length;
@@ -137,6 +143,15 @@ jQuery.fn.dialog.open = function(obj) {
 					eval(obj.onDestroy);
 				}
 			}
+			var overlays = $('.ui-widget-overlay').length;
+			$('.ui-widget-overlay').each(function(i, obj) {
+				if ((i + 1) < overlays) {
+					$(this).css('opacity', 0);
+				} else {
+					$(this).css('opacity', 1);
+				}
+			});
+
 			nd--;
 		}
 	});		
@@ -202,7 +217,7 @@ jQuery.fn.dialog.replaceTop = function(r) {
 		} else {
 			var helpText = 'Help';
 		}
-		$("#ccm-dialog-content" + nd).parent().find('.ui-dialog-titlebar').append('<span class="ccm-dialog-help"><a href="javascript:void(0)" title="' + helpText + '" class="ccm-menu-help-trigger">Help</a></span>');
+		$("#ccm-dialog-content" + nd).parent().find('.ui-dialog-titlebar').append('<button class="ui-dialog-titlebar-help ccm-menu-help-trigger"></button>');
 		$("#ccm-dialog-content" + nd).parent().find('.ui-dialog-titlebar .ccm-menu-help-trigger').popover({content: function() {
 			return helpContent;			
 		}, placement: 'bottom', html: true, trigger: 'click'});

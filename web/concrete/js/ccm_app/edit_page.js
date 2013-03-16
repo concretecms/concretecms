@@ -69,7 +69,24 @@ var CCMEditMode = function() {
 			setupMenus();
 			setupBlockMovement();
 
+		},
+
+		setupBlockForm: function(form, bID, task) {
+			form.ajaxForm({
+				type: 'POST',
+				iframe: true,
+				beforeSubmit: function() {
+					$('input[name=ccm-block-form-method]').val('AJAX');
+					jQuery.fn.dialog.showLoader();
+					return ccm_blockFormSubmit();
+				},
+				success: function(r) {
+					ccm_parseBlockResponse(r, bID, task);
+				}
+			});
 		}
+
+
 	}
 
 }();
