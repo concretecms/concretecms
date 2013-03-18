@@ -88,6 +88,7 @@ var CCMEditMode = function() {
 
 		activateBlockTypesOverlay: function() {
 			$('#ccm-dialog-block-types-sets ul a').on('click', function() {
+				$('#ccm-overlay-block-types li').hide();
 				$('#ccm-overlay-block-types li[data-block-type-sets~=' + $(this).attr('data-tab') + ']').show();
 				$('#ccm-dialog-block-types-sets ul a').removeClass('active');
 				$(this).addClass('active');
@@ -112,6 +113,8 @@ var CCMEditMode = function() {
 					$('#ccm-block-types-wrapper ul.nav-tabs').css('visibility', 'hidden');
 				}
 			});
+
+			/*
 
 			var ccm_blockTypeDropped = false;
 
@@ -158,6 +161,7 @@ var CCMEditMode = function() {
 					connectToSortable: $sortables
 				});
 			});
+			*/
 		}
 
 
