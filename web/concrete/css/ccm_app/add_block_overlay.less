@@ -133,3 +133,27 @@ ul#ccm-overlay-block-types {
 		display: block;
 	}
 }
+
+#ccm-block-types-dragging {
+	a {
+		cursor: move;
+		border-color: #00cc66;
+		background-color: #e0ffe0 !important;
+		-webkit-transform: rotate(5deg);
+	}
+}
+
+/** 
+ * Drag and drop into an area with blocks in it
+ */
+
+div.ccm-block-type-drop-zone {
+	height: 20px;
+	border: 2px solid rgba(0,0,0,0.05);
+	.border-radius(2px);
+	margin-bottom: 5px;
+}
+
+div.ccm-block-type-drop-zone.ccm-area-drag-block-type-over {
+	border-color: #0c6;
+}

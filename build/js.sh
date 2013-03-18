@@ -28,6 +28,7 @@ cat ../web/concrete/js/ccm_app/pubsub.js \
 ../web/concrete/js/ccm_app/chosen.jquery.js \
 ../web/concrete/js/ccm_app/base.js \
 ../web/concrete/js/ccm_app/ui.js \
+../web/concrete/js/ccm_app/edit_page.js \
 ../web/concrete/js/ccm_app/filemanager.js \
 ../web/concrete/js/ccm_app/jquery.cookie.js \
 ../web/concrete/js/ccm_app/legacy_dialog.js \
@@ -36,11 +37,11 @@ cat ../web/concrete/js/ccm_app/pubsub.js \
 ../web/concrete/js/ccm_app/in_context_menu.js \
 ../web/concrete/js/ccm_app/quicksilver.js \
 ../web/concrete/js/ccm_app/remote_marketplace.js \
+../web/concrete/js/ccm_app/inline_edit.js \
 ../web/concrete/js/ccm_app/search.js \
 ../web/concrete/js/ccm_app/sitemap.js \
 ../web/concrete/js/ccm_app/custom_style.js \
 ../web/concrete/js/ccm_app/tabs.js \
-../web/concrete/js/ccm_app/edit_page.js \
 ../web/concrete/js/ccm_app/toolbar.js \
 ../web/concrete/js/ccm_app/themes.js > ccm.app.tmp.js
 
