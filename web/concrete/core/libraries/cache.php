@@ -10,7 +10,7 @@ class Concrete5_Library_Cache {
 		static $cache;
 		if (!isset($cache) && defined('DIR_FILES_CACHE')) {
 			if (is_dir(DIR_FILES_CACHE) && is_writable(DIR_FILES_CACHE)) {
-				require_once(DIR_LIBRARIES_3RDPARTY_CORE . '/Zend/Cache.php');
+				Loader::library('3rdparty/Zend/Cache');
 
 				$frontendOptions = array(
 					'lifetime' => CACHE_LIFETIME,
