@@ -55,6 +55,7 @@ div.ccm-area {
 }
 div.ccm-area:hover,
 div.ccm-area.ccm-parent-menu-item-active,
+div.ccm-area.ccm-area-accepts-blocks,
 div.ccm-area.ccm-menu-item-active {
 	outline: 1px solid #e6e6e6;
 	outline-offset: 18px;
@@ -78,7 +79,6 @@ div.ccm-area-footer {
 		border-left: 1px solid #ccc;
 		border-bottom: 1px solid #ccc;
 		border-right: 1px solid #ccc;
-		.border-bottom-radius(3px);
 		padding: 5px 10px 0px 10px;
 		color: #666;
 		height: 25px;
@@ -98,23 +98,54 @@ div.ccm-area[data-total-blocks="0"] {
 	div.ccm-area-footer {
 		opacity: 1;
 		position: static;
-
 	}
 	
 	div.ccm-area-footer-handle {
 
 		span {
 			opacity: 0;
+			i {
+				vertical-align: middle;
+			}
 		}
 
+		height: auto;
+		font-size: @font-size-base;
+		line-height: @font-size-base;
+
 		border: 1px solid #e7e7e7;
-		.border-radius(2px);
 		padding: 15px 20px;
 		display: block;
 		background-color: transparent;
 		color: #0c6;
 	}
+
 }
+
+div.ccm-area[data-total-blocks="0"].ccm-area-drag-block-type-over {
+
+	div.ccm-area-footer-handle {
+		border-color: #0c6;
+		span {
+			opacity: 1 !important;
+		}
+	}
+
+}
+
+div.ccm-area[data-total-blocks="0"].ccm-area-edit-inline-active {
+
+	div.ccm-area-footer-handle {
+		display: none;
+	}
+
+
+	div.ccm-block-edit-inline-active {
+		border: 1px solid #e7e7e7;
+		padding: 15px 20px;
+	}
+}
+
 
 /** 
  * Hovering over areas
@@ -127,6 +158,15 @@ div.ccm-menu-item-active {
 	}
 }
 
+/** 
+ * Inline edit mode tweaks
+ */
+div.ccm-block-edit-disabled {
+	opacity: 0.2 !important;
+	transition: opacity 0.5s linear;
+	-webkit-transition: opacity 0.5s linear;
+	-moz-transition: opacity 0.5s linear;
+}
 
 /** 
  * Inline commands

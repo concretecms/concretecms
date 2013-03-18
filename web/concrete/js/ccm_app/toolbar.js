@@ -237,7 +237,14 @@ var CCMToolbar = function() {
 					e.stopPropagation();
 				});
 			}
+		},
+
+		disableDirectExit: function() {
+			$('li.ccm-toolbar-page-edit a').attr('data-toggle-menu', '#ccm-exit-edit-mode-comment');
+			setupToolbarMenus();				
 		}
+
+
 	}
 
 }();

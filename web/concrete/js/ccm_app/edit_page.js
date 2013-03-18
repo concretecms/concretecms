@@ -10,6 +10,109 @@ var CCMEditMode = function() {
 		$('.ccm-block-edit-layout').ccmmenu();
 	}
 
+	saveAreaArrangement = function(cID, arHandle) {
+	
+		if (!cID) {
+			cID = CCM_CID;
+		}
+
+		var serial = '';
+		var $area = $('div.ccm-area[data-area-handle=' + arHandle + ']');
+		areaStr = '&area[' + $area.attr('id').substring(1) + '][]=';
+
+		$area.find('div.ccm-block-edit').each(function() {
+			serial += areaStr + $(this).attr('data-block-id');
+		});
+
+	 	$.ajax({
+	 		type: 'POST',
+	 		url: CCM_DISPATCHER_FILENAME,
+	 		data: 'cID=' + cID + '&ccm_token=' + CCM_SECURITY_TOKEN + '&btask=ajax_do_arrange' + serial
+	 	});
+	}
+
+	parseBlockResponse = function(r, currentBlockID, task) {
+		try { 
+			r = r.replace(/(<([^>]+)>)/ig,""); // because some plugins add bogus HTML after our JSON requests and screw everything up
+			resp = eval('(' + r + ')');
+			if (resp.error == true) {
+				var message = '<ul>'
+				for (i = 0; i < resp.response.length; i++) {						
+					message += '<li>' + resp.response[i] + '<\/li>';
+				}
+				message += '<\/ul>';
+				ccmAlert.notice(ccmi18n.error, message);
+			} else {
+				jQuery.fn.dialog.closeTop();
+				$(document).trigger('blockWindowAfterClose');
+				if (resp.cID) {
+					cID = resp.cID; 
+				} else {
+					cID = CCM_CID;
+				}
+				var action = CCM_TOOLS_PATH + '/edit_block_popup?cID=' + cID + '&bID=' + resp.bID + '&arHandle=' + encodeURIComponent(resp.arHandle) + '&btask=view_edit_mode';	 
+				$.get(action, 		
+					function(r) { 
+						if (task == 'add') {
+							if ($('#ccm-add-new-block-placeholder').length > 0) {
+								$('#ccm-add-new-block-placeholder').before(r).remove();
+								saveAreaArrangement(cID, resp.arHandle);
+							} else {
+								$("#a" + resp.aID + " div.ccm-area-footer").before(r);
+							}
+						} else {
+							$('[data-block-id=' + currentBlockID + '][data-area-id=' + resp.aID + ']').before(r).remove();
+						}
+						setupMenus();
+						CCMInlineEditMode.exit();
+						CCMToolbar.disableDirectExit();
+						jQuery.fn.dialog.hideLoader();
+						if (task == 'add') {
+							var tb = parseInt($('[data-area-id=' + resp.aID + ']').attr('data-total-blocks'));
+							$('[data-area-id=' + resp.aID + ']').attr('data-total-blocks', tb + 1);
+							ccmAlert.hud(ccmi18n.addBlockMsg, 2000, 'add', ccmi18n.addBlock);
+							jQuery.fn.dialog.closeAll();
+						} else {
+							ccmAlert.hud(ccmi18n.updateBlockMsg, 2000, 'success', ccmi18n.updateBlock);
+						}
+						if (typeof window.ccm_parseBlockResponsePost == 'function') {
+							ccm_parseBlockResponsePost(resp);
+						}
+					}
+				);
+			}
+		} catch(e) { 
+			ccmAlert.notice(ccmi18n.error, r); 
+		}
+	}
+	addBlockType = function(cID, aID, arHandle, $link, fromdrag) {
+		var btID = $link.attr('data-btID');
+		var inline = parseInt($link.attr('data-supports-inline-editing'));
+		var hasadd = parseInt($link.attr('data-has-add-template'));
+
+		if (!hasadd) {
+			var action = CCM_DISPATCHER_FILENAME + "?cID=" + cID + "&arHandle=" + encodeURIComponent(arHandle) + "&btID=" + btID + "&mode=edit&processBlock=1&add=1&ccm_token=" + CCM_SECURITY_TOKEN;
+			$.get(action, function(r) { parseBlockResponse(r, false, 'add'); })
+		} else if (inline) {
+			CCMInlineEditMode.loadAdd(cID, arHandle, aID, btID);
+		} else {
+			jQuery.fn.dialog.open({
+				onClose: function() {
+					$(document).trigger('blockWindowClose');
+					if (fromdrag) {
+						jQuery.fn.dialog.closeAll();
+						var ccm_blockTypeDropped = false;
+					}
+				},
+				modal: false,
+				width: parseInt($link.attr('data-dialog-width')),
+				height: parseInt($link.attr('data-dialog-height')) + 20,
+				title: $link.attr('data-dialog-title'),
+				href: CCM_TOOLS_PATH + '/add_block_popup?cID=' + cID + '&btID=' + btID + '&arHandle=' + encodeURIComponent(arHandle)
+			});
+		}
+	}
+
 	setupBlockMovement = function() {
 		
 		var $dropelement;
@@ -67,7 +170,7 @@ var CCMEditMode = function() {
 		start: function() {
 			
 			setupMenus();
-			setupBlockMovement();
+			//setupBlockMovement();
 
 		},
 
@@ -78,12 +181,43 @@ var CCMEditMode = function() {
 				beforeSubmit: function() {
 					$('input[name=ccm-block-form-method]').val('AJAX');
 					jQuery.fn.dialog.showLoader();
-					return ccm_blockFormSubmit();
+					if (typeof window.ccmValidateBlockForm == 'function') {
+						r = window.ccmValidateBlockForm();
+						if (ccm_isBlockError) {
+							jQuery.fn.dialog.hideLoader();
+							if(ccm_blockError) {
+								ccmAlert.notice(ccmi18n.error, ccm_blockError + '</ul>');
+							}
+							ccm_resetBlockErrors();
+							return false;
+						}
+					}
 				},
 				success: function(r) {
-					ccm_parseBlockResponse(r, bID, task);
+					parseBlockResponse(r, bID, task);
 				}
 			});
+		},
+
+		deleteBlock: function(cID, bID, aID, arHandle, msg) {
+			if (confirm(msg)) {
+				CCMToolbar.disableDirectExit();
+				// got to grab the message too, eventually
+				$d = $('[data-block-id=' + bID + '][data-area-id=' + aID + ']');
+				$d.hide().remove();
+				$.fn.ccmmenu.resethighlighter();
+				ccmAlert.hud(ccmi18n.deleteBlockMsg, 2000, 'delete_small', ccmi18n.deleteBlock);
+				var tb = parseInt($('[data-area-id=' + aID + ']').attr('data-total-blocks'));
+				$('[data-area-id=' + aID + ']').attr('data-total-blocks', tb - 1);
+				$.ajax({
+					type: 'POST',
+					url: CCM_DISPATCHER_FILENAME,
+					data: 'cID=' + cID + '&ccm_token=' + CCM_SECURITY_TOKEN + '&isAjax=true&btask=remove&bID=' + bID + '&arHandle=' + arHandle
+				});
+				if (typeof window.ccm_parseBlockResponsePost == 'function') {
+					ccm_parseBlockResponsePost({});
+				}
+			}	
 		},
 
 		activateBlockTypesOverlay: function() {
@@ -114,54 +248,72 @@ var CCMEditMode = function() {
 				}
 			});
 
-			/*
+			// add droppables for empty areas.
+			var $emptyareas = $('div.ccm-area[data-total-blocks=0]');
 
-			var ccm_blockTypeDropped = false;
-
-			$('div.ccm-area').sortable({
-				connectWith: 'div.ccm-area',
-				placeholder: "ccm-block-type-drop-holder",
-				receive: function(e, ui) {
-					ccm_blockTypeDropped = true;
-					ccm_doAddBlockType($(this).attr('data-cID'), $(this).attr('data-aID'), $(this).attr('data-area-handle'), ui.helper, true);
-					$('div.ccm-area .ccm-overlay-draggable-block-type').replaceWith($('<div />', {'id': 'ccm-add-new-block-placeholder'}));
-					$('.ccm-area-drag-active').removeClass('ccm-area-drag-active');
-				}
-			});
-			
-			$('a.ccm-overlay-clickable-block-type').on('click', function() {
-				ccm_doAddBlockType($(this).attr('data-cID'), $(this).attr('data-aID'), $(this).attr('data-area-handle'), $(this));
-				return false;
-			});
-			
+			var dropSuccessful = false;
 			$('#ccm-overlay-block-types a.ccm-overlay-draggable-block-type').each(function() {
 				var $li = $(this);
 				$li.css('cursor', 'move');
-				var $sortables = $('div.ccm-area[data-accepts-block-types~=' + $li.attr('data-block-type-handle') + ']');
 				$li.draggable({
 					helper: 'clone',
 					appendTo: $('#ccm-block-types-dragging'),
 					revert: false,
 					start: function(e, ui) {
+						// handle the dialog
 						$('#ccm-block-types-wrapper').parent().jqdialog('option', 'closeOnEscape', false);
-						$.fn.ccmmenu.disable();
-						$('#ccm-overlay-block-types').parent().parent().parent().fadeOut(100);
+						$('#ccm-overlay-block-types').closest('.ui-dialog').fadeOut(100);
 						$('.ui-widget-overlay').remove();
-						$sortables.addClass('ccm-area-drag-active');
-						$('#ccm-block-types-dragging a').css('background-color', '#4FDAFF');
+
+						// deactivate the menu on drag
+						$.fn.ccmmenu.disable();
+
+						// drop into empty areas.
+						var $droppables = $emptyareas.filter('[data-accepts-block-types~=' + $li.attr('data-block-type-handle') + ']');
+						$droppables.droppable({
+							hoverClass: 'ccm-area-drag-block-type-over',
+							accept: 'a.ccm-overlay-draggable-block-type',
+							drop: function(e, ui) {
+								dropSuccessful = true;
+								addBlockType($(this).attr('data-cID'), $(this).attr('data-area-id'), $(this).attr('data-area-handle'), ui.helper, true);
+							}
+						});
+
+						// add in block type dividers.
+						$('div.ccm-area[data-accepts-block-types~=' + $li.attr('data-block-type-handle') + '][data-total-blocks!=0]').addClass('ccm-area-accepts-blocks').each(function() {
+							// before each block
+							$('<div />', {'class': 'ccm-block-type-drop-zone', 'data-accepts-block-types': $(this).attr('data-accepts-block-types')}).insertBefore($(this).find('.ccm-block-edit'));
+							$('<div />', {'class': 'ccm-block-type-drop-zone', 'data-accepts-block-types': $(this).attr('data-accepts-block-types')}).insertBefore($(this).find('.ccm-area-footer'));
+						});
+
+						$('.ccm-block-type-drop-zone').droppable({
+							hoverClass: 'ccm-area-drag-block-type-over',
+							accept: 'a.ccm-overlay-draggable-block-type',
+							drop: function(e, ui) {
+								dropSuccessful = true;
+								var $area = $(this).parent();
+								$(this).replaceWith($('<div />', {'id': 'ccm-add-new-block-placeholder'}));
+								addBlockType($area.attr('data-cID'), $area.attr('data-area-id'), $area.attr('data-area-handle'), ui.helper, true);
+							}
+						});
 					},
 					stop: function() {
 						$.fn.ccmmenu.enable();
-						if (!ccm_blockTypeDropped) {
+						$('.ccm-block-type-drop-zone').remove();
+						if (!dropSuccessful) {
 							// this got cancelled without a receive.
 							jQuery.fn.dialog.closeAll();
-							$('.ccm-area-drag-active').removeClass('ccm-area-drag-active');
 						}
-					},
-					connectToSortable: $sortables
+					}
 				});
 			});
-			*/
+
+			$('a.ccm-overlay-clickable-block-type').on('click', function() {
+				addBlockType($(this).attr('data-cID'), $(this).attr('data-area-id'), $(this).attr('data-area-handle'), $(this));
+				return false;
+			});
+			
+			
 		}
 
 
