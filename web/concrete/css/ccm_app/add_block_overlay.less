@@ -86,12 +86,11 @@ ul#ccm-overlay-block-types a, a.ccm-overlay-draggable-block-type {
 	border: 1px solid darken(@well-background, 7%);
 	.border-radius(@border-radius-base);
 	.box-shadow(inset 0 1px 1px rgba(0,0,0,.05));
-	-webkit-transition: background-color ease-in-out 0.5s;
 
 	span {
 		position: absolute;
 		left: 0px;
-		bottom: 5px;
+		bottom: 15px;
 		width: 100%;
 		text-align: center;
 		display: block;
@@ -103,12 +102,15 @@ ul#ccm-overlay-block-types a, a.ccm-overlay-draggable-block-type {
 
 	img {
 		margin-top: -10px;
+		height: 24px;
+		width: auto;
 	}
 }
 
-ul#ccm-overlay-block-types a.ccm-overlay-clickable-block-type:hover {
+ul#ccm-overlay-block-types a:hover {
 	cursor: pointer;
-	background-color: #4FDAFF !important;
+	border-color: #00cc66;
+	background-color: #e0ffe0 !important;
 }
 
 ul#ccm-overlay-block-types a:hover, a.ccm-overlay-draggable-block-type:hover {
