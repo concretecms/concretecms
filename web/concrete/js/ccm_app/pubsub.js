@@ -10,6 +10,8 @@ var ccm_event = (function(window){
    *
    * Events that go along with created elements should define the element type
    * and pass the element dom object.
+   *
+   * @author Korvin Szanto <Korvin@concrete5.org>
    */
   ccm_event = function(window) {
     var target = window.document.createElement('span');
@@ -25,7 +27,6 @@ var ccm_event = (function(window){
       }
     };
     // Add aliases
-    self.subscribe = self.bind = self.watch = self.sub;
 
     // Handle publishing
     self.pub = function (type, data, elem) {
@@ -50,7 +51,8 @@ var ccm_event = (function(window){
       }
     };
     // Add aliases
-    self.publish = self.fire = self.trigger = self.pub;
+    self.subscribe = self.bind = self.watch   = self.on = self.sub;
+    self.publish   = self.fire = self.trigger = self.do = self.pub;
 
     return self;
   };
