@@ -18,8 +18,11 @@ var CCMInlineEditMode = function() {
 
 	return {
 
-		exit: function(onComplete, activeObj) {
-			$(document).trigger('inlineEditCancel');
+		exit: function(onComplete) {
+			$(document).trigger('inlineEditCancel', [onComplete]);
+		},
+
+		finishExit: function() {
 			$('div.ccm-area-edit-inline-active').removeClass('ccm-area-edit-inline-active');
 			$.fn.ccmmenu.enable();
 			$('div.ccm-block-edit-inline-active').remove();
@@ -28,13 +31,7 @@ var CCMInlineEditMode = function() {
 			$('div.ccm-area-layout-control-bar').removeClass('ccm-block-edit-disabled');
 
 			jQuery.fn.dialog.hideLoader();
-			if (activeObj) {
-				activeObj.ccmmenu();
-				CCMEditMode.start();
-			}
-			if (onComplete) {
-				onComplete();
-			}
+			CCMEditMode.start();
 		},
 
 		loadEditFromLink: function(link, params) {
