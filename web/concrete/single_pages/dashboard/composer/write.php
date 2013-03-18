@@ -9,6 +9,11 @@ if (isset($entry)) {
 	$asl = $pk->getMyAssignment();
 	$allowedAKIDs = $asl->getAttributesAllowedArray();
 
+	$pk = PermissionKey::getByHandle('approve_page_versions');
+	$pk->setPermissionObject($entry);
+	$pa = $pk->getPermissionAccessObject();
+	$workflow = (count($pa->getWorkflows()) > 0);
+
 	?>
 
 	<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(ucfirst($action) . ' ' . $ct->getCollectionTypeName(), false, false, false)?>
@@ -134,12 +139,20 @@ if (isset($entry)) {
 	<? if ($entry->isComposerDraft()) { 
 	$pp = new Permissions($entry);
 	?>
-		<?=Loader::helper('concrete/interface')->submit(t('Publish Page'), 'publish', 'right', 'primary')?>
+		<? if ($workflow) { ?>
+			<?=Loader::helper('concrete/interface')->submit(t('Submit to Workflow'), 'publish', 'right', 'primary')?>
+		<? } else { ?>
+			<?=Loader::helper('concrete/interface')->submit(t('Publish Page'), 'publish', 'right', 'primary')?>
+		<? } ?>
 		<? if (PERMISSIONS_MODEL != 'simple' && $pp->canEditPagePermissions()) { ?>
 			<?=Loader::helper('concrete/interface')->button_js(t('Permissions'), 'javascript:ccm_composerLaunchPermissions()', 'left', 'primary ccm-composer-hide-on-no-target')?>
 		<? } ?>
 	<? } else { ?>
-		<?=Loader::helper('concrete/interface')->submit(t('Publish Changes'), 'publish', 'right', 'primary')?>
+		<? if ($workflow) { ?>
+			<?=Loader::helper('concrete/interface')->submit(t('Submit to Workflow'), 'publish', 'right', 'primary')?>
+		<? } else { ?>
+			<?=Loader::helper('concrete/interface')->submit(t('Publish Changes'), 'publish', 'right', 'primary')?>
+		<? } ?>
 	<? } ?>
 
 	<?=Loader::helper('concrete/interface')->button_js(t('Preview'), 'javascript:ccm_composerLaunchPreview()', 'right', 'ccm-composer-hide-on-approved')?>
