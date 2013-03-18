@@ -11,21 +11,16 @@ $bt = $b->getBlockTypeObject();
 if ($bt->supportsInlineEditing()) { ?>
 
 <script type="text/javascript">
-ccm_onInlineEditCancel = function(onComplete) {
+$(document).on('inlineEditCancel', function() {
 	jQuery.fn.dialog.showLoader();
 	var action = CCM_TOOLS_PATH + '/edit_block_popup?cID=<?=$c->getCollectionID()?>&bID=<?=$b->getBlockID()?>&arHandle=<?=htmlspecialchars($a->getAreaHandle())?>&btask=view_edit_mode';	 
 	$.get(action, 		
 		function(r) { 
-			if (onComplete) {
-				onComplete();
-			}
 			$('[data-block-id=<?=$b->getBlockID()?>][data-area-id=<?=$a->getAreaID()?>]').before(r).remove();
-			ccm_exitInlineEditMode($('[data-block-id=<?=$b->getBlockID()?>][data-area-id=<?=$a->getAreaID()?>]'));
 
 		}
 	);
-}
-
+});
 </script>
 
 <? } ?>

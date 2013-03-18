@@ -59,7 +59,7 @@ $class = 'ccm-area-footer';
 			<? if ($a->getAreaGridColumnSpan() > 0) {
 				$params = '{arGridColumnSpan: ' . $a->getAreaGridColumnSpan() . '}';
 			} ?>
-			<li><a dialog-title="<?=t('Add Layout')?>" onclick="ccm_loadInlineEditorAdd(<?=$c->getCollectionID()?>, '<?=htmlspecialchars($arHandle)?>', <?=$a->getAreaID()?>, <?=$areaLayoutBT->getBlockTypeID()?>, <?=$params?>)" id="menuLayout<?=$a->getAreaID()?>" href="javascript:void(0)"><?=t("Add Layout")?></a></li>		
+			<li><a dialog-title="<?=t('Add Layout')?>" onclick="CCMInlineEditMode.loadAdd(<?=$c->getCollectionID()?>, '<?=htmlspecialchars($arHandle)?>', <?=$a->getAreaID()?>, <?=$areaLayoutBT->getBlockTypeID()?>, <?=$params?>)" id="menuLayout<?=$a->getAreaID()?>" href="javascript:void(0)"><?=t("Add Layout")?></a></li>		
 		<? } ?>
 		<? if ($canEditAreaPermissions) { ?>
 			<li class="divider"></li>
