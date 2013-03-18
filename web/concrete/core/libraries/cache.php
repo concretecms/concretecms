@@ -171,6 +171,11 @@ class Concrete5_Library_Cache {
 			$fh->removeAll(DIR_FILES_CACHE . '/' . DIRNAME_CSS);
 		}
 		
+		$pageCache = PageCache::getLibrary();
+		if (is_object($pageCache)) {
+			$pageCache->flush();
+		}
+		
 		if (in_array('Config', $r)) {
 			// clear the environment overrides cache
 			$env = Environment::get();
