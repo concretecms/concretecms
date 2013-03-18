@@ -16,8 +16,11 @@
 if ($bt->supportsInlineEditing()) { ?>
 
 <script type="text/javascript">
-$(document).on('inlineEditCancel', function() {
+$(document).on('inlineEditCancel', function(onComplete) {
 	$('#a<?=$a->getAreaID()?>-bt<?=$bt->getBlockTypeID()?>').remove();
+	if (onComplete) {
+		onComplete();
+	}
 });
 </script>
 
