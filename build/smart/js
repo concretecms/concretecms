@@ -71,6 +71,17 @@ if $(echo "$status" | grep "$thisgrep" &> /dev/null); then
     uglifyjs --no-copyright --no-seqs -o ./web/concrete/js/ccm.conversations.js ./web/concrete/js/ccm_app/conversations.js
 fi
 
+# Events
+thisgrep=''
+thisgrep='web/concrete/js/ccm_app/pubsub.js'
+if [ $1 ]; then
+    thisgrep=''
+fi
+if $(echo "$status" | grep "$thisgrep" &> /dev/null); then
+    echo "Building pubsub.js"
+    uglifyjs --no-copyright --no-seqs -o ./web/concrete/js/ccm.pubsub.js ./web/concrete/js/ccm_app/pubsub.js
+fi
+
 # Profile
 thisgrep=''
 thisgrep='web/concrete/js/ccm.profile.js'
@@ -112,8 +123,7 @@ if $(echo "$status" | grep "$thisgrep" &> /dev/null); then
 `cat $file`"
     }
 
-    INP="$(getFile 'pubsub.js' 'first')
-$(getFile 'jquery.colorpicker.js')
+    INP="$(getFile 'jquery.colorpicker.js' first)
 $(getFile 'jquery.hoverIntent.js')
 $(getFile 'jquery.liveupdate.js')
 $(getFile 'jquery.metadata.js')

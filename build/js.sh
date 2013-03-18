@@ -19,9 +19,12 @@ cat ../web/concrete/js/ccm_app/conversations.js > ccm.conversations.tmp.js
 uglifyjs --no-copyright --no-seqs -o ../web/concrete/js/ccm.conversations.js ./ccm.conversations.tmp.js 
 rm ccm.conversations.tmp.js
 
+cat ../web/concrete/js/ccm_app/pubsub.js > ccm.pubsub.tmp.js
+uglifyjs --no-copyright --no-seqs -o ../web/concrete/js/ccm.pubsub.js ./ccm.pubsub.tmp.js 
+rm ccm.pubsub.tmp.js
+
 # Note: The order here is important
-cat ../web/concrete/js/ccm_app/pubsub.js \
-../web/concrete/js/ccm_app/jquery.colorpicker.js \
+cat ../web/concrete/js/ccm_app/jquery.colorpicker.js \
 ../web/concrete/js/ccm_app/jquery.hoverIntent.js \
 ../web/concrete/js/ccm_app/jquery.liveupdate.js \
 ../web/concrete/js/ccm_app/jquery.metadata.js \

@@ -12,7 +12,7 @@ if (is_object($conversation)) {
 </div>
 
 <script type="text/javascript">
-$(function() { 
+$(function() {
 	$('div[data-conversation-id=<?=$conversation->getConversationID()?>]').ccmconversation({
 		'cnvID': <?=$conversation->getConversationID()?>,
 		'posttoken': '<?=$posttoken?>',

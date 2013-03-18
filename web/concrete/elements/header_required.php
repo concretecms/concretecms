@@ -79,6 +79,7 @@ var CCM_REL = "<?php echo DIR_REL?>";
 $html = Loader::helper('html');
 $this->addHeaderItem($html->css('ccm.base.css'), 'CORE');
 $this->addHeaderItem($html->javascript('jquery.js'), 'CORE');
+$this->addHeaderItem($html->javascript('ccm.pubsub.js'), 'CORE');
 if (defined('ENABLE_USER_PROFILES') && ENABLE_USER_PROFILES && $u->isRegistered()) {
 	$this->addFooterItem($html->javascript('bootstrap.js'));
 	$this->addFooterItem($html->javascript('ccm.profile.js'));
