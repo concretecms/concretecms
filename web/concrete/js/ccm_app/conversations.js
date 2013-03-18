@@ -58,6 +58,7 @@
 			var orderBy = (obj.options.orderBy);
 			var enableOrdering = (obj.options.enableOrdering);
 			var displayPostingForm = (obj.options.displayPostingForm);
+			var insertNewMessages = (obj.options.insertNewMessages);
 
 			if (obj.options.method == 'ajax') {
 				$.post(CCM_TOOLS_PATH + '/conversations/view_ajax', {
@@ -68,7 +69,8 @@
 					'displayMode': obj.options.displayMode,
 					'orderBy': orderBy,
 					'enableOrdering': enableOrdering,
-					'displayPostingForm': displayPostingForm
+					'displayPostingForm': displayPostingForm,
+					'insertNewMessages': insertNewMessages
 				}, function(r) {
 					obj.$element.empty().append(r);;
 					obj.attachBindings();
@@ -250,7 +252,11 @@
 						obj.$replyholder.appendTo(obj.$element);
 						obj.$replyholder.hide();
 					} else {
-						obj.$messages.prepend(html);
+						if (obj.options.insertNewMessages == 'bottom') {
+							obj.$messages.append(html);
+						} else {
+							obj.$messages.prepend(html);
+						} 
 						obj.$element.find('.ccm-conversation-no-messages').hide();
 					}
 
