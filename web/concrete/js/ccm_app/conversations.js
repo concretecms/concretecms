@@ -1,5 +1,21 @@
 /**
- * Conversations functions
+ * $.fn.ccmconversation
+ * Functions for conversation handling
+ *
+ * Events:
+ *    beforeInitializeConversation         : Before Conversation Initialized
+ *    initializeConversation               : Conversation Initialized
+ *    conversationLoaded                   : Conversation Loaded
+ *    conversationPostError                : Error posting message
+ *    conversationBeforeDeleteMessage      : Before deleting message
+ *    conversationDeleteMessage            : Deleting message
+ *    conversationDeleteMessageError       : Error deleting message
+ *    conversationBeforeAddMessageFromJSON : Before adding message from json
+ *    conversationAddMessageFromJSON       : After adding message from json
+ *    conversationBeforeUpdateCount        : Before updating message count
+ *    conversationUpdateCount              : After updating message count
+ *    conversationBeforeSubmitForm         : Before submitting form
+ *    conversationSubmitForm               : After submitting form
  */
 
 (function($,window){
@@ -16,9 +32,9 @@
 		}
 	});
 	var CCMConversation = function(element, options) {
-		this.publish("beforeInitializeConversation",{CCMConversation:this,element:element,options:options});
+		this.publish("beforeInitializeConversation",{element:element,options:options});
 		this.init(element,options);
-		this.publish("initializeConversation",{CCMConversation:this,element:element,options:options});
+		this.publish("initializeConversation",{element:element,options:options});
 	};
 	CCMConversation.fn = CCMConversation.prototype = {
 		publish: function(t,f) {
@@ -176,7 +192,7 @@
 		deleteMessage: function(msgID) {
 
 			var obj = this;
-			obj.publish('conversationBeforeDeleteMessage',{CCMConversation:obj,msgID:msgID});
+			obj.publish('conversationBeforeDeleteMessage',{msgID:msgID});
 			var	formArray = [{
 				'name': 'cnvMessageID',
 				'value': msgID
@@ -195,17 +211,17 @@
 					obj.updateCount();
 					if (obj.$deletedialog.dialog)
 						obj.$deletedialog.dialog('close');
-					obj.publish('conversationDeleteMessage',{CCMConversation:obj,msgID:msgID});
+					obj.publish('conversationDeleteMessage',{msgID:msgID});
 				},
 				error: function(e) {
-					obj.publish('conversationDeleteMessageError',{CCMConversation:obj,msgID:msgID,error:arguments});
+					obj.publish('conversationDeleteMessageError',{msgID:msgID,error:arguments});
 					alert('Something went wrong while deleting this message, please refresh and try again.');
 				}
 			});
 		},
 		addMessageFromJSON: function($form, json) {
 			var obj = this;
-			obj.publish('conversationBeforeAddMessageFromJSON',{CCMConversation:obj,json:json,form:$form});
+			obj.publish('conversationBeforeAddMessageFromJSON',{json:json,form:$form});
 			var enablePosting = (obj.options.posttoken != '') ? 1 : 0;
 			var	formArray = [{
 				'name': 'cnvMessageID',
@@ -236,6 +252,7 @@
 						obj.$element.find('.ccm-conversation-no-messages').hide();
 					}
 
+					obj.publish('conversationAddMessageFromJSON',{json:json,form:$form});
 					obj.updateCount();
 				}
 			});
