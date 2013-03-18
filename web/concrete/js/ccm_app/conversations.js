@@ -40,7 +40,7 @@
 		publish: function(t,f) {
 			f = f || {};
 			f.CCMConversation = this;
-			window.ccm_event.publish.call(ccm_event,t,f);
+			window.ccm_event.publish(t,f);
 		},
 		init: function(element,options) {
 			var obj = this;
@@ -69,12 +69,12 @@
 					'enableOrdering': enableOrdering
 				}, function(r) {
 					obj.attachBindings();
-					this.publish('conversationLoaded');
+					obj.publish('conversationLoaded');
 				});
 			} else {
 				obj.attachBindings();
 				obj.finishSetup();
-				this.publish('conversationLoaded');
+				obj.publish('conversationLoaded');
 			}
 		},
 		attachBindings: function() {
@@ -241,7 +241,6 @@
 				success: function(html) {
 
 					var $parent = $('div[data-conversation-message-id=' + json.cnvMessageParentID + ']');
-					$form.find('textarea').val('');
 
 					if ($parent.length) {
 						$parent.after(html);
@@ -258,11 +257,12 @@
 			});
 		},
 		updateCount: function() {
-			this.publish('conversationBeforeUpdateCount');
-			this.$messagecnt.load(CCM_TOOLS_PATH + '/conversations/count_header', {
-				'cnvID': this.options.cnvID,
+			var obj = this;
+			obj.publish('conversationBeforeUpdateCount');
+			obj.$messagecnt.load(CCM_TOOLS_PATH + '/conversations/count_header', {
+				'cnvID': obj.options.cnvID,
 			},function(){
-				this.publish('conversationUpdateCount');
+				obj.publish('conversationUpdateCount');
 			});
 		},
 		submitForm: function($btn) {
