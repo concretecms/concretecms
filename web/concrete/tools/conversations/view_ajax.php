@@ -59,7 +59,8 @@ if (is_object($cnv)) {
 		'totalPages' => $totalPages,
 		'orderBy' => $_POST['orderBy'],
 		'enableOrdering' => $enableOrdering,
-		'displayPostingForm' => $_POST['displayPostingForm']
+		'displayPostingForm' => $_POST['displayPostingForm'],
+		'insertNewMessages' => $_POST['insertNewMessages']
 	);
 	
 	Loader::element('conversation/display', $args);
