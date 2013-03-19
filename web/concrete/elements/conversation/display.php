@@ -17,7 +17,7 @@ $editor->cnvObject = $args['conversation'];
 <h4><?=t('Add Message')?></h4>
 
 	<? if ($enablePosting) { ?>
-		<div class="ccm-conversation-add-new-message">
+		<div class="ccm-conversation-add-new-message" rel="<?php echo rand(1, 100000); ?>">
 			<form method="post">
 			<div class="ccm-conversation-avatar"><? print Loader::helper('concrete/avatar')->outputUserAvatar($ui)?></div>
 			<div class="ccm-conversation-message-form">
@@ -25,6 +25,8 @@ $editor->cnvObject = $args['conversation'];
 				<? $editor->outputConversationEditorAddMessageForm(); ?>
 				<button type="button" data-post-parent-id="0" data-submit="conversation-message" class="pull-right btn btn-submit btn-small"><?=t('Post')?> <i class="icon-bullhorn"></i></button>
 			</div>
+			</form>
+			<form action="<?php echo Loader::helper('concrete/urls')->getToolsURL('conversations/add_file');?>" class="dropzone" id="file-upload">
 			</form>
 		</div>
 
@@ -36,6 +38,8 @@ $editor->cnvObject = $args['conversation'];
 				<? $editor->outputConversationEditorReplyMessageForm(); ?>
 				<button type="button" data-submit="conversation-message" class="pull-right btn btn-submit btn-small"><?=t('Post')?> <i class="icon-bullhorn"></i></button>
 			</div>
+			</form>
+			<form action="<?php echo Loader::helper('concrete/urls')->getToolsURL('conversations/add_file');?>" class="dropzone" id="file-upload-reply">
 			</form>
 		</div>
 	<? } else { ?>
@@ -99,6 +103,8 @@ $editor->cnvObject = $args['conversation'];
 			<button type="button" data-post-parent-id="0" data-submit="conversation-message" class="pull-right btn btn-submit btn-small"><?=t('Post')?> <i class="icon-bullhorn"></i></button>
 		</div>
 		</form>
+		<form action="<?php echo Loader::helper('concrete/urls')->getToolsURL('conversations/add_file');?>" class="dropzone" id="file-upload">
+		</form>
 	</div>
 
 	<div class="ccm-conversation-add-reply">
@@ -109,6 +115,8 @@ $editor->cnvObject = $args['conversation'];
 			<textarea name="cnvMessageBody"></textarea>
 			<button type="button" data-submit="conversation-message" class="pull-right btn btn-submit btn-small"><?=t('Post')?> <i class="icon-bullhorn"></i></button>
 		</div>
+		</form>
+		<form action="<?php echo Loader::helper('concrete/urls')->getToolsURL('conversations/add_file');?>" class="dropzone" id="file-upload-reply">
 		</form>
 	</div>
 <? } else { ?>
