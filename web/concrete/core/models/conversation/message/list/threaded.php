@@ -2,7 +2,7 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 class Concrete5_Model_Conversation_Message_List_Threaded extends ItemList {
 
-	protected $sortBy = 'date';
+	protected $sortBy = 'cnvMessageDateCreated';
 	protected $sortByDirection = 'asc';
 	protected $cnvID;
 
@@ -12,12 +12,13 @@ class Concrete5_Model_Conversation_Message_List_Threaded extends ItemList {
 	}
 
 	public function sortByDateDescending() {
-		$this->sortBy('date', 'desc');
+		$this->sortBy('cnvMessageDateCreated', 'desc');
 	}
 	
 	public function sortByDateAscending() {
-		$this->sortBy('date', 'asc');
+		$this->sortBy('cnvMessageDateCreated', 'asc');
 	}
+	
 	
 	public function sortByRating() {
 		$this->sortBy('date', 'asc');

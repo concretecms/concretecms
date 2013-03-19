@@ -1,5 +1,4 @@
-<? defined('C5_EXECUTE') or die("Access Denied."); ?>
-<? 
+<?php defined('C5_EXECUTE') or die("Access Denied.");
 $cnv = Conversation::getByID($_POST['cnvID']);
 if (is_object($cnv)) {
 	$enablePosting = ($_POST['enablePosting'] == 1) ? true : false;
