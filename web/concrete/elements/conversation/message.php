@@ -28,6 +28,6 @@ $cnvMessageID = $message->cnvMessageID;
 		</ul>
 		<? } ?>
 
-		<?=$message->getConversationMessageDateTimeOutput()?>
+		<?=$message->getConversationMessageDateTimeOutput()?> <i class="icon-thumbs-up"></i> <i class="icon-thumbs-down"></i>&nbsp;<span class="ccm-conversation-message-rating">6</span>
 	</div>
 </div>
