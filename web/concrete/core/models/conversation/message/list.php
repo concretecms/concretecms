@@ -2,7 +2,7 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 class Concrete5_Model_Conversation_Message_List extends DatabaseItemList {
 
-	protected $sortBy = 'date';
+	protected $sortBy = 'cnvMessageDateCreated';
 	protected $sortByDirection = 'asc';
 	protected $cnvID;
 

@@ -1,5 +1,4 @@
-<?
-
+<?php
 abstract class Concrete5_Model_ConversationEditor extends Object {
 
 	abstract public function getConversationEditorHeaderItems();

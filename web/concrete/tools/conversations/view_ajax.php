@@ -1,5 +1,4 @@
-<? defined('C5_EXECUTE') or die("Access Denied."); ?>
-<? 
+<?php defined('C5_EXECUTE') or die("Access Denied.");
 $cnv = Conversation::getByID($_POST['cnvID']);
 if (is_object($cnv)) {
 	$displayForm = true;
@@ -60,6 +59,6 @@ if (is_object($cnv)) {
 		'orderBy' => $_POST['orderBy'],
 		'enableOrdering' => $enableOrdering
 	);
-
+	
 	Loader::element('conversation/display', $args);
 }

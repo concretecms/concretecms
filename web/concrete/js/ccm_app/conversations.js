@@ -59,7 +59,7 @@
 			var enableOrdering = (obj.options.enableOrdering);
 
 			if (obj.options.method == 'ajax') {
-				obj.$element.load(CCM_TOOLS_PATH + '/conversations/view_ajax', {
+				$.post(CCM_TOOLS_PATH + '/conversations/view_ajax', {
 					'cnvID': obj.options.cnvID,
 					'enablePosting': enablePosting,
 					'itemsPerPage': obj.options.itemsPerPage,
@@ -68,6 +68,7 @@
 					'orderBy': orderBy,
 					'enableOrdering': enableOrdering
 				}, function(r) {
+					obj.$element.empty().append(r);;
 					obj.attachBindings();
 					obj.publish('conversationLoaded');
 				});
