@@ -1,5 +1,4 @@
-<?
-defined('C5_EXECUTE') or die("Access Denied.");
+<?php defined('C5_EXECUTE') or die("Access Denied.");
 $ax = Loader::helper('ajax');
 $vs = Loader::helper('validation/strings');
 $ve = Loader::helper('validation/error');
