@@ -252,6 +252,7 @@ var CCMEditMode = function() {
 						var $droppables = $emptyareas.filter('[data-accepts-block-types~=' + $li.attr('data-block-type-handle') + ']');
 						$droppables.droppable({
 							hoverClass: 'ccm-area-drag-block-type-over',
+							tolerance: 'touch',
 							accept: 'a.ccm-overlay-draggable-block-type',
 							drop: function(e, ui) {
 								dropSuccessful = true;
@@ -268,6 +269,7 @@ var CCMEditMode = function() {
 
 						$('.ccm-block-type-drop-zone').droppable({
 							hoverClass: 'ccm-area-drag-block-type-over',
+							tolerance: 'pointer',
 							accept: 'a.ccm-overlay-draggable-block-type',
 							drop: function(e, ui) {
 								dropSuccessful = true;
