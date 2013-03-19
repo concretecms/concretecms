@@ -84,6 +84,7 @@
 			var enablePosting = (obj.options.posttoken != '') ? 1 : 0;
 
 			obj.$replyholder = obj.$element.find('div.ccm-conversation-add-reply');
+			obj.$newmessageform = obj.$element.find('div.ccm-conversation-add-new-message form');
 			obj.$deleteholder = obj.$element.find('div.ccm-conversation-delete-message');
 			obj.$messagelist = obj.$element.find('div.ccm-conversation-message-list');
 			obj.$messagecnt = obj.$element.find('.ccm-conversation-message-count');
@@ -91,6 +92,10 @@
 			obj.$sortselect = obj.$element.find('select[data-sort=conversation-message-list]');
 			obj.$loadmore = obj.$element.find('[data-load-page=conversation-message-list]');
 			obj.$messages = obj.$element.find('div.ccm-conversation-messages');
+
+			obj.$newmessageform.dropzone({
+				'url': CCM_TOOLS_PATH + '/conversations/add_file'
+			});
 
 			obj.$postbuttons.on('click', function() {
 				obj.submitForm($(this));
