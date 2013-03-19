@@ -47,4 +47,29 @@
 			<default value="top" />
 		</field>
 	</table>
+	<table name="ConversationMessageRatings">
+		<field name="cnvMessageID" type="I">
+			<key />
+			<unsigned />
+		</field>
+		<field name="cnvMessageRatingTypeID" type="I">
+			<default value="0" />
+		</field>
+		<field name="timestamp" type="T">
+		</field>
+		<field name="uID" type="I">
+			<default value="0" />
+		</field>
+	</table>
+	<table name="ConversationMessageRatingTypes">
+		<field name="cnvMessageRatingTypeID" type="I">
+			
+		</field>
+		<field name="cnvMessageRatingTypeHandle"  type="C">
+			
+		</field>
+		<field name="cnvMessageRatingTypeCommunityPoints" type="I">
+			<default value="0" />
+		</field>
+	</table>
 </schema>
