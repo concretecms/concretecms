@@ -97,6 +97,7 @@
 			obj.$sortselect = obj.$element.find('select[data-sort=conversation-message-list]');
 			obj.$loadmore = obj.$element.find('[data-load-page=conversation-message-list]');
 			obj.$messages = obj.$element.find('div.ccm-conversation-messages');
+			obj.$messagerating = obj.$element.find('.ccm-conversation-message-rating');
 
 			if (obj.$newmessageform.dropzone) {
 				obj.$newmessageform.dropzone({
@@ -107,6 +108,12 @@
 			obj.$element.on('click', 'button[data-submit=conversation-message]', function() {
 				obj.submitForm($(this));
 				return false;
+			});
+			obj.$element.on('click', 'i.icon-thumbs-up', function() {
+				obj.updateRating(1);
+			});
+			obj.$element.on('click', 'i.icon-thumbs-down', function() {
+				obj.updateRating(0);
 			});
 			obj.$element.on('click', 'a[data-toggle=conversation-reply]', function() {
 				var $replyform = obj.$replyholder.appendTo($(this).closest('div[data-conversation-message-id]'));
@@ -284,6 +291,16 @@
 			},function(){
 				obj.publish('conversationUpdateCount');
 			});
+		},
+		updateRating: function($inc) {
+			var obj = this;
+			alert($inc);
+			/* obj.publish('conversationBeforeUpdateRating'); */
+			obj.$messagerating.load(CCM_TOOLS_PATH + '/conversations/rate', {
+				'cnvID': obj.options.cnvID
+			}/*function(){
+				obj.publish('conversationUpdateRating');
+			}*/);
 		},
 		submitForm: function($btn) {
 			var obj = this;
