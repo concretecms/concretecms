@@ -678,6 +678,21 @@
 			</attributes>
         </page>
 
+		<page name="Conversations" path="/dashboard/system/conversations" filename="/dashboard/system/conversations/view.php" pagetype="" description="Manage your conversations settings" package="">
+			<attributes>
+				<attributekey handle="meta_keywords">
+					<value>conversations</value>
+				</attributekey>
+			</attributes>
+		</page>
+		<page name="Editor" path="/dashboard/system/conversations/editor" filename="/dashboard/system/conversations/editor.php" pagetype="" description="" package="">
+			<attributes>
+				<attributekey handle="meta_keywords">
+					<value>conversations editor, editor</value>
+				</attributekey>
+			</attributes>
+		</page>
+
         <page name="Attributes" path="/dashboard/system/attributes" filename="/dashboard/system/attributes/view.php" pagetype="" description="Setup attributes for pages, users, files and more." package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
