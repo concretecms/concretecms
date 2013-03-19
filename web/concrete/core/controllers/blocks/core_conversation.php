@@ -67,7 +67,19 @@ defined('C5_EXECUTE') or die("Access Denied.");
 					$token = '';
 				}
 				$this->set('posttoken', $token);
+				$this->set('users', $this->getActiveUsers(true));
 			}
+		}
+
+		public function getActiveUsers($lower=false) {
+			$db = Loader::db();
+			$cnvID = $db->GetOne('select cnvID from btCoreConversation where bID = ?', array($this->bID));
+			if ($lower) {
+				$users = $db->getCol('SELECT LOWER(uName) FROM Users WHERE uID IN (SELECT DISTINCT uID FROM ConversationMessages WHERE cnvID=?)',array($cnvID));
+			} else {
+				$users = $db->getCol('SELECT uName FROM Users WHERE uID IN (SELECT DISTINCT uID FROM ConversationMessages WHERE cnvID=?)',array($cnvID));
+			}
+			return (array)$users;
 		}
 
 		public function save($post) {
