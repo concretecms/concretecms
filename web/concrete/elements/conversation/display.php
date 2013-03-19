@@ -12,7 +12,7 @@ $editor->cnvObject = $args['conversation'];
 
 ?>
 
-<? if ($displayForm && ($displayPostingForm == 'top')) { ?>
+<? if ($displayForm && ($displayPostingForm != 'bottom')) { ?>
 
 <h4><?=t('Add Message')?></h4>
 

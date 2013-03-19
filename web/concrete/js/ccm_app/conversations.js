@@ -72,7 +72,7 @@
 					'displayPostingForm': displayPostingForm,
 					'insertNewMessages': insertNewMessages
 				}, function(r) {
-					obj.$element.empty().append(r);;
+					obj.$element.empty().append(r);
 					obj.attachBindings();
 					obj.publish('conversationLoaded');
 				});
@@ -98,11 +98,13 @@
 			obj.$loadmore = obj.$element.find('[data-load-page=conversation-message-list]');
 			obj.$messages = obj.$element.find('div.ccm-conversation-messages');
 
-			obj.$newmessageform.dropzone({
-				'url': CCM_TOOLS_PATH + '/conversations/add_file'
-			});
+			if (obj.$newmessageform.dropzone) {
+				obj.$newmessageform.dropzone({
+					'url': CCM_TOOLS_PATH + '/conversations/add_file'
+				});
+			}
 
-			obj.$postbuttons.on('click', function() {
+			obj.$element.on('click', 'button[data-submit=conversation-message]', function() {
 				obj.submitForm($(this));
 				return false;
 			});
@@ -154,9 +156,12 @@
 					'itemsPerPage': obj.options.itemsPerPage,
 					'paginate': paginate,
 					'orderBy': $(this).val(),
-					'enableOrdering': obj.options.enableOrdering
+					'enableOrdering': obj.options.enableOrdering,
+					'displayPostingForm': displayPostingForm,
+					'insertNewMessages': insertNewMessages
 				}, function(r) {
 					obj.$replyholder.appendTo(obj.$element);
+					obj.attachBindings();
 				});
 			});
 
@@ -261,7 +266,7 @@
 							obj.$messages.append(html);
 						} else {
 							obj.$messages.prepend(html);
-						} 
+						}
 						obj.$element.find('.ccm-conversation-no-messages').hide();
 					}
 

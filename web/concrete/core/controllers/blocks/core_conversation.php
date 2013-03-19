@@ -49,7 +49,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			if (is_object($conversation)) {
 				$this->addHeaderItem(Loader::helper('html')->css('ccm.conversations.css'));
 				$this->addHeaderItem(Loader::helper('html')->javascript('ccm.conversations.js'));
-				$this->addHeaderItem(Loader::helper('html')->javascript('dropzone.js'));
 			}
 			$editor = ConversationEditor::getActive();
 			foreach((array)$editor->getConversationEditorHeaderItems() as $item) {
@@ -86,9 +85,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				$values['enableOrdering'] = 0;
 			}
 			if (!$values['enableCommentRating']) {
-				$values['enableCommentRating'] = 0;
-			}
-			if ($values['enableCommentRating']) {
 				$values['enableCommentRating'] = 0;
 			}
 			$values['cnvID'] = $conversation->getConversationID();
