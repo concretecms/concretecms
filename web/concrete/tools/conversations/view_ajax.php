@@ -5,7 +5,8 @@ if (is_object($cnv)) {
 	$enableOrdering = ($_POST['enableOrdering'] == 1) ? true : false;
 	$enablePosting = ($_POST['enablePosting'] == 1) ? true : false;
 	$paginate = ($_POST['paginate'] == 1) ? true : false;
-
+	
+	
 	if (in_array($_POST['displayMode'], array('flat'))) {
 		$displayMode = $_POST['displayMode'];
 	} else {
@@ -57,7 +58,9 @@ if (is_object($cnv)) {
 		'currentPage' => 1,
 		'totalPages' => $totalPages,
 		'orderBy' => $_POST['orderBy'],
-		'enableOrdering' => $enableOrdering
+		'enableOrdering' => $enableOrdering,
+		'displayPostingForm' => $_POST['displayPostingForm'],
+		'insertNewMessages' => $_POST['insertNewMessages']
 	);
 	
 	Loader::element('conversation/display', $args);
