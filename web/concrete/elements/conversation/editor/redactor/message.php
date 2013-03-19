@@ -4,7 +4,6 @@ print $form->textarea($editor->getConversationEditorInputName(),array('class'=>'
 ?>
 <script>
 var textarea = $('textarea.unbound.redactor_conversation_editor_<?=$editor->cnvObject->cnvID?>').removeClass('unbound');
-console.log(textarea);
 $(textarea).redactor({
     focus: true,
     autoresize: false,
