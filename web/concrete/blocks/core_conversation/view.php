@@ -11,15 +11,18 @@ if (is_object($conversation)) {
 <script type="text/javascript">
 $(function() {
 	$('div[data-conversation-id=<?=$conversation->getConversationID()?>]').ccmconversation({
-		'cnvID': <?=$conversation->getConversationID()?>,
-		'posttoken': '<?=$posttoken?>',
-		'displayMode': '<?=$displayMode?>',
-		'paginate': <?=$paginate?>,
-		'itemsPerPage': <?=$itemsPerPage?>,
-		'orderBy': '<?=$orderBy?>',
-		'enableOrdering': <?=$enableOrdering?>,
-		'displayPostingForm': '<?=$displayPostingForm?>',
-		'insertNewMessages': '<?=$insertNewMessages?>'
+		cnvID: <?=$conversation->getConversationID()?>,
+		blockID: <?=$bID?>,
+		posttoken: '<?=$posttoken?>',
+		displayMode: '<?=$displayMode?>',
+		paginate: <?=$paginate?>,
+		itemsPerPage: <?=$itemsPerPage?>,
+		orderBy: '<?=$orderBy?>',
+		enableOrdering: <?=$enableOrdering?>,
+		displayPostingForm: '<?=$displayPostingForm?>',
+		insertNewMessages: '<?=$insertNewMessages?>',
+		activeUsers: <?=Loader::helper('json')->encode($users)?>
+
 	});
 });
 </script>

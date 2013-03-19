@@ -47,10 +47,12 @@
 
 			obj.$element = element;
 			obj.options = $.extend({
-				'method':       'ajax',
-				'paginate':     false,
-				'displayMode':  'threaded',
-				'itemsPerPage': -1
+				method:        'ajax',
+				paginate:      false,
+				displayMode:   'threaded',
+				itemsPerPage:  -1,
+				activeUsers:   [],
+				uninitialized: true
 			}, options);
 
 			var enablePosting      = (obj.options.posttoken != '') ? 1 : 0;
@@ -72,7 +74,10 @@
 					'displayPostingForm': displayPostingForm,
 					'insertNewMessages':  insertNewMessages
 				}, function(r) {
+					var oldobj = window.obj;
+					window.obj = obj;
 					obj.$element.empty().append(r);
+					window.obj = oldobj;
 					obj.attachBindings();
 					obj.publish('conversationLoaded');
 				});
@@ -82,9 +87,50 @@
 				obj.publish('conversationLoaded');
 			}
 		},
+		mentionList: function(items, coordinates, bindTo) {
+			var obj = this;
+			if (!coordinates) return;
+			obj.dropdown.parent.css({top:coordinates.y,left:coordinates.x});
+			if (items.length == 0) {
+				obj.dropdown.handle.dropdown('toggle');
+				obj.dropdown.parent.remove();
+				obj.dropdown.active = false;
+				return;
+			}
+
+			obj.dropdown.list.empty();
+			items.map(function(item){
+				var listitem = $('<li/>');
+				var anchor = $('<a/>').appendTo(listitem).text(item.getName());
+				anchor.click(function(){ccm_event.fire('conversationsMentionSelect',{obj:obj,item:item},bindTo)});
+				listitem.appendTo(obj.dropdown.list);
+			});
+			if (!obj.dropdown.active) {
+				obj.dropdown.active = true;
+				obj.dropdown.parent.appendTo(obj.$element);
+				obj.dropdown.handle.dropdown('toggle');
+			}
+		},
 		attachBindings: function() {
 			var obj = this;
-
+			if (obj.options.uninitialized) {
+				obj.options.uninitialized = false;
+				ccm_event.bind('conversationsMention',function(e){
+						obj.mentionList(e.eventData.items,e.eventData.coordinates || false, e.eventData.bindTo || obj.$element.get(0));
+					},
+					obj.$element.get(0) // Bind to this conversation only.
+				);
+				obj.dropdown = {};
+				obj.dropdown.parent = $('<div/>').css({
+					position:'absolute',
+					height:0,
+					width:0
+				});
+				obj.dropdown.active = false;
+				obj.dropdown.handle = $('<a/>').appendTo(obj.dropdown.parent);
+				obj.dropdown.list = $('<ul/>').addClass('dropdown-menu').appendTo(obj.dropdown.parent);
+				obj.dropdown.handle.dropdown();
+			}
 			var paginate = (obj.options.paginate) ? 1 : 0;
 			var enablePosting = (obj.options.posttoken != '') ? 1 : 0;
 
@@ -228,7 +274,7 @@
 				},
 				error: function(e) {
 					obj.publish('conversationDeleteMessageError',{msgID:msgID,error:arguments});
-					alert('Something went wrong while deleting this message, please refresh and try again.');
+					window.alert('Something went wrong while deleting this message, please refresh and try again.');
 				}
 			});
 		},
@@ -329,7 +375,61 @@
 					$form.parent().closest('.ccm-conversation-form-submitted').removeClass('ccm-conversation-form-submitted');
 				}
 			});
+		},
+		tool:{
+			setCaretPosition:function(elem, caretPos) {
+				// http://stackoverflow.com/a/512542/950669
+				if(elem != null) {
+					if(elem.createTextRange) {
+						var range = elem.createTextRange();
+						range.move('character', caretPos);
+						range.select();
+					}
+					else {
+						if(elem.selectionStart) {
+							elem.focus();
+							elem.setSelectionRange(caretPos, caretPos);
+						}
+						else
+							elem.focus();
+					}
+				}
+			},
+			getCaretPosition: function(elem) {
+				// http://stackoverflow.com/a/263796/950669
+				if (elem.selectionStart) { 
+					return elem.selectionStart; 
+				} else if (document.selection) { 
+					elem.focus(); 
 
+					var r = document.selection.createRange(); 
+					if (r == null) { 
+					return 0; 
+					} 
+
+					var re = elem.createTextRange(), 
+					rc = re.duplicate(); 
+					re.moveToBookmark(r.getBookmark()); 
+					rc.setEndPoint('EndToStart', re); 
+
+					return rc.text.length; 
+				}  
+				return 0; 
+			},
+			testMentionString: function(s) {
+				return /^@[a-z0-9]+$/.test(s);
+			},
+			getMentionMatches: function(s,u) {
+				return u.filter(function(d){return(d.indexOf(s)>=0)});
+			},
+			isSameConversation: function(o,n) {
+				return (o.options.blockID === n.options.blockID && o.options.cnvID === n.options.cnvID);
+			},
+
+			// MentionUser class, use this to pass around data with your @mention names.
+			MentionUser: function(name) {
+				this.getName = function() { return name; };
+			}
 		}
 	};
 })(jQuery,window);
