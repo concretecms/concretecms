@@ -61,6 +61,19 @@ if ($controller->getTask() == 'add') {
 			<?=$form->text('itemsPerPage', $itemsPerPage, array('class' => 'span1'))?>
 		</div>
 	</div>
+	<div class="control-group">
+		<label class="control-label"><?=t('Add new messages')?></label>
+		<div class="controls">
+			<label class="radio">
+				<?=$form->radio('insertNewMessages', 'top', $insertNewMessages)?>
+				<span><?=t('Top')?></span>
+			</label>
+			<label class="radio">
+				<?=$form->radio('insertNewMessages', 'bottom', $insertNewMessages)?>
+				<span><?=t('Bottom')?></span>
+			</label>
+		</div>
+	</div>
 </fieldset>
 
 <fieldset>
@@ -75,6 +88,19 @@ if ($controller->getTask() == 'add') {
 			<label class="radio">
 				<?=$form->radio('enablePosting', 0, $enablePosting)?>
 				<span><?=t('No, posting is disabled.')?></span>
+			</label>
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label"><?=t('Display Posting Form')?></label>
+		<div class="controls">
+			<label class="radio">
+				<?=$form->radio('displayPostingForm', 'top', $displayPostingForm)?>
+				<span><?=t('Top')?></span>
+			</label>
+			<label class="radio">
+				<?=$form->radio('displayPostingForm', 'bottom', $displayPostingForm)?>
+				<span><?=t('Bottom')?></span>
 			</label>
 		</div>
 	</div>
