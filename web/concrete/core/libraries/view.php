@@ -102,7 +102,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			$file = $this->getThemePath() . '/' . $stylesheet;
 			$cacheFile = DIR_FILES_CACHE . '/' . DIRNAME_CSS . '/' . $this->getThemeHandle() . '/' . $stylesheet;
 			$env = Environment::get();
-			$themeRec = $env->getRecord(DIRNAME_THEMES . '/' . $this->getThemeHandle() . '/' . $stylesheet, $pt->getPackageHandle());
+			$themeRec = $env->getUncachedRecord(DIRNAME_THEMES . '/' . $this->getThemeHandle() . '/' . $stylesheet, $pt->getPackageHandle());
 			if (file_exists($cacheFile) && $themeRec->exists()) {
 				if (filemtime($cacheFile) > filemtime($themeRec->file)) {
 					return REL_DIR_FILES_CACHE . '/' . DIRNAME_CSS . '/' . $this->getThemeHandle() . '/' . $stylesheet;

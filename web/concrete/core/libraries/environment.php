@@ -79,7 +79,7 @@ class Concrete5_Library_Environment {
 			if (is_dir($loc)) {
 				$contents = $this->getDirectoryContents($loc, array(), true);
 				foreach($contents as $f) {
-					if (preg_match('/^.+\.(php|js|css)$/i', $f)) {
+					if (preg_match('/^.+\.php$/i', $f)) {
 						$this->coreOverrides[] = str_replace(DIR_BASE . '/', '', $f);
 					}				
 				}
@@ -173,6 +173,32 @@ class Concrete5_Library_Environment {
 		$obj->override = false;
 		$this->cachedOverrides[$segment][$pkgHandle] = $obj;
 		return $obj;		
+	}
+
+	/** 
+	 * Bypasses overrides cache to get record
+	 */
+	public function getUncachedRecord($segment, $pkgHandle = false) {
+		$obj = new EnvironmentRecord();
+		if (is_object($pkgHandle)) {
+			$pkgHandle = $pkgHandle->getPackageHandle();
+		}
+		$obj->override = false;
+		if (file_exists(DIR_BASE . '/' . $segment)) {
+			$obj->file = DIR_BASE . '/' . $segment;
+			$obj->override = true;
+		} else if ($pkgHandle) {
+			$dirp1 = DIR_PACKAGES . '/' . $pkgHandle . '/' . $segment;
+			$dirp2 = DIR_PACKAGES_CORE . '/' . $pkgHandle . '/' . $segment;
+			if (file_exists($dirp2)) {
+				$obj->file = $dirp2;
+			} else if (file_exists($dirp1)) {
+				$obj->file = $dirp1;
+			}
+		} else {
+			$obj->file = DIR_BASE_CORE . '/' . $segment;
+		}
+		return $obj;
 	}
 	
 	/** 
