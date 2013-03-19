@@ -57,6 +57,7 @@
 			var paginate = (obj.options.paginate) ? 1 : 0;
 			var orderBy = (obj.options.orderBy);
 			var enableOrdering = (obj.options.enableOrdering);
+			var displayPostingForm = (obj.options.displayPostingForm);
 
 			if (obj.options.method == 'ajax') {
 				$.post(CCM_TOOLS_PATH + '/conversations/view_ajax', {
@@ -66,7 +67,8 @@
 					'paginate': paginate,
 					'displayMode': obj.options.displayMode,
 					'orderBy': orderBy,
-					'enableOrdering': enableOrdering
+					'enableOrdering': enableOrdering,
+					'displayPostingForm': displayPostingForm
 				}, function(r) {
 					obj.$element.empty().append(r);;
 					obj.attachBindings();

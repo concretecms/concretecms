@@ -12,8 +12,7 @@ $editor->cnvObject = $args['conversation'];
 
 ?>
 
-
-<? if ($displayForm) { ?>
+<? if ($displayForm && ($displayPostingForm == 'top')) { ?>
 
 <h4><?=t('Add Message')?></h4>
 
@@ -85,3 +84,35 @@ $editor->cnvObject = $args['conversation'];
 </div>
 
 </div>
+
+<? if ($displayForm && ($displayPostingForm == 'bottom')) { ?>
+
+<h4><?=t('Add Message')?></h4>
+
+<? if ($enablePosting) { ?>
+	<div class="ccm-conversation-add-new-message">
+		<form method="post">
+		<div class="ccm-conversation-avatar"><? print Loader::helper('concrete/avatar')->outputUserAvatar($ui)?></div>
+		<div class="ccm-conversation-message-form">
+			<div class="ccm-conversation-errors alert alert-error"></div>
+			<textarea name="cnvMessageBody"></textarea>
+			<button type="button" data-post-parent-id="0" data-submit="conversation-message" class="pull-right btn btn-submit btn-small"><?=t('Post')?> <i class="icon-bullhorn"></i></button>
+		</div>
+		</form>
+	</div>
+
+	<div class="ccm-conversation-add-reply">
+		<form method="post">
+		<div class="ccm-conversation-avatar"><? print Loader::helper('concrete/avatar')->outputUserAvatar($ui)?></div>
+		<div class="ccm-conversation-message-form">
+			<div class="ccm-conversation-errors alert alert-error"></div>
+			<textarea name="cnvMessageBody"></textarea>
+			<button type="button" data-submit="conversation-message" class="pull-right btn btn-submit btn-small"><?=t('Post')?> <i class="icon-bullhorn"></i></button>
+		</div>
+		</form>
+	</div>
+<? } else { ?>
+	<p><?=t('Adding new posts is disabled for this conversation.')?></p>
+<? } ?>
+
+<? } ?>

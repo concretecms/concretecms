@@ -38,5 +38,13 @@
 			<notnull />
 			<default value="1" />
 		</field>
+		<field name="displayPostingForm" type="C" size="255">
+			<notnull />
+			<default value="top" />
+		</field>
+		<field name="insertNewMessages" type="C" size="255">
+			<notnull />
+			<default value="top" />
+		</field>
 	</table>
 </schema>
