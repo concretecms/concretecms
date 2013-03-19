@@ -1,11 +1,9 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
 $paginate = ($paginate) ? 'true' : 'false';
-//$enableOrdering = ($enableOrdering) ? 'true' : 'false';
 $itemsPerPage = ($paginate) ? $itemsPerPage : -1;
 
 if (is_object($conversation)) {
 ?>
-
 <div class="ccm-conversation-wrapper" data-conversation-id="<?=$conversation->getConversationID()?>">
 <?=t('Loading Conversation')?> <img src="<?=Loader::helper('concrete/urls')->getBlockTypeAssetsURL($b->getBlockTypeObject(), 'loading.gif')?>" />
 </div>
@@ -19,7 +17,9 @@ $(function() {
 		'paginate': <?=$paginate?>,
 		'itemsPerPage': <?=$itemsPerPage?>,
 		'orderBy': '<?=$orderBy?>',
-		'enableOrdering': <?=$enableOrdering?>
+		'enableOrdering': <?=$enableOrdering?>,
+		'displayPostingForm': '<?=$displayPostingForm?>',
+		'insertNewMessages': '<?=$insertNewMessages?>'
 	});
 });
 </script>

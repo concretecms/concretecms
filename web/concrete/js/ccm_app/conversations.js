@@ -57,6 +57,8 @@
 			var paginate = (obj.options.paginate) ? 1 : 0;
 			var orderBy = (obj.options.orderBy);
 			var enableOrdering = (obj.options.enableOrdering);
+			var displayPostingForm = (obj.options.displayPostingForm);
+			var insertNewMessages = (obj.options.insertNewMessages);
 
 			if (obj.options.method == 'ajax') {
 				$.post(CCM_TOOLS_PATH + '/conversations/view_ajax', {
@@ -66,9 +68,11 @@
 					'paginate': paginate,
 					'displayMode': obj.options.displayMode,
 					'orderBy': orderBy,
-					'enableOrdering': enableOrdering
+					'enableOrdering': enableOrdering,
+					'displayPostingForm': displayPostingForm,
+					'insertNewMessages': insertNewMessages
 				}, function(r) {
-					obj.$element.empty().append(r);;
+					obj.$element.empty().append(r);
 					obj.attachBindings();
 					obj.publish('conversationLoaded');
 				});
@@ -94,11 +98,13 @@
 			obj.$loadmore = obj.$element.find('[data-load-page=conversation-message-list]');
 			obj.$messages = obj.$element.find('div.ccm-conversation-messages');
 
-			obj.$newmessageform.dropzone({
-				'url': CCM_TOOLS_PATH + '/conversations/add_file'
-			});
+			if (obj.$newmessageform.dropzone) {
+				obj.$newmessageform.dropzone({
+					'url': CCM_TOOLS_PATH + '/conversations/add_file'
+				});
+			}
 
-			obj.$postbuttons.on('click', function() {
+			obj.$element.on('click', 'button[data-submit=conversation-message]', function() {
 				obj.submitForm($(this));
 				return false;
 			});
@@ -150,9 +156,12 @@
 					'itemsPerPage': obj.options.itemsPerPage,
 					'paginate': paginate,
 					'orderBy': $(this).val(),
-					'enableOrdering': obj.options.enableOrdering
+					'enableOrdering': obj.options.enableOrdering,
+					'displayPostingForm': displayPostingForm,
+					'insertNewMessages': insertNewMessages
 				}, function(r) {
 					obj.$replyholder.appendTo(obj.$element);
+					obj.attachBindings();
 				});
 			});
 
@@ -253,12 +262,17 @@
 						obj.$replyholder.appendTo(obj.$element);
 						obj.$replyholder.hide();
 					} else {
-						obj.$messages.prepend(html);
+						if (obj.options.insertNewMessages == 'bottom') {
+							obj.$messages.append(html);
+						} else {
+							obj.$messages.prepend(html);
+						}
 						obj.$element.find('.ccm-conversation-no-messages').hide();
 					}
 
 					obj.publish('conversationAddMessageFromJSON',{json:json,form:$form});
 					obj.updateCount();
+					window.location = '#cnvMessage' + json.cnvMessageID; 
 				}
 			});
 		},
