@@ -47,30 +47,30 @@
 
 			obj.$element = element;
 			obj.options = $.extend({
-				'method': 'ajax',
-				'displayMode': 'threaded',
-				'paginate': false,
+				'method':       'ajax',
+				'paginate':     false,
+				'displayMode':  'threaded',
 				'itemsPerPage': -1
 			}, options);
 
-			var enablePosting = (obj.options.posttoken != '') ? 1 : 0;
-			var paginate = (obj.options.paginate) ? 1 : 0;
-			var orderBy = (obj.options.orderBy);
-			var enableOrdering = (obj.options.enableOrdering);
+			var enablePosting      = (obj.options.posttoken != '') ? 1 : 0;
+			var paginate           = (obj.options.paginate) ? 1 : 0;
+			var orderBy            = (obj.options.orderBy);
+			var enableOrdering     = (obj.options.enableOrdering);
 			var displayPostingForm = (obj.options.displayPostingForm);
-			var insertNewMessages = (obj.options.insertNewMessages);
+			var insertNewMessages  = (obj.options.insertNewMessages);
 
 			if (obj.options.method == 'ajax') {
 				$.post(CCM_TOOLS_PATH + '/conversations/view_ajax', {
-					'cnvID': obj.options.cnvID,
-					'enablePosting': enablePosting,
-					'itemsPerPage': obj.options.itemsPerPage,
-					'paginate': paginate,
-					'displayMode': obj.options.displayMode,
-					'orderBy': orderBy,
-					'enableOrdering': enableOrdering,
+					'cnvID':              obj.options.cnvID,
+					'enablePosting':      enablePosting,
+					'itemsPerPage':       obj.options.itemsPerPage,
+					'paginate':           paginate,
+					'displayMode':        obj.options.displayMode,
+					'orderBy':            orderBy,
+					'enableOrdering':     enableOrdering,
 					'displayPostingForm': displayPostingForm,
-					'insertNewMessages': insertNewMessages
+					'insertNewMessages':  insertNewMessages
 				}, function(r) {
 					obj.$element.empty().append(r);
 					obj.attachBindings();
@@ -88,21 +88,19 @@
 			var paginate = (obj.options.paginate) ? 1 : 0;
 			var enablePosting = (obj.options.posttoken != '') ? 1 : 0;
 
-			obj.$replyholder = obj.$element.find('div.ccm-conversation-add-reply');
+			obj.$replyholder    = obj.$element.find('div.ccm-conversation-add-reply');
 			obj.$newmessageform = obj.$element.find('div.ccm-conversation-add-new-message form');
-			obj.$deleteholder = obj.$element.find('div.ccm-conversation-delete-message');
-			obj.$messagelist = obj.$element.find('div.ccm-conversation-message-list');
-			obj.$messagecnt = obj.$element.find('.ccm-conversation-message-count');
-			obj.$postbuttons = obj.$element.find('button[data-submit=conversation-message]');
-			obj.$sortselect = obj.$element.find('select[data-sort=conversation-message-list]');
-			obj.$loadmore = obj.$element.find('[data-load-page=conversation-message-list]');
-			obj.$messages = obj.$element.find('div.ccm-conversation-messages');
+			obj.$deleteholder   = obj.$element.find('div.ccm-conversation-delete-message');
+			obj.$messagelist    = obj.$element.find('div.ccm-conversation-message-list');
+			obj.$messagecnt     = obj.$element.find('.ccm-conversation-message-count');
+			obj.$postbuttons    = obj.$element.find('button[data-submit=conversation-message]');
+			obj.$sortselect     = obj.$element.find('select[data-sort=conversation-message-list]');
+			obj.$loadmore       = obj.$element.find('[data-load-page=conversation-message-list]');
+			obj.$messages       = obj.$element.find('div.ccm-conversation-messages');
 
-			if (obj.$newmessageform.dropzone) {
-				obj.$newmessageform.dropzone({
-					'url': CCM_TOOLS_PATH + '/conversations/add_file'
-				});
-			}
+			obj.$newmessageform.dropzone({
+				'url': CCM_TOOLS_PATH + '/conversations/add_file'
+			});
 
 			obj.$element.on('click', 'button[data-submit=conversation-message]', function() {
 				obj.submitForm($(this));
@@ -149,16 +147,16 @@
 
 			obj.$element.on('change', 'select[data-sort=conversation-message-list]', function() {
 				obj.$messagelist.load(CCM_TOOLS_PATH + '/conversations/view_ajax', {
-					'cnvID': obj.options.cnvID,
-					'task': 'get_messages',
-					'enablePosting': enablePosting,
-					'displayMode': obj.options.displayMode,
-					'itemsPerPage': obj.options.itemsPerPage,
-					'paginate': paginate,
-					'orderBy': $(this).val(),
-					'enableOrdering': obj.options.enableOrdering,
+					'cnvID':              obj.options.cnvID,
+					'task':               'get_messages',
+					'enablePosting':      enablePosting,
+					'displayMode':        obj.options.displayMode,
+					'itemsPerPage':       obj.options.itemsPerPage,
+					'paginate':           paginate,
+					'orderBy':            $(this).val(),
+					'enableOrdering':     obj.options.enableOrdering,
 					'displayPostingForm': displayPostingForm,
-					'insertNewMessages': insertNewMessages
+					'insertNewMessages':  insertNewMessages
 				}, function(r) {
 					obj.$replyholder.appendTo(obj.$element);
 					obj.attachBindings();
