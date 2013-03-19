@@ -51,6 +51,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				$this->addHeaderItem(Loader::helper('html')->javascript('ccm.conversations.js'));
 				$this->addHeaderItem(Loader::helper('html')->javascript('dropzone.js'));
 			}
+			$editor = ConversationEditor::getActive();
+			foreach((array)$editor->getConversationEditorHeaderItems() as $item) {
+				$this->addHeaderItem($item);
+			}
 		}
 
 		public function view() {
