@@ -181,8 +181,12 @@ class Concrete5_Library_Cache {
 			$env = Environment::get();
 			$env->clearOverrideCache();
 
-			$db->Execute('update Blocks set btCachedBlockRecord = null');
-			$db->Execute('truncate table CollectionVersionBlocksOutputCache');
+			if(in_array('btCachedBlockRecord', $db->MetaColumnNames('Blocks'))) {
+				$db->Execute('update Blocks set btCachedBlockRecord = null');
+			}
+			if (in_array('CollectionVersionBlocksOutputCache', $r)) {
+				$db->Execute('truncate table CollectionVersionBlocksOutputCache');
+			}
 		}
 		
 		$loc = CacheLocal::get();
