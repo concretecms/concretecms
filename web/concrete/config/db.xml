@@ -49,6 +49,17 @@
    <field name="fdObject" type="X2"></field>
   </table>
 
+  <table name="BannedWords">
+    <field name="bwID" type="I" size="10">
+      <key/>
+      <autoincrement/>
+      <unsigned/>
+    </field>
+    <field name="bannedWord" type="X2"></field>
+    <index name="bwID">
+      <col>bwID</col>
+    </index>
+  </table>
 
   <table name="Aggregators">
     <field name="agID" type="I" size="10">
