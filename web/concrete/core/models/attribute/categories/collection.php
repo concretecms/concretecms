@@ -111,7 +111,7 @@ class Concrete5_Model_CollectionAttributeKey extends AttributeKey {
 		return CollectionAttributeKey::getByID($akID);
 	}
 	
-	protected function saveAttribute($nvc, $value = false) {
+	protected function saveAttribute($nvc, $value = null) {
 		// We check a cID/cvID/akID combo, and if that particular combination has an attribute value ID that
 		// is NOT in use anywhere else on the same cID, cvID, akID combo, we use it (so we reuse IDs)
 		// otherwise generate new IDs
