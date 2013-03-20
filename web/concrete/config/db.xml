@@ -269,7 +269,39 @@
       <default value="0"/>
       <unsigned/>
     </field>
-  </table>  <table name="PermissionAssignments">
+</table>
+<table name="ConversationMessageRatings">
+		<field name="cnvMessageID" type="I"  size="10">
+			<key />
+			<unsigned />
+		</field>
+		<field name="cnvMessageRatingTypeID" type="I" size="10">
+			<notnull />
+			<default value="0" />
+			<unsigned />
+		</field>
+		<field name="timestamp" type="T" />
+		<field name="uID" type="I" size="10">
+			<notnull />
+			<default value="0" />
+			<unsigned />
+		</field>
+	</table>
+	<table name="ConversationMessageRatingTypes">
+		<field name="cnvMessageRatingTypeID" type="I" size="10">
+			<notnull />
+			<default value="0" />
+			<unsigned />
+		</field>
+		<field name="cnvMessageRatingTypeHandle"  type="C">
+		</field>
+		<field name="cnvMessageRatingTypeCommunityPoints" type="I" size="10">
+			<notnull />
+			<default value="0" />
+			<unsigned />
+		</field>
+	</table>
+  <table name="PermissionAssignments">
     <field name="paID" type="I" size="10">
       <key/>
       <default value="0"/>
