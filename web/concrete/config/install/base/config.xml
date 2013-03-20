@@ -10,4 +10,10 @@
 		<ENABLE_BLOCK_CACHE>1</ENABLE_BLOCK_CACHE>
 		<ENABLE_OVERRIDE_CACHE>1</ENABLE_OVERRIDE_CACHE>
 	</config>
+	<banned_words>
+		<banned_word>fuck</banned_word>
+		<banned_word>shit</banned_word>
+		<banned_word>bitch</banned_word>
+		<banned_word>ass</banned_word>
+	</banned_words>
 </concrete5-cif>

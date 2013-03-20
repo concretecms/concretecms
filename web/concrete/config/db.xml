@@ -49,6 +49,17 @@
    <field name="fdObject" type="X2"></field>
   </table>
 
+  <table name="BannedWords">
+    <field name="bwID" type="I" size="10">
+      <key/>
+      <autoincrement/>
+      <unsigned/>
+    </field>
+    <field name="bannedWord" type="X2"></field>
+    <index name="bwID">
+      <col>bwID</col>
+    </index>
+  </table>
 
   <table name="Aggregators">
     <field name="agID" type="I" size="10">
@@ -269,7 +280,36 @@
       <default value="0"/>
       <unsigned/>
     </field>
-  </table>  <table name="PermissionAssignments">
+</table>
+<table name="ConversationMessageRatings">
+		<field name="cnvMessageID" type="I"  size="10">
+			<key />
+			<unsigned />
+		</field>
+		<field name="cnvMessageRatingTypeID" type="I" size="10">
+			<notnull />
+			<default value="0" />
+			<unsigned />
+		</field>
+		<field name="timestamp" type="T" />
+		<field name="uID" type="I" size="10">
+			<notnull />
+			<default value="0" />
+			<unsigned />
+		</field>
+	</table>
+	<table name="ConversationMessageRatingTypes">
+		<field name="cnvMessageRatingTypeID" type="I" size="10">
+			<notnull />
+			<default value="0" />
+			<unsigned />
+		</field>
+		<field name="cnvMessageRatingTypeHandle" type="C" size="10">
+		</field>
+		<field name="cnvMessageRatingTypeCommunityPoints" type="I" size="10">
+		</field>
+	</table>
+  <table name="PermissionAssignments">
     <field name="paID" type="I" size="10">
       <key/>
       <default value="0"/>

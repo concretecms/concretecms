@@ -1,8 +1,18 @@
 <?php
-class Concrete5_Model_MarkdownConversationEditor extends Concrete5_Model_PlainTextConversationEditor {
+class Concrete5_Model_MarkdownConversationEditor extends Concrete5_Model_ConversationEditor {
+
+	public function getConversationEditorHeaderItems() {
+		return array();
+	}
+
+	public function outputConversationEditorReplyMessageForm() {
+		$this->outputConversationEditorAddMessageForm();
+	}
+
 	public function formatConversationMessageBody($cnvMessageBody) {
 		loader::library('3rdparty/markdown');
-
-		return Markdown($cnvMessageBody);
+		$text = Loader::helper('text');
+		$md = Markdown(htmlentities($cnvMessageBody));
+		return str_replace(array('&amp;lt','&amp;gt'), array('&lt','&gt'), $md);
 	}
 }

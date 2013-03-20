@@ -9,7 +9,20 @@ print $form->textarea($editor->getConversationEditorInputName(),array('class'=>'
 		ccm_event.bind('conversationSubmitForm',function(){
 			me.val('');
 		});
-		me.keyup(function(e){
+		me.keydown(function(e) {
+			ccm_event.fire('conversationsTextareaKeydown', e, obj.$element.get(0));
+			if (e.keyCode == 40) {
+				ccm_event.fire('conversationsTextareaKeydownDown',e,obj.$element.get(0));
+				if (obj.dropdown.active) return false;
+			} else if (e.keyCode == 38) {
+				ccm_event.fire('conversationsTextareaKeydownUp',e,obj.$element.get(0));
+				if (obj.dropdown.active) return false;
+			} else if (e.keyCode == 13) {
+				ccm_event.fire('conversationsTextareaKeydownEnter',e,obj.$element.get(0));
+				if (obj.dropdown.active) return false;
+			}
+		}).keyup(function(e) {
+			if (e.keyCode == 40) return;
 			var caret = obj.tool.getCaretPosition(me.get(0)),
 				string = me.val().substr(0,caret).split(' ').pop(),
 				matches = [];
