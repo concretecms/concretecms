@@ -81,6 +81,7 @@ $.fn.ccmmenu.enable = function() {
 }
 
 $.fn.ccmmenu.disable = function() {
+	$.fn.ccmmenu.out();
 	$.fn.ccmmenu.isenabled = false;
 	$.fn.ccmmenu.$highlighter.remove();
 }
@@ -97,10 +98,10 @@ $.fn.ccmmenu.over = function(e, $this, $menulauncher) {
 
 			// we offset this because we're using outlines in the page and we want the highlighter to show up over the items.
 			var offset = $menulauncher.offset();
-			var t = offset.top - 10;
-			var l = offset.left - 10;
-			var w = $menulauncher.outerWidth() + 20;
-			var h = $menulauncher.outerHeight() + 20;
+			var t = offset.top - 5;
+			var l = offset.left - 5;
+			var w = $menulauncher.outerWidth() + 10;
+			var h = $menulauncher.outerHeight() + 10;
 
 			$.fn.ccmmenu.$highlighter.css('width', w)
 			.css('height', h)

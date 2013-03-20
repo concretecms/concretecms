@@ -169,11 +169,11 @@ $.fn.ajaxSubmit = function(options) {
    }
    else {
 		// IE7 massage (see issue 57)
-		if ($.browser.msie && method == 'get' && typeof options.type === "undefined") {
-			var ieMeth = $form[0].getAttribute('method');
-			if (typeof ieMeth === 'string')
-				options.type = ieMeth;
-		}
+		//if ($.browser.msie && method == 'get' && typeof options.type === "undefined") {
+		//	var ieMeth = $form[0].getAttribute('method');
+		//	if (typeof ieMeth === 'string')
+		//		options.type = ieMeth;
+		//}
 		$.ajax(options);
    }
 
