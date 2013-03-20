@@ -266,7 +266,7 @@ class Concrete5_Model_PageTheme extends Object {
 	
 	public function parseStyleSheet($file, $styles = false) {
 		$env = Environment::get();
-		$themeRec = $env->getRecord(DIRNAME_THEMES . '/' . $this->getThemeHandle() . '/' . $file, $this->getPackageHandle());
+		$themeRec = $env->getUncachedRecord(DIRNAME_THEMES . '/' . $this->getThemeHandle() . '/' . $file, $this->getPackageHandle());
 		if ($themeRec->exists()) {
 			$fh = Loader::helper('file');
 			$contents = $fh->getContents($themeRec->file);
