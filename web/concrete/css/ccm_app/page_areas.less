@@ -25,6 +25,16 @@ div.ccm-block-edit, div.ccm-area {
 	.clearfix();
 }
 
+/** 
+ * sorting blocks in page
+ */
+div.ccm-block-type-dragging {
+	opacity: 0.5;
+	background: #efefef;
+	border: 1px solid #aaa;
+	box-shadow: 0px 0px 2px 0px rgba(0,0,0,0);
+}
+
 
 /** 
  * Blocks
@@ -38,7 +48,7 @@ div.ccm-block-edit {
 
 div.ccm-block-edit.ccm-menu-item-active {
 	outline: 2px solid #59ec59;
-	outline-offset: 10px;
+	outline-offset: 5px;
 
 	ul.ccm-edit-mode-inline-commands {
 		opacity: 1;
@@ -52,13 +62,28 @@ div.ccm-block-edit.ccm-menu-item-active {
 
 div.ccm-area {
 	margin-bottom: 50px;
+
+	/** 
+	 * draggable blocks into area
+	 */
+	.ui-state-highlight {
+		display: block;
+		background-color: transparent;
+		height: 8px;
+		border: 2px solid #0c6;
+		.border-radius(0px);
+		margin-top: 0px;
+		margin-bottom:0px;
+		background-image: none;
+	}
+
 }
 div.ccm-area:hover,
 div.ccm-area.ccm-parent-menu-item-active,
 div.ccm-area.ccm-area-accepts-blocks,
 div.ccm-area.ccm-menu-item-active {
 	outline: 1px solid #e6e6e6;
-	outline-offset: 18px;
+	outline-offset: 9px;
 
 	div.ccm-area-footer {
 		display: block;
@@ -71,7 +96,7 @@ div.ccm-area-footer {
 	width: 100%;
 	position: absolute;
 	z-index: 4; /* less than the highlighter z-index */
-	bottom: -50px;
+	bottom: -41px;
 	padding-top: 15px;
 
 	div.ccm-area-footer-handle {
@@ -175,9 +200,9 @@ ul.ccm-edit-mode-inline-commands {
 	list-style-type: none;
 	opacity: 0;
 	position: absolute;
-	top: -10px;
-	right: -10px;
-	background: rgba(255,255,255,0.5);
+	top: -4px;
+	right: -4px;
+	background: rgba(255,255,255,0.8);
 	z-index: 100;
 	li {
 		display: inline-block;
@@ -258,6 +283,7 @@ ul.ccm-edit-mode-inline-commands {
 
 	.divider {margin: 9px 1px !important;}
 }
+
 
 .ccm-ui div.popover ul.dropdown-menu a:hover {
   color: @dropdown-link-color !important;

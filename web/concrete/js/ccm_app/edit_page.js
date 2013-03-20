@@ -4,10 +4,40 @@
 
 var CCMEditMode = function() {
 
+	var blockTypeDropSuccessful = false;
+	var $sortableAreas;
+	var $sortableDropElement = false;
+	var $draggableElement = false;
+
 	setupMenus = function() {
 		$('.ccm-area').ccmmenu();
 		$('.ccm-block-edit').ccmmenu();
 		$('.ccm-block-edit-layout').ccmmenu();
+	}
+
+	saveArrangement = function(cID) {
+		
+		if (!cID) {
+			cID = CCM_CID;
+		}
+
+		CCMToolbar.disableDirectExit();
+		var serial = '';
+		$('div.ccm-area').each(function() {
+			areaStr = '&area[' + $(this).attr('id').substring(1) + '][]=';
+			bArray = $(this).sortable('toArray', {'attribute': 'data-block-id'});
+			for (i = 0; i < bArray.length; i++ ) {
+				var bID = bArray[i];
+				serial += areaStr + bID;
+			}
+		});
+	 	$.ajax({
+	 		type: 'POST',
+	 		url: CCM_DISPATCHER_FILENAME,
+	 		data: 'cID=' + cID + '&ccm_token=' + CCM_SECURITY_TOKEN + '&btask=ajax_do_arrange' + serial,
+	 		success: function(msg) {
+
+	 		}});
 	}
 
 	saveAreaArrangement = function(cID, arHandle) {
@@ -113,13 +143,99 @@ var CCMEditMode = function() {
 		}
 	}
 
+	setupSortablesAndDroppables = function() {
+		
+		// empty areas are droppable. We have to 
+		// declare them separately because sortable and droppable don't play as 
+		// nicely together as they should.
+
+		$emptyareas = $('div.ccm-area[data-total-blocks=0]');
+		$emptyareas.droppable({
+			hoverClass: 'ccm-area-drag-block-type-over',
+			tolerance: 'pointer',
+			accept: function($item) {
+				var btHandle = $item.attr('data-block-type-handle');
+				return $(this).attr('data-accepts-block-types').indexOf(btHandle) !== -1;
+			},
+			drop: function(e, ui) {
+				if (ui.helper.is('.ccm-overlay-draggable-block-type')) {
+					CCMEditMode.blockTypeDropSuccessful = true;
+					// it's from the add block overlay
+					addBlockType($(this).attr('data-cID'), $(this).attr('data-area-id'), $(this).attr('data-area-handle'), ui.helper, true);
+				} else {
+					ui.draggable.appendTo($(this));
+					if (CCMEditMode.$draggableElement) {
+						CCMEditMode.$sortableDropElement = CCMEditMode.$draggableElement;
+					}
+				}
+			}
+		});
+
+
+		// areas with more than 1 block are sortable.
+		$sortableAreas = $('div.ccm-area[data-total-blocks!=0]');
+		$sortableAreas.sortable({
+			items: 'div.ccm-block-edit',
+			placeholder: 'ui-state-highlight',
+			opacity: 0.4,
+			out: function() {
+		
+			},
+
+			receive: function(e, ui) {
+				if (ui.item.is('.ccm-overlay-draggable-block-type')) {
+					CCMEditMode.blockTypeDropSuccessful = true;
+					// it's from the add block overlay
+					$(this).find('.ccm-overlay-draggable-block-type').replaceWith($('<div />', {'id': 'ccm-add-new-block-placeholder'}));
+					addBlockType($(this).attr('data-cID'), $(this).attr('data-area-id'), $(this).attr('data-area-handle'), ui.helper, true);
+				} else {
+					CCMEditMode.$sortableDropElement = ui.item;
+				}
+			}
+		});
+
+		$sortableAreas.find('div.ccm-block-edit').each(function() {
+			var $block = $(this);
+			$block.draggable({
+				cursor: 'move',
+				handle: '[data-inline-command=move-block]',
+				helper: function() {
+					var w = $(this).width();
+					var h = $(this).height();
+					var $d =  $('<div />', {'class': 'ccm-block-type-dragging'}).css('width', w).css('height', h);
+					return $d;
+				},
+				connectToSortable: $sortableAreas.filter('[data-accepts-block-types~=' + $block.attr('data-block-type-handle') + ']'),
+				stop: function() {
+					$.fn.ccmmenu.enable();
+					if (CCMEditMode.$sortableDropElement) {
+						CCMEditMode.$sortableDropElement.remove();
+						CCMEditMode.$sortableDropElement = false;
+					}
+					saveArrangement();
+				},
+				start: function(e, ui) {
+					// deactivate the menu on drag
+					$.fn.ccmmenu.disable();
+					CCMEditMode.$draggableElement = $(this);
+				}
+			});
+		});
+
+
+	}
+
+	/*
+
 	setupBlockMovement = function() {
 		
 		var $dropelement;
 		
 		$('div.ccm-area').sortable({
 			items: 'div.ccm-block-edit',
+			placeholder: 'ui-state-highlight',
 			connectWith: 'div.ccm-area',
+			handle: '[data-inline-command=move-block]',
 			opacity: 0.4,
 			over: function(e, ui) {
 		
@@ -147,11 +263,13 @@ var CCMEditMode = function() {
 			});
 		});
 	}
+		*/
 
 	return {
 		start: function() {			
 			setupMenus();
-			setupBlockMovement();
+			//setupBlockMovement();
+			setupSortablesAndDroppables();
 		},
 
 		setupBlockForm: function(form, bID, task) {
@@ -228,10 +346,6 @@ var CCMEditMode = function() {
 				}
 			});
 
-			// add droppables for empty areas.
-			var $emptyareas = $('div.ccm-area[data-total-blocks=0]');
-
-			var dropSuccessful = false;
 			$('#ccm-overlay-block-types a.ccm-overlay-draggable-block-type').each(function() {
 				var $li = $(this);
 				$li.css('cursor', 'move');
@@ -239,7 +353,10 @@ var CCMEditMode = function() {
 					helper: 'clone',
 					appendTo: $('#ccm-block-types-dragging'),
 					revert: false,
+					connectToSortable: $sortableAreas.filter('[data-accepts-block-types~=' + $li.attr('data-block-type-handle') + ']'),
 					start: function(e, ui) {
+						CCMEditMode.blockTypeDropSuccessful = false;
+
 						// handle the dialog
 						$('#ccm-block-types-wrapper').parent().jqdialog('option', 'closeOnEscape', false);
 						$('#ccm-overlay-block-types').closest('.ui-dialog').fadeOut(100);
@@ -249,10 +366,11 @@ var CCMEditMode = function() {
 						$.fn.ccmmenu.disable();
 
 						// drop into empty areas.
+						/*
 						var $droppables = $emptyareas.filter('[data-accepts-block-types~=' + $li.attr('data-block-type-handle') + ']');
 						$droppables.droppable({
 							hoverClass: 'ccm-area-drag-block-type-over',
-							tolerance: 'touch',
+							tolerance: 'pointer',
 							accept: 'a.ccm-overlay-draggable-block-type',
 							drop: function(e, ui) {
 								dropSuccessful = true;
@@ -278,11 +396,12 @@ var CCMEditMode = function() {
 								addBlockType($area.attr('data-cID'), $area.attr('data-area-id'), $area.attr('data-area-handle'), ui.helper, true);
 							}
 						});
+						*/
+
 					},
 					stop: function() {
 						$.fn.ccmmenu.enable();
-						$('.ccm-block-type-drop-zone').remove();
-						if (!dropSuccessful) {
+						if (!CCMEditMode.blockTypeDropSuccessful) {
 							// this got cancelled without a receive.
 							jQuery.fn.dialog.closeAll();
 						}
