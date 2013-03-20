@@ -1,0 +1,110 @@
+From 87a7bb44fa60970a080781af670dcd3caf055a9b Mon Sep 17 00:00:00 2001
+From: Matt Waters <matt@concretecms.com>
+Date: Mon, 18 Mar 2013 15:08:11 -0700
+Subject: [PATCH] fixed block defaults and adjusted sorting for successive
+ replies when set to bottom
+
+---
+ web/concrete/blocks/core_conversation/form.php             |  6 ++++--
+ web/concrete/core/controllers/blocks/core_conversation.php |  7 ++-----
+ web/concrete/js/ccm_app/conversations.js                   | 10 ++++++++--
+ web/concrete/tools/conversations/view_ajax.php             |  3 ++-
+ 4 files changed, 16 insertions(+), 10 deletions(-)
+
+diff --git a/web/concrete/blocks/core_conversation/form.php b/web/concrete/blocks/core_conversation/form.php
+index 9dbc50f..74edfad 100644
+--- a/web/concrete/blocks/core_conversation/form.php
++++ b/web/concrete/blocks/core_conversation/form.php
+@@ -5,6 +5,8 @@
+ 	$paginate = 1;
+ 	$itemsPerPage = 20;
+ 	$displayMode = 'threaded';
++	$insertNewMessages = 'top';
++	$displayPostingForm = 'top';
+ }
+ ?>
+ <div class="form-horizontal">
+@@ -46,11 +48,11 @@
+ 		<label class="control-label"><?=t('Paginate Message List')?></label>
+ 		<div class="controls">
+ 			<label class="radio">
+-				<?=$form->radio('paginate', 0, $paginate)?>
++				<?=$form->radio('paginate', 1, $paginate)?>
+ 				<span><?=t('No, display all messages.')?></span>
+ 			</label>
+ 			<label class="radio">
+-				<?=$form->radio('paginate', 1, $paginate)?>
++				<?=$form->radio('paginate', 0, $paginate)?>
+ 				<span><?=t('Yes, display only a sub-set of messages at a time.')?></span>
+ 			</label>
+ 		</div> 
+diff --git a/web/concrete/core/controllers/blocks/core_conversation.php b/web/concrete/core/controllers/blocks/core_conversation.php
+index 7ce7e7a..73e2eed 100644
+--- a/web/concrete/core/controllers/blocks/core_conversation.php
++++ b/web/concrete/core/controllers/blocks/core_conversation.php
+@@ -83,11 +83,8 @@ public function save($post) {
+ 			if (!$values['enableCommentRating']) {
+ 				$values['enableCommentRating'] = 0;
+ 			}
+-			if (!$values['displayPostingForm']) {
+-				$values['displayPostingForm'] = 0;
+-			}
+-			if (!$values['insertNewMessages']) {
+-				$values['insertNewMessages'] = 0;
++			if ($values['enableCommentRating']) {
++				$values['enableCommentRating'] = 0;
+ 			}
+ 			$values['cnvID'] = $conversation->getConversationID();
+ 			parent::save($values);
+diff --git a/web/concrete/js/ccm_app/conversations.js b/web/concrete/js/ccm_app/conversations.js
+index e590b03..a1867e2 100755
+--- a/web/concrete/js/ccm_app/conversations.js
++++ b/web/concrete/js/ccm_app/conversations.js
+@@ -39,6 +39,7 @@ var CCMConversation = function(element, options) {
+ 	var orderBy = (obj.options.orderBy);
+ 	var enableOrdering = (obj.options.enableOrdering);
+ 	var displayPostingForm = (obj.options.displayPostingForm);
++	var insertNewMessages = (obj.options.insertNewMessages);
+ 
+ 	if (obj.options.method == 'ajax') {
+ 		obj.$element.load(CCM_TOOLS_PATH + '/conversations/view_ajax', {
+@@ -49,7 +50,8 @@ var CCMConversation = function(element, options) {
+ 			'displayMode': obj.options.displayMode,
+ 			'orderBy': orderBy,
+ 			'enableOrdering': enableOrdering,
+-			'displayPostingForm': displayPostingForm
++			'displayPostingForm': displayPostingForm,
++			'insertNewMessages': insertNewMessages
+ 		}, function(r) {
+ 			obj._init();
+ 		});
+@@ -222,7 +224,11 @@ CCMConversation.prototype._addMessageFromJSON = function($form, json) {
+ 				obj.$replyholder.appendTo(obj.$element);
+ 				obj.$replyholder.hide();
+ 			} else {
+-				obj.$messages.prepend(html);
++				if (obj.options.insertNewMessages == 'bottom') {
++					obj.$messages.append(html);
++				} else {
++					obj.$messages.prepend(html);
++				}
+ 				obj.$element.find('.ccm-conversation-no-messages').hide();
+ 			}
+ 			obj._init();
+diff --git a/web/concrete/tools/conversations/view_ajax.php b/web/concrete/tools/conversations/view_ajax.php
+index ca68be9..d8b3aca 100644
+--- a/web/concrete/tools/conversations/view_ajax.php
++++ b/web/concrete/tools/conversations/view_ajax.php
+@@ -60,7 +60,8 @@
+ 		'totalPages' => $totalPages,
+ 		'orderBy' => $_POST['orderBy'],
+ 		'enableOrdering' => $enableOrdering,
+-		'displayPostingForm' => $_POST['displayPostingForm']
++		'displayPostingForm' => $_POST['displayPostingForm'],
++		'insertNewMessages' => $_POST['insertNewMessages']
+ 	);
+ 
+ 	Loader::element('conversation/display', $args);
+-- 
+1.8.1.5
+
