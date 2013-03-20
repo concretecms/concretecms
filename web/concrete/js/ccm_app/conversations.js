@@ -156,13 +156,14 @@
 
 			obj.$replyholder    = obj.$element.find('div.ccm-conversation-add-reply');
 			obj.$newmessageform = obj.$element.find('div.ccm-conversation-add-new-message form');
-			obj.$deleteholder   = obj.$element.find('div.ccm-conversation-delete-message');
-			obj.$messagelist    = obj.$element.find('div.ccm-conversation-message-list');
-			obj.$messagecnt     = obj.$element.find('.ccm-conversation-message-count');
-			obj.$postbuttons    = obj.$element.find('button[data-submit=conversation-message]');
-			obj.$sortselect     = obj.$element.find('select[data-sort=conversation-message-list]');
-			obj.$loadmore       = obj.$element.find('[data-load-page=conversation-message-list]');
-			obj.$messages       = obj.$element.find('div.ccm-conversation-messages');
+			obj.$deleteholder = obj.$element.find('div.ccm-conversation-delete-message');
+			obj.$messagelist = obj.$element.find('div.ccm-conversation-message-list');
+			obj.$messagecnt = obj.$element.find('.ccm-conversation-message-count');
+			obj.$postbuttons = obj.$element.find('button[data-submit=conversation-message]');
+			obj.$sortselect = obj.$element.find('select[data-sort=conversation-message-list]');
+			obj.$loadmore = obj.$element.find('[data-load-page=conversation-message-list]');
+			obj.$messages = obj.$element.find('div.ccm-conversation-messages');
+			obj.$messagerating = obj.$element.find('span.ccm-conversation-message-rating');
 
 			obj.$newmessageform.dropzone({
 				'url': CCM_TOOLS_PATH + '/conversations/add_file'
@@ -228,7 +229,7 @@
 					obj.attachBindings();
 				});
 			});
-
+			
 			obj.$element.on('click', '[data-load-page=conversation-message-list]', function() {
 				var nextPage = parseInt(obj.$loadmore.attr('data-next-page'));
 				var totalPages = parseInt(obj.$loadmore.attr('data-total-pages'));
@@ -255,7 +256,19 @@
 					}
 				});
 			});
-
+			
+			obj.$element.on('click', 'i.icon-thumbs-up', function() {
+				//alert('upvote');
+				obj.$messagerating.load(CCM_TOOLS_PATH + '/conversations/rate');
+			});
+			
+			obj.$element.on('click', 'i.icon-thumbs-down', function() {
+				//alert('downvote');
+				obj.$messagerating.load(CCM_TOOLS_PATH + '/conversations/rate'), {
+				
+				};
+			});
+			
 		},
 		handlePostError: function($form, messages) {
 			if (!messages) {
