@@ -304,12 +304,9 @@
 			<default value="0" />
 			<unsigned />
 		</field>
-		<field name="cnvMessageRatingTypeHandle"  type="C">
+		<field name="cnvMessageRatingTypeHandle" type="C" size="10">
 		</field>
 		<field name="cnvMessageRatingTypeCommunityPoints" type="I" size="10">
-			<notnull />
-			<default value="0" />
-			<unsigned />
 		</field>
 	</table>
   <table name="PermissionAssignments">
