@@ -26,6 +26,11 @@ class Concrete5_Model_BannedWord extends Object {
 		$this->word = $word;
 	}
 
+	public function delete() {
+		$db = Loader::db();
+		$db->Execute('DELETE FROM BannedWords WHERE bwID=?',array($this->id));
+	}
+
 	public static function getByID($id) {
 		$db = Loader::db();
 		$word = $db->getOne("SELECT bannedWord FROM BannedWords WHERE bwID=?",array($id));
