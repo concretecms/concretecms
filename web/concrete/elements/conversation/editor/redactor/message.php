@@ -7,6 +7,7 @@ var textarea = $('textarea.unbound.redactor_conversation_editor_<?=$editor->cnvO
 $(textarea).redactor({
     focus: true,
     autoresize: false,
+    buttons: [ 'bold','italic','deleted','|','fontcolor','|','link' ],
     callback: function(obj) {
         ccm_event.publish('conversationsRedactorEditorLoaded',obj);
         ccm_event.bind('conversationSubmitForm',function(){
