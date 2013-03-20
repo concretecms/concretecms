@@ -375,6 +375,7 @@ class Concrete5_Library_Controller {
 	 * @param string $http_status
 	 */	
 	public function externalRedirect($url,$http_status=false) {
+		$url = SecurityHelper::sanitize_url($url);
 		if($this->isValidExternalUrl($url)){
 			if($http_status){
 				header($http_status);
