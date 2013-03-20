@@ -23,6 +23,10 @@ if (Loader::helper('validation/numbers')->integer($_POST['cnvMessageParentID']) 
 	}
 }
 
+if (Loader::helper('validation/banned_words')->hasBannedWords($_POST['cnvMessageBody'])) {
+	$ve->add(t('Banned words detected.'));
+}
+
 if ($ve->has()) {
 	$ax->sendError($ve);
 } else {

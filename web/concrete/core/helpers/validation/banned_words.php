@@ -1,5 +1,4 @@
-<?
-defined('C5_EXECUTE') or die("Access Denied.");
+<?php defined('C5_EXECUTE') or die("Access Denied.");
 
 /**
  * Helper functions for catching or stripping dirty words from content
@@ -25,16 +24,23 @@ define("STRING_UTILS_TRUNCATE_PARS",    '\n{2,}');
 
 class Concrete5_Helper_Validation_BannedWords {
 
-    public $bannedWords;
+	public $bannedWords;
 
-    function getCSV_simple($file){}
+	function getCSV_simple($file){
+		return false;
+	}
 
-    function loadBannedWords(){
-		$bw = new BannedWords();
-		$this->bannedWords = $bw->get();
-    }
+	function loadBannedWords(){
+		if ($this->bannedWords) return;
+		$bw = new BannedWordList();
+		$bannedWords = $bw->get();
+		$this->bannedWords = array();
+		foreach ($bannedWords as $word) {
+			$this->bannedWords[] = $word->getWord();
+		}
+	}
 
-    function wordCase($word){
+	function wordCase($word){
 		$lower = "abcdefghijklmnopqrstuvwxyz";
 		$UPPER = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 		$i = 0;
@@ -58,9 +64,9 @@ class Concrete5_Helper_Validation_BannedWords {
 			$i++;
 		}
 		return $case;
-    }
+	}
 
-    function forceCase($case, &$word){
+	function forceCase($case, &$word){
 		$word = strtolower($word);
 		if ($case & STRING_UTILS_CASE_FIRST_UPPER)
 			$word = ucfirst($word);
@@ -74,25 +80,74 @@ class Concrete5_Helper_Validation_BannedWords {
 			}
 			$i++;
 		}
-    }
+	}
 
-    function isBannedWord(&$word){
-		return in_array(strtolower($word), $this->bannedWords);
-    }
+	function isBannedWord(&$word){
+		$case = ValidationBannedWordsHelper::wordCase($word);
+		$nword = strtolower($word);
+		$this->loadBannedWords();
+		if (in_array($nword, $this->bannedWords)) {
+			return TRUE;
+		}
+		return FALSE;
+	}
 
-    function hasBannedWords(&$string){
-    	return (strlen($string) == str_replace($this->bannedWords, array_pad(array(), count($this->bannedWords), ''), strtolower($string)));
-    }
+	function hasBannedWords(&$string){
+		$alpha    = "abcdefghijklmnopqrstuvwxyz";
+		$alpha   .= strtoupper($alpha);
+		$start    = $end = 0;
+		$ra       = 0;
+		$i        = 0;
+		$out      = 0;
+		while ($c = $string[$i]) {
+			if ($ra) {
+			if (strpos($alpha, $c)!==FALSE) {
+			} else {
+				$ra = 0;
+				$end = $i;
+				$word = substr($string, $start, $end-$start);
+				if ($this->isBannedWord($word)) {
+				$out++;
+				$string = substr($string, 0, $start).
+					  $word.
+					  substr($string,$end);
+				}
+			}
+			} else {
+			if (strpos($alpha, $c)!==FALSE) {
+				$ra    = 1;
+				$start = $i;
+			} else {
+			}
+			}
+			$i++;
+		}
+		if ($ra) {
+			$word = substr($string, $start);
+			if ($this->isBannedWord($word)) {
+			$out++;
+			$string = substr($string, 0, $start).
+				  $word;
+	
+			}
+		}
+		if(strlen($this->errorMsg) && !$this->errorMsgDisplayed) {
+			//echo "<div class=\"infoBox\">$this->errorMsg</div>";
+			//$this->errorMsgDisplayed=1;
+		}
+		return $out;
+	}
 
-    function hasBannedPart($string){
+	function hasBannedPart($string){
+		$this->loadBannedWords();
 		$string = strtolower($string);
-		foreach ($this->bannedWords as $bw => $replacement) {
+		foreach ($this->bannedWords as $bw) {
 			if (strpos($string, $bw)!==FALSE) return TRUE;
 		}
 		return FALSE;
-    }
+	}
 
-    function truncate($string, $num, $which=STRING_UTILS_TRUNCATE_CHARS, $ellipsis="&#8230;"){
+	function truncate($string, $num, $which=STRING_UTILS_TRUNCATE_CHARS, $ellipsis="&#8230;"){
 		$parts = preg_split("/($which)/", $string, -1, PREG_SPLIT_DELIM_CAPTURE);
 		$i = 0;
 		$out = "";
@@ -101,7 +156,7 @@ class Concrete5_Helper_Validation_BannedWords {
 		}
 		if (count($parts)) $out = trim($out).$ellipsis;
 		return $out;
-    }
+	}
 
 
 	public function getBannedKeys($inputArray) {
@@ -109,9 +164,9 @@ class Concrete5_Helper_Validation_BannedWords {
 		if(is_array($inputArray) && count($inputArray)) {
 			foreach(array_keys($inputArray) as $k) {
 				 if(is_string($inputArray[$k]) && $this->hasBannedWords( $inputArray[$k])) {
-				 	$error_keys[] = $k;
+					$error_keys[] = $k;
 				 }	elseif (is_array($inputArray[$k]) && count($inputArray[$k])) {
-				 	foreach($inputArray[$k] as $v) {
+					foreach($inputArray[$k] as $v) {
 						if($this->hasBannedWords($v)) {
 							$error_keys[] = $k;
 							break;
