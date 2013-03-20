@@ -42,10 +42,15 @@ class Concrete5_Model_Conversation_Message extends Object {
 	
 	public function attachFile(File $f, $cnvMessageID) {
 		$db = Loader::db();
-		$db->Execute('INSERT INTO ConversationMessageAttachments (cnvMessageID, fID) VALUES (?, ?)', array(
-			$f,
-			$cnvMessageID
-		));
+		if(!is_object($f) || !is_object(ConversationMessage::getByID($cnvMessageID))) {
+			return false;
+		} else {
+			
+			$db->Execute('INSERT INTO ConversationMessageAttachments (cnvMessageID, fID) VALUES (?, ?)', array(
+				$cnvMessageID,
+				$f->getFileID()
+			));
+		}
 	}
 	
 	public function removeFile(File $f, $cnvMessageID) {
