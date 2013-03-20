@@ -11,6 +11,8 @@ class Concrete5_Model_MarkdownConversationEditor extends Concrete5_Model_Convers
 
 	public function formatConversationMessageBody($cnvMessageBody) {
 		loader::library('3rdparty/markdown');
-		return Markdown(parent::formatConversationMessageBody($cnvMessageBody, array('elements'=>'-all')));
+		$text = Loader::helper('text');
+		$md = Markdown(htmlentities($cnvMessageBody));
+		return str_replace(array('&amp;lt','&amp;gt'), array('&lt','&gt'), $md);
 	}
 }
