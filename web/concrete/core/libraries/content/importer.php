@@ -29,6 +29,7 @@ class Concrete5_Library_Content_Importer {
 		$this->importBlockTypes($sx);
 		$this->importBlockTypeSets($sx);
 		$this->importConversationEditors($sx);
+		$this->importBannedWords($sx);
 		$this->importFeatures($sx);
 		$this->importFeatureCategories($sx);
 		$this->importAggregatorDataSources($sx);
@@ -388,6 +389,14 @@ class Concrete5_Library_Content_Importer {
 				if ($th['activated'] == '1') {
 					$ce->activate();
 				}
+			}
+		}
+	}
+
+	protected function importBannedWords(SimpleXMLElement $sx) {
+		if (isset($sx->banned_words)) {
+			foreach($sx->banned_words->banned_word as $p) {
+				$bw = BannedWord::add($p);
 			}
 		}
 	}
