@@ -147,21 +147,47 @@
 			if (obj.$newmessageform.dropzone) {
 				obj.$newmessageform.dropzone({
 					'url': CCM_TOOLS_PATH + '/conversations/add_file', 
-					'success' : function(neat, response) { console.log(response)}
+					'success' : function(file, raw) {
+						var response = JSON.parse(raw);
+						$('div[rel="' + response.tag + '"] form.clickable').append('<input type="hidden" name="attachments[]" value="'+response.id+'" />');
+					},
+					'sending' : function(file, xhr, formData) { 
+						formData.append("tag", $(obj.$newmessageform).parent('div').attr('rel'));
+					}
+					
 				});
 			}
-
+			
 			obj.$element.on('click', 'button[data-submit=conversation-message]', function() {
 				obj.submitForm($(this));
 				return false;
 			});
+			var replyIterator = 1; 
 			obj.$element.on('click', 'a[data-toggle=conversation-reply]', function() {
 				var $replyform = obj.$replyholder.appendTo($(this).closest('div[data-conversation-message-id]'));
 				$replyform.attr('data-form', 'conversation-reply').show();
 				$replyform.find('button[data-submit=conversation-message]').attr('data-post-parent-id', $(this).attr('data-post-parent-id'));
-				$replyform.attr('rel', Math.floor(Math.random()*100001)); 
+				$replyform.find('.dropzone').dropzone({
+					'url': CCM_TOOLS_PATH + '/conversations/add_file', 
+					'success' : function(file, raw) {
+						var response = JSON.parse(raw);
+						$('div[rel="' + response.tag + '"]').find('background-color', 'green')
+					},
+					'sending' : function(file, xhr, formData) { 
+						formData.append("tag", $(obj.$newmessageform).parent('div').attr('rel'));
+					}
+				});
+				$replyform.attr('rel', 'newReply' + replyIterator);
+				replyIterator++;  
 				return false;
 			});
+			
+			$('.attachmentContainer').hide();
+			$('.attachmentToggle').click(function(event){ 
+				event.preventDefault();
+				$('.attachmentContainer').toggle();
+			});
+			
 			obj.$element.on('click', 'a[data-submit=delete-conversation-message]', function() {
 				var $link = $(this);
 				obj.$deletedialog = obj.$deleteholder.clone();
