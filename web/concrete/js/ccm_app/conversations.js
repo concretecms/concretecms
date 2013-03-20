@@ -274,7 +274,7 @@
 			if (!messages) {
 				var messages = ['An unspecified error occurred.'];
 			}
-			obj.publish('conversationPostError',{messages:messages});
+			this.publish('conversationPostError',{messages:messages});
 			var s = '';
 			$.each(messages, function(i, m) {
 				s += m + '<br>';
