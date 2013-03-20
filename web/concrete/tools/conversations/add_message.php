@@ -31,5 +31,10 @@ if ($ve->has()) {
 	$ax->sendError($ve);
 } else {
 	$msg = $cn->addMessage($cnvMessageSubject, $_POST['cnvMessageBody'], $parent);
+	if($_POST['attachments'] && count($_POST['attachments'])) {
+		foreach($_POST['attachments'] as $attachmentID) {
+			ConversationMessage::attachFile(File::getByID($attachmentID), $msg->cnvMessageID);
+		}
+	}
 	$ax->sendResult($msg);
 }
