@@ -17,17 +17,19 @@ $editor->cnvObject = $args['conversation'];
 <h4><?=t('Add Message')?></h4>
 
 	<? if ($enablePosting) { ?>
-		<div class="ccm-conversation-add-new-message" rel="<?php echo rand(1, 100000); ?>">
+		<div class="ccm-conversation-add-new-message" rel="mainReplyForm">
 			<form method="post">
 			<div class="ccm-conversation-avatar"><? print Loader::helper('concrete/avatar')->outputUserAvatar($ui)?></div>
 			<div class="ccm-conversation-message-form">
 				<div class="ccm-conversation-errors alert alert-error"></div>
 				<? $editor->outputConversationEditorAddMessageForm(); ?>
-				<button type="button" data-post-parent-id="0" data-submit="conversation-message" class="pull-right btn btn-submit btn-small"><?=t('Post')?> <i class="icon-bullhorn"></i></button>
+				<button type="button" data-post-parent-id="0" data-submit="conversation-message" class="pull-right btn btn-submit btn-small"><?=t('Post')?> <i class="icon-bullhorn"></i></button><a class="attachmentToggle" href="#"><?php echo t('Attach Files'); ?></a>
 			</div>
 			</form>
-			<form action="<?php echo Loader::helper('concrete/urls')->getToolsURL('conversations/add_file');?>" class="dropzone" id="file-upload">
-			</form>
+			<div class="attachmentContainer">
+				<form action="<?php echo Loader::helper('concrete/urls')->getToolsURL('conversations/add_file');?>" class="dropzone" id="file-upload">
+				</form>
+			</div>
 		</div>
 
 		<div class="ccm-conversation-add-reply">
@@ -39,8 +41,10 @@ $editor->cnvObject = $args['conversation'];
 				<button type="button" data-submit="conversation-message" class="pull-right btn btn-submit btn-small"><?=t('Post')?> <i class="icon-bullhorn"></i></button>
 			</div>
 			</form>
-			<form action="<?php echo Loader::helper('concrete/urls')->getToolsURL('conversations/add_file');?>" class="dropzone" id="file-upload-reply">
-			</form>
+			<div class="attachmentContainer">
+				<form action="<?php echo Loader::helper('concrete/urls')->getToolsURL('conversations/add_file');?>" class="dropzone" id="file-upload-reply">
+				</form>
+			</div>
 		</div>
 	<? } else { ?>
 		<p><?=t('Adding new posts is disabled for this conversation.')?></p>
