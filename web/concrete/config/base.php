@@ -93,6 +93,11 @@ if (!defined("PAGE_PATH_SEPARATOR")) {
 	define('PAGE_PATH_SEPARATOR', '-');
 }
 
+if (!defined('PAGE_PATH_SEGMENT_MAX_LENGTH')) {
+	define('PAGE_PATH_SEGMENT_MAX_LENGTH', '128');
+}
+
+
 if (!defined('ENABLE_ASSET_COMPRESSION')) {
 	define('ENABLE_ASSET_COMPRESSION', false);
 }
