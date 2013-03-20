@@ -2,7 +2,12 @@
 abstract class Concrete5_Model_ConversationEditor extends Object {
 
 	abstract public function getConversationEditorHeaderItems();
-	abstract public function formatConversationMessageBody($cnvMessageBody);
+	public function formatConversationMessageBody($cnvMessageBody,$config=array()) {
+		Loader::library('3rdparty/htmLawed');
+		$default = array('safe'=>1,'elements'=>'span, em, b, i, p, strike, font, br, div');
+		$config = array_merge($default,(array)$config);
+		return htmLawed($cnvMessageBody, $config);
+	}
 
 	public function outputConversationEditorAddMessageForm() {
 		$env = Environment::get();
