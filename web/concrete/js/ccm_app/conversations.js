@@ -55,24 +55,24 @@
 				uninitialized: true
 			}, options);
 
-			var enablePosting = (obj.options.posttoken != '') ? 1 : 0;
-			var paginate = (obj.options.paginate) ? 1 : 0;
-			var orderBy = (obj.options.orderBy);
-			var enableOrdering = (obj.options.enableOrdering);
+			var enablePosting      = (obj.options.posttoken != '') ? 1 : 0;
+			var paginate           = (obj.options.paginate) ? 1 : 0;
+			var orderBy            = (obj.options.orderBy);
+			var enableOrdering     = (obj.options.enableOrdering);
 			var displayPostingForm = (obj.options.displayPostingForm);
-			var insertNewMessages = (obj.options.insertNewMessages);
+			var insertNewMessages  = (obj.options.insertNewMessages);
 
 			if (obj.options.method == 'ajax') {
 				$.post(CCM_TOOLS_PATH + '/conversations/view_ajax', {
-					'cnvID': obj.options.cnvID,
-					'enablePosting': enablePosting,
-					'itemsPerPage': obj.options.itemsPerPage,
-					'paginate': paginate,
-					'displayMode': obj.options.displayMode,
-					'orderBy': orderBy,
-					'enableOrdering': enableOrdering,
+					'cnvID':              obj.options.cnvID,
+					'enablePosting':      enablePosting,
+					'itemsPerPage':       obj.options.itemsPerPage,
+					'paginate':           paginate,
+					'displayMode':        obj.options.displayMode,
+					'orderBy':            orderBy,
+					'enableOrdering':     enableOrdering,
 					'displayPostingForm': displayPostingForm,
-					'insertNewMessages': insertNewMessages
+					'insertNewMessages':  insertNewMessages
 				}, function(r) {
 					var oldobj = window.obj;
 					window.obj = obj;
@@ -95,11 +95,12 @@
 				obj.dropdown.handle.dropdown('toggle');
 				obj.dropdown.parent.remove();
 				obj.dropdown.active = false;
+				obj.dropdown.activeItem = -1;
 				return;
 			}
 
 			obj.dropdown.list.empty();
-			items.map(function(item){
+			items.slice(0,20).map(function(item){
 				var listitem = $('<li/>');
 				var anchor = $('<a/>').appendTo(listitem).text(item.getName());
 				anchor.click(function(){ccm_event.fire('conversationsMentionSelect',{obj:obj,item:item},bindTo)});
@@ -107,9 +108,12 @@
 			});
 			if (!obj.dropdown.active) {
 				obj.dropdown.active = true;
+				obj.dropdown.activeItem = -1;
 				obj.dropdown.parent.appendTo(obj.$element);
 				obj.dropdown.handle.dropdown('toggle');
 			}
+			if (obj.dropdown.activeItem >= 0)
+				obj.dropdown.list.children().eq(obj.dropdown.activeItem).addClass('active');
 		},
 		attachBindings: function() {
 			var obj = this;
@@ -130,26 +134,39 @@
 				obj.dropdown.handle = $('<a/>').appendTo(obj.dropdown.parent);
 				obj.dropdown.list = $('<ul/>').addClass('dropdown-menu').appendTo(obj.dropdown.parent);
 				obj.dropdown.handle.dropdown();
+				ccm_event.bind('conversationsTextareaKeydownUp',function(e){
+					if (obj.dropdown.activeItem == -1) obj.dropdown.activeItem = obj.dropdown.list.children().length;
+					obj.dropdown.activeItem -= 1;
+					obj.dropdown.activeItem += obj.dropdown.list.children().length;
+					obj.dropdown.activeItem %= obj.dropdown.list.children().length;
+					obj.dropdown.list.children().filter('.active').removeClass('active').end().eq(obj.dropdown.activeItem).addClass('active');
+				}, obj.$element.get(0));
+				ccm_event.bind('conversationsTextareaKeydownDown',function(e){
+					obj.dropdown.activeItem += 1;
+					obj.dropdown.activeItem += obj.dropdown.list.children().length;
+					obj.dropdown.activeItem %= obj.dropdown.list.children().length;
+					obj.dropdown.list.children().filter('.active').removeClass('active').end().eq(obj.dropdown.activeItem).addClass('active');
+				}, obj.$element.get(0));
+				ccm_event.bind('conversationsTextareaKeydownEnter',function(e){
+					obj.dropdown.list.children().filter('.active').children('a').click();
+				}, obj.$element.get(0));
 			}
 			var paginate = (obj.options.paginate) ? 1 : 0;
 			var enablePosting = (obj.options.posttoken != '') ? 1 : 0;
 
-			obj.$replyholder = obj.$element.find('div.ccm-conversation-add-reply');
+			obj.$replyholder    = obj.$element.find('div.ccm-conversation-add-reply');
 			obj.$newmessageform = obj.$element.find('div.ccm-conversation-add-new-message form');
-			obj.$deleteholder = obj.$element.find('div.ccm-conversation-delete-message');
-			obj.$messagelist = obj.$element.find('div.ccm-conversation-message-list');
-			obj.$messagecnt = obj.$element.find('.ccm-conversation-message-count');
-			obj.$postbuttons = obj.$element.find('button[data-submit=conversation-message]');
-			obj.$sortselect = obj.$element.find('select[data-sort=conversation-message-list]');
-			obj.$loadmore = obj.$element.find('[data-load-page=conversation-message-list]');
-			obj.$messages = obj.$element.find('div.ccm-conversation-messages');
+			obj.$deleteholder   = obj.$element.find('div.ccm-conversation-delete-message');
+			obj.$messagelist    = obj.$element.find('div.ccm-conversation-message-list');
+			obj.$messagecnt     = obj.$element.find('.ccm-conversation-message-count');
+			obj.$postbuttons    = obj.$element.find('button[data-submit=conversation-message]');
+			obj.$sortselect     = obj.$element.find('select[data-sort=conversation-message-list]');
+			obj.$loadmore       = obj.$element.find('[data-load-page=conversation-message-list]');
+			obj.$messages       = obj.$element.find('div.ccm-conversation-messages');
 
-			if (obj.$newmessageform.dropzone) {
-				obj.$newmessageform.dropzone({
-					'url': CCM_TOOLS_PATH + '/conversations/add_file', 
-					'success' : function(neat, response) { console.log(response)}
-				});
-			}
+			obj.$newmessageform.dropzone({
+				'url': CCM_TOOLS_PATH + '/conversations/add_file'
+			});
 
 			obj.$element.on('click', 'button[data-submit=conversation-message]', function() {
 				obj.submitForm($(this));
@@ -159,7 +176,6 @@
 				var $replyform = obj.$replyholder.appendTo($(this).closest('div[data-conversation-message-id]'));
 				$replyform.attr('data-form', 'conversation-reply').show();
 				$replyform.find('button[data-submit=conversation-message]').attr('data-post-parent-id', $(this).attr('data-post-parent-id'));
-				$replyform.attr('rel', Math.floor(Math.random()*100001)); 
 				return false;
 			});
 			obj.$element.on('click', 'a[data-submit=delete-conversation-message]', function() {
@@ -197,16 +213,16 @@
 
 			obj.$element.on('change', 'select[data-sort=conversation-message-list]', function() {
 				obj.$messagelist.load(CCM_TOOLS_PATH + '/conversations/view_ajax', {
-					'cnvID': obj.options.cnvID,
-					'task': 'get_messages',
-					'enablePosting': enablePosting,
-					'displayMode': obj.options.displayMode,
-					'itemsPerPage': obj.options.itemsPerPage,
-					'paginate': paginate,
-					'orderBy': $(this).val(),
-					'enableOrdering': obj.options.enableOrdering,
+					'cnvID':              obj.options.cnvID,
+					'task':               'get_messages',
+					'enablePosting':      enablePosting,
+					'displayMode':        obj.options.displayMode,
+					'itemsPerPage':       obj.options.itemsPerPage,
+					'paginate':           paginate,
+					'orderBy':            $(this).val(),
+					'enableOrdering':     obj.options.enableOrdering,
 					'displayPostingForm': displayPostingForm,
-					'insertNewMessages': insertNewMessages
+					'insertNewMessages':  insertNewMessages
 				}, function(r) {
 					obj.$replyholder.appendTo(obj.$element);
 					obj.attachBindings();
@@ -328,7 +344,7 @@
 			var obj = this;
 			obj.publish('conversationBeforeUpdateCount');
 			obj.$messagecnt.load(CCM_TOOLS_PATH + '/conversations/count_header', {
-				'cnvID': obj.options.cnvID,
+				'cnvID': obj.options.cnvID
 			},function(){
 				obj.publish('conversationUpdateCount');
 			});
