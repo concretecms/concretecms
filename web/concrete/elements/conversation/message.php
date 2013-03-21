@@ -27,7 +27,10 @@ $cnvMessageID = $message->cnvMessageID;
 			<? } ?>
 		</ul>
 		<? } ?>
-
-		<?=$message->getConversationMessageDateTimeOutput()?> <i class="icon-thumbs-up"></i> <i class="icon-thumbs-down"></i>&nbsp;<span class="ccm-conversation-message-rating">6</span>
+		
+		<?=$message->getConversationMessageDateTimeOutput()?>
+		<? if ($enableCommentRating)  { ?>
+			<i class="icon-thumbs-up"></i> <i class="icon-thumbs-down"></i>&nbsp;<span class="ccm-conversation-message-rating">6</span>
+		<? } ?>
 	</div>
 </div>

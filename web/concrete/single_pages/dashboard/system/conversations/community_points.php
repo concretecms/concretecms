@@ -5,8 +5,13 @@ echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Comm
 ?>
 <form action="<?=$this->action('save')?>" method='post'>
 	<div class='ccm-pane-body'>
-		<span>Upvotes</span><br />
-		<span>Downvotes</span>
+		<h4>Point Values</h4>
+		<fieldset>
+		<?=$form->label('upvote', 'Upvote'); ?>
+		<?=$form->text('upvote', '10'); ?>
+		<?=$form->label('upvote', 'Downvote'); ?>
+		<?=$form->text('upvote', '0'); ?>
+		</fieldset>
 	</div>
 	<div class='ccm-pane-footer'>
 	</div>
