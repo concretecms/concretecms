@@ -100,8 +100,11 @@ jQuery.fn.dialog.open = function(obj) {
 		},*/
 		
 		'open': function() {
-			$("body").attr('data-last-overflow', $('body').css('overflow'));
-			$("body").css("overflow", "hidden");
+			var nd = $(".ui-dialog").length;
+			if (nd == 1) {
+				$("body").attr('data-last-overflow', $('body').css('overflow'));
+				$("body").css("overflow", "hidden");
+			}
 		},
 		'beforeClose': function() {
 			var nd = $(".ui-dialog").length;
