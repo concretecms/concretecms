@@ -692,6 +692,13 @@
 				</attributekey>
 			</attributes>
 		</page>
+		<page name="Banned Words" path="/dashboard/system/conversations/banned_words" filename="/dashboard/system/conversations/banned_words.php" pagetype="" description="" package="">
+			<attributes>
+				<attributekey handle="meta_keywords">
+					<value>conversations bad words, banned words, banned, bad words, bad, words, list</value>
+				</attributekey>
+			</attributes>
+		</page>
 
         <page name="Attributes" path="/dashboard/system/attributes" filename="/dashboard/system/attributes/view.php" pagetype="" description="Setup attributes for pages, users, files and more." package="">
 			<attributes>
