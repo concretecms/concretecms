@@ -28,7 +28,6 @@ echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Conv
 				</thead>
 				<tbody>
 					<?php
-					print_R($bannedWords);
 					foreach ($bannedWords as $word) {
 						if (!is_object($word)) continue;
 						?>
