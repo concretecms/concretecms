@@ -11,7 +11,7 @@ echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Conv
 			</label>
 		</div>
 		<script class='word_template' type="text/template" charset="utf-8">
-			<tr>
+			<tr class='editing'>
 				<th class='id'></th>
 				<td class='word'><span></span><input name='banned_word[]'></td>
 				<td style='text-align:right'><a href='#' class='save_word btn'><?=t('Save')?></a></td>
@@ -28,7 +28,9 @@ echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Conv
 				</thead>
 				<tbody>
 					<?php
+					print_R($bannedWords);
 					foreach ($bannedWords as $word) {
+						if (!is_object($word)) continue;
 						?>
 						<tr>
 							<th class='id'><?=$word->getID()?></th>
@@ -60,8 +62,11 @@ if (!$('input[name=banned_list_enabled]').get(0).checked) {
 $('input[name=banned_list_enabled]').click(function(){
 	if (this.checked) {
 		ctx.fadeIn(200);
-		ctx.parent().animate({height:totalheight},200);
+		ctx.parent().animate({height:totalheight},200,function(){
+			$(this).height('auto');
+		});
 	} else {
+		totalheight = ctx.parent().height();
 		ctx.fadeOut(200);
 		ctx.parent().animate({height:0},200);
 	}
@@ -88,6 +93,7 @@ ctx.on('click','a.edit_word',function(e){
 	e.stopPropagation();
 	return false;
 }).on('click','a.add_word',function(e){
+	ctx.find('tr.editing').find('a.save_word').click();
 	var newWord = getTemplate();
 	newWord.find('th.id').text(' ');
 	newWord.appendTo(ctx.find('tbody'));
