@@ -426,6 +426,7 @@
 						obj.handlePostError($form, r.messages);
 						return false;
 					}
+					$form.find('div.ccm-conversation-errors').hide();
 					obj.addMessageFromJSON($form, r);
 					obj.publish('conversationSubmitForm');
 				},
