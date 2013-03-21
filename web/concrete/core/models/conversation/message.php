@@ -30,6 +30,10 @@ class Concrete5_Model_Conversation_Message extends Object {
 		return t('Posted on %s', Loader::helper('date')->date('F d, Y \a\t g:i a', strtotime($this->cnvMessageDateCreated)));
 	}
 
+	public function rateMessage(ConversationRatingType $ratingType, $post = array()) {
+		
+	}
+
 	public static function getByID($cnvMessageID) {
 		$db = Loader::db();
 		$r = $db->GetRow('select * from ConversationMessages where cnvMessageID = ?', array($cnvMessageID));
