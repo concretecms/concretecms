@@ -61,6 +61,7 @@
 			var enableOrdering     = (obj.options.enableOrdering);
 			var displayPostingForm = (obj.options.displayPostingForm);
 			var insertNewMessages  = (obj.options.insertNewMessages);
+			var enableCommentRating = (obj.options.enableCommentRating);
 
 			if (obj.options.method == 'ajax') {
 				$.post(CCM_TOOLS_PATH + '/conversations/view_ajax', {
@@ -72,7 +73,9 @@
 					'orderBy':            orderBy,
 					'enableOrdering':     enableOrdering,
 					'displayPostingForm': displayPostingForm,
-					'insertNewMessages':  insertNewMessages
+					'insertNewMessages':  insertNewMessages,
+					'enableCommentRating': enableCommentRating
+					
 				}, function(r) {
 					var oldobj = window.obj;
 					window.obj = obj;
@@ -176,6 +179,7 @@
 			obj.$loadmore = obj.$element.find('[data-load-page=conversation-message-list]');
 			obj.$messages = obj.$element.find('div.ccm-conversation-messages');
 			obj.$messagerating = obj.$element.find('span.ccm-conversation-message-rating');
+			obj.$messagescore = 2; // this is test
 
 			if (obj.$newmessageform.dropzone) {
 				obj.$newmessageform.dropzone({
@@ -265,7 +269,9 @@
 					'orderBy':            $(this).val(),
 					'enableOrdering':     obj.options.enableOrdering,
 					'displayPostingForm': displayPostingForm,
-					'insertNewMessages':  insertNewMessages
+					'insertNewMessages':  insertNewMessages,
+					'enableCommentRating': obj.options.enableCommentRating
+					
 				}, function(r) {
 					obj.$replyholder.appendTo(obj.$element);
 					obj.attachBindings();
@@ -281,7 +287,8 @@
 					'displayMode': obj.options.displayMode,
 					'enablePosting': enablePosting,
 					'page': nextPage,
-					'orderBy': obj.$sortselect.val()
+					'orderBy': obj.$sortselect.val(),
+					'enableCommentRating': obj.options.enableCommentRating
 				};
 
 				$.ajax({
@@ -300,15 +307,22 @@
 			});
 			
 			obj.$element.on('click', 'i.icon-thumbs-up', function() {
-				//alert('upvote');
-				obj.$messagerating.load(CCM_TOOLS_PATH + '/conversations/rate');
+				var data = {
+					'cnvID': obj.options.cnvID,
+					'msgScore': obj.$messagescore
+				};
+				$.ajax({
+					type: 'post',
+					data: data,
+					url: CCM_TOOLS_PATH + '/conversations/rate',
+					success: function(html) {
+						obj.$messagerating.append(html);
+					}
+				});
 			});
 			
 			obj.$element.on('click', 'i.icon-thumbs-down', function() {
-				//alert('downvote');
-				obj.$messagerating.load(CCM_TOOLS_PATH + '/conversations/rate'), {
-				
-				};
+				obj.$messagerating.load(CCM_TOOLS_PATH + '/conversations/rate');
 			});
 			
 		},
@@ -358,9 +372,12 @@
 			}, {
 				'name': 'enablePosting',
 				'value': enablePosting
-			},  {
+			}, {
 				'name': 'displayMode',
 				'value': obj.options.displayMode
+			}, {
+				'name': 'enableCommentRating',
+				'value': obj.options.enableCommentRating
 			}];
 
 			$.ajax({

@@ -23,6 +23,7 @@ $classes = array(
 	'ConversationMessage' => array('model','conversation/message/model'),
 	'ConversationMessageThreadedList' => array('model','conversation/message/list/threaded'),
 	'ConversationMessageList' => array('model','conversation/message/list/model'),
+	'ConversationMessageRating' => array('model','conversation/message/rating/model'),
 	'BannedWord' => array('model','banned_word'),
 	'BannedWordList' => array('model','banned_word_list'),
 	'FeatureAssignment' => array('model','feature/assignment'),

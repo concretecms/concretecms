@@ -4,7 +4,7 @@ if (is_object($cnv)) {
 	$enablePosting = ($_POST['enablePosting'] == 1) ? true : false;
 	$enableOrdering = ($_POST['enableOrdering'] == 1) ? true : false;
 	$currentPage = (Loader::helper('validation/numbers')->integer($_POST['page'])) ? $_POST['page'] : 1;
-
+	
 	if (in_array($_POST['displayMode'], array('flat'))) {
 		$displayMode = $_POST['displayMode'];
 	} else {
