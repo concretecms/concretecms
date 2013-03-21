@@ -283,6 +283,8 @@ class Concrete5_Model_Package extends Object {
 		$items['attribute_types'] = AttributeType::getListByPackage($this);		
 		$items['captcha_libraries'] = SystemCaptchaLibrary::getListByPackage($this);		
 		$items['content_editor_snippets'] = SystemContentEditorSnippet::getListByPackage($this);		
+		$items['conversation_editors'] = ConversationEditor::getListByPackage($this);		
+		$items['conversation_rating_types'] = ConversationRatingType::getListByPackage($this);		
 		$items['antispam_libraries'] = SystemAntispamLibrary::getListByPackage($this);		
 		$items['community_point_actions'] = UserPointAction::getListByPackage($this);		
 		$items['jobs'] = Job::getListByPackage($this);		
@@ -338,6 +340,8 @@ class Concrete5_Model_Package extends Object {
 			return $item->getSystemCaptchaLibraryName();
 		} else if ($item instanceof SystemAntispamLibrary) {
 			return $item->getSystemAntispamLibraryName();
+		} else if ($item instanceof ConversationRatingType) {
+			return $item->getConversationRatingTypeName();
 		} else if ($item instanceof SystemContentEditorSnippet) {
 			return $item->getSystemContentEditorSnippetName();
 		} else if (is_a($item, 'PermissionKey')) {
@@ -375,6 +379,8 @@ class Concrete5_Model_Package extends Object {
 						case 'Feature':
 						case 'FeatureCategory':
 						case 'AggregatorItemTemplate':
+						case 'ConversationEditor':
+						case 'ConversationRatingType':
 							$item->delete();	
 							break;
 						case 'PageTheme':

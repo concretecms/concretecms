@@ -39,6 +39,11 @@ $cnvMessageID = $message->cnvMessageID;
 		</ul>
 		<? } ?>
 
-		<?=$message->getConversationMessageDateTimeOutput()?> <i class="icon-thumbs-up"></i> <i class="icon-thumbs-down"></i>&nbsp;<span class="ccm-conversation-message-rating">6</span>
+		<?=$message->getConversationMessageDateTimeOutput()?> 
+		<?
+		$ratingTypes = ConversationRatingType::getList();
+		foreach($ratingTypes as $type) { ?>
+			<?=$type->outputRatingTypeHTML()?>
+		<? } ?>
 	</div>
 </div>

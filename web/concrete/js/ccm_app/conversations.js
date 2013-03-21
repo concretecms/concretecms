@@ -61,6 +61,7 @@
 			var enableOrdering     = (obj.options.enableOrdering);
 			var displayPostingForm = (obj.options.displayPostingForm);
 			var insertNewMessages  = (obj.options.insertNewMessages);
+			var enableCommentRating = (obj.options.enableCommentRating);
 
 			if (obj.options.method == 'ajax') {
 				$.post(CCM_TOOLS_PATH + '/conversations/view_ajax', {
@@ -72,7 +73,9 @@
 					'orderBy':            orderBy,
 					'enableOrdering':     enableOrdering,
 					'displayPostingForm': displayPostingForm,
-					'insertNewMessages':  insertNewMessages
+					'insertNewMessages':  insertNewMessages,
+					'enableCommentRating': enableCommentRating
+					
 				}, function(r) {
 					var oldobj = window.obj;
 					window.obj = obj;
@@ -150,6 +153,18 @@
 				ccm_event.bind('conversationsTextareaKeydownEnter',function(e){
 					obj.dropdown.list.children().filter('.active').children('a').click();
 				}, obj.$element.get(0));
+				ccm_event.bind('conversationPostError',function(e){
+					var $form = e.eventData.form,
+						messages = e.eventData.messages;
+					var s = '';
+					$.each(messages, function(i, m) {
+						s += m + '<br>';
+					});
+					$form.find('div.ccm-conversation-errors').html(s).show();
+				});
+				ccm_event.bind('conversationSubmitForm',function(e){
+					e.eventData.form.find('div.ccm-conversation-errors').hide();
+				});
 			}
 			var paginate = (obj.options.paginate) ? 1 : 0;
 			var enablePosting = (obj.options.posttoken != '') ? 1 : 0;
@@ -165,6 +180,7 @@
 			obj.$loadmore = obj.$element.find('[data-load-page=conversation-message-list]');
 			obj.$messages = obj.$element.find('div.ccm-conversation-messages');
 			obj.$messagerating = obj.$element.find('span.ccm-conversation-message-rating');
+			obj.$messagescore = 2; // this is test
 
 			if (obj.$newmessageform.dropzone) {
 				obj.$newmessageform.dropzone({
@@ -326,7 +342,9 @@
 					'orderBy':            $(this).val(),
 					'enableOrdering':     obj.options.enableOrdering,
 					'displayPostingForm': displayPostingForm,
-					'insertNewMessages':  insertNewMessages
+					'insertNewMessages':  insertNewMessages,
+					'enableCommentRating': obj.options.enableCommentRating
+					
 				}, function(r) {
 					obj.$replyholder.appendTo(obj.$element);
 					obj.attachBindings();
@@ -342,7 +360,8 @@
 					'displayMode': obj.options.displayMode,
 					'enablePosting': enablePosting,
 					'page': nextPage,
-					'orderBy': obj.$sortselect.val()
+					'orderBy': obj.$sortselect.val(),
+					'enableCommentRating': obj.options.enableCommentRating
 				};
 
 				$.ajax({
@@ -360,29 +379,29 @@
 				});
 			});
 			
-			obj.$element.on('click', 'i.icon-thumbs-up', function() {
+			obj.$element.on('click', '.conversation-rate-message', function() {
 				//alert('upvote');
 				obj.$messagerating.load(CCM_TOOLS_PATH + '/conversations/rate');
-			});
-			
-			obj.$element.on('click', 'i.icon-thumbs-down', function() {
-				//alert('downvote');
-				obj.$messagerating.load(CCM_TOOLS_PATH + '/conversations/rate'), {
-				
+				var data = {
+					'cnvID': obj.options.cnvID,
+					'cnvMessageID': $(this).closest('[data-conversation-message-id]').attr('data-conversation-message-id'),
+					'cnvRatingTypeHandle': $(this).attr('data-conversation-rating-type')
 				};
+				$.ajax({
+					type: 'post',
+					data: data,
+					url: CCM_TOOLS_PATH + '/conversations/rate',
+					success: function(html) {
+
+					}
+				});
 			});
-			
 		},
 		handlePostError: function($form, messages) {
 			if (!messages) {
 				var messages = ['An unspecified error occurred.'];
 			}
-			this.publish('conversationPostError',{messages:messages});
-			var s = '';
-			$.each(messages, function(i, m) {
-				s += m + '<br>';
-			});
-			$form.find('div.ccm-conversation-errors').html(s).show();
+			this.publish('conversationPostError',{form:$form,messages:messages});
 		},
 		deleteMessage: function(msgID) {
 
@@ -424,9 +443,12 @@
 			}, {
 				'name': 'enablePosting',
 				'value': enablePosting
-			},  {
+			}, {
 				'name': 'displayMode',
 				'value': obj.options.displayMode
+			}, {
+				'name': 'enableCommentRating',
+				'value': obj.options.enableCommentRating
 			}];
 
 			$.ajax({
@@ -526,7 +548,7 @@
 						return false;
 					}
 					obj.addMessageFromJSON($form, r);
-					obj.publish('conversationSubmitForm');
+					obj.publish('conversationSubmitForm',{form:$form,response:r});
 				},
 				error: function(r) {
 					obj.handlePostError($form);

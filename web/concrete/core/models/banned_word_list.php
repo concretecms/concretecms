@@ -3,7 +3,7 @@ class Concrete5_Model_BannedWordList extends DatabaseItemList {
 
 	public function __construct() {
 		$this->setQuery('select * from BannedWords');
-		$this->sortBy('bannedWord', 'asc');
+		$this->sortBy('bwID', 'asc');
 	}
 
 	public function get() {
