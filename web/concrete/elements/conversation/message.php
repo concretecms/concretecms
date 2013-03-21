@@ -17,6 +17,17 @@ $cnvMessageID = $message->cnvMessageID;
 		<?=$message->getConversationMessageBodyOutput()?>
 	</div>
 	<div class="ccm-conversation-message-controls">
+		<div class="message-attachments">
+			<?php
+			if(count($message->getAttachments($message->cnvMessageID))) {
+				foreach ($message->getAttachments($message->cnvMessageID) as $attachment) {
+					$file = File::getByID($attachment['fID']);
+					if(is_object($file)) { ?>
+					<p rel="<?php echo $attachment['cnvMessageAttachmentID'];?>"><a href="<?php echo $file->getDownloadURL() ?>"><?php echo $file->getFileName() ?></a><a rel="<?php echo $attachment['cnvMessageAttachmentID'];?>" class="attachmentDelete" href="#">Delete</a></p>
+				<?php }
+				}
+			} ?>
+		</div>
 		<? if (!$message->isConversationMessageDeleted()) { ?>
 		<ul>
 			

@@ -53,19 +53,27 @@ class Concrete5_Model_Conversation_Message extends Object {
 		}
 	}
 	
-	public function removeFile(File $f, $cnvMessageID) {
+	public function removeFile($cnvMessageAttachmentID) {
 		$db = Loader::db();
-		$db->Execute('DELETE FROM ConversationMessageAttachments WHERE cnvMessageID = ? AND fID = ?', array(
-			$f,
-			$cnvMessageID
+		$db->Execute('DELETE FROM ConversationMessageAttachments WHERE cnvMessageAttachmentID = ?', array(
+			$cnvMessageAttachmentID
 		));
 	}
 	
 	public function getAttachments($cnvMessageID) {
 		$db = Loader::db();
-		$db->Execute('SELECT fID FROM ConversationMessageAttachments WHERE cnvMessageID = ?', array(
+		$attachments = $db->Execute('SELECT * FROM ConversationMessageAttachments WHERE cnvMessageID = ?', array(
 			$cnvMessageID
 		));
+		return $attachments;
+	}
+
+	public function getAttachmentByID($cnvMessageAttachmentID) {
+		$db = Loader::db();
+		$attachment = $db->Execute('SELECT * FROM ConversationMessageAttachments WHERE cnvMessageAttachmentID = ?', array(
+		$cnvMessageAttachmentID
+		));
+		return $attachment;
 	}
 
 	public function delete() {
