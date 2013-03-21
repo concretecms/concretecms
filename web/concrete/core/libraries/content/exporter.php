@@ -34,6 +34,10 @@ class Concrete5_Library_Content_Exporter {
 		Feature::exportList($this->x);
 		FeatureCategory::exportList($this->x);
 
+		ConversationEditor::exportList($this->x);
+
+		ConversationRatingType::exportList($this->x);
+
 		// attribute types
 		AttributeType::exportList($this->x);
 

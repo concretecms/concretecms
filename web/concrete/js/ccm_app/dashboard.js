@@ -97,7 +97,11 @@ $(function() {
 		e.stopPropagation();
 	});
 	$(document).click(function() {
-		$ccmPageHelp.data('popover').hide();
+		var $popover = $ccmPageHelp.data('popover');
+		if ($popover) {
+			$popover.hide();
+			console.log('hidepopover');
+		}
 	});
 	$('.launch-tooltip').tooltip({placement: 'bottom'});
 	if ($('#ccm-dashboard-result-message').length > 0) { 

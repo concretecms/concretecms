@@ -21,8 +21,8 @@ $(function() {
 		enableOrdering: <?=$enableOrdering?>,
 		displayPostingForm: '<?=$displayPostingForm?>',
 		insertNewMessages: '<?=$insertNewMessages?>',
-		activeUsers: <?=Loader::helper('json')->encode($users)?>
-
+		activeUsers: <?=Loader::helper('json')->encode($users)?>,
+		enableCommentRating: <?=$enableCommentRating?>
 	});
 });
 </script>

@@ -23,9 +23,13 @@ if (Loader::helper('validation/numbers')->integer($_POST['cnvMessageParentID']) 
 	}
 }
 
-if (Loader::helper('validation/banned_words')->hasBannedWords($_POST['cnvMessageBody'])) {
+if (Config::get('CONVERSATION_DISALLOW_BANNED_WORDS') && Loader::helper('validation/banned_words')->hasBannedWords($_POST['cnvMessageBody'])) {
 	$ve->add(t('Banned words detected.'));
 }
+if (!Loader::helper('validation/antispam')->check($_POST['cnvMessageBody'],'conversation_comment')) {
+	$ve->add(t('Spam Detected'));
+}
+
 
 if ($ve->has()) {
 	$ax->sendError($ve);
