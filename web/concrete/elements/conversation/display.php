@@ -77,7 +77,7 @@ $editor->cnvObject = $args['conversation'];
 	<div class="ccm-conversation-messages">
 
 	<? foreach($messages as $m) {
-		Loader::element('conversation/message', array('message' => $m, 'enablePosting' => $enablePosting, 'displayMode' => $displayMode));
+		Loader::element('conversation/message', array('message' => $m, 'enablePosting' => $enablePosting, 'displayMode' => $displayMode, 'enableCommentRating' => $enableCommentRating));
 	} ?>
 
 	</div>
