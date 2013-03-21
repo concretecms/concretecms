@@ -4,17 +4,17 @@ var dateNav ={
 		this.blockForm=document.forms['ccm-block-form'];
 		
 		$('#cParentIDLocation').change(function() {
-			if($('#cParentIDLocation').val() == 'CUSTOM') {
+			if($('#cParentIDLocation').val() === 'CUSTOM') {
 			
 			}
 			
 		});
-		if (value == "custom") {
-				$("#ccm-autonav-page-selector").css('display','block');
-			} else {
-				$("#ccm-autonav-page-selector").hide();
-			}
+		if (value === "custom") {
+			$("#ccm-autonav-page-selector").css('display','block');
+		} else {
+			$("#ccm-autonav-page-selector").hide();
 		}
+		
 		
 		/*
 		this.cParentIDRadios=this.blockForm.cParentID;
@@ -41,7 +41,7 @@ var dateNav ={
 	}, 
 	showDescriptionOpts:function(){ 
 		for(var i=0;i<this.showDescriptionsRadios.length;i++){
-			if( this.showDescriptionsRadios[i].checked && this.showDescriptionsRadios[i].value=='1' ){
+			if( this.showDescriptionsRadios[i].checked && this.showDescriptionsRadios[i].value==='1' ){
 				$('div#ccm-pagelist-summariesOptsWrap').css('display','block'); 
 				return; 
 			}				
@@ -72,7 +72,7 @@ var dateNav ={
 	}, 	
 	locationOtherShown:function(){
 		for(var i=0;i<this.cParentIDRadios.length;i++){
-			if( this.cParentIDRadios[i].checked && this.cParentIDRadios[i].value=='OTHER' ){
+			if( this.cParentIDRadios[i].checked && this.cParentIDRadios[i].value==='OTHER' ){
 				$('div.ccm-page-list-page-other').css('display','block');
 				return; 
 			}				
@@ -83,7 +83,7 @@ var dateNav ={
 		
 		var failed=0; 
 		
-		if( failed==1 ){
+		if( failed===1 ){
 			ccm_isBlockError=1;
 			return false;
 		}
