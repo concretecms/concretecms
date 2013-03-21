@@ -10,6 +10,7 @@ class Concrete5_Model_BannedWord extends Object {
 
 	public function setWord($word) {
 		$db = Loader::db();
+		if ($word == false) return $this->delete();
 		$db->execute('UPDATE BannedWords SET bannedWord=? WHERE bwID=?',array($word,$this->id));
 		$this->word = $word;
 	}
@@ -49,6 +50,7 @@ class Concrete5_Model_BannedWord extends Object {
 	}
 
 	public static function add($word) {
+		if (!$word) return false;
 		$db = Loader::db();
 		$word = strtolower($word);
 		if ($bw = BannedWord::getByWord($word)) return $bw;
