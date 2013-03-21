@@ -299,18 +299,25 @@
 				});
 			});
 			
-			obj.$element.on('click', 'i.icon-thumbs-up', function() {
+			obj.$element.on('click', '.conversation-rate-message', function() {
 				//alert('upvote');
 				obj.$messagerating.load(CCM_TOOLS_PATH + '/conversations/rate');
-			});
-			
-			obj.$element.on('click', 'i.icon-thumbs-down', function() {
-				//alert('downvote');
-				obj.$messagerating.load(CCM_TOOLS_PATH + '/conversations/rate'), {
-				
+				var data = {
+					'cnvID': obj.options.cnvID,
+					'cnvMessageID': $(this).closest('[data-conversation-message-id]').attr('data-conversation-message-id'),
+					'cnvRatingTypeHandle': $(this).attr('data-conversation-rating-type')
 				};
+				$.ajax({
+					type: 'post',
+					data: data,
+					url: CCM_TOOLS_PATH + '/conversations/rate',
+					success: function(html) {
+
+					}
+				});
 			});
 			
+		
 		},
 		handlePostError: function($form, messages) {
 			if (!messages) {

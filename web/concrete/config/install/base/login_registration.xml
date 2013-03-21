@@ -30,4 +30,9 @@
         <editor handle="redactor" name="Redactor" package="" activated="1"/>
     </conversationeditors>
 
+    <conversationratingtypes>
+        <conversationratingtype handle="up_vote" name="Up Vote" package="" />
+        <conversationratingtype handle="down_vote" name="Down Vote" package="" />
+    </conversationratingtypes>
+
 </concrete5-cif>
