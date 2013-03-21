@@ -150,6 +150,18 @@
 				ccm_event.bind('conversationsTextareaKeydownEnter',function(e){
 					obj.dropdown.list.children().filter('.active').children('a').click();
 				}, obj.$element.get(0));
+				ccm_event.bind('conversationPostError',function(e){
+					var $form = e.eventData.form,
+						messages = e.eventData.messages;
+					var s = '';
+					$.each(messages, function(i, m) {
+						s += m + '<br>';
+					});
+					$form.find('div.ccm-conversation-errors').html(s).show();
+				});
+				ccm_event.bind('conversationSubmitForm',function(e){
+					e.eventData.form.find('div.ccm-conversation-errors').hide();
+				});
 			}
 			var paginate = (obj.options.paginate) ? 1 : 0;
 			var enablePosting = (obj.options.posttoken != '') ? 1 : 0;
@@ -304,12 +316,7 @@
 			if (!messages) {
 				var messages = ['An unspecified error occurred.'];
 			}
-			this.publish('conversationPostError',{messages:messages});
-			var s = '';
-			$.each(messages, function(i, m) {
-				s += m + '<br>';
-			});
-			$form.find('div.ccm-conversation-errors').html(s).show();
+			this.publish('conversationPostError',{form:$form,messages:messages});
 		},
 		deleteMessage: function(msgID) {
 
@@ -426,9 +433,8 @@
 						obj.handlePostError($form, r.messages);
 						return false;
 					}
-					$form.find('div.ccm-conversation-errors').hide();
 					obj.addMessageFromJSON($form, r);
-					obj.publish('conversationSubmitForm');
+					obj.publish('conversationSubmitForm',{form:$form,response:r});
 				},
 				error: function(r) {
 					obj.handlePostError($form);
