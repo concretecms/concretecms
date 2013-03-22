@@ -45,7 +45,7 @@
 @font-family-monospace:   Monaco, Menlo, Consolas, "Courier New", monospace;
 @font-family-base:        @font-family-sans-serif;
 
-@font-size-base:          14px;
+@font-size-base:          14;
 @font-size-large:         (@font-size-base * 1.25); // ~18px
 @font-size-small:         (@font-size-base * 0.85); // ~12px
 @font-size-mini:          (@font-size-base * 0.75); // ~11px
@@ -308,11 +308,9 @@
 
 
 
-// GRID
+// Grid system
 // --------------------------------------------------
 
-// Default 940px grid
 @grid-columns:              12;
-@grid-column-width:         60px;
-@grid-gutter-width:         20px;
-@grid-row-width:            ((@grid-columns * @grid-column-width) + (@grid-gutter-width * (@grid-columns - 1)));
+@grid-gutter-width:         30px;
+@grid-float-breakpoint:     768px;

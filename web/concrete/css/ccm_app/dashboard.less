@@ -3,17 +3,28 @@ div#ccm-dashboard-content {  margin-top: 130px; margin-bottom: 80px }
 #ccm-dashboard-result-message {display: none;}
 
 /* New Central Panes */
-.ccm-pane-backdrop{background-color:rgba(0, 0, 0, 0.5);position:fixed;top:0;left:0;right:0;bottom:0;z-index:1000;}
-.ccm-pane{border:1px solid #999;border:1px solid rgba(0, 0, 0, 0.3);*border:1px solid #999;-webkit-border-radius:6px;-moz-border-radius:6px;border-radius:6px;-webkit-box-shadow:0 3px 7px rgba(0, 0, 0, 0.3);-moz-box-shadow:0 3px 7px rgba(0, 0, 0, 0.3);box-shadow:0 3px 7px rgba(0, 0, 0, 0.3);-webkit-background-clip:padding-box;-moz-background-clip:padding-box;background-clip:padding-box;}
+.ccm-pane-backdrop {
+	background-color:rgba(0, 0, 0, 0.5);
+	position:fixed;
+	top:0;
+	left:0;
+	right:0;
+	bottom:0;
+	z-index:1000;
+}
+
+.ccm-pane {
+	border:1px solid #999;
+	border:1px solid rgba(0, 0, 0, 0.3);
+	.border-radius(6px);
+	.box-shadow(0 3px 7px rgba(0,0,0,0.3));
+	.background-clip(padding-box);
+}
+
 .ccm-pane-header{
 	#gradient > .vertical(#f1f1f1,#d1d1d1);
-	background-clip: padding-box;
-	-webkit-border-top-left-radius: 6px;
-	-webkit-border-top-right-radius: 6px;
-	border-top-right-radius: 6px;
-	border-top-left-radius: 6px;
-	-moz-border-radius-topleft: 6px;
-	-moz-border-radius-topright: 6px;
+	.background-clip(padding-box);
+	.border-top-radius(6px);
 	position: relative;
 	border-bottom:1px solid #eee;padding:5px 20px; position: relative;
 }
@@ -80,7 +91,7 @@ div.ccm-dashboard-system-category-inner div {
 
 .ccm-dashboard-page-container h1 span {
 	.ccm-pane-header;
-	#font > .sans-serif(bold, 24px, 36px);
+	font-family: @font-family-sans-serif;
 	border-left: 1px solid #999;
 	border-top: 1px solid #999;
 	border-right: 1px solid #999;
@@ -100,7 +111,7 @@ div.ccm-dashboard-inner {
 	border-bottom: 1px solid #999;
 	border-right: 1px solid #999;
 	.border-radius-bottom-only(6px);
-	#font > .sans-serif();
+	font-family: @font-family-sans-serif;
 	.box-shadow(0 3px 7px rgba(0,0,0,0.3));
 }
 
@@ -124,7 +135,7 @@ tr.ccm-theme-active td {background-color: #DDF4FB !important;}
 /* themes customization page */
 form#customize-form{margin-bottom:0;}
 div#previewTheme {height:500px;}
-div.ccm-theme-style-attribute {display:inline-block; margin-right:25px; line-height: 36px; position: relative; height: 36px; font-weight: bold; zoom: 1; *display: inline; *width: 120px; *margin-right:15px;}
+div.ccm-theme-style-attribute {display:inline-block; margin-right:25px; line-height: 36px; position: relative; height: 36px; font-weight: bold; zoom: 1;}
 span.ccm-theme-style-attribute-name {display:block; float:left; margin-right:5px; font-weight:normal;}
 div.ccm-theme-style-attribute div.ccm-theme-style-slot-1 {display:inline;}
 
@@ -132,9 +143,6 @@ div.ccm-theme-style-attribute div {
 	float:right;
 	background: url(../images/widgets/colorpicker/select2.png) no-repeat;
 	cursor: pointer;
-	*float:left;
-	*width: 36px;
-	*height: 36px;
 }
 
 div.ccm-theme-style-attribute div div {
@@ -152,7 +160,6 @@ div.ccm-attribute-list-wrapper {margin-top: 10px; margin-bottom: 10px;}
 
 div.ccm-theme-style-attribute div.ccm-theme-style-custom {
 	background: transparent url(../images/widgets/font/custom_style.png) no-repeat scroll 10px 10px;
-	*position:absolute;
 }
 
 div#jquery-font-panel input, div#jquery-custom-panel input {
