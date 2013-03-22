@@ -24,6 +24,8 @@ div.ccm-conversation-message div.ccm-conversation-message-controls{border-top:1p
 div.ccm-conversation-message div.ccm-conversation-message-controls ul li.ccm-conversation-message-admin-control{display:none;}
 div.ccm-conversation-mesage-deleted{opacity:0.3;filter:alpha(opacity=30);}
 div.ccm-conversation-message:hover div.ccm-conversation-message-controls li.ccm-conversation-message-admin-control{display:inline-block;}
+div.ccm-conversation-message a.ccm-conversation-message-admin-control{display:none;}
+div.ccm-conversation-message:hover a.ccm-conversation-message-admin-control{display:inline-block; margin-left: 20px;}
 div.ccm-conversation-messages-threaded div.ccm-conversation-message-level0{margin-left:0px;}
 div.ccm-conversation-messages-threaded div.ccm-conversation-message-level1{margin-left:50px;}
 div.ccm-conversation-messages-threaded div.ccm-conversation-message-level2{margin-left:100px;}

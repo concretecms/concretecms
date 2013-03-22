@@ -299,8 +299,8 @@
 			});
 			
 			$('a.attachmentDelete').click(function() {
-				var $link = $(this);
-				/* obj.$attachmentdeletetdialog  = obj.$attachmentdeleteholder.clone();
+				var link = $(this);
+				obj.$attachmentdeletetdialog  = obj.$attachmentdeleteholder.clone();
 				if (obj.$attachmentdeletetdialog.dialog) {
 					obj.$attachmentdeletetdialog.dialog({
 						modal: true,
@@ -318,16 +318,16 @@
 								'text': obj.$attachmentdeleteholder.attr('data-confirm-button-title'),
 								'class': 'btn pull-right btn-danger',
 								'click': function() {
-									obj.deleteAttachment($link.attr('data-conversation-message-id'));
+									obj.deleteAttachment(link.attr('rel'));
 								}
 							}
 						]
 					});
 				} else {
-					if (confirm('Remove this message? Replies to it will not be removed.')) { */
-						obj.deleteAttachment($link.attr('rel'));
-				/*	}
-				} */
+					if (confirm('Remove this message? Replies to it will not be removed.')) { 
+						obj.deleteAttachment(link.attr('rel'));
+					}
+				} 
 				return false;
 			}); 
 
@@ -479,7 +479,6 @@
 			});
 		},
 		deleteAttachment: function(cnvMessageAttachmentID) {
-
 			var obj = this;
 			obj.publish('conversationBeforeDeleteAttachment',{cnvMessageAttachmentID:cnvMessageAttachmentID});
 			var	formArray = [{
@@ -492,11 +491,13 @@
 				data: formArray,
 				url: CCM_TOOLS_PATH + '/conversations/delete_file',
 				success: function(response) {
-					$('p[rel="'+response.attachmentID+'"]').fadeOut(300, function() { $(this).remove() });
-					
-					if (obj.$attachmentdeletedialog.dialog)
+					var parsedData = JSON.parse(response);
+					console.log(parsedData)
+					$('p[rel="'+parsedData.attachmentID+'"]').fadeOut(300, function() { $(this).remove() });
+					if (obj.$attachmentdeletedialog.dialog) {
 						obj.$attachmentdeletedialog.dialog('close');
-					obj.publish('conversationDeleteAttachment',{cnvMessageAttachmentID:cnvMessageAttachmentID});
+						obj.publish('conversationDeleteAttachment',{cnvMessageAttachmentID:cnvMessageAttachmentID});
+					}
 				},
 				error: function(e) {
 					obj.publish('conversationDeleteMessageError',{cnvMessageAttachmentID:cnvMessageAttachmentID,error:arguments});

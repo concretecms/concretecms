@@ -23,7 +23,11 @@ $cnvMessageID = $message->cnvMessageID;
 				foreach ($message->getAttachments($message->cnvMessageID) as $attachment) {
 					$file = File::getByID($attachment['fID']);
 					if(is_object($file)) { ?>
-					<p rel="<?php echo $attachment['cnvMessageAttachmentID'];?>"><a href="<?php echo $file->getDownloadURL() ?>"><?php echo $file->getFileName() ?></a><a rel="<?php echo $attachment['cnvMessageAttachmentID'];?>" class="attachmentDelete" href="#">Delete</a></p>
+					<p rel="<?php echo $attachment['cnvMessageAttachmentID'];?>"><a href="<?php echo $file->getDownloadURL() ?>"><?php echo $file->getFileName() ?></a>
+						<? if (!$message->isConversationMessageDeleted()) { ?>
+							<a rel="<?php echo $attachment['cnvMessageAttachmentID'];?>" class="attachmentDelete ccm-conversation-message-admin-control" href="#">Delete</a>
+						<?php } ?>
+					</p>
 				<?php }
 				}
 			} ?>
