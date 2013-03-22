@@ -8,6 +8,8 @@ class Concrete5_Model_Conversation_Message extends Object {
 	public function getConversationID() {return $this->cnvID;}
 	public function getConversationMessageLevel() {return $this->cnvMessageLevel;}
 	public function getConversationMessageParentID() {return $this->cnvMessageParentID;}
+	public function getConversationMessageSubmitIP() {return long2ip($this->cnvMessageSubmitIP);}
+	public function getConversationMessageSubmitUserAgent() { return $this->cnvMessageSubmitUserAgent;}
 	public function isConversationMessageDeleted() {return $this->cnvIsMessageDeleted;}
 	public function isConversationMessageFlagged() {return (count($this->getConversationMessageFlagTypes()) > 0);}
 	public function isConversationMessageApproved() {return $this->cnvIsMessageApproved;}
