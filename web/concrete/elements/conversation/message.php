@@ -3,7 +3,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
 $ui = $message->getConversationMessageUserObject();
 $class = 'ccm-conversation-message ccm-conversation-message-level' . $message->getConversationMessageLevel();
 if ($message->isConversationMessageDeleted()) {
-	$class .= ' ccm-conversation-mesage-deleted';
+	$class .= ' ccm-conversation-message-deleted';
+}
+if (!$message->isConversationMessageApproved()){
+	$class .= ' ccm-conversation-message-flagged';
 }
 $cnvMessageID = $message->cnvMessageID;
 ?>
@@ -32,9 +35,9 @@ $cnvMessageID = $message->cnvMessageID;
 				}
 			} ?>
 		</div>
-		<? if (!$message->isConversationMessageDeleted()) { ?>
+		<? if (!$message->isConversationMessageDeleted() && $message->isConversationMessageApproved()) { ?>
 		<ul>
-			
+			<li class="ccm-conversation-message-admin-control"><a href="#" data-submit="flag-conversation-message" data-conversation-message-id="<?=$message->getConversationMessageID()?>"><?=t('Flag As Spam')?></a></li>
 			<li class="ccm-conversation-message-admin-control"><a href="#" data-submit="delete-conversation-message" data-conversation-message-id="<?=$message->getConversationMessageID()?>"><?=t('Delete')?></a></li>
 			
 			<? if ($enablePosting && $displayMode == 'threaded') { ?>
