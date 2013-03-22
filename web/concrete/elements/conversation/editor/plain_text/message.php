@@ -8,6 +8,13 @@ print $form->textarea($editor->getConversationEditorInputName(),array('class'=>'
 		var obj = window.obj;
 		ccm_event.bind('conversationSubmitForm',function(){
 			me.val('');
+			$('.preview.processing').each(function(){ 
+				$('input[rel="'+ $(this).attr('rel') +'"]').remove();
+				$(this).remove();
+			});
+			if($('.attachmentContainer').is(':visible')) {
+				$('.attachmentContainer').toggle();
+			}
 		});
 		me.keydown(function(e) {
 			ccm_event.fire('conversationsTextareaKeydown', e, obj.$element.get(0));

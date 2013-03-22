@@ -311,7 +311,7 @@
 			<key />
 			<unsigned />
 		</field>
-		<field name="cnvMessageRatingTypeID" type="I" size="10">
+		<field name="cnvRatingTypeID" type="I" size="10">
 			<notnull />
 			<default value="0" />
 			<unsigned />
@@ -323,16 +323,22 @@
 			<unsigned />
 		</field>
 	</table>
-	<table name="ConversationMessageRatingTypes">
-		<field name="cnvMessageRatingTypeID" type="I" size="10">
-			<notnull />
-			<default value="0" />
-			<unsigned />
+	<table name="ConversationRatingTypes">
+		<field name="cnvRatingTypeID" type="I" size="10">
+      <key/>
+      <autoincrement/>
+      <unsigned/>
 		</field>
-		<field name="cnvMessageRatingTypeHandle" type="C" size="10">
+		<field name="cnvRatingTypeHandle" type="C" size="10">
 		</field>
-		<field name="cnvMessageRatingTypeCommunityPoints" type="I" size="10">
+    <field name="cnvRatingTypeName" type="C" size="255"/>
+		<field name="cnvRatingTypeCommunityPoints" type="I" size="10">
 		</field>
+    <field name="pkgID" type="I" size="10">
+      <notnull/>
+      <default value="0"/>
+      <unsigned/>
+    </field>
 	</table>
   <table name="PermissionAssignments">
     <field name="paID" type="I" size="10">

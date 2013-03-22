@@ -20,6 +20,21 @@ $cnvMessageID = $message->cnvMessageID;
 		<?=$message->getConversationMessageBodyOutput()?>
 	</div>
 	<div class="ccm-conversation-message-controls">
+		<div class="message-attachments">
+			<?php
+			if(count($message->getAttachments($message->cnvMessageID))) {
+				foreach ($message->getAttachments($message->cnvMessageID) as $attachment) {
+					$file = File::getByID($attachment['fID']);
+					if(is_object($file)) { ?>
+					<p rel="<?php echo $attachment['cnvMessageAttachmentID'];?>"><a href="<?php echo $file->getDownloadURL() ?>"><?php echo $file->getFileName() ?></a>
+						<? if (!$message->isConversationMessageDeleted()) { ?>
+							<a rel="<?php echo $attachment['cnvMessageAttachmentID'];?>" class="attachmentDelete ccm-conversation-message-admin-control" href="#">Delete</a>
+						<?php } ?>
+					</p>
+				<?php }
+				}
+			} ?>
+		</div>
 		<? if (!$message->isConversationMessageDeleted() && $message->isConversationMessageApproved()) { ?>
 		<ul>
 			<li class="ccm-conversation-message-admin-control"><a href="#" data-submit="flag-conversation-message" data-conversation-message-id="<?=$message->getConversationMessageID()?>"><?=t('Flag As Spam')?></a></li>
@@ -31,6 +46,11 @@ $cnvMessageID = $message->cnvMessageID;
 		</ul>
 		<? } ?>
 
-		<?=$message->getConversationMessageDateTimeOutput()?> <i class="icon-thumbs-up"></i> <i class="icon-thumbs-down"></i>&nbsp;<span class="ccm-conversation-message-rating">6</span>
+		<?=$message->getConversationMessageDateTimeOutput()?> 
+		<?
+		$ratingTypes = ConversationRatingType::getList();
+		foreach($ratingTypes as $type) { ?>
+			<?=$type->outputRatingTypeHTML()?>
+		<? } ?>
 	</div>
 </div>
