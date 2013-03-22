@@ -134,6 +134,7 @@ var CCMEditMode = function() {
 			},
 			greedy: true,
 			drop: function(e, ui) {
+				$('.ccm-area-drag-block-type-over').removeClass('ccm-area-drag-block-type-over');
 				if (ui.helper.is('.ccm-overlay-draggable-block-type')) {
 					CCMEditMode.blockTypeDropSuccessful = true;
 					// it's from the add block overlay
@@ -150,19 +151,22 @@ var CCMEditMode = function() {
 
 		// areas with more than 1 block are sortable.
 		$sortableAreas = $('div.ccm-area[data-total-blocks!=0]');
-		$sortableAreas.droppable({
+		/*$sortableAreas.droppable({
 			greedy: true
 		});
+*/
 		$sortableAreas.sortable({
 			items: 'div.ccm-block-edit',
 			tolerance: 'pointer',
 			placeholder: 'ui-state-highlight',
 			opacity: 0.4,
+			handle: '[data-inline-command=move-block]',
 			out: function() {
 		
 			},
 
 			receive: function(e, ui) {
+				$('.ccm-area-drag-block-type-over').removeClass('ccm-area-drag-block-type-over');
 				if (ui.item.is('.ccm-overlay-draggable-block-type')) {
 					CCMEditMode.blockTypeDropSuccessful = true;
 					// it's from the add block overlay
@@ -233,6 +237,7 @@ var CCMEditMode = function() {
 				}
 			});
 		});
+
 
 
 	}
