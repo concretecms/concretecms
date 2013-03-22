@@ -18,7 +18,7 @@
 
 <? foreach($columns as $col) { ?>
 	<? if ($col->getAreaLayoutColumnOffset() > 0 && (!$gf->hasPageThemeGridFrameworkOffsetClasses())) { ?>
-		<div class="ccm-theme-grid-offset-column <?=$col->getAreaLayoutColumnOffsetClass()?>"></div>
+		<div class="<?=$col->getAreaLayoutColumnOffsetClass()?> ccm-theme-grid-offset-column"></div>
 	<? } ?>
 	<div class="<?=$col->getAreaLayoutColumnClass()?><? if ($gf->hasPageThemeGridFrameworkOffsetClasses() && $col->getAreaLayoutColumnOffset()) { ?> <?=$col->getAreaLayoutColumnOffsetClass()?><? } ?>"><? 
 		$col->display();
