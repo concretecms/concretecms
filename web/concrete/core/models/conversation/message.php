@@ -25,10 +25,12 @@ class Concrete5_Model_Conversation_Message extends Object {
 	public function approve() {
 		$db = Loader::db();
 		$db->execute('UPDATE ConversationMessages SET cnvIsMessageApproved=1 WHERE cnvMessageID=?',array($this->cnvMessageID));
+		$this->cnvIsMessageApproved = true;
 	}
 	public function unapprove() {
 		$db = Loader::db();
 		$db->execute('UPDATE ConversationMessages SET cnvIsMessageApproved=0 WHERE cnvMessageID=?',array($this->cnvMessageID));
+		$this->cnvIsMessageApproved = false;
 	}
 	public function conversationMessageHasFlag($flag) {
 		if (!$flag instanceof ConversationFlagType) {
@@ -71,8 +73,8 @@ class Concrete5_Model_Conversation_Message extends Object {
 	public function flag($flagtype) {
 		if ($flagtype instanceof ConversationFlagType) {
 			$db = Loader::db();
-			foreach ($this->getConversationMessageFlagTypes as $ft) {
-				if ($ft->getID() === $flagType->getID()) {
+			foreach ($this->getConversationMessageFlagTypes() as $ft) {
+				if ($ft->getID() === $flagtype->getID()) {
 					return;
 				}
 			}
