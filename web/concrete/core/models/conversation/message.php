@@ -9,9 +9,45 @@ class Concrete5_Model_Conversation_Message extends Object {
 	public function getConversationMessageLevel() {return $this->cnvMessageLevel;}
 	public function getConversationMessageParentID() {return $this->cnvMessageParentID;}
 	public function isConversationMessageDeleted() {return $this->cnvIsMessageDeleted;}
+	public function isConversationMessageFlagged() {return (count($this->getConversationMessageFlagTypes()) > 0);}
+	public function isConversationMessageApproved() {return $this->cnvIsMessageApproved;}
+	public function getConversationMessageFlagTypes() {
+		$db = Loader::db();
+		if ($this->cnvMessageFlagTypes) return $this->cnvMessageFlagTypes;
+		$flagTypes = $db->GetCol('SELECT cnvMessageFlagTypeID FROM ConversationFlaggedMessages WHERE cnvMessageID=?',array($this->cnvMessageID));
+		$flags = array();
+		foreach ($flagTypes as $flagType) {
+			$flags[] = ConversationFlagType::getByID($flagType);
+		}
+		$this->cnvMessageFlagTypes = $flags;
+		return $flags;
+	}
+	public function approve() {
+		$db = Loader::db();
+		$db->execute('UPDATE ConversationMessages SET cnvIsMessageApproved=1 WHERE cnvMessageID=?',array($this->cnvMessageID));
+	}
+	public function unapprove() {
+		$db = Loader::db();
+		$db->execute('UPDATE ConversationMessages SET cnvIsMessageApproved=0 WHERE cnvMessageID=?',array($this->cnvMessageID));
+	}
+	public function conversationMessageHasFlag($flag) {
+		if (!$flag instanceof ConversationFlagType) {
+			$flag = ConversationFlagType::getByHandle($flag);
+		}
+		if ($flag instanceof ConversationFlagType) {
+			foreach ($this->getConversationMessageFlagTypes() as $type) {
+				if ($flag->getID() == $type->getID()) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
 	public function getConversationMessageBodyOutput() {
 		if ($this->cnvIsMessageDeleted) {
 			return t('This message has been deleted.');
+		} else if (!$this->cnvIsMessageApproved) {
+			return t('This message is queued for approval.');
 		} else {
 			$editor = ConversationEditor::getActive();
 			return $editor->formatConversationMessageBody($this->cnvMessageBody);
@@ -30,11 +66,27 @@ class Concrete5_Model_Conversation_Message extends Object {
 		return t('Posted on %s', Loader::helper('date')->date('F d, Y \a\t g:i a', strtotime($this->cnvMessageDateCreated)));
 	}
 
+	public function flag($flagtype) {
+		if ($flagtype instanceof ConversationFlagType) {
+			$db = Loader::db();
+			foreach ($this->getConversationMessageFlagTypes as $ft) {
+				if ($ft->getID() === $flagType->getID()) {
+					return;
+				}
+			}
+			$db->execute('INSERT INTO ConversationFlaggedMessages (cnvMessageFlagTypeID, cnvMessageID) VALUES (?,?)',array($flagtype->getID(),$this->getConversationMessageID()));
+			$this->cnvMessageFlagTypes[] = $flagtype;
+			return true;
+		}
+		throw new Exception('Invalid flag type.');
+	}
+
 	public static function getByID($cnvMessageID) {
 		$db = Loader::db();
 		$r = $db->GetRow('select * from ConversationMessages where cnvMessageID = ?', array($cnvMessageID));
 		if (is_array($r) && $r['cnvMessageID'] == $cnvMessageID) {
 			$cnv = new ConversationMessage;
+			$cnv->getConversationMessageFlagTypes();
 			$cnv->setPropertiesFromArray($r);
 			return $cnv;
 		}

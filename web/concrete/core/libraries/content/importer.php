@@ -401,6 +401,14 @@ class Concrete5_Library_Content_Importer {
 		}
 	}
 
+	protected function importFlagTypes(SimpleXMLElement $sx) {
+		if (isset($sx->flag_types)) {
+			foreach($sx->flag_types->flag_type as $p) {
+				$bw = FlagType::add($p);
+			}
+		}
+	}
+
 	protected function importSystemCaptchaLibraries(SimpleXMLElement $sx) {
 		if (isset($sx->systemcaptcha)) {
 			Loader::model('system/captcha/library');
