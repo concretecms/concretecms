@@ -4,6 +4,11 @@ class Concrete5_Model_RedactorConversationEditor extends ConversationEditor {
 		$html = Loader::helper('html');
 		return array($html->javascript('redactor.js'),$html->css('redactor.css'));
 	}
+
+	public function outputConversationEditorReplyMessageForm() {
+		$this->outputConversationEditorAddMessageForm();
+	}
+
 	public function formatConversationMessageBody($cnvMessageBody) {
 		return parent::formatConversationMessageBody($cnvMessageBody);
 	}
