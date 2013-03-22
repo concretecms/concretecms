@@ -22,6 +22,11 @@ class Concrete5_Model_Conversation_Message extends Object {
 		$this->cnvMessageFlagTypes = $flags;
 		return $flags;
 	}
+	public function conversationMessageHasChildren() {
+		$db = Loader::db();
+		$count = $db->getOne('SELECT COUNT(cnvMessageID) as cnt FROM ConversationMessages WHERE cnvMessageParentID=?',array($this->cnvMessageID));
+		return ($count > 0);
+	}
 	public function approve() {
 		$db = Loader::db();
 		$db->execute('UPDATE ConversationMessages SET cnvIsMessageApproved=1 WHERE cnvMessageID=?',array($this->cnvMessageID));
