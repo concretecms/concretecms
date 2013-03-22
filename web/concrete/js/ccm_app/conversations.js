@@ -297,7 +297,13 @@
 				}
 				return false;
 			});
-			
+			obj.$element.on('click', 'a[data-submit=flag-conversation-message]', function() {
+				var $link = $(this);
+				if (confirm('Remove this message? Replies to it will not be removed.')) {
+					obj.flagMessage($link.attr('data-conversation-message-id'));
+				}
+				return false;
+			});
 			$('a.attachmentDelete').click(function() {
 				var link = $(this);
 				obj.$attachmentdeletetdialog  = obj.$attachmentdeleteholder.clone();
@@ -430,6 +436,34 @@
 				error: function(e) {
 					obj.publish('conversationDeleteMessageError',{msgID:msgID,error:arguments});
 					window.alert('Something went wrong while deleting this message, please refresh and try again.');
+				}
+			});
+		},
+		flagMessage: function(msgID) {
+
+			var obj = this;
+			obj.publish('conversationBeforeFlagMessage',{msgID:msgID});
+			var	formArray = [{
+				'name': 'cnvMessageID',
+				'value': msgID
+			}];
+
+			$.ajax({
+				type: 'post',
+				data: formArray,
+				url: CCM_TOOLS_PATH + '/conversations/flag_message',
+				success: function(html) {
+					var $parent = $('div[data-conversation-message-id=' + msgID + ']');
+
+					if ($parent.length) {
+						$parent.after(html).remove();
+					}
+					obj.updateCount();
+					obj.publish('conversationFlagMessage',{msgID:msgID});
+				},
+				error: function(e) {
+					obj.publish('conversationFlageMessageError',{msgID:msgID,error:arguments});
+					window.alert('Something went wrong while flagging this message, please refresh and try again.');
 				}
 			});
 		},
