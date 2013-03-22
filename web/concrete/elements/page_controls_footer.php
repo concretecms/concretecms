@@ -163,7 +163,7 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
 				<? } ?>
 				<li class="ccm-toolbar-search pull-right"><i class="glyphicon glyphicon-search"></i> <input type="search" id="ccm-nav-intelligent-search" tabindex="1" /></li>
 				<? if ($c->isEditMode() && $cp->canEditPageContents()) { ?>
-					<li class="ccm-toolbar-add pull-right"><a class="dialog-launch" title="<?=t('Add Block')?>" dialog-width="660" dialog-height="400" dialog-modal="false" dialog-title="<?=t('Add Block')?>" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/pages/add_block?cID=<?=$c->getCollectionID()?>"><i class="glyphicon glyphicon-plus"></i></a></li>
+					<li class="ccm-toolbar-add pull-right"><a class="dialog-launch" title="<?=t('Add Block')?>" dialog-width="660" dialog-height="430" dialog-modal="false" dialog-title="<?=t('Add Block')?>" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/pages/add_block?cID=<?=$c->getCollectionID()?>"><i class="glyphicon glyphicon-plus"></i></a></li>
 				<? } ?>
 
 			</ul>

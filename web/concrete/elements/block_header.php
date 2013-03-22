@@ -72,8 +72,10 @@ if ($b->getBlockTypeHandle() == BLOCK_HANDLE_LAYOUT_PROXY) {
 		<? if ($btw->getBlockTypeHandle() == BLOCK_HANDLE_AGGREGATOR) { ?> data-menu-handle="ccm-aggregator-control-bar-<?=$b->getBlockID()?>-<?=$a->getAreaID()?>"<? } ?>
 		<? if ($btw->getBlockTypeHandle() == BLOCK_HANDLE_LAYOUT_PROXY) { ?> data-menu-handle="ccm-area-layout-control-bar-<?=$b->getBlockID()?>-<?=$a->getAreaID()?>"<? } ?>>
 
-		<ul class="ccm-edit-mode-inline-commands">
+		<ul class="ccm-edit-mode-inline-commands ccm-ui">
+		<? if ($p->canEditBlock() && (!$a->isGlobalArea())) {  ?>
 			<li><a data-inline-command="move-block" href="#"><i class="glyphicon glyphicon-move"></i></a></li>
+		<? } ?>
 		</ul>
 		
 <div class="ccm-ui">
@@ -122,9 +124,6 @@ if ($b->getBlockTypeHandle() == BLOCK_HANDLE_LAYOUT_PROXY) {
 	<li><a href="javascript:void(0)" onclick="ccm_addToScrapbook('<?=$cID?>','<?=$bID?>', '<?=htmlspecialchars($arHandle)?>')"><?=t("Copy to Clipboard")?></a></li>		
 	<? } ?>
 
-	<? if ($p->canEditBlock() && (!$a->isGlobalArea())) {  ?>
-		<li><a href="javascript:void(0)" onclick="ccm_arrangeInit()"><?=t("Move")?></a></li>		
-	<? } ?>
 
 	<? if ($p->canDeleteBlock()) {  ?>
 		<li><a href="javascript:void(0)" onclick="CCMEditMode.deleteBlock('<?=$cID?>','<?=$bID?>','<?=$aID?>','<?=htmlspecialchars($arHandle)?>', '<?=$deleteMessage?>')"><?=t("Delete")?></a></li>		

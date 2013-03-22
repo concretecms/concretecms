@@ -132,6 +132,7 @@ var CCMEditMode = function() {
 				var btHandle = $item.attr('data-block-type-handle');
 				return $(this).attr('data-accepts-block-types').indexOf(btHandle) !== -1;
 			},
+			greedy: true,
 			drop: function(e, ui) {
 				if (ui.helper.is('.ccm-overlay-draggable-block-type')) {
 					CCMEditMode.blockTypeDropSuccessful = true;
@@ -149,6 +150,9 @@ var CCMEditMode = function() {
 
 		// areas with more than 1 block are sortable.
 		$sortableAreas = $('div.ccm-area[data-total-blocks!=0]');
+		$sortableAreas.droppable({
+			greedy: true
+		});
 		$sortableAreas.sortable({
 			items: 'div.ccm-block-edit',
 			tolerance: 'pointer',

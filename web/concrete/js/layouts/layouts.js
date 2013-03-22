@@ -158,7 +158,7 @@ CCMLayout.prototype._setupDOM = function() {
 CCMLayout.prototype._setupFormSaveAndCancel = function() {
 	var obj = this;
 	this.$cancelbtn.on('click', function() {
-		ccm_onInlineEditCancel(function() {
+		CCMInlineEditMode.exit(function() {
 			obj.$toolbar.remove();
 		});
 	});
@@ -544,10 +544,7 @@ CCMLayout.prototype._redrawThemeGrid = function() {
 	obj.$element.find('.ccm-theme-grid-offset-column').remove();
 	$.each(obj.$element.find('.ccm-theme-grid-column'), function(i, col) {
 		var $col = $(col);
-		$col.removeClass().addClass('ccm-theme-grid-column');
-		if (obj.options.editing) {
-			$col.addClass('ccm-theme-grid-column-edit-mode');
-		}
+		$col.removeClass();
 		if ($col.attr('data-span')) {
 			var spandex = parseInt($col.attr('data-span')) - 1;
 			$col.addClass(obj.options.gridColumnClasses[spandex]);
@@ -558,6 +555,10 @@ CCMLayout.prototype._redrawThemeGrid = function() {
 			var offdex = parseInt($col.attr('data-offset')) - 1;
 			$('<div />', {'data-offset-column': true}).addClass('ccm-theme-grid-offset-column').addClass(obj.options.gridColumnClasses[offdex]).insertBefore($col);
 			$('#ccm-edit-layout-column-offset-' + i).val(parseInt($col.attr('data-offset')));
+		}
+		$col.addClass('ccm-theme-grid-column');
+		if (obj.options.editing) {
+			$col.addClass('ccm-theme-grid-column-edit-mode');
 		}
 	});
 }

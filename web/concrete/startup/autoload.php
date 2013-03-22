@@ -116,6 +116,7 @@ $classes = array(
 	'PageThemeGridFramework' => array('library','page_theme/grid_framework/library'),
 	'TwitterBootstrapPageTheme' => array('model','page_theme/custom/twitter_bootstrap'),
 	'Bootstrap2PageThemeGridFramework' => array('library','page_theme/grid_framework/types/bootstrap2'),
+	'Bootstrap3PageThemeGridFramework' => array('library','page_theme/grid_framework/types/bootstrap3'),
 	'ComposerPage' => array('model','composer_page'),
 	'PermissionAccess' => array('model','permission/access/model'),
 	'PermissionAccessEntity' => array('model','permission/access/entity/model'),

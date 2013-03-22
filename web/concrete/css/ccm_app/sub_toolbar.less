@@ -4,10 +4,10 @@
 	left: 0;
 	top: 50px;
 	width: 100%;
-	z-index: 98;
+	z-index: 999;
 	visibility: visible;
 	margin: 0 !important;
-	padding: 0 !important;
+	padding: 0px 0px 0px 12px !important;
 	padding-left: 2px;
 	line-height: 0;
 	list-style: none;
@@ -49,18 +49,22 @@
 
 		label {
 			line-height: 24px !important; 
+			font-weight: normal;
 		}
 
 		input[type=text] {
-			height: 11px !important;
+			height: 16px !important;
 			line-height: 11px !important;
 			padding: 1px !important;
+			padding: 1px !important;
+			min-height: 16px !important;
 		}
 	}
 	
 	> li.ccm-sub-toolbar-icon-cell > a {
 		width: 25px;
 		height: 25px;
+		color: #333;
 		margin: 4px 0px 0px 2px;
 		border: 1px solid transparent;
 		display: block;
@@ -73,7 +77,8 @@
 
 		i {
 			margin-top: 5px !important;
-			margin-left: 5px !important;
+			margin-left: 5px;
+			display: inline-block;
 		}
 	}
 
