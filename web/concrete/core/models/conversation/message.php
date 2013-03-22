@@ -49,6 +49,9 @@ class Concrete5_Model_Conversation_Message extends Object {
 		if ($this->cnvIsMessageDeleted) {
 			return t('This message has been deleted.');
 		} else if (!$this->cnvIsMessageApproved) {
+			if ($this->conversationMessageHasFlag('spam')) {
+				return t('This message has been flagged as spam.');
+			}
 			return t('This message is queued for approval.');
 		} else {
 			$editor = ConversationEditor::getActive();
