@@ -281,6 +281,17 @@
       <unsigned/>
     </field>
 </table>
+<table name="ConversationMessageAttachments">
+    <field name="cnvMessageAttachmentID" type="I" size="11">
+      <key/>
+      <unsigned />
+       <autoincrement/>
+    </field>
+    <field name="cnvMessageID" type="I" size="11">
+    </field>
+  	<field name="fID" type="I" size="11">
+  	</field>
+</table>
 <table name="ConversationMessageRatings">
 		<field name="cnvMessageID" type="I"  size="10">
 			<key />
