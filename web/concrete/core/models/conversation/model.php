@@ -14,6 +14,16 @@ class Concrete5_Model_Conversation extends Object {
 		}
 	}
 
+	public function getConversationMessageUsers() {
+		$ml = new ConversationMessageList($this);
+		$users = array();
+		foreach ($ml->get() as $message) {
+			$ui = $message->getConversationMessageUserObject();
+			$users[$ui->getUserID()] = $ui;
+		}
+		return array_values($users);
+	}
+
 	public static function add() {
 		$db = Loader::db();
 		$date = Loader::helper('date')->getSystemDateTime();

@@ -9,7 +9,7 @@ class Concrete5_Model_RedactorConversationEditor extends ConversationEditor {
 		$this->outputConversationEditorAddMessageForm();
 	}
 
-	public function formatConversationMessageBody($cnvMessageBody) {
-		return parent::formatConversationMessageBody($cnvMessageBody);
+	public function formatConversationMessageBody($cnv,$cnvMessageBody) {
+		return parent::formatConversationMessageBody($cnv,$cnvMessageBody,array('htmlawed'=>true));
 	}
 }

@@ -2,11 +2,26 @@
 abstract class Concrete5_Model_ConversationEditor extends Object {
 
 	abstract public function getConversationEditorHeaderItems();
-	public function formatConversationMessageBody($cnvMessageBody,$config=array()) {
-		Loader::library('3rdparty/htmLawed');
-		$default = array('safe'=>1,'elements'=>'span, em, b, i, p, strike, font, br, div');
-		$config = array_merge($default,(array)$config);
-		return htmLawed($cnvMessageBody, $config);
+	public function formatConversationMessageBody($cnv,$cnvMessageBody,$config=array()) {
+		if (isset($config['htmlawed'])) {
+			Loader::library('3rdparty/htmLawed');
+			$default = array('safe'=>1,'elements'=>'span, em, b, i, p, strike, font, br, div');
+			$conf = array_merge($default,(array)$config['htmlawed']);
+			$lawed = htmLawed($cnvMessageBody, $conf);
+		} else {
+			$lawed = $cnvMessageBody;
+		}
+		if ($config['mention'] !== false && Config::get('ENABLE_USER_PROFILES')) {
+			$users = $cnv->getConversationMessageUsers();
+			$needle = array();
+			$haystack = array();
+			foreach ($users as $user) {
+				$needle[] = "@".$user->getUserName();
+				$haystack[] = "<a href='".View::url('/account/profile/public', 'view', $user->getUserID())."'>@".$user->getUserName()."</a>";
+			}
+			return str_ireplace($needle,$haystack,$lawed);
+		}
+		return $lawed;
 	}
 
 	public function outputConversationEditorAddMessageForm() {
