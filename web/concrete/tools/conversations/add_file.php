@@ -16,7 +16,7 @@
 		unlink($_SERVER['DOCUMENT_ROOT'] . '/files/tmp/' . $_FILES["file"]["name"]);
 		if(!$fv instanceof FileVersion) {
 			$file->error = $fi->getErrorMessage($fv);
-			echo $file->error;
+			$file->timestamp = $_POST['timestamp'];
 		} else {
 			$fs = FileSet::getByName(CONVERSATION_MESSAGE_ATTACHMENTS_PENDING_FILE_SET);
 			if (!is_object($fs)) {
