@@ -53,6 +53,4 @@ class Concrete5_Model_Conversation extends Object {
 		return ConversationMessage::getByID($db->Insert_ID());
 	}
 
-
-
 }
