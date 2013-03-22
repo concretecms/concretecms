@@ -7,7 +7,7 @@ echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Conv
 		<div class='clearfix'>
 			<label>
 				<input value=1 name='banned_list_enabled' <?=$bannedListEnabled?'checked ':''?>type='checkbox'>
-				Disable posts that include banned words
+				<?=t('Disallow posts that include banned words?')?>
 			</label>
 		</div>
 		<script class='word_template' type="text/template" charset="utf-8">
