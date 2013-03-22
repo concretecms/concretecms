@@ -407,7 +407,7 @@ class Concrete5_Library_Content_Importer {
 	protected function importBannedWords(SimpleXMLElement $sx) {
 		if (isset($sx->banned_words)) {
 			foreach($sx->banned_words->banned_word as $p) {
-				$bw = BannedWord::add($p);
+				$bw = BannedWord::add(str_rot13($p));
 			}
 		}
 	}
