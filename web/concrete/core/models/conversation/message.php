@@ -52,8 +52,11 @@ class Concrete5_Model_Conversation_Message extends Object {
 			return t('This message is queued for approval.');
 		} else {
 			$editor = ConversationEditor::getActive();
-			return $editor->formatConversationMessageBody($this->cnvMessageBody);
+			return $editor->formatConversationMessageBody($this->getConversationMessageConversationObject(),$this->cnvMessageBody);
 		}
+	}
+	public function getConversationMessageConversationObject() {
+		return Conversation::getByID($this->cnvID);
 	}
 	public function getConversationMessageUserObject() {
 		return UserInfo::getByID($this->uID);

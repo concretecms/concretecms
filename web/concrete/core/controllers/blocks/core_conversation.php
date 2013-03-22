@@ -72,14 +72,17 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		}
 
 		public function getActiveUsers($lower=false) {
-			$db = Loader::db();
-			$cnvID = $db->GetOne('select cnvID from btCoreConversation where bID = ?', array($this->bID));
-			if ($lower) {
-				$users = $db->getCol('SELECT LOWER(uName) FROM Users WHERE uID IN (SELECT DISTINCT uID FROM ConversationMessages WHERE cnvID=?)',array($cnvID));
-			} else {
-				$users = $db->getCol('SELECT uName FROM Users WHERE uID IN (SELECT DISTINCT uID FROM ConversationMessages WHERE cnvID=?)',array($cnvID));
+			$cnv = $this->getConversationObject();
+			$uobs = $cnv->getConversationMessageUsers();
+			$users = array();
+			foreach ($uobs as $user) {
+				if ($lower) {
+					$users[] = strtolower($user->getUserName());
+				} else {
+					$users[] = $user->getUserName();
+				}
 			}
-			return (array)$users;
+			return $users;
 		}
 
 		public function save($post) {
