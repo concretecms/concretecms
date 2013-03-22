@@ -32,6 +32,8 @@ class ConcreteUpgradeVersion570Helper {
 		'Conversations',
 		'ConversationMessages',
 		'ConversationEditors',
+		'ConversationRatings',
+		'ConversationRatingTypes',
 		'AreaLayoutThemeGridColumns',
 		/*'Queues',*/
 		'BlockTypes',

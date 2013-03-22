@@ -1,5 +1,5 @@
 <?php
-class Concrete5_Model_MarkdownConversationEditor extends Concrete5_Model_ConversationEditor {
+class Concrete5_Model_MarkdownConversationEditor extends ConversationEditor {
 
 	public function getConversationEditorHeaderItems() {
 		return array();

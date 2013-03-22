@@ -18,8 +18,14 @@
 			$file->error = $fi->getErrorMessage($fv);
 			echo $file->error;
 		} else {
+			$fs = FileSet::getByName(CONVERSATION_MESSAGE_ATTACHMENTS_PENDING_FILE_SET);
+			if (!is_object($fs)) {
+			$fs = FileSet::createAndGetSet(CONVERSATION_MESSAGE_ATTACHMENTS_PENDING_FILE_SET, FileSet::TYPE_PUBLIC, USER_SUPER_ID);
+			}
+			$fs->addFileToSet($fv);
 			$file->id 	= $fv->getFileID();
 			$file->tag = $_POST['tag'];
+			$file->timestamp = $_POST['timestamp'];
 		}
       } echo Loader::helper('json')->encode($file);
 

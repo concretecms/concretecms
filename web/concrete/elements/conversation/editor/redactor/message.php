@@ -12,6 +12,13 @@ $(textarea).redactor({
         ccm_event.publish('conversationsRedactorEditorLoaded',obj);
         ccm_event.bind('conversationSubmitForm',function(){
             obj.setCode("");
+			$('.preview.processing').each(function(){ 
+				$('input[rel="'+ $(this).attr('rel') +'"]').remove();
+				$(this).remove();
+			});
+			if($('.attachmentContainer').is(':visible')) {
+				$('.attachmentContainer').toggle();
+			}
         });
     }
 });
