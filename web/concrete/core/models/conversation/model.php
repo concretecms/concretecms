@@ -19,7 +19,9 @@ class Concrete5_Model_Conversation extends Object {
 		$users = array();
 		foreach ($ml->get() as $message) {
 			$ui = $message->getConversationMessageUserObject();
-			$users[$ui->getUserID()] = $ui;
+			if ($ui instanceof UserInfo) {
+				$users[$ui->getUserID()] = $ui;
+			}
 		}
 		return array_values($users);
 	}
@@ -33,7 +35,7 @@ class Concrete5_Model_Conversation extends Object {
 
 	public function getConversationMessagesTotal() {
 		$db = Loader::db();
-		$cnt = $db->GetOne('select count(cnvMessageID) from ConversationMessages where cnvID = ? and cnvIsMessageDeleted = 0', array($this->cnvID));
+		$cnt = $db->GetOne('select count(cnvMessageID) from ConversationMessages where cnvID = ? and cnvIsMessageDeleted = 0 and cnvIsMessageApproved = 1', array($this->cnvID));
 		return $cnt;
 	}
 	

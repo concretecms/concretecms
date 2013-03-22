@@ -299,7 +299,7 @@
 			});
 			obj.$element.on('click', 'a[data-submit=flag-conversation-message]', function() {
 				var $link = $(this);
-				if (confirm('Remove this message? Replies to it will not be removed.')) {
+				if (confirm('Are you sure you want to flag this messge as spam?')) {
 					obj.flagMessage($link.attr('data-conversation-message-id'));
 				}
 				return false;
