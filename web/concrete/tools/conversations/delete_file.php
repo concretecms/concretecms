@@ -7,7 +7,7 @@ if (Loader::helper('validation/numbers')->integer($_POST['cnvMessageAttachmentID
 	$attachment = ConversationMessage::getAttachmentByID($_POST['cnvMessageAttachmentID']);
 	
 	$message = ConversationMessage::getByID($attachment->cnvMessageID);
-	if (is_object($attachment)) { 
+	if (is_object($attachment)) {
 		$message->removeFile($_POST['cnvMessageAttachmentID']);
 	}
 	$attachmentDeleted = new stdClass();
