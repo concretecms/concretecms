@@ -359,6 +359,7 @@ CCMLayout.prototype._updateCustomView = function() {
 CCMLayout.prototype._resetSlider = function() {
 	if (this.$slider) {
 		this.$slider.slider('destroy');
+		this.$slider = false;
 	}
 
 	if ($("#ccm-area-layout-active-control-bar").hasClass('ccm-area-layout-control-bar-add')) {

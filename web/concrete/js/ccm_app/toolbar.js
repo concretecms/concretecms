@@ -26,6 +26,10 @@ var CCMToolbar = function() {
 			e.stopPropagation(); // so we don't close menus if we click on the toolbar buttons themselves.
 		});
 
+		$toolbar.find('#ccm-exit-edit-mode-comment form').on('click', function(e) {
+			e.stopPropagation(); // so we don't close menus if we click on the toolbar buttons themselves.
+		});
+
 		$($toolbar.find('.ccm-toolbar-hover-menu a')).on('click', function() {
 			$('.ccm-toolbar-hover-menu').hide();
 		});
