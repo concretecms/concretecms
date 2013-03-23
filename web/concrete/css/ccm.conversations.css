@@ -24,8 +24,6 @@ div.ccm-conversation-message div.ccm-conversation-message-controls{border-top:1p
 div.ccm-conversation-message div.ccm-conversation-message-controls ul li.ccm-conversation-message-admin-control{display:none;}
 div.ccm-conversation-message-deleted,div.ccm-conversation-message-flagged{opacity:0.3;filter:alpha(opacity=30);}
 div.ccm-conversation-message:hover div.ccm-conversation-message-controls li.ccm-conversation-message-admin-control{display:inline-block;}
-div.ccm-conversation-message a.ccm-conversation-message-admin-control{display:none;}
-div.ccm-conversation-message:hover a.ccm-conversation-message-admin-control{display:inline-block; margin-left: 20px;}
 div.ccm-conversation-messages-threaded div.ccm-conversation-message-level0{margin-left:0px;}
 div.ccm-conversation-messages-threaded div.ccm-conversation-message-level1{margin-left:50px;}
 div.ccm-conversation-messages-threaded div.ccm-conversation-message-level2{margin-left:100px;}
@@ -33,3 +31,33 @@ div.ccm-conversation-messages-threaded div.ccm-conversation-message-level3{margi
 div.ccm-conversation-messages-threaded div.ccm-conversation-message-level4{margin-left:200px;}
 div.ccm-conversation-form-submitted{opacity:0.4;filter:alpha(opacity=40);}
 div.ccm-conversation-load-more-messages{text-align:center;padding:0px 0px 20px 0px;}
+div.ccm-conversation-avatar{width:40px;position:absolute;top:0px;left:0px;margin-right:10px;}div.ccm-conversation-avatar img{-webkit-border-radius:4px;-moz-border-radius:4px;border-radius:4px;}
+div.ccm-conversation-messages-header{*zoom:1;}div.ccm-conversation-messages-header:before,div.ccm-conversation-messages-header:after{display:table;content:"";line-height:0;}
+div.ccm-conversation-messages-header:after{clear:both;}
+div.ccm-conversation-messages-header select.ccm-sort-conversations{font-size:11.9px;width:auto;float:right;}
+div.ccm-conversation-add-reply,div.ccm-conversation-add-new-message{*zoom:1;position:relative;}div.ccm-conversation-add-reply:before,div.ccm-conversation-add-new-message:before,div.ccm-conversation-add-reply:after,div.ccm-conversation-add-new-message:after{display:table;content:"";line-height:0;}
+div.ccm-conversation-add-reply:after,div.ccm-conversation-add-new-message:after{clear:both;}
+div.ccm-conversation-add-reply form,div.ccm-conversation-add-new-message form{margin-bottom:0px;}
+div.ccm-conversation-add-reply div.ccm-conversation-message-form,div.ccm-conversation-add-new-message div.ccm-conversation-message-form{padding-left:50px;*zoom:1;}div.ccm-conversation-add-reply div.ccm-conversation-message-form:before,div.ccm-conversation-add-new-message div.ccm-conversation-message-form:before,div.ccm-conversation-add-reply div.ccm-conversation-message-form:after,div.ccm-conversation-add-new-message div.ccm-conversation-message-form:after{display:table;content:"";line-height:0;}
+div.ccm-conversation-add-reply div.ccm-conversation-message-form:after,div.ccm-conversation-add-new-message div.ccm-conversation-message-form:after{clear:both;}
+div.ccm-conversation-add-reply div.ccm-conversation-message-form textarea,div.ccm-conversation-add-new-message div.ccm-conversation-message-form textarea{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;width:100%;font-size:11.9px;height:80px;}
+div.ccm-conversation-add-new-message{margin-bottom:20px;}
+div.ccm-conversation-add-reply{display:none;margin-top:10px;}
+div.ccm-conversation-errors{display:none;}
+div.ccm-conversation-message-list div.ccm-conversation-delete-message{display:none;}
+div.ccm-conversation-dialog div.ui-dialog-buttonset{float:none !important;}
+div.ccm-conversation-message{position:relative;*zoom:1;padding-top:0px;padding-bottom:20px;padding-right:0px;padding-left:50px;}div.ccm-conversation-message:before,div.ccm-conversation-message:after{display:table;content:"";line-height:0;}
+div.ccm-conversation-message:after{clear:both;}
+div.ccm-conversation-message div.ccm-conversation-message-byline{padding:8px;height:40px;box-sizing:border-box;font-weight:lighter;border:1px solid #ddd;background-color:#e6e6e6;background-image:-moz-linear-gradient(top, #dedede, #f2f2f2);background-image:-webkit-gradient(linear, 0 0, 0 100%, from(#dedede), to(#f2f2f2));background-image:-webkit-linear-gradient(top, #dedede, #f2f2f2);background-image:-o-linear-gradient(top, #dedede, #f2f2f2);background-image:linear-gradient(to bottom, #dedede, #f2f2f2);background-repeat:repeat-x;filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffdedede', endColorstr='#fff2f2f2', GradientType=0);-webkit-border-radius:4px;-moz-border-radius:4px;border-radius:4px;margin-bottom:8px;}
+div.ccm-conversation-message div.ccm-conversation-message-controls{border-top:1px dotted #afafaf;padding-top:2px;padding-top:8px;margin-top:8px;font-weight:lighter;color:#999;}div.ccm-conversation-message div.ccm-conversation-message-controls ul{float:right;list-style-type:none;margin:0px;padding:0px;}div.ccm-conversation-message div.ccm-conversation-message-controls ul li{display:inline-block;margin-left:20px;}
+div.ccm-conversation-message div.ccm-conversation-message-controls ul li.ccm-conversation-message-admin-control{display:none;}
+div.ccm-conversation-message-deleted,div.ccm-conversation-message-flagged{opacity:0.3;filter:alpha(opacity=30);}
+div.ccm-conversation-message:hover div.ccm-conversation-message-controls li.ccm-conversation-message-admin-control{display:inline-block;}
+div.ccm-conversation-messages-threaded div.ccm-conversation-message-level0{margin-left:0px;}
+div.ccm-conversation-messages-threaded div.ccm-conversation-message-level1{margin-left:50px;}
+div.ccm-conversation-messages-threaded div.ccm-conversation-message-level2{margin-left:100px;}
+div.ccm-conversation-messages-threaded div.ccm-conversation-message-level3{margin-left:150px;}
+div.ccm-conversation-messages-threaded div.ccm-conversation-message-level4{margin-left:200px;}
+div.ccm-conversation-form-submitted{opacity:0.4;filter:alpha(opacity=40);}
+div.ccm-conversation-load-more-messages{text-align:center;padding:0px 0px 20px 0px;}
+div.ccm-discussion-add-conversation{display:none;}
