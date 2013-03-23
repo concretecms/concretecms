@@ -24,6 +24,17 @@ class Concrete5_Model_Conversation_Message extends Object {
 		$this->cnvMessageFlagTypes = $flags;
 		return $flags;
 	}
+	public function conversationMessageHasActiveChildren() {
+		$db = Loader::db();
+		$children = $db->getCol('SELECT cnvMessageID as cnt FROM ConversationMessages WHERE cnvMessageParentID=?',array($this->cnvMessageID));
+		foreach ($children as $childID) {
+			$child = ConversationMessage::getByID($childID);
+			if (($child->isConversationMessageApproved() && !$child->isConversationMessageDeleted()) || $child->conversationMessageHasActiveChildren()) {
+				return true;
+			}
+		}
+		return false;
+	}
 	public function conversationMessageHasChildren() {
 		$db = Loader::db();
 		$count = $db->getOne('SELECT COUNT(cnvMessageID) as cnt FROM ConversationMessages WHERE cnvMessageParentID=?',array($this->cnvMessageID));

@@ -67,6 +67,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 					$token = '';
 				}
 				$this->set('posttoken', $token);
+				$this->set('cID',Page::getCurrentPage()->getCollectionID());
 				$this->set('users', $this->getActiveUsers(true));
 			}
 		}
