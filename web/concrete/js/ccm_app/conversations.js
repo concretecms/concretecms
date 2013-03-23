@@ -65,15 +65,17 @@
 
 			if (obj.options.method == 'ajax') {
 				$.post(CCM_TOOLS_PATH + '/conversations/view_ajax', {
-					'cnvID':              obj.options.cnvID,
-					'enablePosting':      enablePosting,
-					'itemsPerPage':       obj.options.itemsPerPage,
-					'paginate':           paginate,
-					'displayMode':        obj.options.displayMode,
-					'orderBy':            orderBy,
-					'enableOrdering':     enableOrdering,
-					'displayPostingForm': displayPostingForm,
-					'insertNewMessages':  insertNewMessages,
+					'cnvID':               obj.options.cnvID,
+					'cID':                 obj.options.cID,
+					'blockID':             obj.options.blockID,
+					'enablePosting':       enablePosting,
+					'itemsPerPage':        obj.options.itemsPerPage,
+					'paginate':            paginate,
+					'displayMode':         obj.options.displayMode,
+					'orderBy':             orderBy,
+					'enableOrdering':      enableOrdering,
+					'displayPostingForm':  displayPostingForm,
+					'insertNewMessages':   insertNewMessages,
 					'enableCommentRating': enableCommentRating
 					
 				}, function(r) {
@@ -360,16 +362,18 @@
 
 			obj.$element.on('change', 'select[data-sort=conversation-message-list]', function() {
 				obj.$messagelist.load(CCM_TOOLS_PATH + '/conversations/view_ajax', {
-					'cnvID':              obj.options.cnvID,
-					'task':               'get_messages',
-					'enablePosting':      enablePosting,
-					'displayMode':        obj.options.displayMode,
-					'itemsPerPage':       obj.options.itemsPerPage,
-					'paginate':           paginate,
-					'orderBy':            $(this).val(),
-					'enableOrdering':     obj.options.enableOrdering,
-					'displayPostingForm': displayPostingForm,
-					'insertNewMessages':  insertNewMessages,
+					'cnvID':               obj.options.cnvID,
+					'task':                'get_messages',
+					'cID':                 obj.options.cID,
+					'blockID':             obj.options.blockID,
+					'enablePosting':       enablePosting,
+					'displayMode':         obj.options.displayMode,
+					'itemsPerPage':        obj.options.itemsPerPage,
+					'paginate':            paginate,
+					'orderBy':             $(this).val(),
+					'enableOrdering':      obj.options.enableOrdering,
+					'displayPostingForm':  displayPostingForm,
+					'insertNewMessages':   insertNewMessages,
 					'enableCommentRating': obj.options.enableCommentRating
 					
 				}, function(r) {
@@ -382,12 +386,14 @@
 				var nextPage = parseInt(obj.$loadmore.attr('data-next-page'));
 				var totalPages = parseInt(obj.$loadmore.attr('data-total-pages'));
 				var data = {
-					'cnvID': obj.options.cnvID,
-					'itemsPerPage': obj.options.itemsPerPage,
-					'displayMode': obj.options.displayMode,
-					'enablePosting': enablePosting,
-					'page': nextPage,
-					'orderBy': obj.$sortselect.val(),
+					'cnvID':               obj.options.cnvID,
+					'cID':                 obj.options.cID,
+					'blockID':             obj.options.blockID,
+					'itemsPerPage':        obj.options.itemsPerPage,
+					'displayMode':         obj.options.displayMode,
+					'enablePosting':       enablePosting,
+					'page':                nextPage,
+					'orderBy':             obj.$sortselect.val(),
 					'enableCommentRating': obj.options.enableCommentRating
 				};
 
@@ -410,8 +416,10 @@
 				//alert('upvote');
 				obj.$messagerating.load(CCM_TOOLS_PATH + '/conversations/rate');
 				var data = {
-					'cnvID': obj.options.cnvID,
-					'cnvMessageID': $(this).closest('[data-conversation-message-id]').attr('data-conversation-message-id'),
+					'cnvID':               obj.options.cnvID,
+					'cID':                 obj.options.cID,
+					'blockID':             obj.options.blockID,
+					'cnvMessageID':        $(this).closest('[data-conversation-message-id]').attr('data-conversation-message-id'),
 					'cnvRatingTypeHandle': $(this).attr('data-conversation-rating-type')
 				};
 				$.ajax({
