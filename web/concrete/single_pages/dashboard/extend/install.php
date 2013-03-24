@@ -131,7 +131,10 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
 		}
 	}
 	if ($tp->canInstallPackages()) { 
-		$pkgAvailableArray = Package::getAvailablePackages();
+		foreach(Package::getAvailablePackages() as $_pkg) {
+			$_pkg->setupPackageLocalization();
+			$pkgAvailableArray[] = $_pkg;
+		}
 	}
 	
 
