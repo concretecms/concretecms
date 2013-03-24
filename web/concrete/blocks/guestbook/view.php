@@ -11,6 +11,7 @@ if (!$dateFormat) {
 }
 $posts = $controller->getEntries();
 $bp = $controller->getPermissionObject(); 
+$dh = Loader::helper('date');
 foreach($posts as $p) { ?>
 	<? if($p['approved'] || $bp->canWrite()) { ?>
     <div class="guestBook-entry<?php if ($c->getVersionObject()->getVersionAuthorUserName() == $u->getUserName()) {?> authorPost <?php }?>">
@@ -39,7 +40,7 @@ foreach($posts as $p) { ?>
 				</span> 
 				<?=t('on')?>
 				<span class="contentDate">
-					<?=date($dateFormat,strtotime($p['entryDate']));?>
+					<?=$dh->date($dateFormat,strtotime($p['entryDate']));?>
 				</span>
 			</div>
 			<?=nl2br($p['commentText'])?>
