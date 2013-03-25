@@ -94,9 +94,13 @@ class Concrete5_Model_Conversation_Message extends Object {
 		$uID = 0; //this needs to be fixed
 		$db = Loader::db();
 		$cnvRatingTypeID = $db->GetOne('SELECT * FROM ConversationRatingTypes WHERE cnvRatingTypeHandle = ?', array($ratingType->cnvRatingTypeHandle));
-		$db->Execute('INSERT INTO ConversationMessageRatings (cnvMessageID, cnvRatingTypeID, cnvRatingTypeHandle, timestamp, uID) VALUES (?, ?, ?, ?, ?)', array($cnvMessageID, $cnvRatingTypeID, $ratingType->cnvRatingTypeHandle, date('Y-m-d H:i:s'), $uID));
+		$db->Execute('INSERT INTO ConversationMessageRatings (cnvMessageID, cnvRatingTypeID, timestamp, uID) VALUES (?, ?, ?, ?)', array($cnvMessageID, $cnvRatingTypeID, date('Y-m-d H:i:s'), $uID));
+	}	
+	public function getConversationMessageRating(ConversationRatingType $ratingType) {
+		$db = Loader::db();
+		$cnt = $db->GetOne('select count(*) from ConversationMessageRatings where cnvRatingTypeID = ? AND cnvMessageID = ?',  array($ratingType->getConversationRatingTypeID(), $this->cnvMessageID));
+		return $cnt;
 	}
-
 	public function flag($flagtype) {
 		if ($flagtype instanceof ConversationFlagType) {
 			$db = Loader::db();

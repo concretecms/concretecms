@@ -47,12 +47,12 @@ if ((!$message->isConversationMessageDeleted() && $message->isConversationMessag
 			</ul>
 			<? } ?>
 			
-		<?=$message->getConversationMessageDateTimeOutput()?> 
+		<?=$message->getConversationMessageDateTimeOutput()?>
 		<? if ($enableCommentRating) {
 			$ratingTypes = ConversationRatingType::getList();
-			foreach($ratingTypes as $type) { ?>
-				<?=$type->outputRatingTypeHTML();?>
-				
+			foreach($ratingTypes as $ratingType) { ?>
+				<?=$ratingType->outputRatingTypeHTML();?>
+				<?=$message->getConversationMessageRating($ratingType); ?>
 			 <? } ?>
 		<? } ?>
 		</div>

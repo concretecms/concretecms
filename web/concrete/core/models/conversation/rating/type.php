@@ -31,7 +31,7 @@ abstract class Concrete5_Model_ConversationRatingType extends Object {
 
 	public static function getByHandle($cnvRatingTypeHandle) {
 		$db = Loader::db();
-		$r = $db->GetRow('select cnvRatingTypeHandle, cnvRatingTypeName, pkgID from ConversationRatingTypes where cnvRatingTypeHandle = ?', array($cnvRatingTypeHandle));
+		$r = $db->GetRow('select cnvRatingTypeID, cnvRatingTypeHandle, cnvRatingTypeName, pkgID from ConversationRatingTypes where cnvRatingTypeHandle = ?', array($cnvRatingTypeHandle));
 		if (is_array($r) && $r['cnvRatingTypeHandle']) {
 			$class = Loader::helper('text')->camelcase($r['cnvRatingTypeHandle']) . 'ConversationRatingType';
 			$sc = new $class();
@@ -73,6 +73,7 @@ abstract class Concrete5_Model_ConversationRatingType extends Object {
 
 	public function getConversationRatingTypeHandle() {return $this->cnvRatingTypeHandle;}
 	public function getConversationRatingTypeName() {return $this->cnvRatingTypeName;}
+	public function getConversationRatingTypeID() {return $this->cnvRatingTypeID;}
 	public function getPackageID() { return $this->pkgID;}
 	public function getPackageHandle() {
 		return PackageList::getHandle($this->pkgID);
