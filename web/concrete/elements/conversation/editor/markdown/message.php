@@ -12,8 +12,8 @@ print $form->textarea($editor->getConversationEditorInputName(),array('class'=>'
 				$('input[rel="'+ $(this).attr('rel') +'"]').remove();
 				$(this).remove();
 			});
-			if($('.attachmentContainer').is(':visible')) {
-				$('.attachmentContainer').toggle();
+			if($('.ccm-conversation-attachment-container').is(':visible')) {
+				$('.ccm-conversation-attachment-container').toggle();
 			}
 		});
 		me.keydown(function(e) {
