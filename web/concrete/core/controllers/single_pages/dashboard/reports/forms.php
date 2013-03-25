@@ -225,6 +225,7 @@ class Concrete5_Controller_Dashboard_Reports_Forms extends Controller {
 	}
 	//DELETE FORMS AND ALL SUBMISSIONS
 	private function deleteForm($bID, $qsID){
+		$db = Loader::db();
 		$this->deleteFormAnswers($qsID);
 		
 		$v = array(intval($bID));
