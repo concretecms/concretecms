@@ -1,9 +1,16 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
 if (Loader::helper('validation/numbers')->integer($_POST['cnvMessageID']) && $_POST['cnvMessageID'] > 0) {
-
-	$msg = ConversationMessage::getByID($_POST['cnvMessageID']);
+	
+	$cnvMessageID = $_POST['cnvMessageID'];
+	$msg = ConversationMessage::getByID($_POST[$cnvMessageID]);
 	$ratingType = ConversationRatingType::getByHandle($_POST['cnvRatingTypeHandle']);
+	
+	
+	$msg->rateMessage($ratingType, $cnvMessageID);
 
-	$msg->rateMessage($ratingType, $_POST);
+}
 
+public function getRating(cnvMessageID) {
+	$count = $db->Execute('SELECT COUNT FROM ConversationMessageRatings where cnvRatingTypeID = ? AND cnvMessageID = ? ', array ($cnvRatingTypeID, $cnvMessageID));
+	return $count;
 }

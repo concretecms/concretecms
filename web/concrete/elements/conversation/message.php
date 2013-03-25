@@ -29,10 +29,12 @@ $cnvMessageID = $message->cnvMessageID;
 		<? } ?>
 
 		<?=$message->getConversationMessageDateTimeOutput()?> 
-		<?
-		$ratingTypes = ConversationRatingType::getList();
-		foreach($ratingTypes as $type) { ?>
-			<?=$type->outputRatingTypeHTML()?>
+		<? if ($enableCommentRating) {
+			$ratingTypes = ConversationRatingType::getList();
+			foreach($ratingTypes as $type) { ?>
+				<?=$type->outputRatingTypeHTML();?>
+				
+			 <? } ?>
 		<? } ?>
 	</div>
 </div>
