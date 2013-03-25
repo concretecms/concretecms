@@ -98,6 +98,16 @@ if $(echo "$status" | grep "$thisgrep" &> /dev/null); then
     uglifyjs -o ./web/concrete/js/ccm.profile.js ./web/concrete/js/ccm_profile/base.js
 fi
 
+# Layouts
+thisgrep='web/concrete/js/ccm.profile.js'
+if [ $1 ]; then
+    thisgrep=''
+fi
+if $(echo "$status" | grep "$thisgrep" &> /dev/null); then
+    echo "Building ccm.layouts.js"
+    uglifyjs -o ./web/concrete/js/ccm.layouts.js ./web/concrete/js/layouts/layouts.js
+fi
+
 # Redactor
 thisgrep='web/concrete/js/redactor/'
 if [ $1 ]; then
@@ -152,7 +162,6 @@ $(getFile 'jquery.metadata.js')
 $(getFile 'chosen.jquery.js')
 $(getFile 'base.js')
 $(getFile 'ui.js')
-$(getFile 'dashboard.js')
 $(getFile 'filemanager.js')
 $(getFile 'jquery.cookie.js')
 $(getFile 'legacy_dialog.js')
