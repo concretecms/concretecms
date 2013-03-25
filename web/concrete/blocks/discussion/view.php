@@ -5,7 +5,7 @@
 <?
 if ($enableNewConversations) { ?>
 
-	<div class="ccm-discussion-add-conversation" data-dialog-form="add-conversation" data-dialog-title="<?=t('Add Topic')?>">
+	<div class="ccm-discussion-add-conversation" data-dialog-form="add-conversation">
 		<?=Loader::element('conversation/discussion/form');?>
 	</div>
 
