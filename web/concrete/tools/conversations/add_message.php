@@ -2,6 +2,8 @@
 $ax = Loader::helper('ajax');
 $vs = Loader::helper('validation/strings');
 $ve = Loader::helper('validation/error');
+$u  = new User;
+$wlg = Group::getByID(Config::get('CONVERSATION_SPAM_WHITELIST_GROUP'));
 $cnvMessageSubject = null;
 if (Loader::helper('validation/numbers')->integer($_POST['cnvID'])) {
 	$cn = Conversation::getByID($_POST['cnvID']);
@@ -26,15 +28,19 @@ if (Loader::helper('validation/numbers')->integer($_POST['cnvMessageParentID']) 
 if (Config::get('CONVERSATION_DISALLOW_BANNED_WORDS') && Loader::helper('validation/banned_words')->hasBannedWords($_POST['cnvMessageBody'])) {
 	$ve->add(t('Banned words detected.'));
 }
-if (!Loader::helper('validation/antispam')->check($_POST['cnvMessageBody'],'conversation_comment')) {
-	$ve->add(t('Spam Detected'));
-}
-
 
 if ($ve->has()) {
 	$ax->sendError($ve);
 } else {
 	$msg = $cn->addMessage($cnvMessageSubject, $_POST['cnvMessageBody'], $parent);
+	if (!Loader::helper('validation/antispam')->check($_POST['cnvMessageBody'],'conversation_comment')) {
+		$msg->flag(ConversationFlagType::getByHandle('spam'));
+	} else {
+		$msg->approve();
+	}
+	if ($wlg instanceOf Group && $u->inGroup($wlg)) {
+		$msg->approve();
+	}
 	if($_POST['attachments'] && count($_POST['attachments'])) {
 		foreach($_POST['attachments'] as $attachmentID) {
 			ConversationMessage::attachFile(File::getByID($attachmentID), $msg->cnvMessageID);

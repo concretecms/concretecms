@@ -14,6 +14,18 @@ class Concrete5_Model_Conversation extends Object {
 		}
 	}
 
+	public function getConversationMessageUsers() {
+		$ml = new ConversationMessageList($this);
+		$users = array();
+		foreach ($ml->get() as $message) {
+			$ui = $message->getConversationMessageUserObject();
+			if ($ui instanceof UserInfo) {
+				$users[$ui->getUserID()] = $ui;
+			}
+		}
+		return array_values($users);
+	}
+
 	public static function add() {
 		$db = Loader::db();
 		$date = Loader::helper('date')->getSystemDateTime();
@@ -23,7 +35,7 @@ class Concrete5_Model_Conversation extends Object {
 
 	public function getConversationMessagesTotal() {
 		$db = Loader::db();
-		$cnt = $db->GetOne('select count(cnvMessageID) from ConversationMessages where cnvID = ? and cnvIsMessageDeleted = 0', array($this->cnvID));
+		$cnt = $db->GetOne('select count(cnvMessageID) from ConversationMessages where cnvID = ? and cnvIsMessageDeleted = 0 and cnvIsMessageApproved = 1', array($this->cnvID));
 		return $cnt;
 	}
 	
@@ -49,10 +61,9 @@ class Concrete5_Model_Conversation extends Object {
 			$cnvMessageLevel = $parentMessage->getConversationMessageLevel() + 1;
 		}
 
-		$r = $db->Execute('insert into ConversationMessages (cnvMessageSubject, cnvMessageBody, cnvMessageDateCreated, cnvMessageParentID, cnvMessageLevel, cnvID, uID) values (?, ?, ?, ?, ?, ?, ?)', array($cnvMessageSubject, $cnvMessageBody, $date, $cnvMessageParentID, $cnvMessageLevel, $this->cnvID, $uID));
+		$r = $db->Execute('insert into ConversationMessages (cnvMessageSubject, cnvMessageBody, cnvMessageDateCreated, cnvMessageParentID, cnvMessageLevel, cnvID, uID, cnvMessageSubmitIP, cnvMessageSubmitUserAgent) values (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+						  array($cnvMessageSubject, $cnvMessageBody, $date, $cnvMessageParentID, $cnvMessageLevel, $this->cnvID, $uID, ip2long(Loader::Helper('validation/ip')->getRequestIP()), $_SERVER['HTTP_USER_AGENT']));
 		return ConversationMessage::getByID($db->Insert_ID());
 	}
-
-
 
 }

@@ -232,6 +232,12 @@
       <DEFAULT value="0"/>
       <UNSIGNED/>
     </field>
+    <field name="cnvMessageSubmitIP" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="cnvMessageSubmitUserAgent" type="X2" />
     <field name="cnvMessageLevel" type="I" size="10">
       <NOTNULL/>
       <DEFAULT value="0"/>
@@ -255,6 +261,10 @@
       <notnull/>
       <default value="0"/>
     </field>
+    <field name="cnvIsMessageApproved" type="I1" size="1">
+      <notnull/>
+      <default value="0"/>
+    </field>
     <index name="cnvID">
       <col>cnvID</col>
     </index>
@@ -266,7 +276,28 @@
       <col>cnvIsMessageDeleted</col>
     </index>
   </table>
-<table name="ConversationEditors">
+  <table name="ConversationFlaggedMessages">
+    <field name="cnvMessageID" type="I" size="10">
+      <key/>
+      <unsigned/>
+    </field>
+    <field name="cnvMessageFlagTypeID" type="I" size="10"/>
+    <index name='cnvMessageID'>
+      <col>cnvMessageID</col>
+    </index>
+  </table>
+  <table name="ConversationFlaggedMessageTypes">
+    <field name="cnvMessageFlagTypeID" type="I" size="10">
+      <key/>
+      <autoincrement/>
+      <unsigned/>
+    </field>
+    <field name="cnvMessageFlagTypeHandle" type="c" size="64" />
+    <index name='cnvMessageFlagTypeID'>
+      <col>cnvMessageFlagTypeID</col>
+    </index>
+  </table>
+  <table name="ConversationEditors">
     <field name="cnvEditorHandle" type="C" size="64">
       <key/>
     </field>
@@ -281,12 +312,18 @@
       <unsigned/>
     </field>
 </table>
-<table name="ConversationMessageRatings">
-		<field name="cnvRatingID" type="I" size="10">
-			 <key/>
-     		 <autoincrement/>
-     		 <unsigned/>
-		</field>
+  <table name="ConversationMessageAttachments">
+    <field name="cnvMessageAttachmentID" type="I" size="11">
+      <key/>
+      <unsigned />
+       <autoincrement/>
+    </field>
+    <field name="cnvMessageID" type="I" size="11">
+    </field>
+  	<field name="fID" type="I" size="11">
+  	</field>
+  </table>
+  <table name="ConversationMessageRatings">
 		<field name="cnvMessageID" type="I"  size="10">
 			<unsigned />
 		</field>
