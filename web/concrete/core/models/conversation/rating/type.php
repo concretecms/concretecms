@@ -4,6 +4,8 @@ abstract class Concrete5_Model_ConversationRatingType extends Object {
 
 	abstract public function outputRatingTypeHTML();
 	
+	abstract public function rateMessage();
+	
 	public static function getList() {
 		$db = Loader::db();
 		$handles = $db->GetCol('select cnvRatingTypeHandle from ConversationRatingTypes order by cnvRatingTypeHandle asc');
@@ -26,7 +28,6 @@ abstract class Concrete5_Model_ConversationRatingType extends Object {
 		$db->Execute('insert into ConversationRatingTypes (cnvRatingTypeHandle, cnvRatingTypeName, pkgID) values (?, ?, ?)', array($cnvRatingTypeHandle, $cnvRatingTypeName, $pkgID));
 		return ConversationRatingType::getByHandle($cnvRatingTypeHandle);
 	}
-
 
 	public static function getByHandle($cnvRatingTypeHandle) {
 		$db = Loader::db();
