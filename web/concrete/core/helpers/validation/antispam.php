@@ -13,6 +13,21 @@ class Concrete5_Helper_Validation_Antispam {
 		}
 	}		
 	
+	public function report($content, $ui, $ip, $ua, $additionalArgs = array()) {
+		$args['content'] = $content;
+		$args['author'] = $ui->getUserName();
+		$args['author_email'] = $ui->getUserEmail();
+		$args['ip_address'] = $ip;
+		$args['user_agent'] = $ua;
+
+		foreach($additionalArgs as $key => $value) {
+			$args[$key] = $value;
+		}
+		if (method_exists($this->library, 'report')) {
+			$this->library->report($args);
+		}
+	}
+
 	public function check($content, $type, $additionalArgs = array()) {
 		if ($this->controller) { 
 			$args['ip_address'] = Loader::helper('validation/ip')->getRequestIP();
