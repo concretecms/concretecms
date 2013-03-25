@@ -5,6 +5,8 @@
 			<key />
 			<unsigned />
 		</field>
+		<field name="cnvID" type="I">
+		</field>
 		<field name="enableNewConversations" type="I">
 			<default value="1"/>
 		</field>

@@ -1,4 +1,11 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die("Access Denied."); 
+$c = Page::getCurrentPage();
+
+$options = '{}';
+if ($enableNewConversations) { 
+	$options = "{ctID: '{$ctID}', cParentID: '{$c->getCollectionID()}', posttoken: '" . Loader::helper('validation/token')->generate('add_discussion_conversation') . "'}"; 
+}
+?>
 
 <div class="ccm-discussion" data-discussion-block-id="<?=$b->getBlockID()?>">
 
@@ -18,6 +25,6 @@ if ($enableNewConversations) { ?>
 
 <script type="text/javascript">
 $(function() {
-	$('div[data-discussion-block-id=<?=$b->getBlockID()?>]').ccmdiscussion();
+	$('div[data-discussion-block-id=<?=$b->getBlockID()?>]').ccmdiscussion(<?=$options?>);
 });
 </script>

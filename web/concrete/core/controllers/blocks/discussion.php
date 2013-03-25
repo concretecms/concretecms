@@ -33,7 +33,19 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				$this->addFooterItem($item);
 			}
 			$this->addFooterItem(Loader::helper('html')->javascript('dropzone.js'));
+		}
 
+		public function save($post) {
+			$db = Loader::db();
+			$cnvID = $db->GetOne('select cnvID from btDiscussion where bID = ?', array($this->bID));
+			if (!$cnvID) {
+				$discussion = ConversationDiscussion::add();
+			} else {
+				$discussion = ConversationDiscussion::getByID($cnvID);
+			}
+			$values = $post;
+			$values['cnvID'] = $conversation->getConversationID();
+			parent::save($values);
 		}
 
 		public function validate($post) {

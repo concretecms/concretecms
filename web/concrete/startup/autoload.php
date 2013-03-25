@@ -21,6 +21,7 @@ $classes = array(
 	'Archive' => array('library','archive'),
 	'Conversation' => array('model','conversation/model'),
 	'ConversationMessage' => array('model','conversation/message/model'),
+	'ConversationDiscussion' => array('model','conversation/discussion'),
 	'ConversationMessageThreadedList' => array('model','conversation/message/list/threaded'),
 	'ConversationMessageList' => array('model','conversation/message/list/model'),
 	'ConversationFlagType' => array('model','conversation/flag_type/model'),
