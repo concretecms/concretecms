@@ -1,27 +1,47 @@
 (function($) {
 
-$.fn.ccmdiscussion = function() {
+$.fn.ccmdiscussion = function(options) {
+
+	this.options = $.extend({
+		'title': 'Add Topic',
+		'buttonTitleCancel': 'Cancel',
+		'buttonTitlePost': 'Post'
+	}, options);
+
+	var discussion = this;
 	
 	return $.each($(this), function(i, obj) {
 
 		var $postbutton = $(this).find('[data-action=add-conversation]');
 		var $postdialog = $(this).find('div[data-dialog-form=add-conversation]');
+
 		$postbutton.on('click', function() {
 			$postdialog.dialog({
 				width: 620,
-				height: 520,
+				height: 550,
 				modal: true,
-				title: $postdialog.attr('data-dialog-title'), 
+				dialogClass: 'ccm-discussion-dialog-post',
+				title: discussion.options.title,
 				open: function() {
-					/*
-					$('div.ccm-discussion-form .ccm-conversation-attachment-container').each(function() {
-						if($(this).is(':visible')) {
-							$(this).toggle();
-						}
-					});
-					*/
 					$('.ccm-discussion-form').ccmconversationattachments();
-				}
+				},
+				buttons: [
+					{
+						'text': discussion.options.buttonTitleCancel,
+						'class': 'btn pull-left',
+						'click': function() {
+							$(this).dialog('close');
+						}
+					},
+					{
+						'text': discussion.options.buttonTitlePost,
+						'class': 'btn pull-right btn-primary',
+						'click': function() {
+
+						}
+					}
+				]
+
 			})
 			return false;
 		});

@@ -3,6 +3,7 @@
 var methods = {
 
 	init: function(options) {
+
 		return $.each($(this), function(i, obj) {
 			$(this).find('.ccm-conversation-attachment-container').each(function() {
 				if($(this).is(':visible')) {
