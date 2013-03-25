@@ -1,5 +1,25 @@
 #!/bin/bash
 
+################################################################################
+# smart/js                                                                     #
+#                                                                              #
+# Author: Korvin Szanto <korvin@concrete5.org>                                 #
+#                                                                              #
+# In this file, we build several plugins only when they have changed in git.   #
+# If you would like to compile everything, regardless of git status, just add  #
+# a second token to your invocation:                                           #
+#     $ ./build/smart/js all                                                   #
+#                                                                              #
+#                                                                              #
+# We minify javascript files in two ways, the first being a                    #
+# straight uglifyjs minification, which you can see with jQuery Cookie, the    #
+# second being adding multiple files to a tmp file, adding headers for debug,  #
+# then minifying with uglifyjs.                                                #
+#                                                                              #
+################################################################################
+
+
+
 function InfoBlock {
     # Throw an infoblock containing the filename in before we load the file
     str=" $1 ";
@@ -39,7 +59,6 @@ cd $(git rev-parse --show-toplevel)
 status=$(git status --porcelain 2> /dev/null)
 
 # jQuery Cookie
-thisgrep=''
 thisgrep='web/concrete/js/ccm_app/jquery.cookie.js'
 if [ $1 ]; then
     thisgrep=''
@@ -50,7 +69,6 @@ if $(echo "$status" | grep "$thisgrep" &> /dev/null); then
 fi
 
 # Gridster
-thisgrep=''
 thisgrep='web/concrete/js/ccm_app/gridster.js'
 if [ $1 ]; then
     thisgrep=''
@@ -60,19 +78,7 @@ if $(echo "$status" | grep "$thisgrep" &> /dev/null); then
     uglifyjs --no-copyright --no-seqs -o ./web/concrete/js/jquery.gridster.js ./web/concrete/js/gridster/jquery.gridster.js
 fi
 
-# Conversations
-thisgrep=''
-thisgrep='web/concrete/js/ccm_app/conversations.js'
-if [ $1 ]; then
-    thisgrep=''
-fi
-if $(echo "$status" | grep "$thisgrep" &> /dev/null); then
-    echo "Building conversations.js"
-    uglifyjs --no-copyright --no-seqs -o ./web/concrete/js/ccm.conversations.js ./web/concrete/js/ccm_app/conversations.js
-fi
-
 # Events
-thisgrep=''
 thisgrep='web/concrete/js/ccm_app/pubsub.js'
 if [ $1 ]; then
     thisgrep=''
@@ -83,7 +89,6 @@ if $(echo "$status" | grep "$thisgrep" &> /dev/null); then
 fi
 
 # Profile
-thisgrep=''
 thisgrep='web/concrete/js/ccm.profile.js'
 if [ $1 ]; then
     thisgrep=''
@@ -94,7 +99,6 @@ if $(echo "$status" | grep "$thisgrep" &> /dev/null); then
 fi
 
 # Redactor
-thisgrep=''
 thisgrep='web/concrete/js/redactor/'
 if [ $1 ]; then
     thisgrep=''
@@ -107,9 +111,27 @@ if $(echo "$status" | grep "$thisgrep" &> /dev/null); then
     rm redactor.tmp.js
 fi
 
+# Conversations
+thisgrep='web/concrete/js/ccm_app/conversations/'
+if [ $1 ]; then
+    thisgrep=''
+    fi
+if $(echo "$status" | grep "$thisgrep" &> /dev/null); then
+    function getFile {
+        file="./web/concrete/js/ccm_app/conversations/"$1
+        echo "$(InfoBlock $1 $2)
+`cat $file`"
+    }
+    echo "Building ccm.conversations.js"
+    INP="$(getFile 'conversations.js' 'first')
+$(getFile 'attachments.js')
+$(getFile 'discussion.js')" 
+
+    echo "$INP" > ./web/concrete/js/ccm.conversations.pretty.js
+    uglifyjs --no-seqs -o ./web/concrete/js/ccm.conversations.js ./web/concrete/js/ccm.conversations.pretty.js
+fi
 
 # CCM APP
-thisgrep=''
 thisgrep='web/concrete/js/ccm_app/'
 if [ $1 ]; then
     thisgrep=''
@@ -156,7 +178,6 @@ fi
 
 
 # Image Editor
-thisgrep=''
 thisgrep='web/concrete/js/image_editor/build/'
 if [ $1 ]; then
     thisgrep=''
