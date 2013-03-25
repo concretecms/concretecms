@@ -39,7 +39,12 @@ abstract class Concrete5_Model_ConversationEditor extends Object {
 	}
 
 	protected $cnvEditorInputName = 'cnvMessageBody';
-
+	public function setConversationObject($cnvObject) {
+		$this->cnvObject = $cnvObject;
+	}
+	public function getConversationObject() {
+		return $this->cnvObject;
+	}
 	public function getConversationEditorInputName() {return $this->cnvEditorInputName;}
 	public function getConversationEditorHandle() { return $this->cnvEditorHandle;}
 	public function getConversationEditorName() { return $this->cnvEditorName;}

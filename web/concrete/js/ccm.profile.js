@@ -1,1 +1,1 @@
-ccm_enableUserProfileMenu=function(){var container=$("#ccm-account-menu-container");if(container.length==0){var container=$("<div />").appendTo(document.body)}container.addClass("ccm-ui").attr("id","ccm-account-menu-container");$("#ccm-account-menu").appendTo(container)};
+/* User Profile Functionality */ccm_enableUserProfileMenu=function(){var e=$("#ccm-account-menu-container");if(e.length==0)var e=$("<div />").appendTo(document.body);e.addClass("ccm-ui").attr("id","ccm-account-menu-container"),$("#ccm-account-menu").appendTo(e)};
