@@ -207,6 +207,16 @@
       <notnull/>
     </field>
   </table>
+    <table name="ConversationDiscussions">
+    <field name="cnvDiscussionID" type="I" size="10">
+      <key/>
+      <autoincrement/>
+      <unsigned/>
+    </field>
+    <field name="cnvDiscussionDateCreated" type="T">
+      <notnull/>
+    </field>
+  </table>
    <table name="agPage">
     <field name="agiID" type="I" size="10">
       <key/>

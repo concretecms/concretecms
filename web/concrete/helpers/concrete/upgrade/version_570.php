@@ -30,6 +30,7 @@ class ConcreteUpgradeVersion570Helper {
 		'AreaLayoutColumns',
 		'AreaLayoutCustomColumns',
 		'Conversations',
+		'ConversationDiscussions',
 		'ConversationMessages',
 		'ConversationEditors',
 		'ConversationRatings',
