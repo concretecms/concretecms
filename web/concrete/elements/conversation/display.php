@@ -8,7 +8,7 @@ $u = new User();
 $ui = UserInfo::getByID($u->getUserID());
 
 $editor = ConversationEditor::getActive();
-$editor->cnvObject = $args['conversation'];
+$editor->setConversationObject($args['conversation']);
 
 ?>
 
@@ -18,31 +18,35 @@ $editor->cnvObject = $args['conversation'];
 
 	<? if ($enablePosting) { ?>
 		<div class="ccm-conversation-add-new-message" rel="mainReplyForm">
-			<form method="post">
+			<form method="post" class="main-reply-form">
 			<div class="ccm-conversation-avatar"><? print Loader::helper('concrete/avatar')->outputUserAvatar($ui)?></div>
 			<div class="ccm-conversation-message-form">
 				<div class="ccm-conversation-errors alert alert-error"></div>
 				<? $editor->outputConversationEditorAddMessageForm(); ?>
-				<button type="button" data-post-parent-id="0" data-submit="conversation-message" class="pull-right btn btn-submit btn-small"><?=t('Post')?> <i class="icon-bullhorn"></i></button><a class="attachmentToggle" href="#"><?php echo t('Attach Files'); ?></a>
+				<button type="button" data-post-parent-id="0" data-submit="conversation-message" class="pull-right btn btn-submit btn-small"><?=t('Post')?> <i class="icon-bullhorn"></i></button>
+				<a class="ccm-conversation-attachment-toggle" href="#"><?php echo t('Attach Files'); ?></a>
 			</div>
 			</form>
-			<div class="attachmentContainer">
+			<div class="ccm-conversation-attachment-container">
 				<form action="<?php echo Loader::helper('concrete/urls')->getToolsURL('conversations/add_file');?>" class="dropzone" id="file-upload">
+					<div class="ccm-conversation-errors alert alert-error"></div>
 				</form>
 			</div>
 		</div>
 
 		<div class="ccm-conversation-add-reply">
-			<form method="post">
+			<form method="post" class="aux-reply-form">
 			<div class="ccm-conversation-avatar"><? print Loader::helper('concrete/avatar')->outputUserAvatar($ui)?></div>
 			<div class="ccm-conversation-message-form">
 				<div class="ccm-conversation-errors alert alert-error"></div>
 				<? $editor->outputConversationEditorReplyMessageForm(); ?>
 				<button type="button" data-submit="conversation-message" class="pull-right btn btn-submit btn-small"><?=t('Post')?> <i class="icon-bullhorn"></i></button>
+				<a class="ccm-conversation-attachment-toggle" href="#"><?php echo t('Attach Files'); ?></a>
 			</div>
 			</form>
-			<div class="attachmentContainer">
+			<div class="ccm-conversation-attachment-container">
 				<form action="<?php echo Loader::helper('concrete/urls')->getToolsURL('conversations/add_file');?>" class="dropzone" id="file-upload-reply">
+					<div class="ccm-conversation-errors alert alert-error"></div>
 				</form>
 			</div>
 		</div>
@@ -56,6 +60,9 @@ $editor->cnvObject = $args['conversation'];
 
 	<div class="ccm-conversation-delete-message" data-dialog-title="<?=t('Delete Message')?>" data-cancel-button-title="<?=t('Cancel')?>" data-confirm-button-title="<?=t('Delete Message')?>">
 		<?=t('Remove this message? Replies to it will not be removed.')?>
+	</div>
+	<div class="ccm-conversation-delete-attachment" data-dialog-title="<?=t('Delete Attachment')?>" data-cancel-button-title="<?=t('Cancel')?>" data-confirm-button-title="<?=t('Delete Attachment')?>">
+		<?=t('Remove this attachment?')?>
 	</div>
 
 
@@ -95,36 +102,42 @@ $editor->cnvObject = $args['conversation'];
 
 <? if ($displayForm && ($displayPostingForm == 'bottom')) { ?>
 
-	<h4><?=t('Add Message')?></h4>
+<h4><?=t('Add Message')?></h4>
 
-<? if ($enablePosting) { ?>
-	<div class="ccm-conversation-add-new-message">
-		<form method="post">
-		<div class="ccm-conversation-avatar"><? print Loader::helper('concrete/avatar')->outputUserAvatar($ui)?></div>
-		<div class="ccm-conversation-message-form">
-			<div class="ccm-conversation-errors alert alert-error"></div>
-			<textarea name="cnvMessageBody"></textarea>
-			<button type="button" data-post-parent-id="0" data-submit="conversation-message" class="pull-right btn btn-submit btn-small"><?=t('Post')?> <i class="icon-bullhorn"></i></button>
+	<? if ($enablePosting) { ?>
+		<div class="ccm-conversation-add-new-message" rel="mainReplyForm">
+			<form method="post" class="main-reply-form">
+			<div class="ccm-conversation-avatar"><? print Loader::helper('concrete/avatar')->outputUserAvatar($ui)?></div>
+			<div class="ccm-conversation-message-form">
+				<div class="ccm-conversation-errors alert alert-error"></div>
+				<? $editor->outputConversationEditorAddMessageForm(); ?>
+				<button type="button" data-post-parent-id="0" data-submit="conversation-message" class="pull-right btn btn-submit btn-small"><?=t('Post')?> <i class="icon-bullhorn"></i></button>
+				<a class="ccm-conversation-attachment-toggle" href="#"><?php echo t('Attach Files'); ?></a>
+			</div>
+			</form>
+			<div class="ccm-conversation-attachment-container">
+				<form action="<?php echo Loader::helper('concrete/urls')->getToolsURL('conversations/add_file');?>" class="dropzone" id="file-upload">
+				</form>
+			</div>
 		</div>
-		</form>
-		<form action="<?php echo Loader::helper('concrete/urls')->getToolsURL('conversations/add_file');?>" class="dropzone" id="file-upload">
-		</form>
-	</div>
 
-	<div class="ccm-conversation-add-reply">
-		<form method="post">
-		<div class="ccm-conversation-avatar"><? print Loader::helper('concrete/avatar')->outputUserAvatar($ui)?></div>
-		<div class="ccm-conversation-message-form">
-			<div class="ccm-conversation-errors alert alert-error"></div>
-			<textarea name="cnvMessageBody"></textarea>
-			<button type="button" data-submit="conversation-message" class="pull-right btn btn-submit btn-small"><?=t('Post')?> <i class="icon-bullhorn"></i></button>
+		<div class="ccm-conversation-add-reply">
+			<form method="post" class="aux-reply-form">
+			<div class="ccm-conversation-avatar"><? print Loader::helper('concrete/avatar')->outputUserAvatar($ui)?></div>
+			<div class="ccm-conversation-message-form">
+				<div class="ccm-conversation-errors alert alert-error"></div>
+				<? $editor->outputConversationEditorReplyMessageForm(); ?>
+				<button type="button" data-submit="conversation-message" class="pull-right btn btn-submit btn-small"><?=t('Post')?> <i class="icon-bullhorn"></i></button>
+				<a class="ccm-conversation-attachment-toggle" href="#"><?php echo t('Attach Files'); ?></a>
+			</div>
+			</form>
+			<div class="ccm-conversation-attachment-container">
+				<form action="<?php echo Loader::helper('concrete/urls')->getToolsURL('conversations/add_file');?>" class="dropzone" id="file-upload-reply">
+				</form>
+			</div>
 		</div>
-		</form>
-		<form action="<?php echo Loader::helper('concrete/urls')->getToolsURL('conversations/add_file');?>" class="dropzone" id="file-upload-reply">
-		</form>
-	</div>
-<? } else { ?>
-	<p><?=t('Adding new posts is disabled for this conversation.')?></p>
-<? } ?>
+	<? } else { ?>
+		<p><?=t('Adding new posts is disabled for this conversation.')?></p>
+	<? } ?>
 
 <? } ?>

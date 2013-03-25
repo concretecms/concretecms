@@ -9,10 +9,11 @@ class Concrete5_Model_MarkdownConversationEditor extends ConversationEditor {
 		$this->outputConversationEditorAddMessageForm();
 	}
 
-	public function formatConversationMessageBody($cnvMessageBody) {
+	public function formatConversationMessageBody($cnv,$cnvMessageBody) {
 		loader::library('3rdparty/markdown');
 		$text = Loader::helper('text');
 		$md = Markdown(htmlentities($cnvMessageBody));
-		return str_replace(array('&amp;lt','&amp;gt'), array('&lt','&gt'), $md);
+		$formatted = str_replace(array('&amp;lt','&amp;gt'), array('&lt','&gt'), $md);
+		return parent::formatConversationMessageBody($cnv,$formatted);
 	}
 }

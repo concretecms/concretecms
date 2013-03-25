@@ -30,6 +30,7 @@ class Concrete5_Library_Content_Importer {
 		$this->importBlockTypeSets($sx);
 		$this->importConversationEditors($sx);
 		$this->importConversationRatingTypes($sx);
+		$this->importFlagTypes($sx);
 		$this->importBannedWords($sx);
 		$this->importFeatures($sx);
 		$this->importFeatureCategories($sx);
@@ -407,7 +408,15 @@ class Concrete5_Library_Content_Importer {
 	protected function importBannedWords(SimpleXMLElement $sx) {
 		if (isset($sx->banned_words)) {
 			foreach($sx->banned_words->banned_word as $p) {
-				$bw = BannedWord::add($p);
+				$bw = BannedWord::add(str_rot13($p));
+			}
+		}
+	}
+
+	protected function importFlagTypes(SimpleXMLElement $sx) {
+		if (isset($sx->flag_types)) {
+			foreach($sx->flag_types->flag_type as $p) {
+				$bw = FlagType::add($p);
 			}
 		}
 	}

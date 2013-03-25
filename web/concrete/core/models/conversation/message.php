@@ -7,14 +7,76 @@ class Concrete5_Model_Conversation_Message extends Object {
 	public function getConversationID() {return $this->cnvID;}
 	public function getConversationMessageLevel() {return $this->cnvMessageLevel;}
 	public function getConversationMessageParentID() {return $this->cnvMessageParentID;}
+	public function getConversationMessageSubmitIP() {return long2ip($this->cnvMessageSubmitIP);}
+	public function getConversationMessageSubmitUserAgent() { return $this->cnvMessageSubmitUserAgent;}
 	public function isConversationMessageDeleted() {return $this->cnvIsMessageDeleted;}
+	public function isConversationMessageFlagged() {return (count($this->getConversationMessageFlagTypes()) > 0);}
+	public function isConversationMessageApproved() {return $this->cnvIsMessageApproved;}
+	public function getConversationMessageFlagTypes() {
+		$db = Loader::db();
+		if ($this->cnvMessageFlagTypes) return $this->cnvMessageFlagTypes;
+		$flagTypes = $db->GetCol('SELECT cnvMessageFlagTypeID FROM ConversationFlaggedMessages WHERE cnvMessageID=?',array($this->cnvMessageID));
+		$flags = array();
+		foreach ($flagTypes as $flagType) {
+			$flags[] = ConversationFlagType::getByID($flagType);
+		}
+		$this->cnvMessageFlagTypes = $flags;
+		return $flags;
+	}
+	public function conversationMessageHasActiveChildren() {
+		$db = Loader::db();
+		$children = $db->getCol('SELECT cnvMessageID as cnt FROM ConversationMessages WHERE cnvMessageParentID=?',array($this->cnvMessageID));
+		foreach ($children as $childID) {
+			$child = ConversationMessage::getByID($childID);
+			if (($child->isConversationMessageApproved() && !$child->isConversationMessageDeleted()) || $child->conversationMessageHasActiveChildren()) {
+				return true;
+			}
+		}
+		return false;
+	}
+	public function conversationMessageHasChildren() {
+		$db = Loader::db();
+		$count = $db->getOne('SELECT COUNT(cnvMessageID) as cnt FROM ConversationMessages WHERE cnvMessageParentID=?',array($this->cnvMessageID));
+		return ($count > 0);
+	}
+	public function approve() {
+		$db = Loader::db();
+		$db->execute('UPDATE ConversationMessages SET cnvIsMessageApproved=1 WHERE cnvMessageID=?',array($this->cnvMessageID));
+		$this->cnvIsMessageApproved = true;
+	}
+	public function unapprove() {
+		$db = Loader::db();
+		$db->execute('UPDATE ConversationMessages SET cnvIsMessageApproved=0 WHERE cnvMessageID=?',array($this->cnvMessageID));
+		$this->cnvIsMessageApproved = false;
+	}
+	public function conversationMessageHasFlag($flag) {
+		if (!$flag instanceof ConversationFlagType) {
+			$flag = ConversationFlagType::getByHandle($flag);
+		}
+		if ($flag instanceof ConversationFlagType) {
+			foreach ($this->getConversationMessageFlagTypes() as $type) {
+				if ($flag->getID() == $type->getID()) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
 	public function getConversationMessageBodyOutput() {
 		if ($this->cnvIsMessageDeleted) {
 			return t('This message has been deleted.');
+		} else if (!$this->cnvIsMessageApproved) {
+			if ($this->conversationMessageHasFlag('spam')) {
+				return t('This message has been flagged as spam.');
+			}
+			return t('This message is queued for approval.');
 		} else {
 			$editor = ConversationEditor::getActive();
-			return $editor->formatConversationMessageBody($this->cnvMessageBody);
+			return $editor->formatConversationMessageBody($this->getConversationMessageConversationObject(),$this->cnvMessageBody);
 		}
+	}
+	public function getConversationMessageConversationObject() {
+		return Conversation::getByID($this->cnvID);
 	}
 	public function getConversationMessageUserObject() {
 		return UserInfo::getByID($this->uID);
@@ -34,11 +96,27 @@ class Concrete5_Model_Conversation_Message extends Object {
 		$cnvRatingTypeID = $db->GetOne('SELECT * FROM ConversationRatingTypes WHERE cnvRatingTypeHandle = ?', array($ratingType->cnvRatingTypeHandle));
 		$db->Execute('INSERT INTO ConversationMessageRatings (cnvMessageID, cnvRatingTypeID, cnvRatingTypeHandle, timestamp, uID) VALUES (?, ?, ?, ?, ?)', array($cnvMessageID, $cnvRatingTypeID, $ratingType->cnvRatingTypeHandle, date('Y-m-d H:i:s'), $uID));
 	}
+
+	public function flag($flagtype) {
+		if ($flagtype instanceof ConversationFlagType) {
+			$db = Loader::db();
+			foreach ($this->getConversationMessageFlagTypes() as $ft) {
+				if ($ft->getID() === $flagtype->getID()) {
+					return;
+				}
+			}
+			$db->execute('INSERT INTO ConversationFlaggedMessages (cnvMessageFlagTypeID, cnvMessageID) VALUES (?,?)',array($flagtype->getID(),$this->getConversationMessageID()));
+			$this->cnvMessageFlagTypes[] = $flagtype;
+			return true;
+		}
+		throw new Exception('Invalid flag type.');
+	}
 	public static function getByID($cnvMessageID) {
 		$db = Loader::db();
 		$r = $db->GetRow('select * from ConversationMessages where cnvMessageID = ?', array($cnvMessageID));
 		if (is_array($r) && $r['cnvMessageID'] == $cnvMessageID) {
 			$cnv = new ConversationMessage;
+			$cnv->getConversationMessageFlagTypes();
 			$cnv->setPropertiesFromArray($r);
 			return $cnv;
 		}
@@ -57,19 +135,27 @@ class Concrete5_Model_Conversation_Message extends Object {
 		}
 	}
 	
-	public function removeFile(File $f, $cnvMessageID) {
+	public function removeFile($cnvMessageAttachmentID) {
 		$db = Loader::db();
-		$db->Execute('DELETE FROM ConversationMessageAttachments WHERE cnvMessageID = ? AND fID = ?', array(
-			$f,
-			$cnvMessageID
+		$db->Execute('DELETE FROM ConversationMessageAttachments WHERE cnvMessageAttachmentID = ?', array(
+			$cnvMessageAttachmentID
 		));
 	}
 	
 	public function getAttachments($cnvMessageID) {
 		$db = Loader::db();
-		$db->Execute('SELECT fID FROM ConversationMessageAttachments WHERE cnvMessageID = ?', array(
+		$attachments = $db->Execute('SELECT * FROM ConversationMessageAttachments WHERE cnvMessageID = ?', array(
 			$cnvMessageID
 		));
+		return $attachments;
+	}
+
+	public function getAttachmentByID($cnvMessageAttachmentID) {
+		$db = Loader::db();
+		$attachment = $db->Execute('SELECT * FROM ConversationMessageAttachments WHERE cnvMessageAttachmentID = ?', array(
+		$cnvMessageAttachmentID
+		));
+		return $attachment;
 	}
 
 	public function delete() {
