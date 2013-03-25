@@ -28,6 +28,12 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			$this->addFooterItem(Loader::helper('html')->javascript('jquery.ui.js'));
 			$this->addHeaderItem(Loader::helper('html')->css('ccm.conversations.css'));
 			$this->addFooterItem(Loader::helper('html')->javascript('ccm.conversations.js'));
+			$editor = ConversationEditor::getActive();
+			foreach((array)$editor->getConversationEditorHeaderItems() as $item) {
+				$this->addFooterItem($item);
+			}
+			$this->addFooterItem(Loader::helper('html')->javascript('dropzone.js'));
+
 		}
 
 		public function validate($post) {

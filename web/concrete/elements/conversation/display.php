@@ -8,7 +8,7 @@ $u = new User();
 $ui = UserInfo::getByID($u->getUserID());
 
 $editor = ConversationEditor::getActive();
-$editor->cnvObject = $args['conversation'];
+$editor->setConversationObject($args['conversation']);
 
 ?>
 
@@ -24,10 +24,10 @@ $editor->cnvObject = $args['conversation'];
 				<div class="ccm-conversation-errors alert alert-error"></div>
 				<? $editor->outputConversationEditorAddMessageForm(); ?>
 				<button type="button" data-post-parent-id="0" data-submit="conversation-message" class="pull-right btn btn-submit btn-small"><?=t('Post')?> <i class="icon-bullhorn"></i></button>
-				<a class="attachmentToggle" href="#"><?php echo t('Attach Files'); ?></a>
+				<a class="ccm-conversation-attachment-toggle" href="#"><?php echo t('Attach Files'); ?></a>
 			</div>
 			</form>
-			<div class="attachmentContainer">
+			<div class="ccm-conversation-attachment-container">
 				<form action="<?php echo Loader::helper('concrete/urls')->getToolsURL('conversations/add_file');?>" class="dropzone" id="file-upload">
 				</form>
 			</div>
@@ -40,10 +40,10 @@ $editor->cnvObject = $args['conversation'];
 				<div class="ccm-conversation-errors alert alert-error"></div>
 				<? $editor->outputConversationEditorReplyMessageForm(); ?>
 				<button type="button" data-submit="conversation-message" class="pull-right btn btn-submit btn-small"><?=t('Post')?> <i class="icon-bullhorn"></i></button>
-				<a class="attachmentToggle" href="#"><?php echo t('Attach Files'); ?></a>
+				<a class="ccm-conversation-attachment-toggle" href="#"><?php echo t('Attach Files'); ?></a>
 			</div>
 			</form>
-			<div class="attachmentContainer">
+			<div class="ccm-conversation-attachment-container">
 				<form action="<?php echo Loader::helper('concrete/urls')->getToolsURL('conversations/add_file');?>" class="dropzone" id="file-upload-reply">
 				</form>
 			</div>
@@ -110,10 +110,10 @@ $editor->cnvObject = $args['conversation'];
 				<div class="ccm-conversation-errors alert alert-error"></div>
 				<? $editor->outputConversationEditorAddMessageForm(); ?>
 				<button type="button" data-post-parent-id="0" data-submit="conversation-message" class="pull-right btn btn-submit btn-small"><?=t('Post')?> <i class="icon-bullhorn"></i></button>
-				<a class="attachmentToggle" href="#"><?php echo t('Attach Files'); ?></a>
+				<a class="ccm-conversation-attachment-toggle" href="#"><?php echo t('Attach Files'); ?></a>
 			</div>
 			</form>
-			<div class="attachmentContainer">
+			<div class="ccm-conversation-attachment-container">
 				<form action="<?php echo Loader::helper('concrete/urls')->getToolsURL('conversations/add_file');?>" class="dropzone" id="file-upload">
 				</form>
 			</div>
@@ -126,10 +126,10 @@ $editor->cnvObject = $args['conversation'];
 				<div class="ccm-conversation-errors alert alert-error"></div>
 				<? $editor->outputConversationEditorReplyMessageForm(); ?>
 				<button type="button" data-submit="conversation-message" class="pull-right btn btn-submit btn-small"><?=t('Post')?> <i class="icon-bullhorn"></i></button>
-				<a class="attachmentToggle" href="#"><?php echo t('Attach Files'); ?></a>
+				<a class="ccm-conversation-attachment-toggle" href="#"><?php echo t('Attach Files'); ?></a>
 			</div>
 			</form>
-			<div class="attachmentContainer">
+			<div class="ccm-conversation-attachment-container">
 				<form action="<?php echo Loader::helper('concrete/urls')->getToolsURL('conversations/add_file');?>" class="dropzone" id="file-upload-reply">
 				</form>
 			</div>

@@ -216,7 +216,7 @@
 					$('input[rel="'+ $(this).attr('rel') +'"]').remove();
 					$(this).remove();
 				});
-				$('.attachmentContainer').each(function() {
+				$('.ccm-conversation-attachment-container').each(function() {
 					if($(this).is(':visible')) {
 						$(this).toggle();
 					}
@@ -249,20 +249,20 @@
 				return false;
 			});
 			
-			$('.attachmentContainer').hide();
-			$('.ccm-conversation-add-new-message .attachmentToggle').click(function(event){ 
+			$('.ccm-conversation-attachment-container').hide();
+			$('.ccm-conversation-add-new-message .ccm-conversation-attachment-toggle').click(function(event){ 
 				event.preventDefault();
-				if($('.ccm-conversation-add-reply .attachmentContainer').is(':visible')) {
-					$('.ccm-conversation-add-reply .attachmentContainer').toggle();
+				if($('.ccm-conversation-add-reply .ccm-conversation-attachment-container').is(':visible')) {
+					$('.ccm-conversation-add-reply .ccm-conversation-attachment-container').toggle();
 				}
-				$('.ccm-conversation-add-new-message .attachmentContainer').toggle();
+				$('.ccm-conversation-add-new-message .ccm-conversation-attachment-container').toggle();
 			});
-			$('.ccm-conversation-add-reply .attachmentToggle').click(function(event){ 
+			$('.ccm-conversation-add-reply .ccm-conversation-attachment-toggle').click(function(event){ 
 				event.preventDefault();
-				if($('.ccm-conversation-add-new-message .attachmentContainer').is(':visible')) {
-					$('.ccm-conversation-add-new-message .attachmentContainer').toggle();
+				if($('.ccm-conversation-add-new-message .ccm-conversation-attachment-container').is(':visible')) {
+					$('.ccm-conversation-add-new-message .ccm-conversation-attachment-container').toggle();
 				}
-				$('.ccm-conversation-add-reply .attachmentContainer').toggle();
+				$('.ccm-conversation-add-reply .ccm-conversation-attachment-container').toggle();
 			});
 			
 			obj.$element.on('click', 'a[data-submit=delete-conversation-message]', function() {
