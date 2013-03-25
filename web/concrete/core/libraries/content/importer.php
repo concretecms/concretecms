@@ -30,6 +30,7 @@ class Concrete5_Library_Content_Importer {
 		$this->importBlockTypeSets($sx);
 		$this->importConversationEditors($sx);
 		$this->importConversationRatingTypes($sx);
+		$this->importFlagTypes($sx);
 		$this->importBannedWords($sx);
 		$this->importFeatures($sx);
 		$this->importFeatureCategories($sx);

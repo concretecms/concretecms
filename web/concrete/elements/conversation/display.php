@@ -29,6 +29,7 @@ $editor->setConversationObject($args['conversation']);
 			</form>
 			<div class="ccm-conversation-attachment-container">
 				<form action="<?php echo Loader::helper('concrete/urls')->getToolsURL('conversations/add_file');?>" class="dropzone" id="file-upload">
+					<div class="ccm-conversation-errors alert alert-error"></div>
 				</form>
 			</div>
 		</div>
@@ -45,6 +46,7 @@ $editor->setConversationObject($args['conversation']);
 			</form>
 			<div class="ccm-conversation-attachment-container">
 				<form action="<?php echo Loader::helper('concrete/urls')->getToolsURL('conversations/add_file');?>" class="dropzone" id="file-upload-reply">
+					<div class="ccm-conversation-errors alert alert-error"></div>
 				</form>
 			</div>
 		</div>

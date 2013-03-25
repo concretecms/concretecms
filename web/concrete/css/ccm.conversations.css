@@ -18,7 +18,7 @@ div.ccm-conversation-add-reply div.ccm-conversation-message-form textarea,div.cc
 div.ccm-conversation-add-new-message{margin-bottom:20px;}
 div.ccm-conversation-add-reply{display:none;margin-top:10px;}
 div.ccm-conversation-errors{display:none;}
-div.ccm-conversation-message-list div.ccm-conversation-delete-message{display:none;}
+div.ccm-conversation-message-list div.ccm-conversation-delete-message, div.ccm-conversation-message-list div.ccm-conversation-delete-attachment{display:none;}
 div.ccm-conversation-dialog div.ui-dialog-buttonset{float:none !important;}
 div.ccm-conversation-message{position:relative;*zoom:1;padding-top:0px;padding-bottom:20px;padding-right:0px;padding-left:50px;}div.ccm-conversation-message:before,div.ccm-conversation-message:after{display:table;content:"";line-height:0;}
 div.ccm-conversation-message:after{clear:both;}
