@@ -17,7 +17,7 @@ $editor->setConversationObject($args['conversation']);
 <h4><?=t('Add Message')?></h4>
 
 	<? if ($enablePosting) { ?>
-		<div class="ccm-conversation-add-new-message" rel="mainReplyForm">
+		<div class="ccm-conversation-add-new-message" rel="main-reply-form">
 			<form method="post" class="main-reply-form">
 			<div class="ccm-conversation-avatar"><? print Loader::helper('concrete/avatar')->outputUserAvatar($ui)?></div>
 			<div class="ccm-conversation-message-form">
@@ -105,7 +105,7 @@ $editor->setConversationObject($args['conversation']);
 <h4><?=t('Add Message')?></h4>
 
 	<? if ($enablePosting) { ?>
-		<div class="ccm-conversation-add-new-message" rel="mainReplyForm">
+		<div class="ccm-conversation-add-new-message" rel="main-reply-form">
 			<form method="post" class="main-reply-form">
 			<div class="ccm-conversation-avatar"><? print Loader::helper('concrete/avatar')->outputUserAvatar($ui)?></div>
 			<div class="ccm-conversation-message-form">
