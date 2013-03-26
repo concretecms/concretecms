@@ -12,6 +12,10 @@
 				</attributekey>
 			</attributes>
         </page>
+        <page name="Composer Types" path="/dashboard/composer/types" filename="/dashboard/composer/types.php" pagetype="" description="" package="">
+
+        </page>
+
         <page name="Write" path="/dashboard/composer/write" filename="/dashboard/composer/write.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
