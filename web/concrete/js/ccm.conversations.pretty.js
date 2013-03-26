@@ -186,39 +186,6 @@
 			obj.$messages = obj.$element.find('div.ccm-conversation-messages');
 			obj.$messagerating = obj.$element.find('span.ccm-conversation-message-rating');
 			obj.$messagescore = 2; // this is test
-
-			if (obj.$newmessageform.dropzone) {
-				obj.$newmessageform.dropzone({
-					'url': CCM_TOOLS_PATH + '/conversations/add_file', 
-					'success' : function(file, raw) {
-						var response = JSON.parse(raw);
-						if(!response.error) {
-							$('div[rel="' + response.tag + '"] form.main-reply-form').append('<input rel="'+response.timestamp+'" type="hidden" name="attachments[]" value="'+response.id+'" />');
-						} else {
-							
-							var $form = $('.preview.processing[rel="'+response.timestamp+'"]').closest('form');
-							obj.handlePostError($form, [response.error]);
-							$('.preview.processing[rel="'+response.timestamp+'"]').remove();
-							$form.children('.ccm-conversation-errors').delay(3000).fadeOut('slow', function() {
-								$(this).html('');
-							});
-						}
-					},
-					'sending' : function(file, xhr, formData) { 
-						$(file.previewTemplate).attr('rel', new Date().getTime());
-						formData.append("timestamp", $(file.previewTemplate).attr('rel'));
-						formData.append("tag", $(obj.$newmessageform).parent('div').attr('rel'));
-					},
-					'init' : function() { 
-						 this.on("complete", function(file) {
-						 	$('.preview.processing').click(function(){ 
-								$('input[rel="'+ $(this).attr('rel') +'"]').remove();
-								$(this).remove();
-							})
-						});
-					}
-				});
-			}
 			
 			obj.$element.on('click', 'button[data-submit=conversation-message]', function() {
 				obj.submitForm($(this));
@@ -227,10 +194,6 @@
 			var replyIterator = 1;
 			obj.$element.on('click', 'a[data-toggle=conversation-reply]', function(event) {
 				event.preventDefault();
-				$('.preview.processing').each(function(){    // first remove any previous attachments and hide dropzone if it was open.
-					$('input[rel="'+ $(this).attr('rel') +'"]').remove();
-					$(this).remove();
-				});
 				$('.ccm-conversation-attachment-container').each(function() {
 					if($(this).is(':visible')) {
 						$(this).toggle();
@@ -239,38 +202,8 @@
 				var $replyform = obj.$replyholder.appendTo($(this).closest('div[data-conversation-message-id]'));
 				$replyform.attr('data-form', 'conversation-reply').show();
 				$replyform.find('button[data-submit=conversation-message]').attr('data-post-parent-id', $(this).attr('data-post-parent-id'));
-				if(replyIterator < 2) {  // only apply dropzone when reply is first shown
-					$replyform.find('.dropzone').dropzone({
-						'url': CCM_TOOLS_PATH + '/conversations/add_file',
-						'success' : function(file, raw) {
-							var response = JSON.parse(raw);
-							if(!response.error) {
-								$('div[rel="' + response.tag + '"] form.main-reply-form').append('<input rel="'+response.timestamp+'" type="hidden" name="attachments[]" value="'+response.id+'" />');
-							} else {
-							var $form = $('.preview.processing[rel="'+response.timestamp+'"]').closest('form');
-							obj.handlePostError($form, [response.error]);
-							$('.preview.processing[rel="'+response.timestamp+'"]').remove();
-							$form.children('.ccm-conversation-errors').delay(3000).fadeOut('slow', function() {
-									$(this).html('');
-								});
-							}
-						},
-						'sending' : function(file, xhr, formData) { 
-							$(file.previewTemplate).attr('rel', new Date().getTime());
-							formData.append("timestamp", $(file.previewTemplate).attr('rel'));
-							formData.append("tag", $(obj.$newmessageform).parent('div').attr('rel'));
-						},
-						'init' : function() { 
-							 this.on("complete", function(file) { 
-							 	$('.preview.processing').click(function(){ 
-									$('input[rel="'+ $(this).attr('rel') +'"]').remove();
-									$(this).remove();
-								})
-							});
-						}
-					});
-				}
-				$replyform.attr('rel', 'newReply' + replyIterator);
+				
+				$replyform.attr('rel', 'new-reply' + replyIterator);
 				replyIterator++;  // this may not be necessary, but might come in handy if we need to know how many times a new reply box has been triggered. 
 				return false;
 			});
@@ -330,38 +263,6 @@
 				}
 				return false;
 			});
-			$('a.attachmentDelete').click(function() {
-				var link = $(this);
-				obj.$attachmentdeletetdialog  = obj.$attachmentdeleteholder.clone();
-				if (obj.$attachmentdeletetdialog.dialog) {
-					obj.$attachmentdeletetdialog.dialog({
-						modal: true,
-						dialogClass: 'ccm-conversation-dialog',
-						title: obj.$attachmentdeletetdialog.attr('data-dialog-title'),
-						buttons: [
-							{
-								'text': obj.$attachmentdeleteholder.attr('data-cancel-button-title'),
-								'class': 'btn pull-left',
-								'click': function() {
-									obj.$attachmentdeletetdialog.dialog('close');
-								}
-							},
-							{
-								'text': obj.$attachmentdeleteholder.attr('data-confirm-button-title'),
-								'class': 'btn pull-right btn-danger',
-								'click': function() {
-									obj.deleteAttachment(link.attr('rel'));
-								}
-							}
-						]
-					});
-				} else {
-					if (confirm('Remove this message? Replies to it will not be removed.')) { 
-						obj.deleteAttachment(link.attr('rel'));
-					}
-				} 
-				return false;
-			}); 
 
 			obj.$element.on('change', 'select[data-sort=conversation-message-list]', function() {
 				obj.$messagelist.load(CCM_TOOLS_PATH + '/conversations/view_ajax', {
@@ -434,6 +335,8 @@
 					}
 				});
 			});
+			obj.$element.ccmconversationattachments(obj);
+
 		},
 		handlePostError: function($form, messages) {
 			if (!messages) {
@@ -544,33 +447,7 @@
 				}
 			});
 		},
-		deleteAttachment: function(cnvMessageAttachmentID) {
-			var obj = this;
-			obj.publish('conversationBeforeDeleteAttachment',{cnvMessageAttachmentID:cnvMessageAttachmentID});
-			var	formArray = [{
-				'name': 'cnvMessageAttachmentID',
-				'value': cnvMessageAttachmentID
-			}];
 
-			$.ajax({
-				type: 'post',
-				data: formArray,
-				url: CCM_TOOLS_PATH + '/conversations/delete_file',
-				success: function(response) {
-					var parsedData = JSON.parse(response);
-					console.log(parsedData)
-					$('p[rel="'+parsedData.attachmentID+'"]').fadeOut(300, function() { $(this).remove() });
-					if (obj.$attachmentdeletedialog.dialog) {
-						obj.$attachmentdeletedialog.dialog('close');
-						obj.publish('conversationDeleteAttachment',{cnvMessageAttachmentID:cnvMessageAttachmentID});
-					}
-				},
-				error: function(e) {
-					obj.publish('conversationDeleteAttachmentError',{cnvMessageAttachmentID:cnvMessageAttachmentID,error:arguments});
-					window.alert('Something went wrong while deleting this attachment, please refresh and try again.');
-				}
-			});
-		},
 		updateCount: function() {
 			var obj = this;
 			obj.publish('conversationBeforeUpdateCount');
@@ -689,36 +566,171 @@
 ///////////////////////////////////////////////////////////////////////////////
 //                               attachments.js                              //
 ///////////////////////////////////////////////////////////////////////////////
-(function($) {
-
-var methods = {
-
-	init: function(options) {
-
-		return $.each($(this), function(i, obj) {
-			$(this).find('.ccm-conversation-attachment-container').each(function() {
-				if($(this).is(':visible')) {
-					$(this).toggle();
+(function($, window) {
+	
+	var methods = {
+	
+		init: function(options) {
+			var obj = options;
+			obj.$element.on('click', 'a[data-toggle=conversation-reply]', function() {
+				$('.ccm-conversation-wrapper').ccmconversationattachments('clearDropzoneQueues');
+			});
+			obj.$element.on('click', 'a.attachment-delete', function(){
+				$(this).ccmconversationattachments('attachmentDeleteTrigger');
+			});
+			if (obj.$newmessageform.dropzone) {  // dropzone new message form
+				obj.$newmessageform.dropzone({
+					'url': CCM_TOOLS_PATH + '/conversations/add_file', 
+					'success' : function(file, raw) {
+						var response = JSON.parse(raw);
+						if(!response.error) {
+							$('div[rel="' + response.tag + '"] form.main-reply-form').append('<input rel="'+response.timestamp+'" type="hidden" name="attachments[]" value="'+response.id+'" />');
+						} else {
+							
+							var $form = $('.preview.processing[rel="'+response.timestamp+'"]').closest('form');
+							obj.handlePostError($form, [response.error]);
+							$('.preview.processing[rel="'+response.timestamp+'"]').remove();
+							$form.children('.ccm-conversation-errors').delay(3000).fadeOut('slow', function() {
+								$(this).html('');
+							});
+						}
+					},
+					'sending' : function(file, xhr, formData) { 
+						$(file.previewTemplate).attr('rel', new Date().getTime());
+						formData.append("timestamp", $(file.previewTemplate).attr('rel'));
+						formData.append("tag", $(obj.$newmessageform).parent('div').attr('rel'));
+					},
+					'init' : function() { 
+						 this.on("complete", function(file) {
+						 	$('.preview.processing').click(function(){ 
+								$('input[rel="'+ $(this).attr('rel') +'"]').remove();
+								$(this).remove();
+							})
+						});
+					}
+				});
+			}
+			
+			obj.$replyholder.find('.dropzone').dropzone({  // dropzone reply form
+				'url': CCM_TOOLS_PATH + '/conversations/add_file',
+				'success' : function(file, raw) {
+					console.log(this);
+					var response = JSON.parse(raw);
+					if(!response.error) {
+						$(this.element).closest('div.ccm-conversation-add-reply').find('form.aux-reply-form').append('<input rel="'+response.timestamp+'" type="hidden" name="attachments[]" value="'+response.id+'" />');
+					} else {
+						var $form = $('.preview.processing[rel="'+response.timestamp+'"]').closest('form');
+						obj.handlePostError($form, [response.error]);
+						$('.preview.processing[rel="'+response.timestamp+'"]').remove();
+						$form.children('.ccm-conversation-errors').delay(3000).fadeOut('slow', function() {
+							$(this).html('');
+						});
+					}
+				},
+				'sending' : function(file, xhr, formData) { 
+					$(file.previewTemplate).attr('rel', new Date().getTime());
+					formData.append("timestamp", $(file.previewTemplate).attr('rel'));
+					formData.append("tag", $(obj.$newmessageform).parent('div').attr('rel'));
+				},
+				'init' : function() { 
+					 this.on("complete", function(file) { 
+					 	$('.preview.processing').click(function(){ 
+							$('input[rel="'+ $(this).attr('rel') +'"]').remove();
+							$(this).remove();
+						})
+					});
 				}
 			});
-		});
+			return $.each($(this), function(i, obj) {
+				$(this).find('.ccm-conversation-attachment-container').each(function() {
+					if($(this).is(':visible')) {
+						$(this).toggle();
+					}
+				});
+			});
+		}, 
+		
+		attachmentDeleteTrigger: function(){
+			var link = $(this);
+			obj.$attachmentdeletetdialog  = obj.$attachmentdeleteholder.clone();
+			if (obj.$attachmentdeletetdialog.dialog) {
+				obj.$attachmentdeletetdialog.dialog({
+					modal: true,
+					dialogClass: 'ccm-conversation-dialog',
+					title: obj.$attachmentdeletetdialog.attr('data-dialog-title'),
+					buttons: [
+						{
+							'text': obj.$attachmentdeleteholder.attr('data-cancel-button-title'),
+							'class': 'btn pull-left',
+							'click': function() {
+								obj.$attachmentdeletetdialog.dialog('close');
+							}
+						},
+						{
+							'text': obj.$attachmentdeleteholder.attr('data-confirm-button-title'),
+							'class': 'btn pull-right btn-danger',
+							'click': function() {
+								obj.deleteAttachment(link.attr('rel'));
+							}
+						}
+					]
+				});
+			} else {
+				if (confirm('Remove this message? Replies to it will not be removed.')) { 
+					ccmconversationattachments.deleteAttachment(link.attr('rel'));
+				}
+			} 
+			return false;
+		},
+		
+		clearDropzoneQueues : function() {
+			$('.preview.processing').each(function(){    // first remove any previous attachments and hide dropzone if it was open.
+				$('input[rel="'+ $(this).attr('rel') +'"]').remove();
+				$(this).remove();
+			});
+		},
+		
+		deleteAttachment: function(cnvMessageAttachmentID) {
+			var obj = this;
+			obj.publish('conversationBeforeDeleteAttachment',{cnvMessageAttachmentID:cnvMessageAttachmentID});
+			var	formArray = [{
+				'name': 'cnvMessageAttachmentID',
+				'value': cnvMessageAttachmentID
+			}];
+	
+			$.ajax({
+				type: 'post',
+				data: formArray,
+				url: CCM_TOOLS_PATH + '/conversations/delete_file',
+				success: function(response) {
+					var parsedData = JSON.parse(response);
+					$('p[rel="'+parsedData.attachmentID+'"]').fadeOut(300, function() { $(this).remove() });
+					if (obj.$attachmentdeletedialog.dialog) {
+						obj.$attachmentdeletedialog.dialog('close');
+						obj.publish('conversationDeleteAttachment',{cnvMessageAttachmentID:cnvMessageAttachmentID});
+					}
+				},
+				error: function(e) {
+					obj.publish('conversationDeleteAttachmentError',{cnvMessageAttachmentID:cnvMessageAttachmentID,error:arguments});
+					window.alert('Something went wrong while deleting this attachment, please refresh and try again.');
+				}
+			});
+		}
+	}
+	
+	$.fn.ccmconversationattachments = function(method) {
+	
+		if ( methods[method] ) {
+			return methods[method].apply( this, Array.prototype.slice.call( arguments, 1 ));
+		} else if ( typeof method === 'object' || ! method ) {
+			return methods.init.apply( this, arguments );
+		} else {
+			$.error( 'Method ' +  method + ' does not exist on jQuery.tooltip' );
+		}    
+	
 	}
 
-}
-
-$.fn.ccmconversationattachments = function(method) {
-	
-	if ( methods[method] ) {
-		return methods[method].apply( this, Array.prototype.slice.call( arguments, 1 ));
-	} else if ( typeof method === 'object' || ! method ) {
-		return methods.init.apply( this, arguments );
-	} else {
-		$.error( 'Method ' +  method + ' does not exist on jQuery.tooltip' );
-	}    
-
-}
-
-})(jQuery);
+})(jQuery, window);
 
 
 ///////////////////////////////////////////////////////////////////////////////
