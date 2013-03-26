@@ -84,7 +84,7 @@ $editor->setConversationObject($args['conversation']);
 	<div class="ccm-conversation-messages">
 
 	<? foreach($messages as $m) {
-		Loader::element('conversation/message', array('message' => $m, 'enablePosting' => $enablePosting, 'displayMode' => $displayMode, 'enableCommentRating' => $enableCommentRating));
+		Loader::element('conversation/message', array('cID' => $cID, 'message' => $m, 'enablePosting' => $enablePosting, 'displayMode' => $displayMode, 'enableCommentRating' => $enableCommentRating));
 	} ?>
 
 	</div>
