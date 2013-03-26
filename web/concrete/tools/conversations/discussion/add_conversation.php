@@ -24,35 +24,29 @@ if (!$vs->notempty($_POST['cnvMessageBody'])) {
 	$ve->add(t('Your message cannot be empty.'));
 }
 
+if (Config::get('CONVERSATION_DISALLOW_BANNED_WORDS') && (
+	Loader::helper('validation/banned_words')->hasBannedWords($_POST['cnvDiscussionSubject']) ||
+	Loader::helper('validation/banned_words')->hasBannedWords($_POST['cnvMessageBody']))) {
 
-/*
-
-$cnvMessageSubject = null;
-if (Loader::helper('validation/numbers')->integer($_POST['cnvID'])) {
-	$cn = Conversation::getByID($_POST['cnvID']);
-}
-if (!is_object($cn)) {
-	$ve->add(t('Invalid conversation.'));
-}
-if (!$vs->notempty($_POST['cnvMessageBody'])) {
-	$ve->add(t('Your message cannot be empty.'));
+	$ve->add(t('Banned words detected.'));	
 }
 
-if (Loader::helper('validation/numbers')->integer($_POST['cnvMessageParentID']) && $_POST['cnvMessageParentID'] > 0) {
-	$parent = ConversationMessage::getByID($_POST['cnvMessageParentID']);
-	if (!is_object($parent)) {
-		$ve->add(t('Invalid parent message.'));
-	}
+$c = $discussion->getConversationDiscussionCollectionObject();
+if (!is_object($c)) {
+	$ve->add(t('Invalid parent page object.'));
 }
 
-if (Config::get('CONVERSATION_DISALLOW_BANNED_WORDS') && Loader::helper('validation/banned_words')->hasBannedWords($_POST['cnvMessageBody'])) {
-	$ve->add(t('Banned words detected.'));
+$ct = $discussion->getConversationDiscussionCollectionObject();
+if (!is_object($ct)) {
+	$ve->add(t('Invalid page type object for post creation.'));
 }
-*/
 
 if ($ve->has()) {
 	$ax->sendError($ve);
 } else {
+
+	$conversation = $discussion->addConversation($subject, $_POST['cnvMessageBody']);
+
 	/*
 	$msg = $cn->addMessage($cnvMessageSubject, $_POST['cnvMessageBody'], $parent);
 	if (!Loader::helper('validation/antispam')->check($_POST['cnvMessageBody'],'conversation_comment')) {
@@ -70,5 +64,5 @@ if ($ve->has()) {
 	}
 	*/
 
-	$ax->sendResult($c);
+	$ax->sendResult($conversation);
 }

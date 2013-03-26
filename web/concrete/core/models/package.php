@@ -285,6 +285,8 @@ class Concrete5_Model_Package extends Object {
 		$items['content_editor_snippets'] = SystemContentEditorSnippet::getListByPackage($this);		
 		$items['conversation_editors'] = ConversationEditor::getListByPackage($this);		
 		$items['conversation_rating_types'] = ConversationRatingType::getListByPackage($this);		
+		$items['composer_target_types'] = ComposerTargetType::getListByPackage($this);		
+		$items['composer_control_types'] = ComposerControlType::getListByPackage($this);		
 		$items['antispam_libraries'] = SystemAntispamLibrary::getListByPackage($this);		
 		$items['community_point_actions'] = UserPointAction::getListByPackage($this);		
 		$items['jobs'] = Job::getListByPackage($this);		
@@ -295,7 +297,6 @@ class Concrete5_Model_Package extends Object {
 	
 	public static function getItemName($item) {
 		$txt = Loader::helper('text');
-		Loader::model('single_page');
 		if ($item instanceof BlockType) {
 			return $item->getBlockTypeName();
 		} else if ($item instanceof PageTheme) {
@@ -310,6 +311,10 @@ class Concrete5_Model_Package extends Object {
 			return $item->getAggregatorItemTemplateName();
 		} else if ($item instanceof BlockTypeSet) {
 			return $item->getBlockTypeSetName();
+		} else if ($item instanceof ComposerControlType) {
+			return $item->getComposerControlTypeName();
+		} else if ($item instanceof ComposerTargetType) {
+			return $item->getComposerTargetTypeName();
 		} else if ($item instanceof CollectionType) {
 			return $item->getCollectionTypeName();
 		} else if ($item instanceof MailImporter) {
@@ -381,6 +386,8 @@ class Concrete5_Model_Package extends Object {
 						case 'AggregatorItemTemplate':
 						case 'ConversationEditor':
 						case 'ConversationRatingType':
+						case 'ComposerTargetType':
+						case 'ComposerControlType':
 							$item->delete();	
 							break;
 						case 'PageTheme':
