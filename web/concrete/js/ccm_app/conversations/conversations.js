@@ -314,7 +314,6 @@
 			});
 			
 			obj.$element.on('click', '.conversation-rate-message', function() {
-				//alert('upvote');
 				obj.$messagerating.load(CCM_TOOLS_PATH + '/conversations/rate');
 				var data = {
 					'cnvID':               obj.options.cnvID,
