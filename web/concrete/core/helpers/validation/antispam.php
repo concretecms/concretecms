@@ -13,6 +13,10 @@ class Concrete5_Helper_Validation_Antispam {
 		}
 	}		
 	
+	public function getWhitelistGroup() {
+		return Group::getByID(Config::get('SPAM_WHITELIST_GROUP'));
+	}
+
 	public function report($content, $ui, $ip, $ua, $additionalArgs = array()) {
 		$args['content'] = $content;
 		$args['author'] = $ui->getUserName();
@@ -23,13 +27,21 @@ class Concrete5_Helper_Validation_Antispam {
 		foreach($additionalArgs as $key => $value) {
 			$args[$key] = $value;
 		}
-		if (method_exists($this->library, 'report')) {
-			$this->library->report($args);
+		if (method_exists($this->controller, 'report')) {
+			$this->controller->report($args);
 		}
 	}
 
-	public function check($content, $type, $additionalArgs = array()) {
+	public function check($content, $type, $additionalArgs = array(), $user = false) {
 		if ($this->controller) { 
+			if (!$user) {
+				$user = new User;
+			}
+			$wlg = $this->getWhitelistGroup();
+			if ($wlg instanceOf Group && $u->inGroup($wlg)) {
+				// Never spam if user is in the whitelist
+				return true;
+			}
 			$args['ip_address'] = Loader::helper('validation/ip')->getRequestIP();
 			$args['user_agent'] = $_SERVER['HTTP_USER_AGENT'];
 			$args['content'] = $content;
