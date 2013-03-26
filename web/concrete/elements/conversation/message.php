@@ -46,14 +46,16 @@ if ((!$message->isConversationMessageDeleted() && $message->isConversationMessag
 				<? } ?>
 			</ul>
 			<? } ?>
-
-			<?=$message->getConversationMessageDateTimeOutput()?> 
-			<?
-			Loader::element('conversation/social_share', array('cID' => $cID, 'message' => $message));
+			
+		<?=$message->getConversationMessageDateTimeOutput();
+		Loader::element('conversation/social_share', array('cID' => $cID, 'message' => $message));?>
+		<? if ($enableCommentRating) {
 			$ratingTypes = ConversationRatingType::getList();
-			foreach($ratingTypes as $type) { ?>
-				<?=$type->outputRatingTypeHTML()?>
-			<? } ?>
+			foreach($ratingTypes as $ratingType) { ?>
+				<?=$ratingType->outputRatingTypeHTML();?>
+				<?=$message->getConversationMessageRating($ratingType); ?>
+			 <? } ?>
+		<? } ?>
 		</div>
 	</div>
 	<?php

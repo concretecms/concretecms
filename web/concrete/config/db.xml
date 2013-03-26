@@ -14,10 +14,7 @@
       <notnull/>
       <default value="0" />
     </field>
-    <field name="cmpTargetTypeID" type="I" size="10">
-      <notnull/>
-      <default value="0" />
-    </field>
+   <field name="cmpTargetObject" type="X2"></field>
   </table>
   <table name="ComposerTargetTypes">
     <field name="cmpTargetTypeID" type="I" size="10">
@@ -47,29 +44,7 @@
       <unsigned/>
     </field>
   </table>
-  <table name="ComposerTargetPageTypes">
-    <field name="cmpID" type="I" size="10">
-      <key/>
-      <unsigned/>
-    </field>
-    <field name="ctID" type="I" size="10">
-      <key/>
-      <unsigned/>
-      <default value="0" />
-    </field>
-  </table>
 
-  <table name="ComposerTargetParentPages">
-    <field name="cmpID" type="I" size="10">
-      <key/>
-      <unsigned/>
-    </field>
-    <field name="cParentID" type="I" size="10">
-      <key/>
-      <unsigned/>
-      <default value="0" />
-    </field>
-  </table>
 
     <table name="Features">
     <field name="feID" type="I" size="10">
@@ -398,7 +373,7 @@
       <default value="0"/>
       <unsigned/>
     </field>
-  </table>
+</table>
   <table name="ConversationMessageAttachments">
     <field name="cnvMessageAttachmentID" type="I" size="11">
       <key/>
@@ -412,13 +387,14 @@
   </table>
   <table name="ConversationMessageRatings">
 		<field name="cnvMessageID" type="I"  size="10">
-			<key />
 			<unsigned />
 		</field>
 		<field name="cnvRatingTypeID" type="I" size="10">
 			<notnull />
 			<default value="0" />
 			<unsigned />
+		</field>
+		<field name="cnvRatingTypeHandle" type="C" size="10">
 		</field>
 		<field name="timestamp" type="T" />
 		<field name="uID" type="I" size="10">
@@ -429,20 +405,20 @@
 	</table>
 	<table name="ConversationRatingTypes">
 		<field name="cnvRatingTypeID" type="I" size="10">
-      <key/>
-      <autoincrement/>
-      <unsigned/>
+		  <key/>
+		  <autoincrement/>
+		  <unsigned/>
 		</field>
-		<field name="cnvRatingTypeHandle" type="C" size="10">
+		<field name="cnvRatingTypeHandle" type="C" size="255">
 		</field>
-    <field name="cnvRatingTypeName" type="C" size="255"/>
+		<field name="cnvRatingTypeName" type="C" size="10"/>
 		<field name="cnvRatingTypeCommunityPoints" type="I" size="10">
 		</field>
-    <field name="pkgID" type="I" size="10">
-      <notnull/>
-      <default value="0"/>
-      <unsigned/>
-    </field>
+		<field name="pkgID" type="I" size="10">
+		  <notnull/>
+		  <default value="0"/>
+		  <unsigned/>
+		</field>
 	</table>
   <table name="PermissionAssignments">
     <field name="paID" type="I" size="10">
