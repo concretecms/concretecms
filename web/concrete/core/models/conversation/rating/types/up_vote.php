@@ -6,5 +6,7 @@ class Concrete5_Model_UpVoteConversationRatingType extends ConversationRatingTyp
 		print '<i data-conversation-rating-type="up_vote" class="icon-thumbs-up conversation-rate-message"></i>';
 	}
 	
-
+	public function rateMessage() {
+		
+	}
 }

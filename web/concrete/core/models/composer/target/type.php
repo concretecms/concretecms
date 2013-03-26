@@ -2,6 +2,8 @@
 
 abstract class Concrete5_Model_ComposerTargetType extends Object {
 
+	abstract public function configureComposerTarget(Composer $cm, $post);
+	
 	public function getComposerTargetTypeName() {return $this->cmpTargetTypeName;}
 	public function getComposerTargetTypeHandle() {return $this->cmpTargetTypeHandle;}
 	public function getComposerTargetTypeID() { return $this->cmpTargetTypeID;}
@@ -86,11 +88,15 @@ abstract class Concrete5_Model_ComposerTargetType extends Object {
 			$type->addAttribute('package', $sc->getPackageHandle());
 		}
 	}
-		
+			
 	public function hasOptionsForm() {
 		$env = Environment::get();
-		$rec = $env->getRecord(DIRNAME_ELEMENTS . '/' . DIRNAME_COMPOSER . '/' . DIRNAME_COMPOSER_TARGET_TYPES . '/' . $this->getComposerTargetTypeHandle() . '.php', $this->getPackageHandle());
+		$rec = $env->getRecord(DIRNAME_ELEMENTS . '/' . DIRNAME_COMPOSER . '/' . DIRNAME_COMPOSER_ELEMENTS_TARGET_TYPES . '/' . $this->getComposerTargetTypeHandle() . '.php', $this->getPackageHandle());
 		return $rec->exists();
 	}	
+
+	public function includeOptionsForm() {
+		Loader::element(DIRNAME_COMPOSER . '/' . DIRNAME_COMPOSER_ELEMENTS_TARGET_TYPES . '/' . $this->getComposerTargetTypeHandle(), $this->getPackageHandle());
+	}
 
 }
