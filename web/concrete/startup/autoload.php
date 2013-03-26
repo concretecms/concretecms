@@ -297,10 +297,15 @@ $classes = array(
 	'Zend_Queue_Adapter_Concrete5' => array('library', 'Zend/Queue/Adapter/Concrete5'),
 
 	/* composer */
+	'Composer' => array('model', 'composer/model'),
 	'ComposerTargetType' => array('model','composer/target/type'),
+	'ComposerTargetConfiguration' => array('model','composer/target/configuration'),
 	'AllComposerTargetType' => array('model','composer/target/types/all'),
 	'PageTypeComposerTargetType' => array('model','composer/target/types/page_type'),
 	'ParentPageComposerTargetType' => array('model','composer/target/types/parent_page'),
+	'AllComposerTargetConfiguration' => array('model','composer/target/types/configurations/all'),
+	'PageTypeComposerTargetConfiguration' => array('model','composer/target/types/configurations/page_type'),
+	'ParentPageComposerTargetConfiguration' => array('model','composer/target/types/configurations/parent_page'),
 	'ComposerControlType' => array('model','composer/control/type'),
 	'CorePagePropertyComposerControlType' => array('model','composer/control/types/core_page_property'),
 	'CollectionAttributeComposerControlType' => array('model','composer/control/types/collection_attribute'),

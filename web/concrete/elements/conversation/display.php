@@ -64,6 +64,8 @@ $editor->setConversationObject($args['conversation']);
 	<div class="ccm-conversation-delete-attachment" data-dialog-title="<?=t('Delete Attachment')?>" data-cancel-button-title="<?=t('Cancel')?>" data-confirm-button-title="<?=t('Delete Attachment')?>">
 		<?=t('Remove this attachment?')?>
 	</div>
+	<div class="ccm-conversation-message-permalink" data-dialog-title="<?=t('Link')?>" data-cancel-button-title="<?=t('Close')?>">
+	</div>
 
 
 	<div class="ccm-conversation-messages-header">
@@ -84,7 +86,7 @@ $editor->setConversationObject($args['conversation']);
 	<div class="ccm-conversation-messages">
 
 	<? foreach($messages as $m) {
-		Loader::element('conversation/message', array('message' => $m, 'enablePosting' => $enablePosting, 'displayMode' => $displayMode, 'enableCommentRating' => $enableCommentRating));
+		Loader::element('conversation/message', array('cID' => $cID, 'message' => $m, 'enablePosting' => $enablePosting, 'displayMode' => $displayMode, 'enableCommentRating' => $enableCommentRating));
 	} ?>
 
 	</div>

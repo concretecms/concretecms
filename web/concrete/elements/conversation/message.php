@@ -47,7 +47,8 @@ if ((!$message->isConversationMessageDeleted() && $message->isConversationMessag
 			</ul>
 			<? } ?>
 			
-		<?=$message->getConversationMessageDateTimeOutput()?>
+		<?=$message->getConversationMessageDateTimeOutput();
+		Loader::element('conversation/social_share', array('cID' => $cID, 'message' => $message));?>
 		<? if ($enableCommentRating) {
 			$ratingTypes = ConversationRatingType::getList();
 			foreach($ratingTypes as $ratingType) { ?>

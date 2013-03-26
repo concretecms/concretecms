@@ -16,6 +16,10 @@
 
         </page>
 
+        <page name="Add Composer Type" path="/dashboard/composer/types/add" filename="/dashboard/composer/types/add.php" pagetype="" description="" package="">
+
+        </page>
+
         <page name="Write" path="/dashboard/composer/write" filename="/dashboard/composer/write.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
