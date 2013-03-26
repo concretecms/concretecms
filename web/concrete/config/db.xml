@@ -352,6 +352,9 @@
       <notnull/>
       <default value="0"/>
     </field>
+    <field name="cnvMessageTotal" type="I8">
+    	<default value="0" />
+    </field>
     <index name="cnvID">
       <col>cnvID</col>
     </index>
