@@ -5,6 +5,8 @@ class Concrete5_Model_DownVoteConversationRatingType extends ConversationRatingT
 	public function outputRatingTypeHTML() {
 		print '<i data-conversation-rating-type="down_vote" class="conversation-rate-message icon-thumbs-down"></i>';
 	}
-
+	
+	public function rateMessage() {
+	}
 
 }

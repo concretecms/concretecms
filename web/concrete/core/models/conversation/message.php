@@ -1,7 +1,6 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
 class Concrete5_Model_Conversation_Message extends Object {
-
 	public function getConversationMessageID() {return $this->cnvMessageID;}
 	public function getConversationMessageSubject() {return $this->cnvMessageSubject;}
 	public function getConversationMessageBody() {return $this->cnvMessageBody;}
@@ -91,9 +90,17 @@ class Concrete5_Model_Conversation_Message extends Object {
 	public function getConversationMessageDateTimeOutput() {
 		return t('Posted on %s', Loader::helper('date')->date('F d, Y \a\t g:i a', strtotime($this->cnvMessageDateCreated)));
 	}
-	public function rateMessage(ConversationRatingType $ratingType, $post = array()) {
+	public function rateMessage(ConversationRatingType $ratingType, $cnvMessageID, $post = array()) {
+		$uID = 0; //this needs to be fixed
+		$db = Loader::db();
+		$cnvRatingTypeID = $db->GetOne('SELECT * FROM ConversationRatingTypes WHERE cnvRatingTypeHandle = ?', array($ratingType->cnvRatingTypeHandle));
+		$db->Execute('INSERT INTO ConversationMessageRatings (cnvMessageID, cnvRatingTypeID, timestamp, uID) VALUES (?, ?, ?, ?)', array($cnvMessageID, $cnvRatingTypeID, date('Y-m-d H:i:s'), $uID));
+	}	
+	public function getConversationMessageRating(ConversationRatingType $ratingType) {
+		$db = Loader::db();
+		$cnt = $db->GetOne('select count(*) from ConversationMessageRatings where cnvRatingTypeID = ? AND cnvMessageID = ?',  array($ratingType->getConversationRatingTypeID(), $this->cnvMessageID));
+		return $cnt;
 	}
-
 	public function flag($flagtype) {
 		if ($flagtype instanceof ConversationFlagType) {
 			$db = Loader::db();
@@ -108,7 +115,6 @@ class Concrete5_Model_Conversation_Message extends Object {
 		}
 		throw new Exception('Invalid flag type.');
 	}
-
 	public static function getByID($cnvMessageID) {
 		$db = Loader::db();
 		$r = $db->GetRow('select * from ConversationMessages where cnvMessageID = ?', array($cnvMessageID));
