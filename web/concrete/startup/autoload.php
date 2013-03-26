@@ -294,7 +294,17 @@ $classes = array(
 	'DashboardBaseController' => array('controller', '/dashboard/base'),
 	'AccountController' => array('controller', '/account'),
 	'AccountProfileEditController' => array('controller', '/account/profile/edit'),
-	'Zend_Queue_Adapter_Concrete5' => array('library', 'Zend/Queue/Adapter/Concrete5')
+	'Zend_Queue_Adapter_Concrete5' => array('library', 'Zend/Queue/Adapter/Concrete5'),
+
+	/* composer */
+	'ComposerTargetType' => array('model','composer/target/type'),
+	'AllComposerTargetType' => array('model','composer/target/types/all'),
+	'PageTypeComposerTargetType' => array('model','composer/target/types/page_type'),
+	'ParentPageComposerTargetType' => array('model','composer/target/types/parent_page'),
+	'ComposerControlType' => array('model','composer/control/type'),
+	'CorePagePropertyComposerControlType' => array('model','composer/control/types/core_page_property'),
+	'CollectionAttributeComposerControlType' => array('model','composer/control/types/collection_attribute'),
+	'BlockComposerControlType' => array('model','composer/control/types/block')
 );
 
 Loader::registerAutoload($classes);

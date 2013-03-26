@@ -5,15 +5,11 @@
 			<key />
 			<unsigned />
 		</field>
-		<field name="cnvID" type="I">
+		<field name="cnvDiscussionID" type="I">
 		</field>
 		<field name="enableNewConversations" type="I">
 			<default value="1"/>
 		</field>
-		<field name="ctID" type="I">
-			<unsigned />
-			<notnull />
-			<default value="0" />
-		</field>
+
 	</table>
 </schema>

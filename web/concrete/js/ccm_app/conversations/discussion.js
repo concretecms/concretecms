@@ -96,6 +96,9 @@ var methods = {
 		}, {
 			'name': 'token',
 			'value': posttoken
+		}, {
+			'name': 'cnvDiscussionID',
+			'value': this.options.cnvDiscussionID
 		});
 
 		$('#ccm-discussion-dialog-post-btn').prop('disabled', true);

@@ -30,7 +30,9 @@ class Concrete5_Library_Content_Importer {
 		$this->importBlockTypeSets($sx);
 		$this->importConversationEditors($sx);
 		$this->importConversationRatingTypes($sx);
-		$this->importFlagTypes($sx);
+		$this->importConversationFlagTypes($sx);
+		$this->importComposerTargetTypes($sx);
+		$this->importComposerControlTypes($sx);
 		$this->importBannedWords($sx);
 		$this->importFeatures($sx);
 		$this->importFeatureCategories($sx);
@@ -383,6 +385,24 @@ class Concrete5_Library_Content_Importer {
 		}
 	}
 
+	protected function importComposerTargetTypes(SimpleXMLElement $sx) {
+		if (isset($sx->composertargettypes)) {
+			foreach($sx->composertargettypes->type as $th) {
+				$pkg = ContentImporter::getPackageObject($th['package']);
+				$ce = ComposerTargetType::add((string) $th['handle'], (string) $th['name'], $pkg);
+			}
+		}
+	}
+
+	protected function importComposerControlTypes(SimpleXMLElement $sx) {
+		if (isset($sx->composercontroltypes)) {
+			foreach($sx->composercontroltypes->type as $th) {
+				$pkg = ContentImporter::getPackageObject($th['package']);
+				$ce = ComposerControlType::add((string) $th['handle'], (string) $th['name'], $pkg);
+			}
+		}
+	}
+
 	protected function importConversationEditors(SimpleXMLElement $sx) {
 		if (isset($sx->conversationeditors)) {
 			foreach($sx->conversationeditors->editor as $th) {
@@ -413,10 +433,10 @@ class Concrete5_Library_Content_Importer {
 		}
 	}
 
-	protected function importFlagTypes(SimpleXMLElement $sx) {
+	protected function importConversationFlagTypes(SimpleXMLElement $sx) {
 		if (isset($sx->flag_types)) {
 			foreach($sx->flag_types->flag_type as $p) {
-				$bw = FlagType::add($p);
+				$bw = ConversationFlagType::add($p);
 			}
 		}
 	}

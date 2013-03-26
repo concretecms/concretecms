@@ -1,5 +1,76 @@
 <?xml version="1.0"?>
 <schema version="0.3">
+
+   <table name="Composers">
+    <field name="cmpID" type="I" size="10">
+      <key/>
+      <autoincrement/>
+      <unsigned/>
+    </field>
+    <field name="cmpName" type="C" size="255">
+      <notnull/>
+    </field>
+    <field name="ctID" type="I" size="10">
+      <notnull/>
+      <default value="0" />
+    </field>
+    <field name="cmpTargetTypeID" type="I" size="10">
+      <notnull/>
+      <default value="0" />
+    </field>
+  </table>
+  <table name="ComposerTargetTypes">
+    <field name="cmpTargetTypeID" type="I" size="10">
+      <key/>
+      <autoincrement/>
+      <unsigned/>
+    </field>
+    <field name="cmpTargetTypeHandle" type="C" size="255"/>
+    <field name="cmpTargetTypeName" type="C" size="255"/>
+    <field name="pkgID" type="I" size="10">
+      <notnull/>
+      <default value="0"/>
+      <unsigned/>
+    </field>
+  </table>
+  <table name="ComposerControlTypes">
+    <field name="cmpControlTypeID" type="I" size="10">
+      <key/>
+      <autoincrement/>
+      <unsigned/>
+    </field>
+    <field name="cmpControlTypeHandle" type="C" size="255"/>
+    <field name="cmpControlTypeName" type="C" size="255"/>
+    <field name="pkgID" type="I" size="10">
+      <notnull/>
+      <default value="0"/>
+      <unsigned/>
+    </field>
+  </table>
+  <table name="ComposerTargetPageTypes">
+    <field name="cmpID" type="I" size="10">
+      <key/>
+      <unsigned/>
+    </field>
+    <field name="ctID" type="I" size="10">
+      <key/>
+      <unsigned/>
+      <default value="0" />
+    </field>
+  </table>
+
+  <table name="ComposerTargetParentPages">
+    <field name="cmpID" type="I" size="10">
+      <key/>
+      <unsigned/>
+    </field>
+    <field name="cParentID" type="I" size="10">
+      <key/>
+      <unsigned/>
+      <default value="0" />
+    </field>
+  </table>
+
     <table name="Features">
     <field name="feID" type="I" size="10">
       <key/>
@@ -215,6 +286,12 @@
     </field>
     <field name="cnvDiscussionDateCreated" type="T">
       <notnull/>
+    </field>
+    <field name="cID" type="I" size="10">
+      <unsigned />
+    </field>
+    <field name="ctID" type="I" size="10">
+      <unsigned />
     </field>
   </table>
    <table name="agPage">

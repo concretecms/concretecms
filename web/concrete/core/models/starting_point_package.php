@@ -27,6 +27,7 @@ class Concrete5_Model_StartingPointPackage extends Package {
 		new StartingPointInstallRoutine('install_attributes', 25, t('Installing attributes.')),
 		new StartingPointInstallRoutine('install_blocktypes', 30, t('Adding block types.')),
 		new StartingPointInstallRoutine('install_aggregator', 33, t('Adding aggregator data sources.')),
+		new StartingPointInstallRoutine('install_composer', 36, t('Adding composer.')),
 		new StartingPointInstallRoutine('install_themes', 38, t('Adding themes.')),
 		new StartingPointInstallRoutine('install_jobs', 40, t('Installing automated jobs.')),
 		new StartingPointInstallRoutine('install_dashboard', 45, t('Installing dashboard.')),
@@ -67,6 +68,11 @@ class Concrete5_Model_StartingPointPackage extends Package {
 	public function install_aggregator() {
 		$ci = new ContentImporter();
 		$ci->importContentFile(DIR_BASE_CORE. '/config/install/base/aggregator.xml');
+	}
+
+	public function install_composer() {
+		$ci = new ContentImporter();
+		$ci->importContentFile(DIR_BASE_CORE. '/config/install/base/composer.xml');
 	}
 
 	public function install_required_single_pages() {
