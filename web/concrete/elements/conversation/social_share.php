@@ -14,6 +14,3 @@ $messageID = $message->getConversationMessageID();
 		</ul>
 	</li>
 </ul>
-<div class="ccm-conversation-message-permalink <?php echo $messageID?>" data-dialog-title="<?=t('Permalink')?>" data-cancel-button-title="<?=t('Cancel')?>">
-	<textarea class="cnv-link-select"> <?php echo $url.'#cnvMessage'.$messageID; ?></textarea>
-</div>
