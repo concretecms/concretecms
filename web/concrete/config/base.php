@@ -656,4 +656,12 @@ if (!defined('CONVERSATION_MESSAGE_ATTACHMENTS_PENDING_FILE_SET')) {
 	define('CONVERSATION_MESSAGE_ATTACHMENTS_PENDING_FILE_SET', 'Conversation Messages (Pending)');
 }
 
+if (!defined('BLOCK_HANDLE_CONVERSATION')) {
+	define('BLOCK_HANDLE_CONVERSATION', 'core_conversation');
+}
+if (!defined('BLOCK_HANDLE_CONVERSATION_MESSAGE')) {
+	define('BLOCK_HANDLE_CONVERSATION_MESSAGE', 'core_conversation_message');
+}
+
+
 

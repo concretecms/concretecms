@@ -38,6 +38,10 @@ class Concrete5_Library_Content_Exporter {
 
 		ConversationRatingType::exportList($this->x);
 
+		// composer
+		ComposerTargetType::exportList($this->x);
+		ComposerControlType::exportList($this->x);
+
 		// attribute types
 		AttributeType::exportList($this->x);
 
