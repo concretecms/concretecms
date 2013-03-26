@@ -51,8 +51,8 @@ if ((!$message->isConversationMessageDeleted() && $message->isConversationMessag
 		<? if ($enableCommentRating) {
 			$ratingTypes = ConversationRatingType::getList();
 			foreach($ratingTypes as $ratingType) { ?>
-				<?=$ratingType->outputRatingTypeHTML();?>
-				<?=$message->getConversationMessageRating($ratingType); ?>
+				<a href="#" title="Rate this Message"><?=$ratingType->outputRatingTypeHTML();?></a>
+				<span class="ccm-conversation-message-rating-id-<?=$message->cnvMessageID?> ccm-conversation-message-rating-type-<?=$ratingType->getConversationRatingTypeID()?>"><?=$message->getConversationMessageRating($ratingType); ?></span>
 			 <? } ?>
 		<? } ?>
 		</div>

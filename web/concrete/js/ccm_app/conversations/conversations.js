@@ -327,7 +327,7 @@
 					data: data,
 					url: CCM_TOOLS_PATH + '/conversations/rate',
 					success: function(html) {
-
+						//$(this).closest('ccm-conversation-message-rating-id-1 ccm-conversation-message-rating-type-2').append('hullo');
 					}
 				});
 			});
