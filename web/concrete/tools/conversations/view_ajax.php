@@ -50,6 +50,7 @@ if (is_object($cnv)) {
 	$totalPages = $summary->pages;
 
 	$args = array(
+		'cID' => $cID,
 		'conversation' => $cnv,
 		'messages' => $ml->getPage(),
 		'displayMode' => $displayMode,
