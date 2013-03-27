@@ -3,13 +3,62 @@ defined('C5_EXECUTE') or die("Access Denied.");
 class Concrete5_Model_Composer extends Object {
 
 	public function getComposerID() {return $this->cmpID;}
-	
-	public static function add($cmpName, CollectionType $ct) {
+	public function getComposerName() {return $this->cmpName;}
+	public function getComposerTargetTypeID() {return $this->cmpTargetTypeID;}
+	public function getComposerTargetObject() {return $this->cmpTargetObject;}
+
+	public function getComposerPageTypeObjects() {
 		$db = Loader::db();
-		$db->Execute('insert into Composers (cmpName, ctID) values (?, ?)', array(
-			$cmpName, $ct->getCollectionTypeID()
+		$types = array();
+		$r = $db->Execute('select ctID from ComposerPageTypes where cmpID = ? order by ctID asc', array($this->cmpID));
+		while ($row = $r->FetchRow()) {
+			$ct = CollectionType::getByID($row['ctID']);
+			if (is_object($ct)) {
+				$types[] = $ct;
+			}
+		}
+		return $types;
+	}
+
+	public static function add($cmpName, $types) {
+		$db = Loader::db();
+		$db->Execute('insert into Composers (cmpName) values (?)', array(
+			$cmpName
 		));
+		$cmpID = $db->Insert_ID();
+		foreach($types as $ct) {
+			$db->Execute('insert into ComposerPageTypes (cmpID, ctID) values (?, ?)', array(
+				$cmpID, $ct->getCollectionTypeID()
+			));
+		}
 		return Composer::getByID($db->Insert_ID());
+	}
+
+	public function update($cmpName, $types) {
+		$db = Loader::db();
+		$db->Execute('update Composers set cmpName = ? where cmpID = ?', array(
+			$cmpName,
+			$this->cmpID
+		));
+		$db->Execute('delete from ComposerPageTypes where cmpID = ?', array($this->cmpID));
+		foreach($types as $ct) {
+			$db->Execute('insert into ComposerPageTypes (cmpID, ctID) values (?, ?)', array(
+				$this->cmpID, $ct->getCollectionTypeID()
+			));
+		}
+	}
+
+	public static function getList() {
+		$db = Loader::db();
+		$cmpIDs = $db->GetCol('select cmpID from Composers order by cmpName asc');
+		$list = array();
+		foreach($cmpIDs as $cmpID) {
+			$cm = Composer::getByID($cmpID);
+			if (is_object($cm)) {
+				$list[] = $cm;
+			}
+		}
+		return $list;
 	}
 
 	public static function getByID($cmpID) {
@@ -18,18 +67,38 @@ class Concrete5_Model_Composer extends Object {
 		if (is_array($r) && $r['cmpID']) {
 			$cm = new Composer;
 			$cm->setPropertiesFromArray($r);
+			$cm->cmpTargetObject = unserialize($r['cmpTargetObject']);
 			return $cm;
 		}
+	}
+
+	public function delete() {
+		$db = Loader::db();
+		$db->Execute('delete from Composers where cmpID = ?', array($this->cmpID));
+		$db->Execute('delete from ComposerPageTypes where cmpID = ?', array($this->cmpID));
 	}
 
 	public function setConfiguredComposerTargetObject(ComposerTargetConfiguration $configuredTarget) {
 		$db = Loader::db();
 		if (is_object($configuredTarget)) {
-			$db->Execute('update Composers set cmpTargetObject = ? where cmpID = ?', array(
+			$db->Execute('update Composers set cmpTargetTypeID = ?, cmpTargetObject = ? where cmpID = ?', array(
+				$configuredTarget->getComposerTargetTypeID(),
 				@serialize($configuredTarget),
 				$this->getComposerID()
 			));
 		}
+	}
+
+	public function addComposerFormLayoutSet($cmpFormLayoutSetName) {
+		$db = Loader::db();
+		$displayOrder = $db->GetOne('select count(cmpFormLayoutSetID) from ComposerFormLayoutSets where cmpID = ?', array($this->cmpID));
+		if (!$displayOrder) {
+			$displayOrder = 0;
+		}
+		$db->Execute('insert into ComposerFormLayoutSets (cmpFormLayoutSetName, cmpID, cmpFormLayoutSetDisplayOrder) values (?, ?, ?)', array(
+			$cmpFormLayoutSetName, $this->cmpID, $displayOrder
+		));	
+		return ComposerFormLayoutSet::getByID($db->Insert_ID());
 	}
 
 }
