@@ -10,11 +10,22 @@
     <field name="cmpName" type="C" size="255">
       <notnull/>
     </field>
-    <field name="ctID" type="I" size="10">
-      <notnull/>
-      <default value="0" />
+    <field name="cmpTargetTypeID" type="I" size="10">
+      <unsigned/>
     </field>
    <field name="cmpTargetObject" type="X2"></field>
+  </table>
+  <table name="ComposerPageTypes">
+    <field name="cmpID" type="I" size="10">
+      <key/>
+      <unsigned/>
+      <default value="0" />
+    </field>
+    <field name="ctID" type="I" size="10">
+      <key/>
+      <unsigned/>
+      <default value="0" />
+    </field>
   </table>
   <table name="ComposerTargetTypes">
     <field name="cmpTargetTypeID" type="I" size="10">
@@ -44,8 +55,44 @@
       <unsigned/>
     </field>
   </table>
-
-
+  <table name="ComposerFormLayoutSets">
+    <field name="cmpFormLayoutSetID" type="I" size="10">
+      <key/>
+      <autoincrement/>
+      <unsigned/>
+    </field>
+    <field name="cmpID" type="I" size="10">
+      <unsigned/>
+      <default value="0" />
+    </field>
+    <field name="cmpFormLayoutSetName" type="C" size="255"/>
+    <field name="cmpFormLayoutSetDisplayOrder" type="I" size="10">
+      <unsigned/>
+      <default value="0" />
+    </field>
+  </table>
+  <table name="ComposerFormLayoutSetControls">
+    <field name="cmpFormLayoutSetControlID" type="I" size="10">
+      <key/>
+      <autoincrement/>
+      <unsigned/>
+    </field>
+    <field name="cmpFormLayoutSetID" type="I" size="10">
+      <unsigned/>
+      <default value="0" />
+    </field>
+   <field name="cmpControlTypeID" type="I" size="10">
+      <unsigned/>
+      <default value="0" />
+    </field>
+   <field name="cmpControlObject" type="X2"></field>
+    <field name="cmpFormLayoutSetControlDisplayOrder" type="I" size="10">
+      <unsigned/>
+      <default value="0" />
+    </field>
+    <field name="cmpFormLayoutSetControlCustomLabel" type="C" size="255"/>
+    <field name="cmpFormLayoutSetControlCustomTemplate" type="C" size="255"/>
+  </table>
     <table name="Features">
     <field name="feID" type="I" size="10">
       <key/>

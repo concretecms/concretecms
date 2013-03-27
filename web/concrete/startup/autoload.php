@@ -300,6 +300,7 @@ $classes = array(
 	'Composer' => array('model', 'composer/model'),
 	'ComposerTargetType' => array('model','composer/target/type'),
 	'ComposerTargetConfiguration' => array('model','composer/target/configuration'),
+	'ComposerFormLayoutSet' => array('model','composer/form/layout_set/model'),
 	'AllComposerTargetType' => array('model','composer/target/types/all'),
 	'PageTypeComposerTargetType' => array('model','composer/target/types/page_type'),
 	'ParentPageComposerTargetType' => array('model','composer/target/types/parent_page'),
@@ -309,7 +310,13 @@ $classes = array(
 	'ComposerControlType' => array('model','composer/control/type'),
 	'CorePagePropertyComposerControlType' => array('model','composer/control/types/core_page_property'),
 	'CollectionAttributeComposerControlType' => array('model','composer/control/types/collection_attribute'),
-	'BlockComposerControlType' => array('model','composer/control/types/block')
+	'BlockComposerControlType' => array('model','composer/control/types/block'),
+	'ComposerControl' => array('model','composer/control/model'),
+	'CorePagePropertyComposerControl' => array('model','composer/control/controls/core_page_property'),
+	'CollectionAttributeComposerControl' => array('model','composer/control/controls/collection_attribute'),
+	'BlockComposerControl' => array('model','composer/control/controls/block'),
+	'ComposerFormLayoutSetControl' => array('model','composer/form/layout_set/control')
+
 );
 
 Loader::registerAutoload($classes);
