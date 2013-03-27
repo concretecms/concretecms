@@ -4,6 +4,8 @@
 <? if (is_object($activeLibrary) && $activeLibrary->hasOptionsForm()) { ?>
 	<div class="ccm-pane-body">
 <? } ?>
+		<label for='group_id'>Spam Whitelist Group</label>
+		<?=$form->select('group_id', (array)$groups, $whitelistGroup);?>
 
 	<?=$this->controller->token->output('update_library')?>
 	<? if (count($libraries) > 0) { ?>
