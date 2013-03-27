@@ -17,7 +17,12 @@ class Concrete5_Model_CollectionAttributeComposerControlType extends ComposerCon
 	}
 
 	public function getComposerControlByIdentifier($identifier) {
-
+		$ak = CollectionAttributeKey::getByID($identifier);
+		$ax = new CollectionAttributeComposerControl();
+		$ax->setAttributeKeyID($ak->getAttributeKeyID());
+		$ax->setComposerControlIconSRC($ak->getAttributeKeyIconSRC($ak));
+		$ax->setComposerControlName($ak->getAttributeKeyName());
+		return $ax;
 	}
 
 }

@@ -11,7 +11,9 @@ class Concrete5_Model_ComposerFormLayoutSetControl extends Object {
 
 	public static function getList(ComposerFormLayoutSet $set) {
 		$db = Loader::db();
-		$cmpFormLayoutSetControlIDs = $db->GetCol('select cmpFormLayoutSetControlID from ComposerFormLayoutSetControls order by cmpFormLayoutSetControlDisplayOrder asc');
+		$cmpFormLayoutSetControlIDs = $db->GetCol('select cmpFormLayoutSetControlID from ComposerFormLayoutSetControls where cmpFormLayoutSetID = ? order by cmpFormLayoutSetControlDisplayOrder asc',
+			array($set->getComposerFormLayoutSetID())
+		);
 		$list = array();
 		foreach($cmpFormLayoutSetControlIDs as $cmpFormLayoutSetControlID) {
 			$control = ComposerFormLayoutSetControl::getByID($cmpFormLayoutSetControlID);
@@ -45,7 +47,7 @@ class Concrete5_Model_ComposerFormLayoutSetControl extends Object {
 		$db = Loader::db();
 		$db->Execute('delete from ComposerFormLayoutSetControls where cmpFormLayoutSetControlID = ?', array($this->cmpFormLayoutSetControlID));
 		$composer = $this->getComposerFormLayoutSetObject();
-		$composer->rescanControlSetDisplayOrder();
+		$composer->rescanFormLayoutSetControlDisplayOrder();
 	}
 
 }
