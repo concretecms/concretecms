@@ -2,6 +2,8 @@
 
 abstract class Concrete5_Model_ComposerControlType extends Object {
 
+	abstract public function getComposerControlObjects();
+	
 	public function getComposerControlTypeName() {return $this->cmpControlTypeName;}
 	public function getComposerControlTypeHandle() {return $this->cmpControlTypeHandle;}
 	public function getComposerControlTypeID() { return $this->cmpControlTypeID;}
@@ -72,7 +74,7 @@ abstract class Concrete5_Model_ComposerControlType extends Object {
 		}
 		return $types;
 	}
-	
+
 	public static function exportList($xml) {
 		$list = self::getList();
 		$nxml = $xml->addChild('composercontroltypes');

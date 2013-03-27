@@ -54,7 +54,6 @@
 								<?=$form->text('cmpFormLayoutSetName', $set->getComposerFormLayoutSetName())?>
 							</div>
 						</div>
-
 						<?=Loader::helper('validation/token')->output('update_set')?>
 						</form>
 					</div>

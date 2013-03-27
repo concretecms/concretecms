@@ -310,7 +310,12 @@ $classes = array(
 	'ComposerControlType' => array('model','composer/control/type'),
 	'CorePagePropertyComposerControlType' => array('model','composer/control/types/core_page_property'),
 	'CollectionAttributeComposerControlType' => array('model','composer/control/types/collection_attribute'),
-	'BlockComposerControlType' => array('model','composer/control/types/block')
+	'BlockComposerControlType' => array('model','composer/control/types/block'),
+	'ComposerControl' => array('model','composer/control/model'),
+	'CorePagePropertyComposerControl' => array('model','composer/control/controls/core_page_property'),
+	'CollectionAttributeComposerControl' => array('model','composer/control/controls/collection_attribute'),
+	'BlockComposerControl' => array('model','composer/control/controls/block')
+
 );
 
 Loader::registerAutoload($classes);
