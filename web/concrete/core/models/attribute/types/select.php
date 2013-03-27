@@ -537,10 +537,11 @@ class Concrete5_Model_SelectAttributeTypeOption extends Object {
 	
 	public static function add($ak, $option, $isEndUserAdded = 0) {
 		$db = Loader::db();
+		$th = Loader::helper('text');
 		// this works because displayorder starts at zero. So if there are three items, for example, the display order of the NEXT item will be 3.
 		$displayOrder = $db->GetOne('select count(ID) from atSelectOptions where akID = ?', array($ak->getAttributeKeyID()));			
 
-		$v = array($ak->getAttributeKeyID(), $displayOrder, $option, $isEndUserAdded);
+		$v = array($ak->getAttributeKeyID(), $displayOrder, $th->sanitize($option), $isEndUserAdded);
 		$db->Execute('insert into atSelectOptions (akID, displayOrder, value, isEndUserAdded) values (?, ?, ?, ?)', $v);
 		
 		return SelectAttributeTypeOption::getByID($db->Insert_ID());
@@ -584,7 +585,8 @@ class Concrete5_Model_SelectAttributeTypeOption extends Object {
 			return SelectAttributeTypeOption::add($ak, $this->value);
 		} else {
 			$db = Loader::db();
-			$db->Execute('update atSelectOptions set value = ? where ID = ?', array($this->value, $this->ID));
+			$th = Loader::helper('text');
+			$db->Execute('update atSelectOptions set value = ? where ID = ?', array($th->sanitize($this->value), $this->ID));
 			return SelectAttributeTypeOption::getByID($this->ID);
 		}
 	}
