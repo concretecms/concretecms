@@ -7,7 +7,7 @@ class Concrete5_Model_CollectionAttributeComposerControl extends ComposerControl
 	
 	public function setAttributeKeyID($akID) {
 		$this->akID = $akID;
-		$this->setComposerControlIdentifier($btID);
+		$this->setComposerControlIdentifier($akID);
 	}
 
 	public function getAttributeKeyID() {
