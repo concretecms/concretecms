@@ -183,7 +183,7 @@
 			obj.$loadmore = obj.$element.find('[data-load-page=conversation-message-list]');
 			obj.$messages = obj.$element.find('div.ccm-conversation-messages');
 			obj.$messagerating = obj.$element.find('span.ccm-conversation-message-rating');
-			obj.$messagescore = 2; // this is test
+			//obj.$messagescore = 2; // this is test
 			
 			obj.$element.on('click', 'button[data-submit=conversation-message]', function() {
 				obj.submitForm($(this));
@@ -315,6 +315,10 @@
 			});
 			
 			obj.$element.on('click', '.conversation-rate-message', function() {
+				
+				var cnvMessageID = $(this).closest('[data-conversation-message-id]').attr('data-conversation-message-id');
+				var cnvRatingTypeHandle = $(this).attr('data-conversation-rating-type');
+				
 				obj.$messagerating.load(CCM_TOOLS_PATH + '/conversations/rate');
 				var data = {
 					'cnvID':               obj.options.cnvID,
@@ -328,7 +332,14 @@
 					data: data,
 					url: CCM_TOOLS_PATH + '/conversations/rate',
 					success: function(html) {
-						//$(this).closest('ccm-conversation-message-rating-id-1 ccm-conversation-message-rating-type-2').append('hullo');
+						//$('span.ccm-conversation-message-rating-score').load(CCM_TOOLS_PATH + '/conversations/get_rating', {
+						//$("ul").find("[data-slide='" + current + "']");
+						//data-msg-rating-type
+						//alert(cnvRatingTypeHandle);
+						$('span[data-msg-rating="' + cnvMessageID + '"][data-msg-rating-type="' + cnvRatingTypeHandle + '"]').load(CCM_TOOLS_PATH + '/conversations/get_rating', {
+							'cnvMessageID':        cnvMessageID,
+							'cnvRatingTypeHandle': cnvRatingTypeHandle
+						});
 					}
 				});
 			});
@@ -480,7 +491,6 @@
 				}
 			});
 		},
-
 		updateCount: function() {
 			var obj = this;
 			obj.publish('conversationBeforeUpdateCount');
@@ -489,6 +499,13 @@
 			},function(){
 				obj.publish('conversationUpdateCount');
 			});
+		},
+		updateRating: function() {
+			/*
+			$('.ccm-conversation-message-rating-total').load(CCM_TOOLS_PATH + '/conversations/get_rating', {
+				'cnvMessageID':        $(this).closest('[data-conversation-message-id]').attr('data-conversation-message-id'),
+				'cnvRatingTypeHandle': $(this).attr('data-conversation-rating-type')
+			});*/
 		},
 		submitForm: function($btn) {
 			var obj = this;
