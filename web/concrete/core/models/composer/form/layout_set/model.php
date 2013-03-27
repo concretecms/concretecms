@@ -49,20 +49,33 @@ class Concrete5_Model_ComposerFormLayoutSet extends Object {
 	}
 
 	public function delete() {
+		$controls = ComposerFormLayoutSetControl::getList($this);
+		foreach($controls as $control) {
+			$control->delete();
+		}
 		$db = Loader::db();
 		$db->Execute('delete from ComposerFormLayoutSets where cmpFormLayoutSetID = ?', array($this->cmpFormLayoutSetID));
 		$composer = $this->getComposerObject();
-		$composer->rescanControlSetDisplayOrder();
+		$composer->rescanFormLayoutSetDisplayOrder();
+	}
+
+	public function rescanFormLayoutSetControlDisplayOrder() {
+		$sets = ComposerFormLayoutSetControl::getList($this);
+		$displayOrder = 0;
+		foreach($sets as $s) {
+			$s->updateFormLayoutSetControlDisplayOrder($displayOrder);
+			$displayOrder++;
+		}
 	}
 
 	public function addComposerControl(ComposerControl $control) {
 		$db = Loader::db();
-		$displayOrder = $db->GetOne('select count(cmpFormLayoutControlID) from ComposerFormLayoutControls where cmpFormLayoutSetID = ?', array($this->getComposerFormLayoutSetID()));
+		$displayOrder = $db->GetOne('select count(cmpFormLayoutSetControlID) from ComposerFormLayoutSetControls where cmpFormLayoutSetID = ?', array($this->getComposerFormLayoutSetID()));
 		if (!$displayOrder) {
 			$displayOrder = 0;
 		}
 		$controlType = $control->getComposerControlTypeObject();
-		$db->Execute('insert into ComposerFormLayoutControls (cmpFormLayoutSetID, cmpFormControlTypeID, cmpFormControlObject, cmpFormLayoutControlDisplayOrder) values (?, ?, ?, ?)', array(
+		$db->Execute('insert into ComposerFormLayoutSetControls (cmpFormLayoutSetID, cmpControlTypeID, cmpControlObject, cmpFormLayoutSetControlDisplayOrder) values (?, ?, ?, ?)', array(
 			$this->getComposerFormLayoutSetID(), $controlType->getComposerControlTypeID(), serialize($control), $displayOrder
 		));	
 		return ComposerFormLayoutSetControl::getByID($db->Insert_ID());

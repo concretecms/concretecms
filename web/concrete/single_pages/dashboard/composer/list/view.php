@@ -5,7 +5,7 @@
 <?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Edit Composer'), false, 'span8 offset2', false)?>
 <form class="form-horizontal" method="post" action="<?=$this->action('submit', $composer->getComposerID())?>">
 <div class="ccm-pane-body">
-<?=Loader::element('composer/form', array('composer' => $composer));?>
+<?=Loader::element('composer/form/display', array('composer' => $composer));?>
 </div>
 <div class="ccm-pane-footer">
 	<a href="<?=$this->url('/dashboard/composer/list')?>" class="btn pull-left"><?=t('Cancel')?></a>
