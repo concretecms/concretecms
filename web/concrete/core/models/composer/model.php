@@ -89,6 +89,15 @@ class Concrete5_Model_Composer extends Object {
 		}
 	}
 
+	public function rescanControlSetDisplayOrder() {
+		$sets = ComposerFormLayoutSet::getList($this);
+		$displayOrder = 0;
+		foreach($sets as $s) {
+			$s->updateFormLayoutSetDisplayOrder($displayOrder);
+			$displayOrder++;
+		}
+	}
+
 	public function addComposerFormLayoutSet($cmpFormLayoutSetName) {
 		$db = Loader::db();
 		$displayOrder = $db->GetOne('select count(cmpFormLayoutSetID) from ComposerFormLayoutSets where cmpID = ?', array($this->cmpID));
