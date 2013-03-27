@@ -57,6 +57,15 @@ class Concrete5_Controller_Dashboard_Composer_List_Form extends DashboardBaseCon
 		}
 	}
 
+	public function delete_set_control() {
+		$control = ComposerFormLayoutSetControl::getByID($this->post('cmpFormLayoutSetControlID'));
+		if (is_object($control)) {
+			if ($this->token->validate('delete_set_control', $_POST['token'])) {
+				$control->delete();
+			}
+		}
+		exit;
+	}
 
 	public function add_set($cmpID = false) {
 		$this->view($cmpID);
@@ -66,6 +75,23 @@ class Concrete5_Controller_Dashboard_Composer_List_Form extends DashboardBaseCon
 			$set = $this->composer->addComposerFormLayoutSet($name);
 			$this->redirect('/dashboard/composer/list/form', $this->composer->getComposerID(), 'layout_set_added');
 		}
+	}
+
+	public function update_set_control_display_order() {
+		$fs = ComposerFormLayoutSet::getByID($_POST['cmpFormLayoutSetID']);
+		if (is_object($fs)) {
+			if ($this->token->validate('update_set_control_display_order', $_POST['token'])) {
+				$displayOrder = 0;
+				foreach($this->post('cmpFormLayoutSetControlID') as $cmpFormLayoutSetControlID) {
+					$control = ComposerFormLayoutSetControl::getByID($cmpFormLayoutSetControlID);
+					if (is_object($control)) {
+						$control->updateFormLayoutSetControlDisplayOrder($displayOrder);
+						$displayOrder++;
+					}
+				}
+			}
+		}
+		exit;
 	}
 
 	public function update_set_display_order() {

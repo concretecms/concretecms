@@ -89,7 +89,7 @@ class Concrete5_Model_Composer extends Object {
 		}
 	}
 
-	public function rescanControlSetDisplayOrder() {
+	public function rescanFormLayoutSetDisplayOrder() {
 		$sets = ComposerFormLayoutSet::getList($this);
 		$displayOrder = 0;
 		foreach($sets as $s) {
