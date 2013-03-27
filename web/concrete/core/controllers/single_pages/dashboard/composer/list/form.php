@@ -15,6 +15,9 @@ class Concrete5_Controller_Dashboard_Composer_List_Form extends DashboardBaseCon
 			case 'layout_set_deleted':
 				$this->set('success', t('Form layout set deleted.'));
 				break;
+			case 'layout_set_updated':
+				$this->set('success', t('Form layout set updated.'));
+				break;
 		}
 		$this->set('composer', $this->composer);
 		$this->set('sets', ComposerFormLayoutSet::getList($this->composer));
@@ -33,6 +36,24 @@ class Concrete5_Controller_Dashboard_Composer_List_Form extends DashboardBaseCon
 		if (!$this->error->has()) {
 			$set->delete();
 			$this->redirect('/dashboard/composer/list/form', $set->getComposerID(), 'layout_set_deleted');
+		}
+	}
+
+	public function update_set($cmpFormLayoutSetID = false) {
+		$set = ComposerFormLayoutSet::getByID($cmpFormLayoutSetID);
+		if (!is_object($set)) {
+			$this->redirect('/dashboard/composer/list');
+		}
+		$this->view($set->getComposerID());
+		$sec = Loader::helper('security');
+		$name = $sec->sanitizeString($this->post('cmpFormLayoutSetName'));
+		if (!$this->token->validate('update_set')) { 
+			$this->error->add(t($this->token->getErrorMessage()));
+		}
+
+		if (!$this->error->has()) {
+			$set->updateFormLayoutSetName($name);
+			$this->redirect('/dashboard/composer/list/form', $set->getComposerID(), 'layout_set_updated');
 		}
 	}
 
