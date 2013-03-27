@@ -40,11 +40,10 @@ class Concrete5_Model_ComposerFormLayoutSet extends Object {
 	}
 
 	public function delete() {
-		/*
 		$db = Loader::db();
-		$db->Execute('delete from Composers where cmpID = ?', array($this->cmpID));
-		$db->Execute('delete from ComposerPageTypes where cmpID = ?', array($this->cmpID));
-		*/
+		$db->Execute('delete from ComposerFormLayoutSets where cmpFormLayoutSetID = ?', array($this->cmpFormLayoutSetID));
+		$composer = $this->getComposerObject();
+		$composer->rescanControlSetDisplayOrder();
 	}
 
 }

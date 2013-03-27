@@ -16,13 +16,12 @@
 	</div>
 </div>
 
-<form class="form-horizontal" method="post" action="<?=$this->action('submit')?>">
 <div class="ccm-pane-options">
 <div class="ccm-pane-options-permanent-search">
 	<a href="#" data-dialog="add_set" class="btn"><?=t('Add Set')?></a>
 </div>
 </div>
-<div class="ccm-pane-body">
+<div class="ccm-pane-body ccm-pane-body-footer">
 
 <? if (count($sets) > 0) {
 
@@ -34,9 +33,17 @@
 					<li><a href="#" data-command="add_form_element"><i class="icon-plus-sign"></i></a></li>
 					<li><a href="#" data-command="move_set" style="cursor: move"><i class="icon-move"></i></a></li>
 					<li><a href="#" data-command="edit_set"><i class="icon-pencil"></i></a></li>
-					<li><a href="#" data-command="delete_set"><i class="icon-trash"></i></a></li>
+					<li><a href="#" data-delete-set="<?=$set->getComposerFormLayoutSetID()?>"><i class="icon-trash"></i></a></li>
 				</ul>
 				<div class="ccm-composer-form-layout-control-set-name" ><? if ($set->getComposerFormLayoutSetName()) { ?><?=$set->getComposerFormLayoutSetName()?><? } else { ?><?=t('(No Name)')?><? } ?></div>
+				<div style="display: none">
+					<div data-delete-set-dialog="<?=$set->getComposerFormLayoutSetID()?>">
+						<form data-delete-set-form="<?=$set->getComposerFormLayoutSetID()?>" action="<?=$this->action('delete_set', $set->getComposerFormLayoutSetID())?>" method="post">
+						<?=t("Delete this form layout set? This cannot be undone.")?>
+						<?=Loader::helper('validation/token')->output('delete_set')?>
+						</form>
+					</div>
+				</div>
 			</div>
 			<div class="ccm-composer-form-layout-control-set-inner">
 
@@ -50,11 +57,6 @@
 
 </div>
 
-<div class="ccm-pane-footer">
-	<a href="<?=$this->url('/dashboard/composer/list')?>" class="btn pull-left"><?=t('Cancel')?></a>
-	<button class="pull-right btn btn-primary" type="submit"><?=t('Add')?></button>
-</div>
-</form>
 
 <script type="text/javascript">
 $(function() {
@@ -78,6 +80,32 @@ $(function() {
 					'class': 'btn pull-right btn-primary',
 					'click': function() {
 						$('#ccm-composer-add-set form').submit();
+					}
+				}
+			]
+		});
+	});
+	$('a[data-delete-set]').on('click', function() {
+		var cmpFormLayoutSetID = $(this).attr('data-delete-set');
+		$('div[data-delete-set-dialog=' + cmpFormLayoutSetID + ']').dialog({
+			modal: true,
+			width: 320,
+			dialogClass: 'ccm-ui',
+			title: '<?=t("Delete Set ")?>',
+			height: 200, 
+			buttons: [
+				{
+					'text': '<?=t("Cancel")?>',
+					'class': 'btn pull-left',
+					'click': function() {
+						$(this).dialog('close');
+					}
+				},
+				{
+					'text': '<?=t("Delete")?>',
+					'class': 'btn pull-right btn-danger',
+					'click': function() {
+						$('form[data-delete-set-form=' + cmpFormLayoutSetID + ']').submit();
 					}
 				}
 			]
