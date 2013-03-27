@@ -71,6 +71,28 @@
       <default value="0" />
     </field>
   </table>
+  <table name="ComposerFormLayoutSetControls">
+    <field name="cmpFormLayoutSetControlID" type="I" size="10">
+      <key/>
+      <autoincrement/>
+      <unsigned/>
+    </field>
+    <field name="cmpFormLayoutSetID" type="I" size="10">
+      <unsigned/>
+      <default value="0" />
+    </field>
+   <field name="cmpControlTypeID" type="I" size="10">
+      <unsigned/>
+      <default value="0" />
+    </field>
+   <field name="cmpControlObject" type="X2"></field>
+    <field name="cmpFormLayoutSetControlDisplayOrder" type="I" size="10">
+      <unsigned/>
+      <default value="0" />
+    </field>
+    <field name="cmpFormLayoutSetControlCustomLabel" type="C" size="255"/>
+    <field name="cmpFormLayoutSetControlCustomTemplate" type="C" size="255"/>
+  </table>
     <table name="Features">
     <field name="feID" type="I" size="10">
       <key/>

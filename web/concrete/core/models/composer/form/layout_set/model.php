@@ -62,20 +62,10 @@ class Concrete5_Model_ComposerFormLayoutSet extends Object {
 			$displayOrder = 0;
 		}
 		$controlType = $control->getComposerControlTypeObject();
-		$db->Execute('insert into ComposerFormLayoutControls (cmpFormLayoutSetID, cmpControlTypeID, cmpControlObject, cmpFormLayoutSetControlDisplayOrder) values (?, ?, ?, ?)', array(
+		$db->Execute('insert into ComposerFormLayoutControls (cmpFormLayoutSetID, cmpFormControlTypeID, cmpFormControlObject, cmpFormLayoutControlDisplayOrder) values (?, ?, ?, ?)', array(
 			$this->getComposerFormLayoutSetID(), $controlType->getComposerControlTypeID(), serialize($control), $displayOrder
 		));	
 		return ComposerFormLayoutSetControl::getByID($db->Insert_ID());
 	}
-
-	public function rescanControlSetDisplayOrder() {
-		$sets = ComposerFormLayoutSetControl::getList($this);
-		$displayOrder = 0;
-		foreach($controls as $control) {
-			$control->updateFormLayoutSetControlDisplayOrder($displayOrder);
-			$displayOrder++;
-		}
-	}
-
 
 }

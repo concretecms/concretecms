@@ -18,4 +18,13 @@ class Concrete5_Model_BlockComposerControlType extends ComposerControlType {
 		return $objects;
 	}
 
+	public function getComposerControlByIdentifier($identifier) {
+		$bt = BlockType::getByID($identifier);
+		$ci = Loader::helper('concrete/urls');
+		$bx = new BlockComposerControl();
+		$bx->setBlockTypeID($bt->getBlockTypeID());
+		$bx->setComposerControlIconSRC($ci->getBlockTypeIconURL($bt));
+		$bx->setComposerControlName($bt->getBlockTypeName());
+		return $bx;
+	}
 }
