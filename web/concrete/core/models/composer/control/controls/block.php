@@ -3,6 +3,7 @@
 class Concrete5_Model_BlockComposerControl extends ComposerControl {
 
 	protected $btID;
+	protected $cmpControlTypeHandle = 'block';
 	
 	public function setBlockTypeID($btID) {
 		$this->btID = $btID;

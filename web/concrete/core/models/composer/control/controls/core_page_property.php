@@ -3,6 +3,7 @@
 class Concrete5_Model_CorePagePropertyComposerControl extends ComposerControl {
 
 	protected $propertyHandle;
+	protected $cmpControlTypeHandle = 'core_page_property';
 	
 	public function __construct($propertyHandle, $cmpControlName, $cmpControlIconSRC) {
 		$this->setCorePagePropertyHandle($propertyHandle);

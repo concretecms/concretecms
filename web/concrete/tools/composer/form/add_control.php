@@ -3,7 +3,21 @@
 $c = Page::getByPath('/dashboard/composer/list/form');
 $cp = new Permissions($c);
 $ih = Loader::helper('concrete/interface');
-if ($cp->canViewPage()) { ?>
+$set = ComposerFormLayoutSet::getByID($_REQUEST['cmpFormLayoutSetID']);
+if (!is_object($set)) {
+	die(t('Invalid set'));
+}
+if ($cp->canViewPage()) { 
+
+	if ($_POST['cmpControlTypeID'] && $_POST['cmpControlIdentifier']) {
+		$type = ComposerControlType::getByID($_POST['cmpControlTypeID']);
+		$control = $type->getComposerControlByIdentifier($_POST['cmpControlIdentifier']);
+		$layoutSetControl = $set->addComposerControl($control);
+		print Loader::helper('json')->encode($layoutSetControl);
+		exit;
+	}
+
+	?>
 
 	<div class="ccm-ui">
 	<?
@@ -19,7 +33,7 @@ if ($cp->canViewPage()) { ?>
 	foreach($types as $t) { ?>
 
 	<div class="ccm-tab-content" id="ccm-tab-content-<?=$t->getComposerControlTypeHandle()?>">
-	<ul class="item-select-list">
+	<ul data-list="composer-control-type" class="item-select-list">
 		<? 
 		$controls = $t->getComposerControlObjects();
 		foreach($controls as $cnt) { ?>
@@ -39,6 +53,36 @@ if ($cp->canViewPage()) { ?>
 	}
 </style>
 
+<script type="text/javascript">
+$(function() {
+	$('ul[data-list=composer-control-type] a').on('click', function() {
+		var cmpControlTypeID = $(this).attr('data-control-type-id');
+		var cmpControlIdentifier = $(this).attr('data-control-identifier');
+		var formData = [{
+			'name': 'cmpControlTypeID',
+			'value': cmpControlTypeID
+		},{
+			'name': 'cmpControlIdentifier',
+			'value': cmpControlIdentifier
+		},{
+			'name': 'cmpFormLayoutSetID',
+			'value': '<?=$set->getComposerFormLayoutSetID()?>'
+		}];
+		$.ajax({
+			type: 'post',
+			data: formData,
+			dataType: 'json',
+			url: '<?=REL_DIR_FILES_TOOLS_REQUIRED?>/composer/form/add_control',
+			success: function(r) {
+				ccm_parseJSON(r, function() {
+
+				});
+			}
+		});
+
+	});
+});
+</script>
 
 
 <?

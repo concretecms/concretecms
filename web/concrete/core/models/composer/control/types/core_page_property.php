@@ -12,5 +12,9 @@ class Concrete5_Model_CorePagePropertyComposerControlType extends ComposerContro
 		);
 		return $objects;
 	}
+
+	public function getComposerControlByIdentifier($identifier) {
+
+	}
 	
 }

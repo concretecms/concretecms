@@ -16,4 +16,8 @@ class Concrete5_Model_CollectionAttributeComposerControlType extends ComposerCon
 		return $objects;
 	}
 
+	public function getComposerControlByIdentifier($identifier) {
+
+	}
+
 }

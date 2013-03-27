@@ -30,5 +30,9 @@ abstract class Concrete5_Model_ComposerControl extends Object {
 	public function getComposerControlIdentifier() {
 		return $this->cmpControlIdentifier;
 	}
+
+	public function getComposerControlTypeObject() {
+		return ComposerControlType::getByHandle($this->cmpControlTypeHandle);
+	}
 	
 }
