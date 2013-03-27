@@ -3,7 +3,7 @@
 class Concrete5_Model_AllComposerTargetType extends ComposerTargetType {
 
 	public function configureComposerTarget(Composer $cm, $post) {
-		$configuredTarget = new AllComposerTargetConfiguration();
+		$configuredTarget = new AllComposerTargetConfiguration($this);
 		return $configuredTarget;
 	}
 

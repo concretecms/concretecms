@@ -12,11 +12,11 @@
 				</attributekey>
 			</attributes>
         </page>
-        <page name="Composer Types" path="/dashboard/composer/types" filename="/dashboard/composer/types.php" pagetype="" description="" package="">
+        <page name="Composers" path="/dashboard/composer/list" filename="/dashboard/composer/list.php" pagetype="" description="" package="">
 
         </page>
 
-        <page name="Add Composer Type" path="/dashboard/composer/types/add" filename="/dashboard/composer/types/add.php" pagetype="" description="" package="">
+        <page name="Add Composer" path="/dashboard/composer/list/add" filename="/dashboard/composer/list/add.php" pagetype="" description="" package="">
 
         </page>
 
