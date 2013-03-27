@@ -31,6 +31,15 @@ class Concrete5_Model_ComposerFormLayoutSet extends Object {
 		}
 	}
 
+	public function updateFormLayoutSetName($cmpFormLayoutSetName) {
+		$db = Loader::db();
+		$db->Execute('update ComposerFormLayoutSets set cmpFormLayoutSetName = ? where cmpFormLayoutSetID = ?', array(
+			$cmpFormLayoutSetName, $this->cmpFormLayoutSetID
+		));
+		$this->cmpFormLayoutSetName = $cmpFormLayoutSetName;
+	}
+
+
 	public function updateFormLayoutSetDisplayOrder($displayOrder) {
 		$db = Loader::db();
 		$db->Execute('update ComposerFormLayoutSets set cmpFormLayoutSetDisplayOrder = ? where cmpFormLayoutSetID = ?', array(
