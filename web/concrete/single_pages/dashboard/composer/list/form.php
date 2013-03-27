@@ -29,11 +29,17 @@
 	foreach($sets as $set) { ?>
 
 		<div class="ccm-composer-form-layout-control-set" data-composer-form-layout-control-set-id="<?=$set->getComposerFormLayoutSetID()?>">
-			<ul class="ccm-composer-form-layout-control-set-controls">
-				<li><a href="#" data-command="move_set" style="cursor: move"><i class="icon-move"></i></a></li>
-			</ul>
-			<div class="ccm-composer-form-layout-control-set-name" ><? if ($set->getComposerFormLayoutSetName()) { ?><?=$set->getComposerFormLayoutSetName()?><? } else { ?><?=t('(No Name)')?><? } ?></div>
+			<div class="ccm-composer-form-layout-control-set-bar">
+				<ul class="ccm-composer-form-layout-control-set-controls">
+					<li><a href="#" data-command="move_set" style="cursor: move"><i class="icon-move"></i></a></li>
+					<li><a href="#" data-command="edit_set"><i class="icon-pencil"></i></a></li>
+					<li><a href="#" data-command="delete_set"><i class="icon-trash"></i></a></li>
+				</ul>
+				<div class="ccm-composer-form-layout-control-set-name" ><? if ($set->getComposerFormLayoutSetName()) { ?><?=$set->getComposerFormLayoutSetName()?><? } else { ?><?=t('(No Name)')?><? } ?></div>
+			</div>
+			<div class="ccm-composer-form-layout-control-set-inner">
 
+			</div>
 		</div>
 
 	<? } ?>
@@ -110,42 +116,46 @@ $(function() {
 
 div.ccm-composer-form-layout-control-set {
 	margin-top: 20px;
-	border: 1px solid #eee;
-	padding: 10px;
-	margin-bottom: 50px;
-	position: relative;
 }
 
 div.ccm-composer-form-layout-control-set:last-child {
 	margin-bottom: 20px;
 }
 
+div.ccm-composer-form-layout-control-set-bar {
+	position: relative;
+}
+
+div.ccm-composer-form-layout-control-set-inner {
+	border: 1px solid #eee;
+	padding: 10px;
+	min-height: 50px;
+}
+
 div.ccm-composer-form-layout-control-set-name {
-	position: absolute;
-	top: -25px;
 	border-left: 1px solid #eee;
 	border-right: 1px solid #eee;
 	border-top: 1px solid #eee;
 	background-color: #fafafa;
-	padding-left: 3px;
-	padding-right: 3px;
-	color: #999;
-	height: 24px;
+	padding: 4px 4px 4px 8px;
+	color: #888;
 	border-top-left-radius: 4px;
 	border-top-right-radius: 4px;
-	box-sizing: border-box;
-	padding-top: 1px;
-	left: 10px;
 }
 
 ul.ccm-composer-form-layout-control-set-controls {
 	position: absolute;
-	right: 0px;
-	top: -22px;
+	right: 8px;
+	top: 5px;
+}
+
+div.ccm-composer-form-layout-control-set-bar:hover ul.ccm-composer-form-layout-control-set-controls li {
+	display: inline-block;
 }
 
 ul.ccm-composer-form-layout-control-set-controls li {
 	list-style-type: none;
+	display: none;
 }
 
 
