@@ -31,6 +31,7 @@
 		<div class="ccm-composer-form-layout-control-set" data-composer-form-layout-control-set-id="<?=$set->getComposerFormLayoutSetID()?>">
 			<div class="ccm-composer-form-layout-control-set-bar">
 				<ul class="ccm-composer-form-layout-control-set-controls">
+					<li><a href="#" data-command="add_form_element"><i class="icon-plus-sign"></i></a></li>
 					<li><a href="#" data-command="move_set" style="cursor: move"><i class="icon-move"></i></a></li>
 					<li><a href="#" data-command="edit_set"><i class="icon-pencil"></i></a></li>
 					<li><a href="#" data-command="delete_set"><i class="icon-trash"></i></a></li>
