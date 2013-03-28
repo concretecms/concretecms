@@ -7,5 +7,5 @@ if (Loader::helper('validation/numbers')->integer($_POST['cnvMessageID']) && $_P
 	$msg = ConversationMessage::getByID($_POST[$cnvMessageID]);
 	
 	$msg->rateMessage($ratingType, $cnvMessageID);
-	$msg->getRating($cnvMessageID);
+	
 }
