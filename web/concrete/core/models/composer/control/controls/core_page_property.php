@@ -20,4 +20,7 @@ class Concrete5_Model_CorePagePropertyComposerControl extends ComposerControl {
 		return $this->propertyHandle;
 	}
 	
+	public function getComposerControlCustomTemplates() {
+		return array();
+	}
 }
