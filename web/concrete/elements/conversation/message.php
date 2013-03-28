@@ -12,7 +12,7 @@ $cnvMessageID = $message->cnvMessageID;
 if ((!$message->isConversationMessageDeleted() && $message->isConversationMessageApproved()) || $message->conversationMessageHasActiveChildren()) {
 	?>
 	<div data-conversation-message-id="<?=$message->getConversationMessageID()?>" data-conversation-message-level="<?=$message->getConversationMessageLevel()?>" class="<?=$class?>">
-		<a name="cnvMessage<?=$cnvMessageID?>" />
+		<a id="cnvMessage<?=$cnvMessageID?>" />
 		<div class="ccm-conversation-message-user">
 			<div class="ccm-conversation-avatar"><? print Loader::helper('concrete/avatar')->outputUserAvatar($ui)?></div>
 			<div class="ccm-conversation-message-byline"><? if (!is_object($ui)) { ?><?=t('Anonymous')?><? } else { ?><?=$ui->getUserDisplayName()?><? } ?></div>
@@ -49,6 +49,7 @@ if ((!$message->isConversationMessageDeleted() && $message->isConversationMessag
 			
 		<?=$message->getConversationMessageDateTimeOutput();
 		Loader::element('conversation/social_share', array('cID' => $cID, 'message' => $message));?>
+		
 		<? if ($enableCommentRating) {
 			$ratingTypes = ConversationRatingType::getList();
 			foreach($ratingTypes as $ratingType) { ?>

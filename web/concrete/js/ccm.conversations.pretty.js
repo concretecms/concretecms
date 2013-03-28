@@ -186,7 +186,6 @@
 			obj.$loadmore = obj.$element.find('[data-load-page=conversation-message-list]');
 			obj.$messages = obj.$element.find('div.ccm-conversation-messages');
 			obj.$messagerating = obj.$element.find('span.ccm-conversation-message-rating');
-			//obj.$messagescore = 2; // this is test
 			
 			obj.$element.on('click', 'button[data-submit=conversation-message]', function() {
 				obj.submitForm($(this));
@@ -486,7 +485,8 @@
 
 					obj.publish('conversationAddMessageFromJSON',{json:json,form:$form});
 					obj.updateCount();
-					window.location = '#cnvMessage' + json.cnvMessageID; 
+     				var target = $('a#cnvMessage' + json.cnvMessageID).offset();
+     				$('html, body').animate({scrollTop: target.top}, 800, 'linear');
 				}
 			});
 		},
@@ -517,6 +517,9 @@
 				'value': obj.options.cnvID
 			}, {
 				'name': 'cnvMessageParentID',
+				'value': parentID
+			},{
+				'name': 'enableRating',
 				'value': parentID
 			});
 			$.ajax({
