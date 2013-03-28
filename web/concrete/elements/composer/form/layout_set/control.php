@@ -5,7 +5,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 <div class="ccm-composer-item-control-bar">
 	<ul class="ccm-composer-item-controls">
 		<li><a href="#" data-command="move-set-control" style="cursor: move"><i class="icon-move"></i></a></li>
-		<li><a href="#" data-edit-set="<?=$control->getComposerFormLayoutSetControlID()?>"><i class="icon-pencil"></i></a></li>
+		<li><a data-command="edit-form-set-control" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/composer/form/edit_control?cmpFormLayoutSetControlID=<?=$control->getComposerFormLayoutSetControlID()?>" class="dialog-launch" dialog-width="400" dialog-height="200" dialog-modal="true" dialog-title="<?=t('Edit Form Control')?>"><i class="icon-pencil"></i></a></li>
 		<li><a href="#" data-delete-set-control="<?=$control->getComposerFormLayoutSetControlID()?>"><i class="icon-trash"></i></a></li>
 	</ul>
 
@@ -16,27 +16,9 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		</div>
 	</div>
 
-	<? /*
-
-	<div style="display: none">
-		<div data-edit-set-dialog="<?=$set->getComposerFormLayoutSetID()?>">
-			<form data-edit-set-form="<?=$set->getComposerFormLayoutSetID()?>" action="<?=$this->action('update_set', $set->getComposerFormLayoutSetID())?>" method="post">
-			<div class="control-group">
-				<?=$form->label('cmpFormLayoutSetName', t('Set Name'))?>
-				<div class="controls">
-					<?=$form->text('cmpFormLayoutSetName', $set->getComposerFormLayoutSetName())?>
-				</div>
-			</div>
-			<?=Loader::helper('validation/token')->output('update_set')?>
-			</form>
-		</div>
-	</div>
-	*/
-	?>
 <div class="ccm-composer-form-layout-control-set-control-inner">
 	<?
-	$object = $control->getComposerControlObject();
-	print $object->getComposerControlName();
+	print $control->getComposerControlLabel();
 	?>
 </div>
 </div>

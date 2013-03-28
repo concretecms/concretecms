@@ -7,6 +7,8 @@ abstract class Concrete5_Model_ComposerControl extends Object {
 	protected $cmpControlIconSRC;
 	protected $cmpControl;
 
+	abstract public function getComposerControlCustomTemplates();
+
 	public function setComposerControlName($cmpControlName) {
 		$this->cmpControlName = $cmpControlName;
 	}

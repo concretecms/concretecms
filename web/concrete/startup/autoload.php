@@ -312,6 +312,7 @@ $classes = array(
 	'CollectionAttributeComposerControlType' => array('model','composer/control/types/collection_attribute'),
 	'BlockComposerControlType' => array('model','composer/control/types/block'),
 	'ComposerControl' => array('model','composer/control/model'),
+	'ComposerControlCustomTemplate' => array('model', 'composer/control/custom_template'),
 	'CorePagePropertyComposerControl' => array('model','composer/control/controls/core_page_property'),
 	'CollectionAttributeComposerControl' => array('model','composer/control/controls/collection_attribute'),
 	'BlockComposerControl' => array('model','composer/control/controls/block'),

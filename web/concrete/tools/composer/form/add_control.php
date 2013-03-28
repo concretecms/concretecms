@@ -77,6 +77,7 @@ $(function() {
 				jQuery.fn.dialog.hideLoader();
 				jQuery.fn.dialog.closeTop();
 				$('div[data-composer-form-layout-control-set-id=<?=$set->getComposerFormLayoutSetID()?>] div.ccm-composer-form-layout-control-set-inner').append(html);
+				$('a[data-command=edit-form-set-control]').dialog();
 			}
 		});
 

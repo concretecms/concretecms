@@ -30,7 +30,7 @@
 		<div class="ccm-composer-form-layout-control-set" data-composer-form-layout-control-set-id="<?=$set->getComposerFormLayoutSetID()?>">
 			<div class="ccm-composer-item-control-bar">
 				<ul class="ccm-composer-item-controls">
-					<li><a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/composer/form/add_control?cmpFormLayoutSetID=<?=$set->getComposerFormLayoutSetID()?>" dialog-title="<?=t('Add Form Control')?>" dialog-width="640" dialog-height="400" data-command="add_form_element"><i class="icon-plus-sign"></i></a></li>
+					<li><a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/composer/form/add_control?cmpFormLayoutSetID=<?=$set->getComposerFormLayoutSetID()?>" dialog-title="<?=t('Add Form Control')?>" dialog-width="640" dialog-height="400" data-command="add-form-set-control"><i class="icon-plus-sign"></i></a></li>
 					<li><a href="#" data-command="move_set" style="cursor: move"><i class="icon-move"></i></a></li>
 					<li><a href="#" data-edit-set="<?=$set->getComposerFormLayoutSetID()?>"><i class="icon-pencil"></i></a></li>
 					<li><a href="#" data-delete-set="<?=$set->getComposerFormLayoutSetID()?>"><i class="icon-trash"></i></a></li>
@@ -181,7 +181,8 @@ $(function() {
 			});
 		}
 	});
-	$('a[data-command=add_form_element]').dialog();
+	$('a[data-command=add-form-set-control]').dialog();
+	$('a[data-command=edit-form-set-control]').dialog();
 
 	$('.ccm-composer-form-layout-control-set-inner').sortable({
 		handle: 'a[data-command=move-set-control]',

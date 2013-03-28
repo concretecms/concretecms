@@ -14,4 +14,8 @@ class Concrete5_Model_CollectionAttributeComposerControl extends ComposerControl
 		return $this->akID;
 	}
 
+	public function getComposerControlCustomTemplates() {
+		return array();
+	}
+
 }
