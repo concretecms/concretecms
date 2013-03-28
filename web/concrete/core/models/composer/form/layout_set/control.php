@@ -11,6 +11,13 @@ class Concrete5_Model_ComposerFormLayoutSetControl extends Object {
 	public function getComposerFormLayoutSetControlCustomLabel() {return $this->cmpFormLayoutSetControlCustomLabel;}
 	public function getComposerFormLayoutSetControlCustomTemplate() {return $this->cmpFormLayoutSetControlCustomTemplate;}
 
+	public function render() {
+		$control = $this->getComposerControlObject();
+		$control->setComposerFormLayoutSetControlObject($this);
+		$control->render($this->getComposerControlLabel(), $this->getComposerFormLayoutSetControlCustomTemplate());
+	}
+
+
 	public function getComposerControlLabel() {
 		if ($this->getComposerFormLayoutSetControlCustomLabel()) {
 			return $this->getComposerFormLayoutSetControlCustomLabel();

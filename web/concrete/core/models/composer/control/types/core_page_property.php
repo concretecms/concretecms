@@ -2,30 +2,21 @@
 
 class Concrete5_Model_CorePagePropertyComposerControlType extends ComposerControlType {
 
+	protected $corePageProperties = array(
+		'name', 'url_slug', 'date_time', 'description', 'user'
+	);
+
 	public function getComposerControlObjects() {
-		$objects = array(
-			new CorePagePropertyComposerControl('name', t('Page Name'), ASSETS_URL . '/models/attribute/types/text/icon.png'),
-			new CorePagePropertyComposerControl('url_slug', t('URL Slug'), ASSETS_URL . '/models/attribute/types/text/icon.png'),
-			new CorePagePropertyComposerControl('date', t('Date/Time'), ASSETS_URL . '/models/attribute/types/text/icon.png'),
-			new CorePagePropertyComposerControl('description', t('Short Description'), ASSETS_URL . '/models/attribute/types/text/icon.png'),
-			new CorePagePropertyComposerControl('user', t('User'), ASSETS_URL . '/models/attribute/types/text/icon.png'),
-		);
+		foreach($this->corePageProperties as $propertyHandle) {
+			$objects[] = $this->getComposerControlByIdentifier($propertyHandle);	
+		}
 		return $objects;
 	}
 
-	protected function getCorePropertyNameFromIdentifier($identifier) {
-		$properties = array(
-			'name' => t('Page Name'),
-			'url_slug' => t('URL Slug'),
-			'date' => t('Date/Time'),
-			'description' => t('Short Description'),
-			'user' => t('User')
-		);
-		return $properties[$identifier];
-	}
-
 	public function getComposerControlByIdentifier($identifier) {
-		return new CorePagePropertyComposerControl($identifier, $this->getCorePropertyNameFromIdentifier($identifier), ASSETS_URL . '/models/attribute/types/text/icon.png');
+		$class = Loader::helper('text')->camelcase($identifier) . 'CorePagePropertyComposerControl';
+		$object = new $class();
+		return $object;
 	}
 
 	

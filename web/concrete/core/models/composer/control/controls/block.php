@@ -34,4 +34,13 @@ class Concrete5_Model_BlockComposerControl extends ComposerControl {
 		return $templates;
 	}
 
+	public function render($label, $customTemplate) {
+		$bt = BlockType::getByID($this->btID);
+		$env = Environment::get();
+		if ($customTemplate) {
+			$bt->setBlockTypeComposerFilename($customTemplate);
+		}
+		$template = $env->getPath(DIRNAME_ELEMENTS . '/' . DIRNAME_COMPOSER . '/' . DIRNAME_COMPOSER_ELEMENTS_CONTROLS . '/' . $this->cmpControlTypeHandle . '.php');
+		include($template);
+	}
 }
