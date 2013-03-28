@@ -13,8 +13,20 @@ class Concrete5_Model_CorePagePropertyComposerControlType extends ComposerContro
 		return $objects;
 	}
 
-	public function getComposerControlByIdentifier($identifier) {
-
+	protected function getCorePropertyNameFromIdentifier($identifier) {
+		$properties = array(
+			'name' => t('Page Name'),
+			'url_slug' => t('URL Slug'),
+			'date' => t('Date/Time'),
+			'description' => t('Short Description'),
+			'user' => t('User')
+		);
+		return $properties[$identifier];
 	}
+
+	public function getComposerControlByIdentifier($identifier) {
+		return new CorePagePropertyComposerControl($identifier, $this->getCorePropertyNameFromIdentifier($identifier), ASSETS_URL . '/models/attribute/types/text/icon.png');
+	}
+
 	
 }
