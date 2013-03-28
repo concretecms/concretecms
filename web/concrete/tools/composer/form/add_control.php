@@ -13,7 +13,7 @@ if ($cp->canViewPage()) {
 		$type = ComposerControlType::getByID($_POST['cmpControlTypeID']);
 		$control = $type->getComposerControlByIdentifier($_POST['cmpControlIdentifier']);
 		$layoutSetControl = $set->addComposerControl($control);
-		print Loader::helper('json')->encode($layoutSetControl);
+		Loader::element('composer/form/layout_set/control', array('control' => $layoutSetControl));
 		exit;
 	}
 
@@ -68,15 +68,15 @@ $(function() {
 			'name': 'cmpFormLayoutSetID',
 			'value': '<?=$set->getComposerFormLayoutSetID()?>'
 		}];
+		jQuery.fn.dialog.showLoader();
 		$.ajax({
 			type: 'post',
 			data: formData,
-			dataType: 'json',
 			url: '<?=REL_DIR_FILES_TOOLS_REQUIRED?>/composer/form/add_control',
-			success: function(r) {
-				ccm_parseJSON(r, function() {
-
-				});
+			success: function(html) {
+				jQuery.fn.dialog.hideLoader();
+				jQuery.fn.dialog.closeTop();
+				$('div[data-composer-form-layout-control-set-id=<?=$set->getComposerFormLayoutSetID()?>] div.ccm-composer-form-layout-control-set-inner').append(html);
 			}
 		});
 
