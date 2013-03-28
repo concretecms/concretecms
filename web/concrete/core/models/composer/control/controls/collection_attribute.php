@@ -18,4 +18,11 @@ class Concrete5_Model_CollectionAttributeComposerControl extends ComposerControl
 		return array();
 	}
 
+	public function render($label, $customTemplate) {
+		$ak = CollectionAttributeKey::getByID($this->akID);
+		$env = Environment::get();
+		$template = $env->getPath(DIRNAME_ELEMENTS . '/' . DIRNAME_COMPOSER . '/' . DIRNAME_COMPOSER_ELEMENTS_CONTROLS . '/' . $this->cmpControlTypeHandle . '.php');
+		include($template);
+	}
+
 }

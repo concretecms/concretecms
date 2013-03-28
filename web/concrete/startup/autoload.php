@@ -316,7 +316,13 @@ $classes = array(
 	'CorePagePropertyComposerControl' => array('model','composer/control/controls/core_page_property'),
 	'CollectionAttributeComposerControl' => array('model','composer/control/controls/collection_attribute'),
 	'BlockComposerControl' => array('model','composer/control/controls/block'),
-	'ComposerFormLayoutSetControl' => array('model','composer/form/layout_set/control')
+	'ComposerFormLayoutSetControl' => array('model','composer/form/layout_set/control'),
+
+	'NameCorePagePropertyComposerControl' => array('model','composer/control/controls/core_page_property/name'),
+	'UrlSlugCorePagePropertyComposerControl' => array('model','composer/control/controls/core_page_property/url_slug'),
+	'DateTimeCorePagePropertyComposerControl' => array('model','composer/control/controls/core_page_property/date_time'),
+	'DescriptionCorePagePropertyComposerControl' => array('model','composer/control/controls/core_page_property/description'),
+	'UserCorePagePropertyComposerControl' => array('model','composer/control/controls/core_page_property/user')
 
 );
 

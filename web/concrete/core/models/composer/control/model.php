@@ -8,6 +8,7 @@ abstract class Concrete5_Model_ComposerControl extends Object {
 	protected $cmpControl;
 
 	abstract public function getComposerControlCustomTemplates();
+	abstract public function render($label, $customTemplate);
 
 	public function setComposerControlName($cmpControlName) {
 		$this->cmpControlName = $cmpControlName;
@@ -35,6 +36,18 @@ abstract class Concrete5_Model_ComposerControl extends Object {
 
 	public function getComposerControlTypeObject() {
 		return ComposerControlType::getByHandle($this->cmpControlTypeHandle);
+	}
+
+	public function setComposerFormLayoutSetControlObject(ComposerFormLayoutSetControl $setcontrol) {
+		$this->cmpFormLayoutSetControlObject = $setcontrol;
+	}
+
+	public function getComposerFormLayoutSetControlObject() {
+		return $this->cmpFormLayoutSetControlObject;
+	}
+
+	public function field($key) {
+		return 'cmp[' . $this->cmpFormLayoutSetControlObject->getComposerFormLayoutSetControlID(). '][' . $key . ']';
 	}
 	
 }

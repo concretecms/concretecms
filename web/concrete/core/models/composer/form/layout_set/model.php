@@ -10,7 +10,7 @@ class Concrete5_Model_ComposerFormLayoutSet extends Object {
 
 	public static function getList(Composer $composer) {
 		$db = Loader::db();
-		$cmpFormLayoutSetIDs = $db->GetCol('select cmpFormLayoutSetID from ComposerFormLayoutSets order by cmpFormLayoutSetDisplayOrder asc');
+		$cmpFormLayoutSetIDs = $db->GetCol('select cmpFormLayoutSetID from ComposerFormLayoutSets where cmpID = ? order by cmpFormLayoutSetDisplayOrder asc', array($composer->getComposerID()));
 		$list = array();
 		foreach($cmpFormLayoutSetIDs as $cmpFormLayoutSetID) {
 			$set = ComposerFormLayoutSet::getByID($cmpFormLayoutSetID);

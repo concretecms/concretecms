@@ -20,6 +20,7 @@ class Concrete5_Model_AttributeKey extends Object {
 		return Loader::helper('text')->unhandle($this->akHandle);
 	}
 	
+
 	/** 
 	 * Returns the ID for this attribute key
 	 */
@@ -91,6 +92,14 @@ class Concrete5_Model_AttributeKey extends Object {
 	public function getAttributeType() {
 		return AttributeType::getByID($this->atID);
 	}
+
+	/** 
+	 * Returns the attribute type handle
+	 */
+	public function getAttributeTypeHandle() {
+		return $this->atHandle;
+	}
+	
 	//deprecated
 	public function getAttributeKeyType(){ return $this->getAttributeType(); }	
 	

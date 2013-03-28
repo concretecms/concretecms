@@ -266,7 +266,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 						$displayEditLink = true;
 						$header = DIR_FILES_ELEMENTS_CORE . '/block_header_composer.php';
 						$footer = DIR_FILES_ELEMENTS_CORE . '/block_footer_composer.php';
-						$cpFilename = $obj->getBlockComposerFilename();
+						$cpFilename = $obj->getBlockTypeComposerFilename();
 						if ($cpFilename) {
 							$cmpbase = $this->getBlockPath(DIRNAME_BLOCK_TEMPLATES_COMPOSER . '/' . $cpFilename);
 							if (file_exists($cmpbase . '/' . DIRNAME_BLOCK_TEMPLATES_COMPOSER . '/' . $cpFilename)) {
