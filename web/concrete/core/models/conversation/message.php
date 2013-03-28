@@ -98,8 +98,12 @@ class Concrete5_Model_Conversation_Message extends Object {
 	}	
 	public function getConversationMessageRating(ConversationRatingType $ratingType) {
 		$db = Loader::db();
-		$cnt = $db->GetOne('select count(*) from ConversationMessageRatings where cnvRatingTypeID = ? AND cnvMessageID = ?',  array($ratingType->getConversationRatingTypeID(), $this->cnvMessageID));
+		$cnt = $db->GetOne('SELECT count(*) from ConversationMessageRatings where cnvRatingTypeID = ? AND cnvMessageID = ?',  array($ratingType->getConversationRatingTypeID(), $this->cnvMessageID));
 		return $cnt;
+		//$this->updateConversationMessageTotalRating();
+	}
+	public function updateConversationMessageTotalRating() {
+		// stuff to do here...
 	}
 	public function flag($flagtype) {
 		if ($flagtype instanceof ConversationFlagType) {

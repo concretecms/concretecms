@@ -707,13 +707,6 @@
 				</attributekey>
 			</attributes>
 		</page>
-		<page name="Spam Settings" path="/dashboard/system/conversations/spam" filename="/dashboard/system/conversations/spam.php" pagetype="" description="" package="">
-			<attributes>
-				<attributekey handle="meta_keywords">
-					<value>conversations spam, spam</value>
-				</attributekey>
-			</attributes>
-		</page>
 
         <page name="Attributes" path="/dashboard/system/attributes" filename="/dashboard/system/attributes/view.php" pagetype="" description="Setup attributes for pages, users, files and more." package="">
 			<attributes>
