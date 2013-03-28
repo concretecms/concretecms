@@ -324,18 +324,14 @@
 					'cnvID':               obj.options.cnvID,
 					'cID':                 obj.options.cID,
 					'blockID':             obj.options.blockID,
-					'cnvMessageID':        $(this).closest('[data-conversation-message-id]').attr('data-conversation-message-id'),
-					'cnvRatingTypeHandle': $(this).attr('data-conversation-rating-type')
+					'cnvMessageID':        cnvMessageID,
+					'cnvRatingTypeHandle': cnvRatingTypeHandle
 				};
 				$.ajax({
 					type: 'post',
 					data: data,
 					url: CCM_TOOLS_PATH + '/conversations/rate',
 					success: function(html) {
-						//$('span.ccm-conversation-message-rating-score').load(CCM_TOOLS_PATH + '/conversations/get_rating', {
-						//$("ul").find("[data-slide='" + current + "']");
-						//data-msg-rating-type
-						//alert(cnvRatingTypeHandle);
 						$('span[data-msg-rating="' + cnvMessageID + '"][data-msg-rating-type="' + cnvRatingTypeHandle + '"]').load(CCM_TOOLS_PATH + '/conversations/get_rating', {
 							'cnvMessageID':        cnvMessageID,
 							'cnvRatingTypeHandle': cnvRatingTypeHandle
@@ -499,13 +495,6 @@
 			},function(){
 				obj.publish('conversationUpdateCount');
 			});
-		},
-		updateRating: function() {
-			/*
-			$('.ccm-conversation-message-rating-total').load(CCM_TOOLS_PATH + '/conversations/get_rating', {
-				'cnvMessageID':        $(this).closest('[data-conversation-message-id]').attr('data-conversation-message-id'),
-				'cnvRatingTypeHandle': $(this).attr('data-conversation-rating-type')
-			});*/
 		},
 		submitForm: function($btn) {
 			var obj = this;
