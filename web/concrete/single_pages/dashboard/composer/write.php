@@ -8,11 +8,17 @@
 	<div class="ccm-pane-body">
 	<? foreach($fieldsets as $cfl) { ?>
 		<fieldset style="margin-bottom: 0px">
-			<legend><?=$cfl->getComposerFormLayoutSetName()?></legend>
+			<? if ($cfl->getComposerFormLayoutSetName()) { ?>
+				<legend><?=$cfl->getComposerFormLayoutSetName()?></legend>
+			<? } ?>
 			<? $controls = ComposerFormLayoutSetControl::getList($cfl);
 
-			foreach($controls as $con) { ?>
-				<? $con->render(); ?>
+			foreach($controls as $con) { 
+				$cnp = new Permissions($con);
+				if ($cnp->canAccessComposerFormLayoutSetControl()) { ?>
+					<? $con->render(); ?>
+				<? } ?>
+				
 			<? } ?>
 
 		</fieldset>

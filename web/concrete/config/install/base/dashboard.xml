@@ -20,6 +20,10 @@
 
         </page>
 
+        <page name="Composer Form" path="/dashboard/composer/list/form" filename="/dashboard/composer/list/form.php" pagetype="" description="" package="">
+
+        </page>
+
         <page name="Write" path="/dashboard/composer/write" filename="/dashboard/composer/write.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">

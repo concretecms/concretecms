@@ -9,7 +9,7 @@ class Concrete5_Controller_Dashboard_Composer_Write extends DashboardBaseControl
 			$composers = Composer::getList();
 			if (count($composers) == 1) {
 				$cmp = $composers[0];
-				$this->redrect('/dashboard/composer/write', $cmp->getComposerID());
+				$this->redirect('/dashboard/composer/write', $cmp->getComposerID());
 			} else {
 				$this->set('composers', $composers);
 			}
