@@ -2,47 +2,16 @@
 
 <?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('%s Output', $composer->getComposerName()), false, false)?>
 
-<? if (count($sets) > 0) {
+<? if (count($areas) > 0) {
 
-	foreach($sets as $set) { ?>
+	foreach($areas as $area) { ?>
 
-		<div class="ccm-composer-form-layout-control-set" data-composer-form-layout-control-set-id="<?=$set->getComposerFormLayoutSetID()?>">
-			<div class="ccm-composer-item-control-bar">
-				<ul class="ccm-composer-item-controls">
-					<li><a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/composer/form/add_control?cmpFormLayoutSetID=<?=$set->getComposerFormLayoutSetID()?>" dialog-title="<?=t('Add Form Control')?>" dialog-width="640" dialog-height="400" data-command="add-form-set-control"><i class="icon-plus-sign"></i></a></li>
-					<li><a href="#" data-command="move_set" style="cursor: move"><i class="icon-move"></i></a></li>
-					<li><a href="#" data-edit-set="<?=$set->getComposerFormLayoutSetID()?>"><i class="icon-pencil"></i></a></li>
-					<li><a href="#" data-delete-set="<?=$set->getComposerFormLayoutSetID()?>"><i class="icon-trash"></i></a></li>
-				</ul>
-				<div class="ccm-composer-form-layout-control-set-name" ><? if ($set->getComposerFormLayoutSetName()) { ?><?=$set->getComposerFormLayoutSetName()?><? } else { ?><?=t('(No Name)')?><? } ?></div>
-				<div style="display: none">
-					<div data-delete-set-dialog="<?=$set->getComposerFormLayoutSetID()?>">
-						<form data-delete-set-form="<?=$set->getComposerFormLayoutSetID()?>" action="<?=$this->action('delete_set', $set->getComposerFormLayoutSetID())?>" method="post">
-						<?=t("Delete this form layout set? This cannot be undone.")?>
-						<?=Loader::helper('validation/token')->output('delete_set')?>
-						</form>
-					</div>
-				</div>
-
-				<div style="display: none">
-					<div data-edit-set-dialog="<?=$set->getComposerFormLayoutSetID()?>">
-						<form data-edit-set-form="<?=$set->getComposerFormLayoutSetID()?>" action="<?=$this->action('update_set', $set->getComposerFormLayoutSetID())?>" method="post">
-						<div class="control-group">
-							<?=$form->label('cmpFormLayoutSetName', t('Set Name'))?>
-							<div class="controls">
-								<?=$form->text('cmpFormLayoutSetName', $set->getComposerFormLayoutSetName())?>
-							</div>
-						</div>
-						<?=Loader::helper('validation/token')->output('update_set')?>
-						</form>
-					</div>
-				</div>
-
-			</div>
-			<div class="ccm-composer-form-layout-control-set-inner">
-				<? $controls = ComposerFormLayoutSetControl::getList($set);
+		<div class="ccm-composer-control-output-area" data-composer-control-output-area="<?=$area?>">
+			<div class="ccm-composer-control-output-area-handle" ><?=$area?></div>
+			<div class="ccm-composer-control-output-area-inner">
+				<? $controls = ComposerOutputControl::getList($composer, $area);
 				foreach($controls as $cnt) { ?>
-					<?=Loader::element('composer/form/layout_set/control', array('control' => $cnt));?>
+					<? Loader::element('composer/output/control', array('control' => $cnt));?>
 				<? } ?>
 			</div>
 		</div>
@@ -52,187 +21,42 @@
 	<p><?=t('There are no areas.')?></p>
 <? } ?>
 
+
 <script type="text/javascript">
 $(function() {
-	$('a[data-dialog=add_set]').on('click', function() {
-		$("#ccm-composer-add-set").dialog({
-			modal: true,
-			width: 320,
-			dialogClass: 'ccm-ui',
-			title: '<?=t("Add Control Set")?>',
-			height: 235, 
-			buttons: [
-				{
-					'text': '<?=t("Cancel")?>',
-					'class': 'btn pull-left',
-					'click': function() {
-						$(this).dialog('close');
-					}
-				},
-				{
-					'text': '<?=t("Add Set")?>',
-					'class': 'btn pull-right btn-primary',
-					'click': function() {
-						$('#ccm-composer-add-set form').submit();
-					}
-				}
-			]
-		});
-	});
-	$('a[data-delete-set]').on('click', function() {
-		var cmpFormLayoutSetID = $(this).attr('data-delete-set');
-		$('div[data-delete-set-dialog=' + cmpFormLayoutSetID + ']').dialog({
-			modal: true,
-			width: 320,
-			dialogClass: 'ccm-ui',
-			title: '<?=t("Delete Set ")?>',
-			height: 200, 
-			buttons: [
-				{
-					'text': '<?=t("Cancel")?>',
-					'class': 'btn pull-left',
-					'click': function() {
-						$(this).dialog('close');
-					}
-				},
-				{
-					'text': '<?=t("Delete")?>',
-					'class': 'btn pull-right btn-danger',
-					'click': function() {
-						$('form[data-delete-set-form=' + cmpFormLayoutSetID + ']').submit();
-					}
-				}
-			]
-		});
-	});
-	$('a[data-edit-set]').on('click', function() {
-		var cmpFormLayoutSetID = $(this).attr('data-edit-set');
-		$('div[data-edit-set-dialog=' + cmpFormLayoutSetID + ']').dialog({
-			modal: true,
-			width: 320,
-			dialogClass: 'ccm-ui',
-			title: '<?=t("Update Set ")?>',
-			height: 235, 
-			buttons: [
-				{
-					'text': '<?=t("Cancel")?>',
-					'class': 'btn pull-left',
-					'click': function() {
-						$(this).dialog('close');
-					}
-				},
-				{
-					'text': '<?=t("Update")?>',
-					'class': 'btn pull-right btn-primary',
-					'click': function() {
-						$('form[data-edit-set-form=' + cmpFormLayoutSetID + ']').submit();
-					}
-				}
-			]
-		});
-	});
-	$('div.ccm-pane-body').sortable({
-		handle: 'a[data-command=move_set]',
-		items: '.ccm-composer-form-layout-control-set',
+
+	$('.ccm-composer-control-output-area-inner').sortable({
+		handle: 'a[data-command=move-output-control]',
+		items: '.ccm-composer-output-control',
+		connectWith: '.ccm-composer-control-output-area-inner',
 		cursor: 'move',
 		axis: 'y', 
 		stop: function() {
+
 			var formData = [{
 				'name': 'token',
-				'value': '<?=Loader::helper("validation/token")->generate("update_set_display_order")?>'
+				'value': '<?=Loader::helper("validation/token")->generate("update_output_control_display_order")?>'
 			}, {
 				'name': 'cmpID',
-				'value': <?=$composer->getComposerID()?>
-			}];
-			$('.ccm-composer-form-layout-control-set').each(function() {
-				formData.push({'name': 'cmpFormLayoutSetID[]', 'value': $(this).attr('data-composer-form-layout-control-set-id')});
-			});
-			$.ajax({
-				type: 'post',
-				data: formData,
-				url: '<?=$this->action("update_set_display_order")?>',
-				success: function() {
-
-				}
-			});
-		}
-	});
-	$('a[data-command=add-form-set-control]').dialog();
-	$('a[data-command=edit-form-set-control]').dialog();
-
-	$('.ccm-composer-form-layout-control-set-inner').sortable({
-		handle: 'a[data-command=move-set-control]',
-		items: '.ccm-composer-form-layout-control-set-control',
-		cursor: 'move',
-		axis: 'y', 
-		stop: function() {
-			var formData = [{
-				'name': 'token',
-				'value': '<?=Loader::helper("validation/token")->generate("update_set_control_display_order")?>'
-			}, {
-				'name': 'cmpFormLayoutSetID',
-				'value': $(this).parent().attr('data-composer-form-layout-control-set-id')
+				'value': '<?=$composer->getComposerID()?>'
 			}];
 
-			$(this).find('.ccm-composer-form-layout-control-set-control').each(function() {
-				formData.push({'name': 'cmpFormLayoutSetControlID[]', 'value': $(this).attr('data-composer-form-layout-control-set-control-id')});
+			$('div[data-composer-control-output-area]').each(function() {
+				var area = $(this).attr('data-composer-control-output-area');
+				$(this).find('div[data-composer-output-control-id]').each(function() {
+					var controlID = $(this).attr('data-composer-output-control-id');
+					formData.push({'name': 'area[' + area + '][]', 'value': controlID});
+				});
 			});
 
 			$.ajax({
 				type: 'post',
 				data: formData,
-				url: '<?=$this->action("update_set_control_display_order")?>',
+				url: '<?=$this->action("update_output_control_display_order")?>',
 				success: function() {}
 			});
 
 		}
-	});
-
-	$('div.ccm-composer-form-layout-control-set-inner').on('click', 'a[data-delete-set-control]', function() {
-		var cmpFormLayoutSetControlID = $(this).attr('data-delete-set-control');
-		$('div[data-delete-set-control-dialog=' + cmpFormLayoutSetControlID + ']').dialog({
-			modal: true,
-			width: 320,
-			dialogClass: 'ccm-ui',
-			title: '<?=t("Delete Control ")?>',
-			height: 200, 
-			buttons: [
-				{
-					'text': '<?=t("Cancel")?>',
-					'class': 'btn pull-left',
-					'click': function() {
-						$(this).dialog('close');
-					}
-				},
-				{
-					'text': '<?=t("Delete")?>',
-					'class': 'btn pull-right btn-danger',
-					'click': function() {
-						jQuery.fn.dialog.showLoader();
-						var formData = [{
-							'name': 'token',
-							'value': '<?=Loader::helper("validation/token")->generate("delete_set_control")?>'
-						}, {
-							'name': 'cmpFormLayoutSetControlID',
-							'value': cmpFormLayoutSetControlID
-						}];
-
-						$.ajax({
-							type: 'post',
-							data: formData,
-							url: '<?=$this->action("delete_set_control")?>',
-							success: function() {
-								jQuery.fn.dialog.hideLoader();
-								jQuery.fn.dialog.closeAll();
-								$('div[data-composer-form-layout-control-set-control-id=' + cmpFormLayoutSetControlID + ']').remove();								
-							}
-						});
-
-					}
-				}
-			]
-		});
-		return false;
 	});
 
 });
@@ -240,34 +64,19 @@ $(function() {
 
 <style type="text/css">
 
-div.ccm-composer-form-layout-control-set {
-	margin-top: 20px;
-}
-
-div.ccm-composer-form-layout-control-set:last-child {
+div.ccm-composer-control-output-area {
 	margin-bottom: 20px;
 }
 
-div.ccm-composer-item-control-bar {
-	position: relative;
+div.ccm-composer-control-output-area:last-child {
+	margin-bottom: 0px;
 }
 
-div.ccm-composer-form-layout-control-set-control div.ccm-composer-item-control-bar {
-	background-color: #fafafa;
-	border-bottom: 1px solid #dedede;
-	padding: 4px 10px 4px 10px;
-}
-
-div.ccm-composer-form-layout-control-set-control:last-child div.ccm-composer-item-control-bar {
-	border-bottom: 0px;
-}
-
-
-div.ccm-composer-form-layout-control-set-inner {
+div.ccm-composer-control-output-area-inner {
 	border: 1px solid #eee;
 }
 
-div.ccm-composer-form-layout-control-set-name {
+div.ccm-composer-control-output-area-handle {
 	border-left: 1px solid #eee;
 	border-right: 1px solid #eee;
 	border-top: 1px solid #eee;
@@ -277,6 +86,21 @@ div.ccm-composer-form-layout-control-set-name {
 	border-top-left-radius: 4px;
 	border-top-right-radius: 4px;
 }
+
+div.ccm-composer-item-control-bar {
+	position: relative;
+}
+
+div.ccm-composer-output-control div.ccm-composer-item-control-bar {
+	background-color: #fafafa;
+	border-bottom: 1px solid #dedede;
+	padding: 4px 10px 4px 10px;
+}
+
+div.ccm-composer-output-control:last-child div.ccm-composer-item-control-bar {
+	border-bottom: 0px;
+}
+
 
 ul.ccm-composer-item-controls {
 	position: absolute;
@@ -296,5 +120,4 @@ ul.ccm-composer-item-controls li {
 
 
 </style>
-
 <?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper();?>

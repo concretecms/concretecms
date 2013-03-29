@@ -68,17 +68,5 @@ class Concrete5_Model_ComposerFormLayoutSet extends Object {
 		}
 	}
 
-	public function addComposerControl(ComposerControl $control) {
-		$db = Loader::db();
-		$displayOrder = $db->GetOne('select count(cmpFormLayoutSetControlID) from ComposerFormLayoutSetControls where cmpFormLayoutSetID = ?', array($this->getComposerFormLayoutSetID()));
-		if (!$displayOrder) {
-			$displayOrder = 0;
-		}
-		$controlType = $control->getComposerControlTypeObject();
-		$db->Execute('insert into ComposerFormLayoutSetControls (cmpFormLayoutSetID, cmpControlTypeID, cmpControlObject, cmpFormLayoutSetControlDisplayOrder) values (?, ?, ?, ?)', array(
-			$this->getComposerFormLayoutSetID(), $controlType->getComposerControlTypeID(), serialize($control), $displayOrder
-		));	
-		return ComposerFormLayoutSetControl::getByID($db->Insert_ID());
-	}
 
 }

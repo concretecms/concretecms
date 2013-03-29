@@ -84,6 +84,7 @@ class Concrete5_Model_ComposerFormLayoutSetControl extends Object {
 	public function delete() {
 		$db = Loader::db();
 		$db->Execute('delete from ComposerFormLayoutSetControls where cmpFormLayoutSetControlID = ?', array($this->cmpFormLayoutSetControlID));
+		$db->Execute('delete from ComposerOutputControls where cmpFormLayoutSetControlID = ?', array($this->cmpFormLayoutSetControlID));
 		$composer = $this->getComposerFormLayoutSetObject();
 		$composer->rescanFormLayoutSetControlDisplayOrder();
 	}

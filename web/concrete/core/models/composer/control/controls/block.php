@@ -34,6 +34,12 @@ class Concrete5_Model_BlockComposerControl extends ComposerControl {
 		return $templates;
 	}
 
+	public function addToComposerFormLayoutSet(ComposerFormLayoutSet $set) {
+		$layoutSetControl = parent::addToComposerFormLayoutSet($set);
+		ComposerOutputControl::add($layoutSetControl, STACKS_AREA_NAME);
+		return $layoutSetControl;
+	}
+
 	public function render($label, $customTemplate) {
 		$bt = BlockType::getByID($this->btID);
 		$env = Environment::get();
