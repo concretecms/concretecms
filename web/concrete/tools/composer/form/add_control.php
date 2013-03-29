@@ -12,7 +12,7 @@ if ($cp->canViewPage()) {
 	if ($_POST['cmpControlTypeID'] && $_POST['cmpControlIdentifier']) {
 		$type = ComposerControlType::getByID($_POST['cmpControlTypeID']);
 		$control = $type->getComposerControlByIdentifier($_POST['cmpControlIdentifier']);
-		$layoutSetControl = $set->addComposerControl($control);
+		$layoutSetControl = $control->addToComposerFormLayoutSet($set);
 		Loader::element('composer/form/layout_set/control', array('control' => $layoutSetControl));
 		exit;
 	}

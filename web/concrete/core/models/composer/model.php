@@ -34,6 +34,23 @@ class Concrete5_Model_Composer extends Object {
 		return Composer::getByID($db->Insert_ID());
 	}
 
+	/** 
+	 * Returns an array of all areas on the page type defaults for the page types selected
+	 */
+	public function getPageTypeAreaList() {
+		$db = Loader::db();
+		$ctIDs = array(-1);
+		foreach($this->getComposerPageTypeObjects() as $ct) {
+			$ctIDs[] = $ct->getCollectionTypeID();
+		}
+		$r = $db->Execute('select distinct arHandle from Areas where cID in (select p.cID from Pages p inner join CollectionVersions cv on (p.cID = cv.cID and cv.cvIsApproved = 1) where cIsTemplate = 1 and ctID in (' . implode(',', $ctIDs) . ')) order by arHandle');
+		$areas = array();
+		while ($row = $r->FetchRow()) {
+			$areas[] = $row['arHandle'];
+		}
+		return $areas;
+	}
+
 	public function update($cmpName, $types) {
 		$db = Loader::db();
 		$db->Execute('update Composers set cmpName = ? where cmpID = ?', array(
@@ -73,9 +90,14 @@ class Concrete5_Model_Composer extends Object {
 	}
 
 	public function delete() {
+		$sets = ComposerFormLayoutSet::getList($this);
+		foreach($sets as $set) {
+			$set->delete();
+		}
 		$db = Loader::db();
 		$db->Execute('delete from Composers where cmpID = ?', array($this->cmpID));
 		$db->Execute('delete from ComposerPageTypes where cmpID = ?', array($this->cmpID));
+		$db->Execute('delete from ComposerOutputControls where cmpID = ?', array($this->cmpID));
 	}
 
 	public function setConfiguredComposerTargetObject(ComposerTargetConfiguration $configuredTarget) {

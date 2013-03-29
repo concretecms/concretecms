@@ -296,6 +296,7 @@ $classes = array(
 	'ComposerTargetType' => array('model','composer/target/type'),
 	'ComposerTargetConfiguration' => array('model','composer/target/configuration'),
 	'ComposerFormLayoutSet' => array('model','composer/form/layout_set/model'),
+	'ComposerOutputControl' => array('model','composer/output/control'),
 	'AllComposerTargetType' => array('model','composer/target/types/all'),
 	'PageTypeComposerTargetType' => array('model','composer/target/types/page_type'),
 	'ParentPageComposerTargetType' => array('model','composer/target/types/parent_page'),
