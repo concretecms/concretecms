@@ -39,7 +39,7 @@
 			<td class="composer-tasks">
 				<a href="<?=$this->action('edit', $cm->getComposerID())?>" class="btn btn-mini"><?=t('Basic Details')?></a>
 				<a href="<?=$this->url('/dashboard/composer/list/form', $cm->getComposerID())?>" class="btn btn-mini"><?=t('Edit Form')?></a>
-				<a href="" class="btn btn-mini"><?=t('Output')?></a>
+				<a href="<?=$this->url('/dashboard/composer/list/output', $cm->getComposerID())?>" class="btn btn-mini"><?=t('Output')?></a>
 				<a href="#" data-delete="<?=$cm->getComposerID()?>" class="btn btn-mini btn-danger"><?=t('Delete')?></a>
 
 				<div style="display: none">

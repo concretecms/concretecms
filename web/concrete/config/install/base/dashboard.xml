@@ -24,6 +24,10 @@
 
         </page>
 
+        <page name="Composer Output" path="/dashboard/composer/list/output" filename="/dashboard/composer/list/output.php" pagetype="" description="" package="">
+
+        </page>
+
         <page name="Write" path="/dashboard/composer/write" filename="/dashboard/composer/write.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
