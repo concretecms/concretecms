@@ -193,10 +193,6 @@ $classes = array(
 	'StackPermissionAssignment' => array('model','permission/assignments/stack'),
 	'StackPermissionAccess' => array('model','permission/access/categories/stack'),
 	'StackPermissionAccessListItem' => array('model','permission/access/list_items/stack'),
-	'ComposerPagePermissionKey' => array('model','permission/keys/composer_page'),
-	'ComposerPagePermissionAssignment' => array('model','permission/assignments/composer_page'),
-	'ComposerPagePermissionAccess' => array('model','permission/access/categories/composer_page'),
-	'ComposerPagePermissionAccessListItem' => array('model','permission/access/list_items/composer_page'),
 	'UserPermissionKey' => array('model','permission/keys/user'),
 	'UserPermissionAssignment' => array('model','permission/assignments/user'),
 	'UserPermissionAccess' => array('model','permission/access/categories/user'),
@@ -239,7 +235,6 @@ $classes = array(
 	'AreaPermissionResponse' => array('model','permission/response/area'),
 	'BlockPermissionResponse' => array('model','permission/response/block'),
 	'CollectionVersionPermissionResponse' => array('model','permission/response/collection_version'),
-	'ComposerPagePermissionResponse' => array('model','permission/response/composer_page'),
 	'FileSetPermissionResponse' => array('model','permission/response/file_set'),
 	'FilePermissionResponse' => array('model','permission/response/file'),
 	'PagePermissionResponse' => array('model','permission/response/page'),
@@ -322,7 +317,14 @@ $classes = array(
 	'UrlSlugCorePagePropertyComposerControl' => array('model','composer/control/controls/core_page_property/url_slug'),
 	'DateTimeCorePagePropertyComposerControl' => array('model','composer/control/controls/core_page_property/date_time'),
 	'DescriptionCorePagePropertyComposerControl' => array('model','composer/control/controls/core_page_property/description'),
-	'UserCorePagePropertyComposerControl' => array('model','composer/control/controls/core_page_property/user')
+	'UserCorePagePropertyComposerControl' => array('model','composer/control/controls/core_page_property/user'),
+
+	'ComposerFormLayoutSetControlPermissionKey' => array('model','permission/keys/composer_form_layout_set_control'),
+	'ComposerFormLayoutSetControlPermissionAssignment' => array('model','permission/assignments/composer_form_layout_set_control'),
+	'ComposerFormLayoutSetControlPermissionAccess' => array('model','permission/access/categories/composer_form_layout_set_control'),
+	'ComposerFormLayoutSetControlPermissionAccessListItem' => array('model','permission/access/list_items/composer_form_layout_set_control'),
+	'ComposerFormLayoutSetControlPermissionResponse' => array('model','permission/response/composer_form_layout_set_control')
+
 
 );
 

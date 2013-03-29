@@ -5,7 +5,6 @@
         <category handle="page" package=""/>
         <category handle="single_page" package=""/>
         <category handle="stack" package=""/>
-        <category handle="composer_page" package=""/>
         <category handle="user" package=""/>
         <category handle="file_set" package=""/>
         <category handle="file" package=""/>
@@ -16,6 +15,7 @@
         <category handle="sitemap" package=""/>
         <category handle="marketplace_newsflow" package=""/>
         <category handle="basic_workflow" package=""/>
+        <category handle="composer_form_layout_set_control" package=""/>
     </permissioncategories>
 
     <permissionkeys>
@@ -89,6 +89,9 @@
         <permissionkey handle="notify_on_basic_workflow_approve" name="Notify on Approve" description="Notify approvers that a change has been approved." package="" category="basic_workflow" />
         <permissionkey handle="notify_on_basic_workflow_deny" name="Notify on Deny" description="Notify approvers that a change has been denied." package="" category="basic_workflow" />
         		
+        <!-- composer //-->
+        <permissionkey handle="access_composer_form_layout_set_control" name="Access Composer Control" description="" package="" category="composer_form_layout_set_control" />
+
         <!-- users //-->
         <permissionkey handle="access_user_search" has-custom-class="true" name="Access User Search" description="" package="" category="user">
             <access>
