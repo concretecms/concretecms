@@ -43,7 +43,10 @@ class Concrete5_Controller_Dashboard_Composer_Write extends DashboardBaseControl
 		if (!$this->error->has()) {
 			// create the page
 			$d = $this->composer->createDraft($ct);
-
+			$controls = ComposerControl::getList($this->composer);
+			foreach($controls as $cn) {
+				print_r($cn);
+			}
 		}
 
 	}
