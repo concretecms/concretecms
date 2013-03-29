@@ -43,7 +43,7 @@ class Concrete5_Model_Composer extends Object {
 		foreach($this->getComposerPageTypeObjects() as $ct) {
 			$ctIDs[] = $ct->getCollectionTypeID();
 		}
-		$r = $db->Execute('select distinct arHandle from Areas where cID in (select p.cID from Pages p inner join CollectionVersions cv on (p.cID = cv.cID and cv.cvIsApproved = 1) where cIsTemplate = 1 and ctID in (' . implode(',', $ctIDs) . ')) order by arHandle');
+		$r = $db->Execute('select distinct arHandle from Areas where cID in (select p.cID from Pages p inner join CollectionVersions cv on (p.cID = cv.cID and cv.cvIsApproved = 1) where cIsTemplate = 1 and arIsGlobal = 0 and ctID in (' . implode(',', $ctIDs) . ')) order by arHandle');
 		$areas = array();
 		while ($row = $r->FetchRow()) {
 			$areas[] = $row['arHandle'];
