@@ -3,7 +3,7 @@
 class Concrete5_Model_CorePagePropertyComposerControlType extends ComposerControlType {
 
 	protected $corePageProperties = array(
-		'name', 'url_slug', 'date_time', 'description', 'user'
+		'name', 'url_slug', 'date_time', 'description', 'user', 'page_type', 'publish_target'
 	);
 
 	public function getComposerControlObjects() {

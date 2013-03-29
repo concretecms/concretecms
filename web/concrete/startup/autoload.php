@@ -320,6 +320,8 @@ $classes = array(
 	'DateTimeCorePagePropertyComposerControl' => array('model','composer/control/controls/core_page_property/date_time'),
 	'DescriptionCorePagePropertyComposerControl' => array('model','composer/control/controls/core_page_property/description'),
 	'UserCorePagePropertyComposerControl' => array('model','composer/control/controls/core_page_property/user'),
+	'PageTypeCorePagePropertyComposerControl' => array('model','composer/control/controls/core_page_property/page_type'),
+	'PublishTargetCorePagePropertyComposerControl' => array('model','composer/control/controls/core_page_property/publish_target'),
 
 	'ComposerFormLayoutSetControlPermissionKey' => array('model','permission/keys/composer_form_layout_set_control'),
 	'ComposerFormLayoutSetControlPermissionAssignment' => array('model','permission/assignments/composer_form_layout_set_control'),
