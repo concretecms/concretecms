@@ -13,12 +13,37 @@
     <field name="cmpTargetTypeID" type="I" size="10">
       <unsigned/>
     </field>
+    
    <field name="cmpTargetObject" type="X2"></field>
    <field name="cmpTargetSelectedParentPageID" type="I" size="10">
       <unsigned/>
       <default value="0" />
     </field>
   </table>
+
+   <table name="ComposerDrafts">
+    <field name="cmpDraftID" type="I" size="10">
+      <key/>
+      <autoincrement/>
+      <unsigned/>
+    </field>
+    <field name="cmpID" type="I" size="10">
+      <unsigned/>
+      <default value="0" />
+    </field>
+    <field name="cID" type="I" size="10">
+      <unsigned/>
+      <default value="0" />
+    </field>
+    <field name="uID" type="I" size="10">
+      <unsigned/>
+      <default value="0" />
+    </field>
+    <field name="cmpDateCreated" type="T">
+      <notnull/>
+    </field>
+  </table>
+
   <table name="ComposerPageTypes">
     <field name="cmpID" type="I" size="10">
       <key/>
@@ -1492,18 +1517,6 @@
     <index name="cDateAdded">
       <col>cDateAdded</col>
     </index>
-  </table>
-  <table name="ComposerDrafts">
-    <field name="cID" type="I" size="10">
-      <key/>
-      <default value="0"/>
-      <unsigned/>
-    </field>
-    <field name="cpPublishParentID" type="I" size="10">
-      <notnull/>
-      <default value="0"/>
-      <unsigned/>
-    </field>
   </table>
   <table name="ComposerContentLayout">
     <field name="cclID" type="I" size="10">

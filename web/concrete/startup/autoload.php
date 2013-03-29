@@ -314,6 +314,7 @@ $classes = array(
 	'CollectionAttributeComposerControl' => array('model','composer/control/controls/collection_attribute'),
 	'BlockComposerControl' => array('model','composer/control/controls/block'),
 	'ComposerFormLayoutSetControl' => array('model','composer/form/layout_set/control'),
+	'ComposerDraft' => array('model','composer/draft/model'),
 
 	'NameCorePagePropertyComposerControl' => array('model','composer/control/controls/core_page_property/name'),
 	'UrlSlugCorePagePropertyComposerControl' => array('model','composer/control/controls/core_page_property/url_slug'),
@@ -328,7 +329,6 @@ $classes = array(
 	'ComposerFormLayoutSetControlPermissionAccess' => array('model','permission/access/categories/composer_form_layout_set_control'),
 	'ComposerFormLayoutSetControlPermissionAccessListItem' => array('model','permission/access/list_items/composer_form_layout_set_control'),
 	'ComposerFormLayoutSetControlPermissionResponse' => array('model','permission/response/composer_form_layout_set_control')
-
 
 );
 

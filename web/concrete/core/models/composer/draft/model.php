@@ -1,63 +1,12 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Model_Composer extends Object {
+class Concrete5_Model_ComposerDraft extends Object {
 
+	public function getComposerDraftID() {return $this->cmpDraftID;}
 	public function getComposerID() {return $this->cmpID;}
-	public function getComposerName() {return $this->cmpName;}
-	public function getComposerTargetTypeID() {return $this->cmpTargetTypeID;}
-	public function getComposerTargetObject() {return $this->cmpTargetObject;}
-	public function getComposerSelectedTargetPageObject() {
-		if ($this->cmpTargetSelectedParentPageID) {
-			$c = Page::getByID($this->cmpTargetSelectedParentPageID);
-			if (is_object($c) && !$c->isError()) {
-				return $c;
-			}
-		}
-	}
+	public function getComposerDraftDateCreated() {return $this->cmpDateCreated;}
+	public function getComposerDraftUserID() {return $this->uID;}
 
-	public function getComposerPageTypeObjects() {
-		$db = Loader::db();
-		$types = array();
-		$r = $db->Execute('select ctID from ComposerPageTypes where cmpID = ? order by ctID asc', array($this->cmpID));
-		while ($row = $r->FetchRow()) {
-			$ct = CollectionType::getByID($row['ctID']);
-			if (is_object($ct)) {
-				$types[] = $ct;
-			}
-		}
-		return $types;
-	}
-
-	public static function add($cmpName, $types) {
-		$db = Loader::db();
-		$db->Execute('insert into Composers (cmpName) values (?)', array(
-			$cmpName
-		));
-		$cmpID = $db->Insert_ID();
-		foreach($types as $ct) {
-			$db->Execute('insert into ComposerPageTypes (cmpID, ctID) values (?, ?)', array(
-				$cmpID, $ct->getCollectionTypeID()
-			));
-		}
-		return Composer::getByID($db->Insert_ID());
-	}
-
-	/** 
-	 * Returns an array of all areas on the page type defaults for the page types selected
-	 */
-	public function getPageTypeAreaList() {
-		$db = Loader::db();
-		$ctIDs = array(-1);
-		foreach($this->getComposerPageTypeObjects() as $ct) {
-			$ctIDs[] = $ct->getCollectionTypeID();
-		}
-		$r = $db->Execute('select distinct arHandle from Areas where cID in (select p.cID from Pages p inner join CollectionVersions cv on (p.cID = cv.cID and cv.cvIsApproved = 1) where cIsTemplate = 1 and arIsGlobal = 0 and ctID in (' . implode(',', $ctIDs) . ')) order by arHandle');
-		$areas = array();
-		while ($row = $r->FetchRow()) {
-			$areas[] = $row['arHandle'];
-		}
-		return $areas;
-	}
 
 	public function update($cmpName, $types) {
 		$db = Loader::db();
@@ -139,30 +88,6 @@ class Concrete5_Model_Composer extends Object {
 			$cmpFormLayoutSetName, $this->cmpID, $displayOrder
 		));	
 		return ComposerFormLayoutSet::getByID($db->Insert_ID());
-	}
-
-	public function createDraft(CollectionType $ct, $u = false) {
-		if (!is_object($u)) {
-			$u = new User();
-		}
-		$db = Loader::db();
-		$cmpID = $this->getComposerID();
-		$cmpDateCreated = Loader::helper('date')->getSystemDateTime();
-		$uID = $u->getUserID();
-		
-		$db->Execute('insert into ComposerDrafts (cmpID, cmpDateCreated, uID) values (?, ?, ?)', array(
-			$cmpID, $cmpDateCreated, $uID
-		));	
-
-		$cmpDraftID = $db->Insert_ID();
-
-		$parent = Page::getByPath(COMPOSER_DRAFTS_PAGE_PATH);
-		$data = array('cvIsApproved' => 0);
-		$p = $parent->add($ct, $data);
-		$p->deactivate();
-
-		$db->Execute('update ComposerDrafts set cID = ? where cmpDraftID = ?', array($p->getCollectionID(), $cmpDraftID));
-		return ComposerDraft::getByID($db->Insert_ID());
 	}
 
 }
