@@ -108,6 +108,18 @@ ul.ccm-composer-item-controls {
 	top: 5px;
 }
 
+ul.ccm-composer-item-controls a {
+	color: #333;
+}
+
+ul.ccm-composer-item-controls a i {
+	position: relative;
+}
+
+ul.ccm-composer-item-controls a:hover {
+	text-decoration: none;
+}
+
 div.ccm-composer-item-control-bar:hover ul.ccm-composer-item-controls li {
 	display: inline-block;
 }
