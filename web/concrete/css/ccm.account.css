@@ -1,7 +1,4 @@
-.clearfix{*zoom:1;}.clearfix:before,.clearfix:after{display:table;content:"";line-height:0;}
-.clearfix:after{clear:both;}
-.ccm-ui .hide-text{font:0/0 a;color:transparent;text-shadow:none;background-color:transparent;border:0;}
-.ccm-ui .input-block-level{display:block;width:100%;min-height:30px;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;}
+
 div#ccm-profile-header{position:relative;}
 div#ccm-profile-statistics-bar{font-weight:bold;font-size:13px;border-top:1px solid #cecece;border-bottom:1px solid #cecece;padding-top:8px;margin-top:20px;margin-bottom:20px;padding-bottom:8px;}
 div#ccm-profile-statistics-bar div.clearfix{padding-bottom:0px;}
