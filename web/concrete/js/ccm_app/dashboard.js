@@ -83,9 +83,7 @@ ccm_dashboardEqualizeMenus = function() {
 	$('div.dashboard-icon-list div.well').css('visibility', 'visible');
 }
 
-/*
 $(function() {
-	ccm_activateToolbar();
 	
 	var $ccmPageHelp = $("#ccm-page-help").popover({
 		trigger: 'click',
@@ -116,4 +114,3 @@ $(function() {
 		$("#ccm-dashboard-result-message").fadeIn(200);
 	}
 });
-*/

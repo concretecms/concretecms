@@ -500,6 +500,9 @@ if (!defined('DIRNAME_COMPOSER_ELEMENTS_TARGET_TYPES')) {
 if (!defined('DIRNAME_COMPOSER_ELEMENTS_CONTROLS')) {
 	define('DIRNAME_COMPOSER_ELEMENTS_CONTROLS', 'controls');
 }
+if (!defined('DIRNAME_COMPOSER_ELEMENTS_TARGET_TYPES_FORM')) {
+	define('DIRNAME_COMPOSER_ELEMENTS_TARGET_TYPES_FORM', 'form');
+}
 
 
 # User avatar constants - should probably be moved into the avatar helper class as avatar constants

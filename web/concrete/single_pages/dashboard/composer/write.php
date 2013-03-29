@@ -4,7 +4,7 @@
 <? if (is_object($composer)) { ?>
 
 	<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper($composer->getComposerName(), false, false, false)?>
-	<form method="post" class="form-horizontal">
+	<form method="post" class="form-horizontal" action="<?=$this->action('save', $composer->getComposerID())?>">
 	<div class="ccm-pane-body">
 	<? foreach($fieldsets as $cfl) { ?>
 		<fieldset style="margin-bottom: 0px">
@@ -27,7 +27,7 @@
 
 	</div>
 	<div class="ccm-pane-footer">
-
+		<button type="submit" class="btn btn-primary pull-right"><?=t('Publish')?></button>
 	</div>
 	</form>
 	<?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(false)?>
