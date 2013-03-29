@@ -61,7 +61,18 @@ abstract class Concrete5_Model_ComposerControl extends Object {
 			$set->getComposerFormLayoutSetID(), $controlType->getComposerControlTypeID(), serialize($this), $displayOrder
 		));	
 		return ComposerFormLayoutSetControl::getByID($db->Insert_ID());
+	}
 
+	public static function getList(Composer $composer) {
+		$sets = ComposerFormLayoutSet::getList($composer);
+		$controls = array();
+		foreach($sets as $s) {
+			$setControls = ComposerFormLayoutSetControl::getList($s);
+			foreach($setControls as $sc) {
+				$controls[] = $sc->getComposerControlObject();
+			}
+		}
+		return $controls;
 	}
 	
 }
