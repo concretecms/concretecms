@@ -29,10 +29,6 @@
 				if ($cp->canEditPageContents()) {
 					$nvc = $c->getVersionToModify();
 					$r = $nvc->processArrangement($_POST['area']);
-					if (!is_object($r)) {
-						$r = new stdClass;
-						$r->error = false;
-					}
 				} else {
 					$r = new stdClass;
 					$r->error = true;

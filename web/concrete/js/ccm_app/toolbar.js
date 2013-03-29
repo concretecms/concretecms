@@ -1,117 +1,77 @@
 /** 
- * Toolbar
+ * Basic concrete5 toolbar class
  */
 
-$(function() {
-	if ($("#ccm-toolbar").length > 0) { 
-		ccm_intelligentSearchActivateResults();	
-		ccm_intelligentSearchDoRemoteCalls($('#ccm-nav-intelligent-search').val());
-	}
-});
+var CCMToolbar = function() {
 
-	ccm_togglePopover = function(e, link) {
-		if ($('.popover').is(':visible')) {
-			$(link).popover('hide');	
-		} else {
-			$(link).popover('show');	
-			e.stopPropagation();
-			$(window).bind('click.popover', function() {
-				$(link).popover('hide');		
-				$(window).unbind('click.popover');
-			});
-		}
-	}
-	
-	ccm_toggleQuickNav = function(cID, token) {
-		var l = $("#ccm-add-to-quick-nav");
-		if (l.hasClass('ccm-icon-favorite-selected')) {
-			l.removeClass('ccm-icon-favorite-selected').addClass('ccm-icon-favorite');
-		} else {
-			l.removeClass('ccm-icon-favorite').addClass('ccm-icon-favorite-selected');
-		}
-		var accepter = $('#ccm-nav-dashboard');
-		var title = l.parent().parent().parent().find('h3');
-		title.css('display','inline');
-		title.effect("transfer", { to: accepter, 'easing': 'easeOutExpo'}, 600);
-		$.get(CCM_TOOLS_PATH + '/dashboard/add_to_quick_nav', {
-			'cID': cID,
-			'token': token
-		}, function(r) {
-			var div = $('<div />').html(r);
-			$('#ccm-intelligent-search-results').html(div.find('#ccm-intelligent-search-results').html());
-			$('#ccm-dashboard-overlay').html(div.find('#ccm-dashboard-overlay').html());
-			div = false;
+	var $toolbar = $('#ccm-toolbar');
+	var $searchInput = $('#ccm-nav-intelligent-search');
+	var $searchResults = $('#ccm-intelligent-search-results');
+	var remotesearchquery, ajaxtimer;
+
+	setupToolbarMenus = function() {
+		$('a[data-toggle=ccm-toolbar-hover-menu]').hoverIntent(function() {
+			$('.ccm-toolbar-hover-menu').hide();
+			$($(this).data('toggle-menu')).show();
+		}, function() {
+
+		});
+
+
+		$(document).on('click.ccm-toolbar', function() {
+			$('.ccm-toolbar-hover-menu').hide();
+		});
+
+		$toolbar.find('#ccm-toolbar').on('click', function(e) {
+			e.stopPropagation(); // so we don't close menus if we click on the toolbar buttons themselves.
+		});
+
+		$toolbar.find('#ccm-exit-edit-mode-comment form').on('click', function(e) {
+			e.stopPropagation(); // so we don't close menus if we click on the toolbar buttons themselves.
+		});
+
+		$($toolbar.find('.ccm-toolbar-hover-menu a')).on('click', function() {
+			$('.ccm-toolbar-hover-menu').hide();
+		});
+
+		$toolbar.find('#ccm-exit-edit-mode-publish-menu a').on('click', function() {
+			switch($(this).data('publish-action')) {
+				case 'approve':
+					$('#ccm-approve-field').val('APPROVE');
+					break;
+				case 'discard':
+					$('#ccm-approve-field').val('DISCARD');
+					break;
+			}
+
+			$('#ccm-exit-edit-mode-comment form').submit();
 		});
 	}
-	
-	var ccm_hideToolbarMenusTimer = false;
-	ccm_hideToolbarMenus = function() {
-		$(".ccm-system-nav-selected").removeClass('ccm-system-nav-selected');
-		$(".ccm-system-nav-selected").removeClass('ccm-system-nav-selected');
-		$('#ccm-edit-overlay').fadeOut(90, 'easeOutExpo');
-		$('#ccm-dashboard-overlay').fadeOut(90, 'easeOutExpo');
-		clearTimeout(ccm_hideToolbarMenusTimer);
-	}
-	
-	ccm_activateToolbar = function() {
-		
-		$("#ccm-dashboard-overlay").css('visibility','visible').hide();
-	
-		$("#ccm-nav-intelligent-search-wrapper").click(function() {
-			$("#ccm-nav-intelligent-search").focus();
-		});
-		$("#ccm-nav-intelligent-search").focus(function() {
-			$(".ccm-system-nav-selected").removeClass('ccm-system-nav-selected');
-			$(this).parent().addClass("ccm-system-nav-selected");
-			if ($("#ccm-dashboard-overlay").is(':visible')) {
-				$('#ccm-dashboard-overlay').fadeOut(90, 'easeOutExpo');
-				$(window).unbind('click.dashboard-nav');
+
+	setupStatusBar = function() {
+		$('#ccm-page-status-bar .alert').bind('closed', function() {
+			$(this).remove();
+			var visi = $('#ccm-page-status-bar .alert:visible').length;
+			if (visi == 0) {
+				$('#ccm-page-status-bar').remove();
 			}
 		});
-		
-		$(".ccm-nav-edit-mode-active").click(function() {
-			void(0);
-			return false;
-		});
-		
-		$("#ccm-edit-overlay,#ccm-dashboard-overlay").mouseover(function() {
-			clearTimeout(ccm_hideToolbarMenusTimer);
-		});
-		
-		$("#ccm-nav-dashboard").hoverIntent(function() {
-			clearTimeout(ccm_hideToolbarMenusTimer);
-			$(".ccm-system-nav-selected").removeClass('ccm-system-nav-selected');
-			$(this).parent().addClass('ccm-system-nav-selected');
-			$("#ccm-nav-intelligent-search").val('');
-			$("#ccm-intelligent-search-results").fadeOut(90, 'easeOutExpo');
-	
-			if ($('#ccm-edit-overlay').is(':visible')) {
-				$('#ccm-edit-overlay').fadeOut(90, 'easeOutExpo');
-				$(window).unbind('click.ccm-edit');
+
+		$('#ccm-page-status-bar .ccm-status-bar-ajax-form').ajaxForm({
+			dataType: 'json',
+			beforeSubmit: function() {
+				jQuery.fn.dialog.showLoader();
+			},
+			success: function(r) {
+				if (r.redirect) {
+					window.location.href = r.redirect;
+				}
 			}
-	
-			/*if ($('#ccm-dashboard-overlay').is(':visible')) {
-				$(".ccm-system-nav-selected").removeClass('ccm-system-nav-selected');
-				$('#ccm-dashboard-overlay').fadeOut(90, 'easeOutExpo');
-				$(window).unbind('click.dashboard-nav');
-			} else {*/
-				$("#ccm-dashboard-overlay").fadeIn(160, 'easeOutExpo');
-				$(window).bind('click.dashboard-nav', function() {
-					$(".ccm-system-nav-selected").removeClass('ccm-system-nav-selected');
-					$('#ccm-dashboard-overlay').fadeOut(90, 'easeOutExpo');
-					$(window).unbind('click.dashboard-nav');
-				});
-			//}
-			return false;
-		}, function() {});
-		
-		$("#ccm-nav-dashboard,#ccm-dashboard-overlay,#ccm-nav-edit,#ccm-edit-overlay").mouseout(function() {
-			ccm_hideToolbarMenusTimer = setTimeout(function() {
-				ccm_hideToolbarMenus();
-			}, 1500);
 		});
-	
-		$("#ccm-nav-intelligent-search").bind('keydown.ccm-intelligent-search', function(e) {
+	}
+
+	setupIntelligentSearch = function() {
+		$searchInput.bind('keydown.ccm-intelligent-search', function(e) {
 			if (e.keyCode == 13 || e.keyCode == 40 || e.keyCode == 38) {
 				e.preventDefault();
 				e.stopPropagation();
@@ -145,100 +105,18 @@ $(function() {
 				}
 			} 
 		});
-	
-		$("#ccm-nav-intelligent-search").bind('keyup.ccm-intelligent-search', function(e) {
-			ccm_intelligentSearchDoRemoteCalls($(this).val());
+
+		$searchInput.liveUpdate('ccm-intelligent-search-results', 'intelligent-search');
+		$searchInput.bind('keyup.ccm-intelligent-search', function(e) {
+			doRemoteSearchCall($(this).val());
 		});
-	
-		$("#ccm-nav-intelligent-search").blur(function() {
-			$(this).parent().removeClass("ccm-system-nav-selected");
-		});
-		
-		
-		$("#ccm-nav-intelligent-search").liveUpdate('ccm-intelligent-search-results', 'intelligent-search');
-		$("#ccm-nav-intelligent-search").bind('click', function(e) { if ( this.value=="") { 
-			$("#ccm-intelligent-search-results").hide();
+		$searchInput.bind('click', function(e) { if ( this.value=="") { 
+			$searchResults.hide();
 		}});
-		
-		$("#ccm-toolbar-nav-properties").dialog();
-		$("#ccm-toolbar-nav-preview-as-user").dialog();
-		$("#ccm-toolbar-add-subpage").dialog();
-		$("#ccm-toolbar-nav-versions").dialog();
-		$("#ccm-toolbar-nav-design").dialog();
-		$("#ccm-toolbar-nav-permissions").dialog();
-		$("#ccm-toolbar-nav-speed-settings").dialog();
-		$("#ccm-toolbar-nav-move-copy").dialog();
-		$("#ccm-toolbar-nav-delete").dialog();
-
-		$("#ccm-edit-overlay,#ccm-dashboard-overlay").click(function(e) {
-			e.stopPropagation();
-		});
-	
-		
-		$("#ccm-nav-edit").hoverIntent(function() {
-			clearTimeout(ccm_hideToolbarMenusTimer);
-			$(".ccm-system-nav-selected").removeClass('ccm-system-nav-selected');
-			$(this).parent().addClass('ccm-system-nav-selected');
-			$("#ccm-nav-intelligent-search").val('');
-			$("#ccm-intelligent-search-results").fadeOut(90, 'easeOutExpo');
-	
-			if ($('#ccm-dashboard-overlay').is(':visible')) {
-				$('#ccm-dashboard-overlay').fadeOut(90, 'easeOutExpo');
-				$(window).unbind('click.dashboard-nav');
-			}
-	
-			/*if ($('#ccm-edit-overlay').is(':visible')) {
-				$(".ccm-system-nav-selected").removeClass('ccm-system-nav-selected');
-				$('#ccm-edit-overlay').fadeOut(90, 'easeOutExpo');
-				$(window).unbind('click.ccm-edit');
-			} else {*/
-				setTimeout("$('#ccm-check-in-comments').focus();",300);
-				$("#ccm-check-in-preview").click(function() {
-					$("#ccm-approve-field").val('PREVIEW');
-					$("#ccm-check-in").submit();
-				});
-			
-				$("#ccm-check-in-discard").click(function() {
-					$("#ccm-approve-field").val('DISCARD');
-					$("#ccm-check-in").submit();
-				});
-			
-				$("#ccm-check-in-publish").click(function() {
-					$("#ccm-approve-field").val('APPROVE');
-					$("#ccm-check-in").submit();
-				});
-				/*
-				var posX = $(this).position().left;
-				if (posX > 0) {
-					posX = posX - 20; // BACK it up!
-				}
-				*/
-				var posX = 30;
-
-				$("#ccm-edit-overlay").css('left', posX + "px");
-				$("#ccm-edit-overlay").fadeIn(160, 'easeOutExpo', function() {
-					$(this).find('a').click(function() {
-						ccm_toolbarCloseEditMenu();
-					});
-				});
-				$(window).bind('click.ccm-edit', function() {
-					ccm_toolbarCloseEditMenu();				
-				});
-			//}
-			return false;
-		}, function() {});
 
 	}
-	var ajaxtimer = null;
-	var ajaxquery = null;
 
-	ccm_toolbarCloseEditMenu = function() {
-		$(".ccm-system-nav-selected").removeClass('ccm-system-nav-selected');
-		$('#ccm-edit-overlay').fadeOut(90, 'easeOutExpo');
-		$(window).unbind('click.ccm-edit');
-	}
-	
-	ccm_intelligentSearchActivateResults = function() {
+	activateIntelligentSearchResults = function() {
 		if ($("#ccm-intelligent-search-results div:visible").length == 0) {
 			$("#ccm-intelligent-search-results").hide();
 		}
@@ -249,21 +127,22 @@ $(function() {
 			$(this).removeClass('ccm-intelligent-search-result-selected');
 		});
 	}
-	
-	ccm_intelligentSearchDoRemoteCalls = function(query) {	
+
+
+	doRemoteSearchCall = function(query) {	
 		query = jQuery.trim(query);
 		if (!query) {
 			return;
 		}
 		if (query.length > 2) {
-			if (query == ajaxquery) {
+			if (query == remotesearchquery) {
 				return;
 			}
 			
 			if (ajaxtimer) {
 				window.clearTimeout(ajaxtimer);
 			}
-			ajaxquery = query;
+			remotesearchquery = query;
 			ajaxtimer = window.setTimeout(function() {
 				ajaxtimer = null;
 				$("#ccm-intelligent-search-results-list-marketplace").parent().show();
@@ -274,7 +153,7 @@ $(function() {
 				$("#ccm-intelligent-search-results-list-your-site").parent().addClass('ccm-intelligent-search-results-module-loading');
 	
 				$.getJSON(CCM_TOOLS_PATH + '/marketplace/intelligent_search', {
-					'q': ajaxquery
+					'q': remotesearchquery
 				},
 				function(r) {
 					$("#ccm-intelligent-search-results-list-marketplace").parent().removeClass('ccm-intelligent-search-results-module-loading');
@@ -291,13 +170,13 @@ $(function() {
 						$("#ccm-intelligent-search-results").find('li a').removeClass('ccm-intelligent-search-result-selected');
 						$("#ccm-intelligent-search-results li:visible a:first").addClass('ccm-intelligent-search-result-selected');
 					}
-					ccm_intelligentSearchActivateResults();
+					activateIntelligentSearchResults();
 				}).error(function() {
 					$("#ccm-intelligent-search-results-list-marketplace").parent().hide();
 				});
 	
 				$.getJSON(CCM_TOOLS_PATH + '/get_remote_help', {
-					'q': ajaxquery
+					'q': remotesearchquery
 				},
 				function(r) {
 
@@ -314,14 +193,14 @@ $(function() {
 						$("#ccm-intelligent-search-results").find('li a').removeClass('ccm-intelligent-search-result-selected');
 						$("#ccm-intelligent-search-results li:visible a:first").addClass('ccm-intelligent-search-result-selected');
 					}
-					ccm_intelligentSearchActivateResults();
+					activateIntelligentSearchResults();
 
 				}).error(function() {
 					$("#ccm-intelligent-search-results-list-help").parent().hide();
 				});
 
 				$.getJSON(CCM_TOOLS_PATH + '/pages/intelligent_search', {
-					'q': ajaxquery
+					'q': remotesearchquery
 				},
 				function(r) {
 
@@ -338,7 +217,7 @@ $(function() {
 						$("#ccm-intelligent-search-results").find('li a').removeClass('ccm-intelligent-search-result-selected');
 						$("#ccm-intelligent-search-results li:visible a:first").addClass('ccm-intelligent-search-result-selected');
 					}
-					ccm_intelligentSearchActivateResults();
+					activateIntelligentSearchResults();
 
 				}).error(function() {
 					$("#ccm-intelligent-search-results-list-your-site").parent().hide();
@@ -346,3 +225,30 @@ $(function() {
 			}, 500);
 		}
 	}
+
+	return {
+		start: function() {
+			if ($toolbar.length > 0) {
+
+				$toolbar.find('.dialog-launch').dialog();
+
+				setupToolbarMenus();				
+				setupStatusBar();
+				setupIntelligentSearch();
+
+				// make sure that dashboard dropdown doesn't get dismissed if you mis-click inside it;
+				$('#ccm-toolbar-menu-dashboard').on('click', function(e) {
+					e.stopPropagation();
+				});
+			}
+		},
+
+		disableDirectExit: function() {
+			$('li.ccm-toolbar-page-edit a').attr('data-toggle-menu', '#ccm-exit-edit-mode-comment');
+			setupToolbarMenus();				
+		}
+
+
+	}
+
+}();

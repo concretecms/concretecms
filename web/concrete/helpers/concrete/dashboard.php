@@ -243,8 +243,7 @@ class ConcreteDashboardHelper {
 			
 
 			if (count($_SESSION['ccmQuickNavRecentPages']) > 0) { ?>
-				<ul class="breadcrumb">
-				<li><strong><?=t('Recent')?></strong> <span class="divider" style="padding-right: 5px; padding-left: 3px;">:</span></li>
+				<ul class="ccm-dashboard-recent-pages">
 				<?php
 				$i = 0;
 				$recentPages = array_reverse($_SESSION['ccmQuickNavRecentPages']); //display most-recent first
@@ -253,7 +252,7 @@ class ConcreteDashboardHelper {
 					$name = t('(No Name)');
 					$divider = '';
 					if (isset($_SESSION['ccmQuickNavRecentPages'][$i+1])) {
-						$divider = '<span class="divider">|</span>';
+						$divider = '<span class="dashboard-divider">></span>';
 					}
 					if ($_c->getCollectionName()) {
 						$name = $_c->getCollectionName();
@@ -273,9 +272,9 @@ class ConcreteDashboardHelper {
 
 	public function getDashboardAndSearchMenus() {
 
-		if (isset($_SESSION['dashboardMenus'])) {
-			return $_SESSION['dashboardMenus'];
-		}
+//		if (isset($_SESSION['dashboardMenus'])) {
+//			return $_SESSION['dashboardMenus'];
+//		}
 				
 		$d = ConcreteDashboardMenu::getMine();
 		$items = $d->getItems();
@@ -392,16 +391,34 @@ class ConcreteDashboardHelper {
 				<? } ?>				
 			</div>
 			
-			<div id="ccm-dashboard-overlay">
-			<div id="ccm-dashboard-overlay-core">
-			<div class="ccm-dashboard-overlay-inner" id="ccm-dashboard-overlay-main">
-			
+			<div id="ccm-toolbar-menu-dashboard" class="ccm-toolbar-hover-menu dropdown-menu">
+			<div id="ccm-dashboard-dropdown-recent" class="ccm-dashboard-dropdown-inner">
+
+			<h6><?=t('Recent')?></h6>
 			<!--recent-->
-						
-			
-			<? 
-			$currentHeader = false;
-			$x = 0;
+
+			</div>
+			<div id="ccm-dashboard-dropdown-favorites" class="ccm-dashboard-dropdown-inner">
+				<h6><?=t('Favorites')?>
+					<span class="dashboard-divider">|</span>
+					<a href="<?=View::url('/dashboard')?>"><?=t('Full Dashboard')?></a>
+				</h6>
+				<ul>
+				<?
+				foreach($items as $path) { 
+				$p = Page::getByPath($path, 'ACTIVE');
+				$pc = new Permissions($p);
+				if ($pc->canViewPage()) {
+					$name = t($p->getCollectionName()); ?>
+					<li><a href="<?=Loader::helper('navigation')->getLinkTocollection($p)?>"><?=$name?></a></li>
+				<? } 
+
+				} ?>
+				</ul>
+			</div>
+
+
+			<? /*
 			foreach($items as $path) { 
 			
 				$p = Page::getByPath($path, 'ACTIVE');
@@ -508,6 +525,7 @@ class ConcreteDashboardHelper {
 			<a href="<?=View::url('/dashboard')?>"><?=t('View Full Dashboard')?>  <i class="icon-arrow-right"></i></a>
 			</div>
 			</div>
+			*/ ?>
 			</div>
 		<?
 			$html = ob_get_contents();
