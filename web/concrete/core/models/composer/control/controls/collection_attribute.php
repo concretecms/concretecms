@@ -25,4 +25,8 @@ class Concrete5_Model_CollectionAttributeComposerControl extends ComposerControl
 		include($template);
 	}
 
+	public function publishToPage(Page $c, $data, $controls) {
+	}
+
+
 }

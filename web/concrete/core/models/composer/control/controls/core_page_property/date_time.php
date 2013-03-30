@@ -8,4 +8,10 @@ class Concrete5_Model_DateTimeCorePagePropertyComposerControl extends CorePagePr
 		$this->setComposerControlIconSRC(ASSETS_URL . '/models/attribute/types/date_time/icon.png');
 	}
 
+	public function publishToPage(Page $c, $data, $controls) {
+		$this->addComposerControlRequestValue('cDatePublic', Loader::helper('form/date_time')->translate('date_time', $data));
+		parent::publishToPage($c, $data, $controls);
+	}
+
+
 }
