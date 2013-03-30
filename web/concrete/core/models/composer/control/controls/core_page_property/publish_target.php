@@ -8,4 +8,5 @@ class Concrete5_Model_PublishTargetCorePagePropertyComposerControl extends CoreP
 		$this->setComposerControlIconSRC(ASSETS_URL . '/models/attribute/types/image_file/icon.png');
 	}
 
+
 }

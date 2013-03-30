@@ -4,6 +4,19 @@ abstract class Concrete5_Model_CorePagePropertyComposerControl extends ComposerC
 
 	protected $propertyHandle;
 	protected $cmpControlTypeHandle = 'core_page_property';
+	private static $cmpSaveRequest = null;
+	private static $cmpRequestControlsProcessed = array();
+	
+	public static function getComposerSaveRequest() {
+		if (null === self::$cmpSaveRequest) {
+			self::$cmpSaveRequest = array();
+		}
+		return self::$cmpSaveRequest;
+	}
+
+	public function addComposerControlRequestValue($key, $value) {
+		self::$cmpSaveRequest[$key] = $value;
+	}	
 
 	public function setCorePagePropertyHandle($propertyHandle) {
 		$this->setComposerControlIdentifier($propertyHandle);
@@ -17,6 +30,23 @@ abstract class Concrete5_Model_CorePagePropertyComposerControl extends ComposerC
 	public function getComposerControlCustomTemplates() {
 		return array();
 	}
+
+	public function publishToPage(Page $c, $data, $controls) {
+		array_push(self::$cmpRequestControlsProcessed, $this);
+		// now we check to see if we have any more core controls to process in this request
+		$coreControls = array();
+		foreach($controls as $cnt) {
+			if ($cnt->getComposerControlTypeHandle() == $this->cmpControlTypeHandle) {
+				$coreControls[] = $controls;
+			}
+		}
+		if (count(self::$cmpRequestControlsProcessed) == count($coreControls)) {
+			// this was the last one. so we're going to loop through our saved request
+			// and do the page update once, rather than four times.
+			$c->update(self::$cmpSaveRequest);
+		}
+	}
+
 
 	public function render($label, $customTemplate) {
 		$env = Environment::get();

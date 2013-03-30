@@ -8,4 +8,10 @@ class Concrete5_Model_UserCorePagePropertyComposerControl extends CorePageProper
 		$this->setComposerControlIconSRC(ASSETS_URL . '/models/attribute/types/text/icon.png');
 	}
 
+	public function publishToPage(Page $c, $data, $controls) {
+		$this->addComposerControlRequestValue('uID', $data['user']);
+		parent::publishToPage($c, $data, $controls);
+	}
+
+
 }

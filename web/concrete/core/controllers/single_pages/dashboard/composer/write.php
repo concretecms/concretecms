@@ -44,8 +44,10 @@ class Concrete5_Controller_Dashboard_Composer_Write extends DashboardBaseControl
 			// create the page
 			$d = $this->composer->createDraft($ct);
 			$controls = ComposerControl::getList($this->composer);
+			$dc = $d->getComposerDraftCollectionObject();
 			foreach($controls as $cn) {
-				print_r($cn);
+				$data = $cn->getRequestValue();
+				$cn->publishToPage($dc, $data, $controls);
 			}
 		}
 

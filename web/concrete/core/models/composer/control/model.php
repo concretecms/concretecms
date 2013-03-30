@@ -9,6 +9,7 @@ abstract class Concrete5_Model_ComposerControl extends Object {
 
 	abstract public function getComposerControlCustomTemplates();
 	abstract public function render($label, $customTemplate);
+	abstract public function publishToPage(Page $c, $data, $controls);
 
 	public function setComposerControlName($cmpControlName) {
 		$this->cmpControlName = $cmpControlName;
@@ -38,6 +39,10 @@ abstract class Concrete5_Model_ComposerControl extends Object {
 		return ComposerControlType::getByHandle($this->cmpControlTypeHandle);
 	}
 
+	public function getComposerControlTypeHandle() {
+		return $this->cmpControlTypeHandle;
+	}
+
 	public function setComposerFormLayoutSetControlObject(ComposerFormLayoutSetControl $setcontrol) {
 		$this->cmpFormLayoutSetControlObject = $setcontrol;
 	}
@@ -48,6 +53,13 @@ abstract class Concrete5_Model_ComposerControl extends Object {
 
 	public function field($key) {
 		return 'cmp[' . $this->cmpFormLayoutSetControlObject->getComposerFormLayoutSetControlID(). '][' . $key . ']';
+	}
+
+	public function getRequestValue($args = false) {
+		if (!$args) {
+			$args = $_POST;
+		}
+		return $args['cmp'][$this->cmpFormLayoutSetControlObject->getComposerFormLayoutSetControlID()];
 	}
 
 	public function addToComposerFormLayoutSet(ComposerFormLayoutSet $set) {
@@ -69,7 +81,9 @@ abstract class Concrete5_Model_ComposerControl extends Object {
 		foreach($sets as $s) {
 			$setControls = ComposerFormLayoutSetControl::getList($s);
 			foreach($setControls as $sc) {
-				$controls[] = $sc->getComposerControlObject();
+				$cnt = $sc->getComposerControlObject();
+				$cnt->setComposerFormLayoutSetControlObject($sc);
+				$controls[] = $cnt;
 			}
 		}
 		return $controls;

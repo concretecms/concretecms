@@ -49,4 +49,10 @@ class Concrete5_Model_BlockComposerControl extends ComposerControl {
 		$template = $env->getPath(DIRNAME_ELEMENTS . '/' . DIRNAME_COMPOSER . '/' . DIRNAME_COMPOSER_ELEMENTS_CONTROLS . '/' . $this->cmpControlTypeHandle . '.php');
 		include($template);
 	}
+
+	public function publishToPage(Page $c, $data, $controls) {
+
+	}
+
+
 }
