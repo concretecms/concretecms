@@ -6,6 +6,9 @@ class Concrete5_Model_ComposerDraft extends Object {
 
 	public function getComposerDraftID() {return $this->cmpDraftID;}
 	public function getComposerID() {return $this->cmpID;}
+	public function getComposerObject() {
+		return Composer::getByID($this->cmpID);
+	}
 	public function getComposerDraftDateCreated() {return $this->cmpDateCreated;}
 	public function getComposerDraftUserID() {return $this->uID;}
 	public function getComposerDraftCollectionID() {return $this->cID;}
@@ -27,6 +30,20 @@ class Concrete5_Model_ComposerDraft extends Object {
 			$cm->setPropertiesFromArray($r);
 			return $cm;
 		}
+	}
+
+	public function getMyDrafts() {
+		$db = Loader::db();
+		$u = new User();
+		$r = $db->Execute('select ComposerDrafts.cmpDraftID from ComposerDrafts where uID = ? order by cmpDateCreated desc', array($u->getUserID()));
+		$pages = array();
+		while ($row = $r->FetchRow()) {
+			$entry = ComposerDraft::getByID($row['cmpDraftID']);
+			if (is_object($entry)) {
+				$pages[] = $entry;
+			}
+		}
+		return $pages;		
 	}
 
 	public function setComposerDraftTargetParentPageID($cParentID) {

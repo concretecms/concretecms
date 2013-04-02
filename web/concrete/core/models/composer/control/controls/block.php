@@ -81,7 +81,10 @@ class Concrete5_Model_BlockComposerControl extends ComposerControl {
 
 	public function addToComposerFormLayoutSet(ComposerFormLayoutSet $set) {
 		$layoutSetControl = parent::addToComposerFormLayoutSet($set);
-		ComposerOutputControl::add($layoutSetControl, STACKS_AREA_NAME);
+		$composer = $set->getComposerObject();
+		foreach($composer->getComposerPageTypeObjects() as $ct) {
+			ComposerOutputControl::add($layoutSetControl, $ct, STACKS_AREA_NAME);
+		}
 		return $layoutSetControl;
 	}
 
@@ -89,6 +92,9 @@ class Concrete5_Model_BlockComposerControl extends ComposerControl {
 		$env = Environment::get();
 		$form = Loader::helper('form');
 		$bt = $this->getBlockTypeObject();
+		$set = $this->getComposerFormLayoutSetControlObject()->getComposerFormLayoutSetObject();
+		$control = $this;
+
 		if ($customTemplate) {
 			$rec = $env->getRecord(DIRNAME_BLOCKS . '/' . $bt->getBlockTypeHandle() . '/' . DIRNAME_BLOCK_TEMPLATES_COMPOSER . '/' . $customTemplate);
 			if ($rec->exists()) {
@@ -114,11 +120,16 @@ class Concrete5_Model_BlockComposerControl extends ComposerControl {
 		include($env->getPath(DIRNAME_BLOCKS . '/' . $bt->getBlockTypeHandle() . '/' . $file));
 	}
 
+	public function getComposerControlDraftValue() {
+
+	}
+	
 	public function publishToPage(ComposerDraft $d, $data, $controls) {
 		$c = $d->getComposerDraftCollectionObject();
 		// for blocks, we need to also grab their output 
 		$bt = $this->getBlockTypeObject();
-		$outputControl = $this->getComposerFormLayoutSetControlObject()->getComposerOutputControlObject();
+		$ct = CollectionType::getByID($c->getCollectionTypeID());
+		$outputControl = $this->getComposerFormLayoutSetControlObject()->getComposerOutputControlObject($ct);
 		$arHandle = $outputControl->getComposerOutputControlAreaHandle();
 		$ax = Area::getOrCreate($c, $arHandle);
 		$b = $c->addBlock($bt, $ax, $data);

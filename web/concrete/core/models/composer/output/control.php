@@ -8,28 +8,35 @@ class Concrete5_Model_ComposerOutputControl extends Object {
 	public function getComposerFormLayoutSetID() {return $this->cmpFormLayoutSetID;}
 	public function getComposerOutputControlAreaHandle() {return $this->arHandle;}
 
-	public static function add(ComposerFormLayoutSetControl $control, $arHandle) {
+	public static function add(ComposerFormLayoutSetControl $control, CollectionType $ct, $arHandle) {
 
 		$set = $control->getComposerFormLayoutSetObject();
 		$composer = $set->getComposerObject();
 
 		$db = Loader::db();
-		$displayOrder = $db->GetOne('select count(cmpOutputControlID) from ComposerOutputControls where cmpID = ? and arHandle = ?', array($composer->getComposerID(), $arHandle));
+		$displayOrder = $db->GetOne('select count(cmpOutputControlID) from ComposerOutputControls where cmpID = ? and ctID = ? and arHandle = ?', array($composer->getComposerID(), $ct->getCollectionTypeID(), $arHandle));
 		if (!$displayOrder) {
 			$displayOrder = 0;
 		}
 
-		$db->Execute('insert into ComposerOutputControls (arHandle, cmpID, cmpFormLayoutSetControlID, cmpOutputControlDisplayOrder) values (?, ?, ?, ?)', array(
-			$arHandle, $composer->getComposerID(), $control->getComposerFormLayoutSetControlID(), $displayOrder
+		$db->Execute('insert into ComposerOutputControls (arHandle, cmpID, ctID, cmpFormLayoutSetControlID, cmpOutputControlDisplayOrder) values (?, ?, ?, ?, ?)', array(
+			$arHandle, $composer->getComposerID(), $ct->getCollectionTypeID(), $control->getComposerFormLayoutSetControlID(), $displayOrder
 		));
 		$cmpOutputControlID = $db->Insert_ID();
 		return ComposerOutputControl::getByID($cmpOutputControlID);
 	}
 
-	public static function getList(Composer $composer, $arHandle) {
+	public static function getCollectionTypeAreas(CollectionType $ct) {
+		$mc = $ct->getMasterTemplate();
 		$db = Loader::db();
-		$cmpOutputControlIDs = $db->GetCol('select cmpOutputControlID from ComposerOutputControls where cmpID = ? and arHandle = ? order by cmpOutputControlDisplayOrder asc', array(
-			$composer->getComposerID(), $arHandle
+		$areas = $db->GetCol('select distinct arHandle from Areas where cID = ? and arIsGlobal = 0', array($mc->getCollectionID()));
+		return $areas;
+	}
+
+	public static function getList(Composer $composer, CollectionType $ct, $arHandle) {
+		$db = Loader::db();
+		$cmpOutputControlIDs = $db->GetCol('select cmpOutputControlID from ComposerOutputControls where cmpID = ? and ctID = ? and arHandle = ? order by cmpOutputControlDisplayOrder asc', array(
+			$composer->getComposerID(), $ct->getCollectionTypeID(), $arHandle
 		));
 		$list = array();
 		foreach($cmpOutputControlIDs as $cmpOutputControlID) {

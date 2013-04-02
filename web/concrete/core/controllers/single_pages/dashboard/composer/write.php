@@ -3,19 +3,31 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 class Concrete5_Controller_Dashboard_Composer_Write extends DashboardBaseController {
 
-	public function view($cmpID = false) {
-		$this->composer = Composer::getByID($cmpID);
+	public function view($type = false, $id = false) {
+		switch($type) {
+			case 'composer':
+				$this->composer = Composer::getByID($id);
+				break;
+			case 'draft':
+				$this->draft = ComposerDraft::getByID($id);
+				if (is_object($this->draft)) {
+					$this->composer = $this->draft->getComposerObject();
+				}
+				break;
+		}
+
 		if (!is_object($this->composer)) {
 			$composers = Composer::getList();
 			if (count($composers) == 1) {
 				$cmp = $composers[0];
-				$this->redirect('/dashboard/composer/write', $cmp->getComposerID());
+				$this->redirect('/dashboard/composer/write', 'composer', $cmp->getComposerID());
 			} else {
 				$this->set('composers', $composers);
 			}
 		} else {
 			$this->set('composer', $this->composer);
 			$this->set('fieldsets', ComposerFormLayoutSet::getList($this->composer));
+			$this->set('draft', $this->draft);
 			$this->setupAssets();
 		}
 	}
@@ -51,12 +63,12 @@ class Concrete5_Controller_Dashboard_Composer_Write extends DashboardBaseControl
 		}
 	}
 
-	public function save($cmpID = false) {
+	public function save($cmpID = false, $return = 'json') {
 		Cache::disableCache();
 		Cache::disableLocalCache();
 		session_write_close();
 
-		$this->view($cmpID);
+		$this->view('composer', $cmpID);
 		$ct = CollectionType::getByID($this->post('cmpPageTypeID'));
 		$availablePageTypes = $this->composer->getComposerPageTypeObjects();
 
@@ -83,7 +95,14 @@ class Concrete5_Controller_Dashboard_Composer_Write extends DashboardBaseControl
 				$targetPageID = $this->post('cParentID');
 			}
 			$d->setComposerDraftTargetParentPageID($targetPageID);
-			$this->publish($d, $outputControls);
+			if ($return == 'json') {
+				$ax = Loader::helper('ajax');
+				$r = new stdClass;
+				$r->time = date('F d, Y g:i A');
+				$r->cmpDraftID = $d->getComposerDraftID();
+				$ax->sendResult($r);
+			}
+			//$this->publish($d, $outputControls);
 		}
 	}
 

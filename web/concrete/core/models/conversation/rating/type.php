@@ -25,7 +25,7 @@ abstract class Concrete5_Model_ConversationRatingType extends Object {
 			$pkgID = $pkg->getPackageID();
 		}
 		$db = Loader::db();
-		$db->Execute('insert into ConversationRatingTypes (cnvRatingTypeHandle, cnvRatingTypeName, cnvRatingTypeCommunityPoints, pkgID) values (?, ?, ?, ?)', array($cnvRatingTypeHandle, $cnvRatingTypeName, $pkgID, $cnvRatingTypeCommunityPoints));
+		$db->Execute('insert into ConversationRatingTypes (cnvRatingTypeHandle, cnvRatingTypeName, cnvRatingTypeCommunityPoints, pkgID) values (?, ?, ?, ?)', array($cnvRatingTypeHandle, $cnvRatingTypeName, $cnvRatingTypeCommunityPoints, $pkgID));
 		return ConversationRatingType::getByHandle($cnvRatingTypeHandle);
 	}
 

@@ -16,9 +16,14 @@ class Concrete5_Model_ComposerFormLayoutSetControl extends Object {
 		return $this->getComposerFormLayoutSetControlID();
 	}
 
+	public function setComposerDraftObject($cmpDraftObject) {
+		$this->cmpDraftObject = $cmpDraftObject;
+	}
+
 	public function render() {
 		$control = $this->getComposerControlObject();
 		$control->setComposerFormLayoutSetControlObject($this);
+		$control->setComposerDraftObject($this->cmpDraftObject);
 		$control->render($this->getComposerControlLabel(), $this->getComposerFormLayoutSetControlCustomTemplate());
 	}
 
@@ -90,9 +95,9 @@ class Concrete5_Model_ComposerFormLayoutSetControl extends Object {
 		$this->cmpFormLayoutSetControlCustomTemplate = $template;
 	}
 
-	public function getComposerOutputControlObject() {
+	public function getComposerOutputControlObject(CollectionType $ct) {
 		$db = Loader::db();
-		$cmpOutputControlID = $db->GetOne('select cmpOutputControlID from ComposerOutputControls where cmpFormLayoutSetControlID = ?', array($this->cmpFormLayoutSetControlID));
+		$cmpOutputControlID = $db->GetOne('select cmpOutputControlID from ComposerOutputControls where cmpFormLayoutSetControlID = ? and ctID = ?', array($this->cmpFormLayoutSetControlID, $ct->getCollectionTypeID()));
 		if ($cmpOutputControlID) {
 			return ComposerOutputControl::getByID($cmpOutputControlID);
 		}

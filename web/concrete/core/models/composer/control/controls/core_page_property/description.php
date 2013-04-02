@@ -26,5 +26,11 @@ class Concrete5_Model_DescriptionCorePagePropertyComposerControl extends CorePag
 		return $data;
 	}
 
+	public function getComposerControlDraftValue() {
+		$c = $this->cmpDraftObject->getComposerDraftCollectionObject();
+		return $c->getCollectionDescription();
+	}
+	
+
 
 }

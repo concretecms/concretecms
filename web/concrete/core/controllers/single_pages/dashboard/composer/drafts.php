@@ -5,8 +5,7 @@ Loader::model('collection_types');
 class Concrete5_Controller_Dashboard_Composer_Drafts extends Controller {
 
 	public function on_start() {
-		$this->set('disableThirdLevelNav', true);
-		$this->set('drafts', ComposerPage::getMyDrafts());
+		$this->set('drafts', ComposerDraft::getMyDrafts());
 	}
 	
 	public function draft_discarded() {

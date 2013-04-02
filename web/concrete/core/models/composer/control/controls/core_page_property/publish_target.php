@@ -12,5 +12,9 @@ class Concrete5_Model_PublishTargetCorePagePropertyComposerControl extends CoreP
 		return false;
 	}
 
+	public function getComposerControlDraftValue() {
+	}
+	
+
 
 }

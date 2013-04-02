@@ -1,6 +1,5 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-$set = $control->getComposerFormLayoutSetObject();
 $composer = $set->getComposerObject();
 $target = $composer->getComposerTargetObject();
 ?>
