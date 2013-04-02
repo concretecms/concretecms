@@ -113,6 +113,12 @@ jQuery.fn.dialog.open = function(obj) {
 		
 		'open': function() {
 			$("body").css("overflow", "hidden");
+			var overlays = $('.ui-widget-overlay').length;
+			$('.ui-widget-overlay').each(function(i, obj) {
+				if ((i + 1) < overlays) {
+					$(this).css('opacity', 0);
+				}
+			});
 		},
 		'beforeClose': function() {
 			var nd = $(".ui-dialog").length;
@@ -137,6 +143,15 @@ jQuery.fn.dialog.open = function(obj) {
 					eval(obj.onDestroy);
 				}
 			}
+			var overlays = $('.ui-widget-overlay').length;
+			$('.ui-widget-overlay').each(function(i, obj) {
+				if ((i + 1) < overlays) {
+					$(this).css('opacity', 0);
+				} else {
+					$(this).css('opacity', 1);
+				}
+			});
+
 			nd--;
 		}
 	});		
@@ -202,7 +217,7 @@ jQuery.fn.dialog.replaceTop = function(r) {
 		} else {
 			var helpText = 'Help';
 		}
-		$("#ccm-dialog-content" + nd).parent().find('.ui-dialog-titlebar').append('<span class="ccm-dialog-help"><a href="javascript:void(0)" title="' + helpText + '" class="ccm-menu-help-trigger">Help</a></span>');
+		$("#ccm-dialog-content" + nd).parent().find('.ui-dialog-titlebar').append('<button class="ui-dialog-titlebar-help ccm-menu-help-trigger"></button>');
 		$("#ccm-dialog-content" + nd).parent().find('.ui-dialog-titlebar .ccm-menu-help-trigger').popover({content: function() {
 			return helpContent;			
 		}, placement: 'bottom', html: true, trigger: 'click'});
@@ -212,7 +227,7 @@ jQuery.fn.dialog.replaceTop = function(r) {
 jQuery.fn.dialog.showLoader = function(text) {
 	if (typeof(imgLoader)=='undefined' || !imgLoader || !imgLoader.src) return false; 
 	if ($('#ccm-dialog-loader').length < 1) {
-		$("body").append("<div id='ccm-dialog-loader-wrapper' class='ccm-ui'><div class='progress progress-striped active' style='width: 300px'><div class='bar' style='width: 100%;'></div></div></div>");//add loader to the page
+		$("body").append("<div id='ccm-dialog-loader-wrapper' class='ccm-ui'><div class='progress progress-striped active' style='width: 300px'><div class='progress-bar progress-bar-info' style='width: 100%;'></div></div></div>");//add loader to the page
 	}
 	if (text != null) {
 		$('#ccm-dialog-loader-text',$('#ccm-dialog-loader-wrapper')).remove();

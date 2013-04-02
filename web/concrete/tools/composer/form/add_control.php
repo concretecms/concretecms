@@ -12,7 +12,7 @@ if ($cp->canViewPage()) {
 	if ($_POST['cmpControlTypeID'] && $_POST['cmpControlIdentifier']) {
 		$type = ComposerControlType::getByID($_POST['cmpControlTypeID']);
 		$control = $type->getComposerControlByIdentifier($_POST['cmpControlIdentifier']);
-		$layoutSetControl = $set->addComposerControl($control);
+		$layoutSetControl = $control->addToComposerFormLayoutSet($set);
 		Loader::element('composer/form/layout_set/control', array('control' => $layoutSetControl));
 		exit;
 	}
@@ -77,6 +77,7 @@ $(function() {
 				jQuery.fn.dialog.hideLoader();
 				jQuery.fn.dialog.closeTop();
 				$('div[data-composer-form-layout-control-set-id=<?=$set->getComposerFormLayoutSetID()?>] div.ccm-composer-form-layout-control-set-inner').append(html);
+				$('a[data-command=edit-form-set-control]').dialog();
 			}
 		});
 

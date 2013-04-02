@@ -19,6 +19,18 @@ class Concrete5_Model_GlobalArea extends Area {
 	public function getAreaDisplayName() {
 		return t('Sitewide %s', $this->getAreaHandle());
 	}
+
+	public function getTotalBlocksInArea() {
+		$c = Page::getCurrentPage();
+		$cp = new Permissions($c);
+		if ($cp->canViewPageVersions()) {
+			$stack = Stack::getByName($this->arHandle);
+		} else {
+			$stack = Stack::getByName($this->arHandle, 'ACTIVE');
+		}
+		$ax = Area::get($stack, STACKS_AREA_NAME);
+		return $ax->getTotalBlocksInArea();
+	}
 	
 	public function getAreaBlocks() {
 		$cp = new Permissions($this->c);
