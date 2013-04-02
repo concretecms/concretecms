@@ -19,16 +19,8 @@
 	class Concrete5_Helper_Validation_Error {
 	
 		protected $error = array();
-		
-		/**
-		 * this method is called by the Loader::helper to clean up the instance of this object
-		 * resets the class scope variables
-		 * @return void
-		*/
-		public function reset() {
-			$this->error = array();
-		}
-		
+		public $helperAlwaysCreateNewInstance = true;
+
 		/** 
 		 * Adds an error object or exception to the internal error array
 		 * @param Exception | string $e
@@ -36,7 +28,9 @@
 		 */
 		public function add($e) {
 			if ($e instanceof ValidationErrorHelper) {
-				$this->error = array_merge($e->getList(), $this->error);			
+				foreach($e->getList() as $errorString) {
+					$this->add($errorString);
+				}
 			} else if (is_object($e) && ($e instanceof Exception)) {
 				$this->error[] = $e->getMessage();
 			} else {

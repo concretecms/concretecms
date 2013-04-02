@@ -20,6 +20,11 @@ $dialogurl = $url->getBlockTypeToolsUrl($bt)."/crop_image";
 $al = Loader::helper('concrete/asset_library');
 
 ?>
+
+<div class="control-group">
+	<label class="control-label"><?=$label?></label>
+	<div class="controls">
+
 <div>
 	<div style="float: left; width: 50%"><?php echo $al->image('ccm-b-image-'.$bID, $this->field('fID'), t('Choose Image'), $bf); ?></div>
 	<div style="padding: 0 10px; float: left; margin-left: 10px; ">
@@ -31,6 +36,10 @@ $al = Loader::helper('concrete/asset_library');
 	</div>
 	<div class="ccm-spacer" style="height: 10px;"></div>
 </div>
+
+	</div>
+</div>
+
 <script type="text/javascript">
 ccm_triggerSelectFileComplete = function(fID, af) { 
 	// af = ccm-b-image-blockid
