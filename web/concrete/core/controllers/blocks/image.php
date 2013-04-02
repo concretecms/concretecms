@@ -135,6 +135,17 @@
 				return '';
 			}
 		}
+
+		public function validate_composer($data) {
+			$e = Loader::helper('validation/error');
+			if (Loader::helper('validation/numbers')->integer($data['fID'])) {
+				$f = File::getByID($data['fID']);
+			}
+			if (!is_object($f) || $f->isError()) {
+				$e->add(t('You must specify a valid image file.'));
+			}
+			return $e;
+		}
 		
 		public function save($args) {		
 			$args['fID'] = ($args['fID'] != '') ? $args['fID'] : 0;

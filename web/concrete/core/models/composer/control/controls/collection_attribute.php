@@ -3,11 +3,23 @@
 class Concrete5_Model_CollectionAttributeComposerControl extends ComposerControl {
 	
 	protected $akID;
+	protected $ak = false;
 	protected $cmpControlTypeHandle = 'collection_attribute';
 	
 	public function setAttributeKeyID($akID) {
 		$this->akID = $akID;
 		$this->setComposerControlIdentifier($akID);
+	}
+
+	public function composerFormControlSupportsValidation() {
+		return true;
+	}
+
+	public function getAttributeKeyObject() {
+		if (!$this->ak) {
+			$this->ak = CollectionAttributeKey::getByID($this->akID);
+		}
+		return $this->ak;
 	}
 
 	public function getAttributeKeyID() {
@@ -18,15 +30,41 @@ class Concrete5_Model_CollectionAttributeComposerControl extends ComposerControl
 		return array();
 	}
 
+	public function canComposerControlSetPageName() {
+		$ak = $this->getAttributeKeyObject();
+		if ($ak->getAttributeKeyHandle() == 'meta_title') {
+			return true;
+		}
+		return false;
+	}
+
+	public function getComposerControlPageNameValue(Page $c) {
+		$ak = $this->getAttributeKeyObject();
+		return $c->getAttribute($ak->getAttributeKeyHandle());
+	}
+
 	public function render($label, $customTemplate) {
-		$ak = CollectionAttributeKey::getByID($this->akID);
+		$ak = $this->getAttributeKeyObject();
 		$env = Environment::get();
 		$template = $env->getPath(DIRNAME_ELEMENTS . '/' . DIRNAME_COMPOSER . '/' . DIRNAME_COMPOSER_ELEMENTS_CONTROLS . '/' . $this->cmpControlTypeHandle . '.php');
 		include($template);
 	}
 
-	public function publishToPage(Page $c, $data, $controls) {
+	public function publishToPage(ComposerDraft $d, $data, $controls) {
+		$c = $d->getComposerDraftCollectionObject();
+		// the data for this actually doesn't come from $data. Attributes have their own way of gettin data.
+		$ak = $this->getAttributeKeyObject();
+		$ak->saveAttributeForm($c);				
 	}
 
+	public function validate($data, ValidationErrorHelper $e) {
+		$ak = $this->getAttributeKeyObject();
+		$e1 = $ak->validateAttributeForm();
+		if ($e1 == false) {
+			$e->add(t('The field "%s" is required', $ak->getAttributeKeyName()));
+		} else if ($e1 instanceof ValidationErrorHelper) {
+			$e->add($e1);
+		}
+	}
 
 }

@@ -12,7 +12,7 @@ class Concrete5_Model_ParentPageComposerTargetConfiguration extends ComposerTarg
 		return $this->cParentID;
 	}
 
-	public function getComposerConfiguredTargetPageID() {
+	public function getComposerConfiguredTargetParentPageID() {
 		return $this->cParentID;
 	}
 

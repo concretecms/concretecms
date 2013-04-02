@@ -3,11 +3,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 class Concrete5_Helper_Form_Attribute {
 	
 	protected $obj;
-	
-	public function reset() {
-		unset($this->obj);
-	}
-	
+	protected $helperAlwaysCreateNewInstance = true;
+
 	public function setAttributeObject($obj) {
 		$this->obj = $obj;
 	}

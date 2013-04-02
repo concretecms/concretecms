@@ -8,9 +8,16 @@ class Concrete5_Model_UrlSlugCorePagePropertyComposerControl extends CorePagePro
 		$this->setComposerControlIconSRC(ASSETS_URL . '/models/attribute/types/text/icon.png');
 	}
 
-	public function publishToPage(Page $c, $data, $controls) {
+	public function publishToPage(ComposerDraft $d, $data, $controls) {
 		$this->addComposerControlRequestValue('cHandle', $data['url_slug']);
-		parent::publishToPage($c, $data, $controls);
+		parent::publishToPage($d, $data, $controls);
+	}
+
+	public function validate($data, ValidationErrorHelper $e) {
+		$vt = Loader::helper('validation/strings');
+		if (!($vt->notempty($data['url_slug']))) {
+			$e->add(t('You must specify a URL slug.'));
+		}
 	}
 
 

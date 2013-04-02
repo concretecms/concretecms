@@ -23,6 +23,47 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			return t("Conversation Message");
 		}
 
+		public function composer() {
+			$html = Loader::helper('html');
+			$this->addHeaderItem($html->css('ccm.conversations.css'));
+			$this->addFooterItem($html->javascript('ccm.conversations.js'));
+		}
 
+		public function save($args) {
+			$db = Loader::db();
+			$cnvMessageID = $db->GetOne('select cnvMessageID from btCoreConversationMessage where bID = ?', array($this->bID));
+			if (!$cnvMessageID) {
+				$conversation = Conversation::add();
+				$message = $conversation->addMessage($args['cnvMessageSubject'], $args['cnvMessageBody']);
+				if (!Loader::helper('validation/antispam')->check($args['cnvMessageBody'],'conversation_comment')) {
+					$message->flag(ConversationFlagType::getByHandle('spam'));
+				} else {
+					$message->approve();
+				}
+				$data = array();
+				$data['cnvMessageID'] = $message->getConversationMessageID();
+				parent::save($data);
+			}
+
+		}
+
+		public function view() {
+			$message = $this->getConversationMessageObject();
+			$this->set('message', $message);
+		}
+
+		public function getConversationMessageObject() {
+			if (!isset($this->message)) {
+				$db = Loader::db();
+				$cnvMesageID = $db->GetOne('select cnvMessageID from btCoreConversationMessage where bID = ?', array($this->bID));
+				$this->message = ConversationMessage::getByID($cnvMesageID);
+			}
+			return $this->message;
+		}
+
+		public function getComposerControlPageNameValue() {
+			$message = $this->getConversationMessageObject();
+			return $message->getConversationMessageSubject();
+		}
 		
 	}

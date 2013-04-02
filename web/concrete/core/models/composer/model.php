@@ -6,14 +6,6 @@ class Concrete5_Model_Composer extends Object {
 	public function getComposerName() {return $this->cmpName;}
 	public function getComposerTargetTypeID() {return $this->cmpTargetTypeID;}
 	public function getComposerTargetObject() {return $this->cmpTargetObject;}
-	public function getComposerSelectedTargetPageObject() {
-		if ($this->cmpTargetSelectedParentPageID) {
-			$c = Page::getByID($this->cmpTargetSelectedParentPageID);
-			if (is_object($c) && !$c->isError()) {
-				return $c;
-			}
-		}
-	}
 
 	public function getComposerPageTypeObjects() {
 		$db = Loader::db();
@@ -111,10 +103,9 @@ class Concrete5_Model_Composer extends Object {
 	public function setConfiguredComposerTargetObject(ComposerTargetConfiguration $configuredTarget) {
 		$db = Loader::db();
 		if (is_object($configuredTarget)) {
-			$db->Execute('update Composers set cmpTargetTypeID = ?, cmpTargetObject = ?, cmpTargetSelectedParentPageID = ? where cmpID = ?', array(
+			$db->Execute('update Composers set cmpTargetTypeID = ?, cmpTargetObject = ? where cmpID = ?', array(
 				$configuredTarget->getComposerTargetTypeID(),
 				@serialize($configuredTarget),
-				$configuredTarget->getComposerConfiguredTargetPageID(),
 				$this->getComposerID()
 			));
 		}
@@ -140,6 +131,17 @@ class Concrete5_Model_Composer extends Object {
 		));	
 		return ComposerFormLayoutSet::getByID($db->Insert_ID());
 	}
+
+	public function validateCreateDraftRequest($ct) {
+		$e = Loader::helper('validation/error');
+		$availablePageTypes = $this->getComposerPageTypeObjects();
+		if (!is_object($ct)) {
+			$e->add(t('You must choose a page type.'));
+		} else if (!in_array($ct, $availablePageTypes)) {
+			$e->add(t('This page type is not a valid page type for this composer.'));
+		}
+		return $e;
+	}	
 
 	public function createDraft(CollectionType $ct, $u = false) {
 		if (!is_object($u)) {

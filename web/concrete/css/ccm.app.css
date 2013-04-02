@@ -1184,7 +1184,7 @@ div#ccm-toolbar>ul li.ccm-toolbar-page-edit>a{border-left:1px solid #ccc;}
 div#ccm-toolbar input[type=search]{margin-left:40px;height:47px;width:210px;}
 div#ccm-toolbar input[type=search],div#ccm-toolbar textarea{border:0px;-webkit-border-radius:0px;-moz-border-radius:0px;border-radius:0px;-ms-border-radius:0px;-webkit-box-shadow:none;box-shadow:none;}
 div#ccm-toolbar input[type=search]:focus,div#ccm-toolbar textarea:focus{-webkit-appearance:none !important;outline:none !important;}
-div#ccm-toolbar .ccm-toolbar-hover-menu{color:#999;}div#ccm-toolbar .ccm-toolbar-hover-menu a{color:#999;}
+div#ccm-toolbar .ccm-toolbar-hover-menu{color:#999;margin-top:1px;}div#ccm-toolbar .ccm-toolbar-hover-menu a{color:#999;}
 div#ccm-toolbar .ccm-toolbar-hover-menu a:hover{background-color:#fff !important;background-image:none;color:#000;}
 div#ccm-toolbar .ccm-toolbar-hover-menu li.ccm-toolbar-hover-menu-edit{padding:0px;margin:-5px 0px -9px 0px;}div#ccm-toolbar .ccm-toolbar-hover-menu li.ccm-toolbar-hover-menu-edit a{padding:10px 20px;color:#00cc66;}
 div#ccm-toolbar .ccm-toolbar-hover-menu li.ccm-toolbar-hover-menu-edit a:hover{background-color:#9f9 !important;}

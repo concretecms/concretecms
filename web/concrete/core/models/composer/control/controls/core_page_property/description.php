@@ -8,9 +8,22 @@ class Concrete5_Model_DescriptionCorePagePropertyComposerControl extends CorePag
 		$this->setComposerControlIconSRC(ASSETS_URL . '/models/attribute/types/textarea/icon.png');
 	}
 
-	public function publishToPage(Page $c, $data, $controls) {
+	public function publishToPage(ComposerDraft $d, $data, $controls) {
 		$this->addComposerControlRequestValue('cDescription', $data['description']);
-		parent::publishToPage($c, $data, $controls);
+		parent::publishToPage($d, $data, $controls);
+	}
+
+	public function validate($data, ValidationErrorHelper $e) {
+		$vt = Loader::helper('validation/strings');
+		if (!($vt->notempty($data['description']))) {
+			$e->add(t('You must specify a page description.'));
+		}
+	}
+
+	public function getRequestValue() {
+		$data = parent::getRequestValue();
+		$data['description'] = Loader::helper('security')->sanitizeString($data['description']);
+		return $data;
 	}
 
 
