@@ -708,6 +708,13 @@
 				</attributekey>
 			</attributes>
 		</page>
+		<page name="Community Points" path="/dashboard/system/conversations/community_points" filename="/dashboard/system/conversations/community_points.php" pagetype="" description="" package="">
+			<attributes>
+				<attributekey handle="meta_keywords">
+					<value>conversations ratings, ratings, community, community points</value>
+				</attributekey>
+			</attributes>
+		</page>
 		<page name="Banned Words" path="/dashboard/system/conversations/banned_words" filename="/dashboard/system/conversations/banned_words.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">

@@ -25,13 +25,25 @@ abstract class Concrete5_Model_ConversationRatingType extends Object {
 			$pkgID = $pkg->getPackageID();
 		}
 		$db = Loader::db();
-		$db->Execute('insert into ConversationRatingTypes (cnvRatingTypeHandle, cnvRatingTypeName, pkgID) values (?, ?, ?)', array($cnvRatingTypeHandle, $cnvRatingTypeName, $pkgID));
+		$db->Execute('insert into ConversationRatingTypes (cnvRatingTypeHandle, cnvRatingTypeName, cnvRatingTypeCommunityPoints, pkgID) values (?, ?, ?, ?)', array($cnvRatingTypeHandle, $cnvRatingTypeName, $pkgID, $cnvRatingTypeCommunityPoints));
 		return ConversationRatingType::getByHandle($cnvRatingTypeHandle);
 	}
 
 	public static function getByHandle($cnvRatingTypeHandle) {
 		$db = Loader::db();
-		$r = $db->GetRow('select cnvRatingTypeID, cnvRatingTypeHandle, cnvRatingTypeName, pkgID from ConversationRatingTypes where cnvRatingTypeHandle = ?', array($cnvRatingTypeHandle));
+		$r = $db->GetRow('select cnvRatingTypeID, cnvRatingTypeHandle, cnvRatingTypeName, cnvRatingTypeCommunityPoints, pkgID from ConversationRatingTypes where cnvRatingTypeHandle = ?', array($cnvRatingTypeHandle));
+		
+		if (is_array($r) && $r['cnvRatingTypeHandle']) {
+			$class = Loader::helper('text')->camelcase($r['cnvRatingTypeHandle']) . 'ConversationRatingType';
+			$sc = new $class();
+			$sc->setPropertiesFromArray($r);
+			return $sc;
+		}
+	}
+	
+	public static function getByID($cnvRatingTypeID) {
+		$db = Loader::db();
+		$r = $db->GetRow('select cnvRatingTypeID, cnvRatingTypeHandle, cnvRatingTypeName, cnvRatingTypeCommunityPoints, pkgID from ConversationRatingTypes where cnvRatingTypeID = ?', array($cnvRatingTypeID));
 		
 		if (is_array($r) && $r['cnvRatingTypeHandle']) {
 			$class = Loader::helper('text')->camelcase($r['cnvRatingTypeHandle']) . 'ConversationRatingType';
