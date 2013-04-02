@@ -6,6 +6,14 @@ class Concrete5_Model_Composer extends Object {
 	public function getComposerName() {return $this->cmpName;}
 	public function getComposerTargetTypeID() {return $this->cmpTargetTypeID;}
 	public function getComposerTargetObject() {return $this->cmpTargetObject;}
+	public function getComposerSelectedTargetPageObject() {
+		if ($this->cmpTargetSelectedParentPageID) {
+			$c = Page::getByID($this->cmpTargetSelectedParentPageID);
+			if (is_object($c) && !$c->isError()) {
+				return $c;
+			}
+		}
+	}
 
 	public function getComposerPageTypeObjects() {
 		$db = Loader::db();
@@ -32,6 +40,23 @@ class Concrete5_Model_Composer extends Object {
 			));
 		}
 		return Composer::getByID($db->Insert_ID());
+	}
+
+	/** 
+	 * Returns an array of all areas on the page type defaults for the page types selected
+	 */
+	public function getPageTypeAreaList() {
+		$db = Loader::db();
+		$ctIDs = array(-1);
+		foreach($this->getComposerPageTypeObjects() as $ct) {
+			$ctIDs[] = $ct->getCollectionTypeID();
+		}
+		$r = $db->Execute('select distinct arHandle from Areas where cID in (select p.cID from Pages p inner join CollectionVersions cv on (p.cID = cv.cID and cv.cvIsApproved = 1) where cIsTemplate = 1 and arIsGlobal = 0 and ctID in (' . implode(',', $ctIDs) . ')) order by arHandle');
+		$areas = array();
+		while ($row = $r->FetchRow()) {
+			$areas[] = $row['arHandle'];
+		}
+		return $areas;
 	}
 
 	public function update($cmpName, $types) {
@@ -73,17 +98,23 @@ class Concrete5_Model_Composer extends Object {
 	}
 
 	public function delete() {
+		$sets = ComposerFormLayoutSet::getList($this);
+		foreach($sets as $set) {
+			$set->delete();
+		}
 		$db = Loader::db();
 		$db->Execute('delete from Composers where cmpID = ?', array($this->cmpID));
 		$db->Execute('delete from ComposerPageTypes where cmpID = ?', array($this->cmpID));
+		$db->Execute('delete from ComposerOutputControls where cmpID = ?', array($this->cmpID));
 	}
 
 	public function setConfiguredComposerTargetObject(ComposerTargetConfiguration $configuredTarget) {
 		$db = Loader::db();
 		if (is_object($configuredTarget)) {
-			$db->Execute('update Composers set cmpTargetTypeID = ?, cmpTargetObject = ? where cmpID = ?', array(
+			$db->Execute('update Composers set cmpTargetTypeID = ?, cmpTargetObject = ?, cmpTargetSelectedParentPageID = ? where cmpID = ?', array(
 				$configuredTarget->getComposerTargetTypeID(),
 				@serialize($configuredTarget),
+				$configuredTarget->getComposerConfiguredTargetPageID(),
 				$this->getComposerID()
 			));
 		}
@@ -108,6 +139,30 @@ class Concrete5_Model_Composer extends Object {
 			$cmpFormLayoutSetName, $this->cmpID, $displayOrder
 		));	
 		return ComposerFormLayoutSet::getByID($db->Insert_ID());
+	}
+
+	public function createDraft(CollectionType $ct, $u = false) {
+		if (!is_object($u)) {
+			$u = new User();
+		}
+		$db = Loader::db();
+		$cmpID = $this->getComposerID();
+		$cmpDateCreated = Loader::helper('date')->getSystemDateTime();
+		$uID = $u->getUserID();
+		
+		$db->Execute('insert into ComposerDrafts (cmpID, cmpDateCreated, uID) values (?, ?, ?)', array(
+			$cmpID, $cmpDateCreated, $uID
+		));	
+
+		$cmpDraftID = $db->Insert_ID();
+
+		$parent = Page::getByPath(COMPOSER_DRAFTS_PAGE_PATH);
+		$data = array('cvIsApproved' => 0);
+		$p = $parent->add($ct, $data);
+		$p->deactivate();
+
+		$db->Execute('update ComposerDrafts set cID = ? where cmpDraftID = ?', array($p->getCollectionID(), $cmpDraftID));
+		return ComposerDraft::getByID($cmpDraftID);
 	}
 
 }

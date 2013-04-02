@@ -187,6 +187,10 @@ class Concrete5_Model_Page extends Collection {
 		
 		$db->Execute('delete from CollectionVersionBlockStyles where cID = ? and cvID = ?', array($this->getCollectionID(), $this->getVersionID()));
 		
+		$obj = new stdClass;
+		$obj->error = false;
+		$obj->areas = array();
+
 		foreach($areas as $arID => $blocks) {
 			if (intval($arID) > 0) {
 				// this is a serialized area;
@@ -197,6 +201,8 @@ class Concrete5_Model_Page extends Collection {
 					$ao = Area::getOrCreate($this, $arHandle);
 					$ap = new Permissions($ao);
 				}
+
+				$obj->areas[$arID] = 0;
 
 				foreach($blocks as $bIdentifier) {
 
@@ -213,7 +219,7 @@ class Concrete5_Model_Page extends Collection {
 							$b = Block::getByID($bID);
 							$bt = $b->getBlockTypeObject();
 							if (!$ap->canAddBlockToArea($bt) && (!$bt->isBlockTypeInternal())) {
-								$obj = new stdClass;
+								unset($obj->areas);
 								$obj->error = true;
 								$obj->message = t('You may not add %s to area %s.', $bt->getBlockTypeName(), $arHandle);
 								return $obj;
@@ -233,10 +239,13 @@ class Concrete5_Model_Page extends Collection {
 						} catch(Exception $e) {}
 						
 						$startDO++;
+						$obj->areas[$arID] = $startDO;
 					}
 				}
 			}
 		}
+
+		return $obj;
 	}
 
 	/**

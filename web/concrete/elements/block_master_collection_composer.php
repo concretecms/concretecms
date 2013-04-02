@@ -64,7 +64,7 @@ $valt->output();
 <script type="text/javascript">
 $(function() {
 	$('#ccmComposerCustomTemplateForm').each(function() {
-		ccm_setupBlockForm($(this), '<?=$b->getBlockID()?>', 'edit');
+		CCMEditMode.setupBlockForm($(this), '<?=$b->getBlockID()?>', 'edit');
 	});
 });
 </script>

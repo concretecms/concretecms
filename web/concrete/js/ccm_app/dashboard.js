@@ -84,7 +84,6 @@ ccm_dashboardEqualizeMenus = function() {
 }
 
 $(function() {
-	ccm_activateToolbar();
 	
 	var $ccmPageHelp = $("#ccm-page-help").popover({
 		trigger: 'click',

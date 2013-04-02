@@ -33,22 +33,20 @@ cat ../web/concrete/js/ccm_app/jquery.colorpicker.js \
 ../web/concrete/js/ccm_app/chosen.jquery.js \
 ../web/concrete/js/ccm_app/base.js \
 ../web/concrete/js/ccm_app/ui.js \
+../web/concrete/js/ccm_app/edit_page.js \
 ../web/concrete/js/ccm_app/filemanager.js \
 ../web/concrete/js/ccm_app/jquery.cookie.js \
 ../web/concrete/js/ccm_app/legacy_dialog.js \
 ../web/concrete/js/ccm_app/newsflow.js \
 ../web/concrete/js/ccm_app/page_reindexing.js \
 ../web/concrete/js/ccm_app/in_context_menu.js \
-../web/concrete/js/ccm_app/block_types.js \
 ../web/concrete/js/ccm_app/quicksilver.js \
-../web/concrete/js/ccm_app/inline_edit.js \
 ../web/concrete/js/ccm_app/remote_marketplace.js \
+../web/concrete/js/ccm_app/inline_edit.js \
 ../web/concrete/js/ccm_app/search.js \
 ../web/concrete/js/ccm_app/sitemap.js \
 ../web/concrete/js/ccm_app/custom_style.js \
-../web/concrete/js/ccm_app/status_bar.js \
 ../web/concrete/js/ccm_app/tabs.js \
-../web/concrete/js/ccm_app/page_areas.js \
 ../web/concrete/js/ccm_app/toolbar.js \
 ../web/concrete/js/ccm_app/themes.js > ccm.app.tmp.js
 
@@ -57,6 +55,7 @@ rm ccm.app.tmp.js
 
 uglifyjs -o ../web/concrete/js/ccm.layouts.js ../web/concrete/js/layouts/layouts.js
 
+uglifyjs -o ../web/concrete/js/jquery.backstretch.js ../web/concrete/js/ccm_app/backstretch.js
 
 cat ../web/concrete/js/image_editor/build/kinetic.prototype.js \
     ../web/concrete/js/image_editor/build/imageeditor.js \

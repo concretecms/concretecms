@@ -99,4 +99,5 @@ abstract class Concrete5_Model_ComposerTargetType extends Object {
 		Loader::element(DIRNAME_COMPOSER . '/' . DIRNAME_COMPOSER_ELEMENTS_TARGET_TYPES . '/' . $this->getComposerTargetTypeHandle(), array('composer' => $composer), $this->getPackageHandle());
 	}
 
+
 }

@@ -1,12 +1,8 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
 //$replaceOnUnload = 1;
-$bc = $b->getBlockCollectionObject();
 
 $class = strtolower('ccm-content-editor-' . $controller->getIdentifier());
-if (is_object($bc)) {
-	$class .= "_" . $bc->getCollectionID();
-}
 
 $form = Loader::helper('form');
 print $form->textarea($this->field('content'), $controller->getContentEditMode(), array(

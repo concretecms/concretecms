@@ -66,7 +66,7 @@ $(function() {
 		}
 	});
 	$('#ccmBlockMasterCollectionForm').each(function() {
-		ccm_setupBlockForm($(this), '<?=$b->getBlockID()?>', 'edit');
+		CCMEditMode.setupBlockForm($(this), '<?=$b->getBlockID()?>', 'edit');
 	});
 
 });

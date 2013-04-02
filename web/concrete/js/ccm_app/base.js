@@ -48,3 +48,40 @@ ccm_addHeaderItem = function(item, type) {
 		}
 	}
 }
+
+//legacy 
+var ccm_isBlockError = false;
+ccm_hideMenus = function() {
+	/* 1st, hide all items w/the css menu class */
+	ccm_activeMenu = false;
+	$("div.ccm-menu").hide();
+	$("div.ccm-menu").css('visibility', 'hidden');
+	$("div.ccm-menu").show();
+}
+
+// legacy menu. Will go away when all are converted to bootstrap menus
+ccm_fadeInMenu = function(bobj, e) {
+	var mwidth = bobj.find('div.popover div.inner').width();
+	var mheight = bobj.find('div.popover').height();
+	bobj.hide();
+	bobj.css('visibility', 'visible');
+	
+	var posX = e.pageX + 2;
+	var posY = e.pageY + 2;
+
+	if ($(window).height() < e.clientY + mheight) {
+		posY = posY - mheight - 10;
+		posX = posX - (mwidth / 2);
+		bobj.find('div.popover').removeClass('below');
+		bobj.find('div.popover').addClass('above');
+	} else {
+		posX = posX - (mwidth / 2);
+		posY = posY + 10;
+		bobj.find('div.popover').removeClass('above');
+		bobj.find('div.popover').addClass('below');
+	}	
+	
+	bobj.css("top", posY + "px");
+	bobj.css("left", posX + "px");
+	bobj.fadeIn(60);
+}

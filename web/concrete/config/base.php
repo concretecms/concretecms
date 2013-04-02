@@ -497,9 +497,13 @@ if (!defined('DIRNAME_COMPOSER')) {
 if (!defined('DIRNAME_COMPOSER_ELEMENTS_TARGET_TYPES')) {
 	define('DIRNAME_COMPOSER_ELEMENTS_TARGET_TYPES', 'target_types');
 }
-if (!defined('DIRNAME_COMPOSER_ELEMENTS_CONTROL_TYPES')) {
-	define('DIRNAME_COMPOSER_ELEMENTS_CONTROL_TYPES', 'control_types');
+if (!defined('DIRNAME_COMPOSER_ELEMENTS_CONTROLS')) {
+	define('DIRNAME_COMPOSER_ELEMENTS_CONTROLS', 'controls');
 }
+if (!defined('DIRNAME_COMPOSER_ELEMENTS_TARGET_TYPES_FORM')) {
+	define('DIRNAME_COMPOSER_ELEMENTS_TARGET_TYPES_FORM', 'form');
+}
+
 
 # User avatar constants - should probably be moved into the avatar helper class as avatar constants
 if (!defined('AVATAR_WIDTH') && !defined('AVATAR_HEIGHT')) {

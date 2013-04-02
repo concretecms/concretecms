@@ -15,7 +15,7 @@ RedactorPlugins.concrete5inline = {
 		$('#ccm-redactor-cancel-button').on('click', function() {
 			$('li#ccm-redactor-actions-buttons').hide();
 			toolbar.appendTo(editor);
-			ccm_onInlineEditCancel(function() {
+			CCMInlineEditMode.exit(function() {
 				editor.destroyEditor();
 			});
 		});

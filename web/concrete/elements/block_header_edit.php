@@ -31,9 +31,9 @@ if (is_array($headerItems[$identifier])) {
 $(function() {
 	$('#ccm-block-form').each(function() {
 		<? if (is_object($b->getProxyBlock())) { ?>
-			ccm_setupBlockForm($(this), '<?=$b->getProxyBlock()->getBlockID()?>', 'edit');
+			CCMEditMode.setupBlockForm($(this), '<?=$b->getProxyBlock()->getBlockID()?>', 'edit');
 		<? } else { ?>
-			ccm_setupBlockForm($(this), '<?=$b->getBlockID()?>', 'edit');
+			CCMEditMode.setupBlockForm($(this), '<?=$b->getBlockID()?>', 'edit');
 		<? } ?>
 	});
 });
