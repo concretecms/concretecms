@@ -6,14 +6,31 @@ abstract class Concrete5_Model_ComposerControl extends Object {
 	protected $cmpControlName;
 	protected $cmpControlIconSRC;
 	protected $cmpControl;
+	protected $cmpControlRequiredByDefault = false;
+	protected $cmpControlRequiredOnThisRequest = false;
 
 	abstract public function getComposerControlCustomTemplates();
 	abstract public function render($label, $customTemplate);
-	abstract public function publishToPage(Page $c, $data, $controls);
+	abstract public function publishToPage(ComposerDraft $d, $data, $controls);
+	abstract public function validate($data, ValidationErrorHelper $e);
+	
+	public function composerFormControlSupportsValidation() {
+		return false;
+	}
 
 	public function setComposerControlName($cmpControlName) {
 		$this->cmpControlName = $cmpControlName;
 	}
+
+	public function setComposerFormControlRequired($req) {
+		$this->cmpControlRequiredOnThisRequest = $req;
+	}
+	
+	public function isComposerFormControlRequiredOnThisRequest() {
+		return $this->cmpControlRequiredOnThisRequest;
+	}
+
+	public function onComposerControlRender() {}
 	
 	public function getComposerControlName() {
 		return $this->cmpControlName;
@@ -68,11 +85,23 @@ abstract class Concrete5_Model_ComposerControl extends Object {
 		if (!$displayOrder) {
 			$displayOrder = 0;
 		}
+		$cmpFormLayoutSetControlRequired = 0;
+		if ($this->cmpControlRequiredByDefault) {
+			$cmpFormLayoutSetControlRequired = 1;
+		}
 		$controlType = $this->getComposerControlTypeObject();
-		$db->Execute('insert into ComposerFormLayoutSetControls (cmpFormLayoutSetID, cmpControlTypeID, cmpControlObject, cmpFormLayoutSetControlDisplayOrder) values (?, ?, ?, ?)', array(
-			$set->getComposerFormLayoutSetID(), $controlType->getComposerControlTypeID(), serialize($this), $displayOrder
+		$db->Execute('insert into ComposerFormLayoutSetControls (cmpFormLayoutSetID, cmpControlTypeID, cmpControlObject, cmpFormLayoutSetControlDisplayOrder, cmpFormLayoutSetControlRequired) values (?, ?, ?, ?, ?)', array(
+			$set->getComposerFormLayoutSetID(), $controlType->getComposerControlTypeID(), serialize($this), $displayOrder, $cmpFormLayoutSetControlRequired
 		));	
 		return ComposerFormLayoutSetControl::getByID($db->Insert_ID());
+	}
+
+	public function canComposerControlSetPageName() {
+		return false;
+	}
+
+	public function getComposerControlPageNameValue(Page $c) {
+		return false;
 	}
 
 	public static function getList(Composer $composer) {
@@ -83,6 +112,7 @@ abstract class Concrete5_Model_ComposerControl extends Object {
 			foreach($setControls as $sc) {
 				$cnt = $sc->getComposerControlObject();
 				$cnt->setComposerFormLayoutSetControlObject($sc);
+				$cnt->setComposerFormControlRequired($sc->isComposerFormLayoutSetControlRequired());
 				$controls[] = $cnt;
 			}
 		}

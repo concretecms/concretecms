@@ -83,6 +83,18 @@ class Concrete5_Controller_AttributeType_ImageFile extends AttributeTypeControll
 			$db->Execute('delete from atFile where avID = ?', array($id));
 		}
 	}
+
+	public function validateForm($data) {
+		if (Loader::helper('validation/numbers')->integer($data['value'])) {
+			$f = File::getByID($data['value']);
+			if (is_object($f) && !$f->isError()) {
+				return true;
+			}
+		}
+		$e = Loader::helper('validation/error');
+		$e->add(t('You must specify a valid file for %s', $this->attributeKey->getAttributeKeyName()));
+		return $e;
+	}
 	
 	public function saveForm($data) {
 		if ($data['value'] > 0) {

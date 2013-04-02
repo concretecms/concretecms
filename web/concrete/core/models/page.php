@@ -1136,6 +1136,28 @@ class Concrete5_Model_Page extends Collection {
 		return (!in_array($cobj->getCollectionID(), $children));
 	}
 
+	public function updateCollectionName($name) {
+		$db = Loader::db();
+		$vo = $this->getVersionObject();
+		$cvID = $vo->getVersionID();
+		$this->markModified();
+		if (is_object($this->vObj)) {
+			$this->vObj->cvName = $name;
+
+			$txt = Loader::helper('text');
+            $cHandle = $txt->urlify($name);
+			$cHandle = str_replace('-', PAGE_PATH_SEPARATOR, $cHandle);		
+
+			$db->Execute('update CollectionVersions set cvName = ?, cvHandle = ? where cID = ? and cvID = ?', array($name, $cHandle, $this->getCollectionID(), $cvID));
+
+
+			$cache = PageCache::getLibrary();
+			$cache->purge($this);
+
+			$ret = Events::fire('on_page_update', $this);
+		}
+	}
+
 	function update($data) {
 		$db = Loader::db();
 

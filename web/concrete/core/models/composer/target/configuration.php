@@ -18,7 +18,7 @@ class Concrete5_Model_ComposerTargetConfiguration extends Object {
 	/** 
 	 * If this composer target object supports a single page ID (currently only the parent_page target object supports this) it is returned here.
 	 */
-	public function getComposerConfiguredTargetPageID() {
+	public function getComposerConfiguredTargetParentPageID() {
 		return 0;
 	}
 	

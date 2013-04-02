@@ -10,6 +10,7 @@ class Concrete5_Model_ComposerFormLayoutSetControl extends Object {
 	public function getComposerFormLayoutSetObject() {return ComposerFormLayoutSet::getByID($this->cmpFormLayoutSetID);}
 	public function getComposerFormLayoutSetControlCustomLabel() {return $this->cmpFormLayoutSetControlCustomLabel;}
 	public function getComposerFormLayoutSetControlCustomTemplate() {return $this->cmpFormLayoutSetControlCustomTemplate;}
+	public function isComposerFormLayoutSetControlRequired() {return $this->cmpFormLayoutSetControlRequired;}
 
 	public function getPermissionObjectIdentifier() {
 		return $this->getComposerFormLayoutSetControlID();
@@ -73,12 +74,28 @@ class Concrete5_Model_ComposerFormLayoutSetControl extends Object {
 		$this->cmpFormLayoutSetControlCustomLabel = $label;
 	}
 
+	public function updateFormLayoutSetControlRequired($required) {
+		$db = Loader::db();
+		$db->Execute('update ComposerFormLayoutSetControls set cmpFormLayoutSetControlRequired = ? where cmpFormLayoutSetControlID = ?', array(
+			$required, $this->cmpFormLayoutSetControlID
+		));
+		$this->cmpFormLayoutSetControlRequired = $label;
+	}
+
 	public function updateFormLayoutSetControlCustomTemplate($template) {
 		$db = Loader::db();
 		$db->Execute('update ComposerFormLayoutSetControls set cmpFormLayoutSetControlCustomTemplate = ? where cmpFormLayoutSetControlID = ?', array(
 			$template, $this->cmpFormLayoutSetControlID
 		));
 		$this->cmpFormLayoutSetControlCustomTemplate = $template;
+	}
+
+	public function getComposerOutputControlObject() {
+		$db = Loader::db();
+		$cmpOutputControlID = $db->GetOne('select cmpOutputControlID from ComposerOutputControls where cmpFormLayoutSetControlID = ?', array($this->cmpFormLayoutSetControlID));
+		if ($cmpOutputControlID) {
+			return ComposerOutputControl::getByID($cmpOutputControlID);
+		}
 	}
 
 	public function delete() {

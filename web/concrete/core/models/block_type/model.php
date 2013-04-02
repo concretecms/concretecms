@@ -320,14 +320,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			return $templates;
 		}
 		
-		public function getBlockTypeComposerFilename() {
-			return $this->cmpFilename;
-		}
-
-		public function setBlockTypeComposerFilename($cmpFilename) {
-			$this->cmpFilename = $cmpFilename;
-		}
-		
 		function setBlockTypeDisplayOrder($displayOrder) {
 			$db = Loader::db();
 			
