@@ -20,7 +20,6 @@ class Concrete5_Controller_Dashboard_Composer_List_Output extends DashboardBaseC
 			$_v->render($mc);
 			$ret = ob_get_contents();
 			ob_end_clean();
-			print $ret;
 			unset($_v);
 		}
 		$this->redirect('/dashboard/composer/list/output', 'order', $cmpID);
@@ -51,7 +50,6 @@ class Concrete5_Controller_Dashboard_Composer_List_Output extends DashboardBaseC
 			$this->redirect('/dashboard/composer/list');
 		}
 		$this->set('composer', $this->composer);
-		$this->set('areas', $this->composer->getPageTypeAreaList());
 	}
 
 

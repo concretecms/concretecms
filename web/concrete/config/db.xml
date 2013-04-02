@@ -132,6 +132,10 @@
       <autoincrement/>
       <unsigned/>
     </field>
+    <field name="ctID" type="I" size="10">
+      <unsigned/>
+      <default value="0" />
+    </field>
     <field name="arHandle" type="C" size="255">
     </field>
    <field name="cmpID" type="I" size="10">
@@ -521,11 +525,11 @@
 		<field name="cnvRatingTypeName" type="C" size="10"/>
 		<field name="cnvRatingTypeCommunityPoints" type="I" size="10">
 		</field>
-		<field name="pkgID" type="I" size="10">
-		  <notnull/>
-		  <default value="0"/>
-		  <unsigned/>
-		</field>
+    <field name="pkgID" type="I" size="10">
+      <notnull/>
+      <default value="0"/>
+      <unsigned/>
+    </field>
 	</table>
   <table name="PermissionAssignments">
     <field name="paID" type="I" size="10">

@@ -8,11 +8,13 @@ abstract class Concrete5_Model_ComposerControl extends Object {
 	protected $cmpControl;
 	protected $cmpControlRequiredByDefault = false;
 	protected $cmpControlRequiredOnThisRequest = false;
+	protected $cmpDraftObject;
 
 	abstract public function getComposerControlCustomTemplates();
 	abstract public function render($label, $customTemplate);
 	abstract public function publishToPage(ComposerDraft $d, $data, $controls);
 	abstract public function validate($data, ValidationErrorHelper $e);
+	abstract public function getComposerControlDraftValue();
 	
 	public function composerFormControlSupportsValidation() {
 		return false;
@@ -26,6 +28,10 @@ abstract class Concrete5_Model_ComposerControl extends Object {
 		$this->cmpControlRequiredOnThisRequest = $req;
 	}
 	
+	public function setComposerDraftObject($cmpDraftObject) {
+		$this->cmpDraftObject = $cmpDraftObject;
+	}
+
 	public function isComposerFormControlRequiredOnThisRequest() {
 		return $this->cmpControlRequiredOnThisRequest;
 	}

@@ -12,20 +12,19 @@ if (count($drafts) > 0) { ?>
 	<th width="20%"><?=t('Page Type')?></th>
 	<th width="20%"><?=t('Last Modified')?></th>
 </tr>
-<? foreach($drafts as $dr) { ?>
+<? foreach($drafts as $dr) { 
+	$d = $dr->getComposerDraftCollectionObject();
+	$pageName = ($d->getCollectionName()) ? $d->getCollectionName() : t('(Untitled Page)');
+	?>
 <tr>
-	<td><a href="<?=$this->url('/dashboard/composer/write', 'edit', $dr->getCollectionID())?>"><? if (!$dr->getCollectionName()) {
-		print t('(Untitled Page)');
-	} else {
-		print $dr->getCollectionName();
-	} ?></a></td>
-	<td><?=$dr->getCollectionTypeName()?></td>
+	<td><a href="<?=$this->url('/dashboard/composer/write', 'draft', $dr->getComposerDraftID())?>"><?=$pageName?></a></td>
+	<td><?=$d->getCollectionTypeName()?></td>
 	<td><?
 		$mask = DATE_APP_GENERIC_MDYT;
-		if ($today == $dr->getCollectionDateLastModified("Y-m-d")) {
+		if ($today == $d->getCollectionDateLastModified("Y-m-d")) {
 			$mask = DATE_APP_GENERIC_T;
 		}
-		print $dr->getCollectionDateLastModified($mask)?></td>
+		print $d->getCollectionDateLastModified($mask)?></td>
 <? } ?>
 </table>
 

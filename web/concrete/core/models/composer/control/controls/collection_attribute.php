@@ -43,9 +43,15 @@ class Concrete5_Model_CollectionAttributeComposerControl extends ComposerControl
 		return $c->getAttribute($ak->getAttributeKeyHandle());
 	}
 
+	public function getComposerControlDraftValue() {
+
+	}
+	
 	public function render($label, $customTemplate) {
 		$ak = $this->getAttributeKeyObject();
 		$env = Environment::get();
+		$set = $this->getComposerFormLayoutSetControlObject()->getComposerFormLayoutSetObject();
+		$control = $this;
 		$template = $env->getPath(DIRNAME_ELEMENTS . '/' . DIRNAME_COMPOSER . '/' . DIRNAME_COMPOSER_ELEMENTS_CONTROLS . '/' . $this->cmpControlTypeHandle . '.php');
 		include($template);
 	}

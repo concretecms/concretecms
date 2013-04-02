@@ -56,7 +56,9 @@ abstract class Concrete5_Model_CorePagePropertyComposerControl extends ComposerC
 	public function render($label, $customTemplate) {
 		$env = Environment::get();
 		$form = Loader::helper('form');
-		$control = $this->getComposerFormLayoutSetControlObject();
+		$set = $this->getComposerFormLayoutSetControlObject()->getComposerFormLayoutSetObject();
+		$control = $this;
+		
 		if ($customTemplate) {
 			$rec = $env->getRecord(DIRNAME_ELEMENTS . '/' . DIRNAME_COMPOSER . '/' . DIRNAME_COMPOSER_ELEMENTS_CONTROLS . '/' . $this->cmpControlTypeHandle . '/' . $this->propertyHandle . '/' . DIRNAME_BLOCK_TEMPLATES_COMPOSER . '/' . $customTemplate);
 			if ($rec->exists()) {
