@@ -444,7 +444,10 @@
 			<default value="0" />
 			<unsigned />
 		</field>
-		<field name="cnvRatingTypeHandle" type="C" size="10">
+		<field name="cnvRatingIP" type="bigint" size="10">
+			<notnull />
+			<default value="0" />
+			<unsigned />
 		</field>
 		<field name="timestamp" type="T" />
 		<field name="uID" type="I" size="10">
