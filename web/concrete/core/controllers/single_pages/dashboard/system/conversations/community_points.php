@@ -22,18 +22,12 @@ class Concrete5_Controller_Dashboard_System_Conversations_CommunityPoints extend
 		$this->view();
 		$this->set('error',$this->error);
 	}
+	
+	public function add() {
+		// next up
+	}
 
 	public function save() {
-		/*
-		$this->view();
-		$active = $this->post('activeEditor');
-		
-		$db = Loader::db();
-
-		if (!isset($this->editors[$active])) {
-			$this->redirect('/dashboard/system/conversations/editor/error');
-			return;
-		}*/
 		$rtID = $this->post('rtID');
 		$rtName = $this->post('rtName');
 		$rtPoints = $this->post('rtPoints');

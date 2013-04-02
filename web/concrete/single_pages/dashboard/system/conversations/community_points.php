@@ -56,6 +56,7 @@ echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Comm
 			</ul>
 		<? }else{ ?>
 			<p><?=t('There are no Community Points Rating Types installed.')?></p>
+			
 		<? } ?>
 	</div>
 	<div class='ccm-pane-footer'>
