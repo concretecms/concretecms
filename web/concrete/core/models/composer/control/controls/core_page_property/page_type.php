@@ -8,6 +8,10 @@ class Concrete5_Model_PageTypeCorePagePropertyComposerControl extends CorePagePr
 		$this->setComposerControlIconSRC(ASSETS_URL . '/models/attribute/types/select/icon.png');
 	}
 
+	public function composerFormControlSupportsValidation() {
+		return false;
+	}
+
 
 
 }

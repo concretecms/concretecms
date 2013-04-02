@@ -306,8 +306,11 @@
 					}
 				}
 
-	            $instances[$class] = new $class();
-    	        $instance = $instances[$class];
+
+				$instance = new $class();
+				if (!property_exists($instance, 'helperAlwaysCreateNewInstance') || $instance->helperAlwaysCreateNewInstance == false) {
+		            $instances[$class] = $instance;
+		        }
 			}
 			
 			if(method_exists($instance,'reset')) {

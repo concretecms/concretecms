@@ -21,6 +21,9 @@ if ($cp->canViewPage()) {
 	if ($_POST['task'] == 'edit' && Loader::helper('validation/token')->validate('update_set_control')) {
 		$control->updateFormLayoutSetControlCustomLabel($_POST['cmpFormLayoutSetControlCustomLabel']);
 		$control->updateFormLayoutSetControlCustomTemplate($_POST['cmpFormLayoutSetControlCustomTemplate']);
+		if ($object->composerFormControlSupportsValidation()) {
+			$control->updateFormLayoutSetControlRequired($_POST['cmpFormLayoutSetControlRequired']);
+		}
 		Loader::element('composer/form/layout_set/control', array('control' => $control));
 		exit;
 	}
@@ -41,6 +44,15 @@ if ($cp->canViewPage()) {
 				<?=$form->select('cmpFormLayoutSetControlCustomTemplate', $templates, $control->getComposerFormLayoutSetControlCustomTemplate())?>
 			</div>
 		</div>
+
+		<? if ($object->composerFormControlSupportsValidation()) { ?>
+		<div class="control-group">
+			<?=$form->label('cmpFormLayoutSetControlRequired', t('Required'))?>
+			<div class="controls">
+				<label class="checkbox"><?=$form->checkbox('cmpFormLayoutSetControlRequired', 1, $control->isComposerFormLayoutSetControlRequired())?> <label><?=t('Yes, require this form element')?></label></label>
+			</div>
+		</div>
+		<? } ?>
 
 		<?=Loader::helper('validation/token')->output('update_set_control')?>
 		</form>

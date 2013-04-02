@@ -14,6 +14,10 @@ abstract class Concrete5_Model_CorePagePropertyComposerControl extends ComposerC
 		return self::$cmpSaveRequest;
 	}
 
+	public function composerFormControlSupportsValidation() {
+		return true;
+	}
+
 	public function addComposerControlRequestValue($key, $value) {
 		self::$cmpSaveRequest[$key] = $value;
 	}	
@@ -31,7 +35,8 @@ abstract class Concrete5_Model_CorePagePropertyComposerControl extends ComposerC
 		return array();
 	}
 
-	public function publishToPage(Page $c, $data, $controls) {
+	public function publishToPage(ComposerDraft $d, $data, $controls) {
+		$c = $d->getComposerDraftCollectionObject();
 		array_push(self::$cmpRequestControlsProcessed, $this);
 		// now we check to see if we have any more core controls to process in this request
 		$coreControls = array();
@@ -55,7 +60,7 @@ abstract class Concrete5_Model_CorePagePropertyComposerControl extends ComposerC
 		if ($customTemplate) {
 			$rec = $env->getRecord(DIRNAME_ELEMENTS . '/' . DIRNAME_COMPOSER . '/' . DIRNAME_COMPOSER_ELEMENTS_CONTROLS . '/' . $this->cmpControlTypeHandle . '/' . $this->propertyHandle . '/' . DIRNAME_BLOCK_TEMPLATES_COMPOSER . '/' . $customTemplate);
 			if ($rec->exists()) {
-				$template = $rec->getPath();
+				$template = $rec->file;
 			}
 		}
 
@@ -65,5 +70,7 @@ abstract class Concrete5_Model_CorePagePropertyComposerControl extends ComposerC
 
 		include($template);
 	}
+
+	public function validate($data, ValidationErrorHelper $e) {}
 
 }

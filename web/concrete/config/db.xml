@@ -15,10 +15,6 @@
     </field>
     
    <field name="cmpTargetObject" type="X2"></field>
-   <field name="cmpTargetSelectedParentPageID" type="I" size="10">
-      <unsigned/>
-      <default value="0" />
-    </field>
   </table>
 
    <table name="ComposerDrafts">
@@ -41,6 +37,10 @@
     </field>
     <field name="cmpDateCreated" type="T">
       <notnull/>
+    </field>
+   <field name="cmpDraftTargetParentPageID" type="I" size="10">
+      <unsigned/>
+      <default value="0" />
     </field>
   </table>
 
@@ -121,6 +121,9 @@
     </field>
     <field name="cmpFormLayoutSetControlCustomLabel" type="C" size="255"/>
     <field name="cmpFormLayoutSetControlCustomTemplate" type="C" size="255"/>
+    <field name="cmpFormLayoutSetControlRequired" type="I" size="10">
+      <default value="0" />
+    </field>
   </table>
 
   <table name="ComposerOutputControls">
