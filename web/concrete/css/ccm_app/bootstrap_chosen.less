@@ -7,9 +7,9 @@
 // Submit bugfixes to: http://github.com/alxlit/bootstrap-chosen
 //
 
-@chznBackground: @input-background;
-@chznBorder: @input-border;
-@chznBorderRadius: @input-border-radius;
+@chznBackground: @inputBackground;
+@chznBorder: @inputBorder;
+@chznBorderRadius: @inputBorderRadius;
 @chznBoxShadow: ~"inset 0 1px 1px rgba(0, 0, 0, .075)";
 @chznDropBorder: @grayLight;
 @chznDropBoxShadow: ~"0 8px 8px rgba(0, 0, 0, .25)";
@@ -17,7 +17,7 @@
 @chznFocusBorder: rgba(82, 168, 236, .8);
 @chznFocusBoxShadow: ~"0 1px 1px rgba(0, 0, 0, .075) inset, 0 0 8px rgba(82, 168, 236, .6)";
 @chznFocusTransition: ~"border linear .2s, box-shadow linear .2s";
-@chznHeight: @line-height-base + 8px; // 4px padding
+@chznHeight: @baseLineHeight + 8px; // 4px padding
 @chznSpritePath: "images/chosen-sprite.png";
 
 .chosen            { width: 220px; }
@@ -30,7 +30,7 @@
 
 .chzn-container {
   display: inline-block;
-  font-size: @font-size-base;
+  font-size: @baseFontSize;
   position: relative;
   vertical-align: middle;
 
@@ -65,7 +65,7 @@
 
     li {
       display: none;
-      line-height: @line-height-base; // 15px;
+      line-height: @baseLineHeight; // 15px;
       list-style: none;
       margin: 0;
       padding: 5px 6px;
@@ -86,8 +86,8 @@
     }
 
     .highlighted {
-      background-color: @link-color;
-      color: @body-background;
+      background-color: @linkColor;
+      color: @bodyBackground;
 
       em {
         background: transparent;
@@ -111,7 +111,7 @@
   }
 
   .chzn-results-scroll {
-    background: @body-background;
+    background: @bodyBackground;
     margin: 0 4px;
     position: absolute;
     text-align: center;
@@ -120,7 +120,7 @@
 
     span {
       display: inline-block;
-      height: @line-height-base; // 17px;
+      height: @baseLineHeight; // 17px;
       text-indent: -5000px;
       width: 9px;
     }
@@ -144,7 +144,7 @@
 .chzn-container-single {
   .chzn-single {
     background-color: @chznBackground;
-    #gradient > .vertical(@body-background, @grayLighter);
+    #gradient > .vertical(@bodyBackground, @grayLighter);
     //.border-radius(5px);
     -webkit-background-clip: padding-box;
        -moz-background-clip: padding;
@@ -212,7 +212,7 @@
     padding: 3px 4px;
     position: relative;
     white-space: nowrap;
-    z-index: @zindex-dropdown;
+    z-index: @zindexDropdown;
 
     input {
       background: url("@{chznSpritePath}") no-repeat 100% -21px, @chznBackground;
@@ -294,7 +294,7 @@
       background-color: @grayLighter;
       border: 1px solid @chznBorder;
       .border-radius(@chznBorderRadius);
-      #gradient > .vertical(@body-background, @grayLighter);
+      #gradient > .vertical(@bodyBackground, @grayLighter);
       .box-shadow(@chznBoxShadow);
       color: @grayDark;
       cursor: default;

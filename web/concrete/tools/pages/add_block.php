@@ -42,7 +42,7 @@ $(function() {
 <div id="ccm-dialog-block-types-sets">
 
 <form class="form-inline" id="ccm-block-type-search">
-	<i class="glyphicon glyphicon-search"></i> <input type="search" />
+	<i class="icon-search"></i> <input type="search" />
 </form>
 
 	<ul>
