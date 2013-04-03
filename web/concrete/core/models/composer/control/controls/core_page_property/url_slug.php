@@ -21,8 +21,10 @@ class Concrete5_Model_UrlSlugCorePagePropertyComposerControl extends CorePagePro
 	}
 
 	public function getComposerControlDraftValue() {
-		$c = $this->cmpDraftObject->getComposerDraftCollectionObject();
-		return $c->getCollectionHandle();
+		if (is_object($this->cmpDraftObject)) {
+			$c = $this->cmpDraftObject->getComposerDraftCollectionObject();
+			return $c->getCollectionHandle();
+		}
 	}
 	
 
