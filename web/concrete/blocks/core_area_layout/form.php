@@ -6,7 +6,7 @@
 ?>
 
 <ul id="ccm-layouts-toolbar" class="ccm-sub-toolbar ccm-ui">
-	<li data-area-presets-view="presets" class="ccm-sub-toolbar-icon-cell"><a class="toolbar-icon dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)"><i class="glyphicon glyphicon-bookmark"></i></a>
+	<li data-area-presets-view="presets" class="ccm-sub-toolbar-icon-cell"><a class="toolbar-icon dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)"><i class="icon-bookmark"></i></a>
 	  <ul class="dropdown-menu ccm-dropdown-area-layout-presets">
 	  	<? foreach($presets as $pr) { ?>
 		    <li><a href="javascript:void(0)" data-area-layout-preset-id="<?=$pr->getAreaLayoutPresetID()?>"><?=$pr->getAreaLayoutPresetName()?></a></li>

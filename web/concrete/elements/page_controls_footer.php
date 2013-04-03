@@ -53,7 +53,7 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
 			<ul>
 				<li class="ccm-logo pull-left"><span><?=Loader::helper('concrete/interface')->getToolbarLogoSRC()?></span></li>
 				<? if (!$pageInUseBySomeoneElse && $c->getCollectionPointerID() == 0) { ?>
-				<li class="<? if ($c->isEditMode()) { ?> ccm-toolbar-page-edit-mode-active <? } ?> ccm-toolbar-page-edit pull-left"><a data-toggle="ccm-toolbar-hover-menu" data-toggle-menu="<?=$publishToggle?>" href="<? if (!$c->isEditMode()) { ?><?=DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=<?=$c->getCollectionID()?>&ctask=check-out<?=$token?><? } else { ?>javascript:void(0);<? } ?>"><i class="glyphicon glyphicon-pencil"></i></a>
+				<li class="<? if ($c->isEditMode()) { ?> ccm-toolbar-page-edit-mode-active <? } ?> ccm-toolbar-page-edit pull-left"><a data-toggle="ccm-toolbar-hover-menu" data-toggle-menu="<?=$publishToggle?>" href="<? if (!$c->isEditMode()) { ?><?=DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=<?=$c->getCollectionID()?>&ctask=check-out<?=$token?><? } else { ?>javascript:void(0);<? } ?>"><i class="icon-pencil"></i></a>
 
 				<? if ($c->isEditMode()) { ?>
 
@@ -65,7 +65,7 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
 						<input type="hidden" name="approve" value="PREVIEW" id="ccm-approve-field" />
 					</div>
 					<div id="ccm-exit-edit-mode-publish-menu" class="ccm-toolbar-hover-menu-footer">
-						<!--<a href=""><i class="glyphicon glyphicon-time"></i></a>//-->
+						<!--<a href=""><i class="icon-time"></i></a>//-->
 						<ul>
 							<? if ($canApprovePageVersions) { ?>
 								<? 
@@ -105,7 +105,7 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
 				<? } ?>
 
 				</li>
-				<li class="ccm-toolbar-page-settings pull-left"><a href="#" onclick="return false" data-toggle="ccm-toolbar-hover-menu" data-toggle-menu="#ccm-toolbar-menu-page-settings"><i class="glyphicon glyphicon-cog"></i></a>
+				<li class="ccm-toolbar-page-settings pull-left"><a href="#" onclick="return false" data-toggle="ccm-toolbar-hover-menu" data-toggle-menu="#ccm-toolbar-menu-page-settings"><i class="icon-cog"></i></a>
 
 				<ul id="ccm-toolbar-menu-page-settings" class="ccm-toolbar-hover-menu dropdown-menu">
 				<? if ($canEditPageProperties) { ?>
@@ -143,7 +143,7 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
 				</li>
 				<? } ?>
 
-				<li class="ccm-toolbar-account pull-right"><a href="#" data-toggle="ccm-toolbar-hover-menu" data-toggle-menu="#ccm-toolbar-menu-user"><i class="glyphicon glyphicon-user"></i></a>
+				<li class="ccm-toolbar-account pull-right"><a href="#" data-toggle="ccm-toolbar-hover-menu" data-toggle-menu="#ccm-toolbar-menu-user"><i class="icon-user"></i></a>
 				
 				<ul id="ccm-toolbar-menu-user" class="ccm-toolbar-hover-menu dropdown-menu">
 				  <li><a href="<?=$this->url('/account')?>"><?=t('Account')?></a></li>
@@ -153,7 +153,7 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
 
 				</li>
 				<? if ($dh->canRead()) { ?>
-					<li class="ccm-toolbar-dashboard pull-right"><a href="<?=$this->url('/dashboard')?>" data-toggle="ccm-toolbar-hover-menu" data-toggle-menu="#ccm-toolbar-menu-dashboard"><i class="glyphicon glyphicon-briefcase"></i></a>
+					<li class="ccm-toolbar-dashboard pull-right"><a href="<?=$this->url('/dashboard')?>" data-toggle="ccm-toolbar-hover-menu" data-toggle-menu="#ccm-toolbar-menu-dashboard"><i class="icon-briefcase"></i></a>
 
 					<?
 					print $dh->addQuickNavToMenus($dh->getDashboardAndSearchMenus());
@@ -161,9 +161,9 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
 
 					</li>
 				<? } ?>
-				<li class="ccm-toolbar-search pull-right"><i class="glyphicon glyphicon-search"></i> <input type="search" id="ccm-nav-intelligent-search" tabindex="1" /></li>
+				<li class="ccm-toolbar-search pull-right"><i class="icon-search"></i> <input type="search" id="ccm-nav-intelligent-search" tabindex="1" /></li>
 				<? if ($c->isEditMode() && $cp->canEditPageContents()) { ?>
-					<li class="ccm-toolbar-add pull-right"><a class="dialog-launch" title="<?=t('Add Block')?>" dialog-width="660" dialog-height="430" dialog-modal="false" dialog-title="<?=t('Add Block')?>" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/pages/add_block?cID=<?=$c->getCollectionID()?>"><i class="glyphicon glyphicon-plus"></i></a></li>
+					<li class="ccm-toolbar-add pull-right"><a class="dialog-launch" title="<?=t('Add Block')?>" dialog-width="660" dialog-height="430" dialog-modal="false" dialog-title="<?=t('Add Block')?>" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/pages/add_block?cID=<?=$c->getCollectionID()?>"><i class="icon-plus"></i></a></li>
 				<? } ?>
 
 			</ul>
@@ -271,7 +271,7 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
 							$appLabel = t('Approve Version');
 						}
 						?>
-						<a href="<?=DIR_REL . "/" . DISPATCHER_FILENAME . "?cID=" . $c->getCollectionID() . "&ctask=approve-recent" . $token?>" class="btn btn-mini"><?=$appLabel?> <i class="glyphicon glyphicon-thumbs-up"></i></a>
+						<a href="<?=DIR_REL . "/" . DISPATCHER_FILENAME . "?cID=" . $c->getCollectionID() . "&ctask=approve-recent" . $token?>" class="btn btn-mini"><?=$appLabel?> <i class="icon-thumbs-up"></i></a>
 					</div>
 					<? } ?>
 				</div>

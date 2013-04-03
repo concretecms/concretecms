@@ -41,7 +41,7 @@ div#ccm-dialog-block-types {
 		background-color: #fff;
 		padding: 0px;
 		height: 47px;
-		width: 193px;
+		width: 195px;
 		white-space: nowrap;
 		color: #c8c8c8;
 		position: relative;
@@ -49,9 +49,9 @@ div#ccm-dialog-block-types {
 		margin-bottom: 15px;
 
 		input {
-			margin-left: 30px;
-			height: 43px;
-			padding: 10px 0px 0px 10px;
+			margin: 0px 0px 0px 45px;
+			height: 33px;
+			padding: 10px 0px 0px 0px;
 			width: 160px;
 			border: 0px;
 			.border-radius(0px);
@@ -63,7 +63,7 @@ div#ccm-dialog-block-types {
 			outline: none !important;
 		}
 
-		i.glyphicon-search {
+		i.icon-search {
 			position: absolute;
 			top: 20px;
 			left: 20px;
@@ -82,9 +82,9 @@ ul#ccm-overlay-block-types a, a.ccm-overlay-draggable-block-type {
 	width: 100px; 
 	line-height: 100px;
 	text-align: center;
-	background-color: @well-background;
-	border: 1px solid darken(@well-background, 7%);
-	.border-radius(@border-radius-base);
+	background-color: @wellBackground;
+	border: 1px solid darken(@wellBackground, 7%);
+	.border-radius(@baseBorderRadius);
 	.box-shadow(inset 0 1px 1px rgba(0,0,0,.05));
 
 	span {
@@ -95,8 +95,8 @@ ul#ccm-overlay-block-types a, a.ccm-overlay-draggable-block-type {
 		text-align: center;
 		display: block;
 		color: @gray;
-		font-size: @font-size-mini;
-		line-height: @font-size-small;
+		font-size: @fontSizeMini;
+		line-height: @fontSizeSmall;
 		font-weight: lighter;
 	}
 

@@ -63,7 +63,7 @@ div#ccm-toolbar {
 			color: #c8c8c8;
 			position: relative;
 
-			i.glyphicon-search {
+			i.icon-search {
 				position: absolute;
 				top: 16px;
 				left: 16px;
@@ -97,9 +97,10 @@ div#ccm-toolbar {
 	}
 
 	input[type=search] {
-		margin-left: 40px;
+		margin: 0px 0px 0px 40px;
 		height: 47px;
 		width: 210px;
+		padding: 0px;
 	}
 
 	input[type=search], textarea {
@@ -219,7 +220,7 @@ div#ccm-toolbar {
 
 /* In-page HUD */
 div#ccm-notification {
-	font-family: @font-family-sans-serif;
+	font-family: @sansFontFamily;
 	position: fixed; 
 	display: none; 
 	top: 60px; 
@@ -232,7 +233,6 @@ div#ccm-notification {
 	padding: 6px 8px 6px 8px;
 	z-index: 500; 
 	font-size: 14px;
-	font-size: 1.4rem;
 
 	a {
 		color: #444; 
@@ -246,8 +246,6 @@ div#ccm-notification {
 		padding: 0px; 
 		line-height: 16px; 
 		color: #444;
-		font-size: 1.6rem;
-		line-height: 1.6rem;
 	}
 
 	img#ccm-notification-icon {
