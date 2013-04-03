@@ -81,7 +81,10 @@ class Concrete5_Model_BlockComposerControl extends ComposerControl {
 
 	public function addToComposerFormLayoutSet(ComposerFormLayoutSet $set) {
 		$layoutSetControl = parent::addToComposerFormLayoutSet($set);
-		ComposerOutputControl::add($layoutSetControl, STACKS_AREA_NAME);
+		$composer = $set->getComposerObject();
+		foreach($composer->getComposerPageTypeObjects() as $ct) {
+			ComposerOutputControl::add($layoutSetControl, $ct, STACKS_AREA_NAME);
+		}
 		return $layoutSetControl;
 	}
 
@@ -89,10 +92,13 @@ class Concrete5_Model_BlockComposerControl extends ComposerControl {
 		$env = Environment::get();
 		$form = Loader::helper('form');
 		$bt = $this->getBlockTypeObject();
+		$set = $this->getComposerFormLayoutSetControlObject()->getComposerFormLayoutSetObject();
+		$control = $this;
+
 		if ($customTemplate) {
 			$rec = $env->getRecord(DIRNAME_BLOCKS . '/' . $bt->getBlockTypeHandle() . '/' . DIRNAME_BLOCK_TEMPLATES_COMPOSER . '/' . $customTemplate);
 			if ($rec->exists()) {
-				$template = $customTemplate;
+				$template = DIRNAME_BLOCK_TEMPLATES_COMPOSER . '/' . $customTemplate;
 			}
 		}
 
@@ -105,24 +111,62 @@ class Concrete5_Model_BlockComposerControl extends ComposerControl {
 
 	public function inc($file, $args = array()) {
 		extract($args);
-		$bt = $this->getBlockTypeObject();
-		$controller = $bt->getController();
+		$obj = $this->getComposerControlDraftValue();
+		if (!is_object($obj)) {
+			$obj = $this->getBlockTypeObject();
+		}
+		$controller = $obj->getController();
 		extract($controller->getSets());
 		extract($controller->getHelperObjects());
 		$label = $this->getComposerFormLayoutSetControlObject()->getComposerControlLabel();
 		$env = Environment::get();
-		include($env->getPath(DIRNAME_BLOCKS . '/' . $bt->getBlockTypeHandle() . '/' . $file));
+		include($env->getPath(DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle() . '/' . $file));
 	}
 
+	public function getComposerControlDraftValue() {
+		if (is_object($this->cmpDraftObject)) {
+			$c = $this->cmpDraftObject->getComposerDraftCollectionObject();
+			$ct = CollectionType::getByID($c->getCollectionTypeID());
+			$setControl = $this->getComposerFormLayoutSetControlObject();
+			$outputControl = $setControl->getComposerOutputControlObject($ct);
+			$arHandle = $outputControl->getComposerOutputControlAreaHandle();
+			$db = Loader::db();
+			$bID = $db->GetOne('select bID from ComposerDraftBlocks where cmpDraftID = ? and cmpFormLayoutSetControlID = ?', array(
+				$this->cmpDraftObject->getComposerDraftID(), $setControl->getComposerFormLayoutSetControlID()
+			));
+			return Block::getByID($bID, $c, $arHandle);
+		}
+	}
 	public function publishToPage(ComposerDraft $d, $data, $controls) {
 		$c = $d->getComposerDraftCollectionObject();
 		// for blocks, we need to also grab their output 
 		$bt = $this->getBlockTypeObject();
-		$outputControl = $this->getComposerFormLayoutSetControlObject()->getComposerOutputControlObject();
+		$ct = CollectionType::getByID($c->getCollectionTypeID());
+		$setControl = $this->getComposerFormLayoutSetControlObject();
+
+		// delete the block that this set control has placed on this version, because
+		// we are going to replace it with a new one.
+		$db = Loader::db();
+		$q = 'select cvb.arHandle, cdb.bID from ComposerDraftBlocks cdb inner join ComposerDrafts cd on cdb.cmpDraftID = cd.cmpDraftID inner join CollectionVersionBlocks cvb on (cdb.bID = cvb.bID and cvb.cID = cd.cID and cvb.cvID = ?) where cdb.cmpFormLayoutSetControlID = ? and cd.cmpDraftID = ?';
+		$v = array($c->getVersionID(), $setControl->getComposerFormLayoutSetControlID(), $d->getComposerDraftID());
+		$row = $db->GetRow($q, $v);
+		if ($row['bID'] && $row['arHandle']) {
+			$ob = Block::getByID($row['bID'], $c, $row['arHandle']);
+			$ob->deleteBlock();
+			$db->Execute('delete from ComposerDraftBlocks where cmpFormLayoutSetControlID = ? and cmpDraftID = ?', array($setControl->getComposerFormLayoutSetControlID(), $d->getComposerDraftID()));
+		}
+
+		$outputControl = $setControl->getComposerOutputControlObject($ct);
 		$arHandle = $outputControl->getComposerOutputControlAreaHandle();
 		$ax = Area::getOrCreate($c, $arHandle);
 		$b = $c->addBlock($bt, $ax, $data);
 		$this->setComposerControlBlockObject($b);
+
+		// make a reference to the new block
+		$db = Loader::db();
+		$db->Execute('insert into ComposerDraftBlocks (cmpDraftID, cmpFormLayoutSetControlID, bID) values (?, ?, ?)', array(
+			$d->getComposerDraftID(), $setControl->getComposerFormLayoutSetControlID(), $b->getBlockID()
+		));
 	}
 
 	public function validate($data, ValidationErrorHelper $e) {

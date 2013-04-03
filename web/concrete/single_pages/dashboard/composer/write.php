@@ -4,8 +4,11 @@
 <? if (is_object($composer)) { ?>
 
 	<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper($composer->getComposerName(), false, false, false)?>
-	<form method="post" class="form-horizontal" action="<?=$this->action('save', $composer->getComposerID())?>">
+	<form method="post" data-form="composer" class="form-horizontal">
 	<div class="ccm-pane-body">
+
+	<div id="composer-save-status"></div>
+
 	<? foreach($fieldsets as $cfl) { ?>
 		<fieldset style="margin-bottom: 0px">
 			<? if ($cfl->getComposerFormLayoutSetName()) { ?>
@@ -14,6 +17,9 @@
 			<? $controls = ComposerFormLayoutSetControl::getList($cfl);
 
 			foreach($controls as $con) { 
+				if (is_object($draft)) { // we are loading content in
+					$con->setComposerDraftObject($draft);
+				}
 				$cnp = new Permissions($con);
 				if ($cnp->canAccessComposerFormLayoutSetControl()) { ?>
 					<? $con->render(); ?>
@@ -27,9 +33,78 @@
 
 	</div>
 	<div class="ccm-pane-footer">
-		<button type="submit" class="btn btn-primary pull-right"><?=t('Publish')?></button>
+		<button type="button" id="ccm-composer-btn-publish" class="btn btn-primary pull-right" style="margin-left: 10px"><?=t('Publish')?></button>
+		<button type="button" id="ccm-composer-btn-save" class="btn pull-right" style="margin-left: 10px"><?=t('Save and Exit')?></button>
+		<button type="button" id="ccm-composer-btn-exit" class="btn pull-right"><?=t('Back to Drafts')?></button>
+		<button type="button" id="ccm-composer-btn-discard" class="btn btn-danger pull-left"><?=t('Discard Draft')?></button>
 	</div>
+
+
 	</form>
+
+	<script type="text/javascript">
+	var ccm_saveComposerDraftURL = '<?=$saveURL?>';
+	var ccm_publishComposerDraftURL = '<?=$publishURL?>';
+	var ccm_discardComposerDraftURL = '<?=$discardURL?>';
+	var ccm_saveComposerDraftInterval = false;
+
+	ccm_saveComposerDraft = function(onComplete) {
+		var $f = $('form[data-form=composer]'),
+			formData = $f.serializeArray();
+
+		$.ajax({
+			dataType: 'json',
+			type: 'post',
+			data: formData,
+			url: ccm_saveComposerDraftURL,
+			success: function(r) {
+				$("#composer-save-status").html('<div class="alert alert-info"><?=t("Page saved at ")?>' + r.time + '</div>');
+				if (r.saveurl) {
+					ccm_saveComposerDraftURL = r.saveurl;
+				}
+				if (r.discardurl) {
+					ccm_discardComposerDraftURL = r.discardurl;
+				}
+				if (r.publishurl) {
+					ccm_publishComposerDraftURL = r.publishurl;
+				}
+				if (onComplete) {
+					onComplete();
+				}
+			}
+		});
+	}
+
+	$(function() {
+
+		ccm_saveComposerDraftInterval = setInterval(function() {
+			ccm_saveComposerDraft()
+		}, 10000);
+
+		$('#ccm-composer-btn-exit').on('click', function() {
+			window.location.href = "<?=$this->url('/dashboard/composer/drafts')?>";
+		});
+
+		$('#ccm-composer-btn-discard').on('click', function() {
+			window.location.href = ccm_discardComposerDraftURL;
+		});
+
+		$('#ccm-composer-btn-save').on('click', function() {
+			clearInterval(ccm_saveComposerDraftInterval);
+			ccm_saveComposerDraft(function() {
+				window.location.href = "<?=$this->url('/dashboard/composer/drafts')?>";
+			});
+		});
+
+		$('#ccm-composer-btn-publish').on('click', function() {
+			clearInterval(ccm_saveComposerDraftInterval);
+			var $f = $('form[data-form=composer]');
+			$f.attr('action', ccm_publishComposerDraftURL);
+			$f.submit();
+		});
+
+	});
+	</script>
 	<?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(false)?>
 
 
@@ -41,7 +116,7 @@
 	<h3><?=t('What would you like to write?')?></h3>
 	<ul class="item-select-list">
 	<? foreach($composers as $cmp) { ?>
-		<li class="item-select-page"><a href="<?=$this->url('/dashboard/composer/write', $cmp->getComposerID())?>"><?=$cmp->getComposerName()?></a></li>
+		<li class="item-select-page"><a href="<?=$this->url('/dashboard/composer/write', 'composer', $cmp->getComposerID())?>"><?=$cmp->getComposerName()?></a></li>
 	<? } ?>
 	</ul>
 	<? } else { ?>

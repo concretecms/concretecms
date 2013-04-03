@@ -28,4 +28,12 @@ class Concrete5_Model_NameCorePagePropertyComposerControl extends CorePageProper
 		return $data;
 	}
 
+	public function getComposerControlDraftValue() {
+		if (is_object($this->cmpDraftObject)) {
+			$c = $this->cmpDraftObject->getComposerDraftCollectionObject();
+			return $c->getCollectionName();
+		}
+	}
+	
+
 }

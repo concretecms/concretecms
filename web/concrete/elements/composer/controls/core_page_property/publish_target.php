@@ -1,13 +1,13 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-$set = $control->getComposerFormLayoutSetObject();
 $composer = $set->getComposerObject();
 $target = $composer->getComposerTargetObject();
+$draft = $control->getComposerDraftObject();
 ?>
 
 <div class="control-group">
 	<label class="control-label"><?=$label?></label>
 	<div class="controls" data-composer-field="name">
-		<?=$target->includeChooseTargetForm($composer)?>
+		<?=$target->includeChooseTargetForm($composer, $draft)?>
 	</div>
 </div>

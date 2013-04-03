@@ -5,7 +5,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 <div class="control-group">
 	<label class="control-label"><?=$label?></label>
 	<div class="controls" data-composer-field="name">
-		<?=$form->text($this->field('name'))?>
+		<?=$form->text($this->field('name'), $control->getComposerControlDraftValue())?>
 	</div>
 </div>
 
