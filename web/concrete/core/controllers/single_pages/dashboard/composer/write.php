@@ -8,6 +8,7 @@ class Concrete5_Controller_Dashboard_Composer_Write extends DashboardBaseControl
 			case 'composer':
 				$this->composer = Composer::getByID($id);
 				$this->set('saveURL', View::url('/dashboard/composer/write', 'save', 'composer', $id));
+				$this->set('discardURL', View::url('/dashboard/composer/drafts'));
 				break;
 			case 'draft':
 				$this->draft = ComposerDraft::getByID($id);
@@ -15,6 +16,7 @@ class Concrete5_Controller_Dashboard_Composer_Write extends DashboardBaseControl
 					$this->composer = $this->draft->getComposerObject();
 				}
 				$this->set('saveURL', View::url('/dashboard/composer/write', 'save', 'draft', $id));
+				$this->set('discardURL', View::url('/dashboard/composer/write', 'discard', $id, Loader::helper('validation/token')->generate('discard_draft')));
 				break;
 		}
 
@@ -65,6 +67,14 @@ class Concrete5_Controller_Dashboard_Composer_Write extends DashboardBaseControl
 		}
 	}
 
+	public function discard($cmpDraftID = false, $token = false) {
+		if (Loader::helper('validation/token')->validate('discard_draft', $token)) {
+			$draft = ComposerDraft::getByID($cmpDraftID);
+			$draft->discard();
+			$this->redirect('/dashboard/composer/drafts');
+		}
+	}
+
 	public function save($type = 'composer', $id = false, $return = 'json') {
 		Cache::disableCache();
 		Cache::disableLocalCache();
@@ -86,6 +96,7 @@ class Concrete5_Controller_Dashboard_Composer_Write extends DashboardBaseControl
 				$d = $this->composer->createDraft($ct);
 			} else {
 				$d = $this->draft;
+				$d->createNewCollectionVersion();
 			}
 
 			$controls = ComposerControl::getList($this->composer);
@@ -102,11 +113,16 @@ class Concrete5_Controller_Dashboard_Composer_Write extends DashboardBaseControl
 				$targetPageID = $this->post('cParentID');
 			}
 			$d->setComposerDraftTargetParentPageID($targetPageID);
+			$d->finishSave();
 			if ($return == 'json') {
 				$ax = Loader::helper('ajax');
 				$r = new stdClass;
 				$r->time = date('F d, Y g:i A');
 				$r->cmpDraftID = $d->getComposerDraftID();
+				// we make sure to send back the save url which we need because it changes
+				// between making a draft and saving new copies of drafts.
+				$r->saveurl = View::url('/dashboard/composer/write', 'save', 'draft', $d->getComposerDraftID());
+				$r->discardurl = View::url('/dashboard/composer/write', 'discard', $d->getComposerDraftID(), Loader::helper('validation/token')->generate('discard_draft'));
 				$ax->sendResult($r);
 			}
 			//$this->publish($d, $outputControls);
