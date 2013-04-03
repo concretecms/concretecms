@@ -114,12 +114,12 @@
 	
 		function getFileID() {return $this->fID;}
 		function getFileOnstateID() {return $this->fOnstateID;}
-		public function getFileObject() {
+		public function getFileOnstateObject() {
 			if($this->fOnstateID) {
 				return File::getByID($this->fOnstateID);
 			}
 		}
-		public function getFileOnstateObject() {
+		public function getFileObject() {
 			return File::getByID($this->fID);
 		}
 		function getAltText() {return $this->altText;}

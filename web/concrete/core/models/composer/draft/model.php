@@ -3,9 +3,13 @@ defined('C5_EXECUTE') or die("Access Denied.");
 class Concrete5_Model_ComposerDraft extends Object {
 
 	protected $c;
+	protected $cmpVersionsToSave = 10;
 
 	public function getComposerDraftID() {return $this->cmpDraftID;}
 	public function getComposerID() {return $this->cmpID;}
+	public function getComposerObject() {
+		return Composer::getByID($this->cmpID);
+	}
 	public function getComposerDraftDateCreated() {return $this->cmpDateCreated;}
 	public function getComposerDraftUserID() {return $this->uID;}
 	public function getComposerDraftCollectionID() {return $this->cID;}
@@ -17,6 +21,25 @@ class Concrete5_Model_ComposerDraft extends Object {
 			return $this->c;
 		}
 	}
+
+	public function createNewCollectionVersion() {
+		$c = $this->getComposerDraftCollectionObject();
+		$this->c = $c->cloneVersion('');
+	}
+
+	public function finishSave() {
+		// remove all but the most recent X drafts.
+		$vl = new VersionList($this->getComposerDraftCollectionObject(), -1);
+		// this will ensure that we only ever keep X versions.
+		$vArray = $vl->getVersionListArray();
+		if (count($vArray) > $this->cmpVersionsToSave) {
+			for ($i = $this->cmpVersionsToSave; $i < count($vArray); $i++) {
+				$v = $vArray[$i];
+				@$v->delete();
+			} 
+		}	
+	}
+
 	public function getComposerDraftTargetParentPageID() {return $this->cmpDraftTargetParentPageID;}
 	
 	public static function getByID($cmpDraftID) {
@@ -27,6 +50,28 @@ class Concrete5_Model_ComposerDraft extends Object {
 			$cm->setPropertiesFromArray($r);
 			return $cm;
 		}
+	}
+
+	public function discard() {
+		$c = $this->getComposerDraftCollectionObject();
+		$c->delete();
+		$db = Loader::db();
+		$db->Execute('delete from ComposerDrafts where cmpDraftID = ?', array($this->cmpDraftID));
+		$db->Execute('delete from ComposerDraftBlocks where cmpDraftID = ?', array($this->cmpDraftID));
+	}
+
+	public function getMyDrafts() {
+		$db = Loader::db();
+		$u = new User();
+		$r = $db->Execute('select ComposerDrafts.cmpDraftID from ComposerDrafts where uID = ? order by cmpDateCreated desc', array($u->getUserID()));
+		$pages = array();
+		while ($row = $r->FetchRow()) {
+			$entry = ComposerDraft::getByID($row['cmpDraftID']);
+			if (is_object($entry)) {
+				$pages[] = $entry;
+			}
+		}
+		return $pages;		
 	}
 
 	public function setComposerDraftTargetParentPageID($cParentID) {

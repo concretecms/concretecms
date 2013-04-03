@@ -2,23 +2,41 @@
 
 <?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('%s Output', $composer->getComposerName()), false, false)?>
 
-<? if (count($areas) > 0) {
+<? 
+$tabs = array();
+$i = 0;
+foreach($composer->getComposerPageTypeObjects() as $ct) {
+	$tabs[] = array($ct->getCollectionTypeID(), $ct->getCollectionTypeName(), $i == 0);
+	$i++;
+}
+print Loader::helper('concrete/interface')->tabs($tabs);
 
-	foreach($areas as $area) { ?>
+foreach($composer->getComposerPageTypeObjects() as $ct) { ?>
+	
+	<div id="ccm-tab-content-<?=$ct->getCollectionTypeID()?>" class="ccm-tab-content" data-composer-control-output-collection-type-id="<?=$ct->getCollectionTypeID()?>">
+		<?
+		$areas = ComposerOutputControl::getCollectionTypeAreas($ct);
+		if (count($areas) > 0) {
 
-		<div class="ccm-composer-control-output-area" data-composer-control-output-area="<?=$area?>">
-			<div class="ccm-composer-control-output-area-handle" ><?=$area?></div>
-			<div class="ccm-composer-control-output-area-inner">
-				<? $controls = ComposerOutputControl::getList($composer, $area);
-				foreach($controls as $cnt) { ?>
-					<? Loader::element('composer/output/control', array('control' => $cnt));?>
-				<? } ?>
-			</div>
-		</div>
+			foreach($areas as $area) { ?>
 
-	<? } ?>
-<? } else { ?>
-	<p><?=t('There are no areas.')?></p>
+				<div class="ccm-composer-control-output-area" data-composer-control-output-area="<?=$area?>">
+					<div class="ccm-composer-control-output-area-handle" ><?=$area?></div>
+					<div class="ccm-composer-control-output-area-inner">
+						<? $controls = ComposerOutputControl::getList($composer, $ct, $area);
+						foreach($controls as $cnt) { ?>
+							<? Loader::element('composer/output/control', array('control' => $cnt));?>
+						<? } ?>
+					</div>
+				</div>
+
+			<? } ?>
+		<? } else { ?>
+			<p><?=t('There are no areas.')?></p>
+		<? }
+		?>
+	</div>
+
 <? } ?>
 
 
@@ -33,29 +51,35 @@ $(function() {
 		axis: 'y', 
 		stop: function() {
 
-			var formData = [{
-				'name': 'token',
-				'value': '<?=Loader::helper("validation/token")->generate("update_output_control_display_order")?>'
-			}, {
-				'name': 'cmpID',
-				'value': '<?=$composer->getComposerID()?>'
-			}];
+			$('.ccm-tab-content:visible').each(function() {
+				var ctID = $(this).attr('data-composer-control-output-collection-type-id');
 
-			$('div[data-composer-control-output-area]').each(function() {
-				var area = $(this).attr('data-composer-control-output-area');
-				$(this).find('div[data-composer-output-control-id]').each(function() {
-					var controlID = $(this).attr('data-composer-output-control-id');
-					formData.push({'name': 'area[' + area + '][]', 'value': controlID});
+				var formData = [{
+					'name': 'token',
+					'value': '<?=Loader::helper("validation/token")->generate("update_output_control_display_order")?>'
+				}, {
+					'name': 'cmpID',
+					'value': '<?=$composer->getComposerID()?>'
+				}, {
+					'name': 'ctID',
+					'value': ctID
+				}];
+
+				$(this).find('div[data-composer-control-output-area]').each(function() {
+					var area = $(this).attr('data-composer-control-output-area');
+					$(this).find('div[data-composer-output-control-id]').each(function() {
+						var controlID = $(this).attr('data-composer-output-control-id');
+						formData.push({'name': 'area[' + area + '][]', 'value': controlID});
+					});
+				});
+
+				$.ajax({
+					type: 'post',
+					data: formData,
+					url: '<?=$this->action("update_output_control_display_order")?>',
+					success: function() {}
 				});
 			});
-
-			$.ajax({
-				type: 'post',
-				data: formData,
-				url: '<?=$this->action("update_output_control_display_order")?>',
-				success: function() {}
-			});
-
 		}
 	});
 
@@ -63,6 +87,10 @@ $(function() {
 </script>
 
 <style type="text/css">
+
+div.ccm-tab-content {
+	padding: 10px;
+}
 
 div.ccm-composer-control-output-area {
 	margin-bottom: 20px;
@@ -132,4 +160,5 @@ ul.ccm-composer-item-controls li {
 
 
 </style>
+
 <?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper();?>

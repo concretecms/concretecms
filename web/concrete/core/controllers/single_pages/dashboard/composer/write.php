@@ -3,19 +3,37 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 class Concrete5_Controller_Dashboard_Composer_Write extends DashboardBaseController {
 
-	public function view($cmpID = false) {
-		$this->composer = Composer::getByID($cmpID);
+	public function view($type = false, $id = false) {
+		switch($type) {
+			case 'composer':
+				$this->composer = Composer::getByID($id);
+				$this->set('saveURL', View::url('/dashboard/composer/write', 'save', 'composer', $id));
+				$this->set('discardURL', View::url('/dashboard/composer/drafts'));
+				$this->set('publishURL', View::url('/dashboard/composer/write', 'save', 'composer', $id, 'publish'));
+				break;
+			case 'draft':
+				$this->draft = ComposerDraft::getByID($id);
+				if (is_object($this->draft)) {
+					$this->composer = $this->draft->getComposerObject();
+				}
+				$this->set('saveURL', View::url('/dashboard/composer/write', 'save', 'draft', $id));
+				$this->set('discardURL', View::url('/dashboard/composer/write', 'discard', $id, Loader::helper('validation/token')->generate('discard_draft')));
+				$this->set('publishURL', View::url('/dashboard/composer/write', 'save', 'draft', $id, 'publish'));
+				break;
+		}
+
 		if (!is_object($this->composer)) {
 			$composers = Composer::getList();
 			if (count($composers) == 1) {
 				$cmp = $composers[0];
-				$this->redirect('/dashboard/composer/write', $cmp->getComposerID());
+				$this->redirect('/dashboard/composer/write', 'composer', $cmp->getComposerID());
 			} else {
 				$this->set('composers', $composers);
 			}
 		} else {
 			$this->set('composer', $this->composer);
 			$this->set('fieldsets', ComposerFormLayoutSet::getList($this->composer));
+			$this->set('draft', $this->draft);
 			$this->setupAssets();
 		}
 	}
@@ -51,12 +69,20 @@ class Concrete5_Controller_Dashboard_Composer_Write extends DashboardBaseControl
 		}
 	}
 
-	public function save($cmpID = false) {
+	public function discard($cmpDraftID = false, $token = false) {
+		if (Loader::helper('validation/token')->validate('discard_draft', $token)) {
+			$draft = ComposerDraft::getByID($cmpDraftID);
+			$draft->discard();
+			$this->redirect('/dashboard/composer/drafts');
+		}
+	}
+
+	public function save($type = 'composer', $id = false, $action = 'return_json') {
 		Cache::disableCache();
 		Cache::disableLocalCache();
 		session_write_close();
 
-		$this->view($cmpID);
+		$this->view($type, $id);
 		$ct = CollectionType::getByID($this->post('cmpPageTypeID'));
 		$availablePageTypes = $this->composer->getComposerPageTypeObjects();
 
@@ -68,7 +94,13 @@ class Concrete5_Controller_Dashboard_Composer_Write extends DashboardBaseControl
 
 		if (!$this->error->has()) {
 			// create the page
-			$d = $this->composer->createDraft($ct);
+			if (!is_object($this->draft)) {
+				$d = $this->composer->createDraft($ct);
+			} else {
+				$d = $this->draft;
+				$d->createNewCollectionVersion();
+			}
+
 			$controls = ComposerControl::getList($this->composer);
 			$outputControls = array();
 			foreach($controls as $cn) {
@@ -83,7 +115,21 @@ class Concrete5_Controller_Dashboard_Composer_Write extends DashboardBaseControl
 				$targetPageID = $this->post('cParentID');
 			}
 			$d->setComposerDraftTargetParentPageID($targetPageID);
-			$this->publish($d, $outputControls);
+			$d->finishSave();
+			if ($action == 'return_json') {
+				$ax = Loader::helper('ajax');
+				$r = new stdClass;
+				$r->time = date('F d, Y g:i A');
+				$r->cmpDraftID = $d->getComposerDraftID();
+				// we make sure to send back the save url which we need because it changes
+				// between making a draft and saving new copies of drafts.
+				$r->saveurl = View::url('/dashboard/composer/write', 'save', 'draft', $d->getComposerDraftID());
+				$r->discardurl = View::url('/dashboard/composer/write', 'discard', $d->getComposerDraftID(), Loader::helper('validation/token')->generate('discard_draft'));
+				$r->publishurl = View::url('/dashboard/composer/write', 'save', $d->getComposerDraftID(), 'publish');
+				$ax->sendResult($r);
+			} else if ($action == 'publish') {
+				$this->publish($d, $outputControls);
+			}
 		}
 	}
 

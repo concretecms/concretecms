@@ -20,6 +20,11 @@ class Concrete5_Model_DateTimeCorePagePropertyComposerControl extends CorePagePr
 		}
 	}
 
+	public function getComposerControlDraftValue() {
+		$c = $this->cmpDraftObject->getComposerDraftCollectionObject();
+		return $c->getCollectionDatePublic();
+	}
+	
 
 
 }
