@@ -74,7 +74,7 @@ if ($b->getBlockTypeHandle() == BLOCK_HANDLE_LAYOUT_PROXY) {
 
 		<ul class="ccm-edit-mode-inline-commands ccm-ui">
 		<? if ($p->canEditBlock() && (!$a->isGlobalArea())) {  ?>
-			<li><a data-inline-command="move-block" href="#"><i class="glyphicon glyphicon-move"></i></a></li>
+			<li><a data-inline-command="move-block" href="#"><i class="icon-move"></i></a></li>
 		<? } ?>
 		</ul>
 		

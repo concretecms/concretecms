@@ -120,8 +120,8 @@ $backgroundImage = Loader::helper('concrete/dashboard')->getDashboardBackgroundI
 	<ul>
 		<li class="ccm-logo pull-left"><span><?=Loader::helper('concrete/interface')->getToolbarLogoSRC()?></span></li>
 
-		<li class="ccm-toolbar-account pull-left"><a href="<?=DIR_REL?>/"><i class="glyphicon glyphicon-arrow-left"></i></a>
-		<li class="ccm-toolbar-account pull-right"><a href="#" data-toggle="ccm-toolbar-hover-menu" data-toggle-menu="#ccm-toolbar-menu-user"><i class="glyphicon glyphicon-user"></i></a>
+		<li class="ccm-toolbar-account pull-left"><a href="<?=DIR_REL?>/"><i class="icon-arrow-left"></i></a>
+		<li class="ccm-toolbar-account pull-right"><a href="#" data-toggle="ccm-toolbar-hover-menu" data-toggle-menu="#ccm-toolbar-menu-user"><i class="icon-user"></i></a>
 		
 		<ul id="ccm-toolbar-menu-user" class="ccm-toolbar-hover-menu dropdown-menu">
 		  <li><a href="<?=$this->url('/account')?>"><?=t('Account')?></a></li>
@@ -130,7 +130,7 @@ $backgroundImage = Loader::helper('concrete/dashboard')->getDashboardBackgroundI
 		</ul>
 
 		</li>
-		<li class="ccm-toolbar-dashboard pull-right"><a href="<?=$this->url('/dashboard')?>" data-toggle="ccm-toolbar-hover-menu" data-toggle-menu="#ccm-toolbar-menu-dashboard"><i class="glyphicon glyphicon-briefcase"></i></a>
+		<li class="ccm-toolbar-dashboard pull-right"><a href="<?=$this->url('/dashboard')?>" data-toggle="ccm-toolbar-hover-menu" data-toggle-menu="#ccm-toolbar-menu-dashboard"><i class="icon-briefcase"></i></a>
 
 		<?
 		$dh = Loader::helper('concrete/dashboard');
@@ -139,7 +139,7 @@ $backgroundImage = Loader::helper('concrete/dashboard')->getDashboardBackgroundI
 
 		</li>
 
-		<li class="ccm-toolbar-search pull-right"><i class="glyphicon glyphicon-search"></i> <input type="search" id="ccm-nav-intelligent-search" tabindex="1" /></li>
+		<li class="ccm-toolbar-search pull-right"><i class="icon-search"></i> <input type="search" id="ccm-nav-intelligent-search" tabindex="1" /></li>
 
 	</ul>
 

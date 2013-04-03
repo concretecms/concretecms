@@ -8,16 +8,19 @@
 
 .alert {
   padding: 8px 35px 8px 14px;
-  margin-bottom: @line-height-base;
-  color: @state-warning-text;
-  background-color: @state-warning-background;
-  border: 1px solid @state-warning-border;
-  border-radius: @border-radius-base;
+  margin-bottom: @baseLineHeight;
+  text-shadow: 0 1px 0 rgba(255,255,255,.5);
+  background-color: @warningBackground;
+  border: 1px solid @warningBorder;
+  .border-radius(@baseBorderRadius);
+}
+.alert,
+.alert h4 {
+  // Specified for the h4 to prevent conflicts of changing @headingsColor
+  color: @warningText;
 }
 .alert h4 {
-  margin-top: 0;
-  // Specified for the h4 to prevent conflicts of changing @headingsColor
-  color: inherit;
+  margin: 0;
 }
 
 // Adjust close link position
@@ -25,29 +28,40 @@
   position: relative;
   top: -2px;
   right: -21px;
-  line-height: @line-height-base;
-  color: inherit;
+  line-height: @baseLineHeight;
 }
+
 
 // Alternate styles
 // -------------------------
 
 .alert-success {
-  background-color: @state-success-background;
-  border-color: @state-success-border;
-  color: @state-success-text;
+  background-color: @successBackground;
+  border-color: @successBorder;
+  color: @successText;
+}
+.alert-success h4 {
+  color: @successText;
 }
 .alert-danger,
 .alert-error {
-  background-color: @state-error-background;
-  border-color: @state-error-border;
-  color: @state-error-text;
+  background-color: @errorBackground;
+  border-color: @errorBorder;
+  color: @errorText;
+}
+.alert-danger h4,
+.alert-error h4 {
+  color: @errorText;
 }
 .alert-info {
-  background-color: @state-info-background;
-  border-color: @state-info-border;
-  color: @state-info-text;
+  background-color: @infoBackground;
+  border-color: @infoBorder;
+  color: @infoText;
 }
+.alert-info h4 {
+  color: @infoText;
+}
+
 
 // Block alerts
 // -------------------------

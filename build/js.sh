@@ -26,6 +26,16 @@ uglifyjs --no-copyright --no-seqs -o ../web/concrete/js/ccm.pubsub.js ./ccm.pubs
 rm ccm.pubsub.tmp.js
 
 # Note: The order here is important
+cat ../web/concrete/js/bootstrap/bootstrap-alert.js \
+../web/concrete/js/bootstrap/bootstrap-tooltip.js \
+../web/concrete/js/bootstrap/bootstrap-dropdown.js \
+../web/concrete/js/bootstrap/bootstrap-popover.js \
+../web/concrete/js/bootstrap/bootstrap-transition.js > bootstrap.tmp.js
+
+uglifyjs --no-seqs -o ../web/concrete/js/bootstrap.js ./bootstrap.tmp.js
+rm bootstrap.tmp.js
+
+# Note: The order here is important
 cat ../web/concrete/js/ccm_app/jquery.colorpicker.js \
 ../web/concrete/js/ccm_app/jquery.hoverIntent.js \
 ../web/concrete/js/ccm_app/jquery.liveupdate.js \
