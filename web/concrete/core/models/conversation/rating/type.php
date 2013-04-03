@@ -3,7 +3,7 @@
 abstract class Concrete5_Model_ConversationRatingType extends Object {
 
 	abstract public function outputRatingTypeHTML();
-	
+	abstract public function adjustConversationMessageRatingTotalScore(ConversationMessage $message);
 	abstract public function rateMessage();
 	
 	public static function getList() {

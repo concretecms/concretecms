@@ -23,6 +23,8 @@ class Concrete5_Model_Conversation_Message extends Object {
 		$this->cnvMessageFlagTypes = $flags;
 		return $flags;
 	}
+	public function getConversationMessageTotalRatingScore() {return $this->cnvMessageTotalRatingScore;}
+
 	public function conversationMessageHasActiveChildren() {
 		$db = Loader::db();
 		$children = $db->getCol('SELECT cnvMessageID as cnt FROM ConversationMessages WHERE cnvMessageParentID=?',array($this->cnvMessageID));
@@ -90,11 +92,12 @@ class Concrete5_Model_Conversation_Message extends Object {
 	public function getConversationMessageDateTimeOutput() {
 		return t('Posted on %s', Loader::helper('date')->date('F d, Y \a\t g:i a', strtotime($this->cnvMessageDateCreated)));
 	}
-	public function rateMessage(ConversationRatingType $ratingType, $cnvMessageID, $post = array()) {
+	public function rateMessage(ConversationRatingType $ratingType, $post = array()) {
 		$uID = 0; //this needs to be fixed
 		$db = Loader::db();
 		$cnvRatingTypeID = $db->GetOne('SELECT * FROM ConversationRatingTypes WHERE cnvRatingTypeHandle = ?', array($ratingType->cnvRatingTypeHandle));
-		$db->Execute('INSERT INTO ConversationMessageRatings (cnvMessageID, cnvRatingTypeID, timestamp, uID) VALUES (?, ?, ?, ?)', array($cnvMessageID, $cnvRatingTypeID, date('Y-m-d H:i:s'), $uID));
+		$db->Execute('INSERT INTO ConversationMessageRatings (cnvMessageID, cnvRatingTypeID, timestamp, uID) VALUES (?, ?, ?, ?)', array($this->getConversationMessageID(), $cnvRatingTypeID, date('Y-m-d H:i:s'), $uID));
+		$ratingType->adjustConversationMessageRatingTotalScore($this);
 	}	
 	public function getConversationMessageRating(ConversationRatingType $ratingType) {
 		$db = Loader::db();
