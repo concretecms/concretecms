@@ -7,12 +7,14 @@ class Concrete5_Controller_Dashboard_Composer_Write extends DashboardBaseControl
 		switch($type) {
 			case 'composer':
 				$this->composer = Composer::getByID($id);
+				$this->set('saveURL', View::url('/dashboard/composer/write', 'save', 'composer', $id));
 				break;
 			case 'draft':
 				$this->draft = ComposerDraft::getByID($id);
 				if (is_object($this->draft)) {
 					$this->composer = $this->draft->getComposerObject();
 				}
+				$this->set('saveURL', View::url('/dashboard/composer/write', 'save', 'draft', $id));
 				break;
 		}
 
@@ -63,12 +65,12 @@ class Concrete5_Controller_Dashboard_Composer_Write extends DashboardBaseControl
 		}
 	}
 
-	public function save($cmpID = false, $return = 'json') {
+	public function save($type = 'composer', $id = false, $return = 'json') {
 		Cache::disableCache();
 		Cache::disableLocalCache();
 		session_write_close();
 
-		$this->view('composer', $cmpID);
+		$this->view($type, $id);
 		$ct = CollectionType::getByID($this->post('cmpPageTypeID'));
 		$availablePageTypes = $this->composer->getComposerPageTypeObjects();
 
@@ -80,7 +82,12 @@ class Concrete5_Controller_Dashboard_Composer_Write extends DashboardBaseControl
 
 		if (!$this->error->has()) {
 			// create the page
-			$d = $this->composer->createDraft($ct);
+			if (!is_object($this->draft)) {
+				$d = $this->composer->createDraft($ct);
+			} else {
+				$d = $this->draft;
+			}
+
 			$controls = ComposerControl::getList($this->composer);
 			$outputControls = array();
 			foreach($controls as $cn) {

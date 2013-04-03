@@ -11,8 +11,8 @@ class Concrete5_Model_ComposerTargetConfiguration extends Object {
 		$this->pkgHandle = $type->getPackageHandle();
 	}
 
-	public function includeChooseTargetForm($composer = false) {
-		Loader::element(DIRNAME_COMPOSER . '/' . DIRNAME_COMPOSER_ELEMENTS_TARGET_TYPES . '/' . DIRNAME_COMPOSER_ELEMENTS_TARGET_TYPES_FORM . '/' . $this->getComposerTargetTypeHandle(), array('composer' => $composer), $this->pkgHandle);
+	public function includeChooseTargetForm($composer = false, $draft = false) {
+		Loader::element(DIRNAME_COMPOSER . '/' . DIRNAME_COMPOSER_ELEMENTS_TARGET_TYPES . '/' . DIRNAME_COMPOSER_ELEMENTS_TARGET_TYPES_FORM . '/' . $this->getComposerTargetTypeHandle(), array('draft' => $draft, 'composer' => $composer), $this->pkgHandle);
 	}
 
 	/** 

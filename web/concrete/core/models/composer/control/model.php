@@ -32,6 +32,10 @@ abstract class Concrete5_Model_ComposerControl extends Object {
 		$this->cmpDraftObject = $cmpDraftObject;
 	}
 
+	public function getComposerDraftObject() {
+		return $this->cmpDraftObject;
+	}
+
 	public function isComposerFormControlRequiredOnThisRequest() {
 		return $this->cmpControlRequiredOnThisRequest;
 	}

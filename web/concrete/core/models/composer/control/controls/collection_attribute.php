@@ -44,7 +44,11 @@ class Concrete5_Model_CollectionAttributeComposerControl extends ComposerControl
 	}
 
 	public function getComposerControlDraftValue() {
-
+		if (is_object($this->cmpDraftObject)) {
+			$ak = $this->getAttributeKeyObject();
+			$c = $this->cmpDraftObject->getComposerDraftCollectionObject();
+			return $c->getAttributeValueObject($ak);
+		}
 	}
 	
 	public function render($label, $customTemplate) {

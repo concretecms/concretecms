@@ -55,17 +55,16 @@
 					callback();
 				}
 			}
-
+	*/
 		$.ajax({
 			dataType: 'json',
 			type: 'post',
 			data: formData,
-			url: '<?=$this->action("save", $composer->getComposerID())?>',
+			url: '<?=$saveURL?>',
 			success: function(r) {
 
 			}
 		});
-		*/
 
 	}
 

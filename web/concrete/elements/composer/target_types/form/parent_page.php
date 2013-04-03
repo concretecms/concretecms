@@ -1,6 +1,10 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
 $form = Loader::helper('form');
+$cParentID = false;
+if (is_object($draft)) {
+	$cParentID = $draft->getComposerDraftTargetParentPageID();
+}
 if (is_object($composer) && $composer->getComposerTargetTypeID() == $this->getComposerTargetTypeID()) {
 	$configuredTarget = $composer->getComposerTargetObject();
 	$cID = $configuredTarget->getParentPageID();

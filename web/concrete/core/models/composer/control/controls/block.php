@@ -98,7 +98,7 @@ class Concrete5_Model_BlockComposerControl extends ComposerControl {
 		if ($customTemplate) {
 			$rec = $env->getRecord(DIRNAME_BLOCKS . '/' . $bt->getBlockTypeHandle() . '/' . DIRNAME_BLOCK_TEMPLATES_COMPOSER . '/' . $customTemplate);
 			if ($rec->exists()) {
-				$template = $customTemplate;
+				$template = DIRNAME_BLOCK_TEMPLATES_COMPOSER . '/' . $customTemplate;
 			}
 		}
 
