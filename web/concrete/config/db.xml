@@ -151,6 +151,28 @@
       <default value="0" />
     </field>
   </table>
+
+  <table name="ComposerDraftBlocks">
+<field name="cmpDraftBlockID" type="I" size="10">
+      <key/>
+      <autoincrement/>
+      <unsigned/>
+    </field>
+  <field name="cmpDraftID" type="I" size="10">
+      <unsigned/>
+      <notnull />
+      <default value="0" />
+    </field>
+    <field name="cmpFormLayoutSetControlID" type="I" size="10">
+      <unsigned/>
+      <default value="0" />
+      <notnull />
+    </field>
+    <field name="bID" type="I" size="10">
+      <unsigned/>
+      <default value="0" />
+    </field>
+  </table>
     <table name="Features">
     <field name="feID" type="I" size="10">
       <key/>
