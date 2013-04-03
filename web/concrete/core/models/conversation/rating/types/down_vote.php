@@ -9,4 +9,10 @@ class Concrete5_Model_DownVoteConversationRatingType extends ConversationRatingT
 	public function rateMessage() {
 	}
 
+	public function adjustConversationMessageRatingTotalScore(ConversationMessage $message) {
+		$db = Loader::db();
+		$db->Execute('update ConversationMessages set cnvMessageTotalRatingScore = cnvMessageTotalRatingScore - 1 where cnvMessageID = ?', array(
+			$message->getConversationMessageID()
+		));
+	}
 }
