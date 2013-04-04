@@ -20,12 +20,6 @@ class Concrete5_Model_BlockComposerControl extends ComposerControl {
 		$this->b = $b;
 	}
 
-	public function onComposerControlRender() {
-		$bt = $this->getBlockTypeObject();
-		$cnt = $bt->getController();
-		$cnt->setupAndRun('composer');
-	}
-
 	public function getBlockTypeObject() {
 		if (!is_object($this->bt)) {
 			$this->bt = BlockType::getByID($this->btID);
@@ -89,14 +83,21 @@ class Concrete5_Model_BlockComposerControl extends ComposerControl {
 	}
 
 	public function render($label, $customTemplate) {
+		$obj = $this->getComposerControlDraftValue();
+		if (!is_object($obj)) {
+			$obj = $this->getBlockTypeObject();
+		}
+
+		$cnt = $obj->getController();
+		$cnt->setupAndRun('composer');
+
 		$env = Environment::get();
 		$form = Loader::helper('form');
-		$bt = $this->getBlockTypeObject();
 		$set = $this->getComposerFormLayoutSetControlObject()->getComposerFormLayoutSetObject();
 		$control = $this;
 
 		if ($customTemplate) {
-			$rec = $env->getRecord(DIRNAME_BLOCKS . '/' . $bt->getBlockTypeHandle() . '/' . DIRNAME_BLOCK_TEMPLATES_COMPOSER . '/' . $customTemplate);
+			$rec = $env->getRecord(DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle() . '/' . DIRNAME_BLOCK_TEMPLATES_COMPOSER . '/' . $customTemplate);
 			if ($rec->exists()) {
 				$template = DIRNAME_BLOCK_TEMPLATES_COMPOSER . '/' . $customTemplate;
 			}
@@ -106,14 +107,16 @@ class Concrete5_Model_BlockComposerControl extends ComposerControl {
 			$template = FILENAME_BLOCK_COMPOSER;
 		}
 
-		$this->inc($template);
+		$this->inc($template, array('obj' => $obj));
 	}
 
 	public function inc($file, $args = array()) {
 		extract($args);
-		$obj = $this->getComposerControlDraftValue();
-		if (!is_object($obj)) {
-			$obj = $this->getBlockTypeObject();
+		if (!isset($obj)) {
+			$obj = $this->getComposerControlDraftValue();
+			if (!is_object($obj)) {
+				$obj = $this->getBlockTypeObject();
+			}
 		}
 		$controller = $obj->getController();
 		extract($controller->getSets());

@@ -1,5 +1,9 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
+$cnvMessageSubject = '';
+if (is_object($message)) {
+	$cnvMessageSubject = $message->getConversationMessageSubject();
+}
 ?>
 
 <div class="ccm-discussion-form">
@@ -7,7 +11,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 <div class="control-group">
 	<?=$form->label($this->field('cnvMessageSubject'), t('Subject'))?>
 	<div class="controls">
-		<?=$form->text($this->field('cnvMessageSubject'));?>
+		<?=$form->text($this->field('cnvMessageSubject'), $cnvMessageSubject);?>
 	</div>
 </div>
 
@@ -17,6 +21,9 @@ defined('C5_EXECUTE') or die("Access Denied.");
 	<?
 	$editor = ConversationEditor::getActive();
 	$editor->setConversationEditorInputName($this->field('cnvMessageBody'));
+	if (is_object($message)) {
+		$editor->setConversationMessageObject($message);
+	}
 	$editor->outputConversationEditorAddMessageForm(); ?>
 	</div>
 </div>
