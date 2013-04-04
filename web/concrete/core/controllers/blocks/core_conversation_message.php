@@ -27,6 +27,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			$html = Loader::helper('html');
 			$this->addHeaderItem($html->css('ccm.conversations.css'));
 			$this->addFooterItem($html->javascript('ccm.conversations.js'));
+			$this->view();
 		}
 
 		public function save($args) {
@@ -55,8 +56,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		public function getConversationMessageObject() {
 			if (!isset($this->message)) {
 				$db = Loader::db();
-				$cnvMesageID = $db->GetOne('select cnvMessageID from btCoreConversationMessage where bID = ?', array($this->bID));
-				$this->message = ConversationMessage::getByID($cnvMesageID);
+				$cnvMessageID = $db->GetOne('select cnvMessageID from btCoreConversationMessage where bID = ?', array($this->bID));
+				$this->message = ConversationMessage::getByID($cnvMessageID);
 			}
 			return $this->message;
 		}

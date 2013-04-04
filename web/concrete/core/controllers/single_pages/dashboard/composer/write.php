@@ -50,7 +50,6 @@ EOL;
 			$controls = ComposerFormLayoutSetControl::getList($s);
 			foreach($controls as $cn) {
 				$basecontrol = $cn->getComposerControlObject();
-				$basecontrol->onComposerControlRender();
 			}
 		}
 	}
