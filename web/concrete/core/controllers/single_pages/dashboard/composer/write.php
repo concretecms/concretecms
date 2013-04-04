@@ -8,7 +8,7 @@ class Concrete5_Controller_Dashboard_Composer_Write extends DashboardBaseControl
 			case 'composer':
 				$this->composer = Composer::getByID($id);
 				$saveURL = View::url('/dashboard/composer/write', 'save', 'composer', $id);
-				$discardURL = View::url('/dashboard/composer/drafts');
+				$discardURL = '';
 				$publishURL = View::url('/dashboard/composer/write', 'save', 'composer', $id, 'publish');
 				break;
 			case 'draft':
@@ -79,7 +79,7 @@ EOL;
 		if (Loader::helper('validation/token')->validate('discard_draft', $token)) {
 			$draft = ComposerDraft::getByID($cmpDraftID);
 			$draft->discard();
-			$this->redirect('/dashboard/composer/drafts');
+			exit;
 		}
 	}
 

@@ -7,7 +7,7 @@
 	<form method="post" data-form="composer" class="form-horizontal">
 	<div class="ccm-pane-body">
 
-	<div id="composer-save-status"></div>
+	<div class="ccm-composer-save-status"></div>
 
 	<? foreach($fieldsets as $cfl) { ?>
 		<fieldset style="margin-bottom: 0px">
