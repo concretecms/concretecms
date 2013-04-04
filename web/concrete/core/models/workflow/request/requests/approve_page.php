@@ -1,4 +1,4 @@
-<?
+<?php 
 defined('C5_EXECUTE') or die("Access Denied.");
 /**
  * @package Workflow
@@ -56,15 +56,18 @@ class Concrete5_Model_ApprovePagePageWorkflowRequest extends PageWorkflowRequest
 		
 		$buttons = array();
 		$c = Page::getByID($this->cID, 'ACTIVE');
-		$button = new WorkflowProgressAction();
-		$button->setWorkflowProgressActionLabel(t('Compare Versions'));
-		$button->addWorkflowProgressActionButtonParameter('dialog-title', t('Compare Versions'));
-		$button->addWorkflowProgressActionButtonParameter('dialog-width', '90%');
-		$button->addWorkflowProgressActionButtonParameter('dialog-height', '70%');
-		$button->setWorkflowProgressActionStyleInnerButtonLeftHTML('<i class="icon-eye-open"></i>');
-		$button->setWorkflowProgressActionURL(REL_DIR_FILES_TOOLS_REQUIRED . '/workflow/dialogs/approve_page_preview.php?wpID=' . $wp->getWorkflowProgressID());
-		$button->setWorkflowProgressActionStyleClass('dialog-launch');
-		$buttons[] = $button;
+		$cp = new Permissions($c);
+		if ($cp->canViewPageVersions()) {
+			$button = new WorkflowProgressAction();
+			$button->setWorkflowProgressActionLabel(t('Compare Versions'));
+			$button->addWorkflowProgressActionButtonParameter('dialog-title', t('Compare Versions'));
+			$button->addWorkflowProgressActionButtonParameter('dialog-width', '90%');
+			$button->addWorkflowProgressActionButtonParameter('dialog-height', '70%');
+			$button->setWorkflowProgressActionStyleInnerButtonLeftHTML('<i class="icon-eye-open"></i>');
+			$button->setWorkflowProgressActionURL(REL_DIR_FILES_TOOLS_REQUIRED . '/workflow/dialogs/approve_page_preview.php?wpID=' . $wp->getWorkflowProgressID());
+			$button->setWorkflowProgressActionStyleClass('dialog-launch');
+			$buttons[] = $button;
+		}
 		return $buttons;
 	}
 
