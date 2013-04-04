@@ -31,8 +31,8 @@
     </conversationeditors>
 
     <conversationratingtypes>
-        <conversationratingtype handle="up_vote" name="Up Vote" package="" />
-        <conversationratingtype handle="down_vote" name="Down Vote" package="" />
+        <conversationratingtype handle="up_vote" name="Up Vote" points="1" package="" />
+        <conversationratingtype handle="down_vote" name="Down Vote" points="0" package="" />
     </conversationratingtypes>
 
 </concrete5-cif>
