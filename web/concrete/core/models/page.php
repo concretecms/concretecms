@@ -191,10 +191,6 @@ class Concrete5_Model_Page extends Collection {
 				$arHandle = $db->getOne("select arHandle from Areas where arID = ?", array($arID));
 				$startDO = 0;
 
-				$db->Execute(
-					'delete from CollectionVersionBlockStyles where cID = ? and cvID = ? and arHandle = ?',
-					array($this->getCollectionID(), $this->getVersionID(), $arHandle)
-				);
 
 				if (PERMISSIONS_MODEL == 'advanced') { // for performance sake
 					$ao = Area::getOrCreate($this, $arHandle);
@@ -222,6 +218,11 @@ class Concrete5_Model_Page extends Collection {
 								return $obj;
 							}
 						}
+
+						$db->Execute(
+							'delete from CollectionVersionBlockStyles where cID = ? and cvID = ? and bID = ? and arHandle = ?',
+							array($this->getCollectionID(), $this->getVersionID(), $bID, $arHandle)
+						);
 
 						$v = array($startDO, $arHandle, $bID, $this->getCollectionID(), $this->getVersionID());
 						try {
