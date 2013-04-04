@@ -33,78 +33,15 @@
 
 	</div>
 	<div class="ccm-pane-footer">
-		<button type="button" id="ccm-composer-btn-publish" class="btn btn-primary pull-right" style="margin-left: 10px"><?=t('Publish')?></button>
-		<button type="button" id="ccm-composer-btn-save" class="btn pull-right" style="margin-left: 10px"><?=t('Save and Exit')?></button>
-		<button type="button" id="ccm-composer-btn-exit" class="btn pull-right"><?=t('Back to Drafts')?></button>
-		<button type="button" id="ccm-composer-btn-discard" class="btn btn-danger pull-left"><?=t('Discard Draft')?></button>
+		<button type="button" data-composer-btn="publish" class="btn btn-primary pull-right" style="margin-left: 10px"><?=t('Publish')?></button>
+		<button type="button" data-composer-btn="save" class="btn pull-right" style="margin-left: 10px"><?=t('Save and Exit')?></button>
+		<button type="button" data-composer-btn="exit" class="btn pull-right"><?=t('Back to Drafts')?></button>
+		<button type="button" data-composer-btn="discard" class="btn btn-danger pull-left"><?=t('Discard Draft')?></button>
 	</div>
 
 
 	</form>
 
-	<script type="text/javascript">
-	var ccm_saveComposerDraftURL = '<?=$saveURL?>';
-	var ccm_publishComposerDraftURL = '<?=$publishURL?>';
-	var ccm_discardComposerDraftURL = '<?=$discardURL?>';
-	var ccm_saveComposerDraftInterval = false;
-
-	ccm_saveComposerDraft = function(onComplete) {
-		var $f = $('form[data-form=composer]'),
-			formData = $f.serializeArray();
-
-		$.ajax({
-			dataType: 'json',
-			type: 'post',
-			data: formData,
-			url: ccm_saveComposerDraftURL,
-			success: function(r) {
-				$("#composer-save-status").html('<div class="alert alert-info"><?=t("Page saved at ")?>' + r.time + '</div>');
-				if (r.saveurl) {
-					ccm_saveComposerDraftURL = r.saveurl;
-				}
-				if (r.discardurl) {
-					ccm_discardComposerDraftURL = r.discardurl;
-				}
-				if (r.publishurl) {
-					ccm_publishComposerDraftURL = r.publishurl;
-				}
-				if (onComplete) {
-					onComplete();
-				}
-			}
-		});
-	}
-
-	$(function() {
-
-		ccm_saveComposerDraftInterval = setInterval(function() {
-			ccm_saveComposerDraft()
-		}, 10000);
-
-		$('#ccm-composer-btn-exit').on('click', function() {
-			window.location.href = "<?=$this->url('/dashboard/composer/drafts')?>";
-		});
-
-		$('#ccm-composer-btn-discard').on('click', function() {
-			window.location.href = ccm_discardComposerDraftURL;
-		});
-
-		$('#ccm-composer-btn-save').on('click', function() {
-			clearInterval(ccm_saveComposerDraftInterval);
-			ccm_saveComposerDraft(function() {
-				window.location.href = "<?=$this->url('/dashboard/composer/drafts')?>";
-			});
-		});
-
-		$('#ccm-composer-btn-publish').on('click', function() {
-			clearInterval(ccm_saveComposerDraftInterval);
-			var $f = $('form[data-form=composer]');
-			$f.attr('action', ccm_publishComposerDraftURL);
-			$f.submit();
-		});
-
-	});
-	</script>
 	<?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(false)?>
 
 
