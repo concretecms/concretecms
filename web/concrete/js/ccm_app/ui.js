@@ -705,7 +705,7 @@ ccm_arrangeInit = function() {
 			accept: 'div.ccm-block-arrange',
 			opacity: 0.5,
 			stop: function(e, ui) {
-				ccm_saveArrangement(cID, area, ui.item.parent());
+				ccm_saveArrangement(cID, area, ui.item.closest('.ccm-area'));
 			}
 		});
 	});
