@@ -130,7 +130,7 @@ EOL;
 				// between making a draft and saving new copies of drafts.
 				$r->saveurl = View::url('/dashboard/composer/write', 'save', 'draft', $d->getComposerDraftID());
 				$r->discardurl = View::url('/dashboard/composer/write', 'discard', $d->getComposerDraftID(), Loader::helper('validation/token')->generate('discard_draft'));
-				$r->publishurl = View::url('/dashboard/composer/write', 'save', $d->getComposerDraftID(), 'publish');
+				$r->publishurl = View::url('/dashboard/composer/write', 'save', 'draft', $d->getComposerDraftID(), 'publish');
 				$ax->sendResult($r);
 			} else if ($action == 'publish') {
 				$this->publish($d, $outputControls);

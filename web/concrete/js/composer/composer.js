@@ -38,6 +38,7 @@
       var settings = $.extend({
         autoSaveEnabled: true,
         autoSaveTimeout: 5000,
+        publishReturnMethod: 'reload',
         onExit: function() {
           window.location.href = CCM_DISPATCHER_FILENAME + '/dashboard/composer/drafts';
         },
@@ -92,6 +93,26 @@
         $this.find('button[data-composer-btn=publish]').on('click', function() {
           clearInterval(methods.saveinterval);
           $this.attr('action', $this.data('publishURL'));
+          if (settings.publishReturnMethod == 'ajax') {
+            $this.on('submit.composer', function() {
+              $(this).prop('disabled', true);
+              formData = $this.serializeArray();
+              $.ajax({
+                type: 'post',
+                data: formData,
+                dataType: 'json',
+                url: $this.data('publishURL'),
+                success: function(r) {
+                  $(this).prop('disabled', false);
+                },
+                complete: function() {
+                  $this.unbind('submit.composer');
+                  $this.removeAttr('action');
+                }
+              });
+              return false;
+            });
+          }
           $this.submit();
         });
 

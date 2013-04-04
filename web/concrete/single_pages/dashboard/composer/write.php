@@ -6,41 +6,24 @@
 	<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper($composer->getComposerName(), false, false, false)?>
 	<form method="post" data-form="composer" class="form-horizontal">
 	<div class="ccm-pane-body">
-
-	<div class="ccm-composer-save-status"></div>
-
-	<? foreach($fieldsets as $cfl) { ?>
-		<fieldset style="margin-bottom: 0px">
-			<? if ($cfl->getComposerFormLayoutSetName()) { ?>
-				<legend><?=$cfl->getComposerFormLayoutSetName()?></legend>
-			<? } ?>
-			<? $controls = ComposerFormLayoutSetControl::getList($cfl);
-
-			foreach($controls as $con) { 
-				if (is_object($draft)) { // we are loading content in
-					$con->setComposerDraftObject($draft);
-				}
-				$cnp = new Permissions($con);
-				if ($cnp->canAccessComposerFormLayoutSetControl()) { ?>
-					<? $con->render(); ?>
-				<? } ?>
-				
-			<? } ?>
-
-		</fieldset>
-
-	<? } ?>
-
+		<? Loader::helper('composer/form')->display($composer, $draft); ?>
 	</div>
 	<div class="ccm-pane-footer">
-		<button type="button" data-composer-btn="publish" class="btn btn-primary pull-right" style="margin-left: 10px"><?=t('Publish')?></button>
-		<button type="button" data-composer-btn="save" class="btn pull-right" style="margin-left: 10px"><?=t('Save and Exit')?></button>
-		<button type="button" data-composer-btn="exit" class="btn pull-right"><?=t('Back to Drafts')?></button>
-		<button type="button" data-composer-btn="discard" class="btn btn-danger pull-left"><?=t('Discard Draft')?></button>
+		<? Loader::helper('composer/form')->displayButtons(); ?>
 	</div>
 
 
 	</form>
+
+	<style type="text/css">
+		button[data-composer-btn=save] {
+			margin-left: 10px;
+		}
+		button[data-composer-btn=publish] {
+			margin-left: 10px;
+		}
+
+	</style>
 
 	<?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(false)?>
 

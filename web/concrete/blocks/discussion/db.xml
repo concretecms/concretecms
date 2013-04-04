@@ -7,7 +7,11 @@
 		</field>
 		<field name="cnvDiscussionID" type="I">
 		</field>
-		<field name="enableNewConversations" type="I">
+		<field name="cmpID" type="I">
+			<unsigned />
+			<default value="0" />
+		</field>
+		<field name="enableNewTopics" type="I">
 			<default value="1"/>
 		</field>
 
