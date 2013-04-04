@@ -65,6 +65,7 @@
 			var displayPostingForm = (obj.options.displayPostingForm);
 			var insertNewMessages  = (obj.options.insertNewMessages);
 			var enableCommentRating = (obj.options.enableCommentRating);
+			var commentRatingUserID = (obj.options.commentRatingUserID);
 
 			if (obj.options.method == 'ajax') {
 				$.post(CCM_TOOLS_PATH + '/conversations/view_ajax', {
@@ -79,7 +80,8 @@
 					'enableOrdering':      enableOrdering,
 					'displayPostingForm':  displayPostingForm,
 					'insertNewMessages':   insertNewMessages,
-					'enableCommentRating': enableCommentRating
+					'enableCommentRating': enableCommentRating,
+					'commentRatingUserID': commentRatingUserID
 					
 				}, function(r) {
 					var oldobj = window.obj;
@@ -327,7 +329,8 @@
 					'cID':                 obj.options.cID,
 					'blockID':             obj.options.blockID,
 					'cnvMessageID':        cnvMessageID,
-					'cnvRatingTypeHandle': cnvRatingTypeHandle
+					'cnvRatingTypeHandle': cnvRatingTypeHandle,
+					'commentRatingUserID': obj.options.commentRatingUserID
 				};
 				$.ajax({
 					type: 'post',
