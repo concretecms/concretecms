@@ -185,13 +185,16 @@ class Concrete5_Model_Page extends Collection {
 		// a{areaID} = array(b1, b2, b3) (where b1, etc... are blocks with ids appended.)
 		$db = Loader::db();
 		
-		$db->Execute('delete from CollectionVersionBlockStyles where cID = ? and cvID = ?', array($this->getCollectionID(), $this->getVersionID()));
-		
 		foreach($areas as $arID => $blocks) {
 			if (intval($arID) > 0) {
 				// this is a serialized area;
 				$arHandle = $db->getOne("select arHandle from Areas where arID = ?", array($arID));
 				$startDO = 0;
+
+				$db->Execute(
+					'delete from CollectionVersionBlockStyles where cID = ? and cvID = ? and arHandle = ?',
+					array($this->getCollectionID(), $this->getVersionID(), $arHandle)
+				);
 
 				if (PERMISSIONS_MODEL == 'advanced') { // for performance sake
 					$ao = Area::getOrCreate($this, $arHandle);
