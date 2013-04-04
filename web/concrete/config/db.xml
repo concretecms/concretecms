@@ -392,9 +392,6 @@
     <field name="cID" type="I" size="10">
       <unsigned />
     </field>
-    <field name="ctID" type="I" size="10">
-      <unsigned />
-    </field>
   </table>
    <table name="agPage">
     <field name="agiID" type="I" size="10">

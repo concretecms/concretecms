@@ -20,8 +20,7 @@ uglifyjs --no-copyright --no-seqs -o ../web/concrete/js/ccm.composer.js ./ccm.co
 rm ccm.composer.tmp.js
 
 cat ../web/concrete/js/ccm_app/conversations/conversations.js \
-../web/concrete/js/ccm_app/conversations/attachments.js \
-../web/concrete/js/ccm_app/conversations/discussion.js > ccm.conversations.tmp.js
+../web/concrete/js/ccm_app/conversations/attachments.js > ccm.conversations.tmp.js
 uglifyjs --no-copyright --no-seqs -o ../web/concrete/js/ccm.conversations.js ./ccm.conversations.tmp.js 
 rm ccm.conversations.tmp.js
 

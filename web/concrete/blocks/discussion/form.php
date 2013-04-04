@@ -1,13 +1,13 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?>  
 <?
 if ($controller->getTask() == 'add') {
-	$enableNewConversations = 1;
+	$enableNewTopics = 1;
 }
 
-$ctArray = CollectionType::getList();
-$types = array('-1' => t('** None Selected'));
-foreach($ctArray as $ct) {
-	$types[$ct->getCollectionTypeID()] = $ct->getCollectionTypeName();
+$composers = Composer::getList();
+$types = array();
+foreach($composers as $cmp) {
+	$types[$cmp->getComposerID()] = $cmp->getComposerName();
 }
 
 ?>
@@ -16,22 +16,22 @@ foreach($ctArray as $ct) {
 <fieldset>
 	<legend><?=t('Posting')?></legend>
 	<div class="control-group">
-		<label class="control-label"><?=t('Enable New Conversations')?></label>
+		<label class="control-label"><?=t('Enable New Topics')?></label>
 		<div class="controls">
 			<label class="radio">
-				<?=$form->radio('enableNewConversations', 1, $enableNewConversations)?>
+				<?=$form->radio('enableNewTopics', 1, $enableNewConversations)?>
 				<span><?=t('Yes, this conversation is open and new topics can be posted.')?></span>
 			</label>
 			<label class="radio">
-				<?=$form->radio('enableNewConversations', 0, $enableNewConversations)?>
+				<?=$form->radio('enableNewTopics', 0, $enableNewConversations)?>
 				<span><?=t('No, posting is disabled.')?></span>
 			</label>
 		</div>
 	</div>
 	<div class="control-group" data-row="enableNewConversations">
-		<label class="control-label"><?=t('Create Conversation with Page Type')?></label>
+		<label class="control-label"><?=t('Create Conversation using Composer')?></label>
 		<div class="controls" data-select="page">
-			<?=$form->select('ctID', $types, $ctID)?>
+			<?=$form->select('cmpID', $types, $cmpID)?>
 		</div>
 	</div>
 </fieldset>
@@ -39,12 +39,12 @@ foreach($ctArray as $ct) {
 
 <script type="text/javascript">
 $(function() {
-	$('input[name=enableNewConversations]').on('change', function() {
-		var pg = $('input[name=enableNewConversations]:checked');
+	$('input[name=enableNewTopics]').on('change', function() {
+		var pg = $('input[name=enableNewTopics]:checked');
 		if (pg.val() == 1) {
-			$('div[data-row=enableNewConversations]').show();
+			$('div[data-row=enableNewTopics]').show();
 		} else {
-			$('div[data-row=enableNewConversations]').hide();
+			$('div[data-row=enableNewTopics]').hide();
 		}
 	}).trigger('change');
 });
