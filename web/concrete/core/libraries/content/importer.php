@@ -419,7 +419,7 @@ class Concrete5_Library_Content_Importer {
 		if (isset($sx->conversationratingtypes)) {
 			foreach($sx->conversationratingtypes->conversationratingtype as $th) {
 				$pkg = ContentImporter::getPackageObject($th['package']);
-				$ce = ConversationRatingType::add((string) $th['handle'], (string) $th['name'], $pkg);
+				$ce = ConversationRatingType::add((string) $th['handle'], (string) $th['name'], $th['points'], $pkg);
 			}
 		}
 	}

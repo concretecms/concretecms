@@ -5,37 +5,27 @@ class Concrete5_Controller_Dashboard_System_Conversations_CommunityPoints extend
 		$ratingTypes = array_reverse(ConversationRatingType::getList());
 		$this->set('ratingTypes', $ratingTypes);
 	}
-	
-	public function manage($typeID) {
-		$ratingType = ConversationRatingType::getByID($typeID);
-		$this->set('ratingType', $ratingType);
-	}
 
 	public function success() {
 		$this->view();
-		$this->set('message','Updated rating type.');
+		$this->set('message','Rating type updated.');
 	}
-
+	
 	public function error() {
 		$this->error = Loader::helper('validation/error');
 		$this->error->add('Invalid rating type specified.');
 		$this->view();
-		$this->set('error',$this->error);
-	}
-	
-	public function add() {
-		// next up
+		$this->set('error', $this->error);
 	}
 
 	public function save() {
-		$rtID = $this->post('rtID');
-		$rtName = $this->post('rtName');
-		$rtPoints = $this->post('rtPoints');
-		$rtHandle = $this->post('rtHandle');
 		$db = Loader::db();
-		$db->execute('UPDATE ConversationRatingTypes SET cnvRatingTypeName = ? WHERE cnvRatingTypeID = ?', array($rtName, $rtID));
+		$rtID = $this->post('rtID');
+		$rtPoints = $this->post('rtPoints');
+		if($rtPoints == '') {
+			$rtPoints = 0;
+		};
 		$db->execute('UPDATE ConversationRatingTypes SET cnvRatingTypeCommunityPoints = ? WHERE cnvRatingTypeID = ?', array($rtPoints, $rtID));
-		$db->execute('UPDATE ConversationRatingTypes SET cnvRatingTypeHandle = ? WHERE cnvRatingTypeID = ?', array($rtHandle, $rtID));
 		$this->redirect('/dashboard/system/conversations/community_points/success');
 	}
 
