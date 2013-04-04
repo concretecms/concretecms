@@ -19,7 +19,7 @@ abstract class Concrete5_Model_ConversationRatingType extends Object {
 		return $types;
 	}
 
-	public static function add($cnvRatingTypeHandle, $cnvRatingTypeName, $pkg = false) {
+	public static function add($cnvRatingTypeHandle, $cnvRatingTypeName, $cnvRatingTypeCommunityPoints, $pkgID = false) {
 		$pkgID = 0;
 		if (is_object($pkg)) {
 			$pkgID = $pkg->getPackageID();
@@ -62,6 +62,7 @@ abstract class Concrete5_Model_ConversationRatingType extends Object {
 			$type->addAttribute('handle', $sc->getConversationRatingTypeHandle());
 			$type->addAttribute('name', $sc->getConversationRatingTypeName());
 			$type->addAttribute('package', $sc->getPackageHandle());
+			$type->addAttribute('points', $sc->getConversationRatingTypePoints());
 		}
 	}
 
@@ -87,6 +88,7 @@ abstract class Concrete5_Model_ConversationRatingType extends Object {
 	public function getConversationRatingTypeHandle() {return $this->cnvRatingTypeHandle;}
 	public function getConversationRatingTypeName() {return $this->cnvRatingTypeName;}
 	public function getConversationRatingTypeID() {return $this->cnvRatingTypeID;}
+	public function getConversationRatingTypePoints() {return $this->cnvRatingTypeCommunityPoints;}
 	public function getPackageID() { return $this->pkgID;}
 	public function getPackageHandle() {
 		return PackageList::getHandle($this->pkgID);
