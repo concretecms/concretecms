@@ -27,7 +27,7 @@ class Concrete5_Model_ApprovePagePageWorkflowRequest extends PageWorkflowRequest
 
 	public function getWorkflowRequestDescriptionObject() {
 		$d = new WorkflowDescription();
-		$c = Page::getByID($this->cID, 'ACTIVE');
+		$c = Page::getByID($this->cID, 'RECENT');
 		$link = Loader::helper('navigation')->getLinkToCollection($c, true);
 		$d->setEmailDescription(t("\"%s\" has pending changes and needs to be approved. View the page here: %s.", $c->getCollectionName(), $link));
 		$d->setDescription(t("Page <a href=\"%s\">%s</a> submitted for Approval.", $link, $c->getCollectionName()));
