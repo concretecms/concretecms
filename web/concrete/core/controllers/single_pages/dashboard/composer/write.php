@@ -7,20 +7,26 @@ class Concrete5_Controller_Dashboard_Composer_Write extends DashboardBaseControl
 		switch($type) {
 			case 'composer':
 				$this->composer = Composer::getByID($id);
-				$this->set('saveURL', View::url('/dashboard/composer/write', 'save', 'composer', $id));
-				$this->set('discardURL', View::url('/dashboard/composer/drafts'));
-				$this->set('publishURL', View::url('/dashboard/composer/write', 'save', 'composer', $id, 'publish'));
+				$saveURL = View::url('/dashboard/composer/write', 'save', 'composer', $id);
+				$discardURL = '';
+				$publishURL = View::url('/dashboard/composer/write', 'save', 'composer', $id, 'publish');
 				break;
 			case 'draft':
 				$this->draft = ComposerDraft::getByID($id);
 				if (is_object($this->draft)) {
 					$this->composer = $this->draft->getComposerObject();
 				}
-				$this->set('saveURL', View::url('/dashboard/composer/write', 'save', 'draft', $id));
-				$this->set('discardURL', View::url('/dashboard/composer/write', 'discard', $id, Loader::helper('validation/token')->generate('discard_draft')));
-				$this->set('publishURL', View::url('/dashboard/composer/write', 'save', 'draft', $id, 'publish'));
+				$saveURL = View::url('/dashboard/composer/write', 'save', 'draft', $id);
+				$discardURL = View::url('/dashboard/composer/write', 'discard', $id, Loader::helper('validation/token')->generate('discard_draft'));
+				$publishURL = View::url('/dashboard/composer/write', 'save', 'draft', $id, 'publish');
 				break;
 		}
+
+		$this->addFooterItem(Loader::helper('html')->javascript('ccm.composer.js'));
+		$js =<<<EOL
+<script type="text/javascript">$(function() { $('form[data-form=composer]').ccmcomposer({saveURL: '{$saveURL}', discardURL: '{$discardURL}', publishURL: '{$publishURL}'})});</script>
+EOL;
+		$this->addFooterItem($js);
 
 		if (!is_object($this->composer)) {
 			$composers = Composer::getList();
@@ -44,7 +50,6 @@ class Concrete5_Controller_Dashboard_Composer_Write extends DashboardBaseControl
 			$controls = ComposerFormLayoutSetControl::getList($s);
 			foreach($controls as $cn) {
 				$basecontrol = $cn->getComposerControlObject();
-				$basecontrol->onComposerControlRender();
 			}
 		}
 	}
@@ -73,7 +78,7 @@ class Concrete5_Controller_Dashboard_Composer_Write extends DashboardBaseControl
 		if (Loader::helper('validation/token')->validate('discard_draft', $token)) {
 			$draft = ComposerDraft::getByID($cmpDraftID);
 			$draft->discard();
-			$this->redirect('/dashboard/composer/drafts');
+			exit;
 		}
 	}
 

@@ -40,8 +40,6 @@ abstract class Concrete5_Model_ComposerControl extends Object {
 		return $this->cmpControlRequiredOnThisRequest;
 	}
 
-	public function onComposerControlRender() {}
-	
 	public function getComposerControlName() {
 		return $this->cmpControlName;
 	}

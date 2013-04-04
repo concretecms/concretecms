@@ -99,7 +99,6 @@ $(function() {
 		var $popover = $ccmPageHelp.data('popover');
 		if ($popover) {
 			$popover.hide();
-			console.log('hidepopover');
 		}
 	});
 	$('.launch-tooltip').tooltip({placement: 'bottom'});
