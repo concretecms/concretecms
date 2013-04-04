@@ -15,6 +15,10 @@ cat ../web/concrete/js/ccm_app/dashboard.js > ccm.dashboard.tmp.js
 uglifyjs --no-copyright --no-seqs -o ../web/concrete/js/ccm.dashboard.js ./ccm.dashboard.tmp.js 
 rm ccm.dashboard.tmp.js
 
+cat ../web/concrete/js/composer/composer.js > ccm.composer.tmp.js
+uglifyjs --no-copyright --no-seqs -o ../web/concrete/js/ccm.composer.js ./ccm.composer.tmp.js 
+rm ccm.composer.tmp.js
+
 cat ../web/concrete/js/ccm_app/conversations/conversations.js \
 ../web/concrete/js/ccm_app/conversations/attachments.js \
 ../web/concrete/js/ccm_app/conversations/discussion.js > ccm.conversations.tmp.js

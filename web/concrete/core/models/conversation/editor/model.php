@@ -2,6 +2,11 @@
 abstract class Concrete5_Model_ConversationEditor extends Object {
 
 	abstract public function getConversationEditorHeaderItems();
+
+	public function setConversationMessageObject(ConversationMessage $message) {
+		$this->cnvMessage = $message;
+	}
+
 	public function formatConversationMessageBody($cnv,$cnvMessageBody,$config=array()) {
 		if (isset($config['htmlawed'])) {
 			Loader::library('3rdparty/htmLawed');
@@ -22,6 +27,14 @@ abstract class Concrete5_Model_ConversationEditor extends Object {
 			return str_ireplace($needle,$haystack,$lawed);
 		}
 		return $lawed;
+	}
+
+	public function getConversationEditorMessageBody() {
+		if (!is_object($this->cnvMessage)) {
+			return '';
+		}
+		$cnv = $this->cnvMessage->getConversationMessageConversationObject();
+		return $this->formatConversationMessageBody($cnv, $this->cnvMessage->getConversationMessageBody());
 	}
 
 	public function outputConversationEditorAddMessageForm() {
