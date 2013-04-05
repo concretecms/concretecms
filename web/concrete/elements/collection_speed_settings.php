@@ -81,9 +81,6 @@ if ($_REQUEST['reload_and_remove_cache']) {
 	</script>
 	
 
-
-	<div id="ccm-properties-cache-tab">
-		
 		<? $form = Loader::helper('form');?>
 		<?
 		switch(FULL_PAGE_CACHE_GLOBAL) {

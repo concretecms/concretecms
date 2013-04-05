@@ -12,8 +12,6 @@ class Concrete5_Controller_Dashboard_System_Optimization_ClearCache extends Dash
 		if ($this->token->validate("clear_cache")) {
 			if ($this->isPost()) {
 				Cache::flush();
-				$pageCache = PageCache::getLibrary();
-				$pageCache->flush();
 				$this->redirect('/dashboard/system/optimization/clear_cache', 'cache_cleared');
 			}
 		} else {

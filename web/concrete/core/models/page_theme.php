@@ -265,9 +265,11 @@ class Concrete5_Model_PageTheme extends Object {
 	}
 	
 	public function parseStyleSheet($file, $styles = false) {
-		if (file_exists($this->getThemeDirectory() . '/' . $file)) {
+		$env = Environment::get();
+		$themeRec = $env->getUncachedRecord(DIRNAME_THEMES . '/' . $this->getThemeHandle() . '/' . $file, $this->getPackageHandle());
+		if ($themeRec->exists()) {
 			$fh = Loader::helper('file');
-			$contents = $fh->getContents($this->getThemeDirectory() . '/' . $file);
+			$contents = $fh->getContents($themeRec->file);
 			
 			// replace all url( instances with url starting with path to theme
 			$contents = preg_replace('/(url\(\')([^\)]*)/', '$1' . $this->getThemeURL() . '/$2', $contents);

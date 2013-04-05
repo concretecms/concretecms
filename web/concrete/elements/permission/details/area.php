@@ -10,5 +10,5 @@ $c = $a->getAreaCollectionObject();
 
 
 <script type="text/javascript">
-var ccm_permissionDialogURL = '<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_area_popup?atask=set_advanced_permissions&cID=<?=$c->getCollectionID()?>&arHandle=<?=$a->getAreaHandle()?>'; 
+var ccm_permissionDialogURL = '<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_area_popup?atask=set_advanced_permissions&cID=<?=$c->getCollectionID()?>&arHandle=<?=urlencode($a->getAreaHandle())?>'; 
 </script>

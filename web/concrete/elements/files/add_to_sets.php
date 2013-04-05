@@ -14,7 +14,7 @@ function checkbox($field, $value, $state, $miscFields = array()) {
 
 	$src = ASSETS_URL_IMAGES . '/checkbox_state_' . $state . '.png';
 					
-	$str = '<a href="javascript:void(0)" ccm-tri-state-startup="' . $state . '" ccm-tri-state-selected="' . $state . '" ><input type="hidden" value="' . $state . '" name="' . $field . ':' . $value . '" /> <img width="16" height="16" src="' . $src . '" ' . $mf . ' /></a>';
+	$str = '<input type="hidden" value="' . $state . '" name="' . $field . ':' . $value . '" /><a href="javascript:void(0)" ccm-tri-state-startup="' . $state . '" ccm-tri-state-selected="' . $state . '" ><img width="16" height="16" src="' . $src . '" ' . $mf . ' /></a>';
 	return $str;
 }
 
@@ -162,9 +162,11 @@ $(function() {
 		if ($displaySet) {
 		?>
 	
-		<li class="ccm-file-set-add-cb" ><label>
-			<?=checkbox('fsID', $s->getFileSetID(), $s->state)?> <span><?=$s->getFileSetName()?></span>
-		</label>
+		<li class="ccm-file-set-add-cb">
+				<label>
+				<?=checkbox('fsID', $s->getFileSetID(), $s->state)?>
+				<span><?=$s->getFileSetName()?></span>
+				</label>
 		</li>
 	<? } 
 	} ?>

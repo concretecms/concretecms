@@ -231,6 +231,7 @@ class Concrete5_Controller_Upgrade extends Controller {
 		$runMessages = array();
 		$prepareMessages = array();
 		try {
+			Cache::flush();
 			$this->set_upgrades();
 			foreach($this->upgrades as $ugh) {
 				if (method_exists($ugh, 'prepare')) {
@@ -271,7 +272,7 @@ class Concrete5_Controller_Upgrade extends Controller {
 			$upgrade = true;
 		} catch(Exception $e) {
 			$upgrade = false;
-			$message .= '<div class="alert-message block-message error"><p>' . t('An Unexpected Error occurred while upgrading: %s', $e->getMessage()) . '</p></div>';
+			$message .= '<div class="alert-message block-message error"><p>' . t('An Unexpected Error occurred while upgrading: %s', $e->getTraceAsString()) . '</p></div>';
 		}
 		
 		if ($upgrade) {

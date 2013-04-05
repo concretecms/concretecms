@@ -263,7 +263,7 @@ class Concrete5_Controller_Block_FormMinisurvey {
 					
 				case 'text':
 					$val=($_REQUEST['Question'.$msqID])?Loader::helper('text')->entities($_REQUEST['Question'.$msqID]):'';
-					return '<textarea name="Question'.$msqID.'" id="Question'.$msqID.'" cols="'.$questionData['width'].'" rows="'.$questionData['height'].'" style="width:95%">'.$val.'</textarea>';
+					return '<textarea name="Question'.$msqID.'" id="Question'.$msqID.'" cols="'.$questionData['width'].'" rows="'.$questionData['height'].'">'.$val.'</textarea>';
 				case 'url':
 					$val=($_REQUEST['Question'.$msqID])?$_REQUEST['Question'.$msqID]:'';
 					return '<input name="Question'.$msqID.'" id="Question'.$msqID.'" type="url" value="'.stripslashes(htmlspecialchars($val)).'" />';

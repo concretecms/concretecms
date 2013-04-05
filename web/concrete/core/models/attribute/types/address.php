@@ -130,7 +130,7 @@ class Concrete5_Controller_AttributeType_Address extends AttributeTypeController
 		$all = $h->getAll();
 		foreach($all as $country => $countries) {
 			foreach($countries as $value => $text) {
-				print $country . ':' . $value . ':' . $text . "|\\\n";
+				print addslashes($country) . ':' . addslashes($value) . ':' . addslashes($text) . "|\\\n";
 			}
 		}
 		print "'";

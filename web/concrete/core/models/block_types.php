@@ -141,7 +141,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 						if (is_dir($fdir) && !in_array($file, $btHandles) && file_exists($fdir . '/' . FILENAME_BLOCK_CONTROLLER)) {
 							$bt = new BlockType;
 							$bt->btHandle = $file;
-							$class = $bt->getBlockTypeClassFromHandle($file);
+							$class = $bt->getBlockTypeClass();
 							
 							require_once($fdir . '/' . FILENAME_BLOCK_CONTROLLER);
 							if (!class_exists($class)) {
@@ -582,8 +582,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			
 			if (file_exists($dir1)) {
 				$dir = $dir1;
+				$dirDbXml = $dir;
 			} else {
 				$dir = $dir2;
+				$dirDbXml = $dir;
 			}
 
 			// now we check to see if it's been overridden in the site root and if so we do it there
@@ -592,13 +594,16 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				if (file_exists(DIR_FILES_BLOCK_TYPES . '/' . $btHandle . '/' . FILENAME_BLOCK_CONTROLLER)) {
 					$dir = DIR_FILES_BLOCK_TYPES;
 				}
+				if (file_exists(DIR_FILES_BLOCK_TYPES . '/' . $btHandle . '/' . FILENAME_BLOCK_DB)) {
+					$dirDbXml = DIR_FILES_BLOCK_TYPES;
+				}
 			}
 			
 			$bt = new BlockType;
 			$bt->btHandle = $btHandle;
 			$bt->pkgHandle = $pkg->getPackageHandle();
 			$bt->pkgID = $pkg->getPackageID();
-			return BlockType::doInstallBlockType($btHandle, $bt, $dir, $btID);
+			return BlockType::doInstallBlockType($btHandle, $bt, $dir, $btID, $dirDbXml);
 		}
 		
 		/**
@@ -642,12 +647,17 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			} else {
 				$dir = DIR_FILES_BLOCK_TYPES_CORE;
 			}
+			if (file_exists(DIR_FILES_BLOCK_TYPES . '/' . $btHandle . '/' . FILENAME_BLOCK_DB)) {
+				$dirDbXml = DIR_FILES_BLOCK_TYPES;
+			} else {
+				$dirDbXml = DIR_FILES_BLOCK_TYPES_CORE;
+			}
 			
 			$bt = new BlockType;
 			$bt->btHandle = $btHandle;
 			$bt->pkgHandle = null;
 			$bt->pkgID = 0;
-			return BlockType::doInstallBlockType($btHandle, $bt, $dir, $btID);
+			return BlockType::doInstallBlockType($btHandle, $bt, $dir, $btID, $dirDbXml);
 		}
 		
 		/** 
@@ -675,16 +685,17 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		 * @param BlockType $bt
 		 * @param string $dir
 		 * @param int $btID
+		 * @param string $dirDbXml
 		 */
-		protected function doInstallBlockType($btHandle, $bt, $dir, $btID = 0) {
+		protected function doInstallBlockType($btHandle, $bt, $dir, $btID = 0, $dirDbXml) {
 			$db = Loader::db();
 			$env = Environment::get();
 			$env->clearOverrideCache();
 			
 			if (file_exists($dir . '/' . $btHandle . '/' . FILENAME_BLOCK_CONTROLLER)) {
-				$class = $bt->getBlockTypeClassFromHandle();
+				$class = $bt->getBlockTypeClass();
 				
-				$path = $dir . '/' . $btHandle;
+				$path = $dirDbXml . '/' . $btHandle;
 				if (!class_exists($class)) {
 					require_once($dir . '/' . $btHandle . '/' . FILENAME_BLOCK_CONTROLLER);
 				}
@@ -696,7 +707,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				
 				//Attempt to run the subclass methods (install schema from db.xml, etc.)
 				$r = $bta->install($path);
-				
+
 				//Validate
 				if ($r === false) {
 					return t('Error: Block Type cannot be installed because no db.xml file can be found. Either create a db.xml file for this block type, or remove the $btTable variable from its controller.');
@@ -848,12 +859,14 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		}
 		
 		public function getBlockTypeClass() {
-			$btHandle = $this->getBlockTypeHandle();
-			return $this->_getClass($btHandle);
+			return $this->_getClass();
 		}
 		
+		/**
+		 * Deprecated -- use getBlockTypeClass() instead.
+		 */
 		public function getBlockTypeClassFromHandle() {
-			return $this->_getClass();
+			return $this->getBlockTypeClass();
 		}
 		
 		/** 
@@ -875,6 +888,9 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			$ca->delete('blockTypeByHandle', $this->btHandle);		 	
 			$ca->delete('blockTypeList', false);		 	
 			$db->Execute("delete from BlockTypes where btID = ?", array($this->btID));
+			
+			//Remove gaps in display order numbering (to avoid future sorting errors)
+			BlockTypeList::resetBlockTypeDisplayOrder('btDisplayOrder');
 		}
 		
 		/** 
@@ -1019,4 +1035,3 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		}
 
 	}
-	

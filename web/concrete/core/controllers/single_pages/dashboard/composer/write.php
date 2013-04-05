@@ -98,20 +98,19 @@ class Concrete5_Controller_Dashboard_Composer_Write extends Controller {
 					Cache::disableLocalCache();
 
 					if ($entry->isComposerDraft()) { 
-
 						$entry->move($parent);
-	
-						$v = CollectionVersion::get($entry, 'RECENT');
-						$pkr = new ApprovePagePageWorkflowRequest();
-						$pkr->setRequestedPage($entry);
-						$pkr->setRequestedVersionID($v->getVersionID());
-						$pkr->setRequesterUserID($u->getUserID());
-						$pkr->trigger();
-
-						Events::fire('on_composer_publish', $entry);
-						$entry->markComposerPageAsPublished();
-
 					}
+	
+					$v = CollectionVersion::get($entry, 'RECENT');
+					$pkr = new ApprovePagePageWorkflowRequest();
+					$pkr->setRequestedPage($entry);
+					$pkr->setRequestedVersionID($v->getVersionID());
+					$pkr->setRequesterUserID($u->getUserID());
+					$pkr->trigger();
+
+					Events::fire('on_composer_publish', $entry);
+					$entry->markComposerPageAsPublished();
+
 					$this->redirect('?cID=' . $entry->getCollectionID());
 				} else if ($this->post('autosave')) { 
 					// this is done by javascript. we refresh silently and send a json success back
@@ -120,7 +119,7 @@ class Concrete5_Controller_Dashboard_Composer_Write extends Controller {
 					$obj = new stdClass;
 					$dh = Loader::helper('date');
 					$obj->error = false;
-					$obj->time = $dh->getLocalDateTime('now','g:i a');
+					$obj->time = $dh->getLocalDateTime('now',DATE_APP_GENERIC_T);
 					$obj->timestamp =date('m/d/Y g:i a');
 					print $json->encode($obj);
 					exit;

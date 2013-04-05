@@ -43,6 +43,7 @@ $v->addFooterItem($html->javascript('jquery.rating.js'));
 $v->addFooterItem('<script type="text/javascript" src="' . REL_DIR_FILES_TOOLS_REQUIRED . '/i18n_js"></script>'); 
 $v->addFooterItem($html->javascript('bootstrap.js'));
 $v->addFooterItem($html->javascript('ccm.app.js'));
+$v->addFooterItem($html->javascript('ccm.dashboard.js'));
 $v->addFooterItem(Loader::helper('html')->javascript('tiny_mce/tiny_mce.js'));
 
 if (ENABLE_PROGRESSIVE_PAGE_REINDEX && Config::get('DO_PAGE_REINDEX_CHECK')) {
@@ -72,27 +73,6 @@ Loader::element('header_required', array('disableTrackingCode' => true));
 $backgroundImage = Loader::helper('concrete/dashboard')->getDashboardBackgroundImage();
 ?>
 <script type="text/javascript">
-	var lastSizeCheck = 9999999;		
-	ccm_testFixForms = function() {
-		if ($(window).width() <= 560 && lastSizeCheck > 560) {
-			ccm_fixForms();
-		} else if ($(window).width() > 560 && lastSizeCheck <= 560) {
-			ccm_fixForms(true);
-		}
-		lastSizeCheck = $(window).width();
-	}
-	ccm_fixForms = function(horizontal) {
-		$('form').each(function() {
-			var f = $(this);
-			if (horizontal) {
-				if (f.attr('original-class') == 'form-horizontal') {
-					f.attr('class', '').addClass('form-horizontal');
-				}
-			} else {
-				f.removeClass('form-horizontal');
-			}
-		});
-	}
 
 	$(function() {
 		<? if ($backgroundImage->image) { ?>

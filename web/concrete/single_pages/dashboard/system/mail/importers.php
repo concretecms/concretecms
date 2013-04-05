@@ -9,10 +9,10 @@ $form = Loader::helper('form');
 <? if ($this->controller->getTask() == 'edit_importer') { ?>
 
 <?php echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Edit Importer'), false, 'span8 offset2', false)?>
+<form method="post" id="mail-importer-form" class="form-horizontal" action="<?=$this->url('/dashboard/system/mail/importers', 'save_importer')?>">
 <div class="ccm-pane-body">
 
-	<form method="post" id="mail-importer-form" class="form-horizontal" action="<?=$this->url('/dashboard/system/mail/importers', 'save_importer')?>">
-			<?=$form->hidden('miID', $mi->getMailImporterID())?>
+		<?=$form->hidden('miID', $mi->getMailImporterID())?>
 		<fieldset>
 			<legend><?=t($mi->getMailImporterName())?> <?=t('Settings');?></legend>
 		

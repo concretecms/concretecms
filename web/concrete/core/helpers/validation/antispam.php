@@ -15,7 +15,7 @@ class Concrete5_Helper_Validation_Antispam {
 	
 	public function check($content, $type, $additionalArgs = array()) {
 		if ($this->controller) { 
-			$args['ip_address'] = $_SERVER['REMOTE_ADDR'];
+			$args['ip_address'] = Loader::helper('validation/ip')->getRequestIP();
 			$args['user_agent'] = $_SERVER['HTTP_USER_AGENT'];
 			$args['content'] = $content;
 			foreach($additionalArgs as $key => $value) {
