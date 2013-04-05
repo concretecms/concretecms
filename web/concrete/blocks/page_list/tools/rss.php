@@ -11,6 +11,10 @@ if($_GET['bID'] && $_GET['cID'] && $nh->integer($_GET['bID']) && $nh->integer($_
 			
 		//edit survey mode
 		$b = Block::getByID($_GET['bID'],$c, $a);
+		if ($b->getBlockTypeHandle() == BLOCK_HANDLE_SCRAPBOOK_PROXY) {
+			$cnt = $b->getController();
+			$b = Block::getByID($cnt->getOriginalBlockID());
+		}
 		
 		$controller = new PageListBlockController($b);
 		$rssUrl = $controller->getRssUrl($b);

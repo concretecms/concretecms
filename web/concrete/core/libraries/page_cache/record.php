@@ -8,6 +8,7 @@ class Concrete5_Library_PageCacheRecord {
 		$cache = PageCache::getLibrary();
 		$this->setCacheRecordLifetime($lifetime);
 		$this->setCacheRecordKey($cache->getCacheKey($c));
+		$this->setCacheRecordHeaders($cache->getCacheHeaders($c));
 		$this->setCacheRecordContent($content);
 	}
 
@@ -25,6 +26,14 @@ class Concrete5_Library_PageCacheRecord {
 
 	public function getCacheRecordContent() {
 		return $this->content;
+	}
+
+	public function setCacheRecordHeaders($headers) {
+		$this->headers = $headers;
+	}
+
+	public function getCacheRecordHeaders() {
+		return $this->headers;
 	}
 
 	public function getCacheRecordKey() {

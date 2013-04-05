@@ -1,4 +1,4 @@
-<? 
+<?
 /**
  * @package Helpers
  * @category Concrete
@@ -15,10 +15,10 @@
  * @copyright  Copyright (c) 2003-2008 Concrete5. (http://www.concrete5.org)
  * @license    http://www.concrete5.org/license/     MIT License
  */
- 
+
 defined('C5_EXECUTE') or die("Access Denied.");
 class Concrete5_Helper_Lists_StatesProvinces {
-	
+
 	protected $stateProvinces = array(
 	'US' => array(
 		'AL' => 'Alabama',
@@ -73,7 +73,7 @@ class Concrete5_Helper_Lists_StatesProvinces {
 		'WI' => 'Wisconsin',
 		'WY' => 'Wyoming'
 	),
-	
+
 	'CA' => array(
 		'AB' => 'Alberta',
 		'BC' => 'British Columbia',
@@ -89,7 +89,7 @@ class Concrete5_Helper_Lists_StatesProvinces {
 		'SK' => 'Saskatchewan',
 		'YT' => 'Yukon'
 	),
-	
+
 	'AU' => array(
 		'AAT' => 'Australian Antarctic Territory',
 		'ACT' => 'Australian Capital Territory',
@@ -101,125 +101,125 @@ class Concrete5_Helper_Lists_StatesProvinces {
 		'VIC' => 'Victoria',
 		'WA' => 'Western Australia',
 	),
-	
-	'DE' => array(
-      'BW' => 'Baden-W&uuml;rttemberg',
-      'BY' => 'Bayern',
-      'BE' => 'Berlin',
-      'BB' => 'Brandenburg',
-      'HB' => 'Bremen',
-      'HH' => 'Hamburg',
-      'HE' => 'Hessen',
-      'MV' => 'Mecklenburg-Vorpommern',
-      'NI' => 'Niedersachsen',
-      'NW' => 'Nordrhein-Westfalen',
-      'RP' => 'Rheinland-Pfalz',
-      'SL' => 'Saarland',
-      'SN' => 'Sachsen',
-      'ST' => 'Sachsen-Anhalt',
-      'SH' => 'Schleswig-Holstein',
-      'TH' => 'Th&uuml;ringen'   
-   ),
 
-   'FR' => array(
-	'01' => 'Ain',
-    '02' => 'Aisne',
-    '03' => 'Allier',
-    '04' => 'Alpes-de-Haute-Provence',
-    '05' => 'Haute-Alpes',
-    '06' => 'Alpes-Maritimes',
-    '07' => 'Ardèche',
-    '08' => 'Ardennes',
-    '09' => 'Ariège',
-    '10' => 'Aube',
-    '11' => 'Aude',
-    '12' => 'Aveyron',
-    '13' => 'Bouches-du-Rhône',
-    '14' => 'Calvados',
-    '15' => 'Cantal',
-    '16' => 'Charente',
-    '17' => 'Charente-Maritime',
-    '18' => 'Cher',
-    '19' => 'Corrèze',
-    '2A' => 'Corse-du-Sud',
-    '2B' => 'Haute-Corse',
-    '21' => 'Côte-d&#39;Or',
-    '22' => 'Côte-d&#39;Armor',
-    '23' => 'Creuse',
-    '24' => 'Dordogne',
-    '25' => 'Doubs',
-    '26' => 'Drôme',
-    '27' => 'Eure',
-    '28' => 'Eure-et-Loir',
-    '29' => 'Finistère',
-    '30' => 'Gard',
-    '31' => 'Haute-Garonne',
-    '32' => 'Gers',
-    '33' => 'Gironde',
-    '34' => 'Hérault',
-    '35' => 'Ille-et-Vilaine',
-    '36' => 'Indre',
-    '37' => 'Indre-et-Loire',
-    '38' => 'Isère',
-    '39' => 'Jura',
-    '40' => 'Landes',
-    '41' => 'Loir-et-Cher',
-    '42' => 'Loire',
-    '43' => 'Haute-Loire',
-    '44' => 'Loire-Atlantique',
-    '45' => 'Loiret',
-    '46' => 'Lot',
-    '47' => 'Lot-et-Garonne',
-    '48' => 'Lozère',
-    '49' => 'Maine-et-Loire',
-    '50' => 'Manche',
-    '51' => 'Marne',
-    '52' => 'Haute-Marne',
-    '53' => 'Mayenne',
-    '54' => 'Meurthe-et-Moselle',
-    '55' => 'Meuse',
-    '56' => 'Morbihan',
-    '57' => 'Moselle',
-    '58' => 'Nièvre',
-    '59' => 'Nord',
-    '60' => 'Oise',
-    '61' => 'Orne',
-    '62' => 'Pas-de-Calais',
-    '63' => 'Puy-de-Dôme',
-    '64' => 'Pyrénées-Atlantiques',
-    '65' => 'Hautes-Pyrénées',
-    '66' => 'Pyrénées-Orientales',
-    '67' => 'Bas-Rhin',
-    '68' => 'Haut-Rhin',
-    '69' => 'Rhône',
-    '70' => 'Haute-Saône',
-    '71' => 'Saône-et-Loire',
-    '72' => 'Sarthe',
-    '73' => 'Savoie',
-    '74' => 'Haute-Savoie',
-    '75' => 'Paris',
-    '76' => 'Seine-Maritime',
-    '77' => 'Seine-et-Marne',
-    '78' => 'Yvelines',
-    '79' => 'Deux-Sèvres',
-    '80' => 'Somme',
-    '81' => 'Tarn',
-    '82' => 'Tarn-et-Garonne',
-    '83' => 'Var',
-    '84' => 'Vaucluse',
-    '85' => 'Vendée',
-    '86' => 'Vienne',
-    '87' => 'Haute-Vienne',
-    '88' => 'Vosges',
-    '89' => 'Yonne',
-    '90' => 'Territoire de Belfort',
-    '91' => 'Essonne',
-    '92' => 'Hauts-de-Seine',
-    '93' => 'Seine-Saint-Denis',
-    '94' => 'Val-de-Marne',
-    '95' => 'Val-d&#39;Oise'
+	'DE' => array(
+		'BW' => 'Baden-Württemberg',
+		'BY' => 'Bayern',
+		'BE' => 'Berlin',
+		'BB' => 'Brandenburg',
+		'HB' => 'Bremen',
+		'HH' => 'Hamburg',
+		'HE' => 'Hessen',
+		'MV' => 'Mecklenburg-Vorpommern',
+		'NI' => 'Niedersachsen',
+		'NW' => 'Nordrhein-Westfalen',
+		'RP' => 'Rheinland-Pfalz',
+		'SL' => 'Saarland',
+		'SN' => 'Sachsen',
+		'ST' => 'Sachsen-Anhalt',
+		'SH' => 'Schleswig-Holstein',
+		'TH' => 'Thüringen'
 	),
-	
+
+	'FR' => array(
+		'01' => 'Ain',
+		'02' => 'Aisne',
+		'03' => 'Allier',
+		'04' => 'Alpes-de-Haute-Provence',
+		'05' => 'Haute-Alpes',
+		'06' => 'Alpes-Maritimes',
+		'07' => 'Ardèche',
+		'08' => 'Ardennes',
+		'09' => 'Ariège',
+		'10' => 'Aube',
+		'11' => 'Aude',
+		'12' => 'Aveyron',
+		'13' => 'Bouches-du-Rhône',
+		'14' => 'Calvados',
+		'15' => 'Cantal',
+		'16' => 'Charente',
+		'17' => 'Charente-Maritime',
+		'18' => 'Cher',
+		'19' => 'Corrèze',
+		'2A' => 'Corse-du-Sud',
+		'2B' => 'Haute-Corse',
+		'21' => 'Côte-d\'Or',
+		'22' => 'Côte-d\'Armor',
+		'23' => 'Creuse',
+		'24' => 'Dordogne',
+		'25' => 'Doubs',
+		'26' => 'Drôme',
+		'27' => 'Eure',
+		'28' => 'Eure-et-Loir',
+		'29' => 'Finistère',
+		'30' => 'Gard',
+		'31' => 'Haute-Garonne',
+		'32' => 'Gers',
+		'33' => 'Gironde',
+		'34' => 'Hérault',
+		'35' => 'Ille-et-Vilaine',
+		'36' => 'Indre',
+		'37' => 'Indre-et-Loire',
+		'38' => 'Isère',
+		'39' => 'Jura',
+		'40' => 'Landes',
+		'41' => 'Loir-et-Cher',
+		'42' => 'Loire',
+		'43' => 'Haute-Loire',
+		'44' => 'Loire-Atlantique',
+		'45' => 'Loiret',
+		'46' => 'Lot',
+		'47' => 'Lot-et-Garonne',
+		'48' => 'Lozère',
+		'49' => 'Maine-et-Loire',
+		'50' => 'Manche',
+		'51' => 'Marne',
+		'52' => 'Haute-Marne',
+		'53' => 'Mayenne',
+		'54' => 'Meurthe-et-Moselle',
+		'55' => 'Meuse',
+		'56' => 'Morbihan',
+		'57' => 'Moselle',
+		'58' => 'Nièvre',
+		'59' => 'Nord',
+		'60' => 'Oise',
+		'61' => 'Orne',
+		'62' => 'Pas-de-Calais',
+		'63' => 'Puy-de-Dôme',
+		'64' => 'Pyrénées-Atlantiques',
+		'65' => 'Hautes-Pyrénées',
+		'66' => 'Pyrénées-Orientales',
+		'67' => 'Bas-Rhin',
+		'68' => 'Haut-Rhin',
+		'69' => 'Rhône',
+		'70' => 'Haute-Saône',
+		'71' => 'Saône-et-Loire',
+		'72' => 'Sarthe',
+		'73' => 'Savoie',
+		'74' => 'Haute-Savoie',
+		'75' => 'Paris',
+		'76' => 'Seine-Maritime',
+		'77' => 'Seine-et-Marne',
+		'78' => 'Yvelines',
+		'79' => 'Deux-Sèvres',
+		'80' => 'Somme',
+		'81' => 'Tarn',
+		'82' => 'Tarn-et-Garonne',
+		'83' => 'Var',
+		'84' => 'Vaucluse',
+		'85' => 'Vendée',
+		'86' => 'Vienne',
+		'87' => 'Haute-Vienne',
+		'88' => 'Vosges',
+		'89' => 'Yonne',
+		'90' => 'Territoire de Belfort',
+		'91' => 'Essonne',
+		'92' => 'Hauts-de-Seine',
+		'93' => 'Seine-Saint-Denis',
+		'94' => 'Val-de-Marne',
+		'95' => 'Val-d\'Oise'
+	),
+
 	'UK' => array(
 		'ANGLES' => 'Anglesey',
 		'BRECK' => 'Brecknockshire',
@@ -234,7 +234,6 @@ class Concrete5_Helper_Lists_StatesProvinces {
 		'MONTG' => 'Mongtomeryshire',
 		'PEMBR' => 'Pembrokeshire',
 		'RADNOR' => 'Radnorshire',
-		
 		'ARBERD' => 'Aberdeenshire',
 		'ANGUS' => 'Angus',
 		'ARGYLL' => 'Argyllshire',
@@ -269,9 +268,7 @@ class Concrete5_Helper_Lists_StatesProvinces {
 		'SUTHER' => 'Sutherland',
 		'WESTL' => 'West Lothian',
 		'WIGTOWN' => 'Wigtownshire',
-		
 		'MERSEYSIDE' => 'Merseyside',
-		
 		'BEDS' => 'Bedfordshire',
 		'LONDON' => 'London',
 		'BERKS' => 'Berkshire',
@@ -313,7 +310,7 @@ class Concrete5_Helper_Lists_StatesProvinces {
 		'WORCES' => 'Worcestershire',
 		'YORK' => 'Yorkshire'
 	),
-	
+
 	'IE' => array(
 		'CO ANTRIM' => 'County Antrim',
 		'CO ARMAGH' => 'County Armagh',
@@ -348,9 +345,8 @@ class Concrete5_Helper_Lists_StatesProvinces {
 		'CO TIPPERARY' => 'County Tipperary',
 		'CO WATERFORD' => 'County Waterford'
 	),
-	
+
 	'NL' => array(
-	
 		'DR' => 'Drente',
 		'FL' => 'Flevoland',
 		'FR' => 'Friesland',
@@ -364,9 +360,8 @@ class Concrete5_Helper_Lists_StatesProvinces {
 		'ZH' => 'Zuid Holland',
 		'ZL' => 'Zeeland'
 	),
-	
+
 	'BR' => array(
-	
 		'AC' => 'Acre',
 		'AL' => 'Alagoas',
 		'AM' => 'Amazonas',
@@ -395,56 +390,176 @@ class Concrete5_Helper_Lists_StatesProvinces {
 		'SE' => 'Sergipe',
 		'SP' => 'Sao Paulo',
 		'TO' => 'Tocatins'
+	),
 
+	'IT' => array(
+		'AG' => 'Agrigento',
+		'AL' => 'Alessandria',
+		'AN' => 'Ancona',
+		'AO' => 'Aosta',
+		'AR' => 'Arezzo',
+		'AP' => 'Ascoli Piceno',
+		'AT' => 'Asti',
+		'AV' => 'Avellino',
+		'BA' => 'Bari',
+		'BT' => 'Barletta-Andria-Trani',
+		'BL' => 'Belluno',
+		'BN' => 'Benevento',
+		'BG' => 'Bergamo',
+		'BI' => 'Biella',
+		'BO' => 'Bologna',
+		'BZ' => 'Bolzano',
+		'BS' => 'Brescia',
+		'BR' => 'Brindisi',
+		'CA' => 'Cagliari',
+		'CL' => 'Caltanissetta',
+		'CB' => 'Campobasso',
+		'CI' => 'Carbonia-Iglesias',
+		'CE' => 'Caserta',
+		'CT' => 'Catania',
+		'CZ' => 'Catanzaro',
+		'CH' => 'Chieti',
+		'CO' => 'Como',
+		'CS' => 'Cosenza',
+		'CR' => 'Cremona',
+		'KR' => 'Crotone',
+		'CN' => 'Cuneo',
+		'EN' => 'Enna',
+		'FM' => 'Fermo',
+		'FE' => 'Ferrara',
+		'FI' => 'Firenze',
+		'FG' => 'Foggia',
+		'FC' => 'Forlì-Cesena',
+		'FR' => 'Frosinone',
+		'GE' => 'Genova',
+		'GO' => 'Gorizia',
+		'GR' => 'Grosseto',
+		'IM' => 'Imperia',
+		'IS' => 'Isernia',
+		'AQ' => 'L’Aquila',
+		'SP' => 'La Spezia',
+		'LT' => 'Latina',
+		'LE' => 'Lecce',
+		'LC' => 'Lecco',
+		'LI' => 'Livorno',
+		'LO' => 'Lodi',
+		'LU' => 'Lucca',
+		'MC' => 'Macerata',
+		'MN' => 'Mantova',
+		'MS' => 'Massa e Carrara',
+		'MT' => 'Matera',
+		'VS' => 'Medio Campidano',
+		'ME' => 'Messina',
+		'MI' => 'Milano',
+		'MO' => 'Modena',
+		'MB' => 'Monza e Brianza',
+		'NA' => 'Napoli',
+		'NO' => 'Novara',
+		'NU' => 'Nuoro',
+		'OG' => 'Ogliastra',
+		'OT' => 'Olbia-Tempio',
+		'OR' => 'Oristano',
+		'PD' => 'Padova',
+		'PA' => 'Palermo',
+		'PR' => 'Parma',
+		'PV' => 'Pavia',
+		'PG' => 'Perugia',
+		'PU' => 'Pesaro e Urbino',
+		'PE' => 'Pescara',
+		'PC' => 'Piacenza',
+		'PI' => 'Pisa',
+		'PT' => 'Pistoia',
+		'PN' => 'Pordenone',
+		'PZ' => 'Potenza',
+		'PO' => 'Prato',
+		'RG' => 'Ragusa',
+		'RA' => 'Ravenna',
+		'RC' => 'Reggio Calabria',
+		'RE' => 'Reggio Emilia',
+		'RI' => 'Rieti',
+		'RN' => 'Rimini',
+		'RM' => 'Roma',
+		'RO' => 'Rovigo',
+		'SA' => 'Salerno',
+		'SS' => 'Sassari',
+		'SV' => 'Savona',
+		'SI' => 'Siena',
+		'SR' => 'Siracusa',
+		'SO' => 'Sondrio',
+		'TA' => 'Taranto',
+		'TE' => 'Teramo',
+		'TR' => 'Terni',
+		'TO' => 'Torino',
+		'TP' => 'Trapani',
+		'TN' => 'Trento',
+		'TV' => 'Treviso',
+		'TS' => 'Trieste',
+		'UD' => 'Udine',
+		'VA' => 'Varese',
+		'VE' => 'Venezia',
+		'VB' => 'Verbano-Cusio-Ossola',
+		'VC' => 'Vercelli',
+		'VR' => 'Verona',
+		'VV' => 'Vibo Valentia',
+		'VI' => 'Vicenza',
+		'VT' => 'Viterbo'
 	)
+
 	);
-	
+
 	public function __construct() {
 		$this->stateProvinces['GB'] = $this->stateProvinces['UK'];
-	}
-	public function getStateProvinceName($v, $country) {
-		foreach($this->stateProvinces as $countryKey => $countries) {
-			foreach($countries as $key => $value) {
-				if ($key == $v && $country == $countryKey) {
-					return $value;
-				}
-			}
+		$stateProvincesFromEvent = Events::fire('on_get_states_provinces_list', $this->stateProvinces);
+		if(is_array($stateProvincesFromEvent)) {
+			$this->stateProvinces = $stateProvincesFromEvent;
+		}
+		foreach(array_keys($this->stateProvinces) as $country) {
+			asort($this->stateProvinces[$country]);
 		}
 	}
-	
-	public function getStateProvinceArray($k) {
-		$a = $this->stateProvinces[$k];
-		asort($a);
-		return $a;
-	}
-	
+
+	/** Returns the list of States/Provinces for some countries (States/Provinces are sorted alphabetically).
+	* @return array Returns an array whose keys are the country codes and the values are arrays (with keys: State/Province code, values: State/Province names)
+	*/
 	public function getAll() {
-		$sp = $this->stateProvinces;
-		foreach($sp as $p => $pv) {
-			asort($sp[$p]);
+		return $this->stateProvinces;
+	}
+
+	/** Returns the name of a specified State/Province in a specified Country.
+	* @param string $code The State/Province code.
+	* @param string $country The Country code.
+	* @return string|void Returns the State/Province name (if found), or nothing if not found.
+	*/
+	public function getStateProvinceName($code, $country) {
+		if(isset($this->stateProvinces[$country]) && isset($this->stateProvinces[$country][$code])) {
+			return $this->stateProvinces[$country][$code];
 		}
-		return $sp;
 	}
-	
-	/** 
-	 * Returns an array of US states
-	 * @deprecated
-	 * @return array
-	 */
+
+	/** Returns a list of States/Provinces for a country.
+	* @param string $country The country code.
+	* @return array|void If the Country is supported, the function returns an array (whose keys are the States/Provinces codes and the values are their names); returns nothing if $country is not supported.
+	*/
+	public function getStateProvinceArray($country) {
+		if(isset($this->stateProvinces[$country])) {
+			return $this->stateProvinces[$country];
+		}
+	}
+
+	/** Returns the list of US states.
+	* @deprecated
+	* @return array Returns an array whose keys are the US State codes and the values are their names.
+	*/
 	public function getStates() {
-		return $this->stateProvinces['US'];
+		return $this->getStateProvinceArray('US');
 	}
-	
-	/** 
-	 * Returns an array of Canadian provinces
-	 * @deprecated
-	 * @return array
-	 */
+
+	/** Returns the list of Canadian provinces.
+	* @deprecated
+	* @return array Returns an array whose keys are the Canadian Provinces codes and the values are their names.
+	*/
 	public function getCanadianProvinces() {
-		return $this->stateProvinces['CA'];
+		return $this->getStateProvinceArray('CA');
 	}
-	
 
 }
-
-?>

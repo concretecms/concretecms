@@ -28,7 +28,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		protected $attributes = array();
 		/* version specific stuff */
 
-		function loadVersionObject($cvID) {
+		function loadVersionObject($cvID = 'ACTIVE') {
 			$this->vObj = CollectionVersion::get($this, $cvID);
 		}
 		
@@ -441,8 +441,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				} else {
 					$s = Stack::getByName($garHandle, 'ACTIVE');
 				}
-				CacheLocal::set('csrCheck', $s->getCollectionID() . ':' . $s->getVersionID(), true);
 				if (is_object($s)) {
+					CacheLocal::set('csrCheck', $s->getCollectionID() . ':' . $s->getVersionID(), true);
 					$rs1 = $db->GetAll('select bID, csrID, arHandle from CollectionVersionBlockStyles where cID = ? and cvID = ? and csrID > 0', array($s->getCollectionID(), $s->getVersionID()));
 					foreach($rs1 as $r) {
 						$csrID = $r['csrID'];
@@ -722,7 +722,12 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			return $blocks;
 		}
 		
-		public function getBlocks($arHandle = false) {
+		/**
+		 * List the block IDs in a collection or area within a collection
+		 * @param string $arHandle. If specified, returns just the blocks in an area
+		 * @return array
+		 */
+		public function getBlockIDs($arHandle = false) {
 			$blockIDs = CacheLocal::getEntry('collection_block_ids', $this->getCollectionID() . ':' . $this->getVersionID());
 			$blocks = array();
 		
@@ -754,8 +759,19 @@ defined('C5_EXECUTE') or die("Access Denied.");
 						}
 					}
 				}
-			}		
+			}
+			return $blockIDs;
+		}
 			
+		/**
+		 * List the blocks in a collection or area within a collection
+		 * @param string $arHandle. If specified, returns just the blocks in an area
+		 * @return array
+		 */
+		public function getBlocks($arHandle = false) {
+
+			$blockIDs = $this->getBlockIDs($arHandle);
+
 			$blocks = array();
 			if (is_array($blockIDs)) {
 				foreach($blockIDs as $row) {
@@ -767,6 +783,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			}
 			return $blocks;
 		}
+
 		
 		public function addBlock($bt, $a, $data) {
 			$db = Loader::db();

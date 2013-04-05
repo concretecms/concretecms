@@ -51,7 +51,9 @@ class Concrete5_Model_PackageList extends Object {
 	}
 	
 	public static function refreshCache() {
-
+		CacheLocal::delete('packageHandleList', false);
+		CacheLocal::delete('pkgList', 1);
+		CacheLocal::delete('pkgList', 0);
 	}
 	
 	public static function get($pkgIsInstalled = 1) {
@@ -573,6 +575,7 @@ class Concrete5_Model_Package extends Object {
 	 * @return Package
 	 */
 	public function install() {
+		PackageList::refreshCache();
 		$db = Loader::db();
 		$dh = Loader::helper('date');
 		$v = array($this->getPackageName(), $this->getPackageDescription(), $this->getPackageVersion(), $this->getPackageHandle(), 1, $dh->getSystemDateTime());

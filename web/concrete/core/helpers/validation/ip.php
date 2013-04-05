@@ -47,16 +47,21 @@
 			return $this->check($ip, ' AND isManual = ? AND expires = ? ',Array(1,0));
 		}
 		
-		public function getRequestIP() {			
-			if ( array_key_exists ('HTTP_CLIENT_IP', $_SERVER ) && $_SERVER['HTTP_CLIENT_IP']){
-				return $_SERVER['HTTP_CLIENT_IP'];
+		/** Returns the client IP address (or an empty string if it can't be found).
+		* @return string
+		*/
+		public function getRequestIP() {
+			foreach(array('HTTP_CLIENT_IP', 'HTTP_X_FORWARDED_FOR', 'HTTP_X_FORWARDED', 'HTTP_X_CLUSTER_CLIENT_IP', 'HTTP_FORWARDED_FOR', 'HTTP_FORWARDED', 'REMOTE_ADDR') as $index) {
+				if(array_key_exists($index, $_SERVER) && is_string($_SERVER[$index])) {
+					foreach(split(',', $_SERVER[$index]) as $ip) {
+						$ip = trim($ip);
+						if(strlen($ip)) {
+							return $ip;
+						}
+					}
+				}
 			}
-			else if ( array_key_exists ('HTTP_X_FORWARDED_FOR', $_SERVER ) && $_SERVER['HTTP_X_FORWARDED_FOR']) {
-				return $_SERVER['HTTP_X_FORWARDED_FOR'];
-			}
-			else{
-				return $_SERVER['REMOTE_ADDR'];
-			}
+			return '';
 		}
 		
 		public function getErrorMessage() {

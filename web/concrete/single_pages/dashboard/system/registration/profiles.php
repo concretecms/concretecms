@@ -47,7 +47,6 @@ $form = Loader::helper('form');
 print $h->submit(t('Save'), 'public-profiles-form', 'right', 'primary');
 ?>
 </div>
-</div>
 
 </form>
 <script type="text/javascript">

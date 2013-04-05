@@ -19,7 +19,8 @@ $db = Loader::db();
 <script>
 jQuery(function($) {
 	var deleteResponse = (<?=$json->encode(t('Are you sure you want to delete this form submission?'))?>),
-		deleteForm = (<?=$json->encode(t('Are you sure you want to delete this form and its form submissions?'))?>);
+		deleteForm = (<?=$json->encode(t('Are you sure you want to delete this form and its form submissions?'))?>),
+		deleteFormAnswers = (<?=$json->encode(t('Are you sure you want to delete this form submissions?'))?>);
 	$('.delete-response').live('click', function(e) {
 		if (!confirm(deleteResponse)) {
 			e.preventDefault();
@@ -27,6 +28,11 @@ jQuery(function($) {
 	});
 	$('.delete-form').live('click', function(e) {
 		if (!confirm(deleteForm)) {
+			e.preventDefault();
+		}
+	});
+	$('.delete-form-answers').live('click', function(e) {
+		if (!confirm(deleteFormAnswers)) {
 			e.preventDefault();
 		}
 	});
@@ -104,6 +110,7 @@ if ($showTable) { ?>
 			<td>
 				<?=$ih->button(t('View Responses'), DIR_REL . '/index.php?cID=' . $c->getCollectionID().'&qsid='.$qsid, 'left', 'small')?>
 				<?=$ih->button(t('Open Page'), $url, 'left', 'small')?>
+				<?=$ih->button(t('Delete Submissions'), $this->action('').'?qsID='.$qsid.'&action=deleteFormAnswers', 'left', 'small error delete-form-answers')?>
 				<?if(!$in_use):?>
 				<?=$ih->button(t('Delete'), $this->action('').'?bID='.$survey['bID'].'&qsID='.$qsid.'&action=deleteForm', 'left', 'small error delete-form')?>
 				<?endif?>

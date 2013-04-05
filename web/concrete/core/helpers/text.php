@@ -33,9 +33,9 @@ class Concrete5_Helper_Text {
 	 * @param string $handle
 	 * @return string $handle
 	 */
-	public function urlify($handle) {
+	public function urlify($handle, $maxlength = PAGE_PATH_SEGMENT_MAX_LENGTH) {
 		Loader::library('3rdparty/urlify');
-		$handle = URLify::filter($handle);
+		$handle = URLify::filter($handle, $maxlength);
 		return $handle;
 	}
 		

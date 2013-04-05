@@ -10,7 +10,7 @@ class Concrete5_Library_Cache {
 		static $cache;
 		if (!isset($cache) && defined('DIR_FILES_CACHE')) {
 			if (is_dir(DIR_FILES_CACHE) && is_writable(DIR_FILES_CACHE)) {
-				require_once(DIR_LIBRARIES_3RDPARTY_CORE . '/Zend/Cache.php');
+				Loader::library('3rdparty/Zend/Cache');
 
 				$frontendOptions = array(
 					'lifetime' => CACHE_LIFETIME,
@@ -171,13 +171,22 @@ class Concrete5_Library_Cache {
 			$fh->removeAll(DIR_FILES_CACHE . '/' . DIRNAME_CSS);
 		}
 		
+		$pageCache = PageCache::getLibrary();
+		if (is_object($pageCache)) {
+			$pageCache->flush();
+		}
+		
 		if (in_array('Config', $r)) {
 			// clear the environment overrides cache
 			$env = Environment::get();
 			$env->clearOverrideCache();
 
-			$db->Execute('update Blocks set btCachedBlockRecord = null');
-			$db->Execute('truncate table CollectionVersionBlocksOutputCache');
+			if(in_array('btCachedBlockRecord', $db->MetaColumnNames('Blocks'))) {
+				$db->Execute('update Blocks set btCachedBlockRecord = null');
+			}
+			if (in_array('CollectionVersionBlocksOutputCache', $r)) {
+				$db->Execute('truncate table CollectionVersionBlocksOutputCache');
+			}
 		}
 		
 		$loc = CacheLocal::get();

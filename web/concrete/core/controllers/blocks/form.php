@@ -79,8 +79,19 @@ class Concrete5_Controller_Block_Form extends BlockController {
 	}
 	
 	public function on_page_view() {
-		$this->addFooterItem(Loader::helper('html')->css('jquery.ui.css'));
-		$this->addFooterItem(Loader::helper('html')->javascript('jquery.ui.js'));
+		if ($this->viewRequiresJqueryUI()) {
+			$this->addHeaderItem(Loader::helper('html')->css('jquery.ui.css'));
+			$this->addFooterItem(Loader::helper('html')->javascript('jquery.ui.js'));
+		}
+	}
+	
+	//Internal helper function
+	private function viewRequiresJqueryUI() {
+		$whereInputTypes = "inputType = 'date' OR inputType = 'datetime'";
+		$sql = "SELECT COUNT(*) FROM {$this->btQuestionsTablename} WHERE questionSetID = ? AND bID = ? AND ({$whereInputTypes})";
+		$vals = array(intval($this->questionSetId), intval($this->bID));
+		$JQUIFieldCount = Loader::db()->GetOne($sql, $vals);
+		return (bool)$JQUIFieldCount;
 	}
 	
 	public function getDefaultThankYouMsg() {

@@ -76,6 +76,9 @@ class Concrete5_Model_UserAttributeKey extends AttributeKey {
 		}
 
 		CacheLocal::set('user_attribute_key_by_handle', $akHandle, $ak);
+		if ($ak === -1) {
+			return false;
+		}
 		return $ak;
 	}
 

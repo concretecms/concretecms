@@ -218,7 +218,7 @@
 			$db = Loader::db();
 			$uLastLogin = $db->getOne("select uLastLogin from Users where uID = ?", array($this->uID));
 			
-			$db->query("update Users set uLastIP = ?, uLastLogin = ?, uPreviousLogin = ?, uNumLogins = uNumLogins + 1 where uID = ?", array(ip2long($_SERVER['REMOTE_ADDR']), time(), $uLastLogin, $this->uID));
+			$db->query("update Users set uLastIP = ?, uLastLogin = ?, uPreviousLogin = ?, uNumLogins = uNumLogins + 1 where uID = ?", array(ip2long(Loader::helper('validation/ip')->getRequestIP()), time(), $uLastLogin, $this->uID));
 		}
 		
 		function recordView($c) {

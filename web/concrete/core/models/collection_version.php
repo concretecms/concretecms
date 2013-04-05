@@ -31,6 +31,9 @@
 		}
 		
 		public function refreshCache() {
+			CacheLocal::delete('page', $this->getCollectionID() . ':' . $this->getVersionID());
+			CacheLocal::delete('page', $this->getCollectionID() . ':' . 'RECENT');
+			CacheLocal::delete('page', $this->getCollectionID() . ':' . 'ACTIVE');
 			Events::fire('on_page_version_refresh_cache', $this);
 		}
 		

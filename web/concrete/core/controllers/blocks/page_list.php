@@ -37,7 +37,7 @@
 			);
 		}
 		
-		public function getPageList($query = null) {
+		public function getPageList() {
 			Loader::model('page_list');
 			$db = Loader::db();
 			$bID = $this->bID;
@@ -126,7 +126,7 @@
 		}
 
 		
-		public function getPages($query = NULL) {
+		public function getPages() {
 			$pl = $this->getPageList();
 			
 			if ($pl->getItemsPerPage() > 0) {
@@ -245,12 +245,21 @@
 		public function getRssUrl($b, $tool = 'rss'){
 			$uh = Loader::helper('concrete/urls');
 			if(!$b) return '';
+
+			$pb = $b->getProxyBlock();
+			$rssb = $b;
+			if (is_object($pb)) {
+				$rssb = $pb;
+			}
+
 			$btID = $b->getBlockTypeID();
 			$bt = BlockType::getByID($btID);
-			$c = $b->getBlockCollectionObject();
-			$a = $b->getBlockAreaObject();
-			$rssUrl = $uh->getBlockTypeToolsURL($bt)."/" . $tool . "?bID=".$b->getBlockID()."&amp;cID=".$c->getCollectionID()."&amp;arHandle=" . $a->getAreaHandle();
-			return $rssUrl;
+			$c = $rssb->getBlockCollectionObject();
+			$a = $rssb->getBlockAreaObject();
+			if (is_object($a)) {
+				$rssUrl = $uh->getBlockTypeToolsURL($bt)."/" . $tool . "?bID=".$rssb->getBlockID()."&amp;cID=".$c->getCollectionID()."&amp;arHandle=" . $a->getAreaHandle();
+				return $rssUrl;
+			}
 		}
 	}
 

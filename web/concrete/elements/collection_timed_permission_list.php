@@ -48,7 +48,6 @@ foreach($assignments as $ppc) {
 	</tr>
 <? } ?>
 </table>
-</div>
 
 <? } else { ?>
 	<p><?=t('No timed permission assignments')?></p>

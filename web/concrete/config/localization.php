@@ -1,5 +1,5 @@
 <?
-defined('C5_EXECUTE') or die("Access Denied."); 
+defined('C5_EXECUTE') or die("Access Denied.");
 
 $u = new User();
 Config::getOrDefine('SITE_LOCALE', 'en_US');
@@ -31,6 +31,10 @@ if (!defined('REL_DIR_LANGUAGES_SITE_INTERFACE')) {
 
 if (!defined("LANGUAGE")) {
 	define("LANGUAGE", ACTIVE_LOCALE);
+}
+
+if (!defined('ENABLE_TRANSLATE_LOCALE_EN_US')) {
+	define('ENABLE_TRANSLATE_LOCALE_EN_US', false);
 }
 
 // initialize localization immediately following defining locale

@@ -23,8 +23,8 @@ class Concrete5_Controller_Dashboard_Pages_Types_Add extends DashboardBaseContro
 		
 		if (!$ctName) {
 			$this->error->add(t("Name required."));
-		} else if (preg_match('/[^0-9A-Z\.\!\&\(\)\-\_ ]/i', $ctName)) {
-			$this->error->add(t('Page type names can only contain letters, numbers, spaces and the following symbols: !, &, (, ), -, _.'));
+		} else if (preg_match('/[<>{};?"`]/i', $ctName)) {
+			$this->error->add(t('Invalid characters in page type name.'));
 		}
 
 		$valt = Loader::helper('validation/token');
