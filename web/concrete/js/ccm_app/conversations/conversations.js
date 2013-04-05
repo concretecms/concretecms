@@ -316,10 +316,8 @@
 			});
 			
 			obj.$element.on('click', '.conversation-rate-message', function() {
-				
 				var cnvMessageID = $(this).closest('[data-conversation-message-id]').attr('data-conversation-message-id');
 				var cnvRatingTypeHandle = $(this).attr('data-conversation-rating-type');
-				
 				obj.$messagerating.load(CCM_TOOLS_PATH + '/conversations/rate');
 				var data = {
 					'cnvID':               obj.options.cnvID,
@@ -334,9 +332,8 @@
 					data: data,
 					url: CCM_TOOLS_PATH + '/conversations/rate',
 					success: function(html) {
-						$('span[data-msg-rating="' + cnvMessageID + '"][data-msg-rating-type="' + cnvRatingTypeHandle + '"]').load(CCM_TOOLS_PATH + '/conversations/get_rating', {
-							'cnvMessageID':        cnvMessageID,
-							'cnvRatingTypeHandle': cnvRatingTypeHandle
+						$('span[data-message-rating="' + cnvMessageID + '"]').load(CCM_TOOLS_PATH + '/conversations/get_rating', {
+							'cnvMessageID':        cnvMessageID
 						});
 					}
 				});

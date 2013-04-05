@@ -4,7 +4,14 @@ $itemsPerPage = ($paginate) ? $itemsPerPage : -1;
 $u = new User();
 if ($u->isLoggedIn()) {
 	$uID = $u->getUserID();
+	$ui = UserInfo::getByID($uID);
+	$ip = $ui->getLastIPAddress();
+	echo $ip;
+}else{
+	$uID = 0;
 }
+
+
 
 if (is_object($conversation)) {
 	?>
