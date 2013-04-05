@@ -4,6 +4,7 @@ if (Loader::helper('validation/numbers')->integer($_POST['cnvMessageID']) && $_P
 	$ratingType = ConversationRatingType::getByHandle($_POST['cnvRatingTypeHandle']);
 	$cnvMessageID = $_POST['cnvMessageID'];
 	$commentRatingUserID = $_POST['commentRatingUserID'];
+	$commentRatingIP = $_POST['commentRatingIP'];
 	$msg = ConversationMessage::getByID($cnvMessageID);
-	$msg->rateMessage($ratingType, $commentRatingUserID);
+	$msg->rateMessage($ratingType, $commentRatingIP, $commentRatingUserID);
 }

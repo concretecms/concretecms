@@ -1,12 +1,11 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
 $paginate = ($paginate) ? 'true' : 'false';
 $itemsPerPage = ($paginate) ? $itemsPerPage : -1;
+$iph = Loader::helper('validation/ip');
+$commentRatingIP = ip2long($iph->getRequestIP());
 $u = new User();
 if ($u->isLoggedIn()) {
 	$uID = $u->getUserID();
-	$ui = UserInfo::getByID($uID);
-	$ip = $ui->getLastIPAddress();
-	echo $ip;
 }else{
 	$uID = 0;
 }
@@ -35,7 +34,8 @@ if (is_object($conversation)) {
 			insertNewMessages: '<?=$insertNewMessages?>',
 			activeUsers: <?=Loader::helper('json')->encode($users)?>,
 			enableCommentRating: <?=$enableCommentRating?>,
-			commentRatingUserID: <?=$uID?>
+			commentRatingUserID: <?=$uID?>,
+			commentRatingIP: '<?=$commentRatingIP?>'
 		});
 	});
 	</script>

@@ -63,6 +63,7 @@
 			var insertNewMessages  = (obj.options.insertNewMessages);
 			var enableCommentRating = (obj.options.enableCommentRating);
 			var commentRatingUserID = (obj.options.commentRatingUserID);
+			var commentRatingIP = (obj.options.commentRatingIP);
 
 			if (obj.options.method == 'ajax') {
 				$.post(CCM_TOOLS_PATH + '/conversations/view_ajax', {
@@ -78,7 +79,8 @@
 					'displayPostingForm':  displayPostingForm,
 					'insertNewMessages':   insertNewMessages,
 					'enableCommentRating': enableCommentRating,
-					'commentRatingUserID': commentRatingUserID
+					'commentRatingUserID': commentRatingUserID,
+					'commentRatingIP':     commentRatingIP
 					
 				}, function(r) {
 					var oldobj = window.obj;
@@ -325,7 +327,8 @@
 					'blockID':             obj.options.blockID,
 					'cnvMessageID':        cnvMessageID,
 					'cnvRatingTypeHandle': cnvRatingTypeHandle,
-					'commentRatingUserID': obj.options.commentRatingUserID
+					'commentRatingUserID': obj.options.commentRatingUserID,
+					'commentRatingIP':     obj.options.commentRatingIP
 				};
 				$.ajax({
 					type: 'post',
