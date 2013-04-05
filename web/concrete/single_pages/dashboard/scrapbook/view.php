@@ -153,7 +153,7 @@ if(!$scrapbookName){ ?>
 
 	<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Choose a Scrapbook'), $scrapbookDeprecationNote)?>
 	<div class="block-message warning alert-message"><p><?=t('<strong>Note</strong>: Scrapbooks are preserved for backward compatibility, but you really should be using <a href="%s">stacks</a> instead.', View::url('/dashboard/blocks/stacks'))?></p></div>
-		<table id="availableScrapbooks" border="0" cellspacing="1" class="grid-list" >
+		<table id="availableScrapbooks" border="0" cellspacing="1" class="grid-list table table-bordered" >
 			<tr>
 				<td class="header">
 					<?=t('Scrapbook Name')?>
