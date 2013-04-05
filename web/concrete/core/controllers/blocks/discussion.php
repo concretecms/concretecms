@@ -36,12 +36,24 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			$discussion = $this->getConversationDiscussionObject();
 			if (is_object($discussion)) {
 				$this->set('discussion', $discussion);
-				if ($this->enableNewConversations) {
-					$token = Loader::helper('validation/token')->generate('add_discussion_conversation');
-				} else {
-					$token = '';
+				if ($this->enableNewTopics && $this->cmpID) {
+					$this->set('composer', Composer::getByID($this->cmpID));
 				}
-				$this->set('posttoken', $token);
+			}
+		}
+
+		public function action_post() {
+			// happens through ajax
+			$composer = Composer::getByID($this->cmpID);
+			if (is_object($composer)) {
+				$pagetypes = $composer->getComposerPageTypeObjects();
+				$ctTopic = $pagetypes[0];
+				$c = Page::getCurrentPage();
+				$e = $composer->validatePublishRequest($ctTopic, $c);
+				print_r($e);
+				exit;
+				$o = new stdClass;
+				print Loader::helper('ajax')->sendResult($o);
 			}
 		}
 
@@ -50,6 +62,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			$this->addFooterItem(Loader::helper('html')->javascript('jquery.ui.js'));
 			$this->addHeaderItem(Loader::helper('html')->css('ccm.conversations.css'));
 			$this->addFooterItem(Loader::helper('html')->javascript('ccm.conversations.js'));
+			$this->addFooterItem(Loader::helper('html')->javascript('ccm.composer.js'));
 			$editor = ConversationEditor::getActive();
 			foreach((array)$editor->getConversationEditorHeaderItems() as $item) {
 				$this->addFooterItem($item);
@@ -62,25 +75,18 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			$cnvID = $db->GetOne('select cnvDiscussionID from btDiscussion where bID = ?', array($this->bID));
 			if (!$cnvID) {
 				$c = Page::getCurrentPage();
-				$discussion = ConversationDiscussion::add($c, $_POST['ctID']);
+				$discussion = ConversationDiscussion::add($c);
 			} else {
 				$discussion = ConversationDiscussion::getByID($cnvID);
-				if ($_POST['ctID']) {
-					$discussion->setConversationDiscussionCollectionTypeID($_POST['ctID']);
-				}
 			}
 			$values = $post;
+			$cmpID = 0;
+			if ($post['cmpID']) {
+				$cmpID = $post['cmpID'];
+			}
+			$values['cmpID'] = $cmpID;
 			$values['cnvDiscussionID'] = $discussion->getConversationDiscussionID();
 			parent::save($values);
 		}
 
-		public function validate($post) {
-			$e = Loader::helper('validation/error');
-			if ($post['enableNewConversations']) {
-				if ($post['ctID'] == '-1') {
-					$e->add(t('You must choose a page type with a Main area.'));
-				}
-			}
-			return $e;
-		}
 	}

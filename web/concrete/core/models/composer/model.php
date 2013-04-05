@@ -126,6 +126,29 @@ class Concrete5_Model_Composer extends Object {
 		return $e;
 	}	
 
+	/** 
+	 * Validates an entire request, from create draft, individual controls, and publish location. Useful for front-end forms that make use of composer without
+	 * interim steps like autosave
+	 */
+	public function validatePublishRequest($ct, $parent) {
+		$e = $this->validateCreateDraftRequest($ct);
+
+		$controls = ComposerControl::getList($this);
+		$outputControls = array();
+		foreach($controls as $cn) {
+			$data = $cn->getRequestValue();
+			if ($cn->isComposerFormControlRequiredOnThisRequest()) {
+				$cn->validate($data, $e);
+			}
+		}
+
+		if (!is_object($parent) || $parent->isError()) {
+			$e->add(t('You must choose a page to publish this page beneath.'));
+		}
+
+		return $e;
+	}
+
 	public function createDraft(CollectionType $ct, $u = false) {
 		if (!is_object($u)) {
 			$u = new User();

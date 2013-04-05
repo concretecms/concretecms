@@ -30,6 +30,26 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			$this->view();
 		}
 
+		public function validate_composer($data) {
+			$vs = Loader::helper('validation/strings');
+			$ve = Loader::helper('validation/error');
+			$subject = Loader::helper('security')->sanitizeString($data['cnvMessageSubject']);
+			if (!$vs->notempty($subject)) {
+				$ve->add(t('Your subject cannot be empty.'));
+			}
+
+			if (!$vs->notempty($data['cnvMessageBody'])) {
+				$ve->add(t('Your message cannot be empty.'));
+			}
+
+			if (Config::get('CONVERSATION_DISALLOW_BANNED_WORDS') && (
+				Loader::helper('validation/banned_words')->hasBannedWords($data['cnvMessageSubject']) ||
+				Loader::helper('validation/banned_words')->hasBannedWords($data['cnvMessageBody']))) {
+				$ve->add(t('Banned words detected.'));	
+			}
+			return $ve;
+		}
+
 		public function save($args) {
 			$db = Loader::db();
 			$cnvMessageID = $db->GetOne('select cnvMessageID from btCoreConversationMessage where bID = ?', array($this->bID));
