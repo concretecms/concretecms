@@ -92,10 +92,10 @@ class Concrete5_Model_Conversation_Message extends Object {
 	public function getConversationMessageDateTimeOutput() {
 		return t('Posted on %s', Loader::helper('date')->date('F d, Y \a\t g:i a', strtotime($this->cnvMessageDateCreated)));
 	}
-	public function rateMessage(ConversationRatingType $ratingType, $commentRatingUserID, $post = array()) {
+	public function rateMessage(ConversationRatingType $ratingType, $commentRatingIP, $commentRatingUserID, $post = array()) {
 		$db = Loader::db();
 		$cnvRatingTypeID = $db->GetOne('SELECT * FROM ConversationRatingTypes WHERE cnvRatingTypeHandle = ?', array($ratingType->cnvRatingTypeHandle));
-		$db->Execute('INSERT INTO ConversationMessageRatings (cnvMessageID, cnvRatingTypeID, timestamp, uID) VALUES (?, ?, ?, ?)', array($this->getConversationMessageID(), $cnvRatingTypeID, date('Y-m-d H:i:s'), $commentRatingUserID));
+		$db->Execute('INSERT INTO ConversationMessageRatings (cnvMessageID, cnvRatingTypeID, cnvMessageRatingIP, timestamp, uID) VALUES (?, ?, ?, ?, ?)', array($this->getConversationMessageID(), $cnvRatingTypeID, $commentRatingIP, date('Y-m-d H:i:s'), $commentRatingUserID));
 		$ratingType->adjustConversationMessageRatingTotalScore($this);
 	}	
 	public function getConversationMessageRating(ConversationRatingType $ratingType) {
