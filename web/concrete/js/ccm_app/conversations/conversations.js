@@ -62,6 +62,8 @@
 			var displayPostingForm = (obj.options.displayPostingForm);
 			var insertNewMessages  = (obj.options.insertNewMessages);
 			var enableCommentRating = (obj.options.enableCommentRating);
+			var commentRatingUserID = (obj.options.commentRatingUserID);
+			var commentRatingIP = (obj.options.commentRatingIP);
 
 			if (obj.options.method == 'ajax') {
 				$.post(CCM_TOOLS_PATH + '/conversations/view_ajax', {
@@ -76,7 +78,9 @@
 					'enableOrdering':      enableOrdering,
 					'displayPostingForm':  displayPostingForm,
 					'insertNewMessages':   insertNewMessages,
-					'enableCommentRating': enableCommentRating
+					'enableCommentRating': enableCommentRating,
+					'commentRatingUserID': commentRatingUserID,
+					'commentRatingIP':     commentRatingIP
 					
 				}, function(r) {
 					var oldobj = window.obj;
@@ -314,26 +318,25 @@
 			});
 			
 			obj.$element.on('click', '.conversation-rate-message', function() {
-				
 				var cnvMessageID = $(this).closest('[data-conversation-message-id]').attr('data-conversation-message-id');
 				var cnvRatingTypeHandle = $(this).attr('data-conversation-rating-type');
-				
 				obj.$messagerating.load(CCM_TOOLS_PATH + '/conversations/rate');
 				var data = {
 					'cnvID':               obj.options.cnvID,
 					'cID':                 obj.options.cID,
 					'blockID':             obj.options.blockID,
 					'cnvMessageID':        cnvMessageID,
-					'cnvRatingTypeHandle': cnvRatingTypeHandle
+					'cnvRatingTypeHandle': cnvRatingTypeHandle,
+					'commentRatingUserID': obj.options.commentRatingUserID,
+					'commentRatingIP':     obj.options.commentRatingIP
 				};
 				$.ajax({
 					type: 'post',
 					data: data,
 					url: CCM_TOOLS_PATH + '/conversations/rate',
 					success: function(html) {
-						$('span[data-msg-rating="' + cnvMessageID + '"][data-msg-rating-type="' + cnvRatingTypeHandle + '"]').load(CCM_TOOLS_PATH + '/conversations/get_rating', {
-							'cnvMessageID':        cnvMessageID,
-							'cnvRatingTypeHandle': cnvRatingTypeHandle
+						$('span[data-message-rating="' + cnvMessageID + '"]').load(CCM_TOOLS_PATH + '/conversations/get_rating', {
+							'cnvMessageID':        cnvMessageID
 						});
 					}
 				});

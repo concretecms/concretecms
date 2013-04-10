@@ -49,16 +49,13 @@ if ((!$message->isConversationMessageDeleted() && $message->isConversationMessag
 			
 		<?=$message->getConversationMessageDateTimeOutput();
 		Loader::element('conversation/social_share', array('cID' => $cID, 'message' => $message));?>
-		
 		<? if ($enableCommentRating) {
 			$ratingTypes = ConversationRatingType::getList();
-			foreach($ratingTypes as $ratingType) { ?>
-				<?=$ratingType->outputRatingTypeHTML();?>
-				<span class="ccm-conversation-message-rating-score" data-msg-rating="<?=$message->cnvMessageID?>" data-msg-rating-type="<?=$ratingType->getConversationRatingTypeHandle()?>"><?=$message->getConversationMessageRating($ratingType); ?></span>
-			 <? } ?>
+			foreach($ratingTypes as $ratingType) {
+				echo $ratingType->outputRatingTypeHTML();
+			} ?>
+			<span class="ccm-conversation-message-rating-score" data-message-rating="<?=$message->cnvMessageID?>"><?=$message->getConversationMessageTotalRatingScore();?></span>
 		<? } ?>
 		</div>
 	</div>
-	<?php
-}
-?>
+<? } ?>
