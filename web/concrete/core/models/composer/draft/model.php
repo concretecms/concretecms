@@ -46,7 +46,9 @@ class Concrete5_Model_ComposerDraft extends Object {
 				$v = $vArray[$i];
 				@$v->delete();
 			} 
-		}	
+		}
+
+		return $outputControls;
 	}
 
 	public function getComposerDraftTargetParentPageID() {return $this->cmpDraftTargetParentPageID;}
@@ -128,5 +130,6 @@ class Concrete5_Model_ComposerDraft extends Object {
 
 		Events::fire('on_composer_draft_publish', $this);
 
+		CacheLocal::flush();
 	}
 }

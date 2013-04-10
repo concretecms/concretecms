@@ -632,6 +632,18 @@ class Concrete5_Model_Block extends Object {
 			$bc->duplicate($newBID);
 		}
 
+		$features = $bc->getBlockTypeFeatureObjects();
+		if (count($features) > 0) {
+			foreach($features as $fe) {
+				$fd = $fe->getFeatureDetailObject($bc);	
+				$fa = CollectionVersionFeatureAssignment::add($fe, $fd, $nc);
+				$db->Execute('insert into BlockFeatureAssignments (cID, cvID, bID, faID) values (?, ?, ?, ?)', array(
+					$ncID, $nvID, $newBID, $fa->getFeatureAssignmentID()
+				));
+			}
+		}
+
+
 		// finally, we insert into the CollectionVersionBlocks table
 		if (!is_numeric($this->cbDisplayOrder)) {
 			$newBlockDisplayOrder = $nc->getCollectionAreaDisplayOrder($this->arHandle);

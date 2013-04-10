@@ -4,6 +4,7 @@ abstract class Concrete5_Model_FeatureAssignment extends Object {
 
 	abstract public function loadDetails($mixed);
 	abstract public static function getList($mixed);
+	abstract public static function getFeature($feHandle, $mixed);
 	
 	public static function add(Feature $fe, FeatureCategory $fc, FeatureDetail $fd, $mixed) {
 		$db = Loader::db();

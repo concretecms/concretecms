@@ -25,16 +25,37 @@ if (is_object($discussion)) { ?>
 	
 		<? if (count($topics)) { ?>
 
+			<?=$list->displaySummary()?>
+
 			<ul class="ccm-discussion-topics">
 
-			<? foreach($topics as $t) { ?>
+			<? foreach($topics as $t) { 
+				$v = $t->getVersionObject();
+				$fa = CollectionVersionFeatureAssignment::getFeature('conversation', $v);
+				$replies = 0;
+				if (is_object($fa)) {
+					$fd = $fa->getFeatureDetailObject();
+					$cnv = $fd->getConversationObject();
+					if (is_object($cnv)) {
+						$replies = $cnv->getConversationMessagesTotal();
+					}
+				}
+
+				?>
 			<li>
-				<div class="ccm-discussion-topic-replies"><em>0</em> Replies</div>
-				<div class="ccm-discussion-topic-details"><h3><a href="<?=Loader::helper('navigation')->getLinkToCollection($t)?>"><?=$t->getCollectionName()?></a></h3></div>
+				<div class="ccm-discussion-topic-replies">
+					<?=t2('<em>%s</em> Reply', '<em>%s</em> Replies', $replies)?>
+				</div>
+				<div class="ccm-discussion-topic-details">
+					<h3><a href="<?=Loader::helper('navigation')->getLinkToCollection($t)?>"><?=$t->getCollectionName()?></a></h3>
+					<p><?=date(DATE_APP_GENERIC_MDYT_FULL, strtotime($t->getCollectionDatePublic()))?></p>
+				</div>
 			</li>
 			<? } ?>
 
-			</div>
+			</ul>
+
+			<?=$list->displayPagingV2()?>
 
 		<? } else { ?>
 			<div class="well"><?=t('No topics have been posted.')?></div>
