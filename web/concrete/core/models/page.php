@@ -1966,7 +1966,7 @@ class Concrete5_Model_Page extends Collection {
 			while ($row = $r->fetchRow()) {
 				$b = Block::getByID($row['bID'], $mc, $row['arHandle']);
 				if ($row['btCopyWhenPropagate']) {
-					$b->duplicate($nc);
+					$b->duplicate($nc, true);
 				} else {
 					$b->alias($nc);
 				}

@@ -39,6 +39,13 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				if ($this->enableNewTopics && $this->cmpID) {
 					$this->set('composer', Composer::getByID($this->cmpID));
 				}
+
+				$pl = new PageList();
+				$c = Page::getCurrentPage();
+				$pl->filterByParentID($c->getCollectionID());
+				$pages = $pl->getPage();
+				$this->set('topics', $pages);
+
 			}
 		}
 
@@ -50,19 +57,25 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				$ctTopic = $pagetypes[0];
 				$c = Page::getCurrentPage();
 				$e = $composer->validatePublishRequest($ctTopic, $c);
-				print_r($e);
-				exit;
-				$o = new stdClass;
-				print Loader::helper('ajax')->sendResult($o);
+				$r = new ComposerPublishResponse($e);
+				if (!$e->has()) {
+					$d = $composer->createDraft($ctTopic);
+					$d->setComposerDraftTargetParentPageID($c->getCollectionID());
+					$d->saveForm();
+					$d->publish();
+				}
+				print Loader::helper('ajax')->sendResult($r);
 			}
+			exit;
 		}
 
 		public function on_page_view() {
 			$this->addHeaderItem(Loader::helper('html')->css('jquery.ui.css'));
 			$this->addFooterItem(Loader::helper('html')->javascript('jquery.ui.js'));
-			$this->addHeaderItem(Loader::helper('html')->css('ccm.conversations.css'));
 			$this->addFooterItem(Loader::helper('html')->javascript('ccm.conversations.js'));
+			$this->addHeaderItem(Loader::helper('html')->css('ccm.conversations.css'));
 			$this->addFooterItem(Loader::helper('html')->javascript('ccm.composer.js'));
+			$this->addHeaderItem(Loader::helper('html')->css('ccm.composer.css'));
 			$editor = ConversationEditor::getActive();
 			foreach((array)$editor->getConversationEditorHeaderItems() as $item) {
 				$this->addFooterItem($item);

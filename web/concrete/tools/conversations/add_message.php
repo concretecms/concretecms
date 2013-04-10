@@ -31,7 +31,7 @@ if (Config::get('CONVERSATION_DISALLOW_BANNED_WORDS') && Loader::helper('validat
 if ($ve->has()) {
 	$ax->sendError($ve);
 } else {
-	$msg = $cn->addMessage($cnvMessageSubject, $_POST['cnvMessageBody'], $parent);
+	$msg = ConversationMessage::add($cn, $cnvMessageSubject, $_POST['cnvMessageBody'], $parent);
 	if (!Loader::helper('validation/antispam')->check($_POST['cnvMessageBody'],'conversation_comment')) {
 		$msg->flag(ConversationFlagType::getByHandle('spam'));
 	} else {

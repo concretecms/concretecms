@@ -21,7 +21,7 @@ class Concrete5_Controller_Dashboard_Composer_Write extends DashboardBaseControl
 				$publishURL = View::url('/dashboard/composer/write', 'save', 'draft', $id, 'publish');
 				break;
 		}
-
+		$this->addHeaderItem(Loader::helper('html')->css('ccm.composer.css'));
 		$this->addFooterItem(Loader::helper('html')->javascript('ccm.composer.js'));
 		$js =<<<EOL
 <script type="text/javascript">$(function() { $('form[data-form=composer]').ccmcomposer({saveURL: '{$saveURL}', discardURL: '{$discardURL}', publishURL: '{$publishURL}'})});</script>
@@ -106,21 +106,15 @@ EOL;
 				$d->createNewCollectionVersion();
 			}
 
-			$controls = ComposerControl::getList($this->composer);
-			$outputControls = array();
-			foreach($controls as $cn) {
-				$data = $cn->getRequestValue();
-				$cn->publishToPage($d, $data, $controls);
-				$outputControls[] = $cn;
-			}
-			$d->setPageNameFromComposerControls($outputControls);
+			/// set the target
 			$configuredTarget = $this->composer->getComposerTargetObject();
 			$targetPageID = $configuredTarget->getComposerConfiguredTargetParentPageID();
 			if (!$targetPageID) {
 				$targetPageID = $this->post('cParentID');
 			}
 			$d->setComposerDraftTargetParentPageID($targetPageID);
-			$d->finishSave();
+			$d->saveForm();
+
 			if ($action == 'return_json') {
 				$ax = Loader::helper('ajax');
 				$r = new stdClass;

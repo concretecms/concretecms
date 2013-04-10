@@ -169,6 +169,37 @@ class Concrete5_Model_Conversation_Message extends Object {
 		return $attachment;
 	}
 
+	public static function add($cnv, $cnvMessageSubject, $cnvMessageBody, $parentMessage = false, $user = false) {
+		$db = Loader::db();
+		$date = Loader::helper('date')->getSystemDateTime();
+		$uID = 0;
+
+		if (is_object($user)) {
+			$ux = $user;
+		} else {
+			$ux = new User();
+		}
+
+		if ($ux->isRegistered()) {
+			$uID = $ux->getUserID();
+		}
+		$cnvMessageParentID = 0;
+		$cnvMessageLevel = 0;
+		if (is_object($parentMessage)) {
+			$cnvMessageParentID = $parentMessage->getConversationMessageID();
+			$cnvMessageLevel = $parentMessage->getConversationMessageLevel() + 1;
+		}
+
+		$cnvID = 0;
+		if ($cnv instanceof Conversation) {
+			$cnvID = $cnv->getConversationID();
+		}
+
+		$r = $db->Execute('insert into ConversationMessages (cnvMessageSubject, cnvMessageBody, cnvMessageDateCreated, cnvMessageParentID, cnvMessageLevel, cnvID, uID, cnvMessageSubmitIP, cnvMessageSubmitUserAgent) values (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+						  array($cnvMessageSubject, $cnvMessageBody, $date, $cnvMessageParentID, $cnvMessageLevel, $cnvID, $uID, ip2long(Loader::Helper('validation/ip')->getRequestIP()), $_SERVER['HTTP_USER_AGENT']));
+		return ConversationMessage::getByID($db->Insert_ID());
+	}
+
 	public function delete() {
 		$db = Loader::db();
 		$db->Execute('update ConversationMessages set uID = ?, cnvMessageSubject = null, cnvMessageBody = null, cnvIsMessageDeleted = 1 where cnvMessageID = ?', array(

@@ -5,6 +5,8 @@ $fieldsets = ComposerFormLayoutSet::getList($composer);
 
 <div class="ccm-composer-save-status"></div>
 
+<div class="alert alert-danger" id="ccm-composer-error-list"></div>
+
 <? foreach($fieldsets as $cfl) { ?>
 	<fieldset style="margin-bottom: 0px">
 		<? if ($cfl->getComposerFormLayoutSetName()) { ?>
