@@ -586,7 +586,7 @@ class Concrete5_Model_Block extends Object {
 		$db->Execute('update CollectionVersionBlocks set cID = ?, cvID = ?, arHandle = ?, cbDisplayOrder = ? where cID = ? and bID = ? and arHandle = ? and isOriginal = 1', $v);
 	}
 	
-	function duplicate($nc) {
+	function duplicate($nc, $isCopyFromMasterCollectionPropagation = false) {
 		// duplicate takes a new collection as its argument, and duplicates the existing block
 		// to that collection
 
@@ -626,7 +626,11 @@ class Concrete5_Model_Block extends Object {
 		}
 
 		// we duplicate block-specific sub-content 
-		$bc->duplicate($newBID);
+		if ($isCopyFromMasterCollectionPropagation && method_exists($bc, 'duplicate_master')) {
+			$bc->duplicate_master($newBID);
+		} else {
+			$bc->duplicate($newBID);
+		}
 
 		// finally, we insert into the CollectionVersionBlocks table
 		if (!is_numeric($this->cbDisplayOrder)) {
@@ -748,6 +752,10 @@ class Concrete5_Model_Block extends Object {
 		} else {
 			return $this->getOriginalCollection();
 		}
+	}
+
+	public function setBlockCollectionObject($c) {
+		$this->c = $c;
 	}
 
 	function getBlockCollectionID() {

@@ -457,6 +457,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				$this->btHandle = $obj->getBlockTypeHandle();
 				$this->bActionCID = $obj->getBlockActionCollectionID();
 				$this->btCachedBlockRecord = $obj->getBlockCachedRecord();
+				$this->setBlockObject($b);
 				$this->load();
 			}
 			parent::__construct();

@@ -3,6 +3,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 class Concrete5_Model_Conversation extends Object {
 
 	public function getConversationID() {return $this->cnvID;}
+	public function getConversationParentMessageID() {return $this->cnvParentMessageID;}
 	
 	public static function getByID($cnvID) {
 		$db = Loader::db();
@@ -26,6 +27,12 @@ class Concrete5_Model_Conversation extends Object {
 		return array_values($users);
 	}
 
+	public function setConversationParentMessageID($cnvParentMessageID) {
+		$db = Loader::db();
+		$db->Execute('update Conversations set cnvParentMessageID = ? where cnvID = ?', array($cnvParentMessageID, $this->getConversationID()));
+		$this->cnvMessageParentID = $cnvParentMessageID;
+	}
+
 	public static function add() {
 		$db = Loader::db();
 		$date = Loader::helper('date')->getSystemDateTime();
@@ -39,31 +46,5 @@ class Concrete5_Model_Conversation extends Object {
 		return $cnt;
 	}
 	
-
-	public function addMessage($cnvMessageSubject, $cnvMessageBody, $parentMessage = false, $user = false) {
-		$db = Loader::db();
-		$date = Loader::helper('date')->getSystemDateTime();
-		$uID = 0;
-
-		if (is_object($user)) {
-			$ux = $user;
-		} else {
-			$ux = new User();
-		}
-
-		if ($ux->isRegistered()) {
-			$uID = $ux->getUserID();
-		}
-		$cnvMessageParentID = 0;
-		$cnvMessageLevel = 0;
-		if (is_object($parentMessage)) {
-			$cnvMessageParentID = $parentMessage->getConversationMessageID();
-			$cnvMessageLevel = $parentMessage->getConversationMessageLevel() + 1;
-		}
-
-		$r = $db->Execute('insert into ConversationMessages (cnvMessageSubject, cnvMessageBody, cnvMessageDateCreated, cnvMessageParentID, cnvMessageLevel, cnvID, uID, cnvMessageSubmitIP, cnvMessageSubmitUserAgent) values (?, ?, ?, ?, ?, ?, ?, ?, ?)',
-						  array($cnvMessageSubject, $cnvMessageBody, $date, $cnvMessageParentID, $cnvMessageLevel, $this->cnvID, $uID, ip2long(Loader::Helper('validation/ip')->getRequestIP()), $_SERVER['HTTP_USER_AGENT']));
-		return ConversationMessage::getByID($db->Insert_ID());
-	}
 
 }

@@ -723,15 +723,11 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				$btHandle = $this->getBlockTypeHandle();
 				
 				$class = $this->getBlockTypeClass();
-				$bc = new $class($nb);
 				if (is_object($c)) {
-					$bc->setCollectionObject($c);
+					$nb->setBlockCollectionObject($c);
 				}
-				$bc->save($data);
-				
-				// the previous version of the block above is cached without the values				
-				$nb->refreshCache();
-				
+				$bc = new $class($nb);
+				$bc->save($data);				
 				return Block::getByID($bIDnew);
 				
 			}

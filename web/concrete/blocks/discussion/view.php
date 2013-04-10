@@ -20,6 +20,25 @@ if (is_object($discussion)) { ?>
 		</div>
 
 		<button class="pull-right btn" data-action="add-conversation" type="button"><?=t('New Topic')?></button>
+
+		<h3><?=$c->getCollectionName()?></h3>
+	
+		<? if (count($topics)) { ?>
+
+			<ul class="ccm-discussion-topics">
+
+			<? foreach($topics as $t) { ?>
+			<li>
+				<div class="ccm-discussion-topic-replies"><em>0</em> Replies</div>
+				<div class="ccm-discussion-topic-details"><h3><a href="<?=Loader::helper('navigation')->getLinkToCollection($t)?>"><?=$t->getCollectionName()?></a></h3></div>
+			</li>
+			<? } ?>
+
+			</div>
+
+		<? } else { ?>
+			<div class="well"><?=t('No topics have been posted.')?></div>
+		<? } ?>
 	<? } ?>
 
 	</div>

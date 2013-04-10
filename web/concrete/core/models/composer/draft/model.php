@@ -27,7 +27,16 @@ class Concrete5_Model_ComposerDraft extends Object {
 		$this->c = $c->cloneVersion('');
 	}
 
-	public function finishSave() {
+	public function saveForm() {
+		$controls = ComposerControl::getList($this->getComposerObject());
+		$outputControls = array();
+		foreach($controls as $cn) {
+			$data = $cn->getRequestValue();
+			$cn->publishToPage($this, $data, $controls);
+			$outputControls[] = $cn;
+		}
+		$this->setPageNameFromComposerControls($outputControls);
+
 		// remove all but the most recent X drafts.
 		$vl = new VersionList($this->getComposerDraftCollectionObject(), -1);
 		// this will ensure that we only ever keep X versions.
@@ -112,6 +121,10 @@ class Concrete5_Model_ComposerDraft extends Object {
 		$pkr->setRequestedVersionID($v->getVersionID());
 		$pkr->setRequesterUserID($u->getUserID());
 		$pkr->trigger();
+
+		$c->activate();
+		$db = Loader::db();
+		$db->Execute('delete from ComposerDrafts where cmpDraftID = ?', array($this->cmpDraftID));
 
 		Events::fire('on_composer_draft_publish', $this);
 

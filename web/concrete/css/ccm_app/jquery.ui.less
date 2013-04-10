@@ -591,8 +591,10 @@ position: fixed;
 }
 */
 
+/* concrete5 changes this */
+
 .ui-front {
-  z-index: 1000000 !important;
+  z-index: 999 !important;
 }
 
 /* end concrete5 */
@@ -939,7 +941,10 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
   position: fixed;
   /*top: 10%;
   width: 560px;*/
-  z-index: 1050;
+  /* concrete5 */
+  /*z-index: 1050; */
+  z-index: 999;
+  /* end concrete5 */
 }
 .ui-dialog .ui-dialog-titlebar { /*padding: .4em 1em;*/
   position: relative;

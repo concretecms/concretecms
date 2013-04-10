@@ -54,8 +54,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			$db = Loader::db();
 			$cnvMessageID = $db->GetOne('select cnvMessageID from btCoreConversationMessage where bID = ?', array($this->bID));
 			if (!$cnvMessageID) {
-				$conversation = Conversation::add();
-				$message = $conversation->addMessage($args['cnvMessageSubject'], $args['cnvMessageBody']);
+				$message = ConversationMessage::add(false, $args['cnvMessageSubject'], $args['cnvMessageBody']);
 				if (!Loader::helper('validation/antispam')->check($args['cnvMessageBody'],'conversation_comment')) {
 					$message->flag(ConversationFlagType::getByHandle('spam'));
 				} else {
@@ -64,6 +63,18 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				$data = array();
 				$data['cnvMessageID'] = $message->getConversationMessageID();
 				parent::save($data);
+				// update any conversation blocks on that page to have their conversations reflect that this is a base message block.
+				// we will then use that to group and show replies and messages in the dashboard
+				$b = $this->getBlockObject();
+				$c = $b->getBlockCollectionObject();
+				$blocks = $c->getBlocks();
+				foreach($blocks as $b) {
+					if ($b->getBlockTypeHandle() == BLOCK_HANDLE_CONVERSATION) {
+						$bi = $b->getController();
+						$conversation = $bi->getConversationObject();
+						$conversation->setConversationParentMessageID($message->getConversationMessageID());
+					}
+				}
 			}
 
 		}

@@ -89,6 +89,11 @@
           });
         });
 
+        if (settings.publishReturnMethod == 'ajax') {
+          $this.on('submit.composer', function() {
+            return false;
+          });
+        }
 
         $this.find('button[data-composer-btn=publish]').on('click', function() {
           clearInterval(methods.saveinterval);
@@ -104,9 +109,20 @@
                 url: $this.data('publishURL'),
                 success: function(r) {
                   $(this).prop('disabled', false);
+                  if (r.error) {
+                    var html = '';
+                    for (i = 0; i < r.messages.length; i++) {
+                      html += '<div>' + r.messages[i] + '</div>';
+                    }
+                    $('#ccm-composer-error-list').show().html(html);
+                  } else {
+                    $('#ccm-composer-error-list').hide();
+                  }
                 },
                 complete: function() {
-                  $this.unbind('submit.composer');
+                  $this.unbind('submit.composer').on('submit.composer', function() {
+                    return false;
+                  });
                   $this.removeAttr('action');
                 }
               });

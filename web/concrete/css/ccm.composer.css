@@ -1,0 +1,7 @@
+.clear_float{*zoom:1;}.clear_float:before,.clear_float:after{display:table;content:"";line-height:0;}
+.clear_float:after{clear:both;}
+.clearfix{*zoom:1;}.clearfix:before,.clearfix:after{display:table;content:"";line-height:0;}
+.clearfix:after{clear:both;}
+.hide-text{font:0/0 a;color:transparent;text-shadow:none;background-color:transparent;border:0;}
+.input-block-level{display:block;width:100%;min-height:30px;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;}
+#ccm-composer-error-list{display:none;}

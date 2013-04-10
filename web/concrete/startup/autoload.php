@@ -315,6 +315,7 @@ $classes = array(
 	'BlockComposerControl' => array('model','composer/control/controls/block'),
 	'ComposerFormLayoutSetControl' => array('model','composer/form/layout_set/control'),
 	'ComposerDraft' => array('model','composer/draft/model'),
+	'ComposerPublishResponse' => array('model','composer/publish/response'),
 
 	'NameCorePagePropertyComposerControl' => array('model','composer/control/controls/core_page_property/name'),
 	'UrlSlugCorePagePropertyComposerControl' => array('model','composer/control/controls/core_page_property/url_slug'),

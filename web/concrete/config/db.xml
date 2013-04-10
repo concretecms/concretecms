@@ -379,6 +379,10 @@
     <field name="cnvDateCreated" type="T">
       <notnull/>
     </field>
+    <field name="cnvParentMessageID" type="I" size="10">
+      <unsigned/>
+      <default value="0" />
+    </field>
   </table>
     <table name="ConversationDiscussions">
     <field name="cnvDiscussionID" type="I" size="10">

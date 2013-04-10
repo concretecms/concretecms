@@ -16,6 +16,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		protected $btTable = 'btCoreConversation';
 		protected $conversation;
 		protected $btWrapperClass = 'ccm-ui';
+		protected $btCopyWhenPropagate = true;
 		protected $btFeatures = array(
 			'conversation'
 		);
@@ -41,6 +42,13 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				$this->conversation = Conversation::getByID($cnvID);
 			}
 			return $this->conversation;
+		}
+
+		public function duplicate_master($newBID) {
+			parent::duplicate($newBID);
+			$db = Loader::db();
+			$conv = Conversation::add();
+			$db->Execute('update btCoreConversation set cnvID = ? where bID = ?', array($conv->getConversationID(), $newBID));
 		}
 
 		public function on_page_view() {

@@ -11,3 +11,4 @@ lessc --verbose -x ../web/concrete/css/ccm_app/build/ccm.app.mobile.less ../web/
 lessc --verbose -x ../web/concrete/css/ccm_app/build/ccm.app.less ../web/concrete/css/ccm.app.css
 lessc --verbose -x ../web/concrete/css/ccm_app/build/ccm.account.less ../web/concrete/css/ccm.account.css
 lessc --verbose -x ../web/concrete/css/image_editor/build/ccm.image_editor.less ../web/concrete/css/ccm.image_editor.css
+lessc --verbose -x ../web/concrete/css/ccm_app/build/ccm.composer.less ../web/concrete/css/ccm.composer.css
