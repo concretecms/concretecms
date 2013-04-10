@@ -22,6 +22,21 @@ class Concrete5_Model_CollectionVersionFeatureAssignment extends FeatureAssignme
 		return $fa;
 	}
 
+	public static function getFeature($feHandle, $page) {
+		$db = Loader::db();
+		$faID = $db->GetOne('select ca.faID from CollectionVersionFeatureAssignments ca inner join FeatureAssignments fa on ca.faID = fa.faID inner join Features fe on fa.feID = fe.feID where cID = ? and cvID = ? and fe.feHandle = ?', array(
+			$page->getCollectionID(),
+			$page->getVersionID(),
+			$feHandle
+		));
+		if ($faID && $faID > 0) {
+			$fa = FeatureAssignment::getByID($faID, $page);
+			if (is_object($fa)) {
+				return $fa;
+			}
+		}
+	}
+
 	public static function getList($page) {
 		$db = Loader::db();
 		$r = $db->Execute('select faID from CollectionVersionFeatureAssignments where cID = ? and cvID = ?', array(

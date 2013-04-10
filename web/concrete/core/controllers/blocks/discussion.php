@@ -43,8 +43,11 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				$pl = new PageList();
 				$c = Page::getCurrentPage();
 				$pl->filterByParentID($c->getCollectionID());
+				$pl->setItemsPerPage(5);
+				$pl->sortByPublicDateDescending();
 				$pages = $pl->getPage();
 				$this->set('topics', $pages);
+				$this->set('list', $pl);
 
 			}
 		}
@@ -63,6 +66,9 @@ defined('C5_EXECUTE') or die("Access Denied.");
 					$d->setComposerDraftTargetParentPageID($c->getCollectionID());
 					$d->saveForm();
 					$d->publish();
+					$nc = Page::getByID($d->getComposerDraftCollectionID(), 'RECENT');
+					$link = Loader::helper('navigation')->getLinkToCollection($nc, true);
+					$r->setRedirectURL($link);
 				}
 				print Loader::helper('ajax')->sendResult($r);
 			}

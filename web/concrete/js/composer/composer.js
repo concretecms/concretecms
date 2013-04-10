@@ -15,14 +15,14 @@
           url: $f.data('saveURL'),
           success: function(r) {
             $f.find('.ccm-composer-save-status').html('<div class="alert alert-info"><?=t("Page saved at ")?>' + r.time + '</div>');
-            if (r.saveurl) {
-              $f.data('saveURL', r.saveurl);
+            if (r.saveURL) {
+              $f.data('saveURL', r.saveURL);
             }
-            if (r.discardurl) {
-              $f.data('discardURL', r.discardurl);
+            if (r.discardURL) {
+              $f.data('discardURL', r.discardURL);
             }
-            if (r.publishurl) {
-              $f.data('publishURL', r.publishurl);
+            if (r.publishURL) {
+              $f.data('publishURL', r.publishURL);
             }
             if (onComplete) {
               onComplete();
@@ -117,6 +117,9 @@
                     $('#ccm-composer-error-list').show().html(html);
                   } else {
                     $('#ccm-composer-error-list').hide();
+                    if (r.redirectURL) {
+                      window.location.href = r.redirectURL;
+                    }
                   }
                 },
                 complete: function() {

@@ -48,6 +48,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			parent::duplicate($newBID);
 			$db = Loader::db();
 			$conv = Conversation::add();
+			$this->conversation = $conv;
 			$db->Execute('update btCoreConversation set cnvID = ? where bID = ?', array($conv->getConversationID(), $newBID));
 		}
 

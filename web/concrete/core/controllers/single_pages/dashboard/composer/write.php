@@ -113,18 +113,17 @@ EOL;
 				$targetPageID = $this->post('cParentID');
 			}
 			$d->setComposerDraftTargetParentPageID($targetPageID);
-			$d->saveForm();
+			$outputControls = $d->saveForm();
+
+			$r = new ComposerPublishResponse();
+			$r->setComposerDraft($d);
 
 			if ($action == 'return_json') {
 				$ax = Loader::helper('ajax');
-				$r = new stdClass;
 				$r->time = date('F d, Y g:i A');
-				$r->cmpDraftID = $d->getComposerDraftID();
-				// we make sure to send back the save url which we need because it changes
-				// between making a draft and saving new copies of drafts.
-				$r->saveurl = View::url('/dashboard/composer/write', 'save', 'draft', $d->getComposerDraftID());
-				$r->discardurl = View::url('/dashboard/composer/write', 'discard', $d->getComposerDraftID(), Loader::helper('validation/token')->generate('discard_draft'));
-				$r->publishurl = View::url('/dashboard/composer/write', 'save', 'draft', $d->getComposerDraftID(), 'publish');
+				$r->setSaveURL(View::url('/dashboard/composer/write', 'save', 'draft', $d->getComposerDraftID()));
+				$r->setDiscardURL(View::url('/dashboard/composer/write', 'discard', $d->getComposerDraftID(), Loader::helper('validation/token')->generate('discard_draft')));
+				$r->setPublishURL(View::url('/dashboard/composer/write', 'save', 'draft', $d->getComposerDraftID(), 'publish'));
 				$ax->sendResult($r);
 			} else if ($action == 'publish') {
 				$this->publish($d, $outputControls);

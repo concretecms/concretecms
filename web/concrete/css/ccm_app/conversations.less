@@ -184,7 +184,7 @@ div.ccm-conversation-load-more-messages {
  */
 ul.ccm-discussion-topics {
 	list-style-type: none;
-	margin: 0px;
+	margin: 0px 0px 20px 0px;
 	padding: 0px;
 
 	li {
@@ -192,6 +192,7 @@ ul.ccm-discussion-topics {
 		padding: 4px 4px 10px 80px;
 		position: relative;
 		min-height: 60px;
+		border-bottom: 1px inset #ccc;
 
 		div.ccm-discussion-topic-replies {
 			position: absolute;
@@ -216,10 +217,15 @@ ul.ccm-discussion-topics {
 
 		}
 
+		div.ccm-discussion-topic-details {
+			color: #444;
+		}
 	}
 
 	h3 {
 		font-size: 1.4em;
 		font-weight: lighter;
+		line-height: 1.4em;
+		margin-bottom: 2px;
 	}
 }
