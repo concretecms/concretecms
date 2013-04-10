@@ -1,6 +1,16 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
 $paginate = ($paginate) ? 'true' : 'false';
 $itemsPerPage = ($paginate) ? $itemsPerPage : -1;
+$iph = Loader::helper('validation/ip');
+$commentRatingIP = ip2long($iph->getRequestIP());
+$u = new User();
+if ($u->isLoggedIn()) {
+	$uID = $u->getUserID();
+}else{
+	$uID = 0;
+}
+
+
 
 if (is_object($conversation)) {
 	?>
@@ -23,7 +33,9 @@ if (is_object($conversation)) {
 			displayPostingForm: '<?=$displayPostingForm?>',
 			insertNewMessages: '<?=$insertNewMessages?>',
 			activeUsers: <?=Loader::helper('json')->encode($users)?>,
-			enableCommentRating: <?=$enableCommentRating?>
+			enableCommentRating: <?=$enableCommentRating?>,
+			commentRatingUserID: <?=$uID?>,
+			commentRatingIP: '<?=$commentRatingIP?>'
 		});
 	});
 	</script>
