@@ -42,6 +42,10 @@
 			<notnull />
 			<default value="top" />
 		</field>
+		<field name="addMessageLabel" type="C" size="255">
+			<notnull />
+			<default value="" />
+		</field>
 		<field name="insertNewMessages" type="C" size="255">
 			<notnull />
 			<default value="top" />

@@ -13,6 +13,10 @@ if (is_object($cnv)) {
 		$displayMode = 'threaded';
 	}
 	
+	$addMessageLabel = t('Add Message');
+	if ($_POST['addMessageLabel']) {
+		$addMessageLabel = Loader::helper('security')->sanitizeString($_POST['addMessageLabel']);
+	}
 	switch($_POST['task']) {
 		case 'get_messages':
 			$displayForm = false;
@@ -56,6 +60,7 @@ if (is_object($cnv)) {
 		'displayMode' => $displayMode,
 		'displayForm' => $displayForm,
 		'enablePosting' => $enablePosting,
+		'addMessageLabel' => $addMessageLabel,
 		'currentPage' => 1,
 		'totalPages' => $totalPages,
 		'orderBy' => $_POST['orderBy'],
