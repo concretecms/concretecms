@@ -64,6 +64,7 @@
 			var enableCommentRating = (obj.options.enableCommentRating);
 			var commentRatingUserID = (obj.options.commentRatingUserID);
 			var commentRatingIP = (obj.options.commentRatingIP);
+			var addMessageLabel = (obj.options.addMessageLabel) ? obj.options.addMessageLabel : '';
 
 			if (obj.options.method == 'ajax') {
 				$.post(CCM_TOOLS_PATH + '/conversations/view_ajax', {
@@ -72,6 +73,7 @@
 					'blockID':             obj.options.blockID,
 					'enablePosting':       enablePosting,
 					'itemsPerPage':        obj.options.itemsPerPage,
+					'addMessageLabel':     addMessageLabel,
 					'paginate':            paginate,
 					'displayMode':         obj.options.displayMode,
 					'orderBy':             orderBy,
@@ -174,6 +176,7 @@
 			}
 			var paginate = (obj.options.paginate) ? 1 : 0;
 			var enablePosting = (obj.options.posttoken != '') ? 1 : 0;
+			var addMessageLabel = (obj.options.addMessageLabel) ? obj.options.addMessageLabel : '';
 
 			obj.$replyholder    = obj.$element.find('div.ccm-conversation-add-reply');
 			obj.$newmessageform = obj.$element.find('div.ccm-conversation-add-new-message form');
@@ -275,10 +278,11 @@
 					'displayMode':         obj.options.displayMode,
 					'itemsPerPage':        obj.options.itemsPerPage,
 					'paginate':            paginate,
+					'addMessageLabel':     addMessageLabel,
 					'orderBy':             $(this).val(),
 					'enableOrdering':      obj.options.enableOrdering,
-					'displayPostingForm':  displayPostingForm,
-					'insertNewMessages':   insertNewMessages,
+					'displayPostingForm':  obj.options.displayPostingForm,
+					'insertNewMessages':   obj.options.insertNewMessages,
 					'enableCommentRating': obj.options.enableCommentRating
 					
 				}, function(r) {
@@ -297,6 +301,7 @@
 					'itemsPerPage':        obj.options.itemsPerPage,
 					'displayMode':         obj.options.displayMode,
 					'enablePosting':       enablePosting,
+					'addMessageLabel':     addMessageLabel,
 					'page':                nextPage,
 					'orderBy':             obj.$sortselect.val(),
 					'enableCommentRating': obj.options.enableCommentRating

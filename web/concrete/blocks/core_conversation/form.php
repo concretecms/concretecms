@@ -3,10 +3,13 @@
 if ($controller->getTask() == 'add') {
 	$enablePosting = 1;
 	$paginate = 1;
-	$itemsPerPage = 20;
+	$itemsPerPage = 50;
 	$displayMode = 'threaded';
 	$insertNewMessages = 'top';
+	$enableOrdering = 1;
+	$enableCommentRating = 1;
 	$displayPostingForm = 'top';
+	$addMessageLabel = t('Add Message');
 }
 ?>
 <div class="form-horizontal">
@@ -80,6 +83,12 @@ if ($controller->getTask() == 'add') {
 
 <fieldset>
 	<legend><?=t('Posting')?></legend>
+	<div class="control-group">
+		<?=$form->label('addMessageLabel', t('Add Message Label'))?>
+		<div class="controls">
+			<?=$form->text('addMessageLabel', $addMessageLabel)?>
+		</div>
+	</div>
 	<div class="control-group">
 		<label class="control-label"><?=t('Enable Posting')?></label>
 		<div class="controls">

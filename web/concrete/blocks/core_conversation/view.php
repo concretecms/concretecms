@@ -26,6 +26,7 @@ if (is_object($conversation)) {
 			cID: <?=$cID?>,
 			posttoken: '<?=$posttoken?>',
 			displayMode: '<?=$displayMode?>',
+			addMessageLabel: '<?=$addMessageLabel?>',
 			paginate: <?=$paginate?>,
 			itemsPerPage: <?=$itemsPerPage?>,
 			orderBy: '<?=$orderBy?>',
