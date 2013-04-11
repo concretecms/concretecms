@@ -13,7 +13,10 @@ abstract class Concrete5_Model_FeatureAssignment extends Object {
 			$fe->getFeatureID(),
 			serialize($fd)
 		));
-		return FeatureAssignment::getByID($db->Insert_ID(), $mixed);
+		// sometimes feature detail objects need to do more with the feature assignments, so we do that here.
+		$fa = FeatureAssignment::getByID($db->Insert_ID(), $mixed);
+		$fd->handleFeatureAssignment($fa);
+		return $fa;
 	}
 
 	protected function assignmentIsInUse() {

@@ -40,14 +40,30 @@ defined('C5_EXECUTE') or die("Access Denied.");
 					$this->set('composer', Composer::getByID($this->cmpID));
 				}
 
-				$pl = new PageList();
 				$c = Page::getCurrentPage();
-				$pl->filterByParentID($c->getCollectionID());
-				$pl->setItemsPerPage(5);
-				$pl->sortByPublicDateDescending();
-				$pages = $pl->getPage();
+				$dl = new ConversationDiscussionList($c);
+				$orderBy = $this->orderBy;
+				if (in_array($_REQUEST['orderBy'], array('replies', 'date', 'date_last_message')) && $this->enableOrdering) {
+					$orderBy = $_REQUEST['orderBy'];
+				}
+				switch($orderBy) {
+					case 'replies':
+						$dl->sortByTotalReplies();
+						break;
+					case 'date':
+						$dl->sortByPublicDateDescending();
+						break;
+					default: //date_last_message
+						$dl->sortByConversationDateLastMessage();
+						break;
+				}
+				if ($this->itemsPerPage > 0) {
+					$dl->setItemsPerPage($this->itemsPerPage);
+				}
+				$pages = $dl->getPage();
+				$this->set('reqOrderBy', $orderBy);
 				$this->set('topics', $pages);
-				$this->set('list', $pl);
+				$this->set('list', $dl);
 
 			}
 		}
@@ -55,7 +71,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		public function action_post() {
 			// happens through ajax
 			$composer = Composer::getByID($this->cmpID);
-			if (is_object($composer)) {
+			if (is_object($composer) && $this->enableNewTopics) {
 				$pagetypes = $composer->getComposerPageTypeObjects();
 				$ctTopic = $pagetypes[0];
 				$c = Page::getCurrentPage();

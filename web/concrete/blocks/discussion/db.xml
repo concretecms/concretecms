@@ -14,6 +14,20 @@
 		<field name="enableNewTopics" type="I">
 			<default value="1"/>
 		</field>
+		<field name="itemsPerPage" type="I2">
+			<unsigned />
+			<notnull />
+			<default value="50" />
+		</field>
+		<field name="orderBy" type="C" size="255">
+			<notnull />
+			<default value="date_desc" />
+		</field>
+		<field name="enableOrdering" type="I1">
+			<unsigned />
+			<notnull />
+			<default value="1" />
+		</field>
 
 	</table>
 </schema>

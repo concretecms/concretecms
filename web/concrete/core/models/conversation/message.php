@@ -45,12 +45,24 @@ class Concrete5_Model_Conversation_Message extends Object {
 		$db = Loader::db();
 		$db->execute('UPDATE ConversationMessages SET cnvIsMessageApproved=1 WHERE cnvMessageID=?',array($this->cnvMessageID));
 		$this->cnvIsMessageApproved = true;
+
+		$cnv = $this->getConversationMessageConversationObject();
+		if (is_object($cnv)) {
+			$cnv->updateConversationSummary();
+		}
+
 	}
 	public function unapprove() {
 		$db = Loader::db();
 		$db->execute('UPDATE ConversationMessages SET cnvIsMessageApproved=0 WHERE cnvMessageID=?',array($this->cnvMessageID));
 		$this->cnvIsMessageApproved = false;
+
+		$cnv = $this->getConversationMessageConversationObject();
+		if (is_object($cnv)) {
+			$cnv->updateConversationSummary();
+		}
 	}
+
 	public function conversationMessageHasFlag($flag) {
 		if (!$flag instanceof ConversationFlagType) {
 			$flag = ConversationFlagType::getByHandle($flag);
@@ -192,6 +204,11 @@ class Concrete5_Model_Conversation_Message extends Object {
 
 		$r = $db->Execute('insert into ConversationMessages (cnvMessageSubject, cnvMessageBody, cnvMessageDateCreated, cnvMessageParentID, cnvMessageLevel, cnvID, uID, cnvMessageSubmitIP, cnvMessageSubmitUserAgent) values (?, ?, ?, ?, ?, ?, ?, ?, ?)',
 						  array($cnvMessageSubject, $cnvMessageBody, $date, $cnvMessageParentID, $cnvMessageLevel, $cnvID, $uID, ip2long(Loader::Helper('validation/ip')->getRequestIP()), $_SERVER['HTTP_USER_AGENT']));
+
+		if ($cnv instanceof Conversation) {
+			$cnv->updateConversationSummary();
+		}
+
 		return ConversationMessage::getByID($db->Insert_ID());
 	}
 
@@ -201,6 +218,11 @@ class Concrete5_Model_Conversation_Message extends Object {
 			USER_DELETED_CONVERSATION_ID,
 			$this->cnvMessageID
 		));
+
+		$cnv = $this->getConversationMessageConversationObject();
+		if (is_object($cnv)) {
+			$cnv->updateConversationSummary();
+		}
 
 		$this->cnvIsMessageDeleted = true;
 		$this->cnvMessageSubject = null;

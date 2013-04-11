@@ -48,11 +48,11 @@ if ($controller->getTask() == 'add') {
 		<label class="control-label"><?=t('Paginate Message List')?></label>
 		<div class="controls">
 			<label class="radio">
-				<?=$form->radio('paginate', 1, $paginate)?>
+				<?=$form->radio('paginate', 0, $paginate)?>
 				<span><?=t('No, display all messages.')?></span>
 			</label>
 			<label class="radio">
-				<?=$form->radio('paginate', 0, $paginate)?>
+				<?=$form->radio('paginate', 1, $paginate)?>
 				<span><?=t('Yes, display only a sub-set of messages at a time.')?></span>
 			</label>
 		</div> 

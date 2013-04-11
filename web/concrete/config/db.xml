@@ -379,9 +379,26 @@
     <field name="cnvDateCreated" type="T">
       <notnull/>
     </field>
+    <field name="cnvDateLastMessage" type="T"/>
     <field name="cnvParentMessageID" type="I" size="10">
       <unsigned/>
       <default value="0" />
+    </field>
+    <field name="cnvMessagesTotal" type="I" size="10">
+      <default value="0" />
+      <unsigned/>
+    </field>
+  </table>
+  <table name="ConversationFeatureDetailAssignments">
+    <field name="faID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="cnvID" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
     </field>
   </table>
     <table name="ConversationDiscussions">
