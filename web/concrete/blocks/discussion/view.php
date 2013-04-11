@@ -21,6 +21,16 @@ if (is_object($discussion)) { ?>
 
 		<button class="pull-right btn" data-action="add-conversation" type="button"><?=t('New Topic')?></button>
 
+	<? } ?>
+
+		<? if ($enableOrdering) { ?>
+			<select name="orderBy" class="ccm-discussion-order-by" data-select="order">
+				<option data-sort-url="<?=Loader::helper('url')->setVariable('orderBy', 'date_last_message')?>" value="date_last_message" <? if ($reqOrderBy == 'date_last_message') { ?>selected<? } ?>><?=t('Recent Comment')?></option>
+				<option data-sort-url="<?=Loader::helper('url')->setVariable('orderBy', 'date')?>" value="date" <? if ($reqOrderBy == 'date') { ?>selected<? } ?>><?=t('Original Post')?></option>
+				<option data-sort-url="<?=Loader::helper('url')->setVariable('orderBy', 'replies')?>" value="replies" <? if ($reqOrderBy == 'replies') { ?>selected<? } ?>><?=t('Activity')?></option>
+			</select>
+		<? } ?>
+
 		<h3><?=$c->getCollectionName()?></h3>
 	
 		<? if (count($topics)) { ?>
@@ -48,7 +58,11 @@ if (is_object($discussion)) { ?>
 				</div>
 				<div class="ccm-discussion-topic-details">
 					<h3><a href="<?=Loader::helper('navigation')->getLinkToCollection($t)?>"><?=$t->getCollectionName()?></a></h3>
-					<p><?=date(DATE_APP_GENERIC_MDYT_FULL, strtotime($t->getCollectionDatePublic()))?></p>
+					<p><?=t('Topic Posted on %s.', date(DATE_APP_GENERIC_MDYT_FULL, strtotime($t->getCollectionDatePublic())))?>
+					<? if ($replies > 0) { ?>
+						<?=t('Last Message Posted on %s.', date(DATE_APP_GENERIC_MDYT_FULL, strtotime($cnv->getConversationDateLastMessage())))?>
+					<? } ?>
+					</p>
 				</div>
 			</li>
 			<? } ?>
@@ -64,15 +78,19 @@ if (is_object($discussion)) { ?>
 
 	</div>
 
-<? } ?>
 
 <script type="text/javascript">
 $(function() {
 
 	var $db = $('div[data-discussion-block-id=<?=$b->getBlockID()?>]'),
 		$dialog = $db.find('div[data-form=discussion]'),
-		$addTopic = $db.find('button[data-action=add-conversation]');
+		$addTopic = $db.find('button[data-action=add-conversation]'),
+		$orderBy = $db.find('select[data-select=order]');
 
+	$orderBy.on('change', function() {
+
+		window.location.href = $(this).find('option:selected').attr('data-sort-url');
+	});
 	$('form[data-form=composer]').ccmcomposer({
 		publishURL: '<?=html_entity_decode($this->action("post"))?>',
 		onExit: function() {

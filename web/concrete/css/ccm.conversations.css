@@ -35,6 +35,7 @@ div.ccm-conversation-messages-threaded div.ccm-conversation-message-level4{margi
 div.ccm-conversation-form-submitted{opacity:0.4;filter:alpha(opacity=40);}
 div.ccm-conversation-load-more-messages{text-align:center;padding:0px 0px 20px 0px;}
 .conversation-editor{height:200px;}
-ul.ccm-discussion-topics{list-style-type:none;margin:0px;padding:0px;}ul.ccm-discussion-topics li{display:block;padding:4px 4px 10px 80px;position:relative;min-height:60px;border-bottom:1px inset #ccc;}ul.ccm-discussion-topics li div.ccm-discussion-topic-replies{position:absolute;top:18px;left:0px;height:62px;width:62px;text-align:center;font-size:0.9em;color:#999;}ul.ccm-discussion-topics li div.ccm-discussion-topic-replies em{font-weight:lighter;font-size:1.6em;font-style:normal;display:block;line-height:1em;color:#999;margin:5px auto 0px auto;}
+ul.ccm-discussion-topics{list-style-type:none;margin:0px 0px 20px 0px;padding:0px;}ul.ccm-discussion-topics li{display:block;padding:4px 4px 10px 80px;position:relative;min-height:60px;border-bottom:1px inset #ccc;}ul.ccm-discussion-topics li div.ccm-discussion-topic-replies{position:absolute;top:18px;left:0px;height:62px;width:62px;text-align:center;font-size:0.9em;color:#999;}ul.ccm-discussion-topics li div.ccm-discussion-topic-replies em{font-weight:lighter;font-size:1.6em;font-style:normal;display:block;line-height:1em;color:#999;margin:5px auto 0px auto;}
 ul.ccm-discussion-topics li div.ccm-discussion-topic-details{color:#444;}
 ul.ccm-discussion-topics h3{font-size:1.4em;font-weight:lighter;line-height:1.4em;margin-bottom:2px;}
+div.ccm-discussion select.ccm-discussion-order-by{float:right;margin-right:10px;}
