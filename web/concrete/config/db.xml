@@ -173,6 +173,56 @@
       <default value="0" />
     </field>
   </table>
+  <table name="ComposerPermissionAssignments">
+    <field name="cmpID" type="I" size="10">
+      <key/>
+      <default value="0"/>
+      <unsigned/>
+    </field>
+    <field name="pkID" type="I" size="10">
+      <key/>
+      <default value="0"/>
+      <unsigned/>
+    </field>
+    <field name="paID" type="I" size="10">
+      <key/>
+      <default value="0"/>
+      <unsigned/>
+    </field>
+  </table>
+  <table name="ComposerPermissionControlAccessList">
+    <field name="paID" type="I" size="10">
+      <key/>
+      <default value="0"/>
+      <unsigned/>
+    </field>
+    <field name="peID" type="I" size="10">
+      <key/>
+      <default value="0"/>
+      <unsigned/>
+    </field>
+    <field name="permission" type="C" size="1">
+      <notnull/>
+      <default value="1"/>
+    </field>
+  </table>
+  <table name="ComposerPermissionControlAccessListCustom">
+    <field name="paID" type="I" size="10">
+      <key/>
+      <default value="0"/>
+      <unsigned/>
+    </field>
+    <field name="peID" type="I" size="10">
+      <key/>
+      <default value="0"/>
+      <unsigned/>
+    </field>
+    <field name="cmpFormLayoutSetControlID" type="I" size="10">
+      <key/>
+      <default value="0"/>
+      <unsigned/>
+    </field>
+  </table>
     <table name="Features">
     <field name="feID" type="I" size="10">
       <key/>

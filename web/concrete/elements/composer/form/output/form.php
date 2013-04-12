@@ -1,6 +1,7 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
 $fieldsets = ComposerFormLayoutSet::getList($composer);
+$cmp = new Permissions($composer);
 ?>
 
 <div class="ccm-composer-save-status"></div>
@@ -18,8 +19,7 @@ $fieldsets = ComposerFormLayoutSet::getList($composer);
 			if (is_object($draft)) { // we are loading content in
 				$con->setComposerDraftObject($draft);
 			}
-			$cnp = new Permissions($con);
-			if ($cnp->canAccessComposerFormLayoutSetControl()) { ?>
+			if ($cmp->canAccessComposer($con)) { ?>
 				<? $con->render(); ?>
 			<? } ?>
 			

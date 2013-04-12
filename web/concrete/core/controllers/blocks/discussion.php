@@ -72,21 +72,24 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			// happens through ajax
 			$composer = Composer::getByID($this->cmpID);
 			if (is_object($composer) && $this->enableNewTopics) {
-				$pagetypes = $composer->getComposerPageTypeObjects();
-				$ctTopic = $pagetypes[0];
-				$c = Page::getCurrentPage();
-				$e = $composer->validatePublishRequest($ctTopic, $c);
-				$r = new ComposerPublishResponse($e);
-				if (!$e->has()) {
-					$d = $composer->createDraft($ctTopic);
-					$d->setComposerDraftTargetParentPageID($c->getCollectionID());
-					$d->saveForm();
-					$d->publish();
-					$nc = Page::getByID($d->getComposerDraftCollectionID(), 'RECENT');
-					$link = Loader::helper('navigation')->getLinkToCollection($nc, true);
-					$r->setRedirectURL($link);
+				$ccp = new Permissions($composer);
+				if ($ccp->canAccessComposer()) {
+					$pagetypes = $composer->getComposerPageTypeObjects();
+					$ctTopic = $pagetypes[0];
+					$c = Page::getCurrentPage();
+					$e = $composer->validatePublishRequest($ctTopic, $c);
+					$r = new ComposerPublishResponse($e);
+					if (!$e->has()) {
+						$d = $composer->createDraft($ctTopic);
+						$d->setComposerDraftTargetParentPageID($c->getCollectionID());
+						$d->saveForm();
+						$d->publish();
+						$nc = Page::getByID($d->getComposerDraftCollectionID(), 'RECENT');
+						$link = Loader::helper('navigation')->getLinkToCollection($nc, true);
+						$r->setRedirectURL($link);
+					}
+					print Loader::helper('ajax')->sendResult($r);
 				}
-				print Loader::helper('ajax')->sendResult($r);
 			}
 			exit;
 		}

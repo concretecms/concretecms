@@ -141,14 +141,19 @@ $(function() {
 			jQuery.fn.dialog.hideLoader();
 			jQuery.fn.dialog.closeTop();
 			// now we reload the permission key to use the new permission assignment
-			$('#ccm-permission-grid-cell-<?=$permissionKey->getPermissionKeyID()?>').load(
-				'<?=$permissionKey->getPermissionAssignmentObject()->getPermissionKeyToolsURL("display_access_cell")?>&paID=<?=$pa->getPermissionAccessID()?>', function() {
+			var gc = $('#ccm-permission-grid-cell-<?=$permissionKey->getPermissionKeyID()?>');
+			if (gc.length > 0) {
+				gc.load('<?=$permissionKey->getPermissionAssignmentObject()->getPermissionKeyToolsURL("display_access_cell")?>&paID=<?=$pa->getPermissionAccessID()?>', function() {
 					$('#ccm-permission-grid-name-<?=$permissionKey->getPermissionKeyID()?> a').attr('data-paID', '<?=$pa->getPermissionAccessID()?>');	
 					if (typeof(ccm_submitPermissionsDetailFormPost) != 'undefined') {
 						ccm_submitPermissionsDetailFormPost();
 					}
+				});
+			} else {
+				if (typeof(ccm_submitPermissionsDetailFormPost) != 'undefined') {
+					ccm_submitPermissionsDetailFormPost();
 				}
-			);
+			}
 		});
 		return false;
 	}
