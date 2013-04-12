@@ -14,6 +14,8 @@ class Concrete5_Controller_Dashboard_Blocks_Types extends Controller {
 	}
 	
 	public function view() {
+		$env = Environment::get();
+		$env->clearOverrideCache();
 		$btAvailableArray = BlockTypeList::getAvailableList();
 		$btInstalledArray = BlockTypeList::getInstalledList();
 		$internalBlockTypes = array();		
