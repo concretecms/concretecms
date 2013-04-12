@@ -53,7 +53,7 @@ for ($i = 0; $i < count($sets); $i++) {
 	$set = $sets[$i];?>
 	<li><a href="#" data-tab="<?=$set->getBlockTypeSetHandle()?>"><?=$set->getBlockTypeSetName()?></a></li>
 <? } ?>
-
+	<li><a href="#" data-tab="other"><?=t('Other')?></a></li>
 </ul>
 
 </div>
@@ -75,6 +75,9 @@ for ($i = 0; $i < count($sets); $i++) {
 			$sets .= $set->getBlockTypeSetHandle() . ' ';
 		}
 		$sets = trim($sets);
+		if (!$sets) {
+			$sets = 'other';
+		}
 		$btIcon = $ci->getBlockTypeIconURL($bt);
 
 		?>
