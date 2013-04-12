@@ -21,6 +21,7 @@ class Concrete5_Controller_Dashboard_Composer_Write extends DashboardBaseControl
 				$publishURL = View::url('/dashboard/composer/write', 'save', 'draft', $id, 'publish');
 				break;
 		}
+
 		$this->addHeaderItem(Loader::helper('html')->css('ccm.composer.css'));
 		$this->addFooterItem(Loader::helper('html')->javascript('ccm.composer.js'));
 		$js =<<<EOL
@@ -37,6 +38,10 @@ EOL;
 				$this->set('composers', $composers);
 			}
 		} else {
+			$ccp = new Permissions($this->composer);
+			if (!$ccp->canAccessComposer()) {
+				throw new Exception('You do not have access to this composer.');
+			}
 			$this->set('composer', $this->composer);
 			$this->set('fieldsets', ComposerFormLayoutSet::getList($this->composer));
 			$this->set('draft', $this->draft);

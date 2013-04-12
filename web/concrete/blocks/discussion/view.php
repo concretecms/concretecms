@@ -1,11 +1,19 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); 
 $c = Page::getCurrentPage();
+$canAccessComposer = false;
+if (is_object($composer)) {
+	$ccp = new Permissions($composer);
+	if ($ccp->canAccessComposer()) {
+		$canAccessComposer = true;
+	}
+}
+
 if (is_object($discussion)) { ?>
 
 	<div class="ccm-discussion" data-discussion-block-id="<?=$b->getBlockID()?>">
 
 	<?
-	if ($enableNewTopics && $composer) { ?>
+	if ($enableNewTopics && $canAccessComposer) { ?>
 
 		<div style="display: none">
 			<div data-form="discussion">

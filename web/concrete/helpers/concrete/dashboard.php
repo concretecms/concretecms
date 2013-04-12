@@ -272,9 +272,9 @@ class ConcreteDashboardHelper {
 
 	public function getDashboardAndSearchMenus() {
 
-//		if (isset($_SESSION['dashboardMenus'])) {
-//			return $_SESSION['dashboardMenus'];
-//		}
+		if (isset($_SESSION['dashboardMenus'])) {
+			return $_SESSION['dashboardMenus'];
+		}
 				
 		$d = ConcreteDashboardMenu::getMine();
 		$items = $d->getItems();
@@ -418,114 +418,6 @@ class ConcreteDashboardHelper {
 			</div>
 
 
-			<? /*
-			foreach($items as $path) { 
-			
-				$p = Page::getByPath($path, 'ACTIVE');
-				$pc = new Permissions($p);
-				if ($pc->canViewPage()) {
-					
-					$name = t($p->getCollectionName());
-					$parent = Page::getByID($p->getCollectionParentID(), 'ACTIVE');
-					if ($parent->getCollectionPath() == '/dashboard') {
-						$parent = $p;
-						$name = t('Home');						
-					}
-					
-					if ($currentHeader != $parent->getCollectionID()) { ?>
-						<? if ($currentHeader != false) { ?>
-							</ul>
-							</div>
-							<? $x++; ?>
-							<? if ($x % 4 == 0) { ?>
-								<div class="clearfix" style="padding-bottom: 0px"></div>
-							<? } ?>
-							
-						<? } ?>
-
-						<div class="ccm-dashboard-overlay-module">
-						<h1><?=t($parent->getCollectionName())?></h1>
-						<ul>			
-						
-						<? $currentHeader = $parent->getCollectionID(); ?>		
-
-					<? } ?>
-					
-						<li><a href="<?=Loader::helper('navigation')->getLinkToCollection($p, false, true)?>"><?=$name?></a></li>
-
-				
-				<? } ?>
-				
-							
-			<? } ?>
-			
-			<? if ($currentHeader != false) { ?>
-							</ul>
-							</div>
-			<? } ?>
-			</div>
-			</div>
-			<div id="ccm-dashboard-overlay-misc" class="ccm-dashboard-overlay-misc-rounded">
-			<div class="ccm-dashboard-overlay-inner">
-
-            <?
-
-			// Before we throw in a UL, we check permissions, etc. to see if any of the LI items need to be shown.
-			$systemNews = Page::getByPath('/dashboard/news');
-			$systemNewsP = new Permissions($systemNews);
-			$canAccessNews = $systemNewsP->canRead();
-
-			$systemSettings = Page::getByPath('/dashboard/system');
-			$systemSettingsP = new Permissions($systemSettings);
-			$canAccessSystem = $systemSettingsP->canRead();
-
-			$tpa = new TaskPermission();
-			$canAccessExtend = $tpa->canInstallPackages();
-			$systemExtend = Page::getByPath('/dashboard/extend');
-			$systemExtendP = new Permissions($systemExtend);
-			$canViewExtend = $systemExtendP->canRead();
-
-			// If any need to be shown then we proceed...
-			if($canAccessNews || $canAccessSystem || ($canAccessExtend && $canViewExtend)){ ?>
-
-                <ul>
-
-                <? if ($canAccessNews) { ?>
-                    <li><a href="<?=View::url('/dashboard/news')?>"><strong><?=t('News')?></strong></a> – <?=t('Learn about your site and concrete5.')?></li>
-                <? } ?>
-
-				<? if ($canAccessSystem) { ?>
-                    <li><a href="<?=View::url('/dashboard/system')?>"><strong><?=t('System &amp; Settings')?></strong></a> – <?=t('Secure and setup your site.')?></li>
-                <? } ?>
-
-                <? if ($canAccessExtend && $canViewExtend) { ?>
-                    <li><a href="<?php echo View::url('/dashboard/extend') ?>"><strong><?php echo t("Extend concrete5") ?></strong></a> – 
-                    <? if (ENABLE_MARKETPLACE_SUPPORT) { ?>
-                    <?php echo sprintf(t('<a href="%s">Install</a>, <a href="%s">update</a> or download more <a href="%s">themes</a> and <a href="%s">add-ons</a>.'),
-                        View::url('/dashboard/extend/install'),
-                        View::url('/dashboard/extend/update'),
-                        View::url('/dashboard/extend/themes'),
-                        View::url('/dashboard/extend/add-ons')); ?>
-                    <? } else { ?>
-					<?php echo sprintf(t('<a href="%s">Install</a> or <a href="%s">update</a> packages.'),
-                        View::url('/dashboard/extend/install'),
-                        View::url('/dashboard/extend/update'))?>
-                    <? } ?>
-					</li>
-                <? } ?>
-
-                </ul>
-
-            <? } ?>
-
-			</div>
-			</div>
-			<div id="ccm-dashboard-overlay-footer">
-			<div class="ccm-dashboard-overlay-inner">
-			<a href="<?=View::url('/dashboard')?>"><?=t('View Full Dashboard')?>  <i class="icon-arrow-right"></i></a>
-			</div>
-			</div>
-			*/ ?>
 			</div>
 		<?
 			$html = ob_get_contents();

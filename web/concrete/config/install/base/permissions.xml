@@ -15,7 +15,7 @@
         <category handle="sitemap" package=""/>
         <category handle="marketplace_newsflow" package=""/>
         <category handle="basic_workflow" package=""/>
-        <category handle="composer_form_layout_set_control" package=""/>
+        <category handle="composer" package=""/>
     </permissioncategories>
 
     <permissionkeys>
@@ -90,7 +90,7 @@
         <permissionkey handle="notify_on_basic_workflow_deny" name="Notify on Deny" description="Notify approvers that a change has been denied." package="" category="basic_workflow" />
         		
         <!-- composer //-->
-        <permissionkey handle="access_composer_form_layout_set_control" name="Access Composer Control" description="" package="" category="composer_form_layout_set_control" />
+        <permissionkey handle="access_composer" name="Access Composer" description="" package="" category="composer" />
 
         <!-- users //-->
         <permissionkey handle="access_user_search" has-custom-class="true" name="Access User Search" description="" package="" category="user">
@@ -220,6 +220,7 @@
 		        <category handle="sitemap" />
 		        <category handle="marketplace_newsflow" />
 		        <category handle="basic_workflow" />
+                <category handle="composer" />
 			</categories>
         </permissionaccessentitytype>
         <permissionaccessentitytype handle="user" name="User" package="">
@@ -235,6 +236,7 @@
 		        <category handle="sitemap" />
 		        <category handle="marketplace_newsflow" />
 		        <category handle="basic_workflow" />
+                <category handle="composer" />
 			</categories>
         </permissionaccessentitytype>
         <permissionaccessentitytype handle="group_set" name="Group Set" package="">
@@ -250,6 +252,7 @@
 		        <category handle="sitemap" />
 		        <category handle="marketplace_newsflow" />
 		        <category handle="basic_workflow" />
+                <category handle="composer" />
 			</categories>
         </permissionaccessentitytype>
         <permissionaccessentitytype handle="group_combination" name="Group Combination" package="">
@@ -265,6 +268,7 @@
 		        <category handle="sitemap" />
 		        <category handle="marketplace_newsflow" />
 		        <category handle="basic_workflow" />
+                <category handle="composer" />
 			</categories>
         </permissionaccessentitytype>
         <permissionaccessentitytype handle="page_owner" name="Page Owner" package="">

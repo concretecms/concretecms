@@ -12,10 +12,6 @@ class Concrete5_Model_ComposerFormLayoutSetControl extends Object {
 	public function getComposerFormLayoutSetControlCustomTemplate() {return $this->cmpFormLayoutSetControlCustomTemplate;}
 	public function isComposerFormLayoutSetControlRequired() {return $this->cmpFormLayoutSetControlRequired;}
 
-	public function getPermissionObjectIdentifier() {
-		return $this->getComposerFormLayoutSetControlID();
-	}
-
 	public function setComposerDraftObject($cmpDraftObject) {
 		$this->cmpDraftObject = $cmpDraftObject;
 	}

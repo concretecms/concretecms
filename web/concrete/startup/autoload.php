@@ -124,7 +124,6 @@ $classes = array(
 	'TwitterBootstrapPageTheme' => array('model','page_theme/custom/twitter_bootstrap'),
 	'Bootstrap2PageThemeGridFramework' => array('library','page_theme/grid_framework/types/bootstrap2'),
 	'Bootstrap3PageThemeGridFramework' => array('library','page_theme/grid_framework/types/bootstrap3'),
-	'ComposerPage' => array('model','composer_page'),
 	'PermissionAccess' => array('model','permission/access/model'),
 	'PermissionAccessEntity' => array('model','permission/access/entity/model'),
 	'PermissionAccessEntityType' => array('model','permission/access/entity/type'),
@@ -326,11 +325,11 @@ $classes = array(
 	'PageTypeCorePagePropertyComposerControl' => array('model','composer/control/controls/core_page_property/page_type'),
 	'PublishTargetCorePagePropertyComposerControl' => array('model','composer/control/controls/core_page_property/publish_target'),
 
-	'ComposerFormLayoutSetControlPermissionKey' => array('model','permission/keys/composer_form_layout_set_control'),
-	'ComposerFormLayoutSetControlPermissionAssignment' => array('model','permission/assignments/composer_form_layout_set_control'),
-	'ComposerFormLayoutSetControlPermissionAccess' => array('model','permission/access/categories/composer_form_layout_set_control'),
-	'ComposerFormLayoutSetControlPermissionAccessListItem' => array('model','permission/access/list_items/composer_form_layout_set_control'),
-	'ComposerFormLayoutSetControlPermissionResponse' => array('model','permission/response/composer_form_layout_set_control')
+	'ComposerPermissionKey' => array('model','permission/keys/composer'),
+	'ComposerPermissionAssignment' => array('model','permission/assignments/composer'),
+	'ComposerPermissionAccess' => array('model','permission/access/categories/composer'),
+	'ComposerPermissionAccessListItem' => array('model','permission/access/list_items/composer'),
+	'ComposerPermissionResponse' => array('model','permission/response/composer')
 
 );
 

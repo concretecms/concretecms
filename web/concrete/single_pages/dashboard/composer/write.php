@@ -35,8 +35,12 @@
 	<? if (count($composers) > 0) { ?>
 	<h3><?=t('What would you like to write?')?></h3>
 	<ul class="item-select-list">
-	<? foreach($composers as $cmp) { ?>
+	<? foreach($composers as $cmp) { 
+		$ccp = new Permissions($cmp);
+		if ($ccp->canAccessComposer()) { 
+		?>
 		<li class="item-select-page"><a href="<?=$this->url('/dashboard/composer/write', 'composer', $cmp->getComposerID())?>"><?=$cmp->getComposerName()?></a></li>
+		<? } ?>
 	<? } ?>
 	</ul>
 	<? } else { ?>

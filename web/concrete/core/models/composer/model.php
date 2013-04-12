@@ -7,6 +7,10 @@ class Concrete5_Model_Composer extends Object {
 	public function getComposerTargetTypeID() {return $this->cmpTargetTypeID;}
 	public function getComposerTargetObject() {return $this->cmpTargetObject;}
 
+	public function getPermissionObjectIdentifier() {
+		return $this->getComposerID();
+	}
+
 	public function getComposerPageTypeObjects() {
 		$db = Loader::db();
 		$types = array();
