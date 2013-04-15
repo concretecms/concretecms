@@ -439,6 +439,7 @@
 					}
 				}
 				break;
+			case 'check-out-add-block':
 			case 'check-out':
 			case 'check-out-first':
 				if ($cp->canEditPageContents() || $cp->canEditPageProperties() || $cp->canApprovePageVersions()) {
@@ -446,15 +447,12 @@
 					$u = new User();
 					$u->loadCollectionEdit($c);
 					
-					/*
-					if ($_GET['ctask'] == 'check-out-first') {
-						header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?ctask=first_run&cID=' . $c->getCollectionID() . $step);
+					if ($_REQUEST['ctask'] == 'check-out-add-block') {
+						setcookie("ccmLoadAddBlockWindow", "1", -1, DIR_REL . '/');
+						header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $c->getCollectionID());
 						exit;
-					} else {
-						header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $c->getCollectionID() . $step);
-						exit;
+						break;
 					}
-					*/
 				}
 				break;
 			case 'check-in':
