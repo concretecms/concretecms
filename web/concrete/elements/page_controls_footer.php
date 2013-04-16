@@ -4,6 +4,7 @@ $html = Loader::helper('html');
 $dh = Loader::helper('concrete/dashboard');
 $valt = Loader::helper('validation/token');
 $token = '&' . $valt->getParameter();
+$logouttoken = Loader::helper('validation/token')->generate('logout');
 $cID = $c->getCollectionID();
 
 $workflowList = PageWorkflowProgress::getList($c);
@@ -148,7 +149,7 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
 				<ul id="ccm-toolbar-menu-user" class="ccm-toolbar-hover-menu dropdown-menu">
 				  <li><a href="<?=$this->url('/account')?>"><?=t('Account')?></a></li>
 				  <li><a href="<?=$this->url('/account/messages/inbox')?>"><?=t('Inbox')?></a></li>
-				  <li><a href="<?=$this->url('/login', 'logout')?>">Sign Out</a></li>
+				  <li><a href="<?=$this->url('/login', 'logout', $logouttoken)?>">Sign Out</a></li>
 				</ul>
 
 				</li>

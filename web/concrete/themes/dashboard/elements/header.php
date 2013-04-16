@@ -34,6 +34,8 @@ if (!isset($enableEditing) || $enableEditing == false) {
 	$v->disableEditing();
 }
 
+$logouttoken = Loader::helper('validation/token')->generate('logout');
+
 // Required JavaScript
 
 $v->addFooterItem($html->javascript('jquery.backstretch.js'));
@@ -126,7 +128,7 @@ $backgroundImage = Loader::helper('concrete/dashboard')->getDashboardBackgroundI
 		<ul id="ccm-toolbar-menu-user" class="ccm-toolbar-hover-menu dropdown-menu">
 		  <li><a href="<?=$this->url('/account')?>"><?=t('Account')?></a></li>
 		  <li><a href="<?=$this->url('/account/messages/inbox')?>"><?=t('Inbox')?></a></li>
-		  <li><a href="<?=$this->url('/login', 'logout')?>">Sign Out</a></li>
+		  <li><a href="<?=$this->url('/login', 'logout', $logouttoken)?>">Sign Out</a></li>
 		</ul>
 
 		</li>
