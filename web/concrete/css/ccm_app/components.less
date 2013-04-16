@@ -151,7 +151,12 @@ div.ccm-summary-selected-item {border: 1px solid #dedede; margin-top: 8px; margi
 
 /* buttons */
 .ccm-ui .btn {
-  .buttonBackground(#ffffff, #ffffff, @grayDark, 0 1px 1px rgba(255,255,255,.75));
+  .buttonBackground(#ffffff, #f8f8f8, @grayDark, 0 1px 1px rgba(255,255,255,.75));
+  border-color: @btnBorder;
+}
+
+.ccm-ui .btn:hover {
+  border-color: #999;
 }
 
 table.ccm-permission-grid {border: 0px;}
