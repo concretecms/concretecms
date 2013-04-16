@@ -217,7 +217,7 @@ jQuery.fn.dialog.replaceTop = function(r) {
 		} else {
 			var helpText = 'Help';
 		}
-		$("#ccm-dialog-content" + nd).parent().find('.ui-dialog-titlebar').append('<button class="ui-dialog-titlebar-help ccm-menu-help-trigger"></button>');
+		$("#ccm-dialog-content" + nd).parent().find('.ui-dialog-titlebar').append('<button class="ui-dialog-titlebar-help ccm-menu-help-trigger"><i class="icon-info-sign"></i></button>');
 		$("#ccm-dialog-content" + nd).parent().find('.ui-dialog-titlebar .ccm-menu-help-trigger').popover({content: function() {
 			return helpContent;			
 		}, placement: 'bottom', html: true, trigger: 'click'});
