@@ -7,6 +7,10 @@ abstract class Concrete5_Model_CorePagePropertyComposerControl extends ComposerC
 	private static $cmpSaveRequest = null;
 	private static $cmpRequestControlsProcessed = array();
 	
+	public function addAssetsToRequest(Controller $cnt) {
+
+	}
+
 	public static function getComposerSaveRequest() {
 		if (null === self::$cmpSaveRequest) {
 			self::$cmpSaveRequest = array();
