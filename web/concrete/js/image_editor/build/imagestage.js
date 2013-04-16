@@ -21,18 +21,18 @@ im.stage.setDragBoundFunc(function(ret) {
 });
 im.setActiveElement(im.stage);
 im.stage.setDraggable(true);
-
+im.autoCrop = true;
 im.on('imageLoad',function(){
   var padding = 100;
 
   var w = im.stage.getWidth() - (padding * 2), h = im.stage.getHeight() - (padding * 2);
   if (im.saveWidth < w && im.saveHeight < h) return;
   var perc = Math.max(im.saveWidth/w, im.saveHeight/h);
-  im.scale = 1/perc;
-  im.scale = Math.round(im.scale * 1000) / 1000;
-  im.alterCore('scale',im.scale);
+  //im.scale = 1/perc;
+  //im.scale = Math.round(im.scale * 1000) / 1000;
+  //im.alterCore('scale',im.scale);
 
-  im.stage.setScale(im.scale);
+  //im.stage.setScale(im.scale);
   im.stage.setX((im.stage.getWidth() - (im.stage.getWidth() * im.stage.getScale().x))/2);
   im.stage.setY((im.stage.getHeight() - (im.stage.getHeight() * im.stage.getScale().y))/2);
   
