@@ -8,19 +8,24 @@ im.addElement = function(object,type) {
   object.doppelganger = object.clone();
   if (type == 'image') object.doppelganger.setImage('');
   object.doppelganger.doppelganger = object;
-  object.doppelganger.setDrawHitFunc(function(){return false});
+  object.doppelganger.drawHitFunc = object.doppelganger.attrs.drawHitFunc = function(){return false};
   object.doppelganger.setFill('transparent');
   object.doppelganger.elementType = 'StokeClone';
   object.doppelganger.setStroke('blue');
-  object.doppelganger.setStrokeWidth(5);
   object.doppelganger._drawFunc = object.getDrawFunc();
   object.doppelganger.setDrawFunc(function(canvas){
-    this.setStrokeWidth(3/im.scale);
-    this.setPosition(this.doppelganger.getPosition());
-    this.setSize(this.doppelganger.getSize());
-    this.setRotation(this.doppelganger.getRotation());
-    this.setRotationDeg(this.doppelganger.getRotationDeg());
-    this._drawFunc(canvas);
+    if (typeof this._drawFunc == "function") {
+      for (var attr in this.doppelganger.attrs) {
+        if (attr == 'drawFunc' ||
+            attr == 'drawHitFunc' ||
+            attr == 'strokeWidth' ||
+            attr == 'fill') continue;
+        this.attrs[attr] = this.doppelganger.attrs[attr];
+      }
+      this.attrs.strokeWidth = 1/im.scale;
+      if (type == 'image') { this.attrs.image = ''; }
+      this._drawFunc(canvas);
+    }
   });
 
   object.elementType = type;
@@ -30,20 +35,8 @@ im.addElement = function(object,type) {
   });
   object._drawFunc = object.getDrawFunc();
   object.setDrawFunc(function(canvas) {
-    for(var i in this.attrs) {
-      if (i == 'drawFunc') continue;
-      this.doppelganger.attrs[i] = this.attrs[i];
-    }
-    this.doppelganger.setSize(this.getSize());
-    this.doppelganger.setPosition(this.getPosition());
-    this.doppelganger.setDrawHitFunc(function(){return false});
-    this.doppelganger.setFill('transparent');
-    this.doppelganger.elementType = 'StokeClone';
-    this.doppelganger.setStroke('blue');
-    this.doppelganger.setStrokeWidth(5);
-    if (this.elementType == 'image') this.doppelganger.setImage('');
+    this._drawFunc(canvas);
     im.foreground.draw();
-    object._drawFunc(canvas);
   });
 
   object.on('mouseover',function(){
@@ -68,6 +61,7 @@ im.addElement = function(object,type) {
 im.on('backgroundBuilt',function(){
   if (im.activeElement !== undefined && im.activeElement.doppelganger !== undefined) {
     im.foreground.add(im.activeElement.doppelganger);
+    im.activeElement.doppelganger.setPosition(im.activeElement.getPosition());
   }
 });
 

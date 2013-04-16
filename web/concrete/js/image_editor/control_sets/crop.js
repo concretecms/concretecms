@@ -240,7 +240,6 @@ var cropToCroppers = function() {
   for (var i in overridedasharray) {
     overridedasharray[i] *= im.scale;
   }
-  im.activeElement.releaseStroke(false);
 
   im.activeElement.toImage({
     x:im.dragger.getX(),

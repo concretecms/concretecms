@@ -122,10 +122,10 @@ im.activeElement.on('dragend',function(e){
 	im.trigger('activeElementMove');
 })
 im.activeElement.on('dragstart',function(e){
-	im.trigger('activeElementDragMove');
+	im.trigger('activeElementDragStart');
 })
 // Use our API, not kinetics.
-im.activeElement.on('dragmove',function(e){im.trigger('activeElementDragMove',e)});
+//im.activeElement.on('dragmove',function(e){im.trigger('activeElementDragMove',e)});
 
 im.bind('activeElementMove',function(e){
 	var x = im.activeElement.getX(), y = im.activeElement.getY(),
@@ -140,5 +140,24 @@ im.bind('activeElementMove',function(e){
 		im.activeElement.parent.draw();
 	} else if (typeof im.activeElement.draw == 'function') {
 		im.activeElement.draw();
+	}
+
+	im.fire('activeElementDragMove');
+});
+
+im.bind('activeElementDragMove',function(e) {
+	// Update Canvas
+	if (im.activeElement.elementType != "stage" && im.autoCrop) {
+		im.alterCore('saveWidth',Math.ceil(-(im.activeElement.getX() - im.center.x)*2));
+		im.alterCore('saveHeight',Math.ceil(-(im.activeElement.getY() - im.center.y)*2));
+		if ((im.activeElement.getWidth() - im.saveWidth / 2) * 2 > im.saveWidth) {
+			im.alterCore('saveWidth', Math.ceil((im.activeElement.getWidth() - im.saveWidth / 2) * 2));
+		}
+		if ((im.activeElement.getHeight() - im.saveHeight / 2) * 2 > im.saveHeight) {
+			im.alterCore('saveHeight', Math.ceil((im.activeElement.getHeight() - im.saveHeight / 2) * 2));
+		}
+		if (im.autoCrop) {
+			im.buildBackground();
+		}
 	}
 });
