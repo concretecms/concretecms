@@ -2,7 +2,7 @@ var me = $(this);
 
 im.activeTextElement = false;
 im.on('changeActiveComponent',function(e){
-	if (e.eventData != im.namespace) return;
+	if (e.eventData != im.namespace) return im.hideSlideOut();
 	im.activeTextElement = new Kinetic.Text({
 		fontFamily:"arial",
 		fontSize:23,
@@ -27,7 +27,7 @@ im.on('changeActiveComponent',function(e){
 
 var me = $(this);
 String.prototype.spx = function(){return Number(this.replace('px',''))}
-var fonts = $($('script.font-slideout',me).html());
+var fonts = $($.parseHTML($('script.font-slideout',me).html()));
 fonts.find('li').css('cursor','pointer').click(function(){
 	$('button.fontname').css('font-family',$(this).text()).text($(this).text());
 	im.hideSlideOut();
