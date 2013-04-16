@@ -10,13 +10,13 @@ if (settings.src) {
       im.buildBackground();
     }
     var center = {
-      x: im.center.x - (img.width / 2),
-      y: im.center.y - (img.height / 2)
+      x: Math.floor(im.center.x - (img.width / 2)),
+      y: Math.floor(im.center.y - (img.height / 2))
     };
     var image = new Kinetic.Image({
       image: img,
-      x: Math.round(center.x),
-      y: Math.round(center.y)
+      x: Math.floor(center.x),
+      y: Math.floor(center.y)
     });
     im.fire('imageload');
     im.addElement(image,'image');
