@@ -8,3 +8,8 @@
 	margin:3px 4px 0px 0px;
 	width:10px;
 	}
+
+#surveyQuestion {
+	clear: both;
+	padding-bottom: 10px;
+}
