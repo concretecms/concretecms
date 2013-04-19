@@ -12,9 +12,13 @@ div.controlset.position > div.control div.vertical > input {
 div.controlset.position > div.control div.horizontal > div,
 div.controlset.position > div.control div.vertical > div {
   display: inline-block;
+  margin-top: 6px;
   width: 190px;
 }
-
+div.controlset.position > div.control button.center,
+div.controlset.position > div.control button.center {
+  margin-bottom: 20px;
+}
 div.controlset.position > div.control div.horizontal,
 div.controlset.position > div.control div.vertical {
   display: block;

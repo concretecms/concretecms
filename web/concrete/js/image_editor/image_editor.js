@@ -277,8 +277,6 @@ im.history = new History();
 ///////////////////////////////////////////////////////////////////////////////
 // Handle event binding.
 im.bindEvent = im.bind = im.on = function (type, handler, elem) {
-	if (type == 'sliderMove')
-	console.log("BIND",elem);
   var element = elem || im.stage.getContainer();
   if (element instanceof jQuery) element = element[0];
   ccm_event.sub(type,handler,element);
@@ -286,8 +284,6 @@ im.bindEvent = im.bind = im.on = function (type, handler, elem) {
 
 // Handle event firing
 im.fireEvent = im.fire = im.trigger = function (type, data, elem) {
-	if (type == 'sliderMove')
-	console.log("FIRE",elem);
   var element = elem || im.stage.getContainer();
   if (element instanceof jQuery) element = element[0];
   ccm_event.pub(type,data,element);
@@ -314,14 +310,8 @@ im.addElement = function(object,type) {
   object.doppelganger._drawFunc = object.getDrawFunc();
   object.doppelganger.setDrawFunc(function(canvas){
     if (typeof this._drawFunc == "function") {
-      for (var attr in this.doppelganger.attrs) {
-        if (attr == 'drawFunc' ||
-            attr == 'drawHitFunc' ||
-            attr == 'strokeWidth' ||
-            attr == 'fill') continue;
-        this.attrs[attr] = this.doppelganger.attrs[attr];
-      }
       this.attrs.strokeWidth = 1/im.scale;
+      this.setFill('transparent');
       if (type == 'image') { this.attrs.image = ''; }
       this._drawFunc(canvas);
     }
@@ -334,8 +324,15 @@ im.addElement = function(object,type) {
   });
   object._drawFunc = object.getDrawFunc();
   object.setDrawFunc(function(canvas) {
-    this._drawFunc(canvas);
+    for (var attr in this.attrs) {
+      if (attr == 'drawFunc' ||
+          attr == 'drawHitFunc' ||
+          attr == 'strokeWidth' ||
+          attr == 'fill') continue;
+      this.doppelganger.attrs[attr] = this.attrs[attr];
+    }
     im.foreground.draw();
+    this._drawFunc(canvas);
   });
 
   object.on('mouseover',function(){
@@ -711,7 +708,6 @@ im.bgimage = new Image();
 im.bgimage.src = '/concrete/images/testbg.png';
 im.buildBackground = function() {
   var startbb = (new Date).getTime();
-  im.foreground.moveToTop();
 
   var dimensions = im.stage.getTotalDimensions();
   var to = (dimensions.max.x + dimensions.visibleHeight + dimensions.visibleWidth) * 2;
@@ -762,7 +758,6 @@ im.buildBackground = function() {
   im.coverLayer.attrs.y = im.saveArea.attrs.y - width/2;
   im.coverLayer.setStrokeWidth(width);
   im.foreground.add(im.coverLayer);
-
 
   im.fire('backgroundBuilt');
   im.background.draw();

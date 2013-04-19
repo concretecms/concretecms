@@ -1,4 +1,4 @@
-<div class='cancelbutton	'>
+<div class='cancelbutton'>
 	Cancel
 </div>
 <div class='horizontal'>

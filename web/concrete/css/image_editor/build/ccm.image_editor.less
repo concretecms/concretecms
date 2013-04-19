@@ -60,12 +60,6 @@ div.editorcontainer {
       }
       &:active {
         background: #e8e9e9;
-        background: -moz-linear-gradient(top, #e8e9e9 0%, #ffffff 61%);
-        background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#e8e9e9), color-stop(61%,#ffffff));
-        background: -webkit-linear-gradient(top, #e8e9e9 0%,#ffffff 61%);
-        background: -o-linear-gradient(top, #e8e9e9 0%,#ffffff 61%);
-        background: -ms-linear-gradient(top, #e8e9e9 0%,#ffffff 61%);
-        background: linear-gradient(to bottom, #e8e9e9 0%,#ffffff 61%);
         filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e8e9e9', endColorstr='#ffffff',GradientType=0 );
       }
       &.plus {
@@ -177,9 +171,8 @@ div.controls {
       > div.contents {
         > div.cancelbutton {
           color:#b3b3b3;
-          font-size:12px;
-          position: absolute;
-          right: 15px;
+          font-size: 12px;
+          text-align: right;
           transition: color 200ms;
           cursor:pointer;
           &:hover {
