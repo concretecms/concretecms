@@ -116,7 +116,6 @@ div.ccm-pane-dialog-pagination div.pagination, .ccm-pane-footer div.pagination {
 .ccm-pane-footer{background-color:#f5f5f5;padding:14px 20px 15px;border-top:1px solid #ddd;-webkit-border-radius:0 0 6px 6px;-moz-border-radius:0 0 6px 6px;border-radius:0 0 6px 6px;-webkit-box-shadow:inset 0 1px 0 #ffffff;-moz-box-shadow:inset 0 1px 0 #ffffff;box-shadow:inset 0 1px 0 #ffffff;zoom:1;margin-bottom:0;}
 .ccm-pane-footer:before, .ccm-pane-footer:after{display:table;content:"";}
 .ccm-pane-footer:after{clear:both;}
-.ccm-pane-footer .ccm-button-v2-right {float:right;margin-left:10px;}
 
 /* Dialog Loader */
 #ccm-dialog-loader-wrapper {display:none; font-size: 14px; color: #555; z-index:2000; position: fixed; padding: 20px; background-color: #fff; -webkit-border-radius: 6px; border-radius: 6px; -moz-border-radius: 6px; text-align:center;}
@@ -151,8 +150,46 @@ div.ccm-editor-controls ul li a:hover {text-decoration: underline}
 div.ccm-summary-selected-item {border: 1px solid #dedede; margin-top: 8px; margin-bottom: 8px; padding: 10px}
 
 /* buttons */
-.ccm-button-v2-left {margin-right: 8px;}
-.ccm-button-v2-right {float: right;margin-left: 8px;}
+.ccm-ui .btn {
+  .buttonBackground(#ffffff, #f8f8f8, @grayDark, none);
+  border-color: #ccc;
+  padding: 6px 19px;
+}
+
+.ccm-ui .btn.btn-primary {
+  .buttonBackground(#0098fe, #0084db, #fff, none);
+  border: none;
+}
+
+.ccm-ui .btn.btn-primary:hover {
+	background-image: none;
+	background-color: #09f;
+ 	border: none;
+}
+
+.ccm-ui .btn:hover {
+	background-image: none;
+	background-color: #fff;
+ 	border-color: #6cf;
+}
+
+.ccm-ui .btn.btn-hover-danger:hover {
+ 	border-color: #ee5f5b;
+}
+
+.ccm-ui .btn[disabled=disabled]:hover {
+	background-image: none;
+	color: #b7b7b7;
+	background-color: #eae9e9;
+ 	border-color: #ccc;
+}
+
+.ccm-ui .btn[disabled=disabled] {
+	background-image: none;
+	color: #b7b7b7;
+	background-color: #eae9e9;
+ 	border-color: #ccc;
+}
 
 table.ccm-permission-grid {border: 0px;}
 table.ccm-permission-grid td.ccm-permission-grid-name {text-align: right; width: auto; white-space: nowrap;}
@@ -207,9 +244,6 @@ table.ccm-block-type-table td {padding: 8px 2px 8px; border-bottom: 1px solid #D
 /* Versions Grid */
 table#ccm-versions-list tr.version-active td {font-weight: bold;}
 
-/* Buttons */
-.ccm-button-right {float: right;}
-.ccm-button-left {float: left;}
 
 /* user/group selector */
 div.ccm-group span.ccm-group-inner, div.ccm-group a.ccm-group-inner {background-repeat: no-repeat; background-position: 8px 8px; color: #666; display: block; font-size: 14px; padding: 8px 8px 8px 30px; text-decoration: none; border: 1px solid #fff}

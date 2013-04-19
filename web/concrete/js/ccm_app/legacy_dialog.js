@@ -209,6 +209,11 @@ jQuery.fn.dialog.replaceTop = function(r) {
 		$("#ccm-dialog-content" + nd).parent().find(".ui-dialog-buttonpane").html('');
 		$("#ccm-dialog-content" + nd + " .dialog-buttons").appendTo($("#ccm-dialog-content" + nd).parent().find('.ui-dialog-buttonpane').addClass("ccm-ui"));
 	}
+
+	if ($("#tooltip-holder").length == 0) {
+		$('<div />').attr('id','tooltip-holder').attr('class', 'ccm-ui').prependTo(document.body);
+	}
+
 	if ($("#ccm-dialog-content" + nd + " .dialog-help").length > 0) {
 		$("#ccm-dialog-content" + nd + " .dialog-help").hide();
 		var helpContent = $("#ccm-dialog-content" + nd + " .dialog-help").html();
@@ -217,10 +222,10 @@ jQuery.fn.dialog.replaceTop = function(r) {
 		} else {
 			var helpText = 'Help';
 		}
-		$("#ccm-dialog-content" + nd).parent().find('.ui-dialog-titlebar').append('<button class="ui-dialog-titlebar-help ccm-menu-help-trigger"></button>');
+		$("#ccm-dialog-content" + nd).parent().find('.ui-dialog-titlebar').addClass('ccm-ui').append('<button class="ui-dialog-titlebar-help ccm-menu-help-trigger"><i class="icon-info-sign"></i></button>');
 		$("#ccm-dialog-content" + nd).parent().find('.ui-dialog-titlebar .ccm-menu-help-trigger').popover({content: function() {
 			return helpContent;			
-		}, placement: 'bottom', html: true, trigger: 'click'});
+		}, placement: 'bottom', html: true, container: '#tooltip-holder', trigger: 'click'});
 	}
 }
 

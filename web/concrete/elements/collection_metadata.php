@@ -189,6 +189,6 @@ if ($_REQUEST['approveImmediately'] == 1) {
 </form>
 </div>
 	<div class="dialog-buttons">
-	<a href="javascript:void(0)" onclick="jQuery.fn.dialog.closeTop();" class="ccm-button-left btn"><?=t('Cancel')?></a>
-	<a href="javascript:void(0)" class="btn primary ccm-button-right" onclick="$('#ccmMetadataForm').submit()"><?=t('Save')?></a>
+	<button onclick="jQuery.fn.dialog.closeTop();" class="btn-hover-danger btn pull-left"><?=t('Cancel')?></button>
+	<button class="btn btn-primary pull-right" onclick="$('#ccmMetadataForm').submit()"><?=t('Save')?></button>
 	</div>

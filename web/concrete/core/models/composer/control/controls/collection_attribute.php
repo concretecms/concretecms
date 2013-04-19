@@ -77,4 +77,10 @@ class Concrete5_Model_CollectionAttributeComposerControl extends ComposerControl
 		}
 	}
 
+	public function addAssetsToRequest(Controller $cnt) {
+		$ak = $this->getAttributeKeyObject();
+		$akc = $ak->getController();
+		$akc->setupAndRun('composer');
+	}
+
 }
