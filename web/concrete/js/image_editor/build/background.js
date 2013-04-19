@@ -7,7 +7,6 @@ im.bgimage = new Image();
 im.bgimage.src = '/concrete/images/testbg.png';
 im.buildBackground = function() {
   var startbb = (new Date).getTime();
-  im.foreground.moveToTop();
 
   var dimensions = im.stage.getTotalDimensions();
   var to = (dimensions.max.x + dimensions.visibleHeight + dimensions.visibleWidth) * 2;
@@ -58,7 +57,6 @@ im.buildBackground = function() {
   im.coverLayer.attrs.y = im.saveArea.attrs.y - width/2;
   im.coverLayer.setStrokeWidth(width);
   im.foreground.add(im.coverLayer);
-
 
   im.fire('backgroundBuilt');
   im.background.draw();

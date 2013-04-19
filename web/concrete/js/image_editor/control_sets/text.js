@@ -21,7 +21,6 @@ im.on("changeActiveElement",function(e){
 		im.activeTextElement = standinText;
 		return im.disable();
 	}
-	me.find('button.fontname').click();
 	im.enable();
 	im.activeTextElement = im.activeElement;
 	updateFields();
