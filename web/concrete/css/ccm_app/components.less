@@ -151,12 +151,44 @@ div.ccm-summary-selected-item {border: 1px solid #dedede; margin-top: 8px; margi
 
 /* buttons */
 .ccm-ui .btn {
-  .buttonBackground(#ffffff, #f8f8f8, @grayDark, 0 1px 1px rgba(255,255,255,.75));
-  border-color: @btnBorder;
+  .buttonBackground(#ffffff, #f8f8f8, @grayDark, none);
+  border-color: #ccc;
+  padding: 6px 19px;
+}
+
+.ccm-ui .btn.btn-primary {
+  .buttonBackground(#0098fe, #0084db, #fff, none);
+  border: none;
+}
+
+.ccm-ui .btn.btn-primary:hover {
+	background-image: none;
+	background-color: #09f;
+ 	border: none;
 }
 
 .ccm-ui .btn:hover {
-  border-color: #999;
+	background-image: none;
+	background-color: #fff;
+ 	border-color: #6cf;
+}
+
+.ccm-ui .btn.btn-hover-danger:hover {
+ 	border-color: #ee5f5b;
+}
+
+.ccm-ui .btn[disabled=disabled]:hover {
+	background-image: none;
+	color: #b7b7b7;
+	background-color: #eae9e9;
+ 	border-color: #ccc;
+}
+
+.ccm-ui .btn[disabled=disabled] {
+	background-image: none;
+	color: #b7b7b7;
+	background-color: #eae9e9;
+ 	border-color: #ccc;
 }
 
 table.ccm-permission-grid {border: 0px;}
