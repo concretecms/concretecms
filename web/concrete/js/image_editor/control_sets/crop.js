@@ -234,20 +234,12 @@ var cropToCroppers = function() {
 
   im.showLoader('cropping...');
 
-  var overridestroke = im.activeElement.getStroke();
-  var overridestrokewidth = im.activeElement.getStrokeWidth() * im.scale;
-  var overridedasharray = im.activeElement.getDashArray();
-  for (var i in overridedasharray) {
-    overridedasharray[i] *= im.scale;
-  }
-
   im.activeElement.toImage({
     x:im.dragger.getX(),
     y:im.dragger.getY(),
     width:im.width,
     height:im.height,
     callback:function(img) {
-      im.activeElement.overrideStroke(overridestroke,overridestrokewidth,overridedasharray,false);
       im.activeElement.setImage(img);
       im.activeElement.setCrop();
       im.activeElement.setWidth(im.dragger.getWidth());
@@ -260,6 +252,7 @@ var cropToCroppers = function() {
 
       im.fire('imageChange');
       im.hideLoader();
+      im.adjustSavers();
       im.stage.draw();
     }
   });

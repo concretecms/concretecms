@@ -1,10 +1,12 @@
 // Zoom
 var controlBar = getElem(im.stage.getContainer()).parent().children('.bottomBar');
 
+controlBar.attr('unselectable', 'on').css('user-select', 'none').on('selectstart', false);
+
 var zoom = {};
 
-zoom.in = getElem("<span><i class='icon-plus'></i></span>");
-zoom.out = getElem("<span><i class='icon-minus'></i></span>");
+zoom.in = getElem("<div class='bottombarbutton plus'><i class='icon-plus'></i></div>");
+zoom.out = getElem("<div class='bottombarbutton'><i class='icon-minus'></i></div>");
 
 zoom.in.appendTo(controlBar);
 zoom.out.appendTo(controlBar);
@@ -12,7 +14,7 @@ zoom.out.appendTo(controlBar);
 zoom.in.click(function(e){im.fire('zoomInClick',e)});
 zoom.out.click(function(e){im.fire('zoomOutClick',e)});
 
-var scale = getElem('<span></span>').addClass('scale').text('100%');
+var scale = getElem('<div></div>').addClass('scale').text('100%');
 im.on('scaleChange',function(e){
   scale.text(Math.round(im.scale * 10000)/100 + "%");
 });
@@ -82,43 +84,39 @@ im.on('zoomOutClick',function(e){
 // Save
 var saveSize = {};
 
-saveSize.width = getElem('<input/>');
-saveSize.height = getElem('<input/>');
-saveSize.both = saveSize.height.add(saveSize.width).width(32);
+saveSize.width = getElem('<span/>').addClass('saveWidth');
+saveSize.height = getElem('<span/>').addClass('saveHeight');
+saveSize.crop = getElem('<div><i class="icon-resize-full"/></div>').addClass('bottombarbutton').addClass('crop');
+saveSize.both = saveSize.height.add(saveSize.width).width(32).attr('contenteditable',!!1);
 
-saveSize.area = getElem('<span/>').css({float:'right',margin:'-5px 14px 0 0'});
-saveSize.width.appendTo(saveSize.area);
-saveSize.area.append(getElem('<span> x </span>'));
-saveSize.height.appendTo(saveSize.area);
+saveSize.area = getElem('<span/>').css({float:'right'});
+saveSize.crop.appendTo(saveSize.area);
+saveSize.width.appendTo($('<div>w </div>').addClass('saveWidth').appendTo(saveSize.area));
+saveSize.height.appendTo($('<div>h </div>').addClass('saveHeight').appendTo(saveSize.area));
 saveSize.area.appendTo(controlBar);
-
-var saveButton = $('<button/>').addClass('btn').addClass('btn-primary').text('Save');
-saveButton.appendTo(saveSize.area);
-saveButton.click(function(){im.save()});
-
 
 if (im.strictSize) {
   saveSize.both.attr('disabled','true');
 } else {
-  saveSize.both.keyup(function(){
-    im.fire('editedSize');
+  saveSize.both.keyup(function(e){
+    im.fire('editedSize',e);
   });
 }
 
-im.bind('editedSize',function(){
-  im.saveWidth = parseInt(saveSize.width.val());
-  im.saveHeight = parseInt(saveSize.height.val());
+im.bind('editedSize',function(e){
+  im.saveWidth = parseInt(saveSize.width.text());
+  im.saveHeight = parseInt(saveSize.height.text());
 
   if (isNaN(im.saveWidth)) im.saveWidth = 0;
   if (isNaN(im.saveHeight)) im.saveHeight = 0;
 
-  im.trigger('saveSizeChange');
+  //im.trigger('saveSizeChange');
   im.buildBackground();
 });
 
 im.bind('saveSizeChange',function(){
-  saveSize.width.val(im.saveWidth);
-  saveSize.height.val(im.saveHeight);
+  saveSize.width.text(im.saveWidth);
+  saveSize.height.text(im.saveHeight);
 });
 
 im.setCursor = function(cursor) {

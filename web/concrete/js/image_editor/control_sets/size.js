@@ -63,14 +63,15 @@ control.on('dragmove',function(){
       newHeight = startpos.height - offsetY
   if (locked) {
     if (offsetX < offsetY) {
-      newHeight = Math.abs(newWidth * ratio);
+      newHeight = newWidth * ratio;
     } else {
-      newWidth = Math.abs(newHeight / ratio);
+      newWidth = newHeight / ratio;
     }
   }
-  im.activeElement.setWidth(newWidth);
-  im.activeElement.setHeight(newHeight);
-  im.stage.draw();
+  im.activeElement.setWidth(Math.max(newWidth,0));
+  im.activeElement.setHeight(Math.max(newHeight,0));
+  im.activeElement.parent.draw();
+  im.adjustSavers();
 });
 
 control.on('mouseover',function(){

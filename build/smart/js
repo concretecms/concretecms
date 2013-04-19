@@ -247,7 +247,8 @@ if $(echo "$status" | grep "$thisgrep" &> /dev/null); then
 `cat $file`"
     }
     echo "Building image_editor.js"
-    INP="$(getFile 'kinetic.prototype.js' 'first')
+    INP="$(getFile 'head.js' 'first')
+$(getFile 'kinetic.prototype.js')
 $(getFile 'imageeditor.js')
 $(getFile 'history.js')
 $(getFile 'events.js')
@@ -261,7 +262,8 @@ $(getFile 'image.js')
 $(getFile 'actions.js')
 $(getFile 'slideOut.js')
 $(getFile 'jquerybinding.js')
-$(getFile 'filters.js')"
+$(getFile 'filters.js')
+$(getFile 'foot.js')"
 
     echo "$INP" > ./web/concrete/js/image_editor/image_editor.js
 
