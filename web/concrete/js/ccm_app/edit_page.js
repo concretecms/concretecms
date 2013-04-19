@@ -300,6 +300,7 @@ var CCMEditMode = function() {
 				$('#ccm-overlay-block-types li[data-block-type-sets~=' + $(this).attr('data-tab') + ']').show();
 				$('#ccm-dialog-block-types-sets ul a').removeClass('active');
 				$(this).addClass('active');
+				return false;
 			});
 
 			$($('#ccm-dialog-block-types ul a').get(0)).trigger('click');
