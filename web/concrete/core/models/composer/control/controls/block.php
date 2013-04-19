@@ -52,6 +52,12 @@ class Concrete5_Model_BlockComposerControl extends ComposerControl {
 		return false;
 	}
 
+	public function addAssetsToRequest(Controller $cnt) {
+		$bt = $this->getBlockTypeObject();
+		$controller = $bt->getController();
+		$controller->setupAndRun('composer');
+	}
+
 
 	public function getComposerControlCustomTemplates() {
 		$bt = $this->getBlockTypeObject();

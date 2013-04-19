@@ -13,4 +13,17 @@ class Concrete5_Helper_Composer_Form {
 		Loader::element('composer/form/output/buttons');
 	}
 
+	public function addAssetsToRequest(Composer $cmp, Controller $cnt) {
+		$cnt->addFooterItem(Loader::helper('html')->javascript('ccm.composer.js'));
+		$cnt->addHeaderItem(Loader::helper('html')->css('ccm.composer.css'));
+		$cnt->addHeaderItem(Loader::helper('html')->css('jquery.ui.css'));
+		$cnt->addFooterItem(Loader::helper('html')->javascript('jquery.ui.js'));
+
+		$list = ComposerControl::getList($cmp);
+		foreach($list as $l) {
+			$l->addAssetsToRequest($cnt);
+		}
+	}
+
+
 }

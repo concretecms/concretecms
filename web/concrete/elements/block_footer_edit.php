@@ -38,8 +38,8 @@ $(document).unbind('inlineEditCancel').on('inlineEditCancel', function(e, onComp
 
 <? if (!$b->getProxyBlock() && !$bt->supportsInlineEditing()) { ?>	
 	<div class="ccm-buttons dialog-buttons">
-	<a href="javascript:clickedButton = true;$('#ccm-form-submit-button').get(0).click()" class="btn pull-right btn-primary"><?=t('Save')?> <i class="icon-ok icon-white"></i></a>
-	<a style="float:left" href="javascript:void(0)" <? if ($replaceOnUnload) { ?>onclick="location.href='<?=DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=<?=$closeWindowCID ?><?=$step?>'; return true" class="btn"<? } else { ?>class="btn" onclick="$(document).trigger('blockWindowClose');jQuery.fn.dialog.closeTop();" <? } ?>><?=t('Cancel')?></a>
+	<a href="javascript:clickedButton = true;$('#ccm-form-submit-button').get(0).click()" class="btn pull-right btn-primary"><?=t('Save')?></a>
+	<a style="float:left" href="javascript:void(0)" <? if ($replaceOnUnload) { ?>onclick="location.href='<?=DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=<?=$closeWindowCID ?><?=$step?>'; return true" class="btn btn-hover-danger"<? } else { ?>class="btn btn-hover-danger" onclick="$(document).trigger('blockWindowClose');jQuery.fn.dialog.closeTop();" <? } ?>><?=t('Cancel')?></a>
 	</div>
 <? } ?>
 
