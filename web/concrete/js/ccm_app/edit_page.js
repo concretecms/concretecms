@@ -159,7 +159,6 @@ var CCMEditMode = function() {
 			items: 'div.ccm-block-edit',
 			tolerance: 'pointer',
 			placeholder: 'ui-state-highlight',
-			opacity: 0.4,
 			handle: '[data-inline-command=move-block]',
 			out: function() {
 		
@@ -190,7 +189,7 @@ var CCMEditMode = function() {
 				helper: function() {
 					var w = '100px';
 					var h = '100px';
-					var $d =  $('<div />', {'class': 'ccm-block-type-dragging'}).css('width', w).css('height', h);
+					var $d =  $('<div />', {'class': 'ccm-block-type-dragging'}).css('opacity', 0.5).css('width', w).css('height', h);
 					return $d;
 				},
 				connectToSortable: $sortableAreas.filter('[data-accepts-block-types~=' + $block.attr('data-block-type-handle') + ']'),
