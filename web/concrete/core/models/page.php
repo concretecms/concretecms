@@ -183,60 +183,86 @@ class Concrete5_Model_Page extends Collection {
 
 		// this function is called via ajax, so it's a bit wonky, but the format is generally
 		// a{areaID} = array(b1, b2, b3) (where b1, etc... are blocks with ids appended.)
-		$db = Loader::db();
-		
-		$db->Execute('delete from CollectionVersionBlockStyles where cID = ? and cvID = ?', array($this->getCollectionID(), $this->getVersionID()));
-		
-		foreach($areas as $arID => $blocks) {
-			if (intval($arID) > 0) {
-				// this is a serialized area;
-				$arHandle = $db->getOne("select arHandle from Areas where arID = ?", array($arID));
-				$startDO = 0;
 
-				if (PERMISSIONS_MODEL == 'advanced') { // for performance sake
-					$ao = Area::getOrCreate($this, $arHandle);
-					$ap = new Permissions($ao);
+		$db = Loader::db();
+
+		/**
+		 * We need to check permissions before all else
+		 */
+		if (PERMISSIONS_MODEL == 'advanced') {
+			foreach ($areas as $arID => $blocks) {
+				if (intval($arID) < 1) {
+					continue;
 				}
 
-				foreach($blocks as $bIdentifier) {
-
+				$arHandle = $db->getOne("select arHandle from Areas where arID = ?", array($arID));
+				$ap = new Permissions(Area::getOrCreate($this, $arHandle));
+				foreach ($blocks as $bIdentifier) {
 					$bID = 0;
-					$csrID = 0;
-					
 					$bd2 = explode('-', $bIdentifier);
 					$bID = $bd2[0];
-					$csrID = $bd2[1];
 
-					if (intval($bID) > 0) {
-	
-						if (PERMISSIONS_MODEL == 'advanced') { // for performance sake
-							$b = Block::getByID($bID);
-							$bt = $b->getBlockTypeObject();
-							if (!$ap->canAddBlockToArea($bt) && (!$bt->isBlockTypeInternal())) {
-								$obj = new stdClass;
-								$obj->error = true;
-								$obj->message = t('You may not add %s to area %s.', $bt->getBlockTypeName(), $arHandle);
-								return $obj;
-							}
-						}
+					if (intval($bID) < 1) {
+						continue;
+					}
 
-						$v = array($startDO, $arHandle, $bID, $this->getCollectionID(), $this->getVersionID());
-						try {
-							$db->query("update CollectionVersionBlocks set cbDisplayOrder = ?, arHandle = ? where bID = ? and cID = ? and (cvID = ? or cbIncludeAll = 1)", $v);
-							if ($csrID > 0) {
-								$db->query("insert into CollectionVersionBlockStyles (csrID, arHandle, bID, cID, cvID) values (?, ?, ?, ?, ?)", array(
-									$csrID, $arHandle, $bID, $this->getCollectionID(), $this->getVersionID()
-								));
-							}
-							// update the style for any of these blocks
-							
-						} catch(Exception $e) {}
-						
-						$startDO++;
+					$b = Block::getByID($bID);
+					$bt = $b->getBlockTypeObject();
+					if (!$ap->canAddBlockToArea($bt) && (!$bt->isBlockTypeInternal())) {
+						$obj = new stdClass;
+						$obj->error = true;
+						$obj->message = t('You may not add %s to area %s.', $bt->getBlockTypeName(), $arHandle);
+						return $obj;
 					}
 				}
 			}
+
 		}
+
+		/**
+		 * Permissions check passes so we can do the work
+		 */
+		foreach($areas as $arID => $blocks) {
+			if (intval($arID) < 1) {
+				continue;
+			}
+			$arHandle = $db->getOne("select arHandle from Areas where arID = ?", array($arID));
+			$startDO = 0;
+
+			foreach($blocks as $bIdentifier) {
+
+				$bID = 0;
+				$csrID = 0;
+
+				$bd2 = explode('-', $bIdentifier);
+				$bID = $bd2[0];
+				$csrID = $bd2[1];
+
+				if (intval($bID) < 1) {
+					continue;
+				}
+
+				$db->Execute(
+					'delete from CollectionVersionBlockStyles where cID = ? and cvID = ? and bID = ? and arHandle = ?',
+					array($this->getCollectionID(), $this->getVersionID(), $bID, $arHandle)
+				);
+
+				$v = array($startDO, $arHandle, $bID, $this->getCollectionID(), $this->getVersionID());
+				try {
+					$db->query("update CollectionVersionBlocks set cbDisplayOrder = ?, arHandle = ? where bID = ? and cID = ? and (cvID = ? or cbIncludeAll = 1)", $v);
+					if ($csrID > 0) {
+						$db->query("insert into CollectionVersionBlockStyles (csrID, arHandle, bID, cID, cvID) values (?, ?, ?, ?, ?)", array(
+							$csrID, $arHandle, $bID, $this->getCollectionID(), $this->getVersionID()
+						));
+					}
+					// update the style for any of these blocks
+
+				} catch(Exception $e) {}
+
+				$startDO++;
+			}
+		}
+
 	}
 
 	/**

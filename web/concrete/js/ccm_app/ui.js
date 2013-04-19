@@ -633,7 +633,7 @@ ccm_setupGroupSearch = function(callback) {
 	});
 }
 
-ccm_saveArrangement = function(cID) {
+ccm_saveArrangement = function(cID, origin, destination) {
 	
 	if (!cID) {
 		cID = CCM_CID;
@@ -641,10 +641,11 @@ ccm_saveArrangement = function(cID) {
 
 	ccm_mainNavDisableDirectExit();
 	var serial = '';
-	$('div.ccm-area').each(function() {
-		areaStr = '&area[' + $(this).attr('id').substring(1) + '][]=';
+	$.each([origin, destination], function(idx, area) {
+		var $area = $(area);
+		areaStr = '&area[' + $area.attr('id').substring(1) + '][]=';
 		
-		bArray = $(this).sortable('toArray');
+		bArray = $area.sortable('toArray');
 
 		for (i = 0; i < bArray.length; i++ ) {
 			if (bArray[i] != '' && bArray[i].substring(0, 1) == 'b') {
@@ -695,15 +696,16 @@ ccm_arrangeInit = function() {
 	});
 	
 	$("div.ccm-area").each(function() {
-		var cID = $(this).attr('cID');
-		$(this).addClass('ccm-move-mode');
-		$(this).sortable({
+		var area = $(this);
+		var cID = area.attr('cID');
+		area.addClass('ccm-move-mode');
+		area.sortable({
 			items: 'div.ccm-block-arrange',
 			connectWith: $("div.ccm-area-move-enabled"),
 			accept: 'div.ccm-block-arrange',
 			opacity: 0.5,
-			stop: function() {
-				ccm_saveArrangement(cID);
+			stop: function(e, ui) {
+				ccm_saveArrangement(cID, area, ui.item.closest('.ccm-area'));
 			}
 		});
 	});
