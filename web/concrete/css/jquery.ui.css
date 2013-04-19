@@ -297,10 +297,10 @@ button.ui-button::-moz-focus-inner{border:0;padding:0;}
 .ui-dialog{position:absolute;top:0;left:0;padding:0px;width:300px;overflow:hidden;outline:0;background-clip:padding-box;background-color:#FFFFFF;border:1px solid #888;border-radius:4px 4px 4px 4px;box-shadow:0px 0px 20px rgba(0, 0, 0, 0.4);outline:medium none;position:fixed;z-index:999;}
 .ui-dialog .ui-dialog-titlebar{position:relative;border-color:white;padding:19px 26px 19px 26px;font-size:18px;border-left:0px !important;text-decoration:none;line-height:18px;background-color:#f4f4f4;background-image:-moz-linear-gradient(top, #ffffff, #e3e3e3);background-image:-webkit-gradient(linear, 0 0, 0 100%, from(#ffffff), to(#e3e3e3));background-image:-webkit-linear-gradient(top, #ffffff, #e3e3e3);background-image:-o-linear-gradient(top, #ffffff, #e3e3e3);background-image:linear-gradient(to bottom, #ffffff, #e3e3e3);background-repeat:repeat-x;filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffffff', endColorstr='#ffe3e3e3', GradientType=0);-webkit-border-bottom-right-radius:0px;-moz-border-radius-bottomright:0px;border-bottom-right-radius:0px;-webkit-border-bottom-left-radius:0px;-moz-border-radius-bottomleft:0px;border-bottom-left-radius:0px;border-bottom:1px solid #ccc;}
 .ui-dialog .ui-dialog-title{color:#404040;font-weight:bold;text-overflow:ellipsis;overflow:hidden;}
-.ui-dialog .ui-dialog-titlebar-close{position:absolute;opacity:0.6;right:17px;top:16px;background:none;border-width:0;border:none;box-shadow:none;}
-.ui-dialog .ui-dialog-titlebar-close:hover{opacity:1;}
-.ui-dialog .ui-dialog-titlebar-help:hover i{opacity:1;}
-.ui-dialog .ui-dialog-titlebar-help i{opacity:0.4;}
+.ui-dialog .ui-dialog-titlebar-close{position:absolute;opacity:0.5;right:17px;top:16px;background:none;border-width:0;border:none;box-shadow:none;}
+.ui-dialog .ui-dialog-titlebar-close:hover{opacity:0.9;}
+.ui-dialog .ui-dialog-titlebar-help:hover i{opacity:0.7;}
+.ui-dialog .ui-dialog-titlebar-help i{opacity:0.3;}
 .ui-dialog .ui-dialog-titlebar-help{position:absolute;right:50px;top:19px;background:none;border-width:0;border:none;box-shadow:none;}
 .ui-dialog button:hover{color:#333;}
 .ui-dialog button:focus{outline:0px;}

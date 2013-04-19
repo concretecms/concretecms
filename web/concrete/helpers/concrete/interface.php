@@ -32,9 +32,9 @@ class ConcreteInterfaceHelper {
 	 */
 	public function submit($text, $formID = false, $buttonAlign = 'right', $innerClass = null, $args = array()) {
 		if ($buttonAlign == 'right') {
-			$innerClass .= ' ccm-button-v2-right';
+			$innerClass .= ' pull-right';
 		} else if ($buttonAlign == 'left') {
-			$innerClass .= ' ccm-button-v2-left';
+			$innerClass .= ' pull-left';
 		}
 		
 		if (!$formID) {
@@ -44,7 +44,7 @@ class ConcreteInterfaceHelper {
 		foreach($args as $k => $v) {
 			$argsstr .= $k . '="' . $v . '" ';
 		}
-		return '<input type="submit" class="btn ccm-button-v2 ' . $innerClass . '" value="' . $text . '" id="ccm-submit-' . $formID . '" name="ccm-submit-' . $formID . '" ' . $align . ' ' . $argsstr . ' />';
+		return '<input type="submit" class="btn ' . $innerClass . '" value="' . $text . '" id="ccm-submit-' . $formID . '" name="ccm-submit-' . $formID . '" ' . $align . ' ' . $argsstr . ' />';
 	}
 	
 	/** 
@@ -58,9 +58,9 @@ class ConcreteInterfaceHelper {
 	 */
 	public function button($text, $href, $buttonAlign = 'right', $innerClass = null, $args = array()) { 
 		if ($buttonAlign == 'right') {
-			$innerClass .= ' ccm-button-v2-right';
+			$innerClass .= ' pull-right';
 		} else if ($buttonAlign == 'left') {
-			$innerClass .= ' ccm-button-v2-left';
+			$innerClass .= ' pull-left';
 		}
 		$argsstr = '';
 		foreach($args as $k => $v) {
@@ -80,15 +80,15 @@ class ConcreteInterfaceHelper {
 	 */
 	public function button_js($text, $onclick, $buttonAlign = 'right', $innerClass = null, $args = array()) {
 		if ($buttonAlign == 'right') {
-			$innerClass .= ' ccm-button-v2-right';
+			$innerClass .= ' pull-right';
 		} else if ($buttonAlign == 'left') {
-			$innerClass .= ' ccm-button-v2-left';
+			$innerClass .= ' pull-left';
 		}
 		$argsstr = '';
 		foreach($args as $k => $v) {
 			$argsstr .= $k . '="' . $v . '" ';
 		}
-		return '<input type="button" class="btn ccm-button-v2 ' . $innerClass . '" value="' . $text . '" onclick="' . $onclick . '" ' . $align . ' ' . $argsstr . ' />';
+		return '<input type="button" class="btn ' . $innerClass . '" value="' . $text . '" onclick="' . $onclick . '" ' . $align . ' ' . $argsstr . ' />';
 	}
 	
 	/** 
