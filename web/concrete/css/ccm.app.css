@@ -1172,7 +1172,7 @@ div.ccm-editor-controls ul li a:hover{text-decoration:underline;}
 div.ccm-summary-selected-item{border:1px solid #dedede;margin-top:8px;margin-bottom:8px;padding:10px;}
 .ccm-ui .dialog-buttons .btn,.ccm-ui .ccm-pane-footer .btn{padding:6px 19px;}
 .ccm-ui .btn.btn-primary{border:none;}
-.ccm-ui .btn:hover{border-color:#6cf;}
+.ccm-ui .btn:hover{border-color:#6cf;background-image:none;background-color:#fff;}
 .ccm-ui .btn.btn-primary:hover{background-image:none;background-color:#09f;border:none;}
 .ccm-ui .btn.btn-hover-danger:hover{border-color:#ee5f5b;}
 .ccm-ui .btn[disabled=disabled]:hover{background-image:none;color:#b7b7b7;background-color:#eae9e9;border-color:#ccc;}
@@ -1264,7 +1264,7 @@ div#ccm-toolbar .ccm-toolbar-hover-menu a:hover{background-color:#fff !important
 div#ccm-toolbar .ccm-toolbar-hover-menu li.ccm-toolbar-hover-menu-edit{padding:0px;margin:-5px 0px -9px 0px;}div#ccm-toolbar .ccm-toolbar-hover-menu li.ccm-toolbar-hover-menu-edit a{padding:10px 20px;color:#00cc66;}
 div#ccm-toolbar .ccm-toolbar-hover-menu li.ccm-toolbar-hover-menu-edit a:hover{background-color:#9f9 !important;}
 div#ccm-toolbar .dropdown-menu{-webkit-border-top-right-radius:0px;-moz-border-radius-topright:0px;border-top-right-radius:0px;-webkit-border-top-left-radius:0px;-moz-border-radius-topleft:0px;border-top-left-radius:0px;border-top:0px;}
-div#ccm-toolbar #ccm-exit-edit-mode-comment{background-color:#f8f8f8;padding:0px;}
+div#ccm-toolbar #ccm-exit-edit-mode-comment{background-color:#f8f8f8;padding:0px;}div#ccm-toolbar #ccm-exit-edit-mode-comment form{margin:0px;}
 div#ccm-toolbar #ccm-exit-edit-mode-publish-menu{border-top:1px solid #ccc;margin:0px;padding-top:9px;padding-bottom:9px;}div#ccm-toolbar #ccm-exit-edit-mode-publish-menu ul{margin:0px;}
 div#ccm-toolbar #ccm-exit-edit-mode-publish-menu li{padding:0px;list-style-type:none;}div#ccm-toolbar #ccm-exit-edit-mode-publish-menu li a{padding:3px 20px;display:block;}
 div#ccm-toolbar #ccm-exit-edit-mode-publish-menu li a:hover{text-decoration:none;background-color:#f8f8f8 !important;}
