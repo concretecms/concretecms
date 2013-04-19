@@ -150,27 +150,22 @@ div.ccm-editor-controls ul li a:hover {text-decoration: underline}
 div.ccm-summary-selected-item {border: 1px solid #dedede; margin-top: 8px; margin-bottom: 8px; padding: 10px}
 
 /* buttons */
-.ccm-ui .btn {
-  .buttonBackground(#ffffff, #f8f8f8, @grayDark, none);
-  border-color: #ccc;
+.ccm-ui .dialog-buttons .btn, .ccm-ui .ccm-pane-footer .btn {
   padding: 6px 19px;
 }
 
 .ccm-ui .btn.btn-primary {
-  .buttonBackground(#0098fe, #0084db, #fff, none);
   border: none;
+}
+
+.ccm-ui .btn:hover {
+ 	border-color: #6cf;
 }
 
 .ccm-ui .btn.btn-primary:hover {
 	background-image: none;
 	background-color: #09f;
  	border: none;
-}
-
-.ccm-ui .btn:hover {
-	background-image: none;
-	background-color: #fff;
- 	border-color: #6cf;
 }
 
 .ccm-ui .btn.btn-hover-danger:hover {
