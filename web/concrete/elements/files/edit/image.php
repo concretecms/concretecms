@@ -46,6 +46,7 @@ $filters = SystemImageEditorFilter::getList();
                   "<div class='control'><div class='contents'>";
                     echo Loader::element('image_editor/control_sets/'.$handle,array('editorid'=>$editorid));
                   echo "</div></div>".
+                  "<div class='border'></div>".
                 "</div>";
         }
         ?>
@@ -63,10 +64,15 @@ $filters = SystemImageEditorFilter::getList();
                   "<div class='control'><div class='contents'>";
                     echo Loader::element('image_editor/components/'.$handle,array('editorid'=>$editorid));
                   echo "</div></div>".
+                  "<div class='border'></div>".
                 "</div>";
         }
         ?>
       </div>
+    </div>
+    <div class='save'>
+      <button class='cancel btn'>Cancel</button>
+      <button class='save btn ccm-button-right btn-primary'>Save</button>
     </div>
   </div>
 </div>

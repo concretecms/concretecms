@@ -18,7 +18,9 @@ $.fn.ImageEditor = function (settings) {
     },50);
     return;
   }
-  self.height(self.height()-31);
+  self.closest('.ui-dialog').find('.ui-resizable-handle').hide();
+  self.height("-=30");
+  self.width("-=330").parent().width("-=330").children('div.bottomBar').width("-=330");
   (settings.width === undefined && (settings.width = self.width()));
   (settings.height === undefined && (settings.height = self.height()));
   $.fn.dialog.showLoader();
@@ -32,6 +34,12 @@ $.fn.ImageEditor = function (settings) {
   im.on('ChangeActiveComponent',function(e){
     if (!e.eventData)
       $('h4.active',context).removeClass('active');
+  });
+  $('div.controls',context).children('div.save').children('button.save').click(function(){
+    im.save();
+  }).end().children('button.cancel').click(function(){
+    if (confirm("Are you certain?"))
+      $.fn.dialog.closeTop();
   });
   $('div.controls',context).children('ul.nav').children().click(function(){
     if ($(this).hasClass('active')) return false;
@@ -51,6 +59,7 @@ $.fn.ImageEditor = function (settings) {
 
   $('div.component',context).find('div.control').children('div.contents').slideUp(0).hide()
   .end().end().find('h4').click(function(){
+    if ($(this).hasClass('active')) return false;
     $(this).addClass('active');
     $('div.component',context).children('h4').not($(this)).removeClass('active');
     var ns = $(this).parent().attr('data-namespace');

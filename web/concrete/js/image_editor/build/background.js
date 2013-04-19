@@ -11,21 +11,8 @@ im.buildBackground = function() {
 
   var dimensions = im.stage.getTotalDimensions();
   var to = (dimensions.max.x + dimensions.visibleHeight + dimensions.visibleWidth) * 2;
-  if (!im.totalBackground) {
-    im.totalBackground = new Kinetic.Rect({
-      x:dimensions.max.x - dimensions.width,
-      y:dimensions.max.y - dimensions.height,
-      width:to,
-      height:to,
-      fill:'#aaa'
-    });
-    im.background.add(im.totalBackground);
-  }
-  im.totalBackground.setX(dimensions.max.x - dimensions.width);
-  im.totalBackground.setY(dimensions.max.y - dimensions.height);
-  im.totalBackground.setWidth(to);
-  im.totalBackground.setHeight(to);
 
+  
   if (!im.saveArea) {
     im.saveArea = new Kinetic.Rect({
       width:im.saveWidth,
@@ -52,8 +39,6 @@ im.buildBackground = function() {
   im.saveArea.setWidth(im.saveWidth);
   im.saveArea.setHeight(im.saveHeight);
 
-  var dimensions = im.stage.getTotalDimensions();
-
   if (im.foreground) {
     im.foreground.destroy();
   }
@@ -61,9 +46,17 @@ im.buildBackground = function() {
   im.stage.add(im.foreground);
   if (!im.coverLayer) {
     im.coverLayer = new Kinetic.Rect;
-    im.coverLayer.setStroke('rgba(255,0,0,.5)');
+    im.coverLayer.setStroke('rgba(150,150,150,.5)');
+    im.coverLayer.setFill('transparent');
+    im.coverLayer.setDrawHitFunc(function(){});
     im.coverLayer.setStrokeWidth(Math.max(dimensions.width,dimensions.height,500));
   }
+  var width = Math.max(dimensions.width,dimensions.height)*2;
+  im.coverLayer.attrs.width = im.saveArea.attrs.width + width;
+  im.coverLayer.attrs.height = im.saveArea.attrs.height + width;
+  im.coverLayer.attrs.x = im.saveArea.attrs.x - width/2;
+  im.coverLayer.attrs.y = im.saveArea.attrs.y - width/2;
+  im.coverLayer.setStrokeWidth(width);
   im.foreground.add(im.coverLayer);
 
 

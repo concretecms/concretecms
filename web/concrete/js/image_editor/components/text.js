@@ -1,4 +1,4 @@
-var me = $(this);
+ var me = $(this);
 
 im.activeTextElement = false;
 im.on('changeActiveComponent',function(e){

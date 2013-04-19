@@ -14,26 +14,91 @@ div.table > div {
   float:left;
 }
 div.editorcontainer {
-  width:75%;
+  width:100%;
   overflow-x:hidden;
   div.Editor {
     height:100%;
   }
   div.bottomBar {
-    height: 25px;
-    padding: 6px 10px 0 10px;
+    border-top:solid 1px #ccc;
+    height: 45px;
     background: white;
     bottom: 0;
     position: absolute;
-    width: 75%;
-    box-shadow:0 0 15px -5px black;
+    width: 100%;
     border-bottom-left-radius: 5px;
     -moz-border-bottom-left-radius: 5px;
     -webkit-border-bottom-left-radius: 5px;
     -o-border-bottom-left-radius: 5px;
+    background: #ffffff;
+    background: -moz-linear-gradient(top, #ffffff 31%, #e8e9e9 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(31%,#ffffff), color-stop(100%,#e8e9e9));
+    background: -webkit-linear-gradient(top, #ffffff 31%,#e8e9e9 100%);
+    background: -o-linear-gradient(top, #ffffff 31%,#e8e9e9 100%);
+    background: -ms-linear-gradient(top, #ffffff 31%,#e8e9e9 100%);
+    background: linear-gradient(to bottom, #ffffff 31%,#e8e9e9 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#e8e9e9',GradientType=0 );
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#e8e9e9',GradientType=0 ); /* IE6-9 */
+
     span.scale {
       position: absolute;
       margin-top: -2px;
+    }
+    div.bottombarbutton {
+      background: transparent;
+      display:inline-block;
+      padding: 15px 20px 0px 20px;
+      height:30px;
+      border-left:solid 1px #ccc;
+      margin-left:-1px;
+      border-right:solid 1px #ccc;
+      transition: box-shadow 200ms;
+      -webkit-transition: box-shadow 200ms;
+      float:left;
+      &:hover {
+        box-shadow: 0 0 15px skyblue;
+      }
+      &:active {
+        background: #e8e9e9;
+        background: -moz-linear-gradient(top, #e8e9e9 0%, #ffffff 61%);
+        background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#e8e9e9), color-stop(61%,#ffffff));
+        background: -webkit-linear-gradient(top, #e8e9e9 0%,#ffffff 61%);
+        background: -o-linear-gradient(top, #e8e9e9 0%,#ffffff 61%);
+        background: -ms-linear-gradient(top, #e8e9e9 0%,#ffffff 61%);
+        background: linear-gradient(to bottom, #e8e9e9 0%,#ffffff 61%);
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e8e9e9', endColorstr='#ffffff',GradientType=0 );
+      }
+      &.plus {
+        border-bottom-left-radius: 5px;
+        -moz-border-bottom-left-radius: 5px;
+        -webkit-border-bottom-left-radius: 5px;
+        -o-border-bottom-left-radius: 5px;
+      }
+      &.crop > i {
+        background-image: url('/concrete/images/image_editor/crop_icon.png');
+        background-position:0 0;
+      }
+    }
+    div.saveWidth, div.saveHeight, div.scale {
+      > span {
+        font-size:12px;
+        color:#aaa;
+        font-weight:normal;
+      }
+      font-weight:bold;
+      color:#999;
+      float:left;
+      margin-left:-1px;
+      border-right:solid 1px #ccc;
+      display:inline-block;
+      background:white;
+      padding: 12px 20px 0px 20px;
+      height:33px;
+      border-left:solid 1px #ccc;
+    }
+    div.scale {
+      font-size:12px;
+      color:#aaa;
     }
   }
 }
@@ -50,16 +115,32 @@ div.slideOut {
       }
     }
   }
+  ul.slideOutBoxList {
+    margin:0;
+    list-style-type: none;
+    li {
+      padding:20px 30px;
+      font-size:20px;
+      &:hover {
+        background:skyblue;
+      }
+    }
+  }
 }
 
 div.controls {
-  width:25%;
+  width:330px;
+  float:right;
+  position:absolute;
   background:white;
-  position:relative;
   box-shadow:-5px 0px 25px -5px black;
   overflow-x:hidden;
   box-shadow: 0 0 25px -5px black;
   z-index: 1;
+  border-bottom-right-radius: 5px;
+  -moz-border-bottom-right-radius: 5px;
+  -webkit-border-bottom-right-radius: 5px;
+  -o-border-bottom-right-radius: 5px;
   ul.nav {
     padding-left: 20px;
     padding-top: 10px;
@@ -67,8 +148,8 @@ div.controls {
   div.controlset, div.component {
     &.disabled {
       h4 {
-        color:#ccc;
-        background:#eee;
+        color:#ababab;
+        //background:#eee;
         cursor:auto;
       }
     }
@@ -77,20 +158,47 @@ div.controls {
       margin:0;
       cursor:pointer;
       background:white;
-      border-bottom:solid 1px #ddd;
-      color:#aaa;
+      color:#00cc66;
       &.active {
-        color:#333;
+        color:#006633;
         cursor:auto;
       }
     }
+    div.border {
+      height:0px;
+      margin:0 15px;
+      border-bottom:solid 1px #eaeaea;
+      margin-top:-2px;
+    }
     div.control {
-      padding:0 60px;
+      padding:0 30px;
       background:#f5f5f5;
       box-shadow:0 12px 20px -15px black inset,0 -7px 20px -15px black inset;
       > div.contents {
+        > div.cancelbutton {
+          color:#b3b3b3;
+          font-size:12px;
+          position: absolute;
+          right: 15px;
+          transition: color 200ms;
+          cursor:pointer;
+          &:hover {
+            color: #87CEEB;
+          }
+          &:active {
+            color: #ccc;
+          }
+        }
         padding:20px 0;
       }
     }
+  }
+  div.save {
+    position: absolute;
+    padding: 15px 15px 15px;
+    bottom: 0;
+    background: #F5F5F5;
+    width: 300px;
+    border-top: solid 1px #ccc;
   }
 }

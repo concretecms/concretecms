@@ -1,4 +1,12 @@
 ///////////////////////////////////////////////////////////////////////////////
+//                                  head.js                                  //
+///////////////////////////////////////////////////////////////////////////////
+;(function(window,jQuery,Kinetic){
+	var $ = jQuery;
+	window.devicePixelRatio = 1;
+
+
+///////////////////////////////////////////////////////////////////////////////
 //                            kinetic.prototype.js                           //
 ///////////////////////////////////////////////////////////////////////////////
 /////////////////////////////
@@ -155,6 +163,7 @@ Kinetic.Global.extend(Kinetic.Wedge, Kinetic.Shape);
 var ImageEditor = function (settings) {
   "use strict";
   if (settings === undefined) return this;
+  settings.pixelRatio = 1;
   var im            = this, x, round = function(float){return Math.round(float)};
   im.width          = settings.width;
   im.height         = settings.height;
@@ -165,6 +174,7 @@ var ImageEditor = function (settings) {
   im.namespaces     = {};
   im.controlSets    = {};
   im.components     = {};
+  im.settings       = settings;
   im.filters        = {};
   im.scale          = 1;
   im.crosshair      = new Image();
@@ -267,17 +277,19 @@ im.history = new History();
 ///////////////////////////////////////////////////////////////////////////////
 // Handle event binding.
 im.bindEvent = im.bind = im.on = function (type, handler, elem) {
+	if (type == 'sliderMove')
+	console.log("BIND",elem);
   var element = elem || im.stage.getContainer();
   if (element instanceof jQuery) element = element[0];
-  console.log('Binding',type,data,element);
   ccm_event.sub(type,handler,element);
 };
 
 // Handle event firing
 im.fireEvent = im.fire = im.trigger = function (type, data, elem) {
+	if (type == 'sliderMove')
+	console.log("FIRE",elem);
   var element = elem || im.stage.getContainer();
   if (element instanceof jQuery) element = element[0];
-  console.log('Sending',type,data,element);
   ccm_event.pub(type,data,element);
 };
 
@@ -386,10 +398,12 @@ im.bind('stageChanged',function(e){
 // Zoom
 var controlBar = getElem(im.stage.getContainer()).parent().children('.bottomBar');
 
+controlBar.attr('unselectable', 'on').css('user-select', 'none').on('selectstart', false);
+
 var zoom = {};
 
-zoom.in = getElem("<span><i class='icon-plus'></i></span>");
-zoom.out = getElem("<span><i class='icon-minus'></i></span>");
+zoom.in = getElem("<div class='bottombarbutton plus'><i class='icon-plus'></i></div>");
+zoom.out = getElem("<div class='bottombarbutton'><i class='icon-minus'></i></div>");
 
 zoom.in.appendTo(controlBar);
 zoom.out.appendTo(controlBar);
@@ -397,7 +411,7 @@ zoom.out.appendTo(controlBar);
 zoom.in.click(function(e){im.fire('zoomInClick',e)});
 zoom.out.click(function(e){im.fire('zoomOutClick',e)});
 
-var scale = getElem('<span></span>').addClass('scale').text('100%');
+var scale = getElem('<div></div>').addClass('scale').text('100%');
 im.on('scaleChange',function(e){
   scale.text(Math.round(im.scale * 10000)/100 + "%");
 });
@@ -467,43 +481,39 @@ im.on('zoomOutClick',function(e){
 // Save
 var saveSize = {};
 
-saveSize.width = getElem('<input/>');
-saveSize.height = getElem('<input/>');
-saveSize.both = saveSize.height.add(saveSize.width).width(32);
+saveSize.width = getElem('<span/>').addClass('saveWidth');
+saveSize.height = getElem('<span/>').addClass('saveHeight');
+saveSize.crop = getElem('<div><i class="icon-resize-full"/></div>').addClass('bottombarbutton').addClass('crop');
+saveSize.both = saveSize.height.add(saveSize.width).width(32).attr('contenteditable',!!1);
 
-saveSize.area = getElem('<span/>').css({float:'right',margin:'-5px 14px 0 0'});
-saveSize.width.appendTo(saveSize.area);
-saveSize.area.append(getElem('<span> x </span>'));
-saveSize.height.appendTo(saveSize.area);
+saveSize.area = getElem('<span/>').css({float:'right'});
+saveSize.crop.appendTo(saveSize.area);
+saveSize.width.appendTo($('<div>w </div>').addClass('saveWidth').appendTo(saveSize.area));
+saveSize.height.appendTo($('<div>h </div>').addClass('saveHeight').appendTo(saveSize.area));
 saveSize.area.appendTo(controlBar);
-
-var saveButton = $('<button/>').addClass('btn').addClass('btn-primary').text('Save');
-saveButton.appendTo(saveSize.area);
-saveButton.click(function(){im.save()});
-
 
 if (im.strictSize) {
   saveSize.both.attr('disabled','true');
 } else {
-  saveSize.both.keyup(function(){
-    im.fire('editedSize');
+  saveSize.both.keyup(function(e){
+    im.fire('editedSize',e);
   });
 }
 
-im.bind('editedSize',function(){
-  im.saveWidth = parseInt(saveSize.width.val());
-  im.saveHeight = parseInt(saveSize.height.val());
+im.bind('editedSize',function(e){
+  im.saveWidth = parseInt(saveSize.width.text());
+  im.saveHeight = parseInt(saveSize.height.text());
 
   if (isNaN(im.saveWidth)) im.saveWidth = 0;
   if (isNaN(im.saveHeight)) im.saveHeight = 0;
 
-  im.trigger('saveSizeChange');
+  //im.trigger('saveSizeChange');
   im.buildBackground();
 });
 
 im.bind('saveSizeChange',function(){
-  saveSize.width.val(im.saveWidth);
-  saveSize.height.val(im.saveHeight);
+  saveSize.width.text(im.saveWidth);
+  saveSize.height.text(im.saveHeight);
 });
 
 im.setCursor = function(cursor) {
@@ -705,21 +715,8 @@ im.buildBackground = function() {
 
   var dimensions = im.stage.getTotalDimensions();
   var to = (dimensions.max.x + dimensions.visibleHeight + dimensions.visibleWidth) * 2;
-  if (!im.totalBackground) {
-    im.totalBackground = new Kinetic.Rect({
-      x:dimensions.max.x - dimensions.width,
-      y:dimensions.max.y - dimensions.height,
-      width:to,
-      height:to,
-      fill:'#aaa'
-    });
-    im.background.add(im.totalBackground);
-  }
-  im.totalBackground.setX(dimensions.max.x - dimensions.width);
-  im.totalBackground.setY(dimensions.max.y - dimensions.height);
-  im.totalBackground.setWidth(to);
-  im.totalBackground.setHeight(to);
 
+  
   if (!im.saveArea) {
     im.saveArea = new Kinetic.Rect({
       width:im.saveWidth,
@@ -746,8 +743,6 @@ im.buildBackground = function() {
   im.saveArea.setWidth(im.saveWidth);
   im.saveArea.setHeight(im.saveHeight);
 
-  var dimensions = im.stage.getTotalDimensions();
-
   if (im.foreground) {
     im.foreground.destroy();
   }
@@ -755,9 +750,17 @@ im.buildBackground = function() {
   im.stage.add(im.foreground);
   if (!im.coverLayer) {
     im.coverLayer = new Kinetic.Rect;
-    im.coverLayer.setStroke('rgba(255,0,0,.5)');
+    im.coverLayer.setStroke('rgba(150,150,150,.5)');
+    im.coverLayer.setFill('transparent');
+    im.coverLayer.setDrawHitFunc(function(){});
     im.coverLayer.setStrokeWidth(Math.max(dimensions.width,dimensions.height,500));
   }
+  var width = Math.max(dimensions.width,dimensions.height)*2;
+  im.coverLayer.attrs.width = im.saveArea.attrs.width + width;
+  im.coverLayer.attrs.height = im.saveArea.attrs.height + width;
+  im.coverLayer.attrs.x = im.saveArea.attrs.x - width/2;
+  im.coverLayer.attrs.y = im.saveArea.attrs.y - width/2;
+  im.coverLayer.setStrokeWidth(width);
   im.foreground.add(im.coverLayer);
 
 
@@ -905,7 +908,20 @@ im.bind('imageload',function(){
     });
   }
 });
-
+im.adjustSavers = function() {
+  if (im.activeElement.elementType != "stage" && im.autoCrop) {
+    im.alterCore('saveWidth',Math.ceil(-(im.activeElement.getX() - im.center.x)*2));
+    im.alterCore('saveHeight',Math.ceil(-(im.activeElement.getY() - im.center.y)*2));
+    if ((im.activeElement.getWidth() - im.saveWidth / 2) * 2 > im.saveWidth) {
+      im.alterCore('saveWidth', Math.ceil((im.activeElement.getWidth() - im.saveWidth / 2) * 2));
+    }
+    if ((im.activeElement.getHeight() - im.saveHeight / 2) * 2 > im.saveHeight) {
+      im.alterCore('saveHeight', Math.ceil((im.activeElement.getHeight() - im.saveHeight / 2) * 2));
+    }
+    im.buildBackground();
+    im.fire('saveSizeChange');
+  }
+};
 im.bind('ControlSetsLoaded',function(){
   im.fire('LoadingComponents');
   im.showLoader('Loading Components..');
@@ -1033,46 +1049,36 @@ im.bind('FiltersLoaded',function(){
 //                                slideOut.js                                //
 ///////////////////////////////////////////////////////////////////////////////
 im.slideOut = $("<div/>").addClass('slideOut').css({
-	width:0,
-	float:'right',
-	height:'100%',
-	'overflow-x':'hidden',
-	right:im.controlContext.width()-1,
-	position:'absolute',
-	background:'white',
-	'box-shadow':'black -20px 0 20px -25px'
+  width:0,
+  float:'right',
+  height:'100%',
+  'overflow-x':'hidden',
+  right:im.controlContext.width()-1,
+  position:'absolute',
+  background:'white',
+  'box-shadow':'black -20px 0 20px -25px'
 });
 
 im.slideOutContents = $('<div/>').appendTo(im.slideOut).width(300);
-im.showSlideOut = function(contents,callback){
-	im.slideOut.css('border-right','solid 1px #eee');
-	if (im.slideOut.hasClass('active')) {
-		im.slideOut.addClass('sliding');
-		im.slideOut.slideIn(300,function(){
-			im.slideOutContents.replaceWith(contents.width(300));
-			im.slideOutContents = contents;
-			im.slideOut.slideOut(300,function(){
-				im.slideOut.removeClass('sliding');
-				((typeof callback === 'function') && callback());
-			});
-		});
-	} else {
-		im.slideOutContents.replaceWith(contents.width(300));
-		im.slideOutContents = contents;
-		im.slideOut.addClass('active').addClass('sliding');
-		im.slideOut.slideOut(300,function(){
-			im.slideOut.removeClass('sliding');
-			((typeof callback === 'function') && callback());
-		});
-	}
+im.showSlideOut = function(contents,callback) {
+  im.hideSlideOut(function(){
+    im.slideOut.empty();
+    im.slideOutContents = contents.width(300);
+    im.slideOut.append(im.slideOutContents)
+    im.slideOut.addClass('active').addClass('sliding');
+    im.slideOut.stop(1).slideOut(300,function(){
+      im.slideOut.removeClass('sliding');
+      ((typeof callback === 'function') && callback());
+    });
+  });
 };
 im.hideSlideOut = function(callback) {
-	im.slideOut.addClass('sliding');
-	im.slideOut.slideIn(300,function(){
-		im.slideOut.css('border-right','0');
-		im.slideOut.removeClass('active').removeClass('sliding');
-		((typeof callback === 'function') && callback());
-	});
+  im.slideOut.addClass('sliding');
+  im.slideOut.slideIn(300,function(){
+    im.slideOut.css('border-right','0');
+    im.slideOut.removeClass('active').removeClass('sliding');
+    ((typeof callback === 'function') && callback());
+  });
 };
 im.controlContext.after(im.slideOut);
 
@@ -1100,7 +1106,9 @@ $.fn.ImageEditor = function (settings) {
     },50);
     return;
   }
-  self.height(self.height()-31);
+  self.closest('.ui-dialog').find('.ui-resizable-handle').hide();
+  self.height("-=30");
+  self.width("-=330").parent().width("-=330").children('div.bottomBar').width("-=330");
   (settings.width === undefined && (settings.width = self.width()));
   (settings.height === undefined && (settings.height = self.height()));
   $.fn.dialog.showLoader();
@@ -1114,6 +1122,12 @@ $.fn.ImageEditor = function (settings) {
   im.on('ChangeActiveComponent',function(e){
     if (!e.eventData)
       $('h4.active',context).removeClass('active');
+  });
+  $('div.controls',context).children('div.save').children('button.save').click(function(){
+    im.save();
+  }).end().children('button.cancel').click(function(){
+    if (confirm("Are you certain?"))
+      $.fn.dialog.closeTop();
   });
   $('div.controls',context).children('ul.nav').children().click(function(){
     if ($(this).hasClass('active')) return false;
@@ -1133,6 +1147,7 @@ $.fn.ImageEditor = function (settings) {
 
   $('div.component',context).find('div.control').children('div.contents').slideUp(0).hide()
   .end().end().find('h4').click(function(){
+    if ($(this).hasClass('active')) return false;
     $(this).addClass('active');
     $('div.component',context).children('h4').not($(this)).removeClass('active');
     var ns = $(this).parent().attr('data-namespace');
@@ -1211,3 +1226,9 @@ ImageEditor.prototype = ImageEditor.fn = {
     }
   }
 };
+
+
+///////////////////////////////////////////////////////////////////////////////
+//                                  foot.js                                  //
+///////////////////////////////////////////////////////////////////////////////
+})(window,jQuery,Kinetic);
