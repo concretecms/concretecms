@@ -100,14 +100,18 @@ class Concrete5_Model_FileList extends DatabaseItemList {
 		$filenames = array();
 		$filename = $fh->getTemporaryDirectory() . '/' . $archive . '.zip';
 		if (count($files) > 0) {
-			foreach($files as $f) {
-				if (!in_array(basename($f->getPath()), $filenames)) {
-					$filestring .= "'" . addslashes($f->getPath()) . "' ";
-				}
-				$filenames[] = basename($f->getPath());
+			$zip = new ZipArchive;
+			$res = $zip->open($filename, ZipArchive::CREATE);
+			if ($res === TRUE) {
+				foreach($files as $f)
+					if (!in_array(basename($f->getPath()), $filenames))
+						$zip->addFile(addslashes($f->getPath()), basename($f->getPath()));
+				$zip->close();
+			} else {
+				die('Failed to create zip file as '.$filename);
 			}
-			exec(DIR_FILES_BIN_ZIP . ' -j \'' . addslashes($filename) . '\' ' . $filestring);
 		}
+
 	}
 	
 	protected function setupFileSetFilters() {	
