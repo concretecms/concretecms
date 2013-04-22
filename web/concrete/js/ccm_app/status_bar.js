@@ -6,7 +6,11 @@ ccm_statusBar = {
 		this.items.push(item);
 	},
 
-	activate: function() {
+	activate: function(containerID) {
+		if (!containerID) {
+			containerID = 'ccm-page-controls-wrapper';
+		}
+
 		if (this.items.length > 0) { 
 			var d = '<div id="ccm-page-status-bar" class="ccm-ui">';
 			for (i = 0; i < this.items.length; i++) {
@@ -37,7 +41,7 @@ ccm_statusBar = {
 				d += line;
 			}
 			d += '</div>';
-			$('#ccm-page-controls-wrapper').append(d);
+			$('#' + containerID).append(d);
 			$('#ccm-page-status-bar .dialog-launch').dialog();
 			$('#ccm-page-status-bar .alert').bind('closed', function() {
 				$(this).remove();
