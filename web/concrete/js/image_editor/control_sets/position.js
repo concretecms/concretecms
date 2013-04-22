@@ -6,7 +6,9 @@ im.bind('changeActiveElement',function(e){
 	if (e.eventData.elementType == 'stage') return im.disable();
 	im.enable();
 	if (im.selected) {
-		im.currentElement.setDraggable(false);
+		if (im.currentElement) {
+			im.currentElement.setDraggable(false);
+		}
 		im.currentElement = e.eventData;
 		im.currentElement.setDraggable(true);
 		im.origin = im.currentElement.getPosition();
@@ -40,7 +42,9 @@ im.bind('ChangeActiveAction',function(e){
 		updateSliders();
 	} else {
 		im.selected = false;
-		im.currentElement.setDraggable(false);
+		if (im.currentElement) {
+			im.currentElement.setDraggable(false);
+		}
 	}
 });
 
@@ -113,11 +117,11 @@ $('button.down',me).click(function(e) {
 	im.buildBackground();
 });
 $('button.center',me).click(function(e) {
-	sliderx.slider('value',0);
-	slidery.slider('value',0);
+	sliderx.slider('value',-Math.round(Math.round(im.center.x - im.saveWidth/2) - (im.center.x - im.currentElement.attrs.width/2)));
+	slidery.slider('value',Math.round(Math.round(im.center.y - im.saveHeight/2) - (im.center.y - im.currentElement.attrs.height/2)));
 	im.currentElement.transitionTo({
-		x:Math.round(im.center.x - im.saveWidth/2),
-		y:Math.round(im.center.y - im.saveHeight/2),
+		x:Math.round(im.center.x - im.currentElement.attrs.width/2),
+		y:Math.round(im.center.y - im.currentElement.attrs.height/2),
 		duration:.3,
 		callback:updateSliders
 	});
