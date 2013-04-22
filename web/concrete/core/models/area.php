@@ -338,6 +338,11 @@ class Concrete5_Model_Area extends Object {
 
 	}
 
+	public static function getAreaHandleFromID($arID) {
+		$db = Loader::db();
+		return $db->GetOne('select arHandle from Areas where arID = ?', array($arID));
+	}
+	
 	/**
 	 * Get all of the blocks within the current area for a given page
 	 * @param Page|Collection $c
