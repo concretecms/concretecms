@@ -28,16 +28,63 @@
 			case 'ajax_do_arrange': /* called via ajax */
 				if ($cp->canEditPageContents()) {
 					$nvc = $c->getVersionToModify();
-					$r = $nvc->processArrangement($_POST['area']);
+					$doProcessArrangement = true;
+					if (PERMISSIONS_MODEL == 'advanced') {
+						// first, we check to see if we have permissions to edit the area contents for the source area.
+						$arHandle = Area::getAreaHandleFromID($_POST['sourceBlockAreaID']);
+						$ar = Area::getOrCreate($nvc, $arHandle);
+						$ap = new Permissions($ar);
+						if (!$ap->canEditAreaContents()) {
+							$r = new stdClass;
+							$r->error = true;
+							$doProcessArrangement = false;
+							$r->message = t('You may not arrange the contents of area %s.', $arHandle);
+						} else {
+							// now we get further in. We check to see if we're dealing with both a source AND a destination area.
+							// if so, we check the area permissions for the destination area.
+							if ($_POST['sourceBlockAreaID'] != $_POST['destinationBlockAreaID']) {
+								$destAreaHandle = Area::getAreaHandleFromID($_POST['destinationBlockAreaID']);
+								$destArea = Area::getOrCreate($nvc, $destAreaHandle);
+								$destAP = new Permissions($destArea);
+								if (!$destAP->canEditAreaContents()) {
+									$r = new stdClass;
+									$r->error = true;
+									$doProcessArrangement = false;
+									$r->message = t('You may not arrange the contents of area %s.', $destAreaHandle);
+								} else {
+									// we're not done yet. Now we have to check to see whether this user has permission to add
+									// a block of this type to the destination area.
+									$b = Block::getByID($_REQUEST['sourceBlockID'], $nvc, $arHandle);
+									$bt = $b->getBlockTypeObject();
+									if (!$destAP->canAddBlock($bt)) {
+										$doProcessArrangement = false;
+										$r = new stdClass;
+										$r->error = true;
+										$r->message = t('You may not add %s to area %s.', $bt->getBlockTypeName(), $destAreaHandle);
+									}
+								}
+							}							
+						}
+
+						// now, if we get down here and $doProcessArrangement is still set to true, we perform the arrangement
+						// it will be set to true if we're in simple permissions mode, or if we've passed all the checks
+					}
+
+					if ($doProcessArrangement) {
+						$nvc->processArrangement($_POST['area']);
+					}
+
 					if (!is_object($r)) {
 						$r = new stdClass;
 						$r->error = false;
 					}
+
 				} else {
 					$r = new stdClass;
 					$r->error = true;
 					$r->message = t('Access Denied');
 				}
+				
 				print Loader::helper('json')->encode($r);
 				exit;
 				break;

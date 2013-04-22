@@ -633,6 +633,8 @@ ccm_setupGroupSearch = function(callback) {
 	});
 }
 
+/*
+
 ccm_saveArrangement = function(cID, origin, destination) {
 	
 	if (!cID) {
@@ -679,6 +681,64 @@ ccm_saveArrangement = function(cID, origin, destination) {
  		}});
 }
 
+*/
+
+ccm_saveArrangement = function(cID, block, origin, destination) {
+	if (!cID) {
+		cID = CCM_CID;
+	}
+
+	var bID = block.attr('id').substring(1, block.attr('id').indexOf('-'));
+	var baID = block.attr('id').substring(block.attr('id').indexOf('-')+1);
+	var destinationBlockAreaID = destination.attr('id').substring(1);
+
+	ccm_mainNavDisableDirectExit();
+	var serial = '&sourceBlockID=' + bID + '&sourceBlockAreaID=' + baID + '&destinationBlockAreaID=' + destinationBlockAreaID
+	if (origin.attr('id') == destination.attr('id')) {
+		var areaArray = [origin];
+	} else {
+		var areaArray = [origin, destination];
+	}
+	$.each(areaArray, function(idx, area) {
+		var $area = $(area);
+		areaStr = '&area[' + $area.attr('id').substring(1) + '][]=';
+		
+		bArray = $area.sortable('toArray');
+
+		for (i = 0; i < bArray.length; i++ ) {
+			if (bArray[i] != '' && bArray[i].substring(0, 1) == 'b') {
+				// make sure to only go from b to -, meaning b28-9 becomes "28"
+				var bID = bArray[i].substring(1, bArray[i].indexOf('-'));
+				var bObj = $('#' + bArray[i]);
+				if (bObj.attr('custom-style')) {
+					bID += '-' + bObj.attr('custom-style');
+				}
+				serial += areaStr + bID;
+			}
+		}
+	});
+
+ 	$.ajax({
+ 		type: 'POST',
+ 		url: CCM_DISPATCHER_FILENAME,
+ 		dataType: 'json',
+ 		data: 'cID=' + cID + '&ccm_token=' + CCM_SECURITY_TOKEN + '&btask=ajax_do_arrange' + serial,
+ 		success: function(r) {
+ 			ccm_parseJSON(r, function() {
+	 			$("div.ccm-area").removeClass('ccm-move-mode');
+				$('div.ccm-block-arrange').each(function() {
+					$(this).addClass('ccm-block');
+					$(this).removeClass('ccm-block-arrange');
+				});
+				ccm_arrangeMode = false;
+				$(".ccm-main-nav-edit-option").fadeIn(300);
+				ccmAlert.hud(ccmi18n.arrangeBlockMsg, 2000, 'up_down', ccmi18n.arrangeBlock);
+			});
+ 		}});
+
+
+}
+
 ccm_arrangeInit = function() {
 	//$(document.body).append('<img src="' + CCM_IMAGE_PATH + '/topbar_throbber.gif" width="16" height="16" id="ccm-topbar-loader" />');
 	
@@ -705,7 +765,13 @@ ccm_arrangeInit = function() {
 			accept: 'div.ccm-block-arrange',
 			opacity: 0.5,
 			stop: function(e, ui) {
-				ccm_saveArrangement(cID, area, ui.item.closest('.ccm-area'));
+				// two possibilities here.
+				// 1, we could be dropping a block into a different area
+				// or are we could be rearranging an existing area. Very
+				// different use cases.
+				var origin = area;
+				var destination = ui.item.closest('.ccm-area');
+				ccm_saveArrangement(cID, ui.item, origin, destination);
 			}
 		});
 	});
