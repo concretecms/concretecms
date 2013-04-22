@@ -113,6 +113,11 @@ class Concrete5_Model_FileList extends DatabaseItemList {
 						die('Failed to create zip file as '.$filename);
 					}
 				} else {
+					foreach($files as $f) {
+						if (!in_array(basename($f->getPath()), $filenames))
+							$filestring .= "'" . addslashes($f->getPath()) . "' ";
+						$filenames[] = basename($f->getPath());
+					}
 					exec(DIR_FILES_BIN_ZIP . ' -j \'' . addslashes($filename) . '\' ' . $filestring);
 				}
 			}catch(Exception $e) {
