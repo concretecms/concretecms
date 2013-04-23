@@ -35,7 +35,18 @@ class Concrete5_Model_Composer extends Object {
 				$cmpID, $ct->getCollectionTypeID()
 			));
 		}
-		return Composer::getByID($db->Insert_ID());
+
+		$cmp = Composer::getByID($db->Insert_ID());
+
+		// copy permissions from the defaults to the composer
+		$cpk = PermissionKey::getByHandle('access_composer_permissions');
+		$permissions = PermissionKey::getList('composer');
+		foreach($permissions as $pk) { 
+			$pk->setPermissionObject($cmp);
+			$pk->copyFromDefaultsToComposer($cpk);
+		}
+
+		return $cmp;
 	}
 
 	public function update($cmpName, $types) {

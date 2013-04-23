@@ -24,8 +24,12 @@ class Concrete5_Controller_Dashboard_Composer_Write extends DashboardBaseControl
 
 		$this->addHeaderItem(Loader::helper('html')->css('ccm.composer.css'));
 		$this->addFooterItem(Loader::helper('html')->javascript('ccm.composer.js'));
+		$cmpDraftID = 0;
+		if (is_object($this->draft)) {
+			$cmpDraftID = $this->draft->getComposerDraftID();
+		}
 		$js =<<<EOL
-<script type="text/javascript">$(function() { $('form[data-form=composer]').ccmcomposer({saveURL: '{$saveURL}', discardURL: '{$discardURL}', publishURL: '{$publishURL}'})});</script>
+<script type="text/javascript">$(function() { $('form[data-form=composer]').ccmcomposer({cmpDraftID: {$cmpDraftID}, saveURL: '{$saveURL}', discardURL: '{$discardURL}', publishURL: '{$publishURL}'})});</script>
 EOL;
 		$this->addFooterItem($js);
 

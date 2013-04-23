@@ -61,12 +61,20 @@
         if (settings.autoSaveEnabled) {
           methods.saveinternal = setInterval(function() {
             methods.private.saveDraft($this);
+            if (parseInt(settings.cmpDraftID) == 0) {
+              // this is the first auto-save.
+              $this.find('button[data-composer-btn=permissions]').show();
+            }
           }, settings.autoSaveTimeout);
         }
 
         $this.find('button[data-composer-btn=exit]').on('click', function() {
           settings.onExit();
         });
+
+        if (parseInt(settings.cmpDraftID) > 0) {
+          $this.find('button[data-composer-btn=permissions]').show();
+        }
 
         $this.find('button[data-composer-btn=discard]').on('click', function() {
           if (!$this.data('discardURL')) {

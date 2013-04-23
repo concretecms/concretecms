@@ -13,6 +13,10 @@
 				</div>
 			</div>
 		</form>
+		<div class="dialog-buttons">
+			<button class="btn pull-left" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel')?></button>
+			<button class="btn btn-primary pull-right" onclick="$('#ccm-composer-add-set form').submit()"><?=t('Add Set')?></button>
+		</div>
 	</div>
 </div>
 
@@ -79,28 +83,12 @@
 <script type="text/javascript">
 $(function() {
 	$('a[data-dialog=add_set]').on('click', function() {
-		$("#ccm-composer-add-set").dialog({
+		jQuery.fn.dialog.open({
+			element: '#ccm-composer-add-set',
 			modal: true,
 			width: 320,
-			dialogClass: 'ccm-ui',
 			title: '<?=t("Add Control Set")?>',
-			height: 235, 
-			buttons: [
-				{
-					'text': '<?=t("Cancel")?>',
-					'class': 'btn pull-left',
-					'click': function() {
-						$(this).dialog('close');
-					}
-				},
-				{
-					'text': '<?=t("Add Set")?>',
-					'class': 'btn pull-right btn-primary',
-					'click': function() {
-						$('#ccm-composer-add-set form').submit();
-					}
-				}
-			]
+			height: 120
 		});
 	});
 	$('a[data-delete-set]').on('click', function() {
