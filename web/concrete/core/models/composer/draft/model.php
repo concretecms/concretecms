@@ -51,6 +51,7 @@ class Concrete5_Model_ComposerDraft extends Object {
 		return $outputControls;
 	}
 
+	public function getPermissionObjectIdentifier() {return $this->cmpDraftID;}
 	public function getComposerDraftTargetParentPageID() {return $this->cmpDraftTargetParentPageID;}
 	
 	public static function getByID($cmpDraftID) {
@@ -71,10 +72,10 @@ class Concrete5_Model_ComposerDraft extends Object {
 		$db->Execute('delete from ComposerDraftBlocks where cmpDraftID = ?', array($this->cmpDraftID));
 	}
 
-	public function getMyDrafts() {
+	public function getList() {
 		$db = Loader::db();
 		$u = new User();
-		$r = $db->Execute('select ComposerDrafts.cmpDraftID from ComposerDrafts where uID = ? order by cmpDateCreated desc', array($u->getUserID()));
+		$r = $db->Execute('select cmpDraftID from ComposerDrafts order by cmpDateCreated desc');
 		$pages = array();
 		while ($row = $r->FetchRow()) {
 			$entry = ComposerDraft::getByID($row['cmpDraftID']);

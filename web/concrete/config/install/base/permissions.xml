@@ -16,6 +16,7 @@
         <category handle="marketplace_newsflow" package=""/>
         <category handle="basic_workflow" package=""/>
         <category handle="composer" package=""/>
+        <category handle="composer_draft" package=""/>
     </permissioncategories>
 
     <permissionkeys>
@@ -91,6 +92,8 @@
         		
         <!-- composer //-->
         <permissionkey handle="access_composer" name="Access Composer" description="" package="" category="composer" />
+        <permissionkey handle="edit_composer_permissions" name="Edit Composer Permissions" description="" package="" category="composer" />
+        <permissionkey handle="edit_composer_draft" name="Edit Composer Draft" description="" package="" category="composer_draft" />
 
         <!-- users //-->
         <permissionkey handle="access_user_search" has-custom-class="true" name="Access User Search" description="" package="" category="user">
@@ -140,6 +143,12 @@
         </permissionkey>
 
         <permissionkey handle="assign_user_groups" has-custom-class="true" name="Assign Groups to User" description="" package="" category="user">
+            <access>
+                <group name="Administrators"/>
+            </access>
+        </permissionkey>
+
+        <permissionkey handle="access_composer_permissions" name="Access Composer Permissions" package="" category="admin">
             <access>
                 <group name="Administrators"/>
             </access>
@@ -221,6 +230,7 @@
 		        <category handle="marketplace_newsflow" />
 		        <category handle="basic_workflow" />
                 <category handle="composer" />
+                <category handle="composer_draft" />
 			</categories>
         </permissionaccessentitytype>
         <permissionaccessentitytype handle="user" name="User" package="">
@@ -237,6 +247,7 @@
 		        <category handle="marketplace_newsflow" />
 		        <category handle="basic_workflow" />
                 <category handle="composer" />
+                <category handle="composer_draft" />
 			</categories>
         </permissionaccessentitytype>
         <permissionaccessentitytype handle="group_set" name="Group Set" package="">
@@ -253,6 +264,7 @@
 		        <category handle="marketplace_newsflow" />
 		        <category handle="basic_workflow" />
                 <category handle="composer" />
+                <category handle="composer_draft" />
 			</categories>
         </permissionaccessentitytype>
         <permissionaccessentitytype handle="group_combination" name="Group Combination" package="">
@@ -269,11 +281,13 @@
 		        <category handle="marketplace_newsflow" />
 		        <category handle="basic_workflow" />
                 <category handle="composer" />
+                <category handle="composer_draft" />
 			</categories>
         </permissionaccessentitytype>
         <permissionaccessentitytype handle="page_owner" name="Page Owner" package="">
 			<categories>
 		        <category handle="page" />
+                <category handle="composer_draft" />
 			</categories>
         </permissionaccessentitytype>
         <permissionaccessentitytype handle="file_uploader" name="File Uploader" package="">

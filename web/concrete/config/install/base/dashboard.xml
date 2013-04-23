@@ -12,9 +12,6 @@
 				</attributekey>
 			</attributes>
         </page>
-        <page name="Composers" path="/dashboard/composer/list" filename="/dashboard/composer/list.php" pagetype="" description="" package="">
-
-        </page>
 
         <page name="Add Composer" path="/dashboard/composer/list/add" filename="/dashboard/composer/list/add.php" pagetype="" description="" package="">
 
@@ -25,6 +22,10 @@
         </page>
 
         <page name="Composer Output" path="/dashboard/composer/list/output" filename="/dashboard/composer/list/output.php" pagetype="" description="" package="">
+
+        </page>
+
+        <page name="Composer Permissions" path="/dashboard/composer/list/permissions" filename="/dashboard/composer/list/permissions.php" pagetype="" description="" package="">
 
         </page>
 
@@ -48,6 +49,15 @@
 				</attributekey>
 			</attributes>
         </page>
+
+        <page name="Composers" path="/dashboard/composer/list" filename="/dashboard/composer/list.php" pagetype="" description="" package="">
+        	<attributes>
+				<attributekey handle="icon_dashboard">
+					<value>icon-cog</value>
+				</attributekey>
+			</attributes>
+        </page>
+
         <page name="Sitemap" path="/dashboard/sitemap" filename="/dashboard/sitemap/view.php" pagetype="" description="Whole world at a glance." package="">
 			<attributes>
 				<attributekey handle="meta_keywords">

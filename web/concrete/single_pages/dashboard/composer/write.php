@@ -9,21 +9,12 @@
 		<? Loader::helper('composer/form')->display($composer, $draft); ?>
 	</div>
 	<div class="ccm-pane-footer">
-		<? Loader::helper('composer/form')->displayButtons(); ?>
+		<? Loader::helper('composer/form')->displayButtons($composer, $draft); ?>
 	</div>
 
 
 	</form>
 
-	<style type="text/css">
-		button[data-composer-btn=save] {
-			margin-left: 10px;
-		}
-		button[data-composer-btn=publish] {
-			margin-left: 10px;
-		}
-
-	</style>
 
 	<?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(false)?>
 

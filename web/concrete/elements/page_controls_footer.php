@@ -98,9 +98,17 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
 				<? if ($canEditPageContents) { ?>
 					<li class="ccm-toolbar-hover-menu-edit"><a href="<?=DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=<?=$c->getCollectionID()?>&ctask=check-out<?=$token?>"><?=t('Edit Page')?></a></li>
 					<li class="divider"></li>
+				<? } 
+				$writePage = Page::getByPath('/dashboard/composer/write');
+				$writePageP = new Permissions($writePage);
+				$draftsPage = Page::getByPath('/dashboard/composer/drafts');
+				$draftsPageP = new Permissions($writePage);
+				if ($writePageP->canViewPage()) { ?>
+				<li><a href="<?=$this->url('/dashboard/composer/write')?>"><?php echo t('New Page')?></a></li>
+				<? }
+				if ($draftsPageP->canViewPage()) { ?>
+					<li><a href="<?=$this->url('/dashboard/composer/drafts')?>"><?php echo t('Drafts')?></a></li>
 				<? } ?>
-				<li><a class="dialog-launch" dialog-width="645" dialog-modal="false" dialog-height="345" dialog-title="<?php echo t('New Page')?>" href="<?php echo REL_DIR_FILES_TOOLS_REQUIRED?>/edit_collection_popup.php?cID=<?php echo $cID?>&ctask=add"class="btn"><?php echo t('New Page')?></a></li>
-				<li><a class="dialog-launch" dialog-width="645" dialog-modal="false" dialog-height="345" dialog-title="<?php echo t('Drafts')?>" href="<?php echo REL_DIR_FILES_TOOLS_REQUIRED?>/pages/drafts"class="btn"><?php echo t('Drafts')?></a></li>
 				</ul>
 
 				<? } ?>

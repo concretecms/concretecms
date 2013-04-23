@@ -173,6 +173,23 @@
       <default value="0" />
     </field>
   </table>
+  <table name="ComposerDraftPermissionAssignments">
+    <field name="cmpDraftID" type="I" size="10">
+      <key/>
+      <default value="0"/>
+      <unsigned/>
+    </field>
+    <field name="pkID" type="I" size="10">
+      <key/>
+      <default value="0"/>
+      <unsigned/>
+    </field>
+    <field name="paID" type="I" size="10">
+      <key/>
+      <default value="0"/>
+      <unsigned/>
+    </field>
+  </table>
   <table name="ComposerPermissionAssignments">
     <field name="cmpID" type="I" size="10">
       <key/>

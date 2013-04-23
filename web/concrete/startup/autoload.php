@@ -329,7 +329,12 @@ $classes = array(
 	'ComposerPermissionAssignment' => array('model','permission/assignments/composer'),
 	'ComposerPermissionAccess' => array('model','permission/access/categories/composer'),
 	'ComposerPermissionAccessListItem' => array('model','permission/access/list_items/composer'),
-	'ComposerPermissionResponse' => array('model','permission/response/composer')
+	'ComposerPermissionResponse' => array('model','permission/response/composer'),
+	'ComposerDraftPermissionKey' => array('model','permission/keys/composer_draft'),
+	'ComposerDraftPermissionAssignment' => array('model','permission/assignments/composer_draft'),
+	'ComposerDraftPermissionAccess' => array('model','permission/access/categories/composer_draft'),
+	'ComposerDraftPermissionAccessListItem' => array('model','permission/access/list_items/composer_draft'),
+	'ComposerDraftPermissionResponse' => array('model','permission/response/composer_draft')
 
 );
 
