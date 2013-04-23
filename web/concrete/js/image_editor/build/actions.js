@@ -30,7 +30,20 @@ im.bind('imageload',function(){
     });
   }
 });
-
+im.adjustSavers = function() {
+  if (im.activeElement.elementType != "stage" && im.autoCrop) {
+    im.alterCore('saveWidth',Math.ceil(-(im.activeElement.getX() - im.center.x)*2));
+    im.alterCore('saveHeight',Math.ceil(-(im.activeElement.getY() - im.center.y)*2));
+    if ((im.activeElement.getWidth() - im.saveWidth / 2) * 2 > im.saveWidth) {
+      im.alterCore('saveWidth', Math.ceil((im.activeElement.getWidth() - im.saveWidth / 2) * 2));
+    }
+    if ((im.activeElement.getHeight() - im.saveHeight / 2) * 2 > im.saveHeight) {
+      im.alterCore('saveHeight', Math.ceil((im.activeElement.getHeight() - im.saveHeight / 2) * 2));
+    }
+    im.buildBackground();
+    im.fire('saveSizeChange');
+  }
+};
 im.bind('ControlSetsLoaded',function(){
   im.fire('LoadingComponents');
   im.showLoader('Loading Components..');

@@ -30,7 +30,6 @@ im.on("changeActiveAction",function(e){
 	updateFields();
 });
 
-
 var me = $(this);
 String.prototype.spx = function(){return Number(this.replace('px',''))}
 var fonts = $($.parseHTML($('script.font-slideout',me).html()));
@@ -43,7 +42,7 @@ fonts.find('li').css('cursor','pointer').click(function(){
 });
 
 me.find('button.fontname').click(function(e){
-	if (im.slideOut.hasClass('active')) return im.hideSlideOut();
+	if (im.slideOut.hasClass('active')) return im.hideSlideOut(function(){$(this).click()});
 	im.showSlideOut(fonts.clone(1));
 });
 var colorButton = me.find('button.color');

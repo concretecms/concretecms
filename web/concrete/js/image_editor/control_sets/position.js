@@ -1,163 +1,138 @@
-// Handle selection
+var me = $(this), elem = this;
 im.selected = false;
+im.disable();
+im.origin = {};
 im.bind('changeActiveElement',function(e){
-	if (im.selected) im.activeElement.setDraggable(true);
-	if (im.activeElement.elementType == 'stage') {
-		im.disable();
-		return;
-	}
+	if (e.eventData.elementType == 'stage') return im.disable();
 	im.enable();
-	if (im.activeElement.isBound !== true) {
-		im.activeElement.on('dragmove',function(e){im.trigger('activeElementDragMove',e)});
-		im.activeElement.isBound = true;
+	if (im.selected) {
+		if (im.currentElement) {
+			im.currentElement.setDraggable(false);
+		}
+		im.currentElement = e.eventData;
+		im.currentElement.setDraggable(true);
+		im.origin = im.currentElement.getPosition();
+		if (!im.currentElement.isBound) {
+			im.currentElement.on('dragmove',function() {
+				updateInputs();
+			});
+			im.currentElement.on('dragend',function(){
+				updateSliders();
+			});
+			im.currentElement.isBound = true;
+		}
+		updateSliders();
 	}
-	updateSliders();
-});
-im.bind('beforeChangeActiveElement',function(e){
-	if (im.activeElement.elementType == 'stage') return;
-	im.activeElement.setDraggable(false);
 });
 im.bind('ChangeActiveAction',function(e){
-	if (e.eventData != im.namespace) {
-		im.selected = false;
-		if (im.activeElement.elementType != 'stage') {
-			im.activeElement.setDraggable(false);
-		}
-	} else {
+	if (e.eventData == im.namespace) {
 		im.selected = true;
-		im.activeElement.setDraggable(true);
+		im.currentElement = im.activeElement;
+		im.currentElement.setDraggable(true);
+		im.origin = im.currentElement.getPosition();
+		if (!im.currentElement.isBound) {
+			im.currentElement.on('dragmove',function() {
+				updateInputs();
+			});
+			im.currentElement.on('dragend',function(){
+				updateSliders();
+			});
+			im.currentElement.isBound = true;
+		}
+		updateSliders();
+	} else {
+		im.selected = false;
+		if (im.currentElement) {
+			im.currentElement.setDraggable(false);
+		}
 	}
 });
-var me = $(this);
-im.disable();
 
-var sliderx = $('div.xslider',me).slider({
+var slidery = $('div.vertical > div',me);
+var sliderx = $('div.horizontal > div',me);
+slidery.slider({
 	step: 1,
 	range: "min",
-	min:-im.activeElement.getWidth(),
-	max:im.width,
-	value:Math.round(im.activeElement.getX()),
-	animate: true,
-	create: function(ev,e){
-		$('input.x',me).val(im.activeElement.getX());
-	},
+	min:-im.saveHeight,
+	max:im.saveHeight,
+	value:0,
+	animate: 300,
 	slide: function(ev,e){
-		im.activeElement.setX(e.value);
-		im.trigger('activeElementMove');
+		im.activeElement.setY(-e.value + Math.round(im.center.y - im.saveHeight/2));
+		im.trigger('activeElementMove', e);
+		im.trigger('sliderMove', e, elem);
+	},
+	stop: function(ev,e){
+		im.trigger('activeElementDragMove', e);
+		im.trigger('activeElementDragMove', e, elem);
+		updateSliders();
 	}
 });
-var slidery = $('div.yslider',me).slider({
+sliderx.slider({
 	step: 1,
 	range: "min",
-	min:-im.activeElement.getHeight(),
-	max:im.height,
-	value:Math.round(im.activeElement.getY()),
-	animate: true,
-	create: function(ev,e){
-		$('input.y',me).val(im.activeElement.getY());
-	},
+	min:-im.saveWidth,
+	max:im.saveWidth,
+	value:0,
+	animate: 300,
 	slide: function(ev,e){
-		im.activeElement.setY(e.value);
-		im.trigger('activeElementMove');
+		im.activeElement.setX(e.value + Math.round(im.center.x - im.saveWidth/2));
+		im.trigger('activeElementMove', e);
+		im.trigger('sliderMove', e, elem);
+	},
+	stop: function(ev,e){
+		im.trigger('activeElementDragMove', e);
+		im.trigger('activeElementDragMove', e, elem);
+		updateSliders();
 	}
 });
+
+im.bind('sliderMove',function(){
+	im.currentElement.parent.draw();
+	im.buildBackground();
+	$('div.horizontal > input').val(sliderx.slider('option', 'value') || "0");
+	$('div.vertical > input').val(slidery.slider('option', 'value') || "0");
+	updateInputs();
+},elem);
 
 var updateSliders = function() {
-	var max = {x:im.stage.getWidth(),y:im.stage.getHeight()},
-		min = {x:-im.activeElement.getWidth(),y:-im.activeElement.getHeight()},
-		cur = {x:im.activeElement.getX(),y:im.activeElement.getY()};
-	sliderx.slider("option", "min", min.x);
-	sliderx.slider("option", "max", max.x);
-	sliderx.slider('value',cur.x);
-	$('input.x',me).val(cur.x);
-
-	slidery.slider("option", "min", min.y);
-	slidery.slider("option", "max", max.y);
-	slidery.slider('value',cur.y);
-	$('input.y',me).val(cur.y);
+	sliderx.slider('option', 'value', -Math.round(Math.round(im.center.x - im.saveWidth/2) - im.currentElement.attrs.x));
+	slidery.slider('option', 'value', Math.round(Math.round(im.center.y - im.saveHeight/2) - im.currentElement.attrs.y));
+	updateInputs();
+};
+var inputx = $('div.horizontal > input',me), inputy = $('div.vertical > input',me);
+var updateInputs = function() {
+	inputx.val(-Math.round(Math.round(im.center.x - im.saveWidth/2) - im.currentElement.attrs.x) || "0");
+	inputy.val(Math.round(Math.round(im.center.y - im.saveHeight/2) - im.currentElement.attrs.y) || "0");
 };
 
-updateSliders();
-
-$('input.y',me).keyup(function(e){
-	var m = $(this);
-	v = parseInt(Number(m.val().replace(/[^0-9\.\-]/g,'')));
-	if (e.keyCode == 38) v++;
-	if (e.keyCode == 40) v--;
-	im.activeElement.setY(v);
-	im.trigger('activeElementMove');
-	e.preventDefault();
-});
-$('input.x',me).keyup(function(e){
-	var m = $(this);
-	v = parseInt(Number(m.val().replace(/[^0-9\.\-]/g,'')));
-	if (e.keyCode == 38) v++;
-	if (e.keyCode == 40) v--;
-	im.activeElement.setX(v);
-	im.trigger('activeElementMove');
-	e.preventDefault();
-});
 $('button.up',me).click(function(e) {
-	im.activeElement.parent.moveUp();
-  	im.foreground.moveToTop();
+	if (im.foreground.getZIndex() - im.activeElement.parent.getZIndex() == 1) return;
+	im.currentElement.parent.moveUp();
+	im.buildBackground();
 });
 $('button.down',me).click(function(e) {
-	// Don't go below the savers
 	if (im.activeElement.parent.getZIndex() - im.background.getZIndex() == 1) return;
-	im.activeElement.parent.moveDown();
+	im.currentElement.parent.moveDown();
+	im.buildBackground();
 });
-$('button.center',me).click(function(e){
-	im.activeElement.transitionTo({
-		x:Math.round(im.width / 2 - im.activeElement.getWidth()/2),
-		y:Math.round(im.height / 2 - im.activeElement.getHeight()/2),
-		duration:.2,
-		callback: function(){
-			im.trigger('activeElementMove');
-		}
-	})
-})
-im.activeElement.on('dragend',function(e){
-	var x = im.activeElement.getX(), y = im.activeElement.getY();
-	im.trigger('activeElementDragMove');
-	im.trigger('activeElementMove');
-})
-im.activeElement.on('dragstart',function(e){
-	im.trigger('activeElementDragStart');
-})
-// Use our API, not kinetics.
-//im.activeElement.on('dragmove',function(e){im.trigger('activeElementDragMove',e)});
-
-im.bind('activeElementMove',function(e){
-	var x = im.activeElement.getX(), y = im.activeElement.getY(),
-		height=im.activeElement.getHeight(),width=im.activeElement.getWidth();
-
-	// Update Sliders
-	sliderx.slider('value',x);
-	slidery.slider('value',y);
-	$('input.x',me).val(x);
-	$('input.y',me).val(y);
-	if (im.activeElement.parent) {
-		im.activeElement.parent.draw();
-	} else if (typeof im.activeElement.draw == 'function') {
-		im.activeElement.draw();
-	}
-
-	im.fire('activeElementDragMove');
+$('button.center',me).click(function(e) {
+	sliderx.slider('value',-Math.round(Math.round(im.center.x - im.saveWidth/2) - (im.center.x - im.currentElement.attrs.width/2)));
+	slidery.slider('value',Math.round(Math.round(im.center.y - im.saveHeight/2) - (im.center.y - im.currentElement.attrs.height/2)));
+	im.currentElement.transitionTo({
+		x:Math.round(im.center.x - im.currentElement.attrs.width/2),
+		y:Math.round(im.center.y - im.currentElement.attrs.height/2),
+		duration:.3,
+		callback:updateSliders
+	});
 });
-
-im.bind('activeElementDragMove',function(e) {
-	// Update Canvas
-	if (im.activeElement.elementType != "stage" && im.autoCrop) {
-		im.alterCore('saveWidth',Math.ceil(-(im.activeElement.getX() - im.center.x)*2));
-		im.alterCore('saveHeight',Math.ceil(-(im.activeElement.getY() - im.center.y)*2));
-		if ((im.activeElement.getWidth() - im.saveWidth / 2) * 2 > im.saveWidth) {
-			im.alterCore('saveWidth', Math.ceil((im.activeElement.getWidth() - im.saveWidth / 2) * 2));
-		}
-		if ((im.activeElement.getHeight() - im.saveHeight / 2) * 2 > im.saveHeight) {
-			im.alterCore('saveHeight', Math.ceil((im.activeElement.getHeight() - im.saveHeight / 2) * 2));
-		}
-		if (im.autoCrop) {
-			im.buildBackground();
-		}
-	}
+$('div.cancelbutton',me).click(function(e) {
+	sliderx.slider('value', -Math.round(Math.round(im.center.x - im.saveWidth/2) - im.origin.x));
+	slidery.slider('value',Math.round(Math.round(im.center.y - im.saveHeight/2) - im.origin.y));
+	im.currentElement.transitionTo({
+		x:im.origin.x,
+		y:im.origin.y,
+		duration:.3,
+		callback:updateSliders
+	});
 });
