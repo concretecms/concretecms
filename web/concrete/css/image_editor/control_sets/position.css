@@ -1,10 +1,26 @@
-div.control-sets > div.position div.xslider,
-div.control-sets > div.position div.yslider {
-  width: 75%;
-  display: inline-block;
+div.controlset.position > div.control div.horizontal > span,
+div.controlset.position > div.control div.vertical > span {
+  box-shadow: none;
+  color: #666;
+  display: block;
 }
-div.control-sets > div.position input.x,
-div.control-sets > div.position input.y {
-  width: 30px;
+div.controlset.position > div.control div.horizontal > input,
+div.controlset.position > div.control div.vertical > input {
+  width: 50px;
+  float: right;
+}
+div.controlset.position > div.control div.horizontal > div,
+div.controlset.position > div.control div.vertical > div {
   display: inline-block;
+  margin-top: 6px;
+  width: 190px;
+}
+div.controlset.position > div.control button.center,
+div.controlset.position > div.control button.center {
+  margin-bottom: 20px;
+}
+div.controlset.position > div.control div.horizontal,
+div.controlset.position > div.control div.vertical {
+  display: block;
+  margin-bottom: 20px;
 }

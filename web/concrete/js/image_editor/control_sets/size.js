@@ -8,6 +8,8 @@ locker.click(function(){
 
 im.on('changeActiveAction',function(e){
   if (e.eventData === im.namespace) {
+    console.log('autocrop', im.autoCrop, me);
+    $('input.autocrop').get(0).checked = !!im.autoCrop;
     selected = true;
     locked = true;
     locker[0].checked = locked;
@@ -52,25 +54,30 @@ control.on('dragstart',function(){
   ratio = im.activeElement.getHeight() / im.activeElement.getWidth();
   startpos.x = control.getX();
   startpos.y = control.getY();
+  startpos.obx = im.activeElement.getX();
+  startpos.oby = im.activeElement.getY();
   startpos.width = im.activeElement.getWidth();
   startpos.height = im.activeElement.getHeight();
 });
 
 control.on('dragmove',function(){
-  var offsetX = (startpos.x - control.getX()),
-      offsetY = (startpos.y - control.getY()),
+  var offsetX = (startpos.x - control.getX()) * 2,
+      offsetY = (startpos.y - control.getY()) * 2,
       newWidth = startpos.width - offsetX,
-      newHeight = startpos.height - offsetY
+      newHeight = startpos.height - offsetY;
   if (locked) {
     if (offsetX < offsetY) {
-      newHeight = Math.abs(newWidth * ratio);
+      newHeight = newWidth * ratio;
     } else {
-      newWidth = Math.abs(newHeight / ratio);
+      newWidth = newHeight / ratio;
     }
   }
-  im.activeElement.setWidth(newWidth);
-  im.activeElement.setHeight(newHeight);
-  im.stage.draw();
+  im.activeElement.attrs.x = startpos.obx + (startpos.width - Math.max(newWidth,0)) / 2;
+  im.activeElement.attrs.y = startpos.oby + (startpos.height - Math.max(newHeight,0)) / 2;
+  im.activeElement.setWidth(Math.max(newWidth,0));
+  im.activeElement.setHeight(Math.max(newHeight,0));
+  im.activeElement.parent.draw();
+  im.adjustSavers();
 });
 
 control.on('mouseover',function(){

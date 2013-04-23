@@ -2767,7 +2767,7 @@
       <default value="0"/>
     </field>
   </table>
-  <table name="SystemImageEditorFilters">
+  <table name="SystemImageEditorComponents">
     <field name="scsID" type="I" size="10">
       <key/>
       <notnull/>
@@ -2793,7 +2793,7 @@
       <default value="0"/>
     </field>
   </table>
-  <table name="SystemImageEditorComponents">
+  <table name="SystemImageEditorShapes">
     <field name="scsID" type="I" size="10">
       <key/>
       <notnull/>

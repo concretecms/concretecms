@@ -2,6 +2,7 @@
 var ImageEditor = function (settings) {
   "use strict";
   if (settings === undefined) return this;
+  settings.pixelRatio = 1;
   var im            = this, x, round = function(float){return Math.round(float)};
   im.width          = settings.width;
   im.height         = settings.height;
@@ -12,6 +13,7 @@ var ImageEditor = function (settings) {
   im.namespaces     = {};
   im.controlSets    = {};
   im.components     = {};
+  im.settings       = settings;
   im.filters        = {};
   im.scale          = 1;
   im.crosshair      = new Image();

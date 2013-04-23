@@ -15,14 +15,8 @@ im.addElement = function(object,type) {
   object.doppelganger._drawFunc = object.getDrawFunc();
   object.doppelganger.setDrawFunc(function(canvas){
     if (typeof this._drawFunc == "function") {
-      for (var attr in this.doppelganger.attrs) {
-        if (attr == 'drawFunc' ||
-            attr == 'drawHitFunc' ||
-            attr == 'strokeWidth' ||
-            attr == 'fill') continue;
-        this.attrs[attr] = this.doppelganger.attrs[attr];
-      }
       this.attrs.strokeWidth = 1/im.scale;
+      this.setFill('transparent');
       if (type == 'image') { this.attrs.image = ''; }
       this._drawFunc(canvas);
     }
@@ -35,8 +29,15 @@ im.addElement = function(object,type) {
   });
   object._drawFunc = object.getDrawFunc();
   object.setDrawFunc(function(canvas) {
-    this._drawFunc(canvas);
+    for (var attr in this.attrs) {
+      if (attr == 'drawFunc' ||
+          attr == 'drawHitFunc' ||
+          attr == 'strokeWidth' ||
+          attr == 'fill') continue;
+      this.doppelganger.attrs[attr] = this.attrs[attr];
+    }
     im.foreground.draw();
+    this._drawFunc(canvas);
   });
 
   object.on('mouseover',function(){
