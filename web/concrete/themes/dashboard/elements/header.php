@@ -132,7 +132,7 @@ $backgroundImage = Loader::helper('concrete/dashboard')->getDashboardBackgroundI
 		</ul>
 
 		</li>
-		<li class="ccm-toolbar-dashboard pull-right"><a href="<?=$this->url('/dashboard')?>" data-toggle="ccm-toolbar-hover-menu" data-toggle-menu="#ccm-toolbar-menu-dashboard"><i class="icon-briefcase"></i></a>
+		<li class="ccm-toolbar-dashboard pull-right"><a href="<?=$this->url('/dashboard')?>" data-toggle="ccm-toolbar-hover-menu" data-toggle-menu="#ccm-toolbar-menu-dashboard"><i class="icon-th-large"></i></a>
 
 		<?
 		$dh = Loader::helper('concrete/dashboard');
