@@ -6,6 +6,9 @@ class Concrete5_Model_Composer extends Object {
 	public function getComposerName() {return $this->cmpName;}
 	public function getComposerTargetTypeID() {return $this->cmpTargetTypeID;}
 	public function getComposerTargetObject() {return $this->cmpTargetObject;}
+	public function getComposerAllowedPageTypes() {
+		return $this->cmpAllowedPageTypes;
+	}
 
 	public function getPermissionObjectIdentifier() {
 		return $this->getComposerID();
@@ -13,27 +16,35 @@ class Concrete5_Model_Composer extends Object {
 
 	public function getComposerPageTypeObjects() {
 		$db = Loader::db();
-		$types = array();
-		$r = $db->Execute('select ctID from ComposerPageTypes where cmpID = ? order by ctID asc', array($this->cmpID));
-		while ($row = $r->FetchRow()) {
-			$ct = CollectionType::getByID($row['ctID']);
-			if (is_object($ct)) {
-				$types[] = $ct;
+		if ($this->cmpAllowedPageTypes == 'C') {
+			$types = array();
+			$r = $db->Execute('select ctID from ComposerPageTypes where cmpID = ? order by ctID asc', array($this->cmpID));
+			while ($row = $r->FetchRow()) {
+				$ct = CollectionType::getByID($row['ctID']);
+				if (is_object($ct)) {
+					$types[] = $ct;
+				}
 			}
+			return $types;
+		} else {
+			$pagetypes = CollectionType::getList();
+			return $pagetypes;
+
 		}
-		return $types;
 	}
 
-	public static function add($cmpName, $types) {
+	public static function add($cmpName, $cmpAllowedPageTypes, $types) {
 		$db = Loader::db();
-		$db->Execute('insert into Composers (cmpName) values (?)', array(
-			$cmpName
+		$db->Execute('insert into Composers (cmpName, cmpAllowedPageTypes) values (?, ?)', array(
+			$cmpName, $cmpAllowedPageTypes
 		));
 		$cmpID = $db->Insert_ID();
-		foreach($types as $ct) {
-			$db->Execute('insert into ComposerPageTypes (cmpID, ctID) values (?, ?)', array(
-				$cmpID, $ct->getCollectionTypeID()
-			));
+		if ($cmpAllowedPageTypes == 'C') {
+			foreach($types as $ct) {
+				$db->Execute('insert into ComposerPageTypes (cmpID, ctID) values (?, ?)', array(
+					$cmpID, $ct->getCollectionTypeID()
+				));
+			}
 		}
 
 		$cmp = Composer::getByID($db->Insert_ID());
@@ -61,17 +72,20 @@ class Concrete5_Model_Composer extends Object {
 		return $cmp;
 	}
 
-	public function update($cmpName, $types) {
+	public function update($cmpName, $cmpAllowedPageTypes, $types) {
 		$db = Loader::db();
-		$db->Execute('update Composers set cmpName = ? where cmpID = ?', array(
+		$db->Execute('update Composers set cmpName = ?, cmpAllowedPageTypes = ? where cmpID = ?', array(
 			$cmpName,
+			$cmpAllowedPageTypes,
 			$this->cmpID
 		));
 		$db->Execute('delete from ComposerPageTypes where cmpID = ?', array($this->cmpID));
-		foreach($types as $ct) {
-			$db->Execute('insert into ComposerPageTypes (cmpID, ctID) values (?, ?)', array(
-				$this->cmpID, $ct->getCollectionTypeID()
-			));
+		if ($cmpAllowedPageTypes == 'C') {
+			foreach($types as $ct) {
+				$db->Execute('insert into ComposerPageTypes (cmpID, ctID) values (?, ?)', array(
+					$this->cmpID, $ct->getCollectionTypeID()
+				));
+			}
 		}
 	}
 
@@ -145,9 +159,13 @@ class Concrete5_Model_Composer extends Object {
 	public function validateCreateDraftRequest($ct) {
 		$e = Loader::helper('validation/error');
 		$availablePageTypes = $this->getComposerPageTypeObjects();
+		$availablePageTypeIDs = array();
+		foreach($availablePageTypes as $cct) {
+			$availablePageTypeIDs[] = $cct->getCollectionTypeID();
+		}
 		if (!is_object($ct)) {
 			$e->add(t('You must choose a page type.'));
-		} else if (!in_array($ct, $availablePageTypes)) {
+		} else if (!in_array($ct->getCollectionTypeID(), $availablePageTypeIDs)) {
 			$e->add(t('This page type is not a valid page type for this composer.'));
 		}
 		return $e;
@@ -200,7 +218,7 @@ class Concrete5_Model_Composer extends Object {
 		$cmp = ComposerDraft::getByID($cmpDraftID);
 
 		ComposerDraftAuthorPermissionAccessEntity::refresh($cmp);
-		
+
 		return $cmp;
 	}
 

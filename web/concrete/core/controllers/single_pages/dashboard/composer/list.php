@@ -66,7 +66,7 @@ class Concrete5_Controller_Dashboard_Composer_List extends DashboardBaseControll
 				}
 			}
 		}
-		if (count($types) == 0) {
+		if (count($types) == 0 && $this->post('cmpAllowedPageTypes') == 'C') {
 			$this->error->add(t('You must specify at least one page type.'));
 		}
 		$target = ComposerTargetType::getByID($this->post('cmpTargetTypeID'));
@@ -74,7 +74,7 @@ class Concrete5_Controller_Dashboard_Composer_List extends DashboardBaseControll
 			$this->error->add(t('Invalid composer target type.'));
 		}
 		if (!$this->error->has()) {
-			$composer->update($name, $types);
+			$composer->update($name, $this->post('cmpAllowedPageTypes'), $types);
 			$configuredTarget = $target->configureComposerTarget($composer, $this->post());
 			$composer->setConfiguredComposerTargetObject($configuredTarget);
 			$this->redirect('/dashboard/composer/list', 'composer_updated');
