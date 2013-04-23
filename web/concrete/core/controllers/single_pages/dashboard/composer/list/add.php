@@ -22,7 +22,7 @@ class Concrete5_Controller_Dashboard_Composer_List_Add extends DashboardBaseCont
 				}
 			}
 		}
-		if (count($types) == 0) {
+		if (count($types) == 0 && $this->post('cmpAllowedPageTypes') == 'C') {
 			$this->error->add(t('You must specify at least one page type.'));
 		}
 		$target = ComposerTargetType::getByID($this->post('cmpTargetTypeID'));
@@ -31,7 +31,7 @@ class Concrete5_Controller_Dashboard_Composer_List_Add extends DashboardBaseCont
 		}
 
 		if (!$this->error->has()) {
-			$cmp = Composer::add($name, $types);
+			$cmp = Composer::add($name, $this->post('cmpAllowedPageTypes'), $types);
 			$configuredTarget = $target->configureComposerTarget($cmp, $this->post());
 			$cmp->setConfiguredComposerTargetObject($configuredTarget);
 			$this->redirect('/dashboard/composer/list', 'composer_added');

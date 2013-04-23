@@ -13,7 +13,9 @@
     <field name="cmpTargetTypeID" type="I" size="10">
       <unsigned/>
     </field>
-    
+    <field name="cmpAllowedPageTypes" type="C" size="1">
+      <default value="A" />
+    </field>
    <field name="cmpTargetObject" type="X2"></field>
   </table>
 
