@@ -334,7 +334,9 @@ $classes = array(
 	'ComposerDraftPermissionAssignment' => array('model','permission/assignments/composer_draft'),
 	'ComposerDraftPermissionAccess' => array('model','permission/access/categories/composer_draft'),
 	'ComposerDraftPermissionAccessListItem' => array('model','permission/access/list_items/composer_draft'),
-	'ComposerDraftPermissionResponse' => array('model','permission/response/composer_draft')
+	'ComposerDraftPermissionResponse' => array('model','permission/response/composer_draft'),
+
+	'ComposerDraftAuthorPermissionAccessEntity' => array('model','permission/access/entity/types/composer_draft_author'),
 
 );
 

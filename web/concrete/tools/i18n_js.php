@@ -25,6 +25,7 @@ var ccmi18n = {
 	deleteLayoutOptsTitle: "<?=t('Delete Layout')?>", 
 	confirmLayoutPresetDelete: "<?=t('Are you sure you want to delete this layout preset?')?>",
 	setAreaPermissions: "<?=t('Set Permissions')?>",
+	cmpDraftPermissionsTitle: "<?=t('Composer Draft Permissions')?>",
 	addBlockMsg: "<?=t('The block has been added successfully.')?>",
 	updateBlock: "<?=t('Update Block')?>",
 	updateBlockMsg: "<?=t('The block has been saved successfully.')?>",
