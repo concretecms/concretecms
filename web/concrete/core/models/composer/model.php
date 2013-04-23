@@ -46,6 +46,18 @@ class Concrete5_Model_Composer extends Object {
 			$pk->copyFromDefaultsToComposer($cpk);
 		}
 
+		// now we clear the default from edit composer drafts
+		$pk = PermissionKey::getByHandle('edit_composer_drafts_from_composer');
+		$pk->setPermissionObject($cmp);
+		$pt = $pk->getPermissionAssignmentObject();
+		$pt->clearPermissionAssignment();
+
+		// now we assign the composer draft owner access entity
+		$pa = PermissionAccess::create($pk);
+		$pe = ComposerDraftAuthorPermissionAccessEntity::getOrCreate();
+		$pa->addListItem($pe);
+		$pt->assignPermissionAccess($pa);
+
 		return $cmp;
 	}
 

@@ -93,6 +93,7 @@
         <!-- composer //-->
         <permissionkey handle="access_composer" name="Access Composer" description="" package="" category="composer" />
         <permissionkey handle="edit_composer_permissions" name="Edit Composer Permissions" description="" package="" category="composer" />
+        <permissionkey handle="edit_composer_drafts_from_composer" name="Edit Composer Drafts" description="" package="" category="composer" />
         <permissionkey handle="edit_composer_draft" name="Edit Composer Draft" description="" package="" category="composer_draft" />
 
         <!-- users //-->
@@ -287,7 +288,6 @@
         <permissionaccessentitytype handle="page_owner" name="Page Owner" package="">
 			<categories>
 		        <category handle="page" />
-                <category handle="composer_draft" />
 			</categories>
         </permissionaccessentitytype>
         <permissionaccessentitytype handle="file_uploader" name="File Uploader" package="">
@@ -296,6 +296,13 @@
 		        <category handle="file" />
 			</categories>
         </permissionaccessentitytype>
+        <permissionaccessentitytype handle="composer_draft_author" name="Draft Author" package="">
+            <categories>
+                <category handle="composer" />
+                <category handle="composer_draft" />
+            </categories>
+        </permissionaccessentitytype>
+
     </permissionaccessentitytypes>
 
     <workflowprogresscategories>

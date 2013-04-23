@@ -25,7 +25,7 @@
               $f.data('publishURL', r.publishURL);
             }
             if (onComplete) {
-              onComplete();
+              onComplete(r);
             }
           }
       });
@@ -60,11 +60,13 @@
 
         if (settings.autoSaveEnabled) {
           methods.saveinternal = setInterval(function() {
-            methods.private.saveDraft($this);
-            if (parseInt(settings.cmpDraftID) == 0) {
-              // this is the first auto-save.
-              $this.find('button[data-composer-btn=permissions]').show();
-            }
+            methods.private.saveDraft($this, function(r) {
+              if (parseInt(settings.cmpDraftID) == 0) {
+                // this is the first auto-save.
+                $this.find('button[data-composer-btn=permissions]').show();
+                settings.cmpDraftID = r.cmpDraftID;
+              }
+            });
           }, settings.autoSaveTimeout);
         }
 
@@ -75,6 +77,15 @@
         if (parseInt(settings.cmpDraftID) > 0) {
           $this.find('button[data-composer-btn=permissions]').show();
         }
+
+        $this.find('button[data-composer-btn=permissions]').on('click', function() {
+          jQuery.fn.dialog.open({
+            href: CCM_TOOLS_PATH + '/composer/draft/permissions?cmpDraftID=' + settings.cmpDraftID,
+            width: 400,
+            height: 290,
+            title: ccmi18n.cmpDraftPermissionsTitle
+          });
+        });
 
         $this.find('button[data-composer-btn=discard]').on('click', function() {
           if (!$this.data('discardURL')) {
@@ -92,7 +103,7 @@
 
         $this.find('button[data-composer-btn=save]').on('click', function() {
           clearInterval(methods.saveinterval);
-          methods.private.saveDraft($this, function() {
+          methods.private.saveDraft($this, function(r) {
             settings.onAfterSaveAndExit();
           });
         });
