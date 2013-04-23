@@ -21,6 +21,19 @@ class Concrete5_Model_ComposerDraftAuthorPermissionAccessEntity extends Permissi
 			return $users[0]->getUserID() == $u->getUserID();
 		}
 	}
+
+	/** 
+	 * Checks to see if this is the FIRST draft of this user. If so, then we set the access entity time stamp
+	 * to now, so we will refresh the user's access entities on page refresh.
+	 */
+	public function refresh(ComposerDraft $draft) {
+		$db = Loader::db();
+		$u = new User();
+		$cnt = $db->GetOne('select count(cmpDraftID) from ComposerDrafts where uID = ?', array($u->getUserID()));
+		if ($cnt == 1) {
+			Config::save('ACCESS_ENTITY_UPDATED', time());
+		}
+	}
 	
 	public function getAccessEntityTypeLinkHTML() {
 		$html = '<a href="javascript:void(0)" onclick="ccm_choosePermissionAccessEntityComposerDraftAuthor()">' . t('Draft Author') . '</a>';

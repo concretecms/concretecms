@@ -162,7 +162,7 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
 
 				</li>
 				<? if ($dh->canRead()) { ?>
-					<li class="ccm-toolbar-dashboard pull-right"><a href="<?=$this->url('/dashboard')?>" data-toggle="ccm-toolbar-hover-menu" data-toggle-menu="#ccm-toolbar-menu-dashboard"><i class="icon-briefcase"></i></a>
+					<li class="ccm-toolbar-dashboard pull-right"><a href="<?=$this->url('/dashboard')?>" data-toggle="ccm-toolbar-hover-menu" data-toggle-menu="#ccm-toolbar-menu-dashboard"><i class="icon-th-large"></i></a>
 
 					<?
 					print $dh->addQuickNavToMenus($dh->getDashboardAndSearchMenus());

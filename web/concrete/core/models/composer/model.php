@@ -197,7 +197,11 @@ class Concrete5_Model_Composer extends Object {
 		$p->deactivate();
 
 		$db->Execute('update ComposerDrafts set cID = ? where cmpDraftID = ?', array($p->getCollectionID(), $cmpDraftID));
-		return ComposerDraft::getByID($cmpDraftID);
+		$cmp = ComposerDraft::getByID($cmpDraftID);
+
+		ComposerDraftAuthorPermissionAccessEntity::refresh($cmp);
+		
+		return $cmp;
 	}
 
 }

@@ -14,6 +14,7 @@ class Concrete5_Controller_Dashboard_Composer_Write extends DashboardBaseControl
 			case 'draft':
 				$this->draft = ComposerDraft::getByID($id);
 				if (is_object($this->draft)) {
+					$this->checkDraftPermissions($this->draft);
 					$this->composer = $this->draft->getComposerObject();
 				}
 				$saveURL = View::url('/dashboard/composer/write', 'save', 'draft', $id);
@@ -53,6 +54,13 @@ EOL;
 		}
 	}
 
+	protected function checkDraftPermissions(ComposerDraft $d) {
+		$dp = new Permissions($d);
+		if (!$dp->canEditComposerDraft()) {
+			throw new Exception('You do not have access to this draft.');
+		}
+	}
+
 	protected function setupAssets() {
 		$sets = $this->get('fieldsets');
 		foreach($sets as $s) {
@@ -86,6 +94,7 @@ EOL;
 	public function discard($cmpDraftID = false, $token = false) {
 		if (Loader::helper('validation/token')->validate('discard_draft', $token)) {
 			$draft = ComposerDraft::getByID($cmpDraftID);
+			$this->checkDraftPermissions($draft);
 			$draft->discard();
 			exit;
 		}
