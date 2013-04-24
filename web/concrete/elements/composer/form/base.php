@@ -16,7 +16,7 @@ if (is_object($composer)) {
 	$token = 'update_composer';
 	$cmpName = $composer->getComposerName();
 	$cmpAllowedPageTypes = $composer->getComposerAllowedPageTypes();
-	$selectedtypes = $composer->getComposerPageTypeObjects();
+	$selectedtypes = $composer->getComposerFormSelectedPageTypeObjects();
 	foreach($selectedtypes as $ct) {
 		$cmpCTID[] = $ct->getCollectionTypeID();
 	}
@@ -34,7 +34,7 @@ if (is_object($composer)) {
 	<div class="control-group">
 		<?=$form->label('cmpCTID', t('Allowed Page Types'))?>
 		<div class="controls">
-			<?=$form->select('cmpAllowedPageTypes', array('A' => t('All'), 'C' => t('Custom')), $cmpAllowedPageTypes, array('class' => 'span2'))?>
+			<?=$form->select('cmpAllowedPageTypes', array('A' => t('All'), 'C' => t('Selected Page Types'), 'X' => t('Everything But Selected')), $cmpAllowedPageTypes, array('class' => 'span3'))?>
 		</div>
 	</div>
 
