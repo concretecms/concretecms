@@ -247,7 +247,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
 							} else if (in_array($key, $this->btExportPageTypeColumns)) {
 								$tableRecord->addChild($key, ContentExporter::replacePageTypeWithPlaceHolder($value));
 							} else {
-								$tableRecord->addChild($key, '<![CDATA[' . $value . ']]>');
+								$cnode = $tableRecord->addChild($key);
+								$node = dom_import_simplexml($cnode);
+								$no = $node->ownerDocument;
+								$node->appendChild($no->createCDataSection($value));
 							}
 						}
 					}
