@@ -50,7 +50,6 @@ $canScheduleGuestAccess = (PERMISSIONS_MODEL != 'simple' && $p->canGuestsViewThi
 $canAliasBlockOut = ($c->isMasterCollection());
 if ($canAliasBlockOut) {
 	$ct = CollectionType::getByID($c->getCollectionTypeID());
-	$canSetupComposer = ($ct->isCollectionTypeIncludedInComposer());
 }
 
 $isAlias = $b->isAlias();
