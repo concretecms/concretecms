@@ -222,7 +222,7 @@ class Concrete5_Model_Composer extends Object {
 
 	public static function getList() {
 		$db = Loader::db();
-		$cmpIDs = $db->GetCol('select cmpID from Composers order by cmpName asc');
+		$cmpIDs = $db->GetCol('select cmpID from Composers order by cmpID asc');
 		$list = array();
 		foreach($cmpIDs as $cmpID) {
 			$cm = Composer::getByID($cmpID);

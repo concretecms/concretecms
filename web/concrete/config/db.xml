@@ -1640,55 +1640,6 @@
       <col>cDateAdded</col>
     </index>
   </table>
-  <table name="ComposerContentLayout">
-    <field name="cclID" type="I" size="10">
-      <key/>
-      <autoincrement/>
-      <unsigned/>
-    </field>
-    <field name="bID" type="I" size="10">
-      <notnull/>
-      <default value="0"/>
-      <unsigned/>
-    </field>
-    <field name="akID" type="I" size="10">
-      <notnull/>
-      <default value="0"/>
-      <unsigned/>
-    </field>
-    <field name="displayOrder" type="I" size="10">
-      <notnull/>
-      <default value="0"/>
-      <unsigned/>
-    </field>
-    <field name="ctID" type="I" size="10">
-      <notnull/>
-      <default value="0"/>
-      <unsigned/>
-    </field>
-    <field name="ccFilename" type="C" size="128"/>
-  </table>
-  <table name="ComposerTypes">
-    <field name="ctID" type="I" size="10">
-      <key/>
-      <default value="0"/>
-      <unsigned/>
-    </field>
-    <field name="ctComposerPublishPageMethod" type="C" size="64">
-      <notnull/>
-      <default value="CHOOSE"/>
-    </field>
-    <field name="ctComposerPublishPageTypeID" type="I" size="10">
-      <notnull/>
-      <default value="0"/>
-      <unsigned/>
-    </field>
-    <field name="ctComposerPublishPageParentID" type="I" size="10">
-      <notnull/>
-      <default value="0"/>
-      <unsigned/>
-    </field>
-  </table>
   <table name="Config">
     <field name="cfKey" type="C" size="64">
       <key/>
