@@ -33,6 +33,118 @@ class Concrete5_Model_Composer extends Object {
 		}
 	}
 
+	public static function import($node) {
+		$types = array();
+		if ($node->pagetypes['type'] == 'custom') {
+			$cmpAllowedPageTypes = 'C';
+			foreach($node->pagetypes->pagetype as $pagetype) {
+				$types[] = CollectionType::getByHandle((string) $pagetype['handle']);
+			}
+		} else {
+			$cmpAllowedPageTypes = 'A';
+		}
+		$cm = Composer::add((string) $node['name'], $cmpAllowedPageTypes, $types);
+		$target = ComposerTargetType::importConfiguredComposerTarget($node->target);
+		$cm->setConfiguredComposerTargetObject($target);
+
+		if (isset($node->formlayout->set)) {
+			foreach($node->formlayout->set as $setnode) {
+				$set = $cm->addComposerFormLayoutSet((string) $setnode['name']);
+				if (isset($setnode->control)) {
+					foreach($setnode->control as $controlnode) {
+						$controltype = ComposerControlType::getByHandle((string) $controlnode['type']);
+						$control = $controltype->configureFromImport($controlnode);
+						$setcontrol = $control->addToComposerFormLayoutSet($set);
+						$required = (string) $controlnode['required'];
+						$customTemplate = (string) $controlnode['custom-template'];
+						$label = (string) $controlnode['custom-label'];
+						$outputControlID = (string) $controlnode['output-control-id'];
+						if ($required == '1') {
+							$setcontrol->updateFormLayoutSetControlRequired(true);
+						} else {
+							$setcontrol->updateFormLayoutSetControlRequired(false);
+						}
+						if ($customTemplate) {
+							$setcontrol->updateFormLayoutSetControlCustomTemplate($customTemplate);
+						}
+						if ($label) {
+							$setcontrol->updateFormLayoutSetControlCustomLabel($label);
+						}
+						if ($outputControlID) {
+							ContentImporter::addComposerOutputControlID($setcontrol, $outputControlID);
+						}
+					}
+				}
+			}
+		}
+
+		if (isset($node->output->pagetype)) {
+			foreach($node->output->pagetype as $pagetype) {
+				foreach($pagetype->area as $area) {
+					$displayOrder = 0;
+					foreach($area->control as $outputcontrolnode) {
+						$ct = CollectionType::getByHandle((string) $pagetype['handle']);
+						$formLayoutSetControlID = ContentImporter::getComposerFormLayoutSetControlFromTemporaryID((string) $outputcontrolnode['output-control-id']);
+						$formLayoutSetControl = ComposerFormLayoutSetControl::getByID($formLayoutSetControlID);
+						$outputControl = ComposerOutputControl::getByComposerFormLayoutSetControl($ct, $formLayoutSetControl);
+
+						$outputControl->updateComposerOutputControlArea((string) $area['name']);
+						$outputControl->updateComposerOutputControlDisplayOrder($displayOrder);
+						$displayOrder++;
+					}
+				}
+			}
+		}
+	}
+
+
+
+	public static function exportList($xml) {
+		$list = self::getList();
+		$nxml = $xml->addChild('composers');
+		
+		foreach($list as $sc) {
+			$activated = 0;
+			$types = $sc->getComposerPageTypeObjects();
+
+			$composer = $nxml->addChild('composer');
+			$composer->addAttribute('name', $sc->getComposerName());
+			$pagetypes = $composer->addChild('pagetypes');
+			if ($sc->getComposerAllowedPageTypes() == 'A') {
+				$pagetypes->addAttribute('type', 'all');
+			} else {
+				$pagetypes->addAttribute('type', 'custom');
+				foreach($types as $ct) {
+					$pagetypes->addChild('pagetype')->addAttribute('handle', $ct->getCollectionTypeHandle());
+				}	
+			}
+			$target = $sc->getComposerTargetObject();
+			$target->export($composer);
+
+			$fsn = $composer->addChild('formlayout');
+			$fieldsets = ComposerFormLayoutSet::getList($sc);
+			foreach($fieldsets as $fs) {
+				$fs->export($fsn);
+			}
+
+			$osn = $composer->addChild('output');
+			foreach($types as $ct) {
+				$pagetype = $osn->addChild('pagetype');
+				$pagetype->addAttribute('handle', $ct->getCollectionTypeHandle());
+				$areas = ComposerOutputControl::getCollectionTypeAreas($ct);
+				foreach($areas as $arHandle) {
+					$area = $pagetype->addChild('area');
+					$area->addAttribute('name', $arHandle);
+					$controls = ComposerOutputControl::getList($sc, $ct, $arHandle);
+					foreach($controls as $outputControl) {
+						$outputControl->export($area);
+					}
+				}
+
+			}
+		}
+	}
+
 	public static function add($cmpName, $cmpAllowedPageTypes, $types) {
 		$db = Loader::db();
 		$db->Execute('insert into Composers (cmpName, cmpAllowedPageTypes) values (?, ?)', array(

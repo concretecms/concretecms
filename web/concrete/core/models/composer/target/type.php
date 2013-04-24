@@ -3,7 +3,8 @@
 abstract class Concrete5_Model_ComposerTargetType extends Object {
 
 	abstract public function configureComposerTarget(Composer $cm, $post);
-	
+	abstract public function configureComposerTargetFromImport($txml);
+
 	public function getComposerTargetTypeName() {return $this->cmpTargetTypeName;}
 	public function getComposerTargetTypeHandle() {return $this->cmpTargetTypeHandle;}
 	public function getComposerTargetTypeID() { return $this->cmpTargetTypeID;}
@@ -33,6 +34,12 @@ abstract class Concrete5_Model_ComposerTargetType extends Object {
 			$sc->setPropertiesFromArray($r);
 			return $sc;
 		}
+	}
+
+	public static function importConfiguredComposerTarget($txml) {
+		$type = ComposerTargetType::getByHandle((string) $txml['handle']);
+		$target = $type->configureComposerTargetFromImport($txml);
+		return $target;
 	}
 	
 	public static function add($cmpTargetTypeHandle, $cmpTargetTypeName, $pkg = false) {

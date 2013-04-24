@@ -31,6 +31,15 @@ class Concrete5_Model_ComposerFormLayoutSet extends Object {
 		}
 	}
 
+	public function export($fxml) {
+		$node = $fxml->addChild('set');
+		$node->addAttribute('name', $this->getComposerFormLayoutSetName());
+		$controls = ComposerFormLayoutSetControl::getList($this);
+		foreach($controls as $con) {
+			$con->export($node);
+		}
+	}
+
 	public function updateFormLayoutSetName($cmpFormLayoutSetName) {
 		$db = Loader::db();
 		$db->Execute('update ComposerFormLayoutSets set cmpFormLayoutSetName = ? where cmpFormLayoutSetID = ?', array(

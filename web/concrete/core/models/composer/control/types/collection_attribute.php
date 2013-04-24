@@ -25,4 +25,10 @@ class Concrete5_Model_CollectionAttributeComposerControlType extends ComposerCon
 		return $ax;
 	}
 
+	public function configureFromImport($node) {
+		$ak = CollectionAttributeKey::getByHandle((string) $node['handle']);
+		return CollectionAttributeComposerControlType::getComposerControlByIdentifier($ak->getAttributeKeyID());
+	}
+	
+
 }

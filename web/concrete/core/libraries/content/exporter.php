@@ -22,6 +22,7 @@ class Concrete5_Library_Content_Exporter {
 	
 	protected $x; // the xml object for export
 	protected static $mcBlockIDs = array();
+	protected static $cmpOutputControlIDs = array();
 	
 	public function run() {
 		$this->x = new SimpleXMLElement("<concrete5-cif></concrete5-cif>");
@@ -41,6 +42,7 @@ class Concrete5_Library_Content_Exporter {
 		// composer
 		ComposerTargetType::exportList($this->x);
 		ComposerControlType::exportList($this->x);
+		Composer::exportList($this->x);
 
 		// attribute types
 		AttributeType::exportList($this->x);
@@ -121,6 +123,16 @@ class Concrete5_Library_Content_Exporter {
 			return self::$mcBlockIDs[$b->getBlockID()];
 		}
 	}
+
+	public static function addComposerOutputControlID(ComposerFormLayoutSetControl $control, $id) {
+		self::$cmpOutputControlIDs[$control->getComposerFormLayoutSetControlID()] = $id;
+	}
+	
+	public static function getComposerOutputControlTemporaryID(ComposerFormLayoutSetControl $control) {
+		if (isset(self::$cmpOutputControlIDs[$control->getComposerFormLayoutSetControlID()])) {
+			return self::$cmpOutputControlIDs[$control->getComposerFormLayoutSetControlID()];
+		}
+	}	
 	
 	public function output() {
 		return $this->x->asXML();

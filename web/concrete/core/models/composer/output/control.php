@@ -33,6 +33,12 @@ class Concrete5_Model_ComposerOutputControl extends Object {
 		return $areas;
 	}
 
+	public function export($cnode) {
+		$control = $cnode->addChild('control');
+		$fsc = ComposerFormLayoutSetControl::getByID($this->getComposerFormLayoutSetControlID());
+		$control->addAttribute('output-control-id', ContentExporter::getComposerOutputControlTemporaryID($fsc));
+	}
+
 	public static function getList(Composer $composer, CollectionType $ct, $arHandle) {
 		$db = Loader::db();
 		$cmpOutputControlIDs = $db->GetCol('select cmpOutputControlID from ComposerOutputControls where cmpID = ? and ctID = ? and arHandle = ? order by cmpOutputControlDisplayOrder asc', array(
@@ -55,6 +61,14 @@ class Concrete5_Model_ComposerOutputControl extends Object {
 			$cm = new ComposerOutputControl;
 			$cm->setPropertiesFromArray($r);
 			return $cm;
+		}
+	}
+
+	public static function getByComposerFormLayoutSetControl(CollectionType $ct, ComposerFormLayoutSetControl $control) {
+		$db = Loader::db();
+		$cmpOutputControlID = $db->GetOne('select cmpOutputControlID from ComposerOutputControls where ctID = ? and cmpFormLayoutSetControlID = ?', array($ct->getCollectionTypeID(), $control->getComposerFormLayoutSetControlID()));
+		if ($cmpOutputControlID) {
+			return ComposerOutputControl::getByID($cmpOutputControlID);
 		}
 	}
 

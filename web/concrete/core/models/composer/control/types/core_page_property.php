@@ -19,5 +19,8 @@ class Concrete5_Model_CorePagePropertyComposerControlType extends ComposerContro
 		return $object;
 	}
 
+	public function configureFromImport($node) {
+		return CorePagePropertyComposerControlType::getComposerControlByIdentifier((string) $node['handle']);
+	}
 	
 }

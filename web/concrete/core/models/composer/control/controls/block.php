@@ -16,6 +16,11 @@ class Concrete5_Model_BlockComposerControl extends ComposerControl {
 		return $this->btID;
 	}
 
+	public function export($node) {
+		$bt = $this->getBlockTypeObject();
+		$node->addAttribute('handle', $bt->getBlockTypeHandle());
+	}
+
 	public function setComposerControlBlockObject($b) {
 		$this->b = $b;
 	}
