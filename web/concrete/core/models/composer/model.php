@@ -14,20 +14,35 @@ class Concrete5_Model_Composer extends Object {
 		return $this->getComposerID();
 	}
 
-	public function getComposerPageTypeObjects() {
+	public function getComposerFormSelectedPageTypeObjects() {
+		$types = array();
 		$db = Loader::db();
-		if ($this->cmpAllowedPageTypes == 'C') {
-			$types = array();
-			$r = $db->Execute('select ctID from ComposerPageTypes where cmpID = ? order by ctID asc', array($this->cmpID));
-			while ($row = $r->FetchRow()) {
-				$ct = CollectionType::getByID($row['ctID']);
-				if (is_object($ct)) {
-					$types[] = $ct;
-				}
+		$r = $db->Execute('select ctID from ComposerPageTypes where cmpID = ? order by ctID asc', array($this->cmpID));
+		while ($row = $r->FetchRow()) {
+			$ct = CollectionType::getByID($row['ctID']);
+			if (is_object($ct)) {
+				$types[] = $ct;
 			}
-			return $types;
+		}
+		return $types;
+	}
+
+	public function getComposerPageTypeObjects() {
+		if ($this->cmpAllowedPageTypes == 'C') {
+			return $this->getComposerFormSelectedPageTypeObjects();
 		} else {
 			$pagetypes = CollectionType::getList();
+			$db = Loader::db();
+			if ($this->cmpAllowedPageTypes == 'X') {
+				$_pagetypes = array();
+				$ctIDs = $db->GetCol('select ctID from ComposerPageTypes where cmpID = ? order by ctID asc', array($this->cmpID));
+				foreach($pagetypes as $ct) {
+					if (!in_array($ct->getCollectionTypeID(), $ctIDs)) {
+						$_pagetypes[] = $ct;
+					}
+				}
+				return $_pagetypes;
+			}
 			return $pagetypes;
 
 		}
@@ -35,7 +50,7 @@ class Concrete5_Model_Composer extends Object {
 
 	public static function import($node) {
 		$types = array();
-		if ($node->pagetypes['type'] == 'custom') {
+		if ((string) $node->pagetypes['type'] == 'custom' || (string) $node->pagetypes['type'] == 'except') {
 			$cmpAllowedPageTypes = 'C';
 			foreach($node->pagetypes->pagetype as $pagetype) {
 				$types[] = CollectionType::getByHandle((string) $pagetype['handle']);
@@ -113,7 +128,11 @@ class Concrete5_Model_Composer extends Object {
 			if ($sc->getComposerAllowedPageTypes() == 'A') {
 				$pagetypes->addAttribute('type', 'all');
 			} else {
-				$pagetypes->addAttribute('type', 'custom');
+				if ($sc->getComposerAllowedPageTypes() == 'X') {
+					$pagetypes->addAttribute('type', 'except');
+				} else {
+					$pagetypes->addAttribute('type', 'custom');
+				}
 				foreach($types as $ct) {
 					$pagetypes->addChild('pagetype')->addAttribute('handle', $ct->getCollectionTypeHandle());
 				}	
@@ -151,7 +170,7 @@ class Concrete5_Model_Composer extends Object {
 			$cmpName, $cmpAllowedPageTypes
 		));
 		$cmpID = $db->Insert_ID();
-		if ($cmpAllowedPageTypes == 'C') {
+		if ($cmpAllowedPageTypes != 'A') {
 			foreach($types as $ct) {
 				$db->Execute('insert into ComposerPageTypes (cmpID, ctID) values (?, ?)', array(
 					$cmpID, $ct->getCollectionTypeID()
@@ -192,7 +211,7 @@ class Concrete5_Model_Composer extends Object {
 			$this->cmpID
 		));
 		$db->Execute('delete from ComposerPageTypes where cmpID = ?', array($this->cmpID));
-		if ($cmpAllowedPageTypes == 'C') {
+		if ($cmpAllowedPageTypes != 'A') {
 			foreach($types as $ct) {
 				$db->Execute('insert into ComposerPageTypes (cmpID, ctID) values (?, ?)', array(
 					$this->cmpID, $ct->getCollectionTypeID()

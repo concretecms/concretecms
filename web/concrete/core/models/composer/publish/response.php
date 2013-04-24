@@ -10,6 +10,7 @@ class Concrete5_Model_ComposerPublishResponse extends Object {
 	public $redirectURL;
 	public $publishURL;
 	public $discardURL;
+	public $viewURL;
 
 	public function __construct($e = false) {
 		if ($e instanceof ValidationErrorHelper && $e->has()) {
@@ -41,6 +42,10 @@ class Concrete5_Model_ComposerPublishResponse extends Object {
 	
 	public function setDiscardURL($discardURL) {
 		$this->discardURL = $discardURL;
+	}
+
+	public function setViewURL($viewURL) {
+		$this->viewURL = $viewURL;
 	}
 	
 	public function setPublishURL($publishURL) {

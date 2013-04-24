@@ -18,11 +18,21 @@
             if (r.saveURL) {
               $f.data('saveURL', r.saveURL);
             }
+            if (r.viewURL) {
+              $f.data('viewURL', r.viewURL);
+            }
             if (r.discardURL) {
               $f.data('discardURL', r.discardURL);
             }
             if (r.publishURL) {
               $f.data('publishURL', r.publishURL);
+            }
+            var settings = $f.data('settings');
+            if (settings.pushStateOnSave && r.viewURL != settings.viewURL) {
+              if (window.history) {
+                window.history.replaceState({'method': 'loaddraft'}, '', r.viewURL);
+                settings.viewURL = r.viewURL;
+              }
             }
             if (onComplete) {
               onComplete(r);
@@ -38,6 +48,7 @@
       var settings = $.extend({
         autoSaveEnabled: true,
         autoSaveTimeout: 5000,
+        pushStateOnSave: false,
         publishReturnMethod: 'reload',
         onExit: function() {
           window.location.href = CCM_DISPATCHER_FILENAME + '/dashboard/composer/drafts';
@@ -55,6 +66,7 @@
         var $this = $(this);
         $this.data('settings', settings);
         $this.data('saveURL', settings.saveURL);
+        $this.data('viewURL', settings.viewURL);
         $this.data('discardURL', settings.discardURL);
         $this.data('publishURL', settings.publishURL);
 
