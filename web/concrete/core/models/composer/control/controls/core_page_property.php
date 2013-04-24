@@ -11,6 +11,10 @@ abstract class Concrete5_Model_CorePagePropertyComposerControl extends ComposerC
 
 	}
 
+	public function export($node) {
+		$node->addAttribute('handle', $this->getCorePagePropertyHandle());
+	}
+
 	public static function getComposerSaveRequest() {
 		if (null === self::$cmpSaveRequest) {
 			self::$cmpSaveRequest = array();

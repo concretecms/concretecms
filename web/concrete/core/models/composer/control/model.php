@@ -16,6 +16,7 @@ abstract class Concrete5_Model_ComposerControl extends Object {
 	abstract public function validate($data, ValidationErrorHelper $e);
 	abstract public function getComposerControlDraftValue();
 	abstract public function addAssetsToRequest(Controller $cnt);
+	abstract public function export($node);
 	
 	public function composerFormControlSupportsValidation() {
 		return false;

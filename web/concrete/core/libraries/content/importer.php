@@ -21,7 +21,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 class Concrete5_Library_Content_Importer {
 	
 	protected static $mcBlockIDs = array();
-	
+	protected static $cmpOutputControlIDs = array();
+
 	public function importContentFile($file) {
 		$sx = simplexml_load_file($file);
 		$this->importSinglePageStructure($sx);
@@ -62,6 +63,7 @@ class Concrete5_Library_Content_Importer {
 		$this->importConfigValues($sx);
 		$this->importSystemCaptchaLibraries($sx);
 		$this->importSystemContentEditorSnippets($sx);
+		$this->importComposers($sx);
 	}
 	
 	protected static function getPackageObject($pkgHandle) {
@@ -261,6 +263,16 @@ class Concrete5_Library_Content_Importer {
 			return self::$mcBlockIDs[$b->getBlockID()];
 		}
 	}
+
+	public static function addComposerOutputControlID(ComposerFormLayoutSetControl $control, $id) {
+		self::$cmpOutputControlIDs[$id] = $control->getComposerFormLayoutSetControlID();
+	}
+	
+	public static function getComposerFormLayoutSetControlFromTemporaryID($id) {
+		if (isset(self::$cmpOutputControlIDs[$id])) {
+			return self::$cmpOutputControlIDs[$id];
+		}
+	}
 	
 	protected function importPageTypesBase(SimpleXMLElement $sx) {
 		if (isset($sx->pagetypes)) {
@@ -287,10 +299,6 @@ class Concrete5_Library_Content_Importer {
 				$mc = Page::getByID($ctr->getMasterCollectionID(), 'RECENT');
 				if (isset($ct->page)) {
 					$this->importPageAreas($mc, $ct->page);
-				}
-				if (isset($ct->composer)) {
-					$ctr = CollectionType::getByHandle((string) $ct['handle']);
-					$ctr->importComposerSettings($ct->composer);
 				}
 			}
 		}
@@ -399,6 +407,14 @@ class Concrete5_Library_Content_Importer {
 			foreach($sx->composercontroltypes->type as $th) {
 				$pkg = ContentImporter::getPackageObject($th['package']);
 				$ce = ComposerControlType::add((string) $th['handle'], (string) $th['name'], $pkg);
+			}
+		}
+	}
+
+	protected function importComposers(SimpleXMLElement $sx) {
+		if (isset($sx->composers)) {
+			foreach($sx->composers->composer as $cm) {
+				Composer::import($cm);
 			}
 		}
 	}

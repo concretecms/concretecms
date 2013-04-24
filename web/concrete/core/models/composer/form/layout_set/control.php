@@ -33,6 +33,27 @@ class Concrete5_Model_ComposerFormLayoutSetControl extends Object {
 		}
 	}
 
+	public function export($fxml) {
+		$node = $fxml->addChild('control');
+		$node->addAttribute('custom-template', $this->getComposerFormLayoutSetControlCustomTemplate());
+		if ($this->isComposerFormLayoutSetControlRequired()) {
+			$node->addAttribute('required', true);
+		}
+		$node->addAttribute('custom-label', $this->getComposerFormLayoutSetControlCustomLabel());
+		$db = Loader::db();
+		$cnt = $db->GetOne('select count(*) from ComposerOutputControls where cmpFormLayoutSetControlID = ?', array($this->cmpFormLayoutSetControlID));
+		if ($cnt > 0) {
+			$cmpControlTemporaryID = Loader::helper('validation/identifier')->getString(8);
+			ContentExporter::addComposerOutputControlID($this, $cmpControlTemporaryID);
+			$node->addAttribute('output-control-id', $cmpControlTemporaryID);
+		}
+		$typeo = $this->getComposerControlTypeObject();
+		$node->addAttribute('type', $typeo->getComposerControlTypeHandle());
+		$to = $this->getComposerControlObject();
+		$to->export($node);
+	}
+
+
 	public static function getList(ComposerFormLayoutSet $set) {
 		$db = Loader::db();
 		$cmpFormLayoutSetControlIDs = $db->GetCol('select cmpFormLayoutSetControlID from ComposerFormLayoutSetControls where cmpFormLayoutSetID = ? order by cmpFormLayoutSetControlDisplayOrder asc',

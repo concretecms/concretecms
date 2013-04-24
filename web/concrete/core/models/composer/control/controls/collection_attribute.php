@@ -15,6 +15,11 @@ class Concrete5_Model_CollectionAttributeComposerControl extends ComposerControl
 		return true;
 	}
 
+	public function export($node) {
+		$ak = $this->getAttributeKeyObject();
+		$node->addAttribute('handle', $ak->getAttributeKeyHandle());
+	}
+
 	public function getAttributeKeyObject() {
 		if (!$this->ak) {
 			$this->ak = CollectionAttributeKey::getByID($this->akID);

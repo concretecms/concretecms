@@ -16,4 +16,13 @@ class Concrete5_Model_ParentPageComposerTargetConfiguration extends ComposerTarg
 		return $this->cParentID;
 	}
 
+	public function export($cxml) {
+		$target = parent::export($cxml);
+		$c = Page::getByID($this->cParentID);
+		if (is_object($c) && !$c->isError()) {
+			$target->addAttribute('path', $c->getCollectionPath());
+		}
+	}
+
+
 }

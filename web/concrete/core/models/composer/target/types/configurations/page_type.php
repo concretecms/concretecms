@@ -11,5 +11,13 @@ class Concrete5_Model_PageTypeComposerTargetConfiguration extends ComposerTarget
 	public function getCollectionTypeID() {
 		return $this->ctID;
 	}
+
+	public function export($cxml) {
+		$target = parent::export($cxml);
+		$ct = CollectionType::getByID($this->ctID);
+		if (is_object($ct)) {
+			$target->addAttribute('pagetype', $ct->getCollectionTypeHandle());
+		}
+	}
 	
 }
