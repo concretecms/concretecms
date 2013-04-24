@@ -27,10 +27,27 @@ class Concrete5_Model_StackList extends PageList {
 			$gas = $x->addChild('stacks');
 			while ($row = $r->FetchRow()) {
 				$stack = Stack::getByName($row['stName']);
-				$stack->export($gas);
+				if (is_object($stack)) {
+					$stack->export($gas);
+				}
 			}
 		}
 	}
+
+	public function get($itemsToGet = 0, $offset = 0) {
+		if ($this->getQuery() == '') {
+			$this->setBaseQuery();
+		}		
+		$stacks = array();
+		$this->setItemsPerPage($itemsToGet);		
+		$r = DatabaseItemList::get($itemsToGet, $offset);
+		foreach($r as $row) {
+			$s = Stack::getByID($row['cID'], 'RECENT');
+			$stacks[] = $s;
+		}
+		return $stacks;
+	}
+
 
 	
 }
