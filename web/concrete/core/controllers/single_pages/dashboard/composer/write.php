@@ -10,22 +10,29 @@ class Concrete5_Controller_Dashboard_Composer_Write extends DashboardBaseControl
 				$saveURL = View::url('/dashboard/composer/write', 'save', 'composer', $id);
 				$discardURL = '';
 				$publishURL = View::url('/dashboard/composer/write', 'save', 'composer', $id, 'publish');
+				$viewURL = View::url('/dashboard/composer/write', 'composer', $id);
 				break;
 			case 'draft':
 				$this->draft = ComposerDraft::getByID($id);
 				if (is_object($this->draft)) {
+					$this->checkDraftPermissions($this->draft);
 					$this->composer = $this->draft->getComposerObject();
 				}
 				$saveURL = View::url('/dashboard/composer/write', 'save', 'draft', $id);
 				$discardURL = View::url('/dashboard/composer/write', 'discard', $id, Loader::helper('validation/token')->generate('discard_draft'));
 				$publishURL = View::url('/dashboard/composer/write', 'save', 'draft', $id, 'publish');
+				$viewURL = View::url('/dashboard/composer/write', 'draft', $id);
 				break;
 		}
 
 		$this->addHeaderItem(Loader::helper('html')->css('ccm.composer.css'));
 		$this->addFooterItem(Loader::helper('html')->javascript('ccm.composer.js'));
+		$cmpDraftID = 0;
+		if (is_object($this->draft)) {
+			$cmpDraftID = $this->draft->getComposerDraftID();
+		}
 		$js =<<<EOL
-<script type="text/javascript">$(function() { $('form[data-form=composer]').ccmcomposer({saveURL: '{$saveURL}', discardURL: '{$discardURL}', publishURL: '{$publishURL}'})});</script>
+<script type="text/javascript">$(function() { $('form[data-form=composer]').ccmcomposer({pushStateOnSave: true, cmpDraftID: {$cmpDraftID}, viewURL: '{$viewURL}', saveURL: '{$saveURL}', discardURL: '{$discardURL}', publishURL: '{$publishURL}'})});</script>
 EOL;
 		$this->addFooterItem($js);
 
@@ -46,6 +53,13 @@ EOL;
 			$this->set('fieldsets', ComposerFormLayoutSet::getList($this->composer));
 			$this->set('draft', $this->draft);
 			$this->setupAssets();
+		}
+	}
+
+	protected function checkDraftPermissions(ComposerDraft $d) {
+		$dp = new Permissions($d);
+		if (!$dp->canEditComposerDraft()) {
+			throw new Exception('You do not have access to this draft.');
 		}
 	}
 
@@ -82,6 +96,7 @@ EOL;
 	public function discard($cmpDraftID = false, $token = false) {
 		if (Loader::helper('validation/token')->validate('discard_draft', $token)) {
 			$draft = ComposerDraft::getByID($cmpDraftID);
+			$this->checkDraftPermissions($draft);
 			$draft->discard();
 			exit;
 		}
@@ -127,6 +142,7 @@ EOL;
 				$ax = Loader::helper('ajax');
 				$r->time = date('F d, Y g:i A');
 				$r->setSaveURL(View::url('/dashboard/composer/write', 'save', 'draft', $d->getComposerDraftID()));
+				$r->setViewURL(View::url('/dashboard/composer/write', 'draft', $d->getComposerDraftID()));
 				$r->setDiscardURL(View::url('/dashboard/composer/write', 'discard', $d->getComposerDraftID(), Loader::helper('validation/token')->generate('discard_draft')));
 				$r->setPublishURL(View::url('/dashboard/composer/write', 'save', 'draft', $d->getComposerDraftID(), 'publish'));
 				$ax->sendResult($r);

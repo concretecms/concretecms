@@ -15,36 +15,60 @@
             </type>
         </attributekey>
     </attributekeys>
+    <composers>
+        <!-- we also strip out blog entry from basic page. //-->
+        <composer name="Page">
+            <pagetypes type="except">
+                <pagetype handle="blog_entry"/>
+            </pagetypes>
+        </composer>
+
+        <composer name="Blog Entry">
+            <pagetypes type="custom">
+                <pagetype handle="blog_entry"/>
+            </pagetypes>
+            <target handle="parent_page" package="" path="/blog"/>
+            <formlayout>
+                <set name="Basics">
+                    <control custom-template="" required="1" custom-label="Post Name" type="core_page_property" handle="name"/>
+                    <control custom-template="" custom-label="" type="core_page_property" handle="description"/>
+                    <control custom-template="" custom-label="" type="core_page_property" handle="url_slug"/>
+                    <control custom-template="" custom-label="" type="core_page_property" handle="page_type"/>
+                    <control custom-template="" custom-label="" type="core_page_property" handle="publish_target"/>
+                </set>
+                <set name="Navigation">
+                    <control custom-template="" custom-label="" type="collection_attribute" handle="tags"/>
+                </set>
+                <set name="Images">
+                    <control custom-template="thumbnail.php" custom-label="Thumbnail" output-control-id="WWYvC5sc" type="block" handle="image"/>
+                    <control custom-template="header.php" required="1" custom-label="Header Image" output-control-id="DjZTZlM7" type="block" handle="image"/>
+                </set>
+                <set name="Content">
+                    <control custom-template="" custom-label="Body" output-control-id="ZmQkiRH8" type="block" handle="content"/>
+                </set>
+            </formlayout>
+            <output>
+                <pagetype handle="blog_entry">
+                    <area name="Main">
+                        <control output-control-id="ZmQkiRH8"/>
+                    </area>
+                    <area name="Sidebar"/>
+                    <area name="Thumbnail Image">
+                        <control output-control-id="WWYvC5sc"/>
+                    </area>
+                    <area name="Header Image">
+                        <control output-control-id="DjZTZlM7"/>
+                    </area>
+                </pagetype>
+            </output>
+        </composer>
+    </composers>
     <themes>
         <theme handle="greek_yogurt" package="" activated="1"/>
     </themes>
     <pagetypes>
         <pagetype handle="blog_entry" name="Blog Entry" internal="0" icon="template1.png" package="">
-            <composer method="PARENT" pagetype="" parent="{ccm:export:page:/blog}">
-                <items>
-                    <block type="image" name="Header Image" composer-template="header.php"/>
-                    <block type="image" name="Thumbnail Image" composer-template="thumbnail.php"/>
-                    <block type="content" name="Blog Content"/>
-                    <attributekey handle="tags"/>
-                </items>
-            </composer>
             <page name="" path="" filename="" pagetype="blog_entry" description="" package="">
-                <attributes>
-                    <attributekey handle="tags"/>
-                </attributes>
-                <area name="Blog Post Header"/>
-                <area name="Main">
-                    <block type="content" name="Blog Content" mc-block-id="0yueptBw">
-                        <data table="btContentLocal">
-                            <record>
-                                <content><![CDATA[<p>This is my first blog post.</p>]]></content>
-                            </record>
-                        </data>
-                    </block>
-                </area>
-                <area name="Blog Post More"/>
-                <area name="Blog Post Footer"/>
-                <area name="FeaturedImage"/>
                 <area name="Sidebar">
                     <block type="tags" name="" mc-block-id="wG4zxttW">
                         <data table="btTags">
@@ -53,39 +77,6 @@
                                 <targetCID>{ccm:export:page:/blog/blog-archives}</targetCID>
                                 <displayMode><![CDATA[page]]></displayMode>
                                 <cloudCount><![CDATA[0]]></cloudCount>
-                            </record>
-                        </data>
-                    </block>
-                </area>
-                <area name="ThumbnailImage"/>
-                <area name="HeaderImage"/>
-                <area name="Thumbnail Image">
-                    <block type="image" name="Thumbnail Image" composer-template="thumbnail.php" mc-block-id="QCpfJ7BF">
-                        <data table="btContentImage">
-                            <record>
-                                <fID>{ccm:export:file:sh_thumbnail.jpg}</fID>
-                                <fOnstateID/>
-                                <maxWidth><![CDATA[0]]></maxWidth>
-                                <maxHeight><![CDATA[0]]></maxHeight>
-                                <externalLink><![CDATA[]]></externalLink>
-                                <internalLinkCID><![CDATA[0]]></internalLinkCID>
-                                <altText><![CDATA[]]></altText>
-                            </record>
-                        </data>
-                    </block>
-                </area>
-                <area name="Header Image">
-                    <block type="image" name="Header Image" composer-template="header.php" mc-block-id="wLzzOzzD">
-                        <data table="btContentImage">
-                            <record>
-                                <fID>{ccm:export:file:europe_england_stonehenge.jpg}</fID>
-                                <fOnstateID/>
-                                <maxWidth><![CDATA[960]]></maxWidth>
-                                <maxHeight><![CDATA[212]]></maxHeight>
-                                <forceImageToMatchDimensions>1</forceImageToMatchDimensions>
-                                <externalLink><![CDATA[]]></externalLink>
-                                <internalLinkCID><![CDATA[0]]></internalLinkCID>
-                                <altText><![CDATA[My concrete5 Blog]]></altText>
                             </record>
                         </data>
                     </block>
@@ -493,7 +484,7 @@
                                                             </attributekey>
                                                         </attributes>
                                                         <area name="Header Image">
-                                                            <block type="image" name="Header Image" composer-template="header.php">
+                                                            <block type="image" name="Header Image">
                                                                 <data table="btContentImage">
                                                                     <record>
                                                                         <fID>{ccm:export:file:europe_england_stonehenge.jpg}</fID>
@@ -521,7 +512,7 @@
                                                             </block>
                                                         </area>
                                                         <area name="Thumbnail Image">
-                                                            <block type="image" name="Thumbnail Image" composer-template="thumbnail.php">
+                                                            <block type="image" name="Thumbnail Image">
                                                                 <data table="btContentImage">
                                                                     <record>
                                                                         <fID>{ccm:export:file:sh_thumbnail.jpg}</fID>

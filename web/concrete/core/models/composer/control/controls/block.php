@@ -16,6 +16,11 @@ class Concrete5_Model_BlockComposerControl extends ComposerControl {
 		return $this->btID;
 	}
 
+	public function export($node) {
+		$bt = $this->getBlockTypeObject();
+		$node->addAttribute('handle', $bt->getBlockTypeHandle());
+	}
+
 	public function setComposerControlBlockObject($b) {
 		$this->b = $b;
 	}
@@ -78,13 +83,11 @@ class Concrete5_Model_BlockComposerControl extends ComposerControl {
 		}
 		return $templates;
 	}
-
+	
 	public function addToComposerFormLayoutSet(ComposerFormLayoutSet $set) {
 		$layoutSetControl = parent::addToComposerFormLayoutSet($set);
 		$composer = $set->getComposerObject();
-		foreach($composer->getComposerPageTypeObjects() as $ct) {
-			ComposerOutputControl::add($layoutSetControl, $ct, STACKS_AREA_NAME);
-		}
+		$composer->rescanComposerOutputControlObjects();
 		return $layoutSetControl;
 	}
 

@@ -13,7 +13,9 @@
     <field name="cmpTargetTypeID" type="I" size="10">
       <unsigned/>
     </field>
-    
+    <field name="cmpAllowedPageTypes" type="C" size="1">
+      <default value="A" />
+    </field>
    <field name="cmpTargetObject" type="X2"></field>
   </table>
 
@@ -34,6 +36,10 @@
     <field name="uID" type="I" size="10">
       <unsigned/>
       <default value="0" />
+    </field>
+    <field name="cmpDraftOverrideComposerPermissions" type="I1" size="1">
+      <notnull/>
+      <default value="0"/>
     </field>
     <field name="cmpDateCreated" type="T">
       <notnull/>
@@ -171,6 +177,23 @@
     <field name="bID" type="I" size="10">
       <unsigned/>
       <default value="0" />
+    </field>
+  </table>
+  <table name="ComposerDraftPermissionAssignments">
+    <field name="cmpDraftID" type="I" size="10">
+      <key/>
+      <default value="0"/>
+      <unsigned/>
+    </field>
+    <field name="pkID" type="I" size="10">
+      <key/>
+      <default value="0"/>
+      <unsigned/>
+    </field>
+    <field name="paID" type="I" size="10">
+      <key/>
+      <default value="0"/>
+      <unsigned/>
     </field>
   </table>
   <table name="ComposerPermissionAssignments">
@@ -1616,55 +1639,6 @@
     <index name="cDateAdded">
       <col>cDateAdded</col>
     </index>
-  </table>
-  <table name="ComposerContentLayout">
-    <field name="cclID" type="I" size="10">
-      <key/>
-      <autoincrement/>
-      <unsigned/>
-    </field>
-    <field name="bID" type="I" size="10">
-      <notnull/>
-      <default value="0"/>
-      <unsigned/>
-    </field>
-    <field name="akID" type="I" size="10">
-      <notnull/>
-      <default value="0"/>
-      <unsigned/>
-    </field>
-    <field name="displayOrder" type="I" size="10">
-      <notnull/>
-      <default value="0"/>
-      <unsigned/>
-    </field>
-    <field name="ctID" type="I" size="10">
-      <notnull/>
-      <default value="0"/>
-      <unsigned/>
-    </field>
-    <field name="ccFilename" type="C" size="128"/>
-  </table>
-  <table name="ComposerTypes">
-    <field name="ctID" type="I" size="10">
-      <key/>
-      <default value="0"/>
-      <unsigned/>
-    </field>
-    <field name="ctComposerPublishPageMethod" type="C" size="64">
-      <notnull/>
-      <default value="CHOOSE"/>
-    </field>
-    <field name="ctComposerPublishPageTypeID" type="I" size="10">
-      <notnull/>
-      <default value="0"/>
-      <unsigned/>
-    </field>
-    <field name="ctComposerPublishPageParentID" type="I" size="10">
-      <notnull/>
-      <default value="0"/>
-      <unsigned/>
-    </field>
   </table>
   <table name="Config">
     <field name="cfKey" type="C" size="64">

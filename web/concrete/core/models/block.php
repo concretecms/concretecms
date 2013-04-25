@@ -29,7 +29,6 @@ class Concrete5_Model_Block extends Object {
 	var $c;
 	protected $csrID;
 	protected $proxyBlock = false;
-	protected $bIncludeInComposerIsSet = false;
 
 	public static function populateManually($blockInfo, $c, $a) {
 		$b = new Block;
@@ -309,50 +308,6 @@ class Concrete5_Model_Block extends Object {
 		return $dir;	
 	}
 	
-	public function isBlockIncludedInComposer() {
-		if (!$this->bIncludeInComposerIsSet) {
-			$this->setBlockComposerProperties();
-		}
-
-		return $this->bIncludeInComposer;
-	}
-
-
-	protected function setBlockComposerProperties() {
-		$this->bIncludeInComposerIsSet = true;
-		$db = Loader::db();
-		if ($this->c != null) {
-			$ct = CollectionType::getByID($this->c->getCollectionTypeID());
-			if (is_object($ct)) {
-				if ($ct->isCollectionTypeIncludedInComposer()) { 				
-					if ($this->c->isMasterCollection()) {
-						$ctID = $this->c->getCollectionTypeID();
-						$ccbID = $this->bID;
-					} else {
-						$tempBID = $this->getBlockID();
-						while ($tempBID != false && $tempBID != 0) {
-							$originalBID = $tempBID;
-							$tempBID = $db->GetOne('select distinct br.originalBID from BlockRelations br inner join CollectionVersionBlocks cvb on cvb.bID = br.bID where br.bID = ? and cvb.cID = ?', array($tempBID, $this->c->getCollectionID()));
-						}
-						if ($originalBID && is_object($this->c)) {
-							$ctID = $this->c->getCollectionTypeID();
-							$ccbID = $originalBID;
-						}
-					}
-					
-					if ($ctID && $ccbID) {
-						$cb = $db->GetRow('select bID, ccFilename from ComposerContentLayout where ctID = ? and bID = ?', array($ctID, $ccbID));
-						if (is_array($cb) && $cb['bID'] == $ccbID) {
-							$this->bIncludeInComposer = 1;
-							$this->cbFilename = $cb['ccFilename'];
-						}
-					}
-				}
-			}
-		}
-	}
-
-
 	function loadNewCollection(&$c) {
 		$this->c = $c;
 	}
@@ -785,32 +740,6 @@ class Concrete5_Model_Block extends Object {
 	function getBlockFilename() {
 		return $this->bFilename;
 	}
-
-	function getBlockComposerFilename() {
-		if (!$this->bIncludeInComposerIsSet) {
-			$this->setBlockComposerProperties();
-		}
-		return $this->cbFilename;
-	}
-
-	public function hasComposerBlockTemplate() {
-		$bv = new BlockView();
-		$bv->setBlockObject($this);
-		$cpFilename = $this->getBlockComposerFilename();
-		if ($cpFilename) {
-			$cmpbase = $bv->getBlockPath(DIRNAME_BLOCK_TEMPLATES_COMPOSER . '/' . $cpFilename);
-			if (file_exists($cmpbase . '/' . DIRNAME_BLOCK_TEMPLATES_COMPOSER . '/' . $cpFilename)) {
-				return true;
-			}
-		}
-		
-		$cmpbase = $bv->getBlockPath(FILENAME_BLOCK_COMPOSER);
-		if (file_exists($cmpbase . '/' . FILENAME_BLOCK_COMPOSER)) {
-			return true;
-		}
-		
-		return false;
-	}
 	
 	public function getBlockDisplayOrder() {
 		return $this->cbDisplayOrder;
@@ -904,11 +833,6 @@ class Concrete5_Model_Block extends Object {
 		return $str . '&amp;btask=update_block_css';
 	}	
 
-	function getBlockUpdateComposerSettingsAction() {
-		$str = $this->_getBlockAction();
-		return $str . '&amp;btask=update_composer_settings';
-	}	
-
 	function getBlockPassThruAction() {
 		// is the block located in a stack?
 		$pc = $this->getBlockCollectionObject();
@@ -968,9 +892,6 @@ class Concrete5_Model_Block extends Object {
 
 			// this is an original. We're deleting it, and everything else having to do with it
 			$q = "delete from CollectionVersionBlocks where bID = '$bID'";
-			$r = $db->query($q);
-
-			$q = "delete from ComposerContentLayout where bID = '$bID'";
 			$r = $db->query($q);
 
 			$q = "delete from BlockPermissionAssignments where bID = '$bID'";
@@ -1209,14 +1130,6 @@ class Concrete5_Model_Block extends Object {
 				ContentExporter::addMasterCollectionBlockID($this, $mcBlockID);
 				$blockNode->addAttribute('mc-block-id', $mcBlockID);
 			}			
-
-			if ($exportType == 'composer') {
-				$db = Loader::db();
-				$cbFilename = $db->GetOne('select ccFilename from ComposerContentLayout where bID = ?', array($this->getBlockID()));
-				if ($cbFilename) {
-					$blockNode->addAttribute("composer-template", $cbFilename);
-				}
-			}
 			
 			if ($exportType == 'full') {
 				$bc = $this->getInstance();
@@ -1248,30 +1161,6 @@ class Concrete5_Model_Block extends Object {
 		$r = $db->prepare($q);
 		$res = $db->execute($r, $v);
 		
-	}
-
-	function updateBlockComposerSettings($data) {
-		$db = Loader::db();
-		$this->updateBlockInformation($data);
-		if ($this->c->isMasterCollection()) {
-			$ctID = $this->c->getCollectionTypeID();
-			if ($data['bIncludeInComposer']) {
-				$displayOrder = $db->GetOne('select max(displayOrder) from ComposerContentLayout where ctID = ?', array($this->c->getCollectionTypeID()));
-				if ($displayOrder !== false) {
-					if ($displayOrder > 0) { 
-						$displayOrder++;
-					} else {
-						$displayOrder = 1;
-					}
-				} else {
-					$displayOrder = 0;
-				}
-			
-				$db->Replace('ComposerContentLayout', array('bID' => $this->getBlockID(), 'ctID' => $ctID, 'ccFilename' => $data['cbFilename'], 'displayOrder' => $displayOrder), array('bID', 'ctID'), true);
-			} else {
-				$db->Execute('delete from ComposerContentLayout where ctID = ? and bID = ?', array($ctID, $this->getBlockID()));
-			}
-		}		
 	}
 
 

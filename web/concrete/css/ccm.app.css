@@ -1170,13 +1170,13 @@ div.ccm-editor-controls ul li{display:inline-block;font-size:10px;color:#333;mar
 div.ccm-editor-controls ul li a{color:#333;text-decoration:none;display:block;padding:0px 0px 0px 12px;background:transparent url(../images/bg_editor_concrete_caret.png) no-repeat scroll left 6px;}
 div.ccm-editor-controls ul li a:hover{text-decoration:underline;}
 div.ccm-summary-selected-item{border:1px solid #dedede;margin-top:8px;margin-bottom:8px;padding:10px;}
-.ccm-ui .dialog-buttons .btn,.ccm-ui .ccm-pane-footer .btn{padding:6px 19px;}
-.ccm-ui .btn.btn-primary{border:none;}
-.ccm-ui .btn:hover{border-color:#6cf;background-image:none;background-color:#fff;}
-.ccm-ui .btn.btn-primary:hover{background-image:none;background-color:#09f;border:none;}
-.ccm-ui .btn.btn-hover-danger:hover{border-color:#ee5f5b;}
-.ccm-ui .btn[disabled=disabled]:hover{background-image:none;color:#b7b7b7;background-color:#eae9e9;border-color:#ccc;}
-.ccm-ui .btn[disabled=disabled]{background-image:none;color:#b7b7b7;background-color:#eae9e9;border-color:#ccc;}
+.ccm-ui .dialog-buttons .btn,.ccm-ui .ccm-pane-footer .btn{padding:6px 19px !important;}
+.ccm-ui .btn.btn-primary{border-color:#09f;}
+.ccm-ui .btn:hover{border-color:#6cf !important;background-image:none !important;background-color:#fff !important;}
+.ccm-ui .btn.btn-primary:hover{background-image:none !important;background-color:#09f !important;}
+.ccm-ui .btn.btn-hover-danger:hover{border-color:# !important;}
+.ccm-ui .btn[disabled=disabled]:hover{background-image:none !important;color:#b7b7b7 !important;background-color:#eae9e9 !important;border-color:#ccc !important;}
+.ccm-ui .btn[disabled=disabled]{background-image:none !important;color:#b7b7b7 !important;background-color:#eae9e9 !important;border-color:#ccc !important;}
 table.ccm-permission-grid{border:0px;}
 table.ccm-permission-grid td.ccm-permission-grid-name{text-align:right;width:auto;white-space:nowrap;}
 table.ccm-permission-grid td{width:100%;border-left:0px !important;border-right:0px !important;}

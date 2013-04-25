@@ -103,15 +103,6 @@ if (isset($_REQUEST['searchInstance'])) {
 				'canAddExternalLinks'=>$canAddExternalLinks
 			);
 
-			$canCompose = false;
-			$ct = CollectionType::getByID($cobj->getCollectionTypeID());
-			if (is_object($ct)) {
-				if ($ct->isCollectionTypeIncludedInComposer()) {
-					if ($canEditPageProperties && $h->canAccessComposer()) {
-						$canCompose = 1;
-					}
-				}
-			}
 			
 			?>
 			<tr class="ccm-list-record <?=$striped?>" 
@@ -122,7 +113,6 @@ if (isset($_REQUEST['searchInstance'])) {
 				sitemap-instance-id="<?=$searchInstance?>" 
 				sitemap-display-mode="search" 
 				cNumChildren="<?=$cobj->getNumChildren()?>" 
-				tree-node-cancompose="<?=$canCompose?>"
 				
 				cAlias="false"
 				<?=$dsh->getPermissionsNodes($permissionArray);?>>

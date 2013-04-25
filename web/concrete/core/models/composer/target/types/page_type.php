@@ -9,5 +9,12 @@ class Concrete5_Model_PageTypeComposerTargetType extends ComposerTargetType {
 		return $configuration;
 	}
 
+	public function configureComposerTargetFromImport($txml) {
+		$configuration = new PageTypeComposerTargetConfiguration($this);
+		$ct = CollectionType::getByHandle((string) $txml['pagetype']);
+		$configuration->setCollectionTypeID($ct->getCollectionTypeID());
+		return $configuration;
+	}
+
 	
 }

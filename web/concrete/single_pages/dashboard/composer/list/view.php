@@ -18,7 +18,7 @@
 
 
 <? } else {
-	$pk = PermissionKey::getByHandle('access_composer');
+	$pk = PermissionKey::getByHandle('access_composer_permissions');
 	 ?>
 
 	<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Composers'))?>
@@ -35,15 +35,16 @@
 		</tr>
 	</thead>
 	<tbody>
-		<? foreach($composers as $cm) { 
-			$pk->setPermissionObject($cm);?>
+		<? foreach($composers as $cm) {  ?>
 		<tr>
 			<td class="composer-name"><?=$cm->getComposerName()?></td>
 			<td class="composer-tasks">
 				<a href="<?=$this->action('edit', $cm->getComposerID())?>" class="btn btn-mini"><?=t('Basic Details')?></a>
 				<a href="<?=$this->url('/dashboard/composer/list/form', $cm->getComposerID())?>" class="btn btn-mini"><?=t('Edit Form')?></a>
 				<a href="<?=$this->url('/dashboard/composer/list/output', $cm->getComposerID())?>" class="btn btn-mini"><?=t('Output')?></a>
-				<a href="javascript:void(0)" data-cmpID="<?=$cm->getComposerID()?>" dialog-title="<?=$pk->getPermissionKeyName()?>" data-pkID="<?=$pk->getPermissionKeyID()?>" data-paID="<?=$pk->getPermissionAccessID()?>" onclick="ccm_permissionLaunchDialog(this)" class="btn btn-mini"><?=t('Permissions')?></a>
+				<? if ($pk->can()) { ?>
+					<a href="<?=$this->url('/dashboard/composer/list/permissions', $cm->getComposerID())?>" class="btn btn-mini"><?=t('Permissions')?></a>
+				<? } ?>
 				<a href="#" data-delete="<?=$cm->getComposerID()?>" class="btn btn-mini btn-danger"><?=t('Delete')?></a>
 
 				<div style="display: none">
@@ -59,28 +60,6 @@
 		<? } ?>
 	</tbody>
 	</table>
-
-	<script type="text/javascript">
-	ccm_permissionLaunchDialog = function(link) {
-		var dupe = $(link).attr('data-duplicate');
-		if (dupe != 1) {
-			dupe = 0;
-		}
-
-		jQuery.fn.dialog.open({
-			title: $(link).attr('dialog-title'),
-			href: '<?=REL_DIR_FILES_TOOLS_REQUIRED?>/permissions/dialogs/composer?duplicate=' + dupe + '&cmpID=' + $(link).attr('data-cmpID') + '&pkID=' + $(link).attr('data-pkID') + '&paID=' + $(link).attr('data-paID'),
-			modal: false,
-			width: 500,
-			height: 380
-		});		
-	}
-
-	ccm_submitPermissionsDetailFormPost = function() {
-		window.location.reload();
-	}
-
-	</script>
 
 	<? } else { ?>
 		<p><?=t('You have not created any composers yet.')?></p>
