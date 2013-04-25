@@ -95,6 +95,16 @@ saveSize.width.appendTo($('<div>w </div>').addClass('saveWidth').appendTo(saveSi
 saveSize.height.appendTo($('<div>h </div>').addClass('saveHeight').appendTo(saveSize.area));
 saveSize.area.appendTo(controlBar);
 
+
+im.on('adjustedsavers',function(){
+  saveSize.width.text(im.saveWidth);
+  saveSize.height.text(im.saveHeight);
+});
+
+saveSize.crop.click(function(){
+  im.adjustSavers();
+});
+
 if (im.strictSize) {
   saveSize.both.attr('disabled','true');
 } else {

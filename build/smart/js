@@ -273,6 +273,6 @@ $(getFile 'foot.js')"
 "`cat ./web/concrete/js/image_editor/image_editor.js`
     echo "$INP" > image_editor.tmp.js
 
-    uglifyjs --no-seqs -o ./web/concrete/js/image_editor.min.js ./image_editor.tmp.js
+    uglifyjs -b -o ./web/concrete/js/image_editor.min.js ./image_editor.tmp.js
     rm image_editor.tmp.js
 fi

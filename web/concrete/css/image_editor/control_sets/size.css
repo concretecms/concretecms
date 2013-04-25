@@ -7,8 +7,14 @@ div.controlset.size div.cropcontrols div.cropcontrol > label {
 div.controlset.size div.cropcontrols div.cropcheckbox {
 	margin: 10px 0px 10px 80px;
 }
+div.controlset.size div.cropcontrols div.locked {
+	display:inline-block;
+	margin-top:-50px;
+}
 div.controlset.size div.cropcontrols div.cropcontrol {
 	margin: 10px 0;
+	width:150px;
+	display:inline-block;
 }
 div.controlset.size div.cropcontrols div.cropcontrol > div.input {
 	width: 50px;

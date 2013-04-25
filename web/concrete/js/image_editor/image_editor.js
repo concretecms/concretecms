@@ -220,7 +220,7 @@ var ImageEditor = function (settings) {
     if (console !== undefined) {
       var args = arguments;
       if (args.length == 1) args = args[0];
-      console.error(args);
+      console.error("Image Editor Error: " + args);
     }
   };
 
@@ -297,6 +297,8 @@ im.addElement = function(object,type) {
   var layer = new Kinetic.Layer();
   layer.elementType = layer;
   layer.add(object);
+  object.setOffset([object.getWidth()/2,object.getHeight()/2]);
+  layer.setOffset([-object.getWidth()/2,-object.getHeight()/2]);
   object.setX(im.center.x - Math.round(object.getWidth() / 2));
   object.setY(im.center.y - Math.round(object.getHeight() / 2));
 
@@ -308,9 +310,10 @@ im.addElement = function(object,type) {
   object.doppelganger.elementType = 'StokeClone';
   object.doppelganger.setStroke('blue');
   object.doppelganger._drawFunc = object.getDrawFunc();
+  object.doppelganger.setListening(false);
   object.doppelganger.setDrawFunc(function(canvas){
     if (typeof this._drawFunc == "function") {
-      this.attrs.strokeWidth = 1/im.scale;
+      this.setStrokeWidth(1/im.scale);
       this.setFill('transparent');
       if (type == 'image') { this.attrs.image = ''; }
       this._drawFunc(canvas);
@@ -328,9 +331,15 @@ im.addElement = function(object,type) {
       if (attr == 'drawFunc' ||
           attr == 'drawHitFunc' ||
           attr == 'strokeWidth' ||
-          attr == 'fill') continue;
+          attr == 'fill'        ||
+          attr == 'listening') continue;
       this.doppelganger.attrs[attr] = this.attrs[attr];
     }
+    var offset = this.getOffset();
+    this.doppelganger.setX(this.getX() + offset.x);
+    this.doppelganger.setY(this.getY() + offset.y);
+    this.doppelganger.setOffset(this.getOffset());
+    this.doppelganger.setSize(this.getSize());
     im.foreground.draw();
     this._drawFunc(canvas);
   });
@@ -489,6 +498,16 @@ saveSize.width.appendTo($('<div>w </div>').addClass('saveWidth').appendTo(saveSi
 saveSize.height.appendTo($('<div>h </div>').addClass('saveHeight').appendTo(saveSize.area));
 saveSize.area.appendTo(controlBar);
 
+
+im.on('adjustedsavers',function(){
+  saveSize.width.text(im.saveWidth);
+  saveSize.height.text(im.saveHeight);
+});
+
+saveSize.crop.click(function(){
+  im.adjustSavers();
+});
+
 if (im.strictSize) {
   saveSize.both.attr('disabled','true');
 } else {
@@ -531,6 +550,8 @@ im.save = function() {
 
   im.fire('ChangeActiveAction');
   im.fire('changeActiveComponent');
+  im.background.hide();
+  im.foreground.hide();
 
   $(im.stage.getContainer()).hide();
 
@@ -557,6 +578,7 @@ im.save = function() {
       $.fn.dialog.open({element:$(img).width(250)});
       im.hideLoader();
       im.background.show();
+      im.foreground.show();
       im.stage.setX(oldx);
       im.stage.setY(oldy);
       im.stage.setWidth(oldwidth);
@@ -566,6 +588,50 @@ im.save = function() {
       $(im.stage.getContainer()).show();
     }
   })
+};
+
+im.adjustSavers = function() {
+  im.foreground.autoCrop = false;
+  im.background.autoCrop = false;
+  var i, e, c = im.stage.getChildren(), l = c.length, count = {min:{x:false,y:false},max:{x:false,y:false}};
+  for (i=0;i<l;i++) {
+    if (c[i].autoCrop === false) continue;
+    for (e in c[i].children) {
+      var pos = c[i].children[e].getPosition(), size = c[i].children[e].getSize(), center = {x:pos.x + size.width / 2, y:pos.y + size.height / 2};
+      if (count.min.x === false) {
+        count.min.x = pos.x;
+        count.min.y = pos.y;
+        count.max.x = pos.x - size.width;
+        count.max.y = pos.y + size.height;
+      }
+      if (count.min.x > pos.x) count.min.x = pos.x;
+      if (count.min.y > pos.y) count.min.y = pos.y;
+      if (count.max.x < pos.x + size.width) count.max.x = pos.x + size.width;
+      if (count.max.y < pos.y + size.height) count.max.y = pos.y + size.height;
+    }
+  }
+
+  var avg = {x:(count.min.x + count.max.x)/2, y:(count.min.y + count.max.y)/2},
+      diff = {x:Math.round(avg.x-im.center.x), y:Math.round(avg.y-im.center.y)};
+
+  if (diff.x !== 0 || diff.y !== 0) {
+    for (i=0;i<l;i++) {
+      if (c[i].autoCrop === false) continue;
+      for (e in c[i].children) {
+        c[i].children[e].attrs.x -= diff.x;
+        c[i].children[e].attrs.y -= diff.y;
+      }
+    }
+    return im.adjustSavers();
+  }
+
+  var size = {width: count.max.x - count.min.x, height: count.max.y - count.min.y};
+  console.log(size);
+  im.alterCore('saveWidth',Math.round(size.width));
+  im.alterCore('saveHeight',Math.round(size.height));
+  im.buildBackground();
+  im.fire('adjustedsavers');
+  im.stage.draw();
 };
 
 
@@ -609,9 +675,11 @@ im.addControlSet = function(ns,js,elem) {
   if (jQuery && elem instanceof jQuery) elem = elem[0];
   elem.controlSet = function(im,js) {
     im.disable = function() {
+      im.enabled = false;
       $(elem).parent().parent().addClass('disabled');
     };
     im.enable = function() {
+      im.enabled = true;
       $(elem).parent().parent().removeClass('disabled');
     };
     this.im = im;
@@ -619,18 +687,21 @@ im.addControlSet = function(ns,js,elem) {
     try {
       eval(js);
     } catch(e) {
-      console.error(e);
       var pos = e.stack.replace(/[\S\s]+at HTMLDivElement.eval.+?<anonymous>:(\d+:\d+)[\S\s]+/,'$1').split(':');
-      var jsstack = js.split("\n");
-      var error = "Parse error at line #"+pos[0]+" char #"+pos[1]+" within "+ns;
-      error += "\n"+jsstack[parseInt(pos[0])-1];
-      error += "\n"+(new Array(parseInt(pos[1])).join(" "))+"^";
-      console.error(error);
+      if (pos[1] && !isNaN(parseInt(pos[1]))) {
+        var jsstack = js.split("\n");
+        var msg = "Parse error at line #"+pos[0]+" char #"+pos[1]+" within "+ns;
+        msg += "\n"+jsstack[parseInt(pos[0])-1];
+        msg += "\n"+(new Array(parseInt(pos[1])).join(" "))+"^";
+        error(msg);
+      } else {
+        error("\"" + e.message + "\" in \"" + im.namespace + "\"");
+      }
     }
     return this;
   };
   var newim = im.clone(ns);
-  var nso = elem.controlSet(newim,js);
+  var nso = elem.controlSet.call(elem,newim,js);
   im.controlSets[ns] = nso;
   return nso;
 };
@@ -641,20 +712,18 @@ im.addFilter = function(ns,js) {
     try {
       eval(js);
     } catch(e) {
-      console.error(e);
+      error(e);
       window.lastError = e;
       var pos = e.stack.replace(/[\S\s]+at HTMLDivElement.eval.+?<anonymous>:(\d+:\d+)[\S\s]+/,'$1').split(':');
-      if (e.count != 2) {
-        console.error(e.message);
-        console.error(e.stack);
-
+      if (pos.length != 2) {
+        error(e.message);
+        error(e.stack);
       } else {
         var jsstack = js.split("\n");
-        var error = "Parse error at line #"+pos[0]+" char #"+pos[1]+" within "+ns;
-        console.log(pos);
-        error += "\n"+jsstack[parseInt(pos[0])-1];
-        error += "\n"+(new Array(parseInt(pos[1])).join(" "))+"^";
-        console.error(error);
+        var msg = "Parse error at line #"+pos[0]+" char #"+pos[1]+" within "+ns;
+        msg += "\n"+jsstack[parseInt(pos[0])-1];
+        msg += "\n"+(new Array(parseInt(pos[1]) || 0).join(" "))+"^";
+        error(msg);
       }
     }
     return this;
@@ -679,18 +748,21 @@ im.addComponent = function(ns,js,elem) {
     try {
       eval(js);
     } catch(e) {
-      error(e);
       var pos = e.stack.replace(/[\S\s]+at HTMLDivElement.eval.+?<anonymous>:(\d+:\d+)[\S\s]+/,'$1').split(':');
-      var jsstack = js.split("\n");
-      var error = "Parse error at line #"+pos[0]+" char #"+pos[1]+" within "+ns;
-      error += "\n"+jsstack[parseInt(pos[0])-1];
-      error += "\n"+(new Array(parseInt(pos[1])).join(" "))+"^";
-      error(error);
+      if (pos[1] && !isNaN(parseInt(pos[1]))) {
+        var jsstack = js.split("\n");
+        var msg = "Parse error at line #"+pos[0]+" char #"+pos[1]+" within "+ns;
+        msg += "\n"+jsstack[parseInt(pos[0])-1];
+        msg += "\n"+(new Array(parseInt(pos[1])).join(" "))+"^";
+        error(msg);
+      } else {
+        error("\"" + e.message + "\" in \"" + im.namespace + "\"");
+      }
     }
     return this;
   };
   var newim = im.clone(ns);
-  var nso = elem.component(newim,js);
+  var nso = elem.component.call(elem,newim,js);
   im.components[ns] = nso;
   return nso;
 };
@@ -705,6 +777,21 @@ im.foreground = new Kinetic.Layer();
 im.stage.add(im.background);
 im.stage.add(im.foreground);
 im.bgimage = new Image();
+im.saveArea = new Kinetic.Rect();
+im.bgimage.onload = function(){
+  im.saveArea.setFillPatternImage(im.bgimage);
+
+  im.saveArea.setFillPatternOffset([-(im.saveWidth/2),-(im.saveHeight/2)]);
+  im.saveArea.setFillPatternScale(1/im.scale);
+  im.saveArea.setFillPatternX(0);
+  im.saveArea.setFillPatternY(0);
+  im.saveArea.setFillPatternRepeat('repeat');
+
+  im.background.add(im.saveArea);
+  im.background.on('click',function(){
+    im.setActiveElement(im.stage);
+  });
+}
 im.bgimage.src = '/concrete/images/testbg.png';
 im.buildBackground = function() {
   var startbb = (new Date).getTime();
@@ -712,25 +799,6 @@ im.buildBackground = function() {
   var dimensions = im.stage.getTotalDimensions();
   var to = (dimensions.max.x + dimensions.visibleHeight + dimensions.visibleWidth) * 2;
 
-  
-  if (!im.saveArea) {
-    im.saveArea = new Kinetic.Rect({
-      width:im.saveWidth,
-      height:im.saveHeight,
-      fillPatternImage: im.bgimage,
-      fillPatternOffset: [-(im.saveWidth/2),-(im.saveHeight/2)],
-      fillPatternScale: 1/im.scale,
-      fillPatternX:0,
-      fillPatternY:0,
-      fillPatternRepeat:'repeat',
-      x:Math.floor(im.center.x - (im.saveWidth / 2)),
-      y:Math.floor(im.center.y - (im.saveHeight / 2))
-    });
-    im.background.add(im.saveArea);
-    im.background.on('click',function(){
-      im.setActiveElement(im.stage);
-    });
-  }
 
   im.saveArea.setFillPatternOffset([-(im.saveWidth/2) * im.scale,-(im.saveHeight/2) * im.scale]);
   im.saveArea.setX(Math.floor(im.center.x - (im.saveWidth / 2)));
@@ -762,6 +830,9 @@ im.buildBackground = function() {
   im.fire('backgroundBuilt');
   im.background.draw();
   im.foreground.draw();
+  if (im.activeElement && im.activeElement.elementType != 'stage' && im.activeElement.parent) {
+    im.activeElement.parent.draw();
+  }
 };
 
 im.buildBackground();
@@ -903,20 +974,6 @@ im.bind('imageload',function(){
     });
   }
 });
-im.adjustSavers = function() {
-  if (im.activeElement.elementType != "stage" && im.autoCrop) {
-    im.alterCore('saveWidth',Math.ceil(-(im.activeElement.getX() - im.center.x)*2));
-    im.alterCore('saveHeight',Math.ceil(-(im.activeElement.getY() - im.center.y)*2));
-    if ((im.activeElement.getWidth() - im.saveWidth / 2) * 2 > im.saveWidth) {
-      im.alterCore('saveWidth', Math.ceil((im.activeElement.getWidth() - im.saveWidth / 2) * 2));
-    }
-    if ((im.activeElement.getHeight() - im.saveHeight / 2) * 2 > im.saveHeight) {
-      im.alterCore('saveHeight', Math.ceil((im.activeElement.getHeight() - im.saveHeight / 2) * 2));
-    }
-    im.buildBackground();
-    im.fire('saveSizeChange');
-  }
-};
 im.bind('ControlSetsLoaded',function(){
   im.fire('LoadingComponents');
   im.showLoader('Loading Components..');
@@ -1103,6 +1160,7 @@ $.fn.ImageEditor = function (settings) {
   }
   self.closest('.ui-dialog').find('.ui-resizable-handle').hide();
   self.height("-=30");
+  $('div.editorcontrols').height(self.height() - 130);
   self.width("-=330").parent().width("-=330").children('div.bottomBar').width("-=330");
   (settings.width === undefined && (settings.width = self.width()));
   (settings.height === undefined && (settings.height = self.height()));
@@ -1118,15 +1176,15 @@ $.fn.ImageEditor = function (settings) {
     if (!e.eventData)
       $('h4.active',context).removeClass('active');
   });
-  $('div.controls',context).children('div.save').children('button.save').click(function(){
+  $('div.controls > div.controlscontainer',context).children('div.save').children('button.save').click(function(){
     im.save();
   }).end().children('button.cancel').click(function(){
     if (confirm("Are you certain?"))
       $.fn.dialog.closeTop();
   });
-  $('div.controls',context).children('ul.nav').children().click(function(){
+  $('div.controls > div.controlscontainer',context).children('ul.nav').children().click(function(){
     if ($(this).hasClass('active')) return false;
-    $('div.controls',context).children('ul.nav').children().removeClass('active');
+    $('div.controls > div.controlscontainer',context).children('ul.nav').children().removeClass('active');
     $(this).addClass('active');
     im.trigger('ChangeNavTab',$(this).text().toLowerCase());
     return false;

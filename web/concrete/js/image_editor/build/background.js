@@ -4,6 +4,21 @@ im.foreground = new Kinetic.Layer();
 im.stage.add(im.background);
 im.stage.add(im.foreground);
 im.bgimage = new Image();
+im.saveArea = new Kinetic.Rect();
+im.bgimage.onload = function(){
+  im.saveArea.setFillPatternImage(im.bgimage);
+
+  im.saveArea.setFillPatternOffset([-(im.saveWidth/2),-(im.saveHeight/2)]);
+  im.saveArea.setFillPatternScale(1/im.scale);
+  im.saveArea.setFillPatternX(0);
+  im.saveArea.setFillPatternY(0);
+  im.saveArea.setFillPatternRepeat('repeat');
+
+  im.background.add(im.saveArea);
+  im.background.on('click',function(){
+    im.setActiveElement(im.stage);
+  });
+}
 im.bgimage.src = '/concrete/images/testbg.png';
 im.buildBackground = function() {
   var startbb = (new Date).getTime();
@@ -11,25 +26,6 @@ im.buildBackground = function() {
   var dimensions = im.stage.getTotalDimensions();
   var to = (dimensions.max.x + dimensions.visibleHeight + dimensions.visibleWidth) * 2;
 
-  
-  if (!im.saveArea) {
-    im.saveArea = new Kinetic.Rect({
-      width:im.saveWidth,
-      height:im.saveHeight,
-      fillPatternImage: im.bgimage,
-      fillPatternOffset: [-(im.saveWidth/2),-(im.saveHeight/2)],
-      fillPatternScale: 1/im.scale,
-      fillPatternX:0,
-      fillPatternY:0,
-      fillPatternRepeat:'repeat',
-      x:Math.floor(im.center.x - (im.saveWidth / 2)),
-      y:Math.floor(im.center.y - (im.saveHeight / 2))
-    });
-    im.background.add(im.saveArea);
-    im.background.on('click',function(){
-      im.setActiveElement(im.stage);
-    });
-  }
 
   im.saveArea.setFillPatternOffset([-(im.saveWidth/2) * im.scale,-(im.saveHeight/2) * im.scale]);
   im.saveArea.setX(Math.floor(im.center.x - (im.saveWidth / 2)));
@@ -61,6 +57,9 @@ im.buildBackground = function() {
   im.fire('backgroundBuilt');
   im.background.draw();
   im.foreground.draw();
+  if (im.activeElement && im.activeElement.elementType != 'stage' && im.activeElement.parent) {
+    im.activeElement.parent.draw();
+  }
 };
 
 im.buildBackground();

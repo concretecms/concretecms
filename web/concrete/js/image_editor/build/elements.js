@@ -2,6 +2,8 @@ im.addElement = function(object,type) {
   var layer = new Kinetic.Layer();
   layer.elementType = layer;
   layer.add(object);
+  object.setOffset([object.getWidth()/2,object.getHeight()/2]);
+  layer.setOffset([-object.getWidth()/2,-object.getHeight()/2]);
   object.setX(im.center.x - Math.round(object.getWidth() / 2));
   object.setY(im.center.y - Math.round(object.getHeight() / 2));
 
@@ -13,9 +15,10 @@ im.addElement = function(object,type) {
   object.doppelganger.elementType = 'StokeClone';
   object.doppelganger.setStroke('blue');
   object.doppelganger._drawFunc = object.getDrawFunc();
+  object.doppelganger.setListening(false);
   object.doppelganger.setDrawFunc(function(canvas){
     if (typeof this._drawFunc == "function") {
-      this.attrs.strokeWidth = 1/im.scale;
+      this.setStrokeWidth(1/im.scale);
       this.setFill('transparent');
       if (type == 'image') { this.attrs.image = ''; }
       this._drawFunc(canvas);
@@ -33,9 +36,15 @@ im.addElement = function(object,type) {
       if (attr == 'drawFunc' ||
           attr == 'drawHitFunc' ||
           attr == 'strokeWidth' ||
-          attr == 'fill') continue;
+          attr == 'fill'        ||
+          attr == 'listening') continue;
       this.doppelganger.attrs[attr] = this.attrs[attr];
     }
+    var offset = this.getOffset();
+    this.doppelganger.setX(this.getX() + offset.x);
+    this.doppelganger.setY(this.getY() + offset.y);
+    this.doppelganger.setOffset(this.getOffset());
+    this.doppelganger.setSize(this.getSize());
     im.foreground.draw();
     this._drawFunc(canvas);
   });
