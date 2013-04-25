@@ -59,7 +59,7 @@ var ImageEditor = function (settings) {
     if (console !== undefined) {
       var args = arguments;
       if (args.length == 1) args = args[0];
-      console.error(args);
+      console.error("Image Editor Error: " + args);
     }
   };
 

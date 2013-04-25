@@ -200,7 +200,7 @@ var ImageEditor = function(settings) {
         if (console !== undefined) {
             var e = arguments;
             if (e.length == 1) e = e[0];
-            console.error(e);
+            console.error("Image Editor Error: " + e);
         }
     };
     im.stage._setDraggable = im.stage.setDraggable;
@@ -258,6 +258,8 @@ var ImageEditor = function(settings) {
         var n = new Kinetic.Layer;
         n.elementType = n;
         n.add(e);
+        e.setOffset([ e.getWidth() / 2, e.getHeight() / 2 ]);
+        n.setOffset([ -e.getWidth() / 2, -e.getHeight() / 2 ]);
         e.setX(im.center.x - Math.round(e.getWidth() / 2));
         e.setY(im.center.y - Math.round(e.getHeight() / 2));
         e.doppelganger = e.clone();
@@ -270,9 +272,10 @@ var ImageEditor = function(settings) {
         e.doppelganger.elementType = "StokeClone";
         e.doppelganger.setStroke("blue");
         e.doppelganger._drawFunc = e.getDrawFunc();
+        e.doppelganger.setListening(false);
         e.doppelganger.setDrawFunc(function(e) {
             if (typeof this._drawFunc == "function") {
-                this.attrs.strokeWidth = 1 / im.scale;
+                this.setStrokeWidth(1 / im.scale);
                 this.setFill("transparent");
                 if (t == "image") {
                     this.attrs.image = "";
@@ -287,9 +290,14 @@ var ImageEditor = function(settings) {
         e._drawFunc = e.getDrawFunc();
         e.setDrawFunc(function(e) {
             for (var t in this.attrs) {
-                if (t == "drawFunc" || t == "drawHitFunc" || t == "strokeWidth" || t == "fill") continue;
+                if (t == "drawFunc" || t == "drawHitFunc" || t == "strokeWidth" || t == "fill" || t == "listening") continue;
                 this.doppelganger.attrs[t] = this.attrs[t];
             }
+            var n = this.getOffset();
+            this.doppelganger.setX(this.getX() + n.x);
+            this.doppelganger.setY(this.getY() + n.y);
+            this.doppelganger.setOffset(this.getOffset());
+            this.doppelganger.setSize(this.getSize());
             im.foreground.draw();
             this._drawFunc(e);
         });
@@ -424,6 +432,13 @@ var ImageEditor = function(settings) {
     saveSize.width.appendTo($("<div>w </div>").addClass("saveWidth").appendTo(saveSize.area));
     saveSize.height.appendTo($("<div>h </div>").addClass("saveHeight").appendTo(saveSize.area));
     saveSize.area.appendTo(controlBar);
+    im.on("adjustedsavers", function() {
+        saveSize.width.text(im.saveWidth);
+        saveSize.height.text(im.saveHeight);
+    });
+    saveSize.crop.click(function() {
+        im.adjustSavers();
+    });
     if (im.strictSize) {
         saveSize.both.attr("disabled", "true");
     } else {
@@ -454,6 +469,8 @@ var ImageEditor = function(settings) {
         im.setActiveElement(im.stage);
         im.fire("ChangeActiveAction");
         im.fire("changeActiveComponent");
+        im.background.hide();
+        im.foreground.hide();
         $(im.stage.getContainer()).hide();
         var e = Math.round(im.center.x - im.saveWidth / 2), t = Math.round(im.center.y - im.saveHeight / 2), n = im.stage.getX(), r = im.stage.getY(), i = im.stage.getWidth(), s = im.stage.getHeight();
         im.stage.setX(-e);
@@ -472,6 +489,7 @@ var ImageEditor = function(settings) {
                 });
                 im.hideLoader();
                 im.background.show();
+                im.foreground.show();
                 im.stage.setX(n);
                 im.stage.setY(r);
                 im.stage.setWidth(i);
@@ -481,6 +499,66 @@ var ImageEditor = function(settings) {
                 $(im.stage.getContainer()).show();
             }
         });
+    };
+    im.adjustSavers = function() {
+        im.foreground.autoCrop = false;
+        im.background.autoCrop = false;
+        var e, t, n = im.stage.getChildren(), r = n.length, i = {
+            min: {
+                x: false,
+                y: false
+            },
+            max: {
+                x: false,
+                y: false
+            }
+        };
+        for (e = 0; e < r; e++) {
+            if (n[e].autoCrop === false) continue;
+            for (t in n[e].children) {
+                var s = n[e].children[t].getPosition(), o = n[e].children[t].getSize(), u = {
+                    x: s.x + o.width / 2,
+                    y: s.y + o.height / 2
+                };
+                if (i.min.x === false) {
+                    i.min.x = s.x;
+                    i.min.y = s.y;
+                    i.max.x = s.x - o.width;
+                    i.max.y = s.y + o.height;
+                }
+                if (i.min.x > s.x) i.min.x = s.x;
+                if (i.min.y > s.y) i.min.y = s.y;
+                if (i.max.x < s.x + o.width) i.max.x = s.x + o.width;
+                if (i.max.y < s.y + o.height) i.max.y = s.y + o.height;
+            }
+        }
+        var a = {
+            x: (i.min.x + i.max.x) / 2,
+            y: (i.min.y + i.max.y) / 2
+        }, f = {
+            x: Math.round(a.x - im.center.x),
+            y: Math.round(a.y - im.center.y)
+        };
+        if (f.x !== 0 || f.y !== 0) {
+            for (e = 0; e < r; e++) {
+                if (n[e].autoCrop === false) continue;
+                for (t in n[e].children) {
+                    n[e].children[t].attrs.x -= f.x;
+                    n[e].children[t].attrs.y -= f.y;
+                }
+            }
+            return im.adjustSavers();
+        }
+        var o = {
+            width: i.max.x - i.min.x,
+            height: i.max.y - i.min.y
+        };
+        console.log(o);
+        im.alterCore("saveWidth", Math.round(o.width));
+        im.alterCore("saveHeight", Math.round(o.height));
+        im.buildBackground();
+        im.fire("adjustedsavers");
+        im.stage.draw();
     };
     im.extend = function(e, t) {
         this[e] = t;
@@ -515,9 +593,11 @@ var ImageEditor = function(settings) {
         if (jQuery && elem instanceof jQuery) elem = elem[0];
         elem.controlSet = function(im, js) {
             im.disable = function() {
+                im.enabled = false;
                 $(elem).parent().parent().addClass("disabled");
             };
             im.enable = function() {
+                im.enabled = true;
                 $(elem).parent().parent().removeClass("disabled");
             };
             this.im = im;
@@ -525,18 +605,21 @@ var ImageEditor = function(settings) {
             try {
                 eval(js);
             } catch (e) {
-                console.error(e);
                 var pos = e.stack.replace(/[\S\s]+at HTMLDivElement.eval.+?<anonymous>:(\d+:\d+)[\S\s]+/, "$1").split(":");
-                var jsstack = js.split("\n");
-                var error = "Parse error at line #" + pos[0] + " char #" + pos[1] + " within " + ns;
-                error += "\n" + jsstack[parseInt(pos[0]) - 1];
-                error += "\n" + (new Array(parseInt(pos[1]))).join(" ") + "^";
-                console.error(error);
+                if (pos[1] && !isNaN(parseInt(pos[1]))) {
+                    var jsstack = js.split("\n");
+                    var msg = "Parse error at line #" + pos[0] + " char #" + pos[1] + " within " + ns;
+                    msg += "\n" + jsstack[parseInt(pos[0]) - 1];
+                    msg += "\n" + (new Array(parseInt(pos[1]))).join(" ") + "^";
+                    error(msg);
+                } else {
+                    error('"' + e.message + '" in "' + im.namespace + '"');
+                }
             }
             return this;
         };
         var newim = im.clone(ns);
-        var nso = elem.controlSet(newim, js);
+        var nso = elem.controlSet.call(elem, newim, js);
         im.controlSets[ns] = nso;
         return nso;
     };
@@ -546,19 +629,18 @@ var ImageEditor = function(settings) {
             try {
                 eval(js);
             } catch (e) {
-                console.error(e);
+                error(e);
                 window.lastError = e;
                 var pos = e.stack.replace(/[\S\s]+at HTMLDivElement.eval.+?<anonymous>:(\d+:\d+)[\S\s]+/, "$1").split(":");
-                if (e.count != 2) {
-                    console.error(e.message);
-                    console.error(e.stack);
+                if (pos.length != 2) {
+                    error(e.message);
+                    error(e.stack);
                 } else {
                     var jsstack = js.split("\n");
-                    var error = "Parse error at line #" + pos[0] + " char #" + pos[1] + " within " + ns;
-                    console.log(pos);
-                    error += "\n" + jsstack[parseInt(pos[0]) - 1];
-                    error += "\n" + (new Array(parseInt(pos[1]))).join(" ") + "^";
-                    console.error(error);
+                    var msg = "Parse error at line #" + pos[0] + " char #" + pos[1] + " within " + ns;
+                    msg += "\n" + jsstack[parseInt(pos[0]) - 1];
+                    msg += "\n" + (new Array(parseInt(pos[1]) || 0)).join(" ") + "^";
+                    error(msg);
                 }
             }
             return this;
@@ -582,18 +664,21 @@ var ImageEditor = function(settings) {
             try {
                 eval(js);
             } catch (e) {
-                error(e);
                 var pos = e.stack.replace(/[\S\s]+at HTMLDivElement.eval.+?<anonymous>:(\d+:\d+)[\S\s]+/, "$1").split(":");
-                var jsstack = js.split("\n");
-                var error = "Parse error at line #" + pos[0] + " char #" + pos[1] + " within " + ns;
-                error += "\n" + jsstack[parseInt(pos[0]) - 1];
-                error += "\n" + (new Array(parseInt(pos[1]))).join(" ") + "^";
-                error(error);
+                if (pos[1] && !isNaN(parseInt(pos[1]))) {
+                    var jsstack = js.split("\n");
+                    var msg = "Parse error at line #" + pos[0] + " char #" + pos[1] + " within " + ns;
+                    msg += "\n" + jsstack[parseInt(pos[0]) - 1];
+                    msg += "\n" + (new Array(parseInt(pos[1]))).join(" ") + "^";
+                    error(msg);
+                } else {
+                    error('"' + e.message + '" in "' + im.namespace + '"');
+                }
             }
             return this;
         };
         var newim = im.clone(ns);
-        var nso = elem.component(newim, js);
+        var nso = elem.component.call(elem, newim, js);
         im.components[ns] = nso;
         return nso;
     };
@@ -602,29 +687,24 @@ var ImageEditor = function(settings) {
     im.stage.add(im.background);
     im.stage.add(im.foreground);
     im.bgimage = new Image;
+    im.saveArea = new Kinetic.Rect;
+    im.bgimage.onload = function() {
+        im.saveArea.setFillPatternImage(im.bgimage);
+        im.saveArea.setFillPatternOffset([ -(im.saveWidth / 2), -(im.saveHeight / 2) ]);
+        im.saveArea.setFillPatternScale(1 / im.scale);
+        im.saveArea.setFillPatternX(0);
+        im.saveArea.setFillPatternY(0);
+        im.saveArea.setFillPatternRepeat("repeat");
+        im.background.add(im.saveArea);
+        im.background.on("click", function() {
+            im.setActiveElement(im.stage);
+        });
+    };
     im.bgimage.src = "/concrete/images/testbg.png";
     im.buildBackground = function() {
         var e = (new Date).getTime();
         var t = im.stage.getTotalDimensions();
         var n = (t.max.x + t.visibleHeight + t.visibleWidth) * 2;
-        if (!im.saveArea) {
-            im.saveArea = new Kinetic.Rect({
-                width: im.saveWidth,
-                height: im.saveHeight,
-                fillPatternImage: im.bgimage,
-                fillPatternOffset: [ -(im.saveWidth / 2), -(im.saveHeight / 2) ],
-                fillPatternScale: 1 / im.scale,
-                fillPatternX: 0,
-                fillPatternY: 0,
-                fillPatternRepeat: "repeat",
-                x: Math.floor(im.center.x - im.saveWidth / 2),
-                y: Math.floor(im.center.y - im.saveHeight / 2)
-            });
-            im.background.add(im.saveArea);
-            im.background.on("click", function() {
-                im.setActiveElement(im.stage);
-            });
-        }
         im.saveArea.setFillPatternOffset([ -(im.saveWidth / 2) * im.scale, -(im.saveHeight / 2) * im.scale ]);
         im.saveArea.setX(Math.floor(im.center.x - im.saveWidth / 2));
         im.saveArea.setY(Math.floor(im.center.y - im.saveHeight / 2));
@@ -653,6 +733,9 @@ var ImageEditor = function(settings) {
         im.fire("backgroundBuilt");
         im.background.draw();
         im.foreground.draw();
+        if (im.activeElement && im.activeElement.elementType != "stage" && im.activeElement.parent) {
+            im.activeElement.parent.draw();
+        }
     };
     im.buildBackground();
     im.on("stageChanged", im.buildBackground);
@@ -770,20 +853,6 @@ var ImageEditor = function(settings) {
             });
         }
     });
-    im.adjustSavers = function() {
-        if (im.activeElement.elementType != "stage" && im.autoCrop) {
-            im.alterCore("saveWidth", Math.ceil(-(im.activeElement.getX() - im.center.x) * 2));
-            im.alterCore("saveHeight", Math.ceil(-(im.activeElement.getY() - im.center.y) * 2));
-            if ((im.activeElement.getWidth() - im.saveWidth / 2) * 2 > im.saveWidth) {
-                im.alterCore("saveWidth", Math.ceil((im.activeElement.getWidth() - im.saveWidth / 2) * 2));
-            }
-            if ((im.activeElement.getHeight() - im.saveHeight / 2) * 2 > im.saveHeight) {
-                im.alterCore("saveHeight", Math.ceil((im.activeElement.getHeight() - im.saveHeight / 2) * 2));
-            }
-            im.buildBackground();
-            im.fire("saveSizeChange");
-        }
-    };
     im.bind("ControlSetsLoaded", function() {
         im.fire("LoadingComponents");
         im.showLoader("Loading Components..");
@@ -955,6 +1024,7 @@ $.fn.ImageEditor = function(e) {
     }
     t.closest(".ui-dialog").find(".ui-resizable-handle").hide();
     t.height("-=30");
+    $("div.editorcontrols").height(t.height() - 130);
     t.width("-=330").parent().width("-=330").children("div.bottomBar").width("-=330");
     e.width === undefined && (e.width = t.width());
     e.height === undefined && (e.height = t.height());
@@ -967,14 +1037,14 @@ $.fn.ImageEditor = function(e) {
     n.on("ChangeActiveComponent", function(e) {
         if (!e.eventData) $("h4.active", r).removeClass("active");
     });
-    $("div.controls", r).children("div.save").children("button.save").click(function() {
+    $("div.controls > div.controlscontainer", r).children("div.save").children("button.save").click(function() {
         n.save();
     }).end().children("button.cancel").click(function() {
         if (confirm("Are you certain?")) $.fn.dialog.closeTop();
     });
-    $("div.controls", r).children("ul.nav").children().click(function() {
+    $("div.controls > div.controlscontainer", r).children("ul.nav").children().click(function() {
         if ($(this).hasClass("active")) return false;
-        $("div.controls", r).children("ul.nav").children().removeClass("active");
+        $("div.controls > div.controlscontainer", r).children("ul.nav").children().removeClass("active");
         $(this).addClass("active");
         n.trigger("ChangeNavTab", $(this).text().toLowerCase());
         return false;

@@ -20,6 +20,7 @@ $.fn.ImageEditor = function (settings) {
   }
   self.closest('.ui-dialog').find('.ui-resizable-handle').hide();
   self.height("-=30");
+  $('div.editorcontrols').height(self.height() - 130);
   self.width("-=330").parent().width("-=330").children('div.bottomBar').width("-=330");
   (settings.width === undefined && (settings.width = self.width()));
   (settings.height === undefined && (settings.height = self.height()));
@@ -35,15 +36,15 @@ $.fn.ImageEditor = function (settings) {
     if (!e.eventData)
       $('h4.active',context).removeClass('active');
   });
-  $('div.controls',context).children('div.save').children('button.save').click(function(){
+  $('div.controls > div.controlscontainer',context).children('div.save').children('button.save').click(function(){
     im.save();
   }).end().children('button.cancel').click(function(){
     if (confirm("Are you certain?"))
       $.fn.dialog.closeTop();
   });
-  $('div.controls',context).children('ul.nav').children().click(function(){
+  $('div.controls > div.controlscontainer',context).children('ul.nav').children().click(function(){
     if ($(this).hasClass('active')) return false;
-    $('div.controls',context).children('ul.nav').children().removeClass('active');
+    $('div.controls > div.controlscontainer',context).children('ul.nav').children().removeClass('active');
     $(this).addClass('active');
     im.trigger('ChangeNavTab',$(this).text().toLowerCase());
     return false;

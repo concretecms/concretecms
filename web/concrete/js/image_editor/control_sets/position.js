@@ -59,7 +59,7 @@ slidery.slider({
 	animate: 300,
 	slide: function(ev,e){
 		im.activeElement.setY(-e.value + Math.round(im.center.y - im.saveHeight/2));
-		im.trigger('activeElementMove', e);
+		//im.trigger('activeElementMove', e);
 		im.trigger('sliderMove', e, elem);
 	},
 	stop: function(ev,e){
@@ -77,7 +77,7 @@ sliderx.slider({
 	animate: 300,
 	slide: function(ev,e){
 		im.activeElement.setX(e.value + Math.round(im.center.x - im.saveWidth/2));
-		im.trigger('activeElementMove', e);
+		//im.trigger('activeElementMove', e);
 		im.trigger('sliderMove', e, elem);
 	},
 	stop: function(ev,e){
@@ -89,7 +89,7 @@ sliderx.slider({
 
 im.bind('sliderMove',function(){
 	im.currentElement.parent.draw();
-	im.buildBackground();
+	//im.buildBackground();
 	$('div.horizontal > input').val(sliderx.slider('option', 'value') || "0");
 	$('div.vertical > input').val(slidery.slider('option', 'value') || "0");
 	updateInputs();
@@ -103,10 +103,11 @@ var updateSliders = function() {
 var inputx = $('div.horizontal > input',me), inputy = $('div.vertical > input',me);
 var updateInputs = function() {
 	inputx.val(-Math.round(Math.round(im.center.x - im.saveWidth/2) - im.currentElement.attrs.x) || "0");
-	inputy.val(Math.round(Math.round(im.center.y - im.saveHeight/2) - im.currentElement.attrs.y) || "0");
+	inputy.val(-Math.round(Math.round(im.center.y - im.saveHeight/2) - im.currentElement.attrs.y) || "0");
 };
 
 $('button.up',me).click(function(e) {
+	im.buildBackground();
 	if (im.foreground.getZIndex() - im.activeElement.parent.getZIndex() == 1) return;
 	im.currentElement.parent.moveUp();
 	im.buildBackground();
@@ -119,9 +120,15 @@ $('button.down',me).click(function(e) {
 $('button.center',me).click(function(e) {
 	sliderx.slider('value',-Math.round(Math.round(im.center.x - im.saveWidth/2) - (im.center.x - im.currentElement.attrs.width/2)));
 	slidery.slider('value',Math.round(Math.round(im.center.y - im.saveHeight/2) - (im.center.y - im.currentElement.attrs.height/2)));
+	console.log({
+		x:Math.round(im.center.x - im.currentElement.getWidth()/2),
+		y:Math.round(im.center.y - im.currentElement.getHeight()/2),
+		duration:.3,
+		callback:updateSliders
+	});
 	im.currentElement.transitionTo({
-		x:Math.round(im.center.x - im.currentElement.attrs.width/2),
-		y:Math.round(im.center.y - im.currentElement.attrs.height/2),
+		x:Math.round(im.center.x - im.currentElement.getWidth()/2),
+		y:Math.round(im.center.y - im.currentElement.getHeight()/2),
 		duration:.3,
 		callback:updateSliders
 	});
