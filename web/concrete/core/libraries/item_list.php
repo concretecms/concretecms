@@ -107,6 +107,10 @@ class Concrete5_Library_ItemList {
 
 	public function get($itemsToGet = 0, $offset = 0) {
 		$this->start = $offset;
+		if ($itemsToGet == -1) {
+			return $this->items;
+		}
+		
 		return array_slice($this->items, $offset, $itemsToGet);
 	}
 	

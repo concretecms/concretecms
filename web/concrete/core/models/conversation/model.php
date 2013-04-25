@@ -34,7 +34,8 @@ class Concrete5_Model_Conversation extends Object {
 	}
 
 	public function getConversationMessageUsers() {
-		$ml = new ConversationMessageList($this);
+		$ml = new ConversationMessageList();
+		$ml->filterByConversation($this);
 		$users = array();
 		foreach ($ml->get() as $message) {
 			$ui = $message->getConversationMessageUserObject();

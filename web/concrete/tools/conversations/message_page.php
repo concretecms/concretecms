@@ -13,7 +13,8 @@ if (is_object($cnv)) {
 	
 	switch($displayMode) {
 		case 'flat':
-			$ml = new ConversationMessageList($cnv);
+			$ml = new ConversationMessageList();
+			$ml->filterByConversation($cnv);
 			break;
 		default: // threaded
 			$ml = new ConversationMessageThreadedList($cnv);

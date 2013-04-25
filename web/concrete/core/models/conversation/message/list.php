@@ -6,8 +6,11 @@ class Concrete5_Model_Conversation_Message_List extends DatabaseItemList {
 	protected $sortByDirection = 'asc';
 	protected $cnvID;
 
-	public function __construct(Conversation $cnv) {
+	public function __construct() {
 		$this->setQuery('select cnvMessageID from ConversationMessages');
+	}
+
+	public function filterByConversation(Conversation $cnv) {
 		$this->filter('cnvID', $cnv->getConversationID());
 	}
 

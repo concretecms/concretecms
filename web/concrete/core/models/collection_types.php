@@ -211,6 +211,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				$r2 = $db->prepare($q2);
 				$res2 = $db->execute($r2, $v2);
 				if ($res2) {
+					$cmplist = Composer::getList();
+					foreach($cmplist as $cmp) {
+						$cmp->rescanComposerOutputControlObjects();
+					}
 					return CollectionType::getByID($ctID);
 				}
 			}
