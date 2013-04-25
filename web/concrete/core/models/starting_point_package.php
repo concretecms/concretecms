@@ -119,7 +119,6 @@ class Concrete5_Model_StartingPointPackage extends Package {
 		$installDirectory = DIR_BASE_CORE . '/config';
 		$ci = new ContentImporter();
 		$ci->importContentFile($this->getPackagePath() . '/content.xml');
-		$ci->importContentFile(DIR_BASE_CORE. '/config/install/base/shared_composer_content.xml');
 
 	}
 	

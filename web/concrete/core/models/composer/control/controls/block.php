@@ -83,13 +83,11 @@ class Concrete5_Model_BlockComposerControl extends ComposerControl {
 		}
 		return $templates;
 	}
-
+	
 	public function addToComposerFormLayoutSet(ComposerFormLayoutSet $set) {
 		$layoutSetControl = parent::addToComposerFormLayoutSet($set);
 		$composer = $set->getComposerObject();
-		foreach($composer->getComposerPageTypeObjects() as $ct) {
-			ComposerOutputControl::add($layoutSetControl, $ct, STACKS_AREA_NAME);
-		}
+		$composer->rescanComposerOutputControlObjects();
 		return $layoutSetControl;
 	}
 
