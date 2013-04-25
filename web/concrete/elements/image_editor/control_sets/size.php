@@ -20,7 +20,7 @@
 			<input name='height' />
 		</div>
 	</div>
-</div>
-<div class='locked'>
-
+	<div class='locked btn'>
+		%
+	</div>
 </div>

@@ -1,5 +1,5 @@
 div.controlset.text button.fontname {
-	width:269px;
+	width:219px;
 	font-family:"Roboto Condensed";
 }
 div.controlset.text button.color {
@@ -7,7 +7,7 @@ div.controlset.text button.color {
 	background:black;
 }
 div.controlset.text textarea {
-	width:292px;
+	width:240px;
 	height:80px;
 }
 div.controlset.text div.settingslider {
@@ -17,7 +17,7 @@ div.controlset.text div.settingslider span {
 	color:#666666;
 }
 div.controlset.text div.settingslider div.slider {
-	width: 240px;
+	width: 189px;
 	margin-right:9px;
 	display:inline-block;
 }

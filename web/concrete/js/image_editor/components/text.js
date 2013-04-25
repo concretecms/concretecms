@@ -1,4 +1,4 @@
- var me = $(this);
+var me = $(this);
 
 im.activeTextElement = false;
 im.on('changeActiveComponent',function(e){
@@ -11,8 +11,6 @@ im.on('changeActiveComponent',function(e){
 		y:0
 	});
 	im.addElement(im.activeTextElement,'text');
-	im.activeTextElement.doppelganger = new Kinetic.Rect({});
-	im.activeTextElement.doppelganger.doppelganger = im.activeTextElement;
 	im.setActiveElement(im.activeTextElement);
 
 	var defFont = 'Open Sans';
@@ -61,8 +59,8 @@ colorPicker.addClass('ccm-ui').css({
 	'background-image':'none',
 	background:'white',
 	'border-radius':'5px',
-	border:'solid 1px #333',
-	top:'-=136'
+	border:'solid 1px #666',
+	"margin-top":-136
 }).find('.colorpicker_new_color').css({
 	width:82,
 	height:150,
@@ -71,20 +69,22 @@ colorPicker.addClass('ccm-ui').css({
 }).end().append(buttonDiv);
 
 buttonDiv.css({
-	background:'black',
-	height:60,
+	background:'#f5f5f5',
+	'border-top':'solid 1px #ccc',
+	height:50,
 	width:'100%',
-	top:218,
+	top:228,
 	position:'absolute',
 });
 var cancelButton = $('<button/>').text('Cancel').click(function(){
 	colorPicker.hide();
 }).css({
-	color:'#aaa',
+	color:'#666',
+	"font-weight":"bold",
 	float:'left',
 	background:'none',
 	border:'none',
-	'margin-top':18,
+	'margin-top':13,
 	padding:'0 20px'
 });
 var okayButton = $('<button/>').text('Apply').click(function(){
@@ -94,11 +94,12 @@ var okayButton = $('<button/>').text('Apply').click(function(){
 	im.activeTextElement.setFill(currentColor);
 	im.activeTextElement.parent.draw();
 }).css({
-	color:'#fff',
+	color:'#0099ff',
+	"font-weight":"bold",
 	float:'right',
 	background:'none',
 	border:'none',
-	'margin-top':18,
+	'margin-top':13,
 	padding:'0 20px'
 });
 buttonDiv.append(cancelButton).append(okayButton);
@@ -210,19 +211,19 @@ $('div.sizeSlider',me).find('div.slider').slider({
 $('div.lineHeightSlider',me).find('div.slider').slider({
 	min:0,
 	max:200,
-	value:0,
+	value:100,
 	slide:function(e,ui){
-		$('div.lineHeightSlider',me).find('input').val(ui.value);
-		im.activeTextElement.setLineHeight(ui.value+1);
+		$('div.lineHeightSlider',me).find('input').val(ui.value/100);
+		im.activeTextElement.setLineHeight(ui.value/100);
 		im.activeTextElement.parent.draw();
 	},
 	change:function(e,ui){
-		im.activeTextElement.setLineHeight(ui.value+1);
+		im.activeTextElement.setLineHeight(ui.value/100);
 		im.activeTextElement.parent.draw();
 	}
 }).end().find('input').val(0).keyup(function(){
 	var val = Number($(this).val());
-	if (isNaN(val)) val=0;
+	if (isNaN(val)) val=1;
 	$('div.lineHeightSlider',me).find('div.slider').slider("value",val);
 	$(this).val(val);
 });
