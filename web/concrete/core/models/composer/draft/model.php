@@ -21,7 +21,9 @@ class Concrete5_Model_ComposerDraft extends Object {
 			return $this->c;
 		}
 	}
-
+	public function overrideComposerPermissions() {
+		return $this->cmpDraftOverrideComposerPermissions;
+	}
 	public function createNewCollectionVersion() {
 		$c = $this->getComposerDraftCollectionObject();
 		$this->c = $c->cloneVersion('');
@@ -51,6 +53,7 @@ class Concrete5_Model_ComposerDraft extends Object {
 		return $outputControls;
 	}
 
+	public function getPermissionObjectIdentifier() {return $this->cmpDraftID;}
 	public function getComposerDraftTargetParentPageID() {return $this->cmpDraftTargetParentPageID;}
 	
 	public static function getByID($cmpDraftID) {
@@ -63,6 +66,23 @@ class Concrete5_Model_ComposerDraft extends Object {
 		}
 	}
 
+	public function resetComposerDraftPermissions() {
+		$db = Loader::db();
+		$db->Execute("delete from ComposerDraftPermissionAssignments where cmpDraftID = ?", array($this->cmpDraftID));
+		$db->Execute("update ComposerDrafts set cmpDraftOverrideComposerPermissions = 0 where cmpDraftID = ?", array($this->cmpDraftID));
+	}
+
+	public function doOverrideComposerPermissions() {
+		$db = Loader::db();
+		$db->Execute("delete from ComposerDraftPermissionAssignments where cmpDraftID = ?", array($this->cmpDraftID));
+		$db->Execute("update ComposerDrafts set cmpDraftOverrideComposerPermissions = 1 where cmpDraftID = ?", array($this->cmpDraftID));
+		$permissions = PermissionKey::getList('composer_draft');
+		foreach($permissions as $pk) { 
+			$pk->setPermissionObject($this);
+			$pk->copyFromComposerToComposerDraft();
+		}
+	}
+
 	public function discard() {
 		$c = $this->getComposerDraftCollectionObject();
 		$c->delete();
@@ -71,10 +91,10 @@ class Concrete5_Model_ComposerDraft extends Object {
 		$db->Execute('delete from ComposerDraftBlocks where cmpDraftID = ?', array($this->cmpDraftID));
 	}
 
-	public function getMyDrafts() {
+	public function getList() {
 		$db = Loader::db();
 		$u = new User();
-		$r = $db->Execute('select ComposerDrafts.cmpDraftID from ComposerDrafts where uID = ? order by cmpDateCreated desc', array($u->getUserID()));
+		$r = $db->Execute('select cmpDraftID from ComposerDrafts order by cmpDateCreated desc');
 		$pages = array();
 		while ($row = $r->FetchRow()) {
 			$entry = ComposerDraft::getByID($row['cmpDraftID']);

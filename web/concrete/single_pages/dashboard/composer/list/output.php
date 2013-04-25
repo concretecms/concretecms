@@ -15,7 +15,7 @@ foreach($composer->getComposerPageTypeObjects() as $ct) { ?>
 	
 	<div id="ccm-tab-content-<?=$ct->getCollectionTypeID()?>" class="ccm-tab-content" data-composer-control-output-collection-type-id="<?=$ct->getCollectionTypeID()?>">
 		<?
-		$areas = ComposerOutputControl::getCollectionTypeAreas($ct);
+		$areas = ComposerOutputControl::getCollectionTypeAreas($composer, $ct);
 		if (count($areas) > 0) {
 
 			foreach($areas as $area) { ?>

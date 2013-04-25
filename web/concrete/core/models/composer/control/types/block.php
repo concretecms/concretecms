@@ -32,4 +32,14 @@ class Concrete5_Model_BlockComposerControlType extends ComposerControlType {
 		$bx->setComposerControlName($bt->getBlockTypeName());
 		return $bx;
 	}
+
+	public function controlTypeSupportsOutputControl() {return true;}
+	
+	public function configureFromImport($node) {
+		$bt = BlockType::getByHandle((string) $node['handle']);
+		return BlockComposerControlType::getComposerControlByIdentifier($bt->getBlockTypeID());
+	}
+	
+	
+
 }

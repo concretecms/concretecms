@@ -35,10 +35,6 @@ class Concrete5_Controller_Dashboard_Pages_Types extends DashboardBaseController
 		$this->view();
 	}
 	
-	public function clear_composer() {
-		$this->set('message', t("This page type is no longer included in composer."));
-	}
-	
 	public function update() {
 		
 		$valt = Loader::helper('validation/token');

@@ -7,4 +7,8 @@ class Concrete5_Model_AllComposerTargetType extends ComposerTargetType {
 		return $configuredTarget;
 	}
 
+	public function configureComposerTargetFromImport($txml) {
+		return new AllComposerTargetConfiguration($this);
+	}
+
 }

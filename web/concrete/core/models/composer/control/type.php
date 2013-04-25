@@ -4,7 +4,9 @@ abstract class Concrete5_Model_ComposerControlType extends Object {
 
 	abstract public function getComposerControlObjects();
 	abstract public function getComposerControlByIdentifier($identifier);
+	abstract public function configureFromImport($node);
 	
+	public function controlTypeSupportsOutputControl() {return false;}
 	public function getComposerControlTypeName() {return $this->cmpControlTypeName;}
 	public function getComposerControlTypeHandle() {return $this->cmpControlTypeHandle;}
 	public function getComposerControlTypeID() { return $this->cmpControlTypeID;}

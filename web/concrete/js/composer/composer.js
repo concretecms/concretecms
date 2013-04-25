@@ -18,14 +18,24 @@
             if (r.saveURL) {
               $f.data('saveURL', r.saveURL);
             }
+            if (r.viewURL) {
+              $f.data('viewURL', r.viewURL);
+            }
             if (r.discardURL) {
               $f.data('discardURL', r.discardURL);
             }
             if (r.publishURL) {
               $f.data('publishURL', r.publishURL);
             }
+            var settings = $f.data('settings');
+            if (settings.pushStateOnSave && r.viewURL != settings.viewURL) {
+              if (window.history) {
+                window.history.replaceState({'method': 'loaddraft'}, '', r.viewURL);
+                settings.viewURL = r.viewURL;
+              }
+            }
             if (onComplete) {
-              onComplete();
+              onComplete(r);
             }
           }
       });
@@ -38,6 +48,7 @@
       var settings = $.extend({
         autoSaveEnabled: true,
         autoSaveTimeout: 5000,
+        pushStateOnSave: false,
         publishReturnMethod: 'reload',
         onExit: function() {
           window.location.href = CCM_DISPATCHER_FILENAME + '/dashboard/composer/drafts';
@@ -55,17 +66,37 @@
         var $this = $(this);
         $this.data('settings', settings);
         $this.data('saveURL', settings.saveURL);
+        $this.data('viewURL', settings.viewURL);
         $this.data('discardURL', settings.discardURL);
         $this.data('publishURL', settings.publishURL);
 
         if (settings.autoSaveEnabled) {
           methods.saveinternal = setInterval(function() {
-            methods.private.saveDraft($this);
+            methods.private.saveDraft($this, function(r) {
+              if (parseInt(settings.cmpDraftID) == 0) {
+                // this is the first auto-save.
+                $this.find('button[data-composer-btn=permissions]').show();
+                settings.cmpDraftID = r.cmpDraftID;
+              }
+            });
           }, settings.autoSaveTimeout);
         }
 
         $this.find('button[data-composer-btn=exit]').on('click', function() {
           settings.onExit();
+        });
+
+        if (parseInt(settings.cmpDraftID) > 0) {
+          $this.find('button[data-composer-btn=permissions]').show();
+        }
+
+        $this.find('button[data-composer-btn=permissions]').on('click', function() {
+          jQuery.fn.dialog.open({
+            href: CCM_TOOLS_PATH + '/composer/draft/permissions?cmpDraftID=' + settings.cmpDraftID,
+            width: 400,
+            height: 290,
+            title: ccmi18n.cmpDraftPermissionsTitle
+          });
         });
 
         $this.find('button[data-composer-btn=discard]').on('click', function() {
@@ -84,7 +115,7 @@
 
         $this.find('button[data-composer-btn=save]').on('click', function() {
           clearInterval(methods.saveinterval);
-          methods.private.saveDraft($this, function() {
+          methods.private.saveDraft($this, function(r) {
             settings.onAfterSaveAndExit();
           });
         });

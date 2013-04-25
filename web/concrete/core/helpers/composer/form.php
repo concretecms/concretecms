@@ -9,8 +9,11 @@ class Concrete5_Helper_Composer_Form {
 		));
 	}
 
-	public function displayButtons() {
-		Loader::element('composer/form/output/buttons');
+	public function displayButtons(Composer $composer, $draft = false) {
+		Loader::element('composer/form/output/buttons', array(
+			'composer' => $composer,
+			'draft' => $draft
+		));
 	}
 
 	public function addAssetsToRequest(Composer $cmp, Controller $cnt) {
