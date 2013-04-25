@@ -26,10 +26,10 @@ class Concrete5_Model_ComposerOutputControl extends Object {
 		return ComposerOutputControl::getByID($cmpOutputControlID);
 	}
 
-	public static function getCollectionTypeAreas(CollectionType $ct) {
+	public static function getCollectionTypeAreas(Composer $cmp, CollectionType $ct) {
 		$mc = $ct->getMasterTemplate();
 		$db = Loader::db();
-		$areas = $db->GetCol('select distinct arHandle from Areas where cID = ? and arIsGlobal = 0', array($mc->getCollectionID()));
+		$areas = $db->GetCol('select arHandle from Areas where cID = ? and arIsGlobal = 0 union distinct select arHandle from ComposerOutputControls where cmpID = ?', array($mc->getCollectionID(), $cmp->getComposerID()));
 		return $areas;
 	}
 

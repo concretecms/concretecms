@@ -33,6 +33,18 @@ class Concrete5_Model_ComposerFormLayoutSetControl extends Object {
 		}
 	}
 
+	public function ensureOutputControlExists() {
+		$set = $this->getComposerFormLayoutSetObject();
+		$cmp = $set->getComposerObject();
+		$pagetypes = $cmp->getComposerPageTypeObjects();
+		foreach($pagetypes as $ct) {
+			$outputcontrol = ComposerOutputControl::getByComposerFormLayoutSetControl($ct, $this);
+			if (!is_object($outputcontrol)) {
+				ComposerOutputControl::add($this, $ct, STACKS_AREA_NAME);
+			}
+		}
+	}
+
 	public function export($fxml) {
 		$node = $fxml->addChild('control');
 		$node->addAttribute('custom-template', $this->getComposerFormLayoutSetControlCustomTemplate());

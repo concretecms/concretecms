@@ -51,17 +51,31 @@ class Concrete5_Model_Composer extends Object {
 	public static function import($node) {
 		$types = array();
 		if ((string) $node->pagetypes['type'] == 'custom' || (string) $node->pagetypes['type'] == 'except') {
-			$cmpAllowedPageTypes = 'C';
+			if ((string) $node->pagetypes['type'] == 'custom') {
+				$cmpAllowedPageTypes = 'C';
+			} else {
+				$cmpAllowedPageTypes = 'X';
+			}
+			
 			foreach($node->pagetypes->pagetype as $pagetype) {
 				$types[] = CollectionType::getByHandle((string) $pagetype['handle']);
 			}
 		} else {
 			$cmpAllowedPageTypes = 'A';
 		}
-		$cm = Composer::add((string) $node['name'], $cmpAllowedPageTypes, $types);
-		$target = ComposerTargetType::importConfiguredComposerTarget($node->target);
-		$cm->setConfiguredComposerTargetObject($target);
-
+		$cmpName = (string) $node['name'];
+		$db = Loader::db();
+		$cmpID = $db->GetOne('select cmpID from Composers where cmpName = ?', array($cmpName));
+		if ($cmpID) {
+			$cm = Composer::getByID($cmpID);
+			$cm->update($cmpName, $cmpAllowedPageTypes, $types);
+		} else {
+			$cm = Composer::add($cmpName, $cmpAllowedPageTypes, $types);
+		}
+		if (isset($node->target)) {
+			$target = ComposerTargetType::importConfiguredComposerTarget($node->target);
+			$cm->setConfiguredComposerTargetObject($target);
+		}
 		if (isset($node->formlayout->set)) {
 			foreach($node->formlayout->set as $setnode) {
 				$set = $cm->addComposerFormLayoutSet((string) $setnode['name']);
@@ -150,7 +164,7 @@ class Concrete5_Model_Composer extends Object {
 			foreach($types as $ct) {
 				$pagetype = $osn->addChild('pagetype');
 				$pagetype->addAttribute('handle', $ct->getCollectionTypeHandle());
-				$areas = ComposerOutputControl::getCollectionTypeAreas($ct);
+				$areas = ComposerOutputControl::getCollectionTypeAreas($sc, $ct);
 				foreach($areas as $arHandle) {
 					$area = $pagetype->addChild('area');
 					$area->addAttribute('name', $arHandle);
@@ -160,6 +174,19 @@ class Concrete5_Model_Composer extends Object {
 					}
 				}
 
+			}
+		}
+	}
+
+	public function rescanComposerOutputControlObjects() {
+		$sets = ComposerFormLayoutSet::getList($this);
+		foreach($sets as $s) {
+			$controls = ComposerFormLayoutSetControl::getList($s);
+			foreach($controls as $cs) {
+				$type = $cs->getComposerControlTypeObject();
+				if ($type->controlTypeSupportsOutputControl()) {
+					$cs->ensureOutputControlExists();
+				}
 			}
 		}
 	}
@@ -218,6 +245,7 @@ class Concrete5_Model_Composer extends Object {
 				));
 			}
 		}
+		$this->rescanComposerOutputControlObjects();
 	}
 
 	public static function getList() {

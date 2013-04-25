@@ -16,6 +16,13 @@
         </attributekey>
     </attributekeys>
     <composers>
+        <!-- we also strip out blog entry from basic page. //-->
+        <composer name="Page">
+            <pagetypes type="except">
+                <pagetype handle="blog_entry"/>
+            </pagetypes>
+        </composer>
+
         <composer name="Blog Entry">
             <pagetypes type="custom">
                 <pagetype handle="blog_entry"/>
