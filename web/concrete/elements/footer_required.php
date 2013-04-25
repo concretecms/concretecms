@@ -15,3 +15,4 @@ print $this->controller->outputFooterItems();
 // user profile menu
 Loader::element('account/menu');
 ?>
+<script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/image_editor.min.js"></script>

@@ -35,9 +35,11 @@ im.addControlSet = function(ns,js,elem) {
   if (jQuery && elem instanceof jQuery) elem = elem[0];
   elem.controlSet = function(im,js) {
     im.disable = function() {
+      im.enabled = false;
       $(elem).parent().parent().addClass('disabled');
     };
     im.enable = function() {
+      im.enabled = true;
       $(elem).parent().parent().removeClass('disabled');
     };
     this.im = im;
@@ -45,18 +47,21 @@ im.addControlSet = function(ns,js,elem) {
     try {
       eval(js);
     } catch(e) {
-      console.error(e);
       var pos = e.stack.replace(/[\S\s]+at HTMLDivElement.eval.+?<anonymous>:(\d+:\d+)[\S\s]+/,'$1').split(':');
-      var jsstack = js.split("\n");
-      var error = "Parse error at line #"+pos[0]+" char #"+pos[1]+" within "+ns;
-      error += "\n"+jsstack[parseInt(pos[0])-1];
-      error += "\n"+(new Array(parseInt(pos[1])).join(" "))+"^";
-      console.error(error);
+      if (pos[1] && !isNaN(parseInt(pos[1]))) {
+        var jsstack = js.split("\n");
+        var msg = "Parse error at line #"+pos[0]+" char #"+pos[1]+" within "+ns;
+        msg += "\n"+jsstack[parseInt(pos[0])-1];
+        msg += "\n"+(new Array(parseInt(pos[1])).join(" "))+"^";
+        error(msg);
+      } else {
+        error("\"" + e.message + "\" in \"" + im.namespace + "\"");
+      }
     }
     return this;
   };
   var newim = im.clone(ns);
-  var nso = elem.controlSet(newim,js);
+  var nso = elem.controlSet.call(elem,newim,js);
   im.controlSets[ns] = nso;
   return nso;
 };
@@ -67,20 +72,18 @@ im.addFilter = function(ns,js) {
     try {
       eval(js);
     } catch(e) {
-      console.error(e);
+      error(e);
       window.lastError = e;
       var pos = e.stack.replace(/[\S\s]+at HTMLDivElement.eval.+?<anonymous>:(\d+:\d+)[\S\s]+/,'$1').split(':');
-      if (e.count != 2) {
-        console.error(e.message);
-        console.error(e.stack);
-
+      if (pos.length != 2) {
+        error(e.message);
+        error(e.stack);
       } else {
         var jsstack = js.split("\n");
-        var error = "Parse error at line #"+pos[0]+" char #"+pos[1]+" within "+ns;
-        console.log(pos);
-        error += "\n"+jsstack[parseInt(pos[0])-1];
-        error += "\n"+(new Array(parseInt(pos[1])).join(" "))+"^";
-        console.error(error);
+        var msg = "Parse error at line #"+pos[0]+" char #"+pos[1]+" within "+ns;
+        msg += "\n"+jsstack[parseInt(pos[0])-1];
+        msg += "\n"+(new Array(parseInt(pos[1]) || 0).join(" "))+"^";
+        error(msg);
       }
     }
     return this;
@@ -105,18 +108,21 @@ im.addComponent = function(ns,js,elem) {
     try {
       eval(js);
     } catch(e) {
-      error(e);
       var pos = e.stack.replace(/[\S\s]+at HTMLDivElement.eval.+?<anonymous>:(\d+:\d+)[\S\s]+/,'$1').split(':');
-      var jsstack = js.split("\n");
-      var error = "Parse error at line #"+pos[0]+" char #"+pos[1]+" within "+ns;
-      error += "\n"+jsstack[parseInt(pos[0])-1];
-      error += "\n"+(new Array(parseInt(pos[1])).join(" "))+"^";
-      error(error);
+      if (pos[1] && !isNaN(parseInt(pos[1]))) {
+        var jsstack = js.split("\n");
+        var msg = "Parse error at line #"+pos[0]+" char #"+pos[1]+" within "+ns;
+        msg += "\n"+jsstack[parseInt(pos[0])-1];
+        msg += "\n"+(new Array(parseInt(pos[1])).join(" "))+"^";
+        error(msg);
+      } else {
+        error("\"" + e.message + "\" in \"" + im.namespace + "\"");
+      }
     }
     return this;
   };
   var newim = im.clone(ns);
-  var nso = elem.component(newim,js);
+  var nso = elem.component.call(elem,newim,js);
   im.components[ns] = nso;
   return nso;
 };

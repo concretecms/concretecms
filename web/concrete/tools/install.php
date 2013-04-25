@@ -24,6 +24,12 @@ if ($filters->getImageEditorControlSetHandle() != 'filter') {
 	echo "Add Filter Control Set\n";
 	SystemImageEditorControlSet::add('filter','Filters');
 }
+$rotate = SystemImageEditorControlSet::getByHandle('rotate');
+if ($rotate->getImageEditorControlSetHandle() != 'rotate') {
+	echo "Add Text Control Set\n";
+	SystemImageEditorControlSet::add('rotate','Rotate');
+}
+
 $text = SystemImageEditorControlSet::getByHandle('text');
 if ($text->getImageEditorControlSetHandle() != 'text') {
 	echo "Add Text Control Set\n";
