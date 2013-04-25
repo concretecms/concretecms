@@ -132,6 +132,13 @@ var CCMEditMode = function() {
 				var btHandle = $item.attr('data-block-type-handle');
 				return $(this).attr('data-accepts-block-types').indexOf(btHandle) !== -1;
 			},
+			over: function() {
+				var l = $('.ccm-area-drag-block-type-over').length;
+				if (l > 1) {
+					// we have somehow gotten two areas selected. we unselected not this one
+					$emptyareas.not($(this)).removeClass('ccm-area-drag-block-type-over');
+				}
+			},
 			greedy: true,
 			drop: function(e, ui) {
 				$('.ccm-area-drag-block-type-over').removeClass('ccm-area-drag-block-type-over');

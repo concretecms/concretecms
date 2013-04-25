@@ -174,7 +174,7 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
 				<? if ($cp->canEditPageContents() && (!$pageInUseBySomeoneElse)) { ?>
 					<li class="ccm-toolbar-add pull-right">
 						<? if ($c->isEditMode()) { ?>
-							<a class="dialog-launch" data-dialog="add-block" title="<?=t('Add Block')?>" dialog-width="660" dialog-height="430" dialog-modal="false" dialog-title="<?=t('Add Block')?>" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/pages/add_block?cID=<?=$c->getCollectionID()?>"><i class="icon-plus"></i></a>
+							<a class="dialog-launch" <? if ($_COOKIE['ccmLoadAddBlockWindow'] && $c->isEditMode()) { ?>dialog-on-direct-close="window.location.href='<?=DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=<?=$c->getCollectionID()?>&ctask=check-in<?=$token?>'"<? } ?> data-dialog="add-block" title="<?=t('Add Block')?>" dialog-width="660" dialog-height="430" dialog-modal="false" dialog-title="<?=t('Add Block')?>" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/pages/add_block?cID=<?=$c->getCollectionID()?>"><i class="icon-plus"></i></a>
 						<? } else { ?>
 							<a title="<?=t('Add Block')?>" href="<?=DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=<?=$cID?>&ctask=check-out-add-block<?=$token?>"><i class="icon-plus"></i></a>
 							<? } ?>

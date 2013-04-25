@@ -343,6 +343,15 @@
 			</attributes>
         </page>        
 
+        <page name="Conversations" path="/dashboard/conversations" filename="/dashboard/conversations/view.php" pagetype="" description="" package=""></page>
+        <page name="Messages" path="/dashboard/conversations/messages" filename="/dashboard/conversations/messages.php" pagetype="" description="" package="">
+			<attributes>
+				<attributekey handle="icon_dashboard">
+					<value>icon-bullhorn</value>
+				</attributekey>
+			</attributes>
+        </page>
+
         <page name="Workflow" path="/dashboard/workflow" filename="/dashboard/workflow/view.php" pagetype="" description="" package="">
         	<attributes>
 				<attributekey handle="meta_keywords">
