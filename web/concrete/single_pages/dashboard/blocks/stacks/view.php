@@ -45,17 +45,37 @@
 		<? } ?>
 
 		<?
-		$vo = $stack->getVersionObject();
-		if ($cpc->canApprovePageVersions()) {
-			$token = '&' . Loader::helper('validation/token')->getParameter(); ?>
-			<a style="margin-right: 8px; <? if ($vo->isApproved()) { ?> display: none; <? } ?> href="javascript:void(0)" onclick="window.location.href='<?=DIR_REL . "/" . DISPATCHER_FILENAME . "?cID=" . $stack->getCollectionID() . "&ctask=approve-recent" . $token?>'" class="btn small ccm-main-nav-edit-option ccm-button-v2-right"><?=t('Approve Changes')?></a>
-		<?
-		}		
+		$hasPendingPageApproval = false;
+		$workflowList = PageWorkflowProgress::getList($stack);
+		foreach($workflowList as $wl) {
+			$wr = $wl->getWorkflowRequestObject(); 
+			$wrk = $wr->getWorkflowRequestPermissionKeyObject(); 
+			if ($wrk->getPermissionKeyHandle() == 'approve_page_versions') {
+				$hasPendingPageApproval = true;
+				break;
+			}
+		}
+
+		if (!$hasPendingPageApproval) { 
+			$vo = $stack->getVersionObject();
+			if ($cpc->canApprovePageVersions()) {
+				$publishTitle = t('Approve Changes');
+				$pk = PermissionKey::getByHandle('approve_page_versions');
+				$pk->setPermissionObject($stack);
+				$pa = $pk->getPermissionAccessObject();
+				if (is_object($pa) && count($pa->getWorkflows()) > 0) {
+					$publishTitle = t('Submit to Workflow');
+				}
+			
+				$token = '&' . Loader::helper('validation/token')->getParameter(); ?>
+				<a style="margin-right: 8px; <? if ($vo->isApproved()) { ?> display: none; <? } ?> href="javascript:void(0)" onclick="window.location.href='<?=DIR_REL . "/" . DISPATCHER_FILENAME . "?cID=" . $stack->getCollectionID() . "&ctask=approve-recent" . $token?>'" class="btn small ccm-main-nav-edit-option ccm-button-v2-right"><?=$publishTitle?></a>
+			<?
+			}		
+		}
 		?>
 	</div>
 	<div class="ccm-pane-body ccm-pane-body-footer clearfix" id="ccm-stack-container">
 		<?
-			$workflowList = PageWorkflowProgress::getList($stack);
 			if (count($workflowList) > 0) { ?>
 			<div id="ccm-stack-status-bar"></div>
 
