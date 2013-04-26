@@ -34,6 +34,16 @@ $(function() {
         rowHeight:  <?=$item->getAggregatorItemSlotHeight()?>
     }
   });
+
   $agg.css('opacity', 1);
+  $agg.sortable({
+      helper: function(event, element) {
+        var clone = $(element).clone();
+        clone.removeClass('isotope-item');
+        element.removeClass('isotope-item');
+        return clone;
+      }
+  });
+  //$agg.find('>div').resizable();
 });
 </script>
