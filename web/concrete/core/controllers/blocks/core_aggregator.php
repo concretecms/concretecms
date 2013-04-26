@@ -81,7 +81,7 @@ class Concrete5_Controller_Block_CoreAggregator extends BlockController {
 				$aggregator = Aggregator::getByID($this->agID);
 				if (is_object($aggregator)) {
 					$this->addHeaderItem(Loader::helper('html')->css('ccm.aggregator.css'));
-					$this->addFooterItem(Loader::helper('html')->javascript('jquery.gridster.js'));
+					$this->addHeaderItem(Loader::helper('html')->javascript('jquery.isotope.js'));
 				}
 			}
 		}

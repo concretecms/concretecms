@@ -4,6 +4,8 @@
 <?
 $a = $b->getBlockAreaObject();
 $c = Page::getCurrentPage();
+$pt = $c->getCollectionThemeObject();
+
 if ($c->isEditMode()) {
   $bp = new Permissions($b);
   if ($bp->canEditBlock()) { ?>
@@ -14,29 +16,24 @@ if ($c->isEditMode()) {
 
 <? } ?>
 
-<div data-aggregator-id="<?=$aggregator->getAggregatorID()?>" class="ccm-aggregator-grid gridster">
-  <ul>
+<div data-aggregator-id="<?=$aggregator->getAggregatorID()?>" class="ccm-aggregator-grid">
   	<? foreach($items as $item) { ?>
-    <li data-row="1" data-col="1" data-sizex="<?=$item->getAggregatorItemSlotWidth()?>" data-sizey="<?=$item->getAggregatorItemSlotHeight()?>"><?
+    <div style="width: <?=$item->getAggregatorItemSlotWidth()*$pt->getThemeAggregatorGridItemWidth()?>px; height: <?=$item->getAggregatorItemSlotHeight()*$pt->getThemeAggregatorGridItemHeight()?>px;"><?
     	$item->render();
-    ?></li>
+    ?></div>
   	<? } ?>
-  </ul>
 </div>
 
-<?
-$c = Page::getCurrentPage();
-$pt = $c->getCollectionThemeObject();
-?>
-
 <script type="text/javascript">
-  var grid;
-  $(function(){
-    grid = $("div[data-aggregator-id=<?=$aggregator->getAggregatorID()?>] > ul").gridster({
-        widget_margins: [<?=$pt->getThemeAggregatorGridItemMargin()?>, <?=$pt->getThemeAggregatorGridItemMargin()?>],
-        widget_base_dimensions: [<?=$pt->getThemeAggregatorGridItemWidth()?>,<?=$pt->getThemeAggregatorGridItemHeight()?>]
-    }).data('gridster').disable();
-    $("div[data-aggregator-id=<?=$aggregator->getAggregatorID()?>]").css('opacity', 1);
+$(function() {
+  var $agg = $("div[data-aggregator-id=<?=$aggregator->getAggregatorID()?>]");
+  $agg.isotope({
+  layoutMode: 'perfectMasonry',
+    perfectMasonry: {
+        columnWidth: <?=$item->getAggregatorItemSlotWidth()?>,
+        rowHeight:  <?=$item->getAggregatorItemSlotHeight()?>
+    }
   });
-
+  $agg.css('opacity', 1);
+});
 </script>
