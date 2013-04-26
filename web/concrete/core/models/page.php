@@ -1914,6 +1914,9 @@ class Concrete5_Model_Page extends Collection {
 		$cDatePublic = ($data['cDatePublic']) ? $data['cDatePublic'] : null;		
 		
 		$data['ctID'] = $ct->getCollectionTypeID();
+		if ($ct->getCollectionTypeHandle() == STACKS_PAGE_TYPE) {
+			$data['cvIsNew'] = 0;
+		}
 		$cobj = parent::add($data);		
 		$cID = $cobj->getCollectionID();		
 		$ctID = $ct->getCollectionTypeID();

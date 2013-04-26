@@ -834,6 +834,9 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			if ($cvIsApproved) {
 				$cvIsNew = 0;
 			}
+			if (isset($data['cvIsNew'])) {
+				$cvIsNew = $data['cvIsNew'];
+			}
 			$data['name'] = Loader::helper('text')->sanitize($data['name']);
 			if (is_object($this)) {
 				$ptID = $this->getCollectionThemeID();
