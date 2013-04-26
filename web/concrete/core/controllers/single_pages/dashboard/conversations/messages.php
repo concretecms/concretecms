@@ -5,10 +5,9 @@ class Concrete5_Controller_Dashboard_Conversations_Messages extends DashboardBas
 
 	public function view() {
 		$ml = new ConversationMessageList();
-		$this->set('messages', $ml->getPage());
+		$ml->setItemsPerPage(20);
 		$cmpFilterTypes = array(
 			'approved' => t('Approved'),
-			'pending' => t('Pending'),
 			'deleted' => t('Deleted')
 		);
 		$fl = new ConversationFlagTypeList();
@@ -20,6 +19,35 @@ class Concrete5_Controller_Dashboard_Conversations_Messages extends DashboardBas
 			'date_asc' => t('Earliest First')
 		);
 
+		if ($_REQUEST['cmpMessageKeywords']) {
+			$ml->filterByKeywords($_REQUEST['cmpMessageKeywords']);
+		}
+		if ($_REQUEST['cmpMessageFilter'] && $_REQUEST['cmpMessageFilter'] != 'approved') {
+			switch($_REQUEST['cmpMessageFilter']) {
+				case 'deleted':
+					$ml->filterByDeleted();
+					break;
+				default: // flag
+					$flagtype = ConversationFlagType::getByHandle($_REQUEST['cmpMessageFilter']);
+					if (is_object($flagtype)){
+						$ml->filterByFlag($flagtype);
+					} else {
+						$ml->filterByApproved();
+					}
+					break;
+
+			}
+		} else {
+			$ml->filterByApproved();
+		}
+		if ($_REQUEST['cmpMessageSort'] == 'date_asc') {
+			$ml->sortByDateAscending();
+		} else {
+			$ml->sortByDateDescending();
+		}
+		
+		$this->set('list', $ml);
+		$this->set('messages', $ml->getPage());
 		$this->set('cmpFilterTypes', $cmpFilterTypes);
 		$this->set('cmpSortTypes', $cmpSortTypes);
 	}

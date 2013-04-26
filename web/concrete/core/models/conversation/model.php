@@ -10,12 +10,27 @@ class Concrete5_Model_Conversation extends Object {
 
 	public static function getByID($cnvID) {
 		$db = Loader::db();
-		$r = $db->GetRow('select cnvID, cnvDateCreated, cnvDateLastMessage, cnvMessagesTotal from Conversations where cnvID = ?', array($cnvID));
+		$r = $db->GetRow('select cnvID, cID, cnvDateCreated, cnvDateLastMessage, cnvMessagesTotal from Conversations where cnvID = ?', array($cnvID));
 		if (is_array($r) && $r['cnvID'] == $cnvID) {
 			$cnv = new Conversation;
 			$cnv->setPropertiesFromArray($r);
 			return $cnv;
 		}
+	}
+
+	public function getConversationPageObject() {
+		if ($this->cID) {
+			$c = Page::getByID($this->cID, 'ACTIVE');
+			if (is_object($c) && !$c->isError()) {
+				return $c;
+			}
+		}
+	}
+
+	public function setConversationPageObject($c) {
+		$db = Loader::db();
+		$db->Execute('update Conversations set cID = ? where cnvID = ?', array($c->getCollectionID(), $this->getConversationID()));
+		$this->cID = $c->getCollectionID();
 	}
 
 	public function updateConversationSummary() {

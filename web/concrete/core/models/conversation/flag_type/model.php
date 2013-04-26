@@ -6,7 +6,7 @@ class Concrete5_Model_ConversationFlagType extends Object {
 	public $handle;
 
 	public function getConversationFlagTypeHandle() { return $this->handle; }
-	public function getID() { return $this->id; }
+	public function getConversationFlagTypeID() { return $this->id; }
 
 	public function __construct($id=false,$handle=false) {
 		$this->init($id,$handle);
