@@ -5,7 +5,7 @@
 var CCMEditMode = function() {
 
 	var blockTypeDropSuccessful = false;
-	var $sortableAreas;
+	var $areaDropZones;
 	var $sortableDropElement = false;
 	var $draggableElement = false;
 
@@ -154,14 +154,82 @@ var CCMEditMode = function() {
 				}
 			}
 		});
+	
+		var $dropzone = $('<div />').addClass('ccm-area-block-dropzone').append($('<div />').addClass('ccm-area-block-dropzone-inner'));
+		$dropzone.clone().insertBefore($('.ccm-block-edit'));
 
+		$nonemptyareas = $('div.ccm-area[data-total-blocks!=0]');
+		$nonemptyareas.append($dropzone.clone());
+
+		$('.ccm-area-block-dropzone').droppable({
+			hoverClass: 'ccm-area-block-dropzone-over',
+			tolerance: 'pointer'
+		});
+
+		$('[data-inline-command=move-block]').on('mousedown', function() {
+			$('.ccm-area-block-dropzone').addClass('ccm-area-block-dropzone-active');
+		});
+
+		$('.ccm-block-edit').draggable({
+			cursor: 'move',
+			cursorAt: {
+				right: 10,
+				top: 10
+			},
+			handle: '[data-inline-command=move-block]',
+			helper: function() {
+				var w = '100px';
+				var h = '100px';
+				var $d =  $('<div />', {'class': 'ccm-block-type-dragging'}).css('opacity', 0.5).css('width', w).css('height', h);
+				return $d;
+			},
+			stop: function() {
+				$.fn.ccmmenu.enable();
+				if (CCMEditMode.$sortableDropElement) {
+					CCMEditMode.$sortableDropElement.remove();
+					CCMEditMode.$sortableDropElement = false;
+				}
+				CCMToolbar.disableDirectExit();
+				var _serial = '';
+				$('div.ccm-area').each(function() {
+					var $_area = $(this);
+					$_area.find('div.ccm-block-edit').each(function() {
+						var $_block = $(this);
+						_serial += '&area[' + $_area.attr('data-area-id') + '][]=' + $_block.attr('data-block-id');
+					});
+				});
+
+			 	$.ajax({
+			 		type: 'POST',
+					dataType: 'json',
+			 		url: CCM_DISPATCHER_FILENAME,
+			 		data: 'cID=' + CCM_CID + '&ccm_token=' + CCM_SECURITY_TOKEN + '&btask=ajax_do_arrange' + _serial,
+			 		success: function(r) {
+			 			ccm_parseJSON(r, function() {
+			 				$('div.ccm-area').each(function() {
+			 					var _arID = $(this).attr('data-area-id');
+			 					var tb = 0;
+			 					if (r.areas[_arID]) {
+			 						var tb = r.areas[_arID];
+			 					}
+			 					$('div.ccm-area[data-area-id=' + _arID + ']').attr('data-total-blocks', tb);
+			 				});
+			 				CCMEditMode.start();
+			 			});
+			 		}
+			 	});
+			},
+			start: function(e, ui) {
+				// deactivate the menu on drag
+				$.fn.ccmmenu.disable();
+				CCMEditMode.$draggableElement = $(this);
+			}
+		});		
 
 		// areas with more than 1 block are sortable.
+		/*
 		$sortableAreas = $('div.ccm-area[data-total-blocks!=0]');
-		/*$sortableAreas.droppable({
-			greedy: true
-		});
-*/
+
 		$sortableAreas.sortable({
 			items: 'div.ccm-block-edit',
 			tolerance: 'pointer',
@@ -243,6 +311,7 @@ var CCMEditMode = function() {
 				}
 			});
 		});
+		*/
 
 
 
@@ -337,10 +406,9 @@ var CCMEditMode = function() {
 					helper: 'clone',
 					appendTo: $('#ccm-block-types-dragging'),
 					revert: false,
-					connectToSortable: $sortableAreas.filter('[data-accepts-block-types~=' + $li.attr('data-block-type-handle') + ']'),
 					start: function(e, ui) {
 						CCMEditMode.blockTypeDropSuccessful = false;
-
+						$('.ccm-area-block-dropzone').addClass('ccm-area-block-dropzone-active');
 						// handle the dialog
 						$('#ccm-block-types-wrapper').parent().jqdialog('option', 'closeOnEscape', false);
 						$('#ccm-overlay-block-types').closest('.ui-dialog').fadeOut(100);
