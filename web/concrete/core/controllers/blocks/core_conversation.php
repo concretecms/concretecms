@@ -44,10 +44,11 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			return $this->conversation;
 		}
 
-		public function duplicate_master($newBID) {
+		public function duplicate_master($newBID, $newPage) {
 			parent::duplicate($newBID);
 			$db = Loader::db();
 			$conv = Conversation::add();
+			$conv->setConversationPageObject($newPage);
 			$this->conversation = $conv;
 			$db->Execute('update btCoreConversation set cnvID = ? where bID = ?', array($conv->getConversationID(), $newBID));
 		}
@@ -100,6 +101,9 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			$cnvID = $db->GetOne('select cnvID from btCoreConversation where bID = ?', array($this->bID));
 			if (!$cnvID) {
 				$conversation = Conversation::add();
+				$b = $this->getBlockObject();
+				$xc = $b->getBlockCollectionObject();
+				$conversation->setConversationPageObject($xc);
 			} else {
 				$conversation = Conversation::getByID($cnvID);
 			}

@@ -33,7 +33,7 @@ abstract class Concrete5_Model_ConversationEditor extends Object {
 		if (!is_object($this->cnvMessage)) {
 			return '';
 		}
-		$cnv = $this->cnvMessage->getConversationMessageConversationObject();
+		$cnv = $this->cnvMessage->getConversationObject();
 		return $this->formatConversationMessageBody($cnv, $this->cnvMessage->getConversationMessageBody());
 	}
 
