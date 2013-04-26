@@ -110,7 +110,7 @@ class Concrete5_Model_FileList extends DatabaseItemList {
 								$zip->addFile(addslashes($f->getPath()), basename($f->getPath()));
 						$zip->close();
 					} else {
-						die('Failed to create zip file as '.$filename);
+						throw new Exception(t('Could not open with ZipArchive::CREATE'));
 					}
 				} else {
 					foreach($files as $f) {
@@ -121,7 +121,7 @@ class Concrete5_Model_FileList extends DatabaseItemList {
 					exec(DIR_FILES_BIN_ZIP . ' -j \'' . addslashes($filename) . '\' ' . $filestring);
 				}
 			}catch(Exception $e) {
-				die('Failed to create zip file as "'.$filename.'": '.$e->getMessage());
+				throw new Exception(sprintf(t('Failed to create zip file as "%s": %s'), $filename, $e->getMessage()));
 			}
 		}
 	}
