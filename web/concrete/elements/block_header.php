@@ -35,10 +35,12 @@ $btOriginal = $btw;
 $bID = $b->getBlockID();
 $aID = $a->getAreaID();
 $heightPlus = 20;
+$btHandle = $btw->getBlockTypeHandle();
 if ($btw->getBlockTypeHandle() == BLOCK_HANDLE_SCRAPBOOK_PROXY) {
 	$_bi = $b->getInstance();
 	$_bo = Block::getByID($_bi->getOriginalBlockID());
 	$btOriginal = BlockType::getByHandle($_bo->getBlockTypeHandle());
+	$btHandle = $btOriginal->getBlockTypeHandle();
 	$heightPlus = 80;
 	if ($btOriginal->supportsInlineEditing()) {
 		$editInline = true;
@@ -65,9 +67,10 @@ if ($b->getBlockTypeHandle() == BLOCK_HANDLE_LAYOUT_PROXY) {
 	$deleteMessage = t('Do you want to delete this block?');
 }
 
+
 ?>
 
-<div custom-style="<?=$b->getBlockCustomStyleRuleID()?>" data-area-id="<?=$a->getAreaID()?>" data-block-id="<?=$b->getBlockID()?>" class="<?=$class?>" data-block-type-handle="<?=$btw->getBlockTypeHandle()?>" data-menu="block-menu-b<?=$b->getBlockID()?>-<?=$a->getAreaID()?>" 
+<div custom-style="<?=$b->getBlockCustomStyleRuleID()?>" data-area-id="<?=$a->getAreaID()?>" data-block-id="<?=$b->getBlockID()?>" class="<?=$class?>" data-block-type-handle="<?=$btHandle?>" data-menu="block-menu-b<?=$b->getBlockID()?>-<?=$a->getAreaID()?>" 
 		<? if ($btw->getBlockTypeHandle() == BLOCK_HANDLE_AGGREGATOR) { ?> data-menu-handle="ccm-aggregator-control-bar-<?=$b->getBlockID()?>-<?=$a->getAreaID()?>"<? } ?>
 		<? if ($btw->getBlockTypeHandle() == BLOCK_HANDLE_LAYOUT_PROXY) { ?> data-menu-handle="ccm-area-layout-control-bar-<?=$b->getBlockID()?>-<?=$a->getAreaID()?>"<? } ?>>
 

@@ -12,7 +12,7 @@ var CCMToolbar = function() {
 	setupToolbarMenus = function() {
 		$('a[data-toggle=ccm-toolbar-hover-menu]').hoverIntent(function() {
 			$('.ccm-toolbar-hover-menu').hide();
-			$($(this).data('toggle-menu')).show();
+			$($(this).attr('data-toggle-menu')).show();
 		}, function() {
 
 		});
