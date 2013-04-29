@@ -13,6 +13,16 @@ var CCMEditMode = function() {
 		$('.ccm-area').ccmmenu();
 		$('.ccm-block-edit').ccmmenu();
 		$('.ccm-block-edit-layout').ccmmenu();
+
+		$('.ccm-block-edit').each(function() {
+			var $b = $(this);
+			$b.find('a[data-menu-action=edit_inline]').on('click', function() {
+				var bID = $b.attr('data-block-id');
+				var aID = $b.attr('data-area-id');
+				var arHandle = $b.closest('div.ccm-area').attr('data-area-handle');
+				CCMInlineEditMode.editBlock(CCM_CID, aID, arHandle, bID, $(this).attr('data-menu-action-params'));
+			});
+		});		
 	}
 
 	saveArrangement = function(sourceBlockID, sourceBlockAreaID, destinationBlockAreaID) {

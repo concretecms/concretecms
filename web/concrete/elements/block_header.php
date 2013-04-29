@@ -112,9 +112,9 @@ if ($b->getBlockTypeHandle() == BLOCK_HANDLE_LAYOUT_PROXY) {
 			} ?>
 
 			<? if ($b->getBlockTypeHandle() == BLOCK_HANDLE_LAYOUT_PROXY) { ?>
-				<li><a href="javascript:void(0)" data-bID="<?=$bID?>" data-area-id="<?=$aID?>" data-area-handle="<?=htmlspecialchars($arHandle)?>" data-cID="<?=$cID?>" onclick="CCMInlineEditMode.loadEditFromLink(this, <?=$params?>)"><?=t("Edit Layout")?></a></li>		
+				<li><a href="javascript:void(0)" data-menu-action="edit_inline" data-menu-edit-params="<?=$params?>"><?=t("Edit Layout")?></a></li>		
 			<? } else { ?>
-				<li><a href="javascript:void(0)" data-bID="<?=$bID?>" data-area-id="<?=$aID?>" data-area-handle="<?=htmlspecialchars($arHandle)?>" data-cID="<?=$cID?>" onclick="CCMInlineEditMode.loadEditFromLink(this, <?=$params?>)"><?=t("Edit Block")?></a></li>		
+				<li><a href="javascript:void(0)" data-menu-action="edit_inline" data-menu-edit-params="<?=$params?>"><?=t("Edit Block")?></a></li>		
 				<? } ?>
 		<? } else { ?>
 			<li><a class="dialog-launch" dialog-title="<?=t('Edit %s', $btOriginal->getBlockTypeName())?>" dialog-modal="false" dialog-on-close="$(document).trigger('blockWindowClose')" dialog-width="<?=$btOriginal->getBlockTypeInterfaceWidth()?>" dialog-height="<?=$btOriginal->getBlockTypeInterfaceHeight() + $heightPlus?>" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_block_popup?cID=<?=$cID?>&amp;bID=<?=$bID?>&amp;arHandle=<?=htmlspecialchars($arHandle)?>&amp;btask=edit" ><?=t("Edit Block")?></a></li>		
