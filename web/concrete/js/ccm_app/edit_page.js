@@ -69,60 +69,7 @@ var CCMEditMode = function() {
 	 	});
 	}
 
-	parseBlockResponse = function(r, currentBlockID, task) {
-		try { 
-			r = r.replace(/(<([^>]+)>)/ig,""); // because some plugins add bogus HTML after our JSON requests and screw everything up
-			resp = eval('(' + r + ')');
-			if (resp.error == true) {
-				var message = '<ul>'
-				for (i = 0; i < resp.response.length; i++) {						
-					message += '<li>' + resp.response[i] + '<\/li>';
-				}
-				message += '<\/ul>';
-				ccmAlert.notice(ccmi18n.error, message);
-			} else {
-				jQuery.fn.dialog.closeTop();
-				$(document).trigger('blockWindowAfterClose');
-				if (resp.cID) {
-					cID = resp.cID; 
-				} else {
-					cID = CCM_CID;
-				}
-				var action = CCM_TOOLS_PATH + '/edit_block_popup?cID=' + cID + '&bID=' + resp.bID + '&arHandle=' + encodeURIComponent(resp.arHandle) + '&btask=view_edit_mode';	 
-				$.get(action, 		
-					function(r) { 
-						if (task == 'add') {
-							if ($('#ccm-add-new-block-placeholder').length > 0) {
-								$('#ccm-add-new-block-placeholder').before(r).remove();
-								saveArrangement(resp.bID, resp.aID);
-							} else {
-								$("#a" + resp.aID + " > div.ccm-area-block-list").append(r);
-							}
-						} else {
-							$('[data-block-id=' + currentBlockID + '][data-area-id=' + resp.aID + ']').before(r).remove();
-						}
-						CCMInlineEditMode.exit();
-						CCMToolbar.disableDirectExit();
-						jQuery.fn.dialog.hideLoader();
-						if (task == 'add') {
-							var tb = parseInt($('div.ccm-area[data-area-id=' + resp.aID + ']').attr('data-total-blocks'));
-							$('div.ccm-area[data-area-id=' + resp.aID + ']').attr('data-total-blocks', tb + 1);
-							ccmAlert.hud(ccmi18n.addBlockMsg, 2000, 'add', ccmi18n.addBlock);
-							jQuery.fn.dialog.closeAll();
-							CCMEditMode.start(); // refresh areas. 
-						} else {
-							ccmAlert.hud(ccmi18n.updateBlockMsg, 2000, 'success', ccmi18n.updateBlock);
-						}
-						if (typeof window.ccm_parseBlockResponsePost == 'function') {
-							ccm_parseBlockResponsePost(resp);
-						}
-					}
-				);
-			}
-		} catch(e) { 
-			ccmAlert.notice(ccmi18n.error, r); 
-		}
-	}
+
 	addBlockType = function(cID, aID, arHandle, $link, fromdrag) {
 		var btID = $link.attr('data-btID');
 		var inline = parseInt($link.attr('data-supports-inline-editing'));
@@ -130,7 +77,7 @@ var CCMEditMode = function() {
 
 		if (!hasadd) {
 			var action = CCM_DISPATCHER_FILENAME + "?cID=" + cID + "&arHandle=" + encodeURIComponent(arHandle) + "&btID=" + btID + "&mode=edit&processBlock=1&add=1&ccm_token=" + CCM_SECURITY_TOKEN;
-			$.get(action, function(r) { parseBlockResponse(r, false, 'add'); })
+			$.get(action, function(r) { CCMEditMode.parseBlockResponse(r, false, 'add'); })
 		} else if (inline) {
 			CCMInlineEditMode.loadAdd(cID, arHandle, aID, btID);
 		} else {
@@ -281,9 +228,21 @@ var CCMEditMode = function() {
 					}
 				},
 				success: function(r) {
-					parseBlockResponse(r, bID, task);
+					CCMEditMode.parseBlockResponse(r, bID, task);
 				}
 			});
+		},
+
+		addBlockToScrapbook: function(cID, bID, arHandle) {
+			CCMToolbar.disableDirectExit();
+			// got to grab the message too, eventually
+			$.ajax({
+			type: 'POST',
+			url: CCM_TOOLS_PATH + '/pile_manager.php',
+			data: 'cID=' + cID + '&bID=' + bID + '&arHandle=' + arHandle + '&btask=add&scrapbookName=userScrapbook',
+			success: function(resp) {
+				ccmAlert.hud(ccmi18n.copyBlockToScrapbookMsg, 2000, 'add', ccmi18n.copyBlockToScrapbook);
+			}});		
 		},
 
 		deleteBlock: function(cID, bID, aID, arHandle, msg) {
@@ -306,6 +265,61 @@ var CCMEditMode = function() {
 					ccm_parseBlockResponsePost({});
 				}
 			}	
+		},
+
+		parseBlockResponse: function(r, currentBlockID, task) {
+			try { 
+				r = r.replace(/(<([^>]+)>)/ig,""); // because some plugins add bogus HTML after our JSON requests and screw everything up
+				resp = eval('(' + r + ')');
+				if (resp.error == true) {
+					var message = '<ul>'
+					for (i = 0; i < resp.response.length; i++) {						
+						message += '<li>' + resp.response[i] + '<\/li>';
+					}
+					message += '<\/ul>';
+					ccmAlert.notice(ccmi18n.error, message);
+				} else {
+					jQuery.fn.dialog.closeTop();
+					$(document).trigger('blockWindowAfterClose');
+					if (resp.cID) {
+						cID = resp.cID; 
+					} else {
+						cID = CCM_CID;
+					}
+					var action = CCM_TOOLS_PATH + '/edit_block_popup?cID=' + cID + '&bID=' + resp.bID + '&arHandle=' + encodeURIComponent(resp.arHandle) + '&btask=view_edit_mode';	 
+					$.get(action, 		
+						function(r) { 
+							if (task == 'add') {
+								if ($('#ccm-add-new-block-placeholder').length > 0) {
+									$('#ccm-add-new-block-placeholder').before(r).remove();
+									saveArrangement(resp.bID, resp.aID);
+								} else {
+									$("#a" + resp.aID + " > div.ccm-area-block-list").append(r);
+								}
+							} else {
+								$('[data-block-id=' + currentBlockID + '][data-area-id=' + resp.aID + ']').before(r).remove();
+							}
+							CCMInlineEditMode.exit();
+							CCMToolbar.disableDirectExit();
+							jQuery.fn.dialog.hideLoader();
+							if (task == 'add') {
+								var tb = parseInt($('div.ccm-area[data-area-id=' + resp.aID + ']').attr('data-total-blocks'));
+								$('div.ccm-area[data-area-id=' + resp.aID + ']').attr('data-total-blocks', tb + 1);
+								ccmAlert.hud(ccmi18n.addBlockMsg, 2000, 'add', ccmi18n.addBlock);
+								jQuery.fn.dialog.closeAll();
+								CCMEditMode.start(); // refresh areas. 
+							} else {
+								ccmAlert.hud(ccmi18n.updateBlockMsg, 2000, 'success', ccmi18n.updateBlock);
+							}
+							if (typeof window.ccm_parseBlockResponsePost == 'function') {
+								ccm_parseBlockResponsePost(resp);
+							}
+						}
+					);
+				}
+			} catch(e) { 
+				ccmAlert.notice(ccmi18n.error, r); 
+			}
 		},
 
 		activateBlockTypesOverlay: function() {
