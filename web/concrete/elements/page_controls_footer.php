@@ -2,6 +2,7 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 $html = Loader::helper('html');
 $dh = Loader::helper('concrete/dashboard');
+$ihm = Loader::helper('concrete/interface/menu');
 $valt = Loader::helper('validation/token');
 $token = '&' . $valt->getParameter();
 $logouttoken = Loader::helper('validation/token')->generate('logout');
@@ -53,6 +54,9 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
 		<div id="ccm-toolbar">
 			<ul>
 				<li class="ccm-logo pull-left"><span><?=Loader::helper('concrete/interface')->getToolbarLogoSRC()?></span></li>
+				<? if ($c->isMasterCollection()) { ?>
+					<li class="pull-left"><a href="<?=View::url('/dashboard/pages/types')?>"><i class="icon-arrow-left"></i></a>
+				<? } ?>
 				<? if (!$pageInUseBySomeoneElse && $c->getCollectionPointerID() == 0) { ?>
 				<li class="<? if ($c->isEditMode()) { ?> ccm-toolbar-page-edit-mode-active <? } ?> ccm-toolbar-page-edit pull-left"><a data-toggle="ccm-toolbar-hover-menu" data-toggle-menu="<?=$publishToggle?>" href="<? if (!$c->isEditMode()) { ?><?=DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=<?=$c->getCollectionID()?>&ctask=check-out<?=$token?><? } else { ?>javascript:void(0);<? } ?>"><i class="icon-pencil"></i></a>
 
@@ -150,7 +154,22 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
 				</ul>
 
 				</li>
-				<? } ?>
+				<? }
+
+					
+				$items = $ihm->getPageHeaderMenuItems('left');
+				foreach($items as $ih) {
+					$cnt = $ih->getController(); 
+					if ($cnt->displayItem()) {
+					?>
+						<li class="pull-left"><?=$cnt->getMenuLinkHTML()?></li>
+					<?
+					}
+				}
+				
+				if (Loader::helper('concrete/interface')->showWhiteLabelMessage()) { ?>
+					<li class="pull-left" id="ccm-white-label-message"><?=t('Powered by <a href="%s">concrete5</a>.', CONCRETE5_ORG_URL)?></li>
+				<? }?>
 
 				<li class="ccm-toolbar-account pull-right"><a href="#" data-toggle="ccm-toolbar-hover-menu" data-toggle-menu="#ccm-toolbar-menu-user"><i class="icon-user"></i></a>
 				
@@ -179,7 +198,19 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
 							<a title="<?=t('Add Block')?>" href="<?=DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=<?=$cID?>&ctask=check-out-add-block<?=$token?>"><i class="icon-plus"></i></a>
 							<? } ?>
 					</li>
-				<? } ?>
+				<? } 
+
+				$items = $ihm->getPageHeaderMenuItems('right');
+				foreach($items as $ih) {
+					$cnt = $ih->getController(); 
+					if ($cnt->displayItem()) {
+					?>
+						<li class="pull-right"><?=$cnt->getMenuLinkHTML()?></li>
+					<?
+					}
+				}
+
+				?>
 
 			</ul>
 

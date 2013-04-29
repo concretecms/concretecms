@@ -34,6 +34,7 @@ var CCMToolbar = function() {
 			$('.ccm-toolbar-hover-menu').hide();
 		});
 
+		$toolbar.find('li.pull-left').last().addClass('ccm-toolbar-last-left-child');
 		$toolbar.find('#ccm-exit-edit-mode-publish-menu a').on('click', function() {
 			switch($(this).data('publish-action')) {
 				case 'approve':

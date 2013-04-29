@@ -26,7 +26,7 @@ div#ccm-toolbar {
 				padding: 16px 24px 0px 24px;
 				position: relative;
 				color: #999;
-				border-right: 1px solid #ccc;
+				border-left: 1px solid #ccc;
 				text-decoration: none;
 
 				img {
@@ -49,17 +49,13 @@ div#ccm-toolbar {
 			}
 		}
 
-		> li.pull-right:last-child {
-			border-left: 1px solid #ccc;
-		}
-
 		li.ccm-toolbar-search {
 			background-color: #fff;
 			padding: 0px;
 			height: 47px;
 			width: 280px;
 			white-space: nowrap;
-			border-right: 1px solid #ccc;
+			border-left: 1px solid #ccc;
 			color: #c8c8c8;
 			position: relative;
 
@@ -75,8 +71,6 @@ div#ccm-toolbar {
 			> a {
 				background-color: #b5eeb5;
 				#gradient .vertical(#c2ffc2, #b5eeb5);
-				border-left: 1px solid #98c898;
-				border-right: 1px solid #98c898;
 				color: #333;
 			}
 		}
@@ -86,14 +80,35 @@ div#ccm-toolbar {
 			> a:hover {
 				background-color: #b5eeb5;
 				#gradient .vertical(#c2ffc2, #b5eeb5);
-				border-left: 1px solid #98c898;
-				border-right: 1px solid #98c898;
-			}
-
-			> a {
-				border-left: 1px solid #ccc;
 			}
 		}
+
+
+		> li#ccm-white-label-message {
+
+			> a {
+				display: inline;
+				border: 0px;
+				text-decoration: underline;
+				padding: 0px;
+				color: #ccc;
+			}
+
+			> a:hover {
+				background-color: transparent !important;
+				background-image: none !important;
+				text-decoration: underline;
+			}
+
+			color: #ccc;
+			font-size: 11px;
+			line-height: 11px;
+			padding: 18px 24px 0px 24px;
+			height: 30px;
+			border-right: 0px !important;
+			border-left: 1px solid #ccc;
+		}
+
 	}
 
 	input[type=search] {
@@ -213,13 +228,10 @@ div#ccm-toolbar {
 	
 	}
 
-}
-
-#ccm-dashboard-page {
-	
-	li.ccm-logo {
+	li.ccm-toolbar-last-left-child {
 		border-right: 1px solid #ccc;
 	}
+
 
 }
 
@@ -258,7 +270,6 @@ div#ccm-notification {
 		margin-top: 2px;
 		opacity: 0.5;
 	}
-
 }
 
 /* Status Bar */

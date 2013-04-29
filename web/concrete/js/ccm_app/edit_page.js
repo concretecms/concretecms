@@ -15,24 +15,57 @@ var CCMEditMode = function() {
 		$('.ccm-block-edit-layout').ccmmenu();
 	}
 
-	saveAreaArrangement = function(cID, arHandle) {
-	
-		if (!cID) {
-			cID = CCM_CID;
+	saveArrangement = function(sourceBlockID, sourceBlockAreaID, destinationBlockAreaID) {
+		var	cID = CCM_CID;
+		jQuery.fn.dialog.showLoader();
+
+		var serial = '&sourceBlockID=' + sourceBlockID + '&sourceBlockAreaID=' + sourceBlockAreaID + '&destinationBlockAreaID=' + destinationBlockAreaID
+		var source = $('div.ccm-area[data-area-id=' + sourceBlockAreaID + ']');
+
+		if (sourceBlockAreaID == destinationBlockAreaID) {
+			var areaArray = [source];
+		} else {
+			var destination = $('div.ccm-area[data-area-id=' + destinationBlockAreaID + ']');
+			var areaArray = [source, destination];
 		}
 
-		var serial = '';
-		var $area = $('div.ccm-area[data-area-handle=' + arHandle + ']');
-		areaStr = '&area[' + $area.attr('id').substring(1) + '][]=';
+		$.each(areaArray, function(idx, area) {
+			var $area = $(area);
+			areaStr = '&area[' + $area.attr('data-area-id') + '][]=';
 
-		$area.find('div.ccm-block-edit').each(function() {
-			serial += areaStr + $(this).attr('data-block-id');
+			$area.find('> div.ccm-area-block-list > div.ccm-block-edit').each(function() {
+				var bID = $(this).attr('data-block-id');
+				if ($(this).attr('custom-style')) {
+					bID += '-' + $(this).attr('custom-style');
+				}
+				serial += areaStr + bID;
+			});
 		});
 
 	 	$.ajax({
 	 		type: 'POST',
 	 		url: CCM_DISPATCHER_FILENAME,
-	 		data: 'cID=' + cID + '&ccm_token=' + CCM_SECURITY_TOKEN + '&btask=ajax_do_arrange' + serial
+	 		dataType: 'json',
+	 		data: 'cID=' + cID + '&ccm_token=' + CCM_SECURITY_TOKEN + '&btask=ajax_do_arrange' + serial,
+	 		complete: function() {
+		 		CCMEditMode.start();
+		 	},
+	 		success: function(r) {
+	 			ccm_parseJSON(r, function() {
+	 				jQuery.fn.dialog.hideLoader();
+	 				if (source && destination) {
+	 					// we are moving blocks from one area to another
+						var stb = parseInt(source.attr('data-total-blocks'));
+						var dtb = parseInt(destination.attr('data-total-blocks'));
+						source.attr('data-total-blocks', stb - 1);
+						destination.attr('data-total-blocks', dtb + 1);
+
+						// we change the info on the block itself
+						destination.find('div[data-block-id=' + sourceBlockID + ']').attr('data-area-id', destinationBlockAreaID);
+						CCMToolbar.disableDirectExit();
+					}
+				});
+	 		}
 	 	});
 	}
 
@@ -61,9 +94,9 @@ var CCMEditMode = function() {
 						if (task == 'add') {
 							if ($('#ccm-add-new-block-placeholder').length > 0) {
 								$('#ccm-add-new-block-placeholder').before(r).remove();
-								saveAreaArrangement(cID, resp.arHandle);
+								saveArrangement(resp.bID, resp.aID);
 							} else {
-								$("#a" + resp.aID + " div.ccm-area-footer").before(r);
+								$("#a" + resp.aID + " > div.ccm-area-block-list").append(r);
 							}
 						} else {
 							$('[data-block-id=' + currentBlockID + '][data-area-id=' + resp.aID + ']').before(r).remove();
@@ -120,6 +153,9 @@ var CCMEditMode = function() {
 
 	setupSortablesAndDroppables = function() {
 		
+		// clean up in case we're running twice
+		$('div.ccm-area-block-dropzone').remove();
+
 		// empty areas are droppable. We have to 
 		// declare them separately because sortable and droppable don't play as 
 		// nicely together as they should.
@@ -132,13 +168,6 @@ var CCMEditMode = function() {
 				var btHandle = $item.attr('data-block-type-handle');
 				return $(this).attr('data-accepts-block-types').indexOf(btHandle) !== -1;
 			},
-			over: function() {
-				var l = $('.ccm-area-drag-block-type-over').length;
-				if (l > 1) {
-					// we have somehow gotten two areas selected. we unselected not this one
-					$emptyareas.not($(this)).removeClass('ccm-area-drag-block-type-over');
-				}
-			},
 			greedy: true,
 			drop: function(e, ui) {
 				$('.ccm-area-drag-block-type-over').removeClass('ccm-area-drag-block-type-over');
@@ -147,23 +176,50 @@ var CCMEditMode = function() {
 					// it's from the add block overlay
 					addBlockType($(this).attr('data-cID'), $(this).attr('data-area-id'), $(this).attr('data-area-handle'), ui.helper, true);
 				} else {
-					ui.draggable.appendTo($(this));
-					if (CCMEditMode.$draggableElement) {
-						CCMEditMode.$sortableDropElement = CCMEditMode.$draggableElement;
-					}
+					// else we are dragging a block from some other area into this one.
+					ui.draggable.appendTo($(this).find('.ccm-area-block-list'));
+					saveArrangement(ui.draggable.attr('data-block-id'), ui.draggable.attr('data-area-id'), $(this).attr('data-area-id'));
 				}
 			}
 		});
-	
+
 		var $dropzone = $('<div />').addClass('ccm-area-block-dropzone').append($('<div />').addClass('ccm-area-block-dropzone-inner'));
 		$dropzone.clone().insertBefore($('.ccm-block-edit'));
 
-		$nonemptyareas = $('div.ccm-area[data-total-blocks!=0]');
+		$nonemptyareas = $('div.ccm-area[data-total-blocks!=0] > div.ccm-area-block-list');
 		$nonemptyareas.append($dropzone.clone());
 
 		$('.ccm-area-block-dropzone').droppable({
 			hoverClass: 'ccm-area-block-dropzone-over',
-			tolerance: 'pointer'
+			tolerance: 'pointer',
+			accept: function($item) {
+				var btHandle = $item.attr('data-block-type-handle');
+				var $area = $(this).closest('.ccm-area');
+				var btHandles = $area.attr('data-accepts-block-types');
+				if (btHandles) {
+					return btHandles.indexOf(btHandle) !== -1;
+				}
+			},
+			drop: function(e, ui) {
+				$('.ccm-area-drag-block-type-over').removeClass('ccm-area-drag-block-type-over');
+				if (ui.helper.is('.ccm-overlay-draggable-block-type')) {
+					CCMEditMode.blockTypeDropSuccessful = true;
+					$(this).replaceWith($('<div />', {'id': 'ccm-add-new-block-placeholder'}));
+					// it's from the add block overlay
+					var $area = $('#ccm-add-new-block-placeholder').closest('.ccm-area');
+					addBlockType($area.attr('data-cID'), $area.attr('data-area-id'), $area.attr('data-area-handle'), ui.helper, true);
+				} else {
+					var bID = ui.draggable.attr('data-block-id');
+					var arID = ui.draggable.attr('data-area-id');
+					var $area = $(this).closest('.ccm-area');
+					$(this).replaceWith(ui.draggable.clone());
+					ui.draggable.remove();
+					setTimeout(function() {
+						saveArrangement(bID, arID, $area.attr('data-area-id'));
+					}, 100); // i don't know why but we need to wait a moment so that the original draggable is out of the DOM
+				}
+			}
+
 		});
 
 		$('[data-inline-command=move-block]').on('mousedown', function() {
@@ -190,135 +246,12 @@ var CCMEditMode = function() {
 			},
 			stop: function() {
 				$.fn.ccmmenu.enable();
-				if (CCMEditMode.$sortableDropElement) {
-					CCMEditMode.$sortableDropElement.remove();
-					CCMEditMode.$sortableDropElement = false;
-				}
-				CCMToolbar.disableDirectExit();
-				var _serial = '';
-				$('div.ccm-area').each(function() {
-					var $_area = $(this);
-					$_area.find('div.ccm-block-edit').each(function() {
-						var $_block = $(this);
-						_serial += '&area[' + $_area.attr('data-area-id') + '][]=' + $_block.attr('data-block-id');
-					});
-				});
-
-			 	$.ajax({
-			 		type: 'POST',
-					dataType: 'json',
-			 		url: CCM_DISPATCHER_FILENAME,
-			 		data: 'cID=' + CCM_CID + '&ccm_token=' + CCM_SECURITY_TOKEN + '&btask=ajax_do_arrange' + _serial,
-			 		success: function(r) {
-			 			ccm_parseJSON(r, function() {
-			 				$('div.ccm-area').each(function() {
-			 					var _arID = $(this).attr('data-area-id');
-			 					var tb = 0;
-			 					if (r.areas[_arID]) {
-			 						var tb = r.areas[_arID];
-			 					}
-			 					$('div.ccm-area[data-area-id=' + _arID + ']').attr('data-total-blocks', tb);
-			 				});
-			 				CCMEditMode.start();
-			 			});
-			 		}
-			 	});
 			},
 			start: function(e, ui) {
 				// deactivate the menu on drag
 				$.fn.ccmmenu.disable();
-				CCMEditMode.$draggableElement = $(this);
 			}
 		});		
-
-		// areas with more than 1 block are sortable.
-		/*
-		$sortableAreas = $('div.ccm-area[data-total-blocks!=0]');
-
-		$sortableAreas.sortable({
-			items: 'div.ccm-block-edit',
-			tolerance: 'pointer',
-			placeholder: 'ui-state-highlight',
-			handle: '[data-inline-command=move-block]',
-			out: function() {
-		
-			},
-
-			receive: function(e, ui) {
-				$('.ccm-area-drag-block-type-over').removeClass('ccm-area-drag-block-type-over');
-				if (ui.item.is('.ccm-overlay-draggable-block-type')) {
-					CCMEditMode.blockTypeDropSuccessful = true;
-					// it's from the add block overlay
-					$(this).find('.ccm-overlay-draggable-block-type').replaceWith($('<div />', {'id': 'ccm-add-new-block-placeholder'}));
-					addBlockType($(this).attr('data-cID'), $(this).attr('data-area-id'), $(this).attr('data-area-handle'), ui.helper, true);
-				} else {
-					CCMEditMode.$sortableDropElement = ui.item;
-				}
-			}
-		});
-
-		$sortableAreas.find('div.ccm-block-edit').each(function() {
-			var $block = $(this);
-			$block.draggable({
-				cursor: 'move',
-				cursorAt: {
-					right: 10,
-					top: 10
-				},
-				handle: '[data-inline-command=move-block]',
-				helper: function() {
-					var w = '100px';
-					var h = '100px';
-					var $d =  $('<div />', {'class': 'ccm-block-type-dragging'}).css('opacity', 0.5).css('width', w).css('height', h);
-					return $d;
-				},
-				connectToSortable: $sortableAreas.filter('[data-accepts-block-types~=' + $block.attr('data-block-type-handle') + ']'),
-				stop: function() {
-					$.fn.ccmmenu.enable();
-					if (CCMEditMode.$sortableDropElement) {
-						CCMEditMode.$sortableDropElement.remove();
-						CCMEditMode.$sortableDropElement = false;
-					}
-					CCMToolbar.disableDirectExit();
-					var _serial = '';
-					$('div.ccm-area').each(function() {
-						var $_area = $(this);
-						$_area.find('div.ccm-block-edit').each(function() {
-							var $_block = $(this);
-							_serial += '&area[' + $_area.attr('data-area-id') + '][]=' + $_block.attr('data-block-id');
-						});
-					});
-
-				 	$.ajax({
-				 		type: 'POST',
-						dataType: 'json',
-				 		url: CCM_DISPATCHER_FILENAME,
-				 		data: 'cID=' + CCM_CID + '&ccm_token=' + CCM_SECURITY_TOKEN + '&btask=ajax_do_arrange' + _serial,
-				 		success: function(r) {
-				 			ccm_parseJSON(r, function() {
-				 				$('div.ccm-area').each(function() {
-				 					var _arID = $(this).attr('data-area-id');
-				 					var tb = 0;
-				 					if (r.areas[_arID]) {
-				 						var tb = r.areas[_arID];
-				 					}
-				 					$('div.ccm-area[data-area-id=' + _arID + ']').attr('data-total-blocks', tb);
-				 				});
-				 				CCMEditMode.start();
-				 			});
-				 		}
-				 	});
-				},
-				start: function(e, ui) {
-					// deactivate the menu on drag
-					$.fn.ccmmenu.disable();
-					CCMEditMode.$draggableElement = $(this);
-				}
-			});
-		});
-		*/
-
-
 
 	}
 
