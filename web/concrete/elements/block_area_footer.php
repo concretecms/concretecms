@@ -22,6 +22,7 @@ $cp = new Permissions($c);
 $class = 'ccm-area-footer';
 
 ?>
+</div>
 
 <div class="<?=$class?> ccm-ui">
 
