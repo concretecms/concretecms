@@ -1310,7 +1310,7 @@ li.themeWrap .ccm-theme-name a{text-decoration:none;}
 li.themeWrap .ccm-theme-name a:hover{text-decoration:underline;}
 ul#ccm-select-marketplace-theme li .desc{font-size:10px;}
 #ccm-block-fields{margin-bottom:-18px;}
-div#ccm-dialog-block-types{margin:-20px -20px;*zoom:1;position:relative;min-height:100%;}div#ccm-dialog-block-types:before,div#ccm-dialog-block-types:after{display:table;content:"";line-height:0;}
+div#ccm-dialog-block-types{margin:-24px -26px;*zoom:1;position:relative;min-height:100%;}div#ccm-dialog-block-types:before,div#ccm-dialog-block-types:after{display:table;content:"";line-height:0;}
 div#ccm-dialog-block-types:after{clear:both;}
 div#ccm-dialog-block-types div#ccm-dialog-block-types-sets{width:195px;float:left;}div#ccm-dialog-block-types div#ccm-dialog-block-types-sets ul{list-style-type:none;margin-left:20px;}div#ccm-dialog-block-types div#ccm-dialog-block-types-sets ul li{padding:0px 0px 15px 0px;}div#ccm-dialog-block-types div#ccm-dialog-block-types-sets ul li a{display:block;color:#999;}
 div#ccm-dialog-block-types div#ccm-dialog-block-types-sets ul li a.active,div#ccm-dialog-block-types div#ccm-dialog-block-types-sets ul li a:hover{text-decoration:none;color:#333;}

@@ -76,31 +76,33 @@ $disp .= "</script>"."\n";
 $v->addHeaderItem($disp);
 Loader::element('header_required', array('disableTrackingCode' => true));
 $backgroundImage = Loader::helper('concrete/dashboard')->getDashboardBackgroundImage();
+
+$options = '{';
+if ($backgroundImage->image) {
+	if (!$_SESSION['dashboardHasSeenImage']) {
+		$options .= 'imagetime: 750, ';
+	} else {
+		$options .= 'imagetime: false, ';
+	}
+	if ($backgroundImage->checkData) {
+		$options .= 'filename: \'' . $backgroundImage->filename . '\', ';
+		if ($backgroundImage->displayCaption) {
+			$options .= 'displayCaption: true, ';
+		} else {
+			$options .= 'displayCaption: false, ';
+		}
+	}
+	$options .= 'image: \'' . $backgroundImage->image . '\'';
+
+} else {
+	$options .= 'image: false';
+}
+
+$options .= '}';
+
+$this->addFooterItem('<script type="text/javascript">$(function() { CCMDashboard.start(' . $options . '); });</script>');
+
 ?>
-<script type="text/javascript">
-
-	$(function() {
-		<? if ($backgroundImage->image) { ?>
-		    $.backstretch("<?=$backgroundImage->image?>" <? if (!$_SESSION['dashboardHasSeenImage']) { ?>,  {speed: 750}<? } ?>);
-	    <? } ?>
-	    <? if ($backgroundImage->checkData) { ?>
-		    ccm_getDashboardBackgroundImageData('<?=$backgroundImage->filename?>', <? if ($backgroundImage->displayCaption) { ?> true <? } else { ?> false <? } ?>);
-		<? } ?>
-
-		<? /*
-
-		$(window).on('resize', function() {
-			ccm_testFixForms();
-		});
-		$('form').each(function() {
-			$(this).attr('original-class', $(this).attr('class'));
-		});
-		ccm_testFixForms();
-		*/
-		?>
-
-	});
-</script>
 
 </head>
 <body>

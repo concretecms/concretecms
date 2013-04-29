@@ -120,7 +120,7 @@ if ($b->getBlockTypeHandle() == BLOCK_HANDLE_LAYOUT_PROXY) {
 	<? } ?>
 
 	<? if ($b->getBlockTypeHandle() != BLOCK_HANDLE_LAYOUT_PROXY) { ?>
-	<li><a href="javascript:void(0)" onclick="ccm_addToScrapbook('<?=$cID?>','<?=$bID?>', '<?=htmlspecialchars($arHandle)?>')"><?=t("Copy to Clipboard")?></a></li>		
+	<li><a href="javascript:void(0)" onclick="CCMEditMode.addBlockToScrapbook('<?=$cID?>','<?=$bID?>', '<?=htmlspecialchars($arHandle)?>')"><?=t("Copy to Clipboard")?></a></li>		
 	<? } ?>
 
 
