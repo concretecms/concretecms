@@ -177,10 +177,15 @@ var CCMEditMode = function() {
 				top: 10
 			},
 			handle: '[data-inline-command=move-block]',
+			opacity: 0.5,
 			helper: function() {
-				var w = '100px';
-				var h = '100px';
-				var $d =  $('<div />', {'class': 'ccm-block-type-dragging'}).css('opacity', 0.5).css('width', w).css('height', h);
+				var w = $(this).width();
+				var h = $(this).height();
+				if (h > 300) {
+					h = 300;
+				}
+				var $d =  $('<div />', {'class': 'ccm-block-type-sorting'}).css('width', w).css('height', h);
+				$d.append($(this).clone());
 				return $d;
 			},
 			stop: function() {
