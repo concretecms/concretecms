@@ -18,7 +18,7 @@ if ($c->isEditMode()) {
 
 <div data-aggregator-id="<?=$aggregator->getAggregatorID()?>" class="ccm-aggregator-grid">
   	<? foreach($items as $item) { ?>
-    <div style="width: <?=$item->getAggregatorItemSlotWidth()*$pt->getThemeAggregatorGridItemWidth()?>px; height: <?=$item->getAggregatorItemSlotHeight()*$pt->getThemeAggregatorGridItemHeight()?>px;"><?
+    <div class="ccm-aggregator-item h<?=$item->getAggregatorItemSlotHeight()?> w<?=$item->getAggregatorItemSlotWidth()?>"><?
     	$item->render();
     ?></div>
   	<? } ?>
@@ -27,23 +27,44 @@ if ($c->isEditMode()) {
 <script type="text/javascript">
 $(function() {
   var $agg = $("div[data-aggregator-id=<?=$aggregator->getAggregatorID()?>]");
-  $agg.isotope({
-  layoutMode: 'perfectMasonry',
-    perfectMasonry: {
-        columnWidth: <?=$item->getAggregatorItemSlotWidth()?>,
-        rowHeight:  <?=$item->getAggregatorItemSlotHeight()?>
+  $agg.packery({
+    columnWidth: <?=$pt->getThemeAggregatorGridItemWidth()?>,
+    rowHeight: <?=$pt->getThemeAggregatorGridItemHeight()?>
+  });
+  var $itemElements = $($agg.packery('getItemElements'));
+  $itemElements.draggable({
+    'stop': function() {
+      $agg.packery('layout');
     }
   });
-
+  $agg.packery( 'bindUIDraggableEvents', $itemElements );
   $agg.css('opacity', 1);
-  $agg.sortable({
-      helper: function(event, element) {
-        var clone = $(element).clone();
-        clone.removeClass('isotope-item');
-        element.removeClass('isotope-item');
-        return clone;
-      }
-  });
-  //$agg.find('>div').resizable();
 });
 </script>
+
+<style type="text/css">
+  div.w1 {
+    width: <?=$pt->getThemeAggregatorGridItemWidth()?>px;
+  }
+
+  div.h1 {
+    height: <?=$pt->getThemeAggregatorGridItemHeight()?>px;
+  }
+
+  div.w2 {
+    width: <?=2*$pt->getThemeAggregatorGridItemWidth()?>px;
+  }
+
+  div.h2 {
+    height: <?=2*$pt->getThemeAggregatorGridItemHeight()?>px;
+  }
+
+  div.w3 {
+    width: <?=3*$pt->getThemeAggregatorGridItemWidth()?>px;
+  }
+
+  div.h3 {
+    height: <?=3*$pt->getThemeAggregatorGridItemHeight()?>px;
+  }
+
+</style>
