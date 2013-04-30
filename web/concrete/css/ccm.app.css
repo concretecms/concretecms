@@ -1174,7 +1174,8 @@ div.ccm-summary-selected-item{border:1px solid #dedede;margin-top:8px;margin-bot
 .ccm-ui .btn.btn-primary{border-color:#09f;}
 .ccm-ui .btn:hover{border-color:#6cf !important;background-image:none !important;background-color:#fff !important;}
 .ccm-ui .btn.btn-primary:hover{background-image:none !important;background-color:#09f !important;}
-.ccm-ui .btn.btn-hover-danger:hover{border-color:# !important;}
+.ccm-ui .btn.btn-hover-danger:hover{border-color:#e85a55 !important;}
+.ccm-ui .btn.btn-danger:hover{background-image:none !important;background-color:#e85a55 !important;border-color:#e85a55 !important;}
 .ccm-ui .btn[disabled=disabled]:hover{background-image:none !important;color:#b7b7b7 !important;background-color:#eae9e9 !important;border-color:#ccc !important;}
 .ccm-ui .btn[disabled=disabled]{background-image:none !important;color:#b7b7b7 !important;background-color:#eae9e9 !important;border-color:#ccc !important;}
 table.ccm-permission-grid{border:0px;}
