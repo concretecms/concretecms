@@ -16,12 +16,31 @@ var CCMEditMode = function() {
 
 		$('.ccm-block-edit').each(function() {
 			var $b = $(this);
+			var bID = $b.attr('data-block-id');
+			var aID = $b.attr('data-area-id');
+			var arHandle = encodeURIComponent($b.closest('div.ccm-area').attr('data-area-handle'));
+
 			$b.find('a[data-menu-action=edit_inline]').unbind().on('click', function() {
-				var bID = $b.attr('data-block-id');
-				var aID = $b.attr('data-area-id');
-				var arHandle = $b.closest('div.ccm-area').attr('data-area-handle');
 				CCMInlineEditMode.editBlock(CCM_CID, aID, arHandle, bID, $(this).attr('data-menu-action-params'));
 			});
+			$b.find('a[data-menu-action=block_dialog]').each(function() {
+				var href = $(this).attr('data-menu-href');
+				if (href.indexOf('?') !== -1) {
+					href += '&cID=' + CCM_CID;
+				} else {
+					href += '?cID=' + CCM_CID;
+				}
+				href += '&arHandle=' + arHandle + '&bID=' + bID;
+				$(this).attr('href', href);
+				$(this).dialog();
+			});
+			$b.find('a[data-menu-action=block_scrapbook]').unbind().on('click', function() {
+				CCMEditMode.addBlockToScrapbook(CCM_CID, bID, arHandle);
+			});
+			$b.find('a[data-menu-action=delete_block]').unbind().on('click', function() {
+				CCMEditMode.deleteBlock(CCM_CID, bID, aID, arHandle, $(this).attr('data-menu-delete-message'));
+			});
+
 		});		
 	}
 
@@ -312,12 +331,12 @@ var CCMEditMode = function() {
 							CCMInlineEditMode.exit();
 							CCMToolbar.disableDirectExit();
 							jQuery.fn.dialog.hideLoader();
+							CCMEditMode.start(); // refresh areas. 
 							if (task == 'add') {
 								var tb = parseInt($('div.ccm-area[data-area-id=' + resp.aID + ']').attr('data-total-blocks'));
 								$('div.ccm-area[data-area-id=' + resp.aID + ']').attr('data-total-blocks', tb + 1);
 								ccmAlert.hud(ccmi18n.addBlockMsg, 2000, 'add', ccmi18n.addBlock);
 								jQuery.fn.dialog.closeAll();
-								CCMEditMode.start(); // refresh areas. 
 							} else {
 								ccmAlert.hud(ccmi18n.updateBlockMsg, 2000, 'success', ccmi18n.updateBlock);
 							}
