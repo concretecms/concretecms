@@ -75,7 +75,7 @@ if ($b->getBlockTypeHandle() == BLOCK_HANDLE_LAYOUT_PROXY) {
 		<? if ($btw->getBlockTypeHandle() == BLOCK_HANDLE_LAYOUT_PROXY) { ?> data-menu-handle="ccm-area-layout-control-bar-<?=$b->getBlockID()?>-<?=$a->getAreaID()?>"<? } ?>>
 
 		<ul class="ccm-edit-mode-inline-commands ccm-ui">
-		<? if ($p->canEditBlock() && (!$a->isGlobalArea())) {  ?>
+		<? if ($p->canEditBlock() && $btw->getBlockTypeHandle() != BLOCK_HANDLE_LAYOUT_PROXY && (!$a->isGlobalArea())) {  ?>
 			<li><a data-inline-command="move-block" href="#"><i class="icon-move"></i></a></li>
 		<? } ?>
 		</ul>

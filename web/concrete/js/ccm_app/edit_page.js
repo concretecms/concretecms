@@ -16,7 +16,7 @@ var CCMEditMode = function() {
 
 		$('.ccm-block-edit').each(function() {
 			var $b = $(this);
-			$b.find('a[data-menu-action=edit_inline]').on('click', function() {
+			$b.find('a[data-menu-action=edit_inline]').unbind().on('click', function() {
 				var bID = $b.attr('data-block-id');
 				var aID = $b.attr('data-area-id');
 				var arHandle = $b.closest('div.ccm-area').attr('data-area-handle');
