@@ -35,7 +35,7 @@ var CCMInlineEditMode = function() {
 		},
 
 		editBlock: function(cID, aID, arHandle, bID, params) {
-
+			
 			var postData = [
 				{name: 'btask', value: 'edit'},
 				{name: 'cID', value: cID},
