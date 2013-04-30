@@ -18,8 +18,9 @@ foreach($blockTypes as $bt) {
 if ($ap->canAddLayout()) {
 	$handles .= BLOCK_HANDLE_LAYOUT_PROXY . ' ';
 }
+
 ?>
-<div id="a<?=$a->getAreaID()?>" data-total-blocks="<?=$a->getTotalBlocksInAreaEditMode()?>" data-accepts-block-types="<?=trim($handles)?>" data-area-id="<?=$a->getAreaID()?>" data-cID="<?=$a->getCollectionID()?>" data-area-handle="<?=$a->getAreaHandle()?>" data-menu-disable-highlight="true" data-menu="area-menu-a<?=$a->getAreaID()?>" data-menu-handle="area-menu-footer-<?=$a->getAreaID()?>" class="<?=$class?>">
+<div id="a<?=$a->getAreaID()?>" data-maximum-blocks="<?=$a->getMaximumBlocks()?>" data-total-blocks="<?=$a->getTotalBlocksInAreaEditMode()?>" data-accepts-block-types="<?=trim($handles)?>" data-area-id="<?=$a->getAreaID()?>" data-cID="<?=$a->getCollectionID()?>" data-area-handle="<?=$a->getAreaHandle()?>" data-menu-disable-highlight="true" data-menu="area-menu-a<?=$a->getAreaID()?>" data-menu-handle="area-menu-footer-<?=$a->getAreaID()?>" class="<?=$class?>">
 
 <? unset($class); ?>
 
