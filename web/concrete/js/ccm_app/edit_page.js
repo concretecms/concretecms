@@ -24,7 +24,7 @@ var CCMEditMode = function() {
 			var $b = $(this);
 			var bID = $b.attr('data-block-id');
 			var aID = $b.attr('data-area-id');
-			var arHandle = encodeURIComponent($b.closest('div.ccm-area').attr('data-area-handle'));
+			var arHandle = $b.closest('div.ccm-area').attr('data-area-handle');
 
 			$b.find('a[data-menu-action=edit_inline]').unbind().on('click', function() {
 				CCMInlineEditMode.editBlock(CCM_CID, aID, arHandle, bID, $(this).attr('data-menu-action-params'));
@@ -36,7 +36,7 @@ var CCMEditMode = function() {
 				} else {
 					href += '?cID=' + CCM_CID;
 				}
-				href += '&arHandle=' + arHandle + '&bID=' + bID;
+				href += '&arHandle=' + encodeURIComponent(arHandle) + '&bID=' + bID;
 				$(this).attr('href', href);
 				$(this).dialog();
 			});
@@ -284,7 +284,7 @@ var CCMEditMode = function() {
 			$.ajax({
 			type: 'POST',
 			url: CCM_TOOLS_PATH + '/pile_manager.php',
-			data: 'cID=' + cID + '&bID=' + bID + '&arHandle=' + arHandle + '&btask=add&scrapbookName=userScrapbook',
+			data: 'cID=' + cID + '&bID=' + bID + '&arHandle=' + encodeURIComponent(arHandle) + '&btask=add&scrapbookName=userScrapbook',
 			success: function(resp) {
 				ccmAlert.hud(ccmi18n.copyBlockToScrapbookMsg, 2000, 'add', ccmi18n.copyBlockToScrapbook);
 			}});		
@@ -304,7 +304,7 @@ var CCMEditMode = function() {
 				$.ajax({
 					type: 'POST',
 					url: CCM_DISPATCHER_FILENAME,
-					data: 'cID=' + cID + '&ccm_token=' + CCM_SECURITY_TOKEN + '&isAjax=true&btask=remove&bID=' + bID + '&arHandle=' + arHandle
+					data: 'cID=' + cID + '&ccm_token=' + CCM_SECURITY_TOKEN + '&isAjax=true&btask=remove&bID=' + bID + '&arHandle=' + encodeURIComponent(arHandle)
 				});
 				if (typeof window.ccm_parseBlockResponsePost == 'function') {
 					ccm_parseBlockResponsePost({});
