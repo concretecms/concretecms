@@ -26,7 +26,6 @@ $this->inc('elements/header.php'); ?>
 <?
 	$a = new Area('Right');
 	$a->setAreaGridColumnSpan(4);
-	$a->setBlockLimit(1);
 	$a->display($c);
 ?>
 </div>
