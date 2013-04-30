@@ -222,14 +222,6 @@ class Concrete5_Model_Area extends Object {
 	public function disableControls() {
 		$this->showControls = false;
 	}
-	
-	/**
-	 * determines if the current Area can accept additonal Blocks
-	 * @return boolean
-	 */
-	public function areaAcceptsBlocks() {
-		return (($this->maximumBlocks > count($this->areaBlocksArray)) || ($this->maximumBlocks == -1));
-	}
 
 	/**
 	 * gets the maximum allowed number of blocks, -1 if unlimited

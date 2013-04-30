@@ -5,15 +5,21 @@
 var CCMEditMode = function() {
 
 	var blockTypeDropSuccessful = false;
-	var $areaDropZones;
-	var $sortableDropElement = false;
-	var $draggableElement = false;
 
 	setupMenus = function() {
 		$('.ccm-area').ccmmenu();
 		$('.ccm-block-edit').ccmmenu();
 		$('.ccm-block-edit-layout').ccmmenu();
 
+		$('.ccm-area').each(function() {
+			var totalblocks = parseInt($(this).attr('data-total-blocks'));
+			var maxblocks = parseInt($(this).attr('data-maximum-blocks'));
+			if (maxblocks > -1 && (totalblocks == maxblocks || totalblocks > maxblocks)) {
+				$(this).find('div.ccm-area-footer li[data-list-item=block_limit_row]').hide();
+			} else {
+				$(this).find('div.ccm-area-footer li[data-list-item=block_limit_row]').show();
+			}
+		});
 		$('.ccm-block-edit').each(function() {
 			var $b = $(this);
 			var bID = $b.attr('data-block-id');
@@ -141,8 +147,13 @@ var CCMEditMode = function() {
 			hoverClass: 'ccm-area-drag-block-type-over',
 			tolerance: 'pointer',
 			accept: function($item) {
-				var btHandle = $item.attr('data-block-type-handle');
-				return $(this).attr('data-accepts-block-types').indexOf(btHandle) !== -1;
+				var totalblocks = parseInt($(this).attr('data-total-blocks'));
+				var maxblocks = parseInt($(this).attr('data-maximum-blocks'));
+				if (maxblocks == -1 || totalblocks < maxblocks) {
+					var btHandle = $item.attr('data-block-type-handle');
+					return $(this).attr('data-accepts-block-types').indexOf(btHandle) !== -1;
+				}
+				return false;
 			},
 			greedy: true,
 			drop: function(e, ui) {
@@ -171,10 +182,15 @@ var CCMEditMode = function() {
 			accept: function($item) {
 				var btHandle = $item.attr('data-block-type-handle');
 				var $area = $(this).closest('.ccm-area');
-				var btHandles = $area.attr('data-accepts-block-types');
-				if (btHandles) {
-					return btHandles.indexOf(btHandle) !== -1;
+				var totalblocks = parseInt($area.attr('data-total-blocks'));
+				var maxblocks = parseInt($area.attr('data-maximum-blocks'));
+				if (maxblocks == -1 || totalblocks < maxblocks) {
+					var btHandles = $area.attr('data-accepts-block-types');
+					if (btHandles) {
+						return btHandles.indexOf(btHandle) !== -1;
+					}
 				}
+				return false;
 			},
 			drop: function(e, ui) {
 				$('.ccm-area-drag-block-type-over').removeClass('ccm-area-drag-block-type-over');
@@ -331,7 +347,6 @@ var CCMEditMode = function() {
 							CCMInlineEditMode.exit();
 							CCMToolbar.disableDirectExit();
 							jQuery.fn.dialog.hideLoader();
-							CCMEditMode.start(); // refresh areas. 
 							if (task == 'add') {
 								var tb = parseInt($('div.ccm-area[data-area-id=' + resp.aID + ']').attr('data-total-blocks'));
 								$('div.ccm-area[data-area-id=' + resp.aID + ']').attr('data-total-blocks', tb + 1);
@@ -340,6 +355,7 @@ var CCMEditMode = function() {
 							} else {
 								ccmAlert.hud(ccmi18n.updateBlockMsg, 2000, 'success', ccmi18n.updateBlock);
 							}
+							CCMEditMode.start(); // refresh areas. 
 							if (typeof window.ccm_parseBlockResponsePost == 'function') {
 								ccm_parseBlockResponsePost(resp);
 							}
