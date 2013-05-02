@@ -1,9 +1,6 @@
 <div class='cancelbutton'>Cancel</div>
 
 <div class='cropcontrols'>
-	<div class='cropcheckbox'>
-		<label><input class='autocrop' type='checkbox'/> Auto Crop</label>
-	</div>
 	<div class='widthinput cropcontrol'>
 		<label for='width'>
 			Width: 
@@ -21,6 +18,6 @@
 		</div>
 	</div>
 	<div class='locked btn'>
-		%
+		<i class='icon-glass'>&nbsp;</i>
 	</div>
 </div>

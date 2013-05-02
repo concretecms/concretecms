@@ -72,7 +72,7 @@ $filters = SystemImageEditorFilter::getList();
       </div>
       <div class='save'>
         <button class='cancel btn'>Cancel</button>
-        <button class='save btn ccm-button-right btn-primary'>Save</button>
+        <button class='save btn pull-right btn-primary'>Save</button>
       </div>
     </div>
   </div>

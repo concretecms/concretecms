@@ -43,7 +43,7 @@ im.buildBackground = function() {
     im.coverLayer = new Kinetic.Rect;
     im.coverLayer.setStroke('rgba(150,150,150,.5)');
     im.coverLayer.setFill('transparent');
-    im.coverLayer.setDrawHitFunc(function(){});
+    im.coverLayer.setListening(false);
     im.coverLayer.setStrokeWidth(Math.max(dimensions.width,dimensions.height,500));
   }
   var width = Math.max(dimensions.width,dimensions.height)*2;

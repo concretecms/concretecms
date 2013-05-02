@@ -1,3 +1,7 @@
+
+var me = $(this);
+
+
 ccm_event.bind('FileManagerFileSelected',function(e){
 	if (e.eventData.af == "addImageToImageEditor_"+im.uniqid) {
 		im.showLoader();
@@ -23,10 +27,9 @@ ccm_event.bind('FileManagerFileSelected',function(e){
 		});
 	}
 });
-var me = $(this);
 me.find('a.webcam').click(function(e) {
   e.preventDefault();
-  var photoDialog  = $($('script.template',me).text());
+  var photoDialog  = $($.parseHTML($('script.template',me).text()));
   console.log(photoDialog);
   $.fn.dialog.open({width:window.innerWidth - 300, height:window.innerHeight - 300, element:photoDialog});
   navigator.getMedia = (navigator.getUserMedia ||

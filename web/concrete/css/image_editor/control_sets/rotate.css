@@ -10,6 +10,10 @@ div.controlset.rotate > div.control div.angle > div.slider {
 	width:75%;
 	display:inline-block;
 }
+div.controlset.rotate > div.control div.anglelabel {
+	margin-top:20px;
+	color:#666;
+}
 div.controlset.rotate > div.control div.angle > input {
 	width:10%;
 	margin-left:15px;

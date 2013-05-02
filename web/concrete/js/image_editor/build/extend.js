@@ -68,6 +68,7 @@ im.addControlSet = function(ns,js,elem) {
 
 im.addFilter = function(ns,js) {
   var filter = function(im,js) {
+    this.namespace = im.namespace;
     this.im = im;
     try {
       eval(js);

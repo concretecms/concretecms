@@ -11,6 +11,9 @@
 	</button>
 </div>
 
+<div class='anglelabel'>
+	<label>Angle</label>
+</div>
 <div class='angle'>
 	<div class='slider'></div>
 	<input>

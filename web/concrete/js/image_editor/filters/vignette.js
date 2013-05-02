@@ -79,22 +79,17 @@ var vignette = function(data,stuff,size,strength) {
 
 var me = this;
 im.bind('filterFullyLoaded',function(e){
-  if (e.eventData.namespace === me.namespace){
+  if (e.eventData.im.namespace === me.im.namespace){
     //This is me, start initialization.
-    me.label.text(me.name);
   }
 });
 im.bind('filterChange',function(e){
-  if (e.eventData.namespace === me.namespace) {
-    if (!me.controls.hasClass('active')) return;
+  if (e.eventData.im.namespace === me.im.namespace) {
     im.showLoader('Applying Vignette');
-    me.controls.stop(1,1).hide();
-    me.label.click();
 
     setTimeout(function(){
       // Just apply, there is no variation.
 
-      console.log('applyFilter');
       im.activeElement.applyFilter(vignette,{test:'val'},function(){
         im.hideLoader();
         im.fire('filterApplied', me);
@@ -103,5 +98,13 @@ im.bind('filterChange',function(e){
       });
       // Apply Filter
     },10); // Allow loader to show
+  }
+});
+im.bind('filterApplyExample',function(e){
+  console.log(e);
+  if (e.eventData.namespace === me.im.namespace) {
+    e.eventData.image.applyFilter(vignette,{},function(){
+      im.fire('filterBuiltExample', me, e.eventData.elem);
+    });
   }
 });

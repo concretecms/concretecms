@@ -16,7 +16,7 @@ div.controlset.position > div.control div.vertical > div {
   width: 190px;
 }
 div.controlset.position > div.control button.center,
-div.controlset.position > div.control button.center {
+div.controlset.position > div.control button.delete {
   margin-bottom: 20px;
 }
 div.controlset.position > div.control div.horizontal,

@@ -68,10 +68,15 @@ im.adjustSavers = function() {
       if (count.max.y < pos.y + size.height) count.max.y = pos.y + size.height;
     }
   }
-
   var avg = {x:(count.min.x + count.max.x)/2, y:(count.min.y + count.max.y)/2},
       diff = {x:Math.round(avg.x-im.center.x), y:Math.round(avg.y-im.center.y)};
-
+  if (count.min.x === false) {
+    im.alterCore('saveWidth',0);
+    im.alterCore('saveHeight',0);
+    im.buildBackground();
+    im.fire('adjustedsavers');
+    return;
+  }
   if (diff.x !== 0 || diff.y !== 0) {
     for (i=0;i<l;i++) {
       if (c[i].autoCrop === false) continue;
