@@ -4,6 +4,8 @@
 <?
 $a = $b->getBlockAreaObject();
 $c = Page::getCurrentPage();
+$pt = $c->getCollectionThemeObject();
+
 if ($c->isEditMode()) {
   $bp = new Permissions($b);
   if ($bp->canEditBlock()) { ?>
@@ -14,29 +16,55 @@ if ($c->isEditMode()) {
 
 <? } ?>
 
-<div data-aggregator-id="<?=$aggregator->getAggregatorID()?>" class="ccm-aggregator-grid gridster">
-  <ul>
+<div data-aggregator-id="<?=$aggregator->getAggregatorID()?>" class="ccm-aggregator-grid">
   	<? foreach($items as $item) { ?>
-    <li data-row="1" data-col="1" data-sizex="<?=$item->getAggregatorItemSlotWidth()?>" data-sizey="<?=$item->getAggregatorItemSlotHeight()?>"><?
+    <div class="ccm-aggregator-item h<?=$item->getAggregatorItemSlotHeight()?> w<?=$item->getAggregatorItemSlotWidth()?>"><?
     	$item->render();
-    ?></li>
+    ?></div>
   	<? } ?>
-  </ul>
 </div>
 
-<?
-$c = Page::getCurrentPage();
-$pt = $c->getCollectionThemeObject();
-?>
-
 <script type="text/javascript">
-  var grid;
-  $(function(){
-    grid = $("div[data-aggregator-id=<?=$aggregator->getAggregatorID()?>] > ul").gridster({
-        widget_margins: [<?=$pt->getThemeAggregatorGridItemMargin()?>, <?=$pt->getThemeAggregatorGridItemMargin()?>],
-        widget_base_dimensions: [<?=$pt->getThemeAggregatorGridItemWidth()?>,<?=$pt->getThemeAggregatorGridItemHeight()?>]
-    }).data('gridster').disable();
-    $("div[data-aggregator-id=<?=$aggregator->getAggregatorID()?>]").css('opacity', 1);
+$(function() {
+  var $agg = $("div[data-aggregator-id=<?=$aggregator->getAggregatorID()?>]");
+  $agg.packery({
+    columnWidth: <?=$pt->getThemeAggregatorGridItemWidth()?>,
+    rowHeight: <?=$pt->getThemeAggregatorGridItemHeight()?>
   });
-
+  var $itemElements = $($agg.packery('getItemElements'));
+  $itemElements.draggable({
+    'stop': function() {
+      $agg.packery('layout');
+    }
+  });
+  $agg.packery( 'bindUIDraggableEvents', $itemElements );
+  $agg.css('opacity', 1);
+});
 </script>
+
+<style type="text/css">
+  div.w1 {
+    width: <?=$pt->getThemeAggregatorGridItemWidth()?>px;
+  }
+
+  div.h1 {
+    height: <?=$pt->getThemeAggregatorGridItemHeight()?>px;
+  }
+
+  div.w2 {
+    width: <?=2*$pt->getThemeAggregatorGridItemWidth()?>px;
+  }
+
+  div.h2 {
+    height: <?=2*$pt->getThemeAggregatorGridItemHeight()?>px;
+  }
+
+  div.w3 {
+    width: <?=3*$pt->getThemeAggregatorGridItemWidth()?>px;
+  }
+
+  div.h3 {
+    height: <?=3*$pt->getThemeAggregatorGridItemHeight()?>px;
+  }
+
+</style>

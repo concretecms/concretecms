@@ -21,6 +21,12 @@ class Concrete5_Model_GlobalArea extends Area {
 	}
 
 	public function getTotalBlocksInArea() {
+		$stack = $this->getGlobalAreaStackObject();
+		$ax = Area::get($stack, STACKS_AREA_NAME);
+		return $ax->getTotalBlocksInArea();
+	}
+
+	protected function getGlobalAreaStackObject() {
 		$c = Page::getCurrentPage();
 		$cp = new Permissions($c);
 		if ($cp->canViewPageVersions()) {
@@ -28,10 +34,19 @@ class Concrete5_Model_GlobalArea extends Area {
 		} else {
 			$stack = Stack::getByName($this->arHandle, 'ACTIVE');
 		}
-		$ax = Area::get($stack, STACKS_AREA_NAME);
-		return $ax->getTotalBlocksInArea();
+		return $stack;
 	}
-	
+
+	public function getTotalBlocksInAreaEditMode() {
+		$stack = $this->getGlobalAreaStackObject();
+		$ax = Area::get($stack, STACKS_AREA_NAME);
+
+		$db = Loader::db();
+		$r = $db->GetOne('select count(b.bID) from CollectionVersionBlocks cvb inner join Blocks b on cvb.bID = b.bID inner join BlockTypes bt on b.btID = bt.btID where cID = ? and cvID = ? and arHandle = ?',
+			array($stack->getCollectionID(), $stack->getVersionID(), $ax->getAreaHandle()));
+		return $r;
+	}
+
 	public function getAreaBlocks() {
 		$cp = new Permissions($this->c);
 		if ($cp->canViewPageVersions()) {

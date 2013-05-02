@@ -1,5 +1,5 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Model_Conversation_FlagTypeList extends DatabaseItemList {
+class Concrete5_Model_Conversation_FlagType_List extends DatabaseItemList {
 
 	public function __construct() {
 		$this->setQuery('select * from ConversationFlaggedMessageTypes');
@@ -10,7 +10,7 @@ class Concrete5_Model_Conversation_FlagTypeList extends DatabaseItemList {
 		$r = parent::get(0, 0);
 		$flagTypes = array();
 		foreach($r as $row) {
-			$flagTypes[] = FlagType::getByID($row['cnvMessageFlagTypeID']);
+			$flagTypes[] = ConversationFlagType::getByID($row['cnvMessageFlagTypeID']);
 		}
 		return $flagTypes;
 	}

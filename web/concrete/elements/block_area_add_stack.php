@@ -106,7 +106,7 @@ ccmStackAddToArea = function(stackID, arHandle) {
 	ccmStackSearchResetKeys();
 	jQuery.fn.dialog.showLoader();
 	$.get('<?=DIR_REL?>/<?=DISPATCHER_FILENAME?>?atask=add_stack&stID=' + stackID + '&cID=<?=$c->getCollectionID()?>&arHandle=' + encodeURIComponent(arHandle) + '&<?=$token?>', 
-		function(r) { ccm_parseBlockResponse(r, false, 'add'); 
+		function(r) { CCMEditMode.parseBlockResponse(r, false, 'add'); 
 	});
 }
 

@@ -173,59 +173,28 @@ class Concrete5_Model_Page extends Collection {
 		return false;
 	}
 	
-	/** 
-	 * Takes an array of area/block values and makes that the arrangement for this page's version
-	 * Format is like: $area[10][0] = 2, $area[10][1] = 8, $area[15][0] = 27, with the area ID being the 
-	 * key and the block IDs being 1-n values inside it
-	 * @param array $areas
-	 */
 	public function processArrangement($areas) {
 
 		// this function is called via ajax, so it's a bit wonky, but the format is generally
 		// a{areaID} = array(b1, b2, b3) (where b1, etc... are blocks with ids appended.)
-		$db = Loader::db();
-		
-		$db->Execute('delete from CollectionVersionBlockStyles where cID = ? and cvID = ?', array($this->getCollectionID(), $this->getVersionID()));
-		
-		$obj = new stdClass;
-		$obj->error = false;
-		$obj->areas = array();
-
+		$db = Loader::db();		
+		$db->Execute('delete from CollectionVersionBlockStyles where cID = ? and cvID = ?', array($this->getCollectionID(), $this->getVersionID()));		
 		foreach($areas as $arID => $blocks) {
 			if (intval($arID) > 0) {
 				// this is a serialized area;
 				$arHandle = $db->getOne("select arHandle from Areas where arID = ?", array($arID));
 				$startDO = 0;
 
-				if (PERMISSIONS_MODEL == 'advanced') { // for performance sake
-					$ao = Area::getOrCreate($this, $arHandle);
-					$ap = new Permissions($ao);
-				}
-
-				$obj->areas[$arID] = 0;
-
 				foreach($blocks as $bIdentifier) {
 
 					$bID = 0;
 					$csrID = 0;
-					
+
 					$bd2 = explode('-', $bIdentifier);
 					$bID = $bd2[0];
 					$csrID = $bd2[1];
 
 					if (intval($bID) > 0) {
-	
-						if (PERMISSIONS_MODEL == 'advanced') { // for performance sake
-							$b = Block::getByID($bID);
-							$bt = $b->getBlockTypeObject();
-							if (!$ap->canAddBlockToArea($bt) && (!$bt->isBlockTypeInternal())) {
-								unset($obj->areas);
-								$obj->error = true;
-								$obj->message = t('You may not add %s to area %s.', $bt->getBlockTypeName(), $arHandle);
-								return $obj;
-							}
-						}
-
 						$v = array($startDO, $arHandle, $bID, $this->getCollectionID(), $this->getVersionID());
 						try {
 							$db->query("update CollectionVersionBlocks set cbDisplayOrder = ?, arHandle = ? where bID = ? and cID = ? and (cvID = ? or cbIncludeAll = 1)", $v);
@@ -235,18 +204,16 @@ class Concrete5_Model_Page extends Collection {
 								));
 							}
 							// update the style for any of these blocks
-							
+
 						} catch(Exception $e) {}
-						
+
 						$startDO++;
-						$obj->areas[$arID] = $startDO;
 					}
 				}
 			}
 		}
-
-		return $obj;
 	}
+
 
 	/**
 	 * checks if the page is checked out, if it is return true

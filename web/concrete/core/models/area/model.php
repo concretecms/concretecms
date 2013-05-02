@@ -184,6 +184,16 @@ class Concrete5_Model_Area extends Object {
 		}
 		return $r;
 	}
+
+	/** 
+	 * Returns the amount of actual blocks in the area, does not exclude core blocks or layouts, does not recurse.
+	 */
+	public function getTotalBlocksInAreaEditMode() {
+		$db = Loader::db();
+		$r = $db->GetOne('select count(b.bID) from CollectionVersionBlocks cvb inner join Blocks b on cvb.bID = b.bID inner join BlockTypes bt on b.btID = bt.btID where cID = ? and cvID = ? and arHandle = ?',
+			array($this->c->getCollectionID(), $this->c->getVersionID(), $this->arHandle));
+		return $r;
+	}
 	
 	/**
 	 * check if the area has permissions that override the page's permissions
@@ -211,14 +221,6 @@ class Concrete5_Model_Area extends Object {
 	 */
 	public function disableControls() {
 		$this->showControls = false;
-	}
-	
-	/**
-	 * determines if the current Area can accept additonal Blocks
-	 * @return boolean
-	 */
-	public function areaAcceptsBlocks() {
-		return (($this->maximumBlocks > count($this->areaBlocksArray)) || ($this->maximumBlocks == -1));
 	}
 
 	/**
@@ -294,6 +296,11 @@ class Concrete5_Model_Area extends Object {
 		return $area;
 	}
 
+
+	public static function getAreaHandleFromID($arID) {
+		$db = Loader::db();
+		return $db->GetOne('select arHandle from Areas where arID = ?', array($arID));
+	}
 	
 	/**
 	 * Get all of the blocks within the current area for a given page
