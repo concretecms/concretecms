@@ -76,6 +76,9 @@ im.on('backgroundBuilt',function(){
 });
 
 im.setActiveElement = function(element) {
+  if (element.defer) {
+      return im.setActiveElement(element.defer);
+  }
   if (im.activeElement == element) return;
   if (im.activeElement !== undefined && im.activeElement.doppelganger !== undefined) {
     im.activeElement.doppelganger.remove();

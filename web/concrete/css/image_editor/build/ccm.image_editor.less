@@ -1,3 +1,51 @@
+.border-radius(@topright: 0, @bottomright: 0, @bottomleft: 0, @topleft: 0) {
+  -webkit-border-top-right-radius: @topright;
+  -webkit-border-bottom-right-radius: @bottomright;
+  -webkit-border-bottom-left-radius: @bottomleft;
+  -moz-border-radius-topright: @topright;
+  -moz-border-radius-bottomright: @bottomright;
+  -moz-border-radius-bottomleft: @bottomleft;
+  border-top-right-radius: @topright;
+  border-bottom-right-radius: @bottomright;
+  border-bottom-left-radius: @bottomleft;
+}
+.border-top-left-radius(@radius: 0) {
+  border-top-left-radius: @radius;
+  -moz-border-radius-topleft: @radius;
+  -webkit-border-top-left-radius: @radius;
+}
+.border-top-right-radius(@radius: 0) {
+  border-top-right-radius: @radius;
+  -moz-border-radius-topright: @radius;
+  -webkit-border-top-right-radius: @radius;
+}
+.border-top-right-radius(@radius: 0) {
+  border-top-right-radius: @radius;
+  -moz-border-radius-topright: @radius;
+  -webkit-border-top-right-radius: @radius;
+}
+.opacity(@opacity: 0.5) {
+  -moz-opacity: @opacity;
+  -khtml-opacity: @opacity;
+  -webkit-opacity: @opacity;
+  opacity: @opacity;
+  @opperc: @opacity * 100;
+  -ms-filter: ~"progid:DXImageTransform.Microsoft.Alpha(opacity=@{opperc})";
+  filter: ~"alpha(opacity=@{opperc})";
+}
+.transition(@duration:0.2s, @elem:all, @ease:ease-out) {
+  -webkit-transition: @elem @duration @ease;
+  -moz-transition: @elem @duration @ease;
+  -o-transition: @elem @duration @ease;
+  transition: @elem @duration @ease;
+}
+.box-shadow(@arguments) {
+  -webkit-box-shadow: @arguments;
+  -moz-box-shadow: @arguments;
+  box-shadow: @arguments;
+}
+
+
 div#ccm-dialog-content1 {
   padding:0;
   div.ui-dialog-titlebar {
@@ -26,10 +74,7 @@ div.editorcontainer {
     bottom: 0;
     position: absolute;
     width: 100%;
-    border-bottom-left-radius: 5px;
-    -moz-border-bottom-left-radius: 5px;
-    -webkit-border-bottom-left-radius: 5px;
-    -o-border-bottom-left-radius: 5px;
+    .border-radius(0, 0, 5px, 0);
     background: #ffffff;
     background: -moz-linear-gradient(top, #ffffff 31%, #e8e9e9 100%);
     background: -webkit-gradient(linear, left top, left bottom, color-stop(31%,#ffffff), color-stop(100%,#e8e9e9));
@@ -50,23 +95,18 @@ div.editorcontainer {
       padding: 15px 20px 0px 20px;
       height:30px;
       border-left:solid 1px #ccc;
-      margin-left:-1px;
       border-right:solid 1px #ccc;
-      transition: box-shadow 200ms;
-      -webkit-transition: box-shadow 200ms;
+      margin-left:-1px;
+      .transition(.2,box-shadow);
       float:left;
       &:hover {
-        box-shadow: 0 0 15px skyblue;
+        .box-shadow(0 0 15px skyblue);
       }
       &:active {
         background: #e8e9e9;
-        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e8e9e9', endColorstr='#ffffff',GradientType=0 );
       }
       &.plus {
-        border-bottom-left-radius: 5px;
-        -moz-border-bottom-left-radius: 5px;
-        -webkit-border-bottom-left-radius: 5px;
-        -o-border-bottom-left-radius: 5px;
+        .border-radius(0,0,5);
       }
       &.crop > i {
         background-image: url('/concrete/images/image_editor/crop_icon.png');
@@ -98,25 +138,71 @@ div.editorcontainer {
 }
 
 div.slideOut {
-  ul.slideOutList {
-    margin:0;
-    list-style-type: none;
-    li {
-      padding:20px 30px;
-      font-size:20px;
-      &:hover {
-        background:skyblue;
+  > ul {
+    &.slideOutList {
+      margin:0;
+      list-style-type: none;
+      > li {
+        padding:20px 30px;
+        font-size:20px;
+        cursor:pointer;
+        &:hover {
+          background:skyblue;
+        }
       }
     }
-  }
-  ul.slideOutBoxList {
-    margin:0;
-    list-style-type: none;
-    li {
-      padding:20px 30px;
-      font-size:20px;
-      &:hover {
-        background:skyblue;
+    &.slideOutBoxList {
+      margin:0;
+      list-style-type: none;
+      margin-left:5px;
+      > li {
+        cursor:pointer;
+        font-size: 20px;
+        width: 143px;
+        height: 143px;
+        display: inline-block;
+        float: left;
+        position: relative;
+        border: solid 1px #ccc;
+        border-right: none;
+        border-top: none;
+        &:nth-child(odd) {
+          border-left:none;
+        }
+        &:hover {
+          background:skyblue;
+        }
+        &:active {
+          background:lightblue;
+        }
+      }
+    }
+    &.slideOutBlockList {
+      margin:0;
+      list-style-type: none;
+      margin-left:5px;
+      padding-top:30px;
+      padding-bottom:30px;
+      > li {
+        margin:15px 50px;
+        width:160px;
+        position:relative;
+        > span.title {
+          position:absolute;
+          bottom:0;
+          padding:5px 20px;
+          text-align:center;
+          width:120px;
+          background:#333;
+          color:white;
+          .opacity(.8);
+        }
+        &:hover {
+          .box-shadow(0 0 0 2px skyblue);
+        }
+        &:active {
+          background:lightblue;
+        }
       }
     }
   }
@@ -127,14 +213,11 @@ div.controls {
   float:right;
   position:absolute;
   background:white;
-  box-shadow:-5px 0px 25px -5px black;
   overflow:hidden;
-  box-shadow: 0 0 25px -5px black;
+  .box-shadow(0 0 25px -5px black);
   z-index: 1;
-  border-bottom-right-radius: 5px;
-  -moz-border-bottom-right-radius: 5px;
-  -webkit-border-bottom-right-radius: 5px;
-  -o-border-bottom-right-radius: 5px;
+  .border-radius(0,5px)
+
   > div.controlscontainer {
     > ul.nav {
       padding-left: 20px;
@@ -176,19 +259,25 @@ div.controls {
           > div.control {
             padding:0 30px;
             background:#f5f5f5;
-            box-shadow:0 12px 20px -15px black inset,0 -7px 20px -15px black inset;
+            .box-shadow(0 12px 20px -15px black inset,0 -7px 20px -15px black inset);
             > div.contents {
               > div.cancelbutton {
                 color:#b3b3b3;
                 font-size: 12px;
                 text-align: right;
-                transition: color 200ms;
                 cursor:pointer;
+                text-indent:0;
+                .transition(.2,color);
+                .transition(.2,text-indent);
                 &:hover {
                   color: #87CEEB;
                 }
                 &:active {
                   color: #ccc;
+                }
+                &.disabled {
+                  text-indent:300px;
+                  cursor:auto;
                 }
               }
               padding:20px 0;

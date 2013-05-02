@@ -1,22 +1,35 @@
 var me = this;
+me.controls = $(document.createElement('div'));
 im.bind('filterFullyLoaded',function(e){
 	if (e.eventData.namespace === me.namespace){
-		//This is me, start initialization.
-		me.label.text(me.name);
-		me.applybutton = $("<button/>").text('apply');
-		me.radius = $("<input/>").val(1);
-
-		me.applybutton.click(function(){
-			$.fn.dialog.showLoader();
-			im.activeElement.applyFilter(blur,{radius:parseInt(me.radius.val())},function(){
-				$.fn.dialog.hideLoader();
-				im.fire('filterApplied', me);
-				im.fire('SepiaFilterDidFinish');
-				im.activeElement.parent.draw();
-			});
-		});
+		me.applybutton = $($.parseHTML("<button/>")).text('apply').addClass('btn');
+		me.radius = $($.parseHTML("<input/>")).val(1);
 
 		me.controls.append(me.radius).append(me.applybutton);
+	}
+});
+im.bind('filterChange',function(e){
+	if (e.eventData.namespace === me.namespace) {
+		var clone = me.controls.clone(1,1);
+		clone.find('button').click(function(){
+			var btn = $(this);
+			$.fn.dialog.showLoader();
+			setTimeout(function(){
+				im.activeElement.applyFilter(blur,{radius:parseInt(btn.parent().find('input').val())},function(){
+					$.fn.dialog.hideLoader();
+					im.fire('filterApplied', me);
+					im.activeElement.parent.draw();
+				});
+			},0);
+		});
+		me.parent.append(clone);
+	}
+});
+im.bind('filterApplyExample',function(e){
+	if (e.eventData.namespace === me.namespace) {
+		e.eventData.image.applyFilter(blur,{radius:5},function(){
+			im.fire('filterBuiltExample', me, e.eventData.elem);
+		});
 	}
 });
 

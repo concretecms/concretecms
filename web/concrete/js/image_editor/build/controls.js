@@ -1,7 +1,7 @@
 // Zoom
 var controlBar = getElem(im.stage.getContainer()).parent().children('.bottomBar');
 
-controlBar.attr('unselectable', 'on').css('user-select', 'none').on('selectstart', false);
+controlBar.attr('unselectable', 'on');
 
 var zoom = {};
 
@@ -94,7 +94,6 @@ saveSize.crop.appendTo(saveSize.area);
 saveSize.width.appendTo($('<div>w </div>').addClass('saveWidth').appendTo(saveSize.area));
 saveSize.height.appendTo($('<div>h </div>').addClass('saveHeight').appendTo(saveSize.area));
 saveSize.area.appendTo(controlBar);
-
 
 im.on('adjustedsavers',function(){
   saveSize.width.text(im.saveWidth);
