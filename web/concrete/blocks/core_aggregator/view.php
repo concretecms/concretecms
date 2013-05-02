@@ -31,6 +31,7 @@ $(function() {
     columnWidth: <?=$pt->getThemeAggregatorGridItemWidth()?>,
     rowHeight: <?=$pt->getThemeAggregatorGridItemHeight()?>
   });
+if (jQuery.ui) {
   var $itemElements = $($agg.packery('getItemElements'));
   $itemElements.draggable({
     'stop': function() {
@@ -38,7 +39,8 @@ $(function() {
     }
   });
   $agg.packery( 'bindUIDraggableEvents', $itemElements );
-  $agg.css('opacity', 1);
+}
+$agg.css('opacity', 1);
 });
 </script>
 

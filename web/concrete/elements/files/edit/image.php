@@ -78,7 +78,7 @@ $filters = SystemImageEditorFilter::getList();
   </div>
 </div>
 
-
+<script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/image_editor.min.js"></script>
 <script>
 $(function(){
   var settings = {src:'<?=$fv->getURL()?>',controlsets:{},filters:{},components:{},debug:true};
