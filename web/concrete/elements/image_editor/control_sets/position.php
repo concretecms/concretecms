@@ -15,6 +15,10 @@
 	<i class='icon-screenshot'/>
 	Center
 </button>
+<button class='btn delete btn-danger'>
+	<i class='icon-trash'/>
+	Delete
+</button>
 <div class="btn-group">
   <button class="btn up">Move Forward</button>
   <button class="btn down">Move Backward</button>

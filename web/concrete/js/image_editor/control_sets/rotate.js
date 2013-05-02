@@ -7,7 +7,7 @@ var me = $(this), self = this, handleLayer = false, handle = new Kinetic.Rect({
 	stroke:'black',
 	fill:'transparent',
 	draggable:true
-}), cache = {rotation: 0};
+}), cache = {rotation: 0,scale:{x:1,y:1}};
 
 im.disable();
 
@@ -70,6 +70,11 @@ $('button.hflip',me).click(function(){
 		btn.removeAttr('disabled');
 	}});
 	im.activeElement.parent.draw();
+
+	if (!shown) {
+		cancelbutton.slideDown(250);
+		shown = true;
+	}
 });
 $('button.vflip',me).click(function(){
 	var scale = im.activeElement.getScale();
@@ -78,11 +83,17 @@ $('button.vflip',me).click(function(){
 		btn.removeAttr('disabled');
 	}});
 	im.activeElement.parent.draw();
+
+	if (!shown) {
+		cancelbutton.slideDown(250);
+		shown = true;
+	}
 });
 var shown = false;
 var cancelbutton = $('div.cancelbutton',me).click(function(){
 	im.activeElement.setRotationDeg(cache.rotation);
 	handle.setRotationDeg(cache.rotation);
+	im.activeElement.setScale(cache.scale);
 	im.activeElement.parent.draw();
 	tearDownLayers();
 	setupLayers();
@@ -118,6 +129,11 @@ im.bind('changeactiveaction',function(e){
 	}
 	im.selected = true;
 	cache.rotation = im.activeElement.getRotationDeg();
+
+	var s = im.activeElement.getScale();
+	cache.scale.x = s.x;
+	cache.scale.y = s.y;
+
 	setupLayers();
 });
 im.bind('changeActiveElement',function(e){ 
@@ -131,6 +147,11 @@ im.bind('changeActiveElement',function(e){
 			im.fire('changeActiveAction');
 		}
 		cache.rotation = im.activeElement.getRotationDeg();
+
+		var s = im.activeElement.getScale();
+		cache.scale.x = s.x;
+		cache.scale.y = s.y;
+
 		slider.slider('option','value',cache.rotation);
 		anglediv.children('input').val(cache.rotation);
 		cancelbutton.slideUp(250);
@@ -169,7 +190,9 @@ var setupLayers = function() {
 },
 tearDownLayers = function() {
 	handle.remove();
-	handleLayer.destroy();
+	if (handleLayer.destroy) {
+		handleLayer.destroy();
+	}
 	handleLayer = false;
 };
 handle.on('dragend',setupLayers);

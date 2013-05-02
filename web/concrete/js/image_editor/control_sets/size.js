@@ -3,8 +3,8 @@ im.disable();
 im.selected = false;
 im.cache = {};
 im.sizeBoxes = {
-  width:$('div.widthinput > div.input > input'),
-  height:$('div.heightinput > div.input > input'),
+  width:$('div.widthinput > div.input > input',me),
+  height:$('div.heightinput > div.input > input',me),
 };
 
 im.sizeBoxes.width.keyup(function(){
@@ -32,9 +32,8 @@ im.sizeBoxes.height.keyup(function(){
 
 
 im.myControls = new Kinetic.Layer();
-var autocrop = $('input.autocrop',me);
 var locked = $('div.locked',me).addClass('active');
-$('div.cancelbutton',me).click(function(){
+var cancelbutton = $('div.cancelbutton',me).click(function(){
   im.activeElement.attrs.x = im.cache.startPos.x;
   im.activeElement.attrs.y = im.cache.startPos.y;
   im.activeElement.setWidth(im.cache.startSize.width);
@@ -44,6 +43,7 @@ $('div.cancelbutton',me).click(function(){
   im.buildBackground();
   im.activeElement.parent.draw();
   setupControls();
+  $(this).addClass('disabled');
 });
 im.locked = true;
 im.ratio = [1, 1];
@@ -58,11 +58,6 @@ locked.click(function(){
     $(this).addClass('active');
   }
 });
-
-autocrop.change(function(){
-  console.log('change');
-  im.alterCore('autoCrop',this.checked);
-}).get(0).checked = im.autoCrop;
 
 im.on('changeActiveAction',function(e){
   if (e.eventData == im.namespace) {
@@ -102,6 +97,8 @@ var changeSize = function(size) {
   im.activeElement.parent.setOffset([-im.activeElement.getWidth()/2,-im.activeElement.getHeight()/2]);
 
   im.activeElement.parent.draw();
+  cancelbutton.removeClass('disabled');
+
 };
 
 var setupControls = function() {
@@ -168,7 +165,6 @@ im.br_control.on('dragmove',function(){
   im.sizeBoxes.height.val(height);
 });
 im.myControls.add(im.br_control);
-im.myControls.autoCrop = false;
 
 
 im.bind('adjustedsavers',positionControls);
