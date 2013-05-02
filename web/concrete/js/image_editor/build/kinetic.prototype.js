@@ -117,13 +117,6 @@ Kinetic.Text.prototype.rasterize = function(e) {
   });
 };
 
-
-
-
-
-
-
-
 // Rebuild:
 Kinetic.Global.extend(Kinetic.Container, Kinetic.Node);
 Kinetic.Global.extend(Kinetic.Shape, Kinetic.Node);

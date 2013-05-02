@@ -143,3 +143,9 @@ $('div.cancelbutton',me).click(function(e) {
 		callback:updateSliders
 	});
 });
+$('button.delete',me).click(function(e) {
+	if (confirm('Really delete this?')) {
+		im.activeElement.parent.remove();
+		im.setActiveElement(im.stage);
+	}
+});

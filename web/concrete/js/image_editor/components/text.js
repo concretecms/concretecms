@@ -10,6 +10,9 @@ im.on('changeActiveComponent',function(e){
 		x:0,
 		y:0
 	});
+	im.activeTextElement.on('BEFORETEXTCHANGE',function(){
+		alert('textchange');
+	});
 	im.addElement(im.activeTextElement,'text');
 	im.setActiveElement(im.activeTextElement);
 
@@ -164,6 +167,8 @@ cpo.onShow = function(elem,a) {
 
 $('textarea',me).keyup(function(){
 	im.activeTextElement.setText($(this).val());
+	im.activeTextElement.setOffset([im.activeTextElement.getWidth()/2,im.activeTextElement.getHeight()/2]);
+	im.activeTextElement.parent.setOffset([-im.activeTextElement.getWidth()/2,-im.activeTextElement.getHeight()/2]);
 	im.activeTextElement.parent.draw();
 });
 
