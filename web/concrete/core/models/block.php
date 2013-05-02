@@ -582,7 +582,7 @@ class Concrete5_Model_Block extends Object {
 
 		// we duplicate block-specific sub-content 
 		if ($isCopyFromMasterCollectionPropagation && method_exists($bc, 'duplicate_master')) {
-			$bc->duplicate_master($newBID);
+			$bc->duplicate_master($newBID, $nc);
 		} else {
 			$bc->duplicate($newBID);
 		}

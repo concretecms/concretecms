@@ -95,7 +95,13 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		}
 
 		public function on_page_view() {
-			Loader::helper('composer/form')->addAssetsToRequest($this);
+			if ($this->enableNewTopics && $this->cmpID) {
+				$cmp = Composer::getByID($this->cmpID);
+				if (is_object($cmp)) {
+					Loader::helper('composer/form')->addAssetsToRequest($cmp, $this);
+				}
+			}
+
 			$this->addFooterItem(Loader::helper('html')->javascript('ccm.conversations.js'));
 			$this->addHeaderItem(Loader::helper('html')->css('ccm.conversations.css'));
 			$editor = ConversationEditor::getActive();

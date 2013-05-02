@@ -7,9 +7,10 @@ cat ../web/concrete/js/redactor/redactor.js \
 uglifyjs -o ../web/concrete/js/redactor.js ./redactor.tmp.js
 rm redactor.tmp.js
 
-cat ../web/concrete/js/gridster/jquery.gridster.js > jquery.gridster.tmp.js
-uglifyjs --no-copyright --no-seqs -o ../web/concrete/js/jquery.gridster.js ./jquery.gridster.tmp.js 
-rm jquery.gridster.tmp.js
+cat ../web/concrete/js/isotope/jquery.isotope.js \
+../web/concrete/js/isotope/jquery.isotope.perfectmasonry.js > jquery.isotope.tmp.js
+uglifyjs --no-copyright --no-seqs -o ../web/concrete/js/jquery.isotope.js ./jquery.isotope.tmp.js 
+rm jquery.isotope.tmp.js
 
 cat ../web/concrete/js/ccm_app/dashboard.js > ccm.dashboard.tmp.js
 uglifyjs --no-copyright --no-seqs -o ../web/concrete/js/ccm.dashboard.js ./ccm.dashboard.tmp.js 

@@ -34,12 +34,8 @@ var CCMInlineEditMode = function() {
 			CCMEditMode.start();
 		},
 
-		loadEditFromLink: function(link, params) {
-			var cID = $(link).attr('data-cID');
-			var aID = $(link).attr('data-area-id');
-			var arHandle = $(link).attr('data-area-handle');
-			var bID = $(link).attr('data-bID');
-
+		editBlock: function(cID, aID, arHandle, bID, params) {
+			
 			var postData = [
 				{name: 'btask', value: 'edit'},
 				{name: 'cID', value: cID},

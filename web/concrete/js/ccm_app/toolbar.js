@@ -12,7 +12,7 @@ var CCMToolbar = function() {
 	setupToolbarMenus = function() {
 		$('a[data-toggle=ccm-toolbar-hover-menu]').hoverIntent(function() {
 			$('.ccm-toolbar-hover-menu').hide();
-			$($(this).data('toggle-menu')).show();
+			$($(this).attr('data-toggle-menu')).show();
 		}, function() {
 
 		});
@@ -34,6 +34,7 @@ var CCMToolbar = function() {
 			$('.ccm-toolbar-hover-menu').hide();
 		});
 
+		$toolbar.find('li.pull-left').last().addClass('ccm-toolbar-last-left-child');
 		$toolbar.find('#ccm-exit-edit-mode-publish-menu a').on('click', function() {
 			switch($(this).data('publish-action')) {
 				case 'approve':

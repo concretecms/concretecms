@@ -27,10 +27,12 @@ $this->addFooterItem(Loader::helper('html')->javascript('bootstrap.js'));
 <div class="ccm-ui">
 
 <? if ($showLogo) { ?>
-	<div id="ccm-logo"><?=Loader::helper('concrete/interface')->getToolbarLogoSRC()?></div>
+<div id="ccm-toolbar">
+	<ul>
+		<li class="ccm-logo pull-left"><span><?=Loader::helper('concrete/interface')->getToolbarLogoSRC()?></span></li>
+	</ul>
+</div>
 <? } ?>
-
-
 
 <div class="container">
 <div class="row">

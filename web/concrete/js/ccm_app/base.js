@@ -51,13 +51,24 @@ ccm_addHeaderItem = function(item, type) {
 
 //legacy 
 var ccm_isBlockError = false;
-ccm_hideMenus = function() {
-	/* 1st, hide all items w/the css menu class */
-	ccm_activeMenu = false;
-	$("div.ccm-menu").hide();
-	$("div.ccm-menu").css('visibility', 'hidden');
-	$("div.ccm-menu").show();
+var ccm_blockError = false;
+
+ccm_addError = function(err) {
+	if (!ccm_isBlockError) {
+		ccm_blockError = '';
+		ccm_blockError += '<ul>';
+	}
+	
+	ccm_isBlockError = true;
+	ccm_blockError += "<li>" + err + "</li>";;
 }
+
+ccm_resetBlockErrors = function() {
+	ccm_isBlockError = false;
+	ccm_blockError = "";
+}
+
+
 
 // legacy menu. Will go away when all are converted to bootstrap menus
 ccm_fadeInMenu = function(bobj, e) {
@@ -84,4 +95,12 @@ ccm_fadeInMenu = function(bobj, e) {
 	bobj.css("top", posY + "px");
 	bobj.css("left", posX + "px");
 	bobj.fadeIn(60);
+}
+
+ccm_hideMenus = function() {
+	/* 1st, hide all items w/the css menu class */
+	ccm_activeMenu = false;
+	$("div.ccm-menu").hide();
+	$("div.ccm-menu").css('visibility', 'hidden');
+	$("div.ccm-menu").show();
 }

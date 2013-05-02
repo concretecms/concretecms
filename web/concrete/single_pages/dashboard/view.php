@@ -91,9 +91,9 @@ for ($i = 0; $i < count($categories); $i++) {
 </div>
 <script type="text/javascript">
 $(function() {
-	ccm_dashboardEqualizeMenus();
+	CCMDashboard.equalizeMenus();
 	$(window).resize(function() {
-		ccm_dashboardEqualizeMenus();
+		CCMDashboard.equalizeMenus();
 	});
 });
 </script>

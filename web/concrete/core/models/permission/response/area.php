@@ -11,6 +11,9 @@ class Concrete5_Model_AreaPermissionResponse extends PermissionResponse {
 	public function canAddStack() { return $this->validate('add_stack_to_area'); }
 	public function canAddLayout() { return $this->validate('add_layout_to_area'); }
 	public function canAddBlock($bt) {
+		if ($bt->getBlockTypeHandle() == BLOCK_HANDLE_LAYOUT_PROXY) {
+			return $this->canAddLayout();
+		}
 		$pk = $this->category->getPermissionKeyByHandle('add_block_to_area');
 		$pk->setPermissionObject($this->object);
 		return $pk->validate($bt);

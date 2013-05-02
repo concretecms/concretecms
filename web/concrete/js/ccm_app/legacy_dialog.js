@@ -24,6 +24,7 @@ jQuery.fn.dialog = function() {
 				var appendButtons = $(this).attr('dialog-append-buttons');
 			*/
 			var onClose = $(this).attr('dialog-on-close');
+			var onDirectClose = $(this).attr('dialog-on-direct-close');
 			obj = {
 				modal: true,
 				href: href,
@@ -32,7 +33,8 @@ jQuery.fn.dialog = function() {
 				title: title,
 				onOpen: onOpen,
 				onDestroy: onDestroy,
-				onClose: onClose
+				onClose: onClose,
+				onDirectClose: onDirectClose
 			}
 			jQuery.fn.dialog.open(obj);
 			return false;
@@ -134,6 +136,13 @@ jQuery.fn.dialog.open = function(obj) {
 					obj.onClose();
 				} else {
 					eval(obj.onClose);
+				}
+			}
+			if (typeof obj.onDirectClose != "undefined" && ev.handleObj && (ev.handleObj.type == 'keydown' || ev.handleObj.type == 'click')) {
+				if ((typeof obj.onDirectClose) == 'function') {
+					obj.onDirectClose();
+				} else {
+					eval(obj.onDirectClose);
 				}
 			}
 			if (typeof obj.onDestroy != "undefined") {

@@ -46,7 +46,7 @@ class Concrete5_Model_Conversation_Message extends Object {
 		$db->execute('UPDATE ConversationMessages SET cnvIsMessageApproved=1 WHERE cnvMessageID=?',array($this->cnvMessageID));
 		$this->cnvIsMessageApproved = true;
 
-		$cnv = $this->getConversationMessageConversationObject();
+		$cnv = $this->getConversationObject();
 		if (is_object($cnv)) {
 			$cnv->updateConversationSummary();
 		}
@@ -57,7 +57,7 @@ class Concrete5_Model_Conversation_Message extends Object {
 		$db->execute('UPDATE ConversationMessages SET cnvIsMessageApproved=0 WHERE cnvMessageID=?',array($this->cnvMessageID));
 		$this->cnvIsMessageApproved = false;
 
-		$cnv = $this->getConversationMessageConversationObject();
+		$cnv = $this->getConversationObject();
 		if (is_object($cnv)) {
 			$cnv->updateConversationSummary();
 		}
@@ -69,7 +69,7 @@ class Concrete5_Model_Conversation_Message extends Object {
 		}
 		if ($flag instanceof ConversationFlagType) {
 			foreach ($this->getConversationMessageFlagTypes() as $type) {
-				if ($flag->getID() == $type->getID()) {
+				if ($flag->getConversationFlagTypeID() == $type->getConversationFlagTypeID()) {
 					return true;
 				}
 			}
@@ -86,10 +86,11 @@ class Concrete5_Model_Conversation_Message extends Object {
 			return t('This message is queued for approval.');
 		} else {
 			$editor = ConversationEditor::getActive();
-			return $editor->formatConversationMessageBody($this->getConversationMessageConversationObject(),$this->cnvMessageBody);
+			return $editor->formatConversationMessageBody($this->getConversationObject(),$this->cnvMessageBody);
 		}
 	}
-	public function getConversationMessageConversationObject() {
+
+	public function getConversationObject() {
 		return Conversation::getByID($this->cnvID);
 	}
 	public function getConversationMessageUserObject() {
@@ -119,11 +120,11 @@ class Concrete5_Model_Conversation_Message extends Object {
 		if ($flagtype instanceof ConversationFlagType) {
 			$db = Loader::db();
 			foreach ($this->getConversationMessageFlagTypes() as $ft) {
-				if ($ft->getID() === $flagtype->getID()) {
+				if ($ft->getConversationFlagTypeID() === $flagtype->getConversationFlagTypeID()) {
 					return;
 				}
 			}
-			$db->execute('INSERT INTO ConversationFlaggedMessages (cnvMessageFlagTypeID, cnvMessageID) VALUES (?,?)',array($flagtype->getID(),$this->getConversationMessageID()));
+			$db->execute('INSERT INTO ConversationFlaggedMessages (cnvMessageFlagTypeID, cnvMessageID) VALUES (?,?)',array($flagtype->getConversationFlagTypeID(),$this->getConversationMessageID()));
 			$this->cnvMessageFlagTypes[] = $flagtype;
 			return true;
 		}
@@ -219,7 +220,7 @@ class Concrete5_Model_Conversation_Message extends Object {
 			$this->cnvMessageID
 		));
 
-		$cnv = $this->getConversationMessageConversationObject();
+		$cnv = $this->getConversationObject();
 		if (is_object($cnv)) {
 			$cnv->updateConversationSummary();
 		}
