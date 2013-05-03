@@ -288,14 +288,22 @@ class Concrete5_Helper_Text {
 	}
 	
 	/** 
-	 * Highlights a string within a string with the class ccm-hightlight-search
+	 * Highlights a string within a string with the class ccm-highlight-search
 	 * @param string $value
 	 * @param string $searchString
 	 * @return string
 	 */
 	 
 	public function highlightSearch($value, $searchString) {
-		return str_ireplace($searchString, '<em class="ccm-highlight-search">' . $searchString . '</em>', $value);
+		if (strlen($value) < 1 || strlen($searchString) < 1) {
+		    return $value;
+		}
+		preg_match_all("/$searchString+/i", $value, $matches);
+		if (is_array($matches[0]) && count($matches[0]) > 0) {
+		    foreach ($matches[0] as $match) {
+			return str_replace($match, '<em class="ccm-highlight-search">'.$match.'</em>', $value);
+		    }
+		}
 	}
 	
 	/** 
