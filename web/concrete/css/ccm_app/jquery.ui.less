@@ -952,6 +952,20 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
   z-index: 999;
   /* end concrete5 */
 }
+
+/* concrete5 */
+.ccm-dialog-opening {
+  -webkit-transition: opacity 0.2s ease-in-out; 
+  -moz-transition: opacity 0.2s ease-in-out; 
+  -o-transition: opacity 0.2s ease-in-out; 
+  transition: opacity 0.2s ease-in-out; 
+  opacity: 0;
+}
+
+.ccm-dialog-open {
+  opacity: 1;
+}
+
 .ui-dialog .ui-dialog-titlebar { /*padding: .4em 1em;*/
   position: relative;
   border-color: white;
