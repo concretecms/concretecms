@@ -613,6 +613,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		public function renderError($title, $error, $errorObj = null) {
 			$innerContent = $error;
 			$titleContent = $title; 
+			header('HTTP/1.1 500 Internal Server Error');
 			if (!isset($this) || (!$this)) {
 				$v = new View();
 				$v->setThemeForView(DIRNAME_THEMES_CORE, FILENAME_THEMES_ERROR . '.php', true);
