@@ -25,21 +25,21 @@ if ($wp instanceof PageWorkflowProgress) {
 		}
 		?>
 		
-		<div class="ccm-ui">
+		<div class="ccm-ui" style="height: 100%">
 		
 		<?php echo $ih->tabs($tabs); ?>
 		
-		<div style="display: block" id="ccm-tab-content-requested-version">
+		<div style="display: block; height: 100%" id="ccm-tab-content-requested-version">
 			<iframe border="0" id="v<?php echo time()?>r" frameborder="0" height="100%" width="100%" src="<?php echo BASE_URL . DIR_REL?>/<?php echo DISPATCHER_FILENAME?>?cvID=<?php echo $req->getRequestedVersionID()?>&cID=<?php echo $req->getRequestedPageID()?>&vtask=view_versions" />
 		</div>
 		
-		<div style="display: none" id="ccm-tab-content-live-version">
+		<div style="display: none; height: 100%" id="ccm-tab-content-live-version">
 			<iframe border="0" id="v<?php echo time()?>l" frameborder="0" height="100%" width="100%" src="<?php echo BASE_URL . DIR_REL?>/<?php echo DISPATCHER_FILENAME?>?cvID=<?php echo $liveCVID?>&cID=<?php echo $req->getRequestedPageID()?>&vtask=view_versions" />
 		</div>
 
 	<?php 	if ($liveCVID != $rvr->getVersionID()) { ?>
 
-		<div style="display: none" id="ccm-tab-content-recent-version">
+		<div style="display: none; height: 100%" id="ccm-tab-content-recent-version">
 			<iframe border="0" id="v<?php echo time()?>rec" frameborder="0" height="100%" width="100%" src="<?php echo BASE_URL . DIR_REL?>/<?php echo DISPATCHER_FILENAME?>?cvID=<?php echo $recentCVID?>&cID=<?php echo $req->getRequestedPageID()?>&vtask=view_versions" />
 		</div>
 		
