@@ -1063,7 +1063,7 @@ ul.dynatree-container a{color:black;text-decoration:none;vertical-align:top;marg
 ul.dynatree-container a:hover{background-color:#F2F7FD;border-color:#B8D6FB;}
 span.dynatree-node a{font-size:10pt;display:inline-block;padding-left:3px;padding-right:3px;}
 span.dynatree-folder a{font-weight:bold;}
-ul.dynatree-container a:focus,span.dynatree-focused a:link{background-color:#EFEBDE;}
+ul.dynatree-container a:focus,span.dynatree-focused a:link{background-color:#EFEBDE;outline:0;}
 span.dynatree-selected a{color:green;font-style:italic;}
 span.dynatree-active a{background-color:#3169C6 !important;color:white !important;}
 div.dynatree-drag-helper a{border:1px solid gray;background-color:white;padding-left:5px;padding-right:5px;opacity:0.8;}
