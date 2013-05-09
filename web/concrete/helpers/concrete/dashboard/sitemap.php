@@ -178,7 +178,6 @@ class ConcreteDashboardSitemapHelper {
 		$node->title = $cvName;
 		if ($numSubpages > 0) {
 			$node->isLazy = true;
-			$node->isFolder = true;
 		}
 		$node->cID = $cID;
 
