@@ -126,13 +126,15 @@ $usedKeysCombined = array_merge($requiredKeys, $usedKeys);
 	$v = View::getInstance();
 	$headerItems = $v->getHeaderItems();
 	foreach($headerItems as $item) {
-		if ($item instanceof CSSOutputObject) {
-			$type = 'CSS';
-		} else {
-			$type = 'JAVASCRIPT';
-		} ?>
-		 ccm_addHeaderItem("<?=$item->file?>", '<?=$type?>');
-		<? 
+		if ($item->file) {
+			if ($item instanceof CSSOutputObject) {
+				$type = 'CSS';
+			} else {
+				$type = 'JAVASCRIPT';
+			} ?>
+			ccm_addHeaderItem("<?=$item->file?>", '<?=$type?>');
+			<?
+		}
 	} 
 	?>
 	</script>
