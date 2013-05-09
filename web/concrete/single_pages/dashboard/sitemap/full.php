@@ -1,7 +1,7 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
 $sh = Loader::helper('concrete/dashboard/sitemap');
-
+/*
 if (isset($_REQUEST['reveal'])) {
 	$nc = Page::getByID($_REQUEST['reveal']);
 	$nh = Loader::helper('navigation');
@@ -15,13 +15,14 @@ if (isset($_REQUEST['reveal'])) {
 $nodes = $sh->getSubNodes(0, 1, false, true);
 $instanceID = time();
 $listHTML = $sh->outputRequestHTML($instanceID, 'full', false, $nodes);
+*/
 
 ?>
 
 <script type="text/javascript">
 	var CCM_LAUNCHER_SITEMAP = 'full';
 	$(function() {
-		ccmSitemapLoad('<?=$instanceID?>', 'full');
+		$('div[sitemap-instance-id<?=$instanceID?>]').ccmsitemap();
 	});
 </script>
 <?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Sitemap'), t('The sitemap allows you to view your site as a tree and easily organize its hierarchy.'), 'span10 offset1', false);?>
@@ -63,11 +64,7 @@ $listHTML = $sh->outputRequestHTML($instanceID, 'full', false, $nodes);
 		<div id="ccm-sitemap-message"></div>
 	
 		
-		<div id="tree" sitemap-instance-id="<?=$instance_id?>">
-			<ul id="tree-root0" tree-root-node-id="0" sitemap-mode="full" sitemap-instance-id="<?=$instanceID?>">
-			<?=$listHTML?>
-			</ul>
-		</div>
+		<div sitemap-instance-id="<?=$instance_id?>"></div>
 		
 	
 	<? } else { ?>
