@@ -65,7 +65,7 @@ if ($_POST['task'] == 'update_extended_attribute' && $fp->canEditFileProperties(
 	$ak->saveAttributeForm($fv);
 	
 	$val = $fv->getAttributeValueObject($ak);
-	print $val->getValue('display');
+	print $val->getValue('displaySanitized');
 	exit;
 }
 
