@@ -17,6 +17,10 @@
 		return this.each(function() {
 			$(this).dynatree({
 				autoFocus: false,
+				cookieId: 'ccmsitemap',
+				cookie: {
+					path: CCM_REL + '/'
+				},
 				persist: true,
 				initAjax: {
 					url: CCM_TOOLS_PATH + '/dashboard/sitemap_data',
@@ -56,7 +60,7 @@
 				        return true;
 					},
 					onDrop: function(node, sourceNode, hitMode, ui, draggable) {
-
+				        sourceNode.move(node, hitMode);
 					}
 				}
 			});

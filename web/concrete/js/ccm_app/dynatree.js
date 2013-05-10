@@ -2628,17 +2628,27 @@ TODO: better?
 //			$target.addClass("dynatree-drop-target");
 
 			var markerOffset = "0 0";
+			/* concrete5 */
+			var my = "left center";
+			var at = "left center";
+			/* end concrete5 */
 
 			switch(hitMode){
 			case "before":
 				this.$dndMarker.removeClass("dynatree-drop-after dynatree-drop-over");
 				this.$dndMarker.addClass("dynatree-drop-before");
 				markerOffset = "0 -8";
+				/* concrete5 */
+				  my = "left bottom";
+				  at = "left center";
+				/* end concrete5 */
 				break;
 			case "after":
 				this.$dndMarker.removeClass("dynatree-drop-before dynatree-drop-over");
 				this.$dndMarker.addClass("dynatree-drop-after");
 				markerOffset = "0 8";
+    my = "left center";
+    at = "left bottom";
 				break;
 			default:
 				this.$dndMarker.removeClass("dynatree-drop-after dynatree-drop-before");
@@ -2660,8 +2670,10 @@ TODO: better?
 			this.$dndMarker
 				.show()
 				.position({
-					my: "left top",
-					at: "left top",
+					/* concrete5 */
+					my: my,
+					at: at,
+					/* end concrete5 */
 					of: $target,
 					offset: markerOffset
 				});

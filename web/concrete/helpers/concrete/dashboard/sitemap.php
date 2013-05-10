@@ -113,12 +113,12 @@ class ConcreteDashboardSitemapHelper {
 		$canAddExternalLinks = $cp->canAddExternalLink();
 		
 		$nodeOpen = false;
-		if (is_array($_SESSION['dsbSitemapNodes'])) {
-			if (in_array($cID, $_SESSION['dsbSitemapNodes'])) {
+		$openNodeArray = explode(',', str_replace('_', '', $_COOKIE['ccmsitemap-expand']));
+		if (is_array($openNodeArray)) {
+			if (in_array($cID, $openNodeArray)) {
 				$nodeOpen = true;
 			}
 		}
-		
 		$status = '';
 		
 		$cls = ($c->getNumChildren() > 0) ? "folder" : "file";
@@ -180,6 +180,7 @@ class ConcreteDashboardSitemapHelper {
 			$node->isLazy = true;
 		}
 		$node->cID = $cID;
+		$node->key = $cID;
 
 		if ($cID == 1 || ($nodeOpen && $this->autoOpenNodes)) {
 			// We open another level
