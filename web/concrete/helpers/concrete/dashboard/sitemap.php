@@ -161,14 +161,6 @@ class ConcreteDashboardSitemapHelper {
 			'isTrash' => $isTrash,
 			'numSubpages'=> $numSubpages,
 			'status'=> $status,
-			'canEditPageProperties'=>$canEditPageProperties,
-			'canEditPageSpeedSettings'=>$canEditPageSpeedSettings,
-			'canEditPagePermissions'=>$canEditPagePermissions,
-			'canEditPageDesign'=>$canEditPageDesign,
-			'canViewPageVersions'=>$canViewPageVersions,
-			'canDeletePage'=>$canDeletePage,
-			'canAddSubpages'=>$canAddSubpages,
-			'canAddExternalLinks'=>$canAddExternalLinks,
 			'id'=>$cID
 		);
 
@@ -179,8 +171,18 @@ class ConcreteDashboardSitemapHelper {
 		if ($numSubpages > 0) {
 			$node->isLazy = true;
 		}
+		$node->numSubpages = $numSubpages;
+		$node->isTrash = $isTrash;
 		$node->cID = $cID;
 		$node->key = $cID;
+		$node->canEditPageProperties = $canEditPageProperties;
+		$node->canEditPageSpeedSettings = $canEditPageSpeedSettings;
+		$node->canEditPagePermissions = $canEditPagePermissions;
+		$node->canEditPageDesign = $canEditPageDesign;
+		$node->canViewPageVersions = $canViewPageVersions;
+		$node->canDeletePage = $canDeletePage;
+		$node->canAddSubpages = $canAddSubpages;
+		$node->canAddExternalLinks = $canAddExternalLinks;
 
 		if ($cID == 1 || ($nodeOpen && $this->autoOpenNodes)) {
 			// We open another level

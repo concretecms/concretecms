@@ -76,7 +76,7 @@ $.fn.ccmmenu.enable = function() {
 
 	$.fn.ccmmenu.$highlighter.unbind('click.highlighter').on('click.highlighter', function(e) {
 		$.fn.ccmmenu.$highlighter.addClass('ccm-highlighter-clicked');
-		$.fn.ccmmenu.showmenu(e, $.fn.ccmmenu.$overmenu);
+		$.fn.ccmmenu.showmenu(e, $.fn.ccmmenu.$overmenu.$menu);
 	});
 }
 
@@ -140,17 +140,16 @@ $.fn.ccmmenu.hide = function(e) {
 	}
 }
 
-$.fn.ccmmenu.showmenu = function(e, $this) {
+$.fn.ccmmenu.showmenu = function(e, $menu) {
 
 	e.stopPropagation();
 
 	if ($.fn.ccmmenu.isactive) {
 		$('div.popover').css('opacity', 0).hide();
 	}
-
 	$.fn.ccmmenu.isactive = true;
 
-	var $pp = $this.$menu.clone(true, true);
+	var $pp = $menu.clone(true, true);
 	$pp.appendTo($.fn.ccmmenu.$holder);
 
 	var posX = e.pageX + 2;
