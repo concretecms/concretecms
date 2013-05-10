@@ -12,8 +12,13 @@
     	getMenu: function(instanceID, data) {
     		var menu = '<div data-sitemap-instance-id="' + instanceID + '" class="ccm-sitemap-menu popover fade"><div class="arrow"></div><div class="popover-inner">';
     		menu += '<ul class="dropdown-menu">';
+    		console.log(data);
     		if (data.isTrash && data.numSubpages) {
     			menu += '<li><a onclick="$.fn.ccmsitemap(\'emptyTrash\', this)" href="javascript:void(0)">' + ccmi18n_sitemap.emptyTrash + '<\/a><\/li>';
+    		} else if (data.isInTrash) {
+    			menu += '<li><a onclick="ccm_previewInternalTheme(' + data.cID + ', false, \'' + ccmi18n_sitemap.previewPage + '\')" href="javascript:void(0)">' + ccmi18n_sitemap.previewPage + '<\/a><\/li>';
+    			menu += '<li class="divider"><\/li>';
+    			menu += '<li><a onclick="$.fn.ccmsitemap(\'deleteForever\', this, ' + data.cID + ')" href="javascript:void(0)">' + ccmi18n_sitemap.deletePageForever + '<\/a><\/li>';
     		}
     		menu += '</ul></div></div>';
     		var $menu = $(menu);
@@ -25,21 +30,49 @@
     	}
 
     },
-
-    emptyTrash: function(link) {
-		var instanceID = $(link).closest('div.ccm-sitemap-menu').attr('data-sitemap-instance-id');
+    /*
+    deleteForever: function(link, cID) {
+    	var isTrash = false;
 		var node = $('[data-sitemap-instance-id=' + instanceID + ']').dynatree('getActiveNode');
-		node.setLazyNodeStatus(DTNodeStatus_Loading);
-		$.getJSON(CCM_TOOLS_PATH + '/dashboard/sitemap_empty_trash.php', function(resp) {
+		var trash = node.parent;
+    	if (!cID) {
+    		var isTrash = true;
+    	}
+		var dialogTitle = (isTrash) ? ccmi18n_sitemap.emptyTrash : ccmi18n_sitemap.deletePages;
+
+		var instanceID = $(link).closest('div.ccm-sitemap-menu').attr('data-sitemap-instance-id');
+		var numSubpages = node.parent.data.numSubpages - 1;
+
+		ccm_triggerProgressiveOperation(
+			CCM_TOOLS_PATH + '/dashboard/sitemap_delete_forever', 
+			[{'name': 'cID', 'value': nodeID}],
+			dialogTitle,
+			function() {
+				if (isTrash) {
+					closeSub(instance_id, nodeID, 'full', '');
+					var container = $("ul[tree-root-node-id=" + nodeID + "]").parent();
+					container.find('img.tree-plus').remove();
+					container.find('span.ccm-sitemap-num-subpages').remove();
+				} else {
+					deleteBranchFade(nodeID);
+					ccmAlert.hud(ccmi18n_sitemap.deletePageSuccessMsg, 2000);
+				}
+			}
+		);
+
+		trash.setLazyNodeStatus(DTNodeStatus_Loading);
+		params = {'cID': cID};
+		$.getJSON(CCM_TOOLS_PATH + '/dashboard/sitemap_delete_forever.php', params, function(resp) {
 			// parse response
 			ccm_parseJSON(resp, function() {
+				trash.data.numSubpages = numSubpages;
+				trash.reloadChildren();
 				ccmAlert.hud(resp.message, 2000);
-				node.data.numSubpages = 0;
-				node.reloadChildren();
 			});
 		});
 
     },
+    */
 
     init: function(options) {
 
