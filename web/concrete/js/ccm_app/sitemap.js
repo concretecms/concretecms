@@ -9,12 +9,49 @@
 
     private:  {
 
+    	getMenu: function(instanceID, data) {
+    		var menu = '<div data-sitemap-instance-id="' + instanceID + '" class="ccm-sitemap-menu popover fade"><div class="arrow"></div><div class="popover-inner">';
+    		menu += '<ul class="dropdown-menu">';
+    		if (data.isTrash && data.numSubpages) {
+    			menu += '<li><a onclick="$.fn.ccmsitemap(\'emptyTrash\', this)" href="javascript:void(0)">' + ccmi18n_sitemap.emptyTrash + '<\/a><\/li>';
+    		}
+    		menu += '</ul></div></div>';
+    		var $menu = $(menu);
+    		if ($menu.find('li').length == 0) {
+    			return false;
+    		}
+
+    		return $menu;
+    	}
+
+    },
+
+    emptyTrash: function(link) {
+		var instanceID = $(link).closest('div.ccm-sitemap-menu').attr('data-sitemap-instance-id');
+		var node = $('[data-sitemap-instance-id=' + instanceID + ']').dynatree('getActiveNode');
+		node.setLazyNodeStatus(DTNodeStatus_Loading);
+		$.getJSON(CCM_TOOLS_PATH + '/dashboard/sitemap_empty_trash.php', function(resp) {
+			// parse response
+			ccm_parseJSON(resp, function() {
+				ccmAlert.hud(resp.message, 2000);
+				node.data.numSubpages = 0;
+				node.reloadChildren();
+			});
+		});
 
     },
 
     init: function(options) {
 
+    	$('#ccm-show-all-pages-cb').on('click', function() {
+			var showSystemPages = $(this).get(0).checked == true ? 1 : 0;
+			$.get(CCM_TOOLS_PATH + "/dashboard/sitemap_data.php?show_system=" + showSystemPages, function(resp) {
+				location.reload();
+			});
+    	});
+    	$.fn.ccmmenu.enable();
 		return this.each(function() {
+	    	var instanceID = $(this).attr("data-sitemap-instance-id");
 			$(this).dynatree({
 				autoFocus: false,
 				cookieId: 'ccmsitemap',
@@ -39,6 +76,14 @@
 						}
 					});
 				}, 
+				onClick: function(node, e) {
+					if (node.getEventTargetType(event) == "title"){
+						var $menu = methods.private.getMenu(instanceID, node.data);
+						if ($menu) {
+							$.fn.ccmmenu.showmenu(e, $menu);
+						}
+					}
+				},
 				dnd: {
 					onDragStart: function(node) {
 						return true;

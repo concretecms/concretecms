@@ -13,16 +13,17 @@ if (isset($_REQUEST['reveal'])) {
 }
 
 $nodes = $sh->getSubNodes(0, 1, false, true);
-$instanceID = time();
 $listHTML = $sh->outputRequestHTML($instanceID, 'full', false, $nodes);
 */
+
+$instanceID = time();
 
 ?>
 
 <script type="text/javascript">
 	var CCM_LAUNCHER_SITEMAP = 'full';
 	$(function() {
-		$('div[sitemap-instance-id<?=$instanceID?>]').ccmsitemap();
+		$('div[data-sitemap-instance-id=<?=$instanceID?>]').ccmsitemap();
 	});
 </script>
 <?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Sitemap'), t('The sitemap allows you to view your site as a tree and easily organize its hierarchy.'), 'span10 offset1', false);?>
@@ -64,7 +65,7 @@ $listHTML = $sh->outputRequestHTML($instanceID, 'full', false, $nodes);
 		<div id="ccm-sitemap-message"></div>
 	
 		
-		<div sitemap-instance-id="<?=$instance_id?>"></div>
+		<div data-sitemap-instance-id="<?=$instanceID?>"></div>
 		
 	
 	<? } else { ?>
