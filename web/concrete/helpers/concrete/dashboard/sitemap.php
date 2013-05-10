@@ -171,6 +171,7 @@ class ConcreteDashboardSitemapHelper {
 		if ($numSubpages > 0) {
 			$node->isLazy = true;
 		}
+		$node->isInTrash = $isInTrash;
 		$node->numSubpages = $numSubpages;
 		$node->isTrash = $isTrash;
 		$node->cID = $cID;
