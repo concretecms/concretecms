@@ -119,7 +119,6 @@ class ConcreteDashboardSitemapHelper {
 				$nodeOpen = true;
 			}
 		}
-		$status = '';
 		
 		$cls = ($c->getNumChildren() > 0) ? "folder" : "file";
 		$leaf = ($c->getNumChildren() > 0) ? false : true;
@@ -154,14 +153,9 @@ class ConcreteDashboardSitemapHelper {
 
 		/*
 		$node = array(
-			'cvName'=> $cvName,
 			'cIcon' => $cIcon,
 			'cAlias' => $cAlias,
-			'isInTrash' => $isInTrash,
-			'isTrash' => $isTrash,
 			'numSubpages'=> $numSubpages,
-			'status'=> $status,
-			'id'=>$cID
 		);
 
 		*/
@@ -171,6 +165,10 @@ class ConcreteDashboardSitemapHelper {
 		if ($numSubpages > 0) {
 			$node->isLazy = true;
 		}
+		if ($cIcon) {
+			$node->icon = $cIcon;
+		}
+		$node->cAlias = $cAlias;
 		$node->isInTrash = $isInTrash;
 		$node->numSubpages = $numSubpages;
 		$node->isTrash = $isTrash;

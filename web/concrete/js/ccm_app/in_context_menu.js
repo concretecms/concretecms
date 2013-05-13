@@ -15,7 +15,6 @@ $.fn.ccmmenu = function() {
 			$menulauncher;
 
 		if (!$this.prop('has-menu')) {
-			$this.find('.dialog-launch').dialog();
 			$this.prop('has-menu', true);
 			$this.prop('disable-highlight', $this.attr('data-menu-disable-highlight'));
 
@@ -151,6 +150,7 @@ $.fn.ccmmenu.showmenu = function(e, $menu) {
 
 	var $pp = $menu.clone(true, true);
 	$pp.appendTo($.fn.ccmmenu.$holder);
+	$pp.find('.dialog-launch').dialog();
 
 	var posX = e.pageX + 2;
 	var posY = e.pageY + 2;
