@@ -1082,7 +1082,8 @@ span.dynatree-drop-target{}
 span.dynatree-drop-target.dynatree-drop-accept a{background-color:#3169C6 !important;color:white !important;text-decoration:none;}
 span.dynatree-drop-target.dynatree-drop-reject{}
 span.custom1 a{background-color:maroon;color:yellow;}
-span.dynatree-ico-c span.dynatree-icon{cursor:move;}
+span.dynatree-node span.dynatree-icon{cursor:move;}
+span.dynatree-node a,span.dynatree-node a:hover,span.dynatree-node a:focus{text-decoration:none;}
 div.newsflow{z-index:1001;width:940px;min-height:590px;margin:0px auto 0px auto;position:relative;background-color:#ffffff;border:1px solid #666;-webkit-border-radius:6px;-moz-border-radius:6px;border-radius:6px;-ms-border-radius:6px;-webkit-box-shadow:0 3px 7px rgba(0, 0, 0, 0.3);-moz-box-shadow:0 3px 7px rgba(0, 0, 0, 0.3);box-shadow:0 3px 7px rgba(0, 0, 0, 0.3);}
 div.newsflow table.newsflow-layout td{vertical-align:top;padding:12px;border-bottom:1px solid #dedede;border-top:0px !important;border-left:0px !important;height:125px;border-right:1px solid #dedede;background-clip:padding-box;}
 div.newsflow table.newsflow-layout td:last-child{border-right:0px;}
