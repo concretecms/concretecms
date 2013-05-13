@@ -9,6 +9,32 @@
 
     private:  {
 
+    	rescanDisplayOrder: function(node) {
+
+			node.setLazyNodeStatus(DTNodeStatus_Loading);	
+			var childNodes = node.getChildren();
+			var params = [];
+			for (i = 0; i < childNodes.length; i++) {
+				var childNode = childNodes[i];
+				params.push({'name': 'cID[]', 'value': childNode.data.cID});
+			}
+			$.ajax({
+				dataType: 'json',
+				type: 'POST',
+				data: params,
+				url: CCM_TOOLS_PATH + '/dashboard/sitemap_update',
+				success: function(r) {
+					ccm_parseJSON(r, function() {});
+					node.setLazyNodeStatus(DTNodeStatus_Ok);
+				}
+			});
+    	},
+
+    	selectMoveCopyTarget: function(node, destNode) {
+    		console.log(node.data);
+    		console.log(destNode.data);
+    	},
+
     	getMenu: function(instanceID, data) {
     		var menu = '<div data-sitemap-instance-id="' + instanceID + '" class="ccm-sitemap-menu popover fade"><div class="arrow"></div><div class="popover-inner">';
     		menu += '<ul class="dropdown-menu">';
@@ -195,7 +221,13 @@
 
 					},
 					onDrop: function(node, sourceNode, hitMode, ui, draggable) {
-				        sourceNode.move(node, hitMode);
+						if (hitMode == 'before' || hitMode == 'after') {
+							// we are reordering
+				        	sourceNode.move(node, hitMode);
+							methods.private.rescanDisplayOrder(sourceNode.parent);
+						} else {
+							methods.private.selectMoveCopyTarget(sourceNode, node);
+						}
 					}
 				}
 			});
