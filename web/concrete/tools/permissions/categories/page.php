@@ -150,7 +150,7 @@ if (count($pages) > 0) {
 						// a third object, and try and assign that object
 						$orig = $pa->duplicate();
 						$newpa = PermissionAccess::getByID($newPAID, $pk);
-						$pa = $orig->duplicate($newpa);
+						$pa = $newpa->duplicate($orig);
 					} else {
 						// no current $pa object, which means we assign the new $pa object to this thing
 						$pk->setPermissionObject($c);
