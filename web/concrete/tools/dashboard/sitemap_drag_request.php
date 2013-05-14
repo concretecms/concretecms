@@ -202,11 +202,11 @@ if ($successMessage) {
 	
 	<div class="dialog-buttons">
 	<? if ($_REQUEST['sitemap_mode'] == 'move_copy_delete') { ?>
-		<a href="javascript:void(0)" onclick="$.fn.dialog.closeTop()" id="ccm-exit-drag-request" title="<?=t('Choose Page')?>" class="ccm-button-left btn"><?=t('Cancel')?></a>
+		<a href="javascript:void(0)" onclick="$.fn.dialog.closeTop()" id="ccm-exit-drag-request" title="<?=t('Choose Page')?>" class="pull-left btn btn-hover-danger"><?=t('Cancel')?></a>
 	<? } else { ?>
-		<a href="javascript:void(0)" onclick="showBranch(<?=$oc->getCollectionID()?>);$.fn.dialog.closeTop()" class="ccm-button-left btn"><?=t('Cancel')?></a>
+		<a href="javascript:void(0)" onclick="$.fn.dialog.closeTop()" class="pull-left btn btn-hover-danger"><?=t('Cancel')?></a>
 	<? } ?>
-	<a href="javascript:void(0)" onclick="moveCopyAliasNode(<? if ($_REQUEST['select_mode'] == 'move_copy_delete') { ?>true<? } ?>)" class="ccm-button-right btn primary"><span><?=t('Go')?></span></a>
+	<a href="javascript:void(0)" onclick="moveCopyAliasNode(<? if ($_REQUEST['select_mode'] == 'move_copy_delete') { ?>true<? } ?>)" class="pull-right btn btn-primary"><span><?=t('Go')?></span></a>
 	</div>
 	
 	<div class="ccm-spacer">&nbsp;</div>

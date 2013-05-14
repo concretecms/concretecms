@@ -30,9 +30,24 @@
 			});
     	},
 
-    	selectMoveCopyTarget: function(node, destNode) {
-    		console.log(node.data);
-    		console.log(destNode.data);
+    	selectMoveCopyTarget: function(instanceID, node, destNode) {
+
+			var dialog_title = ccmi18n_sitemap.moveCopyPage;
+			var dialog_url = CCM_TOOLS_PATH + '/dashboard/sitemap_drag_request.php?instance_id=' + instanceID + '&origCID=' + node.data.cID + '&destCID=' + destNode.data.cID;
+			var dialog_height = 350;
+			var dialog_width = 350;
+			
+			$.fn.dialog.open({
+				title: dialog_title,
+				href: dialog_url,
+				width: dialog_width,
+				modal: false,
+				height: dialog_height,
+				onClose: function() {
+
+				}
+
+			});
     	},
 
     	getMenu: function(instanceID, data) {
@@ -226,7 +241,7 @@
 				        	sourceNode.move(node, hitMode);
 							methods.private.rescanDisplayOrder(sourceNode.parent);
 						} else {
-							methods.private.selectMoveCopyTarget(sourceNode, node);
+							methods.private.selectMoveCopyTarget(instanceID, sourceNode, node);
 						}
 					}
 				}
