@@ -20,7 +20,7 @@ class Concrete5_Controller_Dashboard_Pages_Types extends DashboardBaseController
 				$ct->delete();
 				$this->redirect("/dashboard/pages/types");
 			} else {
-				$this->set("error", array(t("You must delete all pages of this type, and remove all page versions that contain this page type before deleting this page type.")));
+				$this->error->add(t("You must delete all pages of this type, and remove all page versions that contain this page type before deleting this page type."));
 			}
 		}
 	}
