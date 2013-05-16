@@ -315,7 +315,8 @@ $(function() {
 						}
 						?>
 						btn1 = new ccm_statusBarItemButton();
-						btn1.setLabel('<?=$appLabel?> <i class="icon-thumbs-up"></i>');
+						btn1.setCSSClass('btn-success');
+						btn1.setLabel('<?=$appLabel?> <i class="icon-thumbs-up icon-white"></i>');
 						btn1.setURL('<?=DIR_REL . "/" . DISPATCHER_FILENAME . "?cID=" . $c->getCollectionID() . "&ctask=approve-recent" . $token?>');
 						sbitem.addButton(btn1);
 					<? } ?>
