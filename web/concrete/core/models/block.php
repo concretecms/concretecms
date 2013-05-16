@@ -852,16 +852,25 @@ class Concrete5_Model_Block extends Object {
 		$this->bActionCID = $bActionCID;
 	}
 	
+	/**
+	 * @return integer|false The block action collection id or false if not found
+	 */
 	public function getBlockActionCollectionID() {
 		if ($this->bActionCID > 0) {
 			return $this->bActionCID;
 		}
+
 		$c = Page::getCurrentPage();
 		if (is_object($c)) {
 			return $c->getCollectionID();
-		} else {
-			$this->getBlockCollectionObject();
 		}
+
+		$c = $this->getBlockCollectionObject();
+		if (is_object($c)) {
+			return $c->getCollectionID();
+		}
+
+		return false;
 	}
 	function getBlockEditAction() {
 		return $this->_getBlockAction();
