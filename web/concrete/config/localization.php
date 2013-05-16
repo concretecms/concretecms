@@ -59,7 +59,7 @@ if (!defined('DATE_APP_GENERIC_MDY')) {
 }
 
 if (!defined('DATE_APP_GENERIC_MDY_FULL')) {
-	define('DATE_APP_GENERIC_MDY_FULL', t('F jS, Y'));
+	define('DATE_APP_GENERIC_MDY_FULL', t('F j, Y'));
 }
 
 if (!defined('DATE_APP_GENERIC_T')) {
