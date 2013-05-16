@@ -1024,42 +1024,6 @@
     <field name="css_serialized" type="X"/>
     <field name="css_custom" type="X"/>
   </table>
-  <table name="FilePermissions">
-    <field name="fID" type="I" size="10">
-      <KEY/>
-      <NOTNULL/>
-      <DEFAULT value="0"/>
-      <UNSIGNED/>
-    </field>
-    <field name="gID" type="I" size="10">
-      <KEY/>
-      <NOTNULL/>
-      <DEFAULT value="0"/>
-      <UNSIGNED/>
-    </field>
-    <field name="uID" type="I" size="10">
-      <KEY/>
-      <NOTNULL/>
-      <DEFAULT value="0"/>
-      <UNSIGNED/>
-    </field>
-    <field name="canRead" type="I" size="4">
-      <NOTNULL/>
-      <DEFAULT value="0"/>
-    </field>
-    <field name="canWrite" type="I" size="4">
-      <NOTNULL/>
-      <DEFAULT value="0"/>
-    </field>
-    <field name="canAdmin" type="I" size="4">
-      <NOTNULL/>
-      <DEFAULT value="0"/>
-    </field>
-    <field name="canSearch" type="I" size="4">
-      <NOTNULL/>
-      <DEFAULT value="0"/>
-    </field>
-  </table>
 
   <table name="PermissionKeys">
     <field name="pkID" type="I" size="10">
