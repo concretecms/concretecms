@@ -115,7 +115,7 @@ if (!defined('DATE_APP_SURVEY_RESULTS')) {
 }
 
 if (!defined('DATE_FORM_HELPER_FORMAT_HOUR')) {
-	define('DATE_FORM_HELPER_FORMAT_HOUR', '12'); // can be 12 or 24
+	define('DATE_FORM_HELPER_FORMAT_HOUR', tc(/*i18n: can be 12 or 24 */'Time format', '12'));
 }
 define('BLOCK_NOT_AVAILABLE_TEXT', t('This block is no longer available.'));
 define('GUEST_GROUP_NAME', t('Guest'));
