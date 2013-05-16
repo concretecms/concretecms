@@ -428,7 +428,7 @@ class Concrete5_Controller_Block_Form extends BlockController {
 				$q="delete from {$this->btAnswerSetTablename} where asID = ?";
 				$v = array($this->lastAnswerSetId);
 				$db->Execute($q, $v);
-				$db->Execute('delete from {$this->btAnswersTablename} where asID = ?', array($this->lastAnswerSetId));
+				$db->Execute("delete from {$this->btAnswersTablename} where asID = ?", array($this->lastAnswerSetId));
 			}
 			
 			if(intval($this->notifyMeOnSubmission)>0 && !$foundSpam){	
