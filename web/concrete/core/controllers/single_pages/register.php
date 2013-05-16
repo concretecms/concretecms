@@ -160,7 +160,7 @@ class Concrete5_Controller_Register extends Controller {
 					$attribs = UserAttributeKey::getRegistrationList();
 					$attribValues = array();
 					foreach($attribs as $ak) {
-						$attribValues[] = $ak->getAttributeKeyDisplayHandle() . ': ' . $process->getAttribute($ak->getAttributeKeyHandle(), 'display');		
+						$attribValues[] = $ak->getAttributeKeyName() . ': ' . $process->getAttribute($ak->getAttributeKeyHandle(), 'display');		
 					}						
 					$mh->addParameter('attribs', $attribValues);
 					
