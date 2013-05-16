@@ -127,9 +127,10 @@ class Concrete5_Library_Environment {
 	}
 	
 	public function getRecord($segment, $pkgHandle = false) {
-		
 		if(is_object($pkgHandle)) {
 			$pkgHandle = $pkgHandle->getPackageHandle();
+		} else {
+			$pkgHandle = (string)$pkgHandle;
 		}
 		
 		if (!$this->overridesScanned) {
