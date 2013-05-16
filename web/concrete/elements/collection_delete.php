@@ -57,6 +57,9 @@ $(function() {
 			<div class="dialog-buttons"><input type="button" class="btn" value="<?=t('Cancel')?>" onclick="jQuery.fn.dialog.closeTop()" />
 			<a href="javascript:void(0)" onclick="$('#ccmDeletePageForm').submit()" class="ccm-button-right btn error"><span><?=t('Delete')?></span></a>
 			</div>
+		<? if($c->isSystemPage()) { ?>
+			<div class="alert alert-error"><?php echo t('STOP! This is a System Page. Deleting it could potentially break your site.') ?></div>
+		<? } ?>
 		<h3><?=t('Are you sure you wish to delete this page?')?></h3>
 		<? if ($u->isSuperUser() && $numChildren > 0) { ?>
 			<h4><?=t2('This will remove %s child page.', 'This will remove %s child pages.', $numChildren, $numChildren)?></h4>
