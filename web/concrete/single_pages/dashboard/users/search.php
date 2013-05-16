@@ -475,7 +475,7 @@ if (is_object($uo)) {
 			?>
 			
 		<div class="row">
-		<div class="span5" style=""><p><strong><?=$uk->getAttributeKeyDisplayHandle()?></strong></p></div>
+		<div class="span5" style=""><p><strong><?=$uk->getAttributeKeyName()?></strong></p></div>
 		<div class="span5"><p>
 			<?=$uo->getAttribute($uk->getAttributeKeyHandle(), 'displaySanitized', 'display')?>
 		</p></div>

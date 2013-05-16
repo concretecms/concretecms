@@ -67,7 +67,7 @@ $list = CollectionAttributeKey::getList();
 	
 	<? foreach($list as $ak) { ?>
 
-		<li><label><?=$form->checkbox('ak_' . $ak->getAttributeKeyHandle(), 1, $fldc->contains($ak))?> <span><?=$ak->getAttributeKeyDisplayHandle()?></span></label></li>
+		<li><label><?=$form->checkbox('ak_' . $ak->getAttributeKeyHandle(), 1, $fldc->contains($ak))?> <span><?=$ak->getAttributeKeyName()?></span></label></li>
 	
 	<? } ?>
 	
