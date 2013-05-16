@@ -134,6 +134,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			
 			$aDir = array();
 			if (is_dir($dir)) {
+				$currentLocale = Localization::activeLocale();
+				if ($currentLocale != 'en_US') {
+					Localization::changeLocale('en_US');
+				}
 				$handle = opendir($dir);
 				while(($file = readdir($handle)) !== false) {
 					if (strpos($file, '.') === false) {
@@ -159,6 +163,9 @@ defined('C5_EXECUTE') or die("Access Denied.");
 							
 						}
 					}				
+				}
+				if ($currentLocale != 'en_US') {
+					Localization::changeLocale($currentLocale);
 				}
 			}
 			
@@ -470,7 +477,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		 * @return string
 		 */
 		function getBlockTypeDescription() {
-			return $this->btDescription;
+			return t($this->btDescription);
 		}
 		
 		/**
@@ -1003,7 +1010,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		
 		
 		function getBlockTypeName() {
-			return $this->btName;
+			return t($this->btName);
 		}
 		
 		function isInstalled() {
