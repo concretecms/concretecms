@@ -15,13 +15,13 @@ $nextLinkURL = is_object($nextCollection) ? $nh->getLinkToCollection($nextCollec
 	<?php endif; ?>
 
 	<?php if ($parentLinkText): ?>
-	<div class="ccm-next-parent-parentlink">
+	<div class="ccm-next-previous-parentlink">
 		<?php echo $parentLinkURL ? '<a href="' . $parentLinkURL . '">' . $parentLinkText . '</a>' : '' ?>
  	</div>
 	<?php endif; ?>
 	
 	<?php if ($nextLinkText): ?>
-	<div class="ccm-next-next-nextlink">
+	<div class="ccm-next-previous-nextlink">
 		<?php echo $nextLinkURL ? '<a href="' . $nextLinkURL . '">' . $nextLinkText . '</a>' : '' ?>
  	</div>
 	<?php endif; ?>
