@@ -58,7 +58,7 @@ $(function() {
 			<a href="javascript:void(0)" onclick="$('#ccmDeletePageForm').submit()" class="ccm-button-right btn error"><span><?=t('Delete')?></span></a>
 			</div>
 		<? if($c->isSystemPage()) { ?>
-			<div class="alert alert-error"><?php echo t('STOP! This is a System Page. Deleting it could potentially break your site.') ?></div>
+			<div class="alert alert-error"><?php echo t('Warning! This is a system page. Deleting it could potentially break your site. Please proceed with caution.') ?></div>
 		<? } ?>
 		<h3><?=t('Are you sure you wish to delete this page?')?></h3>
 		<? if ($u->isSuperUser() && $numChildren > 0) { ?>
