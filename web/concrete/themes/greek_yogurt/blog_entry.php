@@ -46,22 +46,25 @@ $nav = Loader::helper('navigation');
 			
 			<div id="main-content-post-author">
 			<?php
-			$uID = $c->getVersionObject()->getVersionAuthorUserID();
-			$username = $c->getVersionObject()->getVersionAuthorUserName();
-			if (Config::get("ENABLE_USER_PROFILES")) {
-				$profileLink= '<a href="' . $this->url('/profile/view/') . $uID . '/' . '">' . $username . '</a>';
-			}else{ 
-				$profileLink = $username;
-			} ?>
+			$vo = $c->getVersionObject();
+			if (is_object($vo)) {
+				$uID = $vo->getVersionAuthorUserID();
+				$username = $vo->getVersionAuthorUserName();
+				if (Config::get("ENABLE_USER_PROFILES")) {
+					$profileLink= '<a href="' . $this->url('/profile/view/', $uID) . '">' . $username . '</a>';
+				}else{ 
+					$profileLink = $username;
+				} ?>
 				<p><?php echo t('Posted by:');?> <span class="post-author"><?php  echo $profileLink; ?> at <a href="<?php $c->getLinkToCollection;?>"><?php echo $c->getCollectionDatePublic('g:i a')?> on <?php echo $c->getCollectionDatePublic('F jS, Y')?></a></span>
-					<div id="main-content-post-footer-share">
-						<p>Share:
-						<a href="mailto:?subject=<?php echo $c->getCollectionName(); ?>&body=<?php echo $nav->getLinkToCollection($c, true); ?>"><img class="main-content-post-footer-share-email" src="<?php echo $this->getThemePath(); ?>/images/icon_email.png" alt="Email" /></a>
-						<a href="https://twitter.com/share"><img class="main-content-post-footer-share-twitter" src="<?php echo $this->getThemePath(); ?>/images/icon_twitter.png" alt="Share on Twitter" /></a>
-						<a href="http://www.facebook.com/share.php?u=<?php echo $nav->getLinkToCollection($c, true); ?>"><img class="main-content-post-footer-share-facebook" src="<?php echo $this->getThemePath(); ?>/images/icon_facebook.png" alt="Share on Facebook" /></a>
-						</p>
-					</div>
+				<div id="main-content-post-footer-share">
+					<p>Share:
+					<a href="mailto:?subject=<?php echo $c->getCollectionName(); ?>&body=<?php echo $nav->getLinkToCollection($c, true); ?>"><img class="main-content-post-footer-share-email" src="<?php echo $this->getThemePath(); ?>/images/icon_email.png" alt="Email" /></a>
+					<a href="https://twitter.com/share"><img class="main-content-post-footer-share-twitter" src="<?php echo $this->getThemePath(); ?>/images/icon_twitter.png" alt="Share on Twitter" /></a>
+					<a href="http://www.facebook.com/share.php?u=<?php echo $nav->getLinkToCollection($c, true); ?>"><img class="main-content-post-footer-share-facebook" src="<?php echo $this->getThemePath(); ?>/images/icon_facebook.png" alt="Share on Facebook" /></a>
+					</p>
+				</div>
 				</p>	
+			<? } ?>
 			</div>
 			
 		</div>
