@@ -474,26 +474,14 @@ class Concrete5_Model_Block extends Object {
 
 	function deactivate() {
 		$db = Loader::db();
-<<<<<<< HEAD
-		$q = "update Blocks set bIsActive = 0 where bID = '{$this->bID}'";
-		$db->query($q);
-=======
 		$q = "update Blocks set bIsActive = 0 where bID = ?";
 		$db->query($q, array($this->bID));
-		$this->refreshCache();
->>>>>>> 718eb702c3aa1c2b8101b0aae0ece52d4a855f63
 	}
 
 	function activate() {
 		$db = Loader::db();
-<<<<<<< HEAD
-		$q = "update Blocks set bIsActive = 1 where bID = '{$this->bID}'";
-		$db->query($q);
-=======
 		$q = "update Blocks set bIsActive = 1 where bID = ?";
 		$db->query($q, array($this->bID));
-		$this->refreshCache();
->>>>>>> 718eb702c3aa1c2b8101b0aae0ece52d4a855f63
 	}
 
 	public function getPackageID() {return $this->pkgID;}
