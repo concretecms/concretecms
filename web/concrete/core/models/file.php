@@ -419,6 +419,10 @@ class Concrete5_Model_File extends Object {
 		$db->Execute("delete from FileAttributeValues where fID = ?", array($this->fID));
 		$db->Execute("delete from FileSetFiles where fID = ?", array($this->fID));
 		$db->Execute("delete from FileVersionLog where fID = ?", array($this->fID));
+		$db->Execute("delete from FileSearchIndexAttributes where fID = ?", array($this->fID));
+		$db->Execute("delete from DownloadStatistics where fID = ?", array($this->fID));
+		$db->Execute("delete from FilePermissions where fID = ?", array($this->fID));
+		$db->Execute("delete from FilePermissionAssignments where fID = ?", array($this->fID));		
 	}
 	
 
