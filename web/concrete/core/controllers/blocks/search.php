@@ -63,7 +63,7 @@ class Concrete5_Controller_Block_Search extends BlockController {
 			return $text;
 		}
 
-		$regex = '([[:alnum:]|\'|\.|_|\s]{0,45})'. $highlight .'([[:alnum:]|\.|_|\s]{0,45})';
+		$regex = '([[:alnum:]|\'|\.|_|\s]{0,45})'. preg_quote($highlight, '#') .'([[:alnum:]|\.|_|\s]{0,45})';
 		preg_match_all("#$regex#ui", $text, $matches);
 
 		if(!empty($matches[0])) {
