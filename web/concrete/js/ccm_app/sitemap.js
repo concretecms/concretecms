@@ -30,10 +30,14 @@
 			});
     	},
 
-    	selectMoveCopyTarget: function(instanceID, node, destNode) {
+
+    	selectMoveCopyTarget: function(instanceID, node, destNode, dragMode) {
 
 			var dialog_title = ccmi18n_sitemap.moveCopyPage;
-			var dialog_url = CCM_TOOLS_PATH + '/dashboard/sitemap_drag_request.php?instance_id=' + instanceID + '&origCID=' + node.data.cID + '&destCID=' + destNode.data.cID;
+			if (!dragMode) {
+				var dragMode = '';
+			}
+			var dialog_url = CCM_TOOLS_PATH + '/dashboard/sitemap_drag_request.php?instance_id=' + instanceID + '&origCID=' + node.data.cID + '&destCID=' + destNode.data.cID + '&dragMode=' + dragMode;
 			var dialog_height = 350;
 			var dialog_width = 350;
 			
@@ -43,10 +47,59 @@
 				width: dialog_width,
 				modal: false,
 				height: dialog_height,
-				onClose: function() {
+				onOpen: function() {
+					$('#ctaskMove').on('click', function() {
+						if ($("#copyThisPage").get(0)) {
+							$("#copyThisPage").get(0).disabled = true;
+							$("#copyChildren").get(0).disabled = true;
+							$("#saveOldPagePath").attr('disabled', false);
+						}
+					});
 
+					$('#ctaskAlias').on('click', function() {
+						if ($("#copyThisPage").get(0)) {
+							$("#copyThisPage").get(0).disabled = true;
+							$("#copyChildren").get(0).disabled = true;
+							$("#saveOldPagePath").attr('checked', false);
+							$("#saveOldPagePath").attr('disabled', 'disabled');
+						}
+					});
+
+					$('#ctaskCopy').on('click', function() {
+						if ($("#copyThisPage").get(0)) {
+							$("#copyThisPage").get(0).disabled = false;
+							$("#copyThisPage").get(0).checked = true;
+							$("#copyChildren").get(0).disabled = false;
+							$("#saveOldPagePath").attr('checked', false);
+							$("#saveOldPagePath").attr('disabled', 'disabled');
+						}
+					});
 				}
 
+			});
+
+			$('[data-sitemap-instance-id=' + instanceID + ']').on('dragRequestComplete', function(e, mode) {
+
+				if (mode == 'MOVE') {
+					// remove the original
+					node.remove();
+				}
+
+				destNode.removeChildren();
+				var cID = destNode.data.cID;
+				destNode.appendAjax({
+					url: CCM_TOOLS_PATH + '/dashboard/sitemap_data',
+					data: {
+						node: cID
+					},
+					success: function() {
+						if (!destNode.bExpanded) {
+							destNode.expand(true);
+						}
+					}
+				});
+
+				$(this).unbind('dragRequestComplete');
 			});
     	},
 
@@ -168,6 +221,101 @@
 
     },
 
+	submitDragRequest: function() {
+	
+		var origCID = $('#origCID').val();
+		var destParentID = $('#destParentID').val();
+		var destCID = $('#destCID').val();
+		var dragMode = $('#dragMode').val();
+		var destSibling = $('#destSibling').val();
+		var ctask = $("input[name=ctask]:checked").val();
+		var instance_id = $("input[name=instance_id]").val();
+		var display_mode = $("input[name=display_mode]").val();
+		var select_mode = $("input[name=select_mode]").val();
+		var copyAll = $("input[name=copyAll]:checked").val();
+		var saveOldPagePath = $("input[name=saveOldPagePath]:checked").val();
+
+		params = {
+		
+			'origCID': origCID,
+			'destCID': destCID,
+			'ctask': ctask,
+			'ccm_token': CCM_SECURITY_TOKEN,
+			'copyAll': copyAll,
+			'destSibling': destSibling,
+			'dragMode': dragMode,
+			'saveOldPagePath': saveOldPagePath
+		};
+
+
+		if (copyAll == 1) {
+
+			var dialogTitle = ccmi18n_sitemap.copyProgressTitle;
+			ccm_triggerProgressiveOperation(
+				CCM_TOOLS_PATH + '/dashboard/sitemap_copy_all', 
+				[{'name': 'origCID', 'value': origCID}, {'name': 'destCID', 'value': destCID}],
+				dialogTitle, function() {
+					$('.ui-dialog-content').dialog('close');
+					openSub(instance_id, destParentID, display_mode, select_mode, function() {openSub(instance_id, destCID, display_mode, select_mode)});
+				}
+			);
+
+		} else {
+
+			jQuery.fn.dialog.showLoader();
+
+			$.getJSON(CCM_TOOLS_PATH + '/dashboard/sitemap_drag_request.php', params, function(resp) {
+				// parse response
+				ccm_parseJSON(resp, function() {
+					jQuery.fn.dialog.closeAll();
+					jQuery.fn.dialog.hideLoader();
+		 			ccmAlert.hud(resp.message, 2000);
+		 			$('[data-sitemap-instance-id=' + instance_id + ']').trigger('dragRequestComplete', [ctask]);
+
+					// if node is closed, we open it.
+
+					/*
+					if (reloadPage == true) {
+						if (typeof(CCM_LAUNCHER_SITEMAP) != 'undefined') {
+							if (CCM_LAUNCHER_SITEMAP == 'explore') {
+								// we are in the dashboard and we need to actually go to the explore node
+								window.location.href = CCM_DISPATCHER_FILENAME + "/dashboard/sitemap/explore/-/" + destCID;
+								return false;
+							}
+							if (CCM_LAUNCHER_SITEMAP == 'search') {
+								ccm_deactivateSearchResults(CCM_SEARCH_INSTANCE_ID);
+								$("#ccm-" + CCM_SEARCH_INSTANCE_ID + "-advanced-search").ajaxSubmit(function(resp) {
+									ccm_parseAdvancedSearchResponse(resp, CCM_SEARCH_INSTANCE_ID);
+								});
+							}
+						} else {
+							setTimeout(function() {
+								window.location.href = CCM_DISPATCHER_FILENAME + "?cID=" + resp.cID;
+							}, 2000);
+							return false;
+						}
+					}
+					
+					switch(ctask) {
+						case "COPY":
+						case "ALIAS":
+							// since we're copying we show the original again
+							showBranch(origCID);
+							break;
+						case "MOVE":
+							deleteBranchDirect(origCID);
+							break;
+					}
+					
+					openSub(instance_id, destParentID, display_mode, select_mode, function() {openSub(instance_id, destCID, display_mode, select_mode)});
+					*/
+					jQuery.fn.dialog.closeTop();
+					jQuery.fn.dialog.closeTop();
+				});
+			});
+		}
+	},
+
     init: function(options) {
 
     	$('#ccm-show-all-pages-cb').on('click', function() {
@@ -193,7 +341,7 @@
 					}
 				},
 				selectMode: 1,
-				minExpandLevel: 1,
+				minExpandLevel: 2,
 				clickFolderMode: 2,
 				onLazyRead: function(node) {
 					node.appendAjax({
@@ -224,24 +372,25 @@
 						return true;
 					},
 					onDragOver: function(node, sourceNode, hitMode) {
+						if (node.data.cID == 1) {
+							return false;
+						}
+
 				        // Prevent dropping a parent below it's own child
 				        if(node.isDescendantOf(sourceNode)){
 				          return false;
 				        }
-				        if (hitMode == 'over') { // we allow drag over stuff in all cases
-				        	return true;
-				        }
-				        // if it's before or after, we need to make sure the parent nodes are the same.
-				        return node.parent.data.cID == sourceNode.parent.data.cID;
+				        return true;
 
 					},
 					onDrop: function(node, sourceNode, hitMode, ui, draggable) {
-						if (hitMode == 'before' || hitMode == 'after') {
+						if (node.parent.data.cID == sourceNode.parent.data.cID && hitMode != 'over') {
 							// we are reordering
 				        	sourceNode.move(node, hitMode);
 							methods.private.rescanDisplayOrder(sourceNode.parent);
 						} else {
-							methods.private.selectMoveCopyTarget(instanceID, sourceNode, node);
+							// we are dragging either onto a node or into another part of the site
+							methods.private.selectMoveCopyTarget(instanceID, sourceNode, node, hitMode);
 						}
 					}
 				}

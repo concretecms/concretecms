@@ -1083,7 +1083,11 @@ span.dynatree-drop-target.dynatree-drop-accept a{background-color:#3169C6 !impor
 span.dynatree-drop-target.dynatree-drop-reject{}
 span.custom1 a{background-color:maroon;color:yellow;}
 span.dynatree-node span.dynatree-icon{cursor:move;}
-span.dynatree-node a,span.dynatree-node a:hover,span.dynatree-node a:focus{text-decoration:none;}
+span.dynatree-node a,span.dynatree-node a:hover,span.dynatree-node a:focus{text-decoration:none;-webkit-border-radius:2px;-moz-border-radius:2px;border-radius:2px;-ms-border-radius:2px;}
+span.dynatree-active a{background-color:#91E1F1 !important;color:black !important;}
+span.dynatree-drop-target.dynatree-drop-accept a{color:black !important;background-color:#E6FBFF !important;}
+span.dynatree-node.dynatree-drop-accept.dynatree-drop-before a{color:black !important;background-color:transparent !important;}
+span.dynatree-node.dynatree-drop-accept.dynatree-drop-after a{color:black !important;background-color:transparent !important;}
 div.newsflow{z-index:1001;width:940px;min-height:590px;margin:0px auto 0px auto;position:relative;background-color:#ffffff;border:1px solid #666;-webkit-border-radius:6px;-moz-border-radius:6px;border-radius:6px;-ms-border-radius:6px;-webkit-box-shadow:0 3px 7px rgba(0, 0, 0, 0.3);-moz-box-shadow:0 3px 7px rgba(0, 0, 0, 0.3);box-shadow:0 3px 7px rgba(0, 0, 0, 0.3);}
 div.newsflow table.newsflow-layout td{vertical-align:top;padding:12px;border-bottom:1px solid #dedede;border-top:0px !important;border-left:0px !important;height:125px;border-right:1px solid #dedede;background-clip:padding-box;}
 div.newsflow table.newsflow-layout td:last-child{border-right:0px;}
