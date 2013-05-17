@@ -426,6 +426,9 @@ class Concrete5_Model_File extends Object {
 		$db->Execute("delete from FileAttributeValues where fID = ?", array($this->fID));
 		$db->Execute("delete from FileSetFiles where fID = ?", array($this->fID));
 		$db->Execute("delete from FileVersionLog where fID = ?", array($this->fID));
+		$db->Execute("delete from FileSearchIndexAttributes where fID = ?", array($this->fID));
+		$db->Execute("delete from DownloadStatistics where fID = ?", array($this->fID));
+		$db->Execute("delete from FilePermissionAssignments where fID = ?", array($this->fID));		
 	}
 	
 
@@ -450,11 +453,14 @@ class Concrete5_Model_File extends Object {
 		if ($fvID == null) {
 			$fvID = $this->fvID; // approved version
 		}
-
-		if (is_object($this->fv)) {
-			return $this->fv;
+		$fv = CacheLocal::getEntry('file', $this->getFileID() . ':' . $fvID);
+		if ($fv === -1) {
+			return false;
 		}
-		
+		if ($fv) {
+			return $fv;
+		}
+
 		$db = Loader::db();
 		$row = $db->GetRow("select * from FileVersions where fvID = ? and fID = ?", array($fvID, $this->fID));
 		$row['fvAuthorName'] = $db->GetOne("select uName from Users where uID = ?", array($row['fvAuthorUID']));
@@ -463,7 +469,7 @@ class Concrete5_Model_File extends Object {
 		$row['fslID'] = $this->fslID;
 		$fv->setPropertiesFromArray($row);
 		
-		$this->fv = $fv;
+		CacheLocal::set('file', $this->getFileID() . ':' . $fvID, $fv);
 		return $fv;
 	}
 	

@@ -37,12 +37,13 @@ class Concrete5_Controller_Dashboard_Reports_Statistics extends DashboardBaseCon
 	}
 
 	public function on_start() {
+		$dh = Loader::helper('date');
 		for ($i = -4; $i < 1; $i++) {
 			$date = date('Y-m-d', strtotime($i . ' days'));
 			if ($i == 0) {
 				$label = t('Today');
 			} else { 
-				$label = date('D', strtotime($i . ' days'));
+				$label = $dh->date('D', strtotime($i . ' days'));
 			}
 			$this->labels[] = $label;
 			$this->dates[] = $date;

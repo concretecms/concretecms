@@ -146,12 +146,14 @@ $(function(){ GlobalScrapbook.init(); });
 
 
 
-<? if(!$scrapbookName){ ?>
+<?
+$scrapbookDeprecationNote = t('<strong>Note</strong>: Scrapbooks are preserved for backward compatibility, but you really should be using <a href="%s">stacks</a> instead.', View::url('/dashboard/blocks/stacks'));
 
-	<h1><span><?=t('Choose a Scrapbook')?></span></h1>
-	<div class="ccm-dashboard-inner ccm-ui"> 
+if(!$scrapbookName){ ?>
+
+	<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Choose a Scrapbook'), $scrapbookDeprecationNote)?>
 	<div class="block-message warning alert-message"><p><?=t('<strong>Note</strong>: Scrapbooks are preserved for backward compatibility, but you really should be using <a href="%s">stacks</a> instead.', View::url('/dashboard/blocks/stacks'))?></p></div>
-		<table id="availableScrapbooks" border="0" cellspacing="1" class="grid-list" >
+		<table id="availableScrapbooks" border="0" cellspacing="1" class="grid-list table table-bordered" >
 			<tr>
 				<td class="header">
 					<?=t('Scrapbook Name')?>
@@ -212,16 +214,14 @@ $(function(){ GlobalScrapbook.init(); });
 		
 		<div class="ccm-spacer"></div>			
 		
-	</div>
+	<?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(false)?>
 
 
 
 <? }else{ ?>
 
-	<h1><span><?=htmlentities($scrapbookName, ENT_QUOTES, APP_CHARSET) ?></span></h1>
+	<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(htmlentities($scrapbookName, ENT_QUOTES, APP_CHARSET), $scrapbookDeprecationNote)?>
 	
-	<div class="ccm-dashboard-inner ccm-ui"> 
-
 		<a style="float: right" href="<?=View::url($cPath) ?>"><?= t("&laquo; Return to Scrapbook List") ?></a>		
 		
 		<div class="sillyIE7"><?= $ih->button_js( t('Add Block to Scrapbook'), 'GlobalScrapbook.addBlock(event)','left'); ?></div>
@@ -306,6 +306,6 @@ $(function(){ GlobalScrapbook.init(); });
 		</div> 	
 		
 	
-	</div>
+	</div><?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(false)?>
 
 <? } ?>

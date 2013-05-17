@@ -43,8 +43,17 @@ class Concrete5_Controller_Dashboard_Blocks_Stacks extends DashboardBaseControll
 			if (is_object($s)) {
 				$sps = new Permissions($s);
 				if ($sps->canDeletePage()) {
-					$s->delete();
-					$this->redirect('/dashboard/blocks/stacks', 'stack_deleted');
+					$u = new User();
+					$pkr = new DeletePagePageWorkflowRequest();
+					$pkr->setRequestedPage($s);
+					$pkr->setRequesterUserID($u->getUserID());
+					$response = $pkr->trigger();
+					if ($response instanceof WorkflowProgressResponse) {
+						// we only get this response if we have skipped workflows and jumped straight in to an approve() step.
+						$this->redirect('/dashboard/blocks/stacks', 'stack_deleted');
+					} else {
+						$this->redirect('/dashboard/blocks/stacks', 'view_details', $cID, 'delete_saved');
+					}
 				} else {
 					$this->error->add(t('You do not have access to delete this stack.'));
 				}
@@ -56,7 +65,7 @@ class Concrete5_Controller_Dashboard_Blocks_Stacks extends DashboardBaseControll
 		}
 	}
 	
-	public function view_details($cID) {
+	public function view_details($cID, $msg = false) {
 		$s = Stack::getByID($cID);
 		if (is_object($s)) {
 			$blocks = $s->getBlocks('Main');
@@ -73,6 +82,12 @@ class Concrete5_Controller_Dashboard_Blocks_Stacks extends DashboardBaseControll
 
 			$this->set('stack', $s);
 			$this->set('blocks', $blocks);
+			switch($msg) {
+				case 'delete_saved':
+					$this->set('message', t('Delete request saved. You must complete the delete workflow before this stack can be deleted.'));
+					break;
+			
+			}
 		} else {
 			throw new Exception(t('Invalid stack'));
 		}

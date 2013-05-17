@@ -30,8 +30,10 @@ class Concrete5_Helper_Validation_Numbers {
 	public function integer($data) {
 		if (is_int($data)) {
 			return true;
-		} else if (is_string($data) === true && is_numeric($data) === true) {
-			return (strpos($data, '.') === false);
+		} else if (is_string($data)) {
+			$iv = (string) intval($data);
+			$sv = (string) $data;
+			return $sv == $iv;
 		}
 	}
 	

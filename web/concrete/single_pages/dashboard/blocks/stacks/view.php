@@ -25,6 +25,8 @@
 	
 	<style type="text/css">
 	div.ccm-block {border: 2px dotted #efefef; clear: both; overflow: hidden; margin: 0px 0px 4px 0px; padding: 2px}
+	div#ccm-stack-status-bar div#ccm-page-status-bar {position: static; height: auto; margin-bottom: 20px;}
+	div#ccm-stack-status-bar div#ccm-page-status-bar div.ccm-page-status-bar-buttons {display: block; margin-top: 10px; position: static;}
 	</style>
 	
 	<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper($stack->getCollectionName(), false, 'span10 offset1', false)?>
@@ -43,16 +45,84 @@
 		<? } ?>
 
 		<?
-		$vo = $stack->getVersionObject();
-		if ($cp->canApprovePageVersions()) {
-			$token = '&' . Loader::helper('validation/token')->getParameter(); ?>
-			<a style="margin-right: 8px; <? if ($vo->isApproved()) { ?> display: none; <? } ?> href="javascript:void(0)" onclick="window.location.href='<?=DIR_REL . "/" . DISPATCHER_FILENAME . "?cID=" . $stack->getCollectionID() . "&ctask=approve-recent" . $token?>'" class="btn small ccm-main-nav-edit-option ccm-button-v2-right"><?=t('Approve Changes')?></a>
-		<?
-		}		
+		$hasPendingPageApproval = false;
+		$workflowList = PageWorkflowProgress::getList($stack);
+		foreach($workflowList as $wl) {
+			$wr = $wl->getWorkflowRequestObject(); 
+			$wrk = $wr->getWorkflowRequestPermissionKeyObject(); 
+			if ($wrk->getPermissionKeyHandle() == 'approve_page_versions') {
+				$hasPendingPageApproval = true;
+				break;
+			}
+		}
+
+		if (!$hasPendingPageApproval) { 
+			$vo = $stack->getVersionObject();
+			if ($cpc->canApprovePageVersions()) {
+				$publishTitle = t('Approve Changes');
+				$pk = PermissionKey::getByHandle('approve_page_versions');
+				$pk->setPermissionObject($stack);
+				$pa = $pk->getPermissionAccessObject();
+				if (is_object($pa) && count($pa->getWorkflows()) > 0) {
+					$publishTitle = t('Submit to Workflow');
+				}
+			
+				$token = '&' . Loader::helper('validation/token')->getParameter(); ?>
+				<a style="margin-right: 8px; <? if ($vo->isApproved()) { ?> display: none; <? } ?> href="javascript:void(0)" onclick="window.location.href='<?=DIR_REL . "/" . DISPATCHER_FILENAME . "?cID=" . $stack->getCollectionID() . "&ctask=approve-recent" . $token?>'" class="btn btn-success small ccm-main-nav-edit-option ccm-button-v2-right"><?=$publishTitle?></a>
+			<?
+			}		
+		}
 		?>
 	</div>
 	<div class="ccm-pane-body ccm-pane-body-footer clearfix" id="ccm-stack-container">
-	<?
+		<?
+			if (count($workflowList) > 0) { ?>
+			<div id="ccm-stack-status-bar"></div>
+
+			<script type="text/javascript">
+			$(function() {
+
+			<? foreach($workflowList as $wl) { ?>
+				<? $wr = $wl->getWorkflowRequestObject(); 
+				$wrk = $wr->getWorkflowRequestPermissionKeyObject(); 
+				if ($wrk->getPermissionKeyHandle() == 'approve_page_versions') {
+					$hasPendingPageApproval = true;
+				}
+				?>
+				<? $wf = $wl->getWorkflowObject(); ?>
+				sbitem = new ccm_statusBarItem();
+				sbitem.setCSSClass('<?=$wr->getWorkflowRequestStyleClass()?>');
+				sbitem.setDescription('<?=$wf->getWorkflowProgressCurrentDescription($wl)?>');
+				sbitem.setAction('<?=$wl->getWorkflowProgressFormAction()?>');
+				sbitem.enableAjaxForm();
+				<? $actions = $wl->getWorkflowProgressActions(); ?>
+				<? foreach($actions as $act) { ?>
+					btn = new ccm_statusBarItemButton();
+					btn.setLabel('<?=$act->getWorkflowProgressActionLabel()?>');
+					btn.setCSSClass('<?=$act->getWorkflowProgressActionStyleClass()?>');
+					btn.setInnerButtonLeftHTML('<?=$act->getWorkflowProgressActionStyleInnerButtonLeftHTML()?>');
+					btn.setInnerButtonRightHTML('<?=$act->getWorkflowProgressActionStyleInnerButtonRightHTML()?>');
+					<? if ($act->getWorkflowProgressActionURL() != '') { ?>
+						btn.setURL('<?=$act->getWorkflowProgressActionURL()?>');
+					<? } else { ?>
+						btn.setAction('<?=$act->getWorkflowProgressActionTask()?>');
+					<? } ?>
+					<? if (count($act->getWorkflowProgressActionExtraButtonParameters()) > 0) { ?>
+						<? foreach($act->getWorkflowProgressActionExtraButtonParameters() as $key => $value) { ?>
+							btn.addAttribute('<?=$key?>', '<?=$value?>');
+						<? } ?>
+					<? } ?>
+					sbitem.addButton(btn);
+				<? } ?>
+				ccm_statusBar.addItem(sbitem);
+			<? } ?>
+				ccm_statusBar.activate('ccm-stack-status-bar');
+			});
+			</script>
+
+			<? }  
+
+
 		$a = Area::get($stack, 'Main');
 		$bv = new BlockView();
 		$bv->renderElement('block_area_header', array('a' => $a));	

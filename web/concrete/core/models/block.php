@@ -188,8 +188,8 @@ class Concrete5_Model_Block extends Object {
 			$cID = $c->getCollectionID();
 			$vo = $c->getVersionObject();
 			$cvID = $vo->getVersionID();
-			$q = "select bID from CollectionVersionBlocks where bID = '{$this->bID}' and cID='{$cID}' and isOriginal = 0 and cvID = $cvID";
-			$r = $db->query($q);
+			$q = "select bID from CollectionVersionBlocks where bID = ? and cID=? and isOriginal = 0 and cvID = ?";
+			$r = $db->query($q, array($this->bID, $cID, $cvID));
 			if ($r) {
 				return ($r->numRows() > 0);
 			}
@@ -326,8 +326,8 @@ class Concrete5_Model_Block extends Object {
 	function getOriginalCollection() {
 		// given a block ID, we find the original collection ID (where this bID is marked as isOriginal)
 		$db = Loader::db();
-		$q = "select Pages.cID, cIsTemplate from Pages inner join CollectionVersionBlocks on (CollectionVersionBlocks.cID = Pages.cID) where CollectionVersionBlocks.bID = '{$this->bID}' and CollectionVersionBlocks.isOriginal = 1";
-		$r = $db->query($q);
+		$q = "select Pages.cID, cIsTemplate from Pages inner join CollectionVersionBlocks on (CollectionVersionBlocks.cID = Pages.cID) where CollectionVersionBlocks.bID = ? and CollectionVersionBlocks.isOriginal = 1";
+		$r = $db->query($q, array($this->bID));
 		if ($r) {
 			$row = $r->fetchRow();
 			$cID = $row['cID'];
@@ -338,8 +338,8 @@ class Concrete5_Model_Block extends Object {
 
 	function getNumChildren() {
 		$db = Loader::db();
-		$q = "select count(*) as total from CollectionVersionBlocks where bID = '{$this->bID}' and isOriginal = 0";
-		$total = $db->getOne($q);
+		$q = "select count(*) as total from CollectionVersionBlocks where bID = ? and isOriginal = 0";
+		$total = $db->getOne($q, array($this->bID));
 		return $total;
 	}
 
@@ -386,8 +386,8 @@ class Concrete5_Model_Block extends Object {
 		// gets a list of collections that include this block, along with area name, etc...
 		// used in the block_details.php page in the admin control panel
 		$db = Loader::db();
-		$q = "select DISTINCT Pages.cID from CollectionVersionBlocks inner join Pages on (CollectionVersionBlocks.cID = Pages.cID) inner join CollectionVersions on (CollectionVersions.cID = Pages.cID) where CollectionVersionBlocks.bID = '{$this->bID}'";
-		$r = $db->query($q);
+		$q = "select DISTINCT Pages.cID from CollectionVersionBlocks inner join Pages on (CollectionVersionBlocks.cID = Pages.cID) inner join CollectionVersions on (CollectionVersions.cID = Pages.cID) where CollectionVersionBlocks.bID = ?";
+		$r = $db->query($q, array($this->bID));
 		$cArray = array();
 		if ($r) {
 			while ($row = $r->fetchRow()) {
@@ -430,14 +430,14 @@ class Concrete5_Model_Block extends Object {
 
 	function deactivate() {
 		$db = Loader::db();
-		$q = "update Blocks set bIsActive = 0 where bID = '{$this->bID}'";
-		$db->query($q);
+		$q = "update Blocks set bIsActive = 0 where bID = ?";
+		$db->query($q, array($this->bID));
 	}
 
 	function activate() {
 		$db = Loader::db();
-		$q = "update Blocks set bIsActive = 1 where bID = '{$this->bID}'";
-		$db->query($q);
+		$q = "update Blocks set bIsActive = 1 where bID = ?";
+		$db->query($q, array($this->bID));
 	}
 
 	public function getPackageID() {return $this->pkgID;}
@@ -511,8 +511,8 @@ class Concrete5_Model_Block extends Object {
 				}
 
 
-				$qa = "select paID, pkID from BlockPermissionAssignments where bID = '{$this->bID}' and cID = '$ocID' and cvID='{$ocvID}'";
-				$ra = $db->query($qa);
+				$qa = "select paID, pkID from BlockPermissionAssignments where bID = ? and cID = ? and cvID = ?";
+				$ra = $db->query($qa, array($this->bID, $ocID, $ocvID));
 
 				if ($ra) {
 					while ($row_a = $ra->fetchRow()) {
@@ -568,8 +568,8 @@ class Concrete5_Model_Block extends Object {
 		$ncID = $nc->getCollectionID();
 		$nvID = $nc->getVersionID();
 
-		$q = "select paID, pkID from BlockPermissionAssignments where cID = '$ocID' and bID = '{$this->bID}' and cvID = '{$ovID}'";
-		$r = $db->query($q);
+		$q = "select paID, pkID from BlockPermissionAssignments where cID = '$ocID' and bID = ? and cvID = ?";
+		$r = $db->query($q, array($this->bID, $ovID));
 		if ($r) {
 			while ($row = $r->fetchRow()) {
 				$db->Replace('BlockPermissionAssignments', 
@@ -652,13 +652,25 @@ class Concrete5_Model_Block extends Object {
 				return false;
 			}
 
-			$v = array(
-				$co->getCollectionID(), 
-				$co->getVersionID(),
-				$this->getAreaHandle(),
-				$this->bID
-			);
-			$this->csrID = $db->GetOne('select csrID from CollectionVersionBlockStyles where cID = ? and cvID = ? and arHandle = ? and bID = ?', $v);
+			$arHandle = $this->getAreaHandle();
+			if ($arHandle) {
+				$a = $this->getBlockAreaObject();
+				if ($a->isGlobalArea()) {
+					// then we need to check against the global area name. We currently have the wrong area handle passed in
+					$arHandle = STACKS_AREA_NAME;
+				}
+
+				$v = array(
+					$co->getCollectionID(), 
+					$co->getVersionID(),
+					$arHandle,
+					$this->bID
+				);
+
+				$this->csrID = $db->GetOne('select csrID from CollectionVersionBlockStyles where cID = ? and cvID = ? and arHandle = ? and bID = ?', $v);
+			} else {
+				$this->csrID = 0;
+			}
 		}
 		return $this->csrID;
 	}
@@ -803,16 +815,25 @@ class Concrete5_Model_Block extends Object {
 		$this->bActionCID = $bActionCID;
 	}
 	
+	/**
+	 * @return integer|false The block action collection id or false if not found
+	 */
 	public function getBlockActionCollectionID() {
 		if ($this->bActionCID > 0) {
 			return $this->bActionCID;
 		}
+
 		$c = Page::getCurrentPage();
 		if (is_object($c)) {
 			return $c->getCollectionID();
-		} else {
-			$this->getBlockCollectionObject();
 		}
+
+		$c = $this->getBlockCollectionObject();
+		if (is_object($c)) {
+			return $c->getCollectionID();
+		}
+
+		return false;
 	}
 	function getBlockEditAction() {
 		return $this->_getBlockAction();

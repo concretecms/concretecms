@@ -184,7 +184,6 @@ class Concrete5_Model_Page extends Collection {
 				// this is a serialized area;
 				$arHandle = $db->getOne("select arHandle from Areas where arID = ?", array($arID));
 				$startDO = 0;
-
 				foreach($blocks as $bIdentifier) {
 
 					$bID = 0;
@@ -2080,6 +2079,9 @@ class Concrete5_Model_Page extends Collection {
 		$cDatePublic = ($data['cDatePublic']) ? $data['cDatePublic'] : null;		
 		
 		$data['ctID'] = $ct->getCollectionTypeID();
+		if ($ct->getCollectionTypeHandle() == STACKS_PAGE_TYPE) {
+			$data['cvIsNew'] = 0;
+		}
 		$cobj = parent::add($data);		
 		$cID = $cobj->getCollectionID();		
 		$ctID = $ct->getCollectionTypeID();

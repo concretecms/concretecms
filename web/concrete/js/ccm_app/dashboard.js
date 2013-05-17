@@ -139,7 +139,6 @@ var CCMDashboard = function() {
 				div = false;
 			});
 
-
 		}
 
 	}

@@ -141,8 +141,7 @@
 			$no = $node->ownerDocument;
 			$node->appendChild($no->createCDataSection($content));
 		}
-		
-		
+
 
 		function translateFromEditMode($text) {
 			// now we add in support for the links

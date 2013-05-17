@@ -28,7 +28,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		protected $attributes = array();
 		/* version specific stuff */
 
-		function loadVersionObject($cvID) {
+		function loadVersionObject($cvID = 'ACTIVE') {
 			$this->vObj = CollectionVersion::get($this, $cvID);
 		}
 		
@@ -415,8 +415,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				} else {
 					$s = Stack::getByName($garHandle, 'ACTIVE');
 				}
-				CacheLocal::set('csrCheck', $s->getCollectionID() . ':' . $s->getVersionID(), true);
 				if (is_object($s)) {
+					CacheLocal::set('csrCheck', $s->getCollectionID() . ':' . $s->getVersionID(), true);
 					$rs1 = $db->GetAll('select bID, csrID, arHandle from CollectionVersionBlockStyles where cID = ? and cvID = ? and csrID > 0', array($s->getCollectionID(), $s->getVersionID()));
 					foreach($rs1 as $r) {
 						$csrID = $r['csrID'];
@@ -737,6 +737,9 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			$cvIsNew = 1;
 			if ($cvIsApproved) {
 				$cvIsNew = 0;
+			}
+			if (isset($data['cvIsNew'])) {
+				$cvIsNew = $data['cvIsNew'];
 			}
 			$data['name'] = Loader::helper('text')->sanitize($data['name']);
 			if (is_object($this)) {

@@ -28,12 +28,16 @@ if ($controller->hasVoted()) { ?>
 			$totalVotes+=intval($opt->getResults());
 		}
 		foreach ($optionResults as &$value){
-			$value=round($value/$totalVotes*100,0);
+			if($totalVotes) {
+				$value=round($value/$totalVotes*100,0);
+			}
 		}		
 		?>
-		
-		<strong><?=t("Question")?>: <?=$controller->getQuestion()?></strong>
-		
+
+		<div id="surveyQuestion">
+			<strong><?=t("Question")?>: <?=$controller->getQuestion()?></strong>
+		</div>
+
 		<div id="surveyResults" style=" <?=(!$_GET['dontGraphPoll'] && $totalVotes>0)?'float:left; width:45%':''?>">
 			<table style="width:98%">
 			<?	$i = 1; 
@@ -68,8 +72,10 @@ if ($controller->hasVoted()) { ?>
 	<div class="spacer">&nbsp;</div>
 
 <? } else { ?>
-
-	<?=$controller->getQuestion()?><br/>
+	
+	<div id="surveyQuestion">
+		<?=$controller->getQuestion()?><br/>
+	</div>
 	
 	<? if(!$controller->requiresRegistration() || intval($uID) > 0) { ?>
 	<form method="post" action="<?=$this->action('form_save_vote', '#survey-form-'.$controller->bID)?>">

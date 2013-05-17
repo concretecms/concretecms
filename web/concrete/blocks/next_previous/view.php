@@ -1,39 +1,30 @@
-<?php
-defined('C5_EXECUTE') or die("Access Denied.");
-$ih = Loader::helper('image');
+<?php defined('C5_EXECUTE') or die(_("Access Denied."));
+
+$nh = Loader::helper('navigation');
+$previousLinkURL = is_object($previousCollection) ? $nh->getLinkToCollection($previousCollection) : '';
+$parentLinkURL = is_object($parentCollection) ? $nh->getLinkToCollection($parentCollection) : '';
+$nextLinkURL = is_object($nextCollection) ? $nh->getLinkToCollection($nextCollection) : '';
 ?>
 
-<div id="ccm-next-previous-<?php echo intval($bID)?>" class="ccm-next-previous-wrapper">
+<div id="ccm-next-previous-<?php echo $bID; ?>" class="ccm-next-previous-wrapper">
 
-    <?php  if( strlen($previousLinkText) > 0){ ?>
-      <div class="ccm-next-previous-previouslink">
-        <?php  if( is_object($previousCollection) ){ ?>
-          <a href="<?php echo Loader::helper('navigation')->getLinkToCollection($previousCollection)?>"><?php echo $previousLinkText ?></a>
-        <?php  } else { ?>
-          &nbsp;
-        <?php  } ?>
-      </div>
-    <?php } ?>
+    <?php if ($previousLinkText): ?>
+	<div class="ccm-next-previous-previouslink">
+		<?php echo $previousLinkURL ? '<a href="' . $previousLinkURL . '">' . $previousLinkText . '</a>' : '&nbsp;' ?>
+ 	</div>
+	<?php endif; ?>
 
-    <?php  if( strlen($parentLinkText) > 0){ ?>
-      <div class="ccm-next-previous-parentlink">
-        <?php  if( is_object($parentCollection) && $parentLinkText){ ?>
-          <a href="<?php echo Loader::helper('navigation')->getLinkToCollection($parentCollection)?>"><?php echo $parentLinkText ?></a>
-        <?php  } else { ?>
-          &nbsp;
-        <?php  } ?>
-      </div>
-    <?php } ?>
+	<?php if ($parentLinkText): ?>
+	<div class="ccm-next-previous-parentlink">
+		<?php echo $parentLinkURL ? '<a href="' . $parentLinkURL . '">' . $parentLinkText . '</a>' : '' ?>
+ 	</div>
+	<?php endif; ?>
+	
+	<?php if ($nextLinkText): ?>
+	<div class="ccm-next-previous-nextlink">
+		<?php echo $nextLinkURL ? '<a href="' . $nextLinkURL . '">' . $nextLinkText . '</a>' : '' ?>
+ 	</div>
+	<?php endif; ?>
 
-    <?php  if( strlen($nextLinkText) > 0){ ?>
-      <div class="ccm-next-previous-nextlink">
-        <?php  if( is_object($nextCollection) ){ ?>
-          <a href="<?php echo Loader::helper('navigation')->getLinkToCollection($nextCollection)?>"><?php echo $nextLinkText ?></a>
-        <?php  } else { ?>
-          &nbsp;
-        <?php  } ?>
-      </div>
-    <?php } ?>
-
-    <div class="spacer"></div>
+	<div class="spacer"></div>
 </div>

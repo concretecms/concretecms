@@ -2,6 +2,7 @@
  * Global UI functions
  */
 
+
 ccm_paneToggleOptions = function(obj) {
 	var pane = $(obj).parent().find('div.ccm-pane-options-content');
 	if ($(obj).hasClass('ccm-icon-option-closed')) {

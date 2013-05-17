@@ -20,9 +20,13 @@ class Concrete5_Model_DeletePagePageWorkflowRequest extends PageWorkflowRequest 
 	public function getWorkflowRequestDescriptionObject() {
 		$d = new WorkflowDescription();
 		$c = Page::getByID($this->cID, 'ACTIVE');
+		$item = t('page');
+		if ($c->getCollectionTypeHandle() == STACKS_PAGE_TYPE) {
+			$item = t('stack');
+		}
 		$link = Loader::helper('navigation')->getLinkToCollection($c, true);
 		$d->setEmailDescription(t("\"%s\" has been marked for deletion. View the page here: %s.", $c->getCollectionName(), $link));
-		$d->setInContextDescription(t("This page has been marked for deletion. "));
+		$d->setInContextDescription(t("This %s has been marked for deletion. ", $item));
 		$d->setDescription(t("<a href=\"%s\">%s</a> has been marked for deletion. ", $link, $c->getCollectionName()));
 		$d->setShortStatus(t("Pending Delete"));
 		return $d;
@@ -46,6 +50,14 @@ class Concrete5_Model_DeletePagePageWorkflowRequest extends PageWorkflowRequest 
 
 	public function approve(WorkflowProgress $wp) {
 		$c = Page::getByID($this->getRequestedPageID());
+		if ($c->getCollectionTypeHandle() == STACKS_PAGE_TYPE) {
+			$c = Stack::getByID($this->getRequestedPageID());
+			$c->delete();
+			$wpr = new WorkflowProgressResponse();
+			$wpr->setWorkflowProgressResponseURL(View::url('/dashboard/blocks/stacks', 'stack_deleted'));
+			return $wpr;
+		}
+
 		$cParentID = $c->getCollectionParentID();
 		if (ENABLE_TRASH_CAN) {
 			$c->moveToTrash();

@@ -296,7 +296,6 @@ class Concrete5_Model_Area extends Object {
 		return $area;
 	}
 
-
 	public static function getAreaHandleFromID($arID) {
 		$db = Loader::db();
 		return $db->GetOne('select arHandle from Areas where arID = ?', array($arID));

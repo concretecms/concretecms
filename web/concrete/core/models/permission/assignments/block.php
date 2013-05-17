@@ -96,8 +96,8 @@ class Concrete5_Model_BlockPermissionAssignment extends PermissionAssignment {
 	public function getPermissionKeyToolsURL($task = false) {
 		$b = $this->getPermissionObject();
 		$c = $b->getBlockCollectionObject();
-		$arHandle = urlencode($b->getAreaHandle());
-		return parent::getPermissionKeyToolsURL($task) . '&cID=' . $c->getCollectionID() . '&cvID=' . $c->getVersionID() . '&bID=' . $b->getBlockID() . '&arHandle=' . $arHandle;
+		$arHandle = $b->getAreaHandle();
+		return parent::getPermissionKeyToolsURL($task) . '&cID=' . $c->getCollectionID() . '&cvID=' . $c->getVersionID() . '&bID=' . $b->getBlockID() . '&arHandle=' . urlencode($arHandle);
 	}
 
 	
