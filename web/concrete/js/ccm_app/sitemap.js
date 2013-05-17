@@ -9,6 +9,22 @@
 
     private:  {
 
+    	reloadNode: function(node, onComplete) {
+    		
+    		var params = {
+				url: CCM_TOOLS_PATH + '/dashboard/sitemap_data',
+				data: {
+					node: node.data.cID
+				}
+			};
+			if (onComplete) {
+				params.success = onComplete;
+			}
+
+			node.appendAjax(params);
+
+    	},
+
     	rescanDisplayOrder: function(node) {
 
 			node.setLazyNodeStatus(DTNodeStatus_Loading);	
@@ -87,15 +103,9 @@
 
 				destNode.removeChildren();
 				var cID = destNode.data.cID;
-				destNode.appendAjax({
-					url: CCM_TOOLS_PATH + '/dashboard/sitemap_data',
-					data: {
-						node: cID
-					},
-					success: function() {
-						if (!destNode.bExpanded) {
-							destNode.expand(true);
-						}
+				methods.private.reloadNode(destNode, function() {
+					if (!destNode.bExpanded) {
+						destNode.expand(true);
 					}
 				});
 
@@ -145,7 +155,7 @@
 					menu += '<li><a class="dialog-launch" dialog-on-close="$.fn.ccmsitemap(\'exitEditMode\', ' + data.cID + ')" dialog-width="640" dialog-height="340" dialog-modal="false" dialog-title="' + ccmi18n_sitemap.pageVersions + '" href="' + CCM_TOOLS_PATH + '/versions.php?rel=SITEMAP&cID=' + data.cID + '">' + ccmi18n_sitemap.pageVersions + '<\/a><\/li>';
 				}
 				if (data.canDeletePage) { 
-					menu += '<li><a class="dialog-launch" dialog-on-close="$.fn.ccmsitemap(\'exitEditMode\', ' + data.cID + ')" dialog-width="360" dialog-height="150" dialog-modal="false" dialog-title="' + ccmi18n_sitemap.deletePage + '" href="' + CCM_TOOLS_PATH + '/edit_collection_popup.php?rel=SITEMAP&cID=' + data.cID + '&display_mode=' + data.display_mode + '&instance_id=' + data.instance_id + '&select_mode=' + data.select_mode + '&ctask=delete">' + ccmi18n_sitemap.deletePage + '<\/a><\/li>';
+					menu += '<li><a class="dialog-launch" dialog-on-close="$.fn.ccmsitemap(\'exitEditMode\', ' + data.cID + ')" dialog-width="360" dialog-height="150" dialog-modal="false" dialog-title="' + ccmi18n_sitemap.deletePage + '" href="' + CCM_TOOLS_PATH + '/edit_collection_popup.php?rel=SITEMAP&cID=' + data.cID + '&display_mode=' + data.display_mode + '&instance_id=' + instanceID + '&select_mode=' + data.select_mode + '&ctask=delete">' + ccmi18n_sitemap.deletePage + '<\/a><\/li>';
 				}
 				if (data.display_mode == 'explore' || data.display_mode == 'search') {
 					menu += '<li class=\"divide\"><\/li>';
@@ -271,44 +281,6 @@
 					jQuery.fn.dialog.hideLoader();
 		 			ccmAlert.hud(resp.message, 2000);
 		 			$('[data-sitemap-instance-id=' + instance_id + ']').trigger('dragRequestComplete', [ctask]);
-
-					// if node is closed, we open it.
-
-					/*
-					if (reloadPage == true) {
-						if (typeof(CCM_LAUNCHER_SITEMAP) != 'undefined') {
-							if (CCM_LAUNCHER_SITEMAP == 'explore') {
-								// we are in the dashboard and we need to actually go to the explore node
-								window.location.href = CCM_DISPATCHER_FILENAME + "/dashboard/sitemap/explore/-/" + destCID;
-								return false;
-							}
-							if (CCM_LAUNCHER_SITEMAP == 'search') {
-								ccm_deactivateSearchResults(CCM_SEARCH_INSTANCE_ID);
-								$("#ccm-" + CCM_SEARCH_INSTANCE_ID + "-advanced-search").ajaxSubmit(function(resp) {
-									ccm_parseAdvancedSearchResponse(resp, CCM_SEARCH_INSTANCE_ID);
-								});
-							}
-						} else {
-							setTimeout(function() {
-								window.location.href = CCM_DISPATCHER_FILENAME + "?cID=" + resp.cID;
-							}, 2000);
-							return false;
-						}
-					}
-					
-					switch(ctask) {
-						case "COPY":
-						case "ALIAS":
-							// since we're copying we show the original again
-							showBranch(origCID);
-							break;
-						case "MOVE":
-							deleteBranchDirect(origCID);
-							break;
-					}
-					
-					openSub(instance_id, destParentID, display_mode, select_mode, function() {openSub(instance_id, destCID, display_mode, select_mode)});
-					*/
 					jQuery.fn.dialog.closeTop();
 					jQuery.fn.dialog.closeTop();
 				});
@@ -344,12 +316,7 @@
 				minExpandLevel: 2,
 				clickFolderMode: 2,
 				onLazyRead: function(node) {
-					node.appendAjax({
-						url: CCM_TOOLS_PATH + '/dashboard/sitemap_data',
-						data: {
-							node: node.data.cID
-						}
-					});
+					methods.private.reloadNode(node);
 				}, 
 				onClick: function(node, e) {
 					if (node.getEventTargetType(event) == "title"){
@@ -395,6 +362,24 @@
 					}
 				}
 			});
+			
+			$(this).on('deleteRequestComplete', function(e, response) {
+				if (response.deferred) {
+		 			ccmAlert.hud(ccmi18n_sitemap.deletePageSuccessDeferredMsg, 2000, 'delete_small', ccmi18n_sitemap.deletePage);
+				} else {
+		 			ccmAlert.hud(ccmi18n_sitemap.deletePageSuccessMsg, 2000, 'delete_small', ccmi18n_sitemap.deletePage);
+		 			if (response.display_mode == 'explore') {
+						ccmSitemapExploreNode(response.instance_id, 'explore', response.select_mode, response.cParentID);
+					} else {
+						var node = $('[data-sitemap-instance-id=' + response.instance_id + ']').dynatree('getActiveNode');
+						var parent = node.parent;
+						methods.private.reloadNode(parent);
+					}
+				}
+			});
+
+
+
 		});
 
     }
