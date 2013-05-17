@@ -15,10 +15,6 @@ class Concrete5_Controller_Dashboard_System_Optimization_Cache extends Dashboard
 				$eca = $this->post('ENABLE_BLOCK_CACHE') == 1 ? 1 : 0; 
 				$eoc = $this->post('ENABLE_OVERRIDE_CACHE') == 1 ? 1 : 0; 
 				Cache::flush();
-				$pageCache = PageCache::getLibrary();
-				$pageCache->flush();
-				$env = Environment::get();
-				$env->clearOverrideCache();
 				Config::save('ENABLE_BLOCK_CACHE', $eca);
 				Config::save('ENABLE_OVERRIDE_CACHE', $eoc);
 				Config::save('FULL_PAGE_CACHE_GLOBAL', $this->post('FULL_PAGE_CACHE_GLOBAL'));

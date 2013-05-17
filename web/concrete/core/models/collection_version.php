@@ -31,6 +31,9 @@
 		}
 		
 		public function refreshCache() {
+			CacheLocal::delete('page', $this->getCollectionID() . ':' . $this->getVersionID());
+			CacheLocal::delete('page', $this->getCollectionID() . ':' . 'RECENT');
+			CacheLocal::delete('page', $this->getCollectionID() . ':' . 'ACTIVE');
 			Events::fire('on_page_version_refresh_cache', $this);
 		}
 		
@@ -165,9 +168,12 @@
 
 			$u = new User();
 			$versionComments = (!$versionComments) ? t("New Version %s", $newVID) : $versionComments;
-			
+			$cvIsNew = 1;
+			if ($c->getCollectionTypeHandle() == STACKS_PAGE_TYPE) {
+				$cvIsNew = 0;
+			}
 			$dh = Loader::helper('date');
-			$v = array($this->cID, $newVID, $c->getCollectionName(), $c->getCollectionHandle(), $c->getCollectionDescription(), $c->getCollectionDatePublic(), $dh->getSystemDateTime(), $versionComments, $u->getUserID(), 1, $this->ptID, $this->ctID);
+			$v = array($this->cID, $newVID, $c->getCollectionName(), $c->getCollectionHandle(), $c->getCollectionDescription(), $c->getCollectionDatePublic(), $dh->getSystemDateTime(), $versionComments, $u->getUserID(), $cvIsNew, $this->ptID, $this->ctID);
 			$q = "insert into CollectionVersions (cID, cvID, cvName, cvHandle, cvDescription, cvDatePublic, cvDateCreated, cvComments, cvAuthorUID, cvIsNew, ptID, ctID)
 				values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 				

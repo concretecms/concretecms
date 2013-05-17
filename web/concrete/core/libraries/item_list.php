@@ -66,7 +66,9 @@ class Concrete5_Library_ItemList {
 	}
 	
 	public function setItemsPerPage($num) {
-		$this->itemsPerPage = $num;
+		if (Loader::helper('validation/numbers')->integer($num)) {
+			$this->itemsPerPage = $num;
+		}
 	}
 	
 	public function getItemsPerPage() {

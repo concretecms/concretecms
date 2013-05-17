@@ -20,6 +20,10 @@ class Concrete5_Controller_AttributeType_ImageFile extends AttributeTypeControll
 			return '<a href="' . $f->getDownloadURL() . '">' . $f->getTitle() . '</a>';
 		}
 	}
+
+	public function getDisplaySanitizedValue() {
+		return $this->getDisplayValue();
+	}
 	
 	public function exportValue($akn) {
 		$av = $akn->addChild('value');

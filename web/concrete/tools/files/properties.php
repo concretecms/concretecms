@@ -65,7 +65,7 @@ if ($_POST['task'] == 'update_extended_attribute' && $fp->canEditFileProperties(
 	$ak->saveAttributeForm($fv);
 	
 	$val = $fv->getAttributeValueObject($ak);
-	print $val->getValue('display');
+	print $val->getValue('displaySanitized');
 	exit;
 }
 
@@ -126,7 +126,7 @@ function printFileAttributeRow($ak, $fv) {
 	$vo = $fv->getAttributeValueObject($ak);
 	$value = '';
 	if (is_object($vo)) {
-		$value = $vo->getValue('display');
+		$value = $vo->getValue('displaySanitized');
 	}
 	
 	if ($value == '') {
@@ -166,6 +166,8 @@ function printFileAttributeRow($ak, $fv) {
 	}
 	print $html;
 }
+
+$dateHelper = Loader::helper('date');
 
 if (!isset($_REQUEST['reload'])) { ?>
 	<div id="ccm-file-properties-wrapper">
@@ -248,7 +250,7 @@ if (is_object($oc)) {
 </tr>
 <tr>
 	<td><strong><?=t('Date Added')?></strong></td>
-	<td colspan="2"><?=t('Added by <strong>%s</strong> on %s', $fv->getAuthorName(), date(DATE_APP_FILE_PROPERTIES, strtotime($f->getDateAdded())))?></td>
+	<td colspan="2"><?=t('Added by <strong>%s</strong> on %s', $fv->getAuthorName(), $dateHelper->date(DATE_APP_FILE_PROPERTIES, strtotime($f->getDateAdded())))?></td>
 </tr>
 <?
 Loader::model("file_storage_location");
@@ -387,7 +389,7 @@ foreach($attribs as $at) {
 					?>
 					</td>
 				<td><?=$fvv->getAuthorName()?></td>
-				<td><?=date(DATE_APP_FILE_VERSIONS, strtotime($fvv->getDateAdded()))?></td>
+				<td><?=$dateHelper->date(DATE_APP_FILE_VERSIONS, strtotime($fvv->getDateAdded()))?></td>
 				<? if ($fp->canEditFileContents()) { ?>
 					<? if ($fvv->getFileVersionID() == $fv->getFileVersionID()) { ?>
 						<td>&nbsp;</td>
@@ -441,7 +443,7 @@ foreach($attribs as $at) {
 				} 
 				?>
 			</td>
-			<td><?=date(DATE_APP_FILE_DOWNLOAD, strtotime($download['timestamp']))?></td>
+			<td><?=$dateHelper->date(DATE_APP_FILE_DOWNLOAD, strtotime($download['timestamp']))?></td>
 			<td><?=intval($download['fvID'])?></td>
 		</tr>
 		<? } ?>

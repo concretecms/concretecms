@@ -15,8 +15,10 @@
 	
 	$.liveUpdate = function (e, list, type) {
 		this.field = $(e);
+		$(e).data('liveUpdate', this);
 		this.list  = $('#' + list);
 		this.lutype = 'blocktypes';
+
 		if (typeof(type) != 'undefined') {
 			this.lutype = type;
 		}
@@ -34,7 +36,7 @@
 			this.field.keyup(function() { self.filter(); });
 			self.filter();
 		},
-		
+
 		filter: function() {
 			if (this.field.val() != searchValue) {
 				if ($.trim(this.field.val()) == '') { 

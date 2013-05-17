@@ -47,6 +47,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			if (is_object($val)) {
 				$val = (string) $val;
 			}
+
 			$cnode = $akv->addChild('value');
 			$node = dom_import_simplexml($cnode);
 			$no = $node->ownerDocument;

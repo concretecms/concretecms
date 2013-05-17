@@ -127,7 +127,7 @@ if ($_REQUEST['approveImmediately'] == 1) {
 	
 	<? if ($asl->allowEditPaths()) { ?>
 	<div id="ccm-page-paths-tab" style="display: none">
-		
+		<?php if ($c->getCollectionID() != 1) { ?>
 		<div class="clearfix">
 		<label for="cHandle"><?= t('Canonical URL')?></label>
 		<div class="input">
@@ -141,6 +141,7 @@ if ($_REQUEST['approveImmediately'] == 1) {
 			<span class="help-block"><?=t('This page must always be available from at least one URL. That URL is listed above.')?></span>
 		</div>
 		</div>
+		<?php } ?>
 		
 		<?php if (!$c->isGeneratedCollection()) { ?>
 		<div class="clearfix" id="ccm-more-page-paths">

@@ -99,7 +99,7 @@ $th = Loader::helper('text');
 				'50' => '50',
 				'100' => '100',
 				'500' => '500'
-			), $searchRequest['numResults'], array('style' => 'width:65px; margin: 0px 10px 0px 10px;'))?>
+			), Loader::helper('text')->specialchars($searchRequest['numResults']), array('style' => 'width:65px; margin: 0px 10px 0px 10px;'))?>
 			<?php print $concrete_interface->submit('Search', $formID, $buttonAlign = 'left', 'searchSubmit'); ?><br />
 			<a href="javascript:void(0)" class="ccm-icon-option-closed" id="searchUnderParent"><?php echo t('Advanced Search'); ?></a>
 			<div id="parentOptions" style="margin-left: 25px; display: <?php echo $parentDialogOpen ? 'block' : 'none'; ?>">

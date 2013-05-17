@@ -61,7 +61,6 @@ class Concrete5_Model_PageOwnerPermissionAccessEntity extends PermissionAccessEn
 	}
 
 	public function load() {
-		$db = Loader::db();
 		$this->label = t('Page Owner');
 	}
 

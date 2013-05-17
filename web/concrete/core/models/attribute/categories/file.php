@@ -84,6 +84,9 @@ class Concrete5_Model_FileAttributeKey extends AttributeKey {
 			 }
 		}
 		CacheLocal::set('file_attribute_key_by_handle', $akHandle, $ak);
+		if ($ak === -1) {
+			return false;
+		}
 		return $ak;
 	}
 

@@ -107,7 +107,11 @@ jQuery.fn.dialog.open = function(obj) {
 
 		'open': function() {
 			$(this).parent().addClass('ccm-dialog-open');
-			$("body").css("overflow", "hidden");
+			var nd = $(".ui-dialog").length;
+			if (nd == 1) {
+				$("body").attr('data-last-overflow', $('body').css('overflow'));
+				$("body").css("overflow", "hidden");
+			}
 			var overlays = $('.ui-widget-overlay').length;
 			$('.ui-widget-overlay').each(function(i, obj) {
 				if ((i + 1) < overlays) {
@@ -118,7 +122,7 @@ jQuery.fn.dialog.open = function(obj) {
 		'beforeClose': function() {
 			var nd = $(".ui-dialog").length;
 			if (nd == 1) {
-				$("body").css("overflow", "auto");		
+				$("body").css("overflow", $('body').attr('data-last-overflow'));		
 			}
 		},
 		'close': function(ev, u) {

@@ -22,6 +22,7 @@ class Concrete5_Helper_Json {
 	/** 
 	 * Decodes a JSON string into a php variable
 	 * @param string $string
+	 * @param bool $assoc [default: false] When true, returned objects will be converted into associative arrays, when false they'll be converted into stdClass instances. 
 	 * @return mixed
 	 */
 	public function decode($string, $assoc = false) {

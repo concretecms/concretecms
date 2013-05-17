@@ -100,13 +100,36 @@ class Concrete5_Model_FileList extends DatabaseItemList {
 		$filenames = array();
 		$filename = $fh->getTemporaryDirectory() . '/' . $archive . '.zip';
 		if (count($files) > 0) {
-			foreach($files as $f) {
-				if (!in_array(basename($f->getPath()), $filenames)) {
-					$filestring .= "'" . addslashes($f->getPath()) . "' ";
+			try {
+				if (class_exists('ZipArchive', false)) {
+					$zip = new ZipArchive;
+					$res = $zip->open($filename, ZipArchive::CREATE);
+					if ($res === TRUE) {
+						foreach($files as $f) {
+							$file = $f->getPath();
+							if (!in_array(basename($file), $filenames)) {
+								$filenames[] = basename($file);
+								$zip->addFile(addslashes($file), basename($file));
+							}
+						}
+						$zip->close();
+					} else {
+						throw new Exception(t('Could not open with ZipArchive::CREATE'));
+					}
+				} else {
+					$filestring = "'" . addslashes($filename) . "' ";
+					foreach($files as $f) {
+						$file = $f->getPath();
+						if (!in_array(basename($file), $filenames)) {
+							$filenames[] = basename($file);
+							$filestring .= "'" . addslashes($file) . "' ";
+						}
+					}
+					exec(DIR_FILES_BIN_ZIP . ' -j ' . $filestring);
 				}
-				$filenames[] = basename($f->getPath());
+			} catch(Exception $e) {
+				throw new Exception(t('Failed to create zip file as "%s": %s', $filename, $e->getMessage()));
 			}
-			exec(DIR_FILES_BIN_ZIP . ' -j \'' . addslashes($filename) . '\' ' . $filestring);
 		}
 	}
 	

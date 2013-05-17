@@ -27,7 +27,7 @@ class Concrete5_Library_FilePageCache extends PageCache {
 				$dir = DIR_FILES_PAGE_CACHE . '/' . $key[0] . '/' . $key[1] . '/' . $key[2];
 			}
 			if ($dir && (!is_dir($dir))) {
-				mkdir($dir, DIRECTORY_PERMISSIONS_MODE, true);
+				@mkdir($dir, DIRECTORY_PERMISSIONS_MODE, true);
 			}
 			$path = $dir . '/' . $filename;
 			return $path;
@@ -37,7 +37,7 @@ class Concrete5_Library_FilePageCache extends PageCache {
 	public function purgeByRecord(PageCacheRecord $rec) {
 		$file = $this->getCacheFile($rec);
 		if ($file && file_exists($file)) {
-			unlink($file);
+			@unlink($file);
 		}
 	}
 
@@ -49,14 +49,14 @@ class Concrete5_Library_FilePageCache extends PageCache {
 	public function purge(Page $c) {
 		$file = $this->getCacheFile($c);
 		if ($file && file_exists($file)) {
-			unlink($file);
+			@unlink($file);
 		}
 	}
 
 	public function set(Page $c, $content) {
 		if (!is_dir(DIR_FILES_PAGE_CACHE)) {
-			mkdir(DIR_FILES_PAGE_CACHE);
-			touch(DIR_FILES_PAGE_CACHE . '/index.html');
+			@mkdir(DIR_FILES_PAGE_CACHE);
+			@touch(DIR_FILES_PAGE_CACHE . '/index.html');
 		}
 
 		$lifetime = $c->getCollectionFullPageCachingLifetimeValue();

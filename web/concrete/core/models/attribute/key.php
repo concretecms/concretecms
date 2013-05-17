@@ -16,6 +16,9 @@ class Concrete5_Model_AttributeKey extends Object {
 	 */
 	public function getAttributeKeyHandle() { return $this->akHandle;}
 	
+	/** 
+	 * Deprecated. Going to be replaced by front end display name
+	 */
 	public function getAttributeKeyDisplayHandle() {
 		return Loader::helper('text')->unhandle($this->akHandle);
 	}

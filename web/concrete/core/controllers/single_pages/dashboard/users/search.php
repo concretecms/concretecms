@@ -7,17 +7,20 @@ class Concrete5_Controller_Dashboard_Users_Search extends Controller {
 	}
 
 	public function view() {
-		$html = Loader::helper('html');
+		// this is hacky as hell, we need to make this page MVC
+		if ($_REQUEST['task'] != 'edit' && !$_REQUEST['uID']) {
+			$this->addHeaderItem('<script type="text/javascript">$(function() { ccm_setupAdvancedSearch(\'user\'); });</script>');
+			$userList = $this->getRequestedSearchResults();
+			$users = $userList->getPage();
+					
+			$this->set('userList', $userList);		
+			$this->set('users', $users);		
+			$this->set('pagination', $userList->getPagination());	
+		}
+
 		$form = Loader::helper('form');
 		$this->set('form', $form);
-		$this->addHeaderItem('<script type="text/javascript">$(function() { ccm_setupAdvancedSearch(\'user\'); });</script>');
-		$userList = $this->getRequestedSearchResults();
-		$users = $userList->getPage();
-				
-		$this->set('userList', $userList);		
-		$this->set('users', $users);		
-		$this->set('pagination', $userList->getPagination());	
-		
+
 		if($_POST['edit'])	{
 			$this->validate_user();
 		}
