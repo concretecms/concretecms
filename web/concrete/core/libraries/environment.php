@@ -120,13 +120,8 @@ class Concrete5_Library_Environment {
 	
 	}
 	
-	
-	public function overrideCoreByPackage($segment, $pkg) {
-		$pkgHandle = $pkg->getPackageHandle();
-		$this->coreOverridesByPackage[$segment] = $pkgHandle;	
-	}
-
-	public function overrideCoreByPackageHandle($segment, $pkgHandle) {
+	public function overrideCoreByPackage($segment, $pkgOrHandle) {
+		$pkgHandle = is_object($pkgOrHandle) ? $pkgOrHandle->getPackageHandle() : $pkgOrHandle;
 		$this->coreOverridesByPackage[$segment] = $pkgHandle;	
 	}
 	
