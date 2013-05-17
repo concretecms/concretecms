@@ -1760,6 +1760,28 @@ class Concrete5_Model_Page extends Collection {
 			$displayOrder++;			
 		}
 	}
+
+	public function movePageDisplayOrderToSibling(Page $c, $position = 'before') {
+		// first, we get a list of IDs.
+		$pageIDs = array();
+		$db = Loader::db();
+		$r = $db->Execute('select cID from Pages where cParentID = ? and cID <> ? order by cDisplayOrder asc', array($this->getCollectionParentID(), $this->getCollectionID()));
+		while ($row = $r->FetchRow()) {
+			if ($row['cID'] == $c->getCollectionID() && $position == 'before') {
+				$pageIDs[] = $this->cID;
+			}
+			$pageIDs[] = $row['cID'];
+			if ($row['cID'] == $c->getCollectionID() && $position == 'after') {
+				$pageIDs[] = $this->cID;
+			}
+		}
+		$displayOrder = 0;
+		foreach($pageIDs as $cID) {
+			$co = Page::getByID($cID);
+			$co->updateDisplayOrder($displayOrder);
+			$displayOrder++;
+		}
+	}
 	
 	function rescanCollectionPathIndividual($cID, $cPath, $retainOldPagePath = false) {
 		$db = Loader::db();

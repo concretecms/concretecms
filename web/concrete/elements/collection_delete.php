@@ -19,16 +19,9 @@ $(function() {
 			if (r != null && r.rel == 'SITEMAP') {
 				jQuery.fn.dialog.hideLoader();
 				jQuery.fn.dialog.closeTop();
-				if (r.deferred) {
-		 			ccmAlert.hud(ccmi18n_sitemap.deletePageSuccessDeferredMsg, 2000, 'delete_small', ccmi18n_sitemap.deletePage);
-				} else {
-		 			ccmAlert.hud(ccmi18n_sitemap.deletePageSuccessMsg, 2000, 'delete_small', ccmi18n_sitemap.deletePage);
-					<? if ($_REQUEST['display_mode'] == 'explore') { ?>
-						ccmSitemapExploreNode('<?=$_REQUEST['instance_id']?>', 'explore', '<?=$_REQUEST['select_mode']?>', r.cParentID);
-					<? } else { ?>
-						deleteBranchFade(r.cID);
-					<? } ?>
-				}
+				<? if ($_REQUEST['instance_id']) { ?>
+					$('[data-sitemap-instance-id=<?=$_REQUEST['instance_id']?>]').trigger('deleteRequestComplete', [r]);
+				<? } ?>
 			} else {
 				window.location.href = '<?=DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=' + r.refreshCID;
 			}
