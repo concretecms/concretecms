@@ -22,17 +22,19 @@ Loader::model('page_list');
 Loader::model('collection_types');
 class ConcreteDashboardSitemapHelper {
 
-	// todo: implement aliasing support in getnode
-	// getnode needs to check against the session array, to see if it should open a node, and get subnodes
-	// integrate droppables
-	
+	protected $autoOpenNodes = true;
+
+	function showSystemPages() {
+		return $_SESSION['dsbSitemapShowSystem'] == 1;
+	}
+
+	public function setAutoOpenNodes($autoOpen) {
+		$this->autoOpenNodes = $autoOpen;
+	}
+
+	/*	
 	public $html = '';
 	
-	/**
-	 * this method is called by the Loader::helper to clean up the instance of this object
-	 * resets the class scope variables
-	 * @return void
-	*/
 	public function reset() {
 		$this->html = '';
 	}
@@ -55,15 +57,43 @@ class ConcreteDashboardSitemapHelper {
 		unset($_SESSION['dsbSitemapActiveNode']);
 	}
 	
-	function showSystemPages() {
-		return $_SESSION['dsbSitemapShowSystem'] == 1;
-	}
 	
-	function isOneTimeActiveNode($cID) {
-		return ($_SESSION['dsbSitemapActiveNode'] == $cID);
+
+
+	*/
+
+	function getSubNodes($cID) {
+		$db = Loader::db();
+		
+		$obj = new stdClass;
+		$pl = new PageList();
+		$pl->sortByDisplayOrder();
+		if (ConcreteDashboardSitemapHelper::showSystemPages()) {
+			$pl->includeSystemPages();
+			$pl->includeInactivePages();
+		}
+		$pl->filterByParentID($cID);
+		$pl->displayUnapprovedPages();
+		$total = $pl->getTotal();
+		if ($cID == 1) {
+			$results = $pl->get();			
+		} else {
+			$pl->setItemsPerPage(SITEMAP_PAGES_LIMIT);
+			$results = $pl->getPage();
+		}
+		
+		$nodes = array();
+		foreach($results as $c) {
+			$n = ConcreteDashboardSitemapHelper::getNode($c);
+			if ($n != false) {
+				$nodes[] = $n;
+			}
+		}
+		
+		return $nodes;
 	}
-	
-	function getNode($cItem, $level = 0, $autoOpenNodes = true) {
+
+	function getNode($cItem) {
 		if (!is_object($cItem)) {
 			$cID = $cItem;
 			$c = Page::getByID($cID, 'RECENT');
@@ -83,20 +113,18 @@ class ConcreteDashboardSitemapHelper {
 		$canAddExternalLinks = $cp->canAddExternalLink();
 		
 		$nodeOpen = false;
-		if (is_array($_SESSION['dsbSitemapNodes'])) {
-			if (in_array($cID, $_SESSION['dsbSitemapNodes'])) {
+		$openNodeArray = explode(',', str_replace('_', '', $_COOKIE['ccmsitemap-expand']));
+		if (is_array($openNodeArray)) {
+			if (in_array($cID, $openNodeArray)) {
 				$nodeOpen = true;
 			}
 		}
-		
-		$status = '';
 		
 		$cls = ($c->getNumChildren() > 0) ? "folder" : "file";
 		$leaf = ($c->getNumChildren() > 0) ? false : true;
 		$numSubpages = ($c->getNumChildren()  > 0) ? $c->getNumChildren()  : '';
 		
 		$cvName = ($c->getCollectionName()) ? $c->getCollectionName() : '(No Title)';
-		$selected = (ConcreteDashboardSitemapHelper::isOneTimeActiveNode($cID)) ? true : false;
 		
 		$ct = CollectionType::getByID($c->getCollectionTypeID());
 		$isInTrash = $c->isInTrash();
@@ -122,82 +150,47 @@ class ConcreteDashboardSitemapHelper {
 				$cAlias = 'LINK';
 			}
 		}
+
+		/*
 		$node = array(
-			'cvName'=> $cvName,
 			'cIcon' => $cIcon,
 			'cAlias' => $cAlias,
-			'isInTrash' => $isInTrash,
-			'isTrash' => $isTrash,
 			'numSubpages'=> $numSubpages,
-			'status'=> $status,
-			'canEditPageProperties'=>$canEditPageProperties,
-			'canEditPageSpeedSettings'=>$canEditPageSpeedSettings,
-			'canEditPagePermissions'=>$canEditPagePermissions,
-			'canEditPageDesign'=>$canEditPageDesign,
-			'canViewPageVersions'=>$canViewPageVersions,
-			'canDeletePage'=>$canDeletePage,
-			'canAddSubpages'=>$canAddSubpages,
-			'canAddExternalLinks'=>$canAddExternalLinks,
-			'id'=>$cID,
-			'selected'=>$selected
 		);
-		
-		if ($cID == 1 || ($nodeOpen && $autoOpenNodes)) {
+
+		*/
+
+		$node = new stdClass;
+		$node->title = $cvName;
+		if ($numSubpages > 0) {
+			$node->isLazy = true;
+		}
+		if ($cIcon) {
+			$node->icon = $cIcon;
+		}
+		$node->cAlias = $cAlias;
+		$node->isInTrash = $isInTrash;
+		$node->numSubpages = $numSubpages;
+		$node->isTrash = $isTrash;
+		$node->cID = $cID;
+		$node->key = $cID;
+		$node->canEditPageProperties = $canEditPageProperties;
+		$node->canEditPageSpeedSettings = $canEditPageSpeedSettings;
+		$node->canEditPagePermissions = $canEditPagePermissions;
+		$node->canEditPageDesign = $canEditPageDesign;
+		$node->canViewPageVersions = $canViewPageVersions;
+		$node->canDeletePage = $canDeletePage;
+		$node->canAddSubpages = $canAddSubpages;
+		$node->canAddExternalLinks = $canAddExternalLinks;
+
+		if ($cID == 1 || ($nodeOpen && $this->autoOpenNodes)) {
 			// We open another level
-			$node['subnodes'] = $this->getSubNodes($cID, $level, false, $autoOpenNodes);
+			$node->children = $this->getSubNodes($cID, $level, false, $autoOpenNodes);
 		}
 		
 		return $node;
 	}
-	
-	function getSubNodes($cID, $level = 0, $keywords = '', $autoOpenNodes = true) {
-		$db = Loader::db();
-		
-		$obj = new stdClass;
-		if ($keywords != '' && $keywords != false) {
-			$nc = Page::getByID($cID, 'RECENT');
-			$pl = new PageList();
-			$obj->keywords = $keywords;
-			$pl->filterByName($keywords);
-			$pl->ignoreAliases();
-			$pl->filterByPath($nc->getCollectionPath());
-			$pl->displayUnapprovedPages();
-			$pl->sortByDisplayOrder();
-			$results = $pl->get(SITEMAP_PAGES_LIMIT);
-			$total = $pl->getTotal();
-		} else {			
-			$pl = new PageList();
-			$pl->sortByDisplayOrder();
-			if (ConcreteDashboardSitemapHelper::showSystemPages()) {
-				$pl->includeSystemPages();
-				$pl->includeInactivePages();
-			}
-			$pl->filterByParentID($cID);
-			$pl->displayUnapprovedPages();
-			$total = $pl->getTotal();
-			if ($cID == 1) {
-				$results = $pl->get();			
-			} else {
-				$pl->setItemsPerPage(SITEMAP_PAGES_LIMIT);
-				$results = $pl->getPage();
-			}
-		}
-		
-		$nodes = array();
-		foreach($results as $c) {
-			$n = ConcreteDashboardSitemapHelper::getNode($c, $level+1, $autoOpenNodes);
-			if ($n != false) {
-				$nodes[] = $n;
-			}
-		}
-		
-		$obj->total = $total;
-		$obj->nodeID = $cID;
-		$obj->pageList = $pl;
-		$obj->results = $nodes;
-		return $obj;
-	}
-	
+	/*
 	public function getPermissionsNodes($obj) {
 		$str = '';
 		if ($obj['canEditPageProperties']) {
@@ -274,34 +267,20 @@ class ConcreteDashboardSitemapHelper {
 			}
 			$cAlias = $ri['cAlias'];
 			$canDrag = ($ri['id'] > 1) ? "true" : "false";
-			/*
-			if ($ri['isInTrash']) {
-				$canDrag = "false";
-			}*/
 			
 			$this->html .= '<li ' . $this->getPermissionsNodes($ri) . ' tree-node-intrash="' . $ri['isInTrash'] . '" tree-node-istrash="' . $ri['isTrash'] . '" tree-node-type="' . $treeNodeType . '" draggable="' . $canDrag . '" class="tree-node ' . $typeClass . ' tree-branch' . $nodeID . '" id="tree-node' . $ri['id'] . '"' . $customIconSrc . '>';
 			
 			if ($ri['numSubpages'] > 0) {
 				$subPageStr = ($ri['id'] == 1) ? '' : ' <span class="ccm-sitemap-num-subpages">(' . $ri['numSubpages'] . ')</span>';
-				/*
-				if ($display_mode == 'explore') {
-					$this->html .= ($select_mode == 'move_copy_delete' || $select_mode == 'select_page') ? '<a href="javascript:void(0)" onclick="ccmSitemapExploreNode(\'' . $instanceID . '\', \'' . $display_mode . '\', \'' . $select_mode . '\', ' . $ri["id"] . ',\'' . $spID . '\')">' : '<a href="' . View::url('/dashboard/sitemap/explore', $ri['id']) . '">' ;
-				}*/
-				
+
 				$this->html .= '<img src="' . ASSETS_URL_IMAGES . '/spacer.gif" width="16" height="16" class="handle ' . $moveableClass . '" />';
-				/*if ($display_mode == 'explore' || $select_mode == 'move_copy_delete' || $select_mode == 'select_page') {
-					$this->html .= '</a>';
-				}*/
-				/*
-				if ($display_mode == 'full' || $display_mode == '') {
-				*/
+
 				if ($display_mode == 'explore') {
 					$this->html .= ($select_mode == 'move_copy_delete' || $select_mode == 'select_page') ? '<a href="javascript:void(0)" onclick="ccmSitemapExploreNode(\'' . $instanceID . '\', \'' . $display_mode . '\', \'' . $select_mode . '\', ' . $ri["id"] . ',\'' . $spID . '\')">' : '<a href="' . View::url('/dashboard/sitemap/explore', $ri['id']) . '">' ;
 				} else {
 					$this->html .= '<a href="javascript:toggleSub(\'' . $instanceID . '\',\'' . $ri['id'] . '\',\'' . $display_mode . '\',\'' . $select_mode . '\')">';
 				}
 				$this->html .= '<img src="' . ASSETS_URL_IMAGES . '/dashboard/plus.jpg" width="9" height="9" class="tree-plus" id="tree-collapse' . $ri['id'] . '" /></a>';
-				/*}*/
 				$this->html .= '<div rel="' . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $ri['id'] . '" class="' . $labelClass . '" tree-node-alias="' . $cAlias . '" ';
 				$this->html .= 'selected-page-id="' . $this->selectedPageID . '" ' . $this->getPermissionsNodes($ri) . ' tree-node-intrash="' . $ri['isInTrash'] . '" tree-node-istrash="' . $ri['isTrash'] . '" sitemap-display-mode="' . $display_mode . '" sitemap-select-mode="' . $select_mode . '" sitemap-instance-id="' . $instanceID . '" tree-node-children="' . $ri['numSubpages'] . '" ';
 				$this->html .= 'tree-node-title="' . htmlspecialchars($ri['cvName']) . '" id="tree-label' . $ri['id'] . '" ';
@@ -310,20 +289,11 @@ class ConcreteDashboardSitemapHelper {
 				}
 				$this->html .= '>';
 				$this->html .= '<span>' . $ri['cvName'] . $subPageStr . '</span>';
-				/*
-				if ($display_mode == 'full' || $display_mode == '') {
-					$this->html .= '<a class="ccm-tree-search-trigger" href="javascript:void(0)" onclick="searchSubPages(' . $ri['id'] . ')">';
-					$this->html .= '<img src="' . ASSETS_URL_IMAGES . '/icons/magnifying.png" /></a>';
-				}
-				*/
+
+
 				$this->html .= '</div>';
 				if ($display_mode == 'full' || $display_mode == '') {
-					/*
-					$this->html .= '<form onsubmit="return searchSitemapNode(' . $ri['id'] . ')" id="ccm-tree-search' . $ri['id'] . '" class="ccm-tree-search">';
-					$this->html .= '<a href="javascript:void(0)" onclick="closeSub(' . $ri['id'] . ')" class="ccm-tree-search-close"><img src="' . ASSETS_URL_IMAGES . '/icons/close.png" /></a>';
-					$this->html .= '<input type="text" name="submit" name="q" /> <a href="javascript:void(0)" onclick="searchSitemapNode(' . $ri['id'] . ')">';
-					$this->html .= '<img src="' . ASSETS_URL_IMAGES . '/icons/magnifying.png" /></a></form>';
-					*/
+
 					// we HAVE to add another <LI> because of jQuery UI's weird drag and drop behavior on Windows
 					if (strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') > -1) {
 						$this->html .= '<li>';
@@ -378,6 +348,8 @@ class ConcreteDashboardSitemapHelper {
 		}
 		return $drops;
 	}
+
+	*/
 	
 	function canRead() {
 		$tp = new TaskPermission();

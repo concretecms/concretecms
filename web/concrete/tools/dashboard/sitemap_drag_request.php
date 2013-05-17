@@ -17,6 +17,13 @@ if (isset($_REQUEST['origCID'] ) && is_numeric($_REQUEST['origCID'])) {
 
 if (isset($_REQUEST['destCID'] ) && is_numeric($_REQUEST['destCID'])) {
 	$dc = Page::getByID($_REQUEST['destCID']);
+	if (!$_REQUEST['ctask']) {
+		if ($_REQUEST['dragMode'] == 'after' || $_REQUEST['dragMode'] == 'before') {
+			$destSibling = $dc;
+			$dc = Page::getByID($dc->getCollectionParentID());
+		}
+	}
+
 	$dcp = new Permissions($dc);
 }
 $u = new User();
@@ -134,6 +141,17 @@ if (!$error) {
 }
 
 if ($successMessage) {
+	if (is_array($newCID) && isset($_REQUEST['destSibling'])) {
+		$destSibling = Page::getByID($_REQUEST['destSibling']);
+		foreach($newCID as $ncID) {
+			$nc = Page::getByID($ncID);
+			if ($_REQUEST['dragMode'] == 'before') {
+				$nc->movePageDisplayOrderToSibling($destSibling, 'before');
+			} else if ($_REQUEST['dragMode'] == 'after') {
+				$nc->movePageDisplayOrderToSibling($destSibling, 'after');
+			}	
+		}
+	}
 	$json['error'] = false;
 	$json['message'] = $successMessage;
 	$json['cID'] = $newCID;
@@ -167,14 +185,18 @@ if ($successMessage) {
 </h3><br/>
 	<form>
 
-		<input type="hidden" name="origCID" id="origCID" value="<?=$_REQUEST['origCID']?>" />
+		<input type="hidden" name="origCID" id="origCID" value="<?=$oc->getCollectionID()?>" />
 		<input type="hidden" name="destParentID" id="destParentID" value="<?=$dc->getCollectionParentID()?>" />
-		<input type="hidden" name="destCID" id="destCID" value="<?=$_REQUEST['destCID']?>" />
+		<input type="hidden" name="destCID" id="destCID" value="<?=$dc->getCollectionID()?>" />
 		<input type="hidden" name="instance_id" id="instance_id" value="<?=$_REQUEST['instance_id']?>" />
+		<input type="hidden" name="dragMode" id="dragMode" value="<?=$_REQUEST['dragMode']?>" />
+		<? if (isset($destSibling)) { ?>
+			<input type="hidden" name="destSibling" id="destSibling" value="<?=$destSibling->getCollectionID()?>" />
+		<? } ?>
 		<input type="hidden" name="select_mode" id="select_mode" value="<?=$_REQUEST['select_mode']?>" />
 		<input type="hidden" name="display_mode" id="display_mode" value="<?=$_REQUEST['display_mode']?>" />
 
-		<input type="radio" checked style="vertical-align: middle" id="ctaskMove" name="ctask" value="MOVE" onclick="toggleMove()" />
+		<input type="radio" checked style="vertical-align: middle" id="ctaskMove" name="ctask" value="MOVE" />
 		<strong><?=t('Move')?></strong> <? if (count($originalPages) == 1) { ?>"<?=$oc->getCollectionName()?>"<? } ?> <?=t('beneath')?> "<?=$dc->getCollectionName()?>"
 		<div style="margin: 4px 0px 0px 20px">
 		<input type="checkbox" id="saveOldPagePath" name="saveOldPagePath" value="1" style="vertical-align: middle" <? if (isset($_SESSION['movePageSaveOldPagePath']) && $_SESSION['movePageSaveOldPagePath']) { ?> checked="checked" <? } ?> /> <?=t('Save old page path')?>
@@ -182,12 +204,12 @@ if ($successMessage) {
 		<br/>
 		
 		<? if ($oc->getCollectionPointerID() < 1) { ?>
-		<input type="radio" style="vertical-align: middle" id="ctaskAlias" name="ctask" value="ALIAS" onclick="toggleAlias()" />
+		<input type="radio" style="vertical-align: middle" id="ctaskAlias" name="ctask" value="ALIAS" />
 		<strong><?=t('Alias')?></strong> <? if (count($originalPages) == 1) { ?>"<?=$oc->getCollectionName()?>"<? } ?> <?=t('beneath')?> "<?=$dc->getCollectionName()?>" - <?=t('Pages appear in both locations; all edits to originals will be reflected in their alias.')?>
 		<br/><br/>
 		<? } ?>
 		
-		<input type="radio" style="vertical-align: middle" id="ctaskCopy" name="ctask" value="COPY" onclick="toggleCopy()" />
+		<input type="radio" style="vertical-align: middle" id="ctaskCopy" name="ctask" value="COPY" />
 		<strong><?=t('Copy')?></strong> <? if (count($originalPages) == 1) { ?>"<?=$oc->getCollectionName()?>"<? } ?> <?=t('beneath')?> "<?=$dc->getCollectionName()?>"
 		<div style="margin: 4px 0px 0px 20px">
 		<? if ($canCopyChildren) { ?>
@@ -202,11 +224,11 @@ if ($successMessage) {
 	
 	<div class="dialog-buttons">
 	<? if ($_REQUEST['sitemap_mode'] == 'move_copy_delete') { ?>
-		<a href="javascript:void(0)" onclick="$.fn.dialog.closeTop()" id="ccm-exit-drag-request" title="<?=t('Choose Page')?>" class="ccm-button-left btn"><?=t('Cancel')?></a>
+		<a href="javascript:void(0)" onclick="$.fn.dialog.closeTop()" id="ccm-exit-drag-request" title="<?=t('Choose Page')?>" class="pull-left btn btn-hover-danger"><?=t('Cancel')?></a>
 	<? } else { ?>
-		<a href="javascript:void(0)" onclick="showBranch(<?=$oc->getCollectionID()?>);$.fn.dialog.closeTop()" class="ccm-button-left btn"><?=t('Cancel')?></a>
+		<a href="javascript:void(0)" onclick="$.fn.dialog.closeTop()" class="pull-left btn btn-hover-danger"><?=t('Cancel')?></a>
 	<? } ?>
-	<a href="javascript:void(0)" onclick="moveCopyAliasNode(<? if ($_REQUEST['select_mode'] == 'move_copy_delete') { ?>true<? } ?>)" class="ccm-button-right btn primary"><span><?=t('Go')?></span></a>
+	<a href="javascript:void(0)" onclick="$.fn.ccmsitemap('submitDragRequest')" class="pull-right btn btn-primary"><span><?=t('Go')?></span></a>
 	</div>
 	
 	<div class="ccm-spacer">&nbsp;</div>
