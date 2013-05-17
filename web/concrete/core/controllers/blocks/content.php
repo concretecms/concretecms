@@ -293,9 +293,8 @@
 			return $text;
 		}
 		
-		function save($data) {
-			$content = $this->translateTo($data['content']);
-			$args['content'] = $content;
+		function save($args) {
+			$args['content'] = $this->translateTo($args['content']);
 			parent::save($args);
 		}
 		
