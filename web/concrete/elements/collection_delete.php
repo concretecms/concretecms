@@ -19,9 +19,7 @@ $(function() {
 			if (r != null && r.rel == 'SITEMAP') {
 				jQuery.fn.dialog.hideLoader();
 				jQuery.fn.dialog.closeTop();
-				<? if ($_REQUEST['instance_id']) { ?>
-					$('[data-sitemap-instance-id=<?=$_REQUEST['instance_id']?>]').trigger('deleteRequestComplete', [r]);
-				<? } ?>
+				$.fn.ccmsitemap('triggerEvent', 'deleteRequestComplete', [r]);
 			} else {
 				window.location.href = '<?=DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=' + r.refreshCID;
 			}
@@ -71,11 +69,9 @@ $(function() {
 
 			<?php 
 			$display_mode = SecurityHelper::sanitizeString($_REQUEST['display_mode']);
-			$instance_id = SecurityHelper::sanitizeInt($_REQUEST['instance_id']);
 			$select_mode = SecurityHelper::sanitizeString($_REQUEST['select_mode']);
 			?>			
 			<input type="hidden" name="display_mode" value="<?php echo h($display_mode); ?>" />
-			<input type="hidden" name="instance_id" value="<?php echo h($instance_id); ?>" />
 			<input type="hidden" name="select_mode" value="<?php echo h($select_mode); ?>" />
 		</form>
 		</div>

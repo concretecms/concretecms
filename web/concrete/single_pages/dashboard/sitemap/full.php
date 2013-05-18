@@ -1,29 +1,14 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
 $sh = Loader::helper('concrete/dashboard/sitemap');
-/*
-if (isset($_REQUEST['reveal'])) {
-	$nc = Page::getByID($_REQUEST['reveal']);
-	$nh = Loader::helper('navigation');
-	$cArray = $nh->getTrailToCollection($nc);
-	foreach($cArray as $co) {
-		ConcreteDashboardSitemapHelper::addOpenNode($co->getCollectionID());
-	}
-	ConcreteDashboardSitemapHelper::addOneTimeActiveNode($_REQUEST['reveal']);
-}
-
-$nodes = $sh->getSubNodes(0, 1, false, true);
-$listHTML = $sh->outputRequestHTML($instanceID, 'full', false, $nodes);
-*/
-
-$instanceID = time();
-
 ?>
 
 <script type="text/javascript">
-	var CCM_LAUNCHER_SITEMAP = 'full';
 	$(function() {
-		$('div[data-sitemap-instance-id=<?=$instanceID?>]').ccmsitemap();
+		$('div#ccm-full-sitemap-container').ccmsitemap({
+			'maxPages': <?=SITEMAP_PAGES_LIMIT?>,
+			'maxPagesWarningTitle': '<?=t('%s more to display. <strong>View all &gt;</strong>')?>'
+		});
 	});
 </script>
 <?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Sitemap'), t('The sitemap allows you to view your site as a tree and easily organize its hierarchy.'), 'span10 offset1', false);?>
@@ -51,7 +36,7 @@ $instanceID = time();
 		if ($q->count() > 0) { ?>
 
 			<div style="position: relative" class="alert alert-warning">
-				<div style="position: absolute; top: 5px; right: 5px"><button class="btn btn-small" onclick="ccm_refreshCopyOperations()"><?=t('Resume Copy')?></button></div>
+				<div style="position: absolute; top: 5px; right: 5px"><button class="btn btn-small" onclick="$.fn.ccmsitemap('refreshCopyOperations')"><?=t('Resume Copy')?></button></div>
 				<?=t('Page copy operations pending.')?>
 			</div>
 
@@ -60,12 +45,9 @@ $instanceID = time();
 
 	} ?>
 
-	<? if ($sh->canRead()) { ?>
-	
-		<div id="ccm-sitemap-message"></div>
-	
+	<? if ($sh->canRead()) { ?>	
 		
-		<div data-sitemap-instance-id="<?=$instanceID?>"></div>
+		<div id="ccm-full-sitemap-container"></div>
 		
 	
 	<? } else { ?>

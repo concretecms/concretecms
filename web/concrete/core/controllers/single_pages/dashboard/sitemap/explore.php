@@ -4,6 +4,7 @@ class Concrete5_Controller_Dashboard_Sitemap_Explore extends Controller {
 
 	public function view($nodeID = 1, $auxMessage = false) {
 		$dh = Loader::helper('concrete/dashboard/sitemap');
+		/*
 		if ($dh->canRead()) { 
 			$this->set('nodeID', $nodeID);			
 			$nodes = $dh->getSubNodes($nodeID, 1, false, false);
@@ -11,6 +12,7 @@ class Concrete5_Controller_Dashboard_Sitemap_Explore extends Controller {
 			$this->set('listHTML', $dh->outputRequestHTML($instanceID, 'explore', false, $nodes));
 			$this->set('instanceID', $instanceID);
 		}
+		*/
 		
 		if (isset($_REQUEST['task']) && isset($_REQUEST['cNodeID'])) {
 			$nc = Page::getByID($_REQUEST['cNodeID']);

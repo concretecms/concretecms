@@ -32,36 +32,6 @@ class ConcreteDashboardSitemapHelper {
 		$this->autoOpenNodes = $autoOpen;
 	}
 
-	/*	
-	public $html = '';
-	
-	public function reset() {
-		$this->html = '';
-	}
-	
-	function addOpenNode($cID) {
-		if (is_array($_SESSION['dsbSitemapNodes'])) {
-			if (in_array($cID, $_SESSION['dsbSitemapNodes'])) {
-				return true;
-			}
-		}
-		
-		$_SESSION['dsbSitemapNodes'][] = $cID;	
-	}
-	
-	function addOneTimeActiveNode($cID) {
-		$_SESSION['dsbSitemapActiveNode'] = $cID;	
-	}
-	
-	function clearOneTimeActiveNodes() {
-		unset($_SESSION['dsbSitemapActiveNode']);
-	}
-	
-	
-
-
-	*/
-
 	function getSubNodes($cID) {
 		$db = Loader::db();
 		
@@ -89,7 +59,7 @@ class ConcreteDashboardSitemapHelper {
 				$nodes[] = $n;
 			}
 		}
-		
+
 		return $nodes;
 	}
 
@@ -138,6 +108,14 @@ class ConcreteDashboardSitemapHelper {
 		}
 		
 		$cIcon = $c->getCollectionIcon();
+		if (!$cIcon) {
+			if ($numSubpages > 0) {
+				$cIcon = ASSETS_URL_IMAGES . '/dashboard/sitemap/folder.png';
+			} else {
+				$cIcon = ASSETS_URL_IMAGES . '/dashboard/sitemap/document.png';
+			}
+		}
+
 		$cAlias = $c->isAlias();
 		$cPointerID = $c->getCollectionPointerID();
 		if ($cAlias) {

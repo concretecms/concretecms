@@ -5,25 +5,20 @@ div.ccm-sitemap-explore ul li.ccm-sitemap-explore-paging {display: none;}
 </style>
 
 <script type="text/javascript">
-
-CCM_LAUNCHER_SITEMAP = 'explore'; // we need this for when we are moving and copying
-
-$(function() {
-	ccmSitemapLoad('<?=$instanceID?>', 'explore');
-});
+	$(function() {
+		$('div#ccm-flat-sitemap-container').ccmsitemap({
+			
+		});
+	});
 </script>
 
 <?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Sitemap'), t('Sitemap flat view lets you page through particular long lists of pages.'), 'span10 offset1', false);?>
 <div class="ccm-pane-body">
 
 <? if ($dh->canRead()) { ?>	
-	<div id="ccm-sitemap-message"></div>
 
-	<div id="tree" class="ccm-sitemap-explore">
-		<ul id="tree-root0" tree-root-node-id="0" sitemap-display-mode="explore" sitemap-instance-id="<?=$instanceID?>">
-		<?=$listHTML?>
-		</ul>
-	</div>
+	<div id="ccm-flat-sitemap-container"></div>
+
 <? } else { ?>
 	<p><?=t('You do not have access to the dashboard sitemap.')?></p>
 <? } ?>
