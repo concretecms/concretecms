@@ -14,13 +14,13 @@
     		var params = {
 				url: CCM_TOOLS_PATH + '/dashboard/sitemap_data',
 				data: {
-					node: node.data.cID
+					cParentID: node.data.cID,
+					'displayNodePagination': options.displayNodePagination ? 1 : 0
 				},
 				success: function() {
 					if (onComplete) {
 						onComplete();
 					}
-					obj.checkPageLimit(node, options);
 				}
 			};
 			
@@ -28,22 +28,19 @@
 
     	},
 
-    	checkPageLimit: function(node, options) {
-    		if (node.data.numSubpages > options.maxPages) {
-    			if ($(node.li).find('.ccm-sitemap-explore').length == 0) {
-	    			// add the notification that we have too many to display
-	    			node.addChild({
-	    				icon: false,
-	    				addClass: 'ccm-sitemap-explore',
-	    				noLink: true,
-	    				activate: false,
-	    				focus: false,
-	    				unselectable: true,
-	    				title: '&nbsp;' + options.maxPagesWarningTitle.replace('%s', node.data.numSubpages - options.maxPages),
-	    				href: CCM_DISPATCHER_FILENAME + '/dashboard/sitemap/explore/-/' + node.data.cID
-	    			});
-	    		}
-    		}
+    	displaySingleLevel: function(node, options) {
+
+			var root = $(node.li).closest('[data-sitemap=container]').dynatree('getRoot');
+			root.removeChildren();
+			root.appendAjax({
+				url: CCM_TOOLS_PATH + '/dashboard/sitemap_data',
+				data: {
+					'displayNodePagination': options.displayNodePagination ? 1 : 0,
+					'cParentID': node.data.cID,
+					'displaySingleLevel': true
+				}
+			});
+
     	},
 
     	rescanDisplayOrder: function(node) {
@@ -333,8 +330,18 @@
     	});
 
 		var settings = $.extend({
-			maxPages: 0
+			displayNodePagination: false,
+			cParentID: 0,
+			displaySingleLevel: false
 		}, options);
+
+		var doPersist = true;
+		if (options.displaySingleLevel) {
+			var minExpandLevel = 2;
+			var doPersist = false;
+		} else {
+			var minExpandLevel = 1;
+		}
 
     	$.fn.ccmmenu.enable();
 		return this.each(function() {
@@ -346,30 +353,30 @@
 				cookie: {
 					path: CCM_REL + '/'
 				},
-				persist: true,
+				persist: doPersist,
 				initAjax: {
 					url: CCM_TOOLS_PATH + '/dashboard/sitemap_data',
 					data: {
-
-					}
-				},
-				onPostInit: function() {
-					$('.dynatree-expanded').each(function() {
-						var node = $.ui.dynatree.getNode($(this));
-						methods.private.checkPageLimit(node, settings);
-					});
-				},
-				onExpand: function(expand, node) {
-					if (expand) {
-						methods.private.checkPageLimit(node, settings);
+						'displayNodePagination': settings.displayNodePagination ? 1 : 0,
+						'cParentID': settings.cParentID,
+						'displaySingleLevel': settings.displaySingleLevel ? 1 : 0
 					}
 				},
 				selectMode: 1,
-				minExpandLevel: 1,
+				minExpandLevel:  minExpandLevel,
 				clickFolderMode: 2,
 				onLazyRead: function(node) {
-					methods.private.reloadNode(node, settings);
+					if (settings.displaySingleLevel) {
+						methods.private.displaySingleLevel(node, settings);
+					} else {
+						methods.private.reloadNode(node, settings);
+					}
 				}, 
+				onExpand: function(expand, node) {
+					if (expand && settings.displaySingleLevel) {
+						methods.private.displaySingleLevel(node, settings);
+					}
+				},
 				onClick: function(node, e) {
 					if (node.getEventTargetType(event) == "title" && node.data.cID){
 						var $menu = methods.private.getMenu(node.data);
@@ -397,7 +404,7 @@
 						return true;
 					},
 					onDragOver: function(node, sourceNode, hitMode) {
-						if (node.data.cID == 1) {
+						if (!node.parent.data.cID) {
 							return false;
 						}
 

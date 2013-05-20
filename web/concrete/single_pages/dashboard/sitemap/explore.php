@@ -7,7 +7,9 @@ div.ccm-sitemap-explore ul li.ccm-sitemap-explore-paging {display: none;}
 <script type="text/javascript">
 	$(function() {
 		$('div#ccm-flat-sitemap-container').ccmsitemap({
-			
+			displayNodePagination: true,
+			cParentID: '<?=$nodeID?>',
+			displaySingleLevel: true
 		});
 	});
 </script>

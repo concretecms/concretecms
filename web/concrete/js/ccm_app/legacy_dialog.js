@@ -238,7 +238,7 @@ jQuery.fn.dialog.replaceTop = function(r) {
 jQuery.fn.dialog.showLoader = function(text) {
 	if (typeof(imgLoader)=='undefined' || !imgLoader || !imgLoader.src) return false; 
 	if ($('#ccm-dialog-loader').length < 1) {
-		$("body").append("<div id='ccm-dialog-loader-wrapper' class='ccm-ui'><div class='progress progress-striped active' style='width: 300px'><div class='progress-bar progress-bar-info' style='width: 100%;'></div></div></div>");//add loader to the page
+		$("body").append("<div id='ccm-dialog-loader-wrapper' class='ccm-ui'><div class='progress progress-striped active' style='width: 300px'><div class='bar' style='width: 100%;'></div></div></div>");//add loader to the page
 	}
 	if (text != null) {
 		$('#ccm-dialog-loader-text',$('#ccm-dialog-loader-wrapper')).remove();

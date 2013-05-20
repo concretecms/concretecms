@@ -6,8 +6,6 @@ $sh = Loader::helper('concrete/dashboard/sitemap');
 <script type="text/javascript">
 	$(function() {
 		$('div#ccm-full-sitemap-container').ccmsitemap({
-			'maxPages': <?=SITEMAP_PAGES_LIMIT?>,
-			'maxPagesWarningTitle': '<?=t('%s more to display. <strong>View all &gt;</strong>')?>'
 		});
 	});
 </script>
