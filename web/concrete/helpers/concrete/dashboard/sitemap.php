@@ -23,6 +23,7 @@ Loader::model('collection_types');
 class ConcreteDashboardSitemapHelper {
 
 	protected $autoOpenNodes = true;
+	protected $displayNodePagination = false;
 
 	function showSystemPages() {
 		return $_SESSION['dsbSitemapShowSystem'] == 1;
@@ -30,6 +31,10 @@ class ConcreteDashboardSitemapHelper {
 
 	public function setAutoOpenNodes($autoOpen) {
 		$this->autoOpenNodes = $autoOpen;
+	}
+
+	public function setDisplayNodePagination($paginate) {
+		$this->displayNodePagination = $paginate;
 	}
 
 	function getSubNodes($cID) {
@@ -60,6 +65,29 @@ class ConcreteDashboardSitemapHelper {
 			}
 		}
 
+		if ($total > SITEMAP_PAGES_LIMIT) {
+			if ($this->displayNodePagination) {
+
+				$n = new stdClass;
+				$n->icon = false;
+				$n->addClass = 'ccm-sitemap-explore-paging';
+				$n->noLink = true;
+				$n->unselectable = true;
+				$n->title = $pl->displayPagingV2(false, true);
+				$nodes[] = $n;
+			} else {
+				$n = new stdClass;
+				$n->icon =false;
+				$n->addClass = 'ccm-sitemap-explore';
+				$n->noLink = true;
+				$n->active = false;
+				$n->focus = false;
+				$n->unselectable = true;
+				$n->title = t('%s more to display. <strong>View all &gt;</strong>', $total - SITEMAP_PAGES_LIMIT);
+				$n->href = View::url('/dashboard/sitemap/explore/', $cID);
+				$nodes[] = $n;
+			}
+		}
 		return $nodes;
 	}
 
