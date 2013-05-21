@@ -56,6 +56,7 @@ cat ../web/concrete/js/ccm_app/jquery.colorpicker.js \
 ../web/concrete/js/ccm_app/search.js \
 ../web/concrete/js/ccm_app/dynatree.js \
 ../web/concrete/js/ccm_app/sitemap.js \
+../web/concrete/js/ccm_app/page_search.js \
 ../web/concrete/js/ccm_app/custom_style.js \
 ../web/concrete/js/ccm_app/tabs.js \
 ../web/concrete/js/ccm_app/toolbar.js \

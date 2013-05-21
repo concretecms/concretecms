@@ -1,8 +1,4 @@
 <? defined('C5_EXECUTE') or die('Access Denied'); ?>
-<script type="text/javascript">
-CCM_LAUNCHER_SITEMAP = 'search'; // we need this for when we are moving and copying
-CCM_SEARCH_INSTANCE_ID = '<?=$searchInstance?>';
-</script>
 
 <?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Search Pages'), t('Search the pages of your site and perform bulk actions on them.'), false, false);?>
 

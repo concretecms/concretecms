@@ -158,7 +158,7 @@ $(function() {
 			if (r != null && r.rel == 'SITEMAP') {
 				jQuery.fn.dialog.hideLoader();
 				jQuery.fn.dialog.closeTop();
-				ccmSitemapHighlightPageLabel(r.cID);
+				$.fn.ccmsitemap('triggerEvent', 'updateRequestComplete', [r.cID, r.name]);
 			} else {
 				jQuery.fn.dialog.closeTop();
 			}
