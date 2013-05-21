@@ -10,7 +10,7 @@ class Concrete5_Model_Aggregator_Item_List extends DatabaseItemList {
 	}
 
 	public function sortByDateDescending() {
-		$this->sortBy('agiPublicDateTime', 'desc');
+		$this->sortByMultiple('agiBatchTimestamp desc', 'agiBatchDisplayOrder asc');
 	}
 
 	public function get($itemsToGet = 100, $offset = 0) {
