@@ -261,7 +261,7 @@
 
 		return $menu;
 	},
-	
+
     exitEditMode: function(cID) {
 		$.get(CCM_TOOLS_PATH + "/dashboard/sitemap_check_in?cID=" + cID  + "&ccm_token=" + CCM_SECURITY_TOKEN);
     },
@@ -441,7 +441,7 @@
 				},
 				onClick: function(node, e) {
 					if (node.getEventTargetType(event) == "title" && node.data.cID){
-						var $menu = methods.private.getMenu(node.data);
+						var $menu = methods.getMenu(node.data);
 						if ($menu) {
 							$.fn.ccmmenu.showmenu(e, $menu);
 						}
