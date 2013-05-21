@@ -28,12 +28,24 @@
 
     	},
 
-    	setupNodePagination: function($tree) {
+    	setupNodePagination: function($tree, nodeKey) {
     		//var tree = $tree.dynatree('getTree');
     		var pg = $tree.find('span.ccm-sitemap-explore-paging');
-    		pg.find('div.ccm-pagination').appendTo($tree);
-    		var node = $.ui.dynatree.getNode(pg);
-    		node.remove();
+    		$tree.find('div.ccm-pagination-bound').remove();
+    		if (pg.length) {
+    			pg.find('a').on('click', function() {
+    				// load under node
+    				var href = $(this).attr('href');
+    				$tree.dynatree('option', 'initAjax', {
+    					url: href
+    				});
+    				$tree.dynatree('getTree').reload();
+    				return false;
+    			});
+	    		pg.find('div.ccm-pagination').addClass('ccm-pagination-bound').appendTo($tree);
+	    		var node = $.ui.dynatree.getNode(pg);
+	    		node.remove();
+	    	}
     	},
 
     	displaySingleLevel: function(node, options) {
@@ -56,7 +68,7 @@
 				},
 
 				success: function() {
-					methods.private.setupNodePagination(root.tree.$tree);
+					methods.private.setupNodePagination(root.tree.$tree, node.data.key);
 				}
 			});
 
@@ -402,7 +414,7 @@
 				},
 				onPostInit: function() {
 					if (settings.displayNodePagination) {
-						methods.private.setupNodePagination($obj);
+						methods.private.setupNodePagination($obj, settings.cParentID);
 					}
 				},
 				selectMode: 1,
