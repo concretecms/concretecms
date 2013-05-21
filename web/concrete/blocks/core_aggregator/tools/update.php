@@ -18,8 +18,17 @@ if($_POST['bID'] && $_POST['cID'] && $nh->integer($_POST['bID']) && $nh->integer
         switch($_POST['task']) {
           case 'resize':
             $agi = AggregatorItem::getByID($_POST['agiID']);
-            $agi->setAggregatorItemSlotWidth($_POST['agiSlotWidth']);
-            $agi->setAggregatorItemSlotHeight($_POST['agiSlotHeight']);
+            $sw = intval($_POST['agiSlotWidth']);
+            $sh = intval($_POST['agiSlotHeight']);
+            if (!$sw) {
+              $sw = 1;
+            }
+            if (!$sh) {
+              $sh = 1;
+            }
+            
+            $agi->setAggregatorItemSlotWidth($sw);
+            $agi->setAggregatorItemSlotHeight($sh);
             break;
           case 'update_display_order':
             $displayOrder = 0;
