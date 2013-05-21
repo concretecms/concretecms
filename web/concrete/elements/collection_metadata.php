@@ -61,9 +61,9 @@ if ($_REQUEST['approveImmediately'] == 1) {
 						jQuery.fn.dialog.hideLoader();
 						jQuery.fn.dialog.closeTop();
 						if (r != null && r.rel == 'SITEMAP') {
-							ccmSitemapHighlightPageLabel(r.cID, r.name);
+							$.fn.ccmsitemap('triggerEvent', 'updateRequestComplete', [r.cID, r.name]);
 						} else {
-							ccm_mainNavDisableDirectExit();
+							CCMToolbar.disableDirectExit();
 						}
 						ccmAlert.hud(ccmi18n.savePropertiesMsg, 2000, 'success', ccmi18n.properties);
 					} catch(e) {

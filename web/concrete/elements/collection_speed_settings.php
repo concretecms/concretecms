@@ -69,7 +69,7 @@ if ($_REQUEST['reload_and_remove_cache']) {
 						jQuery.fn.dialog.hideLoader();
 						jQuery.fn.dialog.closeTop();
 						if (r != null && r.rel == 'SITEMAP') {
-							ccmSitemapHighlightPageLabel(r.cID, r.name);
+							$.fn.ccmsitemap('triggerEvent', 'updateRequestComplete', [r.cID, r.name]);
 						}
 						ccmAlert.hud(ccmi18n.saveSpeedSettingsMsg, 2000, 'success', ccmi18n.properties);
 					} catch(e) {
