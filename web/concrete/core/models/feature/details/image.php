@@ -16,7 +16,7 @@ class Concrete5_Model_ImageFeatureDetail extends FeatureDetail {
 			}
 		} else {
 			$this->path = $mixed;
-			$r = @getimagesize($this->path);
+			//$r = @getimagesize($this->path);
 			if ($r[0]) {
 				$this->width = $r[0];
 			}
