@@ -5,10 +5,13 @@
 $a = $b->getBlockAreaObject();
 $c = Page::getCurrentPage();
 $pt = $c->getCollectionThemeObject();
+$showTileCommands = false;
 
 if ($c->isEditMode()) {
   $bp = new Permissions($b);
-  if ($bp->canEditBlock()) { ?>
+  if ($bp->canEditBlock()) { 
+    $showTileCommands = true;
+    ?>
 
     <div class="ccm-aggregator-control-bar" id="ccm-aggregator-control-bar-<?=$b->getBlockID()?>-<?=$a->getAreaID()?>"></div>
 
@@ -16,11 +19,19 @@ if ($c->isEditMode()) {
 
 <? } ?>
 
-<div data-aggregator-id="<?=$aggregator->getAggregatorID()?>" class="ccm-aggregator-grid">
+<div data-aggregator-id="<?=$aggregator->getAggregatorID()?>" class="<? if ($showTileCommands) { ?>ccm-aggregator-active-tile-commands<? } ?> ccm-aggregator-grid">
   	<? foreach($items as $item) { ?>
-    <div class="ccm-aggregator-item h<?=$item->getAggregatorItemSlotHeight()?> w<?=$item->getAggregatorItemSlotWidth()?>"><?
-    	$item->render();
-    ?></div>
+    <div class="ccm-aggregator-item h<?=$item->getAggregatorItemSlotHeight()?> w<?=$item->getAggregatorItemSlotWidth()?>">
+      <div class="ccm-aggregator-item-inner">
+      <? if ($showTileCommands) { ?>
+        <ul class="ccm-aggregator-item-inline-commands ccm-ui">
+          <li class="ccm-aggregator-item-inline-move"><a data-inline-command="move-tile" href="#"><i class="icon-move"></i></a></li>
+          <li class="ccm-aggregator-item-inline-options"><a data-inline-command="options-tile" href="#"><i class="icon-cog"></i></a></li>
+        </ul>
+      <? } ?>
+      <? $item->render(); ?></div>
+      </div>
+
   	<? } ?>
 </div>
 
@@ -31,16 +42,25 @@ $(function() {
     columnWidth: <?=$pt->getThemeAggregatorGridItemWidth()?>,
     rowHeight: <?=$pt->getThemeAggregatorGridItemHeight()?>
   });
-if (jQuery.ui) {
-  var $itemElements = $($agg.packery('getItemElements'));
-  $itemElements.draggable({
-    'stop': function() {
-      $agg.packery('layout');
-    }
-  });
-  $agg.packery( 'bindUIDraggableEvents', $itemElements );
-}
-$agg.css('opacity', 1);
+  $agg.css('opacity', 1);
+
+  <? if ($showTileCommands) { ?>
+    var $itemElements = $($agg.packery('getItemElements'));
+    $itemElements.draggable({
+      'handle': 'a[data-inline-command=move-tile]',
+      'stop': function() {
+        $agg.packery('layout');
+      }
+    });
+    $agg.packery( 'bindUIDraggableEvents', $itemElements );
+    $itemElements.resizable({
+      handles: 'se',
+      grid: [<?=$pt->getThemeAggregatorGridItemWidth()?>,<?=$pt->getThemeAggregatorGridItemHeight()?>],
+      resize: function() {
+        $agg.packery('layout');
+      }
+    });
+  <? } ?>
 });
 </script>
 
