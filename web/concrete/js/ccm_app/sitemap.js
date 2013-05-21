@@ -28,9 +28,24 @@
 
     	},
 
+    	setupNodePagination: function($tree) {
+    		//var tree = $tree.dynatree('getTree');
+    		var pg = $tree.find('span.ccm-sitemap-explore-paging');
+    		pg.find('div.ccm-pagination').appendTo($tree);
+    		var node = $.ui.dynatree.getNode(pg);
+    		node.remove();
+    	},
+
     	displaySingleLevel: function(node, options) {
 
+			if (node.data.cID == 1) {
+				var minExpandLevel = 2;
+			} else {
+				var minExpandLevel = 3;
+			}
+
 			var root = $(node.li).closest('[data-sitemap=container]').dynatree('getRoot');
+			$(node.li).closest('[data-sitemap=container]').dynatree('option', 'minExpandLevel', minExpandLevel);
 			root.removeChildren();
 			root.appendAjax({
 				url: CCM_TOOLS_PATH + '/dashboard/sitemap_data',
@@ -38,6 +53,10 @@
 					'displayNodePagination': options.displayNodePagination ? 1 : 0,
 					'cParentID': node.data.cID,
 					'displaySingleLevel': true
+				},
+
+				success: function() {
+					methods.private.setupNodePagination(root.tree.$tree);
 				}
 			});
 
@@ -119,6 +138,18 @@
 					node.remove();
 				}
 
+				var reloadNode = destNode.parent;
+				if (dragMode == 'over') {
+					reloadNode = destNode;
+				}
+				reloadNode.removeChildren();
+				methods.private.reloadNode(reloadNode, $(this).data('options'), function() {
+					if (!destNode.bExpanded) {
+						destNode.expand(true);
+					}
+				});
+
+				/*
 				destNode.removeChildren();
 				var cID = destNode.data.cID;
 				methods.private.reloadNode(destNode, $(this).data('options'), function() {
@@ -126,6 +157,7 @@
 						destNode.expand(true);
 					}
 				});
+				*/
 
 				$(this).unbind('dragRequestComplete');
 			});
@@ -337,7 +369,11 @@
 
 		var doPersist = true;
 		if (options.displaySingleLevel) {
-			var minExpandLevel = 2;
+			if (options.cParentID == 1) {
+				var minExpandLevel = 2;
+			} else {
+				var minExpandLevel = 3;
+			}
 			var doPersist = false;
 		} else {
 			var minExpandLevel = 1;
@@ -346,6 +382,7 @@
     	$.fn.ccmmenu.enable();
 		return this.each(function() {
 			$(this).attr('data-sitemap', 'container');
+			var $obj = $(this);
 			$(this).data('options', settings);
 			$(this).dynatree({
 				autoFocus: false,
@@ -360,6 +397,12 @@
 						'displayNodePagination': settings.displayNodePagination ? 1 : 0,
 						'cParentID': settings.cParentID,
 						'displaySingleLevel': settings.displaySingleLevel ? 1 : 0
+					}, 
+
+				},
+				onPostInit: function() {
+					if (settings.displayNodePagination) {
+						methods.private.setupNodePagination($obj);
 					}
 				},
 				selectMode: 1,
@@ -431,6 +474,14 @@
 					}
 				}
 			});
+
+			if (options.displayNodePagination) {
+				$(this).dynatree('option', 'onActivate', function(node) {
+					if ($(node.span).hasClass('ccm-sitemap-explore-paging')) {
+						node.deactivate();
+					}
+				});
+			}
 
 			$(this).on('deleteRequestComplete', function(e, response) {
 				if (response.deferred) {

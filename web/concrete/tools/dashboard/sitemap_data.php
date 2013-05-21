@@ -34,8 +34,19 @@ if (isset($_REQUEST['show_system'])) {
 
 $cParentID = (isset($_REQUEST['cParentID'])) ? $_REQUEST['cParentID'] : 0;
 if ($_REQUEST['displaySingleLevel']) {
-	$n = $dh->getNode($cParentID);
-	$n->children = $dh->getSubNodes($cParentID);
+	$c = Page::getByID($cParentID);
+	$parent = Page::getByID($c->getCollectionParentID());
+	if (is_object($parent) && !$parent->isError()) {
+		$n = $dh->getNode($parent->getCollectionID());
+		$n->icon = 	ASSETS_URL_IMAGES . '/dashboard/sitemap/up.png';
+
+		$p = $dh->getNode($cParentID);
+		$p->children = $dh->getSubNodes($cParentID);
+		$n->children = array($p);
+	} else {
+		$n = $dh->getNode($cParentID);
+		$n->children = $dh->getSubNodes($cParentID);
+	}
 	$nodes[] = $n;
 } else {
 	$nodes = $dh->getSubNodes($cParentID);
