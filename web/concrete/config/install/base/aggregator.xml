@@ -8,10 +8,10 @@
         <feature handle="title" score="1" />
         <feature handle="link" score="1" />
         <feature handle="date_time" score="1" />
-        <feature handle="image" score="10" has-custom-class="true" />
+        <feature handle="image" score="500" has-custom-class="true" />
         <feature handle="conversation" score="10" has-custom-class="true" />
         <feature handle="description" score="1" />
-        <feature handle="featured" score="20" />
+        <feature handle="featured" score="1000" />
     </features>
     <aggregatoritemtemplates>
         <aggregatoritemtemplate handle="featured" name="Featured Item" package="" fixed-slot-width="6" fixed-slot-height="2" force-default="1">

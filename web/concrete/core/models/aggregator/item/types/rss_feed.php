@@ -12,7 +12,7 @@ class Concrete5_Model_RssFeedAggregatorItem extends AggregatorItem {
 		$enclosures = $post->get_enclosures();
 		if (is_array($enclosures)) {
 			foreach($enclosures as $e) {
-				if ($e->get_medium() == 'image') {
+				if ($e->get_medium() == 'image' || strpos($e->get_type(), 'image') === 0) {
 					$thumbnail = $e->get_link();
 					break;
 				}

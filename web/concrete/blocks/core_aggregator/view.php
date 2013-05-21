@@ -13,7 +13,7 @@ if ($c->isEditMode()) {
     $showTileCommands = true;
     ?>
 
-    <div class="ccm-aggregator-control-bar" id="ccm-aggregator-control-bar-<?=$b->getBlockID()?>-<?=$a->getAreaID()?>"></div>
+    <div class="ccm-aggregator-control-bar"></div>
 
   <? } ?>
 
