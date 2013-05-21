@@ -350,6 +350,16 @@
       <notnull />
       <default value="0" />
     </field>
+    <field name="agiBatchDisplayOrder" type="I" size="10">
+      <unsigned/>
+      <notnull />
+      <default value="0" />
+    </field>
+    <field name="agiBatchTimestamp" type="I" size="10">
+      <unsigned/>
+      <notnull />
+      <default value="0" />
+    </field>
   </table>
   <table name="AggregatorItemFeatureAssignments">
     <field name="agfaID" type="I" size="10">

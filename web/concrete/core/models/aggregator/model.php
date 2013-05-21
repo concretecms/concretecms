@@ -78,6 +78,16 @@ class Concrete5_Model_Aggregator extends Object {
 			$dataSource = $configuration->getAggregatorDataSourceObject();
 			$items = $dataSource->createAggregatorItems($configuration);
 		}
+
+		$agiBatchTimestamp = time();
+		$agiBatchDisplayOrder = 0;
+		// now we order all items by public date ascending
+		$db = Loader::db();
+		$r = $db->Execute('select agiID from AggregatorItems where agID = ? order by agiPublicDateTime desc', array($this->getAggregatorID()));
+		while ($row = $r->FetchRow()) {
+			$db->Execute('update AggregatorItems set agiBatchDisplayOrder = ?, agiBatchTimestamp = ? where agiID = ?', array($agiBatchDisplayOrder, $agiBatchTimestamp, $row['agiID']));
+			$agiBatchDisplayOrder++;
+		}
 	}
 
 	public function clearAggregatorItems() {

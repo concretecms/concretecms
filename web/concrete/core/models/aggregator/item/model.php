@@ -14,6 +14,8 @@ abstract class Concrete5_Model_AggregatorItem extends Object {
 	public function getAggregatorItemTemplateHandle() {return $this->agtHandle;}
 	public function getAggregatorItemSlotWidth() { return $this->agiSlotWidth; 	}
 	public function getAggregatorItemSlotHeight() {	return $this->agiSlotHeight; }
+	public function getAggregatorItemBatchTimestamp() {	return $this->agiBatchTimestamp; }
+	public function getAggregatorItemBatchDisplayOrder() {	return $this->agiBatchDisplayOrder; }
 
 	public function getAggregatorItemFeatureHandles() {
 		if (!isset($this->feHandles)) {
@@ -27,6 +29,12 @@ abstract class Concrete5_Model_AggregatorItem extends Object {
 		$db = Loader::db();
 		$db->Execute('update AggregatorItems set agtID = ? where agiID = ?', array($agtID, $this->agiID));
 		$this->agtID = $agtID;
+	}
+
+	public function setAggregatorItemBatchDisplayOrder($agiBatchDisplayOrder) {
+		$db = Loader::db();
+		$db->Execute('update AggregatorItems set agiBatchDisplayOrder = ? where agiID = ?', array($agiBatchDisplayOrder, $this->agiID));
+		$this->agiBatchDisplayOrder = $agiBatchDisplayOrder;
 	}
 
 	public function setAggregatorItemSlotWidth($agiSlotWidth) {

@@ -72,7 +72,6 @@ if ($b->getBlockTypeHandle() == BLOCK_HANDLE_LAYOUT_PROXY) {
 
 <div custom-style="<?=$b->getBlockCustomStyleRuleID()?>" data-area-id="<?=$a->getAreaID()?>" data-block-id="<?=$b->getBlockID()?>" class="<?=$class?>" data-block-type-handle="<?=$btHandle?>" data-menu="block-menu-b<?=$b->getBlockID()?>-<?=$a->getAreaID()?>" 
 		<? if ($btw->getBlockTypeHandle() == BLOCK_HANDLE_LAYOUT_PROXY) { ?> data-menu-handle="ccm-area-layout-control-bar-<?=$b->getBlockID()?>-<?=$a->getAreaID()?>"<? } ?>>
-
 		<ul class="ccm-edit-mode-inline-commands ccm-ui">
 		<? if ($p->canEditBlock() && $btw->getBlockTypeHandle() != BLOCK_HANDLE_LAYOUT_PROXY && (!$a->isGlobalArea())) {  ?>
 			<li><a data-inline-command="move-block" href="#"><i class="icon-move"></i></a></li>
