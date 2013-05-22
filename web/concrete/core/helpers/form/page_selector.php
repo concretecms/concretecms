@@ -29,8 +29,8 @@ class Concrete5_Helper_Form_PageSelector {
 	 * </code>
 	 * @param int $cID
 	 */
-	 
-	public function selectPage($fieldName, $cID = false, $javascriptFunc='ccm_selectSitemapNode') {
+
+	public function selectPage($fieldName, $cID = false) {
 		$selectedCID = 0;
 		if (isset($_REQUEST[$fieldName])) {
 			$selectedCID = $_REQUEST[$fieldName];
@@ -39,52 +39,39 @@ class Concrete5_Helper_Form_PageSelector {
 		}
 
 		$html = '';
+		$requestID = mt_rand(100000000,999999999);
 		$clearStyle = 'display: none';
-		$html .= '<div class="ccm-summary-selected-item"><div class="ccm-summary-selected-item-inner"><strong class="ccm-summary-selected-item-label">';
+		$html .= '<div class="ccm-summary-selected-item" data-page-selector="' . $requestID . '"><div class="ccm-summary-selected-item-inner"><strong class="ccm-summary-selected-item-label">';
 		if ($selectedCID > 0) {
 			$oc = Page::getByID($selectedCID);
 			$html .= $oc->getCollectionName();
 			$clearStyle = '';
 		}
 		$html .= '</strong></div>';
-		$html .= '<a class="ccm-sitemap-select-page" dialog-sender="' . $fieldName . '" dialog-width="90%" dialog-height="70%" dialog-append-buttons="true" dialog-modal="false" dialog-title="' . t('Choose Page') . '" href="' . REL_DIR_FILES_TOOLS_REQUIRED . '/sitemap_search_selector.php?sitemap_select_mode=select_page&amp;cID=' . $selectedCID . '">' . t('Select Page') . '</a>';
+		$html .= '<a class="ccm-sitemap-select-page" dialog-width="90%" dialog-height="70%" dialog-append-buttons="true" dialog-modal="false" dialog-title="' . t('Choose Page') . '" href="' . REL_DIR_FILES_TOOLS_REQUIRED . '/sitemap_search_selector.php?requestID=' . $requestID . '&amp;cID=' . $selectedCID . '">' . t('Select Page') . '</a>';
 		$html .= '&nbsp;<a href="javascript:void(0)" dialog-sender="' . $fieldName . '" class="ccm-sitemap-clear-selected-page" style="float: right; margin-top: -8px;' . $clearStyle . '"><img src="' . ASSETS_URL_IMAGES . '/icons/remove.png" style="vertical-align: middle; margin-left: 3px" /></a>';
-		$html .= '<input type="hidden" name="' . $fieldName . '" value="' . $selectedCID . '"/>';
+		$html .= '<input type="hidden" data-page-selector="cID" name="' . $fieldName . '" value="' . $selectedCID . '"/>';
 		$html .= '</div>'; 
-		$html .= '<script type="text/javascript"> 
+		$html .= "<script type=\"text/javascript\"> 
 		var ccmActivePageField;
 		function ccm_initSelectPage() {
-			$("a.ccm-sitemap-select-page").unbind().dialog().click(function(){
-				ccmActivePageField = this;
+			$('a.ccm-sitemap-select-page').unbind().dialog();
+			$.fn.ccmsitemap('onNodeSelected', '{$requestID}', function(node) {
+				console.log(node);
+				var container = $('div[data-page-selector={$requestID}]');
+				container.find('.ccm-summary-selected-item-label').html(node.data.title);
+				container.find('.ccm-sitemap-clear-selected-page').show();
+				container.find('input[data-page-selector=cID]').val(node.data.cID);
+				$.fn.dialog.closeTop();
 			});
-			$("a.ccm-sitemap-clear-selected-page").unbind().click(function(){
-				ccmActivePageField = this;
-				clearPageSelection();
+			$('a.ccm-sitemap-clear-selected-page').unbind().click(function() {
+				var container = $('div[data-page-selector={$requestID}]');
+				container.find('.ccm-summary-selected-item-label').html('');
+				container.find('.ccm-sitemap-clear-selected-page').hide();
+				container.find('input[data-page-selector=cID]').val('');
 			});
 		};
-		function clearPageSelection() {
-			var fieldName = $(ccmActivePageField).attr("dialog-sender");
-			var par = $(ccmActivePageField).parent().find(\'.ccm-summary-selected-item-label\');
-			$(ccmActivePageField).parent().find(\'.ccm-sitemap-clear-selected-page\').hide();
-			var pari = $(ccmActivePageField).parent().find("[name=\'"+fieldName+"\']");
-			par.html("");
-			pari.val("0");
-		}
-		$(ccm_initSelectPage);
-		ccm_selectSitemapNode = function(cID, cName) { ';
-		if($javascriptFunc=='' || $javascriptFunc=='ccm_selectSitemapNode'){
-			$html .= '
-			var fieldName = $(ccmActivePageField).attr("dialog-sender");
-			var par = $(ccmActivePageField).parent().find(\'.ccm-summary-selected-item-label\');
-			$(ccmActivePageField).parent().find(\'.ccm-sitemap-clear-selected-page\').show();
-			var pari = $(ccmActivePageField).parent().find("[name=\'"+fieldName+"\']");
-			par.html(cName);
-			pari.val(cID);
-			';
-		}else{
-			$html .= $javascriptFunc."(cID, cName); \n";
-		}
-		$html .= "} \r\n </script>";
+		$(ccm_initSelectPage); </script>";
 		return $html;
 	}
 	
@@ -98,6 +85,7 @@ class Concrete5_Helper_Form_PageSelector {
      *  (any other arguments the dashboard/sitemap element supports)
 	 */
 	public function sitemap($args) {
+		/*
 		if (!isset($args['select_mode'])) {
 			$args['select_mode'] = 'move_copy_delete';
 		}
@@ -111,6 +99,7 @@ class Concrete5_Helper_Form_PageSelector {
 			$args['instance_id'] = time();
 		}
     	Loader::element('dashboard/sitemap', $args);
+    	*/
 	}
 
 	public function quickSelect($key, $cID = false, $args = array()) {
