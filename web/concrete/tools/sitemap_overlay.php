@@ -6,6 +6,7 @@ if (!$sh->canRead()) {
 	die(t('Access Denied'));
 }
 
+/*
 $txt = Loader::helper('text');
 $args = $_REQUEST;
 array_walk_recursive($args, array($txt, 'entities'));
@@ -27,5 +28,27 @@ if ($args['select_mode'] == 'select_page') {
 
 $args['display_mode'] = 'full';
 $args['instance_id'] = time();
-Loader::element('dashboard/sitemap', $args);
+*/
+
+if (isset($_REQUEST['requestID']) && Loader::helper('validation/numbers')->integer($_REQUEST['requestID'])) {
+	$requestID = $_REQUEST['requestID'];
+}
 ?>
+
+<div class="ccm-sitemap-overlay"></div>
+
+
+<script type="text/javascript">
+$(function() {
+	$('.ccm-sitemap-overlay').ccmsitemap({
+		<? if (isset($requestID)) { ?>
+			'requestID': '<?=$requestID?>',
+		<? } ?>
+		<? if ($_REQUEST['display'] == 'flat') { ?>
+			displaySingleLevel: true,
+		<? } else { ?>
+			displaySingleLevel: false
+		<? } ?>
+	});
+});
+</script>

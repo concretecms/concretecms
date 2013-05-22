@@ -5,6 +5,8 @@ if (!$sh->canRead()) {
 	die(t('Access Denied.') . ' ' . t('You do not have access to the sitemap.'));
 }
 
+/*
+
 $select_mode = Loader::helper('text')->entities($_REQUEST['sitemap_select_mode']);
 $callback = Loader::helper('text')->entities($_REQUEST['callback']);
 
@@ -17,6 +19,11 @@ if (Loader::helper('validation/numbers')->integer($_REQUEST['cID']) && $select_m
 if ($callback) {
 	$callback = '&callback=' . addslashes($callback);
 }
+*/
+
+if (isset($_REQUEST['requestID']) && Loader::helper('validation/numbers')->integer($_REQUEST['requestID'])) {
+	$requestID = $_REQUEST['requestID'];
+}
 
 ?>
 <div class="ccm-ui" id="ccm-sitemap-search-selector">
@@ -28,11 +35,11 @@ if ($callback) {
 ));
 ?>
 
-<div id="ccm-tab-content-sitemap" <? if (!$sitemapSelected) { ?>style="display: none"<? } ?>></div>
+<div id="ccm-tab-content-sitemap"></div>
 
-<div id="ccm-tab-content-explore" <? if (!$flatSelected) { ?>style="display: none"<? } ?>></div>
+<div id="ccm-tab-content-explore"></div>
 
-<div id="ccm-tab-content-search" <? if (!$searchSelected) { ?>style="display: none"<? } ?>></div>
+<div id="ccm-tab-content-search"></div>
 
 </div>
 
@@ -58,7 +65,7 @@ $(function() {
 		ccm_sitemapSearchSelectorHideBottom();
 		if ($('#ccm-tab-content-sitemap').html() == '') { 
 			jQuery.fn.dialog.showLoader();
-			$('#ccm-tab-content-sitemap').load('<?=REL_DIR_FILES_TOOLS_REQUIRED?>/sitemap_overlay?display_mode=full&select_mode=<?=$select_mode?><?=$cID?><?=$callback?>', function() {
+			$('#ccm-tab-content-sitemap').load('<?=REL_DIR_FILES_TOOLS_REQUIRED?>/sitemap_overlay?requestID=<?=$requestID?>', function() {
 				jQuery.fn.dialog.hideLoader();
 			});
 		}
@@ -68,7 +75,7 @@ $(function() {
 		ccm_sitemapSearchSelectorHideBottom();
 		if ($('#ccm-tab-content-explore').html() == '') { 
 			jQuery.fn.dialog.showLoader();
-			$('#ccm-tab-content-explore').load('<?=REL_DIR_FILES_TOOLS_REQUIRED?>/sitemap_overlay?display_mode=explore&select_mode=<?=$select_mode?><?=$cID?><?=$callback?>', function() {
+			$('#ccm-tab-content-explore').load('<?=REL_DIR_FILES_TOOLS_REQUIRED?>/sitemap_overlay?display=flat&requestID=<?=$requestID?>', function() {
 				jQuery.fn.dialog.hideLoader();
 			});
 		}
@@ -78,7 +85,7 @@ $(function() {
 		ccm_sitemapSearchSelectorShowBottom();
 		if ($('#ccm-tab-content-search').html() == '') { 
 			jQuery.fn.dialog.showLoader();
-			$('#ccm-tab-content-search').load('<?=REL_DIR_FILES_TOOLS_REQUIRED?>/pages/search_dialog?sitemap_select_mode=<?=$select_mode?><?=$cID?><?=$callback?>', function() {
+			$('#ccm-tab-content-search').load('<?=REL_DIR_FILES_TOOLS_REQUIRED?>/pages/search_dialog', function() {
 				jQuery.fn.dialog.hideLoader();
 			});
 		}

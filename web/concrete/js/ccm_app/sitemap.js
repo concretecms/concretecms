@@ -9,6 +9,8 @@
 
     private:  {
 
+    	customEvents: [],
+
     	reloadNode: function(node, options, onComplete) {
     		var obj = this;
     		var params = {
@@ -27,6 +29,17 @@
 			node.appendAjax(params);
 
     	},
+
+
+		eventListenerExists: function(eventName, requestID) {
+			for (i = 0; i < this.customEvents.length; i++) {
+				var eobj = this.customEvents[i];
+				if (eobj.requestID == requestID && eobj.eventName == eventName) {
+					return true;
+				}
+			}
+			return false;
+		},
 
     	setupNodePagination: function($tree, nodeKey) {
     		//var tree = $tree.dynatree('getTree');
@@ -311,8 +324,12 @@
 		);
 	},
 
-	triggerEvent: function(eventName, args) {
-		$('[data-sitemap=container]').trigger(eventName, args);
+	triggerEvent: function(eventName, args, requestID) {
+		if (requestID) {
+			return $('[data-sitemap-request-id=' + requestID + ']').trigger(eventName, args);
+		} else {
+			return $('[data-sitemap=container]').trigger(eventName, args);
+		}
 	},
 
 	submitDragRequest: function() {
@@ -371,7 +388,15 @@
 		}
 	},
 
-    init: function(options) {
+	onNodeSelected: function(requestID, onComplete) {
+		methods.private.customEvents.push({
+			'eventName': 'selectNode',
+			'requestID': requestID,
+			'onComplete': onComplete
+		});
+	},
+
+	init: function(options) {
 
     	$('#ccm-show-all-pages-cb').on('click', function() {
 			var showSystemPages = $(this).get(0).checked == true ? 1 : 0;
@@ -383,12 +408,13 @@
 		var settings = $.extend({
 			displayNodePagination: false,
 			cParentID: 0,
+			requestID: (new Date().getTime()),
 			displaySingleLevel: false
 		}, options);
 
 		var doPersist = true;
-		if (options.displaySingleLevel) {
-			if (options.cParentID == 1) {
+		if (settings.displaySingleLevel) {
+			if (settings.cParentID == 1) {
 				var minExpandLevel = 2;
 			} else {
 				var minExpandLevel = 3;
@@ -397,10 +423,18 @@
 		} else {
 			var minExpandLevel = 1;
 		}
-
+    
     	$.fn.ccmmenu.enable();
 		return this.each(function() {
-			$(this).attr('data-sitemap', 'container');
+			$(this).attr('data-sitemap', 'container').attr('data-sitemap-request-id', settings.requestID);
+			// setup events
+			for (i = 0; i < methods.private.customEvents.length; i++) {
+				var eobj = methods.private.customEvents[i];
+				$('[data-sitemap-request-id=' + eobj.requestID + ']').on('selectNode', function(sitemapEvent, mouseEvent, node) {
+					eobj.onComplete(node);
+					return true;
+				});
+			}
 			var $obj = $(this);
 			$(this).data('options', settings);
 			$(this).dynatree({
@@ -440,11 +474,8 @@
 					}
 				},
 				onClick: function(node, e) {
-					if (node.getEventTargetType(event) == "title" && node.data.cID){
-						var $menu = methods.getMenu(node.data);
-						if ($menu) {
-							$.fn.ccmmenu.showmenu(e, $menu);
-						}
+					if (node.getEventTargetType(event) == "title" && node.data.cID) {
+						$.fn.ccmsitemap('triggerEvent', 'startSelectNode', [e, node, settings.requestID]);
 					} else if (node.data.href) {
 						window.location.href = node.data.href;
 					}
@@ -494,13 +525,24 @@
 				}
 			});
 
-			if (options.displayNodePagination) {
+			if (settings.displayNodePagination) {
 				$(this).dynatree('option', 'onActivate', function(node) {
 					if ($(node.span).hasClass('ccm-sitemap-explore-paging')) {
 						node.deactivate();
 					}
 				});
 			}
+
+			$(this).on('startSelectNode', function(sitemapEvent, mouseEvent, node, requestID) {
+				if (methods.private.eventListenerExists('selectNode', requestID)) {
+					var r = $.fn.ccmsitemap('triggerEvent', 'selectNode', [mouseEvent, node], requestID);
+				} else {
+					var $menu = methods.getMenu(node.data);
+					if ($menu) {
+						$.fn.ccmmenu.showmenu(mouseEvent, $menu);
+					}
+				}
+			});
 
 			$(this).on('deleteRequestComplete', function(e, response) {
 				if (response.deferred) {
