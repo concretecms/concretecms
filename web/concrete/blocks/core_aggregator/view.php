@@ -21,7 +21,7 @@ if ($c->isEditMode()) {
 
 <div data-aggregator-id="<?=$aggregator->getAggregatorID()?>" data-aggregator-current-page="1" class="<? if ($showTileCommands) { ?>ccm-aggregator-active-tile-commands<? } ?> ccm-aggregator-grid">
     <? foreach($items as $item) { ?>
-      <?=Loader::element('aggregator/item', array('item' => $item))?>
+      <?=Loader::element('aggregator/item', array('item' => $item, 'showTileCommands' => $showTileCommands))?>
     <? } ?>
 </div>
 
@@ -31,6 +31,11 @@ if ($c->isEditMode()) {
 
 <script type="text/javascript">
 $(function() {
+  var totalPages = '<?=$paginator->getTotalPages()?>';
+  var $loadButton = $('button[data-aggregator-button=aggregator-load-more-items]');
+  if (totalPages == 1) {
+    $loadButton.hide();
+  }
   var $agg = $("div[data-aggregator-id=<?=$aggregator->getAggregatorID()?>]");
   $agg.packery({
     columnWidth: <?=$pt->getThemeAggregatorGridItemWidth()?>,
@@ -38,10 +43,13 @@ $(function() {
   });
   $agg.css('opacity', 1);
 
-  $('button[data-aggregator-button=aggregator-load-more-items]').on('click', function() {
-    var $btn = $(this);
+  $loadButton.on('click', function() {
+    var $btn = $(this),
+        page = parseInt($('div[data-aggregator-id=<?=$aggregator->getAggregatorID()?>]').attr('data-aggregator-current-page')),
+        newPage = page + 1;
+
     $btn.prop('disabled', true);
-    var page = parseInt($('div[data-aggregator-id=<?=$aggregator->getAggregatorID()?>]').attr('data-aggregator-current-page'));
+
     $.ajax({
       type: 'post',
       url: "<?=Loader::helper('concrete/urls')->getBlockTypeToolsURL($b)?>/load_more",
@@ -50,7 +58,7 @@ $(function() {
         'bID': <?=$b->getBlockID()?>,
         'cID': <?=$c->getCollectionID()?>,
         'arHandle': '<?=urlencode($a->getAreaHandle())?>',
-        'page': page + 1,
+        'page': newPage,
         'token': '<?=Loader::helper('validation/token')->generate('get_aggregator_items')?>'
       },
       success: function(r) {
@@ -59,7 +67,11 @@ $(function() {
           $agg.append(obj);
         });
         $agg.packery('appended', elements);
-        $btn.prop('disabled', false);
+        if (newPage == totalPages) {
+          $btn.hide();
+        } else {
+          $btn.prop('disabled', false);
+        }
       }
     });
   });
@@ -157,6 +169,38 @@ $(function() {
 
   div.h4 {
     height: <?=4*$pt->getThemeAggregatorGridItemHeight()?>px;
+  }
+
+  div.w5 {
+    width: <?=5*$pt->getThemeAggregatorGridItemWidth()?>px;
+  }
+
+  div.h5 {
+    height: <?=5*$pt->getThemeAggregatorGridItemHeight()?>px;
+  }
+
+  div.w6 {
+    width: <?=6*$pt->getThemeAggregatorGridItemWidth()?>px;
+  }
+
+  div.h6 {
+    height: <?=6*$pt->getThemeAggregatorGridItemHeight()?>px;
+  }
+
+  div.w7 {
+    width: <?=7*$pt->getThemeAggregatorGridItemWidth()?>px;
+  }
+
+  div.h7 {
+    height: <?=7*$pt->getThemeAggregatorGridItemHeight()?>px;
+  }
+
+  div.w8 {
+    width: <?=8*$pt->getThemeAggregatorGridItemWidth()?>px;
+  }
+
+  div.h8 {
+    height: <?=8*$pt->getThemeAggregatorGridItemHeight()?>px;
   }
 
 

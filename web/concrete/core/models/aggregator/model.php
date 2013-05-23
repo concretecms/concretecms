@@ -3,15 +3,30 @@ defined('C5_EXECUTE') or die("Access Denied.");
 class Concrete5_Model_Aggregator extends Object {
 
 	public function getAggregatorID() {return $this->agID;}
+	public function getAggregatorDateCreated() {return $this->agDateCreated;}
+	public function getAggregatorDateLastUpdated() {return $this->agDateLastUpdated;}
 	
 	public static function getByID($agID) {
 		$db = Loader::db();
-		$r = $db->GetRow('select agID, agDateCreated from Aggregators where agID = ?', array($agID));
+		$r = $db->GetRow('select agID, agDateCreated, agDateLastUpdated from Aggregators where agID = ?', array($agID));
 		if (is_array($r) && $r['agID'] == $agID) {
 			$ag = new Aggregator;
 			$ag->setPropertiesFromArray($r);
 			return $ag;
 		}
+	}
+
+	public static function getList() {
+		$db = Loader::db();
+		$r = $db->Execute('select agID from Aggregators order by agDateLastUpdated asc');
+		$aggregators = array();
+		while ($row = $r->FetchRow()) {
+			$ag = Aggregator::getByID($row['agID']);
+			if (is_object($ag)) {
+				$aggregators[] = $ag;
+			}
+		}
+		return $aggregators;
 	}
 
 	public static function add() {
@@ -79,15 +94,24 @@ class Concrete5_Model_Aggregator extends Object {
 			$items = $dataSource->createAggregatorItems($configuration);
 		}
 
+		// now we loop all the items returned, and assign the batch to those items.
 		$agiBatchTimestamp = time();
-		$agiBatchDisplayOrder = 0;
-		// now we order all items by public date ascending
 		$db = Loader::db();
-		$r = $db->Execute('select agiID from AggregatorItems where agID = ? order by agiPublicDateTime desc', array($this->getAggregatorID()));
+		foreach($items as $it) {
+			$it->setAggregatorItemBatchTimestamp($agiBatchTimestamp);
+		}
+
+		// now, we find all the items with that timestamp, and we update their display order.
+		$agiBatchDisplayOrder = 0;
+		$r = $db->Execute('select agiID from AggregatorItems where agID = ? and agiBatchTimestamp = ? order by agiPublicDateTime desc', array($this->getAggregatorID(), $agiBatchTimestamp));
 		while ($row = $r->FetchRow()) {
-			$db->Execute('update AggregatorItems set agiBatchDisplayOrder = ?, agiBatchTimestamp = ? where agiID = ?', array($agiBatchDisplayOrder, $agiBatchTimestamp, $row['agiID']));
+			$db->Execute('update AggregatorItems set agiBatchDisplayOrder = ? where agiID = ?', array($agiBatchDisplayOrder, $row['agiID']));
 			$agiBatchDisplayOrder++;
 		}
+
+		$date = Loader::helper('date')->getSystemDateTime();
+		$db->Execute('update Aggregators set agDateLastUpdated = ? where agID = ?', array($date, $this->agID));
+
 	}
 
 	public function clearAggregatorItems() {

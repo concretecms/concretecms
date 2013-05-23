@@ -16,6 +16,7 @@ abstract class Concrete5_Model_AggregatorItem extends Object {
 	public function getAggregatorItemSlotHeight() {	return $this->agiSlotHeight; }
 	public function getAggregatorItemBatchTimestamp() {	return $this->agiBatchTimestamp; }
 	public function getAggregatorItemBatchDisplayOrder() {	return $this->agiBatchDisplayOrder; }
+	public function getAggregatorItemKey() {	return $this->agiKey; }
 
 	public function getAggregatorItemFeatureHandles() {
 		if (!isset($this->feHandles)) {
@@ -35,6 +36,12 @@ abstract class Concrete5_Model_AggregatorItem extends Object {
 		$db = Loader::db();
 		$db->Execute('update AggregatorItems set agiBatchDisplayOrder = ? where agiID = ?', array($agiBatchDisplayOrder, $this->agiID));
 		$this->agiBatchDisplayOrder = $agiBatchDisplayOrder;
+	}
+
+	public function setAggregatorItemBatchTimestamp($agiBatchTimestamp) {
+		$db = Loader::db();
+		$db->Execute('update AggregatorItems set agiBatchTimestamp = ? where agiID = ?', array($agiBatchTimestamp, $this->agiID));
+		$this->agiBatchTimestamp = $agiBatchTimestamp;
 	}
 
 	public function setAggregatorItemSlotWidth($agiSlotWidth) {
@@ -61,15 +68,16 @@ abstract class Concrete5_Model_AggregatorItem extends Object {
 		}
 	}
 
-	public static function add(Aggregator $ag, AggregatorDataSource $ags, $agiPublicDateTime, $agiTitle, $agiSlotWidth = 1, $agiSlotHeight = 1) {
+	public static function add(Aggregator $ag, AggregatorDataSource $ags, $agiPublicDateTime, $agiTitle, $agiKey, $agiSlotWidth = 1, $agiSlotHeight = 1) {
 		$db = Loader::db();
 		$agiDateTimeCreated = Loader::helper('date')->getSystemDateTime();
-		$r = $db->Execute('insert into AggregatorItems (agID, agsID, agiDateTimeCreated, agiPublicDateTime, agiTitle, agiSlotWidth, agiSlotHeight) values (?, ?, ?, ?, ?, ?, ?)', array(
+		$r = $db->Execute('insert into AggregatorItems (agID, agsID, agiDateTimeCreated, agiPublicDateTime, agiTitle, agiKey, agiSlotWidth, agiSlotHeight) values (?, ?, ?, ?, ?, ?, ?, ?)', array(
 			$ag->getAggregatorID(),
 			$ags->getAggregatorDataSourceID(), 
 			$agiDateTimeCreated,
 			$agiPublicDateTime, 
 			$agiTitle,
+			$agiKey,
 			$agiSlotWidth,
 			$agiSlotHeight
 		));
@@ -79,10 +87,10 @@ abstract class Concrete5_Model_AggregatorItem extends Object {
 
 	public function duplicate(Aggregator $aggregator) {
 		$db = Loader::db();
-		$db->Execute('insert into AggregatorItems (agID, agsID, agiDateTimeCreated, agiPublicDateTime, agiTitle, agiSlotWidth, agiSlotHeight, agtID) 
-			values (?, ?, ?, ?, ?, ?, ?, ?)', array(
+		$db->Execute('insert into AggregatorItems (agID, agsID, agiDateTimeCreated, agiPublicDateTime, agiTitle, agiKey, agiSlotWidth, agiSlotHeight, agtID) 
+			values (?, ?, ?, ?, ?, ?, ?, ?, ?)', array(
 				$aggregator->getAggregatorID(), $this->getAggregatorDataSourceID(), $this->agiDateTimeCreated, $this->agiPublicDateTime, 
-				$this->agiTitle, $this->agiSlotWidth, $this->agiSlotHeight, $this->agtID
+				$this->agiTitle, $this->agiKey, $this->agiSlotWidth, $this->agiSlotHeight, $this->agtID
 			)
 		);
 
