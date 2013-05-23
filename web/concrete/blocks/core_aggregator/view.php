@@ -73,12 +73,25 @@ $(function() {
           $btn.hide();
         } else {
           $btn.prop('disabled', false);
+          $('div[data-aggregator-id=<?=$aggregator->getAggregatorID()?>]').attr('data-aggregator-current-page', newPage);
         }
       }
     });
   });
 
   <? if ($showTileCommands) { ?>
+
+    $('a[data-inline-command=options-tile]').on('click', function() {
+      var agiID = $(this).closest('div.ccm-aggregator-item').attr('data-aggregator-item-id');
+      var href = '<?=Loader::helper('concrete/urls')->getBlockTypeToolsURL($b)?>/edit_template?agiID=' + agiID + '&cID=<?=$c->getCollectionID()?>&arHandle=<?=Loader::helper('text')->entities($a->getAreaHandle())?>&bID=<?=$b->getBlockID()?>';
+      jQuery.fn.dialog.open({
+        modal: true,
+        href: href,
+        width: '400',
+        height: '150',
+        title: '<?=t('Edit Aggregator Template')?>'
+      });
+    });
     var $itemElements = $($agg.packery('getItemElements'));
     $itemElements.draggable({
       'handle': 'a[data-inline-command=move-tile]',

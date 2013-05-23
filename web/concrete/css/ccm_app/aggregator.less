@@ -13,9 +13,16 @@ div.ccm-aggregator-grid {
         background-color: #f2f2f2;
         padding: 5px;
         position: relative;
-        .box-sizing(border-box);
-        width: 100%;
-        height: 100%;
+
+          .box-sizing(border-box);
+          width: 100%;
+          height: 100%;
+
+        div.ccm-aggregator-item-inner-render {
+          .box-sizing(border-box);
+          width: 100%;
+          height: 100%;
+        }
     }
 
   }
@@ -117,5 +124,7 @@ div.ccm-aggregator-item:hover {
 
 div.ccm-aggregator-load-more {
   text-align: center;
+  position: relative;
   padding: 0px 0px 20px 0px;
+  z-index: 100;
 }
