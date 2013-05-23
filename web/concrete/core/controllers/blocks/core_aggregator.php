@@ -76,9 +76,6 @@ class Concrete5_Controller_Block_CoreAggregator extends BlockController {
 						$agc = $ags->configure($ag, $post);	
 					}
 				}
-				if ($_POST['rescanAggregatorItems']) {
-					$ag->clearAggregatorItems();
-				}
 				$ag->generateAggregatorItems();
 			}
 
