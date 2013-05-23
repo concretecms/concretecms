@@ -3,6 +3,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 abstract class Concrete5_Model_AggregatorItem extends Object {
 
 	abstract public function loadDetails();
+	abstract public function canViewAggregatorItem();
 
 	protected $feHandles;
 
@@ -16,7 +17,8 @@ abstract class Concrete5_Model_AggregatorItem extends Object {
 	public function getAggregatorItemSlotHeight() {	return $this->agiSlotHeight; }
 	public function getAggregatorItemBatchTimestamp() {	return $this->agiBatchTimestamp; }
 	public function getAggregatorItemBatchDisplayOrder() {	return $this->agiBatchDisplayOrder; }
-	public function getAggregatorItemKey() {	return $this->agiKey; }
+	public function getAggregatorItemKey() { return $this->agiKey; }
+	public function getAggregatorObject() { return Aggregator::getByID($this->agID); }
 
 	public function getAggregatorItemFeatureHandles() {
 		if (!isset($this->feHandles)) {

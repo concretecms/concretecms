@@ -48,4 +48,18 @@
         <featurecategory handle="collection_version" />
         <featurecategory handle="aggregator_item" />
     </featurecategories>
+
+    <permissionkeys>
+        <permissionkey handle="edit_aggregators" name="Edit Aggregators" description="Can edit the footprint and items in all aggregators." package="" category="admin">
+            <access>
+                <group name="Administrators"/>
+            </access>
+        </permissionkey>
+        <permissionkey handle="edit_aggregator_items" name="Edit Aggregator Items" description="" package="" category="aggregator">
+            <access>
+                <group name="Administrators"/>
+            </access>
+        </permissionkey>
+    </permissionkeys>
+
 </concrete5-cif>

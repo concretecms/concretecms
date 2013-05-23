@@ -292,7 +292,12 @@ $classes = array(
 	'AccountProfileEditController' => array('controller', '/account/profile/edit'),
 	'Zend_Queue_Adapter_Concrete5' => array('library', 'Zend/Queue/Adapter/Concrete5'),
 
-	/* composer */
+	'AggregatorPermissionKey' => array('model','permission/keys/aggregator'),
+	'AggregatorPermissionAssignment' => array('model','permission/assignments/aggregator'),
+	'AggregatorPermissionAccess' => array('model','permission/access/categories/aggregator'),
+	'AggregatorPermissionAccessListItem' => array('model','permission/access/list_items/aggregator'),
+	'AggregatorPermissionResponse' => array('model','permission/response/aggregator'),
+
 	'Composer' => array('model', 'composer/model'),
 	'ComposerTargetType' => array('model','composer/target/type'),
 	'ComposerTargetConfiguration' => array('model','composer/target/configuration'),
@@ -316,7 +321,6 @@ $classes = array(
 	'ComposerFormLayoutSetControl' => array('model','composer/form/layout_set/control'),
 	'ComposerDraft' => array('model','composer/draft/model'),
 	'ComposerPublishResponse' => array('model','composer/publish/response'),
-
 	'NameCorePagePropertyComposerControl' => array('model','composer/control/controls/core_page_property/name'),
 	'UrlSlugCorePagePropertyComposerControl' => array('model','composer/control/controls/core_page_property/url_slug'),
 	'DateTimeCorePagePropertyComposerControl' => array('model','composer/control/controls/core_page_property/date_time'),
@@ -324,7 +328,6 @@ $classes = array(
 	'UserCorePagePropertyComposerControl' => array('model','composer/control/controls/core_page_property/user'),
 	'PageTypeCorePagePropertyComposerControl' => array('model','composer/control/controls/core_page_property/page_type'),
 	'PublishTargetCorePagePropertyComposerControl' => array('model','composer/control/controls/core_page_property/publish_target'),
-
 	'ComposerPermissionKey' => array('model','permission/keys/composer'),
 	'ComposerPermissionAssignment' => array('model','permission/assignments/composer'),
 	'ComposerPermissionAccess' => array('model','permission/access/categories/composer'),
@@ -335,7 +338,6 @@ $classes = array(
 	'ComposerDraftPermissionAccess' => array('model','permission/access/categories/composer_draft'),
 	'ComposerDraftPermissionAccessListItem' => array('model','permission/access/list_items/composer_draft'),
 	'ComposerDraftPermissionResponse' => array('model','permission/response/composer_draft'),
-
 	'ComposerDraftAuthorPermissionAccessEntity' => array('model','permission/access/entity/types/composer_draft_author'),
 
 );
