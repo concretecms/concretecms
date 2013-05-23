@@ -2,7 +2,11 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 class Concrete5_Model_PageAggregatorItem extends AggregatorItem {
 
-	
+	public function canViewAggregatorItem() {
+		$cp = new Permissions($this->page);
+		return $cp->canViewPage();
+	}
+
 	public static function add(AggregatorDataSourceConfiguration $configuration, Page $c) {
 		$aggregator = $configuration->getAggregatorObject();
 		try {

@@ -11,10 +11,11 @@ if($_POST['bID'] && $_POST['cID'] && $nh->integer($_POST['bID']) && $nh->integer
       $b = Block::getByID($cnt->getOriginalBlockID());
     }
 
-    $bp = new Permissions($b);
-    if ($bp->canEditBlock() && Loader::helper('validation/token')->validate('update_aggregator_item', $_POST['token'])) {
-      $controller = $b->getController();
-      if ($controller instanceof CoreAggregatorBlockController) {
+    $controller = $b->getController();
+    if ($controller instanceof CoreAggregatorBlockController) {
+      $ag = $controller->getAggregatorObject();
+      $agp = new Permissions($ag);
+      if ($agp->canEditAggregatorItems() && Loader::helper('validation/token')->validate('update_aggregator_item', $_POST['token'])) {
         switch($_POST['task']) {
           case 'resize':
             $agi = AggregatorItem::getByID($_POST['agiID']);

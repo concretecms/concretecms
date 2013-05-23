@@ -5,7 +5,8 @@ class Concrete5_Model_Aggregator extends Object {
 	public function getAggregatorID() {return $this->agID;}
 	public function getAggregatorDateCreated() {return $this->agDateCreated;}
 	public function getAggregatorDateLastUpdated() {return $this->agDateLastUpdated;}
-	
+	public function getPermissionObjectIdentifier() { return $this->agID;}
+
 	public static function getByID($agID) {
 		$db = Loader::db();
 		$r = $db->GetRow('select agID, agDateCreated, agDateLastUpdated from Aggregators where agID = ?', array($agID));
@@ -89,9 +90,11 @@ class Concrete5_Model_Aggregator extends Object {
 	 */
 	public function generateAggregatorItems() {
 		$configuredDataSources = $this->getConfiguredAggregatorDataSources();
+		$items = array();
 		foreach($configuredDataSources as $configuration) {
 			$dataSource = $configuration->getAggregatorDataSourceObject();
-			$items = $dataSource->createAggregatorItems($configuration);
+			$dataSourceItems = $dataSource->createAggregatorItems($configuration);
+			$items = array_merge($dataSourceItems, $items);
 		}
 
 		// now we loop all the items returned, and assign the batch to those items.

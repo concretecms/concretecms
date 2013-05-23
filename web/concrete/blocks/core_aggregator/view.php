@@ -6,11 +6,12 @@ $a = $b->getBlockAreaObject();
 $c = Page::getCurrentPage();
 $pt = $c->getCollectionThemeObject();
 $showTileCommands = false;
+$agp = new Permissions($aggregator);
 
 if ($c->isEditMode()) {
+  $showTileCommands = $agp->canEditAggregatorItems();
   $bp = new Permissions($b);
   if ($bp->canEditBlock()) { 
-    $showTileCommands = true;
     ?>
 
     <div class="ccm-aggregator-control-bar"></div>
@@ -62,7 +63,8 @@ $(function() {
         'token': '<?=Loader::helper('validation/token')->generate('get_aggregator_items')?>'
       },
       success: function(r) {
-        var elements = $(r);
+        var elements = ($('<div />').append(r).find('>div'));
+
         $.each(elements, function(i, obj) {
           $agg.append(obj);
         });
