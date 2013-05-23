@@ -12,6 +12,7 @@ if($_POST['bID'] && $_POST['cID'] && $nh->integer($_POST['bID']) && $nh->integer
     }
 
     $bp = new Permissions($b);
+    $showTileCommands = $c->isEditMode() && $bp->canEditBlock();
     if ($bp->canViewBlock() && Loader::helper('validation/token')->validate('get_aggregator_items', $_POST['token'])) {
       $controller = $b->getController();
       if ($controller instanceof CoreAggregatorBlockController) {
@@ -20,7 +21,7 @@ if($_POST['bID'] && $_POST['cID'] && $nh->integer($_POST['bID']) && $nh->integer
         $list->sortByDateDescending();
         $items = $list->getPage($_REQUEST['page']);
         foreach($items as $item) {
-          Loader::element('aggregator/item', array("item" => $item));
+          Loader::element('aggregator/item', array("item" => $item, 'showTileCommands' => $showTileCommands));
         }
       }
     }

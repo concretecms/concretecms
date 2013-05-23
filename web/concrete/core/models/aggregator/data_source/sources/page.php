@@ -14,15 +14,23 @@ class Concrete5_Model_PageAggregatorDataSource extends AggregatorDataSource {
 		$pl = new PageList();
 		$pl->ignoreAliases();
 		$pl->ignorePermissions();
+		$aggregator = $configuration->getAggregatorObject();
+		if ($aggregator->getAggregatorDateLastUpdated()) {
+			$pl->filterByPublicDate($aggregator->getAggregatorDateLastUpdated(), '>');
+		}
 		$ctID = $configuration->getCollectionTypeID();
 		if ($ctID > 0) {
 			$pl->filterByCollectionTypeID($ctID);
 		}
 		$pages = $pl->get();
+		$items = array();
 		foreach($pages as $c) {
 			$item = PageAggregatorItem::add($configuration, $c);
+			if (is_object($item)) {
+				$items[] = $item;
+			}
 		}
-
+		return $items;
 	}
 
 }

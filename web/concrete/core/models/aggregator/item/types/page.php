@@ -5,24 +5,31 @@ class Concrete5_Model_PageAggregatorItem extends AggregatorItem {
 	
 	public static function add(AggregatorDataSourceConfiguration $configuration, Page $c) {
 		$aggregator = $configuration->getAggregatorObject();
-		$item = parent::add($aggregator, $configuration->getAggregatorDataSourceObject(), $c->getCollectionDatePublic(), $c->getCollectionName());
-		$db = Loader::db();
-		$db->Execute('insert into agPage (agiID, cID) values (?, ?)', array(
-			$item->getAggregatorItemID(),
-			$c->getCollectionID()
-		));
-		$item->addFeatureAssignment('title', $c->getCollectionName());
-		$item->addFeatureAssignment('date_time', $c->getCollectionDatePublic());
-		$item->addFeatureAssignment('link', Loader::helper('navigation')->getLinkToCollection($c));
-		$item->addFeatureAssignment('description', $c->getCollectionDescription());
-		if ($c->getAttribute('is_featured')) {
-			$item->addFeatureAssignment('featured', 1);
+		try {
+			// we wrap this in a try because it MIGHT fail if it's a duplicate
+			$item = parent::add($aggregator, $configuration->getAggregatorDataSourceObject(), $c->getCollectionDatePublic(), $c->getCollectionName(), $c->getCollectionID());
+		} catch (Exception $e) {}
+
+		if (is_object($item)) {
+			$db = Loader::db();
+			$db->Execute('insert into agPage (agiID, cID) values (?, ?)', array(
+				$item->getAggregatorItemID(),
+				$c->getCollectionID()
+			));
+			$item->addFeatureAssignment('title', $c->getCollectionName());
+			$item->addFeatureAssignment('date_time', $c->getCollectionDatePublic());
+			$item->addFeatureAssignment('link', Loader::helper('navigation')->getLinkToCollection($c));
+			$item->addFeatureAssignment('description', $c->getCollectionDescription());
+			if ($c->getAttribute('is_featured')) {
+				$item->addFeatureAssignment('featured', 1);
+			}
+			$assignments = $c->getFeatureAssignments();
+			foreach($assignments as $fa) {
+				$item->copyFeatureAssignment($fa);
+			}
+			$item->setAutomaticAggregatorItemTemplate();
+			return $item;
 		}
-		$assignments = $c->getFeatureAssignments();
-		foreach($assignments as $fa) {
-			$item->copyFeatureAssignment($fa);
-		}
-		$item->setAutomaticAggregatorItemTemplate();
 	}
 
 	public function duplicate(Aggregator $aggregator) {
