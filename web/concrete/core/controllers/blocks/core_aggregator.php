@@ -34,6 +34,17 @@ class Concrete5_Controller_Block_CoreAggregator extends BlockController {
 			$this->set('aggregator', $aggregator);
 		}
 
+		public function getAggregatorObject() {
+			if (!isset($this->aggregator)) {
+				// i don't know why this->cnvid isn't sticky in some cases, leading us to query
+				// every damn time
+				$db = Loader::db();
+				$agID = $db->GetOne('select agID from btCoreAggregator where bID = ?', array($this->bID));
+				$this->aggregator = Aggregator::getByID($agID);
+			}
+			return $this->aggregator;
+		}
+
 		public function add() {
 			$this->setupForm();
 		}
@@ -42,7 +53,7 @@ class Concrete5_Controller_Block_CoreAggregator extends BlockController {
 			$this->setupForm();
 		}
 
-		public function save() {
+		public function save($args) {
 			$db = Loader::db();
 			$agID = $db->GetOne('select agID from btCoreAggregator where bID = ?', array($this->bID));
 			if (!$agID) {
@@ -71,7 +82,12 @@ class Concrete5_Controller_Block_CoreAggregator extends BlockController {
 				$ag->generateAggregatorItems();
 			}
 
-			$values = array('agID' => $ag->getAggregatorID());
+
+			$itemsPerPage = intval($args['itemsPerPage']);
+			$values = array(
+				'agID' => $ag->getAggregatorID(),
+				'itemsPerPage' => $itemsPerPage
+			);
 			parent::save($values);
 
 		}
@@ -116,6 +132,7 @@ class Concrete5_Controller_Block_CoreAggregator extends BlockController {
 					$items = $list->getPage();
 					$this->set('aggregator', $aggregator);
 					$this->set('itemList', $list);
+					$this->set('paginator', $list->getPagination());
 					$this->set('items', $items);
 				}
 			}
