@@ -13,7 +13,7 @@ class Concrete5_Model_Aggregator_Item_List extends DatabaseItemList {
 		$this->sortByMultiple('agiBatchTimestamp desc', 'agiBatchDisplayOrder asc');
 	}
 
-	public function get($itemsToGet = 100, $offset = 0) {
+	public function get($itemsToGet = 10000, $offset = 0) {
 		$items = array(); 
 		$r = parent::get($itemsToGet, intval($offset));
 		foreach($r as $row) {

@@ -19,20 +19,14 @@ if ($c->isEditMode()) {
 
 <? } ?>
 
-<div data-aggregator-id="<?=$aggregator->getAggregatorID()?>" class="<? if ($showTileCommands) { ?>ccm-aggregator-active-tile-commands<? } ?> ccm-aggregator-grid">
-  	<? foreach($items as $item) { ?>
-    <div data-aggregator-item-batch-timestamp="<?=$item->getAggregatorItemBatchTimestamp()?>" data-aggregator-item-id="<?=$item->getAggregatorItemID()?>" class="ccm-aggregator-item h<?=$item->getAggregatorItemSlotHeight()?> w<?=$item->getAggregatorItemSlotWidth()?>">
-      <div class="ccm-aggregator-item-inner">
-      <? if ($showTileCommands) { ?>
-        <ul class="ccm-aggregator-item-inline-commands ccm-ui">
-          <li class="ccm-aggregator-item-inline-move"><a data-inline-command="move-tile" href="#"><i class="icon-move"></i></a></li>
-          <li class="ccm-aggregator-item-inline-options"><a data-inline-command="options-tile" href="#"><i class="icon-cog"></i></a></li>
-        </ul>
-      <? } ?>
-      <? $item->render(); ?></div>
-      </div>
+<div data-aggregator-id="<?=$aggregator->getAggregatorID()?>" data-aggregator-current-page="1" class="<? if ($showTileCommands) { ?>ccm-aggregator-active-tile-commands<? } ?> ccm-aggregator-grid">
+    <? foreach($items as $item) { ?>
+      <?=Loader::element('aggregator/item', array('item' => $item))?>
+    <? } ?>
+</div>
 
-  	<? } ?>
+<div class="ccm-aggregator-load-more">
+  <button class="btn-large btn" data-aggregator-button="aggregator-load-more-items"><?=t('Load More')?></button>
 </div>
 
 <script type="text/javascript">
@@ -43,6 +37,32 @@ $(function() {
     rowHeight: <?=$pt->getThemeAggregatorGridItemHeight()?>
   });
   $agg.css('opacity', 1);
+
+  $('button[data-aggregator-button=aggregator-load-more-items]').on('click', function() {
+    var $btn = $(this);
+    $btn.prop('disabled', true);
+    var page = parseInt($('div[data-aggregator-id=<?=$aggregator->getAggregatorID()?>]').attr('data-aggregator-current-page'));
+    $.ajax({
+      type: 'post',
+      url: "<?=Loader::helper('concrete/urls')->getBlockTypeToolsURL($b)?>/load_more",
+      data: {
+        'task': 'get_aggregator_items',
+        'bID': <?=$b->getBlockID()?>,
+        'cID': <?=$c->getCollectionID()?>,
+        'arHandle': '<?=urlencode($a->getAreaHandle())?>',
+        'page': page + 1,
+        'token': '<?=Loader::helper('validation/token')->generate('get_aggregator_items')?>'
+      },
+      success: function(r) {
+        var elements = $(r);
+        $.each(elements, function(i, obj) {
+          $agg.append(obj);
+        });
+        $agg.packery('appended', elements);
+        $btn.prop('disabled', false);
+      }
+    });
+  });
 
   <? if ($showTileCommands) { ?>
     var $itemElements = $($agg.packery('getItemElements'));
@@ -130,5 +150,14 @@ $(function() {
   div.h3 {
     height: <?=3*$pt->getThemeAggregatorGridItemHeight()?>px;
   }
+
+  div.w4 {
+    width: <?=4*$pt->getThemeAggregatorGridItemWidth()?>px;
+  }
+
+  div.h4 {
+    height: <?=4*$pt->getThemeAggregatorGridItemHeight()?>px;
+  }
+
 
 </style>

@@ -7,5 +7,10 @@
 		</field>
 		<field name="agID" type="I">
 		</field>
+		<field name="itemsPerPage" type="I2">
+			<unsigned />
+			<notnull />
+			<default value="50" />
+		</field>
 	</table>
 </schema>

@@ -8,7 +8,12 @@
 
 <div class="ccm-tab-content" id="ccm-tab-content-sources">
 
-<? if ($controller->getTask() == 'edit') { ?>
+<?
+if ($controller->getTask() == 'add') { 
+	$itemsPerPage = 20;
+}
+
+if ($controller->getTask() == 'edit') { ?>
 <div class="alert alert-warning ccm-aggregator-data-source-update-detected">
 	<?=t("Data source change detected. If saved, this block will clear its current tiles and grab new ones.")?>
 	<input type="hidden" name="rescanAggregatorItems" value="0" />
@@ -74,8 +79,14 @@
 <? } ?>
 </div>
 
-<div class="ccm-tab-content" id="ccm-tab-content-output">
-	asdf
+<div class="ccm-tab-content form-horizontal" id="ccm-tab-content-output">
+		<div class="control-group" data-row="itemsPerPage">
+		<label class="control-label"><?=t('Messages Per Page')?></label>
+		<div class="controls">
+			<?=$form->text('itemsPerPage', $itemsPerPage, array('class' => 'span1'))?>
+		</div>
+	</div>
+
 </div>
 
 
