@@ -11,7 +11,9 @@ if ($item->canViewAggregatorItem()) { ?>
       <li class="ccm-aggregator-item-inline-options"><a data-inline-command="options-tile" href="#"><i class="icon-cog"></i></a></li>
     </ul>
   <? } ?>
-  <? $item->render(); ?>
+  <div class="ccm-aggregator-item-inner-render">
+	  <? $item->render(); ?>
+	</div>
 </div>
 </div>
 

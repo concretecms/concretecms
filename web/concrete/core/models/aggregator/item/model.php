@@ -32,6 +32,7 @@ abstract class Concrete5_Model_AggregatorItem extends Object {
 		$db = Loader::db();
 		$db->Execute('update AggregatorItems set agtID = ? where agiID = ?', array($agtID, $this->agiID));
 		$this->agtID = $agtID;
+		$this->agtHandle = $db->GetOne('select agtHandle from AggregatorItemTemplates where agtID = ?', array($agtID));
 	}
 
 	public function setAggregatorItemBatchDisplayOrder($agiBatchDisplayOrder) {
