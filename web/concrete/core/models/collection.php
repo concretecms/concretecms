@@ -280,7 +280,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		/* area stuff */
 		
 		function getArea($arHandle) {
-			return Area::get($c, $arHandle);
+			return Area::get($this, $arHandle);
 		}
 
 		/* aliased content */
