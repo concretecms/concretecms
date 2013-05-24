@@ -7,6 +7,7 @@ if ($_POST['agID'] && $nh->integer($_POST['agID'])) {
     $showTileCommands = ($_POST['showTileCommands'] && Loader::helper('validation/token')->validate('update_aggregator_items', $_POST['editToken']));
     $list = new AggregatorItemList($aggregator);
     $list->sortByDateDescending();
+    $list->setItemsPerPage($_REQUEST['itemsPerPage']);
     $items = $list->getPage($_REQUEST['page']);
     foreach($items as $item) {
       Loader::element('aggregator/item', array("item" => $item, 'showTileCommands' => $showTileCommands));

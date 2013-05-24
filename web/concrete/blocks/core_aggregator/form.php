@@ -78,6 +78,7 @@ if ($controller->getTask() == 'edit') { ?>
 	<span data-message="no-sources"><?=t('You have not added any data sources.')?></span></div>
 <? } ?>
 </div>
+</div>
 
 <div class="ccm-tab-content form-horizontal" id="ccm-tab-content-output">
 		<div class="control-group" data-row="itemsPerPage">

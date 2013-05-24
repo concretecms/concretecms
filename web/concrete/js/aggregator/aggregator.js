@@ -132,6 +132,7 @@
 		var options = $.extend({
 			totalPages: 0,
 			columnWidth: 120,
+			itemsPerPage: 24,
 			rowHeight: 120,
 			showTileComamnds: 0
 		}, options);
@@ -161,6 +162,7 @@
 						'task': 'get_aggregator_items',
 						'agID': options.agID,
 						'page': newPage,
+						'itemsPerPage': options.itemsPerPage,
 						'loadToken': options.loadToken,
 						'editToken': options.editToken,
 						'showTileCommands': options.showTileCommands
