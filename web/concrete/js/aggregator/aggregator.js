@@ -24,7 +24,16 @@
 
 			var $itemElements = $($aggregator.packery('getItemElements')).not('.event-bound');
 			$itemElements.draggable({
-				'handle': 'a[data-inline-command=move-tile]'
+				'handle': 'a[data-inline-command=move-tile]', 
+				start: function() {
+					$.fn.ccmmenu.disable();
+					$('.ccm-area-block-dropzone').addClass('ccm-area-block-dropzone-active');
+				},
+				stop: function() {
+					$.fn.ccmmenu.enable();
+					$('.ccm-area-block-dropzone').removeClass('ccm-area-block-dropzone-active');
+					$aggregator.packery('layout');
+				}
 			});
 
 			$aggregator.packery('on', 'dragItemPositioned', function(pkr, item) {
@@ -40,7 +49,6 @@
 					data.push({'name': 'agiID[' + $obj.attr('data-aggregator-item-batch-timestamp') + '][]', 'value': $obj.attr('data-aggregator-item-id')});
 				}
 
-				console.log(data);
 				$.ajax({
 					type: 'post',
 					url: CCM_TOOLS_PATH + '/aggregator/update',
@@ -181,7 +189,9 @@
 							$loadButton.prop('disabled', false);
 							$aggregator.attr('data-aggregator-current-page', newPage);
 						}
-						methods.private.enableEditing($aggregator, options);
+						if (options.showTileCommands) {
+							methods.private.enableEditing($aggregator, options);
+						}
 					}
 				});
 			});

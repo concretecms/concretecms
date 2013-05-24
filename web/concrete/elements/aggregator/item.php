@@ -3,7 +3,7 @@
 $ap = new Permissions($item->getAggregatorObject());
 if ($item->canViewAggregatorItem()) { ?>
 
-<div data-aggregator-item-batch-timestamp="<?=$item->getAggregatorItemBatchTimestamp()?>" data-aggregator-item-id="<?=$item->getAggregatorItemID()?>" class="ccm-aggregator-item h<?=$item->getAggregatorItemSlotHeight()?> w<?=$item->getAggregatorItemSlotWidth()?>">
+<div data-block-type-handle="<?=BLOCK_HANDLE_AGGREGATOR_ITEM_PROXY?>" data-aggregator-item-batch-timestamp="<?=$item->getAggregatorItemBatchTimestamp()?>" data-aggregator-item-id="<?=$item->getAggregatorItemID()?>" class="ccm-aggregator-item h<?=$item->getAggregatorItemSlotHeight()?> w<?=$item->getAggregatorItemSlotWidth()?>">
   <div class="ccm-aggregator-item-inner">
   <? if ($showTileCommands && $ap->canEditAggregatorItems()) { ?>
     <ul class="ccm-aggregator-item-inline-commands ccm-ui">
