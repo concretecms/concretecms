@@ -105,6 +105,28 @@
     	});
     },
 
+    deleteItem: function(options) {
+		jQuery.fn.dialog.showLoader();
+		$.ajax({
+			type: 'POST',
+			data: {
+				task: 'delete_item',
+				agiID: options.agiID,
+				token: options.deleteToken
+			},
+			url: CCM_TOOLS_PATH + '/aggregator/edit_template',
+			success: function(r) {
+				jQuery.fn.dialog.hideLoader();
+				// load the newly rendered HTML into the old aggregator item.
+				var $item = $('[data-aggregator-item-id=' + options.agiID + ']');
+				var $aggregator = $item.parent();
+				$item.remove();
+				$aggregator.packery('layout');
+				jQuery.fn.dialog.closeTop();
+			}
+		});
+    },
+
 	init: function(options) {
 
 		var options = $.extend({

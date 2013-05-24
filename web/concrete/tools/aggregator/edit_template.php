@@ -16,6 +16,11 @@ if ($_REQUEST['agiID'] && $nh->integer($_REQUEST['agiID'])) {
           $item->render();
           exit;
         }
+        if (is_object($item) && $_POST['task'] == 'delete_item' && Loader::helper('validation/token')->validate('delete_item', $_POST['token'])) {
+          $item->delete();
+          exit;
+        }
+
         $templates = AggregatorItemTemplate::getList();
         ?>
 
@@ -38,6 +43,7 @@ if ($_REQUEST['agiID'] && $nh->integer($_REQUEST['agiID'])) {
         <div class="dialog-buttons">
           <button class="btn pull-left btn-hover-danger" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel')?></button>
           <button class="btn pull-right btn-primary" onclick="$('form[data-aggregator-form=template]').submit()"><?=t('Save')?></button>
+          <button class="btn pull-right btn-danger" onclick="$.fn.ccmaggregator('deleteItem', {agiID: '<?=$agiID?>', 'deleteToken': '<?=Loader::helper('validation/token')->generate('delete_item')?>'})"><?=t('Delete')?></button>
         </div>
       </div>
 
