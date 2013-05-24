@@ -43,6 +43,7 @@ if ($c->isEditMode()) {
 $(function() {
   $('div[data-aggregator-id=<?=$aggregator->getAggregatorID()?>]').ccmaggregator({
     totalPages: '<?=$paginator->getTotalPages()?>',
+    'itemsPerPage': '<?=$itemsPerPage?>', 
     columnWidth: <?=$pt->getThemeAggregatorGridItemWidth()?>,
     rowHeight: <?=$pt->getThemeAggregatorGridItemHeight()?>,
     agID: <?=$aggregator->getAggregatorID()?>,

@@ -126,6 +126,7 @@ class Concrete5_Controller_Block_CoreAggregator extends BlockController {
 
 					$list = new AggregatorItemList($aggregator);
 					$list->sortByDateDescending();
+					$list->setItemsPerPage($this->itemsPerPage);
 					$items = $list->getPage();
 					$this->set('aggregator', $aggregator);
 					$this->set('itemList', $list);
