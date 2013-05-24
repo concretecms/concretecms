@@ -90,9 +90,10 @@ abstract class Concrete5_Model_AggregatorItem extends Object {
 
 	public function duplicate(Aggregator $aggregator) {
 		$db = Loader::db();
+		$agID = $aggregator->getAggregatorID();
 		$db->Execute('insert into AggregatorItems (agID, agsID, agiDateTimeCreated, agiPublicDateTime, agiTitle, agiKey, agiSlotWidth, agiSlotHeight, agiBatchTimestamp, agiBatchDisplayOrder, agtID) 
 			values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', array(
-				$aggregator->getAggregatorID(), $this->getAggregatorDataSourceID(), $this->agiDateTimeCreated, $this->agiPublicDateTime, 
+				$agID, $this->getAggregatorDataSourceID(), $this->agiDateTimeCreated, $this->agiPublicDateTime, 
 				$this->agiTitle, $this->agiKey, $this->agiSlotWidth, $this->agiSlotHeight, $this->agiBatchTimestamp, $this->agiBatchDisplayOrder, $this->agtID
 			)
 		);
@@ -103,6 +104,8 @@ abstract class Concrete5_Model_AggregatorItem extends Object {
 		foreach($assignments as $as) {
 			$item->copyFeatureAssignment($as);
 		}
+
+		return $item;
 	}
 
 	public function addFeatureAssignment($feHandle, $mixed) {

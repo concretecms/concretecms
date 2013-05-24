@@ -50,11 +50,13 @@ var CCMEditMode = function() {
 		});		
 	}
 
-	saveArrangement = function(sourceBlockID, sourceBlockAreaID, destinationBlockAreaID) {
+	saveArrangement = function(sourceBlockID, sourceBlockAreaID, destinationBlockAreaID, sourceBlockTypeHandle) {
 		var	cID = CCM_CID;
 		jQuery.fn.dialog.showLoader();
-
-		var serial = '&sourceBlockID=' + sourceBlockID + '&sourceBlockAreaID=' + sourceBlockAreaID + '&destinationBlockAreaID=' + destinationBlockAreaID
+		if (!sourceBlockTypeHandle) {
+			var sourceBlockTypeHandle = '';
+		}
+		var serial = '&sourceBlockID=' + sourceBlockID + '&sourceBlockTypeHandle=' + sourceBlockTypeHandle + '&sourceBlockAreaID=' + sourceBlockAreaID + '&destinationBlockAreaID=' + destinationBlockAreaID
 		var source = $('div.ccm-area[data-area-id=' + sourceBlockAreaID + ']');
 
 		if (sourceBlockAreaID == destinationBlockAreaID) {
@@ -88,17 +90,23 @@ var CCMEditMode = function() {
 	 		success: function(r) {
 	 			ccm_parseJSON(r, function() {
 	 				jQuery.fn.dialog.hideLoader();
-	 				if (source && destination) {
-	 					// we are moving blocks from one area to another
-						var stb = parseInt(source.attr('data-total-blocks'));
-						var dtb = parseInt(destination.attr('data-total-blocks'));
-						source.attr('data-total-blocks', stb - 1);
+	 				if (sourceBlockTypeHandle == 'core_aggregator_item') {
+	 					destination.find('div[data-aggregator-item-id=' + sourceBlockID + ']').remove();
+	 					CCMEditMode.parseBlockResponse(r, r.bID, 'add');
 						destination.attr('data-total-blocks', dtb + 1);
+	 				} else {
+		 				if (source && destination) {
+		 					// we are moving blocks from one area to another
+							var stb = parseInt(source.attr('data-total-blocks'));
+							var dtb = parseInt(destination.attr('data-total-blocks'));
+							source.attr('data-total-blocks', stb - 1);
+							destination.attr('data-total-blocks', dtb + 1);
 
-						// we change the info on the block itself
-						destination.find('div[data-block-id=' + sourceBlockID + ']').attr('data-area-id', destinationBlockAreaID);
-						CCMToolbar.disableDirectExit();
+							// we change the info on the block itself
+							destination.find('div[data-block-id=' + sourceBlockID + ']').attr('data-area-id', destinationBlockAreaID);
+						}
 					}
+					CCMToolbar.disableDirectExit();
 				});
 	 		}
 	 	});
@@ -165,7 +173,12 @@ var CCMEditMode = function() {
 				} else {
 					// else we are dragging a block from some other area into this one.
 					ui.draggable.appendTo($(this).find('.ccm-area-block-list'));
-					saveArrangement(ui.draggable.attr('data-block-id'), ui.draggable.attr('data-area-id'), $(this).attr('data-area-id'));
+					var itemID = ui.draggable.attr('data-block-id');
+					var btHandle = ui.draggable.attr('data-block-type-handle');
+					if (btHandle == 'core_aggregator_item') {
+						var itemID = ui.draggable.attr('data-aggregator-item-id');
+					}
+					saveArrangement(itemID, ui.draggable.attr('data-area-id'), $(this).attr('data-area-id'), btHandle);
 				}
 			}
 		});
@@ -201,13 +214,17 @@ var CCMEditMode = function() {
 					var $area = $('#ccm-add-new-block-placeholder').closest('.ccm-area');
 					addBlockType($area.attr('data-cID'), $area.attr('data-area-id'), $area.attr('data-area-handle'), ui.helper, true);
 				} else {
-					var bID = ui.draggable.attr('data-block-id');
+					var itemID = ui.draggable.attr('data-block-id');
+					var btHandle = ui.draggable.attr('data-block-type-handle');
+					if (btHandle == 'core_aggregator_item') {
+						var itemID = ui.draggable.attr('data-aggregator-item-id');
+					}
 					var arID = ui.draggable.attr('data-area-id');
 					var $area = $(this).closest('.ccm-area');
 					$(this).replaceWith(ui.draggable.clone());
 					ui.draggable.remove();
 					setTimeout(function() {
-						saveArrangement(bID, arID, $area.attr('data-area-id'));
+						saveArrangement(itemID, arID, $area.attr('data-area-id'), btHandle);
 					}, 100); // i don't know why but we need to wait a moment so that the original draggable is out of the DOM
 				}
 			}
@@ -314,8 +331,13 @@ var CCMEditMode = function() {
 
 		parseBlockResponse: function(r, currentBlockID, task) {
 			try { 
-				r = r.replace(/(<([^>]+)>)/ig,""); // because some plugins add bogus HTML after our JSON requests and screw everything up
-				resp = eval('(' + r + ')');
+				if (typeof(r) == 'string') {
+					r = r.replace(/(<([^>]+)>)/ig,""); // because some plugins add bogus HTML after our JSON requests and screw everything up
+					resp = eval('(' + r + ')');
+				} else {
+					resp = r;
+				}
+
 				if (resp.error == true) {
 					var message = '<ul>'
 					for (i = 0; i < resp.response.length; i++) {						
