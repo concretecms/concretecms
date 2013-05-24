@@ -25,13 +25,7 @@ if($_REQUEST['bID'] && $_REQUEST['cID'] && $nh->integer($_REQUEST['bID']) && $nh
           $item->render();
           exit;
         }
-        $list = AggregatorItemTemplate::getList();
-        $templates = array();
-        foreach($list as $template) {
-          if (is_object($template)) {
-            $templates[$template->getAggregatorItemTemplateID()] = $template->getAggregatorItemTemplateName();
-          }
-        }
+        $templates = AggregatorItemTemplate::getList();
         ?>
 
       <div class="ccm-ui">
@@ -40,7 +34,11 @@ if($_REQUEST['bID'] && $_REQUEST['cID'] && $nh->integer($_REQUEST['bID']) && $nh
         <div class="control-group">
           <?=$form->label('agtID', t('Template'))?>
           <div class="controls">
-            <?=$form->select('agtID', $templates, $item->getAggregatorItemTemplateID());?>
+            <select name="agtID">
+              <? foreach($templates as $template) { ?>
+                <option <? if (!$item->itemSupportsAggregatorItemTemplate($template)) { ?>disabled<? } ?> value="<?=$template->getAggregatorItemTemplateID()?>" <? if ($template->getAggregatorItemTemplateID() == $item->getAggregatorItemTemplateID()) { ?>selected<? } ?>><?=$template->getAggregatorItemTemplateName()?></option>
+              <? } ?>
+            </select>
           </div>
         </div>
 
