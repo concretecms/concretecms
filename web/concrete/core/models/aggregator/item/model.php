@@ -90,10 +90,10 @@ abstract class Concrete5_Model_AggregatorItem extends Object {
 
 	public function duplicate(Aggregator $aggregator) {
 		$db = Loader::db();
-		$db->Execute('insert into AggregatorItems (agID, agsID, agiDateTimeCreated, agiPublicDateTime, agiTitle, agiKey, agiSlotWidth, agiSlotHeight, agtID) 
-			values (?, ?, ?, ?, ?, ?, ?, ?, ?)', array(
+		$db->Execute('insert into AggregatorItems (agID, agsID, agiDateTimeCreated, agiPublicDateTime, agiTitle, agiKey, agiSlotWidth, agiSlotHeight, agiBatchTimestamp, agiBatchDisplayOrder, agtID) 
+			values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', array(
 				$aggregator->getAggregatorID(), $this->getAggregatorDataSourceID(), $this->agiDateTimeCreated, $this->agiPublicDateTime, 
-				$this->agiTitle, $this->agiKey, $this->agiSlotWidth, $this->agiSlotHeight, $this->agtID
+				$this->agiTitle, $this->agiKey, $this->agiSlotWidth, $this->agiSlotHeight, $this->agiBatchTimestamp, $this->agiBatchDisplayOrder, $this->agtID
 			)
 		);
 
