@@ -163,6 +163,14 @@ abstract class Concrete5_Model_AggregatorItem extends Object {
 		}
 	}
 
+	public function itemSupportsAggregatorItemTemplate(AggregatorItemTemplate $template) {
+		// checks to see if all the features necessary to implement the template are present in this item.
+		$templateFeatures = $template->getAggregatorItemTemplateFeatureHandles();
+		$itemFeatures = $this->getAggregatorItemFeatureHandles();
+		$features = array_intersect($templateFeatures, $itemFeatures);
+		return count($features) == count($templateFeatures);
+	}
+
 	public function delete() {
 		$db = Loader::db();
 		$db->Execute('delete from AggregatorItems where agiID = ?', array($this->agiID));

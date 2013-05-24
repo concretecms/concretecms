@@ -29,7 +29,10 @@ class Concrete5_Model_RssFeedAggregatorItem extends AggregatorItem {
 			$item->addFeatureAssignment('title', $post->get_title());
 			$item->addFeatureAssignment('date_time', $post->get_date('Y-m-d H:i:s'));
 			$item->addFeatureAssignment('link', $post->get_link());
-			$item->addFeatureAssignment('description', strip_tags($post->get_description()));
+			$description = strip_tags($post->get_description());
+			if ($description != '') {
+				$item->addFeatureAssignment('description', $description);
+			}
 			if ($thumbnail) {
 				$item->addFeatureAssignment('image', $thumbnail);
 			}

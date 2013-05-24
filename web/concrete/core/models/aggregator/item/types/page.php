@@ -23,7 +23,9 @@ class Concrete5_Model_PageAggregatorItem extends AggregatorItem {
 			$item->addFeatureAssignment('title', $c->getCollectionName());
 			$item->addFeatureAssignment('date_time', $c->getCollectionDatePublic());
 			$item->addFeatureAssignment('link', Loader::helper('navigation')->getLinkToCollection($c));
-			$item->addFeatureAssignment('description', $c->getCollectionDescription());
+			if ($c->getCollectionDescription() != '') {
+				$item->addFeatureAssignment('description', $c->getCollectionDescription());
+			}
 			if ($c->getAttribute('is_featured')) {
 				$item->addFeatureAssignment('featured', 1);
 			}
