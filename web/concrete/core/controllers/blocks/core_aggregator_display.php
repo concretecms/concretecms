@@ -1,27 +1,27 @@
 <?
 	defined('C5_EXECUTE') or die("Access Denied.");
 /**
- * Displays an aggregator item stand-alone in a page.
+ * Displays an aggregator stand-alone in a page.
  *
  * @package Blocks
- * @subpackage Core Aggregator Item
+ * @subpackage Core Aggregator Display
  * @author Andrew Embler <andrew@concrete5.org>
  * @copyright  Copyright (c) 2003-2013 Concrete5. (http://www.concrete5.org)
  * @license    http://www.concrete5.org/license/     MIT License
  *
  */
 	
-	class Concrete5_Controller_Block_CoreAggregatorItem extends BlockController {
+	class Concrete5_Controller_Block_CoreAggregatorDisplay extends BlockController {
 
 		protected $btCacheBlockRecord = true;
-		protected $btTable = 'btCoreAggregatorItem';
+		protected $btTable = 'btCoreAggregatorDisplay';
 		protected $btIsInternal = true;		
 		public function getBlockTypeDescription() {
 			return t("Proxy block for aggregator items added to areas.");
 		}
 		
 		public function getBlockTypeName() {
-			return t("Aggregator Item (Core)");
+			return t("Aggregator Display (Core)");
 		}
 
 		public function on_page_view() {
@@ -30,11 +30,12 @@
 		}
 
 		public function view() {
-			$item = AggregatorItem::getByID($this->agiID);
-			if (is_object($item)) {
-				$aggregator = $item->getAggregatorObject();
+			$aggregator = Aggregator::getByID($this->agID);
+			if (is_object($aggregator)) {
+				$list = new AggregatorItemList($aggregator);
+				$list->sortByDateDescending();
 				$this->set('aggregator', $aggregator);
-				$this->set('items', $aggregator->getAggregatorItems());
+				$this->set('itemList', $list);
 			}
 		}
 		

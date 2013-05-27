@@ -1,12 +1,12 @@
 <?xml version="1.0"?>
 <schema version="0.3">
-	<table name="btCoreAggregatorItem">
+	<table name="btCoreAggregatorDisplay">
 		<field name="bID" type="I">
 			<key />
 			<unsigned />
 			<notnull />
 		</field>
-		<field name="agiID" type="I">
+		<field name="agID" type="I">
 			<unsigned />
 			<notnull />
 		</field>

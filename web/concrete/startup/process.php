@@ -42,7 +42,7 @@
 						}
 
 						$item = AggregatorItem::getByID($_POST['sourceBlockID']); // this is ACTUALLY an aggregator item ID
-						$btx = BlockType::getByHandle(BLOCK_HANDLE_AGGREGATOR_ITEM_PROXY);
+						$btx = BlockType::getByHandle(BLOCK_HANDLE_AGGREGATOR_PROXY);
 						$nvc = $cx->getVersionToModify();
 						if ($a->isGlobalArea()) {
 							$xvc = $c->getVersionToModify(); // we need to create a new version of THIS page as well.
@@ -50,7 +50,7 @@
 						}
 						$aggregator = Aggregator::add();
 						$newItem = $item->duplicate($aggregator);
-						$data['agiID'] = $newItem->getAggregatorItemID();
+						$data['agID'] = $aggregator->getAggregatorID();
 						$nb = $nvc->addBlock($btx, $ax, $data);
 
 						$item->delete();
