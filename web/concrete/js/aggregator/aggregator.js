@@ -28,9 +28,19 @@
 				start: function() {
 					$.fn.ccmmenu.disable();
 					$('.ccm-area-block-dropzone').addClass('ccm-area-block-dropzone-active');
+					$('div[data-aggregator-id]').each(function() {
+						var $tagg = $(this);
+						if (parseInt($tagg.attr('data-aggregator-id')) != parseInt(options.agID)) {
+							$tagg.addClass('ccm-aggregator-item-droppable').droppable({
+								accept: '.ccm-aggregator-item',
+								hoverClass: 'ccm-aggregator-item-drop-active'
+							});
+						}
+					});
 				},
 				stop: function() {
 					$.fn.ccmmenu.enable();
+					//$('div.ccm-aggregator-item-droppable').droppable('destroy');
 					$('.ccm-area-block-dropzone').removeClass('ccm-area-block-dropzone-active');
 					$aggregator.packery('layout');
 				}

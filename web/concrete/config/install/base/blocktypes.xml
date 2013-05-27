@@ -5,7 +5,7 @@
         <blocktype handle="core_area_layout" package=""/>
         <blocktype handle="core_scrapbook_display" package=""/>
         <blocktype handle="core_stack_display" package=""/>
-        <blocktype handle="core_aggregator_item" package=""/>
+        <blocktype handle="core_aggregator_display" package=""/>
         <blocktype handle="core_conversation" package=""/>
         <blocktype handle="core_conversation_message" package=""/>
         <blocktype handle="core_aggregator" package=""/>

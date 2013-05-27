@@ -112,26 +112,12 @@ class Concrete5_Controller_Block_CoreAggregator extends BlockController {
 		public function view() {
 			if ($this->agID) {
 				$aggregator = Aggregator::getByID($this->agID);
-				if (is_object($aggregator)) {
-					// this is just here to make this easier;
-					//$aggregator->clearAggregatorItems();
-					//$aggregator->generateAggregatorItems();
-					// remove above.
-
-					// reset the template and slot widths on every view
-					$items = $aggregator->getAggregatorItems();
-					//foreach($items as $it) {
-					//	$it->setAutomaticAggregatorItemTemplate();
-					//}
-
+				if (is_object($aggregator)) {					
 					$list = new AggregatorItemList($aggregator);
 					$list->sortByDateDescending();
 					$list->setItemsPerPage($this->itemsPerPage);
-					$items = $list->getPage();
 					$this->set('aggregator', $aggregator);
 					$this->set('itemList', $list);
-					$this->set('paginator', $list->getPagination());
-					$this->set('items', $items);
 				}
 			}
 		}
