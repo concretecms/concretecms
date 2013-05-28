@@ -69,8 +69,9 @@
 			$aggregator.packery( 'bindUIDraggableEvents', $itemElements );
 			$itemElements.resizable({
 				handles: 'se',
-				grid: [options.columnWidth, options.rowHeight],
-				resize: function(e, ui) {
+				helper: 'ccm-aggregator-resize-helper',
+				grid: [options.columnWidth + options.gutter, options.rowHeight + options.gutter],
+				stop: function(e, ui) {
 					var $tile = ui.element,
 					wx = parseInt($tile.css('width')),
 					hx = parseInt($tile.css('height')),
@@ -152,7 +153,8 @@
 			columnWidth: 120,
 			itemsPerPage: 24,
 			rowHeight: 120,
-			showTileComamnds: 0
+			showTileComamnds: 0,
+			gutter: 1
 		}, options);
 
 		return this.each(function() {
@@ -164,7 +166,8 @@
 			}
 			$aggregator.packery({
 				columnWidth: options.columnWidth,
-				rowHeight: options.rowHeight
+				rowHeight: options.rowHeight,
+				gutter: options.gutter
 			});
 			$aggregator.css('opacity', 1);
 			$loadButton.on('click', function() {

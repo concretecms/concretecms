@@ -32,6 +32,7 @@ $(function() {
   $('div[data-aggregator-id=<?=$aggregator->getAggregatorID()?>]').ccmaggregator({
     totalPages: '<?=$paginator->getTotalPages()?>',
     'itemsPerPage': '<?=$itemsPerPage?>', 
+    'gutter': <?=$pt->getThemeAggregatorGridItemMargin()?>,
     columnWidth: <?=$pt->getThemeAggregatorGridItemWidth()?>,
     rowHeight: <?=$pt->getThemeAggregatorGridItemHeight()?>,
     agID: <?=$aggregator->getAggregatorID()?>,
@@ -44,69 +45,13 @@ $(function() {
 </script>
 
 <style type="text/css">
-  div.w1 {
-    width: <?=$pt->getThemeAggregatorGridItemWidth()?>px;
+<? for ($i = 1; $i <= 8; $i++) { ?>
+  div.w<?=$i?> {
+    width: <?=(($i * $pt->getThemeAggregatorGridItemWidth()) + ($pt->getThemeAggregatorGridItemMargin() * ($i - 1)))?>px;
   }
 
-  div.h1 {
-    height: <?=$pt->getThemeAggregatorGridItemHeight()?>px;
+  div.h<?=$i?> {
+    height: <?=(($i * $pt->getThemeAggregatorGridItemHeight()) + ($pt->getThemeAggregatorGridItemMargin() * ($i - 1)))?>px;
   }
-
-  div.w2 {
-    width: <?=2*$pt->getThemeAggregatorGridItemWidth()?>px;
-  }
-
-  div.h2 {
-    height: <?=2*$pt->getThemeAggregatorGridItemHeight()?>px;
-  }
-
-  div.w3 {
-    width: <?=3*$pt->getThemeAggregatorGridItemWidth()?>px;
-  }
-
-  div.h3 {
-    height: <?=3*$pt->getThemeAggregatorGridItemHeight()?>px;
-  }
-
-  div.w4 {
-    width: <?=4*$pt->getThemeAggregatorGridItemWidth()?>px;
-  }
-
-  div.h4 {
-    height: <?=4*$pt->getThemeAggregatorGridItemHeight()?>px;
-  }
-
-  div.w5 {
-    width: <?=5*$pt->getThemeAggregatorGridItemWidth()?>px;
-  }
-
-  div.h5 {
-    height: <?=5*$pt->getThemeAggregatorGridItemHeight()?>px;
-  }
-
-  div.w6 {
-    width: <?=6*$pt->getThemeAggregatorGridItemWidth()?>px;
-  }
-
-  div.h6 {
-    height: <?=6*$pt->getThemeAggregatorGridItemHeight()?>px;
-  }
-
-  div.w7 {
-    width: <?=7*$pt->getThemeAggregatorGridItemWidth()?>px;
-  }
-
-  div.h7 {
-    height: <?=7*$pt->getThemeAggregatorGridItemHeight()?>px;
-  }
-
-  div.w8 {
-    width: <?=8*$pt->getThemeAggregatorGridItemWidth()?>px;
-  }
-
-  div.h8 {
-    height: <?=8*$pt->getThemeAggregatorGridItemHeight()?>px;
-  }
-
-
+<? } ?>
 </style>
