@@ -28,10 +28,13 @@ class Concrete5_Helper_Feed {
 	 * @param string $feed
 	 * @return SimplePie $feed
 	 */
-	public function load($feedurl) {
+	public function load($feedurl, $cache = true) {
 		$feed = new SimplePie();
 		$feed->set_feed_url($feedurl);
 		$feed->set_cache_location(DIR_FILES_CACHE);
+		if (!$cache) {
+			$feed->enable_cache(false);
+		}
 		return $feed;
 	}
 	

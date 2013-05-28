@@ -10,7 +10,7 @@ class Concrete5_Model_RssFeedAggregatorDataSource extends AggregatorDataSource {
 
 	public function createAggregatorItems(AggregatorDataSourceConfiguration $configuration) {
 		$fp = Loader::helper('feed');
-		$feed = $fp->load($configuration->getRssFeedURL()); 
+		$feed = $fp->load($configuration->getRssFeedURL(), false); 
 		$feed->init();
 		$feed->handle_content_type();
 		$posts = $feed->get_items(0);

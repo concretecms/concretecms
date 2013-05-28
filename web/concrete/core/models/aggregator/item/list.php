@@ -7,6 +7,7 @@ class Concrete5_Model_Aggregator_Item_List extends DatabaseItemList {
 	public function __construct(Aggregator $ag) {
 		$this->setQuery('select agiID from AggregatorItems');
 		$this->filter('agID', $ag->getAggregatorID());
+		$this->filter('agiIsDeleted', 0);
 	}
 
 	public function sortByDateDescending() {
