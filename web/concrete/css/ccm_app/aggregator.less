@@ -1,3 +1,33 @@
+/* internal functions */
+div.ccm-aggregator-item:hover {
+  ul.ccm-aggregator-item-inline-commands {
+    opacity: 1;
+  }
+
+  div.ui-resizable-handle {
+     background-color: rgba(255,255,255,1);
+     .border-top-left-radius(3px);
+     opacity: 1;
+  }
+
+}
+
+div.ccm-aggregator-item-drop-active {
+  outline: 2px solid #0c6;
+  outline-offset: 5px;
+}
+
+.ccm-aggregator-resize-helper {
+  background-color: #B9E1FF;
+  border: 1px solid #6FB0DB;
+  z-index: 10000;
+  opacity: 0.7;
+  -webkit-transition: width 0.1s linear, height 0.1s linear;
+}
+
+
+
+
 div.ccm-aggregator-grid {
 
   opacity: 0;
@@ -109,18 +139,6 @@ div.ccm-aggregator-active-tile-commands {
 
 }
 
-div.ccm-aggregator-item:hover {
-  ul.ccm-aggregator-item-inline-commands {
-    opacity: 1;
-  }
-
-  div.ui-resizable-handle {
-     background-color: rgba(255,255,255,1);
-     .border-top-left-radius(3px);
-     opacity: 1;
-  }
-
-}
 
 div.ccm-aggregator-load-more {
   text-align: center;
@@ -133,15 +151,63 @@ div.ccm-aggregator-load-more {
 
 }
 
-div.ccm-aggregator-item-drop-active {
-  outline: 2px solid #0c6;
-  outline-offset: 5px;
+div.ccm-aggregator-overlay-wrapper {
+  div.ccm-aggregator-overlay {
+    opacity: 0;
+   .transition(all 0.2s ease-in-out);
+   transform: scale(0.8);
+   -webkit-transform: scale(0.8);
+   -moz-transform: scale(0.8);
+   -ms-transform: scale(0.8);
+   -o-transform: scale(0.8);
+   
+  }
 }
 
-.ccm-aggregator-resize-helper {
-  background-color: #B9E1FF;
-  border: 1px solid #6FB0DB;
-  z-index: 10000;
-  opacity: 0.7;
-  -webkit-transition: width 0.1s linear, height 0.1s linear;
+div.ccm-aggregator-overlay-wrapper.mfp-ready {
+  div.ccm-aggregator-overlay {
+    opacity: 1;
+   transform: scale(1.0);
+   -webkit-transform: scale(1.0);
+   -moz-transform: scale(1.0);
+   -o-transform: scale(1.0);
+  }
 }
+
+div.ccm-aggregator-overlay-wrapper.mfp-removing {
+  div.ccm-aggregator-overlay {
+    opacity: 0;
+   transform: scale(0.8);
+   -webkit-transform: scale(0.8);
+   -moz-transform: scale(0.8);
+   -ms-transform: scale(0.8);
+   -o-transform: scale(0.8);
+  }
+}
+
+div.ccm-aggregator-overlay {
+  width: 600px;
+  height: 400px;
+  margin: 40px auto 0px auto;
+  background-color: #fff;
+  position: relative;
+}
+
+div.ccm-aggregator-overlay-title {
+  padding-top: 8px 0px 0px 8px;
+  border-bottom: 1px solid #333;
+  height: 40px;
+  color: #aaa;
+  .box-sizing(border-box);
+  font-weight: lighter;
+  font-size: 32px;
+}
+
+div.ccm-aggregator-thumbnail-caption {
+  font-weight: bold;
+  padding: 4px;
+  background-color: #000;
+  color: #fff;
+  .border-bottom-radius(3px);
+}
+

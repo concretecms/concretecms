@@ -95,6 +95,7 @@ class Concrete5_Controller_Block_CoreAggregator extends BlockController {
 				if (is_object($aggregator)) {
 					$this->addHeaderItem(Loader::helper('html')->css('ccm.aggregator.css'));
 					$this->addFooterItem(Loader::helper('html')->javascript('ccm.aggregator.js'));
+					Loader::helper('overlay')->init(false);
 				}
 			}
 		}

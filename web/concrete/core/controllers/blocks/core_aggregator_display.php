@@ -27,6 +27,7 @@
 		public function on_page_view() {
 			$this->addHeaderItem(Loader::helper('html')->css('ccm.aggregator.css'));
 			$this->addFooterItem(Loader::helper('html')->javascript('ccm.aggregator.js'));
+			Loader::helper('overlay')->init(false);
 		}
 
 		public function view() {
