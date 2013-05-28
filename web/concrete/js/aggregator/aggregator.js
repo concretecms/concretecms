@@ -9,6 +9,34 @@
 
     private:  {
 
+    	enableOverlay: function($aggregator, options) {
+
+			$aggregator.find('a[data-overlay=aggregator-item]').not('.event-bound').each(function() {
+				var agiID = $(this).closest('[data-aggregator-item-id]').attr('data-aggregator-item-id');
+				$(this).on('click', function() {
+					$.magnificPopup.open({
+						ajax: {
+							settings: {
+								'data': {
+									'agiID': agiID,
+									'token': options.loadToken
+								},
+								'dataType': 'html',
+								'type': 'post'
+							}
+						},
+						items: {
+							src: CCM_TOOLS_PATH + '/aggregator/detail'
+						},
+						mainClass: 'ccm-aggregator-overlay-wrapper',	
+						type: 'ajax',
+						removalDelay: 200
+					});
+					return false;
+				});
+			}).addClass('event-bound');
+    	},
+
     	enableEditing: function($aggregator, options) {
 			$aggregator.find('a[data-inline-command=options-tile]').not('.event-bound').on('click', function() {
 				var agiID = $(this).closest('div.ccm-aggregator-item').attr('data-aggregator-item-id');
@@ -199,6 +227,10 @@
 				gutter: options.gutter
 			});
 			$aggregator.css('opacity', 1);
+
+			// handle details and lightbox.
+			methods.private.enableOverlay($aggregator, options);
+
 			$loadButton.on('click', function() {
 				page = parseInt($aggregator.attr('data-aggregator-current-page')),
 					newPage = page + 1;
@@ -234,6 +266,9 @@
 						if (options.showTileCommands) {
 							methods.private.enableEditing($aggregator, options);
 						}
+				
+						methods.private.enableOverlay($aggregator, options);
+
 					}
 				});
 			});

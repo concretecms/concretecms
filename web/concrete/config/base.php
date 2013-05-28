@@ -435,6 +435,9 @@ if (!defined('DIRNAME_AGGREGATOR_ITEM_TEMPLATES')) {
 if (!defined('FILENAME_AGGREGATOR_VIEW')) {
 	 define('FILENAME_AGGREGATOR_VIEW', 'view.php');
 }
+if (!defined('FILENAME_AGGREGATOR_OVERLAY')) {
+	 define('FILENAME_AGGREGATOR_OVERLAY', 'overlay.php');
+}
 
 
 # Asset library constants 

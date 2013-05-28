@@ -39,7 +39,7 @@
             <feature handle="title" />
             <feature handle="conversation" />
         </aggregatoritemtemplate>
-        <aggregatoritemtemplate handle="thumbnail" name="Thumbnail Only" package="">
+        <aggregatoritemtemplate handle="thumbnail" name="Thumbnail" package="">
             <feature handle="link" />
             <feature handle="image" />
         </aggregatoritemtemplate>

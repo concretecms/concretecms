@@ -194,14 +194,14 @@ abstract class Concrete5_Model_AggregatorItem extends Object {
 		}
 	}
 
-	public function render() {
+	public function render($view = FILENAME_AGGREGATOR_VIEW) {
 		$t = AggregatorItemTemplate::getByID($this->agtID);
 		if (is_object($t)) {
 			$data = $t->getAggregatorItemTemplateData($this);
 			$env = Environment::get();
 			extract($data);
 			// we can't just use Loader::element because it strips off .php of the filename. Lame.
-			$path = $env->getPath(DIRNAME_ELEMENTS . '/' . DIRNAME_AGGREGATOR . '/' . DIRNAME_AGGREGATOR_ITEM_TEMPLATES . '/' . $this->getAggregatorItemTemplateHandle() . '/' . FILENAME_AGGREGATOR_VIEW);
+			$path = $env->getPath(DIRNAME_ELEMENTS . '/' . DIRNAME_AGGREGATOR . '/' . DIRNAME_AGGREGATOR_ITEM_TEMPLATES . '/' . $this->getAggregatorItemTemplateHandle() . '/' . $view);
 			include($path);
 		}
 	}
