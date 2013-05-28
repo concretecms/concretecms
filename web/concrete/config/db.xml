@@ -366,6 +366,10 @@
       <notnull />
       <default value="0" />
     </field>
+    <field name="agiIsDeleted" type="I" size="1">
+      <unsigned/>
+      <default value="0" />
+    </field>
     <index name="agiUniqueKey">
       <unique/>
       <col>agiKey</col>

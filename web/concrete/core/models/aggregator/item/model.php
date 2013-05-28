@@ -72,11 +72,13 @@ abstract class Concrete5_Model_AggregatorItem extends Object {
 		$db = Loader::db();
 		$r = $db->GetRow('select AggregatorItems.*, AggregatorItemTemplates.agtHandle, AggregatorDataSources.agsHandle from AggregatorItems inner join AggregatorDataSources on AggregatorItems.agsID = AggregatorDataSources.agsID left join AggregatorItemTemplates on AggregatorItems.agtID = AggregatorItemTemplates.agtID where agiID = ?', array($agiID));
 		if (is_array($r) && $r['agiID'] == $agiID) {
-			$class = Loader::helper('text')->camelcase($r['agsHandle']) . 'AggregatorItem';
-			$ags = new $class();
-			$ags->setPropertiesFromArray($r);
-			$ags->loadDetails();
-			return $ags;
+			if (!$r['agiIsDeleted']) {
+				$class = Loader::helper('text')->camelcase($r['agsHandle']) . 'AggregatorItem';
+				$ags = new $class();
+				$ags->setPropertiesFromArray($r);
+				$ags->loadDetails();
+				return $ags;
+			}
 		}
 	}
 
@@ -185,7 +187,7 @@ abstract class Concrete5_Model_AggregatorItem extends Object {
 
 	public function delete() {
 		$db = Loader::db();
-		$db->Execute('delete from AggregatorItems where agiID = ?', array($this->agiID));
+		$db->Execute('update AggregatorItems set agiIsDeleted = 1 where agiID = ?', array($this->agiID));
 		$assignments = AggregatorItemFeatureAssignment::getList($this);
 		foreach($assignments as $as) {
 			$as->delete();
