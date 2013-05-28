@@ -56,7 +56,7 @@
 				var elements = pkr.getItemElements();
 				for (i = 0; i < elements.length; i++) {
 					var $obj = $(elements[i]);
-					data.push({'name': 'agiID[' + $obj.attr('data-aggregator-item-batch-timestamp') + '][]', 'value': $obj.attr('data-aggregator-item-id')});
+					data.push({'name': 'agiID[]', 'value': $obj.attr('data-aggregator-item-id')});
 				}
 
 				$.ajax({
