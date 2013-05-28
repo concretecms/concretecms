@@ -23,14 +23,12 @@ if ($_POST['agID'] && $nh->integer($_POST['agID'])) {
             break;
           case 'update_display_order':
             $displayOrder = 0;
-            foreach($_POST['agiID'] as $batch => $itemIDs) {
-              foreach($itemIDs as $agiID) {
-                $agi = AggregatorItem::getByID($agiID);
-                if ($agi->getAggregatorItemBatchTimestamp() == $batch) {
-                  $agi->setAggregatorItemBatchDisplayOrder($displayOrder);
-                  $displayOrder++;
-                }
-              }
+            $batch = time();
+            foreach($_POST['agiID'] as $agiID) {
+              $agi = AggregatorItem::getByID($agiID);
+              $agi->setAggregatorItemBatchTimestamp($batch);
+              $agi->setAggregatorItemBatchDisplayOrder($displayOrder);
+              $displayOrder++;
             }
             break;
         }
