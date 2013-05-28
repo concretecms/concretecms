@@ -31,6 +31,21 @@ if ($_POST['agID'] && $nh->integer($_POST['agID'])) {
               $displayOrder++;
             }
             break;
+          case 'move_to_new_aggregator':
+            $item = AggregatorItem::getByID($_POST['agiID']);
+            $item->moveToNewAggregator($aggregator);
+            $il = new AggregatorItemList($aggregator);
+            $il->sortByDateDescending();
+            $il->setItemsPerPage($_POST['itemsPerPage']);
+            $c = Page::getByID($_POST['cID'], 'RECENT');
+            if (is_object($c) && !$c->isError()) {
+              Loader::element('aggregator/display', array(
+                'aggregator' => $aggregator,
+                'list' => $il,
+                'c' => $c
+              ));
+            }
+            break;
         }
       }
     }

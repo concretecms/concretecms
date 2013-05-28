@@ -3,7 +3,10 @@
 $items = $list->getPage();
 $paginator = $list->getPagination();
 
-$c = Page::getCurrentPage();
+if (!is_object($c)) {
+  $c = Page::getCurrentPage();
+}
+
 $pt = $c->getCollectionThemeObject();
 $showTileCommands = false;
 $agp = new Permissions($aggregator);

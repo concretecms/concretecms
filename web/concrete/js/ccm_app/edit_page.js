@@ -93,7 +93,6 @@ var CCMEditMode = function() {
 	 				if (sourceBlockTypeHandle == 'core_aggregator_item') {
 	 					destination.find('div[data-aggregator-item-id=' + sourceBlockID + ']').remove();
 	 					CCMEditMode.parseBlockResponse(r, r.bID, 'add');
-						destination.attr('data-total-blocks', dtb + 1);
 	 				} else {
 		 				if (source && destination) {
 		 					// we are moving blocks from one area to another
@@ -145,6 +144,7 @@ var CCMEditMode = function() {
 		
 		// clean up in case we're running twice
 		$('div.ccm-area-block-dropzone').remove();
+		$('.ui-droppable').droppable('destroy');
 
 		// empty areas are droppable. We have to 
 		// declare them separately because sortable and droppable don't play as 
@@ -194,6 +194,10 @@ var CCMEditMode = function() {
 			tolerance: 'pointer',
 			accept: function($item) {
 				var btHandle = $item.attr('data-block-type-handle');
+				if (btHandle == 'core_aggregator_item') {
+					return false;
+				}
+
 				var $area = $(this).closest('.ccm-area');
 				var totalblocks = parseInt($area.attr('data-total-blocks'));
 				var maxblocks = parseInt($area.attr('data-maximum-blocks'));
@@ -216,9 +220,10 @@ var CCMEditMode = function() {
 				} else {
 					var itemID = ui.draggable.attr('data-block-id');
 					var btHandle = ui.draggable.attr('data-block-type-handle');
-					if (btHandle == 'core_aggregator_item') {
+					/*if (btHandle == 'core_aggregator_item') {
 						var itemID = ui.draggable.attr('data-aggregator-item-id');
-					}
+					}*/
+
 					var arID = ui.draggable.attr('data-area-id');
 					var $area = $(this).closest('.ccm-area');
 					$(this).replaceWith(ui.draggable.clone());
