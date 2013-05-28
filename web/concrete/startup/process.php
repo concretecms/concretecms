@@ -41,6 +41,16 @@
 							$ax = Area::get($cx, STACKS_AREA_NAME);
 						}
 
+						$axp = new Permissions($ax);
+						if (!$axp->canAddBlock(BlockType::getByHandle(BLOCK_HANDLE_AGGREGATOR))) {
+							$r = new stdClass;
+							$r->error = true;
+							$r->message = t('You may not add an aggregator item to this area.');
+							print Loader::helper('json')->encode($r);
+							exit;
+						}
+
+
 						$item = AggregatorItem::getByID($_POST['sourceBlockID']); // this is ACTUALLY an aggregator item ID
 						$btx = BlockType::getByHandle(BLOCK_HANDLE_AGGREGATOR_PROXY);
 						$nvc = $cx->getVersionToModify();
