@@ -12,6 +12,6 @@ div.ccm-aggregator-active-tile-commands ul.ccm-aggregator-item-inline-commands l
 div.ccm-aggregator-active-tile-commands ul.ccm-aggregator-item-inline-commands li.ccm-aggregator-item-inline-options{top:0px;left:0px;}div.ccm-aggregator-active-tile-commands ul.ccm-aggregator-item-inline-commands li.ccm-aggregator-item-inline-options a{-webkit-border-bottom-right-radius:3px;-moz-border-radius-bottomright:3px;border-bottom-right-radius:3px;}
 div.ccm-aggregator-item:hover ul.ccm-aggregator-item-inline-commands{opacity:1;}
 div.ccm-aggregator-item:hover div.ui-resizable-handle{background-color:#ffffff;-webkit-border-top-left-radius:3px;-moz-border-radius-topleft:3px;border-top-left-radius:3px;opacity:1;}
-div.ccm-aggregator-load-more{text-align:center;position:relative;padding:0px 0px 20px 0px;z-index:100;}
+div.ccm-aggregator-load-more{text-align:center;padding:0px 0px 20px 0px;}div.ccm-aggregator-load-more button{z-index:100;position:relative;}
 div.ccm-aggregator-item-drop-active{outline:2px solid #0c6;outline-offset:5px;}
-.ccm-aggregator-resize-helper{background-color:#B9E1FF;border:1px solid #6FB0DB;z-index:10000;opacity:0.7;}
+.ccm-aggregator-resize-helper{background-color:#B9E1FF;border:1px solid #6FB0DB;z-index:10000;opacity:0.7;-webkit-transition:width 0.1s linear, height 0.1s linear;}

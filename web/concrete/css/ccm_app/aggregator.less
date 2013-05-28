@@ -124,9 +124,13 @@ div.ccm-aggregator-item:hover {
 
 div.ccm-aggregator-load-more {
   text-align: center;
-  position: relative;
   padding: 0px 0px 20px 0px;
-  z-index: 100;
+
+  button {
+    z-index: 100;
+    position: relative;
+  }
+
 }
 
 div.ccm-aggregator-item-drop-active {
@@ -139,4 +143,5 @@ div.ccm-aggregator-item-drop-active {
   border: 1px solid #6FB0DB;
   z-index: 10000;
   opacity: 0.7;
+  -webkit-transition: width 0.1s linear, height 0.1s linear;
 }

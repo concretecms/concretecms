@@ -241,6 +241,7 @@ define('FILENAME_BLOCK_DB', 'db.xml');
 define('BLOCK_HANDLE_SCRAPBOOK_PROXY', 'core_scrapbook_display');
 define('BLOCK_HANDLE_AGGREGATOR_ITEM_PROXY', 'core_aggregator_item');
 define('BLOCK_HANDLE_AGGREGATOR_PROXY', 'core_aggregator_display');
+define('BLOCK_HANDLE_AGGREGATOR', 'core_aggregator');
 define('BLOCK_HANDLE_LAYOUT_PROXY', 'core_area_layout');
 define('FILENAME_FORM', 'form.php');
 
