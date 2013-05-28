@@ -28,6 +28,15 @@ abstract class Concrete5_Model_AggregatorItem extends Object {
 		return $this->feHandles;
 	}
 
+	public function moveToNewAggregator(Aggregator $aggregator) {
+		$db = Loader::db();
+		$db->Execute('update AggregatorItems set agID = ? where agiID = ?', array($aggregator->getAggregatorID(), $this->agiID));
+		$this->agID = $aggregator->getAggregatorID();
+		$batch = $db->GetOne('select max(agiBatchTimestamp) from AggregatorItems where agiID = ?', array($this->agiID));
+		$this->setAggregatorItemBatchTimestamp($batch);
+		$this->setAggregatorItemBatchDisplayOrder(0);
+	}
+
 	public function setAggregatorItemTemplateID($agtID) {
 		$db = Loader::db();
 		$db->Execute('update AggregatorItems set agtID = ? where agiID = ?', array($agtID, $this->agiID));

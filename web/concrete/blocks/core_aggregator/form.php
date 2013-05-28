@@ -82,7 +82,7 @@ if ($controller->getTask() == 'edit') { ?>
 
 <div class="ccm-tab-content form-horizontal" id="ccm-tab-content-output">
 		<div class="control-group" data-row="itemsPerPage">
-		<label class="control-label"><?=t('Messages Per Page')?></label>
+		<label class="control-label"><?=t('Items Per Page')?></label>
 		<div class="controls">
 			<?=$form->text('itemsPerPage', $itemsPerPage, array('class' => 'span1'))?>
 		</div>

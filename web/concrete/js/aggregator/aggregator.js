@@ -33,7 +33,36 @@
 						if (parseInt($tagg.attr('data-aggregator-id')) != parseInt(options.agID)) {
 							$tagg.addClass('ccm-aggregator-item-droppable').droppable({
 								accept: '.ccm-aggregator-item',
-								hoverClass: 'ccm-aggregator-item-drop-active'
+								tolerance: 'pointer',
+								hoverClass: 'ccm-aggregator-item-drop-active',
+								drop: function(e, ui) {
+									jQuery.fn.dialog.showLoader();
+									var $destination = $(this);
+									var agID = $destination.attr('data-aggregator-id');
+									var data = [
+										{'name': 'task', 'value': 'move_to_new_aggregator'},
+										{'name': 'agiID', 'value': ui.draggable.attr('data-aggregator-item-id')},
+										{'name': 'agID', 'value': $destination.attr('data-aggregator-id')},
+										{'name': 'cID', 'value': CCM_CID},
+										{'name': 'itemsPerPage', 'value': options.itemsPerPage},
+										{'name': 'editToken', 'value': options.editToken}
+									];
+
+									var $source = $(ui.draggable).parent();
+									$(ui.draggable).remove();
+
+									$.ajax({
+										type: 'post',
+										url: CCM_TOOLS_PATH + '/aggregator/update',
+										data: data,
+										success: function(r) {
+											$source.packery('layout');
+											$destination.before(r).remove();
+											$destination.packery('layout');
+											jQuery.fn.dialog.hideLoader();
+										}
+									});
+								}
 							});
 						}
 					});
