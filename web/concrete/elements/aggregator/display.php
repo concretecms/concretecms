@@ -18,9 +18,9 @@ if ($c->isEditMode() && $agp->canEditAggregatorItems()) {
 
 <div class="ccm-aggregator-wrapper">
 
-<div data-aggregator-id="<?=$aggregator->getAggregatorID()?>" data-aggregator-current-page="1" class="<? if ($showTileCommands) { ?>ccm-aggregator-active-tile-commands<? } ?> ccm-aggregator-grid">
+<div data-aggregator-id="<?=$aggregator->getAggregatorID()?>" data-aggregator-current-page="1" class="<? if ($showTileCommands) { ?>ccm-aggregator-edit<? } else { ?>ccm-aggregator-view<? } ?> ccm-aggregator-grid">
     <? foreach($items as $item) { ?>
-      <?=Loader::element('aggregator/item', array('item' => $item, 'showTileCommands' => $showTileCommands))?>
+      <?=Loader::element('aggregator/tile', array('item' => $item, 'showTileCommands' => $showTileCommands))?>
     <? } ?>
 </div>
 

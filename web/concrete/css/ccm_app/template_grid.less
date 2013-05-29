@@ -1,11 +1,11 @@
-div#ccm-dialog-block-types {
+div.ccm-dialog-icon-item-grid {
 
 	margin: -24px -26px;
 	.clear_float();
 	position: relative;
 	min-height: 100%;
 
-	div#ccm-dialog-block-types-sets {
+	div.ccm-dialog-icon-item-grid-sets {
 		width: 195px;
 		float: left;
 
@@ -28,7 +28,7 @@ div#ccm-dialog-block-types {
 		}
 	}
 
-	div#ccm-dialog-block-types-list {
+	div.ccm-dialog-icon-item-grid-list-wrapper {
 		float: left;
 		width: 460px;
 		margin-left: 40px;
@@ -37,7 +37,7 @@ div#ccm-dialog-block-types {
 		overflow: scroll;
 	}
 
-	#ccm-block-type-search {
+	.ccm-icon-item-grid-search {
 		background-color: #fff;
 		padding: 0px;
 		height: 47px;
@@ -56,11 +56,13 @@ div#ccm-dialog-block-types {
 			border: 0px;
 			.border-radius(0px);
 			.box-shadow(none);
+			outline: 0px !important;
 		}
 
 		input:focus {
 			-webkit-appearance: none !important;
-			outline: none !important;
+			outline: 0px !important;
+			.box-shadow(none);
 		}
 
 		i.icon-search {
@@ -72,11 +74,11 @@ div#ccm-dialog-block-types {
 	}
 }
 
-.ui-dialog-content-block-types {
-	background: transparent url(../images/bg_add_block_overlay.png) repeat-y !important;
+.ui-dialog-content-icon-item-grid {
+	background: transparent url(../images/bg_icon_item_grid_overlay.png) repeat-y !important;
 }
 
-ul#ccm-overlay-block-types a, a.ccm-overlay-draggable-block-type {
+ul.ccm-overlay-icon-item-grid-list a, a.ccm-overlay-draggable-block-type {
 	display: block;
 	height: 100px;
 	width: 100px; 
@@ -109,17 +111,17 @@ ul#ccm-overlay-block-types a, a.ccm-overlay-draggable-block-type {
 	}
 }
 
-ul#ccm-overlay-block-types a:hover {
+ul.ccm-overlay-icon-item-grid-list a:hover {
 	cursor: pointer;
 	border-color: #00cc66;
 	background-color: #e0ffe0 !important;
 }
 
-ul#ccm-overlay-block-types a:hover, a.ccm-overlay-draggable-block-type:hover {
+ul.ccm-overlay-icon-item-grid-list a:hover, a.ccm-overlay-draggable-block-type:hover {
 	text-decoration: none;
 }
 
-ul#ccm-overlay-block-types {
+ul.ccm-overlay-icon-item-grid-list {
 
 	margin: 0px !important;
 
@@ -131,7 +133,7 @@ ul#ccm-overlay-block-types {
 		display: none;
 	}
 
-	.ccm-block-type-available {
+	.ccm-icon-item-grid-available {
 		display: block;
 	}
 }

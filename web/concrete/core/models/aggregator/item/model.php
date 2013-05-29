@@ -6,12 +6,25 @@ abstract class Concrete5_Model_AggregatorItem extends Object {
 	abstract public function canViewAggregatorItem();
 
 	protected $feHandles;
+	protected $templates;
 
 	public function getAggregatorItemID() {return $this->agiID;}
 	public function getAggregatorDataSourceHandle() {return $this->agsHandle;}
 	public function getAggregatorDataSourceID() {return $this->agsID;}
 	public function getAggregatorItemPublicDateTime() {return $this->agiPublicDateTime;}
-	public function getAggregatorItemTemplateID() {return $this->agtID;}
+	public function getAggregatorItemTemplateID(AggregatorItemTemplateType $type) {
+		if (!isset($this->templates)) {
+			$this->loadAggregatorItemTemplates();
+		}
+		return $this->templates[$type->getAggregatorItemTemplateTypeID()];
+	}
+
+	public function getAggregatorItemTemplateObject(AggregatorItemTemplateType $type) {
+		$agtID = $this->getAggregatorItemTemplateID($type);
+		if ($agtID) {
+			return AggregatorItemTemplate::getByID($agtID);
+		}
+	}
 	public function getAggregatorItemTemplateHandle() {return $this->agtHandle;}
 	public function getAggregatorItemSlotWidth() { return $this->agiSlotWidth; 	}
 	public function getAggregatorItemSlotHeight() {	return $this->agiSlotHeight; }
@@ -28,6 +41,15 @@ abstract class Concrete5_Model_AggregatorItem extends Object {
 		return $this->feHandles;
 	}
 
+	protected function loadAggregatorItemTemplates() {
+		$this->templates = array();
+		$db = Loader::db();
+		$r = $db->Execute('select agtID, agtTypeID from AggregatorItemSelectedTemplates where agiID = ?', array($this->agiID));
+		while ($row = $r->FetchRow()) {
+			$this->templates[$row['agtTypeID']] = $row['agtID'];
+		}
+	}
+
 	public function moveToNewAggregator(Aggregator $aggregator) {
 		$db = Loader::db();
 		$db->Execute('update AggregatorItems set agID = ? where agiID = ?', array($aggregator->getAggregatorID(), $this->agiID));
@@ -37,11 +59,13 @@ abstract class Concrete5_Model_AggregatorItem extends Object {
 		$this->setAggregatorItemBatchDisplayOrder(0);
 	}
 
-	public function setAggregatorItemTemplateID($agtID) {
+	public function setAggregatorItemTemplate(AggregatorItemTemplateType $type, AggregatorItemTemplate $template) {
 		$db = Loader::db();
-		$db->Execute('update AggregatorItems set agtID = ? where agiID = ?', array($agtID, $this->agiID));
-		$this->agtID = $agtID;
-		$this->agtHandle = $db->GetOne('select agtHandle from AggregatorItemTemplates where agtID = ?', array($agtID));
+		$db->Execute('delete from AggregatorItemSelectedTemplates where agiID = ? and agtTypeID = ?', array($this->agiID, $type->getAggregatorItemTemplateTypeID()));
+		$db->Execute('insert into AggregatorItemSelectedTemplates (agtTypeID, agiID, agtID) values (?, ?, ?)', array(
+			$type->getAggregatorItemTemplateTypeID(), $this->agiID, $template->getAggregatorItemTemplateID()
+		));
+		$this->loadAggregatorItemTemplates();
 	}
 
 	public function setAggregatorItemBatchDisplayOrder($agiBatchDisplayOrder) {
@@ -70,7 +94,7 @@ abstract class Concrete5_Model_AggregatorItem extends Object {
 
 	public static function getByID($agiID) {
 		$db = Loader::db();
-		$r = $db->GetRow('select AggregatorItems.*, AggregatorItemTemplates.agtHandle, AggregatorDataSources.agsHandle from AggregatorItems inner join AggregatorDataSources on AggregatorItems.agsID = AggregatorDataSources.agsID left join AggregatorItemTemplates on AggregatorItems.agtID = AggregatorItemTemplates.agtID where agiID = ?', array($agiID));
+		$r = $db->GetRow('select AggregatorItems.*, AggregatorDataSources.agsHandle from AggregatorItems inner join AggregatorDataSources on AggregatorItems.agsID = AggregatorDataSources.agsID where agiID = ?', array($agiID));
 		if (is_array($r) && $r['agiID'] == $agiID) {
 			if (!$r['agiIsDeleted']) {
 				$class = Loader::helper('text')->camelcase($r['agsHandle']) . 'AggregatorItem';
@@ -102,14 +126,21 @@ abstract class Concrete5_Model_AggregatorItem extends Object {
 	public function duplicate(Aggregator $aggregator) {
 		$db = Loader::db();
 		$agID = $aggregator->getAggregatorID();
-		$db->Execute('insert into AggregatorItems (agID, agsID, agiDateTimeCreated, agiPublicDateTime, agiTitle, agiKey, agiSlotWidth, agiSlotHeight, agiBatchTimestamp, agiBatchDisplayOrder, agtID) 
-			values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', array(
+		$db->Execute('insert into AggregatorItems (agID, agsID, agiDateTimeCreated, agiPublicDateTime, agiTitle, agiKey, agiSlotWidth, agiSlotHeight, agiBatchTimestamp, agiBatchDisplayOrder) 
+			values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', array(
 				$agID, $this->getAggregatorDataSourceID(), $this->agiDateTimeCreated, $this->agiPublicDateTime, 
-				$this->agiTitle, $this->agiKey, $this->agiSlotWidth, $this->agiSlotHeight, $this->agiBatchTimestamp, $this->agiBatchDisplayOrder, $this->agtID
+				$this->agiTitle, $this->agiKey, $this->agiSlotWidth, $this->agiSlotHeight, $this->agiBatchTimestamp, $this->agiBatchDisplayOrder
 			)
 		);
 
-		$item = AggregatorItem::getByID($db->Insert_ID());
+		$this->loadAggregatorItemTemplates();
+		$agiID = $db->Insert_ID();
+
+		foreach($this->templates as $agtTypeID => $agtID) {
+			$db->Execute('insert into AggregatorItemSelectedTemplates (agiID, agtTypeID, agtID) values (?, ?, ?)', array($agiID, $agtTypeID, $agtID));
+		}
+
+		$item = AggregatorItem::getByID($agiID);
 
 		$assignments = AggregatorItemFeatureAssignment::getList($this);
 		foreach($assignments as $as) {
@@ -153,27 +184,34 @@ abstract class Concrete5_Model_AggregatorItem extends Object {
 		$arr = Loader::helper('array');
 		$db = Loader::db();
 		$myFeatureHandles = $this->getAggregatorItemFeatureHandles();
-		$matched = array();
-		$r = $db->Execute('select agtID from AggregatorItemTemplates');
-		while ($row = $r->FetchRow()) {
-			$templateFeatureHandles = $db->GetCol('select feHandle from Features f inner join AggregatorItemTemplateFeatures af on f.feID = af.feID where agtID = ?', array($row['agtID']));
-			if ($arr->subset($templateFeatureHandles, $myFeatureHandles)) {
-				$matched[] = AggregatorItemTemplate::getByID($row['agtID']);
-			}
-		}
 
-		usort($matched, array($this, 'sortByFeatureScore'));
-		if (is_object($matched[0]) && $matched[0]->aggregatorItemTemplateIsAlwaysDefault()) {
-			$template = $matched[0];
-		} else {
-			// we do some fun randomization math.
-			usort($matched, array($this, 'weightByFeatureScore'));
-			$template = $matched[0];
-		}
-		if (is_object($template)) {
-			$this->setAggregatorItemTemplateID($template->getAggregatorItemTemplateID());
-			$this->setAggregatorItemSlotWidth($template->getAggregatorItemTemplateSlotWidth($this));
-			$this->setAggregatorItemSlotHeight($template->getAggregatorItemTemplateSlotHeight($this));
+		// we loop through and do it for all installed aggregator item template types
+		$types = AggregatorItemTemplateType::getList();
+		foreach($types as $type) {
+			$matched = array();
+			$r = $db->Execute('select agtID from AggregatorItemTemplates where agtTypeID = ?', array($type->getAggregatorItemTemplateTypeID()));
+			while ($row = $r->FetchRow()) {
+				$templateFeatureHandles = $db->GetCol('select feHandle from Features f inner join AggregatorItemTemplateFeatures af on f.feID = af.feID where agtID = ?', array($row['agtID']));
+				if ($arr->subset($templateFeatureHandles, $myFeatureHandles)) {
+					$matched[] = AggregatorItemTemplate::getByID($row['agtID']);
+				}
+			}
+
+			usort($matched, array($this, 'sortByFeatureScore'));
+			if (is_object($matched[0]) && $matched[0]->aggregatorItemTemplateIsAlwaysDefault()) {
+				$template = $matched[0];
+			} else {
+				// we do some fun randomization math.
+				usort($matched, array($this, 'weightByFeatureScore'));
+				$template = $matched[0];
+			}
+			if (is_object($template)) {
+				$this->setAggregatorItemTemplate($type, $template);
+				if ($template->aggregatorItemTemplateControlsSlotDimensions()) {
+					$this->setAggregatorItemSlotWidth($template->getAggregatorItemTemplateSlotWidth($this));
+					$this->setAggregatorItemSlotHeight($template->getAggregatorItemTemplateSlotHeight($this));
+				}
+			}
 		}
 	}
 
@@ -187,22 +225,26 @@ abstract class Concrete5_Model_AggregatorItem extends Object {
 
 	public function delete() {
 		$db = Loader::db();
-		$db->Execute('update AggregatorItems set agiIsDeleted = 1 where agiID = ?', array($this->agiID));
+		$db->Execute('delete from AggregatorItems where agiID = ?', array($this->agiID));
+		$db->Execute('delete from AggregatorItemSelectedTemplates where agiID = ?', array($this->agiID));
 		$assignments = AggregatorItemFeatureAssignment::getList($this);
 		foreach($assignments as $as) {
 			$as->delete();
 		}
 	}
 
-	public function render($view = FILENAME_AGGREGATOR_VIEW) {
-		$t = AggregatorItemTemplate::getByID($this->agtID);
+	public function deactivate() {
+		$db = Loader::db();
+		$db->Execute('update AggregatorItems set agiIsDeleted = 1 where agiID = ?', array($this->agiID));
+	}
+
+	public function render(AggregatorItemTemplateType $type) {
+		$t = $this->getAggregatorItemTemplateObject($type);
 		if (is_object($t)) {
 			$data = $t->getAggregatorItemTemplateData($this);
 			$env = Environment::get();
 			extract($data);
-			// we can't just use Loader::element because it strips off .php of the filename. Lame.
-			$path = $env->getPath(DIRNAME_ELEMENTS . '/' . DIRNAME_AGGREGATOR . '/' . DIRNAME_AGGREGATOR_ITEM_TEMPLATES . '/' . $this->getAggregatorItemTemplateHandle() . '/' . $view);
-			include($path);
+			Loader::element(DIRNAME_AGGREGATOR . '/' . DIRNAME_AGGREGATOR_ITEM_TEMPLATES . '/' . $type->getAggregatorItemTemplateTypeHandle() . '/' . $t->getAggregatorItemTemplateHandle() . '/view', $data);
 		}
 	}
 

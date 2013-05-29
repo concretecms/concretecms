@@ -69,6 +69,7 @@ class Concrete5_Model_Feature extends Object {
 	
 	public function getFeatureID() {return $this->feID;}
 	public function getFeatureHandle() {return $this->feHandle;}
+	public function getFeatureName() {return Loader::helper('text')->unhandle($this->feHandle);}
 	public function getFeatureScore() {return $this->feScore;}
 	public function hasFeatureCustomClass() {return $this->feHasCustomClass;}
 	public function getPackageID() {return $this->pkgID;}

@@ -432,13 +432,9 @@ if (!defined('FILENAME_AGGREGATOR_DATA_SOURCE_OPTIONS')) {
 if (!defined('DIRNAME_AGGREGATOR_ITEM_TEMPLATES')) {
 	 define('DIRNAME_AGGREGATOR_ITEM_TEMPLATES', 'templates');
 }
-if (!defined('FILENAME_AGGREGATOR_VIEW')) {
-	 define('FILENAME_AGGREGATOR_VIEW', 'view.php');
+if (!defined('FILENAME_AGGREGATOR_ITEM_TEMPLATE_ICON')) {
+	 define('FILENAME_AGGREGATOR_ITEM_TEMPLATE_ICON', 'icon.png');
 }
-if (!defined('FILENAME_AGGREGATOR_OVERLAY')) {
-	 define('FILENAME_AGGREGATOR_OVERLAY', 'overlay.php');
-}
-
 
 # Asset library constants 
 define('AL_THUMBNAIL_WIDTH', '60');

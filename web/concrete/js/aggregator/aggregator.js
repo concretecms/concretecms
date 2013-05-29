@@ -26,7 +26,7 @@
 							}
 						},
 						items: {
-							src: CCM_TOOLS_PATH + '/aggregator/detail'
+							src: CCM_TOOLS_PATH + '/aggregator/item/detail'
 						},
 						mainClass: 'ccm-aggregator-overlay-wrapper',	
 						type: 'ajax',
@@ -49,17 +49,11 @@
     	},
 
     	enableEditing: function($aggregator, options) {
-			$aggregator.find('a[data-inline-command=options-tile]').not('.event-bound').on('click', function() {
-				var agiID = $(this).closest('div.ccm-aggregator-item').attr('data-aggregator-item-id');
-				var href = CCM_TOOLS_PATH + '/aggregator/edit_template?agiID=' + agiID;
-				jQuery.fn.dialog.open({
-					modal: true,
-					href: href,
-					width: '400',
-					height: '150',
-					title: options.titleEditTemplate
-				});
-			}).addClass('event-bound');
+			$aggregator.find('a[data-inline-command=options-tile]').not('.aggregator-options-bound').on('click', function(e) {
+				var $menu = $('#' + $(this).attr('data-menu'));
+				$.fn.ccmmenu.showmenu(e, $menu);
+				return false;
+			}).addClass('aggregator-options-bound');
 
 			var $itemElements = $($aggregator.packery('getItemElements')).not('.event-bound');
 			$itemElements.draggable({
@@ -166,30 +160,31 @@
     	}
 
     },
-
-    setupTemplateForm: function(options) {
-    	return this.each(function() {
-    		var $form = $(this);
-			$form.on('submit', function() {
-				jQuery.fn.dialog.showLoader();
-				$.ajax({
-					type: 'POST',
-					data: {
-						agtID: $form.find('select[name=agtID]').val(),
-						agiID: options.agiID,
-						token: options.updateToken
-					},
-					url: CCM_TOOLS_PATH + '/aggregator/edit_template',
-					success: function(r) {
-						jQuery.fn.dialog.hideLoader();
-						// load the newly rendered HTML into the old aggregator item.
-						$('[data-aggregator-item-id=' + options.agiID + ']').find('div.ccm-aggregator-item-inner-render').html(r);
-						jQuery.fn.dialog.closeTop();
-					}
-				});
-				return false;
-			});
-    	});
+   
+    updateItemTemplate: function(options) {
+		jQuery.fn.dialog.showLoader();
+		var options = $.extend({
+			reloadItemTile: false
+		}, options);
+		$.ajax({
+			type: 'POST',
+			data: {
+				task: 'update_item_template',
+				agiID: options.agiID,
+				agtTypeID: options.agtTypeID,
+				agtID: options.agtID,
+				token: options.updateToken
+			},
+			url: CCM_TOOLS_PATH + '/aggregator/item/template',
+			success: function(r) {
+				jQuery.fn.dialog.hideLoader();
+				if (options.reloadItemTile) {
+					// load the newly rendered HTML into the old aggregator item.
+					$('[data-aggregator-item-id=' + options.agiID + ']').find('div.ccm-aggregator-item-inner-render').html(r);
+				}
+				jQuery.fn.dialog.closeTop();
+			}
+		});
     },
 
     deleteItem: function(options) {
@@ -201,10 +196,9 @@
 				agiID: options.agiID,
 				token: options.deleteToken
 			},
-			url: CCM_TOOLS_PATH + '/aggregator/edit_template',
+			url: CCM_TOOLS_PATH + '/aggregator/item/delete',
 			success: function(r) {
 				jQuery.fn.dialog.hideLoader();
-				// load the newly rendered HTML into the old aggregator item.
 				var $item = $('[data-aggregator-item-id=' + options.agiID + ']');
 				var $aggregator = $item.parent();
 				$item.remove();
