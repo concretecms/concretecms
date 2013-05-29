@@ -13,8 +13,12 @@
         <feature handle="description" score="1" />
         <feature handle="featured" score="1000" />
     </features>
+    <aggregatoritemtemplatetypes>
+        <aggregatoritemtemplatetype handle="tile" package="" />
+        <aggregatoritemtemplatetype handle="detail" package="" />
+    </aggregatoritemtemplatetypes>
     <aggregatoritemtemplates>
-        <aggregatoritemtemplate handle="featured" name="Featured Item" package="" fixed-slot-width="6" fixed-slot-height="2" force-default="1">
+        <aggregatoritemtemplate handle="featured" type="tile" name="Featured Item" package="" fixed-slot-width="6" fixed-slot-height="2" force-default="1">
             <feature handle="description" />
             <feature handle="date_time" />
             <feature handle="link" />
@@ -22,25 +26,31 @@
             <feature handle="image" />
             <feature handle="featured" />
         </aggregatoritemtemplate>
-        <aggregatoritemtemplate handle="title_description" name="Title Date &amp; Description" package="">
+        <aggregatoritemtemplate handle="title_description" type="tile" name="Title Date &amp; Description" package="">
             <feature handle="description" />
             <feature handle="date_time" />
             <feature handle="link" />
             <feature handle="title" />
         </aggregatoritemtemplate>
-        <aggregatoritemtemplate handle="title_date" name="Title &amp; Date" package="">
+        <aggregatoritemtemplate handle="title_date" type="tile" name="Title &amp; Date" package="">
             <feature handle="date_time" />
             <feature handle="link" />
             <feature handle="title" />
         </aggregatoritemtemplate>
-        <aggregatoritemtemplate handle="title_date_comments" name="Title, Date &amp; Comments" package="" has-custom-class="true">
+        <aggregatoritemtemplate handle="title_date_comments" type="tile" name="Title, Date &amp; Comments" package="" has-custom-class="true">
             <feature handle="date_time" />
             <feature handle="link" />
             <feature handle="title" />
             <feature handle="conversation" />
         </aggregatoritemtemplate>
-        <aggregatoritemtemplate handle="thumbnail" name="Thumbnail" package="">
+        <aggregatoritemtemplate handle="thumbnail" type="tile" name="Thumbnail" package="">
             <feature handle="link" />
+            <feature handle="image" />
+        </aggregatoritemtemplate>
+        <aggregatoritemtemplate handle="basic" type="detail" name="Basic" package="">
+            <feature handle="title" />
+        </aggregatoritemtemplate>
+        <aggregatoritemtemplate handle="image" type="detail" name="Large Image" package="">
             <feature handle="image" />
         </aggregatoritemtemplate>
     </aggregatoritemtemplates>

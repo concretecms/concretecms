@@ -37,11 +37,11 @@ $(function() {
 });
 </script>
 
-<div class="ccm-ui" id="ccm-dialog-block-types">
+<div class="ccm-ui ccm-dialog-icon-item-grid" id="ccm-dialog-block-types">
 
-<div id="ccm-dialog-block-types-sets">
+<div class="ccm-dialog-icon-item-grid-sets">
 
-<form class="form-inline" id="ccm-block-type-search">
+<form class="form-inline ccm-icon-item-grid-search">
 	<i class="icon-search"></i> <input type="search" />
 </form>
 
@@ -58,9 +58,9 @@ for ($i = 0; $i < count($sets); $i++) {
 
 </div>
 
-<div id="ccm-dialog-block-types-list">
+<div class="ccm-dialog-icon-item-grid-list-wrapper" id="ccm-overlay-block-types">
 	
-	<ul id="ccm-overlay-block-types">
+	<ul class="ccm-overlay-icon-item-grid-list">
 
 	<? foreach($blockTypes as $bt) { 
 		if ($a instanceof Area && (!$ap->canAddBlockToArea($bt))) {

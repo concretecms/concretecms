@@ -1,6 +1,6 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Model_TitleDateCommentsAggregatorItemTemplate extends AggregatorItemTemplate {
+class Concrete5_Model_TitleDateCommentsTileAggregatorItemTemplate extends TileAggregatorItemTemplate {
 
 	public function getAggregatorItemTemplateData(AggregatorItem $item) {
 		$items = parent::getAggregatorItemTemplateData($item);
