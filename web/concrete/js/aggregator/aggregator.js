@@ -11,7 +11,7 @@
 
     	enableOverlay: function($aggregator, options) {
 
-			$aggregator.find('a[data-overlay=aggregator-item]').not('.event-bound').each(function() {
+			$aggregator.find('a[data-overlay=aggregator-item]').not('.overlay-bound').each(function() {
 				var agiID = $(this).closest('[data-aggregator-item-id]').attr('data-aggregator-item-id');
 				$(this).on('click', function() {
 					$.magnificPopup.open({
@@ -34,7 +34,18 @@
 					});
 					return false;
 				});
-			}).addClass('event-bound');
+			}).addClass('overlay-bound');
+    	},
+
+    	enableHover: function($aggregator, options) {
+
+			$aggregator.find('.ccm-aggregator-item').not('.hover-bound').each(function() {
+				$(this).on('mouseenter', function() {
+					$(this).addClass('ccm-aggregator-item-over')
+				}).on('mouseleave', function() {
+					$(this).removeClass('ccm-aggregator-item-over')
+				});
+			}).addClass('hover-bound');
     	},
 
     	enableEditing: function($aggregator, options) {
@@ -229,6 +240,9 @@
 			$aggregator.css('opacity', 1);
 
 			// handle details and lightbox.
+			methods.private.enableHover($aggregator, options);
+
+			// handle details and lightbox.
 			methods.private.enableOverlay($aggregator, options);
 
 			$loadButton.on('click', function() {
@@ -268,7 +282,7 @@
 						}
 				
 						methods.private.enableOverlay($aggregator, options);
-
+						methods.private.enableHover($aggregator, options);
 					}
 				});
 			});

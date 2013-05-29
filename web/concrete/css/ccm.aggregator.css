@@ -21,3 +21,4 @@ div.ccm-aggregator-overlay-wrapper.mfp-removing div.ccm-aggregator-overlay{opaci
 div.ccm-aggregator-overlay{width:600px;height:400px;margin:40px auto 0px auto;background-color:#fff;position:relative;}
 div.ccm-aggregator-overlay-title{padding-top:8px 0px 0px 8px;border-bottom:1px solid #333;height:40px;color:#aaa;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;font-weight:lighter;font-size:32px;}
 div.ccm-aggregator-thumbnail-caption{font-weight:bold;padding:4px;background-color:#000;color:#fff;-webkit-border-bottom-right-radius:3px;-moz-border-radius-bottomright:3px;border-bottom-right-radius:3px;-webkit-border-bottom-left-radius:3px;-moz-border-radius-bottomleft:3px;border-bottom-left-radius:3px;}
+div.ccm-aggregator-item.ccm-aggregator-item-over{border:1px solid #000800;}
