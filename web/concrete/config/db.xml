@@ -320,6 +320,27 @@
       <notnull/>
     </field>
   </table>
+  <table name="AggregatorItemSelectedTemplates">
+    <field name="agiID" type="I" size="10">
+      <unsigned/>
+      <notnull />
+      <default value="0" />
+    </field>
+    <field name="agtID" type="I" size="10">
+      <unsigned/>
+      <notnull />
+      <default value="0" />
+    </field>
+    <field name="agtTypeID" type="I" size="10">
+     <unsigned/>
+     <default value="0" />
+    </field>
+    <index name="agtUniqueKey">
+      <unique/>
+      <col>agiID</col>
+      <col>agtTypeID</col>
+    </index>
+  </table>
   <table name="AggregatorItems">
     <field name="agiID" type="I" size="10">
       <key/>
@@ -347,11 +368,6 @@
     <field name="agiSlotHeight" type="I" size="10">
       <unsigned/>
       <default value="1" />
-    </field>
-    <field name="agtID" type="I" size="10">
-      <unsigned/>
-      <notnull />
-      <default value="0" />
     </field>
     <field name="agiKey" type="C" size="255">
       <notnull/>
@@ -409,6 +425,24 @@
       <unsigned/>
     </field>
   </table>
+
+  <table name="AggregatorItemTemplateTypes">
+  <field name="agtTypeID" type="I" size="10">
+    <key/>
+    <autoincrement/>
+    <unsigned/>
+  </field>
+  <field name="agtTypeHandle" type="C" size="64">
+    <notnull/>
+  </field>
+  <field name="pkgID" type="I" size="10">
+    <notnull/>
+    <default value="0"/>
+    <unsigned/>
+  </field>
+</table>
+
+
   <table name="AggregatorItemTemplates">
     <field name="agtID" type="I" size="10">
       <key/>
@@ -439,6 +473,15 @@
     <field name="pkgID" type="I" size="10">
       <unsigned/>
     </field>
+  <field name="agtTypeID" type="I" size="10">
+   <unsigned/>
+   <default value="0" />
+  </field>
+    <index name="agtHandle">
+      <unique/>
+      <col>agtHandle</col>
+      <col>agtTypeID</col>
+    </index>
   </table>
   <table name="AggregatorItemTemplateFeatures">
     <field name="afeID" type="I" size="10">
@@ -1340,7 +1383,11 @@
       <notnull/>
       <default value="0"/>
     </field>
-    <field name="btSupportsInlineEditing" type="I1" size="1">
+    <field name="btSupportsInlineAdd" type="I1" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="btSupportsInlineEdit" type="I1" size="1">
       <NOTNULL/>
       <DEFAULT value="0"/>
     </field>

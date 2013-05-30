@@ -13,7 +13,7 @@
 	<? } ?>
 
 <?
-if ($bt->supportsInlineEditing()) { ?>
+if ($bt->supportsInlineAdd()) { ?>
 
 <script type="text/javascript">
 $(document).unbind('inlineEditCancel').on('inlineEditCancel', function(e, onComplete) {
@@ -27,7 +27,7 @@ $(document).unbind('inlineEditCancel').on('inlineEditCancel', function(e, onComp
 
 <? } ?>
 
-<? if (!$bt->supportsInlineEditing()) { ?>	
+<? if (!$bt->supportsInlineAdd()) { ?>	
 
 	<div class="ccm-buttons dialog-buttons">
 	<a href="javascript:void(0)" <? if ($replaceOnUnload) { ?> onclick="location.href='<?=DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=<?=$c->getCollectionID()?>'; return true" class="btn ccm-button-left cancel" <? } else { ?> onclick="$(document).trigger('blockWindowClose');jQuery.fn.dialog.closeTop()" class="btn btn-hover-danger pull-left"<? } ?>><?=t('Cancel')?></a>

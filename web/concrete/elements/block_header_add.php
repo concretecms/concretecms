@@ -53,7 +53,7 @@ if (isset($blockTypes[$bt->getBlockTypeHandle()])) {
 		$help = $cont->getBlockTypeHelp();
 	}
 }
-if (isset($help) && !$bt->supportsInlineEditing()) { ?>
+if (isset($help) && !$bt->supportsInlineAdd()) { ?>
 	<div class="dialog-help" id="ccm-menu-help-content"><? 
 		if (is_array($help)) { 
 			print $help[0] . '<br><br><a href="' . $help[1] . '" class="btn small" target="_blank">' . t('Learn More') . '</a>';
@@ -73,7 +73,7 @@ if (isset($help) && !$bt->supportsInlineEditing()) { ?>
 	<input type="hidden" name="ccm-string-<?=$key?>" value="<?=$val?>" />
 <? } ?>
 
-<? if (!$bt->supportsInlineEditing()) { ?>
+<? if (!$bt->supportsInlineAdd()) { ?>
 <div id="ccm-block-fields">
 <? } else { ?>
 <div>

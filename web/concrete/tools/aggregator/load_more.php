@@ -10,7 +10,7 @@ if ($_POST['agID'] && $nh->integer($_POST['agID'])) {
     $list->setItemsPerPage($_REQUEST['itemsPerPage']);
     $items = $list->getPage($_REQUEST['page']);
     foreach($items as $item) {
-      Loader::element('aggregator/item', array("item" => $item, 'showTileCommands' => $showTileCommands));
+      Loader::element('aggregator/tile', array("item" => $item, 'showTileCommands' => $showTileCommands));
     }
   }
 }

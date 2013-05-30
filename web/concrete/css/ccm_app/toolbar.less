@@ -312,3 +312,16 @@ div#ccm-page-status-bar {
 
 }
 
+/* Disabling the toolbar */
+div#ccm-toolbar-disabled {
+	height: 49px;
+	background-color: rgba(255,255,255,0.8);
+	z-index: 1000;
+	position: fixed;
+	top: 0px;
+	left: 0px;
+	width: 100%;
+	.opacity(0);
+	.transition(opacity 0.5s linear);
+}
+

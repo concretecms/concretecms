@@ -8,19 +8,20 @@ if (!is_object($c)) {
 }
 
 $pt = $c->getCollectionThemeObject();
-$showTileCommands = false;
 $agp = new Permissions($aggregator);
-if ($c->isEditMode() && $agp->canEditAggregatorItems()) {
-  $showTileCommands = true;
+if ($showTileControls && $agp->canEditAggregatorItems()) {
+  $showTileControls = true;
+} else {
+  $showTileControls = false;
 }
 
 ?>
 
 <div class="ccm-aggregator-wrapper">
 
-<div data-aggregator-id="<?=$aggregator->getAggregatorID()?>" data-aggregator-current-page="1" class="<? if ($showTileCommands) { ?>ccm-aggregator-active-tile-commands<? } ?> ccm-aggregator-grid">
+<div data-aggregator-id="<?=$aggregator->getAggregatorID()?>" data-aggregator-current-page="1" class="<? if ($showTileControls) { ?>ccm-aggregator-edit<? } else { ?>ccm-aggregator-view<? } ?> ccm-aggregator-grid">
     <? foreach($items as $item) { ?>
-      <?=Loader::element('aggregator/item', array('item' => $item, 'showTileCommands' => $showTileCommands))?>
+      <?=Loader::element('aggregator/tile', array('item' => $item, 'showTileControls' => $showTileControls))?>
     <? } ?>
 </div>
 
@@ -39,7 +40,7 @@ $(function() {
     columnWidth: <?=$pt->getThemeAggregatorGridItemWidth()?>,
     rowHeight: <?=$pt->getThemeAggregatorGridItemHeight()?>,
     agID: <?=$aggregator->getAggregatorID()?>,
-    showTileCommands: '<?=$showTileCommands?>',
+    showTileControls: '<?=$showTileControls?>',
     loadToken: '<?=Loader::helper('validation/token')->generate('get_aggregator_items')?>',
     editToken: '<?=Loader::helper('validation/token')->generate('update_aggregator_items')?>',
     titleEditTemplate: '<?=t('Edit Aggregator Template')?>'
