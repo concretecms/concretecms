@@ -114,7 +114,7 @@ var CCMEditMode = function() {
 
 	addBlockType = function(cID, aID, arHandle, $link, fromdrag) {
 		var btID = $link.attr('data-btID');
-		var inline = parseInt($link.attr('data-supports-inline-editing'));
+		var inline = parseInt($link.attr('data-supports-inline-add'));
 		var hasadd = parseInt($link.attr('data-has-add-template'));
 
 		if (!hasadd) {

@@ -4,6 +4,7 @@ class Concrete5_Controller_Block_CoreAggregator extends BlockController {
 
 		protected $btCacheBlockRecord = true;
 		protected $btTable = 'btCoreAggregator';
+		protected $btSupportsInlineEdit = true;
 
 		public function getBlockTypeDescription() {
 			return t("Displays pages and data in list or grids.");
@@ -50,7 +51,7 @@ class Concrete5_Controller_Block_CoreAggregator extends BlockController {
 		}
 
 		public function edit() {
-			$this->setupForm();
+			$this->view();
 		}
 
 		public function save($args) {

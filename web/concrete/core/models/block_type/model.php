@@ -104,7 +104,7 @@ class Concrete5_Model_BlockTypeDB extends ADOdb_Active_Record {
 		protected static function get($where, $properties) {
 			$db = Loader::db();
 			
-			$q = "select btID, btName, btDescription, btHandle, pkgID, btActiveWhenAdded, btIsInternal, btSupportsInlineEditing, btCopyWhenPropagate, btIncludeAll, btDisplayOrder, btInterfaceWidth, btInterfaceHeight from BlockTypes where {$where}";
+			$q = "select btID, btName, btDescription, btHandle, pkgID, btActiveWhenAdded, btIsInternal, btSupportsInlineEdit, btSupportsInlineAdd, btCopyWhenPropagate, btIncludeAll, btDisplayOrder, btInterfaceWidth, btInterfaceHeight from BlockTypes where {$where}";
 			
 			$r = $db->query($q, $properties);
 			
@@ -125,10 +125,16 @@ class Concrete5_Model_BlockTypeDB extends ADOdb_Active_Record {
 		function isBlockTypeInternal() {return $this->btIsInternal;}
 
 		/** 
-		 * if a the current BlockType supports inline editing or not
+		 * if a the current BlockType supports inline edit or not
 		 * @return boolean
 		 */
-		function supportsInlineEditing() {return $this->btSupportsInlineEditing;}
+		public function supportsInlineEdit() {return $this->btSupportsInlineEdit;}
+
+		/** 
+		 * if a the current BlockType supports inline add or not
+		 * @return boolean
+		 */
+		public function supportsInlineAdd() {return $this->btSupportsInlineAdd;}
 		
 		/** 
 		 * Returns true if the block type is internal (and therefore cannot be removed) a core block
@@ -508,7 +514,8 @@ class Concrete5_Model_BlockTypeDB extends ADOdb_Active_Record {
 				$btd->btCopyWhenPropagate = $bta->isCopiedWhenPropagated();
 				$btd->btIncludeAll = $bta->includeAll();
 				$btd->btIsInternal = $bta->isBlockTypeInternal();
-				$btd->btSupportsInlineEditing = $bta->supportsInlineEditing();
+				$btd->btSupportsInlineEdit = $bta->supportsInlineEdit();
+				$btd->btSupportsInlineAdd = $bta->supportsInlineAdd();
 				$btd->btInterfaceHeight = $bta->getInterfaceHeight();
 				$btd->btInterfaceWidth = $bta->getInterfaceWidth();
 				$btd->pkgID = $bt->getPackageID();
