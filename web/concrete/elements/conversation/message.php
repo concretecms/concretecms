@@ -15,7 +15,11 @@ if ((!$message->isConversationMessageDeleted() && $message->isConversationMessag
 		<a id="cnvMessage<?=$cnvMessageID?>" />
 		<div class="ccm-conversation-message-user">
 			<div class="ccm-conversation-avatar"><? print Loader::helper('concrete/avatar')->outputUserAvatar($ui)?></div>
-			<div class="ccm-conversation-message-byline"><? if (!is_object($ui)) { ?><?=t('Anonymous')?><? } else { ?><?=$ui->getUserDisplayName()?><? } ?></div>
+			<div class="ccm-conversation-message-byline">
+				<span class="ccm-conversation-message-username"><? if (!is_object($ui)) { ?><?=t('Anonymous')?><? } else { ?><?=$ui->getUserDisplayName()?><? } ?></span>
+				<span class="ccm-conversation-message-date"><?=$message->getConversationMessageDateTimeOutput();?></span>
+			</div>
+			
 		</div>
 		<div class="ccm-conversation-message-body">
 			<?=$message->getConversationMessageBodyOutput()?>
@@ -29,7 +33,7 @@ if ((!$message->isConversationMessageDeleted() && $message->isConversationMessag
 						if(is_object($file)) { ?>
 						<p rel="<?php echo $attachment['cnvMessageAttachmentID'];?>"><a href="<?php echo $file->getDownloadURL() ?>"><?php echo $file->getFileName() ?></a>
 							<? if (!$message->isConversationMessageDeleted()) { ?>
-								<a rel="<?php echo $attachment['cnvMessageAttachmentID'];?>" class="attachment-delete ccm-conversation-message-admin-control" href="#">Delete</a>
+								<a rel="<?php echo $attachment['cnvMessageAttachmentID'];?>" class="attachment-delete ccm-conversation-message-admin-control" href="#"><?=t('Delete')?></a>
 							<?php } ?>
 						</p>
 					<?php }
@@ -47,8 +51,7 @@ if ((!$message->isConversationMessageDeleted() && $message->isConversationMessag
 			</ul>
 			<? } ?>
 			
-		<?=$message->getConversationMessageDateTimeOutput();
-		Loader::element('conversation/social_share', array('cID' => $cID, 'message' => $message));?>
+		<? Loader::element('conversation/social_share', array('cID' => $cID, 'message' => $message));?>
 		<? if ($enableCommentRating) {
 			$ratingTypes = ConversationRatingType::getList();
 			foreach($ratingTypes as $ratingType) {

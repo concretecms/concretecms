@@ -23,25 +23,48 @@
 	</div>
 </div>
 <div class="ccm-pane-body">
-	<?=$list->displaySummary()?>
-	<table class="ccm-conversation-messages">
+	<div style="margin-bottom: 10px">
+		<select id="ccm-conversation-messages-multiple-operations" class="span3" disabled="">
+				<option value""><?=t('** With Selected')?></option>
+			<?php foreach($cmpFilterTypes as $status) { ?>
+				<option value="<?=$status?>"><?=t('Flag as %s', $status)?></option>
+			<? } ?>
+		</select>
+	</div>
+	<form>
+	<table class="ccm-conversation-messages table table-condensed ccm-results-list">
+		<tr>
+			<th><input type="checkbox" id="ccm-conversation-message-list-all"/></th>
+			<th><?=t('Message')?></th>
+			<th><?=t('Posted')?></th>
+		</tr>
 <? if (count($messages > 0)) { ?>
-	<? foreach($messages as $msg) { ?>
+	<? foreach($messages as $msg) { 
+		$ui = $msg->getConversationMessageUserObject();
+	?>
 	<tr>
 		<td><?=$form->checkbox('cnvMessageID[]', $msg->getConversationMessageID())?></td>
 		<td><?
 		$cnv = $msg->getConversationObject();
-		$page = $cnv->getConversationPageObject();
-		if (is_object($page)) { ?>
-			<div><a href="<?=Loader::helper('navigation')->getLinkToCollection($page)?>"><?=$page->getCollectionName()?></a></div>
-		<? } ?>
+		if(is_object($cnv)) {
+			$page = $cnv->getConversationPageObject();
+			if (is_object($page)) { ?>
+				<div><a href="<?=Loader::helper('navigation')->getLinkToCollection($page)?>"><?=$page->getCollectionName()?></a></div>
+			<? }
+		} ?>
 		<div class="ccm-conversation-message-summary">
 			<?=$msg->getConversationMessageBodyOutput()?>
 		</div>
 		</td>
+		<td>
+			
+			<?=$msg->getConversationMessageDateTimeOutput();?> <?=t('By')?> <? if (!is_object($ui)) { ?><?=t('Anonymous')?><? } else { ?><?=$ui->getUserDisplayName()?><? } ?>
+		</td>
 	</tr>
 	<? } ?>
 	</table>
+	</form>
+	<?=$list->displaySummary()?>
 <? } else { ?>
 	<p><?=t('There are no conversations with messages.')?></p>
 <? } ?>
@@ -51,5 +74,33 @@
 <div class="ccm-pane-footer">
 	<?=$list->displayPagingV2()?>
 </div>
+<script type="text/javascript">
+$(function() {
+	$('.ccm-conversation-messages .ccm-input-checkbox').change(function() {
+		if($(this).is(':checked')) {
+			$('#ccm-conversation-messages-multiple-operations').attr('disabled',false);
+		} else {
+			var disableSelect = true;
+			$('.ccm-conversation-messages .ccm-input-checkbox').each(function() {
+				if($(this).is(':checked')) {
+					disableSelect = false;
+					return false;
+				}
+			});
+			if(disableSelect) {
+				$('#ccm-conversation-messages-multiple-operations').attr('disabled',true);
+			}
+		}
+	});
+	
+	$('#ccm-conversation-message-list-all').change(function() {
+		if($(this).is(':checked')) {
+			$('.ccm-conversation-messages .ccm-input-checkbox').each(function() { $(this).attr('checked',true); });
+		} else {
+			$('.ccm-conversation-messages .ccm-input-checkbox').each(function() { $(this).attr('checked',false); });
+		}
+	});
+});
+</script>
 
 <?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(); ?>

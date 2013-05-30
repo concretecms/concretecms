@@ -43,6 +43,9 @@ div.ccm-conversation-add-reply, div.ccm-conversation-add-new-message {
 			font-size: @fontSizeSmall;
 			height: 80px;
 		}
+		button {
+			margin:16px 0 0 16px;
+		}
 	}
 }
 
@@ -53,6 +56,14 @@ div.ccm-conversation-add-new-message {
 div.ccm-conversation-add-reply {
 	display: none;
 	margin-top: 10px;
+}
+
+div.ccm-conversation-attachment-container {
+	padding: 0 150px 0 50px;
+	margin-top: -30px;
+	.dropzone {
+		border: 2px dashed @grayLight;
+	}
 }
 
 div.ccm-conversation-errors {
@@ -91,11 +102,7 @@ div.ccm-conversation-message {
 	div.ccm-conversation-message-byline {
 		padding: 8px;
 		height: 40px;
-		box-sizing: border-box;
-		font-weight: lighter;
-		border: 1px solid #ddd;
-		#gradient .vertical(#dedede, #f2f2f2);
-		.border-radius(4px); 
+		color: #0099ff;
 		margin-bottom: 8px;
 	}
 
