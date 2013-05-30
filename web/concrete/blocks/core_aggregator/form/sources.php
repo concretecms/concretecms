@@ -1,24 +1,8 @@
-<? defined('C5_EXECUTE') or die("Access Denied."); ?>  
+<?php
+defined('C5_EXECUTE') or die("Access Denied.");
+?>
 
-<?=Loader::helper('concrete/interface')->tabs(array(
-	array('sources', t('Data Sources'), true),
-	array('output', t('Output'))
-));?>
-
-
-<div class="ccm-tab-content" id="ccm-tab-content-sources">
-
-<?
-if ($controller->getTask() == 'add') { 
-	$itemsPerPage = 20;
-}
-
-if ($controller->getTask() == 'edit') { ?>
-<div class="alert alert-warning ccm-aggregator-data-source-update-detected">
-	<?=t("Data source change detected. If saved, this block will clear its current tiles and grab new ones.")?>
-	<input type="hidden" name="rescanAggregatorItems" value="0" />
-</div>
-<? } ?>
+<input type="hidden" name="tab[]" value="sources" />
 
 <div class="form-inline">
 <div class="control-group">
@@ -42,10 +26,9 @@ if ($controller->getTask() == 'edit') { ?>
 	<div style="margin-bottom: 8px">
 		<input type="hidden" name="agsID[_ags_]" value="<?=$ags->getAggregatorDataSourceID()?>" />
 	<a href="#" style="float: right" data-delete="aggregator-source"><i class="icon-minus-sign"></i></a>
-
 		<? $source = $ags; ?>
 		<? include($ags->getAggregatorDataSourceOptionsForm())?>
-		<hr/>
+		<hr />
 	</div>
 </fieldset>
 
@@ -75,22 +58,9 @@ if ($controller->getTask() == 'edit') { ?>
 <? } ?>
 
 <? } else { ?>
-	<span data-message="no-sources"><?=t('You have not added any data sources.')?></span></div>
+	<span data-message="no-sources"><?=t('You have not added any data sources.')?></span>
 <? } ?>
 </div>
-</div>
-
-<div class="ccm-tab-content form-horizontal" id="ccm-tab-content-output">
-		<div class="control-group" data-row="itemsPerPage">
-		<label class="control-label"><?=t('Items Per Page')?></label>
-		<div class="controls">
-			<?=$form->text('itemsPerPage', $itemsPerPage, array('class' => 'span1'))?>
-		</div>
-	</div>
-
-</div>
-
-
 
 <script type="text/javascript">
 $(function() {
@@ -115,14 +85,6 @@ $(function() {
 		}
 		return false;
 	});
-
-	<? if ($controller->getTask() == 'edit') { ?>
-		$('a[data-tab=output]').trigger('click');
-		$('#ccm-aggregator-data-source-templates-selected').on('change', function() {
-			$('div.ccm-aggregator-data-source-update-detected').removeClass('ccm-aggregator-data-source-update-detected');
-			$('input[name=rescanAggregatorItems]').val('1');
-		});
-	<? } ?>
 });
 </script>
 
@@ -130,8 +92,4 @@ $(function() {
 #ccm-aggregator-data-source-templates-selected {
 	margin-top: 18px;
 }
-.ccm-aggregator-data-source-update-detected {
-	display: none;
-}
-
 </style>

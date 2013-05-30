@@ -220,7 +220,7 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
 		<div id="ccm-page-status-bar">
 			<div class="alert alert-info"><button type="button" class="close" data-dismiss="alert">×</button> <span><?= t("%s is currently editing this page.", $c->getCollectionCheckedOutUserName())?></span></div>
 		</div>
-	<? } ?>
+	<? } else { ?>
 
 	<? if ($c->getCollectionPointerID() > 0) { ?>
 
@@ -250,7 +250,7 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
 	$hasPendingPageApproval = false;
 	
 	if ($canViewToolbar) { ?>
-		<? if (is_array($workflowList)) { ?>
+		<? if (is_array($workflowList) && count($workflowList) > 0) { ?>
 			<div id="ccm-page-status-bar">
 			<? foreach($workflowList as $i => $wl) { ?>
 				<? $wr = $wl->getWorkflowRequestObject(); 
@@ -324,7 +324,9 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
 			</div>
 			<? }
 		}
-	} ?>		
+	} ?>	
+
+	<? } ?>	
 	</div>
 
 <? }

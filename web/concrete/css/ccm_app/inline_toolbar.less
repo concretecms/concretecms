@@ -2,16 +2,13 @@
 	font-family: Helvetica, Arial, Verdana, Tahoma, sans-serif !important;
 	.box-shadow(0px 0px 6px rgba(200,200,200,0.5));
 	.border-radius(5px);
-	z-index: 999;
+	z-index: 1002;
 	margin: 0 !important;
+	position: relative;
 	padding: 0px !important;
 	line-height: 0;
 	list-style: none;
-	position: absolute;
 	opacity: 0;
-	top: 0;
-	left: 0;
-	.transition(opacity 0.3s ease-in);
 	display: table;
 	height: 31px;
 
@@ -96,6 +93,23 @@
 
 }
 
+#ccm-inline-toolbar-container {
+	padding: 10px 0px 10px 0px;
+	width: 100%;
+	position: absolute;
+	top: 0;
+	.transition(opacity 0.3s ease-in);
+	opacity: 0;
+	.box-sizing(border-box);
+	left: 0;
+	z-index: 1002; /* same as toolbar */
+}
+
+#ccm-inline-toolbar-container.ccm-inline-toolbar-affixed {
+	position: fixed;
+	top: 0 !important;
+	background-color: rgba(0,0,0,0.4);
+}
 
 /*
 .ccm-inline-toolbar {
@@ -104,7 +118,7 @@
 	left: 0;
 	top: 50px;
 	width: 100%;
-	z-index: 999;
+	z-index: 1001;
 	visibility: visible;
 	margin: 0 !important;
 	padding: 0px 0px 0px 12px !important;

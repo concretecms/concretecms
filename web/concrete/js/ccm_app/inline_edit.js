@@ -13,11 +13,40 @@ var CCMInlineEditMode = function() {
 			$('#ccm-toolbar-disabled').css('opacity', 1);
 		}, 10);
 		$('div.ccm-block-edit').addClass('ccm-block-edit-disabled');
+		$('div.ccm-area').removeClass('ccm-area').addClass('ccm-area-disabled');
 		$('div.ccm-area-footer-handle').addClass('ccm-block-edit-disabled');
 		$('div.ccm-area-layout-control-bar').addClass('ccm-block-edit-disabled');
 		if (activeObj) {
 			activeObj.removeClass('ccm-block-edit-disabled').addClass('ccm-block-edit-inline-active');
 		}
+	}
+
+	completeInlineEditMode = function($block) {
+		$('#ccm-inline-toolbar-container').remove();
+
+		var $toolbar = $block.find('.ccm-inline-toolbar'),
+			$holder = $('<div />', {id: 'ccm-inline-toolbar-container'}).appendTo(document.body),
+			$window = $(window),
+			pos = $block.offset();
+
+		$toolbar.css('left', pos.left).css('opacity', 1).appendTo($holder);
+		$toolbar.find('.dialog-launch').dialog();
+		var t = pos.top - $holder.outerHeight();
+		$holder.css('top', t).css('opacity', 1);
+
+		if ($window.scrollTop() > t) {
+			$('#ccm-toolbar-disabled,#ccm-toolbar').css('opacity', 0);
+			$holder.addClass('ccm-inline-toolbar-affixed');
+		}
+
+		$window.on('scroll.inline-toolbar', function() {
+			$holder.toggleClass('ccm-inline-toolbar-affixed', $window.scrollTop() > t);
+			if ($window.scrollTop() > t) {
+				$('#ccm-toolbar-disabled,#ccm-toolbar').css('opacity', 0);
+			} else {
+				$('#ccm-toolbar-disabled,#ccm-toolbar').css('opacity', 1);
+			}
+		});
 	}
 
 	return {
@@ -30,9 +59,14 @@ var CCMInlineEditMode = function() {
 			$('div.ccm-area-edit-inline-active').removeClass('ccm-area-edit-inline-active');
 			$.fn.ccmmenu.enable();
 			$('div.ccm-block-edit-inline-active').remove();
+			$(window).unbind('scroll.inline-toolbar');
 			$('div.ccm-block-edit').removeClass('ccm-block-edit-disabled');
 			$('div.ccm-area-footer-handle').removeClass('ccm-block-edit-disabled');
 			$('div.ccm-area-layout-control-bar').removeClass('ccm-block-edit-disabled');
+			$('div.ccm-area-disabled').removeClass('ccm-area-disabled').addClass('ccm-area');
+			$('#ccm-toolbar-disabled').remove();
+			$('#ccm-toolbar').css('opacity', 1);
+			$('#ccm-inline-toolbar-container').remove();
 
 			jQuery.fn.dialog.hideLoader();
 			CCMEditMode.start();
@@ -64,9 +98,7 @@ var CCMInlineEditMode = function() {
 			success: function(r) {
 				var $container = $('[data-block-id=' + bID + '][data-area-id=' + aID + ']');
 				$container.html(r);
-				var $toolbar = $container.find('.ccm-inline-toolbar');
-				//var offset = $container.offset();
-				$toolbar.css('top', '-50px').css('opacity', 1);
+				completeInlineEditMode($container);
 				jQuery.fn.dialog.hideLoader();
 			}});
 		},

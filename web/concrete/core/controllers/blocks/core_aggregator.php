@@ -51,6 +51,7 @@ class Concrete5_Controller_Block_CoreAggregator extends BlockController {
 		}
 
 		public function edit() {
+			$this->setupForm();
 			$this->view();
 		}
 
@@ -65,7 +66,11 @@ class Concrete5_Controller_Block_CoreAggregator extends BlockController {
 				$task = 'edit';
 			}
 
-			if ($task == 'add' || $_POST['rescanAggregatorItems']) {
+			$tab = $args['tab'];
+			if (!is_array($tab)) {
+				$tab = array();
+			}
+			if ($task == 'add' || in_array('sources', $tab)) {
 				$ag->clearConfiguredAggregatorDataSources();
 				$sources = $this->post('agsID');
 				foreach($sources as $key => $agsID) {
@@ -83,9 +88,15 @@ class Concrete5_Controller_Block_CoreAggregator extends BlockController {
 
 			$itemsPerPage = intval($args['itemsPerPage']);
 			$values = array(
-				'agID' => $ag->getAggregatorID(),
-				'itemsPerPage' => $itemsPerPage
+				'agID' => $ag->getAggregatorID()
 			);
+
+			if (in_array('output', $tab)) {
+				$values['itemsPerPage'] = $itemsPerPage;
+			} else {
+				$values['itemsPerPage'] = $this->itemsPerPage;
+			}
+
 			parent::save($values);
 
 		}
