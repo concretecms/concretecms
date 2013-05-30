@@ -7,7 +7,7 @@ div#ccm-toolbar {
 	left: 0px; 
 	height: 48px; 
 	width: 100%; 
-	z-index: 999;
+	z-index: 1001; /* over the top of the highlighter, which is 1000 */
 
 	> ul {
 		.clear_float();
@@ -274,7 +274,7 @@ div#ccm-notification {
 
 /* Status Bar */
 div#ccm-page-status-bar {
-	z-index: 98; 
+	z-index: 1000; /* right under toolbar */ 
 	position: relative;
 	display: block; 
 	position: fixed; 
@@ -316,12 +316,11 @@ div#ccm-page-status-bar {
 div#ccm-toolbar-disabled {
 	height: 49px;
 	background-color: rgba(255,255,255,0.8);
-	z-index: 1000;
+	z-index: 1002; /* right over the toolbar */
 	position: fixed;
 	top: 0px;
 	left: 0px;
 	width: 100%;
 	.opacity(0);
-	.transition(opacity 0.5s linear);
 }
 
