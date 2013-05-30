@@ -114,7 +114,7 @@ var CCMEditMode = function() {
 
 	addBlockType = function(cID, aID, arHandle, $link, fromdrag) {
 		var btID = $link.attr('data-btID');
-		var inline = parseInt($link.attr('data-supports-inline-editing'));
+		var inline = parseInt($link.attr('data-supports-inline-add'));
 		var hasadd = parseInt($link.attr('data-has-add-template'));
 
 		if (!hasadd) {
@@ -395,26 +395,26 @@ var CCMEditMode = function() {
 		},
 
 		activateBlockTypesOverlay: function() {
-			$('#ccm-dialog-block-types-sets ul a').on('click', function() {
+			$('#ccm-dialog-block-types .ccm-dialog-icon-item-grid-sets ul a').on('click', function() {
 				$('#ccm-overlay-block-types li').hide();
 				$('#ccm-overlay-block-types li[data-block-type-sets~=' + $(this).attr('data-tab') + ']').show();
-				$('#ccm-dialog-block-types-sets ul a').removeClass('active');
+				$('#ccm-dialog-block-types .ccm-dialog-icon-item-grid-sets ul a').removeClass('active');
 				$(this).addClass('active');
 				return false;
 			});
 
 			$($('#ccm-dialog-block-types ul a').get(0)).trigger('click');
 
-			$('#ccm-dialog-block-types').closest('.ui-dialog-content').addClass('ui-dialog-content-block-types');
-			$('#ccm-block-type-search input').focus();
+			$('#ccm-dialog-block-types').closest('.ui-dialog-content').addClass('ui-dialog-content-icon-item-grid');
+			$('#ccm-dialog-block-types .ccm-icon-item-grid-search input').focus();
 			if ($('#ccm-block-types-dragging').length == 0) {
 				$('<div id="ccm-block-types-dragging" />').appendTo(document.body);
 			}
 			// remove any old add block type placeholders
 			$('#ccm-add-new-block-placeholder').remove();
-			$('#ccm-block-type-search input').liveUpdate('ccm-overlay-block-types');
+			$('#ccm-dialog-block-types .ccm-icon-item-grid-search input').liveUpdate('ccm-overlay-block-types .ccm-overlay-icon-item-grid-list');
 			
-			$('#ccm-block-type-search input').on('keyup', function() {
+			$('#ccm-dialog-block-types .ccm-icon-item-grid-search input').on('keyup', function() {
 				if ($(this).val() == '') {
 					$('#ccm-block-types-wrapper ul.nav-tabs').css('visibility', 'visible');
 					$('#ccm-block-types-wrapper ul.nav-tabs li[class=active] a').click();

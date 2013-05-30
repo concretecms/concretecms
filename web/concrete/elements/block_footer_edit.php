@@ -8,7 +8,7 @@ $closeWindowCID=(intval($rcID))?intval($rcID):$c->getCollectionID();
 
 <?
 $bt = $b->getBlockTypeObject();
-if ($bt->supportsInlineEditing()) { ?>
+if ($bt->supportsInlineEdit()) { ?>
 
 <script type="text/javascript">
 $(document).unbind('inlineEditCancel').on('inlineEditCancel', function(e, onComplete) {
@@ -36,7 +36,7 @@ $(document).unbind('inlineEditCancel').on('inlineEditCancel', function(e, onComp
 		<? } ?>
 	<? } ?>
 
-<? if (!$b->getProxyBlock() && !$bt->supportsInlineEditing()) { ?>	
+<? if (!$b->getProxyBlock() && !$bt->supportsInlineEdit()) { ?>	
 	<div class="ccm-buttons dialog-buttons">
 	<a href="javascript:clickedButton = true;$('#ccm-form-submit-button').get(0).click()" class="btn pull-right btn-primary"><?=t('Save')?></a>
 	<a style="float:left" href="javascript:void(0)" <? if ($replaceOnUnload) { ?>onclick="location.href='<?=DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=<?=$closeWindowCID ?><?=$step?>'; return true" class="btn btn-hover-danger"<? } else { ?>class="btn btn-hover-danger" onclick="$(document).trigger('blockWindowClose');jQuery.fn.dialog.closeTop();" <? } ?>><?=t('Cancel')?></a>

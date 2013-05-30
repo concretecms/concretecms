@@ -32,7 +32,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		protected $btName = "";
 		protected $btHandle = "";
 		protected $btIsInternal = 0;
-		protected $btSupportsInlineEditing = 0;
+		protected $btSupportsInlineAdd = false;
+		protected $btSupportsInlineEdit = false;
 		protected $btActiveWhenAdded = 1;
 		protected $btCopyWhenPropagate = 0;
 		protected $btIncludeAll = 0;
@@ -608,12 +609,16 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		}
 		
 		/** 
-		 * Returns whether the block type supports inline editing mode.
-		 * @returns bool
+		 * if a the current BlockType supports inline edit or not
+		 * @return boolean
 		 */
-		public function supportsInlineEditing() {
-			return $this->btSupportsInlineEditing;
-		}
+		public function supportsInlineEdit() {return $this->btSupportsInlineEdit;}
+
+		/** 
+		 * if a the current BlockType supports inline add or not
+		 * @return boolean
+		 */
+		public function supportsInlineAdd() {return $this->btSupportsInlineAdd;}
 		
 		/** 
 		 * Returns a key/value array of strings that is used to translate items when used in javascript

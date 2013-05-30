@@ -1,6 +1,8 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Model_AggregatorItemTemplate extends Object {
+abstract class Concrete5_Model_AggregatorItemTemplate extends Object {
+
+	abstract public function aggregatorItemTemplateControlsSlotDimensions();
 
 	protected $feTotalScore;
 	protected $feHandles;
@@ -15,9 +17,9 @@ class Concrete5_Model_AggregatorItemTemplate extends Object {
 
 	public static function getByID($agtID) {
 		$db = Loader::db();
-		$row = $db->GetRow('select AggregatorItemTemplates.agtID, agtHandle, agtForceDefault, agtFixedSlotWidth, agtFixedSlotHeight, agtHasCustomClass, pkgID, agtName from AggregatorItemTemplates where AggregatorItemTemplates.agtID = ?', array($agtID));
+		$row = $db->GetRow('select AggregatorItemTemplates.*, AggregatorItemTemplateTypes.agtTypeHandle from AggregatorItemTemplates inner join AggregatorItemTemplateTypes on AggregatorItemTemplateTypes.agtTypeID = AggregatorItemTemplates.agtTypeID where AggregatorItemTemplates.agtID = ?', array($agtID));
 		if (isset($row['agtID'])) {
-			$class = 'AggregatorItemTemplate';
+			$class = Loader::helper('text')->camelcase($row['agtTypeHandle']) . 'AggregatorItemTemplate';
 			if ($row['agtHasCustomClass']) {
 				$class = Loader::helper('text')->camelcase($row['agtHandle']) . $class;
 			}
@@ -29,15 +31,9 @@ class Concrete5_Model_AggregatorItemTemplate extends Object {
 	
 	public static function getByHandle($agtHandle) {
 		$db = Loader::db();
-		$row = $db->GetRow('select agtID, agtHandle, pkgID, agtHasCustomClass, agtForceDefault, agtFixedSlotWidth, agtFixedSlotHeight, agtName from AggregatorItemTemplates where agtHandle = ?', array($agtHandle));
+		$row = $db->GetRow('select agtID from AggregatorItemTemplates where agtHandle = ?', array($agtHandle));
 		if (isset($row['agtID'])) {
-			$class = 'AggregatorItemTemplate';
-			if ($row['agtHasCustomClass']) {
-				$class = Loader::helper('text')->camelcase($row['agtHandle']) . $class;
-			}
-			$agt = new $class();
-			$agt->setPropertiesFromArray($row);
-			return $agt;
+			return AggregatorItemTemplate::getByID($row['agtID']);
 		}
 	}
 
@@ -49,6 +45,20 @@ class Concrete5_Model_AggregatorItemTemplate extends Object {
 			$agt = AggregatorItemTemplate::getByID($row['agtID']);
 			if (is_object($agt)) {
 				$agt[] = $agt;
+			}
+		}
+		$r->Close();
+		return $list;
+	}	
+
+	public static function getListByType(AggregatorItemTemplateType $type) {
+		$db = Loader::db();
+		$list = array();
+		$r = $db->Execute('select agtID from AggregatorItemTemplates where agtTypeID = ? order by agtName asc', array($type->getAggregatorItemTemplateTypeID()));
+		while ($row = $r->FetchRow()) {
+			$agt = AggregatorItemTemplate::getByID($row['agtID']);
+			if (is_object($agt)) {
+				$list[] = $agt;
 			}
 		}
 		$r->Close();
@@ -78,6 +88,8 @@ class Concrete5_Model_AggregatorItemTemplate extends Object {
 	public function getPackageHandle() {return PackageList::getHandle($this->pkgID);}
 	public function getAggregatorItemTemplateFixedSlotWidth() {return $this->agtFixedSlotWidth;}
 	public function getAggregatorItemTemplateFixedSlotHeight() {return $this->agtFixedSlotHeight;}
+	public function getAggregatorItemTemplateTypeObject() {return AggregatorItemTemplateType::getByID($this->agtTypeID);}
+	public function getAggregatorItemTemplateTypeID() {return $this->agtTypeID;}
 	public function getAggregatorItemTemplateMinimumSlotHeight(AggregatorItem $item) {
 		return 1;
 	}
@@ -90,6 +102,13 @@ class Concrete5_Model_AggregatorItemTemplate extends Object {
 	public function getAggregatorItemTemplateMaximumSlotWidth(AggregatorItem $item) {
 		return 3;
 	}
+	public function getAggregatorItemTemplateIconSRC() {
+		$env = Environment::get();
+		$type = $this->getAggregatorItemTemplateTypeObject();
+		$path = $env->getURL(DIRNAME_ELEMENTS . '/' . DIRNAME_AGGREGATOR . '/' . DIRNAME_AGGREGATOR_ITEM_TEMPLATES . '/' . $type->getAggregatorItemTemplateTypeHandle() . '/' . $this->getAggregatorItemTemplateHandle() . '/' . FILENAME_AGGREGATOR_ITEM_TEMPLATE_ICON);
+		return $path;
+	}
+
 	/** 
 	 * This method is called by AggregatorItem when setting defaults
 	 */
@@ -175,14 +194,14 @@ class Concrete5_Model_AggregatorItemTemplate extends Object {
 		return $features;		
 	}
 
-	public static function add($agtHandle, $agtName, $agtFixedSlotWidth, $agtFixedSlotHeight, $agtHasCustomClass = false, $agtForceDefault = false, $pkg = false) {
+	public static function add(AggregatorItemTemplateType $type, $agtHandle, $agtName, $agtFixedSlotWidth, $agtFixedSlotHeight, $agtHasCustomClass = false, $agtForceDefault = false, $pkg = false) {
 		$db = Loader::db();
 		$pkgID = 0;
 		if (is_object($pkg)) {
 			$pkgID = $pkg->getPackageID();
 		}
 
-		$db->Execute('insert into AggregatorItemTemplates (agtHandle, agtName, agtFixedSlotWidth, agtFixedSlotHeight, agtHasCustomClass, agtForceDefault, pkgID) values (?, ?, ?, ?, ?, ?, ?)', array($agtHandle, $agtName, $agtFixedSlotWidth, $agtFixedSlotHeight, $agtHasCustomClass, $agtForceDefault, $pkgID));
+		$db->Execute('insert into AggregatorItemTemplates (agtTypeID, agtHandle, agtName, agtFixedSlotWidth, agtFixedSlotHeight, agtHasCustomClass, agtForceDefault, pkgID) values (?, ?, ?, ?, ?, ?, ?, ?)', array($type->getAggregatorItemTemplateTypeID(), $agtHandle, $agtName, $agtFixedSlotWidth, $agtFixedSlotHeight, $agtHasCustomClass, $agtForceDefault, $pkgID));
 		$id = $db->Insert_ID();
 		
 		$agt = AggregatorItemTemplate::getByID($id);
@@ -192,8 +211,10 @@ class Concrete5_Model_AggregatorItemTemplate extends Object {
 
 	public function export($axml) {
 		$agt = $axml->addChild('aggregatoritemtemplate');
+		$type = $this->getAggregatorItemTemplateTypeObject();
 		$agt->addAttribute('handle',$this->getAggregatorItemTemplateHandle());
 		$agt->addAttribute('name', $this->getAggregatorItemTemplateName());
+		$agt->addAttribute('type', $type->getAggregatorItemTemplateTypeHandle());
 		if ($this->aggregatorItemTemplateHasCustomClass()) {
 			$agt->addAttribute('has-custom-class', true);
 		} else {

@@ -37,11 +37,11 @@ $(function() {
 });
 </script>
 
-<div class="ccm-ui" id="ccm-dialog-block-types">
+<div class="ccm-ui ccm-dialog-icon-item-grid" id="ccm-dialog-block-types">
 
-<div id="ccm-dialog-block-types-sets">
+<div class="ccm-dialog-icon-item-grid-sets">
 
-<form class="form-inline" id="ccm-block-type-search">
+<form class="form-inline ccm-icon-item-grid-search">
 	<i class="icon-search"></i> <input type="search" />
 </form>
 
@@ -58,9 +58,9 @@ for ($i = 0; $i < count($sets); $i++) {
 
 </div>
 
-<div id="ccm-dialog-block-types-list">
+<div class="ccm-dialog-icon-item-grid-list-wrapper" id="ccm-overlay-block-types">
 	
-	<ul id="ccm-overlay-block-types">
+	<ul class="ccm-overlay-icon-item-grid-list">
 
 	<? foreach($blockTypes as $bt) { 
 		if ($a instanceof Area && (!$ap->canAddBlockToArea($bt))) {
@@ -83,7 +83,7 @@ for ($i = 0; $i < count($sets); $i++) {
 		?>
 
 		<li data-block-type-sets="<?=$sets?>">
-			<a <? if (!($a instanceof Area)) { ?> class="ccm-overlay-draggable-block-type" <? } else { ?> class="ccm-overlay-clickable-block-type" data-area-id="<?=$a->getAreaID()?>" data-area-handle="<?=$a->getAreaHandle()?>" <? } ?> data-cID="<?=$c->getCollectionID()?>" data-block-type-handle="<?=$bt->getBlockTypeHandle()?>" data-dialog-title="<?=t('Add %s', $bt->getBlockTypeName())?>" data-dialog-width="<?=$bt->getBlockTypeInterfaceWidth()?>" data-dialog-height="<?=$bt->getBlockTypeInterfaceHeight()?>" data-has-add-template="<?=$bt->hasAddTemplate()?>" data-supports-inline-editing="<?=$bt->supportsInlineEditing()?>" data-btID="<?=$bt->getBlockTypeID()?>" href="javascript:void(0)"><p><img src="<?=$btIcon?>" /><span><?=$bt->getBlockTypeName()?></span></p></a>
+			<a <? if (!($a instanceof Area)) { ?> class="ccm-overlay-draggable-block-type" <? } else { ?> class="ccm-overlay-clickable-block-type" data-area-id="<?=$a->getAreaID()?>" data-area-handle="<?=$a->getAreaHandle()?>" <? } ?> data-cID="<?=$c->getCollectionID()?>" data-block-type-handle="<?=$bt->getBlockTypeHandle()?>" data-dialog-title="<?=t('Add %s', $bt->getBlockTypeName())?>" data-dialog-width="<?=$bt->getBlockTypeInterfaceWidth()?>" data-dialog-height="<?=$bt->getBlockTypeInterfaceHeight()?>" data-has-add-template="<?=$bt->hasAddTemplate()?>" data-supports-inline-add="<?=$bt->supportsInlineAdd()?>" data-btID="<?=$bt->getBlockTypeID()?>" href="javascript:void(0)"><p><img src="<?=$btIcon?>" /><span><?=$bt->getBlockTypeName()?></span></p></a>
 		</li>
 		
 	<? } ?>

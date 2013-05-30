@@ -38,6 +38,7 @@ class Concrete5_Library_Content_Importer {
 		$this->importFeatures($sx);
 		$this->importFeatureCategories($sx);
 		$this->importAggregatorDataSources($sx);
+		$this->importAggregatorItemTemplateTypes($sx);
 		$this->importAggregatorItemTemplates($sx);
 		$this->importAttributeCategories($sx);
 		$this->importAttributeTypes($sx);
@@ -674,10 +675,21 @@ class Concrete5_Library_Content_Importer {
 		}
 	}
 
+	protected function importAggregatorItemTemplateTypes(SimpleXMLElement $sx) {
+		if (isset($sx->aggregatoritemtemplatetypes)) {
+			foreach($sx->aggregatoritemtemplatetypes->aggregatoritemtemplatetype as $at) {
+				$pkg = ContentImporter::getPackageObject($wt['package']);
+				$type = AggregatorItemTemplateType::add((string) $at['handle'], $pkg);
+			}
+		}
+	}
+
+
 	protected function importAggregatorItemTemplates(SimpleXMLElement $sx) {
 		if (isset($sx->aggregatoritemtemplates)) {
 			foreach($sx->aggregatoritemtemplates->aggregatoritemtemplate as $at) {
 				$pkg = ContentImporter::getPackageObject($at['package']);
+				$type = AggregatorItemTemplateType::getByHandle((string) $at['type']);
 				$agtHasCustomClass = false;
 				$agtForceDefault = false;
 				$agtFixedSlotWidth = 0;
@@ -694,7 +706,7 @@ class Concrete5_Library_Content_Importer {
 				if ($at['fixed-slot-height']) {
 					$agtFixedSlotHeight = (string) $at['fixed-slot-height'];
 				}
-				$template = AggregatorItemTemplate::add((string) $at['handle'], (string) $at['name'], $agtFixedSlotWidth, $agtFixedSlotHeight, $agtHasCustomClass, $agtForceDefault, $pkg);
+				$template = AggregatorItemTemplate::add($type, (string) $at['handle'], (string) $at['name'], $agtFixedSlotWidth, $agtFixedSlotHeight, $agtHasCustomClass, $agtForceDefault, $pkg);
 				foreach($at->children() as $fe) {
 					$feo = Feature::getByHandle((string) $fe['handle']);
 					if (is_object($feo)) { 	

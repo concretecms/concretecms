@@ -11,7 +11,7 @@
 
     	enableOverlay: function($aggregator, options) {
 
-			$aggregator.find('a[data-overlay=aggregator-item]').not('.event-bound').each(function() {
+			$aggregator.find('a[data-overlay=aggregator-item]').not('.overlay-bound').each(function() {
 				var agiID = $(this).closest('[data-aggregator-item-id]').attr('data-aggregator-item-id');
 				$(this).on('click', function() {
 					$.magnificPopup.open({
@@ -26,7 +26,7 @@
 							}
 						},
 						items: {
-							src: CCM_TOOLS_PATH + '/aggregator/detail'
+							src: CCM_TOOLS_PATH + '/aggregator/item/detail'
 						},
 						mainClass: 'ccm-aggregator-overlay-wrapper',	
 						type: 'ajax',
@@ -34,21 +34,26 @@
 					});
 					return false;
 				});
-			}).addClass('event-bound');
+			}).addClass('overlay-bound');
+    	},
+
+    	enableHover: function($aggregator, options) {
+
+			$aggregator.find('.ccm-aggregator-item').not('.hover-bound').each(function() {
+				$(this).on('mouseenter', function() {
+					$(this).addClass('ccm-aggregator-item-over')
+				}).on('mouseleave', function() {
+					$(this).removeClass('ccm-aggregator-item-over')
+				});
+			}).addClass('hover-bound');
     	},
 
     	enableEditing: function($aggregator, options) {
-			$aggregator.find('a[data-inline-command=options-tile]').not('.event-bound').on('click', function() {
-				var agiID = $(this).closest('div.ccm-aggregator-item').attr('data-aggregator-item-id');
-				var href = CCM_TOOLS_PATH + '/aggregator/edit_template?agiID=' + agiID;
-				jQuery.fn.dialog.open({
-					modal: true,
-					href: href,
-					width: '400',
-					height: '150',
-					title: options.titleEditTemplate
-				});
-			}).addClass('event-bound');
+			$aggregator.find('a[data-inline-command=options-tile]').not('.aggregator-options-bound').on('click', function(e) {
+				var $menu = $('#' + $(this).attr('data-menu'));
+				$.fn.ccmmenu.showmenu(e, $menu);
+				return false;
+			}).addClass('aggregator-options-bound');
 
 			var $itemElements = $($aggregator.packery('getItemElements')).not('.event-bound');
 			$itemElements.draggable({
@@ -155,30 +160,31 @@
     	}
 
     },
-
-    setupTemplateForm: function(options) {
-    	return this.each(function() {
-    		var $form = $(this);
-			$form.on('submit', function() {
-				jQuery.fn.dialog.showLoader();
-				$.ajax({
-					type: 'POST',
-					data: {
-						agtID: $form.find('select[name=agtID]').val(),
-						agiID: options.agiID,
-						token: options.updateToken
-					},
-					url: CCM_TOOLS_PATH + '/aggregator/edit_template',
-					success: function(r) {
-						jQuery.fn.dialog.hideLoader();
-						// load the newly rendered HTML into the old aggregator item.
-						$('[data-aggregator-item-id=' + options.agiID + ']').find('div.ccm-aggregator-item-inner-render').html(r);
-						jQuery.fn.dialog.closeTop();
-					}
-				});
-				return false;
-			});
-    	});
+   
+    updateItemTemplate: function(options) {
+		jQuery.fn.dialog.showLoader();
+		var options = $.extend({
+			reloadItemTile: false
+		}, options);
+		$.ajax({
+			type: 'POST',
+			data: {
+				task: 'update_item_template',
+				agiID: options.agiID,
+				agtTypeID: options.agtTypeID,
+				agtID: options.agtID,
+				token: options.updateToken
+			},
+			url: CCM_TOOLS_PATH + '/aggregator/item/template',
+			success: function(r) {
+				jQuery.fn.dialog.hideLoader();
+				if (options.reloadItemTile) {
+					// load the newly rendered HTML into the old aggregator item.
+					$('[data-aggregator-item-id=' + options.agiID + ']').find('div.ccm-aggregator-item-inner-render').html(r);
+				}
+				jQuery.fn.dialog.closeTop();
+			}
+		});
     },
 
     deleteItem: function(options) {
@@ -190,10 +196,9 @@
 				agiID: options.agiID,
 				token: options.deleteToken
 			},
-			url: CCM_TOOLS_PATH + '/aggregator/edit_template',
+			url: CCM_TOOLS_PATH + '/aggregator/item/delete',
 			success: function(r) {
 				jQuery.fn.dialog.hideLoader();
-				// load the newly rendered HTML into the old aggregator item.
 				var $item = $('[data-aggregator-item-id=' + options.agiID + ']');
 				var $aggregator = $item.parent();
 				$item.remove();
@@ -210,7 +215,7 @@
 			columnWidth: 120,
 			itemsPerPage: 24,
 			rowHeight: 120,
-			showTileComamnds: 0,
+			showTileControls: false,
 			gutter: 1
 		}, options);
 
@@ -227,6 +232,9 @@
 				gutter: options.gutter
 			});
 			$aggregator.css('opacity', 1);
+
+			// handle details and lightbox.
+			methods.private.enableHover($aggregator, options);
 
 			// handle details and lightbox.
 			methods.private.enableOverlay($aggregator, options);
@@ -247,7 +255,7 @@
 						'itemsPerPage': options.itemsPerPage,
 						'loadToken': options.loadToken,
 						'editToken': options.editToken,
-						'showTileCommands': options.showTileCommands
+						'showTileControls': options.showTileControls
 					},
 				
 					success: function(r) {
@@ -263,17 +271,17 @@
 							$loadButton.prop('disabled', false);
 							$aggregator.attr('data-aggregator-current-page', newPage);
 						}
-						if (options.showTileCommands) {
+						if (options.showTileControls) {
 							methods.private.enableEditing($aggregator, options);
 						}
 				
 						methods.private.enableOverlay($aggregator, options);
-
+						methods.private.enableHover($aggregator, options);
 					}
 				});
 			});
 
-			if (options.showTileCommands) {
+			if (options.showTileControls) {
 				methods.private.enableEditing($aggregator, options);
 			}
 		});	
