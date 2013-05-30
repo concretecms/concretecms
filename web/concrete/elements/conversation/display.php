@@ -23,8 +23,9 @@ $editor->setConversationObject($args['conversation']);
 			<div class="ccm-conversation-message-form">
 				<div class="ccm-conversation-errors alert alert-error"></div>
 				<? $editor->outputConversationEditorAddMessageForm(); ?>
-				<button type="button" data-post-parent-id="0" data-submit="conversation-message" class="pull-right btn btn-submit btn-small"><?=t('Post')?> <i class="icon-bullhorn"></i></button>
-				<a class="ccm-conversation-attachment-toggle" href="#"><?php echo t('Attach Files'); ?></a>
+				<button type="button" data-post-parent-id="0" data-submit="conversation-message" class="pull-right btn btn-submit btn-primary"><?=t('Submit')?></button>
+				<button type="button" class="pull-right btn ccm-conversation-attachment-toggle" href="#" title="<?php echo t('Attach Files'); ?>"><i class="icon-picture"></i></button>
+				
 			</div>
 			</form>
 			<div class="ccm-conversation-attachment-container">
