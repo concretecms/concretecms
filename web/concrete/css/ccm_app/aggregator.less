@@ -20,7 +20,6 @@ div.ccm-aggregator-item-drop-active {
 .ccm-aggregator-resize-helper {
   background-color: #B9E1FF;
   border: 1px solid #6FB0DB;
-  z-index: 10000;
   opacity: 0.7;
   -webkit-transition: width 0.1s linear, height 0.1s linear;
 }
@@ -70,10 +69,6 @@ div.ccm-aggregator-grid {
 
 div.ccm-aggregator-edit {
 
-  div.ccm-aggregator-item {  
-   z-index: 20;
-  }
-
   div.ui-resizable-handle {
     opacity: 0;
     .transition(opacity 0.1s linear);
@@ -83,7 +78,6 @@ div.ccm-aggregator-edit {
     opacity: 0;
     padding: 0px !important;
     margin: 0px !important;
-    z-index: 100;
     .transition(opacity 0.1s linear);
 
     li {
@@ -145,11 +139,6 @@ div.ccm-aggregator-edit {
 div.ccm-aggregator-load-more {
   text-align: center;
   padding: 0px 0px 20px 0px;
-
-  button {
-    z-index: 100;
-    position: relative;
-  }
 
 }
 

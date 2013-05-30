@@ -18,7 +18,8 @@
 		protected $btCacheBlockRecord = true;
 		protected $btCacheBlockOutput = true;
 		protected $btCacheBlockOutputOnPost = true;
-		protected $btSupportsInlineEditing = true;
+		protected $btSupportsInlineEdit = true;
+		protected $btSupportsInlineAdd = true;
 		protected $btCacheBlockOutputForRegisteredUsers = true;
 		protected $btCacheBlockOutputLifetime = 0; //until manually updated or cleared
 		

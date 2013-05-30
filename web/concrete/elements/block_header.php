@@ -28,7 +28,7 @@ if ($a->isGlobalArea()) {
 	$c = $b->getBlockCollectionObject();
 }
 $editInline = false;
-if ($btw->supportsInlineEditing()) {
+if ($btw->supportsInlineEdit()) {
 	$editInline = true;
 }
 $btOriginal = $btw;
@@ -42,7 +42,7 @@ if ($btw->getBlockTypeHandle() == BLOCK_HANDLE_SCRAPBOOK_PROXY) {
 	$btOriginal = BlockType::getByHandle($_bo->getBlockTypeHandle());
 	$btHandle = $btOriginal->getBlockTypeHandle();
 	$heightPlus = 80;
-	if ($btOriginal->supportsInlineEditing()) {
+	if ($btOriginal->supportsInlineEdit()) {
 		$editInline = true;
 	}
 }

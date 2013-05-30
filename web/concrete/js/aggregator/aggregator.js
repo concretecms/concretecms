@@ -215,7 +215,7 @@
 			columnWidth: 120,
 			itemsPerPage: 24,
 			rowHeight: 120,
-			showTileComamnds: 0,
+			showTileControls: false,
 			gutter: 1
 		}, options);
 
@@ -255,7 +255,7 @@
 						'itemsPerPage': options.itemsPerPage,
 						'loadToken': options.loadToken,
 						'editToken': options.editToken,
-						'showTileCommands': options.showTileCommands
+						'showTileControls': options.showTileControls
 					},
 				
 					success: function(r) {
@@ -271,7 +271,7 @@
 							$loadButton.prop('disabled', false);
 							$aggregator.attr('data-aggregator-current-page', newPage);
 						}
-						if (options.showTileCommands) {
+						if (options.showTileControls) {
 							methods.private.enableEditing($aggregator, options);
 						}
 				
@@ -281,7 +281,7 @@
 				});
 			});
 
-			if (options.showTileCommands) {
+			if (options.showTileControls) {
 				methods.private.enableEditing($aggregator, options);
 			}
 		});	
