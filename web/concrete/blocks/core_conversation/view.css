@@ -161,7 +161,10 @@
   }
 }
 .dropzone .default.message span {
-  display: none;
+	display: block;
+	text-align: center;
+	font-size: 16px;
+	color: #999;
 }
 .dropzone.square .default.message {
   background-position: 0 -123px;
