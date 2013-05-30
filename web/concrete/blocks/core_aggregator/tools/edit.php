@@ -35,6 +35,9 @@ if ($cID > 0 && $bID > 0) {
 				case 'sources':
 					$bt->inc('form/sources.php', $data);
 					break;
+				case 'posting':
+					$bt->inc('form/posting.php', $data);
+					break;
 				default: // output
 					$bt->inc('form/output.php', $data);
 					break;
