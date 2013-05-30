@@ -23,7 +23,7 @@ var CCMInlineEditMode = function() {
 
 	completeInlineEditMode = function($block) {
 		$('#ccm-inline-toolbar-container').remove();
-		
+
 		var $toolbar = $block.find('.ccm-inline-toolbar'),
 			$holder = $('<div />', {id: 'ccm-inline-toolbar-container'}).appendTo(document.body),
 			$window = $(window),
@@ -59,11 +59,13 @@ var CCMInlineEditMode = function() {
 			$('div.ccm-area-edit-inline-active').removeClass('ccm-area-edit-inline-active');
 			$.fn.ccmmenu.enable();
 			$('div.ccm-block-edit-inline-active').remove();
+			$(window).unbind('scroll.inline-toolbar');
 			$('div.ccm-block-edit').removeClass('ccm-block-edit-disabled');
 			$('div.ccm-area-footer-handle').removeClass('ccm-block-edit-disabled');
 			$('div.ccm-area-layout-control-bar').removeClass('ccm-block-edit-disabled');
 			$('div.ccm-area-disabled').removeClass('ccm-area-disabled').addClass('ccm-area');
 			$('#ccm-toolbar-disabled').remove();
+			$('#ccm-toolbar').css('opacity', 1);
 			$('#ccm-inline-toolbar-container').remove();
 
 			jQuery.fn.dialog.hideLoader();
