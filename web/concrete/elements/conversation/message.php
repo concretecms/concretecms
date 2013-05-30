@@ -17,6 +17,7 @@ if ((!$message->isConversationMessageDeleted() && $message->isConversationMessag
 			<div class="ccm-conversation-avatar"><? print Loader::helper('concrete/avatar')->outputUserAvatar($ui)?></div>
 			<div class="ccm-conversation-message-byline">
 				<span class="ccm-conversation-message-username"><? if (!is_object($ui)) { ?><?=t('Anonymous')?><? } else { ?><?=$ui->getUserDisplayName()?><? } ?></span>
+				<span class="ccm-conversation-message-divider">|</span>
 				<span class="ccm-conversation-message-date"><?=$message->getConversationMessageDateTimeOutput();?></span>
 			</div>
 			
