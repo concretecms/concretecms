@@ -392,6 +392,10 @@
       <col>agsID</col>
       <col>agID</col>
     </index>
+    <index name="agiKey">
+      <col>agiKey</col>
+      <col>agsID</col>
+    </index>
   </table>
 
   <table name="AggregatorPermissionAssignments">
