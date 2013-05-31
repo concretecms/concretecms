@@ -41,9 +41,9 @@ class Concrete5_Model_PageAggregatorItem extends AggregatorItem {
 	public function duplicate(Aggregator $aggregator) {
 		$item = parent::duplicate($aggregator);
 		$db = Loader::db();
-		$db->Execute('delete from agPage where agiID = ?', array($this->getAggregatorItemID()));
+		$db->Execute('delete from agPage where agiID = ?', array($item->getAggregatorItemID()));
 		$db->Execute('insert into agPage (agiID, cID) values (?, ?)', array(
-			$this->getAggregatorItemID(), $this->page->getCollectionID()
+			$item->getAggregatorItemID(), $this->page->getCollectionID()
 		));
 		return $item;
 	}

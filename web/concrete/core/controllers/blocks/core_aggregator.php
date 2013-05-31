@@ -143,9 +143,8 @@ class Concrete5_Controller_Block_CoreAggregator extends BlockController {
 				$values['cmpID'] = $cmpID;	
 			} else {
 				$values['cmpID'] = $this->cmpID;	
-				$values['cmpID'] = $this->enablePostingFromAggregator;	
+				$values['enablePostingFromAggregator'] = $this->enablePostingFromAggregator;	
 			}
-
 			parent::save($values);
 
 		}
