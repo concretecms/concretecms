@@ -108,8 +108,13 @@
 			// i don't know why this->fID isn't sticky in some cases, leading us to query
 			// every damn time
 			$db = Loader::db();
-			$cnvID = $db->GetOne('select fID from btContentImage where bID = ?', array($this->bID));
-			return File::getByID($cnvID);
+			$fID = $db->GetOne('select fID from btContentImage where bID = ?', array($this->bID));
+			if ($fID) {
+				$f = File::getByID($fID);
+				if (is_object($f) && !$f->isError()) {
+					return $f;
+				}
+			}
 		}
 	
 		function getFileID() {return $this->fID;}

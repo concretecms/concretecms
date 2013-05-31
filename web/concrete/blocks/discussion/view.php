@@ -105,7 +105,10 @@ $(function() {
 			$dialog.dialog('close');
 		},
 		autoSaveEnabled: false,
-		publishReturnMethod: 'ajax'
+		publishReturnMethod: 'ajax',
+		onPublish: function(r) {
+			window.location.href = r.redirectURL;
+		}
 	});
 
 	$addTopic.on('click', function() {
