@@ -50,6 +50,7 @@
         autoSaveTimeout: 5000,
         pushStateOnSave: false,
         publishReturnMethod: 'reload',
+        onPublish: false,
         onExit: function() {
           window.location.href = CCM_DISPATCHER_FILENAME + '/dashboard/composer/drafts';
         },
@@ -148,8 +149,8 @@
                     $('#ccm-composer-error-list').show().html(html);
                   } else {
                     $('#ccm-composer-error-list').hide();
-                    if (r.redirectURL) {
-                      window.location.href = r.redirectURL;
+                    if (settings.onPublish) {
+                      settings.onPublish(r);
                     }
                   }
                 },

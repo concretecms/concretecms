@@ -55,6 +55,39 @@ class Concrete5_Controller_Block_CoreAggregator extends BlockController {
 			$this->view();
 		}
 
+		public function action_post() {
+			// happens through ajax
+			$composer = Composer::getByID($this->cmpID);
+			if (is_object($composer) && $this->enablePostingFromAggregator) {
+				$ccp = new Permissions($composer);
+				if ($ccp->canAccessComposer()) {
+
+					$ct = CollectionType::getByID($this->post('cmpPageTypeID'));
+					$availablePageTypes = $composer->getComposerPageTypeObjects();
+
+					if (!is_object($ct) && count($availablePageTypes) == 1) {
+						$ct = $availablePageTypes[0];
+					}
+
+					$c = Page::getCurrentPage();
+					$e = $composer->validatePublishRequest($ct, $c);
+					$r = new ComposerPublishResponse($e);
+					if (!$e->has()) {
+						$d = $composer->createDraft($ct);
+						$d->setComposerDraftTargetParentPageID($c->getCollectionID());
+						$d->saveForm();
+						$d->publish();
+						$nc = Page::getByID($d->getComposerDraftCollectionID(), 'RECENT');
+						$link = Loader::helper('navigation')->getLinkToCollection($nc, true);
+						$r->setRedirectURL($link);
+					}
+					print Loader::helper('ajax')->sendResult($r);
+				}
+			}
+			exit;
+		}
+
+
 		public function save($args) {
 			$db = Loader::db();
 			$agID = $db->GetOne('select agID from btCoreAggregator where bID = ?', array($this->bID));
@@ -97,6 +130,21 @@ class Concrete5_Controller_Block_CoreAggregator extends BlockController {
 				$values['itemsPerPage'] = $this->itemsPerPage;
 			}
 
+			if (in_array('posting', $tab)) {
+				$cmpID = 0;
+				if ($args['enablePostingFromAggregator']) {
+					$values['enablePostingFromAggregator'] = 1;
+					if ($args['cmpID']) {
+						$cmpID = $args['cmpID'];
+					}
+				} else {
+					$values['enablePostingFromAggregator'] = 0;
+				}
+				$values['cmpID'] = $cmpID;	
+			} else {
+				$values['cmpID'] = $this->cmpID;	
+				$values['enablePostingFromAggregator'] = $this->enablePostingFromAggregator;	
+			}
 			parent::save($values);
 
 		}
@@ -108,6 +156,10 @@ class Concrete5_Controller_Block_CoreAggregator extends BlockController {
 					$this->addHeaderItem(Loader::helper('html')->css('ccm.aggregator.css'));
 					$this->addFooterItem(Loader::helper('html')->javascript('ccm.aggregator.js'));
 					Loader::helper('overlay')->init(false);
+					if ($this->enablePostingFromAggregator) {
+						$cmp = Composer::getByID($this->cmpID);
+						Loader::helper('composer/form')->addAssetsToRequest($cmp, $this);
+					}
 				}
 			}
 		}
@@ -121,11 +173,17 @@ class Concrete5_Controller_Block_CoreAggregator extends BlockController {
 				}
 			}
 		}
-
 		public function view() {
 			if ($this->agID) {
 				$aggregator = Aggregator::getByID($this->agID);
-				if (is_object($aggregator)) {					
+				if (is_object($aggregator)) {			
+					if ($this->enablePostingFromAggregator && $this->cmpID) {
+						$cmp = Composer::getByID($this->cmpID);
+						$p = new Permissions($cmp);
+						if ($p->canAccessComposer()) {
+							$this->set('composer', $cmp);
+						}
+					}		
 					$list = new AggregatorItemList($aggregator);
 					$list->sortByDateDescending();
 					$list->setItemsPerPage($this->itemsPerPage);
