@@ -35,7 +35,11 @@ if ($enablePostingFromAggregator && is_object($composer)) { ?>
 				$dialog.dialog('close');
 			},
 			autoSaveEnabled: false,
-			publishReturnMethod: 'ajax'
+			publishReturnMethod: 'ajax',
+			onPublish: function(r) {
+				jQuery.fn.dialog.closeAll();
+ 				$('div[data-aggregator-id=<?=$aggregator->getAggregatorID()?>]').ccmaggregator('getNew');
+			}
 		});
 
 		$postToAggregator.on('click', function() {
@@ -59,7 +63,8 @@ if ($enablePostingFromAggregator && is_object($composer)) { ?>
 <?
   Loader::element('aggregator/display', array(
   	'aggregator' => $aggregator,
-  	'list' => $itemList
+  	'list' => $itemList,
+  	'itemsPerPage' => $itemsPerPage
   ));
 ?>
 

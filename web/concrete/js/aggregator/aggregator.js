@@ -9,8 +9,23 @@
 
     private:  {
 
-    	enableOverlay: function($aggregator, options) {
+    	handleAppendedElements: function(response, $aggregator, options, prepend) {
+			var elements = ($('<div />').append(response).find('>div'));
+			$.each(elements, function(i, obj) {
+				prepend ? $aggregator.prepend(obj) : $aggregator.append(obj);
+			});
+			if (elements.length > 0) {
+				prepend ? $aggregator.packery('prepended', elements) : $aggregator.packery('appended', elements);
+				if (options.showTileControls) {
+					methods.private.enableEditing($aggregator, options);
+				}
 
+				methods.private.enableOverlay($aggregator, options);
+				methods.private.enableHover($aggregator, options);
+			}
+    	},
+
+    	enableOverlay: function($aggregator, options) {
 			$aggregator.find('a[data-overlay=aggregator-item]').not('.overlay-bound').each(function() {
 				var agiID = $(this).closest('[data-aggregator-item-id]').attr('data-aggregator-item-id');
 				$(this).on('click', function() {
@@ -208,6 +223,29 @@
 		});
     },
 
+    getNew: function() {
+    	var $aggregator = $(this);
+		var options = $(this).data('options');
+		jQuery.fn.dialog.showLoader();
+		var getNewerThan = $($aggregator.find('.ccm-aggregator-item')[0]).attr('data-aggregator-item-id');
+		$.ajax({
+			type: 'post',
+			url: CCM_TOOLS_PATH + '/aggregator/get_new',
+			data: {
+				'task': 'get_aggregator_items',
+				'newerThan': getNewerThan,
+				'agID': options.agID,
+				'editToken': options.editToken,
+				'showTileControls': options.showTileControls
+			},
+		
+			success: function(r) {
+				jQuery.fn.dialog.hideLoader();
+				methods.private.handleAppendedElements(r, $aggregator, options, true);
+			}
+		});
+    },
+
 	init: function(options) {
 
 		var options = $.extend({
@@ -259,29 +297,23 @@
 					},
 				
 					success: function(r) {
-						var elements = ($('<div />').append(r).find('>div'));
-						$.each(elements, function(i, obj) {
-							$aggregator.append(obj);
-						});
-					
-						$aggregator.packery('appended', elements);
+						methods.private.handleAppendedElements(r, $aggregator, options);
 						if (newPage == options.totalPages) {
 							$loadButton.hide();
 						} else {
 							$loadButton.prop('disabled', false);
 							$aggregator.attr('data-aggregator-current-page', newPage);
 						}
-						if (options.showTileControls) {
-							methods.private.enableEditing($aggregator, options);
-						}
-				
-						methods.private.enableOverlay($aggregator, options);
-						methods.private.enableHover($aggregator, options);
 					}
 				});
 			});
 
 			if (options.showTileControls) {
+				var $refreshButton = $('[data-aggregator-refresh=' + options.agID + ']');
+				$refreshButton.on('click', function() {
+					$aggregator.ccmaggregator('getNew');
+					return false;
+				});
 				methods.private.enableEditing($aggregator, options);
 			}
 		});	
