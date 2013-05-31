@@ -32,6 +32,7 @@ abstract class Concrete5_Model_AggregatorItem extends Object {
 	public function getAggregatorItemBatchDisplayOrder() {	return $this->agiBatchDisplayOrder; }
 	public function getAggregatorItemKey() { return $this->agiKey; }
 	public function getAggregatorObject() { return Aggregator::getByID($this->agID); }
+	public function getAggregatorID() { return $this->agID;}
 
 	public function getAggregatorItemFeatureHandles() {
 		if (!isset($this->feHandles)) {

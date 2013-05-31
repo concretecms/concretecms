@@ -55,6 +55,39 @@ class Concrete5_Controller_Block_CoreAggregator extends BlockController {
 			$this->view();
 		}
 
+		public function action_post() {
+			// happens through ajax
+			$composer = Composer::getByID($this->cmpID);
+			if (is_object($composer) && $this->enablePostingFromAggregator) {
+				$ccp = new Permissions($composer);
+				if ($ccp->canAccessComposer()) {
+
+					$ct = CollectionType::getByID($this->post('cmpPageTypeID'));
+					$availablePageTypes = $composer->getComposerPageTypeObjects();
+
+					if (!is_object($ct) && count($availablePageTypes) == 1) {
+						$ct = $availablePageTypes[0];
+					}
+
+					$c = Page::getCurrentPage();
+					$e = $composer->validatePublishRequest($ct, $c);
+					$r = new ComposerPublishResponse($e);
+					if (!$e->has()) {
+						$d = $composer->createDraft($ct);
+						$d->setComposerDraftTargetParentPageID($c->getCollectionID());
+						$d->saveForm();
+						$d->publish();
+						$nc = Page::getByID($d->getComposerDraftCollectionID(), 'RECENT');
+						$link = Loader::helper('navigation')->getLinkToCollection($nc, true);
+						$r->setRedirectURL($link);
+					}
+					print Loader::helper('ajax')->sendResult($r);
+				}
+			}
+			exit;
+		}
+
+
 		public function save($args) {
 			$db = Loader::db();
 			$agID = $db->GetOne('select agID from btCoreAggregator where bID = ?', array($this->bID));
