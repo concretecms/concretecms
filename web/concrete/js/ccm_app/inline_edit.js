@@ -8,6 +8,7 @@ var CCMInlineEditMode = function() {
 	enterInlineEditMode = function(activeObj) {
 		
 		$.fn.ccmmenu.disable();
+		$('#ccm-toolbar-disabled').remove();
 		$('<div />', {'id': 'ccm-toolbar-disabled'}).appendTo(document.body);
 		setTimeout(function() {
 			$('#ccm-toolbar-disabled').css('opacity', 1);
