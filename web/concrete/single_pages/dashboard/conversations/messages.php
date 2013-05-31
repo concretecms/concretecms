@@ -15,7 +15,7 @@
 		<form method="get" action="<?=$this->action('view')?>" class="form-inline">
 			<div class="control-group">
 				<?=$form->text('cmpMessageKeywords', array("placeholder" => t('Search Messages')))?>
-				<?=$form->select('cmpMessageFilter', $cmpFilterTypes, array("class" => "span2"))?>
+				<?=$form->select('cmpMessageFilter', array('any'=>t('** Any')) + $cmpFilterTypes, array("class" => "span2"))?>
 				<?=$form->select('cmpMessageSort', $cmpSortTypes, array("class" => "span2"))?>
 				<button type="submit" class="btn"><?=t('Search')?></button>
 			</div>
@@ -23,6 +23,8 @@
 	</div>
 </div>
 <div class="ccm-pane-body">
+	<form action="<?=$this->action('bulk_update')?>" method="post" id="ccm-conversation-messages-multiple-update">
+	<? Loader::helper('validation/token')->output(); ?>
 	<div style="margin-bottom: 10px">
 		<select id="ccm-conversation-messages-multiple-operations" class="span3" disabled="">
 				<option value""><?=t('** With Selected')?></option>
@@ -31,7 +33,6 @@
 			<? } ?>
 		</select>
 	</div>
-	<form>
 	<table class="ccm-conversation-messages table table-condensed ccm-results-list">
 		<tr>
 			<th><input type="checkbox" id="ccm-conversation-message-list-all"/></th>
@@ -95,11 +96,27 @@ $(function() {
 	
 	$('#ccm-conversation-message-list-all').change(function() {
 		if($(this).is(':checked')) {
-			$('.ccm-conversation-messages .ccm-input-checkbox').each(function() { $(this).attr('checked',true); });
+			$('.ccm-conversation-messages .ccm-input-checkbox').each(function() { 
+				$(this).attr('checked',true);
+				$('#ccm-conversation-messages-multiple-operations').attr('disabled',false); 
+			});
 		} else {
-			$('.ccm-conversation-messages .ccm-input-checkbox').each(function() { $(this).attr('checked',false); });
+			$('.ccm-conversation-messages .ccm-input-checkbox').each(function() { 
+				$(this).attr('checked',false);
+				$('#ccm-conversation-messages-multiple-operations').attr('disabled',true);
+			});
 		}
 	});
+	
+	$('#ccm-conversation-messages-multiple-operations').change(function() {
+		if($(this).val() != 'any') {
+			if(confirm('<?=t('Are you sure?')?>')) {
+				$('#ccm-conversation-messages-multiple-update').submit();
+			}
+		}
+	});
+	
+	
 });
 </script>
 

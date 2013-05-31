@@ -52,4 +52,9 @@ class Concrete5_Controller_Dashboard_Conversations_Messages extends DashboardBas
 		$this->set('cmpSortTypes', $cmpSortTypes);
 	}
 
+	public function bulk_update() {
+		
+		$this->redirect(Page::getCurrentPage()->getCollectionPath());
+	}
+
 }
