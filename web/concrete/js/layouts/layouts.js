@@ -410,7 +410,7 @@ CCMLayout.prototype._showThemeGridSlider = function() {
 	var obj = this;
 
 	obj.$slider = $('#ccm-area-layout-active-control-bar');
-	obj.$slider.css('height', '12px');
+	obj.$slider.css('height', '6px');
 
 	// set the breakpoints
 	var breaks = [];
@@ -568,7 +568,7 @@ CCMLayout.prototype._redrawThemeGrid = function() {
 CCMLayout.prototype._showCustomSlider = function() {
 
 	this.$slider = $('#ccm-area-layout-active-control-bar');
-	this.$slider.css('height', '12px');
+	this.$slider.css('height', '6px');
 
 	var breaks = [],
 		sw = 0,
