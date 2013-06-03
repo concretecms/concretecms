@@ -1,9 +1,8 @@
 
-
 # Concrete5 Build
 If you're new here and looking to build concrete5, you're probably looking in the wrong place. This directory is only used when developing the concrete5 core.
 
-## Dependancies:
+## Dependencies:
 In order to build concrete5's css and js libraries, you'll need a couple binaries:
 
 1. **Lessc**: Lessc is the original OEM less compiling binary, you can grab it at [lesscss.org](http://lesscss.org) or install it in some fancy way with npm or potentially your OS's repos. The npm install is pretty simple; just run `npm install -g less`.
