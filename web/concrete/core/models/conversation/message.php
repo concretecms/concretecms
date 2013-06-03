@@ -102,8 +102,49 @@ class Concrete5_Model_Conversation_Message extends Object {
 	public function getConversationMessageDateTime() {
 		return $this->cnvMessageDateCreated;
 	}
-	public function getConversationMessageDateTimeOutput() {
-		return t('Posted on %s', Loader::helper('date')->date('F d, Y \a\t g:i a', strtotime($this->cnvMessageDateCreated)));
+	public function getConversationMessageDateTimeOutput($format = 'default') {
+		if(is_array($format)) {  // custom date format
+			return t('Posted on %s', Loader::helper('date')->date($format[0], strtotime($this->cnvMessageDateCreated)));
+		}
+		switch($format) {
+			case 'elapsed':   // 3 seconds ago, 4 days ago, etc.
+				$timestamp = strtotime($this->cnvMessageDateCreated);
+				$time = array(
+					12 * 30 * 24 * 60 * 60  => 'year',
+	                30 * 24 * 60 * 60  => 'month',
+	                24 * 60 * 60  => 'day',
+	                60 * 60  => 'hour',
+	                60  => 'minute',
+	                1   => 'second'                                   
+                );
+		                                                         
+		        $ptime = time() - $timestamp;
+		                        
+				foreach ($time as $seconds => $str) {
+			        $elp = $ptime / $seconds;
+			        if($elp <= 0) {
+			                return t('0 seconds ago');
+			        }
+			        if($elp >= 1) {
+			        
+			            $rounded = round($elp);
+						if($rounded > 1)  {
+							$str .= 's';
+			             }
+
+			            $elapsed =  t('%s %s ago', $rounded, $str);
+			            return $elapsed;
+			        }
+				}
+			break;
+			case 'mdy':
+				return t('Posted on %s', Loader::helper('date')->date(DATE_APP_GENERIC_MDY, strtotime($this->cnvMessageDateCreated))); 
+			case 'mdy_full':
+				return t('Posted on %s', Loader::helper('date')->date(DATE_APP_GENERIC_MDY_FULL, strtotime($this->cnvMessageDateCreated))); 
+			default:
+			 	return t('Posted on %s', Loader::helper('date')->date('F d, Y \a\t g:i a', strtotime($this->cnvMessageDateCreated)));
+				break;
+		}
 	}
 	public function rateMessage(ConversationRatingType $ratingType, $commentRatingIP, $commentRatingUserID, $post = array()) {
 		$db = Loader::db();

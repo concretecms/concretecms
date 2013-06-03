@@ -116,6 +116,26 @@ if ($controller->getTask() == 'add') {
 		</div>
 	</div>
 </fieldset>
+<fieldset>
+	<legend><?=t('Date Format')?></legend>
+	<div class="control-group">
+		<div class="controls">
+			<label class="radio">
+				<?=$form->radio('dateFormat', 'default', $dateFormat)?>
+				<span><?=t('Use Site Default.')?></span>
+			</label>
+			<label class="radio">
+				<?=$form->radio('dateFormat', 'elapsed', $dateFormat)?>
+				<span><?=t('Time elapsed since post.')?></span>
+			</label>
+			<label class="radio">
+				<?=$form->radio('dateFormat', 'custom', $dateFormat)?>
+				<span><?=t('Custom')?></span>
+			</label>
+			<?=$form->text('customDateFormat', $customDateFormat)?>
+		</div>
+	</div>
+</fieldset>
 </div>
 
 <script type="text/javascript">

@@ -6,6 +6,10 @@ $class = 'ccm-conversation-message ccm-conversation-message-level' . $message->g
 if ($message->isConversationMessageDeleted()) {
 	$class .= ' ccm-conversation-message-deleted';
 }
+
+if($dateFormat == 'custom' && $customDateFormat) {
+	$dateFormat = array($customDateFormat);
+}
 if (!$message->isConversationMessageApproved()){
 	$class .= ' ccm-conversation-message-flagged';
 }
@@ -19,7 +23,7 @@ if ((!$message->isConversationMessageDeleted() && $message->isConversationMessag
 			<div class="ccm-conversation-message-byline">
 				<span class="ccm-conversation-message-username"><? if (!is_object($ui)) { ?><?=t('Anonymous')?><? } else { ?><?=$ui->getUserDisplayName()?><? } ?></span>
 				<span class="ccm-conversation-message-divider">|</span>
-				<span class="ccm-conversation-message-date"><?=$message->getConversationMessageDateTimeOutput();?></span>
+				<span class="ccm-conversation-message-date"><?=$message->getConversationMessageDateTimeOutput($dateFormat);?></span>
 			</div>
 			
 		</div>
@@ -56,7 +60,7 @@ if ((!$message->isConversationMessageDeleted() && $message->isConversationMessag
 				} ?>
 			</div>
 			<? if (!$message->isConversationMessageDeleted() && $message->isConversationMessageApproved()) { ?>
-			<ul>
+			<ul class="standard-message-controls">
 				<!-- <li class="ccm-conversation-message-admin-control"><a href="#" data-submit="flag-conversation-message" data-conversation-message-id="<?=$message->getConversationMessageID()?>"><?=t('Flag As Spam')?></a></li>
 				<li class="ccm-conversation-message-admin-control"><a href="#" data-submit="delete-conversation-message" data-conversation-message-id="<?=$message->getConversationMessageID()?>"><?=t('Delete')?></a></li> -->
 				
