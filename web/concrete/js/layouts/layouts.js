@@ -47,7 +47,6 @@ var CCMLayout = function(element, options) {
 
 	this.$element = $(element);
 	this.$toolbar = $(this.options.toolbar);
-	this.$toolbar.prependTo(document.body);
 
 	this._setupDOM();
 	this._activatePresets();
@@ -99,9 +98,9 @@ CCMLayout.prototype._activatePresets = function() {
 				obj.$selectcolumnscustom.find('option[value=' + r.arLayout.arLayoutNumColumns + ']').prop('selected', true);
 				obj.$customspacing.val(r.arLayout.arLayoutSpacing);
 				if (parseInt(r.arLayout.arLayoutIsCustom)) {
-					obj.$customautomated.prop('checked', false);
+					obj.$customautomated.find('option[value=1]').prop('selected', true);
 				} else {
-					obj.$customautomated.prop('checked', true);
+					obj.$customautomated.find('option[value=0]').prop('selected', true);
 				}
 
 
@@ -142,12 +141,12 @@ CCMLayout.prototype._setupDOM = function() {
 	this.$usethemegrid = this.$toolbar.find('select[name=useThemeGrid]');
 
 	// choosetype + custom
-	this.$selectcolumnscustom = this.$toolbar.find('select[name=columns]');
+	this.$selectcolumnscustom = this.$toolbar.find('input[name=columns]');
 	this.$customspacing = this.$toolbar.find('input[name=spacing]');
-	this.$customautomated = this.$toolbar.find('input[name=isautomated]');
+	this.$customautomated = this.$toolbar.find('select[name=isautomated]');
 
 	// choosetype + themegrid
-	this.$selectgridcolumns = this.$toolbar.find('select[name=themeGridColumns]');
+	this.$selectgridcolumns = this.$toolbar.find('input[name=themeGridColumns]');
 
 	// all
 	this.$savebtn = this.$toolbar.find(this.options.btnsave);
@@ -196,16 +195,16 @@ CCMLayout.prototype._updateChooseTypeForm = function() {
 
 CCMLayout.prototype._setupFormEvents = function() {
 	var obj = this;
-	this.$selectcolumnscustom.on('change', function() {
+	this.$selectcolumnscustom.on('keyup', function() {
 		obj._updateCustomView();
 	});
-	this.$customspacing.on('change', function() {
+	this.$customspacing.on('keyup', function() {
 		obj._updateCustomView();
 	});
 	this.$customautomated.on('change', function() {
 		obj._updateCustomView();
 	});
-	this.$selectgridcolumns.on('change', function() {
+	this.$selectgridcolumns.on('keyup', function() {
 		obj._updateThemeGridView();
 	});
 	this.$usethemegrid.on('change', function() {
@@ -241,7 +240,7 @@ CCMLayout.prototype._updateThemeGridView = function() {
 
 	// load the current elements from forms
 	this.columns = parseInt(this.$selectgridcolumns.val());
-	this.maxcolumns = parseInt(this.$selectgridcolumns.find(' option:last-child').val());
+	this.maxcolumns = parseInt(this.$selectgridcolumns.attr('data-maximum'));
 
 	if (!this.options.editing) {
 		this.buildThemeGridGrid();
@@ -276,7 +275,7 @@ CCMLayout.prototype._buildThemeGridGridFromPresetColumns = function(arLayoutColu
 	this.$element.append(row);
 
 	this.columns = arLayoutColumns.length;
-	this.maxcolumns = parseInt(this.$selectgridcolumns.find(' option:last-child').val());
+	this.maxcolumns = parseInt(this.$selectgridcolumns.attr('data-maximum'));
 
 	this._resetSlider();
 	this._redrawThemeGrid();
@@ -289,10 +288,11 @@ CCMLayout.prototype._updateCustomView = function() {
 	// load custom view settings
 	this.columns = parseInt(this.$selectcolumnscustom.val());
 	this.customspacing = this.$customspacing.val();
-	this.automatedcustomlayout = this.$customautomated.is(':checked');
+	this.automatedcustomlayout = this.$customautomated.val() == 1;
 	this.columnwidths = [];
 
 	// set relevant forms based on the settings
+	/*
 	if (this.columns < 2) {
 		this.$customspacing.prop('disabled', true);
 		this.$customautomated.prop('disabled', true);
@@ -300,6 +300,7 @@ CCMLayout.prototype._updateCustomView = function() {
 		this.$customspacing.prop('disabled', false);
 		this.$customautomated.prop('disabled', false);
 	}
+	*/
 	if (this.options.editing) {
 		this.$selectcolumnscustom.prop('disabled', true);
 	}
@@ -409,7 +410,7 @@ CCMLayout.prototype._showThemeGridSlider = function() {
 	var obj = this;
 
 	obj.$slider = $('#ccm-area-layout-active-control-bar');
-	obj.$slider.css('height', '12px');
+	obj.$slider.css('height', '6px');
 
 	// set the breakpoints
 	var breaks = [];
@@ -567,7 +568,7 @@ CCMLayout.prototype._redrawThemeGrid = function() {
 CCMLayout.prototype._showCustomSlider = function() {
 
 	this.$slider = $('#ccm-area-layout-active-control-bar');
-	this.$slider.css('height', '12px');
+	this.$slider.css('height', '6px');
 
 	var breaks = [],
 		sw = 0,
