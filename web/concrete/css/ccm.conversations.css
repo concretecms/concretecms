@@ -58,6 +58,7 @@ div.ccm-conversation-avatar img {
 }
 div.ccm-conversation-messages-header {
   *zoom: 1;
+  margin-bottom: 15px;
 }
 div.ccm-conversation-messages-header:before,
 div.ccm-conversation-messages-header:after {
@@ -71,10 +72,12 @@ div.ccm-conversation-messages-header:after {
 div.ccm-conversation-messages-header select.ccm-sort-conversations {
   font-size: 11.049999999999999px;
   width: auto;
+  margin-top: 10px;
   float: right;
 }
 div.ccm-conversation-add-reply,
 div.ccm-conversation-add-new-message {
+  clear: both;
   *zoom: 1;
   position: relative;
 }
@@ -120,6 +123,11 @@ div.ccm-conversation-add-new-message div.ccm-conversation-message-form textarea 
   font-size: 11.049999999999999px;
   height: 80px;
 }
+div.ccm-conversation-add-reply div.ccm-conversation-message-form .ccm-conversation-attachment-toggle,
+div.ccm-conversation-add-new-message div.ccm-conversation-message-form .ccm-conversation-attachment-toggle {
+  float: right;
+  opacity: .7;
+}
 div.ccm-conversation-add-reply div.ccm-conversation-message-form button,
 div.ccm-conversation-add-new-message div.ccm-conversation-message-form button {
   margin: 16px 0 0 16px;
@@ -129,7 +137,7 @@ div.ccm-conversation-add-new-message {
 }
 div.ccm-conversation-add-reply {
   display: none;
-  margin-top: 10px;
+  margin-top: 20px;
 }
 div.ccm-conversation-attachment-container {
   padding: 0 150px 0 50px;
@@ -171,10 +179,9 @@ div.ccm-conversation-message:after {
   clear: both;
 }
 div.ccm-conversation-message div.ccm-conversation-message-byline {
-  padding: 8px;
-  height: 40px;
+  padding: 0px 8px 8px 8px;
   color: #9f9f9f;
-  margin-bottom: 8px;
+  margin-bottom: 0;
 }
 div.ccm-conversation-message div.ccm-conversation-message-byline span.ccm-conversation-message-date {
   color: #9f9f9f;
@@ -186,16 +193,140 @@ div.ccm-conversation-message div.ccm-conversation-message-byline span.ccm-conver
 div.ccm-conversation-message div.ccm-conversation-message-byline span.ccm-conversation-message-divider {
   padding: 0px 10px 0px 10px;
 }
+div.ccm-conversation-message .message-attachments {
+  *zoom: 1;
+}
+div.ccm-conversation-message .message-attachments:before,
+div.ccm-conversation-message .message-attachments:after {
+  display: table;
+  content: "";
+  line-height: 0;
+}
+div.ccm-conversation-message .message-attachments:after {
+  clear: both;
+}
+div.ccm-conversation-message .message-attachments .attachment-container {
+  position: relative;
+  background: #f9f9f9;
+  border: 1px solid #cccccc;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  display: block;
+  margin-left: 30px;
+  *zoom: 1;
+  margin-bottom: 20px;
+}
+div.ccm-conversation-message .message-attachments .attachment-container:before,
+div.ccm-conversation-message .message-attachments .attachment-container:after {
+  display: table;
+  content: "";
+  line-height: 0;
+}
+div.ccm-conversation-message .message-attachments .attachment-container:after {
+  clear: both;
+}
+div.ccm-conversation-message .message-attachments .attachment-container .image-popover-hover {
+  top: 0;
+  left: 0;
+  position: absolute;
+  background: transparent;
+  width: 90px;
+  height: 90px;
+  -webkit-border-top-left-radius: 4px;
+  -webkit-border-bottom-left-radius: 4px;
+  -moz-border-radius-topleft: 4px;
+  -moz-border-radius-bottomleft: 4px;
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+  cursor: pointer;
+}
+div.ccm-conversation-message .message-attachments .attachment-container .image-popover-hover .glyph-container {
+  padding: 8px;
+  display: none;
+  margin: 30px 0px 0px 29px;
+  background-color: black;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  width: 18px;
+  height: 18px;
+}
+div.ccm-conversation-message .message-attachments .attachment-container .image-popover-hover .glyph-container i {
+  margin-left: 1px;
+}
+div.ccm-conversation-message .message-attachments .attachment-container .image-popover-hover:hover {
+  background: #0a5d99;
+  opacity: .8;
+}
+div.ccm-conversation-message .message-attachments .attachment-container .image-popover-hover:hover .glyph-container {
+  display: block;
+}
+div.ccm-conversation-message .message-attachments .attachment-container img {
+  float: left;
+  -webkit-border-top-left-radius: 4px;
+  -webkit-border-bottom-left-radius: 4px;
+  -moz-border-radius-topleft: 4px;
+  -moz-border-radius-bottomleft: 4px;
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+}
+div.ccm-conversation-message .message-attachments .attachment-container p.image-preview {
+  display: block;
+  float: left;
+  padding: 20px;
+}
+div.ccm-conversation-message .message-attachments .attachment-container p {
+  display: block;
+  float: left;
+  margin-bottom: 0px;
+  padding: 10px;
+}
+div.ccm-conversation-message .ccm-conversation-message-body {
+  padding: 0px 8px;
+}
 div.ccm-conversation-message div.ccm-conversation-message-controls {
-  border-top: 1px dotted #afafaf;
   padding-top: 2px;
   padding-top: 8px;
   margin-top: 8px;
   font-weight: lighter;
   color: #999;
+  *zoom: 1;
+}
+div.ccm-conversation-message div.ccm-conversation-message-controls:before,
+div.ccm-conversation-message div.ccm-conversation-message-controls:after {
+  display: table;
+  content: "";
+  line-height: 0;
+}
+div.ccm-conversation-message div.ccm-conversation-message-controls:after {
+  clear: both;
+}
+div.ccm-conversation-message div.ccm-conversation-message-controls span.control-divider {
+  display: block;
+  padding: 8px;
+  float: left;
+  margin-left: 15px;
+}
+div.ccm-conversation-message div.ccm-conversation-message-controls li:first-child {
+  margin-left: 0;
+}
+div.ccm-conversation-message div.ccm-conversation-message-controls .conversation-rate-message {
+  margin: 8px;
+  float: left;
+  display: block;
+  opacity: .5;
+}
+div.ccm-conversation-message div.ccm-conversation-message-controls .conversation-rate-message:hover {
+  cursor: pointer;
+}
+div.ccm-conversation-message div.ccm-conversation-message-controls .ccm-conversation-message-rating-score {
+  margin: 4px 8px;
+  display: block;
+  float: left;
 }
 div.ccm-conversation-message div.ccm-conversation-message-controls ul {
-  float: right;
+  float: left;
   list-style-type: none;
   margin: 0px;
   padding: 0px;
@@ -203,6 +334,14 @@ div.ccm-conversation-message div.ccm-conversation-message-controls ul {
 div.ccm-conversation-message div.ccm-conversation-message-controls ul li {
   display: inline-block;
   margin-left: 20px;
+}
+div.ccm-conversation-message div.ccm-conversation-message-controls ul li.dropdown {
+  margin-left: 0px;
+}
+div.ccm-conversation-message div.ccm-conversation-message-controls ul a {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  display: block;
 }
 div.ccm-conversation-message div.ccm-conversation-message-controls ul li.ccm-conversation-message-admin-control {
   display: none;
