@@ -41,8 +41,8 @@ $editor->setConversationObject($args['conversation']);
 			<div class="ccm-conversation-message-form">
 				<div class="ccm-conversation-errors alert alert-error"></div>
 				<? $editor->outputConversationEditorReplyMessageForm(); ?>
-				<button type="button" data-submit="conversation-message" class="pull-right btn btn-submit btn-small"><?=t('Post')?> <i class="icon-bullhorn"></i></button>
-				<a class="ccm-conversation-attachment-toggle" href="#"><?php echo t('Attach Files'); ?></a>
+				<button type="btn btn-primary" data-submit="conversation-message" class="pull-right btn btn-submit btn-small"><?=t('Submit')?> </button>
+				<button type="button" class="ccm-conversation-attachment-toggle" href="#" title="<?php echo t('Attach Files'); ?>"><i class="icon-picture"></i></button>
 			</div>
 			</form>
 			<div class="ccm-conversation-attachment-container">
@@ -114,8 +114,8 @@ $editor->setConversationObject($args['conversation']);
 			<div class="ccm-conversation-message-form">
 				<div class="ccm-conversation-errors alert alert-error"></div>
 				<? $editor->outputConversationEditorAddMessageForm(); ?>
-				<button type="button" data-post-parent-id="0" data-submit="conversation-message" class="pull-right btn btn-submit btn-small"><?=t('Post')?> <i class="icon-bullhorn"></i></button>
-				<a class="ccm-conversation-attachment-toggle" href="#"><?php echo t('Attach Files'); ?></a>
+				<button type="button" data-post-parent-id="0" data-submit="conversation-message" class="pull-right btn btn-primary btn-small"><?=t('Submit')?> </button>
+				<button type="button" class="ccm-conversation-attachment-toggle" href="#" title="<?php echo t('Attach Files'); ?>"><i class="icon-picture"></i></a>
 			</div>
 			</form>
 			<div class="ccm-conversation-attachment-container">
@@ -130,8 +130,8 @@ $editor->setConversationObject($args['conversation']);
 			<div class="ccm-conversation-message-form">
 				<div class="ccm-conversation-errors alert alert-error"></div>
 				<? $editor->outputConversationEditorReplyMessageForm(); ?>
-				<button type="button" data-submit="conversation-message" class="pull-right btn btn-submit btn-small"><?=t('Post')?> <i class="icon-bullhorn"></i></button>
-				<a class="ccm-conversation-attachment-toggle" href="#"><?php echo t('Attach Files'); ?></a>
+				<button type="button" data-submit="conversation-message" class="pull-right btn btn-primary btn-small"><?=t('Submit')?></button>
+				<button type="button" class="ccm-conversation-attachment-toggle" href="#" title="<?php echo t('Attach Files'); ?>"><i class="icon-picture"></i></a>
 			</div>
 			</form>
 			<div class="ccm-conversation-attachment-container">

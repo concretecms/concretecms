@@ -1,5 +1,6 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
+$im = Loader::helper('image');
 $ui = $message->getConversationMessageUserObject();
 $class = 'ccm-conversation-message ccm-conversation-message-level' . $message->getConversationMessageLevel();
 if ($message->isConversationMessageDeleted()) {
@@ -29,27 +30,41 @@ if ((!$message->isConversationMessageDeleted() && $message->isConversationMessag
 			<div class="message-attachments">
 				<?php
 				if(count($message->getAttachments($message->cnvMessageID))) {
-					foreach ($message->getAttachments($message->cnvMessageID) as $attachment) {
-						$file = File::getByID($attachment['fID']);
-						if(is_object($file)) { ?>
-						<p rel="<?php echo $attachment['cnvMessageAttachmentID'];?>"><a href="<?php echo $file->getDownloadURL() ?>"><?php echo $file->getFileName() ?></a>
+					foreach ($message->getAttachments($message->cnvMessageID) as $attachment) { ?>
+						<div class="attachment-container">
+						<?php $file = File::getByID($attachment['fID']);
+						if(is_object($file)) {
+							if(strpos($file->getMimeType(), 'image') !== false) {
+								$paragraphPadding = 'image-preview';
+								$thumb = $im->getThumbnail($file, '90', '90', true); ?>
+						  <div class="image-popover-hover">
+						  	<div class="glyph-container">
+						  		<i class="icon-search icon-white"></i>
+						  	</div>
+						  </div>
+						  <img class="posted-attachment-image" src="<?php  echo $thumb->src; ?>" width="<?php  echo $thumb->width; ?>" height="<?php  echo $thumb->height; ?>" alt="attachment image" />
+						 <?php } ?>
+							<p class="<?php echo $paragraphPadding ?>" rel="<?php echo $attachment['cnvMessageAttachmentID'];?>"><a href="<?php echo $file->getDownloadURL() ?>"><?php echo $file->getFileName() ?></a>
 							<? if (!$message->isConversationMessageDeleted()) { ?>
 								<a rel="<?php echo $attachment['cnvMessageAttachmentID'];?>" class="attachment-delete ccm-conversation-message-admin-control" href="#"><?=t('Delete')?></a>
 							<?php } ?>
-						</p>
+							</p>
+						</div>
 					<?php }
+					$paragraphPadding = '';
 					}
 				} ?>
 			</div>
 			<? if (!$message->isConversationMessageDeleted() && $message->isConversationMessageApproved()) { ?>
 			<ul>
-				<li class="ccm-conversation-message-admin-control"><a href="#" data-submit="flag-conversation-message" data-conversation-message-id="<?=$message->getConversationMessageID()?>"><?=t('Flag As Spam')?></a></li>
-				<li class="ccm-conversation-message-admin-control"><a href="#" data-submit="delete-conversation-message" data-conversation-message-id="<?=$message->getConversationMessageID()?>"><?=t('Delete')?></a></li>
+				<!-- <li class="ccm-conversation-message-admin-control"><a href="#" data-submit="flag-conversation-message" data-conversation-message-id="<?=$message->getConversationMessageID()?>"><?=t('Flag As Spam')?></a></li>
+				<li class="ccm-conversation-message-admin-control"><a href="#" data-submit="delete-conversation-message" data-conversation-message-id="<?=$message->getConversationMessageID()?>"><?=t('Delete')?></a></li> -->
 				
 				<? if ($enablePosting && $displayMode == 'threaded') { ?>
 					<li><a href="#" data-toggle="conversation-reply" data-post-parent-id="<?=$message->getConversationMessageID()?>"><?=t('Reply')?></a></li>
 				<? } ?>
 			</ul>
+			<span class="control-divider"> | </span>
 			<? } ?>
 			
 		<? Loader::element('conversation/social_share', array('cID' => $cID, 'message' => $message));?>
