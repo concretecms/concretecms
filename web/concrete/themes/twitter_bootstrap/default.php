@@ -6,6 +6,11 @@ $this->inc('elements/header.php'); ?>
 <div class="row">
 <div class="span12">
 <?
+	$a = new GlobalArea('Header Nav');
+	$a->setAreaGridColumnSpan(12);
+	$a->display();
+?>
+<?
 	$a = new Area('Main');
 	$a->setAreaGridColumnSpan(12);
 	$a->display($c);
