@@ -133,6 +133,8 @@ var CCMInlineEditMode = function() {
 				}
 				obj.addClass("ccm-area-edit-inline-active");
 				obj.append($('<div id="a' + aID + '-bt' + btID + '" class="ccm-block-edit-inline-active">' + r + '</div>'));
+				var $container = $('#a' + aID + '-bt' + btID);
+				completeInlineEditMode($container);
 				jQuery.fn.dialog.hideLoader();
 			}});
 		}
