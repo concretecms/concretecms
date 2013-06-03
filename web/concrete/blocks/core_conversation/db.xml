@@ -46,6 +46,12 @@
 			<notnull />
 			<default value="" />
 		</field>
+		<field name="dateFormat" type="C" size="255">
+			<notnull />
+			<default value="default" />
+		</field>
+		<field name="customDateFormat" type="C" size="255">
+		</field>
 		<field name="insertNewMessages" type="C" size="255">
 			<notnull />
 			<default value="top" />

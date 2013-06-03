@@ -36,7 +36,9 @@ if (is_object($conversation)) {
 			activeUsers: <?=Loader::helper('json')->encode($users)?>,
 			enableCommentRating: <?=$enableCommentRating?>,
 			commentRatingUserID: <?=$uID?>,
-			commentRatingIP: '<?=$commentRatingIP?>'
+			commentRatingIP: '<?=$commentRatingIP?>',
+			dateFormat: '<?=$dateFormat?>', 
+			customDateFormat: '<?=$customDateFormat?>'
 		});
 	});
 	</script>
