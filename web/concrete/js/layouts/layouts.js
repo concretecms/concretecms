@@ -144,7 +144,7 @@ CCMLayout.prototype._setupDOM = function() {
 	this.$selectcolumnscustom = this.$toolbar.find('input[name=columns]');
 	this.$customspacing = this.$toolbar.find('input[name=spacing]');
 	this.$customautomatedfrm = this.$toolbar.find('input[name=isautomated]');
-	this.$customautomated = this.$toolbar.find('#toggleAutomated');
+	this.$customautomated = this.$toolbar.find('[data-layout-button=toggleautomated]');
 
 	// choosetype + themegrid
 	this.$selectgridcolumns = this.$toolbar.find('input[name=themeGridColumns]');
