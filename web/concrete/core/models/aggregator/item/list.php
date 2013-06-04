@@ -10,8 +10,16 @@ class Concrete5_Model_Aggregator_Item_List extends DatabaseItemList {
 		$this->filter('agiIsDeleted', 0);
 	}
 
+	public function filterByPublicDate($item, $operator) {
+		$this->filter('agiPublicDateTime', $item, $operator);
+	}
+
 	public function sortByDateDescending() {
 		$this->sortByMultiple('agiBatchTimestamp desc', 'agiBatchDisplayOrder asc');
+	}
+
+	public function sortByDateAscending() {
+		$this->sortByMultiple('agiBatchTimestamp asc', 'agiBatchDisplayOrder desc');
 	}
 
 	public function get($itemsToGet = 10000, $offset = 0) {

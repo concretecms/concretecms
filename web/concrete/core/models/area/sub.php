@@ -33,6 +33,19 @@ class Concrete5_Model_SubArea extends Area {
 		return $a;
 	}
 
+	public function getSubAreaBlockObject() {
+		$db = Loader::db();
+		$arLayoutID = $db->GetOne('select arLayoutID from AreaLayoutColumns where arID = ?', array($this->arID));
+		if ($arLayoutID) {
+			$bID = $db->GetOne('select bID from btCoreAreaLayout where arLayoutID = ?', array($arLayoutID));
+			$arHandle = $db->GetOne('select arHandle from Areas where arID = ?', array($this->arParentID));
+			if ($bID) {
+				$b = Block::getByID($bID, $this->c, $arHandle);
+				return $b;
+			}
+		}
+	}
+
 	public function __construct($arHandle, Area $parent) {
 		$arHandle = $parent->getAreaHandle() . self::AREA_SUB_DELIMITER . $arHandle;
 		$this->arParentID = $parent->getAreaID();

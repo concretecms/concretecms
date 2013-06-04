@@ -20,7 +20,7 @@ div#ccm-highlighter.ccm-highlighter-clicked {
 /** 
  * Blocks AND areas
  */
-div.ccm-block-edit, div.ccm-area {
+div.ccm-block-edit, div.ccm-area, div.ccm-area-disabled {
 	position: relative;
 	opacity: 1;
 	.clearfix();
@@ -210,56 +210,6 @@ div.ccm-block-edit-disabled {
 	transition: opacity 0.5s linear;
 	-webkit-transition: opacity 0.5s linear;
 	-moz-transition: opacity 0.5s linear;
-}
-/** 
- * Layouts
- */
-div.ccm-area-layout-control-bar {
-	background: rgba(60,60,60,0.2);
-	.border-radius(4px);
-	height: 12px;
-	line-height: 12px;
-	margin-bottom: 6px;
-	margin-top: 10px;
-	position: relative;
-
-}
-
-div.ccm-menu-item-active {
-
-	> div.ccm-area-layout-control-bar {
-		background: #0c6;
-	}
-}
-
-div.ccm-block-edit-layout {
-	min-height: 50px;
-}
-
-div.ccm-area-layout-control-bar-add {
-	height: 0px;
-	overflow: hidden;
-}
-
-
-div.ccm-area-layout-control-bar i {
-	position: absolute;
-	top: -2px;
-	z-index: 10;
-	left: -2px;
-}
-
-/** 
- * Aggregator
- */
-div.ccm-aggregator-control-bar {
-	background: rgba(128,128,128,0.2);
-	.border-radius(1px);
-	height: 20px;
-	line-height: 12px;
-	margin-bottom: 1px;
-	margin-top: 1px;
-	position: relative;
 }
 
 

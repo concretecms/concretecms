@@ -4,6 +4,8 @@ abstract class Concrete5_Model_AggregatorItem extends Object {
 
 	abstract public function loadDetails();
 	abstract public function canViewAggregatorItem();
+	abstract public function assignFeatureAssignments($mixed);
+	abstract public static function getListByItem($mixed);
 
 	protected $feHandles;
 	protected $templates;
@@ -32,6 +34,7 @@ abstract class Concrete5_Model_AggregatorItem extends Object {
 	public function getAggregatorItemBatchDisplayOrder() {	return $this->agiBatchDisplayOrder; }
 	public function getAggregatorItemKey() { return $this->agiKey; }
 	public function getAggregatorObject() { return Aggregator::getByID($this->agID); }
+	public function getAggregatorID() { return $this->agID;}
 
 	public function getAggregatorItemFeatureHandles() {
 		if (!isset($this->feHandles)) {
@@ -106,6 +109,21 @@ abstract class Concrete5_Model_AggregatorItem extends Object {
 		}
 	}
 
+	protected static function getListByKey(AggregatorDataSource $ags, $agiKey) {
+		$db = Loader::db();
+		$r = $db->Execute('select agiID from AggregatorItems where agsID = ? and agiKey = ?', array(
+			$ags->getAggregatorDataSourceID(), $agiKey
+		));
+		$items = array();
+		while ($row = $r->FetchRow()) {
+			$item = AggregatorItem::getByID($row['agiID']);
+			if (is_object($item)) {
+				$items[] = $item;
+			}
+		}
+		return $items;
+	}
+
 	public static function add(Aggregator $ag, AggregatorDataSource $ags, $agiPublicDateTime, $agiTitle, $agiKey, $agiSlotWidth = 1, $agiSlotHeight = 1) {
 		$db = Loader::db();
 		$agiDateTimeCreated = Loader::helper('date')->getSystemDateTime();
@@ -148,6 +166,13 @@ abstract class Concrete5_Model_AggregatorItem extends Object {
 		}
 
 		return $item;
+	}
+
+	public function deleteFeatureAssignments() {
+		$assignments = AggregatorItemFeatureAssignment::getList($this);
+		foreach($assignments as $as) {
+			$as->delete();
+		}		
 	}
 
 	public function addFeatureAssignment($feHandle, $mixed) {
@@ -227,10 +252,7 @@ abstract class Concrete5_Model_AggregatorItem extends Object {
 		$db = Loader::db();
 		$db->Execute('delete from AggregatorItems where agiID = ?', array($this->agiID));
 		$db->Execute('delete from AggregatorItemSelectedTemplates where agiID = ?', array($this->agiID));
-		$assignments = AggregatorItemFeatureAssignment::getList($this);
-		foreach($assignments as $as) {
-			$as->delete();
-		}
+		$this->deleteFeatureAssignments();
 	}
 
 	public function deactivate() {

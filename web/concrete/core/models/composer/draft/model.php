@@ -34,8 +34,12 @@ class Concrete5_Model_ComposerDraft extends Object {
 		$outputControls = array();
 		foreach($controls as $cn) {
 			$data = $cn->getRequestValue();
-			$cn->publishToPage($this, $data, $controls);
-			$outputControls[] = $cn;
+			$e = Loader::helper('validation/error');
+			$cn->validate($data, $e);
+			if (!$e->has()) {
+				$cn->publishToPage($this, $data, $controls);
+				$outputControls[] = $cn;
+			}
 		}
 		$this->setPageNameFromComposerControls($outputControls);
 
