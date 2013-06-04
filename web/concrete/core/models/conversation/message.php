@@ -142,7 +142,8 @@ class Concrete5_Model_Conversation_Message extends Object {
 			case 'mdy_full':
 				return t('Posted on %s', Loader::helper('date')->date(DATE_APP_GENERIC_MDY_FULL, strtotime($this->cnvMessageDateCreated))); 
 			default:
-			 	return t('Posted on %s', Loader::helper('date')->date('F d, Y \a\t g:i a', strtotime($this->cnvMessageDateCreated)));
+				return t('Posted on %s', Loader::helper('date')->date(DATE_APP_GENERIC_MDY_FULL, strtotime($this->cnvMessageDateCreated))); 
+			 	//return t('Posted on %s', Loader::helper('date')->date('F d, Y \a\t g:i a', strtotime($this->cnvMessageDateCreated)));
 				break;
 		}
 	}

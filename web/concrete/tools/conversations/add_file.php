@@ -1,6 +1,6 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); 
 
-  /*   converations permissions here -- realpath ? */ 
+   /*   converations permissions here -- realpath ? */
   if ($_FILES["file"]["error"] > 0)
     {
     echo "Return Code: " . $_FILES["file"]["error"] . "<br>";

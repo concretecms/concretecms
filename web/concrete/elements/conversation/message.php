@@ -1,6 +1,8 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
 $im = Loader::helper('image');
+$page = Page::getByID($cID);
+$p = new Permissions($page);
 $ui = $message->getConversationMessageUserObject();
 $class = 'ccm-conversation-message ccm-conversation-message-level' . $message->getConversationMessageLevel();
 if ($message->isConversationMessageDeleted()) {
@@ -17,6 +19,20 @@ $cnvMessageID = $message->cnvMessageID;
 if ((!$message->isConversationMessageDeleted() && $message->isConversationMessageApproved()) || $message->conversationMessageHasActiveChildren()) {
 	?>
 	<div data-conversation-message-id="<?=$message->getConversationMessageID()?>" data-conversation-message-level="<?=$message->getConversationMessageLevel()?>" class="<?=$class?>">
+		<?php if($p->canWrite()) { ?>
+		<ul class="nav nav-pills cnv-admin-pane pull-right">
+			<li class="dropdown">
+			<a class="dropdown-toggle" id="drop4" role="button" data-toggle="dropdown" href="#">&#x25bc;</a>
+				<ul class="dropdown-menu" role="menu" aria-labelledby="drop5">
+				<li><a href="#" class="admin-best-answer"><?php echo t('Best Answer') ?></a></li>
+				<li><a href="#" class="admin-promote"><?php echo t('Promote') ?></a></li>
+				<li><a href="#" class="admin-edit"><?php echo t('Edit') ?></a></li> 
+				<li><a href="#" class="admin-delete" data-submit="delete-conversation-message" data-conversation-message-id="<?=$message->getConversationMessageID()?>"><?=t('Delete')?></a></li>
+				<li><a href="#" class="admin-flag" data-submit="flag-conversation-message" data-conversation-message-id="<?=$message->getConversationMessageID()?>"><?=t('Flag As Spam')?></a></li>
+				</ul>
+			</li>
+		</ul>
+		<?php } ?>
 		<a id="cnvMessage<?=$cnvMessageID?>" />
 		<div class="ccm-conversation-message-user">
 			<div class="ccm-conversation-avatar"><? print Loader::helper('concrete/avatar')->outputUserAvatar($ui)?></div>
@@ -48,10 +64,13 @@ if ((!$message->isConversationMessageDeleted() && $message->isConversationMessag
 						  </div>
 						  <img class="posted-attachment-image" src="<?php  echo $thumb->src; ?>" width="<?php  echo $thumb->width; ?>" height="<?php  echo $thumb->height; ?>" alt="attachment image" />
 						 <?php } ?>
-							<p class="<?php echo $paragraphPadding ?>" rel="<?php echo $attachment['cnvMessageAttachmentID'];?>"><a href="<?php echo $file->getDownloadURL() ?>"><?php echo $file->getFileName() ?></a>
-							<? if (!$message->isConversationMessageDeleted()) { ?>
+							<p class="<?php echo $paragraphPadding ?> filename" rel="<?php echo $attachment['cnvMessageAttachmentID'];?>"><a href="<?php echo $file->getDownloadURL() ?>"><?php echo $file->getFileName() ?></a>
+							<? 
+							if (!$message->isConversationMessageDeleted() && $p->canWrite()) { ?>
 								<a rel="<?php echo $attachment['cnvMessageAttachmentID'];?>" class="attachment-delete ccm-conversation-message-admin-control" href="#"><?=t('Delete')?></a>
 							<?php } ?>
+							<br />
+							<a class="download" href="<?php echo $file->getDownloadURL() ?>"><?php echo t('Download') ?></a>
 							</p>
 						</div>
 					<?php }
