@@ -41,7 +41,11 @@
 		<input type="hidden" name="isautomated" value="<? if ($iscustom) { ?>0<? } else {?>1<? } ?>" />
 	</li>
 	<? if ($controller->getTask() == 'edit') {
-		$bp = new Permissions($b);
+		$bp = new Permissions($b); ?>
+
+		<li class="ccm-inline-toolbar-icon-cell"><a href="#" data-layout-command="move-block"><i class="icon-move"></i></a></li>
+
+		<?
 		if ($bp->canDeleteBlock()) { 
 			$deleteMessage = t('Do you want to delete this layout? This will remove all blocks inside it.');
 			?>

@@ -27,9 +27,18 @@ var CCMInlineEditMode = function() {
 		var $toolbar = $block.find('.ccm-inline-toolbar'),
 			$holder = $('<div />', {id: 'ccm-inline-toolbar-container'}).appendTo(document.body),
 			$window = $(window),
-			pos = $block.offset();
+			pos = $block.offset(),
+			l = pos.left;
 
-		$toolbar.css('left', pos.left).css('opacity', 1).appendTo($holder);
+		$toolbar.appendTo($holder);
+		var tw = l + parseInt($toolbar.width());
+		if (tw > $window.width()) {
+			var overage = tw - (l + $block.width());
+			$toolbar.css('left', l - overage);
+		} else {
+			$toolbar.css('left', l);
+		}
+		$toolbar.css('opacity', 1);
 		$toolbar.find('.dialog-launch').dialog();
 		var t = pos.top - $holder.outerHeight();
 		$holder.css('top', t).css('opacity', 1);
