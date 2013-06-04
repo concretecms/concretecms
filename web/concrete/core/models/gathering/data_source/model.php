@@ -1,29 +1,29 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-abstract class Concrete5_Model_AggregatorDataSource extends Object {
+abstract class Concrete5_Model_GatheringDataSource extends Object {
 
-	abstract public function createConfigurationObject(Aggregator $ag, $post);
-	abstract public function createAggregatorItems(AggregatorDataSourceConfiguration $configuration);
+	abstract public function createConfigurationObject(Gathering $ga, $post);
+	abstract public function createGatheringItems(GatheringDataSourceConfiguration $configuration);
 	
-	protected $optionFormKey = '_ags_';
+	protected $optionFormKey = '_gas_';
 
-	public function configure(Aggregator $ag, $post) {
+	public function configure(Gathering $ga, $post) {
 		$db = Loader::db();
-		$o = $this->createConfigurationObject($ag, $post);
-		$r = $db->Execute('insert into AggregatorConfiguredDataSources (agID, agsID, acdObject) values (?, ?, ?)', array(
-			$ag->getAggregatorID(), $this->agsID, serialize($o)
+		$o = $this->createConfigurationObject($ga, $post);
+		$r = $db->Execute('insert into GatheringConfiguredDataSources (agID, gasID, acdObject) values (?, ?, ?)', array(
+			$ga->getGatheringID(), $this->gasID, serialize($o)
 		));
-		return AggregatorDataSourceConfiguration::getByID($db->Insert_ID());
+		return GatheringDataSourceConfiguration::getByID($db->Insert_ID());
 	}
 
-	public static function getByID($agsID) {
+	public static function getByID($gasID) {
 		$db = Loader::db();
-		$row = $db->GetRow('select agsID, agsHandle, pkgID, agsName from AggregatorDataSources where agsID = ?', array($agsID));
-		if (isset($row['agsID'])) {
-			$class = Loader::helper('text')->camelcase($row['agsHandle']) . 'AggregatorDataSource';
-			$ags = new $class();
-			$ags->setPropertiesFromArray($row);
-			return $ags;
+		$row = $db->GetRow('select gasID, gasHandle, pkgID, gasName from GatheringDataSources where gasID = ?', array($gasID));
+		if (isset($row['gasID'])) {
+			$class = Loader::helper('text')->camelcase($row['gasHandle']) . 'GatheringDataSource';
+			$gas = new $class();
+			$gas->setPropertiesFromArray($row);
+			return $gas;
 		}
 	}
 	
@@ -32,32 +32,32 @@ abstract class Concrete5_Model_AggregatorDataSource extends Object {
 	}
 
 	public function optionFormKey($name) {
-		return 'ags[' . $this->optionFormKey . '][' . $name . ']';
+		return 'gas[' . $this->optionFormKey . '][' . $name . ']';
 	}
 
 	public function getOptionFormRequestData() {
-		return $_REQUEST['ags'][$this->optionFormKey];
+		return $_REQUEST['gas'][$this->optionFormKey];
 	}
 
-	public static function getByHandle($agsHandle) {
+	public static function getByHandle($gasHandle) {
 		$db = Loader::db();
-		$row = $db->GetRow('select agsID, agsHandle, pkgID, agsName from AggregatorDataSources where agsHandle = ?', array($agsHandle));
-		if (isset($row['agsID'])) {
-			$class = Loader::helper('text')->camelcase($row['agsHandle']) . 'AggregatorDataSource';
-			$ags = new $class();
-			$ags->setPropertiesFromArray($row);
-			return $ags;
+		$row = $db->GetRow('select gasID, gasHandle, pkgID, gasName from GatheringDataSources where gasHandle = ?', array($gasHandle));
+		if (isset($row['gasID'])) {
+			$class = Loader::helper('text')->camelcase($row['gasHandle']) . 'GatheringDataSource';
+			$gas = new $class();
+			$gas->setPropertiesFromArray($row);
+			return $gas;
 		}
 	}
 
 	public static function getListByPackage($pkg) {
 		$db = Loader::db();
 		$list = array();
-		$r = $db->Execute('select agsID from AggregatorDataSources where pkgID = ? order by agsID asc', array($pkg->getPackageID()));
+		$r = $db->Execute('select gasID from GatheringDataSources where pkgID = ? order by gasID asc', array($pkg->getPackageID()));
 		while ($row = $r->FetchRow()) {
-			$ags = AggregatorDataSource::getByID($row['agsID']);
-			if (is_object($ags)) {
-				$list[] = $ags;
+			$gas = GatheringDataSource::getByID($row['gasID']);
+			if (is_object($gas)) {
+				$list[] = $gas;
 			}
 		}
 		$r->Close();
@@ -67,89 +67,89 @@ abstract class Concrete5_Model_AggregatorDataSource extends Object {
 	public static function getList() {
 		$db = Loader::db();
 		$list = array();
-		$r = $db->Execute('select agsID from AggregatorDataSources order by agsDisplayOrder asc');
+		$r = $db->Execute('select gasID from GatheringDataSources order by gasDisplayOrder asc');
 		while ($row = $r->FetchRow()) {
-			$ags = AggregatorDataSource::getByID($row['agsID']);
-			if (is_object($ags)) {
-				$list[] = $ags;
+			$gas = GatheringDataSource::getByID($row['gasID']);
+			if (is_object($gas)) {
+				$list[] = $gas;
 			}
 		}
 		$r->Close();
 		return $list;
 	}	
 	
-	public function getAggregatorDataSourceID() {return $this->agsID;}
-	public function getAggregatorDataSourceHandle() {return $this->agsHandle;}
-	public function getAggregatorDataSourceName() {return $this->agsName;}
+	public function getGatheringDataSourceID() {return $this->gasID;}
+	public function getGatheringDataSourceHandle() {return $this->gasHandle;}
+	public function getGatheringDataSourceName() {return $this->gasName;}
 	public function getPackageID() {return $this->pkgID;}
 	public function getPackageHandle() {return PackageList::getHandle($this->pkgID);}
-	public function getAggregatorDataSourceOptionsForm() {
+	public function getGatheringDataSourceOptionsForm() {
 		$env = Environment::get();
-		$file = $env->getPath(DIRNAME_ELEMENTS . '/' . DIRNAME_AGGREGATOR . '/' . DIRNAME_AGGREGATOR_DATA_SOURCES . '/' . $this->agsHandle . '/' . FILENAME_AGGREGATOR_DATA_SOURCE_OPTIONS, $this->getPackageHandle());
+		$file = $env->getPath(DIRNAME_ELEMENTS . '/' . DIRNAME_GATHERING . '/' . DIRNAME_GATHERING_DATA_SOURCES . '/' . $this->gasHandle . '/' . FILENAME_GATHERING_DATA_SOURCE_OPTIONS, $this->getPackageHandle());
 		return $file;
 	}
 	
 
-	public function updateAggregatorDataSourceName($agsName) {
-		$this->agsName = $agsName;
+	public function updateGatheringDataSourceName($gasName) {
+		$this->gasName = $gasName;
 		$db = Loader::db();
-		$db->Execute("update AggregatorDataSources set agsName = ? where agsID = ?", array($agsName, $this->agsID));
+		$db->Execute("update GatheringDataSources set gasName = ? where gasID = ?", array($gasName, $this->gasID));
 	}
 
-	public function updateAggregatorDataSourceHandle($agsHandle) {
-		$this->agsHandle = $agsHandle;
+	public function updateGatheringDataSourceHandle($gasHandle) {
+		$this->gasHandle = $gasHandle;
 		$db = Loader::db();
-		$db->Execute("update AggregatorDataSources set agsHandle = ? where agsID = ?", array($agsHandle, $this->agsID));
+		$db->Execute("update GatheringDataSources set gasHandle = ? where gasID = ?", array($gasHandle, $this->gasID));
 	}
 	
-	public static function add($agsHandle, $agsName, $pkg = false) {
+	public static function add($gasHandle, $gasName, $pkg = false) {
 		$db = Loader::db();
 		$pkgID = 0;
 		if (is_object($pkg)) {
 			$pkgID = $pkg->getPackageID();
 		}
-		$sources = $db->GetOne('select count(agsID) from AggregatorDataSources');
-		$agsDisplayOrder = 0;
+		$sources = $db->GetOne('select count(gasID) from GatheringDataSources');
+		$gasDisplayOrder = 0;
 		if ($sources > 0) {
-			$agsDisplayOrder = $db->GetOne('select max(agsDisplayOrder) from AggregatorDataSources');
-			$agsDisplayOrder++;
+			$gasDisplayOrder = $db->GetOne('select max(gasDisplayOrder) from GatheringDataSources');
+			$gasDisplayOrder++;
 		}
 		
-		$db->Execute('insert into AggregatorDataSources (agsHandle, agsName, agsDisplayOrder, pkgID) values (?, ?, ?, ?)', array($agsHandle, $agsName, $agsDisplayOrder, $pkgID));
+		$db->Execute('insert into GatheringDataSources (gasHandle, gasName, gasDisplayOrder, pkgID) values (?, ?, ?, ?)', array($gasHandle, $gasName, $gasDisplayOrder, $pkgID));
 		$id = $db->Insert_ID();
 		
-		$ags = AggregatorDataSource::getByID($id);
-		return $ags;
+		$gas = GatheringDataSource::getByID($id);
+		return $gas;
 	}
 
 
 	public function export($axml) {
-		$ags = $axml->addChild('aggregatorsource');
-		$ags->addAttribute('handle',$this->getAggregatorDataSourceHandle());
-		$ags->addAttribute('name', $this->getAggregatorDataSourceName());
-		$ags->addAttribute('package', $this->getPackageHandle());
-		return $ags;
+		$gas = $axml->addChild('gatheringsource');
+		$gas->addAttribute('handle',$this->getGatheringDataSourceHandle());
+		$gas->addAttribute('name', $this->getGatheringDataSourceName());
+		$gas->addAttribute('package', $this->getPackageHandle());
+		return $gas;
 	}
 
 	public static function exportList($xml) {
-		$axml = $xml->addChild('aggregatorsources');
+		$axml = $xml->addChild('gatheringsources');
 		$db = Loader::db();
-		$r = $db->Execute('select agsID from AggregatorDataSources order by agsID asc');
+		$r = $db->Execute('select gasID from GatheringDataSources order by gasID asc');
 		$list = array();
 		while ($row = $r->FetchRow()) {
-			$ags = AggregatorDataSource::getByID($row['agsID']);
-			if (is_object($ags)) {
-				$list[] = $ags;
+			$gas = GatheringDataSource::getByID($row['gasID']);
+			if (is_object($gas)) {
+				$list[] = $gas;
 			}
 		}
-		foreach($list as $ags) {
-			$ags->export($axml);
+		foreach($list as $gas) {
+			$gas->export($axml);
 		}
 	}
 
 	public function delete() {
 		$db = Loader::db();
-		$db->Execute('delete from AggregatorDataSources where agsID = ?', array($this->agsID));
+		$db->Execute('delete from GatheringDataSources where gasID = ?', array($this->gasID));
 	}
 	
 		
