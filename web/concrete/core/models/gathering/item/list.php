@@ -1,32 +1,32 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Model_Aggregator_Item_List extends DatabaseItemList {
+class Concrete5_Model_Gathering_Item_List extends DatabaseItemList {
 
 	protected $itemsPerPage = 24;
 
-	public function __construct(Aggregator $ag) {
-		$this->setQuery('select agiID from AggregatorItems');
-		$this->filter('agID', $ag->getAggregatorID());
-		$this->filter('agiIsDeleted', 0);
+	public function __construct(Gathering $ag) {
+		$this->setQuery('select gaiID from GatheringItems');
+		$this->filter('gaID', $ag->getGatheringID());
+		$this->filter('gaiIsDeleted', 0);
 	}
 
 	public function filterByPublicDate($item, $operator) {
-		$this->filter('agiPublicDateTime', $item, $operator);
+		$this->filter('gaiPublicDateTime', $item, $operator);
 	}
 
 	public function sortByDateDescending() {
-		$this->sortByMultiple('agiBatchTimestamp desc', 'agiBatchDisplayOrder asc');
+		$this->sortByMultiple('gaiBatchTimestamp desc', 'gaiBatchDisplayOrder asc');
 	}
 
 	public function sortByDateAscending() {
-		$this->sortByMultiple('agiBatchTimestamp asc', 'agiBatchDisplayOrder desc');
+		$this->sortByMultiple('gaiBatchTimestamp asc', 'gaiBatchDisplayOrder desc');
 	}
 
 	public function get($itemsToGet = 10000, $offset = 0) {
 		$items = array(); 
 		$r = parent::get($itemsToGet, intval($offset));
 		foreach($r as $row) {
-			$ag = AggregatorItem::getByID($row['agiID']);
+			$ag = GatheringItem::getByID($row['gaiID']);
 			if (is_object($ag)) {
 				$items[] = $ag;
 			}
