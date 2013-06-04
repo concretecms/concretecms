@@ -1,8 +1,8 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Model_TileAggregatorItemTemplate extends AggregatorItemTemplate {
+class Concrete5_Model_TileGatheringItemTemplate extends GatheringItemTemplate {
 
-	public function aggregatorItemTemplateControlsSlotDimensions() {
+	public function gatheringItemTemplateControlsSlotDimensions() {
 		return true;
 	}
 

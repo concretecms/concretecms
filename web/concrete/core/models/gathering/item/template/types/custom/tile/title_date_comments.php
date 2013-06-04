@@ -1,9 +1,9 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Model_TitleDateCommentsTileAggregatorItemTemplate extends TileAggregatorItemTemplate {
+class Concrete5_Model_TitleDateCommentsTileGatheringItemTemplate extends TileGatheringItemTemplate {
 
-	public function getAggregatorItemTemplateData(AggregatorItem $item) {
-		$items = parent::getAggregatorItemTemplateData($item);
+	public function getGatheringItemTemplateData(GatheringItem $item) {
+		$items = parent::getGatheringItemTemplateData($item);
 		$totalPosts = 0;
 		if (is_array($items['conversation'])) {
 			foreach($items['conversation'] as $cnv) {
