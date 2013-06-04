@@ -11,7 +11,7 @@
 	.ccm-layout-column {
 
 		float: left;
-
+		
 	}
 
 	.ccm-layout-column-highlight {
@@ -24,18 +24,27 @@
 
 }
 
-
-div.ccm-area-layout-control-bar {
-	background: #4deb4d;
+div.ccm-area-layout-control-bar-wrapper {
 	.border-top-radius(4px);
 	.border-bottom-radius(0px);
+	background: #4deb4d;
 	height: 6px;
 	line-height: 6px;
-	border: 0px;
 	margin-bottom: 6px;
 	margin-top: 10px;
 	margin-left: -6px;
-	margin-right: -6px;
+	margin-right: -6px;	
+	padding-left: 6px;
+	padding-right: 6px;	
+}
+
+
+div.ccm-area-layout-control-bar {
+	background: #4deb4d;
+	.border-radius(0px);
+	height: 6px;
+	line-height: 6px;
+	border: 0px;
 
 	.ui-slider-handle {
 		height: 12px;

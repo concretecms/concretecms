@@ -9,7 +9,6 @@ var CCMEditMode = function() {
 	setupMenus = function() {
 		$('.ccm-area').ccmmenu();
 		$('.ccm-block-edit').ccmmenu();
-		$('.ccm-block-edit-layout').ccmmenu();
 
 		$('.ccm-area').each(function() {
 			var totalblocks = parseInt($(this).attr('data-total-blocks'));

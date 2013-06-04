@@ -71,7 +71,19 @@ $class = 'ccm-area-footer';
 		<li><a dialog-title="<?=t('Area Permissions')?>" class="dialog-launch" dialog-modal="false" dialog-width="425" dialog-height="430" id="menuAreaStyle<?=$a->getAreaID()?>" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_area_popup.php?cID=<?=$c->getCollectionID()?>&arHandle=<?=urlencode($a->getAreaHandle())?>&atask=groups"><?=t("Permissions")?></a></li>		
 	<? } ?>
 
-	<!-- dropdown menu links -->
+	<? 
+	if ($a instanceof SubArea) {
+		$bt = BlockType::getByHandle(BLOCK_HANDLE_LAYOUT_PROXY);
+		$ax = $a->getSubAreaParentPermissionsObject();
+		$axp = new Permissions($ax);
+		if ($axp->canAddBlockToArea($bt)) { 
+			$bx = $a->getSubAreaBlockObject();
+			if (is_object($bx) && !$bx->isError()) { ?>
+				<li class="divider"></li>
+				<li><a href="javascript:void(0)" data-menu-action="edit_inline" data-menu-edit-params="<?=$params?>"><?=t("Edit Container Layout")?></a></li>		
+			<? } ?>
+		<? }
+	} ?>
 	</ul>
 	</div>
 </div>
