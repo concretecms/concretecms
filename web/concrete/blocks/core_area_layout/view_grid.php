@@ -6,14 +6,6 @@
 	$gf = $pt->getThemeGridFrameworkObject();
 ?>
 
-<? if ($c->isEditMode()) {
-	$bp = new Permissions($b);
-	if ($bp->canEditBlock()) { ?>
-		<div class="ccm-area-layout-control-bar" id="ccm-area-layout-control-bar-<?=$b->getBlockID()?>-<?=$a->getAreaID()?>"></div>
-	<? } ?>
-
-<? } ?>
-
 <?=$gf->getPageThemeGridFrameworkRowStartHTML()?>
 
 <? foreach($columns as $col) { ?>

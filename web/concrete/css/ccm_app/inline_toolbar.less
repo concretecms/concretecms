@@ -69,6 +69,11 @@
 			outline: none !important;
 		}
 
+		input[type=text]:disabled {
+			background-color: #fff;
+			.opacity(70);
+		}
+
 	}
 
 
@@ -98,6 +103,15 @@
 		i {
 			display: inline-block;
 		}
+	}
+
+	> li.ccm-inline-toolbar-icon-cell.ccm-inline-toolbar-icon-selected {
+		#gradient > .vertical(#e1e1e1, #cbcbcb);
+		border-right: 1px solid #c5c5c5;
+	}
+
+	> li.ccm-inline-toolbar-icon-cell.ccm-inline-toolbar-icon-selected > a {
+		opacity: 1.0;
 	}
 
 	> li.ccm-inline-toolbar-icon-cell > a:hover {

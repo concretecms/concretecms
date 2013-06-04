@@ -3,6 +3,7 @@
 	$minColumns = 1;
 	if ($controller->getTask() == 'add') {
 		$spacing = 0;
+		$iscustom = false; 
 	}
 
 	$presets = AreaLayoutPreset::getList();
@@ -18,7 +19,7 @@
 	</li>
 	<li data-grid-form-view="themegrid">
 		<label for="themeGridColumns"><?=t("Columns:")?></label>
-		<input type="text" name="themeGridColumns" id="themeGridColumns" style="width: 40px" data-input="number" data-minimum="<?=$minColumns?>" data-maximum="<?=$themeGridMaxColumns?>" value="<?=$columnsNum?>" />
+		<input type="text" name="themeGridColumns" id="themeGridColumns" style="width: 40px" <? if ($controller->getTask() == 'add') {?>  data-input="number" data-minimum="<?=$minColumns?>" data-maximum="<?=$themeGridMaxColumns?>" <? } ?> value="<?=$columnsNum?>" />
 		<? if ($controller->getTask() == 'edit') { 
 			// we need this to actually go through the form in edit mode, for layout presets to be saveable in edit mode. ?>
 			<input type="hidden" name="themeGridColumns" value="<?=$columnsNum?>" />
@@ -26,7 +27,7 @@
 	</li>
 	<li data-grid-form-view="custom" class="ccm-sub-toolbar-text-cell">
 		<label for="columns"><?=t("Columns:")?></label>
-		<input type="text" name="columns" id="columns" style="width: 40px" data-input="number" data-minimum="<?=$minColumns?>" data-maximum="<?=$maxColumns?>" value="<?=$columnsNum?>" />
+		<input type="text" name="columns" id="columns" style="width: 40px" <? if ($controller->getTask() == 'add') {?> data-input="number" data-minimum="<?=$minColumns?>" data-maximum="<?=$maxColumns?>" <? } ?> value="<?=$columnsNum?>" />
 		<? if ($controller->getTask() == 'edit') { 
 			// we need this to actually go through the form in edit mode, for layout presets to be saveable in edit mode. ?>
 			<input type="hidden" name="columns" value="<?=$columnsNum?>" />
@@ -36,12 +37,8 @@
 		<label for="columns"><?=t("Spacing:")?></label>
 		<input name="spacing" id="spacing" type="text" style="width: 40px" data-input="number" data-minimum="0" data-maximum="1000" value="<?=$spacing?>" />
 	</li>
-	<li data-grid-form-view="custom" class="ccm-sub-toolbar-text-cell">
-		<label for="isautomated"><?=t("Column Widths:")?></label>
-		<select name="isautomated" id="isautomated" style="width: auto !important">
-			<option value="1"><?=t('Automated')?></option>
-			<option value="0"><?=t('Manual')?></option>
-		</select>
+	<li data-grid-form-view="custom" class="ccm-inline-toolbar-icon-cell <? if (!$iscustom) { ?>ccm-inline-toolbar-icon-selected<? } ?>"><a href="#" id="toggleAutomated"><i class="icon-lock"></i></a>
+		<input type="hidden" name="isautomated" value="<? if ($iscustom) { ?>0<? } else {?>1<? } ?>" />
 	</li>
 
 	<? /*
