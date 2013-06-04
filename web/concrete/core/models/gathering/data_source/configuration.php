@@ -1,37 +1,37 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Model_AggregatorDataSourceConfiguration extends Object {
+class Concrete5_Model_GatheringDataSourceConfiguration extends Object {
 
 	protected $dataSource;
 
-	public static function getByID($acsID) {
+	public static function getByID($gcsID) {
 		$db = Loader::db();
-		$row = $db->GetRow('select acsID, agsID, agID, acdObject from AggregatorConfiguredDataSources where acsID = ?', array($acsID));
-		if (isset($row['acsID'])) {
-			$source = AggregatorDataSource::getByID($row['agsID']);
-			$o = @unserialize($row['acdObject']);
+		$row = $db->GetRow('select gcsID, gasID, gaID, gcdObject from GatheringConfiguredDataSources where gcsID = ?', array($gcsID));
+		if (isset($row['gcsID'])) {
+			$source = GatheringDataSource::getByID($row['gasID']);
+			$o = @unserialize($row['gcdObject']);
 			if (is_object($o)) {
-				unset($row['acdObject']);
+				unset($row['gcdObject']);
 				$o->setPropertiesFromArray($row);
-				$o->dataSource = AggregatorDataSource::getByID($row['agsID']);
+				$o->dataSource = GatheringDataSource::getByID($row['gasID']);
 				return $o;
 			}
 		}
 	}
 
-	public function duplicate(Aggregator $aggregator) {
+	public function duplicate(Gathering $gathering) {
 		$db = Loader::db();
-		$agsID = $this->getAggregatorDataSourceID();
+		$gasID = $this->getGatheringDataSourceID();
 		// unset the items we don't want in our serialized object
 		$this->dataSource = null;
-		unset($this->agID);
-		unset($this->acsID);
-		unset($this->agsID);
-		$acdObject = serialize($this);
-		$db->Execute('insert into AggregatorConfiguredDataSources (agsID, agID, acdObject) values (?, ?, ?)', array(
-			$agsID,
-			$aggregator->getAggregatorID(),
-			$acdObject
+		unset($this->gaID);
+		unset($this->gcsID);
+		unset($this->gasID);
+		$gcdObject = serialize($this);
+		$db->Execute('insert into GatheringConfiguredDataSources (gasID, gaID, gcdObject) values (?, ?, ?)', array(
+			$gasID,
+			$gathering->getGatheringID(),
+			$gcdObject
 		));
 	}
 
@@ -39,18 +39,18 @@ class Concrete5_Model_AggregatorDataSourceConfiguration extends Object {
 		return call_user_func_array(array($this->dataSource, $method), $args);
 	}
 
-	public function getAggregatorDataSourceObject() {
+	public function getGatheringDataSourceObject() {
 		return $this->dataSource;
 	}
 
-	public function getAggregatorObject() {
-		$aggregator = Aggregator::getByID($this->agID);
-		return $aggregator;
+	public function getGatheringObject() {
+		$gathering = Gathering::getByID($this->gaID);
+		return $gathering;
 	}
 
 	public function delete() {
 		$db = Loader::db();
-		$db->Execute('delete from AggregatorConfiguredDataSources where acsID = ?', array($this->acsID));
+		$db->Execute('delete from GatheringConfiguredDataSources where gcsID = ?', array($this->gcsID));
 	}
 		
 }
