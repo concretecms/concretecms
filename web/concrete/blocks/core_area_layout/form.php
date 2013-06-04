@@ -37,9 +37,17 @@
 		<label for="columns"><?=t("Spacing:")?></label>
 		<input name="spacing" id="spacing" type="text" style="width: 40px" data-input="number" data-minimum="0" data-maximum="1000" value="<?=$spacing?>" />
 	</li>
-	<li data-grid-form-view="custom" class="ccm-inline-toolbar-icon-cell <? if (!$iscustom) { ?>ccm-inline-toolbar-icon-selected<? } ?>"><a href="#" id="toggleAutomated"><i class="icon-lock"></i></a>
+	<li data-grid-form-view="custom" class="ccm-inline-toolbar-icon-cell <? if (!$iscustom) { ?>ccm-inline-toolbar-icon-selected<? } ?>"><a href="#" data-layout-button="toggleautomated"><i class="icon-lock"></i></a>
 		<input type="hidden" name="isautomated" value="<? if ($iscustom) { ?>0<? } else {?>1<? } ?>" />
 	</li>
+	<? if ($controller->getTask() == 'edit') {
+		$bp = new Permissions($b);
+		if ($bp->canDeleteBlock()) { 
+			$deleteMessage = t('Do you want to delete this layout? This will remove all blocks inside it.');
+			?>
+			<li class="ccm-inline-toolbar-icon-cell"><a href="#" onclick="CCMEditMode.deleteBlock(<?=$b->getBlockCollectionID()?>, <?=$b->getBlockID()?>, <?=$a->getAreaID()?>, '<?=Loader::helper('text')->entities($a->getAreaHandle())?>', '<?=$deleteMessage?>', function() { CCMInlineEditMode.finishExit(); })"><i class="icon-trash"></i></a></li>
+		<? } ?>
+	<? } ?>
 
 	<? /*
 	<li data-area-presets-view="presets" class="ccm-sub-toolbar-icon-cell"><a class="toolbar-icon dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)"><i class="icon-bookmark"></i></a>

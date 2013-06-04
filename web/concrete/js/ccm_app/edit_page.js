@@ -311,7 +311,7 @@ var CCMEditMode = function() {
 			}});		
 		},
 
-		deleteBlock: function(cID, bID, aID, arHandle, msg) {
+		deleteBlock: function(cID, bID, aID, arHandle, msg, callback) {
 			if (confirm(msg)) {
 				CCMToolbar.disableDirectExit();
 				// got to grab the message too, eventually
@@ -327,8 +327,8 @@ var CCMEditMode = function() {
 					url: CCM_DISPATCHER_FILENAME,
 					data: 'cID=' + cID + '&ccm_token=' + CCM_SECURITY_TOKEN + '&isAjax=true&btask=remove&bID=' + bID + '&arHandle=' + encodeURIComponent(arHandle)
 				});
-				if (typeof window.ccm_parseBlockResponsePost == 'function') {
-					ccm_parseBlockResponsePost({});
+				if (typeof(callback) == 'function') {
+					callback();
 				}
 			}	
 		},

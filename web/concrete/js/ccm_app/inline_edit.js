@@ -14,7 +14,6 @@ var CCMInlineEditMode = function() {
 			$('#ccm-toolbar-disabled').css('opacity', 1);
 		}, 10);
 		$('div.ccm-block-edit').addClass('ccm-block-edit-disabled');
-		$('div.ccm-area').removeClass('ccm-area').addClass('ccm-area-disabled');
 		$('div.ccm-area-footer-handle').addClass('ccm-block-edit-disabled');
 		$('div.ccm-area-layout-control-bar').addClass('ccm-block-edit-disabled');
 		if (activeObj) {
@@ -64,7 +63,6 @@ var CCMInlineEditMode = function() {
 			$('div.ccm-block-edit').removeClass('ccm-block-edit-disabled');
 			$('div.ccm-area-footer-handle').removeClass('ccm-block-edit-disabled');
 			$('div.ccm-area-layout-control-bar').removeClass('ccm-block-edit-disabled');
-			$('div.ccm-area-disabled').removeClass('ccm-area-disabled').addClass('ccm-area');
 			$('#ccm-toolbar-disabled').remove();
 			$('#ccm-toolbar').css('opacity', 1);
 			$('#ccm-inline-toolbar-container').remove();

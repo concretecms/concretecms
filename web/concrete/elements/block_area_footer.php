@@ -18,7 +18,6 @@ $cID = $c->getCollectionID();
 $u = new User();
 $ap = new Permissions($a);
 $cp = new Permissions($c);
-
 $class = 'ccm-area-footer';
 
 ?>
