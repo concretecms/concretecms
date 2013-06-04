@@ -98,9 +98,9 @@ CCMLayout.prototype._activatePresets = function() {
 				obj.$selectcolumnscustom.find('option[value=' + r.arLayout.arLayoutNumColumns + ']').prop('selected', true);
 				obj.$customspacing.val(r.arLayout.arLayoutSpacing);
 				if (parseInt(r.arLayout.arLayoutIsCustom)) {
-					obj.$customautomated.find('option[value=1]').prop('selected', true);
+					obj.$customautomatedfrm.val(1);
 				} else {
-					obj.$customautomated.find('option[value=0]').prop('selected', true);
+					obj.$customautomated.val(0);
 				}
 
 
@@ -143,7 +143,8 @@ CCMLayout.prototype._setupDOM = function() {
 	// choosetype + custom
 	this.$selectcolumnscustom = this.$toolbar.find('input[name=columns]');
 	this.$customspacing = this.$toolbar.find('input[name=spacing]');
-	this.$customautomated = this.$toolbar.find('select[name=isautomated]');
+	this.$customautomatedfrm = this.$toolbar.find('input[name=isautomated]');
+	this.$customautomated = this.$toolbar.find('#toggleAutomated');
 
 	// choosetype + themegrid
 	this.$selectgridcolumns = this.$toolbar.find('input[name=themeGridColumns]');
@@ -201,8 +202,19 @@ CCMLayout.prototype._setupFormEvents = function() {
 	this.$customspacing.on('keyup', function() {
 		obj._updateCustomView();
 	});
-	this.$customautomated.on('change', function() {
+	this.$customautomatedfrm.on('change', function() {
 		obj._updateCustomView();
+	});
+	this.$customautomated.on('click', function() {
+		if ($(this).parent().hasClass('ccm-inline-toolbar-icon-selected')) {
+			$(this).parent().removeClass('ccm-inline-toolbar-icon-selected');
+			obj.$customautomatedfrm.val(0);
+		} else {
+			$(this).parent().addClass('ccm-inline-toolbar-icon-selected');
+			obj.$customautomatedfrm.val(1);
+		}
+		obj.$customautomatedfrm.trigger("change");
+		return false;
 	});
 	this.$selectgridcolumns.on('keyup', function() {
 		obj._updateThemeGridView();
@@ -288,7 +300,7 @@ CCMLayout.prototype._updateCustomView = function() {
 	// load custom view settings
 	this.columns = parseInt(this.$selectcolumnscustom.val());
 	this.customspacing = this.$customspacing.val();
-	this.automatedcustomlayout = this.$customautomated.val() == 1;
+	this.automatedcustomlayout = this.$customautomatedfrm.val() == 1;
 	this.columnwidths = [];
 
 	// set relevant forms based on the settings

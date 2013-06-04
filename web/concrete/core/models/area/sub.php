@@ -37,7 +37,7 @@ class Concrete5_Model_SubArea extends Area {
 		$db = Loader::db();
 		$arLayoutID = $db->GetOne('select arLayoutID from AreaLayoutColumns where arID = ?', array($this->arID));
 		if ($arLayoutID) {
-			$bID = $db->GetOne('select bID from btCoreAreaLayout where arLayoutID = ?', array($arLayoutID));
+			$bID = $db->GetOne('select cvb.bID from btCoreAreaLayout bta inner join CollectionVersionBlocks cvb on bta.bID = cvb.bID where cvb.cID = ? and cvb.cvID = ? and arLayoutID = ?', array($this->c->getCollectionID(), $this->c->getVersionID(), $arLayoutID));
 			$arHandle = $db->GetOne('select arHandle from Areas where arID = ?', array($this->arParentID));
 			if ($bID) {
 				$b = Block::getByID($bID, $this->c, $arHandle);
