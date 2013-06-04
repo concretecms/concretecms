@@ -65,6 +65,8 @@
 			var commentRatingUserID = (obj.options.commentRatingUserID);
 			var commentRatingIP = (obj.options.commentRatingIP);
 			var addMessageLabel = (obj.options.addMessageLabel) ? obj.options.addMessageLabel : '';
+			var dateFormat = (obj.options.dateFormat);
+			var customDateFormat = (obj.options.customDateFormat);
 
 			if (obj.options.method == 'ajax') {
 				$.post(CCM_TOOLS_PATH + '/conversations/view_ajax', {
@@ -82,7 +84,10 @@
 					'insertNewMessages':   insertNewMessages,
 					'enableCommentRating': enableCommentRating,
 					'commentRatingUserID': commentRatingUserID,
-					'commentRatingIP':     commentRatingIP
+					'commentRatingIP':     commentRatingIP,
+					'dateFormat' : 		   dateFormat,
+					'customDateFormat':    customDateFormat
+
 					
 				}, function(r) {
 					var oldobj = window.obj;
@@ -218,12 +223,24 @@
 				if($('.ccm-conversation-add-reply .ccm-conversation-attachment-container').is(':visible')) {
 					$('.ccm-conversation-add-reply .ccm-conversation-attachment-container').toggle();
 				}
+				if($('.ccm-conversation-add-new-message .ccm-conversation-attachment-container').is(':visible')) {
+					$(this).removeClass('btn-success');	
+				} else {
+					$('.ccm-conversation-attachment-toggle').removeClass('btn-success');
+					$(this).addClass('btn-success');	
+				}
 				$('.ccm-conversation-add-new-message .ccm-conversation-attachment-container').toggle();
 			});
 			$('.ccm-conversation-add-reply .ccm-conversation-attachment-toggle').click(function(event){ 
 				event.preventDefault();
 				if($('.ccm-conversation-add-new-message .ccm-conversation-attachment-container').is(':visible')) {
 					$('.ccm-conversation-add-new-message .ccm-conversation-attachment-container').toggle();
+				}
+				if($('.ccm-conversation-add-reply .ccm-conversation-attachment-container').is(':visible')) {
+					$(this).removeClass('btn-success');	
+				} else {
+					$('.ccm-conversation-attachment-toggle').removeClass('btn-success');
+					$(this).addClass('btn-success');	
 				}
 				$('.ccm-conversation-add-reply .ccm-conversation-attachment-container').toggle();
 			});
@@ -283,7 +300,10 @@
 					'enableOrdering':      obj.options.enableOrdering,
 					'displayPostingForm':  obj.options.displayPostingForm,
 					'insertNewMessages':   obj.options.insertNewMessages,
-					'enableCommentRating': obj.options.enableCommentRating
+					'enableCommentRating': obj.options.enableCommentRating,
+					'dateFormat':          obj.options.dateFormat,
+					'customDateFormat':    obj.options.customDateFormat
+
 					
 				}, function(r) {
 					obj.$replyholder.appendTo(obj.$element);
@@ -304,7 +324,9 @@
 					'addMessageLabel':     addMessageLabel,
 					'page':                nextPage,
 					'orderBy':             obj.$sortselect.val(),
-					'enableCommentRating': obj.options.enableCommentRating
+					'enableCommentRating': obj.options.enableCommentRating,
+					'dateFormat':          obj.options.dateFormat, 
+					'customDateFormat':    obj.options.customDateFormat
 				};
 
 				$.ajax({

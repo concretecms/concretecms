@@ -3,7 +3,7 @@
 class Concrete5_Model_DownVoteConversationRatingType extends ConversationRatingType {
 
 	public function outputRatingTypeHTML() {
-		print '<i data-conversation-rating-type="down_vote" class="conversation-rate-message icon-thumbs-down"></i>';
+		print '<div class="conversation-rate-message-container"><i class="icon-thumbs-down conversation-rate-message" data-conversation-rating-type="down_vote"></i></div>';
 	}
 	
 	public function rateMessage() {
