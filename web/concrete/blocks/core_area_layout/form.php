@@ -143,4 +143,6 @@ $(function() {
 
 </script>
 
-<div id="ccm-area-layout-active-control-bar" class="ccm-area-layout-control-bar ccm-area-layout-control-bar-<?=$controller->getTask()?>"></div>
+<div class="ccm-area-layout-control-bar-wrapper">
+	<div id="ccm-area-layout-active-control-bar" class="ccm-area-layout-control-bar ccm-area-layout-control-bar-<?=$controller->getTask()?>"></div>
+</div>
