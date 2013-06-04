@@ -1,6 +1,6 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Model_PageAggregatorDataSourceConfiguration extends AggregatorDataSourceConfiguration {
+class Concrete5_Model_PageGatheringDataSourceConfiguration extends GatheringDataSourceConfiguration {
 	
 	protected $ctID;
 
