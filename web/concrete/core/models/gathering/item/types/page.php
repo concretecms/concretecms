@@ -1,32 +1,32 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Model_PageAggregatorItem extends AggregatorItem {
+class Concrete5_Model_PageGatheringItem extends GatheringItem {
 
-	public function canViewAggregatorItem() {
+	public function canViewGatheringItem() {
 		$cp = new Permissions($this->page);
 		return $cp->canViewPage();
 	}
 
 	public static function getListByItem($mixed) {
-		$ags = AggregatorDataSource::getByHandle('page');
-		return AggregatorItem::getListByKey($ags, $mixed->getCollectionID());
+		$ags = GatheringDataSource::getByHandle('page');
+		return GatheringItem::getListByKey($ags, $mixed->getCollectionID());
 	}
 
-	public static function add(AggregatorDataSourceConfiguration $configuration, Page $c) {
-		$aggregator = $configuration->getAggregatorObject();
+	public static function add(GatheringDataSourceConfiguration $configuration, Page $c) {
+		$gathering = $configuration->getGatheringObject();
 		try {
 			// we wrap this in a try because it MIGHT fail if it's a duplicate
-			$item = parent::add($aggregator, $configuration->getAggregatorDataSourceObject(), $c->getCollectionDatePublic(), $c->getCollectionName(), $c->getCollectionID());
+			$item = parent::add($gathering, $configuration->getGatheringDataSourceObject(), $c->getCollectionDatePublic(), $c->getCollectionName(), $c->getCollectionID());
 		} catch (Exception $e) {}
 
 		if (is_object($item)) {
 			$db = Loader::db();
-			$db->Execute('insert into agPage (agiID, cID) values (?, ?)', array(
-				$item->getAggregatorItemID(),
+			$db->Execute('insert into gaPage (gaiID, cID) values (?, ?)', array(
+				$item->getGatheringItemID(),
 				$c->getCollectionID()
 			));
 			$item->assignFeatureAssignments($c);
-			$item->setAutomaticAggregatorItemTemplate();
+			$item->setAutomaticGatheringItemTemplate();
 			return $item;
 		}
 	}
@@ -47,12 +47,12 @@ class Concrete5_Model_PageAggregatorItem extends AggregatorItem {
 		}
 	}
 
-	public function duplicate(Aggregator $aggregator) {
-		$item = parent::duplicate($aggregator);
+	public function duplicate(Gathering $gathering) {
+		$item = parent::duplicate($gathering);
 		$db = Loader::db();
-		$db->Execute('delete from agPage where agiID = ?', array($item->getAggregatorItemID()));
-		$db->Execute('insert into agPage (agiID, cID) values (?, ?)', array(
-			$item->getAggregatorItemID(), $this->page->getCollectionID()
+		$db->Execute('delete from gaPage where gaiID = ?', array($item->getGatheringItemID()));
+		$db->Execute('insert into gaPage (gaiID, cID) values (?, ?)', array(
+			$item->getGatheringItemID(), $this->page->getCollectionID()
 		));
 		return $item;
 	}
@@ -61,12 +61,12 @@ class Concrete5_Model_PageAggregatorItem extends AggregatorItem {
 	public function delete() {
 		parent::delete();
 		$db = Loader::db();
-		$db->Execute('delete from agPage where agiID = ?', array($this->getAggregatorItemID()));
+		$db->Execute('delete from gaPage where gaiID = ?', array($this->getGatheringItemID()));
 	}
 
 	public function loadDetails() {
 		$db = Loader::db();
-		$row = $db->GetRow('select cID from agPage where agiID = ?', array($this->getAggregatorItemID()));
+		$row = $db->GetRow('select cID from gaPage where gaiID = ?', array($this->getGatheringItemID()));
 		$this->setPropertiesFromArray($row);
 		$this->page = Page::getByID($row['cID'], 'ACTIVE');
 	}
