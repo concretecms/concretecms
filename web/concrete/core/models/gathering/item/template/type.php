@@ -1,67 +1,67 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Model_AggregatorItemTemplateType extends Object {
+class Concrete5_Model_GatheringItemTemplateType extends Object {
 
-	public function getAggregatorItemTemplateTypeID() {return $this->agtTypeID;}
-	public function getAggregatorItemTemplateTypeHandle() {return $this->agtTypeHandle;}
-	public function getAggregatorItemTemplateTypeName() {
-		return Loader::helper('text')->unhandle($this->agtTypeHandle);
+	public function getGatheringItemTemplateTypeID() {return $this->gatTypeID;}
+	public function getGatheringItemTemplateTypeHandle() {return $this->gatTypeHandle;}
+	public function getGatheringItemTemplateTypeName() {
+		return Loader::helper('text')->unhandle($this->gatTypeHandle);
 	}
 
-	public static function getByID($agtTypeID) {
+	public static function getByID($gatTypeID) {
 		$db = Loader::db();
-		$row = $db->GetRow('select agtTypeID, pkgID, agtTypeHandle from AggregatorItemTemplateTypes where agtTypeID = ?', array($agtTypeID));
-		if ($row['agtTypeID']) {
-			$wt = new AggregatorItemTemplateType();
+		$row = $db->GetRow('select gatTypeID, pkgID, gatTypeHandle from GatheringItemTemplateTypes where gatTypeID = ?', array($gatTypeID));
+		if ($row['gatTypeID']) {
+			$wt = new GatheringItemTemplateType();
 			$wt->setPropertiesFromArray($row);
 			return $wt;
 		}
 	}
 
 	public static function getList() {
-		$agItemTemplateTypeList = CacheLocal::getEntry('agItemTemplateTypeList', false);
-		if ($agItemTemplateTypeList != false) {
-			return $agItemTemplateTypeList;
+		$gaItemTemplateTypeList = CacheLocal::getEntry('gaItemTemplateTypeList', false);
+		if ($gaItemTemplateTypeList != false) {
+			return $gaItemTemplateTypeList;
 		}		
 
 		$db = Loader::db();
 		$list = array();
-		$r = $db->Execute('select agtTypeID from AggregatorItemTemplateTypes order by agtTypeID asc');
+		$r = $db->Execute('select gatTypeID from GatheringItemTemplateTypes order by gatTypeID asc');
 
 		while ($row = $r->FetchRow()) {
-			$type = AggregatorItemTemplateType::getByID($row['agtTypeID']);
+			$type = GatheringItemTemplateType::getByID($row['gatTypeID']);
 			if (is_object($type)) {
 				$list[] = $type;
 			}
 		}
 		
 		$r->Close();
-		CacheLocal::set('agItemTemplateTypeList', false, $list);
+		CacheLocal::set('gaItemTemplateTypeList', false, $list);
 		return $list;
 	}
 	
 	public static function exportList($xml) {
-		$agtypes = AggregatorItemTemplateType::getList();
+		$agtypes = GatheringItemTemplateType::getList();
 		$db = Loader::db();
-		$axml = $xml->addChild('aggregatoritemtemplatetypes');
+		$axml = $xml->addChild('gatheringitemtemplatetypes');
 		foreach($agtypes as $agt) {
-			$atype = $axml->addChild('aggregatoritemtemplatetype');
-			$atype->addAttribute('handle', $agt->getAggregatorItemTemplateTypeHandle());
+			$atype = $axml->addChild('gatheringitemtemplatetype');
+			$atype->addAttribute('handle', $agt->getGatheringItemTemplateTypeHandle());
 			$atype->addAttribute('package', $wt->getPackageHandle());
 		}
 	}
 	
 	public function delete() {
 		$db = Loader::db();
-		$db->Execute("delete from AggregatorItemTemplateTypes where agtTypeID = ?", array($this->agtTypeID));
+		$db->Execute("delete from GatheringItemTemplateTypes where gatTypeID = ?", array($this->gatTypeID));
 	}
 	
 	public static function getListByPackage($pkg) {
 		$db = Loader::db();
 		$list = array();
-		$r = $db->Execute('select agtTypeID from AggregatorItemTemplateTypes where pkgID = ? order by agtTypeID asc', array($pkg->getPackageID()));
+		$r = $db->Execute('select gatTypeID from GatheringItemTemplateTypes where pkgID = ? order by gatTypeID asc', array($pkg->getPackageID()));
 		while ($row = $r->FetchRow()) {
-			$type = AggregatorItemTemplateType::getByID($row['agtTypeID']);
+			$type = GatheringItemTemplateType::getByID($row['gatTypeID']);
 			if (is_object($type)) {
 				$list[] = $type;
 			}
@@ -75,23 +75,23 @@ class Concrete5_Model_AggregatorItemTemplateType extends Object {
 		return PackageList::getHandle($this->pkgID);
 	}
 	
-	public static function getByHandle($agtTypeHandle) {
+	public static function getByHandle($gatTypeHandle) {
 		$db = Loader::db();
-		$agtTypeID = $db->GetOne('select agtTypeID from AggregatorItemTemplateTypes where agtTypeHandle = ?', array($agtTypeHandle));
-		if ($agtTypeID > 0) {
-			return self::getByID($agtTypeID);
+		$gatTypeID = $db->GetOne('select gatTypeID from GatheringItemTemplateTypes where gatTypeHandle = ?', array($gatTypeHandle));
+		if ($gatTypeID > 0) {
+			return self::getByID($gatTypeID);
 		}
 	}
 	
-	public static function add($agtTypeHandle, $pkg = false) {
+	public static function add($gatTypeHandle, $pkg = false) {
 		$pkgID = 0;
 		if (is_object($pkg)) {
 			$pkgID = $pkg->getPackageID();
 		}
 		$db = Loader::db();
-		$db->Execute('insert into AggregatorItemTemplateTypes (agtTypeHandle, pkgID) values (?, ?)', array($agtTypeHandle, $pkgID));
+		$db->Execute('insert into GatheringItemTemplateTypes (gatTypeHandle, pkgID) values (?, ?)', array($gatTypeHandle, $pkgID));
 		$id = $db->Insert_ID();
-		$est = AggregatorItemTemplateType::getByID($id);
+		$est = GatheringItemTemplateType::getByID($id);
 		return $est;
 	}
 	
