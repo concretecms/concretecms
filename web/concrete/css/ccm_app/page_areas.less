@@ -129,65 +129,6 @@ div.ccm-area-footer {
 	}
 }
 
-/** 
- * Empty areas
- */
-div.ccm-area[data-total-blocks="0"] {
-	
-	display: block;
-	outline: 0px !important;
-
-	div.ccm-area-footer {
-		opacity: 1;
-		position: static;
-	}
-	
-	div.ccm-area-footer-handle {
-
-		span {
-			opacity: 0;
-			i {
-				vertical-align: middle;
-			}
-		}
-
-		height: auto;
-		font-size: @baseFontSize;
-		line-height: @baseFontSize;
-
-		border: 1px solid #e7e7e7;
-		padding: 15px 20px;
-		display: block;
-		background-color: transparent;
-		color: #0c6;
-	}
-
-}
-
-div.ccm-area[data-total-blocks="0"].ccm-area-drag-block-type-over {
-
-	div.ccm-area-footer-handle {
-		border-color: #0c6;
-		span {
-			opacity: 1 !important;
-		}
-	}
-
-}
-
-div.ccm-area[data-total-blocks="0"].ccm-area-edit-inline-active {
-
-	div.ccm-area-footer-handle {
-		display: none;
-	}
-
-
-	div.ccm-block-edit-inline-active {
-		outline: 1px solid #e6e6e6;
-		outline-offset: 9px;
-	}
-}
-
 
 /** 
  * Hovering over areas
@@ -201,6 +142,20 @@ div.ccm-menu-item-active {
 		}
 	}
 }
+
+div.ccm-area[data-total-blocks="0"] {
+	
+	outline: 1px solid #e6e6e6;
+	outline-offset: 9px;
+
+	> div.ccm-area-footer {
+		display: block;
+		opacity: 1;
+	}
+
+
+}
+
 
 /** 
  * Inline edit mode tweaks

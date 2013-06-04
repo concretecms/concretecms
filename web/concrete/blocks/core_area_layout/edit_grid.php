@@ -6,7 +6,7 @@
 
 <input type="hidden" name="arLayoutID" value="<?=$controller->arLayout->getAreaLayoutID()?>" />
 
-<div id="ccm-layouts-edit-mode">
+<div id="ccm-layouts-edit-mode" class="ccm-layouts-edit-mode-edit">
 
 <?=$themeGridFramework->getPageThemeGridFrameworkRowStartHTML()?>
 

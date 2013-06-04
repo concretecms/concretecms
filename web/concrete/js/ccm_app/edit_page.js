@@ -239,6 +239,10 @@ var CCMEditMode = function() {
 			$('.ccm-area-block-dropzone').addClass('ccm-area-block-dropzone-active');
 		});
 
+		$('[data-inline-command=move-block]').on('mouseup', function() {
+			$('.ccm-area-block-dropzone-active').removeClass('ccm-area-block-dropzone-active');
+		});
+
 		$('.ccm-block-edit').draggable({
 			cursor: 'move',
 			cursorAt: {
