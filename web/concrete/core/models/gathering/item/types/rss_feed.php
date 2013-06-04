@@ -1,25 +1,25 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Model_RssFeedAggregatorItem extends AggregatorItem {
+class Concrete5_Model_RssFeedGatheringItem extends GatheringItem {
 
 	public function loadDetails() {}
-	public function canViewAggregatorItem() {return true;}
+	public function canViewGatheringItem() {return true;}
 
 	public static function getListByItem($mixed) {
-		$ags = AggregatorDataSource::getByHandle('rss_feed');
-		return AggregatorItem::getListByKey($ags, $mixed->get_link());
+		$ags = GatheringDataSource::getByHandle('rss_feed');
+		return GatheringItem::getListByKey($ags, $mixed->get_link());
 	}
 	
-	public static function add(AggregatorDataSourceConfiguration $configuration, $post) {
-		$aggregator = $configuration->getAggregatorObject();
+	public static function add(GatheringDataSourceConfiguration $configuration, $post) {
+		$gathering = $configuration->getGatheringObject();
 		try {
 			// we wrap this in a try because it MIGHT fail if it's a duplicate
-			$item = parent::add($aggregator, $configuration->getAggregatorDataSourceObject(), $post->get_date('Y-m-d H:i:s'), $post->get_title(), $post->get_link());
+			$item = parent::add($gathering, $configuration->getGatheringDataSourceObject(), $post->get_date('Y-m-d H:i:s'), $post->get_title(), $post->get_link());
 		} catch(Exception $e) {}
 
 		if (is_object($item)) {
 			$item->assignFeatureAssignments($post);
-			$item->setAutomaticAggregatorItemTemplate();
+			$item->setAutomaticGatheringItemTemplate();
 			return $item;
 		}
 	}
