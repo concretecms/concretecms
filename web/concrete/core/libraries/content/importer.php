@@ -690,23 +690,23 @@ class Concrete5_Library_Content_Importer {
 			foreach($sx->gatheringitemtemplates->gatheringitemtemplate as $at) {
 				$pkg = ContentImporter::getPackageObject($at['package']);
 				$type = GatheringItemTemplateType::getByHandle((string) $at['type']);
-				$agtHasCustomClass = false;
-				$agtForceDefault = false;
-				$agtFixedSlotWidth = 0;
-				$agtFixedSlotHeight = 0;
+				$gatHasCustomClass = false;
+				$gatForceDefault = false;
+				$gatFixedSlotWidth = 0;
+				$gatFixedSlotHeight = 0;
 				if ($at['has-custom-class']) {
-					$agtHasCustomClass = true;
+					$gatHasCustomClass = true;
 				}
 				if ($at['force-default']) {
-					$agtForceDefault = true;
+					$gatForceDefault = true;
 				}
 				if ($at['fixed-slot-width']) {
-					$agtFixedSlotWidth = (string) $at['fixed-slot-width'];
+					$gatFixedSlotWidth = (string) $at['fixed-slot-width'];
 				}
 				if ($at['fixed-slot-height']) {
-					$agtFixedSlotHeight = (string) $at['fixed-slot-height'];
+					$gatFixedSlotHeight = (string) $at['fixed-slot-height'];
 				}
-				$template = GatheringItemTemplate::add($type, (string) $at['handle'], (string) $at['name'], $agtFixedSlotWidth, $agtFixedSlotHeight, $agtHasCustomClass, $agtForceDefault, $pkg);
+				$template = GatheringItemTemplate::add($type, (string) $at['handle'], (string) $at['name'], $gatFixedSlotWidth, $gatFixedSlotHeight, $gatHasCustomClass, $gatForceDefault, $pkg);
 				foreach($at->children() as $fe) {
 					$feo = Feature::getByHandle((string) $fe['handle']);
 					if (is_object($feo)) { 	
