@@ -1,0 +1,14 @@
+#attributeValuesWrap {margin-top:4px; width: 100%}
+#attributeValuesWrap .akSelectValueWrap{ margin-bottom:2px; border:1px solid #eee; padding:2px;}
+#attributeValuesWrap .akSelectValueWrap:hover{border:1px solid #ddd; }
+#attributeValuesWrap .akSelectValueWrap .leftCol{float:left; }
+#attributeValuesWrap .akSelectValueWrap .rightCol{float:right; text-align:right }
+
+#addAttributeValueWrap{ margin-top:8px }
+#addAttributeValueWrap input.faint{ color:#999 }
+#addAttributeValueWrap a{cursor:pointer}
+
+#allowOtherValuesWrap{margin-top:16px}
+
+
+.akSelectValueWrapSortable:hover {cursor: move}

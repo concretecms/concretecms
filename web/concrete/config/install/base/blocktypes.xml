@@ -1,0 +1,80 @@
+<?xml version="1.0"?>
+<concrete5-cif version="1.0">
+
+    <blocktypes>
+        <blocktype handle="core_area_layout" package=""/>
+        <blocktype handle="core_scrapbook_display" package=""/>
+        <blocktype handle="core_stack_display" package=""/>
+        <blocktype handle="core_gathering_display" package=""/>
+        <blocktype handle="core_conversation" package=""/>
+        <blocktype handle="core_conversation_message" package=""/>
+        <blocktype handle="core_gathering" package=""/>
+        <blocktype handle="dashboard_featured_addon" package=""/>
+        <blocktype handle="dashboard_featured_theme" package=""/>
+        <blocktype handle="dashboard_newsflow_latest" package=""/>
+        <blocktype handle="dashboard_app_status" package=""/>
+        <blocktype handle="dashboard_site_activity" package=""/>
+        <blocktype handle="autonav" package=""/>
+        <blocktype handle="content" package=""/>
+        <blocktype handle="date_nav" package=""/>
+        <blocktype handle="external_form" package=""/>
+        <blocktype handle="file" package=""/>
+        <blocktype handle="flash_content" package=""/>
+        <blocktype handle="form" package=""/>
+        <blocktype handle="google_map" package=""/>
+        <blocktype handle="html" package=""/>
+        <blocktype handle="discussion" package=""/>
+        <blocktype handle="image" package=""/>
+        <blocktype handle="next_previous" package=""/>
+        <blocktype handle="page_list" package=""/>
+        <blocktype handle="rss_displayer" package=""/>
+        <blocktype handle="search" package=""/>
+        <blocktype handle="slideshow" package=""/>
+        <blocktype handle="survey" package=""/>
+        <blocktype handle="tags" package=""/>
+        <blocktype handle="video" package=""/>
+        <blocktype handle="youtube" package=""/>
+    </blocktypes>
+
+	<systemcontenteditorsnippets>
+		<snippet handle="page_name" name="Page Name" package="" activated="1"/>
+		<snippet handle="user_name" name="User Name" package="" activated="1"/>
+	</systemcontenteditorsnippets>
+
+    <blocktypesets>
+        <blocktypeset handle="basic" name="Basic" package="">
+            <blocktype handle="content"/>
+            <blocktype handle="html"/>
+            <blocktype handle="image"/>
+            <blocktype handle="file"/>
+        </blocktypeset>
+        <blocktypeset handle="navigation" name="Navigation" package="">
+            <blocktype handle="autonav"/>
+            <blocktype handle="core_gathering"/>
+            <blocktype handle="page_list"/>
+            <blocktype handle="next_previous"/>
+            <blocktype handle="date_nav"/>
+            <blocktype handle="tags"/>
+            <blocktype handle="rss_displayer"/>
+            <blocktype handle="date_archive"/>
+        </blocktypeset>
+        <blocktypeset handle="form" name="Forms" package="">
+            <blocktype handle="form"/>
+            <blocktype handle="search"/>
+            <blocktype handle="external_form"/>
+        </blocktypeset>
+        <blocktypeset handle="social" name="Social Networking" package="">
+            <blocktype handle="survey"/>
+            <blocktype handle="core_conversation" />
+            <blocktype handle="discussion"/>
+        </blocktypeset>
+        <blocktypeset handle="multimedia" name="Multimedia" package="">
+            <blocktype handle="slideshow"/>
+            <blocktype handle="video"/>
+            <blocktype handle="youtube"/>
+            <blocktype handle="google_map"/>
+            <blocktype handle="flash_content"/>
+        </blocktypeset>
+    </blocktypesets>
+
+</concrete5-cif>

@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<schema version="0.3">
+	<table name="btCoreScrapbookDisplay">
+		<field name="bID" type="I">
+			<key />
+			<unsigned />
+			<notnull />
+		</field>
+		<field name="bOriginalID" type="I">
+			<unsigned />
+			<notnull />
+		</field>
+		<index name="bOriginalID">
+		  <col>bOriginalID</col>
+		</index>
+	</table>
+</schema>

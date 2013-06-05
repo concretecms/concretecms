@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<schema version="0.3">
+	<table name="btPageList">
+		<field name="bID" type="I">
+			<key />
+			<unsigned />
+		</field>
+		<field name="num" type="I2">
+			<unsigned />
+			<notnull />
+		</field>
+		<field name="orderBy" type="C" size="32">
+			<descr>Was enum, display_asc','display_desc','chrono_asc','chrono_desc','alpha_asc','alpha_desc','score_asc','score_desc'</descr>
+		</field>
+		<field name="cParentID" type="I">
+			<unsigned />
+			<notnull />
+			<default value="1" />
+		</field>
+		<field name="cThis" type="I1">
+			<unsigned />
+			<notnull />
+			<default value="0" />
+		</field>
+		<field name="includeAllDescendents" type="I1">
+			<unsigned />
+			<notnull />
+			<default value="0" />
+		</field>
+		<field name="paginate" type="I1">
+			<unsigned />
+			<notnull />
+			<default value="0" />
+		</field>
+		<field name="displayAliases" type="I1">
+			<unsigned />
+			<notnull />
+			<default value="1" />
+		</field>
+		
+		<field name="ctID" type="I2">
+			<unsigned />
+		</field>
+		<field name="rss" type="I">
+			<default value="0"/>
+		</field>
+		<field name="rssTitle" type="C" size="255">
+		</field>
+		<field name="rssDescription" type="X2">
+		</field>		
+		<field name="truncateSummaries" type="I">
+			<default value="0"/>
+		</field>
+		<field name="displayFeaturedOnly" type="I">
+			<default value="0"/>
+		</field>
+		<field name="truncateChars" type="I">
+			<default value="128"/>
+		</field>		
+	</table>
+</schema>

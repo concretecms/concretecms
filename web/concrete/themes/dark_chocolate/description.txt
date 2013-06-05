@@ -1,0 +1,2 @@
+Dark Chocolate
+Dark Chocolate is concrete5's default theme in black.

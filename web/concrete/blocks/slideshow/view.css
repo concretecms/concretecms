@@ -1,0 +1,3 @@
+.ccm-SlideshowBlock-display{ position:relative; width:100%; height:auto; clear: both;}
+.ccm-SlideshowBlock-display .slideImgWrap{ position:absolute; width:100%; height:auto; top:0px; left:0px; }
+.ccm-SlideshowBlock-display .slideImgWrap a {text-decoration:none; }

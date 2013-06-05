@@ -1,0 +1,188 @@
+<?xml version="1.0"?>
+<schema version="0.3">
+
+<!-- add uID and indexes //-->
+
+  <table name="Files">
+    <field name="fID" type="I" size="10">
+      <KEY/>
+      <AUTOINCREMENT/>
+      <UNSIGNED/>
+    </field>
+    <field name="fDateAdded" type="T"/>
+    <field name="uID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="fslID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="ocID" type="I" size="10">
+      <NOTNULL/>
+      <UNSIGNED />
+    </field>
+
+    <field name="fOverrideSetPermissions" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="fPassword" type="C" size="255"/>
+    <index name="fOverrideSetPermissions">
+      <col>fOverrideSetPermissions</col>
+    </index>
+  </table>
+  
+  <table name="FileSetFiles">
+    <field name="fsfID" type="I" size="10">
+      <KEY/>
+      <AUTOINCREMENT/>
+      <UNSIGNED/>
+    </field>  
+    <field name="fID" type="I" size="10">
+      <UNSIGNED/>
+      <NOTNULL/>
+    </field>
+    <field name="fsID" type="I" size="10">
+      <NOTNULL/>
+      <UNSIGNED/>
+    </field>
+    <field name="timestamp" type="T">
+      <NOTNULL/>
+      <DEFTIMESTAMP/>
+    </field>
+    <field name="fsDisplayOrder" type="I" size="10">
+      <UNSIGNED/>
+      <NOTNULL/>
+    </field>
+     <index name="fID">
+      <col>fID</col>
+    </index>
+    <index name="fsID">
+      <col>fsID</col>
+    </index>
+  </table>
+  
+   <table name="Pages">
+    <field name="cID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="ctID" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="cIsTemplate" type="C" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="uID" type="I" size="10">
+      <UNSIGNED/>
+    </field>
+    <field name="cIsCheckedOut" type="I1" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="cCheckedOutUID" type="I" size="10">
+      <UNSIGNED/>
+    </field>
+    <field name="cCheckedOutDatetime" type="T"/>
+    <field name="cCheckedOutDatetimeLastEdit" type="T"/>
+    <field name="cOverrideTemplatePermissions" type="I1" size="1">
+      <NOTNULL/>
+      <DEFAULT value="1"/>
+    </field>
+    <field name="cInheritPermissionsFromCID" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED />
+    </field>
+    <field name="cInheritPermissionsFrom" type="C" size="8">
+      <NOTNULL/>
+      <DEFAULT value="PARENT"/>
+    </field>
+    <field name="cFilename" type="C" size="255"/>
+    <field name="cPointerID" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="cPointerExternalLink" type="C" size="255"/>
+    <field name="cPointerExternalLinkNewWindow" type="I1" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+
+    <field name="cChildren" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="cDisplayOrder" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED />
+    </field>
+    <field name="cParentID" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="pkgID" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="ptID" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="cCacheFullPageContent" type="I" size="4">
+      <NOTNULL/>
+      <DEFAULT value="-1"/>
+    </field>
+    <field name="cCacheFullPageContentOverrideLifetime" type="C" size="32">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="cCacheFullPageContentLifetimeCustom" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <index name="cParentID">
+      <col>cParentID</col>
+    </index>
+     <index name="cCheckedOutUID">
+      <col>cCheckedOutUID</col>
+    </index>
+    <index name="cPointerID">
+      <col>cIsTemplate</col>
+    </index>
+    <index name="uID">
+      <col>uID</col>
+    </index>
+    <index name="ctID">
+      <col>ctID</col>
+    </index>
+    <index name="cPointerID">
+      <col>cPointerID</col>
+    </index>
+  </table>
+  
+  <table name="FileSetSavedSearches">
+    <field name="fsID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="fsSearchRequest" type="X"/>
+    <field name="fsResultColumns" type="X"/>
+  </table>
+
+</schema>

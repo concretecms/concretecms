@@ -1,0 +1,16 @@
+div.ccm-social-link-service {
+	display: inline-block;
+}
+
+div.ccm-social-link-service-icon, div.ccm-social-link-service-info {
+	display: inline-block;
+	vertical-align: middle;
+}
+
+div.ccm-social-link-service-icon {
+	margin-right: 5px;
+}
+
+div.ccm-social-link-service-info {
+	margin-right: 20px;
+}

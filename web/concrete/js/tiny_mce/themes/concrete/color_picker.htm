@@ -1,0 +1,39 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>{#advanced_dlg.colorpicker_title}</title>
+	<script type="text/javascript" src="../../tiny_mce_popup.js"></script>
+	<script type="text/javascript" src="../../utils/mctabs.js"></script>
+	<script type="text/javascript" src="js/color_picker.js"></script>
+	<style type="text/css">@import "../../../../css/ccm.app.css";</style>
+	<style type="text/css">@import "../../../../css/ccm.tinymce.css";</style>
+</head>
+<body id="colorpicker" style="display: none">
+<form onsubmit="insertAction();return false" action="#">
+
+	<div class="panel_wrapper">
+		<div id="picker_panel" class="panel current">
+			<div id="picker">
+				<img id="colors" src="img/colorpicker.jpg" onclick="computeColor(event)" onmousedown="isMouseDown = true;return false;" onmouseup="isMouseDown = false;" onmousemove="if (isMouseDown && isMouseOver) computeColor(event); return false;" onmouseover="isMouseOver=true;" onmouseout="isMouseOver=false;" alt="" />
+
+				<div id="light">
+					<!-- Will be filled with divs -->
+				</div>
+
+				<br style="clear: both" />
+			</div>
+		</div>
+	</div>
+
+	<div class="mceActionPanel ccm-ui">
+		<input type="submit" class="btn" id="insert" name="insert" value="{#apply}" />
+
+		<div id="preview"></div>
+
+		<div id="previewblock">
+			<label for="color">{#advanced_dlg.colorpicker_color}</label> <input id="color" type="text" size="8" maxlength="8" class="text mceFocus" />
+		</div>
+	</div>
+</form>
+</body>
+</html>

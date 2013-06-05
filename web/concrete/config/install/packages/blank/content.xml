@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<concrete5-cif version="1.0">
+    <pagetypes>
+        <pagetype icon="right_sidebar.png" handle="right_sidebar" name="Right Sidebar" package="" />
+    </pagetypes>
+    <pages>
+	<page name="Home" path="" filename="" pagetype="right_sidebar" description="" package="">
+	</page>
+    </pages>
+</concrete5-cif>

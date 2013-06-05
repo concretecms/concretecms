@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<schema version="0.3">
+	<table name="atAddressCustomCountries">
+    <field name="atAddressCustomCountryID" type="I" size="10">
+      <KEY/>
+      <AUTOINCREMENT/>
+      <UNSIGNED/>
+    </field>
+    <field name="akID" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="country" type="C" size="5">
+      <NOTNULL/>
+    </field>
+  </table>
+  <table name="atAddressSettings">
+    <field name="akID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="akHasCustomCountries" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="akDefaultCountry" type="C" size="12"/>
+  </table>
+</schema>

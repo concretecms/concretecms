@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<schema version="0.3">
+	<table name="btSearch">
+		<field name="bID" type="I">
+			<key />
+			<unsigned />
+		</field>
+		<field name="title" type="C" size="255">
+		</field>
+		<field name="buttonText" type="C" size="128">
+		</field>
+		<field name="baseSearchPath" type="C" size="255">
+		</field>
+		<field name="postTo_cID" type="C" size="255">
+		</field>
+		<field name="resultsURL" type="C" size="255">
+		</field>
+	</table>
+</schema>

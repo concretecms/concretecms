@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<schema version="0.3">
+	<table name="btCoreStackDisplay">
+		<field name="bID" type="I">
+			<key />
+			<unsigned />
+			<notnull />
+		</field>
+		<field name="stID" type="I">
+			<unsigned />
+			<notnull />
+		</field>
+	</table>
+</schema>

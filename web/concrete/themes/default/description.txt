@@ -1,0 +1,2 @@
+Plain Yogurt
+Plain Yogurt is concrete5's default theme.

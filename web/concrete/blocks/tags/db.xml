@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<schema version="0.3">
+	<table name="btTags">
+		<field name="bID" type="I">
+			<key />
+			<unsigned />
+		</field>
+		<field name="title" type="C" size="255"></field>
+		<field name="targetCID" type="I"></field>
+		<field name="displayMode" type="C" size="20">
+			<default value="page"/>
+		</field>
+		<field name="cloudCount" type="I">
+			<default value="10"/>
+		</field>
+	</table>
+</schema>

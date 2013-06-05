@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<concrete5-cif version="1.0">
+	<config>
+		<SITE_DEBUG_LEVEL>1</SITE_DEBUG_LEVEL>
+		<ENABLE_LOG_EMAILS>1</ENABLE_LOG_EMAILS>
+		<ENABLE_LOG_ERRORS>1</ENABLE_LOG_ERRORS>
+		<FULL_PAGE_CACHE_GLOBAL>0</FULL_PAGE_CACHE_GLOBAL>
+		<ENABLE_MARKETPLACE_SUPPORT>1</ENABLE_MARKETPLACE_SUPPORT>
+		<ANTISPAM_LOG_SPAM>1</ANTISPAM_LOG_SPAM>
+		<ENABLE_BLOCK_CACHE>1</ENABLE_BLOCK_CACHE>
+		<ENABLE_OVERRIDE_CACHE>1</ENABLE_OVERRIDE_CACHE>
+	</config>
+
+	<!-- Default Banned Words, these are run through Rot13 -->
+	<banned_words>
+		<banned_word>shpx</banned_word><!-- Fu** -->
+		<banned_word>fuvg</banned_word><!-- Sh** -->
+		<banned_word>ovgpu</banned_word> <!-- Bi*** -->
+		<banned_word>nff</banned_word> <!-- A** -->
+	</banned_words>
+
+	<!-- Conversation Flag Types -->
+	<flag_types>
+		<flag_type>spam</flag_type>
+	</flag_types>
+</concrete5-cif>

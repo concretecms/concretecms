@@ -1,0 +1,84 @@
+<?
+defined('C5_EXECUTE') or die("Access Denied.");
+
+class Concrete5_Model_GroupSetPermissionAccessEntity extends PermissionAccessEntity {
+	
+	protected $groupset;
+	
+	public function getGroupSet() {
+		return $this->groupset;
+	}
+	
+	public function getAccessEntityTypeLinkHTML() {
+		$html = '<a href="' . REL_DIR_FILES_TOOLS_REQUIRED . '/permissions/dialogs/access/entity/types/group_set" dialog-width="400" dialog-height="300" class="dialog-launch" dialog-modal="false" dialog-title="' . t('Add Group Set') . '">' . t('Group Set') . '</a>';
+		return $html;
+	}
+
+	public static function getAccessEntitiesForUser($user) {
+		$entities = array();
+		$ingids = array();
+		$db = Loader::db();
+		foreach($user->getUserGroups() as $key => $val) {
+			$ingids[] = $key;
+		}
+		$instr = implode(',',$ingids);
+		$peIDs = $db->GetCol('select peID from PermissionAccessEntityGroupSets paegs inner join GroupSetGroups gsg on paegs.gsID = gsg.gsID where gsg.gID in (' . $instr . ')');
+		if (is_array($peIDs)) {
+			foreach($peIDs as $peID) { 
+				$entity = PermissionAccessEntity::getByID($peID);
+				if (is_object($entity)) { 
+					$entities[] = $entity;
+				}
+			}
+		}
+
+		return $entities;		
+	}
+	
+	public function getAccessEntityUsers(PermissionAccess $pa) {
+		$groups = $this->groupset->getGroups();
+		$users = array();
+		$ingids = array();
+		$db = Loader::db();
+		foreach($user->getUserGroups() as $key => $val) {
+			$ingids[] = $key;
+		}
+		$instr = implode(',',$ingids);
+		$r = $db->Execute('select uID from UserGroups where gID in (' . $instr . ')');
+		$users = array();
+		while ($row = $r->FetchRow()) {
+			$ui = UserInfo::getByID($row['uID']);
+			if (is_object($ui)) {
+				$users[] = $ui;
+			}
+		}
+		return $users;
+	}
+
+	public static function getOrCreate(GroupSet $gs) {
+		$db = Loader::db();
+		$petID = $db->GetOne('select petID from PermissionAccessEntityTypes where petHandle = \'group_set\'');
+		$peID = $db->GetOne('select pae.peID from PermissionAccessEntities pae inner join PermissionAccessEntityGroupSets paeg on pae.peID = paeg.peID where petID = ? and paeg.gsID = ?', 
+			array($petID, $gs->getGroupSetID()));
+		if (!$peID) { 
+			$db->Execute("insert into PermissionAccessEntities (petID) values(?)", array($petID));
+			Config::save('ACCESS_ENTITY_UPDATED', time());
+			$peID = $db->Insert_ID();
+			$db->Execute('insert into PermissionAccessEntityGroupSets (peID, gsID) values (?, ?)', array($peID, $gs->getGroupSetID()));
+		}
+		return PermissionAccessEntity::getByID($peID);
+	}
+	
+	public function load() {
+		$db = Loader::db();
+		$gsID = $db->GetOne('select gsID from PermissionAccessEntityGroupSets where peID = ?', array($this->peID));
+		if ($gsID) {
+			$gs = GroupSet::getByID($gsID);
+			if (is_object($gs)) {
+				$this->groupset = $gs;
+				$this->label = $gs->getGroupSetName();
+			}
+		}
+	}
+
+}

@@ -1,0 +1,10 @@
+/* CSS Document */
+.spellingSuggestBox{ border:1px solid #999; overflow: visible; padding:2px; background:#f9f9f9; position:relative; z-index:2}
+.spellingSuggestBox .correctedHTML{overflow:auto} 
+.spellingSuggestBox .misspelled{ color:#FF0000; text-decoration:underline; cursor:pointer }
+.spellingSuggestBox .misspelled.fixed{ color: #009900; text-decoration:underline; cursor:pointer }
+.spellingSuggestBox #suggestPopup{ border: 1px solid #999; background:#ddeeFF; padding:1px; position:absolute; top:0px; left:0px; display:none; overflow:auto; z-index:10 }
+.spellingSuggestBox #suggestPopup .suggestion a{ display:block; background:#d8e9Fa; color:#333; padding:1px 4px; font-size:12px; line-height:16px }
+.spellingSuggestBox #suggestPopup .suggestion a:hover{ display:block; background:#f6faFF; color:#333 }
+
+#overlay .checkSpellingTrigger a{color:#FF9900}

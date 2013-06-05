@@ -1,0 +1,50 @@
+div.ccm-menu {
+	z-index: 9999;
+	font-family: "Lucida Grande", Arial, Helvetica;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	width:160px;
+	background-color: #ededed;
+	border: 1px solid #ddd;
+	-webkit-border-radius: 10px; -moz-border-radius: 10px; border-radius: 10px;
+	margin: 0px 0px 0px 10px;
+	-webkit-box-shadow: 4px 4px 10px rgba(0,0,0,0.2), -4px 0px 10px rgba(0,0,0,0.2); -moz-box-shadow: 4px 4px 10px rgba(0,0,0,0.2), -4px 0px 10px rgba(0,0,0,0.2); box-shadow: 4px 4px 10px rgba(0,0,0,0.2), -4px 0px 10px rgba(0,0,0,0.2);
+
+}
+
+div.ccm-menu * {
+	font-family: "Lucida Grande", Arial, Helvetica;
+}
+
+div.ccm-menu a {
+	display: block;
+	padding: 4px 10px 4px 10px;
+	color: #666;
+	text-decoration: none;
+	font-size: 10px;
+	margin: 0px;
+}
+
+div.ccm-menu a.ccm-icon { padding: 0px; }
+div.ccm-menu a.ccm-icon-disabled { /* filter:alpha(opacity=50); opacity: 0.5; */ color: #aaa; }
+
+
+div.ccm-menu a:hover {
+	background: transparent url(../images/bg_menu_active.png) repeat-x scroll;
+}
+
+div.ccm-menu li.header {font-size: 0px; height: 1px; background-color: #afafaf !important; line-height: 1px !important; margin: 4px 0px 4px 0px !important; border: 0px !important}
+
+div.ccm-menu ul {margin: 12px 0px 12px 0px; padding: 0px !important; }
+div.ccm-menu ul li {line-height: 16px; margin: 0px !important; display: block; text-align: left; list-style-type: none; font-size: 10px; padding: 0px !important}
+div.ccm-menu ul li a.ccm-icon span {display: block; background-color: transparent; background-repeat: no-repeat; background-position: 9px 4px; padding: 3px 10px 3px 30px !important;}
+
+div.ccm-page-type-icon {white-space: nowrap; width: auto; float: left; margin-right: 5px; min-width: 130px}
+div.ccm-dialog-content div.ccm-pane-bc {display: none}
+
+
+/* notification */
+div#ccm-notification {position: fixed; display: none; top: 60px; border: 1px solid #d7d7d7; -khtml-border-radius: 8px; -webkit-border-radius: 8px; -moz-border-radius: 8px; color: #333; background: #fff; right: 10px; -webkit-box-shadow: 0px 2px 2px rgba(0,0,0,0.1); -moz-box-shadow: 0px 2px 2px rgba(0,0,0,0.1); padding-right: 8px; padding-bottom: 6px; padding-left: 8px; padding-top: 6px; z-index: 500; font-size: 14px;}
+div#ccm-notification a {color: #444; text-decoration: underline}
+div#ccm-notification h3 {font-size: 16px; font-weight: bold; margin: 2px 0px 2px 0px; padding: 0px; line-height: 16px; color: #444}
+img#ccm-notification-icon {margin-right: 6px; margin-top: 2px; opacity: 0.5}
