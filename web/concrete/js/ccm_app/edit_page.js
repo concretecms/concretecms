@@ -321,7 +321,7 @@ var CCMEditMode = function() {
 				// got to grab the message too, eventually
 				$d = $('[data-block-id=' + bID + '][data-area-id=' + aID + ']');
 				$d.hide().remove();
-				$.fn.ccmmenu.resethighlighter();
+				$.fn.ccmmenu.reset();
 				ccmAlert.hud(ccmi18n.deleteBlockMsg, 2000, 'delete_small', ccmi18n.deleteBlock);
 				var tb = parseInt($('[data-area-id=' + aID + ']').attr('data-total-blocks'));
 				$('[data-area-id=' + aID + ']').attr('data-total-blocks', tb - 1);
