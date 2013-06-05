@@ -53,9 +53,9 @@ if (is_object($cnv)) {
 
 	$summary = $ml->getSummary();
 	$totalPages = $summary->pages;
-
 	$args = array(
-		'cID' => $cID,
+		'cID' => $_POST['cID'],
+		'bID' => $_POST['blockID'],
 		'conversation' => $cnv,
 		'messages' => $ml->getPage(),
 		'displayMode' => $displayMode,
@@ -68,8 +68,10 @@ if (is_object($cnv)) {
 		'enableOrdering' => $enableOrdering,
 		'displayPostingForm' => $_POST['displayPostingForm'],
 		'insertNewMessages' => $_POST['insertNewMessages'],
-		'enableCommentRating' => $_POST['enableCommentRating']
+		'enableCommentRating' => $_POST['enableCommentRating'],
+		'dateFormat' => $_POST['dateFormat'], 
+		'customDateFormat' => $_POST['customDateFormat'],
+		'blockAreaHandle' => $_POST['blockAreaHandle']
 	);
-	
 	Loader::element('conversation/display', $args);
 }

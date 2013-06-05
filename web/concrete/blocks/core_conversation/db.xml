@@ -46,6 +46,22 @@
 			<notnull />
 			<default value="" />
 		</field>
+		<field name="dateFormat" type="C" size="255">
+			<notnull />
+			<default value="default" />
+		</field>
+		<field name="customDateFormat" type="C" size="255">
+		</field>
+		<field name="maxFilesGuest" type="I">
+		</field>
+		<field name="maxFilesRegistered" type="I">
+		</field>
+		<field name="maxFileSizeGuest" type="I">
+		</field>
+		<field name="maxFileSizeRegistered" type="I">
+		</field>
+		<field name="fileExtensions" type="X">
+		</field>
 		<field name="insertNewMessages" type="C" size="255">
 			<notnull />
 			<default value="top" />
