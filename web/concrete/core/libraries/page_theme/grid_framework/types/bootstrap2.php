@@ -50,15 +50,15 @@ class Concrete5_Library_Bootstrap2PageThemeGridFramework extends PageThemeGridFr
 		return $offsets;	
 	}
 
-	public function getAggregatorGridItemMargin() {
+	public function getGatheringGridItemMargin() {
 		return 20;
 	}
 
-	public function getAggregatorGridItemWidth() {
+	public function getGatheringGridItemWidth() {
 		return 146;
 	}
 
-	public function getAggregatorGridItemHeight() {
+	public function getGatheringGridItemHeight() {
 		return 146;
 	}
 

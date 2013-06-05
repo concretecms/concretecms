@@ -89,8 +89,8 @@ var CCMEditMode = function() {
 	 		success: function(r) {
 	 			ccm_parseJSON(r, function() {
 	 				jQuery.fn.dialog.hideLoader();
-	 				if (sourceBlockTypeHandle == 'core_aggregator_item') {
-	 					destination.find('div[data-aggregator-item-id=' + sourceBlockID + ']').remove();
+	 				if (sourceBlockTypeHandle == 'core_gathering_item') {
+	 					destination.find('div[data-gathering-item-id=' + sourceBlockID + ']').remove();
 	 					CCMEditMode.parseBlockResponse(r, r.bID, 'add');
 	 				} else {
 		 				if (source && destination) {
@@ -174,8 +174,8 @@ var CCMEditMode = function() {
 					ui.draggable.appendTo($(this).find('.ccm-area-block-list'));
 					var itemID = ui.draggable.attr('data-block-id');
 					var btHandle = ui.draggable.attr('data-block-type-handle');
-					if (btHandle == 'core_aggregator_item') {
-						var itemID = ui.draggable.attr('data-aggregator-item-id');
+					if (btHandle == 'core_gathering_item') {
+						var itemID = ui.draggable.attr('data-gathering-item-id');
 					}
 					saveArrangement(itemID, ui.draggable.attr('data-area-id'), $(this).attr('data-area-id'), btHandle);
 				}
@@ -193,7 +193,7 @@ var CCMEditMode = function() {
 			tolerance: 'pointer',
 			accept: function($item) {
 				var btHandle = $item.attr('data-block-type-handle');
-				if (btHandle == 'core_aggregator_item') {
+				if (btHandle == 'core_gathering_item') {
 					return false;
 				}
 
@@ -219,8 +219,8 @@ var CCMEditMode = function() {
 				} else {
 					var itemID = ui.draggable.attr('data-block-id');
 					var btHandle = ui.draggable.attr('data-block-type-handle');
-					/*if (btHandle == 'core_aggregator_item') {
-						var itemID = ui.draggable.attr('data-aggregator-item-id');
+					/*if (btHandle == 'core_gathering_item') {
+						var itemID = ui.draggable.attr('data-gathering-item-id');
 					}*/
 
 					var arID = ui.draggable.attr('data-area-id');

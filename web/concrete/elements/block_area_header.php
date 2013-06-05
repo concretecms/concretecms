@@ -9,13 +9,13 @@ if ($a->isGlobalArea()) {
 	$class .= ' ccm-global-area';
 }
 
-$canAddAggregator = false;
+$canAddGathering = false;
 
 foreach($blockTypes as $bt) {
 	if ($ap->canAddBlockToArea($bt)) {
 		$handles .= $bt->getBlockTypeHandle() . ' ';
-		if ($bt->getBlockTypeHandle() == BLOCK_HANDLE_AGGREGATOR) {
-			$canAddAggregator = true;
+		if ($bt->getBlockTypeHandle() == BLOCK_HANDLE_GATHERING) {
+			$canAddGathering = true;
 		}
 	}
 }
@@ -24,8 +24,8 @@ if ($ap->canAddLayout()) {
 	$handles .= BLOCK_HANDLE_LAYOUT_PROXY . ' ';
 }
 
-if ($canAddAggregator) {
-	$handles .= BLOCK_HANDLE_AGGREGATOR_ITEM_PROXY . ' ';
+if ($canAddGathering) {
+	$handles .= BLOCK_HANDLE_GATHERING_ITEM_PROXY . ' ';
 }
 
 ?>

@@ -17,7 +17,7 @@
         <category handle="basic_workflow" package=""/>
         <category handle="composer" package=""/>
         <category handle="composer_draft" package=""/>
-        <category handle="aggregator" package=""/>
+        <category handle="gathering" package=""/>
     </permissioncategories>
 
     <permissionkeys>
