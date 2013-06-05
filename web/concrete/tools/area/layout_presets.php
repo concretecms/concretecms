@@ -18,6 +18,8 @@ if (!$pk->validate()) {
 	die(t('Access Denied'));
 }
 
+
+
 if (Loader::helper('validation/token')->validate('layout_presets')) { 
 
 	if ($_REQUEST['task'] == 'submit_delete') {
@@ -32,18 +34,19 @@ if (Loader::helper('validation/token')->validate('layout_presets')) {
 		exit;
 	}
 
+	$arLayout = AreaLayout::getByID($_REQUEST['arLayoutID']);
+	if (!is_object($arLayout)) {
+		die(t('Invalid layout object.'));
+	}
+
 	if ($_POST['submit']) {
 		
-		$cnt = new CoreAreaLayoutBlockController();
-		$arLayout = $cnt->addFromPost($_POST);
-		if (is_object($arLayout)) {
-			if ($_POST['arLayoutPresetID'] == '-1') {
-				$preset = AreaLayoutPreset::add($arLayout, $_POST['arLayoutPresetName']);
-			} else {
-				$existingPreset = AreaLayoutPreset::getByID($_POST['arLayoutPresetID']);
-				if (is_object($existingPreset)) {
-					$existingPreset->updateAreaLayoutObject($arLayout);
-				}
+		if ($_POST['arLayoutPresetID'] == '-1') {
+			$preset = AreaLayoutPreset::add($arLayout, $_POST['arLayoutPresetName']);
+		} else {
+			$existingPreset = AreaLayoutPreset::getByID($_POST['arLayoutPresetID']);
+			if (is_object($existingPreset)) {
+				$existingPreset->updateAreaLayoutObject($arLayout);
 			}
 		}
 
@@ -51,13 +54,12 @@ if (Loader::helper('validation/token')->validate('layout_presets')) {
 		exit;
 	}
 
-$presetlist = AreaLayoutPreset::getList();
-$presets = array();
-$presets['-1'] = t('** New');
-foreach($presetlist as $preset) {
-	$presets[$preset->getAreaLayoutPresetID()] = $preset->getAreaLayoutPresetName();
-}
-
+	$presetlist = AreaLayoutPreset::getList();
+	$presets = array();
+	$presets['-1'] = t('** New');
+	foreach($presetlist as $preset) {
+		$presets[$preset->getAreaLayoutPresetID()] = $preset->getAreaLayoutPresetName();
+	}
 
 ?>
 
@@ -65,6 +67,7 @@ foreach($presetlist as $preset) {
 
 <form method="post" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/area/layout_presets" id="ccm-layout-save-preset-form">
 	<?=Loader::helper('validation/token')->output('layout_presets')?>
+	<input type="hidden" value="<?=Loader::helper('security')->sanitizeInt($_REQUEST['arLayoutID'])?>" name="arLayoutID" />
 
 	<? if ($_REQUEST['task'] == 'delete' || $_REQUEST['task'] == 'submit_delete') { ?>
 
@@ -90,14 +93,14 @@ foreach($presetlist as $preset) {
 	<div class="control-group">
 		<label class="control-label" for="arLayoutPresetID"><?=t('Save as Preset')?></label>
 		<div class="controls">
-			<?=Loader::helper('form')->select('arLayoutPresetID', $presets, array('style' => 'width: 300px'))?>
+			<?=Loader::helper('form')->select('arLayoutPresetID', $presets, array('class' => 'span3'))?>
 		</div>
 	</div>
 
 	<div class="control-group" id="ccm-layout-save-preset-name">
 		<label class="control-label" for="arLayoutPresetName"><?=t('New Preset Name')?></label>
 		<div class="controls">
-			<input type="text" name="arLayoutPresetName" id="arLayoutPresetName" class="span4" />
+			<input type="text" name="arLayoutPresetName" id="arLayoutPresetName" class="span3" />
 		</div>
 	</div>
 

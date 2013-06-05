@@ -40,7 +40,6 @@ var CCMLayout = function(element, options) {
 		'btnsave': '#ccm-layouts-save-button',
 		'btncancel': '#ccm-layouts-cancel-button',
 		'editing': false,
-		'formview': 'custom',
 		'supportsgrid': false,
 		'gridrowtmpid': 'ccm-theme-grid-temp'
 	}, options);
@@ -49,34 +48,14 @@ var CCMLayout = function(element, options) {
 	this.$toolbar = $(this.options.toolbar);
 
 	this._setupDOM();
-	this._activatePresets();
-	if (this.options.formview == 'choosetype') {
-		this._setupToolbarView(true);
-	} else {
-		this._setupToolbarView();
-	}
+	//this._activatePresets();
+	this._setupToolbarView();
 	this._setupFormSaveAndCancel();
 	this._setupFormEvents();
 
-	switch(this.options.formview) {
-		case 'choosetype':
-			this._updateChooseTypeForm();
-			if (this.usethemegrid) {
-				this._updateThemeGridView();
-			} else {
-				this._updateCustomView();
-			}
-			break;
-		case 'themegrid':
-			this._updateThemeGridView();
-			break;
-		default: // custom
-			this._updateCustomView();
-			break;
-	}
-
+	this._updateChooseTypeForm();
 }
-
+/*
 CCMLayout.prototype._activatePresets = function() {
 	var obj = this;
 	var $presets = this.$toolbar.find('.ccm-dropdown-area-layout-presets li:not(.ccm-dropdown-area-layout-presets-manage) a');
@@ -128,26 +107,26 @@ CCMLayout.prototype._activatePresets = function() {
 		this.$toolbar.find('li[data-area-presets-view=presets]').hide();
 	}		
 }
+*/
 
 // private methods
 CCMLayout.prototype._setupDOM = function() {
 	// form list items
 	this.$formviews = this.$toolbar.find('li[data-grid-form-view]');
 	this.$formviewcustom = this.$toolbar.find('li[data-grid-form-view=custom]');
-	this.$formviewchoosetype = this.$toolbar.find('li[data-grid-form-view=choosetype]');
 	this.$formviewthemegrid = this.$toolbar.find('li[data-grid-form-view=themegrid]');
 
 	// choosetype option
-	this.$usethemegrid = this.$toolbar.find('select[name=useThemeGrid]');
+	this.$selectgridtype = this.$toolbar.find('select[name=gridType]');
 
 	// choosetype + custom
-	this.$selectcolumnscustom = this.$toolbar.find('input[name=columns]');
+	this.$selectcolumnscustom = this.$toolbar.find('input[type=text][name=columns]');
 	this.$customspacing = this.$toolbar.find('input[name=spacing]');
 	this.$customautomatedfrm = this.$toolbar.find('input[name=isautomated]');
 	this.$customautomated = this.$toolbar.find('[data-layout-button=toggleautomated]');
 
 	// choosetype + themegrid
-	this.$selectgridcolumns = this.$toolbar.find('input[name=themeGridColumns]');
+	this.$selectgridcolumns = this.$toolbar.find('input[type=text][name=themeGridColumns]');
 
 	// all
 	this.$savebtn = this.$toolbar.find(this.options.btnsave);
@@ -169,27 +148,34 @@ CCMLayout.prototype._setupFormSaveAndCancel = function() {
 	});
 }
 
-CCMLayout.prototype._setupToolbarView = function(hide) {
+CCMLayout.prototype._setupToolbarView = function() {
 	var obj = this;
 	this.$formviews.each(function(i) {
 		if ($(this).attr('data-grid-form-view') != obj.options.formview) {
-			if (hide) {
-				$(this).hide();
-			} else {
-				$(this).remove();
-			}
+			$(this).hide();
 		}
 	});
 }
 
 CCMLayout.prototype._updateChooseTypeForm = function() {
-	this.usethemegrid = parseInt(this.$usethemegrid.val());
-	if (this.options.formview == 'choosetype' && this.usethemegrid) {
-		this.$formviewcustom.hide();
-		this.$formviewthemegrid.show();
-	} else {
-		this.$formviewthemegrid.hide();
-		this.$formviewcustom.show();
+	switch(this.$selectgridtype.find('option:selected').val()) {
+		case 'FF':
+			this.$formviewthemegrid.hide();
+			this.$formviewcustom.show();
+			this._updateCustomView();
+			break;
+		case 'TG':
+			this.$formviewcustom.hide();
+			this.$formviewthemegrid.show();
+			this._updateThemeGridView();
+			break;
+		default: // a preset
+
+			break;
+	}
+
+	if (this.options.editing) {
+		this.$selectgridtype.prop('disabled', true);
 	}
 }
 
@@ -219,13 +205,8 @@ CCMLayout.prototype._setupFormEvents = function() {
 	this.$selectgridcolumns.on('keyup', function() {
 		obj._updateThemeGridView();
 	});
-	this.$usethemegrid.on('change', function() {
+	this.$selectgridtype.on('change', function() {
 		obj._updateChooseTypeForm();
-		if (obj.usethemegrid) {
-			obj._updateThemeGridView();
-		} else {
-			obj._updateCustomView();
-		}
 	});
 }
 
@@ -658,6 +639,7 @@ CCMLayout.prototype._showCustomSlider = function() {
 
 }
 
+/*
 CCMLayout.prototype._updatePresets = function(r) {
 	var $dd = this.$toolbar.find('.ccm-dropdown-area-layout-presets');
 	$dd.find('li:not(.ccm-dropdown-area-layout-presets-manage)').remove();
@@ -666,60 +648,4 @@ CCMLayout.prototype._updatePresets = function(r) {
 	});
 	this._activatePresets();
 }
-
-// public methods
-CCMLayout.launchPresets = function(selector, token, task) {
-	var url = CCM_TOOLS_PATH + '/area/layout_presets?ccm_token=' + token;
-	if (task) {
-		url += '&task=' + task;
-	}
-	jQuery.fn.dialog.open({
-		width: 280,
-		height: 200,
-		modal: false,
-		href: url,
-		title: ccmi18n.areaLayoutPresets, 
-		onOpen: function() {
-			$('#ccm-layout-save-preset-form select').on('change', function(r) {
-				if ($(this).val() == '-1') {
-					$('#ccm-layout-save-preset-name').show().focus();
-					$('#ccm-layout-save-preset-override').hide();
-				} else {
-					$('#ccm-layout-save-preset-name').hide();
-					$('#ccm-layout-save-preset-override').show();
-				}
-			}).trigger('change');
-
-			$('.delete-area-layout-preset').ccmlayoutpresetdelete({'selector': selector, 'token': token});
-
-			$('#ccm-layout-save-preset-form').on('submit', function() {
-
-				$.fn.dialog.showLoader();
-				
-				var data = $(selector).data('ccmlayout');
-				var formdata = data.$toolbar.find('select, input').serializeArray().
-				concat(data.$element.find('input').serializeArray()).
-				concat($('#ccm-layout-save-preset-form').serializeArray());
-
-				formdata.push({'name': 'submit', 'value': 1});	
-
-				$.ajax({
-					url: url,
-					type: 'POST',
-					data: formdata, 
-					dataType: 'json',
-					success: function(r) {
-						$.fn.dialog.hideLoader();
-						$.fn.dialog.closeAll();
-						data._updatePresets(r);
-					}
-				});
-
-				return false;
-			});
-		}
-	});
-
-
-
-}
+*/

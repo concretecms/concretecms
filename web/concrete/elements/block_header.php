@@ -152,10 +152,8 @@ if ($isAlias) {
 			<? if ($canAliasBlockOut) { ?>
 				<li><a dialog-title="<?=t('Setup on Child Pages')?>" dialog-modal="false" dialog-width="550" dialog-height="450" data-menu-action="block_dialog" data-menu-href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_block_popup?btask=child_pages" ><?=t("Setup on Child Pages")?></a></li>		
 			<? } ?>
-
 		<? } ?>
 	<? } ?>
-
 
 	</ul>
 	</div>

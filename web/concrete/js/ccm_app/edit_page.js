@@ -397,6 +397,56 @@ var CCMEditMode = function() {
 			}
 		},
 
+		launchLayoutPresets: function(arLayoutID, token, task) {
+			var url = CCM_TOOLS_PATH + '/area/layout_presets?arLayoutID=' + arLayoutID + '&ccm_token=' + token;
+			if (task) {
+				url += '&task=' + task;
+			}
+			jQuery.fn.dialog.open({
+				width: 280,
+				height: 200,
+				modal: false,
+				href: url,
+				title: ccmi18n.areaLayoutPresets, 
+				onOpen: function() {
+					$('#ccm-layout-save-preset-form select').on('change', function(r) {
+						if ($(this).val() == '-1') {
+							$('#ccm-layout-save-preset-name').show().focus();
+							$('#ccm-layout-save-preset-override').hide();
+						} else {
+							$('#ccm-layout-save-preset-name').hide();
+							$('#ccm-layout-save-preset-override').show();
+						}
+					}).trigger('change');
+					/*
+					$('.delete-area-layout-preset').ccmlayoutpresetdelete({'selector': selector, 'token': token});
+					*/
+
+					$('#ccm-layout-save-preset-form').on('submit', function() {
+
+						$.fn.dialog.showLoader();
+						
+						var formdata = $('#ccm-layout-save-preset-form').serializeArray();
+						formdata.push({'name': 'submit', 'value': 1});
+
+						$.ajax({
+							url: url,
+							type: 'POST',
+							data: formdata, 
+							dataType: 'json',
+							success: function(r) {
+								$.fn.dialog.hideLoader();
+								$.fn.dialog.closeAll();
+							}
+						});
+
+						return false;
+					});
+		
+				}
+			});
+		},
+
 		activateBlockTypesOverlay: function() {
 			$('#ccm-dialog-block-types .ccm-dialog-icon-item-grid-sets ul a').on('click', function() {
 				$('#ccm-overlay-block-types li').hide();
