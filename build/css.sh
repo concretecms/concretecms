@@ -1,5 +1,5 @@
 lessc --verbose -x ../web/concrete/css/ccm_app/build/redactor.less ../web/concrete/css/redactor.css
-lessc --verbose -x ../web/concrete/css/ccm_app/build/ccm.aggregator.less ../web/concrete/css/ccm.aggregator.css
+lessc --verbose -x ../web/concrete/css/ccm_app/build/ccm.gathering.less ../web/concrete/css/ccm.gathering.css
 lessc --verbose -x ../web/concrete/css/ccm_app/build/jquery.ui.less ../web/concrete/css/jquery.ui.css
 lessc --verbose -x ../web/concrete/css/ccm_app/build/jquery.rating.less ../web/concrete/css/jquery.rating.css
 lessc --verbose -x ../web/concrete/css/ccm_app/build/ccm.default.theme.less ../web/concrete/css/ccm.default.theme.css
