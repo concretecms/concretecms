@@ -55,59 +55,6 @@ var CCMLayout = function(element, options) {
 
 	this._updateChooseTypeForm();
 }
-/*
-CCMLayout.prototype._activatePresets = function() {
-	var obj = this;
-	var $presets = this.$toolbar.find('.ccm-dropdown-area-layout-presets li:not(.ccm-dropdown-area-layout-presets-manage) a');
-	if ($presets.length > 0 && (!this.options.editing)) {
-		this.$toolbar.find('li[data-area-presets-view=presets]').show();
-		$presets.on('click', function() {
-			var arLayoutPresetID = $(this).attr('data-area-layout-preset-id');
-			jQuery.fn.dialog.showLoader();
-			var url = CCM_TOOLS_PATH + '/area/layout_presets?arLayoutPresetID=' + arLayoutPresetID + '&task=get_area_layout&ccm_token=' + CCM_SECURITY_TOKEN;
-			$.getJSON(url, function(r) {
-				// set theme grid option
-				if (parseInt(r.arLayout.arLayoutUsesThemeGridFramework)) {
-					obj.$usethemegrid.val(1);
-					obj.$selectgridcolumns.val(r.arLayout.arLayoutNumColumns);
-				} else {
-					obj.$usethemegrid.val(0);
-				}
-
-				obj.$selectcolumnscustom.find('option[value=' + r.arLayout.arLayoutNumColumns + ']').prop('selected', true);
-				obj.$customspacing.val(r.arLayout.arLayoutSpacing);
-				if (parseInt(r.arLayout.arLayoutIsCustom)) {
-					obj.$customautomatedfrm.val(1);
-				} else {
-					obj.$customautomated.val(0);
-				}
-
-
-				obj._updateChooseTypeForm();
-				if (parseInt(r.arLayout.arLayoutUsesThemeGridFramework)) {
-					obj._buildThemeGridGridFromPresetColumns(r.arLayoutColumns);
-				} else {
-					obj._updateCustomView();
-					// have to try and draw columns
-					if (parseInt(r.arLayout.arLayoutIsCustom)) {
-						$.each(r.arLayoutColumns, function(i, column) {
-							obj.columnwidths.push(parseInt(column.arLayoutColumnWidth));
-							var $column = $(obj.$element.find('.ccm-layout-column').get(i));
-							$column.css('width', column.arLayoutColumnWidth + 'px');
-							$('#ccm-edit-layout-column-width-' + i).val(column.arLayoutColumnWidth);
-						});
-						obj._showCustomSlider();
-					}
-				}
-
-				jQuery.fn.dialog.hideLoader();
-			});
-		});
-	} else {
-		this.$toolbar.find('li[data-area-presets-view=presets]').hide();
-	}		
-}
-*/
 
 // private methods
 CCMLayout.prototype._setupDOM = function() {
@@ -697,14 +644,3 @@ CCMLayout.prototype._showCustomSlider = function() {
 	});
 
 }
-
-/*
-CCMLayout.prototype._updatePresets = function(r) {
-	var $dd = this.$toolbar.find('.ccm-dropdown-area-layout-presets');
-	$dd.find('li:not(.ccm-dropdown-area-layout-presets-manage)').remove();
-	$.each(r, function(i, preset) {
-		$dd.prepend('<li><a href="javascript:void(0)" data-area-layout-preset-id=' + preset.arLayoutPresetID + '">' + preset.arLayoutPresetName + '</a></li>');
-	});
-	this._activatePresets();
-}
-*/
