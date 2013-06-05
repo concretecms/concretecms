@@ -80,6 +80,7 @@ abstract class Concrete5_Model_AreaLayout extends Object {
 		}
 		$db = Loader::db();
 		$db->Execute('delete from AreaLayouts where arLayoutID = ?', array($this->arLayoutID));
+		$db->Execute('delete from AreaLayoutPresets where arLayoutID = ?', array($this->arLayoutID));
 	}
 
 }

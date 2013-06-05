@@ -239,9 +239,9 @@ define('FILENAME_BLOCK_ICON', 'icon.png');
 define('FILENAME_BLOCK_CONTROLLER', 'controller.php');
 define('FILENAME_BLOCK_DB', 'db.xml');
 define('BLOCK_HANDLE_SCRAPBOOK_PROXY', 'core_scrapbook_display');
-define('BLOCK_HANDLE_AGGREGATOR_ITEM_PROXY', 'core_aggregator_item');
-define('BLOCK_HANDLE_AGGREGATOR_PROXY', 'core_aggregator_display');
-define('BLOCK_HANDLE_AGGREGATOR', 'core_aggregator');
+define('BLOCK_HANDLE_GATHERING_ITEM_PROXY', 'core_gathering_item');
+define('BLOCK_HANDLE_GATHERING_PROXY', 'core_gathering_display');
+define('BLOCK_HANDLE_GATHERING', 'core_gathering');
 define('BLOCK_HANDLE_LAYOUT_PROXY', 'core_area_layout');
 define('FILENAME_FORM', 'form.php');
 
@@ -415,25 +415,25 @@ if (!defined('DIR_FILES_BIN_ZIP')) {
 }
 if(!defined('DIR_FILES_BIN_ASPELL')) define('DIR_FILES_BIN_ASPELL', '/usr/bin/aspell'); // spellchecker
 
-# Aggregator
-define('BLOCK_HANDLE_AGGREGATOR', 'core_aggregator');
-if (!defined('DIRNAME_AGGREGATOR')) {
-	 define('DIRNAME_AGGREGATOR', 'aggregator');
+# Gathering
+define('BLOCK_HANDLE_GATHERING', 'core_gathering');
+if (!defined('DIRNAME_GATHERING')) {
+	 define('DIRNAME_GATHERING', 'gathering');
 }
-if (!defined('DIRNAME_AGGREGATOR_DATA_SOURCES')) {
-	 define('DIRNAME_AGGREGATOR_DATA_SOURCES', 'data_sources');
+if (!defined('DIRNAME_GATHERING_DATA_SOURCES')) {
+	 define('DIRNAME_GATHERING_DATA_SOURCES', 'data_sources');
 }
-if (!defined('FILENAME_AGGREGATOR_DATA_SOURCE_OPTIONS')) {
-	 define('FILENAME_AGGREGATOR_DATA_SOURCE_OPTIONS', 'options.php');
+if (!defined('FILENAME_GATHERING_DATA_SOURCE_OPTIONS')) {
+	 define('FILENAME_GATHERING_DATA_SOURCE_OPTIONS', 'options.php');
 }
-if (!defined('FILENAME_AGGREGATOR_DATA_SOURCE_OPTIONS')) {
-	 define('FILENAME_AGGREGATOR_DATA_SOURCE_OPTIONS', 'options.php');
+if (!defined('FILENAME_GATHERING_DATA_SOURCE_OPTIONS')) {
+	 define('FILENAME_GATHERING_DATA_SOURCE_OPTIONS', 'options.php');
 }
-if (!defined('DIRNAME_AGGREGATOR_ITEM_TEMPLATES')) {
-	 define('DIRNAME_AGGREGATOR_ITEM_TEMPLATES', 'templates');
+if (!defined('DIRNAME_GATHERING_ITEM_TEMPLATES')) {
+	 define('DIRNAME_GATHERING_ITEM_TEMPLATES', 'templates');
 }
-if (!defined('FILENAME_AGGREGATOR_ITEM_TEMPLATE_ICON')) {
-	 define('FILENAME_AGGREGATOR_ITEM_TEMPLATE_ICON', 'icon.png');
+if (!defined('FILENAME_GATHERING_ITEM_TEMPLATE_ICON')) {
+	 define('FILENAME_GATHERING_ITEM_TEMPLATE_ICON', 'icon.png');
 }
 
 # Asset library constants 

@@ -17,10 +17,11 @@ class Concrete5_Controller_Block_CoreAreaLayout extends BlockController {
 		}
 
 		public function duplicate($newBID) {
+			$db = Loader::db();
+			parent::duplicate($newBID);
 			$ar = AreaLayout::getByID($this->arLayoutID);
 			$nr = $ar->duplicate();
-			$this->record->arLayoutID = $nr->getAreaLayoutID();
-			parent::duplicate($newBID);
+			$db->Execute('update btCoreAreaLayout set arLayoutID = ? where bID = ?', array($nr->getAreaLayoutID(), $newBID));
 		}
 
 		public function getAreaLayoutObject() {
@@ -32,7 +33,9 @@ class Concrete5_Controller_Block_CoreAreaLayout extends BlockController {
 
 		public function delete() {
 			$arLayout = $this->getAreaLayoutObject();
-			$arLayout->delete();
+			if (is_object($arLayout)) {
+				$arLayout->delete();
+			}
 			parent::delete();
 		}
 
@@ -76,28 +79,36 @@ class Concrete5_Controller_Block_CoreAreaLayout extends BlockController {
 
 		public function addFromPost($post) {
 			// we are adding a new layout 
-			if ($post['useThemeGrid']) {
-				$arLayout = ThemeGridAreaLayout::add();
-				$arLayout->setAreaLayoutMaxColumns($post['arLayoutMaxColumns']);
-				for ($i = 0; $i < $post['themeGridColumns']; $i++) {
-					$span = ($post['span'][$i]) ? $post['span'][$i] : 0;
-					$offset = ($post['offset'][$i]) ? $post['offset'][$i] : 0;
-					$column = $arLayout->addLayoutColumn();
-					$column->setAreaLayoutColumnSpan($span);
-					$column->setAreaLayoutColumnOffset($offset);
-				}
-			} else {
-				if ((!$post['isautomated']) && $post['columns'] > 1) {
-					$iscustom = 1;
-				} else {
-					$iscustom = 0;
-				}
-				$arLayout = CustomAreaLayout::add($post['spacing'], $iscustom);
-				for ($i = 0; $i < $post['columns']; $i++) {
-					$width = ($post['width'][$i]) ? $post['width'][$i] : 0;
-					$column = $arLayout->addLayoutColumn();
-					$column->setAreaLayoutColumnWidth($width);
-				}
+			switch($post['gridType']) {
+				case 'TG':
+					$arLayout = ThemeGridAreaLayout::add();
+					$arLayout->setAreaLayoutMaxColumns($post['arLayoutMaxColumns']);
+					for ($i = 0; $i < $post['themeGridColumns']; $i++) {
+						$span = ($post['span'][$i]) ? $post['span'][$i] : 0;
+						$offset = ($post['offset'][$i]) ? $post['offset'][$i] : 0;
+						$column = $arLayout->addLayoutColumn();
+						$column->setAreaLayoutColumnSpan($span);
+						$column->setAreaLayoutColumnOffset($offset);
+					}
+					break;
+				case 'FF':
+					if ((!$post['isautomated']) && $post['columns'] > 1) {
+						$iscustom = 1;
+					} else {
+						$iscustom = 0;
+					}
+					$arLayout = CustomAreaLayout::add($post['spacing'], $iscustom);
+					for ($i = 0; $i < $post['columns']; $i++) {
+						$width = ($post['width'][$i]) ? $post['width'][$i] : 0;
+						$column = $arLayout->addLayoutColumn();
+						$column->setAreaLayoutColumnWidth($width);
+					}
+					break;
+				default: // a preset
+					$arLayoutPreset = AreaLayoutPreset::getByID($post['gridType']);
+					$arLayout = $arLayoutPreset->getAreaLayoutObject();
+					$arLayout = $arLayout->duplicate();
+					break;
 			}
 			return $arLayout;
 		}

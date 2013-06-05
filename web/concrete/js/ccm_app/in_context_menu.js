@@ -16,7 +16,6 @@ $.fn.ccmmenu = function() {
 
 		if (!$this.prop('has-menu')) {
 			$this.prop('has-menu', true);
-			$this.prop('disable-highlight', $this.attr('data-menu-disable-highlight'));
 
 			if (!$this.attr('data-menu-handle')) {
 				$menulauncher = $this;
@@ -26,7 +25,11 @@ $.fn.ccmmenu = function() {
 
 			var $menu = $('#' + $this.attr('data-menu'));
 			$this.$menu = $menu;
-
+			$this.highlightClass = $this.attr('data-menu-highlight-class');
+			$this.highlightOffset = 9;
+			if ($this.attr('data-menu-highlight-offset')) {
+				$this.highlightOffset = $this.attr('data-menu-highlight-offset');
+			}
 			$menulauncher.mousemove(function(e) {
 				$.fn.ccmmenu.over(e, $this, $menulauncher);
 			});
@@ -34,13 +37,42 @@ $.fn.ccmmenu = function() {
 	});
 }
 
+$.fn.ccmmenu.resetHighlight = function() {
+	$.fn.ccmmenu.$highlighter.hide();
+	// remove any highlight classes
+	$('[data-menu-highlight-class]').each(function() {
+		var className = $(this).attr('data-menu-highlight-class');
+		$('.' + className).removeClass(className);
+	});
+}
+
+$.fn.ccmmenu.highlight = function($obj) {
+
+	// we offset this because we're using outlines in the page and we want the highlighter to show up over the items.
+	var offset = $obj.offset();
+	var t = offset.top - $.fn.ccmmenu.$overmenu.highlightOffset;
+	var l = offset.left - $.fn.ccmmenu.$overmenu.highlightOffset;
+	var w = $obj.outerWidth() + ($.fn.ccmmenu.$overmenu.highlightOffset * 2);
+	var h = $obj.outerHeight() + ($.fn.ccmmenu.$overmenu.highlightOffset * 2);
+
+	$.fn.ccmmenu.$highlighter.css('width', w)
+	.css('height', h)
+	.css('top', t)
+	.css('left', l)
+	.css('border-top-left-radius', $obj.css('border-top-left-radius'))
+	.css('border-bottom-left-radius', $obj.css('border-bottom-left-radius'))
+	.css('border-top-right-radius', $obj.css('border-top-right-radius'))
+	.css('border-bottom-right-radius', $obj.css('border-bottom-right-radius'))
+	.removeClass().addClass($.fn.ccmmenu.$overmenu.highlightClass);
+
+	$.fn.ccmmenu.$highlighter.show();
+}
 
 $.fn.ccmmenu.out = function(e) {
 	if (!$.fn.ccmmenu.isactive) {
-		$.fn.ccmmenu.$highlighter.css("opacity", 0);
+		$.fn.ccmmenu.$proxy.css("opacity", 0);
 		$('.ccm-parent-menu-item-active').removeClass('ccm-parent-menu-item-active');
 		$('.ccm-menu-item-active').removeClass('ccm-menu-item-active');
-		$.fn.ccmmenu.$highlighter.removeClass('ccm-highlighter-clicked');
 	}
 }
 
@@ -49,40 +81,47 @@ $.fn.ccmmenu.out = function(e) {
  * that aren't there anymore
  */
 
-$.fn.ccmmenu.resethighlighter = function() {
+$.fn.ccmmenu.reset = function() {
 	$.fn.ccmmenu.disable();
 	$.fn.ccmmenu.enable();
 }
 
 $.fn.ccmmenu.enable = function() {
 	$.fn.ccmmenu.isenabled = true;
-	if ($("#ccm-highlighter").length == 0) {
-		$(document.body).append($("<div />", {'id': 'ccm-highlighter'}));
+	if ($("#ccm-menu-click-proxy").length == 0) {
+		$(document.body).append($("<div />", {'id': 'ccm-menu-click-proxy'}));
 	}
+	if ($("#ccm-menu-highlighter").length == 0) {
+		$(document.body).append($("<div />", {'id': 'ccm-menu-highlighter'}));
+	}
+
 	if ($("#ccm-popover-menu-container").length == 0) {
 		$(document.body).append($("<div />", {'id': 'ccm-popover-menu-container', 'class': 'ccm-ui'}));
 	}
-	$.fn.ccmmenu.$highlighter = $('#ccm-highlighter');
+	$.fn.ccmmenu.$proxy = $('#ccm-menu-click-proxy');
+	$.fn.ccmmenu.$highlighter = $('#ccm-menu-highlighter');
 	$.fn.ccmmenu.$holder = $('#ccm-popover-menu-container');
 
-	$.fn.ccmmenu.$highlighter.on('mouseout.highlighter', function(e) {
+	$.fn.ccmmenu.$proxy.on('mouseout.clickproxy', function(e) {
 		$.fn.ccmmenu.out(e);
 	});
 
-	$.fn.ccmmenu.$highlighter.on('mouseover.highlighter', function(e) {
+	$.fn.ccmmenu.$proxy.on('mouseover.clickproxy', function(e) {
 		$.fn.ccmmenu.over(e);
 	});
 
-	$.fn.ccmmenu.$highlighter.unbind('click.highlighter').on('click.highlighter', function(e) {
-		$.fn.ccmmenu.$highlighter.addClass('ccm-highlighter-clicked');
+	$.fn.ccmmenu.$proxy.unbind('click.clickproxy').on('click.clickproxy', function(e) {
 		$.fn.ccmmenu.showmenu(e, $.fn.ccmmenu.$overmenu.$menu);
+		$.fn.ccmmenu.highlight($.fn.ccmmenu.$overmenu);
+		$.fn.ccmmenu.$overmenu.addClass($.fn.ccmmenu.$overmenu.highlightClass);
 	});
 }
 
 $.fn.ccmmenu.disable = function() {
 	$.fn.ccmmenu.out();
 	$.fn.ccmmenu.isenabled = false;
-	$.fn.ccmmenu.$highlighter.remove();
+	$.fn.ccmmenu.$proxy.remove();
+	$.fn.ccmmenu.resetHighlight();
 }
 
 $.fn.ccmmenu.over = function(e, $this, $menulauncher) {
@@ -91,7 +130,6 @@ $.fn.ccmmenu.over = function(e, $this, $menulauncher) {
 
 		$('.ccm-menu-item-active').removeClass('ccm-menu-item-active');
 		$('.ccm-parent-menu-item-active').removeClass('ccm-parent-menu-item-active');
-		$.fn.ccmmenu.$highlighter.removeClass('ccm-highlighter-clicked');
 
 		if ($menulauncher) {
 
@@ -102,7 +140,7 @@ $.fn.ccmmenu.over = function(e, $this, $menulauncher) {
 			var w = $menulauncher.outerWidth() + 10;
 			var h = $menulauncher.outerHeight() + 10;
 
-			$.fn.ccmmenu.$highlighter.css('width', w)
+			$.fn.ccmmenu.$proxy.css('width', w)
 			.css('height', h)
 			.css('top', t)
 			.css('left', l)
@@ -115,11 +153,6 @@ $.fn.ccmmenu.over = function(e, $this, $menulauncher) {
 		}
 		$.fn.ccmmenu.$overmenu.addClass('ccm-menu-item-active');
 		$.fn.ccmmenu.$overmenu.parent().addClass('ccm-parent-menu-item-active');
-		if ($.fn.ccmmenu.$overmenu.prop('disable-highlight')) {
-			$.fn.ccmmenu.$highlighter.css('opacity', 0);
-		} else {
-			$.fn.ccmmenu.$highlighter.css('opacity', '0.2');
-		}
 	}
 }
 
@@ -127,13 +160,13 @@ $.fn.ccmmenu.hide = function(e) {
 	if (e) {
 		e.stopPropagation();
 	}
-	if ($.fn.ccmmenu.$highlighter) {
+	if ($.fn.ccmmenu.$proxy) {
 		$.fn.ccmmenu.isactive = false;
-		$.fn.ccmmenu.$highlighter.css("opacity", 0);
+		$.fn.ccmmenu.$proxy.css("opacity", 0);
+		$.fn.ccmmenu.resetHighlight();
 		$.fn.ccmmenu.$holder.html('');
 		$('.ccm-menu-item-active').removeClass('ccm-menu-item-active');
 		$('.ccm-parent-menu-item-active').removeClass('ccm-parent-menu-item-active');
-		$.fn.ccmmenu.$highlighter.removeClass('ccm-highlighter-clicked');
 		$(document).unbind('click.disableccmmenu');
 		$('div.popover').css('opacity', 0).hide();
 	}

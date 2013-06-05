@@ -14,7 +14,6 @@ var CCMInlineEditMode = function() {
 			$('#ccm-toolbar-disabled').css('opacity', 1);
 		}, 10);
 		$('div.ccm-block-edit').addClass('ccm-block-edit-disabled');
-		$('div.ccm-area').removeClass('ccm-area').addClass('ccm-area-disabled');
 		$('div.ccm-area-footer-handle').addClass('ccm-block-edit-disabled');
 		$('div.ccm-area-layout-control-bar').addClass('ccm-block-edit-disabled');
 		if (activeObj) {
@@ -28,9 +27,18 @@ var CCMInlineEditMode = function() {
 		var $toolbar = $block.find('.ccm-inline-toolbar'),
 			$holder = $('<div />', {id: 'ccm-inline-toolbar-container'}).appendTo(document.body),
 			$window = $(window),
-			pos = $block.offset();
+			pos = $block.offset(),
+			l = pos.left;
 
-		$toolbar.css('left', pos.left).css('opacity', 1).appendTo($holder);
+		$toolbar.appendTo($holder);
+		var tw = l + parseInt($toolbar.width());
+		if (tw > $window.width()) {
+			var overage = tw - (l + $block.width());
+			$toolbar.css('left', l - overage);
+		} else {
+			$toolbar.css('left', l);
+		}
+		$toolbar.css('opacity', 1);
 		$toolbar.find('.dialog-launch').dialog();
 		var t = pos.top - $holder.outerHeight();
 		$holder.css('top', t).css('opacity', 1);
@@ -64,7 +72,6 @@ var CCMInlineEditMode = function() {
 			$('div.ccm-block-edit').removeClass('ccm-block-edit-disabled');
 			$('div.ccm-area-footer-handle').removeClass('ccm-block-edit-disabled');
 			$('div.ccm-area-layout-control-bar').removeClass('ccm-block-edit-disabled');
-			$('div.ccm-area-disabled').removeClass('ccm-area-disabled').addClass('ccm-area');
 			$('#ccm-toolbar-disabled').remove();
 			$('#ccm-toolbar').css('opacity', 1);
 			$('#ccm-inline-toolbar-container').remove();

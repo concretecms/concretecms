@@ -11,17 +11,30 @@
 	.ccm-layout-column {
 
 		float: left;
-		
+
 	}
 
 	.ccm-layout-column-highlight {
 		min-height: 80px;
-		background-color: #f5fafe;
-		border: 1px solid #6fb0db;
 		padding-top: 1px; /* disable margin collapse inner */
 		border-collapse: collapse;
 	}
 
+}
+
+#ccm-layouts-edit-mode.ccm-layouts-edit-mode-edit {
+
+	.ccm-layout-column-highlight {
+		background-color: #fffff2;
+		border: 1px solid #02cc67;
+	}
+}
+
+#ccm-layouts-edit-mode.ccm-layouts-edit-mode-add {
+	.ccm-layout-column-highlight {
+		background-color: #f5fafe;
+		border: 1px solid #6fb0db;
+	}
 }
 
 div.ccm-area-layout-control-bar-wrapper {
@@ -36,6 +49,8 @@ div.ccm-area-layout-control-bar-wrapper {
 	margin-right: -6px;	
 	padding-left: 6px;
 	padding-right: 6px;	
+	position: relative;
+	z-index: 10;
 }
 
 
@@ -51,6 +66,7 @@ div.ccm-area-layout-control-bar {
 		background: #b3feb3;
 		border: 1px solid #53ba98;
 		.border-radius(2px);
+		cursor: move;
 		width: 12px;
 
 	}

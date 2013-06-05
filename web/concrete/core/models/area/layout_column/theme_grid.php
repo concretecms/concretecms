@@ -34,11 +34,12 @@ class Concrete5_Model_ThemeGridAreaLayoutColumn extends AreaLayoutColumn {
 			$as->disableControls();
 		}
 		$c = $a->getAreaCollectionObject();
-		$as->display($c);
+		$as->load($c);
 		if (!$this->getAreaID()) {
 			$db = Loader::db();
 			$db->Execute('update AreaLayoutColumns set arID = ? where arLayoutColumnID = ?', array($as->getAreaID(), $this->arLayoutColumnID));
 		}
+		$as->display($c);
 	}
 
 

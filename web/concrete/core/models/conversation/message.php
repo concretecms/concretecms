@@ -110,12 +110,12 @@ class Concrete5_Model_Conversation_Message extends Object {
 			case 'elapsed':   // 3 seconds ago, 4 days ago, etc.
 				$timestamp = strtotime($this->cnvMessageDateCreated);
 				$time = array(
-					12 * 30 * 24 * 60 * 60  => 'year',
-	                30 * 24 * 60 * 60  => 'month',
-	                24 * 60 * 60  => 'day',
-	                60 * 60  => 'hour',
-	                60  => 'minute',
-	                1   => 'second'                                   
+					12 * 30 * 24 * 60 * 60  => array(t('year'), t('years')),
+	                30 * 24 * 60 * 60  => array(t('month'), t('months')),
+	                24 * 60 * 60  => array(t('day'), t('days')),
+	                60 * 60  => array(t('hour'), t('hours')),
+	                60  => array(t('minute'), t('minutes')),
+	                1   => array(t('second'), t('seconds'))                                   
                 );
 		                                                         
 		        $ptime = time() - $timestamp;
@@ -129,10 +129,14 @@ class Concrete5_Model_Conversation_Message extends Object {
 			        
 			            $rounded = round($elp);
 						if($rounded > 1)  {
-							$str .= 's';
+							$str = $str[1]; // plural
+			             } else {
+			             	$str = $str[0]; // singular
 			             }
+						 
+						 $ago = t('ago');
 
-			            $elapsed =  t('%s %s ago', $rounded, $str);
+			            $elapsed =  sprintf('%s %s %s', $rounded, $str, $ago);
 			            return $elapsed;
 			        }
 				}
