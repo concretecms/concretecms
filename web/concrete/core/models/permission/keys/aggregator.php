@@ -1,18 +1,18 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Model_AggregatorPermissionKey extends PermissionKey {
+class Concrete5_Model_GatheringPermissionKey extends PermissionKey {
 	
-	public function copyFromDefaultsToAggregator(PermissionKey $pk) {
+	public function copyFromDefaultsToGathering(PermissionKey $pk) {
 		$db = Loader::db();
 		$paID = $pk->getPermissionAccessID();
 		if ($paID) { 
 			$db = Loader::db();
-			$db->Replace('AggregatorPermissionAssignments', array(
-				'agID' => $this->permissionObject->getAggregatorID(), 
+			$db->Replace('GatheringPermissionAssignments', array(
+				'gaID' => $this->permissionObject->getGatheringID(), 
 				'paID' => $paID,
 				'pkID' => $this->getPermissionKeyID()
 				),
-				array('agID', 'pkID'), true);				
+				array('gaID', 'pkID'), true);				
 		}
 	}
 

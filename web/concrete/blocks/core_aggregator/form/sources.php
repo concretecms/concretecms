@@ -10,7 +10,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 	<div class="controls">
 		<select name="addSource" class="span2">
 			<? foreach($availableSources as $ags) { ?>
-			<option value="<?=$ags->getAggregatorDataSourceID()?>"><?=$ags->getAggregatorDataSourceName()?></option>
+			<option value="<?=$ags->getGatheringDataSourceID()?>"><?=$ags->getGatheringDataSourceName()?></option>
 			<? } ?>
 		</select>
 		<button class="btn" type="button" data-submit="add-source"><?=t('Add')?></button>
@@ -18,16 +18,16 @@ defined('C5_EXECUTE') or die("Access Denied.");
 </div>
 </div>
 
-<div id="ccm-aggregator-data-source-templates" style="display: none">
+<div id="ccm-gathering-data-source-templates" style="display: none">
 
 <? foreach($availableSources as $ags) { ?>
 
-<fieldset data-aggregator-data-source-options-form="<?=$ags->getAggregatorDataSourceID()?>">
+<fieldset data-gathering-data-source-options-form="<?=$ags->getGatheringDataSourceID()?>">
 	<div style="margin-bottom: 8px">
-		<input type="hidden" name="agsID[_ags_]" value="<?=$ags->getAggregatorDataSourceID()?>" />
-	<a href="#" style="float: right" data-delete="aggregator-source"><i class="icon-minus-sign"></i></a>
+		<input type="hidden" name="agsID[_ags_]" value="<?=$ags->getGatheringDataSourceID()?>" />
+	<a href="#" style="float: right" data-delete="gathering-source"><i class="icon-minus-sign"></i></a>
 		<? $source = $ags; ?>
-		<? include($ags->getAggregatorDataSourceOptionsForm())?>
+		<? include($ags->getGatheringDataSourceOptionsForm())?>
 		<hr />
 	</div>
 </fieldset>
@@ -36,20 +36,20 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 </div>
 
-<div id="ccm-aggregator-data-source-templates-selected">
+<div id="ccm-gathering-data-source-templates-selected">
 
 <? if (count($activeSources) > 0) { ?>
 <? foreach($activeSources as $key => $configuration) { ?>
 
-	<fieldset data-aggregator-data-source-selected="<?=$configuration->getAggregatorDataSourceID()?>">
+	<fieldset data-gathering-data-source-selected="<?=$configuration->getGatheringDataSourceID()?>">
 		<div style="margin-bottom: 8px">
-			<input type="hidden" name="agsID[<?=$key?>]" value="<?=$configuration->getAggregatorDataSourceID()?>" />
-		<a href="#" style="float: right" data-delete="aggregator-source"><i class="icon-minus-sign"></i></a>
+			<input type="hidden" name="agsID[<?=$key?>]" value="<?=$configuration->getGatheringDataSourceID()?>" />
+		<a href="#" style="float: right" data-delete="gathering-source"><i class="icon-minus-sign"></i></a>
 
 			<?
 			$source = $configuration; 
 			$source->setOptionFormKey($key);
-			include($configuration->getAggregatorDataSourceOptionsForm());
+			include($configuration->getGatheringDataSourceOptionsForm());
 			?>
 			<hr/>
 		</div>
@@ -67,21 +67,21 @@ $(function() {
 	$('button[data-submit=add-source]').on('click', function() {
 		var agsID = $('select[name=addSource]').val();
 		$("span[data-message=no-sources]").remove();
-		var $fds = $('fieldset[data-aggregator-data-source-options-form=' + agsID + ']').clone();
-		$fds.removeAttr('data-aggregator-data-source-options-form').attr('data-aggregator-data-source-selected', agsID).appendTo('#ccm-aggregator-data-source-templates-selected');
-		var totalsources = $('#ccm-aggregator-data-source-templates-selected fieldset[data-aggregator-data-source-selected]').length;
+		var $fds = $('fieldset[data-gathering-data-source-options-form=' + agsID + ']').clone();
+		$fds.removeAttr('data-gathering-data-source-options-form').attr('data-gathering-data-source-selected', agsID).appendTo('#ccm-gathering-data-source-templates-selected');
+		var totalsources = $('#ccm-gathering-data-source-templates-selected fieldset[data-gathering-data-source-selected]').length;
 		var key = totalsources - 1;
 		var html = $fds.html();
-		$('#ccm-aggregator-data-source-templates-selected').trigger('change');
+		$('#ccm-gathering-data-source-templates-selected').trigger('change');
 		html = html.replace(/\[_ags_\]/gi, '[' + key + ']');
 		$fds.html(html);
 	});
-	$('#ccm-aggregator-data-source-templates-selected').on('click', 'a[data-delete=aggregator-source]', function() {
-		$(this).closest('fieldset[data-aggregator-data-source-selected]').remove();
-		var totalsources = $('#ccm-aggregator-data-source-templates-selected fieldset[data-aggregator-data-source-selected]').length;
-		$('#ccm-aggregator-data-source-templates-selected').trigger('change');
+	$('#ccm-gathering-data-source-templates-selected').on('click', 'a[data-delete=gathering-source]', function() {
+		$(this).closest('fieldset[data-gathering-data-source-selected]').remove();
+		var totalsources = $('#ccm-gathering-data-source-templates-selected fieldset[data-gathering-data-source-selected]').length;
+		$('#ccm-gathering-data-source-templates-selected').trigger('change');
 		if (!totalsources) {
-			$('#ccm-aggregator-data-source-templates-selected').html("<span data-message=\"no-sources\"><?=t('You have not added any data sources.')?></span>");
+			$('#ccm-gathering-data-source-templates-selected').html("<span data-message=\"no-sources\"><?=t('You have not added any data sources.')?></span>");
 		}
 		return false;
 	});
@@ -89,7 +89,7 @@ $(function() {
 </script>
 
 <style type="text/css">
-#ccm-aggregator-data-source-templates-selected {
+#ccm-gathering-data-source-templates-selected {
 	margin-top: 18px;
 }
 </style>

@@ -37,9 +37,9 @@ class Concrete5_Library_Content_Importer {
 		$this->importBannedWords($sx);
 		$this->importFeatures($sx);
 		$this->importFeatureCategories($sx);
-		$this->importAggregatorDataSources($sx);
-		$this->importAggregatorItemTemplateTypes($sx);
-		$this->importAggregatorItemTemplates($sx);
+		$this->importGatheringDataSources($sx);
+		$this->importGatheringItemTemplateTypes($sx);
+		$this->importGatheringItemTemplates($sx);
 		$this->importAttributeCategories($sx);
 		$this->importAttributeTypes($sx);
 		$this->importWorkflowTypes($sx);
@@ -666,30 +666,30 @@ class Concrete5_Library_Content_Importer {
 		}
 	}
 
-	protected function importAggregatorDataSources(SimpleXMLElement $sx) {
-		if (isset($sx->aggregatorsources)) {
-			foreach($sx->aggregatorsources->aggregatorsource as $ags) {
+	protected function importGatheringDataSources(SimpleXMLElement $sx) {
+		if (isset($sx->gatheringsources)) {
+			foreach($sx->gatheringsources->gatheringsource as $ags) {
 				$pkg = ContentImporter::getPackageObject($ags['package']);
-				$source = AggregatorDataSource::add((string) $ags['handle'], (string) $ags['name'], $pkg);
+				$source = GatheringDataSource::add((string) $ags['handle'], (string) $ags['name'], $pkg);
 			}
 		}
 	}
 
-	protected function importAggregatorItemTemplateTypes(SimpleXMLElement $sx) {
-		if (isset($sx->aggregatoritemtemplatetypes)) {
-			foreach($sx->aggregatoritemtemplatetypes->aggregatoritemtemplatetype as $at) {
+	protected function importGatheringItemTemplateTypes(SimpleXMLElement $sx) {
+		if (isset($sx->gatheringitemtemplatetypes)) {
+			foreach($sx->gatheringitemtemplatetypes->gatheringitemtemplatetype as $at) {
 				$pkg = ContentImporter::getPackageObject($wt['package']);
-				$type = AggregatorItemTemplateType::add((string) $at['handle'], $pkg);
+				$type = GatheringItemTemplateType::add((string) $at['handle'], $pkg);
 			}
 		}
 	}
 
 
-	protected function importAggregatorItemTemplates(SimpleXMLElement $sx) {
-		if (isset($sx->aggregatoritemtemplates)) {
-			foreach($sx->aggregatoritemtemplates->aggregatoritemtemplate as $at) {
+	protected function importGatheringItemTemplates(SimpleXMLElement $sx) {
+		if (isset($sx->gatheringitemtemplates)) {
+			foreach($sx->gatheringitemtemplates->gatheringitemtemplate as $at) {
 				$pkg = ContentImporter::getPackageObject($at['package']);
-				$type = AggregatorItemTemplateType::getByHandle((string) $at['type']);
+				$type = GatheringItemTemplateType::getByHandle((string) $at['type']);
 				$agtHasCustomClass = false;
 				$agtForceDefault = false;
 				$agtFixedSlotWidth = 0;
@@ -706,11 +706,11 @@ class Concrete5_Library_Content_Importer {
 				if ($at['fixed-slot-height']) {
 					$agtFixedSlotHeight = (string) $at['fixed-slot-height'];
 				}
-				$template = AggregatorItemTemplate::add($type, (string) $at['handle'], (string) $at['name'], $agtFixedSlotWidth, $agtFixedSlotHeight, $agtHasCustomClass, $agtForceDefault, $pkg);
+				$template = GatheringItemTemplate::add($type, (string) $at['handle'], (string) $at['name'], $agtFixedSlotWidth, $agtFixedSlotHeight, $agtHasCustomClass, $agtForceDefault, $pkg);
 				foreach($at->children() as $fe) {
 					$feo = Feature::getByHandle((string) $fe['handle']);
 					if (is_object($feo)) { 	
-						$template->addAggregatorItemTemplateFeature($feo);
+						$template->addGatheringItemTemplateFeature($feo);
 					}
 				}
 			}

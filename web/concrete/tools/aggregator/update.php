@@ -1,14 +1,14 @@
 <? defined('C5_EXECUTE') or die("Access Denied.");
 
 $nh = Loader::helper('validation/numbers');
-if ($_POST['agID'] && $nh->integer($_POST['agID'])) {
-  $aggregator = Aggregator::getByID($_POST['agID']);
-  if (is_object($aggregator) && Loader::helper('validation/token')->validate('update_aggregator_items', $_POST['editToken'])) {
-    $agp = new Permissions($aggregator);
-    if ($agp->canEditAggregatorItems()) {
+if ($_POST['gaID'] && $nh->integer($_POST['gaID'])) {
+  $gathering = Gathering::getByID($_POST['gaID']);
+  if (is_object($gathering) && Loader::helper('validation/token')->validate('update_gathering_items', $_POST['editToken'])) {
+    $agp = new Permissions($gathering);
+    if ($agp->canEditGatheringItems()) {
         switch($_POST['task']) {
           case 'resize':
-            $agi = AggregatorItem::getByID($_POST['agiID']);
+            $agi = GatheringItem::getByID($_POST['agiID']);
             $sw = intval($_POST['agiSlotWidth']);
             $sh = intval($_POST['agiSlotHeight']);
             if (!$sw) {
@@ -18,29 +18,29 @@ if ($_POST['agID'] && $nh->integer($_POST['agID'])) {
               $sh = 1;
             }
             
-            $agi->setAggregatorItemSlotWidth($sw);
-            $agi->setAggregatorItemSlotHeight($sh);
+            $agi->setGatheringItemSlotWidth($sw);
+            $agi->setGatheringItemSlotHeight($sh);
             break;
           case 'update_display_order':
             $displayOrder = 0;
             $batch = time();
             foreach($_POST['agiID'] as $agiID) {
-              $agi = AggregatorItem::getByID($agiID);
-              $agi->setAggregatorItemBatchTimestamp($batch);
-              $agi->setAggregatorItemBatchDisplayOrder($displayOrder);
+              $agi = GatheringItem::getByID($agiID);
+              $agi->setGatheringItemBatchTimestamp($batch);
+              $agi->setGatheringItemBatchDisplayOrder($displayOrder);
               $displayOrder++;
             }
             break;
-          case 'move_to_new_aggregator':
-            $item = AggregatorItem::getByID($_POST['agiID']);
-            $item->moveToNewAggregator($aggregator);
-            $il = new AggregatorItemList($aggregator);
+          case 'move_to_new_gathering':
+            $item = GatheringItem::getByID($_POST['agiID']);
+            $item->moveToNewGathering($gathering);
+            $il = new GatheringItemList($gathering);
             $il->sortByDateDescending();
             $il->setItemsPerPage($_POST['itemsPerPage']);
             $c = Page::getByID($_POST['cID'], 'RECENT');
             if (is_object($c) && !$c->isError()) {
-              Loader::element('aggregator/display', array(
-                'aggregator' => $aggregator,
+              Loader::element('gathering/display', array(
+                'gathering' => $gathering,
                 'list' => $il,
                 'c' => $c
               ));

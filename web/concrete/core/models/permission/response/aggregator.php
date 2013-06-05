@@ -1,10 +1,10 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Model_AggregatorPermissionResponse extends PermissionResponse {
+class Concrete5_Model_GatheringPermissionResponse extends PermissionResponse {
 	
-	public function canEditAggregatorItems() {
-		// Eventually this will be overrideable at a particular aggregator level.
-		$tp = PermissionKey::getByHandle('edit_aggregators');
+	public function canEditGatheringItems() {
+		// Eventually this will be overrideable at a particular gathering level.
+		$tp = PermissionKey::getByHandle('edit_gatherings');
 		return $tp->can();
 	}
 

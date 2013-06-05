@@ -21,11 +21,11 @@ class Concrete5_Model_FeatureDetail extends Object {
 		}
 	}
 	
-	public function getAggregatorItemSuggestedSlotWidth() {
+	public function getGatheringItemSuggestedSlotWidth() {
 		return 0;
 	}
 
-	public function getAggregatorItemSuggestedSlotHeight() {
+	public function getGatheringItemSuggestedSlotHeight() {
 		return 0;
 	}
 

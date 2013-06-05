@@ -4,28 +4,28 @@ $nh = Loader::helper('validation/numbers');
 $form = Loader::helper('form');
 $agiID = intval($_REQUEST['agiID']);
 $agtTypeID = intval($_REQUEST['agtTypeID']);
-$type = AggregatorItemTemplateType::getByID($agtTypeID);
+$type = GatheringItemTemplateType::getByID($agtTypeID);
 $nh = Loader::helper('validation/numbers');
-$item = AggregatorItem::getByID($agiID);
+$item = GatheringItem::getByID($agiID);
 if (is_object($item) && is_object($type)) {
-  $aggregator = $item->getAggregatorObject();
-  $agp = new Permissions($aggregator);
-  if ($agp->canEditAggregatorItems() && Loader::helper('validation/token')->validate('edit_aggregator_item_template', $_REQUEST['token'])) {
+  $gathering = $item->getGatheringObject();
+  $agp = new Permissions($gathering);
+  if ($agp->canEditGatheringItems() && Loader::helper('validation/token')->validate('edit_gathering_item_template', $_REQUEST['token'])) {
     $reloadItemTile = false;
-    if ($type->getAggregatorItemTemplateTypeHandle() == 'tile') {
+    if ($type->getGatheringItemTemplateTypeHandle() == 'tile') {
       $reloadItemTile = true;
     }
 
     if ($_POST['task'] == 'update_item_template') {
-      $template = AggregatorItemTemplate::getByID($_POST['agtID']);
-      $item->setAggregatorItemTemplate($type, $template);
+      $template = GatheringItemTemplate::getByID($_POST['agtID']);
+      $item->setGatheringItemTemplate($type, $template);
       if ($reloadItemTile) {
         $item->render($type);
       }
       exit;
     }
   
-    $assignments = AggregatorItemFeatureAssignment::getList($item);
+    $assignments = GatheringItemFeatureAssignment::getList($item);
     $features = array();
     foreach($assignments as $as) {
       $f = $as->getFeatureObject();
@@ -34,35 +34,35 @@ if (is_object($item) && is_object($type)) {
       }
     }
 
-    $templates = AggregatorItemTemplate::getListByType($type);
+    $templates = GatheringItemTemplate::getListByType($type);
     ?>
 
 
     <script type="text/javascript">
     $(function() {
-      $('#ccm-dialog-aggregator-item-templates .ccm-dialog-icon-item-grid-sets ul a').on('click', function() {
-        $('#ccm-dialog-aggregator-item-templates .ccm-overlay-icon-item-grid-list li').hide();
-        $('#ccm-dialog-aggregator-item-templates .ccm-overlay-icon-item-grid-list li[data-aggregator-item-template-features~=' + $(this).attr('data-tab') + ']').show();
-        $('#ccm-dialog-aggregator-item-templates .ccm-dialog-icon-item-grid-sets ul a').removeClass('active');
+      $('#ccm-dialog-gathering-item-templates .ccm-dialog-icon-item-grid-sets ul a').on('click', function() {
+        $('#ccm-dialog-gathering-item-templates .ccm-overlay-icon-item-grid-list li').hide();
+        $('#ccm-dialog-gathering-item-templates .ccm-overlay-icon-item-grid-list li[data-gathering-item-template-features~=' + $(this).attr('data-tab') + ']').show();
+        $('#ccm-dialog-gathering-item-templates .ccm-dialog-icon-item-grid-sets ul a').removeClass('active');
         $(this).addClass('active');
         return false;
       });
 
-      $($('#ccm-dialog-aggregator-item-templates .ccm-dialog-icon-item-grid-sets ul a').get(0)).trigger('click');
+      $($('#ccm-dialog-gathering-item-templates .ccm-dialog-icon-item-grid-sets ul a').get(0)).trigger('click');
 
-      $('#ccm-dialog-aggregator-item-templates').closest('.ui-dialog-content').addClass('ui-dialog-content-icon-item-grid');
-      $('#ccm-dialog-aggregator-item-templates .ccm-icon-item-grid-search input').focus();
-      $('#ccm-dialog-aggregator-item-templates .ccm-icon-item-grid-search input').liveUpdate('ccm-dialog-aggregator-item-templates .ccm-overlay-icon-item-grid-list');
+      $('#ccm-dialog-gathering-item-templates').closest('.ui-dialog-content').addClass('ui-dialog-content-icon-item-grid');
+      $('#ccm-dialog-gathering-item-templates .ccm-icon-item-grid-search input').focus();
+      $('#ccm-dialog-gathering-item-templates .ccm-icon-item-grid-search input').liveUpdate('ccm-dialog-gathering-item-templates .ccm-overlay-icon-item-grid-list');
       
-      $('#ccm-dialog-aggregator-item-templates .ccm-icon-item-grid-search input').on('keyup', function() {
+      $('#ccm-dialog-gathering-item-templates .ccm-icon-item-grid-search input').on('keyup', function() {
         if ($(this).val() == '') {
-          $('#ccm-dialog-aggregator-item-templates .ccm-dialog-icon-item-grid-sets ul a.active').click();
+          $('#ccm-dialog-gathering-item-templates .ccm-dialog-icon-item-grid-sets ul a.active').click();
         }
       });
     });
     </script>
 
-    <div class="ccm-ui ccm-dialog-icon-item-grid" id="ccm-dialog-aggregator-item-templates">
+    <div class="ccm-ui ccm-dialog-icon-item-grid" id="ccm-dialog-gathering-item-templates">
 
     <div class="ccm-dialog-icon-item-grid-sets">
 
@@ -84,11 +84,11 @@ if (is_object($item) && is_object($type)) {
       <ul class="ccm-overlay-icon-item-grid-list">
 
       <? foreach($templates as $t) {
-        if (!$item->itemSupportsAggregatorItemTemplate($t)) {
+        if (!$item->itemSupportsGatheringItemTemplate($t)) {
           continue;
         }
 
-        $templateFeatures = $t->getAggregatorItemTemplateFeatureHandles();
+        $templateFeatures = $t->getGatheringItemTemplateFeatureHandles();
         $sets = '';
         foreach($templateFeatures as $tfHandle) {
           $sets .= $tfHandle . ' ';
@@ -97,8 +97,8 @@ if (is_object($item) && is_object($type)) {
        
         ?>
 
-        <li data-aggregator-item-template-features="<?=$sets?>">
-          <a href="javascript:void(0)" <? if ($item->getAggregatorItemTemplateID($type) == $t->getAggregatorItemTemplateID()) { ?>class="ccm-aggregator-item-template-selected"<? } ?> onclick="$.fn.ccmaggregator('updateItemTemplate', {agiID: '<?=$agiID?>', agtID: '<?=$t->getAggregatorItemTemplateID()?>', agtTypeID: '<?=$agtTypeID?>', reloadItemTile: <? if ($reloadItemTile) { ?>true<? } else { ?>false<? } ?>, 'updateToken': '<?=Loader::helper('validation/token')->generate('edit_aggregator_item_template')?>'})"><p><img src="<?=$t->getAggregatorItemTemplateIconSRC()?>" /><span><?=$t->getAggregatorItemTemplateName()?></span></p></a>
+        <li data-gathering-item-template-features="<?=$sets?>">
+          <a href="javascript:void(0)" <? if ($item->getGatheringItemTemplateID($type) == $t->getGatheringItemTemplateID()) { ?>class="ccm-gathering-item-template-selected"<? } ?> onclick="$.fn.ccmgathering('updateItemTemplate', {agiID: '<?=$agiID?>', agtID: '<?=$t->getGatheringItemTemplateID()?>', agtTypeID: '<?=$agtTypeID?>', reloadItemTile: <? if ($reloadItemTile) { ?>true<? } else { ?>false<? } ?>, 'updateToken': '<?=Loader::helper('validation/token')->generate('edit_gathering_item_template')?>'})"><p><img src="<?=$t->getGatheringItemTemplateIconSRC()?>" /><span><?=$t->getGatheringItemTemplateName()?></span></p></a>
         </li>
         
       <? } ?>

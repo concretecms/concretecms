@@ -53,10 +53,10 @@ abstract class Concrete5_Model_GatheringItem extends Object {
 		}
 	}
 
-	public function moveToNewGathering(Gathering $aggregator) {
+	public function moveToNewGathering(Gathering $gathering) {
 		$db = Loader::db();
-		$db->Execute('update GatheringItems set gaID = ? where gaiID = ?', array($aggregator->getGatheringID(), $this->gaiID));
-		$this->gaID = $aggregator->getGatheringID();
+		$db->Execute('update GatheringItems set gaID = ? where gaiID = ?', array($gathering->getGatheringID(), $this->gaiID));
+		$this->gaID = $gathering->getGatheringID();
 		$batch = $db->GetOne('select max(gaiBatchTimestamp) from GatheringItems where gaiID = ?', array($this->gaiID));
 		$this->setGatheringItemBatchTimestamp($batch);
 		$this->setGatheringItemBatchDisplayOrder(0);
@@ -141,9 +141,9 @@ abstract class Concrete5_Model_GatheringItem extends Object {
 	}
 
 
-	public function duplicate(Gathering $aggregator) {
+	public function duplicate(Gathering $gathering) {
 		$db = Loader::db();
-		$gaID = $aggregator->getGatheringID();
+		$gaID = $gathering->getGatheringID();
 		$db->Execute('insert into GatheringItems (gaID, gasID, gaiDateTimeCreated, gaiPublicDateTime, agiTitle, agiKey, gaiSlotWidth, gaiSlotHeight, gaiBatchTimestamp, gaiBatchDisplayOrder) 
 			values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', array(
 				$gaID, $this->getGatheringDataSourceID(), $this->gaiDateTimeCreated, $this->gaiPublicDateTime, 
@@ -210,7 +210,7 @@ abstract class Concrete5_Model_GatheringItem extends Object {
 		$db = Loader::db();
 		$myFeatureHandles = $this->getGatheringItemFeatureHandles();
 
-		// we loop through and do it for all installed aggregator item template types
+		// we loop through and do it for all installed gathering item template types
 		$types = GatheringItemTemplateType::getList();
 		foreach($types as $type) {
 			$matched = array();
@@ -223,7 +223,7 @@ abstract class Concrete5_Model_GatheringItem extends Object {
 			}
 
 			usort($matched, array($this, 'sortByFeatureScore'));
-			if (is_object($matched[0]) && $matched[0]->aggregatorItemTemplateIsAlwaysDefault()) {
+			if (is_object($matched[0]) && $matched[0]->gatheringItemTemplateIsAlwaysDefault()) {
 				$template = $matched[0];
 			} else {
 				// we do some fun randomization math.
@@ -232,7 +232,7 @@ abstract class Concrete5_Model_GatheringItem extends Object {
 			}
 			if (is_object($template)) {
 				$this->setGatheringItemTemplate($type, $template);
-				if ($template->aggregatorItemTemplateControlsSlotDimensions()) {
+				if ($template->gatheringItemTemplateControlsSlotDimensions()) {
 					$this->setGatheringItemSlotWidth($template->getGatheringItemTemplateSlotWidth($this));
 					$this->setGatheringItemSlotHeight($template->getGatheringItemTemplateSlotHeight($this));
 				}

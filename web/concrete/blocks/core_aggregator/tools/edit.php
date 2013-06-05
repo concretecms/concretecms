@@ -21,7 +21,7 @@ if ($cID > 0 && $bID > 0) {
 
 			?>
 
-			<form method="post" id="ccm-aggregator-edit-form" action="<?=$b->getBlockEditAction()?>" enctype="multipart/form-data">
+			<form method="post" id="ccm-gathering-edit-form" action="<?=$b->getBlockEditAction()?>" enctype="multipart/form-data">
 				<?=Loader::helper('validation/token')->output()?>
 				<input type="hidden" name="arHandle" value="<?=$arHandle?>" />
 				<input type="hidden" name="cID" value="<?=$cID?>" />
@@ -47,14 +47,14 @@ if ($cID > 0 && $bID > 0) {
 
 			<div class="dialog-buttons">
 				<button class="btn btn-hover-danger pull-left" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel')?></button>
-				<button class="btn btn-primary pull-right" onclick="$('#ccm-aggregator-edit-form').submit()"><?=t('Save')?></button>		
+				<button class="btn btn-primary pull-right" onclick="$('#ccm-gathering-edit-form').submit()"><?=t('Save')?></button>		
 			</div>
 
 			</form>
 
 			<script type="text/javascript">
 			$(function() {
-				$('#ccm-aggregator-edit-form').ajaxForm({
+				$('#ccm-gathering-edit-form').ajaxForm({
 					dataType: 'json',
 					beforeSubmit: function() {
 						jQuery.fn.dialog.showLoader();
