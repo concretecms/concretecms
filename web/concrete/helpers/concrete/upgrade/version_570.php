@@ -5,13 +5,13 @@ class ConcreteUpgradeVersion570Helper {
 	
 	public $dbRefreshTables = array(
 		'atSocialLinks',
-		'agPage',
-		'Aggregators',
-		'AggregatorItems',
-		'AggregatorItemTemplates',
-		'AggregatorItemTemplateFeatures',
-		'AggregatorDataSources',
-		'AggregatorConfiguredDataSources',
+		'gaPage',
+		'Gatherings',
+		'GatheringItems',
+		'GatheringItemTemplates',
+		'GatheringItemTemplateFeatures',
+		'GatheringDataSources',
+		'GatheringConfiguredDataSources',
 		'atTextareaSettings',
 		'UserPointActions',
 		'UserPointHistory',
@@ -67,7 +67,7 @@ class ConcreteUpgradeVersion570Helper {
 			$bt->refresh();
 		}
 
-		$bt = BlockType::getByHandle('core_aggregator');
+		$bt = BlockType::getByHandle('core_gathering');
 		if (!is_object($bt)) {
 			$bt->install();
 		} else {

@@ -273,9 +273,9 @@ class Concrete5_Model_Package extends Object {
 		$items['page_types'] = CollectionType::getListByPackage($this);
 		$items['mail_importers'] = MailImporter::getListByPackage($this);
 		$items['configuration_values'] = Config::getListByPackage($this);
-		$items['aggregator_item_template_types'] = AggregatorItemTemplateType::getListByPackage($this);		
-		$items['aggregator_item_templates'] = AggregatorItemTemplate::getListByPackage($this);
-		$items['aggregator_data_sources'] = AggregatorDataSource::getListByPackage($this);
+		$items['gathering_item_template_types'] = GatheringItemTemplateType::getListByPackage($this);		
+		$items['gathering_item_templates'] = GatheringItemTemplate::getListByPackage($this);
+		$items['gathering_data_sources'] = GatheringDataSource::getListByPackage($this);
 		$items['features'] = Feature::getListByPackage($this);
 		$items['feature_categories'] = FeatureCategory::getListByPackage($this);
 		$items['block_types'] = BlockTypeList::getByPackage($this);
@@ -308,12 +308,12 @@ class Concrete5_Model_Package extends Object {
 			return $item->getFeatureName();
 		} else if ($item instanceof FeatureCategory) {
 			return $item->getFeatureCategoryName();
-		} else if ($item instanceof AggregatorDataSource) {
-			return $item->getAggregatorDataSourceName();
-		} else if ($item instanceof AggregatorItemTemplateType) {
-			return $txt->unhandle($item->getAggregatorItemTemplateTypeHandle());
-		} else if ($item instanceof AggregatorItemTemplate) {
-			return $item->getAggregatorItemTemplateName();
+		} else if ($item instanceof GatheringDataSource) {
+			return $item->getGatheringDataSourceName();
+		} else if ($item instanceof GatheringItemTemplateType) {
+			return $txt->unhandle($item->getGatheringItemTemplateTypeHandle());
+		} else if ($item instanceof GatheringItemTemplate) {
+			return $item->getGatheringItemTemplateName();
 		} else if ($item instanceof BlockTypeSet) {
 			return $item->getBlockTypeSetName();
 		} else if ($item instanceof ComposerControlType) {
@@ -384,11 +384,11 @@ class Concrete5_Model_Package extends Object {
 				} else {
 					switch(get_class($item)) {
 						case 'BlockType':
-						case 'AggregatorDataSource':
+						case 'GatheringDataSource':
 						case 'BlockTypeSet':
 						case 'Feature':
 						case 'FeatureCategory':
-						case 'AggregatorItemTemplate':
+						case 'GatheringItemTemplate':
 						case 'ConversationEditor':
 						case 'ConversationRatingType':
 						case 'ComposerTargetType':
