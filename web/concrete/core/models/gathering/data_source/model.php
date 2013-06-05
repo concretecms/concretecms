@@ -10,7 +10,7 @@ abstract class Concrete5_Model_GatheringDataSource extends Object {
 	public function configure(Gathering $ga, $post) {
 		$db = Loader::db();
 		$o = $this->createConfigurationObject($ga, $post);
-		$r = $db->Execute('insert into GatheringConfiguredDataSources (agID, gasID, acdObject) values (?, ?, ?)', array(
+		$r = $db->Execute('insert into GatheringConfiguredDataSources (gaID, gasID, gcdObject) values (?, ?, ?)', array(
 			$ga->getGatheringID(), $this->gasID, serialize($o)
 		));
 		return GatheringDataSourceConfiguration::getByID($db->Insert_ID());

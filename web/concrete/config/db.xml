@@ -313,10 +313,10 @@
       <autoincrement/>
       <unsigned/>
     </field>
-    <field name="agDateCreated" type="T">
+    <field name="gaDateCreated" type="T">
       <notnull/>
     </field>
-    <field name="agDateLastUpdated" type="T">
+    <field name="gaDateLastUpdated" type="T">
       <notnull/>
     </field>
   </table>
@@ -583,8 +583,8 @@
       <unsigned />
     </field>
   </table>
-   <table name="agPage">
-    <field name="agiID" type="I" size="10">
+   <table name="gaPage">
+    <field name="gaiID" type="I" size="10">
       <key/>
       <unsigned/>
     </field>
