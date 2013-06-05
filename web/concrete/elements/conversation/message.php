@@ -1,7 +1,11 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
 $im = Loader::helper('image');
-$p = new Permissions($page);
+
+// this is TEMPORARY. we will be using dedicated permissions for this.
+$u = new User();
+$canAdminMessage = ($u->isSuperUser() || $u->inGroup(Group::getByID(ADMIN_GROUP_ID)));
+
 $ui = $message->getConversationMessageUserObject();
 $class = 'ccm-conversation-message ccm-conversation-message-level' . $message->getConversationMessageLevel();
 if ($message->isConversationMessageDeleted()) {
@@ -18,7 +22,7 @@ $cnvMessageID = $message->cnvMessageID;
 if ((!$message->isConversationMessageDeleted() && $message->isConversationMessageApproved()) || $message->conversationMessageHasActiveChildren()) {
 	?>
 	<div data-conversation-message-id="<?=$message->getConversationMessageID()?>" data-conversation-message-level="<?=$message->getConversationMessageLevel()?>" class="<?=$class?>">
-		<?php if($p->canWrite()) { ?>
+		<?php if($canAdminMessage) { ?>
 		<ul class="nav nav-pills cnv-admin-pane pull-right">
 			<li class="dropdown">
 			<a class="dropdown-toggle" id="drop4" role="button" data-toggle="dropdown" href="#">&#x25bc;</a>
@@ -65,7 +69,7 @@ if ((!$message->isConversationMessageDeleted() && $message->isConversationMessag
 						 <?php } ?>
 							<p class="<?php echo $paragraphPadding ?> filename" rel="<?php echo $attachment['cnvMessageAttachmentID'];?>"><a href="<?php echo $file->getDownloadURL() ?>"><?php echo $file->getFileName() ?></a>
 							<? 
-							if (!$message->isConversationMessageDeleted() && $p->canWrite()) { ?>
+							if (!$message->isConversationMessageDeleted() && $canAdminMessage) { ?>
 								<a rel="<?php echo $attachment['cnvMessageAttachmentID'];?>" class="attachment-delete ccm-conversation-message-admin-control" href="#"><?=t('Delete')?></a>
 							<?php } ?>
 							<br />
