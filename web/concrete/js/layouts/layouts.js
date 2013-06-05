@@ -158,7 +158,9 @@ CCMLayout.prototype._setupToolbarView = function() {
 }
 
 CCMLayout.prototype._updateChooseTypeForm = function() {
-	switch(this.$selectgridtype.find('option:selected').val()) {
+	var typeval = this.$selectgridtype.find('option:selected').val();
+	var obj = this;
+	switch(typeval) {
 		case 'FF':
 			this.$formviewthemegrid.hide();
 			this.$formviewcustom.show();
@@ -170,7 +172,42 @@ CCMLayout.prototype._updateChooseTypeForm = function() {
 			this._updateThemeGridView();
 			break;
 		default: // a preset
+			var arLayoutPresetID = typeval;
+			jQuery.fn.dialog.showLoader();
+			var url = CCM_TOOLS_PATH + '/area/layout_presets?arLayoutPresetID=' + arLayoutPresetID + '&task=get_area_layout&ccm_token=' + CCM_SECURITY_TOKEN;
+			$.getJSON(url, function(r) {
+				obj.$formviewthemegrid.hide();
+				obj.$formviewcustom.hide();
 
+				// set theme grid option
+				if (parseInt(r.arLayout.arLayoutUsesThemeGridFramework)) {
+					obj.$formviewthemegrid.show();
+					obj.$selectgridcolumns.val(r.arLayout.arLayoutNumColumns);
+					obj._updateThemeGridView(true);
+				} else {
+					obj.$formviewcustom.show();
+					obj.$selectcolumnscustom.val(r.arLayout.arLayoutNumColumns);
+					obj.$customspacing.val(r.arLayout.arLayoutSpacing);
+					if (parseInt(r.arLayout.arLayoutIsCustom)) {
+						obj.$customautomatedfrm.val(0);
+						obj.$customautomated.parent().removeClass('ccm-inline-toolbar-icon-selected');
+					} else {
+						obj.$customautomated.val(1);
+						obj.$customautomated.parent().addClass('ccm-inline-toolbar-icon-selected');
+					}
+					obj._updateCustomView(true);
+					if (parseInt(r.arLayout.arLayoutIsCustom)) {
+						$.each(r.arLayoutColumns, function(i, column) {
+							obj.columnwidths.push(parseInt(column.arLayoutColumnWidth));
+							var $column = $(obj.$element.find('.ccm-layout-column').get(i));
+							$column.css('width', column.arLayoutColumnWidth + 'px');
+							$('#ccm-edit-layout-column-width-' + i).val(column.arLayoutColumnWidth);
+						});
+						obj._showCustomSlider();
+					}
+				}
+				jQuery.fn.dialog.hideLoader();
+			});
 			break;
 	}
 
@@ -229,7 +266,11 @@ CCMLayout.prototype.buildThemeGridGrid = function() {
 	this.$element.append(row);
 }
 
-CCMLayout.prototype._updateThemeGridView = function() {
+CCMLayout.prototype._updateThemeGridView = function(presetLoad) {
+
+	if (!presetLoad) {
+		this.$selectgridtype.find('option[value=TG]').prop('selected', true);
+	}
 
 	// load the current elements from forms
 	this.columns = parseInt(this.$selectgridcolumns.val());
@@ -276,7 +317,13 @@ CCMLayout.prototype._buildThemeGridGridFromPresetColumns = function(arLayoutColu
 }
 
 // This actually takes care of drawing the grid.
-CCMLayout.prototype._updateCustomView = function() {
+CCMLayout.prototype._updateCustomView = function(presetLoad) {
+	// if it's presetLoad, that means we're updating the view from the first time
+	// after loading a preset. In which case we don't switch away from presets in the gridtype dropdown
+	// Otherwise, we DO switch away to show that we're not going to use that preset.
+	if (!presetLoad) {
+		this.$selectgridtype.find('option[value=FF]').prop('selected', true);
+	}
 
 	// load custom view settings
 	this.columns = parseInt(this.$selectcolumnscustom.val());
@@ -460,6 +507,11 @@ CCMLayout.prototype._showThemeGridSlider = function() {
 		values: breaks,
 
 		slide: function (e, ui) {
+
+			if (obj.$selectgridtype.val() != 'TG') {
+				obj.$selectgridtype.find('option[value=TG]').prop('selected', true);
+			}
+			
 			var index = $(ui.handle).index();
 			var pointsToCheck;
 
@@ -582,6 +634,8 @@ CCMLayout.prototype._showCustomSlider = function() {
 		}
 	}
 
+	var obj = this;
+
 	this.$slider.slider({
 		min: 0,
 		max: tw,
@@ -606,6 +660,11 @@ CCMLayout.prototype._showCustomSlider = function() {
 		},
 
 		slide: function (e, ui) {
+
+			if (obj.$selectgridtype.val() != 'FF') {
+				obj.$selectgridtype.find('option[value=FF]').prop('selected', true);
+			}
+
 			var lastvalue = 0,
 				proceed = true;
 
