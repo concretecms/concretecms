@@ -182,9 +182,9 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				$cache->purge($this);
 
 
-				// we check to see if this page is referenced in any aggregators
+				// we check to see if this page is referenced in any gatherings
 				$c = Page::getByID($this->getCollectionID(), $this->getVersionID());
-				$items = PageAggregatorItem::getListByItem($c);
+				$items = PageGatheringItem::getListByItem($c);
 				foreach($items as $it) {
 					$it->deleteFeatureAssignments();
 					$it->assignFeatureAssignments($c);

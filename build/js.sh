@@ -20,10 +20,10 @@ cat ../web/concrete/js/ccm_app/conversations/conversations.js \
 uglifyjs --no-copyright --no-seqs -o ../web/concrete/js/ccm.conversations.js ./ccm.conversations.tmp.js 
 rm ccm.conversations.tmp.js
 
-cat ../web/concrete/js/aggregator/packery.js \
-../web/concrete/js/aggregator/aggregator.js > ccm.aggregator.tmp.js
-uglifyjs --no-copyright --no-seqs -o ../web/concrete/js/ccm.aggregator.js ./ccm.aggregator.tmp.js 
-rm ccm.aggregator.tmp.js
+cat ../web/concrete/js/gathering/packery.js \
+../web/concrete/js/gathering/gathering.js > ccm.gathering.tmp.js
+uglifyjs --no-copyright --no-seqs -o ../web/concrete/js/ccm.gathering.js ./ccm.gathering.tmp.js 
+rm ccm.gathering.tmp.js
 
 cat ../web/concrete/js/ccm_app/pubsub.js > ccm.pubsub.tmp.js
 uglifyjs --no-copyright --no-seqs -o ../web/concrete/js/ccm.pubsub.js ./ccm.pubsub.tmp.js 

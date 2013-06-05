@@ -18,7 +18,6 @@ $cID = $c->getCollectionID();
 $u = new User();
 $ap = new Permissions($a);
 $cp = new Permissions($c);
-
 $class = 'ccm-area-footer';
 
 ?>
@@ -73,6 +72,7 @@ $class = 'ccm-area-footer';
 
 	<? 
 	if ($a instanceof SubArea) {
+		$pk = PermissionKey::getByHandle('manage_layout_presets');
 		$bt = BlockType::getByHandle(BLOCK_HANDLE_LAYOUT_PROXY);
 		$ax = $a->getSubAreaParentPermissionsObject();
 		$axp = new Permissions($ax);
@@ -80,7 +80,12 @@ $class = 'ccm-area-footer';
 			$bx = $a->getSubAreaBlockObject();
 			if (is_object($bx) && !$bx->isError()) { ?>
 				<li class="divider"></li>
-				<li><a href="javascript:void(0)" data-menu-action="edit_inline" data-menu-edit-params="<?=$params?>"><?=t("Edit Container Layout")?></a></li>		
+				<li><a href="javascript:void(0)" data-menu-action="edit_inline" data-menu-edit-params="<?=$params?>"><?=t("Edit Container Layout")?></a></li>
+				<? if ($pk->validate()) { 
+					$btc = $bx->getController();
+					$arLayout = $btc->getAreaLayoutObject(); ?>
+					<li><a href="javascript:void(0)" onclick="CCMEditMode.launchLayoutPresets(<?=$arLayout->getAreaLayoutID()?>, '<?=Loader::helper('validation/token')->generate('layout_presets')?>')"><?=t("Save Layout as Preset")?></a></li>
+				<? } ?>
 			<? } ?>
 		<? }
 	} ?>

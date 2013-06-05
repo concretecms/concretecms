@@ -89,8 +89,8 @@ var CCMEditMode = function() {
 	 		success: function(r) {
 	 			ccm_parseJSON(r, function() {
 	 				jQuery.fn.dialog.hideLoader();
-	 				if (sourceBlockTypeHandle == 'core_aggregator_item') {
-	 					destination.find('div[data-aggregator-item-id=' + sourceBlockID + ']').remove();
+	 				if (sourceBlockTypeHandle == 'core_gathering_item') {
+	 					destination.find('div[data-gathering-item-id=' + sourceBlockID + ']').remove();
 	 					CCMEditMode.parseBlockResponse(r, r.bID, 'add');
 	 				} else {
 		 				if (source && destination) {
@@ -174,8 +174,8 @@ var CCMEditMode = function() {
 					ui.draggable.appendTo($(this).find('.ccm-area-block-list'));
 					var itemID = ui.draggable.attr('data-block-id');
 					var btHandle = ui.draggable.attr('data-block-type-handle');
-					if (btHandle == 'core_aggregator_item') {
-						var itemID = ui.draggable.attr('data-aggregator-item-id');
+					if (btHandle == 'core_gathering_item') {
+						var itemID = ui.draggable.attr('data-gathering-item-id');
 					}
 					saveArrangement(itemID, ui.draggable.attr('data-area-id'), $(this).attr('data-area-id'), btHandle);
 				}
@@ -193,7 +193,7 @@ var CCMEditMode = function() {
 			tolerance: 'pointer',
 			accept: function($item) {
 				var btHandle = $item.attr('data-block-type-handle');
-				if (btHandle == 'core_aggregator_item') {
+				if (btHandle == 'core_gathering_item') {
 					return false;
 				}
 
@@ -219,8 +219,8 @@ var CCMEditMode = function() {
 				} else {
 					var itemID = ui.draggable.attr('data-block-id');
 					var btHandle = ui.draggable.attr('data-block-type-handle');
-					/*if (btHandle == 'core_aggregator_item') {
-						var itemID = ui.draggable.attr('data-aggregator-item-id');
+					/*if (btHandle == 'core_gathering_item') {
+						var itemID = ui.draggable.attr('data-gathering-item-id');
 					}*/
 
 					var arID = ui.draggable.attr('data-area-id');
@@ -237,6 +237,10 @@ var CCMEditMode = function() {
 
 		$('[data-inline-command=move-block]').on('mousedown', function() {
 			$('.ccm-area-block-dropzone').addClass('ccm-area-block-dropzone-active');
+		});
+
+		$('[data-inline-command=move-block]').on('mouseup', function() {
+			$('.ccm-area-block-dropzone-active').removeClass('ccm-area-block-dropzone-active');
 		});
 
 		$('.ccm-block-edit').draggable({
@@ -311,13 +315,13 @@ var CCMEditMode = function() {
 			}});		
 		},
 
-		deleteBlock: function(cID, bID, aID, arHandle, msg) {
+		deleteBlock: function(cID, bID, aID, arHandle, msg, callback) {
 			if (confirm(msg)) {
 				CCMToolbar.disableDirectExit();
 				// got to grab the message too, eventually
 				$d = $('[data-block-id=' + bID + '][data-area-id=' + aID + ']');
 				$d.hide().remove();
-				$.fn.ccmmenu.resethighlighter();
+				$.fn.ccmmenu.reset();
 				ccmAlert.hud(ccmi18n.deleteBlockMsg, 2000, 'delete_small', ccmi18n.deleteBlock);
 				var tb = parseInt($('[data-area-id=' + aID + ']').attr('data-total-blocks'));
 				$('[data-area-id=' + aID + ']').attr('data-total-blocks', tb - 1);
@@ -327,8 +331,8 @@ var CCMEditMode = function() {
 					url: CCM_DISPATCHER_FILENAME,
 					data: 'cID=' + cID + '&ccm_token=' + CCM_SECURITY_TOKEN + '&isAjax=true&btask=remove&bID=' + bID + '&arHandle=' + encodeURIComponent(arHandle)
 				});
-				if (typeof window.ccm_parseBlockResponsePost == 'function') {
-					ccm_parseBlockResponsePost({});
+				if (typeof(callback) == 'function') {
+					callback();
 				}
 			}	
 		},
@@ -391,6 +395,56 @@ var CCMEditMode = function() {
 			} catch(e) { 
 				ccmAlert.notice(ccmi18n.error, r); 
 			}
+		},
+
+		launchLayoutPresets: function(arLayoutID, token, task) {
+			var url = CCM_TOOLS_PATH + '/area/layout_presets?arLayoutID=' + arLayoutID + '&ccm_token=' + token;
+			if (task) {
+				url += '&task=' + task;
+			}
+			jQuery.fn.dialog.open({
+				width: 280,
+				height: 200,
+				modal: false,
+				href: url,
+				title: ccmi18n.areaLayoutPresets, 
+				onOpen: function() {
+					$('#ccm-layout-save-preset-form select').on('change', function(r) {
+						if ($(this).val() == '-1') {
+							$('#ccm-layout-save-preset-name').show().focus();
+							$('#ccm-layout-save-preset-override').hide();
+						} else {
+							$('#ccm-layout-save-preset-name').hide();
+							$('#ccm-layout-save-preset-override').show();
+						}
+					}).trigger('change');
+					/*
+					$('.delete-area-layout-preset').ccmlayoutpresetdelete({'selector': selector, 'token': token});
+					*/
+
+					$('#ccm-layout-save-preset-form').on('submit', function() {
+
+						$.fn.dialog.showLoader();
+						
+						var formdata = $('#ccm-layout-save-preset-form').serializeArray();
+						formdata.push({'name': 'submit', 'value': 1});
+
+						$.ajax({
+							url: url,
+							type: 'POST',
+							data: formdata, 
+							dataType: 'json',
+							success: function(r) {
+								$.fn.dialog.hideLoader();
+								$.fn.dialog.closeAll();
+							}
+						});
+
+						return false;
+					});
+		
+				}
+			});
 		},
 
 		activateBlockTypesOverlay: function() {

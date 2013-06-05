@@ -57,9 +57,7 @@ if ($canAliasBlockOut) {
 $isAlias = $b->isAlias();
 $u = new User();
 $numChildren = (!$isAlias) ? $b->getNumChildren() : 0;
-if ($b->getBlockTypeHandle() == BLOCK_HANDLE_LAYOUT_PROXY) {
-	$deleteMessage = t('Do you want to delete this layout? This will remove all blocks inside it.');
-} else if ($isAlias) {
+if ($isAlias) {
 	$deleteMessage = t('Do you want to delete this block?');
 } else if ($numChildren) {
 	$deleteMessage = t('Do you want to delete this block? This item is an original. If you delete it, you will delete all blocks aliased to it');
@@ -70,7 +68,7 @@ if ($b->getBlockTypeHandle() == BLOCK_HANDLE_LAYOUT_PROXY) {
 
 ?>
 
-<div custom-style="<?=$b->getBlockCustomStyleRuleID()?>" data-area-id="<?=$a->getAreaID()?>" data-block-id="<?=$b->getBlockID()?>" class="<?=$class?>" data-block-type-handle="<?=$btHandle?>" data-menu="block-menu-b<?=$b->getBlockID()?>-<?=$a->getAreaID()?>" 
+<div custom-style="<?=$b->getBlockCustomStyleRuleID()?>" data-area-id="<?=$a->getAreaID()?>" data-block-id="<?=$b->getBlockID()?>" class="<?=$class?>" data-block-type-handle="<?=$btHandle?>" data-menu-highlight-offset="7" data-menu-highlight-class="ccm-block-highlight"  data-menu="block-menu-b<?=$b->getBlockID()?>-<?=$a->getAreaID()?>" 
 		<? if ($btw->getBlockTypeHandle() == BLOCK_HANDLE_LAYOUT_PROXY) { ?> data-menu-handle="none"<? } ?>>
 		<ul class="ccm-edit-mode-inline-commands ccm-ui">
 		<? if ($p->canEditBlock() && $btw->getBlockTypeHandle() != BLOCK_HANDLE_LAYOUT_PROXY && (!$a->isGlobalArea())) {  ?>
@@ -154,10 +152,8 @@ if ($b->getBlockTypeHandle() == BLOCK_HANDLE_LAYOUT_PROXY) {
 			<? if ($canAliasBlockOut) { ?>
 				<li><a dialog-title="<?=t('Setup on Child Pages')?>" dialog-modal="false" dialog-width="550" dialog-height="450" data-menu-action="block_dialog" data-menu-href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_block_popup?btask=child_pages" ><?=t("Setup on Child Pages")?></a></li>		
 			<? } ?>
-
 		<? } ?>
 	<? } ?>
-
 
 	</ul>
 	</div>

@@ -484,7 +484,7 @@ class Concrete5_Model_Area extends Object {
 		return $area;
 	}
 
-	protected function load($c) {
+	public function load($c) {
 		if (!$this->arIsLoaded) {
 			// replaces the current empty object with the passed object.
 			$area = self::get($c, $this->arHandle);
