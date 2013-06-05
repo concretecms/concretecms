@@ -386,6 +386,7 @@ var CCMEditMode = function() {
 								ccmAlert.hud(ccmi18n.updateBlockMsg, 2000, 'success', ccmi18n.updateBlock);
 							}
 							CCMEditMode.start(); // refresh areas. 
+							$.fn.ccmmenu.reset();
 							if (typeof window.ccm_parseBlockResponsePost == 'function') {
 								ccm_parseBlockResponsePost(resp);
 							}
