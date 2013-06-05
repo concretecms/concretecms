@@ -27,13 +27,13 @@
 
     	enableOverlay: function($gathering, options) {
 			$gathering.find('a[data-overlay=gathering-item]').not('.overlay-bound').each(function() {
-				var agiID = $(this).closest('[data-gathering-item-id]').attr('data-gathering-item-id');
+				var gaiID = $(this).closest('[data-gathering-item-id]').attr('data-gathering-item-id');
 				$(this).on('click', function() {
 					$.magnificPopup.open({
 						ajax: {
 							settings: {
 								'data': {
-									'agiID': agiID,
+									'gaiID': gaiID,
 									'token': options.loadToken
 								},
 								'dataType': 'html',
@@ -78,7 +78,7 @@
 					$('.ccm-area-block-dropzone').addClass('ccm-area-block-dropzone-active');
 					$('div[data-gathering-id]').each(function() {
 						var $tagg = $(this);
-						if (parseInt($tagg.attr('data-gathering-id')) != parseInt(options.agID)) {
+						if (parseInt($tagg.attr('data-gathering-id')) != parseInt(options.gaID)) {
 							$tagg.addClass('ccm-gathering-item-droppable').droppable({
 								accept: '.ccm-gathering-item',
 								tolerance: 'pointer',
@@ -86,11 +86,11 @@
 								drop: function(e, ui) {
 									jQuery.fn.dialog.showLoader();
 									var $destination = $(this);
-									var agID = $destination.attr('data-gathering-id');
+									var gaID = $destination.attr('data-gathering-id');
 									var data = [
 										{'name': 'task', 'value': 'move_to_new_gathering'},
-										{'name': 'agiID', 'value': ui.draggable.attr('data-gathering-item-id')},
-										{'name': 'agID', 'value': $destination.attr('data-gathering-id')},
+										{'name': 'gaiID', 'value': ui.draggable.attr('data-gathering-item-id')},
+										{'name': 'gaID', 'value': $destination.attr('data-gathering-id')},
 										{'name': 'cID', 'value': CCM_CID},
 										{'name': 'itemsPerPage', 'value': options.itemsPerPage},
 										{'name': 'editToken', 'value': options.editToken}
@@ -126,14 +126,14 @@
 			$gathering.packery('on', 'dragItemPositioned', function(pkr, item) {
 				var data = [
 					{'name': 'task', 'value': 'update_display_order'},
-					{'name': 'agID', 'value': options.agID},
+					{'name': 'gaID', 'value': options.gaID},
 					{'name': 'editToken', 'value': options.editToken}
 				];
 				var items = [];
 				var elements = pkr.getItemElements();
 				for (i = 0; i < elements.length; i++) {
 					var $obj = $(elements[i]);
-					data.push({'name': 'agiID[]', 'value': $obj.attr('data-gathering-item-id')});
+					data.push({'name': 'gaiID[]', 'value': $obj.attr('data-gathering-item-id')});
 				}
 
 				$.ajax({
@@ -162,10 +162,10 @@
 						url: CCM_TOOLS_PATH + '/gathering/update',
 						data: {
 							'task': 'resize',
-							'agID': options.agID,
-							'agiID': $tile.attr('data-gathering-item-id'),
-							'agiSlotWidth': w,
-							'agiSlotHeight': h,
+							'gaID': options.gaID,
+							'gaiID': $tile.attr('data-gathering-item-id'),
+							'gaiSlotWidth': w,
+							'gaiSlotHeight': h,
 							'editToken': options.editToken
 						}
 					});
@@ -185,9 +185,9 @@
 			type: 'POST',
 			data: {
 				task: 'update_item_template',
-				agiID: options.agiID,
-				agtTypeID: options.agtTypeID,
-				agtID: options.agtID,
+				gaiID: options.gaiID,
+				gatTypeID: options.gatTypeID,
+				gatID: options.gatID,
 				token: options.updateToken
 			},
 			url: CCM_TOOLS_PATH + '/gathering/item/template',
@@ -195,7 +195,7 @@
 				jQuery.fn.dialog.hideLoader();
 				if (options.reloadItemTile) {
 					// load the newly rendered HTML into the old gathering item.
-					$('[data-gathering-item-id=' + options.agiID + ']').find('div.ccm-gathering-item-inner-render').html(r);
+					$('[data-gathering-item-id=' + options.gaiID + ']').find('div.ccm-gathering-item-inner-render').html(r);
 				}
 				jQuery.fn.dialog.closeTop();
 			}
@@ -208,13 +208,13 @@
 			type: 'POST',
 			data: {
 				task: 'delete_item',
-				agiID: options.agiID,
+				gaiID: options.gaiID,
 				token: options.deleteToken
 			},
 			url: CCM_TOOLS_PATH + '/gathering/item/delete',
 			success: function(r) {
 				jQuery.fn.dialog.hideLoader();
-				var $item = $('[data-gathering-item-id=' + options.agiID + ']');
+				var $item = $('[data-gathering-item-id=' + options.gaiID + ']');
 				var $gathering = $item.parent();
 				$item.remove();
 				$gathering.packery('layout');
@@ -234,7 +234,7 @@
 			data: {
 				'task': 'get_gathering_items',
 				'newerThan': getNewerThan,
-				'agID': options.agID,
+				'gaID': options.gaID,
 				'editToken': options.editToken,
 				'showTileControls': options.showTileControls
 			},
@@ -288,7 +288,7 @@
 					url: CCM_TOOLS_PATH + '/gathering/load_more',
 					data: {
 						'task': 'get_gathering_items',
-						'agID': options.agID,
+						'gaID': options.gaID,
 						'page': newPage,
 						'itemsPerPage': options.itemsPerPage,
 						'loadToken': options.loadToken,
@@ -309,7 +309,7 @@
 			});
 
 			if (options.showTileControls) {
-				var $refreshButton = $('[data-gathering-refresh=' + options.agID + ']');
+				var $refreshButton = $('[data-gathering-refresh=' + options.gaID + ']');
 				$refreshButton.on('click', function() {
 					$gathering.ccmgathering('getNew');
 					return false;
