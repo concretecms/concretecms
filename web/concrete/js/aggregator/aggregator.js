@@ -9,25 +9,25 @@
 
     private:  {
 
-    	handleAppendedElements: function(response, $aggregator, options, prepend) {
+    	handleAppendedElements: function(response, $gathering, options, prepend) {
 			var elements = ($('<div />').append(response).find('>div'));
 			$.each(elements, function(i, obj) {
-				prepend ? $aggregator.prepend(obj) : $aggregator.append(obj);
+				prepend ? $gathering.prepend(obj) : $gathering.append(obj);
 			});
 			if (elements.length > 0) {
-				prepend ? $aggregator.packery('prepended', elements) : $aggregator.packery('appended', elements);
+				prepend ? $gathering.packery('prepended', elements) : $gathering.packery('appended', elements);
 				if (options.showTileControls) {
-					methods.private.enableEditing($aggregator, options);
+					methods.private.enableEditing($gathering, options);
 				}
 
-				methods.private.enableOverlay($aggregator, options);
-				methods.private.enableHover($aggregator, options);
+				methods.private.enableOverlay($gathering, options);
+				methods.private.enableHover($gathering, options);
 			}
     	},
 
-    	enableOverlay: function($aggregator, options) {
-			$aggregator.find('a[data-overlay=aggregator-item]').not('.overlay-bound').each(function() {
-				var agiID = $(this).closest('[data-aggregator-item-id]').attr('data-aggregator-item-id');
+    	enableOverlay: function($gathering, options) {
+			$gathering.find('a[data-overlay=gathering-item]').not('.overlay-bound').each(function() {
+				var agiID = $(this).closest('[data-gathering-item-id]').attr('data-gathering-item-id');
 				$(this).on('click', function() {
 					$.magnificPopup.open({
 						ajax: {
@@ -41,9 +41,9 @@
 							}
 						},
 						items: {
-							src: CCM_TOOLS_PATH + '/aggregator/item/detail'
+							src: CCM_TOOLS_PATH + '/gathering/item/detail'
 						},
-						mainClass: 'ccm-aggregator-overlay-wrapper',	
+						mainClass: 'ccm-gathering-overlay-wrapper',	
 						type: 'ajax',
 						removalDelay: 200
 					});
@@ -52,45 +52,45 @@
 			}).addClass('overlay-bound');
     	},
 
-    	enableHover: function($aggregator, options) {
+    	enableHover: function($gathering, options) {
 
-			$aggregator.find('.ccm-aggregator-item').not('.hover-bound').each(function() {
+			$gathering.find('.ccm-gathering-item').not('.hover-bound').each(function() {
 				$(this).on('mouseenter', function() {
-					$(this).addClass('ccm-aggregator-item-over')
+					$(this).addClass('ccm-gathering-item-over')
 				}).on('mouseleave', function() {
-					$(this).removeClass('ccm-aggregator-item-over')
+					$(this).removeClass('ccm-gathering-item-over')
 				});
 			}).addClass('hover-bound');
     	},
 
-    	enableEditing: function($aggregator, options) {
-			$aggregator.find('a[data-inline-command=options-tile]').not('.aggregator-options-bound').on('click', function(e) {
+    	enableEditing: function($gathering, options) {
+			$gathering.find('a[data-inline-command=options-tile]').not('.gathering-options-bound').on('click', function(e) {
 				var $menu = $('#' + $(this).attr('data-menu'));
 				$.fn.ccmmenu.showmenu(e, $menu);
 				return false;
-			}).addClass('aggregator-options-bound');
+			}).addClass('gathering-options-bound');
 
-			var $itemElements = $($aggregator.packery('getItemElements')).not('.event-bound');
+			var $itemElements = $($gathering.packery('getItemElements')).not('.event-bound');
 			$itemElements.draggable({
 				'handle': 'a[data-inline-command=move-tile]', 
 				start: function() {
 					$.fn.ccmmenu.disable();
 					$('.ccm-area-block-dropzone').addClass('ccm-area-block-dropzone-active');
-					$('div[data-aggregator-id]').each(function() {
+					$('div[data-gathering-id]').each(function() {
 						var $tagg = $(this);
-						if (parseInt($tagg.attr('data-aggregator-id')) != parseInt(options.agID)) {
-							$tagg.addClass('ccm-aggregator-item-droppable').droppable({
-								accept: '.ccm-aggregator-item',
+						if (parseInt($tagg.attr('data-gathering-id')) != parseInt(options.agID)) {
+							$tagg.addClass('ccm-gathering-item-droppable').droppable({
+								accept: '.ccm-gathering-item',
 								tolerance: 'pointer',
-								hoverClass: 'ccm-aggregator-item-drop-active',
+								hoverClass: 'ccm-gathering-item-drop-active',
 								drop: function(e, ui) {
 									jQuery.fn.dialog.showLoader();
 									var $destination = $(this);
-									var agID = $destination.attr('data-aggregator-id');
+									var agID = $destination.attr('data-gathering-id');
 									var data = [
-										{'name': 'task', 'value': 'move_to_new_aggregator'},
-										{'name': 'agiID', 'value': ui.draggable.attr('data-aggregator-item-id')},
-										{'name': 'agID', 'value': $destination.attr('data-aggregator-id')},
+										{'name': 'task', 'value': 'move_to_new_gathering'},
+										{'name': 'agiID', 'value': ui.draggable.attr('data-gathering-item-id')},
+										{'name': 'agID', 'value': $destination.attr('data-gathering-id')},
 										{'name': 'cID', 'value': CCM_CID},
 										{'name': 'itemsPerPage', 'value': options.itemsPerPage},
 										{'name': 'editToken', 'value': options.editToken}
@@ -101,7 +101,7 @@
 
 									$.ajax({
 										type: 'post',
-										url: CCM_TOOLS_PATH + '/aggregator/update',
+										url: CCM_TOOLS_PATH + '/gathering/update',
 										data: data,
 										success: function(r) {
 											$source.packery('layout');
@@ -117,13 +117,13 @@
 				},
 				stop: function() {
 					$.fn.ccmmenu.enable();
-					//$('div.ccm-aggregator-item-droppable').droppable('destroy');
+					//$('div.ccm-gathering-item-droppable').droppable('destroy');
 					$('.ccm-area-block-dropzone').removeClass('ccm-area-block-dropzone-active');
-					$aggregator.packery('layout');
+					$gathering.packery('layout');
 				}
 			});
 
-			$aggregator.packery('on', 'dragItemPositioned', function(pkr, item) {
+			$gathering.packery('on', 'dragItemPositioned', function(pkr, item) {
 				var data = [
 					{'name': 'task', 'value': 'update_display_order'},
 					{'name': 'agID', 'value': options.agID},
@@ -133,20 +133,20 @@
 				var elements = pkr.getItemElements();
 				for (i = 0; i < elements.length; i++) {
 					var $obj = $(elements[i]);
-					data.push({'name': 'agiID[]', 'value': $obj.attr('data-aggregator-item-id')});
+					data.push({'name': 'agiID[]', 'value': $obj.attr('data-gathering-item-id')});
 				}
 
 				$.ajax({
 					type: 'post',
-					url: CCM_TOOLS_PATH + '/aggregator/update',
+					url: CCM_TOOLS_PATH + '/gathering/update',
 					data: data
 				});
 			});
 
-			$aggregator.packery( 'bindUIDraggableEvents', $itemElements );
+			$gathering.packery( 'bindUIDraggableEvents', $itemElements );
 			$itemElements.resizable({
 				handles: 'se',
-				helper: 'ccm-aggregator-resize-helper',
+				helper: 'ccm-gathering-resize-helper',
 				grid: [options.columnWidth + options.gutter, options.rowHeight + options.gutter],
 				stop: function(e, ui) {
 					var $tile = ui.element,
@@ -155,15 +155,15 @@
 					w = Math.floor(wx / options.columnWidth),
 					h = Math.floor(hx / options.rowHeight);
 
-					$aggregator.packery('layout');
+					$gathering.packery('layout');
 
 					$.ajax({
 						type: 'post',
-						url: CCM_TOOLS_PATH + '/aggregator/update',
+						url: CCM_TOOLS_PATH + '/gathering/update',
 						data: {
 							'task': 'resize',
 							'agID': options.agID,
-							'agiID': $tile.attr('data-aggregator-item-id'),
+							'agiID': $tile.attr('data-gathering-item-id'),
 							'agiSlotWidth': w,
 							'agiSlotHeight': h,
 							'editToken': options.editToken
@@ -190,12 +190,12 @@
 				agtID: options.agtID,
 				token: options.updateToken
 			},
-			url: CCM_TOOLS_PATH + '/aggregator/item/template',
+			url: CCM_TOOLS_PATH + '/gathering/item/template',
 			success: function(r) {
 				jQuery.fn.dialog.hideLoader();
 				if (options.reloadItemTile) {
-					// load the newly rendered HTML into the old aggregator item.
-					$('[data-aggregator-item-id=' + options.agiID + ']').find('div.ccm-aggregator-item-inner-render').html(r);
+					// load the newly rendered HTML into the old gathering item.
+					$('[data-gathering-item-id=' + options.agiID + ']').find('div.ccm-gathering-item-inner-render').html(r);
 				}
 				jQuery.fn.dialog.closeTop();
 			}
@@ -211,28 +211,28 @@
 				agiID: options.agiID,
 				token: options.deleteToken
 			},
-			url: CCM_TOOLS_PATH + '/aggregator/item/delete',
+			url: CCM_TOOLS_PATH + '/gathering/item/delete',
 			success: function(r) {
 				jQuery.fn.dialog.hideLoader();
-				var $item = $('[data-aggregator-item-id=' + options.agiID + ']');
-				var $aggregator = $item.parent();
+				var $item = $('[data-gathering-item-id=' + options.agiID + ']');
+				var $gathering = $item.parent();
 				$item.remove();
-				$aggregator.packery('layout');
+				$gathering.packery('layout');
 				jQuery.fn.dialog.closeTop();
 			}
 		});
     },
 
     getNew: function() {
-    	var $aggregator = $(this);
+    	var $gathering = $(this);
 		var options = $(this).data('options');
 		jQuery.fn.dialog.showLoader();
-		var getNewerThan = $($aggregator.find('.ccm-aggregator-item')[0]).attr('data-aggregator-item-id');
+		var getNewerThan = $($gathering.find('.ccm-gathering-item')[0]).attr('data-gathering-item-id');
 		$.ajax({
 			type: 'post',
-			url: CCM_TOOLS_PATH + '/aggregator/get_new',
+			url: CCM_TOOLS_PATH + '/gathering/get_new',
 			data: {
-				'task': 'get_aggregator_items',
+				'task': 'get_gathering_items',
 				'newerThan': getNewerThan,
 				'agID': options.agID,
 				'editToken': options.editToken,
@@ -241,7 +241,7 @@
 		
 			success: function(r) {
 				jQuery.fn.dialog.hideLoader();
-				methods.private.handleAppendedElements(r, $aggregator, options, true);
+				methods.private.handleAppendedElements(r, $gathering, options, true);
 			}
 		});
     },
@@ -258,36 +258,36 @@
 		}, options);
 
 		return this.each(function() {
-			var $aggregator = $(this);
+			var $gathering = $(this);
 			$(this).data('options', options);
-			var $loadButton = $aggregator.parent().find('button[data-aggregator-button=aggregator-load-more-items]');
+			var $loadButton = $gathering.parent().find('button[data-gathering-button=gathering-load-more-items]');
 			if (options.totalPages == 1) {
 				$loadButton.hide();
 			}
-			$aggregator.packery({
+			$gathering.packery({
 				columnWidth: options.columnWidth,
 				rowHeight: options.rowHeight,
 				gutter: options.gutter
 			});
-			$aggregator.css('opacity', 1);
+			$gathering.css('opacity', 1);
 
 			// handle details and lightbox.
-			methods.private.enableHover($aggregator, options);
+			methods.private.enableHover($gathering, options);
 
 			// handle details and lightbox.
-			methods.private.enableOverlay($aggregator, options);
+			methods.private.enableOverlay($gathering, options);
 
 			$loadButton.on('click', function() {
-				page = parseInt($aggregator.attr('data-aggregator-current-page')),
+				page = parseInt($gathering.attr('data-gathering-current-page')),
 					newPage = page + 1;
 
 				$loadButton.prop('disabled', true);
 
 				$.ajax({
 					type: 'post',
-					url: CCM_TOOLS_PATH + '/aggregator/load_more',
+					url: CCM_TOOLS_PATH + '/gathering/load_more',
 					data: {
-						'task': 'get_aggregator_items',
+						'task': 'get_gathering_items',
 						'agID': options.agID,
 						'page': newPage,
 						'itemsPerPage': options.itemsPerPage,
@@ -297,37 +297,37 @@
 					},
 				
 					success: function(r) {
-						methods.private.handleAppendedElements(r, $aggregator, options);
+						methods.private.handleAppendedElements(r, $gathering, options);
 						if (newPage == options.totalPages) {
 							$loadButton.hide();
 						} else {
 							$loadButton.prop('disabled', false);
-							$aggregator.attr('data-aggregator-current-page', newPage);
+							$gathering.attr('data-gathering-current-page', newPage);
 						}
 					}
 				});
 			});
 
 			if (options.showTileControls) {
-				var $refreshButton = $('[data-aggregator-refresh=' + options.agID + ']');
+				var $refreshButton = $('[data-gathering-refresh=' + options.agID + ']');
 				$refreshButton.on('click', function() {
-					$aggregator.ccmaggregator('getNew');
+					$gathering.ccmgathering('getNew');
 					return false;
 				});
-				methods.private.enableEditing($aggregator, options);
+				methods.private.enableEditing($gathering, options);
 			}
 		});	
     }
   }
 
-  $.fn.ccmaggregator = function(method) {
+  $.fn.ccmgathering = function(method) {
 
     if ( methods[method] ) {
       return methods[method].apply( this, Array.prototype.slice.call( arguments, 1 ));
     } else if ( typeof method === 'object' || ! method ) {
       return methods.init.apply( this, arguments );
     } else {
-      $.error( 'Method ' +  method + ' does not exist on jQuery.ccmaggregator' );
+      $.error( 'Method ' +  method + ' does not exist on jQuery.ccmgathering' );
     }   
 
   };
