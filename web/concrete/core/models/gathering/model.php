@@ -40,10 +40,10 @@ class Concrete5_Model_Gathering extends Object {
 
 	public function getGatheringItems() {
 		$db = Loader::db();
-		$r = $db->Execute('select agiID from GatheringItems where gaID = ?', array($this->gaID));
+		$r = $db->Execute('select gaiID from GatheringItems where gaID = ?', array($this->gaID));
 		$list = array();
 		while ($row = $r->FetchRow()) {
-			$item = GatheringItem::getByID($row['agiID']);
+			$item = GatheringItem::getByID($row['gaiID']);
 			if (is_object($item)) {
 				$list[] = $item;
 			}
@@ -106,9 +106,9 @@ class Concrete5_Model_Gathering extends Object {
 
 		// now, we find all the items with that timestamp, and we update their display order.
 		$agiBatchDisplayOrder = 0;
-		$r = $db->Execute('select agiID from GatheringItems where gaID = ? and agiBatchTimestamp = ? order by agiPublicDateTime desc', array($this->getGatheringID(), $agiBatchTimestamp));
+		$r = $db->Execute('select gaiID from GatheringItems where gaID = ? and agiBatchTimestamp = ? order by agiPublicDateTime desc', array($this->getGatheringID(), $agiBatchTimestamp));
 		while ($row = $r->FetchRow()) {
-			$db->Execute('update GatheringItems set agiBatchDisplayOrder = ? where agiID = ?', array($agiBatchDisplayOrder, $row['agiID']));
+			$db->Execute('update GatheringItems set agiBatchDisplayOrder = ? where gaiID = ?', array($agiBatchDisplayOrder, $row['gaiID']));
 			$agiBatchDisplayOrder++;
 		}
 

@@ -2,16 +2,16 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 class Concrete5_Model_GatheringItemFeatureAssignment extends FeatureAssignment {
 
-	protected $agiID;
+	protected $gaiID;
 	public function loadDetails($mixed) {
-		$this->agiID = $mixed->getGatheringItemID();
+		$this->gaiID = $mixed->getGatheringItemID();
 	}
 
 	public static function add(Feature $fe, FeatureDetail $fd, GatheringItem $item) {
 		$fc = FeatureCategory::getByHandle('gathering_item');
 		$fa = parent::add($fe, $fc, $fd, $item);
 		$db = Loader::db();
-		$db->Execute('insert into GatheringItemFeatureAssignments (agiID, faID) values (?, ?)', array(
+		$db->Execute('insert into GatheringItemFeatureAssignments (gaiID, faID) values (?, ?)', array(
 			$item->getGatheringItemID(),
 			$fa->getFeatureAssignmentID()
 		));
@@ -20,7 +20,7 @@ class Concrete5_Model_GatheringItemFeatureAssignment extends FeatureAssignment {
 
 	public static function getList($item) {
 		$db = Loader::db();
-		$r = $db->Execute('select faID from GatheringItemFeatureAssignments where agiID = ?', array(
+		$r = $db->Execute('select faID from GatheringItemFeatureAssignments where gaiID = ?', array(
 			$item->getGatheringItemID()
 		));
 		$list = array();
@@ -35,7 +35,7 @@ class Concrete5_Model_GatheringItemFeatureAssignment extends FeatureAssignment {
 
 	public static function getFeature($feHandle, $item) {
 		$db = Loader::db();
-		$faID = $db->GetOne('select ca.faID from GatheringItemFeatureAssignments as inner join FeatureAssignments fa on as.faID = fa.faID inner join Features fe on fa.feID = fe.feID where agiID = ? and fe.feHandle = ?', array(
+		$faID = $db->GetOne('select ca.faID from GatheringItemFeatureAssignments as inner join FeatureAssignments fa on as.faID = fa.faID inner join Features fe on fa.feID = fe.feID where gaiID = ? and fe.feHandle = ?', array(
 			$item->getGatheringItemID(), $feHandle
 		));
 		if ($faID && $faID > 0) {
@@ -48,7 +48,7 @@ class Concrete5_Model_GatheringItemFeatureAssignment extends FeatureAssignment {
 
 	public function delete() {
 		$db = Loader::db();
-		$db->Execute('delete from GatheringItemFeatureAssignments where faID = ? and agiID = ?', array($this->getFeatureAssignmentID(), $this->agiID));
+		$db->Execute('delete from GatheringItemFeatureAssignments where faID = ? and gaiID = ?', array($this->getFeatureAssignmentID(), $this->gaiID));
 		if (!$this->assignmentIsInUse()) {
 			parent::delete();
 		}
