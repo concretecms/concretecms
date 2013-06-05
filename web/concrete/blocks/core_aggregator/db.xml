@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 <schema version="0.3">
-	<table name="btCoreAggregator">
+	<table name="btCoreGathering">
 		<field name="bID" type="I">
 			<key />
 			<unsigned />
 		</field>
-		<field name="agID" type="I">
+		<field name="gaID" type="I">
 		</field>
 		<field name="itemsPerPage" type="I2">
 			<unsigned />
@@ -16,7 +16,7 @@
 			<unsigned />
 			<default value="0" />
 		</field>
-		<field name="enablePostingFromAggregator" type="I">
+		<field name="enablePostingFromGathering" type="I">
 			<default value="0"/>
 		</field>
 	</table>
