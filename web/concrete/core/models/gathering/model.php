@@ -53,10 +53,10 @@ class Concrete5_Model_Gathering extends Object {
 
 	public function getConfiguredGatheringDataSources() {
 		$db = Loader::db();
-		$r = $db->Execute('select acsID from GatheringConfiguredDataSources where gaID = ?', array($this->gaID));
+		$r = $db->Execute('select gcsID from GatheringConfiguredDataSources where gaID = ?', array($this->gaID));
 		$list = array();
 		while ($row = $r->FetchRow()) {
-			$source = GatheringDataSourceConfiguration::getByID($row['acsID']);
+			$source = GatheringDataSourceConfiguration::getByID($row['gcsID']);
 			if (is_object($source)) {
 				$list[] = $source;
 			}
