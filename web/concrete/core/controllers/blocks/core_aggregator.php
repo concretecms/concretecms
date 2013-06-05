@@ -1,9 +1,9 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Controller_Block_CoreAggregator extends BlockController {
+class Concrete5_Controller_Block_CoreGathering extends BlockController {
 
 		protected $btCacheBlockRecord = true;
-		protected $btTable = 'btCoreAggregator';
+		protected $btTable = 'btCoreGathering';
 		protected $btSupportsInlineEdit = true;
 
 		public function getBlockTypeDescription() {
@@ -11,39 +11,39 @@ class Concrete5_Controller_Block_CoreAggregator extends BlockController {
 		}
 		
 		public function getBlockTypeName() {
-			return t("Aggregator");
+			return t("Gathering");
 		}
 
 		public function duplicate($newBID) {
 			$ni = parent::duplicate($newBID);
-			$ag = Aggregator::getByID($this->agID);
+			$ag = Gathering::getByID($this->gaID);
 			$nr = $ag->duplicate();
 			$db = Loader::db();
-			$db->Execute('update btCoreAggregator set agID = ? where bID = ?', array($nr->getAggregatorID(), $ni->bID));
+			$db->Execute('update btCoreGathering set gaID = ? where bID = ?', array($nr->getGatheringID(), $ni->bID));
 		}
 
 		protected function setupForm() {
-			$aggregator = false;
+			$gathering = false;
 			$activeSources = array();
-			if ($this->agID) {
-				$aggregator = Aggregator::getByID($this->agID);
-				$activeSources = $aggregator->getConfiguredAggregatorDataSources();
+			if ($this->gaID) {
+				$gathering = Gathering::getByID($this->gaID);
+				$activeSources = $gathering->getConfiguredGatheringDataSources();
 			}
-			$availableSources = AggregatorDataSource::getList();
+			$availableSources = GatheringDataSource::getList();
 			$this->set('availableSources', $availableSources);
 			$this->set('activeSources', $activeSources);
-			$this->set('aggregator', $aggregator);
+			$this->set('gathering', $gathering);
 		}
 
-		public function getAggregatorObject() {
-			if (!isset($this->aggregator)) {
+		public function getGatheringObject() {
+			if (!isset($this->gathering)) {
 				// i don't know why this->cnvid isn't sticky in some cases, leading us to query
 				// every damn time
 				$db = Loader::db();
-				$agID = $db->GetOne('select agID from btCoreAggregator where bID = ?', array($this->bID));
-				$this->aggregator = Aggregator::getByID($agID);
+				$agID = $db->GetOne('select gaID from btCoreGathering where bID = ?', array($this->bID));
+				$this->gathering = Gathering::getByID($agID);
 			}
-			return $this->aggregator;
+			return $this->gathering;
 		}
 
 		public function add() {
@@ -58,7 +58,7 @@ class Concrete5_Controller_Block_CoreAggregator extends BlockController {
 		public function action_post() {
 			// happens through ajax
 			$composer = Composer::getByID($this->cmpID);
-			if (is_object($composer) && $this->enablePostingFromAggregator) {
+			if (is_object($composer) && $this->enablePostingFromGathering) {
 				$ccp = new Permissions($composer);
 				if ($ccp->canAccessComposer()) {
 
@@ -90,12 +90,12 @@ class Concrete5_Controller_Block_CoreAggregator extends BlockController {
 
 		public function save($args) {
 			$db = Loader::db();
-			$agID = $db->GetOne('select agID from btCoreAggregator where bID = ?', array($this->bID));
+			$agID = $db->GetOne('select gaID from btCoreGathering where bID = ?', array($this->bID));
 			if (!$agID) {
-				$ag = Aggregator::add();
+				$ag = Gathering::add();
 				$task = 'add';
 			} else {
-				$ag = Aggregator::getByID($agID);
+				$ag = Gathering::getByID($agID);
 				$task = 'edit';
 			}
 
@@ -104,24 +104,24 @@ class Concrete5_Controller_Block_CoreAggregator extends BlockController {
 				$tab = array();
 			}
 			if ($task == 'add' || in_array('sources', $tab)) {
-				$ag->clearConfiguredAggregatorDataSources();
+				$ag->clearConfiguredGatheringDataSources();
 				$sources = $this->post('agsID');
 				foreach($sources as $key => $agsID) {
 					$key = (string) $key; // because PHP is stupid
 					if ($key != '_ags_') {
-						$ags = AggregatorDataSource::getByID($agsID);
+						$ags = GatheringDataSource::getByID($agsID);
 						$ags->setOptionFormKey($key);
 						$post = $ags->getOptionFormRequestData();
 						$agc = $ags->configure($ag, $post);	
 					}
 				}
-				$ag->generateAggregatorItems();
+				$ag->generateGatheringItems();
 			}
 
 
 			$itemsPerPage = intval($args['itemsPerPage']);
 			$values = array(
-				'agID' => $ag->getAggregatorID()
+				'gaID' => $ag->getGatheringID()
 			);
 
 			if (in_array('output', $tab)) {
@@ -132,31 +132,31 @@ class Concrete5_Controller_Block_CoreAggregator extends BlockController {
 
 			if (in_array('posting', $tab)) {
 				$cmpID = 0;
-				if ($args['enablePostingFromAggregator']) {
-					$values['enablePostingFromAggregator'] = 1;
+				if ($args['enablePostingFromGathering']) {
+					$values['enablePostingFromGathering'] = 1;
 					if ($args['cmpID']) {
 						$cmpID = $args['cmpID'];
 					}
 				} else {
-					$values['enablePostingFromAggregator'] = 0;
+					$values['enablePostingFromGathering'] = 0;
 				}
 				$values['cmpID'] = $cmpID;	
 			} else {
 				$values['cmpID'] = $this->cmpID;	
-				$values['enablePostingFromAggregator'] = $this->enablePostingFromAggregator;	
+				$values['enablePostingFromGathering'] = $this->enablePostingFromGathering;	
 			}
 			parent::save($values);
 
 		}
 
 		public function on_page_view() {
-			if ($this->agID) {
-				$aggregator = Aggregator::getByID($this->agID);
-				if (is_object($aggregator)) {
-					$this->addHeaderItem(Loader::helper('html')->css('ccm.aggregator.css'));
-					$this->addFooterItem(Loader::helper('html')->javascript('ccm.aggregator.js'));
+			if ($this->gaID) {
+				$gathering = Gathering::getByID($this->gaID);
+				if (is_object($gathering)) {
+					$this->addHeaderItem(Loader::helper('html')->css('ccm.gathering.css'));
+					$this->addFooterItem(Loader::helper('html')->javascript('ccm.gathering.js'));
 					Loader::helper('overlay')->init(false);
-					if ($this->enablePostingFromAggregator) {
+					if ($this->enablePostingFromGathering) {
 						$cmp = Composer::getByID($this->cmpID);
 						Loader::helper('composer/form')->addAssetsToRequest($cmp, $this);
 					}
@@ -166,28 +166,28 @@ class Concrete5_Controller_Block_CoreAggregator extends BlockController {
 
 		public function delete() {
 			parent::delete();
-			if ($this->agID) {
-				$aggregator = Aggregator::getByID($this->agID);
-				if (is_object($aggregator)) {
-					$aggregator->delete();
+			if ($this->gaID) {
+				$gathering = Gathering::getByID($this->gaID);
+				if (is_object($gathering)) {
+					$gathering->delete();
 				}
 			}
 		}
 		public function view() {
-			if ($this->agID) {
-				$aggregator = Aggregator::getByID($this->agID);
-				if (is_object($aggregator)) {			
-					if ($this->enablePostingFromAggregator && $this->cmpID) {
+			if ($this->gaID) {
+				$gathering = Gathering::getByID($this->gaID);
+				if (is_object($gathering)) {			
+					if ($this->enablePostingFromGathering && $this->cmpID) {
 						$cmp = Composer::getByID($this->cmpID);
 						$p = new Permissions($cmp);
 						if ($p->canAccessComposer()) {
 							$this->set('composer', $cmp);
 						}
 					}		
-					$list = new AggregatorItemList($aggregator);
+					$list = new GatheringItemList($gathering);
 					$list->sortByDateDescending();
 					$list->setItemsPerPage($this->itemsPerPage);
-					$this->set('aggregator', $aggregator);
+					$this->set('gathering', $gathering);
 					$this->set('itemList', $list);
 				}
 			}

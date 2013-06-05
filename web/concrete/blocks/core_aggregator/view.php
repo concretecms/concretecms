@@ -2,12 +2,12 @@
 
 
 <?
-if ($enablePostingFromAggregator && is_object($composer)) { ?>
+if ($enablePostingFromGathering && is_object($composer)) { ?>
 
-	<div data-aggregator-block-id="<?=$b->getBlockID()?>">
+	<div data-gathering-block-id="<?=$b->getBlockID()?>">
 
 	<div style="display: none">
-		<div data-form="aggregator-post">
+		<div data-form="gathering-post">
 			<form data-form="composer">
 			<?=Loader::helper('composer/form')->display($composer)?>
 			<div class="dialog-buttons">
@@ -18,16 +18,16 @@ if ($enablePostingFromAggregator && is_object($composer)) { ?>
 		</div>
 	</div>
 
-	<button class="btn" data-action="post-to-aggregator" type="button"><?=t('Post')?></button><br/><br/>
+	<button class="btn" data-action="post-to-gathering" type="button"><?=t('Post')?></button><br/><br/>
 
 	</div>
 
 	<script type="text/javascript">
 	$(function() {
 
-		var $db = $('div[data-aggregator-block-id=<?=$b->getBlockID()?>]'),
-			$dialog = $db.find('div[data-form=aggregator-post]'),
-			$postToAggregator = $db.find('button[data-action=post-to-aggregator]');
+		var $db = $('div[data-gathering-block-id=<?=$b->getBlockID()?>]'),
+			$dialog = $db.find('div[data-form=gathering-post]'),
+			$postToGathering = $db.find('button[data-action=post-to-gathering]');
 
 		$db.find('form[data-form=composer]').ccmcomposer({
 			publishURL: '<?=html_entity_decode($this->action("post"))?>',
@@ -38,16 +38,16 @@ if ($enablePostingFromAggregator && is_object($composer)) { ?>
 			publishReturnMethod: 'ajax',
 			onPublish: function(r) {
 				jQuery.fn.dialog.closeAll();
- 				$('div[data-aggregator-id=<?=$aggregator->getAggregatorID()?>]').ccmaggregator('getNew');
+ 				$('div[data-gathering-id=<?=$gathering->getGatheringID()?>]').ccmgathering('getNew');
 			}
 		});
 
-		$postToAggregator.on('click', function() {
+		$postToGathering.on('click', function() {
 			$dialog.dialog({
 				modal: true,
 				width: 400,
 				height: 540,
-				title: '<?=t("Post to Aggregator")?>',
+				title: '<?=t("Post to Gathering")?>',
 				open: function() {
 					var $buttons = $dialog.find('.dialog-buttons').hide().clone(true,true);
 					$(this).dialog('option', 'buttons', [{}]);
@@ -61,8 +61,8 @@ if ($enablePostingFromAggregator && is_object($composer)) { ?>
 <? } ?>
 
 <?
-  Loader::element('aggregator/display', array(
-  	'aggregator' => $aggregator,
+  Loader::element('gathering/display', array(
+  	'gathering' => $gathering,
   	'list' => $itemList,
   	'itemsPerPage' => $itemsPerPage
   ));

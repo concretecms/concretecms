@@ -1,3 +1,3 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
-class RssFeedAggregatorDataSource extends Concrete5_Model_RssFeedAggregatorDataSource {}
+class RssFeedGatheringDataSource extends Concrete5_Model_RssFeedGatheringDataSource {}

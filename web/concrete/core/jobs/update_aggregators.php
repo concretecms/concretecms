@@ -6,22 +6,22 @@
 */
 
 defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Job_UpdateAggregators extends Job {
+class Concrete5_Job_UpdateGatherings extends Job {
 
 	public function getJobName() {
-		return t("Update Aggregators");
+		return t("Update Gatherings");
 	}
 	
 	public function getJobDescription() {
-		return t("Loads new items into aggregators.");
+		return t("Loads new items into gatherings.");
 	}
 
 	public function run() {
-		// retrieve all aggregators
-		$list = Aggregator::getList();
-		foreach($list as $aggregator) {
-			// generate all new items since the last time the aggregator was updated.
-			$aggregator->generateAggregatorItems();
+		// retrieve all gatherings
+		$list = Gathering::getList();
+		foreach($list as $gathering) {
+			// generate all new items since the last time the gathering was updated.
+			$gathering->generateGatheringItems();
 		}
 	}
 }

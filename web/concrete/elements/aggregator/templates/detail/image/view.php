@@ -5,7 +5,7 @@ if (is_array($image)) {
 }
 ?>
 
-<div class="ccm-aggregator-overlay">
+<div class="ccm-gathering-overlay">
 	<img src="<?=$image->getPath()?>" style="max-width: 600px" />
-	<div class="ccm-aggregator-thumbnail-caption"><?=$title?></div>
+	<div class="ccm-gathering-thumbnail-caption"><?=$title?></div>
 </div>

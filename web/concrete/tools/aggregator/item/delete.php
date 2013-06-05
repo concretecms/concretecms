@@ -5,11 +5,11 @@ $form = Loader::helper('form');
 $agiID = intval($_REQUEST['agiID']);
 
 $nh = Loader::helper('validation/numbers');
-$item = AggregatorItem::getByID($agiID);
+$item = GatheringItem::getByID($agiID);
 if (is_object($item)) {
-  $aggregator = $item->getAggregatorObject();
-  $agp = new Permissions($aggregator);
-  if ($agp->canEditAggregatorItems() && Loader::helper('validation/token')->validate('delete_aggregator_item', $_REQUEST['token'])) {
+  $gathering = $item->getGatheringObject();
+  $agp = new Permissions($gathering);
+  if ($agp->canEditGatheringItems() && Loader::helper('validation/token')->validate('delete_gathering_item', $_REQUEST['token'])) {
     if ($_POST['task'] == 'delete_item') {
       $item->deactivate();
       exit;
@@ -25,7 +25,7 @@ if (is_object($item)) {
 
     <div class="dialog-buttons">
     <button class="btn pull-left btn-hover-danger" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel')?></button>
-    <button class="btn pull-right btn-danger" onclick="$.fn.ccmaggregator('deleteItem', {agiID: '<?=$agiID?>', 'deleteToken': '<?=Loader::helper('validation/token')->generate('delete_aggregator_item')?>'})"><?=t('Delete')?></button>
+    <button class="btn pull-right btn-danger" onclick="$.fn.ccmgathering('deleteItem', {agiID: '<?=$agiID?>', 'deleteToken': '<?=Loader::helper('validation/token')->generate('delete_gathering_item')?>'})"><?=t('Delete')?></button>
     </div>
 
     <? }

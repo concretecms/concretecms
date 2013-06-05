@@ -16,16 +16,16 @@ foreach($composers as $cmp) {
 		<label class="control-label"><?=t('Enable New Topics')?></label>
 		<div class="controls">
 			<label class="radio">
-				<?=$form->radio('enablePostingFromAggregator', 0, $enablePostingFromAggregator)?>
+				<?=$form->radio('enablePostingFromGathering', 0, $enablePostingFromGathering)?>
 				<span><?=t('No, posting is disabled.')?></span>
 			</label>
 			<label class="radio">
-				<?=$form->radio('enablePostingFromAggregator', 1, $enablePostingFromAggregator)?>
-				<span><?=t('Yes, this aggregator can be posted to from the front-end.')?></span>
+				<?=$form->radio('enablePostingFromGathering', 1, $enablePostingFromGathering)?>
+				<span><?=t('Yes, this gathering can be posted to from the front-end.')?></span>
 			</label>
 		</div>
 	</div>
-	<div class="control-group" data-row="enablePostingFromAggregator">
+	<div class="control-group" data-row="enablePostingFromGathering">
 		<label class="control-label"><?=t('Create pages using')?></label>
 		<div class="controls" data-select="page">
 			<?=$form->select('cmpID', $types, $cmpID)?>
@@ -35,12 +35,12 @@ foreach($composers as $cmp) {
 
 <script type="text/javascript">
 $(function() {
-	$('input[name=enablePostingFromAggregator]').on('change', function() {
-		var pg = $('input[name=enablePostingFromAggregator]:checked');
+	$('input[name=enablePostingFromGathering]').on('change', function() {
+		var pg = $('input[name=enablePostingFromGathering]:checked');
 		if (pg.val() == 1) {
-			$('div[data-row=enablePostingFromAggregator]').show();
+			$('div[data-row=enablePostingFromGathering]').show();
 		} else {
-			$('div[data-row=enablePostingFromAggregator]').hide();
+			$('div[data-row=enablePostingFromGathering]').hide();
 		}
 	}).trigger('change');
 });

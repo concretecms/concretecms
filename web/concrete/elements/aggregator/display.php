@@ -8,8 +8,8 @@ if (!is_object($c)) {
 }
 
 $pt = $c->getCollectionThemeObject();
-$agp = new Permissions($aggregator);
-if ($showTileControls && $agp->canEditAggregatorItems()) {
+$agp = new Permissions($gathering);
+if ($showTileControls && $agp->canEditGatheringItems()) {
   $showTileControls = true;
 } else {
   $showTileControls = false;
@@ -17,33 +17,33 @@ if ($showTileControls && $agp->canEditAggregatorItems()) {
 
 ?>
 
-<div class="ccm-aggregator-wrapper">
+<div class="ccm-gathering-wrapper">
 
-<div data-aggregator-id="<?=$aggregator->getAggregatorID()?>" data-aggregator-current-page="1" class="<? if ($showTileControls) { ?>ccm-aggregator-edit<? } else { ?>ccm-aggregator-view<? } ?> ccm-aggregator-grid">
+<div data-gathering-id="<?=$gathering->getGatheringID()?>" data-gathering-current-page="1" class="<? if ($showTileControls) { ?>ccm-gathering-edit<? } else { ?>ccm-gathering-view<? } ?> ccm-gathering-grid">
     <? foreach($items as $item) { ?>
-      <?=Loader::element('aggregator/tile', array('item' => $item, 'showTileControls' => $showTileControls))?>
+      <?=Loader::element('gathering/tile', array('item' => $item, 'showTileControls' => $showTileControls))?>
     <? } ?>
 </div>
 
-<div class="ccm-aggregator-load-more">
-  <button class="btn-large btn" data-aggregator-button="aggregator-load-more-items"><?=t('Load More')?></button>
+<div class="ccm-gathering-load-more">
+  <button class="btn-large btn" data-gathering-button="gathering-load-more-items"><?=t('Load More')?></button>
 </div>
 
 </div>
 
 <script type="text/javascript">
 $(function() {
-  $('div[data-aggregator-id=<?=$aggregator->getAggregatorID()?>]').ccmaggregator({
+  $('div[data-gathering-id=<?=$gathering->getGatheringID()?>]').ccmgathering({
     totalPages: '<?=$paginator->getTotalPages()?>',
     'itemsPerPage': '<?=$itemsPerPage?>', 
-    'gutter': <?=$pt->getThemeAggregatorGridItemMargin()?>,
-    columnWidth: <?=$pt->getThemeAggregatorGridItemWidth()?>,
-    rowHeight: <?=$pt->getThemeAggregatorGridItemHeight()?>,
-    agID: <?=$aggregator->getAggregatorID()?>,
+    'gutter': <?=$pt->getThemeGatheringGridItemMargin()?>,
+    columnWidth: <?=$pt->getThemeGatheringGridItemWidth()?>,
+    rowHeight: <?=$pt->getThemeGatheringGridItemHeight()?>,
+    gaID: <?=$gathering->getGatheringID()?>,
     showTileControls: '<?=$showTileControls?>',
-    loadToken: '<?=Loader::helper('validation/token')->generate('get_aggregator_items')?>',
-    editToken: '<?=Loader::helper('validation/token')->generate('update_aggregator_items')?>',
-    titleEditTemplate: '<?=t('Edit Aggregator Template')?>'
+    loadToken: '<?=Loader::helper('validation/token')->generate('get_gathering_items')?>',
+    editToken: '<?=Loader::helper('validation/token')->generate('update_gathering_items')?>',
+    titleEditTemplate: '<?=t('Edit Gathering Template')?>'
   });
 });
 </script>
@@ -51,11 +51,11 @@ $(function() {
 <style type="text/css">
 <? for ($i = 1; $i <= 8; $i++) { ?>
   div.w<?=$i?> {
-    width: <?=(($i * $pt->getThemeAggregatorGridItemWidth()) + ($pt->getThemeAggregatorGridItemMargin() * ($i - 1)))?>px;
+    width: <?=(($i * $pt->getThemeGatheringGridItemWidth()) + ($pt->getThemeGatheringGridItemMargin() * ($i - 1)))?>px;
   }
 
   div.h<?=$i?> {
-    height: <?=(($i * $pt->getThemeAggregatorGridItemHeight()) + ($pt->getThemeAggregatorGridItemMargin() * ($i - 1)))?>px;
+    height: <?=(($i * $pt->getThemeGatheringGridItemHeight()) + ($pt->getThemeGatheringGridItemMargin() * ($i - 1)))?>px;
   }
 <? } ?>
 </style>

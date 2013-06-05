@@ -6,6 +6,6 @@
 */
 
 defined('C5_EXECUTE') or die("Access Denied.");
-class UpdateAggregators extends Concrete5_Job_UpdateAggregators {
+class UpdateGatherings extends Concrete5_Job_UpdateGatherings {
 
 }

@@ -544,31 +544,31 @@ class Concrete5_Model_PageTheme extends Object {
 		$env->clearOverrideCache();
 	}
 
-	public function getThemeAggregatorGridItemMargin() {
+	public function getThemeGatheringGridItemMargin() {
 		if ($this->supportsGridFramework()) {
 			$gf = $this->getThemeGridFrameworkObject();
-			if (method_exists($gf, 'getAggregatorGridItemMargin')) {
-				return call_user_func(array($gf, 'getAggregatorGridItemMargin'));
+			if (method_exists($gf, 'getGatheringGridItemMargin')) {
+				return call_user_func(array($gf, 'getGatheringGridItemMargin'));
 			}
 		}
 		return 1;
 	}
 
-	public function getThemeAggregatorGridItemWidth() {
+	public function getThemeGatheringGridItemWidth() {
 		if ($this->supportsGridFramework()) {
 			$gf = $this->getThemeGridFrameworkObject();
-			if (method_exists($gf, 'getAggregatorGridItemWidth')) {
-				return call_user_func(array($gf, 'getAggregatorGridItemWidth'));
+			if (method_exists($gf, 'getGatheringGridItemWidth')) {
+				return call_user_func(array($gf, 'getGatheringGridItemWidth'));
 			}
 		}
 		return 150;
 	}
 
-	public function getThemeAggregatorGridItemHeight() {
+	public function getThemeGatheringGridItemHeight() {
 		if ($this->supportsGridFramework()) {
 			$gf = $this->getThemeGridFrameworkObject();
-			if (method_exists($gf, 'getAggregatorGridItemHeight')) {
-				return call_user_func(array($gf, 'getAggregatorGridItemHeight'));
+			if (method_exists($gf, 'getGatheringGridItemHeight')) {
+				return call_user_func(array($gf, 'getGatheringGridItemHeight'));
 			}
 		}
 		return 150;

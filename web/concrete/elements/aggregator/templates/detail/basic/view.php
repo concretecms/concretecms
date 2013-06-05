@@ -1,7 +1,7 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?>
 
-<div class="ccm-aggregator-overlay">
-	<div class="ccm-aggregator-overlay-title"><?=$title?></div>
+<div class="ccm-gathering-overlay">
+	<div class="ccm-gathering-overlay-title"><?=$title?></div>
 	<? if ($date_time) { ?>
 		<div><?=date(DATE_APP_GENERIC_MDYT_FULL, strtotime($date_time))?></div>
 	<? } ?>

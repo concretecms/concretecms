@@ -1,17 +1,17 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Model_Aggregator extends Object {
+class Concrete5_Model_Gathering extends Object {
 
-	public function getAggregatorID() {return $this->agID;}
-	public function getAggregatorDateCreated() {return $this->agDateCreated;}
-	public function getAggregatorDateLastUpdated() {return $this->agDateLastUpdated;}
-	public function getPermissionObjectIdentifier() { return $this->agID;}
+	public function getGatheringID() {return $this->gaID;}
+	public function getGatheringDateCreated() {return $this->gaDateCreated;}
+	public function getGatheringDateLastUpdated() {return $this->gaDateLastUpdated;}
+	public function getPermissionObjectIdentifier() { return $this->gaID;}
 
-	public static function getByID($agID) {
+	public static function getByID($gaID) {
 		$db = Loader::db();
-		$r = $db->GetRow('select agID, agDateCreated, agDateLastUpdated from Aggregators where agID = ?', array($agID));
-		if (is_array($r) && $r['agID'] == $agID) {
-			$ag = new Aggregator;
+		$r = $db->GetRow('select gaID, gaDateCreated, gaDateLastUpdated from Gatherings where gaID = ?', array($gaID));
+		if (is_array($r) && $r['gaID'] == $gaID) {
+			$ag = new Gathering;
 			$ag->setPropertiesFromArray($r);
 			return $ag;
 		}
@@ -19,31 +19,31 @@ class Concrete5_Model_Aggregator extends Object {
 
 	public static function getList() {
 		$db = Loader::db();
-		$r = $db->Execute('select agID from Aggregators order by agDateLastUpdated asc');
-		$aggregators = array();
+		$r = $db->Execute('select gaID from Gatherings order by gaDateLastUpdated asc');
+		$gatherings = array();
 		while ($row = $r->FetchRow()) {
-			$ag = Aggregator::getByID($row['agID']);
+			$ag = Gathering::getByID($row['gaID']);
 			if (is_object($ag)) {
-				$aggregators[] = $ag;
+				$gatherings[] = $ag;
 			}
 		}
-		return $aggregators;
+		return $gatherings;
 	}
 
 	public static function add() {
 		$db = Loader::db();
 		$date = Loader::helper('date')->getSystemDateTime();
-		$r = $db->Execute('insert into Aggregators (agDateCreated) values (?)', array($date));
-		return Aggregator::getByID($db->Insert_ID());
+		$r = $db->Execute('insert into Gatherings (gaDateCreated) values (?)', array($date));
+		return Gathering::getByID($db->Insert_ID());
 	}
 
 
-	public function getAggregatorItems() {
+	public function getGatheringItems() {
 		$db = Loader::db();
-		$r = $db->Execute('select agiID from AggregatorItems where agID = ?', array($this->agID));
+		$r = $db->Execute('select agiID from GatheringItems where gaID = ?', array($this->gaID));
 		$list = array();
 		while ($row = $r->FetchRow()) {
-			$item = AggregatorItem::getByID($row['agiID']);
+			$item = GatheringItem::getByID($row['agiID']);
 			if (is_object($item)) {
 				$list[] = $item;
 			}
@@ -51,12 +51,12 @@ class Concrete5_Model_Aggregator extends Object {
 		return $list;
 	}
 
-	public function getConfiguredAggregatorDataSources() {
+	public function getConfiguredGatheringDataSources() {
 		$db = Loader::db();
-		$r = $db->Execute('select acsID from AggregatorConfiguredDataSources where agID = ?', array($this->agID));
+		$r = $db->Execute('select acsID from GatheringConfiguredDataSources where gaID = ?', array($this->gaID));
 		$list = array();
 		while ($row = $r->FetchRow()) {
-			$source = AggregatorDataSourceConfiguration::getByID($row['acsID']);
+			$source = GatheringDataSourceConfiguration::getByID($row['acsID']);
 			if (is_object($source)) {
 				$list[] = $source;
 			}
@@ -64,8 +64,8 @@ class Concrete5_Model_Aggregator extends Object {
 		return $list;
 	}
 
-	public function clearConfiguredAggregatorDataSources() {
-		$sources = $this->getConfiguredAggregatorDataSources();
+	public function clearConfiguredGatheringDataSources() {
+		$sources = $this->getConfiguredGatheringDataSources();
 		foreach($sources as $s) {
 			$s->delete();
 		}
@@ -73,27 +73,27 @@ class Concrete5_Model_Aggregator extends Object {
 
 	public function duplicate() {
 		$db = Loader::db();
-		$newag = Aggregator::add();
+		$newag = Gathering::add();
 		// dupe data sources
-		foreach($this->getConfiguredAggregatorDataSources() as $source) {
+		foreach($this->getConfiguredGatheringDataSources() as $source) {
 			$source->duplicate($newag);
 		}
 		// dupe items
-		foreach($this->getAggregatorItems() as $item) {
+		foreach($this->getGatheringItems() as $item) {
 			$item->duplicate($newag);
 		}
 		return $newag;
 	}
 
 	/** 
-	 * Runs through all active aggregator data sources, creates AggregatorItem objects
+	 * Runs through all active gathering data sources, creates GatheringItem objects
 	 */
-	public function generateAggregatorItems() {
-		$configuredDataSources = $this->getConfiguredAggregatorDataSources();
+	public function generateGatheringItems() {
+		$configuredDataSources = $this->getConfiguredGatheringDataSources();
 		$items = array();
 		foreach($configuredDataSources as $configuration) {
-			$dataSource = $configuration->getAggregatorDataSourceObject();
-			$dataSourceItems = $dataSource->createAggregatorItems($configuration);
+			$dataSource = $configuration->getGatheringDataSourceObject();
+			$dataSourceItems = $dataSource->createGatheringItems($configuration);
 			$items = array_merge($dataSourceItems, $items);
 		}
 
@@ -101,24 +101,24 @@ class Concrete5_Model_Aggregator extends Object {
 		$agiBatchTimestamp = time();
 		$db = Loader::db();
 		foreach($items as $it) {
-			$it->setAggregatorItemBatchTimestamp($agiBatchTimestamp);
+			$it->setGatheringItemBatchTimestamp($agiBatchTimestamp);
 		}
 
 		// now, we find all the items with that timestamp, and we update their display order.
 		$agiBatchDisplayOrder = 0;
-		$r = $db->Execute('select agiID from AggregatorItems where agID = ? and agiBatchTimestamp = ? order by agiPublicDateTime desc', array($this->getAggregatorID(), $agiBatchTimestamp));
+		$r = $db->Execute('select agiID from GatheringItems where gaID = ? and agiBatchTimestamp = ? order by agiPublicDateTime desc', array($this->getGatheringID(), $agiBatchTimestamp));
 		while ($row = $r->FetchRow()) {
-			$db->Execute('update AggregatorItems set agiBatchDisplayOrder = ? where agiID = ?', array($agiBatchDisplayOrder, $row['agiID']));
+			$db->Execute('update GatheringItems set agiBatchDisplayOrder = ? where agiID = ?', array($agiBatchDisplayOrder, $row['agiID']));
 			$agiBatchDisplayOrder++;
 		}
 
 		$date = Loader::helper('date')->getSystemDateTime();
-		$db->Execute('update Aggregators set agDateLastUpdated = ? where agID = ?', array($date, $this->agID));
+		$db->Execute('update Gatherings set gaDateLastUpdated = ? where gaID = ?', array($date, $this->gaID));
 
 	}
 
-	public function clearAggregatorItems() {
-		$items = $this->getAggregatorItems();
+	public function clearGatheringItems() {
+		$items = $this->getGatheringItems();
 		foreach($items as $it) {
 			$it->delete();
 		}
@@ -126,9 +126,9 @@ class Concrete5_Model_Aggregator extends Object {
 
 	public function delete() {
 		$db = Loader::db();
-		$db->Execute('delete from Aggregators where agID = ?', array($this->getAggregatorID()));
-		$this->clearConfiguredAggregatorDataSources();
-		$this->clearAggregatorItems();
+		$db->Execute('delete from Gatherings where gaID = ?', array($this->getGatheringID()));
+		$this->clearConfiguredGatheringDataSources();
+		$this->clearGatheringItems();
 	}
 
 }

@@ -105,7 +105,7 @@ abstract class Concrete5_Model_GatheringItemTemplate extends Object {
 	public function getGatheringItemTemplateIconSRC() {
 		$env = Environment::get();
 		$type = $this->getGatheringItemTemplateTypeObject();
-		$path = $env->getURL(DIRNAME_ELEMENTS . '/' . DIRNAME_AGGREGATOR . '/' . DIRNAME_AGGREGATOR_ITEM_TEMPLATES . '/' . $type->getGatheringItemTemplateTypeHandle() . '/' . $this->getGatheringItemTemplateHandle() . '/' . FILENAME_AGGREGATOR_ITEM_TEMPLATE_ICON);
+		$path = $env->getURL(DIRNAME_ELEMENTS . '/' . DIRNAME_GATHERING . '/' . DIRNAME_GATHERING_ITEM_TEMPLATES . '/' . $type->getGatheringItemTemplateTypeHandle() . '/' . $this->getGatheringItemTemplateHandle() . '/' . FILENAME_GATHERING_ITEM_TEMPLATE_ICON);
 		return $path;
 	}
 

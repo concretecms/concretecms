@@ -29,8 +29,8 @@
 				if ($cp->canEditPageContents()) {
 					$nvc = $c->getVersionToModify();
 					$doProcessArrangement = true;
-					// handle dragging aggregator items
-					if ($_POST['sourceBlockTypeHandle'] == BLOCK_HANDLE_AGGREGATOR_ITEM_PROXY) {
+					// handle dragging gathering items
+					if ($_POST['sourceBlockTypeHandle'] == BLOCK_HANDLE_GATHERING_ITEM_PROXY) {
 						$destAreaHandle = Area::getAreaHandleFromID($_POST['destinationBlockAreaID']);
 						$a = Area::get($c, $destAreaHandle);
 						$cx = $c;
@@ -42,25 +42,25 @@
 						}
 
 						$axp = new Permissions($ax);
-						if (!$axp->canAddBlock(BlockType::getByHandle(BLOCK_HANDLE_AGGREGATOR))) {
+						if (!$axp->canAddBlock(BlockType::getByHandle(BLOCK_HANDLE_GATHERING))) {
 							$r = new stdClass;
 							$r->error = true;
-							$r->message = t('You may not add an aggregator item to this area.');
+							$r->message = t('You may not add an gathering item to this area.');
 							print Loader::helper('json')->encode($r);
 							exit;
 						}
 
 
-						$item = AggregatorItem::getByID($_POST['sourceBlockID']); // this is ACTUALLY an aggregator item ID
-						$btx = BlockType::getByHandle(BLOCK_HANDLE_AGGREGATOR_PROXY);
+						$item = GatheringItem::getByID($_POST['sourceBlockID']); // this is ACTUALLY an gathering item ID
+						$btx = BlockType::getByHandle(BLOCK_HANDLE_GATHERING_PROXY);
 						$nvc = $cx->getVersionToModify();
 						if ($a->isGlobalArea()) {
 							$xvc = $c->getVersionToModify(); // we need to create a new version of THIS page as well.
 							$xvc->relateVersionEdits($nvc);
 						}
-						$aggregator = Aggregator::add();
-						$newItem = $item->duplicate($aggregator);
-						$data['agID'] = $aggregator->getAggregatorID();
+						$gathering = Gathering::add();
+						$newItem = $item->duplicate($gathering);
+						$data['gaID'] = $gathering->getGatheringID();
 						$nb = $nvc->addBlock($btx, $ax, $data);
 
 						$item->delete();
