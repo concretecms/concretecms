@@ -106,9 +106,9 @@ class Concrete5_Model_Gathering extends Object {
 
 		// now, we find all the items with that timestamp, and we update their display order.
 		$agiBatchDisplayOrder = 0;
-		$r = $db->Execute('select gaiID from GatheringItems where gaID = ? and agiBatchTimestamp = ? order by agiPublicDateTime desc', array($this->getGatheringID(), $agiBatchTimestamp));
+		$r = $db->Execute('select gaiID from GatheringItems where gaID = ? and gaiBatchTimestamp = ? order by gaiPublicDateTime desc', array($this->getGatheringID(), $agiBatchTimestamp));
 		while ($row = $r->FetchRow()) {
-			$db->Execute('update GatheringItems set agiBatchDisplayOrder = ? where gaiID = ?', array($agiBatchDisplayOrder, $row['gaiID']));
+			$db->Execute('update GatheringItems set gaiBatchDisplayOrder = ? where gaiID = ?', array($agiBatchDisplayOrder, $row['gaiID']));
 			$agiBatchDisplayOrder++;
 		}
 

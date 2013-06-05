@@ -32,7 +32,7 @@ abstract class Concrete5_Model_GatheringItem extends Object {
 	public function getGatheringItemSlotHeight() {	return $this->gaiSlotHeight; }
 	public function getGatheringItemBatchTimestamp() {	return $this->gaiBatchTimestamp; }
 	public function getGatheringItemBatchDisplayOrder() {	return $this->gaiBatchDisplayOrder; }
-	public function getGatheringItemKey() { return $this->agiKey; }
+	public function getGatheringItemKey() { return $this->gaiKey; }
 	public function getGatheringObject() { return Gathering::getByID($this->gaID); }
 	public function getGatheringID() { return $this->gaID;}
 
@@ -109,10 +109,10 @@ abstract class Concrete5_Model_GatheringItem extends Object {
 		}
 	}
 
-	protected static function getListByKey(GatheringDataSource $ags, $agiKey) {
+	protected static function getListByKey(GatheringDataSource $ags, $gaiKey) {
 		$db = Loader::db();
-		$r = $db->Execute('select gaiID from GatheringItems where gasID = ? and agiKey = ?', array(
-			$ags->getGatheringDataSourceID(), $agiKey
+		$r = $db->Execute('select gaiID from GatheringItems where gasID = ? and gaiKey = ?', array(
+			$ags->getGatheringDataSourceID(), $gaiKey
 		));
 		$items = array();
 		while ($row = $r->FetchRow()) {
@@ -124,16 +124,16 @@ abstract class Concrete5_Model_GatheringItem extends Object {
 		return $items;
 	}
 
-	public static function add(Gathering $ag, GatheringDataSource $ags, $gaiPublicDateTime, $agiTitle, $agiKey, $gaiSlotWidth = 1, $gaiSlotHeight = 1) {
+	public static function add(Gathering $ag, GatheringDataSource $ags, $gaiPublicDateTime, $gaiTitle, $gaiKey, $gaiSlotWidth = 1, $gaiSlotHeight = 1) {
 		$db = Loader::db();
 		$gaiDateTimeCreated = Loader::helper('date')->getSystemDateTime();
-		$r = $db->Execute('insert into GatheringItems (gaID, gasID, gaiDateTimeCreated, gaiPublicDateTime, agiTitle, agiKey, gaiSlotWidth, gaiSlotHeight) values (?, ?, ?, ?, ?, ?, ?, ?)', array(
+		$r = $db->Execute('insert into GatheringItems (gaID, gasID, gaiDateTimeCreated, gaiPublicDateTime, gaiTitle, gaiKey, gaiSlotWidth, gaiSlotHeight) values (?, ?, ?, ?, ?, ?, ?, ?)', array(
 			$ag->getGatheringID(),
 			$ags->getGatheringDataSourceID(), 
 			$gaiDateTimeCreated,
 			$gaiPublicDateTime, 
-			$agiTitle,
-			$agiKey,
+			$gaiTitle,
+			$gaiKey,
 			$gaiSlotWidth,
 			$gaiSlotHeight
 		));
@@ -144,10 +144,10 @@ abstract class Concrete5_Model_GatheringItem extends Object {
 	public function duplicate(Gathering $gathering) {
 		$db = Loader::db();
 		$gaID = $gathering->getGatheringID();
-		$db->Execute('insert into GatheringItems (gaID, gasID, gaiDateTimeCreated, gaiPublicDateTime, agiTitle, agiKey, gaiSlotWidth, gaiSlotHeight, gaiBatchTimestamp, gaiBatchDisplayOrder) 
+		$db->Execute('insert into GatheringItems (gaID, gasID, gaiDateTimeCreated, gaiPublicDateTime, gaiTitle, gaiKey, gaiSlotWidth, gaiSlotHeight, gaiBatchTimestamp, gaiBatchDisplayOrder) 
 			values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', array(
 				$gaID, $this->getGatheringDataSourceID(), $this->gaiDateTimeCreated, $this->gaiPublicDateTime, 
-				$this->agiTitle, $this->agiKey, $this->gaiSlotWidth, $this->gaiSlotHeight, $this->gaiBatchTimestamp, $this->gaiBatchDisplayOrder
+				$this->gaiTitle, $this->gaiKey, $this->gaiSlotWidth, $this->gaiSlotHeight, $this->gaiBatchTimestamp, $this->gaiBatchDisplayOrder
 			)
 		);
 

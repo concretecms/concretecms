@@ -105,7 +105,7 @@ class Concrete5_Controller_Block_CoreGathering extends BlockController {
 			}
 			if ($task == 'add' || in_array('sources', $tab)) {
 				$ag->clearConfiguredGatheringDataSources();
-				$sources = $this->post('agsID');
+				$sources = $this->post('gasID');
 				foreach($sources as $key => $agsID) {
 					$key = (string) $key; // because PHP is stupid
 					if ($key != '_ags_') {
