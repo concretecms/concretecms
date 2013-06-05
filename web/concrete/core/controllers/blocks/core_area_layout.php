@@ -104,6 +104,11 @@ class Concrete5_Controller_Block_CoreAreaLayout extends BlockController {
 						$column->setAreaLayoutColumnWidth($width);
 					}
 					break;
+				default: // a preset
+					$arLayoutPreset = AreaLayoutPreset::getByID($post['gridType']);
+					$arLayout = $arLayoutPreset->getAreaLayoutObject();
+					$arLayout = $arLayout->duplicate();
+					break;
 			}
 			return $arLayout;
 		}

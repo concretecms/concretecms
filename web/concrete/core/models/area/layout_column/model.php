@@ -37,8 +37,8 @@ abstract class Concrete5_Model_AreaLayoutColumn extends Object {
 
 	protected function duplicate($newAreaLayout) {
 		$db = Loader::db();
-		$v = array($newAreaLayout->getAreaLayoutID(), $this->arLayoutColumnIndex, $this->arID, $this->arLayoutColumnDisplayID);
-		$db->Execute('insert into AreaLayoutColumns (arLayoutID, arLayoutColumnIndex, arID, arLayoutColumnDisplayID) values (?, ?, ?, ?)', $v);
+		$v = array($newAreaLayout->getAreaLayoutID(), $this->arLayoutColumnIndex, $this->arLayoutColumnDisplayID);
+		$db->Execute('insert into AreaLayoutColumns (arLayoutID, arLayoutColumnIndex, arLayoutColumnDisplayID) values (?, ?, ?)', $v);
 		$newAreaLayoutColumnID = $db->Insert_ID();
 		return $newAreaLayoutColumnID;
 	}
