@@ -87,7 +87,7 @@ abstract class Concrete5_Model_GatheringItemTemplate extends Object {
 	public function gatheringItemTemplateIsAlwaysDefault() {return $this->gatForceDefault;}
 	public function getPackageHandle() {return PackageList::getHandle($this->pkgID);}
 	public function getGatheringItemTemplateFixedSlotWidth() {return $this->gatFixedSlotWidth;}
-	public function getGatheringItemTemplateFixedSlotHeight() {return $this->agtFixedSlotHeight;}
+	public function getGatheringItemTemplateFixedSlotHeight() {return $this->gatFixedSlotHeight;}
 	public function getGatheringItemTemplateTypeObject() {return GatheringItemTemplateType::getByID($this->gatTypeID);}
 	public function getGatheringItemTemplateTypeID() {return $this->gatTypeID;}
 	public function getGatheringItemTemplateMinimumSlotHeight(GatheringItem $item) {
@@ -167,7 +167,7 @@ abstract class Concrete5_Model_GatheringItemTemplate extends Object {
 
 	public function addGatheringItemTemplateFeature($fe) {
 		$db = Loader::db();
-		$no = $db->GetOne("select count(afeID) from GatheringItemTemplateFeatures where gatID = ? and feID = ?", array($this->gatID, $fe->getFeatureID()));
+		$no = $db->GetOne("select count(gfeID) from GatheringItemTemplateFeatures where gatID = ? and feID = ?", array($this->gatID, $fe->getFeatureID()));
 		if ($no < 1) {
 			$db->Execute('insert into GatheringItemTemplateFeatures (gatID, feID) values (?, ?)', array($this->getGatheringItemTemplateID(), $fe->getFeatureID()));
 		}
@@ -194,14 +194,14 @@ abstract class Concrete5_Model_GatheringItemTemplate extends Object {
 		return $features;		
 	}
 
-	public static function add(GatheringItemTemplateType $type, $gatHandle, $gatName, $gatFixedSlotWidth, $agtFixedSlotHeight, $gatHasCustomClass = false, $gatForceDefault = false, $pkg = false) {
+	public static function add(GatheringItemTemplateType $type, $gatHandle, $gatName, $gatFixedSlotWidth, $gatFixedSlotHeight, $gatHasCustomClass = false, $gatForceDefault = false, $pkg = false) {
 		$db = Loader::db();
 		$pkgID = 0;
 		if (is_object($pkg)) {
 			$pkgID = $pkg->getPackageID();
 		}
 
-		$db->Execute('insert into GatheringItemTemplates (gatTypeID, gatHandle, gatName, gatFixedSlotWidth, agtFixedSlotHeight, gatHasCustomClass, gatForceDefault, pkgID) values (?, ?, ?, ?, ?, ?, ?, ?)', array($type->getGatheringItemTemplateTypeID(), $gatHandle, $gatName, $gatFixedSlotWidth, $agtFixedSlotHeight, $gatHasCustomClass, $gatForceDefault, $pkgID));
+		$db->Execute('insert into GatheringItemTemplates (gatTypeID, gatHandle, gatName, gatFixedSlotWidth, gatFixedSlotHeight, gatHasCustomClass, gatForceDefault, pkgID) values (?, ?, ?, ?, ?, ?, ?, ?)', array($type->getGatheringItemTemplateTypeID(), $gatHandle, $gatName, $gatFixedSlotWidth, $gatFixedSlotHeight, $gatHasCustomClass, $gatForceDefault, $pkgID));
 		$id = $db->Insert_ID();
 		
 		$agt = GatheringItemTemplate::getByID($id);
