@@ -24,7 +24,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 <fieldset data-gathering-data-source-options-form="<?=$ags->getGatheringDataSourceID()?>">
 	<div style="margin-bottom: 8px">
-		<input type="hidden" name="agsID[_ags_]" value="<?=$ags->getGatheringDataSourceID()?>" />
+		<input type="hidden" name="gasID[_ags_]" value="<?=$ags->getGatheringDataSourceID()?>" />
 	<a href="#" style="float: right" data-delete="gathering-source"><i class="icon-minus-sign"></i></a>
 		<? $source = $ags; ?>
 		<? include($ags->getGatheringDataSourceOptionsForm())?>
@@ -43,7 +43,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 	<fieldset data-gathering-data-source-selected="<?=$configuration->getGatheringDataSourceID()?>">
 		<div style="margin-bottom: 8px">
-			<input type="hidden" name="agsID[<?=$key?>]" value="<?=$configuration->getGatheringDataSourceID()?>" />
+			<input type="hidden" name="gasID[<?=$key?>]" value="<?=$configuration->getGatheringDataSourceID()?>" />
 		<a href="#" style="float: right" data-delete="gathering-source"><i class="icon-minus-sign"></i></a>
 
 			<?
@@ -65,10 +65,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
 <script type="text/javascript">
 $(function() {
 	$('button[data-submit=add-source]').on('click', function() {
-		var agsID = $('select[name=addSource]').val();
+		var gasID = $('select[name=addSource]').val();
 		$("span[data-message=no-sources]").remove();
-		var $fds = $('fieldset[data-gathering-data-source-options-form=' + agsID + ']').clone();
-		$fds.removeAttr('data-gathering-data-source-options-form').attr('data-gathering-data-source-selected', agsID).appendTo('#ccm-gathering-data-source-templates-selected');
+		var $fds = $('fieldset[data-gathering-data-source-options-form=' + gasID + ']').clone();
+		$fds.removeAttr('data-gathering-data-source-options-form').attr('data-gathering-data-source-selected', gasID).appendTo('#ccm-gathering-data-source-templates-selected');
 		var totalsources = $('#ccm-gathering-data-source-templates-selected fieldset[data-gathering-data-source-selected]').length;
 		var key = totalsources - 1;
 		var html = $fds.html();

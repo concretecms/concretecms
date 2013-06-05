@@ -9,8 +9,8 @@ if ($_POST['gaID'] && $nh->integer($_POST['gaID'])) {
         switch($_POST['task']) {
           case 'resize':
             $agi = GatheringItem::getByID($_POST['gaiID']);
-            $sw = intval($_POST['agiSlotWidth']);
-            $sh = intval($_POST['agiSlotHeight']);
+            $sw = intval($_POST['gaiSlotWidth']);
+            $sh = intval($_POST['gaiSlotHeight']);
             if (!$sw) {
               $sw = 1;
             }
