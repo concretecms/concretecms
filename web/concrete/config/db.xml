@@ -307,8 +307,8 @@
     </index>
   </table>
 
-  <table name="Aggregators">
-    <field name="agID" type="I" size="10">
+  <table name="Gatherings">
+    <field name="gaID" type="I" size="10">
       <key/>
       <autoincrement/>
       <unsigned/>
@@ -320,86 +320,86 @@
       <notnull/>
     </field>
   </table>
-  <table name="AggregatorItemSelectedTemplates">
-    <field name="agiID" type="I" size="10">
+  <table name="GatheringItemSelectedTemplates">
+    <field name="gaiID" type="I" size="10">
       <unsigned/>
       <notnull />
       <default value="0" />
     </field>
-    <field name="agtID" type="I" size="10">
+    <field name="gatID" type="I" size="10">
       <unsigned/>
       <notnull />
       <default value="0" />
     </field>
-    <field name="agtTypeID" type="I" size="10">
+    <field name="gatTypeID" type="I" size="10">
      <unsigned/>
      <default value="0" />
     </field>
-    <index name="agtUniqueKey">
+    <index name="gatUniqueKey">
       <unique/>
-      <col>agiID</col>
-      <col>agtTypeID</col>
+      <col>gaiID</col>
+      <col>gatTypeID</col>
     </index>
   </table>
-  <table name="AggregatorItems">
-    <field name="agiID" type="I" size="10">
+  <table name="GatheringItems">
+    <field name="gaiID" type="I" size="10">
       <key/>
       <autoincrement/>
       <unsigned/>
     </field>
-    <field name="agID" type="I" size="10">
+    <field name="gaID" type="I" size="10">
       <unsigned/>
     </field>
-    <field name="agsID" type="I" size="10">
+    <field name="gasID" type="I" size="10">
       <unsigned/>
     </field>
-    <field name="agiDateTimeCreated" type="T">
+    <field name="gaiDateTimeCreated" type="T">
       <notnull/>
     </field>
-    <field name="agiPublicDateTime" type="T">
+    <field name="gaiPublicDateTime" type="T">
       <notnull/>
     </field>
-    <field name="agiTitle" type="X">
+    <field name="gaiTitle" type="X">
     </field>
-    <field name="agiSlotWidth" type="I" size="10">
+    <field name="gaiSlotWidth" type="I" size="10">
       <unsigned/>
       <default value="1" />
     </field>
-    <field name="agiSlotHeight" type="I" size="10">
+    <field name="gaiSlotHeight" type="I" size="10">
       <unsigned/>
       <default value="1" />
     </field>
-    <field name="agiKey" type="C" size="255">
+    <field name="gaiKey" type="C" size="255">
       <notnull/>
     </field>
-    <field name="agiBatchDisplayOrder" type="I" size="10">
+    <field name="gaiBatchDisplayOrder" type="I" size="10">
       <unsigned/>
       <notnull />
       <default value="0" />
     </field>
-    <field name="agiBatchTimestamp" type="I" size="10">
+    <field name="gaiBatchTimestamp" type="I" size="10">
       <unsigned/>
       <notnull />
       <default value="0" />
     </field>
-    <field name="agiIsDeleted" type="I" size="1">
+    <field name="gaiIsDeleted" type="I" size="1">
       <unsigned/>
       <default value="0" />
     </field>
-    <index name="agiUniqueKey">
+    <index name="gaiUniqueKey">
       <unique/>
-      <col>agiKey</col>
-      <col>agsID</col>
-      <col>agID</col>
+      <col>gaiKey</col>
+      <col>gasID</col>
+      <col>gaID</col>
     </index>
-    <index name="agiKey">
-      <col>agiKey</col>
-      <col>agsID</col>
+    <index name="gaiKey">
+      <col>gaiKey</col>
+      <col>gasID</col>
     </index>
   </table>
 
-  <table name="AggregatorPermissionAssignments">
-    <field name="agID" type="I" size="10">
+  <table name="GatheringPermissionAssignments">
+    <field name="gaID" type="I" size="10">
       <key/>
       <default value="0"/>
       <unsigned/>
@@ -416,13 +416,13 @@
     </field>
   </table>
 
-  <table name="AggregatorItemFeatureAssignments">
-    <field name="agfaID" type="I" size="10">
+  <table name="GatheringItemFeatureAssignments">
+    <field name="gafaID" type="I" size="10">
       <key/>
       <autoincrement/>
       <unsigned/>
     </field>
-    <field name="agiID" type="I" size="10">
+    <field name="gaiID" type="I" size="10">
       <unsigned/>
     </field>
     <field name="faID" type="I" size="10">
@@ -430,13 +430,13 @@
     </field>
   </table>
 
-  <table name="AggregatorItemTemplateTypes">
-  <field name="agtTypeID" type="I" size="10">
+  <table name="GatheringItemTemplateTypes">
+  <field name="gatTypeID" type="I" size="10">
     <key/>
     <autoincrement/>
     <unsigned/>
   </field>
-  <field name="agtTypeHandle" type="C" size="64">
+  <field name="gatTypeHandle" type="C" size="64">
     <notnull/>
   </field>
   <field name="pkgID" type="I" size="10">
@@ -447,67 +447,67 @@
 </table>
 
 
-  <table name="AggregatorItemTemplates">
-    <field name="agtID" type="I" size="10">
+  <table name="GatheringItemTemplates">
+    <field name="gatID" type="I" size="10">
       <key/>
       <autoincrement/>
       <unsigned/>
     </field>
-    <field name="agtHandle" type="C" size="255">
+    <field name="gatHandle" type="C" size="255">
       <notnull/>
     </field>
-    <field name="agtName" type="X">
+    <field name="gatName" type="X">
     </field>
-    <field name="agtHasCustomClass" type="I" size="1">
+    <field name="gatHasCustomClass" type="I" size="1">
       <notnull/>
       <default value="0"/>
     </field>
-    <field name="agtFixedSlotWidth" type="I" size="10">
+    <field name="gatFixedSlotWidth" type="I" size="10">
       <unsigned/>
       <default value="0" />
     </field>
-    <field name="agtFixedSlotHeight" type="I" size="10">
+    <field name="gatFixedSlotHeight" type="I" size="10">
       <unsigned/>
       <default value="0" />
     </field>
-  <field name="agtForceDefault" type="I" size="10">
+  <field name="gatForceDefault" type="I" size="10">
       <unsigned/>
       <default value="0" />
     </field>    
     <field name="pkgID" type="I" size="10">
       <unsigned/>
     </field>
-  <field name="agtTypeID" type="I" size="10">
+  <field name="gatTypeID" type="I" size="10">
    <unsigned/>
    <default value="0" />
   </field>
-    <index name="agtHandle">
+    <index name="gatHandle">
       <unique/>
-      <col>agtHandle</col>
-      <col>agtTypeID</col>
+      <col>gatHandle</col>
+      <col>gatTypeID</col>
     </index>
   </table>
-  <table name="AggregatorItemTemplateFeatures">
-    <field name="afeID" type="I" size="10">
+  <table name="GatheringItemTemplateFeatures">
+    <field name="gfeID" type="I" size="10">
       <key/>
       <autoincrement/>
       <unsigned/>
     </field>
-    <field name="agtID" type="I" size="10">
+    <field name="gatID" type="I" size="10">
       <unsigned/>
     </field>
     <field name="feID" type="I" size="10">
       <unsigned/>
     </field>
   </table>
-    <table name="AggregatorDataSources">
-    <field name="agsID" type="I" size="10">
+    <table name="GatheringDataSources">
+    <field name="gasID" type="I" size="10">
       <key/>
       <autoincrement/>
       <unsigned/>
     </field>
-    <field name="agsName" type="C" size="255"/>
-    <field name="agsHandle" type="C" size="255">
+    <field name="gasName" type="C" size="255"/>
+    <field name="gasHandle" type="C" size="255">
       <notnull/>
     </field>
     <field name="pkgID" type="I" size="10">
@@ -515,25 +515,25 @@
       <default value="0"/>
       <unsigned/>
     </field>
-    <field name="agsDisplayOrder" type="I" size="10">
+    <field name="gasDisplayOrder" type="I" size="10">
       <notnull/>
       <default value="0"/>
       <unsigned/>
     </field>
   </table>
-  <table name="AggregatorConfiguredDataSources">
-    <field name="acsID" type="I" size="10">
+  <table name="GatheringConfiguredDataSources">
+    <field name="gcsID" type="I" size="10">
       <key/>
       <autoincrement/>
       <unsigned/>
     </field>
-    <field name="agID" type="I" size="10">
+    <field name="gaID" type="I" size="10">
       <unsigned/>
     </field>
-    <field name="agsID" type="I" size="10">
+    <field name="gasID" type="I" size="10">
       <unsigned/>
     </field>
-   <field name="acdObject" type="X2"></field>
+   <field name="gcdObject" type="X2"></field>
   </table>
   <table name="Conversations">
     <field name="cnvID" type="I" size="10">
