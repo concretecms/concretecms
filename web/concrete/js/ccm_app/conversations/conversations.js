@@ -65,6 +65,9 @@
 			var commentRatingUserID = (obj.options.commentRatingUserID);
 			var commentRatingIP = (obj.options.commentRatingIP);
 			var addMessageLabel = (obj.options.addMessageLabel) ? obj.options.addMessageLabel : '';
+			var dateFormat = (obj.options.dateFormat);
+			var customDateFormat = (obj.options.customDateFormat);
+			var blockAreaHandle = (obj.options.blockAreaHandle);
 
 			if (obj.options.method == 'ajax') {
 				$.post(CCM_TOOLS_PATH + '/conversations/view_ajax', {
@@ -82,7 +85,10 @@
 					'insertNewMessages':   insertNewMessages,
 					'enableCommentRating': enableCommentRating,
 					'commentRatingUserID': commentRatingUserID,
-					'commentRatingIP':     commentRatingIP
+					'commentRatingIP':     commentRatingIP,
+					'dateFormat': 		   dateFormat,
+					'customDateFormat':    customDateFormat,
+					'blockAreaHandle' :    blockAreaHandle
 					
 				}, function(r) {
 					var oldobj = window.obj;
@@ -283,7 +289,10 @@
 					'enableOrdering':      obj.options.enableOrdering,
 					'displayPostingForm':  obj.options.displayPostingForm,
 					'insertNewMessages':   obj.options.insertNewMessages,
-					'enableCommentRating': obj.options.enableCommentRating
+					'enableCommentRating': obj.options.enableCommentRating,
+					'dateFormat':          obj.options.dateFormat,
+					'customDateFormat':    obj.options.customDateFormat,
+					'blockAreaHandle': 	   obj.options.blockAreaHandle
 					
 				}, function(r) {
 					obj.$replyholder.appendTo(obj.$element);
@@ -300,11 +309,14 @@
 					'blockID':             obj.options.blockID,
 					'itemsPerPage':        obj.options.itemsPerPage,
 					'displayMode':         obj.options.displayMode,
+					'blockAreaHandle': 	   obj.options.blockAreaHandle,
 					'enablePosting':       enablePosting,
 					'addMessageLabel':     addMessageLabel,
 					'page':                nextPage,
 					'orderBy':             obj.$sortselect.val(),
-					'enableCommentRating': obj.options.enableCommentRating
+					'enableCommentRating': obj.options.enableCommentRating,
+					'dateFormat':          obj.options.dateFormat, 
+					'customDateFormat':    obj.options.customDateFormat
 				};
 
 				$.ajax({

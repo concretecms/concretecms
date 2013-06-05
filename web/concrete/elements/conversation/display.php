@@ -6,10 +6,11 @@ if (!is_array($messages)) {
 }
 $u = new User();
 $ui = UserInfo::getByID($u->getUserID());
-
+$page = Page::getByID($cID);
 $editor = ConversationEditor::getActive();
 $editor->setConversationObject($args['conversation']);
-
+$val = Loader::helper('validation/token');
+$form = Loader::helper('form');
 ?>
 
 <? if ($displayForm && ($displayPostingForm != 'bottom')) { ?>
@@ -25,12 +26,15 @@ $editor->setConversationObject($args['conversation']);
 				<? $editor->outputConversationEditorAddMessageForm(); ?>
 				<button type="button" data-post-parent-id="0" data-submit="conversation-message" class="pull-right btn btn-submit btn-primary"><?=t('Submit')?></button>
 				<button type="button" class="pull-right btn ccm-conversation-attachment-toggle" href="#" title="<?php echo t('Attach Files'); ?>"><i class="icon-picture"></i></button>
-				
 			</div>
 			</form>
 			<div class="ccm-conversation-attachment-container">
 				<form action="<?php echo Loader::helper('concrete/urls')->getToolsURL('conversations/add_file');?>" class="dropzone" id="file-upload">
 					<div class="ccm-conversation-errors alert alert-error"></div>
+					<?php $val->output('add_conversations_file'); ?>
+					<?php echo $form->hidden('blockAreaHandle', $blockAreaHandle) ?>
+					<?php echo $form->hidden('cID', $cID) ?>
+					<?php echo $form->hidden('bID', $bID) ?>
 				</form>
 			</div>
 		</div>
@@ -41,13 +45,17 @@ $editor->setConversationObject($args['conversation']);
 			<div class="ccm-conversation-message-form">
 				<div class="ccm-conversation-errors alert alert-error"></div>
 				<? $editor->outputConversationEditorReplyMessageForm(); ?>
-				<button type="button" data-submit="conversation-message" class="pull-right btn btn-submit btn-small"><?=t('Post')?> <i class="icon-bullhorn"></i></button>
-				<a class="ccm-conversation-attachment-toggle" href="#"><?php echo t('Attach Files'); ?></a>
+				<button type="btn btn-primary" data-submit="conversation-message" class="pull-right btn btn-submit btn-small"><?=t('Submit')?> </button>
+				<button type="button" class="ccm-conversation-attachment-toggle" href="#" title="<?php echo t('Attach Files'); ?>"><i class="icon-picture"></i></button>
 			</div>
 			</form>
 			<div class="ccm-conversation-attachment-container">
 				<form action="<?php echo Loader::helper('concrete/urls')->getToolsURL('conversations/add_file');?>" class="dropzone" id="file-upload-reply">
 					<div class="ccm-conversation-errors alert alert-error"></div>
+					<?php $val->output('add_conversations_file'); ?>
+					<?php echo $form->hidden('blockAreaHandle', $blockAreaHandle) ?>
+					<?php echo $form->hidden('cID', $cID) ?>
+					<?php echo $form->hidden('bID', $bID) ?>
 				</form>
 			</div>
 		</div>
@@ -68,13 +76,12 @@ $editor->setConversationObject($args['conversation']);
 	<div class="ccm-conversation-message-permalink" data-dialog-title="<?=t('Link')?>" data-cancel-button-title="<?=t('Close')?>">
 	</div>
 
-
 	<div class="ccm-conversation-messages-header">
 		<? if ($enableOrdering) { ?>
 		<select class="ccm-sort-conversations" data-sort="conversation-message-list">
-			<option value="date_asc" <? if ($orderBy == 'date_asc') { ?>selected="selected"<? } ?>><?=t('Earliest First')?></option>
-			<option value="date_desc" <? if ($orderBy == 'date_desc') { ?>selected="selected"<? } ?>><?=t('Most Recent First')?></option>
-			<option value="rating" <? if ($orderBy == 'rating') { ?>selected="selected"<? } ?>><?=t('Highest Rated')?></option>
+			<option value="date_desc" <? if ($orderBy == 'date_desc') { ?>selected="selected"<? } ?>><?=t('Recent')?></option>
+			<option value="date_asc" <? if ($orderBy == 'date_asc') { ?>selected="selected"<? } ?>><?=t('Oldest')?></option>
+			<option value="rating" <? if ($orderBy == 'rating') { ?>selected="selected"<? } ?>><?=t('Popular')?></option>
 		</select>
 		<? } ?>
 
@@ -87,7 +94,7 @@ $editor->setConversationObject($args['conversation']);
 	<div class="ccm-conversation-messages">
 
 	<? foreach($messages as $m) {
-		Loader::element('conversation/message', array('cID' => $cID, 'message' => $m, 'enablePosting' => $enablePosting, 'displayMode' => $displayMode, 'enableCommentRating' => $enableCommentRating));
+		Loader::element('conversation/message', array('cID' => $cID, 'message' => $m, 'bID' => $bID, 'page' => $page, 'blockAreaHandle' => $blockAreaHandle, 'enablePosting' => $enablePosting, 'displayMode' => $displayMode, 'enableCommentRating' => $enableCommentRating, 'dateFormat' => $dateFormat, 'customDateFormat' => $customDateFormat));
 	} ?>
 
 	</div>
@@ -114,12 +121,16 @@ $editor->setConversationObject($args['conversation']);
 			<div class="ccm-conversation-message-form">
 				<div class="ccm-conversation-errors alert alert-error"></div>
 				<? $editor->outputConversationEditorAddMessageForm(); ?>
-				<button type="button" data-post-parent-id="0" data-submit="conversation-message" class="pull-right btn btn-submit btn-small"><?=t('Post')?> <i class="icon-bullhorn"></i></button>
-				<a class="ccm-conversation-attachment-toggle" href="#"><?php echo t('Attach Files'); ?></a>
+				<button type="button" data-post-parent-id="0" data-submit="conversation-message" class="pull-right btn btn-primary btn-small"><?=t('Submit')?> </button>
+				<button type="button" class="ccm-conversation-attachment-toggle" href="#" title="<?php echo t('Attach Files'); ?>"><i class="icon-picture"></i></a>
 			</div>
 			</form>
 			<div class="ccm-conversation-attachment-container">
 				<form action="<?php echo Loader::helper('concrete/urls')->getToolsURL('conversations/add_file');?>" class="dropzone" id="file-upload">
+					<?php $val->output('add_conversations_file'); ?>
+					<?php echo $form->hidden('blockAreaHandle', $blockAreaHandle) ?>
+					<?php echo $form->hidden('cID', $cID) ?>
+					<?php echo $form->hidden('bID', $bID) ?>		
 				</form>
 			</div>
 		</div>
@@ -130,12 +141,13 @@ $editor->setConversationObject($args['conversation']);
 			<div class="ccm-conversation-message-form">
 				<div class="ccm-conversation-errors alert alert-error"></div>
 				<? $editor->outputConversationEditorReplyMessageForm(); ?>
-				<button type="button" data-submit="conversation-message" class="pull-right btn btn-submit btn-small"><?=t('Post')?> <i class="icon-bullhorn"></i></button>
-				<a class="ccm-conversation-attachment-toggle" href="#"><?php echo t('Attach Files'); ?></a>
+				<button type="button" data-submit="conversation-message" class="pull-right btn btn-primary btn-small"><?=t('Submit')?></button>
+				<button type="button" class="ccm-conversation-attachment-toggle" href="#" title="<?php echo t('Attach Files'); ?>"><i class="icon-picture"></i></a>
 			</div>
 			</form>
 			<div class="ccm-conversation-attachment-container">
 				<form action="<?php echo Loader::helper('concrete/urls')->getToolsURL('conversations/add_file');?>" class="dropzone" id="file-upload-reply">
+				
 				</form>
 			</div>
 		</div>

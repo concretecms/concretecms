@@ -102,8 +102,54 @@ class Concrete5_Model_Conversation_Message extends Object {
 	public function getConversationMessageDateTime() {
 		return $this->cnvMessageDateCreated;
 	}
-	public function getConversationMessageDateTimeOutput() {
-		return t('Posted on %s', Loader::helper('date')->date('F d, Y \a\t g:i a', strtotime($this->cnvMessageDateCreated)));
+	public function getConversationMessageDateTimeOutput($format = 'default') {
+		if(is_array($format)) {  // custom date format
+			return t('Posted on %s', Loader::helper('date')->date($format[0], strtotime($this->cnvMessageDateCreated)));
+		}
+		switch($format) {
+			case 'elapsed':   // 3 seconds ago, 4 days ago, etc.
+				$timestamp = strtotime($this->cnvMessageDateCreated);
+				$time = array(
+					12 * 30 * 24 * 60 * 60  => array(t('year'), t('years')),
+	                30 * 24 * 60 * 60  => array(t('month'), t('months')),
+	                24 * 60 * 60  => array(t('day'), t('days')),
+	                60 * 60  => array(t('hour'), t('hours')),
+	                60  => array(t('minute'), t('minutes')),
+	                1   => array(t('second'), t('seconds'))                                   
+                );
+		                                                         
+		        $ptime = time() - $timestamp;
+		                        
+				foreach ($time as $seconds => $str) {
+			        $elp = $ptime / $seconds;
+			        if($elp <= 0) {
+			                return t('0 seconds ago');
+			        }
+			        if($elp >= 1) {
+			        
+			            $rounded = round($elp);
+						if($rounded > 1)  {
+							$str = $str[1]; // plural
+			             } else {
+			             	$str = $str[0]; // singular
+			             }
+						 
+						 $ago = t('ago');
+
+			            $elapsed =  sprintf('%s %s %s', $rounded, $str, $ago);
+			            return $elapsed;
+			        }
+				}
+			break;
+			case 'mdy':
+				return t('Posted on %s', Loader::helper('date')->date(DATE_APP_GENERIC_MDY, strtotime($this->cnvMessageDateCreated))); 
+			case 'mdy_full':
+				return t('Posted on %s', Loader::helper('date')->date(DATE_APP_GENERIC_MDY_FULL, strtotime($this->cnvMessageDateCreated))); 
+			default:
+				return t('Posted on %s', Loader::helper('date')->date(DATE_APP_GENERIC_MDY_FULL, strtotime($this->cnvMessageDateCreated))); 
+			 	//return t('Posted on %s', Loader::helper('date')->date('F d, Y \a\t g:i a', strtotime($this->cnvMessageDateCreated)));
+				break;
+		}
 	}
 	public function rateMessage(ConversationRatingType $ratingType, $commentRatingIP, $commentRatingUserID, $post = array()) {
 		$db = Loader::db();
