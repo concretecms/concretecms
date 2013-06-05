@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<schema version="0.3">
+	<table name="btContentImage">
+		<field name="bID" type="I">
+			<key />
+			<unsigned />
+		</field>
+		<field name="fID" type="I">
+			<unsigned />
+			<default value="0" />
+		</field>
+		<field name="fOnstateID" type="I">
+			<unsigned />
+			<default value="0" />
+		</field>
+		<field name="maxWidth" type="I">
+			<unsigned />
+			<default value="0" />
+		</field>
+		<field name="maxHeight" type="I">
+			<unsigned />
+			<default value="0" />
+		</field>
+		<field name="externalLink"  type="C" size="255"></field>
+		<field name="internalLinkCID"  type="I">
+			<unsigned />
+			<default value="0" />
+		</field>
+		<field name="forceImageToMatchDimensions"  type="I">
+			<unsigned />
+			<default value="0" />
+		</field>
+		<field name="altText" type="C" size="255">
+		</field>
+	</table>
+</schema>

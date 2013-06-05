@@ -1,0 +1,282 @@
+<?xml version="1.0"?>
+<concrete5-cif version="1.0">
+
+    <singlepages>
+        <page name="Login" path="/login" filename="/login.php" pagetype="" description="" package=""/>
+        <page name="Register" path="/register" filename="/register.php" pagetype="" description="" package=""/>
+        <page name="Profile" path="/profile" filename="/profile/view.php" pagetype="" description="" package=""/>
+        <page name="Edit" path="/profile/edit" filename="/profile/edit.php" pagetype="" description="" package=""/>
+        <page name="Avatar" path="/profile/avatar" filename="/profile/avatar.php" pagetype="" description="" package=""/>
+        <page name="Messages" path="/profile/messages" filename="/profile/messages.php" pagetype="" description="" package=""/>
+        <page name="Friends" path="/profile/friends" filename="/profile/friends.php" pagetype="" description="" package=""/>
+        <page name="Page Not Found" path="/page_not_found" filename="/page_not_found.php" pagetype="" description="" package="">
+            <area name="Main"/>
+        </page>
+        <page name="Page Forbidden" path="/page_forbidden" filename="/page_forbidden.php" pagetype="" description="" package=""/>
+        <page name="Dashboard" path="/dashboard" filename="/dashboard/view.php" pagetype="" description="" package=""/>
+        <page name="Composer" path="/dashboard/composer" filename="/dashboard/composer/view.php" pagetype="" description="Write for your site." package=""/>
+        <page name="Write" path="/dashboard/composer/write" filename="/dashboard/composer/write.php" pagetype="" description="" package=""/>
+        <page name="Drafts" path="/dashboard/composer/drafts" filename="/dashboard/composer/drafts.php" pagetype="" description="" package=""/>
+        <page name="Sitemap" path="/dashboard/sitemap" filename="/dashboard/sitemap/view.php" pagetype="" description="Whole world at a glance." package=""/>
+        <page name="Full Sitemap" path="/dashboard/sitemap/full" filename="/dashboard/sitemap/full.php" pagetype="" description="" package=""/>
+        <page name="Flat View" path="/dashboard/sitemap/explore" filename="/dashboard/sitemap/explore.php" pagetype="" description="" package=""/>
+        <page name="Page Search" path="/dashboard/sitemap/search" filename="/dashboard/sitemap/search.php" pagetype="" description="" package=""/>
+        <page name="Files" path="/dashboard/files" filename="/dashboard/files/view.php" pagetype="" description="All documents and images." package=""/>
+        <page name="File Manager" path="/dashboard/files/search" filename="/dashboard/files/search.php" pagetype="" description="" package=""/>
+        <page name="Attributes" path="/dashboard/files/attributes" filename="/dashboard/files/attributes.php" pagetype="" description="" package=""/>
+        <page name="File Sets" path="/dashboard/files/sets" filename="/dashboard/files/sets.php" pagetype="" description="" package=""/>
+        <page name="Add File Set" path="/dashboard/files/add_set" filename="/dashboard/files/add_set.php" pagetype="" description="" package=""/>
+        <page name="Members" path="/dashboard/users" filename="/dashboard/users/view.php" pagetype="" description="Add and manage the user accounts and groups on your website." package=""/>
+        <page name="Search Users" path="/dashboard/users/search" filename="/dashboard/users/search.php" pagetype="" description="" package=""/>
+        <page name="User Groups" path="/dashboard/users/groups" filename="/dashboard/users/groups.php" pagetype="" description="" package=""/>
+        <page name="Attributes" path="/dashboard/users/attributes" filename="/dashboard/users/attributes.php" pagetype="" description="" package=""/>
+        <page name="Add User" path="/dashboard/users/add" filename="/dashboard/users/add.php" pagetype="" description="" package=""/>
+        <page name="Add Group" path="/dashboard/users/add_group" filename="/dashboard/users/add_group.php" pagetype="" description="" package=""/>
+        <page name="Reports" path="/dashboard/reports" filename="/dashboard/reports.php" pagetype="" description="Get data from forms and logs." package=""/>
+        <page name="Form Results" path="/dashboard/reports/forms" filename="/dashboard/reports/forms.php" pagetype="" description="Get submission data." package=""/>
+        <page name="Surveys" path="/dashboard/reports/surveys" filename="/dashboard/reports/surveys.php" pagetype="" description="" package=""/>
+        <page name="Logs" path="/dashboard/reports/logs" filename="/dashboard/reports/logs.php" pagetype="" description="" package=""/>
+        <page name="Pages &amp; Themes" path="/dashboard/pages" filename="/dashboard/pages/view.php" pagetype="" description="Reskin your site." package=""/>
+        <page name="Themes" path="/dashboard/pages/themes" filename="/dashboard/pages/themes/view.php" pagetype="" description="Reskin your site." package=""/>
+        <page name="Add" path="/dashboard/pages/themes/add" filename="/dashboard/pages/themes/add.php" pagetype="" description="" package=""/>
+        <page name="Inspect" path="/dashboard/pages/themes/inspect" filename="/dashboard/pages/themes/inspect.php" pagetype="" description="" package=""/>
+        <page name="Customize" path="/dashboard/pages/themes/customize" filename="/dashboard/pages/themes/customize.php" pagetype="" description="" package=""/>
+        <page name="Page Types" path="/dashboard/pages/types" filename="/dashboard/pages/types/view.php" pagetype="" description="What goes in your site." package=""/>
+        <page name="Attributes" path="/dashboard/pages/attributes" filename="/dashboard/pages/attributes.php" pagetype="" description="" package=""/>
+        <page name="Single Pages" path="/dashboard/pages/single" filename="/dashboard/pages/single.php" pagetype="" description="" package=""/>        
+        <page name="Stacks &amp; Blocks" path="/dashboard/blocks" filename="/dashboard/blocks/view.php" pagetype="" description="Manage sitewide content and administer block types." package="" />
+        <page name="Stacks" path="/dashboard/blocks/stacks" filename="/dashboard/blocks/stacks/view.php" pagetype="" description="Share content across your site." package="" />
+        <page name="Stack List" path="/dashboard/blocks/stacks/list" filename="/dashboard/blocks/stacks/list/view.php" pagetype="" description="" package="">
+			<attributes>
+				<attributekey handle="exclude_nav">
+					<value><![CDATA[1]]></value>
+				</attributekey>
+				<attributekey handle="exclude_search_index">
+					<value><![CDATA[1]]></value>
+				</attributekey>
+			</attributes>
+        </page>
+        <page name="Block Types" path="/dashboard/blocks/types" filename="/dashboard/blocks/types/view.php" pagetype="" description="Manage the installed block types in your site." package=""/>
+    	
+        <page name="Extend concrete5" path="/dashboard/extend" filename="/dashboard/extend/view.php" pagetype="" description="Connect to the concrete5 marketplace, install custom add-ons, and download updates for marketplace add-ons and themes." package="">
+			<attributes>
+				<attributekey handle="exclude_nav">
+					<value><![CDATA[1]]></value>
+				</attributekey>
+			</attributes>
+        </page>
+        <page name="Add Functionality" path="/dashboard/extend/install" filename="/dashboard/extend/install.php" pagetype="" description="Install add-ons &amp; themes." package=""/>
+        <page name="Update Add-Ons" path="/dashboard/extend/update" filename="/dashboard/extend/update.php" pagetype="" description="Update your installed packages." package=""/>
+        <page name="Connect to the Community" path="/dashboard/extend/connect" filename="/dashboard/extend/connect.php" pagetype="" description="Connect to the concrete5 community." package="" />
+        <page name="Get More Themes" path="/dashboard/extend/themes" filename="/dashboard/extend/themes.php" pagetype="" description="Download themes from concrete5.org." package=""/>
+        <page name="Get More Add-Ons" path="/dashboard/extend/add-ons" filename="/dashboard/extend/add_ons.php" pagetype="" description="Download add-ons from concrete5.org." package=""/>
+        <page name="System &amp; Settings" path="/dashboard/system" filename="/dashboard/system/view.php" pagetype="" description="Secure and setup your site." package="">
+			<attributes>
+				<attributekey handle="exclude_nav">
+					<value><![CDATA[1]]></value>
+				</attributekey>
+			</attributes>
+        </page>
+        <!--
+        <page name="Automated Jobs" path="/dashboard/system/jobs" filename="/dashboard/system/jobs.php" pagetype="" description="" package=""/>
+        <page name="Backup &amp; Restore" path="/dashboard/system/backup" filename="/dashboard/system/backup.php" pagetype="" description="" package=""/>
+        <page name="Update" path="/dashboard/system/update" filename="/dashboard/system/update.php" pagetype="" description="" package=""/>
+        <page name="Notifications" path="/dashboard/system/notifications" filename="/dashboard/system/notifications.php" pagetype="" description="" package=""/>
+        <page name="Email" path="/dashboard/system/mail" filename="/dashboard/system/mail/view.php" pagetype="" description="Enable post via email and other settings." package=""/>
+        <page name="Permissions &amp; Access" path="/dashboard/system/permissions" filename="/dashboard/system/permissions/view.php" pagetype="" description="Change who can edit your site, and how they can do it." package=""/>
+        <page name="File Permissions" path="/dashboard/system/permissions/files" filename="/dashboard/system/permissions/files.php" pagetype="" description="Setup how users can access your site's files." package=""/>
+		<page name="Login &amp; Registration" path="/dashboard/system/registration" filename="/dashboard/system/registration.php" pagetype="" description="" package=""/>
+		//-->
+
+        <page name="Appearance" path="/dashboard/system/appearance" filename="/dashboard/system/appearance/view.php" pagetype="" description="Control your site name and bookmark icons." package=""/>
+        <page name="Site Name" path="/dashboard/system/appearance/site_name" filename="/dashboard/system/appearance/site_name.php" pagetype="" description="" package=""/>
+        <page name="Bookmark Icons" path="/dashboard/system/appearance/icons" filename="/dashboard/system/appearance/icons.php" pagetype="" description="Bookmark icon and mobile home screen icon setup." package=""/>
+        <page name="Time Zone" path="/dashboard/system/appearance/timezone" filename="/dashboard/system/appearance/timezone.php" pagetype="" description="" package=""/>
+
+        <page name="SEO &amp; Statistics" path="/dashboard/system/seo" filename="/dashboard/system/seo/view.php" pagetype="" description="Enable pretty URLs, statistics and tracking codes." package=""/>
+        <page name="Pretty URLs" path="/dashboard/system/seo/urls" filename="/dashboard/system/seo/urls.php" pagetype="" description="" package=""/>
+        <page name="Tracking Codes" path="/dashboard/system/seo/tracking_codes" filename="/dashboard/system/seo/tracking_codes.php" pagetype="" description="" package=""/>
+        <page name="Statistics" path="/dashboard/system/seo/statistics" filename="/dashboard/system/seo/statistics.php" pagetype="" description="" package=""/>
+
+        <page name="Editing" path="/dashboard/system/editing" filename="/dashboard/system/editing/view.php" pagetype="" description="Control how your site is edited." package=""/>
+        <page name="Rich Text Editor" path="/dashboard/system/editing/editor" filename="/dashboard/system/editing/editor.php" pagetype="" description="" package=""/>
+        <page name="Languages" path="/dashboard/system/editing/multilingual" filename="/dashboard/system/editing/multilingual/view.php" pagetype="" description="" package=""/>
+
+        <page name="Optimization &amp; Maintenance" path="/dashboard/system/maintenance" filename="/dashboard/system/maintenance/view.php" pagetype="" description="Keep your site running well." package=""/>
+        <page name="Cache &amp; Speed Settings" path="/dashboard/system/maintenance/cache" filename="/dashboard/system/maintenance/cache.php" pagetype="" description="" package=""/>
+        <page name="Automated Jobs" path="/dashboard/system/maintenance/jobs" filename="/dashboard/system/maintenance/jobs.php" pagetype="" description="" package=""/>
+        <page name="Maintenance Mode" path="/dashboard/system/maintenance/mode" filename="/dashboard/system/maintenance/mode.php" pagetype="" description="" package=""/>
+        <page name="Notifications" path="/dashboard/system/maintenance/notifications" filename="/dashboard/system/maintenance/notifications.php" pagetype="" description="" package=""/>
+        <page name="Update concrete5" path="/dashboard/system/maintenance/update" filename="/dashboard/system/maintenance/update.php" pagetype="" description="" package=""/>
+        <page name="Backup Database" path="/dashboard/system/maintenance/backup" filename="/dashboard/system/maintenance/backup.php" pagetype="" description="" package=""/>
+
+        <page name="Permissions &amp; Access" path="/dashboard/system/permissions" filename="/dashboard/system/permissions/view.php" pagetype="" description="Control who sees and edits your site." package=""/>
+        <page name="Site Access" path="/dashboard/system/permissions/site" filename="/dashboard/system/permissions/site.php" pagetype="" description="" package=""/>
+        <page name="File Permissions" path="/dashboard/system/permissions/file" filename="/dashboard/system/permissions/file.php" pagetype="" description="" package=""/>
+        <page name="Task Permissions" path="/dashboard/system/permissions/tasks" filename="/dashboard/system/permissions/tasks.php" pagetype="" description="" package=""/>
+        <page name="IP Blacklist" path="/dashboard/system/permissions/ip_blacklist" filename="/dashboard/system/permissions/ip_blacklist.php" pagetype="" description="" package=""/>
+
+        <page name="Login &amp; Registration" path="/dashboard/system/registration" filename="/dashboard/system/registration/view.php" pagetype="" description="Change login behaviors and setup public profiles." package=""/>
+        <page name="Post-Login Settings" path="/dashboard/system/registration/postlogin" filename="/dashboard/system/registration/postlogin.php" pagetype="" description="" package=""/>
+        <page name="Public Profiles" path="/dashboard/system/registration/profiles" filename="/dashboard/system/registration/profiles.php" pagetype="" description="" package=""/>
+        <page name="Public Registration" path="/dashboard/system/registration/public_registration" filename="/dashboard/system/registration/public_registration.php" pagetype="" description="" package=""/>
+
+        <page name="Email" path="/dashboard/system/mail" filename="/dashboard/system/mail/view.php" pagetype="" description="Control how your site send and processes mail." package=""/>
+        <page name="SMTP Method" path="/dashboard/system/mail/method" filename="/dashboard/system/mail/method.php" pagetype="" description="" package=""/>
+        <page name="Importers" path="/dashboard/system/mail/importers" filename="/dashboard/system/mail/importers.php" pagetype="" description="" package=""/>
+
+        <page name="Attributes" path="/dashboard/system/attributes" filename="/dashboard/system/attributes/view.php" pagetype="" description="Setup attributes for pages, users, files and more." package=""/>
+        <page name="Sets" path="/dashboard/system/attributes/sets" filename="/dashboard/system/attributes/sets.php" pagetype="" description="Group attributes into sets for easier organization" package=""/>
+        <page name="Types" path="/dashboard/system/attributes/types" filename="/dashboard/system/attributes/types.php" pagetype="" description="Choose which attribute types are available for different items." package=""/>
+	
+        <page name="Developer" path="/dashboard/system/developer" filename="/dashboard/system/developer/view.php" pagetype="" description="Advanced settings for web developers." package=""/>
+        <page name="Environment Information" path="/dashboard/system/developer/environment" filename="/dashboard/system/developer/environment.php" pagetype="" description="" package=""/>
+        <page name="Export Database XML" path="/dashboard/system/developer/database" filename="/dashboard/system/developer/database.php" pagetype="" description="" package=""/>
+        <page name="Debug Settings" path="/dashboard/system/developer/debug" filename="/dashboard/system/developer/debug.php" pagetype="" description="" package=""/>
+        <page name="Logging Settings" path="/dashboard/system/developer/logging" filename="/dashboard/system/developer/logging.php" pagetype="" description="" package=""/>
+
+		<page name="Download File" path="/download_file" filename="/download_file.php" pagetype="" description="" package=""/>
+        <page name="Members" path="/members" filename="/members.php" pagetype="" description="" package=""/>
+        <page name="Composer" path="/dashboard/pages/types/composer" filename="/dashboard/pages/types/composer.php" pagetype="" description="" package=""/>
+    </singlepages>
+    <pagetypes>
+        <pagetype handle="dashboard_primary_five" name="Dashboard Primary + Five" internal="1" package="" />
+        <pagetype handle="dashboard_header_four_col" name="Dashboard Header + Four Column" internal="1" package="" />
+        <pagetype handle="page" name="Page" package="" />
+    </pagetypes>
+    <pages>
+    	<page name="Welcome to concrete5" path="/dashboard/welcome" filename="" description="Learn about how to use concrete5, how to develop for concrete5, and get general help." pagetype="dashboard_header_four_col">
+			<attributes>
+				<attributekey handle="exclude_nav">
+					<value><![CDATA[1]]></value>
+				</attributekey>
+			</attributes>
+			<area name="Header">
+				<block type="content" name="">
+					<data table="btContentLocal">
+						<record>
+						<content><![CDATA[	<div id="newsflow-header-first-run"><h1>Welcome to concrete5.</h1>
+						<h2>It's easy to edit content and add pages using in-context editing.</h2></div>
+						]]></content>
+						</record>
+					</data>
+				</block>
+			</area>
+			<area name="Column 1">
+				<block type="content" name="">
+					<data table="btContentLocal">
+						<record>
+						<content><![CDATA[<div class="newsflow-column-first-run">
+							<h3>Building Your Own Site</h3>
+							<p>If you’re comfortable in PHP concrete5 should be a breeze to learn. Take a few moments to understand the architecture.</p>
+							<p><a href="javascript:void(0)" onclick="ccm_getNewsflowByPath('/welcome/editors')" class="btn primary">Editor's Guide</a></p>
+							</div>]]></content>
+						</record>
+					</data>
+				</block>
+			</area>
+			<area name="Column 2">
+				<block type="content" name="">
+					<data table="btContentLocal">
+						<record>
+						<content><![CDATA[<div class="newsflow-column-first-run">
+							<h3>Developing Applications</h3>
+							<p>If you’re comfortable in PHP concrete5 should be a breeze to learn. Take a few moments to understand the architecture.</p>
+							<p><a href="javascript:void(0)" onclick="ccm_getNewsflowByPath('/welcome/developers')" class="btn primary">Developer's Guide</a></p>
+							</div>]]></content>
+						</record>
+					</data>
+				</block>
+			</area>
+			<area name="Column 3">
+				<block type="content" name="">
+					<data table="btContentLocal">
+						<record>
+						<content><![CDATA[<div class="newsflow-column-first-run">
+							<h3>Designing Websites</h3>
+							<p>Good with CSS and HTML? You can easily theme anything with concrete5.</p>
+							<p><a href="javascript:void(0)" onclick="ccm_getNewsflowByPath('/welcome/designers')" class="btn primary">Designer's Guide</a></p>
+							</div>]]></content>
+						</record>
+					</data>
+				</block>
+			</area>
+			<area name="Column 4">
+				<block type="content" name="">
+					<data table="btContentLocal">
+						<record>
+						<content><![CDATA[
+						<div class="newsflow-column-first-run">
+						<h3>Business Background</h3>
+						<p>Worried about license structures, white-labeling or why concrete5 is a good choice for your agency?</p>
+						<p><a href="javascript:void(0)" onclick="ccm_getNewsflowByPath('/welcome/executives')" class="btn primary">Executive's Guide</a></p>
+						</div>]]></content>
+						</record>
+					</data>
+				</block>
+			</area>
+    	</page>
+    	
+    	<page name="Customize Dashboard Home" path="/dashboard/home" filename="" pagetype="dashboard_primary_five" description="" package="">
+			<attributes>
+				<attributekey handle="exclude_nav">
+					<value><![CDATA[1]]></value>
+				</attributekey>
+				<attributekey handle="exclude_search_index">
+					<value><![CDATA[1]]></value>
+				</attributekey>
+			</attributes>
+			<area name="Primary">
+				<block type="dashboard_app_status" name=""/>
+				<block type="dashboard_form_summary" name=""/>
+			</area>
+			<area name="Secondary 1">
+				<block type="rss_displayer" name="" custom-template="read_more.php">
+					<data table="btRssDisplay">
+						<record>
+							<title><![CDATA[]]></title>
+							<url><![CDATA[http://www.concrete5.org/about/blog/totally-random-web-show/-/feed/]]></url>
+							<dateFormat><![CDATA[F jS]]></dateFormat>
+							<itemsToDisplay><![CDATA[1]]></itemsToDisplay>
+							<showSummary><![CDATA[1]]></showSummary>
+							<launchInNewWindow><![CDATA[0]]></launchInNewWindow>
+						</record>
+					</data>
+				</block>
+			</area>
+			<area name="Secondary 2">
+				<block type="rss_displayer" name="" custom-template="read_more.php">
+					<data table="btRssDisplay">
+						<record>
+							<title><![CDATA[]]></title>
+							<url><![CDATA[http://www.concrete5.org/about/blog/concrete5-sightings/-/feed/]]></url>
+							<dateFormat><![CDATA[F jS]]></dateFormat>
+							<itemsToDisplay><![CDATA[1]]></itemsToDisplay>
+							<showSummary><![CDATA[1]]></showSummary>
+							<launchInNewWindow><![CDATA[0]]></launchInNewWindow>
+						</record>
+					</data>
+				</block>
+			</area>
+			<area name="Secondary 3">
+				<block type="dashboard_featured_theme" name=""/>
+			</area>
+			<area name="Secondary 4">
+				<block type="dashboard_featured_addon" name=""/>
+			</area>
+			<area name="Secondary 5">
+				<block type="dashboard_newsflow_latest" name=""/>
+			</area>
+		</page>
+        <page name="Home" path="" filename="" pagetype="page" description="" package="">
+        </page>
+      </pages>
+	<config>
+		<SITE_DEBUG_LEVEL>1</SITE_DEBUG_LEVEL>
+		<ENABLE_LOG_EMAILS>1</ENABLE_LOG_EMAILS>
+		<ENABLE_LOG_ERRORS>1</ENABLE_LOG_ERRORS>
+		<ENABLE_BLOCK_CACHE>1</ENABLE_BLOCK_CACHE>
+		<FULL_PAGE_CACHE_GLOBAL>0</FULL_PAGE_CACHE_GLOBAL>
+		<ENABLE_MARKETPLACE_SUPPORT>1</ENABLE_MARKETPLACE_SUPPORT>
+	</config>
+</concrete5-cif>

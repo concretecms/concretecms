@@ -1,0 +1,174 @@
+<?xml version="1.0"?>
+<schema version="0.3">
+
+  <table name="ComposerDrafts">
+    <field name="cID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="cpPublishParentID" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+  </table>
+  <table name="ComposerContentLayout">
+    <field name="cclID" type="I" size="10">
+      <KEY/>
+      <AUTOINCREMENT/>
+      <UNSIGNED/>
+    </field>
+    <field name="bID" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="akID" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="displayOrder" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="ctID" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="ccFilename" type="C" size="128"/>
+  </table>
+  <table name="ComposerTypes">
+    <field name="ctID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="ctComposerPublishPageMethod" type="C" size="64">
+      <NOTNULL/>
+      <DEFAULT value="CHOOSE"/>
+    </field>
+    <field name="ctComposerPublishPageTypeID" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="ctComposerPublishPageParentID" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+  </table>
+<table name="Users">
+    <field name="uID" type="I" size="10">
+      <KEY/>
+      <AUTOINCREMENT/>
+      <UNSIGNED/>
+    </field>
+    <field name="uName" type="C" size="64">
+      <NOTNULL/>
+    </field>
+    <field name="uEmail" type="C" size="64">
+      <NOTNULL/>
+    </field>
+    <field name="uPassword" type="C" size="255">
+      <NOTNULL/>
+    </field>
+    <field name="uIsActive" type="C" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="uIsValidated" type="I" size="4">
+      <NOTNULL/>
+      <DEFAULT value="-1"/>
+    </field>
+    <field name="uIsFullRecord" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="1"/>
+    </field>
+    <field name="uDateAdded" type="T">
+      <NOTNULL/>
+      <DEFAULT value="0000-00-00 00:00:00"/>
+    </field>
+    <field name="uHasAvatar" type="I" size="1">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="uLastOnline" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="uLastLogin" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="uPreviousLogin" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="uNumLogins" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="uTimezone" type="C" size="255"/>
+    <field name="uDefaultLanguage" type="C" size="32"/>
+    <index name="uName">
+      <UNIQUE/>
+      <col>uName</col>
+    </index>
+  </table>
+
+	<table name="btGoogleMap">
+		<field name="bID" type="I">
+			<key />
+			<unsigned />
+		</field>
+		<field name="title" type="C" size="255"></field>		
+		<field name="location" type="C" size="255"></field>	
+		<field name="latitude" type="F"></field>
+		<field name="longitude" type="F"></field>	
+		<field name="zoom" type="I" size="8"></field>	
+	</table>
+
+	<!-- in case the table wasn't created properly //-->
+	<table name="btNextPrevious">
+		<field name="bID" type="I">
+			<key />
+			<unsigned />
+		</field>
+		
+		<field name="linkStyle"  type="C" size="32"></field>
+		<field name="nextLabel"  type="C" size="128"></field>
+		<field name="previousLabel"  type="C" size="128"></field>
+		<field name="parentLabel" type="C" size="128"></field>
+		<field name="showArrows" type="i"><default value="1"/></field>
+		<field name="loopSequence" type="i"><default value="1"/></field>
+		<field name="excludeSystemPages" type="i"><default value="1"/></field>
+		<field name="orderBy" type="C" size="20"><default value="display_asc"/></field>
+		
+	</table>
+	
+	<table name="btTags">
+		<field name="bID" type="I">
+			<key />
+			<unsigned />
+		</field>
+		<field name="title" type="C" size="255"></field>
+		<field name="targetCID" type="I"></field>
+		<field name="displayMode" type="C" size="20">
+			<default value="page"/>
+		</field>
+		<field name="cloudCount" type="I">
+			<default value="10"/>
+		</field>
+	</table>
+	
+
+</schema>

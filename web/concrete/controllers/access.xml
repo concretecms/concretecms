@@ -1,0 +1,10 @@
+<access>
+	<node handle="login">
+		<guests canRead="1" />
+		<registered canRead="1" />
+	</node>
+	<node handle="register">
+		<guests canRead="1" />
+		<registered canRead="0" />
+	</node>
+</access>

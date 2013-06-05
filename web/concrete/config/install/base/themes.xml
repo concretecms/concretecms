@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<concrete5-cif version="1.0">
+    <themes>
+        <theme handle="default" package="" activated="1"/>
+        <theme handle="greensalad" package="" activated="0"/>
+        <theme handle="dark_chocolate" package="" activated="0"/>
+        <theme handle="greek_yogurt" package="" activated="0"/>
+    </themes>
+</concrete5-cif>

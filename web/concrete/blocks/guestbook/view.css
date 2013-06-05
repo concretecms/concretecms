@@ -1,0 +1,40 @@
+
+h4.guestBook-title {
+	border-bottom:1px solid #666666;
+	margin-top:30px;
+}
+
+div.guestBook-entry {
+	padding:4px 0 4px 0;
+	margin:6px 0 12px 0;
+}
+
+.guestBook-entry div.contentByLine {
+	font-size:.8em;
+	color:#333333;
+	margin-bottom: 4px;
+}
+
+.guestBook-entry div.guestBook-manage-links {
+	font-size:.8em;
+	color:#333333;
+	text-align:right;
+	float:right;
+	padding-left:8px; 
+}
+.guestBook-formBlock {
+	margin:12px 0 12px 0;
+}
+.guestBook-formBlock textarea {
+	width:100%;
+	height: 150px;
+	margin: 12px 0 12px 0;
+}
+.guestBook-formBlock .note {
+	font-size:10px;
+}
+
+.guestBook-formBlock span.error {
+	color:#ff0000;
+	text-align:left;
+}

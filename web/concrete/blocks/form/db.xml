@@ -1,0 +1,126 @@
+<?xml version="1.0"?>
+<schema version="0.3">
+	
+	<table name="btForm">
+		<field name="bID" type="I">
+			<key />
+			<unsigned />
+		</field>
+		<field name="questionSetId" type="I">
+			<unsigned />
+			<default value="0" />
+		</field>
+		<field name="surveyName" type="C" size="255">
+		</field> 
+		<field name="thankyouMsg" type="X" >
+		</field> 
+		<index name="questionSetIdForeign">
+			<col>questionSetId</col>
+		</index>
+		<field name="notifyMeOnSubmission" type="I1">
+			<unsigned />
+			<notnull />
+			<default value="0" />
+		</field>
+		<field name="recipientEmail" type="C" size="255">
+		</field>		
+		<field name="displayCaptcha" type="i">
+			<default value="1"/>
+		</field>
+		<field name="redirectCID" type="i">
+			<default value="0"/>
+		</field>      		
+		<field name="addFilesToSet" type="i">
+			<default value="0" />
+		</field>
+	</table>
+	
+	<table name="btFormQuestions"> 
+		<field name="qID" type="I">
+			<key />
+			<autoincrement />			
+			<unsigned />
+		</field>
+		<field name="msqID" type="I">
+			<unsigned />
+			<default value="0" /> 
+		</field>
+		<field name="bID" type="I">
+			<unsigned />
+			<default value="0" />
+		</field>		
+		<field name="questionSetId" type="I">
+			<unsigned />
+			<default value="0" />
+		</field>
+		<field name="question" type="C" size="255">
+		</field>
+		<field name="inputType" type="C" size="255">
+		</field>
+		<field name="options" type="X">
+		</field>
+		<field name="position" type="I">
+			<unsigned />
+			<default value="1000" />
+		</field>
+		<field name="width" type="I">
+			<unsigned />
+			<default value="50" />
+		</field>
+		<field name="height" type="I">
+			<unsigned />
+			<default value="3" />
+		</field> 
+		<field name="required" type="i">
+			<default value="0"/>
+		</field>  
+		<index name="questionSetId">
+		  <col>questionSetId</col>
+		</index>
+		<index name="msqID">
+		  <col>msqID</col> 
+		</index> 							
+	</table>
+	
+	<table name="btFormAnswerSet">
+		<field name="asID" type="I">
+			<key />
+			<autoincrement />
+			<unsigned />
+		</field>
+		<field name="questionSetId" type="I">
+			<unsigned />
+			<default value="0" />
+		</field>
+		<field name="created" type="T">
+			<deftimestamp />
+		</field>
+		<field name="uID" type="I">
+			<unsigned />
+			<default value="0" />
+		</field>
+		<index name="questionSetId">
+			<col>questionSetId</col>
+		</index>
+	</table>
+	
+	<table name="btFormAnswers">
+		<field name="aID" type="I">
+			<key />
+			<autoincrement />
+			<unsigned />
+		</field>
+		<field name="asID" type="I">
+			<unsigned />
+			<default value="0" />
+		</field>
+		<field name="msqID" type="I">
+			<unsigned />
+			<default value="0" />
+		</field>
+		<field name="answer" type="C" size="255">
+		</field>
+		<field name="answerLong" type="X">
+		</field>
+	</table>
+</schema>

@@ -1,0 +1,216 @@
+<?xml version="1.0"?>
+<concrete5-cif version="1.0">
+    <attributecategories>
+        <category handle="collection" allow-sets="1" package=""/>
+        <category handle="user" allow-sets="1" package=""/>
+        <category handle="file" allow-sets="1" package=""/>
+    </attributecategories>
+    <attributetypes>
+        <attributetype handle="text" package="">
+            <categories>
+                <category handle="collection"/>
+                <category handle="user"/>
+                <category handle="file"/>
+            </categories>
+        </attributetype>
+        <attributetype handle="textarea" package="">
+            <categories>
+                <category handle="collection"/>
+                <category handle="user"/>
+                <category handle="file"/>
+            </categories>
+        </attributetype>
+        <attributetype handle="boolean" package="">
+            <categories>
+                <category handle="collection"/>
+                <category handle="user"/>
+                <category handle="file"/>
+            </categories>
+        </attributetype>
+        <attributetype handle="date_time" package="">
+            <categories>
+                <category handle="collection"/>
+                <category handle="user"/>
+                <category handle="file"/>
+            </categories>
+        </attributetype>
+        <attributetype handle="image_file" package="">
+            <categories>
+                <category handle="collection"/>
+            </categories>
+        </attributetype>
+        <attributetype handle="number" package="">
+            <categories>
+                <category handle="collection"/>
+                <category handle="user"/>
+                <category handle="file"/>
+            </categories>
+        </attributetype>
+        <attributetype handle="rating" package="">
+            <categories>
+                <category handle="collection"/>
+                <category handle="file"/>
+            </categories>
+        </attributetype>
+        <attributetype handle="select" package="">
+            <categories>
+                <category handle="collection"/>
+                <category handle="user"/>
+                <category handle="file"/>
+            </categories>
+        </attributetype>
+        <attributetype handle="address" package="">
+            <categories>
+                <category handle="user"/>
+            </categories>
+        </attributetype>
+    </attributetypes>
+    <blocktypes>
+        <blocktype handle="core_scrapbook_display" package=""/>
+        <blocktype handle="core_stack_display" package=""/>
+        <blocktype handle="dashboard_featured_addon" package=""/>
+        <blocktype handle="dashboard_featured_theme" package=""/>
+        <blocktype handle="dashboard_newsflow_latest" package=""/>
+        <blocktype handle="dashboard_app_status" package=""/>
+        <blocktype handle="dashboard_form_summary" package=""/>
+        <blocktype handle="autonav" package=""/>
+        <blocktype handle="content" package=""/>
+        <blocktype handle="date_nav" package=""/>
+        <blocktype handle="external_form" package=""/>
+        <blocktype handle="file" package=""/>
+        <blocktype handle="flash_content" package=""/>
+        <blocktype handle="form" package=""/>
+        <blocktype handle="google_map" package=""/>
+        <blocktype handle="guestbook" package=""/>
+        <blocktype handle="html" package=""/>
+        <blocktype handle="image" package=""/>
+        <blocktype handle="next_previous" package=""/>
+        <blocktype handle="page_list" package=""/>
+        <blocktype handle="rss_displayer" package=""/>
+        <blocktype handle="search" package=""/>
+        <blocktype handle="slideshow" package=""/>
+        <blocktype handle="survey" package=""/>
+        <blocktype handle="tags" package=""/>
+        <blocktype handle="video" package=""/>
+        <blocktype handle="youtube" package=""/>
+    </blocktypes>
+    <attributekeys>
+        <attributekey handle="meta_title" name="Meta Title" package="" searchable="1" indexed="1" type="text" category="collection"/>
+        <attributekey handle="meta_description" name="Meta Description" package="" searchable="1" indexed="1" type="textarea" category="collection">
+            <type mode=""/>
+        </attributekey>
+        <attributekey handle="meta_keywords" name="Meta Keywords" package="" searchable="1" indexed="1" type="textarea" category="collection">
+            <type mode=""/>
+        </attributekey>
+        <attributekey handle="exclude_nav" name="Exclude From Nav" package="" searchable="1" indexed="1" type="boolean" category="collection">
+            <type checked=""/>
+        </attributekey>
+        <attributekey handle="exclude_page_list" name="Exclude From Page List" package="" searchable="1" indexed="1" type="boolean" category="collection">
+            <type checked=""/>
+        </attributekey>
+        <attributekey handle="header_extra_content" name="Header Extra Content" package="" searchable="1" indexed="1" type="textarea" category="collection">
+            <type mode=""/>
+        </attributekey>
+        <attributekey handle="exclude_search_index" name="Exclude From Search Index" package="" searchable="1" indexed="1" type="boolean" category="collection">
+            <type checked=""/>
+        </attributekey>
+        <attributekey handle="exclude_sitemapxml" name="Exclude From sitemap.xml" package="" searchable="1" indexed="1" type="boolean" category="collection">
+            <type checked=""/>
+        </attributekey>
+        <attributekey handle="tags" name="Tags" package="" searchable="0" indexed="0" type="select" category="collection">
+            <type allow-multiple-values="1" display-order="display_asc" allow-other-values="1">
+                <options>
+                    <option value="sample" is-end-user-added="1"/>
+                    <option value="Hello World" is-end-user-added="1"/>
+                </options>
+            </type>
+        </attributekey>
+        <attributekey handle="profile_private_messages_enabled" name="I would like to receive private messages." package="" searchable="1" indexed="1" type="boolean" category="user" profile-displayed="0" profile-editable="1" profile-required="0" register-editable="1" register-required="0" member-list-displayed="0">
+            <type checked="1"/>
+        </attributekey>
+        <attributekey handle="profile_private_messages_notification_enabled" name="Send me email notifications when I receive a private message." package="" searchable="1" indexed="1" type="boolean" category="user" profile-displayed="0" profile-editable="1" profile-required="0" register-editable="1" register-required="0" member-list-displayed="0">
+            <type checked="1"/>
+        </attributekey>
+        <attributekey handle="width" name="Width" package="" searchable="1" indexed="1" type="number" category="file"/>
+        <attributekey handle="height" name="Height" package="" searchable="1" indexed="1" type="number" category="file"/>
+    </attributekeys>
+    <attributesets>
+        <attributeset handle="page_header" name="Page Header" package="" locked="0" category="collection">
+            <attributekey handle="meta_title"/>
+            <attributekey handle="meta_description"/>
+            <attributekey handle="meta_keywords"/>
+            <attributekey handle="header_extra_content"/>
+        </attributeset>
+        <attributeset handle="navigation" name="Navigation and Indexing" package="" locked="0" category="collection">
+            <attributekey handle="exclude_nav"/>
+            <attributekey handle="exclude_page_list"/>
+            <attributekey handle="exclude_search_index"/>
+            <attributekey handle="exclude_sitemapxml"/>
+            <attributekey handle="tags"/>
+        </attributeset>
+    </attributesets>
+
+    <themes>
+        <theme handle="default" package="" activated="1"/>
+        <theme handle="greensalad" package="" activated="0"/>
+        <theme handle="dark_chocolate" package="" activated="0"/>
+    </themes>
+    <taskpermissions>
+        <taskpermission handle="access_task_permissions" name="Change Task Permissions" description="" package="">
+            <access>
+                <group name="Administrators"/>
+            </access>
+        </taskpermission>
+        <taskpermission handle="access_sitemap" name="Access Sitemap and Page Search" description="" package="">
+            <access>
+                <group name="Administrators"/>
+            </access>
+        </taskpermission>
+        <taskpermission handle="access_user_search" name="Access User Search" description="" package="">
+            <access>
+                <group name="Administrators"/>
+            </access>
+        </taskpermission>
+        <taskpermission handle="access_group_search" name="Access Group Search" description="" package="">
+            <access>
+                <group name="Administrators"/>
+            </access>
+        </taskpermission>
+        <taskpermission handle="access_page_defaults" name="Change Content on Page Type Default Pages" description="" package="">
+            <access>
+                <group name="Administrators"/>
+            </access>
+        </taskpermission>
+        <taskpermission handle="backup" name="Perform Full Database Backups" description="" package="">
+            <access>
+                <group name="Administrators"/>
+            </access>
+        </taskpermission>
+        <taskpermission handle="sudo" name="Sign in as User" description="" package=""/>
+        <taskpermission handle="uninstall_packages" name="Uninstall Packages" description="" package="">
+            <access>
+                <group name="Administrators"/>
+            </access>
+        </taskpermission>
+        <taskpermission handle="install_packages" name="Install Packages and Connect to the Marketplace" description="" package="">
+            <access>
+                <group name="Administrators"/>
+            </access>
+        </taskpermission>
+        <taskpermission handle="delete_user" name="Delete Users" description="" package="">
+            <access>
+                <group name="Administrators"/>
+            </access>
+        </taskpermission>
+        <taskpermission handle="view_newsflow" name="View Newsflow Updates in an Overlay" description="" package="">
+            <access>
+                <group name="Administrators"/>
+            </access>
+        </taskpermission>
+    </taskpermissions>
+    <jobs>
+        <job handle="index_search" package=""/>
+        <job handle="generate_sitemap" package=""/>
+        <job handle="process_email" package=""/>
+    </jobs>
+</concrete5-cif>

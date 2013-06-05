@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<schema version="0.3">
+	<table name="btGoogleMap">
+		<field name="bID" type="I">
+			<key />
+			<unsigned />
+		</field>
+		<field name="title" type="C" size="255"></field>		
+		<field name="location" type="C" size="255"></field>	
+		<field name="latitude" type="F"></field>
+		<field name="longitude" type="F"></field>	
+		<field name="zoom" type="I" size="8"></field>	
+	</table>
+</schema>

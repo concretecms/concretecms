@@ -1,0 +1,227 @@
+/* colors 
+ * 73880b dark green
+ * f4ffd2 light green
+ * 69ab2b bright green (links & headers)
+ * daf095 med green sidebar backgrounds, header nav
+ * 50AAB5 blue for hovers..
+*/
+
+/* HTML Tag Redefinition */
+html, body {
+	height: 100%;
+	font-family:Arial, Helvetica, sans-serif;
+}
+body {
+	padding: 0px;
+	margin: 0px;
+	background: #fff url(images/footer_grass.jpg) repeat-x fixed left bottom;
+}
+img {
+	border: 0px
+}
+a { cursor:pointer }
+/* Page Structure / Navigation */
+#page {
+	width:800px;
+	margin: auto;
+	background-color:#f4ffd2;
+	height: auto !important;
+	height:100%;
+	min-height:100%;
+	position:relative;
+	background:url(images/central_columns_bg.jpg) repeat-y top left;
+}
+#page.sidebar-left {
+	background:url(images/central_left_columns_bg.jpg) repeat-y top left;
+}
+#page #header {
+	position:relative;
+	height:100px;
+	background: url(images/header_bg.jpg) repeat-x top left #73880b;
+	padding:15px;
+}
+#page #header #logo {
+	color:#fff;
+	font-size:32px;
+	line-height: auto;
+	padding: 0px;
+	margin:0;
+	cursor:pointer;
+	position:absolute;
+	bottom:15px;
+	left: 15px;
+	width:308px;
+	overflow:visible;
+}
+#page #header #logo a {
+	/* customize_header_logo */ color: #ffffff; /* customize_header_logo */
+	/* customize_header_logo_text */ font: normal bold 32px Arial; /* customize_header_logo_text */
+	text-decoration:none;
+}
+
+#page #header #logo p{ display:inline; line-height:inherit; font-size:inherit; padding:inherit; margin:inherit; color:inherit }
+
+#page #header ul.nav-header {
+	list-style:none;
+	margin:0px;
+	float: right; 
+	padding:0px;
+	z-index:2;
+	overflow:visible;
+}
+#page #header ul.nav-header li {
+	float:left;
+	padding:2px 0px;
+	margin-left:24px;
+	margin-bottom: 0px;
+	/* customize_header_link_text */ color:#daf095; /* customize_header_link_text */
+	font-size:14px;
+	letter-spacing:1.5px;
+	margin-top:0px
+}
+#page #header ul.nav-header li a, #page #header ul.nav-header li a:hover {
+	text-decoration:none;
+	color:#daf095
+}
+#page #header ul.nav-header li.nav-selected {
+	font-weight:bold;
+}
+/*
+#page #header #header-area {
+	position:relative;
+	height:75px;
+}
+*/
+#page #header #header-area {
+	position: absolute;
+	bottom: 15px;
+	right: 15px;
+	width: 462px;
+}
+
+#page #homeHeader {
+	background: url(images/home_header.jpg) top left no-repeat;
+	min-height:192px;
+}
+
+#page #homeHeader, #page #pageHeader {
+	margin:0;
+	padding:0;
+	position:relative;
+}
+
+#page #central {
+	clear:both;
+	padding-bottom:30px; /* for footer */
+}
+#page.no-sidebar {
+	background-image: none !important;
+	background-color:#f4ffd2;
+}
+/* body & sidebar */
+#page #central #body {
+	float:left;
+	text-align:left;
+	width:542px;
+	padding:15px;
+	/* customize_background */ background-color:#f4ffd2; /* customize_background */
+}
+#page #central #sidebar {
+	float:right;
+	width:198px;
+	padding:15px 15px 30px 15px;
+	background: #daf095;
+}
+#page.sidebar-left #central #sidebar {
+	float:left;
+	width: 94px
+}
+#page.sidebar-left #central #body {
+	float:right;
+	width: 646px;
+	padding: 15px;
+}
+#page.no-sidebar #body {
+	float: none !important;
+	width: auto !important
+}
+#page #central #sidebar p {
+	line-height:24px
+}
+#page #central #sidebar ul.nav {
+	list-style:none;
+	margin-left:0px;
+	padding:0px;
+	padding-left:0;
+	font-size:11px;
+}
+#page #central #sidebar ul.nav li {
+	margin-bottom:10px;
+}
+#page #central #sidebar ul.nav a {
+	text-decoration:none;
+	color:#69ab2b
+}
+#page #central #sidebar ul.nav a.nav-selected {
+	font-weight: bold
+}
+#page #central #sidebar ul.nav a:hover {
+	text-decoration:underline
+}
+#page #central #sidebar ul.nav ul {
+	list-style:none;
+	margin-left:5px;
+	padding:0px;
+	margin-top:10px;
+}
+#page #central #sidebar ul.nav ul li {
+	padding-left: 5px;
+	margin: 0;
+	border-left: 1px solid #69ab2b;
+}
+#page #central #sidebar ul.nav ul li ul li {
+	list-style:square inside;
+	padding-left:0;
+}
+#page #central #sidebar ul.nav ul li ul li {
+	border:none;
+}
+#page #footer {
+	height:10px;
+	line-height:10px;
+	background:url(images/footer_bg.jpg) repeat-x;
+	clear:both;
+	color:#daf095;
+	font-size:10px;
+	text-align:center;
+	padding:10px 0 10px 0;
+	position:absolute;
+	bottom:0;
+	width:100%
+}
+#page #footer a {
+	color:#daf095;
+	text-decoration:none;
+}
+
+span.sign-in {margin-left: 20px}
+#page #footer span.powered-by { float:right; margin-right:20px;}
+
+
+/* MISC STYLES & SHORTCUTS */
+div.code {
+	border: 1px solid #ddd;
+	background: #eee;
+	padding: 10px
+}
+div.spacer, div.ccm-spacer {
+	clear:both;
+	font-size:1px;
+	line-height:1px
+}
+.noTopSpace {
+	margin-top:0px;
+	padding-top:0px
+}
+
+/* customize_miscellaneous */ /* customize_miscellaneous */

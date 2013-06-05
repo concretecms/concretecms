@@ -1,0 +1,6 @@
+<access>
+<node handle="account">
+<guests canRead="0" />
+<registered canRead="1" />
+</node>
+</access>

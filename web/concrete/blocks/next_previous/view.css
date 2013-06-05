@@ -1,0 +1,19 @@
+.ccm-next-previous-wrapper {
+    text-align: justify;
+    -ms-text-justify: distribute-all-lines;
+    text-justify: distribute-all-lines;
+}
+.ccm-next-previous-previouslink, .ccm-next-previous-parentlink, .ccm-next-previous-nextlink, .ccm-next-previous-wrapper .spacer {
+    display: -moz-inline-block;
+    display: inline-block;
+    *display: inline;
+    zoom: 1;
+    text-align: left;
+    -ms-text-justify: auto;
+    text-justify: auto;
+}
+.ccm-next-previous-wrapper .spacer {
+    font-size: 1px;
+    line-height: 1px;
+    width: 100%;
+}

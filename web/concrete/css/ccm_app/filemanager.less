@@ -1,0 +1,131 @@
+/* asset library */
+
+tr.ccm-file-list-record td {height: 60px}
+table.ccm-results-list th.ccm-file-list-thumbnail-wrapper {width: 1px !important;}
+.ccm-file-list-thumbnail-image{ text-align: center; height: 70px;}
+div.ccm-file-list-thumbnail-image img {}
+div.ccm-file-list-thumbnail-hover div {display: none;z-index: 105;position: absolute;top: 0px;left: 0px;border: 1px dotted #aaa;padding: 8px;background-color: #fff}
+#ccm-file-list-multiple-operations {font-size: 10px}
+table.ccm-results-list th.ccm-file-list-starred, table.ccm-results-list td.ccm-file-list-starred {padding: 0 4px 0 4px;margin:0; text-align: center;}
+ul#ccm-file-search-advanced-saved-searches-list li {padding: 2px}
+
+ul.ccm-file-set-file-list {margin: 0px; padding: 0px}
+ul.ccm-file-set-file-list li {
+	width: 100px;
+	min-height: 80px;   
+	border: 2px solid #aaa;
+	border-radius: 6px;
+	padding: 6px;
+	-webkit-border-radius: 6px;
+	-moz-border-radius: 6px;
+	display: -moz-inline-stack;
+	display: inline-block;
+	vertical-align: top;
+	margin: 5px;
+	zoom: 1;
+	text-align: center;
+	*display: inline;
+	_height: 250px;
+}
+
+table.ccm-results-list td.ccm-file-list-thumbnail-wrapper {padding-top: 10px;}
+table.ccm-results-list .thumbnails {margin-bottom: 0px; margin-top: 0px;}
+table.ccm-results-list .thumbnails > li {margin-bottom: 5px;}
+
+/*
+div.ccm-files-add-to-sets-wrapper {background-color: #efefef; border: 1px solid #dedede; padding: 7px 8px 8px 8px}
+*/
+
+ul.ccm-file-set-file-list span {font-size: 9px; display: block}
+
+/* file permissions */
+div.ccm-file-access-add-extensions-header {border-top: 1px solid #cecece; border-left: 1px solid #cecece; border-right: 1px solid #cecece; background: #D3E4F0; padding: 4px}
+div.ccm-file-access-extensions {border: 1px solid #cecece; padding: 4px; height: 120px; overflow: auto; margin-bottom: 20px}
+
+#ccm-files-add-asset {float: right;}
+#ccm-files-add-asset form {margin-bottom: 0px;}
+#ccm-files-add-asset input[type=file] {background-color: transparent;}
+
+/* Don't remember what this was supposed to fix but it causes other problems. The thumbs get all stretched out weird
+img.ccm-generic-thumbnail {border: 0px; width:100%}}
+*/
+
+.incoming_file_importer {margin: 10px auto 10px auto;}
+.incoming_file_importer .borderflow {border: 1px solid #DEDEDE;overflow-y: scroll}
+.incoming_file_importer .incoming_file {margin: 10px 0px 10px 0px;float: left;text-align: center}
+.incoming_file_importer .incoming_file_table .center {text-align: center}
+.incoming_file_importer .clear {clear: both}
+.theader {background-color: #EFEFEF;font-weight: bold;padding: 4px 0px 4px 0px}
+
+/* file sets dialog */
+div#ccm-file-add-to-set-tab h2 {margin-bottom: 10px}
+div#ccm-file-add-to-set-tab hr {border: 0px; background: #aaa; margin: 8px 0px 8px 0px; height: 1px}
+
+div.ccm-file-search-advanced-sets-results li.ccm-file-set-add-cb {margin-bottom: 4px}
+div.ccm-file-search-advanced-sets-results li.ccm-file-set-add-cb:last-child {margin-bottom: 0px}
+
+.ccm-file-set-add-cb img {vertical-align: middle;}
+
+/* properties */
+div#ccm-file-properties {clear: both;}
+div#ccm-file-properties table th {white-space: nowrap;}
+div#ccm-file-properties table form {margin-bottom: 0px;}
+div#ccm-file-properties table th, div#ccm-file-properties table td {vertical-align: middle !important}
+div#ccm-file-properties table th {text-align: right}
+div#ccm-file-properties table th a { color: #999;text-decoration: underline}
+td.ccm-attribute-editable-field-save {border-left: 0px !important;}
+
+/* Versions */
+tr.ccm-file-versions-grid-active td {font-weight: bold !important}
+
+table#ccm-file-upload-multiple-list {border:1px solid #ddd;}
+table#ccm-file-upload-multiple-list th {font-weight: bold; text-align: left; padding: 4px; background-color: #D3E4F0; border-bottom: 1px solid #cecece}
+table#ccm-file-upload-multiple-list td {padding: 8px; color: #666}
+div.ccm-file-manager-progress-bar-pending {font-weight: bold; text-align: center}
+
+/* Choose Asset in page */
+div.ccm-file-manager-select {
+	border: 1px solid #ccc;
+	.border-radius(3px);
+	@transition: background-color linear .2s, box-shadow linear .2s;
+	.transition(@transition);
+	.box-shadow(inset 0 1px 3px rgba(0,0,0,.1));
+}
+
+div.ccm-file-manager-select a:hover {
+	text-decoration: none;
+}
+
+div.ccm-file-selected-wrapper {
+	padding: 10px 10px 10px 11px;
+	border: 1px solid #ccc;
+	.border-radius(3px);
+	@transition: background-color linear .2s, box-shadow linear .2s;
+	.transition(@transition);
+	.box-shadow(inset 0 1px 3px rgba(0,0,0,.1));
+}
+div.ccm-file-manager-select a {
+	display: block; 
+	padding: 10px 10px 10px 25px; 
+	text-decoration: none; 
+	background: transparent url(../images/icons/add.png) no-repeat scroll 6px 11px; 
+	color: #666; 
+}
+
+div.ccm-file-manager-select:hover {
+border-color: rgba(82,168,236,.8);
+background-color: rgba(82,168,236,.3); cursor: pointer;
+text-decoration: none;
+}
+
+div.ccm-file-selected-wrapper:hover {border-color: rgba(82,168,236,.8);background-color: rgba(82,168,236,.3); cursor: pointer;}
+
+div.ccm-file-manager-pre-filter {margin-bottom: 10px; font-size: 14px; color: #888; font-weight: bold; }
+div.ccm-file-selected-thumbnail {width: 60px; margin-right: 10px; float: left}
+div.ccm-file-selected-data {padding-top: 0px; float: left}
+div.ccm-file-selected-data div {font-size: 11px; word-wrap: break-word}
+
+#ccm-file-manager-edit-image {margin-top: 10px;}
+#ccm-file-manager-zoom-slider #zoomMin, #ccm-file-manager-zoom-slider #zoomMax {display: none;}
+#ccm-file-manager-zoom-slider {width: 120px;}
+#ccm-file-manager-rotate #rotationMin, #ccm-file-manager-rotate #rotationMax {display: none;}

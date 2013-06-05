@@ -1,0 +1,118 @@
+<?xml version="1.0"?>
+<schema version="0.3">
+
+<!-- add uID and indexes //-->
+
+<table name="btFormAnswerSet">
+	<field name="asID" type="I">
+		<key />
+		<autoincrement />
+		<unsigned />
+	</field>
+	<field name="questionSetId" type="I">
+		<unsigned />
+		<default value="0" />
+	</field>
+	<field name="created" type="T">
+		<deftimestamp />
+	</field>
+	<field name="uID" type="I">
+		<unsigned />
+		<default value="0" />
+	</field>
+</table>
+
+
+  <table name="PagePaths">
+    <field name="ppID" type="I" size="10">
+      <KEY/>
+      <AUTOINCREMENT/>
+      <UNSIGNED/>
+    </field>
+    <field name="cID" type="I" size="10">
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="cPath" type="X">
+      <NOTNULL/>
+    </field>
+    <field name="ppIsCanonical" type="C" size="1">
+      <NOTNULL/>
+      <DEFAULT value="1"/>
+    </field>
+    <index name="cID">
+      <col>cID</col>
+    </index>
+    <index name="ppIsCanonical">
+      <col>ppIsCanonical</col>
+    </index>
+  </table>
+
+  <table name="DownloadStatistics">
+    <field name="dsID" type="I" size="10">
+      <KEY/>
+      <AUTOINCREMENT/>
+      <UNSIGNED/>
+    </field> 
+    <field name="fID" type="I" size="10">
+      <NOTNULL/>
+      <UNSIGNED />
+    </field>
+    <field name="fvID" type="I" size="10">
+      <NOTNULL/>
+      <UNSIGNED />
+    </field>
+    <field name="uID" type="I" size="10">
+      <NOTNULL/>
+      <UNSIGNED />
+    </field>
+    <field name="rcID" type="I" size="10">
+      <NOTNULL/>
+      <UNSIGNED />
+    </field>
+    <field name="timestamp" type="T">
+      <NOTNULL/>
+      <DEFTIMESTAMP/>
+    </field>		
+  </table>
+  
+    <table name="PageSearchIndex">
+    <opt platform="MYSQL">ENGINE=MYISAM</opt>
+    <field name="cID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="content" type="X"/>
+    <field name="cName" type="C" size="255" />
+    <field name="cDescription" type="X"/>
+    <field name="cPath" type="X"/>
+    <field name="cDatePublic" type="T"/>
+    <field name="cDateLastIndexed" type="T" />
+    <field name="cDateLastSitemapped" type="T" />
+    <index name="cName">
+      <col>cName</col>
+      <FULLTEXT />
+	</index>
+    <index name="cDescription">
+      <col>cDescription</col>
+      <FULLTEXT />
+	</index>
+    <index name="content">
+      <col>content</col>
+      <FULLTEXT />
+	</index>
+    <index name="content2">
+      <col>cName</col>
+      <col>cDescription</col>
+      <col>content</col>
+      <FULLTEXT />
+	</index>
+    <index name="cDateLastIndexed">
+      <col>cDateLastIndexed</col>
+	</index>
+    <index name="cDateLastSitemapped">
+      <col>cDateLastSitemapped</col>
+	</index>
+  </table>
+</schema>

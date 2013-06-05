@@ -1,0 +1,12 @@
+.ccm-social-link-attribute .btn-link {
+	padding-left: 0px;
+	padding-right: 0px;
+}
+
+.ccm-social-link-attribute .input-prepend input {
+	border-left: 0px;
+}
+
+div.ccm-social-link-attribute .input-prepend .add-on {
+	background-color: #fff;
+}

@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<schema version="0.3">
+	<table name="btDateArchive">
+		<field name="bID" type="I">
+			<key />
+			<unsigned />
+		</field>
+		<field name="title" type="C" size="255"></field>
+		<field name="targetCID" type="I"></field>
+		<field name="numMonths" type="I">
+			<default value="12"/>
+		</field>
+	</table>
+</schema>

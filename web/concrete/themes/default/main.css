@@ -1,0 +1,78 @@
+/* HTML Tag Redefinition */
+html, body {height: 100%;  }
+body {/* customize_background */ background-color: #ffffff; /* customize_background */ padding: 0px; margin: 0px; }
+img {border: 0px}
+a { cursor:pointer}
+
+fieldset { border:1px solid #ccc;}
+
+/* error text class optionally provided by theme */
+div.ccm-error-response {color: #f00; margin-bottom: 12px}
+
+/* Page Structure / Navigation */
+#page{ width:800px; margin:auto; text-align:left }
+#page #headerSpacer{ height:64px }
+#page #header{ position:relative; } 
+#page #header #logo{ color:#999; font-size:32px; 
+	font-family:Arial, Helvetica, sans-serif; 
+	line-height: auto; 
+	margin-bottom: 0px; padding: 0px; margin-top:8px; cursor:pointer;  left:0px ; z-index:1; width:auto; float:left; position: relative }
+#page #header #logo a{ /* customize_header_logo */color:#999; /* customize_header_logo */ text-decoration:none;}
+#page #header #logo p{ display:inline; line-height:inherit; font-size:inherit; padding:inherit; margin:inherit; color:inherit }
+
+
+#page #header #headerNav{ position: absolute; top: 14px; right: 0px; z-index:2; overflow:visible;}
+#page #header ul.nav-header{ list-style:none; margin:0px; padding:0px; width:auto; z-index:2; overflow:visible; float: right}
+#page #header ul.nav-header li{float:left; padding:2px 0px; margin-left:16px; margin-bottom: 0px; color:#999; font-size:13px; margin-top:0px }
+#page #header ul.nav-header li a,#page #header ul.nav-header li a:hover{ text-decoration:none; color:#999999 }
+#page #header ul.nav-header li.nav-selected{ border:1px solid #bbb; padding:2px 8px; }
+#page #header #header-area{margin-top: 10px; margin-bottom: 10px }
+#page #header #header-area #header-area-inside{margin-bottom: 12px;}
+#page #header #header-area img { display: block}
+#page .divider{padding-top: 12px; background: url(images/nav_horizontal_divider.gif) no-repeat top; overflow:hidden; height:1px; clear:both; width:100%; }
+
+#page #central{background:url(images/nav_sidebar_right_bg.gif) repeat-y center; clear:both; }
+#page .no-sidebar { background-image: none !important}
+#page #central.central-left { background:url(images/nav_sidebar_left_bg.gif) repeat-y center !important; }
+#page #central.central-left div#sidebar {float: left !important; }
+#page #central.central-left #body {padding-left: 68px !important; padding-right: 0px !important; float:right}
+ 
+#page #central #body{ float:left; width:67%; padding-right:28px; padding-left: 0px !important; padding-right: 0px !important }
+#page .no-sidebar #body{ float: none !important; width: auto !important; }
+#page #central #sidebar{ float:right; width:23%; overflow:hidden }
+#page #central #sidebar p{ line-height:24px}
+#page #central #sidebar ul.nav{ list-style:none; margin-left:0px; padding:0px; padding-left:24px; font-size:11px;}
+#page #central #sidebar ul.nav li{ margin-bottom:16px; }
+#page #central #sidebar ul.nav a{ text-decoration:none; color:#333 }
+#page #central #sidebar ul.nav a.nav-selected {font-weight: bold}
+#page #central #sidebar ul.nav a:hover{ text-decoration:underline }
+#page #central #sidebar ul.nav ul{ list-style:none; margin-left:0px; padding:0px; padding-left:16px; margin-top:16px; }
+#page #central #sidebar ul.nav ul li{ margin-bottom:16px; }
+
+#page #central.navLeft{ background:url(images/nav_sidebar_left_bg.gif) repeat-y center; }
+#page #central.navLeft  #sidebar{float:left}
+#page #central.navLeft  #body{float:right; padding-right:0px; width:68%; }
+
+#page #central.noSideNav{ background: none; }
+#page #central.noSideNav  #sidebar{ display:none }
+#page #central.noSideNav  #body{float: none; padding-left:0px; padding-right:0px; width:100%; }
+
+#page #footer{ padding-top:24px; clear:both; padding-bottom:16px; color:#999; font-size:10px }
+#page #footer a{ text-decoration:none }
+#page #footer span.sign-in {margin-left: 20px}
+#page #footer span.powered-by { float:right; }
+
+/* Page Elements */
+
+.pagingNav{ margin:16px 0px 8px 0px}
+.pagination{ text-align:center; color:#bbb; padding-top:4px}
+.pagination .pageRight{width:20%; float:right; text-align:right}
+.pagination .pageLeft{width:20%; float:left; text-align:left}
+
+/* MISC STYLES & SHORTCUTS */
+div.code {border: 1px solid #ddd; background: #eee; padding: 10px}
+div.spacer,div.ccm-spacer{ clear:both; font-size:1px; line-height:1px }
+.noTopSpace{margin-top:0px; padding-top:0px}
+div.pageSection { margin-bottom: 10px; }
+
+/* customize_miscellaneous */ /* customize_miscellaneous */
