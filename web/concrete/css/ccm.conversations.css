@@ -59,7 +59,7 @@ div.ccm-conversation-avatar img {
 .cnv-admin-pane {
   position: absolute;
   right: 0;
-  top: -;
+  top: -10px;
 }
 .cnv-admin-pane a.dropdown-toggle {
   font-size: 10px;
@@ -151,6 +151,11 @@ div.ccm-conversation-add-reply div.ccm-conversation-message-form .ccm-conversati
 div.ccm-conversation-add-new-message div.ccm-conversation-message-form .ccm-conversation-attachment-toggle {
   float: right;
   opacity: .7;
+}
+div.ccm-conversation-add-reply div.ccm-conversation-message-form .ccm-conversation-attachment-toggle.btn-success,
+div.ccm-conversation-add-new-message div.ccm-conversation-message-form .ccm-conversation-attachment-toggle.btn-success {
+  border-top: 0;
+  border-bottom: 0;
 }
 div.ccm-conversation-add-reply div.ccm-conversation-message-form button,
 div.ccm-conversation-add-new-message div.ccm-conversation-message-form button {

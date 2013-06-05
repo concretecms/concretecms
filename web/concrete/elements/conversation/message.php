@@ -1,7 +1,6 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
 $im = Loader::helper('image');
-$page = Page::getByID($cID);
 $p = new Permissions($page);
 $ui = $message->getConversationMessageUserObject();
 $class = 'ccm-conversation-message ccm-conversation-message-level' . $message->getConversationMessageLevel();

@@ -67,6 +67,7 @@
 			var addMessageLabel = (obj.options.addMessageLabel) ? obj.options.addMessageLabel : '';
 			var dateFormat = (obj.options.dateFormat);
 			var customDateFormat = (obj.options.customDateFormat);
+			var blockAreaHandle = (obj.options.blockAreaHandle);
 
 			if (obj.options.method == 'ajax') {
 				$.post(CCM_TOOLS_PATH + '/conversations/view_ajax', {
@@ -85,9 +86,9 @@
 					'enableCommentRating': enableCommentRating,
 					'commentRatingUserID': commentRatingUserID,
 					'commentRatingIP':     commentRatingIP,
-					'dateFormat' : 		   dateFormat,
-					'customDateFormat':    customDateFormat
-
+					'dateFormat': 		   dateFormat,
+					'customDateFormat':    customDateFormat,
+					'blockAreaHandle' :    blockAreaHandle
 					
 				}, function(r) {
 					var oldobj = window.obj;
@@ -223,24 +224,12 @@
 				if($('.ccm-conversation-add-reply .ccm-conversation-attachment-container').is(':visible')) {
 					$('.ccm-conversation-add-reply .ccm-conversation-attachment-container').toggle();
 				}
-				if($('.ccm-conversation-add-new-message .ccm-conversation-attachment-container').is(':visible')) {
-					$(this).removeClass('btn-success');	
-				} else {
-					$('.ccm-conversation-attachment-toggle').removeClass('btn-success');
-					$(this).addClass('btn-success');	
-				}
 				$('.ccm-conversation-add-new-message .ccm-conversation-attachment-container').toggle();
 			});
 			$('.ccm-conversation-add-reply .ccm-conversation-attachment-toggle').click(function(event){ 
 				event.preventDefault();
 				if($('.ccm-conversation-add-new-message .ccm-conversation-attachment-container').is(':visible')) {
 					$('.ccm-conversation-add-new-message .ccm-conversation-attachment-container').toggle();
-				}
-				if($('.ccm-conversation-add-reply .ccm-conversation-attachment-container').is(':visible')) {
-					$(this).removeClass('btn-success');	
-				} else {
-					$('.ccm-conversation-attachment-toggle').removeClass('btn-success');
-					$(this).addClass('btn-success');	
 				}
 				$('.ccm-conversation-add-reply .ccm-conversation-attachment-container').toggle();
 			});
@@ -302,8 +291,8 @@
 					'insertNewMessages':   obj.options.insertNewMessages,
 					'enableCommentRating': obj.options.enableCommentRating,
 					'dateFormat':          obj.options.dateFormat,
-					'customDateFormat':    obj.options.customDateFormat
-
+					'customDateFormat':    obj.options.customDateFormat,
+					'blockAreaHandle': 	   obj.options.blockAreaHandle
 					
 				}, function(r) {
 					obj.$replyholder.appendTo(obj.$element);
@@ -320,6 +309,7 @@
 					'blockID':             obj.options.blockID,
 					'itemsPerPage':        obj.options.itemsPerPage,
 					'displayMode':         obj.options.displayMode,
+					'blockAreaHandle': 	   obj.options.blockAreaHandle,
 					'enablePosting':       enablePosting,
 					'addMessageLabel':     addMessageLabel,
 					'page':                nextPage,
