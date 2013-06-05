@@ -2,11 +2,11 @@
 
 $nh = Loader::helper('validation/numbers');
 $form = Loader::helper('form');
-$agiID = intval($_REQUEST['agiID']);
-$agtTypeID = intval($_REQUEST['agtTypeID']);
-$type = GatheringItemTemplateType::getByID($agtTypeID);
+$gaiID = intval($_REQUEST['gaiID']);
+$gatTypeID = intval($_REQUEST['gatTypeID']);
+$type = GatheringItemTemplateType::getByID($gatTypeID);
 $nh = Loader::helper('validation/numbers');
-$item = GatheringItem::getByID($agiID);
+$item = GatheringItem::getByID($gaiID);
 if (is_object($item) && is_object($type)) {
   $gathering = $item->getGatheringObject();
   $agp = new Permissions($gathering);
@@ -17,7 +17,7 @@ if (is_object($item) && is_object($type)) {
     }
 
     if ($_POST['task'] == 'update_item_template') {
-      $template = GatheringItemTemplate::getByID($_POST['agtID']);
+      $template = GatheringItemTemplate::getByID($_POST['gatID']);
       $item->setGatheringItemTemplate($type, $template);
       if ($reloadItemTile) {
         $item->render($type);
@@ -98,7 +98,7 @@ if (is_object($item) && is_object($type)) {
         ?>
 
         <li data-gathering-item-template-features="<?=$sets?>">
-          <a href="javascript:void(0)" <? if ($item->getGatheringItemTemplateID($type) == $t->getGatheringItemTemplateID()) { ?>class="ccm-gathering-item-template-selected"<? } ?> onclick="$.fn.ccmgathering('updateItemTemplate', {agiID: '<?=$agiID?>', agtID: '<?=$t->getGatheringItemTemplateID()?>', agtTypeID: '<?=$agtTypeID?>', reloadItemTile: <? if ($reloadItemTile) { ?>true<? } else { ?>false<? } ?>, 'updateToken': '<?=Loader::helper('validation/token')->generate('edit_gathering_item_template')?>'})"><p><img src="<?=$t->getGatheringItemTemplateIconSRC()?>" /><span><?=$t->getGatheringItemTemplateName()?></span></p></a>
+          <a href="javascript:void(0)" <? if ($item->getGatheringItemTemplateID($type) == $t->getGatheringItemTemplateID()) { ?>class="ccm-gathering-item-template-selected"<? } ?> onclick="$.fn.ccmgathering('updateItemTemplate', {gaiID: '<?=$gaiID?>', gatID: '<?=$t->getGatheringItemTemplateID()?>', gatTypeID: '<?=$gatTypeID?>', reloadItemTile: <? if ($reloadItemTile) { ?>true<? } else { ?>false<? } ?>, 'updateToken': '<?=Loader::helper('validation/token')->generate('edit_gathering_item_template')?>'})"><p><img src="<?=$t->getGatheringItemTemplateIconSRC()?>" /><span><?=$t->getGatheringItemTemplateName()?></span></p></a>
         </li>
         
       <? } ?>

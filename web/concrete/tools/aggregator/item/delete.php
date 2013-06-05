@@ -2,10 +2,10 @@
 
 $nh = Loader::helper('validation/numbers');
 $form = Loader::helper('form');
-$agiID = intval($_REQUEST['agiID']);
+$gaiID = intval($_REQUEST['gaiID']);
 
 $nh = Loader::helper('validation/numbers');
-$item = GatheringItem::getByID($agiID);
+$item = GatheringItem::getByID($gaiID);
 if (is_object($item)) {
   $gathering = $item->getGatheringObject();
   $agp = new Permissions($gathering);
@@ -25,7 +25,7 @@ if (is_object($item)) {
 
     <div class="dialog-buttons">
     <button class="btn pull-left btn-hover-danger" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel')?></button>
-    <button class="btn pull-right btn-danger" onclick="$.fn.ccmgathering('deleteItem', {agiID: '<?=$agiID?>', 'deleteToken': '<?=Loader::helper('validation/token')->generate('delete_gathering_item')?>'})"><?=t('Delete')?></button>
+    <button class="btn pull-right btn-danger" onclick="$.fn.ccmgathering('deleteItem', {gaiID: '<?=$gaiID?>', 'deleteToken': '<?=Loader::helper('validation/token')->generate('delete_gathering_item')?>'})"><?=t('Delete')?></button>
     </div>
 
     <? }

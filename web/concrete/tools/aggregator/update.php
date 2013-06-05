@@ -8,7 +8,7 @@ if ($_POST['gaID'] && $nh->integer($_POST['gaID'])) {
     if ($agp->canEditGatheringItems()) {
         switch($_POST['task']) {
           case 'resize':
-            $agi = GatheringItem::getByID($_POST['agiID']);
+            $agi = GatheringItem::getByID($_POST['gaiID']);
             $sw = intval($_POST['agiSlotWidth']);
             $sh = intval($_POST['agiSlotHeight']);
             if (!$sw) {
@@ -24,15 +24,15 @@ if ($_POST['gaID'] && $nh->integer($_POST['gaID'])) {
           case 'update_display_order':
             $displayOrder = 0;
             $batch = time();
-            foreach($_POST['agiID'] as $agiID) {
-              $agi = GatheringItem::getByID($agiID);
+            foreach($_POST['gaiID'] as $gaiID) {
+              $agi = GatheringItem::getByID($gaiID);
               $agi->setGatheringItemBatchTimestamp($batch);
               $agi->setGatheringItemBatchDisplayOrder($displayOrder);
               $displayOrder++;
             }
             break;
           case 'move_to_new_gathering':
-            $item = GatheringItem::getByID($_POST['agiID']);
+            $item = GatheringItem::getByID($_POST['gaiID']);
             $item->moveToNewGathering($gathering);
             $il = new GatheringItemList($gathering);
             $il->sortByDateDescending();
