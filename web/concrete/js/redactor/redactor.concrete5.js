@@ -5,9 +5,6 @@ RedactorPlugins.concrete5inline = {
 
 	init: function() {
 
-		//this.$toolbar.css({ position: 'fixed', width: '100%', zIndex: 999, top: '50px', left: '0px' });
-		//this.$toolbar.append($('<li id="ccm-redactor-actions-buttons" class="ccm-ui"><button id="ccm-redactor-cancel-button" type="button" class="btn btn-mini">Cancel</button><button id="ccm-redactor-save-button" type="button" class="btn btn-primary btn-mini">Save</button></li>'));
-		//this.$toolbar.appendTo($(document.body));
 		this.$toolbar.addClass("ccm-inline-toolbar");
 		this.$toolbar.append($('<li class="ccm-inline-toolbar-button ccm-inline-toolbar-button-cancel"><button id="ccm-redactor-cancel-button" type="button" class="btn btn-mini">Cancel</button></li><li class="ccm-inline-toolbar-button ccm-inline-toolbar-button-save"><button id="ccm-redactor-save-button" type="button" class="btn btn-primary btn-mini">Save</button></li>'));
 		var toolbar = this.$toolbar;
@@ -37,7 +34,7 @@ RedactorPlugins.concrete5 = {
 	init: function() {
 
 		var plugin = this;
-		/*
+
 		$.ajax({
 			'type': 'get',
 			'dataType': 'json',
@@ -144,13 +141,11 @@ RedactorPlugins.concrete5 = {
 				});
 			
 				if (response.coreMenus.length > 0 || response.snippets.length > 0) {
-					plugin.addBtn('concrete5', 'concrete5', false, dropdownOptions);
-					plugin.addBtnSeparatorBefore('concrete5');
+					plugin.addBtnFirst('concrete5', 'concrete5', false, dropdownOptions);
 				}
 			}
 		});
 		this.opts.observeImages = false;
-		*/
 	}
 
 

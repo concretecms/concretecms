@@ -29,7 +29,9 @@ var RLANG = {
 	link: 'Link',
 	link_insert: 'Insert link',
 	unlink: 'Unlink',
-	formatting: 'Formatting',
+	/* concrete5 */
+	formatting: 'Format',
+	/* end concrete5 */
 	paragraph: 'Paragraph',
 	quote: 'Quote',
 	code: 'Code',
@@ -391,6 +393,9 @@ var RLANG = {
 				{
 					title: RLANG.formatting,
 					func: 'show',
+					/* concrete5 */
+					format: 'text',
+					/* end concrete5 */
 					dropdown:
 					{
 						p:
@@ -1260,6 +1265,7 @@ var RLANG = {
 			if (this.document.getSelection)
 			{
 				sel = this.window.getSelection();
+				
 				if (sel.getRangeAt && sel.rangeCount)
 				{
 					range = sel.getRangeAt(0);
@@ -1614,7 +1620,7 @@ var RLANG = {
 					this.air.hide();
 				}
 			}
-			catch (e) { }
+			catch (e) {}
 		},
 		execRun: function(cmd, param)
 		{
@@ -2105,7 +2111,14 @@ var RLANG = {
 		},
 		buildButton: function(key, s)
 		{
-			var button = $('<a href="javascript:void(null);" title="' + s.title + '" class="redactor_btn_' + key + '"></a>');
+			/* concrete5 */
+			//var button = $('<a href="javascript:void(null);" title="' + s.title + '" class="redactor_btn_' + key + '"></a>');
+			if (s.format == 'text') {
+				var button = $('<a href="javascript:void(null);" title="' + s.title + '" class="redactor_btn_' + key + ' redactor_btn_text_in_bar">' + s.title + '</a>');
+			} else {
+				var button = $('<a href="javascript:void(null);" title="' + s.title + '" class="redactor_btn_' + key + '"></a>');
+			}
+			/* end concrete5 */
 
 			if (typeof s.func === 'undefined')
 			{
@@ -2967,6 +2980,7 @@ var RLANG = {
 		showTable: function()
 		{
 			this.saveSelection();
+
 			/* concrete5 */
 			/*
 			this.modalInit(RLANG.table, this.opts.modal_table, 300, $.proxy(function()
@@ -3712,8 +3726,17 @@ var RLANG = {
 				'title': title,
 				width: width,
 				height: 'auto',
-				element: td
+				element: td,
+				modal: false
 			});
+			
+			// we can't use modal windows because they screw up the events for some stupid reason.
+
+			if (typeof callback === 'function')
+			{
+				callback();
+			}
+
 			/*
 			// modal overlay
 			if ($('#redactor_modal_overlay').size() === 0)
@@ -3806,17 +3829,12 @@ var RLANG = {
 			{
 				$('#redactor_modal').css({ position: 'fixed', width: '100%', height: '100%', top: '0', left: '0', margin: '0', minHeight: '300px' }).show();
 			}
-			*/
-			/* end concrete5 */
-
-			// callback
+			
 			if (typeof callback === 'function')
 			{
 				callback();
 			}
-
-			/* concrete5 */
-			/*
+			
 			if (this.isMobile() === false)
 			{
 				setTimeout(function()

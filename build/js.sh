@@ -50,7 +50,8 @@ cat ../web/concrete/js/ccm_app/jquery.colorpicker.js \
 ../web/concrete/js/ccm_app/edit_page.js \
 ../web/concrete/js/ccm_app/filemanager.js \
 ../web/concrete/js/ccm_app/jquery.cookie.js \
-../web/concrete/js/ccm_app/legacy_dialog.js \
+../web/concrete/js/ccm_app/dialog.js \
+../web/concrete/js/ccm_app/alert.js \
 ../web/concrete/js/ccm_app/newsflow.js \
 ../web/concrete/js/ccm_app/page_reindexing.js \
 ../web/concrete/js/ccm_app/in_context_menu.js \
