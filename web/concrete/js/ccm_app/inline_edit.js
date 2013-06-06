@@ -38,7 +38,7 @@ var CCMInlineEditMode = function() {
 		}
 		$toolbar.css('opacity', 1);
 		$toolbar.find('.dialog-launch').dialog();
-		var t = pos.top - $holder.outerHeight();
+		var t = pos.top - $holder.outerHeight() - 5;
 		$holder.css('top', t).css('opacity', 1);
 
 		if ($window.scrollTop() > t) {
