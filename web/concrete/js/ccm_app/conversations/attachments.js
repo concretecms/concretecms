@@ -141,7 +141,7 @@
 				url: CCM_TOOLS_PATH + '/conversations/delete_file',
 				success: function(response) {
 					var parsedData = JSON.parse(response);
-					$('p[rel="'+parsedData.attachmentID+'"]').fadeOut(300, function() { $(this).remove() });
+					$('p[rel="'+parsedData.attachmentID+'"]').parent('.attachment-container').fadeOut(300, function() { $(this).remove() });
 					if (attachmentsDialog.dialog) {
 						attachmentsDialog.dialog('close');
 						obj.publish('conversationDeleteAttachment',{cnvMessageAttachmentID:cnvMessageAttachmentID});
