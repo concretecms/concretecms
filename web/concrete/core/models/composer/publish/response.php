@@ -8,6 +8,7 @@ class Concrete5_Model_ComposerPublishResponse extends Object {
 	public $cmpDraftID;
 	public $saveURL;
 	public $redirectURL;
+	public $cmpDraftSaveStatus;
 	public $publishURL;
 	public $discardURL;
 	public $viewURL;
@@ -18,6 +19,10 @@ class Concrete5_Model_ComposerPublishResponse extends Object {
 			$this->messages = $e->getList();
 		}
 		$this->time = date('F d, Y g:i A');
+	}
+
+	public function setDraftSaveStatus($cmpDraftSaveStatus) {
+		$this->cmpDraftSaveStatus = $cmpDraftSaveStatus;
 	}
 
 	public function setRedirectURL($url) {
