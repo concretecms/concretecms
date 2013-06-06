@@ -138,8 +138,6 @@ if(!$fv instanceof FileVersion) {
 	$file->id 	= $fv->getFileID();
 	$file->tag = $_POST['tag'];
 	$file->timestamp = $_POST['timestamp'];
-	$file->fileCount = $_POST['fileCount'];
-	$file->maxQuantity = $maxQuantity;
 	}
 echo Loader::helper('json')->encode($file);
 ?>
