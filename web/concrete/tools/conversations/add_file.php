@@ -1,8 +1,7 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); 
 $val = Loader::helper('validation/token');
-$vs = Loader::helper('validation/strings');
-$ve = Loader::helper('validation/error');
 $file = new stdClass(); // json return value holder
+$error = array();
 $file->timestamp = $_POST['timestamp'];
 // --  validation --  // 
 
@@ -17,18 +16,18 @@ if ($_FILES["file"]["error"] > 0) {  // file errors
 }
 
 if(!$_POST['bID'] || !$_POST['cID']) {  // bID cID present
-	$file->error[] = t('Block ID or Page ID not sent.');
+	$error[] = t('Block ID or Page ID not sent');
 }
 
 $blockObj = Block::getByID($_POST['bID'], Page::getByID($_POST['cID']), $_POST['blockAreaHandle']);
 
 if(!is_object($blockObj) || $blockObj->getBlockTypeHandle() != 'core_conversation') { // valid / correct block check
-	$file->error[] = t('Invalid block.');
+	$error[] = t('Invalid block');
 }
 
 $p = new Permissions($blockObj);
 if(!$p->canRead()) {    // block read permissions check
-	$file->error[] = t('You do not have permission to view this conversation.');
+	$error[] = t('You do not have permission to view this conversation');
 }
 
 // check for registered or guest user file size overrides / limits
@@ -45,7 +44,7 @@ if ($u->isRegistered()) {
 	}
 	
 } else {
-	if($blockGuestOverride) {  // if block overrides for guest exist, use them instead of global. 
+	if($blockGuestOverride > 0) {  // if block overrides for guest exist, use them instead of global. 
 		 $maxFileSize =  $blockGuestOverride;
 	} else {
 		// use system defaults 
@@ -71,22 +70,20 @@ if($incomingExtension && strlen($blockExtensionsOverride)) {  // check against b
 		}
 	}
 	if(!$validExtension) {
-		$file->error[] = t('Invalid File Extension');
+		$error[] = t('Invalid File Extension');
 	}
 }
 
-// get block level file size and types if they exist
-$maxFileSizeGuest =  $blockObj->getController()->maxFileSizeGuest;
-$maxFileSizeRegistered =  $blockObj->getController()->maxFileSizeRegistered;
-
 // otherwise get global file size, types, and quantity settings
 
-if ($maxFileSizeGuest > 0 && filesize($_FILES["file"]["tmp_name"]) > $maxFileSizeGuest * 1000000) {  // max upload size
-	$file->error[] = t('File exceeds size limit.');
+if ($maxFileSize > 0 && filesize($_FILES["file"]["tmp_name"]) > $maxFileSize * 1000000) {  // max upload size
+	$error[] = t('File exceeds size limit');
 }
 
-if(is_array($file->error)) {
-	Loader::helper('json')->encode($file);
+if(count($error) > 0) {
+	$errorStr = implode(', ', $error);
+	$file->error = $errorStr . '.';
+	echo Loader::helper('json')->encode($file);
 	exit;
 }
 
