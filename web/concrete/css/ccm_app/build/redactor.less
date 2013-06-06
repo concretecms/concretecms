@@ -1,3 +1,6 @@
+@import "../twitter_bootstrap/variables.less";
+@import "../twitter_bootstrap/mixins.less";
+
 .redactor_box {
 	position: relative;
 	/* concrete5 */ 
@@ -49,24 +52,18 @@ body .redactor_box_fullscreen {
 
 /* concrete5 */
 .redactor_editor {
-	padding: 15px !important;
 	background: #fff !important;
 	overflow: auto;
-	height: 200px;
+	min-height: 200px;
+	border-left: 1px solid #c4c4c4;
+	border-right: 1px solid #c4c4c4;
+	border-bottom: 1px solid #c4c4c4;
+	padding: 8px;
 }
 
-.redactor_box {
-	border: 1px solid #ccc;
-}
-
-.ccm-block-edit-inline-active .redactor_editor {
-	padding: 0px !important;
-	background: none !important;
-	height: auto !important;
-}
-
-.ccm-block-edit-inline-active .redactor_box {
-	border: 0px !important;
+div.ccm-block-edit-inline-active .redactor_editor {
+	border: 0px;
+	padding: 0px;
 }
 
 .ccm-content-editor-snippet {
@@ -310,36 +307,31 @@ body .redactor_box_fullscreen {
 	/* end concrete5 */
 	margin: 0 !important;
 	padding: 0 !important;
-	padding-left: 2px !important;
 	line-height: 0 !important;
 	list-style: none !important;
 	/* concrete5 */
 	/* font-size: 0; */
 	font-size: 0px !important;
-	/* end concrete5 */
 	background: #f1f1f1;
-	background: -moz-linear-gradient(top,  #f1f1f1 0%, #e2e2e2 100%);
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f1f1f1), color-stop(100%,#e2e2e2));
-	background: -webkit-linear-gradient(top,  #f1f1f1 0%,#e2e2e2 100%);
-	background: -o-linear-gradient(top,  #f1f1f1 0%,#e2e2e2 100%);
-	background: -ms-linear-gradient(top,  #f1f1f1 0%,#e2e2e2 100%);
-	background: linear-gradient(to bottom,  #f1f1f1 0%,#e2e2e2 100%);
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f1f1f1', endColorstr='#e2e2e2',GradientType=0 );
+	#gradient > .vertical(#fff, #f1f1f1);	
+	/* end concrete5 */
+	border: 1px solid #c4c4c4;
 	overflow: hidden !important;
 	height: 32px !important;
-	border-bottom: 1px solid #bbb;
 }
+
 body .redactor_air .redactor_toolbar {
 	padding-right: 2px !important;
 }
 .redactor_toolbar li {
 	float: left !important;
 	margin: 0 !important;
-	padding: 3px 1px;
-	padding-right: 0;
+	padding: 3px 2px 3px 2px;
 	list-style: none !important;
 	outline: none;
 }
+/* concrete5 */
+/*
 .redactor_toolbar li.redactor_separator {
 	float: left;
 	height: 34px;
@@ -348,6 +340,35 @@ body .redactor_air .redactor_toolbar {
 	padding: 0;
 	margin: 0 2px 0 3px !important;
 }
+*/
+.redactor_toolbar li.redactor_separator {
+	float: left;
+	background-color: #e5e5e5;
+	width: 1px;
+	height: 33px;
+	padding: 0px !important;
+	margin: 0px !important;
+}
+
+.ccm-inline-toolbar.redactor_toolbar {
+	border: 0px;
+}
+
+.ccm-inline-toolbar.redactor_toolbar li {
+	border-right: 0px;
+	padding: 3px 2px 3px 2px;
+}
+
+.ccm-inline-toolbar.redactor_toolbar li.ccm-inline-toolbar-button {
+	padding: 0px;
+}
+
+.ccm-inline-toolbar.redactor_toolbar li.ccm-inline-toolbar-button-cancel {
+	border-left: 1px solid #c4c4c4;
+}
+
+
+/* end concrete5 */
 .redactor_toolbar li a {
 	width: 25px;
 	height: 25px;
@@ -389,29 +410,20 @@ body .redactor_air .redactor_toolbar {
 	border-color: #98a6ba;
 	background-color: #dde4ef;
 	*/
-	border-color: #b2b2b2 !important;
-	border-radius: 2px !important;
-	background-color: #b2b2b2 !important;
+	border-color: #c4c4c4 !important;
+	.border-radius(2px);
+	background-color: #fff;
 	/* end concrete5 */
 	outline: none;
 }
 .redactor_toolbar li a:active, .redactor_toolbar li a.redactor_act {
 	border-color: #b5b5b5;
-	background-color: #ddd;
+	background-color: #e2f3ff;
+	.border-radius(2px);
 	outline: none;
 }
 
 /* concrete5 */
-
-#ccm-redactor-actions-buttons {
-	position: absolute;
-	top: 2px;
-	right: 15px;
-}
-
-#ccm-redactor-save-button {
-	margin-left: 6px;
-}
 
 body .redactor_toolbar li a.redactor_btn_concrete5	 		{ 
 	background: url(../images/editor_dropdown_btn.png) no-repeat scroll;

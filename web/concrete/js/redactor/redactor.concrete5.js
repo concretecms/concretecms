@@ -9,21 +9,21 @@ RedactorPlugins.concrete5inline = {
 		//this.$toolbar.append($('<li id="ccm-redactor-actions-buttons" class="ccm-ui"><button id="ccm-redactor-cancel-button" type="button" class="btn btn-mini">Cancel</button><button id="ccm-redactor-save-button" type="button" class="btn btn-primary btn-mini">Save</button></li>'));
 		//this.$toolbar.appendTo($(document.body));
 		this.$toolbar.addClass("ccm-inline-toolbar");
+		this.$toolbar.append($('<li class="ccm-inline-toolbar-button ccm-inline-toolbar-button-cancel"><button id="ccm-redactor-cancel-button" type="button" class="btn btn-mini">Cancel</button></li><li class="ccm-inline-toolbar-button ccm-inline-toolbar-button-save"><button id="ccm-redactor-save-button" type="button" class="btn btn-primary btn-mini">Save</button></li>'));
 		var toolbar = this.$toolbar;
 		var editor = this.$editor;
 
 
 		$('#ccm-redactor-cancel-button').on('click', function() {
+			toolbar.hide();
 			$('li#ccm-redactor-actions-buttons').hide();
-			toolbar.appendTo(editor);
 			CCMInlineEditMode.exit(function() {
 				editor.destroyEditor();
 			});
 		});
 		$('#ccm-redactor-save-button').on('click', function() {
 			$('#redactor-content').val(editor.getCode());
-			$('li#ccm-redactor-actions-buttons').hide();
-			toolbar.appendTo(editor); // we have to move these for style purposes
+			toolbar.hide();
 			editor.destroyEditor();
 			$('#ccm-block-form').submit();
 		});
@@ -37,7 +37,7 @@ RedactorPlugins.concrete5 = {
 	init: function() {
 
 		var plugin = this;
-
+		/*
 		$.ajax({
 			'type': 'get',
 			'dataType': 'json',
@@ -150,6 +150,7 @@ RedactorPlugins.concrete5 = {
 			}
 		});
 		this.opts.observeImages = false;
+		*/
 	}
 
 
