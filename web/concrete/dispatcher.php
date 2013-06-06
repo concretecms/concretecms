@@ -5,6 +5,10 @@
 		define('C5_EXECUTE', true);
 	}
 
+	if (!defined('RUNTIME')) {
+		define('RUNTIME', md5(uniqid()));
+	}
+
 	if(defined("E_DEPRECATED")) {
 		error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED); // E_DEPRECATED required for php 5.3.0 because of depreciated function calls in 3rd party libs (adodb).
 	} else {
