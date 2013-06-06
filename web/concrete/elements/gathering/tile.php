@@ -12,25 +12,21 @@ if ($item->canViewGatheringItem()) { ?>
       <li class="ccm-gathering-item-inline-move"><a data-inline-command="move-tile" href="#"><i class="icon-move"></i></a></li>
       <li class="ccm-gathering-item-inline-options"><a data-inline-command="options-tile" href="#" data-menu="gathering-menu-<?=$item->getGatheringItemID()?>"><i class="icon-cog"></i></a></li>
     </ul>
-  <? } ?>
 
-    <div class="ccm-ui">
-
-      <div class="popover fade" id="gathering-menu-<?=$item->getGatheringItemID()?>">
-        <div class="arrow"></div>
-        <div class="popover-inner">
-        <ul class="dropdown-menu">
-          <? foreach($types as $t) { ?>
-            <li><a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/gathering/item/template?gaiID=<?=$item->getGatheringItemID()?>&gatTypeID=<?=$t->getGatheringItemTemplateTypeID()?>&token=<?=Loader::helper('validation/token')->generate('edit_gathering_item_template')?>" class="dialog-launch" dialog-title="<?=t('Edit %s Template', $t->getGatheringItemTemplateTypeName())?>" dialog-width="660" dialog-height="430" ><?=t('Edit %s Template', $t->getGatheringItemTemplateTypeName())?></a></li>
-          <? } ?>
-            <li class="divider"></li>
-            <li><a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/gathering/item/delete?gaiID=<?=$item->getGatheringItemID()?>&token=<?=Loader::helper('validation/token')->generate('delete_gathering_item')?>" class="dialog-launch" dialog-title="<?=t('Delete Item')?>" dialog-width="320" dialog-height="160"><?=t('Delete Tile')?></a></li>
-        </ul>
-        </div>
+    <div class="popover fade" id="gathering-menu-<?=$item->getGatheringItemID()?>">
+      <div class="arrow"></div>
+      <div class="popover-inner">
+      <ul class="dropdown-menu">
+        <? foreach($types as $t) { ?>
+          <li><a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/gathering/item/template?gaiID=<?=$item->getGatheringItemID()?>&gatTypeID=<?=$t->getGatheringItemTemplateTypeID()?>&token=<?=Loader::helper('validation/token')->generate('edit_gathering_item_template')?>" class="dialog-launch" dialog-title="<?=t('Edit %s Template', $t->getGatheringItemTemplateTypeName())?>" dialog-width="660" dialog-height="430" ><?=t('Edit %s Template', $t->getGatheringItemTemplateTypeName())?></a></li>
+        <? } ?>
+          <li class="divider"></li>
+          <li><a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/gathering/item/delete?gaiID=<?=$item->getGatheringItemID()?>&token=<?=Loader::helper('validation/token')->generate('delete_gathering_item')?>" class="dialog-launch" dialog-title="<?=t('Delete Item')?>" dialog-width="320" dialog-height="160"><?=t('Delete Tile')?></a></li>
+      </ul>
       </div>
-
     </div>
 
+  <? } ?>
 
   <div class="ccm-gathering-item-inner-render">
 	  <? $item->render($type); ?>
