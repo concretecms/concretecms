@@ -13,13 +13,12 @@
 			});
 			if (obj.$newmessageform.dropzone && !($(obj.$newmessageform).attr('data-dropzone-applied'))) {  // dropzone new message form
 				obj.$newmessageform.dropzone({
-					'url': CCM_TOOLS_PATH + '/conversations/add_file', 
+					'url': CCM_TOOLS_PATH + '/conversations/add_file',
 					'success' : function(file, raw) {
 						var response = JSON.parse(raw);
 						if(!response.error) {
 							$('div[rel="' + response.tag + '"] form.main-reply-form').append('<input rel="'+response.timestamp+'" type="hidden" name="attachments[]" value="'+response.id+'" />');
 						} else {
-							
 							var $form = $('.preview.processing[rel="'+response.timestamp+'"]').closest('form');
 							obj.handlePostError($form, [response.error]);
 							$('.preview.processing[rel="'+response.timestamp+'"]').remove();
