@@ -4,14 +4,14 @@
 	
 		init: function(options) {
 			var obj = options;
-			obj.$element.on('click', 'a[data-toggle=conversation-reply]', function() {
+			obj.$element.on('click.cnv', 'a[data-toggle=conversation-reply]', function() {
 				$('.ccm-conversation-wrapper').ccmconversationattachments('clearDropzoneQueues');
 			});
-			obj.$element.on('click', 'a.attachment-delete', function(event){
+			obj.$element.on('click.cnv', 'a.attachment-delete', function(event){
 				event.preventDefault();
 				$(this).ccmconversationattachments('attachmentDeleteTrigger', obj);
 			});
-			if (obj.$newmessageform.dropzone) {  // dropzone new message form
+			if (obj.$newmessageform.dropzone && !($(obj.$newmessageform).attr('data-dropzone-applied'))) {  // dropzone new message form
 				obj.$newmessageform.dropzone({
 					'url': CCM_TOOLS_PATH + '/conversations/add_file', 
 					'success' : function(file, raw) {
@@ -42,37 +42,41 @@
 						});
 					}
 				});
+				$(obj.$newmessageform).attr('data-dropzone-applied', 'true');
 			}
 			
-			obj.$replyholder.find('.dropzone').dropzone({  // dropzone reply form
-				'url': CCM_TOOLS_PATH + '/conversations/add_file',
-				'success' : function(file, raw) {
-					var response = JSON.parse(raw);
-					if(!response.error) {
-						$(this.element).closest('div.ccm-conversation-add-reply').find('form.aux-reply-form').append('<input rel="'+response.timestamp+'" type="hidden" name="attachments[]" value="'+response.id+'" />');
-					} else {
-						var $form = $('.preview.processing[rel="'+response.timestamp+'"]').closest('form');
-						obj.handlePostError($form, [response.error]);
-						$('.preview.processing[rel="'+response.timestamp+'"]').remove();
-						$form.children('.ccm-conversation-errors').delay(3000).fadeOut('slow', function() {
-							$(this).html('');
+			if(!($(obj.$replyholder.find('.dropzone')).attr('data-dropzone-applied'))){ 
+				obj.$replyholder.find('.dropzone').not('[data-drozpone-applied="true"]').dropzone({  // dropzone reply form
+					'url': CCM_TOOLS_PATH + '/conversations/add_file',
+					'success' : function(file, raw) {
+						var response = JSON.parse(raw);
+						if(!response.error) {
+							$(this.element).closest('div.ccm-conversation-add-reply').find('form.aux-reply-form').append('<input rel="'+response.timestamp+'" type="hidden" name="attachments[]" value="'+response.id+'" />');
+						} else {
+							var $form = $('.preview.processing[rel="'+response.timestamp+'"]').closest('form');
+							obj.handlePostError($form, [response.error]);
+							$('.preview.processing[rel="'+response.timestamp+'"]').remove();
+							$form.children('.ccm-conversation-errors').delay(3000).fadeOut('slow', function() {
+								$(this).html('');
+							});
+						}
+					},
+					'sending' : function(file, xhr, formData) { 
+						$(file.previewTemplate).attr('rel', new Date().getTime());
+						formData.append("timestamp", $(file.previewTemplate).attr('rel'));
+						formData.append("tag", $(obj.$newmessageform).parent('div').attr('rel'));
+					},
+					'init' : function() { 
+						 this.on("complete", function(file) { 
+						 	$('.preview.processing').click(function(){ 
+								$('input[rel="'+ $(this).attr('rel') +'"]').remove();
+								$(this).remove();
+							})
 						});
 					}
-				},
-				'sending' : function(file, xhr, formData) { 
-					$(file.previewTemplate).attr('rel', new Date().getTime());
-					formData.append("timestamp", $(file.previewTemplate).attr('rel'));
-					formData.append("tag", $(obj.$newmessageform).parent('div').attr('rel'));
-				},
-				'init' : function() { 
-					 this.on("complete", function(file) { 
-					 	$('.preview.processing').click(function(){ 
-							$('input[rel="'+ $(this).attr('rel') +'"]').remove();
-							$(this).remove();
-						})
-					});
-				}
-			});
+				});
+			}
+			$(obj.$replyholder.find('.dropzone')).attr('data-dropzone-applied', 'true');
 			return $.each($(this), function(i, obj) {
 				$(this).find('.ccm-conversation-attachment-container').each(function() {
 					if($(this).is(':visible')) {
@@ -124,7 +128,6 @@
 		},
 		
 		deleteAttachment: function(options) {
-			console.log(options);
 			var cnvMessageAttachmentID = options.cnvMessageAttachmentID;
 			var obj = options.cnvObj; 
 			var attachmentsDialog = options.dialogObj;
