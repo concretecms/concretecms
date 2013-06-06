@@ -13,11 +13,9 @@ var CCMInlineEditMode = function() {
 		setTimeout(function() {
 			$('#ccm-toolbar-disabled').css('opacity', 1);
 		}, 10);
-		$('div.ccm-block-edit').addClass('ccm-block-edit-disabled');
-		$('div.ccm-area-footer-handle').addClass('ccm-block-edit-disabled');
-		$('div.ccm-area-layout-control-bar').addClass('ccm-block-edit-disabled');
+		$('div.ccm-area').addClass('ccm-area-inline-edit-disabled');
 		if (activeObj) {
-			activeObj.removeClass('ccm-block-edit-disabled').addClass('ccm-block-edit-inline-active');
+			activeObj.addClass('ccm-block-edit-inline-active');
 		}
 	}
 
@@ -40,7 +38,7 @@ var CCMInlineEditMode = function() {
 		}
 		$toolbar.css('opacity', 1);
 		$toolbar.find('.dialog-launch').dialog();
-		var t = pos.top - $holder.outerHeight();
+		var t = pos.top - $holder.outerHeight() - 5;
 		$holder.css('top', t).css('opacity', 1);
 
 		if ($window.scrollTop() > t) {
@@ -69,9 +67,7 @@ var CCMInlineEditMode = function() {
 			$.fn.ccmmenu.enable();
 			$('div.ccm-block-edit-inline-active').remove();
 			$(window).unbind('scroll.inline-toolbar');
-			$('div.ccm-block-edit').removeClass('ccm-block-edit-disabled');
-			$('div.ccm-area-footer-handle').removeClass('ccm-block-edit-disabled');
-			$('div.ccm-area-layout-control-bar').removeClass('ccm-block-edit-disabled');
+			$('div.ccm-area').removeClass('ccm-area-inline-edit-disabled');
 			$('#ccm-toolbar-disabled').remove();
 			$('#ccm-toolbar').css('opacity', 1);
 			$('#ccm-inline-toolbar-container').remove();
