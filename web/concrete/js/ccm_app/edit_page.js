@@ -130,7 +130,6 @@ var CCMEditMode = function() {
 						var ccm_blockTypeDropped = false;
 					}
 				},
-				modal: false,
 				width: parseInt($link.attr('data-dialog-width')),
 				height: parseInt($link.attr('data-dialog-height')) + 20,
 				title: $link.attr('data-dialog-title'),
@@ -406,7 +405,6 @@ var CCMEditMode = function() {
 			jQuery.fn.dialog.open({
 				width: 280,
 				height: 200,
-				modal: false,
 				href: url,
 				title: ccmi18n.areaLayoutPresets, 
 				onOpen: function() {
