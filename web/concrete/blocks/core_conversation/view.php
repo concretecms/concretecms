@@ -36,7 +36,7 @@ if (is_object($conversation)) {
 			enableCommentRating: <?=$enableCommentRating?>,
 			commentRatingUserID: <?=$uID?>,
 			commentRatingIP: '<?=$commentRatingIP?>',
-			dateFormat: '<?=$dateFormat?>', 
+			dateFormat: '<?=$dateFormat?>',
 			blockAreaHandle: '<?=$blockAreaHandle ?>',
 			customDateFormat: '<?=$customDateFormat?>'
 		});
