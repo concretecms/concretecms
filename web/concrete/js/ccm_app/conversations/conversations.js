@@ -134,6 +134,7 @@
 		},
 		attachBindings: function() {
 			var obj = this;
+			obj.$element.unbind('.cnv');
 			if (obj.options.uninitialized) {
 				obj.options.uninitialized = false;
 				ccm_event.bind('conversationsMention',function(e){
@@ -197,12 +198,12 @@
 			obj.$messages = obj.$element.find('div.ccm-conversation-messages');
 			obj.$messagerating = obj.$element.find('span.ccm-conversation-message-rating');
 			
-			obj.$element.on('click', 'button[data-submit=conversation-message]', function() {
+			obj.$element.on('click.cnv', 'button[data-submit=conversation-message]', function() {
 				obj.submitForm($(this));
 				return false;
 			});
 			var replyIterator = 1;
-			obj.$element.on('click', 'a[data-toggle=conversation-reply]', function(event) {
+			obj.$element.on('click.cnv', 'a[data-toggle=conversation-reply]', function(event) {
 				event.preventDefault();
 				$('.ccm-conversation-attachment-container').each(function() {
 					if($(this).is(':visible')) {
@@ -219,14 +220,14 @@
 			});
 			
 			$('.ccm-conversation-attachment-container').hide();
-			$('.ccm-conversation-add-new-message .ccm-conversation-attachment-toggle').click(function(event){ 
+			$('.ccm-conversation-add-new-message .ccm-conversation-attachment-toggle').off('click.cnv').on('click.cnv', function(event){ 
 				event.preventDefault();
 				if($('.ccm-conversation-add-reply .ccm-conversation-attachment-container').is(':visible')) {
 					$('.ccm-conversation-add-reply .ccm-conversation-attachment-container').toggle();
 				}
 				$('.ccm-conversation-add-new-message .ccm-conversation-attachment-container').toggle();
 			});
-			$('.ccm-conversation-add-reply .ccm-conversation-attachment-toggle').click(function(event){ 
+			$('.ccm-conversation-add-reply .ccm-conversation-attachment-toggle').off('click.cnv').on('click.cnv', function(event){ 
 				event.preventDefault();
 				if($('.ccm-conversation-add-new-message .ccm-conversation-attachment-container').is(':visible')) {
 					$('.ccm-conversation-add-new-message .ccm-conversation-attachment-container').toggle();
@@ -234,7 +235,7 @@
 				$('.ccm-conversation-add-reply .ccm-conversation-attachment-container').toggle();
 			});
 			
-			obj.$element.on('click', 'a[data-submit=delete-conversation-message]', function() {
+			obj.$element.on('click.cnv', 'a[data-submit=delete-conversation-message]', function() {
 				var $link = $(this);
 				obj.$deletedialog = obj.$deleteholder.clone();
 				if (obj.$deletedialog.dialog) {
@@ -266,7 +267,7 @@
 				}
 				return false;
 			});
-			obj.$element.on('click', 'a[data-submit=flag-conversation-message]', function() {
+			obj.$element.on('click.cnv', 'a[data-submit=flag-conversation-message]', function() {
 				var $link = $(this);
 				if (confirm('Are you sure you want to flag this messge as spam?')) {
 					obj.flagMessage($link.attr('data-conversation-message-id'));
@@ -274,7 +275,7 @@
 				return false;
 			});
 
-			obj.$element.on('change', 'select[data-sort=conversation-message-list]', function() {
+			obj.$element.on('change.cnv', 'select[data-sort=conversation-message-list]', function() {
 				obj.$messagelist.load(CCM_TOOLS_PATH + '/conversations/view_ajax', {
 					'cnvID':               obj.options.cnvID,
 					'task':                'get_messages',
@@ -296,11 +297,12 @@
 					
 				}, function(r) {
 					obj.$replyholder.appendTo(obj.$element);
+					$('.ccm-conversation-messages .dropdown-toggle').dropdown();
 					obj.attachBindings();
 				});
 			});
 			
-			obj.$element.on('click', '[data-load-page=conversation-message-list]', function() {
+			obj.$element.on('click.cnv', '[data-load-page=conversation-message-list]', function() {
 				var nextPage = parseInt(obj.$loadmore.attr('data-next-page'));
 				var totalPages = parseInt(obj.$loadmore.attr('data-total-pages'));
 				var data = {
@@ -325,6 +327,7 @@
 					url: CCM_TOOLS_PATH + '/conversations/message_page',
 					success: function(html) {
 						obj.$messages.append(html);
+						$('.ccm-conversation-messages .dropdown-toggle').dropdown();
 						if ((nextPage + 1) > totalPages) {
 							obj.$loadmore.hide();
 						} else {
@@ -334,7 +337,7 @@
 				});
 			});
 			
-			obj.$element.on('click', '.conversation-rate-message', function() {
+			obj.$element.on('click.cnv', '.conversation-rate-message', function() {
 				var cnvMessageID = $(this).closest('[data-conversation-message-id]').attr('data-conversation-message-id');
 				var cnvRatingTypeHandle = $(this).attr('data-conversation-rating-type');
 				obj.$messagerating.load(CCM_TOOLS_PATH + '/conversations/rate');
@@ -358,7 +361,7 @@
 					}
 				});
 			});
-			obj.$element.on('click', 'a.share-permalink', function() {
+			obj.$element.on('click.cnv', 'a.share-permalink', function() {
 				var $link = $(this);
 				var permalink = $(this).attr('rel');
 				obj.$permalinkdialog = obj.$permalinkholder.clone();
@@ -395,7 +398,6 @@
 			
 			obj.$element.ccmconversationattachments(obj); 
 			$('.dropdown-toggle').dropdown();
-
 		},
 		handlePostError: function($form, messages) {
 			if (!messages) {
