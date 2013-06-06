@@ -19,6 +19,7 @@
 						if(!response.error) {
 							$('div[rel="' + response.tag + '"] form.main-reply-form').append('<input rel="'+response.timestamp+'" type="hidden" name="attachments[]" value="'+response.id+'" />');
 						} else {
+							
 							var $form = $('.preview.processing[rel="'+response.timestamp+'"]').closest('form');
 							obj.handlePostError($form, [response.error]);
 							$('.preview.processing[rel="'+response.timestamp+'"]').remove();
@@ -140,7 +141,7 @@
 				url: CCM_TOOLS_PATH + '/conversations/delete_file',
 				success: function(response) {
 					var parsedData = JSON.parse(response);
-					$('p[rel="'+parsedData.attachmentID+'"]').fadeOut(300, function() { $(this).remove() });
+					$('p[rel="'+parsedData.attachmentID+'"]').parent('.attachment-container').fadeOut(300, function() { $(this).remove() });
 					if (attachmentsDialog.dialog) {
 						attachmentsDialog.dialog('close');
 						obj.publish('conversationDeleteAttachment',{cnvMessageAttachmentID:cnvMessageAttachmentID});

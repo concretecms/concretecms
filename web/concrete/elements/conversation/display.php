@@ -4,6 +4,7 @@
 if (!is_array($messages)) {
 	$messages = array();
 }
+
 $u = new User();
 $ui = UserInfo::getByID($u->getUserID());
 $page = Page::getByID($cID);
@@ -127,6 +128,7 @@ $form = Loader::helper('form');
 			</form>
 			<div class="ccm-conversation-attachment-container">
 				<form action="<?php echo Loader::helper('concrete/urls')->getToolsURL('conversations/add_file');?>" class="dropzone" id="file-upload">
+					<div class="ccm-conversation-errors alert alert-error"></div>
 					<?php $val->output('add_conversations_file'); ?>
 					<?php echo $form->hidden('blockAreaHandle', $blockAreaHandle) ?>
 					<?php echo $form->hidden('cID', $cID) ?>
@@ -147,7 +149,11 @@ $form = Loader::helper('form');
 			</form>
 			<div class="ccm-conversation-attachment-container">
 				<form action="<?php echo Loader::helper('concrete/urls')->getToolsURL('conversations/add_file');?>" class="dropzone" id="file-upload-reply">
-				
+					<div class="ccm-conversation-errors alert alert-error"></div>
+					<?php $val->output('add_conversations_file'); ?>
+					<?php echo $form->hidden('blockAreaHandle', $blockAreaHandle) ?>
+					<?php echo $form->hidden('cID', $cID) ?>
+					<?php echo $form->hidden('bID', $bID) ?>		
 				</form>
 			</div>
 		</div>

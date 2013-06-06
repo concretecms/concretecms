@@ -47,18 +47,21 @@
 			<default value="" />
 		</field>
 		<field name="dateFormat" type="C" size="255">
-			<notnull />
 			<default value="default" />
 		</field>
 		<field name="customDateFormat" type="C" size="255">
 		</field>
 		<field name="maxFilesGuest" type="I">
+			<default value="0" />
 		</field>
 		<field name="maxFilesRegistered" type="I">
+			<default value="0" />
 		</field>
 		<field name="maxFileSizeGuest" type="I">
+			<default value="0" />
 		</field>
 		<field name="maxFileSizeRegistered" type="I">
+			<default value="0" />
 		</field>
 		<field name="fileExtensions" type="X">
 		</field>
