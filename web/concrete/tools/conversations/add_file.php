@@ -8,11 +8,11 @@ $file->timestamp = $_POST['timestamp'];
 $tokenValidation = $val->validate('add_conversations_file');
 
 if(!$tokenValidation) {  // check token
-	$file->error[] = t('Bad token');
+	$error[] = t('Bad token');
 }
 
 if ($_FILES["file"]["error"] > 0) {  // file errors
-	$file->error[] = $_FILES["file"]["error"];
+	$error[] = $_FILES["file"]["error"];
 }
 
 if(!$_POST['bID'] || !$_POST['cID']) {  // bID cID present
