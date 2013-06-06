@@ -4,7 +4,6 @@
 if (!is_array($messages)) {
 	$messages = array();
 }
-
 $u = new User();
 $ui = UserInfo::getByID($u->getUserID());
 $page = Page::getByID($cID);
@@ -25,6 +24,9 @@ $form = Loader::helper('form');
 			<div class="ccm-conversation-message-form">
 				<div class="ccm-conversation-errors alert alert-error"></div>
 				<? $editor->outputConversationEditorAddMessageForm(); ?>
+				<?php echo $form->hidden('blockAreaHandle', $blockAreaHandle) ?>
+				<?php echo $form->hidden('cID', $cID) ?>
+				<?php echo $form->hidden('bID', $bID) ?>	
 				<button type="button" data-post-parent-id="0" data-submit="conversation-message" class="pull-right btn btn-submit btn-primary"><?=t('Submit')?></button>
 				<button type="button" class="pull-right btn ccm-conversation-attachment-toggle" href="#" title="<?php echo t('Attach Files'); ?>"><i class="icon-picture"></i></button>
 			</div>
@@ -46,6 +48,9 @@ $form = Loader::helper('form');
 			<div class="ccm-conversation-message-form">
 				<div class="ccm-conversation-errors alert alert-error"></div>
 				<? $editor->outputConversationEditorReplyMessageForm(); ?>
+				<?php echo $form->hidden('blockAreaHandle', $blockAreaHandle) ?>
+				<?php echo $form->hidden('cID', $cID) ?>
+				<?php echo $form->hidden('bID', $bID) ?>	
 				<button type="btn btn-primary" data-submit="conversation-message" class="pull-right btn btn-submit btn-small"><?=t('Submit')?> </button>
 				<button type="button" class="ccm-conversation-attachment-toggle" href="#" title="<?php echo t('Attach Files'); ?>"><i class="icon-picture"></i></button>
 			</div>
@@ -124,6 +129,9 @@ $form = Loader::helper('form');
 				<? $editor->outputConversationEditorAddMessageForm(); ?>
 				<button type="button" data-post-parent-id="0" data-submit="conversation-message" class="pull-right btn btn-primary btn-small"><?=t('Submit')?> </button>
 				<button type="button" class="ccm-conversation-attachment-toggle" href="#" title="<?php echo t('Attach Files'); ?>"><i class="icon-picture"></i></a>
+				<?php echo $form->hidden('blockAreaHandle', $blockAreaHandle) ?>
+				<?php echo $form->hidden('cID', $cID) ?>
+				<?php echo $form->hidden('bID', $bID) ?>	
 			</div>
 			</form>
 			<div class="ccm-conversation-attachment-container">
@@ -137,7 +145,7 @@ $form = Loader::helper('form');
 			</div>
 		</div>
 
-		<div class="ccm-conversation-add-reply">
+		<div class="ccm-conversation-add-reply" >
 			<form method="post" class="aux-reply-form">
 			<div class="ccm-conversation-avatar"><? print Loader::helper('concrete/avatar')->outputUserAvatar($ui)?></div>
 			<div class="ccm-conversation-message-form">
@@ -145,6 +153,9 @@ $form = Loader::helper('form');
 				<? $editor->outputConversationEditorReplyMessageForm(); ?>
 				<button type="button" data-submit="conversation-message" class="pull-right btn btn-primary btn-small"><?=t('Submit')?></button>
 				<button type="button" class="ccm-conversation-attachment-toggle" href="#" title="<?php echo t('Attach Files'); ?>"><i class="icon-picture"></i></a>
+				<?php echo $form->hidden('blockAreaHandle', $blockAreaHandle) ?>
+				<?php echo $form->hidden('cID', $cID) ?>
+				<?php echo $form->hidden('bID', $bID) ?>	
 			</div>
 			</form>
 			<div class="ccm-conversation-attachment-container">
