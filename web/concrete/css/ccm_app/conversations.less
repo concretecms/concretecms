@@ -250,7 +250,41 @@ div.ccm-conversation-message {
 		font-weight: lighter;
 		color: #999;
 		
-		
+		.cnv-social-share {
+		  li.open { 
+		    a {
+		    color: white;
+		    }
+		    ul {
+		      li {
+		        display: block;
+		        margin-left: inherit;
+		        &:first-child a {
+		          -webkit-border-top-left-radius: 6px;
+              -webkit-border-top-right-radius: 6px;
+              -moz-border-radius-topleft: 6px;
+              -moz-border-radius-topright: 6px;
+              border-top-left-radius: 6px;
+              border-top-right-radius: 6px;
+		        }
+		        &:last-child a {
+		          -webkit-border-bottom-left-radius: 6px;
+              -webkit-border-bottom-right-radius: 6px;
+              -moz-border-radius-bottomleft: 6px;
+              -moz-border-radius-bottomright: 6px;
+              border-bottom-left-radius: 6px;
+              border-bottom-right-radius: 6px;
+		        }
+		        a{ 
+    		      color: #999;
+    		      &:hover {
+    		        color: white;
+    		      }
+    		    }
+    		  }
+		    }
+		  }
+		}
 		.standard-message-controls {
 		  margin-left: 8px;
 		}

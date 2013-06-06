@@ -111,6 +111,18 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			if (!$values['itemsPerPage']) {
 				$values['itemsPerPage'] = 0;
 			}
+			if (!$values['maxFilesGuest']) {
+				$values['maxFilesGuest'] = 0;
+			}
+			if (!$values['maxFilesRegistered']) {
+				$values['maxFilesRegistered'] = 0;
+			}
+			if (!$values['maxFileSizeGuest']) {
+				$values['maxFileSizeGuest'] = 0;
+			}
+			if (!$values['maxFileSizeRegistered']) {
+				$values['maxFileSizeRegistered'] = 0;
+			}
 			if (!$values['enableOrdering']) {
 				$values['enableOrdering'] = 0;
 			}

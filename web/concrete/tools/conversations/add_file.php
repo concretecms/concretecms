@@ -63,7 +63,7 @@ if($blockExtensionsOverride) {
 }
 
 $incomingExtension = end(explode('.', $_FILES["file"]["name"]));
-if($incomingExtension && $blockExtensionsOverride) {  // check against block file extensions override
+if($incomingExtension && strlen($blockExtensionsOverride)) {  // check against block file extensions override
 	foreach(explode(',', $blockExtensionsOverride) as $overrideExtension) {
 		if($overrideExtension == $incomingExtension) {
 			$validExtension = true;
@@ -81,7 +81,7 @@ $maxFileSizeRegistered =  $blockObj->getController()->maxFileSizeRegistered;
 
 // otherwise get global file size, types, and quantity settings
 
-if (filesize($_FILES["file"]["tmp_name"]) > $maxFileSizeGuest * 1000000) {  // max upload size
+if ($maxFileSizeGuest > 0 && filesize($_FILES["file"]["tmp_name"]) > $maxFileSizeGuest * 1000000) {  // max upload size
 	$file->error[] = t('File exceeds size limit.');
 }
 

@@ -29,7 +29,7 @@ if ((!$message->isConversationMessageDeleted() && $message->isConversationMessag
 				<ul class="dropdown-menu" role="menu" aria-labelledby="drop5">
 				<li><a href="#" class="admin-best-answer"><?php echo t('Best Answer') ?></a></li>
 				<li><a href="#" class="admin-promote"><?php echo t('Promote') ?></a></li>
-				<li><a href="#" class="admin-edit"><?php echo t('Edit') ?></a></li> 
+				<li><a href="#" class="admin-edit" data-submit="edit-conversation-message"><?php echo t('Edit') ?></a></li> 
 				<li><a href="#" class="admin-delete" data-submit="delete-conversation-message" data-conversation-message-id="<?=$message->getConversationMessageID()?>"><?=t('Delete')?></a></li>
 				<li><a href="#" class="admin-flag" data-submit="flag-conversation-message" data-conversation-message-id="<?=$message->getConversationMessageID()?>"><?=t('Flag As Spam')?></a></li>
 				</ul>
