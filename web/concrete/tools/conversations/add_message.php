@@ -12,7 +12,7 @@ if(!is_object($blockObj)) {
 
 if($_POST['attachments'] && count($_POST['attachments'])) {
 	$maxFiles = $u->isRegistered() ? $blockObj->getController()->maxFilesRegistered : $blockObj->getController()->maxFilesGuest;
-	if(count($_POST['attachments']) > $maxFiles) {
+	if($maxFiles > 0 && count($_POST['attachments']) > $maxFiles) {
 		$ve->add(t('You have too many attachments.'));
 	}
 }
