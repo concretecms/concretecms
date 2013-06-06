@@ -11,6 +11,9 @@ if ($controller->getTask() == 'add') {
 	$displayPostingForm = 'top';
 	$addMessageLabel = t('Add Message');
 }
+if(!$dateFormat) {
+	$dateFormat = 'default';
+}
 ?>
 <div class="form-horizontal">
 
