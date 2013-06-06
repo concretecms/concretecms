@@ -31,6 +31,7 @@
 						$(file.previewTemplate).attr('rel', new Date().getTime());
 						formData.append("timestamp", $(file.previewTemplate).attr('rel'));
 						formData.append("tag", $(obj.$newmessageform).parent('div').attr('rel'));
+						formData.append("fileCount", $(obj.$newmessageform).parent('div').find('[name="attachments[]"]').length);
 					},
 					'init' : function() { 
 						 this.on("complete", function(file) {
@@ -64,6 +65,7 @@
 						$(file.previewTemplate).attr('rel', new Date().getTime());
 						formData.append("timestamp", $(file.previewTemplate).attr('rel'));
 						formData.append("tag", $(obj.$newmessageform).parent('div').attr('rel'));
+						formData.append("fileCount", $(obj.$replyHolder).find('[name="attachments[]"]').length);
 					},
 					'init' : function() { 
 						 this.on("complete", function(file) { 

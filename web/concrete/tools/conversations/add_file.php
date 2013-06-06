@@ -13,16 +13,25 @@ if(!$tokenValidation) {  // check token
 
 if ($_FILES["file"]["error"] > 0) {  // file errors
 	$error[] = $_FILES["file"]["error"];
+	
 }
 
 if(!$_POST['bID'] || !$_POST['cID']) {  // bID cID present
 	$error[] = t('Block ID or Page ID not sent');
+	$errorStr = implode(', ', $error);
+	$file->error = $errorStr . '.';
+	echo Loader::helper('json')->encode($file);
+	exit;
 }
 
 $blockObj = Block::getByID($_POST['bID'], Page::getByID($_POST['cID']), $_POST['blockAreaHandle']);
 
 if(!is_object($blockObj) || $blockObj->getBlockTypeHandle() != 'core_conversation') { // valid / correct block check
 	$error[] = t('Invalid block');
+	$errorStr = implode(', ', $error);
+	$file->error = $errorStr . '.';
+	echo Loader::helper('json')->encode($file);
+	exit; 
 }
 
 $p = new Permissions($blockObj);
@@ -33,22 +42,46 @@ if(!$p->canRead()) {    // block read permissions check
 // check for registered or guest user file size overrides / limits
 
 $u = new User();
-$blockRegisteredOverride = $blockObj->getController()->maxFileSizeRegistered;
-$blockGuestOverride = $blockObj->getController()->maxFileSizeGuest;
+$blockRegisteredSizeOverride = $blockObj->getController()->maxFileSizeRegistered;
+$blockGuestSizeOverride = $blockObj->getController()->maxFileSizeGuest;
+$blockRegisteredQuantityOverride = $blockObj->getController()->maxFilesRegistered;
+$blockGuestQuantityOverride = $blockObj->getController()->maxFilesGuest;
 
 if ($u->isRegistered()) {
-	if($blockRegisteredOverride > 0) { // if block overrides for registered exist, use them instead of global. 
-		$maxFileSize = $blockRegisteredOverride;
+	if($blockRegisteredSizeOverride > 0) { // if block overrides for registered exist, use them instead of global. 
+		$maxFileSize = $blockRegisteredSizeOverride;
 	} else {
 		// use system defaults
 	}
 	
+	if($blockRegisteredQuantityOverride > 0) {
+		$maxQuantity = $blockRegisteredQuantityOverride;
+	} else {
+		// use system defaults
+	}
+	 
 } else {
-	if($blockGuestOverride > 0) {  // if block overrides for guest exist, use them instead of global. 
-		 $maxFileSize =  $blockGuestOverride;
+	if($blockGuestSizeOverride > 0) {  // if block overrides for guest exist, use them instead of global. 
+		 $maxFileSize =  $blockGuestSizeOverride;
 	} else {
 		// use system defaults 
 	}
+	
+	if($blockGuestQuantityOverride > 0) {  // if block overrides for guest exist, use them instead of global. 
+		 $maxQuantity =  $blockGuestQuantityOverride;
+	} else {
+		// use system defaults 
+	}
+}
+
+
+if ($maxFileSize > 0 && filesize($_FILES["file"]["tmp_name"]) > $maxFileSize * 1000000) {  // max upload size
+	$error[] = t('File size exceeds limit');
+}
+
+// check file count (this is just for presentation, final count check is done on message submit).
+if($maxQuantity > 0 && ($_POST['fileCount'] +1) > $maxQuantity) {
+	$error[] = t('Attachment limit reached');
 }
 
 // check filetype extension and overrides 
@@ -74,13 +107,8 @@ if($incomingExtension && strlen($blockExtensionsOverride)) {  // check against b
 	}
 }
 
-// otherwise get global file size, types, and quantity settings
 
-if ($maxFileSize > 0 && filesize($_FILES["file"]["tmp_name"]) > $maxFileSize * 1000000) {  // max upload size
-	$error[] = t('File exceeds size limit');
-}
-
-if(count($error) > 0) {
+if(count($error) > 0) {  // send in the errors
 	$errorStr = implode(', ', $error);
 	$file->error = $errorStr . '.';
 	echo Loader::helper('json')->encode($file);
@@ -110,6 +138,8 @@ if(!$fv instanceof FileVersion) {
 	$file->id 	= $fv->getFileID();
 	$file->tag = $_POST['tag'];
 	$file->timestamp = $_POST['timestamp'];
+	$file->fileCount = $_POST['fileCount'];
+	$file->maxQuantity = $maxQuantity;
 	}
 echo Loader::helper('json')->encode($file);
 ?>

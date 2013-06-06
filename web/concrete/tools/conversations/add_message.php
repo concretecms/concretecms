@@ -3,7 +3,20 @@ $ax = Loader::helper('ajax');
 $vs = Loader::helper('validation/strings');
 $ve = Loader::helper('validation/error');
 $u  = new User;
+$blockObj = Block::getByID($_POST['bID'], Page::getByID($_POST['cID']), $_POST['blockAreaHandle']);
 $cnvMessageSubject = null;
+
+if(!is_object($blockObj)) {
+	$ve->add(t('Invalid Block Object.'));
+}
+
+if($_POST['attachments'] && count($_POST['attachments'])) {
+	$maxFiles = $u->isRegistered() ? $blockObj->getController()->maxFilesRegistered : $blockObj->getController()->maxFilesGuest;
+	if(count($_POST['attachments']) > $maxFiles) {
+		$ve->add(t('You have too many attachments.'));
+	}
+}
+
 if (Loader::helper('validation/numbers')->integer($_POST['cnvID'])) {
 	$cn = Conversation::getByID($_POST['cnvID']);
 }
