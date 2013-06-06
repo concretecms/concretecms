@@ -108,7 +108,7 @@ class Concrete5_Controller_Block_CoreGathering extends BlockController {
 				$sources = $this->post('gasID');
 				foreach($sources as $key => $gasID) {
 					$key = (string) $key; // because PHP is stupid
-					if ($key != '_ags_') {
+					if ($key != '_gas_') {
 						$ags = GatheringDataSource::getByID($gasID);
 						$ags->setOptionFormKey($key);
 						$post = $ags->getOptionFormRequestData();

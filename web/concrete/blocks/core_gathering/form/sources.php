@@ -24,7 +24,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 <fieldset data-gathering-data-source-options-form="<?=$ags->getGatheringDataSourceID()?>">
 	<div style="margin-bottom: 8px">
-		<input type="hidden" name="gasID[_ags_]" value="<?=$ags->getGatheringDataSourceID()?>" />
+		<input type="hidden" name="gasID[_gas_]" value="<?=$ags->getGatheringDataSourceID()?>" />
 	<a href="#" style="float: right" data-delete="gathering-source"><i class="icon-minus-sign"></i></a>
 		<? $source = $ags; ?>
 		<? include($ags->getGatheringDataSourceOptionsForm())?>
@@ -73,7 +73,7 @@ $(function() {
 		var key = totalsources - 1;
 		var html = $fds.html();
 		$('#ccm-gathering-data-source-templates-selected').trigger('change');
-		html = html.replace(/\[_ags_\]/gi, '[' + key + ']');
+		html = html.replace(/\[_gas_\]/gi, '[' + key + ']');
 		$fds.html(html);
 	});
 	$('#ccm-gathering-data-source-templates-selected').on('click', 'a[data-delete=gathering-source]', function() {
