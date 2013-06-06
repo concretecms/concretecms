@@ -234,6 +234,7 @@
 				$('.ccm-conversation-add-reply .ccm-conversation-attachment-container').toggle();
 			});
 			
+			obj.$element.unbind('.cnv');
 			obj.$element.on('click', 'a[data-submit=delete-conversation-message]', function() {
 				var $link = $(this);
 				obj.$deletedialog = obj.$deleteholder.clone();
@@ -334,7 +335,7 @@
 				});
 			});
 			
-			obj.$element.on('click', '.conversation-rate-message', function() {
+			obj.$element.on('click.cnv', '.conversation-rate-message', function() {
 				var cnvMessageID = $(this).closest('[data-conversation-message-id]').attr('data-conversation-message-id');
 				var cnvRatingTypeHandle = $(this).attr('data-conversation-rating-type');
 				obj.$messagerating.load(CCM_TOOLS_PATH + '/conversations/rate');
