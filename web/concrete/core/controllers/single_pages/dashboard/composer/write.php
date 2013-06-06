@@ -140,7 +140,8 @@ EOL;
 
 			if ($action == 'return_json') {
 				$ax = Loader::helper('ajax');
-				$r->time = date('F d, Y g:i A');
+				$r->time = date('F d, Y \a\t g:i A');
+				$r->setDraftSaveStatus(t('Page saved on %s', $r->time));
 				$r->setSaveURL(View::url('/dashboard/composer/write', 'save', 'draft', $d->getComposerDraftID()));
 				$r->setViewURL(View::url('/dashboard/composer/write', 'draft', $d->getComposerDraftID()));
 				$r->setDiscardURL(View::url('/dashboard/composer/write', 'discard', $d->getComposerDraftID(), Loader::helper('validation/token')->generate('discard_draft')));

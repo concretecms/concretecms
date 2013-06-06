@@ -14,7 +14,7 @@
           data: formData,
           url: $f.data('saveURL'),
           success: function(r) {
-            $f.find('.ccm-composer-save-status').html('<div class="alert alert-info"><?=t("Page saved at ")?>' + r.time + '</div>');
+            $f.find('.ccm-composer-save-status').html('<div class="alert alert-info">' + r.cmpDraftSaveStatus + '</div>');
             if (r.saveURL) {
               $f.data('saveURL', r.saveURL);
             }
