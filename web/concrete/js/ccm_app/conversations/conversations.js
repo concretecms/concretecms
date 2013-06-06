@@ -505,6 +505,7 @@
 					obj.publish('conversationAddMessageFromJSON',{json:json,form:$form});
 					obj.updateCount();
      				var target = $('a#cnvMessage' + json.cnvMessageID).offset();
+     				$('.dropdown-toggle').dropdown();
      				$('html, body').animate({scrollTop: target.top}, 800, 'linear');
 				}
 			});
