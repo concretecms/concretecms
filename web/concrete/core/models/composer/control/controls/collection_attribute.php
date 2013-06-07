@@ -20,6 +20,12 @@ class Concrete5_Model_CollectionAttributeComposerControl extends ComposerControl
 		$node->addAttribute('handle', $ak->getAttributeKeyHandle());
 	}
 
+	public function removeComposerControlFromDraft() {
+		$ak = $this->getAttributeKeyObject();
+		$c = $this->cmpDraftObject->getComposerDraftCollectionObject();
+		$c->clearAttribute($ak);
+	}
+
 	public function getAttributeKeyObject() {
 		if (!$this->ak) {
 			$this->ak = CollectionAttributeKey::getByID($this->akID);
@@ -56,6 +62,16 @@ class Concrete5_Model_CollectionAttributeComposerControl extends ComposerControl
 		}
 	}
 	
+	public function shouldComposerControlStripEmptyValuesFromDraft() {
+		return true;
+	}
+
+	public function isComposerControlDraftValueEmpty() {
+		$ak = $this->getAttributeKeyObject();
+		$c = $this->cmpDraftObject->getComposerDraftCollectionObject();
+		return ($c->getAttribute($ak) == '');
+	}
+
 	public function render($label, $customTemplate) {
 		$ak = $this->getAttributeKeyObject();
 		$env = Environment::get();

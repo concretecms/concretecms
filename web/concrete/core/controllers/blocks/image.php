@@ -104,6 +104,14 @@
 			);
 		}
 
+		public function isComposerControlDraftValueEmpty() {
+			$f = $this->getFileObject();
+			if (is_object($f) && !$f->isError()) {
+				return false;
+			}
+			return true;
+		}
+
 		public function getImageFeatureDetailFileObject() {
 			// i don't know why this->fID isn't sticky in some cases, leading us to query
 			// every damn time

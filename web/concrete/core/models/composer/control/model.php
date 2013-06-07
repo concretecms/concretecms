@@ -8,7 +8,6 @@ abstract class Concrete5_Model_ComposerControl extends Object {
 	protected $cmpControl;
 	protected $cmpControlRequiredByDefault = false;
 	protected $cmpControlRequiredOnThisRequest = false;
-	protected $cmpDraftObject;
 
 	abstract public function getComposerControlCustomTemplates();
 	abstract public function render($label, $customTemplate);
@@ -17,7 +16,10 @@ abstract class Concrete5_Model_ComposerControl extends Object {
 	abstract public function getComposerControlDraftValue();
 	abstract public function addAssetsToRequest(Controller $cnt);
 	abstract public function export($node);
-	
+	abstract public function shouldComposerControlStripEmptyValuesFromDraft();
+	abstract public function isComposerControlDraftValueEmpty();
+	abstract public function removeComposerControlFromDraft();
+
 	public function composerFormControlSupportsValidation() {
 		return false;
 	}

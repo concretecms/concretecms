@@ -8,6 +8,7 @@ if ($item->canViewGatheringItem()) { ?>
 <div data-block-type-handle="<?=BLOCK_HANDLE_GATHERING_ITEM_PROXY?>" data-gathering-item-batch-timestamp="<?=$item->getGatheringItemBatchTimestamp()?>" data-gathering-item-id="<?=$item->getGatheringItemID()?>" class="ccm-gathering-item h<?=$item->getGatheringItemSlotHeight()?> w<?=$item->getGatheringItemSlotWidth()?>">
   <div class="ccm-gathering-item-inner">
   <? if ($showTileControls && $ap->canEditGatheringItems()) { ?>
+  <div class="ccm-ui">
     <ul class="ccm-gathering-item-inline-commands ccm-ui">
       <li class="ccm-gathering-item-inline-move"><a data-inline-command="move-tile" href="#"><i class="icon-move"></i></a></li>
       <li class="ccm-gathering-item-inline-options"><a data-inline-command="options-tile" href="#" data-menu="gathering-menu-<?=$item->getGatheringItemID()?>"><i class="icon-cog"></i></a></li>
@@ -25,7 +26,8 @@ if ($item->canViewGatheringItem()) { ?>
       </ul>
       </div>
     </div>
-
+  </div>
+  
   <? } ?>
 
   <div class="ccm-gathering-item-inner-render">
