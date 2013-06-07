@@ -63,7 +63,7 @@ if (isset($help) && !$bt->supportsInlineAdd()) { ?>
 	?></div>
 <? } ?>
 
-<div class="ccm-ui">
+<div <? if (!$bt->supportsInlineAdd()) { ?>class="ccm-ui"<? } ?>>
 
 <form method="post" action="<?=$action?>" id="ccm-block-form" enctype="multipart/form-data" class="validate">
 
