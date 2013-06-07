@@ -5,8 +5,8 @@
 		define('C5_EXECUTE', true);
 	}
 
-	if (!defined('RUNTIME')) {
-		define('RUNTIME', md5(uniqid()));
+	if (!defined('C5_RUNTIME_HASH')) {
+		define('C5_RUNTIME_HASH', md5(uniqid()));
 	}
 
 	if(defined("E_DEPRECATED")) {
