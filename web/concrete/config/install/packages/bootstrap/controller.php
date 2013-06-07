@@ -5,11 +5,11 @@ class BootstrapStartingPointPackage extends StartingPointPackage {
 	protected $pkgHandle = 'bootstrap';
 	
 	public function getPackageName() {
-		return t('Bootstrap');
+		return t('Empty Site');
 	}
 	
 	public function getPackageDescription() {
-		return t('Creates a Site using a Twitter Bootstrap Theme.');
+		return t('Creates an empty site using a basic plain Bootstrap theme.');
 	}
 	
 }
