@@ -21,6 +21,32 @@ class Concrete5_Model_BlockComposerControl extends ComposerControl {
 		$node->addAttribute('handle', $bt->getBlockTypeHandle());
 	}
 
+	public function shouldComposerControlStripEmptyValuesFromDraft() {
+		return true;
+	}
+
+	public function removeComposerControlFromDraft() {
+		$b = $this->getComposerControlBlockObject();
+		$b->deleteBlock();
+	}
+
+	protected function getComposerControlBlockObject() {
+		if (!is_object($this->b)) {
+			$c = $this->cmpDraftObject->getComposerDraftCollectionObject();
+			$ct = CollectionType::getByID($c->getCollectionTypeID());
+			$setControl = $this->getComposerFormLayoutSetControlObject();
+			$outputControl = $setControl->getComposerOutputControlObject($ct);
+			$arHandle = $outputControl->getComposerOutputControlAreaHandle();
+			$db = Loader::db();
+			$bID = $db->GetOne('select bID from ComposerDraftBlocks where cmpDraftID = ? and cmpFormLayoutSetControlID = ?', array(
+				$this->cmpDraftObject->getComposerDraftID(), $setControl->getComposerFormLayoutSetControlID()
+			));
+			$b = Block::getByID($bID, $c, $arHandle);
+			$this->setComposerControlBlockObject($b);
+		}
+		return $this->b;
+	}
+
 	public function setComposerControlBlockObject($b) {
 		$this->b = $b;
 	}
@@ -44,6 +70,19 @@ class Concrete5_Model_BlockComposerControl extends ComposerControl {
 		$controller = $bt->getController();
 		if (method_exists($controller, 'getComposerControlPageNameValue')) {
 			return true;
+		}
+		return false;
+	}
+
+	public function isComposerControlDraftValueEmpty() {
+		$bt = $this->getBlockTypeObject();
+		$controller = $bt->getController();				
+		if (method_exists($controller, 'isComposerControlDraftValueEmpty')) {
+			$bx = $this->getComposerControlBlockObject();
+			if (is_object($bx)) {
+				$controller = $bx->getController();
+				return $controller->isComposerControlDraftValueEmpty();
+			}
 		}
 		return false;
 	}
@@ -86,6 +125,7 @@ class Concrete5_Model_BlockComposerControl extends ComposerControl {
 	
 	public function addToComposerFormLayoutSet(ComposerFormLayoutSet $set) {
 		$layoutSetControl = parent::addToComposerFormLayoutSet($set);
+		$ct = CollectionType::getByID($c->getCollectionTypeID());
 		$composer = $set->getComposerObject();
 		$composer->rescanComposerOutputControlObjects();
 		return $layoutSetControl;

@@ -34,12 +34,8 @@ class Concrete5_Model_ComposerDraft extends Object {
 		$outputControls = array();
 		foreach($controls as $cn) {
 			$data = $cn->getRequestValue();
-			$e = Loader::helper('validation/error');
-			$cn->validate($data, $e);
-			if (!$e->has()) {
-				$cn->publishToPage($this, $data, $controls);
-				$outputControls[] = $cn;
-			}
+			$cn->publishToPage($this, $data, $controls);
+			$outputControls[] = $cn;
 		}
 		$this->setPageNameFromComposerControls($outputControls);
 
@@ -133,9 +129,21 @@ class Concrete5_Model_ComposerDraft extends Object {
 				}
 			}
 		}
-	}		
+	}			
+
+	protected function stripEmptyComposerControls() {
+		$controls = ComposerControl::getList($this->getComposerObject());
+		foreach($controls as $cn) {			
+			$cn->setComposerDraftObject($this);
+			if ($cn->shouldComposerControlStripEmptyValuesFromDraft() && $cn->isComposerControlDraftValueEmpty()) {
+				$cn->removeComposerControlFromDraft();
+			}
+		}
+	}
 
 	public function publish() {
+		$this->stripEmptyComposerControls();
+
 		$parent = Page::getByID($this->cmpDraftTargetParentPageID);
 		$c = $this->getComposerDraftCollectionObject();
 		$c->move($parent);
