@@ -125,7 +125,6 @@ class Concrete5_Model_BlockComposerControl extends ComposerControl {
 	
 	public function addToComposerFormLayoutSet(ComposerFormLayoutSet $set) {
 		$layoutSetControl = parent::addToComposerFormLayoutSet($set);
-		$ct = CollectionType::getByID($c->getCollectionTypeID());
 		$composer = $set->getComposerObject();
 		$composer->rescanComposerOutputControlObjects();
 		return $layoutSetControl;
@@ -156,7 +155,7 @@ class Concrete5_Model_BlockComposerControl extends ComposerControl {
 			$template = FILENAME_BLOCK_COMPOSER;
 		}
 
-		$this->inc($template, array('obj' => $obj));
+		$this->inc($template, array('control' => $this, 'obj' => $obj));
 	}
 
 	public function inc($file, $args = array()) {
