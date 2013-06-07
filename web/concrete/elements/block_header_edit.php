@@ -65,7 +65,7 @@ if (isset($help) && !$bt->supportsInlineEdit()) { ?>
 	?></div>
 <? } ?>
 
-<div class="ccm-ui">
+<div <? if (!$bt->supportsInlineEdit()) { ?>class="ccm-ui"<? } ?>>
 
 <form method="post" id="ccm-block-form" class="validate" action="<?=$b->getBlockEditAction()?>&rcID=<?=intval($rcID)?>" enctype="multipart/form-data">
 

@@ -4,6 +4,8 @@ $fieldsets = ComposerFormLayoutSet::getList($composer);
 $cmp = new Permissions($composer);
 ?>
 
+<div class="ccm-ui">
+
 <div class="ccm-composer-save-status"></div>
 
 <div class="alert alert-danger" id="ccm-composer-error-list"></div>
@@ -29,3 +31,5 @@ $cmp = new Permissions($composer);
 
 <? } ?>
 
+
+</div>
