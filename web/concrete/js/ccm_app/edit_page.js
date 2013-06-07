@@ -7,8 +7,6 @@ var CCMEditMode = function() {
 	var blockTypeDropSuccessful = false;
 
 	setupMenus = function() {
-		$('.ccm-area').ccmmenu();
-		$('.ccm-block-edit').ccmmenu();
 
 		$('.ccm-area').each(function() {
 			var totalblocks = parseInt($(this).attr('data-total-blocks'));
@@ -18,6 +16,23 @@ var CCMEditMode = function() {
 			} else {
 				$(this).find('div.ccm-area-footer li[data-list-item=block_limit_row]').show();
 			}
+
+			// remove the cached menus
+			$(this).prop('has-menu', false);
+			if (!$(this).attr('data-menu-handle')) {
+				$menulauncher = $(this);
+			} else {
+				$menulauncher = $($(this).attr('data-menu-handle'));
+			}
+			$menulauncher.unbind('.ccmmenu');
+
+			// if we have more than one block in here, we switch to using a different handle
+			if (totalblocks > 0) {
+				$(this).attr('data-menu-handle', '#area-menu-footer-' + $(this).attr('data-area-id'));
+			} else {
+				$(this).attr('data-menu-handle', '#a' + $(this).attr('data-area-id') + ', #area-menu-footer-' + $(this).attr('data-area-id'));
+			}
+
 		});
 		$('.ccm-block-edit').each(function() {
 			var $b = $(this);
@@ -51,6 +66,10 @@ var CCMEditMode = function() {
 			});
 
 		});		
+	
+		$('.ccm-area').ccmmenu();
+		$('.ccm-block-edit').ccmmenu();
+
 	}
 
 	saveArrangement = function(sourceBlockID, sourceBlockAreaID, destinationBlockAreaID, sourceBlockTypeHandle) {
@@ -131,7 +150,6 @@ var CCMEditMode = function() {
 					$(document).trigger('blockWindowClose');
 					if (fromdrag) {
 						jQuery.fn.dialog.closeAll();
-						var ccm_blockTypeDropped = false;
 					}
 				},
 				width: parseInt($link.attr('data-dialog-width')),
@@ -370,7 +388,7 @@ var CCMEditMode = function() {
 							if (task == 'add') {
 								if ($('#ccm-add-new-block-placeholder').length > 0) {
 									$('#ccm-add-new-block-placeholder').before(r).remove();
-									saveArrangement(resp.bID, resp.aID);
+									saveArrangement(resp.bID, resp.aID, resp.aID);
 								} else {
 									$("#a" + resp.aID + " > div.ccm-area-block-list").append(r);
 								}
