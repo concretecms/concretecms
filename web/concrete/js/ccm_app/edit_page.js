@@ -27,6 +27,7 @@ var CCMEditMode = function() {
 
 			$b.find('a[data-menu-action=edit_inline]').unbind().on('click', function() {
 				CCMInlineEditMode.editBlock(CCM_CID, aID, arHandle, bID, $(this).attr('data-menu-action-params'));
+				return false;
 			});
 			$b.find('a[data-menu-action=block_dialog]').each(function() {
 				var href = $(this).attr('data-menu-href');
@@ -38,12 +39,15 @@ var CCMEditMode = function() {
 				href += '&arHandle=' + encodeURIComponent(arHandle) + '&bID=' + bID;
 				$(this).attr('href', href);
 				$(this).dialog();
+				return false;
 			});
 			$b.find('a[data-menu-action=block_scrapbook]').unbind().on('click', function() {
 				CCMEditMode.addBlockToScrapbook(CCM_CID, bID, arHandle);
+				return false;
 			});
 			$b.find('a[data-menu-action=delete_block]').unbind().on('click', function() {
 				CCMEditMode.deleteBlock(CCM_CID, bID, aID, arHandle, $(this).attr('data-menu-delete-message'));
+				return false;
 			});
 
 		});		

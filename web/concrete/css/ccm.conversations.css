@@ -4,7 +4,7 @@
 .clearfix:after{clear:both;}
 .hide-text{font:0/0 a;color:transparent;text-shadow:none;background-color:transparent;border:0;}
 .input-block-level{display:block;width:100%;min-height:28px;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;}
-div.ccm-conversation-avatar{width:40px;position:absolute;top:0px;left:0px;margin-right:10px;}div.ccm-conversation-avatar img{-ms-border-radius:4px;-webkit-border-radius:4px;-moz-border-radius:4px;border-radius:4px;}
+div.ccm-conversation-avatar{width:40px;position:absolute;top:0px;left:0px;margin-right:10px;}div.ccm-conversation-avatar img{-ms-border-radius:4px;-webkit-border-radius:4px;-moz-border-radius:4px;border-radius:4px;max-width:40px !important;max-height:40px !important;}
 .cnv-admin-pane{position:absolute;right:0;top:-10px;}.cnv-admin-pane a.dropdown-toggle{font-size:10px;}
 .cnv-admin-pane ul.dropdown-menu{left:auto;right:0;}.cnv-admin-pane ul.dropdown-menu a.admin-edit{color:#00cc66;}.cnv-admin-pane ul.dropdown-menu a.admin-edit:hover{color:white;}
 .cnv-admin-pane ul.dropdown-menu a.admin-delete{color:#ff7070;}.cnv-admin-pane ul.dropdown-menu a.admin-delete:hover{color:white;}

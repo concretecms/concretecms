@@ -284,11 +284,14 @@ class Concrete5_Controller_AttributeType_Select extends AttributeTypeController 
 	public function validateForm($p) {
 		$this->load();
 		$options = $this->request('atSelectOptionID');
+		if (!is_array($options)) {
+			$options = array();
+		}
 		if ($this->akSelectAllowOtherValues) {
 			$options = array_filter((Array) $this->request('atSelectNewOption'));
 			if (is_array($options) && count($options) > 0) {
 				return true;
-			} else if (array_shift($this->request('atSelectOptionID')) != null) {
+			} else if (array_shift($options) != null) {
 				return true;
 			}
 		}
