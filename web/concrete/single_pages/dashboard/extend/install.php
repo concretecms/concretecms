@@ -40,8 +40,8 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
 <? } ?>
 </div>
 <div class="ccm-pane-footer">
-	<a href="<?=$this->url('/dashboard/extend/install')?>" class="btn"><?=t('Cancel')?></a>
-	<input type="submit" value="<?=t('Install %s', $pkg->getPackageName())?>" class="btn primary ccm-button-right" />
+	<a href="<?=$this->url('/dashboard/extend/install')?>" class="btn pull-left"><?=t('Cancel')?></a>
+	<input type="submit" value="<?=t('Install %s', $pkg->getPackageName())?>" class="btn btn-primary pull-right" />
 </div>
 </form>
 <?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(false); ?>
@@ -221,7 +221,7 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
 			<div style="display: none">
 			<div id="ccm-install-post-notes"><div class="ccm-ui"><?=Loader::element('dashboard/install_post', false, $installedPKG->getPackageHandle())?>
 			<div class="dialog-buttons">
-				<a href="javascript:void(0)" onclick="jQuery.fn.dialog.closeAll()" class="btn ccm-button-right"><?=t('Ok')?></a>
+				<a href="javascript:void(0)" onclick="jQuery.fn.dialog.closeAll()" class="btn pull-right"><?=t('Ok')?></a>
 			</div>
 			</div>
 			</div>
@@ -249,7 +249,7 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
 				<? } else { ?>
 					<p><?=t('There are currently <strong>%s</strong> updates available.', $updates)?></p>
 				<? } ?>
-				<div class="alert-actions"><a class="small btn" href="<?=$this->url('/dashboard/extend/update')?>"><?=t('Update Add-Ons')?></a></div>
+				<div class="alert-actions"><a class="btn-small btn" href="<?=$this->url('/dashboard/extend/update')?>"><?=t('Update Add-Ons')?></a></div>
 				</div>
 			<? } ?>
 
@@ -320,10 +320,11 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
 
 		<? } else if ($tp->canInstallPackages() && ENABLE_MARKETPLACE_SUPPORT == true) { ?>
 
-			<div class="well" style="padding:10px 20px;">
-				<h3><?=t('Connect to Community')?></h3>
+			<br/><br/>
+			<div class="well clearfix" style="padding:10px 20px;">
+				<h4><?=t('Connect to Community')?></h4>
 				<p><?=t('Your site is not connected to the concrete5 community. Connecting lets you easily extend a site with themes and add-ons.')?></p>
-				<p><a class="btn success" href="<?=$this->url('/dashboard/extend/connect', 'register_step1')?>"><?=t("Connect to Community")?></a></p>
+				<p><a class="btn btn-primary pull-right" href="<?=$this->url('/dashboard/extend/connect', 'register_step1')?>"><?=t("Connect to Community")?></a></p>
 			</div>
 		
 		<? } ?>

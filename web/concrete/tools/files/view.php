@@ -34,7 +34,7 @@ if ($to->getPackageHandle() != '') {
 <form method="post" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/download/" style="margin: 0px">
 <?=$form->hidden('fID', $f->getFileID()); ?>
 <?=$form->hidden('fvID', $f->getFileVersionID()); ?>
-<?=$form->submit('submit', t('Download'), array('class' => 'ccm-button-right primary'))?>
+<?=$form->submit('submit', t('Download'), array('class' => 'btn btn-primary pull-right'))?>
 </form>
 </div>
 

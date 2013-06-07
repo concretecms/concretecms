@@ -10,7 +10,7 @@
 	<div class="ccm-pane-body">
 	
 	<div class="clearfix">
-	<ul class="tabs">
+	<ul class="nav nav-tabs">
 		<li class="active"><a href="javascript:void(0)" onclick="$('.tabs').find('li.active').removeClass('active');$(this).parent().addClass('active');$('.ccm-tab').hide();$('#ccm-tab-details').show()" ><?=t('Details')?></a></li>
 		<li><a href="javascript:void(0)" onclick="$('.tabs').find('li.active').removeClass('active');$(this).parent().addClass('active');$('.ccm-tab').hide();$('#ccm-tab-files').show()"><?=t("Files in Set")?></a></li>
 	</ul>

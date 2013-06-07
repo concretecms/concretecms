@@ -54,7 +54,6 @@ var CCMEditMode = function() {
 				href += '&arHandle=' + encodeURIComponent(arHandle) + '&bID=' + bID;
 				$(this).attr('href', href);
 				$(this).dialog();
-				return false;
 			});
 			$b.find('a[data-menu-action=block_scrapbook]').unbind().on('click', function() {
 				CCMEditMode.addBlockToScrapbook(CCM_CID, bID, arHandle);

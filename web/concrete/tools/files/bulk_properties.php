@@ -271,7 +271,7 @@ table.ccm-grid th {width: 70px}
 	<div class="block-message alert-message success" style="padding-right: 14px !important"><a class="btn success btn-mini" style="float: right;" onclick="jQuery.fn.dialog.closeTop()"><?=t('Continue')?></a><?=t2('%d file uploaded successfully.', '%d files uploaded successfully.', count($_REQUEST['fID']), count($_REQUEST['fID']))?></div>
 <? } ?>
 
-<ul class="tabs" id="ccm-file-manager-add-complete-tabs">
+<ul class="nav nav-tabs" id="ccm-file-manager-add-complete-tabs">
 	<li class="active"><a href="javascript:void(0)" id="ccm-file-manager-add-complete-basic"><?=t('Basic Properties')?></a></li>
 	<? if (count($attribs) > 0) { ?>
 		<li><a href="javascript:void(0)" id="ccm-file-manager-add-complete-attributes"><?=t('Other Properties')?></a></li>

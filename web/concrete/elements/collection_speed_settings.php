@@ -185,7 +185,7 @@ if ($_REQUEST['reload_and_remove_cache']) {
 
 <? if (!$_REQUEST['reload_and_remove_cache']) { ?>
 	<div class="dialog-buttons">
-	<a href="javascript:void(0)" onclick="jQuery.fn.dialog.closeTop();" class="ccm-button-left btn"><?=t('Cancel')?></a>
-	<a href="javascript:void(0)" class="btn primary ccm-button-right" onclick="$('#ccmSpeedSettingsForm').submit()"><?=t('Save')?></a>
+	<a href="javascript:void(0)" onclick="jQuery.fn.dialog.closeTop();" class="pull-left btn"><?=t('Cancel')?></a>
+	<a href="javascript:void(0)" class="btn btn-primary pull-right" onclick="$('#ccmSpeedSettingsForm').submit()"><?=t('Save')?></a>
 	</div>
 <? } ?>

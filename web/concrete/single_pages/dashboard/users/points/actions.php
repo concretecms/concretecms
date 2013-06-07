@@ -58,13 +58,13 @@ if ($upaID > 0) {
 ?>
 
 <div class="ccm-pane-footer">
-	<a href="<?=$this->url('/dashboard/users/points/actions')?>" class="btn"><?=t('Back to List')?></a>
-	<button type="submit" class="ccm-button-right btn primary"><?=$label?> <i class="icon-white icon-ok"></i></button>
+	<a href="<?=$this->url('/dashboard/users/points/actions')?>" class="btn pull-left"><?=t('Back to List')?></a>
+	<button type="submit" class="btn btn-primary pull-right"><?=$label?> <i class="icon-white icon-ok"></i></button>
 </div>
 </form>		
 <?php } else { ?>
 	<div class="ccm-pane-options ccm-pane-options-permanent-search">
-		<a href="<?=$this->action('add')?>" class="btn primary"><?=t('Add Action')?></a>
+		<a href="<?=$this->action('add')?>" class="btn btn-primary"><?=t('Add Action')?></a>
 	</div>
 	
 	<div class="ccm-pane-body">

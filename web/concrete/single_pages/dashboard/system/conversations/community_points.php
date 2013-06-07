@@ -19,7 +19,7 @@ echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Comm
 					<tr>
 						<td class="span1"><?php echo $ratingType->cnvRatingTypeName;?></td>
 						<td class="span1"><?=$form->text('rtPoints', $ratingType->cnvRatingTypeCommunityPoints, array('style' => 'class: span1'))?></td>
-						<td class="span1"><button class='btn ccm-button-right'><?=t('Update')?></button></td>
+						<td class="span1"><button class='btn btn-primary pull-right'><?=t('Update')?></button></td>
 					</tr>
 				</form>
 			<? } ?>

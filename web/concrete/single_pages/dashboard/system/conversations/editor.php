@@ -7,6 +7,6 @@ echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Conv
 		<?=$form->select('activeEditor',(array)$editors,$active);?>
 	</div>
 	<div class='ccm-pane-footer'>
-		<button class='btn btn-primary ccm-button-right'>Save</button>
+		<button class='btn btn-primary pull-right'>Save</button>
 	</div>
 </form>

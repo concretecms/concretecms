@@ -141,11 +141,11 @@ class ConcreteDashboardHelper {
 
 		$html = '<div class="ccm-pane-header">';
 		
-		$class = 'ccm-icon-favorite';
+		$class = 'icon-star';
 		$qn = ConcreteDashboardMenu::getMine();
 		$quicknav = $qn->getItems(false);
 		if (in_array($c->getCollectionPath(), $quicknav)) {
-			$class = 'ccm-icon-favorite-selected';	
+			$class = 'icon-white icon-star';	
 		}
 		$html .= '<ul class="ccm-pane-header-icons">';
 		if (!$help) {
@@ -161,18 +161,18 @@ class ConcreteDashboardHelper {
 		}
 		
 		if (isset($relatedPages)) { 
-			$html .= '<li><a href="" class="ccm-icon-navigate-pages" data-toggle="dropdown" title="' . $navigateTitle . '" id="ccm-page-navigate-pages">' . t('Help') . '</a>' . $relatedPages . '</li>';
+			$html .= '<li><a href="" data-toggle="dropdown" title="' . $navigateTitle . '" id="ccm-page-navigate-pages"><i class="icon-share-alt"></i></a>' . $relatedPages . '</li>';
 		}
 		
 		if ($help) {
-			$html .= '<li><span style="display: none" id="ccm-page-help-content">' . $help . '</span><a href="javascript:void(0)" class="ccm-icon-help" title="' . t('Help') . '" id="ccm-page-help">' . t('Help') . '</a></li>';
+			$html .= '<li><span style="display: none" id="ccm-page-help-content">' . $help . '</span><a href="javascript:void(0)" title="' . t('Help') . '" id="ccm-page-help"><i class="icon-question-sign"></i></a></li>';
 		}
 		
 		if ($favorites) {
-		$html .= '<li><a href="javascript:void(0)" id="ccm-add-to-quick-nav" onclick="CCMDashboard.toggleQuickNav(' . $c->getCollectionID() . ',\'' . $token . '\')" class="' . $class . '">' . t('Add to Favorites') . '</a></li>';
+		$html .= '<li><a href="javascript:void(0)" id="ccm-add-to-quick-nav" onclick="CCMDashboard.toggleQuickNav(' . $c->getCollectionID() . ',\'' . $token . '\')"><i class="' . $class . '"></i></a></li>';
 		}
 
-		$html .= '<li><a href="javascript:void(0)" onclick="CCMDashboard.closePane(this)" class="ccm-icon-close">' . t('Close') . '</a></li>';
+		$html .= '<li><a href="javascript:void(0)" onclick="CCMDashboard.closePane(this)"><i class="icon-remove"></i></a></li>';
 		$html .= '</ul>';
 		if (!$title) {
 			$title = $c->getCollectionName();

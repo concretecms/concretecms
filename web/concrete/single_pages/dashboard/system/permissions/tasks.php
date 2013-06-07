@@ -17,8 +17,8 @@
 	<? } ?>
 	</div>
 	<div class="ccm-pane-footer">
-		<a href="<?=$this->url('/dashboard/system/permissions/tasks')?>" class="btn"><?=t('Cancel')?></a>
-		<button type="submit" value="<?=t('Save')?>" class="btn primary ccm-button-right"><?=t('Save')?> <i class="icon-ok-sign icon-white"></i></button>
+		<a href="<?=$this->url('/dashboard/system/permissions/tasks')?>" class="btn pull-left"><?=t('Cancel')?></a>
+		<button type="submit" value="<?=t('Save')?>" class="btn btn-primary pull-right"><?=t('Save')?> <i class="icon-ok-sign icon-white"></i></button>
 	</div>
 	</form>
 	<?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(false)?>
