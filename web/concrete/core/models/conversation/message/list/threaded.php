@@ -9,14 +9,17 @@ class Concrete5_Model_Conversation_Message_List_Threaded extends ItemList {
 	public function __construct(Conversation $cnv) {
 		$this->cnvID = $cnv->getConversationID();
 		$this->messages = $this->getMessages();
+		$this->total = $cnv->getConversationMessagesTotal();
 	}
 
 	public function sortByDateDescending() {
-		$this->sortBy('cnvMessageDateCreated', 'desc');
+		$this->sortBy = 'date';
+		$this->sortByDirection = 'desc';
 	}
 	
 	public function sortByDateAscending() {
-		$this->sortBy('cnvMessageDateCreated', 'asc');
+		$this->sortBy = 'date';
+		$this->sortByDirection = 'asc';
 	}
 	
 	
@@ -48,6 +51,10 @@ class Concrete5_Model_Conversation_Message_List_Threaded extends ItemList {
 				$this->flattenMessages($m->messages);
 			}
 		}
+	}
+
+	public function getTotal() {
+		return $this->total;
 	}
 
 	protected function getMessages($cnvMessageParentID = 0) {
