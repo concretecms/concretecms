@@ -118,7 +118,7 @@ jQuery.fn.dialog.open = function(options) {
 			var overlays = $('.ui-widget-overlay').length;
 			$('.ui-widget-overlay').each(function(i, obj) {
 				if ((i + 1) < overlays) {
-					$dialog.css('opacity', 0);
+					$(this).css('opacity', 0);
 				}
 			});
 
