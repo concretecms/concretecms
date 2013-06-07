@@ -45,8 +45,8 @@ $(function() {
 		<form method="post" id="ccmDeletePageForm" action="<?=$c->getCollectionAction()?>">	
 			<input type="hidden" name="rel" value="<?php echo h($request_rel); ?>" />
 
-			<div class="dialog-buttons"><input type="button" class="btn" value="<?=t('Cancel')?>" onclick="jQuery.fn.dialog.closeTop()" />
-			<a href="javascript:void(0)" onclick="$('#ccmDeletePageForm').submit()" class="ccm-button-right btn error"><span><?=t('Delete')?></span></a>
+			<div class="dialog-buttons"><input type="button" class="btn pull-left" value="<?=t('Cancel')?>" onclick="jQuery.fn.dialog.closeTop()" />
+			<a href="javascript:void(0)" onclick="$('#ccmDeletePageForm').submit()" class="btn btn-danger pull-right"><span><?=t('Delete')?></span></a>
 			</div>
 
 		<? if($c->isSystemPage()) { ?>

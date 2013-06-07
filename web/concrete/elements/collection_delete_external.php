@@ -48,8 +48,8 @@ $(function() {
 	<?=t('Remove this alias or external link?')?>
 
 	<div class="ccm-buttons dialog-buttons">
-	<input type="button" class="btn" value="<?=t('Cancel')?>" onclick="jQuery.fn.dialog.closeTop()" />
-	<a href="javascript:void(0)" onclick="$('#ccm-delete-external-link-form').submit()" class="btn ccm-button-right accept error"><span><?=('Delete')?></span></a>
+	<input type="button" class="btn pull-left" value="<?=t('Cancel')?>" onclick="jQuery.fn.dialog.closeTop()" />
+	<a href="javascript:void(0)" onclick="$('#ccm-delete-external-link-form').submit()" class="btn btn-danger pull-right"><span><?=('Delete')?></span></a>
 	</div>	
 	<input type="hidden" name="display_mode" value="<?=$_REQUEST['display_mode']?>" />
 	<input type="hidden" name="instance_id" value="<?=$_REQUEST['instance_id']?>" />

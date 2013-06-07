@@ -82,8 +82,8 @@ foreach ($gArray as $g) {
 </div>
 
 <div class="dialog-buttons">
-	<a href="javascript:void(0)" onclick="jQuery.fn.dialog.closeTop();" class="ccm-button-left btn"><?=t('Cancel')?></a>
-	<a href="javascript:void(0)" onclick="$('form[name=ccmPermissionsForm]').submit()" class="ccm-button-right btn primary"><?=t('Save')?></a>
+	<a href="javascript:void(0)" onclick="jQuery.fn.dialog.closeTop();" class="pull-left btn"><?=t('Cancel')?></a>
+	<a href="javascript:void(0)" onclick="$('form[name=ccmPermissionsForm]').submit()" class="btn btn-primary pull-right"><?=t('Save')?></a>
 </div>	
 <input type="hidden" name="update_permissions" value="1" class="accept">
 <input type="hidden" name="processCollection" value="1">

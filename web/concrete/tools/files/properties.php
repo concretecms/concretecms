@@ -175,7 +175,7 @@ if (!isset($_REQUEST['reload'])) { ?>
 
 <div class="ccm-ui ccm-file-properties-tabs" id="ccm-file-properties-tab-<?=$f->getFileID()?>-<?=$fv->getFileVersionID()?>">
 
-<ul class="tabs">
+<ul class="nav nav-tabs">
 <li class="active"><a href="javascript:void(0)" id="ccm-file-properties-details-<?=$f->getFileID()?>-<?=$fv->getFileVersionID()?>"><?=t('Details')?></a></li>
 <? if (!$previewMode) { ?>
 	<li><a href="javascript:void(0)" id="ccm-file-properties-versions-<?=$f->getFileID()?>-<?=$fv->getFileVersionID()?>"><?=t('Versions')?></a></li>

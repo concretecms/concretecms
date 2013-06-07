@@ -8,7 +8,7 @@ $form = Loader::helper('form');
 $ih = Loader::helper('concrete/interface');
 ?>
 <div class="ccm-ui">
-	<ul class="tabs" id="ccm-formblock-tabs">
+	<ul class="nav nav-tabs" id="ccm-formblock-tabs">
 		<li class="<?php echo (intval($miniSurveyInfo['bID'])==0)?'active':''?>"><a href="javascript:void(0)" id="ccm-formblock-tab-add"><?php echo t('Add')?></a></li>
 		<li class="<?php echo (intval($miniSurveyInfo['bID'])>0)?'active':''?>"><a href="javascript:void(0)" id="ccm-formblock-tab-edit"><?php echo t('Edit')?></a></li>
 		<li><a href="javascript:void(0)" id="ccm-formblock-tab-preview"><?php echo t('Preview')?></a></li>

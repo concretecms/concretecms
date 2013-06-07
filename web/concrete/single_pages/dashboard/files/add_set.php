@@ -15,7 +15,7 @@
 		</div>
 	</div>
 	<div class="ccm-pane-footer">
-			<?=Loader::helper("form")->submit('add', t('Add'), array('class' => 'ccm-button-right primary'))?>
+			<?=Loader::helper("form")->submit('add', t('Add'), array('class' => 'btn btn-primary pull-right'))?>
 	</div>
     </form>
 	<?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(false);?>

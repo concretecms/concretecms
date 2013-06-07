@@ -90,8 +90,8 @@ Loader::element('permission/access/list', array('pkCategoryHandle' => $pkCategor
 <? } ?>
 
 	<div class="dialog-buttons">
-		<a href="javascript:void(0)" class="btn" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel')?></a>
-		<button type="submit" class="btn primary ccm-button-right" class="btn primary" onclick="$('#ccm-permissions-detail-form').submit()"><?=t('Save')?> <i class="icon-ok-sign icon-white"></i></button>
+		<a href="javascript:void(0)" class="btn pull-left" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel')?></a>
+		<button type="submit" class="btn btn-primary pull-right" onclick="$('#ccm-permissions-detail-form').submit()"><?=t('Save')?> <i class="icon-ok-sign icon-white"></i></button>
 	</div>
 </form>
 </div>

@@ -96,7 +96,7 @@ if ($plID == 0) {
 	<? } ?>
 	
 	<? if(ENABLE_MARKETPLACE_SUPPORT){ ?>
-		<a href="javascript:void(0)" onclick="ccm_openThemeLauncher()" class="btn ccm-button-right success"><?=t("Get More Themes")?></a>
+		<a href="javascript:void(0)" onclick="ccm_openThemeLauncher()" class="btn pull-right"><?=t("Get More Themes")?></a>
 	<? } ?>
 
 	<h3 ><?=t('Themes')?></h3>
@@ -131,8 +131,8 @@ if ($plID == 0) {
 	<? } ?>
 	
 	<div class="dialog-buttons">
-		<a href="javascript:void(0)" onclick="jQuery.fn.dialog.closeTop()" class="ccm-button-left btn"><?=t('Cancel')?></a>
-		<a href="javascript:void(0)" onclick="$('form[name=ccmThemeForm]').submit()" class="ccm-button-right primary btn"><?=t('Save')?></a>
+		<a href="javascript:void(0)" onclick="jQuery.fn.dialog.closeTop()" class="pull-left btn"><?=t('Cancel')?></a>
+		<a href="javascript:void(0)" onclick="$('form[name=ccmThemeForm]').submit()" class="btn btn-primary pull-right"><?=t('Save')?></a>
 	</div>	
 	<input type="hidden" name="update_theme" value="1" class="accept">
 	<input type="hidden" name="processCollection" value="1">

@@ -34,7 +34,7 @@ if ($_POST['task'] == 'set_location') {
 
 <div class="ccm-ui" id="ccm-file-permissions-dialog-wrapper">
 
-<ul class="tabs" id="ccm-file-permissions-tabs">
+<ul class="nav nav-tabs" id="ccm-file-permissions-tabs">
 	<? if (PERMISSIONS_MODEL != 'simple') { ?>
 		<li class="active"><a href="javascript:void(0)" id="ccm-file-permissions-advanced"><?=t('Permissions')?></a></li>
 	<? } ?>

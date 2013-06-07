@@ -21,7 +21,7 @@ $types = $ch->serializeUploadFileExtensions($types);
 $valt = Loader::helper('validation/token');
 ?>
 <div class="ccm-ui">
-<ul class="tabs" id="ccm-file-import-tabs">
+<ul class="nav nav-tabs" id="ccm-file-import-tabs">
 <li class="active"><a href="javascript:void(0)" id="ccm-file-add-multiple"><?=t('Upload Multiple')?></a></li>
 <li><a href="javascript:void(0)" id="ccm-file-add-incoming"><?=t('Add Incoming')?></a></li>
 <li><a href="javascript:void(0)" id="ccm-file-add-remote"><?=t('Add Remote Files')?></a></li>
@@ -235,13 +235,13 @@ $(function() {
 		
 		<div style="display: none" id="dialog-buttons-incoming">
 			<?
-				print $form->submit('submit', t('Import Files'), array('onclick' => "jQuery.fn.dialog.showLoader();$('#ccm-file-manager-multiple-incoming').submit()", 'class' => 'primary ccm-button-right'));
+				print $form->submit('submit', t('Import Files'), array('onclick' => "jQuery.fn.dialog.showLoader();$('#ccm-file-manager-multiple-incoming').submit()", 'class' => 'btn btn-primary pull-right'));
 			?>
 		</div>
 		
 		<div id="dialog-buttons-remote" style="display: none">
 			<?
-				print $form->submit('submit', t('Import Files'), array('onclick' => "jQuery.fn.dialog.showLoader();$('#ccm-file-manager-multiple-remote').submit()", 'class' => 'primary ccm-button-right'));
+				print $form->submit('submit', t('Import Files'), array('onclick' => "jQuery.fn.dialog.showLoader();$('#ccm-file-manager-multiple-remote').submit()", 'class' => 'btn btn-primary pull-right'));
 			?>
 		</div>
 
