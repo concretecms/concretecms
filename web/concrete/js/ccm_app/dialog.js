@@ -156,6 +156,15 @@ jQuery.fn.dialog.open = function(options) {
 				}, placement: 'bottom', html: true, container: '#tooltip-holder', trigger: 'click'});
 			}
 
+			if (typeof options.onOpen != "undefined") {
+				if ((typeof options.onOpen) == 'function') {
+					options.onOpen($dialog);
+				} else {
+					$.proxy(options.onOpen, $dialog);
+				}
+			}
+
+
 		},
 		'beforeClose': function() {
 			var nd = $(".ui-dialog").length;

@@ -20,7 +20,7 @@ if ($cID > 0 && $bID > 0) {
 			$data['controller'] = $controller;
 
 			?>
-
+			<div class="ccm-ui">
 			<form method="post" id="ccm-gathering-edit-form" action="<?=$b->getBlockEditAction()?>" enctype="multipart/form-data">
 				<?=Loader::helper('validation/token')->output()?>
 				<input type="hidden" name="arHandle" value="<?=$arHandle?>" />
@@ -51,7 +51,8 @@ if ($cID > 0 && $bID > 0) {
 			</div>
 
 			</form>
-
+		</div>
+		
 			<script type="text/javascript">
 			$(function() {
 				$('#ccm-gathering-edit-form').ajaxForm({
