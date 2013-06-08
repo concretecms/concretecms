@@ -18,6 +18,8 @@ var CCMEditMode = function() {
 			}
 
 			// remove the cached menus
+			// this is buggy so i'm not doing it right now
+			/*
 			$(this).prop('has-menu', false);
 			if (!$(this).attr('data-menu-handle')) {
 				$menulauncher = $(this);
@@ -32,6 +34,7 @@ var CCMEditMode = function() {
 			} else {
 				$(this).attr('data-menu-handle', '#a' + $(this).attr('data-area-id') + ', #area-menu-footer-' + $(this).attr('data-area-id'));
 			}
+			*/
 
 		});
 		$('.ccm-block-edit').each(function() {
