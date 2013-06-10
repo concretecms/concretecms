@@ -15,6 +15,11 @@
 				obj.$newmessageform.dropzone({
 					'url': CCM_TOOLS_PATH + '/conversations/add_file',
 					'success' : function(file, raw) {
+						var self = this;
+						$(file.previewTemplate).click(function(){
+								$('input[rel="'+ $(this).attr('rel') +'"]').remove();
+							self.removeFile(file);
+						});
 						var response = JSON.parse(raw);
 						if(!response.error) {
 							$('div[rel="' + response.tag + '"] form.main-reply-form').append('<input rel="'+response.timestamp+'" type="hidden" name="attachments[]" value="'+response.id+'" />');
@@ -27,20 +32,32 @@
 							});
 						}
 					},
-					'sending' : function(file, xhr, formData) { 
+					'sending' : function(file, xhr, formData) {
+						 var attachmentCount = this.files.length;
+						 if(attachmentCount > obj.options.maxFiles) {
+							var self = this;
+							$('input[rel="'+ $(file.previewTemplate).attr('rel') +'"]').remove();
+							file.processing = false;
+							self.removeFile(file);
+							alert('too many attachments');
+							var attachmentCount =- 1; 
+							return false;
+						 }
+
 						$(file.previewTemplate).attr('rel', new Date().getTime());
 						formData.append("timestamp", $(file.previewTemplate).attr('rel'));
 						formData.append("tag", $(obj.$newmessageform).parent('div').attr('rel'));
-						formData.append("fileCount", $(obj.$newmessageform).parent('div').find('[name="attachments[]"]').length);
+						formData.append("fileCount", this.files.length);
 					},
-					'init' : function() { 
-						 this.on("complete", function(file) {
-						 	$('.preview.processing').click(function(){ 
-								$('input[rel="'+ $(this).attr('rel') +'"]').remove();
-								$(this).remove();
-							})
-						});
-					}
+					'init' : function() {
+						$(this.element).data('dropzone',this);
+						// this.on("complete", function(file) {
+						 	//$('.preview.processing').click(function(){ 
+							//	$('input[rel="'+ $(this).attr('rel') +'"]').remove();
+							//	$(this).remove();
+							//})
+						//});
+					} 
 				});
 				$(obj.$newmessageform).attr('data-dropzone-applied', 'true');
 			}
@@ -49,6 +66,11 @@
 				obj.$replyholder.find('.dropzone').not('[data-drozpone-applied="true"]').dropzone({  // dropzone reply form
 					'url': CCM_TOOLS_PATH + '/conversations/add_file',
 					'success' : function(file, raw) {
+						var self = this;
+						$(file.previewTemplate).click(function(){
+							self.removeFile(file);
+							$('input[rel="'+ $(this).attr('rel') +'"]').remove();
+						});
 						var response = JSON.parse(raw);
 						if(!response.error) {
 							$(this.element).closest('div.ccm-conversation-add-reply').find('form.aux-reply-form').append('<input rel="'+response.timestamp+'" type="hidden" name="attachments[]" value="'+response.id+'" />');
@@ -61,19 +83,25 @@
 							});
 						}
 					},
-					'sending' : function(file, xhr, formData) { 
+					'sending' : function(file, xhr, formData) {
+						 var attachmentCount = this.files.length;
+						 if(attachmentCount > 3) {
+							var self = this;
+							$('input[rel="'+ $(file.previewTemplate).attr('rel') +'"]').remove();
+							file.processing = false;
+							self.removeFile(file);
+							alert('too many attachments');
+							var attachmentCount =- 1; 
+							return false;
+						 }
+						 
 						$(file.previewTemplate).attr('rel', new Date().getTime());
 						formData.append("timestamp", $(file.previewTemplate).attr('rel'));
 						formData.append("tag", $(obj.$newmessageform).parent('div').attr('rel'));
 						formData.append("fileCount", $(obj.$replyHolder).find('[name="attachments[]"]').length);
 					},
 					'init' : function() { 
-						 this.on("complete", function(file) { 
-						 	$('.preview.processing').click(function(){ 
-								$('input[rel="'+ $(this).attr('rel') +'"]').remove();
-								$(this).remove();
-							})
-						});
+						$(this.element).data('dropzone',this);
 					}
 				});
 			}
@@ -124,7 +152,12 @@
 		clearDropzoneQueues : function() {
 			$('.preview.processing').each(function(){    // first remove any previous attachments and hide dropzone if it was open.
 				$('input[rel="'+ $(this).attr('rel') +'"]').remove();
-				$(this).remove();
+			});
+			$('form.dropzone').each(function(){
+				var d = $(this).data('dropzone');
+				$.each(d.files,function(k,v){
+					d.removeFile(v);
+				});
 			});
 		},
 		

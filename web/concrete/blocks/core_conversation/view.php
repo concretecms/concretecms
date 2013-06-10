@@ -7,7 +7,11 @@ $commentRatingIP = ip2long($iph->getRequestIP());
 $u = new User();
 if ($u->isLoggedIn()) {
 	$uID = $u->getUserID();
+	$maxFileSize = $maxFileSizeRegistered;
+	$maxFiles = $maxFilesRegistered; 
 }else{
+	$maxFileSize = $maxFileSizeGuest;
+	$maxFiles = $maxFilesGuest;
 	$uID = 0;
 }
 
@@ -38,7 +42,9 @@ if (is_object($conversation)) {
 			commentRatingIP: '<?=$commentRatingIP?>',
 			dateFormat: '<?=$dateFormat?>',
 			blockAreaHandle: '<?=$blockAreaHandle ?>',
-			customDateFormat: '<?=$customDateFormat?>'
+			fileExtensions: '<?=$fileExtensions?>',
+			maxFileSize: '<?=$maxFileSize?>',
+			maxFiles: '<?=$maxFiles?>'
 		});
 	});
 	</script>
