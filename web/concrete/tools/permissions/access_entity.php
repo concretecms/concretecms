@@ -104,8 +104,8 @@ if ($_POST['task'] == 'save_permissions') {
 <? } ?>
 
 <div class="dialog-buttons">
-	<input type="button" onclick="jQuery.fn.dialog.closeTop()" value="<?=t('Cancel')?>" class="btn" />
-	<input type="submit" onclick="$('#ccm-permissions-access-entity-form').submit()" value="<?=t('Save')?>" class="btn primary ccm-button-right" />
+	<input type="button" onclick="jQuery.fn.dialog.closeTop()" value="<?=t('Cancel')?>" class="btn pull-left" />
+	<input type="submit" onclick="$('#ccm-permissions-access-entity-form').submit()" value="<?=t('Save')?>" class="btn btn-primary pull-right" />
 </div>
 
 

@@ -44,7 +44,7 @@ echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Conv
 		</div>
 	</div>
 	<div class='ccm-pane-footer'>
-		<button class='btn btn-primary ccm-button-right'><?=t('Save')?></button>
+		<button class='btn btn-primary pull-right'><?=t('Save')?></button>
 	</div>
 </form>
 <script>

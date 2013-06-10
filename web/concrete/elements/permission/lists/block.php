@@ -12,7 +12,7 @@ if (!$b->overrideAreaPermissions()) { ?>
 	<?=t("Permissions for this block are currently dependent on the area containing this block.")?>
 	</p>
 	<br/>
-	<a href="javascript:void(0)" class="btn small" onclick="ccm_setBlockPermissionsToOverride()"><?=t('Override Permissions')?></a>
+	<a href="javascript:void(0)" class="btn btn-small" onclick="ccm_setBlockPermissionsToOverride()"><?=t('Override Permissions')?></a>
 	</div>
 	
 <? } else { 
@@ -22,7 +22,7 @@ if (!$b->overrideAreaPermissions()) { ?>
 	<div class="block-message alert-message notice">
 	<p><?=t("Permissions for this block currently override those of the area and page.")?></p>
 	<br/>
-	<a href="javascript:void(0)" class="btn small" onclick="ccm_revertToAreaPermissions()"><?=t('Revert to Area Permissions')?></a>
+	<a href="javascript:void(0)" class="btn btn-small" onclick="ccm_revertToAreaPermissions()"><?=t('Revert to Area Permissions')?></a>
 	</div>
 
 <? } ?>
@@ -60,8 +60,8 @@ foreach($permissions as $pk) {
 
 <? if ($enablePermissions) { ?>
 <div class="dialog-buttons">
-	<a href="javascript:void(0)" onclick="jQuery.fn.dialog.closeTop()" class="btn"><?=t('Cancel')?></a>
-	<button onclick="$('#ccm-permission-list-form').submit()" class="btn primary ccm-button-right"><?=t('Save')?> <i class="icon-ok-sign icon-white"></i></button>
+	<a href="javascript:void(0)" onclick="jQuery.fn.dialog.closeTop()" class=" pull-left"><?=t('Cancel')?></a>
+	<button onclick="$('#ccm-permission-list-form').submit()" class="btn btn-primary pull-right"><?=t('Save')?> <i class="icon-ok-sign icon-white"></i></button>
 </div>
 <? } ?>
 

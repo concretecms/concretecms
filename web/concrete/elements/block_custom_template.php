@@ -49,8 +49,8 @@ $txt = Loader::helper('text');
         </div>
 
 		<div class="ccm-buttons dialog-buttons">
-			<a href="#" class="btn ccm-dialog-close ccm-button-left cancel"><?=t('Cancel')?></a>
-			<a href="javascript:void(0)" onclick="$('#ccmCustomTemplateForm').submit()" class="ccm-button-right accept primary btn"><span><?=t('Save')?></span></a>
+			<a href="#" class="btn ccm-dialog-close"><?=t('Cancel')?></a>
+			<a href="javascript:void(0)" onclick="$('#ccmCustomTemplateForm').submit()" class="btn btn-primary pull-right"><span><?=t('Save')?></span></a>
 		</div>
 		
 <?

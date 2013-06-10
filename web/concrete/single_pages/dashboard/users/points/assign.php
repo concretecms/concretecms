@@ -42,8 +42,8 @@
 	</div>
 </div>
 <div class="ccm-pane-footer">
-	<a href="<?=$this->url('/dashboard/users/points')?>" class="btn"><?=t('Back to List')?></a>
-	<button type="submit" class="ccm-button-right btn primary"><?=t('Assign')?> <i class="icon-white icon-ok"></i></button>
+	<a href="<?=$this->url('/dashboard/users/points')?>" class="btn pull-left"><?=t('Back to List')?></a>
+	<button type="submit" class="btn btn-primary pull-right"><?=t('Assign')?> <i class="icon-white icon-ok"></i></button>
 </div>
 </form>
 

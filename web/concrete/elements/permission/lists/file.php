@@ -12,7 +12,7 @@ if (!$f->overrideFileSetPermissions()) { ?>
 	<?=t("Permissions for this file are currently dependent on file sets and global file permissions.")?>
 	</p>
 	<br/>
-	<a href="javascript:void(0)" class="btn small" onclick="ccm_setFilePermissionsToOverride()"><?=t('Override Permissions')?></a>
+	<a href="javascript:void(0)" class="btn btn-small" onclick="ccm_setFilePermissionsToOverride()"><?=t('Override Permissions')?></a>
 	</div>
 	
 <? } else { 
@@ -22,7 +22,7 @@ if (!$f->overrideFileSetPermissions()) { ?>
 	<div class="block-message alert-message notice">
 	<p><?=t("Permissions for this file currently override its sets and the global file permissions.")?></p>
 	<br/>
-	<a href="javascript:void(0)" class="btn small" onclick="ccm_revertToGlobalFilePermissions()"><?=t('Revert to File Set and Global Permissions')?></a>
+	<a href="javascript:void(0)" class="btn btn-small" onclick="ccm_revertToGlobalFilePermissions()"><?=t('Revert to File Set and Global Permissions')?></a>
 	</div>
 
 <? } ?>
@@ -59,8 +59,8 @@ foreach($permissions as $pk) {
 
 <? if ($enablePermissions) { ?>
 <div id="ccm-file-permissions-advanced-buttons" style="display: none">
-	<a href="javascript:void(0)" onclick="jQuery.fn.dialog.closeTop()" class="btn"><?=t('Cancel')?></a>
-	<button onclick="$('#ccm-permission-list-form').submit()" class="btn primary ccm-button-right"><?=t('Save')?> <i class="icon-ok-sign icon-white"></i></button>
+	<a href="javascript:void(0)" onclick="jQuery.fn.dialog.closeTop()" class="btn pull-left"><?=t('Cancel')?></a>
+	<button onclick="$('#ccm-permission-list-form').submit()" class="btn btn-primary pull-right"><?=t('Save')?> <i class="icon-ok-sign icon-white"></i></button>
 </div>
 <? } ?>
 

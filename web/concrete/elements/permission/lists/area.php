@@ -9,7 +9,7 @@ if ($a instanceof SubArea && (!$a->overrideCollectionPermissions())) { ?>
 	<?=t("The following area permissions are inherited from a parent area. ")?>
 	</p>
 	<br/>
-	<a href="javascript:void(0)" class="btn small" onclick="ccm_setAreaPermissionsToOverride()"><?=t('Override Permissions')?></a>
+	<a href="javascript:void(0)" class="btn btn-small" onclick="ccm_setAreaPermissionsToOverride()"><?=t('Override Permissions')?></a>
 	</div>
 		
 <? } else if ($a->getAreaCollectionInheritID() != $c->getCollectionID() && $a->getAreaCollectionInheritID() > 0) {
@@ -29,7 +29,7 @@ if ($a instanceof SubArea && (!$a->overrideCollectionPermissions())) { ?>
 		<? } ?>
 		</p>
 		<br/>
-		<a href="javascript:void(0)" class="btn small" onclick="ccm_setAreaPermissionsToOverride()"><?=t('Override Permissions')?></a>
+		<a href="javascript:void(0)" class="btn btn-small" onclick="ccm_setAreaPermissionsToOverride()"><?=t('Override Permissions')?></a>
 		</div>
 		
 <? 	} else if (!$a->overrideCollectionPermissions()) { ?>
@@ -39,7 +39,7 @@ if ($a instanceof SubArea && (!$a->overrideCollectionPermissions())) { ?>
 	<?=t("The following area permissions are inherited from the page's permissions.")?>
 	</p>
 	<br/>
-	<a href="javascript:void(0)" class="btn small" onclick="ccm_setAreaPermissionsToOverride()"><?=t('Override Permissions')?></a>
+	<a href="javascript:void(0)" class="btn btn-small" onclick="ccm_setAreaPermissionsToOverride()"><?=t('Override Permissions')?></a>
 	</div>
 	
 <? } else { 
@@ -49,7 +49,7 @@ if ($a instanceof SubArea && (!$a->overrideCollectionPermissions())) { ?>
 	<div class="block-message alert-message notice">
 	<p><?=t("Permissions for this area currently override those of the page.")?></p>
 	<br/>
-	<a href="javascript:void(0)" class="btn small" onclick="ccm_revertToPagePermissions()"><?=t('Revert to Page Permissions')?></a>
+	<a href="javascript:void(0)" class="btn btn-small" onclick="ccm_revertToPagePermissions()"><?=t('Revert to Page Permissions')?></a>
 	</div>
 
 <? } ?>
@@ -88,8 +88,8 @@ foreach($permissions as $pk) {
 
 <? if ($enablePermissions) { ?>
 <div class="dialog-buttons">
-	<a href="javascript:void(0)" onclick="jQuery.fn.dialog.closeTop()" class="btn"><?=t('Cancel')?></a>
-	<button onclick="$('#ccm-permission-list-form').submit()" class="btn primary ccm-button-right"><?=t('Save')?> <i class="icon-ok-sign icon-white"></i></button>
+	<a href="javascript:void(0)" onclick="jQuery.fn.dialog.closeTop()" class="btn pull-left"><?=t('Cancel')?></a>
+	<button onclick="$('#ccm-permission-list-form').submit()" class="btn btn-primary pull-right"><?=t('Save')?> <i class="icon-ok-sign icon-white"></i></button>
 </div>
 <? } ?>
 

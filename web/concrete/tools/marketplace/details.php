@@ -102,7 +102,7 @@ if (!$tp->canInstallPackages()) { ?>
 	?>
 	
 		<div class="dialog-buttons">
-			<input type="button" class="btn primary <? if (!$mri->getMarketplaceItemVersionForThisSite()) { ?> disabled<? } ?> ccm-button-right" value="<?=$buttonText?>" onclick="<?=$buttonAction?>" />
+			<input type="button" class="btn btn-primary pull-right"  <? if (!$mri->getMarketplaceItemVersionForThisSite()) { ?> disabled<? } ?> value="<?=$buttonText?>" onclick="<?=$buttonAction?>" />
 			<input type="button" class="btn" value="<?=t('View in Marketplace')?>" onclick="window.open('<?=$mri->getRemoteURL()?>')" /> 
 			<? if ($mri->getMarketplaceItemType() == 'theme') { ?>
 				<a title="<?php echo t('Preview')?>" onclick="ccm_previewMarketplaceTheme(1, <?php echo intval($mri->getRemoteCollectionID())?>,'<?php echo addslashes($mri->getName()) ?>','<?php echo addslashes($mri->getHandle()) ?>')" 

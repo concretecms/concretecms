@@ -74,7 +74,6 @@
 			$itemElements.draggable({
 				'handle': 'a[data-inline-command=move-tile]', 
 				start: function() {
-					$.fn.ccmmenu.disable();
 					$('.ccm-area-block-dropzone').addClass('ccm-area-block-dropzone-active');
 					$('div[data-gathering-id]').each(function() {
 						var $tagg = $(this);
@@ -116,7 +115,6 @@
 					});
 				},
 				stop: function() {
-					$.fn.ccmmenu.enable();
 					//$('div.ccm-gathering-item-droppable').droppable('destroy');
 					$('.ccm-area-block-dropzone').removeClass('ccm-area-block-dropzone-active');
 					$gathering.packery('layout');
