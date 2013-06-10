@@ -474,7 +474,7 @@
 					}
 				},
 				onClick: function(node, e) {
-					if (node.getEventTargetType(event) == "title" && node.data.cID) {
+					if (node.getEventTargetType(e) == "title" && node.data.cID) {
 						$.fn.ccmsitemap('triggerEvent', 'startSelectNode', [e, node, settings.requestID]);
 					} else if (node.data.href) {
 						window.location.href = node.data.href;
