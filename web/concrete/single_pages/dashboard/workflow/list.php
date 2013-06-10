@@ -13,8 +13,8 @@
 	<? Loader::element("workflow/edit_type_form_required", array('workflow' => $wf)); ?>
 </div>
 <div class="ccm-pane-footer">
-	<a href="<?=$this->url('/dashboard/workflow/list/view_detail', $wf->getWorkflowID())?>" class="btn"><?=t("Cancel")?></a>
-	<input type="submit" name="submit" value="<?=t('Save')?>" class="ccm-button-right primary btn" />
+	<a href="<?=$this->url('/dashboard/workflow/list/view_detail', $wf->getWorkflowID())?>" class="btn pull-left"><?=t("Cancel")?></a>
+	<input type="submit" name="submit" value="<?=t('Save')?>" class="btn btn-primary pull-right" />
 </div>
 </form>
 
@@ -72,8 +72,8 @@
 
 	</div>
 	<div class="ccm-pane-footer">
-	<a href="<?=$this->url('/dashboard/workflow/list')?>" class="btn"><?=t("Cancel")?></a>
-	<input type="submit" name="submit" value="<?=t('Add')?>" class="ccm-button-right primary btn" />
+	<a href="<?=$this->url('/dashboard/workflow/list')?>" class="btn pull-left"><?=t("Cancel")?></a>
+	<input type="submit" name="submit" value="<?=t('Add')?>" class="btn btn-primary pull-right" />
 	</div>	
 	</form>
 	
@@ -93,7 +93,7 @@
 
 	<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Workflows'), false, 'span10 offset1')?>
 
-	<a href="<?=View::url('/dashboard/workflow/list', 'add')?>" style="float: right" class="btn primary"><?=t("Add Workflow")?></a>
+	<a href="<?=View::url('/dashboard/workflow/list', 'add')?>" style="float: right" class="btn btn-primary"><?=t("Add Workflow")?></a>
 	
 	<h4><?=count($workflows)?> <?
 		if (count($workflows) == 1) {

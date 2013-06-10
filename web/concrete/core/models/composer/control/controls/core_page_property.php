@@ -11,6 +11,14 @@ abstract class Concrete5_Model_CorePagePropertyComposerControl extends ComposerC
 
 	}
 
+	public function removeComposerControlFromDraft() {
+		return false;
+	}
+
+	public function isComposerControlDraftValueEmpty() {
+		return $this->getComposerControlDraftValue() != '';
+	}
+
 	public function export($node) {
 		$node->addAttribute('handle', $this->getCorePagePropertyHandle());
 	}
@@ -20,6 +28,10 @@ abstract class Concrete5_Model_CorePagePropertyComposerControl extends ComposerC
 			self::$cmpSaveRequest = array();
 		}
 		return self::$cmpSaveRequest;
+	}
+
+	public function shouldComposerControlStripEmptyValuesFromDraft() {
+		return false;
 	}
 
 	public function composerFormControlSupportsValidation() {

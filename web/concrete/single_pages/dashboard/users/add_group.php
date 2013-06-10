@@ -177,7 +177,7 @@ $form = Loader::helper('form');
 </div>
 
 <div class="ccm-pane-footer">
-<input type="hidden" name="add" value="1" /><input type="submit" name="submit" value="<?=t('Add')?>" class="btn ccm-button-right primary" />
+<input type="hidden" name="add" value="1" /><input type="submit" name="submit" value="<?=t('Add')?>" class="btn btn-primary pull-right" />
 </div>
 
 </form>	

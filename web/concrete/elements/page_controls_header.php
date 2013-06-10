@@ -23,15 +23,17 @@ print "var CCM_SECURITY_TOKEN = '" . $valt->generate() . "';";
 $dh = Loader::helper('concrete/dashboard');
 if (!$dh->inDashboard()) {
 	$this->addHeaderItem($html->css('ccm.app.css'));
-	if (MOBILE_THEME_IS_ACTIVE == true) {
-		$this->addHeaderItem($html->css('ccm.app.mobile.css'));
-	}
 	$this->addHeaderItem($html->css('jquery.ui.css'));
 	$this->addHeaderItem($html->css('redactor.css'));
 	
 	$this->addFooterItem('<script type="text/javascript" src="' . REL_DIR_FILES_TOOLS_REQUIRED . '/i18n_js"></script>'); 
 	$this->addHeaderItem($html->javascript('jquery.js'));
 	$this->addFooterItem($html->javascript('jquery.ui.js'));
+	$md = new Mobile_Detect();
+	if ($md->isMobile()) {
+		$this->addHeaderItem($html->css('ccm.app.mobile.css'));
+		$this->addFooterItem($html->javascript('jquery.ui.touch-punch.js'));
+	}
 	$this->addFooterItem($html->javascript('jquery.form.js'));
 	$this->addFooterItem($html->javascript('jquery.rating.js'));
 	$this->addFooterItem($html->javascript('bootstrap.js'));

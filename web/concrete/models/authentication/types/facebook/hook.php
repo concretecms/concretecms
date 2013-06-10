@@ -11,7 +11,7 @@
 		<div class='facebookProfileDiv'>
 			<div style='background:#3B5998'>
 				<h3 style='color:white;padding:0 10px 0'>facebook</h3>
-				<button class='btn detachFacebook ccm-button-right'>Detach</button>
+				<button class='btn detachFacebook pull-right'>Detach</button>
 			</div>
 			<div class='facebookUserInfo'>
 				<a href='<?=$uinf['link']?>'><img style='float:left;margin-right:10px' src='<?=$controller->getUserImagePath($u)?>'></a>
@@ -55,7 +55,7 @@
 			</div>
 			<div class='facebookUserInfo'>
 				<center>
-					<button class='btn primary authFacebookLogin'>
+					<button class='btn btn-primary authFacebookLogin'>
 						<?=$loggedin?t('Attach your facebook account to this concrete5 account'):t('Login with Facebook')?>
 					</button>
 				</center>

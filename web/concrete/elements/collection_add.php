@@ -106,8 +106,8 @@ $dh = Loader::helper('date');
 	
 
 	<div class="dialog-buttons">
-		<a href="javascript:void(0)" onclick="jQuery.fn.dialog.closeTop();" class="ccm-button-left btn"><?=t('Cancel')?></a>
-		<input type="submit" onclick="$('#ccmAddPage').submit()" class="btn primary ccm-button-right" value="<?=t('Add Page')?>" />
+		<a href="javascript:void(0)" onclick="jQuery.fn.dialog.closeTop();" class="pull-left btn"><?=t('Cancel')?></a>
+		<input type="submit" onclick="$('#ccmAddPage').submit()" class="btn btn-primary pull-right" value="<?=t('Add Page')?>" />
 	</div>	
 	
 	<input type="hidden" name="add" value="1" />

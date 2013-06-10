@@ -122,40 +122,8 @@ jQuery.fn.dialog.open = function(options) {
 				}
 			});
 
-			// handle buttons
-			if ($dialog.find('.dialog-buttons').length > 0) {
-				$dialog.jqdialog('option', 'buttons', [{}]);
-				$dialog.parent().find(".ui-dialog-buttonset").remove();
-				$dialog.parent().find(".ui-dialog-buttonpane").html('');
-				$dialog.find('.dialog-buttons').appendTo($dialog.parent().find('.ui-dialog-buttonpane').addClass("ccm-ui"));
-			}
-
-			// make dialogs
-			$dialog.find('.dialog-launch').dialog();
-
-			// automated close handling
-			$dialog.find('.ccm-dialog-close').on('click', function() {
-				$dialog.dialog('close');
-			});
-
-			// help handling
-			if ($("#tooltip-holder").length == 0) {
-				$('<div />').attr('id','tooltip-holder').attr('class', 'ccm-ui').prependTo(document.body);
-			}
-			if ($dialog.find('.dialog-help').length > 0) {
-				$dialog.find('.dialog-help').hide();
-				var helpContent = $dialog.find('.dialog-help').html();
-				if (ccmi18n.helpPopup) {
-					var helpText = ccmi18n.helpPopup;
-				} else {
-					var helpText = 'Help';
-				}
-				$dialog.parent().find('.ui-dialog-titlebar').addClass('ccm-ui').append('<button class="ui-dialog-titlebar-help ccm-menu-help-trigger"><i class="icon-info-sign"></i></button>');
-				$dialog.parent().find('.ui-dialog-titlebar .ccm-menu-help-trigger').popover({content: function() {
-					return helpContent;			
-				}, placement: 'bottom', html: true, container: '#tooltip-holder', trigger: 'click'});
-			}
-
+			jQuery.fn.dialog.activateDialogContents($dialog);
+			
 			if (typeof options.onOpen != "undefined") {
 				if ((typeof options.onOpen) == 'function') {
 					options.onOpen($dialog);
@@ -227,6 +195,53 @@ jQuery.fn.dialog.open = function(options) {
 		
 }
 
+jQuery.fn.dialog.activateDialogContents = function($dialog) {
+	// handle buttons
+	if ($dialog.find('.dialog-buttons').length > 0) {
+		$dialog.jqdialog('option', 'buttons', [{}]);
+		$dialog.parent().find(".ui-dialog-buttonset").remove();
+		$dialog.parent().find(".ui-dialog-buttonpane").html('');
+		$dialog.find('.dialog-buttons').appendTo($dialog.parent().find('.ui-dialog-buttonpane').addClass("ccm-ui"));
+	}
+
+	// make dialogs
+	$dialog.find('.dialog-launch').dialog();
+
+	// automated close handling
+	$dialog.find('.ccm-dialog-close').on('click', function() {
+		$dialog.dialog('close');
+	});
+
+	// help handling
+	if ($("#tooltip-holder").length == 0) {
+		$('<div />').attr('id','tooltip-holder').attr('class', 'ccm-ui').prependTo(document.body);
+	}
+	if ($dialog.find('.dialog-help').length > 0) {
+		$dialog.find('.dialog-help').hide();
+		var helpContent = $dialog.find('.dialog-help').html();
+		if (ccmi18n.helpPopup) {
+			var helpText = ccmi18n.helpPopup;
+		} else {
+			var helpText = 'Help';
+		}
+		$dialog.parent().find('.ui-dialog-titlebar').addClass('ccm-ui').append('<button class="ui-dialog-titlebar-help ccm-menu-help-trigger"><i class="icon-info-sign"></i></button>');
+		$dialog.parent().find('.ui-dialog-titlebar .ccm-menu-help-trigger').popover({content: function() {
+			return helpContent;			
+		}, placement: 'bottom', html: true, container: '#tooltip-holder', trigger: 'click'});
+	}
+}
+
+jQuery.fn.dialog.getTop = function() {
+	var nd = $(".ui-dialog").length;
+	return $($('.ui-dialog-content')[nd-1]);
+}
+
+jQuery.fn.dialog.replaceTop = function(html) {
+	$dialog = jQuery.fn.dialog.getTop();
+	$dialog.html(html);
+	jQuery.fn.dialog.activateDialogContents($dialog);
+}
+
 jQuery.fn.dialog.showLoader = function(text) {
 	if ($('#ccm-dialog-loader').length < 1) {
 		$("body").append("<div id='ccm-dialog-loader-wrapper' class='ccm-ui'><div class='progress progress-striped active' style='width: 300px'><div class='bar' style='width: 100%;'></div></div></div>");//add loader to the page
@@ -252,9 +267,10 @@ jQuery.fn.dialog.hideLoader = function() {
 	$("#ccm-dialog-loader-text").remove();
 }
 
+
 jQuery.fn.dialog.closeTop = function() {
-	var nd = $(".ui-dialog").length;
-	$($('.ui-dialog-content')[nd-1]).jqdialog('close');
+	$dialog = jQuery.fn.dialog.getTop();
+	$dialog.jqdialog('close');
 }
 
 jQuery.fn.dialog.closeAll = function() {

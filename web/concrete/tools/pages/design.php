@@ -174,7 +174,7 @@ $searchInstance = Loader::helper('text')->entities($_REQUEST['searchInstance']);
 	
 	
 	<? if(ENABLE_MARKETPLACE_SUPPORT){ ?>
-		<a href="javascript:void(0)" class="btn ccm-button-right"><?=t("Get more themes.")?></a>
+		<a href="javascript:void(0)" class="btn pull-right"><?=t("Get more themes.")?></a>
 	<? } ?>
 
 	<h3 ><?=t('Themes')?></h3>
@@ -205,8 +205,8 @@ $searchInstance = Loader::helper('text')->entities($_REQUEST['searchInstance']);
 	</form>
 	<div class="dialog-buttons">
 	<? $ih = Loader::helper('concrete/interface')?>
-	<?=$ih->button_js(t('Cancel'), 'jQuery.fn.dialog.closeTop()', 'left', 'btn')?>	
-	<?=$ih->button_js(t('Update'), 'ccm_sitemapUpdateDesign(\'' . $searchInstance . '\')', 'right', 'btn primary')?>
+	<?=$ih->button_js(t('Cancel'), 'jQuery.fn.dialog.closeTop()', 'left', 'btn pull-left')?>	
+	<?=$ih->button_js(t('Update'), 'ccm_sitemapUpdateDesign(\'' . $searchInstance . '\')', 'right', 'btn btn-primary')?>
 	</div>		
 		
 	<?

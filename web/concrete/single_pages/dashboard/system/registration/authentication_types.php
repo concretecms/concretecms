@@ -95,11 +95,11 @@ if ($editmode) {
 if ($editmode) {
 	?>
 	<div class='ccm-pane-footer'>
-		<a href='<?=$this->action('')?>' class='btn'><?=t('Cancel')?></a>
-		<span class='ccm-button-right'>
-			<a href='<?=$this->action($at->isEnabled()?'disable':'enable',$at->getAuthenticationTypeID())?>' class='btn <?=$at->isEnabled()?'error':'success'?>'>
+		<a href='<?=$this->action('')?>' class='btn pull-left'><?=t('Cancel')?></a>
+		<span class='pull-right'>
+			<a href='<?=$this->action($at->isEnabled()?'disable':'enable',$at->getAuthenticationTypeID())?>' class='btn btn-<?=$at->isEnabled()?'danger':'success'?>'>
 				<?=$at->isEnabled()?t('Disable'):t('Enable')?></a>
-			<button class='btn primary'><?=t('Save')?></button>
+			<button class='btn btn-primary'><?=t('Save')?></button>
 		</span>
 	</div>
 	<?php

@@ -3,7 +3,7 @@
 <div style='margin-left:20px;background:#3B5998'>
 	<h3 style='color:white;padding:0 10px 0'>
 		facebook
-		<button style='margin-top:5px' class='btn ccm-button-right authFacebookLogin'>
+		<button style='margin-top:5px' class='btn btn-primary pull-right authFacebookLogin'>
 			<?=t('Login with Facebook')?>
 		</button>
 	</h3>

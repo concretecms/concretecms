@@ -40,6 +40,10 @@ $logouttoken = Loader::helper('validation/token')->generate('logout');
 
 $v->addFooterItem($html->javascript('jquery.backstretch.js'));
 $v->addFooterItem($html->javascript('jquery.ui.js'));
+$md = new Mobile_Detect();
+if ($md->isMobile()) {
+	$this->addFooterItem($html->javascript('jquery.ui.touch-punch.js'));
+}
 $v->addFooterItem($html->javascript('jquery.form.js'));
 $v->addFooterItem($html->javascript('jquery.rating.js'));
 $v->addFooterItem('<script type="text/javascript" src="' . REL_DIR_FILES_TOOLS_REQUIRED . '/i18n_js"></script>'); 

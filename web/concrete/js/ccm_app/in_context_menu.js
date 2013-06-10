@@ -20,7 +20,7 @@ $.fn.ccmmenu = function() {
 			if (!$this.attr('data-menu-handle')) {
 				$menulauncher = $this;
 			} else {
-				$menulauncher = $('#' + $this.attr('data-menu-handle'));
+				$menulauncher = $($this.attr('data-menu-handle'));
 			}
 
 			var $menu = $('#' + $this.attr('data-menu'));
@@ -30,8 +30,9 @@ $.fn.ccmmenu = function() {
 			if ($this.attr('data-menu-highlight-offset')) {
 				$this.highlightOffset = $this.attr('data-menu-highlight-offset');
 			}
-			$menulauncher.mousemove(function(e) {
-				$.fn.ccmmenu.over(e, $this, $menulauncher);
+			$menulauncher.on('mousemove.ccmmenu', function(e) {
+				e.stopPropagation();
+				$.fn.ccmmenu.over(e, $this, $(this));
 			});
 		}
 	});
