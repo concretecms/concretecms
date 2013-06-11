@@ -1,7 +1,5 @@
 <?
 
-Loader::model('file_version');
-
 class Concrete5_Model_File extends Object { 
 
 	const CREATE_NEW_VERSION_THRESHOLD = 300; // in seconds (5 minutes)
