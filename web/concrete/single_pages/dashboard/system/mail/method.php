@@ -8,6 +8,7 @@ $form = Loader::helper('form');
 
 	<?php echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('SMTP Method'), false, 'span8 offset2', false)?>
 	<form method="post" action="<?=$this->url('/dashboard/system/mail/method', 'save_settings')?>" class="form-horizontal" id="mail-settings-form">
+	<?php Loader::helper('validation/token')->output('save_settings') ?>
 	<div class="ccm-pane-body">
 	<fieldset>
 	<legend><?=t('Send Mail Method')?></legend>

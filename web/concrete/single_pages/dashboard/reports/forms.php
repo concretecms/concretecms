@@ -13,6 +13,8 @@ $dh = Loader::helper('date');
 $urlhelper = Loader::helper('url');
 /* @var $json JsonHelper */
 $json = Loader::helper('json');
+/* @var $valt ValidationTokenHelper */
+$valt = Loader::helper('validation/token');
 /* @var $db DataBase */
 $db = Loader::db();
 ?>
@@ -110,9 +112,20 @@ if ($showTable) { ?>
 			<td>
 				<?=$ih->button(t('View Responses'), DIR_REL . '/index.php?cID=' . $c->getCollectionID().'&qsid='.$qsid, 'left', 'small')?>
 				<?=$ih->button(t('Open Page'), $url, 'left', 'small')?>
-				<?=$ih->button(t('Delete Submissions'), $this->action('').'?qsID='.$qsid.'&action=deleteFormAnswers', 'left', 'small error delete-form-answers')?>
+				<form method="post" action="" style="display: inline">
+					<input type="hidden" name="qsID" value="<?= intval($qsid) ?>" />
+					<input type="hidden" name="action" value="deleteFormAnswers" />
+					<?php $valt->output('deleteFormAnswers') ?>
+					<?= $ih->submit(t('Delete Submissions'), false, 'left', 'small error delete-form-answers') ?>
+				</form>
 				<?if(!$in_use):?>
-				<?=$ih->button(t('Delete'), $this->action('').'?bID='.$survey['bID'].'&qsID='.$qsid.'&action=deleteForm', 'left', 'small error delete-form')?>
+					<form method="post" action="" style="display: inline">
+						<input type="hidden" name="bID" value="<?= intval($survey['bID']) ?>" />
+						<input type="hidden" name="qsID" value="<?= intval($qsid) ?>" />
+						<input type="hidden" name="action" value="deleteForm" />
+						<?php $valt->output('deleteForm') ?>
+						<?= $ih->submit(t('Delete'), false, 'left', 'small error delete-form') ?>
+					</form>
 				<?endif?>
 			</td>
 		</tr>
@@ -196,12 +209,13 @@ if ($showTable) { ?>
 
 		endforeach?>
 					<td>
-						<?=$ih->button(
-							t("Delete"),
-							$this->action('').'?qsid='.$answerSet['questionSetId'].'&asid='.$answerSet['asID'].'&action=deleteResponse',
-							'left',
-							'danger delete-response small'
-						)?>
+						<form method="post" action="" style="display: inline">
+							<input type="hidden" name="qsid" value="<?= intval($answerSet['questionSetId']) ?>" />
+							<input type="hidden" name="asid" value="<?= intval($answerSet['asID']) ?>" />
+							<input type="hidden" name="action" value="deleteResponse" />
+							<?php $valt->output('deleteResponse') ?>
+							<?= $ih->submit(t('Delete'), false, 'left', 'danger delete-response small') ?>
+						</form>
 					</td>
 				</tr>
 		<?endforeach?>
