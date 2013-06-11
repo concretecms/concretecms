@@ -65,7 +65,9 @@ if ((!$message->isConversationMessageDeleted() && $message->isConversationMessag
 						  		<i class="icon-search icon-white"></i>
 						  	</div>
 						  </div>
-						  <img class="posted-attachment-image" src="<?php  echo $thumb->src; ?>" width="<?php  echo $thumb->width; ?>" height="<?php  echo $thumb->height; ?>" alt="attachment image" />
+						  <div class="attachment-preview-container">
+						 	 <img class="posted-attachment-image" src="<?php  echo $thumb->src; ?>" width="<?php  echo $thumb->width; ?>" height="<?php  echo $thumb->height; ?>" alt="attachment image" />
+						  </div>
 						 <?php } ?>
 							<p class="<?php echo $paragraphPadding ?> filename" rel="<?php echo $attachment['cnvMessageAttachmentID'];?>"><a href="<?php echo $file->getDownloadURL() ?>"><?php echo $file->getFileName() ?></a>
 							<? 

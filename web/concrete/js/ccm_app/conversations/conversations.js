@@ -68,6 +68,9 @@
 			var dateFormat = (obj.options.dateFormat);
 			var customDateFormat = (obj.options.customDateFormat);
 			var blockAreaHandle = (obj.options.blockAreaHandle);
+			var maxFiles = (obj.options.maxFiles);
+			var maxFileSize = (obj.options.MaxFileSize);
+			var fileExtensions = (obj.options.fileExtensions);
 
 			if (obj.options.method == 'ajax') {
 				$.post(CCM_TOOLS_PATH + '/conversations/view_ajax', {
@@ -486,7 +489,6 @@
 				data: formArray,
 				url: CCM_TOOLS_PATH + '/conversations/message_detail',
 				success: function(html) {
-
 					var $parent = $('div[data-conversation-message-id=' + json.cnvMessageParentID + ']');
 
 					if ($parent.length) {
@@ -501,7 +503,6 @@
 						}
 						obj.$element.find('.ccm-conversation-no-messages').hide();
 					}
-
 					obj.publish('conversationAddMessageFromJSON',{json:json,form:$form});
 					obj.updateCount();
      				var target = $('a#cnvMessage' + json.cnvMessageID).offset();
@@ -556,6 +557,15 @@
 						obj.handlePostError($form, r.messages);
 						return false;
 					}
+					$('.preview.processing').each(function(){    
+						$('input[rel="'+ $(this).attr('rel') +'"]').remove();
+					});
+					$('form.dropzone').each(function(){
+						var d = $(this).data('dropzone');
+						$.each(d.files,function(k,v){
+							d.removeFile(v);
+						});
+					});
 					obj.addMessageFromJSON($form, r);
 					obj.publish('conversationSubmitForm',{form:$form,response:r});
 				},

@@ -80,7 +80,7 @@ if ($maxFileSize > 0 && filesize($_FILES["file"]["tmp_name"]) > $maxFileSize * 1
 }
 
 // check file count (this is just for presentation, final count check is done on message submit).
-if($maxQuantity > 0 && ($_POST['fileCount'] +1) > $maxQuantity) {
+if($maxQuantity > 0 && ($_POST['fileCount']) > $maxQuantity) {
 	$error[] = t('Attachment limit reached');
 }
 
