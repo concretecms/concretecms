@@ -31,7 +31,8 @@ $.fn.ccmmenu = function() {
 				$this.highlightOffset = $this.attr('data-menu-highlight-offset');
 			}
 			$menulauncher.on('mousemove.ccmmenu', function(e) {
-				e.stopPropagation();
+				//e.stopPropagation(); 
+				// we had the above line in here so we could do some area menu niceties but it was playing hell with the gathering block.
 				$.fn.ccmmenu.over(e, $this, $(this));
 			});
 		}
