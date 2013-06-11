@@ -1,6 +1,6 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Controller_Dashboard_System_Mail_Method extends Controller {
+class Concrete5_Controller_Dashboard_System_Mail_Method extends DashboardBaseController {
 	protected $sendUndefinedTasksToView = false;
 	
 	public function settings_updated() {
@@ -8,6 +8,11 @@ class Concrete5_Controller_Dashboard_System_Mail_Method extends Controller {
 	}
 	
 	public function save_settings() {
+		if (!Loader::helper('validation/token')->validate('save_settings')) {
+			$this->error->add(t('Invalid Token.'));
+			return;
+		}
+
 		Config::save('MAIL_SEND_METHOD', $this->post('MAIL_SEND_METHOD'));
 		if ($this->post('MAIL_SEND_METHOD')== 'SMTP') {
 			Config::save('MAIL_SEND_METHOD_SMTP_SERVER', $this->post('MAIL_SEND_METHOD_SMTP_SERVER'));
