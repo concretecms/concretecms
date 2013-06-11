@@ -12,6 +12,7 @@ $form = Loader::helper('form');
 <form method="post" id="mail-importer-form" class="form-horizontal" action="<?=$this->url('/dashboard/system/mail/importers', 'save_importer')?>">
 <div class="ccm-pane-body">
 
+		<?php Loader::helper('validation/token')->output('save_importer') ?>
 		<?=$form->hidden('miID', $mi->getMailImporterID())?>
 		<fieldset>
 			<legend><?=t($mi->getMailImporterName())?> <?=t('Settings');?></legend>
