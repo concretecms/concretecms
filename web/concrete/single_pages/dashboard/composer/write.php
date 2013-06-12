@@ -182,7 +182,8 @@ if (isset($entry)) {
 			$('#ccm-url-slug-loader').show();
 			$.post('<?=REL_DIR_FILES_TOOLS_REQUIRED?>/pages/url_slug', {
 				'token': '<?=Loader::helper('validation/token')->generate('get_url_slug')?>',
-				'name': val
+				'name': val,
+				'parentID' : $("input[name=cPublishParentID]").val()
 			}, function(r) {
 				$('#ccm-url-slug-loader').hide();
 				$('#ccm-dashboard-composer-form input[name=cHandle]').val(r);
