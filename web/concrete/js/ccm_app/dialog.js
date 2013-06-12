@@ -128,7 +128,7 @@ jQuery.fn.dialog.open = function(options) {
 				if ((typeof options.onOpen) == 'function') {
 					options.onOpen($dialog);
 				} else {
-					$.proxy(options.onOpen, $dialog);
+					eval(options.onOpen);
 				}
 			}
 
