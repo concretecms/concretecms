@@ -86,7 +86,7 @@ abstract class Concrete5_Model_SystemContentEditorSnippet extends Object {
 
 	public static function getListByPackage($pkg) {
 		$db = Loader::db();
-		$saslHandles = $db->GetCol('select scsHandle from SystemContentEditorSnippets where pkgID = ? order by scsHandle asc', array($pkg->getPackageID()));
+		$scsHandles = $db->GetCol('select scsHandle from SystemContentEditorSnippets where pkgID = ? order by scsHandle asc', array($pkg->getPackageID()));
 		$libraries = array();
 		foreach($scsHandles as $scsHandle) {
 			$scs = SystemContentEditorSnippet::getByHandle($scsHandle);
