@@ -178,7 +178,7 @@ jQuery.fn.dialog.open = function(options) {
 	$.extend(finalSettings, defaults, options);
 
 	if (finalSettings.element) {
-		finalSettings.element.jqdialog(finalSettings).jqdialog('open');
+		$(finalSettings.element).jqdialog(finalSettings).jqdialog('open');
 	} else {
 		jQuery.fn.dialog.showLoader();
 		$.ajax({
