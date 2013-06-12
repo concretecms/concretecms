@@ -29,6 +29,7 @@ if (!$dh->inDashboard()) {
 	$this->addFooterItem('<script type="text/javascript" src="' . REL_DIR_FILES_TOOLS_REQUIRED . '/i18n_js"></script>'); 
 	$this->addHeaderItem($html->javascript('jquery.js'));
 	$this->addFooterItem($html->javascript('jquery.ui.js'));
+	Loader::library("3rdparty/mobile_detect");
 	$md = new Mobile_Detect();
 	if ($md->isMobile()) {
 		$this->addHeaderItem($html->css('ccm.app.mobile.css'));
