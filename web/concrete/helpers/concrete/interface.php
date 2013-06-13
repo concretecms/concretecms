@@ -183,7 +183,7 @@ class ConcreteInterfaceHelper {
 		$u = new User();
 		if ($u->isRegistered()) {
 			$ch = Loader::helper('concrete/dashboard');
-			$_SESSION['dashboardMenus'] = $ch->getDashboardAndSearchMenus();
+			$_SESSION['dashboardMenus'][Localization::activeLocale()] = $ch->getDashboardAndSearchMenus();
 		}
 	}
 	
