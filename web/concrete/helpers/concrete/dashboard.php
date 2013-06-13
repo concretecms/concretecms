@@ -273,8 +273,8 @@ class ConcreteDashboardHelper {
 
 	public function getDashboardAndSearchMenus() {
 
-		if (isset($_SESSION['dashboardMenus'.Localization::activeLocale()])) {
-			return $_SESSION['dashboardMenus'.Localization::activeLocale()];
+		if (isset($_SESSION['dashboardMenus'][Localization::activeLocale()])) {
+			return $_SESSION['dashboardMenus'][Localization::activeLocale()];
 		}
 				
 		$d = ConcreteDashboardMenu::getMine();
