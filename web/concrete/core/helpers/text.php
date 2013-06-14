@@ -131,25 +131,28 @@ class Concrete5_Helper_Text {
 		return $textStr;			
 	}
         
-        /**
-        * Shortens and sanitizes a string but only cuts at word boundaries
+	/**
+	* Shortens and sanitizes a string but only cuts at word boundaries
 	* @param string $textStr
 	* @param int $numChars
 	* @param string $tail
-        */
-        function shortenTextWord($textStr, $numChars=255, $tail='…') {
+	*/
+	function shortenTextWord($textStr, $numChars=255, $tail='…') {
 		if (intval($numChars)==0) $numChars=255;
 		$textStr=strip_tags($textStr);
 		if (function_exists('mb_substr')) {
 			if (mb_strlen($textStr, APP_CHARSET) > $numChars) { 
-				$textStr=preg_replace('/\s+?(\S+)?$/', '', mb_substr($textStr, 0, $numChars + 1, APP_CHARSET)) . $tail;
+				$textStr=preg_replace('/\s+?(\S+)?$/', '', mb_substr($textStr, 0, $numChars + 1, APP_CHARSET));
+				// this is needed if the shortened string consists of one single word
+				$textStr = mb_substr($textStr, 0, $numChars, APP_CHARSET). $tail;
 			}
 		} else {
 			if (strlen($textStr) > $numChars) { 
-				$textStr = preg_replace('/\s+?(\S+)?$/', '', substr($textStr, 0, $numChars + 1)) . $tail;
+				$textStr = preg_replace('/\s+?(\S+)?$/', '', substr($textStr, 0, $numChars + 1));
+				$textStr = substr($textStr, 0, $numChars). $tail;
 			}
 		}
-		return $textStr;		
+		return $textStr;
 	}
 
 	
