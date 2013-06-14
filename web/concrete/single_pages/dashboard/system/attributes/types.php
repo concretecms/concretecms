@@ -42,14 +42,14 @@ $types = PendingAttributeType::getList(); ?>
 <? if (count($types) == 0) { ?>
 	<?=t('There are no available attribute types awaiting installation.')?>
 <? } else { ?>
-	<ul id="ccm-block-type-list">
+	<ul class="item-select-list">
 		<? foreach($types as $at) { ?>
-			<li class="ccm-block-type ccm-block-type-available">
+			<li>
 				<form id="attribute_type_install_form_<?=$at->getAttributeTypeHandle()?>" style="margin: 0px" method="post" action="<?=$this->action('add_attribute_type')?>">
 					<?
 					print $form->hidden("atHandle", $at->getAttributeTypeHandle());
 					?>
-					<p style="background-image: url(<?=$at->getAttributeTypeIconSRC()?>)" class="ccm-block-type-inner"><?=$ch->submit(t("Install"), 'submit', 'right', 'btn-small')?><?=$at->getAttributeTypeName()?></p>
+					<span style="background-image: url(<?=$at->getAttributeTypeIconSRC()?>)"><?=$ch->submit(t("Install"), 'submit', 'right', 'btn-small')?><?=$at->getAttributeTypeName()?></span>
 				</form>
 			</li>
 		<? } ?>
