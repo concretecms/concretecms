@@ -8,9 +8,7 @@ if (!$sh->canRead()) {
 }
 
 $args = $_REQUEST;
-foreach($args as $key => $value) {
-	$args[$key] = @$th->entities($value);
-}
+array_walk_recursive($args, create_function('&$a', '$a = $th->entities($a);'));
 
 if (isset($select_mode)) {
 	$args['select_mode'] = $select_mode;
