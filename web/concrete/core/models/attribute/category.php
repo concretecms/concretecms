@@ -118,8 +118,16 @@ class Concrete5_Model_AttributeKeyCategory extends Object {
 	}
 	
 	public function associateAttributeKeyType($at) {
+		if (!$this->hasAttributeKeyTypeAssociated($at)) {
+			$db = Loader::db();
+			$db->Execute('insert into AttributeTypeCategories (atID, akCategoryID) values (?, ?)', array($at->getAttributeTypeID(), $this->akCategoryID));
+		}
+	}
+
+	public function hasAttributeKeyTypeAssociated($at) {
 		$db = Loader::db();
-		$db->Execute('insert into AttributeTypeCategories (atID, akCategoryID) values (?, ?)', array($at->getAttributeTypeID(), $this->akCategoryID));
+		$r = $db->getOne('select atID from AttributeTypeCategories where atID = ? and akCategoryID = ?', array($at->getAttributeTypeID(), $this->akCategoryID));
+		return (boolean) $r;
 	}
 	
 	public function clearAttributeKeyCategoryTypes() {
