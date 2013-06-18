@@ -97,7 +97,7 @@ if($blockExtensionsOverride) {
 $incomingExtension = end(explode('.', $_FILES["file"]["name"]));
 if($incomingExtension && strlen($blockExtensionsOverride)) {  // check against block file extensions override
 	foreach(explode(',', $blockExtensionsOverride) as $overrideExtension) {
-		if($overrideExtension == $incomingExtension) {
+		if(strtolower($overrideExtension) == strtolower($incomingExtension)) {
 			$validExtension = true;
 			break;
 		}

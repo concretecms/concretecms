@@ -21,7 +21,7 @@
 						 	var maxFilesExceeded = true;
 						 }
 						 var requiredExtensions = obj.options.fileExtensions.split(',');
-						 if(file.name.split('.').pop() && requiredExtensions.indexOf(file.name.split('.').pop()) == -1 && requiredExtensions!='') {
+						 if(file.name.split('.').pop().toLowerCase() && requiredExtensions.indexOf(file.name.split('.').pop().toLowerCase()) == -1 && requiredExtensions!='') {
 						 	errors.push('Invalid file extension');
 						 	var invalidFileExtension = true;
 						 }
@@ -107,7 +107,7 @@
 						 	var maxFilesExceeded = true;
 						 }
 						 var requiredExtensions = obj.options.fileExtensions.split(',');
-						 if(file.name.split('.').pop() && requiredExtensions.indexOf(file.name.split('.').pop()) == -1 && requiredExtensions!='') {
+						 if(file.name.split('.').pop().toLowerCase() && requiredExtensions.indexOf(file.name.split('.').pop().toLowerCase()) == -1 && requiredExtensions!='') {
 						 	errors.push('Invalid file extension');
 						 	var invalidFileExtension = true;
 						 }
