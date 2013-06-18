@@ -3,18 +3,13 @@ $ax = Loader::helper('ajax');
 $vs = Loader::helper('validation/strings');
 $ve = Loader::helper('validation/error');
 $u  = new User;
-$blockObj = Block::getByID($_POST['bID'], Page::getByID($_POST['cID']), $_POST['blockAreaHandle']);
+$pageObj = Page::getByID($_POST['cID']);
+$areaObj = Area::get($pageObj, $_POST['blockAreaHandle']);
+$blockObj = Block::getByID($_POST['bID'], $pageObj, $areaObj);
 $cnvMessageSubject = null;
 
 if(!is_object($blockObj)) {
 	$ve->add(t('Invalid Block Object.'));
-}
-
-if($_POST['attachments'] && count($_POST['attachments'])) {
-	$maxFiles = $u->isRegistered() ? $blockObj->getController()->maxFilesRegistered : $blockObj->getController()->maxFilesGuest;
-	if($maxFiles > 0 && count($_POST['attachments']) > $maxFiles) {
-		$ve->add(t('You have too many attachments.'));
-	}
 }
 
 if (Loader::helper('validation/numbers')->integer($_POST['cnvID'])) {
@@ -23,6 +18,25 @@ if (Loader::helper('validation/numbers')->integer($_POST['cnvID'])) {
 if (!is_object($cn)) {
 	$ve->add(t('Invalid conversation.'));
 }
+
+if(!is_object($pageObj)) {
+	$ve->add(t('Invalid Page.'));
+}
+
+if(!is_object($blockObj)) {
+	$ve->add(t('Invalid Page.'));
+}
+
+if(is_object($blockObj)) {
+	if($_POST['attachments'] && count($_POST['attachments'])) {
+		$maxFiles = $u->isRegistered() ? $blockObj->getController()->maxFilesRegistered : $blockObj->getController()->maxFilesGuest;
+		if($maxFiles > 0 && count($_POST['attachments']) > $maxFiles) {
+			$ve->add(t('You have too many attachments.'));
+		}
+	}
+}
+
+
 if (!Loader::helper('validation/token')->validate('add_conversation_message', $_POST['token'])) {
 	$ve->add(t('Invalid conversation post token.'));
 }

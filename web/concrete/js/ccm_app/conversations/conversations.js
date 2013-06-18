@@ -305,6 +305,18 @@
 				});
 			});
 			
+			obj.$element.on('click.cnv', '.image-popover-hover', function() {
+				$.magnificPopup.open({
+				  items: {
+				    src: $(this).attr('data-full-image'), // can be a HTML string, jQuery object, or CSS selector
+				    type: 'image',
+				    verticalFit: true
+				  }
+				});
+			});
+			
+			
+			
 			obj.$element.on('click.cnv', '[data-load-page=conversation-message-list]', function() {
 				var nextPage = parseInt(obj.$loadmore.attr('data-next-page'));
 				var totalPages = parseInt(obj.$loadmore.attr('data-total-pages'));
