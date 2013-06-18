@@ -31,7 +31,6 @@
 						 }
 						 
 						 if(maxFileSizeExceeded || maxFilesExceeded || invalidFileExtension) {
-						 	alert('error handling going');
 							var self = this;
 							$('input[rel="'+ $(file.previewTemplate).attr('rel') +'"]').remove();
 							var $form = $(file.previewTemplate).parent('.dropzone');
@@ -118,7 +117,6 @@
 						 }
 						 
 						 if(maxFileSizeExceeded || maxFilesExceeded || invalidFileExtension) {
-						 	alert('error handling going');
 							var self = this;
 							$('input[rel="'+ $(file.previewTemplate).attr('rel') +'"]').remove();
 							var $form = $(file.previewTemplate).parent('.dropzone');
