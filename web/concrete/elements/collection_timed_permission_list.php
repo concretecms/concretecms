@@ -12,7 +12,7 @@ foreach($assignments as $ppc) {
 	?>
 	<tr>
 	<td>
-	<strong><?=$pk->getPermissionKeyName()?></strong>
+	<strong><?=tc('PermissionKeyName', $pk->getPermissionKeyName())?></strong>
 	<?=t('Permission on ')?><?
 		if ($pk instanceof AreaPermissionKey) {  ?>
 			<strong><?=$pk->getPermissionObject()->getAreaHandle() ?></strong>.
