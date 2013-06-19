@@ -125,7 +125,7 @@ $txt = Loader::helper('text');?>
 			<?php foreach($sets as $asl) { ?>
 				<div class="ccm-group" id="asID_<?php echo $asl->getAttributeSetID()?>">
 					<img class="ccm-group-sort" src="<?php echo ASSETS_URL_IMAGES?>/icons/up_down.png" width="14" height="14" />
-					<a class="ccm-group-inner" href="<?php echo $this->url('/dashboard/system/attributes/sets/', 'edit', $asl->getAttributeSetID())?>" style="background-image: url(<?php echo ASSETS_URL_IMAGES?>/icons/group.png)"><?php echo $asl->getAttributeSetName()?></a>
+					<a class="ccm-group-inner" href="<?php echo $this->url('/dashboard/system/attributes/sets/', 'edit', $asl->getAttributeSetID())?>" style="background-image: url(<?php echo ASSETS_URL_IMAGES?>/icons/group.png)"><?php echo tc('AttributeSetName', $asl->getAttributeSetName())?></a>
 				</div>
 			<?php } ?>
 		</div>
