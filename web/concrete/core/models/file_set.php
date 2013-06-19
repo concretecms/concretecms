@@ -112,7 +112,7 @@
 		 * @param int $fsID
 		 * @return FileSet
 		 */
-		public function getByID($fsID) {
+		public static function getByID($fsID) {
 			$db = Loader::db();
 			$row = $db->GetRow('select * from FileSets where fsID = ?', array($fsID));
 			if (is_array($row)) {
@@ -132,7 +132,7 @@
 		 * @param string $fsName
 		 * @return FileSet
 		 */
-		public function getByName($fsName) {
+		public static function getByName($fsName) {
 			$db = Loader::db();
 			$row = $db->GetRow('select * from FileSets where fsName = ?', array($fsName));
 			if (is_array($row) && count($row)) {
