@@ -166,7 +166,7 @@ if ($cap->canAccessComposer()) { ?>
                                 if ($b->getBlockName()) {
                                     print $b->getBlockName();
                                 } else {
-                                    print $b->getBlockTypeName();
+                                    print t($b->getBlockTypeName());
                                 }
                             ?>
                         </div>

@@ -31,7 +31,7 @@ if (count($blocks) == 0) { ?>
 	<? foreach($blocks as $b) { 
 		$bt = $b->getBlockTypeObject();
 		$btIcon = $ci->getBlockTypeIconURL($bt);
-		$name = $bt->getBlockTypeName();
+		$name = t($bt->getBlockTypeName());
 		if ($b->getBlockName() != '') {
 			$name = $b->getBlockName();
 		}

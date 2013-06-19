@@ -60,7 +60,7 @@
 										$doProcessArrangement = false;
 										$r = new stdClass;
 										$r->error = true;
-										$r->message = t('You may not add %s to area %s.', $bt->getBlockTypeName(), $destAreaHandle);
+										$r->message = t('You may not add %s to area %s.', t($bt->getBlockTypeName()), $destAreaHandle);
 									}
 								}
 							}							
