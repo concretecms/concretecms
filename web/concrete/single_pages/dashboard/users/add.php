@@ -93,7 +93,7 @@ $languages = Localization::getAvailableInterfaceLanguages();
 				?>
                 <tr>
                     <td class="clearfix">
-                    	<label><?=$ak->getAttributeKeyName()?> <? if ($ak->isAttributeKeyRequiredOnRegister()) { ?><span class="required">*</span><? } ?></label>
+                    	<label><?=tc('AttributeKeyName', $ak->getAttributeKeyName())?> <? if ($ak->isAttributeKeyRequiredOnRegister()) { ?><span class="required">*</span><? } ?></label>
                         <? $ak->render('form', $caValue, false)?>
                     </td>
                 </tr>

@@ -78,7 +78,7 @@ class Concrete5_Controller_Dashboard_Users_Add extends Controller {
 					if ($uak->isAttributeKeyRequiredOnRegister()) {
 						$e1 = $uak->validateAttributeForm();
 						if ($e1 == false) {
-							$this->error->add(t('The field "%s" is required', $uak->getAttributeKeyName()));
+							$this->error->add(t('The field "%s" is required', tc('AttributeKeyName', $uak->getAttributeKeyName())));
 						} else if ($e1 instanceof ValidationErrorHelper) {
 							$this->error->add( $e1->getList() );
 						}

@@ -23,7 +23,7 @@ $html = Loader::helper('html');
 Loader::model('file_attributes');
 $searchFieldAttributes = FileAttributeKey::getSearchableList();
 foreach($searchFieldAttributes as $ak) {
-	$searchFields[$ak->getAttributeKeyID()] = $ak->getAttributeKeyName();
+	$searchFields[$ak->getAttributeKeyID()] = tc('AttributeKeyName', $ak->getAttributeKeyName());
 }
 
 $ext1 = FileList::getExtensionList();
