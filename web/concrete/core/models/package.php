@@ -302,7 +302,7 @@ class Concrete5_Model_Package extends Object {
 		} else if ($item instanceof AttributeType) {
 			return tc('AttributeTypeName', $item->getAttributeTypeName());
 		} else if ($item instanceof PermissionAccessEntityType) {
-			return $item->getAccessEntityTypeName();
+			return tc('PermissionAccessEntityTypeName', $item->getAccessEntityTypeName());
 		} else if ($item instanceof PermissionKeyCategory) {
 			return $txt->unhandle($item->getPermissionKeyCategoryHandle());
 		} else if ($item instanceof AttributeKeyCategory) {
