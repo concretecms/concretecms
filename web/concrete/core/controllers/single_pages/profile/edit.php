@@ -77,7 +77,7 @@ class Concrete5_Controller_Profile_Edit extends Controller {
 			if ($uak->isAttributeKeyRequiredOnProfile()) {
 				$e1 = $uak->validateAttributeForm();
 				if ($e1 == false) {
-					$e->add(t('The field "%s" is required', $uak->getAttributeKeyName()));
+					$e->add(t('The field "%s" is required', tc('AttributeKeyName', $uak->getAttributeKeyName())));
 				} else if ($e1 instanceof ValidationErrorHelper) {
 					$e->add($e1);
 				}

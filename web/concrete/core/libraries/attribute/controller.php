@@ -72,7 +72,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 		public function label($customText = false) {
 			if ($customText == false) {
-				$text = t($this->attributeKey->getAttributeKeyName());
+				$text = tc('AttributeKeyName', $this->attributeKey->getAttributeKeyName());
 			} else {
 				$text = $customText;
 			}
