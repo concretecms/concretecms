@@ -51,7 +51,7 @@ if (count($attribs) > 0) { ?>
 		foreach($sets as $as) { ?>
 	
 		
-		<h3><?=$as->getAttributeSetName()?></h3>
+		<h3><?=tc('AttributeSetName', $as->getAttributeSetName())?></h3>
 	
 		<?
 		
