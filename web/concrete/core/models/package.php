@@ -290,7 +290,7 @@ class Concrete5_Model_Package extends Object {
 		$txt = Loader::helper('text');
 		Loader::model('single_page');
 		if ($item instanceof BlockType) {
-			return $item->getBlockTypeName();
+			return t($item->getBlockTypeName());
 		} else if ($item instanceof PageTheme) {
 			return $item->getThemeName();
 		} else if ($item instanceof CollectionType) {

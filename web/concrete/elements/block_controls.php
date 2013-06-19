@@ -52,7 +52,7 @@ ccm_menuObj<?=$id?>.canWrite =true;
 <? } else { ?>
 	ccm_menuObj<?=$id?>.hasEditDialog = false;
 <? } ?>
-ccm_menuObj<?=$id?>.btName = "<?=$btOriginal->getBlockTypeName()?>";
+ccm_menuObj<?=$id?>.btName = "<?=t($btOriginal->getBlockTypeName())?>";
 ccm_menuObj<?=$id?>.width = <?=$btOriginal->getBlockTypeInterfaceWidth()?>;
 ccm_menuObj<?=$id?>.height = <?=$btOriginal->getBlockTypeInterfaceHeight()+$heightPlus ?>;
 <? } else if ($btOriginal->getBlockTypeHandle() == BLOCK_HANDLE_STACK_PROXY) { 
