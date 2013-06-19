@@ -24,12 +24,15 @@ class Concrete5_Controller_Dashboard_Extend_Update extends Controller {
 					}
 					try {
 						$p->upgradeCoreData();
+						$p->upgrade();
 						if ($currentLocale != 'en_US') {
 							Localization::changeLocale($currentLocale);
 						}
-						$p->upgrade();
 						$this->set('message', t('The package has been updated successfully.'));
 					} catch(Exception $e) {
+						if ($currentLocale != 'en_US') {
+							Localization::changeLocale($currentLocale);
+						}
 						$this->set('error', $e);
 					}
 				}
