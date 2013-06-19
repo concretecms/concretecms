@@ -65,7 +65,7 @@ class Concrete5_Model_PermissionAccessEntityType extends Object {
 		foreach($ptypes as $pt) {
 			$ptype = $axml->addChild('permissionaccessentitytype');
 			$ptype->addAttribute('handle', $pt->getAccessEntityTypeHandle());
-			$ptype->addAttribute('name', $pt->getAccessEntityTypeName());
+			$ptype->addAttribute('name', tc('PermissionAccessEntityTypeName', $pt->getAccessEntityTypeName()));
 			$ptype->addAttribute('package', $pt->getPackageHandle());
 			$categories = $db->GetCol('select pkCategoryHandle from PermissionKeyCategories inner join PermissionAccessEntityTypeCategories where PermissionKeyCategories.pkCategoryID = PermissionAccessEntityTypeCategories.pkCategoryID and PermissionAccessEntityTypeCategories.petID = ?', array($pt->getAccessEntityTypeID()));
 			if (count($categories) > 0) {

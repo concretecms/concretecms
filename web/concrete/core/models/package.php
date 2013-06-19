@@ -290,7 +290,7 @@ class Concrete5_Model_Package extends Object {
 		$txt = Loader::helper('text');
 		Loader::model('single_page');
 		if ($item instanceof BlockType) {
-			return $item->getBlockTypeName();
+			return t($item->getBlockTypeName());
 		} else if ($item instanceof PageTheme) {
 			return $item->getThemeName();
 		} else if ($item instanceof CollectionType) {
@@ -300,16 +300,16 @@ class Concrete5_Model_Package extends Object {
 		} else if ($item instanceof SinglePage) {
 			return $item->getCollectionPath();
 		} else if ($item instanceof AttributeType) {
-			return $item->getAttributeTypeName();
+			return tc('AttributeTypeName', $item->getAttributeTypeName());
 		} else if ($item instanceof PermissionAccessEntityType) {
-			return $item->getAccessEntityTypeName();
+			return tc('PermissionAccessEntityTypeName', $item->getAccessEntityTypeName());
 		} else if ($item instanceof PermissionKeyCategory) {
 			return $txt->unhandle($item->getPermissionKeyCategoryHandle());
 		} else if ($item instanceof AttributeKeyCategory) {
 			return $txt->unhandle($item->getAttributeKeyCategoryHandle());
 		} else if ($item instanceof AttributeSet) {
 			$at = AttributeKeyCategory::getByID($item->getAttributeSetKeyCategoryID());
-			return t('%s (%s)', $item->getAttributeSetName(), $txt->unhandle($at->getAttributeKeyCategoryHandle()));
+			return t('%s (%s)', tc('AttributeSetName', $item->getAttributeSetName()), $txt->unhandle($at->getAttributeKeyCategoryHandle()));
 		} else if ($item instanceof GroupSet) {
 			return $item->getGroupSetNAme();
 		} else if (is_a($item, 'AttributeKey')) {
@@ -320,7 +320,7 @@ class Concrete5_Model_Package extends Object {
 		} else if ($item instanceof SystemAntispamLibrary) {
 			return $item->getSystemAntispamLibraryName();
 		} else if (is_a($item, 'PermissionKey')) {
-			return $item->getPermissionKeyName();			
+			return tc('PermissionKeyName', $item->getPermissionKeyName());			
 		} else if (is_a($item, 'Job')) {
 			return $item->getJobName();
 		} else if (is_a($item, 'WorkflowType')) {

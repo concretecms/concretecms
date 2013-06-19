@@ -72,7 +72,7 @@ class Concrete5_Model_AttributeSet extends Object {
 		$category = AttributeKeyCategory::getByID($this->getAttributeSetKeyCategoryID())->getAttributeKeyCategoryHandle();
 		$akey = $axml->addChild('attributeset');
 		$akey->addAttribute('handle',$this->getAttributeSetHandle());
-		$akey->addAttribute('name', $this->getAttributeSetName());
+		$akey->addAttribute('name', tc('AttributeSetName', $this->getAttributeSetName()));
 		$akey->addAttribute('package', $this->getPackageHandle());
 		$akey->addAttribute('locked', $this->isAttributeSetLocked());
 		$akey->addAttribute('category', $category);

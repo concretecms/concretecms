@@ -10,7 +10,7 @@
         $uaks = UserAttributeKey::getPublicProfileList();
         foreach($uaks as $ua) { ?>
             <div>
-                <label><?=$ua->getKeyName()?></label>
+                <label><?=tc('AttributeKeyName', $ua->getAttributeKeyName())?></label>
                 <?=$profile->getAttribute($ua, 'displaySanitized', 'display'); ?>
             </div>
         <? } ?>		

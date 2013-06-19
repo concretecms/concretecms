@@ -262,7 +262,7 @@ class Concrete5_Controller_Login extends Controller {
 			foreach($unfilledAttributes as $uak) {
 				$e1 = $uak->validateAttributeForm();
 				if ($e1 == false) {
-					$this->error->add(t('The field "%s" is required', $uak->getAttributeKeyName()));
+					$this->error->add(t('The field "%s" is required', tc('AttributeKeyName', $uak->getAttributeKeyName())));
 				} elseif ($e1 instanceof ValidationErrorHelper) {
 					$this->error->add($e1);
 				}

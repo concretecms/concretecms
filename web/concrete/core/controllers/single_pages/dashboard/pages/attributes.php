@@ -9,7 +9,7 @@ class Concrete5_Controller_Dashboard_Pages_Attributes extends Controller {
 		$otypes = AttributeType::getList('collection');
 		$types = array();
 		foreach($otypes as $at) {
-			$types[$at->getAttributeTypeID()] = $at->getAttributeTypeName();
+			$types[$at->getAttributeTypeID()] = tc('AttributeTypeName', $at->getAttributeTypeName());
 		}
 		$this->set('types', $types);
 	}

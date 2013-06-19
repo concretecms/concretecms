@@ -135,8 +135,8 @@ abstract class Concrete5_Model_PermissionKey extends Object {
 		$category = PermissionKeyCategory::getByID($this->pkCategoryID)->getPermissionKeyCategoryHandle();
 		$pkey = $axml->addChild('permissionkey');
 		$pkey->addAttribute('handle',$this->getPermissionKeyHandle());
-		$pkey->addAttribute('name', $this->getPermissionKeyName());
-		$pkey->addAttribute('description', $this->getPermissionKeyDescription());
+		$pkey->addAttribute('name', tc('PermissionKeyName', $this->getPermissionKeyName()));
+		$pkey->addAttribute('description', tc('PermissionKeyDescription', $this->getPermissionKeyDescription()));
 		$pkey->addAttribute('package', $this->getPackageHandle());
 		$pkey->addAttribute('category', $category);
 		$this->exportAccess($pkey);
