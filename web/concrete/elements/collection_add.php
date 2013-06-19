@@ -147,7 +147,8 @@ $dh = Loader::helper('date');
 			$('#ccm-url-slug-loader').show();
 			$.post('<?=REL_DIR_FILES_TOOLS_REQUIRED?>/pages/url_slug', {
 				'token': '<?=Loader::helper('validation/token')->generate('get_url_slug')?>',
-				'name': val
+				'name': val,
+				'parentID' : '<?php echo $c->getCollectionId()  ?>'
 			}, function(r) {
 				$('#ccm-url-slug-loader').hide();
 				$('#ccmAddPage input[name=cHandle]').val(r);
