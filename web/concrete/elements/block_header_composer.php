@@ -42,7 +42,7 @@ $(function() {
 if ($b->getBlockName() != '') { 
 	$btName = $b->getBlockName();
 } else {
-	$btName = $bt->getBlockTypeName();
+	$btName = t($bt->getBlockTypeName());
 }
 ?>
 

@@ -9,7 +9,7 @@ class Concrete5_Controller_Dashboard_Files_Attributes extends Controller {
 		$otypes = AttributeType::getList('file');
 		$types = array();
 		foreach($otypes as $at) {
-			$types[$at->getAttributeTypeID()] = $at->getAttributeTypeName();
+			$types[$at->getAttributeTypeID()] = tc('AttributeTypeName', $at->getAttributeTypeName());
 		}
 		$this->set('types', $types);
 	}

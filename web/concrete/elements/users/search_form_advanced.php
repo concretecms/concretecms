@@ -13,7 +13,7 @@ if (PERMISSIONS_MODEL == 'advanced') {
 Loader::model('user_attributes');
 $searchFieldAttributes = UserAttributeKey::getSearchableList();
 foreach($searchFieldAttributes as $ak) {
-	$searchFields[$ak->getAttributeKeyID()] = $ak->getAttributeKeyName();
+	$searchFields[$ak->getAttributeKeyID()] = tc('AttributeKeyName', $ak->getAttributeKeyName());
 }
 
 

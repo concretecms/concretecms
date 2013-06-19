@@ -11,7 +11,7 @@ class Concrete5_Model_GroupPermissionAccessEntity extends PermissionAccessEntity
 	}
 	
 	public function getAccessEntityTypeLinkHTML() {
-		$html = '<a href="' . REL_DIR_FILES_TOOLS_REQUIRED . '/select_group?include_core_groups=1" class="dialog-launch" dialog-modal="false" dialog-title="' . t('Add Group') . '">' . t('Group') . '</a>';
+		$html = '<a href="' . REL_DIR_FILES_TOOLS_REQUIRED . '/select_group?include_core_groups=1" class="dialog-launch" dialog-modal="false" dialog-title="' . t('Add Group') . '">' . tc('PermissionAccessEntityTypeName', 'Group') . '</a>';
 		return $html;
 	}
 

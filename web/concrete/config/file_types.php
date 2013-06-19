@@ -52,6 +52,6 @@ $ft->define('ogg', t('OGG'), FileType::T_AUDIO);
 $ft->define('ogv', t('OGG Video'), FileType::T_VIDEO);
 $ft->define('webm', t('WebM'), FileType::T_VIDEO);
 
-$ft->defineImporterAttribute('width', t('Width'), 'NUMBER', false);
-$ft->defineImporterAttribute('height', t('Height'), 'NUMBER', false);
-$ft->defineImporterAttribute('duration', t('Duration'), 'NUMBER', false);
+$ft->defineImporterAttribute('width', 'Width', 'NUMBER', false);
+$ft->defineImporterAttribute('height', 'Height', 'NUMBER', false);
+$ft->defineImporterAttribute('duration', 'Duration', 'NUMBER', false);

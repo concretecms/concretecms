@@ -6,7 +6,7 @@
         <category handle="file" allow-sets="1" package=""/>
     </attributecategories>
     <attributetypes>
-        <attributetype handle="text" package="">
+        <attributetype handle="text" name="Text" package="">
             <categories>
                 <category handle="collection"/>
                 <category handle="user"/>
@@ -39,27 +39,27 @@
                 <category handle="collection"/>
             </categories>
         </attributetype>
-        <attributetype handle="number" package="">
+        <attributetype handle="number" name="Number" package="">
             <categories>
                 <category handle="collection"/>
                 <category handle="user"/>
                 <category handle="file"/>
             </categories>
         </attributetype>
-        <attributetype handle="rating" package="">
+        <attributetype handle="rating" name="Rating" package="">
             <categories>
                 <category handle="collection"/>
                 <category handle="file"/>
             </categories>
         </attributetype>
-        <attributetype handle="select" package="">
+        <attributetype handle="select" name="Select" package="">
             <categories>
                 <category handle="collection"/>
                 <category handle="user"/>
                 <category handle="file"/>
             </categories>
         </attributetype>
-        <attributetype handle="address" package="">
+        <attributetype handle="address" name="Address" package="">
             <categories>
                 <category handle="user"/>
             </categories>
@@ -99,6 +99,7 @@
         </attributekey>
         <attributekey handle="width" name="Width" package="" searchable="1" indexed="1" type="number" category="file"/>
         <attributekey handle="height" name="Height" package="" searchable="1" indexed="1" type="number" category="file"/>
+        <attributekey handle="duration" name="Duration" package="" searchable="1" indexed="1" type="number" category="file"/>
     </attributekeys>
     <attributesets>
         <attributeset handle="page_header" name="Page Header" package="" locked="0" category="collection">
