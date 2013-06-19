@@ -300,7 +300,7 @@ class Concrete5_Model_Package extends Object {
 		} else if ($item instanceof SinglePage) {
 			return $item->getCollectionPath();
 		} else if ($item instanceof AttributeType) {
-			return $item->getAttributeTypeName();
+			return tc('AttributeTypeName', $item->getAttributeTypeName());
 		} else if ($item instanceof PermissionAccessEntityType) {
 			return $item->getAccessEntityTypeName();
 		} else if ($item instanceof PermissionKeyCategory) {
