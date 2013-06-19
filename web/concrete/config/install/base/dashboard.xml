@@ -25,7 +25,7 @@
         <page name="Drafts" path="/dashboard/composer/drafts" filename="/dashboard/composer/drafts.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
-					<value>blog drafts,composer</value>
+					<value>blog drafts, composer</value>
 				</attributekey>
 				<attributekey handle="icon_dashboard">
 					<value>icon-book</value>
@@ -371,7 +371,7 @@
 			</attributes>
 			<attributes>
 				<attributekey handle="meta_keywords">
-					<value>add-on, addon, add on, package,applications, ecommerce, discussions, forums, themes, templates, blocks</value>
+					<value>add-on, addon, add on, package, applications, ecommerce, discussions, forums, themes, templates, blocks</value>
 				</attributekey>
 			</attributes>
         </page>
@@ -452,14 +452,14 @@
         <page name="Rich Text Editor" path="/dashboard/system/basics/editor" filename="/dashboard/system/basics/editor.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
-					<value>tinymce, content block, fonts, editor, tinymce, content, overlay</value>
+					<value>tinymce, content block, fonts, editor, content, overlay</value>
 				</attributekey>
 			</attributes>
         </page>
         <page name="Languages" path="/dashboard/system/basics/multilingual" filename="/dashboard/system/basics/multilingual/view.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
-					<value>translate, translation, internationalization, multilingual, translate</value>
+					<value>translate, translation, internationalization, multilingual</value>
 				</attributekey>
 			</attributes>
         </page>
@@ -617,7 +617,7 @@
         <page name="Public Profiles" path="/dashboard/system/registration/profiles" filename="/dashboard/system/registration/profiles.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
-					<value>member profile, member page,community, forums, social, avatar</value>
+					<value>member profile, member page, community, forums, social, avatar</value>
 				</attributekey>
 			</attributes>
         </page>
@@ -682,21 +682,21 @@
         <page name="Environment Information" path="/dashboard/system/environment/info" filename="/dashboard/system/environment/info.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
-					<value>overrides, system info, debug, support,help</value>
+					<value>overrides, system info, debug, support, help</value>
 				</attributekey>
 			</attributes>
         </page>
         <page name="Debug Settings" path="/dashboard/system/environment/debug" filename="/dashboard/system/environment/debug.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
-					<value>errors,exceptions, develop, support, help</value>
+					<value>errors, exceptions, develop, support, help</value>
 				</attributekey>
 			</attributes>
         </page>
         <page name="Logging Settings" path="/dashboard/system/environment/logging" filename="/dashboard/system/environment/logging.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
-					<value>email, logging, logs, smtp, pop, errors, mysql, errors, log</value>
+					<value>email, logging, logs, smtp, pop, errors, mysql, log</value>
 				</attributekey>
 			</attributes>
         </page>
