@@ -265,7 +265,7 @@
 		 */
 		public static function getFilesBySetID($fsID) {
 			if (intval($fsID) > 0) {
-				$fileset = FileSet::getByID($fsID);
+				$fileset = self::getByID($fsID);
 				if ($fileset instanceof FileSet) {
 					return $fileset->getFiles();
 				}
@@ -279,7 +279,7 @@
 		 */
 		public static function getFilesBySetName($fsName) {
 			if (!empty($fsName)) {
-				$fileset = FileSet::getByName($fsName);
+				$fileset = self::getByName($fsName);
 				if ($fileset instanceof FileSet) {
 					return $fileset->getFiles();
 				}
