@@ -2,6 +2,9 @@
 $val = Loader::helper('validation/token');
 $file = new stdClass(); // json return value holder
 $error = array();
+$pageObj = Page::getByID($_POST['cID']);
+$areaObj = Area::get($pageObj, $_POST['blockAreaHandle']);
+$blockObj = Block::getByID($_POST['bID'], $pageObj, $areaObj);
 $file->timestamp = $_POST['timestamp'];
 // --  validation --  // 
 
@@ -13,7 +16,6 @@ if(!$tokenValidation) {  // check token
 
 if ($_FILES["file"]["error"] > 0) {  // file errors
 	$error[] = $_FILES["file"]["error"];
-	
 }
 
 if(!$_POST['bID'] || !$_POST['cID']) {  // bID cID present
@@ -23,8 +25,6 @@ if(!$_POST['bID'] || !$_POST['cID']) {  // bID cID present
 	echo Loader::helper('json')->encode($file);
 	exit;
 }
-
-$blockObj = Block::getByID($_POST['bID'], Page::getByID($_POST['cID']), $_POST['blockAreaHandle']);
 
 if(!is_object($blockObj) || $blockObj->getBlockTypeHandle() != 'core_conversation') { // valid / correct block check
 	$error[] = t('Invalid block');
@@ -97,7 +97,7 @@ if($blockExtensionsOverride) {
 $incomingExtension = end(explode('.', $_FILES["file"]["name"]));
 if($incomingExtension && strlen($blockExtensionsOverride)) {  // check against block file extensions override
 	foreach(explode(',', $blockExtensionsOverride) as $overrideExtension) {
-		if($overrideExtension == $incomingExtension) {
+		if(strtolower($overrideExtension) == strtolower($incomingExtension)) {
 			$validExtension = true;
 			break;
 		}

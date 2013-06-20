@@ -129,6 +129,9 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			if (!$values['enableCommentRating']) {
 				$values['enableCommentRating'] = 0;
 			}
+			
+			$values['fileExtensions'] = str_replace(' ', '', strtolower($values['fileExtensions']));
+			
 			$values['cnvID'] = $conversation->getConversationID();
 			parent::save($values);
 		}
