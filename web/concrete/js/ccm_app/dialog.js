@@ -141,7 +141,6 @@ jQuery.fn.dialog.open = function(options) {
 			}
 		},
 		'close': function(ev, u) {
-			$(this).jqdialog('destroy').remove();
 			if (typeof options.onClose != "undefined") {
 				if ((typeof options.onClose) == 'function') {
 					options.onClose();
@@ -178,7 +177,8 @@ jQuery.fn.dialog.open = function(options) {
 	$.extend(finalSettings, defaults, options);
 
 	if (finalSettings.element) {
-		$(finalSettings.element).clone(true,true).jqdialog(finalSettings).jqdialog('open');
+		$(finalSettings.element).jqdialog(finalSettings).jqdialog();
+		$(finalSettings.element).jqdialog('open');
 	} else {
 		jQuery.fn.dialog.showLoader();
 		$.ajax({
@@ -232,8 +232,8 @@ jQuery.fn.dialog.activateDialogContents = function($dialog) {
 }
 
 jQuery.fn.dialog.getTop = function() {
-	var nd = $(".ui-dialog").length;
-	return $($('.ui-dialog-content')[nd-1]);
+	var nd = $(".ui-dialog:visible").length;
+	return $($('.ui-dialog:visible')[nd-1]).find('.ui-dialog-content');
 }
 
 jQuery.fn.dialog.replaceTop = function(html) {
