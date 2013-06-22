@@ -26,14 +26,22 @@ class Concrete5_Model_PermissionResponse {
 			return $r;
 		}
 		
-		$category = PermissionKeyCategory::getByHandle(Loader::helper('text')->uncamelcase(get_class($object)));
-		if (!is_object($category) && $object instanceof Page) {
-			$category = PermissionKeyCategory::getByHandle('page');
+		if (method_exists($object, 'getPermissionObjectPermissionKeyCategoryHandle')) {
+			$objectClass = $object->getPermissionObjectPermissionKeyCategoryHandle();
+		} else {
+			$objectClass = get_class($object);
 		}
-		$txt = Loader::helper('text');
-		$c1 = get_class($object) . 'PermissionResponse';
-		if (!class_exists($c1)) {
-			$c1 = 'PagePermissionResponse';
+		$handle = Loader::helper('text')->uncamelcase($objectClass);
+		$category = PermissionKeyCategory::getByHandle($handle);
+		$c1 = $objectClass . 'PermissionResponse';
+		if (!is_object($category)) {
+			if ($object instanceof Page) {
+				$category = PermissionKeyCategory::getByHandle('page');
+				$c1 = 'PagePermissionResponse';
+			} else if ($object instanceof Area) {
+				$category = PermissionKeyCategory::getByHandle('area');
+				$c1 = 'AreaPermissionResponse';
+			}
 		}
 		$pr = new $c1();
 		$pr->setPermissionObject($object);
