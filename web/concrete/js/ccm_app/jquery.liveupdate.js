@@ -133,7 +133,7 @@
 				var shown = 0;
 				$.each(scores, function(i, score) { 
 					$li = self.rows[score[1]];
-					if (score[0] > 0.7) {
+					if (score[0] > 0.75) {
 						shown++;
 						if (!$li.parent().parent().is(':visible')) {
 							$li.parent().parent().show();
