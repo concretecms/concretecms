@@ -26,8 +26,14 @@ class Concrete5_Model_PermissionResponse {
 			return $r;
 		}
 		
-		$category = PermissionKeyCategory::getByHandle(Loader::helper('text')->uncamelcase(get_class($object)));
-		$c1 = get_class($object) . 'PermissionResponse';
+		if (method_exists($object, 'getPermissionObjectPermissionKeyCategoryHandle')) {
+			$objectClass = $object->getPermissionObjectPermissionKeyCategoryHandle();
+		} else {
+			$objectClass = get_class($object);
+		}
+		$handle = Loader::helper('text')->uncamelcase($objectClass);
+		$category = PermissionKeyCategory::getByHandle($handle);
+		$c1 = $objectClass . 'PermissionResponse';
 		if (!is_object($category)) {
 			if ($object instanceof Page) {
 				$category = PermissionKeyCategory::getByHandle('page');
