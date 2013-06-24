@@ -27,9 +27,14 @@
             <feature handle="image" />
             <feature handle="featured" />
         </gatheringitemtemplate>
-        <gatheringitemtemplate handle="title_description" type="tile" name="Title Date &amp; Description" package="">
+        <gatheringitemtemplate handle="title_date_description" type="tile" name="Title Date &amp; Description" package="">
             <feature handle="description" />
             <feature handle="date_time" />
+            <feature handle="link" />
+            <feature handle="title" />
+        </gatheringitemtemplate>
+        <gatheringitemtemplate handle="title_description" type="tile" name="Title &amp; Description" package="">
+            <feature handle="description" />
             <feature handle="link" />
             <feature handle="title" />
         </gatheringitemtemplate>
@@ -51,9 +56,62 @@
         <gatheringitemtemplate handle="basic" type="detail" name="Basic" package="">
             <feature handle="title" />
         </gatheringitemtemplate>
+        <gatheringitemtemplate handle="image_sharing_link" type="detail" name="Image Sharing Link" package="">
+            <feature handle="image" />
+            <feature handle="link" />
+        </gatheringitemtemplate>
         <gatheringitemtemplate handle="image" type="detail" name="Large Image" package="">
             <feature handle="image" />
         </gatheringitemtemplate>
+        <gatheringitemtemplate handle="masthead_image_left" type="tile" name="Masthead Image Left" package="">
+			<feature handle="title" />
+			<feature handle="description" />
+			<feature handle="date_time" />
+			<feature handle="image" />
+		</gatheringitemtemplate>
+		<gatheringitemtemplate handle="masthead_image_right" type="tile" name="Masthead Image Right" package="">
+			<feature handle="title" />
+			<feature handle="description" />
+			<feature handle="date_time" />
+			<feature handle="image" />
+		</gatheringitemtemplate>
+		<gatheringitemtemplate handle="masthead_image_byline_right" type="tile" name="Masthead Image Byline Right" package="">
+			<feature handle="title" />
+			<feature handle="description" />
+			<feature handle="date_time" />
+			<feature handle="image" />
+			<feature handle="byline" />
+		</gatheringitemtemplate>
+		<gatheringitemtemplate handle="masthead_image_byline_left" type="tile" name="Masthead Image Byline Left" package="">
+			<feature handle="title" />
+			<feature handle="description" />
+			<feature handle="date_time" />
+			<feature handle="image" />
+			<feature handle="byline" />
+		</gatheringitemtemplate>
+		<gatheringitemtemplate handle="image_masthead_description_center" type="tile" name="Image Masthead Description Center" package="">
+			<feature handle="title" />
+			<feature handle="description" />
+			<feature handle="image" />
+		</gatheringitemtemplate>
+		<gatheringitemtemplate handle="image_byline_description_center" type="tile" name="Image Byline Description Center" package="">
+			<feature handle="image" />
+			<feature handle="byline" />
+			<feature handle="description" />
+		</gatheringitemtemplate>
+		<gatheringitemtemplate handle="masthead_byline_description" type="tile" name="Masthead Byline Description" package="">
+			<feature handle="title" />
+			<feature handle="description" />
+			<feature handle="byline" />
+		</gatheringitemtemplate>
+		<gatheringitemtemplate handle="masthead_description" type="tile" name="Masthead Description" package="">
+			<feature handle="title" />
+			<feature handle="description" />
+		</gatheringitemtemplate>
+		<gatheringitemtemplate handle="thumbnail_description_center" type="tile" name="Thumbnail &amp; Description Center" package="">
+			<feature handle="description" />
+			<feature handle="image" />
+		</gatheringitemtemplate>
     </gatheringitemtemplates>
     <featurecategories>
         <featurecategory handle="collection_version" />
