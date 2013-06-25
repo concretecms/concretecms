@@ -89,9 +89,9 @@ if(!$layout ){
 			</tr>			
 			
 			<tr>
-				<td class="padBottom"><?= t('Lock Widths') ?>:</td>
+				<td class="padBottom"><label for="locked"><?= t('Lock Widths') ?>:</label></td>
 				<td class="val padBottom">
-					<input name="locked" type="checkbox" value="1" <?= ( intval($layout->locked) ) ? 'checked="checked"' : '' ?> />
+					<input id="locked" name="locked" type="checkbox" value="1" <?= ( intval($layout->locked) ) ? 'checked="checked"' : '' ?> />
 				</td>				
 			</tr>			
 							
@@ -119,15 +119,17 @@ if(!$layout ){
 	
 	<? if ( is_object($layoutPreset) ) { ?>
 		<div id="layoutPresetActions" style="display: none">
-			<div><?=$form->radio('layoutPresetAction', 'update_existing_preset', true)?> <?=t('Update "%s" preset everywhere it is used?', $layoutPreset->getLayoutPresetName())?></div>
-			<div><?=$form->radio('layoutPresetAction', 'save_as_custom')?> <?=t('Use this layout here, and leave "%s" unchanged?', $layoutPreset->getLayoutPresetName())?></div>
-			<div><?=$form->radio('layoutPresetAction', 'create_new_preset')?> <?=t('Save this style as a new preset?')?><br/><span style="margin-left: 20px"><?=$form->text('layoutPresetNameAlt', array('style' => 'width:  127px', 'disabled' => true))?></span></div>
+			<label class="radio"><?=$form->radio('layoutPresetAction', 'update_existing_preset', true)?> <?=t('Update "%s" preset everywhere it is used?', $layoutPreset->getLayoutPresetName())?></label>
+			<label class="radio"><?=$form->radio('layoutPresetAction', 'save_as_custom')?> <?=t('Use this layout here, and leave "%s" unchanged?', $layoutPreset->getLayoutPresetName())?></label>
+			<label class="radio"><?=$form->radio('layoutPresetAction', 'create_new_preset')?> <?=t('Save this style as a new preset?')?><br/><span style="margin-left: 20px"><?=$form->text('layoutPresetNameAlt', array('style' => 'width:  127px', 'disabled' => true))?></span></label>
 		</div>
 	<? } ?>	
 
 	<div id="layoutPresetActionNew" style="margin-bottom:16px;"> 
-		<?=$form->checkbox('layoutPresetAction', 'create_new_preset')?> 
-		<?=t('Save this style as a new preset.')?>
+		<label for="layoutPresetAction" class="checkbox inline">
+			<?=$form->checkbox('layoutPresetAction', 'create_new_preset')?> 
+			<?=t('Save this style as a new preset.')?>
+		</label>
 		<span style="margin-left: 10px"><?=$form->text('layoutPresetName', array('style' => 'width:  127px', 'disabled' => true))?></span>
 	</div>
 	

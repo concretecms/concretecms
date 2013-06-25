@@ -32,8 +32,10 @@ $form = Loader::helper('form');
 </select>
 <br><br>
 <strong><?=t('Viewing Permissions')?></strong><br/>
+<label class="checkbox">
 <?=$form->checkbox('displayUnavailablePages', 1, $info['displayUnavailablePages']); ?>
 <?=t('Display pages to users even when those users cannot access those pages.')?>
+</label>
 <br/><br/>
 <strong><?=t('Display Pages')?></strong><br>
 <select name="displayPages" onchange="toggleCustomPage(this.value);">
