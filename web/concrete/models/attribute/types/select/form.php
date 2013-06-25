@@ -100,9 +100,9 @@ if ($akSelectAllowMultipleValues && $akSelectAllowOtherValues) { // display auto
 	if ($akSelectAllowMultipleValues) { ?>
 			
 		<? foreach($options as $opt) { ?>
-			<div>
+			<label class="checkbox">
 				<?=$form->checkbox($this->field('atSelectOptionID') . '[]', $opt->getSelectAttributeOptionID(), in_array($opt->getSelectAttributeOptionID(), $selectedOptions)); ?>
-				<?=$opt->getSelectAttributeOptionValue()?></div>
+				<?=$opt->getSelectAttributeOptionValue()?></label>
 		<? } ?>
 	<? } else { 
 		$opts = array('' => t('** None'));
