@@ -27,11 +27,12 @@ class Concrete5_Model_PermissionResponse {
 		}
 		
 		if (method_exists($object, 'getPermissionObjectPermissionKeyCategoryHandle')) {
-			$objectClass = $object->getPermissionObjectPermissionKeyCategoryHandle();
+			$objectClass = Loader::helper('text')->camelcase($object->getPermissionObjectPermissionKeyCategoryHandle());
+			$handle = $object->getPermissionObjectPermissionKeyCategoryHandle();
 		} else {
 			$objectClass = get_class($object);
+			$handle = Loader::helper('text')->uncamelcase($objectClass);
 		}
-		$handle = Loader::helper('text')->uncamelcase($objectClass);
 		$category = PermissionKeyCategory::getByHandle($handle);
 		$c1 = $objectClass . 'PermissionResponse';
 		if (!is_object($category)) {
@@ -56,7 +57,9 @@ class Concrete5_Model_PermissionResponse {
 		if ($u->isSuperUser()) {
 			return true;
 		}
-
+		if (!is_object($this->category)) {
+			throw new Exception(t('Unable category for permission %s', $permission));
+		}
 		$pk = $this->category->getPermissionKeyByHandle($permission);
 		if (!$pk) {
 			print t('Unable to get permission key for %s', $permission);
