@@ -35,11 +35,23 @@ class ConcreteDashboardHelper {
 		return $cp->canViewPage();
 	}
 
+	/**
+	 * Test if the current path is within the dashboard.
+	 * Optionally, a Page or path can be passed to test.
+	 * 
+	 * @param  Page | string $page (optional)
+	 * @return [boolean]
+	 */
 	public function inDashboard($page = false) {
-		if (!$page) {
-			$page = Page::getCurrentPage();
+		if ($page instanceof Page && !$page->isError()) {
+			$path = $page->getCollectionPath();
+		} elseif (is_string($page)) {
+			$path = $page;
+		} else {
+			$request = Request::get();
+			$path = $request->getRequestCollectionPath();
 		}
-		return strpos($page->getCollectionPath(), '/dashboard') === 0;
+		return strpos($path, '/dashboard') === 0;
 	}
 	
 	public function getDashboardPaneFooterWrapper($includeDefaultBody = true) {
