@@ -107,17 +107,17 @@
 				if (strpos($class, ',') > -1) {
 					$subclasses = explode(',', $class);
 					foreach($subclasses as $subclass) {
-						self::$autoloadClasses[$subclass] = $data;
+						self::$autoloadClasses[$subclass][$data[0]] = $data;
 					}
 				} else {
-					self::$autoloadClasses[$class] = $data;
+					self::$autoloadClasses[$class][$data[0]] = $data;
 				}
 			}				
 		}
 		
-		protected static function getFileFromCorePath($found) {
+		protected static function getFileFromCorePath($type, $found) {
 			$classes = self::$autoloadClasses;
-			$cl = $classes[$found];
+			$cl = $classes[$found][$type];
 			if ($cl) {
 				$file = $cl[1];
 			} else {
@@ -141,38 +141,38 @@
 		
 		public static function autoloadCore($class) {
 			if (stripos($class, $m = 'Concrete5_Model_') === 0) {
-				$file = self::getFileFromCorePath(substr($class, strlen($m)));
+				$file = self::getFileFromCorePath('model', substr($class, strlen($m)));
 				require_once(DIR_BASE_CORE . '/' . DIRNAME_CORE_CLASSES . '/' . DIRNAME_MODELS . '/' . $file . '.php');
 			}
 			elseif (stripos($class, $m = 'Concrete5_Library_') === 0) {
-				$file = self::getFileFromCorePath(substr($class, strlen($m)));
+				$file = self::getFileFromCorePath('library', substr($class, strlen($m)));
 				require_once(DIR_BASE_CORE . '/' . DIRNAME_CORE_CLASSES . '/' . DIRNAME_LIBRARIES . '/' . $file . '.php');
 			}
 			elseif (stripos($class, $m = 'Concrete5_Helper_') === 0) {
-				$file = self::getFileFromCorePath(substr($class, strlen($m)));
+				$file = self::getFileFromCorePath('helper', substr($class, strlen($m)));
 				require_once(DIR_BASE_CORE . '/' . DIRNAME_CORE_CLASSES . '/' . DIRNAME_HELPERS . '/' . $file . '.php');
 			}
 			elseif (stripos($class, $m = 'Concrete5_Controller_Block_') === 0) {
-				$file = self::getFileFromCorePath(substr($class, strlen($m)));
+				$file = self::getFileFromCorePath('block_controller', substr($class, strlen($m)));
 				require_once(DIR_BASE_CORE . '/' . DIRNAME_CORE_CLASSES . '/' . DIRNAME_CONTROLLERS . '/' . DIRNAME_BLOCKS . '/' . $file. '.php');
 			}
 			elseif (stripos($class, $m = 'Concrete5_Controller_PageType_') === 0) {
-				$file = self::getFileFromCorePath(substr($class, strlen($m)));
+				$file = self::getFileFromCorePath('page_type_controller', substr($class, strlen($m)));
 				require_once(DIR_BASE_CORE . '/' . DIRNAME_CORE_CLASSES . '/' . DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_TYPES . '/' . $file. '.php');
 
 			} elseif (preg_match('/^Concrete5_Controller_AuthenticationType_(.*)/i', $class, $m)) {
-				$file = self::getFileFromCorePath($m[1]);
+				$file = self::getFileFromCorePath('authentication_type_controller', $m[1]);
 				require_once(DIR_BASE_CORE . '/' . DIRNAME_CORE_CLASSES . '/' . DIRNAME_MODELS . '/' . DIRNAME_AUTHENTICATION . '/' . DIRNAME_AUTHENTICATION_TYPES . '/' . $file . '.php');
 			} elseif (preg_match('/^Concrete5_Controller_AttributeType_(.*)/i', $class, $m)) {
-				$file = self::getFileFromCorePath($m[1]);
+				$file = self::getFileFromCorePath('attribute_type_controller', $m[1]);
 				require_once(DIR_BASE_CORE . '/' . DIRNAME_CORE_CLASSES . '/' . DIRNAME_MODELS . '/' . DIRNAME_ATTRIBUTES . '/' . DIRNAME_ATTRIBUTE_TYPES . '/' . $file . '.php');
 			}
 			elseif (stripos($class, $m = 'Concrete5_Controller_') === 0) {
-				$file = self::getFileFromCorePath(substr($class, strlen($m)));
+				$file = self::getFileFromCorePath('page_controller', substr($class, strlen($m)));
 				require_once(DIR_BASE_CORE . '/' . DIRNAME_CORE_CLASSES . '/' . DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGES . '/' . $file . '.php');
 			}
 			elseif (stripos($class, $m = 'Concrete5_Job_') === 0) {
-				$file = self::getFileFromCorePath(substr($class, strlen($m)));
+				$file = self::getFileFromCorePath('job', substr($class, strlen($m)));
 				require_once(DIR_BASE_CORE . '/' . DIRNAME_CORE_CLASSES . '/' . DIRNAME_JOBS . '/' . $file . '.php');
 			}
 		}
@@ -182,8 +182,10 @@
 		 */
 		public static function autoload($class) {
 			$classes = self::$autoloadClasses;
-			$cl = $classes[$class];
-			if ($cl) {
+			$clx = $classes[$class];
+			if (is_array($clx)) {
+				$k = key($clx);
+				$cl = $clx[$k];
 				call_user_func_array(array(__CLASS__, $cl[0]), array($cl[1], $cl[2]));
 			} else {
 				/* lets handle some things slightly more dynamically */				

@@ -105,13 +105,16 @@ if (!defined('PAGE_PATH_SEGMENT_MAX_LENGTH')) {
 	define('PAGE_PATH_SEGMENT_MAX_LENGTH', '128');
 }
 
-
-if (!defined('ENABLE_ASSET_COMPRESSION')) {
-	define('ENABLE_ASSET_COMPRESSION', false);
-}
-
 if (!defined('PAGING_STRING')) {
 	define('PAGING_STRING', 'ccm_paging_p');
+}
+
+if (!defined('DIRNAME_LIBRARIES_ASSET')) {
+	define('DIRNAME_LIBRARIES_ASSET', 'asset');
+}
+
+if (!defined('DIRNAME_LIBRARIES_ASSET_ASSETS')) {
+	define('DIRNAME_LIBRARIES_ASSET_ASSETS', 'assets');
 }
 
 /** 
