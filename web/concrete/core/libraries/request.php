@@ -34,6 +34,7 @@ class Concrete5_Library_Request {
 	private $hasCustomRequestUser;
 	private $customRequestUser;
 	private $customRequestDateTime;
+	private $requiredAssets = array();
 	
 	// parses the current request and returns an 
 	// object with tasks, tools, etc... defined in them
@@ -449,6 +450,15 @@ class Concrete5_Library_Request {
 	 */
 	public function setCollectionPath($path) {
 		$this->cPath = $path;
+	}
+
+
+	/** 
+	 * Adds a required asset to this request. This asset will attempt to be output or included
+	 * when a view is rendered
+	 */
+	public function requireAsset($assetHandle) {
+		$asset = Asset::getByHandle($assetHandle);
 	}
 
 }

@@ -48,6 +48,9 @@
 	## Default routes for various content items ##
 	require($cdir . '/config/theme_paths.php');
 
+	## Core Assets ##
+	require($cdir . '/config/assets.php');
+
 	## Load session handlers
 	require($cdir . '/startup/session.php');
 
