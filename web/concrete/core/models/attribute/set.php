@@ -6,7 +6,12 @@ class Concrete5_Model_AttributeSet extends Object {
 		$db = Loader::db();
 		$row = $db->GetRow('select asID, asHandle, pkgID, asName, akCategoryID, asIsLocked  from AttributeSets where asID = ?', array($asID));
 		if (isset($row['asID'])) {
-			$akc = new AttributeSet();
+			if (function_exists('get_called_class')) {
+				$class = get_called_class(); // using this for an add-on that requires 5.3
+			} else {
+				$class = 'AttributeSet';
+			}
+			$akc = new $class();
 			$akc->setPropertiesFromArray($row);
 			return $akc;
 		}
