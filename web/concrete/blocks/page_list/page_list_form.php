@@ -32,37 +32,45 @@
 	  Loader::model('attribute/categories/collection');
 	  $cadf = CollectionAttributeKey::getByHandle('is_featured');
 	  ?>
-	  <input <? if (!is_object($cadf)) { ?> disabled <? } ?> type="checkbox" name="displayFeaturedOnly" value="1" <? if ($displayFeaturedOnly == 1) { ?> checked <? } ?> style="vertical-align: middle" />
-	  <?=t('Featured pages only.')?>
-		<? if (!is_object($cadf)) { ?>
-			 <?=t('(<strong>Note</strong>: You must create the "is_featured" page attribute first.)');?>
-		<? } ?>
-		<br/>
+	  <label class="checkbox">
+		  <input <? if (!is_object($cadf)) { ?> disabled <? } ?> type="checkbox" name="displayFeaturedOnly" value="1" <? if ($displayFeaturedOnly == 1) { ?> checked <? } ?> style="vertical-align: middle" />
+		  <?=t('Featured pages only.')?>
+			<? if (!is_object($cadf)) { ?>
+				 <?=t('(<strong>Note</strong>: You must create the "is_featured" page attribute first.)');?>
+			<? } ?>
+	  </label>
+	  <label class="checkbox">
 		<input type="checkbox" name="displayAliases" value="1" <? if ($displayAliases == 1) { ?> checked <? } ?> />
 		<?=t('Display page aliases.')?>
-		<br/>
+	  </label>
 		
 	</div>
 	<div class="ccm-block-field-group">
 		<h2><?=t('Pagination')?></h2>
-		<input type="checkbox" name="paginate" value="1" <? if ($paginate == 1) { ?> checked <? } ?> />
-		<?=t('Display pagination interface if more items are available than are displayed.')?>
+		<label class="checkbox">
+			<input type="checkbox" name="paginate" value="1" <? if ($paginate == 1) { ?> checked <? } ?> />
+			<?=t('Display pagination interface if more items are available than are displayed.')?>
+		</label>
 	</div>
 	<div class="ccm-block-field-group">
 	  <h2><?=t('Location in Website')?></h2>
 	  <?=t('Display pages that are located')?>:<br/>
 	  <br/>
 	  <div>
+	  	<label class="radio inline">
 			<input type="radio" name="cParentID" id="cEverywhereField" value="0" <? if ($cParentID == 0) { ?> checked<? } ?> />
 			<?=t('everywhere')?>
+		</label>
 			
-			&nbsp;&nbsp; 
+	  	<label class="radio inline">
 			<input type="radio" name="cParentID" id="cThisPageField" value="<?=$c->getCollectionID()?>" <? if ($cParentID == $c->getCollectionID() || $cThis) { ?> checked<? } ?>>
 			<?=t('beneath this page')?>
+		</label>
 			
-			&nbsp;&nbsp;
+	  	<label class="radio inline">
 			<input type="radio" name="cParentID" id="cOtherField" value="OTHER" <? if ($isOtherPage) { ?> checked<? } ?>>
-			<?=t('beneath another page')?> </div>
+			<?=t('beneath another page')?>
+		</label>
 			
 			<div class="ccm-page-list-page-other" <? if (!$isOtherPage) { ?> style="display: none" <? } ?>>
 			
@@ -77,8 +85,10 @@
 			</div>
 			
 			<div class="ccm-page-list-all-descendents" style="margin: 5px 0 0 0px;<?php echo (!$isOtherPage && !$cThis) ? ' display: none;' : ''; ?>">
-				<input type="checkbox" name="includeAllDescendents" id="includeAllDescendents" value="1" <?php echo $includeAllDescendents ? 'checked="checked"' : '' ?> />
-				<label for="includeAllDescendents"><?php echo t('Include all child pages') ?></label>
+				<label class="checkbox">
+					<input type="checkbox" name="includeAllDescendents" id="includeAllDescendents" value="1" <?php echo $includeAllDescendents ? 'checked="checked"' : '' ?> />
+					<?php echo t('Include all child pages') ?>
+				</label>
 			</div>
 	</div>
 	<div class="ccm-block-field-group">
@@ -95,10 +105,12 @@
 	
 	<div class="ccm-block-field-group">
 	  <h2><?=t('Provide RSS Feed')?></h2>
-	   <input id="ccm-pagelist-rssSelectorOn" type="radio" name="rss" class="rssSelector" value="1" <?=($rss?"checked=\"checked\"":"")?>/> <?=t('Yes')?>   
-	   &nbsp;&nbsp;
-	   <input type="radio" name="rss" class="rssSelector" value="0" <?=($rss?"":"checked=\"checked\"")?>/> <?=t('No')?>   
-	   <br /><br />
+	   <label class="radio inline">
+		   <input id="ccm-pagelist-rssSelectorOn" type="radio" name="rss" class="rssSelector" value="1" <?=($rss?"checked=\"checked\"":"")?>/> <?=t('Yes')?>   
+	   </label>
+	   <label class="radio inline">
+	   		<input type="radio" name="rss" class="rssSelector" value="0" <?=($rss?"":"checked=\"checked\"")?>/> <?=t('No')?>   
+	   </label>
 	   <div id="ccm-pagelist-rssDetails" <?=($rss?"":"style=\"display:none;\"")?>>
 		   <strong><?=t('RSS Feed Title')?></strong><br />
 		   <input id="ccm-pagelist-rssTitle" type="text" name="rssTitle" style="width:250px" value="<?=$rssTitle?>" /><br /><br />
