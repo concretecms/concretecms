@@ -86,7 +86,7 @@ $languages = Localization::getAvailableInterfaceLanguages();
             		<th><?=t('Registration Data')?></th>
 	        	</tr>
 			</thead>
-            <tbody class="inputs-list">
+            <tbody>
             
 			<? foreach($attribs as $ak) { 
 				if (in_array($ak->getAttributeKeyID(), $assignment->getAttributesAllowedArray())) { 
