@@ -277,7 +277,12 @@
 			}
 		}
 		
-		function add($gName, $gDescription) {
+		/** Creates a new user group.
+		* @param string $gName
+		* @param string $gDescription
+		* @return Group
+		*/
+		public static function add($gName, $gDescription) {
 			$db = Loader::db();
 			$v = array($gName, $gDescription);
 			$r = $db->prepare("insert into Groups (gName, gDescription) values (?, ?)");
