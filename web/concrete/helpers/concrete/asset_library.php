@@ -35,6 +35,26 @@
 			
 			if (isset($_POST[$postname])) {
 				$bf = File::getByID($_POST[$postname]);
+			} else {
+				$ah = Loader::helper('array');
+				$key = str_replace(']', '', $postname);
+				$key = explode('[', trim($key, '['));
+				$v2 = $ah->get($_POST, $key);
+				if (isset($v2)) {
+					$bf = File::getByID($v2);
+				}
+			}
+			
+			if (isset($_GET[$postname])) {
+				$bf = File::getByID($_GET[$postname]);
+			} else {
+				$ah = Loader::helper('array');
+				$key = str_replace(']', '', $postname);
+				$key = explode('[', trim($key, '['));
+				$v2 = $ah->get($_GET, $key);
+				if (isset($v2)) {
+					$bf = File::getByID($v2);
+				}
 			}
 			
 			if (is_object($bf) && (!$bf->isError()) && $bf->getFileID() > 0) {
