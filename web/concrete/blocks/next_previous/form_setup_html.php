@@ -23,21 +23,21 @@ defined('C5_EXECUTE') or die("Access Denied.");
   <div class="control-group">
     <label class="control-label"><?php  echo t('Next Label')?></label>
     <div class="controls">
-      <input name="nextLabel" type="text" value="<?php echo htmlentities($controller->nextLabel, ENT_QUOTES, APP_CHARSET) ?>" />
+      <input name="nextLabel" type="text" value="<?php echo htmlentities($controller->nextLabel, ENT_QUOTES, APP_CHARSET) ?>" placeholder="<?php echo t('leave blank to hide'); ?>" />
     </div>
   </div>    
 
   <div class="control-group">
     <label class="control-label"><?php  echo t('Previous Label')?></label>
     <div class="controls">
-      <input name="previousLabel" type="text" value="<?php echo htmlentities($controller->previousLabel, ENT_QUOTES, APP_CHARSET) ?>" />
+      <input name="previousLabel" type="text" value="<?php echo htmlentities($controller->previousLabel, ENT_QUOTES, APP_CHARSET) ?>" placeholder="<?php echo t('leave blank to hide'); ?>" />
     </div>
   </div>    
 
   <div class="control-group">
     <label class="control-label"><?php  echo t('Up Label')?></label>
     <div class="controls">
-          <input name="parentLabel" type="text" value="<?php echo htmlentities($controller->parentLabel, ENT_QUOTES, APP_CHARSET) ?>" />
+          <input name="parentLabel" type="text" value="<?php echo htmlentities($controller->parentLabel, ENT_QUOTES, APP_CHARSET) ?>" placeholder="<?php echo t('leave blank to hide'); ?>" />
     </div>
   </div>    
  
