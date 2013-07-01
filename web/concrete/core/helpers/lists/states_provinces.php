@@ -512,9 +512,10 @@ class Concrete5_Helper_Lists_StatesProvinces {
 		$stateProvincesFromEvent = Events::fire('on_get_states_provinces_list', $this->stateProvinces);
 		if(is_array($stateProvincesFromEvent)) {
 			$this->stateProvinces = $stateProvincesFromEvent;
-		}
-		foreach(array_keys($this->stateProvinces) as $country) {
-			asort($this->stateProvinces[$country]);
+		} else {
+			foreach(array_keys($this->stateProvinces) as $country) {
+				asort($this->stateProvinces[$country]);
+			}
 		}
 	}
 
