@@ -547,11 +547,11 @@ class Concrete5_Model_AttributeKey extends Object {
 	/** 
 	 * Calls the functions necessary to save this attribute to the database. If no passed value is passed, then we save it via the stock form.
 	 */
-	protected function saveAttribute($attributeValue, $passedValue = false) {
+	protected function saveAttribute($attributeValue, $passedValue = null) {
 		$at = $this->getAttributeType();
 		$at->controller->setAttributeKey($this);
 		$at->controller->setAttributeValue($attributeValue);
-		if ($passedValue) {
+		if (!is_null($passedValue)) {
 			$at->controller->saveValue($passedValue);
 		} else {
 			$at->controller->saveForm($at->controller->post());
