@@ -258,13 +258,13 @@ class Concrete5_Model_Job extends Object {
 		
 		if( !$this->isError() ) $jStatus='ENABLED';
 		else $jStatus='DISABLED_ERROR';
-		$rs = $db->query( "UPDATE Jobs SET jStatus=?, jLastStatusText=? WHERE jHandle=?", array( $jStatus, $resultMsg, $this->jHandle ) );
+		$rs = $db->query( "UPDATE Jobs SET jStatus=?, jLastStatusText=? WHERE jHandle=?", array( $jStatus, substr($resultMsg, 0, 255), $this->jHandle ) );
 		
 		$enum = 0;
 		if ($this->getError() > 0) {
 			$enum = $this->getError();
 		}
-		$rs = $db->query( "INSERT INTO JobsLog (jID, jlMessage, jlTimestamp, jlError) VALUES(?,?,?,?)", array( $this->jID, $resultMsg, $timestamp, $enum ) );
+		$rs = $db->query( "INSERT INTO JobsLog (jID, jlMessage, jlTimestamp, jlError) VALUES(?,?,?,?)", array( $this->jID, substr($resultMsg, 0, 255), $timestamp, $enum ) );
 		Events::fire('on_job_execute', $this);
 		
 		return $resultMsg;
