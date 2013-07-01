@@ -137,7 +137,7 @@ class Concrete5_Model_FileAttributeKey extends AttributeKey {
 		return FileAttributeKey::getByID($akID);
 	}
 	
-	protected function saveAttribute($f, $value = false) {
+	protected function saveAttribute($f, $value = null) {
 		// We check a cID/cvID/akID combo, and if that particular combination has an attribute value ID that
 		// is NOT in use anywhere else on the same cID, cvID, akID combo, we use it (so we reuse IDs)
 		// otherwise generate new IDs

@@ -173,7 +173,7 @@ class Concrete5_Model_UserAttributeKey extends AttributeKey {
 		return UserAttributeKey::getByID($akID);
 	}
 	
-	protected function saveAttribute($uo, $value = false) {
+	protected function saveAttribute($uo, $value = null) {
 		// We check a cID/cvID/akID combo, and if that particular combination has an attribute value ID that
 		// is NOT in use anywhere else on the same cID, cvID, akID combo, we use it (so we reuse IDs)
 		// otherwise generate new IDs
