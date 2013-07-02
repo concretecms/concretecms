@@ -232,7 +232,7 @@ class Concrete5_Controller_Block_Survey extends BlockController {
 		$percentage_value_string = substr_replace($percentage_value_string,'',-1);
 		
 		// Get Google Charts API image
-		$img_src = '<img class="surveyChart" style="margin-bottom:10px;" border="" src="http://chart.apis.google.com/chart?cht=p&chd=t:' . $percentage_value_string . '&chs=180x180&chco=' . join(',',$graphColors) . '" />';
+		$img_src = '<img class="surveyChart" style="margin-bottom:10px;" border="" src="//chart.apis.google.com/chart?cht=p&chd=t:' . $percentage_value_string . '&chs=180x180&chco=' . join(',',$graphColors) . '" />';
 		$this->set('pie_chart', $img_src);
 		
 		// Build human-readable option list
