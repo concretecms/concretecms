@@ -381,7 +381,8 @@ class Concrete5_Controller_Block_Form extends BlockController {
 					$answerLong=$txt->sanitize($_POST['Question'.$row['msqID']]);
 					$answer='';
 				}elseif($row['inputType']=='fileupload'){
-					 $answer=intval( $tmpFileIds[intval($row['msqID'])] );
+					$answerLong="";
+					$answer=intval( $tmpFileIds[intval($row['msqID'])] );
 				}elseif($row['inputType']=='url'){
 					$answerLong="";
 					$answer=$txt->sanitize($_POST['Question'.$row['msqID']]);
