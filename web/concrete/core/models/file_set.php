@@ -246,6 +246,47 @@
 				}
 			}
 		}
+
+		/**
+		 * Returns an array of File objects from the current set
+		 * @return array
+		 */
+		public function getFiles() {
+			if (!$this->fileSetFiles) { $this->populateFiles();	}
+			$files = array();
+			foreach ($this->fileSetFiles as $file) {
+				$files[] = File::getByID($file->fID);
+			}
+			return $files;
+		}
+
+		/**
+		 * Static method to return an array of File objects by the set id
+		 * @param  int $fsID
+		 * @return array
+		 */
+		public static function getFilesBySetID($fsID) {
+			if (intval($fsID) > 0) {
+				$fileset = self::getByID($fsID);
+				if ($fileset instanceof FileSet) {
+					return $fileset->getFiles();
+				}
+			}
+		}
+
+		/**
+		 * Static method to return an array of File objects by the set name
+		 * @param  string $fsName
+		 * @return array
+		 */
+		public static function getFilesBySetName($fsName) {
+			if (!empty($fsName)) {
+				$fileset = self::getByName($fsName);
+				if ($fileset instanceof FileSet) {
+					return $fileset->getFiles();
+				}
+			}
+		}
 		
 		public function delete() {
 			parent::delete();
