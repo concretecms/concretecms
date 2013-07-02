@@ -13,6 +13,8 @@
     
     window.C5GMaps = {
         
+        pacTimer: null,
+        
         init: function () {
             if (!window.C5GMaps.isMapsPresent()) {
                 $('head').append($(unescape("%3Cscript src='https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places&sensor=false&callback=window.C5GMaps.setupAutocomplete' type='text/javascript'%3E%3C/script%3E")));
@@ -40,7 +42,15 @@
                 this.className = 'notfound';
             };
             
-            setInterval(function () { $('.pac-container').css('z-index', '2000'); }, 250);
+            // Keeps the autocomplete list visible above modal dialogue
+            window.C5GMaps.pacTimer = setInterval(function () {
+                var cntr = $('.pac-container'), locBox = $('#ccm_googlemap_block_location');
+                cntr.css('z-index', '2000');
+                if (locBox.length === 0) {
+                    clearInterval(window.C5GMaps.pacTimer);
+                    cntr.remove();
+                }
+            }, 250);
             
             google.maps.event.addListener(autocomplete, 'place_changed', function () {
                 
