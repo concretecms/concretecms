@@ -92,6 +92,14 @@ class Concrete5_Helper_Text {
 		return htmlentities( $v, ENT_COMPAT, APP_CHARSET); 
 	}
 	
+	/** Decodes html-encoded entities (for instance: from '&gt;' to '>')
+	* @param string $v
+	* @return string
+	*/
+	public function decodeEntities($v) {
+		return html_entity_decode($v, ENT_QUOTES, APP_CHARSET);
+	}
+
 	/** 
 	 * A concrete5 specific version of htmlspecialchars(). Double encoding is OFF, and the character set is set to your site's.
 	 */
