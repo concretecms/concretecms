@@ -28,6 +28,19 @@
                     <div class="ccm-note"><? echo t('Enter a number from 0 to 21, with 21 being the most zoomed in.')?> </div>
                 </td>
             </tr>	
+            <tr>
+                <th><? echo t('Map Size')?>:</th>
+                <td>                        
+                    <div style="float: left; margin-right: 20px;">      
+                        <label for="width"><? echo t('Width')?>:</label>        
+                        <input type="text" name="width" value="<? echo ($width != 0) ? $width : '100%'; ?>" style="width: 40px; position: static; margin-right: -4px;">
+                    </div>
+                    <div style="float: left; margin-right: 20px;">
+                        <label for="height"><? echo t('Height')?>:</label>              
+                        <input type="text" name="height" value="<? echo ($height != 0) ? $height : '400px'; ?>" style="width: 40px; position: static; margin-right: -4px;">
+                    </div>
+                </td>
+            </tr>	
         </table>
     </div>
 </div>
