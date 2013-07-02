@@ -76,10 +76,11 @@ class Concrete5_Library_IndexedSearch {
 		
 		$text = '';
 
-		$tagsToSpaces=array('<br>','<br/>','<br />','<p>','</p>','</ p>','<div>','</div>','</ div>');
+		$tagsToSpaces=array('<br>','<br/>','<br />','<p>','</p>','</ p>','<div>','</div>','</ div>','&nbsp;');
 		$blarray=array();
 		$db = Loader::db();
 		$r = $db->Execute('select bID, arHandle from CollectionVersionBlocks where cID = ? and cvID = ?', array($c->getCollectionID(), $c->getVersionID()));
+		$th = Loader::helper('text');
 		while ($row = $r->FetchRow()) {
 			if (in_array($row['arHandle'], $searchableAreaNames)) {
 				$b = Block::getByID($row['bID'], $c, $row['arHandle']);
@@ -91,7 +92,7 @@ class Concrete5_Library_IndexedSearch {
 				if(method_exists($bi,'getSearchableContent')){
 					$searchableContent = $bi->getSearchableContent();  
 					if(strlen(trim($searchableContent))) 					
-						$text .= strip_tags(str_ireplace($tagsToSpaces,' ',$searchableContent)).' ';
+						$text .= $th->decodeEntities(strip_tags(str_ireplace($tagsToSpaces,' ',$searchableContent)), ENT_QUOTES, APP_CHARSET).' ';
 				}
 				unset($b);
 				unset($bi);
