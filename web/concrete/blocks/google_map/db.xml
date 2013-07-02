@@ -9,6 +9,6 @@
 		<field name="location" type="C" size="255"></field>	
 		<field name="latitude" type="F"></field>
 		<field name="longitude" type="F"></field>	
-		<field name="zoom" type="I" size="8"></field>	
+		<field name="zoom" type="I" size="3"></field>	
 	</table>
 </schema>
