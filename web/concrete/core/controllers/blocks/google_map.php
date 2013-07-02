@@ -57,7 +57,7 @@
 			$html = Loader::helper('html');
 			$c = Page::getCurrentPage();
 			if (!$c->isEditMode()) {
-				$this->addFooterItem('<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>');
+				$this->addFooterItem('<script type="text/javascript" src="//maps.google.com/maps/api/js?sensor=true"></script>');
 				$this->addFooterItem('<script type="text/javascript"> 
 				function googleMapInit' . $this->bID . '() { 
 				   try{

@@ -21,9 +21,9 @@ if ($c->isEditMode()) { ?>
 	<div id="youtube<?php echo $bID?>" class="youtubeBlock">
 	
 	<?php if($url['host'] == 'youtu.be') { ?>
-		<iframe class="youtube-player" type="text/html" width="<?php  echo $vWidth; ?>" height="<?php  echo $vHeight; ?>" src="http://www.youtube.com/embed/<?php echo $url['path']?>/<?php echo (strpos($url['path'], '@')) ? '@' : '?'; ?>wmode=transparent" frameborder="0"></iframe>
+		<iframe class="youtube-player" type="text/html" width="<?php  echo $vWidth; ?>" height="<?php  echo $vHeight; ?>" src="//www.youtube.com/embed/<?php echo $url['path']?>/<?php echo (strpos($url['path'], '@')) ? '@' : '?'; ?>wmode=transparent" frameborder="0"></iframe>
 	<?php }else { ?>
-		<iframe class="youtube-player" type="text/html" width="<?php  echo $vWidth; ?>" height="<?php  echo $vHeight; ?>" src="http://www.youtube.com/embed/<?php echo $query['v']?>/<?php echo (strpos($query['v'], '@')) ? '@' : '?'; ?>wmode=transparent" frameborder="0"></iframe>
+		<iframe class="youtube-player" type="text/html" width="<?php  echo $vWidth; ?>" height="<?php  echo $vHeight; ?>" src="//www.youtube.com/embed/<?php echo $query['v']?>/<?php echo (strpos($query['v'], '@')) ? '@' : '?'; ?>wmode=transparent" frameborder="0"></iframe>
 	<?php } ?>
 	</div>
 <? } else { ?>
@@ -39,7 +39,7 @@ if ($c->isEditMode()) { ?>
 			wmode:  "transparent"
 		};
 		flashvars = {};
-		swfobject.embedSWF('http://www.youtube.com/v<?=$url['path']?>&amp;hl=en', 'youtube<?php echo $bID?>_video', '<?php echo $vWidth; ?>', '<?php echo $vHeight; ?>', '8.0.0', false, flashvars, params);
+		swfobject.embedSWF('//www.youtube.com/v<?=$url['path']?>&amp;hl=en', 'youtube<?php echo $bID?>_video', '<?php echo $vWidth; ?>', '<?php echo $vHeight; ?>', '8.0.0', false, flashvars, params);
 		//]]>
 		</script>
 	<? }else{ ?>
@@ -49,7 +49,7 @@ if ($c->isEditMode()) { ?>
 			wmode:  "transparent"
 		};
 		flashvars = {};
-		swfobject.embedSWF('http://www.youtube.com/v/<?=$query['v']?>&amp;hl=en', 'youtube<?php echo $bID?>_video', '<?php echo $vWidth; ?>', '<?php echo $vHeight; ?>', '8.0.0', false, flashvars, params);
+		swfobject.embedSWF('//www.youtube.com/v/<?=$query['v']?>&amp;hl=en', 'youtube<?php echo $bID?>_video', '<?php echo $vWidth; ?>', '<?php echo $vHeight; ?>', '8.0.0', false, flashvars, params);
 		//]]>
 		</script>
 	<? } ?>
