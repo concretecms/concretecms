@@ -12,23 +12,20 @@
 
 class Concrete5_Helper_Security {
 
-    public static function sanitizeString($string)
-    {
+    public static function sanitizeString($string) {
         return filter_var($string, FILTER_SANITIZE_STRING);
     }
 
-    public static function sanitizeInt($int)
-    {
+    public static function sanitizeInt($int) {
         return filter_var($int, FILTER_SANITIZE_NUMBER_INT);
     }
 
-    public static function sanitizeURL($url)
-    {
+    public static function sanitizeURL($url) {
         return filter_var($url, FILTER_SANITIZE_URL);
     }
 
-    public static function sanitizeEmail($email)
-    {
+    public static function sanitizeEmail($email) {
         return filter_var($email, FILTER_VALIDATE_EMAIL);
     }
+    
 }
