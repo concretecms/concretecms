@@ -70,7 +70,9 @@
 					$this->translate->setLocale($locale);
 				}
 			}
-			Events::fire('on_locale_change', $locale, $localeNeededLoading);
+			if($localeNeededLoading) {
+				Events::fire('on_locale_load', $locale);
+			}
 		}
 
 		public function getLocale() {
