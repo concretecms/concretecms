@@ -1,5 +1,11 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?>  
 <?
+
+$helperFile = Loader::helper('concrete/file');
+if($fileExtensions) {  // format file extensions for viewing and editing. 
+	$fileExtensions = $helperFile->unserializeUploadFileExtensions($fileExtensions);
+	$fileExtensions = implode(',', $fileExtensions);
+}
 if ($controller->getTask() == 'add') {
 	$enablePosting = 1;
 	$paginate = 1;

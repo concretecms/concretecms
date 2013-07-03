@@ -179,6 +179,7 @@ class Concrete5_Model_Conversation_Message extends Object {
 			}
 			$db->execute('INSERT INTO ConversationFlaggedMessages (cnvMessageFlagTypeID, cnvMessageID) VALUES (?,?)',array($flagtype->getConversationFlagTypeID(),$this->getConversationMessageID()));
 			$this->cnvMessageFlagTypes[] = $flagtype;
+			$this->unapprove();
 			return true;
 		}
 		throw new Exception('Invalid flag type.');
