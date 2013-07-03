@@ -22,6 +22,7 @@ class Concrete5_Controller_Dashboard_Conversations_Messages extends DashboardBas
 
 		if ($_REQUEST['cmpMessageKeywords']) {
 			$ml->filterByKeywords($_REQUEST['cmpMessageKeywords']);
+			$ml->filterByNotDeleted();
 		}
 		if ($_REQUEST['cmpMessageFilter'] && $_REQUEST['cmpMessageFilter'] != 'approved') {
 			switch($_REQUEST['cmpMessageFilter']) {
@@ -30,12 +31,14 @@ class Concrete5_Controller_Dashboard_Conversations_Messages extends DashboardBas
 					break;
 				case 'unapproved':
 					$ml->filterByUnapproved();
+					$ml->filterByNotDeleted();
 				default: // flag
 					$flagtype = ConversationFlagType::getByHandle($_REQUEST['cmpMessageFilter']);
 					if (is_object($flagtype)){
 						$ml->filterByFlag($flagtype);
+						$ml->filterByNotDeleted();
 					} else {
-						//$ml->filterByApproved();
+						$ml->filterByNotDeleted();
 					}
 					break;
 
@@ -56,6 +59,24 @@ class Concrete5_Controller_Dashboard_Conversations_Messages extends DashboardBas
 	}
 
 	public function bulk_update() {
+		foreach($this->post('cnvMessageID') as $messageID) {
+		$messageObj = ConversationMessage::getByID($messageID);
+			switch($this->post('bulkTask')) {
+				case 'Deleted': 
+					$messageObj->delete();
+					break; 
+				case 'Spam': 
+					$spamFlag = ConversationFlagType::getByHandle('spam');
+					$messageObj->flag($spamFlag);
+					break;
+				case 'Unapproved':
+					$messageObj->unapprove();
+					break;
+				case 'Approved':
+					$messageObj->approve();
+					break;
+			}
+		}
 		$this->redirect(Page::getCurrentPage()->getCollectionPath());
 	}
 	
