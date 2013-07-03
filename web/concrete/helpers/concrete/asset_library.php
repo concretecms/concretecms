@@ -69,7 +69,14 @@
 			$html .= '<a href="javascript:void(0)" onclick="ccm_chooseAsset=false; ccm_alLaunchSelectorFileManager(\'' . $id . '\')">' . $chooseText . '</a>';
 			if ($filterArgs != false) {
 				foreach($filterArgs as $key => $value) {
-					$html .= '<input type="hidden" class="ccm-file-manager-filter" name="' . $key . '" value="' . $value . '" />';
+					if(is_array($value)) {
+						foreach($value as $valueItem) {
+							$html .= '<input type="hidden" class="ccm-file-manager-filter" name="' . $key . '" value="' . $valueItem . '" />';
+						}
+					}
+					else {
+						$html .= '<input type="hidden" class="ccm-file-manager-filter" name="' . $key . '" value="' . $value . '" />';
+					}
 				}
 			}
 			$html .= '</div><input id="' . $id . '-fm-value" type="hidden" name="' . $postname . '" value="' . $fileID . '" />';
