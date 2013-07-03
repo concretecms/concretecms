@@ -1,5 +1,6 @@
-var ccm_event = function(h, b) {
-  "use strict"
+var ccm_event = (function(window){
+  "use strict";
+
   /**
    * concrete5 Event Managment
    * -------------------------
@@ -12,28 +13,48 @@ var ccm_event = function(h, b) {
    *
    * @author Korvin Szanto <Korvin@concrete5.org>
    */
-  ccm_event = function() {
-    var e = b.createElement("span"), t = this;
-    this.sub = function(c, b, a) {
-      a = a || e;
-      a.addEventListener ? a.addEventListener(c.toLowerCase(), b, 0) : a.attachEvent("on" + c.toLowerCase(), b)
-    };
-    this.pub = function(c, g, a) {
-      var d = a || e, f = c.toLowerCase();
-      b.createEvent ? (a = b.createEvent("HTMLEvents"), a.initEvent(f, 1, 1)) : (a = b.createEventObject(), a.eventType = f);
-      a.eventName = "CCMEvent";
-      a.eventData = g || {};
-      b.createEvent ? d.dispatchEvent(a) : d.fireEvent("on" + a.eventType, a);
-      if("function" === typeof d["on" + c.toLowerCase()]) {
-        d["on" + c.toLowerCase()](a)
-      }
-    };
-    t.subscribe = t.bind = t.watch = t.on = t.sub;
-    t.publish = t.fire = t.trigger = t.do = t.pub;
-    return t
+  var target = window.document.createElement('span');
+  var self = {};
+
+  // Handle subscribing
+  self.sub = function (type, handler, elem) {
+    var element = elem || target;
+    if (element.addEventListener) {
+      element.addEventListener(type.toLowerCase(), handler, false);
+    } else {
+      element.attachEvent('on' + type.toLowerCase(), handler);
+    }
   };
-  return new ccm_event
-}(window, document);
+
+  // Handle publishing
+  self.pub = function (type, data, elem) {
+    var event, eventName = 'CCMEvent', element = elem || target;
+    if (document.createEvent) {
+      event = document.createEvent("HTMLEvents");
+      event.initEvent(type.toLowerCase(), true, true);
+    } else {
+      event = document.createEventObject();
+      event.eventType = type.toLowerCase();
+    }
+    event.eventName = eventName;
+    event.eventData = data || {};
+
+    if (document.createEvent) {
+      element.dispatchEvent(event);
+    } else {
+      element.fireEvent("on" + event.eventType, event);
+    }
+    if (typeof element['on' + type.toLowerCase()] === 'function') {
+      element['on' + type.toLowerCase()](event);
+    }
+  };
+
+  // Add aliases
+  self.subscribe = self.bind = self.watch   = self.on = self.sub;
+  self.publish   = self.fire = self.trigger = self.do = self.pub;
+
+  return self;
+})(window);
 window.ccm_subscribe = ccm_event.sub;
 window.ccm_publish = ccm_event.pub;
 
