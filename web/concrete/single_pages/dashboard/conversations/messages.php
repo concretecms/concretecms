@@ -38,14 +38,12 @@ $ip = Loader::helper('validation/ip'); ?>
 	table.ccm-conversation-messages td {
 		vertical-align: top;
 		padding: 5px;
+		padding-top: 20px;
+		padding-bottom: 20px;
 	}
 	
 	table.ccm-conversation-messages tr {
 		cursor: pointer;
-	}
-	
-	table.ccm-conversation-messages tr.flagged {
-		background-color: #faf9e1;
 	}
 	
 	table.ccm-conversation-messages tr.deleted {
@@ -54,6 +52,10 @@ $ip = Loader::helper('validation/ip'); ?>
 	
 	table.ccm-conversation-messages tr.pending {
 		background-color: #ddecf8;
+	}
+	
+	table.ccm-conversation-messages tr.flagged {
+		background-color: #faf9e1;
 	}
 	
 	table.ccm-conversation-messages tr p.message-status {
@@ -223,22 +225,6 @@ $ip = Loader::helper('validation/ip'); ?>
 </div>
 <script type="text/javascript">
 $(function() {
-	$('.ccm-conversation-messages .ccm-input-checkbox').change(function() {
-		if($(this).is(':checked')) {
-			$('#ccm-conversation-messages-multiple-operations').attr('disabled',false);
-		} else {
-			var disableSelect = true;
-			$('.ccm-conversation-messages .ccm-input-checkbox').each(function() {
-				if($(this).is(':checked')) {
-					disableSelect = false;
-					return false;
-				}
-			});
-			if(disableSelect) {
-				$('#ccm-conversation-messages-multiple-operations').attr('disabled',true);
-			}
-		}
-	});
 	
 	var attachButtonBindings = function(parentObj, targetSelector, selectedAction) {
 		var controllerActions = {};
@@ -299,6 +285,13 @@ $(function() {
 			$(this).next('a.read-all').on('click', function(event){
 				event.preventDefault();
 				event.stopPropagation();
+				$('.message-entry').each(function(){
+					$('.popover').each(function(){
+						if($(this).is(':visible')) {
+							$(this).prev('.message-entry').popover('hide');
+						}
+					})
+				});
 				if($(this).hasClass('truncated')) {
 					$(this).prev('.message-output').html('<p>'+$(this).attr('data-rel-summary')+'</p>');
 					$(this).removeClass('truncated');
@@ -312,7 +305,7 @@ $(function() {
 				}
 			})
 		});
-		$('.message-entry').each(function(){
+		$('.message-entry').each(function(){  // message entry click 
 			$(this).unbind('click');
 			$(this).on('click', function(event) {
 				$('.message-entry').each(function(){
@@ -343,7 +336,7 @@ $(function() {
 				}
 			})
 		});
-		$(document).on('click', function(){
+		$(document).on('click', function(){   // close popovers on click off
 			$('.message-entry').each(function(){
 				$('.popover').each(function(){
 					if($(this).is(':visible')) {
@@ -352,32 +345,53 @@ $(function() {
 				})
 			})
 		})
-	}
-
-	attachBindings($('.ccm-conversation-messages'));
-
-
-	$('#ccm-conversation-message-list-all').change(function() {
-		if($(this).is(':checked')) {
-			$('.ccm-conversation-messages .ccm-input-checkbox').each(function() { 
-				$(this).attr('checked',true);
-				$('#ccm-conversation-messages-multiple-operations').attr('disabled',false); 
-			});
-		} else {
-			$('.ccm-conversation-messages .ccm-input-checkbox').each(function() { 
-				$(this).attr('checked',false);
-				$('#ccm-conversation-messages-multiple-operations').attr('disabled',true);
-			});
-		}
-	});
 	
-	$('#ccm-conversation-messages-multiple-operations').change(function() {
-		if($(this).val() != 'any') {
-			if(confirm('<?=t('Are you sure?')?>')) {
-				$('#ccm-conversation-messages-multiple-update').submit();
+		$('.ccm-conversation-messages .ccm-input-checkbox').on('click', function(event){
+			event.stopPropagation();  // keep message summary expand from triggering popover.
+		});
+		
+		$('#ccm-conversation-message-list-all').change(function() {  // bulk checkbox checker / unchecker
+			if($(this).is(':checked')) {
+				$('.ccm-conversation-messages .ccm-input-checkbox').each(function() { 
+					$(this).prop('checked', true);
+					$('#ccm-conversation-messages-multiple-operations').attr('disabled',false); 
+				});
+			} else {
+				$('.ccm-conversation-messages .ccm-input-checkbox').each(function() { 
+					$(this).prop('checked', false);
+					$('#ccm-conversation-messages-multiple-operations').attr('disabled',true);
+				});
+			}
+		});
+		
+		$('#ccm-conversation-messages-multiple-operations').change(function() {
+			if($(this).val() != 'any') {
+				if(confirm('<?=t('Are you sure?')?>')) {  // hidden "bulkTask" input is appended to form with given task name prior to submit
+					$('#ccm-conversation-messages-multiple-update').append('<input type="hidden" name="bulkTask" value="'+$('#ccm-conversation-messages-multiple-operations').val()+'"/>');
+					$('#ccm-conversation-messages-multiple-update').submit();
+				}
+			}
+		});
+		
+		$('.ccm-conversation-messages .ccm-input-checkbox').change(function() {
+		if($(this).is(':checked')) {
+			$('#ccm-conversation-messages-multiple-operations').attr('disabled',false);
+		} else {
+			var disableSelect = true;
+			$('.ccm-conversation-messages .ccm-input-checkbox').each(function() {
+				if($(this).is(':checked')) {
+					disableSelect = false;
+					return false;
+				}
+			});
+			if(disableSelect) {
+				$('#ccm-conversation-messages-multiple-operations').attr('disabled',true);
 			}
 		}
 	});
+	}
+
+	attachBindings($('.ccm-conversation-messages'));
 	
 });
 </script>
