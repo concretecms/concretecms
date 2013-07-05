@@ -333,7 +333,6 @@
 			$sorted_array = $this->sorted_array;
 			$navObjectNames = $this->navObjectNames;
 
-			$allowedParentIDs = ($allowedParentIDs) ? $allowedParentIDs : array();
 			$q = "select Pages.cID from Pages where cIsTemplate = 0 and cIsActive = 1 and cParentID = '{$cParentID}' {$orderBy}";
 			$r = $db->query($q);
 			if ($r) {
