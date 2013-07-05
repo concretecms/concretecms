@@ -343,7 +343,6 @@ class Concrete5_Controller_Block_Form extends BlockController {
 		if(count($errors)){			
 			$this->set('formResponse', t('Please correct the following errors:') );
 			$this->set('errors',$errors);
-			$this->set('Entry',$E);			
 		}else{ //no form errors			
 			//save main survey record	
 			$u = new User();
