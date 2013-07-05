@@ -46,7 +46,7 @@
 			}
 		}
 		
-		public function on_page_view() {
+		public function on_page_view($page) {
 			$stack = Stack::getByID($this->stID);
 			if (!is_object($stack)) {
 				return false;
@@ -66,7 +66,7 @@
 							$styleHeader = '#'.$csr->getCustomStyleRuleCSSID(1).' {'. $csr->getCustomStyleRuleText(). "} \r\n";  
 							$btc->addHeaderItem("<style type=\"text/css\"> \r\n".$styleHeader.'</style>', 'VIEW');
 						}
-						$btc->runTask('on_page_view', array($view));
+						$btc->runTask('on_page_view', array($page));
 					}
 				}			
 			}
