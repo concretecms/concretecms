@@ -500,13 +500,11 @@
 			// returns an array of collection IDs going from the top level to the current item
 			$db = Loader::db();
 			$cParentID = Page::getCollectionParentIDFromChildID($cID);
-			if ($cParentID > -1) {
-				if ($cParentID != $stopAt) {
-					if (!in_array($cParentID, $this->cParentIDArray)) {
-						$this->cParentIDArray[] = $cParentID;
-					}
-					$this->populateParentIDArray($cParentID);
+			if ($cParentID > 0) {
+				if (!in_array($cParentID, $this->cParentIDArray)) {
+					$this->cParentIDArray[] = $cParentID;
 				}
+				$this->populateParentIDArray($cParentID);
 			}
 
 		}
