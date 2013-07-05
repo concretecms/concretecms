@@ -74,7 +74,7 @@
 			$result = '';
 			foreach(array('HTTP_CLIENT_IP', 'HTTP_X_FORWARDED_FOR', 'HTTP_X_FORWARDED', 'HTTP_X_CLUSTER_CLIENT_IP', 'HTTP_FORWARDED_FOR', 'HTTP_FORWARDED', 'REMOTE_ADDR') as $index) {
 				if(array_key_exists($index, $_SERVER) && is_string($_SERVER[$index])) {
-					foreach(split(',', $_SERVER[$index]) as $ip) {
+					foreach(explode(',', $_SERVER[$index]) as $ip) {
 						$ip = trim($ip);
 						if(strlen($ip)) {
 							if($this->isPrivateIP($ip)) {
