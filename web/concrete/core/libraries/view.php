@@ -887,6 +887,12 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				}
 			}			
 			
+			$r = Request::get();
+			$assetGroup = $r->getRequiredAssets();
+			if (is_object($assetGroup)) {
+				$assetGroup->outputItems();
+			}
+			
 			// Determine which outer item/theme to load
 			// obtain theme information for this collection
 			if (isset($this->themeOverride)) {

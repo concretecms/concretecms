@@ -8,8 +8,8 @@ class Concrete5_Library_Asset_Assets_Gathering extends Asset {
 	 */
 	public function getAssetFiles() {
 		return array(
-			AssetFile::javascript('ccm.gathering.js')->minify(false),
-			AssetFile::css('ccm.gathering.css')->minify(false)
+			new JavaScriptAssetFile('ccm.gathering.js', false),
+			new CSSAssetFile('ccm.gathering.css', false)
 		);
 	}
 
