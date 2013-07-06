@@ -13,6 +13,7 @@ class Concrete5_Library_AssetList {
 		return self::$loc;
 	}
 
+/*
 	public function register($identifier) {
 		$env = Environment::get();
 		$path = $identifier;
@@ -37,6 +38,6 @@ class Concrete5_Library_AssetList {
 			include($rec->file);
 		}
 	}
-		
+	*/	
 
 }

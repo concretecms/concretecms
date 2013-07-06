@@ -34,7 +34,7 @@ class Concrete5_Library_Request {
 	private $hasCustomRequestUser;
 	private $customRequestUser;
 	private $customRequestDateTime;
-	private $requiredAssets = array();
+	private $requiredAssetGroup;
 	
 	// parses the current request and returns an 
 	// object with tasks, tools, etc... defined in them
@@ -98,6 +98,7 @@ class Concrete5_Library_Request {
 	public function __construct($path) {
 		$this->requestPath = $path;
 		$this->parse();
+		$this->requiredAssetGroup = new AssetGroup();
 	}
 	
 	/** 
@@ -459,6 +460,16 @@ class Concrete5_Library_Request {
 	 */
 	public function requireAsset($assetHandle) {
 		$asset = Asset::getByHandle($assetHandle);
+		if (!$this->requiredAssetGroup->contains($asset)) {
+			$this->requiredAssetGroup->add($asset);
+		}
+	}
+
+	/** 
+	 * Returns all required assets
+	 */
+	public function getRequiredAssets() {
+		return $this->requiredAssetGroup;
 	}
 
 }
