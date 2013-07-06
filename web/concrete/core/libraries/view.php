@@ -264,21 +264,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		 * @access private
 		 */
 		public function outputHeaderItems() {
-			
-			$items = $this->getHeaderItems();
-			
-			// Loop through all items
-			// If it is a header output object, place each item in a separate array for its container directory
-			// Otherwise, put it in the outputPost array
-			
-			$outputPost = array();
-			$output = array();
-			
-			foreach($items as $hi) {
-				print $hi; // caled on two seperate lines because of pre php 5.2 __toString issues
-				print "\n";
-			}			
-			
+			print View::getHeaderAssetsOutputPlaceholder();
 		}
 		
 		/** 
@@ -286,18 +272,40 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		 * @access private
 		 */
 		public function outputFooterItems() {
-			$items = $this->getFooterItems();
-			
-			foreach($items as $hi) {
-				print $hi; // caled on two seperate lines because of pre php 5.2 __toString issues
-				print "\n";
-			}
+			print View::getFooterAssetsOutputPlaceholder();
 		}
 
-		public function field($fieldName) {
+
+		public function getHeaderAssetsOutputPlaceholder() {
+			return '<!--ccm:assets:header//-->';
+		}
+
+		protected function getFooterAssetsOutputPlaceholder() {
+			return '<!--ccm:assets:footer//-->';
+		}
+
+
+		protected function field($fieldName) {
 			return $this->controller->field($fieldName);
 		}
 		
+		protected function replaceAssetPlaceholders($pageContent) {
+			$items = $this->getHeaderItems();
+			$header = '';
+			foreach($items as $item) {
+				$header .= (string) $item;
+				$header .= "\n";
+			}
+			$pageContent = str_replace($this->getHeaderAssetsOutputPlaceholder(), $header, $pageContent);
+			$items = $this->getFooterItems();
+			$footer = '';
+			foreach($items as $item) {
+				$footer .= (string) $item;
+				$footer .= "\n";
+			}
+			$pageContent = str_replace($this->getFooterAssetsOutputPlaceholder(), $footer, $pageContent);
+			return $pageContent;				
+		}
 		
 		/** 
 		 * @access private
@@ -933,13 +941,15 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				$pageContent = ob_get_contents();
 				ob_end_clean();
 				
+				$pageContent = $this->replaceAssetPlaceholders($pageContent);
+
 				$ret = Events::fire('on_page_output', $pageContent);
 				if($ret != '') {
-					print $ret;
 					$pageContent = $ret;
-				} else {
-					print $pageContent;
 				}
+
+				print $pageContent;
+
 
 				$cache = PageCache::getLibrary();
 				if ($shouldAddToCache) {

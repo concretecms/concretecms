@@ -350,6 +350,10 @@ $classes = array(
 	'ComposerDraftPermissionResponse' => array('model','permission/response/composer_draft'),
 	'ComposerDraftAuthorPermissionAccessEntity' => array('model','permission/access/entity/types/composer_draft_author'),
 
+
+	/* assets */ 
+
+	'GatheringAsset' => array('library', 'asset/assets/gathering')
 );
 
 Loader::registerAutoload($classes);
