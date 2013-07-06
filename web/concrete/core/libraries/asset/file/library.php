@@ -1,7 +1,12 @@
 <?
 
 defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Library_AssetFile {
+abstract class Concrete5_Library_AssetFile {
 	
-	
+	const ASSET_FILE_POSITION_HEADER = 'H';
+	const ASSET_FILE_POSITION_FOOTER = 'F';
+
+	abstract public function getAssetFilePosition();
+
+
 }

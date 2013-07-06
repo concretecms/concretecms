@@ -19,6 +19,7 @@ class Concrete5_Library_AssetGroup {
 	public function outputItems() {
 		foreach($this->assets as $asset) {
 			$files = $asset->getAssetFiles();
+			print_r($files);exit;
 		}
 	}
 }
