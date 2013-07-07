@@ -96,7 +96,7 @@ $th = Loader::helper('text');
 				'100' => '100',
 				'500' => '500'
 			), Loader::helper('text')->specialchars($searchRequest['numResults']), array('style' => 'width:65px; margin: 0px 10px 0px 10px;'))?>
-			<?php print $concrete_interface->submit('Search', $formID, $buttonAlign = 'left', 'searchSubmit'); ?><br />
+			<?php print $concrete_interface->submit(t('Search'), $formID, $buttonAlign = 'left', 'searchSubmit'); ?><br />
 			<a href="javascript:void(0)" class="ccm-icon-option-closed" id="searchUnderParent"><?php echo t('Advanced Search'); ?></a>
 			<div id="parentOptions" style="margin-left: 25px; display: <?php echo $parentDialogOpen ? 'block' : 'none'; ?>">
 			<div id="pageSelectorHolder" style="float: left; width: 400px; margin-top: 15px;">
