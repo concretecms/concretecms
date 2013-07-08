@@ -117,7 +117,7 @@ class Concrete5_Job_GenerateSitemap extends Job {
 			return false;
 		}
 		$pageVersion = $page->getVersionObject();
-		if(!$pageVersion->isApproved()) {
+		if($pageVersion && !$pageVersion->isApproved()) {
 			return false;
 		}
 		$pubDate = new DateTime($page->getCollectionDatePublic());
