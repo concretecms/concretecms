@@ -15,4 +15,8 @@ class Concrete5_Library_CSSAssetFile extends AssetFile {
 		return true;
 	}
 
+	public function __toString() {
+		return '<link rel="stylesheet" type="text/css" href="' . $this->file . '" />';
+	}
+
 }

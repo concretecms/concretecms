@@ -34,15 +34,18 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		public $controller;
 		
 		
+		private $outputAssets = array();
+
+
 		/** 
 		 * An array of items that get loaded into a page's header
 		 */
+		/*
 		private $headerItems = array();
 
-		/** 
-		 * An array of items that get loaded into just before body close
-		 */
 		private $footerItems = array();
+
+		*/
 
 		/**
 		 * themePaths holds the various hard coded paths to themes
@@ -136,20 +139,16 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		 * @access private
 		 */
 
-		public function addHeaderItem($item, $namespace = 'VIEW') {
-			if ($this->resolveItemConflicts($item)) {
-				$this->headerItems[$namespace][] = $item;
-			}
+		public function addHeaderItem($item) {
+			$this->outputAssets[AssetFile::ASSET_FILE_POSITION_HEADER]['unweighted'][] = $item;
 		}
 		
 		/** 
 		 * Function responsible for adding footer items within the context of a view.
 		 * @access private
 		 */
-		public function addFooterItem($item, $namespace = 'VIEW') {
-			if ($this->resolveItemConflicts($item)) {
-				$this->footerItems[$namespace][] = $item;
-			}
+		public function addFooterItem($item) {
+			$this->outputAssets[AssetFile::ASSET_FILE_POSITION_FOOTER]['unweighted'][] = $item;
 		}
 		
 		/**
@@ -170,6 +169,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		 * ~If a duplicate is found and the given item does NOT have a higher version than
 		 *  the found item, we return FALSE (with no side-effects).
 		 */
+		/*
 		private function resolveItemConflicts($checkItem, &$againstItems = null) {
 			
 			//Only check items that have "unique handles"
@@ -258,13 +258,15 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			
 			return $retItems;
 		}
+		*/
 		
+
 		/** 
 		 * Function responsible for outputting header items
 		 * @access private
 		 */
 		public function outputHeaderItems() {
-			print View::getHeaderAssetsOutputPlaceholder();
+			print '<!--ccm:assets:' . AssetFile::ASSET_FILE_POSITION_HEADER . '//-->';
 		}
 		
 		/** 
@@ -272,38 +274,52 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		 * @access private
 		 */
 		public function outputFooterItems() {
-			print View::getFooterAssetsOutputPlaceholder();
+			print '<!--ccm:assets:' . AssetFile::ASSET_FILE_POSITION_FOOTER . '//-->';
 		}
-
-
-		public function getHeaderAssetsOutputPlaceholder() {
-			return '<!--ccm:assets:header//-->';
-		}
-
-		protected function getFooterAssetsOutputPlaceholder() {
-			return '<!--ccm:assets:footer//-->';
-		}
-
 
 		protected function field($fieldName) {
 			return $this->controller->field($fieldName);
 		}
 		
+		protected function addOutputAssetFile(AssetFile $file) {
+			if ($file->getAssetFileWeight() > 0) {
+				$this->outputAssets[$file->getAssetFilePosition()]['weighted'][] = $file;
+			} else {
+				$this->outputAssets[$file->getAssetFilePosition()]['unweighted'][] = $file;
+			}
+		}
+
+		protected function sortAssetsByWeightDescending($assetA, $assetB) {
+			$weightA = $assetA->getAssetFileWeight();
+			$weightB = $assetB->getAssetFileWeight();
+
+			if ($weightA == $weightB) {
+				return 0;
+			}
+
+			return $weightA < $weightB ? 1 : -1;
+		}
+
 		protected function replaceAssetPlaceholders($pageContent) {
-			$items = $this->getHeaderItems();
-			$header = '';
-			foreach($items as $item) {
-				$header .= (string) $item;
-				$header .= "\n";
+			foreach($this->outputAssets as $position => $assets) {
+				$output = '';
+				if (is_array($assets['weighted'])) {
+					$weightedAssets = $assets['weighted'];
+					usort($weightedAssets, array($this, 'sortAssetsByWeightDescending'));
+					foreach($weightedAssets as $item) {
+						$output .= (string) $item;
+						$output .= "\n";
+					}
+				}
+				if (is_array($assets['unweighted'])) {
+					// now the unweighted
+					foreach($assets['unweighted'] as $item) {
+						$output .= (string) $item;
+						$output .= "\n";
+					}
+				}
+				$pageContent = str_replace('<!--ccm:assets:' . $position . '//-->', $output, $pageContent);
 			}
-			$pageContent = str_replace($this->getHeaderAssetsOutputPlaceholder(), $header, $pageContent);
-			$items = $this->getFooterItems();
-			$footer = '';
-			foreach($items as $item) {
-				$footer .= (string) $item;
-				$footer .= "\n";
-			}
-			$pageContent = str_replace($this->getFooterAssetsOutputPlaceholder(), $footer, $pageContent);
 			return $pageContent;				
 		}
 		
@@ -887,12 +903,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				}
 			}			
 			
-			$r = Request::get();
-			$assetGroup = $r->getRequiredAssets();
-			if (is_object($assetGroup)) {
-				$assetGroup->outputItems();
-			}
-			
 			// Determine which outer item/theme to load
 			// obtain theme information for this collection
 			if (isset($this->themeOverride)) {
@@ -946,6 +956,18 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				include($this->theme);
 				$pageContent = ob_get_contents();
 				ob_end_clean();
+
+				$r = Request::get();
+				$assetGroup = $r->getRequiredAssets();
+				if (is_object($assetGroup)) {
+					foreach($assetGroup->getAssets() as $asset) {
+						$files = $asset->getAssetFiles();
+						foreach($files as $af) {
+							$this->addOutputAssetFile($af);
+						}
+					}
+				}
+				
 				
 				$pageContent = $this->replaceAssetPlaceholders($pageContent);
 

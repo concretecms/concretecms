@@ -5,21 +5,41 @@ class Concrete5_Library_AssetGroup {
 	
 	protected $assets = array();
 
-	public function contains(Asset $asset) {
-		return in_array($asset, $this->assets);
-	}
-
-	public function add(Asset $asset) {
-		$this->assets[] = $asset;
-	}
-
-	/** 
-	 * Loops through all assets, breaks them out into header and footer items
-	 */
-	public function outputItems() {
-		foreach($this->assets as $asset) {
-			$files = $asset->getAssetFiles();
-			print_r($files);exit;
+	public function contains($asset) {
+		if ($asset instanceof Asset) {
+			return in_array($asset, $this->assets);
 		}
+		if ($asset instanceof AssetGroup) {
+			foreach($asset->getAssets() as $groupedAsset) {
+				if (in_array($groupedAsset, $this->assets)) {
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
+
+	public function add($asset) {
+		if (!($asset instanceof Asset)) {
+			$asset = Asset::getByPath($asset);
+		}
+		if (!$this->contains($asset)) {
+			$this->assets[] = $asset;
+		}
+	}
+
+	public function getAssets() {
+		return $this->assets;
+	}
+	
+	public function getAssetFiles() {
+		$files = array();
+		foreach($this->assets as $asset) {
+			foreach($asset->getAssetFiles() as $file) {
+				$files[] = $file;
+			}
+		}
+		return $files;
 	}
 }
