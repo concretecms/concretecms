@@ -459,10 +459,7 @@ class Concrete5_Library_Request {
 	 * when a view is rendered
 	 */
 	public function requireAsset($assetHandle) {
-		$asset = Asset::getByHandle($assetHandle);
-		if (!$this->requiredAssetGroup->contains($asset)) {
-			$this->requiredAssetGroup->add($asset);
-		}
+		$this->requiredAssetGroup->add($assetHandle);
 	}
 
 	/** 

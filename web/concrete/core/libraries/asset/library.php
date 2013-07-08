@@ -6,7 +6,7 @@ abstract class Concrete5_Library_Asset {
 	
 	abstract public function getAssetFiles();
 
-	public static function getByHandle($identifier) {
+	public static function getByPath($identifier) {
 		$class = Object::camelcase($identifier) . 'Asset';
 		return new $class();	
 	}

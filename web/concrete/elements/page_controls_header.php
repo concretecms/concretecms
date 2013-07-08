@@ -21,13 +21,17 @@ print "var CCM_SECURITY_TOKEN = '" . $valt->generate() . "';";
 
 <?
 $dh = Loader::helper('concrete/dashboard');
+$req = Request::get();
+
 if (!$dh->inDashboard()) {
+
+	$req->requireAsset('jquery');
+	$req->requireAsset('redactor');
+
 	$this->addHeaderItem($html->css('ccm.app.css'));
 	$this->addHeaderItem($html->css('jquery.ui.css'));
-	$this->addHeaderItem($html->css('redactor.css'));
 	
 	$this->addFooterItem('<script type="text/javascript" src="' . REL_DIR_FILES_TOOLS_REQUIRED . '/i18n_js"></script>'); 
-	$this->addHeaderItem($html->javascript('jquery.js'));
 	$this->addFooterItem($html->javascript('jquery.ui.js'));
 	Loader::library("3rdparty/mobile_detect");
 	$md = new Mobile_Detect();
@@ -39,7 +43,6 @@ if (!$dh->inDashboard()) {
 	$this->addFooterItem($html->javascript('jquery.rating.js'));
 	$this->addFooterItem($html->javascript('bootstrap.js'));
 	$this->addFooterItem($html->javascript('ccm.app.js'));
-	$this->addFooterItem($html->javascript('redactor.js'));
 	$this->addFooterItem('<script type="text/javascript">$(function() { CCMToolbar.start(); });</script>');
 	if ($c->isEditMode()) {
 		$this->addFooterItem('<script type="text/javascript">$(function() { CCMEditMode.start(); });</script>');

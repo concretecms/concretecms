@@ -356,8 +356,11 @@ $classes = array(
 
 
 	/* assets */ 
-
-	'GatheringAsset' => array('library', 'asset/assets/gathering')
+	'JqueryAsset' => array('library', 'asset/assets/jquery'),
+	'ConversationAsset' => array('library', 'asset/assets/conversation'),
+	'ConversationBaseAsset' => array('library', 'asset/assets/conversation/base'),
+	'GatheringAsset' => array('library', 'asset/assets/gathering'),
+	'RedactorAsset' => array('library', 'asset/assets/redactor')
 );
 
 Loader::registerAutoload($classes);
