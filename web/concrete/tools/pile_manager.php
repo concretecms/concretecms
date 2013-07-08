@@ -158,9 +158,10 @@ if (($_REQUEST['btask'] == 'add' || $_REQUEST['ctask'] == 'add') && $scrapbookNa
 					}
 				}
 
-				$PHP_SELF = SecurityHelper::sanitize_url($_SERVER['PHP_SELF']);
-				$cID = SecurityHelper::sanitize_int($_REQUEST['cID']);
-				$arHandle = SecurityHelper::sanitize_string($_REQUEST['arHandle']);
+				$securityHelper = Loader::helper('security');
+				$PHP_SELF = $securityHelper->sanitizeURL($_SERVER['PHP_SELF']);
+				$cID = $securityHelper->sanitizeInt($_REQUEST['cID']);
+				$arHandle = $securityHelper->sanitizeString($_REQUEST['arHandle']);
 			
 				header('Location: ' . $PHP_SELF . '?pID=' . $p->getPileID() . '&cID=' . $cID . '&arHandle=' . $arHandle);
 				exit;

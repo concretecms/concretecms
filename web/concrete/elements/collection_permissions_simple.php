@@ -39,7 +39,7 @@ if ($cp->canEditPagePermissions()) {
 		$gArray[] = Group::getByID($g['gID']);
 	}
 
-	$rel = SecurityHelper::sanitizeString($_REQUEST['rel']);
+	$rel = Loader::helper('security')->sanitizeString($_REQUEST['rel']);
 ?>
 
 <div class="ccm-ui">
