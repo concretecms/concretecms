@@ -4,6 +4,7 @@
 $sh = Loader::helper('concrete/dashboard/sitemap');
 $numChildren = $c->getNumChildren();
 $u = new User();
+$securityHelper = Loader::helper('security');
 ?>
 
 <script type="text/javascript">
@@ -46,7 +47,7 @@ $(function() {
 		
 	<? } else { 
 
-		$request_rel = SecurityHelper::sanitizeString($_REQUEST['rel']);
+		$request_rel = $securityHelper->sanitizeString($_REQUEST['rel']);
 		?>
 		
 		<div class="ccm-buttons">
@@ -76,9 +77,9 @@ $(function() {
 			<input type="hidden" name="processCollection" value="1" />
 
 			<?php 
-			$display_mode = SecurityHelper::sanitizeString($_REQUEST['display_mode']);
-			$instance_id = SecurityHelper::sanitizeInt($_REQUEST['instance_id']);
-			$select_mode = SecurityHelper::sanitizeString($_REQUEST['select_mode']);
+			$display_mode = $securityHelper->sanitizeString($_REQUEST['display_mode']);
+			$instance_id = $securityHelper->sanitizeInt($_REQUEST['instance_id']);
+			$select_mode = $securityHelper->sanitizeString($_REQUEST['select_mode']);
 			?>			
 			<input type="hidden" name="display_mode" value="<?php echo h($display_mode); ?>" />
 			<input type="hidden" name="instance_id" value="<?php echo h($instance_id); ?>" />

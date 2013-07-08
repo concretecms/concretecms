@@ -13,7 +13,7 @@ $u = new User();
 Loader::model('file_set');
 $pageTypeIconsFS = FileSet::getByName("Page Type Icons");
 
-$cID = SecurityHelper::sanitize_int($_GET['cID']);
+$cID = Loader::helper('security')->sanitizeInt($_GET['cID']);
 
 if ($cID && $_GET['task'] == 'load_master') { 
 	$u->loadMasterCollectionEdit($cID, 1);

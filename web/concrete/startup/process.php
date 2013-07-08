@@ -20,6 +20,9 @@
 		$u = new User();
 		$u->refreshCollectionEdit($c);
 	}
+
+	$securityHelper = Loader::helper('security');
+
 	if ($_REQUEST['btask'] && $valt->validate()) {
 	
 		// these are tasks dealing with blocks (moving up, down, removing)
@@ -118,7 +121,7 @@
 							exit;
 						}
 
-						$cID = SecurityHelper::sanitize_int($_GET['cID']);
+						$cID = $securityHelper->sanitizeInt($_GET['cID']);
 						
 						header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $cID . '&mode=edit' . $step);
 						exit;
@@ -182,7 +185,7 @@
 							}
 						}
 
-						$cID = SecurityHelper::sanitize_int($_GET['cID']);
+						$cID = $securityHelper->sanitizeInt($_GET['cID']);
 
 						header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $cID . '&mode=edit' . $step);				
 					}
@@ -427,7 +430,7 @@
 						}
 					}
 
-					$cID = SecurityHelper::sanitize_int($_GET['cID']);
+					$cID = $securityHelper->sanitizeInt($_GET['cID']);
 
 					header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $cID . '&mode=edit' . $step);
 					exit;
@@ -521,7 +524,7 @@
 						if(strlen(trim($newPresetName))) LayoutPreset::add(trim($newPresetName), $layout);
 					}	
 
-					$cID = SecurityHelper::sanitize_int($_GET['cID']);
+					$cID = $securityHelper->sanitizeInt($_GET['cID']);
 
 					header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $cID . '&mode=edit' . $step);
 					exit;
@@ -668,7 +671,7 @@
 						$pc->delete();
 					}
 					if ($pcID && ($_REQUEST['sbURL'])) {
-						$sbURL = SecurityHelper::sanitize_url($_GET['sbURL']);
+						$sbURL = $securityHelper->sanitizeInt($_GET['sbURL']);
 						header('Location: ' . BASE_URL . $sbURL);
 						exit;
 					}
@@ -973,7 +976,7 @@
 					print Loader::helper('json')->encode($obj);
 					exit;
 				} else {
-					$cID = SecurityHelper::sanitize_int($_GET['cID']);
+					$cID = $securityHelper->sanitizeInt($_GET['cID']);
 					header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $cID . '&mode=edit' . $step);
 					exit;
 				}
