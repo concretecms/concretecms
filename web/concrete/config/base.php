@@ -113,8 +113,8 @@ if (!defined('DIRNAME_LIBRARIES_ASSET')) {
 	define('DIRNAME_LIBRARIES_ASSET', 'asset');
 }
 
-if (!defined('DIRNAME_LIBRARIES_ASSET_ASSETS')) {
-	define('DIRNAME_LIBRARIES_ASSET_ASSETS', 'assets');
+if (!defined('DIRNAME_LIBRARIES_ASSET_GROUPS')) {
+	define('DIRNAME_LIBRARIES_ASSET_GROUPS', 'groups');
 }
 
 /** 
