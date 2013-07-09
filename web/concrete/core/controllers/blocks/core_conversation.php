@@ -55,7 +55,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 		public function view() {
 			$req = Request::get();
-			$req->requireAsset('conversation');
+			$req->requireAsset('core/conversation');
 			$conversation = $this->getConversationObject();
 			if (is_object($conversation)) {
 				$this->set('conversation', $conversation);

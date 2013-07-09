@@ -1,7 +1,7 @@
 <?
 
 defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Library_ConversationAssetGroup extends AssetGroup {
+class Concrete5_Library_CoreConversationAssetGroup extends AssetGroup {
 	
 	public function getAssets() {
 		$assets = parent::getAssets();
