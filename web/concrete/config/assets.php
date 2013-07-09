@@ -12,11 +12,6 @@ $al->register('javascript', 'conversation', 'ccm.conversations.js');
 $al->register('javascript', 'dropzone', 'dropzone.js');
 $al->register('css', 'conversation', 'ccm.conversations.css');
 
-/*
-$al->register('bootstrap');
-$al->register('conversation');
-$al->register('conversation/base');*/
-
 $al->registerGroup('redactor', array(
 	array('javascript', 'redactor'),
 	array('css', 'redactor')
@@ -25,8 +20,14 @@ $al->registerGroup('gathering', array(
 	array('javascript', 'gathering'),
 	array('css', 'gathering')
 ));
+
 $al->registerGroup('conversation', array(
 	array('javascript', 'conversation'),
 	array('javascript', 'dropzone'),
 	array('css', 'conversation')
-));
+), true);
+
+
+/*
+$al->register('bootstrap');
+*/

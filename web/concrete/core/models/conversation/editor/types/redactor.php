@@ -1,7 +1,9 @@
 <?php
 class Concrete5_Model_RedactorConversationEditor extends ConversationEditor {
 	public function getConversationEditorAssets() {
-		return array(Asset::getByPath('redactor'));
+		$list = AssetList::getInstance();
+		$r = $list->getAssetGroup('redactor');
+		return $r->getAssets();
 	}
 
 	public function outputConversationEditorReplyMessageForm() {
