@@ -8,12 +8,16 @@ class Concrete5_Library_JavaScriptAsset extends Asset {
 	}
 
 	public function getAssetType() {return 'javascript';}
-	
+
 	public function getAssetDefaultMinify() {
 		return true;
 	}
 
-	public function getAssetPath() {
+	public function getAssetURL() {
+		return ASSETS_URL_JAVASCRIPT . '/' . $this->getAssetFilename();
+	}
+
+	public function getAssetFile() {
 		return ASSETS_URL_JAVASCRIPT . '/' . $this->getAssetFilename();
 	}
 
@@ -22,7 +26,7 @@ class Concrete5_Library_JavaScriptAsset extends Asset {
 	}
 
 	public function __toString() {
-		return '<script type="text/javascript" src="' . $this->getAssetPath() . '"></script>';
+		return '<script type="text/javascript" src="' . $this->getAssetURL() . '"></script>';
 	}
 
 	public function __construct($assetHandle) {

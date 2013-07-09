@@ -13,7 +13,8 @@ abstract class Concrete5_Library_Asset {
 	abstract public function getAssetDefaultPosition();
 	abstract public function getAssetDefaultMinify();
 	abstract public function getAssetDefaultCombine();
-	abstract public function getAssetPath();
+	abstract public function getAssetFile();
+	abstract public function getAssetURL();
 	abstract public function getAssetType();
 	abstract public function __toString();
 

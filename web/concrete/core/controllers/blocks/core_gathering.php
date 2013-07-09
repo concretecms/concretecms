@@ -153,7 +153,7 @@ class Concrete5_Controller_Block_CoreGathering extends BlockController {
 			if ($this->gaID) {
 				$gathering = Gathering::getByID($this->gaID);
 				if (is_object($gathering)) {
-					Request::get()->requireAsset('gathering');
+					Request::get()->requireAsset('core/gathering');
 					Loader::helper('overlay')->init(false);
 					if ($this->enablePostingFromGathering) {
 						$cmp = Composer::getByID($this->cmpID);
