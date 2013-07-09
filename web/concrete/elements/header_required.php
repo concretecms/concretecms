@@ -83,12 +83,6 @@ $req->requireAsset('javascript', 'jquery');
 
 
 
-
-
-
-
-
-
 $html = Loader::helper('html');
 $this->addHeaderItem($html->css('ccm.base.css'), 'CORE');
 $this->addHeaderItem($html->javascript('ccm.pubsub.js'), 'CORE');

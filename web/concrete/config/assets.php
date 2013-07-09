@@ -13,6 +13,12 @@ $al->register('javascript', 'dropzone', 'dropzone.js');
 $al->register('css', 'conversation', 'ccm.conversations.css');
 
 /** 
+ * Core Overlay
+ */
+$al->register('javascript', 'overlay', 'overlay/jquery.magnific-popup.js');
+$al->register('css', 'overlay', 'overlay/jquery.magnific-popup.css');
+
+/** 
  * Bootstrap defaults */
 $al->register('javascript', 'bootstrap/dropdown', 'bootstrap/dropdown.js');
 $al->register('javascript', 'bootstrap/tooltip', 'bootstrap/tooltip.js');
@@ -22,7 +28,10 @@ $al->register('css', 'bootstrap/tooltip', 'ccm.app.css');
 $al->register('css', 'bootstrap/popover', 'ccm.app.css');
 $al->register('css', 'bootstrap', 'ccm.app.css');
 
-
+$al->registerGroup('overlay', array(
+	array('javascript', 'overlay'),
+	array('css', 'overlay')
+));
 $al->registerGroup('redactor', array(
 	array('javascript', 'redactor'),
 	array('css', 'redactor')
@@ -31,7 +40,6 @@ $al->registerGroup('gathering', array(
 	array('javascript', 'gathering'),
 	array('css', 'gathering')
 ));
-
 $al->registerGroup('conversation', array(
 	array('javascript', 'conversation'),
 	array('javascript', 'dropzone'),
