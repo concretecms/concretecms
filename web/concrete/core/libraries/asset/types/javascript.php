@@ -7,6 +7,8 @@ class Concrete5_Library_JavaScriptAsset extends Asset {
 		return Asset::ASSET_POSITION_FOOTER;
 	}
 
+	public function getAssetType() {return 'javascript';}
+	
 	public function getAssetDefaultMinify() {
 		return true;
 	}

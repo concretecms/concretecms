@@ -66,6 +66,11 @@ class Concrete5_Model_PageTheme extends Object {
 		}
 	}
 
+	public function providesAsset($assetType, $assetHandle) {
+		$req = Request::get();
+		$req->markAssetAsIncluded($assetType, $assetHandle);
+	}
+
 	public static function getAvailableThemes($filterInstalled = true) {
 		// scans the directory for available themes. For those who don't want to go through
 		// the hassle of uploading

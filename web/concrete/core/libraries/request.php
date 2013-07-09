@@ -35,6 +35,8 @@ class Concrete5_Library_Request {
 	private $customRequestUser;
 	private $customRequestDateTime;
 	private $requiredAssetGroup;
+	private $providedAssetGroup;
+	private $providedAssetGroupUnmatched = array();
 	
 	// parses the current request and returns an 
 	// object with tasks, tools, etc... defined in them
@@ -99,6 +101,7 @@ class Concrete5_Library_Request {
 		$this->requestPath = $path;
 		$this->parse();
 		$this->requiredAssetGroup = new AssetGroup();
+		$this->providedAssetGroup = new AssetGroup();
 	}
 	
 	/** 
@@ -461,13 +464,29 @@ class Concrete5_Library_Request {
 	public function requireAsset($assetType, $assetHandle = false) {
 		$list = AssetList::getInstance();
 		if ($assetType && $assetHandle) {
-			$asset = $list->getAsset($assetType, $assetHandle);
-			$this->requiredAssetGroup->add($asset);
+			$r = $list->getAsset($assetType, $assetHandle);
 		} else {
-			$group = $list->getAssetGroup($assetType);
-			foreach($group->getAssets() as $asset) {
-				$this->requiredAssetGroup->add($asset);
-			}
+			$r = $list->getAssetGroup($assetType);
+		}
+		if ($r) {
+			$this->requiredAssetGroup->add($r);
+		}
+	}
+
+	/** 
+	 * Notes in the current request that a particular asset has already been provided.
+	 */
+	public function markAssetAsIncluded($assetType, $assetHandle = false) {
+		$list = AssetList::getInstance();
+		if ($assetType && $assetHandle) {
+			$r = $list->getAsset($assetType, $assetHandle);
+		} else {
+			$r = $list->getAssetGroup($assetType);
+		}
+		if ($r) {
+			$this->providedAssetGroup->add($r);
+		} else {
+			$this->providedAssetGroupUnmatched[] = array($assetType, $assetHandle);
 		}
 	}
 
@@ -477,5 +496,35 @@ class Concrete5_Library_Request {
 	public function getRequiredAssets() {
 		return $this->requiredAssetGroup;
 	}
+
+	protected function filterProvidedAssets($asset) {
+		foreach($this->providedAssetGroup->getAssets() as $pass) {
+			if ($pass->getAssetHandle() == $asset->getAssetHandle() && $pass->getAssetType() == $asset->getAssetType()) {
+				return false;
+			}
+		}
+
+		// now is the unmatched assets something that matches this asset?
+		// (ie, is it a path-style match, like bootstrap/* )
+		foreach($this->providedAssetGroupUnmatched as $assetArray) {
+			if ($assetArray[0] == $asset->getAssetType() && fnmatch($assetArray[1], $asset->getAssetHandle())) {
+				return false;
+			}
+		}
+
+		return true;
+
+	}
+
+	/** 
+	 * Returns only assets that are required but that aren't also in the providedAssetGroup
+	 */
+	public function getRequiredAssetsToOutput() {
+		$required = $this->requiredAssetGroup->getAssets();
+		return array_filter($required, array('Request', 'filterProvidedAssets'));
+	}
+
+
+
 
 }

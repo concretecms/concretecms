@@ -3,12 +3,11 @@
 <html lang="en">
 <head>
 
-<link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css" rel="stylesheet">
-
 <? Loader::element('header_required'); ?>
 
-<script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/js/bootstrap.min.js"></script>
-	
+<link type="text/css" rel="stylesheet" href="<?=$this->getThemePath()?>/css/bootstrap.min.css" />
+<link type="text/css" rel="stylesheet" href="<?=$this->getThemePath()?>/css/bootstrap-responsive.min.css" />
+
 </head>
 <body>
 

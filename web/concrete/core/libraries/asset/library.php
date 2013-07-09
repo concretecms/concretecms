@@ -14,8 +14,10 @@ abstract class Concrete5_Library_Asset {
 	abstract public function getAssetDefaultMinify();
 	abstract public function getAssetDefaultCombine();
 	abstract public function getAssetPath();
-
+	abstract public function getAssetType();
 	abstract public function __toString();
+
+	public function getAssetHandle() {return $this->assetHandle;}
 
 	public function __construct($assetHandle) {
 		$this->assetHandle = $assetHandle;
