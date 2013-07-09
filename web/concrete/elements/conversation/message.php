@@ -21,7 +21,7 @@ if (!$message->isConversationMessageApproved()){
 $cnvMessageID = $message->cnvMessageID;
 if ((!$message->isConversationMessageDeleted() && $message->isConversationMessageApproved()) || $message->conversationMessageHasActiveChildren()) {
 	?>
-	<div data-conversation-message-id="<?=$message->getConversationMessageID()?>" data-conversation-message-level="<?=$message->getConversationMessageLevel()?>" class="<?=$class?>">
+	<div data-conversation-message-id="<?=$message->getConversationMessageID()?>" data-conversation-message-level="<?=$message->getConversationMessageLevel()?>" class="<?=$class?> ccm-ui">
 		<?php if($canAdminMessage) { ?>
 		<ul class="nav nav-pills cnv-admin-pane pull-right">
 			<li class="dropdown">

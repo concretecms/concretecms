@@ -20,9 +20,19 @@ class Concrete5_Library_AssetGroup {
 		return false;
 	}
 
-	public function add(Asset $asset) {
-		if (!$this->contains($asset)) {
-			$this->assets[] = $asset;
+	public function add($item) {
+		if ($item instanceof Asset) {
+			$add = array($item);
+		}
+		if ($item instanceof AssetGroup) {
+			$add = $item->getAssets();
+		}
+		if (isset($add)) {
+			foreach($add as $asset) {
+				if (!$this->contains($asset)) {
+					$this->assets[] = $asset;
+				}
+			}
 		}
 	}
 
@@ -30,13 +40,4 @@ class Concrete5_Library_AssetGroup {
 		return $this->assets;
 	}
 	
-	public function getAssetFiles() {
-		$files = array();
-		foreach($this->assets as $asset) {
-			foreach($asset->getAssetFiles() as $file) {
-				$files[] = $file;
-			}
-		}
-		return $files;
-	}
 }

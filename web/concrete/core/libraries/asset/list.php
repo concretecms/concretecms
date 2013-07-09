@@ -35,10 +35,16 @@ class Concrete5_Library_AssetList {
 	}
 
 	public function registerGroup($assetGroupHandle, $assetHandles, $customClass = false) {
-		$obj = new stdClass;
-		$obj->customClass = $customClass;
-		$obj->assetHandles = $assetHandles;
-		$this->assetGroups[$assetGroupHandle] = $obj;
+		if ($customClass) {
+			$class = Object::camelcase($assetGroupHandle) . 'AssetGroup';
+		} else {
+			$class = 'AssetGroup';
+		}
+		$group = new $class();
+		foreach($assetHandles as $assetArray) {
+			$group->add($this->getAsset($assetArray[0], $assetArray[1]));
+		}
+		$this->assetGroups[$assetGroupHandle] = $group;
 	}
 
 	public function getAsset($assetType, $assetHandle) {
@@ -46,21 +52,7 @@ class Concrete5_Library_AssetList {
 	}
 
 	public function getAssetGroup($assetGroupHandle) {
-		$r = $this->assetGroups[$assetGroupHandle];
-		$assetHandles = $r->assetHandles;
-		if ($r->customClass) {
-			$class = Object::camelcase($assetGroupHandle) . 'AssetGroup';
-		} else {
-			$class = 'AssetGroup';
-		}
-		$group = new $class();
-		if (is_array($assetHandles)) {
-			foreach($assetHandles as $assetArray) {
-				$group->add($this->getAsset($assetArray[0], $assetArray[1]));
-			}
-		}
-
-		return $group;
+		return $this->assetGroups[$assetGroupHandle];
 	}
 
 	/*

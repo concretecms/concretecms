@@ -16,4 +16,9 @@ class Concrete5_Model_PageTheme_TwitterBootstrap extends PageTheme {
 		return 146;
 	}
 
+	public function __construct() {
+		$this->providesAsset('javascript', 'bootstrap/*');
+		$this->providesAsset('css', 'bootstrap/*');
+	}
+
 }

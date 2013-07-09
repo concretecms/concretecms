@@ -29,6 +29,10 @@ if (!$dh->inDashboard()) {
 	$req->requireAsset('javascript', 'redactor');
 	$req->requireAsset('css', 'redactor');
 
+	$req->requireAsset('javascript', 'bootstrap/dropdown');
+	$req->requireAsset('javascript', 'bootstrap/popover');
+	$req->requireAsset('javascript', 'bootstrap/tooltip');
+
 	$this->addHeaderItem($html->css('ccm.app.css'));
 	$this->addHeaderItem($html->css('jquery.ui.css'));
 	
@@ -42,7 +46,6 @@ if (!$dh->inDashboard()) {
 	}
 	$this->addFooterItem($html->javascript('jquery.form.js'));
 	$this->addFooterItem($html->javascript('jquery.rating.js'));
-	$this->addFooterItem($html->javascript('bootstrap.js'));
 	$this->addFooterItem($html->javascript('ccm.app.js'));
 	$this->addFooterItem('<script type="text/javascript">$(function() { CCMToolbar.start(); });</script>');
 	if ($c->isEditMode()) {

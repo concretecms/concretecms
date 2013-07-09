@@ -958,12 +958,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				ob_end_clean();
 
 				$r = Request::get();
-				$assetGroup = $r->getRequiredAssets();
+				$assets = $r->getRequiredAssetsToOutput();
 				
-				if (is_object($assetGroup)) {
-					foreach($assetGroup->getAssets() as $asset) {
-						$this->addOutputAsset($asset);
-					}
+				foreach($assets as $asset) {
+					$this->addOutputAsset($asset);
 				}
 				
 				

@@ -7,6 +7,8 @@ class Concrete5_Library_CSSAsset extends Asset {
 		return Asset::ASSET_POSITION_HEADER;
 	}
 
+	public function getAssetType() {return 'css';}
+
 	public function getAssetDefaultMinify() {
 		return true;
 	}
