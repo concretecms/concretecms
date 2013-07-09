@@ -17,9 +17,8 @@ $classes = array(
 	'Asset' => array('library', 'asset/library'),
 	'AssetList' => array('library', 'asset/list'),
 	'AssetGroup' => array('library', 'asset/group'),
-	'AssetFile' => array('library', 'asset/file/library'),
-	'JavaScriptAssetFile' => array('library', 'asset/file/types/javascript'),
-	'CSSAssetFile' => array('library', 'asset/file/types/css'),
+	'JavascriptAsset' => array('library', 'asset/types/javascript'),
+	'CssAsset' => array('library', 'asset/types/css'),
 	'FileType,FileTypeList' => array('library','file/types'),
 	'FileImporter' => array('library', 'file/importer'),
 	'BlockView' => array('library','block_view'),
@@ -352,15 +351,7 @@ $classes = array(
 	'ComposerDraftPermissionAccess' => array('model','permission/access/categories/composer_draft'),
 	'ComposerDraftPermissionAccessListItem' => array('model','permission/access/list_items/composer_draft'),
 	'ComposerDraftPermissionResponse' => array('model','permission/response/composer_draft'),
-	'ComposerDraftAuthorPermissionAccessEntity' => array('model','permission/access/entity/types/composer_draft_author'),
-
-
-	/* assets */ 
-	'JqueryAsset' => array('library', 'asset/assets/jquery'),
-	'ConversationAsset' => array('library', 'asset/assets/conversation'),
-	'ConversationBaseAsset' => array('library', 'asset/assets/conversation/base'),
-	'GatheringAsset' => array('library', 'asset/assets/gathering'),
-	'RedactorAsset' => array('library', 'asset/assets/redactor')
+	'ComposerDraftAuthorPermissionAccessEntity' => array('model','permission/access/entity/types/composer_draft_author')
 );
 
 Loader::registerAutoload($classes);

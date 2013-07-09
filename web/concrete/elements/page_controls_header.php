@@ -25,8 +25,9 @@ $req = Request::get();
 
 if (!$dh->inDashboard()) {
 
-	$req->requireAsset('jquery');
-	$req->requireAsset('redactor');
+	$req->requireAsset('javascript', 'jquery');
+	$req->requireAsset('javascript', 'redactor');
+	$req->requireAsset('css', 'redactor');
 
 	$this->addHeaderItem($html->css('ccm.app.css'));
 	$this->addHeaderItem($html->css('jquery.ui.css'));

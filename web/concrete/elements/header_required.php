@@ -78,7 +78,16 @@ var CCM_REL = "<?php echo DIR_REL?>";
 <?php
 
 $req = Request::get();
-$req->requireAsset('jquery');
+$req->requireAsset('javascript', 'jquery');
+
+
+
+
+
+
+
+
+
 
 $html = Loader::helper('html');
 $this->addHeaderItem($html->css('ccm.base.css'), 'CORE');

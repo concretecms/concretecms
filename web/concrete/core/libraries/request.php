@@ -458,8 +458,17 @@ class Concrete5_Library_Request {
 	 * Adds a required asset to this request. This asset will attempt to be output or included
 	 * when a view is rendered
 	 */
-	public function requireAsset($assetHandle) {
-		$this->requiredAssetGroup->add($assetHandle);
+	public function requireAsset($assetType, $assetHandle = false) {
+		$list = AssetList::getInstance();
+		if ($assetType && $assetHandle) {
+			$asset = $list->getAsset($assetType, $assetHandle);
+			$this->requiredAssetGroup->add($asset);
+		} else {
+			$group = $list->getAssetGroup($assetType);
+			foreach($group->getAssets() as $asset) {
+				$this->requiredAssetGroup->add($asset);
+			}
+		}
 	}
 
 	/** 
