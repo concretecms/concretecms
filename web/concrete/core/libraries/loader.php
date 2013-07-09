@@ -188,7 +188,6 @@
 				$cl = $clx[$k];
 				call_user_func_array(array(__CLASS__, $cl[0]), array($cl[1], $cl[2]));
 			} else {
-				/* lets handle some things slightly more dynamically */				
 				if (strpos($class, 'BlockController') > 0) {
 					$class = substr($class, 0, strpos($class, 'BlockController'));
 					$handle = Object::uncamelcase($class);

@@ -20,10 +20,7 @@ class Concrete5_Library_AssetGroup {
 		return false;
 	}
 
-	public function add($asset) {
-		if (!($asset instanceof Asset)) {
-			$asset = Asset::getByPath($asset);
-		}
+	public function add(Asset $asset) {
 		if (!$this->contains($asset)) {
 			$this->assets[] = $asset;
 		}

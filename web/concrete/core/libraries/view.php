@@ -140,7 +140,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		 */
 
 		public function addHeaderItem($item) {
-			$this->outputAssets[AssetFile::ASSET_FILE_POSITION_HEADER]['unweighted'][] = $item;
+			$this->outputAssets[Asset::ASSET_POSITION_HEADER]['unweighted'][] = $item;
 		}
 		
 		/** 
@@ -148,7 +148,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		 * @access private
 		 */
 		public function addFooterItem($item) {
-			$this->outputAssets[AssetFile::ASSET_FILE_POSITION_FOOTER]['unweighted'][] = $item;
+			$this->outputAssets[Asset::ASSET_POSITION_FOOTER]['unweighted'][] = $item;
 		}
 		
 		/**
@@ -266,7 +266,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		 * @access private
 		 */
 		public function outputHeaderItems() {
-			print '<!--ccm:assets:' . AssetFile::ASSET_FILE_POSITION_HEADER . '//-->';
+			print '<!--ccm:assets:' . Asset::ASSET_POSITION_HEADER . '//-->';
 		}
 		
 		/** 
@@ -274,24 +274,24 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		 * @access private
 		 */
 		public function outputFooterItems() {
-			print '<!--ccm:assets:' . AssetFile::ASSET_FILE_POSITION_FOOTER . '//-->';
+			print '<!--ccm:assets:' . Asset::ASSET_POSITION_FOOTER . '//-->';
 		}
 
 		protected function field($fieldName) {
 			return $this->controller->field($fieldName);
 		}
 		
-		protected function addOutputAssetFile(AssetFile $file) {
-			if ($file->getAssetFileWeight() > 0) {
-				$this->outputAssets[$file->getAssetFilePosition()]['weighted'][] = $file;
+		protected function addOutputAsset(Asset $asset) {
+			if ($asset->getAssetWeight() > 0) {
+				$this->outputAssets[$asset->getAssetPosition()]['weighted'][] = $asset;
 			} else {
-				$this->outputAssets[$file->getAssetFilePosition()]['unweighted'][] = $file;
+				$this->outputAssets[$asset->getAssetPosition()]['unweighted'][] = $asset;
 			}
 		}
 
 		protected function sortAssetsByWeightDescending($assetA, $assetB) {
-			$weightA = $assetA->getAssetFileWeight();
-			$weightB = $assetB->getAssetFileWeight();
+			$weightA = $assetA->getAssetWeight();
+			$weightB = $assetB->getAssetWeight();
 
 			if ($weightA == $weightB) {
 				return 0;
@@ -959,12 +959,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 				$r = Request::get();
 				$assetGroup = $r->getRequiredAssets();
+				
 				if (is_object($assetGroup)) {
 					foreach($assetGroup->getAssets() as $asset) {
-						$files = $asset->getAssetFiles();
-						foreach($files as $af) {
-							$this->addOutputAssetFile($af);
-						}
+						$this->addOutputAsset($asset);
 					}
 				}
 				
