@@ -8,10 +8,10 @@ if (is_array($image)) {
 	<a href="#" data-overlay="gathering-item">
 		<img src="<?=$image->getPath()?>" alt="<?php echo t('Preview Image') ?>" />
 	</a>
-	<div class="ccm-gathering-tile-title-description">
+	<!-- <div class="ccm-gathering-tile-title-description">
 		<div class="ccm-gathering-tile-description">
 		<?=$description?>
-		</div>
-	</div>
+		</div> 
+	</div> --> 
 	<div class="clearfix" style="clear: both;"></div>
 </div>

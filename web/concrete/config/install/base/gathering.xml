@@ -112,6 +112,16 @@
 			<feature handle="description" />
 			<feature handle="image" />
 		</gatheringitemtemplate>
+		<gatheringitemtemplate handle="twitter" type="tile" name="Twitter" package="">
+			<feature handle="title" />
+		</gatheringitemtemplate>
+		<gatheringitemtemplate handle="vimeo" type="tile" name="Vimeo" package="">
+			<feature handle="title" />
+		</gatheringitemtemplate>
+		<gatheringitemtemplate handle="image_overlay_headline" type="tile" name="Image Overlay Headline" package="">
+			<feature handle="title" />
+			<feature handle="image" />
+		</gatheringitemtemplate>
     </gatheringitemtemplates>
     <featurecategories>
         <featurecategory handle="collection_version" />
