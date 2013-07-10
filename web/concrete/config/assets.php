@@ -10,8 +10,19 @@ $al = AssetList::getInstance();
 // jquery
 $al->register('javascript', 'jquery', false, 100, Asset::ASSET_POSITION_HEADER);
 
+// jquery ui
+$al->register('javascript', 'jqueryui', 'jquery.ui.js', 95);
+$al->register('css', 'jqueryui', 'jquery.ui.css');
+$al->registerGroup('jqueryui', array(
+	array('javascript', 'jqueryui'),
+	array('css', 'jqueryui')
+));
+
 // dropzone
 $al->register('javascript', 'dropzone', 'dropzone.js');
+
+// jquery form
+$al->register('javascript', 'jqueryform', 'jquery.form.js');
 
 // redactor
 $al->register('javascript', 'redactor');
@@ -36,6 +47,25 @@ $al->register('css', 'bootstrap', 'ccm.app.css');
 
 // JS Events
 $al->register('javascript', 'core/observer', 'ccm.pubsub.js');
+
+// Core App
+$al->register('css', 'core/app', 'ccm.app.css');
+$al->register('javascript', 'core/app', 'ccm.app.js');
+$al->registerGroup('core/app', array(
+	array('javascript', 'jquery'),
+	array('javascript', 'core/observer'),
+	array('javascript', 'bootstrap/dropdown'),
+	array('javascript', 'bootstrap/popover'),
+	array('javascript', 'bootstrap/tooltip'),
+	array('javascript', 'jqueryui'),
+	array('javascript', 'jqueryui'),
+	array('javascript', 'core/app'),
+	array('javascript', 'redactor'),
+	array('javascript', 'jqueryform'),
+	array('css', 'core/app'),
+	array('css', 'redactor'),
+	array('css', 'jqueryui')
+));
 
 // Basic styles (used to be in ccm.base.css)
 $al->register('css', 'core/captcha', 'frontend/captcha.css');
