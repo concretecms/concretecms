@@ -32,6 +32,9 @@ $al->registerGroup('redactor', array(
 	array('css', 'redactor')
 ));
 
+// backstretch
+$al->register('javascript', 'backstretch', 'jquery.backstretch.js');
+
 // bootstrap
 $al->register('javascript', 'bootstrap/dropdown', 'bootstrap/dropdown.js');
 $al->register('javascript', 'bootstrap/tooltip', 'bootstrap/tooltip.js', 95); // has to come before popover
@@ -62,7 +65,6 @@ $al->registerGroup('core/app', array(
 	array('javascript', 'bootstrap/popover'),
 	array('javascript', 'bootstrap/tooltip'),
 	array('javascript', 'jqueryui'),
-	array('javascript', 'jqueryui'),
 	array('javascript', 'core/app'),
 	array('javascript', 'redactor'),
 	array('javascript', 'jqueryform'),
@@ -70,6 +72,30 @@ $al->registerGroup('core/app', array(
 	array('css', 'redactor'),
 	array('css', 'jqueryui')
 ));
+
+// Dashboard
+$al->register('css', 'dashboard', 'ccm.dashboard.css');
+$al->register('javascript', 'dashboard', 'ccm.dashboard.js');
+$al->registerGroup('dashboard', array(
+	array('javascript', 'jquery'),
+	array('javascript', 'jqueryui'),
+	array('javascript', 'jqueryform'),
+	array('javascript', 'dashboard'),
+	array('javascript', 'backstretch'),
+	array('javascript', 'core/observer'),
+	array('javascript', 'bootstrap/dropdown'),
+	array('javascript', 'bootstrap/popover'),
+	array('javascript', 'bootstrap/tooltip'),
+	array('javascript', 'bootstrap/transition'),
+	array('javascript', 'bootstrap/alert'),
+	array('javascript', 'core/app'),
+	array('javascript', 'redactor'),
+	array('css', 'core/app'),
+	array('css', 'redactor'),
+	array('css', 'jqueryui'),
+	array('css', 'dashboard')
+));
+
 
 // Basic styles (used to be in ccm.base.css)
 $al->register('css', 'core/captcha', 'frontend/captcha.css');
