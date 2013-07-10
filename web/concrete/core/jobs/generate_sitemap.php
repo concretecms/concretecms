@@ -40,8 +40,11 @@ class Concrete5_Job_GenerateSitemap extends Job {
 			$instances = array(
 				'navigation' => Loader::helper('navigation'),
 				'dashboard' => Loader::helper('concrete/dashboard'),
-				'view_page' => PermissionKey::getByHandle('view_page')
+				'view_page' => PermissionKey::getByHandle('view_page'),
+				'guestGroup' => Group::getByID(GUEST_GROUP_ID),
+				'now' => new DateTime('now')
 			);
+			$instances['guestGroupAE'] = array(GroupPermissionAccessEntity::getOrCreate($instances['guestGroup']));
 			$rsPages = $db->query('SELECT cID FROM Pages WHERE (cID > 1) ORDER BY cID');
 			$relName = ltrim(SITEMAPXML_FILE, '\\/');
 			$osName = rtrim(DIR_BASE, '\\/') . '/' . $relName;
@@ -110,6 +113,17 @@ class Concrete5_Job_GenerateSitemap extends Job {
 		if($instances['dashboard']->inDashboard($page)) {
 			return false;
 		}
+		if($page->isInTrash()) {
+			return false;
+		}
+		$pageVersion = $page->getVersionObject();
+		if($pageVersion && !$pageVersion->isApproved()) {
+			return false;
+		}
+		$pubDate = new DateTime($page->getCollectionDatePublic());
+		if($pubDate > $instances['now']) {
+			return false;
+		}
 		if($page->getAttribute('exclude_sitemapxml')) {
 			return false;
 		}
@@ -118,10 +132,7 @@ class Concrete5_Job_GenerateSitemap extends Job {
 		if (!is_object($pa)) {
 			return false;
 		}
-		
-		$guest = Group::getByID(GUEST_GROUP_ID);
-		$accessEntities[] = GroupPermissionAccessEntity::getOrCreate($guest);
-		if (!$pa->validateAccessEntities($accessEntities)) {
+		if (!$pa->validateAccessEntities($instances['guestGroupAE'])) {
 			return false;
 		}
 		$lastmod = new DateTime($page->getCollectionDateLastModified());
