@@ -95,15 +95,15 @@
 	## Security helpers
 	require($cdir . '/startup/security.php');
 
+	## File types ##
+	## Note: these have to come after config/localization.php ##
+	require($cdir . '/config/file_types.php');
+
 	## Package events
 	require($cdir . '/startup/packages.php');
 
 	## Load permissions and attributes
 	PermissionKey::loadAll();
-
-	## File types ##
-	## Note: these have to come after config/localization.php ##
-	require($cdir . '/config/file_types.php');
 
 	## Check host for redirection ##
 	require($cdir . '/startup/url_check.php');
