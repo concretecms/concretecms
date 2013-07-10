@@ -17,7 +17,7 @@ if (REDIRECT_TO_BASE_URL == true) {
 		}
 	}
 
-	$uri = $_SERVER['REQUEST_URI'];
+	$uri = Loader::helper('security')->sanitizeURL($_SERVER['REQUEST_URI']);
 	if (strpos($uri, '%7E') !== false) {
 		$uri = str_replace('%7E', '~', $uri);
 	}
