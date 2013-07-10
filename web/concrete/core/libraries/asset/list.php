@@ -18,12 +18,12 @@ class Concrete5_Library_AssetList {
 		return self::$loc;
 	}
 
-	public function register($assetType, $assetHandle, $filename = false, $weight = false, $position = false) {
+	public function register($assetType, $assetHandle, $filename, $weight = false, $position = false) {
 		$class = Object::camelcase($assetType) . 'Asset';
 		$o = new $class($assetHandle);
-		if ($filename) {
-			$o->setAssetFilename($filename);
-		}
+		$o->populateAssetURLFromFilename($filename);
+		$o->populateAssetPathFromFilename($filename);
+
 		if ($weight) {
 			$o->setAssetWeight($weight);
 		}

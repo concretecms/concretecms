@@ -6,6 +6,8 @@ abstract class Concrete5_Library_Asset {
 	protected $assetHandle;
 	protected $weight = 0;
 	protected $local = true;
+	protected $assetURL;
+	protected $assetPath;
 
 	const ASSET_POSITION_HEADER = 'H';
 	const ASSET_POSITION_FOOTER = 'F';
@@ -13,14 +15,17 @@ abstract class Concrete5_Library_Asset {
 	abstract public function getAssetDefaultPosition();
 	abstract public function getAssetDefaultMinify();
 	abstract public function getAssetDefaultCombine();
-	abstract public function getAssetFile();
-	abstract public function getAssetURL();
 	abstract public function getAssetType();
+	abstract public function populateAssetURLFromFilename($filename);
+	abstract public function populateAssetPathFromFilename($filename);
 	abstract public function __toString();
+
+	public function getAssetURL() {return $this->assetURL;}
+	public function getAssetPath() {return $this->assetPath;}
 
 	public function getAssetHandle() {return $this->assetHandle;}
 
-	public function __construct($assetHandle) {
+	public function __construct($assetHandle = false) {
 		$this->assetHandle = $assetHandle;
 		$this->position = $this->getAssetDefaultPosition();
 	}
@@ -29,10 +34,6 @@ abstract class Concrete5_Library_Asset {
 		return $this->filename;
 	}
 
-	public function setAssetFilename($filename) {
-		$this->filename = $filename;
-	}
-	
 	public function setAssetWeight($weight) {
 		$this->weight = $weight;
 	}
@@ -40,6 +41,10 @@ abstract class Concrete5_Library_Asset {
 	public function setAssetPosition($position) {
 		$this->position = $position;
 	}
+
+	public function setAssetURL($url) {$this->assetURL = $url;}
+	public function setAssetPath($path) {$this->assetPath = $path;}
+
 	public function isAssetLocal() {return $this->local;}
 
 	public function setAssetIsLocal($isLocal) {

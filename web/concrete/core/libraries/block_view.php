@@ -198,6 +198,9 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			$page = Page::getCurrentPage();
 			
 			if ($view == 'view') {
+				$v = View::getInstance();
+				$this->controller->runTask('on_page_view', array($this));
+
 				if (ENABLE_BLOCK_CACHE && $this->controller->cacheBlockOutput() && ($obj instanceof Block)) {
 					if ((!$u->isRegistered() || ($this->controller->cacheBlockOutputForRegisteredUsers())) &&
 						(($_SERVER['REQUEST_METHOD'] != 'POST' || ($this->controller->cacheBlockOutputOnPost() == true)))) {

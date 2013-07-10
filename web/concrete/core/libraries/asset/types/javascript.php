@@ -13,25 +13,26 @@ class Concrete5_Library_JavaScriptAsset extends Asset {
 		return true;
 	}
 
-	public function getAssetURL() {
-		return ASSETS_URL_JAVASCRIPT . '/' . $this->getAssetFilename();
-	}
-
-	public function getAssetFile() {
-		return ASSETS_URL_JAVASCRIPT . '/' . $this->getAssetFilename();
-	}
-
 	public function getAssetDefaultCombine() {
 		return true;
 	}
 
-	public function __toString() {
-		return '<script type="text/javascript" src="' . $this->getAssetURL() . '"></script>';
+	public function populateAssetURLFromFilename($filename) {
+		if ($this->local) {
+			$this->assetURL = ASSETS_URL_JAVASCRIPT . '/' . $filename;
+		} else {
+			$this->assetURL = $filename;
+		}
 	}
 
-	public function __construct($assetHandle) {
-		$this->filename = $assetHandle . '.js';
-		parent::__construct($assetHandle);
+	public function populateAssetPathFromFilename($filename) {
+		if ($this->local) {
+			$this->assetPath = DIR_BASE_CORE . '/js/' . $filename;
+		}
+	}
+
+	public function __toString() {
+		return '<script type="text/javascript" src="' . $this->getAssetURL() . '"></script>';
 	}
 
 }

@@ -13,34 +13,26 @@ class Concrete5_Library_CSSAsset extends Asset {
 		return true;
 	}
 
-	public function getAssetURL() {
+	public function populateAssetURLFromFilename($filename) {
 		if ($this->local) {
-			return ASSETS_URL_CSS . '/' . $this->getAssetFilename();
-
+			$this->assetURL = ASSETS_URL_CSS . '/' . $filename;
 		} else {
-			return $this->getAssetFilename();
+			$this->assetURL = $filename;
 		}
 	}
 
-	public function getAssetFile() {
+	public function populateAssetPathFromFilename($filename) {
 		if ($this->local) {
-			return ASSETS_URL_CSS . '/' . $this->getAssetFilename();
-		} else {
-			return $this->getAssetFilename();
+			$this->assetPath = DIR_BASE_CORE . '/' . $filename;
 		}
 	}
-	
+
 	public function getAssetDefaultCombine() {
 		return true;
 	}
 
 	public function __toString() {
 		return '<link rel="stylesheet" type="text/css" href="' . $this->getAssetURL() . '" />';
-	}
-
-	public function __construct($assetHandle) {
-		$this->filename = $assetHandle . '.css';
-		parent::__construct($assetHandle);
 	}
 
 }

@@ -8,7 +8,7 @@ $al = AssetList::getInstance();
  */
 
 // jquery
-$al->register('javascript', 'jquery', false, 100, Asset::ASSET_POSITION_HEADER);
+$al->register('javascript', 'jquery', 'jquery.js', 100, Asset::ASSET_POSITION_HEADER);
 
 // jquery ui
 $al->register('javascript', 'jqueryui', 'jquery.ui.js', 95);
@@ -25,8 +25,8 @@ $al->register('javascript', 'dropzone', 'dropzone.js');
 $al->register('javascript', 'jqueryform', 'jquery.form.js');
 
 // redactor
-$al->register('javascript', 'redactor');
-$al->register('css', 'redactor');
+$al->register('javascript', 'redactor', 'redactor.js');
+$al->register('css', 'redactor', 'redactor.css');
 $al->registerGroup('redactor', array(
 	array('javascript', 'redactor'),
 	array('css', 'redactor')
