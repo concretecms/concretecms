@@ -4,7 +4,11 @@
 <head>
 <? 
 $this->addHeaderItem(Loader::helper("html")->css('ccm.default.theme.css'));
-$this->addHeaderItem(Loader::helper("html")->css('ccm.app.css'));
+$req = Request::get();
+$req->requireAsset('css', 'bootstrap');
+$req->requireAsset('javascript', 'jquery');
+$req->requireAsset('javascript', 'bootstrap/alert');
+$req->requireAsset('javascript', 'bootstrap/transition');
 
 $showLogo = true;
 if (is_object($c)) {
@@ -16,10 +20,8 @@ if (is_object($c)) {
 		
  	Loader::element('header_required');
 } else { 
-	print Loader::helper('html')->javascript('jquery.js');
 	$this->outputHeaderItems();
 }
-$this->addFooterItem(Loader::helper('html')->javascript('bootstrap.js'));
 
 ?>
 </head>

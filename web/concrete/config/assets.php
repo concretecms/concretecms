@@ -36,9 +36,13 @@ $al->registerGroup('redactor', array(
 $al->register('javascript', 'bootstrap/dropdown', 'bootstrap/dropdown.js');
 $al->register('javascript', 'bootstrap/tooltip', 'bootstrap/tooltip.js', 95); // has to come before popover
 $al->register('javascript', 'bootstrap/popover', 'bootstrap/popover.js');
+$al->register('javascript', 'bootstrap/alert', 'bootstrap/alert.js');
+$al->register('javascript', 'bootstrap/transition', 'bootstrap/transition.js');
 $al->register('css', 'bootstrap/dropdown', 'ccm.app.css');
 $al->register('css', 'bootstrap/tooltip', 'ccm.app.css');
 $al->register('css', 'bootstrap/popover', 'ccm.app.css');
+$al->register('css', 'bootstrap/alert', 'ccm.app.css');
+$al->register('css', 'bootstrap/transition', 'ccm.app.css');
 $al->register('css', 'bootstrap', 'ccm.app.css');
 
 /** 
