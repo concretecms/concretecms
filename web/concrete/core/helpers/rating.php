@@ -149,7 +149,7 @@ class Concrete5_Helper_Rating {
 	
 	
 	
-	public function getAverageChildRating($cItem, $akHandle) {
+	public function getAverageChildRating($cItem, $akHandle = 'rating') {
 		$cID = (is_object($cItem)) ? $cItem->getCollectionID() : $cItem;
 		$db = Loader::db();
 		Loader::model('attribute/categories/collection');
@@ -160,7 +160,7 @@ class Concrete5_Helper_Rating {
 		}		
 	}
 	
-	public function outputAverageChildRating($cItem, $akHandle, $fieldOverride = false) {
+	public function outputAverageChildRating($cItem, $akHandle = 'rating', $fieldOverride = false) {
 		$rating = $this->getAverageChildRating($cItem, $akHandle);
 		$rating = round($rating / 10) * 10;
 		$field = ($fieldOverride) ? $fieldOverride : $akHandle;		
