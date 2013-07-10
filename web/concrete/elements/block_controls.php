@@ -96,7 +96,7 @@ if ($p->canDeleteBlock()) { ?>
 ccm_menuObj<?=$id?>.canDelete = true;
 ccm_menuObj<?=$id?>.deleteMessage = "<?=$deleteMessage?>";
 <? }
-if ($c->isMasterCollection()) { ?>
+if ($c->isMasterCollection() && !$a->isGlobalArea()) { ?>
 ccm_menuObj<?=$id?>.canAliasBlockOut = true;
 <?
 $ct = CollectionType::getByID($c->getCollectionTypeID());
