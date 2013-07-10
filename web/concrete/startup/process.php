@@ -20,6 +20,9 @@
 		$u = new User();
 		$u->refreshCollectionEdit($c);
 	}
+
+	$securityHelper = Loader::helper('security');
+
 	if ($_REQUEST['btask'] && $valt->validate()) {
 	
 		// these are tasks dealing with blocks (moving up, down, removing)
@@ -117,8 +120,10 @@
 						if (isset($_POST['isAjax'])) {
 							exit;
 						}
+
+						$cID = $securityHelper->sanitizeInt($_GET['cID']);
 						
-						header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $_GET['cID'] . '&mode=edit' . $step);
+						header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $cID . '&mode=edit' . $step);
 						exit;
 					}
 				}
@@ -180,7 +185,9 @@
 							}
 						}
 
-						header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $_GET['cID'] . '&mode=edit' . $step);				
+						$cID = $securityHelper->sanitizeInt($_GET['cID']);
+
+						header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $cID . '&mode=edit' . $step);				
 					}
 				}
 				break;
@@ -423,7 +430,9 @@
 						}
 					}
 
-					header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $_GET['cID'] . '&mode=edit' . $step);
+					$cID = $securityHelper->sanitizeInt($_GET['cID']);
+
+					header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $cID . '&mode=edit' . $step);
 					exit;
 				}
 				break; 
@@ -515,7 +524,9 @@
 						if(strlen(trim($newPresetName))) LayoutPreset::add(trim($newPresetName), $layout);
 					}	
 
-					header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $_GET['cID'] . '&mode=edit' . $step);
+					$cID = $securityHelper->sanitizeInt($_GET['cID']);
+
+					header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $cID . '&mode=edit' . $step);
 					exit;
 				}				
 				break;					
@@ -660,7 +671,8 @@
 						$pc->delete();
 					}
 					if ($pcID && ($_REQUEST['sbURL'])) {
-						header('Location: ' . BASE_URL . $_GET['sbURL']);
+						$sbURL = $securityHelper->sanitizeInt($_GET['sbURL']);
+						header('Location: ' . BASE_URL . $sbURL);
 						exit;
 					}
 				//global scrapbooks
@@ -964,7 +976,8 @@
 					print Loader::helper('json')->encode($obj);
 					exit;
 				} else {
-					header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $_GET['cID'] . '&mode=edit' . $step);
+					$cID = $securityHelper->sanitizeInt($_GET['cID']);
+					header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $cID . '&mode=edit' . $step);
 					exit;
 				}
 			}		

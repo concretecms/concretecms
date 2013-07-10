@@ -13,9 +13,11 @@ $u = new User();
 Loader::model('file_set');
 $pageTypeIconsFS = FileSet::getByName("Page Type Icons");
 
-if ($_GET['cID'] && $_GET['task'] == 'load_master') { 
-	$u->loadMasterCollectionEdit($_GET['cID'], 1);
-	header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $_GET['cID'] . '&mode=edit');
+$cID = Loader::helper('security')->sanitizeInt($_GET['cID']);
+
+if ($cID && $_GET['task'] == 'load_master') { 
+	$u->loadMasterCollectionEdit($cID, 1);
+	header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $cID . '&mode=edit');
 	exit;
 }
 
