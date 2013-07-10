@@ -1490,6 +1490,7 @@ class Concrete5_Model_Page extends Collection {
 		$r = $db->query("select cID from Pages where cPointerID = ?", array($cID));
 		while ($row = $r->fetchRow()) {
 			PageStatistics::decrementParents($row['cID']);
+			$db->Execute('DELETE FROM PagePaths WHERE cID=?', array($row['cID']));
 		}
 
 		// Update cChildren for cParentID
