@@ -25,28 +25,16 @@ $req = Request::get();
 
 if (!$dh->inDashboard()) {
 
-	$req->requireAsset('javascript', 'jquery');
-	$req->requireAsset('javascript', 'redactor');
-	$req->requireAsset('css', 'redactor');
-
-	$req->requireAsset('javascript', 'bootstrap/dropdown');
-	$req->requireAsset('javascript', 'bootstrap/popover');
-	$req->requireAsset('javascript', 'bootstrap/tooltip');
-
-	$this->addHeaderItem($html->css('ccm.app.css'));
-	$this->addHeaderItem($html->css('jquery.ui.css'));
-	
+	$req->requireAsset('core/app');
 	$this->addFooterItem('<script type="text/javascript" src="' . REL_DIR_FILES_TOOLS_REQUIRED . '/i18n_js"></script>'); 
-	$this->addFooterItem($html->javascript('jquery.ui.js'));
+	/*
 	Loader::library("3rdparty/mobile_detect");
 	$md = new Mobile_Detect();
 	if ($md->isMobile()) {
 		$this->addHeaderItem($html->css('ccm.app.mobile.css'));
 		$this->addFooterItem($html->javascript('jquery.ui.touch-punch.js'));
 	}
-	$this->addFooterItem($html->javascript('jquery.form.js'));
-	$this->addFooterItem($html->javascript('jquery.rating.js'));
-	$this->addFooterItem($html->javascript('ccm.app.js'));
+	*/
 	$this->addFooterItem('<script type="text/javascript">$(function() { CCMToolbar.start(); });</script>');
 	if ($c->isEditMode()) {
 		$this->addFooterItem('<script type="text/javascript">$(function() { CCMEditMode.start(); });</script>');
