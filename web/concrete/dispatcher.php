@@ -48,6 +48,11 @@
 	## Default routes for various content items ##
 	require($cdir . '/config/theme_paths.php');
 
+	## Site Assets
+	if (file_exists(DIR_CONFIG_SITE . '/site_assets.php')) {
+		require(DIR_CONFIG_SITE . '/site_assets.php');
+	}
+
 	## Core Assets ##
 	require($cdir . '/config/assets.php');
 

@@ -36,23 +36,16 @@ if (!isset($enableEditing) || $enableEditing == false) {
 
 $logouttoken = Loader::helper('validation/token')->generate('logout');
 
+$req = Request::get();
+$req->requireAsset('dashboard');
 // Required JavaScript
-
-$v->addFooterItem($html->javascript('jquery.backstretch.js'));
-$v->addFooterItem($html->javascript('jquery.ui.js'));
-$md = new Mobile_Detect();
+/*$md = new Mobile_Detect();
 if ($md->isMobile()) {
 	$this->addFooterItem($html->javascript('jquery.ui.touch-punch.js'));
-}
-$v->addFooterItem($html->javascript('jquery.form.js'));
-$v->addFooterItem($html->javascript('jquery.rating.js'));
-$v->addFooterItem('<script type="text/javascript" src="' . REL_DIR_FILES_TOOLS_REQUIRED . '/i18n_js"></script>'); 
-$v->addFooterItem($html->javascript('bootstrap.js'));
-$v->addFooterItem($html->javascript('ccm.app.js'));
-$v->addFooterItem($html->javascript('redactor.js'));
-$v->addFooterItem($html->javascript('ccm.dashboard.js'));
+}*/
 
-$this->addFooterItem('<script type="text/javascript">$(function() { CCMToolbar.start(); });</script>');
+$v->addFooterItem('<script type="text/javascript" src="' . REL_DIR_FILES_TOOLS_REQUIRED . '/i18n_js"></script>'); 
+$v->addFooterItem('<script type="text/javascript">$(function() { CCMToolbar.start(); });</script>');
 
 if (ENABLE_PROGRESSIVE_PAGE_REINDEX && Config::get('DO_PAGE_REINDEX_CHECK')) {
 	$v->addFooterItem('<script type="text/javascript">$(function() { ccm_doPageReindexing(); });</script>');
@@ -63,15 +56,11 @@ if (LANGUAGE != 'en') {
 }
 
 // Require CSS
-$v->addHeaderItem($html->css('ccm.app.css'));
-if ($md->isMobile() == true) {
+/*if ($md->isMobile() == true) {
 	$v->addHeaderItem($html->css('ccm.app.mobile.css')); ?>
 	<?		
 }
-$v->addHeaderItem($html->css('ccm.dashboard.css'));
-$v->addHeaderItem($html->css('jquery.ui.css'));
-$v->addHeaderItem($html->css('redactor.css'));
-
+*/
 $valt = Loader::helper('validation/token');
 $disp = '<script type="text/javascript">'."\n";
 $disp .=  "var CCM_SECURITY_TOKEN = '" . $valt->generate() . "';"."\n";
@@ -103,8 +92,7 @@ if ($backgroundImage->image) {
 }
 
 $options .= '}';
-
-$this->addFooterItem('<script type="text/javascript">$(function() { CCMDashboard.start(' . $options . '); });</script>');
+$v->addFooterItem('<script type="text/javascript">$(function() { CCMDashboard.start(' . $options . '); });</script>');
 
 ?>
 
