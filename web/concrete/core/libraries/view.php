@@ -281,7 +281,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			return $this->controller->field($fieldName);
 		}
 		
-		protected function addOutputAsset(Asset $asset) {
+		public function addOutputAsset(Asset $asset) {
 			if ($asset->getAssetWeight() > 0) {
 				$this->outputAssets[$asset->getAssetPosition()]['weighted'][] = $asset;
 			} else {
@@ -883,9 +883,11 @@ defined('C5_EXECUTE') or die("Access Denied.");
 					$view = $c;
 					$req = Request::get();
 					$req->setCurrentPage($c);
+					/*
 					$_pageBlocks = $view->getBlocks();
 					$_pageBlocksGlobal = $view->getGlobalBlocks();
 					$_pageBlocks = array_merge($_pageBlocks, $_pageBlocksGlobal);
+					*/
 				}
 			}
 			
@@ -898,7 +900,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 						if('Controller' != get_class($btc)){
 							$btc->outputAutoHeaderItems();
 						}
-						$btc->runTask('on_page_view', array($view));
+						//$btc->runTask('on_page_view', array($view));
 					}
 				}
 			}			

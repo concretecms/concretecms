@@ -469,19 +469,22 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			$b = $this->getBlockObject();
 			$bvt = new BlockViewTemplate($b);
 			
-			$headers = $bvt->getTemplateHeaderItems();
-			if (count($headers) > 0) {
-				foreach($headers as $h) {
-					$this->addHeaderItem($h);
+			$assets = $bvt->getTemplateAssets();
+			if (count($assets) > 0) {
+				$v = View::getInstance();
+				foreach($assets as $asset) {
+					$v->addOutputAsset($asset);
 				}
 			}
 		}
 		
+		/*
 		public function addHeaderItem($file) {
 			$namespace = 'BLOCK_CONTROLLER_' . strtoupper($this->btHandle);
 			$this->headerItems[$namespace][] = $file;
 			parent::addHeaderItem($file);
 		}
+		*/
 		
 		public function setupAndRun($method) {
 			if ($method) {

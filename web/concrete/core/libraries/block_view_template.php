@@ -30,7 +30,7 @@ class Concrete5_Library_BlockViewTemplate {
 	protected $btHandle;
 	protected $obj;
 	protected $baseURL;
-	protected $checkHeaderItems = true;
+	protected $checkAssets = true;
 	protected $itemsToCheck = array(
 		'CSS' => 'view.css', 
 		'JAVASCRIPT' => 'view.js'
@@ -176,21 +176,27 @@ class Concrete5_Library_BlockViewTemplate {
 		return $this->template;
 	}
 	
-	public function getTemplateHeaderItems() {
+	public function getTemplateAssets() {
 		$items = array();
 		$h = Loader::helper("html");
 		$dh = Loader::helper('file');
-		if ($this->checkHeaderItems == false) {
+		if ($this->checkAssets == false) {
 			return $items;
 		} else {
 			foreach($this->itemsToCheck as $t => $i) {
 				if (file_exists($this->basePath . '/' . $i)) {
 					switch($t) {
 						case 'CSS':
-							$items[] = $h->css($this->getBaseURL() . '/' . $i);
+							$asset = new CSSAsset();
+							$asset->setAssetURL($this->getBaseURL() . '/' . $i);
+							$asset->setAssetPath($this->basePath . '/' . $i);
+							$items[] = $asset;
 							break;
 						case 'JAVASCRIPT':
-							$items[] = $h->javascript($this->getBaseURL() . '/' . $i);
+							$asset = new JavaScriptAsset();
+							$asset->setAssetURL($this->getBaseURL() . '/' . $i);
+							$asset->setAssetPath($this->basePath . '/' . $i);
+							$items[] = $asset;
 							break;
 					}
 				}
@@ -200,14 +206,20 @@ class Concrete5_Library_BlockViewTemplate {
 			if (count($css) > 0) {
 				foreach($css as $i) {
 					if(substr($i,-4)=='.css') {
-						$items[] = $h->css($this->getBaseURL() . '/' . DIRNAME_CSS . '/' . $i);
+						$asset = new CSSAsset();
+						$asset->setAssetURL($this->getBaseURL() . '/' . DIRNAME_CSS . '/' . $i);
+						$asset->setAssetPath($this->basePath . '/' . DIRNAME_CSS . '/' . $i);
+						$items[] = $asset;
 					}
 				}
 			}
 			if (count($js) > 0) {
 				foreach($js as $i) {
 					if (substr($i,-3)=='.js') {
-						$items[] = $h->javascript($this->getBaseURL() . '/' . DIRNAME_JAVASCRIPT . '/' . $i);
+						$asset = new JavaScriptAsset();
+						$asset->setAssetURL($this->getBaseURL() . '/' . DIRNAME_JAVASCRIPT . '/' . $i);
+						$asset->setAssetPath($this->basePath . '/' . DIRNAME_JAVASCRIPT . '/' . $i);
+						$items[] = $asset;
 					}
 				}
 			}
