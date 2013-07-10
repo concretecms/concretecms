@@ -46,26 +46,40 @@
 		public function setLocale($locale) {
 			if (!ENABLE_TRANSLATE_LOCALE_EN_US && $locale == 'en_US' && isset($this->translate)) {
 				unset($this->translate);
-			} else if ((ENABLE_TRANSLATE_LOCALE_EN_US || $locale != 'en_US') && is_dir(DIR_BASE . '/languages/' . $locale)) {
-				$options = array('adapter' => 'gettext');
-				if (defined('TRANSLATE_OPTIONS')) {
-					$_options = unserialize(TRANSLATE_OPTIONS);
-					if (is_array($_options)) {
-						$options = array_merge($options, $_options);
-					}
+				return;
+			}
+			if (!(ENABLE_TRANSLATE_LOCALE_EN_US || $locale != 'en_US')) {
+				return;
+			}
+
+			if (is_dir(DIR_LANGUAGES . '/' . $locale)) {
+				$languageDir = DIR_LANGUAGES . '/' . $locale;
+			} elseif (is_dir(DIR_LANGUAGES_CORE . '/' . $locale)) {
+				$languageDir = DIR_LANGUAGES_CORE . '/' . $locale;
+			}
+			if (!$languageDir) {
+				return;
+			}
+
+			$options = array(
+				'adapter' => 'gettext',
+				'content' => $languageDir,
+				'locale'  => $locale
+			);
+			if (defined('TRANSLATE_OPTIONS')) {
+				$_options = unserialize(TRANSLATE_OPTIONS);
+				if (is_array($_options)) {
+					$options = array_merge($options, $_options);
 				}
-				$options = array_merge($options, array(
-					'content' => DIR_BASE . '/languages/' . $locale,
-					'locale' => $locale
-				));
-				if (!isset($this->translate)) {
-					$this->translate = new Zend_Translate($options);
-				} else {
-					if (!in_array($locale, $this->translate->getList())) {
-						$this->translate->addTranslation($options);
-					}
-					$this->translate->setLocale($locale);
+			}
+
+			if (!isset($this->translate)) {
+				$this->translate = new Zend_Translate($options);
+			} else {
+				if (!in_array($locale, $this->translate->getList())) {
+					$this->translate->addTranslation($options);
 				}
+				$this->translate->setLocale($locale);
 			}
 		}
 
