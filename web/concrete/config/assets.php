@@ -41,12 +41,12 @@ $al->register('javascript', 'bootstrap/tooltip', 'bootstrap/tooltip.js', 95); //
 $al->register('javascript', 'bootstrap/popover', 'bootstrap/popover.js');
 $al->register('javascript', 'bootstrap/alert', 'bootstrap/alert.js');
 $al->register('javascript', 'bootstrap/transition', 'bootstrap/transition.js');
-$al->register('css', 'bootstrap/dropdown', 'ccm.app.css');
-$al->register('css', 'bootstrap/tooltip', 'ccm.app.css');
-$al->register('css', 'bootstrap/popover', 'ccm.app.css');
-$al->register('css', 'bootstrap/alert', 'ccm.app.css');
-$al->register('css', 'bootstrap/transition', 'ccm.app.css');
-$al->register('css', 'bootstrap', 'ccm.app.css');
+$al->register('css', 'bootstrap/dropdown', 'ccm.app.css', false, false, false);
+$al->register('css', 'bootstrap/tooltip', 'ccm.app.css', false, false, false);
+$al->register('css', 'bootstrap/popover', 'ccm.app.css', false, false, false);
+$al->register('css', 'bootstrap/alert', 'ccm.app.css', false, false, false);
+$al->register('css', 'bootstrap/transition', 'ccm.app.css', false, false, false);
+$al->register('css', 'bootstrap', 'ccm.app.css', false, false, false);
 
 /** 
  * ## Core functionality and styles
@@ -56,7 +56,7 @@ $al->register('css', 'bootstrap', 'ccm.app.css');
 $al->register('javascript', 'core/observer', 'ccm.pubsub.js');
 
 // Core App
-$al->register('css', 'core/app', 'ccm.app.css');
+$al->register('css', 'core/app', 'ccm.app.css', false, false, false);
 $al->register('javascript', 'core/app', 'ccm.app.js');
 $al->registerGroup('core/app', array(
 	array('javascript', 'jquery'),

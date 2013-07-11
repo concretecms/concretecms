@@ -300,20 +300,56 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			return $weightA < $weightB ? 1 : -1;
 		}
 
+		protected function postProcessAssets($assets) {
+			// goes through all assets in this list, creating new URLs and post-processing them where possible.
+			$segment = 0;
+			$subassets[$segment] = array();
+			for ($i = 0; $i < count($assets); $i++) {
+				$asset = $assets[$i];
+				$nextasset = $assets[$i+1];
+				$subassets[$segment][] = $asset;
+				if ($asset instanceof Asset && $nextasset instanceof Asset) {
+					if ($asset->getAssetType() != $nextasset->getAssetType()) {
+						$segment++;
+					} else if (!$asset->assetSupportsPostProcessing() || !$nextasset->assetSupportsPostProcessing()) {
+						$segment++;
+					}
+				} else {
+					$segment++;
+				}
+			}
+
+			// now we have a sub assets array with different segments split by post process and non-post-process
+			$return = array();
+			foreach($subassets as $segment => $assets) {
+				if ($assets[0] instanceof Asset && $assets[0]->assetSupportsPostProcessing()) {
+					// this entire segment can be post processed together
+					$class = Loader::helper('text')->camelcase($assets[0]->getAssetType()) . 'Asset';
+					$return[] = call_user_func(array($class, 'postprocess'), $assets);
+				} else {
+					$return = array_merge($return, $assets);
+				}
+			}
+			return $return;
+		}
+
+
 		protected function replaceAssetPlaceholders($pageContent) {
 			foreach($this->outputAssets as $position => $assets) {
 				$output = '';
 				if (is_array($assets['weighted'])) {
 					$weightedAssets = $assets['weighted'];
 					usort($weightedAssets, array($this, 'sortAssetsByWeightDescending'));
-					foreach($weightedAssets as $item) {
+					$transformed = $this->postProcessAssets($assets['weighted']);
+					foreach($transformed as $item) {
 						$output .= (string) $item;
 						$output .= "\n";
 					}
 				}
 				if (is_array($assets['unweighted'])) {
 					// now the unweighted
-					foreach($assets['unweighted'] as $item) {
+					$transformed = $this->postProcessAssets($assets['unweighted']);
+					foreach($transformed as $item) {
 						$output .= (string) $item;
 						$output .= "\n";
 					}
