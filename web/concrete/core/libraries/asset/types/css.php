@@ -12,8 +12,8 @@ class Concrete5_Library_CSSAsset extends Asset {
 	public function getAssetType() {return 'css';}
 
 	public function postprocess($assets) {
-		if (!file_exists(DIR_FILES_CACHE . '/' . DIRNAME_JAVASCRIPT)) {
-			$proceed = @mkdir(DIR_FILES_CACHE . '/' . DIRNAME_JAVASCRIPT);
+		if (!file_exists(DIR_FILES_CACHE . '/' . DIRNAME_CSS)) {
+			$proceed = @mkdir(DIR_FILES_CACHE . '/' . DIRNAME_CSS);
 		} else {
 			$proceed = true;
 		}
