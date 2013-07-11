@@ -3,19 +3,17 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 class Concrete5_Library_JavaScriptAsset extends Asset {
 	
+	protected $assetSupportsPostProcessing = false;
+
 	public function getAssetDefaultPosition() {
 		return Asset::ASSET_POSITION_FOOTER;
 	}
 
+	public function postprocess($assets) {
+
+	}
+
 	public function getAssetType() {return 'javascript';}
-
-	public function getAssetDefaultMinify() {
-		return true;
-	}
-
-	public function getAssetDefaultCombine() {
-		return true;
-	}
 
 	public function populateAssetURLFromFilename($filename) {
 		if ($this->local) {
@@ -27,7 +25,7 @@ class Concrete5_Library_JavaScriptAsset extends Asset {
 
 	public function populateAssetPathFromFilename($filename) {
 		if ($this->local) {
-			$this->assetPath = DIR_BASE_CORE . '/js/' . $filename;
+			$this->assetPath = DIR_BASE_CORE . '/' . DIRNAME_JAVASCRIPT . '/' . $filename;
 		}
 	}
 

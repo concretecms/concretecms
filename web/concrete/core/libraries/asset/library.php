@@ -8,18 +8,22 @@ abstract class Concrete5_Library_Asset {
 	protected $local = true;
 	protected $assetURL;
 	protected $assetPath;
+	protected $assetSupportsPostProcessing = false;
 
 	const ASSET_POSITION_HEADER = 'H';
 	const ASSET_POSITION_FOOTER = 'F';
 
 	abstract public function getAssetDefaultPosition();
-	abstract public function getAssetDefaultMinify();
-	abstract public function getAssetDefaultCombine();
 	abstract public function getAssetType();
 	abstract public function populateAssetURLFromFilename($filename);
 	abstract public function populateAssetPathFromFilename($filename);
+	abstract public function postprocess($assets);
 	abstract public function __toString();
 
+	public function assetSupportsPostProcessing() { return $this->assetSupportsPostProcessing;}
+
+	public function setAssetSupportsPostProcessing($postprocess) {$this->assetSupportsPostProcessing = $postprocess;}
+	
 	public function getAssetURL() {return $this->assetURL;}
 	public function getAssetPath() {return $this->assetPath;}
 
