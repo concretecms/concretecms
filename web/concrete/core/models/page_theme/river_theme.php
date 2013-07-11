@@ -16,4 +16,11 @@ class Concrete5_Model_PageTheme_RiverTheme extends PageTheme {
 		return 146;
 	}
 
+	public function __construct() {
+		$req = Request::get();
+		$req->requireAsset('javascript', 'jquery/form');
+		$req->requireAsset('javascript', 'hoverintent');
+		$req->requireAsset('javascript', 'backstretch');
+	}
+
 }

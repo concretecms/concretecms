@@ -22,7 +22,7 @@ $al->registerGroup('jqueryui', array(
 $al->register('javascript', 'dropzone', 'dropzone.js');
 
 // jquery form
-$al->register('javascript', 'jqueryform', 'jquery.form.js');
+$al->register('javascript', 'jquery/form', 'jquery.form.js');
 
 // redactor
 $al->register('javascript', 'redactor', 'redactor.js', false, false, false);
@@ -34,6 +34,9 @@ $al->registerGroup('redactor', array(
 
 // backstretch
 $al->register('javascript', 'backstretch', 'jquery.backstretch.js');
+
+// hoverIntent
+$al->register('javascript', 'hoverintent', 'ccm_app/jquery.hoverIntent.js');
 
 // bootstrap
 $al->register('javascript', 'bootstrap/dropdown', 'bootstrap/dropdown.js');
@@ -67,7 +70,7 @@ $al->registerGroup('core/app', array(
 	array('javascript', 'jqueryui'),
 	array('javascript', 'core/app'),
 	array('javascript', 'redactor'),
-	array('javascript', 'jqueryform'),
+	array('javascript', 'jquery/form'),
 	array('css', 'core/app'),
 	array('css', 'redactor'),
 	array('css', 'jqueryui')
@@ -79,7 +82,7 @@ $al->register('javascript', 'dashboard', 'ccm.dashboard.js');
 $al->registerGroup('dashboard', array(
 	array('javascript', 'jquery'),
 	array('javascript', 'jqueryui'),
-	array('javascript', 'jqueryform'),
+	array('javascript', 'jquery/form'),
 	array('javascript', 'dashboard'),
 	array('javascript', 'backstretch'),
 	array('javascript', 'core/observer'),
