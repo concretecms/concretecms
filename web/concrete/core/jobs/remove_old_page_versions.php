@@ -34,6 +34,7 @@ class Concrete5_Job_RemoveOldPageVersions extends Job {
 			return t("All pages have been processed, starting from beginning on next run.");
 		}
 
+		$versionCount = 0;
 		$pagesAffected = array();
 		foreach($pages as $page) {
 			if($page instanceof Page) {
@@ -42,6 +43,7 @@ class Concrete5_Job_RemoveOldPageVersions extends Job {
 				foreach(array_slice(array_reverse($pvl->getVersionListArray()), 10) as $v) {
 					if($v instanceof CollectionVersion && !$v->isApproved() && !$v->isMostRecent() ) {
 						@$v->delete();
+						$versionCount++;
 					}
 				}
 			}
