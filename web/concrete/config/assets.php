@@ -8,11 +8,11 @@ $al = AssetList::getInstance();
  */
 
 // jquery
-$al->register('javascript', 'jquery', 'jquery.js', 100, Asset::ASSET_POSITION_HEADER);
+$al->register('javascript', 'jquery', 'jquery.js', 100, Asset::ASSET_POSITION_HEADER, false);
 
 // jquery ui
-$al->register('javascript', 'jqueryui', 'jquery.ui.js', 95);
-$al->register('css', 'jqueryui', 'jquery.ui.css');
+$al->register('javascript', 'jqueryui', 'jquery.ui.js', 95, false, false);
+$al->register('css', 'jqueryui', 'jquery.ui.css', false, false, false);
 $al->registerGroup('jqueryui', array(
 	array('javascript', 'jqueryui'),
 	array('css', 'jqueryui')
@@ -25,7 +25,7 @@ $al->register('javascript', 'dropzone', 'dropzone.js');
 $al->register('javascript', 'jqueryform', 'jquery.form.js');
 
 // redactor
-$al->register('javascript', 'redactor', 'redactor.js');
+$al->register('javascript', 'redactor', 'redactor.js', false, false, false);
 $al->register('css', 'redactor', 'redactor.css');
 $al->registerGroup('redactor', array(
 	array('javascript', 'redactor'),
@@ -57,7 +57,7 @@ $al->register('javascript', 'core/observer', 'ccm.pubsub.js');
 
 // Core App
 $al->register('css', 'core/app', 'ccm.app.css', false, false, false);
-$al->register('javascript', 'core/app', 'ccm.app.js');
+$al->register('javascript', 'core/app', 'ccm.app.js', false, false, false);
 $al->registerGroup('core/app', array(
 	array('javascript', 'jquery'),
 	array('javascript', 'core/observer'),
