@@ -81,7 +81,7 @@
 		 */
 		public function element($file, $args = null, $pkgHandle= null) {
 			if (is_array($args)) {
-				extract($args);
+				extract($args, EXTR_SKIP);
 			}
 
 			$env = Environment::get();
