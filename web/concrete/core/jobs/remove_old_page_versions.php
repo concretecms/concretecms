@@ -19,15 +19,15 @@ class Concrete5_Job_RemoveOldPageVersions extends Job {
 	public function run() {
 
 		$cfg = new Config;
-		$pNum = $cfg->get('OLD_VERSION_JOB_PAGE_NUM');
-		if($pNum < 0) { $pNum = 0; }
+		$pNum = (int) $cfg->get('OLD_VERSION_JOB_PAGE_NUM');
+		$pNum = $pNum < 0 ? 1 : $pNum + 1;
 		
 		$pl = new PageList;
 		$pl->setItemsPerPage(3);
 		/* probably want to keep a record of pages that have been gone through 
 		 * so you don't start from the beginning each time..
 		 */
-		$pages = $pl->getPage($pNum + 1);
+		$pages = $pl->getPage($pNum);
 		
 		if(!count($pages)) {
 			$cfg->save('OLD_VERSION_JOB_PAGE_NUM',0);
@@ -40,23 +40,17 @@ class Concrete5_Job_RemoveOldPageVersions extends Job {
 				$pvl = new VersionList($page);
 				$pagesAffected[] = $page->getCollectionID();
 				foreach(array_slice(array_reverse($pvl->getVersionListArray()), 10) as $v) {
-					if(
-						$v instanceof CollectionVersion
-						&&
-						!$v->isApproved()
-						&&
-						!$v->isMostRecent()
-					) {
+					if($v instanceof CollectionVersion && !$v->isApproved() && !$v->isMostRecent() ) {
 						@$v->delete();
 					}
 				}
 			}
 		}
 		$pageCount = count($pagesAffected);
-		$cfg->save('OLD_VERSION_JOB_PAGE_NUM', $pNum + $pageCount);
+		$cfg->save('OLD_VERSION_JOB_PAGE_NUM', $pNum);
 
 		//i18n: %1$d is the number of versions deleted, %2$d is the number of affected pages, %3$d is the number of times that the Remove Old Page Versions job has been executed.
-		return t2('%1$d versions deleted from %2$d page (%3$d)', '%1$d versions deleted from %2$d pages (%3$d)', $pageCount, $versionCount, $pageCount, implode(',', $pagesAffected));
+		return t2('%1$d versions deleted from %2$d page (%3$d)', '%1$d versions deleted from %2$d pages (%3$s)', $pageCount, $versionCount, $pageCount, implode(',', $pagesAffected));
 
 	}
 }
