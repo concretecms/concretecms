@@ -300,6 +300,24 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			return $weightA < $weightB ? 1 : -1;
 		}
 
+		protected function sortAssetsByPostProcessDescending($assetA, $assetB) {
+			$ppA = ($assetA instanceof Asset && $assetA->assetSupportsPostProcessing());
+			$ppB = ($assetB instanceof Asset && $assetB->assetSupportsPostProcessing());
+			if ($ppA && $ppB) {
+				return 0;
+			}
+			if ($ppA && !$ppB) {
+				return -1;
+			}
+
+			if (!$ppA && $ppB) {
+				return 1;
+			}
+			if (!$ppA && !$ppB) {
+				return 0;
+			}
+		}
+
 		protected function postProcessAssets($assets) {
 			// goes through all assets in this list, creating new URLs and post-processing them where possible.
 			$segment = 0;
@@ -325,33 +343,43 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				if ($assets[0] instanceof Asset && $assets[0]->assetSupportsPostProcessing()) {
 					// this entire segment can be post processed together
 					$class = Loader::helper('text')->camelcase($assets[0]->getAssetType()) . 'Asset';
-					$return[] = call_user_func(array($class, 'postprocess'), $assets);
-				} else {
-					$return = array_merge($return, $assets);
+					$assets = call_user_func(array($class, 'postprocess'), $assets);
 				}
+				$return = array_merge($return, $assets);
 			}
 			return $return;
 		}
 
 
 		protected function replaceAssetPlaceholders($pageContent) {
+			$outputItems = array();
 			foreach($this->outputAssets as $position => $assets) {
 				$output = '';
 				if (is_array($assets['weighted'])) {
 					$weightedAssets = $assets['weighted'];
 					usort($weightedAssets, array($this, 'sortAssetsByWeightDescending'));
-					$transformed = $this->postProcessAssets($assets['weighted']);
+					$transformed = $this->postProcessAssets($weightedAssets);
 					foreach($transformed as $item) {
-						$output .= (string) $item;
-						$output .= "\n";
+						$item = (string) $item;
+						if (!in_array($item, $outputItems)) {
+							$output .= $item;
+							$output .= "\n";
+							$outputItems[] = $item;
+						}
 					}
 				}
 				if (is_array($assets['unweighted'])) {
 					// now the unweighted
-					$transformed = $this->postProcessAssets($assets['unweighted']);
+					$unweightedAssets = $assets['unweighted'];
+					usort($unweightedAssets, array($this, 'sortAssetsByPostProcessDescending'));
+					$transformed = $this->postProcessAssets($unweightedAssets);
 					foreach($transformed as $item) {
-						$output .= (string) $item;
-						$output .= "\n";
+						$item = (string) $item;
+						if (!in_array($item, $outputItems)) {
+							$output .= $item;
+							$output .= "\n";
+							$outputItems[] = $item;
+						}
 					}
 				}
 				$pageContent = str_replace('<!--ccm:assets:' . $position . '//-->', $output, $pageContent);

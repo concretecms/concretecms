@@ -12,27 +12,36 @@ class Concrete5_Library_CSSAsset extends Asset {
 	public function getAssetType() {return 'css';}
 
 	public function postprocess($assets) {
-		$filename = '';
-		for ($i = 0; $i < count($assets); $i++) {
-			$asset = $assets[$i];
-			$filename .= $asset->getAssetURL();
+		if (!file_exists(DIR_FILES_CACHE . '/' . DIRNAME_JAVASCRIPT)) {
+			$proceed = @mkdir(DIR_FILES_CACHE . '/' . DIRNAME_JAVASCRIPT);
+		} else {
+			$proceed = true;
 		}
-		$filename = sha1($filename);
-		$cacheFile = DIR_FILES_CACHE . '/' . DIRNAME_CSS . '/' . $filename . '.css';
-		if (!file_exists($cacheFile)) {
-			Loader::library('3rdparty/cssmin');
-			$css = '';
-			foreach($assets as $asset) {
-				$css .= file_get_contents($asset->getAssetPath()) . "\n\n";
+		if ($proceed) {
+			$filename = '';
+			for ($i = 0; $i < count($assets); $i++) {
+				$asset = $assets[$i];
+				$filename .= $asset->getAssetURL();
 			}
-			$css = CssMin::minify($css);
-			@file_put_contents($cacheFile, $css);
+			$filename = sha1($filename);
+			$cacheFile = DIR_FILES_CACHE . '/' . DIRNAME_CSS . '/' . $filename . '.css';
+			if (!file_exists($cacheFile)) {
+				Loader::library('3rdparty/cssmin');
+				$css = '';
+				foreach($assets as $asset) {
+					$css .= file_get_contents($asset->getAssetPath()) . "\n\n";
+				}
+				$css = CssMin::minify($css);
+				@file_put_contents($cacheFile, $css);
+			}
+		
+			$asset = new CSSAsset();
+			$asset->setAssetURL(REL_DIR_FILES_CACHE . '/' . DIRNAME_CSS . '/' . $filename . '.css');
+			$asset->setAssetPath(DIR_FILES_CACHE . '/' . DIRNAME_CSS . '/' . $filename . '.css');
+			return array($asset);
 		}
-	
-		$asset = new CSSAsset();
-		$asset->setAssetURL(REL_DIR_FILES_CACHE . '/' . DIRNAME_CSS . '/' . $filename . '.css');
-		$asset->setAssetPath(DIR_FILES_CACHE . '/' . DIRNAME_CSS . '/' . $filename . '.css');
-		return $asset;
+		
+		return $assets;
 	}
 
 	public function populateAssetURLFromFilename($filename) {
