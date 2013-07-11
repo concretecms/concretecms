@@ -3,7 +3,7 @@ var dateNav ={
 	init:function(){
 		this.blockForm=document.forms['ccm-block-form'];
 		
-		if (typeof value !=== undefined && value === "custom") {
+		if (typeof value !== undefined && value === "custom") {
 			$("#ccm-autonav-page-selector").css('display','block');
 		} else {
 			$("#ccm-autonav-page-selector").hide();
