@@ -319,6 +319,9 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		}
 
 		protected function postProcessAssets($assets) {
+			if (!ENABLE_ASSET_CACHE) {
+				return $assets;
+			}
 			// goes through all assets in this list, creating new URLs and post-processing them where possible.
 			$segment = 0;
 			$subassets[$segment] = array();

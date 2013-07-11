@@ -20,7 +20,7 @@ abstract class Concrete5_Library_Asset {
 	abstract public function postprocess($assets);
 	abstract public function __toString();
 
-	public function assetSupportsPostProcessing() { return $this->assetSupportsPostProcessing;}
+	public function assetSupportsPostProcessing() { return $this->local && $this->assetSupportsPostProcessing;}
 
 	public function setAssetSupportsPostProcessing($postprocess) {$this->assetSupportsPostProcessing = $postprocess;}
 	

@@ -24,6 +24,25 @@
         </fieldset>
 
         <fieldset>
+            <legend style="margin-bottom: 0px"><?php echo t('CSS and JavaScript Cache')?></legend>
+            <div class="control-group">
+                <div class="controls">
+                <label class="radio">
+                    <input type="radio" name="ENABLE_ASSET_CACHE" value="0" <?php  if (ENABLE_ASSET_CACHE == false) { ?> checked <?php  } ?> />
+                    <span><?php echo t('Off - Good for active theme and block development.')?></span>
+                </label>
+                </div>
+                <div class="controls">
+                <label class="radio">
+                    <input type="radio" name="ENABLE_ASSET_CACHE" value="1" <?php  if (ENABLE_ASSET_CACHE == true) { ?> checked <?php  } ?> />
+                    <span><?php echo t('On - Helps speed up a live site.')?></span>
+                </label>
+                </div>
+            </div>
+        </fieldset>
+
+
+        <fieldset>
             <legend style="margin-bottom: 0px"><?php echo t('Overrides Cache')?></legend>
             <div class="control-group">
                 <div class="controls">

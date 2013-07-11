@@ -4,17 +4,16 @@
 
 <head>
 
-<?php  Loader::element('header_required'); ?>
-
-<!-- Site Header Content //-->
-
 <link rel="stylesheet" href="<?php echo $this->getThemePath(); ?>/css/reset.css" />
-<link rel="stylesheet" href="<?php echo $this->getThemePath(); ?>/css/text.css" />
-<link rel="stylesheet" href="<?php echo $this->getThemePath(); ?>/css/960_24_col.css" />
-<link rel="stylesheet" media="screen" type="text/css" href="<?php echo $this->getStyleSheet('main.css')?>" />
-<link rel="stylesheet" media="screen" type="text/css" href="<?php echo $this->getStyleSheet('typography.css')?>" />
-<link href='//fonts.googleapis.com/css?family=Merriweather:400,700,900,300' rel='stylesheet' type='text/css' />
 
+<?
+$this->addHeaderItem(Loader::helper('html')->css('css/text.css'));
+$this->addHeaderItem(Loader::helper('html')->css('css/960_24_col.css'));
+$this->addHeaderItem(Loader::helper('html')->css($this->getStyleSheet('main.css')));
+$this->addHeaderItem(Loader::helper('html')->css($this->getStyleSheet('typography.css')));
+$this->addHeaderItem(Loader::helper('html')->css('//fonts.googleapis.com/css?family=Merriweather:400,700,900,300'));
+
+Loader::element('header_required'); ?>
 
 </head>
 

@@ -17,6 +17,10 @@ if (!defined('ENABLE_BLOCK_CACHE')) {
 	Config::getOrDefine('ENABLE_BLOCK_CACHE', true); 
 }
 
+if (!defined('ENABLE_ASSET_CACHE')) {
+	Config::getOrDefine('ENABLE_ASSET_CACHE', false); 
+}
+
 if (!defined('FULL_PAGE_CACHE_GLOBAL')) {
 	Config::getOrDefine('FULL_PAGE_CACHE_GLOBAL', false);	
 }
