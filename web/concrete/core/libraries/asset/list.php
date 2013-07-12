@@ -32,8 +32,12 @@ class Concrete5_Library_AssetList {
 		if ($position) {
 			$o->setAssetPosition($position);
 		}
-		$this->assets[$assetType][$assetHandle] = $o;
+		$this->registerAsset($o);
 		return $o;
+	}
+
+	public function registerAsset(Asset $asset) {
+		$this->assets[$asset->getAssetType()][$asset->getAssetHandle()] = $asset;
 	}
 
 	public function registerGroup($assetGroupHandle, $assetHandles, $customClass = false) {

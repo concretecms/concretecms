@@ -1,0 +1,6 @@
+.clearfix{*zoom:1;}.clearfix:before,.clearfix:after{display:table;content:"";line-height:0;}
+.clearfix:after{clear:both;}
+.hide-text{font:0/0 a;color:transparent;text-shadow:none;background-color:transparent;border:0;}
+.input-block-level{display:block;width:100%;min-height:28px;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;}
+div.ccm-gathering-grid{-webkit-transition:opacity 0.3s linear;-moz-transition:opacity 0.3s linear;-o-transition:opacity 0.3s linear;transition:opacity 0.3s linear;}
+div.ccm-gathering-overlay{width:600px;height:400px;margin:40px auto 0px auto;background-color:#fff;position:relative;}

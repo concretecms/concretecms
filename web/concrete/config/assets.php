@@ -108,10 +108,12 @@ $al->register('css', 'core/calendar', 'frontend/calendar.css');
 
 // Gathering
 $al->register('javascript', 'core/gathering', 'ccm.gathering.js');
-$al->register('css', 'core/gathering', 'ccm.gathering.css');
+$al->register('css', 'core/gathering/display', 'ccm.gathering.display.css');
+$al->register('css', 'core/gathering/base', 'ccm.gathering.base.css');
 $al->registerGroup('core/gathering', array(
 	array('javascript', 'core/gathering'),
-	array('css', 'core/gathering')
+	array('css', 'core/gathering/base'),
+	array('css', 'core/gathering/display')
 ));
 
 // Conversation
