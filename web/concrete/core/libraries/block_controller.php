@@ -468,14 +468,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		public function outputAutoHeaderItems() {
 			$b = $this->getBlockObject();
 			$bvt = new BlockViewTemplate($b);
-			
-			$assets = $bvt->getTemplateAssets();
-			if (count($assets) > 0) {
-				$v = View::getInstance();
-				foreach($assets as $asset) {
-					$v->addOutputAsset($asset);
-				}
-			}
+			$bvt->registerTemplateAssets();
 		}
 		
 		/*

@@ -21,7 +21,7 @@ class Concrete5_Model_PageTheme_RiverTheme extends PageTheme {
 		$req->requireAsset('javascript', 'jquery/form');
 		$req->requireAsset('javascript', 'hoverintent');
 		$req->requireAsset('javascript', 'backstretch');
-		$this->providesAsset('css', 'core/gathering');
+		$this->providesAsset('css', 'core/gathering/display');
 	}
 
 }

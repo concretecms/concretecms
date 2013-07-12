@@ -56,6 +56,11 @@ class Concrete5_Library_Controller {
 		return $this->renderOverride;
 	}
 	
+	public function requireAsset() {
+		$args = func_get_args();
+		$req = Request::get();
+		call_user_func_array(array($req, 'requireAsset'), $args);
+	}
 	
 	/** 
 	 * Is responsible for taking a method passed and ensuring that it is valid for the current request. You can't
