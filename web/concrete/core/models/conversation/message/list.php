@@ -31,8 +31,16 @@ class Concrete5_Model_Conversation_Message_List extends DatabaseItemList {
 		$this->filter('cnvIsMessageApproved', 1);
 	}
 
+	public function filterByNotDeleted() {
+		$this->filter('cnvIsMessageDeleted', 0);
+	}
+
 	public function filterByUnapproved() {
 		$this->filter('cnvIsMessageApproved', 0);
+	}
+	
+	public function filterByUser($uID) {
+		$this->filter('uID', $uID);
 	}
 	
 	public function filterByDeleted() {

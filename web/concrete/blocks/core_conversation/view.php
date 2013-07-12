@@ -8,7 +8,7 @@ $u = new User();
 if ($u->isLoggedIn()) {
 	$uID = $u->getUserID();
 	$maxFileSize = $maxFileSizeRegistered;
-	$maxFiles = $maxFilesRegistered; 
+	$maxFiles = $maxFilesRegistered;
 }else{
 	$maxFileSize = $maxFileSizeGuest;
 	$maxFiles = $maxFilesGuest;

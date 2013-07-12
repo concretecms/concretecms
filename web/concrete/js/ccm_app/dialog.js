@@ -141,7 +141,9 @@ jQuery.fn.dialog.open = function(options) {
 			}
 		},
 		'close': function(ev, u) {
-			$(this).jqdialog('destroy').remove();
+			if (!options.element) {
+				$(this).jqdialog('destroy').remove();
+			}
 			if (typeof options.onClose != "undefined") {
 				if ((typeof options.onClose) == 'function') {
 					options.onClose();

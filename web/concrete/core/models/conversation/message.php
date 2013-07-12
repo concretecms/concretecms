@@ -76,16 +76,22 @@ class Concrete5_Model_Conversation_Message extends Object {
 		}
 		return false;
 	}
-	public function getConversationMessageBodyOutput() {
-		if ($this->cnvIsMessageDeleted) {
-			return t('This message has been deleted.');
+	public function getConversationMessageBodyOutput($dashboardOverride = false) {
+		$editor = ConversationEditor::getActive();
+		if($dashboardOverride) {
+			return $this->cnvMessageBody;
+		}
+		else if ($this->cnvIsMessageDeleted) {
+			return $editor->formatConversationMessageBody($this->getConversationObject(),t('This message has been deleted.'));
+			//return t('This message has been deleted.');
 		} else if (!$this->cnvIsMessageApproved) {
 			if ($this->conversationMessageHasFlag('spam')) {
-				return t('This message has been flagged as spam.');
+				return $editor->formatConversationMessageBody($this->getConversationObject(),t('This message has been flagged as spam.'));
+				//return t('This message has been flagged as spam.');
 			}
-			return t('This message is queued for approval.');
+			return $editor->formatConversationMessageBody($this->getConversationObject(),t('This message is queued for approval.'));
+			// return t('This message is queued for approval.');
 		} else {
-			$editor = ConversationEditor::getActive();
 			return $editor->formatConversationMessageBody($this->getConversationObject(),$this->cnvMessageBody);
 		}
 	}
@@ -162,6 +168,7 @@ class Concrete5_Model_Conversation_Message extends Object {
 		$cnt = $db->GetOne('SELECT count(*) from ConversationMessageRatings where cnvRatingTypeID = ? AND cnvMessageID = ?',  array($ratingType->getConversationRatingTypeID(), $this->cnvMessageID));
 		return $cnt;
 	}
+	
 	public function flag($flagtype) {
 		if ($flagtype instanceof ConversationFlagType) {
 			$db = Loader::db();
@@ -172,10 +179,22 @@ class Concrete5_Model_Conversation_Message extends Object {
 			}
 			$db->execute('INSERT INTO ConversationFlaggedMessages (cnvMessageFlagTypeID, cnvMessageID) VALUES (?,?)',array($flagtype->getConversationFlagTypeID(),$this->getConversationMessageID()));
 			$this->cnvMessageFlagTypes[] = $flagtype;
+			$this->unapprove();
 			return true;
 		}
 		throw new Exception('Invalid flag type.');
 	}
+
+	public function unflag($flagtype) {
+		if ($flagtype instanceof ConversationFlagType) {
+			$db = Loader::db();
+			$db->execute('DELETE FROM ConversationFlaggedMessages WHERE cnvMessageFlagTypeID = ? AND cnvMessageID = ?',array($flagtype->getConversationFlagTypeID(),$this->getConversationMessageID()));
+			$this->cnvMessageFlagTypes[] = $flagtype;
+			return true;
+		}
+		throw new Exception('Invalid flag type.');
+	}
+
 	public static function getByID($cnvMessageID) {
 		$db = Loader::db();
 		$r = $db->GetRow('select * from ConversationMessages where cnvMessageID = ?', array($cnvMessageID));
@@ -261,8 +280,7 @@ class Concrete5_Model_Conversation_Message extends Object {
 
 	public function delete() {
 		$db = Loader::db();
-		$db->Execute('update ConversationMessages set uID = ?, cnvMessageSubject = null, cnvMessageBody = null, cnvIsMessageDeleted = 1 where cnvMessageID = ?', array(
-			USER_DELETED_CONVERSATION_ID,
+		$db->Execute('update ConversationMessages set cnvIsMessageDeleted = 1, cnvIsMessageApproved = 0 where cnvMessageID = ?', array(
 			$this->cnvMessageID
 		));
 
@@ -272,9 +290,26 @@ class Concrete5_Model_Conversation_Message extends Object {
 		}
 
 		$this->cnvIsMessageDeleted = true;
-		$this->cnvMessageSubject = null;
-		$this->cnvMessageBody = null;
-		$this->uID = USER_DELETED_CONVERSATION_ID;
+		//$this->cnvMessageSubject = null;
+		//$this->cnvMessageBody = null;
+		// $this->uID = USER_DELETED_CONVERSATION_ID;
+	}
+
+	public function restore() {
+		$db = Loader::db();
+		$db->Execute('update ConversationMessages set cnvIsMessageDeleted = 0 where cnvMessageID = ?', array(
+			$this->cnvMessageID
+		));
+
+		$cnv = $this->getConversationObject();
+		if (is_object($cnv)) {
+			$cnv->updateConversationSummary();
+		}
+
+		$this->cnvIsMessageDeleted = false;
+		//$this->cnvMessageSubject = null;
+		//$this->cnvMessageBody = null;
+		// $this->uID = USER_DELETED_CONVERSATION_ID;
 	}
 
 }
