@@ -25,6 +25,15 @@ class Concrete5_Library_Content_Importer {
 
 	public function importContentFile($file) {
 		$sx = simplexml_load_file($file);
+		$this->doImport($sx);
+	}
+
+	public function importContentString($string) {
+		$sx = simplexml_load_string($string);
+		$this->doImport($sx);
+	}
+
+	protected function doImport($sx) {
 		$this->importSinglePageStructure($sx);
 		$this->importStacksStructure($sx);
 		$this->importBlockTypes($sx);

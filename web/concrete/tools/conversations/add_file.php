@@ -1,5 +1,6 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); 
 $val = Loader::helper('validation/token');
+$helperFile = Loader::helper('concrete/file');
 $file = new stdClass(); // json return value holder
 $error = array();
 $pageObj = Page::getByID($_POST['cID']);
@@ -51,26 +52,26 @@ if ($u->isRegistered()) {
 	if($blockRegisteredSizeOverride > 0) { // if block overrides for registered exist, use them instead of global. 
 		$maxFileSize = $blockRegisteredSizeOverride;
 	} else {
-		// use system defaults
+		$maxFileSize = Config::get('CONVERSATIONS_MAX_FILES_REGISTERED');
 	}
 	
 	if($blockRegisteredQuantityOverride > 0) {
 		$maxQuantity = $blockRegisteredQuantityOverride;
 	} else {
-		// use system defaults
+		$maxQuantity = Config::get('CONVERSATIONS_MAX_FILES_REGISTERED');
 	}
 	 
 } else {
 	if($blockGuestSizeOverride > 0) {  // if block overrides for guest exist, use them instead of global. 
 		 $maxFileSize =  $blockGuestSizeOverride;
 	} else {
-		// use system defaults 
+		$maxFileSize = Config::get('CONVERSATIONS_MAX_FILE_SIZE_GUEST');
 	}
 	
 	if($blockGuestQuantityOverride > 0) {  // if block overrides for guest exist, use them instead of global. 
 		 $maxQuantity =  $blockGuestQuantityOverride;
 	} else {
-		// use system defaults 
+		$maxQuantity = Config::get('CONVERSATIONS_MAX_FILES_GUEST');
 	}
 }
 
@@ -91,13 +92,15 @@ $blockExtensionsOverride = $blockObj->getController()->fileExtensions;
 if($blockExtensionsOverride) {
 	$extensionList = $blockExtensionsOverride;
 } else {
-	// get system defaults
+	$extensionList = Config::get('CONVERSATIONS_ALLOWED_FILE_TYPES');
 }
 
+$extensionList = $helperFile->unserializeUploadFileExtensions($extensionList);
+
 $incomingExtension = end(explode('.', $_FILES["file"]["name"]));
-if($incomingExtension && strlen($blockExtensionsOverride)) {  // check against block file extensions override
-	foreach(explode(',', $blockExtensionsOverride) as $overrideExtension) {
-		if(strtolower($overrideExtension) == strtolower($incomingExtension)) {
+if($incomingExtension && count($extensionList)) {  // check against block file extensions override
+	foreach($extensionList as $extension) {
+		if(strtolower($extension) == strtolower($incomingExtension)) {
 			$validExtension = true;
 			break;
 		}
