@@ -26,8 +26,8 @@ class ConcreteUpgradeVersion562Helper {
 		$js->clearJobs();
 		$jobs = Job::getList();
 		foreach($jobs as $j) {
-			if (!$js->supportsQueue()) {
-				$j->addJob($j);	
+			if (!$j->supportsQueue()) {
+				$js->addJob($j);	
 			}
 		}
 	}
