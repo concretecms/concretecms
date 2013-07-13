@@ -97,10 +97,12 @@ class Concrete5_Model_AttributeType extends Object {
 		
 		$db = Loader::db();
 		$row = $db->GetRow('select atID, pkgID, atHandle, atName from AttributeTypes where atHandle = ?', array($atHandle));
-		$at = new AttributeType();
-		$at->setPropertiesFromArray($row);
-		$at->loadController();
-		return $at;
+		if ($row['atID']) {
+			$at = new AttributeType();
+			$at->setPropertiesFromArray($row);
+			$at->loadController();
+			return $at;
+		}
 	}
 	
 	public static function add($atHandle, $atName, $pkg = false) {
