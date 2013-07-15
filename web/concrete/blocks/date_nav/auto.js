@@ -3,13 +3,7 @@ var dateNav ={
 	init:function(){
 		this.blockForm=document.forms['ccm-block-form'];
 		
-		$('#cParentIDLocation').change(function() {
-			if($('#cParentIDLocation').val() === 'CUSTOM') {
-			
-			}
-			
-		});
-		if (value === "custom") {
+		if (typeof value !== undefined && value === "custom") {
 			$("#ccm-autonav-page-selector").css('display','block');
 		} else {
 			$("#ccm-autonav-page-selector").hide();
@@ -92,5 +86,4 @@ var dateNav ={
 	}	
 }
 $(function(){ dateNav.init(); });
-
 ccmValidateBlockForm = function() { return dateNav.validate(); }
