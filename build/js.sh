@@ -60,8 +60,6 @@ cat ../web/concrete/js/ccm_app/jquery.colorpicker.js \
 ../web/concrete/js/ccm_app/progressive_operations.js \
 ../web/concrete/js/ccm_app/inline_edit.js \
 ../web/concrete/js/ccm_app/search.js \
-../web/concrete/js/ccm_app/dynatree.js \
-../web/concrete/js/ccm_app/sitemap.js \
 ../web/concrete/js/ccm_app/page_search.js \
 ../web/concrete/js/ccm_app/custom_style.js \
 ../web/concrete/js/ccm_app/tabs.js \
@@ -70,6 +68,10 @@ cat ../web/concrete/js/ccm_app/jquery.colorpicker.js \
 
 uglifyjs --no-seqs -o ../web/concrete/js/ccm.app.js ./ccm.app.tmp.js
 rm ccm.app.tmp.js
+
+uglifyjs -o ../web/concrete/js/dynatree.js ../web/concrete/js/ccm_app/dynatree.js
+
+uglifyjs -o ../web/concrete/js/ccm.sitemap.js ../web/concrete/js/ccm_app/sitemap.js
 
 uglifyjs -o ../web/concrete/js/ccm.layouts.js ../web/concrete/js/layouts/layouts.js
 

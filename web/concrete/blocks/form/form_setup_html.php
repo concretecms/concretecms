@@ -6,6 +6,8 @@ $uh = Loader::helper('concrete/urls');
 $form = Loader::helper('form');
 /* @var $ih ConcreteInterfaceHelper */
 $ih = Loader::helper('concrete/interface');
+$a = $this->controller->getAreaObject();
+$bt = BlockType::getByHandle('form');
 ?>
 <div class="ccm-ui">
 	<ul class="nav nav-tabs" id="ccm-formblock-tabs">

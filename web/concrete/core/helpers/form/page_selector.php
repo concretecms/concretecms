@@ -56,7 +56,7 @@ class Concrete5_Helper_Form_PageSelector {
 		var ccmActivePageField;
 		function ccm_initSelectPage() {
 			$('a.ccm-sitemap-select-page').unbind().dialog();
-			$.fn.ccmsitemap('onNodeSelected', '{$requestID}', function(node) {
+			/*$.fn.ccmsitemap('onNodeSelected', '{$requestID}', function(node) {
 				console.log(node);
 				var container = $('div[data-page-selector={$requestID}]');
 				container.find('.ccm-summary-selected-item-label').html(node.data.title);
@@ -64,6 +64,7 @@ class Concrete5_Helper_Form_PageSelector {
 				container.find('input[data-page-selector=cID]').val(node.data.cID);
 				$.fn.dialog.closeTop();
 			});
+			*/
 			$('a.ccm-sitemap-clear-selected-page').unbind().click(function() {
 				var container = $('div[data-page-selector={$requestID}]');
 				container.find('.ccm-summary-selected-item-label').html('');

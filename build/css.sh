@@ -9,6 +9,8 @@ lessc --verbose -x ../web/concrete/css/ccm_app/build/ccm.conversations.less ../w
 lessc --verbose -x ../web/concrete/css/ccm_app/build/ccm.colorpicker.less ../web/concrete/css/ccm.colorpicker.css
 lessc --verbose -x ../web/concrete/css/ccm_app/build/ccm.app.mobile.less ../web/concrete/css/ccm.app.mobile.css
 lessc --verbose -x ../web/concrete/css/ccm_app/build/ccm.app.less ../web/concrete/css/ccm.app.css
+lessc --verbose -x ../web/concrete/css/ccm_app/build/ccm.sitemap.less ../web/concrete/css/ccm.sitemap.css
+lessc --verbose -x ../web/concrete/css/ccm_app/build/dynatree.less ../web/concrete/css/dynatree.css
 lessc --verbose -x ../web/concrete/css/ccm_app/build/ccm.account.less ../web/concrete/css/ccm.account.css
 #lessc --verbose -x ../web/concrete/css/image_editor/build/ccm.image_editor.less ../web/concrete/css/ccm.image_editor.css
 lessc --verbose -x ../web/concrete/css/ccm_app/build/ccm.composer.less ../web/concrete/css/ccm.composer.css

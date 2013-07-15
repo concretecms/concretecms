@@ -35,6 +35,10 @@ $al->registerGroup('redactor', array(
 // backstretch
 $al->register('javascript', 'backstretch', 'jquery.backstretch.js');
 
+// dynatree
+$al->register('javascript', 'dynatree', 'dynatree.js', false, false, false);
+$al->register('css', 'dynatree', 'dynatree.css', false, false, false);
+
 // hoverIntent
 $al->register('javascript', 'hoverintent', 'ccm_app/jquery.hoverIntent.js');
 
@@ -105,6 +109,16 @@ $al->register('css', 'core/captcha', 'frontend/captcha.css');
 $al->register('css', 'core/pagination', 'frontend/pagination.css');
 $al->register('css', 'core/errors', 'frontend/errors.css');
 $al->register('css', 'core/calendar', 'frontend/calendar.css');
+
+// Sitemap
+$al->register('javascript', 'core/sitemap', 'ccm.sitemap.js', false, false, false);
+$al->register('css', 'core/sitemap', 'ccm.sitemap.css', false, false, false);
+$al->registerGroup('core/sitemap', array(
+	array('javascript', 'core/sitemap'),
+	array('javascript', 'dynatree'),
+	array('css', 'dynatree'),
+	array('css', 'core/sitemap')
+));
 
 // Gathering
 $al->register('javascript', 'core/gathering', 'ccm.gathering.js');

@@ -23,6 +23,7 @@ $classes = array(
 	'FileType,FileTypeList' => array('library','file/types'),
 	'FileImporter' => array('library', 'file/importer'),
 	'BlockView' => array('library','block_view'),
+	'ToolView' => array('library','view/tool'),
 	'MailImporter' => array('library','mail/importer'),
 	'Archive' => array('library','archive'),
 	'Conversation' => array('model','conversation/model'),

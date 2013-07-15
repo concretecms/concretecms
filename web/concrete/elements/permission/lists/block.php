@@ -1,8 +1,8 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?>
 <div class="ccm-ui">
 	<? 
-	global $c;
-	global $a;
+	$c = Page::getCurrentPage();
+	$a = $b->getBlockAreaObject();
 
 $enablePermissions = false;
 if (!$b->overrideAreaPermissions()) { ?>

@@ -633,7 +633,7 @@ class Concrete5_Model_BlockTypeDB extends ADOdb_Active_Record {
 		public function inc($file, $args = array()) {
 			extract($args);
 			$bt = $this;
-			global $c;
+			$c = Page::getCurrentPage();
 			global $a;
 			$env = Environment::get();
 			include($env->getPath(DIRNAME_BLOCKS . '/' . $this->getBlockTypeHandle() . '/' . $file, $this->getPackageHandle()));

@@ -2231,12 +2231,7 @@ class Concrete5_Model_Page extends Collection {
 	public static function getCurrentPage() {
 		$req = Request::get();
 		$current = $req->getCurrentPage();
-		if (is_object($current)) {
-			return $current;
-		} else {
-			global $c;
-			return $c;
-		}
+		return $current;
 	}
 	
 	/**

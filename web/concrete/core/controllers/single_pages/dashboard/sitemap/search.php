@@ -5,6 +5,10 @@ class Concrete5_Controller_Dashboard_Sitemap_Search extends Controller {
 	public $helpers = array('form');
 	
 	public function view() {
+
+		$r = Request::get();
+		$r->requireAsset('core/sitemap');
+
 		$html = Loader::helper('html');
 		
 		$pageList = $this->getRequestedSearchResults();

@@ -22,7 +22,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
  */
 	class Concrete5_Library_View extends Object {
 	
-		private $viewPath;
+		protected $viewPath;
 		protected $pkgHandle;
 		protected $disableContentInclude = false;
 		
@@ -34,7 +34,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		public $controller;
 		
 		
-		private $outputAssets = array();
+		protected $outputAssets = array();
 
 
 		/** 
@@ -64,7 +64,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		private $isEditingEnabled = true;
 		
 		// getInstance() grabs one instance of the view w/the singleton pattern
-		public function getInstance() {
+		public static function getInstance() {
 			static $instance;
 			if (!isset($instance)) {
 				$instance = new View();
@@ -319,7 +319,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		}
 
 		protected function postProcessAssets($assets) {
-			if (!ENABLE_ASSET_CACHE) {
+			$c = Page::getCurrentPage();
+			if (!is_object($c) || !ENABLE_ASSET_CACHE) {
 				return $assets;
 			}
 			// goes through all assets in this list, creating new URLs and post-processing them where possible.
@@ -353,6 +354,12 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			return $return;
 		}
 
+		protected function replaceEmptyAssetPlaceholders($pageContent) {
+			foreach(array('<!--ccm:assets:' . Asset::ASSET_POSITION_HEADER . '//-->', '<!--ccm:assets:' . Asset::ASSET_POSITION_FOOTER . '//-->') as $comment) {
+				$pageContent = str_replace($comment, '', $pageContent);
+			}
+			return $pageContent;
+		}
 
 		protected function replaceAssetPlaceholders($pageContent) {
 			$outputItems = array();
@@ -363,11 +370,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
 					usort($weightedAssets, array($this, 'sortAssetsByWeightDescending'));
 					$transformed = $this->postProcessAssets($weightedAssets);
 					foreach($transformed as $item) {
-						$item = (string) $item;
-						if (!in_array($item, $outputItems)) {
-							$output .= $item;
-							$output .= "\n";
-							$outputItems[] = $item;
+						$itemstring = (string) $item;
+						if (!in_array($itemstring, $outputItems)) {
+							$output .= $this->outputAssetIntoView($item);
+							$outputItems[] = $itemstring;
 						}
 					}
 				}
@@ -377,11 +383,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
 					usort($unweightedAssets, array($this, 'sortAssetsByPostProcessDescending'));
 					$transformed = $this->postProcessAssets($unweightedAssets);
 					foreach($transformed as $item) {
-						$item = (string) $item;
-						if (!in_array($item, $outputItems)) {
-							$output .= $item;
-							$output .= "\n";
-							$outputItems[] = $item;
+						$itemstring = (string) $item;
+						if (!in_array($itemstring, $outputItems)) {
+							$output .= $this->outputAssetIntoView($item);
+							$outputItems[] = $itemstring;
 						}
 					}
 				}
@@ -390,6 +395,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			return $pageContent;				
 		}
 		
+		protected function outputAssetIntoView($item) {
+			return $item . "\n";			
+		}
+
 		/** 
 		 * @access private
 		 */
@@ -845,13 +854,14 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 			ob_start();			
 			if ($view instanceof Page) {
-
+				/*
 				$_pageBlocks = $view->getBlocks();
 
 				if (!$dsh->inDashboard()) {
 					$_pageBlocksGlobal = $view->getGlobalBlocks();
 					$_pageBlocks = array_merge($_pageBlocks, $_pageBlocksGlobal);
 				}
+				*/
 
 				// do we have any custom menu plugins?
 				$cp = new Permissions($view);
@@ -958,6 +968,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				}
 			}
 			
+			/*
 			if (is_array($_pageBlocks)) {
 				foreach($_pageBlocks as $b1) {
 					$b1p = new Permissions($b1);
@@ -970,7 +981,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 						//$btc->runTask('on_page_view', array($view));
 					}
 				}
-			}			
+			}		
+			*/	
 			
 			// Determine which outer item/theme to load
 			// obtain theme information for this collection
@@ -1035,6 +1047,9 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				
 				
 				$pageContent = $this->replaceAssetPlaceholders($pageContent);
+
+				// replace any empty placeholders
+				$pageContent = $this->replaceEmptyAssetPlaceholders($pageContent);
 
 				$ret = Events::fire('on_page_output', $pageContent);
 				if($ret != '') {
