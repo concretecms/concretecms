@@ -61,9 +61,13 @@ div#main-container .ccm-tags-display ul.ccm-tag-list li {
 }
 
 div#main-container, div#main-container ul li {
-	/* customize_p-font */ font-family: 'Merriweather', Georgia, serif; line-height: 1.8em; font-size: 14px; /* customize_p-font */
+	/* customize_paragraph_font */ font: normal normal normal 14px/1.8em 'Merriweather', Georgia, sans-serif /* customize_paragraph_font */
 	/* customize_text */ color: #000; /* customize_text */
 
+}
+
+div#main-container {
+	/* customize_miscellaneous */ /* customize_miscellaneous */
 }
 
 /* text styles */
