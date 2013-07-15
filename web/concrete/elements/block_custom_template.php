@@ -1,7 +1,6 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-global $c;?>
-<?
+
 if ($b->getBlockTypeHandle() == BLOCK_HANDLE_SCRAPBOOK_PROXY) {
 	$bi = $b->getInstance();
 	$bx = Block::getByID($bi->getOriginalBlockID());

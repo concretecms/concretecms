@@ -1,6 +1,6 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-global $c; ?>
+?>
 
 <a name="_edit<?=$b->getBlockID()?>"></a>
 

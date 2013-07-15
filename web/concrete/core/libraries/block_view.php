@@ -200,6 +200,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			if ($view == 'view') {
 				$v = View::getInstance();
 				$this->controller->runTask('on_page_view', array($this));
+				$this->controller->outputAutoHeaderItems();
 
 				if (ENABLE_BLOCK_CACHE && $this->controller->cacheBlockOutput() && ($obj instanceof Block)) {
 					if ((!$u->isRegistered() || ($this->controller->cacheBlockOutputForRegisteredUsers())) &&

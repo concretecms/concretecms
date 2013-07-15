@@ -4,7 +4,7 @@ if (ENABLE_CUSTOM_DESIGN == false) {
 	die(t('Custom design options have been disabled.'));
 }
 
-global $c;
+$c = Page::getCurrentPage();
 
 $txt = Loader::helper('text');
 $form = Loader::helper('form');

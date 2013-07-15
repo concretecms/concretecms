@@ -90,11 +90,9 @@ if (is_object($b)) {
 				if('Controller' != get_class($btc)){
 					$btc->outputAutoHeaderItems();
 				}
-				$btc->runTask('on_page_view', array($bv));
 				
 				$v = View::getInstance();
 				
-				$items = array_merge($v->getHeaderItems(), $v->getFooterItems());
 				$csr = $b->getBlockCustomStyleRule(); 
 				if (is_object($csr)) { 
 					$styleHeader = '#'.$csr->getCustomStyleRuleCSSID(1).' {'. $csr->getCustomStyleRuleText(). "}";  ?>
@@ -104,26 +102,17 @@ if (is_object($b)) {
 				<?
 				}
 
-				if (count($items) > 0) { ?>
-				<script type="text/javascript">				
-				<?
-				foreach($items as $item) { 
-					if ($item instanceof CSSOutputObject) { ?>
-						// we only support CSS here
-						ccm_addHeaderItem("<?=$item->href?>", 'CSS');
-					<? } else if ($item instanceof JavaScriptOutputObject) { ?>
-						ccm_addHeaderItem("<?=$item->href?>", 'JAVASCRIPT');
-					<? }
-				
-				} ?>
-				</script>
-				<? }
-				
 				$bv->renderElement('block_header', array(
 					'a' => $a,
 					'b' => $b,
 					'p' => $bp
 				));
+
+				// we make sure that our active theme gets registered as well because we want to make sure that
+				// assets provided by the theme aren't loaded by the block in this mode.
+				$pt = $c->getCollectionThemeObject();
+				$pt->__construct();
+
 				$bv->setAreaObject($a);
 				$bv->render($b);
 				$bv->renderElement('block_footer');

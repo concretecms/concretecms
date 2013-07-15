@@ -1,7 +1,5 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-$step = ($_REQUEST['step']) ? "&step={$_REQUEST['step']}" : ""; 
-$closeWindowCID=(intval($rcID))?intval($rcID):$c->getCollectionID();
 ?>
 
 </div>
@@ -28,7 +26,6 @@ $(document).unbind('inlineEditCancel').on('inlineEditCancel', function(e, onComp
 
 <? } ?>
 
-<? global $c; ?>
 	
 	<? if (is_array($extraParams)) { // defined within the area/content classes 
 		foreach($extraParams as $key => $value) { ?>
@@ -39,7 +36,7 @@ $(document).unbind('inlineEditCancel').on('inlineEditCancel', function(e, onComp
 <? if (!$b->getProxyBlock() && !$bt->supportsInlineEdit()) { ?>	
 	<div class="ccm-buttons dialog-buttons">
 	<a href="javascript:clickedButton = true;$('#ccm-form-submit-button').get(0).click()" class="btn pull-right btn-primary"><?=t('Save')?></a>
-	<a style="float:left" href="javascript:void(0)" <? if ($replaceOnUnload) { ?>onclick="location.href='<?=DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=<?=$closeWindowCID ?><?=$step?>'; return true" class="btn btn-hover-danger"<? } else { ?>class="btn btn-hover-danger" onclick="$(document).trigger('blockWindowClose');jQuery.fn.dialog.closeTop();" <? } ?>><?=t('Cancel')?></a>
+	<a style="float:left" href="javascript:void(0)" class="btn btn-hover-danger" onclick="$(document).trigger('blockWindowClose');jQuery.fn.dialog.closeTop()"><?=t('Cancel')?></a>
 	</div>
 <? } ?>
 

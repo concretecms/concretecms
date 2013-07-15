@@ -9,7 +9,7 @@ var dateNav ={
 			}
 			
 		});
-		if (value === "custom") {
+		if ($('#cParentIDLocation').val() === "custom") {
 			$("#ccm-autonav-page-selector").css('display','block');
 		} else {
 			$("#ccm-autonav-page-selector").hide();
