@@ -71,8 +71,8 @@ class Concrete5_Library_Controller {
 		$task = substr('/' . $req->getRequestPath(), strlen($req->getRequestCollectionPath()) + 1);
 
 		// remove legacy separaters
-		$task = str_replace('-/', '', $task);
-		
+		$task = preg_replace('/^\-\//', '', $task);
+
 		// grab the whole shebang
 		$taskparts = explode('/', $task);
 		

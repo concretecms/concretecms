@@ -293,6 +293,7 @@ class Concrete5_Helper_Text {
 		if (is_array($matches[0]) && count($matches[0]) > 0) {
 			return str_replace($matches[0][0], '<em class="ccm-highlight-search">'.$matches[0][0].'</em>', $value);
 		}
+		return $value;
 	}
 	
 	/** 
