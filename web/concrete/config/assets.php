@@ -8,11 +8,12 @@ $al = AssetList::getInstance();
  */
 
 // jquery
-$al->register('javascript', 'jquery', 'jquery.js', 100, Asset::ASSET_POSITION_HEADER, false);
+$al->register('javascript', 'jquery', 'jquery.js', array('weight' => 100, 'position' => Asset::ASSET_POSITION_HEADER, 'postprocess' => false));
 
 // jquery ui
-$al->register('javascript', 'jqueryui', 'jquery.ui.js', 95, false, false);
-$al->register('css', 'jqueryui', 'jquery.ui.css', false, false, false);
+$al->register('javascript', 'jqueryui', 'jquery.ui.js', array('weight' => 95, 'postprocess' => false));
+$al->register('css', 'jqueryui', 'jquery.ui.css', array('postprocess' => false));
+
 $al->registerGroup('jqueryui', array(
 	array('javascript', 'jqueryui'),
 	array('css', 'jqueryui')
@@ -28,7 +29,7 @@ $al->register('javascript', 'jquery/form', 'jquery.form.js');
 $al->register('javascript', 'swfobject', 'swfobject.js');
 
 // redactor
-$al->register('javascript', 'redactor', 'redactor.js', false, false, false);
+$al->register('javascript', 'redactor', 'redactor.js', array('postprocess' => false));
 $al->register('css', 'redactor', 'redactor.css');
 $al->registerGroup('redactor', array(
 	array('javascript', 'redactor'),
@@ -39,24 +40,24 @@ $al->registerGroup('redactor', array(
 $al->register('javascript', 'backstretch', 'jquery.backstretch.js');
 
 // dynatree
-$al->register('javascript', 'dynatree', 'dynatree.js', false, false, false);
-$al->register('css', 'dynatree', 'dynatree.css', false, false, false);
+$al->register('javascript', 'dynatree', 'dynatree.js', array('postprocess' => false));
+$al->register('css', 'dynatree', 'dynatree.css', array('postprocess' => false));
 
 // hoverIntent
 $al->register('javascript', 'hoverintent', 'ccm_app/jquery.hoverIntent.js');
 
 // bootstrap
 $al->register('javascript', 'bootstrap/dropdown', 'bootstrap/dropdown.js');
-$al->register('javascript', 'bootstrap/tooltip', 'bootstrap/tooltip.js', 95); // has to come before popover
+$al->register('javascript', 'bootstrap/tooltip', 'bootstrap/tooltip.js', array('weight' => 95)); // has to come before popover
 $al->register('javascript', 'bootstrap/popover', 'bootstrap/popover.js');
 $al->register('javascript', 'bootstrap/alert', 'bootstrap/alert.js');
 $al->register('javascript', 'bootstrap/transition', 'bootstrap/transition.js');
-$al->register('css', 'bootstrap/dropdown', 'ccm.app.css', false, false, false);
-$al->register('css', 'bootstrap/tooltip', 'ccm.app.css', false, false, false);
-$al->register('css', 'bootstrap/popover', 'ccm.app.css', false, false, false);
-$al->register('css', 'bootstrap/alert', 'ccm.app.css', false, false, false);
-$al->register('css', 'bootstrap/transition', 'ccm.app.css', false, false, false);
-$al->register('css', 'bootstrap', 'ccm.app.css', false, false, false);
+$al->register('css', 'bootstrap/dropdown', 'ccm.app.css', array('postprocess' => false));
+$al->register('css', 'bootstrap/tooltip', 'ccm.app.css', array('postprocess' => false));
+$al->register('css', 'bootstrap/popover', 'ccm.app.css', array('postprocess' => false));
+$al->register('css', 'bootstrap/alert', 'ccm.app.css', array('postprocess' => false));
+$al->register('css', 'bootstrap/transition', 'ccm.app.css', array('postprocess' => false));
+$al->register('css', 'bootstrap', 'ccm.app.css', array('postprocess' => false));
 
 /** 
  * ## Core functionality and styles
@@ -66,8 +67,8 @@ $al->register('css', 'bootstrap', 'ccm.app.css', false, false, false);
 $al->register('javascript', 'core/observer', 'ccm.pubsub.js');
 
 // Core App
-$al->register('css', 'core/app', 'ccm.app.css', false, false, false);
-$al->register('javascript', 'core/app', 'ccm.app.js', false, false, false);
+$al->register('css', 'core/app', 'ccm.app.css', array('postprocess' => false));
+$al->register('javascript', 'core/app', 'ccm.app.js', array('postprocess' => false));
 $al->registerGroup('core/app', array(
 	array('javascript', 'jquery'),
 	array('javascript', 'core/observer'),
@@ -114,8 +115,8 @@ $al->register('css', 'core/errors', 'frontend/errors.css');
 $al->register('css', 'core/calendar', 'frontend/calendar.css');
 
 // Sitemap
-$al->register('javascript', 'core/sitemap', 'ccm.sitemap.js', false, false, false);
-$al->register('css', 'core/sitemap', 'ccm.sitemap.css', false, false, false);
+$al->register('javascript', 'core/sitemap', 'ccm.sitemap.js', array('postprocess' => false));
+$al->register('css', 'core/sitemap', 'ccm.sitemap.css', array('postprocess' => false));
 $al->registerGroup('core/sitemap', array(
 	array('javascript', 'core/sitemap'),
 	array('javascript', 'dynatree'),
@@ -124,8 +125,8 @@ $al->registerGroup('core/sitemap', array(
 ));
 
 // Composer
-$al->register('javascript', 'core/composer', 'ccm.composer.js', false, false, false);
-$al->register('css', 'core/composer', 'ccm.composer.css', false, false, false);
+$al->register('javascript', 'core/composer', 'ccm.composer.js', array('postprocess' => false));
+$al->register('css', 'core/composer', 'ccm.composer.css', array('postprocess' => false));
 $al->registerGroup('core/composer', array(
 	array('javascript', 'core/composer'),
 	array('css', 'core/composer')
