@@ -463,7 +463,9 @@ class Concrete5_Library_Request {
 	 */
 	public function requireAsset($assetType, $assetHandle = false) {
 		$list = AssetList::getInstance();
-		if ($assetType && $assetHandle) {
+		if ($assetType instanceof Asset) {
+			$r = $assetType;
+		} else if ($assetType && $assetHandle) {
 			$r = $list->getAsset($assetType, $assetHandle);
 		} else {
 			$r = $list->getAssetGroup($assetType);

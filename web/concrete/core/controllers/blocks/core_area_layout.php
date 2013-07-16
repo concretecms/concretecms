@@ -123,6 +123,10 @@ class Concrete5_Controller_Block_CoreAreaLayout extends BlockController {
 				if ($this->arLayout->isAreaLayoutUsingThemeGridFramework()) {
 					$this->render('view_grid');
 				} else {
+					$asset = new CSSAsset();
+					$asset->setAssetURL(REL_DIR_FILES_TOOLS_REQUIRED . '/area/layout.css?bID=' . $this->bID);
+					$asset->setAssetSupportsPostProcessing(false);
+					$this->requireAsset($asset);
 					$this->render('view');
 				}
 			} else {
@@ -171,14 +175,6 @@ class Concrete5_Controller_Block_CoreAreaLayout extends BlockController {
 			$this->set('columnsNum', 1);
 			$this->set('maxColumns', $maxColumns);
 		}
-
-		public function on_page_view() {
-			$ar = AreaLayout::getByID($this->arLayoutID);
-			if (is_object($ar) && !$ar->isAreaLayoutUsingThemeGridFramework()) {
-				$this->addHeaderItem(Loader::helper('html')->css(REL_DIR_FILES_TOOLS_REQUIRED . '/area/layout.css?bID=' . $this->bID));
-			}
-		}
-
 
 
 	}
