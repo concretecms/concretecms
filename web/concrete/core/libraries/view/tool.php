@@ -53,9 +53,13 @@ class Concrete5_Library_ToolView extends View {
 		$_contents = ob_get_contents();
 		ob_end_clean();
 
+		// Wish we didn't have to do it this way.
+		$_v = View::getInstance();
+		$this->outputAssets = $_v->outputAssets;
+
 		$_req = Request::get(); // update the request;
 		$addOutputAssets = $_req->getRequiredAssetsToOutput();
-		if (count($addOutputAssets)) {
+		if (count($addOutputAssets) || count($this->outputAssets)) {
 			ob_start();
 			$this->outputHeaderItems();
 			print $_contents;

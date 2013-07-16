@@ -24,9 +24,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		}
 
 		public function composer() {
-			$html = Loader::helper('html');
-			$this->addHeaderItem($html->css('ccm.conversations.css'));
-			$this->addFooterItem($html->javascript('ccm.conversations.js'));
+			$req = Request::get();
+			$req->requireAsset('core/conversation');
 			$this->view();
 		}
 

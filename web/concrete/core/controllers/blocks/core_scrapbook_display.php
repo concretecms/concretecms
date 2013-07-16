@@ -37,13 +37,9 @@
 
 		public function outputAutoHeaderItems() {
 			$b = Block::getByID($this->bOriginalID);
+			$b = $this->getBlockObject();
 			$bvt = new BlockViewTemplate($b);
-			$headers = $bvt->getTemplateHeaderItems();
-			if (count($headers) > 0) {
-				foreach($headers as $h) {
-					$this->addHeaderItem($h);
-				}
-			}
+			$bvt->registerTemplateAssets();
 		}
 		
 		

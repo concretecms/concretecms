@@ -69,13 +69,11 @@ class Concrete5_Controller_AttributeType_DateTime extends AttributeTypeControlle
 				print $form->text($this->field('value'), $this->getDisplayValue());
 				break;
 			case 'date':
-				$this->addHeaderItem($html->css('jquery.ui.css'));
-				$this->addHeaderItem($html->javascript('jquery.ui.js'));
+				$this->requireAsset('jqueryui');
 				print $dt->date($this->field('value'), $caValue);
 				break;
 			default:
-				$this->addHeaderItem($html->css('jquery.ui.css'));
-				$this->addHeaderItem($html->javascript('jquery.ui.js'));
+				$this->requireAsset('jqueryui');
 				print $dt->datetime($this->field('value'), $caValue);
 				break;
 		}

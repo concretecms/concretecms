@@ -149,20 +149,6 @@ class Concrete5_Controller_Block_CoreGathering extends BlockController {
 
 		}
 
-		public function on_page_view() {
-			if ($this->gaID) {
-				$gathering = Gathering::getByID($this->gaID);
-				if (is_object($gathering)) {
-					Request::get()->requireAsset('core/gathering');
-					Loader::helper('overlay')->init(false);
-					if ($this->enablePostingFromGathering) {
-						$cmp = Composer::getByID($this->cmpID);
-						Loader::helper('composer/form')->addAssetsToRequest($cmp, $this);
-					}
-				}
-			}
-		}
-
 		public function delete() {
 			parent::delete();
 			if ($this->gaID) {
@@ -175,9 +161,12 @@ class Concrete5_Controller_Block_CoreGathering extends BlockController {
 		public function view() {
 			if ($this->gaID) {
 				$gathering = Gathering::getByID($this->gaID);
-				if (is_object($gathering)) {			
+				if (is_object($gathering)) {	
+					Request::get()->requireAsset('core/gathering');
+					Loader::helper('overlay')->init(false);
 					if ($this->enablePostingFromGathering && $this->cmpID) {
 						$cmp = Composer::getByID($this->cmpID);
+						Loader::helper('composer/form')->addAssetsToRequest($cmp, $this);
 						$p = new Permissions($cmp);
 						if ($p->canAccessComposer()) {
 							$this->set('composer', $cmp);
