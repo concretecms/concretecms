@@ -57,4 +57,4 @@ Current build scripts require
 
 From the `build` directory(must be in that directory) run
   * `sh js.sh`
-  * 'sh css.sh`
+  * `sh css.sh`
