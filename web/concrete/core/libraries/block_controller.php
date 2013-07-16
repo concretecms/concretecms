@@ -471,14 +471,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			$bvt->registerTemplateAssets();
 		}
 		
-		/*
-		public function addHeaderItem($file) {
-			$namespace = 'BLOCK_CONTROLLER_' . strtoupper($this->btHandle);
-			$this->headerItems[$namespace][] = $file;
-			parent::addHeaderItem($file);
-		}
-		*/
-		
 		public function setupAndRun($method) {
 			if ($method) {
 				$this->task = $method;

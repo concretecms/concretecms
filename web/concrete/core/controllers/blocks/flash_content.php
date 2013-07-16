@@ -43,9 +43,9 @@
 		}		
 		function getLinkText() {return $this->fileLinkText;}
 		
-		public function on_page_view() {
-			$html = Loader::helper('html');
-			$this->addHeaderItem($html->javascript('swfobject.js'));
+		public function view() {
+			$req = Request::get();
+			$req->requireAsset('swfobject');
 		}
 	}
 ?>

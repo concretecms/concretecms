@@ -5,8 +5,7 @@ class Concrete5_Controller_Account_Profile_Avatar extends AccountProfileEditCont
 	
 	public function view() {
 		parent::view();
-		$html = Loader::helper('html');
-		$this->addHeaderItem($html->javascript('swfobject.js'));
+		$this->requireAsset('swfobject');
 	}
 
 	public function on_start() {

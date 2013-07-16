@@ -344,7 +344,7 @@ class Concrete5_Library_Controller {
 	 */
 	public function addHeaderItem($item) { 
 		$v = View::getInstance();
-		$v->addHeaderItem($item, 'CONTROLLER');
+		$v->addHeaderItem($item);
 	}
 
 	/** 

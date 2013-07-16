@@ -38,17 +38,13 @@
 			return t("YouTube Video");
 		}
 		
-		function on_page_view() {
-			$html = Loader::helper('html');
-			$this->addHeaderItem($html->javascript('swfobject.js'));
-		}
-		
 		function __construct($obj = null) {		
 			parent::__construct($obj);	
 			if(!$this->title) $this->title=t("My Video");
 		}
 		
 		function view(){ 
+			$this->requireAsset('swfobject');
 			$this->set('bID', $this->bID);	
 			$this->set('title', $this->title);
 			$this->set('videoURL', $this->videoURL);

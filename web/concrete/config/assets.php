@@ -24,6 +24,9 @@ $al->register('javascript', 'dropzone', 'dropzone.js');
 // jquery form
 $al->register('javascript', 'jquery/form', 'jquery.form.js');
 
+// swfobject
+$al->register('javascript', 'swfobject', 'swfobject.js');
+
 // redactor
 $al->register('javascript', 'redactor', 'redactor.js', false, false, false);
 $al->register('css', 'redactor', 'redactor.css');
@@ -119,6 +122,15 @@ $al->registerGroup('core/sitemap', array(
 	array('css', 'dynatree'),
 	array('css', 'core/sitemap')
 ));
+
+// Composer
+$al->register('javascript', 'core/composer', 'ccm.composer.js', false, false, false);
+$al->register('css', 'core/composer', 'ccm.composer.css', false, false, false);
+$al->registerGroup('core/composer', array(
+	array('javascript', 'core/composer'),
+	array('css', 'core/composer')
+));
+
 
 // Gathering
 $al->register('javascript', 'core/gathering', 'ccm.gathering.js');

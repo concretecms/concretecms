@@ -88,8 +88,6 @@ class Concrete5_Controller_Install extends Controller {
 			if ($e->has()) {
 				$this->set('error', $e);
 			} else {
-				$this->addHeaderItem(Loader::helper('html')->css('jquery.ui.css'));
-				$this->addHeaderItem(Loader::helper('html')->javascript('jquery.ui.js'));
 				if (defined('INSTALL_STARTING_POINT') && INSTALL_STARTING_POINT) { 
 					$spl = Loader::startingPointPackage(INSTALL_STARTING_POINT);
 				} else {
