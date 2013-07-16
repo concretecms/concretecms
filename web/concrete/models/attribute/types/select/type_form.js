@@ -26,7 +26,7 @@ var ccmAttributesHelper={
 	editValue:function(val){ 
 		if($('#akSelectValueDisplay_'+val).css('display')!='none'){
 			$('#akSelectValueDisplay_'+val).css('display','none');
-			$('#akSelectValueEdit_'+val).css('display','block');		
+			$('#akSelectValueEdit_'+val).css('display','block').find('input[type="text"]').focus();	
 		}else{
 			$('#akSelectValueDisplay_'+val).css('display','block');
 			$('#akSelectValueEdit_'+val).css('display','none');
