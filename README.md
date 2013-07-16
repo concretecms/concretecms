@@ -53,7 +53,7 @@ Current build scripts require
   * `sudo npm install -g uglify-js`
 * less v1.3
   * http://lesscss.org
-  * 'sudo npm install -g less@1.3`
+  * `sudo npm install -g less@1.3`
 
 From the `build` directory(must be in that directory) run
   * `sh js.sh`
