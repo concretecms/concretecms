@@ -2,21 +2,20 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 abstract class Concrete5_Library_Asset {
 
-	protected $assetVersion = '1.0';
+	protected $assetVersion = '0';
 	protected $assetHandle;
 	protected $weight = 0;
 	protected $local = true;
 	protected $assetURL;
 	protected $assetPath;
 	protected $assetSupportsPostProcessing = false;
+	protected $pkg;
 
 	const ASSET_POSITION_HEADER = 'H';
 	const ASSET_POSITION_FOOTER = 'F';
 
 	abstract public function getAssetDefaultPosition();
 	abstract public function getAssetType();
-	abstract public function populateAssetURLFromFilename($filename);
-	abstract public function populateAssetPathFromFilename($filename);
 	abstract public function postprocess($assets);
 	abstract public function __toString();
 
@@ -41,9 +40,20 @@ abstract class Concrete5_Library_Asset {
 	public function setAssetWeight($weight) {
 		$this->weight = $weight;
 	}
+	public function setAssetVersion($version) {
+		$this->assetVersion = $version;
+	}
 
+	public function getAssetVersion() {
+		return $this->assetVersion;
+	}
+	
 	public function setAssetPosition($position) {
 		$this->position = $position;
+	}
+
+	public function setPackageObject($pkg) {
+		$this->pkg = $pkg;
 	}
 
 	public function setAssetURL($url) {$this->assetURL = $url;}
@@ -61,4 +71,22 @@ abstract class Concrete5_Library_Asset {
 
 	public function getAssetWeight() {return $this->weight;}
 
+	public function mapAssetLocation($path) {
+		if ($this->isAssetLocal()) {
+			if (file_exists(DIR_BASE . '/' . $path)) {
+				$this->setAssetPath(DIR_BASE . '/' . $path);
+				$this->setAssetURL(BASE_URL . DIR_REL . '/' . $path);
+			} else if (is_object($this->pkg)) {
+				$pkgHandle = $this->pkg->getPackageHandle();
+				$dirp = is_dir(DIR_PACKAGES . '/' . $pkgHandle) ? DIR_PACKAGES . '/' . $pkgHandle : DIR_PACKAGES_CORE . '/' . $pkgHandle;
+				$this->setAssetPath($dirp . '/' . $path);
+				$this->setAssetURL(BASE_URL . DIR_REL . '/' . DIRNAME_PACKAGES. '/' . $pkgHandle . '/' . $path);
+			} else {
+				$this->setAssetPath(DIR_BASE_CORE . '/' . $path);
+				$this->setAssetURL(ASSETS_URL . '/' . $path);
+			}	
+		} else {
+			$this->setAssetURL($path);
+		}	
+	}
 }

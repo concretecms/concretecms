@@ -44,20 +44,6 @@ class Concrete5_Library_CSSAsset extends Asset {
 		return $assets;
 	}
 
-	public function populateAssetURLFromFilename($filename) {
-		if ($this->local) {
-			$this->assetURL = ASSETS_URL_CSS . '/' . $filename;
-		} else {
-			$this->assetURL = $filename;
-		}
-	}
-
-	public function populateAssetPathFromFilename($filename) {
-		if ($this->local) {
-			$this->assetPath = DIR_BASE_CORE . '/' . DIRNAME_CSS . '/' . $filename;
-		}
-	}
-
 	public function __toString() {
 		return '<link rel="stylesheet" type="text/css" href="' . $this->getAssetURL() . '" />';
 	}
