@@ -68,12 +68,12 @@ class Concrete5_Library_FileImporter {
 		return $msg;
 	}
 	
-	private function generatePrefix() {
+	protected function generatePrefix() {
 		$prefix = rand(10, 99) . time();
 		return $prefix;	
 	}
 	
-	private function storeFile($prefix, $pointer, $filename, $fr = false) {
+	protected function storeFile($prefix, $pointer, $filename, $fr = false) {
 		// assumes prefix are 12 digits
 		$fi = Loader::helper('concrete/file');
 		$path = false;
