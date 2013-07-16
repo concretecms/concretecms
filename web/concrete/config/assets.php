@@ -8,11 +8,11 @@ $al = AssetList::getInstance();
  */
 
 // jquery
-$al->register('javascript', 'jquery', 'jquery.js', array('weight' => 100, 'position' => Asset::ASSET_POSITION_HEADER, 'postprocess' => false));
+$al->register('javascript', 'jquery', 'js/jquery.js', array('weight' => 100, 'position' => Asset::ASSET_POSITION_HEADER, 'postprocess' => false));
 
 // jquery ui
-$al->register('javascript', 'jqueryui', 'jquery.ui.js', array('weight' => 95, 'postprocess' => false));
-$al->register('css', 'jqueryui', 'jquery.ui.css', array('postprocess' => false));
+$al->register('javascript', 'jqueryui', 'js/jquery.ui.js', array('weight' => 95, 'postprocess' => false));
+$al->register('css', 'jqueryui', 'css/jquery.ui.css', array('postprocess' => false));
 
 $al->registerGroup('jqueryui', array(
 	array('javascript', 'jqueryui'),
@@ -20,55 +20,55 @@ $al->registerGroup('jqueryui', array(
 ));
 
 // dropzone
-$al->register('javascript', 'dropzone', 'dropzone.js');
+$al->register('javascript', 'dropzone', 'js/dropzone.js');
 
 // jquery form
-$al->register('javascript', 'jquery/form', 'jquery.form.js');
+$al->register('javascript', 'jquery/form', 'js/jquery.form.js');
 
 // swfobject
-$al->register('javascript', 'swfobject', 'swfobject.js');
+$al->register('javascript', 'swfobject', 'js/swfobject.js');
 
 // redactor
-$al->register('javascript', 'redactor', 'redactor.js', array('postprocess' => false));
-$al->register('css', 'redactor', 'redactor.css');
+$al->register('javascript', 'redactor', 'js/redactor.js', array('postprocess' => false));
+$al->register('css', 'redactor', 'css/redactor.css');
 $al->registerGroup('redactor', array(
 	array('javascript', 'redactor'),
 	array('css', 'redactor')
 ));
 
 // backstretch
-$al->register('javascript', 'backstretch', 'jquery.backstretch.js');
+$al->register('javascript', 'backstretch', 'js/jquery.backstretch.js');
 
 // dynatree
-$al->register('javascript', 'dynatree', 'dynatree.js', array('postprocess' => false));
-$al->register('css', 'dynatree', 'dynatree.css', array('postprocess' => false));
+$al->register('javascript', 'dynatree', 'js/dynatree.js', array('postprocess' => false));
+$al->register('css', 'dynatree', 'css/dynatree.css', array('postprocess' => false));
 
 // hoverIntent
-$al->register('javascript', 'hoverintent', 'ccm_app/jquery.hoverIntent.js');
+$al->register('javascript', 'hoverintent', 'js/ccm_app/jquery.hoverIntent.js');
 
 // bootstrap
-$al->register('javascript', 'bootstrap/dropdown', 'bootstrap/dropdown.js');
-$al->register('javascript', 'bootstrap/tooltip', 'bootstrap/tooltip.js', array('weight' => 95)); // has to come before popover
-$al->register('javascript', 'bootstrap/popover', 'bootstrap/popover.js');
-$al->register('javascript', 'bootstrap/alert', 'bootstrap/alert.js');
-$al->register('javascript', 'bootstrap/transition', 'bootstrap/transition.js');
-$al->register('css', 'bootstrap/dropdown', 'ccm.app.css', array('postprocess' => false));
-$al->register('css', 'bootstrap/tooltip', 'ccm.app.css', array('postprocess' => false));
-$al->register('css', 'bootstrap/popover', 'ccm.app.css', array('postprocess' => false));
-$al->register('css', 'bootstrap/alert', 'ccm.app.css', array('postprocess' => false));
-$al->register('css', 'bootstrap/transition', 'ccm.app.css', array('postprocess' => false));
-$al->register('css', 'bootstrap', 'ccm.app.css', array('postprocess' => false));
+$al->register('javascript', 'bootstrap/dropdown', 'js/bootstrap/dropdown.js');
+$al->register('javascript', 'bootstrap/tooltip', 'js/bootstrap/tooltip.js', array('weight' => 95)); // has to come before popover
+$al->register('javascript', 'bootstrap/popover', 'js/bootstrap/popover.js');
+$al->register('javascript', 'bootstrap/alert', 'js/bootstrap/alert.js');
+$al->register('javascript', 'bootstrap/transition', 'js/bootstrap/transition.js');
+$al->register('css', 'bootstrap/dropdown', 'css/ccm.app.css', array('postprocess' => false));
+$al->register('css', 'bootstrap/tooltip', 'css/ccm.app.css', array('postprocess' => false));
+$al->register('css', 'bootstrap/popover', 'css/ccm.app.css', array('postprocess' => false));
+$al->register('css', 'bootstrap/alert', 'css/ccm.app.css', array('postprocess' => false));
+$al->register('css', 'bootstrap/transition', 'css/ccm.app.css', array('postprocess' => false));
+$al->register('css', 'bootstrap', 'css/ccm.app.css', array('postprocess' => false));
 
 /** 
  * ## Core functionality and styles
  */
 
 // JS Events
-$al->register('javascript', 'core/observer', 'ccm.pubsub.js');
+$al->register('javascript', 'core/observer', 'js/ccm.pubsub.js');
 
 // Core App
-$al->register('css', 'core/app', 'ccm.app.css', array('postprocess' => false));
-$al->register('javascript', 'core/app', 'ccm.app.js', array('postprocess' => false));
+$al->register('css', 'core/app', 'css/ccm.app.css', array('postprocess' => false));
+$al->register('javascript', 'core/app', 'js/ccm.app.js', array('postprocess' => false));
 $al->registerGroup('core/app', array(
 	array('javascript', 'jquery'),
 	array('javascript', 'core/observer'),
@@ -85,8 +85,8 @@ $al->registerGroup('core/app', array(
 ));
 
 // Dashboard
-$al->register('css', 'dashboard', 'ccm.dashboard.css');
-$al->register('javascript', 'dashboard', 'ccm.dashboard.js');
+$al->register('css', 'dashboard', 'css/ccm.dashboard.css');
+$al->register('javascript', 'dashboard', 'js/ccm.dashboard.js');
 $al->registerGroup('dashboard', array(
 	array('javascript', 'jquery'),
 	array('javascript', 'jqueryui'),
@@ -109,14 +109,14 @@ $al->registerGroup('dashboard', array(
 
 
 // Basic styles (used to be in ccm.base.css)
-$al->register('css', 'core/captcha', 'frontend/captcha.css');
-$al->register('css', 'core/pagination', 'frontend/pagination.css');
-$al->register('css', 'core/errors', 'frontend/errors.css');
-$al->register('css', 'core/calendar', 'frontend/calendar.css');
+$al->register('css', 'core/captcha', 'css/frontend/captcha.css');
+$al->register('css', 'core/pagination', 'css/frontend/pagination.css');
+$al->register('css', 'core/errors', 'css/frontend/errors.css');
+$al->register('css', 'core/calendar', 'css/frontend/calendar.css');
 
 // Sitemap
-$al->register('javascript', 'core/sitemap', 'ccm.sitemap.js', array('postprocess' => false));
-$al->register('css', 'core/sitemap', 'ccm.sitemap.css', array('postprocess' => false));
+$al->register('javascript', 'core/sitemap', 'js/ccm.sitemap.js', array('postprocess' => false));
+$al->register('css', 'core/sitemap', 'css/ccm.sitemap.css', array('postprocess' => false));
 $al->registerGroup('core/sitemap', array(
 	array('javascript', 'core/sitemap'),
 	array('javascript', 'dynatree'),
@@ -125,8 +125,8 @@ $al->registerGroup('core/sitemap', array(
 ));
 
 // Composer
-$al->register('javascript', 'core/composer', 'ccm.composer.js', array('postprocess' => false));
-$al->register('css', 'core/composer', 'ccm.composer.css', array('postprocess' => false));
+$al->register('javascript', 'core/composer', 'js/ccm.composer.js', array('postprocess' => false));
+$al->register('css', 'core/composer', 'css/ccm.composer.css', array('postprocess' => false));
 $al->registerGroup('core/composer', array(
 	array('javascript', 'core/composer'),
 	array('css', 'core/composer')
@@ -134,9 +134,9 @@ $al->registerGroup('core/composer', array(
 
 
 // Gathering
-$al->register('javascript', 'core/gathering', 'ccm.gathering.js');
-$al->register('css', 'core/gathering/display', 'ccm.gathering.display.css');
-$al->register('css', 'core/gathering/base', 'ccm.gathering.base.css');
+$al->register('javascript', 'core/gathering', 'js/ccm.gathering.js');
+$al->register('css', 'core/gathering/display', 'css/ccm.gathering.display.css');
+$al->register('css', 'core/gathering/base', 'css/ccm.gathering.base.css');
 $al->registerGroup('core/gathering', array(
 	array('javascript', 'core/gathering'),
 	array('css', 'core/gathering/base'),
@@ -144,8 +144,8 @@ $al->registerGroup('core/gathering', array(
 ));
 
 // Conversation
-$al->register('javascript', 'core/conversation', 'ccm.conversations.js');
-$al->register('css', 'core/conversation', 'ccm.conversations.css');
+$al->register('javascript', 'core/conversation', 'js/ccm.conversations.js');
+$al->register('css', 'core/conversation', 'css/ccm.conversations.css');
 $al->registerGroup('core/conversation', array(
 	array('javascript', 'dropzone'),
 	array('javascript', 'bootstrap/dropdown'),
@@ -156,16 +156,16 @@ $al->registerGroup('core/conversation', array(
 ), true);
 
 // Overlay
-$al->register('javascript', 'core/overlay', 'overlay/jquery.magnific-popup.js');
-$al->register('css', 'core/overlay', 'overlay/jquery.magnific-popup.css');
+$al->register('javascript', 'core/overlay', 'js/overlay/jquery.magnific-popup.js');
+$al->register('css', 'core/overlay', 'css/overlay/jquery.magnific-popup.css');
 $al->registerGroup('core/overlay', array(
 	array('javascript', 'core/overlay'),
 	array('css', 'core/overlay')
 ));
 
 // My Account
-$al->register('javascript', 'core/account', 'ccm.profile.js');
-$al->register('css', 'core/account', 'ccm.account.css');
+$al->register('javascript', 'core/account', 'js/ccm.profile.js');
+$al->register('css', 'core/account', 'css/ccm.account.css');
 $al->registerGroup('core/account', array(
 	array('javascript', 'core/account'),
 	array('javascript', 'bootstrap/dropdown'),

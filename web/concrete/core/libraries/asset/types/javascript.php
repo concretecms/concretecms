@@ -44,20 +44,6 @@ class Concrete5_Library_JavaScriptAsset extends Asset {
 
 	public function getAssetType() {return 'javascript';}
 
-	public function populateAssetURLFromFilename($filename) {
-		if ($this->local) {
-			$this->assetURL = ASSETS_URL_JAVASCRIPT . '/' . $filename;
-		} else {
-			$this->assetURL = $filename;
-		}
-	}
-
-	public function populateAssetPathFromFilename($filename) {
-		if ($this->local) {
-			$this->assetPath = DIR_BASE_CORE . '/' . DIRNAME_JAVASCRIPT . '/' . $filename;
-		}
-	}
-
 	public function __toString() {
 		return '<script type="text/javascript" src="' . $this->getAssetURL() . '"></script>';
 	}

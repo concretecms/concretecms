@@ -18,10 +18,12 @@ class Concrete5_Library_AssetList {
 		return self::$loc;
 	}
 
-	public function register($assetType, $assetHandle, $filename, $args = array()) {
+	public function register($assetType, $assetHandle, $filename, $args = array(), $pkg = false) {
 		$defaults = array(
 			'weight' => false,
 			'position' => false,
+			'local' => true,
+			'version' => false,
 			'postprocess' => -1 // use the asset default
 		);
 		// overwrite all the defaults with the arguments
@@ -29,10 +31,14 @@ class Concrete5_Library_AssetList {
 
 		$class = Object::camelcase($assetType) . 'Asset';
 		$o = new $class($assetHandle);
-		$o->populateAssetURLFromFilename($filename);
-		$o->populateAssetPathFromFilename($filename);
+		$o->setPackageObject($pkg);
+		$o->setAssetIsLocal($args['local']);
+		$o->mapAssetLocation($filename);
 		if ($args['postprocess'] === true || $args['postprocess'] === false) {
 			$o->setAssetSupportsPostProcessing($args['postprocess']);
+		}
+		if ($args['version']) {
+			$o->setAssetVersion($args['version']);
 		}
 		if ($args['weight']) {
 			$o->setAssetWeight($args['weight']);
@@ -45,7 +51,18 @@ class Concrete5_Library_AssetList {
 	}
 
 	public function registerAsset(Asset $asset) {
-		$this->assets[$asset->getAssetType()][$asset->getAssetHandle()] = $asset;
+		// we have to check and see if the asset already exists.
+		// If it exists, we only replace it if our current asset has a later version
+		$doRegister = true;
+		if (is_object($this->assets[$asset->getAssetType()][$asset->getAssetHandle()])) {
+			$existingAsset = $this->assets[$asset->getAssetType()][$asset->getAssetHandle()];
+			if (version_compare($existingAsset->getAssetVersion(), $asset->getAssetVersion(), '>')) {
+				$doRegister = false;
+			}
+		}
+		if ($doRegister) {
+			$this->assets[$asset->getAssetType()][$asset->getAssetHandle()] = $asset;
+		}
 	}
 
 	public function registerGroup($assetGroupHandle, $assetHandles, $customClass = false) {
@@ -68,58 +85,5 @@ class Concrete5_Library_AssetList {
 	public function getAssetGroup($assetGroupHandle) {
 		return $this->assetGroups[$assetGroupHandle];
 	}
-
-	/*
-
-	public function register($identifier, $pkgHandle = false) {
-		$obj = new stdClass;
-		$obj->assetHandle = $identifier;
-		$obj->pkgHandle = $pkgHandle;
-		$this->assets[$identifier] = $obj;
-	}
-
-
-	public function getRegisteredAssetByIdentifier($identifier) {
-		$path = $identifier;
-		$continue = true;
-		while ($continue) {
-			if (array_key_exists($identifier, $this->assets)) {
-				$continue = false;
-			} else {
-				// we didn't find this path so we're going to go up the segment.
-				$path = substr($path, 0, strrpos($path, '/'));
-				if ($path == '/' || $path == '') {
-					$continue = false;
-				}
-			}
-		}
-		
-		return $this->assets[$path];
-	}
-
-		$env = Environment::get();
-		$path = $identifier;
-		$found = false;
-		while (isset($path)) {
-			$rec = $env->getRecord(DIRNAME_LIBRARIES . '/' . DIRNAME_LIBRARIES_ASSET . '/' . DIRNAME_LIBRARIES_ASSET_ASSETS . '/' . $path . '.php');
-			if ($rec->exists()) {
-				$found = true;
-				unset($path);
-			} else if (strpos($path, '/') > 0) {
-				// we didn't find this path so we're going to go up the segment.
-				$path = substr($path, 0, strrpos($path, '/'));
-				if ($path == '/' || $path == '') {
-					unset($path);
-				}
-			} else {
-				unset($path);
-			}
-		}
-
-		if ($found) {
-			include($rec->file);
-		}
-		*/
-
 
 }
