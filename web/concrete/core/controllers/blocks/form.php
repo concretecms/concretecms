@@ -92,7 +92,10 @@ class Concrete5_Controller_Block_Form extends BlockController {
 			$this->requireAsset('css', 'jqueryui');
 			$this->requireAsset('javascript', 'jqueryui');
 		}
-
+		$this->requireAsset('css', 'core/frontend/errors');
+		if ($this->displayCaptcha) {
+			$this->requireAsset('css', 'core/frontend/captcha');
+		}
 	}
 	public function getDefaultThankYouMsg() {
 		return t("Thanks!");

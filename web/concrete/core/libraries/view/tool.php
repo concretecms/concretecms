@@ -63,11 +63,11 @@ class Concrete5_Library_ToolView extends View {
 			ob_start();
 			$this->outputHeaderItems();
 			print $_contents;
-			$this->outputFooterItems();
 			$_contents = ob_get_contents();
 			ob_end_clean();
 
 			foreach($addOutputAssets as $outputAsset) {
+				$outputAsset->setAssetPosition(Asset::ASSET_POSITION_HEADER);
 				$this->addOutputAsset($outputAsset);
 			}
 

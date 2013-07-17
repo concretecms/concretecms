@@ -6,20 +6,16 @@ class Concrete5_Controller_Register extends Controller {
 	
 	protected $displayUserName = true;
 
-	public function __construct() {
+	public function on_start() {
 		if(!ENABLE_REGISTRATION) {
 			$cont = Loader::controller('/page_not_found');
 			$cont->view();
 			$this->render("/page_not_found");
 		}
-		parent::__construct();
-		Loader::model('user_attributes');
-
 		$u = new User();
 		$this->set('u', $u);
-		
 		$this->set('displayUserName', $this->displayUserName);
-		
+		$this->requireAsset('core/frontend/captcha');		
 	}
 	
 	public function forward($cID = 0) {

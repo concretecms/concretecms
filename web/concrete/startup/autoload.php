@@ -135,6 +135,7 @@ $classes = array(
 	'PageThemeEditableStyleFont' => array('model','page_theme/editable_style/font'),
 	'PageThemeGridFramework' => array('library','page_theme/grid_framework/library'),
 	'TwitterBootstrapPageTheme' => array('model','page_theme/custom/twitter_bootstrap'),
+	'ConcretePageTheme' => array('model','page_theme/custom/concrete'),
 	'RiverThemePageTheme' => array('model','page_theme/custom/river_theme'),
 	'NineSixtyPageThemeGridFramework' => array('library','page_theme/grid_framework/types/nine_sixty'),
 	'Bootstrap2PageThemeGridFramework' => array('library','page_theme/grid_framework/types/bootstrap2'),

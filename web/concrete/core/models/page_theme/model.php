@@ -23,7 +23,7 @@ class Concrete5_Model_PageTheme extends Object {
 	const FILENAME_TYPOGRAPHY_CSS = "typography.css";	
 	const FILENAME_EXTENSION_CSS = "css";
 	
-	public function __construct() {}
+	public function registerAssets() {}
 	
 	public static function getGlobalList() {
 		return PageTheme::getList('pkgID > 0');
