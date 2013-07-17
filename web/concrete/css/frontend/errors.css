@@ -1,3 +1,13 @@
-/* global error styles */
-.ccm-error {font-weight: bold; color: #f00}
-.ccm-required {font-weight: bold; color: #3975AD}
+div.ccm-block-type-form div.alert-success {
+	border: 1px solid #05A000;
+	background-color: #B5ECB4;
+	padding: 8px;
+	margin-bottom: 8px;
+}
+
+div.ccm-block-type-form div.alert-error {
+	border: 1px solid #f00;
+	background-color: #E4B5B5;
+	padding: 8px;
+	margin-bottom: 8px;
+}

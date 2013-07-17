@@ -59,6 +59,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				}
 				if ($this->itemsPerPage > 0) {
 					$dl->setItemsPerPage($this->itemsPerPage);
+					$this->requireAsset('core/frontend/pagination');
 				}
 				$pages = $dl->getPage();
 				$this->set('reqOrderBy', $orderBy);

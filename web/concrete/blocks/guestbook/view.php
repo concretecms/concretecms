@@ -78,7 +78,7 @@ foreach($posts as $p) { ?>
 			<?
 			if($controller->displayCaptcha) {
 						   
-				
+				$controller->requireAsset('core/frontend/captcha');
 				$captcha = Loader::helper('validation/captcha');				
    				$captcha->label();
    				$captcha->showInput();

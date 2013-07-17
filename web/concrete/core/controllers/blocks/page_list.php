@@ -169,6 +169,9 @@
 					$paginator = $pl->getPagination();
 				}
 			}
+			if ($showPagination) {
+				$this->requireAsset('core/frontend/pagination');
+			}
 			$this->set('showPagination', $showPagination);
 			$this->set('paginator', $paginator);
 

@@ -25,6 +25,15 @@ $al->register('javascript', 'dropzone', 'js/dropzone.js');
 // jquery form
 $al->register('javascript', 'jquery/form', 'js/jquery.form.js');
 
+// jquery rating
+$al->register('javascript', 'jquery/rating', 'js/jquery.rating.js');
+$al->register('css', 'jquery/rating', 'css/jquery.rating.css', array('postprocess' => false));
+$al->registerGroup('jquery/rating', array(
+	array('javascript', 'jquery/rating'),
+	array('css', 'jquery/rating')
+));
+
+
 // swfobject
 $al->register('javascript', 'swfobject', 'js/swfobject.js');
 
@@ -109,10 +118,9 @@ $al->registerGroup('dashboard', array(
 
 
 // Basic styles (used to be in ccm.base.css)
-$al->register('css', 'core/captcha', 'css/frontend/captcha.css');
-$al->register('css', 'core/pagination', 'css/frontend/pagination.css');
-$al->register('css', 'core/errors', 'css/frontend/errors.css');
-$al->register('css', 'core/calendar', 'css/frontend/calendar.css');
+$al->register('css', 'core/frontend/captcha', 'css/frontend/captcha.css');
+$al->register('css', 'core/frontend/pagination', 'css/frontend/pagination.css');
+$al->register('css', 'core/frontend/errors', 'css/frontend/errors.css');
 
 // Sitemap
 $al->register('javascript', 'core/sitemap', 'js/ccm.sitemap.js', array('postprocess' => false));

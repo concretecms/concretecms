@@ -647,7 +647,13 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			// outerFileWrapper gets set to true if we're passing the filename of a single page or page type file through 
 			$pkgID = 0;
 			$env = Environment::get();
+			if ($pl == VIEW_CORE_THEME) {
+				$_pt = new ConcretePageTheme();
+				$_pt->registerAssets();
+			}
+			
 			if ($pl instanceof PageTheme) {
+				$pl->registerAssets();
 				$this->ptHandle = $pl->getThemeHandle();
 				if ($pl->getPackageID() > 0) {
 					$pkgID = $pl->getPackageID();
@@ -889,8 +895,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				$theme = $tmpTheme;
 			} else {
 				$theme = FILENAME_COLLECTION_DEFAULT_THEME;
-			}		
-			
+			}	
+
 			$this->setThemeForView($theme, $themeFilename, $outerFileWrapper);
 
 
