@@ -320,16 +320,50 @@ class Concrete5_Model_PageList extends DatabaseItemList {
 	}
 		
 	/***
-	 * Like filterByAttribute(), but wraps values properly for "select" type attributes
+	 * Like filterByAttribute(), but wraps values properly for "select" type attributes.
+	 * Accepts either a single value, or an array of values.
+	 * If an array of values is provided, they will be combined together with "OR".
+	 * (If you need to do an "AND" filter on mulitple values, just call this function multiple times).
 	 */
 	public function filterBySelectAttribute($akHandle, $value) {
-		//Wrap the value in newline characters (because that's how the select attribute saves to the database).
-		//For multi-value selects we must use "LIKE" and "%" wildcards because the desired value could be anywhere in the list.
-		//For single-value selects we use "=" and no wildcards because it's much faster (and handles non-ascii chars better according to Remo).
-		if ($this->selectAttributeAllowsMultupleValues($akHandle)) {
-			$this->filterByAttribute($akHandle, "%\n{$value}\n%", 'LIKE');
+		if (empty($value)) {
+			return;
+		}
+		
+		$isMultiSelect = $this->selectAttributeAllowsMultupleValues($akHandle);
+		
+		//Explanation: "select" attributes wrap each value in newline characters when saving to the database,
+		// which allows parsing of individual values within a "multi-select" attribute.
+		//
+		//Because of this, you need to query them using the "LIKE" operator and the "%" wildcards
+		// when the attribute is "multi-select" (although for "single-select" attributes
+		// you can speed things up by just using "=" and excluding the "%" wildcards).
+		//
+		//Things get trickier if you want to string together several values with an "OR"
+		// (for example, "find all pages whose 'tags' attribute is 'hello' OR 'world'"):
+		// the usual "filterBy" methods don't work because they always use "AND" to combine
+		// multiple criteria. So instead we can manually create our own portion of the "WHERE"
+		// clause and pass that directly to the raw "filter" attribute.
+		
+		if (is_array($value)) {
+			$db = Loader::db();
+			$criteria = array();
+			foreach ($value as $v) {
+				$escapedValue = $db->escape($v);
+				if ($isMultiSelect) {
+					$criteria[] = "(ak_{$akHandle} LIKE '%\n{$escapedValue}\n%')";
+				} else {
+					$criteria[] = "(ak_{$akHandle} = '\n{$escapedValue}\n')";
+				}
+			}
+			$where = '(' . implode(' OR ', $criteria) . ')';
+			$this->filter(false, $where); //pass FALSE as 1st argument to tell the filter function we're providing a full "WHERE" clause (as opposed to a separate field name, criteria, and operator)
 		} else {
-			$this->filterByAttribute($akHandle, "\n{$value}\n");
+			 if ($isMultiSelect) {
+				$this->filterByAttribute($akHandle, "%\n{$value}\n%", 'LIKE');
+			} else {
+				$this->filterByAttribute($akHandle, "\n{$value}\n");
+			}
 		}
 	}
 	/**
