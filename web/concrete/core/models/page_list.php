@@ -324,8 +324,8 @@ class Concrete5_Model_PageList extends DatabaseItemList {
 	 */
 	public function filterBySelectAttribute($akHandle, $value) {
 		//Wrap the value in newline characters (because that's how the select attribute saves to the database).
-		//For multi-value selects we must use "LIKE" because the desired value could be anywhere in the list.
-		//For single-value selects we use "=" because it's faster (and handles non-ascii chars better according to Remo).
+		//For multi-value selects we must use "LIKE" and "%" wildcards because the desired value could be anywhere in the list.
+		//For single-value selects we use "=" and no wildcards because it's much faster (and handles non-ascii chars better according to Remo).
 		if ($this->selectAttributeAllowsMultupleValues($akHandle)) {
 			$this->filterByAttribute($akHandle, "%\n{$value}\n%", 'LIKE');
 		} else {
