@@ -318,6 +318,31 @@ class Concrete5_Model_PageList extends DatabaseItemList {
 	public function filterByPublicDate($date, $comparison = '=') {
 		$this->filter('cv.cvDatePublic', $date, $comparison);
 	}
+		
+	/***
+	 * Like filterByAttribute(), but wraps values properly for "select" type attributes
+	 */
+	public function filterBySelectAttribute($akHandle, $value) {
+		//Wrap the value in newline characters (because that's how the select attribute saves to the database).
+		//For multi-value selects we must use "LIKE" because the desired value could be anywhere in the list.
+		//For single-value selects we use "=" because it's faster (and handles non-ascii chars better according to Remo).
+		if ($this->selectAttributeAllowsMultupleValues($akHandle)) {
+			$this->filterByAttribute($akHandle, "%\n{$value}\n%", 'LIKE');
+		} else {
+			$this->filterByAttribute($akHandle, "\n{$value}\n");
+		}
+	}
+	/**
+	 * Internal helper function for filterBySelectAttribute()
+	 */
+	private function selectAttributeAllowsMultupleValues($akHandle) {
+		$ak = CollectionAttributeKey::getByHandle($akHandle);
+		$akID = $ak->getAttributeKeyID();
+		$sql = 'SELECT akSelectAllowMultipleValues FROM atSelectSettings where akID = ?';
+		$vals = array($akID);
+		$allowMultipleValues = Loader::db()->GetOne($sql, $vals);
+		return $allowMultipleValues;
+	}
 	
 	/** 
 	 * If true, pages will be checked for permissions prior to being returned
