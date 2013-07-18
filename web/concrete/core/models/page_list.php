@@ -357,13 +357,11 @@ class Concrete5_Model_PageList extends DatabaseItemList {
 				}
 			}
 			$where = '(' . implode(' OR ', $criteria) . ')';
-			$this->filter(false, $where); //pass FALSE as 1st argument to tell the filter function we're providing a full "WHERE" clause (as opposed to a separate field name, criteria, and operator)
+			$this->filter(false, $where);
+		} else if ($isMultiSelect) {
+			$this->filterByAttribute($akHandle, "%\n{$value}\n%", 'LIKE');
 		} else {
-			 if ($isMultiSelect) {
-				$this->filterByAttribute($akHandle, "%\n{$value}\n%", 'LIKE');
-			} else {
-				$this->filterByAttribute($akHandle, "\n{$value}\n");
-			}
+			$this->filterByAttribute($akHandle, "\n{$value}\n");
 		}
 	}
 	/**
