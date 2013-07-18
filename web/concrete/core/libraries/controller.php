@@ -21,18 +21,48 @@ defined('C5_EXECUTE') or die("Access Denied.");
 class Concrete5_Library_Controller {
 
 	public $theme = null;
-	// sets is an array of items set by the set() method. Whew.
+	/*
+	 * an array of items set by the set() method.
+	 * @var array
+	*/ 
 	private $sets = array();
+	
+	/*
+	 * array of helper objects
+	 * @var array
+	*/
 	protected $helperObjects = array();
-	protected $c; // collection
+	
+	/*
+	 * Page Object for the controller's page
+	 * @var Page 
+	 * 
+	*/
+	protected $c;
+	
+	/*
+	 * Task to be run ex: 'view'
+	 * @var string
+	*/
 	protected $task = false;
+	
+	/*
+	 * @var array
+	*/
 	protected $parameters = false;
+	
+	/*
+	 * If the page supports full page caching or not
+	 * @var bool
+	*/
 	protected $supportsPageCache = false;	
 	
 	/**
-	 * Items in here CANNOT be called through the URL
-	 */
-	private $restrictedMethods = array();
+	 * array of method names that can't be called through the url
+	 * @var array
+	*/
+	protected $restrictedMethods = array();
+	
 	
 	public function __construct() {
 		if (!isset($this->helpers)) {
@@ -61,7 +91,10 @@ class Concrete5_Library_Controller {
 	 * Is responsible for taking a method passed and ensuring that it is valid for the current request. You can't
 	 * 1. Pass a method that starts with "on_"
 	 * 2. Pass a method that's in the restrictedMethods array
-	 */
+	 * 3. Pass a method that's defined in the base class
+	 * 4. Any non-public method
+	 * @return void
+	*/
 	private function setupRequestTask() {
 		
 		$req = Request::get();
@@ -96,7 +129,13 @@ class Concrete5_Library_Controller {
 			$r = new ReflectionMethod(get_class($this), $method);
 			$cl = $r->getDeclaringClass();
 			if (is_object($cl)) {
-				if ($cl->getName() != 'Controller' && strpos($method, 'on_') !== 0 && strpos($method, '__') !== 0 && $r->isPublic()) {
+				if (
+					!($cl->getName() == 'Controller' || $cl->getName() == 'Concrete5_Library_Controller') 
+					&& strpos($method, 'on_') !== 0 
+					&& strpos($method, '__') !== 0 
+					&& $r->isPublic()
+					&& (is_array($this->restrictedMethods) && !in_array($cl->getName(), $this->restrictedMethods))
+					) {
 					$foundTask = true;
 				}
 			}
@@ -207,6 +246,8 @@ class Concrete5_Library_Controller {
 	
 	/** 
 	 * Runs a task in the active controller if it exists.
+	 * @param string | array $method
+	 * @param array $params 
 	 * @return void
 	 */
 	public function runTask($method, $params) {
@@ -227,6 +268,12 @@ class Concrete5_Library_Controller {
 		return null;
 	}
 
+	/**
+	 * Determines if a given method is able to be called
+	 * @depricated doesn't appear to be used.
+	 * @param string $method
+	 * @return bool 
+	*/ 
 	private function isCallable($method) {
 		if (in_array($method, $this->restrictedMethods)) {
 			return false;
@@ -239,6 +286,7 @@ class Concrete5_Library_Controller {
 	
 	/**
 	 * @access private
+	 * @depricated
 	 */
 	/*
 	// no longer used. we use reflection
@@ -256,6 +304,7 @@ class Concrete5_Library_Controller {
 		return $_SERVER['REQUEST_METHOD'] == 'POST';
 	}
 	
+	
 	/** 
 	* If no arguments are passed, returns the post array. If a key is passed, it returns the value as it exists in the post array.
 	* If a default value is provided and the key does not exist in the POST array, the default value is returned
@@ -272,6 +321,7 @@ class Concrete5_Library_Controller {
 		}
 		return $defaultValue;
 	}
+	
 	
 	/** 
 	* If no arguments are passed, returns the GET array. If a key is passed, it returns the value as it exists in the GET array.
@@ -294,6 +344,7 @@ class Concrete5_Library_Controller {
 		return $defaultValue;
 	}
 	
+	
 	/** 
 	* If no arguments are passed, returns the REQUEST array. If a key is passed, it returns the value as it exists in the request array.
 	* If a default value is provided and the key does not exist in the REQUEST array, the default value is returned
@@ -312,11 +363,11 @@ class Concrete5_Library_Controller {
 	}
 	
 	/** 
-	 * Sets a variable to be passed through from the controller to the view
-   * @param string $key
-   * @param string $val
-   * @return void
-	 */
+	* Sets a variable to be passed through from the controller to the view
+	* @param string $key
+	* @param string $val
+	* @return void
+	*/
 	public function set($key, $val) {
 		$loc = CacheLocal::get();
 		$loc->cache['controllerSets'][$key] = $val;
@@ -399,6 +450,7 @@ class Concrete5_Library_Controller {
 	
 	/** 
 	 * Whether a particular single page controller supports full page caching
+	 * @return bool
 	 */
 	public function supportsPageCache() {
 		return $this->supportsPageCache;
@@ -434,7 +486,8 @@ class Concrete5_Library_Controller {
 	 * @return Page
 	 */
 	public function getCollectionObject() {return $this->c;}
-  /** 
+	
+	/** 
 	 * Gets the current view for the controller (typically the page's handle)
 	 * @return string $view
 	 */
