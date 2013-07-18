@@ -9,12 +9,10 @@ if (!$sh->canRead()) {
 
 $args = $_REQUEST;
 foreach($args as $key => $value) {
-	if (strpos($value, ',') !== -1) {
-		$ids = array();
-		foreach(explode(',', $value) as $id) {
-			$ids[] = $th->entities(trim($id));
+	if (is_array($value)) {
+		foreach ($value as $index => $id) {
+			$value[$index] = intval($id);
 		}
-		$args[$key] = implode(',', $ids);
 	} else {
 		$args[$key] = $th->entities($value);
 	}
