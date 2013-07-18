@@ -335,7 +335,7 @@ class Concrete5_Model_PageList extends DatabaseItemList {
 	/**
 	 * Internal helper function for filterBySelectAttribute()
 	 */
-	private function selectAttributeAllowsMultupleValues($akHandle) {
+	protected function selectAttributeAllowsMultupleValues($akHandle) {
 		$ak = CollectionAttributeKey::getByHandle($akHandle);
 		$akID = $ak->getAttributeKeyID();
 		$sql = 'SELECT akSelectAllowMultipleValues FROM atSelectSettings where akID = ?';
