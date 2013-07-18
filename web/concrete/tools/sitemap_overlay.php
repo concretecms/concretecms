@@ -8,8 +8,17 @@ if (!$sh->canRead()) {
 }
 
 $args = $_REQUEST;
-array_walk_recursive($args, create_function('&$a', '$a = $th->entities($a);'));
-
+foreach($args as $key => $value) {
+	if (strpos($value, ',') !== -1) {
+		$ids = array();
+		foreach(explode(',', $value) as $id) {
+			$ids[] = $th->entities(trim($id));
+		}
+		$args[$key] = implode(',', $ids);
+	} else {
+		$args[$key] = $th->entities($value);
+	}
+}
 if (isset($select_mode)) {
 	$args['select_mode'] = $select_mode;
 }
