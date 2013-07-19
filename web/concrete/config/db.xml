@@ -543,7 +543,7 @@
       <NOTNULL/>
       <DEFAULT value="0000-00-00 00:00:00"/>
     </field>
-    <field name="bFilename" type="C" size="32"/>
+    <field name="bFilename" type="C" size="255"/>
     <field name="bIsActive" type="C" size="1">
       <NOTNULL/>
       <DEFAULT value="1"/>
