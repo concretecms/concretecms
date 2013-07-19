@@ -11,7 +11,8 @@ class ConcreteUpgradeVersion562Helper {
 		'Jobs',
 		'JobSets',
 		'JobSetJobs',
-		'Blocks'
+		'Blocks',
+		'Pages'
 	);
 
 	public function run() {
