@@ -1,4 +1,5 @@
 <?php
+defined('C5_EXECUTE') or die('Access Denied.');
 
 if (defined('DIRNAME_APP_UPDATED') && (!isset($GLOBALS['APP_UPDATED_PASSTHRU']) || $GLOBALS['APP_UPDATED_PASSTHRU'] == false)) {
 	$GLOBALS['APP_UPDATED_PASSTHRU'] = true;
