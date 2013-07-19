@@ -2,13 +2,22 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 
 $sh = Loader::helper('concrete/dashboard/sitemap');
+$th = Loader::helper('text');
 if (!$sh->canRead()) {
 	die(t('Access Denied'));
 }
 
 $txt = Loader::helper('text');
 $args = $_REQUEST;
-array_walk_recursive($args, array($txt, 'entities'));
+foreach($args as $key => $value) {
+	if (is_array($value)) {
+		foreach ($value as $index => $id) {
+			$value[$index] = intval($id);
+		}
+	} else {
+		$args[$key] = $txt->entities($value);
+	}
+}
 
 if (isset($select_mode)) {
 	$args['select_mode'] = $select_mode;
