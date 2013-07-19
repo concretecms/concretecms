@@ -1,4 +1,5 @@
 <?php
+defined('C5_EXECUTE') or die('Access Denied.');
 
 $classes = array(
 	'Log' => array('library','log'),
