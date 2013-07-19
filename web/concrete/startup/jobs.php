@@ -1,4 +1,6 @@
 <?php
+defined('C5_EXECUTE') or die('Access Denied.');
+
 if(ENABLE_JOB_SCHEDULING) {
 	$c = Page::getCurrentPage();
 	if($c instanceof Page && !$c->isAdminArea()) {
