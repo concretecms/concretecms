@@ -42,3 +42,19 @@ The concrete5 git repository currently uses php "short tags". Pull requests shou
 If short tags are not enabled in your development environment you can enable them either
 * In `php.ini` add `short_open_tag = On`
 * In Apache `.htaccess` add `php_value short_open_tag 1`
+
+### Building Assets
+You *do not* need to build assets in order to run the github master
+This is only needed if you are hacking core javascript and css
+
+Current build scripts require
+* UglifyJS
+  * https://github.com/mishoo/UglifyJS
+  * `sudo npm install -g uglify-js`
+* less v1.3
+  * http://lesscss.org
+  * `sudo npm install -g less@1.3`
+
+From the `build` directory(must be in that directory) run
+  * `sh js.sh`
+  * `sh css.sh`
