@@ -1,5 +1,5 @@
 <?php  defined('C5_EXECUTE') or die('Access Denied');?>
-<?php echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Bulk SEO Tool'), t('Manage Search Engine Optimization (SEO) Related Page Properties.'), false, false); 
+<?php echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Bulk SEO Updater'), t('Manage Search Engine Optimization (SEO) Related Page Properties.'), false, false); 
 $pageSelector = Loader::helper('form/page_selector');
 $nh = Loader::helper('navigation');
 $th = Loader::helper('text');
