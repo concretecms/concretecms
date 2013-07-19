@@ -42,17 +42,13 @@ function t2($singular, $plural, $number) {
 	if(is_object($zt)) {
 		$translated = $zt->plural($singular, $plural, $number);
 	} else {
-		$translated = ($number == 1) ? $singular : $plural;
-		$translated = vsprintf($translated, $number);
+		$translated = $number == 1 ? $singular : $plural;
 	}
-	if(func_num_args() == 3) {
-		return $translated;
+	$arg = array_slice(func_get_args(), 3);
+	if ($arg) {
+		return vsprintf($translated, $arg);
 	}
-	$arg = array();
-	for($i = 3; $i < func_num_args(); $i++) {
-		$arg[] = func_get_arg($i);
-	}
-	return vsprintf($translated, $arg);
+	return vsprintf($translated, $number);
 }
 
 /** Translate text (simple form) with a context.
