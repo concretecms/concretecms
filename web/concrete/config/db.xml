@@ -2160,7 +2160,7 @@
       <DEFAULT value="0"/>
       <UNSIGNED/>
     </field>
-    <field name="cPointerExternalLink" type="C" size="255"/>
+    <field name="cPointerExternalLink" type="X2"/>
     <field name="cPointerExternalLinkNewWindow" type="I1" size="1">
       <NOTNULL/>
       <DEFAULT value="0"/>
