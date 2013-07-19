@@ -2,7 +2,6 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 
 $sh = Loader::helper('concrete/dashboard/sitemap');
-$th = Loader::helper('text');
 if (!$sh->canRead()) {
 	die(t('Access Denied'));
 }
