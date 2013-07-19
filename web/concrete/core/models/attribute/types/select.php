@@ -508,6 +508,30 @@ class Concrete5_Controller_AttributeType_Select extends AttributeTypeController 
 			}
 		}
 	}
+
+	/**
+	 * Convenience methods to retrieve a select attribute key's settings
+	 */
+	public function getAllowMultipleValues() {
+		if (is_null($this->akSelectAllowMultipleValues)) {
+			$this->load();
+		}
+		return $this->akSelectAllowMultipleValues;
+	}
+	
+	public function getAllowOtherValues() {
+		if (is_null($this->akSelectAllowOtherValues)) {
+			$this->load();
+		}
+		return $this->akSelectAllowOtherValues;
+	}
+	
+	public function getOptionDisplayOrder() {
+		if (is_null($this->akSelectOptionDisplayOrder)) {
+			$this->load();
+		}
+		return $this->akSelectOptionDisplayOrder;
+	}
 	
 }
 
