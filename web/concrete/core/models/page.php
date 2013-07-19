@@ -1581,6 +1581,7 @@ class Concrete5_Model_Page extends Collection {
 		if ($ret < 0) {
 			return false;
 		}
+		Log::addEntry(t('Page "%s" at path "%s" deleted', $this->getCollectionName(), $this->getCollectionPath()),t('Page Action'));
 
 		parent::delete();
 		
@@ -1638,6 +1639,7 @@ class Concrete5_Model_Page extends Collection {
 	
 	public function moveToTrash() {
 		$trash = Page::getByPath(TRASH_PAGE_PATH);
+		Log::addEntry(t('Page "%s" at path "%s" Moved to trash', $this->getCollectionName(), $this->getCollectionPath()),t('Page Action'));
 		$this->move($trash);
 		$this->deactivate();
 		$pages = array();
