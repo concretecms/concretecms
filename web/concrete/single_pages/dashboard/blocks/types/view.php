@@ -16,7 +16,10 @@
 
 	<h5><?=t('Usage Count')?></h5>
 	<p><?=$num?></p>
-		
+	
+	<h5><?php echo t('Usage Count on Active Pages')?></h5>
+	<p><?php echo $numActive?></p>
+	
 	<? if ($bt->isBlockTypeInternal()) { ?>
 	<h5><?=t('Internal')?></h5>
 	<p><?=t('This is an internal block type.')?></p>
