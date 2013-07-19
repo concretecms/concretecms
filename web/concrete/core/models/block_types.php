@@ -451,11 +451,23 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		/** 
 		 * Returns the number of unique instances of this block throughout the entire site
 		 * note - this count could include blocks in areas that are no longer rendered by the theme
+		 * @param boolean specify true if you only want to see the number of blocks in active pages
 		 * @return int
 		 */
-		public function getCount() {
+		public function getCount($ignoreUnapprovedVersions = false) {
 			$db = Loader::db();
-			$count = $db->GetOne("select count(btID) from Blocks where btID = ?", array($this->btID));
+            		if ($ignoreUnapprovedVersions) {
+                		$count = $db->GetOne("SELECT count(btID) FROM Blocks b
+                    			WHERE btID=?
+                    			AND EXISTS (
+                        			SELECT 1 FROM CollectionVersionBlocks cvb 
+                        			INNER JOIN CollectionVersions cv ON cv.cID=cvb.cID AND cv.cvID=cvb.cvID
+                        			WHERE b.bID=cvb.bID AND cv.cvIsApproved=1
+                    			)", array($this->btID));            
+            		}
+            		else {
+                		$count = $db->GetOne("SELECT count(btID) FROM Blocks WHERE btID = ?", array($this->btID));
+            		}
 			return $count;
 		}
 		
