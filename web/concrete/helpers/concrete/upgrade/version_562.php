@@ -10,7 +10,8 @@ class ConcreteUpgradeVersion562Helper {
 		'QueuePageDuplicationRelations',
 		'Jobs',
 		'JobSets',
-		'JobSetJobs'
+		'JobSetJobs',
+		'Blocks'
 	);
 
 	public function run() {
