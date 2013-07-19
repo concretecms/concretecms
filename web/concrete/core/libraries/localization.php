@@ -44,6 +44,7 @@
 		}
 
 		public function setLocale($locale) {
+			$localeNeededLoading = false;
 			if (!ENABLE_TRANSLATE_LOCALE_EN_US && $locale == 'en_US' && isset($this->translate)) {
 				unset($this->translate);
 				return;
@@ -75,11 +76,16 @@
 
 			if (!isset($this->translate)) {
 				$this->translate = new Zend_Translate($options);
+				$localeNeededLoading = true;
 			} else {
 				if (!in_array($locale, $this->translate->getList())) {
 					$this->translate->addTranslation($options);
+					$localeNeededLoading = true;
 				}
 				$this->translate->setLocale($locale);
+			}
+			if($localeNeededLoading) {
+				Events::fire('on_locale_load', $locale);
 			}
 		}
 
