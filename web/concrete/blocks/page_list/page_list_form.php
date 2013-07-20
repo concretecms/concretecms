@@ -39,7 +39,7 @@
 			  <input <? if (!is_object($cadf)) { ?> disabled <? } ?> type="checkbox" name="displayFeaturedOnly" value="1" <? if ($displayFeaturedOnly == 1) { ?> checked <? } ?> style="vertical-align: middle" />
 			  <?=t('Featured pages only.')?>
 				<? if (!is_object($cadf)) { ?>
-					 <?=t('(<strong>Note</strong>: You must create the "is_featured" page attribute first.)');?>
+					 <span><?=t('(<strong>Note</strong>: You must create the "is_featured" page attribute first.)');?></span>
 				<? } ?>
 		  </label>
 		  <label class="checkbox">
@@ -124,7 +124,7 @@
 		
 		<style type="text/css">
 		#ccm-pagelist-truncateTxt.faintText{ color:#999; }
-		<? if(truncateChars==0 && !$truncateSummaries) $truncateChars=128; ?>
+		<? if($truncateChars==0 && !$truncateSummaries) $truncateChars=128; ?>
 		</style>
 		<div class="ccm-block-field-group">
 		   <h2><?=t('Truncate Summaries')?></h2>	  
