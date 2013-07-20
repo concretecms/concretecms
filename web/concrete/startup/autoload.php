@@ -17,6 +17,7 @@ $classes = array(
 	'Asset' => array('library', 'asset/library'),
 	'AssetList' => array('library', 'asset/list'),
 	'AssetGroup' => array('library', 'asset/group'),
+	'AssetPointer' => array('library', 'asset/pointer'),
 	'CoreConversationAssetGroup' => array('library', 'asset/groups/conversation'),
 	'JavascriptAsset' => array('library', 'asset/types/javascript'),
 	'CssAsset' => array('library', 'asset/types/css'),

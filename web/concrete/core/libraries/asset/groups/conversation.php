@@ -3,15 +3,15 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 class Concrete5_Library_CoreConversationAssetGroup extends AssetGroup {
 	
-	public function getAssets() {
-		$assets = parent::getAssets();
+	public function getAssetPointers() {
+		$assetPointers = parent::getAssetPointers();
 
 		$editor = ConversationEditor::getActive();
-		foreach((array)$editor->getConversationEditorAssets() as $asset) {
-			$assets[] = $asset;
+		foreach((array)$editor->getConversationEditorAssetPointers() as $assetPointer) {
+			$assetPointers[] = $assetPointer;
 		}
-
-		return $assets;
+		
+		return $assetPointers;
 	}
 
 }

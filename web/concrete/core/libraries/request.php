@@ -464,14 +464,14 @@ class Concrete5_Library_Request {
 	public function requireAsset($assetType, $assetHandle = false) {
 		$list = AssetList::getInstance();
 		if ($assetType instanceof Asset) {
-			$r = $assetType;
+			$ap = new AssetPointer($assetType->getAssetType(), $assetType->getAssetHandle());
+			$this->requiredAssetGroup->add($ap);
 		} else if ($assetType && $assetHandle) {
-			$r = $list->getAsset($assetType, $assetHandle);
+			$ap = new AssetPointer($assetType, $assetHandle);
+			$this->requiredAssetGroup->add($ap);
 		} else {
 			$r = $list->getAssetGroup($assetType);
-		}
-		if ($r) {
-			$this->requiredAssetGroup->add($r);
+			$this->requiredAssetGroup->addGroup($r);
 		}
 	}
 
@@ -481,14 +481,19 @@ class Concrete5_Library_Request {
 	public function markAssetAsIncluded($assetType, $assetHandle = false) {
 		$list = AssetList::getInstance();
 		if ($assetType && $assetHandle) {
-			$r = $list->getAsset($assetType, $assetHandle);
+			$asset = $list->getAsset($assetType, $assetHandle);
 		} else {
-			$r = $list->getAssetGroup($assetType);
+			$assetGroup = $list->getAssetGroup($assetType);
 		}
-		if ($r) {
-			$this->providedAssetGroup->add($r);
+
+		if ($assetGroup) {
+			$this->providedAssetGroup->addGroup($assetGroup);
+		} else if ($asset) {
+			$ap = new AssetPointer($asset->getAssetType(), $asset->getAssetHandle());
+			$this->providedAssetGroup->add($ap);
 		} else {
-			$this->providedAssetGroupUnmatched[] = array($assetType, $assetHandle);
+			$ap = new AssetPointer($assetType, $assetHandle);
+			$this->providedAssetGroupUnmatched[] = $ap;
 		}
 	}
 
@@ -500,16 +505,16 @@ class Concrete5_Library_Request {
 	}
 
 	protected function filterProvidedAssets($asset) {
-		foreach($this->providedAssetGroup->getAssets() as $pass) {
-			if ($pass->getAssetHandle() == $asset->getAssetHandle() && $pass->getAssetType() == $asset->getAssetType()) {
+		foreach($this->providedAssetGroup->getAssetPointers() as $pass) {
+			if ($pass->getHandle() == $asset->getHandle() && $pass->getType() == $asset->getType()) {
 				return false;
 			}
 		}
 
 		// now is the unmatched assets something that matches this asset?
 		// (ie, is it a path-style match, like bootstrap/* )
-		foreach($this->providedAssetGroupUnmatched as $assetArray) {
-			if ($assetArray[0] == $asset->getAssetType() && fnmatch($assetArray[1], $asset->getAssetHandle())) {
+		foreach($this->providedAssetGroupUnmatched as $assetPointer) {
+			if ($assetPointer->getType() == $asset->getType() && fnmatch($assetPointer->getHandle(), $asset->getHandle())) {
 				return false;
 			}
 		}
@@ -522,8 +527,17 @@ class Concrete5_Library_Request {
 	 * Returns only assets that are required but that aren't also in the providedAssetGroup
 	 */
 	public function getRequiredAssetsToOutput() {
-		$required = $this->requiredAssetGroup->getAssets();
-		return array_filter($required, array('Request', 'filterProvidedAssets'));
+		$required = $this->requiredAssetGroup->getAssetPointers();
+		$assetPointers = array_filter($required, array('Request', 'filterProvidedAssets'));
+		$assets = array();
+		$al = AssetList::getInstance();
+		foreach($assetPointers as $ap) {
+			$asset = $ap->getAsset();
+			if ($asset instanceof Asset) {
+				$assets[] = $asset;
+			}
+		}
+		return $assets;
 	}
 
 

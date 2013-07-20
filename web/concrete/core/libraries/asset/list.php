@@ -73,7 +73,8 @@ class Concrete5_Library_AssetList {
 		}
 		$group = new $class();
 		foreach($assetHandles as $assetArray) {
-			$group->add($this->getAsset($assetArray[0], $assetArray[1]));
+			$ap = new AssetPointer($assetArray[0], $assetArray[1]);
+			$group->add($ap);
 		}
 		$this->assetGroups[$assetGroupHandle] = $group;
 	}

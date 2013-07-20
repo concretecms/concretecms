@@ -2,7 +2,7 @@
 
 class Concrete5_Model_PlainTextConversationEditor extends ConversationEditor {
 
-	public function getConversationEditorAssets() {
+	public function getConversationEditorAssetPointers() {
 		return array();
 	}
 
