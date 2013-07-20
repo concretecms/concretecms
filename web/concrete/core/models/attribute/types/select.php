@@ -2,9 +2,9 @@
 
 class Concrete5_Controller_AttributeType_Select extends AttributeTypeController  {
 
-	private $akSelectAllowMultipleValues;
-	private $akSelectAllowOtherValues;
-	private $akSelectOptionDisplayOrder;
+	protected $akSelectAllowMultipleValues;
+	protected $akSelectAllowOtherValues;
+	protected $akSelectOptionDisplayOrder;
 
 	protected $searchIndexFieldDefinition = 'X NULL';
 	
