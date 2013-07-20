@@ -153,7 +153,7 @@ class Concrete5_Model_ComposerPage extends Page {
 			$tempBID = $b->getBlockID();
 			while ($tempBID != false) {
 				$bID = $tempBID;
-				$tempBID = $db->GetOne('select distinct br.bID from BlockRelations br inner join CollectionVersionBlocks cvb on cvb.bID = br.bID where br.originalBID = ? and cvb.cID = ?', array($bID, $this->getCollectionID()));
+				$tempBID = $db->GetOne('select distinct br.bID from BlockRelations br inner join CollectionVersionBlocks cvb on cvb.bID = br.bID where br.originalBID = ? and cvb.cID = ? and cvb.cvID = ?', array($bID, $this->getCollectionID(),  $this->getVersionID()));
 			}
 			$arHandle = $db->getOne('select arHandle from CollectionVersionBlocks where cID = ? and cvID = ? and bID = ?', array($this->getCollectionID(), $this->getVersionID(), $bID));
 		} else {
