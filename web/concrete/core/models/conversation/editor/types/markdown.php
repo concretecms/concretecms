@@ -1,7 +1,7 @@
 <?php
 class Concrete5_Model_MarkdownConversationEditor extends ConversationEditor {
 
-	public function getConversationEditorAssets() {
+	public function getConversationEditorAssetPointers() {
 		return array();
 	}
 
