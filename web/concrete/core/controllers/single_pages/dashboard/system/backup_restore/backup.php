@@ -77,7 +77,7 @@ class Concrete5_Controller_Dashboard_System_BackupRestore_Backup extends Dashboa
 				@chmod($fullFilename, 666);
 				@unlink($fullFilename);
 				if(is_file($fullFilename)) {
-					$this->error->add(t('Error deleting the file %s.', $str_fname) . ' ' . t('Please check the permissions of the folder %s', DIR_FILES_BACKUPS));
+					$this->error->add(t('Error deleting the file %s. Please check the permissions of the folder %s', $str_fname, DIR_FILES_BACKUPS));
 				}
 			}
 		}
