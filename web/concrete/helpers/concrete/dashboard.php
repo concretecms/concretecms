@@ -225,45 +225,60 @@ class ConcreteDashboardHelper {
 	public function addQuickNavToMenus($html) {
 		$recent = '';
 		ob_start();		
-		
+
 			$c = Page::getCurrentPage();
 			if (!is_array($_SESSION['ccmQuickNavRecentPages'])) {
 				$_SESSION['ccmQuickNavRecentPages'] = array();
 			}
-			if (in_array($c->getCollectionID(), $_SESSION['ccmQuickNavRecentPages'])) {
-				unset($_SESSION['ccmQuickNavRecentPages'][array_search($c->getCollectionID(), $_SESSION['ccmQuickNavRecentPages'])]);
-				$_SESSION['ccmQuickNavRecentPages'] = array_values($_SESSION['ccmQuickNavRecentPages']);
-			}
-			
-			$_SESSION['ccmQuickNavRecentPages'][] = $c->getCollectionID();
-	
-			if (count($_SESSION['ccmQuickNavRecentPages']) > 5) {
-				array_shift($_SESSION['ccmQuickNavRecentPages']);
-			}
-			
 
-			if (count($_SESSION['ccmQuickNavRecentPages']) > 0) { ?>
-				<ul class="breadcrumb">
-				<li><strong><?=t('Recent')?></strong> <span class="divider" style="padding-right: 5px; padding-left: 3px;">:</span></li>
-				<?php
-				$i = 0;
-				$recentPages = array_reverse($_SESSION['ccmQuickNavRecentPages']); //display most-recent first
-				foreach($recentPages as $_cID) {
+			$session_pages = array_filter($_SESSION['ccmQuickNavRecentPages']);
+			$session_pages[] = $c->getCollectionID();
+
+			// Remove duplicates, making sure the most recent is kept.
+			$session_pages = array_reverse(array_unique(array_reverse($session_pages)));
+
+			// Tidy and eliminate non-existent collections, prep for later
+			$breadcrumb_map = array();
+			$last = 0;
+			if (count($session_pages) > 0) {
+				foreach($session_pages as $_cID) {
 					$_c = Page::getByID($_cID);
-					$name = t('(No Name)');
-					$divider = '';
-					if (isset($_SESSION['ccmQuickNavRecentPages'][$i+1])) {
-						$divider = '<span class="divider">|</span>';
+					if (is_object($_c)){
+						$breadcrumb_map[$_cID] = $_c;
+						$last = $_cID;
 					}
+				}
+			}
+
+			// limit size, keeping numeric keys constant
+			$max_breadcrumb_size = 5;
+			// (NB - by using the above, the way is kept open for the size to be adjustable in the future)
+			if (count($breadcrumb_map) > $max_breadcrumb_size) {
+				$breadcrumb_map = array_slice($breadcrumb_map,-$max_breadcrumb_size, null, true);
+			}
+
+			$_SESSION['ccmQuickNavRecentPages'] = array_keys($breadcrumb_map);
+
+			if (count($breadcrumb_map) > 0) { ?>
+				<ul class="breadcrumb">
+				<li><strong><?php echo t('Recent')?></strong> <span class="divider">:</span></li>
+				<?php 
+				// create links
+				foreach($breadcrumb_map as $_cID=>$_c) {
+					$name = t('(No Name)');
 					if ($_c->getCollectionName()) {
 						$name = $_c->getCollectionName();
 					}
-					?> <li><a id="ccm-recent-page-<?=$_c->getCollectionID()?>" href="<?=Loader::helper('navigation')->getLinkToCollection($_c)?>"><?=t($name)?></a><?=$divider?></li>
-					<? $i++;
+					$divider = '';
+					if ($_cID != $last) {
+						$divider = '<span class="divider">/</span>';
+					}
+					?> <li><a id="ccm-recent-page-<?php echo $_c->getCollectionID()?>" href="<?php echo Loader::helper('navigation')->getLinkToCollection($_c)?>"><?php echo t($name)?></a><?php echo $divider?></li>
+					<?php 
 				}
 				?>
 				</ul>
-				<?
+				<?php 
 			}
 		$recent = ob_get_contents();
 		ob_end_clean();
