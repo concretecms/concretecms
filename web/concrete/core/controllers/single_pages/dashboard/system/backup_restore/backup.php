@@ -71,11 +71,17 @@ class Concrete5_Controller_Dashboard_System_BackupRestore_Backup extends Dashboa
 	  //For Security reasons...  allow only known characters in the string e.g no / \ so you can't exploit this
 	  $int_mResult = preg_match('/[0-9A-Za-z._]+/',$str_fname,$ar_matches);
 	  $str_fname = $ar_matches[0];
-	  if (!is_null($str_fname) && trim($str_fname) != "" && !preg_match('/\.\./',$str_fname) && file_exists(DIR_FILES_BACKUPS . "/$str_fname")) {
-		 chmod(DIR_FILES_BACKUPS . "/$str_fname",666);
-		 unlink(DIR_FILES_BACKUPS . "/$str_fname");
-	  }
-	  $this->view();
+		if (!is_null($str_fname) && trim($str_fname) != "" && !preg_match('/\.\./',$str_fname)) {
+			$fullFilename = DIR_FILES_BACKUPS . "/$str_fname";
+			if(is_file($fullFilename)) {
+				@chmod($fullFilename, 666);
+				@unlink($fullFilename);
+				if(is_file($fullFilename)) {
+					$this->error->add(t('Error deleting the file %s.', $str_fname) . ' ' . t('Please check the permissions of the folder %s', DIR_FILES_BACKUPS));
+				}
+			}
+		}
+		$this->view();
 	}
 
 	public function restore_backup() {
