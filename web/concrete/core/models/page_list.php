@@ -330,21 +330,23 @@ class Concrete5_Model_PageList extends DatabaseItemList {
 			return;
 		}
 		
-		$isMultiSelect = $this->selectAttributeAllowsMultupleValues($akHandle);
+		//Determine if this attribute allows multiple selections
+		$ak = CollectionAttributeKey::getByHandle($akHandle);
+		$akc = $ak->getController();
+		$isMultiSelect = $akc->getAllowMultipleValues();
 		
-		//Explanation: "select" attributes wrap each value in newline characters when saving to the database,
-		// which allows parsing of individual values within a "multi-select" attribute.
+		//Explanation of query logic: "select" attributes wrap each value in newline characters when
+		// saving to the db, which allows parsing of individual values within a "multi-select" attribute.
 		//
 		//Because of this, you need to query them using the "LIKE" operator and the "%" wildcards
 		// when the attribute is "multi-select" (although for "single-select" attributes
 		// you can speed things up by just using "=" and excluding the "%" wildcards).
 		//
 		//Things get trickier if you want to string together several values with an "OR"
-		// (for example, "find all pages whose 'tags' attribute is 'hello' OR 'world'"):
-		// the usual "filterBy" methods don't work because they always use "AND" to combine
+		// (for example, "find all pages whose 'tags' attribute is 'hello' OR 'world'")
+		// -- the usual "filterBy" methods don't work because they always use "AND" to combine
 		// multiple criteria. So instead we can manually create our own portion of the "WHERE"
 		// clause and pass that directly to the raw "filter" attribute.
-		
 		if (is_array($value)) {
 			$db = Loader::db();
 			$criteria = array();
@@ -363,17 +365,6 @@ class Concrete5_Model_PageList extends DatabaseItemList {
 		} else {
 			$this->filterByAttribute($akHandle, "\n{$value}\n");
 		}
-	}
-	/**
-	 * Internal helper function for filterBySelectAttribute()
-	 */
-	protected function selectAttributeAllowsMultupleValues($akHandle) {
-		$ak = CollectionAttributeKey::getByHandle($akHandle);
-		$akID = $ak->getAttributeKeyID();
-		$sql = 'SELECT akSelectAllowMultipleValues FROM atSelectSettings where akID = ?';
-		$vals = array($akID);
-		$allowMultipleValues = Loader::db()->GetOne($sql, $vals);
-		return $allowMultipleValues;
 	}
 	
 	/** 
