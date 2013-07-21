@@ -31,6 +31,8 @@ $(function() {
 		mode : "textareas",
 		width: "<?=$textEditorWidth?>", 
 		height: "<?=$textEditorHeight?>px", 	
+		browser_spellcheck: true,
+		gecko_spellcheck: true,
 		inlinepopups_skin : "concreteMCE",
 		entity_encoding: 'raw',
 		theme_concrete_buttons2_add : "spellchecker",
