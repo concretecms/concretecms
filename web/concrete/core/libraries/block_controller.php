@@ -56,9 +56,14 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		
 
 		protected $identifier;
+		protected $uniqueIdentifier;
 		
 		public function getIdentifier() {
 			return $this->identifier;
+		}
+
+		public function getUniqueIdentifier() {
+			return $this->uniqueIdentifier;
 		}
 		
 		/**
@@ -436,7 +441,15 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			} else if ($obj instanceof Block) {
 				$b = $obj;
 				$this->identifier = 'BLOCK_' . $obj->getBlockID();
-				// we either have a blockID passed, or nothing passed, if we're adding a block type				
+
+				// In case we have a clipboard block we use its id for uniqueIdentifier
+				$proxyBlock = $obj->getProxyBlock();
+				if ($proxyBlock) {
+					$this->uniqueIdentifier = 'BLOCK_' . $proxyBlock->getInstance()->getIdentifier();
+				} else {
+					$this->uniqueIdentifier = 'BLOCK_' . $obj->getBlockID();
+				}
+
 				$this->bID = $b->getBlockID();
 				$this->btHandle = $obj->getBlockTypeHandle();
 				$this->bActionCID = $obj->getBlockActionCollectionID();
