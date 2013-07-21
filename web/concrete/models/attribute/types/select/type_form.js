@@ -75,7 +75,6 @@ var ccmAttributesHelper={
 	},
 	
 	keydownHandler:function(event){
-		// this approach is totally !@#&* unreliable in IE because IE sucks
 		var form = $("#ccm-attribute-key-form");
 		switch (event.keyCode) {
 			case(13): // enter
@@ -92,14 +91,5 @@ var ccmAttributesHelper={
 				}
 				break;
 		}
-	
-	},
-
-	_init:function(){
-		$('#attributeValuesWrap').on('keydown', '.akSelectValueField', ccmAttributesHelper.keydownHandler);
 	}
 }
-
-$(function(){
-	ccmAttributesHelper._init();
-});
