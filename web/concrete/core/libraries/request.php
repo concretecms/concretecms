@@ -464,8 +464,7 @@ class Concrete5_Library_Request {
 	public function requireAsset($assetType, $assetHandle = false) {
 		$list = AssetList::getInstance();
 		if ($assetType instanceof Asset) {
-			$ap = new AssetPointer($assetType->getAssetType(), $assetType->getAssetHandle());
-			$this->requiredAssetGroup->add($ap);
+			$this->requiredAssetGroup->addAsset($assetType);
 		} else if ($assetType && $assetHandle) {
 			$ap = new AssetPointer($assetType, $assetHandle);
 			$this->requiredAssetGroup->add($ap);
@@ -537,6 +536,9 @@ class Concrete5_Library_Request {
 				$assets[] = $asset;
 			}
 		}
+		// also include any hard-passed $assets into the group. This is rare but it's used for handle-less
+		// assets like layout css
+		$assets = array_merge($this->requiredAssetGroup->getAssets(), $assets);
 		return $assets;
 	}
 
