@@ -4,6 +4,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 class Concrete5_Library_AssetGroup {
 	
 	protected $assetPointers = array();
+	protected $assets = array();
 
 	public function contains(AssetPointer $ap) {
 		foreach($this->assetPointers as $assetPointer) {
@@ -23,10 +24,20 @@ class Concrete5_Library_AssetGroup {
 		}
 	}
 
+	public function addAsset(Asset $asset) {
+		// doesn't check anything. this is useful for layouts, etc... other handle-less assets.
+		$this->assets[] = $asset;
+	}
+
+
 	public function add(AssetPointer $ap) {
 		if (!$this->contains($ap)) {
 			$this->assetPointers[] = $ap;
 		}
+	}
+
+	public function getAssets() {
+		return $this->assets;
 	}
 
 	public function getAssetPointers() {
