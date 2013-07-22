@@ -26,7 +26,7 @@ var ccmAttributesHelper={
 	editValue:function(val){ 
 		if($('#akSelectValueDisplay_'+val).css('display')!='none'){
 			$('#akSelectValueDisplay_'+val).css('display','none');
-			$('#akSelectValueEdit_'+val).css('display','block');		
+			$('#akSelectValueEdit_'+val).css('display','block').find('input[type="text"]').focus();	
 		}else{
 			$('#akSelectValueDisplay_'+val).css('display','block');
 			$('#akSelectValueEdit_'+val).css('display','none');
@@ -74,17 +74,22 @@ var ccmAttributesHelper={
 		if($(field).hasClass(removeClass)) $(field).removeClass(removeClass);
 	},
 	
-	addEnterClick:function(e,fn){
-		// this approach is totally !@#&* unreliable in IE because IE sucks
+	keydownHandler:function(event){
 		var form = $("#ccm-attribute-key-form");
-		var keyCode = e.which;
-		if(keyCode == 13 && typeof(fn)=='function' ) {
-			form.submit(function() {return false;});
-			fn();
-			setTimeout(function() { 
-				form.unbind();
-			}, 100);
+		switch (event.keyCode) {
+			case(13): // enter
+				event.preventDefault();
+				ccmAttributesHelper.changeValue(event.currentTarget.getAttribute('data-select-value-id'));
+				break;
+			case(38): // arrow up
+			case(40): // arrow down
+				ccmAttributesHelper.changeValue(event.currentTarget.getAttribute('data-select-value-id'));
+				var find = (event.keyCode === 38) ? 'prev' : 'next';
+				var $target = $(event.currentTarget).closest('.akSelectValueWrap')[find]();
+				if ($target.length) {
+					$target.find('.leftCol').click();
+				}
+				break;
 		}
-		
 	}
 }
