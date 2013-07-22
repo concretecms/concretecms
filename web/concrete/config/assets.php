@@ -86,10 +86,10 @@ $al->registerGroup('core/app', array(
 	array('javascript', 'bootstrap/tooltip'),
 	array('javascript', 'jqueryui'),
 	array('javascript', 'core/app'),
-	array('javascript', 'redactor'),
+/*	array('javascript', 'redactor'), */
 	array('javascript', 'jquery/form'),
 	array('css', 'core/app'),
-	array('css', 'redactor'),
+/*	array('css', 'redactor'), */
 	array('css', 'jqueryui')
 ));
 

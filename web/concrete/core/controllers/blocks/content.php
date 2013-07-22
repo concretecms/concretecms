@@ -51,9 +51,19 @@
 			return $content;				
 		}
 
+		public function add() {
+			$req = Request::get();
+			$req->requireAsset('redactor');
+		}
+
+		public function edit() {
+			$req = Request::get();
+			$req->requireAsset('redactor');
+		}
+
 		public function composer() {
-			$this->addFooterItem(Loader::helper('html')->javascript('redactor.js'));
-			$this->addHeaderItem(Loader::helper('html')->css('redactor.css'));
+			$req = Request::get();
+			$req->requireAsset('redactor');
 		}
 
 		public function getImportData($blockNode) {
