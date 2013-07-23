@@ -248,6 +248,7 @@ if (is_object($djs)) { ?>
 			<div class="clearfix">
 				<?php echo $form->submit('submit', t('Delete Job Set'), array('class' => 'danger'))?>
 			</div>
+		</fieldset>
 		</form>
 		<? } ?>
 		</div>
