@@ -13,7 +13,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
  */
 	class Concrete5_Controller_Block_Guestbook extends BlockController {		
 		protected $btTable = 'btGuestBook';
-		protected $btInterfaceWidth = "350";
+		protected $btInterfaceWidth = "370";
 		protected $btInterfaceHeight = "480";	
 		protected $btWrapperClass = 'ccm-ui';
 		protected $btExportPageColumns = array('cID');
