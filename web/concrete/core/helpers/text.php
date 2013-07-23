@@ -327,7 +327,7 @@ class Concrete5_Helper_Text {
 	* @return string $text
 	*/
 	public function preventWidows($text) {
-		$nbsp = mb_convert_encoding('&nbsp;', 'UTF-8', 'HTML-ENTITIES');
+		$nbsp = mb_convert_encoding('&nbsp;', APP_CHARSET, 'HTML-ENTITIES');
 		$text = preg_replace('/(\S+\s+\S+)\s+(\S+)$/', '$1' . $nbsp . '$2', $text);
 		return $text;
 	}
