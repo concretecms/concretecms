@@ -32,14 +32,12 @@ if(ENABLE_JOB_SCHEDULING) {
 		}
 	
 		if(strlen($url)) {
-			echo $url; exit;
 			$ch = curl_init($url);
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 			curl_setopt($ch, CURLOPT_HEADER, 0);
 			curl_setopt($ch,CURLOPT_CONNECTTIMEOUT,1);
 			curl_setopt($ch,CURLOPT_TIMEOUT,1);
 			$res = curl_exec($ch);
-			
 		}
 	}
 }
