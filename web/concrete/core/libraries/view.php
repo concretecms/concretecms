@@ -682,13 +682,13 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		 * or a PageTheme object and sets information in the view about that theme. This is called internally
 		 * and is always passed the correct item based on context
 		 * 
-		 * @access public
+		 * @access protected
 		 * @param PageTheme object $pl
 		 * @param string $filename
 		 * @param boolean $wrapTemplateInTheme
 		 * @return void
 		*/	
-		private function setThemeForView($pl, $filename, $wrapTemplateInTheme = false) {
+		protected function setThemeForView($pl, $filename, $wrapTemplateInTheme = false) {
 			// wrapTemplateInTheme gets set to true if we're passing the filename of a single page or page type file through 
 			$pkgID = 0;
 			$env = Environment::get();
