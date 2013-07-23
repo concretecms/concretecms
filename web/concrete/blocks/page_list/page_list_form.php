@@ -28,7 +28,8 @@
 			<? } ?>
 		  </select>
 		  <? } ?>
-		  
+		</div>
+		<div class="ccm-block-field-group">  
 		  <h2><?=t('Filter')?></h2>
 		  
 		  <?
@@ -59,7 +60,6 @@
 		  <h2><?=t('Location in Website')?></h2>
 		  <?=t('Display pages that are located')?>:<br/>
 		  <br/>
-		  <div>
 		  	<label class="radio inline">
 				<input type="radio" name="cParentID" id="cEverywhereField" value="0" <? if ($cParentID == 0) { ?> checked<? } ?> />
 				<?=t('everywhere')?>
