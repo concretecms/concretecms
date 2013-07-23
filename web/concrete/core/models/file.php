@@ -160,11 +160,10 @@ class Concrete5_Model_File extends Object {
 	
 	public function getFileSets() {
 		$db = Loader::db();
-		Loader::model('file_set');
 		$fsIDs = $db->Execute("select fsID from FileSetFiles where fID = ?", array($this->getFileID()));
 		$filesets = array();
-		foreach($fsIDs as $fsID) {
-			$filesets[] = FileSet::getByID($fsID);
+		while ($row = $fsIDs->FetchRow()) {
+			$filesets[] = FileSet::getByID($row['fsID']);
 		}
 		return $filesets;
 	}
