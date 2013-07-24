@@ -3,27 +3,11 @@ var dateNav ={
 	init:function(){
 		this.blockForm=document.forms['ccm-block-form'];
 		
-		if (typeof value !== undefined && value === "custom") {
-			$("#ccm-autonav-page-selector").css('display','block');
-		} else {
-			$("#ccm-autonav-page-selector").hide();
-		}
-		
-		
-		/*
-		this.cParentIDRadios=this.blockForm.cParentID;
-		for(var i=0;i<this.cParentIDRadios.length;i++){
-			this.cParentIDRadios[i].onclick  = function(){ dateNav.locationOtherShown(); }
-			this.cParentIDRadios[i].onchange = function(){ dateNav.locationOtherShown(); }			
-		}
-		*/
-				
 		this.showDescriptionsRadios=this.blockForm.showDescriptions;
 		for(var i=0;i<this.showDescriptionsRadios.length;i++){
 			this.showDescriptionsRadios[i].onclick  = function(){ dateNav.showDescriptionOpts(); }
 			this.showDescriptionsRadios[i].onchange = function(){ dateNav.showDescriptionOpts(); }			
 		}		
-				
 		this.truncateSwitch=$('#ccm-pagelist-truncateSummariesOn');
 		this.truncateSwitch.click(function(){ dateNav.truncationShown(this); });
 		this.truncateSwitch.change(function(){ dateNav.truncationShown(this); });
