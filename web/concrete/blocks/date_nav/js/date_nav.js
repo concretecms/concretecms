@@ -13,16 +13,6 @@ var ccmDateNav={
 					ccmDateNav.triggered(this); 
 				}
 			});
-			/*
-			var pNs=nav.find('.pageNode');
-			pNs.each(function(i,n){
-				n.pNs=$(pNs);
-				$(n).click(function(el){
-					el.pNs.removeClass('selected');
-					el.addClass('selected');
-				})
-			}); 
-			*/
 			nav.prepared=1;
 		});  
 
