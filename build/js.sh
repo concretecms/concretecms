@@ -16,6 +16,7 @@ rm ccm.dashboard.tmp.js
 # Note: The order here is important
 
 cat ../web/concrete/js/ccm_app/jquery.colorpicker.js \
+../web/concrete/js/ccm_app/composer.js \
 ../web/concrete/js/ccm_app/jquery.hoverIntent.js \
 ../web/concrete/js/ccm_app/jquery.liveupdate.js \
 ../web/concrete/js/ccm_app/jquery.metadata.js \
