@@ -36,7 +36,7 @@ class Concrete5_Model_System_ImageEditor_Shape {
 	 * This method naturally sorts first by display order, then by the orderby
 	 * on the query.
 	 */
-	public static function getSortedListFromQuery($q) {3
+	public static function getSortedListFromQuery($q) {
 		$unsorted = array();
 		while ($row = $q->FetchRow()) {
 			$cs = self::load($row);
