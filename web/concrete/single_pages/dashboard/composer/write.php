@@ -221,7 +221,8 @@ if (isset($entry)) {
 		jQuery.fn.dialog.showLoader();
 		<? $t = PageTheme::getSiteTheme(); ?>
 		ccm_composerDoAutoSave(function() {
-			ccm_previewComposerDraft(<?=$entry->getCollectionID()?>,<?$entry->getCollectionName()?>);
+			ccm_previewComposerDraft(<?=$entry->getCollectionID()?>,
+				"<?= strlen($entry->getCollectionName())?$entry->getCollectionName():t("New Page")?>");
 		});
 	}
 	
