@@ -16,8 +16,7 @@ $collectionType=CollectionType::getByID($ctID);
 
 $c = Page::getByID($previewCID, 'RECENT'); //,"ACTIVE"
 $cp = new Permissions($c);
-if(!$cp->canEditPageContents()) throw new Exception(t('Access Denied'));
-if(!$cp->canEditPageTheme()) $themeID = 0;
+if(!$cp->canEditPageTheme()) throw new Exception(t('Access Denied'));
 
 $v = View::getInstance(); 
 if ($themeID > 0) { 
