@@ -1,7 +1,7 @@
 
-function ccm_previewComposerDraft(cID){
+function ccm_previewComposerDraft(cID,draftTitle){
 	$.fn.dialog.open({
-		title: themeName,
+		title: draftTitle,
 		href: CCM_TOOLS_PATH + "/composer/preview?previewCID="+cID,
 		width: '85%',
 		modal: false,
