@@ -27,6 +27,14 @@
 			return $this->bOriginalID;
 		}
 		
+		public function getSearchableContent() {
+			$b = Block::getByID($this->bOriginalID);
+			$bc = $b->getInstance();
+			if (method_exists($bc, 'getSearchableContent')) {
+				return $bc->getSearchableContent();
+			}
+		}
+
 		public function on_page_view() {
 			$b = Block::getByID($this->bOriginalID);
 			$bc = $b->getInstance();
