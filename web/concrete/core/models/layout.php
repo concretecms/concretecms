@@ -75,8 +75,8 @@
 	//when editing a layout, it should be the only one tied to that collection version. Used in process->atask=layout->edit 
 	public function isUniqueToCollectionVersion($c){
 		$db = Loader::db();	
-		$vals = array( intval($c->cID), $this->getLayoutID() );
-		$sql = 'SELECT count(*) FROM CollectionVersionAreaLayouts WHERE cID=? AND layoutID=?'; 
+		$vals = array( intval($c->getCollectionID()), $c->getVersionID(), $this->getLayoutID() );
+		$sql = 'SELECT count(*) FROM CollectionVersionAreaLayouts WHERE cID=? AND cvID=? AND layoutID=?';
 		return ( intval($db->getOne($sql,$vals))==1) ? true:false; 
 	}
 	
