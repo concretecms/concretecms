@@ -282,7 +282,7 @@ class ConcreteUpgradeVersion560Helper {
 							$pa = $pko->getPermissionAccessObject();
 							if (!is_object($pa)) {
 								$pa = PermissionAccess::create($pko);
-							} else if ($pa->isPermissionKeyInUse()) {
+							} else if ($pa->isPermissionAccessInUse()) {
 								$pa = $pa->duplicate();
 							}
 							$pa->addListItem($pe, false, PermissionKey::ACCESS_TYPE_INCLUDE);	
