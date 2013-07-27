@@ -217,6 +217,9 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		public function getAttributeValueObject($ak, $createIfNotFound = false) {
 			$db = Loader::db();
 			$av = false;
+			if (is_string($ak)) {
+				$ak = CollectionAttributeKey::getByHandle($ak);
+			}
 			$v = array($this->getCollectionID(), $this->getVersionID(), $ak->getAttributeKeyID());
 			$avID = $db->GetOne("select avID from CollectionAttributeValues where cID = ? and cvID = ? and akID = ?", $v);
 			if ($avID > 0) {
