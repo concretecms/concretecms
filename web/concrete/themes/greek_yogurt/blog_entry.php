@@ -73,7 +73,6 @@ $nav = Loader::helper('navigation');
 					<a href="http://www.facebook.com/share.php?u=<?php echo $nav->getLinkToCollection($c, true); ?>"><img class="main-content-post-footer-share-facebook" src="<?php echo $this->getThemePath(); ?>/images/icon_facebook.png" alt="<?php echo t('Share on Facebook'); ?>" /></a>
 					</p>
 				</div>
-				</p>	
 			<? } ?>
 			</div>
 			
