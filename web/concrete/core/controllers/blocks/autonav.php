@@ -498,15 +498,13 @@
 
 		function populateParentIDArray($cID) {
 			// returns an array of collection IDs going from the top level to the current item
-			$db = Loader::db();
 			$cParentID = Page::getCollectionParentIDFromChildID($cID);
-			if ($cParentID > 0) {
+			if ($cParentID > -1) {
 				if (!in_array($cParentID, $this->cParentIDArray)) {
 					$this->cParentIDArray[] = $cParentID;
 				}
 				$this->populateParentIDArray($cParentID);
 			}
-
 		}
 		
 		/** 
