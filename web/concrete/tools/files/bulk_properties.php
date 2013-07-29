@@ -7,7 +7,7 @@ $previewMode = false;
 
 $fp = FilePermissions::getGlobal();
 if (!$fp->canAccessFileManager()) {
-	die(t("Access Denied."));
+	die(t("Unable to access the file manager."));
 }  
 
 $attribs = FileAttributeKey::getUserAddedList();

@@ -3,7 +3,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 $tp = new TaskPermission();
 $dt = Loader::helper('form/date_time');
 if (!$tp->canAccessGroupSearch()) { 
-	die(t("Access Denied."));
+	die(t("You do not have group search permissions."));
 }
 ?>
 <? 
