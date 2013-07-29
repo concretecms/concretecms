@@ -43,7 +43,7 @@ class Concrete5_Library_ItemList {
 		$_SESSION[get_class($this) . $namespace . 'SearchFields'] = array();
 	}
 	
-	public function addToSearchRequest($key, $val) {
+	public function addToSearchRequest($key, $value) {
 		$_SESSION[get_class($this) . $this->stickySearchRequestNameSpace . 'SearchFields'][$key] = $value;
 	}
 	

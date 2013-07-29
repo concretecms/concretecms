@@ -48,6 +48,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			<div class="clearfix">
 				<?php echo $form->submit('submit', t('Delete Group Set'), array('class' => 'danger'))?>
 			</div>
+		</fieldset>
 		</form>
 
 		</div>
