@@ -323,6 +323,7 @@ class Concrete5_Model_Page extends Collection {
 		$pkHandles = array();
 		if ($node['canRead'] == '1') {
 			$pkHandles[] = 'view_page';
+			$pkHandles[] = 'view_page_in_sitemap';
 		}
 		if ($node['canWrite'] == '1') {
 			$pkHandles[] = 'view_page_versions';

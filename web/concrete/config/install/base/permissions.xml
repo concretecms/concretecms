@@ -21,6 +21,7 @@
     <permissionkeys>
         <permissionkey handle="view_page" name="View" description="Can see a page exists and read its content." package="" category="page"/>
         <permissionkey handle="view_page_versions" name="View Versions" description="Can view the page versions dialog and read past versions of a page." package="" category="page"/>
+        <permissionkey handle="view_page_in_sitemap" name="View Page in Sitemap" description="Controls whether a user can see a page in the sitemap or intelligent search." package="" category="page"/>
         <permissionkey handle="preview_page_as_user" name="Preview Page As User" description="Ability to see what this page will look like at a specific time in the future as a specific user." package="" category="page"/>
         <permissionkey handle="edit_page_properties" has-custom-class="true" name="Edit Properties" description="Ability to change anything in the Page Properties menu." package="" category="page"/>
         <permissionkey handle="edit_page_contents" name="Edit Contents" description="Ability to make edits to at least some of the content in the page. You can lock down different block areas and specific blocks by clicking Permissions on them as well. " package="" category="page"/>

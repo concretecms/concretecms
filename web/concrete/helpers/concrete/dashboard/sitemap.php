@@ -167,6 +167,9 @@ class ConcreteDashboardSitemapHelper {
 		if ($keywords != '' && $keywords != false) {
 			$nc = Page::getByID($cID, 'RECENT');
 			$pl = new PageList();
+			if (PERMISSIONS_MODEL != 'simple') {
+				$pl->setViewPagePermissionKeyHandle('view_page_in_sitemap');
+			}
 			$obj->keywords = $keywords;
 			$pl->filterByName($keywords);
 			$pl->ignoreAliases();
@@ -177,6 +180,9 @@ class ConcreteDashboardSitemapHelper {
 			$total = $pl->getTotal();
 		} else {			
 			$pl = new PageList();
+			if (PERMISSIONS_MODEL != 'simple') {
+				$pl->setViewPagePermissionKeyHandle('view_page_in_sitemap');
+			}
 			$pl->sortByDisplayOrder();
 			if (ConcreteDashboardSitemapHelper::showSystemPages()) {
 				$pl->includeSystemPages();
