@@ -34,6 +34,7 @@
 	public $layoutTypes=array('area','table','columns','itemlist','staggered');
 	public $breakpoints=array();
 	public $areaNameNumber=0;
+	public $parentAreaAttributes;
 	
 	
 	//position and cvalID are properties of the collectionVersionAreaLayout join, set when being loaded for an area, not with layout object itself 
@@ -57,7 +58,7 @@
 	
 	public static function getById( $layoutID ){ 
 		if(!intval($layoutID) ) return false; 
-	 		
+			
 		//$cachedObj=self::retrieveFromRuntimeCache( $layoutID );
 		//if( $cachedObj ) return $cachedObj;  
 	
@@ -75,8 +76,8 @@
 	//when editing a layout, it should be the only one tied to that collection version. Used in process->atask=layout->edit 
 	public function isUniqueToCollectionVersion($c){
 		$db = Loader::db();	
-		$vals = array( intval($c->cID), $this->getLayoutID() );
-		$sql = 'SELECT count(*) FROM CollectionVersionAreaLayouts WHERE cID=? AND layoutID=?'; 
+		$vals = array( intval($c->getCollectionID()), $c->getVersionID(), $this->getLayoutID() );
+		$sql = 'SELECT count(*) FROM CollectionVersionAreaLayouts WHERE cID=? AND cvID=? AND layoutID=?';
 		return ( intval($db->getOne($sql,$vals))==1) ? true:false; 
 	}
 	
@@ -177,6 +178,10 @@
 		if(!$c) global $c;
 		
 		if(!$a) global $a;
+
+		if($a instanceof Area) {
+			$this->parentAreaAttributes = $a->attributes;
+		}
 		
 		if(!in_array($this->type,$this->layoutTypes)) $this->layoutType='table'; 
 		
@@ -276,6 +281,7 @@
 					
 					echo '<div class="'.$columnn_id.' ccm-layout-cell ccm-layout-col ccm-layout-col-'.($j+1).' '.$positionTag.'" style="width:'.$colWidth.'">';
 					$a = new Area( $this->getCellAreaHandle($this->getCellNumber()) );
+					$a->attributes = $this->parentAreaAttributes;
 					ob_start();
 					$a->display($c);			
 					$areaHTML = ob_get_contents();
@@ -408,7 +414,7 @@
 		$sql = 'SELECT l.layoutID FROM Layouts AS l LEFT JOIN CollectionVersionAreaLayouts AS cval ON l.layoutID=cval.layoutID '. 
 			   'LEFT JOIN LayoutPresets AS lp ON l.layoutID=lp.layoutID '.
 			   'WHERE cval.layoutID IS NULL AND lp.lpID IS NULL';
- 		$layoutIds = $db->getCol( $sql );
+		$layoutIds = $db->getCol( $sql );
 		foreach($layoutIds as $layoutId){ 
 			$db->query('DELETE FROM Layouts WHERE layoutID='.intval($layoutId));
 		}

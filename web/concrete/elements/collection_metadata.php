@@ -75,7 +75,7 @@ if ($_REQUEST['approveImmediately'] == 1) {
 	</script>
 	
 
-	<div id="ccm-required-meta">
+	<div id="ccm-required-meta"></div>
 	
 	
 	<? if (!$c->isMasterCollection()) { ?>

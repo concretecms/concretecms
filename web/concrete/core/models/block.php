@@ -984,8 +984,8 @@ class Concrete5_Model_Block extends Object {
 		}
 
 		//then, we see whether or not this block is aliased to anything else
-		$q = "select count(*) as total from CollectionVersionBlocks where bID = '$bID'";
-		$totalBlocks = $db->getOne($q);
+		$totalBlocks =  $db->GetOne('select count(*) from CollectionVersionBlocks where bID = ?', array($bID));
+		$totalBlocks += $db->GetOne('select count(*) from btCoreScrapbookDisplay where bOriginalID = ?', array($bID));
 		if ($totalBlocks < 1) {
 			$q = "delete from BlockRelations where originalBID = ? or bID = ?";
 			$r = $db->query($q, array($this->bID, $this->bID));
