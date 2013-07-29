@@ -23,8 +23,13 @@ class Concrete5_Controller_Block_FormStatistics {
 	
 	public static function loadSurveys($MiniSurvey){  
 		$db = Loader::db();
-		return $db->query('SELECT s.* FROM '.$MiniSurvey->btTable.' AS s, Blocks AS b, BlockTypes AS bt '.
-						  'WHERE s.bID=b.bID AND b.btID=bt.btID AND bt.btHandle="form" ' );
+		return $db->query('SELECT s.* FROM '.$MiniSurvey->btTable.' AS s, Blocks AS b, BlockTypes AS bt 
+			WHERE s.bID=b.bID AND b.btID=bt.btID AND bt.btHandle="form" AND EXISTS (
+				SELECT 1 FROM CollectionVersionBlocks cvb
+				INNER JOIN CollectionVersions cv ON cvb.cID=cv.cID AND cvb.cvID=cv.cvID	
+				INNER JOIN Pages p ON cv.cID = p.cID
+				WHERE cvb.bID=s.bID AND p.cIsActive=1 AND cv.cvIsApproved=1	
+			)' );
 	}
 	
 	public static $sortChoices=array('newest'=>'created DESC','chrono'=>'created');
