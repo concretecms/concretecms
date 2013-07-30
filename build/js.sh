@@ -35,7 +35,8 @@ cat ../web/concrete/js/ccm_app/jquery.colorpicker.js \
 ../web/concrete/js/ccm_app/tinymce_integration.js \
 ../web/concrete/js/ccm_app/ui.js \
 ../web/concrete/js/ccm_app/toolbar.js \
-../web/concrete/js/ccm_app/themes.js > ccm.app.tmp.js
+../web/concrete/js/ccm_app/themes.js \
+../web/concrete/js/ccm_app/composer.js > ccm.app.tmp.js
 
 uglifyjs --no-copyright --no-seqs -o ../web/concrete/js/ccm.app.js ./ccm.app.tmp.js 
 rm ccm.app.tmp.js

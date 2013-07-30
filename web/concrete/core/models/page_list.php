@@ -335,6 +335,54 @@ class Concrete5_Model_PageList extends DatabaseItemList {
 	public function filterByPublicDate($date, $comparison = '=') {
 		$this->filter('cv.cvDatePublic', $date, $comparison);
 	}
+		
+	/***
+	 * Like filterByAttribute(), but wraps values properly for "select" type attributes.
+	 * Accepts either a single value, or an array of values.
+	 * If an array of values is provided, they will be combined together with "OR".
+	 * (If you need to do an "AND" filter on mulitple values, just call this function multiple times).
+	 */
+	public function filterBySelectAttribute($akHandle, $value) {
+		if (empty($value)) {
+			return;
+		}
+		
+		//Determine if this attribute allows multiple selections
+		$ak = CollectionAttributeKey::getByHandle($akHandle);
+		$akc = $ak->getController();
+		$isMultiSelect = $akc->getAllowMultipleValues();
+		
+		//Explanation of query logic: "select" attributes wrap each value in newline characters when
+		// saving to the db, which allows parsing of individual values within a "multi-select" attribute.
+		//
+		//Because of this, you need to query them using the "LIKE" operator and the "%" wildcards
+		// when the attribute is "multi-select" (although for "single-select" attributes
+		// you can speed things up by just using "=" and excluding the "%" wildcards).
+		//
+		//Things get trickier if you want to string together several values with an "OR"
+		// (for example, "find all pages whose 'tags' attribute is 'hello' OR 'world'")
+		// -- the usual "filterBy" methods don't work because they always use "AND" to combine
+		// multiple criteria. So instead we can manually create our own portion of the "WHERE"
+		// clause and pass that directly to the raw "filter" attribute.
+		if (is_array($value)) {
+			$db = Loader::db();
+			$criteria = array();
+			foreach ($value as $v) {
+				$escapedValue = $db->escape($v);
+				if ($isMultiSelect) {
+					$criteria[] = "(ak_{$akHandle} LIKE '%\n{$escapedValue}\n%')";
+				} else {
+					$criteria[] = "(ak_{$akHandle} = '\n{$escapedValue}\n')";
+				}
+			}
+			$where = '(' . implode(' OR ', $criteria) . ')';
+			$this->filter(false, $where);
+		} else if ($isMultiSelect) {
+			$this->filterByAttribute($akHandle, "%\n{$value}\n%", 'LIKE');
+		} else {
+			$this->filterByAttribute($akHandle, "\n{$value}\n");
+		}
+	}
 	
 	/** 
 	 * If true, pages will be checked for permissions prior to being returned

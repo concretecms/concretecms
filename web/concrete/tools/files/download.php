@@ -8,7 +8,7 @@ $form = Loader::helper('form');
 
 $fp = FilePermissions::getGlobal();
 if (!$fp->canSearchFileSet()) {
-	die(t("Access Denied."));
+	die(t("Unable to search file sets."));
 }
 
 $ci = Loader::helper('file');
