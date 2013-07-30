@@ -27,6 +27,48 @@ class Concrete5_Controller_Dashboard_System_Basics_Icons extends DashboardBaseCo
 		$this->view();
 	}
 
+	public function modern_icon_saved() {
+		$this->set('message', t('Windows 8 icon updated successfully.'));
+		$this->view();
+	}
+
+	public function modern_icon_removed() {
+		$this->set('message', t('Windows 8 icon removed successfully.'));
+		$this->view();
+	}
+
+	function update_modern_thumbnail() {
+		if($this->token->validate('update_modern_thumbnail')) {
+			if(intval($this->post('remove_icon')) == 1) {
+				Config::save('MODERN_TILE_THUMBNAIL_FID', 0);
+				$this->redirect('/dashboard/system/basics/icons/', 'modern_icon_removed');
+			}
+			else {
+				Loader::library('file/importer');
+				$fi = new FileImporter();
+				$resp = $fi->import($_FILES['favicon_file']['tmp_name'], $_FILES['favicon_file']['name'], $fr);
+				if(!($resp instanceof FileVersion)) {
+					switch($resp) {
+						case FileImporter::E_FILE_INVALID_EXTENSION:
+							$this->error->add(t('Invalid file extension.'));
+							break;
+						case FileImporter::E_FILE_INVALID:
+							$this->error->add(t('Invalid file.'));
+							break;
+					}
+				}
+				else {
+					Config::save('MODERN_TILE_THUMBNAIL_FID', $resp->getFileID());
+					Config::save('MODERN_TILE_THUMBNAIL_BGCOLOR', Loader::helper('security')->sanitizeString($this->post('favicon_bgcolor')));
+					$this->redirect('/dashboard/system/basics/icons/', 'modern_icon_saved');
+				}
+			}
+		}
+		else {
+			$this->set('error', array($this->token->getErrorMessage()));
+		}
+	}
+
 	function update_iphone_thumbnail(){
 		Loader::library('file/importer');
 		if ($this->token->validate("update_iphone_thumbnail")) { 
