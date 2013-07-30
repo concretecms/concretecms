@@ -83,7 +83,8 @@ $this->addHeaderItem($html->javascript('ccm.base.js', false, true), 'CORE');
 
 $favIconFID=intval(Config::get('FAVICON_FID'));
 $appleIconFID =intval(Config::get('IPHONE_HOME_SCREEN_THUMBNAIL_FID'));
-
+$modernIconFID = intval(Config::get('MODERN_TILE_THUMBNAIL_FID'));
+$modernIconBGColor = strval(Config::get('MODERN_TILE_THUMBNAIL_BGCOLOR'));
 
 if($favIconFID) {
 	$f = File::getByID($favIconFID); ?>
@@ -94,9 +95,18 @@ if($favIconFID) {
 if($appleIconFID) {
 	$f = File::getByID($appleIconFID); ?>
 	<link rel="apple-touch-icon" href="<?php echo $f->getRelativePath()?>"  />
-<?php } ?>
+<?php } 
 
-<?php 
+if($modernIconFID) {
+	$f = File::getByID($modernIconFID);
+	?><meta name="msapplication-TileImage" content="<?php echo $f->getRelativePath(); ?>" /><?php
+	echo "\n";
+	if(strlen($modernIconBGColor)) {
+		?><meta name="msapplication-TileColor" content="<?php echo $modernIconBGColor; ?>" /><?php
+		echo "\n";
+	}
+} 
+
 if (is_object($cp)) { 
 
 	if ($this->editingEnabled()) {
