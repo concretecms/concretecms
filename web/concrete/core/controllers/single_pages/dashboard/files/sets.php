@@ -1,7 +1,6 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
 class Concrete5_Controller_Dashboard_Files_Sets extends Controller {
-
 	public $helpers = array('form','validation/token','concrete/interface'); 
 
 	public function view() {
@@ -86,8 +85,8 @@ class Concrete5_Controller_Dashboard_Files_Sets extends Controller {
 			$this->view();
 			return;
 		}
-		if (!Loader::helper('validation/strings')->alphanum($setName, true, true)) {
-			$this->set('error', array(t('Set Names must only include alphanumerics and spaces.')));
+		if (preg_match('/[<>;{}?"`]/i', $setName)) {
+			$this->set('error', array(t('File Set Name cannot contain the characters: %s', Loader::helper('text')->entities('[<>;{}?"`]/'))));
 			$this->view();
 			return;
 		}
