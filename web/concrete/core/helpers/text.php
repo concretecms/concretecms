@@ -320,6 +320,17 @@ class Concrete5_Helper_Text {
 			$this->appendXML($node, $ch);
 		}
 	}
+	
+	/**
+	* Prevents widows on text blocks by combining the last two words with no-breakable space;
+	* @param string $text
+	* @return string $text
+	*/
+	public function preventWidows($text) {
+		$nbsp = mb_convert_encoding('&nbsp;', APP_CHARSET, 'HTML-ENTITIES');
+		$text = preg_replace('/(\S+\s+\S+)\s+(\S+)$/', '$1' . $nbsp . '$2', $text);
+		return $text;
+	}
 
 
 }
