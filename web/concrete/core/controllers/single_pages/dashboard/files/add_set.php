@@ -18,11 +18,11 @@ class Concrete5_Controller_Dashboard_Files_AddSet extends Controller {
 			return;
 		}
 		$setName = trim($this->post('file_set_name'));
-		if (!Loader::helper('validation/strings')->alphanum($setName, true)) {
-			$this->set('error', array(t('Set Names must only include alphanumerics and spaces.')));
+		if (preg_match('/[<>;{}?"`]/i', $setName)) {
+			$this->set('error', array(t('File Set Name cannot contain the characters: %s', Loader::helper('text')->entities('[<>;{}?"`]'))));
 			return;
 		}
-		
+
 		//print('<pre>');print_r(get_included_files());print('</pre>');
 		$u = new User();				
 		$file_set 			= new FileSet();
