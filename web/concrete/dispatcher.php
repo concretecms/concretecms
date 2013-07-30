@@ -52,9 +52,6 @@
 	## Default routes for various content items ##
 	require($cdir . '/config/theme_paths.php');
 
-	## Load session handlers
-	require($cdir . '/startup/session.php');
-
 	## Early loading full page cache
 	if (!$config_check_failed) {
 		require($cdir . '/startup/check_page_cache.php');
@@ -98,6 +95,10 @@
 
 	## Package events
 	require($cdir . '/startup/packages.php');
+
+	## Load session handlers - comes after packages because if you have access entities in there we want to be able to
+	## reconstitute them.
+	require($cdir . '/startup/session.php');
 
 	## Load permissions and attributes
 	PermissionKey::loadAll();
