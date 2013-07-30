@@ -1541,6 +1541,10 @@ class Concrete5_Model_Page extends Collection {
 			if ($this->getCollectionInheritance() == 'OVERRIDE') {
 				$nc2->acquirePagePermissions($this->getPermissionsCollectionID());
 				$nc2->acquireAreaPermissions($this->getPermissionsCollectionID());
+				// This is for Page::getPermissionObjectIdentifier() and the cache
+				$q = "update Pages set cInheritPermissionsFromCID = ? where cID = ?";
+				$v = array($newCID, $newCID);
+				$r = $db->query($q, $v);
 			} else if ($this->getCollectionInheritance() == "PARENT") {
 				// we need to clear out any lingering permissions groups (just in case), and set this collection to inherit from the parent
 				$npID = $nc->getPermissionsCollectionID();
