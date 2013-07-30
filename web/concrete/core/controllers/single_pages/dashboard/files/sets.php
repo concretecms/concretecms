@@ -86,7 +86,7 @@ class Concrete5_Controller_Dashboard_Files_Sets extends Controller {
 			return;
 		}
 		if (preg_match('/[<>;{}?"`]/i', $setName)) {
-			$this->set('error', array(t('File Set Name cannot contain the characters: %s', Loader::helper('text')->entities('[<>;{}?"`]/'))));
+			$this->set('error', array(t('File Set Name cannot contain the characters: %s', Loader::helper('text')->entities('<>;{}?"`'))));
 			$this->view();
 			return;
 		}
