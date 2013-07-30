@@ -70,7 +70,7 @@ class Concrete5_Controller_Dashboard_System_Attributes_Sets extends DashboardBas
 					$this->category->setAllowAttributeSets(AttributeKeyCategory::ASET_ALLOW_SINGLE);
 				}
 				
-				$this->category->addSet($this->post('asHandle'), $this->post('asName'), false, 0);
+				$this->category->addSet($this->post('asHandle'), Loader::helper('text')->specialchars($this->post('asName')), false, 0);
 				$this->redirect('dashboard/system/attributes/sets', 'category', $this->category->getAttributeKeyCategoryID(), 'set_added');
 			}
 			
