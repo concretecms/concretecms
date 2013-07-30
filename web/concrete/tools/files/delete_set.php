@@ -5,7 +5,7 @@ $form = Loader::helper('form');
 $vt = Loader::helper('validation/token');
 $fp = FilePermissions::getGlobal();
 if (!$fp->canAccessFileManager()) {
-	die(t("Access Denied."));
+	die(t("Unable to access the file manager."));
 }
 
 $fs = FileSet::getByID($_REQUEST['fsID']);
