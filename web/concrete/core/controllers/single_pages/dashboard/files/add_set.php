@@ -19,7 +19,7 @@ class Concrete5_Controller_Dashboard_Files_AddSet extends Controller {
 		}
 		$setName = trim($this->post('file_set_name'));
 		if (preg_match('/[<>;{}?"`]/i', $setName)) {
-			$this->set('error', array(t('File Set Name cannot contain the characters: %s', Loader::helper('text')->entities('[<>;{}?"`]'))));
+			$this->set('error', array(t('File Set Name cannot contain the characters: %s', Loader::helper('text')->entities('<>;{}?"`'))));
 			return;
 		}
 
