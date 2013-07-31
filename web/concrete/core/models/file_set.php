@@ -189,7 +189,12 @@
 				$file_set->fsType 	= $fs_type;
 				$file_set->uID		= $fs_uid;
 				$file_set->save();
-				return $file_set;
+
+				$db = Loader::db();
+				$fsID = $db->Insert_Id();
+				$fs = FileSet::getByID($fsID);
+				Events::fire('on_file_set_add', $fs);
+				return $fs;
 			}			
 		}
 		
@@ -318,6 +323,7 @@
 			$db = Loader::db();
 			if ($this->fsID > 0) { 
 				$db->Execute("update FileSets set fsOverrideGlobalPermissions = 1 where fsID = ?", array($this->fsID));
+				$this->fsOverrideGlobalPermissions = true;
 			}
 			
 			if (is_array($userOrGroup)) { 
