@@ -270,8 +270,9 @@ class Concrete5_Model_File extends Object {
 		}
 		
 		// return the new file object
-		return File::getByID($fIDNew);
-		
+		$nf = File::getByID($fIDNew);
+		Events::fire('on_file_duplicate', $this, $nf);
+		return $nf;		
 	}
 	
 	public static function add($filename, $prefix, $data = array()) {
