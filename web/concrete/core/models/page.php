@@ -310,6 +310,8 @@ class Concrete5_Model_Page extends Collection {
 			$pa = $pk->getPermissionAccessObject();
 			if (!is_object($pa)) {
 				$pa = PermissionAccess::create($pk);
+			} else if ($pa->isPermissionAccessInUse()) {
+				$pa = $pa->duplicate();
 			}
 			$pa->addListItem($pe, false, $accessType);
 			$pt = $pk->getPermissionAssignmentObject();
