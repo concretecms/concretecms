@@ -28,6 +28,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			$ui = UserInfo::getByID($u->getUserID());
 			Loader::model("page_statistics");
 			Loader::model("user_statistics");
+			Loader::block('form');
 			$dh = Loader::helper('date');
 			if (is_object($ui)) { 
 				$this->set('uLastLogin', $dh->date(DATE_APP_GENERIC_MDYT, $ui->getLastLogin('user')));
@@ -39,7 +40,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				} else { 
 					$this->set('lastLoginSite', $dh->date(DATE_APP_GENERIC_MDYT, $llu->getLastLogin()));
 				}
-				Loader::block('form');
 			}				
 			$this->set('totalFormSubmissions', FormBlockStatistics::getTotalSubmissions());
 			$this->set('totalFormSubmissionsToday', FormBlockStatistics::getTotalSubmissions(date('Y-m-d')));
