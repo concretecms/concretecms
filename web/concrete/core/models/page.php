@@ -1318,7 +1318,7 @@ class Concrete5_Model_Page extends Collection {
 	
 	public function rescanAreaPermissions() {
 		$db = Loader::db();
-		$arHandles = $db->Execute('select arHandle, arIsGlobal from Areas where cID = ?', $this->getCollectionID());
+		$r = $db->Execute('select arHandle, arIsGlobal from Areas where cID = ?', $this->getCollectionID());
 		while ($row = $r->FetchRow()) {
 			$a = Area::getOrCreate($this, $row['arHandle'], $row['arIsGlobal']);
 			$a->rescanAreaPermissionsChain();
