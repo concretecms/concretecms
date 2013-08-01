@@ -263,6 +263,7 @@ class Concrete5_Model_Area extends Object {
 	 * Gets the Area object for the given page and area handle
 	 * @param Page|Collection $c
 	 * @param string $arHandle
+	 * @param int|null $arIsGlobal
 	 * @return Area
 	 */
 	public static function get(&$c, $arHandle, $arIsGlobal = null) {
