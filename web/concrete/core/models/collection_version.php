@@ -69,7 +69,7 @@
 			return $cv;
 		}
 
-		public function getAttribute($ak, $c) {
+		public function getAttribute($ak, $c, $displayMode = false) {
 			if (is_object($ak)) {
 				$akHandle = $ak->getAttributeKeyHandle();
 			} else {
@@ -82,7 +82,7 @@
 				if (is_object($ak)) {
 					$av = $c->getAttributeValueObject($ak);
 					if (is_object($av)) {
-						$this->attributes[$akHandle] = $av->getValue();
+						$this->attributes[$akHandle] = $av->getValue($displayMode);
 					}
 				}
 			}
