@@ -496,14 +496,19 @@
 			}
 		}
 
+		/** Pupulates the $cParentIDArray instance property.
+		* @param int $cID The collection id.
+		*/
 		function populateParentIDArray($cID) {
 			// returns an array of collection IDs going from the top level to the current item
 			$cParentID = Page::getCollectionParentIDFromChildID($cID);
-			if ($cParentID > -1) {
+			if(is_numeric($cParentID)) {
 				if (!in_array($cParentID, $this->cParentIDArray)) {
 					$this->cParentIDArray[] = $cParentID;
 				}
-				$this->populateParentIDArray($cParentID);
+				if($cParentID > 0) {
+					$this->populateParentIDArray($cParentID);
+				}
 			}
 		}
 		
