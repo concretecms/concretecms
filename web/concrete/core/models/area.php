@@ -156,6 +156,12 @@ class Concrete5_Model_Area extends Object {
 	public function getAreaHandle() {return $this->arHandle;}
 	
 	/**
+	 * returns the name for the current area
+	 * @return string
+	*/
+	public function getAreaName() {return $this->arHandle;}    
+	
+	/**
 	 * returns an array of custom templates
 	 * @return array
 	 */
