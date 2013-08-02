@@ -27,14 +27,14 @@ if (!$c->isArrangeMode()) { ?>
 	ccm_areaMenuObj<?=$a->getAreaID()?> = new Object();
 	ccm_areaMenuObj<?=$a->getAreaID()?>.type = "AREA";
 	ccm_areaMenuObj<?=$a->getAreaID()?>.aID = <?=$a->getAreaID()?>;
-	ccm_areaMenuObj<?=$a->getAreaID()?>.arHandle = "<?=$arHandle?>";
+	ccm_areaMenuObj<?=$a->getAreaID()?>.arHandle = "<?=$a->getAreaHandle()?>";
 	ccm_areaMenuObj<?=$a->getAreaID()?>.maximumBlocks = <?=$a->maximumBlocks?>;
     <? Loader::element('block_area_permissions_js', array('a' => $a, 'ap' => $ap, 'c' => $c, 'cp' => $cp)); ?> 
 	$(function() {ccm_menuInit(ccm_areaMenuObj<?=$a->getAreaID()?>)});
 	</script>
 	<? if ($a->isGlobalArea()) { ?>
-		<div id="a<?=$a->getAreaID()?>controls" class="ccm-add-block"><?=t('Add To Sitewide %s', $arHandle)?></div>
+		<div id="a<?=$a->getAreaID()?>controls" class="ccm-add-block"><?=t('Add To Sitewide %s', $a->getAreaName())?></div>
 	<? } else { ?>
-		<div id="a<?=$a->getAreaID()?>controls" class="ccm-add-block"><?=t('Add To %s', $arHandle)?></div>
+		<div id="a<?=$a->getAreaID()?>controls" class="ccm-add-block"><?=t('Add To %s', $a->getAreaName())?></div>
 	<? } ?>
 <? } ?>
