@@ -59,7 +59,7 @@ class Concrete5_Model_PermissionResponse {
 			return true;
 		}
 		if (!is_object($this->category)) {
-			throw new Exception(t('Unable category for permission %s', $permission));
+			throw new Exception(t('Invalid category for permission %s', $permission));
 		}
 		$pk = $this->category->getPermissionKeyByHandle($permission);
 		if (!$pk) {
