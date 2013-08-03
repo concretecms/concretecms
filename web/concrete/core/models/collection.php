@@ -122,9 +122,38 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		
 		/* attribute stuff */
 		
-		public function getAttribute($akHandle) {
+		/**
+		 * Returns the value of the attribute with the handle $ak
+		 * of the current object.
+		 * 
+		 * $displayMode makes it possible to get the correct output
+		 * value. When you need the raw attribute value or object, use
+		 * this:
+		 * <code>
+		 * $c = Page::getCurrentPage();
+		 * $attributeValue = $c->getAttribute('attribute_handle');
+		 * </code>
+		 * 
+		 * But if you need the formatted output supported by some
+		 * attribute, use this:
+		 * <code>
+		 * $c = Page::getCurrentPage();
+		 * $attributeValue = $c->getAttribute('attribute_handle', 'display');
+		 * </code>
+		 * 
+		 * An attribute type like "date" will then return the date in
+		 * the correct format just like other attributes will show
+		 * you a nicely formatted output and not just a simple value
+		 * or object.
+		 * 
+		 * 
+		 * @param string|object $akHandle
+		 * @param boolean $displayMode
+		 * @return type
+		 */
+		public function getAttribute($akHandle, $displayMode = false) {
 			if (is_object($this->vObj)) {
-				return $this->vObj->getAttribute($akHandle, $this);
+				return $this->vObj->getAttribute($akHandle, $this, $displayMode);
 			}
 		}
 		
