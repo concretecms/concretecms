@@ -33,6 +33,13 @@ class Concrete5_Library_CacheLocal {
 			unset($loc->cache[$key]);
 		}
 	}	
+
+	public static function flush() {
+		$loc = CacheLocal::get();
+		if ($loc->enabled) {
+			$loc->cache = array();
+		}
+	}
 	
 	public static function set($type, $id, $object) {
 		$loc = CacheLocal::get();

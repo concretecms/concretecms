@@ -729,7 +729,9 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			
 		}
 		
-		public function refreshCache() {}
+		public function refreshCache() {
+			CacheLocal::flush();
+		}
 		
 		public function getGlobalBlocks() {
 			$db = Loader::db();
