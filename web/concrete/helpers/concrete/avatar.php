@@ -157,7 +157,7 @@ class ConcreteAvatarHelper {
 		if ($im) {
 			$res = imageCopyResampled($image, $im, 0, 0, 0, 0, $finalWidth, $finalHeight, $oWidth, $oHeight);
 			if ($res) {
-				$res2 = imageJPEG($image, $newPath, Loader::helper('image')->getDefaultJpegCompression());
+				$res2 = imageJPEG($image, $newPath, Loader::helper('image')->defaultJpegCompression());
 				if ($res2) {
 					$uHasAvatar = 1;
 				}
