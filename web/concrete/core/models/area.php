@@ -259,23 +259,25 @@ class Concrete5_Model_Area extends Object {
 		return $str;
 	}
 
-
 	/**
 	 * Gets the Area object for the given page and area handle
 	 * @param Page|Collection $c
 	 * @param string $arHandle
+	 * @param int|null $arIsGlobal
 	 * @return Area
 	 */
-	public static function get(&$c, $arHandle) {
+	public static function get(&$c, $arHandle, $arIsGlobal = null) {
 		if (!is_object($c)) {
 			return false;
 		}
 		
-		$a = CacheLocal::getEntry('area', $c->getCollectionID() . ':' . $arHandle);
+		// Right now we are splitting the cache to deal with times when Areas
+		// get converted to GlobalAreas and back the other way
+		$globalCache = $arIsGlobal ? ':1' : '';
+		$a = CacheLocal::getEntry('area', $c->getCollectionID() . ':' . $arHandle . $globalCache);
 		if ($a instanceof Area) {
 			return $a;
 		}
-		
 		$db = Loader::db();
 		// First, we verify that this is a legitimate area
 		$v = array($c->getCollectionID(), $arHandle);
@@ -291,7 +293,7 @@ class Concrete5_Model_Area extends Object {
 			$area->cID = $c->getCollectionID();
 			$area->c = &$c;
 			
-			CacheLocal::set('area', $c->getCollectionID() . ':' . $arHandle, $area);
+			CacheLocal::set('area', $c->getCollectionID() . ':' . $arHandle . $globalCache, $area);
 			
 			return $area;
 		}
@@ -311,7 +313,7 @@ class Concrete5_Model_Area extends Object {
 			permissions cID / handle combination, we create one. This is to make our lives easier
 		*/
 
-		$area = self::get($c, $arHandle);
+		$area = self::get($c, $arHandle, $arIsGlobal);
 		if (is_object($area)) {
 			if ($area->isGlobalArea() == $arIsGlobal) {
 				return $area;
