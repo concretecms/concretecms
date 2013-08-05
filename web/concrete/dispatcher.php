@@ -98,7 +98,7 @@
 
 	## Load session handlers - comes after packages because if you have access entities in there we want to be able to
 	## reconstitute them.
-	require($cdir . '/startup/session.php');
+	require_once($cdir . '/startup/session.php');
 
 	## Load permissions and attributes
 	PermissionKey::loadAll();
