@@ -5,6 +5,10 @@ if (!$dh->canRead()) {
 	die(t("Access Denied."));
 }
 
+// we have to do this otherwise permissions pointers aren't correct
+// (cInheritPermissionsFromCID on parent nodes)
+Cache::disableLocalCache();
+
 $q = Queue::get('copy_page');
 $includeParent = true;
 if ($_REQUEST['copyChildrenOnly']) {

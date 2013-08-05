@@ -1472,6 +1472,7 @@ class Concrete5_Model_Page extends Collection {
 
 	function duplicateAll($nc, $preserveUserID = false) {
 		$db = Loader::db();
+		Cache::disableLocalCache();
 		$nc2 = $this->duplicate($nc);
 		Page::_duplicateAll($this, $nc2, $preserveUserID);
 		return $nc2;
@@ -1544,7 +1545,7 @@ class Concrete5_Model_Page extends Collection {
 			if ($this->getCollectionInheritance() == 'OVERRIDE') {
 				$nc2->acquirePagePermissions($this->getPermissionsCollectionID());
 				$nc2->acquireAreaPermissions($this->getPermissionsCollectionID());
-				// This is for Page::getPermissionObjectIdentifier() and the cache
+				// make sure we update the proper permissions pointer to the new page ID
 				$q = "update Pages set cInheritPermissionsFromCID = ? where cID = ?";
 				$v = array($newCID, $newCID);
 				$r = $db->query($q, $v);
