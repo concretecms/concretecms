@@ -1193,6 +1193,8 @@ class Concrete5_Model_Page extends Collection {
 		$cache = PageCache::getLibrary();
 		$cache->purge($this);
 
+		$this->refreshCache();
+		
 		$ret = Events::fire('on_page_update', $this);
 	}
 	
@@ -1472,7 +1474,6 @@ class Concrete5_Model_Page extends Collection {
 
 	function duplicateAll($nc, $preserveUserID = false) {
 		$db = Loader::db();
-		Cache::disableLocalCache();
 		$nc2 = $this->duplicate($nc);
 		Page::_duplicateAll($this, $nc2, $preserveUserID);
 		return $nc2;
