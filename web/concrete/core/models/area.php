@@ -336,6 +336,11 @@ class Concrete5_Model_Area extends Object {
 
 		$area = self::get($c, $arHandle); // we're assuming the insert succeeded
 		$area->rescanAreaPermissionsChain();
+
+		// we need to update the local cache
+		$globalCache = $arIsGlobal ? ':1' : '';
+		CacheLocal::set('area', $c->getCollectionID() . ':' . $arHandle . $globalCache, $area);
+
 		return $area;
 
 	}
