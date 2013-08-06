@@ -110,9 +110,9 @@ $(function() {
 
 		// Button settings
 		button_image_url: "<?=ASSETS_URL_IMAGES?>/icons/add_file_swfupload.png",	// Relative to the Flash file
-		button_width: "80",
+		button_width: "90",
 		button_text: '<span class="uploadButtonText"><?=t('Add Files')?><\/span>',
-		button_height: "16",
+		button_height: "18",
 		button_text_left_padding: 18,
 		button_text_style: ".uploadButtonText {background-color: #eee; font-family: Helvetica Neue, Helvetica, Arial}",
 		button_placeholder_id: "ccm-file-add-multiple-spanButtonPlaceHolder",
