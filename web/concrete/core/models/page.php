@@ -1369,8 +1369,19 @@ class Concrete5_Model_Page extends Collection {
 			$q = "insert into AreaPermissionAssignments (cID, arHandle, paID, pkID) values (?, ?, ?, ?)";
 			$db->query($q, $v);
 		}
-	}
 
+		// any areas that were overriding permissions on the current page need to be overriding permissions
+		// on the NEW page as well.
+		$v = array($permissionsCollectionID);
+		$q = "select * from Areas where cID = ?";
+		$r = $db->query($q, $v);
+		while($row = $r->fetchRow()) {
+			$v = array($this->cID, $row['arHandle'], $row['arOverrideCollectionPermissions'], $row['arInheritPermissionsFromAreaOnCID'], $row['arIsGlobal']);
+			$q = "insert into Areas (cID, arHandle, arOverrideCollectionPermissions, arInheritPermissionsFromAreaOnCID, arIsGlobal) values (?, ?, ?, ?, ?)";
+			$db->query($q, $v);
+		}
+	}
+	
 	function acquirePagePermissions($permissionsCollectionID) {
 		$v = array($this->cID);
 		$db = Loader::db();
