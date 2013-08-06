@@ -425,6 +425,9 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				$uDefaultLanguage = $ux->getUserDefaultLanguage();				
 				if (isset($data['uDefaultLanguage']) && $data['uDefaultLanguage'] != '') {
 					$uDefaultLanguage = $data['uDefaultLanguage'];
+					if ($_SESSION['uID'] == $this->uID) {
+						$_SESSION['uDefaultLanguage'] = $uDefaultLanguage; // make sure to keep the new uDefaultLanguage in there
+					} 					
 				}
 				
 				$testChange = false;
