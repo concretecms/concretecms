@@ -50,12 +50,12 @@ class Concrete5_Controller_Dashboard_System_Optimization_Jobs extends DashboardB
 	}
 
 	public function job_uninstalled() {
-		$this->set('message', t('Job succesfully uninstalled.'));
+		$this->set('message', t('Job successfully uninstalled.'));
 		$this->view();
 	}
 
 	public function job_installed() {
-		$this->set('message', t('Job succesfully installed.'));
+		$this->set('message', t('Job successfully installed.'));
 		$this->view();
 	}
 	
