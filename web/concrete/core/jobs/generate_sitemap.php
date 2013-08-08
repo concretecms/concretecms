@@ -97,10 +97,7 @@ class Concrete5_Job_GenerateSitemap extends Job {
     private static function AddPages($hFile, $instances) {
             $db = Loader::db();
             $addedPages = 0;
-            if(self::AddPage($hFile, 1, $instances)) {
-                    $addedPages++;
-            }
-            $rsPages = $db->query('SELECT cID FROM Pages WHERE (cID > 1) ORDER BY cID');
+            $rsPages = $db->query('SELECT cID FROM Pages ORDER BY cID');
             while($rowPage = $rsPages->FetchRow()) {
                     if(self::AddPage($hFile, intval($rowPage['cID']), $instances)) {
                             $addedPages++;
