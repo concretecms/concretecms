@@ -45,7 +45,11 @@ class Concrete5_Job_GenerateSitemap extends Job {
 			);
 			$instances['guestGroupAE'] = array(GroupPermissionAccessEntity::getOrCreate($instances['guestGroup']));
 			$xmlDoc = new SimpleXMLElement('<'.'?xml version="1.0" encoding="' . APP_CHARSET . '"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" />');
-			$this->addPages($xmlDoc, $instances);
+			$rs = Loader::db()->Query('SELECT cID FROM Pages');
+			while($row = $rs->FetchRow()) {
+				self::addPage($xmlDoc, intval($row['cID']), $instances);
+			}
+			$rs->Close();
 			Events::fire('on_sitemap_xml_ready', $xmlDoc);
 			$dom = dom_import_simplexml($xmlDoc)->ownerDocument;
 			$dom->formatOutput = true;
@@ -79,20 +83,6 @@ class Concrete5_Job_GenerateSitemap extends Job {
 			}
 			throw $x;
 		}
-	}
-
-	/** Adds pages to sitemap.xml
-	* @param SimpleXMLElement $xmlDoc The xml document containing the sitemap nodes.
-	* @param array $instances An array with some already instantiated helpers, models, ...
-	*/
-	private static function addPages($xmlDoc, $instances) {
-		$rs = Loader::db()->Query('SELECT cID FROM Pages');
-		while($row = $rs->FetchRow()) {
-			if(self::addPage($xmlDoc, intval($row['cID']), $instances)) {
-			}
-		}
-		$rs->Close();
-		unset($rs);
 	}
 
 	/** Check if the specified page should be included in the sitemap.xml file; if so adds it to the XML document.
