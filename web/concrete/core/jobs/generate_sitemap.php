@@ -45,7 +45,6 @@ class Concrete5_Job_GenerateSitemap extends Job {
 				'now' => new DateTime('now')
 			);
 			$instances['guestGroupAE'] = array(GroupPermissionAccessEntity::getOrCreate($instances['guestGroup']));
-			$rsPages = $db->query('SELECT cID FROM Pages WHERE (cID > 1) ORDER BY cID');
 			$relName = ltrim(SITEMAPXML_FILE, '\\/');
 			$osName = rtrim(DIR_BASE, '\\/') . '/' . $relName;
 			$urlName = rtrim(BASE_URL . DIR_REL, '\\/') . '/' . $relName;
@@ -61,9 +60,7 @@ class Concrete5_Job_GenerateSitemap extends Job {
 			if(!@fprintf($hFile, '<'.'?xml version="1.0" encoding="%s"?>' . self::EOL . '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">', APP_CHARSET)) {
 				throw new Exception(t('Error writing header of %s', $osName));
 			}
-            
 			$addedPages = $this->AddPages($hFile, $instances);
-            
 			if(!@fwrite($hFile, self::EOL . '</urlset>')) {
 				throw new Exception(t('Error writing footer of %s', $osName));
 			}
@@ -73,10 +70,6 @@ class Concrete5_Job_GenerateSitemap extends Job {
 			return t('%1$s file saved (%2$d pages).', $urlName, $addedPages);
 		}
 		catch(Exception $x) {
-			if(isset($rsPages) && $rsPages) {
-				$rsPages->Close();
-				$rsPages = null;
-			}
 			if(isset($hFile) && $hFile) {
 				@fflush($hFile);
 				@ftruncate($hFile, 0);
@@ -85,29 +78,29 @@ class Concrete5_Job_GenerateSitemap extends Job {
 			}
 			throw $x;
 		}
-    }
+	}
 
-    /**
-     * Adds pages to sitemap.xml
-     * 
-     * @param type $hFile
-     * @param array $instances Already instantiated helpers, models, ...
-     * @return int returns the number of indexed pages
-     */
-    private static function AddPages($hFile, $instances) {
-            $db = Loader::db();
-            $addedPages = 0;
-            $rsPages = $db->query('SELECT cID FROM Pages ORDER BY cID');
-            while($rowPage = $rsPages->FetchRow()) {
-                    if(self::AddPage($hFile, intval($rowPage['cID']), $instances)) {
-                            $addedPages++;
-                    }
-            }
-            $rsPages->Close();
-            unset($rsPages);
-            return $addedPages;
-    }
-    
+	/**
+	* Adds pages to sitemap.xml
+	* 
+	* @param type $hFile
+	* @param array $instances Already instantiated helpers, models, ...
+	* @return int returns the number of indexed pages
+	*/
+	private static function AddPages($hFile, $instances) {
+		$db = Loader::db();
+		$addedPages = 0;
+		$rsPages = $db->query('SELECT cID FROM Pages ORDER BY cID');
+		while($rowPage = $rsPages->FetchRow()) {
+			if(self::AddPage($hFile, intval($rowPage['cID']), $instances)) {
+				$addedPages++;
+			}
+		}
+		$rsPages->Close();
+		unset($rsPages);
+		return $addedPages;
+	}
+
 	/** Check if the specified page should be included in the sitemap.xml file; if so adds it to the file.
 	* @param unknown_type $hFile
 	* @param int $cID The page collection id.
