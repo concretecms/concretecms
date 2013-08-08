@@ -134,7 +134,12 @@ class Concrete5_Job_GenerateSitemap extends Job {
 		$xmlNode->addChild('priority', is_numeric($priority) ? $priority : SITEMAPXML_DEFAULT_PRIORITY);
 		$ret = Events::fire('on_sitemap_xml_addingpage', $xmlNode, $page);
 		if((!empty($ret)) && ($ret < 0)) {
-			unset($xmlDoc->url[count($xmlDoc->url) - 1]);
+			for($i = count($xmlDoc->url) - 1; $i >= 0; $i--) {
+				if($xmlDoc->url[$i] == $xmlNode) {
+					unset($xmlDoc->url[$i]);
+					break;
+				}
+			}
 		}
 	}
 }
