@@ -61,17 +61,9 @@ class Concrete5_Job_GenerateSitemap extends Job {
 			if(!@fprintf($hFile, '<'.'?xml version="1.0" encoding="%s"?>' . self::EOL . '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">', APP_CHARSET)) {
 				throw new Exception(t('Error writing header of %s', $osName));
 			}
-			$addedPages = 0;
-			if(self::AddPage($hFile, 1, $instances)) {
-				$addedPages++;
-			}
-			while($rowPage = $rsPages->FetchRow()) {
-				if(self::AddPage($hFile, intval($rowPage['cID']), $instances)) {
-					$addedPages++;
-				}
-			}
-			$rsPages->Close();
-			unset($rsPages);
+            
+			$addedPages = $this->AddPages($hFile, $instances);
+            
 			if(!@fwrite($hFile, self::EOL . '</urlset>')) {
 				throw new Exception(t('Error writing footer of %s', $osName));
 			}
@@ -93,8 +85,32 @@ class Concrete5_Job_GenerateSitemap extends Job {
 			}
 			throw $x;
 		}
-	}
+    }
 
+    /**
+     * Adds pages to sitemap.xml
+     * 
+     * @param type $hFile
+     * @param array $instances Already instantiated helpers, models, ...
+     * @return int returns the number of indexed pages
+     */
+    private static function AddPages($hFile, $instances) {
+            $db = Loader::db();
+            $addedPages = 0;
+            if(self::AddPage($hFile, 1, $instances)) {
+                    $addedPages++;
+            }
+            $rsPages = $db->query('SELECT cID FROM Pages WHERE (cID > 1) ORDER BY cID');
+            while($rowPage = $rsPages->FetchRow()) {
+                    if(self::AddPage($hFile, intval($rowPage['cID']), $instances)) {
+                            $addedPages++;
+                    }
+            }
+            $rsPages->Close();
+            unset($rsPages);
+            return $addedPages;
+    }
+    
 	/** Check if the specified page should be included in the sitemap.xml file; if so adds it to the file.
 	* @param unknown_type $hFile
 	* @param int $cID The page collection id.
