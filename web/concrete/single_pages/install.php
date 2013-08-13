@@ -1,4 +1,5 @@
-<? defined('C5_EXECUTE') or die("Access Denied."); ?> 
+<? 
+defined('C5_EXECUTE') or die("Access Denied."); ?> 
 
 <style type="text/css">@import "<?=ASSETS_URL_CSS?>/ccm.install.css";</style>
 <script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/bootstrap.js"></script>
@@ -31,16 +32,16 @@ $(function() {
 			dataType: 'json',
 			error: function(r) {
 				$("#install-progress-wrapper").hide();
-				$("#install-progress-errors").append('<div class="alert alert-error">' + r.responseText + '</div>');
+				$("#install-progress-errors").append('<div class="alert alert-danger">' + r.responseText + '</div>');
 				$("#install-progress-error-wrapper").fadeIn(300);
 			},
 			success: function(r) {
 				if (r.error) {
 					$("#install-progress-wrapper").hide();
-					$("#install-progress-errors").append('<div class="alert alert-error">' + r.message + '</div>');
+					$("#install-progress-errors").append('<div class="alert alert-danger">' + r.message + '</div>');
 					$("#install-progress-error-wrapper").fadeIn(300);
 				} else {
-					$('#install-progress-bar div.bar').css('width', '<?=$routine->getProgress()?>%');
+					$('#install-progress-bar div.progress-bar').css('width', '<?=$routine->getProgress()?>%');
 					<? if ($i < count($installRoutines)) { ?>
 						ccm_installRoutine<?=$i+1?>();
 					<? } else { ?>
@@ -62,7 +63,7 @@ $(function() {
 </script>
 
 <div class="row">
-<div class="span10 offset1">
+<div class="col-sm-10 col-sm-offset-1">
 <div class="page-header">
 <h1><?=t('Install concrete5')?></h1>
 </div>
@@ -71,7 +72,7 @@ $(function() {
 
 
 <div class="row">
-<div class="span10 offset1">
+<div class="col-sm-10 col-sm-offset-1">
 
 <div id="success-message">
 <?=$successMessage?>
@@ -90,7 +91,7 @@ $(function() {
 
 <div id="install-progress-bar">
 <div class="progress progress-striped active">
-<div class="bar" style="width: 0%;"></div>
+<div class="progress-bar" style="width: 0%;"></div>
 </div>
 </div>
 
@@ -118,7 +119,7 @@ $(function() {
 </script>
 
 <div class="row">
-<div class="span10 offset1">
+<div class="col-md-10 col-md-offset-1">
 
 <div class="page-header">
 <h1><?=t('Install concrete5')?></h1>
@@ -131,75 +132,74 @@ $(function() {
 <form action="<?=$this->url('/install', 'configure')?>" method="post" class="form-horizontal">
 
 <div class="row">
-<div class="span5 offset1">
+<div class="col-md-5 col-md-offset-1">
 
 	<input type="hidden" name="locale" value="<?=$locale?>" />
 	
 	<fieldset>
-		<legend style="margin-bottom: 0px"><?=t('Site Information')?></legend>
-		<div class="control-group">
-		<label for="SITE" class="control-label"><?=t('Name Your Site')?>:</label>
-		<div class="controls">
-			<?=$form->text('SITE', array('class' => 'xlarge'))?>
+		<legend><?=t('Site Information')?></legend>
+		<div class="form-group">
+		<label for="SITE" class="control-label col-md-4"><?=t('Site Name')?>:</label>
+		<div class="col-md-8">
+			<?=$form->text('SITE', array('class' => ''))?>
 		</div>
-		</div>
-			
+		</div>			
 	</fieldset>
 	
 	<fieldset>
-		<legend style="margin-bottom: 0px"><?=t('Administrator Information')?></legend>
-		<div class="control-group">
-		<label for="uEmail" class="control-label"><?=t('Email Address')?>:</label>
-		<div class="controls">
-			<?=$form->email('uEmail', array('class' => 'xlarge'))?>
+		<legend><?=t('Administrator Information')?></legend>
+		<div class="form-group">
+		<label for="uEmail" class="control-label col-md-4"><?=t('Email Address')?>:</label>
+		<div class="col-md-8">
+		<?=$form->email('uEmail', array('class' => ''))?>
 		</div>
 		</div>
-		<div class="control-group">
-		<label for="uPassword" class="control-label"><?=t('Password')?>:</label>
-		<div class="controls">
-			<?=$form->password('uPassword', array('class' => 'xlarge'))?>
+		<div class="form-group">
+		<label for="uPassword" class="control-label col-md-4"><?=t('Password')?>:</label>
+		<div class="col-md-8">
+		<?=$form->password('uPassword', array('class' => ''))?>
 		</div>
 		</div>
-		<div class="control-group">
-		<label for="uPasswordConfirm" class="control-label"><?=t('Confirm Password')?>:</label>
-		<div class="controls">
-			<?=$form->password('uPasswordConfirm', array('class' => 'xlarge'))?>
+		<div class="form-group">
+		<label for="uPasswordConfirm" class="control-label col-md-4"><?=t('Confirm Password')?>:</label>
+		<div class="col-md-8">
+			<?=$form->password('uPasswordConfirm', array('class' => ''))?>
 		</div>
 		</div>
 		
 	</fieldset>
 
 </div>
-<div class="span5">
+<div class="col-sm-5">
 
 	<fieldset>
-		<legend style="margin-bottom: 0px"><?=t('Database Information')?></legend>
+		<legend><?=t('Database Information')?></legend>
 
-	<div class="control-group">
-	<label class="control-label" for="DB_SERVER"><?=t('Server')?>:</label>
-	<div class="controls">
-		<?=$form->text('DB_SERVER', array('class' => 'xlarge'))?>
-	</div>
-	</div>
-
-	<div class="control-group">
-	<label class="control-label" for="DB_USERNAME"><?=t('MySQL Username')?>:</label>
-	<div class="controls">
-		<?=$form->text('DB_USERNAME', array('class' => 'xlarge'))?>
+	<div class="form-group">
+	<label class="control-label col-md-4" for="DB_SERVER"><?=t('Server')?>:</label>
+	<div class="col-md-8">
+	<?=$form->text('DB_SERVER', array('class' => ''))?>
 	</div>
 	</div>
 
-	<div class="control-group">
-	<label class="control-label" for="DB_PASSWORD"><?=t('MySQL Password')?>:</label>
-	<div class="controls">
-		<?=$form->password('DB_PASSWORD', array('class' => 'xlarge'))?>
+	<div class="form-group">
+	<label class="control-label col-md-4" for="DB_USERNAME"><?=t('MySQL Username')?>:</label>
+	<div class="col-md-8">
+		<?=$form->text('DB_USERNAME', array('class' => ''))?>
 	</div>
 	</div>
 
-	<div class="control-group">
-	<label class="control-label" for="DB_DATABASE"><?=t('Database Name')?>:</label>
-	<div class="controls">
-		<?=$form->text('DB_DATABASE', array('class' => 'xlarge'))?>
+	<div class="form-group">
+	<label class="control-label col-md-4" for="DB_PASSWORD"><?=t('MySQL Password')?>:</label>
+	<div class="col-md-8">
+		<?=$form->password('DB_PASSWORD', array('class' => ''))?>
+	</div>
+	</div>
+
+	<div class="form-group">
+	<label class="control-label col-md-4" for="DB_DATABASE"><?=t('Database Name')?>:</label>
+	<div class="col-md-8">
+		<?=$form->text('DB_DATABASE', array('class' => ''))?>
 	</div>
 	</div>
 	</fieldset>
@@ -207,7 +207,7 @@ $(function() {
 </div>
 
 <div class="row">
-<div class="span10 offset1">
+<div class="col-sm-10 col-sm-offset-1">
 
 <h3><?=t('Sample Content')?></h3>
 
@@ -244,7 +244,7 @@ $(function() {
 </div>
 
 <div class="row">
-<div class="span10 offset1">
+<div class="col-sm-10 col-sm-offset-1">
 
 <div class="well">
 	<button class="btn btn-large btn-primary" type="submit"><?=t('Install concrete5')?> <i class="icon-thumbs-up icon-white"></i></button>
@@ -310,7 +310,7 @@ $(function() {
 
 <div class="row">
 
-<div class="span10 offset1">
+<div class="col-sm-10 col-sm-offset-1">
 <div class="page-header">
 	<h1><?=t('Install concrete5')?></h1>
 </div>
@@ -320,7 +320,7 @@ $(function() {
 </div>
 
 <div class="row">
-<div class="span5 offset1">
+<div class="col-sm-5 col-sm-offset-1">
 
 <table class="table table-striped requirements-table">
 <tbody>
@@ -350,7 +350,7 @@ $(function() {
 </table>
 
 </div>
-<div class="span5">
+<div class="col-sm-5">
 
 <table class="table table-striped requirements-table">
 
@@ -387,7 +387,7 @@ $(function() {
 
 
 <div class="row">
-<div class="span10 offset1">
+<div class="col-sm-10 col-sm-offset-1">
 
 <h3><?=t('Testing Optional Items')?></h3>
 
@@ -395,7 +395,7 @@ $(function() {
 </div>
 
 <div class="row">
-<div class="span5 offset1">
+<div class="col-sm-5 col-sm-offset-1">
 
 <table class="table table-striped requirements-table">
 <tbody>
@@ -411,7 +411,7 @@ $(function() {
 </div>
 
 <div class="row">
-<div class="span10 offset1">
+<div class="col-sm-10 col-sm-offset-1">
 <div class="well" id="install-success">
 	<form method="post" action="<?=$this->url('/install','setup')?>">
 	<input type="hidden" name="locale" value="<?=$locale?>" />
@@ -438,7 +438,7 @@ $(function() {
 <? } else { ?>
 
 <div class="row">
-<div class="span10 offset1">
+<div class="col-sm-8 col-sm-offset-2">
 <div class="page-header">
 	<h1><?=t('Install concrete5')?></h1>
 </div>
@@ -446,24 +446,22 @@ $(function() {
 </div>
 
 <div class="row">
-<div class="span10 offset1">
+<div class="col-sm-8 col-sm-offset-2">
 
 <div id="ccm-install-intro">
 
 <form method="post" class="form-horizontal" action="<?=$this->url('/install', 'select_language')?>">
 <fieldset>
-	<div class="control-group">
-	
-	<label for="locale" class="control-label"><?=t('Language')?></label>
-	<div class="controls">
+	<div class="form-group">
+	<label for="locale" class="control-label col-sm-3"><?=t('Language')?></label>
+	<div class="col-sm-7">
 		<?=$form->select('locale', $locales, 'en_US'); ?>
 	</div>
-	
 	</div>
-	
-	<div class="form-actions">
-	<?=$form->submit('submit', t('Choose Language'))?>
+	<div class="form-group col-sm-10">
+		<button type="submit" class="btn btn-primary pull-right"><?=t('Choose Language')?></button>
 	</div>
+
 </fieldset>
 </form>
 
