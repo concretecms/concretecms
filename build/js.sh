@@ -31,6 +31,7 @@ rm ccm.pubsub.tmp.js
 
 # Note: The order here is important
 cat ../web/concrete/js/bootstrap/alert.js \
+../web/concrete/js/bootstrap/button.js \
 ../web/concrete/js/bootstrap/tooltip.js \
 ../web/concrete/js/bootstrap/dropdown.js \
 ../web/concrete/js/bootstrap/popover.js \

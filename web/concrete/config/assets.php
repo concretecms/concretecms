@@ -60,12 +60,14 @@ $al->register('javascript', 'bootstrap/dropdown', 'js/bootstrap/dropdown.js');
 $al->register('javascript', 'bootstrap/tooltip', 'js/bootstrap/tooltip.js', array('weight' => 95)); // has to come before popover
 $al->register('javascript', 'bootstrap/popover', 'js/bootstrap/popover.js');
 $al->register('javascript', 'bootstrap/alert', 'js/bootstrap/alert.js');
+$al->register('javascript', 'bootstrap/button', 'js/bootstrap/button.js');
 $al->register('javascript', 'bootstrap/transition', 'js/bootstrap/transition.js');
 $al->register('css', 'bootstrap/dropdown', 'css/ccm.app.css', array('postprocess' => false));
 $al->register('css', 'bootstrap/tooltip', 'css/ccm.app.css', array('postprocess' => false));
 $al->register('css', 'bootstrap/popover', 'css/ccm.app.css', array('postprocess' => false));
 $al->register('css', 'bootstrap/alert', 'css/ccm.app.css', array('postprocess' => false));
 $al->register('css', 'bootstrap/transition', 'css/ccm.app.css', array('postprocess' => false));
+$al->register('css', 'bootstrap/button', 'css/ccm.app.css', array('postprocess' => false));
 $al->register('css', 'bootstrap', 'css/ccm.app.css', array('postprocess' => false));
 
 /** 
