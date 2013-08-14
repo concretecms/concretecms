@@ -243,13 +243,13 @@ class ConcreteDashboardHelper {
 			if (count($session_pages) > 0) {
 				foreach($session_pages as $_cID) {
 					$_c = Page::getByID($_cID);
-					if (is_object($_c)){
-						$breadcrumb_map[$_cID] = $_c;
-						$last = $_cID;
+					if ($_c->isError()) {
+						continue;
 					}
+					$breadcrumb_map[$_cID] = $_c;
+					$last = $_cID;
 				}
 			}
-
 			// limit size, keeping numeric keys constant
 			$max_breadcrumb_size = 5;
 			// (NB - by using the above, the way is kept open for the size to be adjustable in the future)
@@ -417,9 +417,16 @@ class ConcreteDashboardHelper {
 			<? 
 			$currentHeader = false;
 			$x = 0;
+			$itemsChanged = false;
 			foreach($items as $path) { 
 			
 				$p = Page::getByPath($path, 'ACTIVE');
+				// If page is not found etc, remove it from items
+				if ($p->isError()) {
+					$d->remove($p);
+					$itemsChanged = true;
+					continue;
+				}
 				$pc = new Permissions($p);
 				if ($pc->canViewPage()) {
 					
@@ -456,7 +463,12 @@ class ConcreteDashboardHelper {
 				
 							
 			<? } ?>
-			
+			<?
+			if ($itemsChanged) {
+				$u = new User;
+				$u->saveConfig('QUICK_NAV_BOOKMARKS', serialize($d));
+			}
+			?>
 			<? if ($currentHeader != false) { ?>
 							</ul>
 							</div>
