@@ -1,3 +1,4 @@
+lessc --verbose -x ../web/concrete/css/ccm_app/build/ccm.app.less ../web/concrete/css/ccm.app.css
 lessc --verbose -x ../web/concrete/css/ccm_app/build/redactor.less ../web/concrete/css/redactor.css
 lessc --verbose -x ../web/concrete/css/ccm_app/build/ccm.gathering.base.less ../web/concrete/css/ccm.gathering.base.css
 lessc --verbose -x ../web/concrete/css/ccm_app/build/ccm.gathering.display.less ../web/concrete/css/ccm.gathering.display.css
@@ -8,7 +9,6 @@ lessc --verbose -x ../web/concrete/css/ccm_app/build/ccm.dashboard.less ../web/c
 lessc --verbose -x ../web/concrete/css/ccm_app/build/ccm.conversations.less ../web/concrete/css/ccm.conversations.css
 lessc --verbose -x ../web/concrete/css/ccm_app/build/ccm.colorpicker.less ../web/concrete/css/ccm.colorpicker.css
 lessc --verbose -x ../web/concrete/css/ccm_app/build/ccm.app.mobile.less ../web/concrete/css/ccm.app.mobile.css
-lessc --verbose -x ../web/concrete/css/ccm_app/build/ccm.app.less ../web/concrete/css/ccm.app.css
 lessc --verbose -x ../web/concrete/css/ccm_app/build/ccm.sitemap.less ../web/concrete/css/ccm.sitemap.css
 lessc --verbose -x ../web/concrete/css/ccm_app/build/dynatree.less ../web/concrete/css/dynatree.css
 lessc --verbose -x ../web/concrete/css/ccm_app/build/ccm.account.less ../web/concrete/css/ccm.account.css

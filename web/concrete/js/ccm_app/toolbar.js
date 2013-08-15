@@ -9,45 +9,7 @@ var CCMToolbar = function() {
 	var $searchResults = $('#ccm-intelligent-search-results');
 	var remotesearchquery, ajaxtimer;
 
-	setupToolbarMenus = function() {
-		$('a[data-toggle=ccm-toolbar-hover-menu]').hoverIntent(function() {
-			$('.ccm-toolbar-hover-menu').hide();
-			$($(this).attr('data-toggle-menu')).show();
-		}, function() {
-
-		});
-
-
-		$(document).on('click.ccm-toolbar', function() {
-			$('.ccm-toolbar-hover-menu').hide();
-		});
-
-		$toolbar.find('#ccm-toolbar').on('click', function(e) {
-			e.stopPropagation(); // so we don't close menus if we click on the toolbar buttons themselves.
-		});
-
-		$toolbar.find('#ccm-exit-edit-mode-comment form').on('click', function(e) {
-			e.stopPropagation(); // so we don't close menus if we click on the toolbar buttons themselves.
-		});
-
-		$($toolbar.find('.ccm-toolbar-hover-menu a')).on('click', function() {
-			$('.ccm-toolbar-hover-menu').hide();
-		});
-
-		$toolbar.find('li.pull-left').last().addClass('ccm-toolbar-last-left-child');
-		$toolbar.find('#ccm-exit-edit-mode-publish-menu a').on('click', function() {
-			switch($(this).data('publish-action')) {
-				case 'approve':
-					$('#ccm-approve-field').val('APPROVE');
-					break;
-				case 'discard':
-					$('#ccm-approve-field').val('DISCARD');
-					break;
-			}
-
-			$('#ccm-exit-edit-mode-comment form').submit();
-		});
-	}
+	setupToolbarMenus = function() {}
 
 	setupStatusBar = function() {
 		$('#ccm-page-status-bar .alert').bind('closed', function() {

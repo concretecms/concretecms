@@ -22,11 +22,11 @@ div#ccm-toolbar {
 
 			> a {
 				display: block;
-				height: 32px;
+				height: 47px;
 				padding: 16px 24px 0px 24px;
 				position: relative;
 				color: #999;
-				border-left: 1px solid #ccc;
+				border-right: 1px solid #ccc;
 				text-decoration: none;
 
 				img {
@@ -41,11 +41,19 @@ div#ccm-toolbar {
 			}
 		}
 
+		> li:last-child {
+			a {
+				border-right: 0px;
+			}
+		}
+
 		li.ccm-logo {
 			span {
 				padding: 12px 14px 0px 14px;
 				height: 36px;
 				display: block;
+				height: 47px;
+				border-right: 1px solid #ccc;
 			}
 		}
 
@@ -53,16 +61,20 @@ div#ccm-toolbar {
 			background-color: #fff;
 			padding: 0px;
 			height: 47px;
-			width: 280px;
 			white-space: nowrap;
 			border-left: 1px solid #ccc;
 			color: #c8c8c8;
 			position: relative;
 
-			i.icon-search {
+			i.glyphicon-search {
 				position: absolute;
 				top: 16px;
 				left: 16px;
+			}
+
+			input {
+				border-right: 1px solid #ccc;
+				margin-right: 0px;
 			}
 
 		}
