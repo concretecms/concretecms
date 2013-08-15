@@ -44,13 +44,13 @@ rm bootstrap.tmp.js
 cat ../web/concrete/js/ccm_app/jquery.colorpicker.js \
 ../web/concrete/js/ccm_app/jquery.hoverIntent.js \
 ../web/concrete/js/ccm_app/jquery.liveupdate.js \
-../web/concrete/js/ccm_app/jquery.metadata.js \
 ../web/concrete/js/ccm_app/chosen.jquery.js \
 ../web/concrete/js/ccm_app/base.js \
 ../web/concrete/js/ccm_app/ui.js \
 ../web/concrete/js/ccm_app/edit_page.js \
 ../web/concrete/js/ccm_app/filemanager.js \
 ../web/concrete/js/ccm_app/jquery.cookie.js \
+../web/concrete/js/ccm_app/panels.js \
 ../web/concrete/js/ccm_app/dialog.js \
 ../web/concrete/js/ccm_app/alert.js \
 ../web/concrete/js/ccm_app/newsflow.js \

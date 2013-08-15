@@ -1,0 +1,44 @@
+div.ccm-panel {
+	width: 320px;
+	height: 100%;
+	position: fixed;
+	top: 0px;
+}
+
+html.ccm-panel-ready {
+	.transition(margin 0.2s ease);
+}
+
+html.ccm-panel-left {
+	margin-left: 320px;
+}
+
+html.ccm-panel-right {
+	margin-right: 320px;
+}
+
+div.ccm-panel-left {
+	left: -320px;
+	.transition(left 0.2s ease);
+}
+
+div.ccm-panel-right {
+	right: -320px;
+	.transition(right 0.2s ease);
+}
+
+div#ccm-panel-dashboard {
+	background-color: #aaa;
+}
+
+div#ccm-panel-properties {
+	background-color: #f00;
+}
+
+div.ccm-panel-left.ccm-panel-active {
+	left: 0px;
+}
+
+div.ccm-panel-right.ccm-panel-active {
+	right: 0px;
+}

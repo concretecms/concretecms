@@ -6,6 +6,18 @@ var CCMEditMode = function() {
 
 	var blockTypeDropSuccessful = false;
 
+	setupPanels = function() {
+		CCMPanel.register('dashboard', 'right');
+		CCMPanel.register('properties', 'left');
+
+		$('[data-launch-panel]').on('click', function() {
+			var panel = $(this).attr('data-launch-panel');
+			CCMPanel.toggle(panel);
+			return false;
+		});
+		$('html').addClass('ccm-panel-ready');
+	}
+
 	setupMenus = function() {
 
 		$('.ccm-area').each(function() {
@@ -298,6 +310,7 @@ var CCMEditMode = function() {
 	return {
 		start: function() {			
 			setupMenus();
+			setupPanels();
 			setupSortablesAndDroppables();
 		},
 
