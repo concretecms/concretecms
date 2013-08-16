@@ -1798,7 +1798,6 @@
     <field name="timestamp" type="T">
       <notnull/>
       <deftimestamp/>
->>>>>>> 4946ec7... automatic running and scheduling of jobs without cron.
     </field>
   </table>
   
