@@ -2,58 +2,124 @@
  * Left and right panels
  */
 
-var CCMPanel = function(id, position) {
+var CCMPanel = function(options) {
 
-	var panels = new Array();
-	var active = false;
+	this.options = options;
+	this.id = options.id;
+	this.isOpen = false;
 
-	showPanel = function(panel) {
-		// hide all other panels
-		$('#ccm-panel-' + panel).addClass('ccm-panel-active');
-		$('html').addClass(CCMPanel.getPanel(panel).class);
+	this.getPositionClass = function() {
+		switch(options.position) {
+			case 'left':
+				var class = 'ccm-panel-left';
+				break;
+			case 'right':
+				var class = 'ccm-panel-right';
+				break;					
+			}
+		return class;
 	}
 
-	return {
-		register: function(id, position) {
-			switch(position) {
-				case 'left':
-					var class = 'ccm-panel-left';
-					break;
-				case 'right':
-					var class = 'ccm-panel-right';
-					break;					
+	this.hide = function() {
+		$('#ccm-panel-' + this.options.id).removeClass('ccm-panel-active');
+		$('#ccm-panel-overlay').queue(function() {
+			$(this).removeClass('ccm-panel-translucent');
+			$(this).dequeue();
+		}).delay(1000).hide(0);
+		$('html').removeClass(this.getPositionClass());
+		this.isOpen = false;
+	}
+	this.toggle = function() {
+		if (this.isOpen) {
+			this.hide();
+		} else {
+			this.show();				
+		}
+	}
+
+	this.show = function() {
+
+		if (this.options.primary) {
+			// then it is the only panel that can be open on the screen
+			// we hide any other open ones.
+			var panels = CCMPanelManager.getPanels();
+			for (key in panels) {
+				var panel = panels[key];
+				if ((panel.id != this.id) && (panel.isOpen)) {
+					panel.hide();
+				}
 			}
+		}
+
+		// hide all other panels
+		$('#ccm-panel-' + this.options.id).addClass('ccm-panel-active');
+	    CCMPanelManager.showOverlay(this.options.translucent);
+		$('html').addClass(this.getPositionClass());
+		this.isOpen = true;
+
+
+	}
+
+
+}
+
+var CCMPanelManager = function(id, position) {
+
+	var panels = new Array();
+
+	return {
+
+		getPanels: function() {
+			return panels;
+		},
+
+		showOverlay: function(translucent) {
+			$('#ccm-panel-overlay')
+			.clearQueue()
+			.show(0)
+			.delay(100)
+			.queue(function() {
+				if (translucent) {
+					$(this).addClass('ccm-panel-translucent');
+				} else {
+					$(this).removeClass('ccm-panel-translucent');
+				}
+				$(this).dequeue();
+	    	});
+		},
+
+		register: function(options) {
+			var options = $.extend({
+				translucent: true,
+				position: 'left',
+				primary: true
+			}, options);
+			var panel = new CCMPanel(options);
+			panels[options.id] = panel;
+
 			$('<div />', {
-				'id': 'ccm-panel-' + id,
-				'class': 'ccm-panel ' + class
+				'id': 'ccm-panel-' + options.id,
+				'class': 'ccm-panel ' + panel.getPositionClass()
 			}).appendTo($(document.body));
 
-			panels[id] = {
-				'id': id,
-				'position': position,
-				'class': class
-			}
 		},
 
-		getPanel: function(panel) {
-			return panels[panel];
-		},
+		getByID: function(panelID) {
+			return panels[panelID];
+		}
+		/*,
+
 
 		hideAll: function() {
 			$('.ccm-panel-active').removeClass('ccm-panel-active');
+			$('#ccm-panel-overlay').queue(function() {
+				$(this).removeClass('ccm-panel-translucent');
+				$(this).dequeue();
+			}).delay(1000).hide(0);
 			$('html').removeClass('ccm-panel-right').removeClass('ccm-panel-left');
-		},
+		}
+		*/
 
-		toggle: function(panel) {
-			if (active && active == panel) {
-				CCMPanel.hideAll();
-				active = false;
-				return;
-			}
-			CCMPanel.hideAll();
-			active = panel;
-			showPanel(panel);				
-		},
 
 	}
 
