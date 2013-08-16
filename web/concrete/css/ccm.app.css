@@ -900,8 +900,8 @@ div#ccm-panel-overlay.ccm-panel-translucent{background-color:rgba(255,255,255,0.
 html.ccm-panel-left{margin-left:320px}
 html.ccm-panel-right{margin-right:320px}
 html.ccm-panel-ready{-webkit-transition:margin .2s ease;transition:margin .2s ease}
-div.ccm-panel-left{left:-320px;-webkit-transition:left .2s ease;transition:left .2s ease}
-div.ccm-panel-right{right:-320px;-webkit-transition:right .2s ease;transition:right .2s ease}
+div.ccm-panel-left{left:-320px;-webkit-transition:left .2s ease;transition:left .2s ease;box-shadow:inset -10px 10px 10px rgba(0,0,0,0.3);-webkit-box-shadow:inset -10px 10px 10px rgba(0,0,0,0.3);-moz-box-shadow:inset -10px 10px 10px rgba(0,0,0,0.3);box-shadow:inset -10px 10px 10px rgba(0,0,0,0.3)}
+div.ccm-panel-right{right:-320px;-webkit-transition:right .2s ease;transition:right .2s ease;box-shadow:inset 10px 10px 10px rgba(0,0,0,0.3);-webkit-box-shadow:inset 10px 10px 10px rgba(0,0,0,0.3);-moz-box-shadow:inset 10px 10px 10px rgba(0,0,0,0.3);box-shadow:inset 10px 10px 10px rgba(0,0,0,0.3)}
 div#ccm-panel-dashboard{background-color:#aaa}
 div#ccm-panel-properties{background-color:#f00}
 div.ccm-panel-left.ccm-panel-active{left:0}
