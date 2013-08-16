@@ -7,13 +7,13 @@ var CCMEditMode = function() {
 	var blockTypeDropSuccessful = false;
 
 	setupPanels = function() {
-		CCMPanelManager.register({'id': 'dashboard', 'position': 'right'});
-		CCMPanelManager.register({'id': 'properties', 'translucent': false});
+		CCMPanelManager.register({'identifier': 'dashboard', 'position': 'right'});
+		CCMPanelManager.register({'identifier': 'page/properties', 'translucent': false});
 		$('<div />', {'id': 'ccm-panel-overlay'}).appendTo($(document.body));
 
 		$('[data-launch-panel]').on('click', function() {
 			var panelID = $(this).attr('data-launch-panel');
-			var panel = CCMPanelManager.getByID(panelID);
+			var panel = CCMPanelManager.getByIdentifier(panelID);
 			panel.toggle();
 			return false;
 		});
