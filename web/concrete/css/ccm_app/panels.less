@@ -15,7 +15,7 @@ div#ccm-panel-overlay {
 	left: 0;
 	display: none;
 	background: transparent;
-	.transition(background-color 0.3s ease);
+	.transition(background-color 0.5s cubic-bezier(0.190, 1.000, 0.220, 1.000));
 }
 
 div#ccm-panel-overlay.ccm-panel-translucent {
@@ -31,26 +31,20 @@ html.ccm-panel-right {
 }
 
 html.ccm-panel-ready {
-	.transition(margin 0.2s ease);
+	.transition(margin 0.5s cubic-bezier(0.190, 1.000, 0.220, 1.000));
 }
 
 div.ccm-panel-left {
 	left: -320px;
-	.transition(left 0.2s ease);
-	.box-shadow(inset -10px 10px 10px rgba(0,0,0,0.3));
+	.transition(left 0.5s cubic-bezier(0.190, 1.000, 0.220, 1.000));
 }
 
 div.ccm-panel-right {
 	right: -320px;
-	.transition(right 0.2s ease);
-	.box-shadow(inset 10px 10px 10px rgba(0,0,0,0.3));
+	.transition(right 0.5s cubic-bezier(0.190, 1.000, 0.220, 1.000));
 }
 
-div#ccm-panel-dashboard {
-	background-color: #aaa;
-}
-
-div#ccm-panel-properties {
+div#ccm-panel-page-properties {
 	background-color: #f00;
 }
 
@@ -60,4 +54,97 @@ div.ccm-panel-left.ccm-panel-active {
 
 div.ccm-panel-right.ccm-panel-active {
 	right: 0px;
+}
+
+/** 
+ * Shadow layer
+ */
+
+div.ccm-panel-shadow-layer {
+	width: 20px;
+	height: 100%;
+	position: fixed;
+	top: 0px;
+	z-index: 106;
+	.box-shadow(inset 10px 10px 10px rgba(128,128,128,0.3));
+}
+
+/**
+ * Panel Content
+ */
+div.ccm-panel-content {
+	padding: 60px 20px 20px 20px;
+}
+
+div.ccm-panel div.ccm-panel-content {}
+
+div.ccm-panel.ccm-panel-loaded div.ccm-panel-content {}
+
+div.ccm-panel-content {
+	header {
+		margin: -13px -20px -20px -20px;
+		font-size: 16px;
+		font-weight: bold;
+		padding: 15px 15px 15px 40px;
+		margin-bottom: 10px;
+
+		aside {
+			float: right;
+			font-size: 11px;
+			font-weight: lighter;
+			margin-top: 4px;
+
+			a {text-decoration: none;}
+		}
+	}
+
+	menu {
+		li {
+			
+			margin-top: 10px;
+			list-style-type: none;
+
+			a {
+				display: block; 
+				text-decoration: none;
+				font-size: 14px;
+				font-weight: bold;
+				padding: 5px 21px 5px 21px;
+			}
+
+			a:hover {
+				text-decoration: none;
+				.border-radius(4px);
+			}
+		}
+
+	}
+}
+/** 
+ * Dashboard Panel
+ */
+div#ccm-panel-dashboard {
+	background-color: #cfd4da;
+
+	header {
+		color: #1b2d3e;
+		background-color: #babec4;
+
+		aside a {
+			color: #7a838e;
+		}
+	}
+
+	menu {
+		li {
+			a {
+				color: #4674a1;
+			}
+
+			a:hover {
+				background-color: #e0e3e7;
+				color: #1b2d3e;
+			}
+		}
+	}
 }

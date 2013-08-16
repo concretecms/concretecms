@@ -47,7 +47,7 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
 				<? } ?>
 				<? if (!$pageInUseBySomeoneElse && $c->getCollectionPointerID() == 0) { ?>
 				<li class="<? if ($c->isEditMode()) { ?> ccm-toolbar-page-edit-mode-active <? } ?> ccm-toolbar-page-edit pull-left"><a data-toggle="ccm-toolbar-hover-menu" href="<? if (!$c->isEditMode()) { ?><?=DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=<?=$c->getCollectionID()?>&ctask=check-out<?=$token?><? } else { ?>javascript:void(0);<? } ?>"><i class="glyphicon glyphicon-pencil"></i></a></li>
-				<li class="pull-left"><a href="#" data-launch-panel="properties"><i class="glyphicon glyphicon-cog"></i></a>
+				<li class="pull-left"><a href="#" data-launch-panel="page/properties"><i class="glyphicon glyphicon-cog"></i></a>
 
 				</li>
 				<? }
