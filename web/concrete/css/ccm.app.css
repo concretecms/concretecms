@@ -894,10 +894,12 @@ a#ccm-export-results span{background:transparent url(../images/icons/excel.png) 
 ul.ccm-search-sortable-column-wrapper{border:2px solid #dedede;padding:0;margin:0;padding-top:8px}
 ul.ccm-search-sortable-column-wrapper li{padding:2px 0 4px 24px;margin-left:4px;margin-bottom:4px;background:transparent url(../images/icons/column.png) no-repeat scroll;list-style-type:none}
 ul.ccm-search-sortable-column-wrapper li:hover{cursor:move}
-div.ccm-panel{width:320px;height:100%;position:fixed;top:0}
-html.ccm-panel-ready{-webkit-transition:margin .2s ease;transition:margin .2s ease}
+div.ccm-panel{width:320px;height:100%;position:fixed;top:0;z-index:105}
+div#ccm-panel-overlay{z-index:103;position:fixed;width:100%;height:100%;top:0;left:0;display:none;background:transparent;-webkit-transition:background-color .3s ease;transition:background-color .3s ease}
+div#ccm-panel-overlay.ccm-panel-translucent{background-color:rgba(255,255,255,0.7)}
 html.ccm-panel-left{margin-left:320px}
 html.ccm-panel-right{margin-right:320px}
+html.ccm-panel-ready{-webkit-transition:margin .2s ease;transition:margin .2s ease}
 div.ccm-panel-left{left:-320px;-webkit-transition:left .2s ease;transition:left .2s ease}
 div.ccm-panel-right{right:-320px;-webkit-transition:right .2s ease;transition:right .2s ease}
 div#ccm-panel-dashboard{background-color:#aaa}
