@@ -30,7 +30,7 @@ $returnURL = ($_POST['returnURL']) ? $_POST['returnURL'] : $_SERVER['HTTP_REFERE
 		<? } ?>
 		<input type="hidden" value="<?= $returnURL ?>" name="returnURL" />
 		<input type="hidden" value="<?= $rcID ?>" name="rcID"/>
-		<label for="password"><?=t('Password')?>: <input type="text" name="password" /></label>
+		<label for="password"><?=t('Password')?>: <input type="password" name="password" /></label>
 		<br /><br />
 		<button type="submit"><?=t('Download')?></button>
 	</form>
