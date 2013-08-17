@@ -130,7 +130,7 @@ $v->addFooterItem('<script type="text/javascript">$(function() { CCMDashboard.st
 
 		<?
 		$dh = Loader::helper('concrete/dashboard');
-		print $dh->addQuickNavToMenus($dh->getDashboardAndSearchMenus());
+		print $dh->getIntelligentSearchMenu();
 		?>
 
 		</li>

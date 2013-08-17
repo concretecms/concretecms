@@ -141,12 +141,13 @@ class ConcreteDashboardHelper {
 
 		$html = '<div class="ccm-pane-header">';
 		
-		$class = 'icon-star';
+		/*$class = 'icon-star';
 		$qn = ConcreteDashboardMenu::getMine();
 		$quicknav = $qn->getItems(false);
 		if (in_array($c->getCollectionPath(), $quicknav)) {
 			$class = 'icon-white icon-star';	
 		}
+		*/
 		$html .= '<ul class="ccm-pane-header-icons">';
 		if (!$help) {
 			$ih = Loader::helper('concrete/interface/help');

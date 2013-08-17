@@ -28,6 +28,7 @@ var CCMPanel = function(options) {
 	}
 
 	this.hide = function() {
+		$('[data-launch-panel=\'' + this.getIdentifier() + '\']').removeClass('ccm-launch-panel-active');
 		$('#' + this.getDOMID()).removeClass('ccm-panel-active');
 		$('#ccm-panel-overlay').queue(function() {
 			$(this).removeClass('ccm-panel-translucent');
@@ -60,13 +61,18 @@ var CCMPanel = function(options) {
 		// hide all other panels
 		var $panel = $('#' + this.getDOMID());
 		$panel.addClass('ccm-panel-active ccm-panel-loading');
-		$panel.find('.ccm-panel-content').load(this.options.url, {}, function() {
+		$panel.find('.ccm-panel-content').load(this.options.url, {'cID': CCM_CID}, function() {
 			$panel.delay(1).queue(function() {
 				$(this).removeClass('ccm-panel-loading').addClass('ccm-panel-loaded');
 				$(this).dequeue();
 			});
+			$panel.find('[data-swap-panel]').on('click', function() {
+				alert('hi');
+				return false;
+			})
 		});
 	    CCMPanelManager.showOverlay(this.options.translucent);
+		$('[data-launch-panel=\'' + this.getIdentifier() + '\']').addClass('ccm-launch-panel-active');
 		$('html').addClass(this.getPositionClass());
 		this.isOpen = true;
 
