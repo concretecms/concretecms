@@ -47,7 +47,7 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
 				<? } ?>
 				<? if (!$pageInUseBySomeoneElse && $c->getCollectionPointerID() == 0) { ?>
 				<li class="<? if ($c->isEditMode()) { ?> ccm-toolbar-page-edit-mode-active <? } ?> ccm-toolbar-page-edit pull-left"><a data-toggle="ccm-toolbar-hover-menu" href="<? if (!$c->isEditMode()) { ?><?=DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=<?=$c->getCollectionID()?>&ctask=check-out<?=$token?><? } else { ?>javascript:void(0);<? } ?>"><i class="glyphicon glyphicon-pencil"></i></a></li>
-				<li class="pull-left"><a href="#" data-launch-panel="page/properties"><i class="glyphicon glyphicon-cog"></i></a>
+				<li class="pull-left"><a href="#" data-launch-panel="page"><i class="glyphicon glyphicon-cog"></i></a>
 
 				</li>
 				<? }
@@ -79,7 +79,7 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
 
 				<li class="pull-right"><a href="<?=$this->url('/dashboard')?>" data-launch-panel="dashboard"><i class="glyphicon glyphicon-th-large"></i></a>
 
-				<li class="ccm-toolbar-page-menu pull-right"><a href="<?=$this->url('/dashboard')?>" data-toggle="ccm-toolbar-hover-menu"><i class="glyphicon glyphicon-list-alt"></i></a>
+				<li class="pull-right"><a href="#" data-launch-panel="sitemap"><i class="glyphicon glyphicon-list-alt"></i></a>
 
 				<?
 				print $dh->getIntelligentSearchMenu();

@@ -19,6 +19,8 @@ Loader::element('header_required'); ?>
 
 <body>
 
+<div class="ccm-page">
+
 <!--start main container -->
 
 <div id="main-container" class="container_24">

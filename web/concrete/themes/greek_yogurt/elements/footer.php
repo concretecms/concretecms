@@ -34,6 +34,7 @@
 
 </div>
 </div>
+</div>
 
 <?php  Loader::element('footer_required'); ?>
 
