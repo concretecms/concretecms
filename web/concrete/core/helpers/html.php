@@ -241,14 +241,14 @@ class Concrete5_Helper_Html_HeaderOutputObject {
 
 }
 
-class Concrete5_Helper_Html_JavascriptOutputObject extends Concrete5_Helper_Html_HeaderOutputObject {
+class Concrete5_Helper_Html_JavascriptOutputObject extends HeaderOutputObject {
 	public function __toString() {
 		return '<script type="text/javascript" src="' . $this->file . '"></script>';
 	}
 	
 }
 
-class Concrete5_Helper_Html_InlinescriptOutputObject extends Concrete5_Helper_Html_HeaderOutputObject {
+class Concrete5_Helper_Html_InlinescriptOutputObject extends HeaderOutputObject {
 
   public function __toString() {
     return '<script type="text/javascript">/*<![CDATA[*/'. $this->script .'/*]]>*/</script>';
@@ -256,7 +256,7 @@ class Concrete5_Helper_Html_InlinescriptOutputObject extends Concrete5_Helper_Ht
   
 }
 
-class Concrete5_Helper_Html_CSSOutputObject extends Concrete5_Helper_Html_HeaderOutputObject {
+class Concrete5_Helper_Html_CSSOutputObject extends HeaderOutputObject {
 
 	public function __toString() {
 		return '<link rel="stylesheet" type="text/css" href="' . $this->file . '" />';
