@@ -115,7 +115,7 @@ $jh = Loader::helper('json');
 						<label><?php  echo t('Run this Job Every')?></label>
 						<div class="input">
 							<?php echo $form->text('value',$j->scheduledValue,array('class'=>'span2'))?>
-							<?php echo $form->select('unit', array('hours'=>'Hours', 'days'=>'Days', 'weeks'=>'Weeks', 'months'=>'Months'), $j->scheduledInterval, array('class'=>'span2'))?>
+							<?php echo $form->select('unit', array('hours'=>t('Hours'), 'days'=>t('Days'), 'weeks'=>t('Weeks'), 'months'=>t('Months')), $j->scheduledInterval, array('class'=>'span2'))?>
 						</div>
 					</div>
 				</div>
@@ -148,7 +148,7 @@ $jh = Loader::helper('json');
 			</fieldset>
 			<div class="ccm-pane-footer">
 				<div class="ccm-buttons">
-					<input type="submit" value="Save" class="btn ccm-button-v2 primary ccm-button-v2-right">
+					<input type="submit" value="<?php echo t('Save'); ?>" class="btn ccm-button-v2 primary ccm-button-v2-right">
 				</div>	
 			</div>
 		</form>
@@ -311,7 +311,7 @@ if (is_object($djs)) { ?>
 					<label><?php  echo t('Run this Job Every')?></label>
 					<div class="input">
 						<?php echo $form->text('value',$set->scheduledValue,array('class'=>'span2'))?>
-						<?php echo $form->select('unit', array('hours'=>'Hours', 'days'=>'Days', 'weeks'=>'Weeks', 'months'=>'Months'), $set->scheduledInterval, array('class'=>'span2'))?>
+						<?php echo $form->select('unit', array('hours'=>t('Hours'), 'days'=>t('Days'), 'weeks'=>t('Weeks'), 'months'=>t('Months')), $set->scheduledInterval, array('class'=>'span2'))?>
 					</div>
 				</div>
 			</fieldset>
