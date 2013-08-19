@@ -445,7 +445,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				// In case we have a clipboard block we use its id for uniqueIdentifier
 				$proxyBlock = $obj->getProxyBlock();
 				if ($proxyBlock) {
-					$this->uniqueIdentifier = 'BLOCK_' . $proxyBlock->getInstance()->getBlockID();
+					$this->uniqueIdentifier = 'BLOCK_' . $proxyBlock->getInstance()->getOriginalBlockID();
 				} else {
 					$this->uniqueIdentifier = 'BLOCK_' . $obj->getBlockID();
 				}
