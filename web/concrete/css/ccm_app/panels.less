@@ -225,19 +225,22 @@ div#ccm-panel-page {
  */
 div.ccm-panel-detail {
 	z-index: 103;
-	position: fixed;
+	width: 100%;
 	height: 100%;
+	position: fixed;
 	top: 0;
 	display: none;
+	.box-sizing(border-box);
 	background: transparent;
 }
 
 html.ccm-panel-left div.ccm-panel-detail {
-	left: 321px;
+	padding-left: 360px;
+	padding-right: 40px;
 }
 
 html.ccm-panel-right div.ccm-panel-detail {
-	right: 321px;
+	padding-right: 321px;
 }
 
 /** 
@@ -249,9 +252,8 @@ div.ccm-panel-detail {
 
 	header {
 		font-size: 22px;
-		margin: -40px -40px -40px -95px;
+		margin: -40px -40px 30px -95px;
 		padding: 34px 80px 34px 95px;
-		margin-bottom: 10px;
 		font-weight: 600;
 	}
 }
