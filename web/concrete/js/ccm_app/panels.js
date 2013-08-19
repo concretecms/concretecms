@@ -66,8 +66,15 @@ var CCMPanel = function(options) {
 				$(this).removeClass('ccm-panel-loading').addClass('ccm-panel-loaded');
 				$(this).dequeue();
 			});
-			$panel.find('[data-swap-panel]').on('click', function() {
-				alert('hi');
+			$panel.find('[data-launch-panel-detail]').on('click', function() {
+				var $detail = $('#ccm-panel-detail');
+				var transition = $(this).attr('data-panel-detail-transition');
+				var identifier = $(this).attr('data-launch-panel-detail').replace('/', '-');
+				$detail.addClass('ccm-panel-detail-' + identifier);
+				var url = CCM_TOOLS_PATH + '/panels/' + $(this).attr('data-launch-panel-detail');
+				$detail.load(url, {'cID': CCM_CID}, function() {
+					CCMPanelManager.showDetail(transition);
+				});
 				return false;
 			})
 		});
@@ -107,6 +114,19 @@ var CCMPanelManager = function() {
 	    	});
 		},
 
+		showDetail: function(transition) {
+			$('#ccm-panel-detail')
+			.clearQueue()
+			.queue(function() {
+				$(this).addClass('ccm-panel-flip');
+				$(this).dequeue();
+			})
+			.show(0)
+			.queue(function() {
+				$('.ccm-page').addClass('ccm-page-flip');
+			});
+		},
+
 		register: function(options) {
 			var options = $.extend({
 				translucent: true,
@@ -131,6 +151,8 @@ var CCMPanelManager = function() {
 			$('<div />', {
 				'class': 'ccm-panel-shadow-layer'
 			}).appendTo($('#' + panel.getDOMID()));
+
+			
 		},
 
 		getByIdentifier: function(panelID) {
@@ -140,19 +162,6 @@ var CCMPanelManager = function() {
 				}
 			}
 		}
-		/*,
-
-
-		hideAll: function() {
-			$('.ccm-panel-active').removeClass('ccm-panel-active');
-			$('#ccm-panel-overlay').queue(function() {
-				$(this).removeClass('ccm-panel-translucent');
-				$(this).dequeue();
-			}).delay(1000).hide(0);
-			$('html').removeClass('ccm-panel-right').removeClass('ccm-panel-left');
-		}
-		*/
-
 
 	}
 

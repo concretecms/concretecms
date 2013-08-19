@@ -39,6 +39,8 @@ html.ccm-panel-ready {
 
 	div.ccm-page {
 		-webkit-transform: translate3d(0, 0, 0);
+		backface-visibility: hidden;
+		-webkit-backface-visibility: hidden;
 		.transition(-webkit-transform 0.5s cubic-bezier(0.190, 1.000, 0.220, 1.000));
 	}
 
@@ -210,4 +212,61 @@ div#ccm-panel-page {
 
 
 
+}
+
+
+/** 
+ * Panel main detail areas
+ */
+div#ccm-panel-detail {
+	z-index: 103;
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	display: none;
+	background: transparent;
+}
+
+div#ccm-panel-detail.ccm-panel-flip {
+	transform: rotateY(180deg);
+	-webkit-transform: rotateY(180deg);
+	backface-visibility: hidden;
+	-webkit-backface-visibility: hidden;
+}
+
+html.ccm-panel-left div#ccm-panel-detail {
+	left: 330px;
+}
+
+html.ccm-panel-right div#ccm-panel-detail {
+	right: 330px;
+}
+
+/** 
+ * Panel Detail - Properties
+ */
+div#ccm-panel-detail.ccm-panel-detail-page-properties {
+	background-color: #000;
+}
+
+
+
+/** 
+ * Miscellaneous effects classes 
+ * First we have to push the item with positioning
+ * because it's going to lose its position once the new effect takes place.
+ */
+
+html.ccm-page-left .ccm-page-flip {
+	margin-left: 320px;
+}
+
+html.ccm-page-right .ccm-page-flip {
+	margin-right: 320px;
+}
+
+html.ccm-panel-ready div.ccm-page.ccm-page-flip {
+	transform: rotateY(180deg);
+	-webkit-transform: rotateY(180deg);
 }
