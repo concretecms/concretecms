@@ -68,15 +68,30 @@ var CCMPanel = function(options) {
 			});
 			$panel.find('[data-launch-panel-detail]').on('click', function() {
 				var identifier = $(this).attr('data-launch-panel-detail').replace('/', '-');
-				var detailID = 'ccm-panel-detail-' + identifier);
+				var detailID = 'ccm-panel-detail-' + identifier;
 				$detail = $('<div />', {
 					id: detailID,
 					class: 'ccm-panel-detail'
 				}).appendTo(document.body);
 				var transition = $(this).attr('data-panel-detail-transition');
-				var url = CCM_TOOLS_PATH + '/panels/' + $(this).attr('data-launch-panel-detail');
+				if (transition) {
+					$('div.ccm-page')
+					.queue(function() {
+						$detail.addClass('ccm-transition-' + transition);
+						$(this).addClass('ccm-transition-' + transition);
+						$(this).dequeue();
+					})
+					.delay(3)
+					.queue(function() {
+						$detail.addClass('ccm-transition-' + transition + '-start');
+						$(this).addClass('ccm-transition-' + transition + '-start');
+						$(this).dequeue();
+					})
+				}
+				var url = CCM_TOOLS_PATH + '/panels/details/' + $(this).attr('data-launch-panel-detail');
 				$detail.load(url, {'cID': CCM_CID}, function() {
-					//CCMPanelManager.showDetail(transition);
+					$('div.ccm-page').addClass('ccm-transition-complete');
+					$detail.addClass('ccm-transition-complete');
 				});
 				return false;
 			})
