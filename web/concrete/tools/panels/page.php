@@ -17,7 +17,7 @@ if (is_object($c) && !$c->isError()) {
 						$allowedAKIDs = $asl->getAttributesAllowedArray();
 					}
 					if (is_object($asl) && ($asl->allowEditName() || $asl->allowEditDescription() || $asl->allowEditDateTime() || $asl->allowEditUserID())) { ?>
-						<li><a href=""><?=t('Properties')?></a></li>
+						<li><a href="#" data-launch-panel-detail="page/properties" data-panel-detail-transition="swap"><?=t('Properties')?></a></li>
 					<? }
 					if (is_array($allowedAKIDs) && count($allowedAKIDs) > 0) { ?>
 						<li><a href=""><?=t('Attributes')?></a></li>
