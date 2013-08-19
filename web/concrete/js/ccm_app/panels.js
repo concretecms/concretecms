@@ -67,13 +67,16 @@ var CCMPanel = function(options) {
 				$(this).dequeue();
 			});
 			$panel.find('[data-launch-panel-detail]').on('click', function() {
-				var $detail = $('#ccm-panel-detail');
-				var transition = $(this).attr('data-panel-detail-transition');
 				var identifier = $(this).attr('data-launch-panel-detail').replace('/', '-');
-				$detail.addClass('ccm-panel-detail-' + identifier);
+				var detailID = 'ccm-panel-detail-' + identifier);
+				$detail = $('<div />', {
+					id: detailID,
+					class: 'ccm-panel-detail'
+				}).appendTo(document.body);
+				var transition = $(this).attr('data-panel-detail-transition');
 				var url = CCM_TOOLS_PATH + '/panels/' + $(this).attr('data-launch-panel-detail');
 				$detail.load(url, {'cID': CCM_CID}, function() {
-					CCMPanelManager.showDetail(transition);
+					//CCMPanelManager.showDetail(transition);
 				});
 				return false;
 			})
@@ -112,19 +115,6 @@ var CCMPanelManager = function() {
 				}
 				$(this).dequeue();
 	    	});
-		},
-
-		showDetail: function(transition) {
-			$('#ccm-panel-detail')
-			.clearQueue()
-			.queue(function() {
-				$(this).addClass('ccm-panel-flip');
-				$(this).dequeue();
-			})
-			.show(0)
-			.queue(function() {
-				$('.ccm-page').addClass('ccm-page-flip');
-			});
 		},
 
 		register: function(options) {
