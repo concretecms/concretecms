@@ -11,7 +11,6 @@ var CCMEditMode = function() {
 		CCMPanelManager.register({'identifier': 'page', 'translucent': false});
 		CCMPanelManager.register({'identifier': 'sitemap', 'position': 'right'});
 		$('<div />', {'id': 'ccm-panel-overlay'}).appendTo($(document.body));
-		$('<div />', {'id': 'ccm-panel-detail'}).appendTo($(document.body));
 
 		$('[data-launch-panel]').on('click', function() {
 			var panelID = $(this).attr('data-launch-panel');
