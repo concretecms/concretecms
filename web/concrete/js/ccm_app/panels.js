@@ -97,11 +97,15 @@ var CCMPanel = function(options) {
 					$('div.ccm-page').addClass('ccm-transition-complete');
 					var $actions = $(this).find('.ccm-pane-detail-form-actions');
 					if ($actions.length) {
-						$('<div />', {
-							id: 'ccm-pane-detail-form-actions-wrapper',
-							class: 'ccm-ui'
-						}).appendTo(document.body);
-						$actions.appendTo('#ccm-pane-detail-form-actions-wrapper');
+						$.delay(500)
+						.queue(function() {
+							$('<div />', {
+								id: 'ccm-pane-detail-form-actions-wrapper',
+								class: 'ccm-ui'
+							}).appendTo(document.body);
+							$actions.appendTo('#ccm-pane-detail-form-actions-wrapper');
+							$(this).dequeue();
+						});
 					}
 					$detail.addClass('ccm-transition-complete');
 				});
