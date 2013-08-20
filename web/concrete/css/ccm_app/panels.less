@@ -24,18 +24,12 @@ div#ccm-panel-overlay.ccm-panel-translucent {
 
 
 html.ccm-panel-ready.ccm-panel-left {
-	body {
-		overflow: hidden;
-	}
 	div.ccm-page {
 		-webkit-transform: translate3d(320px, 0, 0);
 	}
 }
 
 html.ccm-panel-ready.ccm-panel-right {
-	body {
-		overflow: hidden;
-	}
 	div.ccm-page {
 		-webkit-transform: translate3d(-320px, 0, 0);
 	}
@@ -227,28 +221,27 @@ div.ccm-panel-detail {
 	z-index: 103;
 	width: 100%;
 	height: 100%;
-	position: fixed;
+	position: absolute;
 	top: 0;
 	display: none;
 	.box-sizing(border-box);
 	background: transparent;
+	padding-top: 48px;
 }
 
 html.ccm-panel-left div.ccm-panel-detail {
-	padding-left: 360px;
-	padding-right: 40px;
+	padding-left: 321px;
 }
 
 html.ccm-panel-right div.ccm-panel-detail {
 	padding-right: 321px;
 }
 
-/** 
- * Panel Detail Content
- */
+div.ccm-panel-detail-content {
+	padding: 40px 40px 90px 40px;
+}
+
 div.ccm-panel-detail {
-	margin: 48px 0px 0px 0px;
-	padding: 40px 40px 40px 95px;
 
 	header {
 		font-size: 22px;
@@ -258,13 +251,16 @@ div.ccm-panel-detail {
 	}
 }
 
-
-
 /** 
  * Panel Detail - Properties
  */
 div#ccm-panel-detail-page-properties {
+	
 	background-color: #f3fbff;
+
+	div.ccm-panel-detail-content {
+		background-color: #f3fbff;
+	}
 
 	header {
 		background-color: #e1f4ff;
@@ -323,5 +319,29 @@ html.ccm-panel-ready div.ccm-page.ccm-transition-swap.ccm-transition-swap-start 
 	transition-duration: 0.5s;
 	transition-easing: none;
 	-webkit-transition-easing: none;
+}
+
+html.ccm-panel-ready div.ccm-page.ccm-transition-swap.ccm-transition-complete {
+	display: none;
+}
+
+
+/** 
+ * Panel Forms
+ */
+
+div#ccm-pane-detail-form-actions-wrapper {
+	position: fixed;
+	bottom: 0px;
+	left: 0px;
+	z-index: 106;
+	width: 100%;
+}
+
+div.ccm-pane-detail-form-actions {
+	.clearfix;
+	background-color: #e3eaee;
+	padding: 30px;
+	margin-left: 321px;
 }
 

@@ -73,6 +73,9 @@ var CCMPanel = function(options) {
 					id: detailID,
 					class: 'ccm-panel-detail'
 				}).appendTo(document.body);
+				$content = $('<div />', {
+					class: 'ccm-panel-detail-content'
+				}).appendTo($detail);				
 				var transition = $(this).attr('data-panel-detail-transition');
 				if (transition) {
 					$('div.ccm-page')
@@ -88,9 +91,18 @@ var CCMPanel = function(options) {
 						$(this).dequeue();
 					})
 				}
+				$('html').addClass('ccm-panel-detail-open');
 				var url = CCM_TOOLS_PATH + '/panels/details/' + $(this).attr('data-launch-panel-detail');
-				$detail.load(url, {'cID': CCM_CID}, function() {
+				$content.load(url, {'cID': CCM_CID}, function() {
 					$('div.ccm-page').addClass('ccm-transition-complete');
+					var $actions = $(this).find('.ccm-pane-detail-form-actions');
+					if ($actions.length) {
+						$('<div />', {
+							id: 'ccm-pane-detail-form-actions-wrapper',
+							class: 'ccm-ui'
+						}).appendTo(document.body);
+						$actions.appendTo('#ccm-pane-detail-form-actions-wrapper');
+					}
 					$detail.addClass('ccm-transition-complete');
 				});
 				return false;

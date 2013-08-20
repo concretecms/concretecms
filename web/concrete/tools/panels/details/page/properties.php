@@ -10,47 +10,58 @@ if (is_object($c) && !$c->isError()) {
 	if ($cp->canEditPageProperties()) { ?>
 
 		<section class="ccm-ui">
+			<div class="container">
 			<header><?=t('Properties')?></header>
-			<form method="post" class="form-horizontal" action="<?=$c->getCollectionAction()?>">
+			<form method="post" class="" action="<?=$c->getCollectionAction()?>">
 			<input type="hidden" name="approveImmediately" value="<?=$approveImmediately?>" />
 			<input type="hidden" name="rel" value="<?=$_REQUEST['rel']?>" />
-			
+
 			<? if ($asl->allowEditName()) { ?>
 			<div class="form-group">
-				<label for="cName" class="form-label"><?=t('Name')?></label>
-				<div class="input"><input type="text" id="cName" name="cName" value="<?=htmlentities( $c->getCollectionName(), ENT_QUOTES, APP_CHARSET) ?>" />
-					<span class="help-inline"><?=t("Page ID: %s", $c->getCollectionID())?></span>
+				<label for="cName" class="control-label"><?=t('Name')?></label>
+				<div>
+				<input type="text" class="form-control" id="cName" name="cName" value="<?=htmlentities( $c->getCollectionName(), ENT_QUOTES, APP_CHARSET) ?>" />
 				</div>
 			</div>
 			<? } ?>
 
 			<? if ($asl->allowEditDateTime()) { ?>
 			<div class="form-group">
-				<label for="cDatePublic" class="form-label"><?=t('Public Date/Time')?></label>
-				<div class="input"><? print $dt->datetime('cDatePublic', $c->getCollectionDatePublic(null, 'user')); ?></div>
+				<label for="cName" class="control-label"><?=t('Created Time')?></label>
+				<div>
+					<? print $dt->datetime('cDatePublic', $c->getCollectionDatePublic(null, 'user')); ?>
+				</div>
 			</div>
 			<? } ?>
 			
 			<? if ($asl->allowEditUserID()) { ?>
 			<div class="form-group">
-			<label class="form-label"><?=t('Owner')?></label>
-			<div class="input">
+				<label for="cName" class="control-label"><?=t('Author')?></label>
+				<div>
 				<? 
 				print $uh->selectUser('uID', $c->getCollectionUserID());
 				?>
-			</div>
+				</div>
 			</div>
 			<? } ?>
 			
 
 			<? if ($asl->allowEditDescription()) { ?>
-			<div class="clearfix">
-			<label for="cDescription"><?=t('Description')?></label>
-			<div class="input"><textarea id="cDescription" name="cDescription" class="ccm-input-text" style="width: 495px; height: 50px"><?=$c->getCollectionDescription()?></textarea></div>
+			<div class="form-group">
+				<label for="cDescription" class="control-label"><?=t('Description')?></label>
+				<div>
+					<textarea id="cDescription" name="cDescription" class="form-control" rows="8"><?=$c->getCollectionDescription()?></textarea>
+				</div>
 			</div>
 			<? } ?>
 
-			</form>			
+			</form>		
+
+			<div class="ccm-pane-detail-form-actions">
+				<button class="pull-left btn" type="button"><?=t('Cancel')?></button>
+				<button class="pull-right btn btn-primary" type="button"><?=t('Save Changes')?></button>
+			</div>
+			</div>	
 		</section>
 	<? }
 }
