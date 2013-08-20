@@ -914,7 +914,7 @@ a#ccm-export-results span{background:transparent url(../images/icons/excel.png) 
 ul.ccm-search-sortable-column-wrapper{border:2px solid #dedede;padding:0;margin:0;padding-top:8px}
 ul.ccm-search-sortable-column-wrapper li{padding:2px 0 4px 24px;margin-left:4px;margin-bottom:4px;background:transparent url(../images/icons/column.png) no-repeat scroll;list-style-type:none}
 ul.ccm-search-sortable-column-wrapper li:hover{cursor:move}
-div.ccm-panel{width:320px;height:100%;position:fixed;top:0;z-index:105}
+div.ccm-panel{width:320px;height:100%;position:fixed;top:0;z-index:105;overflow:hidden}
 div#ccm-panel-overlay{z-index:103;position:fixed;width:100%;height:100%;top:0;left:0;display:none;background:transparent;-webkit-transition:background-color .5s cubic-bezier(.19, 1, .22, 1);transition:background-color .5s cubic-bezier(.19, 1, .22, 1)}
 div#ccm-panel-overlay.ccm-panel-translucent{background-color:rgba(255,255,255,0.7)}
 html.ccm-panel-ready.ccm-panel-left div.ccm-page{-webkit-transform:translate3d(320px, 0, 0)}
@@ -926,7 +926,7 @@ div.ccm-panel-left.ccm-panel-active{-webkit-transform:translate3d(0, 0, 0)}
 div.ccm-panel-right.ccm-panel-active{-webkit-transform:translate3d(0, 0, 0)}
 div.ccm-panel-right div.ccm-panel-shadow-layer{width:20px;height:100%;position:absolute;top:0;z-index:106;box-shadow:inset 10px 10px 10px rgba(128,128,128,0.3);-webkit-box-shadow:inset 10px 10px 10px rgba(128,128,128,0.3);-moz-box-shadow:inset 10px 10px 10px rgba(128,128,128,0.3);box-shadow:inset 10px 10px 10px rgba(128,128,128,0.3)}
 div.ccm-panel-left div.ccm-panel-shadow-layer{width:20px;height:100%;position:absolute;top:0;right:0;z-index:106;box-shadow:inset -10px 10px 10px rgba(128,128,128,0.3);-webkit-box-shadow:inset -10px 10px 10px rgba(128,128,128,0.3);-moz-box-shadow:inset -10px 10px 10px rgba(128,128,128,0.3);box-shadow:inset -10px 10px 10px rgba(128,128,128,0.3)}
-div.ccm-panel-content{padding:60px 20px 20px 20px}
+div.ccm-panel-content{padding:60px 20px 20px 20px;position:absolute;top:0;width:320px;left:0;-webkit-transition:-webkit-transform .5s cubic-bezier(.19, 1, .22, 1);transition:-webkit-transform .5s cubic-bezier(.19, 1, .22, 1)}
 div.ccm-panel-content header{margin:-13px -20px -20px -20px;font-size:16px;padding:15px 15px 15px 40px;margin-bottom:10px;font-weight:500}div.ccm-panel-content header aside{float:right;font-size:11px;font-weight:lighter;margin-top:4px}div.ccm-panel-content header aside a{text-decoration:none}
 div.ccm-panel-content menu li{margin-top:10px;list-style-type:none}div.ccm-panel-content menu li a{display:block;text-decoration:none;font-size:14px;font-weight:500;padding:5px 21px 5px 21px}
 div.ccm-panel-content menu li a:hover{text-decoration:none;-webkit-border-radius:4px;-moz-border-radius:4px;border-radius:4px;-ms-border-radius:4px}
@@ -938,6 +938,13 @@ div#ccm-panel-page{background-color:#2a2c30}div#ccm-panel-page header{color:#3ba
 div#ccm-panel-page menu li a{color:#737c8e}
 div#ccm-panel-page menu li a:hover{background-color:#222427;color:#dce5f7}
 div#ccm-panel-page div.ccm-panel-shadow-layer{box-shadow:inset -10px 10px 10px rgba(20,20,20,0.3);-webkit-box-shadow:inset -10px 10px 10px rgba(20,20,20,0.3);-moz-box-shadow:inset -10px 10px 10px rgba(20,20,20,0.3);box-shadow:inset -10px 10px 10px rgba(20,20,20,0.3)}
+div#ccm-panel-page a.ccm-panel-back{color:#5b5c5f}
+div#ccm-panel-page a.ccm-panel-back:hover{color:#3baaf7}
+div.ccm-panel-slide-left{-webkit-transform:translate3d(-320px, 0, 0)}
+div.ccm-panel-slide-right{-webkit-transform:translate3d(320px, 0, 0)}
+div.ccm-panel-content-appearing{-webkit-transform:translate3d(320px, 0, 0)}
+div.ccm-panel-content.ccm-panel-content-visible{-webkit-transform:translate3d(0, 0, 0)}
+a.ccm-panel-back,a.ccm-panel-back:hover{font-size:12px;text-decoration:none;margin-right:4px}
 div.ccm-panel-detail{z-index:103;width:100%;height:100%;position:absolute;top:0;display:none;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;background:transparent;padding-top:48px}
 html.ccm-panel-left div.ccm-panel-detail{padding-left:321px}
 html.ccm-panel-right div.ccm-panel-detail{padding-right:321px}
