@@ -249,6 +249,7 @@ div.ccm-panel-detail {
 		padding: 34px 80px 34px 95px;
 		font-weight: 600;
 	}
+
 }
 
 /** 
@@ -330,18 +331,24 @@ html.ccm-panel-ready div.ccm-page.ccm-transition-swap.ccm-transition-complete {
  * Panel Forms
  */
 
+div.ccm-pane-detail-form-actions {
+	.opacity(0);
+	.transition(opacity 0.5s cubic-bezier(0.190, 1.000, 0.220, 1.000));
+}
+
 div#ccm-pane-detail-form-actions-wrapper {
 	position: fixed;
 	bottom: 0px;
 	left: 0px;
 	z-index: 106;
 	width: 100%;
-}
 
-div.ccm-pane-detail-form-actions {
-	.clearfix;
-	background-color: #e3eaee;
-	padding: 30px;
-	margin-left: 321px;
+	div.ccm-pane-detail-form-actions {
+		.clearfix;
+		background-color: #e3eaee;
+		padding: 30px;
+		margin-left: 321px;
+	}
+
 }
 
