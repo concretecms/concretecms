@@ -79,7 +79,7 @@ var CCMPanel = function(options) {
 	}		
 
 	this.setupPanelDetails = function($panel) {
-		$panel.find('[data-launch-panel-detail]').on('click', function() {
+		$panel.find('[data-launch-panel-detail]').unbind().on('click', function() {
 			var identifier = $(this).attr('data-launch-panel-detail').replace('/', '-');
 			var detailID = 'ccm-panel-detail-' + identifier;
 			$detail = $('<div />', {
