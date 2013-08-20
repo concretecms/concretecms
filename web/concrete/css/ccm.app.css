@@ -952,9 +952,9 @@ html.ccm-panel-right div.ccm-page.ccm-transition-swap{position:relative;right:32
 html.ccm-panel-ready div.ccm-page.ccm-transition-swap{transition-duration:0;-webkit-transition-duration:0;transform:none;-webkit-transform:none}
 html.ccm-panel-ready div.ccm-page.ccm-transition-swap.ccm-transition-swap-start{transform:rotateY(180deg);-webkit-transform:rotateY(180deg);-webkit-transition-duration:.5s;transition-duration:.5s;transition-easing:none;-webkit-transition-easing:none}
 html.ccm-panel-ready div.ccm-page.ccm-transition-swap.ccm-transition-complete{display:none}
-div#ccm-pane-detail-form-actions-wrapper{position:fixed;bottom:0;left:0;z-index:106;width:100%}
-div.ccm-pane-detail-form-actions{background-color:#e3eaee;padding:30px;margin-left:321px}div.ccm-pane-detail-form-actions:before,div.ccm-pane-detail-form-actions:after{content:" ";display:table;}
-div.ccm-pane-detail-form-actions:after{clear:both}
+div.ccm-pane-detail-form-actions{opacity:0;filter:alpha(opacity=0);-webkit-transition:opacity .5s cubic-bezier(.19, 1, .22, 1);transition:opacity .5s cubic-bezier(.19, 1, .22, 1)}
+div#ccm-pane-detail-form-actions-wrapper{position:fixed;bottom:0;left:0;z-index:106;width:100%}div#ccm-pane-detail-form-actions-wrapper div.ccm-pane-detail-form-actions{background-color:#e3eaee;padding:30px;margin-left:321px}div#ccm-pane-detail-form-actions-wrapper div.ccm-pane-detail-form-actions:before,div#ccm-pane-detail-form-actions-wrapper div.ccm-pane-detail-form-actions:after{content:" ";display:table;}
+div#ccm-pane-detail-form-actions-wrapper div.ccm-pane-detail-form-actions:after{clear:both}
 div.newsflow{z-index:1001;width:940px;min-height:590px;margin:0 auto 0 auto;position:relative;background-color:#fff;border:1px solid #666;-webkit-border-radius:6px;-moz-border-radius:6px;border-radius:6px;-ms-border-radius:6px;-webkit-box-shadow:0 3px 7px rgba(0,0,0,0.3);-moz-box-shadow:0 3px 7px rgba(0,0,0,0.3);box-shadow:0 3px 7px rgba(0,0,0,0.3)}
 div.newsflow table.newsflow-layout td{vertical-align:top;padding:12px;border-bottom:1px solid #dedede;border-top:0 !important;border-left:0 !important;height:125px;border-right:1px solid #dedede;background-clip:padding-box}
 div.newsflow table.newsflow-layout td:last-child{border-right:0}
