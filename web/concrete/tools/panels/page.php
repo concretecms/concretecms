@@ -17,7 +17,7 @@ if (is_object($c) && !$c->isError()) {
 						$allowedAKIDs = $asl->getAttributesAllowedArray();
 					}
 					if (is_object($asl) && ($asl->allowEditName() || $asl->allowEditDescription() || $asl->allowEditDateTime() || $asl->allowEditUserID())) { ?>
-						<li><a href="#" data-launch-panel-detail="page/properties" data-panel-detail-transition="swap"><?=t('Properties')?></a></li>
+						<li><a href="#" data-launch-panel-detail="page/properties" data-panel-transition="swap"><?=t('Properties')?></a></li>
 					<? }
 					if (is_array($allowedAKIDs) && count($allowedAKIDs) > 0) { ?>
 						<li><a href=""><?=t('Attributes')?></a></li>
@@ -27,7 +27,7 @@ if (is_object($c) && !$c->isError()) {
 					<? } ?>
 				<? } ?>
 				<? if ($cp->canViewPageVersions()) { ?>
-					<li><a href="#" data-panel-direction="right" data-swap-panel="page/versions"><?=t('Version History')?></a></li>
+					<li><a href="#" data-launch-sub-panel="page/versions"><?=t('Version History')?></a></li>
 				<? } ?>
 				<? if ($cp->canPreviewPageAsUser() && PERMISSIONS_MODEL == 'advanced') { ?>
 					<li><a href="#"><?=t('View as User')?></a></li>

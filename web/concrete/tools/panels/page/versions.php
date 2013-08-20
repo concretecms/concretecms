@@ -6,8 +6,9 @@ if (is_object($c) && !$c->isError()) {
 	if ($cp->canViewPageVersions()) { ?>
 
 		<section>
-			<header>&lt; <?=t('Versions')?></header>
-			<br/><br/>
+			<header><a href="" data-panel-navigation="back" class="ccm-panel-back"><span class="glyphicon glyphicon-chevron-left"></span></a> <?=t('Versions')?></header>
+					<menu><li><a href="#" data-launch-sub-panel="page/versions"><?=t('Version 2')?></a></li></menu>
+
 		</section>
 
 

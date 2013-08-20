@@ -4,6 +4,7 @@ div.ccm-panel {
 	position: fixed;
 	top: 0px;
 	z-index: 105;
+	overflow: hidden;
 }
 
 div#ccm-panel-overlay {
@@ -94,6 +95,11 @@ div.ccm-panel-left div.ccm-panel-shadow-layer {
  */
 div.ccm-panel-content {
 	padding: 60px 20px 20px 20px;
+	position: absolute;
+	top: 0px;
+	width: 320px;
+	left: 0px;
+	.transition(-webkit-transform 0.5s cubic-bezier(0.190, 1.000, 0.220, 1.000));
 }
 
 div.ccm-panel div.ccm-panel-content {}
@@ -210,9 +216,45 @@ div#ccm-panel-page {
 		.box-shadow(inset -10px 10px 10px rgba(20,20,20,0.3));
 	}
 
+	a.ccm-panel-back {
+		color: #5b5c5f;
+	}
 
-
+	a.ccm-panel-back:hover {
+		color: #3baaf7;
+	}
 }
+
+
+
+
+/** 
+ * Panel Drill Down
+ */
+div.ccm-panel-slide-left {
+	-webkit-transform: translate3d(-320px, 0, 0);
+}
+
+div.ccm-panel-slide-right {
+	-webkit-transform: translate3d(320px, 0, 0);
+}
+
+div.ccm-panel-content-appearing {
+	-webkit-transform: translate3d(320px, 0, 0);
+}
+
+div.ccm-panel-content.ccm-panel-content-visible {
+	-webkit-transform: translate3d(0px, 0, 0);
+}
+
+a.ccm-panel-back,
+a.ccm-panel-back:hover {
+	font-size: 12px;
+	text-decoration: none;
+	margin-right: 4px;
+}
+
+
 
 /** 
  * Panel main detail areas
