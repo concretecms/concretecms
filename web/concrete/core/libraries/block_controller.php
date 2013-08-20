@@ -56,16 +56,11 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		
 
 		protected $identifier;
-		protected $uniqueIdentifier;
 		
 		public function getIdentifier() {
 			return $this->identifier;
 		}
 
-		public function getUniqueIdentifier() {
-			return $this->uniqueIdentifier;
-		}
-		
 		/**
 		 * Sets a value used by a particular block. These variables will automatically be present in the corresponding views used by the block.
 		 * @param string $key
@@ -441,15 +436,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			} else if ($obj instanceof Block) {
 				$b = $obj;
 				$this->identifier = 'BLOCK_' . $obj->getBlockID();
-
-				// In case we have a clipboard block we use its id for uniqueIdentifier
-				$proxyBlock = $obj->getProxyBlock();
-				if ($proxyBlock) {
-					$this->uniqueIdentifier = 'BLOCK_' . $proxyBlock->getInstance()->getOriginalBlockID();
-				} else {
-					$this->uniqueIdentifier = 'BLOCK_' . $obj->getBlockID();
-				}
-
 				$this->bID = $b->getBlockID();
 				$this->btHandle = $obj->getBlockTypeHandle();
 				$this->bActionCID = $obj->getBlockActionCollectionID();
