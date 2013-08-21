@@ -1,4 +1,4 @@
-ul.dynatree-container{font-family:tahoma,arial,helvetica;font-size:10pt;white-space:nowrap;padding:3px;margin:0;background-color:#fff;overflow:auto;height:100%;}
+ul.dynatree-container{font-size:12px;white-space:nowrap;padding:3px;margin:0;overflow:auto;height:100%;}
 ul.dynatree-container ul{padding:0 0 0 16px;margin:0}
 ul.dynatree-container li{list-style-image:none;list-style-position:outside;list-style-type:none;-moz-background-clip:border;-moz-background-inline-policy:continuous;-moz-background-origin:padding;background-attachment:scroll;background-color:transparent;background-repeat:repeat-y;background-image:url("../images/dynatree/vline.gif");background-position:0 0;margin:0;padding:1px 0 0 0}
 ul.dynatree-container li.dynatree-lastsib{background-image:none}
