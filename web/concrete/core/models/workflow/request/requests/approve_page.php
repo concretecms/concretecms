@@ -75,6 +75,7 @@ class Concrete5_Model_ApprovePagePageWorkflowRequest extends PageWorkflowRequest
 		$c = Page::getByID($this->getRequestedPageID());
 		$v = CollectionVersion::get($c, $this->cvID);
 		$v->approve(false);
+		Events::fire('on_page_version_submit_approve', $c);
 		$wpr = new WorkflowProgressResponse();
 		$wpr->setWorkflowProgressResponseURL(BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $c->getCollectionID());
 		return $wpr;
