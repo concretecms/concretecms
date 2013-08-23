@@ -73,8 +73,8 @@ class Concrete5_Helper_Validation_Strings {
 	 * @param int $length
 	 * @return bool
 	 */
-	public function min($str, $num) {
-		return strlen(trim($str)) >= $num;
+	public function min($str, $length) {
+		return strlen(trim($str)) >= $length;
 	}
 	
 	/** 
@@ -83,8 +83,8 @@ class Concrete5_Helper_Validation_Strings {
 	 * @param int $length
 	 * @return bool
 	 */
-	public function max($str, $num) {
-		return strlen(trim($str)) <= $num;
+	public function max($str, $length) {
+		return strlen(trim($str)) <= $length;
 	}
 	
 	/**
