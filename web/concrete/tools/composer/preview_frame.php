@@ -1,5 +1,5 @@
 <?
-defined('C5_EXECUTE') or die(_("Access Denied."));
+defined('C5_EXECUTE') or die("Access Denied.");
 
 $previewCID = Loader::helper('security')->sanitizeInt($_REQUEST['previewCID']);
 $url = Loader::helper('concrete/urls')->getToolsURL('/composer/preview');

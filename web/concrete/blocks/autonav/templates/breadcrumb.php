@@ -1,4 +1,4 @@
-<? defined('C5_EXECUTE') or die(_("Access Denied."));
+<? defined('C5_EXECUTE') or die("Access Denied.");
 $navItems = $controller->getNavItems(true);
 
 for ($i = 0; $i < count($navItems); $i++) {
