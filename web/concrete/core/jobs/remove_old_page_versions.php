@@ -52,7 +52,7 @@ class Concrete5_Job_RemoveOldPageVersions extends Job {
 		$cfg->save('OLD_VERSION_JOB_PAGE_NUM', $pNum);
 
 		//i18n: %1$d is the number of versions deleted, %2$d is the number of affected pages, %3$d is the number of times that the Remove Old Page Versions job has been executed.
-		return t2('%1$d versions deleted from %2$d page (%3$d)', '%1$d versions deleted from %2$d pages (%3$s)', $pageCount, $versionCount, $pageCount, implode(',', $pagesAffected));
+		return t2('%1$d versions deleted from %2$d page (%3$s)', '%1$d versions deleted from %2$d pages (%3$s)', $pageCount, $versionCount, $pageCount, implode(',', $pagesAffected));
 
 	}
 }
