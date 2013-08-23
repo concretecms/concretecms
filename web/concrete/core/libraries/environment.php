@@ -94,7 +94,7 @@ class Concrete5_Library_Environment {
 	}
 	
 	public function getDirectoryContents($dir, $ignoreFilesArray = array(), $recursive = false) {
-		$ignoreFiles = array_merge($this->ignoreFiles, $ignoreFilesArray);
+		$ignoreFiles = (is_array($ignoreFilesArray)) ? array_merge($this->ignoreFiles, $ignoreFilesArray) : $this->ignoreFiles;
 		$aDir = array();
 		if (is_dir($dir)) {
 			$handle = opendir($dir);
