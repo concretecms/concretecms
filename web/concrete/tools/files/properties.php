@@ -246,7 +246,7 @@ if (is_object($oc)) {
 </tr>
 <tr>
 	<td><strong><?=t('Size')?></strong></td>
-	<td colspan="2"><?=$fv->getSize()?> (<?=number_format($fv->getFullSize())?> <?=t('bytes')?>)</td>
+	<td colspan="2"><?=$fv->getSize()?> (<?=t2(/*i18n: %s is a number */ '%s byte', '%s bytes', $fv->getFullSize(), Loader::helper('number')->format($fv->getFullSize()))?>)</td>
 </tr>
 <tr>
 	<td><strong><?=t('Date Added')?></strong></td>
