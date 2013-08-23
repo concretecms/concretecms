@@ -69,8 +69,7 @@ class Concrete5_Library_Controller {
 			$this->helpers[] = 'html';
 		}
 		foreach($this->helpers as $h) {
-			$$h = Loader::helper($h);
-			$this->helperObjects[(str_replace('/','_',$h))] = $$h;
+			$this->helperObjects[(str_replace('/','_',$h))] = Loader::helper($h);
 		}		
 	}	
 	
