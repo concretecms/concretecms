@@ -236,7 +236,7 @@ abstract class Concrete5_Model_PermissionKey extends Object {
 		if ($pkHasCustomClass) {
 			$pkHasCustomClass = 1;
 		} else {
-			$$pkHasCustomClass = 0;
+			$pkHasCustomClass = 0;
 		}
 		$pkCategoryID = $db->GetOne("select pkCategoryID from PermissionKeyCategories where pkCategoryHandle = ?", $pkCategoryHandle);
 		$a = array($pkHandle, $pkName, $pkDescription, $pkCategoryID, $pkCanTriggerWorkflow, $pkHasCustomClass, $pkgID);
