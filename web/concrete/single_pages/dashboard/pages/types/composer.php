@@ -22,6 +22,7 @@ if ($cap->canAccessComposer()) { ?>
 	<div class="ccm-pane-body">
 	<?=$form->hidden('ctID', $ct->getCollectionTypeID()); ?>
     
+        <h3><?=t("Page type: ").$ct->getCollectionTypeName()?></h3>
         <table class="table" cellspacing="0" cellpadding="0" border="0">
             <thead>
                 <tr>
