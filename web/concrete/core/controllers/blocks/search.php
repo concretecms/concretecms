@@ -37,7 +37,6 @@ class Concrete5_Controller_Block_Search extends BlockController {
 	}
 	
 	public function validate($post) {
-		$exception = array();
 		$errors = Loader::helper('validation/error');
 		if ($post['title'] === false || $post['title'] == '') {
 			$errors->add(t("Please enter your Search Title."));
