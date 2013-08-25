@@ -37,7 +37,7 @@ class ConcreteUpgradeVersion562Helper {
 		$rpk = PermissionKey::getByHandle('view_page');
 		$vpk = PermissionKey::getByHandle('view_page_in_sitemap');
 		if (!is_object($vpk)) {
-			$vpk = PermissionKey::add('page', 'view_page_in_sitemap', 'View Page in Sitemap', 'View Page in Sitemap and Intelligent Search.', false, false);
+			$vpk = PermissionKey::add('page', 'view_page_in_sitemap', 'View Page in Sitemap', 'Controls whether a user can see a page in the sitemap or intelligent search.', false, false);
 		}
 		// now we have to get a list of all pages in the site that have their own permissions set.
 		$db = Loader::db();
