@@ -130,7 +130,7 @@ class Concrete5_Helper_Validation_Strings {
 	 * @return bool
 	 */
 	public function containsString($str, $cont = array()) {
-		$arr = ( ! is_array($cont)) ? array($cont) : $cont; // turn the string into an array
+		$arr = (!is_array($cont)) ? array($cont) : $cont; // turn the string into an array
 		foreach ($arr as $item) {
 			if (strstr($str, $item) !== false) {
 				return true;
