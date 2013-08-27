@@ -3,7 +3,7 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 class Concrete5_Controller_DownloadFile extends Controller {
 		
-	protected $force = 0;
+	protected $force = false;
 
 	/**
 	 * Automatically loads the file block class
@@ -79,7 +79,7 @@ class Concrete5_Controller_DownloadFile extends Controller {
 			
 			$this->set('error', t("Password incorrect. Please try again."));
 			
-			$this->set('force',($this->post('force')?1:0));
+			$this->set('force', ($this->post('force') ? true : false));
 			
 			$this->view($fID, $rcID);
 		}
