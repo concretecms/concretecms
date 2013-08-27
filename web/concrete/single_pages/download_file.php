@@ -26,7 +26,7 @@ $returnURL = ($_POST['returnURL']) ? $_POST['returnURL'] : $_SERVER['HTTP_REFERE
 	
 	<form action="<?= View::url('/download_file', 'submit_password', $fID) ?>" method="post">
 		<? if(isset($force)) { ?>
-			<input type="hidden" value="<?=force?>" name="force" />
+			<input type="hidden" value="<?= ($force) ? '1' : '0'; ?>" name="force" />
 		<? } ?>
 		<input type="hidden" value="<?= $returnURL ?>" name="returnURL" />
 		<input type="hidden" value="<?= $rcID ?>" name="rcID"/>
