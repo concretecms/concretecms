@@ -773,7 +773,9 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 			$wrapTemplateInTheme = false;
 			$this->checkMobileView();
-			Events::fire('on_start', $this);
+			if (defined('DB_DATABASE') && ($view !== '/upgrade')) {
+				Events::fire('on_start', $this);
+			}
 			
 			// Extract controller information from the view, and put it in the current context
 			if (!isset($this->controller)) {
