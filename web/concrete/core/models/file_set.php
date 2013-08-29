@@ -238,7 +238,7 @@
 		*/		
 		private function populateFiles(){			
 			$utility 			= new FileSetFile();
-			$this->fileSetFiles = $utility->Find('fsID=?',array($this->fsID));
+			$this->fileSetFiles = $utility->Find('fsID = ? ORDER BY fsDisplayOrder', array($this->fsID));
 		}
 		
 		public function hasFileID($f_id){
