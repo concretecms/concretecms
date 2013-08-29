@@ -96,7 +96,25 @@ class Concrete5_Controller_AttributeType_DateTime extends AttributeTypeControlle
 	}
 
 	public function validateForm($data) {
-		return $data['value'] != '';
+		if(!isset($this->akDateDisplayMode)) {
+			$this->load();
+		}
+		switch($this->akDateDisplayMode) {
+			case 'date_time':
+				if(empty($data['value_dt']) || (!is_numeric($data['value_h'])) || (!is_numeric($data['value_m']))) {
+					return false;
+				}
+				switch(DATE_FORM_HELPER_FORMAT_HOUR) {
+					case '12':
+						if(empty($data['value_a'])) {
+							return false;
+						}
+						break;
+				}
+				return true;
+			default:
+				return $data['value'] != '';
+		}
 	}
 
 	public function getValue() {
