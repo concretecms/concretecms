@@ -40,8 +40,11 @@
     margin-right: 5px;
   }
 
+}
+
+/* concrete5 has to restructure */
   // Linked list items
-  a& {
+  a.list-group-item {
     color: @list-group-link-color;
 
     .list-group-item-heading {
@@ -57,9 +60,9 @@
   }
 
   // Active class on item itself, not parent
-  &.active,
-  &.active:hover,
-  &.active:focus {
+  a.list-group-item.active,
+  a.list-group-item.active:hover,
+  a.list-group-item.active:focus {
     z-index: 2; // Place active items above their siblings for proper border styling
     color: @list-group-active-color;
     background-color: @list-group-active-bg;
@@ -73,7 +76,6 @@
       color: lighten(@list-group-active-bg, 40%);
     }
   }
-}
 
 // Custom content options
 // -------------------------

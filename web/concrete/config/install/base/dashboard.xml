@@ -332,6 +332,25 @@
 				</attributekey>
 			</attributes>
         </page>
+        <page name="Page Templates" path="/dashboard/pages/templates" filename="/dashboard/pages/templates/view.php" pagetype="" description="Form factors for pages in your site." package="">
+			<attributes>
+				<attributekey handle="icon_dashboard">
+					<value>icon-file</value>
+				</attributekey>
+			</attributes>
+        </page>
+		<page name="Add Page Template" path="/dashboard/pages/templates/add" filename="/dashboard/pages/templates/add.php" pagetype="" description="Add page templates to your site." package=""/>
+		
+        <page name="Attributes" path="/dashboard/pages/attributes" filename="/dashboard/pages/attributes.php" pagetype="" description="" package="">
+			<attributes>
+				<attributekey handle="meta_keywords">
+					<value>page attributes, custom</value>
+				</attributekey>
+				<attributekey handle="icon_dashboard">
+					<value>icon-cog</value>
+				</attributekey>
+			</attributes>
+        </page>
         <page name="Single Pages" path="/dashboard/pages/single" filename="/dashboard/pages/single.php" pagetype="" description="" package="">
         	<attributes>
         		<attributekey handle="meta_keywords">
@@ -831,13 +850,18 @@
 		</page>
 	
 
-        <page name="Composer" path="/dashboard/pages/types/composer" filename="/dashboard/pages/types/composer.php" pagetype="" description="" package=""/>
     </singlepages>
     <pagetypes>
         <pagetype handle="core_stack" name="Stack" internal="1" package="" />
         <pagetype handle="dashboard_primary_five" name="Dashboard Primary + Five" internal="1" package="" />
         <pagetype handle="dashboard_header_four_col" name="Dashboard Header + Four Column" internal="1" package="" />
     </pagetypes>
+
+    <pagetemplates>
+        <pagetemplate handle="core_stack" name="Stack" internal="1" package="" />
+        <pagetemplate handle="dashboard_primary_five" name="Dashboard Primary + Five" internal="1" package="" />
+        <pagetemplate handle="dashboard_header_four_col" name="Dashboard Header + Four Column" internal="1" package="" />
+    </pagetemplates>
     <pages>
     	<page name="Welcome to concrete5" path="/dashboard/welcome" filename="" description="Learn about how to use concrete5, how to develop for concrete5, and get general help." pagetype="dashboard_header_four_col">
 			<attributes>
