@@ -3,7 +3,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 $rssUrl = $showRss ? $controller->getRssUrl($b) : '';
 $th = Loader::helper('text');
 //$ih = Loader::helper('image'); //<--uncomment this line if displaying image attributes (see below)
-//$dh = Loader::helper('date'); //<--uncomment this line if displaying dates (see below)
 //Note that $nh (navigation helper) is already loaded for us by the controller (for legacy reasons)
 ?>
 
@@ -22,8 +21,7 @@ $th = Loader::helper('text');
 		
 		//Other useful page data...
 		
-		//$date = $dh->date(DATE_APP_GENERIC_MDY_FULL, strtotime($page->getCollectionDatePublic()));
-		//If you use the date also uncomment the "$dh = Loader::helper('date');" line on top 
+		//$date = $page->getCollectionDatePublic(DATE_APP_GENERIC_MDY_FULL);
 		
 		//$last_edited_by = $page->getVersionObject()->getVersionAuthorUserName();
 		
