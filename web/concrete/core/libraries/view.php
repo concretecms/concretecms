@@ -291,21 +291,12 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		 * @access private
 		 */
 		public function outputHeaderItems() {
-			
 			$items = $this->getHeaderItems();
-			
-			// Loop through all items
-			// If it is a header output object, place each item in a separate array for its container directory
-			// Otherwise, put it in the outputPost array
-			
-			$outputPost = array();
-			$output = array();
 			
 			foreach($items as $hi) {
 				print $hi; // caled on two seperate lines because of pre php 5.2 __toString issues
 				print "\n";
 			}			
-			
 		}
 		
 		/** 
