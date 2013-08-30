@@ -9,7 +9,7 @@ class ConcreteUpgradeVersion5622Helper {
 		$pk = PermissionKey::getByHandle('access_user_search_export');
 		if (!$pk instanceof PermissionKey) {
 			$adminGroupEntity = GroupPermissionAccessEntity::getOrCreate(Group::getByID(ADMIN_GROUP_ID));
-			$pk = PermissionKey::add('user', 'access_user_search_export', tc('Export Site Users', 'Permission name'), tc('Controls whether a user can export site users or not','Permission description'), false, false);
+			$pk = PermissionKey::add('user', 'access_user_search_export', tc('PermissionKeyName', 'Export Site Users'), tc('PermissionKeyDescription', 'Controls whether a user can export site users or not'), false, false);
 			$pa = $pk->getPermissionAccessObject();
 			if (!is_object($pa)) {
 				$pa = PermissionAccess::create($pk);
