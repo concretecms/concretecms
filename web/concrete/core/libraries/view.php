@@ -950,9 +950,11 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			if (ob_get_level() > OB_INITIAL_LEVEL) {
 				ob_end_clean();
 			}
-			
-			Events::fire('on_before_render', $this);
-			
+
+			if (defined('DB_DATABASE') && ($view !== '/upgrade')) {
+				Events::fire('on_before_render', $this);
+			}
+						
 			if (defined('APP_CHARSET')) {
 				header("Content-Type: text/html; charset=" . APP_CHARSET);
 			}
