@@ -42,7 +42,8 @@ if ($_REQUEST['task'] == 'get_all_access_entities' && $pcnt > 0 && $permissionsI
 	$paIDs = array();
 	foreach($pages as $c) {
 		$pk = PermissionKey::getByID($_REQUEST['pkID']);
-		$pa = $c->getPermissionAccessObject($pk);
+		$pk->setPermissionObject($c);
+		$pa = $pk->getPermissionAccessObject();
 		if (is_object($pa)) {
 			$listItems = $pa->getAccessListItems(PermissionKey::ACCESS_TYPE_ALL);
 			foreach($listItems as $as) {
