@@ -4,8 +4,8 @@ ini_set('memory_limit', -1);
 set_time_limit(0);
 
 $tp = new TaskPermission();
-if (!$tp->canAccessUserSearch()) { 
-	die(t("You have no access to users."));
+if (!$tp->canAccessUserSearchExport()) { 
+	die(t("You have no access to user export."));
 }
 
 $u = new User();

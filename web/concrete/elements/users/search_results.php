@@ -119,10 +119,13 @@ if (!$mode) {
 
 </div>
 
-<div id="ccm-export-results-wrapper">
-	<a id="ccm-export-results" href="javascript:void(0)" onclick="$('#ccm-user-advanced-search').attr('action', '<?=REL_DIR_FILES_TOOLS_REQUIRED?>/users/search_results_export'); $('#ccm-user-advanced-search').get(0).submit(); $('#ccm-user-advanced-search').attr('action', '<?=REL_DIR_FILES_TOOLS_REQUIRED?>/users/search_results');"><span></span><?=t('Export')?></a>
-</div>
-
+<?php
+$tp = new TaskPermission();
+if ($tp->canAccessUserSearchExport()) {  ?>
+	<div id="ccm-export-results-wrapper">
+		<a id="ccm-export-results" href="javascript:void(0)" onclick="$('#ccm-user-advanced-search').attr('action', '<?=REL_DIR_FILES_TOOLS_REQUIRED?>/users/search_results_export'); $('#ccm-user-advanced-search').get(0).submit(); $('#ccm-user-advanced-search').attr('action', '<?=REL_DIR_FILES_TOOLS_REQUIRED?>/users/search_results');"><span></span><?=t('Export')?></a>
+	</div>
+<? } ?>
 <?
 	$userList->displaySummary();
 ?>
