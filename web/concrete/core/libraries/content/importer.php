@@ -64,6 +64,7 @@ class Concrete5_Library_Content_Importer {
 		$this->importJobSets($sx);
 		// import bare page types first, then import structure, then page types blocks, attributes and composer settings, then page content, because we need the structure for certain attributes and stuff set in master collections (like composer)
 		$this->importPageTypesBase($sx);
+		$this->importPageTemplates($sx);
 		$this->importPageStructure($sx);
 		$this->importPageTypeDefaults($sx);
 		$this->importSinglePageContent($sx);
@@ -304,6 +305,18 @@ class Concrete5_Library_Content_Importer {
 						'ctIcon' => $ct['icon'],
 						'ctIsInternal' => (string) $ct['internal']
 					), $pkg);
+				}
+			}
+		}
+	}
+
+	protected function importPageTemplates(SimpleXMLElement $sx) {
+		if (isset($sx->pagetemplates)) {
+			foreach($sx->pagetemplates->pagetemplate as $pt) {
+				$pkg = ContentImporter::getPackageObject($pt['package']);
+				$ptt = PageTemplate::getByHandle($pt['handle']);
+				if (!is_object($ptt)) { 
+					$ptt = PageTemplate::add((string) $pt['handle'], (string) $pt['name'], (string) $pt['icon'], $pkg, (string) $pt['internal']);
 				}
 			}
 		}

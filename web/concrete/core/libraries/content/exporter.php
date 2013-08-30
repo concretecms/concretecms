@@ -63,6 +63,8 @@ class Concrete5_Library_Content_Exporter {
 		// now attribute keys (including user)
 		AttributeSet::exportList($this->x);
 
+		PageTemplate::exportList($this->x);
+
 		// now theme
 		PageTheme::exportList($this->x);
 		

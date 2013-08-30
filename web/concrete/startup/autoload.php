@@ -117,6 +117,7 @@ $classes = array(
 	'Collection' => array('model','collection'),
 	'CollectionVersion' => array('model','collection_version'),
 	'CollectionType' => array('model','collection_types'),
+	'PageTemplate' => array('model','page_template'),
 	'Group,GroupList' => array('model','groups'),
 	'GroupSearch' => array('model','search/group'),
 	'GroupAutomationController' => array('library','group/automation'),

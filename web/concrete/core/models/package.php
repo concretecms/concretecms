@@ -271,6 +271,7 @@ class Concrete5_Model_Package extends Object {
 		$items['attribute_sets'] = AttributeSet::getListByPackage($this);
 		$items['group_sets'] = GroupSet::getListByPackage($this);
 		$items['page_types'] = CollectionType::getListByPackage($this);
+		$items['page_templates'] = PageTemplate::getListByPackage($this);
 		$items['mail_importers'] = MailImporter::getListByPackage($this);
 		$items['configuration_values'] = Config::getListByPackage($this);
 		$items['gathering_item_template_types'] = GatheringItemTemplateType::getListByPackage($this);		
@@ -321,7 +322,8 @@ class Concrete5_Model_Package extends Object {
 		} else if ($item instanceof ComposerTargetType) {
 			return $item->getComposerTargetTypeName();
 		} else if ($item instanceof CollectionType) {
-			return $item->getCollectionTypeName();
+		} else if ($item instanceof PageTemplate) {
+			return $item->getPageTemplateName();
 		} else if ($item instanceof MailImporter) {
 			return $item->getMailImporterName();		
 		} else if ($item instanceof SinglePage) {
@@ -393,6 +395,7 @@ class Concrete5_Model_Package extends Object {
 						case 'ConversationRatingType':
 						case 'ComposerTargetType':
 						case 'ComposerControlType':
+						case 'PageTemplate':
 							$item->delete();	
 							break;
 						case 'PageTheme':

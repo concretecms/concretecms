@@ -3046,6 +3046,33 @@
       <unsigned/>
     </field>
   </table>
+  <table name="PageTemplates">
+    <field name="pTemplateID" type="I" size="10">
+      <key/>
+      <autoincrement/>
+      <unsigned/>
+    </field>
+    <field name="pTemplateHandle" type="C" size="32">
+      <notnull/>
+    </field>
+    <field name="pTemplateIcon" type="C" size="128"/>
+    <field name="pTemplateName" type="C" size="90">
+      <notnull/>
+    </field>
+    <field name="pTemplateIsInternal" type="I1" size="1">
+      <notnull/>
+      <default value="0"/>
+    </field>
+    <field name="pkgID" type="I" size="10">
+      <notnull/>
+      <default value="0"/>
+      <unsigned/>
+    </field>
+    <index name="pTemplateHandle">
+      <unique/>
+      <col>ctHandle</col>
+    </index>
+  </table>
   <table name="PageTypes">
     <field name="ctID" type="I" size="10">
       <key/>
