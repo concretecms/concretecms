@@ -36,11 +36,10 @@ class Concrete5_Controller_Dashboard_Pages_Themes_Inspect extends Controller {
 	
 	public function activate_files($ptID) {
 		try {
-			Loader::model("collection_types");
 			$pt = PageTheme::getByID($ptID);
 			$txt = Loader::helper('text');
-			if (!is_array($this->post('pageTypes'))) {
-				throw new Exception(t("You must specify at least one template to make into a page type."));
+			if (!is_array($this->post('pageTemplates'))) {
+				throw new Exception(t("You must specify at least one template to create."));
 			}
 			
 			$pkg = false;
@@ -49,12 +48,12 @@ class Concrete5_Controller_Dashboard_Pages_Themes_Inspect extends Controller {
 				$pkg = Package::getByHandle($pkgHandle);
 			}
 
-			foreach($this->post('pageTypes') as $ptHandle) {
-				$data['ctName'] = $txt->unhandle($ptHandle);
-				$data['ctHandle'] = $ptHandle;
-				$ct = CollectionType::add($data, $pkg);
+			foreach($this->post('pageTemplates') as $pTemplateHandle) {
+				$pTemplateName = $txt->unhandle($pTemplateHandle);
+				$pTemplateIcon = FILENAME_PAGE_TEMPLATE_DEFAULT_ICON;
+				$ct = PageTemplate::add($pTemplateHandle, $pTemplateName, $pTemplateIcon, $pkg);
 			}
-			$this->set('message', t('Files in the theme were activated successfully.'));
+			$this->set('success', t('Files in the theme were activated successfully.'));
 		} catch(Exception $e) {
 			$this->set('error', $e);
 		}

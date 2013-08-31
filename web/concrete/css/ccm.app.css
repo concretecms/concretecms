@@ -178,10 +178,11 @@ textarea.ccm-ui .input-lg{height:auto}
 .ccm-ui .form-horizontal .form-group:after{clear:both}
 @media (min-width:768px){.container .ccm-ui .form-horizontal .form-group{margin-left:-15px;margin-right:-15px}}
 .ccm-ui .form-horizontal .form-group .row{margin-left:-15px;margin-right:-15px}
-@media (min-width:768px){.ccm-ui .form-horizontal .control-label{text-align:right}}.ccm-ui .btn{display:inline-block;padding:6px 12px;margin-bottom:0;font-size:14px;font-weight:bold;line-height:1.428571429;text-align:center;vertical-align:middle;cursor:pointer;border:1px solid transparent;border-radius:4px;white-space:nowrap;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;-o-user-select:none;user-select:none}.ccm-ui .btn:focus{outline:thin dotted #333;outline:5px auto -webkit-focus-ring-color;outline-offset:-2px}
+@media (min-width:768px){.ccm-ui .form-horizontal .control-label{text-align:right}}.ccm-ui .btn{display:inline-block;padding:6px 12px;margin-bottom:0;font-size:14px;font-weight:bold;line-height:1.428571429;text-align:center;vertical-align:middle;cursor:pointer;border:1px solid transparent;border-radius:4px;white-space:nowrap;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;-o-user-select:none;user-select:none}
+.ccm-ui .btn:focus{outline:thin dotted #333;outline:5px auto -webkit-focus-ring-color;outline-offset:-2px}
 .ccm-ui .btn:hover,.ccm-ui .btn:focus{color:#333;text-decoration:none}
 .ccm-ui .btn:active,.ccm-ui .btn.active{outline:0;box-shadow:inset 0 3px 5px rgba(0,0,0,0.125);-webkit-box-shadow:inset 0 3px 5px rgba(0,0,0,0.125);-moz-box-shadow:inset 0 3px 5px rgba(0,0,0,0.125);box-shadow:inset 0 3px 5px rgba(0,0,0,0.125)}
-.ccm-ui .btn.disabled,.ccm-ui .btn[disabled],fieldset[disabled] .ccm-ui .btn{cursor:default;pointer-events:none;opacity:.65;filter:alpha(opacity=65);box-shadow:none;-webkit-box-shadow:none;-moz-box-shadow:none;box-shadow:none}
+.ccm-ui .btn.disabled,.ccm-ui .btn[disabled],.ccm-ui fieldset[disabled] .btn{cursor:default;pointer-events:none;opacity:.65;filter:alpha(opacity=65);box-shadow:none;-webkit-box-shadow:none;-moz-box-shadow:none;box-shadow:none}
 .ccm-ui .btn-default{color:#333;background-color:#fff;border-color:#ccc}.ccm-ui .btn-default:hover,.ccm-ui .btn-default:focus,.ccm-ui .btn-default:active,.ccm-ui .btn-default.active{color:#333;background-color:#ebebeb;border-color:#adadad}
 .ccm-ui .btn-default.disabled,.ccm-ui .btn-default[disabled],fieldset[disabled] .ccm-ui .btn-default,.ccm-ui .btn-default.disabled:hover,.ccm-ui .btn-default[disabled]:hover,fieldset[disabled] .ccm-ui .btn-default:hover,.ccm-ui .btn-default.disabled:focus,.ccm-ui .btn-default[disabled]:focus,fieldset[disabled] .ccm-ui .btn-default:focus,.ccm-ui .btn-default.disabled:active,.ccm-ui .btn-default[disabled]:active,fieldset[disabled] .ccm-ui .btn-default:active,.ccm-ui .btn-default.disabled.active,.ccm-ui .btn-default[disabled].active,fieldset[disabled] .ccm-ui .btn-default.active{background-color:#fff;border-color:#ccc}
 .ccm-ui .btn-primary{color:#fff;background-color:#428bca;border-color:#357ebd}.ccm-ui .btn-primary:hover,.ccm-ui .btn-primary:focus,.ccm-ui .btn-primary:active,.ccm-ui .btn-primary.active{color:#fff;background-color:#3276b1;border-color:#285e8e}
@@ -1044,14 +1045,6 @@ div.ccm-pane-dialog-pagination div.pagination,.ccm-pane-footer div.pagination{ma
 #ccm-dialog-loader{margin:auto}
 #ccm-dialog-loader-text{margin-bottom:6px}
 div.ccm-summary-selected-item{border:1px solid #dedede;margin-top:8px;margin-bottom:8px;padding:10px}
-.ccm-ui .dialog-buttons .btn,.ccm-ui .ccm-pane-footer .btn{padding:6px 19px !important}
-.ccm-ui .btn.btn-primary{border-color:#09f}
-.ccm-ui .btn:hover{border-color:#6cf !important;background-image:none !important;background-color:#fff !important}
-.ccm-ui .btn.btn-primary:hover{background-image:none !important;background-color:#09f !important}
-.ccm-ui .btn.btn-hover-danger:hover{border-color:#e85a55 !important}
-.ccm-ui .btn.btn-danger:hover{background-image:none !important;background-color:#e85a55 !important;border-color:#e85a55 !important}
-.ccm-ui .btn[disabled=disabled]:hover{background-image:none !important;color:#b7b7b7 !important;background-color:#eae9e9 !important;border-color:#ccc !important}
-.ccm-ui .btn[disabled=disabled]{background-image:none !important;color:#b7b7b7 !important;background-color:#eae9e9 !important;border-color:#ccc !important}
 table.ccm-permission-grid{border:0}
 table.ccm-permission-grid td.ccm-permission-grid-name{text-align:right;width:auto;white-space:nowrap}
 table.ccm-permission-grid td{width:100%;border-left:0 !important;border-right:0 !important}

@@ -1,24 +1,24 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
 $form = Loader::helper('form');
-$types = array();
-$pagetypes = CollectionType::getList();
-foreach($pagetypes as $ct) {
-	$types[$ct->getCollectionTypeID()] = $ct->getCollectionTypeName();
+$templates = array();
+$pagetemplates = PageTemplate::getList();
+foreach($pagetemplates as $pt) {
+	$templates[$pt->getPageTemplateID()] = $pt->getPageTemplateName();
 }
 $targetTypes = ComposerTargetType::getList();
 
 $cmpName = '';
-$cmpCTID = array();
-$cmpAllowedPageTypes = 'A';
+$cmpPageTemplateID = array();
+$cmpAllowedPageTemplates = 'A';
 $token = 'add_composer';
 if (is_object($composer)) {
 	$token = 'update_composer';
 	$cmpName = $composer->getComposerName();
-	$cmpAllowedPageTypes = $composer->getComposerAllowedPageTypes();
-	$selectedtypes = $composer->getComposerFormSelectedPageTypeObjects();
-	foreach($selectedtypes as $ct) {
-		$cmpCTID[] = $ct->getCollectionTypeID();
+	$cmpAllowedPageTemplates = $composer->getComposerAllowedPageTemplates();
+	$selectedtemplates = $composer->getComposerFormSelectedPageTemplateObjects();
+	foreach($selectedtemplates as $pt) {
+		$cmpPageTemplateID[] = $pt->getPageTemplateID();
 	}
 }
 ?>
@@ -32,16 +32,23 @@ if (is_object($composer)) {
 	</div>
 
 	<div class="control-group">
-		<?=$form->label('cmpCTID', t('Allowed Page Types'))?>
+		<?=$form->label('cmpPageTemplateID', t('Default Page Template'))?>
 		<div class="controls">
-			<?=$form->select('cmpAllowedPageTypes', array('A' => t('All'), 'C' => t('Selected Page Types'), 'X' => t('Everything But Selected')), $cmpAllowedPageTypes, array('class' => 'span3'))?>
+			<?=$form->select('cmpDefaultPageTemplateID', $templates, $cmpDefaultPageTemplateID, array('class' => 'span5'))?>
 		</div>
 	</div>
 
-	<div class="control-group" data-form-row="page-types">
-		<?=$form->label('cmpCTID', t('Page Types'))?>
+	<div class="control-group">
+		<?=$form->label('cmpAllowedPageTemplates', t('Allowed Page Templates'))?>
 		<div class="controls">
-			<?=$form->selectMultiple('cmpCTID', $types, $cmpCTID, array('class' => 'span5'))?>
+			<?=$form->select('cmpAllowedPageTemplates', array('A' => t('All'), 'C' => t('Selected Page Templates'), 'X' => t('Everything But Selected')), $cmpAllowedPageTemplates, array('class' => 'span3'))?>
+		</div>
+	</div>
+
+	<div class="control-group" data-form-row="page-templates">
+		<?=$form->label('cmpPageTemplateID', t('Page Templates'))?>
+		<div class="controls">
+			<?=$form->selectMultiple('cmpPageTemplateID', $templates, $cmpPageTemplateID, array('class' => 'span5'))?>
 		</div>
 	</div>
 
@@ -75,18 +82,18 @@ if (is_object($composer)) {
 
 <script type="text/javascript">
 $(function() {
-	$('#cmpCTID').chosen();
+	$('#cmpPageTemplateID').chosen();
 	$('input[name=cmpTargetTypeID]').on('click', function() {
 		$('div[data-composer-target-type-id]').hide();
 		var cmpTargetTypeID = $('input[name=cmpTargetTypeID]:checked').val();
 		$('div[data-composer-target-type-id=' + cmpTargetTypeID + ']').show();
 	});
 	$('input[name=cmpTargetTypeID]:checked').trigger('click');
-	$('select[name=cmpAllowedPageTypes]').on('change', function() {
+	$('select[name=cmpAllowedPageTemplates]').on('change', function() {
 		if ($(this).val() == 'A') {
-			$('div[data-form-row=page-types]').hide();
+			$('div[data-form-row=page-templates]').hide();
 		} else {
-			$('div[data-form-row=page-types]').show();
+			$('div[data-form-row=page-templates]').show();
 		}
 	}).trigger('change');
 });

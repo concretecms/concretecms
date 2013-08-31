@@ -11,12 +11,13 @@ class Concrete5_Controller_Dashboard_Pages_Templates_Add extends DashboardBaseCo
 	public function add_page_template() {
 		$pTemplateName = $_POST['pTemplateName'];
 		$pTemplateHandle = $_POST['pTemplateHandle'];
+		$pTemplateIcon = $_POST['pTemplateIcon'];
 		$vs = Loader::helper('validation/strings');
 		
 		$error = array();
-		if (!$pTemplateName) {
+		if (!$pTemplateHandle) {
 			$this->error->add(t("Handle required."));
-		} else if (!$vs->handle($pTemplateName)) {
+		} else if (!$vs->handle($pTemplateHandle)) {
 			$this->error->add(t('Handles must contain only letters, numbers or the underscore symbol.'));
 		}
 		

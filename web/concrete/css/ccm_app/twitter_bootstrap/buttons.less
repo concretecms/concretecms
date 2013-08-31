@@ -22,32 +22,35 @@
   white-space: nowrap;
   .user-select(none);
 
-  &:focus {
+}
+
+/* concrete5 */
+
+
+  .btn:focus {
     .tab-focus();
   }
 
-  &:hover,
-  &:focus {
+  .btn:hover,
+  .btn:focus {
     color: @btn-default-color;
     text-decoration: none;
   }
 
-  &:active,
-  &.active {
+  .btn:active,
+  .btn.active {
     outline: 0;
     .box-shadow(inset 0 3px 5px rgba(0,0,0,.125));
   }
 
-  &.disabled,
-  &[disabled],
-  fieldset[disabled] & {
+  .btn.disabled,
+  .btn[disabled],
+  fieldset[disabled] .btn {
     cursor: default;
     pointer-events: none; // Future-proof disabling of clicks
     .opacity(.65);
     .box-shadow(none);
   }
-
-}
 
 
 // Alternate buttons

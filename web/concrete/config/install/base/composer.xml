@@ -12,11 +12,11 @@
     </composercontroltypes>
     <composers>
         <composer name="Page">
-            <pagetypes type="all" />
+            <pagetemplates type="all" default="full" />
             <target handle="all" package="" />
             <formlayout>
                 <set name="Basics">
-                    <control custom-template="" required="1" custom-label="Post Name" type="core_page_property" handle="name"/>
+                    <control custom-template="" required="1" custom-label="Page Name" type="core_page_property" handle="name"/>
                     <control custom-template="" custom-label="" type="core_page_property" handle="description"/>
                     <control custom-template="" custom-label="" type="core_page_property" handle="url_slug"/>
                     <control custom-template="" custom-label="" type="core_page_property" handle="page_type"/>

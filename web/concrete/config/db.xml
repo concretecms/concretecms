@@ -13,7 +13,10 @@
     <field name="cmpTargetTypeID" type="I" size="10">
       <unsigned/>
     </field>
-    <field name="cmpAllowedPageTypes" type="C" size="1">
+    <field name="cmpDefaultPageTemplateID" type="I" size="10">
+      <unsigned/>
+    </field>
+    <field name="cmpAllowedPageTemplates" type="C" size="1">
       <default value="A" />
     </field>
    <field name="cmpTargetObject" type="X2"></field>
@@ -50,18 +53,19 @@
     </field>
   </table>
 
-  <table name="ComposerPageTypes">
+  <table name="ComposerPageTemplates">
     <field name="cmpID" type="I" size="10">
       <key/>
       <unsigned/>
       <default value="0" />
     </field>
-    <field name="ctID" type="I" size="10">
+    <field name="pTemplateID" type="I" size="10">
       <key/>
       <unsigned/>
       <default value="0" />
     </field>
   </table>
+  
   <table name="ComposerTargetTypes">
     <field name="cmpTargetTypeID" type="I" size="10">
       <key/>
@@ -138,7 +142,7 @@
       <autoincrement/>
       <unsigned/>
     </field>
-    <field name="ctID" type="I" size="10">
+    <field name="pTemplateID" type="I" size="10">
       <unsigned/>
       <default value="0" />
     </field>

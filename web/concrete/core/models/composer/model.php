@@ -6,71 +6,73 @@ class Concrete5_Model_Composer extends Object {
 	public function getComposerName() {return $this->cmpName;}
 	public function getComposerTargetTypeID() {return $this->cmpTargetTypeID;}
 	public function getComposerTargetObject() {return $this->cmpTargetObject;}
-	public function getComposerAllowedPageTypes() {
-		return $this->cmpAllowedPageTypes;
+	public function getComposerAllowedPageTemplates() {
+		return $this->cmpAllowedPageTemplates;
 	}
 
 	public function getPermissionObjectIdentifier() {
 		return $this->getComposerID();
 	}
 
-	public function getComposerFormSelectedPageTypeObjects() {
-		$types = array();
+	public function getComposerFormSelectedPageTemplateObjects() {
+		$templates = array();
 		$db = Loader::db();
-		$r = $db->Execute('select ctID from ComposerPageTypes where cmpID = ? order by ctID asc', array($this->cmpID));
+		$r = $db->Execute('select pTemplateID from ComposerPageTemplates where cmpID = ? order by pTemplateID asc', array($this->cmpID));
 		while ($row = $r->FetchRow()) {
-			$ct = CollectionType::getByID($row['ctID']);
-			if (is_object($ct)) {
-				$types[] = $ct;
+			$pt = PageTemplate::getByID($row['pTemplateID']);
+			if (is_object($pt)) {
+				$templates[] = $pt;
 			}
 		}
-		return $types;
+		return $templates;
 	}
 
-	public function getComposerPageTypeObjects() {
-		if ($this->cmpAllowedPageTypes == 'C') {
-			return $this->getComposerFormSelectedPageTypeObjects();
+	public function getComposerPageTemplateObjects() {
+		if ($this->cmpAllowedPageTemplates == 'C') {
+			return $this->getComposerFormSelectedPageTemplateObjects();
 		} else {
-			$pagetypes = CollectionType::getList();
+			$templates = PageTemplate::getList();
 			$db = Loader::db();
-			if ($this->cmpAllowedPageTypes == 'X') {
-				$_pagetypes = array();
-				$ctIDs = $db->GetCol('select ctID from ComposerPageTypes where cmpID = ? order by ctID asc', array($this->cmpID));
-				foreach($pagetypes as $ct) {
-					if (!in_array($ct->getCollectionTypeID(), $ctIDs)) {
-						$_pagetypes[] = $ct;
+			if ($this->cmpAllowedPageTemplates == 'X') {
+				$_templates = array();
+				$pageTemplateIDs = $db->GetCol('select pTemplateID from ComposerPageTemplates where cmpID = ? order by pTemplateID asc', array($this->cmpID));
+				foreach($templates as $pt) {
+					if (!in_array($pt->getPageTemplateID(), $pageTemplateIDs)) {
+						$_templates[] = $pt;
 					}
 				}
-				return $_pagetypes;
+				return $_templates;
 			}
-			return $pagetypes;
+			return $templates;
 
 		}
 	}
 
 	public static function import($node) {
 		$types = array();
-		if ((string) $node->pagetypes['type'] == 'custom' || (string) $node->pagetypes['type'] == 'except') {
-			if ((string) $node->pagetypes['type'] == 'custom') {
-				$cmpAllowedPageTypes = 'C';
+		if ((string) $node->pagetemplates['type'] == 'custom' || (string) $node->pagetemplates['type'] == 'except') {
+			if ((string) $node->pagetemplates['type'] == 'custom') {
+				$cmpAllowedPageTemplates = 'C';
 			} else {
-				$cmpAllowedPageTypes = 'X';
+				$cmpAllowedPageTemplates = 'X';
 			}
 			
-			foreach($node->pagetypes->pagetype as $pagetype) {
-				$types[] = CollectionType::getByHandle((string) $pagetype['handle']);
+			foreach($node->pagetemplates->pagetemplate as $pagetemplate) {
+				$types[] = PageTemplate::getByHandle((string) $pagetemplate['handle']);
 			}
 		} else {
-			$cmpAllowedPageTypes = 'A';
+			$cmpAllowedPageTemplates = 'A';
 		}
 		$cmpName = (string) $node['name'];
 		$db = Loader::db();
+		$defaultPageTemplate = PageTemplate::getByHandle((string) $node->pagetemplates['default']);
+
 		$cmpID = $db->GetOne('select cmpID from Composers where cmpName = ?', array($cmpName));
 		if ($cmpID) {
 			$cm = Composer::getByID($cmpID);
-			$cm->update($cmpName, $cmpAllowedPageTypes, $types);
+			$cm->update($cmpName, $defaultPageTemplate, $cmpAllowedPageTemplates, $types);
 		} else {
-			$cm = Composer::add($cmpName, $cmpAllowedPageTypes, $types);
+			$cm = Composer::add($cmpName, $defaultPageTemplate, $cmpAllowedPageTemplates, $types);
 		}
 		if (isset($node->target)) {
 			$target = ComposerTargetType::importConfiguredComposerTarget($node->target);
@@ -107,6 +109,7 @@ class Concrete5_Model_Composer extends Object {
 			}
 		}
 
+		/*
 		if (isset($node->output->pagetype)) {
 			foreach($node->output->pagetype as $pagetype) {
 				foreach($pagetype->area as $area) {
@@ -124,6 +127,7 @@ class Concrete5_Model_Composer extends Object {
 				}
 			}
 		}
+		*/
 	}
 
 
@@ -191,16 +195,16 @@ class Concrete5_Model_Composer extends Object {
 		}
 	}
 
-	public static function add($cmpName, $cmpAllowedPageTypes, $types) {
+	public static function add($cmpName, PageTemplate $defaultPageTemplate, $cmpAllowedPageTemplates, $templates) {
 		$db = Loader::db();
-		$db->Execute('insert into Composers (cmpName, cmpAllowedPageTypes) values (?, ?)', array(
-			$cmpName, $cmpAllowedPageTypes
+		$db->Execute('insert into Composers (cmpName, cmpDefaultPageTemplateID, cmpAllowedPageTemplates) values (?, ?, ?)', array(
+			$cmpName, $defaultPageTemplate->getPageTemplateID(), $cmpAllowedPageTemplates
 		));
 		$cmpID = $db->Insert_ID();
-		if ($cmpAllowedPageTypes != 'A') {
-			foreach($types as $ct) {
-				$db->Execute('insert into ComposerPageTypes (cmpID, ctID) values (?, ?)', array(
-					$cmpID, $ct->getCollectionTypeID()
+		if ($cmpAllowedPageTemplates != 'A') {
+			foreach($templates as $pt) {
+				$db->Execute('insert into ComposerPageTemplates (cmpID, pTemplateID) values (?, ?)', array(
+					$cmpID, $pt->getPageTemplateID()
 				));
 			}
 		}
@@ -230,18 +234,19 @@ class Concrete5_Model_Composer extends Object {
 		return $cmp;
 	}
 
-	public function update($cmpName, $cmpAllowedPageTypes, $types) {
+	public function update($cmpName, PageTemplate $defaultPageTemplate, $cmpAllowedPageTemplates, $templates) {
 		$db = Loader::db();
-		$db->Execute('update Composers set cmpName = ?, cmpAllowedPageTypes = ? where cmpID = ?', array(
+		$db->Execute('update Composers set cmpName = ?, cmpDefaultPageTemplateID = ?, cmpAllowedPageTemplates = ? where cmpID = ?', array(
 			$cmpName,
-			$cmpAllowedPageTypes,
+			$defaultPageTemplate->getPageTemplateID(),
+			$cmpAllowedPageTemplates,
 			$this->cmpID
 		));
-		$db->Execute('delete from ComposerPageTypes where cmpID = ?', array($this->cmpID));
-		if ($cmpAllowedPageTypes != 'A') {
-			foreach($types as $ct) {
-				$db->Execute('insert into ComposerPageTypes (cmpID, ctID) values (?, ?)', array(
-					$this->cmpID, $ct->getCollectionTypeID()
+		$db->Execute('delete from ComposerPageTemplates where cmpID = ?', array($this->cmpID));
+		if ($cmpAllowedPageTemplates != 'A') {
+			foreach($templates as $pt) {
+				$db->Execute('insert into ComposerPageTemplates (cmpID, pTemplateID) values (?, ?)', array(
+					$this->cmpID, $pt->getPageTemplateID()
 				));
 			}
 		}
@@ -279,7 +284,7 @@ class Concrete5_Model_Composer extends Object {
 		}
 		$db = Loader::db();
 		$db->Execute('delete from Composers where cmpID = ?', array($this->cmpID));
-		$db->Execute('delete from ComposerPageTypes where cmpID = ?', array($this->cmpID));
+		$db->Execute('delete from ComposerPageTemplates where cmpID = ?', array($this->cmpID));
 		$db->Execute('delete from ComposerOutputControls where cmpID = ?', array($this->cmpID));
 	}
 
