@@ -1,5 +1,8 @@
 <?xml version="1.0"?>
 <concrete5-cif version="1.0">
+    <pagetemplates>
+        <pagetemplate handle="blog_entry" name="Blog Entry" icon="right_sidebar.png" package="" />
+    </pagetemplates>
     <blocktypes>
         <blocktype handle="date_archive" package=""/>
     </blocktypes>
@@ -18,15 +21,15 @@
     <composers>
         <!-- we also strip out blog entry from basic page. //-->
         <composer name="Page">
-            <pagetypes type="except">
-                <pagetype handle="blog_entry"/>
-            </pagetypes>
+            <pagetemplates default="full" type="except">
+                <pagetemplate handle="blog_entry"/>
+            </pagetemplates>
         </composer>
 
         <composer name="Blog Entry">
-            <pagetypes type="custom">
-                <pagetype handle="blog_entry"/>
-            </pagetypes>
+            <pagetemplates default="blog_entry" type="custom">
+                <pagetemplate handle="blog_entry"/>
+            </pagetemplates>
             <target handle="parent_page" package="" path="/blog"/>
             <formlayout>
                 <set name="Basics">
@@ -67,11 +70,6 @@
         <theme handle="greek_yogurt" package="" activated="1"/>
     </themes>
 
-    <pagetemplates>
-        <pagetemplate handle="left_sidebar" name="Left Sidebar" icon="template1.png" package="" />
-        <pagetemplate handle="right_sidebar" name="Right Sidebar" icon="right_sidebar.png" package="" />
-        <pagetemplate handle="full" name="Full Width" icon="main.png" package="" />
-    </pagetemplates>
 
     <pagetypes>
         <pagetype handle="blog_entry" name="Blog Entry" internal="0" icon="template1.png" package="">

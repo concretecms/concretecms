@@ -3,7 +3,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 class Concrete5_Controller_Dashboard_Pages_Templates extends DashboardBaseController {
 	
 	public function view() { 
-		$this->set("icons", PageTemplate::getIcons());
 		$this->set('templates', PageTemplate::getList());
 	}	
 	
@@ -15,25 +14,40 @@ class Concrete5_Controller_Dashboard_Pages_Templates extends DashboardBaseContro
 		} else {
 			$pt = PageTemplate::getByID($pTemplateID);
 			$pt->delete();
-			$this->redirect("/dashboard/pages/templates");
+			$this->redirect("/dashboard/pages/templates", "page_template_deleted");
 		}
 	}
 	
+	public function edit($pTemplateID = false) {
+		$this->set("icons", PageTemplate::getIcons());
+		$template = PageTemplate::getByID($pTemplateID);
+		if (!is_object($template)) {
+			throw new Exception(t('Invalid page template'));
+		}
+		$this->set('template', $template);
+
+	}
 	public function page_template_added() {
-		$this->set('message', t('Page template added successfully.'));
+		$this->set('success', t('Page template added successfully.'));
+		$this->view();
+	}
+
+	public function page_template_deleted() {
+		$this->set('success', t('Page template deleted successfully.'));
 		$this->view();
 	}
 
 	public function page_template_updated() {
-		$this->set('message', t('Page template updated successfully.'));
+		$this->set('success', t('Page template updated successfully.'));
 		$this->view();
 	}
 	
 	public function update() {
 		$valt = Loader::helper('validation/token');
 		$pt = PageTemplate::getByID($_REQUEST['pTemplateID']);
-		$pTemplateName = $_POST['ctName'];
-		$pTemplateHandle = $_POST['ctHandle'];
+		$pTemplateName = $_POST['pTemplateName'];
+		$pTemplateHandle = $_POST['pTemplateHandle'];
+		$pTemplateIcon = $_POST['pTemplateIcon'];
 		$vs = Loader::helper('validation/strings');
 		
 		if (!is_object($pt)) {
@@ -62,7 +76,7 @@ class Concrete5_Controller_Dashboard_Pages_Templates extends DashboardBaseContro
 			$this->redirect('/dashboard/pages/templates', 'page_template_updated');
 		}	
 
-		$this->view();
+		$this->edit($this->post('pTemplateID'));
 
 	
 	}

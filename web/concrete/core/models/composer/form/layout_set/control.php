@@ -36,11 +36,11 @@ class Concrete5_Model_ComposerFormLayoutSetControl extends Object {
 	public function ensureOutputControlExists() {
 		$set = $this->getComposerFormLayoutSetObject();
 		$cmp = $set->getComposerObject();
-		$pagetypes = $cmp->getComposerPageTypeObjects();
-		foreach($pagetypes as $ct) {
-			$outputcontrol = ComposerOutputControl::getByComposerFormLayoutSetControl($ct, $this);
+		$pagetemplates = $cmp->getComposerPageTemplateObjects();
+		foreach($pagetemplates as $pt) {
+			$outputcontrol = ComposerOutputControl::getByComposerFormLayoutSetControl($pt, $this);
 			if (!is_object($outputcontrol)) {
-				ComposerOutputControl::add($this, $ct, STACKS_AREA_NAME);
+				ComposerOutputControl::add($this, $pt, STACKS_AREA_NAME);
 			}
 		}
 	}

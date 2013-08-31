@@ -401,14 +401,12 @@ class Concrete5_Model_PageTheme extends Object {
 	// grabs all files in theme that are PHP based (or html if we go that route) and then
 	// lists them out, by type, allowing people to install them as page type, etc...
 	public function getFilesInTheme() {
-		Loader::model('collection_types');
-		Loader::model('single_page');
 		
 		$dh = Loader::helper('file');
-		$ctlist = CollectionType::getList();
+		$templateList = PageTemplate::getList();
 		$cts = array();
-		foreach($ctlist as $ct) {
-			$cts[] = $ct->getCollectionTypeHandle();
+		foreach($templateList as $pt) {
+			$pts[] = $pt->getPageTemplateHandle();
 		}
 		
 		$filesTmp = $dh->getDirectoryContents($this->ptDirectory);
@@ -422,10 +420,10 @@ class Concrete5_Model_PageTheme extends Object {
 					$type = PageThemeFile::TFTYPE_DEFAULT;
 				} else if (in_array($f, SinglePage::getThemeableCorePages())) {
 					$type = PageThemeFile::TFTYPE_SINGLE_PAGE;
-				} else if (in_array($fHandle, $cts)) {
-					$type = PageThemeFile::TFTYPE_PAGE_TYPE_EXISTING;
+				} else if (in_array($fHandle, $pts)) {
+					$type = PageThemeFile::TFTYPE_PAGE_TEMPLATE_EXISTING;
 				} else {
-					$type = PageThemeFile::TFTYPE_PAGE_TYPE_NEW;
+					$type = PageThemeFile::TFTYPE_PAGE_TEMPLATE_NEW;
 				}
 				
 				$pf = new PageThemeFile();

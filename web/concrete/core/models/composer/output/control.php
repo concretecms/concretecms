@@ -8,30 +8,31 @@ class Concrete5_Model_ComposerOutputControl extends Object {
 	public function getComposerFormLayoutSetID() {return $this->cmpFormLayoutSetID;}
 	public function getComposerOutputControlAreaHandle() {return $this->arHandle;}
 
-	public static function add(ComposerFormLayoutSetControl $control, CollectionType $ct, $arHandle) {
+	public static function add(ComposerFormLayoutSetControl $control, PageTemplate $pt, $arHandle) {
 
 		$set = $control->getComposerFormLayoutSetObject();
 		$composer = $set->getComposerObject();
 
 		$db = Loader::db();
-		$displayOrder = $db->GetOne('select count(cmpOutputControlID) from ComposerOutputControls where cmpID = ? and ctID = ? and arHandle = ?', array($composer->getComposerID(), $ct->getCollectionTypeID(), $arHandle));
+		$displayOrder = $db->GetOne('select count(cmpOutputControlID) from ComposerOutputControls where cmpID = ? and pTemplateID = ? and arHandle = ?', array($composer->getComposerID(), $pt->getPageTemplateID(), $arHandle));
 		if (!$displayOrder) {
 			$displayOrder = 0;
 		}
 
-		$db->Execute('insert into ComposerOutputControls (arHandle, cmpID, ctID, cmpFormLayoutSetControlID, cmpOutputControlDisplayOrder) values (?, ?, ?, ?, ?)', array(
-			$arHandle, $composer->getComposerID(), $ct->getCollectionTypeID(), $control->getComposerFormLayoutSetControlID(), $displayOrder
+		$db->Execute('insert into ComposerOutputControls (arHandle, cmpID, pTemplateID, cmpFormLayoutSetControlID, cmpOutputControlDisplayOrder) values (?, ?, ?, ?, ?)', array(
+			$arHandle, $composer->getComposerID(), $pt->getPageTemplateID(), $control->getComposerFormLayoutSetControlID(), $displayOrder
 		));
 		$cmpOutputControlID = $db->Insert_ID();
 		return ComposerOutputControl::getByID($cmpOutputControlID);
 	}
-
-	public static function getCollectionTypeAreas(Composer $cmp, CollectionType $ct) {
+/*
+	public static function getPageTemplateAreas(Composer $cmp, PageTemplate $pt) {
 		$mc = $ct->getMasterTemplate();
 		$db = Loader::db();
 		$areas = $db->GetCol('select arHandle from Areas where cID = ? and arIsGlobal = 0 union distinct select arHandle from ComposerOutputControls where cmpID = ?', array($mc->getCollectionID(), $cmp->getComposerID()));
 		return $areas;
 	}
+	*/
 
 	public function export($cnode) {
 		$control = $cnode->addChild('control');
@@ -39,10 +40,10 @@ class Concrete5_Model_ComposerOutputControl extends Object {
 		$control->addAttribute('output-control-id', ContentExporter::getComposerOutputControlTemporaryID($fsc));
 	}
 
-	public static function getList(Composer $composer, CollectionType $ct, $arHandle) {
+	public static function getList(Composer $composer, PageTemplate $pt, $arHandle) {
 		$db = Loader::db();
-		$cmpOutputControlIDs = $db->GetCol('select cmpOutputControlID from ComposerOutputControls where cmpID = ? and ctID = ? and arHandle = ? order by cmpOutputControlDisplayOrder asc', array(
-			$composer->getComposerID(), $ct->getCollectionTypeID(), $arHandle
+		$cmpOutputControlIDs = $db->GetCol('select cmpOutputControlID from ComposerOutputControls where cmpID = ? and pTemplateID = ? and arHandle = ? order by cmpOutputControlDisplayOrder asc', array(
+			$composer->getComposerID(), $pt->getPageTemplateID(), $arHandle
 		));
 		$list = array();
 		foreach($cmpOutputControlIDs as $cmpOutputControlID) {
@@ -64,9 +65,9 @@ class Concrete5_Model_ComposerOutputControl extends Object {
 		}
 	}
 
-	public static function getByComposerFormLayoutSetControl(CollectionType $ct, ComposerFormLayoutSetControl $control) {
+	public static function getByComposerFormLayoutSetControl(PageTemplate $pt, ComposerFormLayoutSetControl $control) {
 		$db = Loader::db();
-		$cmpOutputControlID = $db->GetOne('select cmpOutputControlID from ComposerOutputControls where ctID = ? and cmpFormLayoutSetControlID = ?', array($ct->getCollectionTypeID(), $control->getComposerFormLayoutSetControlID()));
+		$cmpOutputControlID = $db->GetOne('select cmpOutputControlID from ComposerOutputControls where pTemplateID = ? and cmpFormLayoutSetControlID = ?', array($pt->getPageTemplateID(), $control->getComposerFormLayoutSetControlID()));
 		if ($cmpOutputControlID) {
 			return ComposerOutputControl::getByID($cmpOutputControlID);
 		}

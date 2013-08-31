@@ -63,11 +63,11 @@ $ci = Loader::helper('concrete/interface');
                                     case PageThemeFile::TFTYPE_SINGLE_PAGE:
                                         print t("Template for internal concrete5 page.");
                                         break;
-                                    case PageThemeFile::TFTYPE_PAGE_TYPE_NEW:
+                                    case PageThemeFile::TFTYPE_PAGE_TEMPLATE_NEW:
                                         print t("New template.");
                                         break;
-                                    case PageThemeFile::TFTYPE_PAGE_TYPE_EXISTING:
-                                        print t("Template for existing page type.");
+                                    case PageThemeFile::TFTYPE_PAGE_TEMPLATE_EXISTING:
+                                        print t("Existing page template.");
                                         break;
                                 }
                                 // END Switch
@@ -84,12 +84,12 @@ $ci = Loader::helper('concrete/interface');
                                     case PageThemeFile::TFTYPE_SINGLE_PAGE:
                                         print t('None. This file will automatically be used by the <strong>%s</strong> page.',$txt->unhandle($f->getHandle()) );
                                         break;
-                                    case PageThemeFile::TFTYPE_PAGE_TYPE_NEW:
+                                    case PageThemeFile::TFTYPE_PAGE_TEMPLATE_NEW:
                                         $pf++;
-                                        print '<label><input type="checkbox" value="' . $f->getHandle() . '" name="pageTypes[]" checked /> <span>'.t('Create page type.').'</span></label>';
+                                        print '<label><input type="checkbox" value="' . $f->getHandle() . '" name="pageTemplates[]" checked /> <span>'.t('Create page template.').'</span></label>';
                                         break;
-                                    case PageThemeFile::TFTYPE_PAGE_TYPE_EXISTING:
-                                        print t('None. This file will automatically be used by the <strong>%s</strong> page type.',$txt->unhandle($f->getHandle()) );
+                                    case PageThemeFile::TFTYPE_PAGE_TEMPLATE_EXISTING:
+                                        print t('None. This file will be used by page\'s with the <strong>%s</strong> template.',$txt->unhandle($f->getHandle()) );
                                         break;
                                 }
                                 // END Switch

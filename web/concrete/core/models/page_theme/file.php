@@ -28,14 +28,14 @@ class Concrete5_Model_PageThemeFile {
 	const TFTYPE_SINGLE_PAGE = 3;
 	
 	/**
-	 * This is a template for a new page type - one that hasn't been previously created in the system.
+	 * This is a template for a page - one that hasn't been previously created in the system.
 	 */
-	const TFTYPE_PAGE_TYPE_NEW = 4;
+	const TFTYPE_PAGE_TEMPLATE_NEW = 4;
 	
 	/**
-	 * This is a template for a page type that already exists in the system.
+	 * This is a template for a page that already exists in the system.
 	 */
-	const TFTYPE_PAGE_TYPE_EXISTING = 5;
+	const TFTYPE_PAGE_TEMPLATE_EXISTING = 5;
 	
 	/** 
 	 * Sets the filename of this object to the passed parameter.
