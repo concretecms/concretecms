@@ -120,7 +120,7 @@ if ($_REQUEST['task'] == 'remove') {
 					<?
 					$permissions = PermissionKey::getList('page');
 					foreach($permissions as $pk) { ?>
-						<option value="<?=$pk->getPermissionKeyID()?>"><?=$pk->getPermissionKeyName()?></option>
+						<option value="<?=$pk->getPermissionKeyID()?>"><?=tc('PermissionKeyName', $pk->getPermissionKeyName())?></option>
 					<? } ?>
 					</select>
 				</td>
