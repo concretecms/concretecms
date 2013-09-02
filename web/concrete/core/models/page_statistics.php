@@ -112,13 +112,18 @@ class Concrete5_Model_PageStatistics {
 	public static function decrementParents($cID) {
 		$db = Loader::db();
 		$cParentID = $db->GetOne("select cParentID from Pages where cID = ?", array($cID));
+		$cChildren = $db->GetOne("select cChildren from Pages where cID = ?", array($cParentID));
+		$cChildren--;
+		if ($cChildren < 0) {
+			$cChildren = 0;
+		}
 
-		$q = "update Pages set cChildren = cChildren - 1 where cID = ?";
+		$q = "update Pages set cChildren = ? where cID = ?";
 		
 		$cpc = Page::getByID($cParentID);
 		$cpc->refreshCache();
 		
-		$r = $db->query($q, array($cParentID));
+		$r = $db->query($q, array($cChildren, $cParentID));
 
 	}
 	
