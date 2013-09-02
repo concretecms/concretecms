@@ -1,5 +1,5 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
-$dh = Loader::helper("Date");
+$dh = Loader::helper("date");
 ?>
 <div class="grid_4 alpha omega" id="main-content-sidebar-archives">
 	<h3><?php echo $title ?></h3>
