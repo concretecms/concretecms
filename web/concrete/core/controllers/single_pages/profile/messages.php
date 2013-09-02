@@ -84,7 +84,7 @@ class Concrete5_Controller_Profile_Messages extends ProfileEditController {
 			$msg->markAsRead();
 			$this->set('subject', $msg->getFormattedMessageSubject());
 			$this->set('msgContent', $msg->getMessageBody());
-			$this->set('dateAdded', $msg->getMessageDateAdded('user', t('F d, Y \a\t g:i A')));
+			$this->set('dateAdded', $msg->getMessageDateAdded('user', DATE_APP_GENERIC_MDYT_FULL));
 			$this->set('author', $msg->getMessageAuthorObject());
 			$this->set('msg', $msg);
 			$this->set('box', $box);			
@@ -131,7 +131,7 @@ class Concrete5_Controller_Profile_Messages extends ProfileEditController {
 		$this->set('msgSubject', $msg->getFormattedMessageSubject());
 		
 		$body = "\n\n\n" . $msg->getMessageDelimiter() . "\n";
-		$body .= t("From: %s\nDate Sent: %s\nSubject: %s", $msg->getMessageAuthorName(), $msg->getMessageDateAdded('user', t('F d, Y \a\t g:i A')), $msg->getFormattedMessageSubject());
+		$body .= t("From: %s\nDate Sent: %s\nSubject: %s", $msg->getMessageAuthorName(), $msg->getMessageDateAdded('user', DATE_APP_GENERIC_MDYT_FULL), $msg->getFormattedMessageSubject());
 		$body .= "\n\n" . $msg->getMessageBody();
 		$this->set('msgBody', $body);
 	}

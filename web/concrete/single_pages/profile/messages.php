@@ -72,7 +72,7 @@
 						<a href="<?=$this->url('/profile', 'view', $msg->getMessageRelevantUserID())?>"><?=$msg->getMessageRelevantUserName()?></a>
 						</td>
 						<td class="ccm-profile-messages-item-name"><a href="<?=$this->url('/profile/messages', 'view_message', $mailbox, $msg->getMessageID())?>"><?=$msg->getFormattedMessageSubject()?></a></td>
-						<td style="white-space: nowrap"><?=$msg->getMessageDateAdded('user', t('F d, Y \a\t g:i A'))?></td>
+						<td style="white-space: nowrap"><?=$msg->getMessageDateAdded('user', DATE_APP_GENERIC_MDYT_FULL)?></td>
 						<td><?=$msg->getMessageStatus()?></td>
 					</tr>
 					
@@ -177,7 +177,7 @@
     				<td class="ccm-profile-mailbox-last-message"><?
     				$msg = $inbox->getLastMessageObject();
     				if (is_object($msg)) {
-    					print t('<strong>%s</strong>, sent by %s on %s', $msg->getFormattedMessageSubject(), $msg->getMessageAuthorName(), $msg->getMessageDateAdded('user', t('F d, Y \a\t g:i A')));
+    					print t('<strong>%s</strong>, sent by %s on %s', $msg->getFormattedMessageSubject(), $msg->getMessageAuthorName(), $msg->getMessageDateAdded('user', DATE_APP_GENERIC_MDYT_FULL));
     				}
     				?></td>
     			</tr>
@@ -187,7 +187,7 @@
     				<td class="ccm-profile-mailbox-last-message"><?
      				$msg = $sent->getLastMessageObject();
     				if (is_object($msg)) {
-    					print t('<strong>%s</strong>, sent by %s on %s', $msg->getFormattedMessageSubject(), $msg->getMessageAuthorName(), $msg->getMessageDateAdded('user', t('F d, Y \a\t g:i A')));
+    					print t('<strong>%s</strong>, sent by %s on %s', $msg->getFormattedMessageSubject(), $msg->getMessageAuthorName(), $msg->getMessageDateAdded('user', DATE_APP_GENERIC_MDYT_FULL));
     				}
     				?>
    				</td>
