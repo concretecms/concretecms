@@ -79,7 +79,11 @@ var ccmAttributesHelper={
 		switch (event.keyCode) {
 			case(13): // enter
 				event.preventDefault();
-				ccmAttributesHelper.changeValue(event.currentTarget.getAttribute('data-select-value-id'));
+				if (event.currentTarget.id === 'akSelectValueFieldNew') { // if the event originates from the "add" input field, create the option
+					ccmAttributesHelper.saveNewOption();
+				} else { // otherwise just fire the existing option save
+					ccmAttributesHelper.changeValue(event.currentTarget.getAttribute('data-select-value-id'));
+				}
 				break;
 			case(38): // arrow up
 			case(40): // arrow down
