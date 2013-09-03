@@ -128,7 +128,7 @@ class Concrete5_Model_Page extends Collection {
 	 */
 	public function isEditMode() {
 		$v = View::getInstance();
-		return ($this->isCheckedOutByMe() && ($v->editingEnabled()));
+		return $this->isCheckedOutByMe();
 	}
 	
 	/**
