@@ -262,5 +262,6 @@
 
 		## now we display (provided we've gotten this far)
 		$v = PageRequestView::getInstance();
+		print_r($v);
 		$v->render($c);
 	}

@@ -92,10 +92,6 @@ class Concrete5_Model_Area extends Object {
 	*/
 	public function __construct($arHandle) {
 		$this->arHandle = $arHandle;
-		$v = View::getInstance();
-		if (!$v->editingEnabled()) {
-			$this->showControls = false;
-		}
 	}
 
 	public function getPermissionObjectIdentifier() {

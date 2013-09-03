@@ -7,7 +7,15 @@ class Concrete5_Library_RequestView extends View {
 	protected $viewPath;
 	protected $innerContentFile;
 
+	protected $themeHandle;
+	protected $themeObject;
+	protected $themeRelativePath;
+	protected $themeAbsolutePath;
+	protected $themePkgHandle;
+
 	private static $instance;
+
+	public function getThemeDirectory() {return $this->themeAbsolutePath;}
 
 	public static function getInstance() {
 		if (null === self::$instance) {
@@ -20,45 +28,34 @@ class Concrete5_Library_RequestView extends View {
 		$this->innerContentFile = $innerContentFile;
 	}
 
-	/** 
-	 * Determine which outer theme to load for this page
-	 */
-	protected function setupRequestViewTheme() {
-		$env = Environment::get();
-		if ($this->controller->theme != false) {
-			$this->setRequestViewTheme($this->controller->theme);
-		} else if (($tmpTheme = $this->getThemeFromPath($this->viewPath)) != false) {
-			$this->setRequestViewTheme($tmpTheme[0]);
-			if ($tmpTheme[0] != VIEW_CORE_THEME && $tmpTheme[0] != 'dashboard') {
-				$pt = PageTheme::getByHandle($tmpTheme[0]);
-			}
-			if (is_object($pt)) {
-				$template = $env->getPath(DIRNAME_THEMES . '/' . $pt->getPageThemeHandle() . '/' . $tmpTheme[1], $pt->getPackageHandle());
-			} else {
-				$template = $env->getPath(DIRNAME_THEMES . '/' . $tmpTheme[0] . '/' . $tmpTheme[1]);
-			}
-			$this->setViewTemplate($template);
-		} else if (is_object($this->c) && ($tmpTheme = $this->c->getCollectionThemeObject()) != false) {
-			$this->setRequestViewTheme($tmpTheme);
-		} else {
-			$this->setRequestViewTheme(FILENAME_COLLECTION_DEFAULT_THEME);
-		}
-	}
 
 	public function setRequestViewTheme($theme) {
 		if (is_object($theme)) {
 			$this->themeHandle = $theme->getPageThemeHandle();
-			$this->theme = $theme;
 		} else {
 			$this->themeHandle = $theme;
 		}
 	}
 
+	/** 
+	 * Load all the theme-related variables for which theme to use for this request.
+	 */
 	protected function loadRequestViewThemeObject() {
-		if (!is_object($this->theme) && ($this->themeHandle != VIEW_CORE_THEME && $this->themeHandle != 'dashboard')) {
-			$this->theme = PageTheme::getByHandle($this->themeHandle);
+		$env = Environment::get();
+		if ($this->controller->theme != false) {
+			$this->setRequestViewTheme($this->controller->theme);
+		} else if (($tmpTheme = $this->getThemeFromPath($this->viewPath)) != false) {
+			$this->setRequestViewTheme($tmpTheme[0]);
+		} else {
+			$this->setRequestViewTheme(FILENAME_COLLECTION_DEFAULT_THEME);
+		}
+
+		if ($this->themeHandle != VIEW_CORE_THEME) {
+			$this->themeObject = PageTheme::getByHandle($this->themeHandle);
 			$this->themePkgHandle = $this->theme->getPackageHandle();
 		}
+
+		$this->themeAbsolutePath = $env->getPath(DIRNAME_THEMES . '/' . $this->themeHandle);
 	}
 
 	/**
@@ -117,30 +114,55 @@ class Concrete5_Library_RequestView extends View {
 		// Set the theme object that we should use for this requested page.
 		// Only run setup if the theme is unset. Usually it will be but if we set it
 		// programmatically we already have a theme.
-		if (!isset($this->themeHandle)) {
-			$this->setupRequestViewTheme();
-		}
-
-		// Now we take the theme handle (which is a string) and we load our theme object into it.
-		// We don't ALWAYS have an object, however. Core and Dashboard themes are just strings.
 		$this->loadRequestViewThemeObject();
 
 		$env = Environment::get();
-		$this->setInnerContentFile($env->getPath(DIRNAME_PAGES . '/' . $this->viewPath, $this->themePkgHandle));
-		$this->setViewTemplate($env->getPath(DIRNAME_THEMES . '/' . $this->themeHandle . '/' . FILENAME_THEMES_VIEW, $this->themePkgHandle));
-
+		$this->setInnerContentFile($env->getPath(DIRNAME_PAGES . '/' . trim($this->viewPath, '/') . '.php', $this->themePkgHandle));
+		if (file_exists(DIR_FILES_THEMES_CORE . '/' . DIRNAME_THEMES_CORE . '/' . $this->themeHandle . '.php')) {
+			$this->setViewTemplate($env->getPath(DIRNAME_THEMES . '/' . DIRNAME_THEMES_CORE . '/' . $this->themeHandle . '.php'));
+		} else {
+			$this->setViewTemplate($env->getPath(DIRNAME_THEMES . '/' . $this->themeHandle . '/' . FILENAME_THEMES_VIEW, $this->themePkgHandle));
+		}
 	}
 
-	public function executeRender() {
-
+	public function getViewContents() {
 		Events::fire('on_before_render', $this);
-		if ($innerContentFile) {
+		$this->controller->on_before_render();
+		extract($this->controller->getSets());
+		extract($this->controller->getHelperObjects());
+
+		if ($this->innerContentFile) {
 			ob_start();
 			include($this->innerContentFile);
 			$innerContent = ob_get_contents();
 			ob_end_clean();
 		}
 
-		print $this->getViewContents();
+		if (file_exists($this->template)) {
+			ob_start();
+			include($this->template);
+			$contents = ob_get_contents();
+			ob_end_clean();
+
+			return $contents;
+
+		} else {
+			throw new Exception(t('File %s not found. All themes need default.php and view.php files in them. Consult concrete5 documentation on how to create these files.', $this->template));
+		}
+	}
+
+	public function deliverRender($contents) {
+		$ret = Events::fire('on_page_output', $contents);
+		if($ret != '') {
+			$contents = $ret;
+		}
+		print $contents;
+	}
+
+	public function finishRender() {
+		Events::fire('on_render_complete', $this);
+		require(DIR_BASE_CORE . '/startup/jobs.php');
+		require(DIR_BASE_CORE . '/startup/shutdown.php');
+		exit;
 	}
 }
