@@ -55,7 +55,7 @@ abstract class Concrete5_Library_PageCache {
 		return $headers;
 	}
 
-	public function shouldAddToCache(View $v) {
+	public function shouldAddToCache(PageView $v) {
 		$c = $v->getCollectionObject();
 		if (!is_object($c)) {
 			return false;

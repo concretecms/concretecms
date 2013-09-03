@@ -47,7 +47,7 @@
 			}
 			
 			
-			$q = "select cvID, cvIsApproved, cvIsNew, cvHandle, cvName, cvDescription, cvDateCreated, cvDatePublic, cvAuthorUID, cvApproverUID, cvComments, ptID, CollectionVersions.ctID, ctHandle, ctName from CollectionVersions left join PageTypes on CollectionVersions.ctID = PageTypes.ctID where cID = ?";
+			$q = "select cvID, cvIsApproved, cvIsNew, cvHandle, cvName, cvDescription, cvDateCreated, cvDatePublic, pTemplateID, cvAuthorUID, cvApproverUID, cvComments, ptID, CollectionVersions.ctID, ctHandle, ctName from CollectionVersions left join PageTypes on CollectionVersions.ctID = PageTypes.ctID where cID = ?";
 			if ($cvID == 'ACTIVE') {
 				$q .= ' and cvIsApproved = 1';
 			} else if ($cvID == 'RECENT') {
@@ -173,9 +173,9 @@
 				$cvIsNew = 0;
 			}
 			$dh = Loader::helper('date');
-			$v = array($this->cID, $newVID, $c->getCollectionName(), $c->getCollectionHandle(), $c->getCollectionDescription(), $c->getCollectionDatePublic(), $dh->getSystemDateTime(), $versionComments, $u->getUserID(), $cvIsNew, $this->ptID, $this->ctID);
-			$q = "insert into CollectionVersions (cID, cvID, cvName, cvHandle, cvDescription, cvDatePublic, cvDateCreated, cvComments, cvAuthorUID, cvIsNew, ptID, ctID)
-				values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+			$v = array($this->cID, $newVID, $c->getCollectionName(), $c->getCollectionHandle(), $c->getCollectionDescription(), $c->getCollectionDatePublic(), $dh->getSystemDateTime(), $versionComments, $u->getUserID(), $cvIsNew, $this->ptID, $this->ctID, $this->pTemplateID);
+			$q = "insert into CollectionVersions (cID, cvID, cvName, cvHandle, cvDescription, cvDatePublic, cvDateCreated, cvComments, cvAuthorUID, cvIsNew, ptID, ctID, pTemplateID)
+				values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 				
 			$r = $db->prepare($q);
 			$res = $db->execute($r, $v);

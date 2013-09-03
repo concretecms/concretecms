@@ -1,7 +1,7 @@
 <?
 
 defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Library_ToolView extends View {
+class Concrete5_Library_ToolRequestView extends RequestView {
 	
 	private static $loc = null;
 

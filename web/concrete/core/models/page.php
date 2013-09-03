@@ -770,6 +770,14 @@ class Concrete5_Model_Page extends Collection {
 	}
 
 	/**
+	 * Returns the Page Template ID
+	 * @return int
+	 */	
+	function getPageTemplateID() {
+		return $this->vObj->pTemplateID;
+	}
+
+	/**
 	 * Returns the Collection Type handle
 	 * @return string
 	 */	
@@ -1138,7 +1146,8 @@ class Concrete5_Model_Page extends Collection {
 		$uID = $this->getCollectionUserID();
 		$pkgID = $this->getPackageID();
 		$cFilename = $this->getCollectionFilename();
-		
+		$pTemplateID = $this->getPageTemplateID();
+
 		$rescanTemplatePermissions = false;
 		
 		$cCacheFullPageContent = $this->cCacheFullPageContent;
@@ -1173,6 +1182,10 @@ class Concrete5_Model_Page extends Collection {
 			$rescanTemplatePermissions = true;
 		}
 
+		if (isset($data['pTemplateID'])) {
+			$pTemplateID = $data['pTemplateID'];
+		}
+
 		$txt = Loader::helper('text');
         if (!isset($data['cHandle']) && ($this->getCollectionHandle() != '')) {
             $cHandle = $this->getCollectionHandle();
@@ -1202,8 +1215,8 @@ class Concrete5_Model_Page extends Collection {
 
 		} else {
 
-			$v = array($cName, $cHandle, $ctID, $cDescription, $cDatePublic, $cvID, $this->cID);
-			$q = "update CollectionVersions set cvName = ?, cvHandle = ?, ctID = ?, cvDescription = ?, cvDatePublic = ? where cvID = ? and cID = ?";
+			$v = array($cName, $cHandle, $ctID, $pTemplateID, $cDescription, $cDatePublic, $cvID, $this->cID);
+			$q = "update CollectionVersions set cvName = ?, cvHandle = ?, ctID = ?, pTemplateID = ?, cvDescription = ?, cvDatePublic = ? where cvID = ? and cID = ?";
 			$r = $db->prepare($q);
 			$res = $db->execute($r, $v);				
 		}

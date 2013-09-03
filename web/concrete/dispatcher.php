@@ -172,8 +172,8 @@
 			// than we load up the Content class, and get prepared to fire away
 			switch($c->getError()) {
 				case COLLECTION_NOT_FOUND:
-					$v = View::getInstance();
-					$v->render('/page_not_found');
+					//$v = View::getInstance();
+					exit;$v->render('/page_not_found');
 					break;
 			}
 		}
@@ -196,16 +196,16 @@
 
 			switch($cp->getError()) {
 				case COLLECTION_FORBIDDEN:
-					$v = View::getInstance();
-					$v->setCollectionObject($c);
-					$v->render('/page_forbidden');
+					//$v = View::getInstance();
+					//$v->setCollectionObject($c);
+					exit;$v->render('/page_forbidden');
 					break;
 			}
 		}
 
 		if (!$c->isActive() && (!$cp->canViewPageVersions())) {
-			$v = View::getInstance();
-			$v->render('/page_not_found');
+			//$v = View::getInstance();
+			exit;$v->render('/page_not_found');
 		}
 
 		## If there's no error, then we build the collection, but first we load it with the appropriate
@@ -220,9 +220,9 @@
 		$vp = new Permissions($c->getVersionObject());
 
 		if ($_REQUEST['ccm-disable-controls'] == true || intval($cvID) > 0) {
-			$v = View::getInstance();
-			$v->disableEditing();
-			$v->disableLinks();
+			//$v = View::getInstance();
+			//$v->disableEditing();
+			//$v->disableLinks();
 		}
 
 		// returns the $vp object, which we then check
@@ -231,13 +231,13 @@
 			// than we load up the Content class, and get prepared to fire away
 			switch($vp->getError()) {
 				case COLLECTION_NOT_FOUND:
-					$v = View::getInstance();
-					$v->render('/page_not_found');
+					//$v = View::getInstance();
+					exit;$v->render('/page_not_found');
 					break;
 				case COLLECTION_FORBIDDEN:
-					$v = View::getInstance();
-					$v->setCollectionObject($c);
-					$v->render('/page_forbidden');
+					//$v = View::getInstance();
+					//$v->setCollectionObject($c);
+					exit;$v->render('/page_forbidden');
 					break;
 			}
 		}
@@ -261,7 +261,6 @@
 		Events::fire('on_page_view', $c, $u);
 
 		## now we display (provided we've gotten this far)
-
-		$v = View::getInstance();
+		$v = PageRequestView::getInstance();
 		$v->render($c);
 	}
