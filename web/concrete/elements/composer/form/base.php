@@ -11,10 +11,12 @@ $targetTypes = ComposerTargetType::getList();
 $cmpName = '';
 $cmpPageTemplateID = array();
 $cmpAllowedPageTemplates = 'A';
+$cmpDefaultPageTemplateID = 0;
 $token = 'add_composer';
 if (is_object($composer)) {
 	$token = 'update_composer';
 	$cmpName = $composer->getComposerName();
+	$cmpDefaultPageTemplateID = $composer->getComposerDefaultPageTemplateID();
 	$cmpAllowedPageTemplates = $composer->getComposerAllowedPageTemplates();
 	$selectedtemplates = $composer->getComposerFormSelectedPageTemplateObjects();
 	foreach($selectedtemplates as $pt) {

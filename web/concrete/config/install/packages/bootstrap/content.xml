@@ -9,8 +9,11 @@
     <pagetypes>
         <pagetype icon="main.png" handle="two_column" name="Two Column" package="" />
     </pagetypes>
+    <pagetemplates>
+        <pagetemplate icon="main.png" handle="two_column" name="Two Column" package="" />
+    </pagetemplates>
     <pages>
-	<page name="Home" path="" filename="" pagetype="full" description="" package="">
+	<page name="Home" path="" filename="" template="two_column" pagetype="full" description="" package="">
 	</page>
     </pages>
 </concrete5-cif>

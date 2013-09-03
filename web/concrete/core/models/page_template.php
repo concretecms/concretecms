@@ -25,6 +25,19 @@ class Concrete5_Model_PageTemplate extends Object {
 		return PackageList::getHandle($this->pkgID);
 	}
 
+	public function refreshPageTemplateAreas($theme = false) {
+		if (!is_object($theme)) {
+			$theme = PageTheme::getSiteTheme();
+		}
+		$v = new PageTemplateView();
+		$v->setTheme($theme);
+		$v->c = new Page();
+		$v->setThemeDirectory($theme->getThemeDirectory());
+		$v->ptHandle = $theme->getThemeHandle();
+		$v->render($this);
+
+	}
+
 	public static function getByHandle($pTemplateHandle) {
 		$db = Loader::db();
 		$q = "select pTemplateID, pTemplateHandle, pTemplateIsInternal, pTemplateName, pTemplateIcon, pkgID from PageTemplates where pTemplateHandle = ?";

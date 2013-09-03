@@ -8,7 +8,6 @@ $classes = array(
 	'PageCacheRecord' => array('library', 'page_cache/record'),
 	'UnknownPageCacheRecord' => array('library', 'page_cache/unknown_record'),
 	'FilePageCache' => array('library', 'page_cache/types/file'),
-	'View' => array('library','view'),
 	'Events' => array('library','events'),
 	'Model' => array('library','model'),
 	'ItemList' => array('library','item_list'),
@@ -23,8 +22,13 @@ $classes = array(
 	'CssAsset' => array('library', 'asset/types/css'),
 	'FileType,FileTypeList' => array('library','file/types'),
 	'FileImporter' => array('library', 'file/importer'),
+
+	'View' => array('library','view/library'),
+	'RequestView' => array('library','view/request/library'),
+	'ToolRequestView' => array('library','view/request/tool'),
+	'PageRequestView' => array('library','view/request/page'),
+
 	'BlockView' => array('library','block_view'),
-	'ToolView' => array('library','view/tool'),
 	'MailImporter' => array('library','mail/importer'),
 	'Archive' => array('library','archive'),
 	'Conversation' => array('model','conversation/model'),

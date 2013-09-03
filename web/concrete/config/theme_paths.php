@@ -1,8 +1,7 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
 
-$v = View::getInstance();
-// TODO - make this honor * better, actually work for more than just dashboard
+$v = RequestView::getInstance();
 $v->setThemeByPath('/dashboard', 'dashboard');
 $v->setThemeByPath('/dashboard/*', 'dashboard');
 $v->setThemeByPath('/account', VIEW_CORE_THEME);

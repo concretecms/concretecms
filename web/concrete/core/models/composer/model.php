@@ -9,7 +9,7 @@ class Concrete5_Model_Composer extends Object {
 	public function getComposerAllowedPageTemplates() {
 		return $this->cmpAllowedPageTemplates;
 	}
-
+	public function getComposerDefaultPageTemplateID() {return $this->cmpDefaultPageTemplateID;}
 	public function getPermissionObjectIdentifier() {
 		return $this->getComposerID();
 	}
@@ -28,8 +28,9 @@ class Concrete5_Model_Composer extends Object {
 	}
 
 	public function getComposerPageTemplateObjects() {
+		$_templates = array();
 		if ($this->cmpAllowedPageTemplates == 'C') {
-			return $this->getComposerFormSelectedPageTemplateObjects();
+			$_templates = $this->getComposerFormSelectedPageTemplateObjects();
 		} else {
 			$templates = PageTemplate::getList();
 			$db = Loader::db();
@@ -41,11 +42,14 @@ class Concrete5_Model_Composer extends Object {
 						$_templates[] = $pt;
 					}
 				}
-				return $_templates;
 			}
-			return $templates;
-
 		}
+		$defaultTemplate = PageTemplate::getByID($this->getComposerDefaultPageTemplateID());
+		if (!in_array($defaultTemplate, $_templates)) {
+			$_templates[] = $defaultTemplate;
+		}
+		
+		return $_templates;
 	}
 
 	public static function import($node) {

@@ -863,7 +863,7 @@
         <pagetemplate handle="dashboard_header_four_col" name="Dashboard Header + Four Column" internal="1" package="" />
     </pagetemplates>
     <pages>
-    	<page name="Welcome to concrete5" path="/dashboard/welcome" filename="" description="Learn about how to use concrete5, how to develop for concrete5, and get general help." pagetype="dashboard_header_four_col">
+    	<page name="Welcome to concrete5" path="/dashboard/welcome" filename="" description="Learn about how to use concrete5, how to develop for concrete5, and get general help." template="dashboard_header_four_col" pagetype="dashboard_header_four_col">
 			<attributes>
 				<attributekey handle="exclude_nav">
 					<value><![CDATA[1]]></value>
@@ -937,7 +937,7 @@
 			</area>
     	</page>
     	
-    	<page name="Customize Dashboard Home" path="/dashboard/home" filename="" pagetype="dashboard_primary_five" description="" package="">
+    	<page name="Customize Dashboard Home" path="/dashboard/home" filename="" template="dashboard_primary_five" pagetype="dashboard_primary_five" description="" package="">
 			<attributes>
 				<attributekey handle="exclude_nav">
 					<value><![CDATA[1]]></value>

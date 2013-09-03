@@ -13,17 +13,21 @@ class Concrete5_Controller_Dashboard_Composer_List_Add extends DashboardBaseCont
 		if (!$vs->notempty($name)) {
 			$this->error->add(t('You must specify a valid name for your composer.'));
 		}
-		$types = array();
-		if (is_array($_POST['cmpCTID'])) {
-			foreach($this->post('cmpCTID') as $ctID) {
-				$ct = CollectionType::getByID($ctID);
-				if (is_object($ct)) {
-					$types[] = $ct;
+		$defaultTemplate = PageTemplate::getByID($this->post('cmpDefaultPageTemplateID'));
+		if (!is_object($defaultTemplate)) {
+			$this->error->add(t('You must choose a valid default page template.'));
+		}
+		$templates = array();
+		if (is_array($_POST['cmpPageTemplateID'])) {
+			foreach($this->post('cmpPageTemplateID') as $pageTemplateID) {
+				$pt = PageTemplate::getByID($pageTemplateID);
+				if (is_object($pt)) {
+					$templates[] = $pt;
 				}
 			}
 		}
-		if (count($types) == 0 && $this->post('cmpAllowedPageTypes') == 'C') {
-			$this->error->add(t('You must specify at least one page type.'));
+		if (count($templates) == 0 && $this->post('cmpAllowedPageTemplates') == 'C') {
+			$this->error->add(t('You must specify at least one page template.'));
 		}
 		$target = ComposerTargetType::getByID($this->post('cmpTargetTypeID'));
 		if (!is_object($target)) {
@@ -31,7 +35,7 @@ class Concrete5_Controller_Dashboard_Composer_List_Add extends DashboardBaseCont
 		}
 
 		if (!$this->error->has()) {
-			$cmp = Composer::add($name, $this->post('cmpAllowedPageTypes'), $types);
+			$cmp = Composer::add($name, $defaultTemplate, $this->post('cmpAllowedPageTemplates'), $templates);
 			$configuredTarget = $target->configureComposerTarget($cmp, $this->post());
 			$cmp->setConfiguredComposerTargetObject($configuredTarget);
 			$this->redirect('/dashboard/composer/list', 'composer_added');

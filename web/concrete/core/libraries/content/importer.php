@@ -222,10 +222,12 @@ class Concrete5_Library_Content_Importer {
 				}
 				$args = array();
 				$ct = CollectionType::getByHandle($px['pagetype']);
+				$template = PageTemplate::getByHandle($px['template']);
 				if ($px['path'] == '') {
 					// home page
 					$page = $home;
 					$args['ctID'] = $ct->getCollectionTypeID();
+					$args['pTemplateID'] = $template->getPageTemplateID();
 				} else {
 					$page = Page::getByPath($px['path']);
 					if (!is_object($page) || ($page->isError())) {
@@ -240,10 +242,11 @@ class Concrete5_Library_Content_Importer {
 						$page = $parent->add($ct, $data);
 					}
 				}
-
+				
 				$args['cName'] = $px['name'];
 				$args['cDescription'] = $px['description'];
 				$args['ctID'] = $ct->getCollectionTypeID();
+				$args['pTemplateID'] = $template->getPageTemplateID();
 				$page->update($args);
 			}
 		}
