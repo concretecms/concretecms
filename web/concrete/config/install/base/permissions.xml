@@ -187,6 +187,12 @@
                 <group name="Administrators"/>
             </access>
 		</permissionkey>
+
+		<permissionkey handle="access_user_search_export" name="Export Site Users" description="Controls whether a user can export site users or not" package="" category="user">
+			<access>
+				<group name="Administrators"/>
+			</access>
+		</permissionkey>
         
 	</permissionkeys>
     
