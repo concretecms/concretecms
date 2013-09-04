@@ -261,7 +261,7 @@
 		Events::fire('on_page_view', $c, $u);
 
 		## now we display (provided we've gotten this far)
-		$v = PageRequestView::getInstance();
+		$v = new PageRequestView();
 		print_r($v);
 		$v->render($c);
 	}

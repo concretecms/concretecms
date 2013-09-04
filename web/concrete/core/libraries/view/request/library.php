@@ -13,16 +13,8 @@ class Concrete5_Library_RequestView extends View {
 	protected $themeAbsolutePath;
 	protected $themePkgHandle;
 
-	private static $instance;
 
 	public function getThemeDirectory() {return $this->themeAbsolutePath;}
-
-	public static function getInstance() {
-		if (null === self::$instance) {
-			self::$instance = new self;
-		}
-		return self::$instance;
-	}
 
 	protected function setInnerContentFile($innerContentFile) {
 		$this->innerContentFile = $innerContentFile;
@@ -42,41 +34,24 @@ class Concrete5_Library_RequestView extends View {
 	 */
 	protected function loadRequestViewThemeObject() {
 		$env = Environment::get();
-		if ($this->controller->theme != false) {
-			$this->setRequestViewTheme($this->controller->theme);
-		} else if (($tmpTheme = $this->getThemeFromPath($this->viewPath)) != false) {
-			$this->setRequestViewTheme($tmpTheme[0]);
-		} else {
-			$this->setRequestViewTheme(FILENAME_COLLECTION_DEFAULT_THEME);
+		if (!$this->themeHandle) {
+			$rl = Router::get();
+			if ($this->controller->theme != false) {
+				$this->setRequestViewTheme($this->controller->theme);
+			} else if (($tmpTheme = $rl->getThemeFromPath($this->viewPath)) != false) {
+				$this->setRequestViewTheme($tmpTheme[0]);
+			} else {
+				$this->setRequestViewTheme(FILENAME_COLLECTION_DEFAULT_THEME);
+			}
 		}
 
 		if ($this->themeHandle != VIEW_CORE_THEME) {
 			$this->themeObject = PageTheme::getByHandle($this->themeHandle);
-			$this->themePkgHandle = $this->theme->getPackageHandle();
+			$this->themePkgHandle = $this->themeObject->getPackageHandle();
 		}
 
 		$this->themeAbsolutePath = $env->getPath(DIRNAME_THEMES . '/' . $this->themeHandle);
 	}
-
-	/**
-	 * This grabs the theme for a particular path, if one exists in the themePaths array 
-	 * @access private
-     * @param string $path
-	 * @return string $theme
-	*/
-	protected function getThemeFromPath($path) {
-		// there's probably a more efficient way to do this
-		$theme = false;
-		$txt = Loader::helper('text');
-		foreach($this->themePaths as $lp => $layout) {
-			if ($txt->fnmatch($lp, $path)) {
-				$theme = $layout;
-				break;
-			}
-		}
-		return $theme;
-	}
-
 
 	/** 
 	 * Begin the render
@@ -88,17 +63,6 @@ class Concrete5_Library_RequestView extends View {
 		$this->viewPath = $path;
 	}
 
-	/**
-	 * Used by the theme_paths and site_theme_paths files in config/ to hard coded certain paths to various themes
-	 * @access public
-	 * @param $path string
-	 * @param $theme object, if null site theme is default
-	 * @return void
-	*/
-	public function setThemeByPath($path, $theme = NULL, $wrapper = FILENAME_THEMES_VIEW) {
-		$this->themePaths[$path] = array($theme, $wrapper);
-	}
-
 	protected function setupController() {
 		if (!isset($this->controller)) {
 			$this->controller = Loader::controller($this->viewPath);
@@ -106,16 +70,11 @@ class Concrete5_Library_RequestView extends View {
 		}
 	}
 
-	public function startRender() {
-
-		// First the starting gun.
-		Events::fire('on_start', $this);
-
+	public function setupRender() {
 		// Set the theme object that we should use for this requested page.
 		// Only run setup if the theme is unset. Usually it will be but if we set it
 		// programmatically we already have a theme.
 		$this->loadRequestViewThemeObject();
-
 		$env = Environment::get();
 		$this->setInnerContentFile($env->getPath(DIRNAME_PAGES . '/' . trim($this->viewPath, '/') . '.php', $this->themePkgHandle));
 		if (file_exists(DIR_FILES_THEMES_CORE . '/' . DIRNAME_THEMES_CORE . '/' . $this->themeHandle . '.php')) {
@@ -125,12 +84,19 @@ class Concrete5_Library_RequestView extends View {
 		}
 	}
 
-	public function getViewContents() {
-		Events::fire('on_before_render', $this);
-		$this->controller->on_before_render();
-		extract($this->controller->getSets());
-		extract($this->controller->getHelperObjects());
+	public function startRender() {
+		// First the starting gun.
+		Events::fire('on_start', $this);
+	}
 
+	public function prepareBeforeRender() {
+		Events::fire('on_before_render', $this);
+		parent::prepareBeforeRender();
+	}
+
+	public function renderViewContents($scopeItems) {
+		extract($scopeItems);
+		$this->prepareBeforeRender();
 		if ($this->innerContentFile) {
 			ob_start();
 			include($this->innerContentFile);
@@ -143,9 +109,7 @@ class Concrete5_Library_RequestView extends View {
 			include($this->template);
 			$contents = ob_get_contents();
 			ob_end_clean();
-
 			return $contents;
-
 		} else {
 			throw new Exception(t('File %s not found. All themes need default.php and view.php files in them. Consult concrete5 documentation on how to create these files.', $this->template));
 		}

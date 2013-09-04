@@ -4,6 +4,7 @@ $classes = array(
 	'Log' => array('library','log'),
 	'Request' => array('library','request'),
 	'Localization' => array('library','localization'),
+	'Router' => array('library', 'router'),
 	'PageCache' => array('library', 'page_cache/library'),
 	'PageCacheRecord' => array('library', 'page_cache/record'),
 	'UnknownPageCacheRecord' => array('library', 'page_cache/unknown_record'),
