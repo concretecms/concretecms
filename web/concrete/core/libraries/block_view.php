@@ -60,7 +60,10 @@ class Concrete5_Library_BlockView extends View {
 	}
 
 	public function finishRender() {}
-
+	public function postProcessViewContents($contents) {
+		return $contents;
+	}
+	
 	public function inc($file, $args = array()) {
 		extract($args);
 		extract($this->getScopeItems());

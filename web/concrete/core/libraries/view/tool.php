@@ -1,17 +1,51 @@
 <?
 
 defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Library_ToolRequestView extends RequestView {
+class Concrete5_Library_ToolView extends View {
 	
-	private static $loc = null;
+	protected $request;
 
-	public static function getInstance() {
-		if (null === self::$loc) {
-			self::$loc = new self;
-		}
-		return self::$loc;
+	public function start($request) {
+		$this->request = $request;
+	}
+	public function action($action) {
+		throw new Exception(t('Action is not available in a tools context.'));
 	}
 
+	protected function setupController() {}
+	public function startRender() {}
+	public function setupRender() {
+		$env = Environment::get();
+		switch($this->request->getIncludeType()) {
+			case "CONCRETE_TOOL":
+			case "TOOL":
+				$r = $env->getPath(DIRNAME_TOOLS . '/' . $this->request->getFilename());
+				break;
+			case 'PACKAGE_TOOL':
+				$r = $env->getPath(DIRNAME_TOOLS . '/' . $this->request->getFilename(), $this->request->getPackageHandle());
+				break;
+			case "BLOCK_TOOL":
+				if ($co->getBlock() != '') {
+					$bt = BlockType::getByHandle($this->request->getBlock());
+					if ($bt->getPackageID() > 0) {
+						$r = $env->getPath(DIRNAME_BLOCKS . '/' . $bt->getBlockTypeHandle() . '/' . DIRNAME_BLOCK_TOOLS . '/' . $this->request->getFilename(), $bt->getPackageHandle());
+					} else {
+						$r = $env->getPath(DIRNAME_BLOCKS . '/' . $bt->getBlockTypeHandle() . '/' . DIRNAME_BLOCK_TOOLS . '/' . $this->request->getFilename());
+					}
+				}
+				break;
+		}
+		$this->setViewTemplate($r);
+	}
+
+	public function getScopeItems() {return array();}
+	public function finishRender() {
+		require(DIR_BASE_CORE . '/startup/shutdown.php');
+		exit;
+	}
+
+
+	/*
 	public function outputAssetIntoView($item) {
 		$str = '<script type="text/javascript">';	
 		if ($item instanceof CssAsset) {
@@ -82,4 +116,6 @@ class Concrete5_Library_ToolRequestView extends RequestView {
 		require(DIR_BASE_CORE . '/startup/shutdown.php');
 		exit;
 	}
+	*/
+
 }

@@ -26,8 +26,8 @@ $classes = array(
 
 	'View' => array('library','view/library'),
 	'RequestView' => array('library','view/request/library'),
-	'ToolRequestView' => array('library','view/request/tool'),
 	'PageRequestView' => array('library','view/request/page'),
+	'ToolView' => array('library','view/tool'),
 
 	'BlockView' => array('library','block_view'),
 	'MailImporter' => array('library','mail/importer'),

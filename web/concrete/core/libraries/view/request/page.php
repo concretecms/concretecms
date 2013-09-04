@@ -84,9 +84,54 @@ class Concrete5_Library_PageRequestView extends RequestView {
 	}
 
 	/** 
+	 * Returns a stylesheet found in a themes directory - but FIRST passes it through the tools CSS handler
+	 * in order to make certain style attributes found inside editable
+	 * @param string $stylesheet
+	 */
+	public function getStyleSheet($stylesheet) {
+		$file = $this->getThemePath() . '/' . $stylesheet;
+		$cacheFile = DIR_FILES_CACHE . '/' . DIRNAME_CSS . '/' . $this->themeHandle . '/' . $stylesheet;
+		$env = Environment::get();
+		$themeRec = $env->getUncachedRecord(DIRNAME_THEMES . '/' . $this->themeHandle . '/' . $stylesheet, $this->themePkgHandle);
+		if (file_exists($cacheFile) && $themeRec->exists()) {
+			if (filemtime($cacheFile) > filemtime($themeRec->file)) {
+				return REL_DIR_FILES_CACHE . '/' . DIRNAME_CSS . '/' . $this->themeHandle . '/' . $stylesheet;
+			}
+		}
+		if ($themeRec->exists()) {
+			$themeFile = $themeRec->file;
+			if (!file_exists(DIR_FILES_CACHE . '/' . DIRNAME_CSS)) {
+				@mkdir(DIR_FILES_CACHE . '/' . DIRNAME_CSS);
+			}
+			if (!file_exists(DIR_FILES_CACHE . '/' . DIRNAME_CSS . '/' . $this->themeHandle)) {
+				@mkdir(DIR_FILES_CACHE . '/' . DIRNAME_CSS . '/' . $this->themeHandle);
+			}
+			$fh = Loader::helper('file');
+			$stat = filemtime($themeFile);
+			if (!file_exists(dirname($cacheFile))) {
+				@mkdir(dirname($cacheFile), DIRECTORY_PERMISSIONS_MODE, true);
+			}
+			$style = $pt->parseStyleSheet($stylesheet);
+			$r = @file_put_contents($cacheFile, $style);
+			if ($r) {
+				return REL_DIR_FILES_CACHE . '/' . DIRNAME_CSS . '/' . $this->themeHandle . '/' . $stylesheet;
+			} else {
+				return $this->getThemePath() . '/' . $stylesheet;
+			}
+		}
+	}
+
+	/** 
 	 * @deprecated
 	 */
 	public function getCollectionObject() {return $this->getPageObject();}
-	
+	public function section($url) {
+		if (!empty($this->viewPath)) {
+			$url = '/' . trim($url, '/');
+			if (strpos($this->viewPath, $url) !== false && strpos($this->viewPath, $url) == 0) {
+				return true;
+			}
+		}
+	}
 
 }
