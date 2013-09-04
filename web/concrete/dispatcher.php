@@ -262,6 +262,5 @@
 
 		## now we display (provided we've gotten this far)
 		$v = new PageRequestView();
-		print_r($v);
 		$v->render($c);
 	}

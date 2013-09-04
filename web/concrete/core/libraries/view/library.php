@@ -11,10 +11,9 @@ abstract class Concrete5_Library_View {
 	abstract public function start($mixed);
 	abstract public function startRender();
 	abstract public function setupRender();
-	abstract public function renderViewContents($scopeItems);
 	abstract protected function setupController();
-	abstract public function deliverRender($contents);
 	abstract public function finishRender();
+	abstract public function action($action);
 
 	public function setViewTemplate($template) {
 		$this->template = $template;
@@ -48,6 +47,22 @@ abstract class Concrete5_Library_View {
 		$contents = $this->postProcessViewContents($contents);
 		$this->deliverRender($contents);
 		$this->finishRender();
+	}
+
+	public function renderViewContents($scopeItems) {
+		extract($scopeItems);
+		$this->prepareBeforeRender();
+		if (file_exists($this->template)) {
+			ob_start();
+			include($this->template);
+			$contents = ob_get_contents();
+			ob_end_clean();
+		}
+		return $contents;
+	}
+
+	public function deliverRender($contents) {
+		print $contents;
 	}
 
 	/**
