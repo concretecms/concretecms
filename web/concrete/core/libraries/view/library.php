@@ -3,22 +3,21 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 abstract class Concrete5_Library_View {
 
-	protected $controller;
+	public $controller;
+
 	protected $template;
+	protected static $instance;
 
 	abstract public function start($mixed);
 	abstract public function startRender();
-	abstract public function getViewContents();
+	abstract public function setupRender();
+	abstract public function renderViewContents($scopeItems);
 	abstract protected function setupController();
 	abstract public function deliverRender($contents);
 	abstract public function finishRender();
 
 	public function setViewTemplate($template) {
 		$this->template = $template;
-	}
-
-	public static function getInstance() {
-		return RequestView::getInstance();
 	}
 
 	/**
@@ -31,12 +30,21 @@ abstract class Concrete5_Library_View {
 		return $this->controller->post($key);
 	}
 
+	public function prepareBeforeRender() {
+		$this->controller->on_before_render();
+	}
+
+	public function getScopeItems() {
+		return array_merge($this->controller->getSets(), $this->controller->getHelperObjects());
+	}
+
 	public function render($mixed) {
 		$this->start($mixed);
 		$this->setupController();
+		$this->setupRender();
 		$this->startRender();
-
-		$contents = $this->getViewContents();
+		$scopeItems = $this->getScopeItems();
+		$contents = $this->renderViewContents($scopeItems);
 		$contents = $this->postProcessViewContents($contents);
 		$this->deliverRender($contents);
 		$this->finishRender();
@@ -254,4 +262,18 @@ abstract class Concrete5_Library_View {
 	protected function outputAssetIntoView($item) {
 		return $item . "\n";			
 	}
+
+	// Legacy Items. Deprecated
+	public static function getInstance() {
+		if (null === self::$instance) {
+			self::$instance = new RequestView();
+		}
+		return self::$instance;
+	}
+
+	public function setThemeByPath($path, $theme = NULL, $wrapper = FILENAME_THEMES_VIEW) {
+		$l = Router::get();
+		$l->setThemeByPath($path, $theme, $wrapper);
+	}
+
 }

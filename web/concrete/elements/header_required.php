@@ -104,9 +104,6 @@ if (is_object($cp)) {
 
 	Loader::element('page_controls_header', array('cp' => $cp, 'c' => $c));
 
-	if ($this->areLinksDisabled()) { 
-		$this->addHeaderItem('<script type="text/javascript">window.onload = function() { td = document.createElement("DIV"); td.style.position = "absolute"; td.style.top = "0px"; td.style.left = "0px"; td.style.width = "100%"; td.style.height = "100%"; td.style.zIndex = "1000";document.body.appendChild(td);}</script>', 'CORE');
-	}
 	$cih = Loader::helper('concrete/interface');
 	if ($cih->showNewsflowOverlay()) {
 		$this->addFooterItem('<script type="text/javascript">$(function() { ccm_showDashboardNewsflowWelcome(); });</script>');
