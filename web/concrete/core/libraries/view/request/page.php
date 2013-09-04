@@ -48,12 +48,33 @@ class Concrete5_Library_PageRequestView extends RequestView {
 	public function setupRender() {
 		$this->loadRequestViewThemeObject();
 		$env = Environment::get();
-		$this->setInnerContentFile($env->getPath(DIRNAME_PAGES . '/' . trim($this->viewPath, '/') . '.php', $this->themePkgHandle));
-		if (file_exists(DIR_FILES_THEMES_CORE . '/' . DIRNAME_THEMES_CORE . '/' . $this->themeHandle . '.php')) {
-			$this->setViewTemplate($env->getPath(DIRNAME_THEMES . '/' . DIRNAME_THEMES_CORE . '/' . $this->themeHandle . '.php'));
+
+		if ($this->c->getCollectionTypeID() == 0 && $this->c->getCollectionFilename()) {
+			$cFilename = trim($this->c->getCollectionFilename(), '/');
+			// if we have this exact template in the theme, we use that as the outer wrapper and we don't do an inner content file
+			$r = $env->getRecord(DIRNAME_THEMES . '/' . $this->themeHandle . '/' . $cFilename);
+			if ($r->exists()) {
+				$this->setViewTemplate($r->file);
+			} else {
+				$this->setViewTemplate($env->getPath(DIRNAME_THEMES . '/' . $this->themeHandle . '/' . FILENAME_THEMES_VIEW, $this->themePkgHandle));
+				$this->setInnerContentFile($env->getPath(DIRNAME_PAGES . '/' . $cFilename, $this->themePkgHandle));
+			}
 		} else {
-			$this->setViewTemplate($env->getPath(DIRNAME_THEMES . '/' . $this->themeHandle . '/' . FILENAME_THEMES_VIEW, $this->themePkgHandle));
+			$pt = PageTemplate::getByID($this->c->getPageTemplateID());
+			$rec = $env->getRecord(DIRNAME_PAGE_TYPES . '/' . $this->c->getCollectionTypeHandle() . '.php', $this->themePkgHandle);
+			if ($rec->exists()) {
+				$this->setInnerContentFile($env->getPath(DIRNAME_PAGES . '/' . $cFilename, $this->themePkgHandle));
+				$this->setViewTemplate($env->getPath(DIRNAME_THEMES . '/' . $this->themeHandle . '/' . FILENAME_THEMES_VIEW, $this->themePkgHandle));
+			} else {
+				$rec = $env->getRecord(DIRNAME_THEMES . '/' . $this->themeHandle . '/' . $pt->getPageTemplateHandle() . '.php', $this->themePkgHandle);
+				if ($rec->exists()) {
+					$this->setViewTemplate($env->getPath(DIRNAME_THEMES . '/' . $this->themeHandle . '/' . $pt->getPageTemplateHandle() . '.php', $this->themePkgHandle));
+				} else {
+					$this->setViewTemplate($env->getPath(DIRNAME_THEMES . '/' . $this->themeHandle . '/' . FILENAME_THEMES_DEFAULT, $this->themePkgHandle));
+				}
+			}
 		}
+
 	}
 
 	public function deliverRender($contents) {

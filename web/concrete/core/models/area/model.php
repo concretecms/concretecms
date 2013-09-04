@@ -547,7 +547,6 @@ class Concrete5_Model_Area extends Object {
 		foreach ($blocksToDisplay as $b) {
 			$includeEditStrip = false;
 			$bv = new BlockView();
-			$bv->setAreaObject($this); 
 			$p = new Permissions($b);
 			if ($c->isEditMode() && $this->showControls && $p->canViewEditInterface()) {
 				$includeEditStrip = true;

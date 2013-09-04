@@ -3,7 +3,6 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 class Concrete5_Library_RequestView extends View {
 
-	protected $controller;
 	protected $viewPath;
 	protected $innerContentFile;
 
@@ -15,11 +14,29 @@ class Concrete5_Library_RequestView extends View {
 
 
 	public function getThemeDirectory() {return $this->themeAbsolutePath;}
+	/**
+	 * gets the relative theme path for use in templates
+	 * @access public
+	 * @return string $themePath
+	*/
+	public function getThemePath() { return $this->themeRelativePath; }
 
 	protected function setInnerContentFile($innerContentFile) {
 		$this->innerContentFile = $innerContentFile;
 	}
 
+	/**
+	 * A shortcut to posting back to the current page with a task and optional parameters. Only works in the context of 
+	 * @param string $action
+	 * @param string $task
+	 * @return string $url
+	 */
+	public function action($action) {
+		$a = func_get_args();
+		array_unshift($a, $this->viewPath);
+		$ret = call_user_func_array(array($this, 'url'), $a);
+		return $ret;
+	}
 
 	public function setRequestViewTheme($theme) {
 		if (is_object($theme)) {
@@ -51,6 +68,7 @@ class Concrete5_Library_RequestView extends View {
 		}
 
 		$this->themeAbsolutePath = $env->getPath(DIRNAME_THEMES . '/' . $this->themeHandle);
+		$this->themeRelativePath = $env->getURL(DIRNAME_THEMES . '/' . $this->themeHandle);
 	}
 
 	/** 
@@ -120,7 +138,7 @@ class Concrete5_Library_RequestView extends View {
 		if($ret != '') {
 			$contents = $ret;
 		}
-		print $contents;
+		parent::deliverRender($contents);
 	}
 
 	public function finishRender() {
