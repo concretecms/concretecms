@@ -7,6 +7,7 @@ abstract class Concrete5_Library_View {
 
 	protected $template;
 	protected static $instance;
+	protected $outputAssets = array();
 
 	abstract public function start($mixed);
 	abstract public function startRender();
@@ -30,7 +31,9 @@ abstract class Concrete5_Library_View {
 	}
 
 	public function prepareBeforeRender() {
-		$this->controller->on_before_render();
+		if (is_object($this->controller)) {
+			$this->controller->on_before_render();
+		}
 	}
 
 	public function getScopeItems() {
@@ -289,6 +292,11 @@ abstract class Concrete5_Library_View {
 	public function setThemeByPath($path, $theme = NULL, $wrapper = FILENAME_THEMES_VIEW) {
 		$l = Router::get();
 		$l->setThemeByPath($path, $theme, $wrapper);
+	}
+
+
+	public function renderError($title, $error, $errorObj = null) {
+		Loader::helper('concrete/interface')->renderError($title, $error);
 	}
 
 }

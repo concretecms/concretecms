@@ -11,7 +11,7 @@
 		}
 
 		$env = Environment::get();
-		$tv = ToolView::getInstance();
+		$tv = new ToolView();
 		$tv->render($co);
 	}
 

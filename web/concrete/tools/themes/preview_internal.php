@@ -25,9 +25,6 @@ if ($themeID > 0) {
 		throw new Exception(t('Theme not found in %s', $th->getThemeDirectory()));
 	$v->setTheme($th);
 }
-$v->disableEditing();
-$v->disableLinks();
-$v->enablePreview();
 $v->render($c); 
 
 ?>
