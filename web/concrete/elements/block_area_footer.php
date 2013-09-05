@@ -33,8 +33,8 @@ if (!$c->isArrangeMode()) { ?>
 	$(function() {ccm_menuInit(ccm_areaMenuObj<?=$a->getAreaID()?>)});
 	</script>
 	<? if ($a->isGlobalArea()) { ?>
-		<div id="a<?=$a->getAreaID()?>controls" class="ccm-add-block"><?=t('Add To Sitewide %s', $arHandle)?></div>
+		<div id="a<?=$a->getAreaID()?>controls" class="ccm-add-block"><?=t('Add To Sitewide %s', tc('AreaName', $arHandle))?></div>
 	<? } else { ?>
-		<div id="a<?=$a->getAreaID()?>controls" class="ccm-add-block"><?=t('Add To %s', $arHandle)?></div>
+		<div id="a<?=$a->getAreaID()?>controls" class="ccm-add-block"><?=t('Add To %s', tc('AreaName', $arHandle))?></div>
 	<? } ?>
 <? } ?>
