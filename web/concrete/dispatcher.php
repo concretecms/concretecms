@@ -173,7 +173,7 @@
 			switch($c->getError()) {
 				case COLLECTION_NOT_FOUND:
 					//$v = View::getInstance();
-					exit;$v->render('/page_not_found');
+					$v->render('/page_not_found');
 					break;
 			}
 		}
@@ -198,14 +198,14 @@
 				case COLLECTION_FORBIDDEN:
 					//$v = View::getInstance();
 					//$v->setCollectionObject($c);
-					exit;$v->render('/page_forbidden');
+					$v->render('/page_forbidden');
 					break;
 			}
 		}
 
 		if (!$c->isActive() && (!$cp->canViewPageVersions())) {
 			//$v = View::getInstance();
-			exit;$v->render('/page_not_found');
+			$v->render('/page_not_found');
 		}
 
 		## If there's no error, then we build the collection, but first we load it with the appropriate
@@ -219,12 +219,6 @@
 
 		$vp = new Permissions($c->getVersionObject());
 
-		if ($_REQUEST['ccm-disable-controls'] == true || intval($cvID) > 0) {
-			//$v = View::getInstance();
-			//$v->disableEditing();
-			//$v->disableLinks();
-		}
-
 		// returns the $vp object, which we then check
 		if (is_object($vp) && $vp->isError()) {
 			// if we've gotten an error getting information about this particular collection
@@ -232,12 +226,12 @@
 			switch($vp->getError()) {
 				case COLLECTION_NOT_FOUND:
 					//$v = View::getInstance();
-					exit;$v->render('/page_not_found');
+					$v->render('/page_not_found');
 					break;
 				case COLLECTION_FORBIDDEN:
 					//$v = View::getInstance();
 					//$v->setCollectionObject($c);
-					exit;$v->render('/page_forbidden');
+					$v->render('/page_forbidden');
 					break;
 			}
 		}

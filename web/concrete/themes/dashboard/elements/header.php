@@ -30,9 +30,6 @@ $md = new Mobile_Detect();
 
 $html = Loader::helper('html');
 $v = View::getInstance();
-if (!isset($enableEditing) || $enableEditing == false) {
-	$v->disableEditing();
-}
 
 $logouttoken = Loader::helper('validation/token')->generate('logout');
 

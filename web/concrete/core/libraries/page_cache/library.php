@@ -55,7 +55,7 @@ abstract class Concrete5_Library_PageCache {
 		return $headers;
 	}
 
-	public function shouldAddToCache(PageView $v) {
+	public function shouldAddToCache(PageRequestView $v) {
 		$c = $v->getCollectionObject();
 		if (!is_object($c)) {
 			return false;
@@ -123,22 +123,6 @@ abstract class Concrete5_Library_PageCache {
 			return $mixed->getCacheRecordKey();
 		}
 	}
-
-	/*
-	public function getPageContent(Page $c) {
-		ob_start();
-		$v = View::getInstance();
-		$v->disableEditing();
-		$v->setCollectionObject($c);
-		$req = Request::get();
-		$req->setCustomRequestUser(false);				
-		$req->setCurrentPage($c);
-		$v->render($c);
-		$contents = ob_get_contents();
-		ob_end_clean();
-		return $contents;
-	}
-	*/
 
 	abstract public function getRecord($mixed);
 	abstract public function set(Page $c, $content);

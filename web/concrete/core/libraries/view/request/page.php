@@ -48,7 +48,6 @@ class Concrete5_Library_PageRequestView extends RequestView {
 	public function setupRender() {
 		$this->loadRequestViewThemeObject();
 		$env = Environment::get();
-
 		if ($this->c->getCollectionTypeID() == 0 && $this->c->getCollectionFilename()) {
 			$cFilename = trim($this->c->getCollectionFilename(), '/');
 			// if we have this exact template in the theme, we use that as the outer wrapper and we don't do an inner content file
@@ -56,7 +55,11 @@ class Concrete5_Library_PageRequestView extends RequestView {
 			if ($r->exists()) {
 				$this->setViewTemplate($r->file);
 			} else {
-				$this->setViewTemplate($env->getPath(DIRNAME_THEMES . '/' . $this->themeHandle . '/' . FILENAME_THEMES_VIEW, $this->themePkgHandle));
+				if (file_exists(DIR_FILES_THEMES_CORE . '/' . DIRNAME_THEMES_CORE . '/' . $this->themeHandle . '.php')) {
+					$this->setViewTemplate($env->getPath(DIRNAME_THEMES . '/' . DIRNAME_THEMES_CORE . '/' . $this->themeHandle . '.php'));
+				} else {
+					$this->setViewTemplate($env->getPath(DIRNAME_THEMES . '/' . $this->themeHandle . '/' . FILENAME_THEMES_VIEW, $this->themePkgHandle));
+				}
 				$this->setInnerContentFile($env->getPath(DIRNAME_PAGES . '/' . $cFilename, $this->themePkgHandle));
 			}
 		} else {
@@ -78,8 +81,12 @@ class Concrete5_Library_PageRequestView extends RequestView {
 	}
 
 	public function deliverRender($contents) {
-		$contents = parent::deliverRender($contents);
-		// do full page caching
+		$cache = PageCache::getLibrary();
+		$shouldAddToCache = $cache->shouldAddToCache($this);
+		if ($shouldAddToCache) {
+			$cache->outputCacheHeaders($this->c);
+			$cache->set($this->c, $contents);
+		}
 		print $contents;
 	}
 
@@ -111,7 +118,7 @@ class Concrete5_Library_PageRequestView extends RequestView {
 			if (!file_exists(dirname($cacheFile))) {
 				@mkdir(dirname($cacheFile), DIRECTORY_PERMISSIONS_MODE, true);
 			}
-			$style = $pt->parseStyleSheet($stylesheet);
+			$style = $this->themeObject->parseStyleSheet($stylesheet);
 			$r = @file_put_contents($cacheFile, $style);
 			if ($r) {
 				return REL_DIR_FILES_CACHE . '/' . DIRNAME_CSS . '/' . $this->themeHandle . '/' . $stylesheet;
