@@ -51,22 +51,22 @@ class Concrete5_Library_RequestView extends View {
 	 */
 	protected function loadRequestViewThemeObject() {
 		$env = Environment::get();
-		if (!$this->themeHandle) {
-			$rl = Router::get();
+		$rl = Router::get();
+		$tmpTheme = $rl->getThemeFromPath($this->viewPath);
+		if ($tmpTheme) {
+			$this->setRequestViewTheme($tmpTheme[0]);
+		} else if (!$this->themeHandle) {
 			if ($this->controller->theme != false) {
 				$this->setRequestViewTheme($this->controller->theme);
-			} else if (($tmpTheme = $rl->getThemeFromPath($this->viewPath)) != false) {
-				$this->setRequestViewTheme($tmpTheme[0]);
 			} else {
 				$this->setRequestViewTheme(FILENAME_COLLECTION_DEFAULT_THEME);
 			}
 		}
 
-		if ($this->themeHandle != VIEW_CORE_THEME) {
+		if ($this->themeHandle != VIEW_CORE_THEME && $this->themeHandle != 'dashboard') {
 			$this->themeObject = PageTheme::getByHandle($this->themeHandle);
 			$this->themePkgHandle = $this->themeObject->getPackageHandle();
 		}
-
 		$this->themeAbsolutePath = $env->getPath(DIRNAME_THEMES . '/' . $this->themeHandle);
 		$this->themeRelativePath = $env->getURL(DIRNAME_THEMES . '/' . $this->themeHandle);
 	}
@@ -109,6 +109,12 @@ class Concrete5_Library_RequestView extends View {
 
 	public function prepareBeforeRender() {
 		Events::fire('on_before_render', $this);
+		if ($this->themeHandle == VIEW_CORE_THEME) {
+			$_pt = new ConcretePageTheme();
+			$_pt->registerAssets();
+		} else if (is_object($this->themeObject)) {
+			$this->themeObject->registerAssets();
+		}
 		parent::prepareBeforeRender();
 	}
 

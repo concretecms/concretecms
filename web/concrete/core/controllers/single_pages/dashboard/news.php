@@ -8,7 +8,6 @@ class Concrete5_Controller_Dashboard_News extends Controller {
 	public function view() {
 		$c = Page::getByPath('/dashboard/home');
 		$v = View::getInstance();
-		$v->disableEditing();
 		$v->render($c);
 	}
 

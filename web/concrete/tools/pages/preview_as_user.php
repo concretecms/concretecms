@@ -6,8 +6,6 @@ $c = Page::getByID($_REQUEST['cID'], 'RECENT'); //,"ACTIVE"
 $cp = new Permissions($c);
 if ($cp->canPreviewPageAsUser() && PERMISSIONS_MODEL == 'advanced') {
 	$v = View::getInstance();
-	$v->disableEditing();
-	$v->disableLinks();
 	$req = Request::get();
 	$req->setCustomRequestUser(false);				
 	if (isset($_REQUEST['customUser'])) {

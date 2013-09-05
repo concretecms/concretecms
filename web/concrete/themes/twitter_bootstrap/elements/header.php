@@ -5,8 +5,8 @@
 
 <? Loader::element('header_required'); ?>
 
-<link type="text/css" rel="stylesheet" href="<?=$this->getThemePath()?>/css/bootstrap.min.css" />
-<link type="text/css" rel="stylesheet" href="<?=$this->getThemePath()?>/css/bootstrap-responsive.min.css" />
+<link type="text/css" rel="stylesheet" href="<?=$view->getThemePath()?>/css/bootstrap.min.css" />
+<link type="text/css" rel="stylesheet" href="<?=$view->getThemePath()?>/css/bootstrap-responsive.min.css" />
 
 </head>
 <body>
