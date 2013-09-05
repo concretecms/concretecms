@@ -1,7 +1,7 @@
 <?
 
 defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Library_PageRequestView extends RequestView {
+class Concrete5_Library_PageRequestView extends PathRequestView {
 
 	protected $c; // page
 

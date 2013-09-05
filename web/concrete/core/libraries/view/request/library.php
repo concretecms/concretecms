@@ -1,157 +1,172 @@
 <?
 
 defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Library_RequestView extends View {
+abstract class Concrete5_Library_RequestView extends View {
 
-	protected $viewPath;
-	protected $innerContentFile;
-
-	protected $themeHandle;
-	protected $themeObject;
-	protected $themeRelativePath;
-	protected $themeAbsolutePath;
-	protected $themePkgHandle;
-
-
-	public function getThemeDirectory() {return $this->themeAbsolutePath;}
-	/**
-	 * gets the relative theme path for use in templates
-	 * @access public
-	 * @return string $themePath
-	*/
-	public function getThemePath() { return $this->themeRelativePath; }
-
-	protected function setInnerContentFile($innerContentFile) {
-		$this->innerContentFile = $innerContentFile;
-	}
-
-	/**
-	 * A shortcut to posting back to the current page with a task and optional parameters. Only works in the context of 
-	 * @param string $action
-	 * @param string $task
-	 * @return string $url
+	/** 
+	 * Assets
 	 */
-	public function action($action) {
-		$a = func_get_args();
-		array_unshift($a, $this->viewPath);
-		$ret = call_user_func_array(array($this, 'url'), $a);
-		return $ret;
+	public function addHeaderAsset($item) {
+		$this->outputAssets[Asset::ASSET_POSITION_HEADER]['unweighted'][] = $item;
+	}
+	
+	/** 
+	 * Function responsible for adding footer items within the context of a view.
+	 * @access private
+	 */
+	public function addFooterAsset($item) {
+		$this->outputAssets[Asset::ASSET_POSITION_FOOTER]['unweighted'][] = $item;
 	}
 
-	public function setRequestViewTheme($theme) {
-		if (is_object($theme)) {
-			$this->themeHandle = $theme->getPageThemeHandle();
+	public function addOutputAsset(Asset $asset) {
+		if ($asset->getAssetWeight() > 0) {
+			$this->outputAssets[$asset->getAssetPosition()]['weighted'][] = $asset;
 		} else {
-			$this->themeHandle = $theme;
+			$this->outputAssets[$asset->getAssetPosition()]['unweighted'][] = $asset;
 		}
 	}
 
 	/** 
-	 * Load all the theme-related variables for which theme to use for this request.
+	 * Function responsible for outputting header items
+	 * @access private
 	 */
-	protected function loadRequestViewThemeObject() {
-		$env = Environment::get();
-		$rl = Router::get();
-		$tmpTheme = $rl->getThemeFromPath($this->viewPath);
-		if ($tmpTheme) {
-			$this->setRequestViewTheme($tmpTheme[0]);
-		} else if (!$this->themeHandle) {
-			if ($this->controller->theme != false) {
-				$this->setRequestViewTheme($this->controller->theme);
+	public function markHeaderAssetPosition() {
+		print '<!--ccm:assets:' . Asset::ASSET_POSITION_HEADER . '//-->';
+	}
+	
+	/** 
+	 * Function responsible for outputting footer items
+	 * @access private
+	 */
+	public function markFooterAssetPosition() {
+		print '<!--ccm:assets:' . Asset::ASSET_POSITION_FOOTER . '//-->';
+	}
+
+	public function postProcessViewContents($contents) {
+		$r = Request::get();
+		$assets = $r->getRequiredAssetsToOutput();
+		
+		foreach($assets as $asset) {
+			$this->addOutputAsset($asset);
+		}
+		
+		$contents = $this->replaceAssetPlaceholders($contents);
+
+		// replace any empty placeholders
+		$contents = $this->replaceEmptyAssetPlaceholders($contents);
+
+		return $contents;
+	}
+
+
+	protected function sortAssetsByWeightDescending($assetA, $assetB) {
+		$weightA = $assetA->getAssetWeight();
+		$weightB = $assetB->getAssetWeight();
+
+		if ($weightA == $weightB) {
+			return 0;
+		}
+
+		return $weightA < $weightB ? 1 : -1;
+	}
+
+	protected function sortAssetsByPostProcessDescending($assetA, $assetB) {
+		$ppA = ($assetA instanceof Asset && $assetA->assetSupportsPostProcessing());
+		$ppB = ($assetB instanceof Asset && $assetB->assetSupportsPostProcessing());
+		if ($ppA && $ppB) {
+			return 0;
+		}
+		if ($ppA && !$ppB) {
+			return -1;
+		}
+
+		if (!$ppA && $ppB) {
+			return 1;
+		}
+		if (!$ppA && !$ppB) {
+			return 0;
+		}
+	}
+
+	protected function postProcessAssets($assets) {
+		$c = Page::getCurrentPage();
+		if (!is_object($c) || !ENABLE_ASSET_CACHE) {
+			return $assets;
+		}
+		// goes through all assets in this list, creating new URLs and post-processing them where possible.
+		$segment = 0;
+		$subassets[$segment] = array();
+		for ($i = 0; $i < count($assets); $i++) {
+			$asset = $assets[$i];
+			$nextasset = $assets[$i+1];
+			$subassets[$segment][] = $asset;
+			if ($asset instanceof Asset && $nextasset instanceof Asset) {
+				if ($asset->getAssetType() != $nextasset->getAssetType()) {
+					$segment++;
+				} else if (!$asset->assetSupportsPostProcessing() || !$nextasset->assetSupportsPostProcessing()) {
+					$segment++;
+				}
 			} else {
-				$this->setRequestViewTheme(FILENAME_COLLECTION_DEFAULT_THEME);
+				$segment++;
 			}
 		}
 
-		if ($this->themeHandle != VIEW_CORE_THEME && $this->themeHandle != 'dashboard') {
-			$this->themeObject = PageTheme::getByHandle($this->themeHandle);
-			$this->themePkgHandle = $this->themeObject->getPackageHandle();
+		// now we have a sub assets array with different segments split by post process and non-post-process
+		$return = array();
+		foreach($subassets as $segment => $assets) {
+			if ($assets[0] instanceof Asset && $assets[0]->assetSupportsPostProcessing()) {
+				// this entire segment can be post processed together
+				$class = Loader::helper('text')->camelcase($assets[0]->getAssetType()) . 'Asset';
+				$assets = call_user_func(array($class, 'postprocess'), $assets);
+			}
+			$return = array_merge($return, $assets);
 		}
-		$this->themeAbsolutePath = $env->getPath(DIRNAME_THEMES . '/' . $this->themeHandle);
-		$this->themeRelativePath = $env->getURL(DIRNAME_THEMES . '/' . $this->themeHandle);
+		return $return;
 	}
 
-	/** 
-	 * Begin the render
-	 */
-	public function start($path) {
-		if (substr($path, strlen($path) - 1) == '/') {
-			$path = substr($path, 0, strlen($path) - 1);
+	protected function replaceEmptyAssetPlaceholders($pageContent) {
+		foreach(array('<!--ccm:assets:' . Asset::ASSET_POSITION_HEADER . '//-->', '<!--ccm:assets:' . Asset::ASSET_POSITION_FOOTER . '//-->') as $comment) {
+			$pageContent = str_replace($comment, '', $pageContent);
 		}
-		$this->viewPath = $path;
+		return $pageContent;
 	}
 
-	protected function setupController() {
-		if (!isset($this->controller)) {
-			$this->controller = Loader::controller($this->viewPath);
-			$this->controller->setupAndRun();
+	protected function replaceAssetPlaceholders($pageContent) {
+		$outputItems = array();
+		foreach($this->outputAssets as $position => $assets) {
+			$output = '';
+			if (is_array($assets['weighted'])) {
+				$weightedAssets = $assets['weighted'];
+				usort($weightedAssets, array($this, 'sortAssetsByWeightDescending'));
+				$transformed = $this->postProcessAssets($weightedAssets);
+				foreach($transformed as $item) {
+					$itemstring = (string) $item;
+					if (!in_array($itemstring, $outputItems)) {
+						$output .= $this->outputAssetIntoView($item);
+						$outputItems[] = $itemstring;
+					}
+				}
+			}
+			if (is_array($assets['unweighted'])) {
+				// now the unweighted
+				$unweightedAssets = $assets['unweighted'];
+				usort($unweightedAssets, array($this, 'sortAssetsByPostProcessDescending'));
+				$transformed = $this->postProcessAssets($unweightedAssets);
+				foreach($transformed as $item) {
+					$itemstring = (string) $item;
+					if (!in_array($itemstring, $outputItems)) {
+						$output .= $this->outputAssetIntoView($item);
+						$outputItems[] = $itemstring;
+					}
+				}
+			}
+			$pageContent = str_replace('<!--ccm:assets:' . $position . '//-->', $output, $pageContent);
 		}
+		return $pageContent;				
+	}
+	
+	protected function outputAssetIntoView($item) {
+		return $item . "\n";			
 	}
 
-	public function setupRender() {
-		// Set the theme object that we should use for this requested page.
-		// Only run setup if the theme is unset. Usually it will be but if we set it
-		// programmatically we already have a theme.
-		$this->loadRequestViewThemeObject();
-		$env = Environment::get();
-		$this->setInnerContentFile($env->getPath(DIRNAME_PAGES . '/' . trim($this->viewPath, '/') . '.php', $this->themePkgHandle));
-		if (file_exists(DIR_FILES_THEMES_CORE . '/' . DIRNAME_THEMES_CORE . '/' . $this->themeHandle . '.php')) {
-			$this->setViewTemplate($env->getPath(DIRNAME_THEMES . '/' . DIRNAME_THEMES_CORE . '/' . $this->themeHandle . '.php'));
-		} else {
-			$this->setViewTemplate($env->getPath(DIRNAME_THEMES . '/' . $this->themeHandle . '/' . FILENAME_THEMES_VIEW, $this->themePkgHandle));
-		}
-	}
-
-	public function startRender() {
-		// First the starting gun.
-		Events::fire('on_start', $this);
-	}
-
-	protected function onBeforeGetContents() {
-		Events::fire('on_before_render', $this);
-		if ($this->themeHandle == VIEW_CORE_THEME) {
-			$_pt = new ConcretePageTheme();
-			$_pt->registerAssets();
-		} else if (is_object($this->themeObject)) {
-			$this->themeObject->registerAssets();
-		}
-		parent::onBeforeGetContents();
-	}
-
-	public function renderViewContents($scopeItems) {
-		if ($this->innerContentFile) {
-			extract($scopeItems);
-			ob_start();
-			$this->onBeforeGetContents();
-			include($this->innerContentFile);
-			$this->onAfterGetContents();
-			$innerContent = ob_get_contents();
-			ob_end_clean();
-		}
-
-		if (file_exists($this->template)) {
-			ob_start();
-			include($this->template);
-			$contents = ob_get_contents();
-			ob_end_clean();
-			return $contents;
-		} else {
-			throw new Exception(t('File %s not found. All themes need default.php and view.php files in them. Consult concrete5 documentation on how to create these files.', $this->template));
-		}
-	}
-
-	public function deliverRender($contents) {
-		$ret = Events::fire('on_page_output', $contents);
-		if($ret != '') {
-			$contents = $ret;
-		}
-		parent::deliverRender($contents);
-	}
-
-	public function finishRender() {
-		Events::fire('on_render_complete', $this);
-		require(DIR_BASE_CORE . '/startup/jobs.php');
-		require(DIR_BASE_CORE . '/startup/shutdown.php');
-		exit;
-	}
 }
