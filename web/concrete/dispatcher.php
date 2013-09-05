@@ -172,7 +172,7 @@
 			// than we load up the Content class, and get prepared to fire away
 			switch($c->getError()) {
 				case COLLECTION_NOT_FOUND:
-					//$v = View::getInstance();
+					$v = View::getInstance();
 					$v->render('/page_not_found');
 					break;
 			}
@@ -196,15 +196,14 @@
 
 			switch($cp->getError()) {
 				case COLLECTION_FORBIDDEN:
-					//$v = View::getInstance();
-					//$v->setCollectionObject($c);
+					$v = View::getInstance();
 					$v->render('/page_forbidden');
 					break;
 			}
 		}
 
 		if (!$c->isActive() && (!$cp->canViewPageVersions())) {
-			//$v = View::getInstance();
+			$v = View::getInstance();
 			$v->render('/page_not_found');
 		}
 
@@ -225,12 +224,11 @@
 			// than we load up the Content class, and get prepared to fire away
 			switch($vp->getError()) {
 				case COLLECTION_NOT_FOUND:
-					//$v = View::getInstance();
+					$v = View::getInstance();
 					$v->render('/page_not_found');
 					break;
 				case COLLECTION_FORBIDDEN:
-					//$v = View::getInstance();
-					//$v->setCollectionObject($c);
+					$v = View::getInstance();
 					$v->render('/page_forbidden');
 					break;
 			}

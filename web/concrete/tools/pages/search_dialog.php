@@ -29,9 +29,6 @@ Loader::element('pages/search_form_advanced', array('columns' => $columns, 'site
 $searchForm = ob_get_contents();
 ob_end_clean();
 
-$v = View::getInstance();
-$v->outputHeaderItems();
-
 ?>
 
 <script type="text/javascript">$(function() {

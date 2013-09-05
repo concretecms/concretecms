@@ -1,5 +1,5 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?>
 
-<h1><?=$titleContent?></h1>
+<h3><?=$titleContent?></h3>
 
-<div class="ccm-error block-message alert-message error"><?php print $innerContent ?></div>
+<div class="alert alert-danger"><?php print $innerContent ?></div>

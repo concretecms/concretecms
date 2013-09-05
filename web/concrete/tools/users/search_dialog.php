@@ -21,9 +21,6 @@ Loader::element('users/search_form_advanced', array('columns' => $columns, 'mode
 $searchForm = ob_get_contents();
 ob_end_clean();
 
-$v = View::getInstance();
-$v->outputHeaderItems();
-
 ?>
 
 <div class="ccm-ui">

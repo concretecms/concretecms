@@ -35,6 +35,10 @@ abstract class Concrete5_Library_View {
 	abstract public function finishRender();
 	abstract public function action($action);
 
+	public function setController($controller) {
+		$this->controller = $controller;
+	}
+	
 	public function setViewTemplate($template) {
 		$this->template = $template;
 	}
@@ -49,11 +53,13 @@ abstract class Concrete5_Library_View {
 		return $this->controller->post($key);
 	}
 
-	public function prepareBeforeRender() {
+	protected function onBeforeGetContents() {
 		if (is_object($this->controller)) {
 			$this->controller->on_before_render();
 		}
 	}
+
+	protected function onAfterGetContents() {}
 
 	public function getScopeItems() {
 		$return = array_merge($this->controller->getSets(), $this->controller->getHelperObjects());
@@ -77,15 +83,16 @@ abstract class Concrete5_Library_View {
 	}
 
 	public function renderViewContents($scopeItems) {
-		extract($scopeItems);
-		$this->prepareBeforeRender();
 		if (file_exists($this->template)) {
+			extract($scopeItems);
 			ob_start();
+			$this->onBeforeGetContents();
 			include($this->template);
+			$this->onAfterGetContents();
 			$contents = ob_get_contents();
 			ob_end_clean();
+			return $contents;
 		}
-		return $contents;
 	}
 
 	public function deliverRender($contents) {
@@ -143,7 +150,7 @@ abstract class Concrete5_Library_View {
 	 * @access private
 	 */
 
-	public function addHeaderItem($item) {
+	public function addHeaderAsset($item) {
 		$this->outputAssets[Asset::ASSET_POSITION_HEADER]['unweighted'][] = $item;
 	}
 	
@@ -151,15 +158,23 @@ abstract class Concrete5_Library_View {
 	 * Function responsible for adding footer items within the context of a view.
 	 * @access private
 	 */
-	public function addFooterItem($item) {
+	public function addFooterAsset($item) {
 		$this->outputAssets[Asset::ASSET_POSITION_FOOTER]['unweighted'][] = $item;
+	}
+
+	public function addOutputAsset(Asset $asset) {
+		if ($asset->getAssetWeight() > 0) {
+			$this->outputAssets[$asset->getAssetPosition()]['weighted'][] = $asset;
+		} else {
+			$this->outputAssets[$asset->getAssetPosition()]['unweighted'][] = $asset;
+		}
 	}
 
 	/** 
 	 * Function responsible for outputting header items
 	 * @access private
 	 */
-	public function outputHeaderItems() {
+	public function markHeaderAssetPosition() {
 		print '<!--ccm:assets:' . Asset::ASSET_POSITION_HEADER . '//-->';
 	}
 	
@@ -167,7 +182,7 @@ abstract class Concrete5_Library_View {
 	 * Function responsible for outputting footer items
 	 * @access private
 	 */
-	public function outputFooterItems() {
+	public function markFooterAssetPosition() {
 		print '<!--ccm:assets:' . Asset::ASSET_POSITION_FOOTER . '//-->';
 	}
 
@@ -187,13 +202,6 @@ abstract class Concrete5_Library_View {
 		return $contents;
 	}
 
-	public function addOutputAsset(Asset $asset) {
-		if ($asset->getAssetWeight() > 0) {
-			$this->outputAssets[$asset->getAssetPosition()]['weighted'][] = $asset;
-		} else {
-			$this->outputAssets[$asset->getAssetPosition()]['unweighted'][] = $asset;
-		}
-	}
 
 	protected function sortAssetsByWeightDescending($assetA, $assetB) {
 		$weightA = $assetA->getAssetWeight();
@@ -316,5 +324,20 @@ abstract class Concrete5_Library_View {
 	public function renderError($title, $error, $errorObj = null) {
 		Loader::helper('concrete/interface')->renderError($title, $error);
 	}
+
+	/** 
+	 * @access private
+	 */
+	public function addHeaderItem($item) {
+		$this->addHeaderAsset($item);
+	}
+	
+	/** 
+	 * @access private
+	 */
+	public function addFooterItem($item) {
+		$this->addFooterAsset($item);
+	}
+
 
 }

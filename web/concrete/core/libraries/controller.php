@@ -171,16 +171,7 @@ class Concrete5_Library_Controller {
 
 			if ($do404) {
 				
-				// this is hacky, the global part
-				global $c;
-				$v = View::getInstance();
-				$c = new Page();
-				$c->loadError(COLLECTION_NOT_FOUND);
-				$v->setCollectionObject($c);
-				$this->c = $c;
-				$cont = Loader::controller("/page_not_found");
-				$v->setController($cont);			
-				$cont->view();
+				$v = new RequestView();
 				$v->render('/page_not_found');
 			}
  		}
@@ -414,15 +405,8 @@ class Concrete5_Library_Controller {
 	 * @return void
 	 */
 	public function render($view) {
-		$v = View::getInstance();
-		$this->renderOverride = $view;
-		$c = Page::getCurrentPage();
-		$v->setCollectionObject($c);
+		$v = new RequestView();
 		$v->setController($this);
-		if (method_exists($this, 'on_before_render')) {
-			// this $view used to be $method which doesn't exist
-			$this->on_before_render($view);
-		}
 		$v->render($view);
 	}
 	
@@ -479,21 +463,4 @@ class Concrete5_Library_Controller {
 	 */
 	public function getHelperObjects() { return $this->helperObjects; }
 	
-	/** 
-	 * Outputs a list of items set by the addHeaderItem() function
-	 * @return void
-	 */
-	public function outputHeaderItems() {
-		$v = View::getInstance();
-		$v->outputHeaderItems();
-	}
-  
-	/** 
-	 * Outputs a list of items set by the addFooterItem() function
-	 * @return void
-	 */
-	public function outputFooterItems() {
-		$v = View::getInstance();
-		$v->outputFooterItems();
-	}
 }

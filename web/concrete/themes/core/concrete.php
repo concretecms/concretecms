@@ -20,7 +20,7 @@ if (is_object($c)) {
 		
  	Loader::element('header_required');
 } else { 
-	$this->outputHeaderItems();
+	$this->markHeaderAssetPosition();
 }
 
 ?>
