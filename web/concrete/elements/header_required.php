@@ -114,7 +114,8 @@ if (is_object($cp)) {
 	}
 }
 
-print $this->controller->outputHeaderItems();
+$v = View::getInstance();
+$v->markHeaderAssetPosition();
 $_trackingCodePosition = Config::get('SITE_TRACKING_CODE_POSITION');
 if (empty($disableTrackingCode) && $_trackingCodePosition === 'top') {
 	echo Config::get('SITE_TRACKING_CODE');

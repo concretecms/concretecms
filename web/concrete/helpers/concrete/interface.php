@@ -232,23 +232,13 @@ class ConcreteInterfaceHelper {
 		return $html;
 	}
 
+
 	public function renderError($title, $error) {
-		$innerContent = $error;
-		$titleContent = $title; 
-		header('HTTP/1.1 500 Internal Server Error');
-		if (!isset($this) || (!$this)) {
-			$v = new View();
-			$v->setThemeForView(DIRNAME_THEMES_CORE, FILENAME_THEMES_ERROR . '.php', true);
-			include($v->getTheme());	
-			exit;
-		}
-		if (!isset($this->theme) || (!$this->theme) || (!file_exists($this->theme))) {
-			$this->setThemeForView(DIRNAME_THEMES_CORE, FILENAME_THEMES_ERROR . '.php', true);
-			include($this->theme);	
-			exit;			
-		} else {
-			Loader::element('error_fatal', array('innerContent' => $innerContent, 
-				'titleContent' => $titleContent));
-		}
+		$ve = new ErrorView();
+		$o = new stdClass;
+		$o->title = $title;
+		$o->content = $error;
+		$ve->render($o);
+
 	}
 }

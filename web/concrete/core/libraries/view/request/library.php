@@ -107,7 +107,7 @@ class Concrete5_Library_RequestView extends View {
 		Events::fire('on_start', $this);
 	}
 
-	public function prepareBeforeRender() {
+	protected function onBeforeGetContents() {
 		Events::fire('on_before_render', $this);
 		if ($this->themeHandle == VIEW_CORE_THEME) {
 			$_pt = new ConcretePageTheme();
@@ -115,15 +115,16 @@ class Concrete5_Library_RequestView extends View {
 		} else if (is_object($this->themeObject)) {
 			$this->themeObject->registerAssets();
 		}
-		parent::prepareBeforeRender();
+		parent::onBeforeGetContents();
 	}
 
 	public function renderViewContents($scopeItems) {
-		extract($scopeItems);
-		$this->prepareBeforeRender();
 		if ($this->innerContentFile) {
+			extract($scopeItems);
 			ob_start();
+			$this->onBeforeGetContents();
 			include($this->innerContentFile);
+			$this->onAfterGetContents();
 			$innerContent = ob_get_contents();
 			ob_end_clean();
 		}

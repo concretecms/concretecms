@@ -7,8 +7,7 @@ Loader::controller('/login');
 class Concrete5_Controller_PageForbidden extends LoginController {
 	
 	public function view() {
-		$v = View::getInstance();
-		$c = $v->getCollectionObject();
+		$c = Page::getCurrentPage();
 		if (is_object($c)) {
 			$cID = $c->getCollectionID();
 			if($cID) { 
@@ -17,8 +16,7 @@ class Concrete5_Controller_PageForbidden extends LoginController {
 		}
 		parent::view();
 		$u = new User();
-		$logged = $u->isLoggedIn();
-		if(!$logged && FORBIDDEN_SHOW_LOGIN) { //if they are not logged in, and we show guests the login...
+		if(!$u->isRegistered() && FORBIDDEN_SHOW_LOGIN) { //if they are not logged in, and we show guests the login...
 			$this->render('/login');
 		}
 	}
