@@ -26,9 +26,10 @@ $classes = array(
 
 	'View' => array('library','view/library'),
 	'RequestView' => array('library','view/request/library'),
+	'PathRequestView' => array('library','view/request/path'),
 	'PageRequestView' => array('library','view/request/page'),
-	'ToolView' => array('library','view/tool'),
-	'ErrorView' => array('library','view/error'),
+	'ToolRequestView' => array('library','view/request/tool'),
+	'ErrorRequestView' => array('library','view/request/error'),
 
 	'BlockView' => array('library','block_view'),
 	'MailImporter' => array('library','mail/importer'),

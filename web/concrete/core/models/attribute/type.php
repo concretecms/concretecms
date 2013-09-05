@@ -128,10 +128,21 @@ class Concrete5_Model_AttributeType extends Object {
 	public function render($view, $ak = false, $value = false, $return = false) {
 		// local scope
 		Loader::library('attribute/view');
-		$av = new AttributeTypeView($this, $ak, $value);	
-		$resp = $av->render($view, $return);
+		if ($value) {
+			$av = new AttributeTypeView($value);
+		} else if ($ak) {
+			$av = new AttributeTypeView($ak);
+		} else {
+			$av = new AttributeTypeView($this);
+		}
+		ob_start();
+		$av->render($view);
+		$contents = ob_get_contents();
+		ob_end_clean();
 		if ($return) {
-			return $resp;
+			return $contents;
+		} else {
+			print $contents;
 		}
 	}
 	
