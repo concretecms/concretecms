@@ -26,7 +26,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 abstract class Concrete5_Model_QueueableJob extends Job {
 
 	// optional queue functions
-	protected $jQueueBatchSize = 100;
+	protected $jQueueBatchSize = JOB_QUEUE_BATCH_SIZE;
 	public function getJobQueueBatchSize() {return $this->jQueueBatchSize;}
 	abstract public function start(Zend_Queue $q);
 	abstract public function finish(Zend_Queue $q);
