@@ -6,8 +6,6 @@ class Concrete5_Controller_Dashboard_System_Registration_PublicRegistration exte
 	
 	public function __construct() { 
 		$this->token = Loader::helper('validation/token');
-		$html = Loader::helper('html');		
-		$this->addHeaderItem($html->javascript('ccm.sitemap.js'));		
 		
 		$this->set('enable_openID',ENABLE_OPENID_AUTHENTICATION);
 		$this->set('email_as_username', USER_REGISTRATION_WITH_EMAIL_ADDRESS);

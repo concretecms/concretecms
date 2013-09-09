@@ -8,8 +8,6 @@ class Concrete5_Controller_Dashboard_System_Registration_Postlogin extends Dashb
 	
 	public function __construct() { 
 		$this->token = Loader::helper('validation/token');
-		$html = Loader::helper('html');		
-		$this->addHeaderItem($html->javascript('ccm.sitemap.js'));		
 
 		//login redirection
 		$this->set('site_login_redirect', Config::get('LOGIN_REDIRECT') );
@@ -43,4 +41,3 @@ class Concrete5_Controller_Dashboard_System_Registration_Postlogin extends Dashb
 		$u = new User();
 	}
 }
-?>
