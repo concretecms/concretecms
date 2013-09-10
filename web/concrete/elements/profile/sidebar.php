@@ -39,13 +39,13 @@
 		$pl->filterByParentID($nc->getCollectionID());
 		$pages = $pl->get(0);
 		if (is_array($pages) && !empty($pages)) {
-                	$nh = Loader::helper('navigation');
-                	?>
-                	<ul class="nav">
-                	<?php foreach ($pages as $page) { ?>
+			$nh = Loader::helper('navigation');
+			?>
+			<ul class="nav">
+			<?php foreach ($pages as $page) { ?>
 				<li><a href="<?php echo $nh->getLinkToCollection($page) ?>"><?php echo t($page->getCollectionName())?></a></li>
-   			<?php } ?>
-                	</ul>
+			<?php } ?>
+			</ul>
 		<?php
 		}
 	}
