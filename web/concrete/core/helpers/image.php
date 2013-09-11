@@ -139,78 +139,95 @@ class Concrete5_Helper_Image {
 			$crop_src_y = round(($oHeight - ($height * $oWidth / $width)) * 0.5);
 		}
 		
-		//create "canvas" to put new resized and/or cropped image into
-		if ($crop) {
-			$image = @imageCreateTrueColor($width, $height);
+		if(!class_exists("Imagick")) {
+			//create "canvas" to put new resized and/or cropped image into
+			if ($crop) {
+				$image = @imageCreateTrueColor($width, $height);
+			} else {
+				$image = @imageCreateTrueColor($finalWidth, $finalHeight);
+			}
+			
+			$im = false;		
+			switch($imageSize[2]) {
+				case IMAGETYPE_GIF:
+					$im = @imageCreateFromGIF($originalPath);
+					break;
+				case IMAGETYPE_JPEG:
+					$im = @imageCreateFromJPEG($originalPath);
+					break;
+				case IMAGETYPE_PNG:
+					$im = @imageCreateFromPNG($originalPath);
+					break;
+			}
+			
+			if ($im) {
+				// Better transparency - thanks for the ideas and some code from mediumexposure.com
+				if (($imageSize[2] == IMAGETYPE_GIF) || ($imageSize[2] == IMAGETYPE_PNG)) {
+					$trnprt_indx = imagecolortransparent($im);
+					
+					// If we have a specific transparent color
+					if ($trnprt_indx >= 0 && $trnprt_indx < imagecolorstotal($im)) {
+				
+						// Get the original image's transparent color's RGB values
+						$trnprt_color = imagecolorsforindex($im, $trnprt_indx);
+						
+						// Allocate the same color in the new image resource
+						$trnprt_indx = imagecolorallocate($image, $trnprt_color['red'], $trnprt_color['green'], $trnprt_color['blue']);
+						
+						// Completely fill the background of the new image with allocated color.
+						imagefill($image, 0, 0, $trnprt_indx);
+						
+						// Set the background color for new image to transparent
+						imagecolortransparent($image, $trnprt_indx);
+						
+					
+					} else if ($imageSize[2] == IMAGETYPE_PNG) {
+					
+						// Turn off transparency blending (temporarily)
+						imagealphablending($image, false);
+						
+						// Create a new transparent color for image
+						$color = imagecolorallocatealpha($image, 0, 0, 0, 127);
+						
+						// Completely fill the background of the new image with allocated color.
+						imagefill($image, 0, 0, $color);
+						
+						// Restore transparency blending
+						imagesavealpha($image, true);
+				
+					}
+				}
+				
+				$res = @imageCopyResampled($image, $im, 0, 0, $crop_src_x, $crop_src_y, $finalWidth, $finalHeight, $oWidth, $oHeight);
+				if ($res) {
+					switch($imageSize[2]) {
+						case IMAGETYPE_GIF:
+							$res2 = imageGIF($image, $newPath);
+							break;
+						case IMAGETYPE_JPEG:
+							$res2 = imageJPEG($image, $newPath, $this->jpegCompression);
+							break;
+						case IMAGETYPE_PNG:
+							$res2 = imagePNG($image, $newPath);
+							break;
+					}
+				}
+			}
 		} else {
-			$image = @imageCreateTrueColor($finalWidth, $finalHeight);
-		}
-		
-		$im = false;		
-		switch($imageSize[2]) {
-			case IMAGETYPE_GIF:
-				$im = @imageCreateFromGIF($originalPath);
-				break;
-			case IMAGETYPE_JPEG:
-				$im = @imageCreateFromJPEG($originalPath);
-				break;
-			case IMAGETYPE_PNG:
-				$im = @imageCreateFromPNG($originalPath);
-				break;
-		}
-		
-		if ($im) {
-			// Better transparency - thanks for the ideas and some code from mediumexposure.com
-			if (($imageSize[2] == IMAGETYPE_GIF) || ($imageSize[2] == IMAGETYPE_PNG)) {
-				$trnprt_indx = imagecolortransparent($im);
-				
-				// If we have a specific transparent color
-				if ($trnprt_indx >= 0 && $trnprt_indx < imagecolorstotal($im)) {
-			
-					// Get the original image's transparent color's RGB values
-					$trnprt_color = imagecolorsforindex($im, $trnprt_indx);
-					
-					// Allocate the same color in the new image resource
-					$trnprt_indx = imagecolorallocate($image, $trnprt_color['red'], $trnprt_color['green'], $trnprt_color['blue']);
-					
-					// Completely fill the background of the new image with allocated color.
-					imagefill($image, 0, 0, $trnprt_indx);
-					
-					// Set the background color for new image to transparent
-					imagecolortransparent($image, $trnprt_indx);
-					
-				
-				} else if ($imageSize[2] == IMAGETYPE_PNG) {
-				
-					// Turn off transparency blending (temporarily)
-					imagealphablending($image, false);
-					
-					// Create a new transparent color for image
-					$color = imagecolorallocatealpha($image, 0, 0, 0, 127);
-					
-					// Completely fill the background of the new image with allocated color.
-					imagefill($image, 0, 0, $color);
-					
-					// Restore transparency blending
-					imagesavealpha($image, true);
-			
-				}
+			$image = new Imagick();
+			if ($crop) {
+				$image->setSize($finalWidth, $finalHeight);
+				$image->readImage($originalPath);
+				$image->cropThumbnailImage($width, $height);
+			} else {
+				$image->setSize($width, $height);
+				$image->readImage($originalPath);
+				$image->thumbnailImage($width, $height, true);
 			}
-			
-			$res = @imageCopyResampled($image, $im, 0, 0, $crop_src_x, $crop_src_y, $finalWidth, $finalHeight, $oWidth, $oHeight);
-			if ($res) {
-				switch($imageSize[2]) {
-					case IMAGETYPE_GIF:
-						$res2 = imageGIF($image, $newPath);
-						break;
-					case IMAGETYPE_JPEG:
-						$res2 = imageJPEG($image, $newPath, $this->jpegCompression);
-						break;
-					case IMAGETYPE_PNG:
-						$res2 = imagePNG($image, $newPath);
-						break;
-				}
+			if($image->getCompression() == imagick::COMPRESSION_JPEG) {
+				$image->setCompressionQuality($this->jpegCompression);
 			}
+			$image->writeImage($newPath);
 		}
 		
 		@chmod($newPath, FILE_PERMISSIONS_MODE);
