@@ -904,7 +904,6 @@ class Concrete5_Model_Page extends Collection {
 		}
 		$dh = Loader::helper('date');
 		if(ENABLE_USER_TIMEZONES && $type == 'user') {
-			$dh = Loader::helper('date');
 			return $dh->getLocalDateTime($this->vObj->cvDatePublic, $dateFormat);
 		} else {
 			return $dh->date($dateFormat, strtotime($this->vObj->cvDatePublic));
