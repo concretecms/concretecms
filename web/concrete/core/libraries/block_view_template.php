@@ -64,8 +64,7 @@ class Concrete5_Library_BlockViewTemplate {
 		if ($bFilename) {
 			if (is_file(DIR_FILES_BLOCK_TYPES . '/' . $obj->getBlockTypeHandle() . '/' . DIRNAME_BLOCK_TEMPLATES . '/' . $bFilename)) {
 				$template = DIR_FILES_BLOCK_TYPES . '/' . $obj->getBlockTypeHandle() . '/' . DIRNAME_BLOCK_TEMPLATES . '/' . $bFilename;
-				$bv = new BlockView();
-				$bv->setBlockObject($obj);
+				$bv = new BlockView($obj);
 				$this->baseURL = $bv->getBlockURL();
 				$this->basePath = $bv->getBlockPath($this->render);
 			} else if (is_file(DIR_FILES_BLOCK_TYPES_CORE . '/' . $obj->getBlockTypeHandle() . '/' . DIRNAME_BLOCK_TEMPLATES . '/' . $bFilename)) {
@@ -130,8 +129,7 @@ class Concrete5_Library_BlockViewTemplate {
 			
 		} else if (file_exists(DIR_FILES_BLOCK_TYPES . '/' . $obj->getBlockTypeHandle() . '.php')) {
 			$template = DIR_FILES_BLOCK_TYPES . '/' . $obj->getBlockTypeHandle() . '.php';
-			$bv = new BlockView();
-			$bv->setBlockObject($obj);
+			$bv = new BlockView($obj);
 			$this->baseURL = $bv->getBlockURL();
 			$this->basePath = $bv->getBlockPath($this->render);
 		} else if (file_exists(DIR_FILES_BLOCK_TYPES . '/' . $obj->getBlockTypeHandle() . '/' . $this->render)) {
@@ -140,8 +138,7 @@ class Concrete5_Library_BlockViewTemplate {
 		}
 		
 		if (!isset($template)) {
-			$bv = new BlockView();
-			$bv->setBlockObject($obj);
+			$bv = new BlockView($obj);
 			$template = $bv->getBlockPath($this->render) . '/' . $this->render;
 			$this->baseURL = $bv->getBlockURL();
 		}

@@ -42,8 +42,8 @@ if (count($blocks) == 0) { ?>
 				<div class="ccm-scrapbook-list-item-detail">	
 					<?	
 					try {
-						$bv = new BlockView();
-						$bv->render($b, 'scrapbook');
+						$bv = new BlockView($b);
+						$bv->render('scrapbook');
 					} catch(Exception $e) {
 						print BLOCK_NOT_AVAILABLE_TEXT;
 					}	

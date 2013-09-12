@@ -124,17 +124,16 @@
 
 
 		$a = Area::get($stack, 'Main');
-		$bv = new BlockView();
-		$bv->renderElement('block_area_header', array('a' => $a));	
-		$bv->renderElement('block_area_header_view', array('a' => $a));	
+		Loader::element('block_area_header', array('a' => $a));	
+		Loader::element('block_area_header_view', array('a' => $a));	
 
 		foreach($blocks as $b) {
-			$bv = new BlockView();
+			$bv = new BlockView($b);
 			$bv->setAreaObject($a); 
 			$p = new Permissions($b);
 			if ($p->canViewBlock()) {
 				$bv->renderElement('block_header', array( 'a' => $a, 'b' => $b, 'p' => $p ));
-				$bv->render($b);
+				$bv->render('view');
 				$bv->renderElement('block_footer');
 			}
 		}

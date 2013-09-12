@@ -7,14 +7,19 @@ class Concrete5_Library_BlockView extends View {
 	protected $blockType;
 	protected $blockTypePkgHandle;
 
-	/**
-	 * Includes a file from the core elements directory. Used by the CMS.
-	 * @access private
-	 */
-	public function renderElement($element, $args = array()) {
-		Loader::element($element, $args);
-	}
+	public function __construct($mixed) {
+		if ($mixed instanceof Block) {
+			$this->blockType = $mixed->getBlockTypeObject();
+			$this->block = $mixed;
+		} else {
+			$this->blockType = $mixed;
+		}
+		$this->blockTypePkgHandle = $this->blockType->getPackageHandle();
+	}		
 
+	public function start($view) {
+		$this->viewToRender = $view;
+	}
 
 	/**
 	 * Creates a URL that can be posted or navigated to that, when done so, will automatically run the corresponding method inside the block's controller.
@@ -40,19 +45,6 @@ class Concrete5_Library_BlockView extends View {
 		} catch(Exception $e) {}
 	}
 
-	/** 
-	 * Begin the render
-	 */
-	public function start($obj) {
-		if ($obj instanceof Block) {
-			$this->blockType = $obj->getBlockTypeObject();
-			$this->block = $obj;
-		} else {
-			$this->blockType = $obj;
-		}
-		$this->blockTypePkgHandle = $this->blockType->getPackageHandle();
-	}
-
 	public function startRender() {}
 	public function setupRender() {
 
@@ -62,6 +54,28 @@ class Concrete5_Library_BlockView extends View {
 	public function finishRender() {}
 	public function postProcessViewContents($contents) {
 		return $contents;
+	}
+
+	/**
+	 * Returns the path to the current block's directory
+	 * @access private
+	 * @deprecated
+	 * @return string
+	*/
+	public function getBlockPath($filename = null) {
+		$obj = $this->blockType;			
+		if (file_exists(DIR_FILES_BLOCK_TYPES . '/' . $obj->getBlockTypeHandle() . '/' . $filename)) {
+			$base = DIR_FILES_BLOCK_TYPES . '/' . $obj->getBlockTypeHandle();
+		} else if ($obj->getPackageID() > 0) {
+			if (is_dir(DIR_PACKAGES . '/' . $obj->getPackageHandle())) {
+				$base = DIR_PACKAGES . '/' . $obj->getPackageHandle() . '/' . DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle();
+			} else {
+				$base = DIR_PACKAGES_CORE . '/' . $obj->getPackageHandle() . '/' . DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle();
+			}
+		} else {
+			$base = DIR_FILES_BLOCK_TYPES_CORE . '/' . $obj->getBlockTypeHandle();
+		}
+		return $base;
 	}
 	
 	public function inc($file, $args = array()) {

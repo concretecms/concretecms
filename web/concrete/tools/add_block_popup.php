@@ -36,17 +36,16 @@ if ($ap->canAddBlock($bt)) {
 		print '<br><br>';
 		print $jsh->button_js(t('Close'), 'jQuery.fn.dialog.closeTop()', 'left');
 	} else {
-		$bv = new BlockView();
+		$bv = new BlockView($bt);
 		// Handle special posted area parameters here
 		if (isset($_REQUEST['arGridColumnSpan'])) {
 			$a->setAreaGridColumnSpan(intval($_REQUEST['arGridColumnSpan']));
 		}
+		$bv->addScopeItem('a', $a);
+		$bv->addScopeItem('cp', $cp);
+		$bv->addScopeItem('ap', $ap);
 		
-		$bv->render($bt, 'add', array(
-			'a' => $a,
-			'cp' => $cp,
-			'ap' => $ap
-		));
+		$bv->render('add');
 	}
 }
 
