@@ -66,12 +66,12 @@ if (is_object($b)) {
 					$styleToDelete->delete();
 				}
 				$refreshAction = REL_DIR_FILES_TOOLS_REQUIRED . '/edit_block_popup?btask=block_css&cID=' . $c->getCollectionID() . '&arHandle=' . $a->getAreaHandle() . '&bID=' . $b->getBlockID() . '&refresh=1';
-				$bv->renderElement('custom_style', array('b' => $b, 'rcID'=>$rcID, 'c' => $c, 'a' => $a, 'style' => $style, 'action' => $action, 'refreshAction' => $refreshAction) );
+				Loader::element('custom_style', array('b' => $b, 'rcID'=>$rcID, 'c' => $c, 'a' => $a, 'style' => $style, 'action' => $action, 'refreshAction' => $refreshAction) );
 			}
 			break;	 
 		case 'template': 		
 			if ($bp->canEditBlockCustomTemplate()) {
-				$bv->renderElement('block_custom_template', array('b' => $b, 'rcID'=>$rcID));
+				Loader::element('block_custom_template', array('b' => $b, 'rcID'=>$rcID));
 			}
 			break;
 		case 'view':
@@ -102,7 +102,7 @@ if (is_object($b)) {
 				<?
 				}
 
-				$bv->renderElement('block_header', array(
+				Loader::element('block_header', array(
 					'a' => $a,
 					'b' => $b,
 					'p' => $bp
@@ -112,10 +112,9 @@ if (is_object($b)) {
 				// assets provided by the theme aren't loaded by the block in this mode.
 				$pt = $c->getCollectionThemeObject();
 				$pt->registerAssets();
-
 				$bv->setAreaObject($a);
-				$bv->render($b);
-				$bv->renderElement('block_footer');
+				$bv->render('view');
+				Loader::element('block_footer');
 			}
 			break;
 		case 'groups':

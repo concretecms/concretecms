@@ -134,9 +134,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		 * </code>
 		 * @param string $view
 		 * @return void
-		 */
 		function render($view) {
-			$bv = new BlockView();
+			$bv = new BlockView($this);
 			$bv->setController($this);
 			// sometimes we need the block type available in here
 			if (is_object($this->getBlockObject())) {
@@ -145,7 +144,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			}
 			$this->renderOverride = $view;
 		}
-		
+				 */
+
 		public function validate($args) {
 			return true;
 		}

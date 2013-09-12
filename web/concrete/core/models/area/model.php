@@ -534,19 +534,18 @@ class Concrete5_Model_Area extends Object {
 		$blocksToDisplay = ($alternateBlockArray) ? $alternateBlockArray : $this->getAreaBlocksArray();
 		
 		$u = new User();
-		$bv = new BlockView();
 		
 		// now, we iterate through these block groups (which are actually arrays of block objects), and display them on the page		
 		if ($this->showControls && $c->isEditMode() && $ap->canViewAreaControls()) {
-			$bv->renderElement('block_area_header', array('a' => $this));	
+			Loader::element('block_area_header', array('a' => $this));	
 		}
-		$bv->renderElement('block_area_header_view', array('a' => $this));	
+		Loader::element('block_area_header_view', array('a' => $this));	
 
 		$blockPositionInArea = 1; //for blockWrapper output		
 
 		foreach ($blocksToDisplay as $b) {
 			$includeEditStrip = false;
-			$bv = new BlockView();
+			$bv = new BlockView($b);
 			$p = new Permissions($b);
 			if ($c->isEditMode() && $this->showControls && $p->canViewEditInterface()) {
 				$includeEditStrip = true;
@@ -556,7 +555,7 @@ class Concrete5_Model_Area extends Object {
 					$this->outputBlockWrapper(true, $b, $blockPositionInArea);
 				}
 				if ($includeEditStrip) {
-					$bv->renderElement('block_header', array(
+					Loader::element('block_header', array(
 						'a' => $this,
 						'b' => $b,
 						'p' => $p
@@ -564,7 +563,7 @@ class Concrete5_Model_Area extends Object {
 				}
 				$bv->render($b);
 				if ($includeEditStrip) {
-					$bv->renderElement('block_footer');
+					Loader::element('block_footer');
 				}
 				if (!$c->isEditMode()) {
 					$this->outputBlockWrapper(false, $b, $blockPositionInArea);
@@ -573,10 +572,10 @@ class Concrete5_Model_Area extends Object {
 			$blockPositionInArea++;
 		}
 
-		$bv->renderElement('block_area_footer_view', array('a' => $this));	
+		Loader::element('block_area_footer_view', array('a' => $this));	
 
 		if ($this->showControls && $c->isEditMode() && $ap->canViewAreaControls()) {
-			$bv->renderElement('block_area_footer', array('a' => $this));	
+			Loader::element('block_area_footer', array('a' => $this));	
 		}
 	}
 	

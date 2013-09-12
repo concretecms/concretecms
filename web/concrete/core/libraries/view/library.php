@@ -5,6 +5,11 @@ abstract class Concrete5_Library_View {
 
 	protected static $requestInstance;
 	protected static $requestInstances = array();
+	protected $scopeItems = array();
+	
+	public function addScopeItem($key, $value) {
+		$this->scopeItems[$key] = $value;
+	}
 
 	public static function getRequestInstance() {
 		if (null === self::$requestInstance) {
@@ -79,7 +84,7 @@ abstract class Concrete5_Library_View {
 	protected function onAfterGetContents() {}
 
 	public function getScopeItems() {
-		$return = array_merge($this->controller->getSets(), $this->controller->getHelperObjects());
+		$return = array_merge($this->scopeItems, $this->controller->getSets(), $this->controller->getHelperObjects());
 		$return['view'] = $this;
 		$return['controller'] = $this->controller;
 		return $return;

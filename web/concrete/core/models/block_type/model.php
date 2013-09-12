@@ -157,8 +157,7 @@ class Concrete5_Model_BlockTypeDB extends ADOdb_Active_Record {
 		 * @return boolean
 		 */
 		public function hasAddTemplate() {
-			$bv = new BlockView();
-			$bv->setBlockObject($this);
+			$bv = new BlockView($this);
 			$path = $bv->getBlockPath(FILENAME_BLOCK_ADD);
 			if (file_exists($path . '/' . FILENAME_BLOCK_ADD)) {
 				return true;
@@ -445,9 +444,8 @@ class Concrete5_Model_BlockTypeDB extends ADOdb_Active_Record {
 		 * @return void
 		 */
 		public function render($view = 'view') {
-			$bv = new BlockView();
-			$bv->setController($this->controller);
-			$bv->render($this, $view);
+			$bv = new BlockView($this);
+			$bv->render($view);
 		}			
 		
 		/**

@@ -170,14 +170,13 @@ class Concrete5_Model_Block extends Object {
 	}
 		
 
-	public function display( $view = 'view', $args = array()){
+	public function display( $view = 'view') {
 		if ($this->getBlockTypeID() < 1) {
 			return ;
 		}
 		
-		$bv = new BlockView();
-		$bt = BlockType::getByID( $this->getBlockTypeID() );  
-		$bv->render($this, $view, $args);
+		$bv = new BlockView($this);
+		$bv->render($view);
 	}
 
 	// if $c is provided, then we check to see if this particular block is aliased
@@ -872,8 +871,7 @@ class Concrete5_Model_Block extends Object {
 	}
 	
 	function isEditable() {
-		$bv = new BlockView();
-		$bv->setBlockObject($this);
+		$bv = new BlockView($this);
 		$path = $bv->getBlockPath(FILENAME_BLOCK_EDIT);
 		if (file_exists($path . '/' . FILENAME_BLOCK_EDIT)) {
 			return true;
