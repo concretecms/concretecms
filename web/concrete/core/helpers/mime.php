@@ -99,12 +99,13 @@ class Concrete5_Helper_Mime {
 
 	/**
 	 * Converts a file extension into a mime type
-	 * @param string $mimeType
-	 * @return string|boolean extension string or false
+	 * @param string $ext
+	 * @return string|boolean mime type string or false
 	 */
-	public function mimeFromExtension($mimeType) {
-		if (array_key_exists($mimeType, MimeHelper::$mime_types_and_extensions)) {
-			return MimeHelper::$mime_types_and_extensions[$mimeType];
+	public function mimeFromExtension($ext) {
+		$ext = strtolower($ext);
+		if (array_key_exists($ext, MimeHelper::$mime_types_and_extensions)) {
+			return MimeHelper::$mime_types_and_extensions[$ext];
 		}
 		return false;
 	}
@@ -113,11 +114,11 @@ class Concrete5_Helper_Mime {
 	 * Converts a known mime-type into it's common file extension. 
 	 * Returns the first match from $mime_types_and_extensions
 	 * @param string $extension
-	 * @return string|boolean mime type string or false
+	 * @return string|boolean extension string or false
 	 */
-	public function mimeToExtension($extension) {
-		$extension = strtolower($extension);
-		$mime = array_search($extension, MimeHelper::$mime_types_and_extensions);
+	public function mimeToExtension($mimeType) {
+		$mimeType = strtolower($mimeType);
+		$mime = array_search($mimeType, MimeHelper::$mime_types_and_extensions);
 		return $mime;
 	}
 	
