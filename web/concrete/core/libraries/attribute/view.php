@@ -65,13 +65,16 @@ class Concrete5_Library_AttributeTypeView extends View {
 	public function setupController() {
 		if (!$this->controller) {
 			$this->controller = $this->attributeType->getController();
-			$this->controller->setupAndRun($this->viewToRender);
 			if (is_object($attributeKey)) {
 				$this->controller->set('akID', $this->attributeKey->getAttributeKeyID());
 			}
 		}
 	}
 
+	public function runControllerTask() {
+		$this->controller->setupAndRun($this->viewToRender);
+	}
+	
 	public function action($action) {
 		$uh = Loader::helper('concrete/urls');
 		$a = func_get_args();

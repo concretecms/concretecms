@@ -84,8 +84,11 @@ class Concrete5_Library_PathRequestView extends RequestView {
 	protected function setupController() {
 		if (!isset($this->controller)) {
 			$this->controller = Loader::controller($this->viewPath);
-			$this->controller->setupAndRun();
 		}
+	}
+
+	protected function runControllerTask() {
+		$this->controller->setupAndRun();
 	}
 
 	public function setupRender() {

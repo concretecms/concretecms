@@ -240,7 +240,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			if ($this->controller->getRenderOverride() != '') { 
 				$_filename = $this->controller->getRenderOverride() . '.php';
 			} 
-			
+
 			if ($view == 'scrapbook') {
 				$template = $this->getBlockPath(FILENAME_BLOCK_VIEW_SCRAPBOOK) . '/' . FILENAME_BLOCK_VIEW_SCRAPBOOK;
 				if (!file_exists($template)) {
@@ -307,7 +307,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 					$header = DIR_FILES_ELEMENTS_CORE . '/block_header_add.php';
 					$footer = DIR_FILES_ELEMENTS_CORE . '/block_footer_add.php';
 					break;
-			*/
 				case 'edit':
 					if (!isset($_filename)) {
 						$_filename = FILENAME_BLOCK_EDIT;
@@ -316,7 +315,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 					$footer = DIR_FILES_ELEMENTS_CORE . '/block_footer_edit.php';
 					break;
 			} 		
-			
+						*/
+			/*
 			if (!isset($template)) {
 				$base = $this->getBlockPath($_filename);
 				$template = $base . '/' . $_filename;
@@ -329,11 +329,13 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				print $outputContent;			
 			} else if ($template) {
 				
+				
 				ob_start();
 				include($template);
 				$outputContent = ob_get_contents();
 				ob_end_clean();					
 				print $outputContent;
+				*/
 				
 				if ($useCache) {
 					$obj->setBlockCachedOutput($outputContent, $this->controller->getBlockTypeCacheOutputLifetime(), $this->area);

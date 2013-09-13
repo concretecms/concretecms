@@ -33,7 +33,7 @@ if ($_REQUEST['btask'] != 'view' && $_REQUEST['btask'] != 'view_edit_mode') {
 	include(DIR_FILES_ELEMENTS_CORE . '/dialog_header.php');
 }
 
-$bv = new BlockView(); 
+$bv = new BlockView($b); 
 
 if ($isGlobalArea && $_REQUEST['btask'] != 'view_edit_mode') {
 	echo '<div class="ccm-ui"><div class="alert alert-warning">';
@@ -76,10 +76,11 @@ if (is_object($b)) {
 			break;
 		case 'view':
 			if ($bp->canViewBlock()) {
-				$bv->render($b, 'view', array(
+				$bv->addScopeItems(array(
 					'c' => $c,
 					'a' => $a
 				));
+				$bv->render('view');
 			}
 			break;
 		case 'view_edit_mode':
@@ -112,30 +113,29 @@ if (is_object($b)) {
 				// assets provided by the theme aren't loaded by the block in this mode.
 				$pt = $c->getCollectionThemeObject();
 				$pt->registerAssets();
-				$bv->setAreaObject($a);
 				$bv->render('view');
 				Loader::element('block_footer');
 			}
 			break;
 		case 'groups':
 			if ($bp->canEditBlockPermissions()) {
-				$bv->renderElement('permission/lists/block', array('b' => $b, 'rcID'=>$rcID));
+				Loader::element('permission/lists/block', array('b' => $b, 'rcID'=>$rcID));
 			}
 			break;
 		case 'set_advanced_permissions':
 			if ($bp->canEditBlockPermissions()) {
-				$bv->renderElement('permission/details/block', array('b' => $b, 'rcID'=>$rcID));
+				Loader::element('permission/details/block', array('b' => $b, 'rcID'=>$rcID));
 			}
 			break;
 		case 'guest_timed_access':
 			if ($bp->canScheduleGuestAccess() && $bp->canGuestsViewThisBlock()) {
-				$bv->renderElement('permission/details/block/timed_guest_access', array('b' => $b, 'rcID'=>$rcID));
+				Loader::element('permission/details/block/timed_guest_access', array('b' => $b, 'rcID'=>$rcID));
 			}
 			break;
 
 		case 'child_pages':
 			if ($bp->canAdminBlock()) {
-				$bv->renderElement('block_master_collection_alias', array('b' => $b));
+				Loader::element('block_master_collection_alias', array('b' => $b));
 			}
 			break;
 		case 'edit': 			
@@ -145,12 +145,12 @@ if (is_object($b)) {
 				if (isset($_REQUEST['arGridColumnSpan'])) {
 					$a->setAreaGridColumnSpan(intval($_REQUEST['arGridColumnSpan']));
 				}
-
-				$bv->render($b, 'edit', array(
+				$bv->addScopeItems(array(
 					'c' => $c,
-					'a' => $a, 
-					'rcID'=>$rcID
+					'a' => $a,
+					'rcID' => $rcID
 				));
+				$bv->render('edit');
 			} 
 			break;
 	}

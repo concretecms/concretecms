@@ -7,8 +7,10 @@ abstract class Concrete5_Library_View {
 	protected static $requestInstances = array();
 	protected $scopeItems = array();
 	
-	public function addScopeItem($key, $value) {
-		$this->scopeItems[$key] = $value;
+	public function addScopeItems($items) {
+		foreach($items as $key => $value) {
+			$this->scopeItems[$key] = $value;
+		}
 	}
 
 	public static function getRequestInstance() {
@@ -37,6 +39,7 @@ abstract class Concrete5_Library_View {
 	abstract public function startRender();
 	abstract public function setupRender();
 	abstract protected function setupController();
+	abstract protected function runControllerTask();
 	abstract public function finishRender();
 	abstract public function action($action);
 
@@ -96,6 +99,7 @@ abstract class Concrete5_Library_View {
 		}
 		$this->start($mixed);
 		$this->setupController();
+		$this->runControllerTask();
 		$this->setupRender();
 		$this->startRender();
 		$scopeItems = $this->getScopeItems();

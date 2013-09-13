@@ -33,8 +33,11 @@ class Concrete5_Library_PageRequestView extends PathRequestView {
 	protected function setupController() {
 		if (!isset($this->controller)) {
 			$this->controller = Loader::controller($this->c);
-			$this->controller->setupAndRun();
 		}
+	}
+
+	protected function runControllerTask() {
+		$this->controller = Loader::controller($this->c);
 	}
 
 	protected function loadRequestViewThemeObject() {
