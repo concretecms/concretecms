@@ -41,10 +41,7 @@ if ($ap->canAddBlock($bt)) {
 		if (isset($_REQUEST['arGridColumnSpan'])) {
 			$a->setAreaGridColumnSpan(intval($_REQUEST['arGridColumnSpan']));
 		}
-		$bv->addScopeItem('a', $a);
-		$bv->addScopeItem('cp', $cp);
-		$bv->addScopeItem('ap', $ap);
-		
+		$bv->addScopeItems(array('a' => $a, 'cp' => $cp, 'ap' => $ap));
 		$bv->render('add');
 	}
 }

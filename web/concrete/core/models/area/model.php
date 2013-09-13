@@ -561,7 +561,7 @@ class Concrete5_Model_Area extends Object {
 						'p' => $p
 					));
 				}
-				$bv->render($b);
+				$bv->render('view');
 				if ($includeEditStrip) {
 					Loader::element('block_footer');
 				}

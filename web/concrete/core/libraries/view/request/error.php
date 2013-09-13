@@ -13,6 +13,7 @@ class Concrete5_Library_ErrorRequestView extends RequestView {
 	}
 
 	protected function setupController() {}
+	protected function runControllerTask() {}
 	public function startRender() {}
 	public function setupRender() {
 		$env = Environment::get();
