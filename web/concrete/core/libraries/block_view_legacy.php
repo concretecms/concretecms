@@ -150,10 +150,12 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		 * @param array $args
 		 */
 		public function render($obj, $view = 'view', $args = array()) {
-			if ($this->hasRendered) {
+			/*if ($this->hasRendered) {
 				return false;
 			}
 			$this->blockObj = $obj;
+			*/
+
 			$customAreaTemplates = array();
 			
 			if ($obj instanceof BlockType) {
@@ -175,6 +177,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 			}				
 			
+			/*
 			$btHandle = $obj->getBlockTypeHandle();
 			
 			if (!isset($this->controller)) {
@@ -190,6 +193,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			} else {
 				$_action = 'view';
 			}
+			*/
 
 			$u = new User();
 			
@@ -213,12 +217,16 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				}
 			}
 
-			extract($args);
+			/*
+			extract($areags);
+			*/
+
 			if ($a instanceof Area) {
 				$this->controller->setAreaObject($a);
 			} else {
 				$this->controller->setAreaObject($this->area);
 			}
+
 
 			if ($outputContent == false) {
 				$this->controller->setupAndRun($_action);
@@ -228,7 +236,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			extract($this->controller->getHelperObjects());
 			$headerItems = $this->controller->headerItems;
 			
-			
+			/*
 			if ($this->controller->getRenderOverride() != '') { 
 				$_filename = $this->controller->getRenderOverride() . '.php';
 			} 
@@ -299,6 +307,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 					$header = DIR_FILES_ELEMENTS_CORE . '/block_header_add.php';
 					$footer = DIR_FILES_ELEMENTS_CORE . '/block_footer_add.php';
 					break;
+			*/
 				case 'edit':
 					if (!isset($_filename)) {
 						$_filename = FILENAME_BLOCK_EDIT;
