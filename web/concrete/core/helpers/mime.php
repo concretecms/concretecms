@@ -63,7 +63,6 @@ class Concrete5_Helper_Mime {
 			'image/ief'                     => 'ief',
 			'image/jp2'                     => 'jp2',
 			'image/jpeg'                    => 'jpg',
-			'image/jpeg'					=> 'jpeg',
 			'image/pict'                    => 'pict',
 			'image/png'                     => 'png',
 			'image/svg+xml'                 => 'svg',
