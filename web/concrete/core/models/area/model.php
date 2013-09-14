@@ -521,6 +521,11 @@ class Concrete5_Model_Area extends Object {
 	 */
 	function display($c, $alternateBlockArray = null) {
 
+		$v = View::getRequestInstance();
+		if ($v instanceof PageTemplateRequestView) {
+			$v->registerAreaHandle($this->arHandle);
+		}
+
 		if (!is_object($c) || $c->isError()) {
 			return false;
 		}

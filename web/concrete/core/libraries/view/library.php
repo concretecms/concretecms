@@ -27,7 +27,7 @@ abstract class Concrete5_Library_View {
 
 	protected static function revertRequestInstance() {
 		array_pop(View::$requestInstances);
-		self::$requestInstance = View::$requestInstances[count(View::requestInstances)];
+		self::$requestInstance = View::$requestInstances[count(View::$requestInstances)];
 	}
 
 	public $controller;

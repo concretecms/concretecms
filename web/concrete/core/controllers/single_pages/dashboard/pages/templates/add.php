@@ -2,7 +2,6 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 class Concrete5_Controller_Dashboard_Pages_Templates_Add extends DashboardBaseController {
 	
-	
 	public function on_start() { 
 		parent::on_start();
 		$this->set("icons", PageTemplate::getIcons());

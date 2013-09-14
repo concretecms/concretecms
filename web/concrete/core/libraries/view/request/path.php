@@ -25,6 +25,13 @@ class Concrete5_Library_PathRequestView extends RequestView {
 		$this->innerContentFile = $innerContentFile;
 	}
 
+	public function inc($file, $args = array()) {
+		extract($args);
+		extract($this->getScopeItems());
+		$env = Environment::get();
+		include($env->getPath(DIRNAME_THEMES . '/' . $this->themeHandle . '/' . $file, $this->themePkgHandle));
+	}
+
 	/**
 	 * A shortcut to posting back to the current page with a task and optional parameters. Only works in the context of 
 	 * @param string $action
