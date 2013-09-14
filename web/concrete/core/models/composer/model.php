@@ -42,6 +42,8 @@ class Concrete5_Model_Composer extends Object {
 						$_templates[] = $pt;
 					}
 				}
+			} else {
+				$_templates = $templates;
 			}
 		}
 		$defaultTemplate = PageTemplate::getByID($this->getComposerDefaultPageTemplateID());

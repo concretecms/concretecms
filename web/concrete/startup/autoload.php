@@ -27,7 +27,8 @@ $classes = array(
 	'View' => array('library','view/library'),
 	'RequestView' => array('library','view/request/library'),
 	'PathRequestView' => array('library','view/request/path'),
-	'PageRequestView' => array('library','view/request/page'),
+	'PageRequestView' => array('library','view/request/page/library'),
+	'PageTemplateRequestView' => array('library','view/request/page/template'),
 	'ToolRequestView' => array('library','view/request/tool'),
 	'ErrorRequestView' => array('library','view/request/error'),
 

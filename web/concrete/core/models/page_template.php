@@ -29,13 +29,11 @@ class Concrete5_Model_PageTemplate extends Object {
 		if (!is_object($theme)) {
 			$theme = PageTheme::getSiteTheme();
 		}
-		$v = new PageTemplateView();
-		$v->setTheme($theme);
-		$v->c = new Page();
-		$v->setThemeDirectory($theme->getThemeDirectory());
-		$v->ptHandle = $theme->getThemeHandle();
+		$v = new PageTemplateRequestView();
+		$v->setPageTheme($theme);
 		$v->render($this);
 
+		print_r($v->getPageTemplateRequestViewAreaHandles());
 	}
 
 	public static function getByHandle($pTemplateHandle) {

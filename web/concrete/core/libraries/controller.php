@@ -29,6 +29,11 @@ class Concrete5_Library_Controller {
 	protected $parameters = false;
 	protected $supportsPageCache = false;	
 	
+
+	public function setParameters($parameters) {
+		$this->parameters = $parameters;
+	}
+	
 	/**
 	 * Items in here CANNOT be called through the URL
 	 */
@@ -150,7 +155,7 @@ class Concrete5_Library_Controller {
 					}
 				}
 			}
-			
+
 			if ($req->isIncludeRequest()) {
 				$do404 = false;
 			}
@@ -170,8 +175,7 @@ class Concrete5_Library_Controller {
 			}
 
 			if ($do404) {
-				
-				$v = new RequestView();
+				$v = new PathRequestView();
 				$v->render('/page_not_found');
 			}
  		}

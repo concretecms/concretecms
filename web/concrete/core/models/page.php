@@ -53,12 +53,18 @@ class Concrete5_Model_Page extends Collection {
 		return $c;
 	}
 	
+	public function __construct() {
+		$this->loadError(COLLECTION_INIT); // init collection until we populate.
+	}
+
 	/**
 	 * @access private
 	 */
 	protected function populatePage($cInfo, $where, $cvID) {
 		$db = Loader::db();
 		
+		$this->loadError(false);
+
 		$q0 = "select Pages.cID, Pages.pkgID, Pages.cPointerID, Pages.cPointerExternalLink, Pages.cIsActive, Pages.cIsSystemPage, Pages.cPointerExternalLinkNewWindow, Pages.cFilename, Collections.cDateAdded, Pages.cDisplayOrder, Collections.cDateModified, cInheritPermissionsFromCID, cInheritPermissionsFrom, cOverrideTemplatePermissions, cCheckedOutUID, cIsTemplate, uID, cPath, cParentID, cChildren, cCacheFullPageContent, cCacheFullPageContentOverrideLifetime, cCacheFullPageContentLifetimeCustom from Pages inner join Collections on Pages.cID = Collections.cID left join PagePaths on (Pages.cID = PagePaths.cID and PagePaths.ppIsCanonical = 1) ";
 		//$q2 = "select cParentID, cPointerID, cPath, Pages.cID from Pages left join PagePaths on (Pages.cID = PagePaths.cID and PagePaths.ppIsCanonical = 1) ";
 		
@@ -90,13 +96,8 @@ class Concrete5_Model_Page extends Collection {
 				}
 				$this->isMasterCollection = $row['cIsTemplate'];
 			} else {
-				if ($cInfo == 1) {
-					$this->cID = '1';
-					$this->loadError(COLLECTION_INIT);
-				} else {
-					// there was no record of this particular collection in the database
-					$this->loadError(COLLECTION_NOT_FOUND);
-				}
+				// there was no record of this particular collection in the database
+				$this->loadError(COLLECTION_NOT_FOUND);
 			}
 			$r->free();
 		} else {

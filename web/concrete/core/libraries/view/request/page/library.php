@@ -23,21 +23,10 @@ class Concrete5_Library_PageRequestView extends PathRequestView {
 		return $items;
 	}
 
-	public function inc($file, $args = array()) {
-		extract($args);
-		extract($this->getScopeItems());
-		$env = Environment::get();
-		include($env->getPath(DIRNAME_THEMES . '/' . $this->themeHandle . '/' . $file, $this->themePkgHandle));
-	}
-
 	protected function setupController() {
 		if (!isset($this->controller)) {
 			$this->controller = Loader::controller($this->c);
 		}
-	}
-
-	protected function runControllerTask() {
-		$this->controller = Loader::controller($this->c);
 	}
 
 	protected function loadRequestViewThemeObject() {
