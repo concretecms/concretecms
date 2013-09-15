@@ -25,7 +25,7 @@ class Concrete5_Model_PageTemplate extends Object {
 		return PackageList::getHandle($this->pkgID);
 	}
 
-	public function refreshPageTemplateAreas($theme = false) {
+	public function getPageTemplateAreaHandles($theme = false) {
 		if (!is_object($theme)) {
 			$theme = PageTheme::getSiteTheme();
 		}
@@ -33,7 +33,7 @@ class Concrete5_Model_PageTemplate extends Object {
 		$v->setPageTheme($theme);
 		$v->render($this);
 
-		print_r($v->getPageTemplateRequestViewAreaHandles());
+		return $v->getPageTemplateRequestViewAreaHandles();
 	}
 
 	public static function getByHandle($pTemplateHandle) {

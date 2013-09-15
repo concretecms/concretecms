@@ -27,6 +27,20 @@ class Concrete5_Model_Composer extends Object {
 		return $templates;
 	}
 
+	public function refreshComposerOutputAreaList() {
+		$db = Loader::db();
+		$templates = $this->getComposerPageTemplateObjects();
+		$db->Execute('delete from ComposerOutputAreas where cmpID = ?', array($this->cmpID));
+		foreach($templates as $pt) {
+			$areaHandles = $pt->getPageTemplateAreaHandles();
+			foreach($areaHandles as $arHandle) {
+				$db->Execute('insert into ComposerOutputAreas (cmpID, pTemplateID, arHandle) values (?, ?, ?)', array(
+					$this->cmpID, $pt->getPageTemplateID(), $arHandle
+				));
+			}
+		}
+	}
+
 	public function getComposerPageTemplateObjects() {
 		$_templates = array();
 		if ($this->cmpAllowedPageTemplates == 'C') {

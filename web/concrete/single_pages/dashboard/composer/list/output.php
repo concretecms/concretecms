@@ -5,17 +5,17 @@
 <? 
 $tabs = array();
 $i = 0;
-foreach($composer->getComposerPageTypeObjects() as $ct) {
-	$tabs[] = array($ct->getCollectionTypeID(), $ct->getCollectionTypeName(), $i == 0);
+foreach($composer->getComposerPageTemplateObjects() as $pt) {
+	$tabs[] = array($pt->getPageTemplateID(), $pt->getPageTemplateName(), $i == 0);
 	$i++;
 }
 print Loader::helper('concrete/interface')->tabs($tabs);
 
-foreach($composer->getComposerPageTypeObjects() as $ct) { ?>
+foreach($composer->getComposerPageTemplateObjects() as $pt) { ?>
 	
-	<div id="ccm-tab-content-<?=$ct->getCollectionTypeID()?>" class="ccm-tab-content" data-composer-control-output-collection-type-id="<?=$ct->getCollectionTypeID()?>">
+	<div id="ccm-tab-content-<?=$pt->getPageTemplateID()?>" class="ccm-tab-content" data-composer-control-output-page-template-id="<?=$pt->getPageTemplateID()?>">
 		<?
-		$areas = ComposerOutputControl::getCollectionTypeAreas($composer, $ct);
+		$areas = ComposerOutputControl::getPageTemplateAreas($composer, $pt);
 		if (count($areas) > 0) {
 
 			foreach($areas as $area) { ?>
@@ -23,7 +23,7 @@ foreach($composer->getComposerPageTypeObjects() as $ct) { ?>
 				<div class="ccm-composer-control-output-area" data-composer-control-output-area="<?=$area?>">
 					<div class="ccm-composer-control-output-area-handle" ><?=$area?></div>
 					<div class="ccm-composer-control-output-area-inner">
-						<? $controls = ComposerOutputControl::getList($composer, $ct, $area);
+						<? $controls = ComposerOutputControl::getList($composer, $pt, $area);
 						foreach($controls as $cnt) { ?>
 							<? Loader::element('composer/output/control', array('control' => $cnt));?>
 						<? } ?>
@@ -52,7 +52,7 @@ $(function() {
 		stop: function() {
 
 			$('.ccm-tab-content:visible').each(function() {
-				var ctID = $(this).attr('data-composer-control-output-collection-type-id');
+				var ctID = $(this).attr('data-composer-control-output-page-template-id');
 
 				var formData = [{
 					'name': 'token',
