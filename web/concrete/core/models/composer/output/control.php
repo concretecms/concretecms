@@ -25,14 +25,12 @@ class Concrete5_Model_ComposerOutputControl extends Object {
 		$cmpOutputControlID = $db->Insert_ID();
 		return ComposerOutputControl::getByID($cmpOutputControlID);
 	}
-/*
+
 	public static function getPageTemplateAreas(Composer $cmp, PageTemplate $pt) {
-		$mc = $ct->getMasterTemplate();
 		$db = Loader::db();
-		$areas = $db->GetCol('select arHandle from Areas where cID = ? and arIsGlobal = 0 union distinct select arHandle from ComposerOutputControls where cmpID = ?', array($mc->getCollectionID(), $cmp->getComposerID()));
+		$areas = $db->GetCol('select arHandle from ComposerOutputAreas where cmpID = ? and pTemplateID = ? order by cmpOutputAreaID asc', array($cmp->getComposerID(), $pt->getPageTemplateID()));
 		return $areas;
 	}
-	*/
 
 	public function export($cnode) {
 		$control = $cnode->addChild('control');

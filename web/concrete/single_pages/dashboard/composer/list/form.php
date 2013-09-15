@@ -14,7 +14,7 @@
 			</div>
 		</form>
 		<div class="dialog-buttons">
-			<button class="btn pull-left" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel')?></button>
+			<button class="btn btn-default pull-left" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel')?></button>
 			<button class="btn btn-primary pull-right" onclick="$('#ccm-composer-add-set form').submit()"><?=t('Add Set')?></button>
 		</div>
 	</div>
@@ -22,7 +22,7 @@
 
 <div class="ccm-pane-options">
 <div class="ccm-pane-options-permanent-search">
-	<a href="#" data-dialog="add_set" class="btn"><?=t('Add Set')?></a>
+	<a href="#" data-dialog="add_set" class="btn btn-default"><?=t('Add Set')?></a>
 </div>
 </div>
 <div class="ccm-pane-body ccm-pane-body-footer">
@@ -34,10 +34,10 @@
 		<div class="ccm-composer-form-layout-control-set" data-composer-form-layout-control-set-id="<?=$set->getComposerFormLayoutSetID()?>">
 			<div class="ccm-composer-item-control-bar">
 				<ul class="ccm-composer-item-controls">
-					<li><a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/composer/form/add_control?cmpFormLayoutSetID=<?=$set->getComposerFormLayoutSetID()?>" dialog-title="<?=t('Add Form Control')?>" dialog-width="640" dialog-height="400" data-command="add-form-set-control"><i class="icon-plus-sign"></i></a></li>
-					<li><a href="#" data-command="move_set" style="cursor: move"><i class="icon-move"></i></a></li>
-					<li><a href="#" data-edit-set="<?=$set->getComposerFormLayoutSetID()?>"><i class="icon-pencil"></i></a></li>
-					<li><a href="#" data-delete-set="<?=$set->getComposerFormLayoutSetID()?>"><i class="icon-trash"></i></a></li>
+					<li><a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/composer/form/add_control?cmpFormLayoutSetID=<?=$set->getComposerFormLayoutSetID()?>" dialog-title="<?=t('Add Form Control')?>" dialog-width="640" dialog-height="400" data-command="add-form-set-control"><i class="glyphicon glyphicon-plus-sign"></i></a></li>
+					<li><a href="#" data-command="move_set" style="cursor: move"><i class="glyphicon glyphicon-move"></i></a></li>
+					<li><a href="#" data-edit-set="<?=$set->getComposerFormLayoutSetID()?>"><i class="glyphicon glyphicon-pencil"></i></a></li>
+					<li><a href="#" data-delete-set="<?=$set->getComposerFormLayoutSetID()?>"><i class="glyphicon glyphicon-trash"></i></a></li>
 				</ul>
 				<div class="ccm-composer-form-layout-control-set-name" ><? if ($set->getComposerFormLayoutSetName()) { ?><?=$set->getComposerFormLayoutSetName()?><? } else { ?><?=t('(No Name)')?><? } ?></div>
 				<div style="display: none">
@@ -102,7 +102,7 @@ $(function() {
 			buttons: [
 				{
 					'text': '<?=t("Cancel")?>',
-					'class': 'btn pull-left',
+					'class': 'btn btn-default pull-left',
 					'click': function() {
 						$(this).dialog('close');
 					}
@@ -128,7 +128,7 @@ $(function() {
 			buttons: [
 				{
 					'text': '<?=t("Cancel")?>',
-					'class': 'btn pull-left',
+					'class': 'btn btn-default pull-left',
 					'click': function() {
 						$(this).dialog('close');
 					}
@@ -211,7 +211,7 @@ $(function() {
 			buttons: [
 				{
 					'text': '<?=t("Cancel")?>',
-					'class': 'btn pull-left',
+					'class': 'btn btn-default pull-left',
 					'click': function() {
 						$(this).dialog('close');
 					}

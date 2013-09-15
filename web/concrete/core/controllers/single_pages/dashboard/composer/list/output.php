@@ -9,10 +9,7 @@ class Concrete5_Controller_Dashboard_Composer_List_Output extends DashboardBaseC
 			$this->redirect('/dashboard/composer/list');
 		}
 		// redirects into the order so we keep areas up to date
-		foreach($this->composer->getComposerPageTemplateObjects() as $pt) {
-			$pt->refreshPageTemplateAreas();
-		}
-		exit;
+		$this->composer->refreshComposerOutputAreaList();
 		$this->redirect('/dashboard/composer/list/output', 'order', $cmpID);
 	}
 
