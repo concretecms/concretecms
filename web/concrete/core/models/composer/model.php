@@ -27,6 +27,33 @@ class Concrete5_Model_Composer extends Object {
 		return $templates;
 	}
 
+	public function getComposerPageTemplateDefaultPageObject(PageTemplate $template) {
+		$db = Loader::db();
+		$cID = $db->GetOne('select cID from ComposerPageTemplateDefaultPages where cmpID = ? and pTemplateID = ?', array(
+			$this->cmpID, $template->getPageTemplateID()
+		));
+		if (!$cID) {
+			// we create one.
+			$dh = Loader::helper('date');
+			$cDate = $dh->getSystemDateTime();
+			$data['pTemplateID'] = $template->getPageTemplateID();
+			$cobj = Collection::add($data);
+			$cID = $cobj->getCollectionID();
+			
+			$v2 = array($cID, 1);
+			$q2 = "insert into Pages (cID, cIsTemplate) values (?, ?)";
+			$r2 = $db->prepare($q2);
+			$res2 = $db->execute($r2, $v2);
+
+			$cID = $db->Insert_ID();
+			$db->Execute('insert into ComposerPageTemplateDefaultPages (cmpID, pTemplateID, cID) values (?, ?, ?)', array(
+				$this->cmpID, $template->getPageTemplateID(), $cID
+			));
+		}
+
+		return Page::getByID($cID, 'RECENT');
+	}
+
 	public function refreshComposerOutputAreaList() {
 		$db = Loader::db();
 		$templates = $this->getComposerPageTemplateObjects();
