@@ -136,6 +136,23 @@
     </field>
   </table>
 
+  <table name="ComposerPageTemplateDefaultPages">
+    <field name="pTemplateID" type="I" size="10">
+      <unsigned/>
+      <default value="0" />
+      <key />
+    </field>
+   <field name="cmpID" type="I" size="10">
+      <unsigned/>
+      <default value="0" />
+      <key />
+    </field>
+   <field name="cID" type="I" size="10">
+      <unsigned/>
+      <default value="0" />
+    </field>
+  </table>
+
   <table name="ComposerOutputAreas">
     <field name="cmpOutputAreaID" type="I" size="10">
       <key/>

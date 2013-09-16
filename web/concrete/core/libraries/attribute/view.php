@@ -65,6 +65,8 @@ class Concrete5_Library_AttributeTypeView extends View {
 	public function setupController() {
 		if (!$this->controller) {
 			$this->controller = $this->attributeType->getController();
+			$this->controller->setAttributeKey($this->attributeKey);
+			$this->controller->setAttributeValue($this->attributeValue);
 			if (is_object($attributeKey)) {
 				$this->controller->set('akID', $this->attributeKey->getAttributeKeyID());
 			}
