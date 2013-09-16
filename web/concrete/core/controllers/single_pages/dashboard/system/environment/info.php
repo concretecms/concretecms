@@ -97,6 +97,17 @@ class Concrete5_Controller_Dashboard_System_Environment_Info extends DashboardBa
 		$environmentMessage .= "\n";
 
 		print $environmentMessage;
+                                
+		// cache
+		$environmentMessage = '# ' . t('concrete5 Cache Settings') . "\n";
+		$environmentMessage .= t('Block Cache - %s', (ENABLE_BLOCK_CACHE ? t('On') : t('Off'))) . "\n";
+		$environmentMessage .= t('Overrides Cache - %s', (ENABLE_OVERRIDE_CACHE ? t('On') : t('Off'))) . "\n";
+		$environmentMessage .= t('Full Page Caching - %s', (FULL_PAGE_CACHE_GLOBAL == 'blocks' ? t('On - If blocks on the particular page allow it.') : (FULL_PAGE_CACHE_GLOBAL == 'all' ? t('On - In all cases.'): t('Off')))) . "\n";
+		if (FULL_PAGE_CACHE_GLOBAL) {
+			$environmentMessage .= t('Full Page Cache Lifetime - %s', (FULL_PAGE_CACHE_LIFETIME == 'default' ? t('Every %s (default setting).', Loader::helper('date')->timeSince(time()-CACHE_LIFETIME)) : (FULL_PAGE_CACHE_LIFETIME == 'forever' ? t('Only when manually removed or the cache is cleared.'): t('Every %s minute.', Config::get('FULL_PAGE_CACHE_LIFETIME_CUSTOM'))))) . "\n";
+		}
+		$environmentMessage .= "\n";
+		print $environmentMessage;
 		
 		$environmentMessage = '# ' . t('Server Software') . "\n" . $_SERVER['SERVER_SOFTWARE'] . "\n\n";
 		$environmentMessage .= '# ' . t('Server API') . "\n" . php_sapi_name() . "\n\n";
