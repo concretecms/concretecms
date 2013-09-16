@@ -113,7 +113,7 @@ class Concrete5_Helper_Mime {
 	/** 
 	 * Converts a known mime-type into it's common file extension. 
 	 * Returns the first match from $mime_types_and_extensions
-	 * @param string $extension
+	 * @param string $mimeType
 	 * @return string|boolean extension string or false
 	 */
 	public function mimeToExtension($mimeType) {
