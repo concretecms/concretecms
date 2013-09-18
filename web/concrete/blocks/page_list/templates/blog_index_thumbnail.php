@@ -14,7 +14,7 @@
 		$target = $cobj->getAttribute('nav_target');
 
 		$title = $cobj->getCollectionName();
-		$date = $cobj->getCollectionDatePublic('M j, Y'); ?>
+		$date = $cobj->getCollectionDatePublic(DATE_APP_GENERIC_MDY_FULL); ?>
 
 	<div class="grid_4 main-content-thumb">
 	<h4><?php echo "&#151; " . $date; ?></h4>
