@@ -36,6 +36,10 @@ For the latest fully supported release, check out http://www.concrete5.org/downl
 
 http://concrete5.org/documentation/
 
+# Code Submissions
+
+http://www.concrete5.org/developers/submitting_code_to_concrete/
+
 ### Short Tags
 The concrete5 git repository currently uses php "short tags". Pull requests should maintain this convention. Final release versions have short tags converted to long tags. _Note:_ This issue has thoroughly discussed. Currently the shed is red but may be painted green in the future.
 
