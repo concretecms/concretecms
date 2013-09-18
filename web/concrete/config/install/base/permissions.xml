@@ -73,7 +73,7 @@
         <permissionkey handle="edit_file_set_file_contents" name="Edit File Contents" description="Can edit or replace files in set." package="" category="file_set"/>
         <permissionkey handle="copy_file_set_files" name="Copy File" description="Can copy files in file set." package="" category="file_set"/>
         <permissionkey handle="edit_file_set_permissions" name="Edit File Access" description="Can edit access to file sets." package="" category="file_set"/>
-        <permissionkey handle="delete_file_set" name="Delete File Set" description="" package="Can delete file set." category="file_set"/>
+        <permissionkey handle="delete_file_set" name="Delete File Set" description="Can delete file set." package="" category="file_set"/>
         <permissionkey handle="delete_file_set_files" name="Delete File" description="Can delete files in set." package="" category="file_set"/>
         <permissionkey handle="add_file" has-custom-class="true" name="Add File" description="Can add files to set." package="" category="file_set"/>
         <permissionkey handle="view_file" name="View Files" description="Can view and download files." package="" category="file"/>
