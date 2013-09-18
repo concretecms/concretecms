@@ -21,6 +21,7 @@ $date = date('Ymd');
 header("Content-Disposition: inline; filename=user_report_{$date}.xls"); 
 header("Content-Title: User Report - Run on {$date}");
 
+echo '<meta http-equiv="Content-Type" content="text/html; charset=' . APP_CHARSET . '">';
 echo("<table><tr>");
 echo("<td><b>".t('Username')."</b></td>");
 echo("<td><b>".t('Email Address')."</b></td>");
