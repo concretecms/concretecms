@@ -239,3 +239,7 @@ if (!defined('SEO_EXCLUDE_WORDS')) {
 if (!defined('ENABLE_JOB_SCHEDULING')) {
 	Config::getOrDefine('ENABLE_JOB_SCHEDULING', true);
 }
+
+if (!defined('JOB_QUEUE_BATCH_SIZE')) {
+	define('JOB_QUEUE_BATCH_SIZE', 10);
+}
