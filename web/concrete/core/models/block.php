@@ -972,8 +972,8 @@ class Concrete5_Model_Block extends Object {
 			$r = $db->query($q);
 			
 		} else {
-			$q = "delete from CollectionVersionBlocks where cID = '$cID' and (cvID = '$cvID' or cbIncludeAll=1) and bID = '$bID' and arHandle = '$arHandle'";
-			$r = $db->query($q);
+			$q = "delete from CollectionVersionBlocks where cID = '$cID' and (cvID = '$cvID' or cbIncludeAll=1) and bID = '$bID' and arHandle = ?";
+			$r = $db->query($q, array($arHandle));
 
 			// next, we delete the groups instance of this block
 			$q = "delete from BlockPermissionAssignments where bID = '$bID' and cvID = '$cvID' and cID = '$cID'";
