@@ -35,11 +35,11 @@
 			}
 		}
 
-		public function on_page_view() {
+		public function on_page_view($page) {
 			$b = Block::getByID($this->bOriginalID);
 			$bc = $b->getInstance();
 			if (method_exists($bc, 'on_page_view')) {
-				$bc->on_page_view();
+				$bc->on_page_view($page);
 			}
 		}
 
