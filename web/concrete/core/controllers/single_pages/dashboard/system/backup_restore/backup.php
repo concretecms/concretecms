@@ -122,12 +122,15 @@ class Concrete5_Controller_Dashboard_System_BackupRestore_Backup extends Dashboa
 			}		
 		}
 		
-		$this->set("message","Restoration Sucessful");
-	
 		//reset perms for security! 
 		chmod(DIR_FILES_BACKUPS . '/'. $file, 000);
 		Cache::flush();
+		$this->redirect('/dashboard/system/backup_restore/backup', 'backup_successful');
+	}
+
+	public function backup_successful() {
+		$this->set('message', 'Restoration Successful');
 		$this->view();
 	}
-	  
+
 }
