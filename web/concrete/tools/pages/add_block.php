@@ -25,7 +25,10 @@ if ($dsh->inDashboard()) {
 	$dashboardBlockTypes = BlockTypeList::getDashboardBlockTypes();
 }
 $blockTypes = array_merge($blockTypes, $dashboardBlockTypes);
-
+if ($c->isMasterCollection()) {
+	$bt = BlockType::getByHandle(BLOCK_HANDLE_COMPOSER_OUTPUT_PROXY);
+	$blockTypes[] = $bt;
+}
 $ih = Loader::helper('concrete/interface');
 $ci = Loader::helper('concrete/urls');
 ?>

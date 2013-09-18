@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<schema version="0.3">
+	<table name="btCoreComposerControlOutput">
+		<field name="bID" type="I">
+			<key />
+			<unsigned />
+			<notnull />
+		</field>
+		<field name="cmpOutputControlID" type="I">
+			<unsigned />
+			<notnull />
+			<default value="0" />
+		</field>
+	</table>
+</schema>

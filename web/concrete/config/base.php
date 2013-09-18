@@ -246,6 +246,7 @@ define('BLOCK_HANDLE_GATHERING_ITEM_PROXY', 'core_gathering_item');
 define('BLOCK_HANDLE_GATHERING_PROXY', 'core_gathering_display');
 define('BLOCK_HANDLE_GATHERING', 'core_gathering');
 define('BLOCK_HANDLE_LAYOUT_PROXY', 'core_area_layout');
+define('BLOCK_HANDLE_COMPOSER_OUTPUT_PROXY', 'core_composer_control_output');
 define('FILENAME_FORM', 'form.php');
 
 # Stacks

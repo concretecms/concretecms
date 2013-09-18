@@ -53,6 +53,22 @@ class Concrete5_Model_ComposerOutputControl extends Object {
 		return $list;
 	}
 
+	public static function getListByPageTemplate(PageTemplate $pt) {
+		$db = Loader::db();
+		// get all composers.
+		$cmpOutputControlIDs = $db->GetCol('select cmpOutputControlID from ComposerOutputControls where pTemplateID = ? order by cmpOutputControlDisplayOrder asc', array(
+			$pt->getPageTemplateID()
+		));
+		$list = array();
+		foreach($cmpOutputControlIDs as $cmpOutputControlID) {
+			$cm = ComposerOutputControl::getByID($cmpOutputControlID);
+			if (is_object($cm)) {
+				$list[] = $cm;
+			}
+		}
+		return $list;
+	}
+
 	public static function getByID($cmpOutputControlID) {
 		$db = Loader::db();
 		$r = $db->GetRow('select * from ComposerOutputControls where cmpOutputControlID = ?', array($cmpOutputControlID));

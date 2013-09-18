@@ -94,7 +94,7 @@ class Concrete5_Library_Content_Exporter {
 		}		
 		
 		// now page types
-		CollectionType::exportList($this->x);
+		//CollectionType::exportList($this->x);
 		
 		// now stacks/global areas
 		Loader::model('stack/list');

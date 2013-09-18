@@ -185,22 +185,26 @@ class Concrete5_Model_Composer extends Object {
 		
 		foreach($list as $sc) {
 			$activated = 0;
-			$types = $sc->getComposerPageTypeObjects();
-
+			$templates = $sc->getComposerPageTemplateObjects();
 			$composer = $nxml->addChild('composer');
 			$composer->addAttribute('name', $sc->getComposerName());
-			$pagetypes = $composer->addChild('pagetypes');
-			if ($sc->getComposerAllowedPageTypes() == 'A') {
-				$pagetypes->addAttribute('type', 'all');
+			$pagetemplates = $composer->addChild('pagetemplates');
+			if ($sc->getComposerAllowedPageTemplates() == 'A') {
+				$pagetemplates->addAttribute('type', 'all');
 			} else {
-				if ($sc->getComposerAllowedPageTypes() == 'X') {
-					$pagetypes->addAttribute('type', 'except');
+				if ($sc->getComposerAllowedPageTemplates() == 'X') {
+					$pagetemplates->addAttribute('type', 'except');
 				} else {
-					$pagetypes->addAttribute('type', 'custom');
+					$pagetemplates->addAttribute('type', 'custom');
 				}
-				foreach($types as $ct) {
-					$pagetypes->addChild('pagetype')->addAttribute('handle', $ct->getCollectionTypeHandle());
+				foreach($templates as $tt) {
+					$pagetemplates->addChild('pagetemplate')->addAttribute('handle', $tt->getPageTemplateHandle());
 				}	
+			}
+
+			$defaultPageTemplate = PageTemplate::getByID($sc->getComposerDefaultPageTemplateID());
+			if (is_object($defaultPageTemplate)) {
+				$composer->addAttribute('default', $defaultPageTemplate->getPageTemplateHandle());
 			}
 			$target = $sc->getComposerTargetObject();
 			$target->export($composer);
@@ -212,19 +216,11 @@ class Concrete5_Model_Composer extends Object {
 			}
 
 			$osn = $composer->addChild('output');
-			foreach($types as $ct) {
-				$pagetype = $osn->addChild('pagetype');
-				$pagetype->addAttribute('handle', $ct->getCollectionTypeHandle());
-				$areas = ComposerOutputControl::getCollectionTypeAreas($sc, $ct);
-				foreach($areas as $arHandle) {
-					$area = $pagetype->addChild('area');
-					$area->addAttribute('name', $arHandle);
-					$controls = ComposerOutputControl::getList($sc, $ct, $arHandle);
-					foreach($controls as $outputControl) {
-						$outputControl->export($area);
-					}
-				}
-
+			foreach($templates as $tt) {
+				$pagetemplate = $osn->addChild('template');
+				$pagetemplate->addAttribute('handle', $tt->getPageTemplateHandle());
+				$xc = $sc->getComposerPageTemplateDefaultPageObject($tt);
+				$xc->export($pagetemplate);
 			}
 		}
 	}

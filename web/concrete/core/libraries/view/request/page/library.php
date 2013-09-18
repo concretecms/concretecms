@@ -52,7 +52,7 @@ class Concrete5_Library_PageRequestView extends PathRequestView {
 				} else {
 					$this->setViewTemplate($env->getPath(DIRNAME_THEMES . '/' . $this->themeHandle . '/' . FILENAME_THEMES_VIEW, $this->themePkgHandle));
 				}
-				$this->setInnerContentFile($env->getPath(DIRNAME_PAGES . '/' . $cFilename, $this->themePkgHandle));
+				$this->setInnerContentFile($env->getPath(DIRNAME_PAGES . '/' . $cFilename, $this->c->getPackageHandle()));
 			}
 		} else {
 			$pt = PageTemplate::getByID($this->c->getPageTemplateID());
