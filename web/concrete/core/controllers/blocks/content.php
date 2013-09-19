@@ -66,7 +66,7 @@
 			$req->requireAsset('redactor');
 		}
 
-		public function getImportData($blockNode) {
+		public function getImportData($blockNode, $page) {
 			$args = array();
 			$content = $blockNode->data->record->content;
 

@@ -31,12 +31,6 @@ class Concrete5_Model_ComposerOutputControl extends Object {
 		return $areas;
 	}
 
-	public function export($cnode) {
-		$control = $cnode->addChild('control');
-		$fsc = ComposerFormLayoutSetControl::getByID($this->getComposerFormLayoutSetControlID());
-		$control->addAttribute('output-control-id', ContentExporter::getComposerOutputControlTemporaryID($fsc));
-	}
-
 	public static function getList(Composer $composer, PageTemplate $pt, $arHandle) {
 		$db = Loader::db();
 		$cmpOutputControlIDs = $db->GetCol('select cmpOutputControlID from ComposerOutputControls where cmpID = ? and pTemplateID = ? and arHandle = ? order by cmpOutputControlDisplayOrder asc', array(

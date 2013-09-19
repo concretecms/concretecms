@@ -199,7 +199,7 @@ class Concrete5_Model_Composer extends Object {
 
 			$defaultPageTemplate = PageTemplate::getByID($sc->getComposerDefaultPageTemplateID());
 			if (is_object($defaultPageTemplate)) {
-				$composer->addAttribute('default', $defaultPageTemplate->getPageTemplateHandle());
+				$pagetemplates->addAttribute('default', $defaultPageTemplate->getPageTemplateHandle());
 			}
 			$target = $sc->getComposerTargetObject();
 			$target->export($composer);

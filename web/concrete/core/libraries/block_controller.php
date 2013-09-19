@@ -275,7 +275,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			}
 		}
 
-		protected function getImportData($blockNode) {
+		protected function getImportData($blockNode, $page) {
 			$args = array();
 			if (isset($blockNode->data)) {
 				foreach($blockNode->data as $data) {
@@ -316,7 +316,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			$args = array();
 			$db = Loader::db();
 			// handle the adodb stuff
-			$args = $this->getImportData($blockNode);
+			$args = $this->getImportData($blockNode, $page);
 			
 			$bt = BlockType::getByHandle($this->btHandle);
 			$b = $page->addBlock($bt, $arHandle, $args);

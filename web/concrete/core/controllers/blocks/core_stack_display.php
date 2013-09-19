@@ -28,7 +28,7 @@
 			return $this->bOriginalID;
 		}
 
-		public function getImportData($blockNode) {
+		public function getImportData($blockNode, $page) {
 			$args = array();
 			$content = (string) $blockNode->stack;
 			$stack = Stack::getByName($content);

@@ -199,7 +199,7 @@ class Concrete5_Model_BlockComposerControl extends ComposerControl {
 		// delete the block that this set control has placed on this version, because
 		// we are going to replace it with a new one.
 		$db = Loader::db();
-		$q = 'select cvb.arHandle, cdb.bID from ComposerDraftBlocks cdb inner join ComposerDrafts cd on cdb.cmpDraftID = cd.cmpDraftID inner join CollectionVersionBlocks cvb on (cdb.bID = cvb.bID and cvb.cID = cd.cID and cvb.cvID = ?) where cdb.cmpFormLayoutSetControlID = ? and cd.cmpDraftID = ?';
+		$q = 'select cvb.arHandle, cdb.bID, cdb.cbDisplayOrder from ComposerDraftBlocks cdb inner join ComposerDrafts cd on cdb.cmpDraftID = cd.cmpDraftID inner join CollectionVersionBlocks cvb on (cdb.bID = cvb.bID and cvb.cID = cd.cID and cvb.cvID = ?) where cdb.cmpFormLayoutSetControlID = ? and cd.cmpDraftID = ?';
 		$v = array($c->getVersionID(), $setControl->getComposerFormLayoutSetControlID(), $d->getComposerDraftID());
 		$row = $db->GetRow($q, $v);
 		if ($row['bID'] && $row['arHandle']) {
@@ -207,15 +207,17 @@ class Concrete5_Model_BlockComposerControl extends ComposerControl {
 		}
 
 		$arHandle = $b->getAreaHandle();
+		$blockDisplayOrder = $b->getBlockDisplayOrder();
 		$b->deleteBlock();
 		$ax = Area::getOrCreate($c, $arHandle);
 		$b = $c->addBlock($bt, $ax, $data);
 		$this->setComposerControlBlockObject($b);
-
+		$b->setAbsoluteBlockDisplayOrder($blockDisplayOrder);
+		
 		// make a reference to the new block
 		$db = Loader::db();
-		$db->Execute('insert into ComposerDraftBlocks (cmpDraftID, arHandle, cmpFormLayoutSetControlID, bID) values (?, ?, ?, ?)', array(
-			$d->getComposerDraftID(), $arHandle, $setControl->getComposerFormLayoutSetControlID(), $b->getBlockID()
+		$db->Execute('insert into ComposerDraftBlocks (cmpDraftID, arHandle, cmpFormLayoutSetControlID, cbDisplayOrder, bID) values (?, ?, ?, ?, ?)', array(
+			$d->getComposerDraftID(), $arHandle, $setControl->getComposerFormLayoutSetControlID(), $b->getBlockDisplayOrder(), $b->getBlockID()
 		));
 	}
 
