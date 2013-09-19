@@ -4,6 +4,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 // HELPERS
 $valt = Loader::helper('validation/token');
 $th = Loader::helper('text');
+$dh = Loader::helper('date');
 
 
 // VARIABLES
@@ -61,9 +62,15 @@ $areEntries = count($entries) > 0 ? true : false;
             <tbody>
 				<? foreach($entries as $ent) { ?>
                 <tr>
-                    <td valign="top" style="white-space: nowrap" class="active"><?=date(DATE_APP_GENERIC_TS, strtotime($ent->getTimestamp('user')))?><? if (date('m-d-y') != date('m-d-y', strtotime($ent->getTimestamp('user')))) { ?>
-                        <?=t(' at ')?><?=date(DATE_APP_GENERIC_MDY, strtotime($ent->getTimestamp('user')))?>
-                    <? } ?></td>
+                    <td valign="top" style="white-space: nowrap" class="active"><?php
+                        if (date('m-d-y') == date('m-d-y', strtotime($ent->getTimestamp('user')))) {
+                            echo t(/*i18n %s is a time*/'Today at %s', $dh->date(DATE_APP_GENERIC_TS, strtotime($ent->getTimestamp('user'))));
+                        }
+                        else {
+                            echo $dh->date(DATE_APP_GENERIC_MDYT, strtotime($ent->getTimestamp('user')));
+                        }
+                        
+                    ?></td>
                     <td valign="top"><strong><?=$ent->getType()?></strong></td>
                     <td valign="top"><strong><?php
                     if($ent->getUserID() == NULL){
