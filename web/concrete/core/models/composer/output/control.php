@@ -3,7 +3,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 class Concrete5_Model_ComposerOutputControl extends Object {
 
 	public function getComposerOutputControlID() {return $this->cmpOutputControlID;}
-	public function getComposerOutputControlDisplayOrderID() {return $this->cmpOutputControlDisplayOrder;}
 	public function getComposerFormLayoutSetControlID() {return $this->cmpFormLayoutSetControlID;}
 	public function getComposerFormLayoutSetID() {return $this->cmpFormLayoutSetID;}
 
@@ -20,11 +19,11 @@ class Concrete5_Model_ComposerOutputControl extends Object {
 		return ComposerOutputControl::getByID($cmpOutputControlID);
 	}
 
-	public static function getList(PageTemplate $pt) {
+	public static function getList(Composer $cmp, PageTemplate $pt) {
 		$db = Loader::db();
-		// get all composers.
-		$cmpOutputControlIDs = $db->GetCol('select cmpOutputControlID from ComposerOutputControls where pTemplateID = ? order by cmpOutputControlDisplayOrder asc', array(
-			$pt->getPageTemplateID()
+		// get all output controls for the particular page template.
+		$cmpOutputControlIDs = $db->GetCol('select cmpOutputControlID from ComposerOutputControls where pTemplateID = ? and cmpID = ? order by cmpOutputControlID asc', array(
+			$pt->getPageTemplateID(), $cmp->getComposerID()
 		));
 		$list = array();
 		foreach($cmpOutputControlIDs as $cmpOutputControlID) {
