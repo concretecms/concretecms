@@ -31,6 +31,7 @@ class Concrete5_Helper_Number {
 
 	/** Checks if a given string is valid representation of a number in the current locale.
 	* @return bool
+	* @example http://www.concrete5.org/documentation/how-tos/developers/formatting-numbers/ See the Formatting numbers how-to for more details
 	*/
 	public function isNumber($string) {
 		return Zend_Locale_Format::isNumber($string, array('locale' => $this->getZendLocale()));
@@ -38,6 +39,7 @@ class Concrete5_Helper_Number {
 
 	/** Checks if a given string is valid representation of an integer in the current locale.
 	* @return bool
+	* @example http://www.concrete5.org/documentation/how-tos/developers/formatting-numbers/ See the Formatting numbers how-to for more details
 	*/
 	public function isInteger($string) {
 		return Zend_Locale_Format::isInteger($string, array('locale' => $this->getZendLocale()));
@@ -47,6 +49,7 @@ class Concrete5_Helper_Number {
 	* @param number $number The number being formatted.
 	* @param int|null $precision [default: null] The wanted precision; if null or not specified the complete localized number will be returned.
 	* @return string
+	* @example http://www.concrete5.org/documentation/how-tos/developers/formatting-numbers/ See the Formatting numbers how-to for more details
 	*/
 	public function format($number, $precision = null) {
 		if(!is_numeric($number)) {
@@ -65,6 +68,7 @@ class Concrete5_Helper_Number {
 	* @param bool $trim [default: true] Remove spaces and new lines at the start/end of $string?
 	* @param int|null $precision [default: null] The wanted precision; if null or not specified the complete number will be returned.
 	* @return null|number
+	* @example http://www.concrete5.org/documentation/how-tos/developers/formatting-numbers/ See the Formatting numbers how-to for more details
 	*/
 	public function unformat($string, $trim = true, $precision = null) {
 		if(is_int($string) || is_float($string)) {
