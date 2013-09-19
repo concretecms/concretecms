@@ -42,11 +42,13 @@ class Concrete5_Model_BlockComposerControl extends ComposerControl {
 				// this is the first run. so we look for the proxy block.
 				$pt = PageTemplate::getByID($c->getPageTemplateID());
 				$outputControl = $setControl->getComposerOutputControlObject($pt);
-				$cm = $cmpDraft->getComposerObject();
-				$mc = $cm->getComposerPageTemplateDefaultPageObject($pt);
-				$r = $db->GetRow('select bco.bID, cvb.arHandle from btCoreComposerControlOutput bco inner join CollectionVersionBlocks cvb on cvb.bID = bco.bID where cmpOutputControlID = ? and cvb.cID = ?', array(
-					$outputControl->getComposerOutputControlID(), $mc->getCollectionID()
-				));
+				if (is_object($outputControl)) {
+					$cm = $cmpDraft->getComposerObject();
+					$mc = $cm->getComposerPageTemplateDefaultPageObject($pt);
+					$r = $db->GetRow('select bco.bID, cvb.arHandle from btCoreComposerControlOutput bco inner join CollectionVersionBlocks cvb on cvb.bID = bco.bID where cmpOutputControlID = ? and cvb.cID = ?', array(
+						$outputControl->getComposerOutputControlID(), $mc->getCollectionID()
+					));
+				}
 			}
 			if ($r['bID']) {
 				$b = Block::getByID($r['bID'], $c, $r['arHandle']);
@@ -196,6 +198,10 @@ class Concrete5_Model_BlockComposerControl extends ComposerControl {
 		$setControl = $this->getComposerFormLayoutSetControlObject();
 
 		$b = $this->getComposerControlBlockObject($d);
+		if (!is_object($b)) {
+			return;
+		}
+		
 		// delete the block that this set control has placed on this version, because
 		// we are going to replace it with a new one.
 		$db = Loader::db();

@@ -27,6 +27,16 @@ class Concrete5_Model_Composer extends Object {
 		return $templates;
 	}
 
+	public static function getByDefaultsPage(Page $c) {
+		if ($c->isMasterCollection()) {
+			$db = Loader::db();
+			$cmpID = $db->GetOne('select cmpID from ComposerPageTemplateDefaultPages where cID = ?', array($c->getCollectionID()));
+			if ($cmpID) {
+				return Composer::getByID($cmpID);
+			}
+		}
+	}
+
 	public function getComposerPageTemplateDefaultPageObject(PageTemplate $template) {
 		$db = Loader::db();
 		$cID = $db->GetOne('select cID from ComposerPageTemplateDefaultPages where cmpID = ? and pTemplateID = ?', array(

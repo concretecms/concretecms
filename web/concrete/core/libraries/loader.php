@@ -52,15 +52,9 @@
 		protected function legacyModel($model) {
 			switch($model) {
 				case 'collection_attributes':
-					self::model('attribute/categories/collection');
-					return true;
-					break;
+				case 'collection_types':
 				case 'user_attributes':
-					self::model('attribute/categories/user');
-					return true;
-					break;
 				case 'file_attributes':
-					self::model('attribute/categories/file');
 					return true;
 					break;
 				default:
