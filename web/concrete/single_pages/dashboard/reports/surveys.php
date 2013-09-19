@@ -80,7 +80,7 @@ if ($this->controller->getTask() == 'viewDetail') { ?>
 					<tr>
 						<td><strong><a href="<?=$this->action('viewDetail', $survey['bID'], $survey['cID'])?>"><?=$survey['question'] ?></a></strong></td>
 						<td><?=$survey['cvName'] ?></td>
-						<td><?=formatDate($survey['lastResponse']) ?></td>
+						<td><?=$this->controller->formatDate($survey['lastResponse']) ?></td>
 						<td><?=$survey['numberOfResponses'] ?></td>
 					</tr>
 				<? }
