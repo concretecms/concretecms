@@ -103,7 +103,7 @@ $searchInstance = Loader::helper('text')->entities($_REQUEST['searchInstance']);
 		<tr>
 			<td class="ccm-page-list-name"><?=$c->getCollectionName()?></td>
 			<td><?=$c->getCollectionTypeName()?></td>
-			<td><?=date(DATE_APP_DASHBOARD_SEARCH_RESULTS_PAGES, strtotime($c->getCollectionDatePublic()))?></td>
+			<td><?=$c->getCollectionDatePublic(DATE_APP_DASHBOARD_SEARCH_RESULTS_PAGES)?></td>
 			<td><?
 				$ui = UserInfo::getByID($c->getCollectionUserID());
 				if (is_object($ui)) {
