@@ -156,25 +156,20 @@ class Concrete5_Model_Composer extends Object {
 			}
 		}
 
-		/*
-		if (isset($node->output->pagetype)) {
-			foreach($node->output->pagetype as $pagetype) {
-				foreach($pagetype->area as $area) {
-					$displayOrder = 0;
-					foreach($area->control as $outputcontrolnode) {
-						$ct = CollectionType::getByHandle((string) $pagetype['handle']);
-						$formLayoutSetControlID = ContentImporter::getComposerFormLayoutSetControlFromTemporaryID((string) $outputcontrolnode['output-control-id']);
-						$formLayoutSetControl = ComposerFormLayoutSetControl::getByID($formLayoutSetControlID);
-						$outputControl = ComposerOutputControl::getByComposerFormLayoutSetControl($ct, $formLayoutSetControl);
-
-						$outputControl->updateComposerOutputControlArea((string) $area['name']);
-						$outputControl->updateComposerOutputControlDisplayOrder($displayOrder);
-						$displayOrder++;
+		if (isset($node->output->pagetemplate)) {
+			$ci = new ContentImporter();
+			foreach($node->output->pagetemplate as $pagetemplate) {
+				$pt = PageTemplate::getByHandle((string) $pagetemplate['handle']);
+				if (is_object($pt)) {
+					// let's get the defaults page for this
+					$xc = $cm->getComposerPageTemplateDefaultPageObject($pt);
+					// now that we have the defaults page, let's import this content into it.
+					if (isset($pagetemplate->page)) {
+						$ci->importPageAreas($xc, $pagetemplate->page);
 					}
 				}
 			}
 		}
-		*/
 	}
 
 
@@ -217,7 +212,7 @@ class Concrete5_Model_Composer extends Object {
 
 			$osn = $composer->addChild('output');
 			foreach($templates as $tt) {
-				$pagetemplate = $osn->addChild('template');
+				$pagetemplate = $osn->addChild('pagetemplate');
 				$pagetemplate->addAttribute('handle', $tt->getPageTemplateHandle());
 				$xc = $sc->getComposerPageTemplateDefaultPageObject($tt);
 				$xc->export($pagetemplate);
@@ -363,16 +358,16 @@ class Concrete5_Model_Composer extends Object {
 		return ComposerFormLayoutSet::getByID($db->Insert_ID());
 	}
 
-	public function validateCreateDraftRequest($ct) {
+	public function validateCreateDraftRequest($pt) {
 		$e = Loader::helper('validation/error');
-		$availablePageTypes = $this->getComposerPageTypeObjects();
-		$availablePageTypeIDs = array();
-		foreach($availablePageTypes as $cct) {
-			$availablePageTypeIDs[] = $cct->getCollectionTypeID();
+		$availablePageTemplates = $this->getComposerPageTemplateObjects();
+		$availablePageTemplateIDs = array();
+		foreach($availablePageTemplates as $ppt) {
+			$availablePageTemplateIDs[] = $ppt->getPageTemplateID();
 		}
-		if (!is_object($ct)) {
-			$e->add(t('You must choose a page type.'));
-		} else if (!in_array($ct->getCollectionTypeID(), $availablePageTypeIDs)) {
+		if (!is_object($pt)) {
+			$e->add(t('You must choose a page template.'));
+		} else if (!in_array($pt->getPageTemplateID(), $availablePageTemplateIDs)) {
 			$e->add(t('This page type is not a valid page type for this composer.'));
 		}
 		return $e;
@@ -382,8 +377,8 @@ class Concrete5_Model_Composer extends Object {
 	 * Validates an entire request, from create draft, individual controls, and publish location. Useful for front-end forms that make use of composer without
 	 * interim steps like autosave
 	 */
-	public function validatePublishRequest($ct, $parent) {
-		$e = $this->validateCreateDraftRequest($ct);
+	public function validatePublishRequest($pt, $parent) {
+		$e = $this->validateCreateDraftRequest($pt);
 
 		$controls = ComposerControl::getList($this);
 		$outputControls = array();
@@ -401,7 +396,7 @@ class Concrete5_Model_Composer extends Object {
 		return $e;
 	}
 
-	public function createDraft(CollectionType $ct, $u = false) {
+	public function createDraft(PageTemplate $pt, $u = false) {
 		if (!is_object($u)) {
 			$u = new User();
 		}
@@ -418,7 +413,7 @@ class Concrete5_Model_Composer extends Object {
 
 		$parent = Page::getByPath(COMPOSER_DRAFTS_PAGE_PATH);
 		$data = array('cvIsApproved' => 0);
-		$p = $parent->add($ct, $data);
+		$p = $parent->add($this, $data, $pt);
 		$p->deactivate();
 
 		$db->Execute('update ComposerDrafts set cID = ? where cmpDraftID = ?', array($p->getCollectionID(), $cmpDraftID));

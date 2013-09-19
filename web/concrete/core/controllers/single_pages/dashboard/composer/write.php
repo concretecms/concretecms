@@ -107,19 +107,19 @@ EOL;
 		session_write_close();
 
 		$this->view($type, $id);
-		$ct = CollectionType::getByID($this->post('cmpPageTypeID'));
-		$availablePageTypes = $this->composer->getComposerPageTypeObjects();
+		$pt = PageTemplate::getByID($this->post('cmpPageTemplateID'));
+		$availablePageTemplates = $this->composer->getComposerPageTemplateObjects();
 
-		if (!is_object($ct) && count($availablePageTypes) == 1) {
-			$ct = $availablePageTypes[0];
+		if (!is_object($pt) && count($availablePageTemplates) == 1) {
+			$pt = $availablePageTemplates[0];
 		}
 
-		$this->error = $this->composer->validateCreateDraftRequest($ct);
+		$this->error = $this->composer->validateCreateDraftRequest($pt);
 
 		if (!$this->error->has()) {
 			// create the page
 			if (!is_object($this->draft)) {
-				$d = $this->composer->createDraft($ct);
+				$d = $this->composer->createDraft($pt);
 			} else {
 				$d = $this->draft;
 				$d->createNewCollectionVersion();
