@@ -4,7 +4,7 @@
 	$c = Page::getCurrentPage();
 	// retrieve all block composer controls attached to this page template.
 	$pt = PageTemplate::getByID($c->getPageTemplateID());
-	$controls = ComposerOutputControl::getListByPageTemplate($pt);
+	$controls = ComposerOutputControl::getList($pt);
 	$values = array();
 	foreach($controls as $control) {
 		$fls = ComposerFormLayoutSetControl::getByID($control->getComposerFormLayoutSetControlID());

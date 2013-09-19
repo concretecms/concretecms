@@ -40,7 +40,7 @@ class Concrete5_Model_ComposerFormLayoutSetControl extends Object {
 		foreach($pagetemplates as $pt) {
 			$outputcontrol = ComposerOutputControl::getByComposerFormLayoutSetControl($pt, $this);
 			if (!is_object($outputcontrol)) {
-				ComposerOutputControl::add($this, $pt, STACKS_AREA_NAME);
+				ComposerOutputControl::add($this, $pt);
 			}
 		}
 	}
