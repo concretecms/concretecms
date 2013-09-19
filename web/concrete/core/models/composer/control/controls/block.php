@@ -26,25 +26,34 @@ class Concrete5_Model_BlockComposerControl extends ComposerControl {
 	}
 
 	public function removeComposerControlFromDraft() {
-		$b = $this->getComposerControlBlockObject();
+		$b = $this->getComposerControlBlockObject($this->cmpDraftObject);
 		$b->deleteBlock();
 	}
 
-	protected function getComposerControlBlockObject() {
+	protected function getComposerControlBlockObject(ComposerDraft $cmpDraft) {
+		$db = Loader::db();
 		if (!is_object($this->b)) {
-			$c = $this->cmpDraftObject->getComposerDraftCollectionObject();
-			$ct = CollectionType::getByID($c->getCollectionTypeID());
 			$setControl = $this->getComposerFormLayoutSetControlObject();
-			$outputControl = $setControl->getComposerOutputControlObject($ct);
-			$arHandle = $outputControl->getComposerOutputControlAreaHandle();
-			$db = Loader::db();
-			$bID = $db->GetOne('select bID from ComposerDraftBlocks where cmpDraftID = ? and cmpFormLayoutSetControlID = ?', array(
-				$this->cmpDraftObject->getComposerDraftID(), $setControl->getComposerFormLayoutSetControlID()
+			$c = $cmpDraft->getComposerDraftCollectionObject();
+			$r = $db->GetRow('select bID, arHandle from ComposerDraftBlocks where cmpDraftID = ? and cmpFormLayoutSetControlID = ?', array(
+				$cmpDraft->getComposerDraftID(), $setControl->getComposerFormLayoutSetControlID()
 			));
-			$b = Block::getByID($bID, $c, $arHandle);
-			$this->setComposerControlBlockObject($b);
+			if (!$r['bID']) {
+				// this is the first run. so we look for the proxy block.
+				$pt = PageTemplate::getByID($c->getPageTemplateID());
+				$outputControl = $setControl->getComposerOutputControlObject($pt);
+				$cm = $cmpDraft->getComposerObject();
+				$mc = $cm->getComposerPageTemplateDefaultPageObject($pt);
+				$r = $db->GetRow('select bco.bID, cvb.arHandle from btCoreComposerControlOutput bco inner join CollectionVersionBlocks cvb on cvb.bID = bco.bID where cmpOutputControlID = ? and cvb.cID = ?', array(
+					$outputControl->getComposerOutputControlID(), $mc->getCollectionID()
+				));
+			}
+			if ($r['bID']) {
+				$b = Block::getByID($r['bID'], $c, $r['arHandle']);
+				$this->setComposerControlBlockObject($b);
+				return $this->b;
+			}
 		}
-		return $this->b;
 	}
 
 	public function setComposerControlBlockObject($b) {
@@ -78,7 +87,7 @@ class Concrete5_Model_BlockComposerControl extends ComposerControl {
 		$bt = $this->getBlockTypeObject();
 		$controller = $bt->getController();				
 		if (method_exists($controller, 'isComposerControlDraftValueEmpty')) {
-			$bx = $this->getComposerControlBlockObject();
+			$bx = $this->getComposerControlBlockObject($this->cmpDraftObject);
 			if (is_object($bx)) {
 				$controller = $bx->getController();
 				return $controller->isComposerControlDraftValueEmpty();
@@ -176,25 +185,17 @@ class Concrete5_Model_BlockComposerControl extends ComposerControl {
 
 	public function getComposerControlDraftValue() {
 		if (is_object($this->cmpDraftObject)) {
-			$c = $this->cmpDraftObject->getComposerDraftCollectionObject();
-			$ct = CollectionType::getByID($c->getCollectionTypeID());
-			$setControl = $this->getComposerFormLayoutSetControlObject();
-			$outputControl = $setControl->getComposerOutputControlObject($ct);
-			$arHandle = $outputControl->getComposerOutputControlAreaHandle();
-			$db = Loader::db();
-			$bID = $db->GetOne('select bID from ComposerDraftBlocks where cmpDraftID = ? and cmpFormLayoutSetControlID = ?', array(
-				$this->cmpDraftObject->getComposerDraftID(), $setControl->getComposerFormLayoutSetControlID()
-			));
-			return Block::getByID($bID, $c, $arHandle);
+			return $this->getComposerControlBlockObject($this->cmpDraftObject);
 		}
 	}
 	public function publishToPage(ComposerDraft $d, $data, $controls) {
 		$c = $d->getComposerDraftCollectionObject();
 		// for blocks, we need to also grab their output 
 		$bt = $this->getBlockTypeObject();
-		$ct = CollectionType::getByID($c->getCollectionTypeID());
+		$pt = PageTemplate::getByID($c->getPageTemplateID());
 		$setControl = $this->getComposerFormLayoutSetControlObject();
 
+		$b = $this->getComposerControlBlockObject($d);
 		// delete the block that this set control has placed on this version, because
 		// we are going to replace it with a new one.
 		$db = Loader::db();
@@ -202,21 +203,19 @@ class Concrete5_Model_BlockComposerControl extends ComposerControl {
 		$v = array($c->getVersionID(), $setControl->getComposerFormLayoutSetControlID(), $d->getComposerDraftID());
 		$row = $db->GetRow($q, $v);
 		if ($row['bID'] && $row['arHandle']) {
-			$ob = Block::getByID($row['bID'], $c, $row['arHandle']);
-			$ob->deleteBlock();
 			$db->Execute('delete from ComposerDraftBlocks where cmpFormLayoutSetControlID = ? and cmpDraftID = ?', array($setControl->getComposerFormLayoutSetControlID(), $d->getComposerDraftID()));
 		}
 
-		$outputControl = $setControl->getComposerOutputControlObject($ct);
-		$arHandle = $outputControl->getComposerOutputControlAreaHandle();
+		$arHandle = $b->getAreaHandle();
+		$b->deleteBlock();
 		$ax = Area::getOrCreate($c, $arHandle);
 		$b = $c->addBlock($bt, $ax, $data);
 		$this->setComposerControlBlockObject($b);
 
 		// make a reference to the new block
 		$db = Loader::db();
-		$db->Execute('insert into ComposerDraftBlocks (cmpDraftID, cmpFormLayoutSetControlID, bID) values (?, ?, ?)', array(
-			$d->getComposerDraftID(), $setControl->getComposerFormLayoutSetControlID(), $b->getBlockID()
+		$db->Execute('insert into ComposerDraftBlocks (cmpDraftID, arHandle, cmpFormLayoutSetControlID, bID) values (?, ?, ?, ?)', array(
+			$d->getComposerDraftID(), $arHandle, $setControl->getComposerFormLayoutSetControlID(), $b->getBlockID()
 		));
 	}
 

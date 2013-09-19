@@ -208,6 +208,8 @@
       <notnull />
       <default value="0" />
     </field>
+    <field name="arHandle" type="C" size="255">
+    </field>
     <field name="cmpFormLayoutSetControlID" type="I" size="10">
       <unsigned/>
       <default value="0" />
@@ -3146,6 +3148,11 @@
   </table>
   <table name="Pages">
     <field name="cID" type="I" size="10">
+      <key/>
+      <default value="0"/>
+      <unsigned/>
+    </field>
+    <field name="cmpID" type="I" size="10">
       <key/>
       <default value="0"/>
       <unsigned/>

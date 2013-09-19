@@ -2053,10 +2053,10 @@ class Concrete5_Model_Page extends Collection {
 	* @return page
 	**/
 	
-	public function add(CollectionType $ct, $data) {
+	public function add($ct, $data, $template = false) {
 		$db = Loader::db();
 		$txt = Loader::helper('text');
-		
+
 		// the passed collection is the parent collection
 		$cParentID = $this->getCollectionID();
 
@@ -2070,8 +2070,6 @@ class Concrete5_Model_Page extends Collection {
 		
 		if (isset($data['pkgID'])) {
 			$pkgID = $data['pkgID'];
-		} else if ($ct->getPackageID() > 0) {
-			$pkgID = $ct->getPackageID();
 		} else {
 			$pkgID = 0;
 		}
@@ -2091,25 +2089,41 @@ class Concrete5_Model_Page extends Collection {
 		$dh = Loader::helper('date');
 		$cDate = $dh->getSystemDateTime();
 		$cDatePublic = ($data['cDatePublic']) ? $data['cDatePublic'] : null;		
-		
-		$data['ctID'] = $ct->getCollectionTypeID();
-		if ($ct->getCollectionTypeHandle() == STACKS_PAGE_TYPE) {
-			$data['cvIsNew'] = 0;
+
+		// THIS IS TEMPORARY
+		$cmpID = 0;
+		if ($ct instanceof CollectionType) {
+			$data['ctID'] = $ct->getCollectionTypeID();
+			if ($ct->getCollectionTypeHandle() == STACKS_PAGE_TYPE) {
+				$data['cvIsNew'] = 0;
+			}
+			if ($ct->getPackageID() > 0) {
+				$pkgID = $ct->getPackageID();
+			}
+			$q = "select p.cID from Pages p inner join CollectionVersions cv on p.cID = cv.cID where cv.ctID = ? and cIsTemplate = 1";
+			$masterCID = $db->getOne($q, array($ct->getCollectionTypeID()));
+
+		} else if ($ct instanceof Composer) {
+			$cmpID = $ct->getComposerID();
+			$mc = $ct->getComposerPageTemplateDefaultPageObject($template);
+			$masterCID = $mc->getCollectionID();
 		}
+
+		if ($template instanceof PageTemplate) {
+			$data['pTemplateID'] = $template->getPageTemplateID();
+		}
+
 		$cobj = parent::add($data);		
 		$cID = $cobj->getCollectionID();		
-		$ctID = $ct->getCollectionTypeID();
 
-		$q = "select p.cID from Pages p inner join CollectionVersions cv on p.cID = cv.cID where cv.ctID = '$ctID' and cIsTemplate = '1'";
-		$masterCID = $db->getOne($q);
 		//$this->rescanChildrenDisplayOrder();
 		$cDisplayOrder = $this->getNextSubPageDisplayOrder();
 
 		$cInheritPermissionsFromCID = ($this->overrideTemplatePermissions()) ? $this->getPermissionsCollectionID() : $masterCID;
 		$cInheritPermissionsFrom = ($this->overrideTemplatePermissions()) ? "PARENT" : "TEMPLATE";
 		$ptID = $this->getCollectionThemeID();
-		$v = array($cID, $cParentID, $uID, $cInheritPermissionsFrom, $this->overrideTemplatePermissions(), $cInheritPermissionsFromCID, $cDisplayOrder, $pkgID);
-		$q = "insert into Pages (cID, cParentID, uID, cInheritPermissionsFrom, cOverrideTemplatePermissions, cInheritPermissionsFromCID, cDisplayOrder, pkgID) values (?, ?, ?, ?, ?, ?, ?, ?)";
+		$v = array($cID, $cmpID, $cParentID, $uID, $cInheritPermissionsFrom, $this->overrideTemplatePermissions(), $cInheritPermissionsFromCID, $cDisplayOrder, $pkgID);
+		$q = "insert into Pages (cID, cmpID, cParentID, uID, cInheritPermissionsFrom, cOverrideTemplatePermissions, cInheritPermissionsFromCID, cDisplayOrder, pkgID) values (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		$r = $db->prepare($q);
 		$res = $db->execute($r, $v);
 

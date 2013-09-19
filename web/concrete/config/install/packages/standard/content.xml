@@ -36,7 +36,7 @@
                     <control custom-template="" required="1" custom-label="Post Name" type="core_page_property" handle="name"/>
                     <control custom-template="" custom-label="" type="core_page_property" handle="description"/>
                     <control custom-template="" custom-label="" type="core_page_property" handle="url_slug"/>
-                    <control custom-template="" custom-label="" type="core_page_property" handle="page_type"/>
+                    <control custom-template="" custom-label="" type="core_page_property" handle="page_template"/>
                     <control custom-template="" custom-label="" type="core_page_property" handle="publish_target"/>
                 </set>
                 <set name="Navigation">

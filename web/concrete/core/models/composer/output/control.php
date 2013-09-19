@@ -6,7 +6,6 @@ class Concrete5_Model_ComposerOutputControl extends Object {
 	public function getComposerOutputControlDisplayOrderID() {return $this->cmpOutputControlDisplayOrder;}
 	public function getComposerFormLayoutSetControlID() {return $this->cmpFormLayoutSetControlID;}
 	public function getComposerFormLayoutSetID() {return $this->cmpFormLayoutSetID;}
-	public function getComposerOutputControlAreaHandle() {return $this->arHandle;}
 
 	public static function add(ComposerFormLayoutSetControl $control, PageTemplate $pt, $arHandle) {
 

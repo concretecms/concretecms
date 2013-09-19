@@ -124,9 +124,9 @@ class Concrete5_Model_ComposerFormLayoutSetControl extends Object {
 		$this->cmpFormLayoutSetControlCustomTemplate = $template;
 	}
 
-	public function getComposerOutputControlObject(CollectionType $ct) {
+	public function getComposerOutputControlObject(PageTemplate $pt) {
 		$db = Loader::db();
-		$cmpOutputControlID = $db->GetOne('select cmpOutputControlID from ComposerOutputControls where cmpFormLayoutSetControlID = ? and ctID = ?', array($this->cmpFormLayoutSetControlID, $ct->getCollectionTypeID()));
+		$cmpOutputControlID = $db->GetOne('select cmpOutputControlID from ComposerOutputControls where cmpFormLayoutSetControlID = ? and pTemplateID = ?', array($this->cmpFormLayoutSetControlID, $pt->getPageTemplateID()));
 		if ($cmpOutputControlID) {
 			return ComposerOutputControl::getByID($cmpOutputControlID);
 		}
