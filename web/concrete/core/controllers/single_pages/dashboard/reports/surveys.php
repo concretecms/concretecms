@@ -1,31 +1,27 @@
-<?
-defined('C5_EXECUTE') or die("Access Denied.");
-Loader::block('survey');
-
-/*	Formats dates to a human-readable form.
-	Example Input:  2009-03-11 15:00:00 
-	Example Output: 3/11/2009 at 3:20 pm */
-function formatDate($InputTime) {
-	$dh = Loader::helper('date');
-	if (defined('DATE_APP_SURVEY_RESULTS')) {
-		return date(DATE_APP_SURVEY_RESULTS, strtotime($InputTime));
-	}
-	
-	$InputTime = $dh->getLocalDateTime($InputTime);
-	$timestamp = strtotime($InputTime);
-	if ($timestamp) { // If today
-		if ($timestamp >= strtotime(date('n/d/y'))) {
-			return 'Today at ' . date('g:i a', $timestamp);
-		}
-		else { // If day in past
-			return date('n/j/y \a\t g:i a', $timestamp);
-		}
-	}	
-	return;
-}
+<?php defined('C5_EXECUTE') or die("Access Denied.");
 
 class Concrete5_Controller_Dashboard_Reports_Surveys extends Controller {
-	
+
+	public function formatDate($inputTime) {
+		if(empty($inputTime)) {
+			return '';
+		}
+		$dh = Loader::helper('date');
+		$inputTime = $dh->getLocalDateTime($inputTime);
+		if (defined('DATE_APP_SURVEY_RESULTS')) {
+			return $dh->date(DATE_APP_SURVEY_RESULTS, strtotime($inputTime));
+		}
+		$timestamp = strtotime($inputTime);
+		if ($timestamp >= strtotime(date('n/d/y'))) {
+			// Today
+			return t(/*i18n %s is a time */'Today at %s', $dh->date(DATE_APP_GENERIC_T, $timestamp));
+		}
+		else {
+			// If day in past
+			return $dh->date(DATE_APP_GENERIC_MDYT, $timestamp);
+		}
+	}
+
 	public function viewDetail($bID = 0, $cID = 0) {
 		// If a valid bID and cID are set, get the corresponding data
 		if ($bID > 0 && $cID > 0) {
@@ -75,7 +71,7 @@ class Concrete5_Controller_Dashboard_Reports_Surveys extends Controller {
 			foreach ($r as $row) {
 				$details[$i]['option'] = $row['optionName'];
 				$details[$i]['ipAddress'] = $row['ipAddress'];
-				$details[$i]['date'] = formatDate($row['timestamp']);
+				$details[$i]['date'] = $this->formatDate($row['timestamp']);
 				$details[$i]['user'] = $row['uName'];
 				$current_survey = $row['question'];
 				$i++;
