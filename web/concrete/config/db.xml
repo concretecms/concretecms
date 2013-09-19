@@ -153,24 +153,6 @@
     </field>
   </table>
 
-  <table name="ComposerOutputAreas">
-    <field name="cmpOutputAreaID" type="I" size="10">
-      <key/>
-      <autoincrement/>
-      <unsigned/>
-    </field>
-    <field name="pTemplateID" type="I" size="10">
-      <unsigned/>
-      <default value="0" />
-    </field>
-    <field name="arHandle" type="C" size="255">
-    </field>
-   <field name="cmpID" type="I" size="10">
-      <unsigned/>
-      <default value="0" />
-    </field>
-  </table>
-
   <table name="ComposerOutputControls">
     <field name="cmpOutputControlID" type="I" size="10">
       <key/>
@@ -181,17 +163,11 @@
       <unsigned/>
       <default value="0" />
     </field>
-    <field name="arHandle" type="C" size="255">
-    </field>
    <field name="cmpID" type="I" size="10">
       <unsigned/>
       <default value="0" />
     </field>
    <field name="cmpFormLayoutSetControlID" type="I" size="10">
-      <unsigned/>
-      <default value="0" />
-    </field>
-    <field name="cmpOutputControlDisplayOrder" type="I" size="10">
       <unsigned/>
       <default value="0" />
     </field>
