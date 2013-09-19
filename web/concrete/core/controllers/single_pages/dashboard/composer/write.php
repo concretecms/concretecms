@@ -121,8 +121,14 @@ EOL;
 			if (!is_object($this->draft)) {
 				$d = $this->composer->createDraft($pt);
 			} else {
+				// if we have a draft, but the page type has changed, we create a new one.
 				$d = $this->draft;
-				$d->createNewCollectionVersion();
+				$dc = $d->getComposerDraftCollectionObject();
+				if ($dc->getPageTemplateID() != $_POST['cmpPageTemplateID']) {
+					$d = $this->composer->createDraft($pt);
+				} else {
+					$d->createNewCollectionVersion();
+				}
 			}
 
 			/// set the target

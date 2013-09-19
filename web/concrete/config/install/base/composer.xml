@@ -10,374 +10,332 @@
         <type handle="collection_attribute" name="Custom Attributes" package="" />
         <type handle="block" name="Block" package="" />
     </composercontroltypes>
-    <composers>
-        <composer name="Page">
-            <pagetemplates type="all" default="full" />
-            <target handle="all" package="" />
-            <formlayout>
-                <set name="Basics">
-                    <control custom-template="" required="1" custom-label="Page Name" type="core_page_property" handle="name"/>
-                    <control custom-template="" custom-label="" type="core_page_property" handle="description"/>
-                    <control custom-template="" custom-label="" type="core_page_property" handle="url_slug"/>
-                    <control custom-template="" custom-label="" type="core_page_property" handle="page_template"/>
-                    <control custom-template="" custom-label="" type="core_page_property" handle="publish_target"/>
-                </set>
-                <set name="Content">
-                    <control custom-template="" custom-label="Body" output-control-id="jflDIFUDK" type="block" handle="content"/>
-                </set>
-            </formlayout>
-            <output>
-            <pagetemplate handle="full">
-              <page name="" path="" filename="" pagetype="" user="admin" description="" package="">
-                <area name="Main">
-                  <block type="image" name="" mc-block-id="4lmkJEaa">
-                    <data table="btContentImage">
-                      <record>
-                        <fID>{ccm:export:file:inneroptics_dot_net_aspens.jpg}</fID>
-                        <fOnstateID/>
-                        <maxWidth><![CDATA[0]]></maxWidth>
-                        <maxHeight><![CDATA[0]]></maxHeight>
-                        <externalLink><![CDATA[]]></externalLink>
-                        <internalLinkCID><![CDATA[0]]></internalLinkCID>
-                        <forceImageToMatchDimensions><![CDATA[0]]></forceImageToMatchDimensions>
-                        <altText><![CDATA[]]></altText>
-                      </record>
-                    </data>
-                  </block>
-                </area>
-                <area name="Left"/>
-                <area name="Right"/>
-                <area name="Main Sub">
-                  <block type="core_composer_control_output" name="" mc-block-id="XJuF4oFO">
-                    <data table="btCoreComposerControlOutput">
-                      <record>
-                        <cmpOutputControlID><![CDATA[1]]></cmpOutputControlID>
-                      </record>
-                    </data>
-                  </block>
-                  <block type="core_conversation" name="" mc-block-id="Y4hDKWMS">
-                    <data table="btCoreConversation">
-                      <record>
-                        <cnvID><![CDATA[1]]></cnvID>
-                        <enablePosting><![CDATA[1]]></enablePosting>
-                        <paginate><![CDATA[1]]></paginate>
-                        <itemsPerPage><![CDATA[50]]></itemsPerPage>
-                        <displayMode><![CDATA[threaded]]></displayMode>
-                        <orderBy><![CDATA[date_asc]]></orderBy>
-                        <enableOrdering><![CDATA[1]]></enableOrdering>
-                        <enableCommentRating><![CDATA[1]]></enableCommentRating>
-                        <displayPostingForm><![CDATA[top]]></displayPostingForm>
-                        <addMessageLabel><![CDATA[Add Message]]></addMessageLabel>
-                        <dateFormat><![CDATA[default]]></dateFormat>
-                        <customDateFormat><![CDATA[]]></customDateFormat>
-                        <maxFilesGuest><![CDATA[0]]></maxFilesGuest>
-                        <maxFilesRegistered><![CDATA[0]]></maxFilesRegistered>
-                        <maxFileSizeGuest><![CDATA[0]]></maxFileSizeGuest>
-                        <maxFileSizeRegistered><![CDATA[0]]></maxFileSizeRegistered>
-                        <fileExtensions><![CDATA[]]></fileExtensions>
-                        <insertNewMessages><![CDATA[top]]></insertNewMessages>
-                      </record>
-                    </data>
-                  </block>
-                </area>
-              </page>
-            </pagetemplate>
-            <pagetemplate handle="left_sidebar">
-              <page name="" path="" filename="" pagetype="" user="admin" description="" package="">
-                <area name="Main">
-                  <block type="image" name="" mc-block-id="koN8QuNl">
-                    <data table="btContentImage">
-                      <record>
-                        <fID>{ccm:export:file:inneroptics_dot_net_aspens.jpg}</fID>
-                        <fOnstateID/>
-                        <maxWidth><![CDATA[0]]></maxWidth>
-                        <maxHeight><![CDATA[0]]></maxHeight>
-                        <externalLink><![CDATA[]]></externalLink>
-                        <internalLinkCID><![CDATA[0]]></internalLinkCID>
-                        <forceImageToMatchDimensions><![CDATA[0]]></forceImageToMatchDimensions>
-                        <altText><![CDATA[]]></altText>
-                      </record>
-                    </data>
-                  </block>
-                </area>
-                <area name="Left">
-                  <block type="core_composer_control_output" name="" mc-block-id="a9TwRBpH">
-                    <data table="btCoreComposerControlOutput">
-                      <record>
-                        <cmpOutputControlID><![CDATA[2]]></cmpOutputControlID>
-                      </record>
-                    </data>
-                  </block>
-                </area>
-                <area name="Right"/>
-                <area name="Main Sub">
-                  <block type="core_conversation" name="" mc-block-id="RmznPHDT">
-                    <data table="btCoreConversation">
-                      <record>
-                        <cnvID><![CDATA[2]]></cnvID>
-                        <enablePosting><![CDATA[1]]></enablePosting>
-                        <paginate><![CDATA[1]]></paginate>
-                        <itemsPerPage><![CDATA[50]]></itemsPerPage>
-                        <displayMode><![CDATA[threaded]]></displayMode>
-                        <orderBy><![CDATA[date_asc]]></orderBy>
-                        <enableOrdering><![CDATA[1]]></enableOrdering>
-                        <enableCommentRating><![CDATA[1]]></enableCommentRating>
-                        <displayPostingForm><![CDATA[top]]></displayPostingForm>
-                        <addMessageLabel><![CDATA[Add Message]]></addMessageLabel>
-                        <dateFormat><![CDATA[default]]></dateFormat>
-                        <customDateFormat><![CDATA[]]></customDateFormat>
-                        <maxFilesGuest><![CDATA[0]]></maxFilesGuest>
-                        <maxFilesRegistered><![CDATA[0]]></maxFilesRegistered>
-                        <maxFileSizeGuest><![CDATA[0]]></maxFileSizeGuest>
-                        <maxFileSizeRegistered><![CDATA[0]]></maxFileSizeRegistered>
-                        <fileExtensions><![CDATA[]]></fileExtensions>
-                        <insertNewMessages><![CDATA[top]]></insertNewMessages>
-                      </record>
-                    </data>
-                  </block>
-                </area>
-              </page>
-            </pagetemplate>
-            <pagetemplate handle="right_sidebar">
-              <page name="" path="" filename="" pagetype="" user="admin" description="" package="">
-                <area name="Main">
-                  <block type="image" name="" mc-block-id="4YkOR8aF">
-                    <data table="btContentImage">
-                      <record>
-                        <fID>{ccm:export:file:inneroptics_dot_net_aspens.jpg}</fID>
-                        <fOnstateID/>
-                        <maxWidth><![CDATA[0]]></maxWidth>
-                        <maxHeight><![CDATA[0]]></maxHeight>
-                        <externalLink><![CDATA[]]></externalLink>
-                        <internalLinkCID><![CDATA[0]]></internalLinkCID>
-                        <forceImageToMatchDimensions><![CDATA[0]]></forceImageToMatchDimensions>
-                        <altText><![CDATA[]]></altText>
-                      </record>
-                    </data>
-                  </block>
-                </area>
-                <area name="Left">
-                  <block type="core_composer_control_output" name="" mc-block-id="x6a01gVI">
-                    <data table="btCoreComposerControlOutput">
-                      <record>
-                        <cmpOutputControlID><![CDATA[3]]></cmpOutputControlID>
-                      </record>
-                    </data>
-                  </block>
-                </area>
-                <area name="Right">
-                  <block type="autonav" name="" mc-block-id="cJrZMAKN">
-                    <data table="btNavigation">
-                      <record>
-                        <orderBy><![CDATA[display_asc]]></orderBy>
-                        <displayPages><![CDATA[top]]></displayPages>
-                        <displayPagesCID/>
-                        <displayPagesIncludeSelf><![CDATA[0]]></displayPagesIncludeSelf>
-                        <displaySubPages><![CDATA[none]]></displaySubPages>
-                        <displaySubPageLevels><![CDATA[enough]]></displaySubPageLevels>
-                        <displaySubPageLevelsNum><![CDATA[0]]></displaySubPageLevelsNum>
-                        <displayUnavailablePages><![CDATA[0]]></displayUnavailablePages>
-                      </record>
-                    </data>
-                  </block>
-                </area>
-                <area name="Main Sub"/>
-              </page>
-            </pagetemplate>
-            <pagetemplate handle="two_column">
-              <page name="" path="" filename="" pagetype="" user="admin" description="" package="">
-                <area name="Main"/>
-                <area name="Column One"/>
-                <area name="Column Two"/>
-              </page>
-            </pagetemplate>
+  <composers>
+    <composer name="Page">
+      <pagetemplates type="all" default="full"/>
+      <target handle="all" package=""/>
+      <formlayout>
+        <set name="Basics">
+          <control custom-template="" required="1" custom-label="Page Name" type="core_page_property" handle="name"/>
+          <control custom-template="" custom-label="" type="core_page_property" handle="description"/>
+          <control custom-template="" custom-label="" type="core_page_property" handle="url_slug"/>
+          <control custom-template="" custom-label="" type="core_page_property" handle="page_template"/>
+          <control custom-template="" custom-label="" type="core_page_property" handle="publish_target"/>
+        </set>
+        <set name="Content">
+          <control custom-template="" custom-label="Body" output-control-id="EcjltFnE" type="block" handle="content"/>
+        </set>
+      </formlayout>
+      <output>
+        <pagetemplate handle="full">
+          <page name="" path="" filename="" pagetype="" user="admin" description="" package="">
+            <area name="Main">
+              <block type="image" name="" mc-block-id="QUJzm7gv">
+                <data table="btContentImage">
+                  <record>
+                    <fID/>
+                    <fOnstateID/>
+                    <maxWidth><![CDATA[0]]></maxWidth>
+                    <maxHeight><![CDATA[0]]></maxHeight>
+                    <externalLink><![CDATA[]]></externalLink>
+                    <internalLinkCID><![CDATA[0]]></internalLinkCID>
+                    <forceImageToMatchDimensions><![CDATA[0]]></forceImageToMatchDimensions>
+                    <altText><![CDATA[]]></altText>
+                  </record>
+                </data>
+              </block>
+            </area>
+            <area name="Main Sub">
+              <block type="core_composer_control_output" name="" mc-block-id="n27l4Ba2">
+                <control output-control-id="EcjltFnE"/>
+              </block>
+              <block type="core_conversation" name="" mc-block-id="5uNTpIOP">
+                <data table="btCoreConversation">
+                  <record>
+                    <cnvID><![CDATA[1]]></cnvID>
+                    <enablePosting><![CDATA[1]]></enablePosting>
+                    <paginate><![CDATA[1]]></paginate>
+                    <itemsPerPage><![CDATA[50]]></itemsPerPage>
+                    <displayMode><![CDATA[threaded]]></displayMode>
+                    <orderBy><![CDATA[date_asc]]></orderBy>
+                    <enableOrdering><![CDATA[1]]></enableOrdering>
+                    <enableCommentRating><![CDATA[1]]></enableCommentRating>
+                    <displayPostingForm><![CDATA[top]]></displayPostingForm>
+                    <addMessageLabel><![CDATA[Add Message]]></addMessageLabel>
+                    <dateFormat><![CDATA[default]]></dateFormat>
+                    <customDateFormat><![CDATA[]]></customDateFormat>
+                    <maxFilesGuest><![CDATA[0]]></maxFilesGuest>
+                    <maxFilesRegistered><![CDATA[0]]></maxFilesRegistered>
+                    <maxFileSizeGuest><![CDATA[0]]></maxFileSizeGuest>
+                    <maxFileSizeRegistered><![CDATA[0]]></maxFileSizeRegistered>
+                    <fileExtensions><![CDATA[]]></fileExtensions>
+                    <insertNewMessages><![CDATA[top]]></insertNewMessages>
+                  </record>
+                </data>
+              </block>
+            </area>
+          </page>
+        </pagetemplate>
+        <pagetemplate handle="left_sidebar">
+          <page name="" path="" filename="" pagetype="" user="admin" description="" package="">
+            <area name="Main">
+              <block type="image" name="" mc-block-id="S3eTGlFz">
+                <data table="btContentImage">
+                  <record>
+                    <fID/>
+                    <fOnstateID/>
+                    <maxWidth><![CDATA[0]]></maxWidth>
+                    <maxHeight><![CDATA[0]]></maxHeight>
+                    <externalLink><![CDATA[]]></externalLink>
+                    <internalLinkCID><![CDATA[0]]></internalLinkCID>
+                    <forceImageToMatchDimensions><![CDATA[0]]></forceImageToMatchDimensions>
+                    <altText><![CDATA[]]></altText>
+                  </record>
+                </data>
+              </block>
+            </area>
+            <area name="Left">
+              <block type="core_composer_control_output" name="" mc-block-id="3yCWaFmU">
+                <control output-control-id="EcjltFnE"/>
+              </block>
+            </area>
+            <area name="Main Sub">
+              <block type="core_conversation" name="" mc-block-id="SfesEKtx">
+                <data table="btCoreConversation">
+                  <record>
+                    <cnvID><![CDATA[2]]></cnvID>
+                    <enablePosting><![CDATA[1]]></enablePosting>
+                    <paginate><![CDATA[1]]></paginate>
+                    <itemsPerPage><![CDATA[50]]></itemsPerPage>
+                    <displayMode><![CDATA[threaded]]></displayMode>
+                    <orderBy><![CDATA[date_asc]]></orderBy>
+                    <enableOrdering><![CDATA[1]]></enableOrdering>
+                    <enableCommentRating><![CDATA[1]]></enableCommentRating>
+                    <displayPostingForm><![CDATA[top]]></displayPostingForm>
+                    <addMessageLabel><![CDATA[Add Message]]></addMessageLabel>
+                    <dateFormat><![CDATA[default]]></dateFormat>
+                    <customDateFormat><![CDATA[]]></customDateFormat>
+                    <maxFilesGuest><![CDATA[0]]></maxFilesGuest>
+                    <maxFilesRegistered><![CDATA[0]]></maxFilesRegistered>
+                    <maxFileSizeGuest><![CDATA[0]]></maxFileSizeGuest>
+                    <maxFileSizeRegistered><![CDATA[0]]></maxFileSizeRegistered>
+                    <fileExtensions><![CDATA[]]></fileExtensions>
+                    <insertNewMessages><![CDATA[top]]></insertNewMessages>
+                  </record>
+                </data>
+              </block>
+            </area>
+          </page>
+        </pagetemplate>
+        <pagetemplate handle="right_sidebar">
+          <page name="" path="" filename="" pagetype="" user="admin" description="" package="">
+            <area name="Main">
+              <block type="image" name="" mc-block-id="AmsNhaIg">
+                <data table="btContentImage">
+                  <record>
+                    <fID/>
+                    <fOnstateID/>
+                    <maxWidth><![CDATA[0]]></maxWidth>
+                    <maxHeight><![CDATA[0]]></maxHeight>
+                    <externalLink><![CDATA[]]></externalLink>
+                    <internalLinkCID><![CDATA[0]]></internalLinkCID>
+                    <forceImageToMatchDimensions><![CDATA[0]]></forceImageToMatchDimensions>
+                    <altText><![CDATA[]]></altText>
+                  </record>
+                </data>
+              </block>
+            </area>
+            <area name="Left">
+              <block type="core_composer_control_output" name="" mc-block-id="zzzZJYY4">
+                <control output-control-id="EcjltFnE"/>
+              </block>
+            </area>
+            <area name="Right">
+              <block type="autonav" name="" mc-block-id="LY8E8K5A">
+                <data table="btNavigation">
+                  <record>
+                    <orderBy><![CDATA[display_asc]]></orderBy>
+                    <displayPages><![CDATA[top]]></displayPages>
+                    <displayPagesCID/>
+                    <displayPagesIncludeSelf><![CDATA[0]]></displayPagesIncludeSelf>
+                    <displaySubPages><![CDATA[none]]></displaySubPages>
+                    <displaySubPageLevels><![CDATA[enough]]></displaySubPageLevels>
+                    <displaySubPageLevelsNum><![CDATA[0]]></displaySubPageLevelsNum>
+                    <displayUnavailablePages><![CDATA[0]]></displayUnavailablePages>
+                  </record>
+                </data>
+              </block>
+            </area>
+          </page>
+        </pagetemplate>
+        <pagetemplate handle="two_column">
+          <page name="" path="" filename="" pagetype="" user="admin" description="" package=""/>
+        </pagetemplate>
       </output>
-        </composer>
-
-
-        <composer name="Test">
-            <pagetemplates type="all" default="full" />
-            <target handle="parent_page" page="" package="" />
-            <formlayout>
-                <set name="Basics">
-                    <control custom-template="" required="1" custom-label="Page Name" type="core_page_property" handle="name"/>
-                    <control custom-template="" custom-label="" type="core_page_property" handle="description"/>
-                    <control custom-template="" custom-label="" type="core_page_property" handle="url_slug"/>
-                    <control custom-template="" custom-label="" type="core_page_property" handle="page_template"/>
-                    <control custom-template="" custom-label="" type="core_page_property" handle="publish_target"/>
-                </set>
-                <set name="Content">
-                    <control custom-template="" custom-label="Body" output-control-id="dfkJDKFJd" type="block" handle="content"/>
-                </set>
-            </formlayout>
-            <output>
-            <pagetemplate handle="full">
-              <page name="" path="" filename="" pagetype="" user="admin" description="" package="">
-                <area name="Main">
-                  <block type="image" name="" mc-block-id="4lmkJEaa">
-                    <data table="btContentImage">
-                      <record>
-                        <fID>{ccm:export:file:inneroptics_dot_net_aspens.jpg}</fID>
-                        <fOnstateID/>
-                        <maxWidth><![CDATA[0]]></maxWidth>
-                        <maxHeight><![CDATA[0]]></maxHeight>
-                        <externalLink><![CDATA[]]></externalLink>
-                        <internalLinkCID><![CDATA[0]]></internalLinkCID>
-                        <forceImageToMatchDimensions><![CDATA[0]]></forceImageToMatchDimensions>
-                        <altText><![CDATA[]]></altText>
-                      </record>
-                    </data>
-                  </block>
-                </area>
-                <area name="Left"/>
-                <area name="Right"/>
-                <area name="Main Sub">
-                  <block type="core_composer_control_output" name="" mc-block-id="XJuF4oFO">
-                    <data table="btCoreComposerControlOutput">
-                      <record>
-                        <cmpOutputControlID><![CDATA[4]]></cmpOutputControlID>
-                      </record>
-                    </data>
-                  </block>
-                  <block type="core_conversation" name="" mc-block-id="Y4hDKWMS">
-                    <data table="btCoreConversation">
-                      <record>
-                        <cnvID><![CDATA[1]]></cnvID>
-                        <enablePosting><![CDATA[1]]></enablePosting>
-                        <paginate><![CDATA[1]]></paginate>
-                        <itemsPerPage><![CDATA[50]]></itemsPerPage>
-                        <displayMode><![CDATA[threaded]]></displayMode>
-                        <orderBy><![CDATA[date_asc]]></orderBy>
-                        <enableOrdering><![CDATA[1]]></enableOrdering>
-                        <enableCommentRating><![CDATA[1]]></enableCommentRating>
-                        <displayPostingForm><![CDATA[top]]></displayPostingForm>
-                        <addMessageLabel><![CDATA[Add Message]]></addMessageLabel>
-                        <dateFormat><![CDATA[default]]></dateFormat>
-                        <customDateFormat><![CDATA[]]></customDateFormat>
-                        <maxFilesGuest><![CDATA[0]]></maxFilesGuest>
-                        <maxFilesRegistered><![CDATA[0]]></maxFilesRegistered>
-                        <maxFileSizeGuest><![CDATA[0]]></maxFileSizeGuest>
-                        <maxFileSizeRegistered><![CDATA[0]]></maxFileSizeRegistered>
-                        <fileExtensions><![CDATA[]]></fileExtensions>
-                        <insertNewMessages><![CDATA[top]]></insertNewMessages>
-                      </record>
-                    </data>
-                  </block>
-                </area>
-              </page>
-            </pagetemplate>
-            <pagetemplate handle="left_sidebar">
-              <page name="" path="" filename="" pagetype="" user="admin" description="" package="">
-                <area name="Main">
-                  <block type="image" name="" mc-block-id="koN8QuNl">
-                    <data table="btContentImage">
-                      <record>
-                        <fID>{ccm:export:file:inneroptics_dot_net_aspens.jpg}</fID>
-                        <fOnstateID/>
-                        <maxWidth><![CDATA[0]]></maxWidth>
-                        <maxHeight><![CDATA[0]]></maxHeight>
-                        <externalLink><![CDATA[]]></externalLink>
-                        <internalLinkCID><![CDATA[0]]></internalLinkCID>
-                        <forceImageToMatchDimensions><![CDATA[0]]></forceImageToMatchDimensions>
-                        <altText><![CDATA[]]></altText>
-                      </record>
-                    </data>
-                  </block>
-                </area>
-                <area name="Left">
-                  <block type="core_composer_control_output" name="" mc-block-id="a9TwRBpH">
-                    <data table="btCoreComposerControlOutput">
-                      <record>
-                        <cmpOutputControlID><![CDATA[5]]></cmpOutputControlID>
-                      </record>
-                    </data>
-                  </block>
-                </area>
-                <area name="Right"/>
-                <area name="Main Sub">
-                  <block type="core_conversation" name="" mc-block-id="RmznPHDT">
-                    <data table="btCoreConversation">
-                      <record>
-                        <cnvID><![CDATA[2]]></cnvID>
-                        <enablePosting><![CDATA[1]]></enablePosting>
-                        <paginate><![CDATA[1]]></paginate>
-                        <itemsPerPage><![CDATA[50]]></itemsPerPage>
-                        <displayMode><![CDATA[threaded]]></displayMode>
-                        <orderBy><![CDATA[date_asc]]></orderBy>
-                        <enableOrdering><![CDATA[1]]></enableOrdering>
-                        <enableCommentRating><![CDATA[1]]></enableCommentRating>
-                        <displayPostingForm><![CDATA[top]]></displayPostingForm>
-                        <addMessageLabel><![CDATA[Add Message]]></addMessageLabel>
-                        <dateFormat><![CDATA[default]]></dateFormat>
-                        <customDateFormat><![CDATA[]]></customDateFormat>
-                        <maxFilesGuest><![CDATA[0]]></maxFilesGuest>
-                        <maxFilesRegistered><![CDATA[0]]></maxFilesRegistered>
-                        <maxFileSizeGuest><![CDATA[0]]></maxFileSizeGuest>
-                        <maxFileSizeRegistered><![CDATA[0]]></maxFileSizeRegistered>
-                        <fileExtensions><![CDATA[]]></fileExtensions>
-                        <insertNewMessages><![CDATA[top]]></insertNewMessages>
-                      </record>
-                    </data>
-                  </block>
-                </area>
-              </page>
-            </pagetemplate>
-            <pagetemplate handle="right_sidebar">
-              <page name="" path="" filename="" pagetype="" user="admin" description="" package="">
-                <area name="Main">
-                  <block type="image" name="" mc-block-id="4YkOR8aF">
-                    <data table="btContentImage">
-                      <record>
-                        <fID>{ccm:export:file:inneroptics_dot_net_aspens.jpg}</fID>
-                        <fOnstateID/>
-                        <maxWidth><![CDATA[0]]></maxWidth>
-                        <maxHeight><![CDATA[0]]></maxHeight>
-                        <externalLink><![CDATA[]]></externalLink>
-                        <internalLinkCID><![CDATA[0]]></internalLinkCID>
-                        <forceImageToMatchDimensions><![CDATA[0]]></forceImageToMatchDimensions>
-                        <altText><![CDATA[]]></altText>
-                      </record>
-                    </data>
-                  </block>
-                </area>
-                <area name="Left">
-                  <block type="core_composer_control_output" name="" mc-block-id="x6a01gVI">
-                    <data table="btCoreComposerControlOutput">
-                      <record>
-                        <cmpOutputControlID><![CDATA[6]]></cmpOutputControlID>
-                      </record>
-                    </data>
-                  </block>
-                </area>
-                <area name="Right">
-                  <block type="autonav" name="" mc-block-id="cJrZMAKN">
-                    <data table="btNavigation">
-                      <record>
-                        <orderBy><![CDATA[display_asc]]></orderBy>
-                        <displayPages><![CDATA[top]]></displayPages>
-                        <displayPagesCID/>
-                        <displayPagesIncludeSelf><![CDATA[0]]></displayPagesIncludeSelf>
-                        <displaySubPages><![CDATA[none]]></displaySubPages>
-                        <displaySubPageLevels><![CDATA[enough]]></displaySubPageLevels>
-                        <displaySubPageLevelsNum><![CDATA[0]]></displaySubPageLevelsNum>
-                        <displayUnavailablePages><![CDATA[0]]></displayUnavailablePages>
-                      </record>
-                    </data>
-                  </block>
-                </area>
-                <area name="Main Sub"/>
-              </page>
-            </pagetemplate>
-            <pagetemplate handle="two_column">
-              <page name="" path="" filename="" pagetype="" user="admin" description="" package="">
-                <area name="Main"/>
-                <area name="Column One"/>
-                <area name="Column Two"/>
-              </page>
-            </pagetemplate>
+    </composer>
+    <composer name="Test">
+      <pagetemplates type="all" default="full"/>
+      <target handle="parent_page" package="" path=""/>
+      <formlayout>
+        <set name="Basics">
+          <control custom-template="" required="1" custom-label="Page Name" type="core_page_property" handle="name"/>
+          <control custom-template="" custom-label="" type="core_page_property" handle="description"/>
+          <control custom-template="" custom-label="" type="core_page_property" handle="url_slug"/>
+          <control custom-template="" custom-label="" type="core_page_property" handle="page_template"/>
+          <control custom-template="" custom-label="" type="core_page_property" handle="publish_target"/>
+        </set>
+        <set name="Content">
+          <control custom-template="" custom-label="Body" output-control-id="MLz8UXZN" type="block" handle="content"/>
+        </set>
+      </formlayout>
+      <output>
+        <pagetemplate handle="full">
+          <page name="" path="" filename="" pagetype="" user="admin" description="" package="">
+            <area name="Main">
+              <block type="image" name="" mc-block-id="Ll9ZTVb4">
+                <data table="btContentImage">
+                  <record>
+                    <fID/>
+                    <fOnstateID/>
+                    <maxWidth><![CDATA[0]]></maxWidth>
+                    <maxHeight><![CDATA[0]]></maxHeight>
+                    <externalLink><![CDATA[]]></externalLink>
+                    <internalLinkCID><![CDATA[0]]></internalLinkCID>
+                    <forceImageToMatchDimensions><![CDATA[0]]></forceImageToMatchDimensions>
+                    <altText><![CDATA[]]></altText>
+                  </record>
+                </data>
+              </block>
+            </area>
+            <area name="Main Sub">
+              <block type="core_composer_control_output" name="" mc-block-id="3vtEa5yx">
+                <control output-control-id="MLz8UXZN"/>
+              </block>
+              <block type="core_conversation" name="" mc-block-id="pS54v26A">
+                <data table="btCoreConversation">
+                  <record>
+                    <cnvID><![CDATA[3]]></cnvID>
+                    <enablePosting><![CDATA[1]]></enablePosting>
+                    <paginate><![CDATA[1]]></paginate>
+                    <itemsPerPage><![CDATA[50]]></itemsPerPage>
+                    <displayMode><![CDATA[threaded]]></displayMode>
+                    <orderBy><![CDATA[date_asc]]></orderBy>
+                    <enableOrdering><![CDATA[1]]></enableOrdering>
+                    <enableCommentRating><![CDATA[1]]></enableCommentRating>
+                    <displayPostingForm><![CDATA[top]]></displayPostingForm>
+                    <addMessageLabel><![CDATA[Add Message]]></addMessageLabel>
+                    <dateFormat><![CDATA[default]]></dateFormat>
+                    <customDateFormat><![CDATA[]]></customDateFormat>
+                    <maxFilesGuest><![CDATA[0]]></maxFilesGuest>
+                    <maxFilesRegistered><![CDATA[0]]></maxFilesRegistered>
+                    <maxFileSizeGuest><![CDATA[0]]></maxFileSizeGuest>
+                    <maxFileSizeRegistered><![CDATA[0]]></maxFileSizeRegistered>
+                    <fileExtensions><![CDATA[]]></fileExtensions>
+                    <insertNewMessages><![CDATA[top]]></insertNewMessages>
+                  </record>
+                </data>
+              </block>
+            </area>
+          </page>
+        </pagetemplate>
+        <pagetemplate handle="left_sidebar">
+          <page name="" path="" filename="" pagetype="" user="admin" description="" package="">
+            <area name="Main">
+              <block type="image" name="" mc-block-id="IsYPohIg">
+                <data table="btContentImage">
+                  <record>
+                    <fID/>
+                    <fOnstateID/>
+                    <maxWidth><![CDATA[0]]></maxWidth>
+                    <maxHeight><![CDATA[0]]></maxHeight>
+                    <externalLink><![CDATA[]]></externalLink>
+                    <internalLinkCID><![CDATA[0]]></internalLinkCID>
+                    <forceImageToMatchDimensions><![CDATA[0]]></forceImageToMatchDimensions>
+                    <altText><![CDATA[]]></altText>
+                  </record>
+                </data>
+              </block>
+            </area>
+            <area name="Left">
+              <block type="core_composer_control_output" name="" mc-block-id="GDKNt7ZP">
+                <control output-control-id="MLz8UXZN"/>
+              </block>
+            </area>
+            <area name="Main Sub">
+              <block type="core_conversation" name="" mc-block-id="sTpWtFY1">
+                <data table="btCoreConversation">
+                  <record>
+                    <cnvID><![CDATA[4]]></cnvID>
+                    <enablePosting><![CDATA[1]]></enablePosting>
+                    <paginate><![CDATA[1]]></paginate>
+                    <itemsPerPage><![CDATA[50]]></itemsPerPage>
+                    <displayMode><![CDATA[threaded]]></displayMode>
+                    <orderBy><![CDATA[date_asc]]></orderBy>
+                    <enableOrdering><![CDATA[1]]></enableOrdering>
+                    <enableCommentRating><![CDATA[1]]></enableCommentRating>
+                    <displayPostingForm><![CDATA[top]]></displayPostingForm>
+                    <addMessageLabel><![CDATA[Add Message]]></addMessageLabel>
+                    <dateFormat><![CDATA[default]]></dateFormat>
+                    <customDateFormat><![CDATA[]]></customDateFormat>
+                    <maxFilesGuest><![CDATA[0]]></maxFilesGuest>
+                    <maxFilesRegistered><![CDATA[0]]></maxFilesRegistered>
+                    <maxFileSizeGuest><![CDATA[0]]></maxFileSizeGuest>
+                    <maxFileSizeRegistered><![CDATA[0]]></maxFileSizeRegistered>
+                    <fileExtensions><![CDATA[]]></fileExtensions>
+                    <insertNewMessages><![CDATA[top]]></insertNewMessages>
+                  </record>
+                </data>
+              </block>
+            </area>
+          </page>
+        </pagetemplate>
+        <pagetemplate handle="right_sidebar">
+          <page name="" path="" filename="" pagetype="" user="admin" description="" package="">
+            <area name="Main">
+              <block type="image" name="" mc-block-id="3Brtwmi0">
+                <data table="btContentImage">
+                  <record>
+                    <fID/>
+                    <fOnstateID/>
+                    <maxWidth><![CDATA[0]]></maxWidth>
+                    <maxHeight><![CDATA[0]]></maxHeight>
+                    <externalLink><![CDATA[]]></externalLink>
+                    <internalLinkCID><![CDATA[0]]></internalLinkCID>
+                    <forceImageToMatchDimensions><![CDATA[0]]></forceImageToMatchDimensions>
+                    <altText><![CDATA[]]></altText>
+                  </record>
+                </data>
+              </block>
+            </area>
+            <area name="Left">
+              <block type="core_composer_control_output" name="" mc-block-id="qchrTAhs">
+                <control output-control-id="MLz8UXZN"/>
+              </block>
+            </area>
+            <area name="Right">
+              <block type="autonav" name="" mc-block-id="IgrCk2p7">
+                <data table="btNavigation">
+                  <record>
+                    <orderBy><![CDATA[display_asc]]></orderBy>
+                    <displayPages><![CDATA[top]]></displayPages>
+                    <displayPagesCID/>
+                    <displayPagesIncludeSelf><![CDATA[0]]></displayPagesIncludeSelf>
+                    <displaySubPages><![CDATA[none]]></displaySubPages>
+                    <displaySubPageLevels><![CDATA[enough]]></displaySubPageLevels>
+                    <displaySubPageLevelsNum><![CDATA[0]]></displaySubPageLevelsNum>
+                    <displayUnavailablePages><![CDATA[0]]></displayUnavailablePages>
+                  </record>
+                </data>
+              </block>
+            </area>
+          </page>
+        </pagetemplate>
+        <pagetemplate handle="two_column">
+          <page name="" path="" filename="" pagetype="" user="admin" description="" package=""/>
+        </pagetemplate>
       </output>
-        </composer>
+    </composer>
+  </composers>
 
 
-    </composers>
 </concrete5-cif>
