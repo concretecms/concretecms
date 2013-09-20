@@ -51,7 +51,7 @@ $canModifyGroups = ($p->canEditBlockPermissions() && PERMISSIONS_MODEL != 'simpl
 $canScheduleGuestAccess = (PERMISSIONS_MODEL != 'simple' && $p->canGuestsViewThisBlock() && $p->canScheduleGuestAccess() && (!$a->isGlobalArea()));
 $canAliasBlockOut = ($c->isMasterCollection());
 if ($canAliasBlockOut) {
-	$ct = CollectionType::getByID($c->getCollectionTypeID());
+	$ct = PageType::getByID($c->getPageTypeID());
 }
 
 $isAlias = $b->isAlias();

@@ -11,8 +11,8 @@ class Concrete5_Model_EditPageThemePagePermissionAccessListItem extends PagePerm
 	public function getThemesAllowedPermission() {
 		return $this->themesAllowedPermission;
 	}
-	public function setThemesAllowedArray($ptIDs) {
-		$this->customThemeArray = $ptIDs;
+	public function setThemesAllowedArray($pThemeIDs) {
+		$this->customThemeArray = $pThemeIDs;
 	}
 	public function getThemesAllowedArray() {
 		return $this->customThemeArray;

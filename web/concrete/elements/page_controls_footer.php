@@ -130,7 +130,7 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
 	if ($c->isMasterCollection()) { ?>
 
 		<div id="ccm-page-status-bar">
-			<div class="alert alert-info"><button type="button" class="close" data-dismiss="alert">×</button> <span><?= t('Page Defaults for %s Page Type. All edits take effect immediately.', $c->getCollectionTypeName()) ?></span></div>
+			<div class="alert alert-info"><button type="button" class="close" data-dismiss="alert">×</button> <span><?= t('Page Defaults for %s Page Type. All edits take effect immediately.', $c->getPageTypeName()) ?></span></div>
 		</div>
 
 	<? }

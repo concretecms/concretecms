@@ -7,11 +7,15 @@ class Concrete5_Controller_Dashboard_Pages_Types_Add extends DashboardBaseContro
 		$vs = Loader::helper('validation/strings');
 		$sec = Loader::helper('security');
 		$name = $sec->sanitizeString($this->post('ptName'));
+		$handle = $sec->sanitizeString($this->post('ptHandle'));
 		if (!$this->token->validate('add_page_type')) { 
 			$this->error->add(t($this->token->getErrorMessage()));
 		}
 		if (!$vs->notempty($name)) {
 			$this->error->add(t('You must specify a valid name for your page type.'));
+		}
+		if (!$vs->handle($handle)) {
+			$this->error->add(t('You must specify a valid handle for your page type.'));
 		}
 		$defaultTemplate = PageTemplate::getByID($this->post('ptDefaultPageTemplateID'));
 		if (!is_object($defaultTemplate)) {
@@ -35,7 +39,7 @@ class Concrete5_Controller_Dashboard_Pages_Types_Add extends DashboardBaseContro
 		}
 
 		if (!$this->error->has()) {
-			$pt = PageType::add($name, $defaultTemplate, $this->post('ptAllowedPageTemplates'), $templates);
+			$pt = PageType::add($handle, $name, $defaultTemplate, $this->post('ptAllowedPageTemplates'), $templates);
 			$configuredTarget = $target->configurePageTypePublishTarget($pt, $this->post());
 			$pt->setConfiguredPageTypePublishTargetObject($configuredTarget);
 			$this->redirect('/dashboard/pages/types', 'page_type_added');

@@ -22,6 +22,15 @@
     <field name="ptAllowedPageTemplates" type="C" size="1">
       <default value="A" />
     </field>
+    <field name="ptIsInternal" type="I1" size="1">
+      <notnull/>
+      <default value="0"/>
+    </field>
+    <field name="pkgID" type="I" size="10">
+      <notnull/>
+      <default value="0"/>
+      <unsigned/>
+    </field>
    <field name="ptPublishTargetObject" type="X2"></field>
   </table>
 
@@ -1724,12 +1733,7 @@
     <field name="cvApproverUID" type="I" size="10">
       <unsigned/>
     </field>
-    <field name="ptID" type="I" size="10">
-      <notnull/>
-      <default value="0"/>
-      <unsigned/>
-    </field>
-    <field name="ctID" type="I" size="10">
+    <field name="pThemeID" type="I" size="10">
       <notnull/>
       <default value="0"/>
       <unsigned/>
@@ -1742,9 +1746,6 @@
     <field name="cvActivateDatetime" type="T"/>
     <index name="cvIsApproved">
       <col>cvIsApproved</col>
-    </index>
-    <index name="ctID">
-      <col>ctID</col>
     </index>
   </table>
   <table name="Collections">
@@ -2064,7 +2065,7 @@
       <default value="0"/>
       <unsigned/>
     </field>
-    <field name="ctID" type="I" size="10">
+    <field name="ptID" type="I" size="10">
       <key/>
       <default value="0"/>
       <unsigned/>
@@ -2097,7 +2098,7 @@
       <default value="0"/>
       <unsigned/>
     </field>
-    <field name="ptID" type="I" size="10">
+    <field name="pThemeID" type="I" size="10">
       <key/>
       <default value="0"/>
       <unsigned/>
@@ -3025,54 +3026,42 @@
     </index>
   </table>
   <table name="PageThemes">
-    <field name="ptID" type="I" size="10">
+    <field name="pThemeID" type="I" size="10">
       <key/>
       <autoincrement/>
       <unsigned/>
     </field>
-    <field name="ptHandle" type="C" size="64">
+    <field name="pThemeHandle" type="C" size="64">
       <notnull/>
     </field>
-    <field name="ptName" type="C" size="255"/>
-    <field name="ptDescription" type="X"/>
+    <field name="pThemeName" type="C" size="255"/>
+    <field name="pThemeDescription" type="X"/>
     <field name="pkgID" type="I" size="10">
       <notnull/>
       <default value="0"/>
       <unsigned/>
     </field>
-    <field name="ptHasCustomClass" type="I" size="1">
+    <field name="pThemeHasCustomClass" type="I" size="1">
       <notnull/>
       <default value="0"/>
     </field>
     <index name="ptHandle">
       <unique/>
-      <col>ptHandle</col>
+      <col>pThemeHandle</col>
     </index>
   </table>
   <table name="PageThemeStyles">
-    <field name="ptID" type="I" size="10">
+    <field name="pThemeID" type="I" size="10">
       <key/>
       <default value="0"/>
       <unsigned/>
     </field>
-    <field name="ptsHandle" type="C" size="128">
+    <field name="pThemeStyleHandle" type="C" size="128">
       <key/>
     </field>
-    <field name="ptsValue" type="X2" />
-    <field name="ptsType" type="C" size="32">
+    <field name="pThemeStyleValue" type="X2" />
+    <field name="pThemeStyleType" type="C" size="32">
       <key/>
-    </field>
-  </table>
-  <table name="PageTypeAttributes">
-    <field name="ctID" type="I" size="10">
-      <key/>
-      <default value="0"/>
-      <unsigned/>
-    </field>
-    <field name="akID" type="I" size="10">
-      <key/>
-      <default value="0"/>
-      <unsigned/>
     </field>
   </table>
   <table name="PageTemplates">
@@ -3099,34 +3088,7 @@
     </field>
     <index name="pTemplateHandle">
       <unique/>
-      <col>ctHandle</col>
-    </index>
-  </table>
-  <table name="PageTypes">
-    <field name="ctID" type="I" size="10">
-      <key/>
-      <autoincrement/>
-      <unsigned/>
-    </field>
-    <field name="ctHandle" type="C" size="32">
-      <notnull/>
-    </field>
-    <field name="ctIcon" type="C" size="128"/>
-    <field name="ctName" type="C" size="90">
-      <notnull/>
-    </field>
-    <field name="ctIsInternal" type="I1" size="1">
-      <notnull/>
-      <default value="0"/>
-    </field>
-    <field name="pkgID" type="I" size="10">
-      <notnull/>
-      <default value="0"/>
-      <unsigned/>
-    </field>
-    <index name="ctHandle">
-      <unique/>
-      <col>ctHandle</col>
+      <col>pTemplateHandle</col>
     </index>
   </table>
   <table name="Pages">

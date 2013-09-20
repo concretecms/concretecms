@@ -47,7 +47,7 @@
 			}
 			
 			
-			$q = "select cvID, cvIsApproved, cvIsNew, cvHandle, cvName, cvDescription, cvDateCreated, cvDatePublic, pTemplateID, cvAuthorUID, cvApproverUID, cvComments, ptID, CollectionVersions.ctID, ctHandle, ctName from CollectionVersions left join PageTypes on CollectionVersions.ctID = PageTypes.ctID where cID = ?";
+			$q = "select cvID, cvIsApproved, cvIsNew, cvHandle, cvName, cvDescription, cvDateCreated, cvDatePublic, pTemplateID, cvAuthorUID, cvApproverUID, cvComments, pThemeID from CollectionVersions where cID = ?";
 			if ($cvID == 'ACTIVE') {
 				$q .= ' and cvIsApproved = 1';
 			} else if ($cvID == 'RECENT') {
@@ -169,12 +169,12 @@
 			$u = new User();
 			$versionComments = (!$versionComments) ? t("New Version %s", $newVID) : $versionComments;
 			$cvIsNew = 1;
-			if ($c->getCollectionTypeHandle() == STACKS_PAGE_TYPE) {
+			if ($c->getPageTypeHandle() == STACKS_PAGE_TYPE) {
 				$cvIsNew = 0;
 			}
 			$dh = Loader::helper('date');
-			$v = array($this->cID, $newVID, $c->getCollectionName(), $c->getCollectionHandle(), $c->getCollectionDescription(), $c->getCollectionDatePublic(), $dh->getSystemDateTime(), $versionComments, $u->getUserID(), $cvIsNew, $this->ptID, $this->ctID, $this->pTemplateID);
-			$q = "insert into CollectionVersions (cID, cvID, cvName, cvHandle, cvDescription, cvDatePublic, cvDateCreated, cvComments, cvAuthorUID, cvIsNew, ptID, ctID, pTemplateID)
+			$v = array($this->cID, $newVID, $c->getCollectionName(), $c->getCollectionHandle(), $c->getCollectionDescription(), $c->getCollectionDatePublic(), $dh->getSystemDateTime(), $versionComments, $u->getUserID(), $cvIsNew, $this->pThemeID, $this->ptID, $this->pTemplateID);
+			$q = "insert into CollectionVersions (cID, cvID, cvName, cvHandle, cvDescription, cvDatePublic, cvDateCreated, cvComments, cvAuthorUID, cvIsNew, pThemeID, ptID, pTemplateID)
 				values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 				
 			$r = $db->prepare($q);
@@ -257,7 +257,7 @@
 
 			if ($c->getCollectionInheritance() == 'TEMPLATE') {
 				// we make sure to update the cInheritPermissionsFromCID value
-				$ct = CollectionType::getByID($c->getCollectionTypeID());
+				$ct = PageType::getByID($c->getPageTypeID());
 				$masterC = $ct->getMasterTemplate();
 				$db->Execute('update Pages set cInheritPermissionsFromCID = ? where cID = ?', array($masterC->getCollectionID(), $c->getCollectioniD()));
 			}

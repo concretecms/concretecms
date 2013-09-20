@@ -5,10 +5,6 @@ Loader::model('collection_attributes');
 $dt = Loader::helper('form/date_time');
 $uh = Loader::helper('form/user_selector');
 
-if ($cp->canEditPageType()) {
-	$ctArray = CollectionType::getList();
-}
-
 $pk = PermissionKey::getByHandle('edit_page_properties');
 $pk->setPermissionObject($c);
 $asl = $pk->getMyAssignment();

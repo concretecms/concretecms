@@ -4,8 +4,8 @@ class Concrete5_Model_PageGatheringDataSource extends GatheringDataSource {
 
 	public function createConfigurationObject(Gathering $ga, $post) {
 		$o = new PageGatheringDataSourceConfiguration();
-		if ($post['ctID']) {
-			$o->setCollectionTypeID($post['ctID']);
+		if ($post['ptID']) {
+			$o->setPageTypeID($post['ptID']);
 		}
 		return $o;
 	}
@@ -18,9 +18,9 @@ class Concrete5_Model_PageGatheringDataSource extends GatheringDataSource {
 		if ($gathering->getGatheringDateLastUpdated()) {
 			$pl->filterByPublicDate($gathering->getGatheringDateLastUpdated(), '>');
 		}
-		$ctID = $configuration->getCollectionTypeID();
-		if ($ctID > 0) {
-			$pl->filterByCollectionTypeID($ctID);
+		$ptID = $configuration->getPageTypeID();
+		if ($ptID > 0) {
+			$pl->filterByPageTypeID($ptID);
 		}
 		$pages = $pl->get();
 		$items = array();

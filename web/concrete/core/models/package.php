@@ -270,7 +270,7 @@ class Concrete5_Model_Package extends Object {
 		$items['attribute_keys'] = AttributeKey::getListByPackage($this);
 		$items['attribute_sets'] = AttributeSet::getListByPackage($this);
 		$items['group_sets'] = GroupSet::getListByPackage($this);
-		$items['page_types'] = CollectionType::getListByPackage($this);
+		$items['page_types'] = PageType::getListByPackage($this);
 		$items['page_templates'] = PageTemplate::getListByPackage($this);
 		$items['mail_importers'] = MailImporter::getListByPackage($this);
 		$items['configuration_values'] = Config::getListByPackage($this);
@@ -321,7 +321,8 @@ class Concrete5_Model_Package extends Object {
 			return $item->getComposerControlTypeName();
 		} else if ($item instanceof ComposerTargetType) {
 			return $item->getComposerTargetTypeName();
-		} else if ($item instanceof CollectionType) {
+		} else if ($item instanceof PageType) {
+			return $item->getPageTypeName();
 		} else if ($item instanceof PageTemplate) {
 			return $item->getPageTemplateName();
 		} else if ($item instanceof MailImporter) {
@@ -409,7 +410,7 @@ class Concrete5_Model_Package extends Object {
 						case 'SystemAntispamLibrary':
 							$item->delete();
 							break;
-						case 'CollectionType':
+						case 'PageType':
 							$item->delete();
 							break;
 						case 'MailImporter':
@@ -487,7 +488,7 @@ class Concrete5_Model_Package extends Object {
 				$b->deleteBlock();
 			}
 			
-			$pageTypes = CollectionType::getList();
+			$pageTypes = PageType::getList();
 			foreach($pageTypes as $ct) {
 				$ct->delete();
 			}

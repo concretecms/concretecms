@@ -3,10 +3,10 @@
  */
 
 function ccm_previewInternalTheme(cID, themeID,themeName){
-	var ctID=$("input[name=ctID]").val();
+	var ptID=$("input[name=ptID]").val();
 	$.fn.dialog.open({
 		title: themeName,
-		href: CCM_TOOLS_PATH + "/themes/preview?themeID="+themeID+'&previewCID='+cID+'&ctID='+ctID,
+		href: CCM_TOOLS_PATH + "/themes/preview?themeID="+themeID+'&previewCID='+cID+'&ptID='+ptID,
 		width: '85%',
 		modal: false,
 		height: '75%' 
@@ -14,11 +14,11 @@ function ccm_previewInternalTheme(cID, themeID,themeName){
 }
 
 function ccm_previewMarketplaceTheme(cID, themeCID,themeName,themeHandle){
-	var ctID=$("input[name=ctID]").val();
+	var ptID=$("input[name=ptID]").val();
 	
 	$.fn.dialog.open({
 		title: themeName,
-		href: CCM_TOOLS_PATH + "/themes/preview?themeCID="+themeCID+'&previewCID='+cID+'&themeHandle='+encodeURIComponent(themeHandle)+'&ctID='+ctID,
+		href: CCM_TOOLS_PATH + "/themes/preview?themeCID="+themeCID+'&previewCID='+cID+'&themeHandle='+encodeURIComponent(themeHandle)+'&ptID='+ptID,
 		width: '85%',
 		modal: false,
 		height: '75%' 
@@ -127,7 +127,7 @@ ccm_enableDesignScrollers = function() {
 			$(this).removeClass('ccm-item-selected');
 		});
 		$(this).parent().addClass('ccm-item-selected');
-		$("input[name=ctID]").val($(this).attr('ccm-page-type-id'));
+		$("input[name=ptID]").val($(this).attr('ccm-page-type-id'));
 	});
 
 	$("#ccm-select-theme a").click(function() {

@@ -7,8 +7,8 @@ if (isset($_POST['ttask']) && $_POST['ttask'] == 'preview_theme_customization') 
 
 $previewCID=intval($_REQUEST['previewCID']);
 $themeID=intval($_REQUEST['themeID']);
-$ctID=intval($_REQUEST['ctID']);
-$collectionType=CollectionType::getByID($ctID);
+$ptID=intval($_REQUEST['ptID']);
+$collectionType=PageType::getByID($ptID);
 
 $c = Page::getByID($previewCID, 'RECENT'); //,"ACTIVE"
 $cp = new Permissions($c);

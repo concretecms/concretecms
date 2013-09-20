@@ -72,10 +72,6 @@
 
 	class Concrete5_Model_Group extends Object {
 	
-		var $ctID;
-		var $permissionSet;
-		private $permissions = array(); // more advanced version of permissions
-		
 		/* 
 		 * Takes the numeric id of a group and returns a group object
 		 * @parem string $gID

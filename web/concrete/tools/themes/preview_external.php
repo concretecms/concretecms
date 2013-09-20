@@ -11,7 +11,7 @@ if ($mi->isConnected() && $tp->canInstallPackages()) {
 	$themeCID=intval($_REQUEST['themeCID']);
 	$themeHandle=$_REQUEST['themeHandle'];
 
-	$postStr= '&themeHandle='.$themeHandle.'&ctID='.$ctID.'&ctHandle='.$ctHandle;
+	$postStr= '&themeHandle='.$themeHandle.'&ptID='.$ptID.'&ctHandle='.$ctHandle;
 	
 	if (!function_exists('curl_init')) { ?>
 		<div><?=t('curl must be enabled to preview external themes.')?></div>

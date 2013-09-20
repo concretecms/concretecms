@@ -2,14 +2,14 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 class Concrete5_Model_PageGatheringDataSourceConfiguration extends GatheringDataSourceConfiguration {
 	
-	protected $ctID;
+	protected $ptID;
 
-	public function setCollectionTypeID($ctID) {
-		$this->ctID = $ctID;
+	public function setPageTypeID($ptID) {
+		$this->ptID = $ptID;
 	}
 
-	public function getCollectionTypeID() {
-		return $this->ctID;
+	public function getPageTypeID() {
+		return $this->ptID;
 	}
 
 }

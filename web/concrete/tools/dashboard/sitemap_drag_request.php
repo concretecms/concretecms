@@ -49,7 +49,7 @@ foreach($originalPages as $oc) {
 	if (!$ocp->canMoveOrCopyPage()) { 
 		$canMoveCopyPages = false;
 	}
-	$ct = CollectionType::getByID($oc->getCollectionTypeID());
+	$ct = PageType::getByID($oc->getPageTypeID());
 	if (!$dcp->canAddSubpage($ct)) {
 		$canAddSubContent = false;
 	}

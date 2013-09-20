@@ -40,7 +40,7 @@ class Concrete5_Library_PageRequestView extends PathRequestView {
 	public function setupRender() {
 		$this->loadRequestViewThemeObject();
 		$env = Environment::get();
-		if ($this->c->getCollectionTypeID() == 0 && $this->c->getCollectionFilename()) {
+		if ($this->c->getPageTypeID() == 0 && $this->c->getCollectionFilename()) {
 			$cFilename = trim($this->c->getCollectionFilename(), '/');
 			// if we have this exact template in the theme, we use that as the outer wrapper and we don't do an inner content file
 			$r = $env->getRecord(DIRNAME_THEMES . '/' . $this->themeHandle . '/' . $cFilename);
@@ -56,7 +56,7 @@ class Concrete5_Library_PageRequestView extends PathRequestView {
 			}
 		} else {
 			$pt = PageTemplate::getByID($this->c->getPageTemplateID());
-			$rec = $env->getRecord(DIRNAME_PAGE_TYPES . '/' . $this->c->getCollectionTypeHandle() . '.php', $this->themePkgHandle);
+			$rec = $env->getRecord(DIRNAME_PAGE_TYPES . '/' . $this->c->getPageTypeHandle() . '.php', $this->themePkgHandle);
 			if ($rec->exists()) {
 				$this->setInnerContentFile($env->getPath(DIRNAME_PAGES . '/' . $cFilename, $this->themePkgHandle));
 				$this->setViewTemplate($env->getPath(DIRNAME_THEMES . '/' . $this->themeHandle . '/' . FILENAME_THEMES_VIEW, $this->themePkgHandle));

@@ -298,7 +298,7 @@ $(function() {
 
 			sbitem = new ccm_statusBarItem();
 			sbitem.setCSSClass('info');
-			sbitem.setDescription('<?= t('Page Defaults for %s Page Type. All edits take effect immediately.', $c->getCollectionTypeName()) ?>');
+			sbitem.setDescription('<?= t('Page Defaults for %s Page Type. All edits take effect immediately.', $c->getPageTypeName()) ?>');
 			ccm_statusBar.addItem(sbitem);		
 		<? } ?>
 		<?

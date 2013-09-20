@@ -23,14 +23,14 @@ $("select#cParentIDLocation").change(function() {
 	  <input type="text" name="num" value="<?php echo $num?>" style="width: 30px">
 	  <?php echo t('pages of type')?>
 	  <?php 
-			$ctArray = CollectionType::getList();
+			$ctArray = PageType::getList();
 	
 			if (is_array($ctArray)) { ?>
-	  <select name="ctID" id="selectCTID">
+	  <select name="ptID" id="selectCTID">
 		<option value="0">** <?php echo t('All')?> **</option>
 		<?php  foreach ($ctArray as $ct) { ?>
-		<option value="<?php echo $ct->getCollectionTypeID()?>" <?php  if ($controller->ctID == $ct->getCollectionTypeID()) { ?> selected <?php  } ?>>
-		<?php echo $ct->getCollectionTypeName()?>
+		<option value="<?php echo $ct->getPageTypeID()?>" <?php  if ($controller->ptID == $ct->getPageTypeID()) { ?> selected <?php  } ?>>
+		<?php echo $ct->getPageTypeName()?>
 		</option>
 		<?php  } ?>
 	  </select>

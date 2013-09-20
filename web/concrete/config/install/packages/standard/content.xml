@@ -434,7 +434,7 @@
                                                                         <includeAllDescendents><![CDATA[0]]></includeAllDescendents>
                                                                         <paginate><![CDATA[1]]></paginate>
                                                                         <displayAliases><![CDATA[0]]></displayAliases>
-                                                                        <ctID>{ccm:export:pagetype:blog_entry}</ctID>
+                                                                        <ptID>{ccm:export:pagetype:blog_entry}</ptID>
                                                                         <rss><![CDATA[0]]></rss>
                                                                         <rssTitle><![CDATA[]]></rssTitle>
                                                                         <rssDescription><![CDATA[]]></rssDescription>

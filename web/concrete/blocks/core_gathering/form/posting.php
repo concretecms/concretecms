@@ -1,10 +1,10 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
 
-$composers = Composer::getList();
+$pagetypes = PageType::getList();
 $types = array();
-foreach($composers as $cmp) {
-	$types[$cmp->getComposerID()] = $cmp->getComposerName();
+foreach($pagetypes as $pt) {
+	$types[$pt->getPageTypeID()] = $pt->getPageTypeName();
 }
 
 ?>
@@ -28,7 +28,7 @@ foreach($composers as $cmp) {
 	<div class="control-group" data-row="enablePostingFromGathering">
 		<label class="control-label"><?=t('Create pages using')?></label>
 		<div class="controls" data-select="page">
-			<?=$form->select('cmpID', $types, $cmpID)?>
+			<?=$form->select('ptID', $types, $ptID)?>
 		</div>
 	</div>
 </div>

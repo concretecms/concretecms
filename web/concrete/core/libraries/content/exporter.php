@@ -93,9 +93,6 @@ class Concrete5_Library_Content_Exporter {
 			$pc->export($singlepages);
 		}		
 		
-		// now page types
-		//CollectionType::exportList($this->x);
-		
 		// now stacks/global areas
 		Loader::model('stack/list');
 		StackList::export($this->x);
@@ -184,10 +181,10 @@ class Concrete5_Library_Content_Exporter {
 		}
 	}
 
-	public static function replacePageTypeWithPlaceHolder($ctID) {
-		if ($ctID > 0) {
-			$ct = CollectionType::getByID($ctID);
-			return '{ccm:export:pagetype:' . $ct->getCollectionTypeHandle() . '}';
+	public static function replacePageTypeWithPlaceHolder($ptID) {
+		if ($ptID > 0) {
+			$ct = PageType::getByID($ptID);
+			return '{ccm:export:pagetype:' . $ct->getPageTypeHandle() . '}';
 		}
 	}
 	

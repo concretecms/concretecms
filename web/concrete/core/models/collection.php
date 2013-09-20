@@ -510,7 +510,9 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		}
 	}
 	
-	function getCollectionTypeID() {
+	function getCollectionTypeID() {return false;}
+	
+	function getPageTypeID() {
 		return false;
 	}	
 	
@@ -752,13 +754,9 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			}
 			$data['name'] = Loader::helper('text')->sanitize($data['name']);
 			if (is_object($this) && $this instanceof Page) {
-				$ptID = $this->getCollectionThemeID();
+				$pThemeID = $this->getCollectionThemeID();
 			} else {
-				$ptID = 0;
-			}
-			$ctID = $data['ctID'];
-			if (!$ctID) {
-				$ctID = 0;
+				$pThemeID = 0;
 			}
 
 			$pTemplateID = 0;
@@ -768,8 +766,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 			if ($res) {
 				// now we add a pending version to the collectionversions table
-				$v2 = array($newCID, 1, $ctID, $pTemplateID, $data['name'], $data['handle'], $data['cDescription'], $cDatePublic, $cDate, VERSION_INITIAL_COMMENT, $data['uID'], $cvIsApproved, $cvIsNew, $ptID);
-				$q2 = "insert into CollectionVersions (cID, cvID, ctID, pTemplateID, cvName, cvHandle, cvDescription, cvDatePublic, cvDateCreated, cvComments, cvAuthorUID, cvIsApproved, cvIsNew, ptID) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+				$v2 = array($newCID, 1, $pTemplateID, $data['name'], $data['handle'], $data['cDescription'], $cDatePublic, $cDate, VERSION_INITIAL_COMMENT, $data['uID'], $cvIsApproved, $cvIsNew, $pThemeID);
+				$q2 = "insert into CollectionVersions (cID, cvID, pTemplateID, cvName, cvHandle, cvDescription, cvDatePublic, cvDateCreated, cvComments, cvAuthorUID, cvIsApproved, cvIsNew, pThemeID) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 				$r2 = $db->prepare($q2);
 				$res2 = $db->execute($r2, $v2);
 			}
@@ -841,8 +839,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 					// insert
 					$cvList[] = $row['cvID'];
 					$cDate = date("Y-m-d H:i:s", strtotime($cDate) + 1);
-					$vv = array($newCID, $row['cvID'], $row['ctID'], $row['cvName'], $row['cvHandle'], $row['cvDescription'], $row['cvDatePublic'], $cDate, $row['cvComments'], $row['cvAuthorUID'], $row['cvIsApproved'], $row['ptID']);
-					$qv = "insert into CollectionVersions (cID, cvID, ctID, cvName, cvHandle, cvDescription, cvDatePublic, cvDateCreated, cvComments, cvAuthorUID, cvIsApproved, ptID) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+					$vv = array($newCID, $row['cvID'], $row['cvName'], $row['cvHandle'], $row['cvDescription'], $row['cvDatePublic'], $cDate, $row['cvComments'], $row['cvAuthorUID'], $row['cvIsApproved'], $row['pThemeID']);
+					$qv = "insert into CollectionVersions (cID, cvID, cvName, cvHandle, cvDescription, cvDatePublic, cvDateCreated, cvComments, cvAuthorUID, cvIsApproved, pThemeID) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 					$db->query($qv, $vv);
 				}
 				

@@ -40,11 +40,11 @@ class Concrete5_Model_Stack extends Page {
 	}
 	
 	protected static function isValidStack($stack) {
-		return $stack->getCollectionTypeHandle() == STACKS_PAGE_TYPE;
+		return $stack->getPageTypeHandle() == STACKS_PAGE_TYPE;
 	}
 
 	public static function addStack($stackName, $type = self::ST_TYPE_USER_ADDED) {
-		$ct = new CollectionType();
+		$ct = new PageType();
 		$data = array();
 
 		$parent = Page::getByPath(STACKS_PAGE_PATH);
@@ -53,7 +53,7 @@ class Concrete5_Model_Stack extends Page {
 		if (!$stackName) {
 			$data['name'] = t('No Name');
 		}
-		$pagetype = CollectionType::getByHandle(STACKS_PAGE_TYPE);
+		$pagetype = PageType::getByHandle(STACKS_PAGE_TYPE);
 		$page = $parent->add($pagetype, $data);	
 
 		// we have to do this because we need the area to exist before we try and add something to it.
