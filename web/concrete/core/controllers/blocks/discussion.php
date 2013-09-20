@@ -99,7 +99,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			if ($this->enableNewTopics && $this->cmpID) {
 				$cmp = Composer::getByID($this->cmpID);
 				if (is_object($cmp)) {
-					Loader::helper('composer/form')->addAssetsToRequest($cmp, $this);
+					Loader::helper('composer')->addAssetsToRequest($cmp, $this);
 				}
 			}
 			$req = Request::get();

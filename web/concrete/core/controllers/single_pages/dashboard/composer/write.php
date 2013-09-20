@@ -5,18 +5,18 @@ class Concrete5_Controller_Dashboard_Composer_Write extends DashboardBaseControl
 
 	public function view($type = false, $id = false) {
 		switch($type) {
-			case 'composer':
-				$this->composer = Composer::getByID($id);
-				$saveURL = View::url('/dashboard/composer/write', 'save', 'composer', $id);
+			case 'pagetype':
+				$this->pagetype = PageType::getByID($id);
+				$saveURL = View::url('/dashboard/composer/write', 'save', 'pagetype', $id);
 				$discardURL = '';
-				$publishURL = View::url('/dashboard/composer/write', 'save', 'composer', $id, 'publish');
-				$viewURL = View::url('/dashboard/composer/write', 'composer', $id);
+				$publishURL = View::url('/dashboard/composer/write', 'save', 'pagetype', $id, 'publish');
+				$viewURL = View::url('/dashboard/composer/write', 'pagetype', $id);
 				break;
 			case 'draft':
-				$this->draft = ComposerDraft::getByID($id);
+				$this->draft = PageDraft::getByID($id);
 				if (is_object($this->draft)) {
 					$this->checkDraftPermissions($this->draft);
-					$this->composer = $this->draft->getComposerObject();
+					$this->pagetype = $this->draft->getPageTypeObject();
 				}
 				$saveURL = View::url('/dashboard/composer/write', 'save', 'draft', $id);
 				$discardURL = View::url('/dashboard/composer/write', 'discard', $id, Loader::helper('validation/token')->generate('discard_draft'));
@@ -26,38 +26,38 @@ class Concrete5_Controller_Dashboard_Composer_Write extends DashboardBaseControl
 		}
 
 		$this->requireAsset('core/composer');
-		$cmpDraftID = 0;
+		$pDraftID = 0;
 		if (is_object($this->draft)) {
-			$cmpDraftID = $this->draft->getComposerDraftID();
+			$pDraftID = $this->draft->getPageDraftID();
 		}
 		$js =<<<EOL
-<script type="text/javascript">$(function() { $('form[data-form=composer]').ccmcomposer({pushStateOnSave: true, cmpDraftID: {$cmpDraftID}, viewURL: '{$viewURL}', saveURL: '{$saveURL}', discardURL: '{$discardURL}', publishURL: '{$publishURL}'})});</script>
+<script type="text/javascript">$(function() { $('form[data-form=composer]').ccmcomposer({pushStateOnSave: true, pDraftID: {$pDraftID}, viewURL: '{$viewURL}', saveURL: '{$saveURL}', discardURL: '{$discardURL}', publishURL: '{$publishURL}'})});</script>
 EOL;
 		$this->addFooterItem($js);
 
-		if (!is_object($this->composer)) {
-			$composers = Composer::getList();
-			if (count($composers) == 1) {
-				$cmp = $composers[0];
-				$this->redirect('/dashboard/composer/write', 'composer', $cmp->getComposerID());
+		if (!is_object($this->pagetype)) {
+			$pagetypes = PageType::getList();
+			if (count($pagetypes) == 1) {
+				$ptt = $pagetypes[0];
+				$this->redirect('/dashboard/composer/write', 'pagetype', $ptt->getPageTypeID());
 			} else {
-				$this->set('composers', $composers);
+				$this->set('pagetypes', $pagetypes);
 			}
 		} else {
-			$ccp = new Permissions($this->composer);
-			if (!$ccp->canAccessComposer()) {
-				throw new Exception('You do not have access to this composer.');
+			$ccp = new Permissions($this->pagetype);
+			if (!$ccp->canComposePageType()) {
+				throw new Exception('You do not have access to this page type.');
 			}
-			$this->set('composer', $this->composer);
-			$this->set('fieldsets', ComposerFormLayoutSet::getList($this->composer));
+			$this->set('pagetype', $this->pagetype);
+			$this->set('fieldsets', PageTypeComposerFormLayoutSet::getList($this->pagetype));
 			$this->set('draft', $this->draft);
 			$this->setupAssets();
 		}
 	}
 
-	protected function checkDraftPermissions(ComposerDraft $d) {
+	protected function checkDraftPermissions(PageDraft $d) {
 		$dp = new Permissions($d);
-		if (!$dp->canEditComposerDraft()) {
+		if (!$dp->canEditPageDraft()) {
 			throw new Exception('You do not have access to this draft.');
 		}
 	}
@@ -65,21 +65,21 @@ EOL;
 	protected function setupAssets() {
 		$sets = $this->get('fieldsets');
 		foreach($sets as $s) {
-			$controls = ComposerFormLayoutSetControl::getList($s);
+			$controls = PageTypeComposerFormLayoutSetControl::getList($s);
 			foreach($controls as $cn) {
-				$basecontrol = $cn->getComposerControlObject();
+				$basecontrol = $cn->getPageTypeComposerControlObject();
 			}
 		}
 	}
 
-	protected function publish(ComposerDraft $d, $outputControls) {
+	protected function publish(PageDraft $d, $outputControls) {
 
-		if (!$d->getComposerDraftTargetParentPageID()) {
+		if (!$d->getPageDraftTargetParentPageID()) {
 			$this->error->add(t('You must choose a page to publish this page beneath.'));
 		}
 
 		foreach($outputControls as $oc) {
-			if ($oc->isComposerFormControlRequiredOnThisRequest()) {
+			if ($oc->isPageTypeComposerFormControlRequiredOnThisRequest()) {
 				$data = $oc->getRequestValue();
 				$oc->validate($data, $this->error);
 			}
@@ -87,70 +87,70 @@ EOL;
 
 		if (!$this->error->has()) {
 			$d->publish();
-			$c = $d->getComposerDraftCollectionObject();
+			$c = $d->getPageDraftCollectionObject();
 			header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $c->getCollectionID());
 		}
 	}
 
-	public function discard($cmpDraftID = false, $token = false) {
+	public function discard($pDraftID = false, $token = false) {
 		if (Loader::helper('validation/token')->validate('discard_draft', $token)) {
-			$draft = ComposerDraft::getByID($cmpDraftID);
+			$draft = PageDraft::getByID($pDraftID);
 			$this->checkDraftPermissions($draft);
 			$draft->discard();
 			exit;
 		}
 	}
 
-	public function save($type = 'composer', $id = false, $action = 'return_json') {
+	public function save($type = 'pagetype', $id = false, $action = 'return_json') {
 		Cache::disableCache();
 		Cache::disableLocalCache();
 		session_write_close();
 
 		$this->view($type, $id);
-		$pt = PageTemplate::getByID($this->post('cmpPageTemplateID'));
-		$availablePageTemplates = $this->composer->getComposerPageTemplateObjects();
+		$pt = PageTemplate::getByID($this->post('ptPageTemplateID'));
+		$availablePageTemplates = $this->pagetype->getPageTypePageTemplateObjects();
 
 		if (!is_object($pt) && count($availablePageTemplates) == 1) {
 			$pt = $availablePageTemplates[0];
 		}
 
-		$this->error = $this->composer->validateCreateDraftRequest($pt);
+		$this->error = $this->pagetype->validateCreateDraftRequest($pt);
 
 		if (!$this->error->has()) {
 			// create the page
 			if (!is_object($this->draft)) {
-				$d = $this->composer->createDraft($pt);
+				$d = $this->pagetype->createDraft($pt);
 			} else {
 				// if we have a draft, but the page type has changed, we create a new one.
 				$d = $this->draft;
-				$dc = $d->getComposerDraftCollectionObject();
-				if ($dc->getPageTemplateID() != $_POST['cmpPageTemplateID']) {
-					$d = $this->composer->createDraft($pt);
+				$dc = $d->getPageDraftCollectionObject();
+				if ($dc->getPageTemplateID() != $_POST['ptPageTemplateID']) {
+					$d = $this->pagetype->createDraft($pt);
 				} else {
 					$d->createNewCollectionVersion();
 				}
 			}
 
 			/// set the target
-			$configuredTarget = $this->composer->getComposerTargetObject();
-			$targetPageID = $configuredTarget->getComposerConfiguredTargetParentPageID();
+			$configuredTarget = $this->pagetype->getPageTypePublishTargetObject();
+			$targetPageID = $configuredTarget->getPageTypeConfiguredPublishTargetParentPageID();
 			if (!$targetPageID) {
 				$targetPageID = $this->post('cParentID');
 			}
-			$d->setComposerDraftTargetParentPageID($targetPageID);
+			$d->setPageDraftTargetParentPageID($targetPageID);
 			$outputControls = $d->saveForm();
 
-			$r = new ComposerPublishResponse();
-			$r->setComposerDraft($d);
+			$r = new PageTypePublishResponse();
+			$r->setPageDraft($d);
 
 			if ($action == 'return_json') {
 				$ax = Loader::helper('ajax');
 				$r->time = date('F d, Y \a\t g:i A');
 				$r->setDraftSaveStatus(t('Page saved on %s', $r->time));
-				$r->setSaveURL(View::url('/dashboard/composer/write', 'save', 'draft', $d->getComposerDraftID()));
-				$r->setViewURL(View::url('/dashboard/composer/write', 'draft', $d->getComposerDraftID()));
-				$r->setDiscardURL(View::url('/dashboard/composer/write', 'discard', $d->getComposerDraftID(), Loader::helper('validation/token')->generate('discard_draft')));
-				$r->setPublishURL(View::url('/dashboard/composer/write', 'save', 'draft', $d->getComposerDraftID(), 'publish'));
+				$r->setSaveURL(View::url('/dashboard/composer/write', 'save', 'draft', $d->getPageDraftID()));
+				$r->setViewURL(View::url('/dashboard/composer/write', 'draft', $d->getPageDraftID()));
+				$r->setDiscardURL(View::url('/dashboard/composer/write', 'discard', $d->getPageDraftID(), Loader::helper('validation/token')->generate('discard_draft')));
+				$r->setPublishURL(View::url('/dashboard/composer/write', 'save', 'draft', $d->getPageDraftID(), 'publish'));
 				$ax->sendResult($r);
 			} else if ($action == 'publish') {
 				$this->publish($d, $outputControls);

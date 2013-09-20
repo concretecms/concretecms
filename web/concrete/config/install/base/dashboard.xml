@@ -2,60 +2,28 @@
 <concrete5-cif version="1.0">
     <singlepages>
         <page name="Dashboard" path="/dashboard" filename="/dashboard/view.php" pagetype="" description="" package="" root="true" />
-        <page name="Composer" path="/dashboard/composer" filename="/dashboard/composer/view.php" pagetype="" description="Write for your site." package="">
-			<attributes>
-				<attributekey handle="meta_keywords">
-					<value>blog, blogging</value>
-				</attributekey>
-				<attributekey handle="icon_dashboard">
-					<value>icon-book</value>
-				</attributekey>
-			</attributes>
+        
+
+        <page name="Compose Page" path="/dashboard/composer/write" filename="/dashboard/composer/write.php" pagetype="" description="" package="">
+            <attributes>
+                    <attributekey handle="meta_keywords">
+                            <value>new page, add page</value>
+                    </attributekey>
+                    <attributekey handle="icon_dashboard">
+                            <value>icon-pencil</value>
+                    </attributekey>
+            </attributes>
         </page>
-
-        <page name="Add Composer" path="/dashboard/composer/list/add" filename="/dashboard/composer/list/add.php" pagetype="" description="" package="">
-
-        </page>
-
-        <page name="Composer Form" path="/dashboard/composer/list/form" filename="/dashboard/composer/list/form.php" pagetype="" description="" package="">
-
-        </page>
-
-        <page name="Composer Output" path="/dashboard/composer/list/output" filename="/dashboard/composer/list/output.php" pagetype="" description="" package="">
-
-        </page>
-
-        <page name="Composer Permissions" path="/dashboard/composer/list/permissions" filename="/dashboard/composer/list/permissions.php" pagetype="" description="" package="">
-
-        </page>
-
-        <page name="Write" path="/dashboard/composer/write" filename="/dashboard/composer/write.php" pagetype="" description="" package="">
-			<attributes>
-				<attributekey handle="meta_keywords">
-					<value>new blog, write blog, blogging</value>
-				</attributekey>
-				<attributekey handle="icon_dashboard">
-					<value>icon-pencil</value>
-				</attributekey>
-			</attributes>
-        </page>
+        
         <page name="Drafts" path="/dashboard/composer/drafts" filename="/dashboard/composer/drafts.php" pagetype="" description="" package="">
-			<attributes>
-				<attributekey handle="meta_keywords">
-					<value>blog drafts,composer</value>
-				</attributekey>
-				<attributekey handle="icon_dashboard">
-					<value>icon-book</value>
-				</attributekey>
-			</attributes>
-        </page>
-
-        <page name="Composers" path="/dashboard/composer/list" filename="/dashboard/composer/list.php" pagetype="" description="" package="">
-        	<attributes>
-				<attributekey handle="icon_dashboard">
-					<value>icon-cog</value>
-				</attributekey>
-			</attributes>
+            <attributes>
+                    <attributekey handle="meta_keywords">
+                            <value>blog drafts, composer</value>
+                    </attributekey>
+                    <attributekey handle="icon_dashboard">
+                            <value>icon-book</value>
+                    </attributekey>
+            </attributes>
         </page>
 
         <page name="Sitemap" path="/dashboard/sitemap" filename="/dashboard/sitemap/view.php" pagetype="" description="Whole world at a glance." package="">
@@ -311,27 +279,23 @@
 				</attributekey>
 			</attributes>
         </page>
-        <page name="Page Types" path="/dashboard/pages/types" filename="/dashboard/pages/types/view.php" pagetype="" description="What goes in your site." package="">
-			<attributes>
-				<attributekey handle="meta_keywords">
-					<value>page type defaults, global block, global area, starter, template</value>
-				</attributekey>
-				<attributekey handle="icon_dashboard">
-					<value>icon-file</value>
-				</attributekey>
-			</attributes>
+
+
+        <page name="Page Types" path="/dashboard/pages/types" filename="/dashboard/pages/types/view.php" pagetype="" description="" package="">
         </page>
-		<page name="Add Page Type" path="/dashboard/pages/types/add" filename="/dashboard/pages/types/add.php" pagetype="" description="Add page types to your site." package=""/>
-        <page name="Attributes" path="/dashboard/pages/attributes" filename="/dashboard/pages/attributes.php" pagetype="" description="" package="">
-			<attributes>
-				<attributekey handle="meta_keywords">
-					<value>page attributes, custom</value>
-				</attributekey>
-				<attributekey handle="icon_dashboard">
-					<value>icon-cog</value>
-				</attributekey>
-			</attributes>
+
+        <page name="Add Page Type" path="/dashboard/pages/types/add" filename="/dashboard/pages/types/add.php" pagetype="" description="" package="">
         </page>
+
+        <page name="Compose Form" path="/dashboard/pages/types/form" filename="/dashboard/pages/types/form.php" pagetype="" description="" package="">
+        </page>
+
+        <page name="Defaults amd Output" path="/dashboard/pages/types/output" filename="/dashboard/pages/types/output.php" pagetype="" description="" package="">
+        </page>
+
+        <page name="Page Type Permissions" path="/dashboard/pages/types/permissions" filename="/dashboard/pages/types/permissions.php" pagetype="" description="" package="">
+        </page>
+
         <page name="Page Templates" path="/dashboard/pages/templates" filename="/dashboard/pages/templates/view.php" pagetype="" description="Form factors for pages in your site." package="">
 			<attributes>
 				<attributekey handle="icon_dashboard">
@@ -339,8 +303,7 @@
 				</attributekey>
 			</attributes>
         </page>
-		<page name="Add Page Template" path="/dashboard/pages/templates/add" filename="/dashboard/pages/templates/add.php" pagetype="" description="Add page templates to your site." package=""/>
-		
+		<page name="Add Page Template" path="/dashboard/pages/templates/add" filename="/dashboard/pages/templates/add.php" pagetype="" description="Add page templates to your site." package=""/>		
         <page name="Attributes" path="/dashboard/pages/attributes" filename="/dashboard/pages/attributes.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">

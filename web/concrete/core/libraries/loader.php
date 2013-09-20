@@ -52,7 +52,7 @@
 		protected function legacyModel($model) {
 			switch($model) {
 				case 'collection_attributes':
-				case 'collection_types':
+				//case 'collection_types':
 				case 'user_attributes':
 				case 'file_attributes':
 					return true;

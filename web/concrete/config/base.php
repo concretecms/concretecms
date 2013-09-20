@@ -246,7 +246,7 @@ define('BLOCK_HANDLE_GATHERING_ITEM_PROXY', 'core_gathering_item');
 define('BLOCK_HANDLE_GATHERING_PROXY', 'core_gathering_display');
 define('BLOCK_HANDLE_GATHERING', 'core_gathering');
 define('BLOCK_HANDLE_LAYOUT_PROXY', 'core_area_layout');
-define('BLOCK_HANDLE_COMPOSER_OUTPUT_PROXY', 'core_composer_control_output');
+define('BLOCK_HANDLE_PAGE_TYPE_OUTPUT_PROXY', 'core_page_type_composer_control_output');
 define('FILENAME_FORM', 'form.php');
 
 # Stacks
@@ -501,7 +501,7 @@ define('HOME_UID', USER_SUPER_ID);
 define('HOME_HANDLE', "home");
 
 # Composer settings
-define('COMPOSER_DRAFTS_PAGE_PATH', '/!drafts');
+define('PAGE_DRAFTS_PAGE_PATH', '/!drafts');
 if (!defined('DIRNAME_COMPOSER')) {
 	define('DIRNAME_COMPOSER', 'composer');
 }

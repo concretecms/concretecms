@@ -1,29 +1,29 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
 
-class Concrete5_Controller_Dashboard_Composer_List_Permissions extends DashboardBaseController {
+class Concrete5_Controller_Dashboard_Pages_Types_Permissions extends DashboardBaseController {
 
-	public function view($cmpID = false, $message = false) {
-		$this->composer = Composer::getByID($cmpID);
-		if (!$this->composer) {
-			$this->redirect('/dashboard/composer/list');
+	public function view($ptID = false, $message = false) {
+		$this->pagetype = PageType::getByID($ptID);
+		if (!$this->pagetype) {
+			$this->redirect('/dashboard/pages/types');
 		}
 		switch($message) {
 			case 'updated':
 				$this->set('success', t('Permissions updated successfully.'));
 				break;
 		}
-		$this->set('composer', $this->composer);
+		$this->set('pagetype', $this->pagetype);
 	}
 
 	public function save() {
-		$this->view($this->post('cmpID'));
+		$this->view($this->post('ptID'));
 		if (Loader::helper('validation/token')->validate('save_permissions')) {
 			$tp = new TaskPermission();
-			if ($tp->canAccessComposerPermissions()) {
-				$permissions = PermissionKey::getList('composer');
+			if ($tp->canAccessPageTypePermissions()) {
+				$permissions = PermissionKey::getList('pagetype');
 				foreach($permissions as $pk) {
-					$pk->setPermissionObject($this->composer);
+					$pk->setPermissionObject($this->pagetype);
 					$paID = $_POST['pkID'][$pk->getPermissionKeyID()];
 					$pt = $pk->getPermissionAssignmentObject();
 					$pt->clearPermissionAssignment();
@@ -34,7 +34,7 @@ class Concrete5_Controller_Dashboard_Composer_List_Permissions extends Dashboard
 						}			
 					}		
 				}
-				$this->redirect('/dashboard/composer/list/permissions', $this->composer->getComposerID(), 'updated');
+				$this->redirect('/dashboard/pages/types/permissions', $this->pagetype->getPageTypeID(), 'updated');
 			}
 			
 		} else {
