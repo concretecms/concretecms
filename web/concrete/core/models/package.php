@@ -289,8 +289,8 @@ class Concrete5_Model_Package extends Object {
 		$items['content_editor_snippets'] = SystemContentEditorSnippet::getListByPackage($this);		
 		$items['conversation_editors'] = ConversationEditor::getListByPackage($this);		
 		$items['conversation_rating_types'] = ConversationRatingType::getListByPackage($this);		
-		$items['composer_target_types'] = ComposerTargetType::getListByPackage($this);		
-		$items['composer_control_types'] = ComposerControlType::getListByPackage($this);		
+		$items['page_type_publish_target_types'] = PageTypePublishTargetType::getListByPackage($this);		
+		$items['page_type_composer_control_types'] = PageTypeComposerControlType::getListByPackage($this);		
 		$items['antispam_libraries'] = SystemAntispamLibrary::getListByPackage($this);		
 		$items['community_point_actions'] = UserPointAction::getListByPackage($this);		
 		$items['jobs'] = Job::getListByPackage($this);		
@@ -317,10 +317,10 @@ class Concrete5_Model_Package extends Object {
 			return $item->getGatheringItemTemplateName();
 		} else if ($item instanceof BlockTypeSet) {
 			return $item->getBlockTypeSetName();
-		} else if ($item instanceof ComposerControlType) {
-			return $item->getComposerControlTypeName();
-		} else if ($item instanceof ComposerTargetType) {
-			return $item->getComposerTargetTypeName();
+		} else if ($item instanceof PageTypeComposerControlType) {
+			return $item->getPageTypeComposerControlTypeName();
+		} else if ($item instanceof PageTypePublishTargetType) {
+			return $item->getPageTypePublishTargetTypeName();
 		} else if ($item instanceof PageType) {
 			return $item->getPageTypeName();
 		} else if ($item instanceof PageTemplate) {
@@ -394,8 +394,8 @@ class Concrete5_Model_Package extends Object {
 						case 'GatheringItemTemplate':
 						case 'ConversationEditor':
 						case 'ConversationRatingType':
-						case 'ComposerTargetType':
-						case 'ComposerControlType':
+						case 'PageTypePublishTargetType':
+						case 'PageTypeComposerControlType':
 						case 'PageTemplate':
 							$item->delete();	
 							break;

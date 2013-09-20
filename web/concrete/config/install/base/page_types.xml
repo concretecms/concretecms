@@ -47,7 +47,7 @@
               </block>
             </area>
             <area name="Main Sub">
-              <block type="core_composer_control_output" name="" mc-block-id="n27l4Ba2">
+              <block type="core_page_type_composer_control_output" name="" mc-block-id="n27l4Ba2">
                 <control output-control-id="EcjltFnE"/>
               </block>
               <block type="core_conversation" name="" mc-block-id="5uNTpIOP">
@@ -96,7 +96,7 @@
               </block>
             </area>
             <area name="Left">
-              <block type="core_composer_control_output" name="" mc-block-id="3yCWaFmU">
+              <block type="core_page_type_composer_control_output" name="" mc-block-id="3yCWaFmU">
                 <control output-control-id="EcjltFnE"/>
               </block>
             </area>
@@ -147,7 +147,7 @@
               </block>
             </area>
             <area name="Left">
-              <block type="core_composer_control_output" name="" mc-block-id="zzzZJYY4">
+              <block type="core_page_type_composer_control_output" name="" mc-block-id="zzzZJYY4">
                 <control output-control-id="EcjltFnE"/>
               </block>
             </area>
@@ -211,7 +211,7 @@
               </block>
             </area>
             <area name="Main Sub">
-              <block type="core_composer_control_output" name="" mc-block-id="3vtEa5yx">
+              <block type="core_page_type_composer_control_output" name="" mc-block-id="3vtEa5yx">
                 <control output-control-id="MLz8UXZN"/>
               </block>
               <block type="core_conversation" name="" mc-block-id="pS54v26A">
@@ -260,7 +260,7 @@
               </block>
             </area>
             <area name="Left">
-              <block type="core_composer_control_output" name="" mc-block-id="GDKNt7ZP">
+              <block type="core_page_type_composer_control_output" name="" mc-block-id="GDKNt7ZP">
                 <control output-control-id="MLz8UXZN"/>
               </block>
             </area>
@@ -311,7 +311,7 @@
               </block>
             </area>
             <area name="Left">
-              <block type="core_composer_control_output" name="" mc-block-id="qchrTAhs">
+              <block type="core_page_type_composer_control_output" name="" mc-block-id="qchrTAhs">
                 <control output-control-id="MLz8UXZN"/>
               </block>
             </area>

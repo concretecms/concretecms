@@ -65,7 +65,7 @@ abstract class Concrete5_Model_PageTypeComposerControl extends Object {
 	}
 
 	public function getPageTypeComposerControlTypeObject() {
-		return ComposerControlType::getByHandle($this->ptComposerControlTypeHandle);
+		return PageTypeComposerControlType::getByHandle($this->ptComposerControlTypeHandle);
 	}
 
 	public function getPageTypeComposerControlTypeHandle() {
@@ -93,7 +93,7 @@ abstract class Concrete5_Model_PageTypeComposerControl extends Object {
 
 	public function addToPageTypeComposerFormLayoutSet(PageTypeComposerFormLayoutSet $set) {
 		$db = Loader::db();
-		$displayOrder = $db->GetOne('select count(ptComposerFormLayoutSetControlID) from ComposerFormLayoutSetControls where ptComposerFormLayoutSetID = ?', array($set->getPageTypeComposerFormLayoutSetID()));
+		$displayOrder = $db->GetOne('select count(ptComposerFormLayoutSetControlID) from PageTypeComposerFormLayoutSetControls where ptComposerFormLayoutSetID = ?', array($set->getPageTypeComposerFormLayoutSetID()));
 		if (!$displayOrder) {
 			$displayOrder = 0;
 		}

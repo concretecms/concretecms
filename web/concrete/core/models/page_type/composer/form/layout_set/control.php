@@ -36,7 +36,7 @@ class Concrete5_Model_PageTypeComposerFormLayoutSetControl extends Object {
 	public function ensureOutputControlExists() {
 		$set = $this->getPageTypeComposerFormLayoutSetObject();
 		$pt = $set->getPageTypeObject();
-		$pagetemplates = $pt->getPageTypeComposerPageTemplateObjects();
+		$pagetemplates = $pt->getPageTypePageTemplateObjects();
 		foreach($pagetemplates as $pt) {
 			$outputcontrol = PageTypeComposerOutputControl::getByPageTypeComposerFormLayoutSetControl($pt, $this);
 			if (!is_object($outputcontrol)) {

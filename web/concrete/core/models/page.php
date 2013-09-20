@@ -792,10 +792,14 @@ class Concrete5_Model_Page extends Collection {
 	 * Returns the Collection Type handle
 	 * @return string
 	 */	
-	function getCollectionTypeHandle() {
-		return $this->vObj->ctHandle;
+	function getPageTypeHandle() {
+		return $this->vObj->ptHandle;
 	}
 
+	public function getCollectionTypeHandle() {
+		return $this->getPageTypeHandle();
+	}
+	
 	/**
 	 * Returns theme id for the collection
 	 * @return int
@@ -2085,7 +2089,6 @@ class Concrete5_Model_Page extends Collection {
 		$cDate = $dh->getSystemDateTime();
 		$cDatePublic = ($data['cDatePublic']) ? $data['cDatePublic'] : null;		
 
-		// THIS IS TEMPORARY
 		$ptID = 0;
 		if ($pt instanceof PageType) {
 			if ($pt->getPageTypeHandle() == STACKS_PAGE_TYPE) {
@@ -2096,8 +2099,10 @@ class Concrete5_Model_Page extends Collection {
 			}
 
 			$ptID = $pt->getPageTypeID();
-			$mc = $pt->getPageTypePageTemplateDefaultPageObject($template);
-			$masterCID = $mc->getCollectionID();
+			if ($template) {
+				$mc = $pt->getPageTypePageTemplateDefaultPageObject($template);
+				$masterCID = $mc->getCollectionID();
+			}
 		}
 
 		if ($template instanceof PageTemplate) {
