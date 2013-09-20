@@ -81,14 +81,14 @@ abstract class Concrete5_Model_PageTypeComposerControl extends Object {
 	}
 
 	public function field($key) {
-		return 'ptComposer[' . $this->ptPageTypeComposerFormLayoutSetControlObject->getPageTypeComposerFormLayoutSetControlID(). '][' . $key . ']';
+		return 'ptComposer[' . $this->ptComposerFormLayoutSetControlObject->getPageTypeComposerFormLayoutSetControlID(). '][' . $key . ']';
 	}
 
 	public function getRequestValue($args = false) {
 		if (!$args) {
 			$args = $_POST;
 		}
-		return $args['ptComposer'][$this->ptPageTypeComposerFormLayoutSetControlObject->getPageTypeComposerFormLayoutSetControlID()];
+		return $args['ptComposer'][$this->ptComposerFormLayoutSetControlObject->getPageTypeComposerFormLayoutSetControlID()];
 	}
 
 	public function addToPageTypeComposerFormLayoutSet(PageTypeComposerFormLayoutSet $set) {

@@ -80,14 +80,14 @@ abstract class Concrete5_Model_CorePagePropertyPageTypeComposerControl extends P
 		$control = $this;
 		
 		if ($customTemplate) {
-			$rec = $env->getRecord(DIRNAME_ELEMENTS . '/' . DIRNAME_COMPOSER . '/' . DIRNAME_COMPOSER_ELEMENTS_CONTROLS . '/' . $this->ptComposerControlTypeHandle . '/' . $this->propertyHandle . '/' . DIRNAME_BLOCK_TEMPLATES_COMPOSER . '/' . $customTemplate);
+			$rec = $env->getRecord(DIRNAME_ELEMENTS . '/' . DIRNAME_PAGE_TYPES . '/' . DIRNAME_COMPOSER . '/' . DIRNAME_COMPOSER_ELEMENTS_CONTROLS . '/' . $this->ptComposerControlTypeHandle . '/' . $this->propertyHandle . '/' . DIRNAME_BLOCK_TEMPLATES_COMPOSER . '/' . $customTemplate);
 			if ($rec->exists()) {
 				$template = $rec->file;
 			}
 		}
 
 		if (!isset($template)) {
-			$template = $env->getPath(DIRNAME_ELEMENTS . '/' . DIRNAME_COMPOSER . '/' . DIRNAME_COMPOSER_ELEMENTS_CONTROLS . '/' . $this->ptComposerControlTypeHandle . '/' . $this->propertyHandle . '.php');
+			$template = $env->getPath(DIRNAME_ELEMENTS . '/' . DIRNAME_PAGE_TYPES . '/' . DIRNAME_COMPOSER . '/' . DIRNAME_COMPOSER_ELEMENTS_CONTROLS . '/' . $this->ptComposerControlTypeHandle . '/' . $this->propertyHandle . '.php');
 		}
 
 		include($template);

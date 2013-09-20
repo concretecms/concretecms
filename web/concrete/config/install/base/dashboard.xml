@@ -7,7 +7,7 @@
         <page name="Compose Page" path="/dashboard/composer/write" filename="/dashboard/composer/write.php" pagetype="" description="" package="">
             <attributes>
                     <attributekey handle="meta_keywords">
-                            <value>new page, add page</value>
+                            <value>write, new page, add page</value>
                     </attributekey>
                     <attributekey handle="icon_dashboard">
                             <value>icon-pencil</value>
