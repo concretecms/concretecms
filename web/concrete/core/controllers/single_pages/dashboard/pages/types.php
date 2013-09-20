@@ -54,10 +54,13 @@ class Concrete5_Controller_Dashboard_Pages_Types extends DashboardBaseController
 		$vs = Loader::helper('validation/strings');
 		$sec = Loader::helper('security');
 		$name = $sec->sanitizeString($this->post('ptName'));
+		$handle = $sec->sanitizeString($this->post('ptHandle'));
 		if (!$vs->notempty($name)) {
 			$this->error->add(t('You must specify a valid name for your page type.'));
 		}
-
+		if (!$vs->handle($handle)) {
+			$this->error->add(t('You must specify a valid handle for your page type.'));
+		}
 		$defaultTemplate = PageTemplate::getByID($this->post('ptDefaultPageTemplateID'));
 		if (!is_object($defaultTemplate)) {
 			$this->error->add(t('You must choose a valid default page template.'));
@@ -80,7 +83,7 @@ class Concrete5_Controller_Dashboard_Pages_Types extends DashboardBaseController
 			$this->error->add(t('Invalid page type target type.'));
 		}
 		if (!$this->error->has()) {
-			$pagetype->update($name, $defaultTemplate, $this->post('ptAllowedPageTemplates'), $templates);
+			$pagetype->update($handle, $name, $defaultTemplate, $this->post('ptAllowedPageTemplates'), $templates);
 			$configuredTarget = $target->configurePageTypePublishTarget($pagetype, $this->post());
 			$pagetype->setConfiguredPageTypePublishTargetObject($configuredTarget);
 			$this->redirect('/dashboard/pages/types', 'page_type_updated');

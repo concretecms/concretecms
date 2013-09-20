@@ -353,7 +353,7 @@
 		 */
 		public function pageTypeControllerPath($ctHandle) {			
 			self::model('collection_types');
-			$ct = CollectionType::getByHandle($ctHandle);
+			$ct = PageType::getByHandle($ctHandle);
 			if (!is_object($ct)) {
 				return false;
 			}			
@@ -392,12 +392,12 @@
 			
 			if ($item instanceof Page) {
 				$c = $item;
-				if ($c->getCollectionTypeID() > 0) {					
-					$ctHandle = $c->getCollectionTypeHandle();
-					$path = self::pageTypeControllerPath($ctHandle, $item->getPackageHandle());
+				if ($c->getPageTypeID() > 0) {					
+					$ptHandle = $c->getPageTypeHandle();
+					$path = self::pageTypeControllerPath($ptHandle, $item->getPackageHandle());
 					if ($path != false) {
 						require_once($path);
-						$class = Object::camelcase($ctHandle) . 'PageTypeController';
+						$class = Object::camelcase($ptHandle) . 'PageTypeController';
 					}
 				} else if ($c->isGeneratedCollection()) {
 					$file = $c->getCollectionFilename();

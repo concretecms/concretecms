@@ -57,8 +57,8 @@ class Concrete5_Controller_Dashboard_Sitemap_Search extends Controller {
 			$pageList->setItemsPerPage($req['numResults']);
 		}
 
-		if ($req['ctID']) {
-			$pageList->filterByCollectionTypeID($req['ctID']);
+		if ($req['ptID']) {
+			$pageList->filterByPageTypeID($req['ptID']);
 		}
 
 		if (is_array($req['selectedSearchField'])) {
@@ -88,7 +88,7 @@ class Concrete5_Controller_Dashboard_Sitemap_Search extends Controller {
 							}
 							break;
 						case 'theme':
-							$pageList->filter('ptID', $_REQUEST['ptID']);
+							$pageList->filter('pThemeID', $_REQUEST['pThemeID']);
 							break;
 						case 'parent':
 							if (isset($req['_cParentAll'])) {

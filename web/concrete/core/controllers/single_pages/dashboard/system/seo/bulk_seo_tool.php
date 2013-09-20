@@ -87,8 +87,8 @@ class Concrete5_Controller_Dashboard_System_Seo_BulkSeoTool extends Controller {
 			$pageList->setItemsPerPage($req['numResults']);
 		}
 
-		if ($req['ctID']) {
-			$pageList->filterByCollectionTypeID($req['ctID']);
+		if ($req['ptID']) {
+			$pageList->filterByPageTypeID($req['ptID']);
 		}
 
 		if ($_REQUEST['noKeywords'] == 1){

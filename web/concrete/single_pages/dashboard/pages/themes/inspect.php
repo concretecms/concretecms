@@ -8,7 +8,7 @@ $ci = Loader::helper('concrete/interface');
 
 		<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Inspect Theme'), false, 'span10 offset1', false);?>
     
-    <form method="post" id="ccm-inspect-form" action="<?=$this->url('/dashboard/pages/themes/inspect/', 'activate_files', $ptID)?>">
+    <form method="post" id="ccm-inspect-form" action="<?=$this->url('/dashboard/pages/themes/inspect/', 'activate_files', $pThemeID)?>">
     
 	<div class="ccm-pane-body" style="padding-top:10px;">
     

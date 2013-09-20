@@ -881,7 +881,7 @@
 
 				if (!$c->isGeneratedCollection()) {
 				
-					if ($_POST['ctID'] && $cp->canEditPageType()) {
+					if ($_POST['ptID'] && $cp->canEditPageType()) {
 						// now we have to check to see if you're allowed to update this page to this page type.
 						// We do this by checking to see whether the PARENT page allows you to add this page type here.
 						// if this is the home page then we assume you are good
@@ -890,11 +890,11 @@
 							Loader::model('collection_types');
 							$parentC = Page::getByID($c->getCollectionParentID());
 							$parentCP = new Permissions($parentC);
-							$ct = CollectionType::getByID($_POST['ctID']);
+							$ct = PageType::getByID($_POST['ptID']);
 						}
 						
 						if ($c->getCollectionID() == 1 || $parentCP->canAddSubCollection($ct)) {
-							$data['ctID'] = $_POST['ctID'];
+							$data['ptID'] = $_POST['ptID'];
 							$nvc->update($data);
 						}						
 					}
@@ -1101,7 +1101,7 @@
 			// adding a collection to a collection
 			Loader::model('collection_types');
 
-			$ct = CollectionType::getByID($_POST['ctID']);
+			$ct = PageType::getByID($_POST['ptID']);
 			if ($cp->canAddSubpage($ct)) {		
 				// the $c below identifies that we're adding a collection _to_ that particular collection object
 				//$newCollectionID = $ct->addCollection($c);				

@@ -42,27 +42,27 @@ class Concrete5_Model_AddSubpagePagePermissionKey extends PagePermissionKey  {
 		$list = PermissionDuration::filterByActive($list);
 		
 		$db = Loader::db();
-		$ctIDs = array();
+		$ptIDs = array();
 		if (count($list) > 0) {
-			$allCTIDs = $db->GetCol('select ctID from PageTypes where ctIsInternal = 0');
+			$allPTIDs = $db->GetCol('select ptID from PageTypes where ptIsInternal = 0');
 			foreach($list as $l) {
 				if ($l->getPageTypesAllowedPermission() == 'N') {
-					$ctIDs = array();
+					$ptIDs = array();
 				}
 				if ($l->getPageTypesAllowedPermission() == 'C') {
 					if ($l->getAccessType() == PagePermissionKey::ACCESS_TYPE_EXCLUDE) {
-						$ctIDs = array_values(array_diff($ctIDs, $l->getPageTypesAllowedArray()));
+						$ptIDs = array_values(array_diff($ptIDs, $l->getPageTypesAllowedArray()));
 					} else { 
-						$ctIDs = array_unique(array_merge($ctIDs, $l->getPageTypesAllowedArray()));
+						$ptIDs = array_unique(array_merge($ptIDs, $l->getPageTypesAllowedArray()));
 					}
 				}
 				if ($l->getPageTypesAllowedPermission() == 'A') {
-					$ctIDs = $allCTIDs;
+					$ptIDs = $allPTIDs;
 				}
 			}
 		}
 				
-		return $ctIDs;
+		return $ptIDs;
 	}
 	
 	public function validate($ct = false) {
@@ -73,7 +73,7 @@ class Concrete5_Model_AddSubpagePagePermissionKey extends PagePermissionKey  {
 
 		$types = $this->getAllowedPageTypeIDs();
 		if ($ct != false) {
-			return in_array($ct->getCollectionTypeID(), $types);
+			return in_array($ct->getPageTypeID(), $types);
 		} else {
 			return count($types) > 0;
 		}

@@ -9,7 +9,7 @@ if (is_object($pagetype) && $pagetype->getPageTypePublishTargetTypeID() == $this
 	$configuredTarget = $pagetype->getPageTypePublishTargetObject();
 	$pl = new PageList();
 	$pl->sortByName();
-	$pl->filterByCollectionTypeID($configuredTarget->getCollectionTypeID());
+	$pl->filterByPageTypeID($configuredTarget->getPageTypeID());
 	$pl->sortByName();
 	$pages = $pl->get();
 	$options = array();

@@ -55,19 +55,6 @@ switch($_GET['ctask']) {
 		$divID = 'ccm-edit-collection-design';
 		$canViewPane = ($cp->canEditPageTheme() || $cp->canEditPageType());
 		break;
-	case 'add':
-		$toolSection = "collection_add";
-		$divID = 'ccm-edit-collection-design';
-		$canViewPane = $cp->canAddSubpage();
-		if ($_REQUEST['ctID']) {
-			$ct = CollectionType::getByID($_REQUEST['ctID']);
-			if (!is_object($ct)) {
-				$canViewPane = false;
-			} else {
-				$canViewPane = $cp->canAddSubCollection($ct);
-			}
-		}
-		break;
 	case 'add_external':
 		$toolSection = "collection_add_external";
 		$divID = 'ccm-edit-collection-external';

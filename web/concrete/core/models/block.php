@@ -208,7 +208,7 @@ class Concrete5_Model_Block extends Object {
 	public function isBlockInStack() {
 		$co = $this->getBlockCollectionObject();
 		if (is_object($co)) {
-			if ($co->getCollectionTypeHandle() == STACKS_PAGE_TYPE) {
+			if ($co->getPageTypeHandle() == STACKS_PAGE_TYPE) {
 				return true;
 			}
 		}
@@ -856,7 +856,7 @@ class Concrete5_Model_Block extends Object {
 	function getBlockPassThruAction() {
 		// is the block located in a stack?
 		$pc = $this->getBlockCollectionObject();
-		if ($pc->getCollectionTypeHandle() == STACKS_PAGE_TYPE) {
+		if ($pc->getPageTypeHandle() == STACKS_PAGE_TYPE) {
 			$c = Page::getCurrentPage();
 			$cID = $c->getCollectionID();
 			$bID = $this->getBlockID();

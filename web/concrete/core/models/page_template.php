@@ -124,11 +124,11 @@ class Concrete5_Model_PageTemplate extends Object {
 		$r = $db->prepare($q);
 		$res = $db->execute($r, $v);
 
-		// now that we have added a template, we need to find any composers that can use this template (any composers that allow ALL page templates or all + a template not of this kind)
+		// now that we have added a template, we need to find any page types that can use this template (any page types that allow ALL page templates or all + a template not of this kind)
 		// and we need to update them to have a reference to this template defaults
-		$cmplist = Composer::getList();
-		foreach($cmplist as $cmp) {
-			$cmp->rescanComposerOutputControlObjects();
+		$ptlist = PageType::getList();
+		foreach($ptlist as $pt) {
+			$pt->rescanPageTypeComposerOutputControlObjects();
 		}
 		
 		if ($res) {

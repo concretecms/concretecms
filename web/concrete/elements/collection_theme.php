@@ -12,7 +12,7 @@ foreach($tArrayTmp as $pt) {
 		$tArray[] = $pt;
 	}
 }
-$ctArray = CollectionType::getList();
+$ctArray = PageType::getList();
 
 $cp = new Permissions($c);
 if ($c->getCollectionID() > 1) {
@@ -32,7 +32,7 @@ for ($i = 0; $i < count($ctArray); $i++) {
 }
 
 $plID = $c->getCollectionThemeID();
-$ctID = $c->getCollectionTypeID();
+$ptID = $c->getPageTypeID();
 if ($plID == 0) {
 	$pl = PageTheme::getSiteTheme();
 	$plID = $pl->getThemeID();
@@ -42,7 +42,7 @@ if ($plID == 0) {
 <div class="ccm-ui">
 <form method="post" name="ccmThemeForm" action="<?=$c->getCollectionAction()?>">
 	<input type="hidden" name="plID" value="<?=$c->getCollectionThemeID()?>" />
-	<input type="hidden" name="ctID" value="<?=$c->getCollectionTypeID()?>" />
+	<input type="hidden" name="ctID" value="<?=$c->getPageTypeID()?>" />
 	<input type="hidden" name="rel" value="<?=$_REQUEST['rel']?>" />
 
 
@@ -60,7 +60,7 @@ if ($plID == 0) {
 	} else if ($c->isMasterCollection()) { ?>
 		<h3><?=t('Choose a Page Type')?></h3>
 		<p>
-		<?=t("This is the defaults page for the %s page type. You cannot change it.", $c->getCollectionTypeName()); ?>
+		<?=t("This is the defaults page for the %s page type. You cannot change it.", $c->getPageTypeName()); ?>
 		</p>
 		<br/><br/>
 	
@@ -82,9 +82,9 @@ if ($plID == 0) {
 				foreach($ctArray as $ct) { 
 					if ($c->getCollectionID() == 1 || $parentCP->canAddSubCollection($ct)) { 
 					?>		
-					<? $class = ($ct->getCollectionTypeID() == $ctID) ? 'ccm-item-selected' : ''; ?>
+					<? $class = ($ct->getPageTypeID() == $ctID) ? 'ccm-item-selected' : ''; ?>
 			
-					<li class="<?=$class?>"><a href="javascript:void(0)" ccm-page-type-id="<?=$ct->getCollectionTypeID()?>"><?=$ct->getCollectionTypeIconImage();?></a><span><?=$ct->getCollectionTypeName()?></span>
+					<li class="<?=$class?>"><a href="javascript:void(0)" ccm-page-type-id="<?=$ct->getPageTypeID()?>"><?=$ct->getPageTypeIconImage();?></a><span><?=$ct->getPageTypeName()?></span>
 					</li>
 				<? } 
 				

@@ -21,8 +21,8 @@ if ($a instanceof SubArea && (!$a->overrideCollectionPermissions())) { ?>
 		<div class="block-message alert-message notice">
 		<p>
 		<? if ($areac->isMasterCollection()) { ?>
-			<? $ctName = $areac->getCollectionTypeName(); ?>
-			<?=t("The following area permissions are inherited from an area set in <strong>%s</strong> defaults.", $ctName)?>
+			<? $ptName = $areac->getPageTypeName(); ?>
+			<?=t("The following area permissions are inherited from an area set in <strong>%s</strong> defaults.", $ptName)?>
 		<? } else { ?>
 			<?=t("The following area permissions are inherited from an area set on ")?>
 			<a href="<?=DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=<?=$areac->getCollectionID()?>"><?=$areac->getCollectionName()?></a>. 

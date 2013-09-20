@@ -33,7 +33,7 @@ foreach($drafts as $dr) {
 		}
 		?>
 		</td>
-		<td><?=$d->getCollectionTypeName()?></td>
+		<td><?=$d->getPageTypeName()?></td>
 		<td><?
 			$mask = DATE_APP_GENERIC_MDYT;
 			if ($today == $d->getCollectionDateLastModified("Y-m-d")) {

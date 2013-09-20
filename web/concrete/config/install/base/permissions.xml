@@ -94,7 +94,7 @@
         <!-- page type (composer) //-->
         <permissionkey handle="compose_page_type" name="Compose Page Type" description="" package="" category="page_type" />
         <permissionkey handle="edit_page_type_permissions" name="Edit Page Type Permissions" description="" package="" category="page_type" />
-        <permissionkey handle="edit_page_type_drafts_from_composer" name="Edit Page Type Drafts" description="" package="" category="page_type" />
+        <permissionkey handle="edit_page_type_drafts" name="Edit Page Type Drafts" description="" package="" category="page_type" />
         <permissionkey handle="edit_page_draft" name="Edit Page Draft" description="" package="" category="page_draft" />
 
         <!-- users //-->

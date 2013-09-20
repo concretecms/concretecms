@@ -17,25 +17,25 @@ class Concrete5_Model_EditPageThemePagePermissionKey extends PagePermissionKey  
 		$list = PermissionDuration::filterByActive($list);
 		
 		$db = Loader::db();
-		$allptIDs = $db->GetCol('select ptID from PageThemes order by ptID asc');
-		$ptIDs = array();
+		$allpThemeIDs = $db->GetCol('select pThemeID from PageThemes order by pThemeID asc');
+		$pThemeIDs = array();
 		foreach($list as $l) {
 			if ($l->getThemesAllowedPermission() == 'N') {
-				$ptIDs = array();
+				$pThemeIDs = array();
 			}
 			if ($l->getThemesAllowedPermission() == 'C') {
 				if ($l->getAccessType() == PagePermissionKey::ACCESS_TYPE_EXCLUDE) {
-					$ptIDs = array_values(array_diff($ptIDs, $l->getThemesAllowedArray()));
+					$pThemeIDs = array_values(array_diff($pThemeIDs, $l->getThemesAllowedArray()));
 				} else { 
-					$ptIDs = array_unique(array_merge($ptIDs, $l->getThemesAllowedArray()));
+					$pThemeIDs = array_unique(array_merge($pThemeIDs, $l->getThemesAllowedArray()));
 				}
 			}
 			if ($l->getThemesAllowedPermission() == 'A') {
-				$ptIDs = $allptIDs;
+				$pThemeIDs = $allpThemeIDs;
 			}
 		}
 		
-		return $ptIDs;
+		return $pThemeIDs;
 	}
 	
 	public function validate($theme = false) {

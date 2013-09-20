@@ -13,6 +13,14 @@ class Concrete5_Model_PageType extends Object {
 	public function getPermissionObjectIdentifier() {
 		return $this->getPageTypeID();
 	}
+	public function isPageTypeInternal() {
+		return $this->ptIsInternal;
+	}
+	public function getPackageID() {return $this->pkgID;}
+	public function getPackageHandle() {
+		return PackageList::getHandle($this->pkgID);
+	}
+	
 
 	public function getPageTypeSelectedPageTemplateObjects() {
 		$templates = array();
@@ -107,15 +115,16 @@ class Concrete5_Model_PageType extends Object {
 			$ptAllowedPageTemplates = 'A';
 		}
 		$ptName = (string) $node['name'];
+		$ptHandle = (string) $node['ptHandle'];
 		$db = Loader::db();
 		$defaultPageTemplate = PageTemplate::getByHandle((string) $node->pagetemplates['default']);
 
-		$ptID = $db->GetOne('select ptID from PageTypes where ptName = ?', array($ptName));
+		$ptID = $db->GetOne('select ptID from PageTypes where ptHandle = ?', array($ptHandle));
 		if ($ptID) {
 			$cm = PageType::getByID($ptID);
-			$cm->update($ptName, $defaultPageTemplate, $ptAllowedPageTemplates, $types);
+			$cm->update($ptHandle, $ptName, $defaultPageTemplate, $ptAllowedPageTemplates, $types);
 		} else {
-			$cm = PageType::add($ptName, $defaultPageTemplate, $ptAllowedPageTemplates, $types);
+			$cm = PageType::add($ptHandle, $ptName, $defaultPageTemplate, $ptAllowedPageTemplates, $types);
 		}
 		if (isset($node->target)) {
 			$target = PageTypePublishTargetType::importConfiguredPageTypePublishTarget($node->target);
@@ -151,23 +160,29 @@ class Concrete5_Model_PageType extends Object {
 				}
 			}
 		}
+	}
 
-		if (isset($node->output->pagetemplate)) {
-			$ci = new ContentImporter();
-			foreach($node->output->pagetemplate as $pagetemplate) {
-				$pt = PageTemplate::getByHandle((string) $pagetemplate['handle']);
-				if (is_object($pt)) {
-					// let's get the defaults page for this
-					$xc = $cm->getPageTypePageTemplateDefaultPageObject($pt);
-					// now that we have the defaults page, let's import this content into it.
-					if (isset($pagetemplate->page)) {
-						$ci->importPageAreas($xc, $pagetemplate->page);
+	public static function importContent($node) {
+		$db = Loader::db();
+		$ptID = $db->GetOne('select ptID from PageTypes where ptHandle = ?', array($ptHandle));
+		if ($ptID) {
+			$pt = PageType::getByID($ptID);
+			if (isset($node->output->pagetemplate)) {
+				$ci = new ContentImporter();
+				foreach($node->output->pagetemplate as $pagetemplate) {
+					$pt = PageTemplate::getByHandle((string) $pagetemplate['handle']);
+					if (is_object($pt)) {
+						// let's get the defaults page for this
+						$xc = $cm->getPageTypePageTemplateDefaultPageObject($pt);
+						// now that we have the defaults page, let's import this content into it.
+						if (isset($pagetemplate->page)) {
+							$ci->importPageAreas($xc, $pagetemplate->page);
+						}
 					}
 				}
 			}
 		}
 	}
-
 
 
 	public static function exportList($xml) {
@@ -229,10 +244,10 @@ class Concrete5_Model_PageType extends Object {
 		}
 	}
 
-	public static function add($ptName, PageTemplate $defaultPageTemplate, $ptAllowedPageTemplates, $templates) {
+	public static function add($ptHandle, $ptName, PageTemplate $defaultPageTemplate, $ptAllowedPageTemplates, $templates) {
 		$db = Loader::db();
-		$db->Execute('insert into PageTypes (ptName, ptDefaultPageTemplateID, ptAllowedPageTemplates) values (?, ?, ?)', array(
-			$ptName, $defaultPageTemplate->getPageTemplateID(), $ptAllowedPageTemplates
+		$db->Execute('insert into PageTypes (ptName, ptHandle, ptDefaultPageTemplateID, ptAllowedPageTemplates) values (?, ?, ?, ?)', array(
+			$ptName, $ptHandle, $defaultPageTemplate->getPageTemplateID(), $ptAllowedPageTemplates
 		));
 		$ptID = $db->Insert_ID();
 		if ($ptAllowedPageTemplates != 'A') {
@@ -254,7 +269,7 @@ class Concrete5_Model_PageType extends Object {
 		}
 
 		// now we clear the default from edit page drafts
-		$pk = PermissionKey::getByHandle('edit_page_drafts_from_page_type');
+		$pk = PermissionKey::getByHandle('edit_page_type_drafts');
 		$pk->setPermissionObject($ptt);
 		$pt = $pk->getPermissionAssignmentObject();
 		$pt->clearPermissionAssignment();
@@ -268,10 +283,11 @@ class Concrete5_Model_PageType extends Object {
 		return $ptt;
 	}
 
-	public function update($ptName, PageTemplate $defaultPageTemplate, $ptAllowedPageTemplates, $templates) {
+	public function update($ptHandle, $ptName, PageTemplate $defaultPageTemplate, $ptAllowedPageTemplates, $templates) {
 		$db = Loader::db();
-		$db->Execute('update PageTypes set ptName = ?, ptDefaultPageTemplateID = ?, ptAllowedPageTemplates = ? where ptID = ?', array(
+		$db->Execute('update PageTypes set ptName = ?, ptHandle = ?, ptDefaultPageTemplateID = ?, ptAllowedPageTemplates = ? where ptID = ?', array(
 			$ptName,
+			$ptHandle,
 			$defaultPageTemplate->getPageTemplateID(),
 			$ptAllowedPageTemplates,
 			$this->ptID

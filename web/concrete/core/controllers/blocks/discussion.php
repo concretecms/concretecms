@@ -36,8 +36,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			$discussion = $this->getConversationDiscussionObject();
 			if (is_object($discussion)) {
 				$this->set('discussion', $discussion);
-				if ($this->enableNewTopics && $this->cmpID) {
-					$this->set('composer', Composer::getByID($this->cmpID));
+				if ($this->enableNewTopics && $this->ptID) {
+					$this->set('pagetype', PageType::getByID($this->ptID));
 				}
 
 				$c = Page::getCurrentPage();
@@ -71,21 +71,21 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 		public function action_post() {
 			// happens through ajax
-			$composer = Composer::getByID($this->cmpID);
-			if (is_object($composer) && $this->enableNewTopics) {
-				$ccp = new Permissions($composer);
-				if ($ccp->canAccessComposer()) {
-					$pagetypes = $composer->getComposerPageTypeObjects();
+			$pagetype = PageType::getByID($this->ptID);
+			if (is_object($pagetype) && $this->enableNewTopics) {
+				$ccp = new Permissions($pagetype);
+				if ($ccp->canComposePageType()) {
+					$pagetypes = $pagetype->getPageTypeComposerPageTypeObjects();
 					$ctTopic = $pagetypes[0];
 					$c = Page::getCurrentPage();
-					$e = $composer->validatePublishRequest($ctTopic, $c);
-					$r = new ComposerPublishResponse($e);
+					$e = $pagetype->validatePublishRequest($ctTopic, $c);
+					$r = new PageTypePublishResponse($e);
 					if (!$e->has()) {
-						$d = $composer->createDraft($ctTopic);
-						$d->setComposerDraftTargetParentPageID($c->getCollectionID());
+						$d = $pagetype->createDraft($ctTopic);
+						$d->setPageDraftTargetParentPageID($c->getCollectionID());
 						$d->saveForm();
 						$d->publish();
-						$nc = Page::getByID($d->getComposerDraftCollectionID(), 'RECENT');
+						$nc = Page::getByID($d->getPageDraftCollectionID(), 'RECENT');
 						$link = Loader::helper('navigation')->getLinkToCollection($nc, true);
 						$r->setRedirectURL($link);
 					}
@@ -96,10 +96,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		}
 
 		public function on_page_view() {
-			if ($this->enableNewTopics && $this->cmpID) {
-				$cmp = Composer::getByID($this->cmpID);
-				if (is_object($cmp)) {
-					Loader::helper('composer')->addAssetsToRequest($cmp, $this);
+			if ($this->enableNewTopics && $this->ptID) {
+				$pt = PageType::getByID($this->ptID);
+				if (is_object($pt)) {
+					Loader::helper('composer')->addAssetsToRequest($pt, $this);
 				}
 			}
 			$req = Request::get();
@@ -116,11 +116,11 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				$discussion = ConversationDiscussion::getByID($cnvID);
 			}
 			$values = $post;
-			$cmpID = 0;
-			if ($post['cmpID']) {
-				$cmpID = $post['cmpID'];
+			$ptID = 0;
+			if ($post['ptID']) {
+				$ptID = $post['ptID'];
 			}
-			$values['cmpID'] = $cmpID;
+			$values['ptID'] = $ptID;
 			$values['cnvDiscussionID'] = $discussion->getConversationDiscussionID();
 			parent::save($values);
 		}

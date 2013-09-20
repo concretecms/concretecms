@@ -6,8 +6,8 @@ $allowedAKIDs = $assignment->getAttributesAllowedArray();
 
 $requiredKeys = array();
 $usedKeys = array();
-if ($c->getCollectionTypeID() > 0 && !$c->isMasterCollection()) {
-	$cto = CollectionType::getByID($c->getCollectionTypeID());
+if ($c->getPageTypeID() > 0 && !$c->isMasterCollection()) {
+	$cto = PageType::getByID($c->getPageTypeID());
 	$aks = $cto->getAvailableAttributeKeys();
 	foreach($aks as $ak) {
 		$requiredKeys[] = $ak->getAttributeKeyID();

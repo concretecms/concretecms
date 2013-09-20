@@ -13,8 +13,8 @@ class Concrete5_Model_AddSubpagePagePermissionAccess extends PagePermissionAcces
 		}
 		$r = $db->Execute('select * from PagePermissionPageTypeAccessListCustom where paID = ?', array($this->getPermissionAccessID()));
 		while ($row = $r->FetchRow()) {
-			$v = array($row['peID'], $newPA->getPermissionAccessID(), $row['ctID']);
-			$db->Execute('insert into PagePermissionPageTypeAccessListCustom  (peID, paID, ctID) values (?, ?, ?)', $v);
+			$v = array($row['peID'], $newPA->getPermissionAccessID(), $row['ptID']);
+			$db->Execute('insert into PagePermissionPageTypeAccessListCustom  (peID, paID, ptID) values (?, ?, ?)', $v);
 		}
 		return $newPA;
 	}
@@ -53,20 +53,20 @@ class Concrete5_Model_AddSubpagePagePermissionAccess extends PagePermissionAcces
 			}
 		}
 
-		if (is_array($args['ctIDInclude'])) { 
-			foreach($args['ctIDInclude'] as $peID => $ctIDs) {
-				foreach($ctIDs as $ctID) { 
-					$v = array($this->getPermissionAccessID(), $peID, $ctID);
-					$db->Execute('insert into PagePermissionPageTypeAccessListCustom (paID, peID, ctID) values (?, ?, ?)', $v);
+		if (is_array($args['ptIDInclude'])) { 
+			foreach($args['ptIDInclude'] as $peID => $ptIDs) {
+				foreach($ptIDs as $ptID) { 
+					$v = array($this->getPermissionAccessID(), $peID, $ptID);
+					$db->Execute('insert into PagePermissionPageTypeAccessListCustom (paID, peID, ptID) values (?, ?, ?)', $v);
 				}
 			}
 		}
 
-		if (is_array($args['ctIDExclude'])) { 
-			foreach($args['ctIDExclude'] as $peID => $ctIDs) {
-				foreach($ctIDs as $ctID) { 
-					$v = array($this->getPermissionAccessID(), $peID, $ctID);
-					$db->Execute('insert into PagePermissionPageTypeAccessListCustom (paID, peID, ctID) values (?, ?, ?)', $v);
+		if (is_array($args['ptIDExclude'])) { 
+			foreach($args['ptIDExclude'] as $peID => $ptIDs) {
+				foreach($ptIDs as $ptID) { 
+					$v = array($this->getPermissionAccessID(), $peID, $ptID);
+					$db->Execute('insert into PagePermissionPageTypeAccessListCustom (paID, peID, ptID) values (?, ?, ?)', $v);
 				}
 			}
 		}
@@ -93,8 +93,8 @@ class Concrete5_Model_AddSubpagePagePermissionAccess extends PagePermissionAcces
 				$l->setAllowExternalLinks(0);
 			}
 			if ($permission == 'C') { 
-				$ctIDs = $db->GetCol('select ctID from PagePermissionPageTypeAccessListCustom where peID = ? and paID = ?', array($pe->getAccessEntityID(), $l->getPermissionAccessID()));
-				$l->setPageTypesAllowedArray($ctIDs);
+				$ptIDs = $db->GetCol('select ptID from PagePermissionPageTypeAccessListCustom where peID = ? and paID = ?', array($pe->getAccessEntityID(), $l->getPermissionAccessID()));
+				$l->setPageTypesAllowedArray($ptIDs);
 			}
 		}
 		return $list;

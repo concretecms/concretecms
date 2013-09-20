@@ -6,17 +6,17 @@ class Concrete5_Controller_Dashboard_Pages_Themes_Inspect extends Controller {
 	protected $helpers = array('html');
 
 	// grab all the page types from within a theme	
-	public function view($ptID = null, $isOnInstall = false) {
-		if (!$ptID) {
+	public function view($pThemeID = null, $isOnInstall = false) {
+		if (!$pThemeID) {
 			$this->redirect('/dashboard/pages/themes/');
 		}
 		
 		$v = Loader::helper('validation/error');
-		$pt = PageTheme::getByID($ptID);
+		$pt = PageTheme::getByID($pThemeID);
 		if (is_object($pt)) {
 			$files = $pt->getFilesInTheme();
 			$this->set('files', $files);
-			$this->set('ptID', $ptID);
+			$this->set('pThemeID', $pThemeID);
 			$this->set('pageTheme', $pt);
 		} else {
 			$v->add('Invalid Theme');
@@ -34,9 +34,9 @@ class Concrete5_Controller_Dashboard_Pages_Themes_Inspect extends Controller {
 
 	}
 	
-	public function activate_files($ptID) {
+	public function activate_files($pThemeID) {
 		try {
-			$pt = PageTheme::getByID($ptID);
+			$pt = PageTheme::getByID($pThemeID);
 			$txt = Loader::helper('text');
 			if (!is_array($this->post('pageTemplates'))) {
 				throw new Exception(t("You must specify at least one template to create."));
@@ -57,7 +57,7 @@ class Concrete5_Controller_Dashboard_Pages_Themes_Inspect extends Controller {
 		} catch(Exception $e) {
 			$this->set('error', $e);
 		}
-		$this->view($ptID);
+		$this->view($pThemeID);
 	}
 
 

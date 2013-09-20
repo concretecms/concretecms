@@ -124,7 +124,7 @@ class ConcreteDashboardSitemapHelper {
 		
 		$cvName = ($c->getCollectionName()) ? $c->getCollectionName() : '(No Title)';
 		
-		$ct = CollectionType::getByID($c->getCollectionTypeID());
+		$ct = PageType::getByID($c->getPageTypeID());
 		$isInTrash = $c->isInTrash();
 		
 		$isTrash = $c->getCollectionPath() == TRASH_PAGE_PATH;
