@@ -27,8 +27,8 @@ class Concrete5_Model_StartingPointPackage extends Package {
 		new StartingPointInstallRoutine('install_attributes', 25, t('Installing attributes.')),
 		new StartingPointInstallRoutine('install_blocktypes', 30, t('Adding block types.')),
 		new StartingPointInstallRoutine('install_gathering', 33, t('Adding gathering data sources.')),
-		new StartingPointInstallRoutine('install_page_templates', 34, t('Instalilng basic page templates.')),
-		new StartingPointInstallRoutine('install_composer', 36, t('Adding composer.')),
+		new StartingPointInstallRoutine('install_page_templates', 34, t('Installing page templates.')),
+		new StartingPointInstallRoutine('install_page_types', 36, t('Adding page types.')),
 		new StartingPointInstallRoutine('install_themes', 38, t('Adding themes.')),
 		new StartingPointInstallRoutine('install_jobs', 40, t('Installing automated jobs.')),
 		new StartingPointInstallRoutine('install_dashboard', 45, t('Installing dashboard.')),
@@ -71,9 +71,9 @@ class Concrete5_Model_StartingPointPackage extends Package {
 		$ci->importContentFile(DIR_BASE_CORE. '/config/install/base/gathering.xml');
 	}
 
-	public function install_composer() {
+	public function install_page_types() {
 		$ci = new ContentImporter();
-		$ci->importContentFile(DIR_BASE_CORE. '/config/install/base/composer.xml');
+		$ci->importContentFile(DIR_BASE_CORE. '/config/install/base/page_types.xml');
 	}
 
 	public function install_page_templates() {

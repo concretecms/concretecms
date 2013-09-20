@@ -166,7 +166,7 @@ class Concrete5_Controller_Block_CoreGathering extends BlockController {
 					Loader::helper('overlay')->init(false);
 					if ($this->enablePostingFromGathering && $this->cmpID) {
 						$cmp = Composer::getByID($this->cmpID);
-						Loader::helper('composer/form')->addAssetsToRequest($cmp, $this);
+						Loader::helper('composer')->addAssetsToRequest($cmp, $this);
 						$p = new Permissions($cmp);
 						if ($p->canAccessComposer()) {
 							$this->set('composer', $cmp);

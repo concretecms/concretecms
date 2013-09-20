@@ -6,10 +6,10 @@
 	<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper($composer->getComposerName(), false, false, false)?>
 	<form method="post" data-form="composer" class="form-horizontal">
 	<div class="ccm-pane-body">
-		<? Loader::helper('composer/form')->display($composer, $draft); ?>
+		<? Loader::helper('composer')->display($composer, $draft); ?>
 	</div>
 	<div class="ccm-pane-footer">
-		<? Loader::helper('composer/form')->displayButtons($composer, $draft); ?>
+		<? Loader::helper('composer')->displayButtons($composer, $draft); ?>
 	</div>
 
 

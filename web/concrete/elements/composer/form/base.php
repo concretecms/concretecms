@@ -18,7 +18,7 @@ if (is_object($composer)) {
 	$cmpName = $composer->getComposerName();
 	$cmpDefaultPageTemplateID = $composer->getComposerDefaultPageTemplateID();
 	$cmpAllowedPageTemplates = $composer->getComposerAllowedPageTemplates();
-	$selectedtemplates = $composer->getComposerFormSelectedPageTemplateObjects();
+	$selectedtemplates = $composer->getPageTypeSelectedPageTemplateObjects();
 	foreach($selectedtemplates as $pt) {
 		$cmpPageTemplateID[] = $pt->getPageTemplateID();
 	}

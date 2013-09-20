@@ -1,19 +1,20 @@
 <?xml version="1.0"?>
 <concrete5-cif version="1.0">
-    <composertargettypes>
+    <pagetypetargettypes>
         <type handle="parent_page" name="Always publish below a certain page" package="" />
         <type handle="page_type" name="Choose from pages of a certain type" package="" />
         <type handle="all" name="Choose from all pages when publishing" package="" />
-    </composertargettypes>
-    <composercontroltypes>
+    </pagetypetargettypes>
+    <pagetypecomposercontroltypes>
         <type handle="core_page_property" name="Built-In Properties" package="" />
         <type handle="collection_attribute" name="Custom Attributes" package="" />
         <type handle="block" name="Block" package="" />
-    </composercontroltypes>
-  <composers>
-    <composer name="Page">
+    </pagetypecomposercontroltypes>
+  <pagetypes>
+    <pagetype name="Page" handle="page">
       <pagetemplates type="all" default="full"/>
       <target handle="all" package=""/>
+      <composer>
       <formlayout>
         <set name="Basics">
           <control custom-template="" required="1" custom-label="Page Name" type="core_page_property" handle="name"/>
@@ -173,9 +174,11 @@
         </pagetemplate>
       </output>
     </composer>
-    <composer name="Test">
+    </pagetype>
+    <pagetype name="Test" handle="test">
       <pagetemplates type="all" default="full"/>
       <target handle="parent_page" package="" path=""/>
+      <composer>
       <formlayout>
         <set name="Basics">
           <control custom-template="" required="1" custom-label="Page Name" type="core_page_property" handle="name"/>
@@ -335,7 +338,8 @@
         </pagetemplate>
       </output>
     </composer>
-  </composers>
+    </pagetype>
+  </pagetypes>
 
 
 </concrete5-cif>
