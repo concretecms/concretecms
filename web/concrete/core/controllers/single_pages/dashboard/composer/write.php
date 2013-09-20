@@ -5,12 +5,12 @@ class Concrete5_Controller_Dashboard_Composer_Write extends DashboardBaseControl
 
 	public function view($type = false, $id = false) {
 		switch($type) {
-			case 'pagetype':
+			case 'composer':
 				$this->pagetype = PageType::getByID($id);
-				$saveURL = View::url('/dashboard/composer/write', 'save', 'pagetype', $id);
+				$saveURL = View::url('/dashboard/composer/write', 'save', 'composer', $id);
 				$discardURL = '';
-				$publishURL = View::url('/dashboard/composer/write', 'save', 'pagetype', $id, 'publish');
-				$viewURL = View::url('/dashboard/composer/write', 'pagetype', $id);
+				$publishURL = View::url('/dashboard/composer/write', 'save', 'composer', $id, 'publish');
+				$viewURL = View::url('/dashboard/composer/write', 'composer', $id);
 				break;
 			case 'draft':
 				$this->draft = PageDraft::getByID($id);
@@ -101,7 +101,7 @@ EOL;
 		}
 	}
 
-	public function save($type = 'pagetype', $id = false, $action = 'return_json') {
+	public function save($type = 'composer', $id = false, $action = 'return_json') {
 		Cache::disableCache();
 		Cache::disableLocalCache();
 		session_write_close();
