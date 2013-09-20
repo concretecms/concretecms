@@ -1,15 +1,15 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
 
-class Concrete5_Model_DescriptionCorePagePropertyComposerControl extends CorePagePropertyComposerControl {
+class Concrete5_Model_DescriptionCorePagePropertyPageTypeComposerControl extends CorePagePropertyPageTypeComposerControl {
 	
 	public function __construct() {
 		$this->setCorePagePropertyHandle('description');
-		$this->setComposerControlName(t('Description'));
-		$this->setComposerControlIconSRC(ASSETS_URL . '/models/attribute/types/textarea/icon.png');
+		$this->setPageTypeComposerControlName(t('Description'));
+		$this->setPageTypeComposerControlIconSRC(ASSETS_URL . '/models/attribute/types/textarea/icon.png');
 	}
 
-	public function publishToPage(ComposerDraft $d, $data, $controls) {
-		$this->addComposerControlRequestValue('cDescription', $data['description']);
+	public function publishToPage(PageDraft $d, $data, $controls) {
+		$this->addPageTypeComposerControlRequestValue('cDescription', $data['description']);
 		parent::publishToPage($d, $data, $controls);
 	}
 
@@ -26,9 +26,9 @@ class Concrete5_Model_DescriptionCorePagePropertyComposerControl extends CorePag
 		return $data;
 	}
 
-	public function getComposerControlDraftValue() {
-		if (is_object($this->cmpDraftObject)) {
-			$c = $this->cmpDraftObject->getComposerDraftCollectionObject();
+	public function getPageTypeComposerControlDraftValue() {
+		if (is_object($this->pDraftObject)) {
+			$c = $this->pDraftObject->getPageDraftCollectionObject();
 			return $c->getCollectionDescription();
 		}
 	}

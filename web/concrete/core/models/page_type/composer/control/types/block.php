@@ -1,8 +1,8 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
 
-class Concrete5_Model_BlockComposerControlType extends ComposerControlType {
+class Concrete5_Model_BlockPageTypeComposerControlType extends PageTypeComposerControlType {
 
-	public function getComposerControlObjects() {
+	public function getPageTypeComposerControlObjects() {
 		$objects = array();
 		$btl = new BlockTypeList();
 		$blockTypes = $btl->getBlockTypeList();
@@ -12,24 +12,24 @@ class Concrete5_Model_BlockComposerControlType extends ComposerControlType {
 
 		foreach($blockTypes as $bt) {
 			$cmf = $env->getRecord(DIRNAME_BLOCKS . '/' . $bt->getBlockTypeHandle() . '/' . FILENAME_BLOCK_COMPOSER);
-			if ($cmf->exists() || count($bt->getBlockTypeComposerTemplates()) > 0) {
-				$bx = new BlockComposerControl();
+			if ($cmf->exists() || count($bt->getBlockTypePageTypeComposerTemplates()) > 0) {
+				$bx = new BlockPageTypeComposerControl();
 				$bx->setBlockTypeID($bt->getBlockTypeID());
-				$bx->setComposerControlIconSRC($ci->getBlockTypeIconURL($bt));
-				$bx->setComposerControlName($bt->getBlockTypeName());
+				$bx->setPageTypeComposerControlIconSRC($ci->getBlockTypeIconURL($bt));
+				$bx->setPageTypeComposerControlName($bt->getBlockTypeName());
 				$objects[] = $bx;
 			}
 		}
 		return $objects;
 	}
 
-	public function getComposerControlByIdentifier($identifier) {
+	public function getPageTypeComposerControlByIdentifier($identifier) {
 		$bt = BlockType::getByID($identifier);
 		$ci = Loader::helper('concrete/urls');
-		$bx = new BlockComposerControl();
+		$bx = new BlockPageTypeComposerControl();
 		$bx->setBlockTypeID($bt->getBlockTypeID());
-		$bx->setComposerControlIconSRC($ci->getBlockTypeIconURL($bt));
-		$bx->setComposerControlName($bt->getBlockTypeName());
+		$bx->setPageTypeComposerControlIconSRC($ci->getBlockTypeIconURL($bt));
+		$bx->setPageTypeComposerControlName($bt->getBlockTypeName());
 		return $bx;
 	}
 
@@ -37,7 +37,7 @@ class Concrete5_Model_BlockComposerControlType extends ComposerControlType {
 	
 	public function configureFromImport($node) {
 		$bt = BlockType::getByHandle((string) $node['handle']);
-		return BlockComposerControlType::getComposerControlByIdentifier($bt->getBlockTypeID());
+		return BlockPageTypeComposerControlType::getPageTypeComposerControlByIdentifier($bt->getBlockTypeID());
 	}
 	
 	

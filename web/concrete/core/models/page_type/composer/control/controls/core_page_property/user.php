@@ -1,15 +1,15 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
 
-class Concrete5_Model_UserCorePagePropertyComposerControl extends CorePagePropertyComposerControl {
+class Concrete5_Model_UserCorePagePropertyPageTypeComposerControl extends CorePagePropertyPageTypeComposerControl {
 	
 	public function __construct() {
 		$this->setCorePagePropertyHandle('user');
-		$this->setComposerControlName(t('User'));
-		$this->setComposerControlIconSRC(ASSETS_URL . '/models/attribute/types/text/icon.png');
+		$this->setPageTypeComposerControlName(t('User'));
+		$this->setPageTypeComposerControlIconSRC(ASSETS_URL . '/models/attribute/types/text/icon.png');
 	}
 
-	public function publishToPage(ComposerDraft $d, $data, $controls) {
-		$this->addComposerControlRequestValue('uID', $data['user']);
+	public function publishToPage(PageTypeComposerDraft $d, $data, $controls) {
+		$this->addPageTypeComposerControlRequestValue('uID', $data['user']);
 		parent::publishToPage($d, $data, $controls);
 	}
 
@@ -22,9 +22,9 @@ class Concrete5_Model_UserCorePagePropertyComposerControl extends CorePageProper
 		}
 	}
 
-	public function getComposerControlDraftValue() {
-		if (is_object($this->cmpDraftObject)) {
-			$c = $this->cmpDraftObject->getComposerDraftCollectionObject();
+	public function getPageTypeComposerControlDraftValue() {
+		if (is_object($this->pDraftObject)) {
+			$c = $this->pDraftObject->getPageDraftCollectionObject();
 			return $c->getCollectionUserID();
 		}
 	}

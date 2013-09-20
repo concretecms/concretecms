@@ -14,7 +14,7 @@
           data: formData,
           url: $f.data('saveURL'),
           success: function(r) {
-            $f.find('.ccm-composer-save-status').html('<div class="alert alert-info">' + r.cmpDraftSaveStatus + '</div>');
+            $f.find('.ccm-page-type-composer-form-save-status').html('<div class="alert alert-info">' + r.cmpDraftSaveStatus + '</div>');
             if (r.saveURL) {
               $f.data('saveURL', r.saveURL);
             }
@@ -76,22 +76,22 @@
             methods.private.saveDraft($this, function(r) {
               if (parseInt(settings.cmpDraftID) == 0) {
                 // this is the first auto-save.
-                $this.find('button[data-composer-btn=permissions]').show();
+                $this.find('button[data-page-type-composer-form-btn=permissions]').show();
                 settings.cmpDraftID = r.cmpDraftID;
               }
             });
           }, settings.autoSaveTimeout);
         }
 
-        $this.find('button[data-composer-btn=exit]').on('click', function() {
+        $this.find('button[data-page-type-composer-form-btn=exit]').on('click', function() {
           settings.onExit();
         });
 
         if (parseInt(settings.cmpDraftID) > 0) {
-          $this.find('button[data-composer-btn=permissions]').show();
+          $this.find('button[data-page-type-composer-form-btn=permissions]').show();
         }
 
-        $this.find('button[data-composer-btn=permissions]').on('click', function() {
+        $this.find('button[data-page-type-composer-form-btn=permissions]').on('click', function() {
           jQuery.fn.dialog.open({
             href: CCM_TOOLS_PATH + '/composer/draft/permissions?cmpDraftID=' + settings.cmpDraftID,
             width: 400,
@@ -100,7 +100,7 @@
           });
         });
 
-        $this.find('button[data-composer-btn=discard]').on('click', function() {
+        $this.find('button[data-page-type-composer-form-btn=discard]').on('click', function() {
           if (!$this.data('discardURL')) {
             settings.onAfterDiscard();
           } else {
@@ -114,7 +114,7 @@
           }
         });
 
-        $this.find('button[data-composer-btn=save]').on('click', function() {
+        $this.find('button[data-page-type-composer-form-btn=save]').on('click', function() {
           clearInterval(methods.saveinterval);
           methods.private.saveDraft($this, function(r) {
             settings.onAfterSaveAndExit();
@@ -127,7 +127,7 @@
           });
         }
 
-        $this.find('button[data-composer-btn=publish]').on('click', function() {
+        $this.find('button[data-page-type-composer-form-btn=publish]').on('click', function() {
           clearInterval(methods.saveinterval);
           $this.attr('action', $this.data('publishURL'));
           if (settings.publishReturnMethod == 'ajax') {
@@ -146,9 +146,9 @@
                     for (i = 0; i < r.messages.length; i++) {
                       html += '<div>' + r.messages[i] + '</div>';
                     }
-                    $('#ccm-composer-error-list').show().html(html);
+                    $('#ccm-page-type-composer-form-error-list').show().html(html);
                   } else {
-                    $('#ccm-composer-error-list').hide();
+                    $('#ccm-page-type-composer-form-error-list').hide();
                     if (settings.onPublish) {
                       settings.onPublish(r);
                     }

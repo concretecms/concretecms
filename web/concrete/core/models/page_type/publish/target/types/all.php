@@ -1,14 +1,14 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
 
-class Concrete5_Model_AllComposerTargetType extends ComposerTargetType {
+class Concrete5_Model_AllPageTypePublishTargetType extends PageTypePublishTargetType {
 
-	public function configureComposerTarget(Composer $cm, $post) {
-		$configuredTarget = new AllComposerTargetConfiguration($this);
+	public function configurePageTypePublishTarget(PageType $pt, $post) {
+		$configuredTarget = new AllPageTypePublishTargetConfiguration($this);
 		return $configuredTarget;
 	}
 
-	public function configureComposerTargetFromImport($txml) {
-		return new AllComposerTargetConfiguration($this);
+	public function configurePageTypePublishTargetFromImport($txml) {
+		return new AllPageTypePublishTargetConfiguration($this);
 	}
 
 }

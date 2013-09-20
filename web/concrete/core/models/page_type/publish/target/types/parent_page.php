@@ -1,15 +1,15 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
 
-class Concrete5_Model_ParentPageComposerTargetType extends ComposerTargetType {
+class Concrete5_Model_ParentPagePageTypePublishTargetType extends PageTypePublishTargetType {
 
-	public function configureComposerTarget(Composer $cm, $post) {
-		$configuration = new ParentPageComposerTargetConfiguration($this);
+	public function configurePageTypePublishTarget(PageType $pt, $post) {
+		$configuration = new ParentPagePageTypePublishTargetConfiguration($this);
 		$configuration->setParentPageID($post['cParentID']);
 		return $configuration;
 	}
 
-	public function configureComposerTargetFromImport($txml) {
-		$configuration = new ParentPageComposerTargetConfiguration($this);
+	public function configurePageTypePublishTargetFromImport($txml) {
+		$configuration = new ParentPagePageTypePublishTargetConfiguration($this);
 		$path = (string) $txml['path'];
 		if (!$path) {
 			$c = Page::getByID(HOME_CID);

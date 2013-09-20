@@ -1,15 +1,15 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
 
-class Concrete5_Model_UrlSlugCorePagePropertyComposerControl extends CorePagePropertyComposerControl {
+class Concrete5_Model_UrlSlugCorePagePropertyPageTypeComposerControl extends CorePagePropertyPageTypeComposerControl {
 	
 	public function __construct() {
 		$this->setCorePagePropertyHandle('url_slug');
-		$this->setComposerControlName(t('URL Slug'));
-		$this->setComposerControlIconSRC(ASSETS_URL . '/models/attribute/types/text/icon.png');
+		$this->setPageTypeComposerControlName(t('URL Slug'));
+		$this->setPageTypeComposerControlIconSRC(ASSETS_URL . '/models/attribute/types/text/icon.png');
 	}
 
-	public function publishToPage(ComposerDraft $d, $data, $controls) {
-		$this->addComposerControlRequestValue('cHandle', $data['url_slug']);
+	public function publishToPage(PageDraft $d, $data, $controls) {
+		$this->addPageTypeComposerControlRequestValue('cHandle', $data['url_slug']);
 		parent::publishToPage($d, $data, $controls);
 	}
 
@@ -20,9 +20,9 @@ class Concrete5_Model_UrlSlugCorePagePropertyComposerControl extends CorePagePro
 		}
 	}
 
-	public function getComposerControlDraftValue() {
-		if (is_object($this->cmpDraftObject)) {
-			$c = $this->cmpDraftObject->getComposerDraftCollectionObject();
+	public function getPageTypeComposerControlDraftValue() {
+		if (is_object($this->pDraftObject)) {
+			$c = $this->pDraftObject->getPageDraftCollectionObject();
 			return $c->getCollectionHandle();
 		}
 	}

@@ -1,20 +1,20 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
 
-class Concrete5_Model_PublishTargetCorePagePropertyComposerControl extends CorePagePropertyComposerControl {
+class Concrete5_Model_PublishTargetCorePagePropertyPageTypeComposerControl extends CorePagePropertyPageTypeComposerControl {
 	
 	public function __construct() {
 		$this->setCorePagePropertyHandle('publish_target');
-		$this->setComposerControlName(t('Publish Target'));
-		$this->setComposerControlIconSRC(ASSETS_URL . '/models/attribute/types/image_file/icon.png');
+		$this->setPageTypeComposerControlName(t('Publish Target'));
+		$this->setPageTypeComposerControlIconSRC(ASSETS_URL . '/models/attribute/types/image_file/icon.png');
 	}
 
-	public function composerFormControlSupportsValidation() {
+	public function pageTypeComposerFormControlSupportsValidation() {
 		return false;
 	}
 
-	public function getComposerControlDraftValue() {
-		if (is_object($this->cmpDraftObject)) {
-			return $this->cmpDraftObject->getComposerDraftTargetParentPageID();
+	public function getPageTypeComposerControlDraftValue() {
+		if (is_object($this->pDraftObject)) {
+			return $this->pDraftObject->getPageTypeComposerDraftTargetParentPageID();
 		}
 	}
 	

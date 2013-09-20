@@ -1,130 +1,130 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
 
-abstract class Concrete5_Model_ComposerControl extends Object {
+abstract class Concrete5_Model_PageTypeComposerControl extends Object {
 
-	protected $cmpControlIdentifier;
-	protected $cmpControlName;
-	protected $cmpControlIconSRC;
-	protected $cmpControl;
-	protected $cmpControlRequiredByDefault = false;
-	protected $cmpControlRequiredOnThisRequest = false;
+	protected $ptComposerControlIdentifier;
+	protected $ptComposerControlName;
+	protected $ptComposerControlIconSRC;
+	protected $ptComposerControl;
+	protected $ptComposerControlRequiredByDefault = false;
+	protected $ptComposerControlRequiredOnThisRequest = false;
 
-	abstract public function getComposerControlCustomTemplates();
+	abstract public function getPageTypeComposerControlCustomTemplates();
 	abstract public function render($label, $customTemplate);
-	abstract public function publishToPage(ComposerDraft $d, $data, $controls);
+	abstract public function publishToPage(PageDraft $d, $data, $controls);
 	abstract public function validate($data, ValidationErrorHelper $e);
-	abstract public function getComposerControlDraftValue();
+	abstract public function getPageTypeComposerControlDraftValue();
 	abstract public function addAssetsToRequest(Controller $cnt);
 	abstract public function export($node);
-	abstract public function shouldComposerControlStripEmptyValuesFromDraft();
-	abstract public function isComposerControlDraftValueEmpty();
-	abstract public function removeComposerControlFromDraft();
+	abstract public function shouldPageTypeComposerControlStripEmptyValuesFromDraft();
+	abstract public function isPageTypeComposerControlDraftValueEmpty();
+	abstract public function removePageTypeComposerControlFromDraft();
 
-	public function composerFormControlSupportsValidation() {
+	public function pageTypeComposerFormControlSupportsValidation() {
 		return false;
 	}
 
-	public function setComposerControlName($cmpControlName) {
-		$this->cmpControlName = $cmpControlName;
+	public function setPageTypeComposerControlName($ptComposerControlName) {
+		$this->ptComposerControlName = $ptComposerControlName;
 	}
 
-	public function setComposerFormControlRequired($req) {
-		$this->cmpControlRequiredOnThisRequest = $req;
+	public function setPageTypeComposerFormControlRequired($req) {
+		$this->ptComposerControlRequiredOnThisRequest = $req;
 	}
 	
-	public function setComposerDraftObject($cmpDraftObject) {
-		$this->cmpDraftObject = $cmpDraftObject;
+	public function setPageTypeComposerDraftObject($ptComposerDraftObject) {
+		$this->pDraftObject = $pDraftObject;
 	}
 
-	public function getComposerDraftObject() {
-		return $this->cmpDraftObject;
+	public function getPageTypeComposerDraftObject() {
+		return $this->pDraftObject;
 	}
 
-	public function isComposerFormControlRequiredOnThisRequest() {
-		return $this->cmpControlRequiredOnThisRequest;
+	public function isPageTypeComposerFormControlRequiredOnThisRequest() {
+		return $this->ptComposerControlRequiredOnThisRequest;
 	}
 
-	public function getComposerControlName() {
-		return $this->cmpControlName;
+	public function getPageTypeComposerControlName() {
+		return $this->ptComposerControlName;
 	}
 
-	public function setComposerControlIconSRC($cmpControlIconSRC) {
-		$this->cmpControlIconSRC = $cmpControlIconSRC;
+	public function setPageTypeComposerControlIconSRC($ptComposerControlIconSRC) {
+		$this->ptComposerControlIconSRC = $ptComposerControlIconSRC;
 	}
 	
-	public function getComposerControlIconSRC() {
-		return $this->cmpControlIconSRC;
+	public function getPageTypeComposerControlIconSRC() {
+		return $this->ptComposerControlIconSRC;
 	}
 
-	public function setComposerControlIdentifier($cmpControlIdentifier) {
-		$this->cmpControlIdentifier = $cmpControlIdentifier;
+	public function setPageTypeComposerControlIdentifier($ptComposerControlIdentifier) {
+		$this->ptComposerControlIdentifier = $ptComposerControlIdentifier;
 	}
 
-	public function getComposerControlIdentifier() {
-		return $this->cmpControlIdentifier;
+	public function getPageTypeComposerControlIdentifier() {
+		return $this->ptComposerControlIdentifier;
 	}
 
-	public function getComposerControlTypeObject() {
-		return ComposerControlType::getByHandle($this->cmpControlTypeHandle);
+	public function getPageTypeComposerControlTypeObject() {
+		return ComposerControlType::getByHandle($this->ptComposerControlTypeHandle);
 	}
 
-	public function getComposerControlTypeHandle() {
-		return $this->cmpControlTypeHandle;
+	public function getPageTypeComposerControlTypeHandle() {
+		return $this->ptComposerControlTypeHandle;
 	}
 
-	public function setComposerFormLayoutSetControlObject(ComposerFormLayoutSetControl $setcontrol) {
-		$this->cmpFormLayoutSetControlObject = $setcontrol;
+	public function setPageTypeComposerFormLayoutSetControlObject(PageTypeComposerFormLayoutSetControl $setcontrol) {
+		$this->ptComposerFormLayoutSetControlObject = $setcontrol;
 	}
 
-	public function getComposerFormLayoutSetControlObject() {
-		return $this->cmpFormLayoutSetControlObject;
+	public function getPageTypeComposerFormLayoutSetControlObject() {
+		return $this->ptComposerFormLayoutSetControlObject;
 	}
 
 	public function field($key) {
-		return 'cmp[' . $this->cmpFormLayoutSetControlObject->getComposerFormLayoutSetControlID(). '][' . $key . ']';
+		return 'ptComposer[' . $this->ptPageTypeComposerFormLayoutSetControlObject->getPageTypeComposerFormLayoutSetControlID(). '][' . $key . ']';
 	}
 
 	public function getRequestValue($args = false) {
 		if (!$args) {
 			$args = $_POST;
 		}
-		return $args['cmp'][$this->cmpFormLayoutSetControlObject->getComposerFormLayoutSetControlID()];
+		return $args['ptComposer'][$this->ptPageTypeComposerFormLayoutSetControlObject->getPageTypeComposerFormLayoutSetControlID()];
 	}
 
-	public function addToComposerFormLayoutSet(ComposerFormLayoutSet $set) {
+	public function addToPageTypeComposerFormLayoutSet(PageTypeComposerFormLayoutSet $set) {
 		$db = Loader::db();
-		$displayOrder = $db->GetOne('select count(cmpFormLayoutSetControlID) from ComposerFormLayoutSetControls where cmpFormLayoutSetID = ?', array($set->getComposerFormLayoutSetID()));
+		$displayOrder = $db->GetOne('select count(ptComposerFormLayoutSetControlID) from ComposerFormLayoutSetControls where ptComposerFormLayoutSetID = ?', array($set->getPageTypeComposerFormLayoutSetID()));
 		if (!$displayOrder) {
 			$displayOrder = 0;
 		}
-		$cmpFormLayoutSetControlRequired = 0;
-		if ($this->cmpControlRequiredByDefault) {
-			$cmpFormLayoutSetControlRequired = 1;
+		$ptComposerFormLayoutSetControlRequired = 0;
+		if ($this->isPageTypeComposerControlRequiredByDefault) {
+			$ptComposerFormLayoutSetControlRequired = 1;
 		}
-		$controlType = $this->getComposerControlTypeObject();
-		$db->Execute('insert into ComposerFormLayoutSetControls (cmpFormLayoutSetID, cmpControlTypeID, cmpControlObject, cmpFormLayoutSetControlDisplayOrder, cmpFormLayoutSetControlRequired) values (?, ?, ?, ?, ?)', array(
-			$set->getComposerFormLayoutSetID(), $controlType->getComposerControlTypeID(), serialize($this), $displayOrder, $cmpFormLayoutSetControlRequired
+		$controlType = $this->getPageTypeComposerControlTypeObject();
+		$db->Execute('insert into PageTypeComposerFormLayoutSetControls (ptComposerFormLayoutSetID, ptComposerControlTypeID, ptComposerControlObject, ptComposerFormLayoutSetControlDisplayOrder, ptComposerFormLayoutSetControlRequired) values (?, ?, ?, ?, ?)', array(
+			$set->getPageTypeComposerFormLayoutSetID(), $controlType->getPageTypeComposerControlTypeID(), serialize($this), $displayOrder, $ptComposerFormLayoutSetControlRequired
 		));	
-		return ComposerFormLayoutSetControl::getByID($db->Insert_ID());
+		return PageTypeComposerFormLayoutSetControl::getByID($db->Insert_ID());
 	}
 
-	public function canComposerControlSetPageName() {
+	public function canPageTypeComposerControlSetPageName() {
 		return false;
 	}
 
-	public function getComposerControlPageNameValue(Page $c) {
+	public function getPageTypeComposerControlPageNameValue(Page $c) {
 		return false;
 	}
 
-	public static function getList(Composer $composer) {
-		$sets = ComposerFormLayoutSet::getList($composer);
+	public static function getList(PageTypeComposer $composer) {
+		$sets = PageTypeComposerFormLayoutSet::getList($composer);
 		$controls = array();
 		foreach($sets as $s) {
-			$setControls = ComposerFormLayoutSetControl::getList($s);
+			$setControls = PageTypeComposerFormLayoutSetControl::getList($s);
 			foreach($setControls as $sc) {
-				$cnt = $sc->getComposerControlObject();
-				$cnt->setComposerFormLayoutSetControlObject($sc);
-				$cnt->setComposerFormControlRequired($sc->isComposerFormLayoutSetControlRequired());
+				$cnt = $sc->getPageTypeComposerControlObject();
+				$cnt->setPageTypeComposerFormLayoutSetControlObject($sc);
+				$cnt->setPageTypeComposerFormControlRequired($sc->isPageTypeComposerFormLayoutSetControlRequired());
 				$controls[] = $cnt;
 			}
 		}

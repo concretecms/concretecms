@@ -1,19 +1,19 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Model_ComposerFormLayoutSet extends Object {
+class Concrete5_Model_PageTypeComposerFormLayoutSet extends Object {
 
-	public function getComposerFormLayoutSetID() {return $this->cmpFormLayoutSetID;}
-	public function getComposerFormLayoutSetName() {return $this->cmpFormLayoutSetName;}
-	public function getComposerFormLayoutSetDisplayOrder() {return $this->cmpFormLayoutSetDisplayOrder;}
-	public function getComposerID() {return $this->cmpID;}
-	public function getComposerObject() {return Composer::getByID($this->cmpID);}
+	public function getPageTypeComposerFormLayoutSetID() {return $this->ptComposerFormLayoutSetID;}
+	public function getPageTypeComposerFormLayoutSetName() {return $this->ptComposerFormLayoutSetName;}
+	public function getPageTypeComposerFormLayoutSetDisplayOrder() {return $this->ptComposerFormLayoutSetDisplayOrder;}
+	public function getPageTypeID() {return $this->ptID;}
+	public function getPageTypeObject() {return PageType::getByID($this->ptID);}
 
-	public static function getList(Composer $composer) {
+	public static function getList(PageType $pagetype) {
 		$db = Loader::db();
-		$cmpFormLayoutSetIDs = $db->GetCol('select cmpFormLayoutSetID from ComposerFormLayoutSets where cmpID = ? order by cmpFormLayoutSetDisplayOrder asc', array($composer->getComposerID()));
+		$ptComposerFormLayoutSetIDs = $db->GetCol('select ptComposerFormLayoutSetID from PageTypeComposerFormLayoutSets where ptID = ? order by ptComposerFormLayoutSetDisplayOrder asc', array($pagetype->getPageTypeID()));
 		$list = array();
-		foreach($cmpFormLayoutSetIDs as $cmpFormLayoutSetID) {
-			$set = ComposerFormLayoutSet::getByID($cmpFormLayoutSetID);
+		foreach($ptComposerFormLayoutSetIDs as $ptComposerFormLayoutSetID) {
+			$set = PageTypeComposerFormLayoutSet::getByID($ptComposerFormLayoutSetID);
 			if (is_object($set)) {
 				$list[] = $set;
 			}
@@ -21,11 +21,11 @@ class Concrete5_Model_ComposerFormLayoutSet extends Object {
 		return $list;
 	}
 
-	public static function getByID($cmpFormLayoutSetID) {
+	public static function getByID($ptComposerFormLayoutSetID) {
 		$db = Loader::db();
-		$r = $db->GetRow('select * from ComposerFormLayoutSets where cmpFormLayoutSetID = ?', array($cmpFormLayoutSetID));
-		if (is_array($r) && $r['cmpFormLayoutSetID']) {
-			$set = new ComposerFormLayoutSet;
+		$r = $db->GetRow('select * from PageTypeComposerFormLayoutSets where ptComposerFormLayoutSetID = ?', array($ptComposerFormLayoutSetID));
+		if (is_array($r) && $r['ptComposerFormLayoutSetID']) {
+			$set = new PageTypeComposerFormLayoutSet;
 			$set->setPropertiesFromArray($r);
 			return $set;
 		}
@@ -33,43 +33,43 @@ class Concrete5_Model_ComposerFormLayoutSet extends Object {
 
 	public function export($fxml) {
 		$node = $fxml->addChild('set');
-		$node->addAttribute('name', $this->getComposerFormLayoutSetName());
-		$controls = ComposerFormLayoutSetControl::getList($this);
+		$node->addAttribute('name', $this->getPageTypeComposerFormLayoutSetName());
+		$controls = PageTypeComposerFormLayoutSetControl::getList($this);
 		foreach($controls as $con) {
 			$con->export($node);
 		}
 	}
 
-	public function updateFormLayoutSetName($cmpFormLayoutSetName) {
+	public function updateFormLayoutSetName($ptComposerFormLayoutSetName) {
 		$db = Loader::db();
-		$db->Execute('update ComposerFormLayoutSets set cmpFormLayoutSetName = ? where cmpFormLayoutSetID = ?', array(
-			$cmpFormLayoutSetName, $this->cmpFormLayoutSetID
+		$db->Execute('update PageTypeComposerFormLayoutSets set ptComposerFormLayoutSetName = ? where ptComposerFormLayoutSetID = ?', array(
+			$ptComposerFormLayoutSetName, $this->ptComposerFormLayoutSetID
 		));
-		$this->cmpFormLayoutSetName = $cmpFormLayoutSetName;
+		$this->ptComposerFormLayoutSetName = $ptComposerFormLayoutSetName;
 	}
 
 
 	public function updateFormLayoutSetDisplayOrder($displayOrder) {
 		$db = Loader::db();
-		$db->Execute('update ComposerFormLayoutSets set cmpFormLayoutSetDisplayOrder = ? where cmpFormLayoutSetID = ?', array(
-			$displayOrder, $this->cmpFormLayoutSetID
+		$db->Execute('update PageTypeComposerFormLayoutSets set ptComposerFormLayoutSetDisplayOrder = ? where ptComposerFormLayoutSetID = ?', array(
+			$displayOrder, $this->ptComposerFormLayoutSetID
 		));
-		$this->cmpFormLayoutSetDisplayOrder = $displayOrder;
+		$this->ptComposerFormLayoutSetDisplayOrder = $displayOrder;
 	}
 
 	public function delete() {
-		$controls = ComposerFormLayoutSetControl::getList($this);
+		$controls = PageTypeComposerFormLayoutSetControl::getList($this);
 		foreach($controls as $control) {
 			$control->delete();
 		}
 		$db = Loader::db();
-		$db->Execute('delete from ComposerFormLayoutSets where cmpFormLayoutSetID = ?', array($this->cmpFormLayoutSetID));
-		$composer = $this->getComposerObject();
-		$composer->rescanFormLayoutSetDisplayOrder();
+		$db->Execute('delete from PageTypeComposerFormLayoutSets where ptComposerFormLayoutSetID = ?', array($this->ptComposerFormLayoutSetID));
+		$pagetype = $this->getPageTypeObject();
+		$pagetype->rescanFormLayoutSetDisplayOrder();
 	}
 
 	public function rescanFormLayoutSetControlDisplayOrder() {
-		$sets = ComposerFormLayoutSetControl::getList($this);
+		$sets = PageTypeComposerFormLayoutSetControl::getList($this);
 		$displayOrder = 0;
 		foreach($sets as $s) {
 			$s->updateFormLayoutSetControlDisplayOrder($displayOrder);
