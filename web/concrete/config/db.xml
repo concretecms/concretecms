@@ -1397,7 +1397,7 @@
       <autoincrement/>
       <unsigned/>
     </field>
-    <field name="btHandle" type="C" size="32">
+    <field name="btHandle" type="C" size="128">
       <notnull/>
     </field>
     <field name="btName" type="C" size="128">

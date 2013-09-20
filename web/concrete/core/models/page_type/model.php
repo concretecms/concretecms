@@ -4,6 +4,7 @@ class Concrete5_Model_PageType extends Object {
 
 	public function getPageTypeID() {return $this->ptID;}
 	public function getPageTypeName() {return $this->ptName;}
+	public function getPageTypeHandle() {return $this->ptHandle;}
 	public function getPageTypePublishTargetTypeID() {return $this->ptPublishTargetTypeID;}
 	public function getPageTypePublishTargetObject() {return $this->ptPublishTargetObject;}
 	public function getPageTypeAllowedPageTemplates() {
@@ -92,7 +93,7 @@ class Concrete5_Model_PageType extends Object {
 			}
 		}
 		$defaultTemplate = PageTemplate::getByID($this->getPageTypeDefaultPageTemplateID());
-		if (!in_array($defaultTemplate, $_templates)) {
+		if (is_object($defaultPageTemplate) && (!in_array($defaultTemplate, $_templates))) {
 			$_templates[] = $defaultTemplate;
 		}
 		
@@ -115,21 +116,37 @@ class Concrete5_Model_PageType extends Object {
 			$ptAllowedPageTemplates = 'A';
 		}
 		$ptName = (string) $node['name'];
-		$ptHandle = (string) $node['ptHandle'];
+		$ptHandle = (string) $node['handle'];
 		$db = Loader::db();
 		$defaultPageTemplate = PageTemplate::getByHandle((string) $node->pagetemplates['default']);
 
 		$ptID = $db->GetOne('select ptID from PageTypes where ptHandle = ?', array($ptHandle));
+		$data = array(
+			'handle' => $ptHandle,
+			'name' => $ptName
+		);
+		if ($defaultPageTemplate) {
+			$data['defaultTemplate'] = $defaultPageTemplate;
+		}
+		if ($ptAllowedPageTemplates) {
+			$data['allowedTemplates'] = $ptAllowedPageTemplates;
+		}
+		if ($node['internal']) {
+			$data['internal'] = true;
+		}
+
+		$data['templates'] = $types;
 		if ($ptID) {
 			$cm = PageType::getByID($ptID);
-			$cm->update($ptHandle, $ptName, $defaultPageTemplate, $ptAllowedPageTemplates, $types);
+			$cm->update($data);
 		} else {
-			$cm = PageType::add($ptHandle, $ptName, $defaultPageTemplate, $ptAllowedPageTemplates, $types);
+			$cm = PageType::add($data);
 		}
 		if (isset($node->target)) {
 			$target = PageTypePublishTargetType::importConfiguredPageTypePublishTarget($node->target);
 			$cm->setConfiguredPageTypePublishTargetObject($target);
 		}
+		$node = $node->composer;
 		if (isset($node->formlayout->set)) {
 			foreach($node->formlayout->set as $setnode) {
 				$set = $cm->addPageTypeComposerFormLayoutSet((string) $setnode['name']);
@@ -164,16 +181,17 @@ class Concrete5_Model_PageType extends Object {
 
 	public static function importContent($node) {
 		$db = Loader::db();
+		$ptHandle = (string) $node['handle'];
 		$ptID = $db->GetOne('select ptID from PageTypes where ptHandle = ?', array($ptHandle));
 		if ($ptID) {
 			$pt = PageType::getByID($ptID);
-			if (isset($node->output->pagetemplate)) {
+			if (isset($node->composer->output->pagetemplate)) {
 				$ci = new ContentImporter();
-				foreach($node->output->pagetemplate as $pagetemplate) {
-					$pt = PageTemplate::getByHandle((string) $pagetemplate['handle']);
-					if (is_object($pt)) {
+				foreach($node->composer->output->pagetemplate as $pagetemplate) {
+					$ptt = PageTemplate::getByHandle((string) $pagetemplate['handle']);
+					if (is_object($ptt)) {
 						// let's get the defaults page for this
-						$xc = $cm->getPageTypePageTemplateDefaultPageObject($pt);
+						$xc = $pt->getPageTypePageTemplateDefaultPageObject($ptt);
 						// now that we have the defaults page, let's import this content into it.
 						if (isset($pagetemplate->page)) {
 							$ci->importPageAreas($xc, $pagetemplate->page);
@@ -194,6 +212,11 @@ class Concrete5_Model_PageType extends Object {
 			$templates = $sc->getPageTypePageTemplateObjects();
 			$pagetype = $nxml->addChild('pagetype');
 			$pagetype->addAttribute('name', $sc->getPageTypeName());
+			$pagetype->addAttribute('handle', $sc->getPagTypeHandle());
+			$pagetype->addAttribute('package', $sc->getPackageHandle());
+			if ($this->isPageTypeInternal()) {
+				$pagetype->addAttribute('internal', 'true');
+			}
 			$pagetemplates = $pagetype->addChild('pagetemplates');
 			if ($sc->getPageTypeAllowedPageTemplates() == 'A') {
 				$pagetemplates->addAttribute('type', 'all');
@@ -244,10 +267,34 @@ class Concrete5_Model_PageType extends Object {
 		}
 	}
 
-	public static function add($ptHandle, $ptName, PageTemplate $defaultPageTemplate, $ptAllowedPageTemplates, $templates) {
+	public static function add($data, $pkg = false) {
+		$ptHandle = $data['handle'];
+		$ptName = $data['name'];
+		$ptDefaultPageTemplateID = 0;
+		$pkgID = 0;
+		if (is_object($pkg)) {
+			$pkgID = $pkg->getPackageID();
+		}
+
+		if (is_object($data['defaultTemplate'])) {
+			$ptDefaultPageTemplateID = $data['defaultTemplate']->getPageTemplateID();
+		}
+		$ptAllowedPageTemplates = 'A';
+		if ($data['allowedTemplates']) {
+			$ptAllowedPageTemplates = $data['allowedTemplates'];
+		}
+		$templates = array();
+		if (is_array($data['templates'])) {
+			$templates = $data['templates'];
+		}
+		$ptIsInternal = 0;
+		if ($data['internal']) {
+			$ptIsInternal = 1;
+		}
+
 		$db = Loader::db();
-		$db->Execute('insert into PageTypes (ptName, ptHandle, ptDefaultPageTemplateID, ptAllowedPageTemplates) values (?, ?, ?, ?)', array(
-			$ptName, $ptHandle, $defaultPageTemplate->getPageTemplateID(), $ptAllowedPageTemplates
+		$db->Execute('insert into PageTypes (ptName, ptHandle, ptDefaultPageTemplateID, ptAllowedPageTemplates, ptIsInternal, pkgID) values (?, ?, ?, ?, ?, ?)', array(
+			$ptName, $ptHandle, $ptDefaultPageTemplateID, $ptAllowedPageTemplates, $ptIsInternal, $pkgID
 		));
 		$ptID = $db->Insert_ID();
 		if ($ptAllowedPageTemplates != 'A') {
@@ -283,13 +330,40 @@ class Concrete5_Model_PageType extends Object {
 		return $ptt;
 	}
 
-	public function update($ptHandle, $ptName, PageTemplate $defaultPageTemplate, $ptAllowedPageTemplates, $templates) {
+	public function update($data) {
+
+		$ptHandle = $this->getPageTypeHandle();
+		$ptName = $this->getPageTypeName();
+		$ptDefaultPageTemplateID = $this->getPageTypeDefaultPageTemplateID();
+		$ptAllowedPageTemplates = $this->getPageTypeAllowedPageTemplates();
+
+		if ($data['name']) {
+			$ptName = $data['name'];
+		}
+		if ($data['handle']) {
+			$ptHandle = $data['handle'];
+		}
+		if (is_object($data['defaultTemplate'])) {
+			$ptDefaultPageTemplateID = $data['defaultTemplate']->getPageTemplateID();
+		}
+		if ($data['allowedTemplates']) {
+			$ptAllowedPageTemplates = $data['allowedTemplates'];
+		}
+		$templates = $this->getPageTypePageTemplateObjects();
+		if (is_array($data['templates'])) {
+			$templates = $data['templates'];
+		}
+		$ptIsInternal = $this->isPageTypeInternal();
+		if ($data['internal']) {
+			$ptIsInternal = 1;
+		}		
 		$db = Loader::db();
-		$db->Execute('update PageTypes set ptName = ?, ptHandle = ?, ptDefaultPageTemplateID = ?, ptAllowedPageTemplates = ? where ptID = ?', array(
+		$db->Execute('update PageTypes set ptName = ?, ptHandle = ?, ptDefaultPageTemplateID = ?, ptAllowedPageTemplates = ?, ptIsInternal = ? where ptID = ?', array(
 			$ptName,
 			$ptHandle,
-			$defaultPageTemplate->getPageTemplateID(),
+			$ptDefaultPageTemplateID,
 			$ptAllowedPageTemplates,
+			$ptIsInternal,
 			$this->ptID
 		));
 		$db->Execute('delete from PageTypePageTemplates where ptID = ?', array($this->ptID));
@@ -303,9 +377,13 @@ class Concrete5_Model_PageType extends Object {
 		$this->rescanPageTypeComposerOutputControlObjects();
 	}
 
-	public static function getList() {
+	public static function getList($includeInternal = false) {
 		$db = Loader::db();
-		$ptIDs = $db->GetCol('select ptID from PageTypes order by ptID asc');
+		if (!$includeInternal) {
+			$ptIDs = $db->GetCol('select ptID from PageTypes where ptIsInternal = false order by ptID asc');
+		} else {
+			$ptIDs = $db->GetCol('select ptID from PageTypes order by ptID asc');
+		}
 		$list = array();
 		foreach($ptIDs as $ptID) {
 			$cm = PageType::getByID($ptID);
@@ -324,6 +402,14 @@ class Concrete5_Model_PageType extends Object {
 			$cm->setPropertiesFromArray($r);
 			$cm->ptPublishTargetObject = unserialize($r['ptPublishTargetObject']);
 			return $cm;
+		}
+	}
+
+	public static function getByHandle($ptHandle) {
+		$db = Loader::db();
+		$ptID = $db->GetOne('select ptID from PageTypes where ptHandle = ?', array($ptHandle));
+		if ($ptID) {
+			return PageType::getByID($ptID);
 		}
 	}
 

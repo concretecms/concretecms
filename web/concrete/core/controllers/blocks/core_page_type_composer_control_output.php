@@ -14,7 +14,7 @@
 		}
 
 		public function export(SimpleXMLElement $blockNode) {			
-			$outputControl = PageTypeComposerOutputControl::getByID($this->cmpOutputControlID);
+			$outputControl = PageTypeComposerOutputControl::getByID($this->ptComposerOutputControlID);
 			if (is_object($outputControl)) {
 				$fsc = PageTypeComposerFormLayoutSetControl::getByID($outputControl->getPageTypeComposerFormLayoutSetControlID());
 				if (is_object($fsc)) {
@@ -31,7 +31,7 @@
 			$b = $this->getBlockObject();
 			$pt = PageTemplate::getByID($page->getPageTemplateID());
 			$outputControl = PageTypeComposerOutputControl::getByPageTypeComposerFormLayoutSetControl($pt, $formLayoutSetControl);
-			$args['cmpOutputControlID'] = $outputControl->getPageTypeComposerOutputControlID();			
+			$args['ptComposerOutputControlID'] = $outputControl->getPageTypeComposerOutputControlID();			
 			return $args;
 		}
 		

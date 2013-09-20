@@ -12,7 +12,7 @@ class Concrete5_Model_BlockPageTypeComposerControlType extends PageTypeComposerC
 
 		foreach($blockTypes as $bt) {
 			$cmf = $env->getRecord(DIRNAME_BLOCKS . '/' . $bt->getBlockTypeHandle() . '/' . FILENAME_BLOCK_COMPOSER);
-			if ($cmf->exists() || count($bt->getBlockTypePageTypeComposerTemplates()) > 0) {
+			if ($cmf->exists() || count($bt->getBlockTypeComposerTemplates()) > 0) {
 				$bx = new BlockPageTypeComposerControl();
 				$bx->setBlockTypeID($bt->getBlockTypeID());
 				$bx->setPageTypeComposerControlIconSRC($ci->getBlockTypeIconURL($bt));

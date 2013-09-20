@@ -8,7 +8,7 @@ class Concrete5_Model_UserCorePagePropertyPageTypeComposerControl extends CorePa
 		$this->setPageTypeComposerControlIconSRC(ASSETS_URL . '/models/attribute/types/text/icon.png');
 	}
 
-	public function publishToPage(PageTypeComposerDraft $d, $data, $controls) {
+	public function publishToPage(PageDraft $d, $data, $controls) {
 		$this->addPageTypeComposerControlRequestValue('uID', $data['user']);
 		parent::publishToPage($d, $data, $controls);
 	}

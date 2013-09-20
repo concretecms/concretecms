@@ -285,11 +285,11 @@ class Concrete5_Library_Content_Importer {
 		}
 	}
 
-	public static function addComposerOutputControlID(ComposerFormLayoutSetControl $control, $id) {
-		self::$ptComposerOutputControlIDs[$id] = $control->getComposerFormLayoutSetControlID();
+	public static function addPageTypeComposerOutputControlID(PageTypeComposerFormLayoutSetControl $control, $id) {
+		self::$ptComposerOutputControlIDs[$id] = $control->getPageTypeComposerFormLayoutSetControlID();
 	}
 	
-	public static function getComposerFormLayoutSetControlFromTemporaryID($id) {
+	public static function getPageTypeComposerFormLayoutSetControlFromTemporaryID($id) {
 		if (isset(self::$ptComposerOutputControlIDs[$id])) {
 			return self::$ptComposerOutputControlIDs[$id];
 		}
@@ -406,8 +406,8 @@ class Concrete5_Library_Content_Importer {
 	}
 
 	protected function importPageTypeComposerControlTypes(SimpleXMLElement $sx) {
-		if (isset($sx->pagetypcomposercontroltypes)) {
-			foreach($sx->pagetypcomposercontroltypes->type as $th) {
+		if (isset($sx->pagetypecomposercontroltypes)) {
+			foreach($sx->pagetypecomposercontroltypes->type as $th) {
 				$pkg = ContentImporter::getPackageObject($th['package']);
 				$ce = PageTypeComposerControlType::add((string) $th['handle'], (string) $th['name'], $pkg);
 			}

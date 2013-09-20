@@ -119,7 +119,7 @@ class Concrete5_Model_BlockPageTypeComposerControl extends PageTypeComposerContr
 		$txt = Loader::helper('text');
 		$templates = array();
 		if (is_object($bt)) {
-			$blocktemplates = $bt->getBlockTypePageTypeComposerTemplates();
+			$blocktemplates = $bt->getBlockTypeComposerTemplates();
 			if (is_array($blocktemplates)) {
 				foreach($blocktemplates as $tpl) {
 	                if (strpos($tpl, '.') !== false) {

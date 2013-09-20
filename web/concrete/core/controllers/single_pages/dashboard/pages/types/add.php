@@ -39,7 +39,14 @@ class Concrete5_Controller_Dashboard_Pages_Types_Add extends DashboardBaseContro
 		}
 
 		if (!$this->error->has()) {
-			$pt = PageType::add($handle, $name, $defaultTemplate, $this->post('ptAllowedPageTemplates'), $templates);
+			$data = array(
+				'handle' => $handle,
+				'name' => $name,
+				'defaultTemplate' => $defaultTemplate,
+				'allowedTemplates' => $this->post('ptAllowedPageTemplates'),
+				'templates' => $templates
+			);
+			$pt = PageType::add($data);
 			$configuredTarget = $target->configurePageTypePublishTarget($pt, $this->post());
 			$pt->setConfiguredPageTypePublishTargetObject($configuredTarget);
 			$this->redirect('/dashboard/pages/types', 'page_type_added');

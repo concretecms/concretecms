@@ -78,12 +78,19 @@ class Concrete5_Controller_Dashboard_Pages_Types extends DashboardBaseController
 		if (count($templates) == 0 && $this->post('ptAllowedPageTemplates') == 'C') {
 			$this->error->add(t('You must specify at least one page template.'));
 		}
-		$target = PageTypePublishTargetType::getByID($this->post('ptTargetTypeID'));
+		$target = PageTypePublishTargetType::getByID($this->post('ptPublishTargetTypeID'));
 		if (!is_object($target)) {
 			$this->error->add(t('Invalid page type target type.'));
 		}
 		if (!$this->error->has()) {
-			$pagetype->update($handle, $name, $defaultTemplate, $this->post('ptAllowedPageTemplates'), $templates);
+			$data = array(
+				'handle' => $handle,
+				'name' => $name,
+				'defaultTemplate' => $defaultTemplate,
+				'allowedTemplates' => $this->post('ptAllowedPageTemplates'),
+				'templates' => $templates
+			);
+			$pagetype->update($data);
 			$configuredTarget = $target->configurePageTypePublishTarget($pagetype, $this->post());
 			$pagetype->setConfiguredPageTypePublishTargetObject($configuredTarget);
 			$this->redirect('/dashboard/pages/types', 'page_type_updated');
