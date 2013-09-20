@@ -1,26 +1,26 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
 
-class Concrete5_Model_PageTemplateCorePagePropertyComposerControl extends CorePagePropertyComposerControl {
+class Concrete5_Model_PageTemplateCorePagePropertyPageTypeComposerControl extends CorePagePropertyPageTypeComposerControl {
 	
 	public function __construct() {
 		$this->setCorePagePropertyHandle('page_template');
-		$this->setComposerControlName(t('Page Template'));
-		$this->setComposerControlIconSRC(ASSETS_URL . '/models/attribute/types/select/icon.png');
+		$this->setPageTypeComposerControlName(t('Page Template'));
+		$this->setPageTypeComposerControlIconSRC(ASSETS_URL . '/models/attribute/types/select/icon.png');
 	}
 
-	public function composerFormControlSupportsValidation() {
+	public function pageTypeComposerFormControlSupportsValidation() {
 		return false;
 	}
 
 
-	public function publishToPage(ComposerDraft $d, $data, $controls) {
-		$this->addComposerControlRequestValue('pTemplateID', $_POST['cmpPageTemplateID']);
+	public function publishToPage(PageDraft $d, $data, $controls) {
+		$this->addPageTypeComposerControlRequestValue('pTemplateID', $_POST['ptComposerPageTemplateID']);
 		parent::publishToPage($d, $data, $controls);
 	}
 
-	public function getComposerControlDraftValue() {
-		if (is_object($this->cmpDraftObject)) {
-			$c = $this->cmpDraftObject->getComposerDraftCollectionObject();
+	public function getPageTypeComposerControlDraftValue() {
+		if (is_object($this->pDraftObject)) {
+			$c = $this->pDraftObject->getPageDraftCollectionObject();
 			return $c->getPageTemplateID();
 		}
 	}

@@ -1,17 +1,17 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
 
-class Concrete5_Model_CollectionAttributeComposerControl extends ComposerControl {
+class Concrete5_Model_CollectionAttributePageTypeComposerControl extends PageTypeComposerControl {
 	
 	protected $akID;
 	protected $ak = false;
-	protected $cmpControlTypeHandle = 'collection_attribute';
+	protected $ptComposerControlTypeHandle = 'collection_attribute';
 	
 	public function setAttributeKeyID($akID) {
 		$this->akID = $akID;
-		$this->setComposerControlIdentifier($akID);
+		$this->setPageTypeComposerControlIdentifier($akID);
 	}
 
-	public function composerFormControlSupportsValidation() {
+	public function pageTypeComposerFormControlSupportsValidation() {
 		return true;
 	}
 
@@ -20,9 +20,9 @@ class Concrete5_Model_CollectionAttributeComposerControl extends ComposerControl
 		$node->addAttribute('handle', $ak->getAttributeKeyHandle());
 	}
 
-	public function removeComposerControlFromDraft() {
+	public function removePageTypeComposerControlFromDraft() {
 		$ak = $this->getAttributeKeyObject();
-		$c = $this->cmpDraftObject->getComposerDraftCollectionObject();
+		$c = $this->pDraftObject->getPageDraftCollectionObject();
 		$c->clearAttribute($ak);
 	}
 
@@ -37,11 +37,11 @@ class Concrete5_Model_CollectionAttributeComposerControl extends ComposerControl
 		return $this->akID;
 	}
 
-	public function getComposerControlCustomTemplates() {
+	public function getPageTypeComposerControlCustomTemplates() {
 		return array();
 	}
 
-	public function canComposerControlSetPageName() {
+	public function canPageTypeComposerControlSetPageName() {
 		$ak = $this->getAttributeKeyObject();
 		if ($ak->getAttributeKeyHandle() == 'meta_title') {
 			return true;
@@ -49,40 +49,40 @@ class Concrete5_Model_CollectionAttributeComposerControl extends ComposerControl
 		return false;
 	}
 
-	public function getComposerControlPageNameValue(Page $c) {
+	public function getPageTypeComposerControlPageNameValue(Page $c) {
 		$ak = $this->getAttributeKeyObject();
 		return $c->getAttribute($ak->getAttributeKeyHandle());
 	}
 
-	public function getComposerControlDraftValue() {
-		if (is_object($this->cmpDraftObject)) {
+	public function getPageTypeComposerControlDraftValue() {
+		if (is_object($this->pDraftObject)) {
 			$ak = $this->getAttributeKeyObject();
-			$c = $this->cmpDraftObject->getComposerDraftCollectionObject();
+			$c = $this->pDraftObject->getPageDraftCollectionObject();
 			return $c->getAttributeValueObject($ak);
 		}
 	}
 	
-	public function shouldComposerControlStripEmptyValuesFromDraft() {
+	public function shouldPageTypeComposerControlStripEmptyValuesFromDraft() {
 		return true;
 	}
 
-	public function isComposerControlDraftValueEmpty() {
+	public function isPageTypeComposerControlDraftValueEmpty() {
 		$ak = $this->getAttributeKeyObject();
-		$c = $this->cmpDraftObject->getComposerDraftCollectionObject();
+		$c = $this->pDraftObject->getPageDraftCollectionObject();
 		return ($c->getAttribute($ak) == '');
 	}
 
 	public function render($label, $customTemplate) {
 		$ak = $this->getAttributeKeyObject();
 		$env = Environment::get();
-		$set = $this->getComposerFormLayoutSetControlObject()->getComposerFormLayoutSetObject();
+		$set = $this->getPageTypeComposerFormLayoutSetControlObject()->getPageTypeComposerFormLayoutSetObject();
 		$control = $this;
-		$template = $env->getPath(DIRNAME_ELEMENTS . '/' . DIRNAME_COMPOSER . '/' . DIRNAME_COMPOSER_ELEMENTS_CONTROLS . '/' . $this->cmpControlTypeHandle . '.php');
+		$template = $env->getPath(DIRNAME_ELEMENTS . '/' . DIRNAME_COMPOSER . '/' . DIRNAME_COMPOSER_ELEMENTS_CONTROLS . '/' . $this->ptComposerControlTypeHandle . '.php');
 		include($template);
 	}
 
-	public function publishToPage(ComposerDraft $d, $data, $controls) {
-		$c = $d->getComposerDraftCollectionObject();
+	public function publishToPage(PageDraft $d, $data, $controls) {
+		$c = $d->getPageDraftCollectionObject();
 		// the data for this actually doesn't come from $data. Attributes have their own way of gettin data.
 		$ak = $this->getAttributeKeyObject();
 		$ak->saveAttributeForm($c);				

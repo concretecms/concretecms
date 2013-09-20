@@ -1,6 +1,6 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
 
-class Concrete5_Model_ParentPageComposerTargetConfiguration extends ComposerTargetConfiguration {
+class Concrete5_Model_ParentPagePageTypePublishTargetConfiguration extends PageTypePublishTargetConfiguration {
 
 	protected $cParentID;
 	
@@ -12,7 +12,7 @@ class Concrete5_Model_ParentPageComposerTargetConfiguration extends ComposerTarg
 		return $this->cParentID;
 	}
 
-	public function getComposerConfiguredTargetParentPageID() {
+	public function getPageTypePublishTargetConfiguredTargetParentPageID() {
 		return $this->cParentID;
 	}
 

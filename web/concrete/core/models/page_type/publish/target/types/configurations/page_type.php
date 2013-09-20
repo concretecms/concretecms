@@ -1,22 +1,22 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
 
-class Concrete5_Model_PageTypeComposerTargetConfiguration extends ComposerTargetConfiguration {
+class Concrete5_Model_PageTypePageTypePublishTargetConfiguration extends PageTypePublishTargetConfiguration {
 
 	protected $ctID;
 
-	public function setCollectionTypeID($ctID) {
+	public function setPageTypeID($ctID) {
 		$this->ctID = $ctID;
 	}
 
-	public function getCollectionTypeID() {
+	public function getPageTypeID() {
 		return $this->ctID;
 	}
 
 	public function export($cxml) {
 		$target = parent::export($cxml);
-		$ct = CollectionType::getByID($this->ctID);
+		$ct = PageType::getByID($this->ctID);
 		if (is_object($ct)) {
-			$target->addAttribute('pagetype', $ct->getCollectionTypeHandle());
+			$target->addAttribute('pagetype', $ct->getPageTypeHandle());
 		}
 	}
 	

@@ -1,6 +1,6 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?>
 
-<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Composer Drafts'))?>
+<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Page Drafts'))?>
 
 <? 
 $today = Loader::helper('date')->getLocalDateTime('now', 'Y-m-d');
@@ -17,15 +17,15 @@ if (count($drafts) > 0) { ?>
 $num = 0;
 foreach($drafts as $dr) { 
 	$pdr = new Permissions($dr);
-	if ($pdr->canEditComposerDraft()) { 
+	if ($pdr->canEditPageDraft()) { 
 		$num++;
-		$d = $dr->getComposerDraftCollectionObject();
+		$d = $dr->getPageDraftCollectionObject();
 		$pageName = ($d->getCollectionName()) ? $d->getCollectionName() : t('(Untitled Page)');
 		?>
 	<tr>
-		<td><a href="<?=$this->url('/dashboard/composer/write', 'draft', $dr->getComposerDraftID())?>"><?=$pageName?></a></td>
+		<td><a href="<?=$this->url('/dashboard/composer/write', 'draft', $dr->getPageDraftID())?>"><?=$pageName?></a></td>
 		<td><?
-		$ui = UserInfo::getByID($dr->getComposerDraftUserID());
+		$ui = UserInfo::getByID($dr->getPageDraftUserID());
 		if (is_object($ui)) {
 			print $ui->getUserDisplayName();
 		} else {

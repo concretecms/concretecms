@@ -1,15 +1,15 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
 
-class Concrete5_Model_BlockComposerControl extends ComposerControl {
+class Concrete5_Model_BlockPageTypeComposerControl extends PageTypeComposerControl {
 
 	protected $btID;
-	protected $cmpControlTypeHandle = 'block';
+	protected $ptComposerControlTypeHandle = 'block';
 	protected $bt = false;
 	protected $b = false;
 
 	public function setBlockTypeID($btID) {
 		$this->btID = $btID;
-		$this->setComposerControlIdentifier($btID);
+		$this->setPageTypeComposerControlIdentifier($btID);
 	}
 
 	public function getBlockTypeID() {
@@ -21,44 +21,44 @@ class Concrete5_Model_BlockComposerControl extends ComposerControl {
 		$node->addAttribute('handle', $bt->getBlockTypeHandle());
 	}
 
-	public function shouldComposerControlStripEmptyValuesFromDraft() {
+	public function shouldPageTypeComposerControlStripEmptyValuesFromDraft() {
 		return true;
 	}
 
-	public function removeComposerControlFromDraft() {
-		$b = $this->getComposerControlBlockObject($this->cmpDraftObject);
+	public function removePageTypeComposerControlFromDraft() {
+		$b = $this->getPageTypeComposerControlBlockObject($this->pDraftObject);
 		$b->deleteBlock();
 	}
 
-	protected function getComposerControlBlockObject(ComposerDraft $cmpDraft) {
+	protected function getPageTypeComposerControlBlockObject(PageDraft $pDraft) {
 		$db = Loader::db();
 		if (!is_object($this->b)) {
-			$setControl = $this->getComposerFormLayoutSetControlObject();
-			$c = $cmpDraft->getComposerDraftCollectionObject();
-			$r = $db->GetRow('select bID, arHandle from ComposerDraftBlocks where cmpDraftID = ? and cmpFormLayoutSetControlID = ?', array(
-				$cmpDraft->getComposerDraftID(), $setControl->getComposerFormLayoutSetControlID()
+			$setControl = $this->getPageTypeComposerFormLayoutSetControlObject();
+			$c = $pDraft->getPageDraftCollectionObject();
+			$r = $db->GetRow('select bID, arHandle from PageDraftBlocks where pDraftID = ? and ptComposerFormLayoutSetControlID = ?', array(
+				$pDraft->getPageDraftID(), $setControl->getPageTypeComposerFormLayoutSetControlID()
 			));
 			if (!$r['bID']) {
 				// this is the first run. so we look for the proxy block.
 				$pt = PageTemplate::getByID($c->getPageTemplateID());
-				$outputControl = $setControl->getComposerOutputControlObject($pt);
+				$outputControl = $setControl->getPageTypeComposerOutputControlObject($pt);
 				if (is_object($outputControl)) {
-					$cm = $cmpDraft->getComposerObject();
-					$mc = $cm->getComposerPageTemplateDefaultPageObject($pt);
-					$r = $db->GetRow('select bco.bID, cvb.arHandle from btCoreComposerControlOutput bco inner join CollectionVersionBlocks cvb on cvb.bID = bco.bID where cmpOutputControlID = ? and cvb.cID = ?', array(
-						$outputControl->getComposerOutputControlID(), $mc->getCollectionID()
+					$cm = $pDraft->getPageTypeObject();
+					$mc = $cm->getPageTypePageTemplateDefaultPageObject($pt);
+					$r = $db->GetRow('select bco.bID, cvb.arHandle from btCorePageTypeComposerControlOutput bco inner join CollectionVersionBlocks cvb on cvb.bID = bco.bID where ptComposerOutputControlID = ? and cvb.cID = ?', array(
+						$outputControl->getPageTypeComposerOutputControlID(), $mc->getCollectionID()
 					));
 				}
 			}
 			if ($r['bID']) {
 				$b = Block::getByID($r['bID'], $c, $r['arHandle']);
-				$this->setComposerControlBlockObject($b);
+				$this->setPageTypeComposerControlBlockObject($b);
 				return $this->b;
 			}
 		}
 	}
 
-	public function setComposerControlBlockObject($b) {
+	public function setPageTypeComposerControlBlockObject($b) {
 		$this->b = $b;
 	}
 
@@ -69,36 +69,36 @@ class Concrete5_Model_BlockComposerControl extends ComposerControl {
 		return $this->bt;
 	}
 
-	public function getComposerControlPageNameValue(Page $dc) {
+	public function getPageTypeComposerControlPageNameValue(Page $dc) {
 		if (is_object($this->b)) {
 			$controller = $this->b->getController();
-			return $controller->getComposerControlPageNameValue();
+			return $controller->getPageTypeComposerControlPageNameValue();
 		}
 	}
 
-	public function canComposerControlSetPageName() {
+	public function canPageTypeComposerControlSetPageName() {
 		$bt = $this->getBlockTypeObject();
 		$controller = $bt->getController();
-		if (method_exists($controller, 'getComposerControlPageNameValue')) {
+		if (method_exists($controller, 'getPageTypeComposerControlPageNameValue')) {
 			return true;
 		}
 		return false;
 	}
 
-	public function isComposerControlDraftValueEmpty() {
+	public function isPageTypeComposerControlDraftValueEmpty() {
 		$bt = $this->getBlockTypeObject();
 		$controller = $bt->getController();				
-		if (method_exists($controller, 'isComposerControlDraftValueEmpty')) {
-			$bx = $this->getComposerControlBlockObject($this->cmpDraftObject);
+		if (method_exists($controller, 'isPageTypeComposerControlDraftValueEmpty')) {
+			$bx = $this->getPageTypeComposerControlBlockObject($this->pDraftObject);
 			if (is_object($bx)) {
 				$controller = $bx->getController();
-				return $controller->isComposerControlDraftValueEmpty();
+				return $controller->isPageTypeComposerControlDraftValueEmpty();
 			}
 		}
 		return false;
 	}
 
-	public function composerFormControlSupportsValidation() {
+	public function pageTypeComposerFormControlSupportsValidation() {
 		$bt = $this->getBlockTypeObject();
 		$controller = $bt->getController();
 		if (method_exists($controller, 'validate_composer')) {
@@ -114,12 +114,12 @@ class Concrete5_Model_BlockComposerControl extends ComposerControl {
 	}
 
 
-	public function getComposerControlCustomTemplates() {
+	public function getPageTypeComposerControlCustomTemplates() {
 		$bt = $this->getBlockTypeObject();
 		$txt = Loader::helper('text');
 		$templates = array();
 		if (is_object($bt)) {
-			$blocktemplates = $bt->getBlockTypeComposerTemplates();
+			$blocktemplates = $bt->getBlockTypePageTypeComposerTemplates();
 			if (is_array($blocktemplates)) {
 				foreach($blocktemplates as $tpl) {
 	                if (strpos($tpl, '.') !== false) {
@@ -127,22 +127,22 @@ class Concrete5_Model_BlockComposerControl extends ComposerControl {
 	                } else {
 	                	$name = $txt->unhandle($tpl);
 	                }
-					$templates[] = new ComposerControlCustomTemplate($tpl, $name);
+					$templates[] = new PageTypeComposerControlCustomTemplate($tpl, $name);
 				}
 			}
 		}
 		return $templates;
 	}
 	
-	public function addToComposerFormLayoutSet(ComposerFormLayoutSet $set) {
-		$layoutSetControl = parent::addToComposerFormLayoutSet($set);
-		$composer = $set->getComposerObject();
-		$composer->rescanComposerOutputControlObjects();
+	public function addToPageTypeComposerFormLayoutSet(PageTypeComposerFormLayoutSet $set) {
+		$layoutSetControl = parent::addToPageTypeComposerFormLayoutSet($set);
+		$pagetype = $set->getPageTypeObject();
+		$pagetype->rescanPageTypeComposerOutputControlObjects();
 		return $layoutSetControl;
 	}
 
 	public function render($label, $customTemplate) {
-		$obj = $this->getComposerControlDraftValue();
+		$obj = $this->getPageTypeComposerControlDraftValue();
 		if (!is_object($obj)) {
 			$obj = $this->getBlockTypeObject();
 		}
@@ -152,7 +152,7 @@ class Concrete5_Model_BlockComposerControl extends ComposerControl {
 
 		$env = Environment::get();
 		$form = Loader::helper('form');
-		$set = $this->getComposerFormLayoutSetControlObject()->getComposerFormLayoutSetObject();
+		$set = $this->getPageTypeComposerFormLayoutSetControlObject()->getPageTypeComposerFormLayoutSetObject();
 		$control = $this;
 
 		if ($customTemplate) {
@@ -172,7 +172,7 @@ class Concrete5_Model_BlockComposerControl extends ComposerControl {
 	public function inc($file, $args = array()) {
 		extract($args);
 		if (!isset($obj)) {
-			$obj = $this->getComposerControlDraftValue();
+			$obj = $this->getPageTypeComposerControlDraftValue();
 			if (!is_object($obj)) {
 				$obj = $this->getBlockTypeObject();
 			}
@@ -180,24 +180,24 @@ class Concrete5_Model_BlockComposerControl extends ComposerControl {
 		$controller = $obj->getController();
 		extract($controller->getSets());
 		extract($controller->getHelperObjects());
-		$label = $this->getComposerFormLayoutSetControlObject()->getComposerControlLabel();
+		$label = $this->getPageTypeComposerFormLayoutSetControlObject()->getPageTypeComposerControlLabel();
 		$env = Environment::get();
 		include($env->getPath(DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle() . '/' . $file));
 	}
 
-	public function getComposerControlDraftValue() {
-		if (is_object($this->cmpDraftObject)) {
-			return $this->getComposerControlBlockObject($this->cmpDraftObject);
+	public function getPageTypeComposerControlDraftValue() {
+		if (is_object($this->pDraftObject)) {
+			return $this->getPageTypeComposerControlBlockObject($this->pDraftObject);
 		}
 	}
-	public function publishToPage(ComposerDraft $d, $data, $controls) {
-		$c = $d->getComposerDraftCollectionObject();
+	public function publishToPage(PageDraft $d, $data, $controls) {
+		$c = $d->getPageDraftCollectionObject();
 		// for blocks, we need to also grab their output 
 		$bt = $this->getBlockTypeObject();
 		$pt = PageTemplate::getByID($c->getPageTemplateID());
-		$setControl = $this->getComposerFormLayoutSetControlObject();
+		$setControl = $this->getPageTypeComposerFormLayoutSetControlObject();
 
-		$b = $this->getComposerControlBlockObject($d);
+		$b = $this->getPageTypeComposerControlBlockObject($d);
 		if (!is_object($b)) {
 			return;
 		}
@@ -205,11 +205,11 @@ class Concrete5_Model_BlockComposerControl extends ComposerControl {
 		// delete the block that this set control has placed on this version, because
 		// we are going to replace it with a new one.
 		$db = Loader::db();
-		$q = 'select cvb.arHandle, cdb.bID, cdb.cbDisplayOrder from ComposerDraftBlocks cdb inner join ComposerDrafts cd on cdb.cmpDraftID = cd.cmpDraftID inner join CollectionVersionBlocks cvb on (cdb.bID = cvb.bID and cvb.cID = cd.cID and cvb.cvID = ?) where cdb.cmpFormLayoutSetControlID = ? and cd.cmpDraftID = ?';
-		$v = array($c->getVersionID(), $setControl->getComposerFormLayoutSetControlID(), $d->getComposerDraftID());
+		$q = 'select cvb.arHandle, cdb.bID, cdb.cbDisplayOrder from PageDraftBlocks cdb inner join PageDrafts cd on cdb.pDraftID = cd.pDraftID inner join CollectionVersionBlocks cvb on (cdb.bID = cvb.bID and cvb.cID = cd.cID and cvb.cvID = ?) where cdb.ptComposerFormLayoutSetControlID = ? and cd.pDraftID = ?';
+		$v = array($c->getVersionID(), $setControl->getPageTypeComposerFormLayoutSetControlID(), $d->getPageDraftID());
 		$row = $db->GetRow($q, $v);
 		if ($row['bID'] && $row['arHandle']) {
-			$db->Execute('delete from ComposerDraftBlocks where cmpFormLayoutSetControlID = ? and cmpDraftID = ?', array($setControl->getComposerFormLayoutSetControlID(), $d->getComposerDraftID()));
+			$db->Execute('delete from PageDraftBlocks where ptComposerFormLayoutSetControlID = ? and pDraftID = ?', array($setControl->getPageTypeComposerFormLayoutSetControlID(), $d->getPageDraftID()));
 		}
 
 		$arHandle = $b->getAreaHandle();
@@ -217,13 +217,13 @@ class Concrete5_Model_BlockComposerControl extends ComposerControl {
 		$b->deleteBlock();
 		$ax = Area::getOrCreate($c, $arHandle);
 		$b = $c->addBlock($bt, $ax, $data);
-		$this->setComposerControlBlockObject($b);
+		$this->setPageTypeComposerControlBlockObject($b);
 		$b->setAbsoluteBlockDisplayOrder($blockDisplayOrder);
 		
 		// make a reference to the new block
 		$db = Loader::db();
-		$db->Execute('insert into ComposerDraftBlocks (cmpDraftID, arHandle, cmpFormLayoutSetControlID, cbDisplayOrder, bID) values (?, ?, ?, ?, ?)', array(
-			$d->getComposerDraftID(), $arHandle, $setControl->getComposerFormLayoutSetControlID(), $b->getBlockDisplayOrder(), $b->getBlockID()
+		$db->Execute('insert into PageDraftBlocks (pDraftID, arHandle, ptComposerFormLayoutSetControlID, cbDisplayOrder, bID) values (?, ?, ?, ?, ?)', array(
+			$d->getPageDraftID(), $arHandle, $setControl->getPageTypeComposerFormLayoutSetControlID(), $b->getBlockDisplayOrder(), $b->getBlockID()
 		));
 	}
 

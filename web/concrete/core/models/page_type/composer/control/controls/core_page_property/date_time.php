@@ -1,15 +1,15 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
 
-class Concrete5_Model_DateTimeCorePagePropertyComposerControl extends CorePagePropertyComposerControl {
+class Concrete5_Model_DateTimeCorePagePropertyPageTypeComposerControl extends CorePagePropertyPageTypeComposerControl {
 	
 	public function __construct() {
 		$this->setCorePagePropertyHandle('date_time');
-		$this->setComposerControlName(t('Public Date/Time'));
-		$this->setComposerControlIconSRC(ASSETS_URL . '/models/attribute/types/date_time/icon.png');
+		$this->setPageTypeComposerControlName(t('Public Date/Time'));
+		$this->setPageTypeComposerControlIconSRC(ASSETS_URL . '/models/attribute/types/date_time/icon.png');
 	}
 
-	public function publishToPage(ComposerDraft $d, $data, $controls) {
-		$this->addComposerControlRequestValue('cDatePublic', Loader::helper('form/date_time')->translate('date_time', $data));
+	public function publishToPage(PageDraft $d, $data, $controls) {
+		$this->addPageTypeComposerControlRequestValue('cDatePublic', Loader::helper('form/date_time')->translate('date_time', $data));
 		parent::publishToPage($d, $data, $controls);
 	}
 
@@ -20,8 +20,8 @@ class Concrete5_Model_DateTimeCorePagePropertyComposerControl extends CorePagePr
 		}
 	}
 
-	public function getComposerControlDraftValue() {
-		$c = $this->cmpDraftObject->getComposerDraftCollectionObject();
+	public function getPageTypeComposerControlDraftValue() {
+		$c = $this->pDraftObject->getPageDraftCollectionObject();
 		return $c->getCollectionDatePublic();
 	}
 	

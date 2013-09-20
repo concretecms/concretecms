@@ -1,17 +1,17 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
 
-class Concrete5_Model_ComposerControlCustomTemplate extends Object {
+class Concrete5_Model_PageTypeComposerControlCustomTemplate extends Object {
 
-	protected $cmpControlCustomTemplateFilename;
-	protected $cmpControlCustomTemplateName;
+	protected $ptComposerControlCustomTemplateFilename;
+	protected $ptComposerControlCustomTemplateName;
 
-	public function __construct($cmpControlCustomTemplateFilename, $cmpControlCustomTemplateName) {
-		$this->cmpControlCustomTemplateFilename = $cmpControlCustomTemplateFilename;
-		$this->cmpControlCustomTemplateName = $cmpControlCustomTemplateName;
+	public function __construct($ptComposerControlCustomTemplateFilename, $ptComposerControlCustomTemplateName) {
+		$this->ptComposerControlCustomTemplateFilename = $ptComposerControlCustomTemplateFilename;
+		$this->ptComposerControlCustomTemplateName = $ptComposerControlCustomTemplateName;
 	}
 
-	public function getComposerControlCustomTemplateFilename() {return $this->cmpControlCustomTemplateFilename;}
-	public function getComposerControlCustomTemplateName() {return $this->cmpControlCustomTemplateName;}
+	public function getPageTypeComposerControlCustomTemplateFilename() {return $this->ptComposerControlCustomTemplateFilename;}
+	public function getPageTypeComposerControlCustomTemplateName() {return $this->ptComposerControlCustomTemplateName;}
 	
 	
 }

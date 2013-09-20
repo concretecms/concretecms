@@ -1,63 +1,63 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
 
-abstract class Concrete5_Model_ComposerControlType extends Object {
+abstract class Concrete5_Model_PageTypeComposerControlType extends Object {
 
-	abstract public function getComposerControlObjects();
-	abstract public function getComposerControlByIdentifier($identifier);
+	abstract public function getPageTypeComposerControlObjects();
+	abstract public function getPageTypeComposerControlByIdentifier($identifier);
 	abstract public function configureFromImport($node);
 	
 	public function controlTypeSupportsOutputControl() {return false;}
-	public function getComposerControlTypeName() {return $this->cmpControlTypeName;}
-	public function getComposerControlTypeHandle() {return $this->cmpControlTypeHandle;}
-	public function getComposerControlTypeID() { return $this->cmpControlTypeID;}
+	public function getPageTypeComposerControlTypeName() {return $this->ptComposerControlTypeName;}
+	public function getPageTypeComposerControlTypeHandle() {return $this->ptComposerControlTypeHandle;}
+	public function getPageTypeComposerControlTypeID() { return $this->ptComposerControlTypeID;}
 	public function getPackageID() { return $this->pkgID;}
 	public function getPackageHandle() {
 		return PackageList::getHandle($this->pkgID);
 	}
 	public function getPackageObject() {return Package::getByID($this->pkgID);}
 
-	public static function getByHandle($cmpControlTypeHandle) {
+	public static function getByHandle($ptComposerControlTypeHandle) {
 		$db = Loader::db();
-		$r = $db->GetRow('select cmpControlTypeID, cmpControlTypeHandle, cmpControlTypeName, pkgID from ComposerControlTypes where cmpControlTypeHandle = ?', array($cmpControlTypeHandle));
-		if (is_array($r) && $r['cmpControlTypeHandle']) {
-			$class = Loader::helper('text')->camelcase($r['cmpControlTypeHandle']) . 'ComposerControlType';
+		$r = $db->GetRow('select ptComposerControlTypeID, ptComposerControlTypeHandle, ptComposerControlTypeName, pkgID from PageTypeComposerControlTypes where ptComposerControlTypeHandle = ?', array($ptComposerControlTypeHandle));
+		if (is_array($r) && $r['ptComposerControlTypeHandle']) {
+			$class = Loader::helper('text')->camelcase($r['ptComposerControlTypeHandle']) . 'PageTypeComposerControlType';
 			$sc = new $class();
 			$sc->setPropertiesFromArray($r);
 			return $sc;
 		}
 	}
-	public static function getByID($cmpControlTypeID) {
+	public static function getByID($ptComposerControlTypeID) {
 		$db = Loader::db();
-		$r = $db->GetRow('select cmpControlTypeID, cmpControlTypeHandle, cmpControlTypeName, pkgID from ComposerControlTypes where cmpControlTypeID = ?', array($cmpControlTypeID));
-		if (is_array($r) && $r['cmpControlTypeHandle']) {
-			$class = Loader::helper('text')->camelcase($r['cmpControlTypeHandle']) . 'ComposerControlType';
+		$r = $db->GetRow('select ptComposerControlTypeID, ptComposerControlTypeHandle, ptComposerControlTypeName, pkgID from PageTypeComposerControlTypes where ptComposerControlTypeID = ?', array($ptComposerControlTypeID));
+		if (is_array($r) && $r['ptComposerControlTypeHandle']) {
+			$class = Loader::helper('text')->camelcase($r['ptComposerControlTypeHandle']) . 'PageTypeComposerControlType';
 			$sc = new $class();
 			$sc->setPropertiesFromArray($r);
 			return $sc;
 		}
 	}	
 	
-	public static function add($cmpControlTypeHandle, $cmpControlTypeName, $pkg = false) {
+	public static function add($ptComposerControlTypeHandle, $ptComposerControlTypeName, $pkg = false) {
 		$pkgID = 0;
 		if (is_object($pkg)) {
 			$pkgID = $pkg->getPackageID();
 		}
 		$db = Loader::db();
-		$db->Execute('insert into ComposerControlTypes (cmpControlTypeHandle, cmpControlTypeName, pkgID) values (?, ?, ?)', array($cmpControlTypeHandle, $cmpControlTypeName, $pkgID));
-		return ComposerControlType::getByHandle($cmpControlTypeHandle);
+		$db->Execute('insert into PageTypeComposerControlTypes (ptComposerControlTypeHandle, ptComposerControlTypeName, pkgID) values (?, ?, ?)', array($ptComposerControlTypeHandle, $ptComposerControlTypeName, $pkgID));
+		return PageTypeComposerControlType::getByHandle($ptComposerControlTypeHandle);
 	}
 	
 	public function delete() {
 		$db = Loader::db();
-		$db->Execute('delete from ComposerControlTypes where cmpControlTypeID = ?', array($this->cmpControlTypeID));
+		$db->Execute('delete from PageTypeComposerControlTypes where ptComposerControlTypeID = ?', array($this->ptComposerControlTypeID));
 	}
 	
 	public static function getList() {
 		$db = Loader::db();
-		$ids = $db->GetCol('select cmpControlTypeID from ComposerControlTypes order by cmpControlTypeName asc');
+		$ids = $db->GetCol('select ptComposerControlTypeID from PageTypeComposerControlTypes order by ptComposerControlTypeName asc');
 		$types = array();
 		foreach($ids as $id) {
-			$type = ComposerControlType::getByID($id);
+			$type = PageTypeComposerControlType::getByID($id);
 			if (is_object($type)) {
 				$types[] = $type;
 			}
@@ -67,10 +67,10 @@ abstract class Concrete5_Model_ComposerControlType extends Object {
 
 	public static function getListByPackage($pkg) {
 		$db = Loader::db();
-		$ids = $db->GetCol('select cmpControlTypeID from ComposerControlTypes where pkgID = ? order by cmpControlTypeName asc', array($pkg->getPackageID()));
+		$ids = $db->GetCol('select ptComposerControlTypeID from PageTypeComposerControlTypes where pkgID = ? order by ptComposerControlTypeName asc', array($pkg->getPackageID()));
 		$types = array();
 		foreach($ids as $id) {
-			$type = ComposerControlType::getByID($id);
+			$type = PageTypeComposerControlType::getByID($id);
 			if (is_object($type)) {
 				$types[] = $type;
 			}
@@ -85,8 +85,8 @@ abstract class Concrete5_Model_ComposerControlType extends Object {
 		foreach($list as $sc) {
 			$activated = 0;
 			$type = $nxml->addChild('type');
-			$type->addAttribute('handle', $sc->getComposerControlTypeHandle());
-			$type->addAttribute('name', $sc->getComposerControlTypeName());
+			$type->addAttribute('handle', $sc->getPageTypeComposerControlTypeHandle());
+			$type->addAttribute('name', $sc->getPageTypeComposerControlTypeName());
 			$type->addAttribute('package', $sc->getPackageHandle());
 		}
 	}

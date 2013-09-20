@@ -1,14 +1,14 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Model_ComposerPublishResponse extends Object {
+class Concrete5_Model_PageTypePublishResponse extends Object {
 
 	public $error = false;
 	public $messages = array();
 	public $outputControls = array();
-	public $cmpDraftID;
+	public $pDraftID;
 	public $saveURL;
 	public $redirectURL;
-	public $cmpDraftSaveStatus;
+	public $pDraftSaveStatus;
 	public $publishURL;
 	public $discardURL;
 	public $viewURL;
@@ -21,8 +21,8 @@ class Concrete5_Model_ComposerPublishResponse extends Object {
 		$this->time = date('F d, Y g:i A');
 	}
 
-	public function setDraftSaveStatus($cmpDraftSaveStatus) {
-		$this->cmpDraftSaveStatus = $cmpDraftSaveStatus;
+	public function setDraftSaveStatus($pDraftSaveStatus) {
+		$this->pDraftSaveStatus = $pDraftSaveStatus;
 	}
 
 	public function setRedirectURL($url) {
@@ -37,8 +37,8 @@ class Concrete5_Model_ComposerPublishResponse extends Object {
 		$this->outputControls = $outputControls;
 	}
 
-	public function setComposerDraft(ComposerDraft $cmpDraft) {
-		$this->cmpDraftID = $cmpDraft->getComposerDraftID();
+	public function setPageDraft(PageDraft $pDraft) {
+		$this->pDraftID = $pDraft->getPageDraftID();
 	}
 
 	public function setSaveURL($saveURL) {
