@@ -173,9 +173,9 @@
 				$cvIsNew = 0;
 			}
 			$dh = Loader::helper('date');
-			$v = array($this->cID, $newVID, $c->getCollectionName(), $c->getCollectionHandle(), $c->getCollectionDescription(), $c->getCollectionDatePublic(), $dh->getSystemDateTime(), $versionComments, $u->getUserID(), $cvIsNew, $this->pThemeID, $this->ptID, $this->pTemplateID);
-			$q = "insert into CollectionVersions (cID, cvID, cvName, cvHandle, cvDescription, cvDatePublic, cvDateCreated, cvComments, cvAuthorUID, cvIsNew, pThemeID, ptID, pTemplateID)
-				values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+			$v = array($this->cID, $newVID, $c->getCollectionName(), $c->getCollectionHandle(), $c->getCollectionDescription(), $c->getCollectionDatePublic(), $dh->getSystemDateTime(), $versionComments, $u->getUserID(), $cvIsNew, $this->pThemeID, $this->pTemplateID);
+			$q = "insert into CollectionVersions (cID, cvID, cvName, cvHandle, cvDescription, cvDatePublic, cvDateCreated, cvComments, cvAuthorUID, cvIsNew, pThemeID, pTemplateID)
+				values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 				
 			$r = $db->prepare($q);
 			$res = $db->execute($r, $v);

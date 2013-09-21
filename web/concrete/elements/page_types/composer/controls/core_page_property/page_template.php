@@ -10,6 +10,6 @@ foreach($pagetype->getPageTypePageTemplateObjects() as $template) {
 <div class="control-group">
 	<label class="control-label"><?=$label?></label>
 	<div class="controls" data-composer-field="page_template">
-		<?=$form->select('ptPublishPageTemplateID', $templates, $control->getPageTypeComposerControlDraftValue())?>
+		<?=$form->select('ptComposerPageTemplateID', $templates, $control->getPageTypeComposerControlDraftValue())?>
 	</div>
 </div>

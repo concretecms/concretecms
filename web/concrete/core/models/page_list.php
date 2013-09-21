@@ -384,9 +384,9 @@ class Concrete5_Model_PageList extends DatabaseItemList {
 		}
 
 		if ($this->includeAliases) {
-			$this->setQuery('select p1.cID, pt.ptHandle ' . $ik . $additionalFields . ' from Pages p1 left join Pages p2 on (p1.cPointerID = p2.cID) left join PagePaths on (PagePaths.cID = p1.cID and PagePaths.ppIsCanonical = 1) left join PageSearchIndex psi on (psi.cID = if(p2.cID is null, p1.cID, p2.cID)) inner join CollectionVersions cv on (cv.cID = if(p2.cID is null, p1.cID, p2.cID) and cvID = ' . $cvID . ') left join PageTypes pt on pt.ctID = cv.ctID inner join Collections c on (c.cID = if(p2.cID is null, p1.cID, p2.cID))');
+			$this->setQuery('select p1.cID, pt.ptHandle ' . $ik . $additionalFields . ' from Pages p1 left join Pages p2 on (p1.cPointerID = p2.cID) left join PagePaths on (PagePaths.cID = p1.cID and PagePaths.ppIsCanonical = 1) left join PageSearchIndex psi on (psi.cID = if(p2.cID is null, p1.cID, p2.cID)) inner join CollectionVersions cv on (cv.cID = if(p2.cID is null, p1.cID, p2.cID) and cvID = ' . $cvID . ') left join PageTypes pt on (pt.ptID = if(p2.cID is null, p1.ptID, p2.ptID)) inner join Collections c on (c.cID = if(p2.cID is null, p1.cID, p2.cID))');
 		} else {
-			$this->setQuery('select p1.cID, pt.ptHandle ' . $ik . $additionalFields . ' from Pages p1 left join PagePaths on (PagePaths.cID = p1.cID and PagePaths.ppIsCanonical = 1) left join PageSearchIndex psi on (psi.cID = p1.cID) inner join CollectionVersions cv on (cv.cID = p1.cID and cvID = ' . $cvID . ') left join PageTypes pt on (pt.ctID = cv.ctID)  inner join Collections c on (c.cID = p1.cID)');
+			$this->setQuery('select p1.cID, pt.ptHandle ' . $ik . $additionalFields . ' from Pages p1 left join PagePaths on (PagePaths.cID = p1.cID and PagePaths.ppIsCanonical = 1) left join PageSearchIndex psi on (psi.cID = p1.cID) inner join CollectionVersions cv on (cv.cID = p1.cID and cvID = ' . $cvID . ') left join PageTypes pt on (pt.ptID = p1.ptID)  inner join Collections c on (c.cID = p1.cID)');
 		}
 		
 		if ($this->includeAliases) {

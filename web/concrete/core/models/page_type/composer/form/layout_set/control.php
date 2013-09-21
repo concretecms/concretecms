@@ -12,14 +12,10 @@ class Concrete5_Model_PageTypeComposerFormLayoutSetControl extends Object {
 	public function getPageTypeComposerFormLayoutSetControlCustomTemplate() {return $this->ptComposerFormLayoutSetControlCustomTemplate;}
 	public function isPageTypeComposerFormLayoutSetControlRequired() {return $this->ptComposerFormLayoutSetControlRequired;}
 
-	public function setPageTypeComposerDraftObject($pDraftObject) {
-		$this->pDraftObject = $pDraftObject;
-	}
-
 	public function render() {
 		$control = $this->getPageTypeComposerControlObject();
 		$control->setPageTypeComposerFormLayoutSetControlObject($this);
-		$control->setPageTypeComposerDraftObject($this->pDraftObject);
+		$control->setPageDraftObject($this->pDraftObject);
 		$control->render($this->getPageTypeComposerControlLabel(), $this->getPageTypeComposerFormLayoutSetControlCustomTemplate());
 	}
 
