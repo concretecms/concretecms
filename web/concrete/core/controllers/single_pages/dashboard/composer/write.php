@@ -107,7 +107,7 @@ EOL;
 		session_write_close();
 
 		$this->view($type, $id);
-		$pt = PageTemplate::getByID($this->post('ptPageTemplateID'));
+		$pt = PageTemplate::getByID($this->post('ptComposerPageTemplateID'));
 		$availablePageTemplates = $this->pagetype->getPageTypePageTemplateObjects();
 
 		if (!is_object($pt) && count($availablePageTemplates) == 1) {
@@ -124,7 +124,7 @@ EOL;
 				// if we have a draft, but the page type has changed, we create a new one.
 				$d = $this->draft;
 				$dc = $d->getPageDraftCollectionObject();
-				if ($dc->getPageTemplateID() != $_POST['ptPageTemplateID']) {
+				if ($dc->getPageTemplateID() != $_POST['ptComposerPageTemplateID']) {
 					$d = $this->pagetype->createDraft($pt);
 				} else {
 					$d->createNewCollectionVersion();
@@ -133,7 +133,7 @@ EOL;
 
 			/// set the target
 			$configuredTarget = $this->pagetype->getPageTypePublishTargetObject();
-			$targetPageID = $configuredTarget->getPageTypeConfiguredPublishTargetParentPageID();
+			$targetPageID = $configuredTarget->getPageTypePublishTargetConfiguredTargetParentPageID();
 			if (!$targetPageID) {
 				$targetPageID = $this->post('cParentID');
 			}

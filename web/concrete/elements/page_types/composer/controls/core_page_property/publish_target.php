@@ -2,7 +2,7 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 $pagetype = $set->getPageTypeObject();
 $target = $pagetype->getPageTypePublishTargetObject();
-$draft = $control->getPageTypeComposerDraftObject();
+$draft = $control->getPageDraftObject();
 ?>
 
 <div class="control-group">

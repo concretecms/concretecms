@@ -30,7 +30,7 @@ class Concrete5_Model_PageDraft extends Object {
 	}
 
 	public function saveForm() {
-		$controls = PageTypeComposerControl::getList($this->getPageTypeComposerObject());
+		$controls = PageTypeComposerControl::getList($this->getPageTypeObject());
 		$outputControls = array();
 		foreach($controls as $cn) {
 			$data = $cn->getRequestValue();

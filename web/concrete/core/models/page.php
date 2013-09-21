@@ -65,7 +65,7 @@ class Concrete5_Model_Page extends Collection {
 		
 		$this->loadError(false);
 
-		$q0 = "select Pages.cID, Pages.pkgID, Pages.cPointerID, Pages.cPointerExternalLink, Pages.cIsActive, Pages.cIsSystemPage, Pages.cPointerExternalLinkNewWindow, Pages.cFilename, Collections.cDateAdded, Pages.cDisplayOrder, Collections.cDateModified, cInheritPermissionsFromCID, cInheritPermissionsFrom, cOverrideTemplatePermissions, cCheckedOutUID, cIsTemplate, uID, cPath, cParentID, cChildren, cCacheFullPageContent, cCacheFullPageContentOverrideLifetime, cCacheFullPageContentLifetimeCustom from Pages inner join Collections on Pages.cID = Collections.cID left join PagePaths on (Pages.cID = PagePaths.cID and PagePaths.ppIsCanonical = 1) ";
+		$q0 = "select Pages.cID, Pages.pkgID, Pages.cPointerID, Pages.cPointerExternalLink, Pages.cIsActive, Pages.cIsSystemPage, Pages.cPointerExternalLinkNewWindow, Pages.cFilename, Pages.ptID, Collections.cDateAdded, Pages.cDisplayOrder, Collections.cDateModified, cInheritPermissionsFromCID, cInheritPermissionsFrom, cOverrideTemplatePermissions, cCheckedOutUID, cIsTemplate, uID, cPath, cParentID, cChildren, cCacheFullPageContent, cCacheFullPageContentOverrideLifetime, cCacheFullPageContentLifetimeCustom from Pages inner join Collections on Pages.cID = Collections.cID left join PagePaths on (Pages.cID = PagePaths.cID and PagePaths.ppIsCanonical = 1) ";
 		//$q2 = "select cParentID, cPointerID, cPath, Pages.cID from Pages left join PagePaths on (Pages.cID = PagePaths.cID and PagePaths.ppIsCanonical = 1) ";
 		
 		$v = array($cInfo);
@@ -777,7 +777,7 @@ class Concrete5_Model_Page extends Collection {
 	 * @return int
 	 */	
 	function getPageTypeID() {
-		return $this->vObj->ptID;
+		return $this->ptID;
 	}
 
 	/**
@@ -1047,13 +1047,17 @@ class Concrete5_Model_Page extends Collection {
 		return Page::getByID($this->cInheritPermissionsFromCID, "RECENT");
 	}
 	
+	/** 
+	 * Given the current page's template and page type, we return the master page
+	 */
 	function getMasterCollectionID() {
-		$db = Loader::db();
-		$q = "select p.cID from Pages p inner join CollectionVersions on p.cID = CollectionVersions.cID where CollectionVersions.ctID = '{$this->vObj->ctID}' and cIsTemplate = 1";
-		$cID = $db->getOne($q);
-		if ($cID) {
-			return $cID;
+		$pt = PageType::getByID($this->getPageTypeID());
+		if (!is_object($pt)) {
+			return 0;
 		}
+		$template = PageTemplate::getByID($this->getPageTemplateID());
+		$c = $pt->getPageTypePageTemplateDefaultPageObject($template);
+		return $c->getCollectionID();
 	}
 
 	function getOriginalCollectionID() {
@@ -1461,7 +1465,8 @@ class Concrete5_Model_Page extends Collection {
 		PageStatistics::decrementParents($cID);
 		
 		$cDateModified = $dh->getSystemDateTime();
-		if ($this->getPermissionsCollectionID() != $this->getCollectionID() && $this->getPermissionsCollectionID() != $this->getMasterCollectionID()) {
+//		if ($this->getPermissionsCollectionID() != $this->getCollectionID() && $this->getPermissionsCollectionID() != $this->getMasterCollectionID()) {
+		if ($this->getPermissionsCollectionID() != $this->getCollectionID()) {
 			// implicitly, we're set to inherit the permissions of wherever we are in the site.
 			// as such, we'll change to inherit whatever permissions our new parent has
 			$npID = $nc->getPermissionsCollectionID();

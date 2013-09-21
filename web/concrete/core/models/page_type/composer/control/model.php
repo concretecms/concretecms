@@ -32,11 +32,11 @@ abstract class Concrete5_Model_PageTypeComposerControl extends Object {
 		$this->ptComposerControlRequiredOnThisRequest = $req;
 	}
 	
-	public function setPageTypeComposerDraftObject($ptComposerDraftObject) {
-		$this->pDraftObject = $pDraftObject;
+	public function setPageDraftObject($draft) {
+		$this->pDraftObject = $draft;
 	}
 
-	public function getPageTypeComposerDraftObject() {
+	public function getPageDraftObject() {
 		return $this->pDraftObject;
 	}
 
@@ -116,8 +116,8 @@ abstract class Concrete5_Model_PageTypeComposerControl extends Object {
 		return false;
 	}
 
-	public static function getList(PageTypeComposer $composer) {
-		$sets = PageTypeComposerFormLayoutSet::getList($composer);
+	public static function getList(PageType $pagetype) {
+		$sets = PageTypeComposerFormLayoutSet::getList($pagetype);
 		$controls = array();
 		foreach($sets as $s) {
 			$setControls = PageTypeComposerFormLayoutSetControl::getList($s);
