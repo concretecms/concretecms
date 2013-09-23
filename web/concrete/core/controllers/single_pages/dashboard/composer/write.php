@@ -39,7 +39,7 @@ EOL;
 			$pagetypes = PageType::getList();
 			if (count($pagetypes) == 1) {
 				$ptt = $pagetypes[0];
-				$this->redirect('/dashboard/composer/write', 'pagetype', $ptt->getPageTypeID());
+				$this->redirect('/dashboard/composer/write', 'composer', $ptt->getPageTypeID());
 			} else {
 				$this->set('pagetypes', $pagetypes);
 			}

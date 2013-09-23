@@ -132,6 +132,7 @@ $al->register('css', 'core/frontend/errors', 'css/frontend/errors.css');
 $al->register('javascript', 'core/sitemap', 'js/ccm.sitemap.js', array('postprocess' => false));
 $al->register('css', 'core/sitemap', 'css/ccm.sitemap.css', array('postprocess' => false));
 $al->registerGroup('core/sitemap', array(
+	array('javascript', 'core/observer'),
 	array('javascript', 'core/sitemap'),
 	array('javascript', 'dynatree'),
 	array('css', 'dynatree'),

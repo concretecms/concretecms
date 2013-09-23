@@ -8,6 +8,6 @@ $draft = $control->getPageDraftObject();
 <div class="control-group">
 	<label class="control-label"><?=$label?></label>
 	<div class="controls" data-composer-field="name">
-		<?=$target->includeChooseTargetForm($composer, $draft)?>
+		<?=$target->includeChooseTargetForm($pagetype, $draft)?>
 	</div>
 </div>

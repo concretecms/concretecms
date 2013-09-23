@@ -49,6 +49,17 @@ class Concrete5_Library_ToolRequestView extends RequestView {
 		$this->markHeaderAssetPosition();
 	}
 
+	public function outputAssetIntoView($item) {
+		$str = '<script type="text/javascript">';	
+		if ($item instanceof CssAsset) {
+			$str .= 'ccm_addHeaderItem("' . $item->getAssetURL() . '", "CSS")';
+		} else {
+			$str .= 'ccm_addHeaderItem("' . $item->getAssetURL() . '", "JAVASCRIPT")';
+		}
+		$str .= '</script>';
+		print $str . "\n";
+	}
+
 	protected function onAfterGetContents() {
 		// now that we have the contents of the tool,
 		// we make sure any require assets get moved into the header

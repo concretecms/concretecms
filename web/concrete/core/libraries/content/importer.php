@@ -63,8 +63,8 @@ class Concrete5_Library_Content_Importer {
 		$this->importJobs($sx);
 		$this->importJobSets($sx);
 		// import bare page types first, then import structure, then page types blocks, attributes and composer settings, then page content, because we need the structure for certain attributes and stuff set in master collections (like composer)
-		$this->importPageTypesBase($sx);
 		$this->importPageTemplates($sx);
+		$this->importPageTypesBase($sx);
 		$this->importPageStructure($sx);
 		$this->importPageTypeDefaults($sx);
 		$this->importSinglePageContent($sx);

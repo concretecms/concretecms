@@ -793,7 +793,12 @@ class Concrete5_Model_Page extends Collection {
 	 * @return string
 	 */	
 	function getPageTypeHandle() {
-		return $this->vObj->ptHandle;
+		if (!isset($this->ptHandle)) {
+			$db = Loader::db();
+			$this->ptHandle = $db->GetOne('select ptHandle from PageTypes where ptID = ?', array($this->ptID));
+		}
+		
+		return $this->ptHandle;
 	}
 
 	public function getCollectionTypeHandle() {
@@ -1056,6 +1061,9 @@ class Concrete5_Model_Page extends Collection {
 			return 0;
 		}
 		$template = PageTemplate::getByID($this->getPageTemplateID());
+		if (!is_object($template)) {
+			return 0;
+		}
 		$c = $pt->getPageTypePageTemplateDefaultPageObject($template);
 		return $c->getCollectionID();
 	}
