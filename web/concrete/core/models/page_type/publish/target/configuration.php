@@ -20,7 +20,7 @@ class Concrete5_Model_PageTypePublishTargetConfiguration extends Object {
 
 
 	public function includeChooseTargetForm($pagetype = false, $draft = false) {
-		Loader::element(DIRNAME_PAGE_TYPES . '/' . DIRNAME_ELEMENTS_PAGE_TYPES_PUBLISH_TARGET_TYPES . '/' . DIRNAME_ELEMENTS_PAGE_TYPES_PUBLISH_TARGET_TYPES_FORM . '/' . $this->getPageTypePublishTargetTypeHandle(), array('draft' => $draft, 'pagetype' => $pagetyp), $this->pkgHandle);
+		Loader::element(DIRNAME_PAGE_TYPES . '/' . DIRNAME_ELEMENTS_PAGE_TYPES_PUBLISH_TARGET_TYPES . '/' . DIRNAME_ELEMENTS_PAGE_TYPES_PUBLISH_TARGET_TYPES_FORM . '/' . $this->getPageTypePublishTargetTypeHandle(), array('draft' => $draft, 'pagetype' => $pagetype), $this->pkgHandle);
 	}
 
 	public function getPageTypePublishTargetConfiguredTargetParentPageID() {
