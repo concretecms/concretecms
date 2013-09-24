@@ -7,7 +7,7 @@ if ($controller->getFileID() > 0) {
 	$bf = $controller->getFileObject();
 }
 
-$setcontrol = $control->getComposerFormLayoutSetControlObject();
+$setcontrol = $control->getPageTypeComposerFormLayoutSetControlObject();
 $al = Loader::helper('concrete/asset_library');
 
 ?>
@@ -15,6 +15,6 @@ $al = Loader::helper('concrete/asset_library');
 <div class="control-group">
 	<label class="control-label"><?=$label?></label>
 	<div class="controls">
-		<?php echo $al->image('ccm-b-image-'.$setcontrol->getComposerFormLayoutSetControlID(), $this->field('fID'), t('Choose Image'), $bf); ?>
+		<?php echo $al->image('ccm-b-image-'.$setcontrol->getPageTypeComposerFormLayoutSetControlID(), $this->field('fID'), t('Choose Image'), $bf); ?>
 	</div>
 </div>
