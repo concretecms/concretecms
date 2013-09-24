@@ -219,9 +219,9 @@ class Concrete5_Model_PageType extends Object {
 			$templates = $sc->getPageTypePageTemplateObjects();
 			$pagetype = $nxml->addChild('pagetype');
 			$pagetype->addAttribute('name', $sc->getPageTypeName());
-			$pagetype->addAttribute('handle', $sc->getPagTypeHandle());
+			$pagetype->addAttribute('handle', $sc->getPageTypeHandle());
 			$pagetype->addAttribute('package', $sc->getPackageHandle());
-			if ($this->isPageTypeInternal()) {
+			if ($sc->isPageTypeInternal()) {
 				$pagetype->addAttribute('internal', 'true');
 			}
 			$pagetemplates = $pagetype->addChild('pagetemplates');

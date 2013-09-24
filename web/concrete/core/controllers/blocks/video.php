@@ -56,7 +56,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			parent::save($args);
 		}				
 
-		public function on_page_view() {
+		public function view() {
 			$this->requireAsset('swfobject');
 		}
 		

@@ -35,9 +35,13 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		public function view() {
 			$discussion = $this->getConversationDiscussionObject();
 			if (is_object($discussion)) {
+				$req = Request::get();
+				$req->requireAsset('core/conversation');
 				$this->set('discussion', $discussion);
 				if ($this->enableNewTopics && $this->ptID) {
-					$this->set('pagetype', PageType::getByID($this->ptID));
+					$pt = PageType::getByID($this->ptID);
+					$this->set('pagetype', $pt);
+					Loader::helper('composer')->addAssetsToRequest($pt, $this);
 				}
 
 				$c = Page::getCurrentPage();
@@ -93,17 +97,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				}
 			}
 			exit;
-		}
-
-		public function on_page_view() {
-			if ($this->enableNewTopics && $this->ptID) {
-				$pt = PageType::getByID($this->ptID);
-				if (is_object($pt)) {
-					Loader::helper('composer')->addAssetsToRequest($pt, $this);
-				}
-			}
-			$req = Request::get();
-			$req->requireAsset('core/conversation');
 		}
 
 		public function save($post) {
