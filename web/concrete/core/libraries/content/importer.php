@@ -66,6 +66,7 @@ class Concrete5_Library_Content_Importer {
 		$this->importPageTemplates($sx);
 		$this->importPageTypesBase($sx);
 		$this->importPageStructure($sx);
+		$this->importPageTypeTargets($sx);
 		$this->importPageTypeDefaults($sx);
 		$this->importSinglePageContent($sx);
 		$this->importStacksContent($sx);
@@ -418,6 +419,14 @@ class Concrete5_Library_Content_Importer {
 		if (isset($sx->pagetypes)) {
 			foreach($sx->pagetypes->pagetype as $p) {
 				PageType::import($p);
+			}
+		}
+	}
+
+	protected function importPageTypeTargets(SimpleXMLElement $sx) {
+		if (isset($sx->pagetypes)) {
+			foreach($sx->pagetypes->pagetype as $p) {
+				PageType::importTargets($p);
 			}
 		}
 	}

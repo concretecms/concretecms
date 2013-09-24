@@ -23,8 +23,8 @@ class Concrete5_Library_AttributeTypeView extends View {
 	public function __construct($mixed) {
 		if ($mixed instanceof AttributeValue) {
 			$this->attributeValue = $mixed;
-			$this->attributeKey = $mixed->getAttributeKeyObject();
-			$this->attributeType = $this->attributeKey->getAttributeTypeObject();
+			$this->attributeKey = $mixed->getAttributeKey();
+			$this->attributeType = $mixed->getAttributeTypeObject();
 		} else if ($mixed instanceof AttributeKey) {
 			$this->attributeKey = $mixed;
 			$this->attributeType = $this->attributeKey->getAttributeType();
@@ -100,6 +100,10 @@ class Concrete5_Library_AttributeTypeView extends View {
 
 	protected function onAfterGetContents() {
 		@Loader::element(DIRNAME_ATTRIBUTES . '/' . $view . '_footer', array('type' => $this->attributeType));
+	}
+
+	public function field($fieldName) {
+		return $this->controller->field($fieldName);
 	}
 
 

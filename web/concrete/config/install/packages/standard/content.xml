@@ -65,6 +65,21 @@
                                 </data>
                             </block>
                         </area>
+                        <area name="Header Image">
+                        <block type="core_page_type_composer_control_output" name="">
+                          <control output-control-id="DjZTZlM7"/>
+                        </block>
+                      </area>
+                        <area name="Thumbnail Image">
+                        <block type="core_page_type_composer_control_output" name="">
+                          <control output-control-id="WWYvC5sc"/>
+                        </block>
+                      </area>
+                        <area name="Main">
+                        <block type="core_page_type_composer_control_output" name="">
+                          <control output-control-id="ZmQkiRH8"/>
+                        </block>
+                      </area>
                     </page>
                 </pagetemplate>
             </output>

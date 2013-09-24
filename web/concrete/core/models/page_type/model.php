@@ -100,6 +100,17 @@ class Concrete5_Model_PageType extends Object {
 		return $_templates;
 	}
 
+	public static function importTargets($node) {
+		$ptHandle = (string) $node['handle'];
+		$db = Loader::db();
+		$ptID = $db->GetOne('select ptID from PageTypes where ptHandle = ?', array($ptHandle));
+		$cm = PageType::getByID($ptID);
+		if (is_object($cm) && isset($node->target)) {
+			$target = PageTypePublishTargetType::importConfiguredPageTypePublishTarget($node->target);
+			$cm->setConfiguredPageTypePublishTargetObject($target);
+		}
+	}
+
 	public static function import($node) {
 		$types = array();
 		if ((string) $node->pagetemplates['type'] == 'custom' || (string) $node->pagetemplates['type'] == 'except') {
@@ -141,10 +152,6 @@ class Concrete5_Model_PageType extends Object {
 			$cm->update($data);
 		} else {
 			$cm = PageType::add($data);
-		}
-		if (isset($node->target)) {
-			$target = PageTypePublishTargetType::importConfiguredPageTypePublishTarget($node->target);
-			$cm->setConfiguredPageTypePublishTargetObject($target);
 		}
 		$node = $node->composer;
 		if (isset($node->formlayout->set)) {
