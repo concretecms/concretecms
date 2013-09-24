@@ -72,6 +72,21 @@ class Concrete5_Library_PageRequestView extends PathRequestView {
 
 	}
 
+	public function startRender() {
+		parent::startRender();
+		$this->c->outputCustomStyleHeaderItems();
+		// do we have any custom menu plugins?
+		$cp = new Permissions($this->c);
+		if ($cp->canViewToolbar()) { 
+			$ih = Loader::helper('concrete/interface/menu');
+			$interfaceItems = $ih->getPageHeaderMenuItems();
+			foreach($interfaceItems as $item) {
+				$controller = $item->getController();
+				$controller->outputAutoHeaderItems();
+			}
+		}
+	}
+
 	public function deliverRender($contents) {
 		$cache = PageCache::getLibrary();
 		$shouldAddToCache = $cache->shouldAddToCache($this);

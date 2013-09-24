@@ -53,7 +53,13 @@
 		}
 		
 		
-		public function on_page_view() {
+		public function view(){ 
+			$this->set('bID', $this->bID);	
+			$this->set('title', $this->title);
+			$this->set('location', $this->location);
+			$this->set('latitude', $this->latitude);
+			$this->set('longitude', $this->longitude);
+			$this->set('zoom', $this->zoom);			
 			$html = Loader::helper('html');
 			$c = Page::getCurrentPage();
 			if (!$c->isEditMode()) {
@@ -93,16 +99,6 @@
 				});            
 				</script>');				
 			}
-		}
-		
-		
-		public function view(){ 
-			$this->set('bID', $this->bID);	
-			$this->set('title', $this->title);
-			$this->set('location', $this->location);
-			$this->set('latitude', $this->latitude);
-			$this->set('longitude', $this->longitude);
-			$this->set('zoom', $this->zoom);			
 		}
 		
 		public function save($data) { 
