@@ -17,7 +17,7 @@ class Concrete5_Controller_Dashboard_System_BackupRestore_Backup extends Dashboa
           try {
 	          $backup = Backup::execute($encrypt);   
  			} catch(Exception $e) {
- 				$this->set('error', $e);
+ 				$this->error->add($e);
  			}
  			$this->view();
 		}
@@ -57,7 +57,7 @@ class Concrete5_Controller_Dashboard_System_BackupRestore_Backup extends Dashboa
 			}
 			chmod(DIR_FILES_BACKUPS . '/'. $file, 000);
 		} else {
-			$this->set('error', array(t('Unable to locate file %s', DIR_FILES_BACKUPS . '/' . $file)));
+			$this->error->add(t('Unable to locate file %s', DIR_FILES_BACKUPS . '/' . $file));
 			$this->view();
 		}
 	}
@@ -100,9 +100,8 @@ class Concrete5_Controller_Dashboard_System_BackupRestore_Backup extends Dashboa
 		}
 		chmod(DIR_FILES_BACKUPS . '/'. $file, 0666);
 		$str_restSql = $fh->getContents(DIR_FILES_BACKUPS . '/' . $file);
-		//$str_restSql = file_get_contents(DIR_FILES_BACKUPS . '/' . $file);
 		if (!$str_restSql) {
-			$this->set("error",array("There was an error trying to restore the database. This file was empty."));
+			$this->error->add(t("There was an error trying to restore the database. This file was empty."));
 			$this->view();
 			return false;
 		}
@@ -116,8 +115,9 @@ class Concrete5_Controller_Dashboard_System_BackupRestore_Backup extends Dashboa
 			if (trim($str_stmt) != "") { 
 				$res_restoration = $db->execute($str_stmt);
 				if (!$res_restoration) { 
-					$this->set("error",array("There was an error trying to restore the database. In query $str_stmt"));
-					return;
+					$this->error->add(t("There was an error trying to restore the database. Affected query: %s", $str_stmt));
+					$this->view();
+					return false;
 				}
 			}		
 		}
@@ -125,11 +125,11 @@ class Concrete5_Controller_Dashboard_System_BackupRestore_Backup extends Dashboa
 		//reset perms for security! 
 		chmod(DIR_FILES_BACKUPS . '/'. $file, 000);
 		Cache::flush();
-		$this->redirect('/dashboard/system/backup_restore/backup', 'backup_successful');
+		$this->redirect('/dashboard/system/backup_restore/backup', 'restoration_successful');
 	}
 
-	public function backup_successful() {
-		$this->set('message', 'Restoration Successful');
+	public function restoration_successful() {
+		$this->set('message', t('Restoration Successful'));
 		$this->view();
 	}
 
