@@ -101,7 +101,7 @@ class Concrete5_Controller_Dashboard_System_BackupRestore_Backup extends Dashboa
 		chmod(DIR_FILES_BACKUPS . '/'. $file, 0666);
 		$str_restSql = $fh->getContents(DIR_FILES_BACKUPS . '/' . $file);
 		if (!$str_restSql) {
-			$this->error->add("There was an error trying to restore the database. This file was empty.");
+			$this->error->add(t("There was an error trying to restore the database. This file was empty."));
 			$this->view();
 			return false;
 		}
@@ -115,7 +115,7 @@ class Concrete5_Controller_Dashboard_System_BackupRestore_Backup extends Dashboa
 			if (trim($str_stmt) != "") { 
 				$res_restoration = $db->execute($str_stmt);
 				if (!$res_restoration) { 
-					$this->error->add(t("There was an error trying to restore the database. In query $str_stmt"));
+					$this->error->add(t("There was an error trying to restore the database. Affected query: %s", $str_stmt));
 					$this->view();
 					return false;
 				}
