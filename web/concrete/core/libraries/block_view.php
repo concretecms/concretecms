@@ -4,6 +4,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 class Concrete5_Library_BlockView extends View {
 
 	protected $block;
+	protected $area;
 	protected $blockType;
 	protected $blockTypePkgHandle;
 	protected $blockViewHeaderFile;
@@ -16,11 +17,16 @@ class Concrete5_Library_BlockView extends View {
 		if ($mixed instanceof Block) {
 			$this->blockType = $mixed->getBlockTypeObject();
 			$this->block = $mixed;
+			$this->area = $mixed->getBlockAreaObject();
 		} else {
 			$this->blockType = $mixed;
 		}
 		$this->blockTypePkgHandle = $this->blockType->getPackageHandle();
 	}		
+
+	public function setAreaObject(Area $area) {
+		$this->area = $area;
+	}
 
 	public function start($view) {
 		/** 
@@ -250,6 +256,10 @@ class Concrete5_Library_BlockView extends View {
 				$this->controller->setBlockObject($this->block);
 			} else {
 				$this->controller = Loader::controller($this->blockType);
+			}
+
+			if (is_object($this->area)) {
+				$this->controller->setAreaObject($this->area);
 			}
 		}
 	}

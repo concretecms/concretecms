@@ -79,6 +79,12 @@ var CCMPanel = function(options) {
 	}		
 
 	this.setupPanelDetails = function($panel) {
+		$panel.find('[data-panel-menu=accordion]').each(function() {
+			var $accordion = $(this);
+			$(this).find('>nav>span').unbind().on('click', function() {
+				$accordion.toggleClass('ccm-panel-header-accordion-dropdown-visible');
+			});
+		});
 		$panel.find('[data-launch-panel-detail]').unbind().on('click', function() {
 			var identifier = $(this).attr('data-launch-panel-detail').replace('/', '-');
 			var detailID = 'ccm-panel-detail-' + identifier;
