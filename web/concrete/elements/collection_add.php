@@ -11,7 +11,7 @@ $dh = Loader::helper('date');
 
 <? if ($_REQUEST['ctID']) { ?>
 
-	<form method="post" action="<?=$c->getCollectionAction()?>" id="ccmAddPage" onsubmit="jQuery.fn.dialog.showLoader()" class="dialog-form">		
+	<form method="post" action="<?=$c->getCollectionAction()?>" id="ccmAddPage" onsubmit="if($('#ccm-url-slug-loader').is(':visible'))return false;jQuery.fn.dialog.showLoader()" class="dialog-form">		
 	<input type="hidden" name="rel" value="<?=$_REQUEST['rel']?>" />
 	<input type="hidden" name="ctID" value="<?=$_REQUEST['ctID']?>" />
 	<input type="hidden" name="mode" value="<?=$_REQUEST['mode']?>" />
@@ -139,19 +139,38 @@ $dh = Loader::helper('date');
 		} 
 	});
 	
-	var addPageTimer = false;
+	var addPageTimer = {};
 	ccm_updateAddPageHandle = function() {
-		clearTimeout(addPageTimer);
-		addPageTimer = setTimeout(function() {
-			var val = $('#ccmAddPage input[name=cName]').val();
+		if(addPageTimer.lastRequested === $.trim($('#ccmAddPage input[name=cName]').val())) {
+			return;
+		}
+		if(addPageTimer.timer) {
+			clearTimeout(addPageTimer.timer);
+		}
+		addPageTimer.timer = setTimeout(function() {
+			var val = $.trim($('#ccmAddPage input[name=cName]').val());
+			addPageTimer.lastRequested = val;
+			delete addPageTimer.timer;
 			$('#ccm-url-slug-loader').show();
-			$.post('<?=REL_DIR_FILES_TOOLS_REQUIRED?>/pages/url_slug', {
-				'token': '<?=Loader::helper('validation/token')->generate('get_url_slug')?>',
-				'name': val,
-				'parentID' : '<?php echo $c->getCollectionId()  ?>'
-			}, function(r) {
-				$('#ccm-url-slug-loader').hide();
-				$('#ccmAddPage input[name=cHandle]').val(r);
+			addPageTimer.xhr = $.ajax({
+				type: 'POST',
+				url: '<?=REL_DIR_FILES_TOOLS_REQUIRED?>/pages/url_slug',
+				data: {
+					'token': '<?=Loader::helper('validation/token')->generate('get_url_slug')?>',
+					'name': val,
+					'parentID' : '<?php echo $c->getCollectionId()  ?>'
+				}
+			})
+			.done(function(r, textStatus, xhr) {
+				if(addPageTimer && addPageTimer.xhr == xhr) {
+					$('#ccmAddPage input[name=cHandle]').val(r);
+					$('#ccm-url-slug-loader').hide();
+				}
+			})
+			.fail(function(xhr) {
+				if(addPageTimer && addPageTimer.xhr == xhr) {
+					$('#ccm-url-slug-loader').hide();
+				}
 			});
 		}, 150);
 	
