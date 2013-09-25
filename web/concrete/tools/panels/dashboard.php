@@ -9,7 +9,7 @@ if ($dh->canRead()) {
 
 <section>
 	<header><?=t('Dashboard')?>
-		<aside><a href=""><?=t('Logout')?></a></aside>
+		<aside><a href="<?=View::url('/login', 'logout', Loader::helper('validation/token')->generate('logout'))?>"><?=t('Logout')?></a></aside>
 	</header>
 	<menu>
 		<? foreach($children as $cID) {

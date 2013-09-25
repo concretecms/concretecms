@@ -6,22 +6,6 @@ var CCMEditMode = function() {
 
 	var blockTypeDropSuccessful = false;
 
-	setupPanels = function() {
-		CCMPanelManager.register({'identifier': 'dashboard', 'position': 'right'});
-		CCMPanelManager.register({'identifier': 'page', 'translucent': false});
-		CCMPanelManager.register({'identifier': 'sitemap', 'position': 'right'});
-		$('<div />', {'id': 'ccm-panel-overlay'}).appendTo($(document.body));
-
-		$('[data-launch-panel]').on('click', function() {
-			var panelID = $(this).attr('data-launch-panel');
-			$(this).toggleClass('ccm-launch-panel-active');
-			var panel = CCMPanelManager.getByIdentifier(panelID);
-			panel.toggle();
-			return false;
-		});
-		$('html').addClass('ccm-panel-ready');
-	}
-
 	setupMenus = function() {
 
 		$('.ccm-area').each(function() {
@@ -314,7 +298,6 @@ var CCMEditMode = function() {
 	return {
 		start: function() {			
 			setupMenus();
-			setupPanels();
 			setupSortablesAndDroppables();
 		},
 

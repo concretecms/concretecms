@@ -9,7 +9,22 @@ var CCMToolbar = function() {
 	var $searchResults = $('#ccm-intelligent-search-results');
 	var remotesearchquery, ajaxtimer;
 
-	setupToolbarMenus = function() {}
+	setupPanels = function() {
+		CCMPanelManager.register({'identifier': 'dashboard', 'position': 'right'});
+		CCMPanelManager.register({'identifier': 'page', 'translucent': false});
+		CCMPanelManager.register({'identifier': 'sitemap', 'position': 'right'});
+		CCMPanelManager.register({'identifier': 'add-block', 'translucent': false, 'position': 'left', 'url' : CCM_TOOLS_PATH + '/panels/page/add_block'});
+		$('<div />', {'id': 'ccm-panel-overlay'}).appendTo($(document.body));
+
+		$('[data-launch-panel]').on('click', function() {
+			var panelID = $(this).attr('data-launch-panel');
+			$(this).toggleClass('ccm-launch-panel-active');
+			var panel = CCMPanelManager.getByIdentifier(panelID);
+			panel.toggle();
+			return false;
+		});
+		$('html').addClass('ccm-panel-ready');
+	}
 
 	setupStatusBar = function() {
 		$('#ccm-page-status-bar .alert').bind('closed', function() {
@@ -195,9 +210,9 @@ var CCMToolbar = function() {
 
 				$toolbar.find('.dialog-launch').dialog();
 
-				setupToolbarMenus();				
 				setupStatusBar();
 				setupIntelligentSearch();
+				setupPanels();
 
 				// make sure that dashboard dropdown doesn't get dismissed if you mis-click inside it;
 				$('#ccm-toolbar-menu-dashboard').on('click', function(e) {
@@ -208,7 +223,6 @@ var CCMToolbar = function() {
 
 		disableDirectExit: function() {
 			$('li.ccm-toolbar-page-edit a').attr('data-toggle-menu', '#ccm-exit-edit-mode-comment');
-			setupToolbarMenus();				
 		}
 
 
