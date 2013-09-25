@@ -4,8 +4,6 @@
 
 var CCMEditMode = function() {
 
-	var blockTypeDropSuccessful = false;
-
 	setupMenus = function() {
 
 		$('.ccm-area').each(function() {
@@ -188,8 +186,7 @@ var CCMEditMode = function() {
 			greedy: true,
 			drop: function(e, ui) {
 				$('.ccm-area-drag-block-type-over').removeClass('ccm-area-drag-block-type-over');
-				if (ui.helper.is('.ccm-overlay-draggable-block-type')) {
-					CCMEditMode.blockTypeDropSuccessful = true;
+				if (ui.helper.is('.ccm-add-block-draggable-block-type')) {
 					// it's from the add block overlay
 					addBlockType($(this).attr('data-cID'), $(this).attr('data-area-id'), $(this).attr('data-area-handle'), ui.helper, true);
 				} else {
@@ -233,8 +230,7 @@ var CCMEditMode = function() {
 			},
 			drop: function(e, ui) {
 				$('.ccm-area-drag-block-type-over').removeClass('ccm-area-drag-block-type-over');
-				if (ui.helper.is('.ccm-overlay-draggable-block-type')) {
-					CCMEditMode.blockTypeDropSuccessful = true;
+				if (ui.helper.is('.ccm-add-block-draggable-block-type')) {
 					$(this).replaceWith($('<div />', {'id': 'ccm-add-new-block-placeholder'}));
 					// it's from the add block overlay
 					var $area = $('#ccm-add-new-block-placeholder').closest('.ccm-area');
@@ -470,36 +466,14 @@ var CCMEditMode = function() {
 			});
 		},
 
-		activateBlockTypesOverlay: function() {
-			$('#ccm-dialog-block-types .ccm-dialog-icon-item-grid-sets ul a').on('click', function() {
-				$('#ccm-overlay-block-types li').hide();
-				$('#ccm-overlay-block-types li[data-block-type-sets~=' + $(this).attr('data-tab') + ']').show();
-				$('#ccm-dialog-block-types .ccm-dialog-icon-item-grid-sets ul a').removeClass('active');
-				$(this).addClass('active');
-				return false;
-			});
-
-			$($('#ccm-dialog-block-types ul a').get(0)).trigger('click');
-
-			$('#ccm-dialog-block-types').closest('.ui-dialog-content').addClass('ui-dialog-content-icon-item-grid');
-			$('#ccm-dialog-block-types .ccm-icon-item-grid-search input').focus();
+		activateAddBlocksPanel: function() {
 			if ($('#ccm-block-types-dragging').length == 0) {
 				$('<div id="ccm-block-types-dragging" />').appendTo(document.body);
 			}
 			// remove any old add block type placeholders
 			$('#ccm-add-new-block-placeholder').remove();
-			$('#ccm-dialog-block-types .ccm-icon-item-grid-search input').liveUpdate('ccm-overlay-block-types .ccm-overlay-icon-item-grid-list');
-			
-			$('#ccm-dialog-block-types .ccm-icon-item-grid-search input').on('keyup', function() {
-				if ($(this).val() == '') {
-					$('#ccm-block-types-wrapper ul.nav-tabs').css('visibility', 'visible');
-					$('#ccm-block-types-wrapper ul.nav-tabs li[class=active] a').click();
-				} else {
-					$('#ccm-block-types-wrapper ul.nav-tabs').css('visibility', 'hidden');
-				}
-			});
 
-			$('#ccm-overlay-block-types a.ccm-overlay-draggable-block-type').each(function() {
+			$('#ccm-panel-add-block a.ccm-add-block-draggable-block-type').each(function() {
 				var $li = $(this);
 				$li.css('cursor', 'move');
 				$li.draggable({
@@ -507,32 +481,15 @@ var CCMEditMode = function() {
 					appendTo: $('#ccm-block-types-dragging'),
 					revert: false,
 					start: function(e, ui) {
-						CCMEditMode.blockTypeDropSuccessful = false;
 						$('.ccm-area-block-dropzone').addClass('ccm-area-block-dropzone-active');
-						// handle the dialog
-						$('#ccm-block-types-wrapper').parent().jqdialog('option', 'closeOnEscape', false);
-						$('#ccm-overlay-block-types').closest('.ui-dialog').fadeOut(100);
-						$('.ui-widget-overlay').remove();
-
-						// deactivate the menu on drag
 						$.fn.ccmmenu.disable();						
 
 					},
 					stop: function() {
 						$.fn.ccmmenu.enable();
-						if (!CCMEditMode.blockTypeDropSuccessful) {
-							// this got cancelled without a receive.
-							jQuery.fn.dialog.closeAll();
-						}
 					}
 				});
 			});
-
-			$('a.ccm-overlay-clickable-block-type').on('click', function() {
-				addBlockType($(this).attr('data-cID'), $(this).attr('data-area-id'), $(this).attr('data-area-handle'), $(this));
-				return false;
-			});
-			
 			
 		}
 
