@@ -106,7 +106,7 @@ class Concrete5_Helper_Number {
 		}
 		$size /= 1024;
 		if(abs($size) < 1024) {
-			return t(/*i18n %s is a number, KB means Kilobyte */'%s KB', $sign . $this->format($size, 2));
+			return t(/*i18n %s is a number, KB means Kilobyte */'%s KB', $this->format($size, 2));
 		}
 		$size /= 1024;
 		if($size < 1024) {
