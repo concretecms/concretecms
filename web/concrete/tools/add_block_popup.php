@@ -37,6 +37,7 @@ if ($ap->canAddBlock($bt)) {
 		print $jsh->button_js(t('Close'), 'jQuery.fn.dialog.closeTop()', 'left');
 	} else {
 		$bv = new BlockView($bt);
+		$bv->setAreaObject($a);
 		// Handle special posted area parameters here
 		if (isset($_REQUEST['arGridColumnSpan'])) {
 			$a->setAreaGridColumnSpan(intval($_REQUEST['arGridColumnSpan']));

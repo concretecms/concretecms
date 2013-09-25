@@ -421,6 +421,8 @@ div.ccm-panel-header-accordion {
 			padding: 18px 15px 19px 40px;
 			font-weight: normal;
 			text-decoration: none;
+			cursor: pointer;
+			.user-select(none);
 		}
 
 		li a:hover {
@@ -430,7 +432,9 @@ div.ccm-panel-header-accordion {
 		ul.ccm-panel-header-accordion-dropdown {
 			height: 0px;
 			overflow: hidden;
-		}		
+			margin-left: 0px;
+			.transition(height 0.5s cubic-bezier(0.190, 1.000, 0.220, 1.000));
+		}
 
 		ul.ccm-panel-header-accordion-dropdown:after {
 		    content: "";
@@ -442,7 +446,17 @@ div.ccm-panel-header-accordion {
 		    border-width: 6px 6px 0px 6px;
 		    border-style: solid;
 		}
+
+
 		 
+	}
+}
+
+div.ccm-panel-header-accordion-dropdown-visible {
+	nav {
+		ul.ccm-panel-header-accordion-dropdown:after {
+		    border-width: 0px 6px 6px 6px;
+		}
 	}
 }
 

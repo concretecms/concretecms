@@ -22,7 +22,7 @@ if (is_object($c) && !$c->isError()) {
 
 	<section>
 
-	<div class="ccm-panel-header-accordion">
+	<div data-panel-menu="accordion" class="ccm-panel-header-accordion">
 	<nav>
 	<span><?=t('Blocks')?></span>
 	<ul class="ccm-panel-header-accordion-dropdown">
