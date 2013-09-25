@@ -8,13 +8,13 @@ var CCMPanel = function(options) {
 	this.isOpen = false;
 
 	this.getPositionClass = function() {
-	switch(options.position) {
-		case 'left':
-			var class = 'ccm-panel-left';
-			break;
-		case 'right':
-			var class = 'ccm-panel-right';
-			break;					
+		switch(options.position) {
+			case 'left':
+				var class = 'ccm-panel-left';
+				break;
+			case 'right':
+				var class = 'ccm-panel-right';
+				break;					
 		}
 		return class;
 	}
@@ -147,6 +147,7 @@ var CCMPanel = function(options) {
 		var obj = this;
 		// hide all other panels
 		var $panel = $('#' + this.getDOMID());
+		$panel.find('.ccm-panel-content-wrapper').html('');
 		$panel.addClass('ccm-panel-active ccm-panel-loading');
 		$('<div />', {'class': 'ccm-panel-content ccm-panel-content-visible'}).appendTo($panel.find('.ccm-panel-content-wrapper')).load(this.options.url, {'cID': CCM_CID}, function() {
 			$panel.delay(1).queue(function() {
@@ -189,6 +190,14 @@ var CCMPanelManager = function() {
 				}
 				$(this).dequeue();
 	    	});
+		},
+
+		hideAll: function() {
+			for (i = 0; i < panels.length; i++) {
+				if (panels[i].isOpen) {
+					panels[i].hide();
+				}
+			}
 		},
 
 		register: function(options) {

@@ -14,6 +14,7 @@ $canViewToolbar = $cp->canViewToolbar();
 
 if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) { 
 
+	$canApprovePageVersions = $cp->canApprovePageVersions();
 	$u = new User();
 	$username = $u->getUserName();
 	$vo = $c->getVersionObject();
@@ -46,7 +47,13 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
 					<li class="pull-left"><a href="<?=View::url('/dashboard/pages/types')?>"><i class="glyphicon glyphicon-arrow-left"></i></a>
 				<? } ?>
 				<? if (!$pageInUseBySomeoneElse && $c->getCollectionPointerID() == 0) { ?>
-				<li class="<? if ($c->isEditMode()) { ?> ccm-toolbar-page-edit-mode-active <? } ?> ccm-toolbar-page-edit pull-left"><a data-toggle="ccm-toolbar-hover-menu" href="<? if (!$c->isEditMode()) { ?><?=DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=<?=$c->getCollectionID()?>&ctask=check-out<?=$token?><? } else { ?>javascript:void(0);<? } ?>"><i class="glyphicon glyphicon-pencil"></i></a></li>
+
+				<? if ($c->isEditMode()) { ?>
+					<li class="ccm-toolbar-page-edit-mode-active ccm-toolbar-page-edit pull-left"><a <? if ($vo->isNew()) { ?>href="javascript:void(0)" data-launch-panel="check-in"<? } else { ?>href="<?=DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=<?=$c->getCollectionID()?>&ctask=check-in<?=$token?>"<? } ?>><i class="glyphicon glyphicon-pencil"></i></a></li>
+				<? } else { ?>
+					<li class="ccm-toolbar-page-edit pull-left"><a href="<?=DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=<?=$c->getCollectionID()?>&ctask=check-out<?=$token?>"><i class="glyphicon glyphicon-pencil"></i></a></li>
+				<? } ?>
+
 				<li class="pull-left"><a href="#" data-launch-panel="page"><i class="glyphicon glyphicon-cog"></i></a>
 
 				</li>
@@ -205,7 +212,7 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
 							$appLabel = t('Approve Version');
 						}
 						?>
-						<a href="<?=DIR_REL . "/" . DISPATCHER_FILENAME . "?cID=" . $c->getCollectionID() . "&ctask=approve-recent" . $token?>" class="btn btn-mini"><?=$appLabel?> <i class="glyphicon glyphicon-thumbs-up"></i></a>
+						<a href="<?=DIR_REL . "/" . DISPATCHER_FILENAME . "?cID=" . $c->getCollectionID() . "&ctask=approve-recent" . $token?>" class="btn btn-default btn-xs"><?=$appLabel?> <i class="glyphicon glyphicon-thumbs-up"></i></a>
 					</div>
 					<? } ?>
 				</div>

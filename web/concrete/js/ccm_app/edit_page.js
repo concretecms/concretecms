@@ -138,7 +138,7 @@ var CCMEditMode = function() {
 		var btID = $link.attr('data-btID');
 		var inline = parseInt($link.attr('data-supports-inline-add'));
 		var hasadd = parseInt($link.attr('data-has-add-template'));
-
+		CCMPanelManager.hideAll();
 		if (!hasadd) {
 			var action = CCM_DISPATCHER_FILENAME + "?cID=" + cID + "&arHandle=" + encodeURIComponent(arHandle) + "&btID=" + btID + "&mode=edit&processBlock=1&add=1&ccm_token=" + CCM_SECURITY_TOKEN;
 			$.get(action, function(r) { CCMEditMode.parseBlockResponse(r, false, 'add'); })
