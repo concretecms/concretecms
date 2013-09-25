@@ -253,10 +253,11 @@ class Concrete5_Model_AttributeKey extends Object {
 		$a = array($akHandle, $akName, $_akIsSearchable, $_akIsSearchableIndexed, $_akIsInternal, $_akIsAutoCreated, $_akIsEditable, $atID, $akCategoryID, $pkgID);
 		$r = $db->query("insert into AttributeKeys (akHandle, akName, akIsSearchable, akIsSearchableIndexed, akIsInternal, akIsAutoCreated, akIsEditable, atID, akCategoryID, pkgID) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", $a);
 		
-		$category = AttributeKeyCategory::getByID($akCategoryID);
-		
 		if ($r) {
+			//getting the insert id must happen right after insertion or
+			//certain adodb drivers (like mysqli) will fail and return 0
 			$akID = $db->Insert_ID();
+			$category = AttributeKeyCategory::getByID($akCategoryID);
 			$className = $txt->camelcase($akCategoryHandle) . 'AttributeKey';
 			$ak = new $className();
 			$ak->load($akID);
