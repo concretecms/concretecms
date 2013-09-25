@@ -15,6 +15,5 @@ $(function() {
 			'concrete5inline', 'concrete5'
 		]
 	});
-	$('#redactor-edit-content').setFocus();
 });
 </script>

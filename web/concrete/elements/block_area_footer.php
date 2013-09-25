@@ -31,6 +31,7 @@ $class = 'ccm-area-footer';
 	<div class="arrow"></div>
 	<div class="popover-inner">
 	<ul class="dropdown-menu">
+	<? /*
 	<? if ($ap->canAddBlockToArea()) { ?>
 		<li data-list-item="block_limit_row"><a dialog-title="<?=t('Add New Block')?>" class="dialog-launch" dialog-modal="false" dialog-width="660" dialog-height="430" id="menuAddNewBlock<?=$a->getAreaID()?>" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/pages/add_block?cID=<?=$c->getCollectionID()?>&arHandle=<?=urlencode($a->getAreaHandle())?>"><?=t("Add New Block")?></a></li>
 		<li data-list-item="block_limit_row"><a dialog-title="<?=t('Paste from Clipboard')?>" class="dialog-launch" dialog-modal="false" dialog-width="550" dialog-height="380" id="menuAddPaste<?=$a->getAreaID()?>" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_area_popup.php?cID=<?=$c->getCollectionID()?>&arHandle=<?=urlencode($a->getAreaHandle())?>&atask=paste"><?=t("Paste from Clipboard")?></a></li>
@@ -41,7 +42,8 @@ $class = 'ccm-area-footer';
 	<? if ($ap->canAddBlockToArea() || $ap->canAddStacks()) { ?>
 		<li data-list-item="block_limit_row" class="divider"></li>
 	<? } ?>
-
+	*/ ?>
+	
 	<?
 		$showAreaDesign = ($ap->canEditAreaDesign() && ENABLE_CUSTOM_DESIGN == true);
 		$showAreaLayouts = ($ap->canAddLayoutToArea() && ENABLE_AREA_LAYOUTS == true);		

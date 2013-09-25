@@ -109,7 +109,7 @@ if (is_object($cp)) {
 		$this->addFooterItem('<script type="text/javascript">$(function() { ccm_showDashboardNewsflowWelcome(); });</script>');
 	}	
 	if ($_COOKIE['ccmLoadAddBlockWindow'] && $c->isEditMode()) {
-		$this->addFooterItem('<script type="text/javascript">$(function() { setTimeout(function() { $("a[data-dialog=add-block]").click()}, 100); });</script>', 'CORE');
+		$this->addFooterItem('<script type="text/javascript">$(function() { setTimeout(function() { $("a[data-launch-panel=add-block]").click()}, 100); });</script>', 'CORE');
 		setcookie("ccmLoadAddBlockWindow", false, -1, DIR_REL . '/');
 	}
 }
