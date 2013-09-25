@@ -100,6 +100,13 @@ for ($i = 0; $i < count($sets); $i++) {
 
 	</section>
 
+	<script type="text/javascript">
+
+	$(function() {
+		CCMEditMode.activateAddBlocksPanel();
+	});
+	</script>
+
 
 	<? }
 }
