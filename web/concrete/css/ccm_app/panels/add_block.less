@@ -55,34 +55,26 @@ div#ccm-panel-add-block {
 		}
 	}	
 
-	a.ccm-add-block-draggable-block-type:hover {
+	a.ccm-panel-add-block-draggable-block-type:hover {
 		cursor: move;
 		.box-shadow(0px 0px 2px 0px #fff);
 	}
 	
 
-	div#ccm-panel-clipboard-list {
+	div#ccm-panel-add-block-clipboard-list {
 
-
-		div.ccm-panel-clipboard-item {
+		div.ccm-panel-add-block-clipboard-item {
 			border-top: 2px groove #424854;
-			padding: 10px 15px 10px 40px;
-
-			div.ccm-panel-clipboard-item-inner {
-				max-height: 140px;
-				margin-bottom: 10px;
-				padding-right: 25px;
-				color: #b4bfcb;	
-				overflow: hidden;
-				font-size: @font-size-base;
-			}
-
-			font-size: @font-size-small;
-			color: #4b5662;
+			.transition(all 0.5s cubic-bezier(0.190, 1.000, 0.220, 1.000));
+			.opacity(1);
+			border-top: 2px groove #424854;		
 			position: relative;
 
 			> a {
-				float: right;
+				position: absolute;
+				top: 10px;
+				right: 15px;
+				z-index: 110;
 				color: #424854;
 			}
 
@@ -90,17 +82,55 @@ div#ccm-panel-add-block {
 				color: #d1322d;
 				text-decoration: none;
 			}
-
 		}
 
-		div.ccm-panel-clipboard-item:last-child {
+		div.ccm-panel-add-block-clipboard-item:last-child {
 			border-bottom: 2px groove #424854;
 		}
+
+		div.ccm-panel-add-block-clipboard-item-delete {
+			.opacity(0);
+			-webkit-transform: translate3d(-100%, 0, 0);
+			max-height: 0px;
+			padding: 0px;
+			border: 0px;
+		}
+
 	}
 
 }
 
-a.ccm-add-block-draggable-block-type {
+div.ccm-panel-add-block-clipboard-item {
+
+	padding: 10px 15px 10px 40px;
+	max-height: 200px;
+
+	div.ccm-panel-add-block-clipboard-item-inner {
+		max-height: 140px;
+		margin-bottom: 10px;
+		padding-right: 25px;
+		color: #b4bfcb;	
+		overflow: hidden;
+		font-size: @font-size-base;
+	}
+
+	font-size: @font-size-small;
+	color: #4b5662;
+}
+
+div#ccm-panel-add-block-dragging {		
+	div.ccm-panel-add-block-clipboard-item {
+		width: 265px;
+		background-color: #161c22;
+		.border-radius(4px);
+
+		> a {
+			display: none;
+		}
+	}
+}
+
+a.ccm-panel-add-block-draggable-block-type {
 	display: block;
 	height: 100px;
 	width: 100px; 
@@ -137,8 +167,8 @@ a.ccm-add-block-draggable-block-type {
 	}
 }
 
-#ccm-block-types-dragging {
-	a {
+#ccm-panel-add-block-dragging {
+	> a, > div {
 		cursor: move;
 		-webkit-transform: rotate(5deg);
 		z-index: 1000;
