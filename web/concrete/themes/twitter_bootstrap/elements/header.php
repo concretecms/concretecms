@@ -12,5 +12,3 @@
 <body>
 
 <div class="ccm-page">
-
-<div style="height: 200px"></div>

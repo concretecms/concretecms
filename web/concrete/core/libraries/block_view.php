@@ -93,25 +93,40 @@ class Concrete5_Library_BlockView extends View {
 				$this->setBlockViewFooterFile(DIR_FILES_ELEMENTS_CORE . '/block_footer_view.php');
 				$bFilename = $this->block->getBlockFilename();
 				$bvt = new BlockViewTemplate($this->block);
-				if ($bFilename) {
-					$bvt->setBlockCustomTemplate($bFilename); // this is PROBABLY already set by the method above, but in the case that it's passed by area we have to set it here
-				} else if ($customFilenameToRender) {
-					$bvt->setBlockCustomRender($customFilenameToRender); 
+				if ($this->controller->blockViewRenderOverride) {
+					$template = DIRNAME_BLOCKS . '/' . $this->blockType->getBlockTypeHandle() . '/' . $this->controller->blockViewRenderOverride . '.php';
+					$this->setViewTemplate($env->getPath($template, $this->blockTypePkgHandle));
+				} else {
+					if ($bFilename) {
+						$bvt->setBlockCustomTemplate($bFilename); // this is PROBABLY already set by the method above, but in the case that it's passed by area we have to set it here
+					} else if ($customFilenameToRender) {
+						$bvt->setBlockCustomRender($customFilenameToRender); 
+					}
+					$this->setViewTemplate($bvt->getTemplate());
 				}
-				$this->setViewTemplate($bvt->getTemplate());
 				break;
 			case 'add':
 				$this->setBlockViewHeaderFile(DIR_FILES_ELEMENTS_CORE . '/block_header_add.php');
 				$this->setBlockViewFooterFile(DIR_FILES_ELEMENTS_CORE . '/block_footer_add.php');
-				$this->setViewTemplate($env->getPath(DIRNAME_BLOCKS . '/' . $this->blockType->getBlockTypeHandle() . '/' . FILENAME_BLOCK_ADD, $this->blockTypePkgHandle));
+				if ($this->controller->blockViewRenderOverride) {
+					$template = DIRNAME_BLOCKS . '/' . $this->blockType->getBlockTypeHandle() . '/' . $this->controller->blockViewRenderOverride . '.php';
+				} else {
+					$template = DIRNAME_BLOCKS . '/' . $this->blockType->getBlockTypeHandle() . '/' . FILENAME_BLOCK_ADD;
+				}
+				$this->setViewTemplate($env->getPath($template, $this->blockTypePkgHandle));
 				break;
 			case 'scrapbook':
 				$this->setViewTemplate($env->getPath(DIRNAME_BLOCKS . '/' . $this->blockType->getBlockTypeHandle() . '/' . FILENAME_BLOCK_VIEW_SCRAPBOOK, $this->blockTypePkgHandle));
 				break;
 			case 'edit':
+				if ($this->controller->blockViewRenderOverride) {
+					$template = DIRNAME_BLOCKS . '/' . $this->blockType->getBlockTypeHandle() . '/' . $this->controller->blockViewRenderOverride . '.php';
+				} else {
+					$template = DIRNAME_BLOCKS . '/' . $this->blockType->getBlockTypeHandle() . '/' . FILENAME_BLOCK_EDIT;
+				}
 				$this->setBlockViewHeaderFile(DIR_FILES_ELEMENTS_CORE . '/block_header_edit.php');
 				$this->setBlockViewFooterFile(DIR_FILES_ELEMENTS_CORE . '/block_footer_edit.php');
-				$this->setViewTemplate($env->getPath(DIRNAME_BLOCKS . '/' . $this->blockType->getBlockTypeHandle() . '/' . FILENAME_BLOCK_EDIT, $this->blockTypePkgHandle));
+				$this->setViewTemplate($env->getPath($template, $this->blockTypePkgHandle));
 				break;
 		}
 
