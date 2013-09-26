@@ -18,7 +18,7 @@ Once you have installed the grunt client, you need to install the project depend
 
 - For debugging: `grunt css:debug`
 	- The generated .css files are more readable, but they have a slightly bigger size
-- For production: `grunt css:release` (or simply `css`)
+- For production: `grunt css:release` (or simply `grunt css`)
 	-  The generated .css files are slightly smaller, but they are harder to read from a human point of view
 
 
@@ -26,7 +26,7 @@ Once you have installed the grunt client, you need to install the project depend
 
 - For debugging: `grunt js:debug`
 	- Building for debug will generate JavaScript SourceMap files, that greatly improve the debugging of scripts with modern browsers.
-- For production: `grunt js:release` (or simply `js`)
+- For production: `grunt js:release` (or simply `grunt js`)
 	- SourceMap files won't be generated.  
 
 
