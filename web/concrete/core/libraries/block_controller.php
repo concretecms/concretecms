@@ -26,7 +26,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		protected $record; // blockrecord
 		protected $helpers = array('form');
 		protected static $sets;
-		
+
 		protected $block;
 		protected $btDescription = "";
 		protected $btName = "";
@@ -56,6 +56,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		protected $btFeatureObjects;
 		
 		public $headerItems = array();
+		public $blockViewRenderOverride;
 		
 		
 
@@ -134,17 +135,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		 * </code>
 		 * @param string $view
 		 * @return void
+		 */
 		function render($view) {
-			$bv = new BlockView($this);
-			$bv->setController($this);
-			// sometimes we need the block type available in here
-			if (is_object($this->getBlockObject())) {
-				$bt = BlockType::getByID($this->getBlockObject()->getBlockTypeID());
-				$a = $this->getBlockObject()->getBlockAreaObject();
-			}
-			$this->renderOverride = $view;
+			$this->blockViewRenderOverride = $view;
 		}
-				 */
 
 		public function validate($args) {
 			return true;

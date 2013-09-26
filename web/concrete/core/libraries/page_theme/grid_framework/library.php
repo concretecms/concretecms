@@ -2,8 +2,8 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 abstract class Concrete5_Library_PageThemeGridFramework {
 
-	public static function getByHandle($ptGridFrameworkHandle) {
-		$class = Loader::helper('text')->camelcase($ptGridFrameworkHandle) . 'PageThemeGridFramework';
+	public static function getByHandle($pThemeGridFrameworkHandle) {
+		$class = Loader::helper('text')->camelcase($pThemeGridFrameworkHandle) . 'PageThemeGridFramework';
 		$cl = new $class();
 		return $cl;
 	}

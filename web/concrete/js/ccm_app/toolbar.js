@@ -222,8 +222,15 @@ var CCMToolbar = function() {
 		},
 
 		disableDirectExit: function() {
-			$('li.ccm-toolbar-page-edit a').attr('data-launch-panel', 'check-in');
-			setupPanels();
+			var $link = $('li.ccm-toolbar-page-edit a');
+			if ($link.attr('data-launch-panel') != 'check-in') {
+				$link.attr('data-launch-panel', 'check-in').on('click', function() {
+					$(this).toggleClass('ccm-launch-panel-active');
+					var panel = CCMPanelManager.getByIdentifier('check-in');
+					panel.toggle();
+					return false;
+				});
+			}
 		}
 
 
