@@ -43,3 +43,9 @@ error_log
 # ignore Eclipse-specific files
 /.settings/
 /.buildpath
+
+# ignore JavaScript source maps
+/web/concrete/js/*.js.map
+
+# ignore node modules used for building
+/build/node_modules
