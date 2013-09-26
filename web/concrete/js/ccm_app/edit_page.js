@@ -186,9 +186,15 @@ var CCMEditMode = function() {
 			greedy: true,
 			drop: function(e, ui) {
 				$('.ccm-area-drag-block-type-over').removeClass('ccm-area-drag-block-type-over');
-				if (ui.helper.is('.ccm-add-block-draggable-block-type')) {
+				if (ui.helper.is('.ccm-panel-add-block-draggable-block-type')) {
 					// it's from the add block overlay
 					addBlockType($(this).attr('data-cID'), $(this).attr('data-area-id'), $(this).attr('data-area-handle'), ui.helper, true);
+				} else if (ui.helper.is('.ccm-panel-add-block-clipboard-item')) {
+					jQuery.fn.dialog.showLoader();
+					var url = CCM_DISPATCHER_FILENAME + '?pcID[]=' + ui.draggable.attr('data-clipboard-item-id') + '&add=1&processBlock=1&cID=' + $(this).attr('data-cID') + '&arHandle=' + $(this).attr('data-area-handle') +  '&btask=alias_existing_block&ccm_token=' + CCM_SECURITY_TOKEN;
+					$.get(url, function(r) { 
+						CCMEditMode.parseBlockResponse(r, false, 'add');
+					});				
 				} else {
 					// else we are dragging a block from some other area into this one.
 					ui.draggable.appendTo($(this).find('.ccm-area-block-list'));
@@ -230,11 +236,21 @@ var CCMEditMode = function() {
 			},
 			drop: function(e, ui) {
 				$('.ccm-area-drag-block-type-over').removeClass('ccm-area-drag-block-type-over');
-				if (ui.helper.is('.ccm-add-block-draggable-block-type')) {
+				// now we handle all the possible things that could be dropped in here.
+				// Add Block Panel - Draggable Block Type
+				if (ui.helper.is('.ccm-panel-add-block-draggable-block-type')) {
 					$(this).replaceWith($('<div />', {'id': 'ccm-add-new-block-placeholder'}));
 					// it's from the add block overlay
 					var $area = $('#ccm-add-new-block-placeholder').closest('.ccm-area');
 					addBlockType($area.attr('data-cID'), $area.attr('data-area-id'), $area.attr('data-area-handle'), ui.helper, true);
+				} else if (ui.helper.is('.ccm-panel-add-block-clipboard-item')) {
+					jQuery.fn.dialog.showLoader();
+					$(this).replaceWith($('<div />', {'id': 'ccm-add-new-block-placeholder'}));
+					var $area = $('#ccm-add-new-block-placeholder').closest('.ccm-area');
+					var url = CCM_DISPATCHER_FILENAME + '?pcID[]=' + ui.draggable.attr('data-clipboard-item-id') + '&add=1&processBlock=1&cID=' + $area.attr('data-cID') + '&arHandle=' + $area.attr('data-area-handle') +  '&btask=alias_existing_block&ccm_token=' + CCM_SECURITY_TOKEN;
+					$.get(url, function(r) { 
+						CCMEditMode.parseBlockResponse(r, false, 'add');
+					});
 				} else {
 					var itemID = ui.draggable.attr('data-block-id');
 					var btHandle = ui.draggable.attr('data-block-type-handle');
@@ -467,30 +483,46 @@ var CCMEditMode = function() {
 		},
 
 		activateAddBlocksPanel: function() {
-			if ($('#ccm-block-types-dragging').length == 0) {
-				$('<div id="ccm-block-types-dragging" />').appendTo(document.body);
+			if ($('#ccm-panel-add-block-dragging').length == 0) {
+				$('<div id="ccm-panel-add-block-dragging" />').appendTo(document.body);
 			}
 			// remove any old add block type placeholders
 			$('#ccm-add-new-block-placeholder').remove();
 
-			$('#ccm-panel-add-block a.ccm-add-block-draggable-block-type').each(function() {
+			$('#ccm-panel-add-block [data-panel-add-block-drag-item]').each(function() {
 				var $li = $(this);
 				$li.css('cursor', 'move');
 				$li.draggable({
 					helper: 'clone',
-					appendTo: $('#ccm-block-types-dragging'),
+					appendTo: $('#ccm-panel-add-block-dragging'),
 					revert: false,
 					start: function(e, ui) {
 						$('.ccm-area-block-dropzone').addClass('ccm-area-block-dropzone-active');
 						$.fn.ccmmenu.disable();						
-
 					},
 					stop: function() {
 						$.fn.ccmmenu.enable();
 					}
 				});
 			});
-			
+
+			$('a[data-delete=clipboard-item]').on('click', function() {
+				var $item = $(this).parent();
+				var itemID = $item.attr('data-clipboard-item-id');
+				$item.addClass('ccm-panel-add-block-clipboard-item-delete')
+				.delay(500)
+				.queue(function() {
+					$(this).remove();
+					$(this).dequeue();
+				});
+
+				$.ajax({
+					type: 'POST',
+					url: CCM_DISPATCHER_FILENAME,
+					data: 'pcID=' + itemID + '&ptask=delete_content&ccm_token=' + CCM_SECURITY_TOKEN
+				}); 
+
+			});
 		}
 
 

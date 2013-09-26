@@ -62,22 +62,19 @@ if (is_object($c) && !$c->isError()) {
 
 			case 'clipboard': ?>
 
-		<div id="ccm-panel-clipboard-list">
+		<div id="ccm-panel-add-block-clipboard-list">
 		<?
 
 		$sp = Pile::getDefault();
 		$contents = $sp->getPileContentObjects('date_desc');
-		if (count($contents) == 0) { 
-			print t('You have no items in your Clipboard.');
-		}
 		foreach($contents as $obj) { 
 			$item = $obj->getObject();
 			if (is_object($item)) {
 				$bt = $item->getBlockTypeObject();
 				?>
-				<div class="ccm-panel-clipboard-item">
-					<a href="javascript:void(0)"><i class="glyphicon glyphicon-trash"></i></a>
-					<div class="ccm-panel-clipboard-item-inner">
+				<div class="ccm-panel-add-block-clipboard-item" data-clipboard-item-id="<?=$obj->getPileContentID()?>" data-cID="<?=$c->getCollectionID()?>"  data-block-type-handle="<?=$item->getBlockTypeHandle()?>" data-panel-add-block-drag-item="clipboard-item">
+					<a href="javascript:void(0)" data-delete="clipboard-item"><i class="glyphicon glyphicon-trash"></i></a>
+					<div class="ccm-panel-add-block-clipboard-item-inner">
 					<?	
 					try {
 						$bv = new BlockView($item);
@@ -134,7 +131,7 @@ if (is_object($c) && !$c->isError()) {
 				?>
 
 			<li>
-				<a class="ccm-add-block-draggable-block-type"  data-cID="<?=$c->getCollectionID()?>" data-block-type-handle="<?=$bt->getBlockTypeHandle()?>" data-dialog-title="<?=t('Add %s', $bt->getBlockTypeName())?>" data-dialog-width="<?=$bt->getBlockTypeInterfaceWidth()?>" data-dialog-height="<?=$bt->getBlockTypeInterfaceHeight()?>" data-has-add-template="<?=$bt->hasAddTemplate()?>" data-supports-inline-add="<?=$bt->supportsInlineAdd()?>" data-btID="<?=$bt->getBlockTypeID()?>" href="javascript:void(0)">
+				<a data-panel-add-block-drag-item="block" class="ccm-panel-add-block-draggable-block-type"  data-cID="<?=$c->getCollectionID()?>" data-block-type-handle="<?=$bt->getBlockTypeHandle()?>" data-dialog-title="<?=t('Add %s', $bt->getBlockTypeName())?>" data-dialog-width="<?=$bt->getBlockTypeInterfaceWidth()?>" data-dialog-height="<?=$bt->getBlockTypeInterfaceHeight()?>" data-has-add-template="<?=$bt->hasAddTemplate()?>" data-supports-inline-add="<?=$bt->supportsInlineAdd()?>" data-btID="<?=$bt->getBlockTypeID()?>" href="javascript:void(0)">
 					<p><img src="<?=$btIcon?>" /><span><?=$bt->getBlockTypeName()?></span></p>
 				</a>
 			</li>
@@ -153,7 +150,7 @@ if (is_object($c) && !$c->isError()) {
 			foreach($blocktypes as $bt) { ?>
 
 			<li data-block-type-sets="<?=$sets?>">
-				<a data-add-block-drag-item="block" class="ccm-add-block-draggable-block-type"  data-cID="<?=$c->getCollectionID()?>" data-block-type-handle="<?=$bt->getBlockTypeHandle()?>" data-dialog-title="<?=t('Add %s', $bt->getBlockTypeName())?>" data-dialog-width="<?=$bt->getBlockTypeInterfaceWidth()?>" data-dialog-height="<?=$bt->getBlockTypeInterfaceHeight()?>" data-has-add-template="<?=$bt->hasAddTemplate()?>" data-supports-inline-add="<?=$bt->supportsInlineAdd()?>" data-btID="<?=$bt->getBlockTypeID()?>" href="javascript:void(0)"><p><img src="<?=$btIcon?>" /><span><?=$bt->getBlockTypeName()?></span></p></a>
+				<a data-panel-add-block-drag-item="block" class="ccm-panel-add-block-draggable-block-type"  data-cID="<?=$c->getCollectionID()?>" data-block-type-handle="<?=$bt->getBlockTypeHandle()?>" data-dialog-title="<?=t('Add %s', $bt->getBlockTypeName())?>" data-dialog-width="<?=$bt->getBlockTypeInterfaceWidth()?>" data-dialog-height="<?=$bt->getBlockTypeInterfaceHeight()?>" data-has-add-template="<?=$bt->hasAddTemplate()?>" data-supports-inline-add="<?=$bt->supportsInlineAdd()?>" data-btID="<?=$bt->getBlockTypeID()?>" href="javascript:void(0)"><p><img src="<?=$btIcon?>" /><span><?=$bt->getBlockTypeName()?></span></p></a>
 			</li>
 
 			<? } ?>
@@ -165,14 +162,14 @@ if (is_object($c) && !$c->isError()) {
 
 		</section>
 
+		<? } ?>
+
 		<script type="text/javascript">
 
 		$(function() {
 			CCMEditMode.activateAddBlocksPanel();
 		});
 		</script>
-
-		<? } ?>
 
 	<? }
 }
