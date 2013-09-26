@@ -105,6 +105,9 @@ class Concrete5_Library_BlockView extends View {
 				$this->setBlockViewFooterFile(DIR_FILES_ELEMENTS_CORE . '/block_footer_add.php');
 				$this->setViewTemplate($env->getPath(DIRNAME_BLOCKS . '/' . $this->blockType->getBlockTypeHandle() . '/' . FILENAME_BLOCK_ADD, $this->blockTypePkgHandle));
 				break;
+			case 'scrapbook':
+				$this->setViewTemplate($env->getPath(DIRNAME_BLOCKS . '/' . $this->blockType->getBlockTypeHandle() . '/' . FILENAME_BLOCK_VIEW_SCRAPBOOK, $this->blockTypePkgHandle));
+				break;
 			case 'edit':
 				$this->setBlockViewHeaderFile(DIR_FILES_ELEMENTS_CORE . '/block_header_edit.php');
 				$this->setBlockViewFooterFile(DIR_FILES_ELEMENTS_CORE . '/block_footer_edit.php');

@@ -59,6 +59,44 @@ div#ccm-panel-add-block {
 		cursor: move;
 		.box-shadow(0px 0px 2px 0px #fff);
 	}
+	
+
+	div#ccm-panel-clipboard-list {
+
+
+		div.ccm-panel-clipboard-item {
+			border-top: 2px groove #424854;
+			padding: 10px 15px 10px 40px;
+
+			div.ccm-panel-clipboard-item-inner {
+				max-height: 140px;
+				margin-bottom: 10px;
+				padding-right: 25px;
+				color: #b4bfcb;	
+				overflow: hidden;
+				font-size: @font-size-base;
+			}
+
+			font-size: @font-size-small;
+			color: #4b5662;
+			position: relative;
+
+			> a {
+				float: right;
+				color: #424854;
+			}
+
+			> a:hover {
+				color: #d1322d;
+				text-decoration: none;
+			}
+
+		}
+
+		div.ccm-panel-clipboard-item:last-child {
+			border-bottom: 2px groove #424854;
+		}
+	}
 
 }
 
