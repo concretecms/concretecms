@@ -3,6 +3,11 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 class ConcreteUpgradeVersion5622Helper {
 
+	public $dbRefreshTables = array(
+		'Jobs',
+		'JobsLog'
+	);
+
 	public function run() {
 			
 		// add user export users task permission
