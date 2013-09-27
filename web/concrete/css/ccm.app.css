@@ -921,8 +921,8 @@ div.ccm-panel-right div.ccm-panel-shadow-layer{width:20px;height:100%;position:a
 div.ccm-panel-left div.ccm-panel-shadow-layer{width:20px;height:100%;position:absolute;top:0;right:0;z-index:106;box-shadow:inset -10px 10px 10px rgba(128,128,128,0.3);-webkit-box-shadow:inset -10px 10px 10px rgba(128,128,128,0.3);-moz-box-shadow:inset -10px 10px 10px rgba(128,128,128,0.3);box-shadow:inset -10px 10px 10px rgba(128,128,128,0.3)}
 div.ccm-panel-content{padding:48px 0 0 0;position:absolute;top:0;height:100%;overflow:auto;width:320px;left:0;-webkit-transition:-webkit-transform .5s cubic-bezier(.19, 1, .22, 1);transition:-webkit-transform .5s cubic-bezier(.19, 1, .22, 1)}
 div.ccm-panel-content header{font-size:16px;padding:15px 15px 15px 40px;margin-bottom:10px;font-weight:500}div.ccm-panel-content header aside{float:right;font-size:11px;font-weight:lighter;margin-top:4px}div.ccm-panel-content header aside a{text-decoration:none}
-div.ccm-panel-content menu{margin:20px 30px 0 20px;padding:0}div.ccm-panel-content menu li{margin-top:10px;list-style-type:none}div.ccm-panel-content menu li a{display:block;text-decoration:none;font-size:14px;font-weight:500;padding:5px 21px 5px 20px}
-div.ccm-panel-content menu li a:hover{text-decoration:none;-webkit-border-radius:4px;-moz-border-radius:4px;border-radius:4px;-ms-border-radius:4px}
+div.ccm-panel-content menu{margin:20px 30px 0 20px;padding:0}div.ccm-panel-content menu li{margin-top:10px;list-style-type:none}div.ccm-panel-content menu li a{display:block;text-decoration:none;font-size:14px;font-weight:500;padding:5px 21px 5px 20px;-webkit-border-radius:4px;-moz-border-radius:4px;border-radius:4px;-ms-border-radius:4px}
+div.ccm-panel-content menu li a:hover{text-decoration:none}
 div.ccm-panel-content-inner{padding:20px 40px 40px 40px}
 div#ccm-panel-dashboard{background-color:#cfd4da}div#ccm-panel-dashboard header{color:#1b2d3e;background-color:#babec4}div#ccm-panel-dashboard header aside a{color:#7a838e}
 div#ccm-panel-dashboard menu li a{color:#4674a1}
@@ -936,8 +936,10 @@ div#ccm-panel-page a{color:#2aa9dd}
 div#ccm-panel-page a:hover{color:#2aa9dd}
 div#ccm-panel-page div.ccm-panel-content-inner textarea{border:1px solid #101114;background-color:#4c4e53;color:#bababa}
 div#ccm-panel-page header{color:#3baaf7;background-color:#202226}div#ccm-panel-page header aside a{color:#565759}
-div#ccm-panel-page menu li a{color:#737c8e}
+div#ccm-panel-page menu.ccm-panel-page-basics{border-bottom:1px solid #36383c}
+div#ccm-panel-page menu{padding-bottom:20px}div#ccm-panel-page menu li a{color:#737c8e}
 div#ccm-panel-page menu li a:hover{background-color:#222427;color:#dce5f7}
+div#ccm-panel-page menu li a.ccm-panel-menu-item-active{background-color:#151619;color:#3baaf7}
 div.ccm-panel-slide-left{-webkit-transform:translate3d(-320px, 0, 0)}
 div.ccm-panel-slide-right{-webkit-transform:translate3d(320px, 0, 0)}
 div.ccm-panel-content-appearing{-webkit-transform:translate3d(320px, 0, 0)}

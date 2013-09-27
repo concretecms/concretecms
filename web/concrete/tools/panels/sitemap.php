@@ -42,6 +42,9 @@ if ($sh->canRead()) { ?>
 <script type="text/javascript">
 $(function() {
 	$('#ccm-sitemap-panel-sitemap').ccmsitemap();
+	ccm_event.subscribe('SitemapSelectNode', function(event) {
+		window.location.href = CCM_DISPATCHER_FILENAME + '?cID=' + event.eventData.node.data.cID;
+	});
 });
 </script>
 
