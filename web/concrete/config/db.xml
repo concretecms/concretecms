@@ -1682,7 +1682,7 @@
       <DEFAULT value="0"/>
       <UNSIGNED/>
     </field>
-    <field name="jLastStatusText" type="C" size="255"></field>
+    <field name="jLastStatusText" type="X2"></field>
     <field name="jLastStatusCode" type="I2" size="4">
       <NOTNULL/>
       <DEFAULT value="0"/>
@@ -1721,7 +1721,7 @@
       <NOTNULL/>
       <UNSIGNED />
     </field>
-    <field name="jlMessage" type="C" size="255">
+    <field name="jlMessage" type="X2">
       <NOTNULL/>
     </field>
     <field name="jlTimestamp" type="T">
