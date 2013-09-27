@@ -141,11 +141,11 @@ div.ccm-panel-content {
 				font-size: 14px;
 				font-weight: 500;
 				padding: 5px 21px 5px 20px;
+				.border-radius(4px);
 			}
 
 			a:hover {
 				text-decoration: none;
-				.border-radius(4px);
 			}
 		}
 
@@ -209,7 +209,14 @@ div#ccm-panel-page {
 		}
 	}
 
+	menu.ccm-panel-page-basics {
+		border-bottom: 1px solid #36383c;
+	}
+
 	menu {
+		
+		padding-bottom: 20px;
+
 		li {
 			a {
 				color: #737c8e;
@@ -218,6 +225,11 @@ div#ccm-panel-page {
 			a:hover {
 				background-color: #222427;
 				color: #dce5f7;
+			}
+
+			a.ccm-panel-menu-item-active {
+				background-color: #151619;
+				color: #3baaf7;
 			}
 		}
 	}

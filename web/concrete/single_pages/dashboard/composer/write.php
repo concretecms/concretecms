@@ -3,20 +3,19 @@
 
 <? if (is_object($pagetype)) { ?>
 
-	<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper($pagetype->getPageTypeName(), false, false, false)?>
-	<form method="post" data-form="composer" class="form-horizontal">
-	<div class="ccm-pane-body">
-		<? Loader::helper('composer')->display($pagetype, $draft); ?>
+<div id="ccm-panel-page" class="ccm-panel ccm-panel-left ccm-panel-active ccm-panel-loaded">
+	<div class="ccm-panel-content-wrapper">
+	<div class="ccm-panel-content ccm-panel-content-visible">
+	<?
+		Loader::element('panels/page', array(
+			'pagetype' => $pagetype,
+			'draft' => $draft
+		));
+	?>
 	</div>
-	<div class="ccm-pane-footer">
-		<? Loader::helper('composer')->displayButtons($pagetype, $draft); ?>
-	</div>
-
-
-	</form>
-
-
-	<?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(false)?>
+	
+</div>
+</div>
 
 
 <? } else { ?>

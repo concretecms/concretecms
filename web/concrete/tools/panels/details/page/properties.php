@@ -13,8 +13,6 @@ if (is_object($c) && !$c->isError()) {
 			<div class="container">
 			<header><?=t('Properties')?></header>
 			<form method="post" class="" action="<?=$c->getCollectionAction()?>">
-			<input type="hidden" name="approveImmediately" value="<?=$approveImmediately?>" />
-			<input type="hidden" name="rel" value="<?=$_REQUEST['rel']?>" />
 
 			<? if ($asl->allowEditName()) { ?>
 			<div class="form-group">
