@@ -17,7 +17,7 @@ if (isset($entry)) {
 	?>
 
 	<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(ucfirst($action) . ' ' . $ct->getCollectionTypeName(), false, false, false)?>
-	<form method="post" class="form-horizontal" enctype="multipart/form-data" action="<?=$this->action('save')?>" id="ccm-dashboard-composer-form">
+	<form method="post" class="form-horizontal" enctype="multipart/form-data" action="<?=$this->action('save')?>" id="ccm-dashboard-composer-form" onsubmit="if($('#ccm-url-slug-loader').is(':visible'))return false;jQuery.fn.dialog.showLoader()">
 	<input type="hidden" name="ccm-publish-draft" value="0" />
 
 	<div class="ccm-pane-body">
@@ -173,23 +173,41 @@ if (isset($entry)) {
 	<script type="text/javascript">
 	var ccm_composerAutoSaveInterval = false;
 	var ccm_composerDoAutoSaveAllowed = true;
-	var ccm_composerAddPageTimer = false;
 
 	ccm_updateAddPageHandle = function() {
-		clearTimeout(ccm_composerAddPageTimer);
-		ccm_composerAddPageTimer = setTimeout(function() {
-			var val = $('#ccm-dashboard-composer-form input[name=cName]').val();
+		if(ccm_updateAddPageHandle.lastRequested === $.trim($('#ccm-dashboard-composer-form input[name=cName]').val())) {
+			return;
+		}
+		if(ccm_updateAddPageHandle.timer) {
+			clearTimeout(ccm_updateAddPageHandle.timer);
+		}
+		ccm_updateAddPageHandle.timer = setTimeout(function() {
+			var val = $.trim($('#ccm-dashboard-composer-form input[name=cName]').val());
+			ccm_updateAddPageHandle.lastRequested = val;
+			delete ccm_updateAddPageHandle.timer;
 			$('#ccm-url-slug-loader').show();
-			$.post('<?=REL_DIR_FILES_TOOLS_REQUIRED?>/pages/url_slug', {
-				'token': '<?=Loader::helper('validation/token')->generate('get_url_slug')?>',
-				'name': val,
-				'parentID' : $("input[name=cPublishParentID]").val()
-			}, function(r) {
-				$('#ccm-url-slug-loader').hide();
-				$('#ccm-dashboard-composer-form input[name=cHandle]').val(r);
+			ccm_updateAddPageHandle.xhr = $.ajax({
+				type: 'POST',
+				url: '<?=REL_DIR_FILES_TOOLS_REQUIRED?>/pages/url_slug',
+				data: {
+					'token': '<?=Loader::helper('validation/token')->generate('get_url_slug')?>',
+					'name': val,
+					'parentID' : $("input[name=cPublishParentID]").val()
+				}
+			})
+			.done(function(r, textStatus, xhr) {
+				if(ccm_updateAddPageHandle.xhr == xhr) {
+					$('#ccm-dashboard-composer-form input[name=cHandle]').val(r);
+					$('#ccm-url-slug-loader').hide();
+				}
+			})
+			.fail(function(xhr) {
+				if(ccm_updateAddPageHandle.xhr == xhr) {
+					$('#ccm-url-slug-loader').hide();
+				}
 			});
 		}, 150);
-	}
+	};
 	
 	ccm_composerDoAutoSave = function(callback) {
 		if (!ccm_composerDoAutoSaveAllowed) {
