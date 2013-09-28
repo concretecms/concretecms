@@ -23,7 +23,7 @@
 
 	$securityHelper = Loader::helper('security');
 
-	if ($_REQUEST['btask'] && $valt->validate()) {
+	if (isset($_REQUEST['btask']) && $_REQUEST['btask'] && $valt->validate()) {
 	
 		// these are tasks dealing with blocks (moving up, down, removing)
 		
@@ -357,7 +357,7 @@
 		}
 	}
 	
-	if ($_GET['atask'] && $valt->validate()) {
+	if (isset($_GET['atask']) && $_GET['atask'] && $valt->validate()) {
 		switch($_GET['atask']) { 		
 			case 'add_stack':
 				$a = Area::get($c, $_GET['arHandle']);
@@ -533,7 +533,7 @@
 		}
 	}
 	
-	if ($_REQUEST['ctask'] && $valt->validate()) {
+	if (isset($_REQUEST['ctask']) && $_REQUEST['ctask'] && $valt->validate()) {
 		
 		switch ($_REQUEST['ctask']) {
 			case 'delete':
@@ -657,7 +657,7 @@
 		}
 	}			
 	
-	if ($_REQUEST['ptask'] && $valt->validate()) {
+	if (isset($_REQUEST['ptask']) && $_REQUEST['ptask'] && $valt->validate()) {
 		Loader::model('pile');
 
 		// piles !
@@ -696,7 +696,7 @@
 		}
 	}
 	
-	if ($_REQUEST['processBlock'] && $valt->validate()) {
+	if (isset($_REQUEST['processBlock']) && $_REQUEST['processBlock'] && $valt->validate()) {
 		
 		// some admin (or unscrupulous person) is doing something to a block of content on the site
 		$edit = ($_REQUEST['enterViewMode']) ? "" : "&mode=edit";
@@ -922,7 +922,7 @@
 		}	
 	}
 
-	if ($_POST['processCollection'] && $valt->validate()) { 
+	if (isset($_POST['processCollection']) && $_POST['processCollection'] && $valt->validate()) {
 
 		if ($_POST['update_theme']) { 
 		
