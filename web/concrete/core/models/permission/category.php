@@ -12,7 +12,7 @@ class Concrete5_Model_PermissionKeyCategory extends Object {
 		return self::$categories[$pkCategoryID];
 	}
 
-	protected function populateCategories() {
+	protected static function populateCategories() {
 		$db = Loader::db();
 		self::$categories = array();
 		$r = $db->Execute('select pkCategoryID, pkCategoryHandle, pkgID from PermissionKeyCategories');
