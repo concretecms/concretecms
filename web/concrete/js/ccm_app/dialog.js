@@ -191,7 +191,8 @@ jQuery.fn.dialog.open = function(options) {
 				jQuery.fn.dialog.hideLoader();
 				// note the order here is very important in order to actually run javascript in
 				// the pages we load while having access to the jqdialog object.
-				$('<div />').jqdialog(finalSettings).html(r).jqdialog('open');
+				// Ensure that the dialog is open prior to evaluating javascript.
+				$('<div />').jqdialog(finalSettings).jqdialog('open').html(r);
 			}
 		});
 	}
