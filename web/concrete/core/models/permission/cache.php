@@ -56,7 +56,7 @@ class Concrete5_Model_PermissionCache {
 		}
 	}
 	
-	public function validate(PermissionKey $pk) {
+	public static function validate(PermissionKey $pk) {
 		if (!PermissionCache::$enabled) {
 			return -1;
 		}

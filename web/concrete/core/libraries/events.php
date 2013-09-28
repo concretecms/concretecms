@@ -130,58 +130,56 @@ class Concrete5_Library_Events {
 		}
 
 		$ce = Events::getInstance();
-		$events = $ce->registeredEvents[$event];
+		$events = array_key_exists($event, $ce->registeredEvents) ? $ce->registeredEvents[$event] : array();
 
 		$eventReturn = false;
 		
-		if (is_array($events)) {
-			foreach($events as $ev) {
-				$type = $ev[0];
-				$proceed = true;
-				if ($type == Events::EVENT_TYPE_PAGETYPE) {
-					// then the first argument in the event fire() method will be the page
-					// that this applies to. We check to see if the page type is the right type
-					$proceed = false;
-					if (is_object($args[0]) && $args[0] instanceof Page && $args[0]->getCollectionTypeID() > 0) {
-						if ($ev[3] == Loader::pageTypeControllerPath($args[0]->getCollectionTypeHandle())) {
-							$proceed = true;
-						}
+		foreach($events as $ev) {
+			$type = $ev[0];
+			$proceed = true;
+			if ($type == Events::EVENT_TYPE_PAGETYPE) {
+				// then the first argument in the event fire() method will be the page
+				// that this applies to. We check to see if the page type is the right type
+				$proceed = false;
+				if (is_object($args[0]) && $args[0] instanceof Page && $args[0]->getCollectionTypeID() > 0) {
+					if ($ev[3] == Loader::pageTypeControllerPath($args[0]->getCollectionTypeHandle())) {
+						$proceed = true;
 					}
 				}
-				
-				if ($proceed) {
-					if ($ev[3] != false) {
-						// HACK - second part is for windows and its paths
-					
-						if (substr($ev[3], 0, 1) == '/' || substr($ev[3], 1, 1) == ':') {
-							// then this means that our path is a full one
-							require_once($ev[3]);
-						} else {
-							require_once(DIR_BASE . '/' . $ev[3]);
-						}
-					}
-					$params = (is_array($ev[4])) ? $ev[4] : array();
-					
-					// now if args has any values we put them FIRST
-					if (is_array($args)) {
-						$params = array_merge($args, $params);
-					}
+			}
 
-					if ($ev[1] instanceof Closure) {
-						$func = $ev[1];
-						$eventReturn = call_user_func_array($func, $params);
+			if ($proceed) {
+				if ($ev[3] != false) {
+					// HACK - second part is for windows and its paths
+				
+					if (substr($ev[3], 0, 1) == '/' || substr($ev[3], 1, 1) == ':') {
+						// then this means that our path is a full one
+						require_once($ev[3]);
 					} else {
-						if (method_exists($ev[1], $ev[2])) {
-							// Note: DO NOT DO RETURN HERE BECAUSE THEN MULTIPLE EVENTS WON'T WORK
-							$response = call_user_func_array(array($ev[1], $ev[2]), $params);
-							if(!is_null($response)) {
-								$eventReturn = $response;
-							}
+						require_once(DIR_BASE . '/' . $ev[3]);
+					}
+				}
+				$params = (is_array($ev[4])) ? $ev[4] : array();
+
+				// now if args has any values we put them FIRST
+				if (is_array($args)) {
+					$params = array_merge($args, $params);
+				}
+
+				if ($ev[1] instanceof Closure) {
+					$func = $ev[1];
+					$eventReturn = call_user_func_array($func, $params);
+				} else {
+					if (method_exists($ev[1], $ev[2])) {
+						// Note: DO NOT DO RETURN HERE BECAUSE THEN MULTIPLE EVENTS WON'T WORK
+						$response = call_user_func_array(array($ev[1], $ev[2]), $params);
+						if(!is_null($response)) {
+							$eventReturn = $response;
 						}
 					}
 				}
 			}
-		}		
+		}
 		return $eventReturn;
 	}
 
