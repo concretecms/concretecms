@@ -555,7 +555,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		 * @param string $task
 		 * @return string $url
 		*/	
-		public function url($action, $task = null) {
+		public static function url($action, $task = null) {
 			$dispatcher = '';
 			if ((!URL_REWRITING_ALL) || !defined('URL_REWRITING_ALL')) {
 				$dispatcher = '/' . DISPATCHER_FILENAME;
