@@ -273,7 +273,7 @@
 			}
 		}
 		
-		function checkUserForeverCookie() {
+		static function checkUserForeverCookie() {
 			if ($_COOKIE['ccmUserHash']) {
 				$hashVal = explode(':', $_COOKIE['ccmUserHash']);
 				$_uID = $hashVal[0];
