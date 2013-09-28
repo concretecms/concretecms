@@ -11,7 +11,7 @@ You can install it globally with `npm install -g grunt-cli`. This requires that 
 If you don't have administrator rights, you may need to install the grunt client locally to your project using `npm install grunt-cli`.
 Unfortunately, this will not put the grunt executable in your PATH, so you'll need to specify its explicit location when executing it (for OS X, *nix, BSD `node_modules/.bin/grunt`, for Windows `node_modules\.bin\grunt`).
 
-Once you have installed the grunt client, you need to install the project dependencies: simply launch the following command: `npm install`
+Once you have installed the grunt client, you need to install the project dependencies: simply launch the following command: `npm install` from inside the `build` directory.
 
 
 ## Building .css files
