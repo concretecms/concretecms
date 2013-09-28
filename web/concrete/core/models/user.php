@@ -268,7 +268,7 @@
 			@session_unset();
 			@session_destroy();
 			Events::fire('on_user_logout');
-			if ($_COOKIE['ccmUserHash']) {
+			if (isset($_COOKIE['ccmUserHash']) && $_COOKIE['ccmUserHash']) {
 				setcookie("ccmUserHash", "", 315532800, DIR_REL . '/');
 			}
 		}
