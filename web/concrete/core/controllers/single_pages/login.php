@@ -17,7 +17,7 @@ class Concrete5_Controller_Login extends Controller {
 		}
 
 		$txt = Loader::helper('text');
-		if (strlen($_GET['uName'])) { // pre-populate the username if supplied, if its an email address with special characters the email needs to be urlencoded first,
+		if (isset($_GET['uName']) && strlen($_GET['uName'])) { // pre-populate the username if supplied, if its an email address with special characters the email needs to be urlencoded first,
 			$this->set("uName",trim($txt->email($_GET['uName'])));
 		}
 
