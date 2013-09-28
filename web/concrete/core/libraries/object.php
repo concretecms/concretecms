@@ -21,7 +21,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		
 		function isError() {
 			$args = func_get_args();
-			if ($args[0]) {
+			if (isset($args[0]) && $args[0]) {
 				return $this->error == $args[0];
 			} else {
 				return $this->error;
