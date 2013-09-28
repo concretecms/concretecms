@@ -3,6 +3,11 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 class Concrete5_Model_PermissionAccessListItem extends Object {
 
+	public $duration;
+	public $accessType;
+	public $accessEntity;
+	public $paID;
+
 	public function getPermissionAccessID() {return $this->paID;}
 	public function setPermissionAccessID($paID) {$this->paID = $paID;}
 
