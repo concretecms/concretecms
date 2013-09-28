@@ -84,7 +84,7 @@
 		}
 		
 		public static function isLoggedIn() {
-			return $_SESSION['uID'] > 0 && $_SESSION['uName'] != '';
+			return isset($_SESSION['uID']) && $_SESSION['uID'] > 0 && isset($_SESSION['uName']) && $_SESSION['uName'] != '';
 		}
 		
 		public function checkLogin() {
