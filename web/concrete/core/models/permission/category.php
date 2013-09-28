@@ -29,7 +29,7 @@ class Concrete5_Model_PermissionKeyCategory extends Object {
 			self::populateCategories();
 		}
 
-		return self::$categories[$pkCategoryHandle];
+		return array_key_exists($pkCategoryHandle, self::$categories) ? self::$categories[$pkCategoryHandle] : false;
 	}
 	
 	public function handleExists($pkHandle) {
