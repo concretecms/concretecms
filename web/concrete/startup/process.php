@@ -9,7 +9,7 @@
 	
 	
 	// Modification for step editing
-	$step = ($_REQUEST['step']) ? '&step=' . $_REQUEST['step'] : '';
+	$step = (isset($_REQUEST['step']) && $_REQUEST['step']) ? '&step=' . $_REQUEST['step'] : '';
 	
 	// if we don't have a valid token we die
 	$valt = Loader::helper('validation/token');
