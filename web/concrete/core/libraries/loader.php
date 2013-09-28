@@ -120,8 +120,7 @@
 		}
 		
 		protected static function getFileFromCorePath($found) {
-			$classes = self::$autoloadClasses;
-			$cl = $classes[$found];
+			$cl = array_key_exists($found, self::$autoloadClasses) ? self::$autoloadClasses[$found] : false;
 			if ($cl) {
 				$file = $cl[1];
 			} else {
