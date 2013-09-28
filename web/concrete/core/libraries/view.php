@@ -80,7 +80,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		 * getInstance() grabs one instance of the view w/the singleton pattern
 		 * @return View
 		*/
-		public function getInstance() {
+		public static function getInstance() {
 			static $instance;
 			if (!isset($instance)) {
 				$instance = new View();
