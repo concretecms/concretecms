@@ -108,6 +108,7 @@ class Concrete5_Library_Controller {
 		// grab the whole shebang
 		$taskparts = explode('/', $task);
 		
+		$method = '';
 		if (isset($taskparts[0]) && $taskparts[0] != '') {
 			$method = $taskparts[0];
 		}
