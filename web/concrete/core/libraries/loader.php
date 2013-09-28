@@ -185,7 +185,7 @@
 			$classes = self::$autoloadClasses;
 			$cl = $classes[$class];
 			if ($cl) {
-				call_user_func_array(array(__CLASS__, $cl[0]), array($cl[1], $cl[2]));
+				call_user_func_array(array(__CLASS__, $cl[0]), array_slice($cl, 1, 2));
 			} else {
 				/* lets handle some things slightly more dynamically */				
 				if (strpos($class, 'BlockController') > 0) {
