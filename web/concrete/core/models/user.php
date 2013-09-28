@@ -274,7 +274,7 @@
 		}
 		
 		static function checkUserForeverCookie() {
-			if ($_COOKIE['ccmUserHash']) {
+			if (isset($_COOKIE['ccmUserHash']) && $_COOKIE['ccmUserHash']) {
 				$hashVal = explode(':', $_COOKIE['ccmUserHash']);
 				$_uID = $hashVal[0];
 				$uHash = $hashVal[1];
