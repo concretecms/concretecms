@@ -370,7 +370,7 @@
 		/** 
 		 * Loads a controller for either a page or view
 		 */
-		public function controller($item) {
+		public static function controller($item) {
 			
 			$include = false;
 			
