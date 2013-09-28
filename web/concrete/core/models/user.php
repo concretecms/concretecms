@@ -84,7 +84,7 @@
 		}
 		
 		public static function isLoggedIn() {
-			return $_SESSION['uID'] > 0 && $_SESSION['uName'] != '';
+			return isset($_SESSION['uID']) && $_SESSION['uID'] > 0 && isset($_SESSION['uName']) && $_SESSION['uName'] != '';
 		}
 		
 		public function checkLogin() {
@@ -268,13 +268,13 @@
 			@session_unset();
 			@session_destroy();
 			Events::fire('on_user_logout');
-			if ($_COOKIE['ccmUserHash']) {
+			if (isset($_COOKIE['ccmUserHash']) && $_COOKIE['ccmUserHash']) {
 				setcookie("ccmUserHash", "", 315532800, DIR_REL . '/');
 			}
 		}
 		
-		function checkUserForeverCookie() {
-			if ($_COOKIE['ccmUserHash']) {
+		static function checkUserForeverCookie() {
+			if (isset($_COOKIE['ccmUserHash']) && $_COOKIE['ccmUserHash']) {
 				$hashVal = explode(':', $_COOKIE['ccmUserHash']);
 				$_uID = $hashVal[0];
 				$uHash = $hashVal[1];
