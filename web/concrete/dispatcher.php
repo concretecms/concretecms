@@ -217,7 +217,7 @@
 
 		$vp = new Permissions($c->getVersionObject());
 
-		if ($_REQUEST['ccm-disable-controls'] == true || intval($cvID) > 0) {
+		if (isset($_REQUEST['ccm-disable-controls']) && ($_REQUEST['ccm-disable-controls'] == true || $cvID > 0)) {
 			$v = View::getInstance();
 			$v->disableEditing();
 			$v->disableLinks();
