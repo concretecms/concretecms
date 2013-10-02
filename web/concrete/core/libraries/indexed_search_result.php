@@ -24,7 +24,7 @@ class Concrete5_Library_IndexedSearchResult {
 	public function getBodyContent() {return $this->content;}
 	public function getDate($mask = '') {
 		if ($mask == '') {
-			$mask = t('Y-m-d H:i:s');
+			$mask = DATE_APP_DASHBOARD_SEARCH_RESULTS_PAGES;
 		}
 		return date($mask, strtotime($this->cDate));
 	}
