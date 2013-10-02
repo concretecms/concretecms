@@ -41,8 +41,7 @@ class Concrete5_Model_UserList extends DatabaseItemList {
 		$this->filter(false, '( u.uName like ' . $qkeywords . $emailSearchStr . $attribsStr . ')');
 	}
 	
-	public function filterByGroup($groupName='', $inGroup = true){ 
-		$group=Group::getByName($groupName); 
+	public function filterByGroup($group, $inGroup = true) {
 		$tbl='ug_'.$group->getGroupID();
 		$this->addToQuery("left join UserGroups $tbl on {$tbl}.uID = u.uID ");	
 		if ($inGroup) {

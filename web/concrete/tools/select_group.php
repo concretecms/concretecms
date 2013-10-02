@@ -58,12 +58,14 @@ if (!$tp->canAccessGroupSearch()) {
 	
 		print $gl->displaySummary();
 	
-		foreach ($gResults as $g) { ?>
+		foreach ($gResults as $gRow) {
+			$g = Group::getByID($gRow['gID']);
+			 ?>
 	
 		<div class="ccm-group">
 			<div style="background-image: url(<?=ASSETS_URL_IMAGES?>/icons/group.png)" class="ccm-group-inner-indiv">
-				<a class="ccm-group-inner-atag" id="g<?=$g['gID']?>" group-id="<?=$g['gID']?>" group-name="<?=$g['gName']?>" href="javascript:void(0)"><?=$g['gName']?></a>
-				<?=( $g['gDescription'] != '' ? ' - <span class="ccm-group-description">'. $g['gDescription'] .'</span>' : '' )?>
+				<a class="ccm-group-inner-atag" id="g<?=$g->getGroupID()?>" group-id="<?=$g->getGroupID()?>" group-name="<?=$g->getGroupDisplayName()?>" href="javascript:void(0)"><?=$g->getGroupDisplayName()?></a>
+				<?=( $g->getGroupDescription() != '' ? ' - <span class="ccm-group-description">'. $g->getGroupDescription() .'</span>' : '' )?>
 			</div>
 		</div>
 	

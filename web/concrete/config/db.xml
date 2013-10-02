@@ -1658,13 +1658,8 @@
       <UNSIGNED/>
     </field>
     <field name="gUserExpirationAction" type="C" size="20"/>
-    <index name="gName">
-      <UNIQUE/>
-      <col>gName</col>
-    </index>
-    <index name="gParentID">
-      <col>gParentID</col>
-    </index>
+    <field name="gPath" type="X">
+    </field>
   </table>
   <table name="Jobs">
     <field name="jID" type="I" size="10">
@@ -3318,6 +3313,18 @@
       <key/>
       <default value="0"/>
       <unsigned/>
+    </field>
+  </table>
+
+  <table name="TreeGroupNodes">
+    <field name="treeNodeID" type="I" size="11">
+      <UNSIGNED/>
+      <autoincrement />
+      <KEY/>
+    </field>
+    <field name="gID" type="I" size="11">
+      <UNSIGNED/>
+      <default value="0" />
     </field>
   </table>
 
