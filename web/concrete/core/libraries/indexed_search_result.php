@@ -2,13 +2,16 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 class Concrete5_Library_IndexedSearchResult {
 
-	public function __construct($id, $name, $description, $score, $cPath, $content) {
+	public function __construct($id, $name, $description, $score, $cPath, $content, $cDatePublic = false) {
 		$this->cID = $id;
 		$this->cName = $name;
 		$this->cDescription = $description;		
 		$this->score = $score;
 		$this->cPath = $cPath;
 		$this->content = $content;
+		if ($cDatePublic) {
+			$this->setDate($cDatePublic); 
+		}
 		$this->nh = Loader::helper('navigation');
 	}
 
