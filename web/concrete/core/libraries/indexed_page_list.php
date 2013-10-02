@@ -23,7 +23,7 @@ class Concrete5_Library_IndexedPageList extends PageList {
 		$r = parent::getPage();
 		$results = array();
 		foreach($r as $c) {
-			$results[] = array('cID' => $c->getCollectionID(), 'cName' => $c->getCollectionName(), 'cDescription' => $c->getCollectionDescription(), 'score' => $c->getPageIndexScore(), 'cPath' => $c->getCollectionPath(), 'content' => $c->getPageIndexContent());
+			$results[] = array('cID' => $c->getCollectionID(), 'cName' => $c->getCollectionName(), 'cDescription' => $c->getCollectionDescription(), 'score' => $c->getPageIndexScore(), 'cPath' => $c->getCollectionPath(), 'content' => $c->getPageIndexContent(), 'cDatePublic' => $c->getCollectionDatePublic());
 		}
 		return $results;
 	}
