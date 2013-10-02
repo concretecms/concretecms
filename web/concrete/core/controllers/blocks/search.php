@@ -217,7 +217,7 @@ class Concrete5_Controller_Block_Search extends BlockController {
 		$res = $ipl->getPage();
 
 		foreach($res as $r) {
-			$results[] = new IndexedSearchResult($r['cID'], $r['cName'], $r['cDescription'], $r['score'], $r['cPath'], $r['content']);
+			$results[] = new IndexedSearchResult($r['cID'], $r['cName'], $r['cDescription'], $r['score'], $r['cPath'], $r['content'], $r['cDatePublic']);
 		}
 
 		$this->set('query', $q);
