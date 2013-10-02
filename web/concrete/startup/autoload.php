@@ -234,7 +234,14 @@ $classes = array(
 	'TreeNodePermissionAssignment' => array('model','permission/assignments/tree/node'),
 	'TreeNodePermissionAccess' => array('model','permission/access/categories/tree/node'),
 	'TreeNodePermissionAccessListItem' => array('model','permission/access/list_items/tree/node'),
-	'TreeNodePermissionResponse' => array('model','permission/response/tree/node')
+	'TreeNodePermissionResponse' => array('model','permission/response/tree/node'),
+	'GroupTreeNode' => array('model', 'tree/node/types/group'),
+	'GroupTree' => array('model', 'tree/types/group'),
+	'GroupTreeNodePermissionKey' => array('model','permission/keys/tree/node/group'),
+	'GroupTreeNodePermissionAssignment' => array('model','permission/assignments/tree/node/group'),
+	'GroupTreeNodePermissionAccess' => array('model','permission/access/categories/tree/node/group'),
+	'GroupTreeNodePermissionAccessListItem' => array('model','permission/access/list_items/tree/node/group'),
+	'GroupTreeNodePermissionResponse' => array('model','permission/response/tree/node/group')
 );
 
 Loader::registerAutoload($classes);

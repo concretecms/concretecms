@@ -16,6 +16,7 @@
         <category handle="sitemap" package=""/>
         <category handle="marketplace_newsflow" package=""/>
         <category handle="basic_workflow" package=""/>
+        <category handle="group_tree_node" package=""/>
     </permissioncategories>
 
     <permissionkeys>
