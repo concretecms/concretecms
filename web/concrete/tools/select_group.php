@@ -66,7 +66,6 @@ if (!$tp->canAccessGroupSearch()) {
 					<a class="ccm-group-inner-atag" id="g<?=$g->getGroupID()?>" group-id="<?=$g->getGroupID()?>" group-name="<?=$g->getGroupDisplayName(false)?>" href="javascript:void(0)"><?=$g->getGroupDisplayName()?></a>
 					<?=( $g->getGroupDescription() != '' ? ' - <span class="ccm-group-description">'. $g->getGroupDescription() .'</span>' : '' )?>
 				</div>
-			</div>
 			
 			<? }
 
