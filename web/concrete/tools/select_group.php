@@ -42,11 +42,11 @@ if (!$tp->canAccessGroupSearch()) {
 		<form id="ccm-group-search" style=""  method="get" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/select_group/">
 		<div id="ccm-group-search-fields" class="ccm-ui">
 		
-		<input type="text" id="ccm-group-search-keywords" name="gKeywords" value="<?=htmlspecialchars($_REQUEST['gKeywords'])?>" class="ccm-text" style="width: 100px" />
+		<input type="text" id="ccm-group-search-keywords" name="gKeywords" value="<?=h($_REQUEST['gKeywords'])?>" class="ccm-text" style="width: 100px" />
 		<input type="submit" value="<?=t('Search')?>" class="btn" />
 		<input type="hidden" name="group_submit_search" value="1" />
-		<input type="hidden" name="callback" value="<?=htmlspecialchars($_REQUEST['callback'])?>" />
-		<input type="hidden" name="include_core_groups" value="<?=htmlspecialchars($_REQUEST['include_core_groups'])?>" />
+		<input type="hidden" name="callback" value="<?=h($_REQUEST['callback'])?>" />
+		<input type="hidden" name="include_core_groups" value="<?=h($_REQUEST['include_core_groups'])?>" />
 		</div>
 		</form>
 	</div>
@@ -62,8 +62,8 @@ if (!$tp->canAccessGroupSearch()) {
 	
 		<div class="ccm-group">
 			<div style="background-image: url(<?=ASSETS_URL_IMAGES?>/icons/group.png)" class="ccm-group-inner-indiv">
-				<a class="ccm-group-inner-atag" id="g<?=$g['gID']?>" group-id="<?=$g['gID']?>" group-name="<?=$g['gName']?>" href="javascript:void(0)"><?=$g['gName']?></a>
-				<?=( $g['gDescription'] != '' ? ' - <span class="ccm-group-description">'. $g['gDescription'] .'</span>' : '' )?>
+				<a class="ccm-group-inner-atag" id="g<?=$g['gID']?>" group-id="<?=$g['gID']?>" group-name="<?=h(t($g['gName']))?>" href="javascript:void(0)"><?=t($g['gName'])?></a>
+				<?=( $g['gDescription'] != '' ? ' - <span class="ccm-group-description">'. t($g['gDescription']) .'</span>' : '' )?>
 			</div>
 		</div>
 	
@@ -71,7 +71,7 @@ if (!$tp->canAccessGroupSearch()) {
 	
 	<div id="ccm-group-paging" class="ccm-pane-dialog-pagination">
 	<?
-	$url = REL_DIR_FILES_TOOLS_REQUIRED . '/select_group?callback=' . htmlspecialchars($_REQUEST['callback']) . '&gKeywords=' . htmlspecialchars($_REQUEST['gKeywords']) . '&include_core_groups=' . htmlspecialchars($_REQUEST['include_core_groups']) . '&' . PAGING_STRING . '=%pageNum%';
+	$url = REL_DIR_FILES_TOOLS_REQUIRED . '/select_group?callback=' . h($_REQUEST['callback']) . '&gKeywords=' . h($_REQUEST['gKeywords']) . '&include_core_groups=' . h($_REQUEST['include_core_groups']) . '&' . PAGING_STRING . '=%pageNum%';
 	$gl->displayPagingV2($url);
 	?>
 	</div>
@@ -95,7 +95,7 @@ if (!$tp->canAccessGroupSearch()) {
 	
 	<script type="text/javascript">
 	$(function() {
-		ccm_setupGroupSearch('<?=htmlspecialchars($_REQUEST['callback'])?>');
+		ccm_setupGroupSearch('<?=h($_REQUEST['callback'])?>');
 	});
 	</script>
 <? } ?>
