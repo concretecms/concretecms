@@ -78,11 +78,9 @@ foreach($searchFieldAttributes as $ak) {
 			<?=$form->label('gID', t('Group(s)'))?>
 			<div class="controls">
 				<select multiple name="gID[]" class="chosen-select" style="width: 200px">
-					<? foreach($g1 as $gRow) {
-						if ($pk->validate($gRow['gID'])) { 
-							$g = Group::getByID($gRow['gID']);
-							?>
-						<option value="<?=$gRow['gID']?>"  <? if (is_array($_REQUEST['gID']) && in_array($gRow['gID'], $_REQUEST['gID'])) { ?> selected="selected" <? } ?>><?=$g->getGroupDisplayName()?></option>
+					<? foreach($g1 as $g) {
+						if ($pk->validate($g['gID'])) { ?>
+						<option value="<?=$g['gID']?>"  <? if (is_array($_REQUEST['gID']) && in_array($g['gID'], $_REQUEST['gID'])) { ?> selected="selected" <? } ?>><?=$g['gName']?></option>
 					<? 
 						}
 					} ?>
