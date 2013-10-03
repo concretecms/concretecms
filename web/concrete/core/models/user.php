@@ -390,14 +390,6 @@
 								}
 							} else {
 								$ug[$row['gID']] = $row['gName'];
-
-								// now we have to test for hierarchy
-								$g = Group::getByID($row['gID']);
-								$parents = $g->getParentGroups();
-								foreach($parents as $pg) {
-									$ug[$pg->getGroupID()] = $pg->getGroupName();
-								}
-
 							}
 							
 						}
@@ -413,7 +405,7 @@
 			return $ug;
 		}
 		
-		function enterGroup($g) {
+		function enterGroup($g, $joinType = "") {
 			// takes a group object, and, if the user is not already in the group, it puts them into it
 			$dt = Loader::helper('date');
 			
@@ -423,10 +415,19 @@
 				$db->Replace('UserGroups', array(
 					'uID' => $this->getUserID(),
 					'gID' => $g->getGroupID(),
+					'type' => $joinType,
 					'ugEntered' => $dt->getSystemDateTime()
 				),
 				array('uID', 'gID'), true);
 				Events::fire('on_user_enter_group', $this, $g);
+			}
+		}
+		
+		public function updateGroupMemberType($g, $joinType) {
+			if ($g instanceof Group) {
+				$db = Loader::db();
+				$dt = Loader::helper('date');
+				$db->Execute('update UserGroups set type = ?, ugEntered = ? where uID = ? and gID = ?', array($joinType, $dt->getSystemDateTime(), $this->uID, $g->getGroupID()));
 			}
 		}
 		
@@ -442,11 +443,23 @@
 			}		
 		}
 		
-		function inGroup($g) {
+		function getGroupMemberType($g) {
 			$db = Loader::db();
-			$v = array($this->uID, $g->getGroupID());
-			$groups = $this->getUserGroups();
-			return array_key_exists($g->getGroupID(), $groups);
+			$r = $db->GetOne("select type from UserGroups where uID = ? and gID = ?", array($this->getUserID(), $g->getGroupID()));
+			return $r;
+		}
+		
+		function inGroup($g, $joinType = null) {
+			$db = Loader::db();
+			if (isset($joinType) && is_object($g)) {
+				$v = array($this->uID, $g->getGroupID(), $joinType);
+				$cnt = $db->GetOne("select gID from UserGroups where uID = ? and gID = ? and type = ?", $v);
+			} else if (is_object($g)) {
+				$v = array($this->uID, $g->getGroupID());
+				$cnt = $db->GetOne("select gID from UserGroups where uID = ? and gID = ?", $v);
+			}
+			
+			return $cnt > 0;
 		}
 		
 		function loadMasterCollectionEdit($mcID, $ocID) {

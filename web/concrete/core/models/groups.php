@@ -122,12 +122,19 @@
 			}
 		}
 
-		public function getGroupMembers() {
+		public function getGroupMembers($type = null) {
 			$db = Loader::db();
-			$r = $db->query("select uID from UserGroups where gID = ?", array($this->gID));
+			if ($type != null) {
+				$r = $db->query("select uID, type from UserGroups where gID = ? and type = ?", array($this->gID, $type));
+			} else {
+				$r = $db->query("select uID, type from UserGroups where gID = ?", array($this->gID));
+			}
+			
+			
 			$members = array();
 			while ($row = $r->fetchRow()) {
 				$ui = UserInfo::getByID($row['uID']);
+				$ui->setGroupMemberType($row['type']);
 				$members[] = $ui;
 			}
 			return $members;			
@@ -139,22 +146,27 @@
 			if ($obj instanceof UserInfo) { 
 				$uID = $this->pObj->getUserID();						
 				if ($uID) {
-					$q = "select gID, ugEntered from UserGroups where gID = '{$this->gID}' and uID = {$uID}";
+					$q = "select gID, ugEntered, UserGroups.type from UserGroups where gID = '{$this->gID}' and uID = {$uID}";
 					$r = $db->query($q);
 					if ($r) {
 						$row = $r->fetchRow();
 						if ($row['gID']) {
 							$this->inGroup = true;
 							$this->gDateTimeEntered = $row['ugEntered'];
+							$this->gMemberType = $row['type'];
 						}
 					}
 				}
 			}
 		}
 		
-		public function getGroupMembersNum() {
+		public function getGroupMembersNum($type = null) {
 			$db = Loader::db();
-			$cnt = $db->GetOne("select count(uID) from UserGroups where gID = ?", array($this->gID));
+			if ($type != null) {
+				$cnt = $db->GetOne("select count(uID) from UserGroups where gID = ? and type = ?", array($this->gID, $type));
+			} else {
+				$cnt = $db->GetOne("select count(uID) from UserGroups where gID = ?", array($this->gID));
+			}
 			return $cnt;
 		}
 		
@@ -208,6 +220,10 @@
 			return $this->gDateTimeEntered;
 		}
 
+		function getGroupMemberType() {
+			return $this->gMemberType;
+		}
+		
 		function getGroupID() {
 			return $this->gID;
 		}
@@ -216,33 +232,29 @@
 			return $this->gName;
 		}
 
-		public function getGroupPath() {return $this->gPath;}
-		
-		public function getParentGroups() {
+		public function getGroupDisplayName($includeHTML = true) {
 			$node = GroupTreeNode::getTreeNodeByGroupID($this->gID);
+			$return = '';
 			$parentGroups = array();
 			if (is_object($node)) {
 				$parents = $node->getTreeNodeParentArray();
 				$parents = array_reverse($parents);
-				foreach($parents as $node) {
-					$g = $node->getTreeNodeGroupObject();
-					if (is_object($g)) {
-						$parentGroups[] = $g;
+				if (count($parents)) {
+					foreach($parents as $node) {
+						$g = $node->getTreeNodeGroupObject();
+						if (is_object($g)) {
+							$parentGroups[] = $g;
+						}
 					}
 				}
 			}
-			return $parentGroups;
-		}
 
-		public function getGroupDisplayName($includeHTML = true) {
-			$return = '';
-			$parentGroups = $this->getParentGroups();
 			if (count($parentGroups) > 0) {
 				if ($includeHTML) {
 					$return .= '<span class="ccm-group-breadcrumb">';
 				}
 				foreach($parentGroups as $pg) {
-					$return .= tc('GroupName', $pg->getGroupName());
+					$return .= t($pg->getGroupName());
 					$return .= ' ' . GROUP_DISPLAY_NAME_SEPARATOR . ' ';
 				}
 				$return = trim($return);			
@@ -250,7 +262,8 @@
 					$return .= '</span> ';
 				}
 			}
-			$return .= tc('GroupName', $this->getGroupName());
+
+			$return .= t($this->getGroupName());
 			return $return;
 		}
 		
