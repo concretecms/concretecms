@@ -99,6 +99,7 @@ module.exports = function(grunt) {
 
 	// Now let's build the final configuration for Grunt.
 	var extend = require('util')._extend;
+	var fs = require('fs');
 
 	// Let's define the uglify section (for generating JavaScripts)
 	var jsTargets = {release: [], debug: []};
@@ -136,7 +137,16 @@ module.exports = function(grunt) {
 		}
 	};
 	
-	// Set base tasks
+	// Download and compile translations
+	function getC5Config() {
+		var cfg = null;
+		if(fs.existsSync('./Gruntfile.c5config.js')) {
+			cfg = require('./Gruntfile.c5config.js');
+		}
+		return cfg || {};
+	}
+
+	// Set Grunt tasks
 	grunt.initConfig(config);
 	grunt.registerTask('js:debug', jsTargets.debug);
 	grunt.registerTask('js:release', jsTargets.release);
@@ -148,6 +158,210 @@ module.exports = function(grunt) {
 	
 	grunt.registerTask('debug', ['js:debug', 'css:debug']);
 	grunt.registerTask('release', ['js:release', 'css:release']);
+
+	grunt.registerTask('translations', 'Download and compile translations.', function() {
+		var done = this.async();
+		var cfg = getC5Config();
+		if(!cfg.txUsername) {
+			process.stderr.write('Transifex username not defined. Define a txUsername variable in Gruntfile.c5config.js file.\n');
+			done(false);
+			return;
+		}
+		if(!cfg.txPassword) {
+			process.stderr.write('Transifex password not defined. Define a txPassword variable in Gruntfile.c5config.js file.\n');
+			done(false);
+			return;
+		}
+		if(!cfg.txResource) {
+			process.stderr.write('Transifex resource not defined. Define a txResource variable in Gruntfile.c5config.js file.\n');
+			done(false);
+			return;
+		}
+		var execFile = require('child_process').execFile;
+		var https = require('https');
+		var path = require('path');
+		function get(urlPath, options, callback) {
+			https.get(
+				{
+					hostname: 'www.transifex.com',
+					path: urlPath,
+					auth: cfg.txUsername + ':' + cfg.txPassword
+				},
+				function(response) {
+					var data = [], fd = null, cleanup = function() {};
+					var goodResponse = response.statusCode < 300;
+					if(goodResponse) {
+						switch(options.type) {
+							case 'file':
+								response.setEncoding('binary')
+								try {
+									fd = createFile(options.filename);
+								}
+								catch(e) {
+									process.stderr.write('Error creating file ' + options.filename + ': ' + e.message + '\n');
+									done(false);
+									return;
+								}
+								cleanup = function(ok) {
+									try {
+										fs.closeSync(fd);
+									}
+									catch(foo) {
+									}
+									if(ok === false) {
+										try {
+											fs.unlinkSync(options.filename);
+										}
+										catch(foo) {
+										}
+									}
+								}
+								break;
+						}
+					}
+					response
+						.on('data', function(chunk) {
+							if(fd) {
+								try {
+									fs.writeSync(fd, chunk.toString('binary'));
+								}
+								catch(e) {
+									cleanup(false);
+									process.stderr.write('Error saving to file ' + options.filename + ': ' + e.message + '\n');
+									done(false);
+									return;
+								}
+							}
+							else {
+								data.push(chunk)
+							}
+						})
+						.on('end', function() {
+							if(!goodResponse) {
+								cleanup(false);
+								var msg = ''
+								if(response.headers['content-type'] == 'text/plain') {
+									msg = data.join('');
+								}
+								process.stderr.write('Error retrieving ' + urlPath + ': ' + (msg || response.statusCode) + '\n');
+								done(false);
+								return;
+							}
+							switch(options.type) {
+								case 'file':
+									cleanup(true);
+									callback();
+									break;
+								case 'json':
+									try {
+										data = JSON.parse(data.join(''));
+									}
+									catch(e) {
+										process.stderr.write('Error parsing response from ' + urlPath + ': ' + e.message + '\n');
+										done(false);
+										return;
+									}
+									callback(data);
+									break;
+							}
+						})
+					;
+				}
+			)
+			.on('error', function(e) {
+				process.stderr.write(e.message + '\n');
+				done(false);
+			})
+		}
+
+		function mkdir(dir, mode) {
+			try {
+				fs.mkdirSync(dir, mode);
+			}
+			catch(e) {
+				if(e.errno !== 34) {
+					throw e;
+				}
+				mkdir(path.dirname(dir), mode);
+				mkdir(dir, mode);
+			}
+		}
+		function createFile(filename) {
+			filename = path.normalize(filename);
+			var dir = path.dirname(filename);
+			if(!fs.existsSync(dir)) {
+				mkdir(dir);
+			}
+			return fs.openSync(filename, 'w');
+		}
+
+		process.stdout.write('Retrieving available locales for Transifex resource ' + cfg.txResource + '... ');
+		get('/api/2/project/concrete5/resource/' + cfg.txResource + '/?details', {type: 'json'}, function(data) {
+			var allLocales = [];
+			data.available_languages.forEach(function(available_language) {
+				switch(available_language.code) {
+					case 'en': // Transifex returns this too
+						break;
+					default:
+						allLocales.push({code: available_language.code, name: available_language.name});
+						break;
+				}
+			});
+			process.stdout.write(allLocales.length + ' locales found.\n');
+			var locales = [];
+			function getLocaleInfo(localeIndex, callback) {
+				if(localeIndex >= allLocales.length) {
+					callback();
+					return;
+				}
+				var locale = allLocales[localeIndex];
+				process.stdout.write('Locale ' + locale.code + ' [' + locale.name + ']... ');
+				get('/api/2/project/concrete5/resource/' + cfg.txResource + '/stats/' + locale.code + '/', {type: 'json'}, function(data) {
+					var tot = data.translated_entities + data.untranslated_entities;
+					var perc = tot ? Math.round(data.translated_entities * 100 / tot) : 0;
+					var passed = (perc >= 95);
+					process.stdout.write(' progress: ' + perc + '% -> ' + (passed ? 'ok' : 'skipped') + ' \n');
+					if(!passed) {
+						getLocaleInfo(localeIndex + 1, callback);
+						return;
+					}
+					locale.poFile = path.join(config.DIR_BASE, 'languages/' + locale.code + '/LC_MESSAGES/messages.po');
+					locale.moFile = path.join(config.DIR_BASE, 'languages/' + locale.code + '/LC_MESSAGES/messages.mo');
+					locales.push(locale);
+					process.stdout.write('\tdownloading .po file... ');
+					get('/api/2/project/concrete5/resource/' + cfg.txResource + '/translation/' + locale.code + '/?file', {type: 'file', filename: locale.poFile}, function() {
+						process.stdout.write('done.\n');
+						process.stdout.write('\tcompiling .mo file... ');
+						execFile(
+							'msgfmt', ['-o', locale.moFile, locale.poFile], {}, function(error, stdout, stderr) {
+								if(error !== null) {
+									process.stderr.write(error.message || error);
+									done(false);
+									return;
+								}
+								process.stdout.write('done.\n');
+								process.stdout.write('\tdeleting .po file... ');
+								try {
+									fs.unlinkSync(locale.poFile);
+								}
+								catch(e) {
+									process.stderr.write(e.message || e);
+									done(false);
+									return;
+								}
+								process.stdout.write('done.\n');
+								getLocaleInfo(localeIndex + 1, callback);
+							}
+						);
+					});
+				});
+			}
+			getLocaleInfo(0, function() {
+				done(true);
+			});
+		});
+		
+	});
 
 	grunt.registerTask('default', 'release');
 };
