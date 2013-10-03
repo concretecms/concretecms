@@ -167,7 +167,7 @@ module.exports = function(grunt, config, done) {
 					switch(available_language.code) {
 						case 'en': // Transifex returns this too
 							break;
-						case 'it_IT'://default:
+						default:
 							allLocales.push({code: available_language.code, name: available_language.code + ' [' + available_language.name + ']'});
 							break;
 					}
