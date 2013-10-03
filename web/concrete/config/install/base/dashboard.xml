@@ -176,6 +176,8 @@
 				</attributekey>
 			</attributes>
         </page>
+        <page name="Move Multiple Groups" path="/dashboard/users/groups/bulk_update" filename="/dashboard/users/groups/bulk_update.php" pagetype="" description="" package="">
+        </page>
         <page name="Group Sets" path="/dashboard/users/group_sets" filename="/dashboard/users/group_sets.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">

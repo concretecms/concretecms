@@ -71,6 +71,15 @@ class ConcreteUpgradeVersion563Helper {
 		if (!is_object($tree)) {
 			$tree = GroupTree::add();
 		}
+
+		GroupTree::ensureGroupNodes();
+
+		$sp = Page::getByPath('/dashboard/users/groups/bulk_update');
+		if (!is_object($sp) || $sp->isError()) {
+			$sp = SinglePage::add('/dashboard/users/groups/bulk_update');
+			$sp->update(array('cName'=>'Move Multiple Groups'));
+		}
+
 		
 	}
 
