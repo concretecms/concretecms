@@ -225,7 +225,7 @@ if (count($pages) > 0) {
 							<div class="updateButton">
 								<br />
 								<br />
-								<?php print $concrete_interface->submit('Save', $formID, $buttonAlign = 'right', 'seoSubmit update' . $cID, array('title' => $cID)); ?>
+								<?php print $concrete_interface->submit(t('Save'), $formID, $buttonAlign = 'right', 'seoSubmit update' . $cID, array('title' => $cID)); ?>
 							</div>
 							<div>
 								<img style="display: none; position: absolute; top: 20px; right: 20px;" id="throbber<?php echo $cID ?>"  class="throbber<?php echo $cID ?>" src="<?php echo ASSETS_URL_IMAGES . '/throbber_white_32.gif' ?>" />
