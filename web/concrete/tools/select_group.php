@@ -82,6 +82,7 @@ if (!$tp->canAccessGroupSearch()) {
 			$callback = h($_REQUEST['callback']);
 			?>
 			<div class="group-tree" data-group-tree="<?=$tree->getTreeID()?>">
+
 			</div>
 			<script type="text/javascript">
 			$(function() {
