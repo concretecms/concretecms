@@ -7,5 +7,9 @@ module.exports = {
 	// Your Transifex password
 	txPassword: '',
 	// The resource identifier of the Transifex resource, for instance 'core-5621'
-	txResource: ''
+	txResource: '',
+	// A list of locales. If empty then all the Transifex locales are retrieved.
+	txLocales: [],
+	// The minimum translation progress of locales (percentage). If not specified we'll use 95%
+	txProgressLimit: 95
 };
