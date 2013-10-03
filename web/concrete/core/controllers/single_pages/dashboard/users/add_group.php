@@ -33,6 +33,13 @@ class Concrete5_Controller_Dashboard_Users_AddGroup extends DashboardBaseControl
 			$this->error->add($valt->getErrorMessage());
 		}
 		
+		$g1 = Group::getByName($gName);
+		if ($g1 instanceof Group) {
+			if ((!is_object($g)) || $g->getGroupID() != $g1->getGroupID()) {
+				$this->error->add(t('A group named "%s" already exists', $g1->getGroupName()));
+			}
+		}
+
 		if (!$this->error->has()) { 	
 			$g = Group::add($gName, $_POST['gDescription']);
 			$this->checkExpirationOptions($g);

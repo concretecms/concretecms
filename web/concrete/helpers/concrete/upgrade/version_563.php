@@ -12,7 +12,6 @@ class ConcreteUpgradeVersion563Helper {
 		'TreeCategoryNodes',
 		'TreeNodePermissionAssignments',
 		'TreeNodes',
-		'TreeGroupNodes',
 		'Trees'
 	);
 
@@ -35,42 +34,7 @@ class ConcreteUpgradeVersion563Helper {
 				$pt->assignPermissionAccess($pa);
 			}
 		}
-
-		/* permission categories */
-		$groupTreeNodeCategory = PermissionKeyCategory::getByHandle('group_tree_node');
-		if (!is_object($groupTreeNodeCategory)) {
-			$groupTreeNodeCategory = PermissionKeyCategory::add('group_tree_node', $pkg);
-		}
-
-		$entities = array(
-			PermissionAccessEntityType::getByHandle('group'),
-			PermissionAccessEntityType::getByHandle('user'),
-			PermissionAccessEntityType::getByHandle('group_combination'),
-			PermissionAccessEntityType::getByHandle('group_set')
-		);
-		foreach($entities as $ent) {
-			$groupTreeNodeCategory->associateAccessEntityType($ent);
-		}
-
-		$db = Loader::db();
-		$r = $db->Execute('select gID from Groups order by gID asc');
-		while ($row = $r->FetchRow()) {
-			$g = Group::getByID($row['gID']);
-			$g->rescanGroupPath();
-		}
-
-		$tt = TreeType::getByHandle('group');
-		if (!is_object($tt)) {
-			$tt = TreeType::add('group');
-		}
-		$tnt = TreeNodeType::getByHandle('group');
-		if (!is_object($tnt)) {
-			$tnt = TreeNodeType::add('group');
-		}
-		$tree = GroupTree::get();
-		if (!is_object($tree)) {
-			$tree = GroupTree::add();
-		}
+		
 		
 	}
 

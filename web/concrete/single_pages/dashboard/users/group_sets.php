@@ -75,7 +75,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 						?>
 								<label class="checkbox">
 									<?php echo $form->checkbox('gID[]', $g->getGroupID(), $set->contains($g)) ?>
-									<span><?php echo $g->getGroupDisplayName()?></span>
+									<span><?php echo $g->getGroupName()?></span>
 								</label>
 						<?php } ?>
 					</div>
@@ -140,7 +140,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		<label class="control-label"><?=t('Groups')?></label>
 		<div class="controls">
 		<? foreach($groups as $g) { ?>
-			<label class="checkbox"><?=$form->checkbox('gID[]', $g->getGroupID())?> <span><?=$g->getGroupDisplayName()?></span></label>
+			<label class="checkbox"><?=$form->checkbox('gID[]', $g->getGroupID())?> <span><?=$g->getGroupName()?></span></label>
 			
 		<? } ?>
 		</div>
