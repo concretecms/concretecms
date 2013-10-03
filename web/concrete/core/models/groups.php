@@ -174,7 +174,19 @@
 			if ($ret < 0) {
 				return false;
 			}
-			
+
+			$tree = GroupTree::get();
+			$rootNode = $tree->getRootTreeNodeObject();
+			$node = GroupTreeNode::getTreeNodeByGroupID($this->gID);
+			if (is_object($node) && is_object($rootNode)) {
+				$node->populateDirectChildrenOnly();
+				foreach($node->getChildNodes() as $childnode) {
+					$childnode->move($rootNode);
+				}
+				$node = GroupTreeNode::getTreeNodeByGroupID($this->gID);
+				$node->delete();
+			}
+
 			$db = Loader::db(); 
 			$r = $db->query("DELETE FROM UserGroups WHERE gID = ?",array(intval($this->gID)) );
 			$r = $db->query("DELETE FROM Groups WHERE gID = ?",array(intval($this->gID)) );
@@ -357,7 +369,7 @@
 
 					GroupTreeNode::add($ng, $node);
 				}
-				
+
 				Events::fire('on_group_add', $ng);
 				$ng->rescanGroupPath();
 				return $ng;
