@@ -117,21 +117,20 @@ $languages = Localization::getAvailableInterfaceLanguages();
                     
 					<? 
 					$gak = PermissionKey::getByHandle('assign_user_groups');
-					foreach ($gArray as $gRow) {
-						$g = Group::getByID($gRow['gID']); 
-						if ($gak->validate($g->getGroupID())) {
+					foreach ($gArray as $g) { 
+						if ($gak->validate($g['gID'])) {
 
 
 						?>
 						<label>
-							<input type="checkbox" name="gID[]" value="<?=$g->getGroupID()?>" <? 
+							<input type="checkbox" name="gID[]" value="<?=$g['gID']?>" <? 
                             if (is_array($_POST['gID'])) {
-                                if (in_array($g->getGroupID(), $_POST['gID'])) {
+                                if (in_array($g['gID'], $_POST['gID'])) {
                                     echo(' checked ');
                                 }
                             }
                         ?> />
-							<span><?=$g->getGroupDisplayName()?></span>
+							<span><?=$g['gName']?></span>
 						</label>
                     <? }
                     

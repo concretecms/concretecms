@@ -64,7 +64,7 @@ if (!$tp->canAccessGroupSearch()) {
 	
 		<div class="ccm-group">
 			<div style="background-image: url(<?=ASSETS_URL_IMAGES?>/icons/group.png)" class="ccm-group-inner-indiv">
-				<a class="ccm-group-inner-atag" id="g<?=$g->getGroupID()?>" group-id="<?=$g->getGroupID()?>" group-name="<?=$g->getGroupDisplayName(false)?>" href="javascript:void(0)"><?=$g->getGroupDisplayName()?></a>
+				<a class="ccm-group-inner-atag" id="g<?=$g->getGroupID()?>" group-id="<?=$g->getGroupID()?>" group-name="<?=$g->getGroupDisplayName()?>" href="javascript:void(0)"><?=$g->getGroupDisplayName()?></a>
 				<?=( $g->getGroupDescription() != '' ? ' - <span class="ccm-group-description">'. $g->getGroupDescription() .'</span>' : '' )?>
 			</div>
 		</div>
