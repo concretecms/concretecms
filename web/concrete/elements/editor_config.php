@@ -40,7 +40,11 @@ $(function() {
 		document_base_url: '<?=BASE_URL . DIR_REL?>/',
 		convert_urls: false,
 		content_css : "<?=$theme->getThemeEditorCSS()?>",
-		<?
+    	<? if(EDITOR_LANGUAGE != "en"){ ?>
+    	translate_mode : true,
+    	language : "<?=EDITOR_LANGUAGE?>",
+    	<?
+    	}
 		if( $txtEditorMode=='CUSTOM' ){ ?>
 			//theme : "concrete",
 			<?
