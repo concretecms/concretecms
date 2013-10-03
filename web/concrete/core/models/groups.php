@@ -201,10 +201,6 @@
 		function getGroupName() {
 			return $this->gName;
 		}
-
-		public function getGroupDisplayName() {
-			return $this->getGroupName();
-		}
 		
 		function getGroupDescription() {
 			return $this->gDescription;

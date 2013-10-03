@@ -1,3 +1,3 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-$APP_VERSION = '5.6.3a1';
+$APP_VERSION = '5.6.2.2b2';
