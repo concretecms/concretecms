@@ -1658,8 +1658,10 @@
       <UNSIGNED/>
     </field>
     <field name="gUserExpirationAction" type="C" size="20"/>
-    <field name="gPath" type="X">
-    </field>
+    <index name="gName">
+      <UNIQUE/>
+      <col>gName</col>
+    </index>
   </table>
   <table name="Jobs">
     <field name="jID" type="I" size="10">
@@ -2451,6 +2453,7 @@
       <NOTNULL/>
       <DEFAULT value="0000-00-00 00:00:00"/>
     </field>
+    <field name="type" type="C" size="64" />
     <index name="uID">
       <col>uID</col>
     </index>
@@ -3202,129 +3205,5 @@
     </field>
   </table>
 
-   <table name="Trees">
-    <field name="treeID" type="I" size="11">
-      <UNSIGNED/>
-      <autoincrement />
-      <KEY/>
-    </field>
-    <field name="treeTypeID" type="I" size="11">
-      <UNSIGNED/>
-      <DEFAULT value="0"/>
-    </field>
-    <field name="treeDateAdded" type="T">
-    </field>
-    <field name="rootTreeNodeID" type="I" size="10">
-      <DEFAULT value="0"/>
-      <UNSIGNED/>
-    </field>
-  </table>
-
-  <table name="TreeTypes">
-    <field name="treeTypeID" type="I" size="11">
-      <UNSIGNED/>
-      <autoincrement />
-      <KEY/>
-    </field>
-    <field name="treeTypeHandle" type="C" size="255">
-      <DEFAULT value=""/>
-    </field>
-    <field name="pkgID" type="I" size="11">
-      <UNSIGNED/>
-      <DEFAULT value="0"/>
-    </field>
-  </table>
-
-  <table name="TreeNodeTypes">
-    <field name="treeNodeTypeID" type="I" size="11">
-      <UNSIGNED/>
-      <autoincrement />
-      <KEY/>
-    </field>
-    <field name="treeNodeTypeHandle" type="C" size="255">
-      <DEFAULT value=""/>
-    </field>
-    <field name="pkgID" type="I" size="11">
-      <UNSIGNED/>
-      <DEFAULT value="0"/>
-    </field>
-  </table>
-
-  <table name="TreeNodes">
-    <field name="treeNodeID" type="I" size="11">
-      <UNSIGNED/>
-      <autoincrement />
-      <KEY/>
-    </field>
-    <field name="treeNodeTypeID" type="I" size="11">
-      <UNSIGNED/>
-      <DEFAULT value="0"/>
-    </field>
-    <field name="treeID" type="I" size="11">
-      <UNSIGNED/>
-      <DEFAULT value="0"/>
-    </field>
-    <field name="treeNodeParentID" type="I" size="10">
-      <DEFAULT value="0"/>
-      <UNSIGNED/>
-    </field>
-    <field name="treeNodeDisplayOrder" type="I" size="10">
-      <DEFAULT value="0"/>
-      <UNSIGNED/>
-    </field>
-    <field name="treeNodeOverridePermissions" type="I1">
-      <UNSIGNED/>
-      <DEFAULT value="0"/>
-    </field>
-    <field name="inheritPermissionsFromTreeNodeID" type="I">
-      <UNSIGNED/>
-      <DEFAULT value="0"/>
-    </field>
-    <index name="treeNodeParentID">
-      <col>treeNodeParentID</col>
-    </index>
-  </table>
-
-
-  <table name="TreeCategoryNodes">
-    <field name="treeNodeID" type="I" size="11">
-      <UNSIGNED/>
-      <autoincrement />
-      <KEY/>
-    </field>
-    <field name="treeNodeCategoryName" type="C" size="255">
-      <DEFAULT value=""/>
-    </field>
-  </table>
-
-  <table name="TreeNodePermissionAssignments">
-    <field name="treeNodeID" type="I" size="10">
-      <key/>
-      <default value="0"/>
-      <unsigned/>
-    </field>
-    <field name="pkID" type="I" size="10">
-      <key/>
-      <default value="0"/>
-      <unsigned/>
-    </field>
-    <field name="paID" type="I" size="10">
-      <key/>
-      <default value="0"/>
-      <unsigned/>
-    </field>
-  </table>
-
-  <table name="TreeGroupNodes">
-    <field name="treeNodeID" type="I" size="11">
-      <UNSIGNED/>
-      <autoincrement />
-      <KEY/>
-    </field>
-    <field name="gID" type="I" size="11">
-      <UNSIGNED/>
-      <default value="0" />
-    </field>
-  </table>
 
   </schema>

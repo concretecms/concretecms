@@ -57,7 +57,7 @@ class Concrete5_Model_GroupPermissionAccessEntity extends PermissionAccessEntity
 			$g = Group::getByID($gID);
 			if (is_object($g)) {
 				$this->group = $g;
-				$this->label = $g->getGroupDisplayName();
+				$this->label = $g->getGroupName();
 			} else {
 				$this->label = t('(Deleted Group)');
 			}

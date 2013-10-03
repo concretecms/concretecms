@@ -223,25 +223,7 @@ $classes = array(
 	'DashboardBaseController' => array('controller', '/dashboard/base'),
 	'AccountController' => array('controller', '/account'),
 	'AccountProfileEditController' => array('controller', '/account/profile/edit'),
-	'Zend_Queue_Adapter_Concrete5' => array('library', 'Zend/Queue/Adapter/Concrete5'),
-	'Tree' => array('model', 'tree/model'),
-	'TreeType' => array('model', 'tree/type'),
-	'TreeNode' => array('model', 'tree/node/model'),
-	'TreeNodeType' => array('model', 'tree/node/type'),
-	'CategoryTreeNode' => array('model', 'tree/node/types/category'),
-	/* Permissions Tree Node BASE class */
-	'TreeNodePermissionKey' => array('model','permission/keys/tree/node'),
-	'TreeNodePermissionAssignment' => array('model','permission/assignments/tree/node'),
-	'TreeNodePermissionAccess' => array('model','permission/access/categories/tree/node'),
-	'TreeNodePermissionAccessListItem' => array('model','permission/access/list_items/tree/node'),
-	'TreeNodePermissionResponse' => array('model','permission/response/tree/node'),
-	'GroupTreeNode' => array('model', 'tree/node/types/group'),
-	'GroupTree' => array('model', 'tree/types/group'),
-	'GroupTreeNodePermissionKey' => array('model','permission/keys/tree/node/group'),
-	'GroupTreeNodePermissionAssignment' => array('model','permission/assignments/tree/node/group'),
-	'GroupTreeNodePermissionAccess' => array('model','permission/access/categories/tree/node/group'),
-	'GroupTreeNodePermissionAccessListItem' => array('model','permission/access/list_items/tree/node/group'),
-	'GroupTreeNodePermissionResponse' => array('model','permission/response/tree/node/group')
+	'Zend_Queue_Adapter_Concrete5' => array('library', 'Zend/Queue/Adapter/Concrete5')
 );
 
 Loader::registerAutoload($classes);

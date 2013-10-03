@@ -79,12 +79,11 @@ if (!isset($_REQUEST['reload'])) { ?>
 				<?=$form->label('groupIDs', t('Add the users below to Group(s)'))?>
 				<div class="input">
 					<select multiple name="groupIDs[]" class="chosen-select" data-placeholder="<?php echo t('Select Group(s)');?>" >
-						<? foreach($g1 as $gRow) {
-							$g = Group::getByID($gRow['gID']); 
-							if ($gk->validate($g->getGroupID())) { 
+						<? foreach($g1 as $g) { 
+							if ($gk->validate($g['gID'])) { 
 
 						?>
-							<option value="<?=$g->getGroupID()?>"  <? if (is_array($_REQUEST['groupIDs']) && in_array($g->getGroupID(), $_REQUEST['groupIDs'])) { ?> selected="selected" <? } ?>><?=$g->getGroupDisplayName()?></option>
+							<option value="<?=$g['gID']?>"  <? if (is_array($_REQUEST['groupIDs']) && in_array($g['gID'], $_REQUEST['groupIDs'])) { ?> selected="selected" <? } ?>><?=$g['gName']?></option>
 						<? } 
 						
 						}?>
