@@ -43,9 +43,13 @@ class Concrete5_Model_UserList extends DatabaseItemList {
 	
 	public function filterByGroup($group, $inGroup = true) {
 		$tbl='ug_'.$group->getGroupID();
+		$tblg = 'g_' . $group->getGroupID();
 		$this->addToQuery("left join UserGroups $tbl on {$tbl}.uID = u.uID ");	
 		if ($inGroup) {
-			$this->filter(false, "{$tbl}.gID=".intval($group->getGroupID()) );
+			$this->addToQuery("left join Groups {$tblg} on {$tbl}.gID = {$tblg}.gID ");	
+			$db = Loader::db();
+			$path = $db->quote($group->getGroupPath() . '%');
+			$this->filter(false, "{$tblg}.gPath like {$path}");
 		} else {
 			$this->filter(false, "{$tbl}.gID is null");
 		}
@@ -61,9 +65,8 @@ class Concrete5_Model_UserList extends DatabaseItemList {
 	}
 
 	public function filterByGroupID($gID){ 
-		$tbl='ug_'.$gID;
-		$this->addToQuery("left join UserGroups $tbl on {$tbl}.uID = u.uID ");			
-		$this->filter(false, "{$tbl}.gID=".$gID);
+		$g = Group::getByID($gID);
+		$this->filterByGroup($g);
 	}
 
 	public function filterByDateAdded($date, $comparison = '=') {
