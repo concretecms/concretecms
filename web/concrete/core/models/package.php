@@ -269,8 +269,6 @@ class Concrete5_Model_Package extends Object {
 		$items['permission_access_entity_types'] = PermissionAccessEntityType::getListByPackage($this);
 		$items['attribute_keys'] = AttributeKey::getListByPackage($this);
 		$items['attribute_sets'] = AttributeSet::getListByPackage($this);
-		$items['tree_types'] = TreeType::getListByPackage($this);
-		$items['tree_node_types'] = TreeNodeType::getListByPackage($this);
 		$items['group_sets'] = GroupSet::getListByPackage($this);
 		$items['page_types'] = CollectionType::getListByPackage($this);
 		$items['mail_importers'] = MailImporter::getListByPackage($this);
@@ -301,10 +299,6 @@ class Concrete5_Model_Package extends Object {
 			return $item->getMailImporterName();		
 		} else if ($item instanceof SinglePage) {
 			return $item->getCollectionPath();
-		} else if ($item instanceof TreeType) {
-			return ucwords(strtolower($txt->unhandle($item->getTreeTypeHandle())));
-		} else if ($item instanceof TreeNodeType) {
-			return ucwords(strtolower($txt->unhandle($item->getTreeNodeTypeHandle())));
 		} else if ($item instanceof AttributeType) {
 			return tc('AttributeTypeName', $item->getAttributeTypeName());
 		} else if ($item instanceof PermissionAccessEntityType) {
@@ -385,8 +379,6 @@ class Concrete5_Model_Package extends Object {
 						case 'WorkflowType':
 						case 'PermissionKey':
 						case 'PermissionAccessEntityType':
-						case 'TreeType':
-						case 'TreeNodeType':
 							$item->delete();
 							break;
 						default:
