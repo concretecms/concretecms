@@ -128,7 +128,9 @@ if (isset($group)) {
 <div class="ccm-pane-footer">
 	<button class="btn pull-right btn-primary" style="margin-left: 10px" type="submit"><?=t('Update Group')?></button>
 	<a href="<?=$this->url('/dashboard/users/groups')?>" class="btn pull-left"><?=t('Cancel')?></a>
-	<? print $ih->button_js(t('Delete'), "deleteGroup()", 'right', 'error');?>
+	<? if ($u->isSuperUser()) { ?>
+		<? print $ih->button_js(t('Delete'), "deleteGroup()", 'right', 'error');?>
+		<? } ?>
 </div>
 </form>
 
@@ -214,13 +216,13 @@ $(function() {
 
 	<? if (count($results) > 0) { 
 		$groupList->displaySummary();
-		$gp = new Permissions();
-		$canEditGroups = $gp->canEditGroups();
 		foreach ($results as $g) {
+			$gp = new Permissions($g);
+			$canEditGroup = $gp->canEditGroup();
 			?>
 			
 			<div class="ccm-group">
-				<<? if ($canEditGroups) { ?>a<? } else {?>span<? } ?> class="ccm-group-inner" <? if ($canEditGroups) { ?>href="<?=$this->url('/dashboard/users/groups', 'edit', $g->getGroupID())?>"<? } ?> style="background-image: url(<?=ASSETS_URL_IMAGES?>/icons/group.png)"><?=$g->getGroupDisplayName()?><? if ($canEditGroups) { ?></a><? } else {?></span><? } ?>
+				<<? if ($canEditGroup) { ?>a<? } else {?>span<? } ?> class="ccm-group-inner" <? if ($canEditGroup) { ?>href="<?=$this->url('/dashboard/users/groups', 'edit', $g->getGroupID())?>"<? } ?> style="background-image: url(<?=ASSETS_URL_IMAGES?>/icons/group.png)"><?=$g->getGroupDisplayName()?><? if ($canEditGroup) { ?></a><? } else {?></span><? } ?>
 				<? if ($g->getGroupDescription()) { ?>
 					<div class="ccm-group-description"><?=$g->getGroupDescription()?></div>
 				<? } ?>

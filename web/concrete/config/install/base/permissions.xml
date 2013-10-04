@@ -112,7 +112,6 @@
 
         <permissionkey handle="sudo" name="Sign in as User" package="" category="user">
         </permissionkey>
-        
 
         <permissionkey handle="access_group_search" name="Access Group Search" package="" category="user">
             <access>
@@ -127,8 +126,6 @@
 		</permissionkey>
 
         <!-- groups //-->
-        <permissionkey handle="view_user_group" name="View Group" package="" category="group_tree_node">
-        </permissionkey>
 
         <permissionkey handle="search_users_in_group" name="Search User Group" package="" category="group_tree_node">
         </permissionkey>

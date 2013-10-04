@@ -10,7 +10,6 @@
 
 $ek = PermissionKey::getByHandle('edit_user_properties');
 $ik = PermissionKey::getByHandle('activate_user');
-$gk = PermissionKey::getByHandle('assign_user_groups');
 $dk = PermissionKey::getByHandle('delete_user');
 
 if (!$mode) {
@@ -42,10 +41,8 @@ if (!$mode) {
 						<option value="activate"><?=t('Activate')?></option>
 						<option value="deactivate"><?=t('Deactivate')?></option>
 					<? } ?>
-					<? if ($gk->validate()) { ?>
 					<option value="group_add"><?=t('Add to Group')?></option>
 					<option value="group_remove"><?=t('Remove from Group')?></option>
-					<? } ?>
 					<? if ($dk->validate()) { ?>
 					<option value="delete"><?=t('Delete')?></option>
 					<? } ?>

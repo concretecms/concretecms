@@ -70,11 +70,6 @@ if (intval($_GET['uID'])) {
 	$uo = UserInfo::getByID(intval($_GET['uID']));
 	if (is_object($uo)) {
 	
-		if (!PermissionKey::getByHandle('access_user_search')->validate($uo)) { 
-			throw new Exception(t('Access Denied.'));
-		}
-		
-		
 		$uID = intval($_REQUEST['uID']);
 		
 		if (isset($_GET['task'])) {
@@ -600,8 +595,8 @@ $(function() {
 <?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Search Users'), t('Search the users of your site and perform bulk actions on them.'), false, false);?>
 
 <?
-$tp = new TaskPermission();
-if ($tp->canAccessUserSearch()) { ?>
+$tp = Loader::helper('concrete/user');
+if ($tp->canAccessUserSearchInterface()) { ?>
 <div class="ccm-pane-options" id="ccm-<?=$searchInstance?>-pane-options">
 <? Loader::element('users/search_form_advanced', array('columns' => $columns, 'searchInstance' => $searchInstance, 'searchRequest' => $searchRequest, 'searchType' => 'DASHBOARD')); ?>
 </div>

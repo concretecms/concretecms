@@ -37,6 +37,10 @@ class Concrete5_Controller_Dashboard_Users_Groups extends DashboardBaseControlle
 
 	public function edit($gID = false) {
 		$g = Group::getByID(intval($gID));
+		$gp = new Permissions($g);
+		if (!$gp->canEditGroup()) {
+			throw new Exception(t('You do not have access to edit this group.'));
+		}
 		if (is_object($g)) { 		
 			$this->set('group', $g);
 		}		
@@ -52,6 +56,11 @@ class Concrete5_Controller_Dashboard_Users_Groups extends DashboardBaseControlle
 		if (is_object($g)) {
 			$this->set('group', $g);
 		}
+		$gp = new Permissions($g);
+		if (!$gp->canEditGroup()) {
+			$this->error->add(t('You do not have access to edit this group.'));
+		}
+
 		$txt = Loader::helper('text');
 		$valt = Loader::helper('validation/token');
 		$gName = $txt->sanitize($_POST['gName']);

@@ -143,7 +143,6 @@ class ConcreteUpgradeVersion563Helper {
 		}
 
 	
-		$this->addGroupPermission('view_user_group');
 		$this->addGroupPermission('search_users_in_group', 'access_user_search');
 		$this->addGroupPermission('edit_group', 'edit_groups');
 		$this->addGroupPermission('assign_group', 'assign_user_groups');

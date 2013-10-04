@@ -47,6 +47,13 @@ class Concrete5_Controller_Dashboard_Users_AddGroup extends DashboardBaseControl
 				$parentGroup = $parentGroupNode->getTreeNodeGroupObject();
 			}
 		}
+
+		if (is_object($parentGroup)) {
+			$pp = new Permissions($parentGroup);
+			if (!$pp->canAddSubGroup()) {
+				$this->error->add(t('You do not have permission to add a group beneath %s', $parentGroup->getGroupDisplayName()));
+			}
+		}
 		
 		if (!$this->error->has()) {
 			$g = Group::add($gName, $_POST['gDescription'], $parentGroup);

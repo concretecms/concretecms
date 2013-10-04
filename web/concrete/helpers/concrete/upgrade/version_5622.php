@@ -1,18 +1,11 @@
 <?
 
 defined('C5_EXECUTE') or die("Access Denied.");
-class ConcreteUpgradeVersion563Helper {
+class ConcreteUpgradeVersion5622Helper {
 
 	public $dbRefreshTables = array(
 		'Jobs',
-		'JobsLog',
-		'Groups',
-		'TreeTypes',
-		'TreeNodeTypes',
-		'TreeCategoryNodes',
-		'TreeNodePermissionAssignments',
-		'TreeNodes',
-		'Trees'
+		'JobsLog'
 	);
 
 	public function run() {

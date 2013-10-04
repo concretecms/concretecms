@@ -63,4 +63,11 @@ class ConcreteUserHelper {
 		
 		return true;
 	}
+
+	public function canAccessUserSearchInterface() {
+		$tree = GroupTree::get();
+		$rootNode = $tree->getRootTreeNodeObject();
+		$p = new Permissions($rootNode);
+		return $p->canSearchUsersInGroup();
+	}
 }

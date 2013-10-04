@@ -10,7 +10,8 @@ if ($_REQUEST['mode'] == 'users') {
 }
 
 $tp = new TaskPermission();
-if (!$tp->canAccessUserSearch() && !$tp->canAccessGroupSearch()) { 
+$tu = Loader::helper('concrete/user');
+if (!$tu->canAccessUserSearchInterface() && !$tp->canAccessGroupSearch()) { 
 	die(t("Access Denied."));
 }
 

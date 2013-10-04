@@ -4,7 +4,6 @@ if(!strlen($searchInstance)) {
 	$searchInstance = 'user';
 }
 
-$sk = PermissionKey::getByHandle('access_user_search');
 $ek = PermissionKey::getByHandle('activate_user');
 
 $form = Loader::helper('form');
@@ -23,7 +22,8 @@ if (is_array($_REQUEST['uID'])) {
 }
 
 foreach($users as $ui) {
-	if (!$sk->validate($ui)) { 
+	$up = new Permissions($ui);
+	if (!$up->canViewUser()) {
 		die(t("Access Denied."));
 	}
 }
