@@ -85,7 +85,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			$txt = Loader::helper('text');
  		
 			$db = Loader::db();
-			$query = "INSERT INTO btGuestBookEntries (bID, cID, uID, user_name, user_email, commentText, approved) VALUES (?, ?, ?, ?, ?, ?, ?)";
+			$query = "INSERT INTO btGuestBookEntries (bID, cID, uID, user_name, user_email, commentText, entryDate, approved) VALUES (?, ?, ?, ?, ?, ?, NOW(), ?)";
 			$res = $db->query($query, array($this->bID, $cID, intval($uID), $txt->sanitize($name), $txt->sanitize($email), $txt->sanitize($comment), $approved) );
 
 			$this->adjustCountCache(1);

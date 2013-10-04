@@ -45,7 +45,7 @@
 		<field name="user_email" type="C" size="100">
 		</field>
 		<field name="entryDate" type="T">
-			<deftimestamp/>
+			<default value="0000-00-00 00:00:00"/>
 		</field>
 		<field name="approved" type="i">
 			<default value="1"/>
