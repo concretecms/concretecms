@@ -3,7 +3,7 @@ module.exports = function(grunt) {
 
 	var parameters = null;
 	if(fs.existsSync(__dirname + '/Gruntfile.parameters.js')) {
-		cfg = require(__dirname + '/Gruntfile.parameters.js');
+		parameters = require(__dirname + '/Gruntfile.parameters.js');
 	}
 	parameters = parameters || {};
 	
