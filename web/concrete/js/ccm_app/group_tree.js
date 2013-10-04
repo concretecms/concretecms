@@ -37,10 +37,10 @@
 				menu += '<li><a href="' + CCM_DISPATCHER_FILENAME + '/dashboard/users/groups/-/edit/' + data.gID + '">Edit Group<\/a><\/li>';
 			}
 
-			/*
 			if (data.canEditTreeNodePermissions) {
 				menu += '<li><a class="dialog-launch" dialog-width="480" dialog-height="380" dialog-modal="true" dialog-title="Edit Permissions" href="' + CCM_TOOLS_PATH + '/tree/node/permissions?treeNodeID=' + data.key + '">Edit Permissions<\/a><\/li>';
 			}
+			/*
 			if (data.treeNodeParentID > 0 && data.treeNodeTypeHandle == 'topic' && data.canDeleteTreeNode) {
 				menu += '<li><a class="dialog-launch" dialog-width="550" dialog-on-open="$(\'[data-topic-form=remove-tree-node]\').ccmtopicstree(\'initRemoveNodeForm\', ' + options.treeID + ');" dialog-height="140" dialog-modal="false" dialog-title="Remove" href="' + CCM_TOOLS_PATH + '/tree/node/remove?treeNodeID=' + data.key + '">Delete Topic<\/a><\/li>';
 			}
