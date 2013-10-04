@@ -139,6 +139,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				if($_POST['entryID']) { // update
 					$bp = $this->getPermissionObject(); 
 					if($bp->canWrite()) {
+						$E->loadData(intval($_POST['entryID']));
+						$uID = $E->uID;
 						$E->updateEntry($_POST['entryID'], $_POST['commentText'], $_POST['name'], $_POST['email'], $uID );
 						$this->set('response', t('The comment has been saved') );
 					} else {
