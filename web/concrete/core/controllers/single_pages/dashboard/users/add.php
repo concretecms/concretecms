@@ -35,7 +35,7 @@ class Concrete5_Controller_Dashboard_Users_Add extends Controller {
 				}
 				
 				if (strlen($username) < USER_USERNAME_MINIMUM) {
-					$this->error->add(t('A username must be between at least %s characters long.',USER_USERNAME_MINIMUM));
+					$this->error->add(t('A username must be at least %s characters long.',USER_USERNAME_MINIMUM));
 				}
 			
 				if (strlen($username) > USER_USERNAME_MAXIMUM) {
