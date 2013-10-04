@@ -241,7 +241,9 @@ $classes = array(
 	'GroupTreeNodePermissionAssignment' => array('model','permission/assignments/tree/node/group'),
 	'GroupTreeNodePermissionAccess' => array('model','permission/access/categories/tree/node/group'),
 	'GroupTreeNodePermissionAccessListItem' => array('model','permission/access/list_items/tree/node/group'),
-	'GroupTreeNodePermissionResponse' => array('model','permission/response/tree/node/group')
+	'GroupTreeNodePermissionResponse' => array('model','permission/response/tree/node/group'),
+	'GroupPermissionResponse' => array('model','permission/response/group'),
+	'UserInfoPermissionResponse' => array('model','permission/response/user_info')
 );
 
 Loader::registerAutoload($classes);

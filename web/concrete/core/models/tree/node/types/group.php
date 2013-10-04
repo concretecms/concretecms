@@ -10,7 +10,7 @@ class Concrete5_Model_GroupTreeNode extends TreeNode {
 	}
 	public function getTreeNodeDisplayName() {
 		if ($this->treeNodeParentID == 0) {
-			return t('Groups');
+			return t('All Groups');
 		}
 		
 		$g = Group::getByID($this->gID);

@@ -6,5 +6,6 @@ abstract class Concrete5_Model_TreeNodePermissionResponse extends PermissionResp
 	abstract public function canDeleteTreeNode();
 	abstract public function canEditTreeNodePermissions();
 	abstract public function canEditTreeNode();
+	abstract public function canAddTreeSubNode();
 
 }

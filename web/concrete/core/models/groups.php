@@ -76,6 +76,7 @@
 		var $permissionSet;
 		private $permissions = array(); // more advanced version of permissions
 		
+		public function getPermissionObjectIdentifier() {return $this->gID;}
 		/* 
 		 * Takes the numeric id of a group and returns a group object
 		 * @parem string $gID

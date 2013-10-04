@@ -1,13 +1,6 @@
 <?php
 defined('C5_EXECUTE') or die(_("Access Denied."));
 $form = Loader::helper('form');
-$c = Page::getByPath('/dashboard/system/attributes/topics');
-$cp = new Permissions($c);
-if (!$cp->canViewPage()) {
-	exit;
-}
-$allChildren = $_REQUEST['allChildren'];
-
 $treeID = Loader::helper('security')->sanitizeInt($_REQUEST['treeID']);
 $tree = Tree::getByID($treeID);
 if (!is_object($tree)) {
@@ -26,5 +19,6 @@ if ($_REQUEST['treeNodeSelectedID']) {
 		}	//end multiple node stuff
 	}
 }
-$result = $tree->getJSON($allChildren);
+
+$result = $tree->getJSON();
 print Loader::helper('ajax')->sendResult($result);

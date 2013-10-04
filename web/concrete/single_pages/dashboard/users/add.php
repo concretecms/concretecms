@@ -116,11 +116,10 @@ $languages = Localization::getAvailableInterfaceLanguages();
 					<td>
                     
 					<? 
-					$gak = PermissionKey::getByHandle('assign_user_groups');
 					foreach ($gArray as $gRow) {
 						$g = Group::getByID($gRow['gID']); 
-						if ($gak->validate($g->getGroupID())) {
-
+						$gp = new Permissions($g);
+						if ($gp->canAssignGroup()) {
 
 						?>
 						<label>

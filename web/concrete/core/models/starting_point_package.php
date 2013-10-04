@@ -223,7 +223,7 @@ class Concrete5_Model_StartingPointPackage extends Package {
 		// group permissions
 		$tree = GroupTree::get();
 		$node = $tree->getRootTreeNodeObject();
-		$permissions = array('view_user_group', 'search_users_in_group', 'edit_group', 'assign_group', 'add_sub_group', 'edit_group_permissions');
+		$permissions = array('search_users_in_group', 'edit_group', 'assign_group', 'add_sub_group', 'edit_group_permissions');
 		$adminGroupEntity = GroupPermissionAccessEntity::getOrCreate($g3);
 		foreach($permissions as $pkHandle) {
 			$pk = PermissionKey::getByHandle($pkHandle);

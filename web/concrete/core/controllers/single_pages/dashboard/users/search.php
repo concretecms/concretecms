@@ -7,8 +7,18 @@ class Concrete5_Controller_Dashboard_Users_Search extends Controller {
 	}
 
 	public function view() {
-		// this is hacky as hell, we need to make this page MVC
-		if ($_REQUEST['task'] != 'edit' && !$_REQUEST['uID']) {
+
+		if (isset($_GET['uID'])) {
+			$uo = UserInfo::getByID(intval($_GET['uID']));
+			if (is_object($uo)) {
+				$up = new Permissions($uo);
+				if (!$up->canViewUser()) {
+					$this->redirect('/dashboard/users/search');
+				}
+			}
+		}
+			// this is hacky as hell, we need to make this page MVC
+		if (!is_object($uo)) {
 			$this->addHeaderItem('<script type="text/javascript">$(function() { ccm_setupAdvancedSearch(\'user\'); });</script>');
 			$userList = $this->getRequestedSearchResults();
 			$users = $userList->getPage();
@@ -161,12 +171,13 @@ class Concrete5_Controller_Dashboard_Users_Search extends Controller {
 					}
 				}
 				
-				$gak = PermissionKey::getByHandle('assign_user_groups');
 				$gIDs = array();
 				if (is_array($_POST['gID'])) {
 					foreach($_POST['gID'] as $gID) {
-						if ($gak->validate($gID)) {
-							$gIDs[] = intval($gID);
+						$gx = Group::getByID($gID);
+						$gxp = new Permissions($gx);
+						if ($gxp->canAssignGroup()) {
+							$gIDs[] = $gID;
 						}
 					}
 				}
@@ -211,27 +222,31 @@ class Concrete5_Controller_Dashboard_Users_Search extends Controller {
 			$userList->setItemsPerPage($_REQUEST['numResults']);
 		}
 		
-		$pk = PermissionKey::getByHandle('access_user_search');
-		$asl = $pk->getMyAssignment();
-
-		$p = new Permissions();
-
-		$filterGIDs = array();
-		if ($asl->getGroupsAllowedPermission() == 'C') { 
-			$userList->filter('u.uID', USER_SUPER_ID, '<>');
-			$userList->addToQuery("left join UserGroups ugRequired on ugRequired.uID = u.uID ");	
-			if (in_array(REGISTERED_GROUP_ID, $asl->getGroupsAllowedArray())) {
-				$userList->filter(false, '(ugRequired.gID in (' . implode(',', $asl->getGroupsAllowedArray()) . ') or ugRequired.gID is null)');
-			} else {
-				$userList->filter('ugRequired.gID', $asl->getGroupsAllowedArray(), 'in');		
+		$u = new User();
+		if (!$u->isSuperUser()) {
+			$gIDs = array(-1);
+			$gs = new GroupSearch();
+			$groups = $gs->get();
+			foreach($groups as $gRow) {
+				$g = Group::getByID($gRow['gID']);
+				if (is_object($g)) {
+					$gp = new Permissions($g);
+					if ($gp->canSearchUsersInGroup()) {
+						$gIDs[] = $g->getGroupID();
+					}
+				}
 			}
+			$userList->addToQuery("left join UserGroups ugRequired on ugRequired.uID = u.uID ");	
+			$userList->filter(false, '(ugRequired.gID in (' . implode(',', $gIDs) . ') or ugRequired.gID is null)');
 		}
 		
+		$filterGIDs = array();
 		if (isset($_REQUEST['gID']) && is_array($_REQUEST['gID'])) {
 			foreach($_REQUEST['gID'] as $gID) {
 				$g = Group::getByID($gID);
 				if (is_object($g)) {
-					if ($pk->validate($g) && (!in_array($g->getGroupID(), $filterGIDs))) {
+					$gp = new Permissions($g);
+					if ($gp->canSearchUsersInGroup()) {
 						$filterGIDs[] = $g->getGroupID();
 					}
 				}
@@ -241,6 +256,7 @@ class Concrete5_Controller_Dashboard_Users_Search extends Controller {
 		foreach($filterGIDs as $gID) {
 			$userList->filterByGroupID($gID);
 		}
+
 		if (is_array($_REQUEST['selectedSearchField'])) {
 			foreach($_REQUEST['selectedSearchField'] as $i => $item) {
 				// due to the way the form is setup, index will always be one more than the arrays
@@ -314,19 +330,15 @@ class Concrete5_Controller_Dashboard_Users_Search extends Controller {
 				throw new Exception(t('Invalid user ID.'));
 			}
 
-			$pk = PermissionKey::getByHandle('access_user_search');
-			if ($pk->validate($ui)) { 
-		
-				$valt = Loader::helper('validation/token');
-				if (!$valt->validate('sudo', $token)) {
-					throw new Exception($valt->getErrorMessage());
-				}
-				
-				User::loginByUserID($uID);
-				$this->redirect('/');
-			
+	
+			$valt = Loader::helper('validation/token');
+			if (!$valt->validate('sudo', $token)) {
+				throw new Exception($valt->getErrorMessage());
 			}
 			
+			User::loginByUserID($uID);
+			$this->redirect('/');
+
 		} catch(Exception $e) {
 			$this->set('error', $e);
 			$this->view();
@@ -373,7 +385,8 @@ class Concrete5_Controller_Dashboard_Users_Search extends Controller {
 				throw new Exception(t('Invalid user ID.'));
 			}
 
-			if (!PermissionKey::getByHandle('access_user_search')->validate($delUI)) { 
+			$dp = new Permissions($delUI);
+			if (!$dp->canViewUser()) {
 				throw new Exception(t('Access Denied.'));
 			}
 		
