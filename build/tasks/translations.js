@@ -1,17 +1,9 @@
-module.exports = function(grunt, config, done) {
+module.exports = function(grunt, config, parameters, done) {
 
 	var fs = require('fs');
 	var execFile = require('child_process').execFile;
 	var https = require('https');
 	var path = require('path');
-
-	function getC5Config() {
-		var cfg = null;
-		if(fs.existsSync(__dirname + '/../Gruntfile.c5config.js')) {
-			cfg = require(__dirname + '/../Gruntfile.c5config.js');
-		}
-		return cfg || {};
-	}
 
 	function mkdir(dir, mode) {
 		try {
@@ -40,7 +32,7 @@ module.exports = function(grunt, config, done) {
 			{
 				hostname: 'www.transifex.com',
 				path: urlPath,
-				auth: cfg.txUsername + ':' + cfg.txPassword
+				auth: parameters.txUsername + ':' + parameters.txPassword
 			},
 			function(response) {
 				var data = [], fd = null, cleanup = function() {};
@@ -129,30 +121,29 @@ module.exports = function(grunt, config, done) {
 		})
 	}
 
-	var cfg = getC5Config();
-	if(!cfg.txUsername) {
+	if(!parameters.txUsername) {
 		process.stderr.write('Transifex username not defined. Define a txUsername variable in Gruntfile.c5config.js file.\n');
 		done(false);
 		return;
 	}
-	if(!cfg.txPassword) {
+	if(!parameters.txPassword) {
 		process.stderr.write('Transifex password not defined. Define a txPassword variable in Gruntfile.c5config.js file.\n');
 		done(false);
 		return;
 	}
-	if(!cfg.txResource) {
+	if(!parameters.txResource) {
 		process.stderr.write('Transifex resource not defined. Define a txResource variable in Gruntfile.c5config.js file.\n');
 		done(false);
 		return;
 	}
 	
-	var txProgressLimit = ('txProgressLimit' in cfg) ? cfg.txProgressLimit : 95;
+	var txProgressLimit = ('txProgressLimit' in parameters) ? parameters.txProgressLimit : 95;
 	
 	var getAllLocales;
-	if(cfg.txLocales && cfg.txLocales.length) {
+	if(parameters.txLocales && parameters.txLocales.length) {
 		getAllLocales = function(callback) {
 			var cfgLocales = [];
-			cfg.txLocales.forEach(function(code) {
+			parameters.txLocales.forEach(function(code) {
 				cfgLocales.push({code: code, name: code});
 			});
 			callback(cfgLocales);
@@ -160,8 +151,8 @@ module.exports = function(grunt, config, done) {
 	}
 	else {
 		getAllLocales = function(callback) {
-			process.stdout.write('Retrieving available locales for Transifex resource ' + cfg.txResource + '... ');
-			get('/api/2/project/concrete5/resource/' + cfg.txResource + '/?details', {type: 'json'}, function(data) {
+			process.stdout.write('Retrieving available locales for Transifex resource ' + parameters.txResource + '... ');
+			get('/api/2/project/concrete5/resource/' + parameters.txResource + '/?details', {type: 'json'}, function(data) {
 				var allLocales = [];
 				data.available_languages.forEach(function(available_language) {
 					switch(available_language.code) {
@@ -181,7 +172,7 @@ module.exports = function(grunt, config, done) {
 	function downloadLocale(locale, callback) {
 		process.stdout.write('\tdownloading .po file... ');
 		get(
-			'/api/2/project/concrete5/resource/' + cfg.txResource + '/translation/' + locale.code + '/?file',
+			'/api/2/project/concrete5/resource/' + parameters.txResource + '/translation/' + locale.code + '/?file',
 			{type: 'file', filename: locale.poFile},
 			function() {
 				process.stdout.write('done.\n');
@@ -214,7 +205,7 @@ module.exports = function(grunt, config, done) {
 		}
 		var locale = allLocales[localeIndex];
 		process.stdout.write('Locale ' + locale.name + '... ');
-		get('/api/2/project/concrete5/resource/' + cfg.txResource + '/stats/' + locale.code + '/', {type: 'json'}, function(data) {
+		get('/api/2/project/concrete5/resource/' + parameters.txResource + '/stats/' + locale.code + '/', {type: 'json'}, function(data) {
 			var tot = data.translated_entities + data.untranslated_entities;
 			locale.percentage = tot ? Math.round(data.translated_entities * 100 / tot) : 0;
 			locale.passed = (locale.percentage >= txProgressLimit);
