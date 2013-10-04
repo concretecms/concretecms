@@ -219,6 +219,20 @@ class Concrete5_Model_StartingPointPackage extends Package {
 		$home = Page::getByID(1, "RECENT");
 		$home->assignPermissions($g1, array('view_page'));
 		$home->assignPermissions($g3, array('view_page_versions', 'view_page_in_sitemap', 'preview_page_as_user', 'edit_page_properties', 'edit_page_contents', 'edit_page_speed_settings', 'edit_page_theme', 'edit_page_type', 'edit_page_permissions', 'delete_page', 'delete_page_versions', 'approve_page_versions', 'add_subpage', 'move_or_copy_page', 'schedule_page_contents_guest_access'));
+
+		// group permissions
+		$tree = GroupTree::get();
+		$node = $tree->getRootTreeNodeObject();
+		$permissions = array('view_user_group', 'search_users_in_group', 'edit_group', 'assign_group', 'add_sub_group', 'edit_group_permissions');
+		$adminGroupEntity = GroupPermissionAccessEntity::getOrCreate($g3);
+		foreach($permissions as $pkHandle) {
+			$pk = PermissionKey::getByHandle($pkHandle);
+			$pk->setPermissionObject($node);
+			$pa = PermissionAccess::create($pk);
+			$pa->addListItem($adminGroupEntity);
+			$pt = $pk->getPermissionAssignmentObject();
+			$pt->assignPermissionAccess($pa);
+		}
 	}
 	
 	public static function hasCustomList() {

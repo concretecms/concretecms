@@ -92,12 +92,6 @@
         <permissionkey handle="notify_on_basic_workflow_deny" name="Notify on Deny" description="Notify approvers that a change has been denied." package="" category="basic_workflow" />
         		
         <!-- users //-->
-        <permissionkey handle="access_user_search" has-custom-class="true" name="Access User Search" description="" package="" category="user">
-            <access>
-                <group name="Administrators"/>
-            </access>
-        </permissionkey>
-        
         <permissionkey handle="edit_user_properties" has-custom-class="true" name="Edit User Details" package="" category="user">
             <access>
                 <group name="Administrators"/>
@@ -119,6 +113,12 @@
         <permissionkey handle="sudo" name="Sign in as User" package="" category="user">
         </permissionkey>
         
+
+        <permissionkey handle="access_group_search" name="Access Group Search" package="" category="user">
+            <access>
+                <group name="Administrators"/>
+            </access>
+        </permissionkey>
         
         <permissionkey handle="delete_user" name="Delete User" package="" category="user">
             <access>
@@ -126,22 +126,25 @@
             </access>
 		</permissionkey>
 
-        <permissionkey handle="access_group_search" name="Access Group Search" description="" package="" category="user">
-            <access>
-                <group name="Administrators"/>
-            </access>
+        <!-- groups //-->
+        <permissionkey handle="view_user_group" name="View Group" package="" category="group_tree_node">
         </permissionkey>
 
-        <permissionkey handle="edit_groups" name="Edit Groups" description="" package="" category="user">
-            <access>
-                <group name="Administrators"/>
-            </access>
+        <permissionkey handle="search_users_in_group" name="Search User Group" package="" category="group_tree_node">
         </permissionkey>
 
-        <permissionkey handle="assign_user_groups" has-custom-class="true" name="Assign Groups to User" description="" package="" category="user">
-            <access>
-                <group name="Administrators"/>
-            </access>
+        <permissionkey handle="edit_group" name="Edit Group" package="" category="group_tree_node">
+        </permissionkey>
+
+        <permissionkey handle="assign_group" name="Assign Group" package="" category="group_tree_node">
+        </permissionkey>
+
+
+        <permissionkey handle="add_sub_group" name="Add Child Group" package="" category="group_tree_node">
+        </permissionkey>
+
+
+        <permissionkey handle="edit_group_permissions" name="Edit Group Permissions" package="" category="group_tree_node">
         </permissionkey>
 
         <permissionkey handle="backup" name="Perform Backups" package="" category="admin">
