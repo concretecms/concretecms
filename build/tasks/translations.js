@@ -40,7 +40,6 @@ module.exports = function(grunt, config, parameters, done) {
 				if(goodResponse) {
 					switch(options.type) {
 						case 'file':
-							response.setEncoding('binary')
 							try {
 								fd = createFile(options.filename);
 							}
@@ -70,7 +69,7 @@ module.exports = function(grunt, config, parameters, done) {
 					.on('data', function(chunk) {
 						if(fd) {
 							try {
-								fs.writeSync(fd, chunk.toString('binary'));
+								fs.writeSync(fd, chunk.toString());
 							}
 							catch(e) {
 								cleanup(false);
