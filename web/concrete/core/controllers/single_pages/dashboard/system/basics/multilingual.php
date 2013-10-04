@@ -5,22 +5,10 @@ class Concrete5_Controller_Dashboard_System_Basics_Multilingual extends Dashboar
 	public $helpers = array('form'); 
 	
 	public function view() {
-		Loader::library('3rdparty/Zend/Locale');
-		Loader::library('3rdparty/Zend/Locale/Data');
-		$languages = Localization::getAvailableInterfaceLanguages();
-		if (count($languages) > 0) { 
-			array_unshift($languages, 'en_US');
-		}
-		$locales = array();
-		Zend_Locale_Data::setCache(Cache::getLibrary());
-		foreach($languages as $lang) {
-			$loc = new Zend_Locale($lang);
-			$locales[$lang] = Zend_Locale::getTranslation($loc->getLanguage(), 'language', $lang);
-		}
+		$locales = Localization::getAvailableInterfaceLanguageDescriptions();
 		$this->set('LANGUAGE_CHOOSE_ON_LOGIN', Config::get('LANGUAGE_CHOOSE_ON_LOGIN'));
 		$this->set('LANGUAGE_MULTILINGUAL_CONTENT_ENABLED', Config::get('LANGUAGE_MULTILINGUAL_CONTENT_ENABLED'));
 		$this->set('interfacelocales', $locales);
-		$this->set('languages', $languages);
 	}
 	
 	public function on_start() {
