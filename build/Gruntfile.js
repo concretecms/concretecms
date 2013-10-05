@@ -1,14 +1,16 @@
 module.exports = function(grunt) {
+	var fs = require('fs');
+
+	var parameters = null;
+	if(fs.existsSync(__dirname + '/Gruntfile.parameters.js')) {
+		parameters = require(__dirname + '/Gruntfile.parameters.js');
+	}
+	parameters = parameters || {};
+	
 	var config = {};
 
-
-	// If concrete5 is installed in a subfolder and if you want to use javascript sourcemap you should change this variable.
-	// For instance if your concrete5 installation is at http://www.domain.com/c5subfolder, you should change it to:
-	// config.DIR_REL = '/c5subfolder';
-	config.DIR_REL = '';
-
-	// The path to the web folder, relative to this Gruntfile
-	config.DIR_BASE = '../web';
+	config.DIR_REL = ('DIR_REL' in parameters) ? parameters.DIR_REL : '';
+	config.DIR_BASE = ('DIR_BASE' in parameters) ? parameters.DIR_BASE : '../web';
 
 	// Options for the generation of JavaScripts. See https://github.com/gruntjs/grunt-contrib-uglify
 	var jsOptions = {
@@ -136,7 +138,7 @@ module.exports = function(grunt) {
 		}
 	};
 	
-	// Set base tasks
+	// Set Grunt tasks
 	grunt.initConfig(config);
 	grunt.registerTask('js:debug', jsTargets.debug);
 	grunt.registerTask('js:release', jsTargets.release);
@@ -148,6 +150,10 @@ module.exports = function(grunt) {
 	
 	grunt.registerTask('debug', ['js:debug', 'css:debug']);
 	grunt.registerTask('release', ['js:release', 'css:release']);
+
+	grunt.registerTask('translations', 'Download and compile translations.', function() {
+		require('./tasks/translations.js')(grunt, config, parameters, this.async());
+	});
 
 	grunt.registerTask('default', 'release');
 };
