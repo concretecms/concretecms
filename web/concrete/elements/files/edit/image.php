@@ -28,10 +28,10 @@ $filters = SystemImageEditorFilter::getList();
   </div>
   <div class='controls'>
     <div class='controlscontainer'>
-      <ul class='nav nav-tabs'>
+      <?php/*<ul class='nav nav-tabs'>
         <li class='active'><a href='#'>Edit</a></li>
         <li><a href='#'>Add</a></li>
-      </ul>
+      </ul>*/?>
       <div class='editorcontrols'>
         <div class='control-sets'>
           <?php
@@ -51,7 +51,7 @@ $filters = SystemImageEditorFilter::getList();
           }
           ?>
         </div>
-        <div class='components'>
+        <?php/*<div class='components'>
           <?php
           if (!$components) echo "&nbsp;";
           foreach($components as $component) {
@@ -68,7 +68,7 @@ $filters = SystemImageEditorFilter::getList();
                   "</div>";
           }
           ?>
-        </div>
+        </div>*/?>
       </div>
       <div class='save'>
         <button class='cancel btn'>Cancel</button>
@@ -78,7 +78,6 @@ $filters = SystemImageEditorFilter::getList();
   </div>
 </div>
 
-<script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/image_editor.min.js"></script>
 <script>
 $(function(){
   var settings = {src:'<?=$fv->getURL()?>',controlsets:{},filters:{},components:{},debug:true};

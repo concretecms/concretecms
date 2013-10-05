@@ -30,7 +30,6 @@ im.clone = function(namespace) {
   return newim;
 };
 
-
 im.addControlSet = function(ns,js,elem) {
   if (jQuery && elem instanceof jQuery) elem = elem[0];
   elem.controlSet = function(im,js) {

@@ -1,4 +1,4 @@
-div.controlset.rotate > div.control button.hflip > i {
+	div.controlset.rotate > div.control button.hflip > i {
 	background-position:0 0;
 	background-image:url('/concrete/images/image_editor/horizontal_flip_icon.png');
 }

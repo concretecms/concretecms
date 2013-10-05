@@ -5,7 +5,7 @@ im.stage.add(im.background);
 im.stage.add(im.foreground);
 im.bgimage = new Image();
 im.saveArea = new Kinetic.Rect();
-im.bgimage.onload = function(){
+im.bind('load', function(){
   im.saveArea.setFillPatternImage(im.bgimage);
 
   im.saveArea.setFillPatternOffset([-(im.saveWidth/2),-(im.saveHeight/2)]);
@@ -18,7 +18,7 @@ im.bgimage.onload = function(){
   im.background.on('click',function(){
     im.setActiveElement(im.stage);
   });
-}
+}, im.bgimage);
 im.bgimage.src = '/concrete/images/testbg.png';
 im.buildBackground = function() {
   var startbb = (new Date).getTime();
@@ -47,10 +47,8 @@ im.buildBackground = function() {
     im.coverLayer.setStrokeWidth(Math.max(dimensions.width,dimensions.height,500));
   }
   var width = Math.max(dimensions.width,dimensions.height)*2;
-  im.coverLayer.attrs.width = im.saveArea.attrs.width + width;
-  im.coverLayer.attrs.height = im.saveArea.attrs.height + width;
-  im.coverLayer.attrs.x = im.saveArea.attrs.x - width/2;
-  im.coverLayer.attrs.y = im.saveArea.attrs.y - width/2;
+  im.coverLayer.setPosition(im.saveArea.getX() - width / 2, im.saveArea.getY() - width / 2);
+  im.coverLayer.setSize(im.saveArea.getWidth() + width, im.saveArea.getHeight() + width);
   im.coverLayer.setStrokeWidth(width);
   im.foreground.add(im.coverLayer);
 
