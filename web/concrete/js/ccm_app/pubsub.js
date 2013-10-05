@@ -18,6 +18,12 @@ var ccm_event = (function(window){
 
   // Handle subscribing
   self.sub = function (type, handler, elem) {
+    if (type instanceof Array) {
+      for (var i = type.length - 1; i >= 0; i--) {
+        self.sub(type[i], handler, elem);
+      }
+      return;
+    }
     var element = elem || target;
     if (element.addEventListener) {
       element.addEventListener(type.toLowerCase(), handler, false);
@@ -28,6 +34,12 @@ var ccm_event = (function(window){
 
   // Handle publishing
   self.pub = function (type, data, elem) {
+    if (type instanceof Array) {
+      for (var i = type.length - 1; i >= 0; i--) {
+        self.pub(type[i], data, elem);
+      }
+      return;
+    }
     var event, eventName = 'CCMEvent', element = elem || target;
     if (document.createEvent) {
       event = document.createEvent("HTMLEvents");
@@ -51,7 +63,7 @@ var ccm_event = (function(window){
 
   // Add aliases
   self.subscribe = self.bind = self.watch   = self.on = self.sub;
-  self.publish   = self.fire = self.trigger = self.do = self.pub;
+  self.publish   = self.fire = self.trigger = self.pub;
 
   return self;
 })(window);

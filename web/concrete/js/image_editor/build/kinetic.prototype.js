@@ -76,7 +76,7 @@ Kinetic.Image.prototype.getImageData = function() {
       var imageData = context.getImageData(0, 0, canvas.getWidth(), canvas.getHeight());
       return imageData;
   } catch(e) {
-      Kinetic.Global.warn('Unable to get imageData.');
+      Kinetic.Util.warn('Unable to get imageData.');
   }
 };
 
@@ -118,21 +118,21 @@ Kinetic.Text.prototype.rasterize = function(e) {
 };
 
 // Rebuild:
-Kinetic.Global.extend(Kinetic.Container, Kinetic.Node);
-Kinetic.Global.extend(Kinetic.Shape, Kinetic.Node);
-Kinetic.Global.extend(Kinetic.Group, Kinetic.Container);
-Kinetic.Global.extend(Kinetic.Layer, Kinetic.Container);
-Kinetic.Global.extend(Kinetic.Stage, Kinetic.Container);
-Kinetic.Global.extend(Kinetic.Circle, Kinetic.Shape);
-Kinetic.Global.extend(Kinetic.Ellipse, Kinetic.Shape);
-Kinetic.Global.extend(Kinetic.Image, Kinetic.Shape);
-Kinetic.Global.extend(Kinetic.Line, Kinetic.Shape);
-Kinetic.Global.extend(Kinetic.Path, Kinetic.Shape);
-Kinetic.Global.extend(Kinetic.Polygon, Kinetic.Shape);
-Kinetic.Global.extend(Kinetic.Rect, Kinetic.Shape);
-Kinetic.Global.extend(Kinetic.RegularPolygon, Kinetic.Shape);
-Kinetic.Global.extend(Kinetic.Sprite, Kinetic.Shape);
-Kinetic.Global.extend(Kinetic.Star, Kinetic.Shape);
-Kinetic.Global.extend(Kinetic.Text, Kinetic.Shape);
-Kinetic.Global.extend(Kinetic.TextPath, Kinetic.Shape);
-Kinetic.Global.extend(Kinetic.Wedge, Kinetic.Shape);
+Kinetic.Util.extend(Kinetic.Container, Kinetic.Node);
+Kinetic.Util.extend(Kinetic.Shape, Kinetic.Node);
+Kinetic.Util.extend(Kinetic.Group, Kinetic.Container);
+Kinetic.Util.extend(Kinetic.Layer, Kinetic.Container);
+Kinetic.Util.extend(Kinetic.Stage, Kinetic.Container);
+Kinetic.Util.extend(Kinetic.Circle, Kinetic.Shape);
+Kinetic.Util.extend(Kinetic.Ellipse, Kinetic.Shape);
+Kinetic.Util.extend(Kinetic.Image, Kinetic.Shape);
+Kinetic.Util.extend(Kinetic.Line, Kinetic.Shape);
+Kinetic.Util.extend(Kinetic.Path, Kinetic.Shape);
+Kinetic.Util.extend(Kinetic.Polygon, Kinetic.Shape);
+Kinetic.Util.extend(Kinetic.Rect, Kinetic.Shape);
+Kinetic.Util.extend(Kinetic.RegularPolygon, Kinetic.Shape);
+Kinetic.Util.extend(Kinetic.Sprite, Kinetic.Shape);
+Kinetic.Util.extend(Kinetic.Star, Kinetic.Shape);
+Kinetic.Util.extend(Kinetic.Text, Kinetic.Shape);
+Kinetic.Util.extend(Kinetic.TextPath, Kinetic.Shape);
+Kinetic.Util.extend(Kinetic.Wedge, Kinetic.Shape);

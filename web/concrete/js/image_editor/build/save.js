@@ -48,51 +48,72 @@ im.save = function() {
   })
 };
 
-im.adjustSavers = function() {
+
+
+
+im.actualPosition = function actualPosition(x, y, cx, cy, rad) {
+  var ay = y - cy,
+      ax = x - cx,
+      degChange = im.activeElement.getRotation() + Math.atan2(ay, ax),
+      r = Math.sqrt(Math.pow(ax, 2) + Math.pow(ay, 2));
+  return [cx + (r * Math.cos(degChange)), cy + (r * Math.sin(degChange))];
+}
+
+im.getActualRect = function actualRect(cx, cy, elem) {
+  var rect = [], rad = elem.getRotation();
+  rect.push(im.actualPosition(elem.getX(), elem.getY(), cx, cy, rad));
+  rect.push(im.actualPosition(elem.getX() + elem.getWidth(), elem.getY(), cx, cy, rad));
+  rect.push(im.actualPosition(elem.getX() + elem.getWidth(), elem.getY() + elem.getHeight(), cx, cy, rad));
+  rect.push(im.actualPosition(elem.getX(), elem.getY() + elem.getHeight(), cx, cy, rad));
+  return rect;
+}
+
+im.getRect = function(elem) {
+  var rect = [];
+  rect.push([elem.getX(), elem.getY()]);
+  rect.push([elem.getX() + elem.getWidth(), elem.getY()]);
+  rect.push([elem.getX(), elem.getY() + elem.getHeight()]);
+  rect.push([elem.getX() + elem.getWidth(), elem.getY() + elem.getHeight()]);
+  return rect;
+}
+
+im.adjustSavers = function AdjustingSavers() {
   im.foreground.autoCrop = false;
   im.background.autoCrop = false;
-  var i, e, c = im.stage.getChildren(), l = c.length, count = {min:{x:false,y:false},max:{x:false,y:false}};
-  for (i=0;i<l;i++) {
-    if (c[i].autoCrop === false) continue;
-    for (e in c[i].children) {
-      var pos = c[i].children[e].getPosition(), size = c[i].children[e].getSize(), center = {x:pos.x + size.width / 2, y:pos.y + size.height / 2};
-      if (count.min.x === false) {
-        count.min.x = pos.x;
-        count.min.y = pos.y;
-        count.max.x = pos.x - size.width;
-        count.max.y = pos.y + size.height;
-      }
-      if (count.min.x > pos.x) count.min.x = pos.x;
-      if (count.min.y > pos.y) count.min.y = pos.y;
-      if (count.max.x < pos.x + size.width) count.max.x = pos.x + size.width;
-      if (count.max.y < pos.y + size.height) count.max.y = pos.y + size.height;
-    }
-  }
-  var avg = {x:(count.min.x + count.max.x)/2, y:(count.min.y + count.max.y)/2},
-      diff = {x:Math.round(avg.x-im.center.x), y:Math.round(avg.y-im.center.y)};
-  if (count.min.x === false) {
-    im.alterCore('saveWidth',0);
-    im.alterCore('saveHeight',0);
-    im.buildBackground();
-    im.fire('adjustedsavers');
-    return;
-  }
-  if (diff.x !== 0 || diff.y !== 0) {
-    for (i=0;i<l;i++) {
-      if (c[i].autoCrop === false) continue;
-      for (e in c[i].children) {
-        c[i].children[e].attrs.x -= diff.x;
-        c[i].children[e].attrs.y -= diff.y;
-      }
-    }
-    return im.adjustSavers();
-  }
+  var i, e, u, score = {min:{x:false, y:false}, max:{x:false, y:false}};
+  for (var i = im.stage.children.length - 1; i >= 0; i--) {
+    var layer = im.stage.children[i];
+    if (layer.autoCrop === false) continue;
+    for (var e = layer.children.length - 1; e >= 0; e--) {
+      var child = layer.children[e],
+          rect = im.getActualRect(0, 0, child);
+          console.log(child);
 
-  var size = {width: count.max.x - count.min.x, height: count.max.y - count.min.y};
-  console.log(size);
+      for (var u = rect.length - 1; u >= 0; u--) {
+        var point = rect[u], x = point[0] + layer.getX(), y = point[1] + layer.getY();
+        if (x > score.max.x || score.max.x === false) score.max.x = x;
+        if (x < score.min.x || score.min.x === false) score.min.x = x;
+        if (y > score.max.y || score.max.y === false) score.max.y = y;
+        if (y < score.min.y || score.min.y === false) score.min.y = y;
+      }
+    }
+  }
+  console.log(score);
+  var size = {width: score.max.x - score.min.x, height: score.max.y - score.min.y};
   im.alterCore('saveWidth',Math.round(size.width));
   im.alterCore('saveHeight',Math.round(size.height));
   im.buildBackground();
+
+
+  var ap = [im.center.x - im.activeElement.getWidth() / 2, im.center.y - im.activeElement.getHeight() / 2],
+      adj = im.actualPosition(ap[0], ap[1], im.center.x, im.center.y, im.activeElement.getRotation());
+  im.activeElement.parent.setPosition(adj);
+
+
   im.fire('adjustedsavers');
   im.stage.draw();
-};
+}
+
+im.bind('imageLoad', function() {
+  setTimeout(im.adjustSavers, 0);
+});
