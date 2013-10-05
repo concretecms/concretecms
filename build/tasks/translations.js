@@ -121,17 +121,17 @@ module.exports = function(grunt, config, parameters, done) {
 	}
 
 	if(!parameters.txUsername) {
-		process.stderr.write('Transifex username not defined. Define a txUsername variable in Gruntfile.c5config.js file.\n');
+		process.stderr.write('Transifex username not defined. Define a txUsername variable in Gruntfile.parameters.js file.\n');
 		done(false);
 		return;
 	}
 	if(!parameters.txPassword) {
-		process.stderr.write('Transifex password not defined. Define a txPassword variable in Gruntfile.c5config.js file.\n');
+		process.stderr.write('Transifex password not defined. Define a txPassword variable in Gruntfile.parameters.js file.\n');
 		done(false);
 		return;
 	}
 	if(!parameters.txResource) {
-		process.stderr.write('Transifex resource not defined. Define a txResource variable in Gruntfile.c5config.js file.\n');
+		process.stderr.write('Transifex resource not defined. Define a txResource variable in Gruntfile.parameters.js file.\n');
 		done(false);
 		return;
 	}
