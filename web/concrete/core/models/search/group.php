@@ -17,9 +17,10 @@ class Concrete5_Model_GroupSearch extends DatabaseItemList {
 	
 	
 	protected $itemsPerPage = 10;
+	protected $minimumGroupID = REGISTERED_GROUP_ID;
 	
 	public function includeAllGroups() {
-		$this->filter('gID', '-1', '>');
+		$this->minimumGroupID = -1;
 	}
 	
 	public function filterByKeywords($kw) {
@@ -43,7 +44,11 @@ class Concrete5_Model_GroupSearch extends DatabaseItemList {
 	
 	function __construct() {
 		$this->setQuery("select Groups.gID, Groups.gName, Groups.gDescription from Groups");
-		$this->filter('gID', REGISTERED_GROUP_ID, '>');
 		$this->sortBy('gName', 'asc');
+	}
+	
+	public function getPage() {
+		$this->filter('gID', $this->minimumGroupID, '>');
+		return parent::getPage();
 	}
 }

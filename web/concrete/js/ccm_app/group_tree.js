@@ -147,7 +147,9 @@
 			readonly: false,
 			chooseNodeInForm: false,
 			onSelect: false,
-			selectNodeByKey: false
+			onClick: false,
+			selectNodeByKey: false,
+			disableDragAndDrop: false
 		}, options);
 
 		var checkbox = false,
@@ -258,6 +260,11 @@
 
 				},
 				onClick: function(node, e) {
+					if (options.onClick && node.getEventTargetType(e) == 'title') {
+						options.onClick(e, node);
+						return false;
+					}
+
 					$.fn.ccmmenu.hide(e);
 					if (node.getEventTargetType(e) == 'expander') {
 						return true;
@@ -277,7 +284,7 @@
 				},
 				dnd: {
 					onDragStart: function(node) {
-						if(options.noDrag) {
+						if(options.disableDragAndDrop) {
 							return false;
 						} else {
 							return true;
