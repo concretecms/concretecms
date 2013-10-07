@@ -110,6 +110,9 @@ abstract class Concrete5_Model_TreeNode extends Object {
 	}
 
 	protected function duplicateChildren(TreeNode $node) {
+		if ($this->overrideParentTreeNodePermissions()) {
+			$node->setTreeNodePermissionsToOverride();
+		}
 		$this->populateDirectChildrenOnly();
 		foreach($this->getChildNodes() as $childnode) {
 			$childnode->duplicate($node);
@@ -185,6 +188,9 @@ abstract class Concrete5_Model_TreeNode extends Object {
 			$treeNodeDisplayOrder = 0;
 		}
 		$db->Execute('update TreeNodes set treeNodeParentID = ?, treeNodeDisplayOrder = ? where treeNodeID = ?', array($newParent->getTreeNodeID(), $treeNodeDisplayOrder, $this->treeNodeID));
+		if (!$this->overrideParentTreeNodePermissions()) {			
+			$db->Execute('update TreeNodes set inheritPermissionsFromTreeNodeID = ? where treeNodeID = ?', array($newParent->getTreeNodePermissionsNodeID(), $this->treeNodeID));
+		}
 		$oldParent = $this->getTreeNodeParentObject();
 		if (is_object($oldParent)) {
 			$oldParent->rescanChildrenDisplayOrder();
@@ -269,6 +275,19 @@ abstract class Concrete5_Model_TreeNode extends Object {
 
 
 	public function delete() {
+
+		// do other nodes that aren't child nodes somehow
+		// inherit permissions from here? If so, we rescan those nodes
+		$db = Loader::db();
+		$r = $db->Execute('select treeNodeID from TreeNodes where inheritPermissionsFromTreeNodeID = ? and treeNodeID <> ?', array(
+			$this->getTreeNodeID(), $this->getTreeNodeID()
+		));
+		while ($row = $r->FetchRow()) {
+			$node = TreeNode::getByID($row['treeNodeID']);
+			$parentNode = $node->getTreeNodeParentObject();
+			$db->Execute('update TreeNodes set inheritPermissionsFromTreeNodeID = ? where treeNodeID = ?', array($parentNode->getTreeNodePermissionsNodeID(), $node->getTreeNodeID()));
+		}
+
 		if (!$this->childNodesLoaded) {
 			$this->populateChildren();
 		}
@@ -278,8 +297,9 @@ abstract class Concrete5_Model_TreeNode extends Object {
 		}
 
 		$this->deleteDetails();
-		$db = Loader::db();
 		$db->Execute('delete from TreeNodes where treeNodeID = ?', array($this->treeNodeID));
+		$db->Execute('delete from TreeNodePermissionAssignments where treeNodeID = ?', array($this->treeNodeID));
+
 	}
 
 	public static function getByID($treeNodeID) {
