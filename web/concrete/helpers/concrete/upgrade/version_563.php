@@ -31,6 +31,9 @@ class ConcreteUpgradeVersion563Helper {
 
 		if ($upgradeFromPermissionHandle) {
 			$upk = PermissionKey::getByHandle($upgradeFromPermissionHandle);
+			if (!$upk) {
+				return false;
+			}
 			$pau = $upk->getPermissionAccessObject();
 			$groupItems = array();
 			$rootItems = array();

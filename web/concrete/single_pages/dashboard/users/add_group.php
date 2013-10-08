@@ -11,6 +11,9 @@ $form = Loader::helper('form');
 
 $rootNode = $tree->getRootTreeNodeObject();
 
+$guestGroupNode = GroupTreeNode::getTreeNodeByGroupID(GUEST_GROUP_ID);
+$registeredGroupNode = GroupTreeNode::getTreeNodeByGroupID(REGISTERED_GROUP_ID);
+
 ?>
 
 <?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Add Group'), false, false, false)?>
@@ -52,6 +55,7 @@ $rootNode = $tree->getRootTreeNodeObject();
           		'selectNodeByKey': '<?=$rootNode->getTreeNodeID()?>',
           		<? } ?>
 	      	<? } ?>
+		removeNodesByID: ['<?=$guestGroupNode->getTreeNodeID()?>','<?=$registeredGroupNode->getTreeNodeID()?>'],
           'onSelect': function(select, node) {
              if (select) {
                 $('input[name=gParentNodeID]').val(node.data.key);

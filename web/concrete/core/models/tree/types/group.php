@@ -27,7 +27,7 @@ class Concrete5_Model_GroupTree extends Tree {
 		$db = Loader::db();
 		$tree = GroupTree::get();
 		$rootNode = $tree->getRootTreeNodeObject();
-		$rows = $db->GetCol('select Groups.gID from Groups left join TreeGroupNodes on Groups.gID = TreeGroupNodes.gID where TreeGroupNodes.gID is null and Groups.gID > ' . REGISTERED_GROUP_ID);
+		$rows = $db->GetCol('select Groups.gID from Groups left join TreeGroupNodes on Groups.gID = TreeGroupNodes.gID where TreeGroupNodes.gID is null');
 		foreach($rows as $gID) {
 			$g = Group::getByID($gID);
 			GroupTreeNode::add($g, $rootNode);

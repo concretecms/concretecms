@@ -55,7 +55,10 @@
 </div>
 
 <div class="span4">
-
+<?
+	$guestGroupNode = GroupTreeNode::getTreeNodeByGroupID(GUEST_GROUP_ID);
+	$registeredGroupNode = GroupTreeNode::getTreeNodeByGroupID(REGISTERED_GROUP_ID);
+?>
 <h3><?=t('3. Choose New Parent Location')?></h3><br/>
 
     <div class="nested-groups-tree" data-groups-tree="<?=$tree->getTreeID()?>">
@@ -70,6 +73,7 @@
           <? if ($this->controller->isPost()) { ?> 
              'selectNodeByKey': '<?=$_POST['gParentNodeID']?>',
           <? } ?>
+		removeNodesByID: ['<?=$guestGroupNode->getTreeNodeID()?>','<?=$registeredGroupNode->getTreeNodeID()?>'],
           'onSelect': function(select, node) {
              if (select) {
                 $('input[name=gParentNodeID]').val(node.data.key);
