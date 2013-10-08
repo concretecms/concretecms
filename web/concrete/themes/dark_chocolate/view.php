@@ -7,9 +7,8 @@ $this->inc('elements/header.php'); ?>
 		
 		<div id="body">	
 			<?
-
-			print $innerContent;
-			
+			Loader::element('system_errors', array('error' => $error));
+			print $innerContent;			
 			?>
 		</div>
 		
