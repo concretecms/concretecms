@@ -39,6 +39,7 @@ $this->inc('elements/header.php'); ?>
 		</div>
 		<div id="body">
 			<?
+			Loader::element('system_errors', array('error' => $error));
 			print $innerContent;
 			?>
 		</div>	
