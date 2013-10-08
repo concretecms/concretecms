@@ -359,17 +359,15 @@
 				$ng = Group::getByID($db->Insert_ID());
 				// create a node for this group.
 
-				if ($ng->getGroupID() != GUEST_GROUP_ID && $ng->getGroupID() != REGISTERED_GROUP_ID) {
-					if (is_object($parentGroup)) {
-						$node = GroupTreeNode::getTreeNodeByGroupID($parentGroup->getGroupID());
-					}
-					if (!is_object($node)) {
-						$tree = GroupTree::get();
-						$node = $tree->getRootTreeNodeObject();
-					}
-
-					GroupTreeNode::add($ng, $node);
+				if (is_object($parentGroup)) {
+					$node = GroupTreeNode::getTreeNodeByGroupID($parentGroup->getGroupID());
 				}
+				if (!is_object($node)) {
+					$tree = GroupTree::get();
+					$node = $tree->getRootTreeNodeObject();
+				}
+
+				GroupTreeNode::add($ng, $node);
 
 				Events::fire('on_group_add', $ng);
 				$ng->rescanGroupPath();

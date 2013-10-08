@@ -246,7 +246,11 @@ $(function() {
 
 	</div>
 
-	<? } else { ?>
+	<? } else { 
+
+		$guestGroupNode = GroupTreeNode::getTreeNodeByGroupID(GUEST_GROUP_ID);
+		$registeredGroupNode = GroupTreeNode::getTreeNodeByGroupID(REGISTERED_GROUP_ID);
+		?>
 
 	<div class="ccm-pane-body ccm-pane-body-footer">
 		<? if (is_object($tree)) { ?>
@@ -255,7 +259,8 @@ $(function() {
 		<script type="text/javascript">
 		$(function() {
 			$('[data-group-tree]').ccmgroupstree({
-				'treeID': '<?=$tree->getTreeID()?>'
+				'treeID': '<?=$tree->getTreeID()?>',
+				removeNodesByID: ['<?=$guestGroupNode->getTreeNodeID()?>','<?=$registeredGroupNode->getTreeNodeID()?>']
 			});
 		});
 		</script>

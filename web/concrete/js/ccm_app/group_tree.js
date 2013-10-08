@@ -149,6 +149,7 @@
 			onSelect: false,
 			onClick: false,
 			selectNodeByKey: false,
+			removeNodesByID: [],
 			disableDragAndDrop: false
 		}, options);
 
@@ -160,9 +161,6 @@
 		} else {
 			var ajaxData = { 'treeNodeParentID': options.treeNodeParentID };
 		}
-		/* var ajaxData =  {
-			'treeID': options.treeID
-		}; */ 
 
 		var persist = true;
 
@@ -240,6 +238,15 @@
 
 				onPostInit: function() {
 		    		var $tree = $obj;
+		    		if (options.removeNodesByID.length) {
+		    			for (i = 0; i < options.removeNodesByID.length; i++) {
+		    				var nodeID = options.removeNodesByID[i];
+		    				var node = this.getNodeByKey(nodeID);
+		    				if (node) {
+		    					node.remove();
+		    				}
+		    			}
+		    		}
 					if (options.readonly) {
 			    		$tree.dynatree('disable');
 					}
