@@ -98,7 +98,7 @@ class Concrete5_Model_UserList extends DatabaseItemList {
 		$userIDs = array();
 		$r = parent::get($itemsToGet, intval($offset));
 		foreach($r as $row) {
-			$userIDs[] = $row['uIDs'];
+			$userIDs[] = $row['uID'];
 		}
 		return $userIDs;
 	}	
