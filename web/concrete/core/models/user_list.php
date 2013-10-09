@@ -73,7 +73,10 @@ class Concrete5_Model_UserList extends DatabaseItemList {
 		$this->filter('u.uDateAdded', $date, $comparison);
 	}
 	
-	// Returns an array of userInfo objects based on current filter settings
+	/**
+	 * Returns an array of userInfo objects based on current filter settings
+	 * @return UserInfo[]
+	 */
 	public function get($itemsToGet = 100, $offset = 0) {
 		$userInfos = array(); 
 		$this->createQuery();
@@ -83,6 +86,21 @@ class Concrete5_Model_UserList extends DatabaseItemList {
 			$userInfos[] = $ui;
 		}
 		return $userInfos;
+	}
+	
+	/**
+	 * similar to get except it returns an array of userIDs
+	 * much faster than getting a UserInfo object for each result if all you need is the user's id
+	 * @return array $userIDs
+	*/
+	public function getUserIDs($itemsToGet = 100, $offset=0) {
+		$this->createQuery();
+		$userIDs = array();
+		$r = parent::get($itemsToGet, intval($offset));
+		foreach($r as $row) {
+			$userIDs[] = $row['uIDs'];
+		}
+		return $userIDs;
 	}	
 	
 	public function getTotal(){ 
