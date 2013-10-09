@@ -304,8 +304,10 @@ class Concrete5_Library_ItemList {
 	 * Sets up a multiple columns to search by. Each argument is taken "as-is" (including asc or desc) and concatenated with commas
 	 * Note that this is overrides any previous sortByMultiple() call, and all sortBy() calls
 	 */
-	public function sortByMultiple() {
-		$args = func_get_args();
+	public function sortByMultiple($args = false) {
+		if (!$args) {
+			$args = func_get_args();
+		}
 		$this->sortByString = implode(', ', $args);
 	}
 }
