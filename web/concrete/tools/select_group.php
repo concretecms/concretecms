@@ -18,6 +18,7 @@ if (!$tp->canAccessGroupSearch()) {
 		$gl->includeAllGroups();
 	}
 	if ($_REQUEST['filter'] == 'assign') {
+		$pk = PermissionKey::getByHandle('assign_user_groups');
 		$gl->filterByAllowedPermission($pk);
 	}
 	if (isset($_GET['gKeywords'])) {
