@@ -77,13 +77,13 @@ class ConcreteUrlsHelper {
 		}
 		
 		if (file_exists(DIR_FILES_BLOCK_TYPES . '/' . $bt->getBlockTypeHandle() . $ff)) {
-			$url = BASE_URL . DIR_REL . '/' . DIRNAME_BLOCKS . '/' . $bt->getBlockTypeHandle() . $ff;
+			$url = DIR_REL . '/' . DIRNAME_BLOCKS . '/' . $bt->getBlockTypeHandle() . $ff;
 		} else if ($bt->getPackageID() > 0) {
 			$db = Loader::db();
 			$h = $bt->getPackageHandle();
 			$dirp = (is_dir(DIR_PACKAGES . '/' . $h)) ? DIR_PACKAGES . '/' . $h : DIR_PACKAGES_CORE . '/' . $h;
 			if (file_exists($dirp . '/' . DIRNAME_BLOCKS . '/' . $bt->getBlockTypeHandle() . $ff)) {
-				$url = (is_dir(DIR_PACKAGES . '/' . $h)) ? BASE_URL . DIR_REL : ASSETS_URL; 
+				$url = (is_dir(DIR_PACKAGES . '/' . $h)) ? DIR_REL : ASSETS_URL; 
 				$url = $url . '/' . DIRNAME_PACKAGES . '/' . $h . '/' . DIRNAME_BLOCKS . '/' . $bt->getBlockTypeHandle() . $ff;
 			}
 		} else if (file_exists(DIR_FILES_BLOCK_TYPES_CORE . '/' . $bt->getBlockTypeHandle() . $ff)) {
