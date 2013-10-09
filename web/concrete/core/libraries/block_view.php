@@ -133,7 +133,7 @@ class Concrete5_Library_BlockView extends View {
 		$this->viewPerformed = $view;
 	}
 
-	public function onBeforeGetContents() {
+	protected function onBeforeGetContents() {
 		if (in_array($this->viewPerformed, array('scrapbook', 'view'))) {
 			$v = View::getInstance();
 			$this->controller->runTask('on_page_view', array($this));

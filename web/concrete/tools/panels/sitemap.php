@@ -9,11 +9,11 @@ foreach($pagetypes as $pt) {
 	}
 }
 
-$drafts = PageDraft::getList();
+$drafts = Page::getDrafts();
 $mydrafts = array();
 foreach($drafts as $d) {
 	$dp = new Permissions($d);
-	if ($dp->canEditPageDraft()) {
+	if ($dp->canEditPage()) {
 		$mydrafts[] = $d;
 	}
 }
@@ -25,7 +25,7 @@ foreach($drafts as $d) {
 <h5><?=t('New Page')?></h5>
 <ul class="ccm-panel-sitemap-list">
 <? foreach($ptlist as $pt) { ?> 
-	<li><a href="<?=View::url('/dashboard/composer/write', 'composer', $pt->getPageTypeID())?>"><?=$pt->getPageTypeName()?></a></li>
+	<li><a href="<?=View::url('/dashboard/composer/write', 'save', 'composer', $pt->getPageTypeID(), 'redirect')?>"><?=$pt->getPageTypeName()?></a></li>
 <? } ?>
 </ul>
 <? } ?>
@@ -53,10 +53,9 @@ $(function() {
 <? if (count($mydrafts)) {?>
 <h5><?=t('Page Drafts')?></h5>
 <ul class="ccm-panel-sitemap-list">
-<? foreach($mydrafts as $d) { 
-	$dc = $d->getPageDraftCollectionObject();
+<? foreach($mydrafts as $dc) { 
 	?> 
-	<li><a href="<?=View::url('/dashboard/composer/write', 'draft', $d->getPageDraftID())?>"><?=$dc->getCollectionName()?></a></li>
+	<li><a href="<?=View::url('/dashboard/composer/write', 'draft', $dc->getCollectionID())?>"><?=$dc->getCollectionName()?></a></li>
 <? } ?>
 </ul>
 <? } ?>

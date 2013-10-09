@@ -14,12 +14,13 @@ class Concrete5_Library_ErrorRequestView extends RequestView {
 
 	protected function setupController() {}
 	protected function runControllerTask() {}
-	public function startRender() {}
 	public function setupRender() {
 		$env = Environment::get();
 		$r = $env->getPath(DIRNAME_THEMES . '/' . DIRNAME_THEMES_CORE . '/' . FILENAME_THEMES_ERROR . '.php');
 		$this->setViewTemplate($r);
 	}
+
+	public function onBeforeGetContents() {}
 
 	public function getScopeItems() {
 		return array('innerContent' => $this->error->content, 'titleContent' => $this->error->title);

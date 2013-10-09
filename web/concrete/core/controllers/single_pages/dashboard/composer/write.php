@@ -13,7 +13,7 @@ class Concrete5_Controller_Dashboard_Composer_Write extends DashboardBaseControl
 				$viewURL = View::url('/dashboard/composer/write', 'composer', $id);
 				break;
 			case 'draft':
-				$this->draft = PageDraft::getByID($id);
+				$this->draft = Page::getByID($id);
 				if (is_object($this->draft)) {
 					$this->checkDraftPermissions($this->draft);
 					$this->pagetype = $this->draft->getPageTypeObject();
@@ -26,12 +26,12 @@ class Concrete5_Controller_Dashboard_Composer_Write extends DashboardBaseControl
 		}
 
 		$this->requireAsset('core/composer');
-		$pDraftID = 0;
+		$cID = 0;
 		if (is_object($this->draft)) {
-			$pDraftID = $this->draft->getPageDraftID();
+			$cID = $this->draft->getCollectionID();
 		}
 		$js =<<<EOL
-<script type="text/javascript">$(function() { $('form[data-form=composer]').ccmcomposer({pushStateOnSave: true, pDraftID: {$pDraftID}, viewURL: '{$viewURL}', saveURL: '{$saveURL}', discardURL: '{$discardURL}', publishURL: '{$publishURL}'})});</script>
+<script type="text/javascript">$(function() { $('form[data-form=composer]').ccmcomposer({pushStateOnSave: true, cID: {$cID}, viewURL: '{$viewURL}', saveURL: '{$saveURL}', discardURL: '{$discardURL}', publishURL: '{$publishURL}'})});</script>
 EOL;
 		$this->addFooterItem($js);
 
@@ -55,9 +55,9 @@ EOL;
 		}
 	}
 
-	protected function checkDraftPermissions(PageDraft $d) {
+	protected function checkDraftPermissions(Page $d) {
 		$dp = new Permissions($d);
-		if (!$dp->canEditPageDraft()) {
+		if (!$dp->canEditPage()) {
 			throw new Exception('You do not have access to this draft.');
 		}
 	}
@@ -72,9 +72,9 @@ EOL;
 		}
 	}
 
-	protected function publish(PageDraft $d, $outputControls) {
+	protected function publish(Page $d, $outputControls) {
 
-		if (!$d->getPageDraftTargetParentPageID()) {
+		if (!$d->getPageTargetParentPageID()) {
 			$this->error->add(t('You must choose a page to publish this page beneath.'));
 		}
 
@@ -87,16 +87,15 @@ EOL;
 
 		if (!$this->error->has()) {
 			$d->publish();
-			$c = $d->getPageDraftCollectionObject();
-			header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $c->getCollectionID());
+			header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $d->getCollectionID());
 		}
 	}
 
-	public function discard($pDraftID = false, $token = false) {
+	public function discard($cID = false, $token = false) {
 		if (Loader::helper('validation/token')->validate('discard_draft', $token)) {
-			$draft = PageDraft::getByID($pDraftID);
+			$draft = Page::getByID($cID);
 			$this->checkDraftPermissions($draft);
-			$draft->discard();
+			$draft->delete();
 			exit;
 		}
 	}
@@ -110,8 +109,8 @@ EOL;
 		$pt = PageTemplate::getByID($this->post('ptComposerPageTemplateID'));
 		$availablePageTemplates = $this->pagetype->getPageTypePageTemplateObjects();
 
-		if (!is_object($pt) && count($availablePageTemplates) == 1) {
-			$pt = $availablePageTemplates[0];
+		if (!is_object($pt)) {
+			$pt = $this->pagetype->getPageTypeDefaultPageTemplateObject();
 		}
 
 		$this->error = $this->pagetype->validateCreateDraftRequest($pt);
@@ -123,8 +122,7 @@ EOL;
 			} else {
 				// if we have a draft, but the page type has changed, we create a new one.
 				$d = $this->draft;
-				$dc = $d->getPageDraftCollectionObject();
-				if ($dc->getPageTemplateID() != $_POST['ptComposerPageTemplateID']) {
+				if ($d->getPageTemplateID() != $_POST['ptComposerPageTemplateID']) {
 					$d = $this->pagetype->createDraft($pt);
 				} else {
 					$d->createNewCollectionVersion();
@@ -138,22 +136,25 @@ EOL;
 				$targetPageID = $this->post('cParentID');
 			}
 			$d->setPageDraftTargetParentPageID($targetPageID);
-			$outputControls = $d->saveForm();
+			$outputControls = $this->pagetype->savePageTypeComposerForm($d);
 
 			$r = new PageTypePublishResponse();
-			$r->setPageDraft($d);
+			$r->setPage($d);
 
 			if ($action == 'return_json') {
 				$ax = Loader::helper('ajax');
 				$r->time = date('F d, Y \a\t g:i A');
 				$r->setDraftSaveStatus(t('Page saved on %s', $r->time));
-				$r->setSaveURL(View::url('/dashboard/composer/write', 'save', 'draft', $d->getPageDraftID()));
-				$r->setViewURL(View::url('/dashboard/composer/write', 'draft', $d->getPageDraftID()));
-				$r->setDiscardURL(View::url('/dashboard/composer/write', 'discard', $d->getPageDraftID(), Loader::helper('validation/token')->generate('discard_draft')));
-				$r->setPublishURL(View::url('/dashboard/composer/write', 'save', 'draft', $d->getPageDraftID(), 'publish'));
+				$r->setSaveURL(View::url('/dashboard/composer/write', 'save', 'draft', $d->getCollectionID()));
+				$r->setViewURL(View::url('/dashboard/composer/write', 'draft', $d->getCollectionID()));
+				$r->setDiscardURL(View::url('/dashboard/composer/write', 'discard', $d->getCollectionID(), Loader::helper('validation/token')->generate('discard_draft')));
+				$r->setPublishURL(View::url('/dashboard/composer/write', 'save', 'draft', $d->getCollectionID(), 'publish'));
 				$ax->sendResult($r);
 			} else if ($action == 'publish') {
 				$this->publish($d, $outputControls);
+			} else if ($action == 'redirect') {
+				header('Location:' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $d->getCollectionID() . '&ctask=check-out-first&' . Loader::helper('validation/token')->getParameter());
+				exit;
 			}
 		}
 	}

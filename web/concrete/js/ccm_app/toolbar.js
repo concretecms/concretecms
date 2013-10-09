@@ -15,6 +15,7 @@ var CCMToolbar = function() {
 		CCMPanelManager.register({'identifier': 'sitemap', 'position': 'right'});
 		CCMPanelManager.register({'identifier': 'add-block', 'translucent': false, 'position': 'left', 'url' : CCM_TOOLS_PATH + '/panels/page/add_block'});
 		CCMPanelManager.register({'identifier': 'check-in', 'position': 'left', 'url' : CCM_TOOLS_PATH + '/panels/page/check_in'});
+		CCMPanelManager.register({'identifier': 'compose-page', 'transition': false, url: CCM_TOOLS_PATH + '/panels/page', 'translucent': false});
 		$('<div />', {'id': 'ccm-panel-overlay'}).appendTo($(document.body));
 		$('[data-launch-panel]').unbind().on('click', function() {
 			var panelID = $(this).attr('data-launch-panel');
@@ -219,6 +220,34 @@ var CCMToolbar = function() {
 					e.stopPropagation();
 				});
 			}
+		},
+
+		launchPageComposer: function() {
+			$('a[data-launch-panel=page]').toggleClass('ccm-launch-panel-active');
+			CCMPanelManager.getByIdentifier('compose-page').show();
+			ccm_event.subscribe('PanelOpen',function(e) {
+				var panel = e.eventData.panel;
+				if (panel.options.identifier == 'compose-page') {
+					$('#' + panel.getDOMID()).find('[data-launch-panel-detail=\'page/composer\']').addClass('ccm-panel-menu-item-active');
+				}
+			});
+			CCMPanelManager.getByIdentifier('compose-page').openPanelDetail({
+				'url': CCM_TOOLS_PATH + '/panels/details/page/composer',
+				'transition': false,
+				'identifier': 'page-composer'
+			});
+		},
+
+		disable: function() {
+			$('#ccm-toolbar-disabled').remove();
+			$('<div />', {'id': 'ccm-toolbar-disabled'}).appendTo(document.body);
+			setTimeout(function() {
+				$('#ccm-toolbar-disabled').css('opacity', 1);
+			}, 10);
+		},
+
+		enable: function() {
+			$('#ccm-toolbar-disabled').remove();
 		},
 
 		disableDirectExit: function() {

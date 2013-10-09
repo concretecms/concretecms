@@ -11,7 +11,7 @@ abstract class Concrete5_Model_CorePagePropertyPageTypeComposerControl extends P
 
 	}
 
-	public function removePageTypeComposerControlFromDraft() {
+	public function removePageTypeComposerControlFromPage() {
 		return false;
 	}
 
@@ -30,7 +30,7 @@ abstract class Concrete5_Model_CorePagePropertyPageTypeComposerControl extends P
 		return self::$ptComposerSaveRequest;
 	}
 
-	public function shouldPageTypeComposerControlStripEmptyValuesFromDraft() {
+	public function shouldPageTypeComposerControlStripEmptyValuesFromPage() {
 		return false;
 	}
 
@@ -55,8 +55,7 @@ abstract class Concrete5_Model_CorePagePropertyPageTypeComposerControl extends P
 		return array();
 	}
 
-	public function publishToPage(PageDraft $d, $data, $controls) {
-		$c = $d->getPageDraftCollectionObject();
+	public function publishToPage(Page $c, $data, $controls) {
 		array_push(self::$ptComposerRequestControlsProcessed, $this);
 		// now we check to see if we have any more core controls to process in this request
 		$coreControls = array();

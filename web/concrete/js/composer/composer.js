@@ -14,7 +14,7 @@
           data: formData,
           url: $f.data('saveURL'),
           success: function(r) {
-            $f.find('.ccm-page-type-composer-form-save-status').html('<div class="alert alert-info">' + r.cmpDraftSaveStatus + '</div>');
+            $f.find('.ccm-page-type-composer-form-save-status').html('<div class="alert alert-info">' + r.saveStatus + '</div>');
             if (r.saveURL) {
               $f.data('saveURL', r.saveURL);
             }
@@ -74,10 +74,10 @@
         if (settings.autoSaveEnabled) {
           methods.saveinternal = setInterval(function() {
             methods.private.saveDraft($this, function(r) {
-              if (parseInt(settings.cmpDraftID) == 0) {
+              if (parseInt(settings.cID) == 0) {
                 // this is the first auto-save.
                 $this.find('button[data-page-type-composer-form-btn=permissions]').show();
-                settings.cmpDraftID = r.cmpDraftID;
+                settings.cID = r.cID;
               }
             });
           }, settings.autoSaveTimeout);
@@ -87,18 +87,20 @@
           settings.onExit();
         });
 
-        if (parseInt(settings.cmpDraftID) > 0) {
+        if (parseInt(settings.cID) > 0) {
           $this.find('button[data-page-type-composer-form-btn=permissions]').show();
         }
 
+        /*
         $this.find('button[data-page-type-composer-form-btn=permissions]').on('click', function() {
           jQuery.fn.dialog.open({
-            href: CCM_TOOLS_PATH + '/composer/draft/permissions?cmpDraftID=' + settings.cmpDraftID,
+            href: CCM_TOOLS_PATH + '/composer/draft/permissions?cID=' + settings.cID,
             width: 400,
             height: 290,
-            title: ccmi18n.cmpDraftPermissionsTitle
+            title: ccmi18n.pDraftPermissionsTitle
           });
         });
+*/
 
         $this.find('button[data-page-type-composer-form-btn=discard]').on('click', function() {
           if (!$this.data('discardURL')) {

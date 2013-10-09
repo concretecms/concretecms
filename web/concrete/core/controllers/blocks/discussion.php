@@ -89,7 +89,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 						$d->setPageDraftTargetParentPageID($c->getCollectionID());
 						$d->saveForm();
 						$d->publish();
-						$nc = Page::getByID($d->getPageDraftCollectionID(), 'RECENT');
+						$nc = Page::getByID($d->getCollectionID(), 'RECENT');
 						$link = Loader::helper('navigation')->getLinkToCollection($nc, true);
 						$r->setRedirectURL($link);
 					}

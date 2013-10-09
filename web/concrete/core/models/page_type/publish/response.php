@@ -5,10 +5,10 @@ class Concrete5_Model_PageTypePublishResponse extends Object {
 	public $error = false;
 	public $messages = array();
 	public $outputControls = array();
-	public $pDraftID;
+	public $cID;
 	public $saveURL;
 	public $redirectURL;
-	public $pDraftSaveStatus;
+	public $saveStatus;
 	public $publishURL;
 	public $discardURL;
 	public $viewURL;
@@ -21,8 +21,8 @@ class Concrete5_Model_PageTypePublishResponse extends Object {
 		$this->time = date('F d, Y g:i A');
 	}
 
-	public function setDraftSaveStatus($pDraftSaveStatus) {
-		$this->pDraftSaveStatus = $pDraftSaveStatus;
+	public function setSaveStatus($saveStatus) {
+		$this->saveStatus = $saveStatus;
 	}
 
 	public function setRedirectURL($url) {
@@ -37,8 +37,8 @@ class Concrete5_Model_PageTypePublishResponse extends Object {
 		$this->outputControls = $outputControls;
 	}
 
-	public function setPageDraft(PageDraft $pDraft) {
-		$this->pDraftID = $pDraft->getPageDraftID();
+	public function setPage(Page $page) {
+		$this->cID = $page->getCollectionID();
 	}
 
 	public function setSaveURL($saveURL) {

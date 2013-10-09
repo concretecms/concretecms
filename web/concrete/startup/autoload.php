@@ -345,7 +345,6 @@ $classes = array(
 	'CollectionAttributePageTypeComposerControl' => array('model','page_type/composer/control/controls/collection_attribute'),
 	'BlockPageTypeComposerControl' => array('model','page_type/composer/control/controls/block'),
 	'PageTypeComposerFormLayoutSetControl' => array('model','page_type/composer/form/layout_set/control'),
-	'PageDraft' => array('model','page_draft'),
 	'PageTypePublishResponse' => array('model','page_type/publish/response'),
 	'NameCorePagePropertyPageTypeComposerControl' => array('model','page_type/composer/control/controls/core_page_property/name'),
 	'UrlSlugCorePagePropertyPageTypeComposerControl' => array('model','page_type/composer/control/controls/core_page_property/url_slug'),
@@ -358,13 +357,7 @@ $classes = array(
 	'PageTypePermissionAssignment' => array('model','permission/assignments/page_type'),
 	'PageTypePermissionAccess' => array('model','permission/access/categories/page_type'),
 	'PageTypePermissionAccessListItem' => array('model','permission/access/list_items/page_type'),
-	'PageTypePermissionResponse' => array('model','permission/response/page_type'),
-	'PageDraftPermissionKey' => array('model','permission/keys/page_draft'),
-	'PageDraftPermissionAssignment' => array('model','permission/assignments/page_draft'),
-	'PageDraftPermissionAccess' => array('model','permission/access/categories/page_draft'),
-	'PageDraftPermissionAccessListItem' => array('model','permission/access/list_items/page_draft'),
-	'PageDraftPermissionResponse' => array('model','permission/response/page_draft'),
-	'PageDraftAuthorPermissionAccessEntity' => array('model','permission/access/entity/types/page_draft_author')
+	'PageTypePermissionResponse' => array('model','permission/response/page_type')
 );
 
 Loader::registerAutoload($classes);

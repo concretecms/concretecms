@@ -20,10 +20,9 @@ class Concrete5_Model_CollectionAttributePageTypeComposerControl extends PageTyp
 		$node->addAttribute('handle', $ak->getAttributeKeyHandle());
 	}
 
-	public function removePageTypeComposerControlFromDraft() {
+	public function removePageTypeComposerControlFromPage() {
 		$ak = $this->getAttributeKeyObject();
-		$c = $this->pDraftObject->getPageDraftCollectionObject();
-		$c->clearAttribute($ak);
+		$this->page->clearAttribute($ak);
 	}
 
 	public function getAttributeKeyObject() {
@@ -55,20 +54,20 @@ class Concrete5_Model_CollectionAttributePageTypeComposerControl extends PageTyp
 	}
 
 	public function getPageTypeComposerControlDraftValue() {
-		if (is_object($this->pDraftObject)) {
+		if (is_object($this->page)) {
 			$ak = $this->getAttributeKeyObject();
-			$c = $this->pDraftObject->getPageDraftCollectionObject();
+			$c = $this->page;
 			return $c->getAttributeValueObject($ak);
 		}
 	}
 	
-	public function shouldPageTypeComposerControlStripEmptyValuesFromDraft() {
+	public function shouldPageTypeComposerControlStripEmptyValuesFromPage() {
 		return true;
 	}
 
 	public function isPageTypeComposerControlDraftValueEmpty() {
 		$ak = $this->getAttributeKeyObject();
-		$c = $this->pDraftObject->getPageDraftCollectionObject();
+		$c = $this->page;
 		return ($c->getAttribute($ak) == '');
 	}
 
@@ -81,8 +80,7 @@ class Concrete5_Model_CollectionAttributePageTypeComposerControl extends PageTyp
 		include($template);
 	}
 
-	public function publishToPage(PageDraft $d, $data, $controls) {
-		$c = $d->getPageDraftCollectionObject();
+	public function publishToPage(Page $c, $data, $controls) {
 		// the data for this actually doesn't come from $data. Attributes have their own way of gettin data.
 		$ak = $this->getAttributeKeyObject();
 		$ak->saveAttributeForm($c);				

@@ -39,6 +39,12 @@ if (!$dh->inDashboard()) {
 	if ($c->isEditMode()) {
 		$this->addFooterItem('<script type="text/javascript">$(function() { CCMEditMode.start(); });</script>');
 	}
+
+
+	if ($cp->canEditPage() && $_REQUEST['ctask'] == 'check-out-first') {
+		$this->addFooterItem("<script type=\"text/javascript\">$(function() { CCMToolbar.launchPageComposer();});</script>");
+	} 
+
 	if (ENABLE_PROGRESSIVE_PAGE_REINDEX && Config::get('DO_PAGE_REINDEX_CHECK')) {
 		$this->addHeaderItem('<script type="text/javascript">$(function() { ccm_doPageReindexing(); });</script>');
 	}

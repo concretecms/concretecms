@@ -11,14 +11,14 @@ abstract class Concrete5_Model_PageTypeComposerControl extends Object {
 
 	abstract public function getPageTypeComposerControlCustomTemplates();
 	abstract public function render($label, $customTemplate);
-	abstract public function publishToPage(PageDraft $d, $data, $controls);
+	abstract public function publishToPage(Page $c, $data, $controls);
 	abstract public function validate($data, ValidationErrorHelper $e);
 	abstract public function getPageTypeComposerControlDraftValue();
 	abstract public function addAssetsToRequest(Controller $cnt);
 	abstract public function export($node);
-	abstract public function shouldPageTypeComposerControlStripEmptyValuesFromDraft();
+	abstract public function shouldPageTypeComposerControlStripEmptyValuesFromPage();
 	abstract public function isPageTypeComposerControlDraftValueEmpty();
-	abstract public function removePageTypeComposerControlFromDraft();
+	abstract public function removePageTypeComposerControlFromPage();
 
 	public function pageTypeComposerFormControlSupportsValidation() {
 		return false;
@@ -32,12 +32,12 @@ abstract class Concrete5_Model_PageTypeComposerControl extends Object {
 		$this->ptComposerControlRequiredOnThisRequest = $req;
 	}
 	
-	public function setPageDraftObject($draft) {
-		$this->pDraftObject = $draft;
+	public function setPageObject($page) {
+		$this->page = $page;
 	}
 
-	public function getPageDraftObject() {
-		return $this->pDraftObject;
+	public function getPageObject() {
+		return $this->page;
 	}
 
 	public function isPageTypeComposerFormControlRequiredOnThisRequest() {

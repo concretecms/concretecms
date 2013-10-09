@@ -14,7 +14,6 @@ class Concrete5_Library_ToolRequestView extends RequestView {
 
 	protected function setupController() {}
 	protected function runControllerTask() {}
-	public function startRender() {}
 	public function setupRender() {
 		$env = Environment::get();
 		switch($this->request->getIncludeType()) {
@@ -50,13 +49,14 @@ class Concrete5_Library_ToolRequestView extends RequestView {
 	}
 
 	public function outputAssetIntoView($item) {
-		$str = '<script type="text/javascript">';	
+		$str = '';
 		if ($item instanceof CssAsset) {
-			$str .= 'ccm_addHeaderItem("' . $item->getAssetURL() . '", "CSS")';
+			$str .= $item;
 		} else {
+			$str .= '<script type="text/javascript">';	
 			$str .= 'ccm_addHeaderItem("' . $item->getAssetURL() . '", "JAVASCRIPT")';
+			$str .= '</script>';
 		}
-		$str .= '</script>';
 		print $str . "\n";
 	}
 

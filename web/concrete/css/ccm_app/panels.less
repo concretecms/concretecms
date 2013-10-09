@@ -36,6 +36,12 @@ html.ccm-panel-ready.ccm-panel-right {
 	}
 }
 
+html.ccm-panel-ready.ccm-panel-transition-none {
+	div.ccm-page {
+		.transition(none);
+	}
+}
+
 html.ccm-panel-ready {
 
 	div.ccm-page {
@@ -46,23 +52,39 @@ html.ccm-panel-ready {
 
 }
 
-div.ccm-panel-left {
+div.ccm-panel-transition-none.ccm-panel-left {
+	left: -320px;
+}
+
+div.ccm-panel-transition-none.ccm-panel-left.ccm-panel-active {
 	left: 0px;
+}
+
+div.ccm-panel-transition-slide.ccm-panel-left {
 	-webkit-transform: translate3d(-100%, 0, 0);
+	left: 0px;
 	.transition(-webkit-transform 0.5s cubic-bezier(0.190, 1.000, 0.220, 1.000));
 }
 
-div.ccm-panel-right {
+div.ccm-panel-transition-none.ccm-panel-right {
+	right: -320px;
+}
+
+div.ccm-panel-transition-none.ccm-panel-right.ccm-panel-active {
 	right: 0px;
+}
+
+div.ccm-panel-transition-slide.ccm-panel-right {
 	-webkit-transform: translate3d(100%, 0, 0);
+	right: 0px;
 	.transition(-webkit-transform 0.5s cubic-bezier(0.190, 1.000, 0.220, 1.000));
 }
 
-div.ccm-panel-left.ccm-panel-active {
+div.ccm-panel-left.ccm-panel-transition-slide.ccm-panel-active {
 	-webkit-transform: translate3d(0, 0, 0);
 }
 
-div.ccm-panel-right.ccm-panel-active {
+div.ccm-panel-right.ccm-panel-transition-slide.ccm-panel-active {
 	-webkit-transform: translate3d(0, 0, 0);
 }
 
@@ -197,7 +219,7 @@ div#ccm-panel-sitemap {
 /** 
  * Properties
  */
-div#ccm-panel-page {
+div#ccm-panel-page, div#ccm-panel-compose-page {
 	.ccm-panel-dark;
 
 	header {
@@ -280,7 +302,38 @@ div.ccm-panel-detail {
 	.box-sizing(border-box);
 	background: transparent;
 	padding-top: 48px;
+
+	&.ccm-panel-detail-static {
+		display: block;
+	}
+
+	&.ccm-panel-detail-static-left {
+		padding-left: 321px;
+	}
+
+	&.ccm-panel-detail-static-right {
+		padding-right: 321px;
+	}
+
+	fieldset {
+		legend {
+			border: 0px;
+		}
+
+		padding-bottom: 20px;
+		border-bottom: 1px solid @legend-border-color;
+		margin-bottom: 20px;
+		margin-left: -40px;
+		padding-left: 40px;
+	}
+
+	fieldset:last-child {
+		border-bottom: 0px;
+	}
+
+
 }
+
 
 html.ccm-panel-left div.ccm-panel-detail {
 	padding-left: 321px;
@@ -308,7 +361,8 @@ div.ccm-panel-detail {
 /** 
  * Panel Detail - Properties
  */
-div#ccm-panel-detail-page-properties {
+div#ccm-panel-detail-page-properties,
+div#ccm-panel-detail-page-composer {
 	
 	background-color: #f3fbff;
 
@@ -325,7 +379,7 @@ div#ccm-panel-detail-page-properties {
 /** 
  * Panel swap
  */
-div.ccm-panel-detail.ccm-transition-swap {
+div.ccm-panel-detail.ccm-panel-detail-transition-swap {
 	backface-visibility: hidden;
 	-webkit-backface-visibility: hidden;
 	display: block;
@@ -333,7 +387,7 @@ div.ccm-panel-detail.ccm-transition-swap {
 	-webkit-transform: rotateY(180deg);
 }
 
-div.ccm-panel-detail.ccm-transition-swap.ccm-transition-swap-start {
+div.ccm-panel-detail.ccm-panel-detail-transition-swap.ccm-panel-detail-transition-swap-start {
 	transform: rotateY(0deg);
 	-webkit-transform: rotateY(0deg);
 	-webkit-transition-duration: 0.5s;
@@ -349,24 +403,24 @@ div.ccm-panel-detail.ccm-transition-swap.ccm-transition-swap-start {
  * because it's going to lose its position once the new effect takes place.
  */
 
-html.ccm-panel-left div.ccm-page.ccm-transition-swap {
+html.ccm-panel-left div.ccm-page.ccm-panel-detail-transition-swap {
 	position: relative;
 	left: 320px;
 }
 
-html.ccm-panel-right div.ccm-page.ccm-transition-swap {
+html.ccm-panel-right div.ccm-page.ccm-panel-detail-transition-swap {
 	position: relative;
 	right: 320px;
 }
 
-html.ccm-panel-ready div.ccm-page.ccm-transition-swap {
+html.ccm-panel-ready div.ccm-page.ccm-panel-detail-transition-swap {
 	transition-duration: 0s;
 	-webkit-transition-duration: 0s;
 	transform: none;
 	-webkit-transform: none;
 }
 
-html.ccm-panel-ready div.ccm-page.ccm-transition-swap.ccm-transition-swap-start {
+html.ccm-panel-ready div.ccm-page.ccm-panel-detail-transition-swap.ccm-panel-detail-transition-swap-start {
 	transform: rotateY(180deg);
 	-webkit-transform: rotateY(180deg);
 	-webkit-transition-duration: 0.5s;
@@ -375,10 +429,13 @@ html.ccm-panel-ready div.ccm-page.ccm-transition-swap.ccm-transition-swap-start 
 	-webkit-transition-easing: none;
 }
 
-html.ccm-panel-ready div.ccm-page.ccm-transition-swap.ccm-transition-complete {
+html.ccm-panel-ready div.ccm-page.ccm-panel-detail-transition-swap.ccm-panel-detail-transition-complete {
 	display: none;
 }
 
+div.ccm-panel-detail.ccm-panel-detail-transition-none.ccm-panel-detail-transition-none-start {
+	display: block;
+}
 
 /** 
  * Panel Forms
@@ -402,9 +459,15 @@ div#ccm-pane-detail-form-actions-wrapper {
 		padding: 30px;
 		margin-left: 321px;
 	}
-
 }
 
+div.ccm-panel-detail-static {
+	div#ccm-pane-detail-form-actions-wrapper {
+		div.ccm-pane-detail-form-actions {
+			.opacity(1);
+		}
+	}
+}
 
 /** 
  * Panel accordion
