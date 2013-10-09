@@ -305,6 +305,7 @@ class Concrete5_Library_ItemList {
 	 * Note that this is overrides any previous sortByMultiple() call, and all sortBy() calls
 	 */
 	public function sortByMultiple() {
+		$args = func_get_args();
 		if(count($args) == 1 && is_array($args[0])) {
 			$args = $args[0];
 		}
