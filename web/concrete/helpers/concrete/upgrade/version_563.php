@@ -26,7 +26,7 @@ class ConcreteUpgradeVersion563Helper {
 
 		$pk = PermissionKey::getByHandle($pkHandle);
 		if (!$pk) {
-			$pk = PermissionKey::add('group_tree_node', $pkHandle, Loader::helper('text')->unhandle($pkHandle), '', false);
+			$pk = PermissionKey::add('group_tree_node', $pkHandle, Loader::helper('text')->unhandle($pkHandle), '', false, false);
 		}
 
 		if ($upgradeFromPermissionHandle) {
