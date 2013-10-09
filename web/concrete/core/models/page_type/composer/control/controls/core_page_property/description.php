@@ -8,9 +8,9 @@ class Concrete5_Model_DescriptionCorePagePropertyPageTypeComposerControl extends
 		$this->setPageTypeComposerControlIconSRC(ASSETS_URL . '/models/attribute/types/textarea/icon.png');
 	}
 
-	public function publishToPage(PageDraft $d, $data, $controls) {
+	public function publishToPage(Page $c, $data, $controls) {
 		$this->addPageTypeComposerControlRequestValue('cDescription', $data['description']);
-		parent::publishToPage($d, $data, $controls);
+		parent::publishToPage($c, $data, $controls);
 	}
 
 	public function validate($data, ValidationErrorHelper $e) {
@@ -27,8 +27,8 @@ class Concrete5_Model_DescriptionCorePagePropertyPageTypeComposerControl extends
 	}
 
 	public function getPageTypeComposerControlDraftValue() {
-		if (is_object($this->pDraftObject)) {
-			$c = $this->pDraftObject->getPageDraftCollectionObject();
+		if (is_object($this->page)) {
+			$c = $this->page;
 			return $c->getCollectionDescription();
 		}
 	}

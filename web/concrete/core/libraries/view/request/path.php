@@ -20,7 +20,8 @@ class Concrete5_Library_PathRequestView extends RequestView {
 	 * @return string $themePath
 	*/
 	public function getThemePath() { return $this->themeRelativePath; }
-
+	public function getThemeHandle() {return $this->themeHandle;}
+	
 	protected function setInnerContentFile($innerContentFile) {
 		$this->innerContentFile = $innerContentFile;
 	}
@@ -59,14 +60,18 @@ class Concrete5_Library_PathRequestView extends RequestView {
 	protected function loadRequestViewThemeObject() {
 		$env = Environment::get();
 		$rl = Router::get();
-		$tmpTheme = $rl->getThemeFromPath($this->viewPath);
-		if ($tmpTheme) {
-			$this->setRequestViewTheme($tmpTheme[0]);
-		} else if (!$this->themeHandle) {
-			if ($this->controller->theme != false) {
-				$this->setRequestViewTheme($this->controller->theme);
-			} else {
-				$this->setRequestViewTheme(FILENAME_COLLECTION_DEFAULT_THEME);
+		if ($this->controller->theme != false) {
+			$this->setRequestViewTheme($this->controller->theme);
+		} else {
+			$tmpTheme = $rl->getThemeFromPath($this->viewPath);
+			if ($tmpTheme) {
+				$this->setRequestViewTheme($tmpTheme[0]);
+			} else if (!$this->themeHandle) {
+				if ($this->controller->theme != false) {
+					$this->setRequestViewTheme($this->controller->theme);
+				} else {
+					$this->setRequestViewTheme(FILENAME_COLLECTION_DEFAULT_THEME);
+				}
 			}
 		}
 
@@ -115,6 +120,7 @@ class Concrete5_Library_PathRequestView extends RequestView {
 	public function startRender() {
 		// First the starting gun.
 		Events::fire('on_start', $this);
+		parent::startRender();
 	}
 
 	protected function onBeforeGetContents() {
@@ -125,7 +131,6 @@ class Concrete5_Library_PathRequestView extends RequestView {
 		} else if (is_object($this->themeObject)) {
 			$this->themeObject->registerAssets();
 		}
-		parent::onBeforeGetContents();
 	}
 
 	public function renderViewContents($scopeItems) {

@@ -13,14 +13,14 @@ class Concrete5_Model_PageTemplateCorePagePropertyPageTypeComposerControl extend
 	}
 
 
-	public function publishToPage(PageDraft $d, $data, $controls) {
+	public function publishToPage(Page $c, $data, $controls) {
 		$this->addPageTypeComposerControlRequestValue('pTemplateID', $_POST['ptComposerPageTemplateID']);
-		parent::publishToPage($d, $data, $controls);
+		parent::publishToPage($c, $data, $controls);
 	}
 
 	public function getPageTypeComposerControlDraftValue() {
-		if (is_object($this->pDraftObject)) {
-			$c = $this->pDraftObject->getPageDraftCollectionObject();
+		if (is_object($this->page)) {
+			$c = $this->page;
 			return $c->getPageTemplateID();
 		}
 	}

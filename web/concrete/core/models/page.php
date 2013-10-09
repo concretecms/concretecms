@@ -311,6 +311,21 @@ class Concrete5_Model_Page extends Collection {
 		}
 		
 	}
+
+	public function getDrafts() {
+		$db = Loader::db();
+		$u = new User();
+		$nc = Page::getByPath(PAGE_DRAFTS_PAGE_PATH);
+		$r = $db->Execute('select cID from Pages where uID = ? and cParentID = ?', array($u->getUserID(), $nc->getCollectionID()));
+		$pages = array();
+		while ($row = $r->FetchRow()) {
+			$entry = Page::getByID($row['cID']);
+			if (is_object($entry)) {
+				$pages[] = $entry;
+			}
+		}
+		return $pages;		
+	}
 	
 	
 	private static function translatePermissionsXMLToKeys($node) {
@@ -778,6 +793,10 @@ class Concrete5_Model_Page extends Collection {
 	 */	
 	function getPageTypeID() {
 		return $this->ptID;
+	}
+
+	public function getPageTypeObject() {
+		return PageType::getByID($this->ptID);
 	}
 
 	/**
@@ -1670,9 +1689,6 @@ class Concrete5_Model_Page extends Collection {
 		$q = "delete from Areas WHERE cID = '{$cID}'";
 		$r = $db->query($q);
 
-		$q = "delete from ComposerDrafts WHERE cID = '{$cID}'";
-		$r = $db->query($q);
-
 		$db->query('delete from PageSearchIndex where cID = ?', array($cID));
 		
 		$q = "select cID from Pages where cParentID = '{$cID}'";
@@ -2281,6 +2297,17 @@ class Concrete5_Model_Page extends Collection {
 		} else {
 			return $db->GetOne("select count(pstID) from PageStatistics where cID = ?", array($this->getCollectionID()));
 		}
+	}
+
+	public function getPageDraftTargetParentPageID() {
+		$db = Loader::db();
+		return $db->GetOne('select cDraftTargetParentPageID where cID = ?', array($this->cID));
+	}
+	
+	public function setPageDraftTargetParentPageID($cParentID) {
+		$db = Loader::db();
+		$db->Execute('update Pages set cDraftTargetParentPageID = ? where cID = ?', array($cParentID, $this->cID));
+		$this->cDraftTargetParentPageID = $cParentID;
 	}
 	
 	/**

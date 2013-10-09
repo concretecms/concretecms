@@ -8,7 +8,11 @@
 <section>
 	<header><?=t('Page Settings')?></header>
 	<menu class="ccm-panel-page-basics">
-		<li><a href="#" class="ccm-panel-menu-item-active"><?=t('Composer')?></a></li>
+		<? 
+		$pagetype = PageType::getByID($c->getPageTypeID());
+		if (is_object($pagetype)) { ?>
+			<li><a href="#" data-launch-panel-detail="page-composer" data-panel-url="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/panels/details/page/composer" data-panel-transition="swap"><?=t('Composer')?></a></li>
+		<? } ?>
 		<? if ($cp->canEditPageTheme() || $cp->canEditPageType()) { ?>
 			<li><a href=""><?=t('Design')?></a></li>
 		<? }

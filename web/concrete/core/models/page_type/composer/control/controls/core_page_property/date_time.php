@@ -8,9 +8,9 @@ class Concrete5_Model_DateTimeCorePagePropertyPageTypeComposerControl extends Co
 		$this->setPageTypeComposerControlIconSRC(ASSETS_URL . '/models/attribute/types/date_time/icon.png');
 	}
 
-	public function publishToPage(PageDraft $d, $data, $controls) {
+	public function publishToPage(Page $c, $data, $controls) {
 		$this->addPageTypeComposerControlRequestValue('cDatePublic', Loader::helper('form/date_time')->translate('date_time', $data));
-		parent::publishToPage($d, $data, $controls);
+		parent::publishToPage($c, $data, $controls);
 	}
 
 	public function validate($data, ValidationErrorHelper $e) {
@@ -21,7 +21,7 @@ class Concrete5_Model_DateTimeCorePagePropertyPageTypeComposerControl extends Co
 	}
 
 	public function getPageTypeComposerControlDraftValue() {
-		$c = $this->pDraftObject->getPageDraftCollectionObject();
+		$c = $this->page;
 		return $c->getCollectionDatePublic();
 	}
 	

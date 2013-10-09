@@ -36,10 +36,17 @@ class ConcreteDashboardHelper {
 	}
 
 	public function inDashboard($page = false) {
-		if (!$page) {
-			$page = Page::getCurrentPage();
+		if ($page) {
+			return strpos($page->getCollectionPath(), '/dashboard') === 0;
+		} else {
+			$view = View::getInstance();
+			if (method_exists($view, 'getThemeHandle')) {
+				return $view->getThemeHandle() == DIRNAME_DASHBOARD;
+			} else {
+				$page = Page::getCurrentPage();
+				return strpos($page->getCollectionPath(), '/dashboard') === 0;
+			}
 		}
-		return strpos($page->getCollectionPath(), '/dashboard') === 0;
 	}
 	
 	public function getDashboardPaneFooterWrapper($includeDefaultBody = true) {

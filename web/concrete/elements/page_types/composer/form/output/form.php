@@ -18,8 +18,8 @@ $cmp = new Permissions($pagetype);
 		<? $controls = PageTypeComposerFormLayoutSetControl::getList($cfl);
 
 		foreach($controls as $con) { 
-			if (is_object($draft)) { // we are loading content in
-				$con->setPageDraftObject($draft);
+			if (is_object($page)) { // we are loading content in
+				$con->setPageObject($page);
 			}
 			if ($cmp->canComposePageType($con)) { ?>
 				<? $con->render(); ?>

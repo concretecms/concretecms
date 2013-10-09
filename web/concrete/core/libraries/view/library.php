@@ -36,7 +36,11 @@ abstract class Concrete5_Library_View {
 	protected $outputAssets = array();
 
 	abstract public function start($mixed);
-	abstract public function startRender();
+	public function startRender() {
+		if (is_object($this->controller)) {
+			$this->controller->on_before_render();
+		}
+	}
 	abstract public function setupRender();
 	abstract protected function setupController();
 	abstract protected function runControllerTask();
@@ -77,11 +81,7 @@ abstract class Concrete5_Library_View {
 		return $this->controller->post($key);
 	}
 
-	protected function onBeforeGetContents() {
-		if (is_object($this->controller)) {
-			$this->controller->on_before_render();
-		}
-	}
+	abstract protected function onBeforeGetContents();
 
 	protected function postProcessViewContents($contents) {return $contents;}
 	protected function onAfterGetContents() {}

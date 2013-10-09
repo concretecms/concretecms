@@ -17,15 +17,14 @@ if (count($drafts) > 0) { ?>
 $num = 0;
 foreach($drafts as $dr) { 
 	$pdr = new Permissions($dr);
-	if ($pdr->canEditPageDraft()) { 
+	if ($pdr->canEditPage()) { 
 		$num++;
-		$d = $dr->getPageDraftCollectionObject();
-		$pageName = ($d->getCollectionName()) ? $d->getCollectionName() : t('(Untitled Page)');
+		$pageName = ($dr->getCollectionName()) ? $dr->getCollectionName() : t('(Untitled Page)');
 		?>
 	<tr>
-		<td><a href="<?=$this->url('/dashboard/composer/write', 'draft', $dr->getPageDraftID())?>"><?=$pageName?></a></td>
+		<td><a href="<?=$this->url('/dashboard/composer/write', 'draft', $dr->getCollectionID())?>"><?=$pageName?></a></td>
 		<td><?
-		$ui = UserInfo::getByID($dr->getPageDraftUserID());
+		$ui = UserInfo::getByID($dr->getCollectionUserID());
 		if (is_object($ui)) {
 			print $ui->getUserDisplayName();
 		} else {
@@ -33,13 +32,13 @@ foreach($drafts as $dr) {
 		}
 		?>
 		</td>
-		<td><?=$d->getPageTypeName()?></td>
+		<td><?=$dr->getPageTypeName()?></td>
 		<td><?
 			$mask = DATE_APP_GENERIC_MDYT;
-			if ($today == $d->getCollectionDateLastModified("Y-m-d")) {
+			if ($today == $dr->getCollectionDateLastModified("Y-m-d")) {
 				$mask = DATE_APP_GENERIC_T;
 			}
-			print $d->getCollectionDateLastModified($mask)?></td>
+			print $dr->getCollectionDateLastModified($mask)?></td>
 	<? } ?>
 
 <? } ?>

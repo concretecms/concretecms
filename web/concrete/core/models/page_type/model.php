@@ -2,6 +2,8 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 class Concrete5_Model_PageType extends Object {
 
+	protected $ptDraftVersionsToSave = 10;
+
 	public function getPageTypeID() {return $this->ptID;}
 	public function getPageTypeName() {return $this->ptName;}
 	public function getPageTypeHandle() {return $this->ptHandle;}
@@ -11,6 +13,7 @@ class Concrete5_Model_PageType extends Object {
 		return $this->ptAllowedPageTemplates;
 	}
 	public function getPageTypeDefaultPageTemplateID() {return $this->ptDefaultPageTemplateID;}
+	public function getPageTypeDefaultPageTemplateObject() {return PageTemplate::getByID($this->ptDefaultPageTemplateID);}
 	public function getPermissionObjectIdentifier() {
 		return $this->getPageTypeID();
 	}
@@ -22,6 +25,47 @@ class Concrete5_Model_PageType extends Object {
 		return PackageList::getHandle($this->pkgID);
 	}
 	
+	public function savePageTypeComposerForm(Page $c) {
+		$controls = PageTypeComposerControl::getList($this);
+		$outputControls = array();
+		foreach($controls as $cn) {
+			$data = $cn->getRequestValue();
+			$cn->publishToPage($c, $data, $controls);
+			$outputControls[] = $cn;
+		}
+
+		// set page name from controls
+		// now we see if there's a page name field in there
+		$containsPageNameControl = false;
+		foreach($outputControls as $cn) {
+			if ($cn instanceof NameCorePagePropertyPageTypeComposerControl) {
+				$containsPageNameControl = true;
+				break;
+			}
+		}
+		if (!$containsPageNameControl) {
+			foreach($outputControls as $cn) {
+				if ($cn->canPageTypeComposerControlSetPageName()) {
+					$pageName = $cn->getPageTypeComposerControlPageNameValue($c);
+					$c->updateCollectionName($pageName);
+				}
+			}
+		}
+
+		// remove all but the most recent X drafts.
+		$vl = new VersionList($c, -1);
+		// this will ensure that we only ever keep X versions.
+		$vArray = $vl->getVersionListArray();
+		if (count($vArray) > $this->ptDraftVersionsToSave) {
+			for ($i = $this->ptDraftVersionsToSave; $i < count($vArray); $i++) {
+				$v = $vArray[$i];
+				@$v->delete();
+			} 
+		}
+
+		return $outputControls;
+	}
+
 
 	public function getPageTypeSelectedPageTemplateObjects() {
 		$templates = array();
@@ -330,7 +374,7 @@ class Concrete5_Model_PageType extends Object {
 
 		// now we assign the page draft owner access entity
 		$pa = PermissionAccess::create($pk);
-		$pe = PageDraftAuthorPermissionAccessEntity::getOrCreate();
+		$pe = PageOwnerPermissionAccessEntity::getOrCreate();
 		$pa->addListItem($pe);
 		$pt->assignPermissionAccess($pa);
 
@@ -507,26 +551,12 @@ class Concrete5_Model_PageType extends Object {
 		}
 		$db = Loader::db();
 		$ptID = $this->getPageTypeID();
-		$pDraftDateCreated = Loader::helper('date')->getSystemDateTime();
-		$uID = $u->getUserID();
-		
-		$db->Execute('insert into PageDrafts (ptID, pDraftDateCreated, uID) values (?, ?, ?)', array(
-			$ptID, $pDraftDateCreated, $uID
-		));	
-
-		$pDraftID = $db->Insert_ID();
-
 		$parent = Page::getByPath(PAGE_DRAFTS_PAGE_PATH);
 		$data = array('cvIsApproved' => 0);
 		$p = $parent->add($this, $data, $pt);
 		$p->deactivate();
 
-		$db->Execute('update PageDrafts set cID = ? where pDraftID = ?', array($p->getCollectionID(), $pDraftID));
-		$d = PageDraft::getByID($pDraftID);
-
-		PageDraftAuthorPermissionAccessEntity::refresh($d);
-
-		return $d;
+		return $p;
 	}
 
 }

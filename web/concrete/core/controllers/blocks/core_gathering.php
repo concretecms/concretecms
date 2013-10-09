@@ -77,7 +77,7 @@ class Concrete5_Controller_Block_CoreGathering extends BlockController {
 						$d->setPageDraftTargetParentPageID($c->getCollectionID());
 						$d->saveForm();
 						$d->publish();
-						$nc = Page::getByID($d->getPageDraftCollectionID(), 'RECENT');
+						$nc = Page::getByID($d->getCollectionID(), 'RECENT');
 						$link = Loader::helper('navigation')->getLinkToCollection($nc, true);
 						$r->setRedirectURL($link);
 					}

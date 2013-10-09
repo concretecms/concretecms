@@ -34,37 +34,6 @@
    <field name="ptPublishTargetObject" type="X2"></field>
   </table>
 
-   <table name="PageDrafts">
-    <field name="pDraftID" type="I" size="10">
-      <key/>
-      <autoincrement/>
-      <unsigned/>
-    </field>
-    <field name="ptID" type="I" size="10">
-      <unsigned/>
-      <default value="0" />
-    </field>
-    <field name="cID" type="I" size="10">
-      <unsigned/>
-      <default value="0" />
-    </field>
-    <field name="uID" type="I" size="10">
-      <unsigned/>
-      <default value="0" />
-    </field>
-    <field name="pDraftOverridePageTypePermissions" type="I1" size="1">
-      <notnull/>
-      <default value="0"/>
-    </field>
-    <field name="pDraftDateCreated" type="T">
-      <notnull/>
-    </field>
-   <field name="pDraftPublishTargetParentPageID" type="I" size="10">
-      <unsigned/>
-      <default value="0" />
-    </field>
-  </table>
-
   <table name="PageTypePageTemplates">
     <field name="ptID" type="I" size="10">
       <key/>
@@ -73,6 +42,34 @@
     </field>
     <field name="pTemplateID" type="I" size="10">
       <key/>
+      <unsigned/>
+      <default value="0" />
+    </field>
+  </table>
+
+  <table name="PageTypeComposerOutputBlocks">
+  <field name="ptComposerOutputBlockID" type="I" size="10">
+      <key/>
+      <autoincrement/>
+      <unsigned/>
+    </field>
+  <field name="cID" type="I" size="10">
+      <unsigned/>
+      <notnull />
+      <default value="0" />
+    </field>
+    <field name="arHandle" type="C" size="255">
+    </field>
+    <field name="cbDisplayOrder" type="I" size="10">
+      <unsigned/>
+      <default value="0" />
+    </field>
+    <field name="ptComposerFormLayoutSetControlID" type="I" size="10">
+      <unsigned/>
+      <default value="0" />
+      <notnull />
+    </field>
+    <field name="bID" type="I" size="10">
       <unsigned/>
       <default value="0" />
     </field>
@@ -185,13 +182,13 @@
     </field>
   </table>
 
-  <table name="PageDraftBlocks">
-<field name="pDraftBlockID" type="I" size="10">
+  <table name="PageTypeComposerDraftBlocks">
+<field name="ptComposerDraftBlockID" type="I" size="10">
       <key/>
       <autoincrement/>
       <unsigned/>
     </field>
-  <field name="pDraftID" type="I" size="10">
+  <field name="cID" type="I" size="10">
       <unsigned/>
       <notnull />
       <default value="0" />
@@ -210,23 +207,6 @@
     <field name="bID" type="I" size="10">
       <unsigned/>
       <default value="0" />
-    </field>
-  </table>
-  <table name="PageDraftPermissionAssignments">
-    <field name="pDraftID" type="I" size="10">
-      <key/>
-      <default value="0"/>
-      <unsigned/>
-    </field>
-    <field name="pkID" type="I" size="10">
-      <key/>
-      <default value="0"/>
-      <unsigned/>
-    </field>
-    <field name="paID" type="I" size="10">
-      <key/>
-      <default value="0"/>
-      <unsigned/>
     </field>
   </table>
   <table name="PageTypePermissionAssignments">
@@ -3163,6 +3143,11 @@
       <unsigned/>
     </field>
     <field name="pkgID" type="I" size="10">
+      <notnull/>
+      <default value="0"/>
+      <unsigned/>
+    </field>
+    <field name="cDraftTargetParentPageID" type="I" size="10">
       <notnull/>
       <default value="0"/>
       <unsigned/>
