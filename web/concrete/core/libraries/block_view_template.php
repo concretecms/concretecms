@@ -202,14 +202,14 @@ class Concrete5_Library_BlockViewTemplate {
 			if (count($css) > 0) {
 				foreach($css as $i) {
 					if(substr($i,-4)=='.css') {
-						$items[] = $h->css($this->getBaseURL() . '/' . DIRNAME_CSS . '/' . $i);
+						$items[] = $h->css($uh->getBlockTypeAssetsURL($bt, DIRNAME_CSS . '/' . $i));
 					}
 				}
 			}
 			if (count($js) > 0) {
 				foreach($js as $i) {
 					if (substr($i,-3)=='.js') {
-						$items[] = $h->javascript($this->getBaseURL() . '/' . DIRNAME_JAVASCRIPT . '/' . $i);
+						$items[] = $h->javascript($uh->getBlockTypeAssetsURL($bt, DIRNAME_JAVASCRIPT . '/' . $i));
 					}
 				}
 			}
