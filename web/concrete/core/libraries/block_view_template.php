@@ -180,6 +180,8 @@ class Concrete5_Library_BlockViewTemplate {
 		$items = array();
 		$h = Loader::helper("html");
 		$dh = Loader::helper('file');
+		$uh = Loader::helper('concrete/urls');
+		$bt = BlockType::getByHandle($this->btHandle);
 		if ($this->checkHeaderItems == false) {
 			return $items;
 		} else {
@@ -187,10 +189,10 @@ class Concrete5_Library_BlockViewTemplate {
 				if (file_exists($this->basePath . '/' . $i)) {
 					switch($t) {
 						case 'CSS':
-							$items[] = $h->css($this->getBaseURL() . '/' . $i);
+							$items[] = $h->css($uh->getBlockTypeAssetsURL($bt, $i));
 							break;
 						case 'JAVASCRIPT':
-							$items[] = $h->javascript($this->getBaseURL() . '/' . $i);
+							$items[] = $h->javascript($uh->getBlockTypeAssetsURL($bt, $i));
 							break;
 					}
 				}
