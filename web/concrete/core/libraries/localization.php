@@ -173,7 +173,15 @@
 		 * @return string Description of a language
 		 */
 		public static function getLanguageDescription($locale, $displayLocale = null) {
-			$description = $locale;
+			$localeList = Zend_Locale::getLocaleList();
+			if (! isset($localeList[$locale])) {
+				return $locale;
+			} 
+			
+			if ($displayLocale !== NULL && (! isset($localeList[$displayLocale]))) {
+				$displayLocale = NULL;
+			} 
+			
 			Zend_Locale_Data::setCache(Cache::getLibrary());
 			
 			$displayLocale = $displayLocale?$displayLocale:$locale;
