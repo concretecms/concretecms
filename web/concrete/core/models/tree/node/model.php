@@ -37,7 +37,7 @@ abstract class Concrete5_Model_TreeNode extends Object {
 		return $count;
 	}
 
-	/** 
+	/**
 	 * Transforms a node to another node
 	 */
 	public function transformNode($treeNodeType) {
@@ -47,7 +47,7 @@ abstract class Concrete5_Model_TreeNode extends Object {
 		return $node;
 	}
 
-	/** 
+	/**
 	 * Returns an array of all parents of this tree node
 	 */
 	public function getTreeNodeParentArray() {
@@ -91,7 +91,7 @@ abstract class Concrete5_Model_TreeNode extends Object {
 			$node->treeNodeParentID = $this->getTreeNodeParentID();
 			$node->treeNodeTypeID = $this->getTreeNodeTypeID();
 			$node->treeNodeTypeHandle = $this->getTreeNodeTypeHandle();
-			
+
 			foreach($this->getChildNodes() as $childnode) {
 				$childnodejson = $childnode->getTreeNodeJSON();
 				if (is_object($childnodejson)) {
@@ -144,7 +144,7 @@ abstract class Concrete5_Model_TreeNode extends Object {
 		$db->Execute('delete from TreeNodePermissionAssignments where treeNodeID = ?', array($this->treeNodeID));
 		// copy permissions from the page to the area
 		$permissions = PermissionKey::getList($this->getTreeNodePermissionKeyCategoryHandle());
-		foreach($permissions as $pk) { 
+		foreach($permissions as $pk) {
 			$pk->setPermissionObject($this);
 			$pk->copyFromParentNodeToCurrentNode();
 		}
@@ -173,7 +173,7 @@ abstract class Concrete5_Model_TreeNode extends Object {
 		};
 		$walk($this->treeNodeID);
 		return $nodeIDs;
-	}	
+	}
 
 	public function setTreeNodeTreeID($treeID) {
 		$db = Loader::db();
@@ -188,7 +188,7 @@ abstract class Concrete5_Model_TreeNode extends Object {
 			$treeNodeDisplayOrder = 0;
 		}
 		$db->Execute('update TreeNodes set treeNodeParentID = ?, treeNodeDisplayOrder = ? where treeNodeID = ?', array($newParent->getTreeNodeID(), $treeNodeDisplayOrder, $this->treeNodeID));
-		if (!$this->overrideParentTreeNodePermissions()) {			
+		if (!$this->overrideParentTreeNodePermissions()) {
 			$db->Execute('update TreeNodes set inheritPermissionsFromTreeNodeID = ? where treeNodeID = ?', array($newParent->getTreeNodePermissionsNodeID(), $this->treeNodeID));
 		}
 		$oldParent = $this->getTreeNodeParentObject();
