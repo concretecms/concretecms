@@ -42,10 +42,12 @@ im.addControlSet = function(ns,js,elem) {
       $(elem).parent().parent().removeClass('disabled');
     };
     this.im = im;
+    this.$ = $;
     warn('Loading ControlSet',im);
     try {
-      eval(js);
+      (new Function('im','$',js)).call(this, im, $);
     } catch(e) {
+      console.log(e.stack);
       var pos = e.stack.replace(/[\S\s]+at HTMLDivElement.eval.+?<anonymous>:(\d+:\d+)[\S\s]+/,'$1').split(':');
       if (pos[1] && !isNaN(parseInt(pos[1]))) {
         var jsstack = js.split("\n");
@@ -70,7 +72,7 @@ im.addFilter = function(ns,js) {
     this.namespace = im.namespace;
     this.im = im;
     try {
-      eval(js);
+      (new Function('im','$',js)).call(this, im, $);
     } catch(e) {
       error(e);
       window.lastError = e;
@@ -106,7 +108,7 @@ im.addComponent = function(ns,js,elem) {
     this.im = im;
     warn('Loading component',im);
     try {
-      eval(js);
+      (new Function('im','$',js)).call(this, im, $);
     } catch(e) {
       var pos = e.stack.replace(/[\S\s]+at HTMLDivElement.eval.+?<anonymous>:(\d+:\d+)[\S\s]+/,'$1').split(':');
       if (pos[1] && !isNaN(parseInt(pos[1]))) {

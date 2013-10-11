@@ -15,6 +15,7 @@ var ImageEditor = function (settings) {
   im.components     = {};
   im.settings       = settings;
   im.filters        = {};
+  im.fileId         = im.settings.fID;
   im.scale          = 1;
   im.crosshair      = new Image();
   im.uniqid         = im.stage.getContainer().id;

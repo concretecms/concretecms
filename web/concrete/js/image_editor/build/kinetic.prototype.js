@@ -116,23 +116,3 @@ Kinetic.Text.prototype.rasterize = function(e) {
     }
   });
 };
-
-// Rebuild:
-Kinetic.Util.extend(Kinetic.Container, Kinetic.Node);
-Kinetic.Util.extend(Kinetic.Shape, Kinetic.Node);
-Kinetic.Util.extend(Kinetic.Group, Kinetic.Container);
-Kinetic.Util.extend(Kinetic.Layer, Kinetic.Container);
-Kinetic.Util.extend(Kinetic.Stage, Kinetic.Container);
-Kinetic.Util.extend(Kinetic.Circle, Kinetic.Shape);
-Kinetic.Util.extend(Kinetic.Ellipse, Kinetic.Shape);
-Kinetic.Util.extend(Kinetic.Image, Kinetic.Shape);
-Kinetic.Util.extend(Kinetic.Line, Kinetic.Shape);
-Kinetic.Util.extend(Kinetic.Path, Kinetic.Shape);
-Kinetic.Util.extend(Kinetic.Polygon, Kinetic.Shape);
-Kinetic.Util.extend(Kinetic.Rect, Kinetic.Shape);
-Kinetic.Util.extend(Kinetic.RegularPolygon, Kinetic.Shape);
-Kinetic.Util.extend(Kinetic.Sprite, Kinetic.Shape);
-Kinetic.Util.extend(Kinetic.Star, Kinetic.Shape);
-Kinetic.Util.extend(Kinetic.Text, Kinetic.Shape);
-Kinetic.Util.extend(Kinetic.TextPath, Kinetic.Shape);
-Kinetic.Util.extend(Kinetic.Wedge, Kinetic.Shape);

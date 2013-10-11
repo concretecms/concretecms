@@ -106,42 +106,6 @@ Kinetic.Text.prototype.rasterize = function(e) {
     });
 };
 
-Kinetic.Util.extend(Kinetic.Container, Kinetic.Node);
-
-Kinetic.Util.extend(Kinetic.Shape, Kinetic.Node);
-
-Kinetic.Util.extend(Kinetic.Group, Kinetic.Container);
-
-Kinetic.Util.extend(Kinetic.Layer, Kinetic.Container);
-
-Kinetic.Util.extend(Kinetic.Stage, Kinetic.Container);
-
-Kinetic.Util.extend(Kinetic.Circle, Kinetic.Shape);
-
-Kinetic.Util.extend(Kinetic.Ellipse, Kinetic.Shape);
-
-Kinetic.Util.extend(Kinetic.Image, Kinetic.Shape);
-
-Kinetic.Util.extend(Kinetic.Line, Kinetic.Shape);
-
-Kinetic.Util.extend(Kinetic.Path, Kinetic.Shape);
-
-Kinetic.Util.extend(Kinetic.Polygon, Kinetic.Shape);
-
-Kinetic.Util.extend(Kinetic.Rect, Kinetic.Shape);
-
-Kinetic.Util.extend(Kinetic.RegularPolygon, Kinetic.Shape);
-
-Kinetic.Util.extend(Kinetic.Sprite, Kinetic.Shape);
-
-Kinetic.Util.extend(Kinetic.Star, Kinetic.Shape);
-
-Kinetic.Util.extend(Kinetic.Text, Kinetic.Shape);
-
-Kinetic.Util.extend(Kinetic.TextPath, Kinetic.Shape);
-
-Kinetic.Util.extend(Kinetic.Wedge, Kinetic.Shape);
-
 var ImageEditor = function(settings) {
     "use strict";
     if (settings === undefined) return this;
@@ -160,6 +124,7 @@ var ImageEditor = function(settings) {
     im.components = {};
     im.settings = settings;
     im.filters = {};
+    im.fileId = im.settings.fID;
     im.scale = 1;
     im.crosshair = new Image();
     im.uniqid = im.stage.getContainer().id;
@@ -255,22 +220,12 @@ var ImageEditor = function(settings) {
         ccm_event.pub(type, data, element);
     };
     im.addElement = function(object, type) {
-        function createConduit(fn, self, callback, callbackself) {
-            return function generatedConduit() {
-                var result = fn.apply(self, arguments);
-                if (typeof callback === "function") {
-                    if (typeof callbackself !== "undefined") {
-                        callback.call(callbackself, result);
-                    } else {
-                        callback(result);
-                    }
-                }
-                return result;
-            };
-        }
         var layer = new Kinetic.Layer();
+        object.elementType = type;
+        layer.elementType = type;
         layer.add(object);
         im.stage.add(layer);
+        layer.moveDown();
         im.stage.draw();
     };
     im.on("backgroundBuilt", function() {
@@ -385,10 +340,6 @@ var ImageEditor = function(settings) {
     saveSize.area = getElem("<span/>").css({
         "float": "right"
     });
-    saveSize.crop.appendTo(saveSize.area);
-    saveSize.width.appendTo($("<div>w </div>").addClass("saveWidth").appendTo(saveSize.area));
-    saveSize.height.appendTo($("<div>h </div>").addClass("saveHeight").appendTo(saveSize.area));
-    saveSize.area.appendTo(controlBar);
     im.on("adjustedsavers", function() {
         saveSize.width.text(im.saveWidth);
         saveSize.height.text(im.saveHeight);
@@ -419,11 +370,7 @@ var ImageEditor = function(settings) {
     };
     im.save = function() {
         im.background.hide();
-        if (im.activeElement !== undefined && typeof im.activeElement.releaseStroke == "function") {
-            im.activeElement.releaseStroke();
-        }
         im.stage.setScale(1);
-        im.setActiveElement(im.stage);
         im.fire("ChangeActiveAction");
         im.fire("changeActiveComponent");
         im.background.hide();
@@ -457,6 +404,37 @@ var ImageEditor = function(settings) {
             }
         });
     };
+    im.save = function saveImage() {
+        im.fire("ChangeActiveAction");
+        var oldStagePosition = im.stage.getPosition(), oldScale = im.scale;
+        im.stage.setPosition(-im.saveArea.getX(), -im.saveArea.getY());
+        im.stage.setScale(1);
+        im.background.hide();
+        im.foreground.hide();
+        im.stage.draw();
+        im.stage.toDataURL({
+            width: im.saveWidth,
+            height: im.saveHeight,
+            callback: function saveImageDataUrlCallback(url) {
+                im.stage.setPosition(oldStagePosition);
+                im.background.show();
+                im.foreground.show();
+                im.stage.setScale(oldScale);
+                im.stage.draw();
+                $.post("/index.php/tools/files/importers/imageeditor", {
+                    fID: im.fileId,
+                    imgData: url
+                }, function(res) {
+                    var result = JSON.parse(res);
+                    if (result.error === 1) {
+                        alert(result.message);
+                    } else {
+                        window.location = window.location;
+                    }
+                });
+            }
+        });
+    };
     im.actualPosition = function actualPosition(x, y, cx, cy, rad) {
         var ay = y - cy, ax = x - cx, degChange = im.activeElement.getRotation() + Math.atan2(ay, ax), r = Math.sqrt(Math.pow(ax, 2) + Math.pow(ay, 2));
         return [ cx + r * Math.cos(degChange), cy + r * Math.sin(degChange) ];
@@ -464,20 +442,13 @@ var ImageEditor = function(settings) {
     im.getActualRect = function actualRect(cx, cy, elem) {
         var rect = [], rad = elem.getRotation();
         rect.push(im.actualPosition(elem.getX(), elem.getY(), cx, cy, rad));
-        rect.push(im.actualPosition(elem.getX() + elem.getWidth(), elem.getY(), cx, cy, rad));
-        rect.push(im.actualPosition(elem.getX() + elem.getWidth(), elem.getY() + elem.getHeight(), cx, cy, rad));
-        rect.push(im.actualPosition(elem.getX(), elem.getY() + elem.getHeight(), cx, cy, rad));
+        rect.push(im.actualPosition(elem.getX() + elem.getWidth() * elem.getScaleX(), elem.getY(), cx, cy, rad));
+        rect.push(im.actualPosition(elem.getX() + elem.getWidth() * elem.getScaleX(), elem.getY() + elem.getHeight() * elem.getScaleY(), cx, cy, rad));
+        rect.push(im.actualPosition(elem.getX(), elem.getY() + elem.getHeight() * elem.getScaleY(), cx, cy, rad));
         return rect;
     };
-    im.getRect = function(elem) {
-        var rect = [];
-        rect.push([ elem.getX(), elem.getY() ]);
-        rect.push([ elem.getX() + elem.getWidth(), elem.getY() ]);
-        rect.push([ elem.getX(), elem.getY() + elem.getHeight() ]);
-        rect.push([ elem.getX() + elem.getWidth(), elem.getY() + elem.getHeight() ]);
-        return rect;
-    };
-    im.adjustSavers = function AdjustingSavers() {
+    im.adjustSavers = function AdjustingSavers(fire) {
+        if (im.activeElement.nodeType === "Stage") return;
         im.foreground.autoCrop = false;
         im.background.autoCrop = false;
         var i, e, u, score = {
@@ -490,22 +461,14 @@ var ImageEditor = function(settings) {
                 y: false
             }
         };
-        for (var i = im.stage.children.length - 1; i >= 0; i--) {
-            var layer = im.stage.children[i];
-            if (layer.autoCrop === false) continue;
-            for (var e = layer.children.length - 1; e >= 0; e--) {
-                var child = layer.children[e], rect = im.getActualRect(0, 0, child);
-                console.log(child);
-                for (var u = rect.length - 1; u >= 0; u--) {
-                    var point = rect[u], x = point[0] + layer.getX(), y = point[1] + layer.getY();
-                    if (x > score.max.x || score.max.x === false) score.max.x = x;
-                    if (x < score.min.x || score.min.x === false) score.min.x = x;
-                    if (y > score.max.y || score.max.y === false) score.max.y = y;
-                    if (y < score.min.y || score.min.y === false) score.min.y = y;
-                }
-            }
+        var child = im.activeElement, layer = child.parent, rect = im.getActualRect(0, 0, child);
+        for (var u = rect.length - 1; u >= 0; u--) {
+            var point = rect[u], x = point[0] + layer.getX(), y = point[1] + layer.getY();
+            if (x > score.max.x || score.max.x === false) score.max.x = x;
+            if (x < score.min.x || score.min.x === false) score.min.x = x;
+            if (y > score.max.y || score.max.y === false) score.max.y = y;
+            if (y < score.min.y || score.min.y === false) score.min.y = y;
         }
-        console.log(score);
         var size = {
             width: score.max.x - score.min.x,
             height: score.max.y - score.min.y
@@ -513,9 +476,9 @@ var ImageEditor = function(settings) {
         im.alterCore("saveWidth", Math.round(size.width));
         im.alterCore("saveHeight", Math.round(size.height));
         im.buildBackground();
-        var ap = [ im.center.x - im.activeElement.getWidth() / 2, im.center.y - im.activeElement.getHeight() / 2 ], adj = im.actualPosition(ap[0], ap[1], im.center.x, im.center.y, im.activeElement.getRotation());
-        im.activeElement.parent.setPosition(adj);
-        im.fire("adjustedsavers");
+        var ap = [ im.center.x - im.activeElement.getWidth() * im.activeElement.getScaleX() / 2, im.center.y - im.activeElement.getHeight() * im.activeElement.getScaleY() / 2 ], adj = im.actualPosition(ap[0], ap[1], im.center.x, im.center.y, im.activeElement.getRotation());
+        im.activeElement.parent.setPosition(adj.map(Math.round));
+        if (fire !== false) im.fire("adjustedsavers");
         im.stage.draw();
     };
     im.bind("imageLoad", function() {
@@ -562,10 +525,12 @@ var ImageEditor = function(settings) {
                 $(elem).parent().parent().removeClass("disabled");
             };
             this.im = im;
+            this.$ = $;
             warn("Loading ControlSet", im);
             try {
-                eval(js);
+                new Function("im", "$", js).call(this, im, $);
             } catch (e) {
+                console.log(e.stack);
                 var pos = e.stack.replace(/[\S\s]+at HTMLDivElement.eval.+?<anonymous>:(\d+:\d+)[\S\s]+/, "$1").split(":");
                 if (pos[1] && !isNaN(parseInt(pos[1]))) {
                     var jsstack = js.split("\n");
@@ -589,7 +554,7 @@ var ImageEditor = function(settings) {
             this.namespace = im.namespace;
             this.im = im;
             try {
-                eval(js);
+                new Function("im", "$", js).call(this, im, $);
             } catch (e) {
                 error(e);
                 window.lastError = e;
@@ -624,7 +589,7 @@ var ImageEditor = function(settings) {
             this.im = im;
             warn("Loading component", im);
             try {
-                eval(js);
+                new Function("im", "$", js).call(this, im, $);
             } catch (e) {
                 var pos = e.stack.replace(/[\S\s]+at HTMLDivElement.eval.+?<anonymous>:(\d+:\d+)[\S\s]+/, "$1").split(":");
                 if (pos[1] && !isNaN(parseInt(pos[1]))) {
@@ -650,6 +615,7 @@ var ImageEditor = function(settings) {
     im.stage.add(im.foreground);
     im.bgimage = new Image();
     im.saveArea = new Kinetic.Rect();
+    im.background.add(im.saveArea);
     im.bind("load", function() {
         im.saveArea.setFillPatternImage(im.bgimage);
         im.saveArea.setFillPatternOffset([ -(im.saveWidth / 2), -(im.saveHeight / 2) ]);
@@ -657,7 +623,6 @@ var ImageEditor = function(settings) {
         im.saveArea.setFillPatternX(0);
         im.saveArea.setFillPatternY(0);
         im.saveArea.setFillPatternRepeat("repeat");
-        im.background.add(im.saveArea);
         im.background.on("click", function() {
             im.setActiveElement(im.stage);
         });
@@ -668,34 +633,26 @@ var ImageEditor = function(settings) {
         var dimensions = im.stage.getTotalDimensions();
         var to = (dimensions.max.x + dimensions.visibleHeight + dimensions.visibleWidth) * 2;
         im.saveArea.setFillPatternOffset([ -(im.saveWidth / 2) * im.scale, -(im.saveHeight / 2) * im.scale ]);
-        im.saveArea.setX(Math.floor(im.center.x - im.saveWidth / 2));
-        im.saveArea.setY(Math.floor(im.center.y - im.saveHeight / 2));
+        im.saveArea.setX(Math.round(im.center.x - im.saveWidth / 2));
+        im.saveArea.setY(Math.round(im.center.y - im.saveHeight / 2));
         im.saveArea.setFillPatternScale(1 / im.scale);
         im.saveArea.setWidth(im.saveWidth);
         im.saveArea.setHeight(im.saveHeight);
-        if (im.foreground) {
-            im.foreground.destroy();
-        }
-        im.foreground = new Kinetic.Layer();
-        im.stage.add(im.foreground);
         if (!im.coverLayer) {
             im.coverLayer = new Kinetic.Rect();
             im.coverLayer.setStroke("rgba(150,150,150,.5)");
             im.coverLayer.setFill("transparent");
             im.coverLayer.setListening(false);
             im.coverLayer.setStrokeWidth(Math.max(dimensions.width, dimensions.height, 500));
+            im.foreground.add(im.coverLayer);
         }
         var width = Math.max(dimensions.width, dimensions.height) * 2;
         im.coverLayer.setPosition(im.saveArea.getX() - width / 2, im.saveArea.getY() - width / 2);
         im.coverLayer.setSize(im.saveArea.getWidth() + width, im.saveArea.getHeight() + width);
         im.coverLayer.setStrokeWidth(width);
-        im.foreground.add(im.coverLayer);
         im.fire("backgroundBuilt");
-        im.background.draw();
-        im.foreground.draw();
-        if (im.activeElement && im.activeElement.elementType != "stage" && im.activeElement.parent) {
-            im.activeElement.parent.draw();
-        }
+        im.saveArea.draw();
+        im.coverLayer.draw();
     };
     im.buildBackground();
     im.on("stageChanged", im.buildBackground);

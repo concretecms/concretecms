@@ -80,7 +80,7 @@ $filters = SystemImageEditorFilter::getList();
 
 <script>
 $(function(){
-  var settings = {src:'<?=$fv->getURL()?>',controlsets:{},filters:{},components:{},debug:true};
+  var settings = {src:'<?=$fv->getURL()?>',fID:<?=$fv->fID?>,controlsets:{},filters:{},components:{},debug:true};
   $('div.controlset','div.controls').each(function(){
     settings.controlsets[$(this).attr('data-namespace')] = {
       src:$(this).attr('data-src'),

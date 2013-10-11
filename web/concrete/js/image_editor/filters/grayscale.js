@@ -5,23 +5,25 @@ im.bind('filterFullyLoaded',function(e){
 	}
 });
 im.bind('filterChange',function(e){
-	if (e.eventData.im.namespace === me.im.namespace) {
-		// Just apply, there is no variation.
-		im.showLoader('Applying Grayscale');
-		setTimeout(function(){
-			im.activeElement.applyFilter(im.filter.grayscale,{},function(){
-				$.fn.dialog.hideLoader();
-				im.fire('filterApplied', me);
-				im.activeElement.parent.draw();
-			});
-			// Apply Filter
-		}, 10);
-	}
+  if (e.eventData.im.namespace === me.im.namespace) {
+    im.showLoader('Applying Grayscale');
+
+    setTimeout(function(){
+      // Just apply, there is no variation.
+
+      im.activeElement.setFilter(Kinetic.Filters.Grayscale);
+      im.activeElement.applyFilter();
+
+      im.hideLoader();
+      im.fire('GrayscaleFilterDidFinish');
+      im.fire('filterApplied', me);
+      // Apply Filter
+    },10); // Allow loader to show
+  }
 });
 im.bind('filterApplyExample',function(e){
 	if (e.eventData.namespace === me.im.namespace) {
-		e.eventData.image.applyFilter(im.filter.grayscale,{},function(){
-			im.fire('filterBuiltExample', me,  e.eventData.elem);
-		});
+		e.eventData.image.setFilter(im.filter.grayscale);
+		im.fire('filterBuiltExample', me, e.eventData.elem);
 	}
 });

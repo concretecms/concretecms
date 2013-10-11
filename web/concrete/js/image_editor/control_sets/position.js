@@ -2,8 +2,14 @@ var me = $(this), elem = this;
 im.selected = false;
 im.disable();
 
+im.ratio = {x:1, y:1}
+
 function Positioning(im, me, elem) {
   var my = this;
+
+  if (!im.strictSize) {
+    $('div.positioning', me).hide();
+  }
 
   my.setActiveX = function(x) { im.activeElement.setX(Math.round(x)); };
   my.setActiveY = function(y) { im.activeElement.setY(Math.round(y)); };
@@ -26,7 +32,9 @@ function Positioning(im, me, elem) {
         im.currentElement.setDraggable(false);
       }
       im.currentElement = im.activeElement;
-      im.currentElement.setDraggable(true);
+      if (im.strictSize) {
+        im.currentElement.setDraggable(true);
+      }
       im.origin = im.currentElement.getPosition();
       if (!im.currentElement.isBound) {
         im.currentElement.on('dragmove',function() {
@@ -44,7 +52,9 @@ function Positioning(im, me, elem) {
     if (e.eventData == im.namespace) {
       im.selected = true;
       im.currentElement = im.activeElement;
-      im.currentElement.setDraggable(true);
+      if (im.strictSize) {
+        im.currentElement.setDraggable(true);
+      }
       im.origin = im.currentElement.getPosition();
       if (!im.currentElement.isBound) {
         im.currentElement.on('dragmove',function() {
@@ -95,7 +105,7 @@ function Positioning(im, me, elem) {
     value:0,
     animate: 300,
     slide: function(ev,e){
-      my.setActiveX(e.value + Math.round(im.center.x - im.saveWidth/2));
+      my.setActiveX(im.saveArea.getX() - e.value);
       //im.trigger('activeElementMove', e);
       im.trigger('sliderMove', e, elem);
     },
@@ -123,14 +133,14 @@ function Positioning(im, me, elem) {
   },elem);
 
   var updateSliders = function() {
-    sliderx.slider('option', 'value', -Math.round(Math.round(im.center.x - im.saveWidth/2) - im.currentElement.attrs.x));
-    slidery.slider('option', 'value', Math.round(Math.round(im.center.y - im.saveHeight/2) - im.currentElement.attrs.y));
+    sliderx.slider('option', 'value', im.saveArea.getX() - im.activeElement.parent.getX());
+    slidery.slider('option', 'value', im.saveArea.getY() - im.activeElement.parent.getY());
     updateInputs();
   };
   var inputx = $('div.horizontal > input',me), inputy = $('div.vertical > input',me);
   var updateInputs = function() {
-    inputx.val(-Math.round(Math.round(im.center.x - im.saveWidth/2) - im.currentElement.attrs.x) || "0");
-    inputy.val(-Math.round(Math.round(im.center.y - im.saveHeight/2) - im.currentElement.attrs.y) || "0");
+    inputx.val(im.saveArea.getX() - im.activeElement.parent.getX());
+    inputy.val(im.saveArea.getY() - im.activeElement.parent.getY());
   };
 
   $('button.up',me).click(function(e) {
@@ -190,21 +200,23 @@ function Sizing(im, me, elem) {
   var our = this;
   var locked = $('div.locked',me).addClass('active').click(function(){
     im.ratioLocked = !im.ratioLocked;
+    im.ratio.x = im.activeElement.getWidth();
+    im.ratio.y = im.activeElement.getHeight();
     ((im.ratioLocked && $(this).addClass('active')) || $(this).removeClass('active'));
   });
 
   this.scalingSize = {width:im.activeElement.getWidth(), height:im.activeElement.getHeight()};
 
-  this.scaleBox = $('div.scale > input', me).val(1);
+  this.scaleBox = $('div.scale > span.perc > input', me).val(100);
   this.slider = $('div.scale > div', me).slider({
-    step: 1,
+    step: 10,
     range: "min",
-    min:0,
+    min:10,
     max:500,
     value:100,
     animate: 300,
     slide: function(ev,e){
-      our.scaleBox.val(e.value / 100);
+      our.scaleBox.val(e.value);
       var oldWidth = im.activeElement.getWidth(), oldHeight = im.activeElement.getHeight();
       im.activeElement.setWidth(Math.round(e.value / 100 * our.scalingSize.width));
       im.activeElement.setHeight(Math.round(e.value / 100 * our.scalingSize.height));
@@ -213,11 +225,13 @@ function Sizing(im, me, elem) {
       im.sizeBoxes.width.val(im.activeElement.getWidth());
       im.sizeBoxes.height.val(im.activeElement.getHeight());
       im.fire('activeElementSizeChange','scale');
+      im.adjustSavers();
       im.activeElement.parent.draw();
     },
     stop: function() {
       im.activeElement.setX(Math.round(im.activeElement.getX()));
       im.activeElement.setY(Math.round(im.activeElement.getY()));
+      im.adjustSavers();
     }
   });
   im.bind('activeElementSizeChange',function(e) {
@@ -225,7 +239,8 @@ function Sizing(im, me, elem) {
     our.scalingSize.width  = im.activeElement.getWidth();
     our.scalingSize.height = im.activeElement.getHeight();
     our.slider.slider('option','value',100);
-    our.scaleBox.val(1);
+    our.scaleBox.val(100);
+    im.adjustSavers();
   });
 
   im.sizeBoxes = {
@@ -238,7 +253,10 @@ function Sizing(im, me, elem) {
         height = im.activeElement.getHeight();
 
     if (im.ratioLocked) {
-      height *= width / im.activeElement.getWidth();
+      height = Math.round(im.ratio.y * (width / im.ratio.x));
+    }
+    if (height === 0) {
+      height = 1;
     }
 
     im.activeElement.setSize(Math.round(width), Math.round(height));
@@ -252,7 +270,10 @@ function Sizing(im, me, elem) {
         width = im.activeElement.getWidth();
 
     if (im.ratioLocked) {
-      width *= height / im.activeElement.getHeight();
+      width = Math.round(im.ratio.x * (height / im.ratio.y));
+    }
+    if (width === 0) {
+      width = 1;
     }
 
     im.activeElement.setSize(Math.round(width), Math.round(height));
@@ -262,6 +283,9 @@ function Sizing(im, me, elem) {
   });
 
   im.controlLayer = new Kinetic.Layer();
+  im.stage.add(im.controlLayer);
+  im.controlLayer.hide();
+
   im.controlLayer.autoCrop = false;
   im.bind('rotationChanged',function(){
     im.controlLayer.setRotationDeg(im.activeElement.getRotationDeg());
@@ -327,10 +351,12 @@ function Sizing(im, me, elem) {
     };
 
     my.setActiveWidth = function(w) {
+      w = Math.max(w, 1);
       im.sizeBoxes.width.val(Math.round(w));
       im.activeElement.setWidth(Math.round(w));
     };
     my.setActiveHeight = function(h) {
+      h = Math.max(h, 1);
       im.sizeBoxes.height.val(Math.round(h));
       im.activeElement.setHeight(Math.round(h));
     };
@@ -383,8 +409,8 @@ function Sizing(im, me, elem) {
         };
         this.update = function UpdateTopLeft(){
           my.setActiveWidth(my.startSize.width - my.handle.getX());
-          my.setActiveHeight(my.startSize.height - my.handle.getY());
-          my.setActivePos(my.elemStartPos.x + my.handle.getX(), my.elemStartPos.y + my.handle.getY());
+          my.setActiveHeight(my.startSize.height * (im.activeElement.getWidth() / my.startSize.width));
+          my.setActivePos(my.elemStartPos.x + my.handle.getX(), my.elemStartPos.y + my.startSize.height - im.activeElement.getHeight());
         };
         break;
       case SizingHandleTop | SizingHandleRight:
@@ -394,8 +420,8 @@ function Sizing(im, me, elem) {
         };
         this.update = function UpdateTopRight(){
           my.setActiveWidth(my.handle.getX());
-          my.setActiveHeight(my.startSize.height - my.handle.getY());
-          my.setActiveY(my.elemStartPos.y + my.handle.getY());
+          my.setActiveHeight(my.startSize.height * (im.activeElement.getWidth() / my.startSize.width));
+          my.setActiveY(my.elemStartPos.y + my.startSize.height - im.activeElement.getHeight());
         };
         break;
         case SizingHandleBottom | SizingHandleLeft:
@@ -405,7 +431,7 @@ function Sizing(im, me, elem) {
         };
         this.update = function UpdateBottomLeft(){
           my.setActiveWidth(my.startSize.width - my.handle.getX());
-          my.setActiveHeight(my.handle.getY());
+          my.setActiveHeight(my.startSize.height * (im.activeElement.getWidth() / my.startSize.width));
           my.setActiveX(my.elemStartPos.x + my.handle.getX());
         };
         break;
@@ -416,7 +442,7 @@ function Sizing(im, me, elem) {
         };
         this.update = function UpdateBottomRight(){
           my.setActiveWidth(my.handle.getX());
-          my.setActiveHeight(my.handle.getY());
+          my.setActiveHeight(my.startSize.height * (im.activeElement.getWidth() / my.startSize.width));
         };
         break;
 
@@ -447,8 +473,12 @@ function Sizing(im, me, elem) {
       im.fire('activeElementSizeChange');
     });
 
-    im.bind(['activeElementDragMove', 'activeElementSizeChange', 'activeElementChangingSize', 'adjustedsavers'], function(e){
+    im.bind(['activeElementDragMove', 'activeElementSizeChange', 'activeElementChangingSize', 'adjustedsavers', 'scaleChange'], function(e){
       if (e.eventData === my) return;
+      my.handle.setSize({width:7 / im.scale, height: 7 / im.scale});
+      my.handle.setOffset([(4 / im.scale) + .5, (4 / im.scale) + .5]);
+      my.handle.setStrokeWidth(1 / im.scale);
+
       my.position();
       im.controlLayer.draw();
     });
@@ -491,29 +521,33 @@ function Sizing(im, me, elem) {
       handles.forEach(function(handle) {
         handle.position();
       });
-      im.stage.add(im.controlLayer);
+      im.controlLayer.show();
       im.sizeBoxes.width.val(im.activeElement.getWidth());
       im.sizeBoxes.height.val(im.activeElement.getHeight());
       our.scalingSize.width = im.activeElement.getWidth();
       our.scalingSize.height = im.activeElement.getHeight();
     } else {
-      im.controlLayer.remove();
+      im.controlLayer.hide();
     }
   });
 
   im.bind('changeActiveElement', function(e) {
+    im.ratio.x = im.activeElement.getWidth();
+    im.ratio.y = im.activeElement.getHeight();
+
     if (typeof im.activeControlSet !== "string") {
       im.fire('ChangeActiveAction', im.namespace);
     }
     if (im.activeElement.nodeType === 'Stage') {
-      im.controlLayer.remove();
+      im.controlLayer.hide();
+
       im.disable();
       im.fire('ChangeActiveAction');
       return;
     } else {
       im.enable();
       if (!im.controlLayer.parent && im.activeControlSet === im.namespace) {
-        im.stage.add(im.controlLayer);
+        im.controlLayer.show();
       }
     }
     handles.forEach(function(handle) {
@@ -577,8 +611,10 @@ function Rotation(im, me, elem) {
   });
   $('button.rot', me).click(function() {
     var deg = im.activeElement.getRotationDeg();
-    deg = (Math.round((deg + 45) / 45) * 45) % 360;
+    deg = (Math.round((deg + 90) / 90) * 90) % 360;
     im.activeElement.setRotationDeg(deg);
+    im.adjustSavers();
+
 
     im.fire('activeElementShouldAdjustLayer');
 
@@ -598,6 +634,7 @@ function Rotation(im, me, elem) {
     slide: function(ev,e){
       my.box.val(e.value);
       im.activeElement.setRotationDeg(e.value);
+      im.adjustSavers(false);
 
       im.fire('activeElementShouldAdjustLayer');
       im.fire('rotationChanged', me);
