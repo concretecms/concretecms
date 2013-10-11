@@ -21,7 +21,7 @@ if (settings.src) {
       x: 0,
       y: 0
     });
-    im.addElement(image,'image');
+    im.addElement(image, 'image');
     image.setPosition(center);
     im.fire('imageload');
     var activate = function(){

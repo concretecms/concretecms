@@ -1,22 +1,11 @@
 im.addElement = function(object, type) {
-
-  function createConduit(fn, self, callback, callbackself) {
-    return function generatedConduit() {
-      var result = fn.apply(self, arguments);
-      if (typeof callback === 'function') {
-        if (typeof callbackself !== 'undefined') {
-          callback.call(callbackself, result);
-        } else {
-          callback(result);
-        }
-      }
-      return result;
-    }
-  }
   var layer = new Kinetic.Layer();
+  object.elementType = type;
+  layer.elementType = type;
 
   layer.add(object);
   im.stage.add(layer);
+  layer.moveDown();
   im.stage.draw();
 };
 
@@ -29,7 +18,7 @@ im.on('backgroundBuilt',function(){
 
 im.setActiveElement = function(element) {
   if (element.defer) {
-      return im.setActiveElement(element.defer);
+    return im.setActiveElement(element.defer);
   }
   if (im.activeElement == element) return;
   if (im.activeElement !== undefined && im.activeElement.doppelganger !== undefined) {

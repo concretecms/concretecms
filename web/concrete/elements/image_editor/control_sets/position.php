@@ -1,34 +1,36 @@
 <div class='cancelbutton'>
 	Cancel
 </div>
-<div class='horizontal'>
-	<span>Horizontal</span>
-	<div></div>
-	<input />
+<div class='positioning'>
+	<div class='horizontal'>
+		<span>Horizontal</span>
+		<div></div>
+		<input />
+	</div>
+	<div class='vertical'>
+		<span>Vertical</span>
+		<div></div>
+		<input />
+	</div>
+	<button class='btn center'>
+		<i class='icon-screenshot'/>
+		Center
+	</button>
+	<?php /*<button class='btn delete btn-danger'>
+		<i class='icon-trash'/>
+		Delete
+	</button>
+	<div class="btn-group">
+	  <button class="btn up">Move Forward</button>
+	  <button class="btn down">Move Backward</button>
+	</div>*/?>
+	<hr>
 </div>
-<div class='vertical'>
-	<span>Vertical</span>
-	<div></div>
-	<input />
-</div>
-<button class='btn center'>
-	<i class='icon-screenshot'/>
-	Center
-</button>
-<?php /*<button class='btn delete btn-danger'>
-	<i class='icon-trash'/>
-	Delete
-</button>
-<div class="btn-group">
-  <button class="btn up">Move Forward</button>
-  <button class="btn down">Move Backward</button>
-</div>*/?>
-<hr>
 <div class='cropcontrols'>
 	<div class='scale'>
 		<span>Scale</span>
 		<div></div>
-		<input />
+		<span class='perc'><input />%</span>
 	</div>
 	<div class='widthinput cropcontrol'>
 		<label for='width'>

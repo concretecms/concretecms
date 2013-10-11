@@ -90,10 +90,11 @@ saveSize.crop = getElem('<div><i class="icon-resize-full"/></div>').addClass('bo
 saveSize.both = saveSize.height.add(saveSize.width).width(32).attr('contenteditable',!!1);
 
 saveSize.area = getElem('<span/>').css({float:'right'});
-saveSize.crop.appendTo(saveSize.area);
+/*saveSize.crop.appendTo(saveSize.area);
 saveSize.width.appendTo($('<div>w </div>').addClass('saveWidth').appendTo(saveSize.area));
 saveSize.height.appendTo($('<div>h </div>').addClass('saveHeight').appendTo(saveSize.area));
 saveSize.area.appendTo(controlBar);
+*/
 
 im.on('adjustedsavers',function(){
   saveSize.width.text(im.saveWidth);

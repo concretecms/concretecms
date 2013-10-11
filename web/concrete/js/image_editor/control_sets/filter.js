@@ -54,7 +54,6 @@ im.bind('filterLoad',function(e) {
     layer.add(image);
     stage.add(layer);
     stage.draw();
-    im.fire('filterApplyExample',{namespace:newFilter.im.namespace, image:image, elem:li.get(0)});
     im.bind('filterBuiltExample',function(e){
       stage.toImage({
         width:160,
@@ -65,7 +64,9 @@ im.bind('filterLoad',function(e) {
           li.append($(renderedimage));
         }
       });
-    },li.get(0));
+    }, li.get(0));
+    im.fire('filterApplyExample',{namespace:newFilter.im.namespace, image:image, elem:li.get(0)});
+
   })();
   newFilter.parent = me;
 
@@ -82,3 +83,27 @@ im.bind('filterLoad',function(e) {
   me.append(newFilter.controls);
   im.fire('filterFullyLoaded',newFilter);
 });
+im.bind('filterApplied',function(e){
+  im.activeElement.parent.draw();
+});
+/*  console.log('derp');
+  var elem = im.activeElement,
+      layer = elem.parent,
+      rotation = elem.getRotation();
+
+  elem.setRotation(0);
+  elem.draw();
+  var img = new Image();
+  img.src = elem.toDataURL({
+    x: layer.getX(),
+    y: layer.getY(),
+    width: elem.getWidth(),
+    height: elem.getHeight(),
+  });
+
+  elem.setImage(img);
+  elem.setRotation(rotation);
+  elem.clearFilter();
+  layer.draw();
+});
+*/

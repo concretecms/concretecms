@@ -5,11 +5,16 @@ div.controlset.position div.cropcontrols > div.scale > span {
   color: #666;
   display: block;
 }
+div.controlset.position div.cropcontrols > div.scale > span.perc {
+  float: right;
+  width: 50px;
+  display: inline-block;
+}
 div.controlset.position > div.control div.horizontal > input,
 div.controlset.position > div.control div.vertical > input,
-div.controlset.position div.cropcontrols > div.scale > input {
-  width: 50px;
-  float: right;
+div.controlset.position div.cropcontrols > div.scale > span.perc > input {
+  width: 30px;
+  float: left;
 }
 div.controlset.position > div.control div.horizontal > div,
 div.controlset.position > div.control div.vertical > div,
