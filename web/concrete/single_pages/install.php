@@ -67,6 +67,7 @@ $(function() {
 
 <div class="page-header">
 <h1><?=t('Install concrete5')?></h1>
+<p><?=t('Version')?> <?=APP_VERSION?></p>
 </div>
 
 <div class="row">
@@ -115,6 +116,7 @@ $(function() {
 
 <div class="page-header">
 <h1><?=t('Install concrete5')?></h1>
+<p><?=t('Version')?> <?=APP_VERSION?></p>
 </div>
 
 <form action="<?=$this->url('/install', 'configure')?>" method="post">
@@ -282,6 +284,7 @@ $(function() {
 
 <div class="page-header">
 	<h1><?=t('Install concrete5')?></h1>
+	<p><?=t('Version')?> <?=APP_VERSION?></p>
 </div>
 
 
@@ -406,6 +409,7 @@ $(function() {
 
 <div class="page-header">
 	<h1><?=t('Install concrete5')?></h1>
+	<p><?=t('Version')?> <?=APP_VERSION?></p>
 </div>
 
 <div id="ccm-install-intro">
