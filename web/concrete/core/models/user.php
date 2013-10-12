@@ -587,6 +587,14 @@
 				return $val;
 			}
 		}
+
+		public function markPreviousFrontendPage(Page $c) {
+			$_SESSION['frontendPreviousPageID'] = $c->getCollectionID();
+		}
+
+		public function getPreviousFrontendPageID() {
+			return $_SESSION['frontendPreviousPageID'];
+		}
 		
 		public function saveConfig($cfKey, $cfValue) {
 			$db = Loader::db();

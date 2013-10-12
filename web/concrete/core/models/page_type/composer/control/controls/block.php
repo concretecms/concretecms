@@ -84,14 +84,14 @@ class Concrete5_Model_BlockPageTypeComposerControl extends PageTypeComposerContr
 		return false;
 	}
 
-	public function isPageTypeComposerControlDraftValueEmpty() {
+	public function isPageTypeComposerControlValueEmpty() {
 		$bt = $this->getBlockTypeObject();
 		$controller = $bt->getController();				
-		if (method_exists($controller, 'isPageTypeComposerControlDraftValueEmpty')) {
+		if (method_exists($controller, 'isPageTypeComposerControlValueEmpty')) {
 			$bx = $this->getPageTypeComposerControlBlockObject($this->page);
 			if (is_object($bx)) {
 				$controller = $bx->getController();
-				return $controller->isPageTypeComposerControlDraftValueEmpty();
+				return $controller->isPageTypeComposerControlValueEmpty();
 			}
 		}
 		return false;

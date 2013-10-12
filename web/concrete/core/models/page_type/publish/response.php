@@ -9,10 +9,10 @@ class Concrete5_Model_PageTypePublishResponse extends Object {
 	public $saveURL;
 	public $redirectURL;
 	public $saveStatus;
-	public $publishURL;
 	public $discardURL;
 	public $viewURL;
-
+	public $time;
+	
 	public function __construct($e = false) {
 		if ($e instanceof ValidationErrorHelper && $e->has()) {
 			$this->error = true;
@@ -53,10 +53,5 @@ class Concrete5_Model_PageTypePublishResponse extends Object {
 		$this->viewURL = $viewURL;
 	}
 	
-	public function setPublishURL($publishURL) {
-		$this->publishURL = $publishURL;
-	}
-
-
 
 }

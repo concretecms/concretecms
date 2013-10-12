@@ -105,7 +105,16 @@ $v->addFooterItem('<script type="text/javascript">$(function() { CCMDashboard.st
 
 <? if (isset($backgroundImage->caption) && $backgroundImage->caption) { ?>
 	<div id="ccm-dashboard-background-caption" class="ccm-ui"><div id="ccm-dashboard-background-caption-inner"><? if ($backgroundImage->url) { ?><a target="_blank" href="<?=$backgroundImage->url?>"><? } ?><?=$backgroundImage->caption?><? if ($backgroundImage->url) { ?></a><? } ?></div></div>
-<? } ?>
+<? } 
+
+$u = new User();
+$frontendPageID = $u->getPreviousFrontendPageID();
+if (!$frontendPageID) {
+	$backLink = DIR_REL . '/';
+} else {
+	$backLink = DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $frontendPageID;
+}
+?>
 
 <div class="ccm-ui">
 
@@ -113,7 +122,7 @@ $v->addFooterItem('<script type="text/javascript">$(function() { CCMDashboard.st
 	<ul>
 		<li class="ccm-logo pull-left"><span><?=Loader::helper('concrete/interface')->getToolbarLogoSRC()?></span></li>
 
-		<li class="ccm-toolbar-account pull-left"><a href="<?=DIR_REL?>/"><i class="icon-arrow-left"></i></a>
+		<li class="ccm-toolbar-account pull-left"><a href="<?=$backLink?>"><i class="icon-arrow-left"></i></a>
 		<li class="ccm-toolbar-account pull-right"><a href="#" data-toggle="ccm-toolbar-hover-menu" data-toggle-menu="#ccm-toolbar-menu-user"><i class="icon-user"></i></a>
 		
 		<ul id="ccm-toolbar-menu-user" class="ccm-toolbar-hover-menu dropdown-menu">

@@ -6,7 +6,7 @@ $cmp = new Permissions($pagetype);
 
 <div class="ccm-ui">
 
-<div class="ccm-page-save-status"></div>
+<div class="alert alert-info" id="ccm-page-type-composer-form-save-status"></div>
 
 <div class="alert alert-danger" id="ccm-page-type-composer-form-error-list"></div>
 

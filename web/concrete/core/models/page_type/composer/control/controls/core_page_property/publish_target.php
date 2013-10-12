@@ -14,7 +14,7 @@ class Concrete5_Model_PublishTargetCorePagePropertyPageTypeComposerControl exten
 
 	public function getPageTypeComposerControlDraftValue() {
 		if (is_object($this->page)) {
-			return $this->page->getPageTargetParentPageID();
+			return $this->page->getPageDraftTargetParentPageID();
 		}
 	}
 	

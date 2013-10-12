@@ -7,6 +7,11 @@ if (is_object($c) && !$c->isError()) {
 		$pagetype = PageType::getByID($c->getPageTypeID());
 		$req = Request::get();
 		$req->requireAsset('core/composer');
+
+		$id = $c->getCollectionID();
+		$saveURL = View::url('/dashboard/composer/write', 'save', 'draft', $id);
+		$viewURL = View::url('/dashboard/composer/write', 'draft', $id);
+
 		?>
 
 		<section class="ccm-ui">
@@ -14,19 +19,18 @@ if (is_object($c) && !$c->isError()) {
 			<header><?=t('Composer - %s', $pagetype->getPageTypeName())?></header>
 			<form method="post" data-form="composer" class="form-horizontal">
 			<div class="ccm-ui">
-				<? Loader::helper('composer')->display($pagetype, $draft); ?>
+				<? Loader::helper('composer')->display($pagetype, $c); ?>
 			</div>
 			<div class="ccm-ui ccm-pane-detail-form-actions">
-				<? Loader::helper('composer')->displayButtons($pagetype, $draft); ?>
+				<? Loader::helper('composer')->displayButtons($pagetype, $c); ?>
 			</div>
 			</form>
 		</section>
 
 		<script type="text/javascript">
-		$(function() {
-			$('form[data-form=composer]').ccmcomposer();
-		});
+			$(function() { 
+				$('form[data-form=composer]').ccmcomposer({token: '<?=Loader::helper('validation/token')->generate('composer')?>', cID: '<?=$id?>'});
+			});
 		</script>
 	<? }
 }
-?>

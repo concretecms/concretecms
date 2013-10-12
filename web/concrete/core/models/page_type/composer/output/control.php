@@ -19,11 +19,11 @@ class Concrete5_Model_PageTypeComposerOutputControl extends Object {
 		return PageTypeComposerOutputControl::getByID($ptComposerOutputControlID);
 	}
 
-	public static function getList(PageType $pt, PageTemplate $pt) {
+	public static function getList(PageType $pt, PageTemplate $template) {
 		$db = Loader::db();
 		// get all output controls for the particular page template.
 		$ptComposerOutputControlIDs = $db->GetCol('select ptComposerOutputControlID from PageTypeComposerOutputControls where pTemplateID = ? and ptID = ? order by ptComposerOutputControlID asc', array(
-			$pt->getPageTemplateID(), $pt->getPageTypeID()
+			$template->getPageTemplateID(), $pt->getPageTypeID()
 		));
 		$list = array();
 		foreach($ptComposerOutputControlIDs as $ptComposerOutputControlID) {
