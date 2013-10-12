@@ -1260,21 +1260,64 @@ class Concrete5_Model_Page extends Collection {
 
 		} else {
 
+			if ($existingPageTemplateID && $pTemplateID && ($existingPageTemplateID != $pTemplateID) && $this->getPageTypeID() > 0) {
+				// we are changing a page template in this operation.
+				// when that happens, we need to get the new defaults for this page, remove the other blocks
+				// on this page that were set by the old defaults master page
+				$pt = $this->getPageTypeObject();
+				if (is_object($pt)) {
+					$template = PageTemplate::getbyID($pTemplateID);
+					$existingPageTemplate = PageTemplate::getByID($existingPageTemplateID);
+
+					$oldMC = $pt->getPageTypePageTemplateDefaultPageObject($existingPageTemplate);
+					$newMC = $pt->getPageTypePageTemplateDefaultPageObject($template);
+					
+					$currentPageBlocks = $this->getBlocks();
+					$newMCBlocks = $newMC->getBlocks();
+					$oldMCBlocks = $oldMC->getBlocks();
+					$oldMCBlockIDs = array();
+					foreach($oldMCBlocks as $ob) {
+						$oldMCBlockIDs[] = $ob->getBlockID();
+					}
+
+					// now, we default all blocks on the current version of the page.
+					$db->Execute('delete from CollectionVersionBlocks where cID = ? and cvID = ?', array($this->getCollectionID(), $cvID));
+
+					// now, we go back and we alias blocks from the new master collection onto the page.
+					foreach($newMCBlocks as $b) {
+						$bt = $b->getBlockTypeObject();
+						if ($bt->getBlockTypeHandle() == BLOCK_HANDLE_PAGE_TYPE_OUTPUT_PROXY) {
+							continue;
+						}
+						if ($bt->isCopiedWhenPropagated()) {
+							$b->duplicate($this, true);
+						} else {
+							$b->alias($this);
+						}
+					}
+
+					// now, we go back and re-add the blocks we originally had on the page
+					// but only if they're not present in the oldMCBlocks array
+					foreach($currentPageBlocks as $b) {
+						if (!in_array($b->getBlockID(), $oldMCBlockIDs)) {
+							$newBlockDisplayOrder = $this->getCollectionAreaDisplayOrder($b->getAreaHandle());
+							$db->Execute('insert into CollectionVersionBlocks (cID, cvID, bID, arHandle, cbDisplayOrder, isOriginal, cbOverrideAreaPermissions, cbIncludeAll) values (?, ?, ?, ?, ?, ?, ?, ?)', array(
+								$this->getCollectionID(), $cvID, $b->getBlockID(), $b->getAreaHandle(), $newBlockDisplayOrder, $b->isAlias(), $b->overrideAreaPermissions(), $b->disableBlockVersioning()
+							));
+						}
+					}
+				}
+			}
+
 			$v = array($cName, $cHandle, $pTemplateID, $cDescription, $cDatePublic, $cvID, $this->cID);
 			$q = "update CollectionVersions set cvName = ?, cvHandle = ?, pTemplateID = ?, cvDescription = ?, cvDatePublic = ? where cvID = ? and cID = ?";
 			$r = $db->prepare($q);
 			$res = $db->execute($r, $v);	
 
-			if ($existingPageTemplateID && $pTemplateID && ($existingPageTemplateID != $pTemplateID) && $this->getPageTypeID() > 0) {
-				$pt = $this->getPageTypeObject();
-				if (is_object($pt)) {
-					$template = PageTemplate::getbyID($pTemplateID);
-					$mc = $pt->getPageTypePageTemplateDefaultPageObject($template);
-					$masterCID = $mc->getCollectionID();
-					$this->_associateMasterCollectionBlocks($this->cID, $masterCID);
-				}
-			}
 		}
+
+		// load new version object
+		$this->loadVersionObject($cvID);
 
 		$db->query("update Pages set uID = ?, pkgID = ?, cFilename = ?, cCacheFullPageContent = ?, cCacheFullPageContentLifetimeCustom = ?, cCacheFullPageContentOverrideLifetime = ? where cID = ?", array($uID, $pkgID, $cFilename, $cCacheFullPageContent, $cCacheFullPageContentLifetimeCustom, $cCacheFullPageContentOverrideLifetime, $this->cID));
 

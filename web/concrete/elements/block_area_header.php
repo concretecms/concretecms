@@ -28,6 +28,10 @@ if ($canAddGathering) {
 	$handles .= BLOCK_HANDLE_GATHERING_ITEM_PROXY . ' ';
 }
 
+$c = Page::getCurrentPage();
+if ($c->isMasterCollection()) {
+	$handles .= BLOCK_HANDLE_PAGE_TYPE_OUTPUT_PROXY . ' ';
+}
 ?>
 <div id="a<?=$a->getAreaID()?>" data-maximum-blocks="<?=$a->getMaximumBlocks()?>"
 data-total-blocks="<?=$a->getTotalBlocksInAreaEditMode()?>" 

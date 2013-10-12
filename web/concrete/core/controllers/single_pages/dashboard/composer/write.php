@@ -30,7 +30,7 @@ class Concrete5_Controller_Dashboard_Composer_Write extends DashboardBaseControl
 		}
 		$token = Loader::helper('validation/token')->generate('composer');
 		$js =<<<EOL
-<script type="text/javascript">$(function() { $('form[data-form=composer]').ccmcomposer({token: '{$token}', autoSavePushViewState: true, cID: {$cID}, viewURL: '{$viewURL}', saveURL: '{$saveURL}', discardURL: '{$discardURL}'})});</script>
+<script type="text/javascript">$(function() { $('form[data-form=composer]').ccmcomposer({token: '{$token}', autoSavePushViewState: true, autoSaveEnabled: false, cID: {$cID}, viewURL: '{$viewURL}', saveURL: '{$saveURL}', discardURL: '{$discardURL}'})});</script>
 EOL;
 		$this->addFooterItem($js);
 
