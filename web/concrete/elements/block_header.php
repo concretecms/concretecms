@@ -94,7 +94,7 @@ if ($isAlias) {
 			$sp = new Permissions($stack);
 			if ($sp->canWrite()) { ?>
 
-			<li><a href="<?=$this->url('/dashboard/blocks/stacks', 'view_details', $stack->getCollectionID())?>"><?=t("Manage Stack Contents")?></a></li>		
+			<li><a href="<?=View::url('/dashboard/blocks/stacks', 'view_details', $stack->getCollectionID())?>"><?=t("Manage Stack Contents")?></a></li>		
 
 			<? } 
 		}

@@ -100,7 +100,6 @@ $(function() {
 		window.location.href = $(this).find('option:selected').attr('data-sort-url');
 	});
 	$('form[data-form=composer]').ccmcomposer({
-		publishURL: '<?=html_entity_decode($this->action("post"))?>',
 		onExit: function() {
 			$dialog.dialog('close');
 		},

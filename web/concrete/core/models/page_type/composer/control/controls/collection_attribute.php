@@ -65,7 +65,7 @@ class Concrete5_Model_CollectionAttributePageTypeComposerControl extends PageTyp
 		return true;
 	}
 
-	public function isPageTypeComposerControlDraftValueEmpty() {
+	public function isPageTypeComposerControlValueEmpty() {
 		$ak = $this->getAttributeKeyObject();
 		$c = $this->page;
 		return ($c->getAttribute($ak) == '');

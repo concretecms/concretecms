@@ -17,7 +17,7 @@ abstract class Concrete5_Model_PageTypeComposerControl extends Object {
 	abstract public function addAssetsToRequest(Controller $cnt);
 	abstract public function export($node);
 	abstract public function shouldPageTypeComposerControlStripEmptyValuesFromPage();
-	abstract public function isPageTypeComposerControlDraftValueEmpty();
+	abstract public function isPageTypeComposerControlValueEmpty();
 	abstract public function removePageTypeComposerControlFromPage();
 
 	public function pageTypeComposerFormControlSupportsValidation() {

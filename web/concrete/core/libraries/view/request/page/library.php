@@ -78,6 +78,11 @@ class Concrete5_Library_PageRequestView extends PathRequestView {
 		// do we have any custom menu plugins?
 		$cp = new Permissions($this->c);
 		if ($cp->canViewToolbar()) { 
+			$dh = Loader::helper('concrete/dashboard');
+			if (!$dh->inDashboard() && $this->c->isActive() && !$this->c->isMasterCollection()) {
+				$u = new User();
+				$u->markPreviousFrontendPage($this->c);
+			}
 			$ih = Loader::helper('concrete/interface/menu');
 			$interfaceItems = $ih->getPageHeaderMenuItems();
 			foreach($interfaceItems as $item) {

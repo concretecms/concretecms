@@ -24,6 +24,32 @@ class Concrete5_Model_PageType extends Object {
 	public function getPackageHandle() {
 		return PackageList::getHandle($this->pkgID);
 	}
+
+	protected function stripEmptyPageTypeComposerControls(Page $c) {
+		$controls = PageTypeComposerControl::getList($this);
+		foreach($controls as $cn) {			
+			$cn->setPageObject($c);
+			if ($cn->shouldPageTypeComposerControlStripEmptyValuesFromPage() && $cn->isPageTypeComposerControlValueEmpty()) {
+				$cn->removePageTypeComposerControlFromPage();
+			}
+		}
+	}
+
+	public function publish(Page $c) {
+		$this->stripEmptyPageTypeComposerControls($c);
+		$parent = Page::getByID($c->getPageDraftTargetParentPageID());
+		$c->move($parent);
+		$u = new User();
+		$v = CollectionVersion::get($c, 'RECENT');
+		$pkr = new ApprovePagePageWorkflowRequest();
+		$pkr->setRequestedPage($c);
+		$pkr->setRequestedVersionID($v->getVersionID());
+		$pkr->setRequesterUserID($u->getUserID());
+		$pkr->trigger();
+		$c->activate();
+		$u->unloadCollectionEdit($c);
+		CacheLocal::flush();
+	}
 	
 	public function savePageTypeComposerForm(Page $c) {
 		$controls = PageTypeComposerControl::getList($this);
@@ -555,6 +581,17 @@ class Concrete5_Model_PageType extends Object {
 		$data = array('cvIsApproved' => 0);
 		$p = $parent->add($this, $data, $pt);
 		$p->deactivate();
+
+		// we have to publish the controls to the page. i'm not sure why
+		$controls = PageTypeComposerControl::getList($this);
+		$outputControls = array();
+		foreach($controls as $cn) {
+			$cn->publishToPage($p, array(), $controls);
+		}
+
+		// now we need to clear out the processed controls in case we 
+		// save again in the same request
+		CorePagePropertyPageTypeComposerControl::clearComposerRequestProcessControls();
 
 		return $p;
 	}

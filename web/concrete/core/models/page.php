@@ -316,7 +316,7 @@ class Concrete5_Model_Page extends Collection {
 		$db = Loader::db();
 		$u = new User();
 		$nc = Page::getByPath(PAGE_DRAFTS_PAGE_PATH);
-		$r = $db->Execute('select cID from Pages where uID = ? and cParentID = ?', array($u->getUserID(), $nc->getCollectionID()));
+		$r = $db->Execute('select Pages.cID from Pages inner join Collections c on Pages.cID = c.cID where uID = ? and cParentID = ? order by cDateAdded desc', array($u->getUserID(), $nc->getCollectionID()));
 		$pages = array();
 		while ($row = $r->FetchRow()) {
 			$entry = Page::getByID($row['cID']);
@@ -327,6 +327,11 @@ class Concrete5_Model_Page extends Collection {
 		return $pages;		
 	}
 	
+	public function isPageDraft() {
+		$db = Loader::db();
+		$nc = Page::getByPath(PAGE_DRAFTS_PAGE_PATH);
+		return $this->getCollectionParentID() == $nc->getCollectionID();
+	}
 	
 	private static function translatePermissionsXMLToKeys($node) {
 		$pkHandles = array();
@@ -1193,6 +1198,7 @@ class Concrete5_Model_Page extends Collection {
 		$pkgID = $this->getPackageID();
 		$cFilename = $this->getCollectionFilename();
 		$pTemplateID = $this->getPageTemplateID();
+		$existingPageTemplateID = $pTemplateID;
 
 		$rescanTemplatePermissions = false;
 		
@@ -1257,7 +1263,17 @@ class Concrete5_Model_Page extends Collection {
 			$v = array($cName, $cHandle, $pTemplateID, $cDescription, $cDatePublic, $cvID, $this->cID);
 			$q = "update CollectionVersions set cvName = ?, cvHandle = ?, pTemplateID = ?, cvDescription = ?, cvDatePublic = ? where cvID = ? and cID = ?";
 			$r = $db->prepare($q);
-			$res = $db->execute($r, $v);				
+			$res = $db->execute($r, $v);	
+
+			if ($existingPageTemplateID && $pTemplateID && ($existingPageTemplateID != $pTemplateID) && $this->getPageTypeID() > 0) {
+				$pt = $this->getPageTypeObject();
+				if (is_object($pt)) {
+					$template = PageTemplate::getbyID($pTemplateID);
+					$mc = $pt->getPageTypePageTemplateDefaultPageObject($template);
+					$masterCID = $mc->getCollectionID();
+					$this->_associateMasterCollectionBlocks($this->cID, $masterCID);
+				}
+			}
 		}
 
 		$db->query("update Pages set uID = ?, pkgID = ?, cFilename = ?, cCacheFullPageContent = ?, cCacheFullPageContentLifetimeCustom = ?, cCacheFullPageContentOverrideLifetime = ? where cID = ?", array($uID, $pkgID, $cFilename, $cCacheFullPageContent, $cCacheFullPageContentLifetimeCustom, $cCacheFullPageContentOverrideLifetime, $this->cID));
@@ -2301,7 +2317,7 @@ class Concrete5_Model_Page extends Collection {
 
 	public function getPageDraftTargetParentPageID() {
 		$db = Loader::db();
-		return $db->GetOne('select cDraftTargetParentPageID where cID = ?', array($this->cID));
+		return $db->GetOne('select cDraftTargetParentPageID from Pages where cID = ?', array($this->cID));
 	}
 	
 	public function setPageDraftTargetParentPageID($cParentID) {

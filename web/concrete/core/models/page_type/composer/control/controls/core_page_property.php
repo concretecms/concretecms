@@ -11,11 +11,15 @@ abstract class Concrete5_Model_CorePagePropertyPageTypeComposerControl extends P
 
 	}
 
+	public function clearComposerRequestProcessControls() {
+		self::$ptComposerRequestControlsProcessed = array();
+	}
+
 	public function removePageTypeComposerControlFromPage() {
 		return false;
 	}
 
-	public function isPageTypeComposerControlDraftValueEmpty() {
+	public function isPageTypeComposerControlValueEmpty() {
 		return $this->getPageTypeComposerControlDraftValue() != '';
 	}
 

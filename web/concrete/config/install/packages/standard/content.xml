@@ -129,6 +129,11 @@
         </pagetemplate>
         <pagetemplate handle="left_sidebar">
             <page name="" path="" filename="" pagetype="left_sidebar" description="" package="">
+                <area name="Sidebar" mc-block-id="aAFFsdkfjdUR">
+                    <block type="core_stack_display" name="">
+                        <stack><![CDATA[Side Nav]]></stack>
+                    </block>
+                </area>
                 <area name="Header Image">
                     <block type="image" name="" mc-block-id="EjT8GZha">
                         <data table="btContentImage">
@@ -154,6 +159,11 @@
         </pagetemplate>
         <pagetemplate handle="right_sidebar">
             <page name="" path="" filename="" pagetype="right_sidebar" description="" package="">
+                <area name="Sidebar" mc-block-id="fjdkfieURH">
+                    <block type="core_stack_display" name="">
+                        <stack><![CDATA[Side Nav]]></stack>
+                    </block>
+                </area>
                 <area name="Header Image">
                     <block type="image" name="" mc-block-id="v0zvw8ct">
                         <data table="btContentImage">
@@ -294,9 +304,7 @@
                     </page>
             <page name="About" path="/about" filename="" pagetype="page" template="left_sidebar" description="" package="">
                                             <area name="Sidebar">
-                                                <block type="core_stack_display" name="">
-                                                    <stack><![CDATA[Side Nav]]></stack>
-                                                </block>
+                                                <block mc-block-id="aAFFsdkfjdUR"/>
                                             </area>
                                             <area name="Main">
                                                 <block type="content" name="">
@@ -319,12 +327,10 @@
                                             </page>
 
             <page name="Contact Us" path="/about/contact-us" filename="" pagetype="page" template="left_sidebar" description="" package="">
-                <area name="Sidebar">
-                    <block type="core_stack_display" name="">
-                        <stack><![CDATA[Side Nav]]></stack>
-                    </block>
-                </area>
-                <area name="Main">
+                    <area name="Sidebar">
+                        <block mc-block-id="aAFFsdkfjdUR"/>
+                    </area>
+                    <area name="Main">
                     <block type="content" name="">
                         <data table="btContentLocal">
                             <record>

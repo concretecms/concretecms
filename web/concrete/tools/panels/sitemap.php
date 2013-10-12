@@ -25,7 +25,7 @@ foreach($drafts as $d) {
 <h5><?=t('New Page')?></h5>
 <ul class="ccm-panel-sitemap-list">
 <? foreach($ptlist as $pt) { ?> 
-	<li><a href="<?=View::url('/dashboard/composer/write', 'save', 'composer', $pt->getPageTypeID(), 'redirect')?>"><?=$pt->getPageTypeName()?></a></li>
+	<li><a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/pages/draft/create?ptID=<?=$pt->getPageTypeID()?>"><?=$pt->getPageTypeName()?></a></li>
 <? } ?>
 </ul>
 <? } ?>
@@ -55,7 +55,13 @@ $(function() {
 <ul class="ccm-panel-sitemap-list">
 <? foreach($mydrafts as $dc) { 
 	?> 
-	<li><a href="<?=View::url('/dashboard/composer/write', 'draft', $dc->getCollectionID())?>"><?=$dc->getCollectionName()?></a></li>
+	<li><a href="<?=View::url('/dashboard/composer/write', 'draft', $dc->getCollectionID())?>"><?
+		if ($dc->getCollectionName()) {
+			print $dc->getCollectionName();
+		} else {
+			print t('(Untitled)');
+		}
+	?></a></li>
 <? } ?>
 </ul>
 <? } ?>
