@@ -64,6 +64,7 @@ $(function() {
 <div class="span10 offset1">
 <div class="page-header">
 <h1><?=t('Install concrete5')?></h1>
+<p><?=t('Version %s', APP_VERSION)?></p>
 </div>
 </div>
 </div>
@@ -121,6 +122,7 @@ $(function() {
 
 <div class="page-header">
 <h1><?=t('Install concrete5')?></h1>
+<p><?=t('Version %s', APP_VERSION)?></p>
 </div>
 
 </div>
@@ -312,6 +314,7 @@ $(function() {
 <div class="span10 offset1">
 <div class="page-header">
 	<h1><?=t('Install concrete5')?></h1>
+	<p><?=t('Version %s', APP_VERSION)?></p>
 </div>
 
 <h3><?=t('Testing Required Items')?></h3>
@@ -440,6 +443,7 @@ $(function() {
 <div class="span10 offset1">
 <div class="page-header">
 	<h1><?=t('Install concrete5')?></h1>
+	<p><?=t('Version %s', APP_VERSION)?></p>
 </div>
 </div>
 </div>
