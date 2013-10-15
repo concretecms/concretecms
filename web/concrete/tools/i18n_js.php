@@ -174,3 +174,11 @@ var ccmi18n_filemanager = {
 	FTYPE_APPLICATION: "<?=FileType::T_APPLICATION?>"
 	
 }
+
+var ccmi18n_chosen = {
+
+	placeholder_text_multiple: "<?=t('Select Some Options')?>",
+	placeholder_text_single: "<?=t('Select an Option')?>",
+	no_results_text: "<?=t('No results match')?>"
+
+};
