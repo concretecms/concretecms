@@ -328,6 +328,6 @@ foreach($t1 as $value) {
 	$('#ccm-<?=$searchInstance?>-advanced-search select[name=fssID]').attr('disabled', false);
 	<? } ?>
 	
-	$(".chosen-select").chosen();	
+	$(".chosen-select").chosen(ccmi18n_chosen);	
 
 });</script>
