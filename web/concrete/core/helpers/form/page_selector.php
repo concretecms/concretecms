@@ -32,7 +32,7 @@ class Concrete5_Helper_Form_PageSelector {
 
 	public function selectPage($fieldName, $cID = false) {
 		$req = Request::get();
-		$req->requireAsset('javascript', 'core/observer');
+		$req->requireAsset('javascript', 'core/sitemap');
 		$selectedCID = 0;
 		if (isset($_REQUEST[$fieldName])) {
 			$selectedCID = $_REQUEST[$fieldName];
@@ -58,8 +58,7 @@ class Concrete5_Helper_Form_PageSelector {
 		var ccmActivePageField;
 		function ccm_initSelectPage() {
 			$('a.ccm-sitemap-select-page').unbind().dialog();
-			ccm_event.subscribe('SitemapSelectNode', function(event) {
-				var node = event.eventData.node;
+			$.fn.ccmsitemap('onSelectNode', '{$requestID}', function(node) {
 				var container = $('div[data-page-selector={$requestID}]');
 				container.find('.ccm-summary-selected-item-label').html(node.data.title);
 				container.find('.ccm-sitemap-clear-selected-page').show();

@@ -11,7 +11,7 @@ var CCMToolbar = function() {
 
 	setupPanels = function() {
 		CCMPanelManager.register({'identifier': 'dashboard', 'position': 'right'});
-		CCMPanelManager.register({'identifier': 'page', 'translucent': false});
+		CCMPanelManager.register({'identifier': 'page'});
 		CCMPanelManager.register({'identifier': 'sitemap', 'position': 'right'});
 		CCMPanelManager.register({'identifier': 'add-block', 'translucent': false, 'position': 'left', 'url' : CCM_TOOLS_PATH + '/panels/page/add_block'});
 		CCMPanelManager.register({'identifier': 'check-in', 'position': 'left', 'url' : CCM_TOOLS_PATH + '/panels/page/check_in'});
@@ -225,8 +225,7 @@ var CCMToolbar = function() {
 		launchPageComposer: function() {
 			$('a[data-launch-panel=page]').toggleClass('ccm-launch-panel-active');
 			CCMPanelManager.getByIdentifier('compose-page').show();
-			ccm_event.subscribe('PanelOpen',function(e) {
-				var panel = e.eventData.panel;
+			ccm_event.subscribe('panel.open',function(e, panel) {
 				if (panel.options.identifier == 'compose-page') {
 					$('#' + panel.getDOMID()).find('[data-launch-panel-detail=\'page/composer\']').addClass('ccm-panel-menu-item-active');
 				}

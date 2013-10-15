@@ -27,7 +27,7 @@
         <permissionkey handle="edit_page_contents" name="Edit Contents" description="Ability to make edits to at least some of the content in the page. You can lock down different block areas and specific blocks by clicking Permissions on them as well. " package="" category="page"/>
         <permissionkey handle="edit_page_speed_settings" name="Edit Speed Settings" description="Ability to change caching settings." package="" category="page"/>
         <permissionkey handle="edit_page_theme" has-custom-class="true" name="Change Theme" description="Ability to change just the theme for this page." package="" category="page"/>
-        <permissionkey handle="edit_page_type" name="Change Page Type" description="Ability to change just the page type for this page, also check out Theme permissions." package="" category="page"/>
+        <permissionkey handle="edit_page_template" name="Change Page Template" description="Ability to change just the page template for this page." package="" category="page"/>
         <permissionkey handle="edit_page_permissions" name="Edit Permissions" description="Ability to change permissions for this page. Warning: by granting this a user could give themselves more access." package="" can-trigger-workflow="true" category="page"/>
         <permissionkey handle="delete_page" name="Delete" package="" description="Ability to move this page to the site's Trash." category="page" can-trigger-workflow="true" />
         <permissionkey handle="delete_page_versions" name="Delete Versions" package="" description="Ability to remove old versions of this page." category="page" can-trigger-workflow="true" />

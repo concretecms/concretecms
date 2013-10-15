@@ -69,7 +69,7 @@ if ($_REQUEST['searchDialog'] == 1) {
 			$canEditPageProperties = $cpobj->canEditPageProperties();
 			$canEditPageSpeedSettings = $cpobj->canEditPageSpeedSettings();
 			$canEditPagePermissions = $cpobj->canEditPagePermissions();
-			$canEditPageDesign = ($cpobj->canEditPageTheme() || $cpobj->canEditPageType());
+			$canEditPageDesign = ($cpobj->canEditPageTheme() || $cpobj->canEditPageTemplate());
 			$canViewPageVersions = $cpobj->canViewPageVersions();
 			$canDeletePage = $cpobj->canDeletePage();
 			$canAddSubpages = $cpobj->canAddSubpage();

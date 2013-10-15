@@ -16,12 +16,18 @@ if (is_object($c) && !$c->isError()) {
 
 		<section class="ccm-ui">
 
+
 			<header><?=t('Composer - %s', $pagetype->getPageTypeName())?></header>
 			<form method="post" data-form="composer" class="form-horizontal">
-			<div class="ccm-ui">
+			<div class="container" style="margin-left: 0px; margin-right: 0px">
+			<div class="row">
+			<div class="col-lg-8">
 				<? Loader::helper('composer')->display($pagetype, $c); ?>
 			</div>
-			<div class="ccm-ui ccm-pane-detail-form-actions">
+			</div>
+			</div>
+
+			<div class="ccm-pane-detail-form-actions">
 				<? Loader::helper('composer')->displayButtons($pagetype, $c); ?>
 			</div>
 			</form>

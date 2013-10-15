@@ -845,7 +845,7 @@
 				$pl = PageTheme::getByID($_POST['plID']);
 			}
 			
-			if ($cp->canEditPageTheme($pl) || $cp->canEditPageType()) {
+			if ($cp->canEditPageTheme($pl) || $cp->canEditPageTemplate()) {
 				$nvc = $c->getVersionToModify();				
 				$data = array();
 				if (is_object($pl)) { 
@@ -854,7 +854,7 @@
 
 				if (!$c->isGeneratedCollection()) {
 				
-					if ($_POST['ptID'] && $cp->canEditPageType()) {
+					if ($_POST['ptID'] && $cp->canEditPageTemplate()) {
 						// now we have to check to see if you're allowed to update this page to this page type.
 						// We do this by checking to see whether the PARENT page allows you to add this page type here.
 						// if this is the home page then we assume you are good
@@ -1035,7 +1035,7 @@
 					'edit_page_contents',
 					'edit_page_speed_settings',
 					'edit_page_theme',
-					'edit_page_type',
+					'edit_page_template',
 					'edit_page_permissions',
 					'preview_page_as_user',
 					'schedule_page_contents_guest_access',

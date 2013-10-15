@@ -104,7 +104,7 @@ class ConcreteDashboardSitemapHelper {
 		$canEditPageProperties = $cp->canEditPageProperties();
 		$canEditPageSpeedSettings = $cp->canEditPageSpeedSettings();
 		$canEditPagePermissions = $cp->canEditPagePermissions();
-		$canEditPageDesign = ($cp->canEditPageTheme() || $cp->canEditPageType());
+		$canEditPageDesign = ($cp->canEditPageTheme() || $cp->canEditPageTemplate());
 		$canViewPageVersions = $cp->canViewPageVersions();
 		$canDeletePage = $cp->canDeletePage();
 		$canAddSubpages = $cp->canAddSubpage();

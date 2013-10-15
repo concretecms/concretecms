@@ -7,11 +7,10 @@ $cmp = new Permissions($pagetype);
 <div class="ccm-ui">
 
 <div class="alert alert-info" id="ccm-page-type-composer-form-save-status"></div>
-
 <div class="alert alert-danger" id="ccm-page-type-composer-form-error-list"></div>
 
 <? foreach($fieldsets as $cfl) { ?>
-	<fieldset style="margin-bottom: 0px">
+	<fieldset>
 		<? if ($cfl->getPageTypeComposerFormLayoutSetName()) { ?>
 			<legend><?=$cfl->getPageTypeComposerFormLayoutSetName()?></legend>
 		<? } ?>
@@ -30,6 +29,5 @@ $cmp = new Permissions($pagetype);
 	</fieldset>
 
 <? } ?>
-
 
 </div>

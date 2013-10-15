@@ -11,9 +11,9 @@ if (!$ptComposerPageTemplateID) {
 }
 ?>
 
-<div class="control-group">
+<div class="form-group">
 	<label class="control-label"><?=$label?></label>
-	<div class="controls" data-composer-field="page_template">
+	<div data-composer-field="page_template">
 		<?=$form->select('ptComposerPageTemplateID', $templates, $ptComposerPageTemplateID)?>
 	</div>
 </div>

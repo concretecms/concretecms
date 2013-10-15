@@ -3,9 +3,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 $user = Loader::helper('form/user_selector');
 ?>
 
-<div class="control-group">
+<div class="form-group">
 	<label class="control-label"><?=$label?></label>
-	<div class="controls">
-		<?=$user->selectUser($this->field('user'), $control->getPageTypeComposerControlDraftValue())?>
-	</div>
+	<?=$user->selectUser($this->field('user'), $control->getPageTypeComposerControlDraftValue())?>
 </div>
