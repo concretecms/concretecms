@@ -7,6 +7,91 @@ div#ccm-panel-page {
 
 		div.ccm-panel-content-inner {
 			padding: 20px;
+
+			div#ccm-panel-page-design-page-types {
+				.list-group-item {
+					img {
+						height: auto;
+						width: auto;
+						max-width: 24px;
+						max-height: 24px;
+						position: absolute;
+						top: 12px;
+						right: 30px;
+						.opacity(0.2);
+					}
+				}
+			}
+
+			div#ccm-panel-page-design-themes {
+
+				div.ccm-page-design-theme-thumbnail.list-group-item {
+					text-align: center;
+					span {
+						position: relative;
+						height: 90px;
+
+						i {
+							background-color: #fff;
+							display: inline-block;
+							text-style: normal;
+						}
+
+						.ccm-panel-page-design-theme-description {
+							display: none;
+							position: absolute;
+							top: 0px; 
+							height: 90px;
+							text-align: center;
+							width: 120px;
+
+							h4 {
+								display: inline;
+								color: #3baaf7;
+							}
+						}
+
+					}
+					img {
+						.opacity(1);
+					}
+					
+					&:hover {
+						cursor: pointer;
+						img {
+							.opacity(0.2);
+						}
+						span {
+							.ccm-panel-page-design-theme-description {
+								display: table-cell;
+								vertical-align: middle;
+							}
+						}
+					}
+				
+					&.ccm-page-design-theme-thumbnail-selected {
+						span {
+							img {
+								.box-shadow(0px 0px 4px 2px #3baaf7);
+							}
+						}
+
+						&:hover {
+							span {
+								img {
+									.opacity(1);
+								}
+								.ccm-panel-page-design-theme-description {
+									display: none;									
+								}
+							}
+						}
+					}
+				}
+
+
+			}
+
 		}
 
 	}
