@@ -171,6 +171,45 @@ var CCMPanel = function(options) {
 				});
 			})
 		});
+		$panel.find('[data-panel-menu=collapsible-list-group]').each(function() {
+			var $clg = $(this);
+			$clg.find('.list-group-item-collapse').on('click', function() {
+				var $inner = $clg.find('.list-group-item-collapse-wrapper');
+				var menuID = $clg.attr('data-panel-menu-id');
+				var $title = $clg.find('.list-group-item-collapse span');
+				var height = $inner.height();
+				if ($clg.hasClass('ccm-panel-list-group-item-expanded')) {
+					$title.text(ccmi18n.expand);
+					ccm_event.publish('collapse.' + menuID);
+					$inner.
+					queue(function() {
+						$(this).css('height', 0);
+						$(this).dequeue();
+					}).
+					delay(305).
+					queue(function() {
+						$(this).hide();
+						$(this).css('height', 'auto');
+						$(this).dequeue();
+					});
+				} else {
+					ccm_event.publish('expand.' + menuID);
+					$title.text(ccmi18n.collapse);
+					$inner.
+					queue(function() {
+						$(this).css('height', 0);
+						$(this).show();
+						$(this).dequeue();
+					}).
+					delay(5).
+					queue(function() {
+						$(this).css('height', height);
+						$(this).dequeue();
+					});
+				}
+				$clg.toggleClass('ccm-panel-list-group-item-expanded');
+			});
+		});
 		$panel.find('[data-launch-panel-detail]').unbind().on('click', function() {
 			$(this).addClass('ccm-panel-menu-item-active');
 			var identifier = $(this).attr('data-launch-panel-detail');

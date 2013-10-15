@@ -5,6 +5,8 @@ header('Content-type: text/javascript'); ?>
 
 var ccmi18n = { 
 	
+	expand: "<?=t('Expand')?>",
+	collapse: "<?=t('Collapse')?>",
 	error: "<?=t('Error')?>",
 	deleteBlock: "<?=t('Delete')?>",
 	deleteBlockMsg: "<?=t('The block has been removed successfully.')?>",
