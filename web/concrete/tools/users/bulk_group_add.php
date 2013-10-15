@@ -121,6 +121,6 @@ ccm_userBulkGroupAdd = function() {
 	});
 };
 $(function() { 
-	$(".chosen-select").chosen();	
+	$(".chosen-select").chosen(ccmi18n_chosen);	
 });
 </script>
