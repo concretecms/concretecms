@@ -352,7 +352,7 @@ class Concrete5_Model_Page extends Collection {
 			$pkHandles[] = 'edit_page_permissions';
 			$pkHandles[] = 'edit_page_theme';
 			$pkHandles[] = 'schedule_page_contents_guest_access';
-			$pkHandles[] = 'edit_page_type';
+			$pkHandles[] = 'edit_page_template';
 			$pkHandles[] = 'delete_page';
 			$pkHandles[] = 'delete_page_versions';
 		}

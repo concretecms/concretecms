@@ -11,6 +11,32 @@
 
     	customEvents: [],
 
+    	registerEvent: function(requestID, eventName, callback) {
+	    	if (this.eventListenerExists(requestID, 'onSelectNode')) {
+				for (i = 0; i < this.customEvents.length; i++) {
+					var eobj = this.customEvents[i];
+					if (eobj.requestID == requestID && eobj.eventName == eventName) {
+						eobj.callback = callback;
+					}
+				}
+	    	} else {
+	    		this.customEvents.push({
+	    			'requestID': requestID,
+	    			'callback': callback,
+	    			'eventName': eventName
+	    		});
+	    	}
+    	},
+
+    	triggerEvent: function(requestID, eventName, arguments) {
+			for (i = 0; i < this.customEvents.length; i++) {
+				var eobj = this.customEvents[i];
+				if (eobj.requestID == requestID && eobj.eventName == eventName) {
+					eobj.callback.apply(null, arguments);
+				}
+			}
+    	},
+
     	reloadNode: function(node, options, onComplete) {
     		var obj = this;
     		var params = {
@@ -31,7 +57,7 @@
     	},
 
 
-		eventListenerExists: function(eventName, requestID) {
+		eventListenerExists: function(requestID, eventName) {
 			for (i = 0; i < this.customEvents.length; i++) {
 				var eobj = this.customEvents[i];
 				if (eobj.requestID == requestID && eobj.eventName == eventName) {
@@ -189,6 +215,10 @@
     	}
 
 
+    },
+
+    onSelectNode: function(requestID, callback) {
+    	methods.private.registerEvent(requestID, 'onSelectNode', callback);
     },
 
 	getMenu: function(data, options) {
@@ -382,14 +412,6 @@
 		}
 	},
 
-	onNodeSelected: function(requestID, onComplete) {
-		methods.private.customEvents.push({
-			'eventName': 'selectNode',
-			'requestID': requestID,
-			'onComplete': onComplete
-		});
-	},
-
 	init: function(options) {
 
     	$('#ccm-show-all-pages-cb').on('click', function() {
@@ -403,7 +425,8 @@
 			displayNodePagination: false,
 			cParentID: 0,
 			requestID: (new Date().getTime()),
-			displaySingleLevel: false
+			displaySingleLevel: false,
+			onSelectNode: false
 		}, options);
 
 		var doPersist = true;
@@ -421,14 +444,7 @@
     	$.fn.ccmmenu.enable();
 		return this.each(function() {
 			$(this).attr('data-sitemap', 'container').attr('data-sitemap-request-id', settings.requestID);
-			// setup events
-			for (i = 0; i < methods.private.customEvents.length; i++) {
-				var eobj = methods.private.customEvents[i];
-				$('[data-sitemap-request-id=' + eobj.requestID + ']').on('selectNode', function(sitemapEvent, mouseEvent, node) {
-					eobj.onComplete(node);
-					return true;
-				});
-			}
+
 			var $obj = $(this);
 			$(this).data('options', settings);
 			$(this).dynatree({
@@ -469,9 +485,16 @@
 				},
 				onClick: function(node, e) {
 					if (node.getEventTargetType(e) == "title" && node.data.cID) {
-						//$.fn.ccmsitemap('triggerEvent', 'startSelectNode', [e, node, settings.requestID]);
-						ccm_event.publish('SitemapSelectNode',{mouseEvent: e, node: node, options: settings});
-
+						if (settings.onSelectNode) {
+							settings.onSelectNode(node);
+						} else if (methods.private.eventListenerExists(settings.requestID, 'onSelectNode')) {
+							methods.private.triggerEvent(settings.requestID, 'onSelectNode', [node]);
+						} else {
+							var $menu = methods.getMenu(node.data, settings);
+							if ($menu) {
+								$.fn.ccmmenu.showmenu(e, $menu);
+							}
+						}
 					} else if (node.data.href) {
 						window.location.href = node.data.href;
 					}
@@ -528,13 +551,6 @@
 					}
 				});
 			}
-
-			ccm_event.subscribe('SitemapSelectNode', function(event) {
-				var $menu = methods.getMenu(event.eventData.node.data, event.eventData.options);
-				if ($menu) {
-					$.fn.ccmmenu.showmenu(event.eventData.mouseEvent, $menu);
-				}
-			});
 
 			$(this).on('deleteRequestComplete', function(e, response) {
 				if (response.deferred) {

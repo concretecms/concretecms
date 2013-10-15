@@ -39,7 +39,7 @@ var CCMPanel = function(options) {
 	this.onPanelLoad = function() {
 		this.setupPanelDetails();
 		this.setupSubPanels();
-		ccm_event.publish('PanelOpen',{panel: this});
+		ccm_event.publish('panel.open', [this]);
 	}
 
 	this.openPanelDetail = function(detail) {

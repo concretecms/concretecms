@@ -53,7 +53,7 @@ switch($_GET['ctask']) {
 	case 'set_theme':
 		$toolSection = "collection_theme";
 		$divID = 'ccm-edit-collection-design';
-		$canViewPane = ($cp->canEditPageTheme() || $cp->canEditPageType());
+		$canViewPane = ($cp->canEditPageTheme() || $cp->canEditPageTemplate());
 		break;
 	case 'add_external':
 		$toolSection = "collection_add_external";

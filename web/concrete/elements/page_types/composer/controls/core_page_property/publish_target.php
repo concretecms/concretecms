@@ -5,9 +5,9 @@ $target = $pagetype->getPageTypePublishTargetObject();
 $c = $control->getPageObject();
 ?>
 
-<div class="control-group">
+<div class="form-group">
 	<label class="control-label"><?=$label?></label>
-	<div class="controls" data-composer-field="name">
+	<div data-composer-field="name">
 		<?=$target->includeChooseTargetForm($pagetype, $c)?>
 	</div>
 </div>

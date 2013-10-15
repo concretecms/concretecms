@@ -69,7 +69,7 @@ foreach($pages as $c) {
 		$isMasterCollection = true;
 	}
 	$cp = new Permissions($c);
-	if ($cp->canEditPageTheme() && $cp->canEditPageType()) {
+	if ($cp->canEditPageTheme() && $cp->canEditPageTemplate()) {
 		$pcnt++;
 	}
 }

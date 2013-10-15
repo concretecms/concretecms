@@ -13,8 +13,8 @@
 		if (is_object($pagetype)) { ?>
 			<li><a href="#" data-launch-panel-detail="page-composer" data-panel-url="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/panels/details/page/composer" data-panel-transition="swap"><?=t('Composer')?></a></li>
 		<? } ?>
-		<? if ($cp->canEditPageTheme() || $cp->canEditPageType()) { ?>
-			<li><a href=""><?=t('Design')?></a></li>
+		<? if ($cp->canEditPageTheme() || $cp->canEditPageTemplate()) { ?>
+			<li><a href="#" data-launch-sub-panel="page/design"><?=t('Design')?></a></li>
 		<? }
 		if (is_object($asl) && ($asl->allowEditName() || $asl->allowEditDescription() || $asl->allowEditDateTime() || $asl->allowEditUserID())) { ?>
 			<li><a href="#" data-launch-panel-detail="page/properties" data-panel-transition="swap"><?=t('SEO')?></a></li>
