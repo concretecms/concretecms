@@ -265,6 +265,14 @@
 			}
 		}
 
+		public function getParentGroup() {
+			$node = GroupTreeNode::getTreeNodeByGroupID($this->gID);
+			$parent = $node->getTreeNodeParentObject();
+			if ($parent) {
+				return $parent->getTreeNodeGroupObject();
+			}
+		}
+
 		public function getGroupDisplayName($includeHTML = true) {
 			$return = '';
 			$parentGroups = $this->getParentGroups();
