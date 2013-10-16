@@ -75,9 +75,9 @@
 				$js = Loader::helper('json');
 				$obj = new stdClass;
 				$obj->error = true;
-				$obj->messages = array();
+				$obj->errors = array();
 				foreach($this->getList() as $error) {
-					$obj->messages[] = $error;
+					$obj->errors[] = $error;
 				}
 				print $js->encode($obj);
 			}

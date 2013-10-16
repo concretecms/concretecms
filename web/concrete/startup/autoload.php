@@ -3,6 +3,8 @@
 $classes = array(
 	'Log' => array('library','log'),
 	'Request' => array('library','request'),
+	'Response' => array('library', 'response/library'),
+	'PageEditResponse' => array('library', 'response/edit/page'),
 	'Localization' => array('library','localization'),
 	'Router' => array('library', 'router'),
 	'PageCache' => array('library', 'page_cache/library'),

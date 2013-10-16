@@ -43,18 +43,23 @@ var CCMPanel = function(options) {
 	}
 
 	this.hide = function() {
-		$('[data-launch-panel=\'' + this.getIdentifier() + '\']').removeClass('ccm-launch-panel-active');
-		$('#' + this.getDOMID()).removeClass('ccm-panel-active');
-		$('#ccm-panel-overlay').queue(function() {
-			$(this).removeClass('ccm-panel-translucent');
+		var detail = this.closePanelDetail();
+		var delay = 0;
+		if (detail) {
+			delay = 550;
+		}
+		var obj = this;
+		$(window).delay(delay).queue(function() {
+			$('[data-launch-panel=\'' + obj.getIdentifier() + '\']').removeClass('ccm-launch-panel-active');
+			$('#' + obj.getDOMID()).removeClass('ccm-panel-active');
+			$('#ccm-panel-overlay').queue(function() {
+				$(this).removeClass('ccm-panel-translucent');
+				$(this).dequeue();
+			}).delay(1000).hide(0);
+			$('html').removeClass(obj.getPositionClass());
+			obj.isOpen = false;
 			$(this).dequeue();
-		}).delay(1000).hide(0);
-		$('#ccm-panel-detail-form-actions-wrapper .ccm-panel-detail-form-actions').queue(function() {
-			$(this).css('opacity', 0);
-			$(this).dequeue(0)
-		}).delay(1000).remove();
-		$('html').removeClass(this.getPositionClass());
-		this.isOpen = false;
+		});
 	}
 	this.toggle = function() {
 		if (this.isOpen) {
@@ -69,7 +74,7 @@ var CCMPanel = function(options) {
 		var obj = this;
 		$panel.find('[data-launch-sub-panel]').unbind().on('click', function() {
 			var url = CCM_TOOLS_PATH + '/panels/' + $(this).attr('data-launch-sub-panel');
-			$('<div />', {'class': 'ccm-panel-content ccm-panel-content-appearing'}).appendTo($panel.find('.ccm-panel-content-wrapper')).load(url, {'cID': CCM_CID}, function(r) {
+			$('<div />', {'class': 'ccm-panel-content ccm-panel-content-appearing'}).appendTo($panel.find('.ccm-panel-content-wrapper')).load(url + '?cID=' + CCM_CID, function(r) {
 				$panel.find('.ccm-panel-content-visible').removeClass('ccm-panel-content-visible').addClass('ccm-panel-slide-left');
 				$(this).removeClass('ccm-panel-content-appearing').addClass('ccm-panel-content-visible');
 				obj.onPanelLoad();
@@ -92,6 +97,24 @@ var CCMPanel = function(options) {
 			return false;
 		});
 	}		
+
+	this.closePanelDetail = function() {
+		$('.ccm-panel-detail').queue(function() {
+			$(this).css('opacity', 0);
+			$(this).dequeue();
+		}).delay(1000).queue(function() {
+			$(this).hide();
+			$(this).dequeue();
+		})
+		$('#ccm-panel-detail-form-actions-wrapper .ccm-panel-detail-form-actions').queue(function() {
+			$(this).css('opacity', 0);
+			$(this).dequeue(0)
+		});
+		$('.ccm-page').removeClass().addClass('ccm-page');
+		$('html').removeClass('ccm-panel-detail-open');
+
+		return $('.ccm-panel-detail').length > 0;
+	}
 
 	this.openPanelDetail = function(options) {
 		var obj = this;
@@ -128,7 +151,7 @@ var CCMPanel = function(options) {
 			$(this).dequeue();
 		});
 		$('html').addClass('ccm-panel-detail-open');
-		$content.load(options.url, {'cID': CCM_CID}, function() {
+		$content.load(options.url + '?cID=' + CCM_CID, function() {
 			$('div.ccm-page').addClass('ccm-panel-detail-transition-complete');
 			obj.loadPanelDetailActions($content);
 			$detail.addClass('ccm-panel-detail-transition-complete');
@@ -152,6 +175,37 @@ var CCMPanel = function(options) {
 				$('#ccm-panel-detail-form-actions-wrapper .ccm-panel-detail-form-actions').css('opacity', 1);
 				$(this).dequeue();
 			});
+			$('button[data-panel-detail-action=cancel]').on('click', function() {
+				CCMPanelManager.exitPanelMode();
+			});
+			$('button[data-panel-detail-action=submit]').on('click', function() {
+				$('[data-panel-detail-form]').ajaxSubmit({
+					type: 'post',
+					dataType: 'json',
+					data: {'submitPanelDetailForm': 1, 'cID': CCM_CID},
+					beforeSubmit: function() {
+						jQuery.fn.dialog.showLoader();
+					},
+					error: function(r) {
+				      ccmAlert.notice('Error', '<div class="alert alert-danger">' + r.responseText + '</div>');
+				  	},
+					success: function(r) {
+						if (r.error) {
+							ccmAlert.notice('Error', '<div class="alert alert-danger">' + r.errors.join("<br>") + '</div>');
+						} else {
+							if (r.redirectURL) {
+								window.location.href = r.redirectURL;
+							} else {
+								CCMEditMode.showResponseNotification(r.message, 'ok', 'success');
+							}
+							CCMPanelManager.exitPanelMode();
+						}
+					},
+					complete: function() {
+						jQuery.fn.dialog.hideLoader();
+					}
+				});
+			});
 		}
 	}
 
@@ -170,7 +224,7 @@ var CCMPanel = function(options) {
 				var $content = $panel.find('.ccm-panel-content');
 				$accordion.removeClass('ccm-panel-header-accordion-dropdown-visible');
 				$title.html($(this).text());
-				$content.load(url, {'cID': CCM_CID, 'tab': $(this).attr('data-panel-accordion-tab')}, function() {
+				$content.load(url + '?cID=' + CCM_CID + '&tab=' + $(this).attr('data-panel-accordion-tab'), function() {
 					obj.onPanelLoad();
 				});
 			})
@@ -249,7 +303,7 @@ var CCMPanel = function(options) {
 		var $panel = $('#' + this.getDOMID());
 		$panel.find('.ccm-panel-content-wrapper').html('');
 		$panel.addClass('ccm-panel-active ccm-panel-loading');
-		$('<div />', {'class': 'ccm-panel-content ccm-panel-content-visible'}).appendTo($panel.find('.ccm-panel-content-wrapper')).load(this.options.url, {'cID': CCM_CID}, function() {
+		$('<div />', {'class': 'ccm-panel-content ccm-panel-content-visible'}).appendTo($panel.find('.ccm-panel-content-wrapper')).load(this.options.url + "?cID=" + CCM_CID, function() {
 			$panel.delay(1).queue(function() {
 				$(this).removeClass('ccm-panel-loading').addClass('ccm-panel-loaded');
 				$(this).dequeue();
@@ -289,12 +343,17 @@ var CCMPanelManager = function() {
 	    	});
 		},
 
-		hideAll: function() {
+		/** 
+		 * Hides all panels, exit preview mode, hides detail content if active, etc..
+		 */
+		exitPanelMode: function() {
+
 			for (i = 0; i < panels.length; i++) {
 				if (panels[i].isOpen) {
 					panels[i].hide();
 				}
 			}
+			CCMEditMode.exitPreviewMode();
 		},
 
 		register: function(options) {

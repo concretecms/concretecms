@@ -968,9 +968,9 @@ div.ccm-panel-detail fieldset:last-child{border-bottom:0}
 html.ccm-panel-left div.ccm-panel-detail{padding-left:321px}
 html.ccm-panel-right div.ccm-panel-detail{padding-right:321px}
 div.ccm-panel-detail-content{padding:40px 40px 90px 40px}
-div.ccm-panel-detail header{font-size:22px;margin:-40px -40px 30px -95px;padding:34px 80px 34px 95px;font-weight:600}
-div#ccm-panel-detail-page-properties,div#ccm-panel-detail-page-composer{background-color:#f3fbff}div#ccm-panel-detail-page-properties div.ccm-panel-detail-content,div#ccm-panel-detail-page-composer div.ccm-panel-detail-content{background-color:#f3fbff}
-div#ccm-panel-detail-page-properties header,div#ccm-panel-detail-page-composer header{background-color:#e1f4ff;color:#105192}
+@media (min-width:992px){div.ccm-panel-detail-content form.ccm-panel-detail-content-form{width:600px}}div.ccm-panel-detail header{font-size:22px;margin:-40px -40px 30px -95px;padding:34px 80px 34px 95px;font-weight:600}
+div#ccm-panel-detail-page-properties,div#ccm-panel-detail-page-seo,div#ccm-panel-detail-page-composer{background-color:#f3fbff}div#ccm-panel-detail-page-properties div.ccm-panel-detail-content,div#ccm-panel-detail-page-seo div.ccm-panel-detail-content,div#ccm-panel-detail-page-composer div.ccm-panel-detail-content{background-color:#f3fbff}
+div#ccm-panel-detail-page-properties header,div#ccm-panel-detail-page-seo header,div#ccm-panel-detail-page-composer header{background-color:#e1f4ff;color:#105192}
 div.ccm-panel-detail.ccm-panel-detail-transition-swap{backface-visibility:hidden;-webkit-backface-visibility:hidden;display:block;transform:rotateY(180deg);-webkit-transform:rotateY(180deg)}
 div.ccm-panel-detail.ccm-panel-detail-transition-swap.ccm-panel-detail-transition-swap-start{transform:rotateY(0deg);-webkit-transform:rotateY(0deg);-webkit-transition-duration:.5s;transition-duration:.5s;transition-easing:none;-webkit-transition-easing:none}
 html.ccm-panel-left div.ccm-page.ccm-panel-detail-transition-swap{position:relative;left:320px}
@@ -1246,10 +1246,11 @@ div#ccm-toolbar #ccm-exit-edit-mode-publish-menu li.ccm-exit-edit-mode-publish a
 div#ccm-toolbar #ccm-exit-edit-mode-publish-menu li.ccm-exit-edit-mode-discard a:hover{color:#f66}
 div#ccm-toolbar #ccm-exit-edit-mode-comment-form{padding:0;background-color:#fff}div#ccm-toolbar #ccm-exit-edit-mode-comment-form textarea{padding:20px;font-size:12px;font-size:1.2rem;width:300px;height:100px}
 div#ccm-toolbar li.ccm-toolbar-last-left-child{border-right:1px solid #ccc}
-div#ccm-notification{font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;position:fixed;display:none;top:60px;border:1px solid #d7d7d7;-webkit-border-radius:8px;-moz-border-radius:8px;border-radius:8px;-ms-border-radius:8px;color:#333;background:#fff;right:10px;-webkit-box-shadow:0 2px 2px rgba(0,0,0,0.1);-moz-box-shadow:0 2px 2px rgba(0,0,0,0.1);box-shadow:0 2px 2px rgba(0,0,0,0.1);padding:6px 8px 6px 8px;z-index:500;font-size:14px}div#ccm-notification a{color:#444;text-decoration:underline}
-div#ccm-notification h3{font-size:16px;font-weight:bold;margin:2px 0 2px 0;padding:0;line-height:16px;color:#444}
-div#ccm-notification img#ccm-notification-icon{margin-right:6px;margin-top:2px;opacity:.5}
-div#ccm-page-status-bar{z-index:1000;position:relative;display:block;position:fixed;left:0;top:49px;height:32px;width:100%}div#ccm-page-status-bar:before,div#ccm-page-status-bar:after{content:" ";display:table;}
+div#ccm-notification{font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;position:fixed;top:110px;border-bottom-left-radius:3px;border-top-left-radius:3px;right:0;padding:30px 30px 30px 80px;z-index:1105;font-size:14px;min-height:25px;opacity:0;filter:alpha(opacity=0);font-weight:300;-webkit-transition:opacity .5s cubic-bezier(.19, 1, .22, 1);transition:opacity .5s cubic-bezier(.19, 1, .22, 1)}div#ccm-notification.ccm-notification-success{background-color:#47a347;color:#fff}
+div#ccm-notification.ccm-notification-info{background-color:#105193;color:#fff}
+div#ccm-notification div#ccm-notification-inner{width:230px}
+div#ccm-notification i.glyphicon{font-size:16px;position:absolute;top:30px;left:35px}
+div#ccm-page-status-bar{z-index:1000;position:relative;display:block;position:fixed;left:0;top:49px;height:32px;width:100%;display:none}div#ccm-page-status-bar:before,div#ccm-page-status-bar:after{content:" ";display:table;}
 div#ccm-page-status-bar:after{clear:both}
 div#ccm-page-status-bar div.alert{padding:12px;margin-bottom:0;position:relative;-webkit-border-radius:0;-moz-border-radius:0;border-radius:0;-ms-border-radius:0}div#ccm-page-status-bar div.alert .close{right:-3px !important;top:-2px !important}
 div#ccm-page-status-bar div.ccm-page-status-bar-buttons{position:absolute;top:12px;right:35px}div#ccm-page-status-bar div.ccm-page-status-bar-buttons .btn{margin-left:10px}
@@ -1384,5 +1385,3 @@ div.ccm-menu ul li:only-child a{border-radius:6px !important}
 div.ccm-menu ul a{display:block;color:#333;padding:4px 10px 4px 28px;text-decoration:none;font-size:12px}
 div.ccm-menu ul a:hover{background-color:#e0f2fe;color:#333;text-decoration:none}
 li.ccm-menu-separator{height:1px;font-size:1px;background-color:#d2d2d2}
-div#ccm-notification-inner img{float:left;margin-right:5px}
-div#ccm-notification-inner div#ccm-notification-message{width:auto;font-size:12px;float:left}
