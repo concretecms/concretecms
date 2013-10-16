@@ -124,14 +124,17 @@
 		}
 
 		public function getGroupMembers() {
-			$db = Loader::db();
-			$r = $db->query("select uID from UserGroups where gID = ?", array($this->gID));
-			$members = array();
-			while ($row = $r->fetchRow()) {
-				$ui = UserInfo::getByID($row['uID']);
-				$members[] = $ui;
-			}
-			return $members;
+			$user_list = new UserList();
+			$user_list->filterByGroup($this);
+
+			return $user_list->get();
+		}
+
+		public function getGroupMemberIDs() {
+			$user_list = new UserList();
+			$user_list->filterByGroup($this);
+
+			return $user_list->getUserIDs();
 		}
 
 		public function setPermissionsForObject($obj) {
