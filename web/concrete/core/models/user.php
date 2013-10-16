@@ -181,7 +181,7 @@
 					$this->uDefaultLanguage = null;
 					$this->uTimezone = null;
 					$ux = $req->getCustomRequestUser();
-					if ($ux) {
+					if ($ux && is_object($ux)) {
 						$this->uID = $ux->getUserID();
 						$this->uName = $ux->getUserName();
 						$this->superUser = $ux->getUserID() == USER_SUPER_ID;

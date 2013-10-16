@@ -4,6 +4,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 class Concrete5_Library_PageRequestView extends PathRequestView {
 
 	protected $c; // page
+	protected $pTemplateID;
 
 	public function getPageObject() {
 		return $this->c;
@@ -15,6 +16,12 @@ class Concrete5_Library_PageRequestView extends PathRequestView {
 	public function start($page) {
 		$this->c = $page;
 		parent::start($page->getCollectionPath());
+		if (!isset($this->pTemplateID)) {
+			$this->pTemplateID = $this->c->getPageTemplateID();
+		}
+		if (!isset($this->pThemeID)) {
+			$this->pThemeID = $this->c->getPageTemplateID();
+		}
 	}
 
 	public function getScopeItems() {
@@ -30,11 +37,27 @@ class Concrete5_Library_PageRequestView extends PathRequestView {
 	}
 
 	protected function loadRequestViewThemeObject() {
-		$theme = $this->c->getCollectionThemeObject();
-		if (is_object($theme)) {
-			$this->themeHandle = $theme->getThemeHandle();
+		if (!isset($this->themeHandle)) {
+			$theme = $this->c->getCollectionThemeObject();
+			if (is_object($theme)) {
+				$this->themeHandle = $theme->getThemeHandle();
+			}
 		}
 		parent::loadRequestViewThemeObject();
+	}
+
+	/** 
+	 * Called from previewing functions, this lets us override the page's template with one of our own choosing
+	 */
+	public function setCustomPageTemplate(PageTemplate $pt) {
+		$this->pTemplateID = $pt->getPageTemplateID();
+	}
+
+	/** 
+	 * Called from previewing functions, this lets us override the page's theme with one of our own choosing
+	 */
+	public function setCustomPageTheme(PageTheme $pt) {
+		$this->themeHandle = $pt->getThemeHandle();
 	}
 
 	public function setupRender() {
@@ -55,7 +78,7 @@ class Concrete5_Library_PageRequestView extends PathRequestView {
 				$this->setInnerContentFile($env->getPath(DIRNAME_PAGES . '/' . $cFilename, $this->c->getPackageHandle()));
 			}
 		} else {
-			$pt = PageTemplate::getByID($this->c->getPageTemplateID());
+			$pt = PageTemplate::getByID($this->pTemplateID);
 			$rec = $env->getRecord(DIRNAME_THEMES . '/' . $this->themeHandle . '/' . $pt->getPageTemplateHandle() . '.php', $this->themePkgHandle);
 			if ($rec->exists()) {
 				$this->setViewTemplate($env->getPath(DIRNAME_THEMES . '/' . $this->themeHandle . '/' . $pt->getPageTemplateHandle() . '.php', $this->themePkgHandle));
@@ -69,7 +92,6 @@ class Concrete5_Library_PageRequestView extends PathRequestView {
 				}
 			}
 		}
-
 	}
 
 	public function startRender() {

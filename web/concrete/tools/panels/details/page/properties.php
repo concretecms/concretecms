@@ -55,7 +55,7 @@ if (is_object($c) && !$c->isError()) {
 
 			</form>		
 
-			<div class="ccm-pane-detail-form-actions">
+			<div class="ccm-panel-detail-form-actions">
 				<button class="pull-left btn" type="button"><?=t('Cancel')?></button>
 				<button class="pull-right btn btn-primary" type="button"><?=t('Save Changes')?></button>
 			</div>

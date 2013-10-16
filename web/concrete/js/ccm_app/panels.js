@@ -42,11 +42,6 @@ var CCMPanel = function(options) {
 		ccm_event.publish('panel.open', [this]);
 	}
 
-	this.openPanelDetail = function(detail) {
-		var $panel = $('#' + this.getDOMID());
-		$panel.find('[data-launch-panel-detail=\'' + detail + '\']').click();	
-	},
-
 	this.hide = function() {
 		$('[data-launch-panel=\'' + this.getIdentifier() + '\']').removeClass('ccm-launch-panel-active');
 		$('#' + this.getDOMID()).removeClass('ccm-panel-active');
@@ -54,6 +49,10 @@ var CCMPanel = function(options) {
 			$(this).removeClass('ccm-panel-translucent');
 			$(this).dequeue();
 		}).delay(1000).hide(0);
+		$('#ccm-panel-detail-form-actions-wrapper .ccm-panel-detail-form-actions').queue(function() {
+			$(this).css('opacity', 0);
+			$(this).dequeue(0)
+		}).delay(1000).remove();
 		$('html').removeClass(this.getPositionClass());
 		this.isOpen = false;
 	}
@@ -95,6 +94,7 @@ var CCMPanel = function(options) {
 	}		
 
 	this.openPanelDetail = function(options) {
+		var obj = this;
 		var options = $.extend({
 			transition: false,
 			url: false
@@ -130,25 +130,29 @@ var CCMPanel = function(options) {
 		$('html').addClass('ccm-panel-detail-open');
 		$content.load(options.url, {'cID': CCM_CID}, function() {
 			$('div.ccm-page').addClass('ccm-panel-detail-transition-complete');
-			var $actions = $(this).find('.ccm-pane-detail-form-actions');
-			if ($actions.length) {
-				$(document.body).delay(500)
-				.queue(function() {
-					$('<div />', {
-						id: 'ccm-pane-detail-form-actions-wrapper',
-						class: 'ccm-ui'
-					}).appendTo(document.body);
-					$actions.appendTo('#ccm-pane-detail-form-actions-wrapper');
-					$(this).dequeue();
-				})
-				.delay(5)
-				.queue(function() {
-					$('#ccm-pane-detail-form-actions-wrapper .ccm-pane-detail-form-actions').css('opacity', 1);
-					$(this).dequeue();
-				});
-			}
+			obj.loadPanelDetailActions($content);
 			$detail.addClass('ccm-panel-detail-transition-complete');
 		});
+	}
+
+	this.loadPanelDetailActions = function($content) {
+		var $actions = $content.find('.ccm-panel-detail-form-actions');
+		if ($actions.length) {
+			$(document.body).delay(500)
+			.queue(function() {
+				$('<div />', {
+					id: 'ccm-panel-detail-form-actions-wrapper',
+					class: 'ccm-ui'
+				}).appendTo(document.body);
+				$actions.appendTo('#ccm-panel-detail-form-actions-wrapper');
+				$(this).dequeue();
+			})
+			.delay(5)
+			.queue(function() {
+				$('#ccm-panel-detail-form-actions-wrapper .ccm-panel-detail-form-actions').css('opacity', 1);
+				$(this).dequeue();
+			});
+		}
 	}
 
 	this.setupPanelDetails = function() {
@@ -223,6 +227,8 @@ var CCMPanel = function(options) {
 			obj.openPanelDetail(panelDetailOptions);
 			return false;
 		});
+		obj.loadPanelDetailActions($panel);
+
 	}
 
 	this.show = function() {

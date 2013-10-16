@@ -246,6 +246,7 @@ jQuery.fn.dialog.replaceTop = function(html) {
 }
 
 jQuery.fn.dialog.showLoader = function(text) {
+	/*
 	if ($('#ccm-dialog-loader').length < 1) {
 		$("body").append("<div id='ccm-dialog-loader-wrapper' class='ccm-ui'><div class='progress progress-striped active' style='width: 300px'><div class='bar' style='width: 100%;'></div></div></div>");//add loader to the page
 	}
@@ -263,11 +264,16 @@ jQuery.fn.dialog.showLoader = function(text) {
 	$("#ccm-dialog-loader-wrapper").css('left', _left + 'px').css('top', _top + 'px');
 	$('#ccm-dialog-loader-wrapper').show();//show loader
 	//$('#ccm-dialog-loader-wrapper').fadeTo('slow', 0.2);
+	*/
+	$('body').addClass('ccm-loading');
 }
 
 jQuery.fn.dialog.hideLoader = function() {
+	/*
 	$("#ccm-dialog-loader-wrapper").hide();
 	$("#ccm-dialog-loader-text").remove();
+	*/
+	$('body').removeClass('ccm-loading');
 }
 
 
