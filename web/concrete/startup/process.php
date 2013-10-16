@@ -863,7 +863,7 @@
 						$proceed = true;
 						$pagetype = $c->getPageTypeObject();
 						if (is_object($pagetype)) {
-							$templates = $p->getPageTypeTemplateObjects();
+							$templates = $pagetype->getPageTypePageTemplateObjects();
 							if (!in_array($template, $templates)) {
 								$proceed = false;
 							}
@@ -875,7 +875,12 @@
 					}				
 				}
 
-				if ($_POST['rel'] == 'SITEMAP' && ($cp->canApprovePageVersions())) {
+				$r = new PageEditResponse();
+				$r->setPage($c);
+				$r->setRedirectURL(BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $c->getCollectionID());
+				$r->outputJSON();
+				
+				/*if ($_POST['rel'] == 'SITEMAP' && ($cp->canApprovePageVersions())) {
 					$pkr = new ApprovePagePageWorkflowRequest();
 					$u = new User();
 					$pkr->setRequestedPage($c);
@@ -883,17 +888,15 @@
 					$pkr->setRequestedVersionID($v->getVersionID());
 					$pkr->setRequesterUserID($u->getUserID());
 					$u->unloadCollectionEdit($c);
-					$response = $pkr->trigger();
-					$obj = new stdClass;
-					$obj->rel = $_POST['rel'];
 					$obj->name = $v->getVersionName();
-					$obj->cID = $c->getCollectionID();
+					$response = $pkr->trigger();
 					print Loader::helper('json')->encode($obj);
 					exit;
 				} else {
-					header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $_GET['cID'] . '&mode=edit' . $step);
+					print Loader::helper('json')->encode($obj);
 					exit;
 				}
+				*/
 			}		
 		} else if ($_POST['update_speed_settings']) {
 			// updating a collection

@@ -4,6 +4,7 @@
 	$pk = PermissionKey::getByHandle('edit_page_properties');
 	$pk->setPermissionObject($c);
 	$asl = $pk->getMyAssignment();
+	$seoSet = AttributeSet::getByHandle('seo');
 ?>
 <section>
 	<header><?=t('Page Settings')?></header>
@@ -16,8 +17,9 @@
 		<? if ($cp->canEditPageTheme() || $cp->canEditPageTemplate()) { ?>
 			<li><a href="#" data-launch-sub-panel="page/design"><?=t('Design')?></a></li>
 		<? }
-		if (is_object($asl) && ($asl->allowEditName() || $asl->allowEditDescription() || $asl->allowEditDateTime() || $asl->allowEditUserID())) { ?>
-			<li><a href="#" data-launch-panel-detail="page/properties" data-panel-transition="swap"><?=t('SEO')?></a></li>
+
+		if ($cp->canEditPageProperties() && is_object($seoSet)) { ?>
+			<li><a href="#" data-launch-panel-detail="page-seo" data-panel-url="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/panels/details/page/seo" data-panel-transition="swap"><?=t('SEO')?></a></li>
 		<? }
 		if (is_object($asl) && ($asl->allowEditPaths())) { ?>
 			<li><a href=""><?=t('Location')?></a></li>

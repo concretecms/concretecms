@@ -79,8 +79,8 @@ class Concrete5_Library_PathRequestView extends RequestView {
 			$this->themeObject = PageTheme::getByHandle($this->themeHandle);
 			$this->themePkgHandle = $this->themeObject->getPackageHandle();
 		}
-		$this->themeAbsolutePath = $env->getPath(DIRNAME_THEMES . '/' . $this->themeHandle);
-		$this->themeRelativePath = $env->getURL(DIRNAME_THEMES . '/' . $this->themeHandle);
+		$this->themeAbsolutePath = $env->getPath(DIRNAME_THEMES . '/' . $this->themeHandle, $this->themePkgHandle);
+		$this->themeRelativePath = $env->getURL(DIRNAME_THEMES . '/' . $this->themeHandle, $this->themePkgHandle);
 	}
 
 	/** 

@@ -84,4 +84,4 @@ if (!($ptr instanceof PageTypePublishResponse)) {
 	$ptr = new PageTypePublishResponse($e);
 }
 
-Loader::helper('ajax')->sendResult($ptr);
+$ptr->outputJSON();

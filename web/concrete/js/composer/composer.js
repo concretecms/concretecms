@@ -64,9 +64,9 @@
     handleAJAXResponseError: function(r, div) {
       if (r.error == true) {
         if (!div) {
-          ccmAlert.notice('Error', '<div class="alert alert-danger">' + r.messages.join("<br>") + '</div>');
+          ccmAlert.notice('Error', '<div class="alert alert-danger">' + r.errors.join("<br>") + '</div>');
         } else {
-          div.show().html(r.messages.join("<br>"));
+          div.show().html(r.errors.join("<br>"));
         }
         return true;
       }
@@ -115,18 +115,18 @@
           }, settings.autoSaveTimeout);
         }
 
-        $this.find('button[data-page-type-composer-form-btn=preview]').on('click', function() {
+        $('button[data-page-type-composer-form-btn=preview]').unbind().on('click', function() {
           clearInterval(methods.saveinterval);
           methods.private.saveDraft('preview', $this, function(r) {
             settings.onAfterSaveAndPreview(r);
           });
         });
 
-        $this.find('button[data-page-type-composer-form-btn=exit]').on('click', function() {
+        $('button[data-page-type-composer-form-btn=exit]').unbind().on('click', function() {
           settings.onExit();
         });
 
-        $this.find('button[data-page-type-composer-form-btn=discard]').on('click', function() {
+        $('button[data-page-type-composer-form-btn=discard]').unbind().on('click', function() {
           $.ajax({
             type: 'post',
             dataType: 'json',
@@ -143,7 +143,7 @@
           });
         });
 
-        $this.find('button[data-page-type-composer-form-btn=save]').on('click', function() {
+        $('button[data-page-type-composer-form-btn=save]').unbind().on('click', function() {
           clearInterval(methods.saveinterval);
           methods.private.saveDraft('save', $this, function(r) {
             settings.onAfterSaveAndExit(r);
@@ -154,7 +154,7 @@
           return false;
         });
 
-        $this.find('button[data-page-type-composer-form-btn=publish]').on('click', function() {
+        $('button[data-page-type-composer-form-btn=publish]').unbind().on('click', function() {
           clearInterval(methods.saveinterval);
           methods.private.saveDraft('publish', $this, function(r) {
             settings.onAfterPublish(r);

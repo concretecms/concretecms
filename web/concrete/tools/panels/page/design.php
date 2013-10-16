@@ -48,7 +48,7 @@ if (is_object($c) && !$c->isError()) {
 	if ($cp->canEditPageTemplate() || $cp->canEditPageTheme()) { ?>
 
 		<section id="ccm-panel-page-design">
-		<form method="post" action="<?=$c->getCollectionAction()?>">
+		<form method="post" action="<?=$c->getCollectionAction()?>" data-panel-detail-form="design">
 			<input type="hidden" name="update_theme" value="1" class="accept">
 			<input type="hidden" name="processCollection" value="1">
 
@@ -124,8 +124,8 @@ if (is_object($c) && !$c->isError()) {
 		</section>
 
 			<div class="ccm-panel-detail-form-actions">
-				<button class="pull-left btn btn-default" type="button" id="ccm-panel-page-design-cancel"><?=t('Cancel')?></button>
-				<button class="pull-right btn btn-success" type="button" id="ccm-panel-page-design-submit"><?=t('Save Changes')?></button>
+				<button class="pull-left btn btn-default" type="button" data-panel-detail-action="cancel"><?=t('Cancel')?></button>
+				<button class="pull-right btn btn-success" type="button" data-panel-detail-action="submit"><?=t('Save Changes')?></button>
 			</div>
 
 		<script type="text/javascript">
@@ -174,15 +174,6 @@ if (is_object($c) && !$c->isError()) {
 				CCMEditMode.previewPage('<?=$c->getCollectionID()?>', {'pTemplateID': pTemplateID, 'pThemeID': pThemeID});
 			});
 
-			$('#ccm-panel-page-design-cancel').on('click', function() {
-				CCMEditMode.exitPreviewMode();
-				CCMPanelManager.hideAll();
-			});
-
-			$('#ccm-panel-page-design-submit').on('click', function() {
-				jQuery.fn.dialog.showLoader();
-				$('#ccm-panel-page-design form').submit();
-			});
 
 		});
 		</script>

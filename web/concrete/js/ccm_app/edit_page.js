@@ -146,7 +146,7 @@ var CCMEditMode = function() {
 		var btID = $link.attr('data-btID');
 		var inline = parseInt($link.attr('data-supports-inline-add'));
 		var hasadd = parseInt($link.attr('data-has-add-template'));
-		CCMPanelManager.hideAll();
+		CCMPanelManager.exitPanelMode();
 		if (!hasadd) {
 			var action = CCM_DISPATCHER_FILENAME + "?cID=" + cID + "&arHandle=" + encodeURIComponent(arHandle) + "&btID=" + btID + "&mode=edit&processBlock=1&add=1&ccm_token=" + CCM_SECURITY_TOKEN;
 			$.get(action, function(r) { CCMEditMode.parseBlockResponse(r, false, 'add'); })
@@ -521,6 +521,20 @@ var CCMEditMode = function() {
 					});
 		
 				}
+			});
+		},
+
+		showResponseNotification: function(message, icon, class) {
+			$('<div id="ccm-notification" class="ccm-ui ccm-notification-' + class + '"><i class="glyphicon glyphicon-' + icon + '"></i><div id="ccm-notification-inner">' + message + '</div></div>').
+			appendTo(document.body).delay(5).queue(function() {
+				$(this).css('opacity', 1);
+				$(this).dequeue();
+			}).delay(2000).queue(function() {
+				$(this).css('opacity', 0);
+				$(this).dequeue();
+			}).delay(1000).queue(function() {
+				$(this).remove();
+				$(this).dequeue();
 			});
 		},
 

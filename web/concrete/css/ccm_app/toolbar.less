@@ -262,36 +262,35 @@ div#ccm-toolbar {
 div#ccm-notification {
 	font-family: @sansFontFamily;
 	position: fixed; 
-	display: none; 
-	top: 60px; 
-	border: 1px solid #d7d7d7; 
-	.border-radius(8px);
-	color: #333;
-	background: #fff;
-	right: 10px; 
-	.box-shadow(0px 2px 2px rgba(0,0,0,0.1));
-	padding: 6px 8px 6px 8px;
-	z-index: 500; 
+	top: 110px; 
+	.border-left-radius(3px);
+	right: 0px; 
+	padding: 30px 30px 30px 80px;
+	z-index: 1105; 
 	font-size: 14px;
-
-	a {
-		color: #444; 
-		text-decoration: underline;
+	min-height: 25px;
+	.opacity(0);
+	font-weight: 300;
+	.transition(opacity 0.5s cubic-bezier(0.190, 1.000, 0.220, 1.000));
+	&.ccm-notification-success {
+		background-color: #47a347;
+		color: #fff;
 	}
 
-	h3 {
-		font-size: 16px; 
-		font-weight: bold; 
-		margin: 2px 0px 2px 0px; 
-		padding: 0px; 
-		line-height: 16px; 
-		color: #444;
+	&.ccm-notification-info {
+		background-color: #105193;
+		color: #fff;
 	}
 
-	img#ccm-notification-icon {
-		margin-right: 6px;
-		margin-top: 2px;
-		opacity: 0.5;
+	div#ccm-notification-inner {
+		width: 230px;
+	}
+
+	i.glyphicon {
+		font-size: 16px;
+		position: absolute;
+		top: 30px;
+		left: 35px;
 	}
 }
 
@@ -305,6 +304,7 @@ div#ccm-page-status-bar {
 	top: 49px; 
 	height: 32px; 
 	width: 100%; 
+	display: none;
 	.clearfix();
 
 	div.alert {

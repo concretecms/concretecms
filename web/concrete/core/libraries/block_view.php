@@ -282,5 +282,14 @@ class Concrete5_Library_BlockView extends View {
 		}
 	}
 
+	/** 
+	 * Legacy
+	 * @access private
+	 */
+	public function getThemePath() {
+		$v = View::getInstance();
+		return $v->getThemePath();
+	}
+
 }
 	
