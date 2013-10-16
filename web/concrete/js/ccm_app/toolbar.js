@@ -222,21 +222,6 @@ var CCMToolbar = function() {
 			}
 		},
 
-		launchPageComposer: function() {
-			$('a[data-launch-panel=page]').toggleClass('ccm-launch-panel-active');
-			CCMPanelManager.getByIdentifier('compose-page').show();
-			ccm_event.subscribe('panel.open',function(e, panel) {
-				if (panel.options.identifier == 'compose-page') {
-					$('#' + panel.getDOMID()).find('[data-launch-panel-detail=\'page/composer\']').addClass('ccm-panel-menu-item-active');
-				}
-			});
-			CCMPanelManager.getByIdentifier('compose-page').openPanelDetail({
-				'url': CCM_TOOLS_PATH + '/panels/details/page/composer',
-				'transition': false,
-				'identifier': 'page-composer'
-			});
-		},
-
 		disable: function() {
 			$('#ccm-toolbar-disabled').remove();
 			$('<div />', {'id': 'ccm-toolbar-disabled'}).appendTo(document.body);

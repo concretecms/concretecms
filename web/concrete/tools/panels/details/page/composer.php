@@ -27,7 +27,7 @@ if (is_object($c) && !$c->isError()) {
 			</div>
 			</div>
 
-			<div class="ccm-pane-detail-form-actions">
+			<div class="ccm-panel-detail-form-actions">
 				<? Loader::helper('composer')->displayButtons($pagetype, $c); ?>
 			</div>
 			</form>

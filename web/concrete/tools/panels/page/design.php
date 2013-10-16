@@ -48,6 +48,11 @@ if (is_object($c) && !$c->isError()) {
 	if ($cp->canEditPageTemplate() || $cp->canEditPageTheme()) { ?>
 
 		<section id="ccm-panel-page-design">
+		<form method="post" action="<?=$c->getCollectionAction()?>">
+			<input type="hidden" name="update_theme" value="1" class="accept">
+			<input type="hidden" name="processCollection" value="1">
+
+
 			<header><a href="" data-panel-navigation="back" class="ccm-panel-back"><span class="glyphicon glyphicon-chevron-left"></span></a> <?=t('Design')?></header>
 
 			<div class="ccm-panel-content-inner">
@@ -114,11 +119,18 @@ if (is_object($c) && !$c->isError()) {
 			<? } ?>
 
 			</div>
+		</form>
 
 		</section>
 
+			<div class="ccm-panel-detail-form-actions">
+				<button class="pull-left btn btn-default" type="button" id="ccm-panel-page-design-cancel"><?=t('Cancel')?></button>
+				<button class="pull-right btn btn-success" type="button" id="ccm-panel-page-design-submit"><?=t('Save Changes')?></button>
+			</div>
+
 		<script type="text/javascript">
 		$(function() {
+
 			function swapElements(elm1, elm2) {
 			    var parent1, next1,
 			        parent2, next2;
@@ -142,7 +154,7 @@ if (is_object($c) && !$c->isError()) {
 			});
 
 			$('.list-group-item[data-theme-id]').on('click', function() {
-				$('#ccm-panel-page-design-themes input[name=pThemeID]').val($(this).attr('data-theme-id'));
+				$('#ccm-panel-page-design-themes input[name=pThemeID]').val($(this).attr('data-theme-id')).trigger('change');
 				$('.ccm-page-design-theme-thumbnail-selected').removeClass('ccm-page-design-theme-thumbnail-selected');
 				$(this).addClass('ccm-page-design-theme-thumbnail-selected');
 			});
@@ -154,6 +166,22 @@ if (is_object($c) && !$c->isError()) {
 				if ($topitem.attr('data-theme-id') != $checkeditem.attr('data-theme-id')) {
 					swapElements($checkeditem[0], $topitem[0]);
 				}
+			});
+
+			$('#ccm-panel-page-design input[name=pThemeID], #ccm-panel-page-design input[name=pTemplateID]').on('change', function() {
+				var pThemeID = $('#ccm-panel-page-design input[name=pThemeID]').val();
+				var pTemplateID = $('#ccm-panel-page-design input[name=pTemplateID]:checked').val();
+				CCMEditMode.previewPage('<?=$c->getCollectionID()?>', {'pTemplateID': pTemplateID, 'pThemeID': pThemeID});
+			});
+
+			$('#ccm-panel-page-design-cancel').on('click', function() {
+				CCMEditMode.exitPreviewMode();
+				CCMPanelManager.hideAll();
+			});
+
+			$('#ccm-panel-page-design-submit').on('click', function() {
+				jQuery.fn.dialog.showLoader();
+				$('#ccm-panel-page-design form').submit();
 			});
 
 		});

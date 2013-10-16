@@ -841,8 +841,8 @@
 		if ($_POST['update_theme']) { 
 		
 			$pl = false;
-			if ($_POST['plID']) { 
-				$pl = PageTheme::getByID($_POST['plID']);
+			if ($_POST['pThemeID']) { 
+				$pl = PageTheme::getByID($_POST['pThemeID']);
 			}
 			
 			if ($cp->canEditPageTheme($pl) || $cp->canEditPageTemplate()) {
@@ -854,24 +854,25 @@
 
 				if (!$c->isGeneratedCollection()) {
 				
-					if ($_POST['ptID'] && $cp->canEditPageTemplate()) {
+					if ($_POST['pTemplateID'] && $cp->canEditPageTemplate()) {
 						// now we have to check to see if you're allowed to update this page to this page type.
 						// We do this by checking to see whether the PARENT page allows you to add this page type here.
 						// if this is the home page then we assume you are good
 						
-						if ($c->getCollectionID() > 1) {
-							Loader::model('collection_types');
-							$parentC = Page::getByID($c->getCollectionParentID());
-							$parentCP = new Permissions($parentC);
-							$ct = PageType::getByID($_POST['ptID']);
+						$template = PageTemplate::getByID($_POST['pTemplateID']);
+						$proceed = true;
+						$pagetype = $c->getPageTypeObject();
+						if (is_object($pagetype)) {
+							$templates = $p->getPageTypeTemplateObjects();
+							if (!in_array($template, $templates)) {
+								$proceed = false;
+							}
 						}
-						
-						if ($c->getCollectionID() == 1 || $parentCP->canAddSubCollection($ct)) {
-							$data['ptID'] = $_POST['ptID'];
+						if ($proceed) {
+							$data['pTemplateID'] = $_POST['pTemplateID'];
 							$nvc->update($data);
 						}						
-					}
-				
+					}				
 				}
 
 				if ($_POST['rel'] == 'SITEMAP' && ($cp->canApprovePageVersions())) {

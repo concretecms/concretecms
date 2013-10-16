@@ -1,0 +1,27 @@
+/** 
+ * Preview Page
+ */
+iframe#ccm-page-preview-frame {
+	z-index: 1001; /* below overlay */
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	top: 0;
+	.box-sizing(border-box);
+	background: transparent;
+	padding-top: 48px;
+}
+
+html.ccm-panel-left iframe#ccm-page-preview-frame {
+	padding-left: 321px;
+}
+
+html.ccm-panel-right iframe#ccm-page-preview-frame {
+	padding-right: 321px;
+}
+
+html.ccm-page-preview-mode {
+	div.ccm-page {
+		display: none;
+	}
+}

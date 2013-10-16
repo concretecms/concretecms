@@ -42,7 +42,7 @@ if (!$dh->inDashboard()) {
 
 
 	if ($cp->canEditPage() && $_REQUEST['ctask'] == 'check-out-first') {
-		$this->addFooterItem("<script type=\"text/javascript\">$(function() { CCMToolbar.launchPageComposer();});</script>");
+		$this->addFooterItem("<script type=\"text/javascript\">$(function() { CCMEditMode.launchPageComposer();});</script>");
 	} 
 
 	if (ENABLE_PROGRESSIVE_PAGE_REINDEX && Config::get('DO_PAGE_REINDEX_CHECK')) {

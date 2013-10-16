@@ -72,6 +72,14 @@ var CCMEditMode = function() {
 
 	}
 
+	setupPagePreview = function() {
+		if (!$('#ccm-page-preview-frame').length) {
+			$preview = $('<iframe />', {
+				id: 'ccm-page-preview-frame'
+			}).appendTo(document.body);
+		}
+	}
+
 	saveArrangement = function(sourceBlockID, sourceBlockAreaID, destinationBlockAreaID, sourceBlockTypeHandle) {
 		var	cID = CCM_CID;
 		jQuery.fn.dialog.showLoader();
@@ -311,6 +319,40 @@ var CCMEditMode = function() {
 		start: function() {			
 			setupMenus();
 			setupSortablesAndDroppables();
+		},
+
+		previewPage: function(cID, arguments) {
+			setupPagePreview();
+			$('html').addClass('ccm-page-preview-mode');
+			var src = CCM_TOOLS_PATH + '/pages/preview_design?cID=' + cID;
+			if (arguments.pThemeID) {
+				src += '&pThemeID=' + arguments.pThemeID;
+			}
+			if (arguments.pTemplateID) {
+				src += '&pTemplateID=' + arguments.pTemplateID;
+			}
+			$('#ccm-page-preview-frame').get(0).src = src;
+		},
+
+		exitPreviewMode: function() {
+			$('html').removeClass('ccm-panel-preview-mode');
+			$('#ccm-page-preview-frame').remove();
+			$('html').removeClass('ccm-page-preview-mode');
+		},
+
+		launchPageComposer: function() {
+			$('a[data-launch-panel=page]').toggleClass('ccm-launch-panel-active');
+			CCMPanelManager.getByIdentifier('compose-page').show();
+			ccm_event.subscribe('panel.open',function(e, panel) {
+				if (panel.options.identifier == 'compose-page') {
+					$('#' + panel.getDOMID()).find('[data-launch-panel-detail=\'page/composer\']').addClass('ccm-panel-menu-item-active');
+				}
+			});
+			CCMPanelManager.getByIdentifier('compose-page').openPanelDetail({
+				'url': CCM_TOOLS_PATH + '/panels/details/page/composer',
+				'transition': false,
+				'identifier': 'page-composer'
+			});
 		},
 
 		setupBlockForm: function(form, bID, task) {
