@@ -72,14 +72,6 @@ var CCMEditMode = function() {
 
 	}
 
-	setupPagePreview = function() {
-		if (!$('#ccm-page-preview-frame').length) {
-			$preview = $('<iframe />', {
-				id: 'ccm-page-preview-frame'
-			}).appendTo(document.body);
-		}
-	}
-
 	saveArrangement = function(sourceBlockID, sourceBlockAreaID, destinationBlockAreaID, sourceBlockTypeHandle) {
 		var	cID = CCM_CID;
 		jQuery.fn.dialog.showLoader();
@@ -322,7 +314,6 @@ var CCMEditMode = function() {
 		},
 
 		previewPage: function(cID, arguments) {
-			setupPagePreview();
 			$('html').addClass('ccm-page-preview-mode');
 			var src = CCM_TOOLS_PATH + '/pages/preview_design?cID=' + cID;
 			if (arguments.pThemeID) {
@@ -525,7 +516,7 @@ var CCMEditMode = function() {
 		},
 
 		showResponseNotification: function(message, icon, class) {
-			$('<div id="ccm-notification" class="ccm-ui ccm-notification-' + class + '"><i class="glyphicon glyphicon-' + icon + '"></i><div id="ccm-notification-inner">' + message + '</div></div>').
+			$('<div id="ccm-notification-hud" class="ccm-ui ccm-notification ccm-notification-' + class + '"><i class="glyphicon glyphicon-' + icon + '"></i><div class="ccm-notification-inner">' + message + '</div></div>').
 			appendTo(document.body).delay(5).queue(function() {
 				$(this).css('opacity', 1);
 				$(this).dequeue();

@@ -95,5 +95,23 @@ div#ccm-panel-page {
 		}
 
 	}
+}
 
+div#ccm-panel-detail-page-design {
+	z-index: 1001; /* below overlay */
+	div.ccm-panel-detail-content {
+		padding: 0px;
+		height: 100%;
+		width: 100%;
+
+		iframe#ccm-page-preview-frame {
+			width: 100%;
+			height: 100%;
+			top: 0;
+			.box-sizing(border-box);
+			background: transparent;
+			margin: 0px;
+			padding: 0px;
+		}
+	}
 }

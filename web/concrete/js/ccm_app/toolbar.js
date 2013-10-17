@@ -9,6 +9,31 @@ var CCMToolbar = function() {
 	var $searchResults = $('#ccm-intelligent-search-results');
 	var remotesearchquery, ajaxtimer;
 
+	setupHelpNotifications = function() {
+		$(document.body).on('click', 'a[data-dismiss]', function() {
+			var action = ($(this).attr('data-dismiss') == 'help-all') ? 'all' : 'this';
+			$(this).parentsUntil('.ccm-notification-help').parent().queue(function() {
+				$(this).css("opacity", 0);
+				$(this).dequeue();
+			}).delay(500).queue(function() {
+				$(this).remove();
+				$(this).dequeue();
+			});
+
+			$.ajax({
+				type: 'post',
+				data: {
+					'type': $(this).attr('data-help-notification-type'),
+					'identifier': $(this).attr('data-help-notification-identifier'),
+					'action': action,
+					'ccm_token': CCM_SECURITY_TOKEN
+				},
+				url: CCM_TOOLS_PATH + '/help/dismiss',
+				success: function(r) {}
+			});
+		});
+	}
+
 	setupPanels = function() {
 		CCMPanelManager.register({'identifier': 'dashboard', 'position': 'right'});
 		CCMPanelManager.register({'identifier': 'page'});
@@ -214,6 +239,7 @@ var CCMToolbar = function() {
 				setupStatusBar();
 				setupIntelligentSearch();
 				setupPanels();
+				setupHelpNotifications();
 
 				// make sure that dashboard dropdown doesn't get dismissed if you mis-click inside it;
 				$('#ccm-toolbar-menu-dashboard').on('click', function(e) {
