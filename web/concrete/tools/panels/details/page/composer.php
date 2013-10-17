@@ -17,6 +17,8 @@ if (is_object($c) && !$c->isError()) {
 		<section class="ccm-ui">
 			<header><?=t('Composer - %s', $pagetype->getPageTypeName())?></header>
 			<form method="post" data-form="composer" class="ccm-panel-detail-content-form">
+				<?=Loader::helper('concrete/interface/help')->notify('panel', '/page/composer')?>
+
 				<? Loader::helper('composer')->display($pagetype, $c); ?>
 			</form>
 
@@ -27,7 +29,14 @@ if (is_object($c) && !$c->isError()) {
 
 		<script type="text/javascript">
 			$(function() { 
-				$('form[data-form=composer]').ccmcomposer({token: '<?=Loader::helper('validation/token')->generate('composer')?>', cID: '<?=$id?>'});
+				$('form[data-form=composer]').ccmcomposer({
+					token: '<?=Loader::helper('validation/token')->generate('composer')?>', 
+					cID: '<?=$id?>',
+					onAfterSaveAndExit: function() {
+						var panel = CCMPanelManager.getByIdentifier('page');
+						panel.closePanelDetail();
+					}
+				});
 			});
 		</script>
 	<? }

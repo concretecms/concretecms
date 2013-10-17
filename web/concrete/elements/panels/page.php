@@ -12,17 +12,17 @@
 		<? 
 		$pagetype = PageType::getByID($c->getPageTypeID());
 		if (is_object($pagetype)) { ?>
-			<li><a href="#" data-launch-panel-detail="page-composer" data-panel-url="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/panels/details/page/composer" data-panel-transition="swap"><?=t('Composer')?></a></li>
+			<li><a href="#" data-launch-panel-detail="page-composer" data-panel-detail-url="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/panels/details/page/composer" data-panel-transition="swap"><?=t('Composer')?></a></li>
 		<? } ?>
 		<? if ($cp->canEditPageTheme() || $cp->canEditPageTemplate()) { ?>
-			<li><a href="#" data-launch-sub-panel="page/design"><?=t('Design')?></a></li>
+			<li><a href="#" data-launch-sub-panel="page/design" data-launch-panel-detail="page-design" data-panel-detail-url="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/panels/details/page/preview" data-panel-transition="fade" ><?=t('Design')?></a></li>
 		<? }
 
 		if ($cp->canEditPageProperties() && is_object($seoSet)) { ?>
-			<li><a href="#" data-launch-panel-detail="page-seo" data-panel-url="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/panels/details/page/seo" data-panel-transition="swap"><?=t('SEO')?></a></li>
+			<li><a href="#" data-launch-panel-detail="page-seo" data-panel-detail-url="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/panels/details/page/seo" data-panel-transition="swap"><?=t('SEO')?></a></li>
 		<? }
 		if (!$c->isPageDraft() && is_object($asl) && ($asl->allowEditPaths())) { ?>
-			<li><a href=""><?=t('Location')?></a></li>
+			<li><a href="#" data-launch-panel-detail="page-location" data-panel-detail-url="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/panels/details/page/location" data-panel-transition="swap"><?=t('Location')?></a></li>
 		<? } ?>
 	</menu>
 	<menu>

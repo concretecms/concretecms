@@ -110,7 +110,7 @@
         $this.data('discardURL', settings.discardURL);
 
         if (settings.autoSaveEnabled) {
-          methods.saveinternal = setInterval(function() {
+          methods.saveinterval = setInterval(function() {
             methods.private.saveDraft('autosave', $this, function(r) {});
           }, settings.autoSaveTimeout);
         }

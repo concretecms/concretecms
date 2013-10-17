@@ -259,33 +259,15 @@ div#ccm-toolbar {
 }
 
 /* In-page HUD */
-div#ccm-notification {
+
+.ccm-notification {
 	font-family: @sansFontFamily;
-	position: fixed; 
-	top: 110px; 
 	.border-left-radius(3px);
-	right: 0px; 
 	padding: 30px 30px 30px 80px;
-	z-index: 1105; 
-	font-size: 14px;
+	font-size: 13px;
 	min-height: 25px;
-	.opacity(0);
 	font-weight: 300;
 	.transition(opacity 0.5s cubic-bezier(0.190, 1.000, 0.220, 1.000));
-	&.ccm-notification-success {
-		background-color: #47a347;
-		color: #fff;
-	}
-
-	&.ccm-notification-info {
-		background-color: #105193;
-		color: #fff;
-	}
-
-	div#ccm-notification-inner {
-		width: 230px;
-	}
-
 	i.glyphicon {
 		font-size: 16px;
 		position: absolute;
@@ -293,6 +275,50 @@ div#ccm-notification {
 		left: 35px;
 	}
 }
+
+div#ccm-notification-hud {
+	position: fixed; 
+	top: 110px; 
+	right: 0px; 
+	z-index: 1105; 
+	.opacity(0);
+}
+
+div.ccm-notification-success {
+	background-color: #47a347;
+	color: rgba(255,255,255,0.7);
+}
+
+div.ccm-notification-help,
+div.ccm-notification-info {
+	background-color: #105193;
+	color: rgba(255,255,255,0.7);
+	a {
+		color: rgba(255,255,255,0.7);
+	}
+	a:hover {
+		color: #538fcb;
+	}
+}
+
+div.ccm-notification-inner {
+	width: 230px;
+}
+
+div.ccm-notification-actions {
+	margin-top: 30px;
+	font-size: @font-size-small;
+	font-weight: bold;
+	a, a:hover {
+		text-decoration: none;
+	}
+
+	a {
+		margin-right: 30px;
+	}
+}
+
+
 
 /* Status Bar */
 div#ccm-page-status-bar {
