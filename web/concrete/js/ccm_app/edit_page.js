@@ -457,10 +457,10 @@ var CCMEditMode = function() {
 							if (task == 'add') {
 								var tb = parseInt($('div.ccm-area[data-area-id=' + resp.aID + ']').attr('data-total-blocks'));
 								$('div.ccm-area[data-area-id=' + resp.aID + ']').attr('data-total-blocks', tb + 1);
-								ccmAlert.hud(ccmi18n.addBlockMsg, 2000, 'add', ccmi18n.addBlock);
+								ccmAlert.hud(ccmi18n.addBlockMsg, 2000, 'ok', ccmi18n.addBlock);
 								jQuery.fn.dialog.closeAll();
 							} else {
-								ccmAlert.hud(ccmi18n.updateBlockMsg, 2000, 'success', ccmi18n.updateBlock);
+								ccmAlert.hud(ccmi18n.updateBlockMsg, 2000, 'ok', ccmi18n.updateBlock);
 							}
 							CCMEditMode.start(); // refresh areas. 
 							$.fn.ccmmenu.reset();

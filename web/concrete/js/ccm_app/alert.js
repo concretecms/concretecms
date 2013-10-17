@@ -21,7 +21,7 @@ var ccmAlert = {
         if (title == null) {    
             var messageText = message;
         } else {
-            var messageText = '<h3>' + title + '</h3>' + message;
+            var messageText = '<strong>' + title + '</strong><br/><br/>' + message;
         }
         if (icon == null) {
             var icon = 'pencil';

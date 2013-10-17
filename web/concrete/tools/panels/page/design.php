@@ -124,7 +124,6 @@ if (is_object($c) && !$c->isError()) {
 		</section>
 
 			<div class="ccm-panel-detail-form-actions">
-				<button class="pull-left btn btn-default" type="button" data-panel-detail-action="cancel"><?=t('Cancel')?></button>
 				<button class="pull-right btn btn-success" type="button" data-panel-detail-action="submit"><?=t('Save Changes')?></button>
 			</div>
 

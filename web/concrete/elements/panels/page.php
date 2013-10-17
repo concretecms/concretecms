@@ -21,7 +21,7 @@
 		if ($cp->canEditPageProperties() && is_object($seoSet)) { ?>
 			<li><a href="#" data-launch-panel-detail="page-seo" data-panel-url="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/panels/details/page/seo" data-panel-transition="swap"><?=t('SEO')?></a></li>
 		<? }
-		if (is_object($asl) && ($asl->allowEditPaths())) { ?>
+		if (!$c->isPageDraft() && is_object($asl) && ($asl->allowEditPaths())) { ?>
 			<li><a href=""><?=t('Location')?></a></li>
 		<? } ?>
 	</menu>
