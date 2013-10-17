@@ -395,11 +395,24 @@ div.ccm-panel-detail.ccm-panel-detail-transition-swap {
 	display: block;
 	transform: rotateY(180deg);
 	-webkit-transform: rotateY(180deg);
+	-webkit-transition-duration: 0.5s;
+	transition-duration: 0.5s;
+	transition-easing: none;
+	-webkit-transition-easing: none;
 }
 
-div.ccm-panel-detail.ccm-panel-detail-transition-swap.ccm-panel-detail-transition-swap-start {
+div.ccm-panel-detail.ccm-panel-detail-transition-swap.ccm-panel-detail-transition-swap-apply {
 	transform: rotateY(0deg);
 	-webkit-transform: rotateY(0deg);
+	-webkit-transition-duration: 0.5s;
+	transition-duration: 0.5s;
+	transition-easing: none;
+	-webkit-transition-easing: none;
+}
+
+div.ccm-panel-detail.ccm-panel-detail-transition-swap.ccm-panel-detail-transition-swap-remove {
+	transform: rotateY(180deg);
+	-webkit-transform: rotateY(180deg);
 	-webkit-transition-duration: 0.5s;
 	transition-duration: 0.5s;
 	transition-easing: none;
@@ -424,13 +437,15 @@ html.ccm-panel-right div.ccm-page.ccm-panel-detail-transition-swap {
 }
 
 html.ccm-panel-ready div.ccm-page.ccm-panel-detail-transition-swap {
-	transition-duration: 0s;
-	-webkit-transition-duration: 0s;
-	transform: none;
-	-webkit-transform: none;
+	transform: rotateY(0deg);
+	-webkit-transform: rotateY(0deg);
+	-webkit-transition-duration: 0.5s;
+	transition-duration: 0.5s;
+	transition-easing: none;
+	-webkit-transition-easing: none;
 }
 
-html.ccm-panel-ready div.ccm-page.ccm-panel-detail-transition-swap.ccm-panel-detail-transition-swap-start {
+html.ccm-panel-ready div.ccm-page.ccm-panel-detail-transition-swap.ccm-panel-detail-transition-swap-apply {
 	transform: rotateY(180deg);
 	-webkit-transform: rotateY(180deg);
 	-webkit-transition-duration: 0.5s;
@@ -439,11 +454,7 @@ html.ccm-panel-ready div.ccm-page.ccm-panel-detail-transition-swap.ccm-panel-det
 	-webkit-transition-easing: none;
 }
 
-html.ccm-panel-ready div.ccm-page.ccm-panel-detail-transition-swap.ccm-panel-detail-transition-complete {
-	display: none;
-}
-
-div.ccm-panel-detail.ccm-panel-detail-transition-none.ccm-panel-detail-transition-none-start {
+div.ccm-panel-detail.ccm-panel-detail-transition-none.ccm-panel-detail-transition-none-apply {
 	display: block;
 }
 
