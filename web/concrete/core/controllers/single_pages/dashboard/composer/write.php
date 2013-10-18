@@ -154,8 +154,8 @@ EOL;
 			$ax = Loader::helper('ajax');
 
 			if ($_POST['task'] == 'autosave') {
-				$r->setSaveStatus(t('Page saved on %s', $r->time));
-				$ax->sendResult($r);
+				$r->setMessage(t('Page saved on %s', $r->time));
+				$r->outputJSON();
 			}
 			if ($_POST['task'] == 'save') {
 				$r->setRedirectURL(View::url('/dashboard/composer/drafts'));

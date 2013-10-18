@@ -79,9 +79,10 @@ class Concrete5_Model_PageType extends Object {
 		}
 
 		// remove all but the most recent X drafts.
-		$vl = new VersionList($c, -1);
+		$vl = new VersionList($c);
+		$vl->setItemsPerPage(-1);
 		// this will ensure that we only ever keep X versions.
-		$vArray = $vl->getVersionListArray();
+		$vArray = $vl->getPage();
 		if (count($vArray) > $this->ptDraftVersionsToSave) {
 			for ($i = $this->ptDraftVersionsToSave; $i < count($vArray); $i++) {
 				$v = $vArray[$i];

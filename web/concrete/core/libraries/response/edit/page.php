@@ -6,6 +6,12 @@ class Concrete5_Library_PageEditResponse extends Response {
 	public function setPage(Page $page) {
 		$this->cID = $page->getCollectionID();
 	}
+
+	public function getJSONObject() {
+		$o = parent::getBaseJSONObject();
+		$o->cID = $this->cID;
+		return $o;
+	}
 	
 
 }

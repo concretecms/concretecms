@@ -165,6 +165,10 @@
 
     },
 
+    disableAutoSave: function() {
+      clearInterval(methods.saveinterval);
+    }
+
 
   };
 

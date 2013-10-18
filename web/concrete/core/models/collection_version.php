@@ -365,43 +365,24 @@
  * @license    http://www.concrete5.org/license/     MIT License
  *
  */
-	class VersionList extends Object {
-	
-		var $vArray = array();
-		
-		function VersionList(&$c, $limit = -1, $page = false) {
-			$db = Loader::db();
-			
-			$cID = $c->getCollectionID();
-			$this->total = $db->GetOne('select count(cvID) from CollectionVersions where cID = ?', $cID);
-			$q = "select cvID from CollectionVersions where cID = '$cID' order by cvID desc ";
-			if ($page > 1) {
-				$pl = ($page-1) * $limit;
-			}			
-			if ($page > 1) {
-				$q .= "limit " . $pl . ',' . $limit;
-			} else if ($limit > -1) {
-				$q .= "limit " . $limit;
+	class VersionList extends DatabaseItemList {
+
+		public function __construct($c) {
+			$this->c = $c;
+			$this->setQuery('select cvID from CollectionVersions');
+			$this->filter('cID', $c->getCollectionID());
+			$this->sortBy('cvID', 'desc');			
+		}
+
+		public function get($itemsToGet, $offset) {
+			$r = parent::get($itemsToGet, $offset);
+			$items = array();
+			foreach($r as $row) {
+				$cv = CollectionVersion::get($this->c, $row['cvID']);
+				$items[] = $cv;
 			}
-			$r = $db->query($q);
-	
-			if ($r) {
-				while ($row = $r->fetchRow()) {
-					$this->vArray[] = CollectionVersion::get($c, $row['cvID'], true);
-				}
-				$r->free();
-			}
-					
-			return $this;
-		}
-		
-		function getVersionListArray() {
-			return $this->vArray;
-		}
-		
-		function getVersionListCount() {
-			return $this->total;
-		}
+			return $items;
+		}	
 	
 	}
 	

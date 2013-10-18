@@ -40,7 +40,7 @@ var CCMPanel = function(options) {
 	this.onPanelLoad = function() {
 		this.setupPanelDetails();
 		this.setupSubPanels();
-		ccm_event.publish('panel.open', [this]);
+		ccm_event.publish('panel.open', this);
 	}
 
 	this.hide = function() {
@@ -138,6 +138,7 @@ var CCMPanel = function(options) {
 			$(this).dequeue();
 		});
 
+		ccm_event.publish('panel.closeDetail', this.detail);
 		this.detail = false;
 
 		if ($('.ccm-panel-detail').length > 0) {
@@ -147,9 +148,13 @@ var CCMPanel = function(options) {
 	}
 
 	this.closePanelDetailImmediately = function() {
+		if (!this.detail) {
+			return false;
+		}
 		$('.ccm-panel-detail').remove();
 		$('.ccm-panel-detail-form-actions').remove();
 		$('.ccm-page').removeClass().addClass('ccm-page');
+		ccm_event.publish('panel.closeDetail', this.detail);
 		this.detail = false;
 	}
 
@@ -157,7 +162,8 @@ var CCMPanel = function(options) {
 		var obj = this;
 		var options = $.extend({
 			transition: 'none',
-			url: false
+			url: false,
+			data: ''
 		}, options);
 		if (!options.url) {
 			options.url = CCM_TOOLS_PATH + '/panels/details/' + options.identifier;
@@ -192,10 +198,11 @@ var CCMPanel = function(options) {
 			$(this).dequeue();
 		});
 		$('html').addClass('ccm-panel-detail-open');
-		$content.load(options.url + '?cID=' + CCM_CID, function() {
+		$content.load(options.url + '?cID=' + CCM_CID + options.data, function() {
 			jQuery.fn.dialog.hideLoader();
 			obj.loadPanelDetailActions($content);
 		});
+		ccm_event.publish('panel.openDetail', obj);
 	}
 
 	this.loadPanelDetailActions = function($content) {
@@ -204,11 +211,15 @@ var CCMPanel = function(options) {
 		if ($actions.length) {
 			$(document.body).delay(500)
 			.queue(function() {
-				$('<div />', {
-					id: 'ccm-panel-detail-form-actions-wrapper',
-					class: 'ccm-ui'
-				}).appendTo(document.body);
-				$actions.appendTo('#ccm-panel-detail-form-actions-wrapper');
+				var $wrapper = $('#ccm-panel-detail-form-actions-wrapper');
+				if (!$wrapper.length) {
+					$wrapper = $('<div />', {
+						id: 'ccm-panel-detail-form-actions-wrapper',
+						class: 'ccm-ui'
+					});
+				}
+				$wrapper.appendTo(document.body);
+				$actions.appendTo($wrapper);
 				$(this).dequeue();
 			})
 			.delay(5)

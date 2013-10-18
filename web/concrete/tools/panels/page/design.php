@@ -170,9 +170,9 @@ if (is_object($c) && !$c->isError()) {
 			$('#ccm-panel-page-design input[name=pThemeID], #ccm-panel-page-design input[name=pTemplateID]').on('change', function() {
 				var pThemeID = $('#ccm-panel-page-design input[name=pThemeID]').val();
 				var pTemplateID = $('#ccm-panel-page-design input[name=pTemplateID]:checked').val();
-				CCMEditMode.previewPage('<?=$c->getCollectionID()?>', {'pTemplateID': pTemplateID, 'pThemeID': pThemeID});
+				var src = CCM_TOOLS_PATH + '/pages/preview_design?cID=<?=$c->getCollectionID()?>&pThemeID=' + pThemeID + '&pTemplateID=' + pTemplateID;
+				$('#ccm-page-preview-frame').get(0).src = src;
 			});
-
 
 		});
 		</script>

@@ -31,11 +31,25 @@ abstract class Concrete5_Library_Response {
 		return $this->message;
 	}
 
+	public function getJSON() {
+		return Loader::helper('json')->encode($this->getJSONObject());
+	}
+
+	abstract public function getJSONObject();
+
+	public function getBaseJSONObject() {
+		$o = new stdClass;
+		$o->message = $this->message;
+		$o->time = $this->time;
+		$o->redirectURL = $this->redirectURL;
+		return $o;
+	}
+
 	public function outputJSON() {
 		if ($this->error && $this->error->has()) {
 			Loader::helper('ajax')->sendError($this->error);
 		} else {
-			Loader::helper('ajax')->sendResult($this);
+			Loader::helper('ajax')->sendResult($this->getJSONObject());
 		}
 	}
 
