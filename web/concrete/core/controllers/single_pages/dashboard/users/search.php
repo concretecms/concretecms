@@ -325,11 +325,14 @@ class Concrete5_Controller_Dashboard_Users_Search extends Controller {
 				throw new Exception(t('You do not have permission to perform this action.'));
 			}
 			
+			if($uID == USER_SUPER_ID) {
+				throw new Exception(t('You can\'t sign in as the %s user.', USER_SUPER));
+			}
+			
 			$ui = UserInfo::getByID($uID); 
 			if(!($ui instanceof UserInfo)) {
 				throw new Exception(t('Invalid user ID.'));
 			}
-
 	
 			$valt = Loader::helper('validation/token');
 			if (!$valt->validate('sudo', $token)) {
