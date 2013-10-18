@@ -5,6 +5,7 @@ $classes = array(
 	'Request' => array('library','request'),
 	'Response' => array('library', 'response/library'),
 	'PageEditResponse' => array('library', 'response/edit/page'),
+	'PageEditVersionResponse' => array('library', 'response/edit/page/version'),
 	'Localization' => array('library','localization'),
 	'Router' => array('library', 'router'),
 	'PageCache' => array('library', 'page_cache/library'),

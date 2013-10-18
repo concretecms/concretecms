@@ -44,7 +44,7 @@ if (!$e->has()) {
 		if ($_POST['task'] == 'save' || $_POST['task'] == 'autosave') {
 			$ptr = new PageTypePublishResponse();
 			$ptr->setPage($c);
-			$ptr->setSaveStatus(t('Page saved on %s', $ptr->time));
+			$ptr->setMessage(t('Page saved on %s', $ptr->time));
 		}
 		if ($_POST['task'] == 'save') {
 			$u = new User();

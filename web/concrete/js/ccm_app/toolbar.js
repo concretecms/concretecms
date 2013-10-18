@@ -40,7 +40,6 @@ var CCMToolbar = function() {
 		CCMPanelManager.register({'identifier': 'sitemap', 'position': 'right'});
 		CCMPanelManager.register({'identifier': 'add-block', 'translucent': false, 'position': 'left', 'url' : CCM_TOOLS_PATH + '/panels/page/add_block'});
 		CCMPanelManager.register({'identifier': 'check-in', 'position': 'left', 'url' : CCM_TOOLS_PATH + '/panels/page/check_in'});
-		CCMPanelManager.register({'identifier': 'compose-page', 'transition': false, url: CCM_TOOLS_PATH + '/panels/page', 'translucent': false});
 		$('<div />', {'id': 'ccm-panel-overlay'}).appendTo($(document.body));
 		$('[data-launch-panel]').unbind().on('click', function() {
 			var panelID = $(this).attr('data-launch-panel');

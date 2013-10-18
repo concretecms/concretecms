@@ -30,6 +30,7 @@ $.fn.ccmmenu = function() {
 			if ($this.attr('data-menu-highlight-offset')) {
 				$this.highlightOffset = $this.attr('data-menu-highlight-offset');
 			}
+			$this.menuClass = $this.attr('data-menu-class');
 			$menulauncher.on('mousemove.ccmmenu', function(e) {
 				//e.stopPropagation(); 
 				// we had the above line in here so we could do some area menu niceties but it was playing hell with the gathering block.
@@ -92,9 +93,13 @@ $.fn.ccmmenu.enable = function() {
 	$.fn.ccmmenu.isenabled = true;
 	if ($("#ccm-menu-click-proxy").length == 0) {
 		$(document.body).append($("<div />", {'id': 'ccm-menu-click-proxy'}));
+	} else {
+		$('#ccm-menu-click-proxy').css('width', 0).css('height', 0).css('top', 0).css('left', 0);
 	}
 	if ($("#ccm-menu-highlighter").length == 0) {
 		$(document.body).append($("<div />", {'id': 'ccm-menu-highlighter'}));
+	} else {
+		$('#ccm-menu-highlighter').css('width', 0).css('height', 0).css('top', 0).css('left', 0);
 	}
 
 	if ($("#ccm-popover-menu-container").length == 0) {
@@ -113,6 +118,7 @@ $.fn.ccmmenu.enable = function() {
 	});
 
 	$.fn.ccmmenu.$proxy.unbind('click.clickproxy').on('click.clickproxy', function(e) {
+		$.fn.ccmmenu.$proxy.addClass($.fn.ccmmenu.$overmenu.menuClass);
 		$.fn.ccmmenu.showmenu(e, $.fn.ccmmenu.$overmenu.$menu);
 		$.fn.ccmmenu.highlight($.fn.ccmmenu.$overmenu);
 		$.fn.ccmmenu.$overmenu.addClass($.fn.ccmmenu.$overmenu.highlightClass);
@@ -149,8 +155,8 @@ $.fn.ccmmenu.over = function(e, $this, $menulauncher) {
 			.css('border-top-left-radius', $menulauncher.css('border-top-left-radius'))
 			.css('border-bottom-left-radius', $menulauncher.css('border-bottom-left-radius'))
 			.css('border-top-right-radius', $menulauncher.css('border-top-right-radius'))
-			.css('border-bottom-right-radius', $menulauncher.css('border-bottom-right-radius'));
-
+			.css('border-bottom-right-radius', $menulauncher.css('border-bottom-right-radius'))
+			.addClass($this.menuClass);
 			$.fn.ccmmenu.$overmenu = $this;
 		}
 		$.fn.ccmmenu.$overmenu.addClass('ccm-menu-item-active');
@@ -184,6 +190,7 @@ $.fn.ccmmenu.showmenu = function(e, $menu) {
 	$.fn.ccmmenu.isactive = true;
 
 	var $pp = $menu.clone(true, true);
+	$pp.addClass($.fn.ccmmenu.$overmenu.menuClass);
 	$pp.appendTo($.fn.ccmmenu.$holder);
 	$pp.find('.dialog-launch').dialog();
 

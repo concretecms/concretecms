@@ -4,14 +4,9 @@ class Concrete5_Model_PageTypePublishResponse extends PageEditResponse {
 
 	public $outputControls = array();
 	public $saveURL;
-	public $saveStatus;
 	public $discardURL;
 	public $viewURL;
 	
-	public function setSaveStatus($saveStatus) {
-		$this->saveStatus = $saveStatus;
-	}
-
 	public function setOutputControls($outputControls) {
 		$this->outputControls = $outputControls;
 	}
@@ -27,6 +22,15 @@ class Concrete5_Model_PageTypePublishResponse extends PageEditResponse {
 
 	public function setViewURL($viewURL) {
 		$this->viewURL = $viewURL;
+	}
+
+	public function getJSONObject() {
+		$o = parent::getBaseJSONObject();
+		$o->discardURL = $this->discardURL;
+		$o->saveURL = $this->saveURL;
+		$o->viewURL = $this->viewURL;
+		$o->saveStatus = $this->message;
+		return $o;
 	}
 	
 

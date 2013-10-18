@@ -794,7 +794,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 	
 				// First we delete all versions
 				$vl = new VersionList($this);
-				$vlArray = $vl->getVersionListArray();
+				$vl->setItemsPerPage(-1);
+				$vlArray = $pvl->getPage();
 		
 				foreach($vlArray as $v) {
 					$v->delete();
@@ -839,8 +840,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 					// insert
 					$cvList[] = $row['cvID'];
 					$cDate = date("Y-m-d H:i:s", strtotime($cDate) + 1);
-					$vv = array($newCID, $row['cvID'], $row['cvName'], $row['cvHandle'], $row['cvDescription'], $row['cvDatePublic'], $cDate, $row['cvComments'], $row['cvAuthorUID'], $row['cvIsApproved'], $row['pThemeID']);
-					$qv = "insert into CollectionVersions (cID, cvID, cvName, cvHandle, cvDescription, cvDatePublic, cvDateCreated, cvComments, cvAuthorUID, cvIsApproved, pThemeID) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+					$vv = array($newCID, $row['cvID'], $row['cvName'], $row['cvHandle'], $row['cvDescription'], $row['cvDatePublic'], $cDate, $row['cvComments'], $row['cvAuthorUID'], $row['cvIsApproved'], $row['pThemeID'], $row['pTemplateID']);
+					$qv = "insert into CollectionVersions (cID, cvID, cvName, cvHandle, cvDescription, cvDatePublic, cvDateCreated, cvComments, cvAuthorUID, cvIsApproved, pThemeID, pTemplateID) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 					$db->query($qv, $vv);
 				}
 				

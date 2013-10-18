@@ -313,18 +313,6 @@ var CCMEditMode = function() {
 			setupSortablesAndDroppables();
 		},
 
-		previewPage: function(cID, arguments) {
-			$('html').addClass('ccm-page-preview-mode');
-			var src = CCM_TOOLS_PATH + '/pages/preview_design?cID=' + cID;
-			if (arguments.pThemeID) {
-				src += '&pThemeID=' + arguments.pThemeID;
-			}
-			if (arguments.pTemplateID) {
-				src += '&pTemplateID=' + arguments.pTemplateID;
-			}
-			$('#ccm-page-preview-frame').get(0).src = src;
-		},
-
 		exitPreviewMode: function() {
 			$('html').removeClass('ccm-panel-preview-mode');
 			$('#ccm-page-preview-frame').remove();
@@ -333,15 +321,15 @@ var CCMEditMode = function() {
 
 		launchPageComposer: function() {
 			$('a[data-launch-panel=page]').toggleClass('ccm-launch-panel-active');
-			CCMPanelManager.getByIdentifier('compose-page').show();
-			ccm_event.subscribe('panel.open',function(e, panel) {
-				if (panel.options.identifier == 'compose-page') {
+			CCMPanelManager.getByIdentifier('page').show();
+			ccm_event.subscribe('panel.open',function(e) {
+				var panel = e.eventData;
+				if (panel.options.identifier == 'page') {
 					$('#' + panel.getDOMID()).find('[data-launch-panel-detail=\'page/composer\']').addClass('ccm-panel-menu-item-active');
 				}
 			});
-			CCMPanelManager.getByIdentifier('compose-page').openPanelDetail({
+			CCMPanelManager.getByIdentifier('page').openPanelDetail({
 				'url': CCM_TOOLS_PATH + '/panels/details/page/composer',
-				'transition': false,
 				'identifier': 'page-composer'
 			});
 		},
