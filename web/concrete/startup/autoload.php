@@ -364,3 +364,4 @@ $classes = array(
 
 Loader::registerAutoload($classes);
 spl_autoload_register(array('Loader', 'autoload'), true);
+require_once(DIR_LIBRARIES_3RDPARTY_CORE. '/autoload.php');
