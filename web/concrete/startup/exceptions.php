@@ -2,7 +2,7 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 function Concrete5_Exception_Handler($e) {
 	// log if setup to do so
-	if (ENABLE_LOG_ERRORS) {
+	if (defined('ENABLE_LOG_ERRORS') && ENABLE_LOG_ERRORS) {
 		$db = Loader::db();
 		$tables = $db->MetaTables();
 		if (in_array('Logs', $tables)) {

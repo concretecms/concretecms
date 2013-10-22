@@ -12,8 +12,6 @@ class Concrete5_Library_ToolRequestView extends RequestView {
 		throw new Exception(t('Action is not available in a tools context.'));
 	}
 
-	protected function setupController() {}
-	protected function runControllerTask() {}
 	public function setupRender() {
 		$env = Environment::get();
 		switch($this->request->getIncludeType()) {

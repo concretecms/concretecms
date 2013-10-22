@@ -21,7 +21,7 @@ define('DIR_FILES_UPLOADED_THUMBNAILS_LEVEL2', DIR_FILES_UPLOADED . '/thumbnails
 define('DIR_FILES_UPLOADED_THUMBNAILS_LEVEL3', DIR_FILES_UPLOADED . '/thumbnails/level3');
 define('DIR_FILES_AVATARS', DIR_FILES_UPLOADED . '/avatars');
 
-class Concrete5_Controller_Install extends Controller {
+class Concrete5_Controller_Install extends RequestController {
 
 	public $helpers = array('form', 'html');
 	

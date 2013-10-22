@@ -2341,7 +2341,7 @@ class Concrete5_Model_Page extends Collection {
 	 *
 	*/
 	public static function getCurrentPage() {
-		$req = Request::get();
+		$req = Request::getInstance();
 		$current = $req->getCurrentPage();
 		return $current;
 	}

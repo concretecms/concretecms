@@ -1,7 +1,7 @@
 <?
 
 defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Library_PageRequestView extends PathRequestView {
+class Concrete5_Library_PageRequestView extends RequestView {
 
 	protected $c; // page
 	protected $pTemplateID;
@@ -28,12 +28,6 @@ class Concrete5_Library_PageRequestView extends PathRequestView {
 		$items = parent::getScopeItems();
 		$items['c'] = $this->c;
 		return $items;
-	}
-
-	protected function setupController() {
-		if (!isset($this->controller)) {
-			$this->controller = Loader::controller($this->c);
-		}
 	}
 
 	protected function loadRequestViewThemeObject() {

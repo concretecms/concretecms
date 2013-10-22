@@ -52,7 +52,7 @@
 		}
 
 		public function add() {
-			$req = Request::get();
+			$req = Request::getInstance();
 			$req->requireAsset('redactor');
 		}
 

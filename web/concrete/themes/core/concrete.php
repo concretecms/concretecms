@@ -3,12 +3,11 @@
 <html>
 <head>
 <? 
-$this->addHeaderItem(Loader::helper("html")->css('ccm.default.theme.css'));
-$req = Request::get();
-$req->requireAsset('css', 'bootstrap');
-$req->requireAsset('javascript', 'jquery');
-$req->requireAsset('javascript', 'bootstrap/alert');
-$req->requireAsset('javascript', 'bootstrap/transition');
+$view->addHeaderItem(Loader::helper("html")->css('ccm.default.theme.css'));
+$view->requireAsset('css', 'bootstrap');
+$view->requireAsset('javascript', 'jquery');
+$view->requireAsset('javascript', 'bootstrap/alert');
+$view->requireAsset('javascript', 'bootstrap/transition');
 
 $showLogo = true;
 if (is_object($c)) {

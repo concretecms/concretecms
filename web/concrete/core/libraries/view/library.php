@@ -15,7 +15,7 @@ abstract class Concrete5_Library_View {
 
 	public static function getRequestInstance() {
 		if (null === self::$requestInstance) {
-			View::setRequestInstance(new PathRequestView());
+			View::setRequestInstance(new RequestView());
 		}
 		return self::$requestInstance;
 	}
@@ -42,8 +42,6 @@ abstract class Concrete5_Library_View {
 		}
 	}
 	abstract public function setupRender();
-	abstract protected function setupController();
-	abstract protected function runControllerTask();
 	abstract public function finishRender();
 	abstract public function action($action);
 
@@ -78,7 +76,8 @@ abstract class Concrete5_Library_View {
 	 * @return void
 	*/
 	public function post($key) {
-		return $this->controller->post($key);
+		$r = Request::getInstance();
+		return $r->post($key);
 	}
 
 	abstract protected function onBeforeGetContents();
@@ -93,23 +92,22 @@ abstract class Concrete5_Library_View {
 		return $return;
 	}
 
-	public function render($mixed) {
+	public function render($mixed = false) {
 		if ($this instanceof RequestView) {
 			$this->setRequestInstance($this);
 		}
 		$this->start($mixed);
-		$this->setupController();
-		$this->runControllerTask();
 		$this->setupRender();
 		$this->startRender();
 		$scopeItems = $this->getScopeItems();
 		$contents = $this->renderViewContents($scopeItems);
 		$contents = $this->postProcessViewContents($contents);
 		$this->deliverRender($contents);
-		$this->finishRender();
+		$response = $this->finishRender();
 		if ($this instanceof RequestView) {
 			$this->revertRequestInstance();
 		}
+		return $response;
 	}
 
 	public function renderViewContents($scopeItems) {
@@ -131,48 +129,14 @@ abstract class Concrete5_Library_View {
 
 	/**
 	 * url is a utility function that is used inside a view to setup urls w/tasks and parameters		
-	 * @access public
+	 * @deprecated
 	 * @param string $action
 	 * @param string $task
 	 * @return string $url
 	*/	
 	public function url($action, $task = null) {
-		$dispatcher = '';
-		if ((!URL_REWRITING_ALL) || !defined('URL_REWRITING_ALL')) {
-			$dispatcher = '/' . DISPATCHER_FILENAME;
-		}
-		
-		$action = trim($action, '/');
-		if ($action == '') {
-			return DIR_REL . '/';
-		}
-		
-		// if a query string appears in this variable, then we just pass it through as is
-		if (strpos($action, '?') > -1) {
-			return DIR_REL . $dispatcher. '/' . $action;
-		} else {
-			$_action = DIR_REL . $dispatcher. '/' . $action . '/';
-		}
-		
-		if ($task != null) {
-			if (ENABLE_LEGACY_CONTROLLER_URLS) {
-				$_action .= '-/' . $task;
-			} else {
-				$_action .= $task;			
-			}
-			$args = func_get_args();
-			if (count($args) > 2) {
-				for ($i = 2; $i < count($args); $i++){
-					$_action .= '/' . $args[$i];
-				}
-			}
-			
-			if (strpos($_action, '?') === false) {
-				$_action .= '/';
-			}
-		}
-		
-		return $_action;
+		$args = func_get_args();
+		return call_user_func_array(array('URL', 'to'), $args);
 	}
 
 	// Legacy Items. Deprecated
