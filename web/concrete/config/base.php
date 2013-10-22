@@ -183,6 +183,7 @@ define('DIR_STARTING_POINT_PACKAGES_CORE', DIR_BASE_CORE . '/config/install/pack
 define('DIRNAME_BLOCKS', 'blocks');
 define('DIRNAME_BACKUPS', 'backups');
 define('DIRNAME_PAGES', 'single_pages');
+define('DIRNAME_VIEWS', 'views');
 define('DIRNAME_PACKAGES', 'packages');
 define('DIRNAME_MODELS', 'models');
 define('DIRNAME_ATTRIBUTES', 'attribute');
@@ -588,6 +589,10 @@ if (!defined('NEWSFLOW_URL')) {
 
 if (!defined('ENABLE_TRASH_CAN')) { 
 	define('ENABLE_TRASH_CAN', true);
+}
+
+if (!defined('URL_USE_TRAILING_SLASH')) {
+	define('URL_USE_TRAILING_SLASH', true);
 }
 
 define('MARKETPLACE_BASE_URL_SITE_PAGE', CONCRETE5_ORG_URL.'/private/sites');

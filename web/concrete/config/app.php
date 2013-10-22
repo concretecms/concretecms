@@ -104,10 +104,6 @@ if (!defined('URL_REWRITING_ALL')) {
 	define("URL_REWRITING_ALL", false);
 }
 
-if (!defined('ENABLE_LEGACY_CONTROLLER_URLS')) {
-	define('ENABLE_LEGACY_CONTROLLER_URLS', false);
-}
-
 if (!defined('ENABLE_PROGRESSIVE_PAGE_REINDEX')) {
 	define('ENABLE_PROGRESSIVE_PAGE_REINDEX', true);
 }

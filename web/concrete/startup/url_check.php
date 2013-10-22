@@ -27,5 +27,20 @@ if (REDIRECT_TO_BASE_URL == true) {
 		header('Location: ' . $base_url . $uri);
 		exit;
 	}
+}
 
+$r = Request::getInstance();
+/** 
+ * Normalize trailing slash
+ */
+$pathInfo = $r->getPathInfo();
+if (strlen($pathInfo) > 1) {
+	$path = trim($pathInfo, '/');
+	$redirect = '/' . $path;
+	if (URL_USE_TRAILING_SLASH) {
+		$redirect .= '/';
+	}
+	if ($pathInfo != $redirect) {
+		Redirect::send($redirect);
+	}
 }

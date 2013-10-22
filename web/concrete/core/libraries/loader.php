@@ -163,7 +163,7 @@
 			}
 			elseif (stripos($class, $m = 'Concrete5_Controller_') === 0) {
 				$file = self::getFileFromCorePath('page_controller', substr($class, strlen($m)));
-				require_once(DIR_BASE_CORE . '/' . DIRNAME_CORE_CLASSES . '/' . DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGES . '/' . $file . '.php');
+				require_once(DIR_BASE_CORE . '/' . DIRNAME_CORE_CLASSES . '/' . DIRNAME_CONTROLLERS . '/' . $file . '.php');
 			}
 			elseif (stripos($class, $m = 'Concrete5_Job_') === 0) {
 				$file = self::getFileFromCorePath('job', substr($class, strlen($m)));
@@ -186,6 +186,13 @@
 					$class = substr($class, 0, strpos($class, 'BlockController'));
 					$handle = Object::uncamelcase($class);
 					self::block($handle);
+				} else if (strpos($class, 'Controller') > 0) {
+					$env = Environment::get();
+					$class = substr($class, 0, strpos($class, 'Controller'));
+					$handle = Object::uncamelcase($class);
+					$path = str_replace('_', '/', $handle);
+					$path = $env->getPath(DIRNAME_CONTROLLERS . '/' . $path . '.php', $pkgHandle);
+					require_once($path);
 				} else if (strpos($class, 'AttributeType') > 0) {
 					$class = substr($class, 0, strpos($class, 'AttributeType'));
 					$handle = Object::uncamelcase($class);

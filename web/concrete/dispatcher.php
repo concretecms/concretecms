@@ -37,7 +37,7 @@
 	}
 
 	## Exception handler
-	require($cdir . '/startup/exceptions.php');
+	//require($cdir . '/startup/exceptions.php');
 
 	## Set default permissions for new files and directories ##
 	require($cdir . '/startup/file_permission_config.php');
@@ -72,6 +72,15 @@
 
 	require($cdir . '/startup/localization.php');
 
+	## Core Routes ##
+	require($cdir . '/config/routes.php');
+
+	## Site Routes
+	if (file_exists(DIR_CONFIG_SITE . '/routes.php')) {
+		require(DIR_CONFIG_SITE . '/routes.php');
+	}
+
+
 	## Load the database ##
 	Loader::database();
 
@@ -80,14 +89,21 @@
 		require($cdir . '/config/app.php');
 	}
 
+	## Check host for redirection ##
+	require($cdir . '/startup/url_check.php');
+
 	## Startup check ##
 	require($cdir . '/startup/encoding_check.php');
 
 	# Startup check, install ##
 	require($cdir . '/startup/config_check_complete.php');
 
-	# Must come before packages 
-	require($cdir . '/startup/tools_upgrade_check.php');
+	$request = Request::getInstance();
+	$app = Dispatcher::get($request);
+	$response = $app->dispatch();
+	$response->send();
+	/*
+
 
 	## Determines whether we can use the more efficient permission local caching
 	require($cdir . '/startup/permission_cache_check.php');
@@ -108,9 +124,6 @@
 	## File types ##
 	## Note: these have to come after config/localization.php ##
 	require($cdir . '/config/file_types.php');
-
-	## Check host for redirection ##
-	require($cdir . '/startup/url_check.php');
 
 	## Set debug-related and logging activities
 	require($cdir . '/startup/debug_logging.php');
@@ -143,12 +156,10 @@
 		@include(DIR_CONFIG_SITE . '/site_events.php');
 	}
 
-	// Now we check to see if we're including CSS, Javascript, etc...
-	// Include Tools. Format: index.php?task=include_frontend&fType=TOOL&filename=test.php
-	require($cdir . '/startup/tools.php');
-
 	## Check online, user-related startup routines
 	require($cdir . '/startup/user.php');
+
+
 
 	if (C5_ENVIRONMENT_ONLY == false) {
 
@@ -255,3 +266,4 @@
 		$v = new PageRequestView();
 		$v->render($c);
 	}
+		*/
