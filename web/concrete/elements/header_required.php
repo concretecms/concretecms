@@ -77,10 +77,10 @@ var CCM_REL = "<?php echo DIR_REL?>";
 
 <?php
 
-$req = Request::get();
-$req->requireAsset('javascript', 'jquery');
+$v = View::getInstance();
+$v->requireAsset('javascript', 'jquery');
 if (defined('ENABLE_USER_PROFILES') && ENABLE_USER_PROFILES && $u->isRegistered()) {
-	$req->requireAsset('core/account');
+	$v->requireAsset('core/account');
 	$this->addFooterItem('<script type="text/javascript">$(function() { ccm_enableUserProfileMenu(); });</script>');
 }
 

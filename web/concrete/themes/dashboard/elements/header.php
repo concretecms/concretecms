@@ -33,8 +33,8 @@ $v = View::getInstance();
 
 $logouttoken = Loader::helper('validation/token')->generate('logout');
 
-$req = Request::get();
-$req->requireAsset('dashboard');
+$v = View::getInstance();
+$v->requireAsset('dashboard');
 // Required JavaScript
 /*$md = new Mobile_Detect();
 if ($md->isMobile()) {

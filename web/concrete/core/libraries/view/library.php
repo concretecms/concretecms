@@ -42,7 +42,7 @@ abstract class Concrete5_Library_View {
 		}
 	}
 	abstract public function setupRender();
-	abstract public function finishRender();
+	abstract public function finishRender($contents);
 	abstract public function action($action);
 
 
@@ -86,7 +86,13 @@ abstract class Concrete5_Library_View {
 	protected function onAfterGetContents() {}
 
 	public function getScopeItems() {
-		$return = array_merge($this->scopeItems, $this->controller->getSets(), $this->controller->getHelperObjects());
+		if (is_object($this->controller)) { 
+			$sets = $this->controller->getSets();
+			$helpers = $this->controller->getHelperObjects();
+			$return = array_merge($this->scopeItems, $sets, $helpers);
+		} else {
+			$return = $this->scopeItems;
+		}
 		$return['view'] = $this;
 		$return['controller'] = $this->controller;
 		return $return;
@@ -102,8 +108,7 @@ abstract class Concrete5_Library_View {
 		$scopeItems = $this->getScopeItems();
 		$contents = $this->renderViewContents($scopeItems);
 		$contents = $this->postProcessViewContents($contents);
-		$this->deliverRender($contents);
-		$response = $this->finishRender();
+		$response = $this->finishRender($contents);
 		if ($this instanceof RequestView) {
 			$this->revertRequestInstance();
 		}
@@ -121,10 +126,6 @@ abstract class Concrete5_Library_View {
 			ob_end_clean();
 			return $contents;
 		}
-	}
-
-	public function deliverRender($contents) {
-		print $contents;
 	}
 
 	/**

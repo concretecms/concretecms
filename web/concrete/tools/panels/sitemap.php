@@ -31,8 +31,8 @@ foreach($drafts as $d) {
 <? } ?>
 
 <?
-$r = Request::get();
-$r->requireAsset('core/sitemap');
+$v = View::getInstance();
+$v->requireAsset('core/sitemap');
 $sh = Loader::helper('concrete/dashboard/sitemap');
 if ($sh->canRead()) { ?>	
 

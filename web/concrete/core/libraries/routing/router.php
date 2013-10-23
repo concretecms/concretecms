@@ -29,20 +29,26 @@ class Concrete5_Library_Router {
 		return self::$instance;
 	}
 
-	public function register($rtHandle, $rtPath, $callback) {
+	public function register($rtPath, $callback, $rtHandle = null, $additionalAttributes = array()) {
 		// setup up standard concrete5 routing.
-		$rtPath = '/' . trim($rtPath, '/') . '/';
-		foreach(array($rtHandle => $rtPath, $rtHandle . '_action' => $rtPath .'{action}/', $rtHandle . '_parameters' => $rtPath . '{action}/{parameters}') as $key => $path) {
-			$attributes = array();
-			$attributes['path'] = $rtPath;
-			if ($callback instanceof Closure) {
-				$attributes['callback'] = new ClosureRouteCallback($callback);
-			} else if (is_string($callback)) {
-				$attributes['callback'] = new ControllerRouteCallback($callback);
-			}
-			$route = new Route($path, $attributes, array('parameters' => '.+'));
-			$this->collection->add($key, $route);
+		$rtPathTrimmed = trim($rtPath, '/');
+		if (!$rtHandle) {
+			$rtHandle = preg_replace('/[^A-Za-z0-9\_]/', '_', $rtPathTrimmed);
+			$rtHandle = preg_replace('/\_+/', '_', $rtHandle);
+			$rtHandle = trim($rtHandle, '_');
 		}
+		$rtPath = '/' . $rtPathTrimmed . '/';
+		$attributes = array();
+		if ($callback instanceof Closure) {
+			$attributes = ClosureRouteCallback::getRouteAttributes($callback);
+		} else if ($callback == 'dispatcher') {
+			$attributes = DispatcherRouteCallback::getRouteAttributes($callback);
+		} else {
+			$attributes = ControllerRouteCallback::getRouteAttributes($callback);
+		}
+		$attributes['path'] = $rtPath;
+		$route = new Route($rtPath, $attributes, $additionalAttributes);
+		$this->collection->add($rtHandle, $route);
 	}
 
 	public function execute(Route $route, $parameters) {

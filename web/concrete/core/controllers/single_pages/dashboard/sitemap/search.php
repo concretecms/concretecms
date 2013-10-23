@@ -6,8 +6,8 @@ class Concrete5_Controller_Dashboard_Sitemap_Search extends Controller {
 	
 	public function view() {
 
-		$r = Request::get();
-		$r->requireAsset('core/sitemap');
+		$v = View::getInstance();
+		$v->requireAsset('core/sitemap');
 
 		$html = Loader::helper('html');
 		

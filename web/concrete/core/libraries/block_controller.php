@@ -25,8 +25,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		
 		protected $record; // blockrecord
 		protected $helpers = array('form');
-		protected static $sets;
-
 		protected $block;
 		protected $btDescription = "";
 		protected $btName = "";
@@ -66,24 +64,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			return $this->identifier;
 		}
 		
-		/**
-		 * Sets a value used by a particular block. These variables will automatically be present in the corresponding views used by the block.
-		 * @param string $key
-		 * @param string $value
-		 * @return void
-		 */
-		public function set($key, $value) {
-			self::$sets[$this->identifier][$key] = $value;		
-		}
-		
-		public function get($key, $defaultValue = null) {
-			if (isset(BlockController::$sets[$this->identifier][$key])) {
-				return BlockController::$sets[$this->identifier][$key];
-			}
-			
-			return parent::get($key, $defaultValue);
-		}
-
 		public function getBlockTypeWrapperClass() {return $this->btWrapperClass;}
 		/** 
 		 * @access private
@@ -455,7 +435,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				$this->setBlockObject($b);
 				$this->load();
 			}
-			parent::__construct();
 			$this->set('controller', $this);
 		}
 		

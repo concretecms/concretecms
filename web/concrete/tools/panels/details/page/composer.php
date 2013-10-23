@@ -5,8 +5,8 @@ if (is_object($c) && !$c->isError()) {
 	$cp = new Permissions($c);
 	if ($cp->canEditPageContents()) { 
 		$pagetype = PageType::getByID($c->getPageTypeID());
-		$req = Request::get();
-		$req->requireAsset('core/composer');
+		$v = View::getInstance();
+		$v->requireAsset('core/composer');
 
 		$id = $c->getCollectionID();
 		$saveURL = View::url('/dashboard/composer/write', 'save', 'draft', $id);

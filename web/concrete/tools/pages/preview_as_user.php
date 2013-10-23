@@ -6,7 +6,7 @@ $c = Page::getByID($_REQUEST['cID'], 'RECENT'); //,"ACTIVE"
 $cp = new Permissions($c);
 if ($cp->canPreviewPageAsUser() && PERMISSIONS_MODEL == 'advanced') {
 	$v = View::getInstance();
-	$req = Request::get();
+	$req = Request::getInstance();
 	$req->setCustomRequestUser(false);				
 	if (isset($_REQUEST['customUser'])) {
 		$ui = UserInfo::getByUserName($_REQUEST['customUser']);
@@ -17,7 +17,7 @@ if ($cp->canPreviewPageAsUser() && PERMISSIONS_MODEL == 'advanced') {
 	$dt = Loader::helper('form/date_time');
 	$date = $dt->translate('onDate', $_REQUEST);
 	$req->setCustomRequestDateTime($date);
-	$req = Request::get();
+	$req = Request::getInstance();
 	$cp = new Permissions($c);
 	if ($cp->canRead()) { 
 		$v->render($c); 

@@ -1,62 +1,34 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
+use Symfony\Component\HttpKernel;
 class Concrete5_Library_ControllerRouteCallback extends RouteCallback {
 
-	protected $parameters = array();
-	protected $action = false;
-
-	protected function prepareExecute(RequestController $controller, $parameters) {
-		$p = trim($parameters['parameters'], '/');
-		if ($p) {
-			$p = explode('/', $p);
-		} else {
-			$p = array();
-		}
-		if ($parameters['action']) {
-			try {
-				$r = new ReflectionMethod(get_class($controller), $parameters['action']);
-				$cl = $r->getDeclaringClass();
-				if (is_object($cl)) {
-					if ($cl->getName() != 'Controller' 
-					&& strpos($method, 'on_') !== 0
-					&& strpos($method, '__') !== 0
-					&& $r->isPublic()
-					&& count($p) == $r->getNumberOfParameters()) {
-						$this->action = $parameters['action'];
-						$this->parameters = $p;
-					} else {
-						throw new InvalidControllerArgumentException();
-					}
-				}
-			} catch(Exception $e) {
-				throw new InvalidControllerArgumentException();
-			}
-		} else if (is_callable(array($this->callback, 'view'))) {
-			$this->action = 'view';
-		}
-	}
-
-	protected function getControllerActionParameters($parameters) {
-		return explode('/', $p);
-	}
-
 	public function execute(Request $request, Route $route, $parameters) {
-		$controller = $this->callback;
-		// now that we have the controller, we figure out
-		// if we ought to
-		try {
-			$controller = new $controller($route, $request);
-			$this->prepareExecute($controller, $parameters);
-			$controller->on_start();
-			$controller->runAction($this->action, $this->parameters);
-			$view = $controller->getView();
+		$resolver = new HttpKernel\Controller\ControllerResolver();
+	    $callback = $resolver->getController($request);
+	    $arguments = $resolver->getArguments($request, $callback);
+	    $controller = $callback[0];
+	    $method = $callback[1];
+		$controller->on_start();
+		$controller->runAction($method, $arguments);
+	    $view = $controller->getViewObject();
+	    if (is_object($view)) {
+		    $view->setController($controller);
 			if (isset($view) && $view instanceof View) {
-				$response = $view->render();
+				$content = $view->render();
 			}
-		} catch(InvalidControllerArgumentException $e) {
-			$v = new RequestView();
-			return $v->render('/page_not_found');
 		}
+		$response = new Response();
+		$response->setContent($content);
+		return $response;
+	}
+
+	public static function getRouteAttributes($callback) {
+		$attributes = array();
+		$attributes['_controller'] = $callback;
+		$callback = new static($callback);
+		$attributes['callback'] = $callback;
+		return $attributes;
 	}
 
 }

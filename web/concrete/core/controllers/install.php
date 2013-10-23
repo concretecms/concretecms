@@ -25,6 +25,12 @@ class Concrete5_Controller_Install extends RequestController {
 
 	public $helpers = array('form', 'html');
 	
+	public function getViewObject() {
+		$v = new RequestView('/install');
+		$v->setRequestViewTheme('concrete');
+		return $v;
+	}
+
 	protected function getLocales() {
 		Loader::library('3rdparty/Zend/Locale');
 		$languages = Localization::getAvailableInterfaceLanguages();

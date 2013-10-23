@@ -44,7 +44,7 @@
 		function getLinkText() {return $this->fileLinkText;}
 		
 		public function view() {
-			$req = Request::get();
+			$req = Request::getInstance();
 			$req->requireAsset('swfobject');
 		}
 	}

@@ -464,10 +464,6 @@
 				}
 			}
 			
-			if (isset($c) && is_object($c)) {
-				$controller->setCollectionObject($c);
-			}
-			
 			return $controller;
 		}
 

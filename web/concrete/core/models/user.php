@@ -173,7 +173,7 @@
 					$this->loadError(USER_INVALID);
 				}
 			} else {
-				$req = Request::get();
+				$req = Request::getInstance();
 				if ($req->hasCustomRequestUser()) {
 					$this->uID = null;
 					$this->uName = null;
@@ -373,7 +373,7 @@
 		}
 		
 		public function getUserAccessEntityObjects() {
-			$req = Request::get();
+			$req = Request::getInstance();
 			if ($req->hasCustomRequestUser()) {
 				// we bypass session-saving performance
 				// and we don't save them in session.
@@ -391,7 +391,7 @@
 		}
 		
 		function _getUserGroups($disableLogin = false) {
-			$req = Request::get();
+			$req = Request::getInstance();
 			if ((!empty($_SESSION['uGroups'])) && (!$disableLogin) && (!$req->hasCustomRequestUser())) {
 				$ug = $_SESSION['uGroups'];
 			} else {

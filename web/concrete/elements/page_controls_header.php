@@ -21,11 +21,11 @@ print "var CCM_SECURITY_TOKEN = '" . $valt->generate() . "';";
 
 <?
 $dh = Loader::helper('concrete/dashboard');
-$req = Request::get();
+$v = View::getInstance();
 
 if (!$dh->inDashboard()) {
 
-	$req->requireAsset('core/app');
+	$v->requireAsset('core/app');
 	$this->addFooterItem('<script type="text/javascript" src="' . REL_DIR_FILES_TOOLS_REQUIRED . '/i18n_js"></script>'); 
 	/*
 	Loader::library("3rdparty/mobile_detect");

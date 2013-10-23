@@ -3,15 +3,23 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 abstract class Concrete5_Library_RequestController extends Controller {
 
-	protected $request;
 	protected $view;
-	protected $route;
+	protected $RequestViewPath;
 
-	public function __construct(Route $route, Request $request) {
-		$this->request = $request;
-		$this->route = $route;
-		$this->view = new RequestView($route->getPath());
+	public function setViewObject(RequestView $view) {
+		$this->view = $view;
 		$this->view->setController($this);
+	}
+
+	public function __construct() {
+		if ($this->requestViewPath) {
+			$this->view = new RequestView($this->requestViewPath);
+			$this->view->setController($this);
+		}
+	}
+
+	public function getViewObject() {
+		return $this->view;
 	}
 
 }

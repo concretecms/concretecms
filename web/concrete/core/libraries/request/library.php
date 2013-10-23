@@ -21,10 +21,17 @@
 class Concrete5_Library_Request extends \Symfony\Component\HttpFoundation\Request {
 
 	static $_request = null;
-
+	protected $hasCustomRequestUser;
+	protected $customRequestUser;
+	protected $customRequestDateTime;
+	protected $c;
+	
 	public function getCurrentPage() {
-		global $c;
-		return $c;
+		return $this->c;
+	}
+
+	public function setCurrentPage(Page $c) {
+		$this->c = $c;
 	}
 
 	public static function getInstance() {
@@ -38,7 +45,29 @@ class Concrete5_Library_Request extends \Symfony\Component\HttpFoundation\Reques
 	 * Returns the full path for a request
 	 */
 	public function getPath() {
-		return '/' . trim($this->getPathInfo(), '/');
+		$path = '/' . trim($this->getPathInfo(), '/');
+		return ($path == '/') ? '' : $path;
+	}
+
+	public function setCustomRequestUser($ui) {
+		$this->hasCustomRequestUser = true;
+		$this->customRequestUser = $ui;
+	}
+	
+	public function getCustomRequestUser() {
+		return $this->customRequestUser;
+	}
+	
+	public function hasCustomRequestUser() {
+		return $this->hasCustomRequestUser;
+	}
+	
+	public function getCustomRequestDateTime() {
+		return $this->customRequestDateTime;
+	}
+	
+	public function setCustomRequestDateTime($date) {
+		$this->customRequestDateTime = $date;
 	}
 
 	/** 

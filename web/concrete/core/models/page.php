@@ -174,6 +174,43 @@ class Concrete5_Model_Page extends Collection {
 		return false;
 	}
 	
+	/** 
+	 * Uses a Request object to determine which page to load. queries by path and then
+	 * by cID
+	 */
+	public static function getFromRequest(Request $request) {
+		if ($request->getPath() != '') {
+			$path = $request->getPath();
+			$r = array();
+			$db = Loader::db();
+			$cID = false;
+			while ((!$cID) && $path) {
+				$cID = $db->GetOne('select cID from PagePaths where cPath = ?', $path);
+				if ($cID) {
+					$cPath = $path;
+					break;
+				}
+				$path = substr($path, 0, strrpos($path, '/'));
+			}
+			
+			if ($cID && $cPath) { 
+				$c = Page::getByID($cID, 'ACTIVE');
+			} else {
+				$c = new Page();
+				$c->loadError(COLLECTION_NOT_FOUND);
+			}
+			return $c;
+		} else {
+			$cID = Loader::helper('security')->sanitizeInt($request->query->get('cID'));
+			if (!$cID) {
+				$cID = 1;
+			}
+			$c = Page::getByID($cID, 'ACTIVE');
+		}
+
+		return $c;
+	}
+
 	public function processArrangement($areas) {
 
 		// this function is called via ajax, so it's a bit wonky, but the format is generally

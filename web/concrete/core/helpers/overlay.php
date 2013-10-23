@@ -4,8 +4,8 @@ class Concrete5_Helper_Overlay {
 	
 	public function init($selector = '.ccm-overlay') {
 		$view = View::getInstance();
-		$req = Request::get();
-		$req->requireAsset('core/overlay');
+		$v = View::getInstance();
+		$v->requireAsset('core/overlay');
 		if($selector && strlen($selector)) {
 			$js = "<script type=\"text/javascript\">$(function() {
 				$('".$selector."-image').magnificPopup({type:'image'});

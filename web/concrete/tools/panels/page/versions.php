@@ -1,8 +1,8 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
 $c = Page::getByID(Loader::helper('security')->sanitizeInt($_REQUEST['cID']));
-$req = Request::get();
-$req->requireAsset('javascript', 'underscore');
+$v = View::getInstance();
+$v->requireAsset('javascript', 'underscore');
 
 if (is_object($c) && !$c->isError()) {
 	$cp = new Permissions($c);

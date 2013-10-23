@@ -3,8 +3,7 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 abstract class Concrete5_Library_Controller {
 
-	protected $view;
-	protected $helperObjects = array();
+	protected $helpers = array();
 	protected $sets = array();
 	protected $action;
 	protected $parameters;
@@ -16,8 +15,6 @@ abstract class Concrete5_Library_Controller {
 	public function getSets() {
 		return $this->sets;
 	}
-
-
 
 	public function getHelperObjects() {
 		$helpers = array();
@@ -52,8 +49,6 @@ abstract class Concrete5_Library_Controller {
 		return call_user_func_array(array($this, $action), $parameters);
 	}
 
-	public function getView() {return $this->view;}
-
 	public function on_start() {}
 	public function on_before_render() {}
 
@@ -66,6 +61,8 @@ abstract class Concrete5_Library_Controller {
 	public function redirect($url) {
 		Redirect::send($url);
 	}
-	
+	public function runTask($action, $parameters) {
+		$this->runAction($action, $parameters);
+	}
 
 }
