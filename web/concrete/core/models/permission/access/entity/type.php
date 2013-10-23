@@ -10,14 +10,14 @@ class Concrete5_Model_PermissionAccessEntityType extends Object {
 		return $class;
 	}
 
-	/** Returns the display name for this attribute (localized and escaped accordingly to $format)
+	/** Returns the display name for this access entity type (localized and escaped accordingly to $format)
 	* @param string $format = 'html'
 	*	Escape the result in html format (if $format is 'html') or in JavaScript format (if $format is 'js').
 	*	If $format is 'text' or any other value, the display name won't be escaped.
 	* @return string
 	*/
 	public function getAccessEntityTypeDisplayName($format = 'html') {
-		$value = tc('AttributeKeyName', $this->getAccessEntityTypeName());
+		$value = tc('PermissionAccessEntityTypeName', $this->getAccessEntityTypeName());
 		switch($format) {
 			case 'html':
 				return h($value);
