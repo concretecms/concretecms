@@ -86,7 +86,7 @@ $txt = Loader::helper('text');?>
 							<li>
 								<label>
 									<?php echo $form->checkbox('akID[]', $ak->getAttributeKeyID(), $ak->inAttributeSet($set), $disabled)?>
-									<span><?php echo tc('AttributeKeyName', $ak->getAttributeKeyName())?></span>
+									<span><?php echo $ak->getAttributeKeyDisplayName()?></span>
 									<span class="help-inline"><?php echo $ak->getAttributeKeyHandle()?></span>
 								</label>
 							</li>	
