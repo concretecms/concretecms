@@ -139,7 +139,7 @@ function printFileAttributeRow($ak, $fv) {
 	
 	$html = '
 	<tr class="ccm-attribute-editable-field">
-		<td><strong><a href="javascript:void(0)">' . tc('AttributeKeyName', $ak->getAttributeKeyName()) . '</a></strong></td>
+		<td><strong><a href="javascript:void(0)">' . $ak->getAttributeKeyDisplayName() . '</a></strong></td>
 		<td width="100%" class="ccm-attribute-editable-field-central"><div class="ccm-attribute-editable-field-text">' . $text . '</div>
 		<form method="post" action="' . REL_DIR_FILES_TOOLS_REQUIRED . '/files/properties">
 		<input type="hidden" name="fakID" value="' . $ak->getAttributeKeyID() . '" />
@@ -160,7 +160,7 @@ function printFileAttributeRow($ak, $fv) {
 
 	$html = '
 	<tr>
-		<td><strong>' . tc('AttributeKeyName', $ak->getAttributeKeyName()) . '</strong></td>
+		<td><strong>' . $ak->getAttributeKeyDisplayName() . '</strong></td>
 		<td width="100%" colspan="2">' . $text . '</td>
 	</tr>';	
 	}
