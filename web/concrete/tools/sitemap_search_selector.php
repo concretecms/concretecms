@@ -5,8 +5,8 @@ if (!$sh->canRead()) {
 	die(t('Access Denied.') . ' ' . t('You do not have access to the sitemap.'));
 }
 
-$r = Request::get();
-$r->requireAsset('core/sitemap');
+$v = View::getInstance();
+$v->requireAsset('core/sitemap');
 
 /*
 

@@ -8,5 +8,10 @@ class Concrete5_Library_ClosureRouteCallback extends RouteCallback {
 		return $r;
 	}
 
+	public static function getRouteAttributes($callback) {
+		$callback = new ClosureRouteCallback($callback);
+		return array('callback' => $callback);
+	}
+
 
 }

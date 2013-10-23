@@ -25,7 +25,7 @@
 		}
 
 		public function view() {
-			$req = Request::get();
+			$req = Request::getInstance();
 			$req->requireAsset('core/gathering');
 			Loader::helper('overlay')->init(false);
 			$gathering = Gathering::getByID($this->gaID);

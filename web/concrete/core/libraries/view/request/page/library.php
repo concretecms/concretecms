@@ -13,7 +13,7 @@ class Concrete5_Library_PageRequestView extends RequestView {
 	/** 
 	 * Begin the render
 	 */
-	public function start($page) {
+	public function __construct($page) {
 		$this->c = $page;
 		parent::start($page->getCollectionPath());
 		if (!isset($this->pTemplateID)) {
@@ -108,14 +108,15 @@ class Concrete5_Library_PageRequestView extends RequestView {
 		}
 	}
 
-	public function deliverRender($contents) {
+	public function finishRender($contents) {
+		parent::finishRender($contents);
 		$cache = PageCache::getLibrary();
 		$shouldAddToCache = $cache->shouldAddToCache($this);
 		if ($shouldAddToCache) {
 			$cache->outputCacheHeaders($this->c);
 			$cache->set($this->c, $contents);
 		}
-		print $contents;
+		return $contents;
 	}
 
 	/** 

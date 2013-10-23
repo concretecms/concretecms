@@ -6,6 +6,8 @@ abstract class Concrete5_Library_RouteCallback {
 
 	abstract public function execute(Request $request, Route $route, $parameters);
 
+	abstract public static function getRouteAttributes($callback);
+
 	public function __construct($callback) {
 		$this->callback = $callback;
 	}

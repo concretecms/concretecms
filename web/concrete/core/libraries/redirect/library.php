@@ -19,6 +19,14 @@ class Concrete5_Library_Redirect {
 		return $r;
 	}
 
+	/** 
+	 * Redirect to a page
+	 */
+	public static function page(Page $c, $code = 302, $headers = array()) {
+		$r = static::createRedirectResponse(URL::to($c->getCollectionPath()), $code, $headers);
+		return $r;
+	}
+
 
 	/** 
 	 * Creates a basic redirect and executes it immediately.

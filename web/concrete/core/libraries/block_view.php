@@ -172,7 +172,6 @@ class Concrete5_Library_BlockView extends View {
 		$this->blockViewFooterFile = $file;
 	}
 
-	public function finishRender() {}
 	public function postProcessViewContents($contents) {
 		return $contents;
 	}
@@ -245,10 +244,11 @@ class Concrete5_Library_BlockView extends View {
 		return false;
 	}
 
-	public function deliverRender($contents) {
+	public function finishRender($contents) {
 		if ($this->useBlockCache()) {
 			$this->block->setBlockCachedOutput($this->outputContent, $this->controller->getBlockTypeCacheOutputLifetime(), $this->area);
 		}
+		return $contents;
 	}
 
 	public function runControllerTask() {

@@ -11,6 +11,7 @@ $classes = array(
 	'RouteCallback' => array('library', 'routing/route/callback/library'),
 	'ClosureRouteCallback' => array('library', 'routing/route/callback/closure'),
 	'ControllerRouteCallback' => array('library', 'routing/route/callback/controller'),
+	'DispatcherRouteCallback' => array('library', 'routing/route/callback/dispatcher'),
 	'Router' => array('library', 'routing/router'),
 	'PageCache' => array('library', 'page_cache/library'),
 	'PageCacheRecord' => array('library', 'page_cache/record'),
@@ -38,7 +39,7 @@ $classes = array(
 	'View' => array('library','view/library'),
 	'RequestView' => array('library','view/request/library'),
 	'PageRequestView' => array('library','view/request/page/library'),
-	'ToolRequestView' => array('library','view/request/tool'),
+	'DialogRequestView' => array('library','view/request/dialog'),
 	'ErrorRequestView' => array('library','view/request/error'),
 	'InvalidControllerArgumentException' => array('library', '/exception/invalid_controller_argument'),
 	'BlockView' => array('library','block_view'),
@@ -370,5 +371,6 @@ $classes = array(
 );
 
 Loader::registerAutoload($classes);
+spl_autoload_register(array('Loader', 'autoloadCore'), true);
 spl_autoload_register(array('Loader', 'autoload'), true);
 require_once(DIR_LIBRARIES_3RDPARTY_CORE. '/autoload.php');

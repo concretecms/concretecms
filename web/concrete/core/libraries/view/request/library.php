@@ -10,11 +10,12 @@ class Concrete5_Library_RequestView extends View {
 	protected $themeRelativePath;
 	protected $themeAbsolutePath;
 	protected $themePkgHandle;
+	protected $viewRootDirectoryName = DIRNAME_VIEWS;
+	private $providedAssetGroupUnmatched = array();
 
 	public function __construct($path) {
+		$path = '/' . trim($path, '/');
 		$this->viewPath = $path;
-		$this->requiredAssetGroup = new AssetGroup();
-		$this->providedAssetGroup = new AssetGroup();
 	}
 
 	public function getThemeDirectory() {return $this->themeAbsolutePath;}
@@ -26,8 +27,12 @@ class Concrete5_Library_RequestView extends View {
 	public function getThemePath() { return $this->themeRelativePath; }
 	public function getThemeHandle() {return $this->themeHandle;}
 	
-	protected function setInnerContentFile($innerContentFile) {
+	public function setInnerContentFile($innerContentFile) {
 		$this->innerContentFile = $innerContentFile;
+	}
+
+	public function setRequestViewRootDirectoryName($directory) {
+		$this->viewRootDirectoryName = $directory;
 	}
 
 	public function inc($file, $args = array()) {
@@ -67,8 +72,8 @@ class Concrete5_Library_RequestView extends View {
 		if ($this->controller->theme != false) {
 			$this->setRequestViewTheme($this->controller->theme);
 		} else {
-			$this->themeHandle = VIEW_CORE_THEME;
 			/*
+			$this->themeHandle = VIEW_CORE_THEME;
 			$tmpTheme = $rl->getThemeFromPath($this->viewPath);
 			if ($tmpTheme) {
 				$this->setRequestViewTheme($tmpTheme[0]);
@@ -82,18 +87,23 @@ class Concrete5_Library_RequestView extends View {
 			*/
 		}
 
-		if ($this->themeHandle != VIEW_CORE_THEME && $this->themeHandle != 'dashboard') {
-			$this->themeObject = PageTheme::getByHandle($this->themeHandle);
-			$this->themePkgHandle = $this->themeObject->getPackageHandle();
+		if ($this->themeHandle) {
+			if ($this->themeHandle != VIEW_CORE_THEME && $this->themeHandle != 'dashboard') {
+				$this->themeObject = PageTheme::getByHandle($this->themeHandle);
+				$this->themePkgHandle = $this->themeObject->getPackageHandle();
+			}
+			$this->themeAbsolutePath = $env->getPath(DIRNAME_THEMES . '/' . $this->themeHandle, $this->themePkgHandle);
+			$this->themeRelativePath = $env->getURL(DIRNAME_THEMES . '/' . $this->themeHandle, $this->themePkgHandle);
 		}
-		$this->themeAbsolutePath = $env->getPath(DIRNAME_THEMES . '/' . $this->themeHandle, $this->themePkgHandle);
-		$this->themeRelativePath = $env->getURL(DIRNAME_THEMES . '/' . $this->themeHandle, $this->themePkgHandle);
 	}
 
 	/** 
 	 * Begin the render
 	 */
-	public function start($mixed) {}
+	public function start($mixed) {
+		$this->requiredAssetGroup = new AssetGroup();
+		$this->providedAssetGroup = new AssetGroup();
+	}
 
 	public function setupRender() {
 		// Set the theme object that we should use for this requested page.
@@ -101,11 +111,13 @@ class Concrete5_Library_RequestView extends View {
 		// programmatically we already have a theme.
 		$this->loadRequestViewThemeObject();
 		$env = Environment::get();
-		$this->setInnerContentFile($env->getPath(DIRNAME_VIEWS . '/' . trim($this->viewPath, '/') . '.php', $this->themePkgHandle));
-		if (file_exists(DIR_FILES_THEMES_CORE . '/' . DIRNAME_THEMES_CORE . '/' . $this->themeHandle . '.php')) {
-			$this->setViewTemplate($env->getPath(DIRNAME_THEMES . '/' . DIRNAME_THEMES_CORE . '/' . $this->themeHandle . '.php'));
-		} else {
-			$this->setViewTemplate($env->getPath(DIRNAME_THEMES . '/' . $this->themeHandle . '/' . FILENAME_THEMES_VIEW, $this->themePkgHandle));
+		$this->setInnerContentFile($env->getPath($this->viewRootDirectoryName . '/' . trim($this->viewPath, '/') . '.php', $this->themePkgHandle));
+		if ($this->themeHandle) {
+			if (file_exists(DIR_FILES_THEMES_CORE . '/' . DIRNAME_THEMES_CORE . '/' . $this->themeHandle . '.php')) {
+				$this->setViewTemplate($env->getPath(DIRNAME_THEMES . '/' . DIRNAME_THEMES_CORE . '/' . $this->themeHandle . '.php'));
+			} else {
+				$this->setViewTemplate($env->getPath(DIRNAME_THEMES . '/' . $this->themeHandle . '/' . FILENAME_THEMES_VIEW, $this->themePkgHandle));
+			}
 		}
 	}
 
@@ -143,23 +155,17 @@ class Concrete5_Library_RequestView extends View {
 			ob_end_clean();
 			return $contents;
 		} else {
-			throw new Exception(t('File %s not found. All themes need default.php and view.php files in them. Consult concrete5 documentation on how to create these files.', $this->template));
+			return $innerContent;
 		}
 	}
 
-	public function deliverRender($contents) {
+	public function finishRender($contents) {
 		$ret = Events::fire('on_page_output', $contents);
 		if($ret != '') {
 			$contents = $ret;
 		}
-		parent::deliverRender($contents);
-	}
-
-	public function finishRender() {
 		Events::fire('on_render_complete', $this);
-		require(DIR_BASE_CORE . '/startup/jobs.php');
-		require(DIR_BASE_CORE . '/startup/shutdown.php');
-		exit;
+		return $contents;
 	}
 
 

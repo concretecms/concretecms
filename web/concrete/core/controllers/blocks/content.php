@@ -57,12 +57,12 @@
 		}
 
 		public function edit() {
-			$req = Request::get();
+			$req = Request::getInstance();
 			$req->requireAsset('redactor');
 		}
 
 		public function composer() {
-			$req = Request::get();
+			$req = Request::getInstance();
 			$req->requireAsset('redactor');
 		}
 

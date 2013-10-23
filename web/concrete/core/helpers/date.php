@@ -30,7 +30,7 @@ class Concrete5_Helper_Date {
 			$mask = 'Y-m-d H:i:s';
 		}
 		
-		$req = Request::get();
+		$req = Request::getInstance();
 		if ($req->hasCustomRequestUser()) {
 			return date($mask, strtotime($req->getCustomRequestDateTime()));
 		}
@@ -71,7 +71,7 @@ class Concrete5_Helper_Date {
 			$mask = 'Y-m-d H:i:s';
 		}
 
-		$req = Request::get();
+		$req = Request::getInstance();
 		if ($req->hasCustomRequestUser()) {
 			return date($mask, strtotime($req->getCustomRequestDateTime()));
 		}

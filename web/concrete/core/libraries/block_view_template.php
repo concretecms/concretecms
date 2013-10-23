@@ -181,7 +181,7 @@ class Concrete5_Library_BlockViewTemplate {
 			return $items;
 		} else {
 			$al = AssetList::getInstance();
-			$req = Request::get();
+			$v = View::getInstance();
 			foreach($this->itemsToCheck as $t => $i) {
 				if (file_exists($this->basePath . '/' . $i)) {
 					switch($t) {
@@ -190,14 +190,14 @@ class Concrete5_Library_BlockViewTemplate {
 							$asset->setAssetURL($this->getBaseURL() . '/' . $i);
 							$asset->setAssetPath($this->basePath . '/' . $i);
 							$al->registerAsset($asset);
-							$req->requireAsset('css', 'blocks/'. $this->btHandle);
+							$v->requireAsset('css', 'blocks/'. $this->btHandle);
 							break;
 						case 'JAVASCRIPT':
 							$asset = new JavaScriptAsset('blocks/'. $this->btHandle);
 							$asset->setAssetURL($this->getBaseURL() . '/' . $i);
 							$asset->setAssetPath($this->basePath . '/' . $i);
 							$al->registerAsset($asset);
-							$req->requireAsset('javascript', 'blocks/'. $this->btHandle);
+							$v->requireAsset('javascript', 'blocks/'. $this->btHandle);
 							break;
 					}
 				}
@@ -211,7 +211,7 @@ class Concrete5_Library_BlockViewTemplate {
 						$asset->setAssetURL($this->getBaseURL() . '/' . DIRNAME_CSS . '/' . $i);
 						$asset->setAssetPath($this->basePath . '/' . DIRNAME_CSS . '/' . $i);
 						$al->registerAsset($asset);
-						$req->requireAsset('css', 'blocks/'. $this->btHandle . '/'. substr($i, 0, -3));
+						$v->requireAsset('css', 'blocks/'. $this->btHandle . '/'. substr($i, 0, -3));
 					}
 				}
 			}
@@ -222,7 +222,7 @@ class Concrete5_Library_BlockViewTemplate {
 						$asset->setAssetURL($this->getBaseURL() . '/' . DIRNAME_JAVASCRIPT . '/' . $i);
 						$asset->setAssetPath($this->basePath . '/' . DIRNAME_JAVASCRIPT . '/' . $i);
 						$al->registerAsset($asset);
-						$req->requireAsset('javascript', 'blocks/'. $this->btHandle . '/'. substr($i, 0, -3));
+						$v->requireAsset('javascript', 'blocks/'. $this->btHandle . '/'. substr($i, 0, -3));
 					}
 				}
 			}
