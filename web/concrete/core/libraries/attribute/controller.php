@@ -1,7 +1,7 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
 
-	class Concrete5_Library_AttributeTypeController extends Controller {
+	class Concrete5_Library_AttributeTypeController extends AbstractController {
 		
 		protected $identifier;
 	 	protected $attributeKey;

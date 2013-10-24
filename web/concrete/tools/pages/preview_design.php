@@ -6,7 +6,7 @@ $c = Page::getByID($_REQUEST['cID'], 'RECENT'); //,"ACTIVE"
 $cp = new Permissions($c);
 if ($cp->canViewPageVersions()) {
 	$req = Request::get();
-	$v = new PageRequestView();
+	$v = new PageView($c);
 	if ($_REQUEST['pTemplateID']) {
 		$pt = PageTemplate::getByID(Loader::helper('security')->sanitizeInt($_REQUEST['pTemplateID']));
 		if (is_object($pt)) {
@@ -20,5 +20,5 @@ if ($cp->canViewPageVersions()) {
 		}
 	}
 	$req->setCustomRequestUser(-1);
-	$v->render($c); 
+	$v->render(); 
 }

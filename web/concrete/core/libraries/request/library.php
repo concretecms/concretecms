@@ -112,6 +112,20 @@ class Concrete5_Library_Request extends \Symfony\Component\HttpFoundation\Reques
 		return $defaultValue;
 	}
 
+	public function request($key = null, $defaultValue = null) {
+		if ($key == null) {
+			return $_REQUEST;
+		}
+		$req = Request::createFromGlobals();
+		if ($req->query->has($key)) {
+			return $req->query->get($key);
+		} else if ($req->request->has($key)) {
+			return $req->request->get($key);
+		}
+
+		return $defaultValue;
+	}
+
 	public function isPost() {
 		return $_SERVER['REQUEST_METHOD'] == 'POST';
 	}

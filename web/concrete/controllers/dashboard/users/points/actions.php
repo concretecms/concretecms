@@ -1,5 +1,5 @@
 <?php
-class DashboardUsersPointsActionsController extends Concrete5_Controller_Dashboard_Users_Points_Actions {
+class DashboardUsersPointsActionsPageController extends Concrete5_Controller_Page_Dashboard_Users_Points_Actions {
 
 
 }

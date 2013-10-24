@@ -1,6 +1,6 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Controller_Register extends Controller {
+class Concrete5_Controller_Page_Register extends PageController {
 
 	public $helpers = array('form', 'html');
 	

@@ -38,4 +38,4 @@ Interface AuthenticationTypeControllerInterface {
 }
 
 // This class must be abstract, as it doesn't actually implement the methods required by AuthenticationTypeControllerInterface.
-abstract class Concrete5_Library_AuthenticationTypeController extends Controller implements AuthenticationTypeControllerInterface {}
+abstract class Concrete5_Library_AuthenticationTypeController extends AbstractController implements AuthenticationTypeControllerInterface {}

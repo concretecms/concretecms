@@ -1,7 +1,11 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Controller_Tool extends RequestController {
+class Concrete5_Controller_Tool extends Controller {
 
+	public function getTheme() {
+		return false;
+	}
+	
 	public function display($tool) {
 		$env = Environment::get();
 		$query = false;
@@ -17,8 +21,8 @@ class Concrete5_Controller_Tool extends RequestController {
 		}
 
 		if ($query) {
-			$v = new DialogRequestView($query);
-			$v->setRequestViewRootDirectoryName(DIRNAME_TOOLS);
+			$v = new DialogView($query);
+			$v->setViewRootDirectoryName(DIRNAME_TOOLS);
 			$this->setViewObject($v);		
 		}
 	}

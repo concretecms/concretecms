@@ -6,7 +6,7 @@ Loader::controller('/login');
 
 class Concrete5_Controller_PageForbidden extends LoginController {
 	
-	protected $requestViewPath = '/page_forbidden';
+	protected $viewPath = '/page_forbidden';
 
 	public function view() {
 		$c = Page::getCurrentPage();

@@ -1,7 +1,7 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
 
-class Concrete5_Controller_Dashboard_Users_Groups extends DashboardBaseController {
+class Concrete5_Controller_Page_Dashboard_Users_Groups extends DashboardController {
 
 
 	public function view() { 

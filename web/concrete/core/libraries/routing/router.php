@@ -56,4 +56,38 @@ class Concrete5_Library_Router {
 		$response = $callback->execute($this->request, $route, $parameters);
 		return $response;
 	}
+
+	/**
+	 * Used by the theme_paths and site_theme_paths files in config/ to hard coded certain paths to various themes
+	 * @access public
+	 * @param $path string
+	 * @param $theme object, if null site theme is default
+	 * @return void
+	*/
+	public function setThemeByRoute($path, $theme = NULL, $wrapper = FILENAME_THEMES_VIEW) {
+		$this->themePaths[$path] = array($theme, $wrapper);
+	}
+
+	/**
+	 * This grabs the theme for a particular path, if one exists in the themePaths array 
+	 * @access private
+     * @param string $path
+	 * @return string $theme
+	*/
+	public function getThemeByRoute($path) {
+		// there's probably a more efficient way to do this
+		$theme = false;
+		$txt = Loader::helper('text');
+		foreach($this->themePaths as $lp => $layout) {
+			if ($txt->fnmatch($lp, $path)) {
+				$theme = $layout;
+				break;
+			}
+		}
+		return $theme;
+	}
+
+
+
+
 }

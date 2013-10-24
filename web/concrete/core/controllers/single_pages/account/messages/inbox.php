@@ -1,7 +1,7 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
 
-class Concrete5_Controller_Account_Messages_Inbox extends AccountController {
+class Concrete5_Controller_Page_Account_Messages_Inbox extends AccountPageController {
 	
 	public function view() {
 		$this->view_mailbox('inbox');

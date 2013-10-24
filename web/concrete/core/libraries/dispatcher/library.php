@@ -40,11 +40,11 @@ class Concrete5_Library_Dispatcher {
 			require(DIR_CONFIG_SITE . '/routes.php');
 		}
 		$this->installed = require(DIR_BASE_CORE . '/startup/config_check.php');
-		if (!$this->installed) {
+		if ($this->installed) {
 			require(DIR_BASE_CORE . '/startup/check_page_cache.php');
 		}
 		Loader::database();
-		if (!$this->installed) {
+		if ($this->installed) {
 			require(DIR_BASE_CORE . '/config/app.php');
 		}
 		require(DIR_BASE_CORE . '/startup/url_check.php');

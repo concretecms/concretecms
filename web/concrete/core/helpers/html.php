@@ -31,7 +31,7 @@ class Concrete5_Helper_Html {
 		} else {
 			$v = View::getInstance();
 			// checking the theme directory for it. It's just in the root.
-			if ($v instanceof RequestView && $v->getThemeDirectory() != '' && file_exists($v->getThemeDirectory() . '/' . $file)) {
+			if ($v instanceof View && $v->getThemeDirectory() != '' && file_exists($v->getThemeDirectory() . '/' . $file)) {
 				$asset->setAssetURL($v->getThemePath() . '/' . $file);
 				$asset->setAssetPath($v->getThemeDirectory() . '/' . $file);
 			} else if (file_exists(DIR_BASE . '/' . DIRNAME_CSS . '/' . $file)) {
@@ -115,7 +115,7 @@ class Concrete5_Helper_Html {
 		if ($width == false && $height == false && (!isset($image['scheme']))) {
 			// if our file is not local we DON'T do getimagesize() on it. too slow
 			$v = View::getInstance();
-			if ($v instanceof RequestView && $v->getThemeDirectory() != '' && file_exists($v->getThemeDirectory() . '/' . DIRNAME_IMAGES . '/' . $src)) {
+			if ($v instanceof View && $v->getThemeDirectory() != '' && file_exists($v->getThemeDirectory() . '/' . DIRNAME_IMAGES . '/' . $src)) {
 				$s = getimagesize($v->getThemeDirectory() . '/' . DIRNAME_IMAGES . '/' . $src);
 				$width = $s[0];
 				$height = $s[1];

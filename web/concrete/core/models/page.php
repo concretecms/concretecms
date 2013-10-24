@@ -201,7 +201,11 @@ class Concrete5_Model_Page extends Collection {
 			}
 			return $c;
 		} else {
-			$cID = Loader::helper('security')->sanitizeInt($request->query->get('cID'));
+			$cID = $request->query->get('cID');
+			if (!$cID) {
+				$cID = $request->request->get('cID');
+			}
+			$cID = Loader::helper('security')->sanitizeInt($cID);
 			if (!$cID) {
 				$cID = 1;
 			}

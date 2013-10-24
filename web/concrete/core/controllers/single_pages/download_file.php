@@ -1,7 +1,7 @@
 <?php
 
 defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Controller_DownloadFile extends Controller {
+class Concrete5_Controller_Page_DownloadFile extends PageController {
 		
 	protected $force = 0;
 

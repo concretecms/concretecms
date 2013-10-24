@@ -16,8 +16,8 @@
 	$token = '&' . $valt->getParameter();
 	
 	// If the user has checked out something for editing, we'll increment the lastedit variable within the database
+	$u = new User();
 	if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-		$u = new User();
 		$u->refreshCollectionEdit($c);
 	}
 	if ($_REQUEST['btask'] && $valt->validate()) {

@@ -21,7 +21,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
  *
  */
 
-	class Concrete5_Library_BlockController extends Controller {
+	class Concrete5_Library_BlockController extends AbstractController {
 		
 		protected $record; // blockrecord
 		protected $helpers = array('form');
@@ -65,12 +65,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		}
 		
 		public function getBlockTypeWrapperClass() {return $this->btWrapperClass;}
-		/** 
-		 * @access private
-		 */
-		public function getSets() {
-			return BlockController::$sets[$this->identifier];		
-		}
 
 		/**
 		 * Installs the current block's DB xml file. If a block needs to do more than this, this should be overridden.

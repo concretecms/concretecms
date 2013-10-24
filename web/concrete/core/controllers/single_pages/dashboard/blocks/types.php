@@ -1,6 +1,6 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Controller_Dashboard_Blocks_Types extends Controller {
+class Concrete5_Controller_Page_Dashboard_Blocks_Types extends DashboardController {
 
 	public function on_start() {
 		$this->set('ci', Loader::helper('concrete/urls'));

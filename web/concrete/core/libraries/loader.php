@@ -161,6 +161,10 @@
 				$file = self::getFileFromCorePath('attribute_type_controller', $m[1]);
 				require_once(DIR_BASE_CORE . '/' . DIRNAME_CORE_CLASSES . '/' . DIRNAME_MODELS . '/' . DIRNAME_ATTRIBUTES . '/' . DIRNAME_ATTRIBUTE_TYPES . '/' . $file . '.php');
 			}
+			elseif (stripos($class, $m = 'Concrete5_Controller_Page_') === 0) {
+				$file = self::getFileFromCorePath('page_controller', substr($class, strlen($m)));
+				require_once(DIR_BASE_CORE . '/' . DIRNAME_CORE_CLASSES . '/' . DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGES . '/' . $file . '.php');
+			}
 			elseif (stripos($class, $m = 'Concrete5_Controller_') === 0) {
 				$file = self::getFileFromCorePath('page_controller', substr($class, strlen($m)));
 				require_once(DIR_BASE_CORE . '/' . DIRNAME_CORE_CLASSES . '/' . DIRNAME_CONTROLLERS . '/' . $file . '.php');
@@ -381,7 +385,7 @@
 			
 			if (is_string($item)) {
 				$db = self::db();
-				if (is_object($db)) {
+				if (is_object($db) && $item != '/dashboard') {
 					try {
 						$_item = Page::getByPath($item);
 						if ($_item->isError()) {
@@ -450,20 +454,26 @@
 				}
 				
 				if ($include) {
-					$class = Object::camelcase($path) . 'Controller';
+					if ($item instanceof Page) {
+						$class = Object::camelcase($path) . 'PageController';
+					} else {
+						$class = Object::camelcase($path) . 'Controller';
+					}
 				}
 			}
 			
 			if (!isset($controller)) {
-				if ($class && class_exists($class)) {
+				if ($class && class_exists($class) && is_object($item)) {
 					// now we get just the filename for this guy, so we can extrapolate
 					// what our controller is named
 					$controller = new $class($item);
+				} else if ($item instanceof Page) {
+					$controller = new PageController($item);
 				} else {
 					$controller = new Controller($item);
 				}
 			}
-			
+					
 			return $controller;
 		}
 

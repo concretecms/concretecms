@@ -1,7 +1,7 @@
 <?
 
 defined('C5_EXECUTE') or die("Access Denied.");
-class DashboardReportsLogsController extends Concrete5_Controller_Dashboard_Reports_Logs {
+class DashboardReportsLogsPageController extends Concrete5_Controller_Page_Dashboard_Reports_Logs {
 	
 
 	
