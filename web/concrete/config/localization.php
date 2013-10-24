@@ -33,7 +33,7 @@ if (!defined("LANGUAGE")) {
 	define("LANGUAGE", ACTIVE_LOCALE);
 }
 
-if(LANGUAGE != "en" and file_exists("./".ASSETS_URL_JAVASCRIPT."/tiny_mce/langs/".LANGUAGE.".js")){
+if(LANGUAGE != "en" and file_exists(DIR_BASE_CORE . '/' . DIRNAME_JAVASCRIPT . '/tiny_mce/langs/' . LANGUAGE . '.js')){
 	define("EDITOR_LANGUAGE", LANGUAGE);
 }
 
