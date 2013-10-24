@@ -1,6 +1,6 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-class DashboardBlocksTypesController extends Concrete5_Controller_Dashboard_Blocks_Types {
+class DashboardBlocksTypesPageController extends Concrete5_Controller_Page_Dashboard_Blocks_Types {
 
 	
 }

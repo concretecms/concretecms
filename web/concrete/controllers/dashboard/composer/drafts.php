@@ -1,5 +1,5 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-class DashboardComposerDraftsController extends Concrete5_Controller_Dashboard_Composer_Drafts {
+class DashboardComposerDraftsPageController extends Concrete5_Controller_Page_Dashboard_Composer_Drafts {
 
 }

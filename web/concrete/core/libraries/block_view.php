@@ -1,7 +1,7 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
 
-class Concrete5_Library_BlockView extends View {
+class Concrete5_Library_BlockView extends AbstractView {
 
 	protected $block;
 	protected $area;
@@ -13,7 +13,7 @@ class Concrete5_Library_BlockView extends View {
 	protected $viewToRender = false;
 	protected $viewPerformed = false;
 
-	public function __construct($mixed) {
+	protected function constructView($mixed) {
 		if ($mixed instanceof Block) {
 			$this->blockType = $mixed->getBlockTypeObject();
 			$this->block = $mixed;
@@ -22,21 +22,33 @@ class Concrete5_Library_BlockView extends View {
 			$this->blockType = $mixed;
 		}
 		$this->blockTypePkgHandle = $this->blockType->getPackageHandle();
+		if (!isset($this->controller)) {
+			if (isset($this->block)) {
+				$this->controller = $this->block->getInstance();
+				$this->controller->setBlockObject($this->block);
+			} else {
+				$this->controller = Loader::controller($this->blockType);
+			}
+		}
+		
+		if (is_object($this->area)) {
+			$this->controller->setAreaObject($this->area);
+		}
 	}		
 
 	public function setAreaObject(Area $area) {
 		$this->area = $area;
 	}
 
-	public function start($view) {
+	public function start($state) {
 		/** 
 		 * Legacy shit
 		 */
-		if ($view instanceof Block) {
-			$this->block = $view;
+		if ($state instanceof Block) {
+			$this->block = $state;
 			$this->viewToRender = 'view';
 		} else {
-			$this->viewToRender = $view;
+			$this->viewToRender = $state;
 		}
 	}
 
@@ -66,6 +78,7 @@ class Concrete5_Library_BlockView extends View {
 
 	public function startRender() {}
 	public function setupRender() {
+		$this->runControllerTask();
 		if ($this->outputContent) {
 			return false;
 		}
@@ -135,8 +148,7 @@ class Concrete5_Library_BlockView extends View {
 
 	protected function onBeforeGetContents() {
 		if (in_array($this->viewPerformed, array('scrapbook', 'view'))) {
-			$v = View::getInstance();
-			$this->controller->runTask('on_page_view', array($this));
+			$this->controller->runAction('on_page_view', array($this));
 			$this->controller->outputAutoHeaderItems();
 		}
 	}
@@ -255,31 +267,18 @@ class Concrete5_Library_BlockView extends View {
 		if ($this->useBlockCache()) {
 			$this->outputContent = $this->block->getBlockCachedOutput($this->area);
 		}
-
+		
 		if (!$this->outputContent) {
 			if (in_array($this->viewToRender, array('view', 'add', 'edit', 'composer'))) {
 				$method = $this->viewToRender;
 			} else {
 				$method = 'view';
 			}
-			$this->controller->setupAndRun($method);
+			$this->controller->on_start();
+			$this->controller->runAction($method, array());
+			$this->controller->on_before_render();
 		}
 
-	}
-
-	public function setupController() {
-		if (!isset($this->controller)) {
-			if (isset($this->block)) {
-				$this->controller = $this->block->getInstance();
-				$this->controller->setBlockObject($this->block);
-			} else {
-				$this->controller = Loader::controller($this->blockType);
-			}
-
-			if (is_object($this->area)) {
-				$this->controller->setAreaObject($this->area);
-			}
-		}
 	}
 
 	/** 

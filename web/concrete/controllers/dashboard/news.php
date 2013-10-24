@@ -1,7 +1,7 @@
 <?
 
 defined('C5_EXECUTE') or die("Access Denied.");
-class DashboardNewsController extends Concrete5_Controller_Dashboard_News {
+class DashboardNewsPageController extends Concrete5_Controller_Page_Dashboard_News {
 
 
 }

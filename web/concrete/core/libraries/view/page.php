@@ -1,7 +1,7 @@
 <?
 
 defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Library_PageRequestView extends RequestView {
+class Concrete5_Library_View_Page extends View {
 
 	protected $c; // page
 	protected $pTemplateID;
@@ -10,12 +10,9 @@ class Concrete5_Library_PageRequestView extends RequestView {
 		return $this->c;
 	}
 
-	/** 
-	 * Begin the render
-	 */
-	public function __construct($page) {
+	protected function constructView($page) {
 		$this->c = $page;
-		parent::start($page->getCollectionPath());
+		parent::constructView($page->getCollectionPath());
 		if (!isset($this->pTemplateID)) {
 			$this->pTemplateID = $this->c->getPageTemplateID();
 		}
@@ -28,16 +25,6 @@ class Concrete5_Library_PageRequestView extends RequestView {
 		$items = parent::getScopeItems();
 		$items['c'] = $this->c;
 		return $items;
-	}
-
-	protected function loadRequestViewThemeObject() {
-		if (!isset($this->themeHandle)) {
-			$theme = $this->c->getCollectionThemeObject();
-			if (is_object($theme)) {
-				$this->themeHandle = $theme->getThemeHandle();
-			}
-		}
-		parent::loadRequestViewThemeObject();
 	}
 
 	/** 
@@ -55,7 +42,7 @@ class Concrete5_Library_PageRequestView extends RequestView {
 	}
 
 	public function setupRender() {
-		$this->loadRequestViewThemeObject();
+		$this->loadViewThemeObject();
 		$env = Environment::get();
 		if ($this->c->getPageTypeID() == 0 && $this->c->getCollectionFilename()) {
 			$cFilename = trim($this->c->getCollectionFilename(), '/');

@@ -24,7 +24,7 @@ function formatDate($InputTime) {
 	return;
 }
 
-class Concrete5_Controller_Dashboard_Reports_Surveys extends Controller {
+class Concrete5_Controller_Page_Dashboard_Reports_Surveys extends DashboardController {
 	
 	public function viewDetail($bID = 0, $cID = 0) {
 		// If a valid bID and cID are set, get the corresponding data

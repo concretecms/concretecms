@@ -9,7 +9,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
  * @license    http://www.concrete5.org/license/     MIT License
  *
  */
-class Concrete5_Library_AttributeTypeView extends View {
+class Concrete5_Library_AttributeTypeView extends AbstractView {
 	
 	protected $attributeValue;
 	protected $attributeKey;
@@ -20,7 +20,7 @@ class Concrete5_Library_AttributeTypeView extends View {
 	protected function getValue() {return $this->attributeValue;}
 	protected function getAttributeKey() {return $this->attributeKey;}
 
-	public function __construct($mixed) {
+	protected function constructView($mixed) {
 		if ($mixed instanceof AttributeValue) {
 			$this->attributeValue = $mixed;
 			$this->attributeKey = $mixed->getAttributeKey();
@@ -32,10 +32,16 @@ class Concrete5_Library_AttributeTypeView extends View {
 			$this->attributeType = $mixed;
 		}
 		$this->attributePkgHandle = $this->attributeType->getPackageHandle();
+		$this->controller = $this->attributeType->getController();
+		$this->controller->setAttributeKey($this->attributeKey);
+		$this->controller->setAttributeValue($this->attributeValue);
+		if (is_object($attributeKey)) {
+			$this->controller->set('akID', $this->attributeKey->getAttributeKeyID());
+		}
 	}		
 
-	public function start($view) {
-		$this->viewToRender = $view;
+	public function start($state) {
+		$this->viewToRender = $state;
 	}
 
 	public function startRender() {
@@ -51,6 +57,7 @@ class Concrete5_Library_AttributeTypeView extends View {
 	}		
 	
 	public function setupRender() {
+		$this->runControllerTask();
 		$atHandle = $this->attributeType->getAttributeTypeHandle();
 		$env = Environment::get();
 		$r = $env->getRecord(DIRNAME_MODELS . '/' . DIRNAME_ATTRIBUTES . '/' . DIRNAME_ATTRIBUTE_TYPES . '/' . $atHandle . '/' . $this->viewToRender . '.php', $this->attributePkgHandle);
@@ -74,7 +81,9 @@ class Concrete5_Library_AttributeTypeView extends View {
 	}
 
 	public function runControllerTask() {
-		$this->controller->setupAndRun($this->viewToRender);
+		$this->controller->on_start();
+		$this->controller->runAction($this->viewToRender);
+		$this->controller->on_before_render();
 	}
 	
 	public function action($action) {

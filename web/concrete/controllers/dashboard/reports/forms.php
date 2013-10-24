@@ -1,2 +1,2 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
-class DashboardReportsFormsController extends Concrete5_Controller_Dashboard_Reports_Forms {}
+class DashboardReportsFormsPageController extends Concrete5_Controller_Page_Dashboard_Reports_Forms {}

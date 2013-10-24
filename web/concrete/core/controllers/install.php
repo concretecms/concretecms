@@ -21,13 +21,13 @@ define('DIR_FILES_UPLOADED_THUMBNAILS_LEVEL2', DIR_FILES_UPLOADED . '/thumbnails
 define('DIR_FILES_UPLOADED_THUMBNAILS_LEVEL3', DIR_FILES_UPLOADED . '/thumbnails/level3');
 define('DIR_FILES_AVATARS', DIR_FILES_UPLOADED . '/avatars');
 
-class Concrete5_Controller_Install extends RequestController {
+class Concrete5_Controller_Install extends Controller {
 
 	public $helpers = array('form', 'html');
 	
 	public function getViewObject() {
-		$v = new RequestView('/install');
-		$v->setRequestViewTheme('concrete');
+		$v = new View('/install');
+		$v->setViewTheme('concrete');
 		return $v;
 	}
 

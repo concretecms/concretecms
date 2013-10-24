@@ -69,8 +69,8 @@ class Concrete5_Model_PageTheme extends Object {
 	}
 
 	public function providesAsset($assetType, $assetHandle) {
-		$view = View::getInstance();
-		$view->markAssetAsIncluded($assetType, $assetHandle);
+		$r = ResponseAssetGroup::get();
+		$r->markAssetAsIncluded($assetType, $assetHandle);
 	}
 
 	public static function getAvailableThemes($filterInstalled = true) {

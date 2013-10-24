@@ -1,6 +1,6 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Controller_Dashboard_Base extends Controller {
+class Concrete5_Controller_Dashboard extends PageController {
 	
 	protected $error; 
 	public $token;

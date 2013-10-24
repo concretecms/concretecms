@@ -1,6 +1,6 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-class AccountProfileEditController extends Concrete5_Controller_Account_Profile_Edit {
+class AccountProfileEditPageController extends Concrete5_Controller_Page_Account_Profile_Edit {
 
 
 }

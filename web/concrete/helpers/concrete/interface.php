@@ -234,7 +234,7 @@ class ConcreteInterfaceHelper {
 
 
 	public function renderError($title, $error) {
-		$ve = new ErrorRequestView();
+		$ve = new ErrorView();
 		$o = new stdClass;
 		$o->title = $title;
 		$o->content = $error;

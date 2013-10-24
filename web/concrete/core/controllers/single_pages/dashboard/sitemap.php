@@ -1,6 +1,6 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Controller_Dashboard_Sitemap extends Controller {
+class Concrete5_Controller_Page_Dashboard_Sitemap extends DashboardController {
 
 	public function view() {
 		$this->redirect('/dashboard/sitemap/full');

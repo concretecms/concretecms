@@ -5,7 +5,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 $c = Page::getByID($_REQUEST['cID'], 'RECENT'); //,"ACTIVE"
 $cp = new Permissions($c);
 if ($cp->canPreviewPageAsUser() && PERMISSIONS_MODEL == 'advanced') {
-	$v = View::getInstance();
+	$v = new PageView($c);
 	$req = Request::getInstance();
 	$req->setCustomRequestUser(false);				
 	if (isset($_REQUEST['customUser'])) {
@@ -20,7 +20,7 @@ if ($cp->canPreviewPageAsUser() && PERMISSIONS_MODEL == 'advanced') {
 	$req = Request::getInstance();
 	$cp = new Permissions($c);
 	if ($cp->canRead()) { 
-		$v->render($c); 
+		$v->render(); 
 	} else {
 		print t('Unable to view page.');
 	}

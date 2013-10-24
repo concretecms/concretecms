@@ -1,5 +1,5 @@
 <?
 
 defined('C5_EXECUTE') or die("Access Denied.");
-class DashboardSystemBasicsInterfaceController extends Concrete5_Controller_Dashboard_System_Basics_Interface {
+class DashboardSystemBasicsInterfacePageController extends Concrete5_Controller_Page_Dashboard_System_Basics_Interface {
 }

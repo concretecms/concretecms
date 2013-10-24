@@ -2,7 +2,7 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 class Concrete5_Library_DispatcherRouteCallback extends RouteCallback {
 	
-	protected function sendResponse(RequestView $v, $code = 200) {
+	protected function sendResponse(View $v, $code = 200) {
 		$contents = $v->render();
 		$response = new Response($contents, $code);
 		return $response;
@@ -11,6 +11,7 @@ class Concrete5_Library_DispatcherRouteCallback extends RouteCallback {
 	protected function sendPageNotFound() {
 		$cnt = Loader::controller('/page_not_found');
 		$v = $cnt->getViewObject();
+		$cnt->on_start();
 		$cnt->runAction('view');
 		$v->setController($cnt);
 		return $this->sendResponse($v, 404);
@@ -19,6 +20,7 @@ class Concrete5_Library_DispatcherRouteCallback extends RouteCallback {
 	protected function sendPageForbidden() {
 		$cnt = Loader::controller('/page_forbidden');
 		$v = $cnt->getViewObject();
+		$cnt->on_start();
 		$cnt->runAction('view');
 		$v->setController($cnt);
 		return $this->sendResponse($v, 403);
@@ -42,10 +44,12 @@ class Concrete5_Library_DispatcherRouteCallback extends RouteCallback {
 		}
 
 		// Check to see whether this is an external alias or a header 301 redirect. If so we go there.
+		/*
 		if (($request->getPath() != '') && ($request->getPath() != $c->getCollectionPath())) {
 			// canonnical paths do not match requested path
 			return Redirect::page($c, 301);
 		}
+		*/
 
 		if ($c->getCollectionPointerExternalLink() != '') {
 			return Redirect::go($c->getCollectionPointerExternalLink());
@@ -78,6 +82,7 @@ class Concrete5_Library_DispatcherRouteCallback extends RouteCallback {
 			}
 		}
 
+		$request->setCurrentPage($c);
 		require(DIR_BASE_CORE . '/startup/process.php');
 		$u = new User();
 		if (STATISTICS_TRACK_PAGE_VIEWS == 1) {
@@ -87,10 +92,17 @@ class Concrete5_Library_DispatcherRouteCallback extends RouteCallback {
 		## Fire the on_page_view Eventclass
 		Events::fire('on_page_view', $c, $u);
 
-		$request->setCurrentPage($c);
-		$v = new PageRequestView($c);
-		$response = $v->render();
-		return $response;
+		$controller = Loader::controller($c);
+		$controller->on_start();
+		$controller->setupRequestActionAndParameters($request);
+		$requestTask = $controller->getRequestAction();
+		$requestParameters = $controller->getRequestActionParameters();
+		if (!$controller->validateRequest()) {
+			return $this->sendPageNotFound();
+		}
+		$controller->runAction($requestTask, $requestParameters);
+		$view = $controller->getViewObject();
+		return $this->sendResponse($view);
 	}
 
 	public static function getRouteAttributes($callback) {

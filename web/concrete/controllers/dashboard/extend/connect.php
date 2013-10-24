@@ -1,6 +1,6 @@
 <?
 
 defined('C5_EXECUTE') or die("Access Denied.");
-class DashboardExtendConnectController extends Concrete5_Controller_Dashboard_Extend_Connect {
+class DashboardExtendConnectPageController extends Concrete5_Controller_Page_Dashboard_Extend_Connect {
 
 }

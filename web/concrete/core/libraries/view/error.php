@@ -1,11 +1,11 @@
 <?
 
 defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Library_ErrorRequestView extends RequestView {
+class Concrete5_Library_View_Error extends View {
 	
 	protected $error;
 
-	public function start($error) {
+	protected function constructView($error) {
 		$this->error = $error;
 	}
 	public function action($action) {

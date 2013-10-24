@@ -1,7 +1,7 @@
 <?
 
 defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Controller_Dashboard_Extend_Install extends Controller {
+class Concrete5_Controller_Page_Dashboard_Extend_Install extends DashboardController {
 	
 	public function on_start() {
 		Loader::library('marketplace');

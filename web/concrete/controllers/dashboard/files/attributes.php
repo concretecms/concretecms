@@ -1,6 +1,6 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
-class DashboardFilesAttributesController extends Concrete5_Controller_Dashboard_Files_Attributes {
+class DashboardFilesAttributesPageController extends Concrete5_Controller_Page_Dashboard_Files_Attributes {
 
 	
 }

@@ -1,7 +1,8 @@
 <?
 	defined('C5_EXECUTE') or die("Access Denied.");
-	class Concrete5_Controller_PageType_CoreStack extends Controller {
+	class Concrete5_Controller_PageType_CoreStack extends PageTypeController {
 	
+		/*
 		public function on_start() {
 			$c = Page::getByPath('/dashboard/blocks/stacks');
 			$cp = new Permissions($c);
@@ -26,4 +27,5 @@
 				$v->render('/page_not_found');
 			}
 		}		
+		*/
 	}

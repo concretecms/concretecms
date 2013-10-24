@@ -1,5 +1,5 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Controller_Dashboard_System_Conversations_Settings extends Controller {
+class Concrete5_Controller_Page_Dashboard_System_Conversations_Settings extends DashboardController {
 
 	public function view() {
 		$helperFile = Loader::helper('concrete/file');

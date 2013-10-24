@@ -1,7 +1,7 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
 
-class Concrete5_Controller_Account_Profile_Public extends AccountController {
+class Concrete5_Controller_Page_Account_Profile_Public extends AccountPageController {
 	
 	public function save_complete() {
 		$this->set('success', t('Profile updated successfully.'));
