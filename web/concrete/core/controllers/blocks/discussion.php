@@ -35,8 +35,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		public function view() {
 			$discussion = $this->getConversationDiscussionObject();
 			if (is_object($discussion)) {
-				$req = Request::getInstance();
-				$req->requireAsset('core/conversation');
+				$this->requireAsset('core/conversation');
 				$this->set('discussion', $discussion);
 				if ($this->enableNewTopics && $this->ptID) {
 					$pt = PageType::getByID($this->ptID);

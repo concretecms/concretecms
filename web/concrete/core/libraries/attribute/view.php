@@ -101,7 +101,9 @@ class Concrete5_Library_AttributeTypeView extends AbstractView {
 		return $url;
 	}
 	
-	public function finishRender() {}
+	public function finishRender($contents) {
+		return $contents;
+	}
 
 	protected function onBeforeGetContents() {
 		@Loader::element(DIRNAME_ATTRIBUTES . '/' . $view . '_header', array('type' => $this->attributeType));

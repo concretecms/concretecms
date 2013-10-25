@@ -52,18 +52,18 @@
 		}
 
 		public function add() {
-			$req = Request::getInstance();
-			$req->requireAsset('redactor');
+			$r = ResponseAssetGroup::get();
+			$r->requireAsset('redactor');
 		}
 
 		public function edit() {
-			$req = Request::getInstance();
-			$req->requireAsset('redactor');
+			$r = ResponseAssetGroup::get();
+			$r->requireAsset('redactor');
 		}
 
 		public function composer() {
-			$req = Request::getInstance();
-			$req->requireAsset('redactor');
+			$r = ResponseAssetGroup::get();
+			$r->requireAsset('redactor');
 		}
 
 		public function getImportData($blockNode, $page) {

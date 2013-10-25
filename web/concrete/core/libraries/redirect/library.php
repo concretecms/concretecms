@@ -16,7 +16,7 @@ class Concrete5_Library_Redirect {
 	 */
 	public static function go($url, $code = 302, $headers = array()) {
 		if (!URL::isValidURL($url)) {
-			$url = BASE_URL . URL::to($url);
+			$url = URL::to($url);
 		}
 		$r = static::createRedirectResponse($url, $code, $headers);
 		return $r;

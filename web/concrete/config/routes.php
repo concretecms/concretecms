@@ -20,7 +20,15 @@ $rl->register('/install/run_routine/{pkgHandle}/{routine}', 'InstallController::
 $rl->register('/tools/{tool}', 'ToolController::display', 'tool', array('tool' => '[A-Za-z0-9_/]+'));
 
 /** 
- * Page Routes 
+ * Editing Interfaces
+ */
+$rl->register('/system/panels/dashboard', 'DashboardPanelController::view');
+$rl->register('/system/panels/sitemap', 'SitemapPanelController::view');
+$rl->register('/system/panels/add_block', 'AddBlockPanelController::view');
+
+/** 
+ * Page Routes - these must come at the end.
  */
 $rl->register('/', 'dispatcher', 'home');
 $rl->register('{path}', 'dispatcher', 'page', array('path' => '.+'));
+

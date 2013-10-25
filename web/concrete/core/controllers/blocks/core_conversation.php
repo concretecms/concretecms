@@ -54,8 +54,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		}
 
 		public function view() {
-			$req = Request::getInstance();
-			$req->requireAsset('core/conversation');
+			$r = ResponseAssetGroup::get();
+			$r->requireAsset('core/conversation');
 			$fileSettings = $this->getFileSettings(); 
 			$conversation = $this->getConversationObject();
 			if (is_object($conversation)) {

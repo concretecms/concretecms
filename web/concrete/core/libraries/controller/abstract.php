@@ -10,8 +10,8 @@ abstract class Concrete5_Library_Controller_Abstract {
 
 	public function requireAsset() {
 		$args = func_get_args();
-		$v = View::getInstance();
-		call_user_func_array(array($v, 'requireAsset'), $args);
+		$r = ResponseAssetGroup::get();
+		call_user_func_array(array($r, 'requireAsset'), $args);
 	}
 
 	/** 
@@ -84,6 +84,9 @@ abstract class Concrete5_Library_Controller_Abstract {
 	/** 
 	 * @deprecated
 	 */
+	public function isPost() {
+		return Request::isPost();
+	}
 	public function post($key = null, $defaultValue = null) {
 		return Request::post($key, $defaultValue);
 	}

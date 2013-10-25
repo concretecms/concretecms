@@ -161,8 +161,9 @@ class Concrete5_Controller_Block_CoreGathering extends BlockController {
 		public function view() {
 			if ($this->gaID) {
 				$gathering = Gathering::getByID($this->gaID);
-				if (is_object($gathering)) {	
-					Request::getInstance()->requireAsset('core/gathering');
+				if (is_object($gathering)) {
+					$r = ResponseAssetGroup::get();
+					$r->requireAsset('core/gathering');
 					Loader::helper('overlay')->init(false);
 					if ($this->enablePostingFromGathering && $this->ptID) {
 						$pt = PageType::getByID($this->ptID);

@@ -165,6 +165,10 @@
 				$file = self::getFileFromCorePath('page_controller', substr($class, strlen($m)));
 				require_once(DIR_BASE_CORE . '/' . DIRNAME_CORE_CLASSES . '/' . DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGES . '/' . $file . '.php');
 			}
+			elseif (stripos($class, $m = 'Concrete5_Controller_Panel_') === 0) {
+				$file = self::getFileFromCorePath('panel_controller', substr($class, strlen($m)));
+				require_once(DIR_BASE_CORE . '/' . DIRNAME_CORE_CLASSES . '/' . DIRNAME_CONTROLLERS . '/' . DIRNAME_PANELS . '/' . $file . '.php');
+			}
 			elseif (stripos($class, $m = 'Concrete5_Controller_') === 0) {
 				$file = self::getFileFromCorePath('page_controller', substr($class, strlen($m)));
 				require_once(DIR_BASE_CORE . '/' . DIRNAME_CORE_CLASSES . '/' . DIRNAME_CONTROLLERS . '/' . $file . '.php');
@@ -190,6 +194,12 @@
 					$class = substr($class, 0, strpos($class, 'BlockController'));
 					$handle = Object::uncamelcase($class);
 					self::block($handle);
+				} else if (strpos($class, 'PanelController') > 0) {
+					$env = Environment::get();
+					$class = substr($class, 0, strpos($class, 'PanelController'));
+					$path = Object::uncamelcase($class);
+					$path = $env->getPath(DIRNAME_CONTROLLERS . '/' . DIRNAME_PANELS . '/' . $path . '.php', $pkgHandle);
+					require_once($path);
 				} else if (strpos($class, 'Controller') > 0) {
 					$env = Environment::get();
 					$class = substr($class, 0, strpos($class, 'Controller'));
@@ -363,7 +373,6 @@
 		 * Gets the path to a particular page type controller
 		 */
 		public function pageTypeControllerPath($ctHandle) {			
-			self::model('collection_types');
 			$ct = PageType::getByHandle($ctHandle);
 			if (!is_object($ct)) {
 				return false;
@@ -372,109 +381,87 @@
 			$env = Environment::get();
 			$path = $env->getPath(DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_TYPES . '/' . $ctHandle . '.php', $pkgHandle);
 			if (file_exists($path)) {
-				return $path;
+				return $patpkgHandleh;
+			}
+		}
+
+		protected static function singlePageControllerPage($path, $pkgHandle) {			
+			$env = Environment::get();
+			$f1 = $env->getRecord(DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGES . $path . '/' . FILENAME_COLLECTION_CONTROLLER, $pkgHandle);
+			$f2 = $env->getRecord(DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGES . $path . '.php', $pkgHandle);
+			if ($f1->exists()) {
+				return $f1->file;
+			} else if ($f2->exists()) {
+				return $f2->file;
 			}
 		}
 		
 		/** 
-		 * Loads a controller for either a page or view
+		 * Loads a controller object
 		 */
-		public function controller($item) {
-			
-			$include = false;
-			
-			if (is_string($item)) {
-				$db = self::db();
-				if (is_object($db) && $item != '/dashboard') {
-					try {
-						$_item = Page::getByPath($item);
-						if ($_item->isError()) {
-							$path = $item;
-						} else {
-							$item = $_item;
-						}
-					} catch(Exception $e) {
-						$path = $item;
-					}
-				} else {
-					$path = $item;
-				}
+		public function controller($mixed) {
+			$env = Environment::get();
+			if ($mixed instanceof Block || $mixed instanceof BlockType) {
+				$class = Object::camelcase($mixed->getBlockTypeHandle()) . 'BlockController';
+				return new $class($mixed);
 			}
-			
-			if ($item instanceof Page) {
-				$c = $item;
-				if ($c->getPageTypeID() > 0) {					
-					$ptHandle = $c->getPageTypeHandle();
-					$path = self::pageTypeControllerPath($ptHandle, $item->getPackageHandle());
-					if ($path != false) {
+			if ($mixed instanceof Page) {
+				$class = 'PageController';
+				if ($mixed->getPageTypeID() > 0) {
+					$ptHandle = $mixed->getPageTypeHandle();
+					$path = self::pageTypeControllerPath($ptHandle, $mixed->getPackageHandle());
+					if ($path) {
 						require_once($path);
 						$class = Object::camelcase($ptHandle) . 'PageTypeController';
 					}
-				} else if ($c->isGeneratedCollection()) {
-					$file = $c->getCollectionFilename();
-					if ($file != '') {
-						// strip off PHP suffix for the $path variable, which needs it gone
-						if (strpos($file, '/' . FILENAME_COLLECTION_VIEW) !== false) {
-							$path = substr($file, 0, strpos($file, '/'. FILENAME_COLLECTION_VIEW));
-						} else {
-							$path = substr($file, 0, strpos($file, '.php'));
-						}
-					}
-				}
-			} else if ($item instanceof Block || $item instanceof BlockType) {
-				
-				$class = Object::camelcase($item->getBlockTypeHandle()) . 'BlockController';
-				if ($item instanceof BlockType) {
-					$controller = new $class($item);
-				}
-				
-				if ($item instanceof Block) {
-					$c = $item->getBlockCollectionObject();
-				}				
-			}
-			
-			$controllerFile = $path . '.php';
-
-			if ($path != '') {
-				
-				$env = Environment::get();
-				$pkgHandle = false;
-				if (is_object($item)) {
-					$pkgHandle = $item->getPackageHandle();
-				}
-				
-				$f1 = $env->getPath(DIRNAME_CONTROLLERS . $path . '/' . FILENAME_COLLECTION_CONTROLLER, $pkgHandle);
-				$f2 = $env->getPath(DIRNAME_CONTROLLERS . $controllerFile, $pkgHandle);
-				if (file_exists($f2)) {
-					$include = true;
-					require_once($f2);
-				} else if (file_exists($f1)) {
-					$include = true;
-					require_once($f1);
-				}
-				
-				if ($include) {
-					if ($item instanceof Page) {
-						$class = Object::camelcase($path) . 'PageController';
+				} else if ($mixed->isGeneratedCollection()) {
+					$file = $mixed->getCollectionFilename();
+					if (strpos($file, '/' . FILENAME_COLLECTION_VIEW) !== false) {
+						$path = substr($file, 0, strpos($file, '/'. FILENAME_COLLECTION_VIEW));
 					} else {
-						$class = Object::camelcase($path) . 'Controller';
+						$path = substr($file, 0, strpos($file, '.php'));
+					}
+					$file = self::singlePageControllerPage($path, $mixed->getPackageHandle());
+					if ($file) {
+						require_once($file);
+						$class = Object::camelcase($path) . 'PageController';
+					}
+				}
+				return new $class($mixed);
+			} else if (is_string($mixed)) {
+				// now we test to see if this is, in fact, a page.
+				// now, in one case loader::controller('/dashboard') we DON'T want to instantiate the 
+				// controller, because it's only ever going to be extended by page controllers.
+				// so we load it but we DON'T instantiate.
+				if ($mixed != '/dashboard') {
+					$page = Page::getByPath($mixed);
+				}
+
+				if (is_object($page) && !$page->isError()) {
+					$class = Object::camelcase($mixed) . 'PageController';
+					$pathPrefix = DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGES;
+				} else {
+					$class = Object::camelcase($mixed) . 'Controller';
+					$pathPrefix = DIRNAME_CONTROLLERS;
+				}
+
+				$f1 = $env->getRecord($pathPrefix . $mixed . '/' . FILENAME_COLLECTION_CONTROLLER);
+				$f2 = $env->getRecord($pathPrefix . $mixed . '.php');
+				if ($f1->exists()) {
+					require_once($f1->file);
+				} else if ($f2->exists()) {
+					require_once($f2->file);
+				}
+				// in this case, we don't return the object.
+				// we don't autoload the class exists because we have some classes that
+				// resolve to different classes than their paths.
+				if ($f1->exists() || $f2->exists() && class_exists($class, false) && $class != 'DashboardController') {
+					if (is_object($page)) {
+						return new $class($page);
+					} else {
+						return new $class($mixed);
 					}
 				}
 			}
-			
-			if (!isset($controller)) {
-				if ($class && class_exists($class) && is_object($item)) {
-					// now we get just the filename for this guy, so we can extrapolate
-					// what our controller is named
-					$controller = new $class($item);
-				} else if ($item instanceof Page) {
-					$controller = new PageController($item);
-				} else {
-					$controller = new Controller($item);
-				}
-			}
-					
-			return $controller;
 		}
-
 	}

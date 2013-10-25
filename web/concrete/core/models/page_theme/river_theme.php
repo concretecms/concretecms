@@ -17,11 +17,11 @@ class Concrete5_Model_PageTheme_RiverTheme extends PageTheme {
 	}
 
 	public function registerAssets() {
-		$v = View::getInstance();
-		$v->requireAsset('javascript', 'jquery/form');
-		$v->requireAsset('javascript', 'hoverintent');
-		$v->requireAsset('javascript', 'backstretch');
-		$v->providesAsset('css', 'core/gathering/display');
+		$r = ResponseAssetGroup::get();
+		$r->requireAsset('javascript', 'jquery/form');
+		$r->requireAsset('javascript', 'hoverintent');
+		$r->requireAsset('javascript', 'backstretch');
+		$r->providesAsset('css', 'core/gathering/display');
 	}
 
 }

@@ -83,3 +83,10 @@ function tc($context, $text) {
 	}
 	return vsprintf($text, $arg);
 }
+
+/** 
+ * Security helper
+ */
+function h($input) {
+    return Loader::helper('text')->specialchars($input);
+}

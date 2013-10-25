@@ -114,9 +114,9 @@ abstract class Concrete5_Library_PageCache {
 				return '!' . HOME_CID;
 			}			
 		} else if ($mixed instanceof Request) {
-			if ($mixed->getRequestPath() != '') {
-				return urlencode(trim($mixed->getRequestPath(), '/'));
-			} else if ($mixed->getRequestCollectionID() == HOME_CID) {
+			if ($mixed->getPath() != '') {
+				return urlencode(trim($mixed->getPath(), '/'));
+			} else {
 				return '!' . HOME_CID;
 			}			
 		} else if ($mixed instanceof PageCacheRecord) {

@@ -8,8 +8,14 @@ class Concrete5_Library_DispatcherRouteCallback extends RouteCallback {
 		return $response;
 	}
 
-	protected function sendPageNotFound() {
-		$cnt = Loader::controller('/page_not_found');
+	protected function sendPageNotFound(Request $request) {
+		$item = '/page_not_found';
+		$c = Page::getByPath($item);
+		if (is_object($c) && !$c->isError()) {
+			$item = $c;
+			$request->setCurrentPage($c);
+		}
+		$cnt = Loader::controller($item);
 		$v = $cnt->getViewObject();
 		$cnt->on_start();
 		$cnt->runAction('view');
@@ -17,8 +23,14 @@ class Concrete5_Library_DispatcherRouteCallback extends RouteCallback {
 		return $this->sendResponse($v, 404);
 	}
 
-	protected function sendPageForbidden() {
-		$cnt = Loader::controller('/page_forbidden');
+	protected function sendPageForbidden(Request $request) {
+		$item = '/page_forbidden';
+		$c = Page::getByPath($item);
+		if (is_object($c) && !$c->isError()) {
+			$item = $c;
+			$request->setCurrentPage($c);
+		}
+		$cnt = Loader::controller($item);
 		$v = $cnt->getViewObject();
 		$cnt->on_start();
 		$cnt->runAction('view');
@@ -31,14 +43,14 @@ class Concrete5_Library_DispatcherRouteCallback extends RouteCallback {
 		// figure out where we need to go
 		$c = Page::getFromRequest($request);
 		if ($c->isError() && $c->getError() == COLLECTION_NOT_FOUND) {
-			$this->sendPageNotFound();
+			return $this->sendPageNotFound($request);
 		}
 		// maintenance mode
 		if ((!$c->isAdminArea()) && ($c->getCollectionPath() != '/login')) {
 			$smm = Config::get('SITE_MAINTENANCE_MODE');
 			if ($smm == 1 && ($_SERVER['REQUEST_METHOD'] != 'POST' || Loader::helper('validation/token')->validate() == false)) {
-				$cnt = Loader::controller('/maintenance_mode');
-				$v = $cnt->getViewObject();
+				$v = new View('/maintenance_mode');
+				$v->setViewTheme(VIEW_CORE_THEME);
 				return $this->sendResponse($v);
 			}
 		}
@@ -56,12 +68,13 @@ class Concrete5_Library_DispatcherRouteCallback extends RouteCallback {
 		}
 
 		$cp = new Permissions($c);
+
 		if ($cp->isError() && $cp->getError() == COLLECTION_FORBIDDEN) {
-			$this->sendPageForbidden();
+			return $this->sendPageForbidden($request);
 		}
 
 		if (!$c->isActive() && (!$cp->canViewPageVersions())) {
-			$this->sendPageNotFound();
+			return $this->sendPageNotFound($request);
 		}
 
 		if ($cp->canEditPageContents() || $cp->canEditPageProperties() || $cp->canViewPageVersions()) {
@@ -74,10 +87,10 @@ class Concrete5_Library_DispatcherRouteCallback extends RouteCallback {
 		if (is_object($vp) && $vp->isError()) {
 			switch($vp->getError()) {
 				case COLLECTION_NOT_FOUND:
-					$this->sendPageNotFound();
+					return $this->sendPageNotFound($request);
 					break;
 				case COLLECTION_FORBIDDEN:
-					$this->sendPageForbidden();
+					return $this->sendPageForbidden($request);
 					break;
 			}
 		}
@@ -98,7 +111,7 @@ class Concrete5_Library_DispatcherRouteCallback extends RouteCallback {
 		$requestTask = $controller->getRequestAction();
 		$requestParameters = $controller->getRequestActionParameters();
 		if (!$controller->validateRequest()) {
-			return $this->sendPageNotFound();
+			return $this->sendPageNotFound($request);
 		}
 		$controller->runAction($requestTask, $requestParameters);
 		$view = $controller->getViewObject();
