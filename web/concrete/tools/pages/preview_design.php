@@ -5,7 +5,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 $c = Page::getByID($_REQUEST['cID'], 'RECENT'); //,"ACTIVE"
 $cp = new Permissions($c);
 if ($cp->canViewPageVersions()) {
-	$req = Request::get();
+	$req = Request::getInstance();
 	$v = new PageView($c);
 	if ($_REQUEST['pTemplateID']) {
 		$pt = PageTemplate::getByID(Loader::helper('security')->sanitizeInt($_REQUEST['pTemplateID']));

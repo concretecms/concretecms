@@ -7,6 +7,7 @@ var CCMPanel = function(options) {
 	this.options = options;
 	this.isOpen = false;
 	this.detail = false;
+	this.url = false;
 
 	this.getPositionClass = function() {
 		switch(options.position) {
@@ -27,6 +28,14 @@ var CCMPanel = function(options) {
 				break;
 		}
 		return class;
+	}
+
+	this.setURL = function(url) {
+		this.url = url;
+	}
+
+	this.getURL = function() {
+		return this.url;
 	}
 
 	this.getIdentifier = function() {
@@ -358,7 +367,7 @@ var CCMPanel = function(options) {
 			var $panel = $('#' + obj.getDOMID());
 			$panel.find('.ccm-panel-content-wrapper').html('');
 			$panel.addClass('ccm-panel-active ccm-panel-loading');
-			$('<div />', {'class': 'ccm-panel-content ccm-panel-content-visible'}).appendTo($panel.find('.ccm-panel-content-wrapper')).load(obj.options.url + "?cID=" + CCM_CID, function() {
+			$('<div />', {'class': 'ccm-panel-content ccm-panel-content-visible'}).appendTo($panel.find('.ccm-panel-content-wrapper')).load(obj.getURL() + "?cID=" + CCM_CID, function() {
 				$panel.delay(1).queue(function() {
 					$(this).removeClass('ccm-panel-loading').addClass('ccm-panel-loaded');
 					$(this).dequeue();
@@ -418,12 +427,9 @@ var CCMPanelManager = function() {
 				translucent: true,
 				position: 'left',
 				primary: true,
-				transition: 'slide',
-				url: false
+				transition: 'slide'
 			}, options);
-			if (!options.url) {
-				options.url = CCM_TOOLS_PATH + '/panels/' + options.identifier;
-			}
+			
 			var panel = new CCMPanel(options);
 			panels.push(panel);
 

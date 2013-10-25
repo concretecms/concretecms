@@ -24,8 +24,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		}
 
 		public function composer() {
-			$req = Request::getInstance();
-			$req->requireAsset('core/conversation');
+			$r = ResponseAssetGroup::get();
+			$r->requireAsset('core/conversation');
 			$this->view();
 		}
 

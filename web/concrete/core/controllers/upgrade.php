@@ -16,6 +16,8 @@ class Concrete5_Controller_Upgrade extends Controller {
 	private $site_version = null;
 	public $upgrade_db = true;
 	
+	protected $viewPath = '/upgrade';
+	
 	public function on_start() {
 		$this->secCheck();
 		// if you just reverted, but didn't manually clear out your files - cache would be a prob here.

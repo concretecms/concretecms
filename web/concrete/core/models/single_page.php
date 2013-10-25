@@ -205,26 +205,26 @@ class Concrete5_Model_SinglePage extends Page {
 		
 		if (!is_object($pkg)) {
 			
-			if (is_dir(DIR_FILES_CONTROLLERS . '/' . $node) || is_dir(DIR_FILES_CONTROLLERS_REQUIRED . '/' . $node)) {
-				if (is_dir(DIR_FILES_CONTROLLERS . '/' . $node)) {
-					$pathToPerms = DIR_FILES_CONTROLLERS . '/' . $node;
+			if (is_dir(DIR_FILES_CONTROLLERS . '/' . DIRNAME_PAGES . '/' . $node) || is_dir(DIR_FILES_CONTROLLERS_REQUIRED . '/' . DIRNAME_PAGES . '/' . $node)) {
+				if (is_dir(DIR_FILES_CONTROLLERS . '/' . DIRNAME_PAGES . '/' . $node)) {
+					$pathToPerms = DIR_FILES_CONTROLLERS . '/' . DIRNAME_PAGES . '/' . $node;
 					if (file_exists($pathToPerms . '/' . FILENAME_COLLECTION_ACCESS)) {
 						$xmlweb = $pathToPerms . '/' . FILENAME_COLLECTION_ACCESS;
 					}
 				}
 				
-				if (is_dir(DIR_FILES_CONTROLLERS_REQUIRED . '/' . $node)) {
-					$pathToPerms = DIR_FILES_CONTROLLERS_REQUIRED . '/' . $node;
+				if (is_dir(DIR_FILES_CONTROLLERS_REQUIRED . '/' . DIRNAME_PAGES . '/' . $node)) {
+					$pathToPerms = DIR_FILES_CONTROLLERS_REQUIRED . '/' . DIRNAME_PAGES . '/' . $node;
 					if (file_exists($pathToPerms . '/' . FILENAME_COLLECTION_ACCESS)) {
 						$xmlcore = $pathToPerms . '/' . FILENAME_COLLECTION_ACCESS;
 					}
 				}
 			} else {
 				if (strpos($node, '/') === false) {
-					if (file_exists(DIR_FILES_CONTROLLERS . '/' . FILENAME_COLLECTION_ACCESS)) {
-						$xmlweb = DIR_FILES_CONTROLLERS . '/' . FILENAME_COLLECTION_ACCESS;
-					} else if (file_exists(DIR_FILES_CONTROLLERS_REQUIRED . '/' . FILENAME_COLLECTION_ACCESS)) {
-						$xmlcore = DIR_FILES_CONTROLLERS_REQUIRED . '/' . FILENAME_COLLECTION_ACCESS;
+					if (file_exists(DIR_FILES_CONTROLLERS . '/' . DIRNAME_PAGES . '/' . FILENAME_COLLECTION_ACCESS)) {
+						$xmlweb = DIR_FILES_CONTROLLERS . '/' . DIRNAME_PAGES . '/' . FILENAME_COLLECTION_ACCESS;
+					} else if (file_exists(DIR_FILES_CONTROLLERS_REQUIRED . '/' . DIRNAME_PAGES . '/' . FILENAME_COLLECTION_ACCESS)) {
+						$xmlcore = DIR_FILES_CONTROLLERS_REQUIRED . '/' . DIRNAME_PAGES . '/' . FILENAME_COLLECTION_ACCESS;
 					}
 				}			
 			}

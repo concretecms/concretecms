@@ -7,5 +7,6 @@ if (is_object($pagetype)) {
 		$pt = $pagetype->getPageTypeDefaultPageTemplateObject();
 		$d = $pagetype->createDraft($pt);
 		header('Location:' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $d->getCollectionID() . '&ctask=check-out-first&' . Loader::helper('validation/token')->getParameter());
+		exit;
 	}
 }

@@ -62,7 +62,7 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
 				if ($cp->canEditPageContents() && (!$pageInUseBySomeoneElse)) { ?>
 					<li class="ccm-toolbar-add pull-left">
 						<? if ($c->isEditMode()) { ?>
-							<a href="#" data-launch-panel="add-block"><i class="glyphicon glyphicon-plus"></i></a>
+							<a href="#" data-launch-panel="add-block" data-panel-url="<?=URL::to('/system/panels/add_block')?>"><i class="glyphicon glyphicon-plus"></i></a>
 						<? } else { ?>
 							<a href="<?=DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=<?=$cID?>&ctask=check-out-add-block<?=$token?>"><i class="glyphicon glyphicon-plus"></i></a>
 						<? } ?>
@@ -84,9 +84,9 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
 					<li class="pull-left" id="ccm-white-label-message"><?=t('Powered by <a href="%s">concrete5</a>.', CONCRETE5_ORG_URL)?></li>
 				<? }?>
 
-				<li class="pull-right"><a href="<?=$this->url('/dashboard')?>" data-launch-panel="dashboard"><i class="glyphicon glyphicon-th-large"></i></a>
+				<li class="pull-right"><a href="<?=URL::to('/dashboard')?>" data-launch-panel="dashboard" data-panel-url="<?=URL::to('/system/panels/dashboard')?>"><i class="glyphicon glyphicon-th-large"></i></a>
 
-				<li class="pull-right"><a href="#" data-launch-panel="sitemap"><i class="glyphicon glyphicon-list-alt"></i></a>
+				<li class="pull-right"><a href="#" data-panel-url="<?=URL::to('/system/panels/sitemap')?>" data-launch-panel="sitemap"><i class="glyphicon glyphicon-list-alt"></i></a>
 
 				<?
 				print $dh->getIntelligentSearchMenu();

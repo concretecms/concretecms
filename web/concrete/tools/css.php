@@ -1,6 +1,6 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-$co = Request::get();
+$co = Request::getInstance();
 $v = View::getInstance();
 $au = $co->getAuxiliaryData();
 if (isset($au->theme) && isset($au->file)) {

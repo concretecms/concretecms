@@ -12,3 +12,4 @@ $l->setThemeByRoute('/install', VIEW_CORE_THEME);
 $l->setThemeByRoute('/login', VIEW_CORE_THEME);
 $l->setThemeByRoute('/register', VIEW_CORE_THEME);
 $l->setThemeByRoute('/maintenance_mode', VIEW_CORE_THEME);
+$l->setThemeByRoute('/upgrade', VIEW_CORE_THEME);

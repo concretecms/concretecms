@@ -17,8 +17,8 @@ class Concrete5_Helper_Composer {
 	}
 
 	public function addAssetsToRequest(PageType $pt, Controller $cnt) {
-		$v = View::getInstance();
-		$v->requireAsset('core/composer');
+		$r = ResponseAssetGroup::get();
+		$r->requireAsset('core/composer');
 		$list = PageTypeComposerControl::getList($pt);
 		foreach($list as $l) {
 			$l->addAssetsToRequest($cnt);

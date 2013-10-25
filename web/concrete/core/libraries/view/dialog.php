@@ -23,7 +23,7 @@ class Concrete5_Library_View_Dialog extends View {
 		// now that we have the contents of the tool,
 		// we make sure any require assets get moved into the header
 		// since that's the only place they work in the AJAX output.
-		$r = Request::get();
+		$r = Request::getInstance();
 		$assets = $r->getRequiredAssetsToOutput();
 		foreach($assets as $asset) {
 			$asset->setAssetPosition(Asset::ASSET_POSITION_HEADER);

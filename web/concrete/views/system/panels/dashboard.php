@@ -1,15 +1,9 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-$dh = Loader::helper('concrete/dashboard');
-if ($dh->canRead()) {
-	$c = Page::getByPath('/dashboard');
-	$children = $c->getCollectionChildrenArray(true);
-
 ?>
-
 <section>
 	<header><?=t('Dashboard')?>
-		<aside><a href="<?=View::url('/login', 'logout', Loader::helper('validation/token')->generate('logout'))?>"><?=t('Logout')?></a></aside>
+		<aside><a href="<?=URL::to('/login', 'logout', Loader::helper('validation/token')->generate('logout'))?>"><?=t('Logout')?></a></aside>
 	</header>
 	<menu>
 		<? foreach($children as $cID) {
@@ -22,6 +16,3 @@ if ($dh->canRead()) {
 
 	</menu>
 </section>
-
-
-<? } ?>

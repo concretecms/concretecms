@@ -6,7 +6,13 @@ $cp = new Permissions($c);
 if ($cp->canViewPageVersions()) {
 	$c->loadVersionObject(Loader::helper('security')->sanitizeInt($_REQUEST['cvID']));
 	$req = Request::getInstance();
-	$v = new PageView($c);
 	$req->setCustomRequestUser(-1);
-	$v->render();
+	$req->setCurrentPage($c);
+	$controller = Loader::controller($c);
+	$view = $controller->getViewObject();
+	$response = new Response();
+	$content = $view->render();
+	$response->setContent($content);
+	$response->send();
+	exit;
 }

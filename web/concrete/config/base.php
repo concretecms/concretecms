@@ -249,6 +249,7 @@ define('BLOCK_HANDLE_GATHERING', 'core_gathering');
 define('BLOCK_HANDLE_LAYOUT_PROXY', 'core_area_layout');
 define('BLOCK_HANDLE_PAGE_TYPE_OUTPUT_PROXY', 'core_page_type_composer_control_output');
 define('FILENAME_FORM', 'form.php');
+define('DIRNAME_PANELS', 'panels');
 
 # Stacks
 define('STACKS_PAGE_PATH', '/!stacks');
@@ -592,7 +593,7 @@ if (!defined('ENABLE_TRASH_CAN')) {
 }
 
 if (!defined('URL_USE_TRAILING_SLASH')) {
-	define('URL_USE_TRAILING_SLASH', true);
+	define('URL_USE_TRAILING_SLASH', false);
 }
 
 define('MARKETPLACE_BASE_URL_SITE_PAGE', CONCRETE5_ORG_URL.'/private/sites');

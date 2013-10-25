@@ -31,8 +31,8 @@ class Concrete5_Helper_Form_PageSelector {
 	 */
 
 	public function selectPage($fieldName, $cID = false) {
-		$v = View::getInstance();
-		$v->requireAsset('javascript', 'core/sitemap');
+		$r = ResponseAssetGroup::get();
+		$r->requireAsset('javascript', 'core/sitemap');
 		$selectedCID = 0;
 		if (isset($_REQUEST[$fieldName])) {
 			$selectedCID = $_REQUEST[$fieldName];

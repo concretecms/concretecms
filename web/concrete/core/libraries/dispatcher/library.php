@@ -28,7 +28,7 @@ class Concrete5_Library_Dispatcher {
 
 		require(DIR_BASE_CORE . '/startup/timezone.php');
 		require(DIR_BASE_CORE . '/startup/file_access_check.php');
-		require(DIR_BASE_CORE . '/startup/localization.php');
+		require(DIR_BASE_CORE . '/startup/helpers.php');
 		require(DIR_BASE_CORE . '/config/theme_paths.php');
 		if (file_exists(DIR_CONFIG_SITE . '/site_assets.php')) {
 			require(DIR_CONFIG_SITE . '/site_assets.php');
@@ -49,6 +49,14 @@ class Concrete5_Library_Dispatcher {
 		}
 		require(DIR_BASE_CORE . '/startup/url_check.php');
 		require(DIR_BASE_CORE . '/startup/encoding_check.php');
+		if (defined('ENABLE_APPLICATION_EVENTS') && ENABLE_APPLICATION_EVENTS == true &&  file_exists(DIR_CONFIG_SITE . '/site_events.php')) {
+			@include(DIR_CONFIG_SITE . '/site_events.php');
+		}
+		require(DIR_BASE_CORE . '/config/file_types.php');
+		if (file_exists(DIR_CONFIG_SITE . '/site_file_types.php')) {
+			@include(DIR_CONFIG_SITE . '/site_file_types.php');
+		}
+
 	}
 
 	public function start(Request $request) {
@@ -59,37 +67,40 @@ class Concrete5_Library_Dispatcher {
 				Redirect::send('/install');
 			}
 		} else {
-			require($cdir . '/startup/permission_cache_check.php');
-			require($cdir . '/config/localization.php');
-			require($cdir . '/startup/security.php');
-			require($cdir . '/startup/packages.php');
-			require($cdir . '/config/file_types.php');
-			require($cdir . '/startup/debug_logging.php');
-			if (file_exists(DIR_CONFIG_SITE . '/site_post.php')) {
-				require(DIR_CONFIG_SITE . '/site_post.php');
-			}
+			$response = $this->getEarlyStartResponse();
+			if (!$response) {
+				require($cdir . '/startup/permission_cache_check.php');
+				require($cdir . '/config/localization.php');
+				require($cdir . '/startup/packages.php');
+				require($cdir . '/startup/debug_logging.php');
+				if (file_exists(DIR_CONFIG_SITE . '/site_post.php')) {
+					require(DIR_CONFIG_SITE . '/site_post.php');
+				}
 
-			## Site-level config POST user/app config - managed by c5, do NOT add your own stuff here ##
-			if (file_exists(DIR_CONFIG_SITE . '/site_post_restricted.php')) {
-				require(DIR_CONFIG_SITE . '/site_post_restricted.php');
-			}
+				## Site-level config POST user/app config - managed by c5, do NOT add your own stuff here ##
+				if (file_exists(DIR_CONFIG_SITE . '/site_post_restricted.php')) {
+					require(DIR_CONFIG_SITE . '/site_post_restricted.php');
+				}
 
-			## Specific site routes for various content items (if they exist) ##
-			if (file_exists(DIR_CONFIG_SITE . '/site_theme_paths.php')) {
-				@include(DIR_CONFIG_SITE . '/site_theme_paths.php');
+				## Specific site routes for various content items (if they exist) ##
+				if (file_exists(DIR_CONFIG_SITE . '/site_theme_paths.php')) {
+					@include(DIR_CONFIG_SITE . '/site_theme_paths.php');
+				}
+				PermissionKey::loadAll();
+				require($cdir . '/startup/optional_menu_buttons.php');
 			}
-			if (file_exists(DIR_CONFIG_SITE . '/site_file_types.php')) {
-				@include(DIR_CONFIG_SITE . '/site_file_types.php');
-			}
+		}
+	}
 
-			PermissionKey::loadAll();
-
-			require($cdir . '/startup/optional_menu_buttons.php');
-			if (defined('ENABLE_APPLICATION_EVENTS') && ENABLE_APPLICATION_EVENTS == true &&  file_exists(DIR_CONFIG_SITE . '/site_events.php')) {
-				@include(DIR_CONFIG_SITE . '/site_events.php');
-			}
-			require($cdir . '/startup/user.php');
-
+	protected function getEarlyStartResponse() {
+		// check to see if this is an upgrade
+		if ($this->request->getPath() == '/tools/required/upgrade') {
+			$cnt = Loader::controller('/upgrade');
+			$cnt->on_start();
+			$cnt->view();
+			$v = $cnt->getViewObject();
+			$r = new Response($v->render());
+			return $r;
 		}
 	}
 	
@@ -100,17 +111,47 @@ class Concrete5_Library_Dispatcher {
 		return self::$dispatcher;
 	}
 
+	protected function getEarlyDispatchResponse() {
+		if (!User::isLoggedIn()) {
+			User::verifyAuthTypeCookie();
+		}		
+		if (User::isLoggedIn()) {		
+			// check to see if this is a valid user account
+			$u = new User();
+			$valid = $u->checkLogin();
+			if (!$valid) {
+				$isActive = $u->isActive();
+				$u->logout();
+				if (!$isActive) {
+					return Redirect::go(URL::to('/login', 'account_deactivated'));
+				} else {
+					$v = new View('/user_error');
+					$v->setViewTheme('concrete');
+					$contents = $v->render();
+					return new Response($contents, 403);
+				}
+			}
+		}
+	}
+
 	public function dispatch() {
-		$collection = Router::getInstance()->getList();
-		$router = Router::getInstance();
-		$context = new RequestContext();
-		$context->fromRequest($this->request);
-		$matcher = new UrlMatcher($collection, $context);
-	    $this->request->attributes->add($matcher->match($this->request->getPathInfo()));
-		$matched = $matcher->match($this->request->getPathInfo());
-		$route = $collection->get($matched['_route']);
-		$router->setRequest($this->request);
-		$response = $router->execute($route, $matched);
+		$response = false;
+		if ($this->installed) { 
+			$response = $this->getEarlyDispatchResponse();
+		}
+		if (!$response) {
+			$collection = Router::getInstance()->getList();
+			$router = Router::getInstance();
+			$context = new RequestContext();
+			$context->fromRequest($this->request);
+			$matcher = new UrlMatcher($collection, $context);
+			$path = rtrim($this->request->getPathInfo(), '/') . '/';
+		    $this->request->attributes->add($matcher->match($path));
+			$matched = $matcher->match($path);
+			$route = $collection->get($matched['_route']);
+			$router->setRequest($this->request);
+			$response = $router->execute($route, $matched);
+		}
 		return $response;
 	}
 
