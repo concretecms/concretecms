@@ -13,6 +13,10 @@ class Concrete5_Controller_Panel_Dashboard extends FrontendEditPageController {
 		$c = Page::getByPath('/dashboard');
 		$children = $c->getCollectionChildrenArray(true);
 		$this->set('children', $children);
+
+		$u = new User();
+		$ui = UserInfo::getByID($u->getUserID());
+		$this->set('ui', $ui);
 	}
 
 }

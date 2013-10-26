@@ -278,7 +278,7 @@ var CCMPanel = function(options) {
 				$accordion.toggleClass('ccm-panel-header-accordion-dropdown-visible');
 			});
 			$(this).find('>nav ul a').on('click.accordion', function() {
-				var url = obj.options.url;
+				var url = obj.getURL();
 				var $content = $panel.find('.ccm-panel-content');
 				$accordion.removeClass('ccm-panel-header-accordion-dropdown-visible');
 				$title.html($(this).text());

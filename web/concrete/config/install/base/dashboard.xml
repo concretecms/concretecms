@@ -2,7 +2,7 @@
 <concrete5-cif version="1.0">
     <singlepages>
         <page name="Dashboard" path="/dashboard" filename="/dashboard/view.php" pagetype="" description="" package="" root="true" />
-        
+        <!--
 
         <page name="Compose Page" path="/dashboard/composer/write" filename="/dashboard/composer/write.php" pagetype="" description="" package="">
             <attributes>
@@ -25,7 +25,8 @@
                     </attributekey>
             </attributes>
         </page>
-
+		//-->
+		
         <page name="Sitemap" path="/dashboard/sitemap" filename="/dashboard/sitemap/view.php" pagetype="" description="Whole world at a glance." package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
