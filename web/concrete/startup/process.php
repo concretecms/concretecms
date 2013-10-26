@@ -525,6 +525,7 @@
 					}
 				}
 				break;
+				/*
 			case 'check-in':
 				if ($cp->canEditPageContents() || $cp->canEditPageProperties() || $cp->canApprovePageVersions()) {
 
@@ -553,6 +554,7 @@
 					exit;
 				}
 				break;
+				*/
 			case 'approve-recent':
 				if ($cp->canApprovePageVersions()) {
 					$u = new User();
@@ -838,6 +840,7 @@
 
 	if ($_POST['processCollection'] && $valt->validate()) { 
 
+		/*
 		if ($_POST['update_theme']) { 
 		
 			$pl = false;
@@ -878,27 +881,11 @@
 				$r = new PageEditResponse();
 				$r->setPage($c);
 				$r->setRedirectURL(BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $c->getCollectionID());
-				$r->outputJSON();
-				
-				/*if ($_POST['rel'] == 'SITEMAP' && ($cp->canApprovePageVersions())) {
-					$pkr = new ApprovePagePageWorkflowRequest();
-					$u = new User();
-					$pkr->setRequestedPage($c);
-					$v = CollectionVersion::get($c, "RECENT");
-					$pkr->setRequestedVersionID($v->getVersionID());
-					$pkr->setRequesterUserID($u->getUserID());
-					$u->unloadCollectionEdit($c);
-					$obj->name = $v->getVersionName();
-					$response = $pkr->trigger();
-					print Loader::helper('json')->encode($obj);
-					exit;
-				} else {
-					print Loader::helper('json')->encode($obj);
-					exit;
-				}
-				*/
+				$r->outputJSON();			
 			}		
-		} else if ($_POST['update_speed_settings']) {
+		} else 
+		*/
+		if ($_POST['update_speed_settings']) {
 			// updating a collection
 			if ($cp->canEditPageSpeedSettings()) {
 				

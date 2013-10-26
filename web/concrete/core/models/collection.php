@@ -795,7 +795,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				// First we delete all versions
 				$vl = new VersionList($this);
 				$vl->setItemsPerPage(-1);
-				$vlArray = $pvl->getPage();
+				$vlArray = $vl->getPage();
 		
 				foreach($vlArray as $v) {
 					$v->delete();

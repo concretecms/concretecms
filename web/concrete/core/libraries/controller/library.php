@@ -37,9 +37,19 @@ class Concrete5_Library_Controller extends AbstractController {
 	}
 
 	public function getViewObject() {
-		$this->view->setController($this);
-		$this->view->setViewTheme($this->getTheme());
-		return $this->view;
+		if ($this->view) {
+			$this->view->setController($this);
+			$this->view->setViewTheme($this->getTheme());
+			return $this->view;
+		}
 	}
+
+	public function action() {
+		$a = func_get_args();
+		array_unshift($a, $this->view->getViewPath());
+		$ret = call_user_func_array(array($this->view, 'url'), $a);
+		return $ret;
+	}
+
 
 }

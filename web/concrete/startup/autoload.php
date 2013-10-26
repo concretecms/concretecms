@@ -26,6 +26,7 @@ $classes = array(
 	'AbstractController' => array('library','controller/abstract'),
 	'Controller' => array('library','controller/library'),
 	'PageController' => array('library','controller/page'),
+	'VersionList' => array('model', 'version_list'),
 	'LoginPageController' => array('controller','/login'),
 	'PageTypeController' => array('library','controller/page_type'),
 	'DashboardController' => array('controller', '/dashboard'),
@@ -332,13 +333,11 @@ $classes = array(
 	'SystemContentEditorSnippet' => array('model','system/content_editor/snippet'),
 	'SecurimageSystemCaptchaTypeController' => array('model','system/captcha/types/securimage/controller'),
 	'Zend_Queue_Adapter_Concrete5' => array('library', 'Zend/Queue/Adapter/Concrete5'),
-
 	'GatheringPermissionKey' => array('model','permission/keys/gathering'),
 	'GatheringPermissionAssignment' => array('model','permission/assignments/gathering'),
 	'GatheringPermissionAccess' => array('model','permission/access/categories/gathering'),
 	'GatheringPermissionAccessListItem' => array('model','permission/access/list_items/gathering'),
 	'GatheringPermissionResponse' => array('model','permission/response/gathering'),
-
 	'PageType' => array('model', 'page_type/model'),
 	'PageTypePublishTargetType' => array('model','page_type/publish/target/type'),
 	'PageTypePublishTargetConfiguration' => array('model','page_type/publish/target/configuration'),
@@ -372,7 +371,19 @@ $classes = array(
 	'PageTypePermissionAssignment' => array('model','permission/assignments/page_type'),
 	'PageTypePermissionAccess' => array('model','permission/access/categories/page_type'),
 	'PageTypePermissionAccessListItem' => array('model','permission/access/list_items/page_type'),
-	'PageTypePermissionResponse' => array('model','permission/response/page_type')
+	'PageTypePermissionResponse' => array('model','permission/response/page_type'),
+
+	/* Editing Controllers */
+	'EditPageController' => array('controller', '/edit/page'),
+	'PageCheckInPanelController' => array('controller', '/panels/page/check_in'),
+	'PageDesignPanelController' => array('controller', '/panels/page/design'),
+	'PageVersionsPanelController' => array('controller', '/panels/page/versions'),
+	'PageAttributesPanelController' => array('controller', '/panels/page/attributes'),
+	'PageVersionsPanelDetailController' => array('controller', '/panels/details/page/versions'),
+	'PageSeoPanelDetailController' => array('controller', '/panels/details/page/seo'),
+	'PageLocationPanelDetailController' => array('controller', '/panels/details/page/location'),
+	'PageComposerPanelDetailController' => array('controller', '/panels/details/page/composer'),
+	'PageAttributesPanelDetailController' => array('controller', '/panels/details/page/attributes')
 );
 
 Loader::registerAutoload($classes);

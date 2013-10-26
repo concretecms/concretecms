@@ -12,17 +12,17 @@
 		<? 
 		$pagetype = PageType::getByID($c->getPageTypeID());
 		if (is_object($pagetype)) { ?>
-			<li><a href="#" data-launch-panel-detail="page-composer" data-panel-detail-url="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/panels/details/page/composer" data-panel-transition="swap"><?=t('Composer')?></a></li>
+			<li><a href="#" data-launch-panel-detail="page-composer" data-panel-detail-url="<?=URL::to('/system/panels/details/page/composer')?>" data-panel-transition="swap"><?=t('Composer')?></a></li>
 		<? } ?>
 		<? if ($cp->canEditPageTheme() || $cp->canEditPageTemplate()) { ?>
-			<li><a href="#" data-launch-sub-panel="page/design" data-launch-panel-detail="page-design" data-panel-detail-url="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/panels/details/page/preview" data-panel-transition="fade" ><?=t('Design')?></a></li>
+			<li><a href="#" data-launch-sub-panel-url="<?=URL::to('/system/panels/page/design')?>" data-launch-panel-detail="page-design" data-panel-detail-url="<?=URL::to('/system/panels/details/page/preview')?>" data-panel-transition="fade" ><?=t('Design')?></a></li>
 		<? }
 
 		if ($cp->canEditPageProperties() && is_object($seoSet)) { ?>
-			<li><a href="#" data-launch-panel-detail="page-seo" data-panel-detail-url="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/panels/details/page/seo" data-panel-transition="swap"><?=t('SEO')?></a></li>
+			<li><a href="#" data-launch-panel-detail="page-seo" data-panel-detail-url="<?=URL::to('/system/panels/details/page/seo')?>" data-panel-transition="swap"><?=t('SEO')?></a></li>
 		<? }
 		if (!$c->isPageDraft() && is_object($asl) && ($asl->allowEditPaths())) { ?>
-			<li><a href="#" data-launch-panel-detail="page-location" data-panel-detail-url="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/panels/details/page/location" data-panel-transition="swap"><?=t('Location')?></a></li>
+			<li><a href="#" data-launch-panel-detail="page-location" data-panel-detail-url="<?=URL::to('/system/panels/details/page/location')?>" data-panel-transition="swap"><?=t('Location')?></a></li>
 		<? } ?>
 	</menu>
 	<menu>
@@ -32,7 +32,7 @@
 				$allowedAKIDs = $asl->getAttributesAllowedArray();
 			}
 			if (is_array($allowedAKIDs) && count($allowedAKIDs) > 0) { ?>
-				<li><a href=""><?=t('Attributes')?></a></li>
+				<li><a href="#" data-launch-sub-panel-url="<?=URL::to('/system/panels/page/attributes')?>" data-launch-panel-detail="page-attributes" data-panel-detail-url="<?=URL::to('/system/panels/details/page/attributes')?>" data-panel-transition="fade"><?=t('Attributes')?></a></li>
 			<? } ?>
 		<? } ?>
 		<? if ($cp->canEditPageSpeedSettings()) { ?>
@@ -42,7 +42,7 @@
 			<li><a href=""><?=t('Permissions')?></a></li>
 		<? } ?>
 		<? if ($cp->canViewPageVersions()) { ?>
-			<li><a href="#" data-launch-sub-panel="page/versions"><?=t('Versions')?></a></li>
+			<li><a href="#" data-launch-sub-panel-url="<?=URL::to('/system/panels/page/versions')?>"><?=t('Versions')?></a></li>
 		<? } ?>
 		<? if ($cp->canPreviewPageAsUser() && PERMISSIONS_MODEL == 'advanced') { ?>
 			<li><a href="#"><?=t('View as User')?></a></li>

@@ -81,8 +81,8 @@ var CCMPanel = function(options) {
 	this.setupSubPanels = function() {
 		var $panel = $('#' + this.getDOMID());
 		var obj = this;
-		$panel.find('[data-launch-sub-panel]').unbind('.sub').on('click.sub', function() {
-			var url = CCM_TOOLS_PATH + '/panels/' + $(this).attr('data-launch-sub-panel');
+		$panel.find('[data-launch-sub-panel-url]').unbind('.sub').on('click.sub', function() {
+			var url = $(this).attr('data-launch-sub-panel-url');
 			$('<div />', {'class': 'ccm-panel-content ccm-panel-content-appearing'}).appendTo($panel.find('.ccm-panel-content-wrapper')).load(url + '?cID=' + CCM_CID, function(r) {
 				$panel.find('.ccm-panel-content-visible').removeClass('ccm-panel-content-visible').addClass('ccm-panel-slide-left');
 				$(this).removeClass('ccm-panel-content-appearing').addClass('ccm-panel-content-visible');
@@ -174,9 +174,6 @@ var CCMPanel = function(options) {
 			url: false,
 			data: ''
 		}, options);
-		if (!options.url) {
-			options.url = CCM_TOOLS_PATH + '/panels/details/' + options.identifier;
-		}
 		var identifier = options.identifier;
 		if (obj.detail) {
 			//options.transition = 'none';
@@ -243,7 +240,6 @@ var CCMPanel = function(options) {
 				$('[data-panel-detail-form]').ajaxSubmit({
 					type: 'post',
 					dataType: 'json',
-					data: {'submitPanelDetailForm': 1, 'cID': CCM_CID},
 					beforeSubmit: function() {
 						jQuery.fn.dialog.showLoader();
 					},

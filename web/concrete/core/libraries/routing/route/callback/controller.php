@@ -10,7 +10,12 @@ class Concrete5_Library_ControllerRouteCallback extends RouteCallback {
 	    $controller = $callback[0];
 	    $method = $callback[1];
 		$controller->on_start();
-		$controller->runAction($method, $arguments);
+		$response = $controller->runAction($method, $arguments);
+		if ($response instanceof Response || $response instanceof RedirectResponse) {
+			// note, our RedirectResponse doesn't extend Response, it extends symfony2 response
+			return $response;
+		}
+
 	    $view = $controller->getViewObject();
 	    if (is_object($view)) {
 		    $view->setController($controller);

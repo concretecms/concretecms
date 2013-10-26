@@ -6,19 +6,24 @@ $c = Page::getByID($_REQUEST['cID'], 'RECENT'); //,"ACTIVE"
 $cp = new Permissions($c);
 if ($cp->canViewPageVersions()) {
 	$req = Request::getInstance();
-	$v = new PageView($c);
+	$req->setCurrentPage($c);
+	$controller = Loader::controller($c);
+	$view = $controller->getViewObject();
 	if ($_REQUEST['pTemplateID']) {
 		$pt = PageTemplate::getByID(Loader::helper('security')->sanitizeInt($_REQUEST['pTemplateID']));
 		if (is_object($pt)) {
-			$v->setCustomPageTemplate($pt);
+			$view->setCustomPageTemplate($pt);
 		}
 	}
 	if ($_REQUEST['pThemeID']) {
 		$pt = PageTheme::getByID(Loader::helper('security')->sanitizeInt($_REQUEST['pThemeID']));
 		if (is_object($pt)) {
-			$v->setCustomPageTheme($pt);
+			$view->setCustomPageTheme($pt);
 		}
 	}
 	$req->setCustomRequestUser(-1);
-	$v->render(); 
+	$response = new Response();
+	$content = $view->render();
+	$response->setContent($content);
+	$response->send();
 }
