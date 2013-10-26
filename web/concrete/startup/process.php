@@ -901,8 +901,10 @@
 				$obj->cID = $c->getCollectionID();
 				print Loader::helper('json')->encode($obj);
 				exit;
-			}	
-		} else if ($_POST['update_metadata']) { 
+			}
+
+		} 
+		/*else if ($_POST['update_metadata']) { 
 			// updating a collection
 			if ($cp->canEditPageProperties()) {
 				$nvc = $c->getVersionToModify();
@@ -985,7 +987,9 @@
 				print Loader::helper('json')->encode($obj);
 				exit;
 			}	
-		} else if ($_POST['update_external']) {
+		*/	
+
+		else if ($_POST['update_external']) {
 			$parent = Page::getByID($c->getCollectionParentID());
 			$parentP = new Permissions($parent);
 			if ($parentP->canAddExternalLink()) {

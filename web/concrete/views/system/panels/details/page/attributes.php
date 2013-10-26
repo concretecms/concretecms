@@ -3,18 +3,17 @@ defined('C5_EXECUTE') or die("Access Denied.");
 ?>
 
 <script type="text/template" class="attribute">
-	<div class="form-group <% if (pending) { %>form-group-pending<% } %>" data-attribute-key-id="<%=akID%>">
-		<a href="#"><i class="glyphicon glyphicon-minus-sign"></i></a>
+	<div class="form-group <% if (pending) { %>ccm-panel-page-attribute-adding<% } %>" data-attribute-key-id="<%=akID%>">
+		<a href="#" data-remove-attribute-key="<%=akID%>"><i class="glyphicon glyphicon-minus-sign"></i></a>
 		<label class="control-label"><%=label%></label>
 		<div>
 			<%=content%>
 		</div>
+		<input type="hidden" name="selectedAKIDs[]" value="<%=akID%>" />
 	</div>
 </script>
 
-
 <section class="ccm-ui">
-	<header><?=t('Attributes')?></header>
 	<form method="post" action="<?=$controller->action('submit')?>" data-panel-detail-form="attributes">
 
 		<?=Loader::helper('concrete/interface/help')->notify('panel', '/page/attributes')?>
@@ -59,7 +58,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 	</form>
 	<div class="ccm-panel-detail-form-actions">
-		<button class="pull-left btn btn-default" type="button" data-panel-detail-action="cancel"><?=t('Cancel')?></button>
 		<button class="pull-right btn btn-success" type="button" data-panel-detail-action="submit"><?=t('Save Changes')?></button>
 	</div>
 
@@ -71,9 +69,20 @@ var renderAttribute = _.template(
     $('script.attribute').html()
 );
 
-var $form = $('form[data-panel-detail-form=attributes]');
 
-CCMPageAttributeDetail = {
+CCMPanelPageAttributesDetail = {
+
+	removeAttributeKey: function(akID) {
+		var $attribute = $('div[data-attribute-key-id=' + akID + ']');
+		$attribute.queue(function() {
+			$(this).addClass('ccm-panel-page-attribute-removing');
+			CCMPanelPageAttributes.deselectAttributeKey(akID);
+			$(this).dequeue();
+		}).delay(400).queue(function() {
+			$(this).remove();
+			$(this).dequeue();
+		});
+	},
 
 	addAttributeKey: function(akID) {
 		jQuery.fn.dialog.showLoader();
@@ -85,11 +94,12 @@ CCMPageAttributeDetail = {
 			},
 			type: 'post',
 			success: function(r) {
+				var $form = $('form[data-panel-detail-form=attributes]');
 				$form.append(
 					renderAttribute(r)
 				);
 				$form.delay(1).queue(function() {
-					$('[data-attribute-key-id=' + r.akID + ']').removeClass('form-group-pending');
+					$('[data-attribute-key-id=' + r.akID + ']').removeClass('ccm-panel-page-attribute-adding');
 					$(this).dequeue();
 				});
 			},
@@ -98,5 +108,20 @@ CCMPageAttributeDetail = {
 			}
 		});
 	}
-
 }
+
+$(function() {
+
+	var $form = $('form[data-panel-detail-form=attributes]');
+	var selectedAttributes = <?=$selectedAttributes?>;
+	_.each(selectedAttributes, function(attribute) {
+		$form.append(renderAttribute(attribute));
+	});
+	$form.on('click', 'a[data-remove-attribute-key]', function() {
+		var akID = $(this).attr('data-remove-attribute-key');
+		CCMPanelPageAttributesDetail.removeAttributeKey(akID);
+	});
+
+});
+
+</script>

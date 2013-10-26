@@ -1,11 +1,11 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Controller_Panel_Add extends PanelController {
+class Concrete5_Controller_Panel_Add extends FrontendEditPageController {
 
 	protected $viewPath = '/system/panels/add';
 	protected $pagetypes = array();
 
-	protected function canViewPanel() {
+	protected function canAccess() {
 		return $this->permissions->canAddBlocks(); //canEditPageContents
 	}
 

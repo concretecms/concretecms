@@ -88,6 +88,7 @@ var CCMPanel = function(options) {
 				$(this).removeClass('ccm-panel-content-appearing').addClass('ccm-panel-content-visible');
 				obj.onPanelLoad();
 			});
+			$(this).removeClass('ccm-panel-menu-item-active');
 			return false;
 		});
 		$panel.find('[data-panel-navigation=back]').on('click.navigate', function() {

@@ -1,10 +1,10 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Controller_Panel_Details_Page_Composer extends PanelController {
+class Concrete5_Controller_Panel_Details_Page_Composer extends FrontendEditPageController {
 
 	protected $viewPath = '/system/panels/details/page/composer';
 
-	protected function canViewPanel() {
+	protected function canAccess() {
 		return $this->permissions->canEditPageContents();
 	}
 

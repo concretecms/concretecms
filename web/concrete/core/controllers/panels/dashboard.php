@@ -1,10 +1,10 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Controller_Panel_Dashboard extends PanelController {
+class Concrete5_Controller_Panel_Dashboard extends FrontendEditPageController {
 
 	protected $viewPath = '/system/panels/dashboard';
 
-	protected function canViewPanel() {
+	protected function canAccess() {
 		$dh = Loader::helper('concrete/dashboard');
 		return $dh->canRead();
 	}

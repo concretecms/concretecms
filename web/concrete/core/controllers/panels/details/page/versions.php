@@ -1,10 +1,10 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Controller_Panel_Details_Page_Versions extends PanelController {
+class Concrete5_Controller_Panel_Details_Page_Versions extends FrontendEditPageController {
 
 	protected $viewPath = '/system/panels/details/page/versions';
 
-	public function canViewPanel() {
+	public function canAccess() {
 		return $this->permissions->canViewPageVersions();
 	}
 

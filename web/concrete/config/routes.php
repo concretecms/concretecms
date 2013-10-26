@@ -51,7 +51,7 @@ $rl->register('/system/panels/details/page/attributes/add_attribute', 'PageAttri
 /**
  * Editing Actions
  */
-$rl->register('/system/page/check_in/{cID}/{token}', 'EditPageController::check_in');
+$rl->register('/system/page/check_in/{cID}/{token}', 'PageCheckInPanelController::exitEditMode');
 
 /** 
  * Page Routes - these must come at the end.

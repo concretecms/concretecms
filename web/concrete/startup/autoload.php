@@ -374,7 +374,6 @@ $classes = array(
 	'PageTypePermissionResponse' => array('model','permission/response/page_type'),
 
 	/* Editing Controllers */
-	'EditPageController' => array('controller', '/edit/page'),
 	'PageCheckInPanelController' => array('controller', '/panels/page/check_in'),
 	'PageDesignPanelController' => array('controller', '/panels/page/design'),
 	'PageVersionsPanelController' => array('controller', '/panels/page/versions'),

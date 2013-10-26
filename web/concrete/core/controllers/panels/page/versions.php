@@ -1,9 +1,9 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Controller_Panel_Page_Versions extends PanelController {
+class Concrete5_Controller_Panel_Page_Versions extends FrontendEditPageController {
 
 	protected $viewPath = '/system/panels/page/versions';
-	public function canViewPanel() {
+	public function canAccess() {
 		return $this->permissions->canViewPageVersions() || $this->permissions->canEditPageVersions();
 	}
 
@@ -38,7 +38,7 @@ class Concrete5_Controller_Panel_Page_Versions extends PanelController {
 	}
 
 	public function duplicate() {
-		if ($this->validateSubmitPanel()) {
+		if ($this->validateAction()) {
 			$this->page->loadVersionObject($this->request->request->get('cvID'));
 			$nc = $this->page->cloneVersion(t('Copy of Version: %s', $this->page->getVersionID()));
 			$v = $nc->getVersionObject();
@@ -50,7 +50,7 @@ class Concrete5_Controller_Panel_Page_Versions extends PanelController {
 	}
 
 	public function new_page() {
-		if ($this->validateSubmitPanel()) {
+		if ($this->validateAction()) {
 			$c = $this->page;
 			$r = new PageEditVersionResponse();
 			$c->loadVersionObject($_REQUEST['cvID']);
@@ -79,7 +79,7 @@ class Concrete5_Controller_Panel_Page_Versions extends PanelController {
 	}
 
 	public function delete() {
-		if ($this->validateSubmitPanel()) {
+		if ($this->validateAction()) {
 			$r = new PageEditVersionResponse();
 			$c = $this->page;
 			$cp = new Permissions($this->page);
@@ -111,7 +111,7 @@ class Concrete5_Controller_Panel_Page_Versions extends PanelController {
 	public function approve() {
 		$c = $this->page;
 		$cp = $this->permissions;
-		if ($this->validateSubmitPanel()) {
+		if ($this->validateAction()) {
 			$r = new PageEditVersionResponse();
 			if ($cp->canApprovePageVersions()) {
 				$ov = CollectionVersion::get($c, 'ACTIVE');

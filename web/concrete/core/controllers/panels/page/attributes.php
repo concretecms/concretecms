@@ -1,10 +1,10 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Controller_Panel_Page_Attributes extends PanelController {
+class Concrete5_Controller_Panel_Page_Attributes extends FrontendEditPageController {
 
 	protected $viewPath = '/system/panels/page/attributes';
 
-	public function canViewPanel() {
+	public function canAccess() {
 		return $this->permissions->canEditPageProperties();
 	}
 
@@ -17,6 +17,12 @@ class Concrete5_Controller_Panel_Page_Attributes extends PanelController {
 		$category = AttributeKeyCategory::getByHandle('collection');
 		$sets = $category->getAttributeSets();
 		$leftovers = $category->getUnassignedAttributeKeys();
+
+		$selectedAttributes = $this->page->getSetCollectionAttributes();
+		$selectedAttributeIDs = array();
+		foreach($selectedAttributes as $ak) {
+			$selectedAttributeIDs[] = $ak->getAttributeKeyID();
+		}
 
 		$data = array();
 		foreach($sets as $set) {
@@ -46,6 +52,7 @@ class Concrete5_Controller_Panel_Page_Attributes extends PanelController {
 			}
 		}
 
+		$this->set('selectedAttributeIDs', $selectedAttributeIDs);
 		$this->set('assignment', $asl);
 		$this->set('attributes', $data);
 	}

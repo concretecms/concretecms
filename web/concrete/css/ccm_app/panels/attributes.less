@@ -97,11 +97,31 @@ div#ccm-panel-page {
 }
 
 div#ccm-panel-detail-page-attributes {
+	div.ccm-panel-detail-content {
+		padding: 0px 0px 100px 0px;
+	}
 	div.form-group {
 		.transition(opacity 0.3s cubic-bezier(0.190, 1.000, 0.220, 1.000));	
 		.opacity(1);
+		position: relative;
+		&:nth-child(odd) {
+			background-color: #e1f4ff;
+		}
+		padding: 25px 50px 25px 50px;
+
+		a[data-remove-attribute-key] {
+			position: absolute;
+			left: 20px;
+			top: 27px;
+
+			&:hover {
+				color: #f00;
+				text-decoration: none;
+			}
+		}
 	}
-	div.form-group-pending {
+	div.ccm-panel-page-attribute-adding,
+	div.ccm-panel-page-attribute-removing {
 		.opacity(0);
 	}
 }
