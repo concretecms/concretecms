@@ -95,7 +95,8 @@ class ConcreteInterfaceHelpHelper {
 	public function getPanels() {
 		$panels = array(
 			'/page/location' => t('Define where this page lives on your website. View and delegate what other pages are redirecting to this page.'),
-			'/page/composer' => t('Use the form below to create your page. You can also preview your page in edit mode at any time.')
+			'/page/composer' => t('Use the form below to create your page. You can also preview your page in edit mode at any time.'),
+			'/page/attributes' => t('This is the help text for attributes. This should probably be changed.')
 		);
 		return $panels;
 	}

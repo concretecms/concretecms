@@ -1,15 +1,10 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-$c = Page::getByID(Loader::helper('security')->sanitizeInt($_REQUEST['cID']));
-if (is_object($c) && !$c->isError()) {
-	$valt = Loader::helper('validation/token');
-	$cp = new Permissions($c);
-	if ($cp->canApprovePageVersions() || $cp->canViewPageVersions()) { ?>
+?>
 
 <div class="ccm-panel-content-inner">
 
-<form method="post" id="ccm-check-in" action="<?=DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=<?=$c->getCollectionID()?>&ctask=check-in">
-<?=$valt->output('', true)?>
+<form method="post" id="ccm-check-in" action="<?=$controller->action('submit')?>">
 
 <h5><?=t('Version Comments')?></h5>
 
@@ -64,7 +59,3 @@ $(function() {
 </script>
 
 </div>
-<? }
-
-}
-?>

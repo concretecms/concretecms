@@ -266,6 +266,7 @@ var CCMToolbar = function() {
 				$link.attr('data-launch-panel', 'check-in').on('click', function() {
 					$(this).toggleClass('ccm-launch-panel-active');
 					var panel = CCMPanelManager.getByIdentifier('check-in');
+					panel.setURL($(this).attr('data-panel-url'));
 					panel.toggle();
 					return false;
 				});

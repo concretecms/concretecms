@@ -1,8 +1,8 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Controller_Panel_AddBlock extends PanelController {
+class Concrete5_Controller_Panel_Add extends PanelController {
 
-	protected $viewPath = '/system/panels/add_block';
+	protected $viewPath = '/system/panels/add';
 	protected $pagetypes = array();
 
 	protected function canViewPanel() {
@@ -31,7 +31,6 @@ class Concrete5_Controller_Panel_AddBlock extends PanelController {
 
 		$this->set('tab', $tab);
 		$this->set('blockTypes', $blockTypes);
-		$this->set('cp', $this->permissions);
 		$this->set('ih', Loader::helper('concrete/interface'));
 		$this->set('ci', Loader::helper('concrete/urls'));
 	}
