@@ -1,11 +1,11 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Controller_Panel_Sitemap extends PanelController {
+class Concrete5_Controller_Panel_Sitemap extends FrontendEditPageController {
 
 	protected $viewPath = '/system/panels/sitemap';
 	protected $pagetypes = array();
 
-	protected function canViewPanel() {
+	protected function canAccess() {
 		return $this->canViewSitemap || count($this->pagetypes) > 0;
 	}
 

@@ -1,10 +1,10 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Controller_Panel_Details_Page_Seo extends PanelController {
+class Concrete5_Controller_Panel_Details_Page_Seo extends FrontendEditPageController {
 
 	protected $viewPath = '/system/panels/details/page/seo';
 
-	protected function canViewPanel() {
+	protected function canAccess() {
 		return $this->permissions->canEditPageContents();
 	}
 
@@ -15,7 +15,7 @@ class Concrete5_Controller_Panel_Details_Page_Seo extends PanelController {
 	}
 
 	public function submit() {
-		if ($this->validateSubmitPanel()) {
+		if ($this->validateAction()) {
 			$nvc = $this->page->getVersionToModify();
 			$as = AttributeSet::getByHandle('seo');
 			$attributes = $as->getAttributeKeys();

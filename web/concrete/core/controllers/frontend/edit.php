@@ -1,9 +1,8 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-abstract class Concrete5_Controller_Panel extends Controller {
+abstract class Concrete5_Controller_Frontend_Edit extends Controller {
 
-	abstract protected function canViewPanel();
-	protected $page;
+	abstract protected function canAccess();
 	protected $error;
 
 	public function __construct() {
@@ -11,23 +10,17 @@ abstract class Concrete5_Controller_Panel extends Controller {
 		$this->view = new DialogView($this->viewPath);
 		$this->view->setController($this);
 		$request = Request::getInstance();
-		$this->page = Page::getByID($request->query->get('cID'));
 		$this->request = $request;
-		$this->permissions = new Permissions($this->page);		
-		$this->set('c', $this->page);
-		$this->set('cp', $this->permissions);
 	}
 
 	public function getViewObject() {
-		if ($this->permissions->canViewPage()) {
-			if ($this->canViewPanel()) {
-				return parent::getViewObject();
-			}
+		if ($this->canAccess()) {
+			return parent::getViewObject();
 		}
 		throw new Exception(t('Access Denied'));
 	}
 
-	protected function validateSubmitPanel() {
+	protected function validateAction() {
 		if (!Loader::helper('validation/token')->validate($this->viewPath)) {
 			$this->error->add(Loader::helper('validation/token')->getErrorMessage());
 			return false;
@@ -38,7 +31,6 @@ abstract class Concrete5_Controller_Panel extends Controller {
 	public function action() {
 		$url = call_user_func_array('parent::action', func_get_args());
 		$url .= '?ccm_token=' . Loader::helper('validation/token')->generate($this->viewPath);
-		$url .= '&cID=' . $this->page->getCollectionID();
 		return $url;
 	}
 

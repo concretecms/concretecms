@@ -1,9 +1,9 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Controller_Panel_Page_Design extends PanelController {
+class Concrete5_Controller_Panel_Page_Design extends FrontendEditPageController {
 
 	protected $viewPath = '/system/panels/page/design';
-	public function canViewPanel() {
+	public function canAccess() {
 		return $this->permissions->canEditPageTemplate() || $this->permissions->canEditPageTheme();
 	}
 
@@ -64,7 +64,7 @@ class Concrete5_Controller_Panel_Page_Design extends PanelController {
 	}
 
 	public function submit() {
-		if ($this->validateSubmitPanel()) {
+		if ($this->validateAction()) {
 			$cp = $this->permissions;
 			$c = $this->page;
 

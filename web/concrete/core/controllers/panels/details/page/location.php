@@ -1,10 +1,10 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Controller_Panel_Details_Page_Location extends PanelController {
+class Concrete5_Controller_Panel_Details_Page_Location extends FrontendEditPageController {
 
 	protected $viewPath = '/system/panels/details/page/location';
 
-	protected function canViewPanel() {
+	protected function canAccess() {
 		return (!$this->page->isPageDraft() && is_object($this->asl) && $this->asl->allowEditPaths());
 	}
 
@@ -16,7 +16,7 @@ class Concrete5_Controller_Panel_Details_Page_Location extends PanelController {
 	}
 
 	public function submit() {
-		if ($this->validateSubmitPanel()) {
+		if ($this->validateAction()) {
 
 		}
 	}
