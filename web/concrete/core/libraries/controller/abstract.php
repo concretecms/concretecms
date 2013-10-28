@@ -92,8 +92,8 @@ abstract class Concrete5_Library_Controller_Abstract {
 	}
 	public function redirect() {
 		$args = func_get_args();
-		$url = call_user_func_array(array('URL', 'to'), $args);
-		Redirect::send(BASE_URL . $url);
+		$r = call_user_func_array(array('Redirect', 'to'), $args);
+		$r->send();
 	}
 	public function runTask($action, $parameters) {
 		$this->runAction($action, $parameters);

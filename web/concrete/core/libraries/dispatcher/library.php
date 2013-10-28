@@ -64,7 +64,7 @@ class Concrete5_Library_Dispatcher {
 		$this->setRequest($request);
 		if (!$this->installed) {
 			if (!$this->request->matches('/install/*') && $this->request->getPath() != '/install') {
-				Redirect::send('/install');
+				Redirect::to('/install')->send();
 			}
 		} else {
 			$response = $this->getEarlyStartResponse();
@@ -123,7 +123,7 @@ class Concrete5_Library_Dispatcher {
 				$isActive = $u->isActive();
 				$u->logout();
 				if (!$isActive) {
-					return Redirect::go(URL::to('/login', 'account_deactivated'));
+					return Redirect::to('/login', 'account_deactivated')->send();
 				} else {
 					$v = new View('/user_error');
 					$v->setViewTheme('concrete');

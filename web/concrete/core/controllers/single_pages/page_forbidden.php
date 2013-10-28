@@ -9,7 +9,7 @@ class Concrete5_Controller_Page_PageForbidden extends Controller {
 	public function view() {
 		$u = new User();
 		if (!$u->isRegistered() && FORBIDDEN_SHOW_LOGIN) { //if they are not logged in, and we show guests the login...
-			Redirect::send('/login');
+			$this->redirect('/login');
 		}
 	}
 
