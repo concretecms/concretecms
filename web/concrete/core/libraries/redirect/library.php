@@ -12,13 +12,11 @@ class Concrete5_Library_Redirect {
 	}
 
 	/** 
-	 * Send a basic redirect
+	* Redirects to a concrete5 resource.	
 	 */
-	public static function go($url, $code = 302, $headers = array()) {
-		if (!URL::isValidURL($url)) {
-			$url = URL::to($url);
-		}
-		$r = static::createRedirectResponse($url, $code, $headers);
+	public static function to() {
+		$url = BASE_URL . call_user_func_array(array('URL', 'to'), func_get_args());
+		$r = static::createRedirectResponse($url, 302, array());
 		return $r;
 	}
 
@@ -33,11 +31,12 @@ class Concrete5_Library_Redirect {
 
 
 	/** 
-	 * Creates a basic redirect and executes it immediately.
+	* Redirects to a URL.	
 	 */
-	public static function send($path, $code = 302, $headers = array()) {
-		$r = Redirect::go($path, $code, $headers);
-		$r->send();
-	}
+	public static function url($url, $code = 302, $headers = array()) {
+		$r = static::createRedirectResponse($url, $code, $headers);
+		return $r;
+	}	
+
 
 }

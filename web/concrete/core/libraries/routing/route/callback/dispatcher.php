@@ -64,7 +64,7 @@ class Concrete5_Library_DispatcherRouteCallback extends RouteCallback {
 		*/
 
 		if ($c->getCollectionPointerExternalLink() != '') {
-			return Redirect::go($c->getCollectionPointerExternalLink());
+			return Redirect::url($c->getCollectionPointerExternalLink(), 301)->send();
 		}
 
 		$cp = new Permissions($c);

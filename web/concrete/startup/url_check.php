@@ -41,6 +41,6 @@ if (strlen($pathInfo) > 1) {
 		$redirect .= '/';
 	}
 	if ($pathInfo != $redirect) {
-		Redirect::send(URL::to($redirect) . ($r->getQueryString() ? '?' . $r->getQueryString() : ''));
+		Redirect::url(BASE_URL . '/' . DISPATCHER_FILENAME . '/' . $path . ($r->getQueryString() ? '?' . $r->getQueryString() : ''))->send();
 	}
 }
