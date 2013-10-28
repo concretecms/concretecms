@@ -1,0 +1,104 @@
+body {
+	background-color: #fff;
+	margin: 0px;
+}
+
+div#ccm-dashboard-content {
+	
+	position: relative;
+
+	header {
+		font-size: 22px;
+		padding: 34px 80px 34px 95px;
+		font-weight: 600;
+		background-color: #f3f3f3;
+		color: #105192;
+		margin-bottom: 30px;
+	}
+
+	margin-right: 320px;
+
+	fieldset {
+		margin-right: 20px;
+		margin-left: 95px;
+	}
+
+	form.ccm-dashboard-content-form {
+		margin-bottom: 120px;
+	}
+
+	label {
+		font-size: 1.1em;
+		margin-bottom: 16px;
+
+		&.launch-tooltip {
+			border-bottom: 1px dotted #50e568;
+		}
+	}
+	div.ccm-dashboard-form-actions-wrapper {
+		position: fixed;
+		bottom: 0px;
+		left: 0px;
+		z-index: 1006;
+		width: 100%;
+		padding: 0px 335px 15px 15px;
+
+		div.ccm-dashboard-form-actions {
+			.clearfix;
+			background-color: #242729;
+			padding: 20px;
+			.border-radius(4px);
+		}
+	}
+}
+
+
+/** 
+ * Result Messages
+ */
+div#ccm-dashboard-content {
+	div#ccm-dashboard-result-message {
+		margin-right: 20px;
+		margin-left: 95px;
+	}
+}
+
+
+/** 
+ * Help and notifications
+ */
+div#ccm-dashboard-content {
+	div.ccm-notification-help {
+		position: absolute;
+		right: 0px;
+		top: 50px;
+	}
+}
+
+/** 
+ * Tooltips
+ */
+
+.ccm-ui {
+	div#ccm-dashboard-content {
+		div.tooltip-inner {
+			font-size: 14px;
+			line-height: 20px;
+			font-weight: 300;
+			padding: 20px 10px;
+			max-width: 250px;
+		}
+	}
+}
+
+/** 
+ * Responsive utilities
+ */
+@media (min-width: @screen-medium) {
+	div#ccm-dashboard-content {
+		form.ccm-dashboard-content-form {
+			width: 650px;
+		}
+	}
+}
+

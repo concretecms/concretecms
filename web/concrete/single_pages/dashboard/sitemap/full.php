@@ -9,6 +9,10 @@ $sh = Loader::helper('concrete/dashboard/sitemap');
 		});
 	});
 </script>
+
+<header><?=t('Sitemap')?></header>
+
+<? /*
 <?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Sitemap'), t('The sitemap allows you to view your site as a tree and easily organize its hierarchy.'), 'span10 offset1', false);?>
 <div class="ccm-pane-options">
 	<a href="javascript:void(0)" onclick="ccm_paneToggleOptions(this)" class="ccm-icon-option-<? if ($_SESSION['dsbSitemapShowSystem'] == 1) { ?>open<? } else { ?>closed<? } ?>"><?=t('Options')?></a>
@@ -48,3 +52,6 @@ $sh = Loader::helper('concrete/dashboard/sitemap');
 	<? } ?>
 </div>
 <?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper()?>
+*/
+?>
+

@@ -403,11 +403,6 @@
     	
         <page name="Extend concrete5" path="/dashboard/extend" filename="/dashboard/extend/view.php" pagetype="" description="Connect to the concrete5 marketplace, install custom add-ons, and download updates for marketplace add-ons and themes." package="">
 			<attributes>
-				<attributekey handle="exclude_nav">
-					<value><![CDATA[1]]></value>
-				</attributekey>
-			</attributes>
-			<attributes>
 				<attributekey handle="meta_keywords">
 					<value>add-on, addon, add on, package,applications, ecommerce, discussions, forums, themes, templates, blocks</value>
 				</attributekey>
@@ -461,11 +456,6 @@
 			</attributes>
         </page>
         <page name="System &amp; Settings" path="/dashboard/system" filename="/dashboard/system/view.php" pagetype="" description="Secure and setup your site." package="">
-			<attributes>
-				<attributekey handle="exclude_nav">
-					<value><![CDATA[1]]></value>
-				</attributekey>
-			</attributes>
 			<attributes>
 				<attributekey handle="meta_keywords">
 					<value>dashboard, configuration</value>

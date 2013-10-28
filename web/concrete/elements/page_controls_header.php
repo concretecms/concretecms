@@ -35,7 +35,9 @@ if (!$dh->inDashboard()) {
 		$this->addFooterItem($html->javascript('jquery.ui.touch-punch.js'));
 	}
 	*/
+
 	$this->addFooterItem('<script type="text/javascript">$(function() { CCMToolbar.start(); });</script>');
+
 	if ($c->isEditMode()) {
 		$this->addFooterItem('<script type="text/javascript">$(function() { CCMEditMode.start(); });</script>');
 	}
@@ -44,6 +46,14 @@ if (!$dh->inDashboard()) {
 	if ($cp->canEditPage() && $_REQUEST['ctask'] == 'check-out-first') {
 		$this->addFooterItem("<script type=\"text/javascript\">$(function() { CCMEditMode.launchPageComposer();});</script>");
 	} 
+
+	$this->addFooterItem("<script type=\"text/javascript\">
+		CCMPanelManager.register({'identifier': 'dashboard', 'position': 'right', url: '" . URL::to('/system/panels/dashboard') . "'});
+		CCMPanelManager.register({'identifier': 'page', url: '" . URL::to('/system/panels/page') . "'});
+		CCMPanelManager.register({'identifier': 'sitemap', 'position': 'right', url: '" . URL::to('/system/panels/sitemap') . "'});
+		CCMPanelManager.register({'identifier': 'add-block', 'translucent': false, 'position': 'left', url: '" . URL::to('/system/panels/add') . "'});
+		CCMPanelManager.register({'identifier': 'check-in', 'position': 'left', url: '" . URL::to('/system/panels/page/check_in') . "'});
+	</script>");
 
 	if (ENABLE_PROGRESSIVE_PAGE_REINDEX && Config::get('DO_PAGE_REINDEX_CHECK')) {
 		$this->addHeaderItem('<script type="text/javascript">$(function() { ccm_doPageReindexing(); });</script>');

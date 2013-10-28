@@ -84,7 +84,7 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
 					<li class="pull-left" id="ccm-white-label-message"><?=t('Powered by <a href="%s">concrete5</a>.', CONCRETE5_ORG_URL)?></li>
 				<? }?>
 
-				<li class="pull-right"><a href="<?=URL::to('/dashboard')?>" data-launch-panel="dashboard" data-panel-url="<?=URL::to('/system/panels/dashboard')?>"><i class="glyphicon glyphicon-th-large"></i></a>
+				<li class="pull-right"><a href="<?=URL::to('/dashboard')?>" data-launch-panel="dashboard"><i class="glyphicon glyphicon-th-large"></i></a>
 
 				<li class="pull-right"><a href="#" data-panel-url="<?=URL::to('/system/panels/sitemap')?>" data-launch-panel="sitemap"><i class="glyphicon glyphicon-list-alt"></i></a>
 

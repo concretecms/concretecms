@@ -37,6 +37,7 @@ class Concrete5_Controller_Panel_Dashboard extends FrontendEditPageController {
 				}
 			}
 		}
+
 		$this->set('nav', $nav);
 		$u = new User();
 		$ui = UserInfo::getByID($u->getUserID());

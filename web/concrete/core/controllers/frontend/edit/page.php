@@ -8,7 +8,14 @@ abstract class Concrete5_Controller_Frontend_Edit_Page extends FrontendEditContr
 	public function __construct() {
 		parent::__construct();
 		$request = $this->request;
-		$this->page = Page::getByID($request->query->get('cID'));
+		$cID = $request->query->get('cID');
+		if ($cID) {
+			$this->setPageObject(Page::getByID($cID));
+		}
+	}
+
+	public function setPageObject(Page $c) {
+		$this->page = $c;
 		$this->permissions = new Permissions($this->page);		
 		$this->set('c', $this->page);
 		$this->set('cp', $this->permissions);

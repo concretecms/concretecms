@@ -21,6 +21,10 @@ class Concrete5_Controller_Dashboard extends PageController {
 	}
 	
 	public function on_before_render() {
+		$pageTitle = $this->get('pageTitle');
+		if (!$pageTitle) {
+			$this->set('pageTitle', $this->c->getCollectionName());
+		}
 		$this->set('error', $this->error);
 	}
 
