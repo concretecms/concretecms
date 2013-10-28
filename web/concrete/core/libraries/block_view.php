@@ -40,6 +40,8 @@ class Concrete5_Library_BlockView extends AbstractView {
 		$this->area = $area;
 	}
 
+	public function getAreaObject() {return $this->area;}
+	
 	public function start($state) {
 		/** 
 		 * Legacy shit

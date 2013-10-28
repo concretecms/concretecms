@@ -55,6 +55,9 @@ if ($b->isAliasOfMasterCollection() && $_REQUEST['btask'] != 'view_edit_mode') {
 	echo '</div></div>';
 }
 
+$request = Request::getInstance();
+$request->setCurrentPage($c);
+
 if (is_object($b)) {
 	switch($_REQUEST['btask']) {
 		case 'block_css': 		
