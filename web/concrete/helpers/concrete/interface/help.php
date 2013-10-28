@@ -106,6 +106,12 @@ class ConcreteInterfaceHelpHelper {
 			case 'panel':
 				$messages = $this->getPanels();
 				break;
+			case 'page':
+				$messages = $this->getPages();
+				break;
+			case 'blocktype':
+				$messages = $this->getBlockTypes();
+				break;
 		}
 
 		$message = $messages[$identifier];

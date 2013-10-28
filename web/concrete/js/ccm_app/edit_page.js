@@ -325,12 +325,8 @@ var CCMEditMode = function() {
 			ccm_event.subscribe('panel.open',function(e) {
 				var panel = e.eventData;
 				if (panel.options.identifier == 'page') {
-					$('#' + panel.getDOMID()).find('[data-launch-panel-detail=\'page/composer\']').addClass('ccm-panel-menu-item-active');
+					$('#' + panel.getDOMID()).find('[data-launch-panel-detail=\'page-composer\']').click();
 				}
-			});
-			CCMPanelManager.getByIdentifier('page').openPanelDetail({
-				'url': CCM_TOOLS_PATH + '/panels/details/page/composer',
-				'identifier': 'page-composer'
 			});
 		},
 

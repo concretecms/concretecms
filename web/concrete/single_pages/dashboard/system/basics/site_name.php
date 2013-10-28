@@ -1,19 +1,16 @@
 <? defined('C5_EXECUTE') or die("Access Denied.");?>
-<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Site Name'), false, 'span10 offset1', false)?>
-<form method="post" class="form-horizontal" id="site-form" action="<?=$this->action('update_sitename')?>">
-<div class="ccm-pane-body">
+<form method="post" class="ccm-dashboard-content-form" action="<?=$this->action('update_sitename')?>">
 	<?=$this->controller->token->output('update_sitename')?>
-	<div class="control-group">
-	<?=$form->label('SITE', t('Site Name'))?>
-	<div class="controls">
-	<?=$form->text('SITE', $site, array('class' => 'span4'))?>
+
+	<fieldset>
+	<div class="form-group">
+		<label for="SITE" class="launch-tooltip control-label" data-placement="right" title="<?=t('By default, site name is displayed in the browser title bar. It is also the default name for your project on concrete5.org')?>"><?=t('Site Name')?></label>
+		<?=$form->text('SITE', $site, array('class' => 'span4'))?>
+	</div>
+	</fieldset>
+	<div class="ccm-dashboard-form-actions-wrapper">
+	<div class="ccm-dashboard-form-actions">
+		<button class="pull-right btn btn-success" type="submit" ><?=t('Save')?></button>
 	</div>
 	</div>
-</div>
-<div class="ccm-pane-footer">
-	<?
-	print $interface->submit(t('Save'), 'site-form', 'right','primary');
-	?>
-</div>
 </form>
-<?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(false);?>

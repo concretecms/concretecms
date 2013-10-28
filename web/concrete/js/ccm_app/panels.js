@@ -7,7 +7,6 @@ var CCMPanel = function(options) {
 	this.options = options;
 	this.isOpen = false;
 	this.detail = false;
-	this.url = false;
 
 	this.getPositionClass = function() {
 		switch(options.position) {
@@ -30,12 +29,8 @@ var CCMPanel = function(options) {
 		return class;
 	}
 
-	this.setURL = function(url) {
-		this.url = url;
-	}
-
 	this.getURL = function() {
-		return this.url;
+		return this.options.url;
 	}
 
 	this.getIdentifier = function() {
@@ -428,6 +423,7 @@ var CCMPanelManager = function() {
 			}, options);
 			
 			var panel = new CCMPanel(options);
+			console.log(panel);
 			panels.push(panel);
 
 			$('<div />', {

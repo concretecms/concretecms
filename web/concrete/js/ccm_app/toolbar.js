@@ -35,17 +35,11 @@ var CCMToolbar = function() {
 	}
 
 	setupPanels = function() {
-		CCMPanelManager.register({'identifier': 'dashboard', 'position': 'right'});
-		CCMPanelManager.register({'identifier': 'page'});
-		CCMPanelManager.register({'identifier': 'sitemap', 'position': 'right'});
-		CCMPanelManager.register({'identifier': 'add-block', 'translucent': false, 'position': 'left'});
-		CCMPanelManager.register({'identifier': 'check-in', 'position': 'left'});
 		$('<div />', {'id': 'ccm-panel-overlay'}).appendTo($(document.body));
 		$('[data-launch-panel]').unbind().on('click', function() {
 			var panelID = $(this).attr('data-launch-panel');
 			$(this).toggleClass('ccm-launch-panel-active');
 			var panel = CCMPanelManager.getByIdentifier(panelID);
-			panel.setURL($(this).attr('data-panel-url'));
 			panel.toggle();
 			return false;
 		});
@@ -266,7 +260,6 @@ var CCMToolbar = function() {
 				$link.attr('data-launch-panel', 'check-in').on('click', function() {
 					$(this).toggleClass('ccm-launch-panel-active');
 					var panel = CCMPanelManager.getByIdentifier('check-in');
-					panel.setURL($(this).attr('data-panel-url'));
 					panel.toggle();
 					return false;
 				});

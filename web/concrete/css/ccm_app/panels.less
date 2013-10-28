@@ -152,9 +152,12 @@ div.ccm-panel-content {
 		margin: 20px 30px 0px 20px;
 		padding: 0px;
 
+		> li {
+			margin-top: 10px;
+		}
+	
 		li {
 			
-			margin-top: 10px;
 			list-style-type: none;
 
 			a {
@@ -168,6 +171,23 @@ div.ccm-panel-content {
 
 			a:hover {
 				text-decoration: none;
+			}
+
+			ul {
+				li {
+					margin-top: 3px;
+				}
+
+				a {
+					.border-radius(0px);
+					display: inline;
+					padding: 0px;
+					font-weight: 400;
+
+					&:hover {
+						background-color: auto;
+					}
+				}
 			}
 		}
 
@@ -198,13 +218,18 @@ div#ccm-panel-dashboard {
 		li {
 			a {
 				color: #4674a1;
-			}
 
-			a:hover {
-				background-color: #c9d4de;
-				color: #0c253e;
+				&:hover{ 
+					color: #0c253e;
+				}
+
+				&.ccm-panel-dashboard-nav-active {
+					color: #0c253e;
+				}
 			}
 		}
+
+		> li > a:hover {	background-color: #c9d4de;}
 	}
 
 	div.ccm-panel-header-accordion {
@@ -623,6 +648,7 @@ div.ccm-panel-header-accordion {
 			height: 0px;
 			overflow: hidden;
 			margin-left: 0px;
+			padding-left: 0px;
 			.transition(height 0.5s cubic-bezier(0.190, 1.000, 0.220, 1.000));
 
 			a {
