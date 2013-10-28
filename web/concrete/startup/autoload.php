@@ -9,6 +9,7 @@ $classes = array(
 	'PageEditResponse' => array('library', 'response/edit/page/library'),
 	'PageEditVersionResponse' => array('library', 'response/edit/page/version'),
 	'Localization' => array('library','localization'),
+	'Cookie' => array('library', 'cookie'),
 	'Route' => array('library', 'routing/route/library'),
 	'RouteCallback' => array('library', 'routing/route/callback/library'),
 	'ClosureRouteCallback' => array('library', 'routing/route/callback/closure'),
