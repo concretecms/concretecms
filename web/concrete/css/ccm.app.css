@@ -1397,7 +1397,7 @@ div.ccm-menu-item-active>div.ccm-area-layout-control-bar{background:#0c6}
 div.ccm-block-edit-layout{min-height:50px}
 div.ccm-area-layout-control-bar-add{height:0}
 div.ccm-area-layout-control-bar i{position:absolute;top:-2px;z-index:10;left:-2px}
-div#ccm-menu-click-proxy{opacity:0;height:0;width:0;position:absolute;cursor:pointer}
+div#ccm-menu-click-proxy{opacity:0;height:0;width:0;position:absolute;cursor:pointer;z-index:1000}
 div#ccm-menu-highlighter{z-index:100;height:0;width:0;position:absolute}
 div.ccm-block-edit,div.ccm-area,div.ccm-area-disabled{position:relative;opacity:1}div.ccm-block-edit:before,div.ccm-area:before,div.ccm-area-disabled:before,div.ccm-block-edit:after,div.ccm-area:after,div.ccm-area-disabled:after{content:" ";display:table;}
 div.ccm-block-edit:after,div.ccm-area:after,div.ccm-area-disabled:after{clear:both}

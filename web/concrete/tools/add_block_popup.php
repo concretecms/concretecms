@@ -26,6 +26,10 @@ if (!$canContinue) {
 }
 	
 $c->loadVersionObject('RECENT');
+$request = Request::getInstance();
+$request->setCurrentPage($c);
+
+
 require_once(DIR_FILES_ELEMENTS_CORE . '/dialog_header.php');
 
 if ($ap->canAddBlock($bt)) {
