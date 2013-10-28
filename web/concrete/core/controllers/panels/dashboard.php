@@ -10,13 +10,39 @@ class Concrete5_Controller_Panel_Dashboard extends FrontendEditPageController {
 	}
 
 	public function view() {
-		$c = Page::getByPath('/dashboard');
-		$children = $c->getCollectionChildrenArray(true);
-		$this->set('children', $children);
+		if ($this->request->get('tab')) {
+			Cookie::set('panels/dashboard/tab', $this->request->get('tab'));
+			$tab = $this->request->get('tab');
+		} else {
+			$tab = Cookie::get('panels/dashboard/tab');
+		}
 
+		$nav = array();
+		if ($tab == 'dashboard') {
+			$c = Page::getByPath('/dashboard');
+			$ids = $c->getCollectionChildrenArray(true);
+			foreach($ids as $cID) {
+				$c = Page::getByID($cID, 'ACTIVE');
+				if (is_object($c) && !$c->isError()) {
+					$nav[] = $c;
+				}
+			}
+		} else {
+			$dh = Loader::helper('concrete/dashboard');
+			$qn = ConcreteDashboardMenu::getMine();
+			foreach($qn->getItems() as $path) {
+				$c = Page::getByPath($path, 'ACTIVE');
+				if (is_object($c) && !$c->isError()) {
+					$nav[] = $c;
+				}
+			}
+		}
+		$this->set('nav', $nav);
 		$u = new User();
 		$ui = UserInfo::getByID($u->getUserID());
 		$this->set('ui', $ui);
+		$this->set('tab', $tab);
+
 	}
 
 }

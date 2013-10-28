@@ -13,8 +13,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 	</div>
 
 	<menu>
-		<? foreach($children as $cID) {
-			$cc = Page::getByID($cID, 'ACTIVE');
+		<? foreach($nav as $cc) {
 			$cp = new Permissions($cc);
 			if ($cp->canViewPage() && $cc->getAttribute('exclude_nav') != true) { ?>
 				<li><a href="<?=Loader::helper('navigation')->getLinkToCollection($cc)?>"><?=$cc->getCollectionName()?></a></li>

@@ -563,7 +563,7 @@ class ConcreteDashboardHelper {
 
 }
 
-/*
+
 class ConcreteDashboardMenu {
 	
 	protected $items;
@@ -656,5 +656,4 @@ class ConcreteDashboardDefaultMenu extends ConcreteDashboardMenu {
 
 }
 
-	*/
 
