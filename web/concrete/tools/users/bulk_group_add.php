@@ -44,7 +44,7 @@ if ($_POST['task'] == 'group_add') {
 			$u = $ui->getUserObject();
 			foreach($groups as $g) {
 				$gp = new Permissions($g);
-				if ($g->canAssignGroup()) {
+				if ($gp->canAssignGroup()) {
 					if(!$u->inGroup($g)) { // avoid messing up group enter times
 						$u->enterGroup($g); 
 					}				
