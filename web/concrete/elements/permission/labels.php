@@ -28,13 +28,17 @@ if (count($assignments) > 0) {
 				$class = 'label-warning';
 				$pdTitle = 'title="' . $pd->getTextRepresentation() . '"';
 			} else {
-				$class = 'label-important';
+				$class = 'label-primary';
 			}
 		} else { 
 			if (is_object($pd)) {
 				$class = 'label-info';
 				$pdTitle = 'title="' . $pd->getTextRepresentation() . '"';
 			}
+		}
+
+		if (!$class) {
+			$class = 'label-default';
 		}
 		$str .= '<span class="label ' . $class . '" ' . $pdTitle . '>' . $entity->getAccessEntityLabel() . '</span> ';
 	}

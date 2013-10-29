@@ -39,7 +39,7 @@
 				<li><a href="#" data-launch-panel-detail="page-caching" data-panel-detail-url="<?=URL::to('/system/panels/details/page/caching')?>" data-panel-transition="fade"><?=t('Caching')?></a></li>
 		<? } ?>
 		<? if ($cp->canEditPagePermissions()) { ?>
-			<li><a href=""><?=t('Permissions')?></a></li>
+				<li><a href="#" data-launch-panel-detail="page-permissions" data-panel-detail-url="<?=URL::to('/system/panels/details/page/permissions')?>" data-panel-transition="fade"><?=t('Permissions')?></a></li>
 		<? } ?>
 		<? if ($cp->canViewPageVersions()) { ?>
 			<li><a href="#" data-launch-sub-panel-url="<?=URL::to('/system/panels/page/versions')?>"><?=t('Versions')?></a></li>

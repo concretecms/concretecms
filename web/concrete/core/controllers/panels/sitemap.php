@@ -26,7 +26,7 @@ class Concrete5_Controller_Panel_Sitemap extends FrontendEditPageController {
 		$mydrafts = array();
 		foreach($drafts as $d) {
 			$dp = new Permissions($d);
-			if ($dp->canEditPage()) {
+			if ($dp->canEditPageContents()) {
 				$mydrafts[] = $d;
 			}
 		}

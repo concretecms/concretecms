@@ -3,7 +3,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 if (Loader::helper('validation/token')->validate('composer', $_REQUEST['token'])) {
 	$c = Page::getByID($_REQUEST['cID']);
 	$cp = new Permissions($c);
-	if ($cp->canEditPage() && $c->isPageDraft()) {
+	if ($cp->canDeletePage() && $c->isPageDraft()) {
 		$c->delete();
 		$u = new User();
 		$cID = $u->getPreviousFrontendPageID();

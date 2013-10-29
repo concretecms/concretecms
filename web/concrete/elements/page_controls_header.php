@@ -43,7 +43,7 @@ if (!$dh->inDashboard()) {
 	}
 
 
-	if ($cp->canEditPage() && $_REQUEST['ctask'] == 'check-out-first') {
+	if ($cp->canEditPageContents() && $_REQUEST['ctask'] == 'check-out-first') {
 		$this->addFooterItem("<script type=\"text/javascript\">$(function() { CCMEditMode.launchPageComposer();});</script>");
 	} 
 

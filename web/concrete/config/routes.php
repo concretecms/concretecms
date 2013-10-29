@@ -50,6 +50,9 @@ $rl->register('/system/panels/details/page/attributes/add_attribute', 'PageAttri
 $rl->register('/system/panels/details/page/caching', 'PageCachingPanelDetailController::view');
 $rl->register('/system/panels/details/page/caching/submit', 'PageCachingPanelDetailController::submit');
 $rl->register('/system/panels/details/page/caching/purge', 'PageCachingPanelDetailController::purge');
+$rl->register('/system/panels/details/page/permissions', 'PagePermissionsPanelDetailController::view');
+$rl->register('/system/panels/details/page/permissions/simple/submit', 'PagePermissionsPanelDetailController::save_simple');
+$rl->register('/system/panels/details/page/permissions/advanced/submit', 'PagePermissionsPanelDetailController::save_advanced');
 
 /**
  * Editing Actions

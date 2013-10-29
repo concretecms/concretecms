@@ -56,7 +56,7 @@ EOL;
 
 	protected function checkDraftPermissions(Page $d) {
 		$dp = new Permissions($d);
-		if (!$dp->canEditPage()) {
+		if (!$dp->canEditPageContents()) {
 			throw new Exception('You do not have access to this draft.');
 		}
 	}
