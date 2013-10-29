@@ -532,6 +532,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			}
 
 			$templates = array_unique($templates);
+			asort($templates);
 	
 			return $templates;
 		}
