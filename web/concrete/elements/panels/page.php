@@ -36,7 +36,7 @@
 			<? } ?>
 		<? } ?>
 		<? if ($cp->canEditPageSpeedSettings()) { ?>
-			<li><a href=""><?=t('Caching')?></a></li>
+				<li><a href="#" data-launch-panel-detail="page-caching" data-panel-detail-url="<?=URL::to('/system/panels/details/page/caching')?>" data-panel-transition="fade"><?=t('Caching')?></a></li>
 		<? } ?>
 		<? if ($cp->canEditPagePermissions()) { ?>
 			<li><a href=""><?=t('Permissions')?></a></li>

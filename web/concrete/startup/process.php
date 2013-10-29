@@ -884,7 +884,7 @@
 				$r->outputJSON();			
 			}		
 		} else 
-		*/
+
 		if ($_POST['update_speed_settings']) {
 			// updating a collection
 			if ($cp->canEditPageSpeedSettings()) {
@@ -904,7 +904,7 @@
 			}
 
 		} 
-		/*else if ($_POST['update_metadata']) { 
+		else if ($_POST['update_metadata']) { 
 			// updating a collection
 			if ($cp->canEditPageProperties()) {
 				$nvc = $c->getVersionToModify();
@@ -989,7 +989,7 @@
 			}	
 		*/	
 
-		else if ($_POST['update_external']) {
+		if ($_POST['update_external']) {
 			$parent = Page::getByID($c->getCollectionParentID());
 			$parentP = new Permissions($parent);
 			if ($parentP->canAddExternalLink()) {

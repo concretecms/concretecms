@@ -423,7 +423,6 @@ var CCMPanelManager = function() {
 			}, options);
 			
 			var panel = new CCMPanel(options);
-			console.log(panel);
 			panels.push(panel);
 
 			$('<div />', {

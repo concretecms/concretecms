@@ -47,6 +47,9 @@ $rl->register('/system/panels/page/attributes', 'PageAttributesPanelController::
 $rl->register('/system/panels/details/page/attributes', 'PageAttributesPanelDetailController::view');
 $rl->register('/system/panels/details/page/attributes/submit', 'PageAttributesPanelDetailController::submit');
 $rl->register('/system/panels/details/page/attributes/add_attribute', 'PageAttributesPanelDetailController::add_attribute');
+$rl->register('/system/panels/details/page/caching', 'PageCachingPanelDetailController::view');
+$rl->register('/system/panels/details/page/caching/submit', 'PageCachingPanelDetailController::submit');
+$rl->register('/system/panels/details/page/caching/purge', 'PageCachingPanelDetailController::purge');
 
 /**
  * Editing Actions
