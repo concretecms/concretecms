@@ -10,7 +10,7 @@ if (!Loader::helper('validation/token')->validate('composer', $_REQUEST['token']
 
 $c = Page::getByID($_REQUEST['cID']);
 $cp = new Permissions($c);
-if (!$cp->canEditPage()) {
+if (!$cp->canEditPageContents()) {
 	$e->add(t('Access Denied.'));
 }
 

@@ -384,7 +384,8 @@ $classes = array(
 	'PageLocationPanelDetailController' => array('controller', '/panels/details/page/location'),
 	'PageComposerPanelDetailController' => array('controller', '/panels/details/page/composer'),
 	'PageAttributesPanelDetailController' => array('controller', '/panels/details/page/attributes'),
-	'PageCachingPanelDetailController' => array('controller', '/panels/details/page/caching')
+	'PageCachingPanelDetailController' => array('controller', '/panels/details/page/caching'),
+	'PagePermissionsPanelDetailController' => array('controller', '/panels/details/page/permissions')
 );
 
 Loader::registerAutoload($classes);

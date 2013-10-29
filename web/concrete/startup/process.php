@@ -997,7 +997,8 @@
 				header('Location: ' . URL_SITEMAP);
 				exit;
 			}
-		} else if ($_POST['update_permissions']) { 
+		}
+		/* else if ($_POST['update_permissions']) { 
 			// updating a collection
 			if ($cp->canEditPagePermissions() && PERMISSIONS_MODEL == 'simple') {
 
@@ -1065,7 +1066,8 @@
 				print Loader::helper('json')->encode($obj);
 				exit;
 			}
-		} else if ($_POST['add']) { 
+		} */
+		else if ($_POST['add']) { 
 			// adding a collection to a collection
 			Loader::model('collection_types');
 
