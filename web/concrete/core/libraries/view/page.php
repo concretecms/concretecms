@@ -4,7 +4,9 @@ defined('C5_EXECUTE') or die("Access Denied.");
 class Concrete5_Library_View_Page extends View {
 
 	protected $c; // page
+	protected $cp;
 	protected $pTemplateID;
+	protected $customStyleMap;
 
 	public function getPageObject() {
 		return $this->c;
@@ -80,6 +82,7 @@ class Concrete5_Library_View_Page extends View {
 		$this->c->outputCustomStyleHeaderItems();
 		// do we have any custom menu plugins?
 		$cp = new Permissions($this->c);
+		$this->cp = $cp;
 		if ($cp->canViewToolbar()) { 
 			$dh = Loader::helper('concrete/dashboard');
 			if (!$dh->inDashboard() && $this->c->isActive() && !$this->c->isMasterCollection()) {
@@ -107,16 +110,38 @@ class Concrete5_Library_View_Page extends View {
 	}
 
 	/** 
+	 * Takes an array of original stylesheets => temporary preview stylesheets. Used by theme customizer
+	 */
+	public function setCustomStyleMap($styleMap) {
+		$this->customStyleMap = $styleMap;
+	}
+
+	/** 
 	 * Returns a stylesheet found in a themes directory - but FIRST passes it through the tools CSS handler
 	 * in order to make certain style attributes found inside editable
 	 * @param string $stylesheet
 	 */
 	public function getStyleSheet($stylesheet) {
-		$file = $this->getThemePath() . '/' . $stylesheet;
-		$cacheFile = DIR_FILES_CACHE . '/' . DIRNAME_CSS . '/' . $this->themeHandle . '/' . $stylesheet;
+		if (isset($this->customStyleMap) && array_key_exists($stylesheet, $this->customStyleMap)) {
+			// this is used by preview
+			return REL_DIR_FILES_CACHE . '/' . DIRNAME_CSS . '/' . $this->themeHandle . '/' . $this->customStyleMap[$stylesheet];
+		}
+		if ($this->cp->canViewPageVersions() && $this->c->hasPageThemeCustomizations()) {
+			return URL::to('/system/page/css', $this->c->getCollectionID(), $this->c->getVersionID(), $stylesheet);
+		}
 		$env = Environment::get();
 		$themeRec = $env->getUncachedRecord(DIRNAME_THEMES . '/' . $this->themeHandle . '/' . $stylesheet, $this->themePkgHandle);
-		if (file_exists($cacheFile) && $themeRec->exists()) {
+		$themeRecExists = $themeRec->exists();
+
+		$pageCacheFile = DIR_FILES_CACHE . '/' . DIRNAME_CSS . '/' . $this->themeHandle . '/' . $this->c->getCollectionID() . '/' . $stylesheet;
+		if (file_exists($pageCacheFile) && $themeRecExists) {
+			if (filemtime($pageCacheFile) > filemtime($pageCacheFile->file)) {
+				return REL_DIR_FILES_CACHE . '/' . DIRNAME_CSS . '/' . $this->themeHandle . '/' . $this->c->getCollectionID() . '/' . $stylesheet;
+			}
+		}
+
+		$cacheFile = DIR_FILES_CACHE . '/' . DIRNAME_CSS . '/' . $this->themeHandle . '/' . $stylesheet;
+		if (file_exists($cacheFile) && $themeRecExists) {
 			if (filemtime($cacheFile) > filemtime($themeRec->file)) {
 				return REL_DIR_FILES_CACHE . '/' . DIRNAME_CSS . '/' . $this->themeHandle . '/' . $stylesheet;
 			}

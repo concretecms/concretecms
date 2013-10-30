@@ -866,7 +866,57 @@ div.ccm-panel-header-accordion-dropdown-visible {
 				}
 			}
 		}
+	}
+}
 
 
+/**
+ * Panel Confirmation
+ */
+div.ccm-panel-confirmation-wrapper {
+	position: fixed;
+	z-index: 10000;
+	top: 0px;
+	left: 0px;
+	width: 100%;
+	height: 100%;
+
+	div.ccm-panel-confirmation {
+		background-color: #000;
+		color: #fff;
+		.opacity(0);
+		padding: 40px 60px 40px 60px;
+		.border-radius(2px);
+	    -webkit-filter: blur(10px);
+	    -moz-filter: blur(10px);
+	    -o-filter: blur(10px);
+	    -ms-filter: blur(10px);
+	    filter: blur(20px);
+	    .opacity(0.4);
+		-webkit-transform: translate3d(0, 0, 0);
+		.transition(all 0.3s ease-out);
+
+		p {
+			font-size: @font-size-large;
+			line-height: 32px;
+			font-weight: 100;
+		}
+	}
+
+	&.ccm-panel-confirmation-displayed {
+		div.ccm-panel-confirmation {
+			.opacity(1);
+		    -webkit-filter: blur(0px);
+		    -moz-filter: blur(0px);
+		    -o-filter: blur(0px);
+		    -ms-filter: blur(0px);
+		    filter: blur(0px);			
+		}
+	}
+
+	&.ccm-panel-confirmation-disappearing {
+		div.ccm-panel-confirmation {
+			.opacity(0);		
+		}
 	}
 }

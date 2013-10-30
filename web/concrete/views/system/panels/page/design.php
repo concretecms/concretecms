@@ -1,6 +1,5 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-$pk = PermissionKey::getByHandle('customize_themes');
 ?>
 <section id="ccm-panel-page-design">
 <form method="post" action="<?=$controller->action('submit')?>" data-panel-detail-form="design">
@@ -57,7 +56,7 @@ $pk = PermissionKey::getByHandle('customize_themes');
 				?>
 				<div data-theme-id="<?=$th->getThemeID()?>" class="list-group-item ccm-page-design-theme-thumbnail <? if ($selected) { ?>ccm-page-design-theme-thumbnail-selected<? } ?> ">
 					<span><i><?=$th->getThemeThumbnail()?>
-						<? if ($th->isThemeCustomizable() && $pk->can()) { ?>
+						<? if ($th->isThemeCustomizable()) { ?>
 						<span class="ccm-page-design-theme-customize">
 							<?=t('Customize')?>
 							<a href="#" data-launch-sub-panel-url="<?=URL::to('/system/panels/page/design/customize', $th->getThemeID())?>"><i class="glyphicon glyphicon-share-alt"></i></a>

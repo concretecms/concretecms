@@ -6,6 +6,7 @@ header('Content-type: text/javascript'); ?>
 var ccmi18n = { 
 	
 	expand: "<?=t('Expand')?>",
+	cancel: "<?=t('Cancel')?>",
 	collapse: "<?=t('Collapse')?>",
 	error: "<?=t('Error')?>",
 	deleteBlock: "<?=t('Delete')?>",

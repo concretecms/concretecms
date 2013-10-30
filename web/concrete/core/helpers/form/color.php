@@ -50,8 +50,8 @@ class Concrete5_Helper_Form_Color {
 					f" .$fieldFormName. "Div.ColorPicker({
 						color: c" .$fieldFormName. ",  
 						onSubmit: function(hsb, hex, rgb, cal) {
-							$('input[name=".$fieldFormName."]').trigger('change');
 							$('input[name=" . $fieldFormName . "]').val('#' + hex);				
+							$('input[name=".$fieldFormName."]').trigger('change');
 							$('div#f" . $fieldFormName. "').css('backgroundColor', '#' + hex); 
 							cal.hide();
 						},  

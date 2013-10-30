@@ -1,9 +1,12 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
+$pk = PermissionKey::getByHandle('customize_themes');
 ?>
 
+
 <section id="ccm-panel-page-design-customize">
-	<header><a href="" data-panel-navigation="back" class="ccm-panel-back"><span class="glyphicon glyphicon-chevron-left"></span></a> <?=t('Customize Theme')?></header>
+	<form data-form="panel-page-design-customize" target="ccm-page-preview-frame" method="post" action="<?=$controller->action("preview", $theme->getThemeID())?>">
+    <header><a href="" data-panel-navigation="back" class="ccm-panel-back"><span class="glyphicon glyphicon-chevron-left"></span></a> <?=t('Customize Theme')?></header>
 
 	<div id="ccm-panel-page-design-customize-list">
 	<? foreach($styleSets as $set) { ?>
@@ -33,6 +36,14 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 	<? } ?>
 	</div>
+
+    <div style="text-align: center">
+        <br/>
+       <button class="btn-danger btn" data-panel-detail-action="reset"><?=t('Reset Customizations')?></button>
+        <br/><br/>
+   </div>
+
+    </form>
 </section>
 
 
@@ -217,11 +228,80 @@ defined('C5_EXECUTE') or die("Access Denied.");
         });
     }
     
+    CCMPageDesignPanel = {
+
+        applyDesignToPage: function() {
+            var $form = $('form[data-form=panel-page-design-customize]'),
+                panel = CCMPanelManager.getByIdentifier('page');
+
+            $form.prop('target', null);
+            $form.attr('action', '<?=$controller->action("apply_to_page", $theme->getThemeID())?>');
+            panel.setupPanelDetailForm($form);
+            $form.submit();
+        },
+
+        applyDesignToSite: function() {
+            var $form = $('form[data-form=panel-page-design-customize]'),
+                panel = CCMPanelManager.getByIdentifier('page');
+
+            $form.prop('target', null);
+            $form.attr('action', '<?=$controller->action("apply_to_site", $theme->getThemeID())?>');
+            panel.setupPanelDetailForm($form);
+            $form.submit();
+        },
+
+        resetPageDesign: function() {
+            var $form = $('form[data-form=panel-page-design-customize]'),
+                panel = CCMPanelManager.getByIdentifier('page');
+
+            $form.prop('target', null);
+            $form.attr('action', '<?=$controller->action("reset_page_customizations")?>');
+            panel.setupPanelDetailForm($form);
+            $form.submit();
+        },
+
+        resetSiteDesign: function() {
+            var $form = $('form[data-form=panel-page-design-customize]'),
+                panel = CCMPanelManager.getByIdentifier('page');
+
+            $form.prop('target', null);
+            $form.attr('action', '<?=$controller->action("reset_site_customizations", $theme->getThemeID())?>');
+            panel.setupPanelDetailForm($form);
+            $form.submit();
+        }
+
+
+    }
+
     $(function() {
+        panel = CCMPanelManager.getByIdentifier('page');
+        $('button[data-panel-detail-action=submit]').unbind().on('click', function() {
+            <? if ($pk->can()) { ?>
+                panel.showPanelConfirmationMessage('page-design-customize-apply', "<?=t('Apply this design to just this page, or your entire site?')?>", [
+                    {'class': 'btn btn-primary pull-right', 'onclick': 'CCMPageDesignPanel.applyDesignToSite()', 'style': 'margin-left: 10px', 'text': '<?=t("Entire Site")?>'},
+                    {'class': 'btn btn-default pull-right', 'onclick': 'CCMPageDesignPanel.applyDesignToPage()', 'text': '<?=t("This Page")?>'}
+                ]);
+            <? } else { ?>
+                CCMPageDesignPanel.applyDesignToPage();
+            <? } ?>
+            return false;
+        });
+        $('button[data-panel-detail-action=reset]').unbind().on('click', function() {
+            <? if ($pk->can()) { ?>
+                panel.showPanelConfirmationMessage('page-design-customize-apply', "<?=t('Reset the theme customizations for just this page, or your entire site?')?>", [
+                    {'class': 'btn btn-primary pull-right', 'onclick': 'CCMPageDesignPanel.resetSiteDesign()', 'style': 'margin-left: 10px', 'text': '<?=t("Entire Site")?>'},
+                    {'class': 'btn btn-default pull-right', 'onclick': 'CCMPageDesignPanel.resetPageDesign()', 'text': '<?=t("This Page")?>'}
+                ]);
+            <? } else { ?>
+                CCMPageDesignPanel.resetPageDesign();
+            <? } ?>
+            return false;
+        });
+
         $('div.ccm-page-design-customize-font-swatch').FontPanel();
         //$('div.ccm-theme-style-custom').CustomPanel();
         $('.ccm-panel-page-design-customize-style-set input[type=hidden]').on('change', function() {
-        	alert('fart');
+            $('form[data-form=panel-page-design-customize]').submit();
         });
     });
 </script>

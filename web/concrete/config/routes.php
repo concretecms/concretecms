@@ -31,8 +31,12 @@ $rl->register('/system/panels/page/check_in/submit', 'PageCheckInPanelController
 $rl->register('/system/panels/page/design', 'PageDesignPanelController::view');
 $rl->register('/system/panels/page/design/preview_contents', 'PageDesignPanelController::preview_contents');
 $rl->register('/system/panels/page/design/submit', 'PageDesignPanelController::submit');
+$rl->register('/system/panels/page/design/customize/preview/{pThemeID}', 'PageDesignCustomizePanelController::preview');
+$rl->register('/system/panels/page/design/customize/apply_to_page/{pThemeID}', 'PageDesignCustomizePanelController::apply_to_page');
+$rl->register('/system/panels/page/design/customize/apply_to_site/{pThemeID}', 'PageDesignCustomizePanelController::apply_to_site');
+$rl->register('/system/panels/page/design/customize/reset_page_customizations', 'PageDesignCustomizePanelController::reset_page_customizations');
+$rl->register('/system/panels/page/design/customize/reset_site_customizations/{pThemeID}', 'PageDesignCustomizePanelController::reset_site_customizations');
 $rl->register('/system/panels/page/design/customize/{pThemeID}', 'PageDesignCustomizePanelController::view');
-$rl->register('/system/panels/page/design/customize/submit', 'PageDesignPanelCustomizeController::submit');
 $rl->register('/system/panels/page/versions', 'PageVersionsPanelController::view');
 $rl->register('/system/panels/page/versions/get_json', 'PageVersionsPanelController::get_json');
 $rl->register('/system/panels/page/versions/duplicate', 'PageVersionsPanelController::duplicate');
@@ -61,6 +65,11 @@ $rl->register('/system/panels/details/page/permissions/advanced/submit', 'PagePe
  * Editing Actions
  */
 $rl->register('/system/page/check_in/{cID}/{token}', 'PageCheckInPanelController::exitEditMode');
+
+/** 
+ * Misc
+ */
+$rl->register('/system/page/css/{cID}/{cvID}/{stylesheet}', 'FrontendPageController::viewVersionStyles');
 
 /** 
  * Page Routes - these must come at the end.

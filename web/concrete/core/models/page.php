@@ -1224,6 +1224,69 @@ class Concrete5_Model_Page extends Collection {
 		}
 	}
 
+	public function hasPageThemeCustomizations() {
+		$db = Loader::db();
+		return ($db->GetOne('select count(cID) from CollectionVersionThemeStyles where cID = ? and cvID = ?', array(
+			$this->cID, $this->getVersionID()
+		)) > 0);
+	}
+
+	public function resetCustomThemeStyles() {
+		$db = Loader::db();
+		$db->Execute('delete from CollectionVersionThemeStyles where cID = ? and cvID = ?', array($this->getCollectionID(), $this->getVersionID()));
+		$this->writePageThemeCustomizations();
+	}
+
+	public function getCustomThemeStyles() {
+		$db = Loader::db();
+		$pt = $this->getCollectionThemeObject();
+		$ptes = $db->GetAll("select pThemeStyleHandle, pThemeStyleValue, pThemeStyleType from CollectionVersionThemeStyles where pThemeID = ? and cID = ? and cvID = ?", array(
+			$pt->getThemeID(), $this->getCollectionID(), $this->getVersionID()
+		));
+		$styles = array();
+		foreach($ptes as $p) {
+			$pts = new PageThemeEditableStyle($p['pThemeStyleValue']);
+			$pts->setPropertiesFromArray($p);
+			$styles[] = $pts;
+		}
+		return $styles;
+	}
+
+	public function updateCustomThemeStyles($styles) {
+		$db = Loader::db();
+		foreach($styles as $ptes) {
+			$db->Replace('CollectionVersionThemeStyles', array(
+				'pThemeID' => $this->vObj->pThemeID,
+				'pThemeStyleHandle' => $ptes->getHandle(),
+				'pThemeStyleValue' => $ptes->getValue(),
+				'pThemeStyleType' => $ptes->getType(),
+				'cID' => $this->getCollectionID(),
+				'cvID' => $this->getVersionID()
+			),
+			array('cID', 'cvID', 'pThemeID', 'pThemeStyleHandle', 'pThemeStyleType'), true);
+		}
+	}
+
+	public function writePageThemeCustomizations() {
+		$theme = $this->getCollectionThemeObject();
+		$sheets = $theme->getStyleSheets();
+		$values = $this->getCustomThemeStyles();
+		foreach($sheets as $file) {
+			$cacheFile = DIR_FILES_CACHE . '/' . DIRNAME_CSS . '/' . $theme->getThemeHandle() . '/' . $this->getCollectionID() . '/' . $file;
+			if (file_exists($cacheFile)) {
+				unlink($cacheFile);
+			}
+			if (count($values)) {
+				$style = $theme->parseStyleSheet($file, $values);
+				$cacheFile = DIR_FILES_CACHE . '/' . DIRNAME_CSS . '/' . $theme->getThemeHandle() . '/' . $this->getCollectionID() . '/' . $file;
+				if (!file_exists(dirname($cacheFile))) {
+					mkdir(dirname($cacheFile), DIRECTORY_PERMISSIONS_MODE, true);
+				}
+				$r = file_put_contents($cacheFile, $style);
+			}
+		}
+	}
+
 	function update($data) {
 		$db = Loader::db();
 

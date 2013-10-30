@@ -104,6 +104,35 @@ var CCMPanel = function(options) {
 		});
 	}		
 
+	this.showPanelConfirmationMessage = function(id, msg, buttons) {
+		var html = '<div id="ccm-panel-confirmation-' + id + '" class="ccm-ui ccm-panel-confirmation-wrapper"><div class="ccm-panel-confirmation">';
+		html += '<p>' + msg + '</p><div class="ccm-panel-confirmation-buttons"></div>';
+		html += '</div></div>';
+		$(html).appendTo(document.body);
+        var $dialog = $('#ccm-panel-confirmation-' + id);
+        $dialog.delay(0).queue(function() {
+            $(this).addClass('ccm-panel-confirmation-displayed');
+            $(this).dequeue();
+        });
+
+        var myButtons = [{'class': 'btn pull-left btn-link', 'type': 'button', 'data-panel-confirmation-action': 'cancel', 'text': ccmi18n.cancel}];
+        for (i = 0; i < buttons.length; i++) {
+        	myButtons.push(buttons[i]);
+        }
+        $.each(myButtons, function(i, button) {
+        	$dialog.find('.ccm-panel-confirmation-buttons').append($('<button />', button));
+        });
+        $dialog.find('button').on('click', function() {
+	        $dialog.delay(0).queue(function() {
+	            $dialog.removeClass('ccm-panel-confirmation-displayed');
+	            $dialog.addClass('ccm-panel-confirmation-disappearing');
+	            $(this).dequeue();
+	        }).delay(350).queue(function() {
+	        	$dialog.remove();
+	        });
+        });
+    }
+
 	this.closePanelDetail = function() {
 		if (!this.detail) {
 			return false;
@@ -207,6 +236,36 @@ var CCMPanel = function(options) {
 		ccm_event.publish('panel.openDetail', obj);
 	}
 
+	this.setupPanelDetailForm = function($form) {
+		$form.ajaxForm({
+			type: 'post',
+			dataType: 'json',
+			beforeSubmit: function() {
+				jQuery.fn.dialog.showLoader();
+			},
+			error: function(r) {
+		      ccmAlert.notice('Error', '<div class="alert alert-danger">' + r.responseText + '</div>');
+		  	},
+			success: function(r) {
+				if (r.error) {
+					ccmAlert.notice('Error', '<div class="alert alert-danger">' + r.errors.join("<br>") + '</div>');
+				} else {
+					CCMEditMode.showResponseNotification(r.message, 'ok', 'success');
+					CCMPanelManager.exitPanelMode();
+					if (r.redirectURL) {
+						setTimeout(function() {
+							window.location.href = r.redirectURL;
+						}, 2000);
+					}
+				}
+			},
+			complete: function() {
+				jQuery.fn.dialog.hideLoader();
+			}
+		});
+		return $form;
+	}
+
 	this.loadPanelDetailActions = function($content) {
 		var obj = this;
 		var $actions = $content.find('.ccm-panel-detail-form-actions');
@@ -233,32 +292,7 @@ var CCMPanel = function(options) {
 				obj.closePanelDetail();
 			});
 			$('button[data-panel-detail-action=submit]').on('click', function() {
-				$('[data-panel-detail-form]').ajaxSubmit({
-					type: 'post',
-					dataType: 'json',
-					beforeSubmit: function() {
-						jQuery.fn.dialog.showLoader();
-					},
-					error: function(r) {
-				      ccmAlert.notice('Error', '<div class="alert alert-danger">' + r.responseText + '</div>');
-				  	},
-					success: function(r) {
-						if (r.error) {
-							ccmAlert.notice('Error', '<div class="alert alert-danger">' + r.errors.join("<br>") + '</div>');
-						} else {
-							CCMEditMode.showResponseNotification(r.message, 'ok', 'success');
-							CCMPanelManager.exitPanelMode();
-							if (r.redirectURL) {
-								setTimeout(function() {
-									window.location.href = r.redirectURL;
-								}, 2000);
-							}
-						}
-					},
-					complete: function() {
-						jQuery.fn.dialog.hideLoader();
-					}
-				});
+				obj.setupPanelDetailForm($('[data-panel-detail-form]')).submit();
 			});
 		}
 	}
