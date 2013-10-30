@@ -35,8 +35,8 @@ $(document).unbind('inlineEditCancel').on('inlineEditCancel', function(e, onComp
 
 <? if (!$b->getProxyBlock() && !$bt->supportsInlineEdit()) { ?>	
 	<div class="ccm-buttons dialog-buttons">
-	<a href="javascript:clickedButton = true;$('#ccm-form-submit-button').get(0).click()" class="btn pull-right btn-primary"><?=t('Save')?></a>
-	<a style="float:left" href="javascript:void(0)" class="btn btn-hover-danger" onclick="$(document).trigger('blockWindowClose');jQuery.fn.dialog.closeTop()"><?=t('Cancel')?></a>
+	<a href="javascript:clickedButton = true;$('#ccm-form-submit-button').get(0).click()" class="btn pull-right btn-primary btn-success"><?=t('Save')?></a>
+	<a style="float:left" href="javascript:void(0)" class="btn btn-default btn-hover-danger" onclick="$(document).trigger('blockWindowClose');jQuery.fn.dialog.closeTop()"><?=t('Cancel')?></a>
 	</div>
 <? } ?>
 

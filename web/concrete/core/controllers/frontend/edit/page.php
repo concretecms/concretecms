@@ -11,6 +11,7 @@ abstract class Concrete5_Controller_Frontend_Edit_Page extends FrontendEditContr
 		$cID = $request->query->get('cID');
 		if ($cID) {
 			$this->setPageObject(Page::getByID($cID));
+			$request->setCurrentPage($this->page);
 		}
 	}
 
