@@ -11,6 +11,11 @@ class Concrete5_Controller_Panel_Details_Page_Permissions extends FrontendEditPa
 	public function view() {
 		if (PERMISSIONS_MODEL != 'simple') {
 			$this->setViewObject(new View('/system/panels/details/page/permissions/advanced'));
+			$this->set('editPermissions', false);
+			if ($this->page->getCollectionInheritance() == 'OVERRIDE') { 
+				$this->set('editPermissions', true);
+			}
+
 		} else {
 
 			$editAccess = array();

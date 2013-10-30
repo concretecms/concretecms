@@ -1,5 +1,6 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
+$pk = PermissionKey::getByHandle('customize_themes');
 ?>
 <section id="ccm-panel-page-design">
 <form method="post" action="<?=$controller->action('submit')?>" data-panel-detail-form="design">
@@ -55,7 +56,14 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				}
 				?>
 				<div data-theme-id="<?=$th->getThemeID()?>" class="list-group-item ccm-page-design-theme-thumbnail <? if ($selected) { ?>ccm-page-design-theme-thumbnail-selected<? } ?> ">
-					<span><i><?=$th->getThemeThumbnail()?></i>
+					<span><i><?=$th->getThemeThumbnail()?>
+						<? if ($th->isThemeCustomizable() && $pk->can()) { ?>
+						<span class="ccm-page-design-theme-customize">
+							<?=t('Customize')?>
+							<a href="#" data-launch-sub-panel-url="<?=URL::to('/system/panels/page/design/customize', $th->getThemeID())?>"><i class="glyphicon glyphicon-share-alt"></i></a>
+						</span>
+						<? } ?>
+					</i>
 					<div class="ccm-panel-page-design-theme-description"><h4><?=$th->getThemeName()?></h4></div>
 
 					</span>
@@ -124,7 +132,7 @@ $(function() {
 	$('#ccm-panel-page-design input[name=pThemeID], #ccm-panel-page-design input[name=pTemplateID]').on('change', function() {
 		var pThemeID = $('#ccm-panel-page-design input[name=pThemeID]').val();
 		var pTemplateID = $('#ccm-panel-page-design input[name=pTemplateID]:checked').val();
-		var src = CCM_TOOLS_PATH + '/pages/preview_design?cID=<?=$c->getCollectionID()?>&pThemeID=' + pThemeID + '&pTemplateID=' + pTemplateID;
+		var src = '<?=$controller->action("preview_contents")?>&pThemeID=' + pThemeID + '&pTemplateID=' + pTemplateID;
 		$('#ccm-page-preview-frame').get(0).src = src;
 	});
 

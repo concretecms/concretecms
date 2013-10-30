@@ -40,6 +40,13 @@ $al->registerGroup('jquery/rating', array(
 	array('css', 'jquery/rating')
 ));
 
+// jquery color picker
+$al->register('javascript', 'jquery/colorpicker', 'js/jquery.colorpicker.js');
+$al->register('css', 'jquery/colorpicker', 'css/jquery.colorpicker.css', array('postprocess' => false));
+$al->registerGroup('jquery/colorpicker', array(
+	array('javascript', 'jquery/colorpicker'),
+	array('css', 'jquery/colorpicker')
+));
 
 // swfobject
 $al->register('javascript', 'swfobject', 'js/swfobject.js');

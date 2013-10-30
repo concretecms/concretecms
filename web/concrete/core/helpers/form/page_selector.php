@@ -50,7 +50,7 @@ class Concrete5_Helper_Form_PageSelector {
 			$clearStyle = '';
 		}
 		$html .= '</strong></div>';
-		$html .= '<a class="ccm-sitemap-select-page" dialog-width="90%" dialog-height="70%" dialog-append-buttons="true" dialog-modal="false" dialog-title="' . t('Choose Page') . '" href="' . REL_DIR_FILES_TOOLS_REQUIRED . '/sitemap_search_selector.php?requestID=' . $requestID . '&amp;cID=' . $selectedCID . '">' . t('Select Page') . '</a>';
+		$html .= '<a class="ccm-sitemap-select-page" dialog-width="90%" dialog-height="70%" dialog-append-buttons="true" dialog-modal="false" dialog-title="' . t('Choose Page') . '" href="' . REL_DIR_FILES_TOOLS_REQUIRED . '/sitemap_search_selector?requestID=' . $requestID . '&amp;cID=' . $selectedCID . '">' . t('Select Page') . '</a>';
 		$html .= '&nbsp;<a href="javascript:void(0)" dialog-sender="' . $fieldName . '" class="ccm-sitemap-clear-selected-page" style="float: right; margin-top: -8px;' . $clearStyle . '"><img src="' . ASSETS_URL_IMAGES . '/icons/remove.png" style="vertical-align: middle; margin-left: 3px" /></a>';
 		$html .= '<input type="hidden" data-page-selector="cID" name="' . $fieldName . '" value="' . $selectedCID . '"/>';
 		$html .= '</div>'; 

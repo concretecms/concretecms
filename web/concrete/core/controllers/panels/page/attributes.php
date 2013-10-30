@@ -10,7 +10,7 @@ class Concrete5_Controller_Panel_Page_Attributes extends FrontendEditPageControl
 
 	public function view() {
 		$pk = PermissionKey::getByHandle('edit_page_properties');
-		$pk->setPermissionObject($c);
+		$pk->setPermissionObject($this->page);
 		$assignment = $pk->getMyAssignment();
 		$allowed = $assignment->getAttributesAllowedArray();
 
