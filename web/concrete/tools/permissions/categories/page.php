@@ -126,12 +126,15 @@ if (count($pages) > 0) {
 				$deferred = true;
 			}
 		}
-		
-		$obj = new stdClass;
-		$obj->deferred = $deferred;
-		print Loader::helper('json')->encode($obj);
-		exit;		
 
+		$r = new PageEditVersionResponse();
+		$r->setPage($c);
+		if ($deferred) {
+			$r->setMessage(t('Page permissions request saved successfully. You must approve this workflow request before the permissions are changed.'));
+		} else {
+			$r->setMessage(t('Page permissions saved successfully.'));
+		}
+		Loader::helper('ajax')->sendResult($r);
 	}
 
 	if ($_REQUEST['task'] == 'bulk_add_access' && Loader::helper('validation/token')->validate('bulk_add_access')) {

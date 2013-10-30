@@ -11,7 +11,7 @@ class Concrete5_Controller_Panel_Details_Page_Attributes extends FrontendEditPag
 	public function __construct() {
 		parent::__construct();
 		$pk = PermissionKey::getByHandle('edit_page_properties');
-		$pk->setPermissionObject($c);
+		$pk->setPermissionObject($this->page);
 		$this->assignment = $pk->getMyAssignment();
 	}
 
@@ -64,17 +64,6 @@ class Concrete5_Controller_Panel_Details_Page_Attributes extends FrontendEditPag
 			if ($asl->allowEditDescription()) { 
 				$data['cDescription'] = $_POST['cDescription'];
 			}
-			if ($asl->allowEditPaths()) { 
-				$data['cHandle'] = $_POST['cHandle'];
-				$data['ppURL'] = array();
-				foreach ($_POST as $key=>$value) {
-					if (strpos($key, 'ppURL-') === 0) {
-						$subkey = substr($key, 6);
-						$data['ppURL'][$subkey] = $value;
-					}
-				}
-			}
-
 			if ($asl->allowEditDateTime()) { 
 				$dt = Loader::helper('form/date_time');
 				$dh = Loader::helper('date');

@@ -63,6 +63,30 @@ class Concrete5_Controller_Panel_Page_Design extends FrontendEditPageController 
 		$this->setViewObject(new View('/system/panels/details/page/preview'));
 	}
 
+	public function preview_contents() {
+		$req = Request::getInstance();
+		$req->setCurrentPage($this->page);
+		$controller = Loader::controller($this->page);
+		$view = $controller->getViewObject();
+		if ($_REQUEST['pTemplateID']) {
+			$pt = PageTemplate::getByID(Loader::helper('security')->sanitizeInt($_REQUEST['pTemplateID']));
+			if (is_object($pt)) {
+				$view->setCustomPageTemplate($pt);
+			}
+		}
+		if ($_REQUEST['pThemeID']) {
+			$pt = PageTheme::getByID(Loader::helper('security')->sanitizeInt($_REQUEST['pThemeID']));
+			if (is_object($pt)) {
+				$view->setCustomPageTheme($pt);
+			}
+		}
+		$req->setCustomRequestUser(-1);
+		$response = new Response();
+		$content = $view->render();
+		$response->setContent($content);
+		return $response;
+	}
+
 	public function submit() {
 		if ($this->validateAction()) {
 			$cp = $this->permissions;
@@ -103,6 +127,7 @@ class Concrete5_Controller_Panel_Page_Design extends FrontendEditPageController 
 
 			$r = new PageEditResponse();
 			$r->setPage($c);
+			$r->setMessage(t('Page theme updated successfully.'));
 			$r->setRedirectURL(BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $c->getCollectionID());
 			$r->outputJSON();
 		}

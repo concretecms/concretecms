@@ -11,6 +11,10 @@ abstract class Concrete5_Controller_Frontend_Edit extends Controller {
 		$this->view->setController($this);
 		$request = Request::getInstance();
 		$this->request = $request;
+
+		set_exception_handler(function($exception) {
+			print $exception->getMessage();
+		});
 	}
 
 	public function getViewObject() {

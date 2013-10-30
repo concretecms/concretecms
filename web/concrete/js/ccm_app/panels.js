@@ -246,11 +246,12 @@ var CCMPanel = function(options) {
 						if (r.error) {
 							ccmAlert.notice('Error', '<div class="alert alert-danger">' + r.errors.join("<br>") + '</div>');
 						} else {
+							CCMEditMode.showResponseNotification(r.message, 'ok', 'success');
+							CCMPanelManager.exitPanelMode();
 							if (r.redirectURL) {
-								window.location.href = r.redirectURL;
-							} else {
-								CCMEditMode.showResponseNotification(r.message, 'ok', 'success');
-								CCMPanelManager.exitPanelMode();
+								setTimeout(function() {
+									window.location.href = r.redirectURL;
+								}, 2000);
 							}
 						}
 					},
@@ -269,10 +270,10 @@ var CCMPanel = function(options) {
 			var $accordion = $(this);
 			var $title = $(this).find('>nav>span');
 			$title.text($(this).find('a[data-panel-accordion-tab-selected=true]').text());
-			$title.on('click.accordion', function() {
+			$title.unbind('.accordion').on('click.accordion', function() {
 				$accordion.toggleClass('ccm-panel-header-accordion-dropdown-visible');
 			});
-			$(this).find('>nav ul a').on('click.accordion', function() {
+			$(this).find('>nav ul a').unbind('.accordion').on('click.accordion', function() {
 				var url = obj.getURL();
 				var $content = $panel.find('.ccm-panel-content');
 				$accordion.removeClass('ccm-panel-header-accordion-dropdown-visible');
@@ -284,7 +285,7 @@ var CCMPanel = function(options) {
 		});
 		$panel.find('[data-panel-menu=collapsible-list-group]').each(function() {
 			var $clg = $(this);
-			$clg.find('.list-group-item-collapse').on('click', function() {
+			$clg.find('.list-group-item-collapse').unbind('.clg').on('click.clg', function() {
 				var $inner = $clg.find('.list-group-item-collapse-wrapper');
 				var menuID = $clg.attr('data-panel-menu-id');
 				var $title = $clg.find('.list-group-item-collapse span');

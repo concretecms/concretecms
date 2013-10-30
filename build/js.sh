@@ -25,6 +25,10 @@ cat ../web/concrete/js/gathering/packery.js \
 uglifyjs --no-copyright --no-seqs -o ../web/concrete/js/ccm.gathering.js ./ccm.gathering.tmp.js 
 rm ccm.gathering.tmp.js
 
+cat ../web/concrete/js/ccm_app/colorpicker.js > jquery.colorpicker.tmp.js
+uglifyjs --no-copyright --no-seqs -o ../web/concrete/js/jquery.colorpicker.js ./jquery.colorpicker.tmp.js 
+rm jquery.colorpicker.tmp.js
+
 cat ../web/concrete/js/ccm_app/pubsub.js > ccm.pubsub.tmp.js
 uglifyjs --no-copyright --no-seqs -o ../web/concrete/js/ccm.pubsub.js ./ccm.pubsub.tmp.js 
 rm ccm.pubsub.tmp.js
@@ -41,8 +45,7 @@ uglifyjs --no-seqs -o ../web/concrete/js/bootstrap.js ./bootstrap.tmp.js
 rm bootstrap.tmp.js
 
 # Note: The order here is important
-cat ../web/concrete/js/ccm_app/jquery.colorpicker.js \
-../web/concrete/js/ccm_app/jquery.hoverIntent.js \
+cat ../web/concrete/js/ccm_app/jquery.hoverIntent.js \
 ../web/concrete/js/ccm_app/jquery.liveupdate.js \
 ../web/concrete/js/ccm_app/chosen.jquery.js \
 ../web/concrete/js/ccm_app/base.js \

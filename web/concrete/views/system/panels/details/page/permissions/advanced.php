@@ -36,7 +36,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 	<p class="lead"><?=t('Current Permission Set')?></p>
 
 	<? $cat = PermissionKeyCategory::getByHandle('page'); ?>
-	<form method="post" action="<?=$controller->action('submit')?>" data-panel-detail-form="permissions">
+	<form method="post" id="ccm-permission-list-form" data-panel-detail-form="permissions" action="<?=$cat->getToolsURL("save_permission_assignments")?>&cID=<?=$c->getCollectionID()?>">
 
 	<table class="ccm-permission-grid table table-striped">
 	<?
@@ -127,7 +127,7 @@ $(function() {
 		jQuery.fn.dialog.showLoader();
 		$.getJSON('<?=$pk->getPermissionAssignmentObject()->getPermissionKeyToolsURL("change_subpage_defaults_inheritance")?>&cID=<?=$c->getCollectionID()?>&inherit=' + $(this).val(), function(r) { 
 			if (r.deferred) {
-				jQuery.fn.dialog.closeTop();
+				CCMPanelManager.exitPanelMode();
 				jQuery.fn.dialog.hideLoader();
 				ccmAlert.hud(ccmi18n.setPermissionsDeferredMsg, 2000, 'success', ccmi18n_sitemap.setPagePermissions);
 			} else {
@@ -139,11 +139,11 @@ $(function() {
 });
 
 ccm_refreshPagePermissions = function() {
-	jQuery.fn.dialog.showLoader();
-	$.get('<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_collection_popup?ctask=edit_permissions&cID=<?=$c->getCollectionID()?>', function(r) { 
-		jQuery.fn.dialog.replaceTop(r);
-		jQuery.fn.dialog.hideLoader();
-	});	
+	var panel = CCMPanelManager.getByIdentifier('page');
+	panel.openPanelDetail({
+		'identifier': 'page-permissions',
+		'url': '<?=URL::to("/system/panels/details/page/permissions")?>'
+	});
 }
 
 ccm_permissionLaunchDialog = function(link) {

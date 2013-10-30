@@ -17,7 +17,7 @@ class Concrete5_Model_PageThemeEditableStyleFont extends Concrete5_Model_PageThe
 		// value is pretty rigid. Has to be "font: normal normal 18px Book Antiqua"
 		// so font: $weight $
 		
-		$expl = explode(' ', $this->ptsValue);
+		$expl = explode(' ', $this->pThemeStyleValue);
 		$this->style = trim($expl[0]);
 		$this->weight = trim($expl[1]);
 		$this->size = preg_replace('/[^0-9]/', '', trim($expl[2]));

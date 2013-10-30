@@ -4,7 +4,7 @@ class Concrete5_Controller_Dashboard extends PageController {
 	
 	protected $error; 
 	public $token;
-	public $helpers = array('form');
+	protected $helpers = array('form');
 
 	public function enableNativeMobile() {
 		Loader::library('3rdparty/mobile_detect');

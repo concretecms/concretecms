@@ -19,6 +19,13 @@ class Concrete5_Library_View_Dialog extends View {
 		print $str . "\n";
 	}
 
+	public function getScopeItems() {
+		$items = parent::getScopeItems();
+		$u = new User();
+		$items['u'] = $u;
+		return $items;
+	}
+
 	protected function onAfterGetContents() {
 		// now that we have the contents of the tool,
 		// we make sure any require assets get moved into the header

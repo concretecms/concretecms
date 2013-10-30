@@ -186,36 +186,34 @@ class Concrete5_Model_PageTheme extends Object {
 	public function mergeStylesFromPost($post) {
 		$values = array();
 		$styles = $this->getEditableStylesList();
-		foreach($styles as $sto) {
-			foreach($sto as $st) {
-				$ptes = new PageThemeEditableStyle();
-				$ptes->pThemeStyleHandle = $st->getHandle();
-				$ptes->pThemeStyleType = $st->getType();
-				$ptes->pThemeStyleProperty = $st->getProperty();
-				
-				switch($st->getType()) {
-					case PageThemeEditableStyle::TSTYPE_COLOR:
-						if (isset($post['input_theme_style_' . $st->getHandle() . '_' . $st->getType()])) {
-							$ptes->pThemeStyleValue = $ptes->getProperty() . ':' . $post['input_theme_style_' . $st->getHandle() . '_' . $st->getType()] . ';';
-							$values[] = $ptes;
-						}
-						break;
-					case PageThemeEditableStyle::TSTYPE_CUSTOM:
-						if (isset($post['input_theme_style_' . $st->getHandle() . '_' . $st->getType()])) {
-							$ptes->pThemeStyleValue = $post['input_theme_style_' . $st->getHandle() . '_' . $st->getType()];
-							$values[] = $ptes;
-						}
-						break;
-					case PageThemeEditableStyle::TSTYPE_FONT:
-						if (isset($post['input_theme_style_' . $st->getHandle() . '_' . $st->getType()])) {
-							$value = $post['input_theme_style_' . $st->getHandle() . '_' . $st->getType()];
-							// now we transform it from it's post, which has pipes and separators and crap
-							$fv = explode('|', $value);
-							$ptes->pThemeStyleValue = $ptes->getProperty() . ':' . $fv[0] . ' ' . $fv[1] . ' ' . $fv[2] . 'px ' . $fv[3] . ';';
-							$values[] = $ptes;
-						}
-						break;
-				}
+		foreach($styles as $st) {
+			$ptes = new PageThemeEditableStyle();
+			$ptes->pThemeStyleHandle = $st->getHandle();
+			$ptes->pThemeStyleType = $st->getType();
+			$ptes->pThemeStyleProperty = $st->getProperty();
+			
+			switch($st->getType()) {
+				case PageThemeEditableStyle::TSTYPE_COLOR:
+					if (isset($post['input_theme_style_' . $st->getHandle() . '_' . $st->getType()])) {
+						$ptes->pThemeStyleValue = $ptes->getProperty() . ':' . $post['input_theme_style_' . $st->getHandle() . '_' . $st->getType()] . ';';
+						$values[] = $ptes;
+					}
+					break;
+				case PageThemeEditableStyle::TSTYPE_CUSTOM:
+					if (isset($post['input_theme_style_' . $st->getHandle() . '_' . $st->getType()])) {
+						$ptes->pThemeStyleValue = $post['input_theme_style_' . $st->getHandle() . '_' . $st->getType()];
+						$values[] = $ptes;
+					}
+					break;
+				case PageThemeEditableStyle::TSTYPE_FONT:
+					if (isset($post['input_theme_style_' . $st->getHandle() . '_' . $st->getType()])) {
+						$value = $post['input_theme_style_' . $st->getHandle() . '_' . $st->getType()];
+						// now we transform it from it's post, which has pipes and separators and crap
+						$fv = explode('|', $value);
+						$ptes->pThemeStyleValue = $ptes->getProperty() . ':' . $fv[0] . ' ' . $fv[1] . ' ' . $fv[2] . 'px ' . $fv[3] . ';';
+						$values[] = $ptes;
+					}
+					break;
 			}
 		}
 		
@@ -293,6 +291,11 @@ class Concrete5_Model_PageTheme extends Object {
 		return PageThemeEditableStyle::TSTYPE_CUSTOM;
 
 	}
+
+	public function isThemeCustomizable() {
+		$styles = $this->getEditableStylesList();
+		return count($styles) > 0;
+	}
 	
 	/** 
 	 * Retrieves an array of editable style objects from the current them. This is accomplished by locating all style sheets in the root of the theme, parsing all their contents
@@ -332,9 +335,19 @@ class Concrete5_Model_PageTheme extends Object {
 				
 				// returns a nested associative array that's
 				// $styles[$handle'][] = style 1, $styles[$handle'][] = 'style 2', etc...
-				$styles[$pte->pThemeStyleHandle][] = $pte;
+				$styles[] = $pte;
 			}
 		}
+
+		usort($styles, function($a, $b) {
+			if ($a->getType() > $b->getType()) {
+				return 1;
+			} else if ($b->getType() > $a->getType()) {
+				return -1;
+			} else {
+				return 0;
+			}
+		});
 		return $styles;
 	}
 	
