@@ -1510,6 +1510,31 @@
       <col>cvID</col>
     </index>
   </table>
+  <table name="CollectionVersionThemeStyles">
+    <field name="cID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="cvID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="1"/>
+      <UNSIGNED/>
+    </field>
+    <field name="pThemeID" type="I" size="10">
+      <key/>
+      <default value="0"/>
+      <unsigned/>
+    </field>
+    <field name="pThemeStyleHandle" type="C" size="128">
+      <key/>
+    </field>
+    <field name="pThemeStyleValue" type="X2" />
+    <field name="pThemeStyleType" type="C" size="32">
+      <key/>
+    </field>
+  </table>
+
   <table name="BlockFeatureAssignments">
     <field name="cID" type="I" size="10">
       <key/>

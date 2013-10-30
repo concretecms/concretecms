@@ -196,6 +196,15 @@
 				$v3 = array(intval($c->getCollectionID()), $newVID, $row3['faID']);
 				$db->query("insert into CollectionVersionFeatureAssignments (cID, cvID, faID) values (?, ?, ?)", $v3); 
 			}
+
+			$q4 = "select pThemeID, pThemeStyleHandle, pThemeStyleValue, pThemeStyleType from CollectionVersionThemeStyles where cID = ? and cvID = ?";
+			$v4 = array($c->getCollectionID(), $this->getVersionID());
+			$r4 = $db->query($q4, $v4);
+			while ($row4 = $r4->fetchRow()) {
+				$v4 = array(intval($c->getCollectionID()), $newVID, $row4['pThemeID'], $row4['pThemeStyleHandle'], $row4['pThemeStyleValue'], $row4['pThemeStyleType']);
+				$db->query("insert into CollectionVersionThemeStyles (cID, cvID, pThemeID, pThemeStyleHandle, pThemeStyleValue, pThemeStyleType) values (?, ?, ?, ?, ?, ?)", $v4); 
+			}
+			
 			
 			$nv = CollectionVersion::get($c, $newVID);
 			Events::fire('on_page_version_add', $c, $nv);
@@ -264,6 +273,7 @@
 
 			Events::fire('on_page_version_approve', $c);
 			$c->reindex(false, $doReindexImmediately);
+			$c->writePageThemeCustomizations();
 			$this->refreshCache();
 		}
 		
@@ -346,6 +356,7 @@
 			}
 			
 			$db->Execute('delete from CollectionVersionBlockStyles where cID = ? and cvID = ?', array($cID, $cvID));
+			$db->Execute('delete from CollectionVersionThemeStyles where cID = ? and cvID = ?', array($cID, $cvID));
 			$db->Execute('delete from CollectionVersionRelatedEdits where cID = ? and cvID = ?', array($cID, $cvID));
 			$db->Execute('delete from CollectionVersionAreaStyles where cID = ? and cvID = ?', array($cID, $cvID));
 			

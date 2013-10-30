@@ -194,20 +194,20 @@ class Concrete5_Model_PageTheme extends Object {
 			
 			switch($st->getType()) {
 				case PageThemeEditableStyle::TSTYPE_COLOR:
-					if (isset($post['input_theme_style_' . $st->getHandle() . '_' . $st->getType()])) {
-						$ptes->pThemeStyleValue = $ptes->getProperty() . ':' . $post['input_theme_style_' . $st->getHandle() . '_' . $st->getType()] . ';';
+					if (isset($post[$st->getFormFieldInputName()])) {
+						$ptes->pThemeStyleValue = $ptes->getProperty() . ':' . $post[$st->getFormFieldInputName()] . ';';
 						$values[] = $ptes;
 					}
 					break;
 				case PageThemeEditableStyle::TSTYPE_CUSTOM:
-					if (isset($post['input_theme_style_' . $st->getHandle() . '_' . $st->getType()])) {
-						$ptes->pThemeStyleValue = $post['input_theme_style_' . $st->getHandle() . '_' . $st->getType()];
+					if (isset($post[$st->getFormFieldInputName()])) {
+						$ptes->pThemeStyleValue = $post[$st->getFormFieldInputName()];
 						$values[] = $ptes;
 					}
 					break;
 				case PageThemeEditableStyle::TSTYPE_FONT:
-					if (isset($post['input_theme_style_' . $st->getHandle() . '_' . $st->getType()])) {
-						$value = $post['input_theme_style_' . $st->getHandle() . '_' . $st->getType()];
+					if (isset($post[$st->getFormFieldInputName()])) {
+						$value = $post[$st->getFormFieldInputName()];
 						// now we transform it from it's post, which has pipes and separators and crap
 						$fv = explode('|', $value);
 						$ptes->pThemeStyleValue = $ptes->getProperty() . ':' . $fv[0] . ' ' . $fv[1] . ' ' . $fv[2] . 'px ' . $fv[3] . ';';
@@ -263,7 +263,7 @@ class Concrete5_Model_PageTheme extends Object {
 		}
 	}
 	
-	private function getStyleSheets() {
+	public function getStyleSheets() {
 		$fh = Loader::helper('file');
 		$files = $fh->getDirectoryContents($this->getThemeDirectory());
 		$sheets = array();
@@ -302,12 +302,12 @@ class Concrete5_Model_PageTheme extends Object {
 	 * @param string $file
 	 * @return array
 	 */
-	public function getEditableStylesList() {
+	public function getEditableStylesList($mergeStyles = false) {
 		$sheets = $this->getStyleSheets();
 
 		$styles = array();
 		foreach($sheets as $file) {		
-			$ss = $this->parseStyleSheet($file);
+			$ss = $this->parseStyleSheet($file, $mergeStyles);
 
 			// match all tokens
 			$matches = array();

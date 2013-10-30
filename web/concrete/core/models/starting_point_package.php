@@ -134,9 +134,16 @@ class Concrete5_Model_StartingPointPackage extends Package {
 		try {
 			Database::ensureEncoding();
 			Package::installDB($installDirectory . '/db.xml');
+			$this->indexAdditionalDatabaseFields();
 		} catch (Exception $e) { 
 			throw new Exception(t('Unable to install database: %s', $db->ErrorMsg()));
 		}
+	}
+
+	protected function indexAdditionalDatabaseFields() {
+		$db = Loader::db();
+		$db->Execute('alter table PagePaths add index (`cPath` (500))');
+		//$db->Execute('alter table Groups add index (`gPath` (500))');
 	}
 
 	public function add_users() {
