@@ -47,7 +47,6 @@ var buildBezier = function(start, ctrl1, ctrl2, end, lowBound, highBound) {
 };
 
 var vignette = function(data,stuff,size,strength) {
-  console.log(arguments);
   var width = data.width,
       height = data.height,
       bezier, center, end, start;
@@ -90,21 +89,19 @@ im.bind('filterChange',function(e){
     setTimeout(function(){
       // Just apply, there is no variation.
 
-      im.activeElement.applyFilter(vignette,{test:'val'},function(){
-        im.hideLoader();
-        im.fire('filterApplied', me);
-        im.fire('VignetteFilterDidFinish');
-        im.activeElement.parent.draw();
-      });
+      im.activeElement.setFilter(vignette);
+      im.activeElement.applyFilter();
+
+      im.hideLoader();
+      im.fire('VignetteFilterDidFinish');
+      im.fire('filterApplied', me);
       // Apply Filter
     },10); // Allow loader to show
   }
 });
 im.bind('filterApplyExample',function(e){
-  console.log(e);
   if (e.eventData.namespace === me.im.namespace) {
-    e.eventData.image.applyFilter(vignette,{},function(){
-      im.fire('filterBuiltExample', me, e.eventData.elem);
-    });
+    e.eventData.image.setFilter(vignette);
+    im.fire('filterBuiltExample', me, e.eventData.elem);
   }
 });

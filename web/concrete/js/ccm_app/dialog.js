@@ -1,4 +1,4 @@
-/** 
+/**
  * concrete5 wrapper for jQuery UI
  */
 
@@ -67,7 +67,7 @@ jQuery.fn.dialog.open = function(options) {
 				w = parseInt(options.width) + 50;
 			}
 		}
-	} else if (options.width) { 
+	} else if (options.width) {
 		w = parseInt(options.width) + 50;
 	} else {
 		w = 550;
@@ -97,7 +97,7 @@ jQuery.fn.dialog.open = function(options) {
 	options.width = w;
 	options.height = h;
 
-	var defaults = { 
+	var defaults = {
 		'modal': true,
 		'escapeClose': true,
 		'width': w,
@@ -123,7 +123,7 @@ jQuery.fn.dialog.open = function(options) {
 			});
 
 			jQuery.fn.dialog.activateDialogContents($dialog);
-			
+
 			if (typeof options.onOpen != "undefined") {
 				if ((typeof options.onOpen) == 'function') {
 					options.onOpen($dialog);
@@ -137,7 +137,7 @@ jQuery.fn.dialog.open = function(options) {
 		'beforeClose': function() {
 			var nd = $(".ui-dialog").length;
 			if (nd == 1) {
-				$("body").css("overflow", $('body').attr('data-last-overflow'));		
+				$("body").css("overflow", $('body').attr('data-last-overflow'));
 			}
 		},
 		'close': function(ev, u) {
@@ -189,13 +189,14 @@ jQuery.fn.dialog.open = function(options) {
 			url: finalSettings.href,
 			success: function(r) {
 				jQuery.fn.dialog.hideLoader();
-				// note the order here is very important in order to actually run javascript in 
+				// note the order here is very important in order to actually run javascript in
 				// the pages we load while having access to the jqdialog object.
-				$('<div />').jqdialog(finalSettings).html(r).jqdialog('open');
+				// Ensure that the dialog is open prior to evaluating javascript.
+				$('<div />').jqdialog(finalSettings).jqdialog('open').html(r);
 			}
-		});			
+		});
 	}
-		
+
 }
 
 jQuery.fn.dialog.activateDialogContents = function($dialog) {
@@ -229,7 +230,7 @@ jQuery.fn.dialog.activateDialogContents = function($dialog) {
 		}
 		$dialog.parent().find('.ui-dialog-titlebar').addClass('ccm-ui').append('<button class="ui-dialog-titlebar-help ccm-menu-help-trigger"><i class="icon-info-sign"></i></button>');
 		$dialog.parent().find('.ui-dialog-titlebar .ccm-menu-help-trigger').popover({content: function() {
-			return helpContent;			
+			return helpContent;
 		}, placement: 'bottom', html: true, container: '#tooltip-holder', trigger: 'click'});
 	}
 }

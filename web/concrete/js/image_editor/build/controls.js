@@ -5,14 +5,14 @@ controlBar.attr('unselectable', 'on');
 
 var zoom = {};
 
-zoom.in = getElem("<div class='bottombarbutton plus'><i class='icon-plus'></i></div>");
-zoom.out = getElem("<div class='bottombarbutton'><i class='icon-minus'></i></div>");
+zoom.zoomIn = getElem("<div class='bottombarbutton plus'><i class='icon-plus'></i></div>");
+zoom.zoomOut = getElem("<div class='bottombarbutton'><i class='icon-minus'></i></div>");
 
-zoom.in.appendTo(controlBar);
-zoom.out.appendTo(controlBar);
+zoom.zoomIn.appendTo(controlBar);
+zoom.zoomOut.appendTo(controlBar);
 
-zoom.in.click(function(e){im.fire('zoomInClick',e)});
-zoom.out.click(function(e){im.fire('zoomOutClick',e)});
+zoom.zoomIn.click(function(e){im.fire('zoomInClick',e)});
+zoom.zoomOut.click(function(e){im.fire('zoomOutClick',e)});
 
 var scale = getElem('<div></div>').addClass('scale').text('100%');
 im.on('scaleChange',function(e){
@@ -27,27 +27,27 @@ scale.click(function(){
   im.fire('scaleChange');
   im.buildBackground();
   im.stage.draw();
-})
+});
 scale.appendTo(controlBar);
 
 var minScale = 0, maxScale = 3000, stepScale = 5/6;
 
 im.on('zoomInClick',function(e){
-  var centerx = (-im.stage.getX() + (im.stage.getWidth() / 2)) / im.scale, 
+  var centerx = (-im.stage.getX() + (im.stage.getWidth() / 2)) / im.scale,
       centery = (-im.stage.getY() + (im.stage.getHeight() / 2)) / im.scale;
-  
+
   im.scale /= stepScale;
   im.scale = Math.round(im.scale * 1000) / 1000;
   im.alterCore('scale',im.scale);
 
-  var ncenterx = (-im.stage.getX() + (im.stage.getWidth() / 2)) / im.scale, 
+  var ncenterx = (-im.stage.getX() + (im.stage.getWidth() / 2)) / im.scale,
       ncentery = (-im.stage.getY() + (im.stage.getHeight() / 2)) / im.scale;
-    
+
   im.stage.setX(im.stage.getX() - (centerx - ncenterx) * im.scale);
   im.stage.setY(im.stage.getY() - (centery - ncentery) * im.scale);
 
   im.stage.setScale(im.scale);
-  
+
   var pos = (im.stage.getDragBoundFunc())({x:im.stage.getX(),y:im.stage.getY()});
   im.stage.setX(pos.x);
   im.stage.setY(pos.y);
@@ -57,21 +57,21 @@ im.on('zoomInClick',function(e){
   im.stage.draw();
 });
 im.on('zoomOutClick',function(e){
-  var centerx = (-im.stage.getX() + (im.stage.getWidth() / 2)) / im.scale, 
+  var centerx = (-im.stage.getX() + (im.stage.getWidth() / 2)) / im.scale,
       centery = (-im.stage.getY() + (im.stage.getHeight() / 2)) / im.scale;
-  
+
   im.scale *= stepScale;
   im.scale = Math.round(im.scale * 1000) / 1000;
   im.alterCore('scale',im.scale);
 
-  var ncenterx = (-im.stage.getX() + (im.stage.getWidth() / 2)) / im.scale, 
+  var ncenterx = (-im.stage.getX() + (im.stage.getWidth() / 2)) / im.scale,
       ncentery = (-im.stage.getY() + (im.stage.getHeight() / 2)) / im.scale;
-    
+
   im.stage.setX(im.stage.getX() - (centerx - ncenterx) * im.scale);
   im.stage.setY(im.stage.getY() - (centery - ncentery) * im.scale);
 
   im.stage.setScale(im.scale);
-  
+
   var pos = (im.stage.getDragBoundFunc())({x:im.stage.getX(),y:im.stage.getY()});
   im.stage.setX(pos.x);
   im.stage.setY(pos.y);
@@ -90,10 +90,11 @@ saveSize.crop = getElem('<div><i class="icon-resize-full"/></div>').addClass('bo
 saveSize.both = saveSize.height.add(saveSize.width).width(32).attr('contenteditable',!!1);
 
 saveSize.area = getElem('<span/>').css({float:'right'});
-saveSize.crop.appendTo(saveSize.area);
+/*saveSize.crop.appendTo(saveSize.area);
 saveSize.width.appendTo($('<div>w </div>').addClass('saveWidth').appendTo(saveSize.area));
 saveSize.height.appendTo($('<div>h </div>').addClass('saveHeight').appendTo(saveSize.area));
 saveSize.area.appendTo(controlBar);
+*/
 
 im.on('adjustedsavers',function(){
   saveSize.width.text(im.saveWidth);

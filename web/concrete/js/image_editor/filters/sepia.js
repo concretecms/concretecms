@@ -5,24 +5,26 @@ im.bind('filterFullyLoaded',function(e){
 	}
 });
 im.bind('filterChange',function(e){
-	if (e.eventData.im.namespace === me.im.namespace) {
-		im.showLoader('Applying Sepia Filter');
-		setTimeout(function(){
-			// Just apply, there is no variation.
+  if (e.eventData.im.namespace === me.im.namespace) {
+    im.showLoader('Applying Sepia');
 
-			im.activeElement.applyFilter(im.filter.sepia,{},function(){
-				im.hideLoader();
-				im.fire('filterApplied', me);
-				im.activeElement.parent.draw();
-			});
-			// Apply Filter
-		},10); // Allow loader to show
-	}
+    setTimeout(function(){
+      // Just apply, there is no variation.
+
+      im.activeElement.setFilter(im.filter.sepia);
+      im.activeElement.applyFilter();
+
+      im.hideLoader();
+      im.fire('SepiaFilterDidFinish');
+      im.fire('filterApplied', me);
+      // Apply Filter
+    }, 10); // Allow loader to show
+  }
 });
 im.bind('filterApplyExample',function(e){
 	if (e.eventData.namespace === me.namespace) {
-		e.eventData.image.applyFilter(im.filter.sepia,{},function(){
-			im.fire('filterBuiltExample', me, e.eventData.elem);
-		});
+		console.log(e.eventData);
+		e.eventData.image.setFilter(im.filter.sepia);
+		im.fire('filterBuiltExample', me, e.eventData.elem);
 	}
 });

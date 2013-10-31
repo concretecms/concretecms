@@ -1,10 +1,6 @@
 im.save = function() {
   im.background.hide();
-  if (im.activeElement !== undefined && typeof im.activeElement.releaseStroke == 'function') {
-    im.activeElement.releaseStroke();
-  }
   im.stage.setScale(1);
-  im.setActiveElement(im.stage);
 
   im.fire('ChangeActiveAction');
   im.fire('changeActiveComponent');
@@ -48,51 +44,114 @@ im.save = function() {
   })
 };
 
-im.adjustSavers = function() {
+im.save = function saveImage() {
+  im.fire('ChangeActiveAction');
+
+  var oldStagePosition = im.stage.getPosition(),
+      oldScale = im.scale;
+
+  im.stage.setPosition(-im.saveArea.getX(), -im.saveArea.getY());
+  im.stage.setScale(1);
+  im.background.hide();
+  im.foreground.hide();
+  im.stage.draw();
+
+  im.stage.toDataURL({
+    width: im.saveWidth,
+    height: im.saveHeight,
+    callback: function saveImageDataUrlCallback(url) {
+      im.stage.setPosition(oldStagePosition);
+      im.background.show();
+      im.foreground.show();
+      im.stage.setScale(oldScale);
+      im.stage.draw();
+
+      $.post('/index.php/tools/files/importers/imageeditor',{
+        fID: im.fileId,
+        imgData: url
+      }, function(res){
+        var result = JSON.parse(res);
+        if (result.error === 1){
+          alert(result.message);
+        } else {
+          window.location = window.location;
+        }
+      });
+    }
+  });
+}
+
+
+
+im.actualPosition = function actualPosition(x, y, cx, cy, rad) {
+  var ay = y - cy,
+      ax = x - cx,
+      degChange = im.activeElement.getRotation() + Math.atan2(ay, ax),
+      r = Math.sqrt(Math.pow(ax, 2) + Math.pow(ay, 2));
+  return [cx + (r * Math.cos(degChange)), cy + (r * Math.sin(degChange))];
+}
+
+im.getActualRect = function actualRect(cx, cy, elem) {
+  var rect = [], rad = elem.getRotation();
+  rect.push(im.actualPosition(elem.getX(), elem.getY(), cx, cy, rad));
+  rect.push(im.actualPosition(elem.getX() + elem.getWidth() * elem.getScaleX(), elem.getY(), cx, cy, rad));
+  rect.push(im.actualPosition(elem.getX() + elem.getWidth() * elem.getScaleX(), elem.getY() + elem.getHeight() * elem.getScaleY(), cx, cy, rad));
+  rect.push(im.actualPosition(elem.getX(), elem.getY() + elem.getHeight() * elem.getScaleY(), cx, cy, rad));
+  return rect;
+}
+
+im.adjustSavers = function AdjustingSavers(fire) {
+  if (im.activeElement.nodeType === 'Stage') return;
   im.foreground.autoCrop = false;
   im.background.autoCrop = false;
-  var i, e, c = im.stage.getChildren(), l = c.length, count = {min:{x:false,y:false},max:{x:false,y:false}};
-  for (i=0;i<l;i++) {
-    if (c[i].autoCrop === false) continue;
-    for (e in c[i].children) {
-      var pos = c[i].children[e].getPosition(), size = c[i].children[e].getSize(), center = {x:pos.x + size.width / 2, y:pos.y + size.height / 2};
-      if (count.min.x === false) {
-        count.min.x = pos.x;
-        count.min.y = pos.y;
-        count.max.x = pos.x - size.width;
-        count.max.y = pos.y + size.height;
-      }
-      if (count.min.x > pos.x) count.min.x = pos.x;
-      if (count.min.y > pos.y) count.min.y = pos.y;
-      if (count.max.x < pos.x + size.width) count.max.x = pos.x + size.width;
-      if (count.max.y < pos.y + size.height) count.max.y = pos.y + size.height;
-    }
-  }
-  var avg = {x:(count.min.x + count.max.x)/2, y:(count.min.y + count.max.y)/2},
-      diff = {x:Math.round(avg.x-im.center.x), y:Math.round(avg.y-im.center.y)};
-  if (count.min.x === false) {
-    im.alterCore('saveWidth',0);
-    im.alterCore('saveHeight',0);
-    im.buildBackground();
-    im.fire('adjustedsavers');
-    return;
-  }
-  if (diff.x !== 0 || diff.y !== 0) {
-    for (i=0;i<l;i++) {
-      if (c[i].autoCrop === false) continue;
-      for (e in c[i].children) {
-        c[i].children[e].attrs.x -= diff.x;
-        c[i].children[e].attrs.y -= diff.y;
+  var i, e, u, score = {min:{x:false, y:false}, max:{x:false, y:false}};
+  /*
+  for (var i = im.stage.children.length - 1; i >= 0; i--) {
+    var layer = im.stage.children[i];
+    if (layer.autoCrop === false) continue;
+    for (var e = layer.children.length - 1; e >= 0; e--) {
+      var child = layer.children[e],
+          rect = im.getActualRect(0, 0, child);
+          console.log(child);
+
+      for (var u = rect.length - 1; u >= 0; u--) {
+        var point = rect[u], x = point[0] + layer.getX(), y = point[1] + layer.getY();
+        if (x > score.max.x || score.max.x === false) score.max.x = x;
+        if (x < score.min.x || score.min.x === false) score.min.x = x;
+        if (y > score.max.y || score.max.y === false) score.max.y = y;
+        if (y < score.min.y || score.min.y === false) score.min.y = y;
       }
     }
-    return im.adjustSavers();
+  }
+  */
+  var child = im.activeElement,
+      layer = child.parent,
+      rect = im.getActualRect(0, 0, child);
+
+  for (var u = rect.length - 1; u >= 0; u--) {
+    var point = rect[u], x = point[0] + layer.getX(), y = point[1] + layer.getY();
+    if (x > score.max.x || score.max.x === false) score.max.x = x;
+    if (x < score.min.x || score.min.x === false) score.min.x = x;
+    if (y > score.max.y || score.max.y === false) score.max.y = y;
+    if (y < score.min.y || score.min.y === false) score.min.y = y;
   }
 
-  var size = {width: count.max.x - count.min.x, height: count.max.y - count.min.y};
-  console.log(size);
+  var size = {width: score.max.x - score.min.x, height: score.max.y - score.min.y};
   im.alterCore('saveWidth',Math.round(size.width));
   im.alterCore('saveHeight',Math.round(size.height));
   im.buildBackground();
-  im.fire('adjustedsavers');
+
+
+  var ap = [im.center.x - (im.activeElement.getWidth() * im.activeElement.getScaleX()) / 2,
+            im.center.y - (im.activeElement.getHeight() * im.activeElement.getScaleY()) / 2],
+      adj = im.actualPosition(ap[0], ap[1], im.center.x, im.center.y, im.activeElement.getRotation());
+
+  im.activeElement.parent.setPosition(adj.map(Math.round));
+
+  if (fire !== false) im.fire('adjustedsavers');
   im.stage.draw();
-};
+}
+
+im.bind('imageLoad', function() {
+  setTimeout(im.adjustSavers, 0);
+});

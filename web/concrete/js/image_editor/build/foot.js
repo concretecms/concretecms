@@ -1,1 +1,1 @@
-})(window,jQuery,Kinetic);
+}(window,jQuery,Kinetic));
