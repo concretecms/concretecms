@@ -291,7 +291,7 @@
         <page name="Compose Form" path="/dashboard/pages/types/form" filename="/dashboard/pages/types/form.php" pagetype="" description="" package="">
         </page>
 
-        <page name="Defaults amd Output" path="/dashboard/pages/types/output" filename="/dashboard/pages/types/output.php" pagetype="" description="" package="">
+        <page name="Defaults and Output" path="/dashboard/pages/types/output" filename="/dashboard/pages/types/output.php" pagetype="" description="" package="">
         </page>
 
         <page name="Page Type Permissions" path="/dashboard/pages/types/permissions" filename="/dashboard/pages/types/permissions.php" pagetype="" description="" package="">

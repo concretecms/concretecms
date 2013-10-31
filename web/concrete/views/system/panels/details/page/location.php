@@ -17,6 +17,12 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 	</div>
 
+		<hr/>
+		<p class="lead"><?=t('Current Canonical URL')?></p>
+		<div class="breadcrumb">
+			<?php echo Loader::helper('navigation')->getLinkToCollection($c, true)?>
+		</div>
+
 	<? if (!$c->isGeneratedCollection()) { ?>
 
 		<hr/>
@@ -46,8 +52,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 
 	<? } ?>
-
-
 
 	</form>
 	<div class="ccm-panel-detail-form-actions">

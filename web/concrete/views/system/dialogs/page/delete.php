@@ -10,11 +10,12 @@ defined('C5_EXECUTE') or die("Access Denied.");
 	<div class="error alert-message"><?=t('Before you can delete this page, you must delete all of its child pages.')?></div>
 	<div class="dialog-buttons"><input type="button" class="btn" value="<?=t('Cancel')?>" onclick="jQuery.fn.dialog.closeTop()" /></div>
 <? } else { ?>		
-	<form method="post" data-form="delete-page" action="<?=$controller->action('submit')?>">
+	<form method="post" data-dialog-form="delete-page" action="<?=$controller->action('submit')?>">
 		<input type="hidden" name="rel" value="<?php echo h($request_rel); ?>" />
 
-		<div class="dialog-buttons"><input type="button" class="btn pull-left" value="<?=t('Cancel')?>" onclick="jQuery.fn.dialog.closeTop()" />
-		<a href="javascript:void(0)" onclick="$('form[data-form=delete-page]').submit()" class="btn btn-danger pull-right"><span><?=t('Delete')?></span></a>
+		<div class="dialog-buttons">
+		<button class="btn pull-left" data-dialog-action="cancel"><?=t('Cancel')?></button>
+		<button type="button" data-dialog-action="submit" class="btn btn-danger pull-right"><?=t('Delete')?></button>
 		</div>
 
 		<? if($c->isSystemPage()) { ?>

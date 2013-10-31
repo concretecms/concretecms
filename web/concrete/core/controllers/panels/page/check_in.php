@@ -27,9 +27,9 @@ class Concrete5_Controller_Panel_Page_CheckIn extends FrontendEditPageController
 			} else {
 				$v->removeNewStatus();
 			}
-
+			$nc = Page::getByID($c->getCollectionID(), $v->getVersionID());
 			$u->unloadCollectionEdit();
-			$r = Redirect::page($c);
+			$r = Redirect::page($nc);
 			return $r;
 		}
 	}

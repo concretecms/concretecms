@@ -23,6 +23,7 @@
     </attributekeys>
     <themes>
         <theme handle="greek_yogurt" package="" activated="1"/>
+        <theme handle="twitter_bootstrap" package="" />
     </themes>
     <pagetypes>
         <pagetype name="Blog Entry" handle="blog_entry">

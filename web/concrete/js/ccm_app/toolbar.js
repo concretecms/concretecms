@@ -33,6 +33,12 @@ var CCMToolbar = function() {
 			});
 		});
 	}
+	setupTooltips = function() {
+		if ($("#ccm-tooltip-holder").length == 0) {
+			$('<div />').attr('id','ccm-tooltip-holder').attr('class', 'ccm-ui').prependTo(document.body);
+		}
+		$('.launch-tooltip').tooltip({'container': '#ccm-tooltip-holder'});
+	}
 
 	setupPanels = function() {
 		$('<div />', {'id': 'ccm-panel-overlay'}).appendTo($(document.body));
@@ -233,6 +239,7 @@ var CCMToolbar = function() {
 				setupStatusBar();
 				setupIntelligentSearch();
 				setupPanels();
+				setupTooltips();
 				setupHelpNotifications();
 
 				// make sure that dashboard dropdown doesn't get dismissed if you mis-click inside it;

@@ -17,7 +17,7 @@ var CCMDashboard = function() {
 	}
 
 	setupTooltips = function() {
-		$('.launch-tooltip').tooltip();
+		$('.launch-tooltip').tooltip({'container': '#ccm-tooltip-holder'});
 	}
 
 	return {
