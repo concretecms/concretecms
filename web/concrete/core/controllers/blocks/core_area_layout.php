@@ -124,7 +124,7 @@ class Concrete5_Controller_Block_CoreAreaLayout extends BlockController {
 					$this->render('view_grid');
 				} else {
 					$asset = new CSSAsset();
-					$asset->setAssetURL(REL_DIR_FILES_TOOLS_REQUIRED . '/area/layout.css?bID=' . $this->bID);
+					$asset->setAssetURL(URL::to('/system/css/layout', $this->bID));
 					$asset->setAssetSupportsPostProcessing(false);
 					$this->requireAsset($asset);
 					$this->render('view');

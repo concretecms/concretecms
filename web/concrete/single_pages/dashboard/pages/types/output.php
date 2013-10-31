@@ -1,12 +1,11 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?>
 
-<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('%s Output', $pagetype->getPageTypeName()))?>
-
+<div class="container">
 <div class="row">
 
 <? foreach($pagetype->getPageTypePageTemplateObjects() as $pt) { ?>
 	
-	  <div class="col-md-2">
+	  <div class="col-md-3">
 	    <div class="thumbnail" style="text-align: center">
 	        <div style="text-align: center"><?=$pt->getPageTemplateIconImage()?></div>
 	        <div class="caption">
@@ -19,5 +18,4 @@
 <? } ?>
 
 </div>
-
-<?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper();?>
+</div>

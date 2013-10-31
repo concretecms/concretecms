@@ -66,7 +66,7 @@ $jh = Loader::helper('json');
 	<? foreach($installedJobs as $j) { ?>
 		<tr class="<? if ($j->didFail()) { ?>error<? } ?> <? if ($j->getJobStatus() == 'RUNNING') {?>running<? } ?>">
 			<td><?=$j->getJobID()?></td>
-			<td><i class="icon-question-sign" title="<?=$j->getJobDescription()?>"></i> <?=$j->getJobName()?></td>
+			<td><i class="icon-question-sign launch-tooltip" title="<?=$j->getJobDescription()?>"></i> <?=$j->getJobName()?></td>
 			<td class="jDateLastRun"><?
 				if ($j->getJobStatus() == 'RUNNING') {
 					$runtime = date(DATE_APP_GENERIC_MDYT_FULL_SECONDS, strtotime($j->getJobDateLastRun()));
@@ -85,9 +85,9 @@ $jh = Loader::helper('json');
 				<button data-jID="<?=$j->getJobID()?>" data-jSupportsQueue="<?=$j->supportsQueue()?>" data-jName="<?=$j->getJobName()?>" class="btn-run-job btn-small btn"><i class="icon-play"></i> <?=t('Run')?></button>
 			</td>
 			<td style="width: 40px">
-				<a href="javascript:void(0)" class="ccm-automate-job-instructions" data-jSupportsQueue="<?=$j->supportsQueue()?>" data-jID="<?=$j->getJobID()?>" title="<?=t('Automate this Job')?>"><i class="icon-tasks"></i></a>
+				<a href="javascript:void(0)" class="ccm-automate-job-instructions" data-jSupportsQueue="<?=$j->supportsQueue()?>" data-jID="<?=$j->getJobID()?>" class="launch-tooltip" title="<?=t('Automate this Job')?>"><i class="icon-tasks"></i></a>
 				<? if ($j->canUninstall()) { ?>
-					<a href="<?=$this->action('uninstall', $j->getJobID())?>" title="<?=t('Remove this Job')?>"><i class="icon-trash"></i></a>
+					<a href="<?=$this->action('uninstall', $j->getJobID())?>" class="launch-tooltip" title="<?=t('Remove this Job')?>"><i class="icon-trash"></i></a>
 				<? } ?>
 			</td>
 		</tr>
@@ -451,8 +451,6 @@ $(function() {
 			title: '<?=t('Automation Instructions')?>'
 		});
 	});
-	$('.icon-question-sign').tooltip();
-	$('i[class=icon-tasks],i[class=icon-trash]').parent().tooltip();
 	$('.btn-run-job').on('click', $('#ccm-jobs-list'), function() {
 		var row = $(this).parent().parent();
 		row.showLoading();

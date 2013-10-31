@@ -10,8 +10,8 @@ if ($item->canViewGatheringItem()) { ?>
   <? if ($showTileControls && $ap->canEditGatheringItems()) { ?>
   <div class="ccm-ui">
     <ul class="ccm-gathering-item-inline-commands ccm-ui">
-      <li class="ccm-gathering-item-inline-move"><a data-inline-command="move-tile" href="#"><i class="icon-move"></i></a></li>
-      <li class="ccm-gathering-item-inline-options"><a data-inline-command="options-tile" href="#" data-menu="gathering-menu-<?=$item->getGatheringItemID()?>"><i class="icon-cog"></i></a></li>
+      <li class="ccm-gathering-item-inline-move"><a data-inline-command="move-tile" href="#"><i class="glyphicon glyphicon-move"></i></a></li>
+      <li class="ccm-gathering-item-inline-options"><a data-inline-command="options-tile" href="#" data-menu="gathering-menu-<?=$item->getGatheringItemID()?>"><i class="glyphicon glyphicon-cog"></i></a></li>
     </ul>
 
     <div class="popover fade" id="gathering-menu-<?=$item->getGatheringItemID()?>">

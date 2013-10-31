@@ -513,6 +513,39 @@ var CCMEditMode = function() {
 			});
 		},
 
+		setupAjaxForm: function($form) {
+			$form.ajaxForm({
+				type: 'post',
+				dataType: 'json',
+				beforeSubmit: function() {
+					jQuery.fn.dialog.showLoader();
+				},
+				error: function(r) {
+			      ccmAlert.notice('Error', '<div class="alert alert-danger">' + r.responseText + '</div>');
+			  	},
+				success: function(r) {
+					if (r.error) {
+						ccmAlert.notice('Error', '<div class="alert alert-danger">' + r.errors.join("<br>") + '</div>');
+					} else {
+						if ($form.attr('data-dialog-form')) {
+							jQuery.fn.dialog.closeTop();
+						}
+						CCMEditMode.showResponseNotification(r.message, 'ok', 'success');
+						CCMPanelManager.exitPanelMode();
+						if (r.redirectURL) {
+							setTimeout(function() {
+								window.location.href = r.redirectURL;
+							}, 2000);
+						}
+					}
+				},
+				complete: function() {
+					jQuery.fn.dialog.hideLoader();
+				}
+			});
+			return $form;
+		},
+
 		activateAddBlocksPanel: function() {
 			if ($('#ccm-panel-add-block-dragging').length == 0) {
 				$('<div id="ccm-panel-add-block-dragging" />').appendTo(document.body);

@@ -32,7 +32,7 @@ class Concrete5_Controller_Page_Dashboard_Pages_Types_Output extends DashboardCo
 			// we load up the master template for this composer/template combination.
 			$c = $this->pagetype->getPageTypePageTemplateDefaultPageObject($template);
 			$_SESSION['mcEditID'] = $c->getCollectionID();
-			header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $c->getCollectionID());
+			Redirect::url(BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $c->getCollectionID())->send();
 		}
 
 	}

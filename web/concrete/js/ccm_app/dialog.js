@@ -200,6 +200,13 @@ jQuery.fn.dialog.open = function(options) {
 
 jQuery.fn.dialog.activateDialogContents = function($dialog) {
 	// handle buttons
+	$dialog.find('button[data-dialog-action=cancel]').on('click', function() {
+		jQuery.fn.dialog.closeTop();
+	});
+	$dialog.find('button[data-dialog-action=submit]').on('click', function() {
+		CCMEditMode.setupAjaxForm($('[data-dialog-form]')).submit();
+	});
+
 	if ($dialog.find('.dialog-buttons').length > 0) {
 		$dialog.jqdialog('option', 'buttons', [{}]);
 		$dialog.parent().find(".ui-dialog-buttonset").remove();
@@ -215,10 +222,9 @@ jQuery.fn.dialog.activateDialogContents = function($dialog) {
 		$dialog.dialog('close');
 	});
 
+	$dialog.find('.launch-tooltip').tooltip({'container': '#ccm-tooltip-holder'});
+	
 	// help handling
-	if ($("#tooltip-holder").length == 0) {
-		$('<div />').attr('id','tooltip-holder').attr('class', 'ccm-ui').prependTo(document.body);
-	}
 	if ($dialog.find('.dialog-help').length > 0) {
 		$dialog.find('.dialog-help').hide();
 		var helpContent = $dialog.find('.dialog-help').html();
@@ -227,10 +233,10 @@ jQuery.fn.dialog.activateDialogContents = function($dialog) {
 		} else {
 			var helpText = 'Help';
 		}
-		$dialog.parent().find('.ui-dialog-titlebar').addClass('ccm-ui').append('<button class="ui-dialog-titlebar-help ccm-menu-help-trigger"><i class="icon-info-sign"></i></button>');
+		$dialog.parent().find('.ui-dialog-titlebar').addClass('ccm-ui').append('<button class="ui-dialog-titlebar-help ccm-menu-help-trigger"><i class="glyphicon glyphicon-info-sign"></i></button>');
 		$dialog.parent().find('.ui-dialog-titlebar .ccm-menu-help-trigger').popover({content: function() {
 			return helpContent;			
-		}, placement: 'bottom', html: true, container: '#tooltip-holder', trigger: 'click'});
+		}, placement: 'bottom', html: true, container: '#ccm-tooltip-holder', trigger: 'click'});
 	}
 }
 

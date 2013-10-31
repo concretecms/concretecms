@@ -45,6 +45,8 @@ class ConcreteDashboardHelper {
 	}
 	
 	public function getDashboardPaneFooterWrapper($includeDefaultBody = true) {
+		return;
+		
 		$html = '</div></div></div></div>';
 		if ($includeDefaultBody) {
 			$html .= '</div>';
@@ -53,7 +55,8 @@ class ConcreteDashboardHelper {
 	}
 	
 	public function getDashboardPaneHeaderWrapper($title = false, $help = false, $span = 'span12', $includeDefaultBody = true, $navigatePages = array(), $upToPage = false, $favorites = true) {
-		
+		return;
+
 		$spantotal = 12;
 		$offset = preg_match('/offset([0-9]+)/i', $span, $offsetmatches);
 		if ($offset) {
