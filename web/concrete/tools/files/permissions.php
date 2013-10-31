@@ -136,7 +136,6 @@ $(function() {
 <? } ?>
 
 	ccm_filePermissionsSetupButtons();
-	ccm_setupGridStriping('ccmPermissionsTable');
 	$("#ccm-<?=$searchInstance?>-storage-form").submit(function() {
 		ccm_alSubmitStorageForm('<?=$searchInstance?>');
 		return false;

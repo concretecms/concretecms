@@ -22,7 +22,7 @@ class Concrete5_Library_Content_Exporter {
 	
 	protected $x; // the xml object for export
 	protected static $mcBlockIDs = array();
-	protected static $cmpOutputControlIDs = array();
+	protected static $ptComposerOutputControlIDs = array();
 	
 	public function run() {
 		$this->x = new SimpleXMLElement("<concrete5-cif></concrete5-cif>");
@@ -40,9 +40,9 @@ class Concrete5_Library_Content_Exporter {
 		ConversationRatingType::exportList($this->x);
 
 		// composer
-		ComposerTargetType::exportList($this->x);
-		ComposerControlType::exportList($this->x);
-		Composer::exportList($this->x);
+		PageTypePublishTargetType::exportList($this->x);
+		PageTypeComposerControlType::exportList($this->x);
+		PageType::exportList($this->x);
 
 		// attribute types
 		AttributeType::exportList($this->x);
@@ -62,6 +62,8 @@ class Concrete5_Library_Content_Exporter {
 
 		// now attribute keys (including user)
 		AttributeSet::exportList($this->x);
+
+		PageTemplate::exportList($this->x);
 
 		// now theme
 		PageTheme::exportList($this->x);
@@ -91,9 +93,6 @@ class Concrete5_Library_Content_Exporter {
 			$pc->export($singlepages);
 		}		
 		
-		// now page types
-		CollectionType::exportList($this->x);
-		
 		// now stacks/global areas
 		Loader::model('stack/list');
 		StackList::export($this->x);
@@ -101,7 +100,7 @@ class Concrete5_Library_Content_Exporter {
 		// now content pages
 		$pages = $this->x->addChild("pages");
 		$db = Loader::db();
-		$r = $db->Execute('select Pages.cID from Pages left join ComposerDrafts on Pages.cID = ComposerDrafts.cID where ComposerDrafts.cID is null and cIsTemplate = 0 and cFilename is null or cFilename = "" order by cID asc');
+		$r = $db->Execute('select Pages.cID from Pages where cIsTemplate = 0 and cFilename is null or cFilename = "" order by cID asc');
 		while($row = $r->FetchRow()) {
 			$pc = Page::getByID($row['cID'], 'RECENT');
 			$pc->export($pages);
@@ -124,13 +123,13 @@ class Concrete5_Library_Content_Exporter {
 		}
 	}
 
-	public static function addComposerOutputControlID(ComposerFormLayoutSetControl $control, $id) {
-		self::$cmpOutputControlIDs[$control->getComposerFormLayoutSetControlID()] = $id;
+	public static function addPageTypeComposerOutputControlID(PageTypeComposerFormLayoutSetControl $control, $id) {
+		self::$ptComposerOutputControlIDs[$control->getPageTypeComposerFormLayoutSetControlID()] = $id;
 	}
 	
-	public static function getComposerOutputControlTemporaryID(ComposerFormLayoutSetControl $control) {
-		if (isset(self::$cmpOutputControlIDs[$control->getComposerFormLayoutSetControlID()])) {
-			return self::$cmpOutputControlIDs[$control->getComposerFormLayoutSetControlID()];
+	public static function getPageTypeComposerOutputControlTemporaryID(PageTypeComposerFormLayoutSetControl $control) {
+		if (isset(self::$ptComposerOutputControlIDs[$control->getPageTypeComposerFormLayoutSetControlID()])) {
+			return self::$ptComposerOutputControlIDs[$control->getPageTypeComposerFormLayoutSetControlID()];
 		}
 	}	
 	
@@ -182,10 +181,10 @@ class Concrete5_Library_Content_Exporter {
 		}
 	}
 
-	public static function replacePageTypeWithPlaceHolder($ctID) {
-		if ($ctID > 0) {
-			$ct = CollectionType::getByID($ctID);
-			return '{ccm:export:pagetype:' . $ct->getCollectionTypeHandle() . '}';
+	public static function replacePageTypeWithPlaceHolder($ptID) {
+		if ($ptID > 0) {
+			$ct = PageType::getByID($ptID);
+			return '{ccm:export:pagetype:' . $ct->getPageTypeHandle() . '}';
 		}
 	}
 	

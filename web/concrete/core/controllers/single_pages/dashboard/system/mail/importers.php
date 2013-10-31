@@ -1,6 +1,6 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Controller_Dashboard_System_Mail_Importers extends Controller {
+class Concrete5_Controller_Page_Dashboard_System_Mail_Importers extends DashboardController {
 	protected $sendUndefinedTasksToView = false;
 	public function on_start() {	
 		$this->set('importers',MailImporter::getList() );

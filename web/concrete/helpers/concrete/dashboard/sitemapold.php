@@ -98,7 +98,7 @@ class ConcreteDashboardSitemapHelper {
 		$cvName = ($c->getCollectionName()) ? $c->getCollectionName() : '(No Title)';
 		$selected = (ConcreteDashboardSitemapHelper::isOneTimeActiveNode($cID)) ? true : false;
 		
-		$ct = CollectionType::getByID($c->getCollectionTypeID());
+		$ct = PageType::getByID($c->getPageTypeID());
 		$isInTrash = $c->isInTrash();
 		
 		$isTrash = $c->getCollectionPath() == TRASH_PAGE_PATH;

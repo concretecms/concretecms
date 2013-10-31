@@ -106,9 +106,9 @@ class Concrete5_Helper_Form_DateTime {
 			
 			$html .= '<input type="checkbox" id="' . $id . '_activate" class="ccm-activate-date-time" ccm-date-time-id="' . $id . '" name="' . $_activate . '" ' . $activated . ' />';
 		}
-		$html .= '<span class="ccm-input-date-wrapper" id="' . $id . '_dw"><input id="' . $id . '_dt" name="' . $_dt . '" class="ccm-input-date" value="' . $dt . '" ' . $disabled . ' /></span>';
-		$html .= '<span class="ccm-input-time-wrapper" id="' . $id . '_tw">';
-		$html .= '<select id="' . $id . '_h" name="' . $_h . '" ' . $disabled . '>';
+		$html .= '<span class="ccm-input-date-wrapper form-inline" id="' . $id . '_dw"><input id="' . $id . '_dt" name="' . $_dt . '" class="form-control ccm-input-date" value="' . $dt . '" ' . $disabled . ' /></span>';
+		$html .= '<span class="ccm-input-time-wrapper form-inline" id="' . $id . '_tw">';
+		$html .= '<select class="form-control" id="' . $id . '_h" name="' . $_h . '" ' . $disabled . '>';
 		for ($i = $dfhs; $i <= $dfhe; $i++) {
 			if ($h == $i) {
 				$selected = 'selected';
@@ -118,7 +118,7 @@ class Concrete5_Helper_Form_DateTime {
 			$html .= '<option value="' . $i . '" ' . $selected . '>' . $i . '</option>';
 		}
 		$html .= '</select>:';
-		$html .= '<select id="' . $id . '_m" name="' . $_m . '" ' . $disabled . '>';
+		$html .= '<select class="form-control"  id="' . $id . '_m" name="' . $_m . '" ' . $disabled . '>';
 		for ($i = 0; $i <= 59; $i++) {
 			if ($m == sprintf('%02d', $i)) {
 				$selected = 'selected';
@@ -129,7 +129,7 @@ class Concrete5_Helper_Form_DateTime {
 		}
 		$html .= '</select>';
 		if (DATE_FORM_HELPER_FORMAT_HOUR == '12') {
-			$html .= '<select id="' . $id . '_a" name="' . $_a . '" ' . $disabled . '>';
+			$html .= '<select class="form-control" id="' . $id . '_a" name="' . $_a . '" ' . $disabled . '>';
 			$html .= '<option value="AM" ';
 			if ($a == 'AM') {
 				$html .= 'selected';

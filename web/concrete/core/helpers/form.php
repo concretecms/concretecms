@@ -75,7 +75,7 @@ class Concrete5_Helper_Form {
 	 * @param string $key
 	 */
 	public function file($key) {
-		$str = '<input type="file" id="' . $key . '" name="' . $key . '" value="" class="ccm-input-file" />';
+		$str = '<input type="file" id="' . $key . '" name="' . $key . '" value="" class="form-control" />';
 		return $str;
 	}
 
@@ -149,7 +149,7 @@ class Concrete5_Helper_Form {
 			}
 		}
 
-		$str .= $this->parseMiscFields('ccm-input-textarea', $miscFields);
+		$str .= $this->parseMiscFields('form-control', $miscFields);
 		$str .= '>' . $innerValue . '</textarea>';
 		return $str;
 	 }
@@ -238,7 +238,7 @@ class Concrete5_Helper_Form {
 		}
 		$val = str_replace('"', '&#34;', $val);
 
-		return "<input id=\"$key\" type=\"$type\" name=\"$key\" value=\"$val\" " . $this->parseMiscFields("ccm-input-$type", $miscFields) . ' />';
+		return "<input id=\"$key\" type=\"$type\" name=\"$key\" value=\"$val\" " . $this->parseMiscFields("form-control ccm-input-$type", $miscFields) . ' />';
 	}
 
 	/**
@@ -322,7 +322,7 @@ class Concrete5_Helper_Form {
 			$miscFields['ccm-passed-value'] = $valueOrArray;	
 		}
 
-		$str = '<select name="' . $key . '" id="' . $id . '" ' . $this->parseMiscFields('ccm-input-select', $miscFields) . '>';
+		$str = '<select name="' . $key . '" id="' . $id . '" ' . $this->parseMiscFields('form-control', $miscFields) . '>';
 
 		foreach($optionValues as $k => $value) {
 			$selected = "";
@@ -356,7 +356,7 @@ class Concrete5_Helper_Form {
         }
 
         $str = "<input type='hidden' class='ignore' name='{$key}' value='' />
-                <select name=\"{$key}[]\" id=\"$key\" multiple=\"multiple\"" . $this->parseMiscFields('ccm-input-select', $miscFields) . ">";
+                <select name=\"{$key}[]\" id=\"$key\" multiple=\"multiple\"" . $this->parseMiscFields('form-control', $miscFields) . ">";
         foreach ($optionValues as $val => $text) {
             $selected = in_array($val, $defaultValues) ? ' selected="selected"' : '';
             $str .= "<option value=\"$val\"$selected>$text</option>";

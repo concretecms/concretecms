@@ -51,12 +51,22 @@
 			return $content;				
 		}
 
-		public function composer() {
-			$this->addFooterItem(Loader::helper('html')->javascript('redactor.js'));
-			$this->addHeaderItem(Loader::helper('html')->css('redactor.css'));
+		public function add() {
+			$r = ResponseAssetGroup::get();
+			$r->requireAsset('redactor');
 		}
 
-		public function getImportData($blockNode) {
+		public function edit() {
+			$r = ResponseAssetGroup::get();
+			$r->requireAsset('redactor');
+		}
+
+		public function composer() {
+			$r = ResponseAssetGroup::get();
+			$r->requireAsset('redactor');
+		}
+
+		public function getImportData($blockNode, $page) {
 			$args = array();
 			$content = $blockNode->data->record->content;
 

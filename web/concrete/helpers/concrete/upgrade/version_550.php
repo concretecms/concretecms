@@ -99,7 +99,7 @@ class ConcreteUpgradeVersion550Helper {
 			$spl->update(array('cName' => t('Stacks')));
 			$spl->moveToRoot();
 		}
-		$spl = SinglePage::add(COMPOSER_DRAFTS_PAGE_PATH);
+		$spl = SinglePage::add(PAGE_DRAFTS_PAGE_PATH);
 		if (is_object($spl)) {
 			$spl->update(array('cName' => t('Drafts')));
 			$spl->moveToRoot();

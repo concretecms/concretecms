@@ -17,7 +17,7 @@ class Concrete5_Model_PageList extends DatabaseItemList {
 	protected $displayOnlyApprovedPages = true;
 	protected $displayOnlyActivePages = true;
 	protected $filterByCParentID = 0;
-	protected $filterByCT = false;
+	protected $filterByPageType = false;
 	protected $ignorePermissions = false;
 	protected $attributeClass = 'CollectionAttributeKey';
 	protected $autoSortColumns = array('cvName', 'cvDatePublic', 'cDateAdded', 'cDateModified');
@@ -243,29 +243,36 @@ class Concrete5_Model_PageList extends DatabaseItemList {
 	
 	/** 
 	 * Filters by type of collection (using the ID field)
-	 * @param mixed $ctID
+	 * @param mixed $ptID
 	 */
-	public function filterByCollectionTypeID($ctID) {
-		$this->filterByCT = true;
+	public function filterByPageTypeID($ptID) {
+		$this->filterByPageType = true;
 		$db = Loader::db();
-		if (is_array($ctID)) {
+		if (is_array($ptID)) {
 			$cth = '(';
-			for ($i = 0; $i < count($ctID); $i++) {
+			for ($i = 0; $i < count($ptID); $i++) {
 				if ($i > 0) {
 					$cth .= ',';
 				}
-				$cth .= $db->quote($ctID[$i]);
+				$cth .= $db->quote($ptID[$i]);
 			}
 			$cth .= ')';
-			$this->filter(false, "(pt.ctID in {$cth})");
+			$this->filter(false, "(pt.ptID in {$cth})");
 		} else {
-			$this->filter("pt.ctID", $ctID);
+			$this->filter("pt.ptID", $ptID);
 		}
 	}
 
 	/** 
+	 * @deprecated
+	 */
+	public function filterByCollectionTypeID($ctID) {
+		$this->filterByPageTypeID($ctID);
+	}
+	
+	/** 
 	 * Filters by user ID of collection (using the uID field)
-	 * @param mixed $ctID
+	 * @param mixed $uID
 	 */
 	public function filterByUserID($uID) {
 		if ($this->includeAliases) {
@@ -291,25 +298,31 @@ class Concrete5_Model_PageList extends DatabaseItemList {
 	
 	/** 
 	 * Filters by type of collection (using the handle field)
-	 * @param mixed $ctID
+	 * @param mixed $ptHandle
 	 */
-	public function filterByCollectionTypeHandle($ctHandle) {
+	public function filterByPageTypeHandle($ptHandle) {
 		$db = Loader::db();
-		$this->filterByCT = true;
-		if (is_array($ctHandle)) {
+		$this->filterByPageType = true;
+		if (is_array($ptHandle)) {
 			$cth = '(';
-			for ($i = 0; $i < count($ctHandle); $i++) {
+			for ($i = 0; $i < count($ptHandle); $i++) {
 				if ($i > 0) {
 					$cth .= ',';
 				}
-				$cth .= $db->quote($ctHandle[$i]);
+				$cth .= $db->quote($ptHandle[$i]);
 			}
 			$cth .= ')';
-			$this->filter(false, "(pt.ctHandle in {$cth})");
+			$this->filter(false, "(pt.ptHandle in {$cth})");
 		} else {
-			$this->filter('pt.ctHandle', $ctHandle);
+			$this->filter('pt.ptHandle', $ptHandle);
 		}
 	}
+
+	public function filterByCollectionTypeHandle($ctHandle) {
+		$this->filterByPageTypeHandle($ctHandle);
+	}
+
+
 
 	/** 
 	 * Filters by date added
@@ -371,9 +384,9 @@ class Concrete5_Model_PageList extends DatabaseItemList {
 		}
 
 		if ($this->includeAliases) {
-			$this->setQuery('select p1.cID, pt.ctHandle ' . $ik . $additionalFields . ' from Pages p1 left join Pages p2 on (p1.cPointerID = p2.cID) left join PagePaths on (PagePaths.cID = p1.cID and PagePaths.ppIsCanonical = 1) left join PageSearchIndex psi on (psi.cID = if(p2.cID is null, p1.cID, p2.cID)) inner join CollectionVersions cv on (cv.cID = if(p2.cID is null, p1.cID, p2.cID) and cvID = ' . $cvID . ') left join PageTypes pt on pt.ctID = cv.ctID inner join Collections c on (c.cID = if(p2.cID is null, p1.cID, p2.cID))');
+			$this->setQuery('select p1.cID, pt.ptHandle ' . $ik . $additionalFields . ' from Pages p1 left join Pages p2 on (p1.cPointerID = p2.cID) left join PagePaths on (PagePaths.cID = p1.cID and PagePaths.ppIsCanonical = 1) left join PageSearchIndex psi on (psi.cID = if(p2.cID is null, p1.cID, p2.cID)) inner join CollectionVersions cv on (cv.cID = if(p2.cID is null, p1.cID, p2.cID) and cvID = ' . $cvID . ') left join PageTypes pt on (pt.ptID = if(p2.cID is null, p1.ptID, p2.ptID)) inner join Collections c on (c.cID = if(p2.cID is null, p1.cID, p2.cID))');
 		} else {
-			$this->setQuery('select p1.cID, pt.ctHandle ' . $ik . $additionalFields . ' from Pages p1 left join PagePaths on (PagePaths.cID = p1.cID and PagePaths.ppIsCanonical = 1) left join PageSearchIndex psi on (psi.cID = p1.cID) inner join CollectionVersions cv on (cv.cID = p1.cID and cvID = ' . $cvID . ') left join PageTypes pt on (pt.ctID = cv.ctID)  inner join Collections c on (c.cID = p1.cID)');
+			$this->setQuery('select p1.cID, pt.ptHandle ' . $ik . $additionalFields . ' from Pages p1 left join PagePaths on (PagePaths.cID = p1.cID and PagePaths.ppIsCanonical = 1) left join PageSearchIndex psi on (psi.cID = p1.cID) inner join CollectionVersions cv on (cv.cID = p1.cID and cvID = ' . $cvID . ') left join PageTypes pt on (pt.ptID = p1.ptID)  inner join Collections c on (c.cID = p1.cID)');
 		}
 		
 		if ($this->includeAliases) {
@@ -398,7 +411,7 @@ class Concrete5_Model_PageList extends DatabaseItemList {
 	}
 	
 	protected function setupSystemPagesToExclude() {
-		if ($this->includeSystemPages || $this->filterByCParentID > 1 || $this->filterByCT == true) {
+		if ($this->includeSystemPages || $this->filterByCParentID > 1 || $this->filterByPageType == true) {
 			return false;
 		}
 		if ($this->includeAliases) {

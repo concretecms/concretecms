@@ -1,5 +1,7 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
+global $previewMode, $f, $fp;
+
 $u = new User();
 $form = Loader::helper('form');
 Loader::model("file_attributes");

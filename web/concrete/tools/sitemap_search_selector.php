@@ -5,6 +5,9 @@ if (!$sh->canRead()) {
 	die(t('Access Denied.') . ' ' . t('You do not have access to the sitemap.'));
 }
 
+$v = View::getInstance();
+$v->requireAsset('core/sitemap');
+
 /*
 
 $select_mode = Loader::helper('text')->entities($_REQUEST['sitemap_select_mode']);

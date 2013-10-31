@@ -12,8 +12,8 @@ class Concrete5_Model_AddSubpagePagePermissionAccessListItem extends PagePermiss
 	public function getPageTypesAllowedPermission() {
 		return $this->pageTypesAllowedPermission;
 	}
-	public function setPageTypesAllowedArray($ctIDs) {
-		$this->customPageTypeArray = $ctIDs;
+	public function setPageTypesAllowedArray($ptIDs) {
+		$this->customPageTypeArray = $ptIDs;
 	}
 	public function getPageTypesAllowedArray() {
 		return $this->customPageTypeArray;

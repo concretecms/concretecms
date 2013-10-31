@@ -6,8 +6,8 @@ $allowedAKIDs = $assignment->getAttributesAllowedArray();
 
 $requiredKeys = array();
 $usedKeys = array();
-if ($c->getCollectionTypeID() > 0 && !$c->isMasterCollection()) {
-	$cto = CollectionType::getByID($c->getCollectionTypeID());
+if ($c->getPageTypeID() > 0 && !$c->isMasterCollection()) {
+	$cto = PageType::getByID($c->getPageTypeID());
 	$aks = $cto->getAvailableAttributeKeys();
 	foreach($aks as $ak) {
 		$requiredKeys[] = $ak->getAttributeKeyID();
@@ -89,7 +89,6 @@ $usedKeysCombined = array_merge($requiredKeys, $usedKeys);
 
 <? 
 	$attribs = CollectionAttributeKey::getList();
-	ob_start();
 
 	foreach($attribs as $ak) {
 		if (!in_array($ak->getAttributeKeyID(), $allowedAKIDs)) {
@@ -115,31 +114,7 @@ $usedKeysCombined = array_merge($requiredKeys, $usedKeys);
 		</div>
 		</div>
 		
-	<? } 
-	$contents = ob_get_contents();
-	ob_end_clean(); ?>	
-	
-	<script type="text/javascript">
-	<? 
-	$v = View::getInstance();
-	$headerItems = $v->getHeaderItems();
-	foreach($headerItems as $item) {
-		if ($item->file) {
-			if ($item instanceof CSSOutputObject) {
-				$type = 'CSS';
-			} else {
-				$type = 'JAVASCRIPT';
-			} ?>
-			ccm_addHeaderItem("<?=$item->file?>", '<?=$type?>');
-			<?
-		}
-	} 
-	?>
-	</script>
-	
-	<? print $contents; ?>
-
-
+	<? } ?>
 
 </div>
 </div>

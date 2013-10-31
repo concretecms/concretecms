@@ -9,10 +9,6 @@ class Concrete5_Controller_AttributeType_Select extends AttributeTypeController 
 	protected $searchIndexFieldDefinition = 'X NULL';
 	
 	public function type_form() {
-		$path1 = $this->getView()->getAttributeTypeURL('type_form.js');
-		$path2 = $this->getView()->getAttributeTypeURL('type_form.css');
-		$this->addHeaderItem(Loader::helper('html')->javascript($path1));
-		$this->addHeaderItem(Loader::helper('html')->css($path2));
 		$this->set('form', Loader::helper('form'));		
 		$this->load();
 		//$akSelectValues = $this->getSelectValuesFromPost();

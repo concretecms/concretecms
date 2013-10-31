@@ -1,6 +1,6 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
 
-class Concrete5_Controller_Dashboard_System_Optimization_Jobs extends DashboardBaseController {
+class Concrete5_Controller_Page_Dashboard_System_Optimization_Jobs extends DashboardController {
 
 	function on_start() {
 		parent::on_start();

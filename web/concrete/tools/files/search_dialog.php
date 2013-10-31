@@ -30,10 +30,6 @@ ob_start();
 Loader::element('files/search_results', array('ocID' => $ocID, 'searchInstance' => $searchInstance, 'searchRequest' => $searchRequest, 'columns' => $columns, 'searchType' => 'DIALOG', 'files' => $files, 'fileList' => $fileList)); $searchForm = ob_get_contents();
 ob_end_clean();
 
-$v = View::getInstance();
-$v->outputHeaderItems();
-
-
 ?>
 
 <? if (!isset($_REQUEST['refreshDialog'])) { ?> 

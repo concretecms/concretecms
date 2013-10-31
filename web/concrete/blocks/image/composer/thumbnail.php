@@ -14,7 +14,7 @@ if ($controller->getFileID() > 0) {
 	$bf = $controller->getFileObject();
 }
 
-$setcontrol = $control->getComposerFormLayoutSetControlObject();
+$setcontrol = $control->getPageTypeComposerFormLayoutSetControlObject();
 
 $bt = BlockType::getByHandle('image');
 $dialogurl = $url->getBlockTypeToolsUrl($bt)."/crop_image";
@@ -28,11 +28,11 @@ $al = Loader::helper('concrete/asset_library');
 	<div class="controls">
 
 <div>
-	<div style="float: left; width: 50%"><?php echo $al->image('ccm-b-image-'.$setcontrol->getComposerFormLayoutSetControlID(), $this->field('fID'), t('Choose Image'), $bf); ?></div>
+	<div style="float: left; width: 50%"><?php echo $al->image('ccm-b-image-'.$setcontrol->getPageTypeComposerFormLayoutSetControlID(), $this->field('fID'), t('Choose Image'), $bf); ?></div>
 	<div style="padding: 0 10px; float: left; margin-left: 10px; ">
 		<strong><?=t('Target Width')?></strong>: <?=$width?><br/>
 		<strong><?=t('Target Height')?></strong>: <?=$height?><br/>
-		<div id="ccm-image-composer-thumbnail-<?php echo $setcontrol->getComposerFormLayoutSetControlID() ?>" target-width="<?=$width?>" target-height="<?=$height?>" >
+		<div id="ccm-image-composer-thumbnail-<?php echo $setcontrol->getPageTypeComposerFormLayoutSetControlID() ?>" target-width="<?=$width?>" target-height="<?=$height?>" >
 		</div>
 		<div class="ccm-spacer"></div>
 	</div>

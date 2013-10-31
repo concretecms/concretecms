@@ -33,7 +33,7 @@ if ($_REQUEST['btask'] != 'view' && $_REQUEST['btask'] != 'view_edit_mode') {
 	include(DIR_FILES_ELEMENTS_CORE . '/dialog_header.php');
 }
 
-$bv = new BlockView(); 
+$bv = new BlockView($b); 
 
 if ($isGlobalArea && $_REQUEST['btask'] != 'view_edit_mode') {
 	echo '<div class="ccm-ui"><div class="alert alert-warning">';
@@ -55,6 +55,9 @@ if ($b->isAliasOfMasterCollection() && $_REQUEST['btask'] != 'view_edit_mode') {
 	echo '</div></div>';
 }
 
+$request = Request::getInstance();
+$request->setCurrentPage($c);
+
 if (is_object($b)) {
 	switch($_REQUEST['btask']) {
 		case 'block_css': 		
@@ -66,20 +69,21 @@ if (is_object($b)) {
 					$styleToDelete->delete();
 				}
 				$refreshAction = REL_DIR_FILES_TOOLS_REQUIRED . '/edit_block_popup?btask=block_css&cID=' . $c->getCollectionID() . '&arHandle=' . $a->getAreaHandle() . '&bID=' . $b->getBlockID() . '&refresh=1';
-				$bv->renderElement('custom_style', array('b' => $b, 'rcID'=>$rcID, 'c' => $c, 'a' => $a, 'style' => $style, 'action' => $action, 'refreshAction' => $refreshAction) );
+				Loader::element('custom_style', array('b' => $b, 'rcID'=>$rcID, 'c' => $c, 'a' => $a, 'style' => $style, 'action' => $action, 'refreshAction' => $refreshAction) );
 			}
 			break;	 
 		case 'template': 		
 			if ($bp->canEditBlockCustomTemplate()) {
-				$bv->renderElement('block_custom_template', array('b' => $b, 'rcID'=>$rcID));
+				Loader::element('block_custom_template', array('b' => $b, 'rcID'=>$rcID));
 			}
 			break;
 		case 'view':
 			if ($bp->canViewBlock()) {
-				$bv->render($b, 'view', array(
+				$bv->addScopeItems(array(
 					'c' => $c,
 					'a' => $a
 				));
+				$bv->render('view');
 			}
 			break;
 		case 'view_edit_mode':
@@ -90,11 +94,9 @@ if (is_object($b)) {
 				if('Controller' != get_class($btc)){
 					$btc->outputAutoHeaderItems();
 				}
-				$btc->runTask('on_page_view', array($bv));
 				
 				$v = View::getInstance();
 				
-				$items = array_merge($v->getHeaderItems(), $v->getFooterItems());
 				$csr = $b->getBlockCustomStyleRule(); 
 				if (is_object($csr)) { 
 					$styleHeader = '#'.$csr->getCustomStyleRuleCSSID(1).' {'. $csr->getCustomStyleRuleText(). "}";  ?>
@@ -104,50 +106,39 @@ if (is_object($b)) {
 				<?
 				}
 
-				if (count($items) > 0) { ?>
-				<script type="text/javascript">				
-				<?
-				foreach($items as $item) { 
-					if ($item instanceof CSSOutputObject) { ?>
-						// we only support CSS here
-						ccm_addHeaderItem("<?=$item->href?>", 'CSS');
-					<? } else if ($item instanceof JavaScriptOutputObject) { ?>
-						ccm_addHeaderItem("<?=$item->href?>", 'JAVASCRIPT');
-					<? }
-				
-				} ?>
-				</script>
-				<? }
-				
-				$bv->renderElement('block_header', array(
+				Loader::element('block_header', array(
 					'a' => $a,
 					'b' => $b,
 					'p' => $bp
 				));
-				$bv->setAreaObject($a);
-				$bv->render($b);
-				$bv->renderElement('block_footer');
+
+				// we make sure that our active theme gets registered as well because we want to make sure that
+				// assets provided by the theme aren't loaded by the block in this mode.
+				$pt = $c->getCollectionThemeObject();
+				$pt->registerAssets();
+				$bv->render('view');
+				Loader::element('block_footer');
 			}
 			break;
 		case 'groups':
 			if ($bp->canEditBlockPermissions()) {
-				$bv->renderElement('permission/lists/block', array('b' => $b, 'rcID'=>$rcID));
+				Loader::element('permission/lists/block', array('b' => $b, 'rcID'=>$rcID));
 			}
 			break;
 		case 'set_advanced_permissions':
 			if ($bp->canEditBlockPermissions()) {
-				$bv->renderElement('permission/details/block', array('b' => $b, 'rcID'=>$rcID));
+				Loader::element('permission/details/block', array('b' => $b, 'rcID'=>$rcID));
 			}
 			break;
 		case 'guest_timed_access':
 			if ($bp->canScheduleGuestAccess() && $bp->canGuestsViewThisBlock()) {
-				$bv->renderElement('permission/details/block/timed_guest_access', array('b' => $b, 'rcID'=>$rcID));
+				Loader::element('permission/details/block/timed_guest_access', array('b' => $b, 'rcID'=>$rcID));
 			}
 			break;
 
 		case 'child_pages':
 			if ($bp->canAdminBlock()) {
-				$bv->renderElement('block_master_collection_alias', array('b' => $b));
+				Loader::element('block_master_collection_alias', array('b' => $b));
 			}
 			break;
 		case 'edit': 			
@@ -157,12 +148,12 @@ if (is_object($b)) {
 				if (isset($_REQUEST['arGridColumnSpan'])) {
 					$a->setAreaGridColumnSpan(intval($_REQUEST['arGridColumnSpan']));
 				}
-
-				$bv->render($b, 'edit', array(
+				$bv->addScopeItems(array(
 					'c' => $c,
-					'a' => $a, 
-					'rcID'=>$rcID
+					'a' => $a,
+					'rcID' => $rcID
 				));
+				$bv->render('edit');
 			} 
 			break;
 	}

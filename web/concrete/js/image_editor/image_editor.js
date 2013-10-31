@@ -1,18 +1,21 @@
-Kinetic.Node.prototype.closest = function(type) {
-    var active = this.parent;
-    while (active !== undefined) {
-        if (active.nodeType === type) return active;
-        active = active.parent;
+/////////////////////////////
+//      Kinetic.Node       //
+/////////////////////////////
+Kinetic.Node.prototype.closest = function(e) {
+    var t = this.parent;
+    while (t !== undefined) {
+        if (t.nodeType === e) return t;
+        t = t.parent;
     }
     return false;
 };
 
 Kinetic.Stage.prototype.createCopy = function() {
-    var copy = [], children = this.getChildren(), i;
-    for (i = 0; i < children.length; i++) {
-        copy.push(children[i].clone());
+    var e = [], t = this.getChildren(), n;
+    for (n = 0; n < t.length; n++) {
+        e.push(t[n].clone());
     }
-    return copy;
+    return e;
 };
 
 Kinetic.Stage.prototype.getScaledWidth = function() {
@@ -32,18 +35,18 @@ Kinetic.Stage.prototype.getSaveHeight = function() {
 };
 
 Kinetic.Stage.prototype.getTotalDimensions = function() {
-    var minY = (this.getSaveHeight() / 2 - this.im.center.y) * this.getScale().y;
-    var maxY = minY + this.getHeight() - this.getSaveHeight() * this.getScale().y;
-    var minX = (this.getSaveWidth() / 2 - this.im.center.x) * this.getScale().x;
-    var maxX = minX + this.getWidth() - this.getSaveWidth() * this.getScale().x;
+    var e = (this.getSaveHeight() / 2 - this.im.center.y) * this.getScale().y;
+    var t = e + this.getHeight() - this.getSaveHeight() * this.getScale().y;
+    var n = (this.getSaveWidth() / 2 - this.im.center.x) * this.getScale().x;
+    var r = n + this.getWidth() - this.getSaveWidth() * this.getScale().x;
     return {
         min: {
-            x: minX,
-            y: minY
+            x: n,
+            y: e
         },
         max: {
-            x: maxX,
-            y: maxY
+            x: r,
+            y: t
         },
         width: this.getScaledWidth(),
         height: this.getScaledHeight(),
@@ -52,11 +55,11 @@ Kinetic.Stage.prototype.getTotalDimensions = function() {
     };
 };
 
-Kinetic.Stage.prototype.loadCopy = function(copy) {
-    var i;
+Kinetic.Stage.prototype.loadCopy = function(e) {
+    var t;
     this.removeChildren();
-    for (i = 0; i < copy.length; i++) {
-        this.add(copy[i]);
+    for (t = 0; t < e.length; t++) {
+        this.add(e[t]);
     }
     this.draw();
 };
@@ -64,25 +67,25 @@ Kinetic.Stage.prototype.loadCopy = function(copy) {
 Kinetic.Stage.prototype.elementType = "stage";
 
 Kinetic.Image.prototype.getImageData = function() {
-    var canvas = new Kinetic.Canvas(this.attrs.image.width, this.attrs.image.height);
-    var context = canvas.getContext();
-    context.drawImage(this.attrs.image, 0, 0);
+    var e = new Kinetic.Canvas(this.attrs.image.width, this.attrs.image.height);
+    var t = e.getContext();
+    t.drawImage(this.attrs.image, 0, 0);
     try {
-        var imageData = context.getImageData(0, 0, canvas.getWidth(), canvas.getHeight());
-        return imageData;
-    } catch (e) {
+        var n = t.getImageData(0, 0, e.getWidth(), e.getHeight());
+        return n;
+    } catch (r) {
         Kinetic.Util.warn("Unable to get imageData.");
     }
 };
 
-Kinetic.Layer.prototype._cacheddraw = new Kinetic.Layer().draw;
+Kinetic.Layer.prototype._cacheddraw = (new Kinetic.Layer).draw;
 
 Kinetic.Layer.prototype.draw = function() {
     if (typeof im === "undefined" || typeof im.trigger === "undefined") {
         return this._cacheddraw();
     }
-    var draw = this._cacheddraw();
-    return draw;
+    var e = this._cacheddraw();
+    return e;
 };
 
 Kinetic.Layer.prototype.elementType = "layer";
@@ -90,344 +93,344 @@ Kinetic.Layer.prototype.elementType = "layer";
 Kinetic.Group.prototype.elementType = "group";
 
 Kinetic.Text.prototype.rasterize = function(e) {
-    var layer = this.parent;
-    var me = this;
+    var t = this.parent;
+    var n = this;
     this.toImage({
-        callback: function(img) {
-            var rasterizedImage = new Kinetic.Image({
-                image: img,
-                x: me.getPosition().x,
-                y: me.getPosition().y
+        callback: function(r) {
+            var i = new Kinetic.Image({
+                image: r,
+                x: n.getPosition().x,
+                y: n.getPosition().y
             });
-            me.remove();
-            layer.add(rasterizedImage).draw();
-            e.callback(rasterizedImage);
+            n.remove();
+            t.add(i).draw();
+            e.callback(i);
         }
     });
 };
 
-var ImageEditor = function(settings) {
+var ImageEditor = function(e) {
     "use strict";
-    if (settings === undefined) return this;
-    settings.pixelRatio = 1;
-    var im = this, x, round = function(float) {
-        return Math.round(float);
+    if (e === undefined) return this;
+    e.pixelRatio = 1;
+    var t = this, n, r = function(e) {
+        return Math.round(e);
     };
-    im.width = settings.width;
-    im.height = settings.height;
-    im.saveWidth = settings.saveWidth || round(im.width / 2);
-    im.saveHeight = settings.saveHeight || round(im.height / 2);
-    im.strictSize = settings.saveWidth !== undefined ? true : false;
-    im.stage = new Kinetic.Stage(settings);
-    im.namespaces = {};
-    im.controlSets = {};
-    im.components = {};
-    im.settings = settings;
-    im.filters = {};
-    im.fileId = im.settings.fID;
-    im.scale = 1;
-    im.crosshair = new Image();
-    im.uniqid = im.stage.getContainer().id;
-    im.editorContext = $(im.stage.getContainer()).parent();
-    im.domContext = im.editorContext.parent();
-    im.controlContext = im.domContext.children("div.controls");
-    im.controlSetNamespaces = [];
-    im.showLoader = $.fn.dialog.showLoader;
-    im.hideLoader = $.fn.dialog.hideLoader;
-    im.stage.im = im;
-    im.stage.setX(.5);
-    im.stage.setY(.5);
-    im.stage.elementType = "stage";
-    im.crosshair.src = "/concrete/images/image_editor/crosshair.png";
-    im.center = {
-        x: Math.round(im.width / 2),
-        y: Math.round(im.height / 2)
+    t.width = e.width;
+    t.height = e.height;
+    t.saveWidth = e.saveWidth || r(t.width / 2);
+    t.saveHeight = e.saveHeight || r(t.height / 2);
+    t.strictSize = e.saveWidth !== undefined ? true : false;
+    t.stage = new Kinetic.Stage(e);
+    t.namespaces = {};
+    t.controlSets = {};
+    t.components = {};
+    t.settings = e;
+    t.filters = {};
+    t.fileId = t.settings.fID;
+    t.scale = 1;
+    t.crosshair = new Image;
+    t.uniqid = t.stage.getContainer().id;
+    t.editorContext = $(t.stage.getContainer()).parent();
+    t.domContext = t.editorContext.parent();
+    t.controlContext = t.domContext.children("div.controls");
+    t.controlSetNamespaces = [];
+    t.showLoader = $.fn.dialog.showLoader;
+    t.hideLoader = $.fn.dialog.hideLoader;
+    t.stage.im = t;
+    t.stage.setX(.5);
+    t.stage.setY(.5);
+    t.stage.elementType = "stage";
+    t.crosshair.src = "/concrete/images/image_editor/crosshair.png";
+    t.center = {
+        x: Math.round(t.width / 2),
+        y: Math.round(t.height / 2)
     };
-    im.centerOffset = {
-        x: im.center.x,
-        y: im.center.y
+    t.centerOffset = {
+        x: t.center.x,
+        y: t.center.y
     };
-    var getElem = function(selector) {
-        return $(selector, im.domContext);
-    }, log = function() {
-        if (settings.debug === true && typeof console !== "undefined") {
-            var args = arguments;
-            if (args.length == 1) args = args[0];
-            console.log(args);
+    var i = function(e) {
+        return $(e, t.domContext);
+    }, s = function() {
+        if (e.debug === true && typeof console !== "undefined") {
+            var t = arguments;
+            if (t.length == 1) t = t[0];
+            console.log(t);
         }
-    }, warn = function() {
-        if (settings.debug === true && typeof console !== "undefined") {
-            var args = arguments;
-            if (args.length == 1) args = args[0];
-            console.warn(args);
+    }, o = function() {
+        if (e.debug === true && typeof console !== "undefined") {
+            var t = arguments;
+            if (t.length == 1) t = t[0];
+            console.warn(t);
         }
-    }, error = function() {
+    }, u = function() {
         if (typeof console !== "undefined") {
-            var args = arguments;
-            if (args.length == 1) args = args[0];
-            console.error("Image Editor Error: " + args);
+            var e = arguments;
+            if (e.length == 1) e = e[0];
+            console.error("Image Editor Error: " + e);
         }
     };
-    im.stage._setDraggable = im.stage.setDraggable;
-    im.stage.setDraggable = function(v) {
-        warn("setting draggable to " + v);
-        return im.stage._setDraggable(v);
+    t.stage._setDraggable = t.stage.setDraggable;
+    t.stage.setDraggable = function(e) {
+        o("setting draggable to " + e);
+        return t.stage._setDraggable(e);
     };
-    var History = function() {
-        var h = this;
-        h.history = [];
-        h.pointer = -1;
-        h.save = function() {
-            im.fire("beforehistorysave");
-            h.history = h.history.slice(0, h.pointer + 1);
-            h.history.push(im.stage.createCopy());
-            h.movePointer(1);
-            im.fire("historysave");
+    var a = function() {
+        var e = this;
+        e.history = [];
+        e.pointer = -1;
+        e.save = function() {
+            t.fire("beforehistorysave");
+            e.history = e.history.slice(0, e.pointer + 1);
+            e.history.push(t.stage.createCopy());
+            e.movePointer(1);
+            t.fire("historysave");
         };
-        h.movePointer = function(diff) {
-            h.pointer += diff;
-            h.pointer < 0 && (h.pointer = 0);
-            h.pointer >= h.history.length && (h.pointer = h.history.length - 1);
-            return h.pointer;
+        e.movePointer = function(t) {
+            e.pointer += t;
+            e.pointer < 0 && (e.pointer = 0);
+            e.pointer >= e.history.length && (e.pointer = e.history.length - 1);
+            return e.pointer;
         };
-        h.render = function() {
-            im.fire("beforehistoryrender");
-            im.stage.loadCopy(h.history[h.pointer]);
-            im.fire("historyrender");
+        e.render = function() {
+            t.fire("beforehistoryrender");
+            t.stage.loadCopy(e.history[e.pointer]);
+            t.fire("historyrender");
         };
-        h.undo = function() {
-            im.fire("beforehistoryundo");
-            h.movePointer(-1);
-            h.render();
-            im.fire("historyundo");
+        e.undo = function() {
+            t.fire("beforehistoryundo");
+            e.movePointer(-1);
+            e.render();
+            t.fire("historyundo");
         };
-        h.redo = function() {
-            im.fire("beforehistoryredo");
-            h.movePointer(1);
-            h.render();
-            im.fire("historyredo");
+        e.redo = function() {
+            t.fire("beforehistoryredo");
+            e.movePointer(1);
+            e.render();
+            t.fire("historyredo");
         };
     };
-    im.history = new History();
-    im.bindEvent = im.bind = im.on = function(type, handler, elem) {
-        var element = elem || im.stage.getContainer();
-        if (element instanceof jQuery) element = element[0];
-        ccm_event.sub(type, handler, element);
+    t.history = new a;
+    t.bindEvent = t.bind = t.on = function(e, n, r) {
+        var i = r || t.stage.getContainer();
+        if (i instanceof jQuery) i = i[0];
+        ccm_event.sub(e, n, i);
     };
-    im.fireEvent = im.fire = im.trigger = function(type, data, elem) {
-        var element = elem || im.stage.getContainer();
-        if (element instanceof jQuery) element = element[0];
-        ccm_event.pub(type, data, element);
+    t.fireEvent = t.fire = t.trigger = function(e, n, r) {
+        var i = r || t.stage.getContainer();
+        if (i instanceof jQuery) i = i[0];
+        ccm_event.pub(e, n, i);
     };
-    im.addElement = function(object, type) {
-        var layer = new Kinetic.Layer();
-        object.elementType = type;
-        layer.elementType = type;
-        layer.add(object);
-        im.stage.add(layer);
-        layer.moveDown();
-        im.stage.draw();
+    t.addElement = function(e, n) {
+        var r = new Kinetic.Layer;
+        e.elementType = n;
+        r.elementType = n;
+        r.add(e);
+        t.stage.add(r);
+        r.moveDown();
+        t.stage.draw();
     };
-    im.on("backgroundBuilt", function() {
-        if (im.activeElement !== undefined && im.activeElement.doppelganger !== undefined) {
-            im.foreground.add(im.activeElement.doppelganger);
-            im.activeElement.doppelganger.setPosition(im.activeElement.getPosition());
+    t.on("backgroundBuilt", function() {
+        if (t.activeElement !== undefined && t.activeElement.doppelganger !== undefined) {
+            t.foreground.add(t.activeElement.doppelganger);
+            t.activeElement.doppelganger.setPosition(t.activeElement.getPosition());
         }
     });
-    im.setActiveElement = function(element) {
-        if (element.defer) {
-            return im.setActiveElement(element.defer);
+    t.setActiveElement = function(e) {
+        if (e.defer) {
+            return t.setActiveElement(e.defer);
         }
-        if (im.activeElement == element) return;
-        if (im.activeElement !== undefined && im.activeElement.doppelganger !== undefined) {
-            im.activeElement.doppelganger.remove();
+        if (t.activeElement == e) return;
+        if (t.activeElement !== undefined && t.activeElement.doppelganger !== undefined) {
+            t.activeElement.doppelganger.remove();
         }
-        if (element === im.stage || element.nodeType == "Stage") {
-            im.trigger("ChangeActiveAction", im.controlSetNamespaces.length ? im.controlSetNamespaces[0] : undefined);
-            $("div.control-sets", im.controlContext).find("h4.active").removeClass("active");
-        } else if (element.doppelganger !== undefined) {
-            im.foreground.add(element.doppelganger);
-            im.foreground.draw();
+        if (e === t.stage || e.nodeType == "Stage") {
+            t.trigger("ChangeActiveAction", t.controlSetNamespaces.length ? t.controlSetNamespaces[0] : undefined);
+            $("div.control-sets", t.controlContext).find("h4.active").removeClass("active");
+        } else if (e.doppelganger !== undefined) {
+            t.foreground.add(e.doppelganger);
+            t.foreground.draw();
         }
-        im.trigger("beforeChangeActiveElement", im.activeElement);
-        im.alterCore("activeElement", element);
-        im.trigger("changeActiveElement", element);
-        im.stage.draw();
+        t.trigger("beforeChangeActiveElement", t.activeElement);
+        t.alterCore("activeElement", e);
+        t.trigger("changeActiveElement", e);
+        t.stage.draw();
     };
-    im.bind("ClickedElement", function(e) {
-        im.setActiveElement(e.eventData);
+    t.bind("ClickedElement", function(e) {
+        t.setActiveElement(e.eventData);
     });
-    im.bind("stageChanged", function(e) {
-        if (im.activeElement.getWidth() > im.stage.getScaledWidth() || im.activeElement.getHeight() > im.stage.getScaledHeight()) {
-            im.setActiveElement(im.stage);
+    t.bind("stageChanged", function(e) {
+        if (t.activeElement.getWidth() > t.stage.getScaledWidth() || t.activeElement.getHeight() > t.stage.getScaledHeight()) {
+            t.setActiveElement(t.stage);
         }
     });
-    var controlBar = getElem(im.stage.getContainer()).parent().children(".bottomBar");
-    controlBar.attr("unselectable", "on");
-    var zoom = {};
-    zoom.zoomIn = getElem("<div class='bottombarbutton plus'><i class='icon-plus'></i></div>");
-    zoom.zoomOut = getElem("<div class='bottombarbutton'><i class='icon-minus'></i></div>");
-    zoom.zoomIn.appendTo(controlBar);
-    zoom.zoomOut.appendTo(controlBar);
-    zoom.zoomIn.click(function(e) {
-        im.fire("zoomInClick", e);
+    var f = i(t.stage.getContainer()).parent().children(".bottomBar");
+    f.attr("unselectable", "on");
+    var l = {};
+    l.zoomIn = i("<div class='bottombarbutton plus'><i class='icon-plus'></i></div>");
+    l.zoomOut = i("<div class='bottombarbutton'><i class='icon-minus'></i></div>");
+    l.zoomIn.appendTo(f);
+    l.zoomOut.appendTo(f);
+    l.zoomIn.click(function(e) {
+        t.fire("zoomInClick", e);
     });
-    zoom.zoomOut.click(function(e) {
-        im.fire("zoomOutClick", e);
+    l.zoomOut.click(function(e) {
+        t.fire("zoomOutClick", e);
     });
-    var scale = getElem("<div></div>").addClass("scale").text("100%");
-    im.on("scaleChange", function(e) {
-        scale.text(Math.round(im.scale * 1e4) / 100 + "%");
+    var c = i("<div></div>").addClass("scale").text("100%");
+    t.on("scaleChange", function(e) {
+        c.text(Math.round(t.scale * 1e4) / 100 + "%");
     });
-    scale.click(function() {
-        im.scale = 1;
-        im.stage.setScale(im.scale);
-        var pos = im.stage.getDragBoundFunc()({
-            x: im.stage.getX(),
-            y: im.stage.getY()
+    c.click(function() {
+        t.scale = 1;
+        t.stage.setScale(t.scale);
+        var e = t.stage.getDragBoundFunc()({
+            x: t.stage.getX(),
+            y: t.stage.getY()
         });
-        im.stage.setX(pos.x);
-        im.stage.setY(pos.y);
-        im.fire("scaleChange");
-        im.buildBackground();
-        im.stage.draw();
+        t.stage.setX(e.x);
+        t.stage.setY(e.y);
+        t.fire("scaleChange");
+        t.buildBackground();
+        t.stage.draw();
     });
-    scale.appendTo(controlBar);
-    var minScale = 0, maxScale = 3e3, stepScale = 5 / 6;
-    im.on("zoomInClick", function(e) {
-        var centerx = (-im.stage.getX() + im.stage.getWidth() / 2) / im.scale, centery = (-im.stage.getY() + im.stage.getHeight() / 2) / im.scale;
-        im.scale /= stepScale;
-        im.scale = Math.round(im.scale * 1e3) / 1e3;
-        im.alterCore("scale", im.scale);
-        var ncenterx = (-im.stage.getX() + im.stage.getWidth() / 2) / im.scale, ncentery = (-im.stage.getY() + im.stage.getHeight() / 2) / im.scale;
-        im.stage.setX(im.stage.getX() - (centerx - ncenterx) * im.scale);
-        im.stage.setY(im.stage.getY() - (centery - ncentery) * im.scale);
-        im.stage.setScale(im.scale);
-        var pos = im.stage.getDragBoundFunc()({
-            x: im.stage.getX(),
-            y: im.stage.getY()
+    c.appendTo(f);
+    var h = 0, p = 3e3, d = 5 / 6;
+    t.on("zoomInClick", function(e) {
+        var n = (-t.stage.getX() + t.stage.getWidth() / 2) / t.scale, r = (-t.stage.getY() + t.stage.getHeight() / 2) / t.scale;
+        t.scale /= d;
+        t.scale = Math.round(t.scale * 1e3) / 1e3;
+        t.alterCore("scale", t.scale);
+        var i = (-t.stage.getX() + t.stage.getWidth() / 2) / t.scale, s = (-t.stage.getY() + t.stage.getHeight() / 2) / t.scale;
+        t.stage.setX(t.stage.getX() - (n - i) * t.scale);
+        t.stage.setY(t.stage.getY() - (r - s) * t.scale);
+        t.stage.setScale(t.scale);
+        var o = t.stage.getDragBoundFunc()({
+            x: t.stage.getX(),
+            y: t.stage.getY()
         });
-        im.stage.setX(pos.x);
-        im.stage.setY(pos.y);
-        im.fire("scaleChange");
-        im.buildBackground();
-        im.stage.draw();
+        t.stage.setX(o.x);
+        t.stage.setY(o.y);
+        t.fire("scaleChange");
+        t.buildBackground();
+        t.stage.draw();
     });
-    im.on("zoomOutClick", function(e) {
-        var centerx = (-im.stage.getX() + im.stage.getWidth() / 2) / im.scale, centery = (-im.stage.getY() + im.stage.getHeight() / 2) / im.scale;
-        im.scale *= stepScale;
-        im.scale = Math.round(im.scale * 1e3) / 1e3;
-        im.alterCore("scale", im.scale);
-        var ncenterx = (-im.stage.getX() + im.stage.getWidth() / 2) / im.scale, ncentery = (-im.stage.getY() + im.stage.getHeight() / 2) / im.scale;
-        im.stage.setX(im.stage.getX() - (centerx - ncenterx) * im.scale);
-        im.stage.setY(im.stage.getY() - (centery - ncentery) * im.scale);
-        im.stage.setScale(im.scale);
-        var pos = im.stage.getDragBoundFunc()({
-            x: im.stage.getX(),
-            y: im.stage.getY()
+    t.on("zoomOutClick", function(e) {
+        var n = (-t.stage.getX() + t.stage.getWidth() / 2) / t.scale, r = (-t.stage.getY() + t.stage.getHeight() / 2) / t.scale;
+        t.scale *= d;
+        t.scale = Math.round(t.scale * 1e3) / 1e3;
+        t.alterCore("scale", t.scale);
+        var i = (-t.stage.getX() + t.stage.getWidth() / 2) / t.scale, s = (-t.stage.getY() + t.stage.getHeight() / 2) / t.scale;
+        t.stage.setX(t.stage.getX() - (n - i) * t.scale);
+        t.stage.setY(t.stage.getY() - (r - s) * t.scale);
+        t.stage.setScale(t.scale);
+        var o = t.stage.getDragBoundFunc()({
+            x: t.stage.getX(),
+            y: t.stage.getY()
         });
-        im.stage.setX(pos.x);
-        im.stage.setY(pos.y);
-        im.fire("scaleChange");
-        im.buildBackground();
-        im.stage.draw();
+        t.stage.setX(o.x);
+        t.stage.setY(o.y);
+        t.fire("scaleChange");
+        t.buildBackground();
+        t.stage.draw();
     });
-    var saveSize = {};
-    saveSize.width = getElem("<span/>").addClass("saveWidth");
-    saveSize.height = getElem("<span/>").addClass("saveHeight");
-    saveSize.crop = getElem('<div><i class="icon-resize-full"/></div>').addClass("bottombarbutton").addClass("crop");
-    saveSize.both = saveSize.height.add(saveSize.width).width(32).attr("contenteditable", !!1);
-    saveSize.area = getElem("<span/>").css({
+    var v = {};
+    v.width = i("<span/>").addClass("saveWidth");
+    v.height = i("<span/>").addClass("saveHeight");
+    v.crop = i('<div><i class="icon-resize-full"/></div>').addClass("bottombarbutton").addClass("crop");
+    v.both = v.height.add(v.width).width(32).attr("contenteditable", !!1);
+    v.area = i("<span/>").css({
         "float": "right"
     });
-    im.on("adjustedsavers", function() {
-        saveSize.width.text(im.saveWidth);
-        saveSize.height.text(im.saveHeight);
+    t.on("adjustedsavers", function() {
+        v.width.text(t.saveWidth);
+        v.height.text(t.saveHeight);
     });
-    saveSize.crop.click(function() {
-        im.adjustSavers();
+    v.crop.click(function() {
+        t.adjustSavers();
     });
-    if (im.strictSize) {
-        saveSize.both.attr("disabled", "true");
+    if (t.strictSize) {
+        v.both.attr("disabled", "true");
     } else {
-        saveSize.both.keyup(function(e) {
-            im.fire("editedSize", e);
+        v.both.keyup(function(e) {
+            t.fire("editedSize", e);
         });
     }
-    im.bind("editedSize", function(e) {
-        im.saveWidth = parseInt(saveSize.width.text());
-        im.saveHeight = parseInt(saveSize.height.text());
-        if (isNaN(im.saveWidth)) im.saveWidth = 0;
-        if (isNaN(im.saveHeight)) im.saveHeight = 0;
-        im.buildBackground();
+    t.bind("editedSize", function(e) {
+        t.saveWidth = parseInt(v.width.text());
+        t.saveHeight = parseInt(v.height.text());
+        if (isNaN(t.saveWidth)) t.saveWidth = 0;
+        if (isNaN(t.saveHeight)) t.saveHeight = 0;
+        t.buildBackground();
     });
-    im.bind("saveSizeChange", function() {
-        saveSize.width.text(im.saveWidth);
-        saveSize.height.text(im.saveHeight);
+    t.bind("saveSizeChange", function() {
+        v.width.text(t.saveWidth);
+        v.height.text(t.saveHeight);
     });
-    im.setCursor = function(cursor) {
-        $(im.stage.getContainer()).css("cursor", cursor);
+    t.setCursor = function(e) {
+        $(t.stage.getContainer()).css("cursor", e);
     };
-    im.save = function() {
-        im.background.hide();
-        im.stage.setScale(1);
-        im.fire("ChangeActiveAction");
-        im.fire("changeActiveComponent");
-        im.background.hide();
-        im.foreground.hide();
-        $(im.stage.getContainer()).hide();
-        var startx = Math.round(im.center.x - im.saveWidth / 2), starty = Math.round(im.center.y - im.saveHeight / 2), oldx = im.stage.getX(), oldy = im.stage.getY(), oldwidth = im.stage.getWidth(), oldheight = im.stage.getHeight();
-        im.stage.setX(-startx);
-        im.stage.setY(-starty);
-        im.stage.setWidth(Math.max(im.stage.getWidth(), im.saveWidth));
-        im.stage.setHeight(Math.max(im.stage.getHeight(), im.saveHeight));
-        im.stage.draw();
-        im.showLoader("Saving..");
-        im.stage.toDataURL({
-            width: im.saveWidth,
-            height: im.saveHeight,
-            callback: function(data) {
-                var img = $("<img/>").attr("src", data);
+    t.save = function() {
+        t.background.hide();
+        t.stage.setScale(1);
+        t.fire("ChangeActiveAction");
+        t.fire("changeActiveComponent");
+        t.background.hide();
+        t.foreground.hide();
+        $(t.stage.getContainer()).hide();
+        var e = Math.round(t.center.x - t.saveWidth / 2), n = Math.round(t.center.y - t.saveHeight / 2), r = t.stage.getX(), i = t.stage.getY(), s = t.stage.getWidth(), o = t.stage.getHeight();
+        t.stage.setX(-e);
+        t.stage.setY(-n);
+        t.stage.setWidth(Math.max(t.stage.getWidth(), t.saveWidth));
+        t.stage.setHeight(Math.max(t.stage.getHeight(), t.saveHeight));
+        t.stage.draw();
+        t.showLoader("Saving..");
+        t.stage.toDataURL({
+            width: t.saveWidth,
+            height: t.saveHeight,
+            callback: function(e) {
+                var n = $("<img/>").attr("src", e);
                 $.fn.dialog.open({
-                    element: $(img).width(250)
+                    element: $(n).width(250)
                 });
-                im.hideLoader();
-                im.background.show();
-                im.foreground.show();
-                im.stage.setX(oldx);
-                im.stage.setY(oldy);
-                im.stage.setWidth(oldwidth);
-                im.stage.setHeight(oldheight);
-                im.stage.setScale(im.scale);
-                im.stage.draw();
-                $(im.stage.getContainer()).show();
+                t.hideLoader();
+                t.background.show();
+                t.foreground.show();
+                t.stage.setX(r);
+                t.stage.setY(i);
+                t.stage.setWidth(s);
+                t.stage.setHeight(o);
+                t.stage.setScale(t.scale);
+                t.stage.draw();
+                $(t.stage.getContainer()).show();
             }
         });
     };
-    im.save = function saveImage() {
-        im.fire("ChangeActiveAction");
-        var oldStagePosition = im.stage.getPosition(), oldScale = im.scale;
-        im.stage.setPosition(-im.saveArea.getX(), -im.saveArea.getY());
-        im.stage.setScale(1);
-        im.background.hide();
-        im.foreground.hide();
-        im.stage.draw();
-        im.stage.toDataURL({
-            width: im.saveWidth,
-            height: im.saveHeight,
-            callback: function saveImageDataUrlCallback(url) {
-                im.stage.setPosition(oldStagePosition);
-                im.background.show();
-                im.foreground.show();
-                im.stage.setScale(oldScale);
-                im.stage.draw();
+    t.save = function() {
+        t.fire("ChangeActiveAction");
+        var n = t.stage.getPosition(), r = t.scale;
+        t.stage.setPosition(-t.saveArea.getX(), -t.saveArea.getY());
+        t.stage.setScale(1);
+        t.background.hide();
+        t.foreground.hide();
+        t.stage.draw();
+        t.stage.toDataURL({
+            width: t.saveWidth,
+            height: t.saveHeight,
+            callback: function(i) {
+                t.stage.setPosition(n);
+                t.background.show();
+                t.foreground.show();
+                t.stage.setScale(r);
+                t.stage.draw();
                 $.post("/index.php/tools/files/importers/imageeditor", {
-                    fID: im.fileId,
-                    imgData: url
-                }, function(res) {
-                    var result = JSON.parse(res);
-                    if (result.error === 1) {
-                        alert(result.message);
+                    fID: t.fileId,
+                    imgData: i
+                }, function(e) {
+                    var t = JSON.parse(e);
+                    if (t.error === 1) {
+                        alert(t.message);
                     } else {
                         window.location = window.location;
                     }
@@ -435,23 +438,23 @@ var ImageEditor = function(settings) {
             }
         });
     };
-    im.actualPosition = function actualPosition(x, y, cx, cy, rad) {
-        var ay = y - cy, ax = x - cx, degChange = im.activeElement.getRotation() + Math.atan2(ay, ax), r = Math.sqrt(Math.pow(ax, 2) + Math.pow(ay, 2));
-        return [ cx + r * Math.cos(degChange), cy + r * Math.sin(degChange) ];
+    t.actualPosition = function(n, r, i, s, o) {
+        var u = r - s, a = n - i, f = t.activeElement.getRotation() + Math.atan2(u, a), l = Math.sqrt(Math.pow(a, 2) + Math.pow(u, 2));
+        return [ i + l * Math.cos(f), s + l * Math.sin(f) ];
     };
-    im.getActualRect = function actualRect(cx, cy, elem) {
-        var rect = [], rad = elem.getRotation();
-        rect.push(im.actualPosition(elem.getX(), elem.getY(), cx, cy, rad));
-        rect.push(im.actualPosition(elem.getX() + elem.getWidth() * elem.getScaleX(), elem.getY(), cx, cy, rad));
-        rect.push(im.actualPosition(elem.getX() + elem.getWidth() * elem.getScaleX(), elem.getY() + elem.getHeight() * elem.getScaleY(), cx, cy, rad));
-        rect.push(im.actualPosition(elem.getX(), elem.getY() + elem.getHeight() * elem.getScaleY(), cx, cy, rad));
-        return rect;
+    t.getActualRect = function(n, r, i) {
+        var s = [], o = i.getRotation();
+        s.push(t.actualPosition(i.getX(), i.getY(), n, r, o));
+        s.push(t.actualPosition(i.getX() + i.getWidth() * i.getScaleX(), i.getY(), n, r, o));
+        s.push(t.actualPosition(i.getX() + i.getWidth() * i.getScaleX(), i.getY() + i.getHeight() * i.getScaleY(), n, r, o));
+        s.push(t.actualPosition(i.getX(), i.getY() + i.getHeight() * i.getScaleY(), n, r, o));
+        return s;
     };
-    im.adjustSavers = function AdjustingSavers(fire) {
-        if (im.activeElement.nodeType === "Stage") return;
-        im.foreground.autoCrop = false;
-        im.background.autoCrop = false;
-        var i, e, u, score = {
+    t.adjustSavers = function(n) {
+        if (t.activeElement.nodeType === "Stage") return;
+        t.foreground.autoCrop = false;
+        t.background.autoCrop = false;
+        var r, i, s, o = {
             min: {
                 x: false,
                 y: false
@@ -461,617 +464,616 @@ var ImageEditor = function(settings) {
                 y: false
             }
         };
-        var child = im.activeElement, layer = child.parent, rect = im.getActualRect(0, 0, child);
-        for (var u = rect.length - 1; u >= 0; u--) {
-            var point = rect[u], x = point[0] + layer.getX(), y = point[1] + layer.getY();
-            if (x > score.max.x || score.max.x === false) score.max.x = x;
-            if (x < score.min.x || score.min.x === false) score.min.x = x;
-            if (y > score.max.y || score.max.y === false) score.max.y = y;
-            if (y < score.min.y || score.min.y === false) score.min.y = y;
+        var u = t.activeElement, a = u.parent, f = t.getActualRect(0, 0, u);
+        for (var s = f.length - 1; s >= 0; s--) {
+            var l = f[s], c = l[0] + a.getX(), h = l[1] + a.getY();
+            if (c > o.max.x || o.max.x === false) o.max.x = c;
+            if (c < o.min.x || o.min.x === false) o.min.x = c;
+            if (h > o.max.y || o.max.y === false) o.max.y = h;
+            if (h < o.min.y || o.min.y === false) o.min.y = h;
         }
-        var size = {
-            width: score.max.x - score.min.x,
-            height: score.max.y - score.min.y
+        var p = {
+            width: o.max.x - o.min.x,
+            height: o.max.y - o.min.y
         };
-        im.alterCore("saveWidth", Math.round(size.width));
-        im.alterCore("saveHeight", Math.round(size.height));
-        im.buildBackground();
-        var ap = [ im.center.x - im.activeElement.getWidth() * im.activeElement.getScaleX() / 2, im.center.y - im.activeElement.getHeight() * im.activeElement.getScaleY() / 2 ], adj = im.actualPosition(ap[0], ap[1], im.center.x, im.center.y, im.activeElement.getRotation());
-        im.activeElement.parent.setPosition(adj.map(Math.round));
-        if (fire !== false) im.fire("adjustedsavers");
-        im.stage.draw();
+        t.alterCore("saveWidth", Math.round(p.width));
+        t.alterCore("saveHeight", Math.round(p.height));
+        t.buildBackground();
+        var d = [ t.center.x - t.activeElement.getWidth() * t.activeElement.getScaleX() / 2, t.center.y - t.activeElement.getHeight() * t.activeElement.getScaleY() / 2 ], v = t.actualPosition(d[0], d[1], t.center.x, t.center.y, t.activeElement.getRotation());
+        t.activeElement.parent.setPosition(v.map(Math.round));
+        if (n !== false) t.fire("adjustedsavers");
+        t.stage.draw();
     };
-    im.bind("imageLoad", function() {
-        setTimeout(im.adjustSavers, 0);
+    t.bind("imageLoad", function() {
+        setTimeout(t.adjustSavers, 0);
     });
-    im.extend = function(property, value) {
-        this[property] = value;
+    t.extend = function(e, t) {
+        this[e] = t;
     };
-    im.alterCore = function(property, value) {
-        var nim = im, ns = "core", i;
-        if (im.namespace) {
-            var ns = nim.namespace;
-            nim = im.realIm;
+    t.alterCore = function(e, n) {
+        var r = t, i = "core", s;
+        if (t.namespace) {
+            var i = r.namespace;
+            r = t.realIm;
         }
-        im[property] = value;
-        for (i in im.controlSets) {
-            im.controlSets[i].im.extend(property, value);
+        t[e] = n;
+        for (s in t.controlSets) {
+            t.controlSets[s].im.extend(e, n);
         }
-        for (i in im.filters) {
-            im.filters[i].im.extend(property, value);
+        for (s in t.filters) {
+            t.filters[s].im.extend(e, n);
         }
-        for (i in im.components) {
-            im.components[i].im.extend(property, value);
+        for (s in t.components) {
+            t.components[s].im.extend(e, n);
         }
     };
-    im.clone = function(namespace) {
-        var newim = new ImageEditor(), i;
-        newim.realIm = im;
-        for (i in im) {
-            newim[i] = im[i];
+    t.clone = function(e) {
+        var n = new ImageEditor, r;
+        n.realIm = t;
+        for (r in t) {
+            n[r] = t[r];
         }
-        newim.namespace = namespace;
-        return newim;
+        n.namespace = e;
+        return n;
     };
-    im.addControlSet = function(ns, js, elem) {
-        if (jQuery && elem instanceof jQuery) elem = elem[0];
-        elem.controlSet = function(im, js) {
-            im.disable = function() {
-                im.enabled = false;
-                $(elem).parent().parent().addClass("disabled");
+    t.addControlSet = function(e, n, r) {
+        if (jQuery && r instanceof jQuery) r = r[0];
+        r.controlSet = function(t, n) {
+            t.disable = function() {
+                t.enabled = false;
+                $(r).parent().parent().addClass("disabled");
             };
-            im.enable = function() {
-                im.enabled = true;
-                $(elem).parent().parent().removeClass("disabled");
+            t.enable = function() {
+                t.enabled = true;
+                $(r).parent().parent().removeClass("disabled");
             };
-            this.im = im;
+            this.im = t;
             this.$ = $;
-            warn("Loading ControlSet", im);
+            o("Loading ControlSet", t);
             try {
-                new Function("im", "$", js).call(this, im, $);
-            } catch (e) {
-                console.log(e.stack);
-                var pos = e.stack.replace(/[\S\s]+at HTMLDivElement.eval.+?<anonymous>:(\d+:\d+)[\S\s]+/, "$1").split(":");
-                if (pos[1] && !isNaN(parseInt(pos[1]))) {
-                    var jsstack = js.split("\n");
-                    var msg = "Parse error at line #" + pos[0] + " char #" + pos[1] + " within " + ns;
-                    msg += "\n" + jsstack[parseInt(pos[0]) - 1];
-                    msg += "\n" + new Array(parseInt(pos[1])).join(" ") + "^";
-                    error(msg);
+                (new Function("im", "$", n)).call(this, t, $);
+            } catch (i) {
+                console.log(i.stack);
+                var s = i.stack.replace(/[\S\s]+at HTMLDivElement.eval.+?<anonymous>:(\d+:\d+)[\S\s]+/, "$1").split(":");
+                if (s[1] && !isNaN(parseInt(s[1]))) {
+                    var a = n.split("\n");
+                    var f = "Parse error at line #" + s[0] + " char #" + s[1] + " within " + e;
+                    f += "\n" + a[parseInt(s[0]) - 1];
+                    f += "\n" + (new Array(parseInt(s[1]))).join(" ") + "^";
+                    u(f);
                 } else {
-                    error('"' + e.message + '" in "' + im.namespace + '"');
+                    u('"' + i.message + '" in "' + t.namespace + '"');
                 }
             }
             return this;
         };
-        var newim = im.clone(ns);
-        var nso = elem.controlSet.call(elem, newim, js);
-        im.controlSets[ns] = nso;
-        return nso;
+        var i = t.clone(e);
+        var s = r.controlSet.call(r, i, n);
+        t.controlSets[e] = s;
+        return s;
     };
-    im.addFilter = function(ns, js) {
-        var filter = function(im, js) {
-            this.namespace = im.namespace;
-            this.im = im;
+    t.addFilter = function(e, n) {
+        var r = function(t, n) {
+            this.namespace = t.namespace;
+            this.im = t;
             try {
-                new Function("im", "$", js).call(this, im, $);
-            } catch (e) {
-                error(e);
-                window.lastError = e;
-                var pos = e.stack.replace(/[\S\s]+at HTMLDivElement.eval.+?<anonymous>:(\d+:\d+)[\S\s]+/, "$1").split(":");
-                if (pos.length != 2) {
-                    error(e.message);
-                    error(e.stack);
+                (new Function("im", "$", n)).call(this, t, $);
+            } catch (r) {
+                u(r);
+                window.lastError = r;
+                var i = r.stack.replace(/[\S\s]+at HTMLDivElement.eval.+?<anonymous>:(\d+:\d+)[\S\s]+/, "$1").split(":");
+                if (i.length != 2) {
+                    u(r.message);
+                    u(r.stack);
                 } else {
-                    var jsstack = js.split("\n");
-                    var msg = "Parse error at line #" + pos[0] + " char #" + pos[1] + " within " + ns;
-                    msg += "\n" + jsstack[parseInt(pos[0]) - 1];
-                    msg += "\n" + new Array(parseInt(pos[1]) || 0).join(" ") + "^";
-                    error(msg);
+                    var s = n.split("\n");
+                    var o = "Parse error at line #" + i[0] + " char #" + i[1] + " within " + e;
+                    o += "\n" + s[parseInt(i[0]) - 1];
+                    o += "\n" + (new Array(parseInt(i[1]) || 0)).join(" ") + "^";
+                    u(o);
                 }
             }
             return this;
         };
-        var newim = im.clone(ns);
-        var nso = new filter(newim, js);
-        im.filters[ns] = nso;
-        return nso;
+        var i = t.clone(e);
+        var s = new r(i, n);
+        t.filters[e] = s;
+        return s;
     };
-    im.addComponent = function(ns, js, elem) {
-        if (jQuery && elem instanceof jQuery) elem = elem[0];
-        elem.component = function(im, js) {
-            im.disable = function() {
+    t.addComponent = function(e, n, r) {
+        if (jQuery && r instanceof jQuery) r = r[0];
+        r.component = function(t, n) {
+            t.disable = function() {
                 $(this).parent().parent().addClass("disabled");
             };
-            im.enable = function() {
+            t.enable = function() {
                 $(this).parent().parent().removeClass("disabled");
             };
-            this.im = im;
-            warn("Loading component", im);
+            this.im = t;
+            o("Loading component", t);
             try {
-                new Function("im", "$", js).call(this, im, $);
-            } catch (e) {
-                var pos = e.stack.replace(/[\S\s]+at HTMLDivElement.eval.+?<anonymous>:(\d+:\d+)[\S\s]+/, "$1").split(":");
-                if (pos[1] && !isNaN(parseInt(pos[1]))) {
-                    var jsstack = js.split("\n");
-                    var msg = "Parse error at line #" + pos[0] + " char #" + pos[1] + " within " + ns;
-                    msg += "\n" + jsstack[parseInt(pos[0]) - 1];
-                    msg += "\n" + new Array(parseInt(pos[1])).join(" ") + "^";
-                    error(msg);
+                (new Function("im", "$", n)).call(this, t, $);
+            } catch (r) {
+                var i = r.stack.replace(/[\S\s]+at HTMLDivElement.eval.+?<anonymous>:(\d+:\d+)[\S\s]+/, "$1").split(":");
+                if (i[1] && !isNaN(parseInt(i[1]))) {
+                    var s = n.split("\n");
+                    var a = "Parse error at line #" + i[0] + " char #" + i[1] + " within " + e;
+                    a += "\n" + s[parseInt(i[0]) - 1];
+                    a += "\n" + (new Array(parseInt(i[1]))).join(" ") + "^";
+                    u(a);
                 } else {
-                    error('"' + e.message + '" in "' + im.namespace + '"');
+                    u('"' + r.message + '" in "' + t.namespace + '"');
                 }
             }
             return this;
         };
-        var newim = im.clone(ns);
-        var nso = elem.component.call(elem, newim, js);
-        im.components[ns] = nso;
-        return nso;
+        var i = t.clone(e);
+        var s = r.component.call(r, i, n);
+        t.components[e] = s;
+        return s;
     };
-    im.background = new Kinetic.Layer();
-    im.foreground = new Kinetic.Layer();
-    im.stage.add(im.background);
-    im.stage.add(im.foreground);
-    im.bgimage = new Image();
-    im.saveArea = new Kinetic.Rect();
-    im.background.add(im.saveArea);
-    im.bind("load", function() {
-        im.saveArea.setFillPatternImage(im.bgimage);
-        im.saveArea.setFillPatternOffset([ -(im.saveWidth / 2), -(im.saveHeight / 2) ]);
-        im.saveArea.setFillPatternScale(1 / im.scale);
-        im.saveArea.setFillPatternX(0);
-        im.saveArea.setFillPatternY(0);
-        im.saveArea.setFillPatternRepeat("repeat");
-        im.background.on("click", function() {
-            im.setActiveElement(im.stage);
+    t.background = new Kinetic.Layer;
+    t.foreground = new Kinetic.Layer;
+    t.stage.add(t.background);
+    t.stage.add(t.foreground);
+    t.bgimage = new Image;
+    t.saveArea = new Kinetic.Rect;
+    t.background.add(t.saveArea);
+    t.bind("load", function() {
+        t.saveArea.setFillPatternImage(t.bgimage);
+        t.saveArea.setFillPatternOffset([ -(t.saveWidth / 2), -(t.saveHeight / 2) ]);
+        t.saveArea.setFillPatternScale(1 / t.scale);
+        t.saveArea.setFillPatternX(0);
+        t.saveArea.setFillPatternY(0);
+        t.saveArea.setFillPatternRepeat("repeat");
+        t.background.on("click", function() {
+            t.setActiveElement(t.stage);
         });
-    }, im.bgimage);
-    im.bgimage.src = "/concrete/images/testbg.png";
-    im.buildBackground = function() {
-        var startbb = new Date().getTime();
-        var dimensions = im.stage.getTotalDimensions();
-        var to = (dimensions.max.x + dimensions.visibleHeight + dimensions.visibleWidth) * 2;
-        im.saveArea.setFillPatternOffset([ -(im.saveWidth / 2) * im.scale, -(im.saveHeight / 2) * im.scale ]);
-        im.saveArea.setX(Math.round(im.center.x - im.saveWidth / 2));
-        im.saveArea.setY(Math.round(im.center.y - im.saveHeight / 2));
-        im.saveArea.setFillPatternScale(1 / im.scale);
-        im.saveArea.setWidth(im.saveWidth);
-        im.saveArea.setHeight(im.saveHeight);
-        if (!im.coverLayer) {
-            im.coverLayer = new Kinetic.Rect();
-            im.coverLayer.setStroke("rgba(150,150,150,.5)");
-            im.coverLayer.setFill("transparent");
-            im.coverLayer.setListening(false);
-            im.coverLayer.setStrokeWidth(Math.max(dimensions.width, dimensions.height, 500));
-            im.foreground.add(im.coverLayer);
+    }, t.bgimage);
+    t.bgimage.src = "/concrete/images/testbg.png";
+    t.buildBackground = function() {
+        var e = (new Date).getTime();
+        var n = t.stage.getTotalDimensions();
+        var r = (n.max.x + n.visibleHeight + n.visibleWidth) * 2;
+        t.saveArea.setFillPatternOffset([ -(t.saveWidth / 2) * t.scale, -(t.saveHeight / 2) * t.scale ]);
+        t.saveArea.setX(Math.round(t.center.x - t.saveWidth / 2));
+        t.saveArea.setY(Math.round(t.center.y - t.saveHeight / 2));
+        t.saveArea.setFillPatternScale(1 / t.scale);
+        t.saveArea.setWidth(t.saveWidth);
+        t.saveArea.setHeight(t.saveHeight);
+        if (!t.coverLayer) {
+            t.coverLayer = new Kinetic.Rect;
+            t.coverLayer.setStroke("rgba(150,150,150,.5)");
+            t.coverLayer.setFill("transparent");
+            t.coverLayer.setListening(false);
+            t.coverLayer.setStrokeWidth(Math.max(n.width, n.height, 500));
+            t.foreground.add(t.coverLayer);
         }
-        var width = Math.max(dimensions.width, dimensions.height) * 2;
-        im.coverLayer.setPosition(im.saveArea.getX() - width / 2, im.saveArea.getY() - width / 2);
-        im.coverLayer.setSize(im.saveArea.getWidth() + width, im.saveArea.getHeight() + width);
-        im.coverLayer.setStrokeWidth(width);
-        im.fire("backgroundBuilt");
-        im.saveArea.draw();
-        im.coverLayer.draw();
+        var i = Math.max(n.width, n.height) * 2;
+        t.coverLayer.setPosition(t.saveArea.getX() - i / 2, t.saveArea.getY() - i / 2);
+        t.coverLayer.setSize(t.saveArea.getWidth() + i, t.saveArea.getHeight() + i);
+        t.coverLayer.setStrokeWidth(i);
+        t.fire("backgroundBuilt");
+        t.saveArea.draw();
+        t.coverLayer.draw();
     };
-    im.buildBackground();
-    im.on("stageChanged", im.buildBackground);
-    im.stage.setDragBoundFunc(function(ret) {
-        var dim = im.stage.getTotalDimensions();
-        var maxx = Math.max(dim.max.x, dim.min.x) - 1, minx = Math.min(dim.max.x, dim.min.x) + 1, maxy = Math.max(dim.max.y, dim.min.y) - 1, miny = Math.min(dim.max.y, dim.min.y) + 1;
-        ret.x = Math.floor(ret.x);
-        ret.y = Math.floor(ret.y);
-        if (ret.x > maxx) ret.x = maxx;
-        if (ret.x < minx) ret.x = minx;
-        if (ret.y > maxy) ret.y = maxy;
-        if (ret.y < miny) ret.y = miny;
-        ret.x = Math.floor(ret.x);
-        ret.y = Math.floor(ret.y);
-        return ret;
+    t.buildBackground();
+    t.on("stageChanged", t.buildBackground);
+    t.stage.setDragBoundFunc(function(e) {
+        var n = t.stage.getTotalDimensions();
+        var r = Math.max(n.max.x, n.min.x) - 1, i = Math.min(n.max.x, n.min.x) + 1, s = Math.max(n.max.y, n.min.y) - 1, o = Math.min(n.max.y, n.min.y) + 1;
+        e.x = Math.floor(e.x);
+        e.y = Math.floor(e.y);
+        if (e.x > r) e.x = r;
+        if (e.x < i) e.x = i;
+        if (e.y > s) e.y = s;
+        if (e.y < o) e.y = o;
+        e.x = Math.floor(e.x);
+        e.y = Math.floor(e.y);
+        return e;
     });
-    im.setActiveElement(im.stage);
-    im.stage.setDraggable(true);
-    im.autoCrop = true;
-    im.on("imageLoad", function() {
-        var padding = 100;
-        var w = im.stage.getWidth() - padding * 2, h = im.stage.getHeight() - padding * 2;
-        if (im.saveWidth < w && im.saveHeight < h) return;
-        var perc = Math.max(im.saveWidth / w, im.saveHeight / h);
-        im.stage.setX((im.stage.getWidth() - im.stage.getWidth() * im.stage.getScale().x) / 2);
-        im.stage.setY((im.stage.getHeight() - im.stage.getHeight() * im.stage.getScale().y) / 2);
-        var pos = im.stage.getDragBoundFunc()({
-            x: im.stage.getX(),
-            y: im.stage.getY()
+    t.setActiveElement(t.stage);
+    t.stage.setDraggable(true);
+    t.autoCrop = true;
+    t.on("imageLoad", function() {
+        var e = 100;
+        var n = t.stage.getWidth() - e * 2, r = t.stage.getHeight() - e * 2;
+        if (t.saveWidth < n && t.saveHeight < r) return;
+        var i = Math.max(t.saveWidth / n, t.saveHeight / r);
+        t.stage.setX((t.stage.getWidth() - t.stage.getWidth() * t.stage.getScale().x) / 2);
+        t.stage.setY((t.stage.getHeight() - t.stage.getHeight() * t.stage.getScale().y) / 2);
+        var s = t.stage.getDragBoundFunc()({
+            x: t.stage.getX(),
+            y: t.stage.getY()
         });
-        im.stage.setX(pos.x);
-        im.stage.setY(pos.y);
-        im.fire("scaleChange");
-        im.fire("stageChanged");
-        im.buildBackground();
+        t.stage.setX(s.x);
+        t.stage.setY(s.y);
+        t.fire("scaleChange");
+        t.fire("stageChanged");
+        t.buildBackground();
     });
-    im.fit = function(wh, scale) {
-        if (scale === false) {
+    t.fit = function(e, n) {
+        if (n === false) {
             return {
-                width: im.saveWidth,
-                height: im.saveHeight
+                width: t.saveWidth,
+                height: t.saveHeight
             };
         }
-        var height = wh.height, width = wh.width;
-        if (width > im.saveWidth) {
-            height /= width / im.saveWidth;
-            width = im.saveWidth;
+        var r = e.height, i = e.width;
+        if (i > t.saveWidth) {
+            r /= i / t.saveWidth;
+            i = t.saveWidth;
         }
-        if (height > im.saveHeight) {
-            width /= height / im.saveHeight;
-            height = im.saveHeight;
+        if (r > t.saveHeight) {
+            i /= r / t.saveHeight;
+            r = t.saveHeight;
         }
         return {
-            width: width,
-            height: height
+            width: i,
+            height: r
         };
     };
-    if (settings.src) {
-        im.showLoader("Loading Image..");
-        var img = new Image(), controlSetsLoaded = false;
-        im.bind("ControlSetsLoaded", function() {
-            controlSetsLoaded = true;
+    if (e.src) {
+        t.showLoader("Loading Image..");
+        var m = new Image, g = false;
+        t.bind("ControlSetsLoaded", function() {
+            g = true;
         });
-        im.bind("load", function imageLoaded() {
-            if (!im.strictSize) {
-                im.saveWidth = img.width;
-                im.saveHeight = img.height;
-                im.fire("saveSizeChange");
-                im.buildBackground();
+        t.bind("load", function() {
+            if (!t.strictSize) {
+                t.saveWidth = m.width;
+                t.saveHeight = m.height;
+                t.fire("saveSizeChange");
+                t.buildBackground();
             }
-            var center = {
-                x: Math.floor(im.center.x - img.width / 2),
-                y: Math.floor(im.center.y - img.height / 2)
+            var n = {
+                x: Math.floor(t.center.x - m.width / 2),
+                y: Math.floor(t.center.y - m.height / 2)
             };
-            var image = new Kinetic.Image({
-                image: img,
+            var r = new Kinetic.Image({
+                image: m,
                 x: 0,
                 y: 0
             });
-            im.addElement(image, "image");
-            image.setPosition(center);
-            im.fire("imageload");
-            var activate = function() {
-                setTimeout(function activateImageElement() {
-                    im.setActiveElement(image);
-                    im.fire("changeActiveAction", im.controlSetNamespaces[0]);
+            t.addElement(r, "image");
+            r.setPosition(n);
+            t.fire("imageload");
+            var i = function() {
+                setTimeout(function() {
+                    t.setActiveElement(r);
+                    t.fire("changeActiveAction", t.controlSetNamespaces[0]);
                 }, 0);
             };
-            if (controlSetsLoaded) {
-                activate();
+            if (g) {
+                i();
             } else {
-                im.bind("ControlSetsLoaded", activate);
+                t.bind("ControlSetsLoaded", i);
             }
-        }, img);
-        img.src = settings.src;
+        }, m);
+        m.src = e.src;
     } else {
-        im.fire("imageload");
+        t.fire("imageload");
     }
-    im.bind("imageload", function() {
-        var cs = settings.controlsets || {}, filters = settings.filters || {}, namespace, firstcs;
-        var running = 0;
-        log("Loading ControlSets");
-        im.showLoader("Loading Control Sets..");
-        im.fire("LoadingControlSets");
-        for (namespace in cs) {
-            var myns = "ControlSet_" + namespace;
-            im.controlSetNamespaces.push(myns);
-            $.ajax(cs[namespace]["src"], {
+    t.bind("imageload", function() {
+        var n = e.controlsets || {}, r = e.filters || {}, i, o;
+        var u = 0;
+        s("Loading ControlSets");
+        t.showLoader("Loading Control Sets..");
+        t.fire("LoadingControlSets");
+        for (i in n) {
+            var a = "ControlSet_" + i;
+            t.controlSetNamespaces.push(a);
+            $.ajax(n[i]["src"], {
                 dataType: "text",
                 cache: false,
-                namespace: namespace,
-                myns: myns,
+                namespace: i,
+                myns: a,
                 beforeSend: function() {
-                    running++;
+                    u++;
                 },
-                success: function(js) {
-                    running--;
-                    var nso = im.addControlSet(this.myns, js, cs[this.namespace]["element"]);
-                    log(nso);
-                    im.fire("controlSetLoad", nso);
-                    if (0 == running) {
-                        im.trigger("ControlSetsLoaded");
+                success: function(e) {
+                    u--;
+                    var r = t.addControlSet(this.myns, e, n[this.namespace]["element"]);
+                    s(r);
+                    t.fire("controlSetLoad", r);
+                    if (0 == u) {
+                        t.trigger("ControlSetsLoaded");
                     }
                 },
-                error: function(xhr, errDesc, exception) {
-                    running--;
-                    if (0 == running) {
-                        im.trigger("ControlSetsLoaded");
+                error: function(e, n, r) {
+                    u--;
+                    if (0 == u) {
+                        t.trigger("ControlSetsLoaded");
                     }
                 }
             });
         }
     });
-    im.bind("ControlSetsLoaded", function() {
-        im.fire("LoadingComponents");
-        im.showLoader("Loading Components..");
-        var components = settings.components || {}, namespace, running = 0;
-        log("Loading Components");
-        for (namespace in components) {
-            var myns = "Component_" + namespace;
-            $.ajax(components[namespace]["src"], {
+    t.bind("ControlSetsLoaded", function() {
+        t.fire("LoadingComponents");
+        t.showLoader("Loading Components..");
+        var n = e.components || {}, r, i = 0;
+        s("Loading Components");
+        for (r in n) {
+            var o = "Component_" + r;
+            $.ajax(n[r]["src"], {
                 dataType: "text",
                 cache: false,
-                namespace: namespace,
-                myns: myns,
+                namespace: r,
+                myns: o,
                 beforeSend: function() {
-                    running++;
+                    i++;
                 },
-                success: function(js) {
-                    running--;
-                    var nso = im.addComponent(this.myns, js, components[this.namespace]["element"]);
-                    log(nso);
-                    im.fire("ComponentLoad", nso);
-                    if (0 == running) {
-                        im.trigger("ComponentsLoaded");
+                success: function(e) {
+                    i--;
+                    var r = t.addComponent(this.myns, e, n[this.namespace]["element"]);
+                    s(r);
+                    t.fire("ComponentLoad", r);
+                    if (0 == i) {
+                        t.trigger("ComponentsLoaded");
                     }
                 },
-                error: function(xhr, errDesc, exception) {
-                    running--;
-                    if (0 == running) {
-                        im.trigger("ComponentsLoaded");
+                error: function(e, n, r) {
+                    i--;
+                    if (0 == i) {
+                        t.trigger("ComponentsLoaded");
                     }
                 }
             });
         }
-        if (0 == running) {
-            im.trigger("ComponentsLoaded");
+        if (0 == i) {
+            t.trigger("ComponentsLoaded");
         }
     });
-    im.bind("ComponentsLoaded", function() {
-        log("Loading Filters");
-        im.showLoader("Loading Filters..");
-        var filters = settings.filters || {}, namespace, firstf, firstc, active = 0;
-        im.fire("LoadingFilters");
-        for (namespace in filters) {
-            var myns = "Filter_" + namespace;
-            var name = filters[namespace].name;
-            if (!firstf) firstf = myns;
-            active++;
-            $.ajax(filters[namespace].src, {
+    t.bind("ComponentsLoaded", function() {
+        s("Loading Filters");
+        t.showLoader("Loading Filters..");
+        var n = e.filters || {}, r, i, o, u = 0;
+        t.fire("LoadingFilters");
+        for (r in n) {
+            var a = "Filter_" + r;
+            var f = n[r].name;
+            if (!i) i = a;
+            u++;
+            $.ajax(n[r].src, {
                 dataType: "text",
                 cache: false,
-                namespace: namespace,
-                myns: myns,
-                name: name,
-                success: function(js) {
-                    var nso = im.addFilter(this.myns, js);
-                    nso.name = this.name;
-                    im.fire("filterLoad", nso);
-                    active--;
-                    if (0 == active) {
-                        im.trigger("FiltersLoaded");
+                namespace: r,
+                myns: a,
+                name: f,
+                success: function(e) {
+                    var n = t.addFilter(this.myns, e);
+                    n.name = this.name;
+                    t.fire("filterLoad", n);
+                    u--;
+                    if (0 == u) {
+                        t.trigger("FiltersLoaded");
                     }
                 },
-                error: function(xhr, errDesc, exception) {
-                    active--;
-                    if (0 == active) {
-                        im.trigger("FiltersLoaded");
+                error: function(e, n, r) {
+                    u--;
+                    if (0 == u) {
+                        t.trigger("FiltersLoaded");
                     }
                 }
             });
         }
     });
-    im.bind("ChangeActiveAction", function(e) {
-        var ns = e.eventData;
-        if (ns === im.activeControlSet) return;
-        for (var ons in im.controlSets) {
-            getElem(im.controlSets[ons]);
-            if (ons !== ns) getElem(im.controlSets[ons]).slideUp();
+    t.bind("ChangeActiveAction", function(e) {
+        var n = e.eventData;
+        if (n === t.activeControlSet) return;
+        for (var r in t.controlSets) {
+            i(t.controlSets[r]);
+            if (r !== n) i(t.controlSets[r]).slideUp();
         }
-        im.activeControlSet = ns;
-        im.alterCore("activeControlSet", ns);
-        if (!ns) {
-            $("div.control-sets", im.controlContext).find("h4.active").removeClass("active");
+        t.activeControlSet = n;
+        t.alterCore("activeControlSet", n);
+        if (!n) {
+            $("div.control-sets", t.controlContext).find("h4.active").removeClass("active");
             return;
         }
-        var cs = $(im.controlSets[ns]), height = cs.show().height();
-        if (cs.length == 0) return;
-        cs.hide().height(height).slideDown(function() {
+        var s = $(t.controlSets[n]), o = s.show().height();
+        if (s.length == 0) return;
+        s.hide().height(o).slideDown(function() {
             $(this).height("");
         });
     });
-    im.bind("ChangeActiveComponent", function(e) {
-        var ns = e.eventData;
-        if (ns === im.activeComponent) return;
-        for (var ons in im.components) {
-            if (ons !== ns) getElem(im.components[ons]).slideUp();
+    t.bind("ChangeActiveComponent", function(e) {
+        var n = e.eventData;
+        if (n === t.activeComponent) return;
+        for (var r in t.components) {
+            if (r !== n) i(t.components[r]).slideUp();
         }
-        im.activeComponent = ns;
-        im.alterCore("activeComponent", ns);
-        if (!ns) return;
-        var cs = $(im.components[ns]), height = cs.show().height();
-        if (cs.length == 0) return;
-        cs.hide().height(height).slideDown(function() {
+        t.activeComponent = n;
+        t.alterCore("activeComponent", n);
+        if (!n) return;
+        var s = $(t.components[n]), o = s.show().height();
+        if (s.length == 0) return;
+        s.hide().height(o).slideDown(function() {
             $(this).height("");
         });
     });
-    im.bind("ChangeNavTab", function(e) {
-        log("changenavtab", e);
-        im.trigger("ChangeActiveAction", e.eventData);
-        im.trigger("ChangeActiveComponent", e.eventData);
-        var parent = getElem("div.editorcontrols");
+    t.bind("ChangeNavTab", function(e) {
+        s("changenavtab", e);
+        t.trigger("ChangeActiveAction", e.eventData);
+        t.trigger("ChangeActiveComponent", e.eventData);
+        var n = i("div.editorcontrols");
         switch (e.eventData) {
           case "add":
-            parent.children("div.control-sets").hide();
-            parent.children("div.components").show();
+            n.children("div.control-sets").hide();
+            n.children("div.components").show();
             break;
-
           case "edit":
-            parent.children("div.components").hide();
-            parent.children("div.control-sets").show();
+            n.children("div.components").hide();
+            n.children("div.control-sets").show();
             break;
         }
     });
-    im.bind("FiltersLoaded", function() {
-        im.hideLoader();
+    t.bind("FiltersLoaded", function() {
+        t.hideLoader();
     });
-    im.slideOut = $("<div/>").addClass("slideOut").css({
+    t.slideOut = $("<div/>").addClass("slideOut").css({
         width: 0,
         "float": "right",
         height: "100%",
         "overflow-x": "hidden",
-        right: im.controlContext.width() - 1,
+        right: t.controlContext.width() - 1,
         position: "absolute",
         background: "white",
         "box-shadow": "black -20px 0 20px -25px"
     });
-    im.slideOutContents = $("<div/>").appendTo(im.slideOut).width(300);
-    im.showSlideOut = function(contents, callback) {
-        im.hideSlideOut(function() {
-            im.slideOut.empty();
-            im.slideOutContents = contents.width(300);
-            im.slideOut.append(im.slideOutContents);
-            im.slideOut.addClass("active").addClass("sliding");
-            im.slideOut.stop(1).slideOut(300, function() {
-                im.slideOut.removeClass("sliding");
-                typeof callback === "function" && callback();
+    t.slideOutContents = $("<div/>").appendTo(t.slideOut).width(300);
+    t.showSlideOut = function(e, n) {
+        t.hideSlideOut(function() {
+            t.slideOut.empty();
+            t.slideOutContents = e.width(300);
+            t.slideOut.append(t.slideOutContents);
+            t.slideOut.addClass("active").addClass("sliding");
+            t.slideOut.stop(1).slideOut(300, function() {
+                t.slideOut.removeClass("sliding");
+                typeof n === "function" && n();
             });
         });
     };
-    im.hideSlideOut = function(callback) {
-        im.slideOut.addClass("sliding");
-        im.slideOut.slideIn(300, function() {
-            im.slideOut.css("border-right", "0");
-            im.slideOut.removeClass("active").removeClass("sliding");
-            typeof callback === "function" && callback();
+    t.hideSlideOut = function(e) {
+        t.slideOut.addClass("sliding");
+        t.slideOut.slideIn(300, function() {
+            t.slideOut.css("border-right", "0");
+            t.slideOut.removeClass("active").removeClass("sliding");
+            typeof e === "function" && e();
         });
     };
-    im.controlContext.after(im.slideOut);
-    im.setActiveElement(im.stage);
-    window.c5_image_editor = im;
-    window.im = im;
-    return im;
+    t.controlContext.after(t.slideOut);
+    t.setActiveElement(t.stage);
+    window.c5_image_editor = t;
+    window.im = t;
+    return t;
 };
 
-$.fn.ImageEditor = function(settings) {
-    settings === undefined && (settings = {});
-    settings.imageload = $.fn.dialog.hideLoader;
-    var self = $(this);
-    settings.container = self[0];
-    if (self.height() == 0) {
+$.fn.ImageEditor = function(e) {
+    e === undefined && (e = {});
+    e.imageload = $.fn.dialog.hideLoader;
+    var t = $(this);
+    e.container = t[0];
+    if (t.height() == 0) {
         setTimeout(function() {
-            self.ImageEditor(settings);
+            t.ImageEditor(e);
         }, 50);
         return;
     }
-    self.closest(".ui-dialog").find(".ui-resizable-handle").hide();
-    self.height("-=30");
-    $("div.editorcontrols").height(self.height() - 90);
-    self.width("-=330").parent().width("-=330").children("div.bottomBar").width("-=330");
-    settings.width === undefined && (settings.width = self.width());
-    settings.height === undefined && (settings.height = self.height());
+    t.closest(".ui-dialog").find(".ui-resizable-handle").hide();
+    t.height("-=30");
+    $("div.editorcontrols").height(t.height() - 90);
+    t.width("-=330").parent().width("-=330").children("div.bottomBar").width("-=330");
+    e.width === undefined && (e.width = t.width());
+    e.height === undefined && (e.height = t.height());
     $.fn.dialog.showLoader();
-    var im = new ImageEditor(settings);
-    var context = im.domContext;
-    im.on("ChangeActiveAction", function(e) {
-        if (!e.eventData) $("h4.active", context).removeClass("active");
+    var n = new ImageEditor(e);
+    var r = n.domContext;
+    n.on("ChangeActiveAction", function(e) {
+        if (!e.eventData) $("h4.active", r).removeClass("active");
     });
-    im.on("ChangeActiveComponent", function(e) {
-        if (!e.eventData) $("h4.active", context).removeClass("active");
+    n.on("ChangeActiveComponent", function(e) {
+        if (!e.eventData) $("h4.active", r).removeClass("active");
     });
-    $("div.controls > div.controlscontainer", context).children("div.save").children("button.save").click(function() {
-        im.save();
+    $("div.controls > div.controlscontainer", r).children("div.save").children("button.save").click(function() {
+        n.save();
     }).end().children("button.cancel").click(function() {
         if (confirm("Are you certain?")) $.fn.dialog.closeTop();
     });
-    $("div.controls > div.controlscontainer", context).children("ul.nav").children().click(function() {
+    $("div.controls > div.controlscontainer", r).children("ul.nav").children().click(function() {
         if ($(this).hasClass("active")) return false;
-        $("div.controls > div.controlscontainer", context).children("ul.nav").children().removeClass("active");
+        $("div.controls > div.controlscontainer", r).children("ul.nav").children().removeClass("active");
         $(this).addClass("active");
-        im.trigger("ChangeNavTab", $(this).text().toLowerCase());
+        n.trigger("ChangeNavTab", $(this).text().toLowerCase());
         return false;
     });
-    $("div.controlset", context).find("div.control").children("div.contents").slideUp(0).end().end().find("h4").click(function() {
+    $("div.controlset", r).find("div.control").children("div.contents").slideUp(0).end().end().find("h4").click(function() {
         if ($(this).parent().hasClass("disabled")) return;
         $(this).addClass("active");
-        $("div.controlset", context).find("h4").not($(this)).removeClass("active");
-        var ns = $(this).parent().attr("data-namespace");
-        im.trigger("ChangeActiveAction", "ControlSet_" + ns);
+        $("div.controlset", r).find("h4").not($(this)).removeClass("active");
+        var e = $(this).parent().attr("data-namespace");
+        n.trigger("ChangeActiveAction", "ControlSet_" + e);
     });
-    $("div.component", context).find("div.control").children("div.contents").slideUp(0).hide().end().end().find("h4").click(function() {
+    $("div.component", r).find("div.control").children("div.contents").slideUp(0).hide().end().end().find("h4").click(function() {
         if ($(this).hasClass("active")) return false;
         $(this).addClass("active");
-        $("div.component", context).children("h4").not($(this)).removeClass("active");
-        var ns = $(this).parent().attr("data-namespace");
-        im.trigger("ChangeActiveComponent", "Component_" + ns);
+        $("div.component", r).children("h4").not($(this)).removeClass("active");
+        var e = $(this).parent().attr("data-namespace");
+        n.trigger("ChangeActiveComponent", "Component_" + e);
     });
     $("div.components").hide();
-    im.bind("imageload", $.fn.dialog.hideLoader);
-    return im;
+    n.bind("imageload", $.fn.dialog.hideLoader);
+    return n;
 };
 
-$.fn.slideOut = function(time, callback) {
-    var me = $(this), startWidth = me.width(), totalWidth = 300;
-    me.css("overflow-y", "auto");
-    if (startWidth == totalWidth) {
-        me.animate({
-            width: totalWidth
-        }, 0, callback);
+$.fn.slideOut = function(e, t) {
+    var n = $(this), r = n.width(), i = 300;
+    n.css("overflow-y", "auto");
+    if (r == i) {
+        n.animate({
+            width: i
+        }, 0, t);
         return this;
     }
-    me.width(startWidth).animate({
-        width: totalWidth
-    }, time || 300, callback || function() {});
+    n.width(r).animate({
+        width: i
+    }, e || 300, t || function() {});
     return this;
 };
 
-$.fn.slideIn = function(time, callback) {
-    var me = $(this);
-    me.css("overflow-y", "hidden");
-    if (me.width() === 0) {
-        me.animate({
+$.fn.slideIn = function(e, t) {
+    var n = $(this);
+    n.css("overflow-y", "hidden");
+    if (n.width() === 0) {
+        n.animate({
             width: 0
-        }, 0, callback);
+        }, 0, t);
         return this;
     }
-    me.animate({
+    n.animate({
         width: 0
-    }, time || 300, callback || function() {});
+    }, e || 300, t || function() {});
     return this;
 };
 
 ImageEditor.prototype = ImageEditor.fn = {
     filter: {
         grayscale: Kinetic.Filters.Grayscale,
-        sepia: function(imageData) {
-            var i;
-            var data = imageData.data;
-            for (i = 0; i < data.length; i += 4) {
-                data[i] = data[i] * .393 + data[i + 1] * .769 + data[i + 2] * .189;
-                data[i + 1] = data[i] * .349 + data[i + 1] * .686 + data[i + 2] * .168;
-                data[i + 2] = data[i] * .272 + data[i + 1] * .534 + data[i + 2] * .131;
+        sepia: function(e) {
+            var t;
+            var n = e.data;
+            for (t = 0; t < n.length; t += 4) {
+                n[t] = n[t] * .393 + n[t + 1] * .769 + n[t + 2] * .189;
+                n[t + 1] = n[t] * .349 + n[t + 1] * .686 + n[t + 2] * .168;
+                n[t + 2] = n[t] * .272 + n[t + 1] * .534 + n[t + 2] * .131;
             }
         },
-        brightness: function(imageData, ob) {
-            var adjustment = ob.level;
-            var d = imageData.data;
-            for (var i = 0; i < d.length; i += 4) {
-                d[i] += adjustment;
-                d[i + 1] += adjustment;
-                d[i + 2] += adjustment;
+        brightness: function(e, t) {
+            var n = t.level;
+            var r = e.data;
+            for (var i = 0; i < r.length; i += 4) {
+                r[i] += n;
+                r[i + 1] += n;
+                r[i + 2] += n;
             }
         },
-        invert: function(imageData, ob) {
-            var d = imageData.data;
-            for (var i = 0; i < d.length; i += 4) {
-                d[i] = 255 - d[i];
-                d[i + 1] = 255 - d[i + 1];
-                d[i + 2] = 255 - d[i + 2];
+        invert: function(e, t) {
+            var n = e.data;
+            for (var r = 0; r < n.length; r += 4) {
+                n[r] = 255 - n[r];
+                n[r + 1] = 255 - n[r + 1];
+                n[r + 2] = 255 - n[r + 2];
             }
         },
-        restore: function(imageData, ob) {
-            var adjustment = ob.level;
-            var d = imageData.data;
-            var g = ob.imageData.data;
-            for (var i = 0; i < d.length; i += 4) {
-                d[i] = g[i];
-                d[i + 1] = g[i + 1];
-                d[i + 2] = g[i + 2];
+        restore: function(e, t) {
+            var n = t.level;
+            var r = e.data;
+            var i = t.imageData.data;
+            for (var s = 0; s < r.length; s += 4) {
+                r[s] = i[s];
+                r[s + 1] = i[s + 1];
+                r[s + 2] = i[s + 2];
             }
         }
     }

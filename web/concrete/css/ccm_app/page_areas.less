@@ -4,11 +4,11 @@
 
 div#ccm-menu-click-proxy {
 	opacity: 0;
-	z-index: 101;
 	height: 0px;
 	width: 0px;
 	position: absolute;
 	cursor: pointer;
+	z-index: 1000;
 }
 
 div#ccm-menu-highlighter {
@@ -115,7 +115,7 @@ div.ccm-area-footer {
 	width: 100%;
 	position: absolute;
 	z-index: 4;
-	bottom: -41px;
+	bottom: -35px;
 	padding-top: 15px;
 
 	div.ccm-area-footer-handle {
@@ -284,53 +284,80 @@ ul.ccm-edit-mode-inline-commands {
 /** 
  * In page menus
  */
-#ccm-popover-menu-container div.popover ul.dropdown-menu { 
+#ccm-popover-menu-container div.popover {
 
-	position: static; 
-	display: block;
-	margin: 0px !important;
-	float: none !important;
-	padding: 0px;
-	border: 0px;
-	-webkit-box-shadow: none !important;
-	-moz-box-shadow: none !important;
-	box-shadow: none !important;
+	&.ccm-popover-inverse {
+		background-color: rgba(0,0,0,0.6) !important;
+		ul.dropdown-menu {
+			background-color: rgba(0,0,0,0.6) !important;
+			li {
+				span {
+					color: #444245;
+				}
+				a {
+					color: #7f7f81;
+					&:hover {
+						color: #c5c5c7 !important;
+					}
+				}
 
-	li:last-child a {
-		.border-bottom-radius(4px);
-	}
-
-	li:first-child a {
-		.border-top-radius(4px);
-	}
-
-	li {
-
-	display: block;
-	
-
-	a {
-		text-decoration: none !important;
-		padding: 3px 12px !important;
-		color: #999;
-	}
-	a:hover {
-		color: #000;	
-		background-image: none !important;
-		background-color: transparent !important;
+				&.divider {
+					background-color: #212123;				
+				}
+			}
+		}
 	}
 
 
+	ul.dropdown-menu { 
 
-	font-family: @baseFontFamily !important;
-	font-size: @baseFontSize !important;
-	line-height: @baseLineHeight !important;
-	
+		position: static; 
+		display: block;
+		margin: 0px !important;
+		float: none !important;
+		padding: 0px;
+		border: 0px;
+		-webkit-box-shadow: none !important;
+		-moz-box-shadow: none !important;
+		box-shadow: none !important;
+
+		li:last-child a {
+			.border-bottom-radius(4px);
+		}
+
+		li:first-child a {
+			.border-top-radius(4px);
+		}
+
+		li {
+
+		display: block;
+		
+
+		a, span {
+			text-decoration: none !important;
+			padding: 3px 12px !important;
+			color: #999;
+			display: block; 
+		}
+		a:hover {
+			color: #000;	
+			background-image: none !important;
+			background-color: transparent !important;
+		}
+
+
+
+		font-family: @baseFontFamily !important;
+		font-size: @font-size-base !important;
+		line-height: @baseLineHeight !important;
+		
+		}
+
+		.divider {margin: 9px 1px !important;}
 	}
 
-	.divider {margin: 9px 1px !important;}
 }
-
 
 .ccm-ui div.popover ul.dropdown-menu a:hover {
   color: @dropdownLinkColor !important;

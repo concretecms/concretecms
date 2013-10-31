@@ -35,10 +35,8 @@ class Concrete5_Controller_AttributeType_Textarea extends DefaultAttributeTypeCo
 		if ($this->akTextareaDisplayMode == 'text' || $this->akTextareaDisplayMode == '') {
 			print Loader::helper('form')->textarea($this->field('value'), $value, array('class' => $additionalClass, 'rows' => 5));
 		} else {
-			$this->addHeaderItem(Loader::helper('html')->css('redactor.css'));
-			$this->addHeaderItem(Loader::helper('html')->css('jquery.ui.css'));
-			$this->addFooterItem(Loader::helper('html')->javascript('jquery.ui.js')); // need it for redactor dialogs
-			$this->addFooterItem(Loader::helper('html')->javascript('redactor.js'));
+			$this->requireAsset('jqueryui');
+			$this->requireAsset('redactor');
 			$this->addFooterItem('<script type="text/javascript" src="' . REL_DIR_FILES_TOOLS_REQUIRED . '/i18n_js"></script>'); 
 			print '<div class="ccm-attribute-textarea-edit">' . Loader::helper('form')->textarea($this->field('value'), $value, array('class' => $additionalClass . ' ccm-advanced-editor-' . $this->attributeKey->getAttributeKeyID())) . '</div>';
 			print '<script type="text/javascript">';

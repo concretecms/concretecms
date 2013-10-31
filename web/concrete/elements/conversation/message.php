@@ -21,7 +21,7 @@ if (!$message->isConversationMessageApproved()){
 $cnvMessageID = $message->cnvMessageID;
 if ((!$message->isConversationMessageDeleted() && $message->isConversationMessageApproved()) || $message->conversationMessageHasActiveChildren()) {
 	?>
-	<div data-conversation-message-id="<?=$message->getConversationMessageID()?>" data-conversation-message-level="<?=$message->getConversationMessageLevel()?>" class="<?=$class?>">
+	<div data-conversation-message-id="<?=$message->getConversationMessageID()?>" data-conversation-message-level="<?=$message->getConversationMessageLevel()?>" class="<?=$class?> ccm-ui">
 		<?php if($canAdminMessage) { ?>
 		<ul class="nav nav-pills cnv-admin-pane pull-right">
 			<li class="dropdown">
@@ -62,7 +62,7 @@ if ((!$message->isConversationMessageDeleted() && $message->isConversationMessag
 								$thumb = $im->getThumbnail($file, '90', '90', true); ?>
 						  <div class="image-popover-hover" data-full-image="<?php echo $file->getURL() ?>">
 						  	<div class="glyph-container">
-						  		<i class="icon-search icon-white"></i>
+						  		<i class="glyphicon glyphiconicon-search glyphicon-white"></i>
 						  	</div>
 						  </div>
 						  <div class="attachment-preview-container">

@@ -11,6 +11,9 @@ if (!$fp->canEditFileContents()) {
   die(t("Access Denied."));
 }
 
+$req = ResponseAssetGroup::get();
+$req->requireAsset('core/imageeditor');
+
 Loader::model('system/image_editor/control_set');
 Loader::model('system/image_editor/component');
 Loader::model('system/image_editor/filter');

@@ -1,5 +1,5 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Controller_Dashboard_System_Seo_TrackingCodes extends DashboardBaseController {
+class Concrete5_Controller_Page_Dashboard_System_Seo_TrackingCodes extends DashboardController {
 
 	public function view() {
 		$this->set('tracking_code', Config::get('SITE_TRACKING_CODE'));

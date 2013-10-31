@@ -13,16 +13,3 @@ ccm_paneToggleOptions = function(obj) {
 		pane.slideUp('fast', 'easeOutExpo');
 	}
 }
-
-ccm_setupGridStriping = function(tbl) {
-	$("#" + tbl + " tr").removeClass();
-	var j = 0;
-	$("#" + tbl + " tr").each(function() {
-		if ($(this).css('display') != 'none') {					
-			if (j % 2 == 0) {
-				$(this).addClass('ccm-row-alt');
-			}
-			j++;
-		}
-	});
-}

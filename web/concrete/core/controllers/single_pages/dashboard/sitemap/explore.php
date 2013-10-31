@@ -1,8 +1,11 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Controller_Dashboard_Sitemap_Explore extends Controller {
+class Concrete5_Controller_Page_Dashboard_Sitemap_Explore extends DashboardController {
 
 	public function view($nodeID = 1, $auxMessage = false) {
+		$v = View::getInstance();
+		$v->requireAsset('core/sitemap');
+
 		$dh = Loader::helper('concrete/dashboard/sitemap');
 		if ($dh->canRead()) { 
 			$this->set('nodeID', $nodeID);			

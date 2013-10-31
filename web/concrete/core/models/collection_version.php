@@ -47,7 +47,7 @@
 			}
 			
 			
-			$q = "select cvID, cvIsApproved, cvIsNew, cvHandle, cvName, cvDescription, cvDateCreated, cvDatePublic, cvAuthorUID, cvApproverUID, cvComments, ptID, CollectionVersions.ctID, ctHandle, ctName from CollectionVersions left join PageTypes on CollectionVersions.ctID = PageTypes.ctID where cID = ?";
+			$q = "select cvID, cvIsApproved, cvIsNew, cvHandle, cvName, cvDescription, cvDateCreated, cvDatePublic, pTemplateID, cvAuthorUID, cvApproverUID, cvComments, pThemeID from CollectionVersions where cID = ?";
 			if ($cvID == 'ACTIVE') {
 				$q .= ' and cvIsApproved = 1';
 			} else if ($cvID == 'RECENT') {
@@ -169,12 +169,12 @@
 			$u = new User();
 			$versionComments = (!$versionComments) ? t("New Version %s", $newVID) : $versionComments;
 			$cvIsNew = 1;
-			if ($c->getCollectionTypeHandle() == STACKS_PAGE_TYPE) {
+			if ($c->getPageTypeHandle() == STACKS_PAGE_TYPE) {
 				$cvIsNew = 0;
 			}
 			$dh = Loader::helper('date');
-			$v = array($this->cID, $newVID, $c->getCollectionName(), $c->getCollectionHandle(), $c->getCollectionDescription(), $c->getCollectionDatePublic(), $dh->getSystemDateTime(), $versionComments, $u->getUserID(), $cvIsNew, $this->ptID, $this->ctID);
-			$q = "insert into CollectionVersions (cID, cvID, cvName, cvHandle, cvDescription, cvDatePublic, cvDateCreated, cvComments, cvAuthorUID, cvIsNew, ptID, ctID)
+			$v = array($this->cID, $newVID, $c->getCollectionName(), $c->getCollectionHandle(), $c->getCollectionDescription(), $c->getCollectionDatePublic(), $dh->getSystemDateTime(), $versionComments, $u->getUserID(), $cvIsNew, $this->pThemeID, $this->pTemplateID);
+			$q = "insert into CollectionVersions (cID, cvID, cvName, cvHandle, cvDescription, cvDatePublic, cvDateCreated, cvComments, cvAuthorUID, cvIsNew, pThemeID, pTemplateID)
 				values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 				
 			$r = $db->prepare($q);
@@ -196,6 +196,15 @@
 				$v3 = array(intval($c->getCollectionID()), $newVID, $row3['faID']);
 				$db->query("insert into CollectionVersionFeatureAssignments (cID, cvID, faID) values (?, ?, ?)", $v3); 
 			}
+
+			$q4 = "select pThemeID, pThemeStyleHandle, pThemeStyleValue, pThemeStyleType from CollectionVersionThemeStyles where cID = ? and cvID = ?";
+			$v4 = array($c->getCollectionID(), $this->getVersionID());
+			$r4 = $db->query($q4, $v4);
+			while ($row4 = $r4->fetchRow()) {
+				$v4 = array(intval($c->getCollectionID()), $newVID, $row4['pThemeID'], $row4['pThemeStyleHandle'], $row4['pThemeStyleValue'], $row4['pThemeStyleType']);
+				$db->query("insert into CollectionVersionThemeStyles (cID, cvID, pThemeID, pThemeStyleHandle, pThemeStyleValue, pThemeStyleType) values (?, ?, ?, ?, ?, ?)", $v4); 
+			}
+			
 			
 			$nv = CollectionVersion::get($c, $newVID);
 			Events::fire('on_page_version_add', $c, $nv);
@@ -257,13 +266,14 @@
 
 			if ($c->getCollectionInheritance() == 'TEMPLATE') {
 				// we make sure to update the cInheritPermissionsFromCID value
-				$ct = CollectionType::getByID($c->getCollectionTypeID());
+				$ct = PageType::getByID($c->getPageTypeID());
 				$masterC = $ct->getMasterTemplate();
 				$db->Execute('update Pages set cInheritPermissionsFromCID = ? where cID = ?', array($masterC->getCollectionID(), $c->getCollectioniD()));
 			}
 
 			Events::fire('on_page_version_approve', $c);
 			$c->reindex(false, $doReindexImmediately);
+			$c->writePageThemeCustomizations();
 			$this->refreshCache();
 		}
 		
@@ -346,6 +356,7 @@
 			}
 			
 			$db->Execute('delete from CollectionVersionBlockStyles where cID = ? and cvID = ?', array($cID, $cvID));
+			$db->Execute('delete from CollectionVersionThemeStyles where cID = ? and cvID = ?', array($cID, $cvID));
 			$db->Execute('delete from CollectionVersionRelatedEdits where cID = ? and cvID = ?', array($cID, $cvID));
 			$db->Execute('delete from CollectionVersionAreaStyles where cID = ? and cvID = ?', array($cID, $cvID));
 			
@@ -355,54 +366,3 @@
 
 		}
 	}
-
-/**
- * An object that holds a list of versions for a particular collection.
- * @package Pages
- * @author Andrew Embler <andrew@concrete5.org>
- * @category Concrete
- * @copyright  Copyright (c) 2003-2008 Concrete5. (http://www.concrete5.org)
- * @license    http://www.concrete5.org/license/     MIT License
- *
- */
-	class VersionList extends Object {
-	
-		var $vArray = array();
-		
-		function VersionList(&$c, $limit = -1, $page = false) {
-			$db = Loader::db();
-			
-			$cID = $c->getCollectionID();
-			$this->total = $db->GetOne('select count(cvID) from CollectionVersions where cID = ?', $cID);
-			$q = "select cvID from CollectionVersions where cID = '$cID' order by cvID desc ";
-			if ($page > 1) {
-				$pl = ($page-1) * $limit;
-			}			
-			if ($page > 1) {
-				$q .= "limit " . $pl . ',' . $limit;
-			} else if ($limit > -1) {
-				$q .= "limit " . $limit;
-			}
-			$r = $db->query($q);
-	
-			if ($r) {
-				while ($row = $r->fetchRow()) {
-					$this->vArray[] = CollectionVersion::get($c, $row['cvID'], true);
-				}
-				$r->free();
-			}
-					
-			return $this;
-		}
-		
-		function getVersionListArray() {
-			return $this->vArray;
-		}
-		
-		function getVersionListCount() {
-			return $this->total;
-		}
-	
-	}
-	
-?>

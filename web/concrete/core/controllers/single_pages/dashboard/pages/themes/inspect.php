@@ -1,22 +1,22 @@
 <?
 
 defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Controller_Dashboard_Pages_Themes_Inspect extends Controller {
+class Concrete5_Controller_Page_Dashboard_Pages_Themes_Inspect extends DashboardController {
 
 	protected $helpers = array('html');
 
 	// grab all the page types from within a theme	
-	public function view($ptID = null, $isOnInstall = false) {
-		if (!$ptID) {
+	public function view($pThemeID = null, $isOnInstall = false) {
+		if (!$pThemeID) {
 			$this->redirect('/dashboard/pages/themes/');
 		}
 		
 		$v = Loader::helper('validation/error');
-		$pt = PageTheme::getByID($ptID);
+		$pt = PageTheme::getByID($pThemeID);
 		if (is_object($pt)) {
 			$files = $pt->getFilesInTheme();
 			$this->set('files', $files);
-			$this->set('ptID', $ptID);
+			$this->set('pThemeID', $pThemeID);
 			$this->set('pageTheme', $pt);
 		} else {
 			$v->add('Invalid Theme');
@@ -34,13 +34,12 @@ class Concrete5_Controller_Dashboard_Pages_Themes_Inspect extends Controller {
 
 	}
 	
-	public function activate_files($ptID) {
+	public function activate_files($pThemeID) {
 		try {
-			Loader::model("collection_types");
-			$pt = PageTheme::getByID($ptID);
+			$pt = PageTheme::getByID($pThemeID);
 			$txt = Loader::helper('text');
-			if (!is_array($this->post('pageTypes'))) {
-				throw new Exception(t("You must specify at least one template to make into a page type."));
+			if (!is_array($this->post('pageTemplates'))) {
+				throw new Exception(t("You must specify at least one template to create."));
 			}
 			
 			$pkg = false;
@@ -49,16 +48,16 @@ class Concrete5_Controller_Dashboard_Pages_Themes_Inspect extends Controller {
 				$pkg = Package::getByHandle($pkgHandle);
 			}
 
-			foreach($this->post('pageTypes') as $ptHandle) {
-				$data['ctName'] = $txt->unhandle($ptHandle);
-				$data['ctHandle'] = $ptHandle;
-				$ct = CollectionType::add($data, $pkg);
+			foreach($this->post('pageTemplates') as $pTemplateHandle) {
+				$pTemplateName = $txt->unhandle($pTemplateHandle);
+				$pTemplateIcon = FILENAME_PAGE_TEMPLATE_DEFAULT_ICON;
+				$ct = PageTemplate::add($pTemplateHandle, $pTemplateName, $pTemplateIcon, $pkg);
 			}
-			$this->set('message', t('Files in the theme were activated successfully.'));
+			$this->set('success', t('Files in the theme were activated successfully.'));
 		} catch(Exception $e) {
 			$this->set('error', $e);
 		}
-		$this->view($ptID);
+		$this->view($pThemeID);
 	}
 
 

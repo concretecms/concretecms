@@ -51,7 +51,7 @@ $canModifyGroups = ($p->canEditBlockPermissions() && PERMISSIONS_MODEL != 'simpl
 $canScheduleGuestAccess = (PERMISSIONS_MODEL != 'simple' && $p->canGuestsViewThisBlock() && $p->canScheduleGuestAccess() && (!$a->isGlobalArea()));
 $canAliasBlockOut = ($c->isMasterCollection());
 if ($canAliasBlockOut) {
-	$ct = CollectionType::getByID($c->getCollectionTypeID());
+	$ct = PageType::getByID($c->getPageTypeID());
 }
 
 $isAlias = $b->isAlias();
@@ -72,7 +72,7 @@ if ($isAlias) {
 		<? if ($btw->getBlockTypeHandle() == BLOCK_HANDLE_LAYOUT_PROXY) { ?> data-menu-handle="none"<? } ?>>
 		<ul class="ccm-edit-mode-inline-commands ccm-ui">
 		<? if ($p->canEditBlock() && $btw->getBlockTypeHandle() != BLOCK_HANDLE_LAYOUT_PROXY && (!$a->isGlobalArea())) {  ?>
-			<li><a data-inline-command="move-block" href="#"><i class="icon-move"></i></a></li>
+			<li><a data-inline-command="move-block" href="#"><i class="glyphicon glyphicon-move"></i></a></li>
 		<? } ?>
 		</ul>
 		
@@ -94,7 +94,7 @@ if ($isAlias) {
 			$sp = new Permissions($stack);
 			if ($sp->canWrite()) { ?>
 
-			<li><a href="<?=$this->url('/dashboard/blocks/stacks', 'view_details', $stack->getCollectionID())?>"><?=t("Manage Stack Contents")?></a></li>		
+			<li><a href="<?=View::url('/dashboard/blocks/stacks', 'view_details', $stack->getCollectionID())?>"><?=t("Manage Stack Contents")?></a></li>		
 
 			<? } 
 		}

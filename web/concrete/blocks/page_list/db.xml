@@ -38,7 +38,7 @@
 			<default value="1" />
 		</field>
 		
-		<field name="ctID" type="I2">
+		<field name="ptID" type="I2">
 			<unsigned />
 		</field>
 		<field name="rss" type="I">

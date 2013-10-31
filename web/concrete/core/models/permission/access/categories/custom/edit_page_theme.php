@@ -12,8 +12,8 @@ class Concrete5_Model_EditPageThemePagePermissionAccess extends PagePermissionAc
 		}
 		$r = $db->Execute('select * from PagePermissionThemeAccessListCustom where paID = ?', array($this->getPermissionAccessID()));
 		while ($row = $r->FetchRow()) {
-			$v = array($row['peID'], $newPA->getPermissionAccessID(), $row['ptID']);
-			$db->Execute('insert into PagePermissionThemeAccessListCustom  (peID, paID, ptID) values (?, ?, ?)', $v);
+			$v = array($row['peID'], $newPA->getPermissionAccessID(), $row['pThemeID']);
+			$db->Execute('insert into PagePermissionThemeAccessListCustom  (peID, paID, pThemeID) values (?, ?, ?)', $v);
 		}
 		return $newPA;
 	}
@@ -37,20 +37,20 @@ class Concrete5_Model_EditPageThemePagePermissionAccess extends PagePermissionAc
 			}
 		}
 
-		if (is_array($args['ptIDInclude'])) { 
-			foreach($args['ptIDInclude'] as $peID => $ptIDs) {
-				foreach($ptIDs as $ptID) { 
-					$v = array($this->getPermissionAccessID(), $peID, $ptID);
-					$db->Execute('insert into PagePermissionThemeAccessListCustom (paID, peID, ptID) values (?, ?, ?)', $v);
+		if (is_array($args['pThemeIDInclude'])) { 
+			foreach($args['pThemeIDInclude'] as $peID => $pThemeIDs) {
+				foreach($pThemeIDs as $pThemeID) { 
+					$v = array($this->getPermissionAccessID(), $peID, $pThemeID);
+					$db->Execute('insert into PagePermissionThemeAccessListCustom (paID, peID, pThemeID) values (?, ?, ?)', $v);
 				}
 			}
 		}
 
-		if (is_array($args['ptIDExclude'])) { 
-			foreach($args['ptIDExclude'] as $peID => $ptIDs) {
-				foreach($ptIDs as $ptID) { 
-					$v = array($this->getPermissionAccessID(), $peID, $ptID);
-					$db->Execute('insert into PagePermissionThemeAccessListCustom (paID, peID, ptID) values (?, ?, ?)', $v);
+		if (is_array($args['pThemeIDExclude'])) { 
+			foreach($args['pThemeIDExclude'] as $peID => $pThemeIDs) {
+				foreach($pThemeIDs as $pThemeID) { 
+					$v = array($this->getPermissionAccessID(), $peID, $pThemeID);
+					$db->Execute('insert into PagePermissionThemeAccessListCustom (paID, peID, pThemeID) values (?, ?, ?)', $v);
 				}
 			}
 		}
@@ -74,8 +74,8 @@ class Concrete5_Model_EditPageThemePagePermissionAccess extends PagePermissionAc
 				$l->setThemesAllowedPermission('N');
 			}
 			if ($permission == 'C') { 
-				$ptIDs = $db->GetCol('select ptID from PagePermissionThemeAccessListCustom where peID = ? and paID = ?', array($pe->getAccessEntityID(), $l->getPermissionAccessID()));
-				$l->setThemesAllowedArray($ptIDs);
+				$pThemeIDs = $db->GetCol('select pThemeID from PagePermissionThemeAccessListCustom where peID = ? and paID = ?', array($pe->getAccessEntityID(), $l->getPermissionAccessID()));
+				$l->setThemesAllowedArray($pThemeIDs);
 			}
 		}
 		return $list;

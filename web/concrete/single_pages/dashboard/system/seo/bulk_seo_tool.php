@@ -150,7 +150,7 @@ if (count($pages) > 0) {
 								<strong><?php echo t('Page Type'); ?></strong>
 								<br />
 								<br />
-								<?php echo $cobj->getCollectionTypeName() ? $cobj->getCollectionTypeName() : t('Single Page'); ?>
+								<?php echo $cobj->getPageTypeName() ? $cobj->getPageTypeName() : t('Single Page'); ?>
 								<br />
 								<br />
 							</div>

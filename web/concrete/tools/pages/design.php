@@ -13,8 +13,8 @@ if ($_POST['task'] == 'design_pages') {
 	if ($_POST['plID'] > 0) {
 		$pl = PageTheme::getByID($_POST['plID']);
 	}
-	if ($_POST['ctID'] > 0) {
-		$ct = CollectionType::getByID($_POST['ctID']);
+	if ($_POST['ptID'] > 0) {
+		$ct = PageType::getByID($_POST['ptID']);
 	}
 	if (is_array($_POST['cID'])) {
 		foreach($_POST['cID'] as $cID) {
@@ -24,11 +24,11 @@ if ($_POST['task'] == 'design_pages') {
 				if ($_POST['plID'] > 0) {
 					$c->setTheme($pl);
 				}
-				if ($_POST['ctID'] > 0 && (!$c->isMasterCollection() && !$c->isGeneratedCollection())) {
+				if ($_POST['ptID'] > 0 && (!$c->isMasterCollection() && !$c->isGeneratedCollection())) {
 					$parentC = Page::getByID($c->getCollectionParentID());
 					$parentCP = new Permissions($parentC);
 					if ($c->getCollectionID() == HOME_CID || $parentCP->canAddSubCollection($ct)) { 
-						$data = array('ctID' => $_POST['ctID']);
+						$data = array('ptID' => $_POST['ptID']);
 						$c->update($data);
 					}
 				}				
@@ -69,7 +69,7 @@ foreach($pages as $c) {
 		$isMasterCollection = true;
 	}
 	$cp = new Permissions($c);
-	if ($cp->canEditPageTheme() && $cp->canEditPageType()) {
+	if ($cp->canEditPageTheme() && $cp->canEditPageTemplate()) {
 		$pcnt++;
 	}
 }
@@ -79,7 +79,7 @@ if ($pcnt > 0) {
 	// first we determine which page types to show, if any
 	$notAllowedPageTypes = array();
 	$allowedPageTypes = array();
-	$ctArray = CollectionType::getList();
+	$ctArray = PageType::getList();
 	foreach($ctArray as $ct) {
 		foreach($pages as $c) {
 			if ($c->getCollectionID() != HOME_CID) {
@@ -98,12 +98,12 @@ if ($pcnt > 0) {
 	}
 	$cnt = count($allowedPageTypes);	
 	// next we determine which page type to select, if any
-	$ctID = -1;
+	$ptID = -1;
 	foreach($pages as $c) {
-		if ($c->getCollectionTypeID() != $ctID && $ctID != -1) {
-			$ctID = 0;
+		if ($c->getPageTypeID() != $ptID && $ptID != -1) {
+			$ptID = 0;
 		} else {
-			$ctID = $c->getCollectionTypeID();
+			$ptID = $c->getPageTypeID();
 		}
 	}
 	// now we determine which theme to select, if any
@@ -127,7 +127,7 @@ $searchInstance = Loader::helper('text')->entities($_REQUEST['searchInstance']);
 <? } else { ?>
 	<form id="ccm-<?=$searchInstance?>-design-form" method="post" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/pages/design">
 	<input type="hidden" name="plID" value="<?=$plID?>" />
-	<input type="hidden" name="ctID" value="<?=$ctID?>" />
+	<input type="hidden" name="ptID" value="<?=$ptID?>" />
 	<? foreach($pages as $c) { ?>
 		<input type="hidden" name="cID[]" value="<?=$c->getCollectionID()?>" />
 	<? } ?>
@@ -139,7 +139,7 @@ $searchInstance = Loader::helper('text')->entities($_REQUEST['searchInstance']);
 		<h3><?=t('Choose a Page Type')?></h3>
 	
 		<p>
-		<?=t("This is the defaults page for the %s page type. You cannot change it.", $c->getCollectionTypeName()); ?>
+		<?=t("This is the defaults page for the %s page type. You cannot change it.", $c->getPageTypeName()); ?>
 		</p>
 		
 	<? } else if ($isSinglePage) { ?>
@@ -161,9 +161,9 @@ $searchInstance = Loader::helper('text')->entities($_REQUEST['searchInstance']);
 			<ul id="ccm-select-page-type" style="width: <?=$cnt * 132?>px">
 				<? 
 				foreach($allowedPageTypes as $ct) { ?>		
-					<? $class = ($ct->getCollectionTypeID() == $ctID) ? 'ccm-item-selected' : ''; ?>
+					<? $class = ($ct->getPageTypeID() == $ptID) ? 'ccm-item-selected' : ''; ?>
 			
-					<li class="<?=$class?>"><a href="javascript:void(0)" ccm-page-type-id="<?=$ct->getCollectionTypeID()?>"><?=$ct->getCollectionTypeIconImage();?></a><span><?=$ct->getCollectionTypeName()?></span>
+					<li class="<?=$class?>"><a href="javascript:void(0)" ccm-page-type-id="<?=$ct->getPageTypeID()?>"><?=$ct->getPageTypeIconImage();?></a><span><?=$ct->getPageTypeName()?></span>
 					</li>
 				<?
 				}?>

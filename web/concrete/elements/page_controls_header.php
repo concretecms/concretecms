@@ -21,29 +21,52 @@ print "var CCM_SECURITY_TOKEN = '" . $valt->generate() . "';";
 
 <?
 $dh = Loader::helper('concrete/dashboard');
+$v = View::getInstance();
+
 if (!$dh->inDashboard()) {
-	$this->addHeaderItem($html->css('ccm.app.css'));
-	$this->addHeaderItem($html->css('jquery.ui.css'));
-	$this->addHeaderItem($html->css('redactor.css'));
-	
-	$this->addFooterItem('<script type="text/javascript" src="' . REL_DIR_FILES_TOOLS_REQUIRED . '/i18n_js"></script>'); 
-	$this->addHeaderItem($html->javascript('jquery.js'));
-	$this->addFooterItem($html->javascript('jquery.ui.js'));
+
+	$v->requireAsset('core/app');
+	/*
 	Loader::library("3rdparty/mobile_detect");
 	$md = new Mobile_Detect();
 	if ($md->isMobile()) {
 		$this->addHeaderItem($html->css('ccm.app.mobile.css'));
 		$this->addFooterItem($html->javascript('jquery.ui.touch-punch.js'));
 	}
-	$this->addFooterItem($html->javascript('jquery.form.js'));
-	$this->addFooterItem($html->javascript('jquery.rating.js'));
-	$this->addFooterItem($html->javascript('bootstrap.js'));
-	$this->addFooterItem($html->javascript('ccm.app.js'));
-	$this->addFooterItem($html->javascript('redactor.js'));
-	$this->addFooterItem('<script type="text/javascript">$(function() { CCMToolbar.start(); });</script>');
+	*/
+
+	$editMode = $c->isEditMode();
+	$tools = REL_DIR_FILES_TOOLS_REQUIRED;
 	if ($c->isEditMode()) {
-		$this->addFooterItem('<script type="text/javascript">$(function() { CCMEditMode.start(); });</script>');
+		$startEditMode = 'CCMEditMode.start();';
 	}
+	if ($cp->canEditPageContents() && $_REQUEST['ctask'] == 'check-out-first') {
+		$launchPageComposer = 'CCMEditMode.launchPageComposer();';
+	}
+	$panelDashboard = URL::to('/system/panels/dashboard');
+	$panelPage = URL::to('/system/panels/page');
+	$panelSitemap = URL::to('/system/panels/sitemap');
+	$panelAdd = URL::to('/system/panels/add');
+	$panelCheckIn = URL::to('/system/panels/page/check_in');
+
+	$js = <<<EOL
+<script type="text/javascript" src="{$tools}/i18n_js"></script>
+<script type="text/javascript">$(function() {
+	CCMPanelManager.register({'identifier': 'dashboard', 'position': 'right', url: '{$panelDashboard}'});
+	CCMPanelManager.register({'identifier': 'page', url: '{$panelPage}'});
+	CCMPanelManager.register({'identifier': 'sitemap', 'position': 'right', url: '{$panelSitemap}'});
+	CCMPanelManager.register({'identifier': 'add-block', 'translucent': false, 'position': 'left', url: '{$panelAdd}'});
+	CCMPanelManager.register({'identifier': 'check-in', 'position': 'left', url: '{$panelCheckIn}'});
+	CCMToolbar.start();
+	{$startEditMode}
+	{$launchPageComposer}
+});
+</script>
+
+EOL;
+
+	$this->addFooterItem($js);
+
 	if (ENABLE_PROGRESSIVE_PAGE_REINDEX && Config::get('DO_PAGE_REINDEX_CHECK')) {
 		$this->addHeaderItem('<script type="text/javascript">$(function() { ccm_doPageReindexing(); });</script>');
 	}

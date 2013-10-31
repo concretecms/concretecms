@@ -10,7 +10,7 @@ if (empty($disableTrackingCode) && (empty($_trackingCodePosition) || $_trackingC
 	echo Config::get('SITE_TRACKING_CODE');
 }
 
-print $this->controller->outputFooterItems();
+print $this->markFooterAssetPosition();
 
 // user profile menu
 Loader::element('account/menu');

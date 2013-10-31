@@ -21,12 +21,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
  *
  */
 
-	class Concrete5_Library_BlockController extends Controller {
+	class Concrete5_Library_BlockController extends AbstractController {
 		
 		protected $record; // blockrecord
 		protected $helpers = array('form');
-		protected static $sets;
-		
 		protected $block;
 		protected $btDescription = "";
 		protected $btName = "";
@@ -56,6 +54,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		protected $btFeatureObjects;
 		
 		public $headerItems = array();
+		public $blockViewRenderOverride;
 		
 		
 
@@ -65,31 +64,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			return $this->identifier;
 		}
 		
-		/**
-		 * Sets a value used by a particular block. These variables will automatically be present in the corresponding views used by the block.
-		 * @param string $key
-		 * @param string $value
-		 * @return void
-		 */
-		public function set($key, $value) {
-			self::$sets[$this->identifier][$key] = $value;		
-		}
-		
-		public function get($key, $defaultValue = null) {
-			if (isset(BlockController::$sets[$this->identifier][$key])) {
-				return BlockController::$sets[$this->identifier][$key];
-			}
-			
-			return parent::get($key, $defaultValue);
-		}
-
 		public function getBlockTypeWrapperClass() {return $this->btWrapperClass;}
-		/** 
-		 * @access private
-		 */
-		public function getSets() {
-			return BlockController::$sets[$this->identifier];		
-		}
 
 		/**
 		 * Installs the current block's DB xml file. If a block needs to do more than this, this should be overridden.
@@ -136,16 +111,9 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		 * @return void
 		 */
 		function render($view) {
-			$bv = new BlockView();
-			$bv->setController($this);
-			// sometimes we need the block type available in here
-			if (is_object($this->getBlockObject())) {
-				$bt = BlockType::getByID($this->getBlockObject()->getBlockTypeID());
-				$a = $this->getBlockObject()->getBlockAreaObject();
-			}
-			$this->renderOverride = $view;
+			$this->blockViewRenderOverride = $view;
 		}
-		
+
 		public function validate($args) {
 			return true;
 		}
@@ -275,7 +243,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			}
 		}
 
-		protected function getImportData($blockNode) {
+		protected function getImportData($blockNode, $page) {
 			$args = array();
 			if (isset($blockNode->data)) {
 				foreach($blockNode->data as $data) {
@@ -316,7 +284,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			$args = array();
 			$db = Loader::db();
 			// handle the adodb stuff
-			$args = $this->getImportData($blockNode);
+			$args = $this->getImportData($blockNode, $page);
 			
 			$bt = BlockType::getByHandle($this->btHandle);
 			$b = $page->addBlock($bt, $arHandle, $args);
@@ -461,26 +429,13 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				$this->setBlockObject($b);
 				$this->load();
 			}
-			parent::__construct();
 			$this->set('controller', $this);
 		}
 		
 		public function outputAutoHeaderItems() {
 			$b = $this->getBlockObject();
 			$bvt = new BlockViewTemplate($b);
-			
-			$headers = $bvt->getTemplateHeaderItems();
-			if (count($headers) > 0) {
-				foreach($headers as $h) {
-					$this->addHeaderItem($h);
-				}
-			}
-		}
-		
-		public function addHeaderItem($file) {
-			$namespace = 'BLOCK_CONTROLLER_' . strtoupper($this->btHandle);
-			$this->headerItems[$namespace][] = $file;
-			parent::addHeaderItem($file);
+			$bvt->registerTemplateAssets();
 		}
 		
 		public function setupAndRun($method) {

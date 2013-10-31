@@ -57,27 +57,27 @@ class Concrete5_Controller_Block_CoreGathering extends BlockController {
 
 		public function action_post() {
 			// happens through ajax
-			$composer = Composer::getByID($this->cmpID);
-			if (is_object($composer) && $this->enablePostingFromGathering) {
-				$ccp = new Permissions($composer);
-				if ($ccp->canAccessComposer()) {
+			$pagetype = PageType::getByID($this->ptID);
+			if (is_object($pagetype) && $this->enablePostingFromGathering) {
+				$ccp = new Permissions($pagetype);
+				if ($ccp->canEditPageTypeInComposer()) {
 
-					$ct = CollectionType::getByID($this->post('cmpPageTypeID'));
-					$availablePageTypes = $composer->getComposerPageTypeObjects();
+					$ct = PageType::getByID($this->post('ptComposerPageTypeID'));
+					$availablePageTypes = $pagetype->getComposerPageTypeObjects();
 
 					if (!is_object($ct) && count($availablePageTypes) == 1) {
 						$ct = $availablePageTypes[0];
 					}
 
 					$c = Page::getCurrentPage();
-					$e = $composer->validatePublishRequest($ct, $c);
-					$r = new ComposerPublishResponse($e);
+					$e = $pagetype->validatePublishRequest($ct, $c);
+					$r = new PageTypePublishResponse($e);
 					if (!$e->has()) {
-						$d = $composer->createDraft($ct);
-						$d->setComposerDraftTargetParentPageID($c->getCollectionID());
+						$d = $pagetype->createDraft($ct);
+						$d->setPageDraftTargetParentPageID($c->getCollectionID());
 						$d->saveForm();
 						$d->publish();
-						$nc = Page::getByID($d->getComposerDraftCollectionID(), 'RECENT');
+						$nc = Page::getByID($d->getCollectionID(), 'RECENT');
 						$link = Loader::helper('navigation')->getLinkToCollection($nc, true);
 						$r->setRedirectURL($link);
 					}
@@ -131,37 +131,22 @@ class Concrete5_Controller_Block_CoreGathering extends BlockController {
 			}
 
 			if (in_array('posting', $tab)) {
-				$cmpID = 0;
+				$ptID = 0;
 				if ($args['enablePostingFromGathering']) {
 					$values['enablePostingFromGathering'] = 1;
-					if ($args['cmpID']) {
-						$cmpID = $args['cmpID'];
+					if ($args['ptID']) {
+						$ptID = $args['ptID'];
 					}
 				} else {
 					$values['enablePostingFromGathering'] = 0;
 				}
-				$values['cmpID'] = $cmpID;	
+				$values['ptID'] = $ptID;	
 			} else {
-				$values['cmpID'] = $this->cmpID;	
+				$values['ptID'] = $this->ptID;	
 				$values['enablePostingFromGathering'] = $this->enablePostingFromGathering;	
 			}
 			parent::save($values);
 
-		}
-
-		public function on_page_view() {
-			if ($this->gaID) {
-				$gathering = Gathering::getByID($this->gaID);
-				if (is_object($gathering)) {
-					$this->addHeaderItem(Loader::helper('html')->css('ccm.gathering.css'));
-					$this->addFooterItem(Loader::helper('html')->javascript('ccm.gathering.js'));
-					Loader::helper('overlay')->init(false);
-					if ($this->enablePostingFromGathering) {
-						$cmp = Composer::getByID($this->cmpID);
-						Loader::helper('composer/form')->addAssetsToRequest($cmp, $this);
-					}
-				}
-			}
 		}
 
 		public function delete() {
@@ -176,12 +161,16 @@ class Concrete5_Controller_Block_CoreGathering extends BlockController {
 		public function view() {
 			if ($this->gaID) {
 				$gathering = Gathering::getByID($this->gaID);
-				if (is_object($gathering)) {			
-					if ($this->enablePostingFromGathering && $this->cmpID) {
-						$cmp = Composer::getByID($this->cmpID);
-						$p = new Permissions($cmp);
-						if ($p->canAccessComposer()) {
-							$this->set('composer', $cmp);
+				if (is_object($gathering)) {
+					$r = ResponseAssetGroup::get();
+					$r->requireAsset('core/gathering');
+					Loader::helper('overlay')->init(false);
+					if ($this->enablePostingFromGathering && $this->ptID) {
+						$pt = PageType::getByID($this->ptID);
+						Loader::helper('composer')->addAssetsToRequest($pt, $this);
+						$p = new Permissions($pt);
+						if ($p->canEditPageTypeInComposer()) {
+							$this->set('pagetype', $pt);
 						}
 					}		
 					$list = new GatheringItemList($gathering);

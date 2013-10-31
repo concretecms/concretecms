@@ -1,10 +1,9 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
 
-	class Concrete5_Library_AttributeTypeController extends Controller {
+	class Concrete5_Library_AttributeTypeController extends AbstractController {
 		
 		protected $identifier;
-		protected static $sets = array();
 	 	protected $attributeKey;
 		protected $requestArray = false;
 		
@@ -82,7 +81,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		public function __construct($attributeType) {
 			$this->identifier = $attributeType->getAttributeTypeID();
 			$this->attributeType = $attributeType;
-			parent::__construct();
 			$this->set('controller', $this);
 		}
 		
@@ -114,7 +112,13 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		}
 		
 		public function getView() {
-			$av = new AttributeTypeView($this->attributeType, $this->attributeKey, $this->attributeValue);
+			if ($this->attributeValue) {
+				$av = new AttributeTypeView($this->attributeValue);
+			} else if ($this->attributeKey) {
+				$av = new AttributeTypeView($this->attributeKey);
+			} else {
+				$av = new AttributeTypeView($this->attributeType);
+			}
 			return $av;
 		}
 		

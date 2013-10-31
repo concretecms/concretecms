@@ -6,6 +6,9 @@ if (!$sh->canRead()) {
 	die(t('Access Denied'));
 }
 
+$v = View::getInstance();
+$v->requireAsset('core/sitemap');
+
 /*
 $txt = Loader::helper('text');
 $args = $_REQUEST;

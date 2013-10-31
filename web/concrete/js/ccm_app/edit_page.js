@@ -4,8 +4,6 @@
 
 var CCMEditMode = function() {
 
-	var blockTypeDropSuccessful = false;
-
 	setupMenus = function() {
 
 		$('.ccm-area').each(function() {
@@ -140,7 +138,7 @@ var CCMEditMode = function() {
 		var btID = $link.attr('data-btID');
 		var inline = parseInt($link.attr('data-supports-inline-add'));
 		var hasadd = parseInt($link.attr('data-has-add-template'));
-
+		CCMPanelManager.exitPanelMode();
 		if (!hasadd) {
 			var action = CCM_DISPATCHER_FILENAME + "?cID=" + cID + "&arHandle=" + encodeURIComponent(arHandle) + "&btID=" + btID + "&mode=edit&processBlock=1&add=1&ccm_token=" + CCM_SECURITY_TOKEN;
 			$.get(action, function(r) { CCMEditMode.parseBlockResponse(r, false, 'add'); })
@@ -188,10 +186,15 @@ var CCMEditMode = function() {
 			greedy: true,
 			drop: function(e, ui) {
 				$('.ccm-area-drag-block-type-over').removeClass('ccm-area-drag-block-type-over');
-				if (ui.helper.is('.ccm-overlay-draggable-block-type')) {
-					CCMEditMode.blockTypeDropSuccessful = true;
+				if (ui.helper.is('.ccm-panel-add-block-draggable-block-type')) {
 					// it's from the add block overlay
 					addBlockType($(this).attr('data-cID'), $(this).attr('data-area-id'), $(this).attr('data-area-handle'), ui.helper, true);
+				} else if (ui.helper.is('.ccm-panel-add-block-clipboard-item')) {
+					jQuery.fn.dialog.showLoader();
+					var url = CCM_DISPATCHER_FILENAME + '?pcID[]=' + ui.draggable.attr('data-clipboard-item-id') + '&add=1&processBlock=1&cID=' + $(this).attr('data-cID') + '&arHandle=' + $(this).attr('data-area-handle') +  '&btask=alias_existing_block&ccm_token=' + CCM_SECURITY_TOKEN;
+					$.get(url, function(r) { 
+						CCMEditMode.parseBlockResponse(r, false, 'add');
+					});				
 				} else {
 					// else we are dragging a block from some other area into this one.
 					ui.draggable.appendTo($(this).find('.ccm-area-block-list'));
@@ -233,12 +236,21 @@ var CCMEditMode = function() {
 			},
 			drop: function(e, ui) {
 				$('.ccm-area-drag-block-type-over').removeClass('ccm-area-drag-block-type-over');
-				if (ui.helper.is('.ccm-overlay-draggable-block-type')) {
-					CCMEditMode.blockTypeDropSuccessful = true;
+				// now we handle all the possible things that could be dropped in here.
+				// Add Block Panel - Draggable Block Type
+				if (ui.helper.is('.ccm-panel-add-block-draggable-block-type')) {
 					$(this).replaceWith($('<div />', {'id': 'ccm-add-new-block-placeholder'}));
 					// it's from the add block overlay
 					var $area = $('#ccm-add-new-block-placeholder').closest('.ccm-area');
 					addBlockType($area.attr('data-cID'), $area.attr('data-area-id'), $area.attr('data-area-handle'), ui.helper, true);
+				} else if (ui.helper.is('.ccm-panel-add-block-clipboard-item')) {
+					jQuery.fn.dialog.showLoader();
+					$(this).replaceWith($('<div />', {'id': 'ccm-add-new-block-placeholder'}));
+					var $area = $('#ccm-add-new-block-placeholder').closest('.ccm-area');
+					var url = CCM_DISPATCHER_FILENAME + '?pcID[]=' + ui.draggable.attr('data-clipboard-item-id') + '&add=1&processBlock=1&cID=' + $area.attr('data-cID') + '&arHandle=' + $area.attr('data-area-handle') +  '&btask=alias_existing_block&ccm_token=' + CCM_SECURITY_TOKEN;
+					$.get(url, function(r) { 
+						CCMEditMode.parseBlockResponse(r, false, 'add');
+					});
 				} else {
 					var itemID = ui.draggable.attr('data-block-id');
 					var btHandle = ui.draggable.attr('data-block-type-handle');
@@ -299,6 +311,23 @@ var CCMEditMode = function() {
 		start: function() {			
 			setupMenus();
 			setupSortablesAndDroppables();
+		},
+
+		exitPreviewMode: function() {
+			$('html').removeClass('ccm-panel-preview-mode');
+			$('#ccm-page-preview-frame').remove();
+			$('html').removeClass('ccm-page-preview-mode');
+		},
+
+		launchPageComposer: function() {
+			$('a[data-launch-panel=page]').toggleClass('ccm-launch-panel-active');
+			CCMPanelManager.getByIdentifier('page').show();
+			ccm_event.subscribe('panel.open',function(e) {
+				var panel = e.eventData;
+				if (panel.options.identifier == 'page') {
+					$('#' + panel.getDOMID()).find('[data-launch-panel-detail=\'page-composer\']').click();
+				}
+			});
 		},
 
 		setupBlockForm: function(form, bID, task) {
@@ -403,10 +432,10 @@ var CCMEditMode = function() {
 							if (task == 'add') {
 								var tb = parseInt($('div.ccm-area[data-area-id=' + resp.aID + ']').attr('data-total-blocks'));
 								$('div.ccm-area[data-area-id=' + resp.aID + ']').attr('data-total-blocks', tb + 1);
-								ccmAlert.hud(ccmi18n.addBlockMsg, 2000, 'add', ccmi18n.addBlock);
+								ccmAlert.hud(ccmi18n.addBlockMsg, 2000, 'ok', ccmi18n.addBlock);
 								jQuery.fn.dialog.closeAll();
 							} else {
-								ccmAlert.hud(ccmi18n.updateBlockMsg, 2000, 'success', ccmi18n.updateBlock);
+								ccmAlert.hud(ccmi18n.updateBlockMsg, 2000, 'ok', ccmi18n.updateBlock);
 							}
 							CCMEditMode.start(); // refresh areas. 
 							$.fn.ccmmenu.reset();
@@ -470,70 +499,94 @@ var CCMEditMode = function() {
 			});
 		},
 
-		activateBlockTypesOverlay: function() {
-			$('#ccm-dialog-block-types .ccm-dialog-icon-item-grid-sets ul a').on('click', function() {
-				$('#ccm-overlay-block-types li').hide();
-				$('#ccm-overlay-block-types li[data-block-type-sets~=' + $(this).attr('data-tab') + ']').show();
-				$('#ccm-dialog-block-types .ccm-dialog-icon-item-grid-sets ul a').removeClass('active');
-				$(this).addClass('active');
-				return false;
+		showResponseNotification: function(message, icon, class) {
+			$('<div id="ccm-notification-hud" class="ccm-ui ccm-notification ccm-notification-' + class + '"><i class="glyphicon glyphicon-' + icon + '"></i><div class="ccm-notification-inner">' + message + '</div></div>').
+			appendTo(document.body).delay(5).queue(function() {
+				$(this).css('opacity', 1);
+				$(this).dequeue();
+			}).delay(2000).queue(function() {
+				$(this).css('opacity', 0);
+				$(this).dequeue();
+			}).delay(1000).queue(function() {
+				$(this).remove();
+				$(this).dequeue();
 			});
+		},
 
-			$($('#ccm-dialog-block-types ul a').get(0)).trigger('click');
+		setupAjaxForm: function($form) {
+			$form.ajaxForm({
+				type: 'post',
+				dataType: 'json',
+				beforeSubmit: function() {
+					jQuery.fn.dialog.showLoader();
+				},
+				error: function(r) {
+			      ccmAlert.notice('Error', '<div class="alert alert-danger">' + r.responseText + '</div>');
+			  	},
+				success: function(r) {
+					if (r.error) {
+						ccmAlert.notice('Error', '<div class="alert alert-danger">' + r.errors.join("<br>") + '</div>');
+					} else {
+						if ($form.attr('data-dialog-form')) {
+							jQuery.fn.dialog.closeTop();
+						}
+						CCMEditMode.showResponseNotification(r.message, 'ok', 'success');
+						CCMPanelManager.exitPanelMode();
+						if (r.redirectURL) {
+							setTimeout(function() {
+								window.location.href = r.redirectURL;
+							}, 2000);
+						}
+					}
+				},
+				complete: function() {
+					jQuery.fn.dialog.hideLoader();
+				}
+			});
+			return $form;
+		},
 
-			$('#ccm-dialog-block-types').closest('.ui-dialog-content').addClass('ui-dialog-content-icon-item-grid');
-			$('#ccm-dialog-block-types .ccm-icon-item-grid-search input').focus();
-			if ($('#ccm-block-types-dragging').length == 0) {
-				$('<div id="ccm-block-types-dragging" />').appendTo(document.body);
+		activateAddBlocksPanel: function() {
+			if ($('#ccm-panel-add-block-dragging').length == 0) {
+				$('<div id="ccm-panel-add-block-dragging" />').appendTo(document.body);
 			}
 			// remove any old add block type placeholders
 			$('#ccm-add-new-block-placeholder').remove();
-			$('#ccm-dialog-block-types .ccm-icon-item-grid-search input').liveUpdate('ccm-overlay-block-types .ccm-overlay-icon-item-grid-list');
-			
-			$('#ccm-dialog-block-types .ccm-icon-item-grid-search input').on('keyup', function() {
-				if ($(this).val() == '') {
-					$('#ccm-block-types-wrapper ul.nav-tabs').css('visibility', 'visible');
-					$('#ccm-block-types-wrapper ul.nav-tabs li[class=active] a').click();
-				} else {
-					$('#ccm-block-types-wrapper ul.nav-tabs').css('visibility', 'hidden');
-				}
-			});
 
-			$('#ccm-overlay-block-types a.ccm-overlay-draggable-block-type').each(function() {
+			$('#ccm-panel-add-block [data-panel-add-block-drag-item]').each(function() {
 				var $li = $(this);
 				$li.css('cursor', 'move');
 				$li.draggable({
 					helper: 'clone',
-					appendTo: $('#ccm-block-types-dragging'),
+					appendTo: $('#ccm-panel-add-block-dragging'),
 					revert: false,
 					start: function(e, ui) {
-						CCMEditMode.blockTypeDropSuccessful = false;
 						$('.ccm-area-block-dropzone').addClass('ccm-area-block-dropzone-active');
-						// handle the dialog
-						$('#ccm-block-types-wrapper').parent().jqdialog('option', 'closeOnEscape', false);
-						$('#ccm-overlay-block-types').closest('.ui-dialog').fadeOut(100);
-						$('.ui-widget-overlay').remove();
-
-						// deactivate the menu on drag
 						$.fn.ccmmenu.disable();						
-
 					},
 					stop: function() {
 						$.fn.ccmmenu.enable();
-						if (!CCMEditMode.blockTypeDropSuccessful) {
-							// this got cancelled without a receive.
-							jQuery.fn.dialog.closeAll();
-						}
 					}
 				});
 			});
 
-			$('a.ccm-overlay-clickable-block-type').on('click', function() {
-				addBlockType($(this).attr('data-cID'), $(this).attr('data-area-id'), $(this).attr('data-area-handle'), $(this));
-				return false;
+			$('a[data-delete=clipboard-item]').on('click', function() {
+				var $item = $(this).parent();
+				var itemID = $item.attr('data-clipboard-item-id');
+				$item.addClass('ccm-panel-add-block-clipboard-item-delete')
+				.delay(500)
+				.queue(function() {
+					$(this).remove();
+					$(this).dequeue();
+				});
+
+				$.ajax({
+					type: 'POST',
+					url: CCM_DISPATCHER_FILENAME,
+					data: 'pcID=' + itemID + '&ptask=delete_content&ccm_token=' + CCM_SECURITY_TOKEN
+				}); 
+
 			});
-			
-			
 		}
 
 

@@ -1,7 +1,7 @@
 <?
 
 defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Controller_Dashboard_Pages_Themes extends Controller {
+class Concrete5_Controller_Page_Dashboard_Pages_Themes extends DashboardController {
 
 	protected $helpers = array('html');
 
@@ -40,14 +40,14 @@ class Concrete5_Controller_Dashboard_Pages_Themes extends Controller {
 		$this->set('disableThirdLevelNav', true);
 	}
 	
-	public function remove($ptID, $token = '') {
+	public function remove($pThemeID, $token = '') {
 		$v = Loader::helper('validation/error');
 		try {
 			$valt = Loader::helper('validation/token');
 			if (!$valt->validate('remove', $token)) {
 				throw new Exception($valt->getErrorMessage());
 			}
-			$pl = PageTheme::getByID($ptID);
+			$pl = PageTheme::getByID($pThemeID);
 			if (!is_object($pl)) {
 				throw new Exception(t('Invalid theme.'));
 			}
@@ -64,7 +64,7 @@ class Concrete5_Controller_Dashboard_Pages_Themes extends Controller {
 				$items = $pkg->getPackageItems();
 				if (count($items) == 1) {
 					$_pl = $items[0];
-					if ($_pl instanceof PageTheme && $_pl->getThemeID() == $ptID) {
+					if ($_pl instanceof PageTheme && $_pl->getThemeID() == $pThemeID) {
 						$pkg->uninstall();
 						$localUninstall = false;						
 					}
@@ -81,25 +81,25 @@ class Concrete5_Controller_Dashboard_Pages_Themes extends Controller {
 		$this->view();
 	}
 	
-	public function activate($ptID) {
+	public function activate($pThemeID) {
 		$valt = Loader::helper('validation/token');
-		$this->set('activate_confirm', View::url('/dashboard/pages/themes', 'activate_confirm', $ptID, $valt->generate('activate')));	
+		$this->set('activate_confirm', View::url('/dashboard/pages/themes', 'activate_confirm', $pThemeID, $valt->generate('activate')));	
 	}
 	
 	public function marketplace() {
 		$this->redirect('/dashboard/install/browse', 'themes');
 	}
 
-	public function install($ptHandle = null) {
-		$th = PageTheme::getByFileHandle($ptHandle);
-		if ($ptHandle == null) {
+	public function install($pThemeHandle = null) {
+		$th = PageTheme::getByFileHandle($pThemeHandle);
+		if ($pThemeHandle == null) {
 			$this->redirect('/dashboard/pages/themes');
 		}
 		
 		$v = Loader::helper('validation/error');
 		try {
 			if (is_object($th)) {
-				$t = PageTheme::add($ptHandle);
+				$t = PageTheme::add($pThemeHandle);
 				$this->redirect('/dashboard/pages/themes/inspect', $t->getThemeID(), 1);
 				
 			} else {
@@ -122,8 +122,8 @@ class Concrete5_Controller_Dashboard_Pages_Themes extends Controller {
 	
 	// this can be run from /layouts/add/ or /layouts/edit/ or /layouts/ - anything really
 	
-	public function activate_confirm($ptID, $token) {
-		$l = PageTheme::getByID($ptID);
+	public function activate_confirm($pThemeID, $token) {
+		$l = PageTheme::getByID($pThemeID);
 		$val = Loader::helper('validation/error');
 		$valt = Loader::helper('validation/token');
 		if (!$valt->validate('activate', $token)) {

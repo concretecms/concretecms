@@ -30,7 +30,7 @@ class Concrete5_Library_BlockViewTemplate {
 	protected $btHandle;
 	protected $obj;
 	protected $baseURL;
-	protected $checkHeaderItems = true;
+	protected $checkAssets = true;
 	protected $itemsToCheck = array(
 		'CSS' => 'view.css', 
 		'JAVASCRIPT' => 'view.js'
@@ -64,8 +64,7 @@ class Concrete5_Library_BlockViewTemplate {
 		if ($bFilename) {
 			if (is_file(DIR_FILES_BLOCK_TYPES . '/' . $obj->getBlockTypeHandle() . '/' . DIRNAME_BLOCK_TEMPLATES . '/' . $bFilename)) {
 				$template = DIR_FILES_BLOCK_TYPES . '/' . $obj->getBlockTypeHandle() . '/' . DIRNAME_BLOCK_TEMPLATES . '/' . $bFilename;
-				$bv = new BlockView();
-				$bv->setBlockObject($obj);
+				$bv = new BlockView($obj);
 				$this->baseURL = $bv->getBlockURL();
 				$this->basePath = $bv->getBlockPath($this->render);
 			} else if (is_file(DIR_FILES_BLOCK_TYPES_CORE . '/' . $obj->getBlockTypeHandle() . '/' . DIRNAME_BLOCK_TEMPLATES . '/' . $bFilename)) {
@@ -130,8 +129,7 @@ class Concrete5_Library_BlockViewTemplate {
 			
 		} else if (file_exists(DIR_FILES_BLOCK_TYPES . '/' . $obj->getBlockTypeHandle() . '.php')) {
 			$template = DIR_FILES_BLOCK_TYPES . '/' . $obj->getBlockTypeHandle() . '.php';
-			$bv = new BlockView();
-			$bv->setBlockObject($obj);
+			$bv = new BlockView($obj);
 			$this->baseURL = $bv->getBlockURL();
 			$this->basePath = $bv->getBlockPath($this->render);
 		} else if (file_exists(DIR_FILES_BLOCK_TYPES . '/' . $obj->getBlockTypeHandle() . '/' . $this->render)) {
@@ -140,8 +138,7 @@ class Concrete5_Library_BlockViewTemplate {
 		}
 		
 		if (!isset($template)) {
-			$bv = new BlockView();
-			$bv->setBlockObject($obj);
+			$bv = new BlockView($obj);
 			$template = $bv->getBlockPath($this->render) . '/' . $this->render;
 			$this->baseURL = $bv->getBlockURL();
 		}
@@ -176,21 +173,31 @@ class Concrete5_Library_BlockViewTemplate {
 		return $this->template;
 	}
 	
-	public function getTemplateHeaderItems() {
+	public function registerTemplateAssets() {
 		$items = array();
 		$h = Loader::helper("html");
 		$dh = Loader::helper('file');
-		if ($this->checkHeaderItems == false) {
+		if ($this->checkAssets == false) {
 			return $items;
 		} else {
+			$al = AssetList::getInstance();
+			$v = View::getInstance();
 			foreach($this->itemsToCheck as $t => $i) {
 				if (file_exists($this->basePath . '/' . $i)) {
 					switch($t) {
 						case 'CSS':
-							$items[] = $h->css($this->getBaseURL() . '/' . $i);
+							$asset = new CSSAsset('blocks/'. $this->btHandle);
+							$asset->setAssetURL($this->getBaseURL() . '/' . $i);
+							$asset->setAssetPath($this->basePath . '/' . $i);
+							$al->registerAsset($asset);
+							$v->requireAsset('css', 'blocks/'. $this->btHandle);
 							break;
 						case 'JAVASCRIPT':
-							$items[] = $h->javascript($this->getBaseURL() . '/' . $i);
+							$asset = new JavaScriptAsset('blocks/'. $this->btHandle);
+							$asset->setAssetURL($this->getBaseURL() . '/' . $i);
+							$asset->setAssetPath($this->basePath . '/' . $i);
+							$al->registerAsset($asset);
+							$v->requireAsset('javascript', 'blocks/'. $this->btHandle);
 							break;
 					}
 				}
@@ -200,18 +207,25 @@ class Concrete5_Library_BlockViewTemplate {
 			if (count($css) > 0) {
 				foreach($css as $i) {
 					if(substr($i,-4)=='.css') {
-						$items[] = $h->css($this->getBaseURL() . '/' . DIRNAME_CSS . '/' . $i);
+						$asset = new CSSAsset('blocks/'. $this->btHandle . '/'. substr($i, 0, -3));
+						$asset->setAssetURL($this->getBaseURL() . '/' . DIRNAME_CSS . '/' . $i);
+						$asset->setAssetPath($this->basePath . '/' . DIRNAME_CSS . '/' . $i);
+						$al->registerAsset($asset);
+						$v->requireAsset('css', 'blocks/'. $this->btHandle . '/'. substr($i, 0, -3));
 					}
 				}
 			}
 			if (count($js) > 0) {
 				foreach($js as $i) {
 					if (substr($i,-3)=='.js') {
-						$items[] = $h->javascript($this->getBaseURL() . '/' . DIRNAME_JAVASCRIPT . '/' . $i);
+						$asset = new JavaScriptAsset('blocks/'. $this->btHandle . '/'. substr($i, 0, -3));
+						$asset->setAssetURL($this->getBaseURL() . '/' . DIRNAME_JAVASCRIPT . '/' . $i);
+						$asset->setAssetPath($this->basePath . '/' . DIRNAME_JAVASCRIPT . '/' . $i);
+						$al->registerAsset($asset);
+						$v->requireAsset('javascript', 'blocks/'. $this->btHandle . '/'. substr($i, 0, -3));
 					}
 				}
 			}
-			return $items;
 		}
 	}
 

@@ -92,7 +92,7 @@ class Concrete5_Model_Block extends Object {
 			$cvID = $vo->getVersionID();
 
 			$v = array($b->arHandle, $cID, $cvID, $bID);
-			$q = "select CollectionVersionBlocks.isOriginal, Blocks.btCachedBlockRecord, BlockTypes.pkgID, CollectionVersionBlocks.cbOverrideAreaPermissions, CollectionVersionBlocks.cbDisplayOrder, Blocks.bIsActive, Blocks.bID, Blocks.btID, bName, bDateAdded, bDateModified, bFilename, btHandle, Blocks.uID from CollectionVersionBlocks inner join Blocks on (CollectionVersionBlocks.bID = Blocks.bID) inner join BlockTypes on (Blocks.btID = BlockTypes.btID) where CollectionVersionBlocks.arHandle = ? and CollectionVersionBlocks.cID = ? and (CollectionVersionBlocks.cvID = ? or CollectionVersionBlocks.cbIncludeAll=1) and CollectionVersionBlocks.bID = ?";
+			$q = "select CollectionVersionBlocks.isOriginal, CollectionVersionBlocks.cbIncludeAll, Blocks.btCachedBlockRecord, BlockTypes.pkgID, CollectionVersionBlocks.cbOverrideAreaPermissions, CollectionVersionBlocks.cbDisplayOrder, Blocks.bIsActive, Blocks.bID, Blocks.btID, bName, bDateAdded, bDateModified, bFilename, btHandle, Blocks.uID from CollectionVersionBlocks inner join Blocks on (CollectionVersionBlocks.bID = Blocks.bID) inner join BlockTypes on (Blocks.btID = BlockTypes.btID) where CollectionVersionBlocks.arHandle = ? and CollectionVersionBlocks.cID = ? and (CollectionVersionBlocks.cvID = ? or CollectionVersionBlocks.cbIncludeAll=1) and CollectionVersionBlocks.bID = ?";
 		
 		}
 
@@ -170,14 +170,13 @@ class Concrete5_Model_Block extends Object {
 	}
 		
 
-	public function display( $view = 'view', $args = array()){
+	public function display( $view = 'view') {
 		if ($this->getBlockTypeID() < 1) {
 			return ;
 		}
 		
-		$bv = new BlockView();
-		$bt = BlockType::getByID( $this->getBlockTypeID() );  
-		$bv->render($this, $view, $args);
+		$bv = new BlockView($this);
+		$bv->render($view);
 	}
 
 	// if $c is provided, then we check to see if this particular block is aliased
@@ -209,7 +208,7 @@ class Concrete5_Model_Block extends Object {
 	public function isBlockInStack() {
 		$co = $this->getBlockCollectionObject();
 		if (is_object($co)) {
-			if ($co->getCollectionTypeHandle() == STACKS_PAGE_TYPE) {
+			if ($co->getPageTypeHandle() == STACKS_PAGE_TYPE) {
 				return true;
 			}
 		}
@@ -323,6 +322,10 @@ class Concrete5_Model_Block extends Object {
 		}
 	}
 
+	public function disableBlockVersioning() {
+		return $this->cbIncludeAll;
+	}
+	
 	function getOriginalCollection() {
 		// given a block ID, we find the original collection ID (where this bID is marked as isOriginal)
 		$db = Loader::db();
@@ -857,7 +860,7 @@ class Concrete5_Model_Block extends Object {
 	function getBlockPassThruAction() {
 		// is the block located in a stack?
 		$pc = $this->getBlockCollectionObject();
-		if ($pc->getCollectionTypeHandle() == STACKS_PAGE_TYPE) {
+		if ($pc->getPageTypeHandle() == STACKS_PAGE_TYPE) {
 			$c = Page::getCurrentPage();
 			$cID = $c->getCollectionID();
 			$bID = $this->getBlockID();
@@ -872,8 +875,7 @@ class Concrete5_Model_Block extends Object {
 	}
 	
 	function isEditable() {
-		$bv = new BlockView();
-		$bv->setBlockObject($this);
+		$bv = new BlockView($this);
 		$path = $bv->getBlockPath(FILENAME_BLOCK_EDIT);
 		if (file_exists($path . '/' . FILENAME_BLOCK_EDIT)) {
 			return true;

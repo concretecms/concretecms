@@ -183,7 +183,7 @@ class ConcreteInterfaceHelper {
 		$u = new User();
 		if ($u->isRegistered()) {
 			$ch = Loader::helper('concrete/dashboard');
-			$_SESSION['dashboardMenus'] = $ch->getDashboardAndSearchMenus();
+			$_SESSION['dashboardMenus'] = $ch->getIntelligentSearchMenu();
 		}
 	}
 	
@@ -230,5 +230,15 @@ class ConcreteInterfaceHelper {
 			$html .= '<script type="text/javascript">$(function() { ' . $callback . '($(\'#ccm-tabs-' . $tcn . '\'));});</script>';
 		}
 		return $html;
+	}
+
+
+	public function renderError($title, $error) {
+		$ve = new ErrorView();
+		$o = new stdClass;
+		$o->title = $title;
+		$o->content = $error;
+		$ve->render($o);
+
 	}
 }

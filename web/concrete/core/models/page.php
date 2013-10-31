@@ -53,13 +53,19 @@ class Concrete5_Model_Page extends Collection {
 		return $c;
 	}
 	
+	public function __construct() {
+		$this->loadError(COLLECTION_INIT); // init collection until we populate.
+	}
+
 	/**
 	 * @access private
 	 */
 	protected function populatePage($cInfo, $where, $cvID) {
 		$db = Loader::db();
 		
-		$q0 = "select Pages.cID, Pages.pkgID, Pages.cPointerID, Pages.cPointerExternalLink, Pages.cIsActive, Pages.cIsSystemPage, Pages.cPointerExternalLinkNewWindow, Pages.cFilename, Collections.cDateAdded, Pages.cDisplayOrder, Collections.cDateModified, cInheritPermissionsFromCID, cInheritPermissionsFrom, cOverrideTemplatePermissions, cCheckedOutUID, cIsTemplate, uID, cPath, cParentID, cChildren, cCacheFullPageContent, cCacheFullPageContentOverrideLifetime, cCacheFullPageContentLifetimeCustom from Pages inner join Collections on Pages.cID = Collections.cID left join PagePaths on (Pages.cID = PagePaths.cID and PagePaths.ppIsCanonical = 1) ";
+		$this->loadError(false);
+
+		$q0 = "select Pages.cID, Pages.pkgID, Pages.cPointerID, Pages.cPointerExternalLink, Pages.cIsActive, Pages.cIsSystemPage, Pages.cPointerExternalLinkNewWindow, Pages.cFilename, Pages.ptID, Collections.cDateAdded, Pages.cDisplayOrder, Collections.cDateModified, cInheritPermissionsFromCID, cInheritPermissionsFrom, cOverrideTemplatePermissions, cCheckedOutUID, cIsTemplate, uID, cPath, cParentID, cChildren, cCacheFullPageContent, cCacheFullPageContentOverrideLifetime, cCacheFullPageContentLifetimeCustom from Pages inner join Collections on Pages.cID = Collections.cID left join PagePaths on (Pages.cID = PagePaths.cID and PagePaths.ppIsCanonical = 1) ";
 		//$q2 = "select cParentID, cPointerID, cPath, Pages.cID from Pages left join PagePaths on (Pages.cID = PagePaths.cID and PagePaths.ppIsCanonical = 1) ";
 		
 		$v = array($cInfo);
@@ -90,13 +96,8 @@ class Concrete5_Model_Page extends Collection {
 				}
 				$this->isMasterCollection = $row['cIsTemplate'];
 			} else {
-				if ($cInfo == 1) {
-					$this->cID = '1';
-					$this->loadError(COLLECTION_INIT);
-				} else {
-					// there was no record of this particular collection in the database
-					$this->loadError(COLLECTION_NOT_FOUND);
-				}
+				// there was no record of this particular collection in the database
+				$this->loadError(COLLECTION_NOT_FOUND);
 			}
 			$r->free();
 		} else {
@@ -128,7 +129,7 @@ class Concrete5_Model_Page extends Collection {
 	 */
 	public function isEditMode() {
 		$v = View::getInstance();
-		return ($this->isCheckedOutByMe() && ($v->editingEnabled()));
+		return $this->isCheckedOutByMe();
 	}
 	
 	/**
@@ -173,6 +174,47 @@ class Concrete5_Model_Page extends Collection {
 		return false;
 	}
 	
+	/** 
+	 * Uses a Request object to determine which page to load. queries by path and then
+	 * by cID
+	 */
+	public static function getFromRequest(Request $request) {
+		if ($request->getPath() != '') {
+			$path = $request->getPath();
+			$r = array();
+			$db = Loader::db();
+			$cID = false;
+			while ((!$cID) && $path) {
+				$cID = $db->GetOne('select cID from PagePaths where cPath = ?', $path);
+				if ($cID) {
+					$cPath = $path;
+					break;
+				}
+				$path = substr($path, 0, strrpos($path, '/'));
+			}
+			
+			if ($cID && $cPath) { 
+				$c = Page::getByID($cID, 'ACTIVE');
+			} else {
+				$c = new Page();
+				$c->loadError(COLLECTION_NOT_FOUND);
+			}
+			return $c;
+		} else {
+			$cID = $request->query->get('cID');
+			if (!$cID) {
+				$cID = $request->request->get('cID');
+			}
+			$cID = Loader::helper('security')->sanitizeInt($cID);
+			if (!$cID) {
+				$cID = 1;
+			}
+			$c = Page::getByID($cID, 'ACTIVE');
+		}
+
+		return $c;
+	}
+
 	public function processArrangement($areas) {
 
 		// this function is called via ajax, so it's a bit wonky, but the format is generally
@@ -278,7 +320,7 @@ class Concrete5_Model_Page extends Collection {
 	 */
 	function isGeneratedCollection() {
 		// generated collections are collections without types, that have special cFilename attributes
-		return $this->cFilename != null && $this->vObj->ctID == 0;
+		return $this->cFilename != null && $this->vObj->ptID == 0;
 	}
 	
 	public function assignPermissions($userOrGroup, $permissions = array(), $accessType = PagePermissionKey::ACCESS_TYPE_INCLUDE) {
@@ -310,7 +352,27 @@ class Concrete5_Model_Page extends Collection {
 		}
 		
 	}
+
+	public function getDrafts() {
+		$db = Loader::db();
+		$u = new User();
+		$nc = Page::getByPath(PAGE_DRAFTS_PAGE_PATH);
+		$r = $db->Execute('select Pages.cID from Pages inner join Collections c on Pages.cID = c.cID where uID = ? and cParentID = ? order by cDateAdded desc', array($u->getUserID(), $nc->getCollectionID()));
+		$pages = array();
+		while ($row = $r->FetchRow()) {
+			$entry = Page::getByID($row['cID']);
+			if (is_object($entry)) {
+				$pages[] = $entry;
+			}
+		}
+		return $pages;		
+	}
 	
+	public function isPageDraft() {
+		$db = Loader::db();
+		$nc = Page::getByPath(PAGE_DRAFTS_PAGE_PATH);
+		return $this->getCollectionParentID() == $nc->getCollectionID();
+	}
 	
 	private static function translatePermissionsXMLToKeys($node) {
 		$pkHandles = array();
@@ -331,7 +393,7 @@ class Concrete5_Model_Page extends Collection {
 			$pkHandles[] = 'edit_page_permissions';
 			$pkHandles[] = 'edit_page_theme';
 			$pkHandles[] = 'schedule_page_contents_guest_access';
-			$pkHandles[] = 'edit_page_type';
+			$pkHandles[] = 'edit_page_template';
 			$pkHandles[] = 'delete_page';
 			$pkHandles[] = 'delete_page_versions';
 		}
@@ -382,7 +444,7 @@ class Concrete5_Model_Page extends Collection {
 
 		$u = new User();
 		$uID = $u->getUserID();
-		$ctID = 0;
+		$ptID = 0;
 		
 		$dh = Loader::helper('date');
 				
@@ -677,7 +739,7 @@ class Concrete5_Model_Page extends Collection {
 			$p->addAttribute('public-date', $this->getCollectionDatePUblic());
 		}
 		$p->addAttribute('filename', $this->getCollectionFilename());
-		$p->addAttribute('pagetype', $this->getCollectionTypeHandle());
+		$p->addAttribute('pagetype', $this->getPageTypeHandle());
 		$ui = UserInfo::getByID($this->getCollectionUserID());
 		if (!is_object($ui)) {
 			$ui = UserInfo::getByID(USER_SUPER_ID);
@@ -754,39 +816,70 @@ class Concrete5_Model_Page extends Collection {
 	}
 
 	/**
-	 * Returns the page's name
-	 * @return string
+	 * @deprecated
 	 */	
 	function getCollectionTypeName() {
-		return $this->vObj->ctName;
+		return $this->getPageTypeName();
+	}
+	
+	public function getPageTypeName() {
+		return $this->vObj->ptName;
 	}
 
+	/**
+	 * @deprecated
+	 */	
+	public function getCollectionTypeID() {
+		return $this->getPageTypeID();
+	}
+	
 	/**
 	 * Returns the Collection Type ID
 	 * @return int
 	 */	
-	function getCollectionTypeID() {
-		return $this->vObj->ctID;
+	function getPageTypeID() {
+		return $this->ptID;
+	}
+
+	public function getPageTypeObject() {
+		return PageType::getByID($this->ptID);
+	}
+
+	/**
+	 * Returns the Page Template ID
+	 * @return int
+	 */	
+	function getPageTemplateID() {
+		return $this->vObj->pTemplateID;
 	}
 
 	/**
 	 * Returns the Collection Type handle
 	 * @return string
 	 */	
-	function getCollectionTypeHandle() {
-		return $this->vObj->ctHandle;
+	function getPageTypeHandle() {
+		if (!isset($this->ptHandle)) {
+			$db = Loader::db();
+			$this->ptHandle = $db->GetOne('select ptHandle from PageTypes where ptID = ?', array($this->ptID));
+		}
+		
+		return $this->ptHandle;
 	}
 
+	public function getCollectionTypeHandle() {
+		return $this->getPageTypeHandle();
+	}
+	
 	/**
 	 * Returns theme id for the collection
 	 * @return int
 	 */	
 	function getCollectionThemeID() {
-		if ($this->vObj->ptID < 1 && $this->cID != HOME_CID) {
+		if ($this->vObj->pThemeID < 1 && $this->cID != HOME_CID) {
 			$c = Page::getByID(HOME_CID);
 			return $c->getCollectionThemeID();
 		} else {
-			return $this->vObj->ptID;
+			return $this->vObj->pThemeID;
 		}	
 	}
 	
@@ -814,10 +907,10 @@ class Concrete5_Model_Page extends Collection {
 	 * @return PageTheme
 	 */		
 	function getCollectionThemeObject() {
-		if ($this->vObj->ptID < 1) {
+		if ($this->vObj->pThemeID < 1) {
 			return PageTheme::getSiteTheme();
 		} else {
-			$pl = PageTheme::getByID($this->vObj->ptID);
+			$pl = PageTheme::getByID($this->vObj->pThemeID);
 			return $pl;
 		}		
 	}
@@ -981,7 +1074,7 @@ class Concrete5_Model_Page extends Collection {
 	 */		
 	public function setTheme($pl) {
 		$db = Loader::db();
-		$db->query('update CollectionVersions set ptID = ? where cID = ? and cvID = ?', array($pl->getThemeID(), $this->cID, $this->vObj->getVersionID()));
+		$db->query('update CollectionVersions set pThemeID = ? where cID = ? and cvID = ?', array($pl->getThemeID(), $this->cID, $this->vObj->getVersionID()));
 	}
 
 	/**
@@ -1024,13 +1117,20 @@ class Concrete5_Model_Page extends Collection {
 		return Page::getByID($this->cInheritPermissionsFromCID, "RECENT");
 	}
 	
+	/** 
+	 * Given the current page's template and page type, we return the master page
+	 */
 	function getMasterCollectionID() {
-		$db = Loader::db();
-		$q = "select p.cID from Pages p inner join CollectionVersions on p.cID = CollectionVersions.cID where CollectionVersions.ctID = '{$this->vObj->ctID}' and cIsTemplate = 1";
-		$cID = $db->getOne($q);
-		if ($cID) {
-			return $cID;
+		$pt = PageType::getByID($this->getPageTypeID());
+		if (!is_object($pt)) {
+			return 0;
 		}
+		$template = PageTemplate::getByID($this->getPageTemplateID());
+		if (!is_object($template)) {
+			return 0;
+		}
+		$c = $pt->getPageTypePageTemplateDefaultPageObject($template);
+		return $c->getCollectionID();
 	}
 
 	function getOriginalCollectionID() {
@@ -1124,6 +1224,69 @@ class Concrete5_Model_Page extends Collection {
 		}
 	}
 
+	public function hasPageThemeCustomizations() {
+		$db = Loader::db();
+		return ($db->GetOne('select count(cID) from CollectionVersionThemeStyles where cID = ? and cvID = ?', array(
+			$this->cID, $this->getVersionID()
+		)) > 0);
+	}
+
+	public function resetCustomThemeStyles() {
+		$db = Loader::db();
+		$db->Execute('delete from CollectionVersionThemeStyles where cID = ? and cvID = ?', array($this->getCollectionID(), $this->getVersionID()));
+		$this->writePageThemeCustomizations();
+	}
+
+	public function getCustomThemeStyles() {
+		$db = Loader::db();
+		$pt = $this->getCollectionThemeObject();
+		$ptes = $db->GetAll("select pThemeStyleHandle, pThemeStyleValue, pThemeStyleType from CollectionVersionThemeStyles where pThemeID = ? and cID = ? and cvID = ?", array(
+			$pt->getThemeID(), $this->getCollectionID(), $this->getVersionID()
+		));
+		$styles = array();
+		foreach($ptes as $p) {
+			$pts = new PageThemeEditableStyle($p['pThemeStyleValue']);
+			$pts->setPropertiesFromArray($p);
+			$styles[] = $pts;
+		}
+		return $styles;
+	}
+
+	public function updateCustomThemeStyles($styles) {
+		$db = Loader::db();
+		foreach($styles as $ptes) {
+			$db->Replace('CollectionVersionThemeStyles', array(
+				'pThemeID' => $this->vObj->pThemeID,
+				'pThemeStyleHandle' => $ptes->getHandle(),
+				'pThemeStyleValue' => $ptes->getValue(),
+				'pThemeStyleType' => $ptes->getType(),
+				'cID' => $this->getCollectionID(),
+				'cvID' => $this->getVersionID()
+			),
+			array('cID', 'cvID', 'pThemeID', 'pThemeStyleHandle', 'pThemeStyleType'), true);
+		}
+	}
+
+	public function writePageThemeCustomizations() {
+		$theme = $this->getCollectionThemeObject();
+		$sheets = $theme->getStyleSheets();
+		$values = $this->getCustomThemeStyles();
+		foreach($sheets as $file) {
+			$cacheFile = DIR_FILES_CACHE . '/' . DIRNAME_CSS . '/' . $theme->getThemeHandle() . '/' . $this->getCollectionID() . '/' . $file;
+			if (file_exists($cacheFile)) {
+				unlink($cacheFile);
+			}
+			if (count($values)) {
+				$style = $theme->parseStyleSheet($file, $values);
+				$cacheFile = DIR_FILES_CACHE . '/' . DIRNAME_CSS . '/' . $theme->getThemeHandle() . '/' . $this->getCollectionID() . '/' . $file;
+				if (!file_exists(dirname($cacheFile))) {
+					mkdir(dirname($cacheFile), DIRECTORY_PERMISSIONS_MODE, true);
+				}
+				$r = file_put_contents($cacheFile, $style);
+			}
+		}
+	}
+
 	function update($data) {
 		$db = Loader::db();
 
@@ -1134,11 +1297,13 @@ class Concrete5_Model_Page extends Collection {
 		$cName = $this->getCollectionName();
 		$cDescription = $this->getCollectionDescription();
 		$cDatePublic = $this->getCollectionDatePublic();
-		$ctID = $this->getCollectionTypeID();
+		$ptID = $this->getPageTypeID();
 		$uID = $this->getCollectionUserID();
 		$pkgID = $this->getPackageID();
 		$cFilename = $this->getCollectionFilename();
-		
+		$pTemplateID = $this->getPageTemplateID();
+		$existingPageTemplateID = $pTemplateID;
+
 		$rescanTemplatePermissions = false;
 		
 		$cCacheFullPageContent = $this->cCacheFullPageContent;
@@ -1166,11 +1331,8 @@ class Concrete5_Model_Page extends Collection {
 		if (isset($data['uID'])) {
 			$uID = $data['uID'];
 		}
-		if (isset($data['ctID'])) {
-			$ctID = $data['ctID'];
-			// we grab the package that this ct belongs to
-			$pkgID = $db->GetOne("select pkgID from PageTypes where ctID = ?", array($data['ctID']));
-			$rescanTemplatePermissions = true;
+		if (isset($data['pTemplateID'])) {
+			$pTemplateID = $data['pTemplateID'];
 		}
 
 		$txt = Loader::helper('text');
@@ -1202,11 +1364,64 @@ class Concrete5_Model_Page extends Collection {
 
 		} else {
 
-			$v = array($cName, $cHandle, $ctID, $cDescription, $cDatePublic, $cvID, $this->cID);
-			$q = "update CollectionVersions set cvName = ?, cvHandle = ?, ctID = ?, cvDescription = ?, cvDatePublic = ? where cvID = ? and cID = ?";
+			if ($existingPageTemplateID && $pTemplateID && ($existingPageTemplateID != $pTemplateID) && $this->getPageTypeID() > 0) {
+				// we are changing a page template in this operation.
+				// when that happens, we need to get the new defaults for this page, remove the other blocks
+				// on this page that were set by the old defaults master page
+				$pt = $this->getPageTypeObject();
+				if (is_object($pt)) {
+					$template = PageTemplate::getbyID($pTemplateID);
+					$existingPageTemplate = PageTemplate::getByID($existingPageTemplateID);
+
+					$oldMC = $pt->getPageTypePageTemplateDefaultPageObject($existingPageTemplate);
+					$newMC = $pt->getPageTypePageTemplateDefaultPageObject($template);
+					
+					$currentPageBlocks = $this->getBlocks();
+					$newMCBlocks = $newMC->getBlocks();
+					$oldMCBlocks = $oldMC->getBlocks();
+					$oldMCBlockIDs = array();
+					foreach($oldMCBlocks as $ob) {
+						$oldMCBlockIDs[] = $ob->getBlockID();
+					}
+
+					// now, we default all blocks on the current version of the page.
+					$db->Execute('delete from CollectionVersionBlocks where cID = ? and cvID = ?', array($this->getCollectionID(), $cvID));
+
+					// now, we go back and we alias blocks from the new master collection onto the page.
+					foreach($newMCBlocks as $b) {
+						$bt = $b->getBlockTypeObject();
+						if ($bt->getBlockTypeHandle() == BLOCK_HANDLE_PAGE_TYPE_OUTPUT_PROXY) {
+							continue;
+						}
+						if ($bt->isCopiedWhenPropagated()) {
+							$b->duplicate($this, true);
+						} else {
+							$b->alias($this);
+						}
+					}
+
+					// now, we go back and re-add the blocks we originally had on the page
+					// but only if they're not present in the oldMCBlocks array
+					foreach($currentPageBlocks as $b) {
+						if (!in_array($b->getBlockID(), $oldMCBlockIDs)) {
+							$newBlockDisplayOrder = $this->getCollectionAreaDisplayOrder($b->getAreaHandle());
+							$db->Execute('insert into CollectionVersionBlocks (cID, cvID, bID, arHandle, cbDisplayOrder, isOriginal, cbOverrideAreaPermissions, cbIncludeAll) values (?, ?, ?, ?, ?, ?, ?, ?)', array(
+								$this->getCollectionID(), $cvID, $b->getBlockID(), $b->getAreaHandle(), $newBlockDisplayOrder, $b->isAlias(), $b->overrideAreaPermissions(), $b->disableBlockVersioning()
+							));
+						}
+					}
+				}
+			}
+
+			$v = array($cName, $cHandle, $pTemplateID, $cDescription, $cDatePublic, $cvID, $this->cID);
+			$q = "update CollectionVersions set cvName = ?, cvHandle = ?, pTemplateID = ?, cvDescription = ?, cvDatePublic = ? where cvID = ? and cID = ?";
 			$r = $db->prepare($q);
-			$res = $db->execute($r, $v);				
+			$res = $db->execute($r, $v);	
+
 		}
+
+		// load new version object
+		$this->loadVersionObject($cvID);
 
 		$db->query("update Pages set uID = ?, pkgID = ?, cFilename = ?, cCacheFullPageContent = ?, cCacheFullPageContentLifetimeCustom = ?, cCacheFullPageContentOverrideLifetime = ? where cID = ?", array($uID, $pkgID, $cFilename, $cCacheFullPageContent, $cCacheFullPageContentLifetimeCustom, $cCacheFullPageContentOverrideLifetime, $this->cID));
 
@@ -1440,7 +1655,8 @@ class Concrete5_Model_Page extends Collection {
 		PageStatistics::decrementParents($cID);
 		
 		$cDateModified = $dh->getSystemDateTime();
-		if ($this->getPermissionsCollectionID() != $this->getCollectionID() && $this->getPermissionsCollectionID() != $this->getMasterCollectionID()) {
+//		if ($this->getPermissionsCollectionID() != $this->getCollectionID() && $this->getPermissionsCollectionID() != $this->getMasterCollectionID()) {
+		if ($this->getPermissionsCollectionID() != $this->getCollectionID()) {
 			// implicitly, we're set to inherit the permissions of wherever we are in the site.
 			// as such, we'll change to inherit whatever permissions our new parent has
 			$npID = $nc->getPermissionsCollectionID();
@@ -1550,8 +1766,8 @@ class Concrete5_Model_Page extends Collection {
 		$newC = $cobj->duplicate();
 		$newCID = $newC->getCollectionID();
 		
-		$v = array($newCID, $cParentID, $uID, $this->overrideTemplatePermissions(), $this->getPermissionsCollectionID(), $this->getCollectionInheritance(), $this->cFilename, $this->cPointerID, $this->cPointerExternalLink, $this->cPointerExternalLinkNewWindow, $this->cDisplayOrder, $this->pkgID);
-		$q = "insert into Pages (cID, cParentID, uID, cOverrideTemplatePermissions, cInheritPermissionsFromCID, cInheritPermissionsFrom, cFilename, cPointerID, cPointerExternalLink, cPointerExternalLinkNewWindow, cDisplayOrder, pkgID) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		$v = array($newCID, $this->getPageTypeID(), $cParentID, $uID, $this->overrideTemplatePermissions(), $this->getPermissionsCollectionID(), $this->getCollectionInheritance(), $this->cFilename, $this->cPointerID, $this->cPointerExternalLink, $this->cPointerExternalLinkNewWindow, $this->cDisplayOrder, $this->pkgID);
+		$q = "insert into Pages (cID, ptID, cParentID, uID, cOverrideTemplatePermissions, cInheritPermissionsFromCID, cInheritPermissionsFrom, cFilename, cPointerID, cPointerExternalLink, cPointerExternalLinkNewWindow, cDisplayOrder, pkgID) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		$res = $db->query($q, $v);
 	
 		Loader::model('page_statistics');
@@ -1634,9 +1850,6 @@ class Concrete5_Model_Page extends Collection {
 		$r = $db->query($q);
 
 		$q = "delete from Areas WHERE cID = '{$cID}'";
-		$r = $db->query($q);
-
-		$q = "delete from ComposerDrafts WHERE cID = '{$cID}'";
 		$r = $db->query($q);
 
 		$db->query('delete from PageSearchIndex where cID = ?', array($cID));
@@ -1995,11 +2208,6 @@ class Concrete5_Model_Page extends Collection {
 		$dh = Loader::helper('date');
 		$db = Loader::db();
 		
-		// we use to hard code the home page page type into the system
-		// but now we're not going to do that
-		
-		//$db->query("insert into PageTypes (ctID, ctHandle, ctName) values (?, ?, ?)", array(HOME_CTID, HOME_HANDLE, HOME_NAME));
-		
 		$cParentID = 0;
 		$handle = HOME_HANDLE;
 		$uID = HOME_UID;
@@ -2012,9 +2220,6 @@ class Concrete5_Model_Page extends Collection {
 
 		$cobj = parent::add($data);		
 		$cID = $cobj->getCollectionID();
-		
-		//$ctID = HOME_CTID;
-		$ctID = 0;
 		
 		$cDate = $dh->getSystemDateTime();
 		$cDatePublic = $dh->getSystemDateTime();
@@ -2039,10 +2244,10 @@ class Concrete5_Model_Page extends Collection {
 	* @return page
 	**/
 	
-	public function add(CollectionType $ct, $data) {
+	public function add($pt, $data, $template = false) {
 		$db = Loader::db();
 		$txt = Loader::helper('text');
-		
+
 		// the passed collection is the parent collection
 		$cParentID = $this->getCollectionID();
 
@@ -2056,8 +2261,6 @@ class Concrete5_Model_Page extends Collection {
 		
 		if (isset($data['pkgID'])) {
 			$pkgID = $data['pkgID'];
-		} else if ($ct->getPackageID() > 0) {
-			$pkgID = $ct->getPackageID();
 		} else {
 			$pkgID = 0;
 		}
@@ -2077,25 +2280,38 @@ class Concrete5_Model_Page extends Collection {
 		$dh = Loader::helper('date');
 		$cDate = $dh->getSystemDateTime();
 		$cDatePublic = ($data['cDatePublic']) ? $data['cDatePublic'] : null;		
-		
-		$data['ctID'] = $ct->getCollectionTypeID();
-		if ($ct->getCollectionTypeHandle() == STACKS_PAGE_TYPE) {
-			$data['cvIsNew'] = 0;
+
+		$ptID = 0;
+		if ($pt instanceof PageType) {
+			if ($pt->getPageTypeHandle() == STACKS_PAGE_TYPE) {
+				$data['cvIsNew'] = 0;
+			}
+			if ($pt->getPackageID() > 0) {
+				$pkgID = $pt->getPackageID();
+			}
+
+			$ptID = $pt->getPageTypeID();
+			if ($template) {
+				$mc = $pt->getPageTypePageTemplateDefaultPageObject($template);
+				$masterCID = $mc->getCollectionID();
+			}
 		}
+
+		if ($template instanceof PageTemplate) {
+			$data['pTemplateID'] = $template->getPageTemplateID();
+		}
+
 		$cobj = parent::add($data);		
 		$cID = $cobj->getCollectionID();		
-		$ctID = $ct->getCollectionTypeID();
 
-		$q = "select p.cID from Pages p inner join CollectionVersions cv on p.cID = cv.cID where cv.ctID = '$ctID' and cIsTemplate = '1'";
-		$masterCID = $db->getOne($q);
 		//$this->rescanChildrenDisplayOrder();
 		$cDisplayOrder = $this->getNextSubPageDisplayOrder();
 
 		$cInheritPermissionsFromCID = ($this->overrideTemplatePermissions()) ? $this->getPermissionsCollectionID() : $masterCID;
 		$cInheritPermissionsFrom = ($this->overrideTemplatePermissions()) ? "PARENT" : "TEMPLATE";
-		$ptID = $this->getCollectionThemeID();
-		$v = array($cID, $cParentID, $uID, $cInheritPermissionsFrom, $this->overrideTemplatePermissions(), $cInheritPermissionsFromCID, $cDisplayOrder, $pkgID);
-		$q = "insert into Pages (cID, cParentID, uID, cInheritPermissionsFrom, cOverrideTemplatePermissions, cInheritPermissionsFromCID, cDisplayOrder, pkgID) values (?, ?, ?, ?, ?, ?, ?, ?)";
+		$pThemeID = $this->getCollectionThemeID();
+		$v = array($cID, $ptID, $cParentID, $uID, $cInheritPermissionsFrom, $this->overrideTemplatePermissions(), $cInheritPermissionsFromCID, $cDisplayOrder, $pkgID);
+		$q = "insert into Pages (cID, ptID, cParentID, uID, cInheritPermissionsFrom, cOverrideTemplatePermissions, cInheritPermissionsFromCID, cDisplayOrder, pkgID) values (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		$r = $db->prepare($q);
 		$res = $db->execute($r, $v);
 
@@ -2229,14 +2445,9 @@ class Concrete5_Model_Page extends Collection {
 	 *
 	*/
 	public static function getCurrentPage() {
-		$req = Request::get();
+		$req = Request::getInstance();
 		$current = $req->getCurrentPage();
-		if (is_object($current)) {
-			return $current;
-		} else {
-			global $c;
-			return $c;
-		}
+		return $current;
 	}
 	
 	/**
@@ -2249,6 +2460,17 @@ class Concrete5_Model_Page extends Collection {
 		} else {
 			return $db->GetOne("select count(pstID) from PageStatistics where cID = ?", array($this->getCollectionID()));
 		}
+	}
+
+	public function getPageDraftTargetParentPageID() {
+		$db = Loader::db();
+		return $db->GetOne('select cDraftTargetParentPageID from Pages where cID = ?', array($this->cID));
+	}
+	
+	public function setPageDraftTargetParentPageID($cParentID) {
+		$db = Loader::db();
+		$db->Execute('update Pages set cDraftTargetParentPageID = ? where cID = ?', array($cParentID, $this->cID));
+		$this->cDraftTargetParentPageID = $cParentID;
 	}
 	
 	/**

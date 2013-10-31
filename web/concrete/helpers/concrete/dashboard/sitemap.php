@@ -104,7 +104,7 @@ class ConcreteDashboardSitemapHelper {
 		$canEditPageProperties = $cp->canEditPageProperties();
 		$canEditPageSpeedSettings = $cp->canEditPageSpeedSettings();
 		$canEditPagePermissions = $cp->canEditPagePermissions();
-		$canEditPageDesign = ($cp->canEditPageTheme() || $cp->canEditPageType());
+		$canEditPageDesign = ($cp->canEditPageTheme() || $cp->canEditPageTemplate());
 		$canViewPageVersions = $cp->canViewPageVersions();
 		$canDeletePage = $cp->canDeletePage();
 		$canAddSubpages = $cp->canAddSubpage();
@@ -124,7 +124,7 @@ class ConcreteDashboardSitemapHelper {
 		
 		$cvName = ($c->getCollectionName()) ? $c->getCollectionName() : '(No Title)';
 		
-		$ct = CollectionType::getByID($c->getCollectionTypeID());
+		$ct = PageType::getByID($c->getPageTypeID());
 		$isInTrash = $c->isInTrash();
 		
 		$isTrash = $c->getCollectionPath() == TRASH_PAGE_PATH;
@@ -137,7 +137,9 @@ class ConcreteDashboardSitemapHelper {
 		
 		$cIcon = $c->getCollectionIcon();
 		if (!$cIcon) {
-			if ($numSubpages > 0) {
+			if ($cID == 1) {
+				$cIconClass = 'glyphicon glyphicon-home';
+			} else if ($numSubpages > 0) {
 				$cIcon = ASSETS_URL_IMAGES . '/dashboard/sitemap/folder.png';
 			} else {
 				$cIcon = ASSETS_URL_IMAGES . '/dashboard/sitemap/document.png';
@@ -147,6 +149,7 @@ class ConcreteDashboardSitemapHelper {
 		$cAlias = $c->isAlias();
 		$cPointerID = $c->getCollectionPointerID();
 		if ($cAlias) {
+			/*
 			if ($cPointerID > 0) {
 				$cIcon = ASSETS_URL_IMAGES . '/icons/alias.png';
 				$cAlias = 'POINTER';
@@ -154,7 +157,8 @@ class ConcreteDashboardSitemapHelper {
 			} else {
 				$cIcon = ASSETS_URL_IMAGES . '/icons/alias_external.png';
 				$cAlias = 'LINK';
-			}
+			}*/
+
 		}
 
 		/*
@@ -173,6 +177,8 @@ class ConcreteDashboardSitemapHelper {
 		}
 		if ($cIcon) {
 			$node->icon = $cIcon;
+		} else if ($cIconClass) {
+			$node->iconClass = $cIconClass;
 		}
 		$node->cAlias = $cAlias;
 		$node->isInTrash = $isInTrash;

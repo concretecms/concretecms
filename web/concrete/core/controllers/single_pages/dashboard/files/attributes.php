@@ -1,6 +1,6 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Controller_Dashboard_Files_Attributes extends Controller {
+class Concrete5_Controller_Page_Dashboard_Files_Attributes extends DashboardController {
 	
 	public $helpers = array('form');
 	

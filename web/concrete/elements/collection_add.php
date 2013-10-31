@@ -60,7 +60,6 @@ $dh = Loader::helper('date');
 		
 
 	<?	
-	ob_start();
 
 	foreach($attribs as $ak) { 
 	
@@ -78,27 +77,6 @@ $dh = Loader::helper('date');
 		</div>
 		
 	<? } 
-	$contents = ob_get_contents();
-	ob_end_clean(); ?>	
-	
-	<script type="text/javascript">
-	<? 
-	$v = View::getInstance();
-	$headerItems = $v->getHeaderItems();
-	foreach($headerItems as $item) {
-		if ($item instanceof CSSOutputObject) {
-			$type = 'CSS';
-		} else {
-			$type = 'JAVASCRIPT';
-		} ?>
-		 ccm_addHeaderItem("<?=$item->file?>", '<?=$type?>');
-		<? 
-	} 
-	?>
-	</script>
-	
-	<? print $contents; ?>
-		
 		<? } ?>
 		
 	</div>

@@ -53,23 +53,9 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			$db->Execute('update btCoreConversation set cnvID = ? where bID = ?', array($conv->getConversationID(), $newBID));
 		}
 
-		public function on_page_view() {
-			$bt = BlockType::getByHandle('core_conversation');
-			$conversation = $this->getConversationObject();
-			if (is_object($conversation)) {
-				$this->addHeaderItem(Loader::helper('html')->css('overlay/jquery.magnific-popup.css'));
-				$this->addFooterItem(Loader::helper('html')->javascript('overlay/jquery.magnific-popup.js'));
-				$this->addHeaderItem(Loader::helper('html')->css('ccm.conversations.css'));
-				$this->addHeaderItem(Loader::helper('html')->javascript('ccm.conversations.js'));
-				$this->addHeaderItem(Loader::helper('html')->javascript('dropzone.js'));
-			}
-			$editor = ConversationEditor::getActive();
-			foreach((array)$editor->getConversationEditorHeaderItems() as $item) {
-				$this->addHeaderItem($item);
-			}
-		}
-
 		public function view() {
+			$r = ResponseAssetGroup::get();
+			$r->requireAsset('core/conversation');
 			$fileSettings = $this->getFileSettings(); 
 			$conversation = $this->getConversationObject();
 			if (is_object($conversation)) {

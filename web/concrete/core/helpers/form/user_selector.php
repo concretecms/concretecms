@@ -116,7 +116,6 @@ class Concrete5_Helper_Form_UserSelector {
 			$("#ccmUserSelect' . $fieldName . ' .ccm-user-select-item").dialog();
 			$("a.ccm-user-list-clear").click(function() {
 				$(this).parents(\'tr\').remove();
-				ccm_setupGridStriping(\'ccmUserSelect' . $fieldName . '\');
 			});
 
 			ccm_triggerSelectUser = function(uID, uName, uEmail) {
@@ -129,10 +128,8 @@ class Concrete5_Helper_Form_UserSelector {
 					html += "</tr>";
 					$("#ccmUserSelect' . $fieldName . '_body").append(html);
 				}
-				ccm_setupGridStriping(\'ccmUserSelect' . $fieldName . '\');
 				$("a.ccm-user-list-clear").click(function() {
 					$(this).parents(\'tr\').remove();
-					ccm_setupGridStriping(\'ccmUserSelect' . $fieldName . '\');
 				});
 			}
 		});

@@ -21,7 +21,7 @@ class Concrete5_Model_DeletePagePageWorkflowRequest extends PageWorkflowRequest 
 		$d = new WorkflowDescription();
 		$c = Page::getByID($this->cID, 'ACTIVE');
 		$item = t('page');
-		if ($c->getCollectionTypeHandle() == STACKS_PAGE_TYPE) {
+		if ($c->getPageTypeHandle() == STACKS_PAGE_TYPE) {
 			$item = t('stack');
 		}
 		$link = Loader::helper('navigation')->getLinkToCollection($c, true);
@@ -50,7 +50,7 @@ class Concrete5_Model_DeletePagePageWorkflowRequest extends PageWorkflowRequest 
 
 	public function approve(WorkflowProgress $wp) {
 		$c = Page::getByID($this->getRequestedPageID());
-		if ($c->getCollectionTypeHandle() == STACKS_PAGE_TYPE) {
+		if ($c->getPageTypeHandle() == STACKS_PAGE_TYPE) {
 			$c = Stack::getByID($this->getRequestedPageID());
 			$c->delete();
 			$wpr = new WorkflowProgressResponse();

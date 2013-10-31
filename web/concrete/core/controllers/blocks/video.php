@@ -56,9 +56,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			parent::save($args);
 		}				
 
-		public function on_page_view() {
-			$html = Loader::helper('html');
-			$this->addHeaderItem($html->javascript('swfobject.js'));
+		public function view() {
+			$this->requireAsset('swfobject');
 		}
 		
 		

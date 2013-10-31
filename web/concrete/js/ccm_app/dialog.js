@@ -201,6 +201,13 @@ jQuery.fn.dialog.open = function(options) {
 
 jQuery.fn.dialog.activateDialogContents = function($dialog) {
 	// handle buttons
+	$dialog.find('button[data-dialog-action=cancel]').on('click', function() {
+		jQuery.fn.dialog.closeTop();
+	});
+	$dialog.find('button[data-dialog-action=submit]').on('click', function() {
+		CCMEditMode.setupAjaxForm($('[data-dialog-form]')).submit();
+	});
+
 	if ($dialog.find('.dialog-buttons').length > 0) {
 		$dialog.jqdialog('option', 'buttons', [{}]);
 		$dialog.parent().find(".ui-dialog-buttonset").remove();
@@ -216,10 +223,9 @@ jQuery.fn.dialog.activateDialogContents = function($dialog) {
 		$dialog.dialog('close');
 	});
 
+	$dialog.find('.launch-tooltip').tooltip({'container': '#ccm-tooltip-holder'});
+	
 	// help handling
-	if ($("#tooltip-holder").length == 0) {
-		$('<div />').attr('id','tooltip-holder').attr('class', 'ccm-ui').prependTo(document.body);
-	}
 	if ($dialog.find('.dialog-help').length > 0) {
 		$dialog.find('.dialog-help').hide();
 		var helpContent = $dialog.find('.dialog-help').html();
@@ -228,10 +234,10 @@ jQuery.fn.dialog.activateDialogContents = function($dialog) {
 		} else {
 			var helpText = 'Help';
 		}
-		$dialog.parent().find('.ui-dialog-titlebar').addClass('ccm-ui').append('<button class="ui-dialog-titlebar-help ccm-menu-help-trigger"><i class="icon-info-sign"></i></button>');
+		$dialog.parent().find('.ui-dialog-titlebar').addClass('ccm-ui').append('<button class="ui-dialog-titlebar-help ccm-menu-help-trigger"><i class="glyphicon glyphicon-info-sign"></i></button>');
 		$dialog.parent().find('.ui-dialog-titlebar .ccm-menu-help-trigger').popover({content: function() {
-			return helpContent;
-		}, placement: 'bottom', html: true, container: '#tooltip-holder', trigger: 'click'});
+			return helpContent;			
+		}, placement: 'bottom', html: true, container: '#ccm-tooltip-holder', trigger: 'click'});
 	}
 }
 
@@ -247,6 +253,7 @@ jQuery.fn.dialog.replaceTop = function(html) {
 }
 
 jQuery.fn.dialog.showLoader = function(text) {
+	/*
 	if ($('#ccm-dialog-loader').length < 1) {
 		$("body").append("<div id='ccm-dialog-loader-wrapper' class='ccm-ui'><div class='progress progress-striped active' style='width: 300px'><div class='bar' style='width: 100%;'></div></div></div>");//add loader to the page
 	}
@@ -264,11 +271,16 @@ jQuery.fn.dialog.showLoader = function(text) {
 	$("#ccm-dialog-loader-wrapper").css('left', _left + 'px').css('top', _top + 'px');
 	$('#ccm-dialog-loader-wrapper').show();//show loader
 	//$('#ccm-dialog-loader-wrapper').fadeTo('slow', 0.2);
+	*/
+	$('body').addClass('ccm-loading');
 }
 
 jQuery.fn.dialog.hideLoader = function() {
+	/*
 	$("#ccm-dialog-loader-wrapper").hide();
 	$("#ccm-dialog-loader-text").remove();
+	*/
+	$('body').removeClass('ccm-loading');
 }
 
 
