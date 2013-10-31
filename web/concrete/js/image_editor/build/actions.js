@@ -6,6 +6,7 @@ im.bind('imageload',function(){
   im.fire('LoadingControlSets');
   for (namespace in cs) {
     var myns = "ControlSet_" + namespace;
+    im.controlSetNamespaces.push(myns);
     $.ajax(cs[namespace]['src'],{
       dataType:'text',
       cache:false,
@@ -35,6 +36,7 @@ im.bind('ControlSetsLoaded',function(){
   im.showLoader('Loading Components..');
   var components = settings.components || {}, namespace, running = 0;
   log('Loading Components');
+
   for (namespace in components) {
     var myns = "Component_" + namespace;
     $.ajax(components[namespace]['src'],{
@@ -59,6 +61,9 @@ im.bind('ControlSetsLoaded',function(){
         }
       }
     });
+  }
+  if (0 == running) {
+    im.trigger('ComponentsLoaded');
   }
 });
 

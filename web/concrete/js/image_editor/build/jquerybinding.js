@@ -1,6 +1,6 @@
 // End the ImageEditor object.
 
-  
+
   im.setActiveElement(im.stage);
 
   window.c5_image_editor = im; // Safe keeping
@@ -20,7 +20,7 @@ $.fn.ImageEditor = function (settings) {
   }
   self.closest('.ui-dialog').find('.ui-resizable-handle').hide();
   self.height("-=30");
-  $('div.editorcontrols').height(self.height() - 130);
+  $('div.editorcontrols').height(self.height() - 90);
   self.width("-=330").parent().width("-=330").children('div.bottomBar').width("-=330");
   (settings.width === undefined && (settings.width = self.width()));
   (settings.height === undefined && (settings.height = self.height()));
@@ -73,7 +73,7 @@ $.fn.ImageEditor = function (settings) {
 };
 $.fn.slideOut = function(time,callback) {
   var me = $(this),
-      startWidth = me.width(), 
+      startWidth = me.width(),
       totalWidth = 300;
   me.css('overflow-y','auto');
   if (startWidth == totalWidth) {

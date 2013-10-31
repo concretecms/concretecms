@@ -15,12 +15,14 @@ var ImageEditor = function (settings) {
   im.components     = {};
   im.settings       = settings;
   im.filters        = {};
+  im.fileId         = im.settings.fID;
   im.scale          = 1;
   im.crosshair      = new Image();
   im.uniqid         = im.stage.getContainer().id;
   im.editorContext  = $(im.stage.getContainer()).parent();
   im.domContext     = im.editorContext.parent();
   im.controlContext = im.domContext.children('div.controls');
+  im.controlSetNamespaces = [];
 
   im.showLoader = $.fn.dialog.showLoader;
   im.hideLoader = $.fn.dialog.hideLoader;
@@ -44,21 +46,21 @@ var ImageEditor = function (settings) {
     return $(selector, im.domContext);
   },
   log = function() {
-    if (settings.debug === true && console !== undefined) {
+    if (settings.debug === true && typeof console !== 'undefined') {
       var args = arguments;
       if (args.length == 1) args = args[0];
       console.log(args);
     }
   },
   warn = function() {
-    if (settings.debug === true && console !== undefined) {
+    if (settings.debug === true && typeof console !== 'undefined') {
       var args = arguments;
       if (args.length == 1) args = args[0];
       console.warn(args);
     }
   },
   error = function() {
-    if (console !== undefined) {
+    if (typeof console !== 'undefined') {
       var args = arguments;
       if (args.length == 1) args = args[0];
       console.error("Image Editor Error: " + args);
