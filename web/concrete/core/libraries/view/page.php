@@ -127,7 +127,7 @@ class Concrete5_Library_View_Page extends View {
 			return REL_DIR_FILES_CACHE . '/' . DIRNAME_CSS . '/' . $this->themeHandle . '/' . $this->customStyleMap[$stylesheet];
 		}
 		if ($this->cp->canViewPageVersions() && $this->c->hasPageThemeCustomizations()) {
-			return URL::to('/system/page/css', $this->c->getCollectionID(), $this->c->getVersionID(), $stylesheet);
+			return URL::to('/system/css/page', $this->c->getCollectionID(), $this->c->getVersionID(), $stylesheet);
 		}
 		$env = Environment::get();
 		$themeRec = $env->getUncachedRecord(DIRNAME_THEMES . '/' . $this->themeHandle . '/' . $stylesheet, $this->themePkgHandle);
