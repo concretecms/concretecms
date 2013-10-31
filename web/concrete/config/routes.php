@@ -60,6 +60,8 @@ $rl->register('/system/panels/details/page/caching/purge', 'PageCachingPanelDeta
 $rl->register('/system/panels/details/page/permissions', 'PagePermissionsPanelDetailController::view');
 $rl->register('/system/panels/details/page/permissions/simple/submit', 'PagePermissionsPanelDetailController::save_simple');
 $rl->register('/system/panels/details/page/permissions/advanced/submit', 'PagePermissionsPanelDetailController::save_advanced');
+$rl->register('/system/dialogs/page/delete/', 'PageDeleteDialogController::view');
+$rl->register('/system/dialogs/page/delete/submit', 'PageDeleteDialogController::submit');
 
 /**
  * Editing Actions

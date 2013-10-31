@@ -387,7 +387,11 @@ $classes = array(
 	'PageComposerPanelDetailController' => array('controller', '/panels/details/page/composer'),
 	'PageAttributesPanelDetailController' => array('controller', '/panels/details/page/attributes'),
 	'PageCachingPanelDetailController' => array('controller', '/panels/details/page/caching'),
-	'PagePermissionsPanelDetailController' => array('controller', '/panels/details/page/permissions')
+	'PagePermissionsPanelDetailController' => array('controller', '/panels/details/page/permissions'),
+
+	/* Dialogs */
+	'PageDeleteDialogController' => array('controller', '/dialogs/page/delete')
+
 );
 
 Loader::registerAutoload($classes);
