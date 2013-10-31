@@ -47,8 +47,8 @@
 		<? if ($cp->canPreviewPageAsUser() && PERMISSIONS_MODEL == 'advanced') { ?>
 			<li><a href="#"><?=t('View as User')?></a></li>
 		<? } ?>
-		<? if ($cp->canMoveOrCopyPage() || $cp->canDeletePage()) { ?>
-			<li><a href=""><?=t('Delete Page')?></a></li>
+		<? if ($cp->canDeletePage()) { ?>
+			<li><a class="dialog-launch" href="<?=URL::to('/system/dialogs/page/delete')?>?cID=<?=$c->getCollectionID()?>" dialog-modal="true" dialog-title="<?=t('Delete Page')?>" dialog-width="400" dialog-height="250"><?=t('Delete Page')?></a></li>
 		<? } ?>
 	</menu>
 </section>

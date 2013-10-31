@@ -317,6 +317,7 @@ var CCMPanel = function(options) {
 				});
 			})
 		});
+		$panel.find('.dialog-launch').dialog();
 		$panel.find('[data-panel-menu=collapsible-list-group]').each(function() {
 			var $clg = $(this);
 			$clg.find('.list-group-item-collapse').unbind('.clg').on('click.clg', function() {
