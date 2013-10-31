@@ -270,7 +270,8 @@ class Concrete5_Model_Package extends Object {
 		$items['attribute_keys'] = AttributeKey::getListByPackage($this);
 		$items['attribute_sets'] = AttributeSet::getListByPackage($this);
 		$items['group_sets'] = GroupSet::getListByPackage($this);
-		$items['page_types'] = CollectionType::getListByPackage($this);
+		$items['page_types'] = PageType::getListByPackage($this);
+		$items['page_templates'] = PageTemplate::getListByPackage($this);
 		$items['mail_importers'] = MailImporter::getListByPackage($this);
 		$items['configuration_values'] = Config::getListByPackage($this);
 		$items['gathering_item_template_types'] = GatheringItemTemplateType::getListByPackage($this);		
@@ -288,8 +289,8 @@ class Concrete5_Model_Package extends Object {
 		$items['content_editor_snippets'] = SystemContentEditorSnippet::getListByPackage($this);		
 		$items['conversation_editors'] = ConversationEditor::getListByPackage($this);		
 		$items['conversation_rating_types'] = ConversationRatingType::getListByPackage($this);		
-		$items['composer_target_types'] = ComposerTargetType::getListByPackage($this);		
-		$items['composer_control_types'] = ComposerControlType::getListByPackage($this);		
+		$items['page_type_publish_target_types'] = PageTypePublishTargetType::getListByPackage($this);		
+		$items['page_type_composer_control_types'] = PageTypeComposerControlType::getListByPackage($this);		
 		$items['antispam_libraries'] = SystemAntispamLibrary::getListByPackage($this);		
 		$items['community_point_actions'] = UserPointAction::getListByPackage($this);		
 		$items['jobs'] = Job::getListByPackage($this);		
@@ -316,12 +317,14 @@ class Concrete5_Model_Package extends Object {
 			return $item->getGatheringItemTemplateName();
 		} else if ($item instanceof BlockTypeSet) {
 			return $item->getBlockTypeSetName();
-		} else if ($item instanceof ComposerControlType) {
-			return $item->getComposerControlTypeName();
-		} else if ($item instanceof ComposerTargetType) {
-			return $item->getComposerTargetTypeName();
-		} else if ($item instanceof CollectionType) {
-			return $item->getCollectionTypeName();
+		} else if ($item instanceof PageTypeComposerControlType) {
+			return $item->getPageTypeComposerControlTypeName();
+		} else if ($item instanceof PageTypePublishTargetType) {
+			return $item->getPageTypePublishTargetTypeName();
+		} else if ($item instanceof PageType) {
+			return $item->getPageTypeName();
+		} else if ($item instanceof PageTemplate) {
+			return $item->getPageTemplateName();
 		} else if ($item instanceof MailImporter) {
 			return $item->getMailImporterName();		
 		} else if ($item instanceof SinglePage) {
@@ -391,8 +394,9 @@ class Concrete5_Model_Package extends Object {
 						case 'GatheringItemTemplate':
 						case 'ConversationEditor':
 						case 'ConversationRatingType':
-						case 'ComposerTargetType':
-						case 'ComposerControlType':
+						case 'PageTypePublishTargetType':
+						case 'PageTypeComposerControlType':
+						case 'PageTemplate':
 							$item->delete();	
 							break;
 						case 'PageTheme':
@@ -406,7 +410,7 @@ class Concrete5_Model_Package extends Object {
 						case 'SystemAntispamLibrary':
 							$item->delete();
 							break;
-						case 'CollectionType':
+						case 'PageType':
 							$item->delete();
 							break;
 						case 'MailImporter':
@@ -484,7 +488,7 @@ class Concrete5_Model_Package extends Object {
 				$b->deleteBlock();
 			}
 			
-			$pageTypes = CollectionType::getList();
+			$pageTypes = PageType::getList();
 			foreach($pageTypes as $ct) {
 				$ct->delete();
 			}

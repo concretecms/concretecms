@@ -17,7 +17,7 @@
 		protected $btInterfaceWidth = "500";
 		protected $btInterfaceHeight = "350";
 		protected $btExportPageColumns = array('cParentID');
-		protected $btExportPageTypeColumns = array('ctID');
+		protected $btExportPageTypeColumns = array('ptID');
 		protected $btCacheBlockRecord = true;
 		
 		/** 
@@ -42,7 +42,7 @@
 			$db = Loader::db();
 			$bID = $this->bID;
 			if ($this->bID) {
-				$q = "select num, cParentID, cThis, orderBy, ctID, displayAliases, rss from btPageList where bID = '$bID'";
+				$q = "select num, cParentID, cThis, orderBy, ptID, displayAliases, rss from btPageList where bID = '$bID'";
 				$r = $db->query($q);
 				if ($r) {
 					$row = $r->fetchRow();
@@ -52,7 +52,7 @@
 				$row['cParentID'] = $this->cParentID;
 				$row['cThis'] = $this->cThis;
 				$row['orderBy'] = $this->orderBy;
-				$row['ctID'] = $this->ctID;
+				$row['ptID'] = $this->ptID;
 				$row['rss'] = $this->rss;
 				$row['displayAliases'] = $this->displayAliases;
 			}
@@ -104,8 +104,8 @@
 			}
 			$pl->filter('cvName', '', '!=');			
 		
-			if ($row['ctID']) {
-				$pl->filterByCollectionTypeID($row['ctID']);
+			if ($row['ptID']) {
+				$pl->filterByPageTypeID($row['ptID']);
 			}
 			
 			$columns = $db->MetaColumns(CollectionAttributeKey::getIndexedSearchTable());
@@ -168,6 +168,9 @@
 					$showPagination = true;
 					$paginator = $pl->getPagination();
 				}
+			}
+			if ($showPagination) {
+				$this->requireAsset('core/frontend/pagination');
 			}
 			$this->set('showPagination', $showPagination);
 			$this->set('paginator', $paginator);
@@ -235,7 +238,7 @@
 			$args['truncateChars'] = intval($args['truncateChars']); 
 			$args['paginate'] = intval($args['paginate']); 
 			$args['rss'] = intval($args['rss']);
-			$args['ctID'] = intval($args['ctID']);
+			$args['ptID'] = intval($args['ptID']);
 
 			parent::save($args);
 		

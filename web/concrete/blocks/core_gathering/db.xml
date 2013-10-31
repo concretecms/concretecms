@@ -12,7 +12,7 @@
 			<notnull />
 			<default value="50" />
 		</field>
-		<field name="cmpID" type="I">
+		<field name="ptID" type="I">
 			<unsigned />
 			<default value="0" />
 		</field>

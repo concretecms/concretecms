@@ -18,7 +18,7 @@ if (is_object($discussion)) { ?>
 		<div style="display: none">
 			<div data-form="discussion">
 				<form data-form="composer">
-				<?=Loader::helper('composer/form')->display($composer)?>
+				<?=Loader::helper('composer')->display($composer)?>
 				<div class="dialog-buttons">
 				<button type="button" data-composer-btn="exit" class="btn pull-left"><?=t('Cancel')?></button>
 				<button type="button" data-composer-btn="publish" class="btn btn-primary pull-right"><?=t('Post')?></button>
@@ -100,7 +100,6 @@ $(function() {
 		window.location.href = $(this).find('option:selected').attr('data-sort-url');
 	});
 	$('form[data-form=composer]').ccmcomposer({
-		publishURL: '<?=html_entity_decode($this->action("post"))?>',
 		onExit: function() {
 			$dialog.dialog('close');
 		},

@@ -1,7 +1,9 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
 //not working? try $_GET['force']=1
-$v = View::getInstance();
-$v->setTheme('concrete');
-$v->render('/upgrade');
-exit;
+$cnt = Loader::controller('/upgrade');
+$cnt->on_start();
+$cnt->view();
+$v = $cnt->getViewObject();
+$r = new Response($v->render());
+$r->send();

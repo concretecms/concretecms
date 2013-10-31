@@ -21,7 +21,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 class Concrete5_Library_Content_Importer {
 	
 	protected static $mcBlockIDs = array();
-	protected static $cmpOutputControlIDs = array();
+	protected static $ptComposerOutputControlIDs = array();
 
 	public function importContentFile($file) {
 		$sx = simplexml_load_file($file);
@@ -41,8 +41,8 @@ class Concrete5_Library_Content_Importer {
 		$this->importConversationEditors($sx);
 		$this->importConversationRatingTypes($sx);
 		$this->importConversationFlagTypes($sx);
-		$this->importComposerTargetTypes($sx);
-		$this->importComposerControlTypes($sx);
+		$this->importPageTypePublishTargetTypes($sx);
+		$this->importPageTypeComposerControlTypes($sx);
 		$this->importBannedWords($sx);
 		$this->importFeatures($sx);
 		$this->importFeatureCategories($sx);
@@ -63,8 +63,10 @@ class Concrete5_Library_Content_Importer {
 		$this->importJobs($sx);
 		$this->importJobSets($sx);
 		// import bare page types first, then import structure, then page types blocks, attributes and composer settings, then page content, because we need the structure for certain attributes and stuff set in master collections (like composer)
+		$this->importPageTemplates($sx);
 		$this->importPageTypesBase($sx);
 		$this->importPageStructure($sx);
+		$this->importPageTypeTargets($sx);
 		$this->importPageTypeDefaults($sx);
 		$this->importSinglePageContent($sx);
 		$this->importStacksContent($sx);
@@ -73,7 +75,6 @@ class Concrete5_Library_Content_Importer {
 		$this->importConfigValues($sx);
 		$this->importSystemCaptchaLibraries($sx);
 		$this->importSystemContentEditorSnippets($sx);
-		$this->importComposers($sx);
 	}
 	
 	protected static function getPackageObject($pkgHandle) {
@@ -220,11 +221,13 @@ class Concrete5_Library_Content_Importer {
 					$data['pkgID'] = $pkg->getPackageID();
 				}
 				$args = array();
-				$ct = CollectionType::getByHandle($px['pagetype']);
+				$ct = PageType::getByHandle($px['pagetype']);
+				$template = PageTemplate::getByHandle($px['template']);
 				if ($px['path'] == '') {
 					// home page
 					$page = $home;
-					$args['ctID'] = $ct->getCollectionTypeID();
+					$args['ptID'] = $ct->getPageTypeID();
+					$args['pTemplateID'] = $template->getPageTemplateID();
 				} else {
 					$page = Page::getByPath($px['path']);
 					if (!is_object($page) || ($page->isError())) {
@@ -239,16 +242,17 @@ class Concrete5_Library_Content_Importer {
 						$page = $parent->add($ct, $data);
 					}
 				}
-
+				
 				$args['cName'] = $px['name'];
 				$args['cDescription'] = $px['description'];
-				$args['ctID'] = $ct->getCollectionTypeID();
+				$args['ptID'] = $ct->getPageTypeID();
+				$args['pTemplateID'] = $template->getPageTemplateID();
 				$page->update($args);
 			}
 		}
 	}
 	
-	protected function importPageAreas(Page $page, SimpleXMLElement $px) {
+	public function importPageAreas(Page $page, SimpleXMLElement $px) {
 		foreach($px->area as $ax) {
 			if (isset($ax->block)) {
 				foreach($ax->block as $bx) {
@@ -282,41 +286,23 @@ class Concrete5_Library_Content_Importer {
 		}
 	}
 
-	public static function addComposerOutputControlID(ComposerFormLayoutSetControl $control, $id) {
-		self::$cmpOutputControlIDs[$id] = $control->getComposerFormLayoutSetControlID();
+	public static function addPageTypeComposerOutputControlID(PageTypeComposerFormLayoutSetControl $control, $id) {
+		self::$ptComposerOutputControlIDs[$id] = $control->getPageTypeComposerFormLayoutSetControlID();
 	}
 	
-	public static function getComposerFormLayoutSetControlFromTemporaryID($id) {
-		if (isset(self::$cmpOutputControlIDs[$id])) {
-			return self::$cmpOutputControlIDs[$id];
-		}
-	}
-	
-	protected function importPageTypesBase(SimpleXMLElement $sx) {
-		if (isset($sx->pagetypes)) {
-			foreach($sx->pagetypes->pagetype as $ct) {
-				$pkg = ContentImporter::getPackageObject($ct['package']);
-				$ctt = CollectionType::getByHandle($ct['handle']);
-				if (!is_object($ctt)) { 
-					$ctr = CollectionType::add(array(
-						'ctHandle' => $ct['handle'],
-						'ctName' => $ct['name'],
-						'ctIcon' => $ct['icon'],
-						'ctIsInternal' => (string) $ct['internal']
-					), $pkg);
-				}
-			}
+	public static function getPageTypeComposerFormLayoutSetControlFromTemporaryID($id) {
+		if (isset(self::$ptComposerOutputControlIDs[$id])) {
+			return self::$ptComposerOutputControlIDs[$id];
 		}
 	}
 
-	protected function importPageTypeDefaults(SimpleXMLElement $sx) {
-		$db = Loader::db();
-		if (isset($sx->pagetypes)) {
-			foreach($sx->pagetypes->pagetype as $ct) {
-				$ctr = CollectionType::getByHandle((string) $ct['handle']);
-				$mc = Page::getByID($ctr->getMasterCollectionID(), 'RECENT');
-				if (isset($ct->page)) {
-					$this->importPageAreas($mc, $ct->page);
+	protected function importPageTemplates(SimpleXMLElement $sx) {
+		if (isset($sx->pagetemplates)) {
+			foreach($sx->pagetemplates->pagetemplate as $pt) {
+				$pkg = ContentImporter::getPackageObject($pt['package']);
+				$ptt = PageTemplate::getByHandle($pt['handle']);
+				if (!is_object($ptt)) { 
+					$ptt = PageTemplate::add((string) $pt['handle'], (string) $pt['name'], (string) $pt['icon'], $pkg, (string) $pt['internal']);
 				}
 			}
 		}
@@ -399,10 +385,10 @@ class Concrete5_Library_Content_Importer {
 		if (isset($sx->themes)) {
 			foreach($sx->themes->theme as $th) {
 				$pkg = ContentImporter::getPackageObject($th['package']);
-				$ptHandle = (string) $th['handle'];
-				$pt = PageTheme::getByHandle($ptHandle);
+				$pThemeHandle = (string) $th['handle'];
+				$pt = PageTheme::getByHandle($pThemeHandle);
 				if (!is_object($pt)) {
-					$pt = PageTheme::add($ptHandle, $pkg);
+					$pt = PageTheme::add($pThemeHandle, $pkg);
 				}
 				if ($th['activated'] == '1') {
 					$pt->applyToSite();
@@ -411,28 +397,44 @@ class Concrete5_Library_Content_Importer {
 		}
 	}
 
-	protected function importComposerTargetTypes(SimpleXMLElement $sx) {
-		if (isset($sx->composertargettypes)) {
-			foreach($sx->composertargettypes->type as $th) {
+	protected function importPageTypePublishTargetTypes(SimpleXMLElement $sx) {
+		if (isset($sx->pagetypepublishtargettypes)) {
+			foreach($sx->pagetypepublishtargettypes->type as $th) {
 				$pkg = ContentImporter::getPackageObject($th['package']);
-				$ce = ComposerTargetType::add((string) $th['handle'], (string) $th['name'], $pkg);
+				$ce = PageTypePublishTargetType::add((string) $th['handle'], (string) $th['name'], $pkg);
 			}
 		}
 	}
 
-	protected function importComposerControlTypes(SimpleXMLElement $sx) {
-		if (isset($sx->composercontroltypes)) {
-			foreach($sx->composercontroltypes->type as $th) {
+	protected function importPageTypeComposerControlTypes(SimpleXMLElement $sx) {
+		if (isset($sx->pagetypecomposercontroltypes)) {
+			foreach($sx->pagetypecomposercontroltypes->type as $th) {
 				$pkg = ContentImporter::getPackageObject($th['package']);
-				$ce = ComposerControlType::add((string) $th['handle'], (string) $th['name'], $pkg);
+				$ce = PageTypeComposerControlType::add((string) $th['handle'], (string) $th['name'], $pkg);
 			}
 		}
 	}
 
-	protected function importComposers(SimpleXMLElement $sx) {
-		if (isset($sx->composers)) {
-			foreach($sx->composers->composer as $cm) {
-				Composer::import($cm);
+	protected function importPageTypesBase(SimpleXMLElement $sx) {
+		if (isset($sx->pagetypes)) {
+			foreach($sx->pagetypes->pagetype as $p) {
+				PageType::import($p);
+			}
+		}
+	}
+
+	protected function importPageTypeTargets(SimpleXMLElement $sx) {
+		if (isset($sx->pagetypes)) {
+			foreach($sx->pagetypes->pagetype as $p) {
+				PageType::importTargets($p);
+			}
+		}
+	}
+
+	protected function importPageTypeDefaults(SimpleXMLElement $sx) {
+		if (isset($sx->pagetypes)) {
+			foreach($sx->pagetypes->pagetype as $p) {
+				PageType::importContent($p);
 			}
 		}
 	}
@@ -759,8 +761,8 @@ class Concrete5_Library_Content_Importer {
 				return $fID;
 			}
 			if ($matches[4]) {
-				$ct = CollectionType::getByHandle($matches[4]);
-				return $ct->getCollectionTypeID();
+				$ct = PageType::getByHandle($matches[4]);
+				return $ct->getPageTypeID();
 			}
 		} else {
 			return $value;

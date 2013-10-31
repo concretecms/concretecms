@@ -217,7 +217,31 @@ class Concrete5_Helper_Text {
 		}
 	}
 	
-	
+	/** 
+	 * Determines whether a string matches a particular pattern.
+	 * @author Laravel Framework
+	 */
+	/**
+	 * Determine if a given string matches a given pattern.
+	 *
+	 * @param  string  $pattern
+	 * @param  string  $value
+	 * @return bool
+	 */
+	public static function match($pattern, $value) {
+		if ($pattern == $value) {
+			return true;
+		}
+
+		$pattern = preg_quote($pattern, '#');
+		if ($pattern !== '/') {
+			$pattern = str_replace('\*', '.*', $pattern).'\z';
+		} else {
+			$pattern = '/$';
+		}
+		return (bool) preg_match('#^'.$pattern.'#', $value);
+	}
+
 	/** 
 	 * Takes a CamelCase string and turns it into camel_case
 	 * @param string $string

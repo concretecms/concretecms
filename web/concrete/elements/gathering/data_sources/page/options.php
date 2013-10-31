@@ -1,19 +1,19 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?>
 <?
-$ctArray = CollectionType::getList();
+$ctArray = PageType::getList();
 $types = array();
 foreach($ctArray as $ct) {
-	$types[$ct->getCollectionTypeID()] = $ct->getCollectionTypeName();
+	$types[$ct->getPageTypeID()] = $ct->getPageTypeName();
 }
 
 if (is_object($configuration)) { 
-	$ctID = $configuration->getCollectionTypeID();
+	$ptID = $configuration->getPageTypeID();
 }
 
 ?>
 <div class="control-group">
 	<label class="control-label"><?=t('Limit By Page Type')?></label>
 	<div class="controls" data-select="page">
-		<?=$form->select($source->optionFormKey('ctID'), $types, $ctID)?>
+		<?=$form->select($source->optionFormKey('ptID'), $types, $ptID)?>
 	</div>
 </div>

@@ -1,80 +1,99 @@
-<?php
+<?
 defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Controller_Dashboard_Pages_Types extends DashboardBaseController {
-	
-	public function view() { 
-		$this->set("icons", CollectionType::getIcons());
-	}	
-	
-	public function delete($ctID, $token = '') {
-		$db = Loader::db();
-		$valt = Loader::helper('validation/token');
-		if (!$valt->validate('delete_page_type', $token)) {
-			$this->set('message', $valt->getErrorMessage());
-		} else {
-			// check to make sure we 
-			$pageCount = $db->getOne("SELECT COUNT(p.cID) from Pages p inner join CollectionVersions cv on p.cID = cv.cID WHERE cIsTemplate = 0 and cv.ctID = ?",array($ctID));
-				
-			if($pageCount == 0) {
-				$ct = CollectionType::getByID($ctID);
-				$ct->delete();
-				$this->redirect("/dashboard/pages/types");
-			} else {
-				$this->error->add(t("You must delete all pages of this type, and remove all page versions that contain this page type before deleting this page type."));
-			}
-		}
-	}
-	
+
+class Concrete5_Controller_Page_Dashboard_Pages_Types extends DashboardController {
+
 	public function page_type_added() {
-		$this->set('message', t('Page type added successfully.'));
+		$this->set('success', t('Page Type added successfully.'));
 		$this->view();
 	}
 
 	public function page_type_updated() {
-		$this->set('message', t('Page type updated successfully.'));
+		$this->set('success', t('Page type updated successfully.'));
 		$this->view();
 	}
-	
-	public function update() {
-		
-		$valt = Loader::helper('validation/token');
 
-		$ct = CollectionType::getByID($_REQUEST['ctID']);
-		$ctName = $_POST['ctName'];
-		$ctHandle = $_POST['ctHandle'];
-		$vs = Loader::helper('validation/strings');
-		
-		if (!$ctHandle) {
-			$this->error->add(t("Handle required."));
-		} else if (!$vs->handle($ctHandle)) {
-			$this->error->add(t('Handles must contain only letters, numbers or the underscore symbol.'));
+	public function page_type_deleted() {
+		$this->set('success', t('Page type deleted successfully.'));
+		$this->view();
+	}
+
+	public function edit($ptID = false) {
+		$cm = PageType::getByID($ptID);
+		$this->set('pagetype', $cm);
+	}
+
+	public function view() {
+		$pagetypes = PageType::getList();
+		$this->set('pagetypes', $pagetypes);
+	}
+
+	public function delete($ptID = false) {
+		$pagetype = PageType::getByID($ptID);
+		if (!is_object($pagetype)) {
+			$this->error->add(t('Invalid page type object.'));
 		}
-		
-		if (!$ctName) {
-			$this->error->add(t("Name required."));
-		} else if (preg_match('/[<>;{}?"`]/i', $ctName)) {
-			$this->error->add(t('Invalid characters in page type name.'));
+		if (!$this->token->validate('delete_page_type')) { 
+			$this->error->add(t($this->token->getErrorMessage()));
 		}
-		
-		
-		if (!$valt->validate('update_page_type')) {
-			$this->error->add($valt->getErrorMessage());
-		}
-		
 		if (!$this->error->has()) {
-			try {
-				if (is_object($ct)) {
-					$ct->update($_POST);
-					$this->redirect('/dashboard/pages/types', 'page_type_updated');
-				}		
-			} catch(Exception $e1) {
-				$this->error->add($e1->getMessage());
-			}
-		}	
-
-		$this->view();
-
-	
+			$pagetype->delete();
+			$this->redirect('/dashboard/pages/types', 'page_type_deleted');
+		}
 	}
+	
+	public function submit($ptID = false) {
+		$pagetype = PageType::getByID($ptID);
+		if (!is_object($pagetype)) {
+			$this->error->add(t('Invalid page type object.'));
+		}
+		if (!$this->token->validate('update_page_type')) { 
+			$this->error->add(t($this->token->getErrorMessage()));
+		}
 
+		$vs = Loader::helper('validation/strings');
+		$sec = Loader::helper('security');
+		$name = $sec->sanitizeString($this->post('ptName'));
+		$handle = $sec->sanitizeString($this->post('ptHandle'));
+		if (!$vs->notempty($name)) {
+			$this->error->add(t('You must specify a valid name for your page type.'));
+		}
+		if (!$vs->handle($handle)) {
+			$this->error->add(t('You must specify a valid handle for your page type.'));
+		}
+		$defaultTemplate = PageTemplate::getByID($this->post('ptDefaultPageTemplateID'));
+		if (!is_object($defaultTemplate)) {
+			$this->error->add(t('You must choose a valid default page template.'));
+		}
+		$templates = array();
+		if (is_array($_POST['ptPageTemplateID'])) {
+			foreach($this->post('ptPageTemplateID') as $pageTemplateID) {
+				$pt = PageTemplate::getByID($pageTemplateID);
+				if (is_object($pt)) {
+					$templates[] = $pt;
+				}
+			}
+		}
+
+		if (count($templates) == 0 && $this->post('ptAllowedPageTemplates') == 'C') {
+			$this->error->add(t('You must specify at least one page template.'));
+		}
+		$target = PageTypePublishTargetType::getByID($this->post('ptPublishTargetTypeID'));
+		if (!is_object($target)) {
+			$this->error->add(t('Invalid page type target type.'));
+		}
+		if (!$this->error->has()) {
+			$data = array(
+				'handle' => $handle,
+				'name' => $name,
+				'defaultTemplate' => $defaultTemplate,
+				'allowedTemplates' => $this->post('ptAllowedPageTemplates'),
+				'templates' => $templates
+			);
+			$pagetype->update($data);
+			$configuredTarget = $target->configurePageTypePublishTarget($pagetype, $this->post());
+			$pagetype->setConfiguredPageTypePublishTargetObject($configuredTarget);
+			$this->redirect('/dashboard/pages/types', 'page_type_updated');
+		}
+	}
 }

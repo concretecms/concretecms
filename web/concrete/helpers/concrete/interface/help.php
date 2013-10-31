@@ -92,4 +92,84 @@ class ConcreteInterfaceHelpHelper {
 		return $pages;
 	}
 
+	public function getPanels() {
+		$panels = array(
+			'/page/location' => t('Define where this page lives on your website. View and delegate what other pages are redirecting to this page.'),
+			'/page/composer' => t('Use the form below to create your page. You can also preview your page in edit mode at any time.'),
+			'/page/attributes' => t('This is the help text for attributes. This should probably be changed.'),
+			'/page/caching' => t('Full page caching can dramatically improve page speed for pages that don\'t need to have absolutely up-to-the-minute content.')
+		);
+		return $panels;
+	}
+
+	protected function getMessage($type, $identifier) {
+		switch($type) {
+			case 'panel':
+				$messages = $this->getPanels();
+				break;
+			case 'page':
+				$messages = $this->getPages();
+				break;
+			case 'blocktype':
+				$messages = $this->getBlockTypes();
+				break;
+		}
+
+		$message = $messages[$identifier];
+		return $message;
+	}
+
+
+	public function notify($type, $identifier) {
+		$message = $this->getMessage($type, $identifier);
+		if (!$message) {
+			return false;
+		}
+		$u = new User();
+		if ($u->isRegistered()) {
+			$disabledHelpNotifications = $u->config('DISABLED_HELP_NOTIFICATIONS');
+			if ($disabledHelpNotifications == 'all') {
+				return false;
+			} else if ($disabledHelpNotifications) {
+				$disabled = @unserialize($disabledHelpNotifications);
+				if (is_array($disabled) && isset($disabled[$type][$identifier])) {
+					return false;
+				}
+			}
+		}
+
+		$ok = t('Ok');
+		$hideAll = t('Hide All');
+		$html =<<<EOT
+		<div class="ccm-notification-help ccm-notification">
+			<i class="glyphicon glyphicon-info-sign"></i>
+			<div class="ccm-notification-inner">{$message}</div>
+			<div class="ccm-notification-actions">
+				<a href="#" data-help-notification-identifier="{$identifier}" data-help-notification-type="{$type}" data-dismiss="help-single">{$ok}</a>
+				<a href="#" data-help-notification-identifier="{$identifier}" data-help-notification-type="{$type}" data-dismiss="help-all">{$hideAll}</a>
+			</div>
+		</div>
+EOT;
+		print $html;
+	}
+
+	public function disableAllHelpNotifications(User $u) {
+		$u->saveConfig('DISABLED_HELP_NOTIFICATIONS', 'all');
+	}
+
+	public function disableThisHelpNotification(User $u, $type, $identifier) {
+		$message = $this->getMessage($type, $identifier);
+		if ($message) {
+			$disabledHelpNotifications = $u->config('DISABLED_HELP_NOTIFICATIONS');
+			if ($disabledHelpNotifications && $disabledHelpNotifications != 'all') {
+				$disabled = @unserialize($disabledHelpNotifications);
+			}
+			if (!is_array($disabled)) {
+				$disabled = array();
+			}
+			$disabled[$type][$identifier] = true;
+			$u->saveConfig('DISABLED_HELP_NOTIFICATIONS', serialize($disabled));
+		}
+	}
+
 }

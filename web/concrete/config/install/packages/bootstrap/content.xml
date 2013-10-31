@@ -3,14 +3,53 @@
     <themes>
         <theme handle="twitter_bootstrap" package="" activated="1"/>
     </themes>
+    <pagetemplates>
+        <pagetemplate handle="right_sidebar" name="Right Sidebar" icon="right_sidebar.png" package="" />
+        <pagetemplate handle="two_column" name="Two Column" icon="main.png" package="" />
+        <pagetemplate handle="full" name="Full" icon="main.png" package="" />
+    </pagetemplates>
     <pagetypes>
-        <pagetype icon="main.png" handle="full" name="Page" package="" />
-    </pagetypes>
-    <pagetypes>
-        <pagetype icon="main.png" handle="two_column" name="Two Column" package="" />
+    <pagetype name="Page" handle="page">
+      <pagetemplates type="all" default="full"/>
+      <target handle="all" package=""/>
+      <composer>
+      <formlayout>
+        <set name="Basics">
+          <control custom-template="" required="1" custom-label="Page Name" type="core_page_property" handle="name"/>
+          <control custom-template="" custom-label="" type="core_page_property" handle="description"/>
+          <control custom-template="" custom-label="" type="core_page_property" handle="url_slug"/>
+          <control custom-template="" custom-label="" type="core_page_property" handle="page_template"/>
+          <control custom-template="" custom-label="" type="core_page_property" handle="publish_target"/>
+        </set>
+        <set name="Content">
+          <control custom-template="" custom-label="Body" output-control-id="EcjltFnE" type="block" handle="content"/>
+        </set>
+      </formlayout>
+      <output>
+        <pagetemplate handle="right_sidebar">
+          <page>
+            <area name="Main">
+              <block type="core_page_type_composer_control_output" name="">
+                <control output-control-id="EcjltFnE"/>
+              </block>
+            </area>
+          </page>
+        </pagetemplate>
+        <pagetemplate handle="two_column">
+          <page>
+            <area name="Main">
+              <block type="core_page_type_composer_control_output" name="">
+                <control output-control-id="EcjltFnE"/>
+              </block>
+            </area>
+          </page>
+        </pagetemplate>
+      </output>
+    </composer>
+    </pagetype>
     </pagetypes>
     <pages>
-	<page name="Home" path="" filename="" pagetype="full" description="" package="">
+	<page name="Home" path="" filename="" template="two_column" pagetype="page" description="" package="">
 	</page>
     </pages>
 </concrete5-cif>

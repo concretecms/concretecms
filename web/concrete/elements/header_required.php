@@ -76,17 +76,12 @@ var CCM_REL = "<?php echo DIR_REL?>";
 </script>
 
 <?php
-$html = Loader::helper('html');
-$this->addHeaderItem($html->css('ccm.base.css'), 'CORE');
-$this->addHeaderItem($html->javascript('jquery.js'), 'CORE');
-$this->addHeaderItem($html->javascript('ccm_app/pubsub.js'), 'CORE');
-$this->addHeaderItem($html->javascript('image_editor/build/kinetic.js'), 'CORE');
-$this->addHeaderItem($html->javascript('image_editor/image_editor.js'), 'CORE');
+
+$v = View::getInstance();
+$v->requireAsset('javascript', 'jquery');
+
 if (defined('ENABLE_USER_PROFILES') && ENABLE_USER_PROFILES && $u->isRegistered()) {
-	$this->addFooterItem($html->javascript('bootstrap.js'));
-	$this->addFooterItem($html->javascript('ccm.profile.js'));
-	$this->addHeaderItem($html->css('ccm.app.css'));
-	$this->addHeaderItem($html->css('ccm.account.css'));
+	$v->requireAsset('core/account');
 	$this->addFooterItem('<script type="text/javascript">$(function() { ccm_enableUserProfileMenu(); });</script>');
 }
 
@@ -108,24 +103,20 @@ if($appleIconFID) {
 <?php
 if (is_object($cp)) {
 
-	if ($this->editingEnabled()) {
-		Loader::element('page_controls_header', array('cp' => $cp, 'c' => $c));
-	}
+	Loader::element('page_controls_header', array('cp' => $cp, 'c' => $c));
 
-	if ($this->areLinksDisabled()) {
-		$this->addHeaderItem('<script type="text/javascript">window.onload = function() { td = document.createElement("DIV"); td.style.position = "absolute"; td.style.top = "0px"; td.style.left = "0px"; td.style.width = "100%"; td.style.height = "100%"; td.style.zIndex = "1000";document.body.appendChild(td);}</script>', 'CORE');
-	}
 	$cih = Loader::helper('concrete/interface');
 	if ($cih->showNewsflowOverlay()) {
 		$this->addFooterItem('<script type="text/javascript">$(function() { ccm_showDashboardNewsflowWelcome(); });</script>');
 	}
 	if ($_COOKIE['ccmLoadAddBlockWindow'] && $c->isEditMode()) {
-		$this->addFooterItem('<script type="text/javascript">$(function() { setTimeout(function() { $("a[data-dialog=add-block]").click()}, 100); });</script>', 'CORE');
+		$this->addFooterItem('<script type="text/javascript">$(function() { setTimeout(function() { $("a[data-launch-panel=add-block]").click()}, 100); });</script>', 'CORE');
 		setcookie("ccmLoadAddBlockWindow", false, -1, DIR_REL . '/');
 	}
 }
 
-print $this->controller->outputHeaderItems();
+$v = View::getInstance();
+$v->markHeaderAssetPosition();
 $_trackingCodePosition = Config::get('SITE_TRACKING_CODE_POSITION');
 if (empty($disableTrackingCode) && $_trackingCodePosition === 'top') {
 	echo Config::get('SITE_TRACKING_CODE');

@@ -26,6 +26,10 @@ if (!$canContinue) {
 }
 	
 $c->loadVersionObject('RECENT');
+$request = Request::getInstance();
+$request->setCurrentPage($c);
+
+
 require_once(DIR_FILES_ELEMENTS_CORE . '/dialog_header.php');
 
 if ($ap->canAddBlock($bt)) {
@@ -36,17 +40,14 @@ if ($ap->canAddBlock($bt)) {
 		print '<br><br>';
 		print $jsh->button_js(t('Close'), 'jQuery.fn.dialog.closeTop()', 'left');
 	} else {
-		$bv = new BlockView();
+		$bv = new BlockView($bt);
+		$bv->setAreaObject($a);
 		// Handle special posted area parameters here
 		if (isset($_REQUEST['arGridColumnSpan'])) {
 			$a->setAreaGridColumnSpan(intval($_REQUEST['arGridColumnSpan']));
 		}
-		
-		$bv->render($bt, 'add', array(
-			'a' => $a,
-			'cp' => $cp,
-			'ap' => $ap
-		));
+		$bv->addScopeItems(array('a' => $a, 'cp' => $cp, 'ap' => $ap));
+		$bv->render('add');
 	}
 }
 

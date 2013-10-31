@@ -2,7 +2,7 @@
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
-class Concrete5_Controller_Dashboard_System_Basics_Timezone extends DashboardBaseController {
+class Concrete5_Controller_Page_Dashboard_System_Basics_Timezone extends DashboardController {
 
      public function view(){
           $this->set('user_timezones',ENABLE_USER_TIMEZONES);

@@ -14,7 +14,7 @@ if ($_REQUEST['cvID'] > 0) {
 	$c = Page::getByID($_REQUEST['cID']);
 }
 $cp = new Permissions($c);
-$req = Request::get();
+$req = Request::getInstance();
 $req->setCurrentPage($c);
 
 $valt = Loader::helper('validation/token');
@@ -298,7 +298,7 @@ $(function() {
 
 			sbitem = new ccm_statusBarItem();
 			sbitem.setCSSClass('info');
-			sbitem.setDescription('<?= t('Page Defaults for %s Page Type. All edits take effect immediately.', $c->getCollectionTypeName()) ?>');
+			sbitem.setDescription('<?= t('Page Defaults for %s Page Type. All edits take effect immediately.', $c->getPageTypeName()) ?>');
 			ccm_statusBar.addItem(sbitem);		
 		<? } ?>
 		<?

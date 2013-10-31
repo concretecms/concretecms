@@ -94,7 +94,7 @@ foreach($searchFieldAttributes as $ak) {
 		</span>
 		
 		<span class="ccm-search-option"  search-field="theme">
-			<select name="ptID">
+			<select name="pThemeID">
 			<? $themes = PageTheme::getList(); ?>
 			<? foreach($themes as $pt) { ?>
 				<option value="<?=$pt->getThemeID()?>"><?=$pt->getThemeName()?></option>			
@@ -138,16 +138,16 @@ foreach($searchFieldAttributes as $ak) {
 		</div>
 
 		<div class="control-inline">
-		<?=$form->label('ctID', t('Page Type'))?>
+		<?=$form->label('ptID', t('Page Type'))?>
 			<? 
 			Loader::model('collection_types');
-			$ctl = CollectionType::getList();
+			$ctl = PageType::getList();
 			$ctypes = array('' => t('** All'));
 			foreach($ctl as $ct) {
-				$ctypes[$ct->getCollectionTypeID()] = $ct->getCollectionTypeName();
+				$ctypes[$ct->getPageTypeID()] = $ct->getPageTypeName();
 			}
 			
-			print $form->select('ctID', $ctypes, $searchRequest['ctID'], array('style' => 'width:120px'))?>
+			print $form->select('ptID', $ctypes, $searchRequest['ptID'], array('style' => 'width:120px'))?>
 
 		</div>
 

@@ -9,44 +9,47 @@ var CCMToolbar = function() {
 	var $searchResults = $('#ccm-intelligent-search-results');
 	var remotesearchquery, ajaxtimer;
 
-	setupToolbarMenus = function() {
-		$('a[data-toggle=ccm-toolbar-hover-menu]').hoverIntent(function() {
-			$('.ccm-toolbar-hover-menu').hide();
-			$($(this).attr('data-toggle-menu')).show();
-		}, function() {
+	setupHelpNotifications = function() {
+		$(document.body).on('click', 'a[data-dismiss]', function() {
+			var action = ($(this).attr('data-dismiss') == 'help-all') ? 'all' : 'this';
+			$(this).parentsUntil('.ccm-notification-help').parent().queue(function() {
+				$(this).css("opacity", 0);
+				$(this).dequeue();
+			}).delay(500).queue(function() {
+				$(this).remove();
+				$(this).dequeue();
+			});
 
+			$.ajax({
+				type: 'post',
+				data: {
+					'type': $(this).attr('data-help-notification-type'),
+					'identifier': $(this).attr('data-help-notification-identifier'),
+					'action': action,
+					'ccm_token': CCM_SECURITY_TOKEN
+				},
+				url: CCM_TOOLS_PATH + '/help/dismiss',
+				success: function(r) {}
+			});
 		});
+	}
+	setupTooltips = function() {
+		if ($("#ccm-tooltip-holder").length == 0) {
+			$('<div />').attr('id','ccm-tooltip-holder').attr('class', 'ccm-ui').prependTo(document.body);
+		}
+		$('.launch-tooltip').tooltip({'container': '#ccm-tooltip-holder'});
+	}
 
-
-		$(document).on('click.ccm-toolbar', function() {
-			$('.ccm-toolbar-hover-menu').hide();
+	setupPanels = function() {
+		$('<div />', {'id': 'ccm-panel-overlay'}).appendTo($(document.body));
+		$('[data-launch-panel]').unbind().on('click', function() {
+			var panelID = $(this).attr('data-launch-panel');
+			$(this).toggleClass('ccm-launch-panel-active');
+			var panel = CCMPanelManager.getByIdentifier(panelID);
+			panel.toggle();
+			return false;
 		});
-
-		$toolbar.find('#ccm-toolbar').on('click', function(e) {
-			e.stopPropagation(); // so we don't close menus if we click on the toolbar buttons themselves.
-		});
-
-		$toolbar.find('#ccm-exit-edit-mode-comment form').on('click', function(e) {
-			e.stopPropagation(); // so we don't close menus if we click on the toolbar buttons themselves.
-		});
-
-		$($toolbar.find('.ccm-toolbar-hover-menu a')).on('click', function() {
-			$('.ccm-toolbar-hover-menu').hide();
-		});
-
-		$toolbar.find('li.pull-left').last().addClass('ccm-toolbar-last-left-child');
-		$toolbar.find('#ccm-exit-edit-mode-publish-menu a').on('click', function() {
-			switch($(this).data('publish-action')) {
-				case 'approve':
-					$('#ccm-approve-field').val('APPROVE');
-					break;
-				case 'discard':
-					$('#ccm-approve-field').val('DISCARD');
-					break;
-			}
-
-			$('#ccm-exit-edit-mode-comment form').submit();
-		});
+		$('html').addClass('ccm-panel-ready');
 	}
 
 	setupStatusBar = function() {
@@ -233,9 +236,11 @@ var CCMToolbar = function() {
 
 				$toolbar.find('.dialog-launch').dialog();
 
-				setupToolbarMenus();				
 				setupStatusBar();
 				setupIntelligentSearch();
+				setupPanels();
+				setupTooltips();
+				setupHelpNotifications();
 
 				// make sure that dashboard dropdown doesn't get dismissed if you mis-click inside it;
 				$('#ccm-toolbar-menu-dashboard').on('click', function(e) {
@@ -244,9 +249,28 @@ var CCMToolbar = function() {
 			}
 		},
 
+		disable: function() {
+			$('#ccm-toolbar-disabled').remove();
+			$('<div />', {'id': 'ccm-toolbar-disabled'}).appendTo(document.body);
+			setTimeout(function() {
+				$('#ccm-toolbar-disabled').css('opacity', 1);
+			}, 10);
+		},
+
+		enable: function() {
+			$('#ccm-toolbar-disabled').remove();
+		},
+
 		disableDirectExit: function() {
-			$('li.ccm-toolbar-page-edit a').attr('data-toggle-menu', '#ccm-exit-edit-mode-comment');
-			setupToolbarMenus();				
+			var $link = $('li.ccm-toolbar-page-edit a');
+			if ($link.attr('data-launch-panel') != 'check-in') {
+				$link.attr('data-launch-panel', 'check-in').on('click', function() {
+					$(this).toggleClass('ccm-launch-panel-active');
+					var panel = CCMPanelManager.getByIdentifier('check-in');
+					panel.toggle();
+					return false;
+				});
+			}
 		}
 
 

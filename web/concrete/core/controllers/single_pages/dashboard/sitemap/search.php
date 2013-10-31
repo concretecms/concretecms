@@ -1,10 +1,14 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Controller_Dashboard_Sitemap_Search extends Controller {
+class Concrete5_Controller_Page_Dashboard_Sitemap_Search extends DashboardController {
 	
 	public $helpers = array('form');
 	
 	public function view() {
+
+		$v = View::getInstance();
+		$v->requireAsset('core/sitemap');
+
 		$html = Loader::helper('html');
 		
 		$pageList = $this->getRequestedSearchResults();
@@ -53,8 +57,8 @@ class Concrete5_Controller_Dashboard_Sitemap_Search extends Controller {
 			$pageList->setItemsPerPage($req['numResults']);
 		}
 
-		if ($req['ctID']) {
-			$pageList->filterByCollectionTypeID($req['ctID']);
+		if ($req['ptID']) {
+			$pageList->filterByPageTypeID($req['ptID']);
 		}
 
 		if (is_array($req['selectedSearchField'])) {
@@ -84,7 +88,7 @@ class Concrete5_Controller_Dashboard_Sitemap_Search extends Controller {
 							}
 							break;
 						case 'theme':
-							$pageList->filter('ptID', $_REQUEST['ptID']);
+							$pageList->filter('pThemeID', $_REQUEST['pThemeID']);
 							break;
 						case 'parent':
 							if (isset($req['_cParentAll'])) {

@@ -36,7 +36,8 @@ class Concrete5_Helper_Form_Color {
 	public function output($fieldFormName, $fieldLabel, $value = null, $includeJavaScript = true) {
 		$html = '';
 		$form = Loader::helper('form');
-
+		$view = View::getInstance();
+		$view->requireAsset('jquery/colorpicker');
 		$html .= '<div class="ccm-color-swatch-wrapper"><div class="ccm-color-swatch"><div id="f' . $fieldFormName . '" hex-color="' . $value . '" style="background-color:' . $value . '"></div></div></div>';
 		$html .= $form->hidden($fieldFormName, $value);
 		$html .= $form->label($fieldFormName, $fieldLabel);
@@ -48,8 +49,9 @@ class Concrete5_Helper_Form_Color {
 					var c" .$fieldFormName. " = f" .$fieldFormName. "Div.attr('hex-color'); 
 					f" .$fieldFormName. "Div.ColorPicker({
 						color: c" .$fieldFormName. ",  
-						onSubmit: function(hsb, hex, rgb, cal) { 
+						onSubmit: function(hsb, hex, rgb, cal) {
 							$('input[name=" . $fieldFormName . "]').val('#' + hex);				
+							$('input[name=".$fieldFormName."]').trigger('change');
 							$('div#f" . $fieldFormName. "').css('backgroundColor', '#' + hex); 
 							cal.hide();
 						},  

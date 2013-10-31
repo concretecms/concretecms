@@ -1,10 +1,11 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied."); 
 
-class Concrete5_Controller_Account_Members_Directory extends AccountController {
+class Concrete5_Controller_Page_Account_Members_Directory extends AccountPageController {
 
 	public function on_start() {
 		parent::on_start();
+		$this->requireAsset('core/frontend/pagination');
 		$this->userList = new UserList(); 
 		$this->userList->sortBy('uName', 'asc'); 
 	}

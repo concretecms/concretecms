@@ -54,7 +54,7 @@ $(function() {
 		<? } ?>
 		<h3><?=t('Are you sure you wish to delete this page?')?></h3>
 		<? if ($u->isSuperUser() && $numChildren > 0) { ?>
-			<h4><?=t2('This will remove %s child page.', 'This will remove %s child pages.', $numChildren, $numChildren)?></h4>
+			<h5><?=t2('This will remove %s child page.', 'This will remove %s child pages.', $numChildren, $numChildren)?></h5>
 		<? } ?>
 		
 		<? if (ENABLE_TRASH_CAN) { ?>

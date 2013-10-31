@@ -1,6 +1,6 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Controller_Dashboard_Workflow_List extends DashboardBaseController {
+class Concrete5_Controller_Page_Dashboard_Workflow_List extends DashboardController {
 	
 	public $helpers = array('form');
 	

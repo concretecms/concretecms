@@ -7,10 +7,10 @@ if ($controller->getTask() == 'add') {
 	$itemsPerPage = 20;
 }
 
-$composers = Composer::getList();
+$pagetypes = PageType::getList();
 $types = array();
-foreach($composers as $cmp) {
-	$types[$cmp->getComposerID()] = $cmp->getComposerName();
+foreach($pagetypes as $pt) {
+	$types[$pt->getPageTypeID()] = $pt->getPageTypeName();
 }
 
 ?>
@@ -54,9 +54,9 @@ foreach($composers as $cmp) {
 		</div>
 	</div>
 	<div class="control-group" data-row="enableNewConversations">
-		<label class="control-label"><?=t('Create Conversation using Composer')?></label>
+		<label class="control-label"><?=t('Create Conversation using Page Type')?></label>
 		<div class="controls" data-select="page">
-			<?=$form->select('cmpID', $types, $cmpID)?>
+			<?=$form->select('ptID', $types, $ptID)?>
 		</div>
 	</div>
 </fieldset>

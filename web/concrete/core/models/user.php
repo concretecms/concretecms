@@ -173,7 +173,7 @@
 					$this->loadError(USER_INVALID);
 				}
 			} else {
-				$req = Request::get();
+				$req = Request::getInstance();
 				if ($req->hasCustomRequestUser()) {
 					$this->uID = null;
 					$this->uName = null;
@@ -181,7 +181,7 @@
 					$this->uDefaultLanguage = null;
 					$this->uTimezone = null;
 					$ux = $req->getCustomRequestUser();
-					if ($ux) {
+					if ($ux && is_object($ux)) {
 						$this->uID = $ux->getUserID();
 						$this->uName = $ux->getUserName();
 						$this->superUser = $ux->getUserID() == USER_SUPER_ID;
@@ -373,7 +373,7 @@
 		}
 		
 		public function getUserAccessEntityObjects() {
-			$req = Request::get();
+			$req = Request::getInstance();
 			if ($req->hasCustomRequestUser()) {
 				// we bypass session-saving performance
 				// and we don't save them in session.
@@ -391,7 +391,7 @@
 		}
 		
 		function _getUserGroups($disableLogin = false) {
-			$req = Request::get();
+			$req = Request::getInstance();
 			if ((!empty($_SESSION['uGroups'])) && (!$disableLogin) && (!$req->hasCustomRequestUser())) {
 				$ug = $_SESSION['uGroups'];
 			} else {
@@ -586,6 +586,14 @@
 				$val = $db->GetOne("select cfValue from Config where uID = ? and cfKey = ?", array($this->getUserID(), $cfKey));
 				return $val;
 			}
+		}
+
+		public function markPreviousFrontendPage(Page $c) {
+			$_SESSION['frontendPreviousPageID'] = $c->getCollectionID();
+		}
+
+		public function getPreviousFrontendPageID() {
+			return $_SESSION['frontendPreviousPageID'];
 		}
 		
 		public function saveConfig($cfKey, $cfValue) {

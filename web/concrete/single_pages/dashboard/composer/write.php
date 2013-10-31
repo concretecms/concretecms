@@ -1,15 +1,15 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?>
 
 
-<? if (is_object($composer)) { ?>
+<? if (is_object($pagetype)) { ?>
 
-	<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper($composer->getComposerName(), false, false, false)?>
+	<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper($pagetype->getPageTypeName(), false, false, false)?>
 	<form method="post" data-form="composer" class="form-horizontal">
 	<div class="ccm-pane-body">
-		<? Loader::helper('composer/form')->display($composer, $draft); ?>
+		<? Loader::helper('composer')->display($pagetype, $draft); ?>
 	</div>
 	<div class="ccm-pane-footer">
-		<? Loader::helper('composer/form')->displayButtons($composer, $draft); ?>
+		<? Loader::helper('composer')->displayButtons($pagetype, $draft); ?>
 	</div>
 
 
@@ -18,24 +18,23 @@
 
 	<?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(false)?>
 
-
 <? } else { ?>
 
 	<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Composer'), false, 'span10 offset1')?>
 
-	<? if (count($composers) > 0) { ?>
+	<? if (count($pagetypes) > 0) { ?>
 	<h3><?=t('What would you like to write?')?></h3>
 	<ul class="item-select-list">
-	<? foreach($composers as $cmp) { 
-		$ccp = new Permissions($cmp);
-		if ($ccp->canAccessComposer()) { 
+	<? foreach($pagetypes as $pt) { 
+		$ccp = new Permissions($pt);
+		if ($ccp->canEditPageTypeInComposer()) { 
 		?>
-		<li class="item-select-page"><a href="<?=$this->url('/dashboard/composer/write', 'composer', $cmp->getComposerID())?>"><?=$cmp->getComposerName()?></a></li>
+		<li class="item-select-page"><a href="<?=$this->url('/dashboard/composer/write', 'composer', $pt->getPageTypeID())?>"><?=$pt->getPageTypeName()?></a></li>
 		<? } ?>
 	<? } ?>
 	</ul>
 	<? } else { ?>
-		<p><?=t('You have not setup any page types for Composer.')?></p>
+		<p><?=t('You do not have any page types.')?></p>
 	<? } ?>
 
 

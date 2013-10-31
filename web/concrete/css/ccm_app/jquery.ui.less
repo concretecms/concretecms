@@ -587,7 +587,7 @@ position: fixed;
 }
 
 .ui-widget-overlay {
-  background: rgba(0,0,0,0.4); 
+  background: rgba(255,255,255,0.85); 
   opacity: 1;
 }
 
@@ -597,10 +597,8 @@ position: fixed;
 }
 */
 
-/* concrete5 changes this */
-
 .ui-front {
-  z-index: 1005 !important;
+  z-index: 10000 !important;
 }
 
 /* end concrete5 */
@@ -936,10 +934,10 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
   outline: 0; 
   background-clip: padding-box;
   background-color: #FFFFFF;
-  border: 1px solid #888;
+  border: 1px solid #a9b7c2;
   border-radius: 4px 4px 4px 4px;
   /* concrete5 */
-  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.4);
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.2);
   /* concrete5 */
   /*left: 50%;
   margin-left: -280px;*/
@@ -950,15 +948,18 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
   /* concrete5 */
   /*z-index: 1050; */
   z-index: 999;
+  -webkit-transform: translate3d(0px, 0, 0);
+
   /* end concrete5 */
+
 }
 
 /* concrete5 */
 .ccm-dialog-opening {
-  -webkit-transition: opacity 0.2s ease-in-out; 
-  -moz-transition: opacity 0.2s ease-in-out; 
-  -o-transition: opacity 0.2s ease-in-out; 
-  transition: opacity 0.2s ease-in-out; 
+  -webkit-transition: opacity 0.3s ease-in; 
+  -moz-transition: opacity 0.3s ease-in; 
+  -o-transition: opacity 0.3s ease-in; 
+  transition: opacity 0.3s ease-in; 
   opacity: 0;
 }
 
@@ -999,7 +1000,7 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
   position: absolute;
   opacity: 0.5;
   right: 17px;
-  top: 16px;
+  top: 19px;
   background:none;
   border-width: 0;
   border:none;
@@ -1026,6 +1027,7 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
   background:none;
   border-width: 0;
   border:none;
+  font-size: 14px;
   box-shadow: none;
 }
 
@@ -1065,7 +1067,7 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
   border-width: 1px 0 0 0;
   background-image: none;
   margin: .5em 0 0 0;
-  background-color: #f5f5f5;
+  background-color: #fff;
   /* concrete5 */
   /*
   padding: 5px 15px 5px;
@@ -1074,7 +1076,7 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
 
   /* end concrete5 */
 
-  border-top: 1px solid #ddd;
+  border-top: 1px solid #c6d0d6;
   -webkit-border-radius: 0 0 6px 6px;
   -moz-border-radius: 0 0 6px 6px;
   border-radius: 0 0 6px 6px;

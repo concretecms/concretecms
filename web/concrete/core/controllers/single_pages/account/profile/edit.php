@@ -1,7 +1,7 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
 
-class Concrete5_Controller_Account_Profile_Edit extends AccountController {
+class Concrete5_Controller_Page_Account_Profile_Edit extends AccountPageController {
 	
 	public function view() {
 		$u = new User();

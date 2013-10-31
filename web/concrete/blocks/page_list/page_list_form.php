@@ -13,14 +13,14 @@
 	  <input type="text" name="num" value="<?=$num?>" style="width: 30px">
 	  <?=t('pages of type')?>
 	  <?
-			$ctArray = CollectionType::getList();
+			$ctArray = PageType::getList();
 	
 			if (is_array($ctArray)) { ?>
-	  <select name="ctID" id="selectCTID">
+	  <select name="ptID" id="selectCTID">
 		<option value="0">** <?php echo t('All')?> **</option>
 		<? foreach ($ctArray as $ct) { ?>
-		<option value="<?=$ct->getCollectionTypeID()?>" <? if ($ctID == $ct->getCollectionTypeID()) { ?> selected <? } ?>>
-		<?=$ct->getCollectionTypeName()?>
+		<option value="<?=$ct->getPageTypeID()?>" <? if ($ptID == $ct->getPageTypeID()) { ?> selected <? } ?>>
+		<?=$ct->getPageTypeName()?>
 		</option>
 		<? } ?>
 	  </select>

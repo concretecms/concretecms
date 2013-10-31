@@ -1,5 +1,5 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Controller_Dashboard_Pages_Single extends DashboardBaseController {
+class Concrete5_Controller_Page_Dashboard_Pages_Single extends DashboardController {
 
 	public function view($message = null, $error = null) {
 		Loader::model('single_page');

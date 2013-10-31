@@ -43,8 +43,8 @@
 					if (this.lutype == 'blocktypes') {
 
 					} else if (this.lutype == 'attributes') {
-						this.list.children('li').addClass('ccm-attribute-available'); 
-						this.list.children('li').removeClass('ccm-attribute-selected'); 
+						this.list.find('h5').show();
+						this.list.find('li').show();
 					} else if (this.lutype == 'stacks') {
 						this.list.children('li').addClass('ccm-stack-available'); 
 						this.list.children('li').removeClass('ccm-stack-selected'); 
@@ -107,12 +107,19 @@
 				this.list.children('li').hide();
 				$.each(scores, function(i, score) { self.rows[score[1]].show(); });
 			} else if (this.lutype == 'attributes') {
+				/*
 				this.list.children('li').removeClass('ccm-attribute-available');
 				this.list.children('li').removeClass('ccm-attribute-selected');
 				this.list.children('li').removeClass('ccm-item-selected');
 				$.each(scores, function(i, score) { self.rows[score[1]].addClass('ccm-attribute-available'); });
 				this.list.children('li.item-select-list-header').removeClass("ccm-attribute-available");
 				$(this.list.find('li.ccm-attribute-available')[0]).addClass('ccm-item-selected');
+				*/
+				this.list.find('h5').hide();
+				this.list.find('li').hide();
+				$.each(scores, function(i, score) { 
+					self.rows[score[1]].show();
+				});
 
 			} else if (this.lutype == 'stacks') {
 				this.list.children('li').removeClass('ccm-stack-available');

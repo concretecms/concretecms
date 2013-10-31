@@ -78,13 +78,6 @@ class Concrete5_Controller_Block_Form extends BlockController {
 		}
 	}
 	
-	public function on_page_view() {
-		if ($this->viewRequiresJqueryUI()) {
-			$this->addHeaderItem(Loader::helper('html')->css('jquery.ui.css'));
-			$this->addFooterItem(Loader::helper('html')->javascript('jquery.ui.js'));
-		}
-	}
-	
 	//Internal helper function
 	private function viewRequiresJqueryUI() {
 		$whereInputTypes = "inputType = 'date' OR inputType = 'datetime'";
@@ -94,6 +87,16 @@ class Concrete5_Controller_Block_Form extends BlockController {
 		return (bool)$JQUIFieldCount;
 	}
 	
+	public function view() {
+		if ($this->viewRequiresJqueryUI()) {
+			$this->requireAsset('css', 'jqueryui');
+			$this->requireAsset('javascript', 'jqueryui');
+		}
+		$this->requireAsset('css', 'core/frontend/errors');
+		if ($this->displayCaptcha) {
+			$this->requireAsset('css', 'core/frontend/captcha');
+		}
+	}
 	public function getDefaultThankYouMsg() {
 		return t("Thanks!");
 	}

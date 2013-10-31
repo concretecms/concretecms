@@ -11,6 +11,32 @@
 
     	customEvents: [],
 
+    	registerEvent: function(requestID, eventName, callback) {
+	    	if (this.eventListenerExists(requestID, 'onSelectNode')) {
+				for (i = 0; i < this.customEvents.length; i++) {
+					var eobj = this.customEvents[i];
+					if (eobj.requestID == requestID && eobj.eventName == eventName) {
+						eobj.callback = callback;
+					}
+				}
+	    	} else {
+	    		this.customEvents.push({
+	    			'requestID': requestID,
+	    			'callback': callback,
+	    			'eventName': eventName
+	    		});
+	    	}
+    	},
+
+    	triggerEvent: function(requestID, eventName, arguments) {
+			for (i = 0; i < this.customEvents.length; i++) {
+				var eobj = this.customEvents[i];
+				if (eobj.requestID == requestID && eobj.eventName == eventName) {
+					eobj.callback.apply(null, arguments);
+				}
+			}
+    	},
+
     	reloadNode: function(node, options, onComplete) {
     		var obj = this;
     		var params = {
@@ -31,7 +57,7 @@
     	},
 
 
-		eventListenerExists: function(eventName, requestID) {
+		eventListenerExists: function(requestID, eventName) {
 			for (i = 0; i < this.customEvents.length; i++) {
 				var eobj = this.customEvents[i];
 				if (eobj.requestID == requestID && eobj.eventName == eventName) {
@@ -191,7 +217,11 @@
 
     },
 
-	getMenu: function(data) {
+    onSelectNode: function(requestID, callback) {
+    	methods.private.registerEvent(requestID, 'onSelectNode', callback);
+    },
+
+	getMenu: function(data, options) {
 		var menu = '<div class="ccm-sitemap-menu popover fade"><div class="arrow"></div><div class="popover-inner">';
 		menu += '<ul class="dropdown-menu">';
 		if (data.isTrash && data.numSubpages) {
@@ -207,7 +237,7 @@
 				menu += '<li><a dialog-width="350" dialog-height="170" dialog-title="' + ccmi18n_sitemap.editExternalLink + '" dialog-modal="false" dialog-append-buttons="true" href="' + CCM_TOOLS_PATH + '/edit_collection_popup.php?rel=SITEMAP&cID=' + data.cID + '&ctask=edit_external">' + ccmi18n_sitemap.editExternalLink + '<\/a><\/li>';
 			}
 			if (data.canDelete) {
-				menu += '<li><a dialog-width="360" dialog-height="150" dialog-modal="false" dialog-title="' + ccmi18n_sitemap.deleteExternalLink + '" href="' + CCM_TOOLS_PATH + '/edit_collection_popup.php?rel=SITEMAP&cID=' + data.cID + '&display_mode=' + data.display_mode + '&select_mode=' + data.select_mode + '&ctask=delete_external">' + ccmi18n_sitemap.deleteExternalLink + '<\/a><\/li>';
+				menu += '<li><a dialog-width="360" dialog-height="150" dialog-modal="false" dialog-title="' + ccmi18n_sitemap.deleteExternalLink + '" href="' + CCM_TOOLS_PATH + '/edit_collection_popup.php?rel=SITEMAP&cID=' + data.cID + '&ctask=delete_external">' + ccmi18n_sitemap.deleteExternalLink + '<\/a><\/li>';
 			}
 			menu += '<li><a onclick="$.fn.ccmsitemap(\'deleteForever\', this, ' + data.cID + ')" href="javascript:void(0)">' + ccmi18n_sitemap.deletePageForever + '<\/a><\/li>';
 		} else {
@@ -233,25 +263,21 @@
 				menu += '<li><a class="dialog-launch" dialog-on-close="$.fn.ccmsitemap(\'exitEditMode\', ' + data.cID + ')" dialog-width="640" dialog-height="340" dialog-modal="false" dialog-title="' + ccmi18n_sitemap.pageVersions + '" href="' + CCM_TOOLS_PATH + '/versions.php?rel=SITEMAP&cID=' + data.cID + '">' + ccmi18n_sitemap.pageVersions + '<\/a><\/li>';
 			}
 			if (data.canDeletePage) { 
-				menu += '<li><a class="dialog-launch" dialog-on-close="$.fn.ccmsitemap(\'exitEditMode\', ' + data.cID + ')" dialog-width="360" dialog-height="150" dialog-modal="false" dialog-title="' + ccmi18n_sitemap.deletePage + '" href="' + CCM_TOOLS_PATH + '/edit_collection_popup.php?rel=SITEMAP&cID=' + data.cID + '&display_mode=' + data.display_mode + '&select_mode=' + data.select_mode + '&ctask=delete">' + ccmi18n_sitemap.deletePage + '<\/a><\/li>';
+				menu += '<li><a class="dialog-launch" dialog-on-close="$.fn.ccmsitemap(\'exitEditMode\', ' + data.cID + ')" dialog-width="360" dialog-height="150" dialog-modal="false" dialog-title="' + ccmi18n_sitemap.deletePage + '" href="' + CCM_TOOLS_PATH + '/edit_collection_popup.php?rel=SITEMAP&cID=' + data.cID + '&ctask=delete">' + ccmi18n_sitemap.deletePage + '<\/a><\/li>';
 			}
-			if (data.display_mode == 'explore' || data.display_mode == 'search') {
+			if (options.displaySingleLevel) {
 				menu += '<li class=\"divide\"><\/li>';
 				menu += '<li><a class="dialog-launch" dialog-width="90%" dialog-height="70%" dialog-modal="false" dialog-title="' + ccmi18n_sitemap.moveCopyPage + '" href="' + CCM_TOOLS_PATH + '/sitemap_search_selector?sitemap_select_mode=move_copy_delete&cID=' + data.cID + '" id="menuMoveCopy' + data.cID + '">' + ccmi18n_sitemap.moveCopyPage + '<\/a><\/li>';
-				if (data.display_mode == 'explore') {
-					menu += '<li><a href="' + CCM_DISPATCHER_FILENAME + '/dashboard/sitemap/explore?cNodeID=' + data.cID + '&task=send_to_top">' + ccmi18n_sitemap.sendToTop + '<\/a><\/li>';
-					menu += '<li><a href="' + CCM_DISPATCHER_FILENAME + '/dashboard/sitemap/explore?cNodeID=' + data.cID + '&task=send_to_bottom">' + ccmi18n_sitemap.sendToBottom + '<\/a><\/li>';
-				}
+				menu += '<li><a href="' + CCM_DISPATCHER_FILENAME + '/dashboard/sitemap/explore?cNodeID=' + data.cID + '&task=send_to_top">' + ccmi18n_sitemap.sendToTop + '<\/a><\/li>';
+				menu += '<li><a href="' + CCM_DISPATCHER_FILENAME + '/dashboard/sitemap/explore?cNodeID=' + data.cID + '&task=send_to_bottom">' + ccmi18n_sitemap.sendToBottom + '<\/a><\/li>';
 			}
 			if (data.numSubpages > 0) {
 				menu += '<li class=\"divider\"><\/li>';
 
 				var searchURL = CCM_DISPATCHER_FILENAME + '/dashboard/sitemap/search/?selectedSearchField[]=parent&cParentAll=1&cParentIDSearchField=' + data.cID;
-			
-				if (data.display_mode == 'full' || data.display_mode == '' || data.display_mode == 'explore') {
-					menu += '<li><a class="ccm-menu-icon ccm-icon-search-pages" href="' + searchURL + '">' + ccmi18n_sitemap.searchPages + '<\/a><\/li>';
-				}
-				if (data.display_mode != 'explore') {
+				
+				menu += '<li><a class="ccm-menu-icon ccm-icon-search-pages" href="' + searchURL + '">' + ccmi18n_sitemap.searchPages + '<\/a><\/li>';
+				if (!options.displaySingleLevel) {
 					menu += '<li><a href="' + CCM_DISPATCHER_FILENAME + '/dashboard/sitemap/explore/-/' + data.cID + '">' + ccmi18n_sitemap.explorePages + '<\/a><\/li>';
 				}
 			
@@ -340,8 +366,6 @@
 		var dragMode = $('#dragMode').val();
 		var destSibling = $('#destSibling').val();
 		var ctask = $("input[name=ctask]:checked").val();
-		var display_mode = $("input[name=display_mode]").val();
-		var select_mode = $("input[name=select_mode]").val();
 		var copyAll = $("input[name=copyAll]:checked").val();
 		var saveOldPagePath = $("input[name=saveOldPagePath]:checked").val();
 
@@ -388,14 +412,6 @@
 		}
 	},
 
-	onNodeSelected: function(requestID, onComplete) {
-		methods.private.customEvents.push({
-			'eventName': 'selectNode',
-			'requestID': requestID,
-			'onComplete': onComplete
-		});
-	},
-
 	init: function(options) {
 
     	$('#ccm-show-all-pages-cb').on('click', function() {
@@ -409,7 +425,8 @@
 			displayNodePagination: false,
 			cParentID: 0,
 			requestID: (new Date().getTime()),
-			displaySingleLevel: false
+			displaySingleLevel: false,
+			onSelectNode: false
 		}, options);
 
 		var doPersist = true;
@@ -427,14 +444,7 @@
     	$.fn.ccmmenu.enable();
 		return this.each(function() {
 			$(this).attr('data-sitemap', 'container').attr('data-sitemap-request-id', settings.requestID);
-			// setup events
-			for (i = 0; i < methods.private.customEvents.length; i++) {
-				var eobj = methods.private.customEvents[i];
-				$('[data-sitemap-request-id=' + eobj.requestID + ']').on('selectNode', function(sitemapEvent, mouseEvent, node) {
-					eobj.onComplete(node);
-					return true;
-				});
-			}
+
 			var $obj = $(this);
 			$(this).data('options', settings);
 			$(this).dynatree({
@@ -475,7 +485,16 @@
 				},
 				onClick: function(node, e) {
 					if (node.getEventTargetType(e) == "title" && node.data.cID) {
-						$.fn.ccmsitemap('triggerEvent', 'startSelectNode', [e, node, settings.requestID]);
+						if (settings.onSelectNode) {
+							settings.onSelectNode(node);
+						} else if (methods.private.eventListenerExists(settings.requestID, 'onSelectNode')) {
+							methods.private.triggerEvent(settings.requestID, 'onSelectNode', [node]);
+						} else {
+							var $menu = methods.getMenu(node.data, settings);
+							if ($menu) {
+								$.fn.ccmmenu.showmenu(e, $menu);
+							}
+						}
 					} else if (node.data.href) {
 						window.location.href = node.data.href;
 					}
@@ -533,29 +552,14 @@
 				});
 			}
 
-			$(this).on('startSelectNode', function(sitemapEvent, mouseEvent, node, requestID) {
-				if (methods.private.eventListenerExists('selectNode', requestID)) {
-					var r = $.fn.ccmsitemap('triggerEvent', 'selectNode', [mouseEvent, node], requestID);
-				} else {
-					var $menu = methods.getMenu(node.data);
-					if ($menu) {
-						$.fn.ccmmenu.showmenu(mouseEvent, $menu);
-					}
-				}
-			});
-
 			$(this).on('deleteRequestComplete', function(e, response) {
 				if (response.deferred) {
 		 			ccmAlert.hud(ccmi18n_sitemap.deletePageSuccessDeferredMsg, 2000, 'delete_small', ccmi18n_sitemap.deletePage);
 				} else {
 		 			ccmAlert.hud(ccmi18n_sitemap.deletePageSuccessMsg, 2000, 'delete_small', ccmi18n_sitemap.deletePage);
-		 			if (response.display_mode == 'explore') {
-						ccmSitemapExploreNode(response.instance_id, 'explore', response.select_mode, response.cParentID);
-					} else {
-						var node = $('[data-sitemap=container]').dynatree('getActiveNode');
-						var parent = node.parent;
-						methods.private.reloadNode(parent, $(this).data('options'));
-					}
+		 			var node = $('[data-sitemap=container]').dynatree('getActiveNode');
+					var parent = node.parent;
+					methods.private.reloadNode(parent, $(this).data('options'));
 				}
 			});
 

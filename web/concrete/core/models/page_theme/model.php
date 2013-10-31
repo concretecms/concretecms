@@ -9,19 +9,21 @@ defined('C5_EXECUTE') or die("Access Denied.");
 */
 class Concrete5_Model_PageTheme extends Object {
 
-	protected $ptName;
-	protected $ptID;
-	protected $ptDescription;
-	protected $ptDirectory;
-	protected $ptThumbnail;
-	protected $ptHandle;
-	protected $ptURL;
-	protected $ptGridFrameworkHandle = false;
+	protected $pThemeName;
+	protected $pThemeID;
+	protected $pThemeDescription;
+	protected $pThemeDirectory;
+	protected $pThemeThumbnail;
+	protected $pThemeHandle;
+	protected $pThemeURL;
+	protected $pThemeGridFrameworkHandle = false;
 
 	const E_THEME_INSTALLED = 1;
 	const THEME_EXTENSION = ".php";
 	const FILENAME_TYPOGRAPHY_CSS = "typography.css";	
 	const FILENAME_EXTENSION_CSS = "css";
+	
+	public function registerAssets() {}
 	
 	public static function getGlobalList() {
 		return PageTheme::getList('pkgID > 0');
@@ -41,10 +43,10 @@ class Concrete5_Model_PageTheme extends Object {
 		}
 		
 		$db = Loader::db();
-		$r = $db->query("select ptID from PageThemes" . $where);
+		$r = $db->query("select pThemeID from PageThemes" . $where);
 		$themes = array();
 		while ($row = $r->fetchRow()) {
-			$pl = PageTheme::getByID($row['ptID']);
+			$pl = PageTheme::getByID($row['pThemeID']);
 			$themes[] = $pl;
 		}
 		return $themes;
@@ -52,18 +54,23 @@ class Concrete5_Model_PageTheme extends Object {
 		
 	public static function getInstalledHandles() {
 		$db = Loader::db();
-		return $db->GetCol("select ptHandle from PageThemes");
+		return $db->GetCol("select pThemeHandle from PageThemes");
 	}
 
 	public function supportsGridFramework() {
-		return $this->ptGridFrameworkHandle != false;
+		return $this->pThemeGridFrameworkHandle != false;
 	}
 
 	public function getThemeGridFrameworkObject() {
-		if ($this->ptGridFrameworkHandle) {
-			$pt = PageThemeGridFramework::getByHandle($this->ptGridFrameworkHandle);
-			return $pt;
+		if ($this->pThemeGridFrameworkHandle) {
+			$pTheme = PageThemeGridFramework::getByHandle($this->pThemeGridFrameworkHandle);
+			return $pTheme;
 		}
+	}
+
+	public function providesAsset($assetType, $assetHandle) {
+		$r = ResponseAssetGroup::get();
+		$r->markAssetAsIncluded($assetType, $assetHandle);
 	}
 
 	public static function getAvailableThemes($filterInstalled = true) {
@@ -76,7 +83,7 @@ class Concrete5_Model_PageTheme extends Object {
 		$themes = $dh->getDirectoryContents(DIR_FILES_THEMES);
 		if ($filterInstalled) {
 			// strip out themes we've already installed
-			$handles = $db->GetCol("select ptHandle from PageThemes");
+			$handles = $db->GetCol("select pThemeHandle from PageThemes");
 			$themesTemp = array();
 			foreach($themes as $t) {
 				if (!in_array($t, $handles)) {
@@ -107,13 +114,13 @@ class Concrete5_Model_PageTheme extends Object {
 			$res = PageTheme::getThemeNameAndDescription($dirt);
 	
 			$th = new PageTheme;
-			$th->ptHandle = $handle;
-			$th->ptDirectory = $dirt;
-			$th->ptName = $res->ptName;
-			$th->ptDescription = $res->ptDescription;	
+			$th->pThemeHandle = $handle;
+			$th->pThemeDirectory = $dirt;
+			$th->pThemeName = $res->pThemeName;
+			$th->pThemeDescription = $res->pThemeDescription;	
 			switch($dir) {
 				case DIR_FILES_THEMES:
-					$th->ptURL = BASE_URL . DIR_REL . '/' . DIRNAME_THEMES . '/' . $handle;
+					$th->pThemeURL = BASE_URL . DIR_REL . '/' . DIRNAME_THEMES . '/' . $handle;
 					break;
 			}
 			return $th;
@@ -147,10 +154,10 @@ class Concrete5_Model_PageTheme extends Object {
 			// if a replacement style array is passed then we use that instead of the database (as is the case when previewing)
 			if (!is_array($styles)) {			
 				$db = Loader::db();
-				$ptes = $db->GetAll("select ptsHandle, ptsValue, ptsType from PageThemeStyles where ptID = ?", $this->getThemeID());
+				$ptes = $db->GetAll("select pThemeStyleHandle, pThemeStyleValue, pThemeStyleType from PageThemeStyles where pThemeID = ?", $this->getThemeID());
 				$styles = array();
 				foreach($ptes as $p) {
-					$pts = new PageThemeEditableStyle($p['ptsValue']);
+					$pts = new PageThemeEditableStyle($p['pThemeStyleValue']);
 					$pts->setPropertiesFromArray($p);
 					$styles[] = $pts;
 				}
@@ -179,36 +186,34 @@ class Concrete5_Model_PageTheme extends Object {
 	public function mergeStylesFromPost($post) {
 		$values = array();
 		$styles = $this->getEditableStylesList();
-		foreach($styles as $sto) {
-			foreach($sto as $st) {
-				$ptes = new PageThemeEditableStyle();
-				$ptes->ptsHandle = $st->getHandle();
-				$ptes->ptsType = $st->getType();
-				$ptes->ptsProperty = $st->getProperty();
-				
-				switch($st->getType()) {
-					case PageThemeEditableStyle::TSTYPE_COLOR:
-						if (isset($post['input_theme_style_' . $st->getHandle() . '_' . $st->getType()])) {
-							$ptes->ptsValue = $ptes->getProperty() . ':' . $post['input_theme_style_' . $st->getHandle() . '_' . $st->getType()] . ';';
-							$values[] = $ptes;
-						}
-						break;
-					case PageThemeEditableStyle::TSTYPE_CUSTOM:
-						if (isset($post['input_theme_style_' . $st->getHandle() . '_' . $st->getType()])) {
-							$ptes->ptsValue = $post['input_theme_style_' . $st->getHandle() . '_' . $st->getType()];
-							$values[] = $ptes;
-						}
-						break;
-					case PageThemeEditableStyle::TSTYPE_FONT:
-						if (isset($post['input_theme_style_' . $st->getHandle() . '_' . $st->getType()])) {
-							$value = $post['input_theme_style_' . $st->getHandle() . '_' . $st->getType()];
-							// now we transform it from it's post, which has pipes and separators and crap
-							$fv = explode('|', $value);
-							$ptes->ptsValue = $ptes->getProperty() . ':' . $fv[0] . ' ' . $fv[1] . ' ' . $fv[2] . 'px ' . $fv[3] . ';';
-							$values[] = $ptes;
-						}
-						break;
-				}
+		foreach($styles as $st) {
+			$ptes = new PageThemeEditableStyle();
+			$ptes->pThemeStyleHandle = $st->getHandle();
+			$ptes->pThemeStyleType = $st->getType();
+			$ptes->pThemeStyleProperty = $st->getProperty();
+			
+			switch($st->getType()) {
+				case PageThemeEditableStyle::TSTYPE_COLOR:
+					if (isset($post[$st->getFormFieldInputName()])) {
+						$ptes->pThemeStyleValue = $ptes->getProperty() . ':' . $post[$st->getFormFieldInputName()] . ';';
+						$values[] = $ptes;
+					}
+					break;
+				case PageThemeEditableStyle::TSTYPE_CUSTOM:
+					if (isset($post[$st->getFormFieldInputName()])) {
+						$ptes->pThemeStyleValue = $post[$st->getFormFieldInputName()];
+						$values[] = $ptes;
+					}
+					break;
+				case PageThemeEditableStyle::TSTYPE_FONT:
+					if (isset($post[$st->getFormFieldInputName()])) {
+						$value = $post[$st->getFormFieldInputName()];
+						// now we transform it from it's post, which has pipes and separators and crap
+						$fv = explode('|', $value);
+						$ptes->pThemeStyleValue = $ptes->getProperty() . ':' . $fv[0] . ' ' . $fv[1] . ' ' . $fv[2] . 'px ' . $fv[3] . ';';
+						$values[] = $ptes;
+					}
+					break;
 			}
 		}
 		
@@ -222,7 +227,7 @@ class Concrete5_Model_PageTheme extends Object {
 	 */
 	public function reset() {
 		$db = Loader::db();
-		$db->Execute('delete from PageThemeStyles where ptID = ?', array($this->ptID));	
+		$db->Execute('delete from PageThemeStyles where pThemeID = ?', array($this->pThemeID));	
 		
 		// now we reset all cached css files in this theme
 		$sheets = $this->getStyleSheets();
@@ -241,12 +246,12 @@ class Concrete5_Model_PageTheme extends Object {
 		$db = Loader::db();
 		foreach($styles as $ptes) {
 			$db->Replace('PageThemeStyles', array(
-				'ptID' => $this->getThemeID(),
-				'ptsHandle' => $ptes->getHandle(),
-				'ptsValue' => $ptes->getValue(),
-				'ptsType' => $ptes->getType()
+				'pThemeID' => $this->getThemeID(),
+				'pThemeStyleHandle' => $ptes->getHandle(),
+				'pThemeStyleValue' => $ptes->getValue(),
+				'pThemeStyleType' => $ptes->getType()
 			),
-			array('ptID', 'ptsHandle', 'ptsType'), true);
+			array('pThemeID', 'pThemeStyleHandle', 'pThemeStyleType'), true);
 		}
 
 		// now we reset all cached css files in this theme
@@ -258,7 +263,7 @@ class Concrete5_Model_PageTheme extends Object {
 		}
 	}
 	
-	private function getStyleSheets() {
+	public function getStyleSheets() {
 		$fh = Loader::helper('file');
 		$files = $fh->getDirectoryContents($this->getThemeDirectory());
 		$sheets = array();
@@ -286,18 +291,23 @@ class Concrete5_Model_PageTheme extends Object {
 		return PageThemeEditableStyle::TSTYPE_CUSTOM;
 
 	}
+
+	public function isThemeCustomizable() {
+		$styles = $this->getEditableStylesList();
+		return count($styles) > 0;
+	}
 	
 	/** 
 	 * Retrieves an array of editable style objects from the current them. This is accomplished by locating all style sheets in the root of the theme, parsing all their contents
 	 * @param string $file
 	 * @return array
 	 */
-	public function getEditableStylesList() {
+	public function getEditableStylesList($mergeStyles = false) {
 		$sheets = $this->getStyleSheets();
 
 		$styles = array();
 		foreach($sheets as $file) {		
-			$ss = $this->parseStyleSheet($file);
+			$ss = $this->parseStyleSheet($file, $mergeStyles);
 
 			// match all tokens
 			$matches = array();
@@ -320,24 +330,34 @@ class Concrete5_Model_PageTheme extends Object {
 				} else {
 					$pte = new PageThemeEditableStyle(trim($values[$i]));
 				}
-				$pte->ptsHandle = trim($handles[$i]);
-				$pte->ptsType = $type;
+				$pte->pThemeStyleHandle = trim($handles[$i]);
+				$pte->pThemeStyleType = $type;
 				
 				// returns a nested associative array that's
 				// $styles[$handle'][] = style 1, $styles[$handle'][] = 'style 2', etc...
-				$styles[$pte->ptsHandle][] = $pte;
+				$styles[] = $pte;
 			}
 		}
+
+		usort($styles, function($a, $b) {
+			if ($a->getType() > $b->getType()) {
+				return 1;
+			} else if ($b->getType() > $a->getType()) {
+				return -1;
+			} else {
+				return 0;
+			}
+		});
 		return $styles;
 	}
 	
 	/**
-	 * @param string $ptHandle
+	 * @param string $pThemeHandle
 	 * @return PageTheme
 	 */
-	public function getByHandle($ptHandle) {
-		$where = 'ptHandle = ?';
-		$args = array($ptHandle);
+	public function getByHandle($pThemeHandle) {
+		$where = 'pThemeHandle = ?';
+		$args = array($pThemeHandle);
 		$pt = PageTheme::populateThemeQuery($where, $args);
 		return $pt;
 	}
@@ -346,19 +366,19 @@ class Concrete5_Model_PageTheme extends Object {
 	 * @param int $ptID
 	 * @return PageTheme
 	 */
-	public function getByID($ptID) {
-		$where = 'ptID = ?';
-		$args = array($ptID);
+	public function getByID($pThemeID) {
+		$where = 'pThemeID = ?';
+		$args = array($pThemeID);
 		$pt = PageTheme::populateThemeQuery($where, $args);
 		return $pt;
 	}
 	
 	protected function populateThemeQuery($where, $args) {
 		$db = Loader::db();
-		$row = $db->GetRow("select ptID, ptHandle, ptDescription, pkgID, ptName, ptHasCustomClass from PageThemes where {$where}", $args);
-		if ($row['ptID']) {
-			if ($row['ptHasCustomClass']) {
-				$class = Loader::helper('text')->camelcase($row['ptHandle']) . 'PageTheme';
+		$row = $db->GetRow("select pThemeID, pThemeHandle, pThemeDescription, pkgID, pThemeName, pThemeHasCustomClass from PageThemes where {$where}", $args);
+		if ($row['pThemeID']) {
+			if ($row['pThemeHasCustomClass']) {
+				$class = Loader::helper('text')->camelcase($row['pThemeHandle']) . 'PageTheme';
 			} else {
 				$class = 'PageTheme';
 			}
@@ -366,45 +386,43 @@ class Concrete5_Model_PageTheme extends Object {
 			$pl->setPropertiesFromArray($row);
 			$pkgHandle = $pl->getPackageHandle();
 			$env = Environment::get();
-			$pl->ptDirectory = $env->getPath(DIRNAME_THEMES . '/' . $row['ptHandle'], $pkgHandle);			
-			$pl->ptURL = $env->getURL(DIRNAME_THEMES . '/' . $row['ptHandle'], $pkgHandle);	
+			$pl->pThemeDirectory = $env->getPath(DIRNAME_THEMES . '/' . $row['pThemeHandle'], $pkgHandle);			
+			$pl->pThemeURL = $env->getURL(DIRNAME_THEMES . '/' . $row['pThemeHandle'], $pkgHandle);	
 			return $pl;
 		}
 	}
 	
-	public function add($ptHandle, $pkg = null) {
+	public function add($pThemeHandle, $pkg = null) {
 		if (is_object($pkg)) {
 			if (is_dir(DIR_PACKAGES . '/' . $pkg->getPackageHandle())) {
-				$dir = DIR_PACKAGES . '/' . $pkg->getPackageHandle() . '/' . DIRNAME_THEMES . '/' . $ptHandle;
+				$dir = DIR_PACKAGES . '/' . $pkg->getPackageHandle() . '/' . DIRNAME_THEMES . '/' . $pThemeHandle;
 			} else {
-				$dir = DIR_PACKAGES_CORE . '/' . $pkg->getPackageHandle() . '/' . DIRNAME_THEMES . '/' . $ptHandle;
+				$dir = DIR_PACKAGES_CORE . '/' . $pkg->getPackageHandle() . '/' . DIRNAME_THEMES . '/' . $pThemeHandle;
 			}
 			$pkgID = $pkg->getPackageID();
-		} else if (is_dir(DIR_FILES_THEMES . '/' . $ptHandle)) {
-			$dir = DIR_FILES_THEMES . '/' . $ptHandle;
+		} else if (is_dir(DIR_FILES_THEMES . '/' . $pThemeHandle)) {
+			$dir = DIR_FILES_THEMES . '/' . $pThemeHandle;
 			$pkgID = 0;
 		} else {
-			$dir = DIR_FILES_THEMES_CORE . '/' . $ptHandle;
+			$dir = DIR_FILES_THEMES_CORE . '/' . $pThemeHandle;
 			$pkgID = 0;
 		}
-		$l = PageTheme::install($dir, $ptHandle, $pkgID);
+		$l = PageTheme::install($dir, $pThemeHandle, $pkgID);
 		return $l;
 	}
 	
 	// grabs all files in theme that are PHP based (or html if we go that route) and then
 	// lists them out, by type, allowing people to install them as page type, etc...
 	public function getFilesInTheme() {
-		Loader::model('collection_types');
-		Loader::model('single_page');
 		
 		$dh = Loader::helper('file');
-		$ctlist = CollectionType::getList();
+		$templateList = PageTemplate::getList();
 		$cts = array();
-		foreach($ctlist as $ct) {
-			$cts[] = $ct->getCollectionTypeHandle();
+		foreach($templateList as $pt) {
+			$pts[] = $pt->getPageTemplateHandle();
 		}
 		
-		$filesTmp = $dh->getDirectoryContents($this->ptDirectory);
+		$filesTmp = $dh->getDirectoryContents($this->pThemeDirectory);
 		foreach($filesTmp as $f) {
 			if (strrchr($f, '.') == PageTheme::THEME_EXTENSION) {
 				$fHandle = substr($f, 0, strpos($f, '.'));
@@ -415,10 +433,10 @@ class Concrete5_Model_PageTheme extends Object {
 					$type = PageThemeFile::TFTYPE_DEFAULT;
 				} else if (in_array($f, SinglePage::getThemeableCorePages())) {
 					$type = PageThemeFile::TFTYPE_SINGLE_PAGE;
-				} else if (in_array($fHandle, $cts)) {
-					$type = PageThemeFile::TFTYPE_PAGE_TYPE_EXISTING;
+				} else if (in_array($fHandle, $pts)) {
+					$type = PageThemeFile::TFTYPE_PAGE_TEMPLATE_EXISTING;
 				} else {
-					$type = PageThemeFile::TFTYPE_PAGE_TYPE_NEW;
+					$type = PageThemeFile::TFTYPE_PAGE_TEMPLATE_NEW;
 				}
 				
 				$pf = new PageThemeFile();
@@ -433,12 +451,12 @@ class Concrete5_Model_PageTheme extends Object {
 	
 	private static function getThemeNameAndDescription($dir) {
 		$res = new stdClass;
-		$res->ptName = t('(No Name)');
-		$res->ptDescription = t('(No Description)');
+		$res->pThemeName = t('(No Name)');
+		$res->pThemeDescription = t('(No Description)');
 		if (file_exists($dir . '/' . FILENAME_THEMES_DESCRIPTION)) {
 			$con = file($dir . '/' . FILENAME_THEMES_DESCRIPTION);
-			$res->ptName = trim($con[0]);
-			$res->ptDescription = trim($con[1]);	
+			$res->pThemeName = trim($con[0]);
+			$res->pThemeDescription = trim($con[1]);	
 		}
 		return $res;
 	}
@@ -461,17 +479,17 @@ class Concrete5_Model_PageTheme extends Object {
 
 	}
 	
-	protected function install($dir, $ptHandle, $pkgID) {
+	protected function install($dir, $pThemeHandle, $pkgID) {
 		if (is_dir($dir)) {
 			$db = Loader::db();
-			$cnt = $db->getOne("select count(ptID) from PageThemes where ptHandle = ?", array($ptHandle));
+			$cnt = $db->getOne("select count(pThemeID) from PageThemes where pThemeHandle = ?", array($pThemeHandle));
 			if ($cnt > 0) {
 				throw new Exception(PageTheme::E_THEME_INSTALLED);
 			}
 			$res = PageTheme::getThemeNameAndDescription($dir);
-			$ptName = $res->ptName;
-			$ptDescription = $res->ptDescription;
-			$db->query("insert into PageThemes (ptHandle, ptName, ptDescription, pkgID) values (?, ?, ?, ?)", array($ptHandle, $ptName, $ptDescription, $pkgID));
+			$pThemeName = $res->pThemeName;
+			$pThemeDescription = $res->pThemeDescription;
+			$db->query("insert into PageThemes (pThemeHandle, pThemeName, pThemeDescription, pkgID) values (?, ?, ?, ?)", array($pThemeHandle, $pThemeName, $pThemeDescription, $pkgID));
 
 			$env = Environment::get();
 			$env->clearOverrideCache();
@@ -485,18 +503,18 @@ class Concrete5_Model_PageTheme extends Object {
 	public function updateThemeCustomClass() {
 		$env = Environment::get();
 		$db = Loader::db();
-		$r = $env->getRecord(DIRNAME_MODELS . '/' . DIRNAME_PAGE_THEME . '/' . DIRNAME_PAGE_THEME_CUSTOM . '/' . $this->ptHandle . '.php', $this->getPackageHandle());
+		$r = $env->getRecord(DIRNAME_MODELS . '/' . DIRNAME_PAGE_THEME . '/' . DIRNAME_PAGE_THEME_CUSTOM . '/' . $this->pThemeHandle . '.php', $this->getPackageHandle());
 		if ($r->exists()) {
-			$db->Execute("update PageThemes set ptHasCustomClass = 1 where ptID = ?", array($this->ptID));
-			$this->ptHasCustomClass = true;
+			$db->Execute("update PageThemes set pThemeHasCustomClass = 1 where pThemeID = ?", array($this->pThemeID));
+			$this->pThemeHasCustomClass = true;
 		} else {
-			$db->Execute("update PageThemes set ptHasCustomClass = 0 where ptID = ?", array($this->ptID));
-			$this->ptHasCustomClass = false;
+			$db->Execute("update PageThemes set pThemeHasCustomClass = 0 where pThemeID = ?", array($this->pThemeID));
+			$this->pThemeHasCustomClass = false;
 		}
 	}
 	
-	public function getThemeID() {return $this->ptID;}
-	public function getThemeName() {return $this->ptName;}
+	public function getThemeID() {return $this->pThemeID;}
+	public function getThemeName() {return $this->pThemeName;}
 	public function getPackageID() {return $this->pkgID;}
 	public function getPackageHandle() {
 		return PackageList::getHandle($this->pkgID);
@@ -504,18 +522,18 @@ class Concrete5_Model_PageTheme extends Object {
 	/** 
 	 * Returns whether a theme has a custom class.
 	 */
-	public function hasCustomClass() {return $this->ptHasCustomClass;}
-	public function getThemeHandle() {return $this->ptHandle;}
-	public function getThemeDescription() {return $this->ptDescription;}
-	public function getThemeDirectory() {return $this->ptDirectory;}
-	public function getThemeURL() {return $this->ptURL;}
-	public function getThemeEditorCSS() {return $this->ptURL . '/' . PageTheme::FILENAME_TYPOGRAPHY_CSS;}
+	public function hasCustomClass() {return $this->pThemeHasCustomClass;}
+	public function getThemeHandle() {return $this->pThemeHandle;}
+	public function getThemeDescription() {return $this->pThemeDescription;}
+	public function getThemeDirectory() {return $this->pThemeDirectory;}
+	public function getThemeURL() {return $this->pThemeURL;}
+	public function getThemeEditorCSS() {return $this->pThemeURL . '/' . PageTheme::FILENAME_TYPOGRAPHY_CSS;}
 	public function isUninstallable() {
-		return ($this->ptDirectory != DIR_FILES_THEMES_CORE . '/' . $this->getThemeHandle());
+		return ($this->pThemeDirectory != DIR_FILES_THEMES_CORE . '/' . $this->getThemeHandle());
 	}
 	public function getThemeThumbnail() {
-		if (file_exists($this->ptDirectory . '/' . FILENAME_THEMES_THUMBNAIL)) {
-			$src = $this->ptURL . '/' . FILENAME_THEMES_THUMBNAIL;
+		if (file_exists($this->pThemeDirectory . '/' . FILENAME_THEMES_THUMBNAIL)) {
+			$src = $this->pThemeURL . '/' . FILENAME_THEMES_THUMBNAIL;
 		} else {
 			$src = ASSETS_URL_THEMES_NO_THUMBNAIL;
 		}
@@ -526,7 +544,7 @@ class Concrete5_Model_PageTheme extends Object {
 	
 	public function applyToSite() {
 		$db = Loader::db();
-		$r = $db->query("update CollectionVersions inner join Pages on CollectionVersions.cID = Pages.cID left join Packages on Pages.pkgID = Packages.pkgID set CollectionVersions.ptID = ? where cIsTemplate = 0 and (Packages.pkgHandle <> 'core' or pkgHandle is null or CollectionVersions.ctID > 0)", array($this->ptID));
+		$r = $db->query("update CollectionVersions inner join Pages on CollectionVersions.cID = Pages.cID left join Packages on Pages.pkgID = Packages.pkgID set CollectionVersions.pThemeID = ? where cIsTemplate = 0 and (Packages.pkgHandle <> 'core' or pkgHandle is null or Pages.ptID > 0)", array($this->pThemeID));
 	}
 	
 	public function getSiteTheme() {
@@ -537,9 +555,7 @@ class Concrete5_Model_PageTheme extends Object {
 	public function uninstall() {
 		$db = Loader::db();
 		Loader::model('page_theme_archive');
-		//$pla = new PageThemeArchive($this->ptHandle);
-		//$pla->uninstall();
-		$db->query("delete from PageThemes where ptID = ?", array($this->ptID));
+		$db->query("delete from PageThemes where pThemeID = ?", array($this->pThemeID));
 		$env = Environment::get();
 		$env->clearOverrideCache();
 	}

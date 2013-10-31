@@ -1,7 +1,7 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
 
-class Concrete5_Controller_Dashboard_System_Optimization_Cache extends DashboardBaseController {
+class Concrete5_Controller_Page_Dashboard_System_Optimization_Cache extends DashboardController {
 	
 	public $helpers = array('form'); 
 	
@@ -14,8 +14,10 @@ class Concrete5_Controller_Dashboard_System_Optimization_Cache extends Dashboard
 				$u = new User();
 				$eca = $this->post('ENABLE_BLOCK_CACHE') == 1 ? 1 : 0; 
 				$eoc = $this->post('ENABLE_OVERRIDE_CACHE') == 1 ? 1 : 0; 
+				$eac = $this->post('ENABLE_ASSET_CACHE') == 1 ? 1 : 0; 
 				Cache::flush();
 				Config::save('ENABLE_BLOCK_CACHE', $eca);
+				Config::save('ENABLE_ASSET_CACHE', $eac);
 				Config::save('ENABLE_OVERRIDE_CACHE', $eoc);
 				Config::save('FULL_PAGE_CACHE_GLOBAL', $this->post('FULL_PAGE_CACHE_GLOBAL'));
 				Config::save('FULL_PAGE_CACHE_LIFETIME', $this->post('FULL_PAGE_CACHE_LIFETIME'));

@@ -65,13 +65,7 @@ td.newsflow-latest-edition-wrapper {
 	#gradient > .vertical(#F3FAFC,#E7F7FF);
 }
 
-/* panes (including dashboard) */ 
-.ccm-pane {position: relative;}
-.ccm-pane-header-icons {position: absolute; top: 15px; right:10px; z-index: 100}
-.ccm-pane-header-icons > li {list-style-type: none; display: inline-block; margin-left: 10px; border-radius: 3px; -moz-border-radius: 3px; -webkit-border-radius: 3px;  background-clip: padding-box; float: left}
-.ccm-pane-header-icons > li:hover {background-color: #c3c3c3; }
-.ccm-pane-header-icons > li > a {display: block; .opacity(50);}
-
+/* Dialog Panes */
 .ccm-pane-options {margin-bottom: 0px !important; background-color:#f1f1f1; position: relative; padding:14px 20px 8px;border-bottom:1px solid #ddd;-webkit-box-shadow:inset 0 1px 0 #ffffff;-moz-box-shadow:inset 0 1px 0 #ffffff;box-shadow:inset 0 1px 0 #ffffff;zoom:1;margin-bottom:0;}
 .ccm-pane-options-content {display: none; margin-bottom: -18px;}
 .ccm-pane-options a.ccm-icon-option-closed, .ccm-pane-options a.ccm-icon-option-open {position: absolute; top: 5px; right: 5px; color: #666; line-height: 12px; padding-bottom: 3px; padding-top: 3px; padding-right: 25px; padding-left: 5px; border-radius: 3px; -moz-border-radius: 3px; -webkit-border-radius: 3px;  background-clip: padding-box; }
@@ -87,91 +81,22 @@ td.newsflow-latest-edition-wrapper {
 .ccm-ui .form-horizontal .ccm-pane-options-permanent-search div.input, .ccm-ui .form-horizontal .ccm-pane-options-permanent-search div.controls {margin-left: 10px; float: left}
 .ccm-ui .form-inline .control-inline {margin-right: 10px; display: inline-block;}
 
-.ccm-pane-options ul.tabs li.active a {background-color: #f1f1f1;}
-.ccm-pane > form {margin-bottom: 0px;}
 .ui-dialog #ccm-list-wrapper {margin-top: 10px;}
 .ui-dialog .ccm-pane-options {margin-left: -10px; margin-right: -10px; margin-top: -12px}
 .ui-dialog-titlebar {z-index: 1100;}
 .ui-dialog .ccm-pane-options {z-index: 1099;}
-.ccm-pane .span-pane-half {width: 439px; float: left;}
-.ccm-pane .span-pane-third {width: 286px; float: left;}
-.ccm-pane .span-pane-fourth {width: 209px; float: left;}
-/*
-.ccm-pane .form-stacked .ccm-pane-body {margin-left: -20px;}
-.ccm-pane .form-stacked .ccm-pane-footer {margin-left: -20px;}
-.ui-dialog .form-stacked {padding-left: 0px;}
-.ccm-pane-footer .form-stacked {padding-left: 0px;}
-*/
+
 .newsflow .ccm-pane-body {background-color: transparent;}
 .newsflow .ccm-pane-body-inner {background-color: transparent; padding: 20px;}
 
 div.ccm-pane-dialog-pagination div.pagination, .ccm-pane-footer div.pagination {margin-top: 0px !important; margin-bottom: 0px !important}
 
-.ccm-pane-header h3 {
-	font-size: @baseFontSize * 1.75;
-	line-height: @baseFontSize * 1.25;
+body.ccm-loading *, body.ccm-loading {
+	cursor: progress !important;
 }
-.ccm-pane-body{padding:20px; background-color: #fff;}
-.ccm-pane-body-footer {background-color:#fff; .border-radius-bottom-only(6px)}
-.ccm-pane-footer{background-color:#f5f5f5;padding:14px 20px 15px;border-top:1px solid #ddd;-webkit-border-radius:0 0 6px 6px;-moz-border-radius:0 0 6px 6px;border-radius:0 0 6px 6px;-webkit-box-shadow:inset 0 1px 0 #ffffff;-moz-box-shadow:inset 0 1px 0 #ffffff;box-shadow:inset 0 1px 0 #ffffff;zoom:1;margin-bottom:0;}
-.ccm-pane-footer:before, .ccm-pane-footer:after{display:table;content:"";}
-.ccm-pane-footer:after{clear:both;}
-
-/* Dialog Loader */
-#ccm-dialog-loader-wrapper {display:none; font-size: 14px; color: #555; z-index:2000; position: fixed; padding: 20px; background-color: #fff; -webkit-border-radius: 6px; border-radius: 6px; -moz-border-radius: 6px; text-align:center;}
-#ccm-dialog-loader-wrapper .progress {
-	margin-bottom: 0px;
-}
-#ccm-dialog-loader { margin: auto; }
-#ccm-dialog-loader-text {margin-bottom: 6px;}
-
 
 /* page selector in blocks */
 div.ccm-summary-selected-item {border: 1px solid #dedede; margin-top: 8px; margin-bottom: 8px; padding: 10px}
-
-/* buttons */
-.ccm-ui .dialog-buttons .btn, .ccm-ui .ccm-pane-footer .btn {
-  padding: 6px 19px !important;
-}
-
-.ccm-ui .btn.btn-primary {
-  border-color: #09f;
- } 
-
-.ccm-ui .btn:hover {
- 	border-color: #6cf !important;
- 	background-image: none !important;
- 	background-color: #fff !important;
-}
-
-.ccm-ui .btn.btn-primary:hover {
-	background-image: none !important;
-	background-color: #09f !important;
-}
-
-.ccm-ui .btn.btn-hover-danger:hover {
- 	border-color: #e85a55 !important;
-}
-
-.ccm-ui .btn.btn-danger:hover {
-	background-image: none !important;
-	background-color: #e85a55 !important;
- 	border-color: #e85a55 !important;
-}
-
-.ccm-ui .btn[disabled=disabled]:hover {
-	background-image: none !important;
-	color: #b7b7b7 !important;
-	background-color: #eae9e9 !important;
- 	border-color: #ccc !important;
-}
-
-.ccm-ui .btn[disabled=disabled] {
-	background-image: none !important;
-	color: #b7b7b7 !important;
-	background-color: #eae9e9 !important;
- 	border-color: #ccc !important;
-}
 
 table.ccm-permission-grid {border: 0px;}
 table.ccm-permission-grid td.ccm-permission-grid-name {text-align: right; width: auto; white-space: nowrap;}
@@ -239,6 +164,10 @@ div.ccm-group-description {padding-left: 30px; color: #aaa; font-size: 12px; pad
 span.ccm-group-description {color: #aaa; font-size: 12px; padding-top: 2px; padding-bottom: 6px}
 #ccm-group-search-fields {padding-left: 24px; background: transparent url(../images/icons/search.png) no-repeat scroll left 6px }
 
+/* date controls */
+.ccm-input-time-wrapper select {width: auto !important; margin-right: 4px !important;}
+.ccm-input-date {width: auto !important; margin-right: 4px !important;}
+
 /* clipboard */
 div.ccm-scrapbook-list-item {position:relative; margin-bottom: 20px;}
 div.ccm-stack-content-wrapper {margin-bottom: 10px;}
@@ -251,3 +180,26 @@ div.ccm-stack a:hover {background-color: #d9e7ff; border: 1px solid #94a7c7; tex
 div.ccm-workflow a {background-repeat: no-repeat; background-position: 8px 11px; background-image: url(../images/icons/wrench.png); color: #666; display: block; font-size: 14px; padding: 8px 8px 8px 30px; text-decoration: none; border: 1px solid #fff}
 div.ccm-workflow {position: relative; padding: 0px 0px 2px 0px; border-bottom: 1px solid #dedede; margin-bottom: 2px}
 div.ccm-workflow a:hover {background-color: #d9e7ff; border: 1px solid #94a7c7; text-decoration: none; color: #666}
+
+/* Tooltips - in dashboard and in panels */
+.launch-tooltip {
+	border-bottom: 1px dotted #50e568;
+}
+
+/** 
+ * Tooltips
+ */
+div#ccm-tooltip-holder {
+	z-index: 10001;
+	position: relative;
+}
+
+.ccm-ui {
+	div.tooltip-inner {
+		font-size: 14px;
+		line-height: 20px;
+		font-weight: 300;
+		padding: 20px 10px;
+		max-width: 250px;
+	}
+}

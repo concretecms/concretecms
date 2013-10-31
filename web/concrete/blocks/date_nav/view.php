@@ -1,7 +1,6 @@
 <?php 
 defined('C5_EXECUTE') or die("Access Denied.");
-
-global $c;
+$c = Page::getCurrentPage();
 $textHelper = Loader::helper("text"); 
 $dateHelper = Loader::helper("date"); 
 
@@ -138,16 +137,18 @@ if( count($postsByDate)>1 && !$controller->flatDisplay ) echo "</ul> \r \n";
 </div>
 
 <script type="text/javascript">
-<?php  if($controller->defaultNode=='current_month'){ ?>
-ccmDateNav.dateKey='<?php echo  date( 'm_Y' ) ?>';
-<?php  }else{  // current page
-	//if( intval(strtotime($c->getCollectionDatePublic()))>0 ) 
-	$createdDate = strtotime($c->getCollectionDatePublic()); 
-	//else $createdDate = strtotime($c->cDateAdded); 
-	?>
-	ccmDateNav.dateKey='<?php echo  date( 'm_Y' , $createdDate ) ?>'; 
-	ccmDateNav.loadCurrentPage=<?php echo intval($currentPageFound) ?>;
-<?php  } ?> 
-ccmDateNav.loadPg=<?php echo intval($c->getCollectionID()) ?>;
-$(function(){ ccmDateNav.init(); });
+$(function() {
+	<?php  if($controller->defaultNode=='current_month'){ ?>
+	ccmDateNav.dateKey='<?php echo  date( 'm_Y' ) ?>';
+	<?php  }else{  // current page
+		//if( intval(strtotime($c->getCollectionDatePublic()))>0 ) 
+		$createdDate = strtotime($c->getCollectionDatePublic()); 
+		//else $createdDate = strtotime($c->cDateAdded); 
+		?>
+		ccmDateNav.dateKey='<?php echo  date( 'm_Y' , $createdDate ) ?>'; 
+		ccmDateNav.loadCurrentPage=<?php echo intval($currentPageFound) ?>;
+	<?php  } ?> 
+	ccmDateNav.loadPg=<?php echo intval($c->getCollectionID()) ?>;
+	ccmDateNav.init();
+});
 </script>

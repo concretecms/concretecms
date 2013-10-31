@@ -4,8 +4,8 @@ class Concrete5_Model_ConversationDiscussion extends Object {
 
 	public static function add(Page $c) {
 		$db = Loader::db();
-		if (!$ctID) {
-			$ctID = 0;
+		if (!$ptID) {
+			$ptID = 0;
 		}
 		$cID = $c->getCollectionID();
 		$date = Loader::helper('date')->getSystemDateTime();
@@ -21,7 +21,7 @@ class Concrete5_Model_ConversationDiscussion extends Object {
 	}
 
 	public function getConversationDiscussionID() {return $this->cnvDiscussionID;}
-	public function getConversationDiscussionCollectionTypeID() {return $this->ctID;}
+	public function getConversationDiscussionPageTypeID() {return $this->ptID;}
 	public function getConversationDiscussionCollectionID() {return $this->cID;}
 
 	public function getConversationDiscussionDateTime() {

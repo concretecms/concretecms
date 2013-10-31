@@ -1,175 +1,70 @@
 <?xml version="1.0"?>
 <schema version="0.3">
 
-   <table name="Composers">
-    <field name="cmpID" type="I" size="10">
+   <table name="PageTypes">
+    <field name="ptID" type="I" size="10">
       <key/>
       <autoincrement/>
       <unsigned/>
     </field>
-    <field name="cmpName" type="C" size="255">
+    <field name="ptName" type="C" size="255">
       <notnull/>
     </field>
-    <field name="cmpTargetTypeID" type="I" size="10">
+    <field name="ptHandle" type="C" size="255">
+      <notnull/>
+    </field>
+    <field name="ptPublishTargetTypeID" type="I" size="10">
       <unsigned/>
     </field>
-    <field name="cmpAllowedPageTypes" type="C" size="1">
+    <field name="ptDefaultPageTemplateID" type="I" size="10">
+      <unsigned/>
+    </field>
+    <field name="ptAllowedPageTemplates" type="C" size="1">
       <default value="A" />
     </field>
-   <field name="cmpTargetObject" type="X2"></field>
-  </table>
-
-   <table name="ComposerDrafts">
-    <field name="cmpDraftID" type="I" size="10">
-      <key/>
-      <autoincrement/>
-      <unsigned/>
-    </field>
-    <field name="cmpID" type="I" size="10">
-      <unsigned/>
-      <default value="0" />
-    </field>
-    <field name="cID" type="I" size="10">
-      <unsigned/>
-      <default value="0" />
-    </field>
-    <field name="uID" type="I" size="10">
-      <unsigned/>
-      <default value="0" />
-    </field>
-    <field name="cmpDraftOverrideComposerPermissions" type="I1" size="1">
+    <field name="ptIsInternal" type="I1" size="1">
       <notnull/>
       <default value="0"/>
     </field>
-    <field name="cmpDateCreated" type="T">
-      <notnull/>
-    </field>
-   <field name="cmpDraftTargetParentPageID" type="I" size="10">
-      <unsigned/>
-      <default value="0" />
-    </field>
-  </table>
-
-  <table name="ComposerPageTypes">
-    <field name="cmpID" type="I" size="10">
-      <key/>
-      <unsigned/>
-      <default value="0" />
-    </field>
-    <field name="ctID" type="I" size="10">
-      <key/>
-      <unsigned/>
-      <default value="0" />
-    </field>
-  </table>
-  <table name="ComposerTargetTypes">
-    <field name="cmpTargetTypeID" type="I" size="10">
-      <key/>
-      <autoincrement/>
-      <unsigned/>
-    </field>
-    <field name="cmpTargetTypeHandle" type="C" size="255"/>
-    <field name="cmpTargetTypeName" type="C" size="255"/>
     <field name="pkgID" type="I" size="10">
       <notnull/>
       <default value="0"/>
       <unsigned/>
     </field>
-  </table>
-  <table name="ComposerControlTypes">
-    <field name="cmpControlTypeID" type="I" size="10">
-      <key/>
-      <autoincrement/>
-      <unsigned/>
-    </field>
-    <field name="cmpControlTypeHandle" type="C" size="255"/>
-    <field name="cmpControlTypeName" type="C" size="255"/>
-    <field name="pkgID" type="I" size="10">
-      <notnull/>
-      <default value="0"/>
-      <unsigned/>
-    </field>
-  </table>
-  <table name="ComposerFormLayoutSets">
-    <field name="cmpFormLayoutSetID" type="I" size="10">
-      <key/>
-      <autoincrement/>
-      <unsigned/>
-    </field>
-    <field name="cmpID" type="I" size="10">
-      <unsigned/>
-      <default value="0" />
-    </field>
-    <field name="cmpFormLayoutSetName" type="C" size="255"/>
-    <field name="cmpFormLayoutSetDisplayOrder" type="I" size="10">
-      <unsigned/>
-      <default value="0" />
-    </field>
-  </table>
-  <table name="ComposerFormLayoutSetControls">
-    <field name="cmpFormLayoutSetControlID" type="I" size="10">
-      <key/>
-      <autoincrement/>
-      <unsigned/>
-    </field>
-    <field name="cmpFormLayoutSetID" type="I" size="10">
-      <unsigned/>
-      <default value="0" />
-    </field>
-   <field name="cmpControlTypeID" type="I" size="10">
-      <unsigned/>
-      <default value="0" />
-    </field>
-   <field name="cmpControlObject" type="X2"></field>
-    <field name="cmpFormLayoutSetControlDisplayOrder" type="I" size="10">
-      <unsigned/>
-      <default value="0" />
-    </field>
-    <field name="cmpFormLayoutSetControlCustomLabel" type="C" size="255"/>
-    <field name="cmpFormLayoutSetControlCustomTemplate" type="C" size="255"/>
-    <field name="cmpFormLayoutSetControlRequired" type="I" size="10">
-      <default value="0" />
-    </field>
+   <field name="ptPublishTargetObject" type="X2"></field>
   </table>
 
-  <table name="ComposerOutputControls">
-    <field name="cmpOutputControlID" type="I" size="10">
+  <table name="PageTypePageTemplates">
+    <field name="ptID" type="I" size="10">
       <key/>
-      <autoincrement/>
-      <unsigned/>
-    </field>
-    <field name="ctID" type="I" size="10">
       <unsigned/>
       <default value="0" />
     </field>
-    <field name="arHandle" type="C" size="255">
-    </field>
-   <field name="cmpID" type="I" size="10">
-      <unsigned/>
-      <default value="0" />
-    </field>
-   <field name="cmpFormLayoutSetControlID" type="I" size="10">
-      <unsigned/>
-      <default value="0" />
-    </field>
-    <field name="cmpOutputControlDisplayOrder" type="I" size="10">
+    <field name="pTemplateID" type="I" size="10">
+      <key/>
       <unsigned/>
       <default value="0" />
     </field>
   </table>
 
-  <table name="ComposerDraftBlocks">
-<field name="cmpDraftBlockID" type="I" size="10">
+  <table name="PageTypeComposerOutputBlocks">
+  <field name="ptComposerOutputBlockID" type="I" size="10">
       <key/>
       <autoincrement/>
       <unsigned/>
     </field>
-  <field name="cmpDraftID" type="I" size="10">
+  <field name="cID" type="I" size="10">
       <unsigned/>
       <notnull />
       <default value="0" />
     </field>
-    <field name="cmpFormLayoutSetControlID" type="I" size="10">
+    <field name="arHandle" type="C" size="255">
+    </field>
+    <field name="cbDisplayOrder" type="I" size="10">
+      <unsigned/>
+      <default value="0" />
+    </field>
+    <field name="ptComposerFormLayoutSetControlID" type="I" size="10">
       <unsigned/>
       <default value="0" />
       <notnull />
@@ -179,8 +74,143 @@
       <default value="0" />
     </field>
   </table>
-  <table name="ComposerDraftPermissionAssignments">
-    <field name="cmpDraftID" type="I" size="10">
+  
+  <table name="PageTypePublishTargetTypes">
+    <field name="ptPublishTargetTypeID" type="I" size="10">
+      <key/>
+      <autoincrement/>
+      <unsigned/>
+    </field>
+    <field name="ptPublishTargetTypeHandle" type="C" size="255"/>
+    <field name="ptPublishTargetTypeName" type="C" size="255"/>
+    <field name="pkgID" type="I" size="10">
+      <notnull/>
+      <default value="0"/>
+      <unsigned/>
+    </field>
+  </table>
+  <table name="PageTypeComposerControlTypes">
+    <field name="ptComposerControlTypeID" type="I" size="10">
+      <key/>
+      <autoincrement/>
+      <unsigned/>
+    </field>
+    <field name="ptComposerControlTypeHandle" type="C" size="255"/>
+    <field name="ptComposerControlTypeName" type="C" size="255"/>
+    <field name="pkgID" type="I" size="10">
+      <notnull/>
+      <default value="0"/>
+      <unsigned/>
+    </field>
+  </table>
+  <table name="PageTypeComposerFormLayoutSets">
+    <field name="ptComposerFormLayoutSetID" type="I" size="10">
+      <key/>
+      <autoincrement/>
+      <unsigned/>
+    </field>
+    <field name="ptID" type="I" size="10">
+      <unsigned/>
+      <default value="0" />
+    </field>
+    <field name="ptComposerFormLayoutSetName" type="C" size="255"/>
+    <field name="ptComposerFormLayoutSetDisplayOrder" type="I" size="10">
+      <unsigned/>
+      <default value="0" />
+    </field>
+  </table>
+  <table name="PageTypeComposerFormLayoutSetControls">
+    <field name="ptComposerFormLayoutSetControlID" type="I" size="10">
+      <key/>
+      <autoincrement/>
+      <unsigned/>
+    </field>
+    <field name="ptComposerFormLayoutSetID" type="I" size="10">
+      <unsigned/>
+      <default value="0" />
+    </field>
+   <field name="ptComposerControlTypeID" type="I" size="10">
+      <unsigned/>
+      <default value="0" />
+    </field>
+   <field name="ptComposerControlObject" type="X2"></field>
+    <field name="ptComposerFormLayoutSetControlDisplayOrder" type="I" size="10">
+      <unsigned/>
+      <default value="0" />
+    </field>
+    <field name="ptComposerFormLayoutSetControlCustomLabel" type="C" size="255"/>
+    <field name="ptComposerFormLayoutSetControlCustomTemplate" type="C" size="255"/>
+    <field name="ptComposerFormLayoutSetControlRequired" type="I" size="10">
+      <default value="0" />
+    </field>
+  </table>
+
+  <table name="PageTypePageTemplateDefaultPages">
+    <field name="pTemplateID" type="I" size="10">
+      <unsigned/>
+      <default value="0" />
+      <key />
+    </field>
+   <field name="ptID" type="I" size="10">
+      <unsigned/>
+      <default value="0" />
+      <key />
+    </field>
+   <field name="cID" type="I" size="10">
+      <unsigned/>
+      <default value="0" />
+    </field>
+  </table>
+
+  <table name="PageTypeComposerOutputControls">
+    <field name="ptComposerOutputControlID" type="I" size="10">
+      <key/>
+      <autoincrement/>
+      <unsigned/>
+    </field>
+    <field name="pTemplateID" type="I" size="10">
+      <unsigned/>
+      <default value="0" />
+    </field>
+   <field name="ptID" type="I" size="10">
+      <unsigned/>
+      <default value="0" />
+    </field>
+   <field name="ptComposerFormLayoutSetControlID" type="I" size="10">
+      <unsigned/>
+      <default value="0" />
+    </field>
+  </table>
+
+  <table name="PageTypeComposerDraftBlocks">
+<field name="ptComposerDraftBlockID" type="I" size="10">
+      <key/>
+      <autoincrement/>
+      <unsigned/>
+    </field>
+  <field name="cID" type="I" size="10">
+      <unsigned/>
+      <notnull />
+      <default value="0" />
+    </field>
+    <field name="arHandle" type="C" size="255">
+    </field>
+    <field name="cbDisplayOrder" type="I" size="10">
+      <unsigned/>
+      <default value="0" />
+    </field>
+    <field name="ptComposerFormLayoutSetControlID" type="I" size="10">
+      <unsigned/>
+      <default value="0" />
+      <notnull />
+    </field>
+    <field name="bID" type="I" size="10">
+      <unsigned/>
+      <default value="0" />
+    </field>
+  </table>
+  <table name="PageTypePermissionAssignments">
+    <field name="ptID" type="I" size="10">
       <key/>
       <default value="0"/>
       <unsigned/>
@@ -196,24 +226,7 @@
       <unsigned/>
     </field>
   </table>
-  <table name="ComposerPermissionAssignments">
-    <field name="cmpID" type="I" size="10">
-      <key/>
-      <default value="0"/>
-      <unsigned/>
-    </field>
-    <field name="pkID" type="I" size="10">
-      <key/>
-      <default value="0"/>
-      <unsigned/>
-    </field>
-    <field name="paID" type="I" size="10">
-      <key/>
-      <default value="0"/>
-      <unsigned/>
-    </field>
-  </table>
-  <table name="ComposerPermissionControlAccessList">
+  <table name="PageTypePermissionControlAccessList">
     <field name="paID" type="I" size="10">
       <key/>
       <default value="0"/>
@@ -229,7 +242,7 @@
       <default value="1"/>
     </field>
   </table>
-  <table name="ComposerPermissionControlAccessListCustom">
+  <table name="PageTypePermissionControlAccessListCustom">
     <field name="paID" type="I" size="10">
       <key/>
       <default value="0"/>
@@ -240,7 +253,7 @@
       <default value="0"/>
       <unsigned/>
     </field>
-    <field name="cmpFormLayoutSetControlID" type="I" size="10">
+    <field name="ptComposerFormLayoutSetControlID" type="I" size="10">
       <key/>
       <default value="0"/>
       <unsigned/>
@@ -1364,7 +1377,7 @@
       <autoincrement/>
       <unsigned/>
     </field>
-    <field name="btHandle" type="C" size="32">
+    <field name="btHandle" type="C" size="128">
       <notnull/>
     </field>
     <field name="btName" type="C" size="128">
@@ -1497,6 +1510,31 @@
       <col>cvID</col>
     </index>
   </table>
+  <table name="CollectionVersionThemeStyles">
+    <field name="cID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="cvID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="1"/>
+      <UNSIGNED/>
+    </field>
+    <field name="pThemeID" type="I" size="10">
+      <key/>
+      <default value="0"/>
+      <unsigned/>
+    </field>
+    <field name="pThemeStyleHandle" type="C" size="128">
+      <key/>
+    </field>
+    <field name="pThemeStyleValue" type="X2" />
+    <field name="pThemeStyleType" type="C" size="32">
+      <key/>
+    </field>
+  </table>
+
   <table name="BlockFeatureAssignments">
     <field name="cID" type="I" size="10">
       <key/>
@@ -1700,12 +1738,12 @@
     <field name="cvApproverUID" type="I" size="10">
       <unsigned/>
     </field>
-    <field name="ptID" type="I" size="10">
+    <field name="pThemeID" type="I" size="10">
       <notnull/>
       <default value="0"/>
       <unsigned/>
     </field>
-    <field name="ctID" type="I" size="10">
+    <field name="pTemplateID" type="I" size="10">
       <notnull/>
       <default value="0"/>
       <unsigned/>
@@ -1713,9 +1751,6 @@
     <field name="cvActivateDatetime" type="T"/>
     <index name="cvIsApproved">
       <col>cvIsApproved</col>
-    </index>
-    <index name="ctID">
-      <col>ctID</col>
     </index>
   </table>
   <table name="Collections">
@@ -2035,7 +2070,7 @@
       <default value="0"/>
       <unsigned/>
     </field>
-    <field name="ctID" type="I" size="10">
+    <field name="ptID" type="I" size="10">
       <key/>
       <default value="0"/>
       <unsigned/>
@@ -2068,7 +2103,7 @@
       <default value="0"/>
       <unsigned/>
     </field>
-    <field name="ptID" type="I" size="10">
+    <field name="pThemeID" type="I" size="10">
       <key/>
       <default value="0"/>
       <unsigned/>
@@ -2996,70 +3031,58 @@
     </index>
   </table>
   <table name="PageThemes">
-    <field name="ptID" type="I" size="10">
+    <field name="pThemeID" type="I" size="10">
       <key/>
       <autoincrement/>
       <unsigned/>
     </field>
-    <field name="ptHandle" type="C" size="64">
+    <field name="pThemeHandle" type="C" size="64">
       <notnull/>
     </field>
-    <field name="ptName" type="C" size="255"/>
-    <field name="ptDescription" type="X"/>
+    <field name="pThemeName" type="C" size="255"/>
+    <field name="pThemeDescription" type="X"/>
     <field name="pkgID" type="I" size="10">
       <notnull/>
       <default value="0"/>
       <unsigned/>
     </field>
-    <field name="ptHasCustomClass" type="I" size="1">
+    <field name="pThemeHasCustomClass" type="I" size="1">
       <notnull/>
       <default value="0"/>
     </field>
     <index name="ptHandle">
       <unique/>
-      <col>ptHandle</col>
+      <col>pThemeHandle</col>
     </index>
   </table>
   <table name="PageThemeStyles">
-    <field name="ptID" type="I" size="10">
+    <field name="pThemeID" type="I" size="10">
       <key/>
       <default value="0"/>
       <unsigned/>
     </field>
-    <field name="ptsHandle" type="C" size="128">
+    <field name="pThemeStyleHandle" type="C" size="128">
       <key/>
     </field>
-    <field name="ptsValue" type="X2" />
-    <field name="ptsType" type="C" size="32">
+    <field name="pThemeStyleValue" type="X2" />
+    <field name="pThemeStyleType" type="C" size="32">
       <key/>
     </field>
   </table>
-  <table name="PageTypeAttributes">
-    <field name="ctID" type="I" size="10">
-      <key/>
-      <default value="0"/>
-      <unsigned/>
-    </field>
-    <field name="akID" type="I" size="10">
-      <key/>
-      <default value="0"/>
-      <unsigned/>
-    </field>
-  </table>
-  <table name="PageTypes">
-    <field name="ctID" type="I" size="10">
+  <table name="PageTemplates">
+    <field name="pTemplateID" type="I" size="10">
       <key/>
       <autoincrement/>
       <unsigned/>
     </field>
-    <field name="ctHandle" type="C" size="32">
+    <field name="pTemplateHandle" type="C" size="32">
       <notnull/>
     </field>
-    <field name="ctIcon" type="C" size="128"/>
-    <field name="ctName" type="C" size="90">
+    <field name="pTemplateIcon" type="C" size="128"/>
+    <field name="pTemplateName" type="C" size="90">
       <notnull/>
     </field>
-    <field name="ctIsInternal" type="I1" size="1">
+    <field name="pTemplateIsInternal" type="I1" size="1">
       <notnull/>
       <default value="0"/>
     </field>
@@ -3068,13 +3091,18 @@
       <default value="0"/>
       <unsigned/>
     </field>
-    <index name="ctHandle">
+    <index name="pTemplateHandle">
       <unique/>
-      <col>ctHandle</col>
+      <col>pTemplateHandle</col>
     </index>
   </table>
   <table name="Pages">
     <field name="cID" type="I" size="10">
+      <key/>
+      <default value="0"/>
+      <unsigned/>
+    </field>
+    <field name="ptID" type="I" size="10">
       <key/>
       <default value="0"/>
       <unsigned/>
@@ -3140,6 +3168,11 @@
       <unsigned/>
     </field>
     <field name="pkgID" type="I" size="10">
+      <notnull/>
+      <default value="0"/>
+      <unsigned/>
+    </field>
+    <field name="cDraftTargetParentPageID" type="I" size="10">
       <notnull/>
       <default value="0"/>
       <unsigned/>

@@ -1,7 +1,7 @@
 <?php
 abstract class Concrete5_Model_ConversationEditor extends Object {
 
-	abstract public function getConversationEditorHeaderItems();
+	abstract public function getConversationEditorAssetPointers();
 
 	public function setConversationMessageObject(ConversationMessage $message) {
 		$this->cnvMessage = $message;

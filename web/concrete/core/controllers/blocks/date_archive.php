@@ -37,8 +37,8 @@ class Concrete5_Controller_Block_DateArchive extends BlockController {
 		
 		$query = "SELECT MIN(cv.cvDatePublic) as firstPost 
 			FROM CollectionVersions cv inner join Pages on cv.cID = Pages.cID
-			INNER JOIN PageTypes pt ON cv.ctID = pt.ctID
-			WHERE pt.ctHandle IN ('blog_entry') and cIsTemplate = 0 and cvIsApproved = 1 and cIsActive = 1";
+			INNER JOIN PageTypes pt ON Pages.ptID = pt.ptID
+			WHERE pt.ptHandle IN ('blog_entry') and cIsTemplate = 0 and cvIsApproved = 1 and cIsActive = 1";
 		$db = Loader::db();
 		$firstPost = $db->getOne($query);
 

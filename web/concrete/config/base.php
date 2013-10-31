@@ -105,13 +105,16 @@ if (!defined('PAGE_PATH_SEGMENT_MAX_LENGTH')) {
 	define('PAGE_PATH_SEGMENT_MAX_LENGTH', '128');
 }
 
-
-if (!defined('ENABLE_ASSET_COMPRESSION')) {
-	define('ENABLE_ASSET_COMPRESSION', false);
-}
-
 if (!defined('PAGING_STRING')) {
 	define('PAGING_STRING', 'ccm_paging_p');
+}
+
+if (!defined('DIRNAME_LIBRARIES_ASSET')) {
+	define('DIRNAME_LIBRARIES_ASSET', 'asset');
+}
+
+if (!defined('DIRNAME_LIBRARIES_ASSET_GROUPS')) {
+	define('DIRNAME_LIBRARIES_ASSET_GROUPS', 'groups');
 }
 
 /** 
@@ -180,6 +183,7 @@ define('DIR_STARTING_POINT_PACKAGES_CORE', DIR_BASE_CORE . '/config/install/pack
 define('DIRNAME_BLOCKS', 'blocks');
 define('DIRNAME_BACKUPS', 'backups');
 define('DIRNAME_PAGES', 'single_pages');
+define('DIRNAME_VIEWS', 'views');
 define('DIRNAME_PACKAGES', 'packages');
 define('DIRNAME_MODELS', 'models');
 define('DIRNAME_ATTRIBUTES', 'attribute');
@@ -212,6 +216,7 @@ define('DIRNAME_BLOCK_TOOLS', 'tools');
 define('DIRNAME_BLOCK_TEMPLATES', 'templates');
 define('DIRNAME_BLOCK_TEMPLATES_COMPOSER', 'composer');
 define('DIRNAME_CSS', 'css');
+define('DIRNAME_PREVIEW', 'preview');
 define('DIRNAME_GROUP', 'group');
 define('DIRNAME_GROUP_AUTOMATION', 'automation');
 
@@ -243,7 +248,9 @@ define('BLOCK_HANDLE_GATHERING_ITEM_PROXY', 'core_gathering_item');
 define('BLOCK_HANDLE_GATHERING_PROXY', 'core_gathering_display');
 define('BLOCK_HANDLE_GATHERING', 'core_gathering');
 define('BLOCK_HANDLE_LAYOUT_PROXY', 'core_area_layout');
+define('BLOCK_HANDLE_PAGE_TYPE_OUTPUT_PROXY', 'core_page_type_composer_control_output');
 define('FILENAME_FORM', 'form.php');
+define('DIRNAME_PANELS', 'panels');
 
 # Stacks
 define('STACKS_PAGE_PATH', '/!stacks');
@@ -289,15 +296,15 @@ define('FILENAME_COLLECTION_VIEW', 'view.php');
 define('FILENAME_COLLECTION_ACCESS', 'access.xml');
 define('FILENAME_COLLECTION_EDIT', 'edit.php');
 define('FILENAME_COLLECTION_DEFAULT_THEME', 'default');
-define('FILENAME_COLLECTION_TYPE_DEFAULT_ICON', 'main.png');
+define('FILENAME_PAGE_TEMPLATE_DEFAULT_ICON', 'main.png');
 define('FILENAME_PAGE_ICON', 'icon.png');
 define('FILENAME_PACKAGE_CONTROLLER', 'controller.php');
 define('FILENAME_PACKAGE_DB', 'db.xml');
 //define('DIR_FILES_COLLECTION_TYPES', DIR_BASE . '/views/page_types');
-define('DIR_FILES_COLLECTION_TYPE_ICONS', DIR_BASE_CORE . '/images/icons/page_types');
-define('REL_DIR_FILES_COLLECTION_TYPE_ICONS', ASSETS_URL_IMAGES . '/icons/page_types');
-define('COLLECTION_TYPE_ICON_WIDTH', 120);
-define('COLLECTION_TYPE_ICON_HEIGHT', 90);
+define('DIR_FILES_PAGE_TEMPLATE_ICONS', DIR_BASE_CORE . '/images/icons/page_templates');
+define('REL_DIR_FILES_PAGE_TEMPLATE_ICONS', ASSETS_URL_IMAGES . '/icons/page_templates');
+define('PAGE_TEMPLATE_ICON_WIDTH', 120);
+define('PAGE_TEMPLATE_ICON_HEIGHT', 90);
 define('DIR_FILES_CONTENT', DIR_BASE . '/single_pages');
 define('DIR_FILES_CONTENT_REQUIRED', DIR_BASE_CORE . '/single_pages');
 define("FILENAME_LOCAL_DB", 'site_db.xml');
@@ -497,18 +504,18 @@ define('HOME_UID', USER_SUPER_ID);
 define('HOME_HANDLE', "home");
 
 # Composer settings
-define('COMPOSER_DRAFTS_PAGE_PATH', '/!drafts');
+define('PAGE_DRAFTS_PAGE_PATH', '/!drafts');
 if (!defined('DIRNAME_COMPOSER')) {
 	define('DIRNAME_COMPOSER', 'composer');
 }
-if (!defined('DIRNAME_COMPOSER_ELEMENTS_TARGET_TYPES')) {
-	define('DIRNAME_COMPOSER_ELEMENTS_TARGET_TYPES', 'target_types');
+if (!defined('DIRNAME_ELEMENTS_PAGE_TYPES_PUBLISH_TARGET_TYPES')) {
+	define('DIRNAME_ELEMENTS_PAGE_TYPES_PUBLISH_TARGET_TYPES', 'target_types');
 }
 if (!defined('DIRNAME_COMPOSER_ELEMENTS_CONTROLS')) {
 	define('DIRNAME_COMPOSER_ELEMENTS_CONTROLS', 'controls');
 }
-if (!defined('DIRNAME_COMPOSER_ELEMENTS_TARGET_TYPES_FORM')) {
-	define('DIRNAME_COMPOSER_ELEMENTS_TARGET_TYPES_FORM', 'form');
+if (!defined('DIRNAME_ELEMENTS_PAGE_TYPES_PUBLISH_TARGET_TYPES_FORM')) {
+	define('DIRNAME_ELEMENTS_PAGE_TYPES_PUBLISH_TARGET_TYPES_FORM', 'form');
 }
 
 
@@ -584,6 +591,10 @@ if (!defined('NEWSFLOW_URL')) {
 
 if (!defined('ENABLE_TRASH_CAN')) { 
 	define('ENABLE_TRASH_CAN', true);
+}
+
+if (!defined('URL_USE_TRAILING_SLASH')) {
+	define('URL_USE_TRAILING_SLASH', false);
 }
 
 define('MARKETPLACE_BASE_URL_SITE_PAGE', CONCRETE5_ORG_URL.'/private/sites');

@@ -8,11 +8,7 @@ var CCMInlineEditMode = function() {
 	enterInlineEditMode = function(activeObj) {
 		
 		$.fn.ccmmenu.disable();
-		$('#ccm-toolbar-disabled').remove();
-		$('<div />', {'id': 'ccm-toolbar-disabled'}).appendTo(document.body);
-		setTimeout(function() {
-			$('#ccm-toolbar-disabled').css('opacity', 1);
-		}, 10);
+		CCMToolbar.disable();
 		$('div.ccm-area').addClass('ccm-area-inline-edit-disabled');
 		if (activeObj) {
 			activeObj.addClass('ccm-block-edit-inline-active');
@@ -68,7 +64,7 @@ var CCMInlineEditMode = function() {
 			$('div.ccm-block-edit-inline-active').remove();
 			$(window).unbind('scroll.inline-toolbar');
 			$('div.ccm-area').removeClass('ccm-area-inline-edit-disabled');
-			$('#ccm-toolbar-disabled').remove();
+			CCMToolbar.enable();
 			$('#ccm-toolbar').css('opacity', 1);
 			$('#ccm-inline-toolbar-container').remove();
 

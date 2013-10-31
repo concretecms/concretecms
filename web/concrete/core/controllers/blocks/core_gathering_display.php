@@ -24,13 +24,10 @@
 			return t("Gathering Display (Core)");
 		}
 
-		public function on_page_view() {
-			$this->addHeaderItem(Loader::helper('html')->css('ccm.gathering.css'));
-			$this->addFooterItem(Loader::helper('html')->javascript('ccm.gathering.js'));
-			Loader::helper('overlay')->init(false);
-		}
-
 		public function view() {
+			$r = ResponseAssetGroup::get();
+			$r->requireAsset('core/gathering');
+			Loader::helper('overlay')->init(false);
 			$gathering = Gathering::getByID($this->gaID);
 			if (is_object($gathering)) {
 				$list = new GatheringItemList($gathering);

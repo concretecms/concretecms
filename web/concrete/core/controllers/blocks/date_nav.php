@@ -17,7 +17,7 @@
 		protected $btInterfaceWidth = "500";
 		protected $btInterfaceHeight = "350";
 		protected $btExportPageColumns = array('cParentID');
-		protected $btExportPageTypeColumns = array('ctID');
+		protected $btExportPageTypeColumns = array('ptID');
 		protected $btCacheBlockRecord = true;
 		
 		/** 
@@ -51,7 +51,7 @@
 				$row['cParentID'] = $this->cParentID;
 				$row['cThis'] = $this->cThis;
 				$row['orderBy'] = $this->orderBy;
-				$row['ctID'] = $this->ctID;
+				$row['ptID'] = $this->ptID;
 				$row['rss'] = $this->rss;
 			}
 
@@ -85,8 +85,8 @@
 			
 			$pl->filter('cvName', '', '!=');			
 		
-			if ($row['ctID']) {
-				$pl->filterByCollectionTypeID($row['ctID']);
+			if ($row['ptID']) {
+				$pl->filterByPageTypeID($row['ptID']);
 			}
 			
 			$pl->filterByAttribute('exclude_nav',false);

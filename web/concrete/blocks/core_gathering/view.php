@@ -9,7 +9,7 @@ if ($enablePostingFromGathering && is_object($composer)) { ?>
 	<div style="display: none">
 		<div data-form="gathering-post">
 			<form data-form="composer">
-			<?=Loader::helper('composer/form')->display($composer)?>
+			<?=Loader::helper('composer')->display($composer)?>
 			<div class="dialog-buttons">
 			<button type="button" data-composer-btn="exit" class="btn pull-left"><?=t('Cancel')?></button>
 			<button type="button" data-composer-btn="publish" class="btn btn-primary pull-right"><?=t('Post')?></button>
@@ -30,7 +30,6 @@ if ($enablePostingFromGathering && is_object($composer)) { ?>
 			$postToGathering = $db.find('button[data-action=post-to-gathering]');
 
 		$db.find('form[data-form=composer]').ccmcomposer({
-			publishURL: '<?=html_entity_decode($this->action("post"))?>',
 			onExit: function() {
 				$dialog.dialog('close');
 			},

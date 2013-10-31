@@ -5,6 +5,9 @@ header('Content-type: text/javascript'); ?>
 
 var ccmi18n = { 
 	
+	expand: "<?=t('Expand')?>",
+	cancel: "<?=t('Cancel')?>",
+	collapse: "<?=t('Collapse')?>",
 	error: "<?=t('Error')?>",
 	deleteBlock: "<?=t('Delete')?>",
 	deleteBlockMsg: "<?=t('The block has been removed successfully.')?>",
@@ -25,7 +28,6 @@ var ccmi18n = {
 	deleteLayoutOptsTitle: "<?=t('Delete Layout')?>", 
 	confirmLayoutPresetDelete: "<?=t('Are you sure you want to delete this layout preset?')?>",
 	setAreaPermissions: "<?=t('Set Permissions')?>",
-	cmpDraftPermissionsTitle: "<?=t('Composer Draft Permissions')?>",
 	addBlockMsg: "<?=t('The block has been added successfully.')?>",
 	updateBlock: "<?=t('Update Block')?>",
 	updateBlockMsg: "<?=t('The block has been saved successfully.')?>",

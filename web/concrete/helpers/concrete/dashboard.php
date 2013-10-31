@@ -36,13 +36,17 @@ class ConcreteDashboardHelper {
 	}
 
 	public function inDashboard($page = false) {
-		if (!$page) {
+		if ($page) {
+			return strpos($page->getCollectionPath(), '/dashboard') === 0;
+		} else {
 			$page = Page::getCurrentPage();
+			return strpos($page->getCollectionPath(), '/dashboard') === 0;
 		}
-		return strpos($page->getCollectionPath(), '/dashboard') === 0;
 	}
 	
 	public function getDashboardPaneFooterWrapper($includeDefaultBody = true) {
+		return;
+		
 		$html = '</div></div></div></div>';
 		if ($includeDefaultBody) {
 			$html .= '</div>';
@@ -51,7 +55,8 @@ class ConcreteDashboardHelper {
 	}
 	
 	public function getDashboardPaneHeaderWrapper($title = false, $help = false, $span = 'span12', $includeDefaultBody = true, $navigatePages = array(), $upToPage = false, $favorites = true) {
-		
+		return;
+
 		$spantotal = 12;
 		$offset = preg_match('/offset([0-9]+)/i', $span, $offsetmatches);
 		if ($offset) {
@@ -141,12 +146,13 @@ class ConcreteDashboardHelper {
 
 		$html = '<div class="ccm-pane-header">';
 		
-		$class = 'icon-star';
+		/*$class = 'icon-star';
 		$qn = ConcreteDashboardMenu::getMine();
 		$quicknav = $qn->getItems(false);
 		if (in_array($c->getCollectionPath(), $quicknav)) {
 			$class = 'icon-white icon-star';	
 		}
+		*/
 		$html .= '<ul class="ccm-pane-header-icons">';
 		if (!$help) {
 			$ih = Loader::helper('concrete/interface/help');
@@ -221,7 +227,132 @@ class ConcreteDashboardHelper {
 		$obj->image = $image;
 		return $obj;
 	}
-	
+
+	public function getIntelligentSearchMenu() {
+		if (isset($_SESSION['dashboardMenus'])) {
+			return $_SESSION['dashboardMenus'];
+		}			
+
+		ob_start(); ?>
+			<div id="ccm-intelligent-search-results">
+			<?
+			$page = Page::getByPath('/dashboard');
+			$children = $page->getCollectionChildrenArray(true);
+			
+			$packagepages = array();
+			$corepages = array();
+			foreach($children as $ch) {
+				$page = Page::getByID($ch);
+				$pageP = new Permissions($page);
+				if ($pageP->canRead()) { 
+					if (!$page->getAttribute("exclude_nav")) {
+						if ($page->getPackageID() > 0) {
+							$packagepages[] = $page;
+						} else {
+							$corepages[] = $page;
+						}
+					}
+				} else {
+					continue;
+				}
+			
+				if ($page->getAttribute('exclude_search_index')) {
+					continue;
+				}
+				
+				if ($page->getCollectionPath() == '/dashboard/system') {
+					$ch2 = $page->getCollectionChildrenArray();
+				} else {
+					$ch2 = $page->getCollectionChildrenArray(true);
+				}
+				?>
+				
+				<div class="ccm-intelligent-search-results-module ccm-intelligent-search-results-module-onsite">
+				
+				<h1><?=t($page->getCollectionName())?></h1>
+				
+				
+				<ul class="ccm-intelligent-search-results-list">
+				<? if (count($ch2) == 0) { ?>
+					<li><a href="<?=Loader::helper('navigation')->getLinkTocollection($page, false, true)?>"><?=t($page->getCollectionName())?></a><span><?=t($page->getCollectionName())?> <?=$page->getAttribute('meta_keywords')?></span></li>
+				<? } ?>
+				
+				<?
+				if ($page->getCollectionPath() == '/dashboard/system') { ?>
+					<li><a href="<?=Loader::helper('navigation')->getLinkTocollection($page, false, true)?>"><?=t('View All')?></a><span><?=t($page->getCollectionName())?> <?=$page->getAttribute('meta_keywords')?></span></li>
+				<?				
+				}
+				
+				foreach($ch2 as $chi) {
+					$subpage = Page::getByID($chi); 
+					$subpageP = new Permissions($subpage);
+					if (!$subpageP->canRead()) {
+						continue;
+					}
+
+					if ($subpage->getAttribute('exclude_search_index')) {
+						continue;
+					}
+			
+					?>
+					<li><a href="<?=Loader::helper('navigation')->getLinkTocollection($subpage, false, true)?>"><?=$subpage->getCollectionName()?></a><span><? if ($page->getCollectionPath() != '/dashboard/system') { ?><?=t($page->getCollectionName())?> <?=$page->getAttribute('meta_keywords')?> <? } ?><?=$subpage->getCollectionName()?> <?=$subpage->getAttribute('meta_keywords')?></span></li>
+					<? 
+				}
+				?>
+				</ul>
+				
+				</div>
+				<? }
+				
+				$custHome = Page::getByPath('/dashboard/home');
+				$custHomeP = new Permissions($custHome);
+				if ($custHomeP->canRead()) {
+				?>
+				
+				<div class="ccm-intelligent-search-results-module ccm-intelligent-search-results-module-onsite">
+				
+				<h1><?=t('Dashboard Home')?></h1>
+				
+				
+				<ul class="ccm-intelligent-search-results-list">
+					<li><a href="<?=View::url('/dashboard/home')?>"><?=t('Customize')?> <span><?=t('Customize Dashboard Home')?></span></a></li>
+				</ul>
+				
+				</div>
+				
+				<? } ?>
+				
+				<div class="ccm-intelligent-search-results-module ccm-intelligent-search-results-module-loading">
+				<h1><?=t('Your Site')?></h1>
+				<ul class="ccm-intelligent-search-results-list" id="ccm-intelligent-search-results-list-your-site">
+				</ul>
+				</div>
+				
+				<? if (ENABLE_INTELLIGENT_SEARCH_HELP) { ?>
+				<div class="ccm-intelligent-search-results-module ccm-intelligent-search-results-module-offsite ccm-intelligent-search-results-module-loading">
+				<h1><?=t('Help')?></h1>
+				<ul class="ccm-intelligent-search-results-list" id="ccm-intelligent-search-results-list-help">
+				</ul>
+				</div>
+				<? } ?>
+				
+				<? if (ENABLE_INTELLIGENT_SEARCH_MARKETPLACE) { ?>
+				<div class="ccm-intelligent-search-results-module ccm-intelligent-search-results-module-offsite ccm-intelligent-search-results-module-loading">
+				<h1><?=t('Add-Ons')?></h1>
+				<ul class="ccm-intelligent-search-results-list" id="ccm-intelligent-search-results-list-marketplace">
+				</ul>
+				</div>
+				<? } ?>				
+			</div>
+			
+		<?
+			$html = ob_get_contents();
+			ob_end_clean();
+			
+		return str_replace(array("\n", "\r", "\t"), "", $html);
+	}	
+
+	/*
 	public function addQuickNavToMenus($html) {
 		$recent = '';
 		ob_start();		
@@ -426,7 +557,10 @@ class ConcreteDashboardHelper {
 		return str_replace(array("\n", "\r", "\t"), "", $html);
 	
 	}
+	*/
+
 }
+
 
 class ConcreteDashboardMenu {
 	
@@ -501,6 +635,8 @@ class ConcreteDashboardMenu {
 		$qn->items = $qnx->items;
 		return $qn;	
 	}
+
+
 }
 
 class ConcreteDashboardDefaultMenu extends ConcreteDashboardMenu {
@@ -517,3 +653,5 @@ class ConcreteDashboardDefaultMenu extends ConcreteDashboardMenu {
 	);
 
 }
+
+

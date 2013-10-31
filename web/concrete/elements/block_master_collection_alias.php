@@ -1,11 +1,11 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-global $c;
+$c  = Page::getCurrentPage();
 
 // grab all the collections belong to the collection type that we're looking at
 Loader::model('collection_types');
-$ctID = $c->getCollectionTypeID();
-$ct = CollectionType::getByID($ctID);
+$ptID = $c->getPageTypeID();
+$ct = PageType::getByID($ptID);
 
 $cList = $ct->getPages();
 ?>

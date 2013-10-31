@@ -7,7 +7,7 @@
 		</field>
 		<field name="cnvDiscussionID" type="I">
 		</field>
-		<field name="cmpID" type="I">
+		<field name="ptID" type="I">
 			<unsigned />
 			<default value="0" />
 		</field>

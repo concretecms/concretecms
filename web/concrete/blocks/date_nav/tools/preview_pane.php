@@ -16,7 +16,7 @@ $controller->num 		= $_REQUEST['num'];
 $controller->cParentID 	= $_REQUEST['cParentID'];
 $controller->cThis 		= $_REQUEST['cThis'];
 $controller->orderBy	= $_REQUEST['orderBy'];
-$controller->ctID 		= $_REQUEST['ctID'];
+$controller->ptID 		= $_REQUEST['ptID'];
 $controller->rss 		= $_REQUEST['rss'];
 $controller->displayFeaturedOnly = $_REQUEST['displayFeaturedOnly'];
 

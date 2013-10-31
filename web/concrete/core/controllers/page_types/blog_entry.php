@@ -1,6 +1,6 @@
 <?
 	defined('C5_EXECUTE') or die("Access Denied.");
-	class Concrete5_Controller_PageType_BlogEntry extends Controller {
+	class Concrete5_Controller_PageType_BlogEntry extends PageTypeController {
 	
 		/**
 		 * Returns a formatted text for the number of comments in the first comment block in the "Entry Comments" area
