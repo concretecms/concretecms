@@ -90,5 +90,7 @@ class Concrete5_Controller_AuthenticationType_Concrete extends AuthenticationTyp
 	public function isAuthenticated(User $u) {
 		return ($u->isLoggedIn());
 	}
+	
+	public function saveAuthenticationType($values) {}
 
 }

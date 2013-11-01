@@ -74,7 +74,7 @@ class Concrete5_Controller_Dashboard_System_Registration_AuthenticationTypes ext
 			$this->redirect('dashboard/system/registration/authentication_types/');
 			exit;
 		}
-		$this->set('message',$at->getAuthenticationTypeName()." authentication has been disabled.");
+		$this->set('message',$at->getAuthenticationTypeName()." authentication has been saved.");
 		$this->view();
 	}
 
