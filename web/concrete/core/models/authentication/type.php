@@ -22,6 +22,10 @@ class Concrete5_Model_AuthenticationType extends Object {
 		$db->Execute('UPDATE AuthenticationTypes SET authTypeDisplayOrder=? WHERE authTypeID=?',array($order,$this->getAuthenticationTypeID()));
 	}
 	
+	/**
+	 * @param int $authTypeID
+	 * @return Concrete5_Model_AuthenticationType
+	 */
 	public static function getByID($authTypeID) {
 		$db = Loader::db();
 		$row = $db->GetRow('SELECT * FROM AuthenticationTypes where authTypeID=?', array($authTypeID));
@@ -236,7 +240,7 @@ class Concrete5_Model_AuthenticationType extends Object {
 	 * @param string $_file The filename you want.
 	 * @return string This will return false if the file is not found.
 	 */
-	protected function mapAuthenticationTypeFilePath($_file) {
+	public function mapAuthenticationTypeFilePath($_file) {
 		$atHandle = $this->getAuthenticationTypeHandle();
 
 		$locations = array();
