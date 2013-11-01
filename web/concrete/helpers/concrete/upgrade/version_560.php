@@ -101,6 +101,11 @@ class ConcreteUpgradeVersion560Helper {
 			$bt->refresh();
 		}
 
+		$bt = BlockType::getByHandle('search');
+		if (is_object($bt)) {
+			$bt->refresh();
+		}
+
 		$sp = Page::getByPath('/dashboard/users/group_sets');
 		if ($sp->isError()) {
 			$d11 = SinglePage::add('/dashboard/users/group_sets');
@@ -150,14 +155,14 @@ class ConcreteUpgradeVersion560Helper {
 		}
 		// update meta keywords
 		$pageKeywords = array(
-			'/dashboard/composer' => t('new blog, write, write blog, blogging'),
-			'/dashboard/composer/write' => t('new blog, write, write blog, blogging'),
-			'/dashboard/composer/drafts' => t('blog drafts,composer'),
+			'/dashboard/composer' => t('blog, blogging'),
+			'/dashboard/composer/write' => t('new blog, write blog, blogging'),
+			'/dashboard/composer/drafts' => t('blog drafts, composer'),
+			'/dashboard/sitemap' => t('pages, add page, delete page, copy, move, alias'),
+			'/dashboard/sitemap/full' => t('pages, add page, delete page, copy, move, alias'),
 			'/dashboard/sitemap/explore' => t('pages, add page, delete page, copy, move, alias, bulk'),
 			'/dashboard/sitemap/search' => t('find page, search page, search, find, pages, sitemap'),
-			'/dashboard/sitemap/full' => t('pages, add page, delete page, copy, move, alias'),
-			'/dashboard/sitemap/search' => t('find page, search page, search, find, pages, sitemap'),
-			'/dashboard/files' => t('add file, delete file, copy, move, alias, resize, crop, rename, images, title, attribute'),
+			'/dashboard/files/search' => t('add file, delete file, copy, move, alias, resize, crop, rename, images, title, attribute'),
 			'/dashboard/files/attributes' => t('file, file attributes, title, attribute, description, rename'),
 			'/dashboard/files/sets' => t('files, category, categories'),
 			'/dashboard/files/add_set' => t('new file set'),
@@ -173,7 +178,6 @@ class ConcreteUpgradeVersion560Helper {
 			'/dashboard/reports/forms' => t('forms, questions, response, data'),
 			'/dashboard/reports/surveys' => t('questions, quiz, response'),
 			'/dashboard/reports/logs' => t('forms, log, error, email, mysql, exception, survey, history'),
-			'/dashboard/pages' => t('themes'),
 			'/dashboard/pages/themes' => t('new theme, theme, active theme, change theme, template, css'),
 			'/dashboard/pages/themes/add' => t('theme'),
 			'/dashboard/pages/themes/inspect' => t('page types'),
@@ -185,7 +189,7 @@ class ConcreteUpgradeVersion560Helper {
 			'/dashboard/blocks/stacks' => t('stacks, reusable content, scrapbook, copy, paste, paste block, copy block, site name, logo'),
 			'/dashboard/blocks/stacks/list' => t('edit stacks, view stacks, all stacks'),
 			'/dashboard/blocks/types' => t('block, refresh, custom'),
-			'/dashboard/extend' => t('add-on, addon, add on, package,applications, ecommerce, discussions, forums, themes, templates, blocks'),
+			'/dashboard/extend' => t('add-on, addon, add on, package, applications, ecommerce, discussions, forums, themes, templates, blocks'),
 			'/dashboard/extend/install' => t('add-on, addon, ecommerce, install, discussions, forums, themes, templates, blocks'),
 			'/dashboard/extend/update' => t('update, upgrade'),
 			'/dashboard/extend/connect' => t('concrete5.org, my account, marketplace'),
@@ -194,19 +198,19 @@ class ConcreteUpgradeVersion560Helper {
 			'/dashboard/system' => t('dashboard, configuration'),
 			'/dashboard/system/basics/site_name' => t('website name, title'),
 			'/dashboard/system/basics/icons' => t('logo, favicon, iphone, icon, bookmark'),
-			'/dashboard/system/basics/editor' => t('tinymce, content block, fonts, editor, tinymce, content, overlay'),
-			'/dashboard/system/basics/multilingual' => t('translate, translation, internationalization, multilingual, translate'),
+			'/dashboard/system/basics/editor' => t('tinymce, content block, fonts, editor, content, overlay'),
+			'/dashboard/system/basics/multilingual' => t('translate, translation, internationalization, multilingual'),
 			'/dashboard/system/basics/timezone' => t('timezone, profile, locale'),
 			'/dashboard/system/basics/interface' => t('interface, quick nav, dashboard background, background image'),
-			'/dashboard/system/seo' => t('vanity, pretty url, seo, pageview, view'),
+			'/dashboard/system/seo/urls' => t('vanity, pretty url, seo, pageview, view'),
 			'/dashboard/system/seo/bulk_seo_tool' => t('bulk, seo, change keywords, engine, optimization, search'),
 			'/dashboard/system/seo/tracking_codes' => t('traffic, statistics, google analytics, quant, pageviews, hits'),
 			'/dashboard/system/seo/statistics' => t('turn off statistics, tracking, statistics, pageviews, hits'),
 			'/dashboard/system/seo/search_index' => t('configure search, site search, search option'),
-			'/dashboard/system/optimization' => t('cache option, change cache, turn on cache, turn off cache, no cache, page cache, caching'),
+			'/dashboard/system/optimization/cache' => t('cache option, change cache, override, turn on cache, turn off cache, no cache, page cache, caching'),
 			'/dashboard/system/optimization/clear_cache' => t('cache option, turn off cache, no cache, page cache, caching'),
 			'/dashboard/system/optimization/jobs' => t('index search, reindex search, build sitemap, sitemap.xml, clear old versions, page versions, remove old'),
-			'/dashboard/system/permissions' => t('/dashboard/system/permissions/site'),
+			'/dashboard/system/permissions/site' => t('editors, hide site, offline, private, public, access'),
 			'/dashboard/system/permissions/files' => t('file options, file manager, upload, modify'),
 			'/dashboard/system/permissions/file_types' => t('security, files, media, extension, manager, upload'),
 			'/dashboard/system/permissions/tasks' => t('security, actions, administrator, admin, package, marketplace, search'),
@@ -214,16 +218,18 @@ class ConcreteUpgradeVersion560Helper {
 			'/dashboard/system/permissions/captcha' => t('security, registration'),
 			'/dashboard/system/permissions/antispam' => t('antispam, block spam, security'),
 			'/dashboard/system/permissions/maintenance_mode' => t('lock site, under construction, hide, hidden'),
-			'/dashboard/system/registration' => t('profile, login, redirect, specific, dashboard, administrators'),
-			'/dashboard/system/registration/profiles' => t('member profile, member page,community, forums, social, avatar'),
+			'/dashboard/system/registration/postlogin' => t('profile, login, redirect, specific, dashboard, administrators'),
+			'/dashboard/system/registration/profiles' => t('member profile, member page, community, forums, social, avatar'),
 			'/dashboard/system/registration/public_registration' => t('signup, new user, community'),
 			'/dashboard/system/mail' => t('smtp, mail settings'),
 			'/dashboard/system/mail/method' => t('email server, mail settings, mail configuration, external, internal'),
 			'/dashboard/system/mail/importers' => t('email server, mail settings, mail configuration, private message, message system, import, email, message'),
 			'/dashboard/system/attributes' => t('attribute configuration'),
-			'/dashboard/system/environment/info' => t('overrides, override, system info, debug, support,help'),
+			'/dashboard/system/attributes/sets' => t('attributes, sets'),
+			'/dashboard/system/attributes/types' => t('attributes, types'),
+			'/dashboard/system/environment/info' => t('overrides, system info, debug, support, help'),
 			'/dashboard/system/environment/debug' => t('errors, exceptions, develop, support, help'),
-			'/dashboard/system/environment/logging' => t('email, logging, logs, smtp, pop, errors, mysql, errors, log'),
+			'/dashboard/system/environment/logging' => t('email, logging, logs, smtp, pop, errors, mysql, log'),
 			'/dashboard/system/environment/file_storage_locations' => t('security, alternate storage, hide files'),
 			'/dashboard/system/environment/proxy' => t('network, proxy server'),
 			'/dashboard/system/backup_restore' => t('export, backup, database, sql, mysql, encryption, restore'),
@@ -281,7 +287,7 @@ class ConcreteUpgradeVersion560Helper {
 							$pa = $pko->getPermissionAccessObject();
 							if (!is_object($pa)) {
 								$pa = PermissionAccess::create($pko);
-							} else if ($pa->isPermissionKeyInUse()) {
+							} else if ($pa->isPermissionAccessInUse()) {
 								$pa = $pa->duplicate();
 							}
 							$pa->addListItem($pe, false, PermissionKey::ACCESS_TYPE_INCLUDE);	

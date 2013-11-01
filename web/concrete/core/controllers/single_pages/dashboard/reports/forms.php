@@ -1,6 +1,5 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
 Loader::block('form');
-
 class Concrete5_Controller_Page_Dashboard_Reports_Forms extends DashboardController {
 
 	protected $pageSize=10; 
@@ -138,16 +137,28 @@ class Concrete5_Controller_Page_Dashboard_Reports_Forms extends DashboardControl
 		$pageBase = DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $c->getCollectionID();
 		
 		if( $_REQUEST['action'] == 'deleteForm' ){
-			$this->deleteForm($_REQUEST['bID'], $_REQUEST['qsID']);
+			if (!Loader::helper('validation/token')->validate('deleteForm')) {
+				$this->error->add(t('Invalid Token.'));
+			} else {
+				$this->deleteForm($_REQUEST['bID'], $_REQUEST['qsID']);
+			}
 		}	
 		
 		if( $_REQUEST['action'] == 'deleteFormAnswers' ){
-			$this->deleteFormAnswers($_REQUEST['qsID']);
-            $this->redirect('/dashboard/reports/forms');
+			if (!Loader::helper('validation/token')->validate('deleteFormAnswers')) {
+				$this->error->add(t('Invalid Token.'));
+			} else {
+				$this->deleteFormAnswers($_REQUEST['qsID']);
+				$this->redirect('/dashboard/reports/forms');
+			}
 		}	
 		
 		if( $_REQUEST['action'] == 'deleteResponse' ){
-			$this->deleteAnswers($_REQUEST['asid']);
+			if (!Loader::helper('validation/token')->validate('deleteResponse')) {
+				$this->error->add(t('Invalid Token.'));
+			} else {
+				$this->deleteAnswers($_REQUEST['asid']);
+			}
 		}		
 		
 		//load surveys

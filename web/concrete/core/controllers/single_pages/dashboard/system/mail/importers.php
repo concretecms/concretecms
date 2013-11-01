@@ -4,7 +4,7 @@ class Concrete5_Controller_Page_Dashboard_System_Mail_Importers extends Dashboar
 	protected $sendUndefinedTasksToView = false;
 	public function on_start() {	
 		$this->set('importers',MailImporter::getList() );
-		
+		parent::on_start();
 	}
 
 	public function edit_importer($miID = false) {
@@ -13,6 +13,11 @@ class Concrete5_Controller_Page_Dashboard_System_Mail_Importers extends Dashboar
 	}
 	
 	public function save_importer() {
+		if (!Loader::helper('validation/token')->validate('save_importer')) {
+			$this->error->add(t('Invalid Token.'));
+			return;
+		}
+
 		$miID = $this->post('miID');
 		$mi = MailImporter::getByID($miID);
 		if (is_object($mi)) {
@@ -26,5 +31,3 @@ class Concrete5_Controller_Page_Dashboard_System_Mail_Importers extends Dashboar
 	}
 		
 }
-
-?>

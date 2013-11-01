@@ -65,7 +65,7 @@ class Concrete5_Controller_AttributeType_Boolean extends AttributeTypeController
 		}
 		
 		$cb = Loader::helper('form')->checkbox($this->field('value'), 1, $checked);
-		print $cb . ' <span>' . $this->attributeKey->getAttributeKeyName() . '</span>';
+		print '<label class="checkbox">' . $cb . ' <span>' . t('Yes') . '</span></label>';
 	}
 	
 	public function composer() {
@@ -75,7 +75,7 @@ class Concrete5_Controller_AttributeType_Boolean extends AttributeTypeController
 	}
 	
 	public function search() {
-		print Loader::helper('form')->checkbox($this->field('value'), 1, $this->request('value') == 1) . ' ' . t('Yes');
+		print '<label class="checkbox">' . Loader::helper('form')->checkbox($this->field('value'), 1, $this->request('value') == 1) . ' ' . t('Yes') . '</label>';
 	}
 
 	public function type_form() {

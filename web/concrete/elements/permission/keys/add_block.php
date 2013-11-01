@@ -24,7 +24,7 @@ $blockTypes = $btl->getBlockTypeList();
 	<?=$form->select('blockTypesIncluded[' . $entity->getAccessEntityID() . ']', array('A' => t('All Block Types'), 'C' => t('Custom')), $assignment->getBlockTypesAllowedPermission())?><br/><br/>
 	<ul class="inputs-list" <? if ($assignment->getBlockTypesAllowedPermission() != 'C') { ?>style="display: none"<? } ?>>
 		<? foreach($blockTypes as $bt) { ?>
-			<li><label><input type="checkbox" name="btIDInclude[<?=$entity->getAccessEntityID()?>][]" value="<?=$bt->getBlockTypeID()?>" <? if (in_array($bt->getBlockTypeID(), $assignment->getBlockTypesAllowedArray())) { ?> checked="checked" <? } ?> /> <span><?=$bt->getBlockTypeName()?></span></label></li>
+			<li><label><input type="checkbox" name="btIDInclude[<?=$entity->getAccessEntityID()?>][]" value="<?=$bt->getBlockTypeID()?>" <? if (in_array($bt->getBlockTypeID(), $assignment->getBlockTypesAllowedArray())) { ?> checked="checked" <? } ?> /> <span><?=t($bt->getBlockTypeName())?></span></label></li>
 		<? } ?>
 	</ul>
 	</div>
@@ -50,7 +50,7 @@ $blockTypes = $btl->getBlockTypeList();
 	<?=$form->select('blockTypesExcluded[' . $entity->getAccessEntityID() . ']', array('N' => t('No Block Types'), 'C' => t('Custom')), $assignment->getBlockTypesAllowedPermission())?><br/><br/>
 	<ul class="inputs-list" <? if ($assignment->getBlockTypesAllowedPermission() != 'C') { ?>style="display: none"<? } ?>>
 		<? foreach($blockTypes as $bt) { ?>
-			<li><label><input type="checkbox" name="btIDExclude[<?=$entity->getAccessEntityID()?>][]" value="<?=$bt->getBlockTypeID()?>" <? if (in_array($bt->getBlockTypeID(), $assignment->getBlockTypesAllowedArray())) { ?> checked="checked" <? } ?> /> <span><?=$bt->getBlockTypeName()?></span></label></li>
+			<li><label><input type="checkbox" name="btIDExclude[<?=$entity->getAccessEntityID()?>][]" value="<?=$bt->getBlockTypeID()?>" <? if (in_array($bt->getBlockTypeID(), $assignment->getBlockTypesAllowedArray())) { ?> checked="checked" <? } ?> /> <span><?=t($bt->getBlockTypeName())?></span></label></li>
 		<? } ?>
 	</ul>
 	</div>

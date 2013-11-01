@@ -12,7 +12,15 @@ $v->requireAsset('core/sitemap');
 /*
 $txt = Loader::helper('text');
 $args = $_REQUEST;
-array_walk_recursive($args, array($txt, 'entities'));
+foreach($args as $key => $value) {
+	if (is_array($value)) {
+		foreach ($value as $index => $id) {
+			$value[$index] = intval($id);
+		}
+	} else {
+		$args[$key] = $txt->entities($value);
+	}
+}
 
 if (isset($select_mode)) {
 	$args['select_mode'] = $select_mode;

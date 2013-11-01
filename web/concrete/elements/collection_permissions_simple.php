@@ -39,7 +39,7 @@ if ($cp->canEditPagePermissions()) {
 		$gArray[] = Group::getByID($g['gID']);
 	}
 
-	$rel = SecurityHelper::sanitizeString($_REQUEST['rel']);
+	$rel = Loader::helper('security')->sanitizeString($_REQUEST['rel']);
 ?>
 
 <div class="ccm-ui">
@@ -56,7 +56,7 @@ if ($cp->canEditPagePermissions()) {
 foreach ($gArray as $g) {
 ?>
 
-<li><label><input type="checkbox" name="readGID[]" value="<?=$g->getGroupID()?>" <? if (in_array($g->getGroupID(), $viewAccess)) { ?> checked <? } ?> /> <?=t($g->getGroupName())?></label></li>
+<li><label><input type="checkbox" name="readGID[]" value="<?=$g->getGroupID()?>" <? if (in_array($g->getGroupID(), $viewAccess)) { ?> checked <? } ?> /> <?=$g->getGroupDisplayName()?></label></li>
 
 <? } ?>
 
@@ -74,7 +74,7 @@ foreach ($gArray as $g) {
 foreach ($gArray as $g) {
 ?>
 
-<li><label><input type="checkbox" name="editGID[]" value="<?=$g->getGroupID()?>" <? if (in_array($g->getGroupID(), $editAccess)) { ?> checked <? } ?> /> <?=t($g->getGroupName())?></label></li>
+<li><label><input type="checkbox" name="editGID[]" value="<?=$g->getGroupID()?>" <? if (in_array($g->getGroupID(), $editAccess)) { ?> checked <? } ?> /> <?=$g->getGroupDisplayName()?></label></li>
 
 <? } ?>
 

@@ -131,7 +131,10 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
 		}
 	}
 	if ($tp->canInstallPackages()) { 
-		$pkgAvailableArray = Package::getAvailablePackages();
+		foreach(Package::getAvailablePackages() as $_pkg) {
+			$_pkg->setupPackageLocalization();
+			$pkgAvailableArray[] = $_pkg;
+		}
 	}
 	
 
@@ -193,8 +196,8 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
 				<? foreach($blocks as $bt) {
 					$btIcon = $ci->getBlockTypeIconURL($bt);?>
 					<li class="ccm-block-type ccm-block-type-available">
-						<a style="background-image: url(<?=$btIcon?>)" class="ccm-block-type-inner" href="<?=$this->url('/dashboard/blocks/types', 'inspect', $bt->getBlockTypeID())?>"><?=$bt->getBlockTypeName()?></a>
-						<div class="ccm-block-type-description"  id="ccm-bt-help<?=$bt->getBlockTypeID()?>"><?=$bt->getBlockTypeDescription()?></div>
+						<a style="background-image: url(<?=$btIcon?>)" class="ccm-block-type-inner" href="<?=$this->url('/dashboard/blocks/types', 'inspect', $bt->getBlockTypeID())?>"><?=t($bt->getBlockTypeName())?></a>
+						<div class="ccm-block-type-description"  id="ccm-bt-help<?=$bt->getBlockTypeID()?>"><?=t($bt->getBlockTypeDescription())?></div>
 					</li>
 				<? } ?>
 				</ul>

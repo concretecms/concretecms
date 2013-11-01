@@ -78,31 +78,28 @@ class Concrete5_Helper_Date {
 		
 		if(!isset($userDateTime) || !strlen($userDateTime)) {
 			return NULL; // if passed a null value, pass it back
-		} elseif(strlen($userDateTime)) {
-			$datetime = new DateTime($userDateTime);
-			
-			if (defined('APP_TIMEZONE')) {
-				$tz = new DateTimeZone(APP_TIMEZONE_SERVER);
-				$datetime = new DateTime($userDateTime,$tz); // create the in the user's timezone 				
-				$stz = new DateTimeZone(date_default_timezone_get()); // grab the default timezone
-				$datetime->setTimeZone($stz); // convert the datetime object to the current timezone
+		}
+		$datetime = new DateTime($userDateTime);
+		
+		if (defined('APP_TIMEZONE')) {
+			$tz = new DateTimeZone(APP_TIMEZONE_SERVER);
+			$datetime = new DateTime($userDateTime,$tz); // create the in the user's timezone 				
+			$stz = new DateTimeZone(date_default_timezone_get()); // grab the default timezone
+			$datetime->setTimeZone($stz); // convert the datetime object to the current timezone
+		}
+		
+		if(defined('ENABLE_USER_TIMEZONES') && ENABLE_USER_TIMEZONES) {
+			$u = new User();
+			if($u && $u->isRegistered()) {
+				$utz = $u->getUserTimezone();
+				if($utz) {			
+					$tz = new DateTimeZone($utz);
+					$datetime = new DateTime($userDateTime,$tz); // create the in the user's timezone 
+					
+					$stz = new DateTimeZone(date_default_timezone_get()); // grab the default timezone
+					$datetime->setTimeZone($stz); // convert the datetime object to the current timezone
+				} 
 			}
-			
-			if(defined('ENABLE_USER_TIMEZONES') && ENABLE_USER_TIMEZONES) {
-				$u = new User();
-				if($u && $u->isRegistered()) {
-					$utz = $u->getUserTimezone();
-					if($utz) {			
-						$tz = new DateTimeZone($utz);
-						$datetime = new DateTime($userDateTime,$tz); // create the in the user's timezone 
-						
-						$stz = new DateTimeZone(date_default_timezone_get()); // grab the default timezone
-						$datetime->setTimeZone($stz); // convert the datetime object to the current timezone
-					} 
-				}
-			}
-		} else {
-			$datetime = new DateTime();
 		}
 		if (Localization::activeLocale() != 'en_US') {
 			return $this->dateTimeFormatLocal($datetime,$mask);
@@ -169,10 +166,11 @@ class Concrete5_Helper_Date {
 		$hoursInSecs=$diff-($days*(24*60*60));
 		$hours=intval($hoursInSecs/(60*60));
 		if ($hours<=0) $hours=$hours+24;           
-		if ($posttime>date("U")) return date(DATE_APP_GENERIC_MDY,$posttime);
+		if ($posttime>date("U") || $diff > (365 * 24 * 60 * 60) ) {
+			return $this->date(DATE_APP_GENERIC_MDY,$posttime);
+		}
 		else{
-			if ($diff>86400){
-					$diff=$diff+86400;
+			if ($diff>86400) {
 					$days=date("z",$diff);
 					$timeRemaining = t2('%d day', '%d days', $days, $days);
 					if($precise==1) {
@@ -184,7 +182,7 @@ class Concrete5_Helper_Date {
 						$minutes = date("i", $diff);
 						$timeRemaining .= ', '.t2('%d minute', '%d minutes', $minutes, $minutes);
 					}
-				}else if ($diff>60){
+				} else if ($diff>60) {
 					$minutes=date("i",$diff);
 					if(substr($minutes,0,1)=='0') $minutes=substr($minutes,1);
 					$timeRemaining = t2('%d minute', '%d minutes', $minutes, $minutes);
@@ -192,7 +190,7 @@ class Concrete5_Helper_Date {
 						$seconds = date("s",$diff);
 						$timeRemaining .= ', '.t2('%d second', '%d seconds', $seconds, $seconds);
 					}
-				}else{
+				} else {
 					$seconds=date("s",$diff);
 					if(substr($seconds,0,1)=='0') $seconds=substr($seconds,1);
 					$timeRemaining = t2('%d second', '%d seconds', $seconds, $seconds);

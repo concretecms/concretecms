@@ -1,8 +1,8 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
 
-$tp = new TaskPermission();
-if (!$tp->canAccessUserSearch()) { 
+$tp = Loader::helper('concrete/user');
+if (!$tp->canAccessUserSearchInterface()) { 
 	die(t("You have no access to users."));
 }
 

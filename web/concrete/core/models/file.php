@@ -1,7 +1,5 @@
 <?
 
-Loader::model('file_version');
-
 class Concrete5_Model_File extends Object { 
 
 	const CREATE_NEW_VERSION_THRESHOLD = 300; // in seconds (5 minutes)
@@ -162,11 +160,10 @@ class Concrete5_Model_File extends Object {
 	
 	public function getFileSets() {
 		$db = Loader::db();
-		Loader::model('file_set');
 		$fsIDs = $db->Execute("select fsID from FileSetFiles where fID = ?", array($this->getFileID()));
 		$filesets = array();
-		foreach($fsIDs as $fsID) {
-			$filesets[] = FileSet::getByID($fsID);
+		while ($row = $fsIDs->FetchRow()) {
+			$filesets[] = FileSet::getByID($row['fsID']);
 		}
 		return $filesets;
 	}
@@ -273,8 +270,9 @@ class Concrete5_Model_File extends Object {
 		}
 		
 		// return the new file object
-		return File::getByID($fIDNew);
-		
+		$nf = File::getByID($fIDNew);
+		Events::fire('on_file_duplicate', $this, $nf);
+		return $nf;		
 	}
 	
 	public static function add($filename, $prefix, $data = array()) {

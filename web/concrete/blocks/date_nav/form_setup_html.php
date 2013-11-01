@@ -35,8 +35,10 @@ $("select#cParentIDLocation").change(function() {
 		<?php  } ?>
 	  </select>
 	  <?php  } ?>
-	  <input type="checkbox" name="displayFeaturedOnly" value="1" <?php  if ($controller->displayFeaturedOnly == 1) { ?> checked <?php  } ?> style="vertical-align: middle" />
-	  <?php echo t('Featured pages only.')?>
+	  <label class="checkbox">
+		  <input type="checkbox" name="displayFeaturedOnly" value="1" <?php  if ($controller->displayFeaturedOnly == 1) { ?> checked <?php  } ?> />
+		  <?php echo t('Featured pages only.')?>
+	  </label>
 
 	</div>
 	
@@ -69,29 +71,45 @@ $("select#cParentIDLocation").change(function() {
 	</div> 
 	
 	<div class="ccm-block-field-group">
-	 	<h2><?php echo t('Display Format')?></h2>	  
-		<input type="radio" name="flatDisplay" value="0" <?php  if (!$controller->flatDisplay) { ?> checked<?php  } ?> /><? echo t('Hierarchy')?>&nbsp; 
-		<input type="radio" name="flatDisplay" value="1" <?php  if ($controller->flatDisplay) { ?> checked<?php  } ?> /><? echo t('Flat')?> 
+	 	<h2><?php echo t('Display Format')?></h2>
+	 	<label class="radio inline">
+			<input type="radio" name="flatDisplay" value="0" <?php  if (!$controller->flatDisplay) { ?> checked<?php  } ?> /><? echo t('Hierarchy')?>&nbsp; 
+		</label>
+	 	<label class="radio inline">
+			<input type="radio" name="flatDisplay" value="1" <?php  if ($controller->flatDisplay) { ?> checked<?php  } ?> /><? echo t('Flat')?> 
+		</label>
 	</div>		
 	 
 	<div class="ccm-block-field-group">
 	 	<h2><?php echo t('Open by default to the...')?></h2>	  
-		<input type="radio" name="defaultNode" value="current_page" <?php  if ($controller->defaultNode!='current_month') { ?> checked<?php  } ?> /><? echo t('Current Page')?>&nbsp; 
-		<input type="radio" name="defaultNode" value="current_month" <?php  if ($controller->defaultNode=='current_month') { ?> checked<?php  } ?> /><? echo t('Current Month')?> 
+	 	<label class="radio inline">
+			<input type="radio" name="defaultNode" value="current_page" <?php  if ($controller->defaultNode!='current_month') { ?> checked<?php  } ?> /><? echo t('Current Page')?>&nbsp; 
+		</label>
+	 	<label class="radio inline">
+			<input type="radio" name="defaultNode" value="current_month" <?php  if ($controller->defaultNode=='current_month') { ?> checked<?php  } ?> /><? echo t('Current Month')?> 
+		</label>
 	</div>		 
 	 
 	<div class="ccm-block-field-group">
 	 	<h2><?php echo t('Page Info')?></h2>	  
-		<input type="radio" name="showDescriptions" value="0" <?php  if (!$controller->showDescriptions) { ?> checked<?php  } ?> /><? echo t('Titles')?>&nbsp;
-		<input type="radio" name="showDescriptions" value="1" <?php  if ($controller->showDescriptions) { ?> checked<?php  } ?> /><? echo t('Titles &amp; Descriptions')?>
+	 	<label class="radio inline">
+			<input type="radio" name="showDescriptions" value="0" <?php  if (!$controller->showDescriptions) { ?> checked<?php  } ?> /><? echo t('Titles')?>&nbsp;
+		</label>
+	 	<label class="radio inline">
+			<input type="radio" name="showDescriptions" value="1" <?php  if ($controller->showDescriptions) { ?> checked<?php  } ?> /><? echo t('Titles &amp; Descriptions')?>
+		</label>
 	</div>	
 
 	<?php  if($controller->truncateTitleChars==0 && !$controller->truncateTitles) $controller->truncateTitleChars=128; ?>
 	<div class="ccm-block-field-group">
 	   <h2><?php echo t('Truncate Titles')?></h2>	  
-	   <input id="ccm-pagelist-truncateTitlesOn" name="truncateTitles" type="checkbox" value="1" <?php echo ($controller->truncateTitles?"checked=\"checked\"":"")?> /> 
-	   <span id="ccm-pagelist-truncateTitleTxt" <?php echo ($controller->truncateTitles?"":"class=\"faintText\"")?>>
-	   		<?php echo t('Truncate titles after')?> 
+   		<label class="radio inline">
+		   <input id="ccm-pagelist-truncateTitlesOn" name="truncateTitles" type="checkbox" value="1" <?php echo ($controller->truncateTitles?"checked=\"checked\"":"")?> /> 
+		   <span class="ccm-pagelist-truncateTitleTxt" <?php echo ($controller->truncateTitles?"":"class=\"faintText\"")?>>
+	   			<?php echo t('Truncate titles after')?> 
+	   		</span>
+	   	</label>
+		   <span class="ccm-pagelist-truncateTitleTxt" <?php echo ($controller->truncateTitles?"":"class=\"faintText\"")?>>
 			<input id="ccm-pagelist-truncateTitleChars" <?php echo ($controller->truncateTitles?"":"disabled=\"disabled\"")?> type="text" name="truncateTitleChars" size="3" value="<?php echo intval($controller->truncateTitleChars)?>" /> 
 			<?php echo t('characters')?>
 	   </span>
@@ -107,5 +125,9 @@ $("select#cParentIDLocation").change(function() {
 			<?php echo t('characters')?>
 	   </span>
 	</div>
+
+	<script>
+
+	</script>
 	
 </div>

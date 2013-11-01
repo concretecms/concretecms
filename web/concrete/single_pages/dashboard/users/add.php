@@ -86,14 +86,14 @@ $languages = Localization::getAvailableInterfaceLanguages();
             		<th><?=t('Registration Data')?></th>
 	        	</tr>
 			</thead>
-            <tbody class="inputs-list">
+            <tbody>
             
 			<? foreach($attribs as $ak) { 
 				if (in_array($ak->getAttributeKeyID(), $assignment->getAttributesAllowedArray())) { 
 				?>
                 <tr>
                     <td class="clearfix">
-                    	<label><?=$ak->getAttributeKeyName()?> <? if ($ak->isAttributeKeyRequiredOnRegister()) { ?><span class="required">*</span><? } ?></label>
+                    	<label><?=tc('AttributeKeyName', $ak->getAttributeKeyName())?> <? if ($ak->isAttributeKeyRequiredOnRegister()) { ?><span class="required">*</span><? } ?></label>
                         <? $ak->render('form', $caValue, false)?>
                     </td>
                 </tr>
@@ -116,21 +116,21 @@ $languages = Localization::getAvailableInterfaceLanguages();
 					<td>
                     
 					<? 
-					$gak = PermissionKey::getByHandle('assign_user_groups');
-					foreach ($gArray as $g) { 
-						if ($gak->validate($g['gID'])) {
-
+					foreach ($gArray as $gRow) {
+						$g = Group::getByID($gRow['gID']); 
+						$gp = new Permissions($g);
+						if ($gp->canAssignGroup()) {
 
 						?>
 						<label>
-							<input type="checkbox" name="gID[]" value="<?=$g['gID']?>" <? 
+							<input type="checkbox" name="gID[]" value="<?=$g->getGroupID()?>" <? 
                             if (is_array($_POST['gID'])) {
-                                if (in_array($g['gID'], $_POST['gID'])) {
+                                if (in_array($g->getGroupID(), $_POST['gID'])) {
                                     echo(' checked ');
                                 }
                             }
                         ?> />
-							<span><?=$g['gName']?></span>
+							<span><?=$g->getGroupDisplayName()?></span>
 						</label>
                     <? }
                     

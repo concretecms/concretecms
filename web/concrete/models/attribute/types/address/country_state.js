@@ -43,11 +43,11 @@ ccm_setupAttributeTypeAddressSetupStateProvinceSelector = function(cls) {
 	
 	if (cs.attr('ccm-passed-value') != '') {
 		$(function() {
-			cs.find('option[value=' + cs.attr('ccm-passed-value') + ']').attr('selected', true);
+			cs.find('option[value="' + cs.attr('ccm-passed-value') + '"]').attr('selected', true);
 			ccm_attributeTypeAddressSelectCountry(cls, cs.attr('ccm-passed-value'));
 			var ss = $('.' + cls + ' .ccm-attribute-address-state-province select');
 			if (ss.attr('ccm-passed-value') != '') {
-				ss.find('option[value=' + ss.attr('ccm-passed-value') + ']').attr('selected', true);
+				ss.find('option[value="' + ss.attr('ccm-passed-value') + '"]').attr('selected', true);
 			}
 		});
 	}

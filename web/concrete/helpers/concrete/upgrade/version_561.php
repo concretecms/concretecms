@@ -15,6 +15,7 @@ class ConcreteUpgradeVersion561Helper {
 		if (!is_object($sp) || $sp->isError()) {
 			$sp = SinglePage::add('/dashboard/system/seo/excluded');
 			$sp->update(array('cName'=>t('Excluded URL Word List')));
+			$sp->setAttribute('meta_keywords', 'pretty, slug');
 		}
 		$bt = BlockType::getByHandle('next_previous');
 		if (is_object($bt)) {
@@ -26,6 +27,7 @@ class ConcreteUpgradeVersion561Helper {
 		if (isset($columns['PTID'])) {
 			$db->Execute('alter table Pages drop column ptID');
 		}
+
 		if (isset($columns['CTID'])) {
 			$db->Execute('alter table Pages drop column ctID');
 		}
@@ -34,7 +36,6 @@ class ConcreteUpgradeVersion561Helper {
 		if (is_object($bt)) {
 			$bt->refresh();
 		}
-
 	}
 
 	

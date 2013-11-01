@@ -27,11 +27,20 @@
 			return $this->bOriginalID;
 		}
 		
-		public function on_page_view() {
+		public function getSearchableContent() {
+			$b = Block::getByID($this->bOriginalID);
+			$bc = ($b) ? $b->getInstance() : false;
+			
+			if ($bc && method_exists($bc, 'getSearchableContent')) {
+				return $bc->getSearchableContent();
+			}
+		}
+
+		public function on_page_view($page) {
 			$b = Block::getByID($this->bOriginalID);
 			$bc = $b->getInstance();
 			if (method_exists($bc, 'on_page_view')) {
-				$bc->on_page_view();
+				$bc->on_page_view($page);
 			}
 		}
 

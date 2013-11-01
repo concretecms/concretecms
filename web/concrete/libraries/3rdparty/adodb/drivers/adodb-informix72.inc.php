@@ -1,6 +1,6 @@
 <?php
 /*
-V5.10 10 Nov 2009   (c) 2000-2009 John Lim. All rights reserved.
+V5.18 3 Sep 2012  (c) 2000-2012 John Lim. All rights reserved.
   Released under both BSD license and Lesser GPL library license.
   Whenever there is any discrepancy between the two licenses,
   the BSD license will take precedence.
@@ -123,7 +123,7 @@ class ADODB_informix72 extends ADOConnection {
 		return true;
 	}
 
-	function RowLock($tables,$where,$col='1 as ignore')
+	function RowLock($tables,$where,$col='1 as adodbignore')
 	{
 		if ($this->_autocommit) $this->BeginTrans();
 		return $this->GetOne("select $col from $tables where $where for update");
@@ -146,6 +146,51 @@ class ADODB_informix72 extends ADOConnection {
 		return 0;
 	}
 
+	
+	function MetaProcedures($NamePattern = false, $catalog  = null, $schemaPattern  = null)
+    {
+        // save old fetch mode
+        global $ADODB_FETCH_MODE;
+
+        $false = false;
+        $save = $ADODB_FETCH_MODE;
+        $ADODB_FETCH_MODE = ADODB_FETCH_NUM;
+        if ($this->fetchMode !== FALSE) {
+               $savem = $this->SetFetchMode(FALSE);
+
+        }
+        $procedures = array ();
+
+        // get index details
+
+        $likepattern = '';
+        if ($NamePattern) {
+           $likepattern = " WHERE procname LIKE '".$NamePattern."'";
+        }
+
+        $rs = $this->Execute('SELECT procname, isproc FROM sysprocedures'.$likepattern);
+
+        if (is_object($rs)) {
+            // parse index data into array
+
+            while ($row = $rs->FetchRow()) {
+                $procedures[$row[0]] = array(
+                        'type' => ($row[1] == 'f' ? 'FUNCTION' : 'PROCEDURE'),
+                        'catalog' => '',
+                        'schema' => '',
+                        'remarks' => ''
+                    );
+            }
+	    }
+
+        // restore fetchmode
+        if (isset($savem)) {
+                $this->SetFetchMode($savem);
+        }
+        $ADODB_FETCH_MODE = $save;
+
+        return $procedures;
+    }
    
     function MetaColumns($table, $normalize=true)
 	{

@@ -9,14 +9,17 @@
 
 <div class="ccm-pane-body">
 	
-	<h3><img src="<?=$ci->getBlockTypeIconURL($bt)?>" /> <?=$bt->getBlockTypeName()?></h3>
+	<h3><img src="<?=$ci->getBlockTypeIconURL($bt)?>" /> <?=t($bt->getBlockTypeName())?></h3>
 		
 	<h5><?=t('Description')?></h5>
-	<p><?=$bt->getBlockTypeDescription()?></p>
+	<p><?=t($bt->getBlockTypeDescription())?></p>
 
 	<h5><?=t('Usage Count')?></h5>
 	<p><?=$num?></p>
-		
+	
+	<h5><?php echo t('Usage Count on Active Pages')?></h5>
+	<p><?php echo $numActive?></p>
+	
 	<? if ($bt->isBlockTypeInternal()) { ?>
 	<h5><?=t('Internal')?></h5>
 	<p><?=t('This is an internal block type.')?></p>
@@ -60,7 +63,7 @@
 			$btIcon = $ci->getBlockTypeIconURL($bt);
 			?>
 			<li class="ccm-block-type ccm-block-type-available">
-				<p style="background-image: url(<?=$btIcon?>)" class="ccm-block-type-inner"><?=$ch->button(t("Install"), $this->url('/dashboard/blocks/types','install', $bt->getBlockTypeHandle()), "right", 'small');?> <?=$bt->getBlockTypeName()?></p>
+				<p style="background-image: url(<?=$btIcon?>)" class="ccm-block-type-inner"><?=$ch->button(t("Install"), $this->url('/dashboard/blocks/types','install', $bt->getBlockTypeHandle()), "right", 'small');?> <?=t($bt->getBlockTypeName())?></p>
 			</li>
 		<? } ?>
 		</ul>
@@ -84,7 +87,7 @@
 			?>
 			<div class="ccm-group" id="btID_<?=$btID?>" data-btid="<?=$btID?>">
 				<img class="ccm-group-sort" src="<?php echo ASSETS_URL_IMAGES?>/icons/up_down.png" width="14" height="14" />
-				<a class="ccm-group-inner" href="<?=$this->action('inspect', $bt->getBlockTypeID())?>" style="background-image: url(<?=$btIcon?>)"><?=$bt->getBlockTypeName()?></a>
+				<a class="ccm-group-inner" href="<?=$this->action('inspect', $bt->getBlockTypeID())?>" style="background-image: url(<?=$btIcon?>)"><?=t($bt->getBlockTypeName())?></a>
 			</div>
 		<? } ?>
 	</div>
@@ -120,8 +123,8 @@
 			$btIcon = $ci->getBlockTypeIconURL($bt);
 			?>	
 			<li class="ccm-block-type ccm-block-type-available">
-				<a style="background-image: url(<?=$btIcon?>)" class="ccm-block-type-inner" href="<?=$this->action('inspect', $bt->getBlockTypeID())?>"><?=$bt->getBlockTypeName()?></a>
-				<div class="ccm-block-type-description"  id="ccm-bt-help<?=$bt->getBlockTypeID()?>"><?=$bt->getBlockTypeDescription()?></div>
+				<a style="background-image: url(<?=$btIcon?>)" class="ccm-block-type-inner" href="<?=$this->action('inspect', $bt->getBlockTypeID())?>"><?=t($bt->getBlockTypeName())?></a>
+				<div class="ccm-block-type-description"  id="ccm-bt-help<?=$bt->getBlockTypeID()?>"><?=t($bt->getBlockTypeDescription())?></div>
 			</li>
 		<? } ?>
 	</ul>

@@ -2,8 +2,8 @@
 
 class Concrete5_Model_FileVersion extends Object {
 
-	private $numThumbnailLevels = 3;
-	private $attributes = array();
+	protected $numThumbnailLevels = 3;
+	protected $attributes = array();
 
 	// Update type constants
 	const UT_REPLACE_FILE = 1;

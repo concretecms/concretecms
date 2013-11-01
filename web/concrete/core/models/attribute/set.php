@@ -21,7 +21,12 @@ class Concrete5_Model_AttributeSet extends Object {
 		$db = Loader::db();
 		$row = $db->GetRow('select asID, asHandle, pkgID, asName, akCategoryID, asIsLocked from AttributeSets where asHandle = ?', array($asHandle));
 		if (isset($row['asID'])) {
-			$akc = new AttributeSet();
+			if (function_exists('get_called_class')) {
+				$class = get_called_class(); // using this for an add-on that requires 5.3
+			} else {
+				$class = 'AttributeSet';
+			}
+			$akc = new $class();
 			$akc->setPropertiesFromArray($row);
 			return $akc;
 		}
@@ -77,7 +82,7 @@ class Concrete5_Model_AttributeSet extends Object {
 		$category = AttributeKeyCategory::getByID($this->getAttributeSetKeyCategoryID())->getAttributeKeyCategoryHandle();
 		$akey = $axml->addChild('attributeset');
 		$akey->addAttribute('handle',$this->getAttributeSetHandle());
-		$akey->addAttribute('name', $this->getAttributeSetName());
+		$akey->addAttribute('name', tc('AttributeSetName', $this->getAttributeSetName()));
 		$akey->addAttribute('package', $this->getPackageHandle());
 		$akey->addAttribute('locked', $this->isAttributeSetLocked());
 		$akey->addAttribute('category', $category);

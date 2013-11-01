@@ -11,7 +11,7 @@ class Concrete5_Model_GroupPermissionAccessEntity extends PermissionAccessEntity
 	}
 	
 	public function getAccessEntityTypeLinkHTML() {
-		$html = '<a href="' . REL_DIR_FILES_TOOLS_REQUIRED . '/select_group?include_core_groups=1" class="dialog-launch" dialog-modal="false" dialog-title="' . t('Add Group') . '">' . t('Group') . '</a>';
+		$html = '<a href="' . REL_DIR_FILES_TOOLS_REQUIRED . '/select_group?include_core_groups=1" class="dialog-launch" dialog-width="90%" dialog-height="70%" dialog-modal="false" dialog-title="' . t('Add Group') . '">' . tc('PermissionAccessEntityTypeName', 'Group') . '</a>';
 		return $html;
 	}
 
@@ -43,8 +43,8 @@ class Concrete5_Model_GroupPermissionAccessEntity extends PermissionAccessEntity
 			array($petID, $g->getGroupID()));
 		if (!$peID) { 
 			$db->Execute("insert into PermissionAccessEntities (petID) values(?)", array($petID));
-			Config::save('ACCESS_ENTITY_UPDATED', time());
 			$peID = $db->Insert_ID();
+			Config::save('ACCESS_ENTITY_UPDATED', time());
 			$db->Execute('insert into PermissionAccessEntityGroups (peID, gID) values (?, ?)', array($peID, $g->getGroupID()));
 		}
 		return PermissionAccessEntity::getByID($peID);
@@ -57,7 +57,7 @@ class Concrete5_Model_GroupPermissionAccessEntity extends PermissionAccessEntity
 			$g = Group::getByID($gID);
 			if (is_object($g)) {
 				$this->group = $g;
-				$this->label = $g->getGroupName();
+				$this->label = $g->getGroupDisplayName();
 			} else {
 				$this->label = t('(Deleted Group)');
 			}

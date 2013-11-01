@@ -35,7 +35,7 @@ class Concrete5_Controller_Page_Dashboard_Users_Add extends DashboardController 
 				}
 				
 				if (strlen($username) < USER_USERNAME_MINIMUM) {
-					$this->error->add(t('A username must be between at least %s characters long.',USER_USERNAME_MINIMUM));
+					$this->error->add(t('A username must be at least %s characters long.',USER_USERNAME_MINIMUM));
 				}
 			
 				if (strlen($username) > USER_USERNAME_MAXIMUM) {
@@ -78,7 +78,7 @@ class Concrete5_Controller_Page_Dashboard_Users_Add extends DashboardController 
 					if ($uak->isAttributeKeyRequiredOnRegister()) {
 						$e1 = $uak->validateAttributeForm();
 						if ($e1 == false) {
-							$this->error->add(t('The field "%s" is required', $uak->getAttributeKeyName()));
+							$this->error->add(t('The field "%s" is required', tc('AttributeKeyName', $uak->getAttributeKeyName())));
 						} else if ($e1 instanceof ValidationErrorHelper) {
 							$this->error->add( $e1->getList() );
 						}
@@ -105,11 +105,12 @@ class Concrete5_Controller_Page_Dashboard_Users_Add extends DashboardController 
 							}
 						}
 
-						$gak = PermissionKey::getByHandle('assign_user_groups');
 						$gIDs = array();
 						if (is_array($_POST['gID'])) {
 							foreach($_POST['gID'] as $gID) {
-								if ($gak->validate($gID)) {
+								$gx = Group::getByID($gID);
+								$gxp = new Permissions($gx);
+								if ($gxp->canAssignGroup()) {
 									$gIDs[] = $gID;
 								}
 							}

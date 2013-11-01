@@ -12,7 +12,7 @@ class Concrete5_Model_PermissionKeyCategory extends Object {
 		return self::$categories[$pkCategoryID];
 	}
 
-	protected function populateCategories() {
+	protected static function populateCategories() {
 		$db = Loader::db();
 		self::$categories = array();
 		$r = $db->Execute('select pkCategoryID, pkCategoryHandle, pkgID from PermissionKeyCategories');
@@ -29,7 +29,7 @@ class Concrete5_Model_PermissionKeyCategory extends Object {
 			self::populateCategories();
 		}
 
-		return self::$categories[$pkCategoryHandle];
+		return array_key_exists($pkCategoryHandle, self::$categories) ? self::$categories[$pkCategoryHandle] : false;
 	}
 	
 	public function handleExists($pkHandle) {
@@ -99,7 +99,14 @@ class Concrete5_Model_PermissionKeyCategory extends Object {
 
 	public function associateAccessEntityType(PermissionAccessEntityType $pt) {
 		$db = Loader::db();
-		$db->Execute('insert into PermissionAccessEntityTypeCategories (petID, pkCategoryID) values (?, ?)', array($pt->getAccessEntityTypeID(), $this->pkCategoryID));
+		$r = $db->GetOne('select petID from PermissionAccessEntityTypeCategories where petID = ? and pkCategoryID = ?', array(
+			$pt->getAccessEntityTypeID(), $this->pkCategoryID
+		));
+		if (!$r) {
+			$db->Execute('insert into PermissionAccessEntityTypeCategories (petID, pkCategoryID) values (?, ?)', array(
+				$pt->getAccessEntityTypeID(), $this->pkCategoryID
+			));
+		}
 	}
 	
 	public function clearAccessEntityTypeCategories() {

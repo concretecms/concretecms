@@ -19,9 +19,9 @@ class Concrete5_Helper_Url {
 		// either it's key/value as variables, or it's an associative array of key/values
 		
 		if ($url == false) {
-			$url = $_SERVER['REQUEST_URI'];
+			$url = Loader::helper('security')->sanitizeString($_SERVER['REQUEST_URI']);
 		} elseif(!strstr($url,'?')) {
-			$url = $url . '?' . $_SERVER['QUERY_STRING'];
+			$url = $url . '?' . Loader::helper('security')->sanitizeString($_SERVER['QUERY_STRING']);
 		}
 
  		$vars = array();

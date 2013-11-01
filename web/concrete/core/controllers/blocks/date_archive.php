@@ -28,7 +28,13 @@ class Concrete5_Controller_Block_DateArchive extends BlockController {
 	public function getBlockTypeName() {
 		return t("Blog Date Archive");
 	}
-	
+
+	public function getJavaScriptStrings() {
+		return array(
+			'num-months-missing' => t('Please enter the number of months you want to show.')
+		);
+	}
+		
 	public function view() {
 		if($this->targetCID > 0) {
 			$target = Page::getByID($this->targetCID);

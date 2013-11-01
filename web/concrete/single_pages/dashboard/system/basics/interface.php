@@ -36,7 +36,9 @@ $(function() {
 });
 </script>
 
-<? } ?>
+<?php  } else { ?>
+    <?=t('Options disabled, interface settings are specified in config/site.php.')?>
+<?php } ?>
 
 </div>
 <div class="ccm-pane-footer">

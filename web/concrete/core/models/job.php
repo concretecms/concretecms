@@ -309,7 +309,7 @@ abstract class Concrete5_Model_Job extends Object {
 			$resultMsg=$e->getMessage();
 			$error = self::JOB_ERROR_EXCEPTION_GENERAL;
 		}
-
+		Events::fire('on_job_execute', $this);
 		$obj = $this->markCompleted($error, $resultMsg);
 		return $obj;
 	}

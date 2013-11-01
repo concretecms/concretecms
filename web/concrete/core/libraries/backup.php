@@ -55,7 +55,7 @@ class Concrete5_Library_Backup_BackupTable {
 	**/
 	public function __construct($table)	{
 		$this->db = Loader::db();
-		$this->db->setFetchMode(ADODB_ASSOC_BOTH);
+		$this->db->setFetchMode(ADODB_FETCH_BOTH);
 		if (trim($table) == "") {
 			return false;
 		}
@@ -108,7 +108,7 @@ class Concrete5_Library_Backup_BackupTable {
 			print "Error while retrieving table creation SQL";
 		}
 		else {
-			$this->str_createTableSql = preg_replace('/CREATE TABLE/','CREATE TABLE IF NOT EXISTS',$rs_createsql->fields['Create Table']). ";";x;
+			$this->str_createTableSql = preg_replace('/CREATE TABLE/','CREATE TABLE IF NOT EXISTS',$rs_createsql->fields['Create Table']). ";";
 			$rs_createsql->close();
 		}
 	}

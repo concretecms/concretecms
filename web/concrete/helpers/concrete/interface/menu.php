@@ -100,7 +100,7 @@ class ConcreteInterfaceHelperMenuItem {
 		$handle = $this->handle;
 		if (file_exists(DIR_FILES_ELEMENTS . '/' . DIRNAME_ELEMENTS_HEADER_MENU . '/' . $handle . '/' . $_file)) {
 			$file = DIR_FILES_ELEMENTS . '/' . DIRNAME_ELEMENTS_HEADER_MENU . '/' . $handle . '/' . $_file;
-			$url = BASE_URL . DIR_REL . '/' . DIRNAME_ELEMENTS . '/' . DIRNAME_ELEMENTS_HEADER_MENU . '/' . $handle . '/' . $_file;
+			$url = DIR_REL . '/' . DIRNAME_ELEMENTS . '/' . DIRNAME_ELEMENTS_HEADER_MENU . '/' . $handle . '/' . $_file;
 		}
 		
 		if ($this->pkgHandle) {
@@ -109,7 +109,7 @@ class ConcreteInterfaceHelperMenuItem {
 				$dirp = is_dir(DIR_PACKAGES . '/' . $pkgHandle) ? DIR_PACKAGES . '/' . $pkgHandle : DIR_PACKAGES_CORE . '/' . $pkgHandle;
 				if (file_exists($dirp . '/' . DIRNAME_ELEMENTS . '/' . DIRNAME_ELEMENTS_HEADER_MENU . '/' . $handle . '/' . $_file)) {
 					$file = $dirp . '/' . DIRNAME_ELEMENTS . '/' . DIRNAME_ELEMENTS_HEADER_MENU . '/' . $handle . '/' . $_file;
-					$url = BASE_URL . DIR_REL . '/' .DIRNAME_PACKAGES. '/' . $pkgHandle . '/' . DIRNAME_ELEMENTS . '/' . DIRNAME_ELEMENTS_HEADER_MENU . '/' . $handle . '/' . $_file;
+					$url = DIR_REL . '/' .DIRNAME_PACKAGES. '/' . $pkgHandle . '/' . DIRNAME_ELEMENTS . '/' . DIRNAME_ELEMENTS_HEADER_MENU . '/' . $handle . '/' . $_file;
 				}
 			}
 		}

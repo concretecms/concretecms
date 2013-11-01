@@ -22,6 +22,7 @@ class Concrete5_Model_PageList extends DatabaseItemList {
 	protected $attributeClass = 'CollectionAttributeKey';
 	protected $autoSortColumns = array('cvName', 'cvDatePublic', 'cDateAdded', 'cDateModified');
 	protected $indexedSearch = false;
+	protected $viewPagePermissionKeyHandle = 'view_page';
 	
 	/* magic method for filtering by page attributes. */
 	
@@ -47,6 +48,10 @@ class Concrete5_Model_PageList extends DatabaseItemList {
         }
 	}
 	
+	public function setViewPagePermissionKeyHandle($pkHandle) {
+		$this->viewPagePermissionKeyHandle = $pkHandle;
+	}
+
 	public function includeInactivePages() {
 		$this->displayOnlyActivePages = false;
 	}
@@ -130,9 +135,12 @@ class Concrete5_Model_PageList extends DatabaseItemList {
 		// against any of these access entity objects. We just get'em all.
 		$db = Loader::db();
 		$activePDIDs = array();
-		$vpPKID = $db->GetOne('select pkID from PermissionKeys where pkHandle = \'view_page\'');
+		$vpPKID = $db->GetOne('select pkID from PermissionKeys where pkHandle = ?', array($this->viewPagePermissionKeyHandle));
+		/*
 		$vpvPKID = $db->GetOne('select pkID from PermissionKeys where pkHandle = \'view_page_versions\'');
 		$pdIDs = $db->GetCol("select distinct pdID from PagePermissionAssignments ppa inner join PermissionAccessList pa on ppa.paID = pa.paID where pkID in (?, ?) and pdID > 0", array($vpPKID, $vpvPKID));
+		*/
+		$pdIDs = $db->GetCol("select distinct pdID from PagePermissionAssignments ppa inner join PermissionAccessList pa on ppa.paID = pa.paID where pkID =? and pdID > 0", array($vpPKID));
 		if (count($pdIDs) > 0) {
 			// then we iterate through all of them and find any that are active RIGHT NOW
 			foreach($pdIDs as $pdID) {
@@ -159,11 +167,20 @@ class Concrete5_Model_PageList extends DatabaseItemList {
 			$uID = $u->getUserID();
 		}
 		
+		/*
 		$this->filter(false, "((select count(cID) from PagePermissionAssignments ppa1 inner join PermissionAccessList pa1 on ppa1.paID = pa1.paID where ppa1.cID = {$cInheritPermissionsFromCID} and pa1.accessType = " . PermissionKey::ACCESS_TYPE_INCLUDE . " and pa1.pdID in (" . implode(',', $activePDIDs) . ")
 			and pa1.peID in (" . implode(',', $peIDs) . ") and (if(pa1.peID = " . $owpae->getAccessEntityID() . " and p1.uID <>" . $uID . ", false, true)) and (ppa1.pkID = " . $vpPKID . $cvIsApproved . " or ppa1.pkID = " . $vpvPKID . ")) > 0
 			or (p1.cPointerExternalLink !='' AND p1.cPointerExternalLink IS NOT NULL))");
 		$this->filter(false, "((select count(cID) from PagePermissionAssignments ppaExclude inner join PermissionAccessList paExclude on ppaExclude.paID = paExclude.paID where ppaExclude.cID = {$cInheritPermissionsFromCID} and accessType = " . PermissionKey::ACCESS_TYPE_EXCLUDE . " and pdID in (" . implode(',', $activePDIDs) . ")
 			and paExclude.peID in (" . implode(',', $peIDs) . ") and (if(paExclude.peID = " . $owpae->getAccessEntityID() . " and p1.uID <>" . $uID . ", false, true)) and (ppaExclude.pkID = " . $vpPKID . $cvIsApproved . " or ppaExclude.pkID = " . $vpvPKID . ")) = 0)");		
+			*/
+
+		$this->filter(false, "((select count(cID) from PagePermissionAssignments ppa1 inner join PermissionAccessList pa1 on ppa1.paID = pa1.paID where ppa1.cID = {$cInheritPermissionsFromCID} and pa1.accessType = " . PermissionKey::ACCESS_TYPE_INCLUDE . " and pa1.pdID in (" . implode(',', $activePDIDs) . ")
+			and pa1.peID in (" . implode(',', $peIDs) . ") and (if(pa1.peID = " . $owpae->getAccessEntityID() . " and p1.uID <>" . $uID . ", false, true)) and (ppa1.pkID = " . $vpPKID . $cvIsApproved . ")) > 0
+			or (p1.cPointerExternalLink !='' AND p1.cPointerExternalLink IS NOT NULL))");
+		$this->filter(false, "((select count(cID) from PagePermissionAssignments ppaExclude inner join PermissionAccessList paExclude on ppaExclude.paID = paExclude.paID where ppaExclude.cID = {$cInheritPermissionsFromCID} and accessType = " . PermissionKey::ACCESS_TYPE_EXCLUDE . " and pdID in (" . implode(',', $activePDIDs) . ")
+			and paExclude.peID in (" . implode(',', $peIDs) . ") and (if(paExclude.peID = " . $owpae->getAccessEntityID() . " and p1.uID <>" . $uID . ", false, true)) and (ppaExclude.pkID = " . $vpPKID . $cvIsApproved . ")) = 0)");		
+
 	}
 
 	public function sortByRelevance() {
@@ -353,6 +370,54 @@ class Concrete5_Model_PageList extends DatabaseItemList {
 	 */
 	public function filterByPublicDate($date, $comparison = '=') {
 		$this->filter('cv.cvDatePublic', $date, $comparison);
+	}
+		
+	/***
+	 * Like filterByAttribute(), but wraps values properly for "select" type attributes.
+	 * Accepts either a single value, or an array of values.
+	 * If an array of values is provided, they will be combined together with "OR".
+	 * (If you need to do an "AND" filter on mulitple values, just call this function multiple times).
+	 */
+	public function filterBySelectAttribute($akHandle, $value) {
+		if (empty($value)) {
+			return;
+		}
+		
+		//Determine if this attribute allows multiple selections
+		$ak = CollectionAttributeKey::getByHandle($akHandle);
+		$akc = $ak->getController();
+		$isMultiSelect = $akc->getAllowMultipleValues();
+		
+		//Explanation of query logic: "select" attributes wrap each value in newline characters when
+		// saving to the db, which allows parsing of individual values within a "multi-select" attribute.
+		//
+		//Because of this, you need to query them using the "LIKE" operator and the "%" wildcards
+		// when the attribute is "multi-select" (although for "single-select" attributes
+		// you can speed things up by just using "=" and excluding the "%" wildcards).
+		//
+		//Things get trickier if you want to string together several values with an "OR"
+		// (for example, "find all pages whose 'tags' attribute is 'hello' OR 'world'")
+		// -- the usual "filterBy" methods don't work because they always use "AND" to combine
+		// multiple criteria. So instead we can manually create our own portion of the "WHERE"
+		// clause and pass that directly to the raw "filter" attribute.
+		if (is_array($value)) {
+			$db = Loader::db();
+			$criteria = array();
+			foreach ($value as $v) {
+				$escapedValue = $db->escape($v);
+				if ($isMultiSelect) {
+					$criteria[] = "(ak_{$akHandle} LIKE '%\n{$escapedValue}\n%')";
+				} else {
+					$criteria[] = "(ak_{$akHandle} = '\n{$escapedValue}\n')";
+				}
+			}
+			$where = '(' . implode(' OR ', $criteria) . ')';
+			$this->filter(false, $where);
+		} else if ($isMultiSelect) {
+			$this->filterByAttribute($akHandle, "%\n{$value}\n%", 'LIKE');
+		} else {
+			$this->filterByAttribute($akHandle, "\n{$value}\n");
+		}
 	}
 	
 	/** 

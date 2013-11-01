@@ -140,7 +140,7 @@ class Concrete5_Library_BlockViewTemplate {
 		if (!isset($template)) {
 			$bv = new BlockView($obj);
 			$template = $bv->getBlockPath($this->render) . '/' . $this->render;
-			$this->baseURL = $bv->getBlockURL();
+			$this->baseURL = $bv->getBlockURL($this->render);
 		}
 		
 		if ($this->basePath == '') {

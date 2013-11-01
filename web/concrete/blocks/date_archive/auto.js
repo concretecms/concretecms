@@ -24,6 +24,12 @@ var tags ={
 	},
 	
 	validate:function(){
+		var numMonth = $("#numMonths");
+		var numMonthVal = numMonth.val();
+		if( !numMonthVal || numMonthVal.length==0 || parseInt(numMonthVal)<1 ){
+			ccm_addError(ccm_t('num-months-missing'));
+			numMonth.focus();
+		}		
 		return true;
 	},
 	

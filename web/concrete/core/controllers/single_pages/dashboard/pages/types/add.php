@@ -5,6 +5,7 @@ class Concrete5_Controller_Page_Dashboard_Pages_Types_Add extends DashboardContr
 
 	public function submit() {
 		$vs = Loader::helper('validation/strings');
+
 		$sec = Loader::helper('security');
 		$name = $sec->sanitizeString($this->post('ptName'));
 		$handle = $sec->sanitizeString($this->post('ptHandle'));

@@ -324,7 +324,6 @@
 			$sorted_array = $this->sorted_array;
 			$navObjectNames = $this->navObjectNames;
 
-			$allowedParentIDs = ($allowedParentIDs) ? $allowedParentIDs : array();
 			$q = "select Pages.cID from Pages where cIsTemplate = 0 and cIsActive = 1 and cParentID = '{$cParentID}' {$orderBy}";
 			$r = $db->query($q);
 			if ($r) {
@@ -488,19 +487,20 @@
 			}
 		}
 
+		/** Pupulates the $cParentIDArray instance property.
+		* @param int $cID The collection id.
+		*/
 		function populateParentIDArray($cID) {
 			// returns an array of collection IDs going from the top level to the current item
-			$db = Loader::db();
 			$cParentID = Page::getCollectionParentIDFromChildID($cID);
-			if ($cParentID > -1) {
-				if ($cParentID != $stopAt) {
-					if (!in_array($cParentID, $this->cParentIDArray)) {
-						$this->cParentIDArray[] = $cParentID;
-					}
+			if(is_numeric($cParentID)) {
+				if (!in_array($cParentID, $this->cParentIDArray)) {
+					$this->cParentIDArray[] = $cParentID;
+				}
+				if($cParentID > 0) {
 					$this->populateParentIDArray($cParentID);
 				}
 			}
-
 		}
 		
 		/** 

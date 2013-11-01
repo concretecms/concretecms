@@ -269,6 +269,8 @@ class Concrete5_Model_Package extends Object {
 		$items['permission_access_entity_types'] = PermissionAccessEntityType::getListByPackage($this);
 		$items['attribute_keys'] = AttributeKey::getListByPackage($this);
 		$items['attribute_sets'] = AttributeSet::getListByPackage($this);
+		$items['tree_types'] = TreeType::getListByPackage($this);
+		$items['tree_node_types'] = TreeNodeType::getListByPackage($this);
 		$items['group_sets'] = GroupSet::getListByPackage($this);
 		$items['page_types'] = PageType::getListByPackage($this);
 		$items['page_templates'] = PageTemplate::getListByPackage($this);
@@ -302,7 +304,7 @@ class Concrete5_Model_Package extends Object {
 	public static function getItemName($item) {
 		$txt = Loader::helper('text');
 		if ($item instanceof BlockType) {
-			return $item->getBlockTypeName();
+			return t($item->getBlockTypeName());
 		} else if ($item instanceof PageTheme) {
 			return $item->getThemeName();
 		} else if ($item instanceof Feature) {
@@ -329,17 +331,21 @@ class Concrete5_Model_Package extends Object {
 			return $item->getMailImporterName();		
 		} else if ($item instanceof SinglePage) {
 			return $item->getCollectionPath();
+		} else if ($item instanceof TreeType) {
+			return ucwords(strtolower($txt->unhandle($item->getTreeTypeHandle())));
+		} else if ($item instanceof TreeNodeType) {
+			return ucwords(strtolower($txt->unhandle($item->getTreeNodeTypeHandle())));
 		} else if ($item instanceof AttributeType) {
-			return $item->getAttributeTypeName();
+			return tc('AttributeTypeName', $item->getAttributeTypeName());
 		} else if ($item instanceof PermissionAccessEntityType) {
-			return $item->getAccessEntityTypeName();
+			return tc('PermissionAccessEntityTypeName', $item->getAccessEntityTypeName());
 		} else if ($item instanceof PermissionKeyCategory) {
 			return $txt->unhandle($item->getPermissionKeyCategoryHandle());
 		} else if ($item instanceof AttributeKeyCategory) {
 			return $txt->unhandle($item->getAttributeKeyCategoryHandle());
 		} else if ($item instanceof AttributeSet) {
 			$at = AttributeKeyCategory::getByID($item->getAttributeSetKeyCategoryID());
-			return t('%s (%s)', $item->getAttributeSetName(), $txt->unhandle($at->getAttributeKeyCategoryHandle()));
+			return t('%s (%s)', tc('AttributeSetName', $item->getAttributeSetName()), $txt->unhandle($at->getAttributeKeyCategoryHandle()));
 		} else if ($item instanceof GroupSet) {
 			return $item->getGroupSetNAme();
 		} else if (is_a($item, 'AttributeKey')) {
@@ -358,7 +364,7 @@ class Concrete5_Model_Package extends Object {
 		} else if ($item instanceof SystemContentEditorSnippet) {
 			return $item->getSystemContentEditorSnippetName();
 		} else if (is_a($item, 'PermissionKey')) {
-			return $item->getPermissionKeyName();			
+			return tc('PermissionKeyName', $item->getPermissionKeyName());			
 		} else if (is_a($item, 'Job')) {
 			return $item->getJobName();
 		} else if (is_a($item, 'WorkflowType')) {
@@ -430,6 +436,8 @@ class Concrete5_Model_Package extends Object {
 						case 'WorkflowType':
 						case 'PermissionKey':
 						case 'PermissionAccessEntityType':
+						case 'TreeType':
+						case 'TreeNodeType':
 							$item->delete();
 							break;
 						default:

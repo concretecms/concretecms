@@ -21,10 +21,6 @@ function getAttributeOptionHTML($v){
 			<span onClick="ccmAttributesHelper.editValue('<?=addslashes($akSelectValueID)?>')" id="akSelectValueStatic_<?=$akSelectValueID?>" class="leftCol"><?=$akSelectValue ?></span>
 		</div>
 		<div id="akSelectValueEdit_<?=$akSelectValueID?>" style="display:none">
-			<div class="rightCol">
-				<input class="btn" type="button" onClick="ccmAttributesHelper.editValue('<?=addslashes($akSelectValueID)?>')" value="<?=t('Cancel')?>" />
-				<input class="btn" type="button" onClick="ccmAttributesHelper.changeValue('<?=addslashes($akSelectValueID)?>')" value="<?=t('Save')?>" />
-			</div>		
 			<span class="leftCol">
 				<input name="akSelectValueOriginal_<?=$akSelectValueID?>" type="hidden" value="<?=$akSelectValue?>" />
 				<? if (is_object($v) && $v->getSelectAttributeOptionTemporaryID() == false) { ?>
@@ -32,9 +28,12 @@ function getAttributeOptionHTML($v){
 				<? } else { ?>
 					<input id="akSelectValueNewOption_<?=$akSelectValueID?>" name="akSelectValueNewOption_<?=$akSelectValueID?>" type="hidden" value="<?=$akSelectValueID?>" />
 				<? } ?>
-				<input id="akSelectValueField_<?=$akSelectValueID?>" name="akSelectValue_<?=$akSelectValueID?>" type="text" value="<?=$akSelectValue?>" size="20" 
-				  onkeypress="ccmAttributesHelper.addEnterClick(event,function(){ccmAttributesHelper.changeValue('<?=addslashes($akSelectValueID)?>')})" />
+				<input id="akSelectValueField_<?php echo $akSelectValueID?>" onkeypress="ccmAttributesHelper.keydownHandler(event);" class="akSelectValueField" data-select-value-id="<?php echo $akSelectValueID; ?>" name="akSelectValue_<?php echo $akSelectValueID?>" type="text" value="<?php echo $akSelectValue?>" size="20" />
 			</span>		
+			<div class="rightCol">
+				<input class="btn" type="button" onClick="ccmAttributesHelper.editValue('<?=addslashes($akSelectValueID)?>')" value="<?=t('Cancel')?>" />
+				<input class="btn" type="button" onClick="ccmAttributesHelper.changeValue('<?=addslashes($akSelectValueID)?>')" value="<?=t('Save')?>" />
+			</div>		
 		</div>	
 		<div class="ccm-spacer">&nbsp;</div>
 <? } ?>
@@ -103,7 +102,7 @@ function getAttributeOptionHTML($v){
 		<input id="akSelectValueFieldNew" name="akSelectValueNew" type="text" value="<?=$defaultNewOptionNm ?>" size="40" class="faint" 
 		onfocus="ccmAttributesHelper.clrInitTxt(this,'<?=$defaultNewOptionNm ?>','faint',0)" 
 		onblur="ccmAttributesHelper.clrInitTxt(this,'<?=$defaultNewOptionNm ?>','faint',1)"
-		onkeypress="ccmAttributesHelper.addEnterClick(event,function(){ccmAttributesHelper.saveNewOption()})"
+		onkeypress="ccmAttributesHelper.keydownHandler(event);"
 		 /> 
 		<input class="btn" type="button" onClick="ccmAttributesHelper.saveNewOption(); $('#ccm-attribute-key-form').unbind()" value="<?=t('Add') ?>" />
 	</div>

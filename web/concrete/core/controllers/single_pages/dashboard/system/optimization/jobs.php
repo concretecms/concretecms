@@ -1,5 +1,4 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
-
 class Concrete5_Controller_Page_Dashboard_System_Optimization_Jobs extends DashboardController {
 
 	function on_start() {
@@ -50,12 +49,12 @@ class Concrete5_Controller_Page_Dashboard_System_Optimization_Jobs extends Dashb
 	}
 
 	public function job_uninstalled() {
-		$this->set('message', t('Job succesfully uninstalled.'));
+		$this->set('message', t('Job successfully uninstalled.'));
 		$this->view();
 	}
 
 	public function job_installed() {
-		$this->set('message', t('Job succesfully installed.'));
+		$this->set('message', t('Job successfully installed.'));
 		$this->view();
 	}
 	

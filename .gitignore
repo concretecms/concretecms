@@ -44,5 +44,9 @@ error_log
 /.settings/
 /.buildpath
 
-# ignore built pretty ccm.app.js
-/web/concrete/js/ccm.app.pretty.js
+# ignore JavaScript source maps
+/web/concrete/js/*.js.map
+
+# ignore node modules used for building
+/build/node_modules
+/build/Gruntfile.parameters.js

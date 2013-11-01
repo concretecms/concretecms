@@ -17,11 +17,13 @@
         <category handle="basic_workflow" package=""/>
         <category handle="page_type" package=""/>
         <category handle="gathering" package=""/>
+        <category handle="group_tree_node" package=""/>
     </permissioncategories>
 
     <permissionkeys>
         <permissionkey handle="view_page" name="View" description="Can see a page exists and read its content." package="" category="page"/>
         <permissionkey handle="view_page_versions" name="View Versions" description="Can view the page versions dialog and read past versions of a page." package="" category="page"/>
+        <permissionkey handle="view_page_in_sitemap" name="View Page in Sitemap" description="Controls whether a user can see a page in the sitemap or intelligent search." package="" category="page"/>
         <permissionkey handle="preview_page_as_user" name="Preview Page As User" description="Ability to see what this page will look like at a specific time in the future as a specific user." package="" category="page"/>
         <permissionkey handle="edit_page_properties" has-custom-class="true" name="Edit Properties" description="Ability to change anything in the Page Properties menu." package="" category="page"/>
         <permissionkey handle="edit_page_contents" name="Edit Contents" description="Ability to make edits to at least some of the content in the page. You can lock down different block areas and specific blocks by clicking Permissions on them as well. " package="" category="page"/>
@@ -73,7 +75,7 @@
         <permissionkey handle="edit_file_set_file_contents" name="Edit File Contents" description="Can edit or replace files in set." package="" category="file_set"/>
         <permissionkey handle="copy_file_set_files" name="Copy File" description="Can copy files in file set." package="" category="file_set"/>
         <permissionkey handle="edit_file_set_permissions" name="Edit File Access" description="Can edit access to file sets." package="" category="file_set"/>
-        <permissionkey handle="delete_file_set" name="Delete File Set" description="" package="Can delete file set." category="file_set"/>
+        <permissionkey handle="delete_file_set" name="Delete File Set" description="Can delete file set." package="" category="file_set"/>
         <permissionkey handle="delete_file_set_files" name="Delete File" description="Can delete files in set." package="" category="file_set"/>
         <permissionkey handle="add_file" has-custom-class="true" name="Add File" description="Can add files to set." package="" category="file_set"/>
         <permissionkey handle="view_file" name="View Files" description="Can view and download files." package="" category="file"/>
@@ -97,12 +99,6 @@
         <!--<permissionkey handle="edit_page_draft" name="Edit Page Draft" description="" package="" category="page_draft" />//-->
 
         <!-- users //-->
-        <permissionkey handle="access_user_search" has-custom-class="true" name="Access User Search" description="" package="" category="user">
-            <access>
-                <group name="Administrators"/>
-            </access>
-        </permissionkey>
-        
         <permissionkey handle="edit_user_properties" has-custom-class="true" name="Edit User Details" package="" category="user">
             <access>
                 <group name="Administrators"/>
@@ -123,7 +119,12 @@
 
         <permissionkey handle="sudo" name="Sign in as User" package="" category="user">
         </permissionkey>
-        
+
+        <permissionkey handle="access_group_search" name="Access Group Search" package="" category="user">
+            <access>
+                <group name="Administrators"/>
+            </access>
+        </permissionkey>
         
         <permissionkey handle="delete_user" name="Delete User" package="" category="user">
             <access>
@@ -131,22 +132,23 @@
             </access>
 		</permissionkey>
 
-        <permissionkey handle="access_group_search" name="Access Group Search" description="" package="" category="user">
-            <access>
-                <group name="Administrators"/>
-            </access>
+        <!-- groups //-->
+
+        <permissionkey handle="search_users_in_group" name="Search User Group" package="" category="group_tree_node">
         </permissionkey>
 
-        <permissionkey handle="edit_groups" name="Edit Groups" description="" package="" category="user">
-            <access>
-                <group name="Administrators"/>
-            </access>
+        <permissionkey handle="edit_group" name="Edit Group" package="" category="group_tree_node">
         </permissionkey>
 
-        <permissionkey handle="assign_user_groups" has-custom-class="true" name="Assign Groups to User" description="" package="" category="user">
-            <access>
-                <group name="Administrators"/>
-            </access>
+        <permissionkey handle="assign_group" name="Assign Group" package="" category="group_tree_node">
+        </permissionkey>
+
+
+        <permissionkey handle="add_sub_group" name="Add Child Group" package="" category="group_tree_node">
+        </permissionkey>
+
+
+        <permissionkey handle="edit_group_permissions" name="Edit Group Permissions" package="" category="group_tree_node">
         </permissionkey>
 
         <permissionkey handle="access_page_type_permissions" name="Access Page Type Permissions" package="" category="admin">
@@ -210,6 +212,12 @@
             <access>
                 <group name="Administrators"/>
             </access>
+		</permissionkey>
+
+		<permissionkey handle="access_user_search_export" name="Export Site Users" description="Controls whether a user can export site users or not" package="" category="user">
+			<access>
+				<group name="Administrators"/>
+			</access>
 		</permissionkey>
         
 	</permissionkeys>

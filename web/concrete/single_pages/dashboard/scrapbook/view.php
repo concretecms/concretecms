@@ -281,7 +281,7 @@ if(!$scrapbookName){ ?>
 							</div>
 							<div class="view">
 								<a onclick="GlobalScrapbook.toggleRename(<?=intval($b->bID) ?>)" >
-									<?=$bt->getBlockTypeName()?>: "<?=$b->getBlockName() ?>"
+									<?=t($bt->getBlockTypeName())?>: "<?=$b->getBlockName() ?>"
 								</a>&nbsp;
 							</div>
 							<div class="edit">
