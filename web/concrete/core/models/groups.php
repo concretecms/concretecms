@@ -442,14 +442,14 @@ class Concrete5_Model_Group extends Object {
 	* @param string $gDescription
 	* @return Group
 	*/
-	public static function add($gName, $gDescription, $parentGroup = false, $pkg = null) {
+	public static function add($gName, $gDescription, $parentGroup = false, $pkg = null, $gID = null) {
 		$db = Loader::db();
 		$pkgID = 0;
 		if (is_object($pkg)) {
 			$pkgID = $pkg->getPackageID();
 		}
-		$v = array($gName, $gDescription, $pkgID);
-		$r = $db->prepare("insert into Groups (gName, gDescription, pkgID) values (?, ?, ?)");
+		$v = array($gID, $gName, $gDescription, $pkgID);
+		$r = $db->prepare("insert into Groups (gID, gName, gDescription, pkgID) values (?, ?, ?, ?)");
 		$res = $db->Execute($r, $v);
 
 		if ($res) {
