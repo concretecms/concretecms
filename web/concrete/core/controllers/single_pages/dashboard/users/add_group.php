@@ -36,6 +36,14 @@ class Concrete5_Controller_Page_Dashboard_Users_AddGroup extends DashboardContro
 	}
 
 
+	public function view() {
+		$tree = GroupTree::get();
+		$this->set('tree', $tree);
+
+		$this->addHeaderItem(Loader::helper('html')->css('dynatree/dynatree.css'));
+		$this->addFooterItem(Loader::helper('html')->javascript('dynatree/dynatree.js'));
+	}
+
 	public function do_add() {
 		$txt = Loader::helper('text');
 		$valt = Loader::helper('validation/token');
@@ -56,20 +64,28 @@ class Concrete5_Controller_Page_Dashboard_Users_AddGroup extends DashboardContro
 			}
 		}
 		
-		$g1 = Group::getByName($gName);
-		if ($g1 instanceof Group) {
-			if ((!is_object($g)) || $g->getGroupID() != $g1->getGroupID()) {
-				$this->error->add(t('A group named "%s" already exists', $g1->getGroupName()));
+		if (isset($_POST['gParentNodeID'])) {
+			$parentGroupNode = TreeNode::getByID($_POST['gParentNodeID']);
+			if (is_object($parentGroupNode) && $parentGroupNode instanceof GroupTreeNode) {
+				$parentGroup = $parentGroupNode->getTreeNodeGroupObject();
 			}
 		}
 
-		if (!$this->error->has()) { 	
-			$g = Group::add($gName, $_POST['gDescription']);
+		if (is_object($parentGroup)) {
+			$pp = new Permissions($parentGroup);
+			if (!$pp->canAddSubGroup()) {
+				$this->error->add(t('You do not have permission to add a group beneath %s', $parentGroup->getGroupDisplayName()));
+			}
+		}
+		
+		if (!$this->error->has()) {
+			$g = Group::add($gName, $_POST['gDescription'], $parentGroup);
 			$this->checkExpirationOptions($g);
 			$this->checkBadgeOptions($g);
 			$this->checkAutomationOptions($g);
 			$this->redirect('/dashboard/users/groups', 'group_added');
 		}	
+		$this->view();
 	}
 
 }

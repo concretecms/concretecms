@@ -62,7 +62,7 @@ class Concrete5_Controller_Page_Register extends PageController {
 		if ($this->displayUserName) {
 			
 			if (strlen($username) < USER_USERNAME_MINIMUM) {
-				$e->add(t('A username must be between at least %s characters long.', USER_USERNAME_MINIMUM));
+				$e->add(t('A username must be at least %s characters long.', USER_USERNAME_MINIMUM));
 			}
 	
 			if (strlen($username) > USER_USERNAME_MAXIMUM) {
@@ -112,7 +112,7 @@ class Concrete5_Controller_Page_Register extends PageController {
 			if ($uak->isAttributeKeyRequiredOnRegister()) {
 				$e1 = $uak->validateAttributeForm();
 				if ($e1 == false) {
-					$e->add(t('The field "%s" is required', $uak->getAttributeKeyName()));
+					$e->add(t('The field "%s" is required', tc('AttributeKeyName', $uak->getAttributeKeyName())));
 				} else if ($e1 instanceof ValidationErrorHelper) {
 					$e->add($e1);
 				}
@@ -152,7 +152,7 @@ class Concrete5_Controller_Page_Register extends PageController {
 					$attribs = UserAttributeKey::getRegistrationList();
 					$attribValues = array();
 					foreach($attribs as $ak) {
-						$attribValues[] = $ak->getAttributeKeyName() . ': ' . $process->getAttribute($ak->getAttributeKeyHandle(), 'display');		
+						$attribValues[] = tc('AttributeKeyName', $ak->getAttributeKeyName()) . ': ' . $process->getAttribute($ak->getAttributeKeyHandle(), 'display');		
 					}						
 					$mh->addParameter('attribs', $attribValues);
 					

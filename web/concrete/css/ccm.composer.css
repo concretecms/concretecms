@@ -1,4 +1,1 @@
-.clear_float:before,.clear_float:after{content:" ";display:table;}
-.clear_float:after{clear:both}
-#ccm-page-type-composer-form-error-list{display:none}
-#ccm-page-type-composer-form-save-status{display:none}
+.clear_float:before,.clear_float:after{content:" ";display:table}.clear_float:after{clear:both}#ccm-page-type-composer-form-error-list{display:none}#ccm-page-type-composer-form-save-status{display:none}

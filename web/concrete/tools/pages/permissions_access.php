@@ -42,7 +42,8 @@ if ($_REQUEST['task'] == 'get_all_access_entities' && $pcnt > 0 && $permissionsI
 	$paIDs = array();
 	foreach($pages as $c) {
 		$pk = PermissionKey::getByID($_REQUEST['pkID']);
-		$pa = $c->getPermissionAccessObject($pk);
+		$pk->setPermissionObject($c);
+		$pa = $pk->getPermissionAccessObject();
 		if (is_object($pa)) {
 			$listItems = $pa->getAccessListItems(PermissionKey::ACCESS_TYPE_ALL);
 			foreach($listItems as $as) {
@@ -119,7 +120,7 @@ if ($_REQUEST['task'] == 'remove') {
 					<?
 					$permissions = PermissionKey::getList('page');
 					foreach($permissions as $pk) { ?>
-						<option value="<?=$pk->getPermissionKeyID()?>"><?=$pk->getPermissionKeyName()?></option>
+						<option value="<?=$pk->getPermissionKeyID()?>"><?=tc('PermissionKeyName', $pk->getPermissionKeyName())?></option>
 					<? } ?>
 					</select>
 				</td>
@@ -213,7 +214,7 @@ if ($_REQUEST['task'] == 'remove') {
 		<? } else { ?>
 			$('#ccm-permissions-bulk-access-form select').on('change', function() {
 				$('.ccm-permission-grid-cell-value').attr('id', 'ccm-permission-grid-cell-' + $(this).val());
-			});
+			}).trigger('change');
 		<? } ?>
 		</script>
 
@@ -225,4 +226,4 @@ if ($_REQUEST['task'] == 'remove') {
 
 	<? } 
 
-} ?>
+}

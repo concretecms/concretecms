@@ -14,6 +14,9 @@ $keywords = $_REQUEST['q'];
 Loader::model('page_list');
 $pl = new PageList();
 $pl->filterByName($keywords);
+if (PERMISSIONS_MODEL != 'simple') {
+	$pl->setViewPagePermissionKeyHandle('view_page_in_sitemap');
+}
 $pl->ignoreAliases();
 $pl->sortBy('cID', 'asc');
 $pl->setItemsPerPage(5);

@@ -36,7 +36,7 @@ function printAttributeRow($ak, $uo, $assignment) {
 	
 	$html = '
 	<tr class="ccm-attribute-editable-field">
-		<td width="250" style="vertical-align:middle;"><a style="font-weight:bold; line-height:18px;" href="javascript:void(0)">' . $ak->getAttributeKeyName() . '</a></td>
+		<td width="250" style="vertical-align:middle;"><a style="font-weight:bold; line-height:18px;" href="javascript:void(0)">' . tc('AttributeKeyName', $ak->getAttributeKeyName()) . '</a></td>
 		<td class="ccm-attribute-editable-field-central" style="vertical-align:middle;"><div class="ccm-attribute-editable-field-text">' . $text . '</div>
 		<form method="post" style="margin-bottom:0;" action="' . View::url('/dashboard/users/search', 'edit_attribute') . '">
 		<input type="hidden" name="uakID" value="' . $ak->getAttributeKeyID() . '" />
@@ -57,7 +57,7 @@ function printAttributeRow($ak, $uo, $assignment) {
 
 	$html = '
 	<tr>
-		<td width="250">' . $ak->getAttributeKeyName() . '</th>
+		<td width="250">' . tc('AttributeKeyName', $ak->getAttributeKeyName()) . '</th>
 		<td class="ccm-attribute-editable-field-central" colspan="2">' . $text . '</td>
 	</tr>';	
 	}
@@ -70,11 +70,6 @@ if (intval($_GET['uID'])) {
 	$uo = UserInfo::getByID(intval($_GET['uID']));
 	if (is_object($uo)) {
 	
-		if (!PermissionKey::getByHandle('access_user_search')->validate($uo)) { 
-			throw new Exception(t('Access Denied.'));
-		}
-		
-		
 		$uID = intval($_REQUEST['uID']);
 		
 		if (isset($_GET['task'])) {
@@ -207,6 +202,7 @@ if (is_object($uo)) {
         
         
 		<table class="table" border="0" cellspacing="0" cellpadding="0" width="100%">
+			<tbody>
 	        <? if ($assignment->allowEditPassword()) { ?>
 
             	<tr>
@@ -307,7 +303,7 @@ if (is_object($uo)) {
                                         }
                                     }
                                 ?> />
-                                <span><?=$g->getGroupName()?></span>
+                                <span><?=$g->getGroupDisplayName()?></span>
                             </label>
                         
                     <? } ?> 
@@ -388,7 +384,7 @@ if (is_object($uo)) {
 		<?
 		$tp = new TaskPermission();
 		if ($uo->getUserID() != $u->getUserID()) {
-			if ($tp->canSudo()) { 
+			if ($tp->canSudo() && $uo->getUserID() != USER_SUPER_ID) { 
 			
 				$loginAsUserConfirm = t('This will end your current session and sign you in as %s', $uo->getUserName());
 				
@@ -475,7 +471,7 @@ if (is_object($uo)) {
 			?>
 			
 		<div class="row">
-		<div class="span5" style=""><p><strong><?=$uk->getAttributeKeyName()?></strong></p></div>
+		<div class="span5" style=""><p><strong><?=tc('AttributeKeyName', $uk->getAttributeKeyName())?></strong></p></div>
 		<div class="span5"><p>
 			<?=$uo->getAttribute($uk->getAttributeKeyHandle(), 'displaySanitized', 'display')?>
 		</p></div>
@@ -500,7 +496,7 @@ if (is_object($uo)) {
 				$groups++; ?>
 
 				<div class="row">
-				<div class="span5" style=""><p><strong><?=$g->getGroupName()?></strong></p></div>
+				<div class="span5" style=""><p><strong><?=$g->getGroupDisplayName()?></strong></p></div>
 				<div class="span5"><p>
 					<?
 					$dateTime = $g->getGroupDateTimeEntered();
@@ -599,8 +595,8 @@ $(function() {
 <?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Search Users'), t('Search the users of your site and perform bulk actions on them.'), false, false);?>
 
 <?
-$tp = new TaskPermission();
-if ($tp->canAccessUserSearch()) { ?>
+$tp = Loader::helper('concrete/user');
+if ($tp->canAccessUserSearchInterface()) { ?>
 <div class="ccm-pane-options" id="ccm-<?=$searchInstance?>-pane-options">
 <? Loader::element('users/search_form_advanced', array('columns' => $columns, 'searchInstance' => $searchInstance, 'searchRequest' => $searchRequest, 'searchType' => 'DASHBOARD')); ?>
 </div>

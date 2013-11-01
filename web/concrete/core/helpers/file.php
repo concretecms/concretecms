@@ -58,7 +58,7 @@ class Concrete5_Helper_File {
 			
 			$d = dir($source);
 			while (FALSE !== ($entry = $d->read())) {
-				if ( $entry == '.' || $entry == '..' || substr($entry, 0, 1) == '.') {
+				if (substr($entry, 0, 1) === '.') {
 					continue;
 				}
 			

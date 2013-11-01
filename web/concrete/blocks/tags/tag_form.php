@@ -31,7 +31,7 @@ if(!$ak instanceof CollectionAttributeKey) {?>
 	</div>
 
 	<div id="ccm-tags-display-page" class="clearfix">
-	<label><?php echo $ak->getAttributeKeyName();?></label>
+	<label><?php echo tc('AttributeKeyName', $ak->getAttributeKeyName());?></label>
 	<div class="input">
 		<?php
 			$av = $c->getAttributeValueObject($ak);

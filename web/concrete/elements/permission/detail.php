@@ -39,7 +39,7 @@ $tabs = array();
 	
 <? if ($permissionKey->getPermissionKeyDescription()) { ?>
 <div class="dialog-help">
-<?=$permissionKey->getPermissionKeyDescription()?>
+<?=tc('PermissionKeyDescription', $permissionKey->getPermissionKeyDescription())?>
 </div>
 <? } ?>
 
@@ -157,7 +157,6 @@ $(function() {
 		});
 		return false;
 	}
-	
 	
 	<? if (isset($_REQUEST['message']) && $_REQUEST['message'] == 'custom_options_saved') { ?>
 		$('a[data-tab=custom-options]').click();

@@ -30,17 +30,17 @@ if ($wp instanceof PageWorkflowProgress) {
 		<?php echo $ih->tabs($tabs); ?>
 		
 		<div style="display: block; height: 100%" id="ccm-tab-content-requested-version">
-			<iframe border="0" id="v<?php echo time()?>r" frameborder="0" height="100%" width="100%" src="<?php echo BASE_URL . DIR_REL?>/<?php echo DISPATCHER_FILENAME?>?cvID=<?php echo $req->getRequestedVersionID()?>&cID=<?php echo $req->getRequestedPageID()?>&vtask=view_versions" />
+			<iframe border="0" id="v<?php echo time()?>r" frameborder="0" height="100%" width="100%" src="<?php echo BASE_URL . DIR_REL?>/<?php echo DISPATCHER_FILENAME?>?cvID=<?php echo $req->getRequestedVersionID()?>&cID=<?php echo $req->getRequestedPageID()?>&vtask=view_versions"></iframe>
 		</div>
 		
 		<div style="display: none; height: 100%" id="ccm-tab-content-live-version">
-			<iframe border="0" id="v<?php echo time()?>l" frameborder="0" height="100%" width="100%" src="<?php echo BASE_URL . DIR_REL?>/<?php echo DISPATCHER_FILENAME?>?cvID=<?php echo $liveCVID?>&cID=<?php echo $req->getRequestedPageID()?>&vtask=view_versions" />
+			<iframe border="0" id="v<?php echo time()?>l" frameborder="0" height="100%" width="100%" src="<?php echo BASE_URL . DIR_REL?>/<?php echo DISPATCHER_FILENAME?>?cvID=<?php echo $liveCVID?>&cID=<?php echo $req->getRequestedPageID()?>&vtask=view_versions"></iframe>
 		</div>
 
 	<?php 	if ($liveCVID != $rvr->getVersionID()) { ?>
 
 		<div style="display: none; height: 100%" id="ccm-tab-content-recent-version">
-			<iframe border="0" id="v<?php echo time()?>rec" frameborder="0" height="100%" width="100%" src="<?php echo BASE_URL . DIR_REL?>/<?php echo DISPATCHER_FILENAME?>?cvID=<?php echo $recentCVID?>&cID=<?php echo $req->getRequestedPageID()?>&vtask=view_versions" />
+			<iframe border="0" id="v<?php echo time()?>rec" frameborder="0" height="100%" width="100%" src="<?php echo BASE_URL . DIR_REL?>/<?php echo DISPATCHER_FILENAME?>?cvID=<?php echo $recentCVID?>&cID=<?php echo $req->getRequestedPageID()?>&vtask=view_versions"></iframe>
 		</div>
 		
 	<?php  } ?>

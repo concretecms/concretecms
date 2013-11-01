@@ -24,8 +24,8 @@ class Concrete5_Model_UserList extends DatabaseItemList {
 	public $searchAgainstEmail=0;
 	
 	//Filter by uName
-	public function filterByUserName($type) {
-		$this->filter('u.uName', $type, '=');
+	public function filterByUserName($username) {
+		$this->filter('u.uName', $username, '=');
 	}
 	
 	public function filterByKeywords($keywords) {
@@ -41,12 +41,15 @@ class Concrete5_Model_UserList extends DatabaseItemList {
 		$this->filter(false, '( u.uName like ' . $qkeywords . $emailSearchStr . $attribsStr . ')');
 	}
 	
-	public function filterByGroup($groupName='', $inGroup = true){ 
-		$group=Group::getByName($groupName); 
+	public function filterByGroup($group, $inGroup = true) {
 		$tbl='ug_'.$group->getGroupID();
+		$tblg = 'g_' . $group->getGroupID();
 		$this->addToQuery("left join UserGroups $tbl on {$tbl}.uID = u.uID ");	
 		if ($inGroup) {
-			$this->filter(false, "{$tbl}.gID=".intval($group->getGroupID()) );
+			$this->addToQuery("left join Groups {$tblg} on {$tbl}.gID = {$tblg}.gID ");	
+			$db = Loader::db();
+			$path = $db->quote($group->getGroupPath() . '%');
+			$this->filter(false, "{$tblg}.gPath like {$path}");
 		} else {
 			$this->filter(false, "{$tbl}.gID is null");
 		}
@@ -62,16 +65,18 @@ class Concrete5_Model_UserList extends DatabaseItemList {
 	}
 
 	public function filterByGroupID($gID){ 
-		$tbl='ug_'.$gID;
-		$this->addToQuery("left join UserGroups $tbl on {$tbl}.uID = u.uID ");			
-		$this->filter(false, "{$tbl}.gID=".$gID);
+		$g = Group::getByID($gID);
+		$this->filterByGroup($g);
 	}
 
 	public function filterByDateAdded($date, $comparison = '=') {
 		$this->filter('u.uDateAdded', $date, $comparison);
 	}
 	
-	// Returns an array of userInfo objects based on current filter settings
+	/**
+	 * Returns an array of userInfo objects based on current filter settings
+	 * @return UserInfo[]
+	 */
 	public function get($itemsToGet = 100, $offset = 0) {
 		$userInfos = array(); 
 		$this->createQuery();
@@ -81,6 +86,21 @@ class Concrete5_Model_UserList extends DatabaseItemList {
 			$userInfos[] = $ui;
 		}
 		return $userInfos;
+	}
+	
+	/**
+	 * similar to get except it returns an array of userIDs
+	 * much faster than getting a UserInfo object for each result if all you need is the user's id
+	 * @return array $userIDs
+	*/
+	public function getUserIDs($itemsToGet = 100, $offset=0) {
+		$this->createQuery();
+		$userIDs = array();
+		$r = parent::get($itemsToGet, intval($offset));
+		foreach($r as $row) {
+			$userIDs[] = $row['uID'];
+		}
+		return $userIDs;
 	}	
 	
 	public function getTotal(){ 

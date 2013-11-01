@@ -167,7 +167,7 @@ class dbObject {
 		
 	}
 	
-	function create() {
+	function create(&$xmls) {
 		return array();
 	}
 	

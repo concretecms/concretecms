@@ -1,5 +1,5 @@
 <?php
-defined('C5_EXECUTE') or die(_("Access Denied."));
+defined('C5_EXECUTE') or die("Access Denied.");
 
 $subject = SITE.' '.t('Registration Approved');
 
@@ -28,7 +28,7 @@ ob_start();
 ?>
 <?= t('Welcome to') ?> <?= SITE ?>
 
-<?= t("Your registation has been approved. You can log into your new account here") ?>:
+<?= t("Your registration has been approved. You can log into your new account here") ?>:
 
 <?= BASE_URL.View::url('/login') ?>
 <?

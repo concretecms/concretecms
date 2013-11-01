@@ -1,11 +1,7 @@
 <?php  
 defined('C5_EXECUTE') or die("Access Denied.");
-Loader::model("collection_types");
 
 $uh = Loader::helper('concrete/urls'); 
-	
-$c = Page::getCurrentPage();
-//	echo $rssUrl;
+$c = $cp->getOriginalObject();
 
-$bt->inc('form_setup_html.php', array( 'c'=>$c, 'b'=>$b, 'uh'=>$uh ) ); 
-?>
+$bt->inc('form_setup_html.php', array( 'c'=>$c, 'b'=>$b, 'uh'=>$uh, 'controller'=>$controller ) );

@@ -147,7 +147,8 @@ if (count($pages) > 0) {
 			
 			foreach($pages as $c) { 
 				if ($_REQUEST['paReplaceAll'] == 'add') {
-					$pa = $c->getPermissionAccessObject($pk);
+					$pk->setPermissionObject($c);
+					$pa = $pk->getPermissionAccessObject();
 					if (is_object($pa)) {
 						// that means that we have to take the current $pa object, and the new $pa object, and merge them together into 
 						// a third object, and try and assign that object
@@ -188,7 +189,8 @@ if (count($pages) > 0) {
 		$deferred = false;
 		
 		foreach($pages as $c) { 
-			$pa = $c->getPermissionAccessObject($pk);
+			$pk->setPermissionObject($c);
+			$pa = $pk->getPermissionAccessObject();
 			$matches = array();
 			if (is_object($pa)) {
 				foreach($_REQUEST['listItem'] as $li) {

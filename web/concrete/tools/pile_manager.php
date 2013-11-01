@@ -157,8 +157,13 @@ if (($_REQUEST['btask'] == 'add' || $_REQUEST['ctask'] == 'add') && $scrapbookNa
 						$p->add($pc);
 					}
 				}
+
+				$securityHelper = Loader::helper('security');
+				$PHP_SELF = $securityHelper->sanitizeURL($_SERVER['PHP_SELF']);
+				$cID = $securityHelper->sanitizeInt($_REQUEST['cID']);
+				$arHandle = $securityHelper->sanitizeString($_REQUEST['arHandle']);
 			
-				header('Location: ' . $_SERVER['PHP_SELF'] . '?pID=' . $p->getPileID() . '&cID=' . $_REQUEST['cID'] . '&arHandle=' . $_REQUEST['arHandle']);
+				header('Location: ' . $PHP_SELF . '?pID=' . $p->getPileID() . '&cID=' . $cID . '&arHandle=' . $arHandle);
 				exit;
 			}
 			break;

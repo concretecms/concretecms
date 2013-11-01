@@ -45,8 +45,9 @@ class Concrete5_Helper_Lists_Countries {
 		$countriesFromEvent = Events::fire('on_get_countries_list', $countries);
 		if(is_array($countriesFromEvent)) {
 			$countries = $countriesFromEvent;
+		} else {
+			asort($countries, SORT_LOCALE_STRING);
 		}
-		asort($countries, SORT_LOCALE_STRING);
 		$this->countries = $countries;
 	}
 

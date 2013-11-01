@@ -110,9 +110,9 @@ $al->registerGroup('core/app', array(
 ));
 
 // Image Editor
-$al->register('javascript', 'kinetic', 'js/image_editor/build/kinetic.js');
+$al->register('javascript', 'kinetic', 'js/kinetic.js');
 $al->register('css', 'core/imageeditor', 'css/ccm.image_editor.css');
-$al->register('javascript', 'core/imageeditor', 'js/image_editor.min.js');
+$al->register('javascript', 'core/imageeditor', 'js/ccm.imageditor.js');
 $al->registerGroup('core/imageeditor', array(
 	array('javascript', 'kinetic'),
 	array('javascript', 'core/imageeditor'),

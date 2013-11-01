@@ -47,21 +47,47 @@
 			return $this->check($ip, ' AND isManual = ? AND expires = ? ',Array(1,0));
 		}
 		
+		/** Checks if an IPv4 address belongs to a private network.
+		* @param string $ip The IP address to check.
+		* @return bool Returns true if $ip belongs to a private network, false if it's a public IP address.
+		*/
+		public function isPrivateIP($ip) {
+			if(empty($ip)) {
+				return false;
+			}
+			if(
+				(strpos($ip, '10.') === 0)
+				||
+				(strpos($ip, '192.168.') === 0)
+				||
+				(preg_match('/^172\.(\d+)\./', $ip, $m) && (intval($m[1]) >= 16) && (intval($m[1]) <= 31))
+			) {
+				return true;
+			}
+			return false;
+		}
+		
 		/** Returns the client IP address (or an empty string if it can't be found).
 		* @return string
 		*/
 		public function getRequestIP() {
+			$result = '';
 			foreach(array('HTTP_CLIENT_IP', 'HTTP_X_FORWARDED_FOR', 'HTTP_X_FORWARDED', 'HTTP_X_CLUSTER_CLIENT_IP', 'HTTP_FORWARDED_FOR', 'HTTP_FORWARDED', 'REMOTE_ADDR') as $index) {
 				if(array_key_exists($index, $_SERVER) && is_string($_SERVER[$index])) {
-					foreach(split(',', $_SERVER[$index]) as $ip) {
+					foreach(explode(',', $_SERVER[$index]) as $ip) {
 						$ip = trim($ip);
 						if(strlen($ip)) {
-							return $ip;
+							if($this->isPrivateIP($ip)) {
+								$result = $ip;
+							}
+							else {
+								return $ip;
+							}
 						}
 					}
 				}
 			}
-			return '';
+			return $result;
 		}
 		
 		public function getErrorMessage() {

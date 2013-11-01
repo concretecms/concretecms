@@ -22,8 +22,8 @@ class Concrete5_Controller_Page_Login extends PageController {
 		}
 
 		$txt = Loader::helper('text');
-		if (strlen($_GET['uName'])) { // pre-populate the username if supplied, if its an email address with special characters the email needs to be urlencoded first,
-		   $this->set("uName",trim($txt->email($_GET['uName'])));
+		if (isset($_GET['uName']) && strlen($_GET['uName'])) { // pre-populate the username if supplied, if its an email address with special characters the email needs to be urlencoded first,
+			$this->set("uName",trim($txt->email($_GET['uName'])));
 		}
 		
 
@@ -102,6 +102,17 @@ class Concrete5_Controller_Page_Login extends PageController {
 			}
 			if (trim($message)) {
 				$this->set('message',$message);
+			}
+		}
+
+		if ($this->post('completePartialProfile')) {
+			foreach($unfilledAttributes as $uak) {
+				$e1 = $uak->validateAttributeForm();
+				if ($e1 == false) {
+					$this->error->add(t('The field "%s" is required', tc('AttributeKeyName', $uak->getAttributeKeyName())));
+				} elseif ($e1 instanceof ValidationErrorHelper) {
+					$this->error->add($e1);
+				}
 			}
 		} catch (exception $e) {
 			if ($e instanceof AuthenticationTypeFailureException) {

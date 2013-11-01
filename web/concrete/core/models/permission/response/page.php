@@ -22,6 +22,7 @@ class Concrete5_Model_PagePermissionResponse extends PermissionResponse {
 		$pk->setPermissionObject($this->object);
 		return $pk->validate($ct);
 	}
+
 	public function canAddBlockType($bt) {
 		$list = Area::getListOnPage($this->object);
 		foreach($list as $la) {
@@ -33,6 +34,15 @@ class Concrete5_Model_PagePermissionResponse extends PermissionResponse {
 		return false;
 	}
 
+	public function canViewPageInSitemap() {
+		if (PERMISSIONS_MODEL != 'simple') {
+			$pk = $this->category->getPermissionKeyByHandle('view_page_in_sitemap');
+			$pk->setPermissionObject($this->object);
+			return $pk->validate();
+		}
+		return $this->canViewPage();
+	}
+	
 	public function canEditPageProperties($obj = false) {
 		if ($this->object->isExternalLink()) {
 			return $this->canDeletePage();

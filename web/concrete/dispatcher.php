@@ -1,9 +1,20 @@
 <?php
+/**
+ * The full dispatcher for concrete5.
+ * @author Andrew Embler <andrew@concrete5.org>
+ * @copyright  Copyright (c) 2003-2013 Concrete5. (http://www.concrete5.org)
+ * @license    http://www.concrete5.org/license/     MIT License
+ */
+
 /** 
  * This constant ensures that we're operating inside dispatcher.php. There is a LATER check to ensure that dispatcher.php is being called correctly. ##
  */
 if (!defined("C5_EXECUTE")) {
 	define('C5_EXECUTE', true);
+}
+
+if (!defined('C5_RUNTIME_HASH')) {
+	define('C5_RUNTIME_HASH', md5(uniqid()));
 }
 
 /** 

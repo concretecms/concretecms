@@ -20,8 +20,11 @@ $th = Loader::helper('text');
 		$description = $th->entities($description);	
 		
 		//Other useful page data...
-		//$date = date('F j, Y', strtotime($page->getCollectionDatePublic()));
+		
+		//$date = $page->getCollectionDatePublic(DATE_APP_GENERIC_MDY_FULL);
+		
 		//$last_edited_by = $page->getVersionObject()->getVersionAuthorUserName();
+		
 		//$original_author = Page::getByID($page->getCollectionID(), 1)->getVersionObject()->getVersionAuthorUserName();
 		
 		/* CUSTOM ATTRIBUTE EXAMPLES:

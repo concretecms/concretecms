@@ -4,6 +4,7 @@
 $sh = Loader::helper('concrete/dashboard/sitemap');
 $numChildren = $c->getNumChildren();
 $u = new User();
+$securityHelper = Loader::helper('security');
 ?>
 
 <script type="text/javascript">
@@ -37,7 +38,7 @@ $(function() {
 		
 	<? } else { 
 
-		$request_rel = SecurityHelper::sanitizeString($_REQUEST['rel']);
+		$request_rel = $securityHelper->sanitizeString($_REQUEST['rel']);
 		?>
 		
 		<div class="ccm-buttons">
@@ -52,7 +53,7 @@ $(function() {
 		<? if($c->isSystemPage()) { ?>
 			<div class="alert alert-error"><?php echo t('Warning! This is a system page. Deleting it could potentially break your site. Please proceed with caution.') ?></div>
 		<? } ?>
-		<h3><?=t('Are you sure you wish to delete this page?')?></h3>
+		<h4><?=t('Are you sure you wish to delete this page?')?></h4>
 		<? if ($u->isSuperUser() && $numChildren > 0) { ?>
 			<h5><?=t2('This will remove %s child page.', 'This will remove %s child pages.', $numChildren, $numChildren)?></h5>
 		<? } ?>
@@ -68,8 +69,9 @@ $(function() {
 			<input type="hidden" name="processCollection" value="1" />
 
 			<?php 
-			$display_mode = SecurityHelper::sanitizeString($_REQUEST['display_mode']);
-			$select_mode = SecurityHelper::sanitizeString($_REQUEST['select_mode']);
+			$display_mode = $securityHelper->sanitizeString($_REQUEST['display_mode']);
+			$instance_id = $securityHelper->sanitizeInt($_REQUEST['instance_id']);
+			$select_mode = $securityHelper->sanitizeString($_REQUEST['select_mode']);
 			?>			
 			<input type="hidden" name="display_mode" value="<?php echo h($display_mode); ?>" />
 			<input type="hidden" name="select_mode" value="<?php echo h($select_mode); ?>" />
@@ -78,3 +80,4 @@ $(function() {
 		
 	<? }
 ?>
+</div>

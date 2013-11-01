@@ -9,7 +9,7 @@
 	
 	
 	// Modification for step editing
-	$step = ($_REQUEST['step']) ? '&step=' . $_REQUEST['step'] : '';
+	$step = (isset($_REQUEST['step']) && $_REQUEST['step']) ? '&step=' . $_REQUEST['step'] : '';
 	
 	// if we don't have a valid token we die
 	$valt = Loader::helper('validation/token');
@@ -20,7 +20,10 @@
 	if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		$u->refreshCollectionEdit($c);
 	}
-	if ($_REQUEST['btask'] && $valt->validate()) {
+
+	$securityHelper = Loader::helper('security');
+
+	if (isset($_REQUEST['btask']) && $_REQUEST['btask'] && $valt->validate()) {
 	
 		// these are tasks dealing with blocks (moving up, down, removing)
 		
@@ -106,7 +109,7 @@
 										$doProcessArrangement = false;
 										$r = new stdClass;
 										$r->error = true;
-										$r->message = t('You may not add %s to area %s.', $bt->getBlockTypeName(), $destAreaHandle);
+										$r->message = t('You may not add %s to area %s.', t($bt->getBlockTypeName()), $destAreaHandle);
 									}
 								}
 							}							
@@ -163,8 +166,10 @@
 						if (isset($_POST['isAjax'])) {
 							exit;
 						}
+
+						$cID = $securityHelper->sanitizeInt($_GET['cID']);
 						
-						header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $_GET['cID'] . '&mode=edit' . $step);
+						header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $cID . '&mode=edit' . $step);
 						exit;
 					}
 				}
@@ -226,7 +231,9 @@
 							}
 						}
 
-						header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $_GET['cID'] . '&mode=edit' . $step);				
+						$cID = $securityHelper->sanitizeInt($_GET['cID']);
+
+						header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $cID . '&mode=edit' . $step);				
 					}
 				}
 				break;
@@ -369,7 +376,7 @@
 		}
 	}
 	
-	if ($_GET['atask'] && $valt->validate()) {
+	if (isset($_GET['atask']) && $_GET['atask'] && $valt->validate()) {
 		switch($_GET['atask']) { 		
 			case 'add_stack':
 				$a = Area::get($c, $_GET['arHandle']);
@@ -442,15 +449,18 @@
 						}
 					}
 
-					header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $_GET['cID'] . '&mode=edit' . $step);
+					$cID = $securityHelper->sanitizeInt($_GET['cID']);
+
+					header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $cID . '&mode=edit' . $step);
 					exit;
 				}
 				break; 
+
 		}
 	}
 	
-	if ($_REQUEST['ctask'] && $valt->validate()) {
-		
+	if (isset($_REQUEST['ctask']) && $_REQUEST['ctask'] && $valt->validate()) {
+	
 		switch ($_REQUEST['ctask']) {
 			case 'remove-alias':
 				if ($cp->canDeletePage()) {
@@ -510,7 +520,7 @@
 		}
 	}			
 	
-	if ($_REQUEST['ptask'] && $valt->validate()) {
+	if (isset($_REQUEST['ptask']) && $_REQUEST['ptask'] && $valt->validate()) {
 		Loader::model('pile');
 
 		// piles !
@@ -524,7 +534,8 @@
 						$pc->delete();
 					}
 					if ($pcID && ($_REQUEST['sbURL'])) {
-						header('Location: ' . BASE_URL . $_GET['sbURL']);
+						$sbURL = $securityHelper->sanitizeInt($_GET['sbURL']);
+						header('Location: ' . BASE_URL . $sbURL);
 						exit;
 					}
 				//global scrapbooks
@@ -548,7 +559,7 @@
 		}
 	}
 	
-	if ($_REQUEST['processBlock'] && $valt->validate()) {
+	if (isset($_REQUEST['processBlock']) && $_REQUEST['processBlock'] && $valt->validate()) {
 		
 		// some admin (or unscrupulous person) is doing something to a block of content on the site
 		$edit = ($_REQUEST['enterViewMode']) ? "" : "&mode=edit";
@@ -775,9 +786,7 @@
 		}	
 	}
 
-	if ($_POST['processCollection'] && $valt->validate()) { 
-
-
+	if (isset($_POST['processCollection']) && $_POST['processCollection'] && $valt->validate()) {
 		if ($_POST['update_external']) {
 			$parent = Page::getByID($c->getCollectionParentID());
 			$parentP = new Permissions($parent);

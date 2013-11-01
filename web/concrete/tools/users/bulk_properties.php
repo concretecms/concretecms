@@ -5,7 +5,6 @@ $tp = new TaskPermission();
 
 Loader::model('attribute/categories/user');
 $attribs = UserAttributeKey::getEditableList();
-$sk = PermissionKey::getByHandle('access_user_search');
 $ek = PermissionKey::getByHandle('edit_user_properties');
 
 $tp = new TaskPermission();
@@ -22,7 +21,8 @@ if (is_array($_REQUEST['uID'])) {
 }
 
 foreach($users as $ui) {
-	if (!$sk->validate($ui)) { 
+	$up = new Permissions($ui);
+	if (!$up->canViewUser()) {
 		die(t("Access Denied."));
 	}
 }
@@ -91,7 +91,7 @@ function printAttributeRow($ak, $ek) {
 	
 	$html = '
 	<tr class="ccm-attribute-editable-field">
-		<td width="250" style="vertical-align: middle"><strong><a href="javascript:void(0)">' . $ak->getAttributeKeyName() . '</a></strong></td>
+		<td width="250" style="vertical-align: middle"><strong><a href="javascript:void(0)">' . tc('AttributeKeyName', $ak->getAttributeKeyName()) . '</a></strong></td>
 		<td style="vertical-align: middle" class="ccm-attribute-editable-field-central"><div class="ccm-attribute-editable-field-text">' . $text . '</div>
 		<form method="post" action="' . REL_DIR_FILES_TOOLS_REQUIRED . '/users/bulk_properties">
 			<input type="hidden" name="fakID" value="' . $ak->getAttributeKeyID() . '" />
@@ -112,7 +112,7 @@ function printAttributeRow($ak, $ek) {
 
 	$html = '
 	<tr>
-		<td width="250"><strong>' . $ak->getAttributeKeyName() . '</strong></td>
+		<td width="250"><strong>' . tc('AttributeKeyName', $ak->getAttributeKeyName()) . '</strong></td>
 		<td style="vertical-align: middle" class="ccm-attribute-editable-field-central" colspan="2">' . $text . '</td>
 	</tr>';	
 	}

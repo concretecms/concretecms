@@ -4,7 +4,7 @@ $form = Loader::helper('form');
 Loader::model('attribute/categories/file');
 $fp = FilePermissions::getGlobal();
 if (!$fp->canAccessFileManager()) {
-	die(t("Access Denied."));
+	die(t("Unable to access the file manager."));
 }
 
 
@@ -67,7 +67,7 @@ $list = FileAttributeKey::getList();
 	
 	<? foreach($list as $ak) { ?>
 
-		<li><label><?=$form->checkbox('ak_' . $ak->getAttributeKeyHandle(), 1, $fldc->contains($ak))?> <span><?=$ak->getAttributeKeyName()?></span></label></li>
+		<li><label><?=$form->checkbox('ak_' . $ak->getAttributeKeyHandle(), 1, $fldc->contains($ak))?> <span><?=tc('AttributeKeyName', $ak->getAttributeKeyName())?></span></label></li>
 	
 	<? } ?>
 	

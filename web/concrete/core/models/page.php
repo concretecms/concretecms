@@ -345,6 +345,8 @@ class Concrete5_Model_Page extends Collection {
 			$pa = $pk->getPermissionAccessObject();
 			if (!is_object($pa)) {
 				$pa = PermissionAccess::create($pk);
+			} else if ($pa->isPermissionAccessInUse()) {
+				$pa = $pa->duplicate();
 			}
 			$pa->addListItem($pe, false, $accessType);
 			$pt = $pk->getPermissionAssignmentObject();
@@ -378,6 +380,7 @@ class Concrete5_Model_Page extends Collection {
 		$pkHandles = array();
 		if ($node['canRead'] == '1') {
 			$pkHandles[] = 'view_page';
+			$pkHandles[] = 'view_page_in_sitemap';
 		}
 		if ($node['canWrite'] == '1') {
 			$pkHandles[] = 'view_page_versions';
@@ -995,7 +998,6 @@ class Concrete5_Model_Page extends Collection {
 		}
 		$dh = Loader::helper('date');
 		if(ENABLE_USER_TIMEZONES && $type == 'user') {
-			$dh = Loader::helper('date');
 			return $dh->getLocalDateTime($this->vObj->cvDatePublic, $dateFormat);
 		} else {
 			return $dh->date($dateFormat, strtotime($this->vObj->cvDatePublic));
@@ -1428,6 +1430,8 @@ class Concrete5_Model_Page extends Collection {
 		$cache = PageCache::getLibrary();
 		$cache->purge($this);
 
+		$this->refreshCache();
+		
 		$ret = Events::fire('on_page_update', $this);
 	}
 	
@@ -1553,9 +1557,9 @@ class Concrete5_Model_Page extends Collection {
 	
 	public function rescanAreaPermissions() {
 		$db = Loader::db();
-		$arHandles = $db->GetCol('select arHandle from Areas where cID = ?', $this->getCollectionID());
-		foreach($arHandles as $arHandle) {
-			$a = Area::getOrCreate($this, $arHandle);
+		$r = $db->Execute('select arHandle, arIsGlobal from Areas where cID = ?', $this->getCollectionID());
+		while ($row = $r->FetchRow()) {
+			$a = Area::getOrCreate($this, $row['arHandle'], $row['arIsGlobal']);
 			$a->rescanAreaPermissionsChain();
 		}
 	}
@@ -1602,8 +1606,19 @@ class Concrete5_Model_Page extends Collection {
 			$q = "insert into AreaPermissionAssignments (cID, arHandle, paID, pkID) values (?, ?, ?, ?)";
 			$db->query($q, $v);
 		}
-	}
 
+		// any areas that were overriding permissions on the current page need to be overriding permissions
+		// on the NEW page as well.
+		$v = array($permissionsCollectionID);
+		$q = "select * from Areas where cID = ?";
+		$r = $db->query($q, $v);
+		while($row = $r->fetchRow()) {
+			$v = array($this->cID, $row['arHandle'], $row['arOverrideCollectionPermissions'], $row['arInheritPermissionsFromAreaOnCID'], $row['arIsGlobal']);
+			$q = "insert into Areas (cID, arHandle, arOverrideCollectionPermissions, arInheritPermissionsFromAreaOnCID, arIsGlobal) values (?, ?, ?, ?, ?)";
+			$db->query($q, $v);
+		}
+	}
+	
 	function acquirePagePermissions($permissionsCollectionID) {
 		$v = array($this->cID);
 		$db = Loader::db();
@@ -1781,6 +1796,10 @@ class Concrete5_Model_Page extends Collection {
 			if ($this->getCollectionInheritance() == 'OVERRIDE') {
 				$nc2->acquirePagePermissions($this->getPermissionsCollectionID());
 				$nc2->acquireAreaPermissions($this->getPermissionsCollectionID());
+				// make sure we update the proper permissions pointer to the new page ID
+				$q = "update Pages set cInheritPermissionsFromCID = ? where cID = ?";
+				$v = array($newCID, $newCID);
+				$r = $db->query($q, $v);
 			} else if ($this->getCollectionInheritance() == "PARENT") {
 				// we need to clear out any lingering permissions groups (just in case), and set this collection to inherit from the parent
 				$npID = $nc->getPermissionsCollectionID();
@@ -1821,6 +1840,7 @@ class Concrete5_Model_Page extends Collection {
 		if ($ret < 0) {
 			return false;
 		}
+		Log::addEntry(t('Page "%s" at path "%s" deleted', $this->getCollectionName(), $this->getCollectionPath()),t('Page Action'));
 
 		parent::delete();
 		
@@ -1835,6 +1855,7 @@ class Concrete5_Model_Page extends Collection {
 		$r = $db->query("select cID from Pages where cPointerID = ?", array($cID));
 		while ($row = $r->fetchRow()) {
 			PageStatistics::decrementParents($row['cID']);
+			$db->Execute('DELETE FROM PagePaths WHERE cID=?', array($row['cID']));
 		}
 
 		// Update cChildren for cParentID
@@ -1882,6 +1903,7 @@ class Concrete5_Model_Page extends Collection {
 		}
 		
 		$trash = Page::getByPath(TRASH_PAGE_PATH);
+		Log::addEntry(t('Page "%s" at path "%s" Moved to trash', $this->getCollectionName(), $this->getCollectionPath()),t('Page Action'));
 		$this->move($trash);
 		$this->deactivate();
 		$pages = array();

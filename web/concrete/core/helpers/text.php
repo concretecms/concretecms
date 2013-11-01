@@ -31,11 +31,13 @@ class Concrete5_Helper_Text {
 	/** 
 	 * Takes text and returns it in the "lowercase-and-dashed-with-no-punctuation" format
 	 * @param string $handle
+	 * @param int $maxlength Max number of characters of the return value
+	 * @param string $lang Language code of the language rules that should be priorized
 	 * @return string $handle
 	 */
-	public function urlify($handle, $maxlength = PAGE_PATH_SEGMENT_MAX_LENGTH) {
+	public function urlify($handle, $maxlength = PAGE_PATH_SEGMENT_MAX_LENGTH, $lang = LANGUAGE) {
 		Loader::library('3rdparty/urlify');
-		$handle = URLify::filter($handle, $maxlength);
+		$handle = URLify::filter($handle, $maxlength, $lang);
 		return $handle;
 	}
 		
@@ -90,6 +92,14 @@ class Concrete5_Helper_Text {
 		return htmlentities( $v, ENT_COMPAT, APP_CHARSET); 
 	}
 	
+	/** Decodes html-encoded entities (for instance: from '&gt;' to '>')
+	* @param string $v
+	* @return string
+	*/
+	public function decodeEntities($v) {
+		return html_entity_decode($v, ENT_QUOTES, APP_CHARSET);
+	}
+
 	/** 
 	 * A concrete5 specific version of htmlspecialchars(). Double encoding is OFF, and the character set is set to your site's.
 	 */
@@ -131,25 +141,28 @@ class Concrete5_Helper_Text {
 		return $textStr;			
 	}
         
-        /**
-        * Shortens and sanitizes a string but only cuts at word boundaries
+	/**
+	* Shortens and sanitizes a string but only cuts at word boundaries
 	* @param string $textStr
 	* @param int $numChars
 	* @param string $tail
-        */
-        function shortenTextWord($textStr, $numChars=255, $tail='…') {
+	*/
+	function shortenTextWord($textStr, $numChars=255, $tail='…') {
 		if (intval($numChars)==0) $numChars=255;
 		$textStr=strip_tags($textStr);
 		if (function_exists('mb_substr')) {
 			if (mb_strlen($textStr, APP_CHARSET) > $numChars) { 
-				$textStr=preg_replace('/\s+?(\S+)?$/', '', mb_substr($textStr, 0, $numChars + 1, APP_CHARSET)) . $tail;
+				$textStr=preg_replace('/\s+?(\S+)?$/', '', mb_substr($textStr, 0, $numChars + 1, APP_CHARSET));
+				// this is needed if the shortened string consists of one single word
+				$textStr = mb_substr($textStr, 0, $numChars, APP_CHARSET). $tail;
 			}
 		} else {
 			if (strlen($textStr) > $numChars) { 
-				$textStr = preg_replace('/\s+?(\S+)?$/', '', substr($textStr, 0, $numChars + 1)) . $tail;
+				$textStr = preg_replace('/\s+?(\S+)?$/', '', substr($textStr, 0, $numChars + 1));
+				$textStr = substr($textStr, 0, $numChars). $tail;
 			}
 		}
-		return $textStr;		
+		return $textStr;
 	}
 
 	
@@ -269,36 +282,14 @@ class Concrete5_Helper_Text {
 	}
 	
 	/**
-	 * shortens a string without breaking words
+	 * alias of shortenTextWord()
 	 * @param string $textStr
 	 * @param int $numChars
 	 * @param string $tail
 	 * @return string
 	 */
-	public function wordSafeShortText($textStr, $numChars=255, $tail='...') {
-		if (intval($numChars)==0) $numChars=255;
-		$textStr = trim(strip_tags($textStr));
-		
-		if (strlen($textStr) > $numChars) { 
-			$words = explode(" ",$textStr);
-			$length = 0;
-			$trimmed = "";
-			if(is_array($words) && count($words) > 1) {
-				foreach($words as $w) {
-					$length += strlen($w);
-					if($length >= $numChars) {
-						break;
-					} else {
-						$trimmed .= $w." ";
-						$length+=1;
-					}
-				}
-				$textStr = trim($trimmed).$tail;
-			} else { // no spaces or something...
-				$textStr = self::shortText($textStr,$numChars,$tail);
-			}
-		}
-		return $textStr;
+	public function wordSafeShortText($textStr, $numChars=255, $tail='…') {
+		return $this->shortenTextWord($textStr, $numChars, $tail);
 	}
 
 	
@@ -326,6 +317,7 @@ class Concrete5_Helper_Text {
 		if (is_array($matches[0]) && count($matches[0]) > 0) {
 			return str_replace($matches[0][0], '<em class="ccm-highlight-search">'.$matches[0][0].'</em>', $value);
 		}
+		return $value;
 	}
 	
 	/** 
@@ -352,6 +344,5 @@ class Concrete5_Helper_Text {
 			$this->appendXML($node, $ch);
 		}
 	}
-
-
+	
 }

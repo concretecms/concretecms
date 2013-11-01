@@ -15,7 +15,6 @@
 
 	</form>
 
-
 	<?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(false)?>
 
 <? } else { ?>

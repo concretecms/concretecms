@@ -31,14 +31,14 @@ if (count($blocks) == 0) { ?>
 	<? foreach($blocks as $b) { 
 		$bt = $b->getBlockTypeObject();
 		$btIcon = $ci->getBlockTypeIconURL($bt);
-		$name = $bt->getBlockTypeName();
+		$name = t($bt->getBlockTypeName());
 		if ($b->getBlockName() != '') {
 			$name = $b->getBlockName();
 		}
 		?>			
 		<div class="ccm-scrapbook-list-item" id="ccm-stack-block-<?=$b->getBlockID()?>">
 			<div class="ccm-block-type">
-				<a class="ccm-block-type-inner" style="background-image: url(<?=$btIcon?>)" href="javascript:void(0)" onclick="jQuery.fn.dialog.showLoader();$.get('<?=DIR_REL?>/<?=DISPATCHER_FILENAME?>?bID=<?=$b->getBlockID()?>&add=1&processBlock=1&cID=<?=$c->getCollectionID()?>&arHandle=<?=$a->getAreaHandle()?>&btask=alias_existing_block&<?=$token?>', function(r) { CCMEditMode.parseBlockResponse(r, false, 'add'); })"><?=$name?></a>
+				<a class="ccm-block-type-inner" style="background-image: url(<?=$btIcon?>)" href="javascript:void(0)" onclick="var me=this; if(me.disabled)return; me.disabled=true; jQuery.fn.dialog.showLoader();$.get('<?=DIR_REL?>/<?=DISPATCHER_FILENAME?>?bID=<?=$b->getBlockID()?>&add=1&processBlock=1&cID=<?=$c->getCollectionID()?>&arHandle=<?=$a->getAreaHandle()?>&btask=alias_existing_block&<?=$token?>', function(r) { me.disabled=false; ccm_parseBlockResponse(r, false, 'add'); })"><?=$name?></a>
 				<div class="ccm-scrapbook-list-item-detail">	
 					<?	
 					try {

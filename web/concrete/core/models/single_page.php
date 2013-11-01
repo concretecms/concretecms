@@ -13,7 +13,7 @@ class Concrete5_Model_SinglePage extends Page {
 
 	// These are pages that you're allowed to override with templates set in themes
 	public static function getThemeableCorePages() {
-		$themeableCorePages = array('login.php', 'register.php');
+		$themeableCorePages = array('download_file.php', 'login.php', 'maintenance_mode.php', 'members.php', 'page_forbidden.php', 'page_not_found.php', 'register.php', 'upgrade.php', 'user_error.php');
 		return $themeableCorePages;
 	}
 

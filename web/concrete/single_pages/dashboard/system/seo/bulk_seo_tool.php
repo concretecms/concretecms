@@ -1,5 +1,5 @@
 <?php  defined('C5_EXECUTE') or die('Access Denied');?>
-<?php echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Bulk SEO Tool'), t('Manage Search Engine Optimization (SEO) Related Page Properties.'), false, false); 
+<?php echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Bulk SEO Updater'), t('Manage Search Engine Optimization (SEO) Related Page Properties.'), false, false); 
 $pageSelector = Loader::helper('form/page_selector');
 $nh = Loader::helper('navigation');
 $th = Loader::helper('text');
@@ -66,10 +66,6 @@ $th = Loader::helper('text');
 			min-height: 0;
 		}
 		
-		.pageChecks {
-			float: left;
-		}
-		
 		a.url-path {
 			word-wrap: break-word;
 			width: 300px;
@@ -92,7 +88,7 @@ $th = Loader::helper('text');
 		</script>
 <form action="<?=$this->action('view')?>">
 	<div class="ccm-pane-options">
-			<label style="width: auto; margin-right: 1em; margin-left: 20px;">Keywords</label><?php echo $form->text('keywords', '', array('style' => 'width: 130px')); ?><span style="margin-left: 30px;"><?=t(' # Per Page'); ?></span>
+			<label style="width: auto; margin-right: 1em; margin-left: 20px;"><?=t('Keywords'); ?></label><?php echo $form->text('keywords', '', array('style' => 'width: 130px')); ?><span style="margin-left: 30px;"><?=t(' # Per Page'); ?></span>
 			<?=$form->select('numResults', array(
 				'10' => '10',
 				'25' => '25',
@@ -100,7 +96,7 @@ $th = Loader::helper('text');
 				'100' => '100',
 				'500' => '500'
 			), Loader::helper('text')->specialchars($searchRequest['numResults']), array('style' => 'width:65px; margin: 0px 10px 0px 10px;'))?>
-			<?php print $concrete_interface->submit('Search', $formID, $buttonAlign = 'left', 'searchSubmit'); ?><br />
+			<?php print $concrete_interface->submit(t('Search'), $formID, $buttonAlign = 'left', 'searchSubmit'); ?><br />
 			<a href="javascript:void(0)" class="ccm-icon-option-closed" id="searchUnderParent"><?php echo t('Advanced Search'); ?></a>
 			<div id="parentOptions" style="margin-left: 25px; display: <?php echo $parentDialogOpen ? 'block' : 'none'; ?>">
 			<div id="pageSelectorHolder" style="float: left; width: 400px; margin-top: 15px;">
@@ -113,8 +109,8 @@ $th = Loader::helper('text');
 					<li><label><?=$form->radio('cParentAll', 0, false)?> <span><?=t('First Level')?></span></label></li>
 					<li><label><?=$form->radio('cParentAll', 1, false)?> <span><?=t('All Levels')?></span></label></li>
 				</ul>
-				<div class="pageChecks"><?php echo $form->checkbox('noDescription', 1, $descCheck, array('style' => 'margin-left: 15px;'));  ?><span><?=t(' No Meta Description'); ?></span></div>
-				<div class="pageChecks"><?php echo $form->checkbox('noKeywords', 1, $keywordCheck, array('style' => 'margin-left: 15px;'));  ?><span><?=t(' No Meta Keywords'); ?></span></div>
+				<div class="pageChecks"><label class="checkbox"> <?php echo $form->checkbox('noDescription', 1, $descCheck);  ?> <span><?=t(' No Meta Description'); ?></span></label></div>
+				<div class="pageChecks"><label class="checkbox"> <?php echo $form->checkbox('noKeywords', 1, $keywordCheck);  ?> <span><?=t(' No Meta Keywords'); ?></span></label></div>
 			</div>
 				<div style="clear: both;"></div>
 			</div>
@@ -229,7 +225,7 @@ if (count($pages) > 0) {
 							<div class="updateButton">
 								<br />
 								<br />
-								<?php print $concrete_interface->submit('Save', $formID, $buttonAlign = 'right', 'seoSubmit update' . $cID, array('title' => $cID)); ?>
+								<?php print $concrete_interface->submit(t('Save'), $formID, $buttonAlign = 'right', 'seoSubmit update' . $cID, array('title' => $cID)); ?>
 							</div>
 							<div>
 								<img style="display: none; position: absolute; top: 20px; right: 20px;" id="throbber<?php echo $cID ?>"  class="throbber<?php echo $cID ?>" src="<?php echo ASSETS_URL_IMAGES . '/throbber_white_32.gif' ?>" />

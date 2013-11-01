@@ -1,56 +1,41 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-$url = parse_url($videoURL);
-parse_str($url['query'], $query);
-parse_str($url['path'], $path);
-$c = Page::getCurrentPage();
 
-if (!$vWidth) {
-	$vWidth=425;
-}
-if (!$vHeight) {
-	$vHeight=344;
+$url       = parse_url($videoURL);
+$pathParts = explode('/', rtrim($url['path'], '/'));
+$videoID   = end($pathParts);
+
+if (isset($url['query'])) {
+	parse_str($url['query'], $query);
+	$videoID = (isset($query['v'])) ? $query['v'] : $videoID;
 }
 
-if ($c->isEditMode()) { ?>
-	<div class="ccm-edit-mode-disabled-item" style="width:<?php echo $vWidth; ?>px; height:<?php echo $vHeight; ?>px;">
-		<div style="padding:8px 0px; padding-top: <?php echo round($vHeight/2)-10; ?>px;"><?php echo t('YouTube Video disabled in edit mode.'); ?></div>
+$vWidth  = ($vWidth)  ? $vWidth  : 425;
+$vHeight = ($vHeight) ? $vHeight : 344;
+
+if (Page::getCurrentPage()->isEditMode()) { ?>
+
+	<div class="ccm-edit-mode-disabled-item" style="width: <?= $vWidth; ?>px; height: <?= $vHeight; ?>px;">
+		<div style="padding:8px 0px; padding-top: <?= round($vHeight/2)-10; ?>px;"><?= t('YouTube Video disabled in edit mode.'); ?></div>
 	</div>
-<? } elseif ($vPlayer==1) { ?>
 	
-	<div id="youtube<?php echo $bID?>" class="youtubeBlock">
-	
-	<?php if($url['host'] == 'youtu.be') { ?>
-		<iframe class="youtube-player" type="text/html" width="<?php  echo $vWidth; ?>" height="<?php  echo $vHeight; ?>" src="http://www.youtube.com/embed/<?php echo $url['path']?>/<?php echo (strpos($url['path'], '@')) ? '@' : '?'; ?>wmode=transparent" frameborder="0"></iframe>
-	<?php }else { ?>
-		<iframe class="youtube-player" type="text/html" width="<?php  echo $vWidth; ?>" height="<?php  echo $vHeight; ?>" src="http://www.youtube.com/embed/<?php echo $query['v']?>/<?php echo (strpos($query['v'], '@')) ? '@' : '?'; ?>wmode=transparent" frameborder="0"></iframe>
-	<?php } ?>
+<? } elseif ($vPlayer == 1) { ?>
+
+	<div id="youtube<?= $bID; ?>" class="youtubeBlock">
+		<iframe class="youtube-player" width="<?= $vWidth; ?>" height="<?= $vHeight; ?>" src="http://www.youtube.com/embed/<?= $videoID; ?>" frameborder="0" allowfullscreen></iframe>
 	</div>
+	
 <? } else { ?>
+
+	<div id="youtube<?= $bID; ?>" class="youtubeBlock"><div id="youtube<?= $bID; ?>_video"><?= t('You must install Adobe Flash to view this content.'); ?></div></div>
+	<script type="text/javascript">
+	//<![CDATA[
+	params = {
+		wmode: "transparent"
+	};
+	flashvars = {};
+	swfobject.embedSWF('http://www.youtube.com/v/<?= $videoID; ?>&amp;hl=en', 'youtube<?= $bID; ?>_video', '<?= $vWidth; ?>', '<?= $vHeight; ?>', '8.0.0', false, flashvars, params);
+	//]]>
+	</script>
 	
-	<div id="youtube<?php echo $bID?>" class="youtubeBlock"><div id="youtube<?php echo $bID?>_video"><?php echo t('You must install Adobe Flash to view this content.')?></div></div>
-	
-	<?php 
-	
-	if($url['host'] == 'youtu.be') { ?>
-		<script type="text/javascript">
-		//<![CDATA[
-		params = {
-			wmode:  "transparent"
-		};
-		flashvars = {};
-		swfobject.embedSWF('http://www.youtube.com/v<?=$url['path']?>&amp;hl=en', 'youtube<?php echo $bID?>_video', '<?php echo $vWidth; ?>', '<?php echo $vHeight; ?>', '8.0.0', false, flashvars, params);
-		//]]>
-		</script>
-	<? }else{ ?>
-		<script type="text/javascript">
-		//<![CDATA[
-		params = {
-			wmode:  "transparent"
-		};
-		flashvars = {};
-		swfobject.embedSWF('http://www.youtube.com/v/<?=$query['v']?>&amp;hl=en', 'youtube<?php echo $bID?>_video', '<?php echo $vWidth; ?>', '<?php echo $vHeight; ?>', '8.0.0', false, flashvars, params);
-		//]]>
-		</script>
-	<? } ?>
 <? } ?>

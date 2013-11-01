@@ -10,7 +10,7 @@ class Concrete5_Model_UserPermissionAccessEntity extends PermissionAccessEntity 
 		return array($this->getUserObject());
 	}
 	public function getAccessEntityTypeLinkHTML() {
-		$html = '<a href="' . REL_DIR_FILES_TOOLS_REQUIRED . '/users/search_dialog?mode=choose_multiple" dialog-modal="false" dialog-width="90%" dialog-title="' . t('Add User') . '" class="dialog-launch" dialog-height="70%"">' . t('User') . '</a>';
+		$html = '<a href="' . REL_DIR_FILES_TOOLS_REQUIRED . '/users/search_dialog?mode=choose_multiple" dialog-modal="false" dialog-width="90%" dialog-title="' . t('Add User') . '" class="dialog-launch" dialog-height="70%"">' . tc('PermissionAccessEntityTypeName', 'User') . '</a>';
 		return $html;		
 	}
 

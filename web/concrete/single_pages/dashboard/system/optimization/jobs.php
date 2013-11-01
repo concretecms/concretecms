@@ -58,7 +58,7 @@ $jh = Loader::helper('json');
 		<th style="width: 200px"><?=t('Name')?></th>
 		<th><?=t('Last Run')?></th>
 		<th style="width: 200px"><?=t('Results of Last Run')?></th>
-		<td style="width: 80px"><a href="<?=$this->action('reset')?>" class="btn pull-right btn-mini"><?=t('Reset All Jobs')?></a></td>
+		<td><a href="<?=$this->action('reset')?>" class="btn pull-right btn-mini"><?=t('Reset All Jobs')?></a></td>
 		<td></td>
 	</tr>
 	</thead>
@@ -115,7 +115,7 @@ $jh = Loader::helper('json');
 						<label><?php  echo t('Run this Job Every')?></label>
 						<div class="input">
 							<?php echo $form->text('value',$j->scheduledValue,array('class'=>'span2'))?>
-							<?php echo $form->select('unit', array('hours'=>'Hours', 'days'=>'Days', 'weeks'=>'Weeks', 'months'=>'Months'), $j->scheduledInterval, array('class'=>'span2'))?>
+							<?php echo $form->select('unit', array('hours'=>t('Hours'), 'days'=>t('Days'), 'weeks'=>t('Weeks'), 'months'=>t('Months')), $j->scheduledInterval, array('class'=>'span2'))?>
 						</div>
 					</div>
 				</div>
@@ -148,7 +148,7 @@ $jh = Loader::helper('json');
 			</fieldset>
 			<div class="ccm-pane-footer">
 				<div class="ccm-buttons">
-					<input type="submit" value="Save" class="btn ccm-button-v2 primary ccm-button-v2-right">
+					<input type="submit" value="<?php echo t('Save'); ?>" class="btn ccm-button-v2 primary ccm-button-v2-right">
 				</div>	
 			</div>
 		</form>
@@ -189,7 +189,7 @@ $djs = JobSet::getDefault();
 if (is_object($djs)) { ?>
 <div class="well">
 <h4><?=t('Automation Instructions')?></h4>
-<p><?=t('To run all the jobs in the <a href="%s">%s</a> Job Set, schedule this URL using cron or a similar system:', $this->url('/dashboard/system/optimization/jobs', 'edit_set', $djs->getJobSetID()), $djs->getJobSetName())?></p>
+<p><?=t('To run all the jobs in the <a href="%s">%s</a> Job Set, schedule this URL using cron or a similar system:', $this->url('/dashboard/system/optimization/jobs', 'edit_set', $djs->getJobSetID()), tc('JobSetName', $djs->getJobSetName()))?></p>
 <div><input type="text" style="width: 700px" class="ccm-default-jobs-url" value="<?=BASE_URL . $this->url('/tools/required/jobs?auth=' . $auth)?>" /></div>
 </div>
 <? } ?>
@@ -248,6 +248,7 @@ if (is_object($djs)) { ?>
 			<div class="clearfix">
 				<?php echo $form->submit('submit', t('Delete Job Set'), array('class' => 'danger'))?>
 			</div>
+		</fieldset>
 		</form>
 		<? } ?>
 		</div>
@@ -310,7 +311,7 @@ if (is_object($djs)) { ?>
 					<label><?php  echo t('Run this Job Every')?></label>
 					<div class="input">
 						<?php echo $form->text('value',$set->scheduledValue,array('class'=>'span2'))?>
-						<?php echo $form->select('unit', array('hours'=>'Hours', 'days'=>'Days', 'weeks'=>'Weeks', 'months'=>'Months'), $set->scheduledInterval, array('class'=>'span2'))?>
+						<?php echo $form->select('unit', array('hours'=>t('Hours'), 'days'=>t('Days'), 'weeks'=>t('Weeks'), 'months'=>t('Months')), $set->scheduledInterval, array('class'=>'span2'))?>
 					</div>
 				</div>
 			</fieldset>
@@ -343,7 +344,7 @@ if (is_object($djs)) { ?>
 		
 			<?php foreach($jobSets as $j) { ?>
 				<div class="ccm-group" id="asID_<?php echo $j->getJobSetID()?>">
-					<a class="ccm-group-inner" href="<?php echo $this->url('/dashboard/system/optimization/jobs', 'edit_set', $j->getJobSetID())?>" style="background-image: url(<?php echo ASSETS_URL_IMAGES?>/icons/group.png)"><?php echo $j->getJobSetName()?></a>
+					<a class="ccm-group-inner" href="<?php echo $this->url('/dashboard/system/optimization/jobs', 'edit_set', $j->getJobSetID())?>" style="background-image: url(<?php echo ASSETS_URL_IMAGES?>/icons/group.png)"><?php echo tc('JobSetName', $j->getJobSetName())?></a>
 				</div>
 			<?php } ?>
 		</div>
@@ -403,8 +404,6 @@ jQuery.fn.showLoading = function() {
 	if (!row.attr('data-color')) {
 		row.find('td').css('background-color', '#ccc');
 	}
-	clearInterval(pulseRowInterval);
-	pulseRowInterval = false;
 	pulseRowInterval = setInterval(function() {
 		if (row.attr('data-color') == '#ccc') {
 			row.find('td').css('background-color', '#fff');
@@ -419,11 +418,10 @@ jQuery.fn.showLoading = function() {
 jQuery.fn.hideLoading = function() {
 	$(this).find('button').html('<i class="icon-play"></i> <?=t('Run')?>').prop('disabled', false);
 	var row = $(this);
-	clearInterval(pulseRowInterval);
-	pulseRowInterval = false;
 	row.removeClass();
 	row.find('td').css('background-color', '');
 	row.attr('data-color', '');
+	clearInterval(pulseRowInterval);
 }
 
 jQuery.fn.processResponse = function(r) {

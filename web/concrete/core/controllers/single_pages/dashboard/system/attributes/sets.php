@@ -60,6 +60,10 @@ class Concrete5_Controller_Page_Dashboard_System_Attributes_Sets extends Dashboa
 			}
 			if (!trim($this->post('asName'))) { 
 				$this->error->add(t("Specify a name for your attribute set."));
+			} else {
+				if (preg_match('/[<>;{}?"`]/', trim($this->post('asName')))) {
+					$this->error->add(t('Name cannot contain the characters: %s', Loader::helper('text')->entities('<>;{}?`')));
+				}
 			}
 			if (!$this->error->has()) {
 				if (!$this->category->allowAttributeSets()) {

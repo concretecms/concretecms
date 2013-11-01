@@ -1,6 +1,5 @@
 <?xml version="1.0"?>
 <schema version="0.3">
-
    <table name="PageTypes">
     <field name="ptID" type="I" size="10">
       <key/>
@@ -1448,7 +1447,7 @@
       <notnull/>
       <default value="0000-00-00 00:00:00"/>
     </field>
-    <field name="bFilename" type="C" size="32"/>
+    <field name="bFilename" type="C" size="255"/>
     <field name="bIsActive" type="C" size="1">
       <notnull/>
       <default value="1"/>
@@ -2320,6 +2319,7 @@
   </table>
   <table name="FileVersions">
     <opt platform="MYSQL">ENGINE=MYISAM</opt>
+    <opt platform="MYSQLT">ENGINE=MYISAM</opt>
     <field name="fID" type="I" size="10">
       <key/>
       <default value="0"/>
@@ -2542,6 +2542,8 @@
       <notnull/>
       <default value="0"/>
     </field>
+    <field name="gPath" type="X">
+    </field>
     <field name="pkgID" type="I" size="10">
       <notnull/>
       <default value="0"/>
@@ -2571,7 +2573,7 @@
       <default value="0"/>
       <unsigned/>
     </field>
-    <field name="jLastStatusText" type="C" size="255"></field>
+    <field name="jLastStatusText" type="X2"></field>
     <field name="jLastStatusCode" type="I2" size="4">
       <notnull/>
       <default value="0"/>
@@ -2599,6 +2601,18 @@
       <notnull/>
       <default value="0"/>
     </field>
+    <field name="isScheduled" type="I2" size="1">
+      <notnull/>
+      <default value="0"/>
+    </field>
+    <field name="scheduledInterval" type="C" size="255">
+      <notnull/>
+      <default value="days"/>
+    </field>
+    <field name="scheduledValue" type="I" size="10">
+      <notnull/>
+      <default value="0"/>
+    </field>
   </table>
   <table name="JobsLog">
     <field name="jlID" type="I" size="10">
@@ -2610,8 +2624,8 @@
       <notnull/>
       <unsigned/>
     </field>
-    <field name="jlMessage" type="C" size="255">
-      <notnull/>
+    <field name="jlMessage" type="X2">
+      <NOTNULL/>
     </field>
     <field name="jlTimestamp" type="T">
       <notnull/>
@@ -2624,34 +2638,34 @@
   </table>
   <table name="JobSetJobs">
     <field name="jsID" type="I" size="10">
-      <key/>
-      <default value="0"/>
-      <unsigned/>
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
     </field>
     <field name="jID" type="I" size="10">
-      <key/>
-      <default value="0"/>
-      <unsigned/>
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
     </field>
     <field name="jRunOrder" type="I" size="10">
-      <notnull/>
-      <default value="0"/>
-      <unsigned/>
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
     </field>
   </table>
   <table name="JobSets">
     <field name="jsID" type="I" size="10">
-      <key/>
-      <autoincrement/>
-      <unsigned/>
+      <KEY/>
+      <AUTOINCREMENT/>
+      <UNSIGNED/>
     </field>
     <field name="jsName" type="C" size="128">
-      <notnull/>
+      <NOTNULL/>
     </field>
     <field name="pkgID" type="I" size="10">
-      <notnull/>
-      <default value="0"/>
-      <unsigned/>
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
     </field>
     <field name="jDateLastRun" type="T"></field>
     <field name="isScheduled" type="I2" size="1">
@@ -2688,11 +2702,9 @@
       <notnull/>
       <deftimestamp/>
     </field>
-    <field name="object" type="X"/>
-    <index name="upuID">
-      <col>kpuID</col>
-    </index>
   </table>
+  
+
   <table name="UserPointActions">
     <field name="upaID" type="I" size="11">
       <key/>
@@ -2952,12 +2964,13 @@
       <col>ppIsCanonical</col>
     </index>
   </table>
-  <table name="PageSearchIndex">
+<table name="PageSearchIndex">
     <opt platform="MYSQL">ENGINE=MYISAM</opt>
+    <opt platform="MYSQLT">ENGINE=MYISAM</opt>
     <field name="cID" type="I" size="10">
-      <key/>
-      <default value="0"/>
-      <unsigned/>
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
     </field>
     <field name="content" type="X"/>
     <field name="cName" type="C" size="255" />
@@ -2967,39 +2980,40 @@
     <field name="cDateLastIndexed" type="T" />
     <field name="cDateLastSitemapped" type="T" />
     <field name="cRequiresReindex" type="I1" size="1">
-      <default value="0"/>
-      <unsigned/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
     </field>
     <index name="cName">
       <col>cName</col>
-      <fulltext/>
-    </index>
+      <FULLTEXT />
+  </index>
     <index name="cDescription">
       <col>cDescription</col>
-      <fulltext/>
-    </index>
+      <FULLTEXT />
+  </index>
     <index name="content">
       <col>content</col>
-      <fulltext/>
-    </index>
+      <FULLTEXT />
+  </index>
     <index name="content2">
       <col>cName</col>
       <col>cDescription</col>
       <col>content</col>
-      <fulltext/>
-    </index>
+      <FULLTEXT />
+  </index>
     <index name="cDateLastIndexed">
       <col>cDateLastIndexed</col>
-    </index>
+  </index>
     <index name="cDateLastSitemapped">
       <col>cDateLastSitemapped</col>
-    </index>
+  </index>
     <index name="cRequiresReindex">
       <col>cRequiresReindex</col>
-    </index>
+  </index>
   </table>
   <table name="PageStatistics">
     <opt platform="MYSQL">ENGINE=MYISAM</opt>
+    <opt platform="MYSQLT">ENGINE=MYISAM</opt>
     <field name="pstID" type="I8" size="20">
       <key/>
       <autoincrement/>
@@ -3143,7 +3157,7 @@
       <default value="0"/>
       <unsigned/>
     </field>
-    <field name="cPointerExternalLink" type="C" size="255"/>
+    <field name="cPointerExternalLink" type="X2"/>
     <field name="cPointerExternalLinkNewWindow" type="I1" size="1">
       <notnull/>
       <default value="0"/>
@@ -3442,7 +3456,6 @@
       <notnull/>
       <default value="0000-00-00 00:00:00"/>
     </field>
-    <field name="type" type="C" size="64" />
     <index name="uID">
       <col>uID</col>
     </index>
@@ -4118,49 +4131,50 @@
   </table>
   <table name="Queues">
     <field name="queue_id" type="I" size="10">
-      <key/>
-      <autoincrement/>
-      <unsigned/>
+      <KEY/>
+      <AUTOINCREMENT/>
+      <UNSIGNED/>
     </field>
     <field name="queue_name" type="C" size="100">
-      <notnull/>
+      <NOTNULL/>
     </field>
     <field name="timeout" type="I" size="5">
-      <notnull/>
-      <default value="30"/>
-      <unsigned/>
+      <NOTNULL/>
+      <DEFAULT value="30"/>
+      <UNSIGNED/>
     </field>
     <opt platform="mysql">ENGINE=INNODB</opt>
+    <opt platform="mysqlt">ENGINE=INNODB</opt>
   </table>
   <table name="QueueMessages">
     <field name="message_id" type="I" size="20">
-      <key/>
-      <autoincrement/>
-      <unsigned/>
+      <KEY/>
+      <AUTOINCREMENT/>
+      <UNSIGNED/>
     </field>
     <field name="queue_id" type="I" size="10">
-      <notnull/>
-      <unsigned/>
-      <constraint platform="mysql">
-        , FOREIGN KEY (`queue_id`) REFERENCES `Queues` (`queue_id`) ON DELETE CASCADE ON UPDATE CASCADE
-      </constraint>
+      <NOTNULL/>
+      <UNSIGNED/>
+		<CONSTRAINT platform="mysql">
+		, FOREIGN KEY (`queue_id`) REFERENCES `Queues` (`queue_id`) ON DELETE CASCADE ON UPDATE CASCADE      
+		</CONSTRAINT>
     </field>
     <field name="handle" type="C" size="32"/>
     <field name="body" type="C" size="8192">
-      <notnull/>
+      <NOTNULL/>
     </field>
     <field name="md5" type="C" size="32">
-      <notnull/>
+      <NOTNULL/>
     </field>
     <field name="timeout" type="N" size="14">
-      <unsigned/>
+      <UNSIGNED/>
     </field>
     <field name="created" type="I" size="10">
-      <notnull/>
-      <unsigned/>
+      <NOTNULL/>
+      <UNSIGNED/>
     </field>
     <index name="message_handle">
-      <unique/>
+      <UNIQUE/>
       <col>handle</col>
     </index>
     <index name="message_queueid">
@@ -4169,18 +4183,144 @@
     <opt platform="mysql">ENGINE=INNODB</opt>
   </table>
   <table name="QueuePageDuplicationRelations">
+    <opt platform="mysqlt">ENGINE=INNODB</opt>
     <field name="queue_name" type="C" size="255">
-      <notnull/>
+      <NOTNULL/>
     </field>
     <field name="cID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="originalCID" type="I" size="10">
+      <KEY/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+  </table>
+   <table name="Trees">
+    <field name="treeID" type="I" size="11">
+      <UNSIGNED/>
+      <autoincrement />
+      <KEY/>
+    </field>
+    <field name="treeTypeID" type="I" size="11">
+      <UNSIGNED/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="treeDateAdded" type="T">
+    </field>
+    <field name="rootTreeNodeID" type="I" size="10">
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+  </table>
+
+  <table name="TreeTypes">
+    <field name="treeTypeID" type="I" size="11">
+      <UNSIGNED/>
+      <autoincrement />
+      <KEY/>
+    </field>
+    <field name="treeTypeHandle" type="C" size="255">
+      <DEFAULT value=""/>
+    </field>
+    <field name="pkgID" type="I" size="11">
+      <UNSIGNED/>
+      <DEFAULT value="0"/>
+    </field>
+  </table>
+
+  <table name="TreeNodeTypes">
+    <field name="treeNodeTypeID" type="I" size="11">
+      <UNSIGNED/>
+      <autoincrement />
+      <KEY/>
+    </field>
+    <field name="treeNodeTypeHandle" type="C" size="255">
+      <DEFAULT value=""/>
+    </field>
+    <field name="pkgID" type="I" size="11">
+      <UNSIGNED/>
+      <DEFAULT value="0"/>
+    </field>
+  </table>
+
+  <table name="TreeNodes">
+    <field name="treeNodeID" type="I" size="11">
+      <UNSIGNED/>
+      <autoincrement />
+      <KEY/>
+    </field>
+    <field name="treeNodeTypeID" type="I" size="11">
+      <UNSIGNED/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="treeID" type="I" size="11">
+      <UNSIGNED/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="treeNodeParentID" type="I" size="10">
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="treeNodeDisplayOrder" type="I" size="10">
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+    </field>
+    <field name="treeNodeOverridePermissions" type="I1">
+      <UNSIGNED/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="inheritPermissionsFromTreeNodeID" type="I">
+      <UNSIGNED/>
+      <DEFAULT value="0"/>
+    </field>
+    <index name="treeNodeParentID">
+      <col>treeNodeParentID</col>
+    </index>
+  </table>
+
+
+  <table name="TreeCategoryNodes">
+    <field name="treeNodeID" type="I" size="11">
+      <UNSIGNED/>
+      <autoincrement />
+      <KEY/>
+    </field>
+    <field name="treeNodeCategoryName" type="C" size="255">
+      <DEFAULT value=""/>
+    </field>
+  </table>
+
+  <table name="TreeNodePermissionAssignments">
+    <field name="treeNodeID" type="I" size="10">
       <key/>
       <default value="0"/>
       <unsigned/>
     </field>
-    <field name="originalCID" type="I" size="10">
+    <field name="pkID" type="I" size="10">
+      <key/>
+      <default value="0"/>
+      <unsigned/>
+    </field>
+    <field name="paID" type="I" size="10">
       <key/>
       <default value="0"/>
       <unsigned/>
     </field>
   </table>
-</schema>
+
+  <table name="TreeGroupNodes">
+    <field name="treeNodeID" type="I" size="11">
+      <UNSIGNED/>
+      <autoincrement />
+      <KEY/>
+    </field>
+    <field name="gID" type="I" size="11">
+      <UNSIGNED/>
+      <default value="0" />
+    </field>
+  </table>
+
+  </schema>

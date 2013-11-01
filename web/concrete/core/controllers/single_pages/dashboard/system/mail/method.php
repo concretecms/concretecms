@@ -8,6 +8,11 @@ class Concrete5_Controller_Page_Dashboard_System_Mail_Method extends DashboardCo
 	}
 	
 	public function save_settings() {
+		if (!Loader::helper('validation/token')->validate('save_settings')) {
+			$this->error->add(t('Invalid Token.'));
+			return;
+		}
+
 		Config::save('MAIL_SEND_METHOD', $this->post('MAIL_SEND_METHOD'));
 		if ($this->post('MAIL_SEND_METHOD')== 'SMTP') {
 			Config::save('MAIL_SEND_METHOD_SMTP_SERVER', $this->post('MAIL_SEND_METHOD_SMTP_SERVER'));

@@ -60,10 +60,13 @@ div#main-container-inner .ccm-tags-display ul.ccm-tag-list li {
 	/* customize_tag-highlight */ background-color: #A0DBE3; /* customize_tag-highlight */
 }
 
-div#main-container-inner, div#main-container-inner ul li {
-	/* customize_p-font */ font-family: 'Merriweather', Georgia, serif; line-height: 1.8em; font-size: 14px; /* customize_p-font */
+div#main-container, div#main-container ul li {
+	/* customize_paragraph_font */ font: normal normal normal 14px/1.8em 'Merriweather', Georgia, serif; /* customize_paragraph_font */
 	/* customize_text */ color: #000; /* customize_text */
+}
 
+div#main-container {
+	/* customize_miscellaneous */ /* customize_miscellaneous */
 }
 
 /* text styles */

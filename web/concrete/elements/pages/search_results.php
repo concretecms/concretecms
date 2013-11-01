@@ -95,8 +95,13 @@ if ($_REQUEST['searchDialog'] == 1) {
 			<tr class="ccm-list-record <?=$striped?>" data-page-menu='<?=Loader::helper('json')->encode($permissionArray)?>'>
 
 			<? if (!$searchDialog) { ?><td class="ccm-<?=$searchInstance?>-list-cb" style="vertical-align: middle !important"><input type="checkbox" value="<?=$cobj->getCollectionID()?>" /></td><? } ?>
-
+			<?php if ($pageList->isIndexedSearch()){?>
+			<td>
+			   <?= $cobj->getPageIndexScore();?>
+			</td>
+			<?php } ?>
 			<? foreach($columns->getColumns() as $col) { ?>
+
 				<? if ($col->getColumnKey() == 'cvName') { ?>
 					<td class="ccm-page-list-name"><?=$txt->highlightSearch($cobj->getCollectionName(), $keywords)?></td>		
 				<? } else { ?>

@@ -19,7 +19,13 @@ if (Job::authenticateRequest($_REQUEST['auth'])) {
 		print $json->encode($obj);
 		exit;
 	}
-
+	if ($_REQUEST['jHandle']) {
+		$j = Job::getByHandle($_REQUEST['jHandle']);
+		$obj = $j->executeJob();
+		print $json->encode($obj);
+		exit;
+	}
+        
 	if ($_REQUEST['jsID']) {
 		$js = JobSet::getByID($_REQUEST['jsID']);
 	} else {

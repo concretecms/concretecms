@@ -13,7 +13,7 @@ if (PERMISSIONS_MODEL == 'advanced') {
 Loader::model('user_attributes');
 $searchFieldAttributes = UserAttributeKey::getSearchableList();
 foreach($searchFieldAttributes as $ak) {
-	$searchFields[$ak->getAttributeKeyID()] = $ak->getAttributeKeyName();
+	$searchFields[$ak->getAttributeKeyID()] = tc('AttributeKeyName', $ak->getAttributeKeyName());
 }
 
 
@@ -65,7 +65,6 @@ foreach($searchFieldAttributes as $ak) {
 		</div>
 				
 		<? 
-		$pk = PermissionKey::getByHandle('access_user_search');
 		Loader::model('search/group');
 		$gl = new GroupSearch();
 		$gl->setItemsPerPage(-1);
@@ -75,9 +74,12 @@ foreach($searchFieldAttributes as $ak) {
 		<div class="control-inline" >
 			<?=$form->label('gID', t('Group(s)'))?>
 				<select multiple name="gID[]" class="chosen-select" style="width: 200px">
-					<? foreach($g1 as $g) {
-						if ($pk->validate($g['gID'])) { ?>
-						<option value="<?=$g['gID']?>"  <? if (is_array($_REQUEST['gID']) && in_array($g['gID'], $_REQUEST['gID'])) { ?> selected="selected" <? } ?>><?=$g['gName']?></option>
+					<? foreach($g1 as $gRow) {
+						$g = Group::getByID($gRow['gID']);
+						$gp = new Permissions($g);
+						if ($gp->canSearchUsersInGroup($g)) {
+							?>
+						<option value="<?=$gRow['gID']?>"  <? if (is_array($_REQUEST['gID']) && in_array($gRow['gID'], $_REQUEST['gID'])) { ?> selected="selected" <? } ?>><?=$g->getGroupDisplayName()?></option>
 					<? 
 						}
 					} ?>

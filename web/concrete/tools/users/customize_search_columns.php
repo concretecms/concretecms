@@ -2,8 +2,8 @@
 $u = new User();
 $form = Loader::helper('form');
 Loader::model('attribute/categories/user');
-$tp = new TaskPermission();
-if (!$tp->canAccessUserSearch()) { 
+$tp = Loader::helper('concrete/user');
+if (!$tp->canAccessUserSearchInterface()) { 
 	die(t("You have no access to users."));
 }
 
@@ -69,7 +69,7 @@ $list = UserAttributeKey::getList();
 	foreach($list as $ak) { 
 		if ($pk->validate($ak)) { ?>
 
-		<li><label><?=$form->checkbox('ak_' . $ak->getAttributeKeyHandle(), 1, $fldc->contains($ak))?> <span><?=$ak->getAttributeKeyName()?></span></label></li>
+		<li><label><?=$form->checkbox('ak_' . $ak->getAttributeKeyHandle(), 1, $fldc->contains($ak))?> <span><?=tc('AttributeKeyName', $ak->getAttributeKeyName())?></span></label></li>
 	
 	<? } 
 	

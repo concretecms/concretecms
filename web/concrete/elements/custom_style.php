@@ -91,16 +91,18 @@ if ($_REQUEST['subtask'] == 'delete_custom_style_preset') {
 		<div id="cspFooterPreset" style="display: none">
 			<div class="ccm-note-important">
 				<h2><?=t('You are changing a preset')?></h2>
-				<div><?=$form->radio('cspPresetAction', 'update_existing_preset', true)?> <?=t('Update "%s" preset everywhere it is used', $cspx->getCustomStylePresetName())?></div>
-				<div><?=$form->radio('cspPresetAction', 'save_as_custom_style')?> <?=t('Use this style here, and leave "%s" unchanged', $cspx->getCustomStylePresetName())?></div>
-				<div><?=$form->radio('cspPresetAction', 'create_new_preset')?> <?=t('Save this style as a new preset')?><br/><span style="margin-left: 20px"><?=$form->text('cspName', array('style' => 'width:  127px', 'disabled' => true))?></span></div>
+				<label class="radio"><?=$form->radio('cspPresetAction', 'update_existing_preset', true)?> <?=t('Update "%s" preset everywhere it is used', $cspx->getCustomStylePresetName())?></label>
+				<label class="radio"><?=$form->radio('cspPresetAction', 'save_as_custom_style')?> <?=t('Use this style here, and leave "%s" unchanged', $cspx->getCustomStylePresetName())?></label>
+				<label class="radio"><?=$form->radio('cspPresetAction', 'create_new_preset')?> <?=t('Save this style as a new preset')?><br/><span style="margin-left: 20px"><?=$form->text('cspName', array('style' => 'width:  127px', 'disabled' => true))?></span></label>
 			</div>
 		</div>
 	<? } ?>
 	
 	<div id="cspFooterNoPreset" >
-		<?=$form->checkbox('cspPresetAction', 'create_new_preset')?>
-		<?=t('Save this style as a new preset.')?>
+		<label for="cspPresetAction" class="checkbox inline">
+			<?=$form->checkbox('cspPresetAction', 'create_new_preset')?>
+			<?=t('Save this style as a new preset.')?>
+		</label>
 		<span style="margin-left: 10px">
 			<?=$form->text('cspName', array('style' => 'width:  140px', 'disabled' => true))?>
 		</span>

@@ -2,31 +2,7 @@
 <concrete5-cif version="1.0">
     <singlepages>
         <page name="Dashboard" path="/dashboard" filename="/dashboard/view.php" pagetype="" description="" package="" root="true" />
-        <!--
-
-        <page name="Compose Page" path="/dashboard/composer/write" filename="/dashboard/composer/write.php" pagetype="" description="" package="">
-            <attributes>
-                    <attributekey handle="meta_keywords">
-                            <value>write, new page, add page</value>
-                    </attributekey>
-                    <attributekey handle="icon_dashboard">
-                            <value>icon-pencil</value>
-                    </attributekey>
-            </attributes>
-        </page>
-        
-        <page name="Drafts" path="/dashboard/composer/drafts" filename="/dashboard/composer/drafts.php" pagetype="" description="" package="">
-            <attributes>
-                    <attributekey handle="meta_keywords">
-                            <value>blog drafts, composer</value>
-                    </attributekey>
-                    <attributekey handle="icon_dashboard">
-                            <value>icon-book</value>
-                    </attributekey>
-            </attributes>
-        </page>
-		//-->
-		
+	
         <page name="Sitemap" path="/dashboard/sitemap" filename="/dashboard/sitemap/view.php" pagetype="" description="Whole world at a glance." package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
@@ -170,6 +146,8 @@
 					<value>icon-plus</value>
 				</attributekey>
 			</attributes>
+        </page>
+        <page name="Move Multiple Groups" path="/dashboard/users/groups/bulk_update" filename="/dashboard/users/groups/bulk_update.php" pagetype="" description="" package="">
         </page>
         <page name="Group Sets" path="/dashboard/users/group_sets" filename="/dashboard/users/group_sets.php" pagetype="" description="" package="">
 			<attributes>
@@ -404,7 +382,7 @@
         <page name="Extend concrete5" path="/dashboard/extend" filename="/dashboard/extend/view.php" pagetype="" description="Connect to the concrete5 marketplace, install custom add-ons, and download updates for marketplace add-ons and themes." package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
-					<value>add-on, addon, add on, package,applications, ecommerce, discussions, forums, themes, templates, blocks</value>
+					<value>add-on, addon, add on, package, applications, ecommerce, discussions, forums, themes, templates, blocks</value>
 				</attributekey>
 			</attributes>
         </page>
@@ -480,14 +458,14 @@
         <page name="Rich Text Editor" path="/dashboard/system/basics/editor" filename="/dashboard/system/basics/editor.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
-					<value>tinymce, content block, fonts, editor, tinymce, content, overlay</value>
+					<value>tinymce, content block, fonts, editor, content, overlay</value>
 				</attributekey>
 			</attributes>
         </page>
         <page name="Languages" path="/dashboard/system/basics/multilingual" filename="/dashboard/system/basics/multilingual/view.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
-					<value>translate, translation, internationalization, multilingual, translate</value>
+					<value>translate, translation, internationalization, multilingual</value>
 				</attributekey>
 			</attributes>
         </page>
@@ -645,7 +623,7 @@
         <page name="Public Profiles" path="/dashboard/system/registration/profiles" filename="/dashboard/system/registration/profiles.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
-					<value>member profile, member page,community, forums, social, avatar</value>
+					<value>member profile, member page, community, forums, social, avatar</value>
 				</attributekey>
 			</attributes>
         </page>
@@ -746,21 +724,21 @@
         <page name="Environment Information" path="/dashboard/system/environment/info" filename="/dashboard/system/environment/info.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
-					<value>overrides, system info, debug, support,help</value>
+					<value>overrides, system info, debug, support, help</value>
 				</attributekey>
 			</attributes>
         </page>
         <page name="Debug Settings" path="/dashboard/system/environment/debug" filename="/dashboard/system/environment/debug.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
-					<value>errors,exceptions, develop, support, help</value>
+					<value>errors, exceptions, develop, support, help</value>
 				</attributekey>
 			</attributes>
         </page>
         <page name="Logging Settings" path="/dashboard/system/environment/logging" filename="/dashboard/system/environment/logging.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
-					<value>email, logging, logs, smtp, pop, errors, mysql, errors, log</value>
+					<value>email, logging, logs, smtp, pop, errors, mysql, log</value>
 				</attributekey>
 			</attributes>
         </page>

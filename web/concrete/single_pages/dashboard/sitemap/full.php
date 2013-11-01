@@ -11,7 +11,6 @@ $sh = Loader::helper('concrete/dashboard/sitemap');
 </script>
 
 
-
 <? $u = new User();
 if ($u->isSuperUser()) {
 	if (Queue::exists('copy_page')) {

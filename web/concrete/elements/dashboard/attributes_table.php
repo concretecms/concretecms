@@ -51,7 +51,7 @@ if (count($attribs) > 0) { ?>
 		foreach($sets as $as) { ?>
 	
 		
-		<h3><?=$as->getAttributeSetName()?></h3>
+		<h3><?=tc('AttributeSetName', $as->getAttributeSetName())?></h3>
 	
 		<?
 		
@@ -69,7 +69,7 @@ if (count($attribs) > 0) { ?>
 			foreach($setattribs as $ak) { ?>
 			
 			<div class="ccm-attribute" id="akID_<?=$as->getAttributeSetID()?>_<?=$ak->getAttributeKeyID()?>">
-				<img class="ccm-attribute-icon" src="<?=$ak->getAttributeKeyIconSRC()?>" width="16" height="16" /><a href="<?=$this->url($editURL, 'edit', $ak->getAttributeKeyID())?>"><?=$ak->getAttributeKeyName()?></a>
+				<img class="ccm-attribute-icon" src="<?=$ak->getAttributeKeyIconSRC()?>" width="16" height="16" /><a href="<?=$this->url($editURL, 'edit', $ak->getAttributeKeyID())?>"><?=tc('AttributeKeyName', $ak->getAttributeKeyName())?></a>
 			</div>
 	
 
@@ -91,7 +91,7 @@ if (count($attribs) > 0) { ?>
 			foreach($unsetattribs as $ak) { ?>
 	
 			<div class="ccm-attribute" id="akID_<?=$as->getAttributeSetID()?>_<?=$ak->getAttributeKeyID()?>">
-				<img class="ccm-attribute-icon" src="<?=$ak->getAttributeKeyIconSRC()?>" width="16" height="16" /><a href="<?=$this->url($editURL, 'edit', $ak->getAttributeKeyID())?>"><?=$ak->getAttributeKeyName()?></a>
+				<img class="ccm-attribute-icon" src="<?=$ak->getAttributeKeyIconSRC()?>" width="16" height="16" /><a href="<?=$this->url($editURL, 'edit', $ak->getAttributeKeyID())?>"><?=tc('AttributeKeyName', $ak->getAttributeKeyName())?></a>
 			</div>
 	
 
@@ -109,7 +109,7 @@ if (count($attribs) > 0) { ?>
 		<?
 		foreach($attribs as $ak) { ?>
 		<div class="ccm-attribute" id="akID_<?=$ak->getAttributeKeyID()?>">
-			<img class="ccm-attribute-icon" src="<?=$ak->getAttributeKeyIconSRC()?>" width="16" height="16" /><a href="<?=$this->url($editURL, 'edit', $ak->getAttributeKeyID())?>"><?=$ak->getAttributeKeyName()?></a>
+			<img class="ccm-attribute-icon" src="<?=$ak->getAttributeKeyIconSRC()?>" width="16" height="16" /><a href="<?=$this->url($editURL, 'edit', $ak->getAttributeKeyID())?>"><?=tc('AttributeKeyName', $ak->getAttributeKeyName())?></a>
 		</div>
 		
 		<? } ?>

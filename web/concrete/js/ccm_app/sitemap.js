@@ -2,7 +2,6 @@
  * Sitemap proxy functions to dynatree
  */
 
-
 (function($, window) {
 
   var methods = {

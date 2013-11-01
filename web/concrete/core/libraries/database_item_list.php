@@ -251,7 +251,7 @@ class Concrete5_Library_DatabaseItemListAttributeKeyColumn extends Concrete5_Lib
 
 	public function __construct($attributeKey, $isSortable = true, $defaultSort = 'asc') {
 		$this->attributeKey = $attributeKey;
-		parent::__construct('ak_' . $attributeKey->getAttributeKeyHandle(), $attributeKey->getAttributeKeyName(), false, $isSortable, $defaultSort);
+		parent::__construct('ak_' . $attributeKey->getAttributeKeyHandle(), tc('AttributeKeyName', $attributeKey->getAttributeKeyName()), false, $isSortable, $defaultSort);
 	}
 	
 	public function getColumnValue($obj) {

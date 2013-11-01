@@ -85,6 +85,14 @@ if (!defined('SITEMAP_APPROVE_IMMEDIATELY')) {
 	define('SITEMAP_APPROVE_IMMEDIATELY', true);
 }
 
+if (!defined('DELETE_PAGES_LIMIT')) {
+	define('DELETE_PAGES_LIMIT', 10); // number of pages to delete during one ajax request.
+}
+
+if (!defined('COPY_PAGES_LIMIT')) {
+	define('COPY_PAGES_LIMIT', 10); // number of pages to delete during one ajax request.
+}
+
 if (!defined('ENABLE_DEFINABLE_USER_ATTRIBUTES')) {
 	define('ENABLE_DEFINABLE_USER_ATTRIBUTES', true);
 }
@@ -99,6 +107,10 @@ if (!defined("PAGE_TITLE_FORMAT")) {
 
 if (!defined("PAGE_PATH_SEPARATOR")) {
 	define('PAGE_PATH_SEPARATOR', '-');
+}
+
+if (!defined("GROUP_DISPLAY_NAME_SEPARATOR")) {
+	define('GROUP_DISPLAY_NAME_SEPARATOR', '>');
 }
 
 if (!defined('PAGE_PATH_SEGMENT_MAX_LENGTH')) {
@@ -233,8 +245,8 @@ define('DIRNAME_SYSTEM_ANTISPAM', 'antispam');
 define('DIRNAME_SYSTEM', 'system');
 
 # Blocks
-define('DIR_FILES_BLOCK_TYPES', DIR_BASE . '/blocks');
-define('DIR_FILES_BLOCK_TYPES_CORE', DIR_BASE_CORE . '/blocks');
+define('DIR_FILES_BLOCK_TYPES', DIR_BASE . '/' . DIRNAME_BLOCKS);
+define('DIR_FILES_BLOCK_TYPES_CORE', DIR_BASE_CORE . '/' . DIRNAME_BLOCKS);
 define('FILENAME_BLOCK_VIEW', 'view.php');
 define('FILENAME_BLOCK_COMPOSER', 'composer.php');
 define('FILENAME_BLOCK_VIEW_SCRAPBOOK', 'scrapbook.php');
@@ -557,9 +569,7 @@ if (!defined('SESSION')) {
 }
 
 # Variables/constants necessary for ADODB
-if (!defined('DB_TYPE')) {
-	define('DB_TYPE', 'mysql');
-}
+define('DB_TYPE', 'mysqlt');
 if (!defined('DB_USE_CACHE')) {
 	// caching now handled by our app, no longer by adodb
 	define('DB_USE_CACHE', false);

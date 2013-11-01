@@ -12,7 +12,7 @@ foreach($assignments as $ppc) {
 	?>
 	<tr>
 	<td>
-	<strong><?=$pk->getPermissionKeyName()?></strong>
+	<strong><?=tc('PermissionKeyName', $pk->getPermissionKeyName())?></strong>
 	<?=t('Permission on ')?><?
 		if ($pk instanceof AreaPermissionKey) {  ?>
 			<strong><?=$pk->getPermissionObject()->getAreaHandle() ?></strong>.
@@ -21,11 +21,11 @@ foreach($assignments as $ppc) {
 			$obj = $pk->getPermissionObject();
 			if ($obj->getBlockName() != '') { ?>
 
-			<?=t('the %s block named <strong>%s</strong> in <strong>%s</strong> Area. ', $bt->getBlockTypeName(), $obj->getBlockName(), $pk->getPermissionObject()->getAreaHandle())?>
+			<?=t('the %s block named <strong>%s</strong> in <strong>%s</strong> Area. ', t($bt->getBlockTypeName()), $obj->getBlockName(), $pk->getPermissionObject()->getAreaHandle())?>
 			
 			<? } else { ?>
 			
-			<?=t('<strong>%s Block</strong> in <strong>%s</strong> Area. ', $bt->getBlockTypeName(), $pk->getPermissionObject()->getAreaHandle())?>
+			<?=t('<strong>%s Block</strong> in <strong>%s</strong> Area. ', t($bt->getBlockTypeName()), $pk->getPermissionObject()->getAreaHandle())?>
 			
 			<? } ?>		
 		<? } else { ?>

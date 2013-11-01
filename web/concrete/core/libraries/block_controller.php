@@ -63,7 +63,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		public function getIdentifier() {
 			return $this->identifier;
 		}
-		
 		public function getBlockTypeWrapperClass() {return $this->btWrapperClass;}
 
 		/**
@@ -421,7 +420,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			} else if ($obj instanceof Block) {
 				$b = $obj;
 				$this->identifier = 'BLOCK_' . $obj->getBlockID();
-				// we either have a blockID passed, or nothing passed, if we're adding a block type				
 				$this->bID = $b->getBlockID();
 				$this->btHandle = $obj->getBlockTypeHandle();
 				$this->bActionCID = $obj->getBlockActionCollectionID();

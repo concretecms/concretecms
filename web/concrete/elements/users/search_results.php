@@ -10,7 +10,6 @@
 
 $ek = PermissionKey::getByHandle('edit_user_properties');
 $ik = PermissionKey::getByHandle('activate_user');
-$gk = PermissionKey::getByHandle('assign_user_groups');
 $dk = PermissionKey::getByHandle('delete_user');
 
 if (!$mode) {
@@ -42,10 +41,8 @@ if (!$mode) {
 						<option value="activate"><?=t('Activate')?></option>
 						<option value="deactivate"><?=t('Deactivate')?></option>
 					<? } ?>
-					<? if ($gk->validate()) { ?>
 					<option value="group_add"><?=t('Add to Group')?></option>
 					<option value="group_remove"><?=t('Remove from Group')?></option>
-					<? } ?>
 					<? if ($dk->validate()) { ?>
 					<option value="delete"><?=t('Delete')?></option>
 					<? } ?>
@@ -119,10 +116,13 @@ if (!$mode) {
 
 </div>
 
-<div id="ccm-export-results-wrapper">
-	<a id="ccm-export-results" href="javascript:void(0)" onclick="$('#ccm-user-advanced-search').attr('action', '<?=REL_DIR_FILES_TOOLS_REQUIRED?>/users/search_results_export'); $('#ccm-user-advanced-search').get(0).submit(); $('#ccm-user-advanced-search').attr('action', '<?=REL_DIR_FILES_TOOLS_REQUIRED?>/users/search_results');"><span></span><?=t('Export')?></a>
-</div>
-
+<?php
+$tp = new TaskPermission();
+if ($tp->canAccessUserSearchExport()) {  ?>
+	<div id="ccm-export-results-wrapper">
+		<a id="ccm-export-results" href="javascript:void(0)" onclick="$('#ccm-user-advanced-search').attr('action', '<?=REL_DIR_FILES_TOOLS_REQUIRED?>/users/search_results_export'); $('#ccm-user-advanced-search').get(0).submit(); $('#ccm-user-advanced-search').attr('action', '<?=REL_DIR_FILES_TOOLS_REQUIRED?>/users/search_results');"><span></span><?=t('Export')?></a>
+	</div>
+<? } ?>
 <?
 	$userList->displaySummary();
 ?>
