@@ -281,7 +281,7 @@
 					$return .= '<span class="ccm-group-breadcrumb">';
 				}
 				foreach($parentGroups as $pg) {
-					$return .= tc('GroupName', $pg->getGroupName());
+					$return .= h(tc('GroupName', $pg->getGroupName()));
 					$return .= ' ' . GROUP_DISPLAY_NAME_SEPARATOR . ' ';
 				}
 				$return = trim($return);
