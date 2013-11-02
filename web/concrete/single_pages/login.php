@@ -157,7 +157,7 @@ $(function() {
 
 <? } else { ?>
 
-<form method="post" action="<?=$this->url('/login', 'do_login')?>" class="form-horizontal">
+<form method="post" action="<?=$this->url('/login', 'do_login')?>" class="form-horizontal ccm-login-form">
 
 <div class="row">
 <div class="span10 offset1">
