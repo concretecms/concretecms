@@ -417,19 +417,19 @@ $classes = array(
 	'UserInfoPermissionResponse' => array('model','permission/response/user_info'),
 
 	/* Topics */
-	'TopicTreeNode' => array('model', 'tree/node/types/topic', 'core_topics'),
-	'TopicCategoryTreeNode' => array('model', 'tree/node/types/topic_category', 'core_topics'),
-	'TopicTree' => array('model', 'tree/types/topic', 'core_topics'),
-	'TopicCategoryTreeNodePermissionKey' => array('model','permission/keys/tree/node/topic_category', 'core_topics'),
-	'TopicCategoryTreeNodePermissionAssignment' => array('model','permission/assignments/tree/node/topic_category', 'core_topics'),
-	'TopicCategoryTreeNodePermissionAccess' => array('model','permission/access/categories/tree/node/topic_category', 'core_topics'),
-	'TopicCategoryTreeNodePermissionAccessListItem' => array('model','permission/access/list_items/tree/node/topic_category', 'core_topics'),
-	'TopicCategoryTreeNodePermissionResponse' => array('model','permission/response/tree/node/topic_category', 'core_topics'),
-	'TopicTreeNodePermissionKey' => array('model','permission/keys/tree/node/topic', 'core_topics'),
-	'TopicTreeNodePermissionAssignment' => array('model','permission/assignments/tree/node/topic', 'core_topics'),
-	'TopicTreeNodePermissionAccess' => array('model','permission/access/categories/tree/node/topic', 'core_topics'),
-	'TopicTreeNodePermissionAccessListItem' => array('model','permission/access/list_items/tree/node/topic', 'core_topics'),
-	'TopicTreeNodePermissionResponse' => array('model','permission/response/tree/node/topic', 'core_topics')
+	'TopicTreeNode' => array('model', 'tree/node/types/topic'),
+	'TopicCategoryTreeNode' => array('model', 'tree/node/types/topic_category'),
+	'TopicTree' => array('model', 'tree/types/topic'),
+	'TopicCategoryTreeNodePermissionKey' => array('model','permission/keys/tree/node/topic_category'),
+	'TopicCategoryTreeNodePermissionAssignment' => array('model','permission/assignments/tree/node/topic_category'),
+	'TopicCategoryTreeNodePermissionAccess' => array('model','permission/access/categories/tree/node/topic_category'),
+	'TopicCategoryTreeNodePermissionAccessListItem' => array('model','permission/access/list_items/tree/node/topic_category'),
+	'TopicCategoryTreeNodePermissionResponse' => array('model','permission/response/tree/node/topic_category'),
+	'TopicTreeNodePermissionKey' => array('model','permission/keys/tree/node/topic'),
+	'TopicTreeNodePermissionAssignment' => array('model','permission/assignments/tree/node/topic'),
+	'TopicTreeNodePermissionAccess' => array('model','permission/access/categories/tree/node/topic'),
+	'TopicTreeNodePermissionAccessListItem' => array('model','permission/access/list_items/tree/node/topic'),
+	'TopicTreeNodePermissionResponse' => array('model','permission/response/tree/node/topic')
 
 );
 
