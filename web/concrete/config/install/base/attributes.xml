@@ -64,6 +64,13 @@
                 <category handle="user"/>
             </categories>
         </attributetype>
+        <attributetype handle="topics" name="Topics" package="">
+            <categories>
+                <category handle="collection"/>
+                <category handle="user"/>
+                <category handle="file"/>
+            </categories>
+        </attributetype>
         <attributetype handle="social_links" name="Social Links" package="">
             <categories>
                 <category handle="user"/>

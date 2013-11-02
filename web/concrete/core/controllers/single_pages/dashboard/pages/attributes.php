@@ -3,16 +3,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 class Concrete5_Controller_Page_Dashboard_Pages_Attributes extends DashboardController {
 	
 	public $helpers = array('form');
-	
-	public function __construct() {
-		parent::__construct();
-		$otypes = AttributeType::getList('collection');
-		$types = array();
-		foreach($otypes as $at) {
-			$types[$at->getAttributeTypeID()] = tc('AttributeTypeName', $at->getAttributeTypeName());
-		}
-		$this->set('types', $types);
-	}
 
 	public function attribute_updated() {
 		$this->set('message', t('Page Attribute Updated.'));
@@ -27,8 +17,14 @@ class Concrete5_Controller_Page_Dashboard_Pages_Attributes extends DashboardCont
 	}
 
 	public function on_start() {
-		$this->set('disableThirdLevelNav', true);
+		parent::on_start();
 		$this->set('category', AttributeKeyCategory::getByHandle('collection'));
+		$otypes = AttributeType::getList('collection');
+		$types = array();
+		foreach($otypes as $at) {
+			$types[$at->getAttributeTypeID()] = tc('AttributeTypeName', $at->getAttributeTypeName());
+		}
+		$this->set('types', $types);
 	}
 	
 	public function delete($akID, $token = null){

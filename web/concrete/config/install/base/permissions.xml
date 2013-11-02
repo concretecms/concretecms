@@ -18,6 +18,8 @@
         <category handle="page_type" package=""/>
         <category handle="gathering" package=""/>
         <category handle="group_tree_node" package=""/>
+        <category handle="topic_category_tree_node" package=""/>
+        <category handle="topic_tree_node" package=""/>
     </permissioncategories>
 
     <permissionkeys>
@@ -97,6 +99,10 @@
         <permissionkey handle="edit_page_type_permissions" name="Edit Page Type Permissions" description="" package="" category="page_type" />
         <permissionkey handle="edit_page_type_drafts" name="Edit Page Type Drafts" description="" package="" category="page_type" />
         <!--<permissionkey handle="edit_page_draft" name="Edit Page Draft" description="" package="" category="page_draft" />//-->
+
+        <!-- topics //-->
+        <permissionkey handle="view_topic_tree_node" name="View Topic Tree Node" description="" package="" category="topic_tree_node" />
+        <permissionkey handle="view_topic_category_tree_node" name="View Topic Category Tree Node" description="" package="" category="topic_category_tree_node" />
 
         <!-- users //-->
         <permissionkey handle="edit_user_properties" has-custom-class="true" name="Edit User Details" package="" category="user">
@@ -196,6 +202,18 @@
             </access>
 		</permissionkey>
 
+        <permissionkey handle="add_topic_tree" name="Add Topic Treee" package="" category="admin">
+            <access>
+                <group name="Administrators"/>
+            </access>
+        </permissionkey>
+
+        <permissionkey handle="remove_topic_tree" name="Remove Topic Tree" package="" category="admin">
+            <access>
+                <group name="Administrators"/>
+            </access>
+        </permissionkey>
+
         <permissionkey handle="uninstall_packages" name="Uninstall Packages" package="" category="marketplace_newsflow">
             <access>
                 <group name="Administrators"/>
@@ -245,6 +263,10 @@
 		        <category handle="marketplace_newsflow" />
 		        <category handle="basic_workflow" />
                 <category handle="page_type" />
+                <category handle="gathering" />
+                <category handle="group_tree_node" />
+                <category handle="topic_category_tree_node" />
+                <category handle="topic_tree_node" />
 			</categories>
         </permissionaccessentitytype>
         <permissionaccessentitytype handle="user" name="User" package="">
@@ -261,6 +283,10 @@
 		        <category handle="marketplace_newsflow" />
 		        <category handle="basic_workflow" />
                 <category handle="page_type" />
+                <category handle="gathering" />
+                <category handle="group_tree_node" />
+                <category handle="topic_category_tree_node" />
+                <category handle="topic_tree_node" />
 			</categories>
         </permissionaccessentitytype>
         <permissionaccessentitytype handle="group_set" name="Group Set" package="">
@@ -277,6 +303,10 @@
 		        <category handle="marketplace_newsflow" />
 		        <category handle="basic_workflow" />
                 <category handle="page_type" />
+                <category handle="gathering" />
+                <category handle="group_tree_node" />
+                <category handle="topic_category_tree_node" />
+                <category handle="topic_tree_node" />
 			</categories>
         </permissionaccessentitytype>
         <permissionaccessentitytype handle="group_combination" name="Group Combination" package="">
@@ -293,6 +323,10 @@
 		        <category handle="marketplace_newsflow" />
 		        <category handle="basic_workflow" />
                 <category handle="page_type" />
+                <category handle="gathering" />
+                <category handle="group_tree_node" />
+                <category handle="topic_category_tree_node" />
+                <category handle="topic_tree_node" />
 			</categories>
         </permissionaccessentitytype>
         <permissionaccessentitytype handle="page_owner" name="Page Owner" package="">

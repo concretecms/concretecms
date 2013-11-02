@@ -73,6 +73,11 @@ module.exports = function(grunt) {
 			src: '<%= DIR_BASE %>/concrete/js/ccm_app/sitemap.js'
 		},
 
+		ccm_topics: {
+			dest: '<%= DIR_BASE %>/concrete/js/ccm.topics.js',
+			src: '<%= DIR_BASE %>/concrete/js/topics/topics.js'
+		},
+
 		ccm_layouts: {
 			dest: '<%= DIR_BASE %>/concrete/js/ccm.layouts.js',
 			src: '<%= DIR_BASE %>/concrete/js/layouts/layouts.js'
@@ -197,6 +202,7 @@ module.exports = function(grunt) {
 		'<%= DIR_BASE %>/concrete/css/ccm.gathering.display.css': '<%= DIR_BASE %>/concrete/css/ccm_app/build/ccm.gathering.display.less',
 		'<%= DIR_BASE %>/concrete/css/ccm.gathering.base.css': '<%= DIR_BASE %>/concrete/css/ccm_app/build/ccm.gathering.base.less',
 		'<%= DIR_BASE %>/concrete/css/redactor.css': '<%= DIR_BASE %>/concrete/css/ccm_app/build/redactor.less',
+		'<%= DIR_BASE %>/concrete/css/ccm.topics.css': '<%= DIR_BASE %>/concrete/css/ccm_app/build/topics.less',
 		'<%= DIR_BASE %>/concrete/css/ccm.app.css': '<%= DIR_BASE %>/concrete/css/ccm_app/build/ccm.app.less'
 	};
 	// Let's include the dependencies

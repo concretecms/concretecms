@@ -65,6 +65,10 @@ $al->register('javascript', 'backstretch', 'js/jquery.backstretch.js');
 // dynatree
 $al->register('javascript', 'dynatree', 'js/dynatree.js', array('postprocess' => false));
 $al->register('css', 'dynatree', 'css/dynatree.css', array('postprocess' => false));
+$al->registerGroup('dynatree', array(
+	array('javascript', 'dynatree'),
+	array('css', 'dynatree')
+));
 
 // hoverIntent
 $al->register('javascript', 'hoverintent', 'js/ccm_app/jquery.hoverIntent.js');
@@ -160,6 +164,16 @@ $al->registerGroup('core/sitemap', array(
 	array('css', 'core/sitemap')
 ));
 
+// Topics
+$al->register('javascript', 'core/topics', 'js/ccm.topics.js', array('postprocess' => false));
+$al->register('css', 'core/topics', 'css/ccm.topics.css', array('postprocess' => false));
+$al->registerGroup('core/topics', array(
+	array('javascript', 'core/topics'),
+	array('javascript', 'dynatree'),
+	array('css', 'dynatree'),
+	array('css', 'core/topics')
+));
+
 // Page Type Compose Form
 $al->register('javascript', 'core/composer', 'js/ccm.composer.js', array('postprocess' => false));
 $al->register('css', 'core/composer', 'css/ccm.composer.css', array('postprocess' => false));
@@ -167,7 +181,6 @@ $al->registerGroup('core/composer', array(
 	array('javascript', 'core/composer'),
 	array('css', 'core/composer')
 ));
-
 
 // Gathering
 $al->register('javascript', 'core/gathering', 'js/ccm.gathering.js');

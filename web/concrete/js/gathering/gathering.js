@@ -1,5 +1,5 @@
 /**
- * Sitemap proxy functions to dynatree
+ * Gathering
  */
 
 
