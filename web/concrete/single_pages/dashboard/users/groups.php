@@ -1,6 +1,5 @@
-<? defined('C5_EXECUTE') or die(_("Access Denied.")); ?>
-
 <?
+defined('C5_EXECUTE') or die("Access Denied.");
 $valt = Loader::helper('validation/token');
 $ih = Loader::helper('concrete/interface');
 if (isset($group)) { 

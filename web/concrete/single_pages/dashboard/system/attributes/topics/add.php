@@ -1,5 +1,6 @@
-<? defined('C5_EXECUTE') or die(_("Access Denied.")); ?>
-<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Add Topic Tree'), false, 'span8 offset2', false);?>
+<?
+defined('C5_EXECUTE') or die("Access Denied.");
+Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Add Topic Tree'), false, 'span8 offset2', false);?>
 <form method="post" action="<?=$this->action('submit')?>" class="form-horizontal">
 
 <div class="ccm-pane-body">
