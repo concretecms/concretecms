@@ -13,6 +13,7 @@ class Concrete5_Controller_Dashboard_System_Seo_TrackingCodes extends DashboardB
 			if ($this->token->validate('update_tracking_code')) {
 					Config::save('SITE_TRACKING_CODE', $this->post('tracking_code'));
 					Config::save('SITE_TRACKING_CODE_POSITION', $this->post('tracking_code_position'));
+					Cache::flush();
 					$this->redirect('/dashboard/system/seo/tracking_codes', 'saved');
 			} else {
 				$this->error->add($this->token->getErrorMessage());
@@ -21,7 +22,10 @@ class Concrete5_Controller_Dashboard_System_Seo_TrackingCodes extends DashboardB
 	}
 	
 	public function saved() {
-		$this->set('message', t('Tracking code settings updated successfully.'));
+		$this->set('message', implode(PHP_EOL, array(
+			t('Tracking code settings updated successfully.'),
+			t('Cached files removed.')
+		)));
 		$this->view();
 	}
 }
