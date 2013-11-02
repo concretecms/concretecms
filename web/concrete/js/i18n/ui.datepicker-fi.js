@@ -14,7 +14,7 @@ $(document).ready(function(){
         'Hein&auml;','Elo','Syys','Loka','Marras','Joulu'],
 		monthStatus: '', yearStatus: '',
 		weekHeader: 'Vk', weekStatus: '',
-		dayNamesShort: ['Su','Ma','Ti','Ke','To','Pe','Su'],
+		dayNamesShort: ['Su','Ma','Ti','Ke','To','Pe','La'],
 		dayNames: ['Sunnuntai','Maanantai','Tiistai','Keskiviikko','Torstai','Perjantai','Lauantai'],
 		dayNamesMin: ['Su','Ma','Ti','Ke','To','Pe','La'],
 		dayStatus: 'DD', dateStatus: 'D, M d',
