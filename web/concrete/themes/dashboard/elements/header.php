@@ -1,4 +1,8 @@
-<? defined('C5_EXECUTE') or die("Access Denied."); ?>
+<? defined('C5_EXECUTE') or die("Access Denied.");
+if ($_GET['_ccm_dashboard_external']) {
+        return;
+}
+ ?>
 <!DOCTYPE html>
 <head>
 <?
