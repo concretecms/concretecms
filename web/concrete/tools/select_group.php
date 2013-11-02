@@ -28,12 +28,9 @@ if (!$tp->canAccessGroupSearch()) {
 	$gl->updateItemsPerPage(20);
 	
 	$gResults = $gl->getPage();
-
+	$ga = ResponseAssetGroup::get();
+	$ga->requireAsset('dynatree');
 	?>
-
-	<script type="text/javascript">ccm_addHeaderItem("<?=Loader::helper('html')->css('dynatree/dynatree.css')->href;?>", "CSS");</script>
-	<script type="text/javascript">ccm_addHeaderItem("<?=Loader::helper('html')->javascript('dynatree/dynatree.js')->href;?>", "JAVASCRIPT");</script>
-	
 
 	<div class="ccm-pane-options">
 	<div class="ccm-pane-options-permanent-search">

@@ -4323,4 +4323,26 @@
     </field>
   </table>
 
+  <table name="TopicTrees">
+    <field name="treeID" type="I" size="11">
+      <UNSIGNED/>
+      <DEFAULT value="0"/>
+    </field>
+    <field name="topicTreeName" type="C" size="255">
+      <DEFAULT value=""/>
+    </field>
+  </table>
+
+  <table name="TreeTopicNodes">
+    <field name="treeNodeID" type="I" size="11">
+      <UNSIGNED/>
+      <autoincrement />
+      <KEY/>
+    </field>
+    <field name="treeNodeTopicName" type="C" size="255">
+      <DEFAULT value=""/>
+    </field>
+  </table>
+
+
   </schema>

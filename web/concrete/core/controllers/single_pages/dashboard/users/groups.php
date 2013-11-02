@@ -7,9 +7,7 @@ class Concrete5_Controller_Page_Dashboard_Users_Groups extends DashboardControll
 	public function view() { 
 		$tree = GroupTree::get();
 		$this->set('tree', $tree);
-
-		$this->addHeaderItem(Loader::helper('html')->css('dynatree/dynatree.css'));
-		$this->addFooterItem(Loader::helper('html')->javascript('dynatree/dynatree.js'));
+		$this->requireAsset('dynatree');
 
 		if (isset($_GET['gKeywords'])) {
 			$gKeywords = Loader::helper('security')->sanitizeString($_GET['gKeywords']);

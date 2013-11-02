@@ -58,6 +58,12 @@ class Concrete5_Model_StartingPointPackage extends Package {
 	public function install_attributes() {
 		$ci = new ContentImporter();
 		$ci->importContentFile(DIR_BASE_CORE. '/config/install/base/attributes.xml');
+
+		$topicType = TreeType::add('topic', $pkg);
+		$topicCategoryNodeType = TreeNodeType::add('topic_category', $pkg);
+		$topicNodeType = TreeNodeType::add('topic', $pkg);
+		$tree = TopicTree::add('Topics');
+
 	}
 
 	public function install_dashboard() {
@@ -143,7 +149,7 @@ class Concrete5_Model_StartingPointPackage extends Package {
 	protected function indexAdditionalDatabaseFields() {
 		$db = Loader::db();
 		$db->Execute('alter table PagePaths add index (`cPath` (500))');
-		//$db->Execute('alter table Groups add index (`gPath` (500))');
+		$db->Execute('alter table Groups add index (`gPath` (500))');
 	}
 
 	public function add_users() {
