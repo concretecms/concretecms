@@ -282,14 +282,14 @@
 		* @param string $gDescription
 		* @return Group
 		*/
-		public static function add($gName, $gDescription) {
+		public static function add($gName, $gDescription, $gID=null) {
 			$db = Loader::db();
-			$v = array($gName, $gDescription);
-			$r = $db->prepare("insert into Groups (gName, gDescription) values (?, ?)");
+			$v = array($gID, $gName, $gDescription);
+			$r = $db->prepare("insert into Groups (gID, gName, gDescription) values (?, ?, ?)");
 			$res = $db->Execute($r, $v);
 			
 			if ($res) {
-				$ng = Group::getByID($db->Insert_ID());
+				$ng = Group::getByID($gID ? $gID : $db->Insert_ID());
 				Events::fire('on_group_add', $ng);
 				return $ng;
 			}
