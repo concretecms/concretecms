@@ -1,5 +1,6 @@
-<? defined('C5_EXECUTE') or die(_("Access Denied.")); ?>
-<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Topics'), false, false, false);?>
+<?
+defined('C5_EXECUTE') or die("Access Denied.");
+Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Topics'), false, false, false);?>
 <div class="ccm-pane-options">
 	<select name="topicTreeIDSelect">
 		<? foreach($trees as $stree) {?> 

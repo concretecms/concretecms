@@ -1,5 +1,5 @@
-<?php
-defined('C5_EXECUTE') or die(_("Access Denied."));
+<?
+defined('C5_EXECUTE') or die("Access Denied.");
 $node = TreeNode::getByID(Loader::helper('security')->sanitizeInt($_REQUEST['treeNodeParentID']));
 $selectedNodeIDs = Loader::helper('security')->sanitizeString($_REQUEST['treeNodeSelectedID']);
 $allChildren = $_REQUEST['allChildren'];

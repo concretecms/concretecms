@@ -1,5 +1,5 @@
-<?php
-defined('C5_EXECUTE') or die(_("Access Denied."));
+<?
+defined('C5_EXECUTE') or die("Access Denied.");
 $node = TreeNode::getByID(Loader::helper('security')->sanitizeInt($_REQUEST['treeNodeID']));
 $np = new Permissions($node);
 if (is_object($node) && $np->canEditTreeNodePermissions()) { ?>

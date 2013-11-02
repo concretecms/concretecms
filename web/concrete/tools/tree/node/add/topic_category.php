@@ -1,5 +1,5 @@
-<?php
-defined('C5_EXECUTE') or die(_("Access Denied."));
+<?
+defined('C5_EXECUTE') or die("Access Denied.");
 $form = Loader::helper('form');
 $parent = TreeNode::getByID(Loader::helper('security')->sanitizeInt($_REQUEST['treeNodeParentID']));
 $np = new Permissions($parent);

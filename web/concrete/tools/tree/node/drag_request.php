@@ -1,5 +1,5 @@
-<?php
-defined('C5_EXECUTE') or die(_("Access Denied."));
+<?
+defined('C5_EXECUTE') or die("Access Denied.");
 $sourceNode = TreeNode::getByID(Loader::helper('security')->sanitizeInt($_REQUEST['sourceTreeNodeID']));
 $destNode = TreeNode::getByID(Loader::helper('security')->sanitizeInt($_REQUEST['treeNodeParentID']));
 if (is_object($sourceNode) && is_object($destNode)) {
