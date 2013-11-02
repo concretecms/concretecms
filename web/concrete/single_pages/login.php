@@ -239,7 +239,7 @@ $(function() {
 
 <a name="forgot_password"></a>
 
-<form method="post" action="<?=$this->url('/login', 'forgot_password')?>" class="form-horizontal">
+<form method="post" action="<?=$this->url('/login', 'forgot_password')?>" class="form-horizontal ccm-forgot-password-form">
 <div class="row">
 <div class="span10 offset1">
 
