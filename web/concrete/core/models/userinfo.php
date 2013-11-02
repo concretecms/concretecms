@@ -352,8 +352,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			if (is_object($ak)) {
 				$av = $this->getAttributeValueObject($ak);
 				if (is_object($av)) {
-					$args = func_get_args();
-					if (count($args) > 1) {
+					if(func_num_args() > 2) {
+						$args = func_get_args();
 						array_shift($args);
 						return call_user_func_array(array($av, 'getValue'), $args);						
 					} else {
