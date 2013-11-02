@@ -21,7 +21,7 @@ class Concrete5_Model_AuthenticationType extends Object {
 		$db = Loader::db();
 		$db->Execute('UPDATE AuthenticationTypes SET authTypeDisplayOrder=? WHERE authTypeID=?',array($order,$this->getAuthenticationTypeID()));
 	}
-	
+
 	public static function getByID($authTypeID) {
 		$db = Loader::db();
 		$row = $db->GetRow('SELECT * FROM AuthenticationTypes where authTypeID=?', array($authTypeID));
@@ -128,7 +128,7 @@ class Concrete5_Model_AuthenticationType extends Object {
 		if (method_exists($this->controller, 'deleteType')) {
 			$this->controller->deleteType();
 		}
-		
+
 		$db->Execute("DELETE FROM AuthenticationTypes WHERE authTypeID=?", array($this->authTypeID));
 	}
 
@@ -172,7 +172,7 @@ class Concrete5_Model_AuthenticationType extends Object {
 		}
 		$at = AuthenticationType::load($row);
 		return $at;
-	}	
+	}
 
 	/**
 	 * AuthenticationType::add
@@ -246,7 +246,7 @@ class Concrete5_Model_AuthenticationType extends Object {
 		}
 
 		if ($this->pkgID > 0) {
-			$pkgHandle = PackageList::getHandle($pkgID);
+			$pkgHandle = PackageList::getHandle($this->pkgID);
 			$dirp = is_dir(DIR_PACKAGES.'/'.$pkgHandle)?DIR_PACKAGES.'/'.$pkgHandle:DIR_PACKAGES_CORE.'/'.$pkgHandle;
 			$locations[] = implode('/',array($dirp,DIRNAME_MODELS,DIRNAME_AUTHENTICATION,DIRNAME_AUTHENTICATION_TYPES,$atHandle,$_file));
 			if ($_file == FILENAME_AUTHENTICATION_CONTROLLER) {
@@ -328,7 +328,7 @@ class Concrete5_Model_AuthenticationType extends Object {
 	 * AuthenticationType::loadController
 	 * Load the AuthenticationTypeController into the AuthenticationType
 	 */
-	protected function loadController() { 
+	protected function loadController() {
 		// local scope
 		$atHandle = $this->authTypeHandle;
 		$txt = Loader::helper('text');
@@ -340,7 +340,7 @@ class Concrete5_Model_AuthenticationType extends Object {
 		require_once($file);
 		$this->controller = new $className($this);
 	}
-	
+
 }
 
 /**
