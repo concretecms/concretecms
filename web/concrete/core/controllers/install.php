@@ -2,7 +2,7 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 ini_set('display_errors', 1);
 if (!ini_get('safe_mode')) {
-	@set_time_limit(150);
+	@set_time_limit(300);
 }
 
 date_default_timezone_set(@date_default_timezone_get());
