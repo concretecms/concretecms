@@ -18,7 +18,7 @@ $(document).ready(function(){
 		dayNames: ['Sunnuntai','Maanantai','Tiistai','Keskiviikko','Torstai','Perjantai','Lauantai'],
 		dayNamesMin: ['Su','Ma','Ti','Ke','To','Pe','La'],
 		dayStatus: 'DD', dateStatus: 'D, M d',
-        dateFormat: 'dd.mm.yy', firstDay: 1,
+        dateFormat: 'd.m.yy', firstDay: 1,
 		initStatus: '', isRTL: false};
     $.datepicker.setDefaults($.datepicker.regional['fi']);
 });
