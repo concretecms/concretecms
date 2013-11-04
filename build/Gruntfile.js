@@ -12,6 +12,35 @@ module.exports = function(grunt) {
 	config.DIR_REL = ('DIR_REL' in parameters) ? parameters.DIR_REL : '';
 	config.DIR_BASE = ('DIR_BASE' in parameters) ? parameters.DIR_BASE : '../web';
 
+	// Options for the tool that will merge the files
+	var concatOptions = {
+		separator: ''
+	};
+
+	// List of the files to be merged
+	var concat = {
+		image_editor: {
+			dest: '<%= DIR_BASE %>/concrete/js/image_editor/image_editor.js',
+			src: [
+				'<%= DIR_BASE %>/concrete/js/image_editor/build/kinetic.prototype.js',
+				'<%= DIR_BASE %>/concrete/js/image_editor/build/imageeditor.js',
+				'<%= DIR_BASE %>/concrete/js/image_editor/build/history.js.js',
+				'<%= DIR_BASE %>/concrete/js/image_editor/build/events.js',
+				'<%= DIR_BASE %>/concrete/js/image_editor/build/elements.js',
+				'<%= DIR_BASE %>/concrete/js/image_editor/build/controls.js',
+				'<%= DIR_BASE %>/concrete/js/image_editor/build/save.js',
+				'<%= DIR_BASE %>/concrete/js/image_editor/build/extend.js',
+				'<%= DIR_BASE %>/concrete/js/image_editor/build/background.js',
+				'<%= DIR_BASE %>/concrete/js/image_editor/build/imagestage.js',
+				'<%= DIR_BASE %>/concrete/js/image_editor/build/image.js',
+				'<%= DIR_BASE %>/concrete/js/image_editor/build/actions.js',
+				'<%= DIR_BASE %>/concrete/js/image_editor/build/slideOut.js',
+				'<%= DIR_BASE %>/concrete/js/image_editor/build/jquerybinding.js',
+				'<%= DIR_BASE %>/concrete/js/image_editor/build/filters.js'
+			]
+		}
+	};
+
 	// Options for the generation of JavaScripts. See https://github.com/gruntjs/grunt-contrib-uglify
 	var jsOptions = {
 		mangle: true,
@@ -22,7 +51,6 @@ module.exports = function(grunt) {
 		banner: '',
 		footer: ''
 	};
-
 
 	// List of the JavaScripts to be generated
 	var js = {
@@ -147,31 +175,11 @@ module.exports = function(grunt) {
 				'<%= DIR_BASE %>/concrete/js/ccm_app/toolbar.js',
 				'<%= DIR_BASE %>/concrete/js/ccm_app/themes.js'
 			]
-		}
-
-		/*,
-
+		},
 		ccm_imageeditor: {
 			dest: '<%= DIR_BASE %>/concrete/js/ccm.imageeditor.js',
-			src: [
-				'<%= DIR_BASE %>/concrete/js/image_editor/build/kinetic.prototype.js',
-				'<%= DIR_BASE %>/concrete/js/image_editor/build/imageeditor.js',
-				'<%= DIR_BASE %>/concrete/js/image_editor/build/history.js.js',
-				'<%= DIR_BASE %>/concrete/js/image_editor/build/events.js',
-				'<%= DIR_BASE %>/concrete/js/image_editor/build/elements.js',
-				'<%= DIR_BASE %>/concrete/js/image_editor/build/controls.js',
-				'<%= DIR_BASE %>/concrete/js/image_editor/build/save.js',
-				'<%= DIR_BASE %>/concrete/js/image_editor/build/extend.js',
-				'<%= DIR_BASE %>/concrete/js/image_editor/build/background.js',
-				'<%= DIR_BASE %>/concrete/js/image_editor/build/imagestage.js',
-				'<%= DIR_BASE %>/concrete/js/image_editor/build/image.js',
-				'<%= DIR_BASE %>/concrete/js/image_editor/build/actions.js',
-				'<%= DIR_BASE %>/concrete/js/image_editor/build/slideOut.js',
-				'<%= DIR_BASE %>/concrete/js/image_editor/build/jquerybinding.js',
-				'<%= DIR_BASE %>/concrete/js/image_editor/build/filters.js'
-			]
+			src: '<%= DIR_BASE %>/concrete/js/image_editor/image_editor.js'
 		}
-		*/
 	};
 
 	// Options for the generation of the CSS files. See https://github.com/gruntjs/grunt-contrib-less
@@ -206,12 +214,16 @@ module.exports = function(grunt) {
 		'<%= DIR_BASE %>/concrete/css/ccm.app.css': '<%= DIR_BASE %>/concrete/css/ccm_app/build/ccm.app.less'
 	};
 	// Let's include the dependencies
+	grunt.loadNpmTasks('grunt-contrib-concat');
 	grunt.loadNpmTasks('grunt-contrib-uglify');
 	grunt.loadNpmTasks('grunt-contrib-cssmin');
 	grunt.loadNpmTasks('grunt-contrib-less');
 
 	// Now let's build the final configuration for Grunt.
 	var extend = require('util')._extend;
+
+	// Let's define the concat section (for concatenating giles)
+	config.concat = extend({options: concatOptions}, concat);
 
 	// Let's define the uglify section (for generating JavaScripts)
 	var jsTargets = {release: [], debug: []};
