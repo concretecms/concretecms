@@ -13,7 +13,7 @@ class Concrete5_Model_AttributeKey extends Object {
 
 	/** Returns the display name for this attribute (localized and escaped accordingly to $format)
 	* @param string $format = 'html'
-	*	Escape the result in html format (if $format is 'html') or in JavaScript format (if $format is 'js').
+	*	Escape the result in html format (if $format is 'html').
 	*	If $format is 'text' or any other value, the display name won't be escaped. 
 	* @return string
 	*/
@@ -22,8 +22,6 @@ class Concrete5_Model_AttributeKey extends Object {
 		switch($format) {
 			case 'html':
 				return h($value);
-			case 'js':
-				return Loader::helper('json')->encode($value);
 			case 'text':
 			default:
 				return $value;
