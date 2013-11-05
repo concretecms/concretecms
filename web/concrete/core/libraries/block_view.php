@@ -267,6 +267,21 @@ class Concrete5_Library_BlockView extends AbstractView {
 		return $contents;
 	}
 
+	/** 
+	 * Tests the current page controller to see if it's passing through a block action. I really wish
+	 * this could be handled in the block controller but due to some dumb decisions years ago it cannot be.
+	 */
+	protected function getPassThruAction() {
+		$c = Page::getCurrentPage();
+		$cnt = $c->getController();
+		$parameters = $cnt->getParameters();
+		$action = $cnt->getAction();
+		if ($action == 'passthru' && $this->block->getBlockID() == $parameters[1]) {
+			return 'action_' . $parameters[2];
+		}
+	}
+
+
 	public function runControllerTask() {
 		if ($this->useBlockCache()) {
 			$this->outputContent = $this->block->getBlockCachedOutput($this->area);
@@ -278,6 +293,10 @@ class Concrete5_Library_BlockView extends AbstractView {
 			} else {
 				$method = 'view';
 			}
+			if ($method == 'view') {
+				$method = $this->getPassThruAction();
+			}
+
 			$this->controller->on_start();
 			$this->controller->runAction($method, array());
 			$this->controller->on_before_render();

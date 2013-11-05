@@ -408,6 +408,18 @@ class Concrete5_Model_Page extends Collection {
 		return $pkHandles;
 	}
 	
+	public function setController($controller) {
+		$this->controller = $controller;
+	}
+
+	public function getController() {
+		if (isset($this->controller)) {
+			return $this->controller;
+		}
+		$cnt = Loader::controller($this);
+		$this->controller = $cnt;
+		return $cnt;
+	}
 	/** 
 	 * @private
 	 */
