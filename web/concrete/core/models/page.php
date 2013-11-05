@@ -179,6 +179,11 @@ class Concrete5_Model_Page extends Collection {
 	 * by cID
 	 */
 	public static function getFromRequest(Request $request) {
+		// if something has already set a page object, we return it
+		$c = $request->getCurrentPage();
+		if (is_object($c)) {
+			return $c;
+		}
 		if ($request->getPath() != '') {
 			$path = $request->getPath();
 			$r = array();
