@@ -33,11 +33,11 @@ class Concrete5_Model_DeletePagePageWorkflowRequest extends PageWorkflowRequest 
 	}
 	
 	public function getWorkflowRequestStyleClass() {
-		return 'error';
+		return 'danger';
 	}
 	
 	public function getWorkflowRequestApproveButtonClass() {
-		return 'error';
+		return 'btn-danger';
 	}
 
 	public function getWorkflowRequestApproveButtonInnerButtonRightHTML() {

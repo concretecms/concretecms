@@ -173,7 +173,7 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
 								<? } ?>
 							<? } ?>
 
-							 class="btn btn-mini <?=$act->getWorkflowProgressActionStyleClass()?>"><?=$act->getWorkflowProgressActionStyleInnerButtonLeftHTML()?> <?=$act->getWorkflowProgressActionLabel()?> <?=$act->getWorkflowProgressActionStyleInnerButtonRightHTML()?>
+							 class="btn btn-xs <?=$act->getWorkflowProgressActionStyleClass()?>"><?=$act->getWorkflowProgressActionStyleInnerButtonLeftHTML()?> <?=$act->getWorkflowProgressActionLabel()?> <?=$act->getWorkflowProgressActionStyleInnerButtonRightHTML()?>
 							<? if ($act->getWorkflowProgressActionURL() != '') { ?>
 								</a>
 							<? } else { ?>

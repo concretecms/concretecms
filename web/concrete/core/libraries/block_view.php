@@ -295,6 +295,9 @@ class Concrete5_Library_BlockView extends AbstractView {
 			}
 			if ($method == 'view') {
 				$method = $this->getPassThruAction();
+				if (!$method) {
+					$method = 'view';
+				}
 			}
 
 			$this->controller->on_start();
