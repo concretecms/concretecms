@@ -32,15 +32,15 @@ class Concrete5_Library_Url {
 		}
 		
 		$path = trim($path, '/');
-		if ($path == '') {
-			return DIR_REL . '/';
-		}
 		
 		// if a query string appears in this variable, then we just pass it through as is
 		if (strpos($path, '?') > -1) {
 			return DIR_REL . $dispatcher. '/' . $path;
 		} else {
-			$_path = DIR_REL . $dispatcher. '/' . $path . '/';
+			$_path = DIR_REL . $dispatcher. '/' . $path;
+			if ($path) {
+				$_path .= '/';
+			}
 		}
 		
 		if ($action != null) {

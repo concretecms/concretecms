@@ -346,30 +346,6 @@ class Concrete5_Model_Block extends Object {
 		return $total;
 	}
 
-	function passThruBlock($method) {
-		// pass this onto the blocktype's class
-		
-		$method = "action_" . $method;
-		if ($this->getBlockTypeHandle() == BLOCK_HANDLE_SCRAPBOOK_PROXY) {
-			$bOriginalID = $this->getController()->getOriginalBlockID();
-			$bo = Block::getByID($bOriginalID);
-			$btID = $bo->getBlockTypeID();
-			$b = $bo;
-		} else {
-			$btID = $this->getBlockTypeID();	
-			$b = $this;
-		}
-		$bt = BlockType::getByID($btID);
-		$class = $bt->getBlockTypeClass();
-		$bc = new $class($b);
-		
-		// ONLY ALLOWS ITEMS THAT START WITH "action_";
-		
-		if (is_callable(array($bc, $method))) {
-			return $bc->{$method}();
-		}
-	}
-	
 	public function getInstance() {		
 		if (ENABLE_BLOCK_CACHE && $this->instance->cacheBlockRecord() && is_object($this->instance->getBlockControllerData())) {
 			$this->instance->__construct();
@@ -862,23 +838,7 @@ class Concrete5_Model_Block extends Object {
 		return $str . '&amp;btask=update_block_css';
 	}	
 
-	function getBlockPassThruAction() {
-		// is the block located in a stack?
-		$pc = $this->getBlockCollectionObject();
-		if ($pc->getPageTypeHandle() == STACKS_PAGE_TYPE) {
-			$c = Page::getCurrentPage();
-			$cID = $c->getCollectionID();
-			$bID = $this->getBlockID();
-			$valt = Loader::helper('validation/token');
-			$token = $valt->generate();
-			$str = DIR_REL . "/" . DISPATCHER_FILENAME . "?cID={$cID}&amp;stackID=" . $this->getBlockActionCollectionID() . "&amp;bID={$bID}&amp;btask=passthru_stack&amp;ccm_token=" . $token;
-			return $str;
-		} else { 
-			$str = $this->_getBlockAction();
-			return $str . '&amp;btask=passthru';
-		}
-	}
-	
+
 	function isEditable() {
 		$bv = new BlockView($this);
 		$path = $bv->getBlockPath(FILENAME_BLOCK_EDIT);

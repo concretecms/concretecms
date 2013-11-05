@@ -73,6 +73,7 @@ $rl->register('/system/page/check_in/{cID}/{token}', 'PageCheckInPanelController
  */
 $rl->register('/system/css/page/{cID}/{cvID}/{stylesheet}', 'FrontendStylesheetController::page');
 $rl->register('/system/css/layout/{bID}', 'FrontendStylesheetController::layout');
+$rl->register('/system/block/action/{cID}/{arHandle}/{bID}/{action}', 'FrontendBlockController::action');
 
 /** 
  * Page Routes - these must come at the end.

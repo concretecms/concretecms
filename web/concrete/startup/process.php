@@ -338,27 +338,6 @@
 					//exit;
 				}
 				break;
-			case 'passthru':
-				if (isset($_GET['bID']) && isset($_GET['arHandle'])) {
-					$vn = Loader::helper('validation/numbers');
-					if ($vn->integer($_GET['bID'])) {
-						$b = Block::getByID($_GET['bID']);
-						if (is_object($b)) {
-							$a = Area::get($c, $_GET['arHandle']);
-							$b = Block::getByID($_GET['bID'], $c, $a);
-							// basically, we hand off the current request to the block
-							// which handles permissions and everything
-							$p = new Permissions($b);
-							if ($p->canViewBlock()) {
-								if (!is_object($b)) {
-									exit;
-								}
-								$action = $b->passThruBlock($_REQUEST['method']);
-							}
-						}
-					}
-				}
-				break;
 			case 'passthru_stack':
 				if (isset($_GET['bID'])) {
 					$vn = Loader::helper('validation/numbers');
