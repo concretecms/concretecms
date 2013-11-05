@@ -43,6 +43,32 @@ class Concrete5_Library_Controller_Page extends Controller {
 		return $this->parameters;
 	}
 
+	public function passthru($arHandle = false, $bID = false, $action = false) {
+		$bID = Loader::helper('security')->sanitizeInt($bID);
+		$arHandle = Loader::helper('security')->sanitizeString($arHandle);
+		if (!$bID || !$arHandle) {
+			return;
+		}
+		$cp = new Permissions($this->c);
+		if ($cp->canViewPage()) {
+			$a = Area::get($this->c, $arHandle);
+			$b = Block::getByID($bID, $this->c, $a);
+			if (is_object($b) && is_object($a)) {
+				$bp = new Permissions($b);
+				if ($bp->canViewBlock()) {
+					$method = 'action_' . $action;
+					$bt = $b->getBlockTypeObject();
+					$class = $bt->getBlockTypeClass();
+					$bc = new $class($b);
+					if (is_callable(array($bc, $method))) {
+						$response = call_user_func_array(array($bc, $method), array());
+					}
+				}
+			}
+		}
+	}
+
+
 	public function setupRequestActionAndParameters(Request $request) {
 		$task = substr($request->getPath(), strlen($this->c->getCollectionPath()) + 1);
 		$task = str_replace('-/', '', $task);

@@ -390,7 +390,6 @@ $classes = array(
 	'PageCachingPanelDetailController' => array('controller', '/panels/details/page/caching'),
 	'PagePermissionsPanelDetailController' => array('controller', '/panels/details/page/permissions'),
 	'FrontendStylesheetController' => array('controller', '/frontend/stylesheet'),
-	'FrontendBlockController' => array('controller', '/frontend/block'),
 	
 
 	'PageDeleteDialogController' => array('controller', '/dialogs/page/delete'),

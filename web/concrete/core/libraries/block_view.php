@@ -74,7 +74,7 @@ class Concrete5_Library_BlockView extends AbstractView {
 				$c = Page::getCurrentPage();
 				if (is_object($b) && is_object($c)) {
 					$a = $b->getBlockAreaObject();
-					return URL::to('/system/block', 'action', $c->getCollectionID(), $a->getAreaHandle(), $b->getBlockID(), $task);
+					return URL::page($c, 'passthru', $a->getAreaHandle(), $b->getBlockID(), $task);
 				}
 			}
 		} catch(Exception $e) {}
