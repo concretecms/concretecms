@@ -80,7 +80,11 @@
 		
 		public function __call($nm, $a) {
 			$cnt = $this->getControllerFile();
-			return $cnt->runTask($nm, $a);
+			$cnt->runTask($nm, $a);
+			// set scope items in this controller
+			foreach($cnt->getSets() as $key => $value) {
+				$this->set($key, $value);
+			}
 		}
 
 		public function add() {

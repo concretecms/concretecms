@@ -70,6 +70,10 @@ abstract class Concrete5_Library_Controller_Abstract {
 		return $this->action;
 	}
 
+	public function getParameters() {
+		return $this->parameters;
+	}
+	
 	public function runAction($action, $parameters = array()) {
 		$this->action = $action;
 		$this->parameters = $parameters;
