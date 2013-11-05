@@ -6,7 +6,7 @@ $uh = Loader::helper('concrete/urls');
 $form = Loader::helper('form');
 /* @var $ih ConcreteInterfaceHelper */
 $ih = Loader::helper('concrete/interface');
-$a = $this->controller->getAreaObject();
+$a = $view->getAreaObject();
 $bt = BlockType::getByHandle('form');
 ?>
 <div class="ccm-ui">

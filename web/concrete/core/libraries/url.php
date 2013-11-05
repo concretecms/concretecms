@@ -21,6 +21,12 @@ class Concrete5_Library_Url {
 		return filter_var($path, FILTER_VALIDATE_URL);
 	}
 
+	public static function page(Page $c, $action = false) {
+		$args = func_get_args();
+		$args[0] = $c->getCollectionPath();
+		return call_user_func_array(array('Url', 'to'), $args);
+	}
+
 	public static function to($path, $action = false) {
 		if (static::isValidURL($path)) {
 			return $path;
