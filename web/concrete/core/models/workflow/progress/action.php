@@ -69,6 +69,7 @@ class Concrete5_Model_WorkflowProgressCancelAction extends Concrete5_Model_Workf
 	public function __construct() {
 		$this->setWorkflowProgressActionLabel(t('Cancel'));
 		$this->setWorkflowProgressActionTask('cancel');
+		$this->setWorkflowProgressActionStyleClass('btn-default');
 	}
 	
 }
