@@ -27,5 +27,19 @@ class Concrete5_Controller_Tool extends Controller {
 		}
 	}
 
+	public function displayBlock($btHandle, $tool) {
+		$bt = BlockType::getByHandle($btHandle);
+		$env = Environment::get();
+		if (is_object($bt)) {
+			$pkgHandle = $bt->getPackageHandle();
+			$r = $env->getRecord(DIRNAME_BLOCKS . '/' . $btHandle . '/' . DIRNAME_TOOLS . '/' . $tool . '.php', $pkgHandle);
+			if ($r->exists()) {
+				$v = new DialogView($btHandle . '/' . DIRNAME_TOOLS . '/' . $tool);
+				$v->setViewRootDirectoryName(DIRNAME_BLOCKS);
+				$this->setViewObject($v);		
+			}
+		}
+	}
+
 }
 

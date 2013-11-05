@@ -17,6 +17,7 @@ $rl->register('/install/run_routine/{pkgHandle}/{routine}', 'InstallController::
 /** 
  * Tools - legacy
  */
+$rl->register('/tools/blocks/{btHandle}/{tool}', 'ToolController::displayBlock', 'blockTool', array('tool' => '[A-Za-z0-9_/]+'));
 $rl->register('/tools/{tool}', 'ToolController::display', 'tool', array('tool' => '[A-Za-z0-9_/]+'));
 
 /** 
