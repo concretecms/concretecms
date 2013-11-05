@@ -21,7 +21,7 @@ if (is_object($c)) {
 		$pageTitle = $c->getCollectionAttributeValue('meta_title');
 		if (!$pageTitle) {
 			$pageTitle = $c->getCollectionName();
-			if($c->isAdminArea()) {
+			if($c->isSystemPage()) {
 				$pageTitle = t($pageTitle);
 			}
 			$pageTitle = sprintf(PAGE_TITLE_FORMAT, SITE, $pageTitle);
