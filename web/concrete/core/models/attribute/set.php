@@ -50,7 +50,24 @@ class Concrete5_Model_AttributeSet extends Object {
 	public function getPackageHandle() {return PackageList::getHandle($this->pkgID);}
 	public function getAttributeSetKeyCategoryID() {return $this->akCategoryID;}
 	public function isAttributeSetLocked() {return $this->asIsLocked;}
-	
+
+	/** Returns the display name for this attribute set (localized and escaped accordingly to $format)
+	* @param string $format = 'html'
+	*	Escape the result in html format (if $format is 'html').
+	*	If $format is 'text' or any other value, the display name won't be escaped.
+	* @return string
+	*/
+	public function getAttributeSetDisplayName($format = 'html') {
+		$value = tc('AttributeSetName', $this->getAttributeSetName());
+		switch($format) {
+			case 'html':
+				return h($value);
+			case 'text':
+			default:
+				return $value;
+		}
+	}
+
 	public function updateAttributeSetName($asName) {
 		$this->asName = $asName;
 		$db = Loader::db();
@@ -82,7 +99,7 @@ class Concrete5_Model_AttributeSet extends Object {
 		$category = AttributeKeyCategory::getByID($this->getAttributeSetKeyCategoryID())->getAttributeKeyCategoryHandle();
 		$akey = $axml->addChild('attributeset');
 		$akey->addAttribute('handle',$this->getAttributeSetHandle());
-		$akey->addAttribute('name', tc('AttributeSetName', $this->getAttributeSetName()));
+		$akey->addAttribute('name', $this->getAttributeSetName());
 		$akey->addAttribute('package', $this->getPackageHandle());
 		$akey->addAttribute('locked', $this->isAttributeSetLocked());
 		$akey->addAttribute('category', $category);

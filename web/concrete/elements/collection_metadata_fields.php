@@ -39,7 +39,7 @@ $usedKeysCombined = array_merge($requiredKeys, $usedKeys);
 
 	<ul id="ccm-page-attribute-list" class="item-select-list">
 	<? foreach($sets as $as) { ?>
-		<li class="item-select-list-header ccm-attribute-available"><span><?=tc('AttributeSetName', $as->getAttributeSetName())?></span></li>
+		<li class="item-select-list-header ccm-attribute-available"><span><?=$as->getAttributeSetDisplayName()?></span></li>
 		<? 
 		$setattribs = $as->getAttributeKeys();
 		foreach($setattribs as $ak) { 
