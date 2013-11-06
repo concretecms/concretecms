@@ -67,7 +67,7 @@ $list = FileAttributeKey::getList();
 	
 	<? foreach($list as $ak) { ?>
 
-		<li><label><?=$form->checkbox('ak_' . $ak->getAttributeKeyHandle(), 1, $fldc->contains($ak))?> <span><?=tc('AttributeKeyName', $ak->getAttributeKeyName())?></span></label></li>
+		<li><label><?=$form->checkbox('ak_' . $ak->getAttributeKeyHandle(), 1, $fldc->contains($ak))?> <span><?=$ak->getAttributeKeyDisplayName()?></span></label></li>
 	
 	<? } ?>
 	
