@@ -3,12 +3,12 @@ div.ccm-panel {
 	height: 100%;
 	position: fixed;
 	top: 0px;
-	z-index: 1006; // has to come above the detail actions wrapper
+	z-index: @index-level-panel; // has to come above the detail actions wrapper
 	overflow: hidden;
 }
 
 div#ccm-panel-overlay {
-	z-index: 1003;
+	z-index: @index-level-panel-overlay;
 	position: fixed;
 	width: 100%;
 	height: 100%;
@@ -97,7 +97,7 @@ div.ccm-panel-right div.ccm-panel-shadow-layer {
 	height: 100%;
 	position: absolute;
 	top: 0px;
-	z-index: 1006;
+	z-index: @index-level-panel;
 	.box-shadow(inset 10px 10px 10px rgba(128,128,128,0.3));
 }
 
@@ -107,7 +107,7 @@ div.ccm-panel-left div.ccm-panel-shadow-layer {
 	position: absolute;
 	top: 0px;
 	right: 0px;
-	z-index: 1006;
+	z-index: @index-level-panel;
 	.box-shadow(inset -10px 10px 10px rgba(128,128,128,0.3));
 }
 
@@ -373,7 +373,7 @@ a.ccm-panel-back:hover {
  * Panel main detail areas
  */
 div.ccm-panel-detail {
-	z-index: 1003;
+	z-index: @index-level-panel-detail;
 	width: 100%;
 	height: 100%;
 	position: absolute;
@@ -590,7 +590,7 @@ div#ccm-panel-detail-form-actions-wrapper {
 	position: fixed;
 	bottom: 0px;
 	left: 0px;
-	z-index: 1005;
+	z-index: @index-level-panel-detail-form-actions;
 	width: 100%;
 
 	div.ccm-panel-detail-form-actions {
@@ -875,7 +875,7 @@ div.ccm-panel-header-accordion-dropdown-visible {
  */
 div.ccm-panel-confirmation-wrapper {
 	position: fixed;
-	z-index: 10000;
+	z-index: @index-level-panel-dialog;
 	top: 0px;
 	left: 0px;
 	width: 100%;

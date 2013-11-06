@@ -8,11 +8,11 @@ div#ccm-menu-click-proxy {
 	width: 0px;
 	position: absolute;
 	cursor: pointer;
-	z-index: 1000;
+	z-index: @index-level-in-context-click-proxy;
 }
 
 div#ccm-menu-highlighter {
-	z-index: 100;
+	z-index: @index-level-in-context-menu-highlighter;
 	height: 0px;
 	width: 0px;
 	position: absolute;
@@ -114,7 +114,6 @@ div.ccm-area-footer {
 	opacity: 0; 
 	width: 100%;
 	position: absolute;
-	z-index: 4;
 	bottom: -35px;
 	padding-top: 15px;
 
@@ -244,7 +243,7 @@ ul.ccm-edit-mode-inline-commands {
 	top: -4px;
 	right: -4px;
 	background: rgba(255,255,255,0.8);
-	z-index: 102; // has to be over the click proxy
+	z-index: @index-level-inline-commands; // has to be over the click proxy
 	li {
 		display: inline-block;
 		line-height: 15px;

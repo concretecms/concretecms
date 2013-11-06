@@ -13,7 +13,6 @@
 @chznBoxShadow: ~"inset 0 1px 1px rgba(0, 0, 0, .075)";
 @chznDropBorder: @grayLight;
 @chznDropBoxShadow: ~"0 8px 8px rgba(0, 0, 0, .25)";
-@chznDropZIndex: 1060;
 @chznFocusBorder: rgba(82, 168, 236, .8);
 @chznFocusBoxShadow: ~"0 1px 1px rgba(0, 0, 0, .075) inset, 0 0 8px rgba(82, 168, 236, .6)";
 @chznFocusTransition: ~"border linear .2s, box-shadow linear .2s";
@@ -50,7 +49,7 @@
     position: absolute;
     top: @chznHeight + 1px; // set dynamically
     left: 0;
-    z-index: @chznDropZIndex;
+    z-index: @index-level-dialog-content;
   }
 
   .chzn-results {
@@ -212,7 +211,7 @@
     padding: 3px 4px;
     position: relative;
     white-space: nowrap;
-    z-index: @zindexDropdown;
+    z-index: @index-level-dialog-content;
 
     input {
       background: url("@{chznSpritePath}") no-repeat 100% -21px, @chznBackground;

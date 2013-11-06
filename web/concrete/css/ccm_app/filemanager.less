@@ -4,7 +4,10 @@ tr.ccm-file-list-record td {height: 60px}
 table.ccm-results-list th.ccm-file-list-thumbnail-wrapper {width: 1px !important;}
 .ccm-file-list-thumbnail-image{ text-align: center; height: 70px;}
 div.ccm-file-list-thumbnail-image img {}
-div.ccm-file-list-thumbnail-hover div {display: none;z-index: 105;position: absolute;top: 0px;left: 0px;border: 1px dotted #aaa;padding: 8px;background-color: #fff}
+div.ccm-file-list-thumbnail-hover div {display: none; position: absolute;top: 0px;left: 0px;border: 1px dotted #aaa;padding: 8px;background-color: #fff}
+.ui-dialog-content {
+	div.ccm-file-list-thumbnail-hover div {z-index: @index-level-dialog-hover}
+}
 #ccm-file-list-multiple-operations {font-size: 10px}
 table.ccm-results-list th.ccm-file-list-starred, table.ccm-results-list td.ccm-file-list-starred {padding: 0 4px 0 4px;margin:0; text-align: center;}
 ul#ccm-file-search-advanced-saved-searches-list li {padding: 2px}
