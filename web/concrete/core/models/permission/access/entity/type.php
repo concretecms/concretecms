@@ -9,6 +9,24 @@ class Concrete5_Model_PermissionAccessEntityType extends Object {
 		$class = Loader::helper('text')->camelcase($this->petHandle) . 'PermissionAccessEntity';
 		return $class;
 	}
+
+	/** Returns the display name for this access entity type (localized and escaped accordingly to $format)
+	* @param string $format = 'html'
+	*	Escape the result in html format (if $format is 'html').
+	*	If $format is 'text' or any other value, the display name won't be escaped.
+	* @return string
+	*/
+	public function getAccessEntityTypeDisplayName($format = 'html') {
+		$value = tc('PermissionAccessEntityTypeName', $this->getAccessEntityTypeName());
+		switch($format) {
+			case 'html':
+				return h($value);
+			case 'text':
+			default:
+				return $value;
+		}
+	}
+
 	public static function getByID($petID) {
 		$db = Loader::db();
 		$row = $db->GetRow('select petID, pkgID, petHandle, petName from PermissionAccessEntityTypes where petID = ?', array($petID));
@@ -65,7 +83,7 @@ class Concrete5_Model_PermissionAccessEntityType extends Object {
 		foreach($ptypes as $pt) {
 			$ptype = $axml->addChild('permissionaccessentitytype');
 			$ptype->addAttribute('handle', $pt->getAccessEntityTypeHandle());
-			$ptype->addAttribute('name', tc('PermissionAccessEntityTypeName', $pt->getAccessEntityTypeName()));
+			$ptype->addAttribute('name', $pt->getAccessEntityTypeName());
 			$ptype->addAttribute('package', $pt->getPackageHandle());
 			$categories = $db->GetCol('select pkCategoryHandle from PermissionKeyCategories inner join PermissionAccessEntityTypeCategories where PermissionKeyCategories.pkCategoryID = PermissionAccessEntityTypeCategories.pkCategoryID and PermissionAccessEntityTypeCategories.petID = ?', array($pt->getAccessEntityTypeID()));
 			if (count($categories) > 0) {
