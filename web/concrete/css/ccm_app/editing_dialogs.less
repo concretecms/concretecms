@@ -32,7 +32,27 @@ li.themeWrap img.ccm-preview {float:right; padding-top:2px;}
 div.ccm-scroller-inner ul li.themeWrap .preview-wrap img{border:0px none}
 li.themeWrap .ccm-theme-name { width:auto; margin:2px 20px; line-height: 14px; font-size: 12px}
 li.themeWrap .ccm-theme-name a{text-decoration:none}
-li.themeWrap .ccm-theme-name a:hover{ text-decoration:underline} 
+li.themeWrap .ccm-theme-name a:hover{ text-decoration:underline}
 ul#ccm-select-marketplace-theme li .desc{ font-size:10px; }
 
 #ccm-block-fields {margin-bottom: -18px;}
+
+div.ccm-area-drag-area {
+	-webkit-transition: outline-width 250ms, outline-color 250ms;
+
+	&.ccm-area-drag-area-contender {
+		background-color: rgba(0, 100, 0, 0.5);
+		outline: solid 5px rgba(0, 255, 0, .7);
+	}
+	&.ccm-area-drag-area-selectable {
+		outline-color: #006400;
+		outline-width: 10px;
+	}
+}
+a.ccm-block-edit-drag {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	width: 90px;
+	height: 90px;
+}

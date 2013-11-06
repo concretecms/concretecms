@@ -1,4 +1,4 @@
-/** 
+/**
  * concrete5 in context editing
  */
 
@@ -65,8 +65,8 @@ var CCMEditMode = function() {
 				return false;
 			});
 
-		});		
-	
+		});
+
 		$('.ccm-area').ccmmenu();
 		$('.ccm-block-edit').ccmmenu();
 
@@ -161,13 +161,13 @@ var CCMEditMode = function() {
 	}
 
 	setupSortablesAndDroppables = function() {
-		
+
 		// clean up in case we're running twice
 		$('div.ccm-area-block-dropzone').remove();
 		$('.ui-droppable').droppable('destroy');
 
-		// empty areas are droppable. We have to 
-		// declare them separately because sortable and droppable don't play as 
+		// empty areas are droppable. We have to
+		// declare them separately because sortable and droppable don't play as
 		// nicely together as they should.
 
 		$emptyareas = $('div.ccm-area[data-total-blocks=0]');
@@ -192,9 +192,9 @@ var CCMEditMode = function() {
 				} else if (ui.helper.is('.ccm-panel-add-block-clipboard-item')) {
 					jQuery.fn.dialog.showLoader();
 					var url = CCM_DISPATCHER_FILENAME + '?pcID[]=' + ui.draggable.attr('data-clipboard-item-id') + '&add=1&processBlock=1&cID=' + $(this).attr('data-cID') + '&arHandle=' + $(this).attr('data-area-handle') +  '&btask=alias_existing_block&ccm_token=' + CCM_SECURITY_TOKEN;
-					$.get(url, function(r) { 
+					$.get(url, function(r) {
 						CCMEditMode.parseBlockResponse(r, false, 'add');
-					});				
+					});
 				} else {
 					// else we are dragging a block from some other area into this one.
 					ui.draggable.appendTo($(this).find('.ccm-area-block-list'));
@@ -248,7 +248,7 @@ var CCMEditMode = function() {
 					$(this).replaceWith($('<div />', {'id': 'ccm-add-new-block-placeholder'}));
 					var $area = $('#ccm-add-new-block-placeholder').closest('.ccm-area');
 					var url = CCM_DISPATCHER_FILENAME + '?pcID[]=' + ui.draggable.attr('data-clipboard-item-id') + '&add=1&processBlock=1&cID=' + $area.attr('data-cID') + '&arHandle=' + $area.attr('data-area-handle') +  '&btask=alias_existing_block&ccm_token=' + CCM_SECURITY_TOKEN;
-					$.get(url, function(r) { 
+					$.get(url, function(r) {
 						CCMEditMode.parseBlockResponse(r, false, 'add');
 					});
 				} else {
@@ -303,14 +303,13 @@ var CCMEditMode = function() {
 				// deactivate the menu on drag
 				$.fn.ccmmenu.disable();
 			}
-		});		
+		});
 
 	}
 
 	return {
-		start: function() {			
-			setupMenus();
-			setupSortablesAndDroppables();
+		start: function() {
+			c5.editMode = new c5.EditMode();
 		},
 
 		exitPreviewMode: function() {
@@ -364,7 +363,7 @@ var CCMEditMode = function() {
 			data: 'cID=' + cID + '&bID=' + bID + '&arHandle=' + encodeURIComponent(arHandle) + '&btask=add&scrapbookName=userScrapbook',
 			success: function(resp) {
 				ccmAlert.hud(ccmi18n.copyBlockToScrapbookMsg, 2000, 'add', ccmi18n.copyBlockToScrapbook);
-			}});		
+			}});
 		},
 
 		deleteBlock: function(cID, bID, aID, arHandle, msg, callback) {
@@ -386,11 +385,11 @@ var CCMEditMode = function() {
 				if (typeof(callback) == 'function') {
 					callback();
 				}
-			}	
+			}
 		},
 
 		parseBlockResponse: function(r, currentBlockID, task) {
-			try { 
+			try {
 				if (typeof(r) == 'string') {
 					r = r.replace(/(<([^>]+)>)/ig,""); // because some plugins add bogus HTML after our JSON requests and screw everything up
 					resp = eval('(' + r + ')');
@@ -400,7 +399,7 @@ var CCMEditMode = function() {
 
 				if (resp.error == true) {
 					var message = '<ul>'
-					for (i = 0; i < resp.response.length; i++) {						
+					for (i = 0; i < resp.response.length; i++) {
 						message += '<li>' + resp.response[i] + '<\/li>';
 					}
 					message += '<\/ul>';
@@ -409,13 +408,13 @@ var CCMEditMode = function() {
 					jQuery.fn.dialog.closeTop();
 					$(document).trigger('blockWindowAfterClose');
 					if (resp.cID) {
-						cID = resp.cID; 
+						cID = resp.cID;
 					} else {
 						cID = CCM_CID;
 					}
-					var action = CCM_TOOLS_PATH + '/edit_block_popup?cID=' + cID + '&bID=' + resp.bID + '&arHandle=' + encodeURIComponent(resp.arHandle) + '&btask=view_edit_mode';	 
-					$.get(action, 		
-						function(r) { 
+					var action = CCM_TOOLS_PATH + '/edit_block_popup?cID=' + cID + '&bID=' + resp.bID + '&arHandle=' + encodeURIComponent(resp.arHandle) + '&btask=view_edit_mode';
+					$.get(action,
+						function(r) {
 							if (task == 'add') {
 								if ($('#ccm-add-new-block-placeholder').length > 0) {
 									$('#ccm-add-new-block-placeholder').before(r).remove();
@@ -437,7 +436,7 @@ var CCMEditMode = function() {
 							} else {
 								ccmAlert.hud(ccmi18n.updateBlockMsg, 2000, 'ok', ccmi18n.updateBlock);
 							}
-							CCMEditMode.start(); // refresh areas. 
+							CCMEditMode.start(); // refresh areas.
 							$.fn.ccmmenu.reset();
 							if (typeof window.ccm_parseBlockResponsePost == 'function') {
 								ccm_parseBlockResponsePost(resp);
@@ -445,8 +444,8 @@ var CCMEditMode = function() {
 						}
 					);
 				}
-			} catch(e) { 
-				ccmAlert.notice(ccmi18n.error, r); 
+			} catch(e) {
+				ccmAlert.notice(ccmi18n.error, r);
 			}
 		},
 
@@ -459,7 +458,7 @@ var CCMEditMode = function() {
 				width: 280,
 				height: 200,
 				href: url,
-				title: ccmi18n.areaLayoutPresets, 
+				title: ccmi18n.areaLayoutPresets,
 				onOpen: function() {
 					$('#ccm-layout-save-preset-form select').on('change', function(r) {
 						if ($(this).val() == '-1') {
@@ -477,14 +476,14 @@ var CCMEditMode = function() {
 					$('#ccm-layout-save-preset-form').on('submit', function() {
 
 						$.fn.dialog.showLoader();
-						
+
 						var formdata = $('#ccm-layout-save-preset-form').serializeArray();
 						formdata.push({'name': 'submit', 'value': 1});
 
 						$.ajax({
 							url: url,
 							type: 'POST',
-							data: formdata, 
+							data: formdata,
 							dataType: 'json',
 							success: function(r) {
 								$.fn.dialog.hideLoader();
@@ -494,7 +493,7 @@ var CCMEditMode = function() {
 
 						return false;
 					});
-		
+
 				}
 			});
 		},
@@ -562,7 +561,7 @@ var CCMEditMode = function() {
 					revert: false,
 					start: function(e, ui) {
 						$('.ccm-area-block-dropzone').addClass('ccm-area-block-dropzone-active');
-						$.fn.ccmmenu.disable();						
+						$.fn.ccmmenu.disable();
 					},
 					stop: function() {
 						$.fn.ccmmenu.enable();
@@ -584,7 +583,7 @@ var CCMEditMode = function() {
 					type: 'POST',
 					url: CCM_DISPATCHER_FILENAME,
 					data: 'pcID=' + itemID + '&ptask=delete_content&ccm_token=' + CCM_SECURITY_TOKEN
-				}); 
+				});
 
 			});
 		}

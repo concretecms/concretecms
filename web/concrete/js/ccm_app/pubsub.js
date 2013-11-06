@@ -1,82 +1,90 @@
-var ccm_event = (function(window){
+;(function(window){
   "use strict";
 
   /**
-   * concrete5 Event Managment
-   * -------------------------
-   *
-   * The event management paradigm that is used here is a subscription to the
-   * main object to attach to the correct dialog.
-   *
-   * Events that go along with created elements should define the element type
-   * and pass the element dom object.
-   *
+   * Event Management
    * @author Korvin Szanto <Korvin@concrete5.org>
    */
   var target = window.document.createElement('span');
-  var self = {};
+  var concrete5_event = {
 
-  // Handle subscribing
-  self.sub = function (type, handler, elem) {
-    if (type instanceof Array) {
-      for (var i = type.length - 1; i >= 0; i--) {
-        self.sub(type[i], handler, elem);
+    /**
+     * Subscribe to an event
+     * @param  {String | Array} type    The event handle(s)
+     * @param  {function}       handler The function to call
+     * @param  {HTMLElement}    elem    An element to replace the default target
+     * @return {Object}                 return `this` to allow chaining
+     */
+    subscribe: function concrete5EventSubscribe(type, handler, elem) {
+      if (type instanceof Array) {
+        for (var i = type.length - 1; i >= 0; i--) {
+          this.subscribe(type[i], handler, elem);
+        }
+        return concrete5_event;
       }
-      return;
-    }
-    var element = elem || target;
-    if (element.addEventListener) {
-      element.addEventListener(type.toLowerCase(), handler, false);
-    } else {
-      element.attachEvent('on' + type.toLowerCase(), handler);
-    }
-  };
-
-  // Handle publishing
-  self.pub = function (type, data, elem) {
-    if (type instanceof Array) {
-      for (var i = type.length - 1; i >= 0; i--) {
-        self.pub(type[i], data, elem);
+      var element = elem || target;
+      if (element.addEventListener) {
+        element.addEventListener(type.toLowerCase(), handler, false);
+      } else {
+        element.attachEvent('on' + type.toLowerCase(), handler);
       }
-      return;
-    }
-    var event, eventName = 'CCMEvent', element = elem || target;
-    if (document.createEvent) {
-      event = document.createEvent("HTMLEvents");
-      event.initEvent(type.toLowerCase(), true, true);
-    } else {
-      event = document.createEventObject();
-      event.eventType = type.toLowerCase();
-    }
-    event.eventName = eventName;
-    event.eventData = data || {};
+      return concrete5_event; // Chaining
+    },
 
-    if (document.createEvent) {
-      element.dispatchEvent(event);
-    } else {
-      element.fireEvent("on" + event.eventType, event);
-    }
-    if (typeof element['on' + type.toLowerCase()] === 'function') {
-      element['on' + type.toLowerCase()](event);
+    /**
+     * Publish an event
+     * @param  {String | Array} type The event handle(s)
+     * @param  {unknown}        data The data to send along with the event
+     * @param  {HTMLElement}    elem An element to replace the default target
+     * @return {Object}              return `this` to allow chaining
+     */
+    publish: function concrete5EventPublish(type, data, elem) {
+      if (type instanceof Array) {
+        for (var i = type.length - 1; i >= 0; i--) {
+          this.publish(type[i], data, elem);
+        }
+        return concrete5_event;
+      }
+      var event, eventName = 'CCMEvent', element = elem || target;
+      if (document.createEvent) {
+        event = document.createEvent("HTMLEvents");
+        event.initEvent(type.toLowerCase(), true, true);
+      } else {
+        event = document.createEventObject();
+        event.eventType = type.toLowerCase();
+      }
+      event.eventName = eventName;
+      event.eventData = data || {};
+
+      if (document.createEvent) {
+        element.dispatchEvent(event);
+      } else {
+        element.fireEvent("on" + event.eventType, event);
+      }
+      if (typeof element['on' + type.toLowerCase()] === 'function') {
+        element['on' + type.toLowerCase()](event);
+      }
+      return concrete5_event; // Chaining
     }
   };
 
   // Add aliases
-  self.subscribe = self.bind = self.watch   = self.on = self.sub;
-  self.publish   = self.fire = self.trigger = self.pub;
+  concrete5_event.sub = concrete5_event.bind = concrete5_event.watch   = concrete5_event.on = concrete5_event.subscribe;
+  concrete5_event.pub = concrete5_event.fire = concrete5_event.trigger = concrete5_event.publish;
 
-  return self;
+
+  window.ccm_event     = concrete5_event;
+  window.ccm_subscribe = concrete5_event.sub;
+  window.ccm_publish   = concrete5_event.pub;
 })(window);
-window.ccm_subscribe = ccm_event.sub;
-window.ccm_publish = ccm_event.pub;
 
 /**
 // Minimal example:
 //Binding:
-ccm_event.bind('someEvent',function(e){alert('Caught event with data: '+e.eventData.info)});
+ccm_event.bind('someEvent', function(e){alert('Caught event with data: '+e.eventData.info)});
 
 //Firing:
-ccm_event.fire('someEvent',{info:'Some Data'});
+ccm_event.fire('someEvent', {info:'Some Data'});
 
 
 // Sample subscription.
