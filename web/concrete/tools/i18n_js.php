@@ -30,6 +30,7 @@ var ccmi18n = {
 	copyBlockToScrapbookMsg: "<?=t('The block has been added to your clipboard.')?>",
 	closeWindow: "<?=t('Close')?>",
 	editBlock: "<?=t('Edit')?>",
+	editBlockWithName: "<?=tc('%s is a block type name', 'Edit %s')?>",
 	setPermissionsDeferredMsg: "<?=t('Permission setting saved. You must complete the workflow before this change is active.')?>",
 	editStackContents: "<?=t('Manage Stack Contents')?>",
 	compareVersions: "<?=t('Compare Versions')?>",
