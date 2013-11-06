@@ -320,7 +320,7 @@ class Concrete5_Model_Package extends Object {
 		} else if ($item instanceof SystemAntispamLibrary) {
 			return $item->getSystemAntispamLibraryName();
 		} else if (is_a($item, 'PermissionKey')) {
-			return tc('PermissionKeyName', $item->getPermissionKeyName());			
+			return $item->getPermissionKeyDisplayName();			
 		} else if (is_a($item, 'Job')) {
 			return $item->getJobName();
 		} else if (is_a($item, 'WorkflowType')) {
