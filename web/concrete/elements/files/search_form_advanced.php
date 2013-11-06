@@ -123,6 +123,7 @@ foreach($t1 as $value) {
 		print $form->hidden('fileSelector', $fileSelector); 
 	?>	
 	<input type="hidden" name="searchInstance" value="<?=$searchInstance?>" />
+	<br/>
 	<div class="ccm-pane-options-permanent-search">
 
 	<?
@@ -150,7 +151,7 @@ foreach($t1 as $value) {
 			
 		<? } ?>
 
-		<div class="span3">
+		<div class="span4">
 		<?=$form->label('fvKeywords', t('Keywords'))?>
 		<div class="controls">
 			<?=$form->text('fKeywords', $searchRequest['fKeywords'], array('style'=> 'width: 130px')); ?>
