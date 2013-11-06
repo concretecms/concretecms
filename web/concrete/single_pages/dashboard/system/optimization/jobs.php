@@ -191,7 +191,7 @@ $djs = JobSet::getDefault();
 if (is_object($djs)) { ?>
 <div class="well">
 <h4><?=t('Automation Instructions')?></h4>
-<p><?=t('To run all the jobs in the <a href="%s">%s</a> Job Set, schedule this URL using cron or a similar system:', $this->url('/dashboard/system/optimization/jobs', 'edit_set', $djs->getJobSetID()), tc('JobSetName', $djs->getJobSetName()))?></p>
+<p><?=t('To run all the jobs in the <a href="%s">%s</a> Job Set, schedule this URL using cron or a similar system:', $this->url('/dashboard/system/optimization/jobs', 'edit_set', $djs->getJobSetID()), $djs->getJobSetDisplayName())?></p>
 <div><input type="text" style="width: 700px" class="ccm-default-jobs-url" value="<?=BASE_URL . $this->url('/tools/required/jobs?auth=' . $auth)?>" /></div>
 </div>
 <? } ?>
@@ -346,7 +346,7 @@ if (is_object($djs)) { ?>
 		
 			<?php foreach($jobSets as $j) { ?>
 				<div class="ccm-group" id="asID_<?php echo $j->getJobSetID()?>">
-					<a class="ccm-group-inner" href="<?php echo $this->url('/dashboard/system/optimization/jobs', 'edit_set', $j->getJobSetID())?>" style="background-image: url(<?php echo ASSETS_URL_IMAGES?>/icons/group.png)"><?php echo tc('JobSetName', $j->getJobSetName())?></a>
+					<a class="ccm-group-inner" href="<?php echo $this->url('/dashboard/system/optimization/jobs', 'edit_set', $j->getJobSetID())?>" style="background-image: url(<?php echo ASSETS_URL_IMAGES?>/icons/group.png)"><?php echo $j->getJobSetDisplayName()?></a>
 				</div>
 			<?php } ?>
 		</div>
