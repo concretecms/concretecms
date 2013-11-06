@@ -1,65 +1,44 @@
-var c5 = {};
-(function() {
+var c5 = (function(ccm_event) {
   "use strict";
-  c5 = {
+
+  function getAttribute(attributes, key) {
+    return attributes[key];
+  }
+  function setAttribute(attributes, key, value) {
+    return attributes[key] = value;
+  }
+
+  var concrete5 = {
     editMode: null,
     event: ccm_event,
 
     /**
-     * Default c5.Object
+     * Create the getter / setter methods and attach them if they don't exist
+     * @param  {Object} attributes Object containing the attributes to create getter/setters for.
+     * @return {Boolean}           Success, always true.
      */
-    Class: function object() {}
-  };
-  c5.Class.prototype = {
+    createGetterSetters: function generateGetterSetters(attributes) {
+      var obj = this;
+      obj.getAttr = _.partial(getAttribute, attributes);
+      obj.setAttr = _.partial(setAttribute, attributes);
+      _(attributes).each(function(value, key){
 
-    /**
-     * Default attribute setter
-     * @param  {String}  key   The key
-     * @param  {Unknown} value The value
-     * @return {Unknown}       The value
-     */
-    setAttr: function(key, value) {
-      this._attr[key] = value;
-      return value;
-    },
+        key += ""; // Make sure we always have a string.
+        var get_method = "get" + key.substr(0, 1).toUpperCase() + key.substr(1),
+            set_method = "set" + key.substr(0, 1).toUpperCase() + key.substr(1),
+            defaults = {};
 
-    /**
-     * Default attribute getter
-     * @param  {String}  key The key to get
-     * @return {Unknown}     The value
-     */
-    getAttr: function(key) {
-      return this._attr[key];
-    },
-
-    /**
-     * Create the getter and setter for a key and add it to `this` if they don't exist
-     * @param  {String}  key The key to create getters and setters for
-     * @return {Boolean}     Success, always true.
-     */
-    createGetterSetter: function(key) {
-      key += ""; // Make sure we always have a string.
-      var get_method = "get" + key.substr(0, 1).toUpperCase() + key.substr(1),
-          set_method = "set" + key.substr(0, 1).toUpperCase() + key.substr(1),
-          defaults = {};
-
-      defaults[get_method] = _.partial(this.getAttr, key);
-      defaults[set_method] = _.partial(this.setAttr, key);
-      _(this).defaults(defaults);
-      return true;
-    },
-
-    /**
-     * Loop through `this._attr` and create getters and setters for all
-     * @return {Boolean} Success, always true.
-     */
-    createGetterSetters: function() {
-      var my = this;
-      _(my._attr).each(function(val, key){
-        my.createGetterSetter(key);
-        return val;
+        if (typeof obj[get_method] == 'undefined') {
+          obj[get_method] = _.partial(getAttribute, attributes, key);
+        }
+        if (typeof obj[set_method] == 'undefined') {
+          obj[set_method] = _.partial(setAttribute, attributes, key);
+        }
       });
       return true;
     }
   };
-}());
+
+  return concrete5;
+
+}(ccm_event));

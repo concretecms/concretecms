@@ -14,15 +14,14 @@
   var EditMode = c5.EditMode = function EditMode() {
     var my = this;
 
-    my._attr = {
+    c5.createGetterSetters.call(my, {
       dragging:false,
       areas: [],
       blocks: [],
       selectedCache: [],
       selectedThreshold: 5,
       dragAreaBlacklist: []
-    };
-    my.createGetterSetters();
+    });
 
     c5.event.bind('panel.open', function editModePanelOpenEventHandler(event) {
       my.panelOpened(event.eventData);
@@ -71,17 +70,16 @@
   var Area = c5.Area = function Area(elem, edit_mode) {
     var my = this;
 
-    my._attr = {
+    c5.createGetterSetters.call(my, {
       id: elem.data('area-id'),
       elem: elem,
       dragAreas: [],
       blocks: [],
       editMode: edit_mode,
       blockTypes: elem.data('accepts-block-types').split(' ')
-    };
-    my.id = my._attr.id; // Set this to enable more succinct filtering.
-    my.createGetterSetters();
+    });
 
+    my.id = my.getId();
     my.addDragArea();
   };
 
@@ -92,7 +90,7 @@
    */
   var Block = c5.Block = function Block(elem, edit_mode){
     var my = this;
-    my._attr = {
+    c5.createGetterSetters.call(my, {
       id: elem.data('block-id'),
       handle: elem.data('block-type-handle'),
       areaId: elem.data('area-id'),
@@ -108,9 +106,8 @@
       stepIndex: 0,
       peper: elem.find('a[data-inline-command="move-block"]'),
       pepSettings:{}
-    };
-    my.id = my._attr.id;
-    my.createGetterSetters();
+    });
+    my.id = my.getId();
 
     _(my.getPepSettings()).extend({
       deferPlacement: true,
@@ -234,8 +231,14 @@
   var DragArea = c5.DragArea = function DragArea(elem, area, block) {
     var my = this;
 
-    my._attr = { block: block, elem: elem, area: area, isContender: false, isSelectable: false, animationLength: 500 };
-    my.createGetterSetters();
+    c5.createGetterSetters.call(my, {
+      block: block,
+      elem: elem,
+      area: area,
+      isContender: false,
+      isSelectable: false,
+      animationLength: 500
+    });
 
     c5.event.bind('EditModeContenders', function(e) {
       var drag_areas = e.eventData;
@@ -247,7 +250,7 @@
   };
 
 
-  _(EditMode.prototype).extend(c5.Class.prototype, {
+  EditMode.prototype = {
 
     panelOpened: function editModePanelOpened(panel) {
     },
@@ -316,9 +319,9 @@
 
       my.getBlocks().push(block);
     }
-  });
+  };
 
-  _(Area.prototype).extend(c5.Class.prototype, {
+  Area.prototype = {
 
     /**
      * Add block to area
@@ -329,7 +332,7 @@
       var my = this;
 
       block.setArea(my);
-      my._attr.blocks.push(block);
+      my.getBlocks().push(block);
       my.addDragArea(block);
       return true;
     },
@@ -393,9 +396,9 @@
         return drag_area.isContender(pep, block);
       });
     }
-  });
+  };
 
-  _(Block.prototype).extend(c5.Class.prototype, {
+  Block.prototype = {
 
     /**
      * Custom dragger getter, create dragger if it doesn't exist
@@ -534,9 +537,9 @@
 
       return true;
     }
-  });
+  };
 
-  _(DragArea.prototype).extend(c5.Class.prototype, {
+  DragArea.prototype = {
 
     /**
      * Is DragArea selectable
@@ -616,6 +619,6 @@
 
         return Math.sqrt(Math.pow(Math.abs(block_center.x - my_center.x), 2) + Math.pow(Math.abs(block_center.y - my_center.y), 2));
     }
-  });
+  };
 
 }(window, jQuery));
