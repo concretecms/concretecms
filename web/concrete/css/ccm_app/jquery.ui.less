@@ -113,7 +113,10 @@ position: fixed;
 .ui-resizable-handle { 
   position: absolute;
   font-size: 0.1px;
+  /*
   z-index: 99999; 
+  */
+  z-index: @index-level-inline-commands;
   display: block; 
 }
 .ui-resizable-disabled .ui-resizable-handle, .ui-resizable-autohide .ui-resizable-handle { 
@@ -598,7 +601,7 @@ position: fixed;
 */
 
 .ui-front {
-  z-index: 10000 !important;
+  z-index: @index-level-dialog-overlay !important;
 }
 
 /* end concrete5 */
@@ -947,7 +950,7 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
   width: 560px;*/
   /* concrete5 */
   /*z-index: 1050; */
-  z-index: 999;
+  z-index: @index-level-dialog;
   -webkit-transform: translate3d(0px, 0, 0);
 
   /* end concrete5 */
@@ -1236,7 +1239,7 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
 .ui-tooltip {
     padding:8px;
     position:absolute;
-    z-index:9999;
+    z-index:@index-level-tooltip-holder;
     max-width: 300px;
     -o-box-shadow: 0 0 5px #ddd;
     -moz-box-shadow: 0 0 5px #ddd;

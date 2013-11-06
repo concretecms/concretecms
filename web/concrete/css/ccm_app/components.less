@@ -4,7 +4,7 @@
  
  /* Newsflow dialog - move into ccm.menus.css */
 
-div.newsflow {z-index:1001; width:940px; /* height: 590px; overflow: hidden; */ min-height: 590px; margin: 0px auto 0px auto; position: relative; background-color:#ffffff; border:1px solid #666;  .border-radius(6px); -webkit-box-shadow:0 3px 7px rgba(0, 0, 0, 0.3);-moz-box-shadow:0 3px 7px rgba(0, 0, 0, 0.3);box-shadow:0 3px 7px rgba(0, 0, 0, 0.3);}
+div.newsflow {z-index:@index-level-dialog; width:940px; /* height: 590px; overflow: hidden; */ min-height: 590px; margin: 0px auto 0px auto; position: relative; background-color:#ffffff; border:1px solid #666;  .border-radius(6px); -webkit-box-shadow:0 3px 7px rgba(0, 0, 0, 0.3);-moz-box-shadow:0 3px 7px rgba(0, 0, 0, 0.3);box-shadow:0 3px 7px rgba(0, 0, 0, 0.3);}
 div.newsflow table.newsflow-layout td {vertical-align: top; padding: 12px; border-bottom: 1px solid #dedede; border-top: 0px !important; border-left: 0px !important; height: 125px; border-right: 1px solid #dedede; background-clip: padding-box;}
 div.newsflow table.newsflow-layout td:last-child {border-right: 0px;}
 div.newsflow table.newsflow-layout h3 {line-height: 20px; margin-bottom: 8px;}
@@ -23,9 +23,9 @@ div.newsflow table.newsflow-layout td.newsflow-em1 {height: 1px; background-colo
 div.newsflow table.newsflow-layout td.newsflow-column-quarter {height: 100%; width: 25%;}
 div.newsflow table.newsflow-layout td.newsflow-em1 hr {border-bottom-color: #d1d1d1;}
 
-div#newsflow-overlay {display: none; position: absolute; z-index: 1001}
+div#newsflow-overlay {display: none; position: absolute; z-index: @index-level-dialog}
 div#newsflow-overlay div.row {margin-left: 0px;}
-div.newsflow .ccm-pane-header-icons li {margin-left: 2px; position: relative; z-index: 1001; }
+div.newsflow .ccm-pane-header-icons li {margin-left: 2px; position: relative; z-index: @index-level-dialog; }
 
 div.newsflow .ccm-pane-header-icons {top: 2px; right: 2px}
 div#ccm-dashboard-welcome-back {margin: -13px -10px 0px -12px; overflow: hidden; color: #666; padding: 74px 30px 30px 145px; background: transparent url(../images/newsflow_logo_welcome_back.png) no-repeat 0 0}
@@ -41,10 +41,7 @@ div#newsflow-header {background-color: #f1f1f1; padding: 40px 30px 10px 60px; ba
 .newsflow-column-first-run h3 {line-height: 28px !important; margin-bottom: 10px; font-weight: normal; font-size: 24px; color: #09f;}
 .newsflow-column-first-run {padding: 10px 10px 100px 10px; overflow: visible}
 .newsflow .ccm-pane-options {.border-radius-top-only(5px);}
-/*
-.newsflow-paging-previous, .newsflow-paging-next {width: 33px; .border-radius-right-only(4px); text-align: center; height: 100%; z-index: 10; position: absolute; top: 0px; background-clip: padding-box; }
-*/
-.newsflow-paging-previous, .newsflow-paging-next {width: 33px; text-align: center; height: 100%; z-index: 1001; position: absolute; top: 0px; background-clip: padding-box; }
+.newsflow-paging-previous, .newsflow-paging-next {width: 33px; text-align: center; height: 100%; z-index: @index-level-dialog; position: absolute; top: 0px; background-clip: padding-box; }
 .newsflow-paging-previous {left: -65px; padding-left: 10px;}
 /*
 .newsflow-paging-previous:hover {background: transparent url(../images/bg_newsflow_previous.png) repeat-y top left; .border-radius-left-only(4px); }
@@ -58,7 +55,7 @@ div#newsflow-header {background-color: #f1f1f1; padding: 40px 30px 10px 60px; ba
 .newsflow-paging-previous a, .newsflow-paging-next a {width: 33px; vertical-align: middle; display: table-cell;}
 .newsflow-paging-previous span {width: 57px; height: 86px; background: transparent url(../images/newsflow_previous.png) no-repeat; display: inline-block;}
 .newsflow-paging-next span {width: 57px; height: 86px; background: transparent url(../images/newsflow_next.png) no-repeat; display: inline-block}
-div#newsflow-main {z-index: 1 !important;}
+div#newsflow-main {z-index: @index-level-base !important;}
 #newsflow-wizard-content {padding: 48px 530px 20px 60px; background-repeat: no-repeat; background-position: right bottom;}
 /* Newsflow block in dashboard */
 td.newsflow-latest-edition-wrapper {
@@ -83,8 +80,8 @@ td.newsflow-latest-edition-wrapper {
 
 .ui-dialog #ccm-list-wrapper {margin-top: 10px;}
 .ui-dialog .ccm-pane-options {margin-left: -10px; margin-right: -10px; margin-top: -12px}
-.ui-dialog-titlebar {z-index: 1100;}
-.ui-dialog .ccm-pane-options {z-index: 1099;}
+.ui-dialog-titlebar {z-index: @index-level-dialog-title-bar;}
+.ui-dialog .ccm-pane-options {z-index: @index-level-dialog-options;}
 
 .newsflow .ccm-pane-body {background-color: transparent;}
 .newsflow .ccm-pane-body-inner {background-color: transparent; padding: 20px;}
@@ -158,7 +155,7 @@ div.ccm-group a.ccm-group-inner-atag {color: #666; font-size: 14px; padding: 8px
 div.ccm-group a.ccm-group-inner-atag:hover {color: #666; font-size: 14px; padding: 8px 0px; text-decoration: none; border: 1px solid #fff}
 div.ccm-group {position: relative; padding: 0px 0px 2px 0px; border-bottom: 1px solid #dedede; margin-bottom: 2px}
 div.ccm-group a.ccm-group-inner:hover {background-color: #d9e7ff; border: 1px solid #94a7c7}
-div.ccm-group img.ccm-group-sort {position: absolute; top: 12px; right: 10px; z-index: 99}
+div.ccm-group img.ccm-group-sort {position: absolute; top: 12px; right: 10px;}
 img.ccm-group-sort:hover {cursor: move}
 div.ccm-group-description {padding-left: 30px; color: #aaa; font-size: 12px; padding-top: 2px; padding-bottom: 6px}
 span.ccm-group-description {color: #aaa; font-size: 12px; padding-top: 2px; padding-bottom: 6px}
@@ -190,7 +187,7 @@ div.ccm-workflow a:hover {background-color: #d9e7ff; border: 1px solid #94a7c7; 
  * Tooltips
  */
 div#ccm-tooltip-holder {
-	z-index: 10001;
+	z-index: @index-level-tooltip-holder;
 	position: relative;
 }
 

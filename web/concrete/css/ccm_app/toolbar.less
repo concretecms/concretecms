@@ -7,7 +7,7 @@ div#ccm-toolbar {
 	left: 0px; 
 	height: 49px; 
 	width: 100%; 
-	z-index: 10001; /* over the top of the highlighter, which is 1000 */
+	z-index: @index-level-main-bar; /* over the top of the highlighter, which is 1000 */
 
 	> ul {
 		.clear_float();
@@ -267,7 +267,7 @@ div#ccm-toolbar {
 	font-size: @font-size-base;
 	min-height: 25px;
 	font-weight: 300;
-	z-index: 1006;
+	z-index: @index-level-hud;
 	.transition(opacity 0.5s cubic-bezier(0.190, 1.000, 0.220, 1.000));
 	i.glyphicon {
 		font-size: 16px;
@@ -281,7 +281,7 @@ div#ccm-notification-hud {
 	position: fixed; 
 	top: 110px; 
 	right: 0px; 
-	z-index: 1105; 
+	z-index: @index-level-hud; 
 	.opacity(0);
 }
 
@@ -323,7 +323,7 @@ div.ccm-notification-actions {
 
 /* Status Bar */
 div#ccm-page-status-bar {
-	z-index: 1000; /* right under toolbar */ 
+	z-index: @index-level-status-bar; /* right under toolbar */ 
 	position: relative;
 	display: block; 
 	position: fixed; 
@@ -365,7 +365,7 @@ div#ccm-page-status-bar {
 div#ccm-toolbar-disabled {
 	height: 49px;
 	background-color: rgba(255,255,255,0.8);
-	z-index: 1002; /* right over the toolbar */
+	z-index: @index-level-toolbar-disabled; /* right over the toolbar */
 	position: fixed;
 	top: 0px;
 	left: 0px;
