@@ -76,7 +76,7 @@ class Concrete5_Model_GroupSetPermissionAccessEntity extends PermissionAccessEnt
 			$gs = GroupSet::getByID($gsID);
 			if (is_object($gs)) {
 				$this->groupset = $gs;
-				$this->label = $gs->getGroupSetName();
+				$this->label = $gs->getGroupSetDisplayName();
 			}
 		}
 	}

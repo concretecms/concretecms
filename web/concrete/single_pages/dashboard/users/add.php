@@ -130,7 +130,7 @@ $languages = Localization::getAvailableInterfaceLanguages();
                                 }
                             }
                         ?> />
-							<span><?=t($g['gName'])?></span>
+							<span><?=h(tc('GroupName', $g['gName']))?></span>
 						</label>
                     <? }
                     
