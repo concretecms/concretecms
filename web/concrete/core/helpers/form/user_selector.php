@@ -41,12 +41,15 @@ class Concrete5_Helper_Form_UserSelector {
 
 		$html = '';
 		$html .= '<div class="ccm-summary-selected-item"><div class="ccm-summary-selected-item-inner"><strong class="ccm-summary-selected-item-label">';
+		$displayTrashcanStyle = 'display:none;';
 		if ($selectedUID > 0) {
 			$ui = UserInfo::getByID($selectedUID);
 			$html .= $ui->getUserName();
-		}
+			$displayTrashcanStyle = '';
+		}		
 		$html .= '</strong></div>';
 		$html .= '<a class="ccm-sitemap-select-item" id="ccm-user-selector-' . $fieldName . '" onclick="ccmActiveUserField=this" dialog-append-buttons="true" dialog-width="90%" dialog-height="70%" dialog-modal="false" dialog-title="' . t('Choose User') . '" href="' . REL_DIR_FILES_TOOLS_REQUIRED . '/users/search_dialog?mode=choose_one">' . t('Select User') . '</a>';
+		$html .= '&nbsp;<a id="ccm-user-clear-' . $fieldName . '" href="javascript:void(0)" class="ccm-clear-selected-user" style="float: right; margin-top: -8px;' . $clearStyle . $displayTrashcanStyle . '"><img src="' . ASSETS_URL_IMAGES . '/icons/remove.png" style="vertical-align: middle; margin-left: 3px" /></a>';
 		$html .= '<input type="hidden" name="' . $fieldName . '" value="' . $selectedUID . '">';
 		$html .= '</div>'; 
 		$html .= '<script type="text/javascript">';
@@ -56,18 +59,34 @@ class Concrete5_Helper_Form_UserSelector {
 		$html .= '}';
 		$html .= '
 		$(function() { 
-		ccm_triggerSelectUser = function(uID, uName, uEmail) { ';
+		var this_ccm_triggerSelectUser = function(uID, uName, uEmail) { ';
 		if($javascriptFunc=='' || $javascriptFunc=='ccm_triggerSelectUser'){
 			$html .= '
 			var par = $(ccmActiveUserField).parent().find(\'.ccm-summary-selected-item-label\');
 			var pari = $(ccmActiveUserField).parent().find(\'[name=' . $fieldName . ']\');
 			par.html(uName);
 			pari.val(uID);
+			$(ccmActiveUserField).parent().find(\'.ccm-clear-selected-user\').show();
 			';
 		}else{
 			$html .= $javascriptFunc."(uID, uName); \n";
 		}
-		$html .= "}}); \r\n </script>";
+		$html .= "
+			};
+		
+			$('#ccm-user-clear-{$fieldName}').unbind().click(function(){
+				ccmActiveUserField = $('#ccm-user-selector-{$fieldName}').get(0);				
+				this_ccm_triggerSelectUser(null, null, null); //should clear the user selection
+				$(this).hide();
+			});
+				
+			$('#ccm-user-selector-{$fieldName}').click(function() {
+				//replace global function called by dialog with local scoped one.  
+				//this is important if we ever use custom javascript functions, so we don't overwrite them.
+				window.ccm_triggerSelectUser = this_ccm_triggerSelectUser;
+			});
+			
+		}); \r\n </script>";
 		return $html;
 	}
 	
