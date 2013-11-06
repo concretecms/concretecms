@@ -90,13 +90,14 @@ class Concrete5_Controller_Dashboard_Reports_Forms extends DashboardBaseControll
 			$numQuestionsToShow=2;
 			echo "\t<tr>\r\n";
 			echo "\t\t<td>". $dateHelper->getSystemDateTime($answerSet['created'])."</td>\r\n";
+			echo "\t\t<td>";
 			if ($answerSet['uID'] > 0) {
 				$ui = UserInfo::getByID($answerSet['uID']);
 				if (is_object($ui)) {
-				echo "\t\t<td>". $ui->getUserName()."</td>\r\n";						}
-			} else {
-				echo "\t\t<td></td>\r\n";
+					echo $ui->getUserName();
+				}
 			}
+			echo "</td>\r\n";
 			foreach($questions as $questionId=>$question){ 
 				$questionNumber++;
                 if ($question['inputType'] == 'checkboxlist'){
