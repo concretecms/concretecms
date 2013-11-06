@@ -311,7 +311,7 @@ class Concrete5_Model_Package extends Object {
 			$at = AttributeKeyCategory::getByID($item->getAttributeSetKeyCategoryID());
 			return t('%s (%s)', tc('AttributeSetName', $item->getAttributeSetName()), $txt->unhandle($at->getAttributeKeyCategoryHandle()));
 		} else if ($item instanceof GroupSet) {
-			return $item->getGroupSetNAme();
+			return $item->getGroupSetDisplayName();
 		} else if (is_a($item, 'AttributeKey')) {
 			$akc = AttributeKeyCategory::getByID($item->getAttributeKeyCategoryID());
 			return t(' %s (%s)', $txt->unhandle($item->getAttributeKeyHandle()), $txt->unhandle($akc->getAttributeKeyCategoryHandle()));

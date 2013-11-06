@@ -201,11 +201,45 @@
 		function getGroupName() {
 			return $this->gName;
 		}
-		
+
+		/** Returns the display name for this group (localized and escaped accordingly to $format)
+		* @param string $format = 'html'
+		*	Escape the result in html format (if $format is 'html').
+		*	If $format is 'text' or any other value, the display name won't be escaped.
+		* @return string
+		*/
+		public function getGroupDisplayName($format = 'html') {
+			$value = tc('GroupName', $this->getGroupName());
+			switch($format) {
+				case 'html':
+					return h($value);
+				case 'text':
+				default:
+					return $value;
+			}
+		}
+
 		function getGroupDescription() {
 			return $this->gDescription;
 		}
-		
+
+		/** Returns the display description for this group (localized and escaped accordingly to $format)
+		* @param string $format = 'html'
+		*	Escape the result in html format (if $format is 'html').
+		*	If $format is 'text' or any other value, the display name won't be escaped.
+		* @return string
+		*/
+		public function getGroupDisplayDescription($format = 'html') {
+			$value = tc('GroupDescription', $this->getGroupDescription());
+			switch($format) {
+				case 'html':
+					return h($value);
+				case 'text':
+				default:
+					return $value;
+			}
+		}
+
 		/**
 		 * Gets the group start date
 		 * if user is specified, returns in the current user's timezone
