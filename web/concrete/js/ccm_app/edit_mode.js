@@ -1,7 +1,7 @@
 /**
  * concrete5 in context editing
  */
-;(function(window, $){
+(function(window, $, _, c5) {
   "use strict";
 
   /**
@@ -12,10 +12,10 @@
    * Edit mode object for managing editing.
    */
   var EditMode = c5.EditMode = function EditMode() {
-    var my = this;
+    var my = this, area, block;
 
     c5.createGetterSetters.call(my, {
-      dragging:false,
+      dragging: false,
       areas: [],
       blocks: [],
       selectedCache: [],
@@ -28,9 +28,11 @@
     });
 
     c5.event.bind('EditModeBlockDrag', _.throttle(function editModeEditModeBlockDragEventHandler(event) {
-      if (!my.getDragging()) return;
-      var data = event.eventData, block = data.block, pep = data.pep;
-      var contenders = _.flatten(_(my.getAreas()).map(function(area){
+      if (!my.getDragging()) {
+        return;
+      }
+      var data = event.eventData, block = data.block, pep = data.pep,
+          contenders = _.flatten(_(my.getAreas()).map(function(area) {
         var drag_areas = area.contendingDragAreas(pep, block);
         return drag_areas;
       }), true);
@@ -51,7 +53,6 @@
       my.setDragging(true);
     });
 
-    var area, block;
     $('div.ccm-area').each(function(){
       area = new Area($(this), my);
       my.addArea(area);
@@ -111,6 +112,7 @@
 
     _(my.getPepSettings()).extend({
       deferPlacement: true,
+      moveTo: function() { my.dragPosition(this); },
       initiate: function blockDragInitiate(event, pep) {
         my.setDragging(true);
         my.getDragger().hide().appendTo(window.document.body).css(my.getElem().offset());
@@ -122,7 +124,6 @@
         });
       },
       drag: function blockDrag(event, pep) {
-        my.dragPosition(pep);
         _.defer(function(){
           c5.event.fire('EditModeBlockDrag', {block: my, pep: pep, event: event});
         });
@@ -219,7 +220,11 @@
       }
     });
 
-    my.getPeper().css('z-index', '50000 !important').pep(my.getPepSettings());
+    my.getPeper().css('z-index', '50000 !important').click(function(e){
+      e.preventDefault();
+      e.stopPropagation();
+      return false;
+    }).pep(my.getPepSettings());
   };
 
   /**
@@ -511,10 +516,13 @@
 
       var cos = _.bind(Math.cos, Math),
           sin = _.bind(Math.sin, Math);
-      var position_matrix = [[ 1, 0, x ], [ 0, 1, y ], [ 0, 0, 1 ]];
-      var rotation_matrix = [[ cos(a), sin(a), 0 ], [ -sin(a), cos(a), 0 ], [ 0 , 0 , 1 ]];
-
-      var final_matrix = my.multiplyMatrices(position_matrix, rotation_matrix);
+      var position_matrix = [[ 1, 0, x ], [ 0, 1, y ], [ 0, 0, 1 ]], rotation_matrix, final_matrix;
+      if (a) {
+        rotation_matrix = [[ cos(a), sin(a), 0 ], [ -sin(a), cos(a), 0 ], [ 0 , 0 , 1 ]];
+        final_matrix = my.multiplyMatrices(position_matrix, rotation_matrix);
+      } else {
+        final_matrix = position_matrix;
+      }
       return this.transform(my.matrixToCss(final_matrix), final_matrix);
     },
 
@@ -621,4 +629,4 @@
     }
   };
 
-}(window, jQuery));
+}(window, jQuery, _, c5));
