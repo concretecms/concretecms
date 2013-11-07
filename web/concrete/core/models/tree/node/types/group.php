@@ -12,7 +12,7 @@ class Concrete5_Model_GroupTreeNode extends TreeNode {
 		if ($this->treeNodeParentID == 0) {
 			return t('All Groups');
 		}
-		
+
 		$g = Group::getByID($this->gID);
 		return t($g->getGroupName());
 	}
@@ -27,7 +27,7 @@ class Concrete5_Model_GroupTreeNode extends TreeNode {
 		parent::move($newParent);
 		$g = $this->getTreeNodeGroupObject();
 		if (is_object($g)) {
-			$g->rescanGroupPath();
+			$g->rescanGroupPathRecursive();
 		}
 	}
 
