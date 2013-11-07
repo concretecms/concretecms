@@ -34,13 +34,14 @@
     drag:                           function(){},
     stop:                           function(){},
     rest:                           function(){},
+    moveTo:                         false,
     callIfNotStarted:               ['stop', 'rest'],
     startThreshold:                 [0,0],
     grid:                           [1,1],
     debug:                          false,
     activeClass:                    'pep-active',
     multiplier:                     1,
-    velocityMultiplier:             1.9,
+    velocityMultiplier:             2.5,
     shouldPreventDefault:           true,
     allowDragEventPropagation:      true,
     stopEvents:                     '',
@@ -48,7 +49,7 @@
     useCSSTranslation:              true,
     disableSelect:                  true,
     cssEaseString:                  "cubic-bezier(0.190, 1.000, 0.220, 1.000)",
-    cssEaseDuration:                750,
+    cssEaseDuration:                1000,
     shouldEase:                     true,
     droppable:                      false,
     droppableActiveClass:           'pep-dpa',
@@ -75,7 +76,7 @@
     this.$el = $(el);
 
     //  merge in defaults
-    this.options    = $.extend( {}, defaults, options );
+    this.options    = $.extend( {}, defaults, options) ;
 
     // store document/body so we don't need to keep grabbing them
     // throughout the code
@@ -301,11 +302,26 @@
             this.log({ type: 'velocity' });
 
             var hash = this.handleConstraint(dx, dy);
+            var xOp, yOp;
 
             // if using not using CSS transforms, move object via absolute position
-            if ( !this.shouldUseCSSTranslation() ){
-              var xOp     = ( dx >= 0 ) ? "+=" + Math.abs(dx/this.scale)*this.options.multiplier : "-=" + Math.abs(dx/this.scale)*this.options.multiplier;
-              var yOp     = ( dy >= 0 ) ? "+=" + Math.abs(dy/this.scale)*this.options.multiplier : "-=" + Math.abs(dy/this.scale)*this.options.multiplier;
+            if ( typeof this.options.moveTo === 'function') {
+              xOp     = ( dx >= 0 ) ? "+=" + Math.abs(dx/this.scale)*this.options.multiplier : "-=" + Math.abs(dx/this.scale)*this.options.multiplier;
+              yOp     = ( dy >= 0 ) ? "+=" + Math.abs(dy/this.scale)*this.options.multiplier : "-=" + Math.abs(dy/this.scale)*this.options.multiplier;
+
+              if ( this.options.constrainTo ) {
+                xOp = (hash.x !== false) ? hash.x : xOp;
+                yOp = (hash.y !== false) ? hash.y : yOp;
+              }
+
+              // only move along single axis, if necessary
+              if ( this.options.axis  === 'x' ) yOp = hash.y;
+              if ( this.options.axis  === 'y' ) xOp = hash.x;
+
+              this.options.moveTo.call(this, xOp, yOp);
+            } else if ( !this.shouldUseCSSTranslation() ){
+              xOp     = ( dx >= 0 ) ? "+=" + Math.abs(dx/this.scale)*this.options.multiplier : "-=" + Math.abs(dx/this.scale)*this.options.multiplier;
+              yOp     = ( dy >= 0 ) ? "+=" + Math.abs(dy/this.scale)*this.options.multiplier : "-=" + Math.abs(dy/this.scale)*this.options.multiplier;
 
               if ( this.options.constrainTo ) {
                 xOp = (hash.x !== false) ? hash.x : xOp;
@@ -408,7 +424,11 @@
 
             // ease it via JS, the last true tells it to animate.
             var jsAnimateFallback = !this.cssAnimationsSupported() || this.options.forceNonCSS3Movement;
-            this.moveTo(xOp, yOp, jsAnimateFallback);
+            if (typeof this.options.moveTo === 'function') {
+              this.options.moveTo.call(this, xOp, yOp);
+            } else {
+              this.moveTo(xOp, yOp, jsAnimateFallback);
+            }
 
             // when the rest occurs, remove active class and call
             // user's rest event.
@@ -470,37 +490,19 @@
   //    .css({top: "+=20", left: "-=30"}) syntax
   Pep.prototype.moveTo = function(x,y, animate) {
 
-    /**
-     * concrete5 polyfill
-     * See https://github.com/briangonzalez/jquery.pep.js/issues/90
-     */
-    if (!this.options.place) {
-      return;
-    }
-    /**
-     * End polyfill
-     */
     this.log({ type: 'delta', x: x, y: y });
     if ( animate ) {
       this.$el.animate({ top: y, left: x }, this.options.cssEaseDuration/2, 'easeOutQuad', {queue: false});
     } else{
       this.$el.stop(true, false).css({ top: y , left: x });
     }
+
   };
 
   //  moveToUsingTransforms();
   //    move the object to an x and/or y value
   Pep.prototype.moveToUsingTransforms = function(x,y) {
-    /**
-     * concrete5 polyfill
-     * See https://github.com/briangonzalez/jquery.pep.js/issues/90
-     */
-    if (!this.options.place) {
-      return;
-    }
-    /**
-     * End polyfill
-     */
+
     // Check for our initial values if we don't have them.
     var matrixArray  = this.matrixToArray( this.matrixString() );
     if ( !this.cssX )
@@ -1089,5 +1091,3 @@
   };
 
 }(jQuery, window));
-
-
