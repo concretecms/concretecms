@@ -6,7 +6,7 @@ module.exports = function(grunt) {
 		parameters = require(__dirname + '/Gruntfile.parameters.js');
 	}
 	parameters = parameters || {};
-	
+
 	var config = {};
 
 	config.DIR_REL = ('DIR_REL' in parameters) ? parameters.DIR_REL : '';
@@ -149,6 +149,7 @@ module.exports = function(grunt) {
 		ccm_app: {
 			dest: '<%= DIR_BASE %>/concrete/js/ccm.app.js',
 			src: [
+				'<%= DIR_BASE %>/concrete/js/ccm_app/json.js',
 				'<%= DIR_BASE %>/concrete/js/ccm_app/jquery.hoverIntent.js',
 				'<%= DIR_BASE %>/concrete/js/ccm_app/jquery.liveupdate.js',
 				'<%= DIR_BASE %>/concrete/js/ccm_app/chosen.jquery.js',
@@ -260,17 +261,17 @@ module.exports = function(grunt) {
 			files: css
 		}
 	};
-	
+
 	// Set Grunt tasks
 	grunt.initConfig(config);
 	grunt.registerTask('js:debug', jsTargets.debug);
 	grunt.registerTask('js:release', jsTargets.release);
 	grunt.registerTask('js', 'js:release');
-	
+
 	grunt.registerTask('css:debug', 'less:debug');
 	grunt.registerTask('css:release', 'less:release');
 	grunt.registerTask('css', 'css:release');
-	
+
 	grunt.registerTask('debug', ['js:debug', 'css:debug']);
 	grunt.registerTask('release', ['js:release', 'css:release']);
 
