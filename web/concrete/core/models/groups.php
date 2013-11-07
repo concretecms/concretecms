@@ -216,6 +216,17 @@
 			$db->Execute('update Groups set gPath = ? where gID = ?', array($path, $this->gID));
 		}
 
+		public function rescanGroupPathRecursive() {
+			$this->rescanGroupPath();
+
+			$node = GroupTreeNode::getTreeNodeByGroupID($this->gID);
+			$node->populateDirectChildrenOnly();
+			foreach ($node->getChildNodes() as $child) {
+				$group = $child->getTreeNodeGroupObject();
+				$group->rescanGroupPathRecursive();
+			}
+		}
+
 		function inGroup() {
 			return $this->inGroup;
 		}
@@ -252,18 +263,20 @@
 
 		public function getChildGroups() {
 			$node = GroupTreeNode::getTreeNodeByGroupID($this->gID);
-			$children = array();
 			if (is_object($node)) {
+				$children = array();
+
 				$node->populateDirectChildrenOnly();
 				$node_children = $node->getChildNodes();
+
 				foreach($node_children as $node_child) {
 					$group = $node_child->getTreeNodeGroupObject();
 					if (is_object($group)) {
 						$children[] = $group;
 					}
 				}
+				return $children;
 			}
-			return $children;
 		}
 
 		public function getParentGroup() {
