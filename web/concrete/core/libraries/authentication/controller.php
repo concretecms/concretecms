@@ -35,6 +35,14 @@ Interface AuthenticationTypeControllerInterface {
 	 * @return	boolean	Is this hash valid?
 	 */
 	public function verifyHash(User $u, $hash);
+	
+	
+	/**
+	 * tasks to finalize authentication, call on login events etc
+	 * @param User
+	 * @return void
+	*/
+	public function authenticateComplete(User $u);
 }
 
 // This class must be abstract, as it doesn't actually implement the methods required by AuthenticationTypeControllerInterface.

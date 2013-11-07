@@ -32,6 +32,9 @@ class Concrete5_Controller_AuthenticationType_Concrete extends AuthenticationTyp
 		if ($post['uMaintainLogin']) {
 			$user->setAuthTypeCookie('concrete');
 		}
+		
+		$this->authenticateComplete($user);
+		
 	}
 
 	public function deauthenticate(User $u) {
@@ -92,5 +95,12 @@ class Concrete5_Controller_AuthenticationType_Concrete extends AuthenticationTyp
 	}
 	
 	public function saveAuthenticationType($values) {}
+	
+	public function authenticateComplete(User $u) {
+		$u->setLastAuthType(AuthenticationType::getByHandle('concrete'));
+		$loginController = Loader::controller('/login');
+		Events::fire('on_user_login',$this);
+		$loginController->chooseRedirect();
+	}
 
 }
