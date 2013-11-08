@@ -362,3 +362,26 @@ ul.ccm-edit-mode-inline-commands {
   color: @dropdownLinkColor !important;
   text-decoration: none !important;
  }
+
+ /*
+  * Korvin's new stuff
+  */
+ div.ccm-area-drag-area {
+	-webkit-transition: outline-width 250ms, outline-color 250ms;
+
+	&.ccm-area-drag-area-contender {
+		background-color: rgba(0, 100, 0, 0.5);
+		outline: solid 5px rgba(0, 255, 0, .7);
+	}
+	&.ccm-area-drag-area-selectable {
+		outline-color: #006400;
+		outline-width: 10px;
+	}
+}
+a.ccm-block-edit-drag {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	width: 90px;
+	height: 90px;
+}
