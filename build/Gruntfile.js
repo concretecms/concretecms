@@ -54,6 +54,40 @@ module.exports = function(grunt) {
 
 	// List of the JavaScripts to be generated
 	var js = {
+		ccm_app: {
+			dest: '<%= DIR_BASE %>/concrete/js/ccm.app.js',
+			src: [
+				'<%= DIR_BASE %>/concrete/js/ccm_app/json.js',
+				'<%= DIR_BASE %>/concrete/js/ccm_app/concrete5.js',
+				'<%= DIR_BASE %>/concrete/js/ccm_app/jquery.hoverIntent.js',
+				'<%= DIR_BASE %>/concrete/js/ccm_app/jquery.liveupdate.js',
+				'<%= DIR_BASE %>/concrete/js/ccm_app/chosen.jquery.js',
+				'<%= DIR_BASE %>/concrete/js/ccm_app/jquery.pep.js',
+				'<%= DIR_BASE %>/concrete/js/ccm_app/base.js',
+				'<%= DIR_BASE %>/concrete/js/ccm_app/ui.js',
+				'<%= DIR_BASE %>/concrete/js/ccm_app/edit_mode.js',
+				'<%= DIR_BASE %>/concrete/js/ccm_app/edit_page.js',
+				'<%= DIR_BASE %>/concrete/js/ccm_app/filemanager.js',
+				'<%= DIR_BASE %>/concrete/js/ccm_app/jquery.cookie.js',
+				'<%= DIR_BASE %>/concrete/js/ccm_app/panels.js',
+				'<%= DIR_BASE %>/concrete/js/ccm_app/dialog.js',
+				'<%= DIR_BASE %>/concrete/js/ccm_app/alert.js',
+				'<%= DIR_BASE %>/concrete/js/ccm_app/newsflow.js',
+				'<%= DIR_BASE %>/concrete/js/ccm_app/page_reindexing.js',
+				'<%= DIR_BASE %>/concrete/js/ccm_app/group_tree.js',
+				'<%= DIR_BASE %>/concrete/js/ccm_app/in_context_menu.js',
+				'<%= DIR_BASE %>/concrete/js/ccm_app/quicksilver.js',
+				'<%= DIR_BASE %>/concrete/js/ccm_app/remote_marketplace.js',
+				'<%= DIR_BASE %>/concrete/js/ccm_app/progressive_operations.js',
+				'<%= DIR_BASE %>/concrete/js/ccm_app/inline_edit.js',
+				'<%= DIR_BASE %>/concrete/js/ccm_app/search.js',
+				'<%= DIR_BASE %>/concrete/js/ccm_app/page_search.js',
+				'<%= DIR_BASE %>/concrete/js/ccm_app/custom_style.js',
+				'<%= DIR_BASE %>/concrete/js/ccm_app/tabs.js',
+				'<%= DIR_BASE %>/concrete/js/ccm_app/toolbar.js',
+				'<%= DIR_BASE %>/concrete/js/ccm_app/themes.js'
+			]
+		},
 		bootstrap: {
 			dest: '<%= DIR_BASE %>/concrete/js/bootstrap.js',
 			src: [
@@ -146,37 +180,6 @@ module.exports = function(grunt) {
 			dest: '<%= DIR_BASE %>/concrete/js/ccm_profile.js',
 			src: '<%= DIR_BASE %>/concrete/js/ccm_profile/base.js'
 		},
-		ccm_app: {
-			dest: '<%= DIR_BASE %>/concrete/js/ccm.app.js',
-			src: [
-				'<%= DIR_BASE %>/concrete/js/ccm_app/json.js',
-				'<%= DIR_BASE %>/concrete/js/ccm_app/jquery.hoverIntent.js',
-				'<%= DIR_BASE %>/concrete/js/ccm_app/jquery.liveupdate.js',
-				'<%= DIR_BASE %>/concrete/js/ccm_app/chosen.jquery.js',
-				'<%= DIR_BASE %>/concrete/js/ccm_app/base.js',
-				'<%= DIR_BASE %>/concrete/js/ccm_app/ui.js',
-				'<%= DIR_BASE %>/concrete/js/ccm_app/edit_page.js',
-				'<%= DIR_BASE %>/concrete/js/ccm_app/filemanager.js',
-				'<%= DIR_BASE %>/concrete/js/ccm_app/jquery.cookie.js',
-				'<%= DIR_BASE %>/concrete/js/ccm_app/panels.js',
-				'<%= DIR_BASE %>/concrete/js/ccm_app/dialog.js',
-				'<%= DIR_BASE %>/concrete/js/ccm_app/alert.js',
-				'<%= DIR_BASE %>/concrete/js/ccm_app/newsflow.js',
-				'<%= DIR_BASE %>/concrete/js/ccm_app/page_reindexing.js',
-				'<%= DIR_BASE %>/concrete/js/ccm_app/group_tree.js',
-				'<%= DIR_BASE %>/concrete/js/ccm_app/in_context_menu.js',
-				'<%= DIR_BASE %>/concrete/js/ccm_app/quicksilver.js',
-				'<%= DIR_BASE %>/concrete/js/ccm_app/remote_marketplace.js',
-				'<%= DIR_BASE %>/concrete/js/ccm_app/progressive_operations.js',
-				'<%= DIR_BASE %>/concrete/js/ccm_app/inline_edit.js',
-				'<%= DIR_BASE %>/concrete/js/ccm_app/search.js',
-				'<%= DIR_BASE %>/concrete/js/ccm_app/page_search.js',
-				'<%= DIR_BASE %>/concrete/js/ccm_app/custom_style.js',
-				'<%= DIR_BASE %>/concrete/js/ccm_app/tabs.js',
-				'<%= DIR_BASE %>/concrete/js/ccm_app/toolbar.js',
-				'<%= DIR_BASE %>/concrete/js/ccm_app/themes.js'
-			]
-		},
 		ccm_imageeditor: {
 			dest: '<%= DIR_BASE %>/concrete/js/ccm.imageeditor.js',
 			src: '<%= DIR_BASE %>/concrete/js/image_editor/image_editor.js'
@@ -196,6 +199,7 @@ module.exports = function(grunt) {
 
 	// List of the CSS files to be generated
 	var css = {
+		'<%= DIR_BASE %>/concrete/css/ccm.app.css': '<%= DIR_BASE %>/concrete/css/ccm_app/build/ccm.app.less',
 		'<%= DIR_BASE %>/concrete/css/jquery.ui.css': '<%= DIR_BASE %>/concrete/css/ccm_app/build/jquery.ui.less',
 		'<%= DIR_BASE %>/concrete/css/jquery.rating.css': '<%= DIR_BASE %>/concrete/css/ccm_app/build/jquery.rating.less',
 		'<%= DIR_BASE %>/concrete/css/ccm.default.theme.css': '<%= DIR_BASE %>/concrete/css/ccm_app/build/ccm.default.theme.less',
@@ -211,8 +215,7 @@ module.exports = function(grunt) {
 		'<%= DIR_BASE %>/concrete/css/ccm.gathering.display.css': '<%= DIR_BASE %>/concrete/css/ccm_app/build/ccm.gathering.display.less',
 		'<%= DIR_BASE %>/concrete/css/ccm.gathering.base.css': '<%= DIR_BASE %>/concrete/css/ccm_app/build/ccm.gathering.base.less',
 		'<%= DIR_BASE %>/concrete/css/redactor.css': '<%= DIR_BASE %>/concrete/css/ccm_app/build/redactor.less',
-		'<%= DIR_BASE %>/concrete/css/ccm.topics.css': '<%= DIR_BASE %>/concrete/css/ccm_app/build/topics.less',
-		'<%= DIR_BASE %>/concrete/css/ccm.app.css': '<%= DIR_BASE %>/concrete/css/ccm_app/build/ccm.app.less'
+		'<%= DIR_BASE %>/concrete/css/ccm.topics.css': '<%= DIR_BASE %>/concrete/css/ccm_app/build/topics.less'
 	};
 	// Let's include the dependencies
 	grunt.loadNpmTasks('grunt-contrib-concat');

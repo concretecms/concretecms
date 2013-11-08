@@ -5,7 +5,7 @@ if (is_object($c)) {
 	$cp = new Permissions($c);
 }
 
-/** 
+/**
  * Handle page title
  */
 
@@ -28,7 +28,7 @@ if (is_object($c)) {
 		}
 	}
 	$pageDescription = (!isset($pageDescription) || !$pageDescription) ? $c->getCollectionDescription() : $pageDescription;
-	$cID = $c->getCollectionID(); 
+	$cID = $c->getCollectionID();
 	$isEditMode = ($c->isEditMode()) ? "true" : "false";
 	$isArrangeMode = ($c->isArrangeMode()) ? "true" : "false";
 
@@ -88,6 +88,10 @@ var CCM_REL = "<?php echo DIR_REL?>";
 $v = View::getInstance();
 $v->requireAsset('javascript', 'jquery');
 
+if ($isEditMode) {
+	$v->requireAsset('javascript', 'underscore');
+}
+
 if (defined('ENABLE_USER_PROFILES') && ENABLE_USER_PROFILES && $u->isRegistered()) {
 	$v->requireAsset('core/account');
 	$this->addFooterItem('<script type="text/javascript">$(function() { ccm_enableUserProfileMenu(); });</script>');
@@ -107,7 +111,7 @@ if($favIconFID) {
 if($appleIconFID) {
 	$f = File::getByID($appleIconFID); ?>
 	<link rel="apple-touch-icon" href="<?php echo $f->getRelativePath()?>"  />
-<?php } 
+<?php }
 
 if($modernIconFID) {
 	$f = File::getByID($modernIconFID);
@@ -117,9 +121,9 @@ if($modernIconFID) {
 		?><meta name="msapplication-TileColor" content="<?php echo $modernIconBGColor; ?>" /><?php
 		echo "\n";
 	}
-} 
+}
 
-if (is_object($cp)) { 
+if (is_object($cp)) {
 
 	Loader::element('page_controls_header', array('cp' => $cp, 'c' => $c));
 
