@@ -1,11 +1,12 @@
 var c5 = (function(ccm_event) {
-  "use strict";
+  'use strict';
 
   function getAttribute(attributes, key) {
     return attributes[key];
   }
   function setAttribute(attributes, key, value) {
-    return attributes[key] = value;
+    attributes[key] = value;
+    return value;
   }
 
   var concrete5 = {
@@ -23,11 +24,9 @@ var c5 = (function(ccm_event) {
       obj.setAttr = _.partial(setAttribute, attributes);
       _(attributes).each(function(value, key){
 
-        key += ""; // Make sure we always have a string.
-        var get_method = "get" + key.substr(0, 1).toUpperCase() + key.substr(1),
-            set_method = "set" + key.substr(0, 1).toUpperCase() + key.substr(1),
-            defaults = {};
-
+        key += ''; // Make sure we always have a string.
+        var get_method = 'get' + key.substr(0, 1).toUpperCase() + key.substr(1),
+            set_method = 'set' + key.substr(0, 1).toUpperCase() + key.substr(1);
         if (typeof obj[get_method] == 'undefined') {
           obj[get_method] = _.partial(getAttribute, attributes, key);
         }

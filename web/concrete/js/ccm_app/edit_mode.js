@@ -2,7 +2,7 @@
  * concrete5 in context editing
  */
 (function(window, $, _, c5) {
-  "use strict";
+  'use strict';
 
   /**
    * First lay out objects
@@ -47,6 +47,31 @@
       c5.event.fire('EditModeContenders', []);
       c5.event.fire('EditModeSelectableContender');
       my.setDragging(false);
+    });
+
+    c5.event.bind('EditModeBlockMove', function editModeEditModeBlockMoveEventHandler(e) {
+      var moved_block = e.eventData, area = moved_block.getArea(), data = {
+        cID: CCM_CID,
+        ccm_token: CCM_SECURITY_TOKEN,
+        btask: 'ajax_do_arrange',
+        area: area.getId(),
+        block: moved_block.getId(),
+        blocks: {}
+      };
+      _(area.getBlocks()).each(function(block, key){
+        data.blocks[key] = block.getId();
+      });
+      var loading = false, timeout = setTimeout(function() {
+        loading = true;
+        $.fn.dialog.showLoader();
+      }, 150);
+
+      $.post(CCM_DISPATCHER_FILENAME, data, function() {
+        if (loading) {
+          $.fn.dialog.hideLoader();
+        }
+        clearTimeout(timeout);
+      });
     });
 
     c5.event.bind('EditModeBlockDragStart', function editModeEditModeBlockDragStartEventHandler() {
@@ -145,13 +170,20 @@
         });
       },
       stop: function blockDragStop(event, pep) {
+        var selected_block;
+        my.getDragger().stop(1);
         my.getDragger().css({top:0, left:0});
         my.dragPosition(pep);
         if (my.getSelected()) {
           my.getArea().removeBlock(my);
           my.getSelected().getElem().after(my.getElem());
-          my.getSelected().getArea().addBlock(my);
+          if (selected_block = my.getSelected().getBlock()) {
+            my.getSelected().getArea().addBlock(my, selected_block);
+          } else {
+            my.getSelected().getArea().addBlockToIndex(my, 0);
+          }
           my.getPeper().pep(my.getPepSettings());
+          c5.event.fire('EditModeBlockMove', my);
         }
 
         var dragger_start = {
@@ -330,11 +362,16 @@
 
     /**
      * Add block to area
-     * @param  Block   block block to add
-     * @return Boolean Success, always true.
+     * @param  {Block}   block       block to add
+     * @param  {Block}   sub_block The block that should be above the added block
+     * @return {Boolean}             Success, always true
      */
-    addBlock: function areaAddBlock(block) {
+    addBlock: function areaAddBlock(block, sub_block) {
       var my = this;
+
+      if (sub_block) {
+        return this.addBlockToIndex(block, _(my.getBlocks()).indexOf(sub_block));
+      }
 
       block.setArea(my);
       my.getBlocks().push(block);
@@ -343,9 +380,21 @@
     },
 
     /**
+     * Add to specific index, pipes to addBlock
+     * @param  {Block}   block Block to add
+     * @param  {int}     index Index to add to
+     * @return {Boolean}       Success, always true
+     */
+    addBlockToIndex: function areaAddBlockToIndex(block, index) {
+      block.setArea(this);
+      this.getBlocks().splice(index, 0, block);
+      return true;
+    },
+
+    /**
      * Remove block from area
-     * @param  Block   block The block to remove.
-     * @return Boolean       Success, always true.
+     * @param  {Block}   block The block to remove.
+     * @return {Boolean}       Success, always true.
      */
     removeBlock: function areaRemoveBlock(block) {
       var my = this;
@@ -356,15 +405,17 @@
       var drag_area = _.first(_(my.getDragAreas()).filter(function(drag_area){
         return drag_area.getBlock() == block;
       }));
-      drag_area.getElem().remove();
-      my.setDragAreas(_(my.getDragAreas()).without(drag_area));
+      if (drag_area) {
+        drag_area.getElem().remove();
+        my.setDragAreas(_(my.getDragAreas()).without(drag_area));
+      }
       return true;
     },
 
     /**
      * Add a drag area
-     * @param  Block    block The block to add this area below.
-     * @return DragArea       The added DragArea
+     * @param  {Block}    block The block to add this area below.
+     * @return {DragArea}       The added DragArea
      */
     addDragArea: function areaAddDragArea(block) {
       var my = this, elem, drag_area;
@@ -387,9 +438,9 @@
 
     /**
      * Find the contending DragArea's
-     * @param  Pep      pep   The Pep object from the event.
-     * @param  Block    block The Block object from the event.
-     * @return Array          Array of all drag areas that are capable of accepting the block.
+     * @param  {Pep}      pep   The Pep object from the event.
+     * @param  {Block}    block The Block object from the event.
+     * @return {Array}          Array of all drag areas that are capable of accepting the block.
      */
     contendingDragAreas: function areaContendingDragAreas(pep, block) {
       var my = this;
@@ -440,16 +491,16 @@
 
       // Modified transformie polyfill
       if(element.filters) {
-        if (!element.filters["DXImageTransform.Microsoft.Matrix"]) {
-          element.style.filter = (element.style.filter ? '' : ' ' ) + "progid:DXImageTransform.Microsoft.Matrix(sizingMethod='auto expand')";
+        if (!element.filters['DXImageTransform.Microsoft.Matrix']) {
+          element.style.filter = (element.style.filter ? '' : ' ' ) + 'progid:DXImageTransform.Microsoft.Matrix(sizingMethod=\'auto expand\')';
         }
 
-        element.filters["DXImageTransform.Microsoft.Matrix"].M11 = matrix.elements[0][0];
-        element.filters["DXImageTransform.Microsoft.Matrix"].M12 = matrix.elements[0][1];
-        element.filters["DXImageTransform.Microsoft.Matrix"].M21 = matrix.elements[1][0];
-        element.filters["DXImageTransform.Microsoft.Matrix"].M22 = matrix.elements[1][1];
-        element.style.left = -(element.offsetWidth/2) + (element.clientWidth/2) + "px";
-        element.style.top = -(element.offsetHeight/2) + (element.clientHeight/2) + "px";
+        element.filters['DXImageTransform.Microsoft.Matrix'].M11 = matrix.elements[0][0];
+        element.filters['DXImageTransform.Microsoft.Matrix'].M12 = matrix.elements[0][1];
+        element.filters['DXImageTransform.Microsoft.Matrix'].M21 = matrix.elements[1][0];
+        element.filters['DXImageTransform.Microsoft.Matrix'].M22 = matrix.elements[1][1];
+        element.style.left = -(element.offsetWidth/2) + (element.clientWidth/2) + 'px';
+        element.style.top = -(element.offsetHeight/2) + (element.clientHeight/2) + 'px';
       }
 
       return true;
@@ -501,7 +552,7 @@
         }
         my.setRotationDeg(start_rotation - now);
         my.renderPosition();
-      }}, "easeOutElastic");
+      }}, 'easeOutElastic');
       return true;
     },
 
