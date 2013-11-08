@@ -9,7 +9,7 @@ for ($i = 0; $i < count($categories); $i++) {
 	?>
 
 	<div class="dashboard-icon-list">
-	<div class="well" style="visibility: hidden">
+	<div class="well">
 
 	<ul class="nav nav-list">
 	<li class="nav-header"><?=t($cat->getCollectionName())?></li>
