@@ -95,6 +95,7 @@ class Concrete5_Library_DispatcherRouteCallback extends RouteCallback {
 			}
 		}
 
+		$request->setCurrentPage($c);
 		require(DIR_BASE_CORE . '/startup/process.php');
 		$u = new User();
 		if (STATISTICS_TRACK_PAGE_VIEWS == 1) {
@@ -115,6 +116,7 @@ class Concrete5_Library_DispatcherRouteCallback extends RouteCallback {
 		$controller->runAction($requestTask, $requestParameters);
 		$c->setController($controller);
 		$view = $controller->getViewObject();
+		// we update the current page with the one bound to this controller.
 		$request->setCurrentPage($c);
 		return $this->sendResponse($view);
 	}
