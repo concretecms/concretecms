@@ -216,6 +216,17 @@ class Concrete5_Model_Group extends Object {
 		$db->Execute('update Groups set gPath = ? where gID = ?', array($path, $this->gID));
 	}
 
+	public function rescanGroupPathRecursive() {
+		$this->rescanGroupPath();
+
+		$node = GroupTreeNode::getTreeNodeByGroupID($this->gID);
+		$node->populateDirectChildrenOnly();
+		foreach ($node->getChildNodes() as $child) {
+			$group = $child->getTreeNodeGroupObject();
+			$group->rescanGroupPathRecursive();
+		}
+	}
+
 	function inGroup() {
 		return $this->inGroup;
 	}
@@ -421,7 +432,7 @@ class Concrete5_Model_Group extends Object {
 	public function getPackageHandle() {
 		return PackageList::getHandle($this->pkgID);
 	}
-	
+
 	function update($gName, $gDescription) {
 		$db = Loader::db();
 		if ($this->gID) {
@@ -525,12 +536,12 @@ class Concrete5_Model_Group extends Object {
 		$db = Loader::db();
 		$db->Execute('update Groups set gIsAutomated = 0, gCheckAutomationOnRegister = 0, gCheckAutomationOnLogin = 0, gCheckAutomationOnJobRun = 0 where gID = ?', array($this->getGroupID()));
 	}
-			
+
 	public function removeGroupExpiration() {
 		$db = Loader::db();
 		$db->Execute('update Groups set gUserExpirationIsEnabled = 0, gUserExpirationMethod = null, gUserExpirationSetDateTime = null, gUserExpirationInterval = 0, gUserExpirationAction = null where gID = ?', array($this->getGroupID()));
 	}
-	
+
 	public function setBadgeOptions($gBadgeFID, $gBadgeDescription, $gBadgeCommunityPointValue) {
 		$db = Loader::db();
 		$db->Execute('update Groups set gIsBadge = 1, gBadgeFID = ?, gBadgeDescription = ?, gBadgeCommunityPointValue = ? where gID = ?', array($gBadgeFID, $gBadgeDescription, $gBadgeCommunityPointValue, $this->gID));
