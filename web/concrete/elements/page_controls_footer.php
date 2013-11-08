@@ -88,10 +88,6 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
 
 				<li class="pull-right"><a href="#" data-panel-url="<?=URL::to('/system/panels/sitemap')?>" data-launch-panel="sitemap"><i class="glyphicon glyphicon-list-alt"></i></a>
 
-				<?
-				print $dh->getIntelligentSearchMenu();
-				?>
-
 					</li>
 				<li class="ccm-toolbar-search pull-right"><i class="glyphicon glyphicon-search"></i> <input type="search" id="ccm-nav-intelligent-search" tabindex="1" /></li>
 				<?
@@ -110,6 +106,10 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
 			</ul>
 
 		</div>
+
+	<?
+	print $dh->getIntelligentSearchMenu();
+	?>
 
 	<? if ($pageInUseBySomeoneElse) { ?>
 		<div id="ccm-page-status-bar">
