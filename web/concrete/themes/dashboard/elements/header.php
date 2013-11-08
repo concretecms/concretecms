@@ -54,14 +54,13 @@ if (!$frontendPageID) {
         <li class="ccm-toolbar-account pull-left"><a href="<?=$backLink?>"><i class="glyphicon glyphicon-arrow-left"></i></a>
 		<li class="pull-right"><a href="<?=URL::to('/dashboard')?>" data-launch-panel="dashboard" class="ccm-launch-panel-active" data-panel-url="<?=URL::to('/system/panels/dashboard')?>"><i class="glyphicon glyphicon-th-large"></i></a>
 		<li class="pull-right"><a href="#" data-panel-url="<?=URL::to('/system/panels/sitemap')?>" data-launch-panel="sitemap"><i class="glyphicon glyphicon-list-alt"></i></a></li>
-        <?
-        $dh = Loader::helper('concrete/dashboard');
-        print $dh->getIntelligentSearchMenu();
-        ?>
         <li class="ccm-toolbar-search pull-right"><i class="glyphicon glyphicon-search"></i> <input type="search" id="ccm-nav-intelligent-search" tabindex="1" /></li>
     </ul>
 </div>
-
+<?
+$dh = Loader::helper('concrete/dashboard');
+print $dh->getIntelligentSearchMenu();
+?>
 <div id="ccm-panel-dashboard" class="ccm-panel ccm-panel-right ccm-panel-transition-slide ccm-panel-active ccm-panel-loaded">
 	<div class="ccm-panel-content-wrapper ccm-ui">
 		<div class="ccm-panel-content ccm-panel-content-visible">
