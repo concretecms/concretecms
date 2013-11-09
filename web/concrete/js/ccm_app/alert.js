@@ -4,19 +4,16 @@
 
 var ccmAlert = {  
     notice : function(title, message, onCloseFn) {
-        $.fn.dialog.open({
-            href: CCM_TOOLS_PATH + '/alert',
+        $('<div id="ccm-popup-alert" class="ccm-ui"><div id="ccm-popup-alert-message" class="alert alert-danger">' + message + '</div></div>').dialog({
             title: title,
             width: 320,
             height: 160,
-            modal: false, 
-			onOpen: function () {
-        		$("#ccm-popup-alert-message").html(message);
-			},
+            modal: true,
 			onDestroy: onCloseFn
-        }); 
+        });
     },
-    
+
+
     hud: function(message, time, icon, title) {
         if (title == null) {    
             var messageText = message;
