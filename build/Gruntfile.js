@@ -74,7 +74,6 @@ module.exports = function(grunt) {
 				'<%= DIR_BASE %>/concrete/js/ccm_app/alert.js',
 				'<%= DIR_BASE %>/concrete/js/ccm_app/newsflow.js',
 				'<%= DIR_BASE %>/concrete/js/ccm_app/page_reindexing.js',
-				'<%= DIR_BASE %>/concrete/js/ccm_app/group_tree.js',
 				'<%= DIR_BASE %>/concrete/js/ccm_app/in_context_menu.js',
 				'<%= DIR_BASE %>/concrete/js/ccm_app/quicksilver.js',
 				'<%= DIR_BASE %>/concrete/js/ccm_app/remote_marketplace.js',
@@ -138,6 +137,11 @@ module.exports = function(grunt) {
 		ccm_topics: {
 			dest: '<%= DIR_BASE %>/concrete/js/ccm.topics.js',
 			src: '<%= DIR_BASE %>/concrete/js/topics/topics.js'
+		},
+
+		ccm_groups: {
+			dest: '<%= DIR_BASE %>/concrete/js/ccm.groups.js',
+			src: '<%= DIR_BASE %>/concrete/js/groups/groups.js'
 		},
 
 		ccm_layouts: {

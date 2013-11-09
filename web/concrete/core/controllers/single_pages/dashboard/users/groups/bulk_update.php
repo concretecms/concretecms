@@ -52,7 +52,7 @@ class Concrete5_Controller_Dashboard_Users_Groups_BulkUpdate extends DashboardBa
 
 	}
 	public function search() {
-		$this->requireAsset('dynatree');
+		$this->requireAsset('core/groups');
 		$tree = GroupTree::get();
 		$this->set("tree", $tree);
 		$gName = Loader::helper('security')->sanitizeString($_REQUEST['gName']);

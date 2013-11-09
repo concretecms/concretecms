@@ -29,7 +29,7 @@ if (!$tp->canAccessGroupSearch()) {
 	
 	$gResults = $gl->getPage();
 	$ga = ResponseAssetGroup::get();
-	$ga->requireAsset('dynatree');
+	$ga->requireAsset('core/groups');
 	?>
 
 	<div class="ccm-pane-options">
