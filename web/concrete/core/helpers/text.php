@@ -56,10 +56,15 @@ class Concrete5_Helper_Text {
 		$text = strtolower(str_replace(array("\r", "\n", "\t"), ' ', $this->asciify($handle, $locale)));
 		if($removeExcludedWords) {
 			$excludeSeoWords = Config::get('SEO_EXCLUDE_WORDS');
-			if($excludeSeoWords) {
-				$remove_list = explode(',', $excludeSeoWords);
-				$remove_list = array_map('trim', $remove_list);
-				$remove_list = array_filter($remove_list, 'strlen');
+			if(is_string($excludeSeoWords)) {
+				if(strlen($excludeSeoWords)) {
+					$remove_list = explode(',', $excludeSeoWords);
+					$remove_list = array_map('trim', $remove_list);
+					$remove_list = array_filter($remove_list, 'strlen');
+				}
+				else {
+					$remove_list = array();
+				}
 			}
 			else {
 				Loader::library('3rdparty/urlify');
