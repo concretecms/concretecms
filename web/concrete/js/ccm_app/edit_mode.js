@@ -29,17 +29,17 @@
 
     c5.event.bind('EditModeBlockEditInline', function(event) {
       var data = event.eventData, block = data.block, area = block.getArea();
-      CCMInlineEditMode.editBlock(CCM_CID, area.getId(), area.getAreaHandle(), block.getId(), $(this).attr('data-menu-action-params'));
+      window.CCMInlineEditMode.editBlock(CCM_CID, area.getId(), area.getHandle(), block.getId(), $(this).data('menu-action-params'));
     });
 
     c5.event.bind('EditModeBlockAddToClipboard', function(event) {
       var data = event.eventData, block = data.block, area = block.getArea();
-      CCMEditMode.addBlockToScrapbook(CCM_CID, block.getId(), area.getAreaHandle());
+      window.CCMEditMode.addBlockToScrapbook(CCM_CID, block.getId(), area.getHandle());
     });
 
     c5.event.bind('EditModeBlockDelete', function(event) {
       var data = event.eventData, block = data.block, area = block.getArea(), message = data.message;
-      CCMEditMode.deleteBlock(CCM_CID, block.getId(), area.getId(), area.getAreaHandle(), message);
+      window.CCMEditMode.deleteBlock(CCM_CID, block.getId(), area.getId(), area.getHandle(), message);
     });
 
     c5.event.bind('EditModeBlockDrag', _.throttle(function editModeEditModeBlockDragEventHandler(event) {
@@ -67,7 +67,7 @@
     c5.event.bind('EditModeBlockMove', function editModeEditModeBlockMoveEventHandler(e) {
       var moved_block = e.eventData, area = moved_block.getArea(), data = {
         cID: CCM_CID,
-        ccm_token: CCM_SECURITY_TOKEN,
+        ccm_token: window.CCM_SECURITY_TOKEN,
         btask: 'ajax_do_arrange',
         area: area.getId(),
         block: moved_block.getId(),
@@ -81,7 +81,7 @@
         $.fn.dialog.showLoader();
       }, 150);
 
-      $.post(CCM_DISPATCHER_FILENAME, data, function() {
+      $.post(window.CCM_DISPATCHER_FILENAME, data, function() {
         if (loading) {
           $.fn.dialog.hideLoader();
         }
@@ -114,7 +114,7 @@
     c5.createGetterSetters.call(my, {
       id: elem.data('area-id'),
       elem: elem,
-      areaHandle: elem.data('area-handle'),
+      handle: elem.data('area-handle'),
       dragAreas: [],
       blocks: [],
       editMode: edit_mode,
@@ -158,7 +158,7 @@
     elem.find('a[data-menu-action=block_dialog]').each(function() {
       var href = $(this).attr('data-menu-href'), area = edit_mode.getAreaByID(my.getAreaId());
       href += (href.indexOf('?') !== -1) ? '&cID=' + CCM_CID : '?cID=' + CCM_CID;
-      href += '&arHandle=' + encodeURIComponent(area.getAreaHandle()) + '&bID=' + my.getId();
+      href += '&arHandle=' + encodeURIComponent(area.getHandle()) + '&bID=' + my.getId();
       $(this).attr('href', href);
       $(this).dialog();
     });
@@ -210,7 +210,7 @@
         if (my.getSelected()) {
           my.getArea().removeBlock(my);
           my.getSelected().getElem().after(my.getElem());
-          if (selected_block = my.getSelected().getBlock()) {
+            if (selected_block = my.getSelected().getBlock()) {
             my.getSelected().getArea().addBlock(my, selected_block);
           } else {
             my.getSelected().getArea().addBlockToIndex(my, 0);
@@ -319,10 +319,11 @@
     });
   };
 
-
   EditMode.prototype = {
 
     panelOpened: function editModePanelOpened(panel) {
+      // @todo: panel logic :)
+      return panel;
     },
 
     getAreaByID: function areaGetByID(arID) {
