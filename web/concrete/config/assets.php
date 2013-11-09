@@ -174,6 +174,14 @@ $al->registerGroup('core/topics', array(
 	array('css', 'core/topics')
 ));
 
+// Groups (Group Tree)
+$al->register('javascript', 'core/groups', 'js/ccm.groups.js', array('postprocess' => false));
+$al->registerGroup('core/groups', array(
+	array('javascript', 'dynatree'),
+	array('css', 'dynatree'),
+	array('javascript', 'core/groups')
+));
+
 // Page Type Compose Form
 $al->register('javascript', 'core/composer', 'js/ccm.composer.js', array('postprocess' => false));
 $al->register('css', 'core/composer', 'css/ccm.composer.css', array('postprocess' => false));

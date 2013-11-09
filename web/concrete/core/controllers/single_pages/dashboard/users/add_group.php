@@ -39,10 +39,7 @@ class Concrete5_Controller_Page_Dashboard_Users_AddGroup extends DashboardContro
 	public function view() {
 		$tree = GroupTree::get();
 		$this->set('tree', $tree);
-		$this->requireAsset('dynatree');
-
-		$this->addHeaderItem(Loader::helper('html')->css('dynatree/dynatree.css'));
-		$this->addFooterItem(Loader::helper('html')->javascript('dynatree/dynatree.js'));
+		$this->requireAsset('core/groups');
 	}
 
 	public function do_add() {

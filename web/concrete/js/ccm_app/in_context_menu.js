@@ -190,7 +190,9 @@ $.fn.ccmmenu.showmenu = function(e, $menu) {
 	$.fn.ccmmenu.isactive = true;
 
 	var $pp = $menu.clone(true, true);
-	$pp.addClass($.fn.ccmmenu.$overmenu.menuClass);
+	if ($.fn.ccmmenu.$overmenu) {
+		$pp.addClass($.fn.ccmmenu.$overmenu.menuClass);
+	}
 	$pp.appendTo($.fn.ccmmenu.$holder);
 	$pp.find('.dialog-launch').dialog();
 

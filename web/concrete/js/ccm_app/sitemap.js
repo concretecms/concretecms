@@ -221,7 +221,7 @@
     },
 
 	getMenu: function(data, options) {
-		var menu = '<div class="ccm-sitemap-menu popover fade"><div class="arrow"></div><div class="popover-inner">';
+		var menu = '<div class="ccm-popover-menu popover fade"><div class="arrow"></div><div class="popover-inner">';
 		menu += '<ul class="dropdown-menu">';
 		if (data.isTrash && data.numSubpages) {
 			menu += '<li><a onclick="$.fn.ccmsitemap(\'deleteForever\', this, ' + data.cID + ')" href="javascript:void(0)">' + ccmi18n_sitemap.emptyTrash + '<\/a><\/li>';
