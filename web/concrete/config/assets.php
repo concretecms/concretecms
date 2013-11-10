@@ -19,6 +19,9 @@ $al->registerGroup('jqueryui', array(
 	array('css', 'jqueryui')
 ));
 
+// Underscore
+$al->register('javascript', 'underscore', 'js/underscore.js');
+
 // dropzone
 $al->register('javascript', 'dropzone', 'js/dropzone.js');
 
@@ -27,9 +30,6 @@ $al->register('javascript', 'jquery/form', 'js/jquery.form.js');
 
 // jquery metadata
 $al->register('javascript', 'jquery/metadata', 'js/jquery.metadata.js');
-
-// jquery metadata
-$al->register('javascript', 'underscore', 'js/underscore.js');
 
 // jquery rating
 $al->register('javascript', 'jquery/rating', 'js/jquery.rating.js');
@@ -106,10 +106,8 @@ $al->registerGroup('core/app', array(
 	array('javascript', 'bootstrap/tooltip'),
 	array('javascript', 'jqueryui'),
 	array('javascript', 'core/app'),
-/*	array('javascript', 'redactor'), */
 	array('javascript', 'jquery/form'),
 	array('css', 'core/app'),
-/*	array('css', 'redactor'), */
 	array('css', 'jqueryui')
 ));
 

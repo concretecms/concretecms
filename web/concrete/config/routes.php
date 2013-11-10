@@ -63,6 +63,8 @@ $rl->register('/system/panels/details/page/permissions/simple/submit', 'PagePerm
 $rl->register('/system/panels/details/page/permissions/advanced/submit', 'PagePermissionsPanelDetailController::save_advanced');
 $rl->register('/system/dialogs/page/delete/', 'PageDeleteDialogController::view');
 $rl->register('/system/dialogs/page/delete/submit', 'PageDeleteDialogController::submit');
+$rl->register('/system/dialogs/area/layout/presets/submit/{arLayoutID}', 'AreaLayoutPresetsDialogController::submit');
+$rl->register('/system/dialogs/area/layout/presets/{arLayoutID}/{token}', 'AreaLayoutPresetsDialogController::view');
 
 /**
  * Editing Actions

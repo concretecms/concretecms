@@ -17,7 +17,6 @@ class Concrete5_Controller_Panel_Details_Page_Location extends FrontendEditPageC
 
 	public function view() {
 		$this->requireAsset('core/sitemap');
-		$this->requireAsset('javascript', 'underscore');
 		$this->set('parent', Page::getByID($this->page->getCollectionParentID(), 'ACTIVE'));
 	}
 

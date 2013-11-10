@@ -35,7 +35,6 @@ class Concrete5_Controller_Panel_Details_Page_Attributes extends FrontendEditPag
 	}
 
 	public function view() {
-		$this->requireAsset('javascript', 'underscore');
 		$this->set('assignment', $this->assignment);
 		$this->set('dt', Loader::helper('form/date_time'));
 		$this->set('uh', Loader::helper('form/user_selector'));

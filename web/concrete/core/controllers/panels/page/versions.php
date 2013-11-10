@@ -23,7 +23,6 @@ class Concrete5_Controller_Panel_Page_Versions extends FrontendEditPageControlle
 	}
 
 	public function view() {
-		$this->requireAsset('javascript', 'underscore');
 		$r = $this->getPageVersionListResponse();
 		$this->set('response', $r);
 	}
