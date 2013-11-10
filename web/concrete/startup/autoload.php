@@ -391,7 +391,7 @@ $classes = array(
 	'PagePermissionsPanelDetailController' => array('controller', '/panels/details/page/permissions'),
 	'FrontendStylesheetController' => array('controller', '/frontend/stylesheet'),
 	
-
+	'AreaLayoutPresetsDialogController' => array('controller', '/dialogs/area/layout/presets'),
 	'PageDeleteDialogController' => array('controller', '/dialogs/page/delete'),
 	'DashboardBaseController' => array('controller', '/dashboard/base'),
 	'AccountController' => array('controller', '/account'),

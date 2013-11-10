@@ -88,10 +88,6 @@ var CCM_REL = "<?php echo DIR_REL?>";
 $v = View::getInstance();
 $v->requireAsset('javascript', 'jquery');
 
-if ($isEditMode) {
-	$v->requireAsset('javascript', 'underscore');
-}
-
 if (defined('ENABLE_USER_PROFILES') && ENABLE_USER_PROFILES && $u->isRegistered()) {
 	$v->requireAsset('core/account');
 	$this->addFooterItem('<script type="text/javascript">$(function() { ccm_enableUserProfileMenu(); });</script>');

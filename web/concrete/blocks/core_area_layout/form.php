@@ -64,15 +64,6 @@
 		<? } ?>
 	<? } ?>
 
-	<? /*
-	<li data-area-presets-view="presets" class="ccm-sub-toolbar-icon-cell"><a class="toolbar-icon dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)"><i class="icon-bookmark"></i></a>
-	  <ul class="dropdown-menu ccm-dropdown-area-layout-presets">
-		<li class="ccm-dropdown-area-layout-presets-manage divider"></li>
-		<li class="ccm-dropdown-area-layout-presets-manage"><a href="javascript:void(0)" onclick="CCMLayout.launchPresets('#ccm-layouts-edit-mode', '<?=Loader::helper('validation/token')->generate('layout_presets')?>', 'delete')"><?=t('Manage Presets')?></a></li>
-	  </ul>
-	</li>
-	*/ ?>
-
 	<li class="ccm-inline-toolbar-button ccm-inline-toolbar-button-cancel">
 		<button id="ccm-layouts-cancel-button" type="button" class="btn btn-mini"><?=t("Cancel")?></button>
 	</li>
