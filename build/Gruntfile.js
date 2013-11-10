@@ -57,6 +57,7 @@ module.exports = function(grunt) {
 		ccm_app: {
 			dest: '<%= DIR_BASE %>/concrete/js/ccm.app.js',
 			src: [
+				'<%= DIR_BASE %>/concrete/js/ccm_app/underscore.js',
 				'<%= DIR_BASE %>/concrete/js/ccm_app/json.js',
 				'<%= DIR_BASE %>/concrete/js/ccm_app/concrete5.js',
 				'<%= DIR_BASE %>/concrete/js/ccm_app/jquery.hoverIntent.js',
@@ -68,7 +69,6 @@ module.exports = function(grunt) {
 				'<%= DIR_BASE %>/concrete/js/ccm_app/edit_mode.js',
 				'<%= DIR_BASE %>/concrete/js/ccm_app/edit_page.js',
 				'<%= DIR_BASE %>/concrete/js/ccm_app/filemanager.js',
-				'<%= DIR_BASE %>/concrete/js/ccm_app/underscore.js',
 				'<%= DIR_BASE %>/concrete/js/ccm_app/jquery.cookie.js',
 				'<%= DIR_BASE %>/concrete/js/ccm_app/panels.js',
 				'<%= DIR_BASE %>/concrete/js/ccm_app/dialog.js',
