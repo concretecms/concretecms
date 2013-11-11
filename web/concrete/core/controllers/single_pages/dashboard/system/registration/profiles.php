@@ -3,20 +3,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 class Concrete5_Controller_Page_Dashboard_System_Registration_Profiles extends DashboardController {
 
-	public $helpers = array('form'); 
-	
-	public function __construct() { 
-		$this->token = Loader::helper('validation/token');
-		$html = Loader::helper('html');			
-
-		$this->set('public_profiles',ENABLE_USER_PROFILES);
-		$this->set('gravatar_fallback', Config::get('GRAVATAR_FALLBACK'));
-		$this->set('gravatar_max_level', Config::get('GRAVATAR_MAX_LEVEL'));
-		$this->set('gravatar_level_options', array('g' => 'G', 'pg' => 'PG', 'r' => 'R', 'x' => 'X'));
-		$this->set('gravatar_image_set', Config::get('GRAVATAR_IMAGE_SET'));
-		$this->set('gravatar_set_options', array('404' => '404', 'mm' => 'mm', 'identicon' => 'identicon', 'monsterid' => 'monsterid', 'wavatar' => "wavatar"));
-
-	}
+	public $helpers = array('form');
 
 	public function update_profiles() { 
 		if ($this->isPost()) {
@@ -33,6 +20,13 @@ class Concrete5_Controller_Page_Dashboard_System_Registration_Profiles extends D
 		if($message) {
 			$this->set('message',$message);
 		}
-		$u = new User();
+    $this->token = Loader::helper('validation/token');
+
+    $this->set('public_profiles',ENABLE_USER_PROFILES);
+    $this->set('gravatar_fallback', Config::get('GRAVATAR_FALLBACK'));
+    $this->set('gravatar_max_level', Config::get('GRAVATAR_MAX_LEVEL'));
+    $this->set('gravatar_level_options', array('g' => 'G', 'pg' => 'PG', 'r' => 'R', 'x' => 'X'));
+    $this->set('gravatar_image_set', Config::get('GRAVATAR_IMAGE_SET'));
+    $this->set('gravatar_set_options', array('404' => '404', 'mm' => 'mm', 'identicon' => 'identicon', 'monsterid' => 'monsterid', 'wavatar' => "wavatar"));
 	}
 }
