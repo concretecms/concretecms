@@ -2,19 +2,7 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 class Concrete5_Controller_Page_Dashboard_System_Registration_PublicRegistration extends DashboardController {
 
-	public $helpers = array('form'); 
-	
-	public function __construct() { 
-		$this->token = Loader::helper('validation/token');
-		
-		$this->set('enable_openID',ENABLE_OPENID_AUTHENTICATION);
-		$this->set('email_as_username', USER_REGISTRATION_WITH_EMAIL_ADDRESS);
-		$this->set('registration_type',REGISTRATION_TYPE);
-		$this->set('user_timezones',ENABLE_USER_TIMEZONES);	
-		$this->set('enable_registration_captcha',ENABLE_REGISTRATION_CAPTCHA);
-		$this->set('register_notification',REGISTER_NOTIFICATION);
-		$this->set('register_notification_email',EMAIL_ADDRESS_REGISTER_NOTIFICATION);
-	}
+	public $helpers = array('form');
 
 	public function update_registration_type() { 
 		if ($this->isPost()) {
@@ -67,6 +55,15 @@ class Concrete5_Controller_Page_Dashboard_System_Registration_PublicRegistration
 		if($updated) {
 			$this->set('message',t('Registration settings have been saved.'));
 		}
+    $this->token = Loader::helper('validation/token');
+
+    $this->set('enable_openID',ENABLE_OPENID_AUTHENTICATION);
+    $this->set('email_as_username', USER_REGISTRATION_WITH_EMAIL_ADDRESS);
+    $this->set('registration_type',REGISTRATION_TYPE);
+    $this->set('user_timezones',ENABLE_USER_TIMEZONES);
+    $this->set('enable_registration_captcha',ENABLE_REGISTRATION_CAPTCHA);
+    $this->set('register_notification',REGISTER_NOTIFICATION);
+    $this->set('register_notification_email',EMAIL_ADDRESS_REGISTER_NOTIFICATION);
 	}
 
 }
