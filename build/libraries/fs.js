@@ -222,6 +222,75 @@ function mkdirRecursiveSync(dir, mode) {
 	}
 }
 
+/** Synchronously delete a directory and all its content.
+* @param {string} dir The directory to delete
+* @throws Throws an exception in case of errors
+*/
+function rmdirRecursiveSync(dir) {
+	fs.readdirSync(dir).forEach(function(item) {
+		var full = dir + path.sep + item;
+		if(fs.lstatSync(full).isDirectory()) {
+			rmdirRecursiveSync(full);
+		}
+		else {
+			fs.unlinkSync(full);
+		}
+	});
+	fs.rmdirSync(dir);
+}
+
+/** Copy a file asynchronously.
+* @param {string} from The source file
+* @param {string} to The destination file (must not exist)
+* @param {function} callback A function to call when operation completes. In case of errors it receives the error as first parameter.
+*/
+function copyFile(from, to, callback) {
+	fs.stat(to, function(err) {
+		if(!err) {
+			if(callback) {
+				callback(new Error('File ' + to + ' already exists.'));
+			}
+			return;
+		}
+		fs.stat(from, function(err, stat) {
+			if(err) {
+				if(callback) {
+					callback(err);
+				}
+				return;
+			}
+			var fromStream = fs.createReadStream(from);
+			var toStream = fs.createWriteStream(to);
+			fromStream.pipe(toStream);
+			toStream.on('close', function(err) {
+				if(err) {
+					try {
+						fs.unlinkSync(to);
+					}
+					catch(foo) {
+					}
+					if(callback) {
+						callback(err);
+					}
+					return;
+				}
+				fs.utimes(to, stat.atime, stat.mtime, function(err) {
+					if(callback) {
+						if(err) {
+							callback(err);
+						}
+						else {
+							callback();
+						}
+					}
+				});
+			});
+		});
+	});
+}
+
 exports.mkdirRecursiveSync = mkdirRecursiveSync;
+exports.rmdirRecursiveSync = rmdirRecursiveSync;
 exports.escapeShellArg = escapeShellArg;
 exports.directoryParser = directoryParser;
+exports.copyFile = copyFile;
