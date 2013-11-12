@@ -8,12 +8,6 @@ if ($_GET['_ccm_dashboard_external']) {
 <?
 $v = View::getInstance();
 $v->requireAsset('dashboard');
-$this->addFooterItem("<script type=\"text/javascript\">
-	CCMPanelManager.register({'identifier': 'dashboard', 'position': 'right', url: '" . URL::to('/system/panels/dashboard') . "'});
-	CCMPanelManager.register({'identifier': 'sitemap', 'position': 'right', url: '" . URL::to('/system/panels/sitemap') . "'});
-	var panel = CCMPanelManager.getByIdentifier('dashboard');
-	panel.onPanelLoad()
-</script>");
 $v->addFooterItem('<script type="text/javascript" src="' . REL_DIR_FILES_TOOLS_REQUIRED . '/i18n_js"></script>'); 
 $v->addFooterItem('<script type="text/javascript">$(function() { CCMToolbar.start(); });</script>');
 if (ENABLE_PROGRESSIVE_PAGE_REINDEX && Config::get('DO_PAGE_REINDEX_CHECK')) {

@@ -101,6 +101,7 @@ $al->register('javascript', 'core/app', 'js/ccm.app.js', array('postprocess' => 
 $al->registerGroup('core/app', array(
 	array('javascript', 'jquery'),
 	array('javascript', 'core/observer'),
+	array('javascript', 'underscore'),
 	array('javascript', 'bootstrap/dropdown'),
 	array('javascript', 'bootstrap/popover'),
 	array('javascript', 'bootstrap/tooltip'),
@@ -129,6 +130,7 @@ $al->registerGroup('dashboard', array(
 	array('javascript', 'jquery'),
 	array('javascript', 'jqueryui'),
 	array('javascript', 'jquery/form'),
+	array('javascript', 'underscore'),
 	array('javascript', 'dashboard'),
 	array('javascript', 'backstretch'),
 	array('javascript', 'core/observer'),
@@ -160,6 +162,14 @@ $al->registerGroup('core/sitemap', array(
 	array('javascript', 'dynatree'),
 	array('css', 'dynatree'),
 	array('css', 'core/sitemap')
+));
+
+// Page Search
+$al->register('javascript', 'core/search', 'js/ccm.search.js', array('postprocess' => false));
+$al->register('css', 'core/search', 'css/ccm.search.css', array('postprocess' => false));
+$al->registerGroup('core/search', array(
+	array('javascript', 'core/search'),
+	array('css', 'core/search')
 ));
 
 // Topics

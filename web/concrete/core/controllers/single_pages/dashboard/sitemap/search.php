@@ -6,26 +6,18 @@ class Concrete5_Controller_Page_Dashboard_Sitemap_Search extends DashboardContro
 	
 	public function view() {
 
-		$v = View::getInstance();
-		$v->requireAsset('core/sitemap');
-
-		$html = Loader::helper('html');
-		
+		$r = ResponseAssetGroup::get();
+		$r->requireAsset('core/search');
+		$this->addFooterItem("<script type=\"text/javascript\">$(function() { $('div[data-search=pages]').concreteAjaxSearch(); });</script>");
 		$pageList = $this->getRequestedSearchResults();
 		if (is_object($pageList)) {
-			$searchInstance = 'page' . time();
-
-			$this->addHeaderItem('<script type="text/javascript">$(function() { ccm_sitemapSetupSearch(\'' . $searchInstance . '\'); });</script>');
 			$pages = $pageList->getPage();
-					
 			$this->set('pageList', $pageList);		
 			$this->set('pages', $pages);		
-			$this->set('searchInstance', $searchInstance);
 			$this->set('pagination', $pageList->getPagination());
-			
 		}
 	}
-	
+
 	public function getRequestedSearchResults() {
 	
 		$dh = Loader::helper('concrete/dashboard/sitemap');
@@ -37,7 +29,7 @@ class Concrete5_Controller_Page_Dashboard_Sitemap_Search extends DashboardContro
 		$pageList->ignoreAliases();
 		$pageList->enableStickySearchRequest();
 		
-		if ($_REQUEST['submit_search']) {
+		if ($_REQUEST['submitSearch']) {
 			$pageList->resetSearchRequest();
 		}
 
