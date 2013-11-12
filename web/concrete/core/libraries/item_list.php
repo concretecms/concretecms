@@ -209,7 +209,7 @@ class Concrete5_Library_ItemList {
 		$summary = $this->getSummary();
 		$paginator = $this->getPagination($script, $additionalVars);
 		if ($summary->pages > 1) {
-			$html .= '<div class="pagination ccm-pagination"><ul>';
+			$html .= '<div class="ccm-search-results-pagination"><ul class="pagination">';
 			$prevClass = 'prev';
 			$nextClass = 'next';
 			if (!$paginator->hasPreviousPage()) {
