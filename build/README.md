@@ -68,7 +68,7 @@ You have to specify the following parameters:
 - `txUsername` a valid Transifex username
 - `txPassword` the password for the above Transifex account
 - `txResource` the resource identifier that you want to download (for instance: `core`)
-- `txLocales` a comma-separated list of locale identifiers (for instance: `de_DE,it_IT,el_GE`) that you want to download. If this option is specified in the `Gruntfile.parameters.js` file you can also write a Javascript array (for instance: `module.exports.txLocales = ['de_DE' ,'it_IT', 'el_GE'];`). If you don't specify this value then all the 
+- `txLocales` a comma-separated list of locale identifiers (for instance: `de_DE,it_IT,el_GE`) that you want to download. If this option is specified in the `Gruntfile.parameters.js` file you can also write a Javascript array (for instance: `module.exports.txLocales = ['de_DE' ,'it_IT', 'el_GE'];`). If you don't specify this value then all the available locales will be fetched.
 - `txProgressLimit` the task will retrieve only translations above this limit. For instance, if you specify `90`, then the task will download translations that are at least at 90% (_the default value for this option is 95%_).
 
 Example:
