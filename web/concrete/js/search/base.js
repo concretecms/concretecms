@@ -26,6 +26,7 @@
 		this._templateSearchResultsTableHead = _.template($element.find('script[data-template=search-results-table-head]').html());
 		this._templateSearchResultsTableBody = _.template($element.find('script[data-template=search-results-table-body]').html());
 		this._templateSearchResultsPagination = _.template($element.find('script[data-template=search-results-pagination]').html());
+		this._templateSearchResultsMenu = _.template($element.find('script[data-template=search-results-menu]').html());
 		
 		this.setupCheckboxes();
 		this.setupSort();
@@ -34,6 +35,7 @@
 		this.setupAdvancedSearch();
 		this.setupCustomizeColumns();
 		this.updateResults(options);
+		this.setupMenus();
 	}
 
 	ConcreteAjaxSearch.prototype.ajaxUpdate = function(url, data, callback) {
@@ -60,6 +62,18 @@
 			}
 		});
 	}
+
+	ConcreteAjaxSearch.prototype.setupMenus = function() {
+		var cs = this;
+		if (cs.$element.find('script[data-template=search-results-menu]').length) {
+			// loop through all results,
+			// create nodes for them.
+			$.each(cs.options.items, function(i, item) {
+				cs.$results.append(cs._templateSearchResultsMenu({'item': item}));
+			});
+		}
+		cs.$element.find('tbody tr').ccmmenu();
+	};
 
 	ConcreteAjaxSearch.prototype.setupCustomizeColumns = function() {
 		var cs = this;

@@ -17,7 +17,7 @@
 
 <script type="text/template" data-template="search-results-table-body">
 <% _.each(items, function(page) {%>
-<tr>
+<tr data-launch-menu="<%=page.cID%>">
 	<td><span class="ccm-search-results-checkbox"><input type="checkbox" data-search-checkbox="individual" value="<%=page.cID%>" /></span></td>
 	<% for(i = 0; i < page.columns.length; i++) {
 		var column = page.columns[i];
@@ -29,6 +29,16 @@
 	<% } %>
 </tr>
 <% }); %>
+</script>
+
+<script type="text/template" data-template="search-results-menu">
+<div class="popover fade" data-menu="<%=item.cID%>">
+	<div class="arrow"></div>
+	<div class="popover-inner">
+	<ul class="dropdown-menu">
+		<li><a href=""><%=item.cID%></a></li>
+	</ul>
+</div>
 </script>
 
 <script type="text/template" data-template="search-results-pagination">
@@ -47,3 +57,5 @@
 </table>
 
 <div class="ccm-search-results-pagination"></div>
+
+
