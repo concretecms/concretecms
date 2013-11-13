@@ -23,7 +23,7 @@ $.fn.ccmmenu = function() {
 				$menulauncher = $($this.attr('data-menu-handle'));
 			}
 
-			var $menu = $('#' + $this.attr('data-menu'));
+			var $menu = $('[data-menu=' + $this.attr('data-launch-menu') + ']');
 			$this.$menu = $menu;
 			$this.highlightClass = $this.attr('data-menu-highlight-class');
 			$this.highlightOffset = 9;

@@ -11,10 +11,10 @@ if ($item->canViewGatheringItem()) { ?>
   <div class="ccm-ui">
     <ul class="ccm-gathering-item-inline-commands ccm-ui">
       <li class="ccm-gathering-item-inline-move"><a data-inline-command="move-tile" href="#"><i class="glyphicon glyphicon-move"></i></a></li>
-      <li class="ccm-gathering-item-inline-options"><a data-inline-command="options-tile" href="#" data-menu="gathering-menu-<?=$item->getGatheringItemID()?>"><i class="glyphicon glyphicon-cog"></i></a></li>
+      <li class="ccm-gathering-item-inline-options"><a data-inline-command="options-tile" href="#" data-launch-menu="gathering-menu-<?=$item->getGatheringItemID()?>"><i class="glyphicon glyphicon-cog"></i></a></li>
     </ul>
 
-    <div class="popover fade" id="gathering-menu-<?=$item->getGatheringItemID()?>">
+    <div class="popover fade" data-menu="gathering-menu-<?=$item->getGatheringItemID()?>">
       <div class="arrow"></div>
       <div class="popover-inner">
       <ul class="dropdown-menu">
