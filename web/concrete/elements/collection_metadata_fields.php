@@ -124,7 +124,7 @@ $usedKeysCombined = array_merge($requiredKeys, $usedKeys);
 	<script type="text/javascript">
 	<? 
 	$v = View::getInstance();
-	$headerItems = $v->getHeaderItems();
+	$headerItems = array_merge($v->getHeaderItems(), $v->getFooterItems());
 	foreach($headerItems as $item) {
 		if ($item->file) {
 			if ($item instanceof CSSOutputObject) {
