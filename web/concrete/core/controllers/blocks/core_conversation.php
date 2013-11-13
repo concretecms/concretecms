@@ -105,7 +105,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			if($this->fileExtensions) {
 				$fileExtensions = $this->fileExtensions;
 			} else {
-				$fileExtensions = Config::get('CONVERSATIONS_MAX_FILE_SIZE_REGISTERED') ? Config::get('CONVERSATIONS_MAX_FILE_SIZE_REGISTERED') : '*.jpg;*.png;*.gif;*.doc';
+				$fileExtensions = Config::get('CONVERSATIONS_ALLOWED_FILE_TYPES') ? Config::get('CONVERSATIONS_ALLOWED_FILE_TYPES') : '*.jpg;*.png;*.gif;*.doc';
 			}
 			
 			$fileExtensions = implode(',', $helperFile->unserializeUploadFileExtensions($fileExtensions)); //unserialize and implode extensions into comma separated string

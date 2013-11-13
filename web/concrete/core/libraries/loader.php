@@ -459,7 +459,7 @@
 				// in this case, we don't return the object.
 				// we don't autoload the class exists because we have some classes that
 				// resolve to different classes than their paths.
-				if ($f1->exists() || $f2->exists() && class_exists($class, false) && $class != 'DashboardController') {
+				if (($f1->exists() || $f2->exists()) && class_exists($class, false) && $class != 'DashboardController') {
 					if (is_object($page)) {
 						return new $class($page);
 					} else {
