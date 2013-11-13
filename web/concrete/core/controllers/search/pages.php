@@ -21,11 +21,12 @@ class Concrete5_Controller_Search_Pages extends Controller {
 			$this->pageList->resetSearchRequest();
 		}
 
-		$this->pageList->sortBy('cvDatePublic', 'desc');
-
 		$req = $this->pageList->getSearchRequest();
 		$this->pageList->displayUnapprovedPages();
 		$columns = PageSearchColumnSet::getCurrent();
+
+		$col = $columns->getDefaultSortColumn();	
+		$this->pageList->sortBy($col->getColumnKey(), $col->getColumnDefaultSortDirection());
 		
 		$cvName = htmlentities($req['cvName'], ENT_QUOTES, APP_CHARSET);
 		
