@@ -32,12 +32,17 @@ class Concrete5_Controller_Dialogs_Search_Pages_Customize extends FrontendEditCo
 			$sortCol = $fldca->getColumnByKey($_POST['fSearchDefaultSort']);
 			$fdc->setDefaultSortColumn($sortCol, $_POST['fSearchDefaultSortDirection']);
 			$u->saveConfig('PAGE_LIST_DEFAULT_COLUMNS', serialize($fdc));
-			
+
 			$pageList = new PageList();
-			$pageList->resetSearchRequest();
-			$r = new PageEditResponse();
+			$columns = PageSearchColumnSet::getCurrent();
+			$col = $columns->getDefaultSortColumn();	
+			$pageList->sortBy($col->getColumnKey(), $col->getColumnDefaultSortDirection());
+
+			$ilr = new PageSearchResult($columns, $pageList, URL::to('/system/search/pages/submit'));
+			$r = new SearchResponse();
 			$r->setMessage(t('Page search columns saved successfully.'));
-			Loader::helper('ajax')->sendResult($r);
+			$r->setSearchResult($ilr);
+			$r->outputJSON();
 		}
 	}
 

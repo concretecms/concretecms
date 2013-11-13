@@ -156,49 +156,12 @@ class Concrete5_Controller_Search_Pages extends Controller {
 			}
 		}
 
-		$sh = Loader::helper('concrete/dashboard/sitemap');
-		$this->pages = array();
-		foreach($this->pageList->getPage() as $c) {
-			$node = $sh->getNode($c);
-			$node->isIndexedSearch = false;
-			if ($this->pageList->isIndexedSearch()) {
-				$node->isIndexedSearch = true;
-				$node->score = $c->getPageIndexScore();
-			}
-			$node->columns = array();
-			foreach($columns->getColumns() as $col) {
-				$obj = new stdClass;
-				$obj->key = $col->getColumnKey();
-				$obj->value = $col->getColumnValue($c);
-				$node->columns[] = $obj;
-			}
-			$this->pages[] = $node;
-		}
+		$ilr = new PageSearchResult($columns, $this->pageList, URL::to('/system/search/pages/submit'), $this->fields);
+		$this->result = $ilr;
+	}
 
-		$this->columns = array();
-		$url = URL::to('/system/search/pages/submit');
-		if ($this->pageList->isIndexedSearch()) {
-			$obj = new stdClass;
-			$obj->isColumnSortable = true;
-			$obj->key = 'cIndexScore';
-			$obj->title = t('Score');
-			$obj->className = $this->pageList->getSearchResultsClass('cIndexScore');
-			$obj->sortURL = $this->pageList->getSortByURL('cIndexScore', 'desc', $url);
-			$this->columns[] = $obj;
-		}
-		foreach($columns->getColumns() as $col) {
-			$obj = new stdClass;
-			$obj->isColumnSortable = $col->isColumnSortable();
-			$obj->key = $col->getColumnKey();
-			$obj->title = $col->getColumnName();
-			$obj->className = $this->pageList->getSearchResultsClass($col->getColumnKey());
-			$obj->sortURL = $this->pageList->getSortByURL($col->getColumnKey(), $col->getColumnDefaultSortDirection(), $url);
-			$this->columns[] = $obj;
-		}
-
-		$this->summary = $this->pageList->getSummary();
-		$p = $this->pageList->getPagination(URL::to('/system/search/pages/submit'));
-		$this->pagination = $p->getAsJSONObject();
+	public function getSearchResultObject() {
+		return $this->result;
 	}
 
 	public function field($field) {
@@ -285,13 +248,8 @@ class Concrete5_Controller_Search_Pages extends Controller {
 
 	public function submit() {
 		$this->search();
-		$result = new stdClass;
-		$result->items = $this->getItems();
-		$result->columns = $this->getColumns();
-		$result->summary = $this->getSummary();
-		$result->pagination = $this->getPagination();
-		$result->fields = $this->getFields();
-		Loader::helper('ajax')->sendResult($result);
+		$result = $this->result;
+		Loader::helper('ajax')->sendResult($this->result->getJSONObject());
 	}
 
 	public function getFields() {
@@ -301,23 +259,6 @@ class Concrete5_Controller_Search_Pages extends Controller {
 	public function getSearchRequest() {
 		return $this->pageList->getSearchRequest();
 	}
-
-	public function getPagination() {
-		return $this->pagination;
-	}
-
-	public function getSummary() {
-		return $this->summary;
-	}
-	
-	public function getItems() {
-		return $this->pages;
-	}
-
-	public function getColumns() {
-		return $this->columns;
-	}
-
 
 
 	

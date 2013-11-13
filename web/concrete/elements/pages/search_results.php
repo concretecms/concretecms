@@ -19,13 +19,10 @@
 <% _.each(items, function(page) {%>
 <tr>
 	<td><span class="ccm-search-results-checkbox"><input type="checkbox" data-search-checkbox="individual" value="<%=page.cID%>" /></span></td>
-	<% if (page.isIndexedSearch) { %>
-		<td><%=page.score%></td>
-	<% } %>
 	<% for(i = 0; i < page.columns.length; i++) {
 		var column = page.columns[i];
 		if (column.key == 'cvName') { %>
-			<td class="ccm-search-results-name"><%=page.title%></td>
+			<td class="ccm-search-results-name"><%=column.value%></td>
 		<% } else { %>
 			<td><%=column.value%></td>
 		<% } %>
