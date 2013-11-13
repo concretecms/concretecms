@@ -20,7 +20,7 @@ class Concrete5_Controller_AuthenticationType_Concrete extends AuthenticationTyp
 				case USER_INVALID:
 					if (USER_REGISTRATION_WITH_EMAIL_ADDRESS) {
 						throw new Exception(t('Invalid email address or password.'));
-					} else { 
+					} else {
 						throw new Exception(t('Invalid username or password.'));
 					}
 					break;
@@ -32,9 +32,9 @@ class Concrete5_Controller_AuthenticationType_Concrete extends AuthenticationTyp
 		if ($post['uMaintainLogin']) {
 			$user->setAuthTypeCookie('concrete');
 		}
-		
-		$this->authenticateComplete($user);
-		
+
+		$this->completeAuthentication($user);
+
 	}
 
 	public function deauthenticate(User $u) {
@@ -93,14 +93,7 @@ class Concrete5_Controller_AuthenticationType_Concrete extends AuthenticationTyp
 	public function isAuthenticated(User $u) {
 		return ($u->isLoggedIn());
 	}
-	
+
 	public function saveAuthenticationType($values) {}
-	
-	public function authenticateComplete(User $u) {
-		$u->setLastAuthType(AuthenticationType::getByHandle('concrete'));
-		$loginController = Loader::controller('/login');
-		Events::fire('on_user_login',$this);
-		$loginController->chooseRedirect();
-	}
 
 }
