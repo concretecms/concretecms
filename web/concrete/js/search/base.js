@@ -99,7 +99,7 @@
 						}
 					});
 					ccm_event.subscribe('AjaxFormSubmitSuccess', function(e) {
-						console.log(e.eventData);
+						cs.updateResults(e.eventData.result);
 					}, $form.get(0));
 				}
 			});
