@@ -544,7 +544,7 @@ class Concrete5_Model_PageSearchDefaultColumnSet extends DatabaseItemListColumnS
 	}
 	
 	public function __construct() {
-		$this->addColumn(new DatabaseItemListColumn('ctHandle', t('Type'), 'getCollectionTypeName', false));
+		$this->addColumn(new DatabaseItemListColumn('ptHandle', t('Type'), 'getPageTypeName', false));
 		$this->addColumn(new DatabaseItemListColumn('cvName', t('Name'), 'getCollectionName'));
 		$this->addColumn(new DatabaseItemListColumn('cvDatePublic', t('Date'), array('PageSearchDefaultColumnSet', 'getCollectionDatePublic')));
 		$this->addColumn(new DatabaseItemListColumn('cDateModified', t('Last Modified'), array('PageSearchDefaultColumnSet', 'getCollectionDateModified')));

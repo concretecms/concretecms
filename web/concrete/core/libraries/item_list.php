@@ -170,7 +170,7 @@ class Concrete5_Library_ItemList {
 			$args[$k] = $v;
 		}
 		$url = $uh->setVariable($args, false, $baseURL);
-		print strip_tags($url);
+		return strip_tags($url);
 	}
 	
 	public function isActiveSortColumn($column) {

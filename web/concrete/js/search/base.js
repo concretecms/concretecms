@@ -7,21 +7,42 @@
 
 	function ConcreteAjaxSearch($element, options) {
 		options = options || {};
+		options = $.extend({
+			'items': [],
+			'columns': [],
+			'pagination': {},
+			'fields': []
+		}, options);
 		this.$element = $element;
 		this.$results = $element.find('div[data-search-results]');
+		this.$resultsTableBody = this.$results.find('tbody');
+		this.$resultsTableHead = this.$results.find('thead');
+		this.$resultsPagination = this.$results.find('div.ccm-search-results-pagination');
+		this.$advancedFields = $element.find('div.ccm-search-fields-advanced')
+		this.options = options;
+
+
+		this._templateAdvancedSearchFieldRow = _.template($element.find('script[data-template=search-field-row]').html());
+		this._templateSearchResultsTableHead = _.template($element.find('script[data-template=search-results-table-head]').html());
+		this._templateSearchResultsTableBody = _.template($element.find('script[data-template=search-results-table-body]').html());
+		this._templateSearchResultsPagination = _.template($element.find('script[data-template=search-results-pagination]').html());
+		
 		this.setupCheckboxes();
 		this.setupSort();
 		this.setupSearch();
 		this.setupPagination();
+		this.setupAdvancedSearch();
+		this.updateResults(options);
 	}
 
-	ConcreteAjaxSearch.prototype.ajaxUpdate = function(url, data) {
+	ConcreteAjaxSearch.prototype.ajaxUpdate = function(url, data, callback) {
 		data = data || [];
 		var cs = this;
 		jQuery.fn.dialog.showLoader();
 		$.ajax({
 			type: 'post', 
 			data: data,
+			dataType: 'json',
 			url: url,
 			complete: function() {
 				jQuery.fn.dialog.hideLoader();
@@ -30,8 +51,54 @@
 				ccmAlert.notice(r);
 			},
 			success: function(r) {
-				cs.$results.html(r);
+				if (!callback) {
+					cs.updateResults(r);
+				} else {
+					callback(r);
+				}
 			}
+		});
+	}
+
+	ConcreteAjaxSearch.prototype.updateResults = function(results) {
+		var cs = this;
+		cs.$resultsTableHead.html(cs._templateSearchResultsTableHead({'columns': results.columns}));
+		cs.$resultsTableBody.html(cs._templateSearchResultsTableBody({'items': results.items}));
+		cs.$resultsPagination.html(cs._templateSearchResultsPagination({'pagination': results.pagination}));
+
+		cs.$advancedFields.html('');
+		$.each(results.fields, function(i, field) {
+			cs.$advancedFields.append(cs._templateAdvancedSearchFieldRow({'field': field}));
+		});
+	}
+
+	ConcreteAjaxSearch.prototype.setupAdvancedSearch = function() {
+		var cs = this;
+
+		cs.$element.on('click', 'a[data-search-toggle=advanced]', function() {
+			cs.$advancedFields.append(cs._templateAdvancedSearchFieldRow());
+			return false;
+		});
+		cs.$element.on('change', 'select[data-search-field]', function() {
+			var $content = $(this).parent().find('.ccm-search-field-content');
+			$content.html('');
+			var field = $(this).find(':selected').attr('data-search-field-url');
+			if (field) {
+				cs.ajaxUpdate(field, false, function(r) {
+					$content.html(r.html);
+				});
+			}
+		});
+		cs.$element.on('click', 'a[data-search-remove=search-field]', function() {
+			var $row = $(this).parent();
+			$row.queue(function () {
+				$(this).addClass('ccm-search-field-removing');
+				$(this).dequeue()
+			}).delay(200).queue(function() {
+				$(this).remove();
+				$(this).dequeue();
+			});
+			return false;
 		});
 	}
 

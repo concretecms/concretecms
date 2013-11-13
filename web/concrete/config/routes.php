@@ -72,6 +72,12 @@ $rl->register('/system/dialogs/area/layout/presets/{arLayoutID}/{token}', 'AreaL
 $rl->register('/system/page/check_in/{cID}/{token}', 'PageCheckInPanelController::exitEditMode');
 
 /** 
+ * Search Routes
+ */
+$rl->register('/system/search/pages/submit', 'SearchPagesController::submit');
+$rl->register('/system/search/pages/field/{field}', 'SearchPagesController::field');
+
+/** 
  * Misc
  */
 $rl->register('/system/css/page/{cID}/{cvID}/{stylesheet}', 'FrontendStylesheetController::page');
