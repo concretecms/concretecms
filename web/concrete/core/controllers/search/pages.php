@@ -317,6 +317,8 @@ class Concrete5_Controller_Search_Pages extends Controller {
 		return $this->columns;
 	}
 
+
+
 	
 }
 

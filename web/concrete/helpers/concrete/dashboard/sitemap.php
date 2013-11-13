@@ -18,8 +18,6 @@
  */
  
 defined('C5_EXECUTE') or die("Access Denied.");
-Loader::model('page_list');
-Loader::model('collection_types');
 class ConcreteDashboardSitemapHelper {
 
 	protected $autoOpenNodes = true;

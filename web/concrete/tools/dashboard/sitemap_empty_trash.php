@@ -9,7 +9,6 @@ if (!$pk->validate()) {
 $trash = Page::getByPath(TRASH_PAGE_PATH);
 $i = 0;
 if (is_object($trash) && !$trash->isError()) {
-	Loader::model('page_list');
 	$pl = new PageList();
 	$pl->filterByParentID($trash->getCollectionID());
 	$pl->includeInactivePages();
