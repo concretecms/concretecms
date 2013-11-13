@@ -65,9 +65,10 @@ foreach($searchFieldAttributes as $ak) {
 			<button type="submit" class="ccm-search-field-hidden-submit" tabindex="-1"><?=t('Search')?></button>
 		</div>
 	</div>
-	<div class="form-group">
-		<a href="#" class="ccm-search-advanced-label" data-search-toggle="advanced"><?=t('Advanced Search')?></a>
-	</div>
+	<ul class="ccm-search-form-advanced list-inline">
+		<li><a href="#" data-search-toggle="advanced"><?=t('Advanced Search')?></a>
+		<li><a href="#" data-search-toggle="customize" data-search-column-customize-url="<?=URL::to('/system/dialogs/search/pages/customize')?>"><?=t('Customize Results')?></a>
+	</ul>
 	<div class="ccm-search-fields-advanced"></div>
 </form>
 

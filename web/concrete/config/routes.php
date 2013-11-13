@@ -74,6 +74,8 @@ $rl->register('/system/page/check_in/{cID}/{token}', 'PageCheckInPanelController
 /** 
  * Search Routes
  */
+$rl->register('/system/dialogs/search/pages/customize', 'SearchPagesCustomizeDialogController::view');
+$rl->register('/system/dialogs/search/pages/customize/submit', 'SearchPagesCustomizeDialogController::submit');
 $rl->register('/system/search/pages/submit', 'SearchPagesController::submit');
 $rl->register('/system/search/pages/field/{field}', 'SearchPagesController::field');
 
