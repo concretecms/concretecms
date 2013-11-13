@@ -210,7 +210,7 @@
         if (my.getSelected()) {
           my.getArea().removeBlock(my);
           my.getSelected().getElem().after(my.getElem());
-            if (selected_block = my.getSelected().getBlock()) {
+          if (selected_block = my.getSelected().getBlock()) {
             my.getSelected().getArea().addBlock(my, selected_block);
           } else {
             my.getSelected().getArea().addBlockToIndex(my, 0);
