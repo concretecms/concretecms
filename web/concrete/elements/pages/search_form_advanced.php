@@ -2,6 +2,31 @@
 <?
 $form = Loader::helper('form');
 
+$searchFields = array(
+	'keywords' => t('Full Page Index'),
+	'date_added' => t('Date Added'),
+	'theme' => t('Theme'),
+	'last_modified' => t('Last Modified'),
+	'date_public' => t('Public Date'),
+	'owner' => t('Page Owner'),
+	'num_children' => t('# Children'),
+	'version_status' => t('Approved Version')
+);
+
+if (PERMISSIONS_MODEL != 'simple') {
+	$searchFields['permissions_inheritance'] = t('Permissions Inheritance');
+}
+
+if (!$searchDialog) {
+	$searchFields['parent'] = t('Parent Page');
+}
+
+Loader::model('attribute/categories/collection');
+$searchFieldAttributes = CollectionAttributeKey::getSearchableList();
+foreach($searchFieldAttributes as $ak) {
+	$searchFields[$ak->getAttributeKeyID()] = tc('AttributeKeyName', $ak->getAttributeKeyName());
+}
+
 if (PERMISSIONS_MODEL != 'simple') {
 	$searchFields['permissions_inheritance'] = t('Permissions Inheritance');
 }
@@ -17,7 +42,7 @@ foreach($searchFieldAttributes as $ak) {
 
 ?>
 
-<form role="form" data-search-form="pages" action="<?=REL_DIR_FILES_TOOLS_REQUIRED . '/pages/search_results'?>" class="form-inline ccm-search-fields">
+<form role="form" data-search-form="pages" action="<?=URL::to('/system/search/pages/submit')?>" class="form-inline ccm-search-fields">
 	<div class="form-group">
 		<select data-bulk-action="pages" class="ccm-search-bulk-action form-control">
 			<option value=""><?=t('Items Selected')?></option>
@@ -37,10 +62,25 @@ foreach($searchFieldAttributes as $ak) {
 		<div class="ccm-search-main-lookup-field">
 			<i class="glyphicon glyphicon-search"></i>
 			<?=$form->search('cvName', $searchRequest['cvName'], array('placeholder' => t('Page Name')))?>
+			<button type="submit" class="ccm-search-field-hidden-submit" tabindex="-1"><?=t('Search')?></button>
 		</div>
 	</div>
 	<div class="form-group">
 		<a href="#" class="ccm-search-advanced-label" data-search-toggle="advanced"><?=t('Advanced Search')?></a>
 	</div>
+	<div class="ccm-search-fields-advanced"></div>
 </form>
+
+<script type="text/template" data-template="search-field-row">
+<div class="ccm-search-fields-row">
+	<select name="field[]" class="ccm-search-choose-field" data-search-field="pages">
+		<option value=""><?=t('Choose Field')?></option>
+		<? foreach($searchFields as $key => $value) { ?>
+			<option value="<?=$key?>" <% if (typeof(field) != 'undefined' && field.field == '<?=$key?>') { %>selected<% } %> data-search-field-url="<?=URL::to('/system/search/pages/field', $key)?>"><?=$value?></option>
+		<? } ?>
+	</select>
+	<div class="ccm-search-field-content"><% if (typeof(field) != 'undefined') { %><%=field.html%><% } %></div>
+	<a data-search-remove="search-field" class="ccm-search-remove-field" href="#"><i class="glyphicon glyphicon-minus-sign"></i></a>
+</div>
+</script>
 

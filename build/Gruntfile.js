@@ -288,6 +288,8 @@ module.exports = function(grunt) {
 	grunt.registerTask('css:release', 'less:release');
 	grunt.registerTask('css', 'css:release');
 
+	grunt.registerTask('js:search', 'uglify:ccm_search_release');
+
 	grunt.registerTask('debug', ['js:debug', 'css:debug']);
 	grunt.registerTask('release', ['js:release', 'css:release']);
 

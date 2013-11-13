@@ -91,7 +91,7 @@ class ConcreteDashboardSitemapHelper {
 		return $nodes;
 	}
 
-	function getNode($cItem) {
+	public function getNode($cItem, $includeChildren = true) {
 		if (!is_object($cItem)) {
 			$cID = $cItem;
 			$c = Page::getByID($cID, 'RECENT');
@@ -195,7 +195,7 @@ class ConcreteDashboardSitemapHelper {
 		$node->canAddSubpages = $canAddSubpages;
 		$node->canAddExternalLinks = $canAddExternalLinks;
 
-		if ($cID == 1 || ($nodeOpen && $this->autoOpenNodes)) {
+		if ($includeChildren && ($cID == 1 || ($nodeOpen && $this->autoOpenNodes))) {
 			// We open another level
 			$node->children = $this->getSubNodes($cID, $level, false, $autoOpenNodes);
 		}

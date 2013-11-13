@@ -870,7 +870,12 @@ class Concrete5_Model_Page extends Collection {
 	}
 
 	public function getPageTypeName() {
-		return $this->vObj->ptName;
+		if (!isset($this->pageType)) {
+			$this->pageType = $this->getPageTypeObject();
+		}
+		if (is_object($this->pageType)) {
+			return $this->pageType->getPageTypeName();
+		}
 	}
 
 	/**
