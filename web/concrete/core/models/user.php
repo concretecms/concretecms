@@ -262,23 +262,63 @@
 			return $this->uTimezone;
 		}
 
-		function logout() {
-			// First, we check to see if we have any collection in edit mode
-			$this->unloadCollectionEdit();
-			@session_unset();
-			@session_destroy();
-			Events::fire('on_user_logout');
-			if (isset($_COOKIE['ccmUserHash']) && $_COOKIE['ccmUserHash']) {
-				setcookie("ccmUserHash", "", 315532800, DIR_REL . '/');
+		function setAuthTypeCookie($authType) {
+			$cookie = array($this->getUserID(),$authType);
+			$at = AuthenticationType::getByHandle($authType);
+			$cookie[] = $at->controller->buildHash($this);
+			setcookie("ccmAuthUserHash", implode(':',$cookie), time() + 1209600, DIR_REL . '/');
+		}
+
+		public function setLastAuthType(AuthenticationType $at) {
+			$db = Loader::db();
+			$db->Execute('UPDATE Users SET uLastAuthTypeID=? WHERE uID=?', array($at->getAuthenticationTypeID(), $this->getUserID()));
+		}
+
+		public function getLastAuthType() {
+			$db = Loader::db();
+			$id = $db->getOne('SELECT uLastAuthTypeID FROM Users WHERE uID=?', array($this->getUserID()));
+			return intval($id);
+		}
+
+		function unloadAuthenticationTypes() {
+			$ats = AuthenticationType::getList();
+			foreach ($ats as $at) {
+				$at->controller->deauthenticate($this);
 			}
 		}
 
-		static function checkUserForeverCookie() {
-			if (isset($_COOKIE['ccmUserHash']) && $_COOKIE['ccmUserHash']) {
+		function logout() {
+			// First, we check to see if we have any collection in edit mode
+			$this->unloadCollectionEdit();
+			$this->unloadAuthenticationTypes();
+			@session_unset();
+			@session_destroy();
+			Events::fire('on_user_logout');
+			if ($_COOKIE['ccmAuthUserHash']) {
+				setcookie("ccmAuthUserHash", "", 315532800, DIR_REL . '/');
+			}
+		}
+
+		function checkUserForeverCookie() {
+			if ($_COOKIE['ccmUserHash']) {
 				$hashVal = explode(':', $_COOKIE['ccmUserHash']);
 				$_uID = $hashVal[0];
 				$uHash = $hashVal[1];
 				if ($uHash == md5(PASSWORD_SALT . $_uID)) {
+					User::loginByUserID($_uID);
+				}
+			}
+		}
+
+		function verifyAuthTypeCookie() {
+			if ($_COOKIE['ccmAuthUserHash']) {
+				list($_uID, $authType, $uHash) = explode(':', $_COOKIE['ccmAuthUserHash']);
+				$at = AuthenticationType::getByHandle($authType);
+				$u = User::getByUserID($_uID);
+				if ($u->isError()) {
+					return;
+				}
+				if ($at->controller->verifyHash($u, $uHash)) {
 					User::loginByUserID($_uID);
 				}
 			}
