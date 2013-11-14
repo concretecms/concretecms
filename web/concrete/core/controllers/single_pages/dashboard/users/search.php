@@ -19,7 +19,14 @@ class Concrete5_Controller_Page_Dashboard_Users_Search extends DashboardControll
 		}
 			// this is hacky as hell, we need to make this page MVC
 		if (!is_object($uo)) {
-			$this->addHeaderItem('<script type="text/javascript">$(function() { ccm_setupAdvancedSearch(\'user\'); });</script>');
+
+			$this->requireAsset('core/search');
+			$cnt = new SearchUsersController();
+			$cnt->search();
+			$this->set('searchRequest', $cnt->getSearchRequest());
+			$result = Loader::helper('json')->encode($cnt->getSearchResultObject()->getJSONObject());
+			$this->addFooterItem("<script type=\"text/javascript\">$(function() { $('div[data-search=users]').concreteAjaxSearch(" . $result . "); });</script>");
+
 			$userList = $this->getRequestedSearchResults();
 			$users = $userList->getPage();
 					
