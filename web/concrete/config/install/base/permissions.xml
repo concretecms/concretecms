@@ -194,6 +194,12 @@
 				<group name="Administrators"/>
 			</access>
 		</permissionkey>
+
+        <permissionkey handle="access_user_search" name="Access User Search" description="Controls whether a user can view the search user interface." package="" category="user">
+            <access>
+                <group name="Administrators"/>
+            </access>
+        </permissionkey>
         
 	</permissionkeys>
     

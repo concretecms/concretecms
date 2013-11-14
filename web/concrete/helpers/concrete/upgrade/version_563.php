@@ -151,6 +151,11 @@ class ConcreteUpgradeVersion563Helper {
 		$this->addGroupPermission('assign_group', 'assign_user_groups');
 		$this->addGroupPermission('add_sub_group');
 		$this->addGroupPermission('edit_group_permissions');
+
+		$pk = PermissionKey::getByHandle('access_user_search');	
+		$db = Loader::db();
+		$db->Execute('update PermissionKeys set pkHasCustomClass = 0 where pkID = ?', array($pk->getPermissionKeyID()));
+		
 	}
 
 }
