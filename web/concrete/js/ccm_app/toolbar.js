@@ -40,6 +40,10 @@ var CCMToolbar = function() {
 		$('.launch-tooltip').tooltip({'container': '#ccm-tooltip-holder'});
 	}
 
+	setupChosen = function() {
+		$('.chosen-select').chosen();
+	}
+
 	setupPanels = function() {
 		$('<div />', {'id': 'ccm-panel-overlay'}).appendTo($(document.body));
 		$('[data-launch-panel]').unbind().on('click', function() {
@@ -240,6 +244,7 @@ var CCMToolbar = function() {
 				setupIntelligentSearch();
 				setupPanels();
 				setupTooltips();
+				setupChosen();
 				setupHelpNotifications();
 
 				// make sure that dashboard dropdown doesn't get dismissed if you mis-click inside it;

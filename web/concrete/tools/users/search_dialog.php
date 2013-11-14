@@ -6,35 +6,29 @@ if (!$tp->canAccessUserSearchInterface()) {
 	die(t("You have no access to users."));
 }
 
-$cnt = Loader::controller('/dashboard/users/search');
-$userList = $cnt->getRequestedSearchResults();
-$users = $userList->getPage();
-$pagination = $userList->getPagination();
-$columns = $cnt->get('columns');
-
-if (!isset($mode)) {
-	$mode = Loader::helper('text')->entities($_REQUEST['mode']);
-}
-
-ob_start();
-Loader::element('users/search_form_advanced', array('columns' => $columns, 'mode' => $mode)) ;
-$searchForm = ob_get_contents();
-ob_end_clean();
-
+$cnt = new SearchUsersController();
+$cnt->search();
+$result = Loader::helper('json')->encode($cnt->getSearchResultObject()->getJSONObject());
 ?>
 
-<div class="ccm-ui">
-<div id="ccm-search-overlay" >
-<div class="ccm-pane-options" id="ccm-<?=$searchInstance?>-pane-options">
-	<?=$searchForm?>
-</div>
-
-<? Loader::element('users/search_results', array('columns' => $columns, 'mode' => $mode, 'users' => $users, 'userList' => $userList, 'pagination' => $pagination)); ?>
-</div>
+<div data-search="users" class="ccm-ui">
+<? Loader::element('users/search', array('controller' => $cnt))?>
 </div>
 
 <script type="text/javascript">
 $(function() {
-	ccm_setupAdvancedSearch('user');
+	$('div[data-search=users]').concreteAjaxSearch({
+		result: <?=$result?>,
+		onLoad: function(concreteSearch) {
+			concreteSearch.$element.on('click', 'a[data-user-id]', function() {
+				ccm_event.publish('UserSearchDialogClick', {
+					uID: $(this).attr('data-user-id'),
+					uEmail: $(this).attr('data-user-email'),
+					uName: $(this).attr('data-user-name')
+				});
+				return false;
+			})
+		}
+	});
 });
 </script>

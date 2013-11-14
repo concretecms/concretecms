@@ -22,10 +22,13 @@ foreach($searchFieldAttributes as $ak) {
 	$searchFields[$ak->getAttributeKeyID()] = tc('AttributeKeyName', $ak->getAttributeKeyName());
 }
 
+$searchRequest = $controller->getSearchRequest();
+
 ?>
 
 <script type="text/template" data-template="search-form">
 <form role="form" data-search-form="pages" action="<?=URL::to('/system/search/pages/submit')?>" class="form-inline ccm-search-fields">
+	<div class="ccm-search-fields-row">
 	<div class="form-group">
 		<select data-bulk-action="pages" disabled class="ccm-search-bulk-action form-control">
 			<option value=""><?=t('Items Selected')?></option>
@@ -52,6 +55,7 @@ foreach($searchFieldAttributes as $ak) {
 		<li><a href="#" data-search-toggle="advanced"><?=t('Advanced Search')?></a>
 		<li><a href="#" data-search-toggle="customize" data-search-column-customize-url="<?=URL::to('/system/dialogs/search/pages/customize')?>"><?=t('Customize Results')?></a>
 	</ul>
+	</div>
 	<div class="ccm-search-fields-advanced"></div>
 </form>
 </script>

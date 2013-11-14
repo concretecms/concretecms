@@ -81,6 +81,11 @@ $rl->register('/system/dialogs/search/pages/customize/submit', 'SearchPagesCusto
 $rl->register('/system/search/pages/submit', 'SearchPagesController::submit');
 $rl->register('/system/search/pages/field/{field}', 'SearchPagesController::field');
 
+$rl->register('/system/dialogs/search/users/customize', 'SearchUsersCustomizeDialogController::view');
+$rl->register('/system/dialogs/search/users/customize/submit', 'SearchUsersCustomizeDialogController::submit');
+$rl->register('/system/search/users/submit', 'SearchUsersController::submit');
+$rl->register('/system/search/users/field/{field}', 'SearchUsersController::field');
+
 /** 
  * Misc
  */

@@ -49,25 +49,20 @@ class Concrete5_Helper_Form_UserSelector {
 		$html .= '<a class="ccm-sitemap-select-item" id="ccm-user-selector-' . $fieldName . '" onclick="ccmActiveUserField=this" dialog-append-buttons="true" dialog-width="90%" dialog-height="70%" dialog-modal="false" dialog-title="' . t('Choose User') . '" href="' . REL_DIR_FILES_TOOLS_REQUIRED . '/users/search_dialog?mode=choose_one">' . t('Select User') . '</a>';
 		$html .= '<input type="hidden" name="' . $fieldName . '" value="' . $selectedUID . '">';
 		$html .= '</div>'; 
-		$html .= '<script type="text/javascript">';
-		$html .= '$(function() { $("#ccm-user-selector-' . $fieldName . '").dialog(); });';
-		$html .= 'if (typeof(ccmActiveUserField) == "undefined") {';
-		$html .= 'var ccmActiveUserField;';		
-		$html .= '}';
-		$html .= '
-		$(function() { 
-		ccm_triggerSelectUser = function(uID, uName, uEmail) { ';
-		if($javascriptFunc=='' || $javascriptFunc=='ccm_triggerSelectUser'){
-			$html .= '
-			var par = $(ccmActiveUserField).parent().find(\'.ccm-summary-selected-item-label\');
-			var pari = $(ccmActiveUserField).parent().find(\'[name=' . $fieldName . ']\');
-			par.html(uName);
-			pari.val(uID);
-			';
-		}else{
-			$html .= $javascriptFunc."(uID, uName); \n";
-		}
-		$html .= "}}); \r\n </script>";
+		$html .= <<<EOL
+<script type="text/javascript">
+$(function() {
+	$("#ccm-user-selector-{$fieldName}").dialog();
+	ccm_event.subscribe('UserSearchDialogClick', function(e) {
+		var par = $(ccmActiveUserField).parent().find('.ccm-summary-selected-item-label'),
+			pari = $(ccmActiveUserField).parent().find('[name={$fieldName}]');
+		par.html(e.eventData.uName);
+		pari.val(e.eventData.uID);
+		jQuery.fn.dialog.closeTop();
+	});
+});
+</script>
+EOL;
 		return $html;
 	}
 	

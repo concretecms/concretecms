@@ -22,8 +22,21 @@ class Concrete5_Controller_Page_Dashboard_Users_Search extends DashboardControll
 			$cnt = new SearchUsersController();
 			$cnt->search();
 			$this->set('searchController', $cnt);
-			$result = Loader::helper('json')->encode($cnt->getSearchResultObject()->getJSONObject());
-			$this->addFooterItem("<script type=\"text/javascript\">$(function() { $('div[data-search=users]').concreteAjaxSearch(" . $result . "); });</script>");
+			$object = $cnt->getSearchResultObject()->getJSONObject();
+			$result = Loader::helper('json')->encode($object);
+			$this->addFooterItem("<script type=\"text/javascript\">
+			$(function() { 
+				$('div[data-search=users]').concreteAjaxSearch({
+					result: " . $result . ", 
+					onLoad: function(concreteSearch) { 
+						concreteSearch.\$element.on('click', 'a[data-user-id]', function() {
+							window.location.href='" . URL::to('/dashboard/users/search') . "?uID=' + $(this).attr('data-user-id');
+							return false;
+						});
+					}
+				});
+			});
+			</script>");
 		}
 
 		$form = Loader::helper('form');
