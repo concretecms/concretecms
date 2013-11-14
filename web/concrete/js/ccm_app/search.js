@@ -1,437 +1,244 @@
-/** 
- * Search
+/**
+ * Base search class for AJAX searching
  */
- 
-var ccm_searchActivatePostFunction = new Array();
 
-ccm_setupAdvancedSearchFields = function(searchType) {
-	ccm_totalAdvancedSearchFields = $('.ccm-search-request-field-set').length;
-	$("#ccm-" + searchType + "-search-add-option").unbind();
-	$("#ccm-" + searchType + "-search-add-option").click(function() {
-		ccm_totalAdvancedSearchFields++;
-		if ($("#ccm-search-fields-wrapper").length > 0) { 
-			$("#ccm-search-fields-wrapper").append('<div class="ccm-search-field" id="ccm-' + searchType + '-search-field-set' + ccm_totalAdvancedSearchFields + '">' + $("#ccm-search-field-base").html() + '<\/div>');
-		} else {
-			$("#ccm-" + searchType + "-search-advanced-fields").append('<tr class="ccm-search-field" id="ccm-' + searchType + '-search-field-set' + ccm_totalAdvancedSearchFields + '">' + $("#ccm-search-field-base").html() + '<\/tr>');
+!function(window, $) {
+	'use strict';
+
+	function ConcreteAjaxSearch($element, options) {
+		options = options || {};
+		options = $.extend({
+			'result': {},
+			'onLoad': false
+		}, options);
+		this.$element = $element;
+		this.$results = $element.find('div[data-search-element=results]');
+		this.$resultsTableBody = this.$results.find('tbody');
+		this.$resultsTableHead = this.$results.find('thead');
+		this.$resultsPagination = this.$results.find('div.ccm-search-results-pagination');
+		this.$menuTemplate = $element.find('script[data-template=search-results-menu]');
+
+		this.options = options;
+
+		this._templateSearchForm = _.template($element.find('script[data-template=search-form]').html());
+		this._templateAdvancedSearchFieldRow = _.template($element.find('script[data-template=search-field-row]').html());
+		this._templateSearchResultsTableHead = _.template($element.find('script[data-template=search-results-table-head]').html());
+		this._templateSearchResultsTableBody = _.template($element.find('script[data-template=search-results-table-body]').html());
+		this._templateSearchResultsPagination = _.template($element.find('script[data-template=search-results-pagination]').html());
+		if (this.$menuTemplate.length) {
+			this._templateSearchResultsMenu = _.template(this.$menuTemplate.html());
 		}
-		ccm_activateAdvancedSearchFields(searchType, ccm_totalAdvancedSearchFields);
-	});
-	
-	// we have to activate any of the fields that were here based on the request
-	// these fields show up after a page is reloaded but we want to keep showing the request fields
-	var i = 1;
-	$('.ccm-search-request-field-set').each(function() {
-		ccm_activateAdvancedSearchFields(searchType, i);
-		i++;
-	});
-}
 
-ccm_setupAdvancedSearch = function(searchType) {
-	ccm_setupAdvancedSearchFields(searchType);
-	$("#ccm-" + searchType + "-advanced-search").ajaxForm({
-		beforeSubmit: function() {
-			ccm_deactivateSearchResults(searchType);
-		},
-		
-		success: function(resp) {
-			ccm_parseAdvancedSearchResponse(resp, searchType);
+		this.setupSearch();
+		this.setupCheckboxes();
+		this.setupBulkActions();
+		this.setupSort();
+		this.setupPagination();
+		this.setupAdvancedSearch();
+		this.setupCustomizeColumns();
+		this.updateResults(options.result);
+
+		if (options.onLoad) {
+			options.onLoad(this);
 		}
-	});
-	ccm_setupInPagePaginationAndSorting(searchType);
-	ccm_setupSortableColumnSelection(searchType);
-	
-}
-
-ccm_parseAdvancedSearchResponse = function(resp, searchType) {
-	var obj = $("#ccm-" + searchType + "-search-results");
-	if (obj.length == 0 || searchType == null) {
-		obj = $("#ccm-search-results");
-	}
-	obj.html(resp);
-	ccm_activateSearchResults(searchType);
-}
-
-ccm_deactivateSearchResults = function(searchType) {
-	var obj = $("#ccm-" + searchType + "-search-fields-submit");
-	if (obj.length == 0 || searchType == null) {
-		obj = $("#ccm-search-fields-submit");
-	}
-	obj.attr('disabled', true);
-	var obj = $("#ccm-" + searchType + "-search-results table.ccm-results-list");
-	if (obj.length == 0 || searchType == null) {
-		obj = $("#ccm-search-results");
-	}
-	obj.css('opacity', 0.4);
-	jQuery.fn.dialog.showLoader();
-}
-
-ccm_activateSearchResults = function(searchType) {
-	/*if ($('a[name=ccm-' + searchType + '-list-wrapper-anchor]').length > 0) {
-		window.location.hash = 'ccm-' + searchType + '-list-wrapper-anchor';
-	}*/
-	if ($('.ui-dialog-content').length == 0) { 
-		window.scrollTo(0,0);
-	} else {
-		$('.ui-dialog-content').each(function(i) { 
-			$(this).get(0).scrollTop = 0;
-		});
-	}
-	$('.dialog-launch').dialog();
-	var obj = $("#ccm-" + searchType + "-search-results table.ccm-results-list");
-	if (obj.length == 0 || searchType == null) {
-		obj = $("#ccm-search-results");
-	}
-	obj.css('opacity', 1);
-	jQuery.fn.dialog.hideLoader();
-	var obj = $("#ccm-" + searchType + "-search-fields-submit");
-	if (obj.length == 0 || searchType == null) {
-		obj = $("#ccm-search-fields-submit");
-	}
-	obj.attr('disabled', false);
-	ccm_setupInPagePaginationAndSorting(searchType);
-	ccm_setupSortableColumnSelection(searchType);
-	if(typeof(ccm_searchActivatePostFunction[searchType]) == 'function') {
-		ccm_searchActivatePostFunction[searchType]();
-	}
-}
-
-ccm_setupInPagePaginationAndSorting = function(searchType) {
-	$(".ccm-results-list th a").click(function() {
-		ccm_deactivateSearchResults(searchType);
-		var obj = $("#ccm-" + searchType + "-search-results");
-		if (obj.length == 0) {
-			obj = $("#ccm-search-results");
-		}
-		obj.load($(this).attr('href'), false, function() {
-			ccm_activateSearchResults(searchType);
-		});
-		return false;
-	});
-	$("div.ccm-pagination a").click(function() {
-		if (!($(this).parent().hasClass('disabled'))) { 
-			ccm_deactivateSearchResults(searchType);
-			var obj = $("#ccm-" + searchType + "-search-results");
-			if (obj.length == 0) {
-				obj = $("#ccm-search-results");
-			}
-			obj.load($(this).attr('href'), false, function() {
-				ccm_activateSearchResults(searchType);
-				$("div.ccm-dialog-content").attr('scrollTop', 0);
-			});
-		}
-		return false;
-	});
-	$(".ccm-pane-dialog-pagination").each(function() {
-		$(this).closest('.ui-dialog-content').dialog('option', 'buttons', [{}]);
-		$(this).closest('.ui-dialog').find('.ui-dialog-buttonpane .ccm-pane-dialog-pagination').remove();
-		$(this).appendTo($(this).closest('.ui-dialog').find('.ui-dialog-buttonpane').addClass('ccm-ui'));
-	});
-	
-}
-
-ccm_setupSortableColumnSelection = function(searchType) {
-	$("#ccm-list-view-customize").unbind();
-	$("#ccm-list-view-customize").click(function() {
-		jQuery.fn.dialog.open({
-			width: 550,
-			height: 350,
-			appendButtons: true,
-			modal: false,
-			href: $(this).attr('href'),
-			title: ccmi18n.customizeSearch				
-		});
-		return false;
-	});
-}
-
-ccm_checkSelectedAdvancedSearchField = function(searchType, fieldset) {
-	$("#ccm-" + searchType + "-search-field-set" + fieldset + " .ccm-search-option-type-date_time input").each(function() {
-		$(this).attr('id', $(this).attr('id') + fieldset);
-	});
-	$("#ccm-" + searchType + "-search-field-set" + fieldset + " .ccm-search-option-type-date_time input").datepicker({
-		showAnim: 'fadeIn'
-	});
-	$("#ccm-" + searchType + "-search-field-set" + fieldset + " .ccm-search-option-type-rating input").rating();		
-}
-
-ccm_activateAdvancedSearchFields = function(searchType, fieldset) {
-	var selTag = $("#ccm-" + searchType + "-search-field-set" + fieldset + " select:first");
-	selTag.unbind();
-	selTag.change(function() {
-		var selected = $(this).find(':selected').val(); 
-		$(this).parent().parent().find('input.ccm-' + searchType + '-selected-field').val(selected);
-		
-		var itemToCopy = $('#ccm-' + searchType + '-search-field-base-elements span[search-field=' + selected + ']');
-		$("#ccm-" + searchType + "-search-field-set" + fieldset + " .ccm-selected-field-content").html('');
-		itemToCopy.clone().appendTo("#ccm-" + searchType + "-search-field-set" + fieldset + " .ccm-selected-field-content");
-		
-		$("#ccm-" + searchType + "-search-field-set" + fieldset + " .ccm-selected-field-content .ccm-search-option").show();
-		ccm_checkSelectedAdvancedSearchField(searchType, fieldset);
-	});
-
-	
-	// add the initial state of the latest select menu
-	/*
-	var lastSelect = $("#ccm-" + searchType + "-search-field-set" + fieldset + " select[ccm-advanced-search-selector=1]").eq($(".ccm-" + searchType + "-search-field select[ccm-advanced-search-selector=1]").length-1);
-	var selected = lastSelect.find(':selected').val();
-	lastSelect.next('input.ccm-" + searchType + "-selected-field').val(selected);
-	*/
-	
-	$("#ccm-" + searchType + "-search-field-set" + fieldset + " .ccm-search-remove-option").unbind();
-	$("#ccm-" + searchType + "-search-field-set" + fieldset + " .ccm-search-remove-option").click(function() {
-		$(this).parents('div.ccm-search-field').remove();
-		$(this).parents('tr.ccm-search-field').remove();
-		
-		//ccm_totalAdvancedSearchFields--;
-	});
-	
-	ccm_checkSelectedAdvancedSearchField(searchType, fieldset);
-	
-}
-
-
-ccm_activateEditablePropertiesGrid = function() {
-	$("tr.ccm-attribute-editable-field").each(function() {
-		var trow = $(this);
-		$(this).find('a').click(function() {
-			trow.find('.ccm-attribute-editable-field-text').hide();
-			trow.find('.ccm-attribute-editable-field-clear-button').hide();
-			trow.find('.ccm-attribute-editable-field-form').show();
-			trow.find('.ccm-attribute-editable-field-save-button').show();
-		});
-		
-		trow.find('form').submit(function() {
-			return false;
-		});
-		
-		trow.find('.ccm-attribute-editable-field-save-button').parent().click(function() {
-			var task = trow.find('form input[name=task]');
-			if (task.val() == 'clear_extended_attribute') {
-				task.val(task.attr('data-original-task'));
-				task.attr('data-original-task', '');
-			}
-			ccm_submitEditablePropertiesGrid(trow);
-		});
-
-		trow.find('.ccm-attribute-editable-field-clear-button').parent().unbind();
-		trow.find('.ccm-attribute-editable-field-clear-button').parent().click(function() {
-			var task = trow.find('form input[name=task]');
-			task.attr('data-original-task', task.val());
-			task.val('clear_extended_attribute');
-			ccm_submitEditablePropertiesGrid(trow);
-			return false;
-		});
-
-	});
-}
-
-ccm_submitEditablePropertiesGrid = function(trow) {
-
-	trow.find('.ccm-attribute-editable-field-save-button').hide();
-	trow.find('.ccm-attribute-editable-field-clear-button').hide();
-	trow.find('.ccm-attribute-editable-field-loading').show();
-	try {
-		tinyMCE.triggerSave(true, true);
-	} catch(e) { }
-
-	trow.find('form').ajaxSubmit(function(resp) {
-		// resp is new HTML to display in the div
-		trow.find('.ccm-attribute-editable-field-loading').hide();
-		trow.find('.ccm-attribute-editable-field-save-button').show();
-		trow.find('.ccm-attribute-editable-field-text').html(resp);
-		trow.find('.ccm-attribute-editable-field-form').hide();
-		trow.find('.ccm-attribute-editable-field-save-button').hide();
-		trow.find('.ccm-attribute-editable-field-text').show();
-		trow.find('.ccm-attribute-editable-field-clear-button').show();
-		trow.find('td').show('highlight', {
-			color: '#FFF9BB'
-		});
-
-	});
-}
-
-ccm_triggerSelectUser = function(uID, uName, uEmail) {
-	alert(uID);
-	alert(uName);
-	alert(uEmail);
-}
-
-ccm_triggerSelectGroup = function(gID, gName) {
-	alert(gID);
-	alert(gName);
-}
-
-ccm_setupUserSearch = function(searchInstance) {
-	$(".chosen-select").chosen();	
-	
-	$("#ccm-user-list-cb-all").click(function() {
-		if ($(this).prop('checked') == true) {
-			$('.ccm-list-record td.ccm-user-list-cb input[type=checkbox]').attr('checked', true);
-			$("#ccm-user-list-multiple-operations").attr('disabled', false);
-		} else {
-			$('.ccm-list-record td.ccm-user-list-cb input[type=checkbox]').attr('checked', false);
-			$("#ccm-user-list-multiple-operations").attr('disabled', true);
-		}
-	});
-	$("td.ccm-user-list-cb input[type=checkbox]").click(function(e) {
-		if ($("td.ccm-user-list-cb input[type=checkbox]:checked").length > 0) {
-			$("#ccm-user-list-multiple-operations").attr('disabled', false);
-		} else {
-			$("#ccm-user-list-multiple-operations").attr('disabled', true);
-		}
-	});
-	
-	// if we're not in the dashboard, add to the multiple operations select menu
-
-	$("#ccm-user-list-multiple-operations").change(function() {
-		var action = $(this).val();
-		switch(action) {
-			case 'choose':
-				var idstr = '';
-				$("td.ccm-user-list-cb input[type=checkbox]:checked").each(function() {
-					ccm_triggerSelectUser($(this).val(), $(this).attr('user-name'), $(this).attr('user-email'));
-				});
-				jQuery.fn.dialog.closeTop();
-				break;
-			case "properties": 
-				uIDstring = '';
-				$("td.ccm-user-list-cb input[type=checkbox]:checked").each(function() {
-					uIDstring=uIDstring+'&uID[]='+$(this).val();
-				});
-				jQuery.fn.dialog.open({
-					width: 630,
-					height: 450,
-					modal: false,
-					href: CCM_TOOLS_PATH + '/users/bulk_properties?' + uIDstring,
-					title: ccmi18n.properties				
-				});
-				break;
-			case "activate": 
-				uIDstring = '';
-				$("td.ccm-user-list-cb input[type=checkbox]:checked").each(function() {
-					uIDstring=uIDstring+'&uID[]='+$(this).val();
-				});
-				jQuery.fn.dialog.open({
-					width: 630,
-					height: 450,
-					modal: false,
-					href: CCM_TOOLS_PATH + '/users/bulk_activate?searchInstance='+ searchInstance + '&' + uIDstring,
-					title: ccmi18n.user_activate				
-				});
-				break;
-			case "deactivate": 
-				uIDstring = '';
-				$("td.ccm-user-list-cb input[type=checkbox]:checked").each(function() {
-					uIDstring=uIDstring+'&uID[]='+$(this).val();
-				});
-				jQuery.fn.dialog.open({
-					width: 630,
-					height: 450,
-					modal: false,
-					href: CCM_TOOLS_PATH + '/users/bulk_deactivate?searchInstance='+ searchInstance + '&' + uIDstring,
-					title: ccmi18n.user_deactivate
-				});
-				break;
-			case "group_add": 
-				uIDstring = '';
-				$("td.ccm-user-list-cb input[type=checkbox]:checked").each(function() {
-					uIDstring=uIDstring+'&uID[]='+$(this).val();
-				});
-				jQuery.fn.dialog.open({
-					width: 630,
-					height: 450,
-					modal: false,
-					href: CCM_TOOLS_PATH + '/users/bulk_group_add?searchInstance='+ searchInstance + '&' + uIDstring,
-					title: ccmi18n.user_group_add		
-				});
-				break;
-			case "group_remove": 
-				uIDstring = '';
-				$("td.ccm-user-list-cb input[type=checkbox]:checked").each(function() {
-					uIDstring=uIDstring+'&uID[]='+$(this).val();
-				});
-				jQuery.fn.dialog.open({
-					width: 630,
-					height: 450,
-					modal: false,
-					href: CCM_TOOLS_PATH + '/users/bulk_group_remove?searchInstance='+ searchInstance + '&' + uIDstring,
-					title: ccmi18n.user_group_remove				
-				});
-				break;
-			case "delete": 
-				uIDstring = '';
-				$("td.ccm-user-list-cb input[type=checkbox]:checked").each(function() {
-					uIDstring=uIDstring+'&uID[]='+$(this).val();
-				});
-				jQuery.fn.dialog.open({
-					width: 630,
-					height: 450,
-					modal: false,
-					href: CCM_TOOLS_PATH + '/users/bulk_delete?searchInstance='+ searchInstance + '&' + uIDstring,
-					title: ccmi18n.user_delete				
-				});
-				break;
-		}
-		
-		$(this).get(0).selectedIndex = 0;
-	});
-
-}
-
-
-ccm_setupGroupSearchPaging = function() {
-	$("div#ccm-group-paging").each(function() {
-		$(this).closest('.ui-dialog-content').dialog('option', 'buttons', [{}]);
-		$(this).closest('.ui-dialog').find('.ui-dialog-buttonpane .ccm-pane-dialog-pagination').remove();
-		$(this).appendTo($(this).closest('.ui-dialog').find('.ui-dialog-buttonpane').addClass('ccm-ui'));
-	});
-}
-
-ccm_setupGroupSearch = function(callback) {
-	$('div.ccm-group a').unbind();
-	if (callback) {
-		func = window[callback];
-	} else {
-		func = ccm_triggerSelectGroup;
 	}
 
-	$('div.ccm-group a').each(function(i) {
-		var gla = $(this);
-		$(this).click(function() {
-			func(gla.attr('group-id'), gla.attr('group-name'));
-			$.fn.dialog.closeTop();
-			return false;
-		});
-	});	
-	$("#ccm-group-search").ajaxForm({
-		beforeSubmit: function() {
-			$("#ccm-group-search-wrapper").html("");	
-		},
-		success: function(resp) {
-			$("#ccm-group-search-wrapper").html(resp);	
-		}
-	});
-	
-	/* setup paging */
-	ccm_setupGroupSearchPaging();
-	$("div#ccm-group-paging a").click(function() {
-		$("#ccm-group-search-wrapper").html("");	
+	ConcreteAjaxSearch.prototype.ajaxUpdate = function(url, data, callback) {
+		data = data || [];
+		var cs = this;
+		jQuery.fn.dialog.showLoader();
 		$.ajax({
-			type: "GET",
-			url: $(this).attr('href'),
-			success: function(resp) {
-				//$("#ccm-dialog-throbber").css('visibility','hidden');
-				$("#ccm-group-search-wrapper").html(resp);
+			type: 'post', 
+			data: data,
+			dataType: 'json',
+			url: url,
+			complete: function() {
+				jQuery.fn.dialog.hideLoader();
+			},
+			error: function(r) {
+				ccmAlert.notice(r);
+			},
+			success: function(r) {
+				if (!callback) {
+					cs.updateResults(r);
+				} else {
+					callback(r);
+				}
 			}
 		});
-		return false;
-	});
-}
-
-if (typeof(ccm_selectSitemapNode) != 'function') {
-	ccm_selectSitemapNode = function(cID, cName) {
-		alert(cID);
-		alert(cName);
 	}
-}
 
+	ConcreteAjaxSearch.prototype.setupMenus = function() {
+		var cs = this;
+		if (cs.$menuTemplate.length) {
+			cs.$element.find('[data-menu]').remove();
+			// loop through all results,
+			// create nodes for them.
+			$.each(cs.options.result.items, function(i, item) {
+				cs.$results.append(cs._templateSearchResultsMenu({'item': item}));
+			});
+			cs.$element.find('tbody tr').ccmmenu();
+		}
+	};
+
+	ConcreteAjaxSearch.prototype.setupCustomizeColumns = function() {
+		var cs = this;
+		cs.$element.on('click', 'a[data-search-toggle=customize]', function() {
+			var url = $(this).attr('data-search-column-customize-url');
+			$.fn.dialog.open({
+				width: 480,
+				height: 400,
+				href: url,
+				modal: true,
+				title: ccmi18n.customizeSearch,
+				onOpen: function() {
+					var $form = $('form[data-dialog-form=search-customize'),
+						$selectDefault = $form.find('select[data-search-select-default-column]'),
+						$columns = $form.find('ul[data-search-column-list]');
+
+					$('ul[data-search-column-list]').sortable({
+						cursor: 'move',
+						opacity: 0.5
+					});
+					$form.on('click', 'input[type=checkbox]', function() {
+						var label = $(this).parent().find('span').html(),
+							id = $(this).attr('id');
+						
+						if ($(this).prop('checked')) {
+							if ($form.find('li[data-field-order-column=' + id + ']').length == 0) {
+								$selectDefault.append($('<option>', {'value': id, 'text': label}));
+								$selectDefault.prop('disabled', false);
+								$columns.append('<li data-field-order-column="' + id + '"><input type="hidden" name="column[]" value="' + id + '" />' + label + '<\/li>');
+							}
+						} else {
+							$columns.find('li[data-field-order-column=' + id + ']').remove();
+							$selectDefault.find('option[value=' + id + ']').remove();
+							if ($columns.find('li').length == 0) {
+								$selectDefault.prop('disabled', true);
+							}
+						}
+					});
+					ccm_event.subscribe('AjaxFormSubmitSuccess', function(e) {
+						cs.updateResults(e.eventData.result);
+					}, $form.get(0));
+				}
+			});
+			return false;
+		});
+	}
+
+	ConcreteAjaxSearch.prototype.updateResults = function(result) {
+		var cs = this;
+		cs.$resultsTableHead.html(cs._templateSearchResultsTableHead({'columns': result.columns}));
+		cs.$resultsTableBody.html(cs._templateSearchResultsTableBody({'items': result.items}));
+		cs.$resultsPagination.html(cs._templateSearchResultsPagination({'pagination': result.pagination}));
+
+		cs.$advancedFields.html('');
+		$.each(result.fields, function(i, field) {
+			cs.$advancedFields.append(cs._templateAdvancedSearchFieldRow({'field': field}));
+		});
+		cs.setupMenus();
+	}
+
+	ConcreteAjaxSearch.prototype.setupAdvancedSearch = function() {
+		var cs = this;
+		cs.$advancedFields = cs.$element.find('div.ccm-search-fields-advanced');
+
+		cs.$element.on('click', 'a[data-search-toggle=advanced]', function() {
+			cs.$advancedFields.append(cs._templateAdvancedSearchFieldRow());
+			return false;
+		});
+		cs.$element.on('change', 'select[data-search-field]', function() {
+			var $content = $(this).parent().find('.ccm-search-field-content');
+			$content.html('');
+			var field = $(this).find(':selected').attr('data-search-field-url');
+			if (field) {
+				cs.ajaxUpdate(field, false, function(r) {
+					$content.html(r.html);
+				});
+			}
+		});
+		cs.$element.on('click', 'a[data-search-remove=search-field]', function() {
+			var $row = $(this).parent();
+			$row.queue(function () {
+				$(this).addClass('ccm-search-field-removing');
+				$(this).dequeue()
+			}).delay(200).queue(function() {
+				$(this).remove();
+				$(this).dequeue();
+			});
+			return false;
+		});
+	}
+
+	ConcreteAjaxSearch.prototype.setupSort = function() {
+		var cs = this;
+		this.$element.on('click', 'thead th a', function() {
+			cs.ajaxUpdate($(this).attr('href'));
+			return false;
+		});
+	}
+
+	ConcreteAjaxSearch.prototype.setupSearch = function() {
+		var cs = this;
+		cs.$element.find('[data-search-element=wrapper]').html(cs._templateSearchForm());
+		cs.$element.on('submit', 'form[data-search-form]', function() {
+			var data = $(this).serializeArray();
+			data.push({'name': 'submitSearch', 'value': '1'});
+			cs.ajaxUpdate($(this).attr('action'), data);
+			return false;
+		});
+	}
+
+	ConcreteAjaxSearch.prototype.setupBulkActions = function() {
+		var cs = this;
+		cs.$bulkActions = cs.$element.find('select[data-bulk-action]');
+		cs.$element.on('change', 'select[data-bulk-action]', function() {
+			var $option = $(this).find('option:selected'),
+				value = $option.attr('data-bulk-action-type'),
+				items = [];
+
+			$.each(cs.$element.find('input[data-search-checkbox=individual]:checked'), function(i, checkbox) {
+				items.push({'name': 'item[]', 'value': $(checkbox).val()});
+			});
+			if (value == 'dialog') {
+				jQuery.fn.dialog.open({
+					width: $option.attr('data-bulk-action-dialog-width'),
+					height: $option.attr('data-bulk-action-dialog-height'),
+					modal: true,
+					href: $option.attr('data-bulk-action-url') + '?' + jQuery.param(items),
+					title: $option.attr('data-bulk-action-title')				
+				});
+			}
+		});
+	}
+
+	ConcreteAjaxSearch.prototype.setupPagination = function() {
+		var cs = this;
+		this.$element.on('click', 'ul.pagination a', function() {
+			cs.ajaxUpdate($(this).attr('href'));
+			return false;
+		});
+	}
+
+	ConcreteAjaxSearch.prototype.setupCheckboxes = function() {
+		var cs = this;
+		cs.$element.on('click', 'input[data-search-checkbox=select-all]', function() {
+			cs.$element.find('input[data-search-checkbox=individual]').prop('checked', $(this).is(':checked')).trigger('change');
+		});
+		cs.$element.on('change', 'input[data-search-checkbox=individual]', function() {
+			if (cs.$element.find('input[data-search-checkbox=individual]:checked').length) {
+				cs.$bulkActions.prop('disabled', false);
+			} else {
+				cs.$bulkActions.prop('disabled', true);
+			}
+		});
+
+	}
+
+	// jQuery Plugin
+	$.fn.concreteAjaxSearch = function(options) {
+		return new ConcreteAjaxSearch(this, options);
+	}
+
+}(window, $);

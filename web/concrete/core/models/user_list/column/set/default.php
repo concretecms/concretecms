@@ -4,7 +4,7 @@ class Concrete5_Model_UserSearchDefaultColumnSet extends DatabaseItemListColumnS
 	protected $attributeClass = 'UserAttributeKey';	
 	
 	public function getUserName($ui) {
-		return '<a href="' . View::url('/dashboard/users/search') . '?uID=' . $ui->getUserID() . '">' . $ui->getUserName() . '</a>';
+		return '<a data-user-name="' . $ui->getUserDisplayName() . '" data-user-email="' . $ui->getUserEmail() . '" data-user-id="' . $ui->getUserID() . '" href="#">' . $ui->getUserName() . '</a>';
 	}
 
 	public function getUserEmail($ui) {

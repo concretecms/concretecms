@@ -6,6 +6,7 @@ class Concrete5_Library_Controller extends AbstractController {
 	protected $view;
 	protected $viewPath;
 	protected $theme;
+	protected $controllerPath;
 
 	public function setViewObject(View $view) {
 		$this->view = $view;
@@ -29,6 +30,10 @@ class Concrete5_Library_Controller extends AbstractController {
 		}
 	}
 
+	public function setControllerPath($controllerPath) {
+		$this->controllerPath = $controllerPath;
+	}
+
 	public function __construct() {
 		if ($this->viewPath) {
 			$this->view = new View($this->viewPath);
@@ -46,7 +51,7 @@ class Concrete5_Library_Controller extends AbstractController {
 
 	public function action() {
 		$a = func_get_args();
-		array_unshift($a, $this->view->getViewPath());
+		array_unshift($a, $this->controllerPath);
 		$ret = call_user_func_array(array($this->view, 'url'), $a);
 		return $ret;
 	}

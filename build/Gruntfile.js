@@ -77,6 +77,7 @@ module.exports = function(grunt) {
 				'<%= DIR_BASE %>/concrete/js/ccm_app/in_context_menu.js',
 				'<%= DIR_BASE %>/concrete/js/ccm_app/quicksilver.js',
 				'<%= DIR_BASE %>/concrete/js/ccm_app/remote_marketplace.js',
+				'<%= DIR_BASE %>/concrete/js/ccm_app/search.js',
 				'<%= DIR_BASE %>/concrete/js/ccm_app/progressive_operations.js',
 				'<%= DIR_BASE %>/concrete/js/ccm_app/inline_edit.js',
 				'<%= DIR_BASE %>/concrete/js/ccm_app/custom_style.js',
@@ -135,12 +136,6 @@ module.exports = function(grunt) {
 			dest: '<%= DIR_BASE %>/concrete/js/ccm.sitemap.js',
 			src: '<%= DIR_BASE %>/concrete/js/ccm_app/sitemap.js'
 		},
-
-		ccm_search: {
-			dest: '<%= DIR_BASE %>/concrete/js/ccm.search.js',
-			src: '<%= DIR_BASE %>/concrete/js/search/base.js'
-		},
-
 
 		ccm_topics: {
 			dest: '<%= DIR_BASE %>/concrete/js/ccm.topics.js',
@@ -228,7 +223,6 @@ module.exports = function(grunt) {
 		'<%= DIR_BASE %>/concrete/css/ccm.gathering.base.css': '<%= DIR_BASE %>/concrete/css/ccm_app/build/ccm.gathering.base.less',
 		'<%= DIR_BASE %>/concrete/css/redactor.css': '<%= DIR_BASE %>/concrete/css/ccm_app/build/redactor.less',
 		'<%= DIR_BASE %>/concrete/css/ccm.topics.css': '<%= DIR_BASE %>/concrete/css/ccm_app/build/topics.less',
-		'<%= DIR_BASE %>/concrete/css/ccm.search.css': '<%= DIR_BASE %>/concrete/css/ccm_app/build/search.less'
 	};
 	// Let's include the dependencies
 	grunt.loadNpmTasks('grunt-contrib-concat');
@@ -287,8 +281,6 @@ module.exports = function(grunt) {
 	grunt.registerTask('css:debug', 'less:debug');
 	grunt.registerTask('css:release', 'less:release');
 	grunt.registerTask('css', 'css:release');
-
-	grunt.registerTask('js:search', 'uglify:ccm_search_release');
 
 	grunt.registerTask('debug', ['js:debug', 'css:debug']);
 	grunt.registerTask('release', ['js:release', 'css:release']);

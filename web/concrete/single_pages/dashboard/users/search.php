@@ -599,7 +599,7 @@ $tp = Loader::helper('concrete/user');
 if ($tp->canAccessUserSearchInterface()) { ?>
 	
 	<div class="ccm-dashboard-content-full" data-search="users">
-	<? Loader::element('users/search')?>
+	<? Loader::element('users/search', array('controller' => $searchController))?>
 	</div>
 
 

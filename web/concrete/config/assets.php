@@ -164,14 +164,6 @@ $al->registerGroup('core/sitemap', array(
 	array('css', 'core/sitemap')
 ));
 
-// Page Search
-$al->register('javascript', 'core/search', 'js/ccm.search.js', array('postprocess' => false));
-$al->register('css', 'core/search', 'css/ccm.search.css', array('postprocess' => false));
-$al->registerGroup('core/search', array(
-	array('javascript', 'core/search'),
-	array('css', 'core/search')
-));
-
 // Topics
 $al->register('javascript', 'core/topics', 'js/ccm.topics.js', array('postprocess' => false));
 $al->register('css', 'core/topics', 'css/ccm.topics.css', array('postprocess' => false));
