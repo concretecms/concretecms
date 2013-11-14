@@ -18,9 +18,10 @@
 		this.$resultsTableBody = this.$results.find('tbody');
 		this.$resultsTableHead = this.$results.find('thead');
 		this.$resultsPagination = this.$results.find('div.ccm-search-results-pagination');
-		this.$advancedFields = $element.find('div.ccm-search-fields-advanced')
-		this.options = options;
+		this.$advancedFields = $element.find('div.ccm-search-fields-advanced');
+		this.$bulkActions = $element.find('select[data-bulk-action]');
 
+		this.options = options;
 
 		this._templateAdvancedSearchFieldRow = _.template($element.find('script[data-template=search-field-row]').html());
 		this._templateSearchResultsTableHead = _.template($element.find('script[data-template=search-results-table-head]').html());
@@ -29,13 +30,13 @@
 		this._templateSearchResultsMenu = _.template($element.find('script[data-template=search-results-menu]').html());
 		
 		this.setupCheckboxes();
+		this.setupBulkActions();
 		this.setupSort();
 		this.setupSearch();
 		this.setupPagination();
 		this.setupAdvancedSearch();
 		this.setupCustomizeColumns();
 		this.updateResults(options);
-		this.setupMenus();
 	}
 
 	ConcreteAjaxSearch.prototype.ajaxUpdate = function(url, data, callback) {
@@ -66,6 +67,7 @@
 	ConcreteAjaxSearch.prototype.setupMenus = function() {
 		var cs = this;
 		if (cs.$element.find('script[data-template=search-results-menu]').length) {
+			cs.$element.find('[data-menu]').remove();
 			// loop through all results,
 			// create nodes for them.
 			$.each(cs.options.items, function(i, item) {
@@ -131,6 +133,8 @@
 		$.each(results.fields, function(i, field) {
 			cs.$advancedFields.append(cs._templateAdvancedSearchFieldRow({'field': field}));
 		});
+		cs.$bulkActions.prop('disabled', true);
+		cs.setupMenus();
 	}
 
 	ConcreteAjaxSearch.prototype.setupAdvancedSearch = function() {
@@ -181,6 +185,28 @@
 		});
 	}
 
+	ConcreteAjaxSearch.prototype.setupBulkActions = function() {
+		var cs = this;
+		cs.$element.on('change', 'select[data-bulk-action]', function() {
+			var $option = $(this).find('option:selected'),
+				value = $option.attr('data-bulk-action-type'),
+				items = [];
+
+			$.each(cs.$element.find('input[data-search-checkbox=individual]:checked'), function(i, checkbox) {
+				items.push({'name': 'item[]', 'value': $(checkbox).val()});
+			});
+			if (value == 'dialog') {
+				jQuery.fn.dialog.open({
+					width: $option.attr('data-bulk-action-dialog-width'),
+					height: $option.attr('data-bulk-action-dialog-height'),
+					modal: true,
+					href: $option.attr('data-bulk-action-url') + '?' + jQuery.param(items),
+					title: $option.attr('data-bulk-action-title')				
+				});
+			}
+		});
+	}
+
 	ConcreteAjaxSearch.prototype.setupPagination = function() {
 		var cs = this;
 		this.$element.on('click', 'ul.pagination a', function() {
@@ -191,9 +217,17 @@
 
 	ConcreteAjaxSearch.prototype.setupCheckboxes = function() {
 		var cs = this;
-		this.$element.on('click', 'input[data-search-checkbox=select-all]', function() {
-			cs.$element.find('input[data-search-checkbox=individual]').prop('checked', $(this).is(':checked'));
+		cs.$element.on('click', 'input[data-search-checkbox=select-all]', function() {
+			cs.$element.find('input[data-search-checkbox=individual]').prop('checked', $(this).is(':checked')).trigger('change');
 		});
+		cs.$element.on('change', 'input[data-search-checkbox=individual]', function() {
+			if (cs.$element.find('input[data-search-checkbox=individual]:checked').length) {
+				cs.$bulkActions.prop('disabled', false);
+			} else {
+				cs.$bulkActions.prop('disabled', true);
+			}
+		});
+
 	}
 
 	// jQuery Plugin

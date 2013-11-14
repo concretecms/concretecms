@@ -408,6 +408,7 @@ $classes = array(
 	
 	'AreaLayoutPresetsDialogController' => array('controller', '/dialogs/area/layout/presets'),
 	'PageDeleteDialogController' => array('controller', '/dialogs/page/delete'),
+	'PageBulkPropertiesDialogController' => array('controller', '/dialogs/page/bulk/properties'),
 	'SearchPagesCustomizeDialogController' => array('controller', '/dialogs/search/pages/customize'),
 	'DashboardBaseController' => array('controller', '/dashboard/base'),
 	'AccountController' => array('controller', '/account'),
