@@ -12,7 +12,7 @@
    * Edit mode object for managing editing.
    */
   var EditMode = c5.EditMode = function EditMode() {
-    var my = this, area, block;
+    var my = this;
 
     c5.createGetterSetters.call(my, {
       dragging: false,
@@ -24,7 +24,7 @@
     });
 
     c5.event.bind('panel.open', function editModePanelOpenEventHandler(event) {
-      my.panelOpened(event.eventData);
+      my.panelOpened(event.eventData.panel, event.eventData.element);
     });
 
     c5.event.bind('EditModeBlockEditInline', function(event) {
@@ -93,14 +93,7 @@
       my.setDragging(true);
     });
 
-    $('div.ccm-area').each(function(){
-      area = new Area($(this), my);
-      my.addArea(area);
-    });
-    $('div.ccm-block-edit').each(function(){
-      my.addBlock(block = new Block($(this), my));
-      _(my.getAreas()).findWhere({id: block.getAreaId()}).addBlock(block);
-    });
+    my.scanBlocks();
   };
 
   /**
@@ -111,6 +104,8 @@
   var Area = c5.Area = function Area(elem, edit_mode) {
     var my = this;
 
+    elem.data('c5.area', my);
+
     c5.createGetterSetters.call(my, {
       id: elem.data('area-id'),
       elem: elem,
@@ -118,6 +113,7 @@
       dragAreas: [],
       blocks: [],
       editMode: edit_mode,
+      maximumBlocks: parseInt(elem.data('maximumBlocks'), 10),
       blockTypes: elem.data('accepts-block-types').split(' ')
     });
 
@@ -131,8 +127,11 @@
    * @param {jQuery}   elem      The blocks HTML element
    * @param {EditMode} edit_mode The EditMode instance
    */
-  var Block = c5.Block = function Block(elem, edit_mode){
+  var Block = c5.Block = function Block(elem, edit_mode, peper){
     var my = this;
+
+    elem.data('c5.block', my);
+
     c5.createGetterSetters.call(my, {
       id: elem.data('block-id'),
       handle: elem.data('block-type-handle'),
@@ -147,131 +146,39 @@
       editMode: edit_mode,
       selected: null,
       stepIndex: 0,
-      peper: elem.find('a[data-inline-command="move-block"]'),
+      peper: peper || elem.find('a[data-inline-command="move-block"]'),
       pepSettings:{}
     });
+
     my.id = my.getId();
     elem.ccmmenu();
+
     elem.find('a[data-menu-action=edit_inline]').on('click', function() {
       c5.event.fire('EditModeBlockEditInline', {block: my, event: event});
     });
-    elem.find('a[data-menu-action=block_dialog]').each(function() {
-      var href = $(this).attr('data-menu-href'), area = edit_mode.getAreaByID(my.getAreaId());
-      href += (href.indexOf('?') !== -1) ? '&cID=' + CCM_CID : '?cID=' + CCM_CID;
-      href += '&arHandle=' + encodeURIComponent(area.getHandle()) + '&bID=' + my.getId();
-      $(this).attr('href', href);
-      $(this).dialog();
-    });
+
     elem.find('a[data-menu-action=block_scrapbook]').on('click', function() {
       c5.event.fire('EditModeBlockAddToClipboard', {block: my, event: event});
     });
+
     elem.find('a[data-menu-action=delete_block]').on('click', function() {
       c5.event.fire('EditModeBlockDelete', {message: $(this).attr('data-menu-delete-message'), block: my, event: event});
     });
+
    _(my.getPepSettings()).extend({
       deferPlacement: true,
       moveTo: function() { my.dragPosition(this); },
       initiate: function blockDragInitiate(event, pep) {
-        my.setDragging(true);
-        my.getDragger().hide().appendTo(window.document.body).css(my.getElem().offset());
-        my.setDraggerOffset({x: event.clientX - my.getElem().offset().left + window.document.body.scrollLeft, y: event.clientY - my.getElem().offset().top + window.document.body.scrollTop});
-        my.getDragger().fadeIn(250);
-
-        _.defer(function(){
-          c5.event.fire('EditModeBlockDragInitialization', {block: my, pep: pep, event: event});
-        });
+        my.pepInitiate.call(my, this, event, pep);
       },
       drag: function blockDrag(event, pep) {
-        _.defer(function(){
-          c5.event.fire('EditModeBlockDrag', {block: my, pep: pep, event: event});
-        });
+        my.pepDrag.call(my, this, event, pep);
       },
       start: function blockDragStart(event, pep) {
-        my.getDragger().css({top:0, left:0});
-        my.setDraggerOffset({x: event.clientX - my.getElem().offset().left + window.document.body.scrollLeft, y: event.clientY - my.getElem().offset().top + window.document.body.scrollTop});
-        my.dragPosition(pep);
-        var start_pos = my.getDraggerOffset(), start_width = my.getDragger().width();
-        my.getDragger().animate({width: 90, height:90}, {duration:250, step:function(now, fx) {
-          if (fx.prop == 'width') {
-            var change = start_width - now;
-            my.setDraggerOffset({x: start_pos.x - change, y: start_pos.y });
-            my.dragPosition(pep);
-          }
-        }});
-        _.defer(function(){
-          c5.event.fire('EditModeBlockDragStart', {block: my, pep: pep, event: event});
-        });
+        my.pepStart.call(my, this, event, pep);
       },
       stop: function blockDragStop(event, pep) {
-        var selected_block;
-        my.getDragger().stop(1);
-        my.getDragger().css({top:0, left:0});
-        my.dragPosition(pep);
-        if (my.getSelected()) {
-          my.getArea().removeBlock(my);
-          my.getSelected().getElem().after(my.getElem());
-            if (selected_block = my.getSelected().getBlock()) {
-            my.getSelected().getArea().addBlock(my, selected_block);
-          } else {
-            my.getSelected().getArea().addBlockToIndex(my, 0);
-          }
-          my.getPeper().pep(my.getPepSettings());
-          c5.event.fire('EditModeBlockMove', my);
-        }
-
-        var dragger_start = {
-          x: my.getDraggerPosition().x,
-          y: my.getDragger().offset().top,
-          width: my.getDragger().width(),
-          height: my.getDragger().height()
-        };
-        my.setDragging(false);
-
-        // Manually animate so that we can ensure that we end at the element.
-        my.getDragger().animate({ccm_perc: 0}, {duration: 0, step: function(){}}).animate({
-          ccm_perc: 1,
-          opacity: 0
-        }, {
-          duration: 500,
-          step: function(now, fx) {
-            if (fx.prop == 'ccm_perc') {
-              var end_pos = {
-                x: my.getElem().offset().left,
-                y: my.getElem().offset().top,
-                width: my.getElem().width(),
-                height: my.getElem().height()
-              }, change = {
-                x: (end_pos.x - dragger_start.x) * now,
-                y: (end_pos.y - dragger_start.y) * now,
-                width: (end_pos.width - dragger_start.width) * now,
-                height: (end_pos.height - dragger_start.height) * now
-              };
-
-              my.setDraggerPosition({
-                x: dragger_start.x + change.x,
-                y: dragger_start.y + change.y
-              });
-              my.renderPosition();
-
-              my.getDragger().css({
-                width: dragger_start.width + change.width,
-                height: dragger_start.height + change.height
-              });
-            } else {
-              my.getDragger().css({
-                opacity:now
-              });
-            }
-          },
-          complete: function(){
-            my.getDragger().remove();
-            my.setAttr('dragger', null);
-          }
-        });
-
-        _.defer(function(){
-          c5.event.fire('EditModeBlockDragStop', {block: my, pep: pep, event: event});
-        });
+        my.pepStop.call(my, this, event, pep);
       },
       place: false
     });
@@ -285,11 +192,17 @@
       }
     });
 
-    my.getPeper().css('z-index', '50000 !important').click(function(e){
+    my.getPeper().click(function(e){
       e.preventDefault();
       e.stopPropagation();
       return false;
     }).pep(my.getPepSettings());
+  };
+
+  var BlockType = c5.BlockType = function BlockType(elem, edit_mode, dragger) {
+    var my = this;
+
+    Block.call(my, elem, edit_mode, dragger);
   };
 
   /**
@@ -321,8 +234,33 @@
 
   EditMode.prototype = {
 
-    panelOpened: function editModePanelOpened(panel) {
-      // @todo: panel logic :)
+    scanBlocks: function editModeScanBlocks() {
+      var my = this, area, block;
+      $('div.ccm-area').each(function(){
+        if ($(this).data('c5.area')) return;
+        area = new Area($(this), my);
+        my.addArea(area);
+      });
+      $('div.ccm-block-edit').each(function(){
+        if ($(this).data('c5.block')) return;
+        my.addBlock(block = new Block($(this), my));
+        _(my.getAreas()).findWhere({id: block.getAreaId()}).addBlock(block);
+      });
+    },
+
+    panelOpened: function editModePanelOpened(panel, element) {
+      var my = this;
+      if (panel.getIdentifier() !== 'add-block') {
+        return null;
+      }
+
+      $(element).find('a.ccm-panel-add-block-draggable-block-type').each(function(){
+        var block, me = $(this), dragger = $('<a/>').addClass('ccm-panel-add-block-draggable-block-type-dragger').appendTo(me);
+        my.addBlock(block = new BlockType($(this), my, dragger));
+
+        block.setPeper(dragger);
+      });
+
       return panel;
     },
 
@@ -400,21 +338,17 @@
 
     /**
      * Add block to area
-     * @param  {Block}   block       block to add
+     * @param  {Block}   block     block to add
      * @param  {Block}   sub_block The block that should be above the added block
-     * @return {Boolean}             Success, always true
+     * @return {Boolean}           Success, always true
      */
     addBlock: function areaAddBlock(block, sub_block) {
       var my = this;
-
       if (sub_block) {
-        return this.addBlockToIndex(block, _(my.getBlocks()).indexOf(sub_block));
+        return this.addBlockToIndex(block, _(my.getBlocks()).indexOf(sub_block) + 1);
       }
 
-      block.setArea(my);
-      my.getBlocks().push(block);
-      my.addDragArea(block);
-      return true;
+      return this.addBlockToIndex(block, my.getBlocks().length);
     },
 
     /**
@@ -426,6 +360,7 @@
     addBlockToIndex: function areaAddBlockToIndex(block, index) {
       block.setArea(this);
       this.getBlocks().splice(index, 0, block);
+      this.addDragArea(block);
       return true;
     },
 
@@ -481,9 +416,9 @@
      * @return {Array}          Array of all drag areas that are capable of accepting the block.
      */
     contendingDragAreas: function areaContendingDragAreas(pep, block) {
-      var my = this;
+      var my = this, max_blocks = my.getMaximumBlocks();
 
-      if (!_(my.getBlockTypes()).contains(block.getHandle())) {
+      if ((max_blocks > 0 && my.getBlocks().length >= max_blocks) || !_(my.getBlockTypes()).contains(block.getHandle())) {
         return [];
       }
       return _(my.getDragAreas()).filter(function(drag_area) {
@@ -493,6 +428,18 @@
   };
 
   Block.prototype = {
+
+    setArea: function blockSetArea(area) {
+      this.setAttr('area', area);
+
+      var my = this;
+      my.getElem().find('a[data-menu-action=block_dialog]').each(function() {
+        var href = $(this).data('menu-href');
+        href += (href.indexOf('?') !== -1) ? '&cID=' + CCM_CID : '?cID=' + CCM_CID;
+        href += '&arHandle=' + encodeURIComponent(area.getHandle()) + '&bID=' + my.getId();
+        $(this).attr('href', href).dialog();
+      });
+    },
 
     /**
      * Custom dragger getter, create dragger if it doesn't exist
@@ -633,8 +580,165 @@
       my.renderPosition();
 
       return true;
+    },
+
+    pepInitiate: function blockPepInitiate(context, event, pep) {
+      var my = this;
+      my.setDragging(true);
+      my.getDragger().hide().appendTo(window.document.body).css(my.getElem().offset());
+      my.setDraggerOffset({x: event.clientX - my.getElem().offset().left + window.document.body.scrollLeft, y: event.clientY - my.getElem().offset().top + window.document.body.scrollTop});
+      my.getDragger().fadeIn(250);
+
+      _.defer(function(){
+        c5.event.fire('EditModeBlockDragInitialization', {block: my, pep: pep, event: event});
+      });
+    },
+    pepDrag: function blockPepDrag(context, event, pep) {
+      var my = this;
+      _.defer(function(){
+        c5.event.fire('EditModeBlockDrag', {block: my, pep: pep, event: event});
+      });
+    },
+    pepStart: function blockPepStart(context, event, pep) {
+      var my = this;
+      my.getDragger().css({top:0, left:0});
+      my.setDraggerOffset({x: event.clientX - my.getElem().offset().left + window.document.body.scrollLeft, y: event.clientY - my.getElem().offset().top + window.document.body.scrollTop});
+      my.dragPosition(pep);
+      var start_pos = my.getDraggerOffset(), start_width = my.getDragger().width();
+      my.getDragger().animate({width: 90, height:90}, {duration:250, step:function(now, fx) {
+        if (fx.prop == 'width') {
+          var change = start_width - now;
+          my.setDraggerOffset({x: start_pos.x - change, y: start_pos.y });
+          my.dragPosition(pep);
+        }
+      }});
+      _.defer(function(){
+        c5.event.fire('EditModeBlockDragStart', {block: my, pep: pep, event: event});
+      });
+    },
+    pepStop: function blockPepStop(context, event, pep) {
+      var selected_block, my = this;
+      my.getDragger().stop(1);
+      my.getDragger().css({top:0, left:0});
+      my.dragPosition(pep);
+      if (my.getSelected()) {
+        my.getArea().removeBlock(my);
+        my.getSelected().getElem().after(my.getElem());
+        if (selected_block = my.getSelected().getBlock()) {
+          my.getSelected().getArea().addBlock(my, selected_block);
+        } else {
+          my.getSelected().getArea().addBlockToIndex(my, 0);
+        }
+        my.getPeper().pep(my.getPepSettings());
+        c5.event.fire('EditModeBlockMove', my);
+      }
+
+      my.animateToElem();
+
+      _.defer(function(){
+        c5.event.fire('EditModeBlockDragStop', {block: my, pep: pep, event: event});
+      });
+    },
+
+    animateToElem: function blockAnimateToElem(element) {
+      var my = this, elem = element || my.getElem(), dragger_start = {
+        x: my.getDraggerPosition().x,
+        y: my.getDragger().offset().top,
+        width: my.getDragger().width(),
+        height: my.getDragger().height()
+      };
+      my.setDragging(false);
+      my.getDragger().animate({ccm_perc: 0}, {duration: 0, step: function(){}}).animate({
+        ccm_perc: 1,
+        opacity: 0
+      }, {
+        duration: 500,
+        step: function(now, fx) {
+          if (fx.prop == 'ccm_perc') {
+            var end_pos = {
+              x: elem.offset().left,
+              y: elem.offset().top,
+              width: elem.width(),
+              height: elem.height()
+            }, change = {
+              x: (end_pos.x - dragger_start.x) * now,
+              y: (end_pos.y - dragger_start.y) * now,
+              width: (end_pos.width - dragger_start.width) * now,
+              height: (end_pos.height - dragger_start.height) * now
+            };
+
+            my.setDraggerPosition({
+              x: dragger_start.x + change.x,
+              y: dragger_start.y + change.y
+            });
+            my.renderPosition();
+
+            my.getDragger().css({
+              width: dragger_start.width + change.width,
+              height: dragger_start.height + change.height
+            });
+          } else {
+            my.getDragger().css({
+              opacity:now
+            });
+          }
+        },
+        complete: function(){
+          my.getDragger().remove();
+          my.setAttr('dragger', null);
+        }
+      });
     }
   };
+
+  BlockType.prototype = _({
+    pepStop: function blockTypePepStop(context, event, pep) {
+      var my = this, elem = my.getElem();
+      if (my.getSelected()) {
+        var block_type_id = elem.data('btid'),
+            area = my.getSelected().getArea(),
+            area_handle = area.getHandle(),
+            area_id = area.getId(),
+            is_inline = !!elem.data('supports-inline-add'),
+            has_add = !!elem.data('has-add-template');
+
+        CCMPanelManager.exitPanelMode();
+
+        if (!has_add) {
+          $.get(CCM_DISPATCHER_FILENAME, {
+            cID: CCM_CID,
+            arHandle: area_handle,
+            btID: block_type_id,
+            mode: 'edit',
+            processBlock: 1,
+            add: 1,
+            ccm_token: CCM_SECURITY_TOKEN
+          }, function(response) {
+            CCMEditMode.parseBlockResponse(response, false, 'add');
+          })
+        } else if (is_inline) {
+          CCMInlineEditMode.loadAdd(CCM_CID, area_handle, area_id, block_type_id);
+        } else {
+          jQuery.fn.dialog.open({
+            onClose: function() {
+              $(document).trigger('blockWindowClose');
+              jQuery.fn.dialog.closeAll();
+            },
+            width: parseInt(elem.data('dialog-width'), 10),
+            height: parseInt(elem.data('dialog-height'), 10) + 20,
+            title: elem.data('dialog-title'),
+            href: CCM_TOOLS_PATH + '/add_block_popup?cID=' + CCM_CID + '&btID=' + block_type_id + '&arHandle=' + encodeURIComponent(area_handle)
+          });
+        }
+      }
+
+      _.defer(function(){
+        c5.event.fire('EditModeBlockDragStop', {block: my, pep: pep, event: event});
+      });
+      my.getDragger().remove();
+      my.setAttr('dragger', null);
+    }
+  }).defaults(Block.prototype);
 
   DragArea.prototype = {
 

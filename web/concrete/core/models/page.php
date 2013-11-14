@@ -243,7 +243,6 @@ class Concrete5_Model_Page extends Collection {
 
 		$update_query .= " " . implode(' ', $when_statements) . " END WHERE bID in (" .
 			implode(',', array_pad(array(), count($block_order), '?')) . ")";
-		$db->debug = true;
 		$db->execute($update_query, array_merge($update_values, $block_order));
 
 		return;

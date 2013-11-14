@@ -1,4 +1,4 @@
-/** 
+/**
  * Inline Edit Mode
  */
 
@@ -6,7 +6,7 @@
 var CCMInlineEditMode = function() {
 
 	enterInlineEditMode = function(activeObj) {
-		
+
 		$.fn.ccmmenu.disable();
 		CCMToolbar.disable();
 		$('div.ccm-area').addClass('ccm-area-inline-edit-disabled');
@@ -73,7 +73,7 @@ var CCMInlineEditMode = function() {
 		},
 
 		editBlock: function(cID, aID, arHandle, bID, params) {
-			
+
 			var postData = [
 				{name: 'btask', value: 'edit'},
 				{name: 'cID', value: cID},
@@ -98,6 +98,11 @@ var CCMInlineEditMode = function() {
 			success: function(r) {
 				var $container = $('[data-block-id=' + bID + '][data-area-id=' + aID + ']');
 				$container.html(r);
+				if (!$container.data('c5.block')) {
+					var block;
+					c5.editMode.addBlock(block = new c5.Block($container, c5.editMode));
+					_(c5.editMode.getAreas()).findWhere({id: block.getAreaId()}).addBlock(block);
+				}
 				completeInlineEditMode($container);
 				jQuery.fn.dialog.hideLoader();
 			}});
@@ -124,15 +129,17 @@ var CCMInlineEditMode = function() {
 			url: CCM_TOOLS_PATH + '/add_block_popup',
 			data: postData,
 			success: function(r) {
+				var obj;
 				jQuery.fn.dialog.closeAll();
 				if ($('#ccm-add-new-block-placeholder').length > 0) {
-					var obj = $('#ccm-add-new-block-placeholder');
+					obj = $('#ccm-add-new-block-placeholder');
 				} else {
-					var obj = $('#a' + aID);
+					obj = $('#a' + aID);
 				}
+				var $container;
 				obj.addClass("ccm-area-edit-inline-active");
-				obj.append($('<div id="a' + aID + '-bt' + btID + '" class="ccm-block-edit-inline-active">' + r + '</div>'));
-				var $container = $('#a' + aID + '-bt' + btID);
+				obj.append($container = $('<div id="a' + aID + '-bt' + btID + '" class="ccm-block-edit-inline-active">' + r + '</div>'));
+
 				completeInlineEditMode($container);
 				jQuery.fn.dialog.hideLoader();
 			}});
