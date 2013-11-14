@@ -3,7 +3,7 @@
         <?php echo $this->controller->token->output('update_cache')?>
         
     <fieldset>
-        <legend style="margin-bottom: 0px"><?php echo t('Block Cache')?></legend>
+        <legend><?php echo t('Block Cache')?></legend>
     	<div class="control-group">
             <div class="controls">
             <label class="radio">
@@ -107,8 +107,13 @@
             </div>
         </div>    
 
-
     </fieldset>
+    <div class="ccm-dashboard-form-actions-wrapper">
+    <div class="ccm-dashboard-form-actions">
+        <button class="pull-right btn btn-success" type="submit" ><?=t('Save')?></button>
+    </div>
+    </div>
+
 </form>
 
 <script type="text/javascript">

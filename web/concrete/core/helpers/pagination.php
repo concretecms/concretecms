@@ -192,6 +192,24 @@ class Concrete5_Helper_Pagination {
 		return $this->current_page-1;
 	}		
 
+	public function getAsJSONObject() {
+		$pagination = new stdClass;
+		$prevClass = 'prev';
+		$nextClass = 'next';
+		if (!$this->hasPreviousPage()) {
+			$prevClass = 'prev disabled';
+		}
+		if (!$this->hasNextPage()) {
+			$nextClass = 'next disabled';
+		}
+		$pagination->prevClass = $prevClass;
+		$pagination->nextClass = $nextClass;
+		$pagination->previousPage = $this->getPrevious();
+		$pagination->nextPage = $this->getNext();
+		$pagination->pages = $this->getPages('li');
+		return $pagination;
+	}
+
 	function getPages($wrapper='span'){
 		if($this->number_of_pages==1) return;
 		$pages_made=0;
