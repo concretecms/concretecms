@@ -1,22 +1,18 @@
 <? defined('C5_EXECUTE') or die('Access Denied'); ?>
+<?
+$dh = Loader::helper('concrete/dashboard/sitemap');
+if ($dh->canRead()) { ?>
+	
+	<div class="ccm-dashboard-content-full" data-search="pages">
+	<? Loader::element('pages/search_form_advanced', array('columns' => $columns, 'searchRequest' => $searchRequest)); ?>
+	<div data-search-results="pages">
+		<? Loader::element('pages/search_results', array('columns' => $columns, 'results' => $results, 'pageList' => $pageList, 'pagination' => $pagination)); ?>
+	</div>
+	</div>
 
-<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Search Pages'), t('Search the pages of your site and perform bulk actions on them.'), false, false);?>
+<? } else { ?>
+	<div class="ccm-pane-body">
+		<p><?=t("You must have access to the dashboard sitemap to search pages.")?></p>
+	</div>
+<? } ?>
 
-	<?
-	$dh = Loader::helper('concrete/dashboard/sitemap');
-	if ($dh->canRead()) { ?>
-	
-		<div class="ccm-pane-options" id="ccm-<?=$searchInstance?>-pane-options">
-			<? Loader::element('pages/search_form_advanced', array('columns' => $columns, 'searchInstance' => $searchInstance, 'searchRequest' => $searchRequest, 'searchType' => 'DASHBOARD')); ?>
-		</div>
-	
-		<? Loader::element('pages/search_results', array('columns' => $columns, 'searchInstance' => $searchInstance, 'searchType' => 'DASHBOARD', 'pages' => $pages, 'pageList' => $pageList, 'pagination' => $pagination)); ?>
-	
-	<? } else { ?>
-		<div class="ccm-pane-body">
-			<p><?=t("You must have access to the dashboard sitemap to search pages.")?></p>
-		</div>	
-	
-	<? } ?>
-
-<?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(false); ?>

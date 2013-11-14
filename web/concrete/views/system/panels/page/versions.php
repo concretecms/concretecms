@@ -1,6 +1,9 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
 ?>
+<script type="text/javascript">
+	
+</script>
 <script type="text/template" class="tbody">
 <% _.each(cv.versions, function(cv) { %>
 	 <%=templateRow(cv) %>
@@ -22,8 +25,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			<% if (cv.cvIsApproved == 1) { %>
 				<i class="glyphicon glyphicon-ok" title="<?=t('This is the approved page version.')?>"></i>
 			<% } %>
-			<a href="#" class="ccm-panel-page-versions-version-menu" data-menu-class="ccm-panel-page-versions-menu" data-menu="ccm-panel-page-versions-version-menu-<%-cv.cvID%>"><i class="glyphicon glyphicon-share-alt"></i></a>
-			<div class="ccm-popover-inverse popover fade" id="ccm-panel-page-versions-version-menu-<%-cv.cvID%>">
+			<a href="#" class="ccm-panel-page-versions-version-menu" data-menu-class="ccm-panel-page-versions-menu" data-launch-menu="ccm-panel-page-versions-version-menu-<%-cv.cvID%>"><i class="glyphicon glyphicon-share-alt"></i></a>
+			<div class="ccm-popover-inverse popover fade" data-menu="ccm-panel-page-versions-version-menu-<%-cv.cvID%>">
 				<div class="popover-inner">
 				<ul class="dropdown-menu">
 					<li><% if (cv.cvIsApproved == 1) { %><span><?=t('Approve')?></span><% } else { %><a href="#" data-version-menu-task="approve" data-version-id="<%-cv.cvID%>"><?=t('Approve')?></a><% } %></li>

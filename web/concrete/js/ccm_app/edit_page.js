@@ -178,6 +178,7 @@ var CCMEditMode = function() {
 						if (r.error) {
 							ccmAlert.notice('Error', '<div class="alert alert-danger">' + r.errors.join("<br>") + '</div>');
 						} else {
+							ccm_event.publish('AjaxFormSubmitSuccess', r, $form.get(0));
 							if ($form.attr('data-dialog-form')) {
 								jQuery.fn.dialog.closeTop();
 							}

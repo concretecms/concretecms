@@ -24,22 +24,5 @@ if (!$_REQUEST['callback']) {
 $searchInstance = $page . time();
 $searchRequest = $pageList->getSearchRequest();
 
-ob_start();
-Loader::element('pages/search_form_advanced', array('columns' => $columns, 'sitemap_select_callback' => $sitemap_select_callback, 'searchInstance' => $searchInstance, 'sitemap_select_mode' => $sitemap_select_mode, 'searchDialog' => true, 'searchRequest' => $searchRequest));
-$searchForm = ob_get_contents();
-ob_end_clean();
-
-?>
-
-<script type="text/javascript">$(function() {
-	ccm_sitemapSetupSearch('<?=$searchInstance?>');
-});
-</script>
-
-<div id="ccm-search-overlay" >
-<div class="ccm-pane-options" id="ccm-<?=$searchInstance?>-pane-options">
-	<?=$searchForm?>
-</div>
-
-<? Loader::element('pages/search_results', array('columns' => $columns, 'searchInstance' => $searchInstance, 'sitemap_select_callback' => $sitemap_select_callback, 'sitemap_select_mode' => $sitemap_select_mode, 'searchDialog' => true, 'pages' => $pages, 'pageList' => $pageList, 'pagination' => $pagination)); ?>
-</div>
+Loader::element('pages/search_form_advanced', array('columns' => $columns, 'searchRequest' => $searchRequest));
+Loader::element('pages/search_results', array('columns' => $columns,'pages' => $pages, 'pageList' => $pageList, 'pagination' => $pagination)); ?>

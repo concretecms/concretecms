@@ -12,20 +12,20 @@ function CCMPanel(options) {
         var ccm_class;
         switch(options.position) {
             case 'left':
-            ccm_class = 'ccm-panel-left';
-            break;
+                ccm_class = 'ccm-panel-left';
+                break;
             case 'right':
-            ccm_class = 'ccm-panel-right';
-            break;
+                ccm_class = 'ccm-panel-right';
+                break;
         }
 
         switch(options.transition) {
             case 'slide':
-            ccm_class += ' ccm-panel-transition-slide';
-            break;
+                ccm_class += ' ccm-panel-transition-slide';
+                break;
             default:
-            ccm_class += ' ccm-panel-transition-none';
-            break;
+                ccm_class += ' ccm-panel-transition-none';
+                break;
         }
         return ccm_class;
     };
@@ -330,30 +330,30 @@ function CCMPanel(options) {
                 }
                 $clg.toggleClass('ccm-panel-list-group-item-expanded');
             });
-});
-$panel.find('[data-launch-panel-detail]').unbind('.detail').on('click.detail', function() {
-    jQuery.fn.dialog.showLoader();
-    $('.ccm-panel-menu-item-active').removeClass('ccm-panel-menu-item-active');
-    $(this).addClass('ccm-panel-menu-item-active');
-    var identifier = $(this).attr('data-launch-panel-detail');
-    var panelDetailOptions = {'identifier': identifier};
-    if ($(this).attr('data-panel-transition')) {
-        panelDetailOptions.transition = $(this).attr('data-panel-transition');
-    }
-    if ($(this).attr('data-panel-detail-url')) {
-        panelDetailOptions.url = $(this).attr('data-panel-detail-url');
-    }
-    obj.openPanelDetail(panelDetailOptions);
-    return false;
-});
-obj.loadPanelDetailActions($panel);
+        });
+        $panel.find('[data-launch-panel-detail]').unbind('.detail').on('click.detail', function() {
+            jQuery.fn.dialog.showLoader();
+            $('.ccm-panel-menu-item-active').removeClass('ccm-panel-menu-item-active');
+            $(this).addClass('ccm-panel-menu-item-active');
+            var identifier = $(this).attr('data-launch-panel-detail');
+            var panelDetailOptions = {'identifier': identifier};
+            if ($(this).attr('data-panel-transition')) {
+                panelDetailOptions.transition = $(this).attr('data-panel-transition');
+            }
+            if ($(this).attr('data-panel-detail-url')) {
+                panelDetailOptions.url = $(this).attr('data-panel-detail-url');
+            }
+            obj.openPanelDetail(panelDetailOptions);
+            return false;
+        });
+        obj.loadPanelDetailActions($panel);
 
-};
+    };
 
-this.show = function() {
+    this.show = function() {
 
-    var delay = 0;
-    if (this.options.primary) {
+        var delay = 0;
+        if (this.options.primary) {
             // then it is the only panel that can be open on the screen
             // we hide any other open ones.
             var panels = CCMPanelManager.getPanels();

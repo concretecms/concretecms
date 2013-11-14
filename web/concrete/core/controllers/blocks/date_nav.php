@@ -38,7 +38,6 @@
 		}
 		
 		function getPages($query = null) {
-			Loader::model('page_list');
 			$db = Loader::db();
 			$bID = $this->bID;
 			if ($this->bID) {
