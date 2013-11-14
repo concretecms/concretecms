@@ -19,7 +19,7 @@ div#ccm-menu-highlighter {
 }
 
 
-/** 
+/**
  * Blocks AND areas
  */
 div.ccm-block-edit, div.ccm-area, div.ccm-area-disabled {
@@ -28,7 +28,7 @@ div.ccm-block-edit, div.ccm-area, div.ccm-area-disabled {
 	.clearfix();
 }
 
-/** 
+/**
  * sorting blocks in page
  */
 div.ccm-block-type-sorting {
@@ -41,7 +41,7 @@ div.ccm-block-type-sorting {
 }
 
 
-/** 
+/**
  * Blocks
  */
 
@@ -59,20 +59,20 @@ div.ccm-block-edit.ccm-menu-item-active {
 	> ul.ccm-edit-mode-inline-commands {
 		float: none;
 		list-style-type: none;
-		margin: 0px !important; 
+		margin: 0px !important;
 		opacity: 1;
 	}
 }
 
 
-/** 
+/**
  * Areas
   */
 
 div.ccm-area {
 	margin-bottom: 50px;
 
-	/** 
+	/**
 	 * draggable blocks into area
 	 */
 
@@ -84,7 +84,7 @@ div.ccm-area {
 			height: 10px;
 			margin-top: 2px;
 			margin-bottom: 2px;
-			border: 2px solid rgba(0,0,0,0);		
+			border: 2px solid rgba(0,0,0,0);
 		}
 	}
 
@@ -111,7 +111,7 @@ div.ccm-area.ccm-menu-item-active {
 }
 
 div.ccm-area-footer {
-	opacity: 0; 
+	opacity: 0;
 	width: 100%;
 	position: absolute;
 	bottom: -35px;
@@ -131,7 +131,7 @@ div.ccm-area-footer {
 }
 
 
-/** 
+/**
  * Hovering over areas
  */
 div.ccm-menu-item-active {
@@ -144,11 +144,11 @@ div.ccm-menu-item-active {
 	}
 }
 
-/** 
+/**
  * Empty areas
  */
 div.ccm-area[data-total-blocks="0"] {
-	
+
 	outline: 1px solid #e6e6e6;
 	outline-offset: 9px;
 	min-height: 30px;
@@ -156,7 +156,7 @@ div.ccm-area[data-total-blocks="0"] {
 }
 
 div.ccm-area[data-total-blocks="0"].ccm-area-drag-block-type-over, div.ccm-area[data-total-blocks="0"].ccm-menu-item-active {
-	
+
 	outline: 1px solid #0c6;
 
 	div.ccm-area-footer-handle {
@@ -168,8 +168,8 @@ div.ccm-area[data-total-blocks="0"].ccm-area-drag-block-type-over, div.ccm-area[
 
 }
 
-/** 
- * Clicking on areas 
+/**
+ * Clicking on areas
  */
 div.ccm-area.ccm-area-highlight {
 
@@ -200,7 +200,7 @@ div#ccm-menu-highlighter.ccm-area-highlight {
 }
 
 
-/** 
+/**
  * Inline edit mode tweaks
  */
 div.ccm-area.ccm-area-inline-edit-disabled {
@@ -221,7 +221,7 @@ div.ccm-area.ccm-area-inline-edit-disabled {
 
 }
 
-/** 
+/**
  * Clicking on blocks
  */
 div#ccm-menu-highlighter.ccm-block-highlight {
@@ -231,7 +231,7 @@ div#ccm-menu-highlighter.ccm-block-highlight {
 
 
 
-/** 
+/**
  * Inline commands
  */
 ul.ccm-edit-mode-inline-commands {
@@ -259,8 +259,8 @@ ul.ccm-edit-mode-inline-commands {
 			line-height: 20px;
 			text-align: center;
 			height: 20px;
-			color: #666; 
-			
+			color: #666;
+
 			i {
 				vertical-align: middle;
 			}
@@ -280,7 +280,7 @@ ul.ccm-edit-mode-inline-commands {
 
 
 
-/** 
+/**
  * In page menus
  */
 #ccm-popover-menu-container div.popover {
@@ -301,16 +301,16 @@ ul.ccm-edit-mode-inline-commands {
 				}
 
 				&.divider {
-					background-color: #212123;				
+					background-color: #212123;
 				}
 			}
 		}
 	}
 
 
-	ul.dropdown-menu { 
+	ul.dropdown-menu {
 
-		position: static; 
+		position: static;
 		display: block;
 		margin: 0px !important;
 		float: none !important;
@@ -331,16 +331,16 @@ ul.ccm-edit-mode-inline-commands {
 		li {
 
 		display: block;
-		
+
 
 		a, span {
 			text-decoration: none !important;
 			padding: 3px 12px !important;
 			color: #999;
-			display: block; 
+			display: block;
 		}
 		a:hover {
-			color: #000;	
+			color: #000;
 			background-image: none !important;
 			background-color: transparent !important;
 		}
@@ -350,7 +350,7 @@ ul.ccm-edit-mode-inline-commands {
 		font-family: @baseFontFamily !important;
 		font-size: @font-size-base !important;
 		line-height: @baseLineHeight !important;
-		
+
 		}
 
 		.divider {margin: 9px 1px !important;}
@@ -370,15 +370,16 @@ ul.ccm-edit-mode-inline-commands {
 	-webkit-transition: outline-width 250ms, outline-color 250ms;
 
 	&.ccm-area-drag-area-contender {
-		background-color: rgba(0, 100, 0, 0.5);
-		outline: solid 5px rgba(0, 255, 0, .7);
+		background-color: rgba(221, 255, 221, 0.5);
+		outline: solid 5px rgb(221, 255, 221);
+		outline-color: rgba(221, 255, 221, .7);
 	}
 	&.ccm-area-drag-area-selectable {
-		outline-color: #006400;
+		outline-color: rgb(170, 255, 170);
 		outline-width: 10px;
 	}
 }
-a.ccm-block-edit-drag {
+a.ccm-block-edit-drag, a.ccm-panel-add-block-draggable-block-type-dragger {
 	position: absolute;
 	top: 0px;
 	left: 0px;
