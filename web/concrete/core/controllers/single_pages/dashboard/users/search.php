@@ -19,20 +19,11 @@ class Concrete5_Controller_Page_Dashboard_Users_Search extends DashboardControll
 		}
 			// this is hacky as hell, we need to make this page MVC
 		if (!is_object($uo)) {
-
-			$this->requireAsset('core/search');
 			$cnt = new SearchUsersController();
 			$cnt->search();
-			$this->set('searchRequest', $cnt->getSearchRequest());
+			$this->set('searchController', $cnt);
 			$result = Loader::helper('json')->encode($cnt->getSearchResultObject()->getJSONObject());
 			$this->addFooterItem("<script type=\"text/javascript\">$(function() { $('div[data-search=users]').concreteAjaxSearch(" . $result . "); });</script>");
-
-			$userList = $this->getRequestedSearchResults();
-			$users = $userList->getPage();
-					
-			$this->set('userList', $userList);		
-			$this->set('users', $users);		
-			$this->set('pagination', $userList->getPagination());	
 		}
 
 		$form = Loader::helper('form');
@@ -212,118 +203,7 @@ class Concrete5_Controller_Page_Dashboard_Users_Search extends DashboardControll
 
 	}
 	
-	public function getRequestedSearchResults() {
-		$userList = new UserList();
-		$userList->sortBy('uDateAdded', 'desc');
-		$userList->showInactiveUsers = true;
-		$userList->showInvalidatedUsers = true;
-		
-		$columns = UserSearchColumnSet::getCurrent();
-		$this->set('columns', $columns);
-
-		if ($_GET['keywords'] != '') {
-			$userList->filterByKeywords($_GET['keywords']);
-		}	
-		
-		if ($_REQUEST['numResults'] && Loader::helper('validation/numbers')->integer($_REQUEST['numResults'])) {
-			$userList->setItemsPerPage($_REQUEST['numResults']);
-		}
-		
-		$u = new User();
-		if (!$u->isSuperUser()) {
-			$gIDs = array(-1);
-			$gs = new GroupSearch();
-			$groups = $gs->get();
-			foreach($groups as $gRow) {
-				$g = Group::getByID($gRow['gID']);
-				if (is_object($g)) {
-					$gp = new Permissions($g);
-					if ($gp->canSearchUsersInGroup()) {
-						$gIDs[] = $g->getGroupID();
-					}
-				}
-			}
-			$userList->addToQuery("left join UserGroups ugRequired on ugRequired.uID = u.uID ");	
-			$userList->filter(false, '(ugRequired.gID in (' . implode(',', $gIDs) . ') or ugRequired.gID is null)');
-		}
-		
-		$filterGIDs = array();
-		if (isset($_REQUEST['gID']) && is_array($_REQUEST['gID'])) {
-			foreach($_REQUEST['gID'] as $gID) {
-				$g = Group::getByID($gID);
-				if (is_object($g)) {
-					$gp = new Permissions($g);
-					if ($gp->canSearchUsersInGroup()) {
-						$filterGIDs[] = $g->getGroupID();
-					}
-				}
-			}
-		}
-		
-		foreach($filterGIDs as $gID) {
-			$userList->filterByGroupID($gID);
-		}
-
-		if (is_array($_REQUEST['selectedSearchField'])) {
-			foreach($_REQUEST['selectedSearchField'] as $i => $item) {
-				// due to the way the form is setup, index will always be one more than the arrays
-				if ($item != '') {
-					switch($item) {
-						case 'is_active':
-							if ($_GET['active'] === '0') {
-								$userList->filterByIsActive(0);
-							} else if ($_GET['active'] === '1') {
-								$userList->filterByIsActive(1);
-							}
-							break;
-						case "date_added":
-							$dateFrom = $_REQUEST['date_from'];
-							$dateTo = $_REQUEST['date_to'];
-							if ($dateFrom != '') {
-								$dateFrom = date('Y-m-d', strtotime($dateFrom));
-								$userList->filterByDateAdded($dateFrom, '>=');
-								$dateFrom .= ' 00:00:00';
-							}
-							if ($dateTo != '') {
-								$dateTo = date('Y-m-d', strtotime($dateTo));
-								$dateTo .= ' 23:59:59';
-								
-								$userList->filterByDateAdded($dateTo, '<=');
-							}
-							break;
-						case "group_set":
-							$gsID = $_REQUEST['gsID'];
-							$gs = GroupSet::getByID($gsID);
-							$groupsetids = array(-1);
-							if (is_object($gs)) {
-								$groups = $gs->getGroups();
-							}
-							$userList->addToQuery('left join UserGroups ugs on u.uID = ugs.uID');
-							foreach($groups as $g) {
-								if ($pk->validate($g) && (!in_array($g->getGroupID(), $groupsetids))) {
-									$groupsetids[] = $g->getGroupID();
-								}								
-							}							
-							$instr = 'ugs.gID in (' . implode(',', $groupsetids) . ')';
-							$userList->filter(false, $instr);
-							break;
-
-						default:
-							$akID = $item;
-							$fak = UserAttributeKey::get($akID);
-							$type = $fak->getAttributeType();
-							$cnt = $type->getController();
-							$cnt->setAttributeKey($fak);
-							$cnt->searchForm($userList);
-							break;
-					}
-				}
-			}
-		}
-		return $userList;
-	}
-	
-		public function sign_in_as_user($uID, $token = null) {
+	public function sign_in_as_user($uID, $token = null) {
 		try {
 			$u = new User();
 			
