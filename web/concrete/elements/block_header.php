@@ -65,7 +65,6 @@ if ($isAlias) {
 	$deleteMessage = t('Do you want to delete this block?');
 }
 
-
 ?>
 
 <div custom-style="<?=$b->getBlockCustomStyleRuleID()?>" data-area-id="<?=$a->getAreaID()?>" data-block-id="<?=$b->getBlockID()?>" class="<?=$class?>" data-block-type-handle="<?=$btHandle?>" data-menu-highlight-offset="7" data-menu-highlight-class="ccm-block-highlight"  data-launch-menu="block-menu-b<?=$b->getBlockID()?>-<?=$a->getAreaID()?>" 

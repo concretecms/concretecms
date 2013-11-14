@@ -66,6 +66,8 @@ $rl->register('/system/dialogs/page/delete/submit', 'PageDeleteDialogController:
 $rl->register('/system/dialogs/area/layout/presets/submit/{arLayoutID}', 'AreaLayoutPresetsDialogController::submit');
 $rl->register('/system/dialogs/area/layout/presets/{arLayoutID}/{token}', 'AreaLayoutPresetsDialogController::view');
 
+$rl->register('/system/dialogs/page/bulk/properties', 'PageBulkPropertiesDialogController::view');
+
 /**
  * Editing Actions
  */

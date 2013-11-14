@@ -207,10 +207,14 @@ table.ccm-search-results-table {
 
 
 		td {
+
+			.transition(all 0.2s cubic-bezier(0.190, 1.000, 0.220, 1.000));
+
 			input[type=checkbox],input[type=radio] {
 				border: 1px solid #c0c0c0;
 				background-color: #f8f8f8;
 				color: #00689c;
+				z-index: @index-level-search-results-checkboxes;
 			}
 			padding: 20px;
 
@@ -219,6 +223,14 @@ table.ccm-search-results-table {
 
 			&.ccm-search-results-name {
 				width: 300px;
+			}
+
+		}
+
+		tr.ccm-menu-item-active {
+			td {
+				background-color: #B8E4F8 !important;
+				color: #000;
 			}
 		}
 
