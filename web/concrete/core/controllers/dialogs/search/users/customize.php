@@ -1,47 +1,47 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Controller_Dialogs_Search_Pages_Customize extends FrontendEditController {
+class Concrete5_Controller_Dialogs_Search_Users_Customize extends FrontendEditController {
 
 	protected $viewPath = '/system/dialogs/search/customize';
 
 	protected function canAccess() {
-		$sh = Loader::helper('concrete/dashboard/sitemap');
-		return $sh->canRead();
+		$sh = Loader::helper('concrete/user');
+		return $sh->canAccessUserSearchInterface();
 	}
 
 	public function view() {
 		$selectedAKIDs = array();
-		$fldc = PageSearchColumnSet::getCurrent();
-		$fldca = new PageSearchAvailableColumnSet();
+		$fldc = UserSearchColumnSet::getCurrent();
+		$fldca = new UserSearchAvailableColumnSet();
 		$searchInstance = Loader::helper('text')->entities($_REQUEST['searchInstance']);
-		$list = CollectionAttributeKey::getList();
+		$list = UserAttributeKey::getList();
 		$this->set('list', $list);
 		$this->set('form', Loader::helper('form'));
 		$this->set('fldca', $fldca);
 		$this->set('fldc', $fldc);
-		$this->set('type', 'pages');
+		$this->set('type', 'users');
 	}
 
 	public function submit() {
 		if ($this->validateAction()) {
 			$u = new User();
-			$fdc = new PageSearchColumnSet();
-			$fldca = new PageSearchAvailableColumnSet();
+			$fdc = new UserSearchColumnSet();
+			$fldca = new UserSearchAvailableColumnSet();
 			foreach($_POST['column'] as $key) {
 				$fdc->addColumn($fldca->getColumnByKey($key));
 			}	
 			$sortCol = $fldca->getColumnByKey($_POST['fSearchDefaultSort']);
 			$fdc->setDefaultSortColumn($sortCol, $_POST['fSearchDefaultSortDirection']);
-			$u->saveConfig('PAGE_LIST_DEFAULT_COLUMNS', serialize($fdc));
+			$u->saveConfig('USER_LIST_DEFAULT_COLUMNS', serialize($fdc));
 
-			$pageList = new PageList();
-			$columns = PageSearchColumnSet::getCurrent();
+			$userList = new UserList();
+			$columns = UserSearchColumnSet::getCurrent();
 			$col = $columns->getDefaultSortColumn();	
-			$pageList->sortBy($col->getColumnKey(), $col->getColumnDefaultSortDirection());
+			$userList->sortBy($col->getColumnKey(), $col->getColumnDefaultSortDirection());
 
-			$ilr = new PageSearchResult($columns, $pageList, URL::to('/system/search/pages/submit'));
+			$ilr = new SearchResult($columns, $userList, URL::to('/system/search/users/submit'));
 			$r = new SearchResponse();
-			$r->setMessage(t('Page search columns saved successfully.'));
+			$r->setMessage(t('User search columns saved successfully.'));
 			$r->setSearchResult($ilr);
 			$r->outputJSON();
 		}
