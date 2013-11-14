@@ -14,25 +14,24 @@
 			'fields': []
 		}, options);
 		this.$element = $element;
-		this.$results = $element.find('div[data-search-results]');
+		this.$results = $element.find('div[data-search-element=results]');
 		this.$resultsTableBody = this.$results.find('tbody');
 		this.$resultsTableHead = this.$results.find('thead');
 		this.$resultsPagination = this.$results.find('div.ccm-search-results-pagination');
-		this.$advancedFields = $element.find('div.ccm-search-fields-advanced');
-		this.$bulkActions = $element.find('select[data-bulk-action]');
 
 		this.options = options;
 
+		this._templateSearchForm = _.template($element.find('script[data-template=search-form]').html());
 		this._templateAdvancedSearchFieldRow = _.template($element.find('script[data-template=search-field-row]').html());
 		this._templateSearchResultsTableHead = _.template($element.find('script[data-template=search-results-table-head]').html());
 		this._templateSearchResultsTableBody = _.template($element.find('script[data-template=search-results-table-body]').html());
 		this._templateSearchResultsPagination = _.template($element.find('script[data-template=search-results-pagination]').html());
 		this._templateSearchResultsMenu = _.template($element.find('script[data-template=search-results-menu]').html());
 		
+		this.setupSearch();
 		this.setupCheckboxes();
 		this.setupBulkActions();
 		this.setupSort();
-		this.setupSearch();
 		this.setupPagination();
 		this.setupAdvancedSearch();
 		this.setupCustomizeColumns();
@@ -133,12 +132,12 @@
 		$.each(results.fields, function(i, field) {
 			cs.$advancedFields.append(cs._templateAdvancedSearchFieldRow({'field': field}));
 		});
-		cs.$bulkActions.prop('disabled', true);
 		cs.setupMenus();
 	}
 
 	ConcreteAjaxSearch.prototype.setupAdvancedSearch = function() {
 		var cs = this;
+		cs.$advancedFields = cs.$element.find('div.ccm-search-fields-advanced');
 
 		cs.$element.on('click', 'a[data-search-toggle=advanced]', function() {
 			cs.$advancedFields.append(cs._templateAdvancedSearchFieldRow());
@@ -177,7 +176,8 @@
 
 	ConcreteAjaxSearch.prototype.setupSearch = function() {
 		var cs = this;
-		this.$element.on('submit', 'form[data-search-form]', function() {
+		cs.$element.find('[data-search-element=wrapper]').html(cs._templateSearchForm());
+		cs.$element.on('submit', 'form[data-search-form]', function() {
 			var data = $(this).serializeArray();
 			data.push({'name': 'submitSearch', 'value': '1'});
 			cs.ajaxUpdate($(this).attr('action'), data);
@@ -187,6 +187,7 @@
 
 	ConcreteAjaxSearch.prototype.setupBulkActions = function() {
 		var cs = this;
+		cs.$bulkActions = cs.$element.find('select[data-bulk-action]');
 		cs.$element.on('change', 'select[data-bulk-action]', function() {
 			var $option = $(this).find('option:selected'),
 				value = $option.attr('data-bulk-action-type'),

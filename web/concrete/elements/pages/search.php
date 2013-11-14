@@ -1,5 +1,5 @@
-<? defined('C5_EXECUTE') or die("Access Denied."); ?> 
 <?
+defined('C5_EXECUTE') or die("Access Denied.");
 $form = Loader::helper('form');
 
 $searchFields = array(
@@ -24,9 +24,10 @@ foreach($searchFieldAttributes as $ak) {
 
 ?>
 
+<script type="text/template" data-template="search-form">
 <form role="form" data-search-form="pages" action="<?=URL::to('/system/search/pages/submit')?>" class="form-inline ccm-search-fields">
 	<div class="form-group">
-		<select data-bulk-action="pages" class="ccm-search-bulk-action form-control">
+		<select data-bulk-action="pages" disabled class="ccm-search-bulk-action form-control">
 			<option value=""><?=t('Items Selected')?></option>
 			<option data-bulk-action-type="dialog" data-bulk-action-title="<?=t('Page Properties')?>" data-bulk-action-url="<?=URL::to('/system/dialogs/page/bulk/properties')?>" data-bulk-action-dialog-width="640" data-bulk-action-dialog-height="480"><?=t('Edit Properties')?></option>
 			<option value="move_copy"><?=t('Move/Copy')?></option>
@@ -53,6 +54,7 @@ foreach($searchFieldAttributes as $ak) {
 	</ul>
 	<div class="ccm-search-fields-advanced"></div>
 </form>
+</script>
 
 <script type="text/template" data-template="search-field-row">
 <div class="ccm-search-fields-row">
@@ -65,21 +67,6 @@ foreach($searchFieldAttributes as $ak) {
 	<div class="ccm-search-field-content"><% if (typeof(field) != 'undefined') { %><%=field.html%><% } %></div>
 	<a data-search-remove="search-field" class="ccm-search-remove-field" href="#"><i class="glyphicon glyphicon-minus-sign"></i></a>
 </div>
-</script>
-
-<script type="text/template" data-template="search-results-table-head">
-<tr>
-	<th><span class="ccm-search-results-checkbox"><input type="checkbox" data-search-checkbox="select-all" /></span></th>
-	<% 
-	for (i = 0; i < columns.length; i++) {
-		var column = columns[i];
-		if (column.isColumnSortable) { %>
-			<th class="<%=column.className%>"><a href="<%=column.sortURL%>"><%=column.title%></a></th>
-		<% } else { %>
-			<th><span><%=column.title%></span></th>
-		<% } %>
-	<% } %>
-</tr>
 </script>
 
 <script type="text/template" data-template="search-results-table-body">
@@ -108,26 +95,4 @@ foreach($searchFieldAttributes as $ak) {
 </div>
 </script>
 
-<script type="text/template" data-template="search-results-pagination">
-<ul class="pagination">
-	<li class="<%=pagination.prevClass%>"><%=pagination.previousPage%></li>
-	<%=pagination.pages%>
-	<li class="<%=pagination.nextClass%>"><%=pagination.nextPage%></li>
-</div>
-</script>
-
-<div data-search-results="pages">
-
-<table border="0" cellspacing="0" cellpadding="0" class="ccm-search-results-table">
-<thead>
-</thead>
-<tbody>
-</tbody>
-</table>
-
-<div class="ccm-search-results-pagination"></div>
-
-</div>
-
-
-
+<? Loader::element('search/template')?>
