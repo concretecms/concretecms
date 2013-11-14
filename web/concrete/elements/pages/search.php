@@ -17,24 +17,6 @@ if (PERMISSIONS_MODEL != 'simple') {
 	$searchFields['permissions_inheritance'] = t('Permissions Inheritance');
 }
 
-if (!$searchDialog) {
-	$searchFields['parent'] = t('Parent Page');
-}
-
-Loader::model('attribute/categories/collection');
-$searchFieldAttributes = CollectionAttributeKey::getSearchableList();
-foreach($searchFieldAttributes as $ak) {
-	$searchFields[$ak->getAttributeKeyID()] = tc('AttributeKeyName', $ak->getAttributeKeyName());
-}
-
-if (PERMISSIONS_MODEL != 'simple') {
-	$searchFields['permissions_inheritance'] = t('Permissions Inheritance');
-}
-
-if (!$searchDialog) {
-	$searchFields['parent'] = t('Parent Page');
-}
-
 $searchFieldAttributes = CollectionAttributeKey::getSearchableList();
 foreach($searchFieldAttributes as $ak) {
 	$searchFields[$ak->getAttributeKeyID()] = tc('AttributeKeyName', $ak->getAttributeKeyName());

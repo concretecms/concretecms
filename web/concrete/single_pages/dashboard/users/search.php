@@ -597,11 +597,11 @@ $(function() {
 <?
 $tp = Loader::helper('concrete/user');
 if ($tp->canAccessUserSearchInterface()) { ?>
-<div class="ccm-pane-options" id="ccm-<?=$searchInstance?>-pane-options">
-<? Loader::element('users/search_form_advanced', array('columns' => $columns, 'searchInstance' => $searchInstance, 'searchRequest' => $searchRequest, 'searchType' => 'DASHBOARD')); ?>
-</div>
+	
+	<div class="ccm-dashboard-content-full" data-search="users">
+	<? Loader::element('users/search')?>
+	</div>
 
-<? Loader::element('users/search_results', array('columns' => $columns, 'searchInstance' => $searchInstance, 'searchType' => 'DASHBOARD', 'users' => $users, 'userList' => $userList, 'pagination' => $pagination)); ?>
 
 <? } else { ?>
 <div class="ccm-pane-body">
