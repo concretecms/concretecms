@@ -54,11 +54,11 @@ div.ccm-block-edit {
 	min-height: 16px;
 
 	.transition(outline-color 0.5s cubic-bezier(0.190, 1.000, 0.220, 1.000));
-	outline: 2px solid transparent;
+	outline: 1px solid transparent;
 }
 
 div.ccm-block-edit.ccm-menu-item-active {
-	outline: 2px solid #59ec59;
+	outline: 1px solid #59ec59;
 
 	> ul.ccm-edit-mode-inline-commands {
 		float: none;
@@ -77,6 +77,7 @@ div.ccm-area {
 	margin-bottom: 50px;
 	.transition(outline-color 0.5s cubic-bezier(0.190, 1.000, 0.220, 1.000));
 	outline: 1px solid transparent;
+	outline-offset: 1px;
 
 	/**
 	 * draggable blocks into area
@@ -120,7 +121,7 @@ div.ccm-area-footer {
 	.transition(opacity 0.5s cubic-bezier(0.190, 1.000, 0.220, 1.000));
 	width: 100%;
 	position: absolute;
-	bottom: -36px;
+	bottom: -37px;
 	left: 20px;
 	padding-top: 15px;
 
@@ -210,7 +211,7 @@ div#ccm-menu-highlighter.ccm-area-highlight {
  * Inline edit mode tweaks
  */
 div.ccm-area.ccm-area-inline-edit-disabled {
-	outline: 0px;
+	outline-color: transparent;
 	div.ccm-area-footer {
 		.opacity(0);
 	}
