@@ -41,7 +41,10 @@ if (!$dh->inDashboard()) {
 		$startEditMode = 'CCMEditMode.start();';
 	}
 	if ($cp->canEditPageContents() && $_REQUEST['ctask'] == 'check-out-first') {
-		$launchPageComposer = 'CCMEditMode.launchPageComposer();';
+		$pagetype = $c->getPageTypeObject();
+		if ($pagetype->doesPageTypeLaunchInComposer()) {
+			$launchPageComposer = 'CCMEditMode.launchPageComposer();';
+		}
 	}
 	$panelDashboard = URL::to('/system/panels/dashboard');
 	$panelPage = URL::to('/system/panels/page');

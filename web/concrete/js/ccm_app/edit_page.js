@@ -23,7 +23,7 @@ var CCMEditMode = function() {
 				$('a[data-launch-panel=page]').toggleClass('ccm-launch-panel-active');
 				CCMPanelManager.getByIdentifier('page').show();
 				ccm_event.subscribe('panel.open',function(e) {
-					var panel = e.eventData;
+					var panel = e.eventData.panel;
 					if (panel.options.identifier == 'page') {
 						$('#' + panel.getDOMID()).find('[data-launch-panel-detail=\'page-composer\']').click();
 					}

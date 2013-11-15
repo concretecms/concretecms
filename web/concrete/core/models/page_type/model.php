@@ -20,6 +20,9 @@ class Concrete5_Model_PageType extends Object {
 	public function isPageTypeInternal() {
 		return $this->ptIsInternal;
 	}
+	public function doesPageTypeLaunchInComposer() {
+		return $this->ptLaunchInComposer;
+	}
 	public function getPackageID() {return $this->pkgID;}
 	public function getPackageHandle() {
 		return PackageList::getHandle($this->pkgID);
@@ -217,6 +220,11 @@ class Concrete5_Model_PageType extends Object {
 			$data['internal'] = true;
 		}
 
+		$data['ptLaunchInComposer'] = 0;
+		if ($node['launch-in-composer'] == '1') {
+			$data['ptLaunchInComposer'] = 1;
+		}
+
 		$data['templates'] = $types;
 		if ($ptID) {
 			$cm = PageType::getByID($ptID);
@@ -295,6 +303,11 @@ class Concrete5_Model_PageType extends Object {
 			if ($sc->isPageTypeInternal()) {
 				$pagetype->addAttribute('internal', 'true');
 			}
+			if ($sc->doesPageTypeLaunchInComposer()) {
+				$pagetype->addAttribute('launch-in-composer', '1');
+			} else {
+				$pagetype->addAttribute('launch-in-composer', '0');
+			}
 			$pagetemplates = $pagetype->addChild('pagetemplates');
 			if ($sc->getPageTypeAllowedPageTemplates() == 'A') {
 				$pagetemplates->addAttribute('type', 'all');
@@ -349,6 +362,7 @@ class Concrete5_Model_PageType extends Object {
 		$ptHandle = $data['handle'];
 		$ptName = $data['name'];
 		$ptDefaultPageTemplateID = 0;
+		$ptLaunchInComposer = 0;
 		$pkgID = 0;
 		if (is_object($pkg)) {
 			$pkgID = $pkg->getPackageID();
@@ -370,9 +384,13 @@ class Concrete5_Model_PageType extends Object {
 			$ptIsInternal = 1;
 		}
 
+		if ($data['ptLaunchInComposer']) {
+			$ptLaunchInComposer = 1;
+		}
+
 		$db = Loader::db();
-		$db->Execute('insert into PageTypes (ptName, ptHandle, ptDefaultPageTemplateID, ptAllowedPageTemplates, ptIsInternal, pkgID) values (?, ?, ?, ?, ?, ?)', array(
-			$ptName, $ptHandle, $ptDefaultPageTemplateID, $ptAllowedPageTemplates, $ptIsInternal, $pkgID
+		$db->Execute('insert into PageTypes (ptName, ptHandle, ptDefaultPageTemplateID, ptAllowedPageTemplates, ptIsInternal, ptLaunchInComposer, pkgID) values (?, ?, ?, ?, ?, ?, ?)', array(
+			$ptName, $ptHandle, $ptDefaultPageTemplateID, $ptAllowedPageTemplates, $ptIsInternal, $ptLaunchInComposer, $pkgID
 		));
 		$ptID = $db->Insert_ID();
 		if ($ptAllowedPageTemplates != 'A') {
@@ -414,6 +432,7 @@ class Concrete5_Model_PageType extends Object {
 		$ptName = $this->getPageTypeName();
 		$ptDefaultPageTemplateID = $this->getPageTypeDefaultPageTemplateID();
 		$ptAllowedPageTemplates = $this->getPageTypeAllowedPageTemplates();
+		$ptLaunchInComposer = $this->doesPageTypeLaunchInComposer();
 
 		if ($data['name']) {
 			$ptName = $data['name'];
@@ -427,6 +446,10 @@ class Concrete5_Model_PageType extends Object {
 		if ($data['allowedTemplates']) {
 			$ptAllowedPageTemplates = $data['allowedTemplates'];
 		}
+		if (isset($data['ptLaunchInComposer'])) {
+			$ptLaunchInComposer = $data['ptLaunchInComposer'];
+		}
+
 		$templates = $this->getPageTypePageTemplateObjects();
 		if (is_array($data['templates'])) {
 			$templates = $data['templates'];
@@ -436,12 +459,13 @@ class Concrete5_Model_PageType extends Object {
 			$ptIsInternal = 1;
 		}		
 		$db = Loader::db();
-		$db->Execute('update PageTypes set ptName = ?, ptHandle = ?, ptDefaultPageTemplateID = ?, ptAllowedPageTemplates = ?, ptIsInternal = ? where ptID = ?', array(
+		$db->Execute('update PageTypes set ptName = ?, ptHandle = ?, ptDefaultPageTemplateID = ?, ptAllowedPageTemplates = ?, ptIsInternal = ?, ptLaunchInComposer = ? where ptID = ?', array(
 			$ptName,
 			$ptHandle,
 			$ptDefaultPageTemplateID,
 			$ptAllowedPageTemplates,
 			$ptIsInternal,
+			$ptLaunchInComposer,
 			$this->ptID
 		));
 		$db->Execute('delete from PageTypePageTemplates where ptID = ?', array($this->ptID));

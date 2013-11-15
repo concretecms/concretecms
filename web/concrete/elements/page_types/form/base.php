@@ -13,11 +13,13 @@ $ptHandle = '';
 $ptPageTemplateID = array();
 $ptAllowedPageTemplates = 'A';
 $ptDefaultPageTemplateID = 0;
+$ptLaunchInComposer = 0;
 $token = 'add_page_type';
 if (is_object($pagetype)) {
 	$token = 'update_page_type';
 	$ptName = $pagetype->getPageTypeName();
 	$ptHandle = $pagetype->getPageTypeHandle();
+	$ptLaunchInComposer = $pagetype->doesPageTypeLaunchInComposer();
 	$ptDefaultPageTemplateID = $pagetype->getPageTypeDefaultPageTemplateID();
 	$ptAllowedPageTemplates = $pagetype->getPageTypeAllowedPageTemplates();
 	$selectedtemplates = $pagetype->getPageTypeSelectedPageTemplateObjects();
@@ -46,6 +48,13 @@ if (is_object($pagetype)) {
 		<?=$form->label('ptPageTemplateID', t('Default Page Template'))?>
 		<div class="controls">
 			<?=$form->select('ptDefaultPageTemplateID', $templates, $ptDefaultPageTemplateID, array('class' => 'span5'))?>
+		</div>
+	</div>
+
+	<div class="control-group">
+		<?=$form->label('ptLaunchInComposer', t('Launch In Composer'))?>
+		<div class="controls">
+			<?=$form->select('ptLaunchInComposer', array('0' => t('No'), '1' => t('Yes')), $ptLaunchInComposer, array('class' => 'span5'))?>
 		</div>
 	</div>
 
