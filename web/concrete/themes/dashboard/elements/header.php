@@ -2,8 +2,8 @@
 if ($_GET['_ccm_dashboard_external']) {
         return;
 }
- ?>
-<!DOCTYPE html>
+$html = Loader::helper('html');
+?><!DOCTYPE html>
 <head>
 <?
 $v = View::getInstance();
