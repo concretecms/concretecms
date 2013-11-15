@@ -54,6 +54,14 @@ var CCMToolbar = function() {
 			return false;
 		});
 		$('html').addClass('ccm-panel-ready');
+
+		ccm_event.subscribe('panel.open',function(e) {
+			var panel = e.eventData.panel;
+			if (panel.options.identifier == 'page') {
+				$('#' + panel.getDOMID()).find('[data-launch-panel-detail=\'page-composer\']').click();
+			}
+		});
+
 	}
 
 	setupStatusBar = function() {
