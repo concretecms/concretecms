@@ -137,10 +137,3 @@ $set = $sets[$i];
 </section>
 
 <? } ?>
-
-<script type="text/javascript">
-
-$(function() {
-	CCMEditMode.activateAddBlocksPanel();
-});
-</script>

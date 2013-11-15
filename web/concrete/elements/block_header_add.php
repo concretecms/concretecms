@@ -32,8 +32,8 @@ if (is_array($headerItems[$identifier])) {
 ?>
 
 $(function() {
-	$('#ccm-block-form').each(function() {
-		CCMEditMode.setupBlockForm($(this), false, 'add');
+	$('#ccm-block-form').concreteAjaxBlockForm({
+		'task': 'add'
 	});
 });
 

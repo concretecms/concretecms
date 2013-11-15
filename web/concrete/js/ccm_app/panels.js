@@ -54,6 +54,7 @@ function CCMPanel(options) {
             delay = 0;
         }
         var obj = this;
+        c5.event.publish('panel.close', {panel:this});
         $(window).delay(delay).queue(function() {
             $('[data-launch-panel=\'' + obj.getIdentifier() + '\']').removeClass('ccm-launch-panel-active');
             $('#' + obj.getDOMID()).removeClass('ccm-panel-active');
@@ -265,7 +266,7 @@ function CCMPanel(options) {
                 obj.closePanelDetail();
             });
             $('button[data-panel-detail-action=submit]').on('click', function() {
-                CCMEditMode.setupAjaxForm($('[data-panel-detail-form]')).submit();
+                $('[data-panel-detail-form]').concreteAjaxForm().submit();
             });
         }
     };
@@ -415,13 +416,11 @@ var CCMPanelManager = (function CCMPanelManagerGenerator() {
          * Hides all panels, exit preview mode, hides detail content if active, etc..
          */
         exitPanelMode: function() {
-
             for (var i = 0; i < panels.length; i++) {
                 if (panels[i].isOpen) {
                     panels[i].hide();
                 }
             }
-            CCMEditMode.exitPreviewMode();
         },
 
         register: function(overrides) {

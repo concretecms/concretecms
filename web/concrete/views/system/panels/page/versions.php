@@ -145,19 +145,19 @@ var CCMPageVersionList = {
 				case 'delete':
 
 					CCMPageVersionList.sendRequest('<?=$controller->action("delete")?>', [{'name': 'cvID[]', 'value': cvID}], function(r) {
-						CCMEditMode.showResponseNotification(r.message, 'ok', 'success');
+						ccmAlert.showResponseNotification(r.message, 'ok', 'success');
 						CCMPageVersionList.handleVersionRemovalResponse(r);
 					});
 					break;
 				case 'approve':
 					CCMPageVersionList.sendRequest('<?=$controller->action("approve")?>', [{'name': 'cvID', 'value': cvID}], function(r) {
-						CCMEditMode.showResponseNotification(r.message, 'ok', 'success');
+						ccmAlert.showResponseNotification(r.message, 'ok', 'success');
 						CCMPageVersionList.handleVersionUpdateResponse(r);
 					});
 					break;
 				case 'duplicate':
 					CCMPageVersionList.sendRequest('<?=$controller->action("duplicate")?>', [{'name': 'cvID', 'value': cvID}], function(r) {
-						CCMEditMode.showResponseNotification(r.message, 'ok', 'success');
+						ccmAlert.showResponseNotification(r.message, 'ok', 'success');
 						CCMPageVersionList.handleVersionUpdateResponse(r);
 					});
 					break;

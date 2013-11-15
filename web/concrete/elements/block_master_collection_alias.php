@@ -10,7 +10,7 @@ $ct = PageType::getByID($ptID);
 $cList = $ct->getPages();
 ?>
 <div class="ccm-ui">
-<form method="post" id="ccmBlockMasterCollectionForm" action="<?=$b->getBlockMasterCollectionAliasAction()?>">
+<form method="post" id="ccmBlockMasterCollectionForm" data-dialog-form="master-collection-alias" action="<?=$b->getBlockMasterCollectionAliasAction()?>">
 
 	<? if (count($cList) == 0) { ?>
 	
@@ -65,9 +65,7 @@ $(function() {
 			});
 		}
 	});
-	$('#ccmBlockMasterCollectionForm').each(function() {
-		CCMEditMode.setupBlockForm($(this), '<?=$b->getBlockID()?>', 'edit');
-	});
+	$('#ccmBlockMasterCollectionForm').concreteAjaxForm();
 
 });
 

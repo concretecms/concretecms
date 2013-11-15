@@ -12,7 +12,7 @@ $templates = $bt->getBlockTypeCustomTemplates();
 $txt = Loader::helper('text');
 ?>
 <div class="ccm-ui" style="padding-top:10px;">
-<form method="post" id="ccmCustomTemplateForm" action="<?=$b->getBlockUpdateInformationAction()?>&amp;rcID=<?=intval($rcID) ?>" class="form-vertical">
+<form method="post" id="ccmCustomTemplateForm" data-dialog-form="custom-template" action="<?=$b->getBlockUpdateInformationAction()?>&amp;rcID=<?=intval($rcID) ?>" class="form-vertical">
 	
 	<? if (count($templates) == 0) { ?>
 
@@ -58,11 +58,3 @@ $valt->output();
 ?>
 </form>
 </div>
-
-<script type="text/javascript">
-$(function() {
-	$('#ccmCustomTemplateForm').each(function() {
-		CCMEditMode.setupBlockForm($(this), '<?=$b->getBlockID()?>', 'edit');
-	});
-});
-</script>

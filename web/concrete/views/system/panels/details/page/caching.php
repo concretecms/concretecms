@@ -144,7 +144,7 @@ switch(FULL_PAGE_CACHE_LIFETIME) {
 			jQuery.fn.dialog.showLoader();
 			$.getJSON('<?=$controller->action("purge")?>', function(r) { 
 				jQuery.fn.dialog.hideLoader();
-				CCMEditMode.showResponseNotification(r.message, 'ok', 'success');
+				ccmAlert.showResponseNotification(r.message, 'ok', 'success');
 				CCMPanelManager.exitPanelMode();
 			});
 		});

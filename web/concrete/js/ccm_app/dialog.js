@@ -204,8 +204,10 @@ jQuery.fn.dialog.activateDialogContents = function($dialog) {
 	$dialog.find('button[data-dialog-action=cancel]').on('click', function() {
 		jQuery.fn.dialog.closeTop();
 	});
+	$('[data-dialog-form]').concreteAjaxForm();
+
 	$dialog.find('button[data-dialog-action=submit]').on('click', function() {
-		CCMEditMode.setupAjaxForm($('[data-dialog-form]')).submit();
+		$('[data-dialog-form]').submit();
 	});
 
 	if ($dialog.find('.dialog-buttons').length > 0) {

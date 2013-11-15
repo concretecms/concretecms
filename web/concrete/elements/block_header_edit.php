@@ -29,12 +29,9 @@ if (is_array($headerItems[$identifier])) {
 }
 ?>
 $(function() {
-	$('#ccm-block-form').each(function() {
-		<? if (is_object($b->getProxyBlock())) { ?>
-			CCMEditMode.setupBlockForm($(this), '<?=$b->getProxyBlock()->getBlockID()?>', 'edit');
-		<? } else { ?>
-			CCMEditMode.setupBlockForm($(this), '<?=$b->getBlockID()?>', 'edit');
-		<? } ?>
+	$('#ccm-block-form').concreteAjaxBlockForm({
+		'task': 'edit',
+		'bID': <? if (is_object($b->getProxyBlock())) { ?><?=$b->getProxyBlock()->getBlockID()?><? } else { ?><?=$b->getBlockID()?><? } ?>
 	});
 });
 </script>

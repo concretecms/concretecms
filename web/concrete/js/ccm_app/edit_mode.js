@@ -34,12 +34,20 @@
 
     c5.event.bind('EditModeBlockAddToClipboard', function(event) {
       var data = event.eventData, block = data.block, area = block.getArea();
-      window.CCMEditMode.addBlockToScrapbook(CCM_CID, block.getId(), area.getHandle());
+      CCMToolbar.disableDirectExit();
+      // got to grab the message too, eventually
+      $.ajax({
+        type: 'POST',
+        url: CCM_TOOLS_PATH + '/pile_manager',
+        data: 'cID=' + CCM_CID + '&bID=' + block.getId() + '&arHandle=' + encodeURIComponent(area.getHandle()) + '&btask=add&scrapbookName=userScrapbook',
+       success: function(resp) {
+        ccmAlert.hud(ccmi18n.copyBlockToScrapbookMsg, 2000, 'add', ccmi18n.copyBlockToScrapbook);
+      }});
     });
 
     c5.event.bind('EditModeBlockDelete', function(event) {
       var data = event.eventData, block = data.block, area = block.getArea(), message = data.message;
-      window.CCMEditMode.deleteBlock(CCM_CID, block.getId(), area.getId(), area.getHandle(), message);
+      block.delete(data.message);
     });
 
     c5.event.bind('EditModeBlockDrag', _.throttle(function editModeEditModeBlockDragEventHandler(event) {
@@ -438,6 +446,36 @@
   };
 
   Block.prototype = {
+
+    delete: function(msg, callback) {
+      var my = this, bID = my.getId(),
+        area = my.getArea(),
+        aID = area.getId(),
+        cID = CCM_CID,
+        arHandle = area.getHandle();
+
+      if (confirm(msg)) {
+        CCMToolbar.disableDirectExit();
+        // got to grab the message too, eventually
+        var $d = $('[data-block-id=' + bID + '][data-area-id=' + aID + ']'),
+          tb = parseInt($('[data-area-id=' + aID + ']').attr('data-total-blocks'));
+        
+        $d.hide().remove();
+        $.fn.ccmmenu.reset();
+        ccmAlert.hud(ccmi18n.deleteBlockMsg, 2000, 'delete_small', ccmi18n.deleteBlock);
+        $('[data-area-id=' + aID + ']').attr('data-total-blocks', tb - 1);
+        $.ajax({
+          type: 'POST',
+          url: CCM_DISPATCHER_FILENAME,
+          data: 'cID=' + cID + '&ccm_token=' + CCM_SECURITY_TOKEN + '&isAjax=true&btask=remove&bID=' + bID + '&arHandle=' + encodeURIComponent(arHandle)
+        });
+        if (typeof(callback) == 'function') {
+          callback();
+        }
+        c5.editMode.scanBlocks();
+
+      }
+    },
 
     setArea: function blockSetArea(area) {
       this.setAttr('area', area);
