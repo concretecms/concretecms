@@ -20,6 +20,7 @@ module.exports = function(grunt) {
 	// List of the files to be merged
 	var concat = {
 		image_editor: {
+			beforeJS: true,
 			dest: '<%= DIR_BASE %>/concrete/js/image_editor/image_editor.js',
 			src: [
 				'<%= DIR_BASE %>/concrete/js/image_editor/build/kinetic.prototype.js',
@@ -238,6 +239,12 @@ module.exports = function(grunt) {
 
 	// Let's define the uglify section (for generating JavaScripts)
 	var jsTargets = {release: [], debug: []};
+	for(var concatKey in concat) {
+		if(concat[concatKey].beforeJS) {
+			jsTargets.release.push('concat:' + concatKey);
+			jsTargets.debug.push('concat:' + concatKey);
+		}
+	}
 	config.uglify = {options: jsOptions};
 	for(var key in js) {
 		var target = {files: {}};
