@@ -28,9 +28,6 @@ $al->register('javascript', 'dropzone', 'js/dropzone.js');
 // jquery form 
 $al->register('javascript', 'jquery/form', 'js/jquery.form.js');
 
-// jquery metadata
-$al->register('javascript', 'jquery/metadata', 'js/jquery.metadata.js');
-
 // jquery rating
 $al->register('javascript', 'jquery/rating', 'js/jquery.rating.js');
 $al->register('css', 'jquery/rating', 'css/jquery.rating.css', array('postprocess' => false));
