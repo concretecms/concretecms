@@ -16,6 +16,8 @@ div#ccm-menu-highlighter {
 	height: 0px;
 	width: 0px;
 	position: absolute;
+	background-color: transparent;
+	.transition(background-color 0.5s cubic-bezier(0.190, 1.000, 0.220, 1.000));
 }
 
 
@@ -50,11 +52,13 @@ div.ccm-block-edit {
 	opacity: 1;
 	.clear_float();
 	min-height: 16px;
+
+	.transition(outline-color 0.5s cubic-bezier(0.190, 1.000, 0.220, 1.000));
+	outline: 2px solid transparent;
 }
 
 div.ccm-block-edit.ccm-menu-item-active {
 	outline: 2px solid #59ec59;
-	outline-offset: 5px;
 
 	> ul.ccm-edit-mode-inline-commands {
 		float: none;
@@ -71,6 +75,8 @@ div.ccm-block-edit.ccm-menu-item-active {
 
 div.ccm-area {
 	margin-bottom: 50px;
+	.transition(outline-color 0.5s cubic-bezier(0.190, 1.000, 0.220, 1.000));
+	outline: 1px solid transparent;
 
 	/**
 	 * draggable blocks into area
@@ -102,7 +108,6 @@ div.ccm-area.ccm-parent-menu-item-active,
 div.ccm-area.ccm-area-accepts-blocks,
 div.ccm-area.ccm-menu-item-active {
 	outline: 1px solid #e6e6e6;
-	outline-offset: 9px;
 
 	> div.ccm-area-footer {
 		display: block;
@@ -112,9 +117,11 @@ div.ccm-area.ccm-menu-item-active {
 
 div.ccm-area-footer {
 	opacity: 0;
+	.transition(opacity 0.5s cubic-bezier(0.190, 1.000, 0.220, 1.000));
 	width: 100%;
 	position: absolute;
-	bottom: -35px;
+	bottom: -36px;
+	left: 20px;
 	padding-top: 15px;
 
 	div.ccm-area-footer-handle {
@@ -122,11 +129,15 @@ div.ccm-area-footer {
 		border-left: 1px solid #ccc;
 		border-bottom: 1px solid #ccc;
 		border-right: 1px solid #ccc;
-		padding: 5px 10px 0px 10px;
+		padding: 8px 15px 8px 15px;
 		color: #666;
-		height: 25px;
+		height: 35px;
 		font-size: @baseFontSize !important;
 		background-color: #f5f5f5;
+
+		i {
+			vertical-align: middle;
+		}
 	}
 }
 
@@ -150,8 +161,7 @@ div.ccm-menu-item-active {
 div.ccm-area[data-total-blocks="0"] {
 
 	outline: 1px solid #e6e6e6;
-	outline-offset: 9px;
-	min-height: 30px;
+	min-height: 50px;
 
 }
 
@@ -174,7 +184,6 @@ div.ccm-area[data-total-blocks="0"].ccm-area-drag-block-type-over, div.ccm-area[
 div.ccm-area.ccm-area-highlight {
 
 	outline: 1px solid #59ec59;
-	outline-offset: 9px;
 
 	> div.ccm-area-footer {
 
@@ -188,10 +197,7 @@ div.ccm-area.ccm-area-highlight {
 }
 
 div.ccm-area[data-total-blocks="0"].ccm-area-highlight {
-
 	outline: 1px solid #59ec59;
-	outline-offset: 9px;
-
 }
 
 div#ccm-menu-highlighter.ccm-area-highlight {
@@ -215,7 +221,6 @@ div.ccm-area.ccm-area-inline-edit-disabled {
 
 	div.ccm-block-edit-inline-active {
 		outline: 1px solid #5eed5e;
-		outline-offset: 5px;
 		.opacity(100);
 	}
 
@@ -240,28 +245,35 @@ ul.ccm-edit-mode-inline-commands {
 	position: absolute;
 	padding: 0px !important;
 	margin: 0px !important;
-	top: -4px;
-	right: -4px;
+	top: 0px;
+	right: 0px;
+	height: 20px !important;
 	background: rgba(255,255,255,0.8);
 	z-index: @index-level-inline-commands; // has to be over the click proxy
 	li {
 		display: inline-block;
-		line-height: 15px;
+		line-height: 20px !important;
+		height: 20px !important;
 		padding: 0px !important;
 		margin: 0px !important;
 
 		a {
 			cursor: move;
+			position: relative;
 			color: #333 !important;
 			display: inline-block;
 			font-weight: lighter;
-			width: 20px;
-			line-height: 20px;
+			width: 20px !important;
+			height: 20px !important;
+			line-height: 20px !important;
 			text-align: center;
-			height: 20px;
 			color: #666;
 
 			i {
+				position: absolute;
+				top: 3px;
+				left: 3px;
+				font-size: 14px !important;
 				vertical-align: middle;
 			}
 		}
@@ -367,18 +379,28 @@ ul.ccm-edit-mode-inline-commands {
   * Korvin's new stuff
   */
  div.ccm-area-drag-area {
-	-webkit-transition: outline-width 250ms, outline-color 250ms;
+	-webkit-transition: outline-width 0.5s cubic-bezier(0.190, 1.000, 0.220, 1.000), outline-color 0.5s cubic-bezier(0.190, 1.000, 0.220, 1.000);
+	outline-color: transparent;
 
 	&.ccm-area-drag-area-contender {
 		background-color: rgba(221, 255, 221, 0.5);
-		outline: solid 5px rgb(221, 255, 221);
-		outline-color: rgba(221, 255, 221, .7);
+		outline: solid 5px rgba(221, 255, 221, .7);
 	}
 	&.ccm-area-drag-area-selectable {
 		outline-color: rgb(170, 255, 170);
 		outline-width: 10px;
 	}
 }
+
+/**
+ * Empty areas
+ */
+div.ccm-area[data-total-blocks="0"] {
+	div.ccm-area-drag-area {
+		height: 50px;
+	}
+}
+
 a.ccm-block-edit-drag, a.ccm-panel-add-block-draggable-block-type-dragger {
 	position: absolute;
 	top: 0px;

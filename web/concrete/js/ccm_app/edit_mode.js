@@ -102,7 +102,9 @@
    * @param {EditMode} edit_mode The EditMode instance
    */
   var Area = c5.Area = function Area(elem, edit_mode) {
-    var my = this;
+    var my = this,
+        totalBlocks = parseInt(elem.attr('data-total-blocks')),
+        menuHandle = (totalBlocks == 0) ? 'this' : '#area-menu-footer-' + elem.attr('data-area-id');
 
     elem.data('c5.area', my);
 
@@ -119,7 +121,10 @@
 
     my.id = my.getId();
     my.addDragArea();
-    elem.ccmmenu();
+
+    elem.ccmmenu({
+      menuHandle: menuHandle
+    });
   };
 
   /**
@@ -128,7 +133,8 @@
    * @param {EditMode} edit_mode The EditMode instance
    */
   var Block = c5.Block = function Block(elem, edit_mode, peper){
-    var my = this;
+    var my = this,
+        menuHandle = elem.attr('data-menu-handle');
 
     elem.data('c5.block', my);
 
@@ -151,7 +157,11 @@
     });
 
     my.id = my.getId();
-    elem.ccmmenu();
+    if (menuHandle != 'none') {
+      elem.ccmmenu({
+        menuHandle: menuHandle
+      });
+    }
 
     elem.find('a[data-menu-action=edit_inline]').on('click', function() {
       c5.event.fire('EditModeBlockEditInline', {block: my, event: event});
@@ -791,9 +801,9 @@
     setIsContender: function dragAreaSetIsContender(is_contender) {
       var my = this;
       if (is_contender && !my.getIsContender()) {
-        my.getElem().addClass('ccm-area-drag-area-contender');
+        _.defer(function() { my.getElem().addClass('ccm-area-drag-area-contender')});
       } else if (!is_contender && my.getIsContender()) {
-        my.getElem().removeClass('ccm-area-drag-area-contender');
+        _.defer(function() { my.getElem().removeClass('ccm-area-drag-area-contender')});
       }
       my.setAttr('isContender', is_contender);
       return true;

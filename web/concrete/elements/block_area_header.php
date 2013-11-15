@@ -41,7 +41,6 @@ data-cID="<?=$a->getCollectionID()?>"
 data-area-handle="<?=$a->getAreaHandle()?>" 
 data-launch-menu="area-menu-a<?=$a->getAreaID()?>" 
 data-menu-highlight-class="ccm-area-highlight" 
-data-menu-handle="#area-menu-footer-<?=$a->getAreaID()?>"
 class="<?=$class?>">
 
 <? unset($class); ?>

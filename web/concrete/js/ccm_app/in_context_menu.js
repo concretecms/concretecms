@@ -6,9 +6,13 @@
 
 
 
-$.fn.ccmmenu = function() {
+$.fn.ccmmenu = function(options) {
 	
 	$.fn.ccmmenu.enable();
+	var options = $.extend({
+		menuHandle: 'this',
+		highlightOffset: 0
+	}, options);
 
 	return $.each($(this), function(i, obj) {
 		var $this = $(obj), 
@@ -16,20 +20,17 @@ $.fn.ccmmenu = function() {
 
 		if (!$this.prop('has-menu')) {
 			$this.prop('has-menu', true);
-
-			if (!$this.attr('data-menu-handle')) {
+			if (options.menuHandle == 'this') {
 				$menulauncher = $this;
 			} else {
-				$menulauncher = $($this.attr('data-menu-handle'));
+				$menulauncher = $(options.menuHandle);
 			}
 
 			var $menu = $('[data-menu=' + $this.attr('data-launch-menu') + ']');
 			$this.$menu = $menu;
 			$this.highlightClass = $this.attr('data-menu-highlight-class');
-			$this.highlightOffset = 9;
-			if ($this.attr('data-menu-highlight-offset')) {
-				$this.highlightOffset = $this.attr('data-menu-highlight-offset');
-			}
+			$this.highlightOffset = options.highlightOffset;
+
 			$this.menuClass = $this.attr('data-menu-class');
 			$menulauncher.on('mousemove.ccmmenu', function(e) {
 				//e.stopPropagation(); 
@@ -66,7 +67,10 @@ $.fn.ccmmenu.highlight = function($obj) {
 	.css('border-bottom-left-radius', $obj.css('border-bottom-left-radius'))
 	.css('border-top-right-radius', $obj.css('border-top-right-radius'))
 	.css('border-bottom-right-radius', $obj.css('border-bottom-right-radius'))
-	.removeClass().addClass($.fn.ccmmenu.$overmenu.highlightClass);
+	.removeClass();
+
+	_.defer(function() { $.fn.ccmmenu.$highlighter.addClass($.fn.ccmmenu.$overmenu.highlightClass)});
+
 
 	$.fn.ccmmenu.$highlighter.show();
 }
@@ -160,7 +164,8 @@ $.fn.ccmmenu.over = function(e, $this, $menulauncher) {
 			$.fn.ccmmenu.$overmenu = $this;
 		}
 		$.fn.ccmmenu.$overmenu.addClass('ccm-menu-item-active');
-		$.fn.ccmmenu.$overmenu.parent().addClass('ccm-parent-menu-item-active');
+		// go through all parents to find any others that have menus and add parent menu item active class to it
+		$.fn.ccmmenu.$overmenu.parents('[data-launch-menu]').addClass('ccm-parent-menu-item-active');
 	}
 }
 
