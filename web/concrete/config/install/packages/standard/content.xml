@@ -26,7 +26,7 @@
         <theme handle="twitter_bootstrap" package="" />
     </themes>
     <pagetypes>
-        <pagetype name="Blog Entry" handle="blog_entry">
+        <pagetype name="Blog Entry" handle="blog_entry" launch-in-composer="1">
              <pagetemplates default="blog_entry" type="custom">
                 <pagetemplate handle="blog_entry"/>
             </pagetemplates>
@@ -86,7 +86,7 @@
             </output>
         </composer>
     </pagetype>
-    <pagetype name="Page" handle="page">
+    <pagetype name="Page" handle="page" launch-in-composer="0">
       <pagetemplates type="all" default="left_sidebar"/>
       <target handle="all" package=""/>
       <composer>

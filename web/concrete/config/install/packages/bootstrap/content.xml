@@ -9,7 +9,7 @@
         <pagetemplate handle="full" name="Full" icon="main.png" package="" />
     </pagetemplates>
     <pagetypes>
-    <pagetype name="Page" handle="page">
+    <pagetype name="Page" handle="page" launch-in-composer="0">
       <pagetemplates type="all" default="full"/>
       <target handle="all" package=""/>
       <composer>

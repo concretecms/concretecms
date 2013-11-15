@@ -44,6 +44,7 @@ class Concrete5_Controller_Page_Dashboard_Pages_Types_Add extends DashboardContr
 				'handle' => $handle,
 				'name' => $name,
 				'defaultTemplate' => $defaultTemplate,
+				'ptLaunchInComposer' => $this->post('ptLaunchInComposer'),
 				'allowedTemplates' => $this->post('ptAllowedPageTemplates'),
 				'templates' => $templates
 			);
