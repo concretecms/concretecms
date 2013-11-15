@@ -547,7 +547,7 @@
 					$obj->bID = $b->getBlockID();
 				} else {
 					$obj->error = true;
-					$obj->response = $e->getList();
+					$obj->errors = $e->getList();
 				}
 
 				print Loader::helper('json')->encode($obj);
@@ -666,7 +666,7 @@
 						} else {
 
 							$obj->error = true;
-							$obj->response = $e->getList();
+							$obj->errors = $e->getList();
 
 						}
 

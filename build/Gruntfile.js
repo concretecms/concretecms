@@ -59,15 +59,17 @@ module.exports = function(grunt) {
 			dest: '<%= DIR_BASE %>/concrete/js/ccm.app.js',
 			src: [
 				'<%= DIR_BASE %>/concrete/js/ccm_app/json.js',
+				'<%= DIR_BASE %>/concrete/js/ccm_app/jquery.form.js',
 				'<%= DIR_BASE %>/concrete/js/ccm_app/concrete5.js',
 				'<%= DIR_BASE %>/concrete/js/ccm_app/jquery.hoverIntent.js',
 				'<%= DIR_BASE %>/concrete/js/ccm_app/jquery.liveupdate.js',
 				'<%= DIR_BASE %>/concrete/js/ccm_app/chosen.jquery.js',
 				'<%= DIR_BASE %>/concrete/js/ccm_app/jquery.pep.js',
 				'<%= DIR_BASE %>/concrete/js/ccm_app/base.js',
+				'<%= DIR_BASE %>/concrete/js/ccm_app/ajax_form/base.js',
+				'<%= DIR_BASE %>/concrete/js/ccm_app/ajax_form/block.js',
 				'<%= DIR_BASE %>/concrete/js/ccm_app/ui.js',
 				'<%= DIR_BASE %>/concrete/js/ccm_app/edit_mode.js',
-				'<%= DIR_BASE %>/concrete/js/ccm_app/edit_page.js',
 				'<%= DIR_BASE %>/concrete/js/ccm_app/filemanager.js',
 				'<%= DIR_BASE %>/concrete/js/ccm_app/jquery.cookie.js',
 				'<%= DIR_BASE %>/concrete/js/ccm_app/panels.js',
@@ -105,6 +107,11 @@ module.exports = function(grunt) {
 		jquery_cookie: {
 			dest: '<%= DIR_BASE %>/concrete/js/jquery.cookie.js',
 			src: '<%= DIR_BASE %>/concrete/js/ccm_app/jquery.cookie.js'
+		},
+
+		jquery_form: {
+			dest: '<%= DIR_BASE %>/concrete/js/jquery.form.js',
+			src: '<%= DIR_BASE %>/concrete/js/ccm_app/jquery.form.js'
 		},
 
 		jquery_colorpicker: {

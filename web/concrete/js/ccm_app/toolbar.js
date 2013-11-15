@@ -60,6 +60,14 @@ var CCMToolbar = function() {
 			if (panel.options.identifier == 'page') {
 				$('#' + panel.getDOMID()).find('[data-launch-panel-detail=\'page-composer\']').click();
 			}
+			$('a[data-toolbar-action=check-in]').on('click.close-check-in', function() {
+				CCMPanelManager.exitPanelMode();
+				return false;
+			});
+		});
+
+		ccm_event.subscribe('panel.close',function(e) {
+			$('a[data-toolbar-action=check-in]').unbind('click.close-check-in');
 		});
 
 	}

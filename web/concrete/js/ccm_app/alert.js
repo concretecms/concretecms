@@ -3,6 +3,7 @@
  */
 
 var ccmAlert = {  
+
     notice : function(title, message, onCloseFn) {
         $('<div id="ccm-popup-alert" class="ccm-ui"><div id="ccm-popup-alert-message" class="alert alert-danger">' + message + '</div></div>').dialog({
             title: title,
@@ -25,8 +26,24 @@ var ccmAlert = {
         }
 
         var style ='info';
-        CCMEditMode.showResponseNotification(messageText, icon, style);
+        ccmAlert.showResponseNotification(messageText, icon, style);
+    },
+
+    showResponseNotification: function(message, icon, class) {
+        $('<div id="ccm-notification-hud" class="ccm-ui ccm-notification ccm-notification-' + class + '"><i class="glyphicon glyphicon-' + icon + '"></i><div class="ccm-notification-inner">' + message + '</div></div>').
+        appendTo(document.body).delay(5).queue(function() {
+            $(this).css('opacity', 1);
+            $(this).dequeue();
+        }).delay(2000).queue(function() {
+            $(this).css('opacity', 0);
+            $(this).dequeue();
+        }).delay(1000).queue(function() {
+            $(this).remove();
+            $(this).dequeue();
+        });
     }
+
+
 }
 
 

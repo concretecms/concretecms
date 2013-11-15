@@ -236,7 +236,7 @@ $pk = PermissionKey::getByHandle('customize_themes');
 
             $form.prop('target', null);
             $form.attr('action', '<?=$controller->action("apply_to_page", $theme->getThemeID())?>');
-            CCMEditMode.setupAjaxForm($form);
+            $form.concreteAjaxForm();
             $form.submit();
         },
 
@@ -246,7 +246,7 @@ $pk = PermissionKey::getByHandle('customize_themes');
 
             $form.prop('target', null);
             $form.attr('action', '<?=$controller->action("apply_to_site", $theme->getThemeID())?>');
-            CCMEditMode.setupAjaxForm($form);
+            $form.concreteAjaxForm();
             $form.submit();
         },
 
@@ -256,7 +256,7 @@ $pk = PermissionKey::getByHandle('customize_themes');
 
             $form.prop('target', null);
             $form.attr('action', '<?=$controller->action("reset_page_customizations")?>');
-            CCMEditMode.setupAjaxForm($form);
+            $form.concreteAjaxForm();
             $form.submit();
         },
 
@@ -266,7 +266,7 @@ $pk = PermissionKey::getByHandle('customize_themes');
 
             $form.prop('target', null);
             $form.attr('action', '<?=$controller->action("reset_site_customizations", $theme->getThemeID())?>');
-            CCMEditMode.setupAjaxForm($form);
+            $form.concreteAjaxForm();
             $form.submit();
         }
 

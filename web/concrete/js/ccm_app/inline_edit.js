@@ -69,7 +69,7 @@ var CCMInlineEditMode = function() {
 			$('#ccm-inline-toolbar-container').remove();
 
 			jQuery.fn.dialog.hideLoader();
-			CCMEditMode.start();
+			c5.editMode.scanBlocks();
 		},
 
 		editBlock: function(cID, aID, arHandle, bID, params) {

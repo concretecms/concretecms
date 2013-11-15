@@ -38,12 +38,12 @@ if (!$dh->inDashboard()) {
 	$editMode = $c->isEditMode();
 	$tools = REL_DIR_FILES_TOOLS_REQUIRED;
 	if ($c->isEditMode()) {
-		$startEditMode = 'CCMEditMode.start();';
+		$startEditMode = 'new c5.EditMode();';
 	}
 	if ($cp->canEditPageContents() && $_REQUEST['ctask'] == 'check-out-first') {
 		$pagetype = $c->getPageTypeObject();
 		if ($pagetype->doesPageTypeLaunchInComposer()) {
-			$launchPageComposer = 'CCMEditMode.launchPageComposer();';
+			$launchPageComposer = "$('a[data-launch-panel=page]').toggleClass('ccm-launch-panel-active'); CCMPanelManager.getByIdentifier('page').show();";
 		}
 	}
 	$panelDashboard = URL::to('/system/panels/dashboard');

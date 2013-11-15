@@ -49,9 +49,9 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
 				<? if (!$pageInUseBySomeoneElse && $c->getCollectionPointerID() == 0) { ?>
 
 				<? if ($c->isEditMode()) { ?>
-					<li class="ccm-toolbar-page-edit-mode-active ccm-toolbar-page-edit pull-left"><a <? if ($vo->isNew()) { ?>href="javascript:void(0)" data-launch-panel="check-in"<? } else { ?>href="<?=URL::to('/system/page/check_in', $c->getCollectionID(), Loader::helper('validation/token')->generate())?>"<? } ?> data-panel-url="<?=URL::to('/system/panels/page/check_in')?>"><i class="glyphicon glyphicon-pencil"></i></a></li>
+					<li class="ccm-toolbar-page-edit-mode-active ccm-toolbar-page-edit pull-left"><a data-toolbar-action="check-in" <? if ($vo->isNew()) { ?>href="javascript:void(0)" data-launch-panel="check-in"<? } else { ?>href="<?=URL::to('/system/page/check_in', $c->getCollectionID(), Loader::helper('validation/token')->generate())?>"<? } ?> data-panel-url="<?=URL::to('/system/panels/page/check_in')?>"><i class="glyphicon glyphicon-pencil"></i></a></li>
 				<? } else { ?>
-					<li class="ccm-toolbar-page-edit pull-left"><a href="<?=DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=<?=$c->getCollectionID()?>&ctask=check-out<?=$token?>"><i class="glyphicon glyphicon-pencil"></i></a></li>
+					<li class="ccm-toolbar-page-edit pull-left"><a data-toolbar-action="check-out" href="<?=DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=<?=$c->getCollectionID()?>&ctask=check-out<?=$token?>"><i class="glyphicon glyphicon-pencil"></i></a></li>
 				<? } ?>
 
 				<li class="pull-left"><a href="#" data-launch-panel="page" data-panel-url="<?=URL::to('/system/panels/page')?>"><i class="glyphicon glyphicon-cog"></i></a>
