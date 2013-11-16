@@ -151,7 +151,11 @@ class Concrete5_Model_FileVersion extends Object {
 		$data['fvID'] = $fvID;
 		$data['fvDateAdded'] = $date;
 		$u = new User();
-		$data['fvAuthorUID'] = $u->getUserID();
+		if ($u->isRegistered()) {
+            $data['fvAuthorUID'] = $u->getUserID();
+        } else {
+            $data['fvAuthorUID'] = 0;
+        }
 
 		// If This version is the approved version, we approve the new one.
 		if ($this->isApproved()) {
