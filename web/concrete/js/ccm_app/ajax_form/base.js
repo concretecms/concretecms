@@ -77,7 +77,9 @@
 
 	// jQuery Plugin
 	$.fn.concreteAjaxForm = function(options) {
-		return new ConcreteAjaxForm(this, options);
+		return $.each($(this), function(i, obj) {
+			new ConcreteAjaxForm($(this), options);
+		});
 	}
 
 	global.ConcreteAjaxForm = ConcreteAjaxForm;

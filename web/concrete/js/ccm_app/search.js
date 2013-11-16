@@ -77,7 +77,7 @@
 			$.each(cs.options.result.items, function(i, item) {
 				cs.$results.append(cs._templateSearchResultsMenu({'item': item}));
 			});
-			cs.$element.find('tbody tr').ccmmenu();
+			cs.$element.find('tbody tr').concreteMenu();
 		}
 	};
 
