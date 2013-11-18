@@ -17,7 +17,7 @@ if (isset($entry)) {
 	?>
 
 	<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(ucfirst($action) . ' ' . $ct->getCollectionTypeName(), false, false, false)?>
-	<form method="post" class="form-horizontal" enctype="multipart/form-data" action="<?=$this->action('save')?>" id="ccm-dashboard-composer-form" onsubmit="if($('#ccm-url-slug-loader').is(':visible'))return false;jQuery.fn.dialog.showLoader()">
+	<form method="post" class="form-horizontal" enctype="multipart/form-data" action="<?=$this->action('save')?>" id="ccm-dashboard-composer-form">
 	<input type="hidden" name="ccm-publish-draft" value="0" />
 
 	<div class="ccm-pane-body">
@@ -320,30 +320,39 @@ if (isset($entry)) {
 			$('input[name=ccm-publish-draft]').val(1);
 		});
 		
-		$("#ccm-dashboard-composer-form").submit(function() {
-			ccm_composerDoAutoSaveAllowed = false;
+		$("#ccm-dashboard-composer-form").submit(function(e) {
+			var proceed = true;
+			if ($('#ccm-url-slug-loader').is(':visible')) {
+				proceed = false;
+			}
+			else {
+				proceed = true;
+				<? if ($entry->isComposerDraft()) { ?>
+					if ($("input[name=cPublishParentID]").val() == 0) {
+						if (ccm_composerIsPublishClicked) {
+							ccm_composerIsPublishClicked = false;			
+							$('input[name=ccm-publish-draft]').val(0);
+							<? if ($ct->getCollectionTypeComposerPublishMethod() == 'PAGE_TYPE' || $ct->getCollectionTypeComposerPublishMethod() == 'CHOOSE') { ?>
+								ccm_openComposerPublishTargetWindow(true);
+								proceed = false;
+							<? } else if ($ct->getCollectionTypeComposerPublishMethod() == 'PARENT') { ?>
+								proceed = true;
+							<? } else { ?>
+								proceed = false;
+							<? } ?>
+						}
+					}
+				<? } ?>
+			}
+			if(proceed) {
+				jQuery.fn.dialog.showLoader();
+				ccm_composerDoAutoSaveAllowed = false;
+			}
+			else {
+				e.preventDefault();
+			}
+			return proceed;
 		});
-		
-		<? if ($entry->isComposerDraft()) { ?>
-			$("#ccm-dashboard-composer-form").submit(function() {
-				if ($("input[name=cPublishParentID]").val() > 0) {
-					return true;
-				}
-				if (ccm_composerIsPublishClicked) {
-					ccm_composerIsPublishClicked = false;			
-					$('input[name=ccm-publish-draft]').val(0);
-	
-					<? if ($ct->getCollectionTypeComposerPublishMethod() == 'PAGE_TYPE' || $ct->getCollectionTypeComposerPublishMethod() == 'CHOOSE') { ?>
-						ccm_openComposerPublishTargetWindow(true);
-						return false;
-					<? } else if ($ct->getCollectionTypeComposerPublishMethod() == 'PARENT') { ?>
-						return true;				
-					<? } else { ?>
-						return false;
-					<? } ?>
-				}
-			});
-		<? } ?>
 		ccm_composerAutoSaveInterval = setInterval(function() {
 			ccm_composerDoAutoSave();
 		}, 
