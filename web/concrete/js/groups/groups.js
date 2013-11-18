@@ -140,9 +140,6 @@
     },
 
 	init: function(options) {
-		if(!options.noMenu) {
-    		$.fn.ccmmenu.enable();
-    	}
 		var options = $.extend({
 			readonly: false,
 			chooseNodeInForm: false,
@@ -272,7 +269,6 @@
 						return false;
 					}
 
-					$.fn.ccmmenu.hide(e);
 					if (node.getEventTargetType(e) == 'expander') {
 						return true;
 					}
@@ -282,10 +278,14 @@
 					if (!node.getEventTargetType(e)) {
 						return false;
 					}
-					if (!options.chooseNodeInForm && node.getEventTargetType(e) == 'title') {
+					if (!options.chooseNodeInForm && node.getEventTargetType(e) == 'title' && !options.noMenu) {
 						var $menu = methods.private.getMenu(node.data, options);
 						if ($menu) {
-							$.fn.ccmmenu.showmenu(e, $menu);
+							var menu = new ConcreteMenu($(node.span), {
+								menu: $menu,
+								launcher: 'none'
+							});
+							menu.show(e);
 						}
 					}
 				},

@@ -28,6 +28,7 @@
 			my.$launcher = (options.handle == 'this') ? my.$element : $(options.handle);
 		}
 		my.$menu = $(options.menu);
+
 		my.$launcher.on('mousemove.concreteMenu', function(e) {
 			my.hoverProxy(e);
 		});
@@ -138,7 +139,6 @@
 			$menu.find('.dialog-launch').dialog();
 			$container.html('');
 			$menu.appendTo($container);
-
 
 			$menu.css('opacity', 0).show();
 			var	mwidth = $menu.width(),
