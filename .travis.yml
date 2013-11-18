@@ -7,6 +7,7 @@ env:
   - REF="5.6.1.2"
 
 before_script:
+    - cd tests
     - composer install
     - echo 'short_open_tag = On' >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
     - git clone https://github.com/concrete5/concrete5.git
