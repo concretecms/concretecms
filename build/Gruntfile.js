@@ -6,6 +6,12 @@ module.exports = function(grunt) {
 		parameters = require(__dirname + '/Gruntfile.parameters.js');
 	}
 	parameters = parameters || {};
+	grunt.option.flags().forEach(function(p) {
+		var m = /^--(.+?)=(.+)$/.exec(p);
+		if(m) {
+			parameters[m[1]] = m[2];
+		}
+	});
 	
 	var config = {};
 
