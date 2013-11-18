@@ -186,17 +186,26 @@ class Concrete5_Library_BlockViewTemplate {
 			return $items;
 		} else {
 			foreach($this->itemsToCheck as $t => $i) {
+					
 				if (file_exists($this->basePath . '/' . $i)) {
+						
+					if(strlen($this->bFilename)) {
+						$i = DIRNAME_BLOCK_TEMPLATES.'/'.$this->bFilename.'/'.$i;
+					}
+					
+					$url = $uh->getBlockTypeAssetsURL($bt, $i);
+					if(!strlen($url)) { continue; }
 					switch($t) {
 						case 'CSS':
-							$items[] = $h->css($uh->getBlockTypeAssetsURL($bt, $i));
+							$items[] = $h->css($url);
 							break;
 						case 'JAVASCRIPT':
-							$items[] = $h->javascript($uh->getBlockTypeAssetsURL($bt, $i));
+							$items[] = $h->javascript($url);
 							break;
 					}
 				}
 			}
+			
 			$css = $dh->getDirectoryContents($this->basePath . '/' . DIRNAME_CSS);
 			$js = $dh->getDirectoryContents($this->basePath . '/' . DIRNAME_JAVASCRIPT);
 			if (count($css) > 0) {
