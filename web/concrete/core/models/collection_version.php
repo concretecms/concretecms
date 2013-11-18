@@ -75,18 +75,19 @@
 			} else {
 				$akHandle = $ak;
 			}
+			$akHash = $akHandle . ':' . $displayMode;
 
-			if (!isset($this->attributes[$akHandle])) {
-				$this->attributes[$akHandle] = false;
+			if (!isset($this->attributes[$akHash])) {
+				$this->attributes[$akHash] = false;
 				$ak = CollectionAttributeKey::getByHandle($akHandle);
 				if (is_object($ak)) {
 					$av = $c->getAttributeValueObject($ak);
 					if (is_object($av)) {
-						$this->attributes[$akHandle] = $av->getValue($displayMode);
+						$this->attributes[$akHash] = $av->getValue($displayMode);
 					}
 				}
 			}
-			return $this->attributes[$akHandle];
+			return $this->attributes[$akHash];
 		}
 
 		function isApproved() {return $this->cvIsApproved;}
