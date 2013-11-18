@@ -1,6 +1,6 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Controller_Dialogs_Area_Layout_Presets extends FrontendEditController {
+class Concrete5_Controller_Dialogs_Area_Layout_Presets extends BackendInterfaceController {
 
 	protected $viewPath = '/system/dialogs/area/layout/presets';
 

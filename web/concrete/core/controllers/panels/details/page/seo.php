@@ -1,6 +1,6 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Controller_Panel_Details_Page_Seo extends FrontendEditPageController {
+class Concrete5_Controller_Panel_Details_Page_Seo extends BackendInterfacePageController {
 
 	protected $viewPath = '/system/panels/details/page/seo';
 
