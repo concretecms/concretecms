@@ -290,21 +290,7 @@
 		}
 		
 		function getUserGroups() {
-			$ugtmp = array();
-			// we have to do this because we don't have a localized version of the guest and registered group names
-			// when we called _getUserGroups() below. So we have to push out the defining of the guest and registered
-			// names til runtime
-			
-			foreach($this->uGroups as $key => $value) {
-				$ugtmp[$key] = $value;
-				if ($key == GUEST_GROUP_ID) {
-					$ugtmp[$key] = GUEST_GROUP_NAME;
-				}
-				if ($key == REGISTERED_GROUP_ID) {
-					$ugtmp[$key] = REGISTERED_GROUP_NAME;
-				}
-			}
-			return $ugtmp;
+			return $this->uGroups;
 		}
 		
 		/** 

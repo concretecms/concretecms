@@ -83,7 +83,7 @@ if (!isset($_REQUEST['reload'])) { ?>
 							if ($gk->validate($g['gID'])) { 
 
 						?>
-							<option value="<?=$g['gID']?>"  <? if (is_array($_REQUEST['groupIDs']) && in_array($g['gID'], $_REQUEST['groupIDs'])) { ?> selected="selected" <? } ?>><?=$g['gName']?></option>
+							<option value="<?=$g['gID']?>"  <? if (is_array($_REQUEST['groupIDs']) && in_array($g['gID'], $_REQUEST['groupIDs'])) { ?> selected="selected" <? } ?>><?=h(tc('GroupName', $g['gName']))?></option>
 						<? } 
 						
 						}?>

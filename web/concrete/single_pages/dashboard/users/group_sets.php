@@ -75,7 +75,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 						?>
 								<label class="checkbox">
 									<?php echo $form->checkbox('gID[]', $g->getGroupID(), $set->contains($g)) ?>
-									<span><?php echo $g->getGroupName()?></span>
+									<span><?php echo $g->getGroupDisplayName()?></span>
 								</label>
 						<?php } ?>
 					</div>
@@ -114,7 +114,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		
 			<?php foreach($groupSets as $gs) { ?>
 				<div class="ccm-group" id="asID_<?php echo $gs->getGroupSetID()?>">
-					<a class="ccm-group-inner" href="<?php echo $this->url('/dashboard/users/group_sets', 'edit', $gs->getGroupSetID())?>" style="background-image: url(<?php echo ASSETS_URL_IMAGES?>/icons/group.png)"><?php echo $gs->getGroupSetName()?></a>
+					<a class="ccm-group-inner" href="<?php echo $this->url('/dashboard/users/group_sets', 'edit', $gs->getGroupSetID())?>" style="background-image: url(<?php echo ASSETS_URL_IMAGES?>/icons/group.png)"><?php echo $gs->getGroupSetDisplayName()?></a>
 				</div>
 			<?php } ?>
 		</div>
@@ -140,7 +140,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		<label class="control-label"><?=t('Groups')?></label>
 		<div class="controls">
 		<? foreach($groups as $g) { ?>
-			<label class="checkbox"><?=$form->checkbox('gID[]', $g->getGroupID())?> <span><?=$g->getGroupName()?></span></label>
+			<label class="checkbox"><?=$form->checkbox('gID[]', $g->getGroupID())?> <span><?=$g->getGroupDisplayName()?></span></label>
 			
 		<? } ?>
 		</div>

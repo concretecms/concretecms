@@ -56,7 +56,24 @@ class Concrete5_Model_GroupSet extends Object {
 	public function getGroupSetID() {return $this->gsID;}
 	public function getGroupSetName() {return $this->gsName;}
 	public function getPackageID() {return $this->pkgID;}
-	
+
+	/** Returns the display name for this group set (localized and escaped accordingly to $format)
+	* @param string $format = 'html'
+	*	Escape the result in html format (if $format is 'html').
+	*	If $format is 'text' or any other value, the display name won't be escaped.
+	* @return string
+	*/
+	public function getGroupSetDisplayName($format = 'html') {
+		$value = tc('GroupSetName', $this->getGroupSetName());
+		switch($format) {
+			case 'html':
+				return h($value);
+			case 'text':
+			default:
+				return $value;
+		}
+	}
+
 	public function updateGroupSetName($gsName) {
 		$this->gsName = $gsName;
 		$db = Loader::db();
