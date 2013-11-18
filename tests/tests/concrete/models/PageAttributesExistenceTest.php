@@ -28,6 +28,7 @@ class PageAttributeExistenceTest extends PHPUnit_Framework_TestCase {
 		$page->setAttribute($handle,$second);
 		$page = Page::getByID($page->getCollectionID());
 		$page->reindex();
+		$page->refreshCache();
 		$attribute = $page->getAttribute($handle);
 	
 		if($secondStatic != null){
