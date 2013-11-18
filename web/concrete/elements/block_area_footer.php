@@ -27,7 +27,7 @@ $class = 'ccm-area-footer';
 
 <div class="ccm-area-footer-handle" id="area-menu-footer-<?=$a->getAreaID()?>"><span><i class="glyphicon glyphicon-share-alt"></i> <?=$a->getAreaDisplayName()?></span></div>
 
-<div class="popover fade" data-menu="area-menu-a<?=$a->getAreaID()?>">
+<div class="popover fade" data-area-menu="area-menu-a<?=$a->getAreaID()?>">
 	<div class="arrow"></div>
 	<div class="popover-inner">
 	<ul class="dropdown-menu">

@@ -42,7 +42,7 @@ if (!$dh->inDashboard()) {
 	}
 	if ($cp->canEditPageContents() && $_REQUEST['ctask'] == 'check-out-first') {
 		$pagetype = $c->getPageTypeObject();
-		if ($pagetype->doesPageTypeLaunchInComposer()) {
+		if (is_object($pagetype) && $pagetype->doesPageTypeLaunchInComposer()) {
 			$launchPageComposer = "$('a[data-launch-panel=page]').toggleClass('ccm-launch-panel-active'); CCMPanelManager.getByIdentifier('page').show();";
 		}
 	}

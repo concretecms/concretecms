@@ -75,7 +75,7 @@ $searchRequest = $controller->getSearchRequest();
 
 <script type="text/template" data-template="search-results-table-body">
 <% _.each(items, function(page) {%>
-<tr data-launch-menu="<%=page.cID%>">
+<tr data-launch-search-menu="<%=page.cID%>">
 	<td><span class="ccm-search-results-checkbox"><input type="checkbox" data-search-checkbox="individual" value="<%=page.cID%>" /></span></td>
 	<% for(i = 0; i < page.columns.length; i++) {
 		var column = page.columns[i];
@@ -90,7 +90,7 @@ $searchRequest = $controller->getSearchRequest();
 </script>
 
 <script type="text/template" data-template="search-results-menu">
-<div class="popover fade" data-menu="<%=item.cID%>">
+<div class="popover fade" data-search-menu="<%=item.cID%>">
 	<div class="arrow"></div>
 	<div class="popover-inner">
 	<ul class="dropdown-menu">

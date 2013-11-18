@@ -57,7 +57,7 @@ div.ccm-block-edit {
 	outline: 1px solid transparent;
 }
 
-div.ccm-block-edit.ccm-menu-item-active {
+div.ccm-block-edit.ccm-menu-item-hover, div.ccm-block-edit.ccm-menu-item-active {
 	outline: 1px solid #59ec59;
 
 	> ul.ccm-edit-mode-inline-commands {
@@ -105,9 +105,11 @@ div.ccm-area {
 
 }
 div.ccm-area:hover,
+div.ccm-area.ccm-parent-menu-item-hover,
 div.ccm-area.ccm-parent-menu-item-active,
 div.ccm-area.ccm-area-accepts-blocks,
-div.ccm-area.ccm-menu-item-active {
+div.ccm-area.ccm-area-highlight,
+div.ccm-area.ccm-menu-item-hover {
 	outline: 1px solid #e6e6e6;
 
 	> div.ccm-area-footer {
@@ -146,7 +148,7 @@ div.ccm-area-footer {
 /**
  * Hovering over areas
  */
-div.ccm-menu-item-active {
+div.ccm-menu-item-hover {
 	> div.ccm-area-footer {
 		> div.ccm-area-footer-handle {
 			span {
@@ -166,7 +168,7 @@ div.ccm-area[data-total-blocks="0"] {
 
 }
 
-div.ccm-area[data-total-blocks="0"].ccm-area-drag-block-type-over, div.ccm-area[data-total-blocks="0"].ccm-menu-item-active {
+div.ccm-area[data-total-blocks="0"].ccm-area-drag-block-type-over, div.ccm-area[data-total-blocks="0"].ccm-menu-item-hover {
 
 	outline: 1px solid #0c6;
 

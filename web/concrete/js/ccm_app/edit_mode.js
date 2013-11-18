@@ -129,9 +129,11 @@
 
     my.id = my.getId();
     my.addDragArea();
-
-    elem.ccmmenu({
-      menuHandle: menuHandle
+    elem.concreteMenu({
+      'handle': menuHandle,
+      'highlightClassName': 'ccm-area-highlight',
+      'menuActiveClass': 'ccm-area-highlight',
+      'menu': $('[data-area-menu=' + elem.attr('data-launch-area-menu') + ']')
     });
   };
 
@@ -142,7 +144,7 @@
    */
   var Block = c5.Block = function Block(elem, edit_mode, peper){
     var my = this,
-        menuHandle = elem.attr('data-menu-handle');
+        menuHandle = elem.attr('data-block-menu-handle');
 
     elem.data('c5.block', my);
 
@@ -166,8 +168,11 @@
 
     my.id = my.getId();
     if (menuHandle != 'none') {
-      elem.ccmmenu({
-        menuHandle: menuHandle
+      elem.concreteMenu({
+        'handle': 'this',
+        'highlightClassName': 'ccm-block-highlight',
+        'menuActiveClass': 'ccm-block-highlight',
+        'menu': $('[data-block-menu=' + elem.attr('data-launch-block-menu') + ']')
       });
     }
 
@@ -461,7 +466,6 @@
           tb = parseInt($('[data-area-id=' + aID + ']').attr('data-total-blocks'));
         
         $d.hide().remove();
-        $.fn.ccmmenu.reset();
         ccmAlert.hud(ccmi18n.deleteBlockMsg, 2000, 'delete_small', ccmi18n.deleteBlock);
         $('[data-area-id=' + aID + ']').attr('data-total-blocks', tb - 1);
         $.ajax({

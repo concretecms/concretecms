@@ -6,8 +6,7 @@
 var CCMInlineEditMode = function() {
 
 	enterInlineEditMode = function(activeObj) {
-
-		$.fn.ccmmenu.disable();
+		ConcreteMenu.disable();
 		CCMToolbar.disable();
 		$('div.ccm-area').addClass('ccm-area-inline-edit-disabled');
 		if (activeObj) {
@@ -60,7 +59,7 @@ var CCMInlineEditMode = function() {
 
 		finishExit: function() {
 			$('div.ccm-area-edit-inline-active').removeClass('ccm-area-edit-inline-active');
-			$.fn.ccmmenu.enable();
+			ConcreteMenu.enable();
 			$('div.ccm-block-edit-inline-active').remove();
 			$(window).unbind('scroll.inline-toolbar');
 			$('div.ccm-area').removeClass('ccm-area-inline-edit-disabled');

@@ -51,8 +51,11 @@ jQuery.fn.dialog.close = function(num) {
 }
 
 jQuery.fn.dialog.open = function(options) {
-	if (typeof($.fn.ccmmenu) != 'undefined') {
-		$.fn.ccmmenu.hide();
+	if (typeof(ConcreteMenu) != 'undefined') {
+		var activeMenu = ConcreteMenuManager.getActiveMenu();
+		if (activeMenu) {
+			activeMenu.hide();
+		}
 	}
 
 	if (typeof(options.width) == 'string') {
