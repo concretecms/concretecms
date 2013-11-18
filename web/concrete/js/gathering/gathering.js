@@ -65,8 +65,13 @@
 
     	enableEditing: function($gathering, options) {
 			$gathering.find('a[data-inline-command=options-tile]').not('.gathering-options-bound').on('click', function(e) {
+				var $item = $(this);
 				var $menu = $('[data-menu=' + $(this).attr('data-launch-menu') + ']'); 
-				$.fn.ccmmenu.showmenu(e, $menu);
+				var menu = new ConcreteMenu($item, {
+					menu: $menu,
+					launcher: 'none'
+				});
+				menu.show(e);
 				return false;
 			}).addClass('gathering-options-bound');
 

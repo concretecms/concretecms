@@ -440,7 +440,7 @@
 			var minExpandLevel = 1;
 		}
     
-    	$.fn.ccmmenu.enable();
+
 		return this.each(function() {
 			$(this).attr('data-sitemap', 'container').attr('data-sitemap-request-id', settings.requestID);
 
@@ -491,7 +491,11 @@
 						} else {
 							var $menu = methods.getMenu(node.data, settings);
 							if ($menu) {
-								$.fn.ccmmenu.showmenu(e, $menu);
+								var menu = new ConcreteMenu($(node.span), {
+									menu: $menu,
+									launcher: 'none'
+								});
+								menu.show(e);
 							}
 						}
 					} else if (node.data.href) {
