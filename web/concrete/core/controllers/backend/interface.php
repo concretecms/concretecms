@@ -1,6 +1,6 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-abstract class Concrete5_Controller_Frontend_Edit extends Controller {
+abstract class Concrete5_Controller_Backend_Interface extends Controller {
 
 	abstract protected function canAccess();
 	protected $error;

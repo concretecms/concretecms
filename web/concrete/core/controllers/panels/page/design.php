@@ -1,6 +1,6 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Controller_Panel_Page_Design extends FrontendEditPageController {
+class Concrete5_Controller_Panel_Page_Design extends BackendInterfacePageController {
 
 	protected $viewPath = '/system/panels/page/design';
 	public function canAccess() {

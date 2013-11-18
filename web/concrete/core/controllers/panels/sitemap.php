@@ -1,6 +1,6 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Controller_Panel_Sitemap extends FrontendEditPageController {
+class Concrete5_Controller_Panel_Sitemap extends BackendInterfacePageController {
 
 	protected $viewPath = '/system/panels/sitemap';
 	protected $pagetypes = array();

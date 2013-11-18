@@ -1,6 +1,6 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Controller_Panel_Page_CheckIn extends FrontendEditPageController {
+class Concrete5_Controller_Panel_Page_CheckIn extends BackendInterfacePageController {
 
 	protected $viewPath = '/system/panels/page/check_in';
 	public function canAccess() {

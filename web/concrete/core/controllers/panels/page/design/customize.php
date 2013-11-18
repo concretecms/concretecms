@@ -1,6 +1,6 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Controller_Panel_Page_Design_Customize extends FrontendEditPageController {
+class Concrete5_Controller_Panel_Page_Design_Customize extends BackendInterfacePageController {
 
 	protected $viewPath = '/system/panels/page/design/customize';
 	protected $helpers = array('form');

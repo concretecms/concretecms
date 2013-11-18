@@ -1,6 +1,6 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Controller_Dialogs_Page_Bulk_Properties extends FrontendEditController {
+class Concrete5_Controller_Dialogs_Page_Bulk_Properties extends BackendInterfaceController {
 
 	protected $viewPath = '/system/dialogs/page/bulk/properties';
 

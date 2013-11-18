@@ -1,6 +1,6 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Controller_Dialogs_Page_Delete extends FrontendEditPageController {
+class Concrete5_Controller_Dialogs_Page_Delete extends BackendInterfacePageController {
 
 	protected $viewPath = '/system/dialogs/page/delete';
 
