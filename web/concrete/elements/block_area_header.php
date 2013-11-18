@@ -39,6 +39,7 @@ data-accepts-block-types="<?=trim($handles)?>"
 data-area-id="<?=$a->getAreaID()?>" 
 data-cID="<?=$a->getCollectionID()?>" 
 data-area-handle="<?=$a->getAreaHandle()?>" 
+data-area-menu-handle="<?=$a->getAreaID()?>"
 data-launch-area-menu="area-menu-a<?=$a->getAreaID()?>" 
 class="<?=$class?>">
 
