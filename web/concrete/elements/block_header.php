@@ -67,8 +67,8 @@ if ($isAlias) {
 
 ?>
 
-<div custom-style="<?=$b->getBlockCustomStyleRuleID()?>" data-area-id="<?=$a->getAreaID()?>" data-block-id="<?=$b->getBlockID()?>" class="<?=$class?>" data-block-type-handle="<?=$btHandle?>" data-menu-highlight-class="ccm-block-highlight"  data-launch-menu="block-menu-b<?=$b->getBlockID()?>-<?=$a->getAreaID()?>" 
-		<? if ($btw->getBlockTypeHandle() == BLOCK_HANDLE_LAYOUT_PROXY) { ?> data-menu-handle="none"<? } ?>>
+<div custom-style="<?=$b->getBlockCustomStyleRuleID()?>" data-area-id="<?=$a->getAreaID()?>" data-block-id="<?=$b->getBlockID()?>" class="<?=$class?>" data-block-type-handle="<?=$btHandle?>" data-launch-block-menu="block-menu-b<?=$b->getBlockID()?>-<?=$a->getAreaID()?>" 
+		<? if ($btw->getBlockTypeHandle() == BLOCK_HANDLE_LAYOUT_PROXY) { ?> data-block-menu-handle="none"<? } ?>>
 		<ul class="ccm-edit-mode-inline-commands ccm-ui">
 		<? if ($p->canEditBlock() && $btw->getBlockTypeHandle() != BLOCK_HANDLE_LAYOUT_PROXY && (!$a->isGlobalArea())) {  ?>
 			<li><a data-inline-command="move-block" href="#"><i class="glyphicon glyphicon-move"></i></a></li>
@@ -77,7 +77,7 @@ if ($isAlias) {
 		
 <div class="ccm-ui">
 
-<div class="popover fade" data-menu="block-menu-b<?=$b->getBlockID()?>-<?=$a->getAreaID()?>">
+<div class="popover fade" data-block-menu="block-menu-b<?=$b->getBlockID()?>-<?=$a->getAreaID()?>">
 	<div class="arrow"></div>
 	<div class="popover-inner">
 	<ul class="dropdown-menu">

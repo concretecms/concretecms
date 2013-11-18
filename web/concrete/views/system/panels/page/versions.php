@@ -25,7 +25,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			<% if (cv.cvIsApproved == 1) { %>
 				<i class="glyphicon glyphicon-ok" title="<?=t('This is the approved page version.')?>"></i>
 			<% } %>
-			<a href="#" class="ccm-panel-page-versions-version-menu" data-menu-class="ccm-panel-page-versions-menu" data-launch-menu="ccm-panel-page-versions-version-menu-<%-cv.cvID%>"><i class="glyphicon glyphicon-share-alt"></i></a>
+			<a href="#" class="ccm-panel-page-versions-version-menu" data-launch-versions-menu="ccm-panel-page-versions-version-menu-<%-cv.cvID%>"><i class="glyphicon glyphicon-share-alt"></i></a>
 			<div class="ccm-popover-inverse popover fade" data-menu="ccm-panel-page-versions-version-menu-<%-cv.cvID%>">
 				<div class="popover-inner">
 				<ul class="dropdown-menu">
@@ -137,8 +137,14 @@ var CCMPageVersionList = {
 	},
 
 	setupMenus: function() {
-		// the click proxy is kinda screwy on this.
-		$('a.ccm-panel-page-versions-version-menu').ccmmenu();
+		// the click proxy is kinda screwy on this
+		$('a.ccm-panel-page-versions-version-menu').each(function() {
+			$(this).concreteMenu({
+				menuLauncherHoverClass: 'ccm-panel-page-versions-hover',
+				menu: 'div[data-menu=' + $(this).attr('data-launch-versions-menu') + ']'
+			});
+		});
+
 		$('a[data-version-menu-task]').unbind('.vmenu').on('click.vmenu', function() {
 			var cvID = $(this).attr('data-version-id');
 			switch($(this).attr('data-version-menu-task')) {

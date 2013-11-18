@@ -60,7 +60,10 @@
 					.opacity(0);
 					.transition(opacity 0.3s cubic-bezier(0.190, 1.000, 0.220, 1.000));	
 					color: #707c8c;
-					&.ccm-menu-item-active {
+					&:hover {
+						text-decoration: none;
+					}
+					&.ccm-panel-page-versions-hover {
 						color: #3baaf7;
 						.opacity(1);
 						text-decoration: none;
@@ -108,7 +111,7 @@
 }
 
 div#ccm-menu-click-proxy {
-	&.ccm-panel-page-versions-menu {
+	&.ccm-panel-page-versions-hover {
 		z-index: @index-level-panel;
 	}
 }
