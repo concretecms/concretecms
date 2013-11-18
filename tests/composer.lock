@@ -1,0 +1,53 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
+    ],
+    "hash": "1c249eeee04e4aade9f82ca1f6b21e06",
+    "packages": [
+
+    ],
+    "packages-dev": [
+        {
+            "name": "concrete5/concrete5-cli",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/concrete5/concrete5-cli.git",
+                "reference": "76ea2cf28434d068c1b04ee89797985d3d395c0d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/concrete5/concrete5-cli/zipball/76ea2cf28434d068c1b04ee89797985d3d395c0d",
+                "reference": "76ea2cf28434d068c1b04ee89797985d3d395c0d",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.1.0"
+            },
+            "bin": [
+                "install-concrete5.php"
+            ],
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "homepage": "http://www.concrete5.org",
+            "time": "2013-10-14 16:47:23"
+        }
+    ],
+    "aliases": [
+
+    ],
+    "minimum-stability": "stable",
+    "stability-flags": {
+        "concrete5/concrete5-cli": 20
+    },
+    "platform": [
+
+    ],
+    "platform-dev": [
+
+    ]
+}
