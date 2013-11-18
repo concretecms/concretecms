@@ -111,8 +111,8 @@
    */
   var Area = c5.Area = function Area(elem, edit_mode) {
     var my = this,
-        totalBlocks = parseInt(elem.attr('data-total-blocks')),
-        menuHandle = (totalBlocks == 0) ? 'this' : '#area-menu-footer-' + elem.attr('data-area-id');
+      totalBlocks = parseInt(elem.attr('data-total-blocks')),
+      menuHandle = (totalBlocks == 0) ? 'div[data-area-menu-handle=' + elem.attr('data-area-id') + ']' : '#area-menu-footer-' + elem.attr('data-area-id');
 
     elem.data('c5.area', my);
 

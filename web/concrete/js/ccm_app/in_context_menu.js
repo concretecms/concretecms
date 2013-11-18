@@ -29,8 +29,11 @@
 		}
 		my.$menu = $(options.menu);
 
-		my.$launcher.on('mousemove.concreteMenu', function(e) {
-			my.hoverProxy(e);
+		my.$launcher.each(function() {
+			var $specificLauncher = $(this);
+			$specificLauncher.on('mousemove.concreteMenu', function(e) {
+				my.hoverProxy(e, $(this));
+			});
 		});
 
 		my.setup();
@@ -85,22 +88,22 @@
 				$elementToPosition.css(properties);
 		},
 
-		hoverProxy: function(e) {
+		hoverProxy: function(e, $specificLauncher) {
+			e.stopPropagation();
+			// we pass $launcher in because some menus can have multiple items
+			// launch the same and we want to know which item triggered the launch
 			var my = this, 
 				global = ConcreteMenuManager,
 				menuLauncherHoverClass = my.options.menuLauncherHoverClass, 
-				$clickProxy = global.$clickProxy, 
-				$launcher = my.$launcher;
+				$clickProxy = global.$clickProxy;
 			
 			if (!global.enabled || global.activeMenu) {
 				return false;
 			}
 
-			if (my.$launcher) {
-				my.positionAt($clickProxy, $launcher);
-				$clickProxy.addClass(menuLauncherHoverClass);
-				ConcreteMenuManager.hoverMenu = my;
-			}
+			my.positionAt($clickProxy, $specificLauncher);
+			$clickProxy.addClass(menuLauncherHoverClass);
+			ConcreteMenuManager.hoverMenu = my;
 		},
 
 		mouseover: function(e) {
