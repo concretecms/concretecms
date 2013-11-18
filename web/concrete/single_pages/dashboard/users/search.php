@@ -308,7 +308,7 @@ if (is_object($uo)) {
                                         }
                                     }
                                 ?> />
-                                <span><?=$g->getGroupName()?></span>
+                                <span><?=$g->getGroupDisplayName()?></span>
                             </label>
                         
                     <? } ?> 
@@ -501,7 +501,7 @@ if (is_object($uo)) {
 				$groups++; ?>
 
 				<div class="row">
-				<div class="span5" style=""><p><strong><?=$g->getGroupName()?></strong></p></div>
+				<div class="span5" style=""><p><strong><?=$g->getGroupDisplayName()?></strong></p></div>
 				<div class="span5"><p>
 					<?
 					$dateTime = $g->getGroupDateTimeEntered();

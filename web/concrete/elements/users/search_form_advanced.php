@@ -38,7 +38,7 @@ foreach($searchFieldAttributes as $ak) {
 			$gsl = new GroupSetList();
 			$groupsets = array();
 			foreach($gsl->get() as $gs) { 
-				$groupsets[$gs->getGroupSetID()] = $gs->getGroupSetName();
+				$groupsets[$gs->getGroupSetID()] = $gs->getGroupSetDisplayName();
 			}
 		?>
 		<span class="ccm-search-option"  search-field="group_set">
@@ -80,7 +80,7 @@ foreach($searchFieldAttributes as $ak) {
 				<select multiple name="gID[]" class="chosen-select" style="width: 220px">
 					<? foreach($g1 as $g) {
 						if ($pk->validate($g['gID'])) { ?>
-						<option value="<?=$g['gID']?>"  <? if (is_array($_REQUEST['gID']) && in_array($g['gID'], $_REQUEST['gID'])) { ?> selected="selected" <? } ?>><?=$g['gName']?></option>
+						<option value="<?=$g['gID']?>"  <? if (is_array($_REQUEST['gID']) && in_array($g['gID'], $_REQUEST['gID'])) { ?> selected="selected" <? } ?>><?=h(tc('GroupName', $g['gName']))?></option>
 					<? 
 						}
 					} ?>
