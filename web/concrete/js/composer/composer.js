@@ -58,13 +58,13 @@
     },
 
     handleAJAXGeneralError: function(r) {
-      ccmAlert.notice('Error', '<div class="alert alert-danger">' + r.responseText + '</div>');
+      ConcreteAlert.notice('Error', '<div class="alert alert-danger">' + r.responseText + '</div>');
     },
 
     handleAJAXResponseError: function(r, div) {
       if (r.error == true) {
         if (!div) {
-          ccmAlert.notice('Error', '<div class="alert alert-danger">' + r.errors.join("<br>") + '</div>');
+          ConcreteAlert.notice('Error', '<div class="alert alert-danger">' + r.errors.join("<br>") + '</div>');
         } else {
           div.show().html(r.errors.join("<br>"));
         }

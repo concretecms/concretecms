@@ -34,7 +34,7 @@ $(function() {
 				<? } else { ?>
 					deleteBranchFade(r.cID);
 				<? } ?>
-	 			ccmAlert.hud(ccmi18n_sitemap.deletePageSuccessMsg, 2000, 'delete_small', ccmi18n_sitemap.deletePage);
+	 			ConcreteAlert.hud(ccmi18n_sitemap.deletePageSuccessMsg, 2000, 'delete_small', ccmi18n_sitemap.deletePage);
 			} else {
 				window.location.href = '<?=DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=' + r.cParentID;
 			}

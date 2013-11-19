@@ -43,12 +43,12 @@
 		},
 
 		error: function(r, my) {
-			ccmAlert.notice('Error', '<div class="alert alert-danger">' + r.responseText + '</div>');
+			ConcreteAlert.notice('Error', '<div class="alert alert-danger">' + r.responseText + '</div>');
 		},
 
 		validateResponse: function(r) {
 			if (r.error) {
-				ccmAlert.notice('Error', '<div class="alert alert-danger">' + r.errors.join("<br>") + '</div>');
+				ConcreteAlert.notice('Error', '<div class="alert alert-danger">' + r.errors.join("<br>") + '</div>');
 				return false;
 			}
 			return true;
@@ -60,7 +60,7 @@
 				if (my.$form.attr('data-dialog-form')) {
 					jQuery.fn.dialog.closeTop();
 				}
-				ccmAlert.showResponseNotification(r.message, 'ok', 'success');
+				ConcreteAlert.showResponseNotification(r.message, 'ok', 'success');
 				CCMPanelManager.exitPanelMode();
 				if (r.redirectURL) {
 					setTimeout(function() {

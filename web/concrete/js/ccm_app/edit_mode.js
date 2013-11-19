@@ -41,7 +41,7 @@
         url: CCM_TOOLS_PATH + '/pile_manager',
         data: 'cID=' + CCM_CID + '&bID=' + block.getId() + '&arHandle=' + encodeURIComponent(area.getHandle()) + '&btask=add&scrapbookName=userScrapbook',
        success: function(resp) {
-        ccmAlert.hud(ccmi18n.copyBlockToScrapbookMsg, 2000, 'add', ccmi18n.copyBlockToScrapbook);
+        ConcreteAlert.hud(ccmi18n.copyBlockToScrapbookMsg, 2000, 'add', ccmi18n.copyBlockToScrapbook);
       }});
     });
 
@@ -466,7 +466,7 @@
           tb = parseInt($('[data-area-id=' + aID + ']').attr('data-total-blocks'));
         
         $d.hide().remove();
-        ccmAlert.hud(ccmi18n.deleteBlockMsg, 2000, 'delete_small', ccmi18n.deleteBlock);
+        ConcreteAlert.hud(ccmi18n.deleteBlockMsg, 2000, 'delete_small', ccmi18n.deleteBlock);
         $('[data-area-id=' + aID + ']').attr('data-total-blocks', tb - 1);
         $.ajax({
           type: 'POST',

@@ -123,7 +123,7 @@ if ($_POST['task'] == 'save_permissions') {
 			r = eval('(' + r + ')');
 			jQuery.fn.dialog.hideLoader();
 			if (r.error) {
-				ccmAlert.notice('<?=t("Error")?>', r.message);
+				ConcreteAlert.notice('<?=t("Error")?>', r.message);
 			} else {
 				if (typeof(ccm_addAccessEntity) == 'function') { 
 					ccm_addAccessEntity(r.peID, r.pdID, '<?=addslashes($_REQUEST["accessType"])?>');

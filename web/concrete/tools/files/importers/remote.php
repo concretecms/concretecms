@@ -143,7 +143,7 @@ if (count($errors) < 1) {
 <? 
 if(count($errors)) { 
 ?>
-	window.parent.ccmAlert.notice("<?=t('Upload Error')?>", "<?=str_replace("\n", '', nl2br(implode('\n', $errors)))?>");
+	window.parent.ConcreteAlert.notice("<?=t('Upload Error')?>", "<?=str_replace("\n", '', nl2br(implode('\n', $errors)))?>");
 	window.parent.ccm_alResetSingle();
 <? } else { ?>
 		highlight = new Array();

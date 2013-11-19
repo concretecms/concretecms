@@ -170,10 +170,10 @@ if ($_REQUEST['task'] == 'remove') {
 					jQuery.fn.dialog.hideLoader();
 					jQuery.fn.dialog.closeTop();
 					if (!r.deferred) {
-						ccmAlert.hud(ccmi18n_sitemap.setPagePermissionsMsg, 2000, 'success', ccmi18n_sitemap.setPagePermissions);
+						ConcreteAlert.hud(ccmi18n_sitemap.setPagePermissionsMsg, 2000, 'success', ccmi18n_sitemap.setPagePermissions);
 					} else {
 						jQuery.fn.dialog.closeTop();
-						ccmAlert.hud(ccmi18n.setPermissionsDeferredMsg, 2000, 'success', ccmi18n_sitemap.setPagePermissions);
+						ConcreteAlert.hud(ccmi18n.setPermissionsDeferredMsg, 2000, 'success', ccmi18n_sitemap.setPagePermissions);
 					}
 
 				}		

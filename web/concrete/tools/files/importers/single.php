@@ -58,7 +58,7 @@ if ($errorCode > -1 && $error == '') {
 <head>
 <script language="javascript">
 	<? if(strlen($error)) { ?>
-		window.parent.ccmAlert.notice("<?=t('Upload Error')?>", "<?=str_replace("\n", '', nl2br($error))?>");
+		window.parent.ConcreteAlert.notice("<?=t('Upload Error')?>", "<?=str_replace("\n", '', nl2br($error))?>");
 		window.parent.ccm_alResetSingle();
 	<? } else { ?>
 		highlight = new Array();

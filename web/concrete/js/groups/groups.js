@@ -87,14 +87,14 @@
 	    			'url': $form.attr('action'),
 	    			success: function(r) {
 	    				if (r.error == true) {
-	    					ccmAlert.notice('Error', '<div class="alert alert-danger">' + r.messages.join("<br>") + '</div>');
+	    					ConcreteAlert.notice('Error', '<div class="alert alert-danger">' + r.messages.join("<br>") + '</div>');
 	    				} else {
 	    					jQuery.fn.dialog.closeTop();
 	    					onSuccess(r);
 	    				}
 	    			},
 	    			error: function(r) {
-    					ccmAlert.notice('Error', '<div class="alert alert-danger">' + r.responseText + '</div>');
+    					ConcreteAlert.notice('Error', '<div class="alert alert-danger">' + r.responseText + '</div>');
 	    			},
 	    			complete: function() {
 	    				jQuery.fn.dialog.hideLoader();
