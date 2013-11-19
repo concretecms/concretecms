@@ -1,3 +1,6 @@
+[![Build Status](https://travis-ci.org/concrete5/concrete5.png?branch=master)](https://travis-ci.org/concrete5/concrete5)
+
+
         c5c5c5c5c5c5c5c5c5c5c5c5c5c5c5c
        c5c5c5c5c5c5c5c5c-c5c5c5c5c5c5c5c
      | c5c5c5c5c5--c5c5   5c5c5c5c5c5c5c
@@ -17,11 +20,6 @@
      | c5c5c5c5c5c5c5c5c5c5c5c5c5c5c5c5c   (  (_ (     )| || |(  (_ | /  (  ---  | |_ (  --- \ \ _ / /
      \  c5c5c5c5c5c5c5c5c5c5c5c5c5c5c5c    \\___]\\___/||_||_|\\___]|_|  \\___/ \\___]\\___/ \\_____/
        ------------------------------        --    --   -- --   --  --     --     --    --     ----
-
-
-
-
-[![Build Status](https://travis-ci.org/concrete5/concrete5.png?branch=master)](https://travis-ci.org/concrete5/concrete5)
 
 # Note
 
