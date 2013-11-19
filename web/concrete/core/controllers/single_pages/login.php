@@ -15,10 +15,7 @@ class Concrete5_Controller_Login extends Controller {
 			$this->set('uNameLabel', t('Username'));
 		}
 
-		if(!$_COOKIE[SESSION]) {
-			throw new Exception(t('Your browser\'s cookie functionality is turned off. Please turn it on.'));
-		}
-
+		
 		$txt = Loader::helper('text');
 		if (strlen($_GET['uName'])) { // pre-populate the username if supplied, if its an email address with special characters the email needs to be urlencoded first,
 		   $this->set("uName",trim($txt->email($_GET['uName'])));
