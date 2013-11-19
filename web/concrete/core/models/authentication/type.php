@@ -298,13 +298,13 @@ class Concrete5_Model_AuthenticationType extends Object {
 	 * AuthenticationType::renderForm
 	 * Render the login form for this authentication type.
 	 */
-	public function renderForm() {
-		$form = $this->mapAuthenticationTypeFilePath('form.php');
+	public function renderForm($element = 'form') {
+		$form = $this->mapAuthenticationTypeFilePath($element.'.php');
 		if ($form) {
 			ob_start();
 			$this->controller->view();
 			extract($this->controller->getSets());
-			require_once($this->mapAuthenticationTypeFilePath('form.php'));
+			require_once($this->mapAuthenticationTypeFilePath($element.'.php'));
 			$out = ob_get_contents();
 			ob_end_clean();
 			echo $out;

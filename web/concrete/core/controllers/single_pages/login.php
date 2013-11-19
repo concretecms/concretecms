@@ -4,7 +4,6 @@ Loader::library('authentication/open_id');
 class Concrete5_Controller_Login extends Controller {
 
 	public $helpers = array('form');
-	private $openIDReturnTo;
 	protected $locales = array();
 	protected $supportsPageCache = true;
 
@@ -54,7 +53,6 @@ class Concrete5_Controller_Login extends Controller {
 		$this->locales = $locales;
 		$this->set('locales', $locales);
 
-		$this->openIDReturnTo = BASE_URL . View::url("/login", "complete_openid");
 	}
 
 	/* automagically run by the controller once we're done with the current method */
@@ -65,7 +63,13 @@ class Concrete5_Controller_Login extends Controller {
 		}
 	}
 
-	public function view() {}
+	public function view($type = NULL, $element = 'form') {
+		if(strlen($type)) {
+			$at = AuthenticationType::getByHandle($type);
+			$this->set('authType', $at);
+			$this->set('authTypeElement', $element);
+		}
+	}
 
 	public function account_deactivated() {
 		$this->error->add(t('This user is inactive. Please contact us regarding this account.'));
@@ -183,14 +187,15 @@ class Concrete5_Controller_Login extends Controller {
 		}
 	}
 
+	/*
 	public function password_sent() {
-		$this->set('intro_msg', $this->getPasswordSentMsg() );
+		$this->set('message', $this->getPasswordSentMsg() );
 	}
 
 	public function getPasswordSentMsg(){
 		return t('An email containing instructions on resetting your password has been sent to your account address.');
 	}
-
+	*/
 	public function logout() {
 		$u = new User();
 		$u->logout();
@@ -203,7 +208,7 @@ class Concrete5_Controller_Login extends Controller {
 			$this->set('rcID', $cID);
 		}
 	}
-
+	/*
 	// responsible for validating a user's email address
 	public function v($hash = '') {
 		$ui = UserInfo::getByValidationHash($hash);
@@ -213,117 +218,7 @@ class Concrete5_Controller_Login extends Controller {
 			$this->set('validated', true);
 		}
 	}
-
-	public function change_password($uHash = '') {
-		$db = Loader::db();
-		$h = Loader::helper('validation/identifier');
-		$e = Loader::helper('validation/error');
-		$ui = UserInfo::getByValidationHash($uHash);
-		if (is_object($ui)){
-			$hashCreated = $db->GetOne("select uDateGenerated FROM UserValidationHashes where uHash=?", array($uHash));
-			if($hashCreated < (time()-(USER_CHANGE_PASSWORD_URL_LIFETIME))) {
-				$h->deleteKey('UserValidationHashes','uHash',$uHash);
-				throw new Exception( t('Key Expired. Please visit the forgot password page again to have a new key generated.') );
-			}else{
-
-				if(strlen($_POST['uPassword'])){
-
-					$userHelper = Loader::helper('concrete/user');
-					$userHelper->validNewPassword($_POST['uPassword'],$e);
-
-					if(strlen($_POST['uPassword']) && $_POST['uPasswordConfirm']!=$_POST['uPassword']){
-						$e->add(t('The two passwords provided do not match.'));
-					}
-
-					if (!$e->has()){
-						$ui->changePassword( $_POST['uPassword'] );
-						$h->deleteKey('UserValidationHashes','uHash',$uHash);
-						$this->set('passwordChanged', true);
-
-						$u = $ui->getUserObject();
-						if (USER_REGISTRATION_WITH_EMAIL_ADDRESS) {
-							$_POST['uName'] =  $ui->getUserEmail();
-						} else {
-							$_POST['uName'] =  $u->getUserName();
-						}
-						$this->do_login();
-
-						return;
-					}else{
-						$this->set('uHash', $uHash);
-						$this->set('changePasswordForm', true);
-						$this->set('errorMsg', join( '<br>', $e->getList() ) );
-					}
-				}else{
-					$this->set('uHash', $uHash);
-					$this->set('changePasswordForm', true);
-				}
-			}
-		}else{
-			throw new Exception( t('Invalid Key. Please visit the forgot password page again to have a new key generated.') );
-		}
-	}
-
-	public function forgot_password() {
-		$loginData['success']=0;
-
-		$vs = Loader::helper('validation/strings');
-		$em = $this->post('uEmail');
-		try {
-			if (!$vs->email($em)) {
-				throw new Exception(t('Invalid email address.'));
-			}
-
-			$oUser = UserInfo::getByEmail($em);
-			if (!$oUser) {
-				throw new Exception(t('We have no record of that email address.'));
-			}
-
-			$mh = Loader::helper('mail');
-			//$mh->addParameter('uPassword', $oUser->resetUserPassword());
-			if (USER_REGISTRATION_WITH_EMAIL_ADDRESS) {
-				$mh->addParameter('uName', $oUser->getUserEmail());
-			} else {
-				$mh->addParameter('uName', $oUser->getUserName());
-			}
-			$mh->to($oUser->getUserEmail());
-
-			//generate hash that'll be used to authenticate user, allowing them to change their password
-			$h = Loader::helper('validation/identifier');
-			$uHash = $h->generate('UserValidationHashes', 'uHash');
-			$db = Loader::db();
-			$db->Execute("DELETE FROM UserValidationHashes WHERE uID=?", array( $oUser->uID ) );
-			$db->Execute("insert into UserValidationHashes (uID, uHash, uDateGenerated, type) values (?, ?, ?, ?)", array($oUser->uID, $uHash, time(),intval(UVTYPE_CHANGE_PASSWORD)));
-			$changePassURL=BASE_URL . View::url('/login', 'change_password', $uHash);
-			$mh->addParameter('changePassURL', $changePassURL);
-
-			if (defined('EMAIL_ADDRESS_FORGOT_PASSWORD')) {
-				$mh->from(EMAIL_ADDRESS_FORGOT_PASSWORD,  t('Forgot Password'));
-			} else {
-				$adminUser = UserInfo::getByID(USER_SUPER_ID);
-				if (is_object($adminUser)) {
-					$mh->from($adminUser->getUserEmail(),  t('Forgot Password'));
-				}
-			}
-			$mh->load('forgot_password');
-			@$mh->sendMail();
-
-			$loginData['success']=1;
-			$loginData['msg']=$this->getPasswordSentMsg();
-
-		} catch(Exception $e) {
-			$this->error->add($e);
-			$loginData['error']=$e->getMessage();
-		}
-
-		if( $_REQUEST['format']=='JSON' ){
-			$jsonHelper=Loader::helper('json');
-			echo $jsonHelper->encode($loginData);
-			die;
-		}
-
-		if($loginData['success']==1)
-			$this->redirect('/login', 'password_sent');
-	}
+	
+	*/
 
 }
