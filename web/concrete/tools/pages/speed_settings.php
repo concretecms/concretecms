@@ -226,7 +226,7 @@ $searchInstance = Loader::helper('text')->entities($_REQUEST['searchInstance']);
 						jQuery.fn.dialog.closeTop();
 						jQuery.fn.dialog.hideLoader();
 						ccm_deactivateSearchResults('<?=$searchInstance?>');
-						ccmAlert.hud(ccmi18n.saveSpeedSettingsMsg, 2000, 'success', ccmi18n.properties);
+						ConcreteAlert.hud(ccmi18n.saveSpeedSettingsMsg, 2000, 'success', ccmi18n.properties);
 						$("#ccm-<?=$searchInstance?>-advanced-search").ajaxSubmit(function(r) {
 							ccm_parseAdvancedSearchResponse(r, '<?=$searchInstance?>');
 						});

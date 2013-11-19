@@ -71,7 +71,7 @@ if ($_REQUEST['reload_and_remove_cache']) {
 						if (r != null && r.rel == 'SITEMAP') {
 							$.fn.ccmsitemap('triggerEvent', 'updateRequestComplete', [r.cID, r.name]);
 						}
-						ccmAlert.hud(ccmi18n.saveSpeedSettingsMsg, 2000, 'success', ccmi18n.properties);
+						ConcreteAlert.hud(ccmi18n.saveSpeedSettingsMsg, 2000, 'success', ccmi18n.properties);
 					} catch(e) {
 						alert(r);
 					}

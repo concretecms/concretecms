@@ -46,10 +46,10 @@
 				if (my.task == 'add') {
 					var tb = parseInt($('div.ccm-area[data-area-id=' + resp.aID + ']').attr('data-total-blocks'));
 					$('div.ccm-area[data-area-id=' + resp.aID + ']').attr('data-total-blocks', tb + 1);
-					ccmAlert.hud(ccmi18n.addBlockMsg, 2000, 'ok', ccmi18n.addBlock);
+					ConcreteAlert.hud(ccmi18n.addBlockMsg, 2000, 'ok', ccmi18n.addBlock);
 					jQuery.fn.dialog.closeAll();
 				} else {
-					ccmAlert.hud(ccmi18n.updateBlockMsg, 2000, 'ok', ccmi18n.updateBlock);
+					ConcreteAlert.hud(ccmi18n.updateBlockMsg, 2000, 'ok', ccmi18n.updateBlock);
 				}
 				c5.editMode.scanBlocks();
 			});

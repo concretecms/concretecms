@@ -52,7 +52,7 @@ $(function() {
 			ccm_mainNavDisableDirectExit();
 			jQuery.fn.dialog.hideLoader();
 			jQuery.fn.dialog.closeTop();
-			ccmAlert.hud(ccmi18n.scheduleGuestAccessSuccess, 2000, 'success', ccmi18n.scheduleGuestAccess);
+			ConcreteAlert.hud(ccmi18n.scheduleGuestAccessSuccess, 2000, 'success', ccmi18n.scheduleGuestAccess);
 		}
 	});
 });

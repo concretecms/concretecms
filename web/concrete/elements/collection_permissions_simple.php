@@ -104,7 +104,7 @@ $(function() {
 			if (r != null && r.rel == 'SITEMAP') {
 				$.fn.ccmsitemap('triggerEvent', 'updateRequestComplete', [r.cID, r.name]);
 			}
-			ccmAlert.hud(ccmi18n_sitemap.setPagePermissionsMsg, 2000, 'success', ccmi18n_sitemap.setPagePermissions);
+			ConcreteAlert.hud(ccmi18n_sitemap.setPagePermissionsMsg, 2000, 'success', ccmi18n_sitemap.setPagePermissions);
 		}
 	});
 });

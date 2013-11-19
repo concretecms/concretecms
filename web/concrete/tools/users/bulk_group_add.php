@@ -110,7 +110,7 @@ ccm_userBulkGroupAdd = function() {
 		jQuery.fn.dialog.closeTop();
 		jQuery.fn.dialog.hideLoader();
 		ccm_deactivateSearchResults('<?=$searchInstance?>');
-		ccmAlert.hud(ccmi18n.saveUserSettingsMsg, 2000, 'success', ccmi18n.user_group_add);
+		ConcreteAlert.hud(ccmi18n.saveUserSettingsMsg, 2000, 'success', ccmi18n.user_group_add);
 		$("#ccm-<?=$searchInstance?>-advanced-search").ajaxSubmit(function(r) {
 		       ccm_parseAdvancedSearchResponse(r, '<?=$searchInstance?>');
 		});

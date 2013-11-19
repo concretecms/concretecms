@@ -331,7 +331,7 @@
 				if (isTrash) {
 					trash.data.numSubpages = numSubpages;
 				}
-				ccmAlert.hud(ccmi18n_sitemap.deletePageSuccessMsg, 2000);
+				ConcreteAlert.hud(ccmi18n_sitemap.deletePageSuccessMsg, 2000);
 			}
 		);
 
@@ -402,7 +402,7 @@
 				ccm_parseJSON(resp, function() {
 					jQuery.fn.dialog.closeAll();
 					jQuery.fn.dialog.hideLoader();
-		 			ccmAlert.hud(resp.message, 2000);
+		 			ConcreteAlert.hud(resp.message, 2000);
 					$.fn.ccmsitemap('triggerEvent', 'dragRequestComplete', [ctask]);
 					jQuery.fn.dialog.closeTop();
 					jQuery.fn.dialog.closeTop();
@@ -557,9 +557,9 @@
 
 			$(this).on('deleteRequestComplete', function(e, response) {
 				if (response.deferred) {
-		 			ccmAlert.hud(ccmi18n_sitemap.deletePageSuccessDeferredMsg, 2000, 'delete_small', ccmi18n_sitemap.deletePage);
+		 			ConcreteAlert.hud(ccmi18n_sitemap.deletePageSuccessDeferredMsg, 2000, 'delete_small', ccmi18n_sitemap.deletePage);
 				} else {
-		 			ccmAlert.hud(ccmi18n_sitemap.deletePageSuccessMsg, 2000, 'delete_small', ccmi18n_sitemap.deletePage);
+		 			ConcreteAlert.hud(ccmi18n_sitemap.deletePageSuccessMsg, 2000, 'delete_small', ccmi18n_sitemap.deletePage);
 		 			var node = $('[data-sitemap=container]').dynatree('getActiveNode');
 					var parent = node.parent;
 					methods.private.reloadNode(parent, $(this).data('options'));

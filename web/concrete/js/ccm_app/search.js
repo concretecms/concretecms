@@ -56,7 +56,7 @@
 				jQuery.fn.dialog.hideLoader();
 			},
 			error: function(r) {
-				ccmAlert.notice(r);
+				ConcreteAlert.notice(r);
 			},
 			success: function(r) {
 				if (!callback) {

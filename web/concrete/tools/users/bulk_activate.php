@@ -70,7 +70,7 @@ ccm_userBulkActivate = function() {
 		jQuery.fn.dialog.closeTop();
 		jQuery.fn.dialog.hideLoader();
 		ccm_deactivateSearchResults('<?=$searchInstance?>');
-		ccmAlert.hud(ccmi18n.saveUserSettingsMsg, 2000, 'success', ccmi18n.user_activate);
+		ConcreteAlert.hud(ccmi18n.saveUserSettingsMsg, 2000, 'success', ccmi18n.user_activate);
 		$("#ccm-<?=$searchInstance?>-advanced-search").ajaxSubmit(function(r) {
 		       ccm_parseAdvancedSearchResponse(r, '<?=$searchInstance?>');
 		});

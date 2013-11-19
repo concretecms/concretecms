@@ -919,7 +919,7 @@ ccm_alDuplicateFile = function(fID, searchInstance) {
 		var r = eval('(' + resp + ')');
 		
 		if (r.error == 1) {
-		 	ccmAlert.notice(ccmi18n.error, r.message);		
+		 	ConcreteAlert.notice(ccmi18n.error, r.message);		
 		 	return false;
 		 }
 		

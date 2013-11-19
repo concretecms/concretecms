@@ -79,11 +79,11 @@ var CCMPageVersionList = {
 				jQuery.fn.dialog.showLoader();
 			},
 			error: function(r) {
-		      ccmAlert.notice('Error', '<div class="alert alert-danger">' + r.responseText + '</div>');
+		      ConcreteAlert.notice('Error', '<div class="alert alert-danger">' + r.responseText + '</div>');
 		  	},
 			success: function(r) {
 				if (r.error) {
-					ccmAlert.notice('Error', '<div class="alert alert-danger">' + r.errors.join("<br>") + '</div>');
+					ConcreteAlert.notice('Error', '<div class="alert alert-danger">' + r.errors.join("<br>") + '</div>');
 				} else {
 					if (onComplete) {
 						onComplete(r);
@@ -151,19 +151,19 @@ var CCMPageVersionList = {
 				case 'delete':
 
 					CCMPageVersionList.sendRequest('<?=$controller->action("delete")?>', [{'name': 'cvID[]', 'value': cvID}], function(r) {
-						ccmAlert.showResponseNotification(r.message, 'ok', 'success');
+						ConcreteAlert.showResponseNotification(r.message, 'ok', 'success');
 						CCMPageVersionList.handleVersionRemovalResponse(r);
 					});
 					break;
 				case 'approve':
 					CCMPageVersionList.sendRequest('<?=$controller->action("approve")?>', [{'name': 'cvID', 'value': cvID}], function(r) {
-						ccmAlert.showResponseNotification(r.message, 'ok', 'success');
+						ConcreteAlert.showResponseNotification(r.message, 'ok', 'success');
 						CCMPageVersionList.handleVersionUpdateResponse(r);
 					});
 					break;
 				case 'duplicate':
 					CCMPageVersionList.sendRequest('<?=$controller->action("duplicate")?>', [{'name': 'cvID', 'value': cvID}], function(r) {
-						ccmAlert.showResponseNotification(r.message, 'ok', 'success');
+						ConcreteAlert.showResponseNotification(r.message, 'ok', 'success');
 						CCMPageVersionList.handleVersionUpdateResponse(r);
 					});
 					break;
