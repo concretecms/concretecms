@@ -9,7 +9,7 @@
 error_reporting(E_ERROR | E_WARNING | E_USER_ERROR);
 
 define('C5_EXECUTE', true);
-$DIR_BASE = realpath(dirname(__FILE__) . '/../web');
+$DIR_BASE = realpath(dirname(__FILE__) . '/../../web');
 define('DIR_BASE', $DIR_BASE);
 
 //causes dispatcher to skip the page rendering
