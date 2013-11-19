@@ -1,6 +1,4 @@
 <?php
-require_once dirname(__FILE__) . '/../../../web/concrete/libraries/object.php';
-
 class ObjectTest extends PHPUnit_Framework_TestCase {
 	
 	private $obj;
