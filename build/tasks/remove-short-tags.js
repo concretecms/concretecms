@@ -64,7 +64,7 @@ module.exports = function(grunt, config, parameters, done) {
 					endForError('The destination folder "' + destinationFolder + '" already exists.');
 					return;
 				}
-			}			
+			}
 		}
 		else {
 			destinationFolder = '';
@@ -145,34 +145,4 @@ module.exports = function(grunt, config, parameters, done) {
 		endForError(e);
 		return;
 	}
-	/*
-	parser.excludeDirectoriesByPath = ['/files'];
-	parser.onlyFilesWithExtension = ['.php'];
-	parser.onFile = function(callback, abs, rel, name) {
-		process.stdout.write(rel + '... ');
-		exec(
-			shortTagRemover + ' ' + utils.escapeShellArg(abs),
-			{},
-			function(error) {
-				if(error) {
-					process.stderr.write(error.message || error);
-					done(false);
-				}
-				else {
-					process.stdout.write('done.\n');
-					callback();
-				}
-			}
-		);
-	};
-	parser.start(function(error) {
-		if(error) {
-			process.stderr.write(error.message || error);
-			done(false);
-		}
-		else {
-			done(true);
-		}
-	});
-	*/
 };
