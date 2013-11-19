@@ -17,7 +17,7 @@ before_script:
     - cd ..
     - mv concrete5/web web
     - mysql -e 'CREATE DATABASE concrete5_tests;'
-    - vendor/bin/install-concrete5.php --db-server=localhost --db-username=travis --db-database=concrete5_tests --admin-email=webmaster@example.org --admin-password=password --target=./web --starting-point=standard
+    - vendor/bin/install-concrete5.php --db-server=localhost --db-username=travis --db-database=concrete5_tests --admin-email=webmaster@example.org --admin-password=password --target=../../../web --starting-point=standard
 
 script: phpunit --bootstrap tests/bootstrap.travis.php
 
