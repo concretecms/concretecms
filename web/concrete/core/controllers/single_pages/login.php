@@ -187,15 +187,6 @@ class Concrete5_Controller_Login extends Controller {
 		}
 	}
 
-	/*
-	public function password_sent() {
-		$this->set('message', $this->getPasswordSentMsg() );
-	}
-
-	public function getPasswordSentMsg(){
-		return t('An email containing instructions on resetting your password has been sent to your account address.');
-	}
-	*/
 	public function logout() {
 		$u = new User();
 		$u->logout();
@@ -208,7 +199,7 @@ class Concrete5_Controller_Login extends Controller {
 			$this->set('rcID', $cID);
 		}
 	}
-	/*
+	/* @TODO this functionality needs to be ported to the concrete5 auth type
 	// responsible for validating a user's email address
 	public function v($hash = '') {
 		$ui = UserInfo::getByValidationHash($hash);
