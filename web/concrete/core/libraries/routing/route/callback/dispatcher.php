@@ -43,8 +43,18 @@ class Concrete5_Library_DispatcherRouteCallback extends RouteCallback {
 		// figure out where we need to go
 		$c = Page::getFromRequest($request);
 		if ($c->isError() && $c->getError() == COLLECTION_NOT_FOUND) {
-			return $this->sendPageNotFound($request);
+			// let's test to see if this is, in fact, the home page,
+			// and we're routing arguments onto it (which is screwing up the path.)
+			$home = Page::getByID(HOME_CID);
+			$homeController = Loader::controller($home);
+			$homeController->setupRequestActionAndParameters($request);
+			if (!$homeController->validateRequest()) {
+				return $this->sendPageNotFound($request);
+			} else {
+				$c = $home;
+			}
 		}
+		
 		// maintenance mode
 		if ((!$c->isAdminArea()) && ($c->getCollectionPath() != '/login')) {
 			$smm = Config::get('SITE_MAINTENANCE_MODE');
