@@ -21,6 +21,7 @@ Do __NOT__ link to a production version because it's possible that some files or
 
 For example
 
+	cd tests
 	phpunit tests
     
 Expected output is something like
