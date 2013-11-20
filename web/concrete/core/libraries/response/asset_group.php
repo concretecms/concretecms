@@ -32,7 +32,7 @@ class Concrete5_Library_ResponseAssetGroup {
 		$this->outputAssets[Asset::ASSET_POSITION_FOOTER]['unweighted'][] = $item;
 	}
 
-	protected function addOutputAsset(Asset $asset) {
+	public function addOutputAsset(Asset $asset) {
 		if ($asset->getAssetWeight() > 0) {
 			$this->outputAssets[$asset->getAssetPosition()]['weighted'][] = $asset;
 		} else {

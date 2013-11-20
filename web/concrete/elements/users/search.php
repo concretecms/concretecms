@@ -64,15 +64,13 @@ $searchRequest = $controller->getSearchRequest();
 		<div class="form-group">
 			<?=$form->label('gID', t('In Group'))?>
 			<? 
-			Loader::model('search/group');
 			$gl = new GroupSearch();
 			$gl->setItemsPerPage(-1);
 			$g1 = $gl->getPage();
 			?>		
 			<div class="ccm-search-field-content">			
 			<select multiple name="gID[]" class="chosen-select form-control" style="width: 200px">
-				<? foreach($g1 as $gRow) {
-					$g = Group::getByID($gRow['gID']);
+				<? foreach($g1 as $g) {
 					$gp = new Permissions($g);
 					if ($gp->canSearchUsersInGroup($g)) {
 						?>

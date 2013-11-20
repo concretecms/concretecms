@@ -65,7 +65,6 @@ foreach($searchFieldAttributes as $ak) {
 		</div>
 				
 		<? 
-		Loader::model('search/group');
 		$gl = new GroupSearch();
 		$gl->setItemsPerPage(-1);
 		$g1 = $gl->getPage();

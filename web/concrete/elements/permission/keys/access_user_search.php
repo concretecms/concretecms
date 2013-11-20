@@ -4,7 +4,6 @@
 <? $included = $permissionAccess->getAccessListItems(PermissionKey::ACCESS_TYPE_INCLUDE); ?>
 <? $excluded = $permissionAccess->getAccessListItems(PermissionKey::ACCESS_TYPE_EXCLUDE); ?>
 <?
-Loader::model('search/group');
 $gl = new GroupSearch();
 $gl->filter('gID', GUEST_GROUP_ID, '>');
 $gl->sortBy('gID', 'asc');

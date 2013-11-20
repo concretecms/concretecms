@@ -48,7 +48,6 @@ class Concrete5_Controller_Panel_Details_Page_Permissions extends BackendInterfa
 				}
 			}
 			
-			Loader::model('search/group');
 			$gl = new GroupSearch();
 			$gl->sortBy('gID', 'asc');
 			$gIDs = $gl->get();
