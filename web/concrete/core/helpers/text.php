@@ -25,7 +25,7 @@ class Concrete5_Helper_Text {
 		$text = URLify::downcode($text, $language);
 		if(preg_match('/[^\\t\\r\\n\\x20-\\x7e]/', $text)) {
 			if(function_exists('iconv')) {
-				$t = @iconv(APP_CHARSET, 'US-ASCII//TRANSLIT//IGNORE', $text);
+				$t = @iconv(APP_CHARSET, 'US-ASCII//IGNORE//TRANSLIT', $text);
 				if(is_string($t)) {
 					$text = $t;
 				}
