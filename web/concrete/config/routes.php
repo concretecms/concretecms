@@ -65,8 +65,10 @@ $rl->register('/system/dialogs/page/delete/', 'PageDeleteDialogController::view'
 $rl->register('/system/dialogs/page/delete/submit', 'PageDeleteDialogController::submit');
 $rl->register('/system/dialogs/area/layout/presets/submit/{arLayoutID}', 'AreaLayoutPresetsDialogController::submit');
 $rl->register('/system/dialogs/area/layout/presets/{arLayoutID}/{token}', 'AreaLayoutPresetsDialogController::view');
-
 $rl->register('/system/dialogs/page/bulk/properties', 'PageBulkPropertiesDialogController::view');
+
+$rl->register('/system/dialogs/user/search', 'UserSearchDialogController::view');
+$rl->register('/system/dialogs/group/search/{include}', 'GroupSearchDialogController::view');
 
 /**
  * Editing Actions
@@ -76,13 +78,13 @@ $rl->register('/system/page/check_in/{cID}/{token}', 'PageCheckInPanelController
 /** 
  * Search Routes
  */
-$rl->register('/system/dialogs/search/pages/customize', 'SearchPagesCustomizeDialogController::view');
-$rl->register('/system/dialogs/search/pages/customize/submit', 'SearchPagesCustomizeDialogController::submit');
+$rl->register('/system/dialogs/page/search/customize', 'PageSearchCustomizeDialogController::view');
+$rl->register('/system/dialogs/page/search/customize/submit', 'PageSearchCustomizeDialogController::submit');
 $rl->register('/system/search/pages/submit', 'SearchPagesController::submit');
 $rl->register('/system/search/pages/field/{field}', 'SearchPagesController::field');
 
-$rl->register('/system/dialogs/search/users/customize', 'SearchUsersCustomizeDialogController::view');
-$rl->register('/system/dialogs/search/users/customize/submit', 'SearchUsersCustomizeDialogController::submit');
+$rl->register('/system/dialogs/user/search/customize', 'UserSearchCustomizeDialogController::view');
+$rl->register('/system/dialogs/user/search/customize/submit', 'UserSearchCustomizeDialogController::submit');
 $rl->register('/system/search/users/submit', 'SearchUsersController::submit');
 $rl->register('/system/search/users/field/{field}', 'SearchUsersController::field');
 
