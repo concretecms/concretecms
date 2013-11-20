@@ -57,7 +57,7 @@ $searchRequest = $controller->getSearchRequest();
 	</div>
 	<ul class="ccm-search-form-advanced list-inline">
 		<li><a href="#" data-search-toggle="advanced"><?=t('Advanced Search')?></a>
-		<li><a href="#" data-search-toggle="customize" data-search-column-customize-url="<?=URL::to('/system/dialogs/search/users/customize')?>"><?=t('Customize Results')?></a>
+		<li><a href="#" data-search-toggle="customize" data-search-column-customize-url="<?=URL::to('/system/dialogs/user/search/customize')?>"><?=t('Customize Results')?></a>
 	</ul>
 	</div>
 	<div class="ccm-search-fields-row">

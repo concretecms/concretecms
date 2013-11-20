@@ -1,6 +1,6 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Controller_Dialogs_Search_Users_Customize extends BackendInterfaceController {
+class Concrete5_Controller_Dialogs_User_Search_Customize extends BackendInterfaceController {
 
 	protected $viewPath = '/system/dialogs/search/customize';
 

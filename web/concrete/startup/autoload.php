@@ -409,11 +409,14 @@ $classes = array(
 	'PagePermissionsPanelDetailController' => array('controller', '/panels/details/page/permissions'),
 	'FrontendStylesheetController' => array('controller', '/frontend/stylesheet'),
 	
+	'UserSearchDialogController' => array('controller', '/dialogs/user/search'),
+	'GroupSearchDialogController' => array('controller', '/dialogs/group/search'),
+	'PageSearchCustomizeDialogController' => array('controller', '/dialogs/page/search/customize'),
+	'UserSearchCustomizeDialogController' => array('controller', '/dialogs/user/search/customize'),
+
 	'AreaLayoutPresetsDialogController' => array('controller', '/dialogs/area/layout/presets'),
 	'PageDeleteDialogController' => array('controller', '/dialogs/page/delete'),
 	'PageBulkPropertiesDialogController' => array('controller', '/dialogs/page/bulk/properties'),
-	'SearchPagesCustomizeDialogController' => array('controller', '/dialogs/search/pages/customize'),
-	'SearchUsersCustomizeDialogController' => array('controller', '/dialogs/search/users/customize'),
 	'DashboardBaseController' => array('controller', '/dashboard/base'),
 	'AccountController' => array('controller', '/account'),
 	'AccountProfileEditController' => array('controller', '/account/profile/edit'),

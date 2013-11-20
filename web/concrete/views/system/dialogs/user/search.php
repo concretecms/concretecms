@@ -1,18 +1,9 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-
-$tp = Loader::helper('concrete/user');
-if (!$tp->canAccessUserSearchInterface()) { 
-	die(t("You have no access to users."));
-}
-
-$cnt = new SearchUsersController();
-$cnt->search();
-$result = Loader::helper('json')->encode($cnt->getSearchResultObject()->getJSONObject());
 ?>
 
 <div data-search="users" class="ccm-ui">
-<? Loader::element('users/search', array('controller' => $cnt))?>
+<? Loader::element('users/search', array('controller' => $searchController))?>
 </div>
 
 <script type="text/javascript">
