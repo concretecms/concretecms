@@ -11,7 +11,7 @@ class Concrete5_Model_GroupPermissionAccessEntity extends PermissionAccessEntity
 	}
 	
 	public function getAccessEntityTypeLinkHTML() {
-		$html = '<a href="' . URL::to('/system/dialogs/group/search', 'all') . '" class="dialog-launch" dialog-width="90%" dialog-height="70%" dialog-modal="false" dialog-title="' . t('Add Group') . '">' . tc('PermissionAccessEntityTypeName', 'Group') . '</a>';
+		$html = '<a href="' . URL::to('/system/dialogs/group/search') . '" class="dialog-launch" dialog-width="500" dialog-height="500" dialog-modal="false" dialog-title="' . t('Add Group') . '">' . tc('PermissionAccessEntityTypeName', 'Group') . '</a>';
 		return $html;
 	}
 

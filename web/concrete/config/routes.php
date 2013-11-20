@@ -68,7 +68,7 @@ $rl->register('/system/dialogs/area/layout/presets/{arLayoutID}/{token}', 'AreaL
 $rl->register('/system/dialogs/page/bulk/properties', 'PageBulkPropertiesDialogController::view');
 
 $rl->register('/system/dialogs/user/search', 'UserSearchDialogController::view');
-$rl->register('/system/dialogs/group/search/{include}', 'GroupSearchDialogController::view');
+$rl->register('/system/dialogs/group/search', 'GroupSearchDialogController::view');
 
 /**
  * Editing Actions
@@ -88,6 +88,7 @@ $rl->register('/system/dialogs/user/search/customize/submit', 'UserSearchCustomi
 $rl->register('/system/search/users/submit', 'SearchUsersController::submit');
 $rl->register('/system/search/users/field/{field}', 'SearchUsersController::field');
 
+$rl->register('/system/search/groups/submit', 'SearchGroupsController::submit');
 /** 
  * Misc
  */
