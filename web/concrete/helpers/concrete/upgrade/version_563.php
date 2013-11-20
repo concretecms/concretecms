@@ -153,9 +153,13 @@ class ConcreteUpgradeVersion563Helper {
 		$this->addGroupPermission('edit_group_permissions');
 
 		$pk = PermissionKey::getByHandle('access_user_search');	
-		$db = Loader::db();
-		$db->Execute('update PermissionKeys set pkHasCustomClass = 0 where pkID = ?', array($pk->getPermissionKeyID()));
-		
+		if (is_object($pk)) {
+			$db = Loader::db();
+			$db->Execute('update PermissionKeys set pkHasCustomClass = 0 where pkID = ?', array($pk->getPermissionKeyID()));
+		} else {
+			$vpk = PermissionKey::add('user', 'access_user_search', 'Access User Search', 'Controls whether a user can view user search results in the dashboard.', false, false);
+
+		}
 	}
 
 }
