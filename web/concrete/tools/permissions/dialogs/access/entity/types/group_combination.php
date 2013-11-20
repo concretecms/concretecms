@@ -31,19 +31,20 @@ $url = $type->getAccessEntityTypeToolsURL(); ?>
 
 </form>
 
-<input type="button" class="btn btn-small pull-right dialog-launch" dialog-width="90%" dialog-height="70%" id="ccm-permissions-access-entity-members-add-group" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/select_group?cID=<?=$_REQUEST['cID']?>&include_core_groups=1&callback=ccm_triggerSelectCombinationGroup" dialog-modal="false" dialog-title="<?=t('Add Group')?>" value="<?=t('Add Group')?>" />
+<input type="button" class="btn btn-small pull-right dialog-launch" dialog-width="500" dialog-height="500" id="ccm-permissions-access-entity-members-add-group" href="<?=URL::to('/system/dialogs/group/search')?>" dialog-modal="false" dialog-title="<?=t('Add Group')?>" value="<?=t('Add Group')?>" />
 
 </div>
 
 <script type="text/javascript">
-ccm_triggerSelectCombinationGroup = function(gID, gName) {
+ccm_event.subscribe('GroupSearchDialogClick', function(e) {
+	var gID = e.eventData.gID, gName = e.eventData.gName;
 	if ($("input[class=combogID][value=" + gID + "]").length == 0) { 
 		$("#ccm-permissions-access-entity-combination-groups-none").hide();
 		var tbl = $("#ccm-permissions-access-entity-combination-groups");
 		html = '<tr><td><input type="hidden" class="combogID" name="gID[]" value="' + gID + '" /><img src="<?=ASSETS_URL_IMAGES?>/icons/group.png" /></td><td>' + gName + '</td><? if (!is_object($pae)) { ?><td><a href="javascript:void(0)" onclick="ccm_removeCombinationGroup(this)"><img src="<?=ASSETS_URL_IMAGES?>/icons/remove.png" /></a></td><? } ?>';
 		tbl.append(html);
 	}
-}
+});
 
 ccm_removeCombinationGroup = function(link) {
 	$(link).parent().parent().remove();
