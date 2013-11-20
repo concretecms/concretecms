@@ -25,6 +25,7 @@ For example
 	phpunit tests
     
 Expected output is something like
+
 	PHPUnit 3.7.28 by Sebastian Bergmann.
 	
 	Configuration read from .../tests/phpunit.xml
