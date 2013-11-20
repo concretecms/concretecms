@@ -30,7 +30,6 @@ if ($cp->canEditPagePermissions()) {
 		}
 	}
 	
-	Loader::model('search/group');
 	$gl = new GroupSearch();
 	$gl->sortBy('gID', 'asc');
 	$gIDs = $gl->get();
