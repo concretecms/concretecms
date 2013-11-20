@@ -17,16 +17,19 @@
 		this.$resultsTableHead = this.$results.find('thead');
 		this.$resultsPagination = this.$results.find('div.ccm-search-results-pagination');
 		this.$menuTemplate = $element.find('script[data-template=search-results-menu]');
+		this.$searchFieldRowTemplate = $element.find('script[data-template=search-field-row]');
 
 		this.options = options;
 
 		this._templateSearchForm = _.template($element.find('script[data-template=search-form]').html());
-		this._templateAdvancedSearchFieldRow = _.template($element.find('script[data-template=search-field-row]').html());
 		this._templateSearchResultsTableHead = _.template($element.find('script[data-template=search-results-table-head]').html());
 		this._templateSearchResultsTableBody = _.template($element.find('script[data-template=search-results-table-body]').html());
 		this._templateSearchResultsPagination = _.template($element.find('script[data-template=search-results-pagination]').html());
 		if (this.$menuTemplate.length) {
 			this._templateSearchResultsMenu = _.template(this.$menuTemplate.html());
+		}
+		if (this.$searchFieldRowTemplate.length) {
+			this._templateAdvancedSearchFieldRow = _.template(this.$searchFieldRowTemplate.html());
 		}
 
 		this.setupSearch();

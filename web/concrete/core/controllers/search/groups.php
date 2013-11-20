@@ -14,18 +14,19 @@ class Concrete5_Controller_Search_Groups extends Controller {
 			return false;
 		}
 
-		if ($_REQUEST['include_core_groups'] == 1) {
-			$this->groupList->includeAllGroups();
-		}
 		if ($_REQUEST['filter'] == 'assign') {
 			$pk = PermissionKey::getByHandle('assign_user_groups');
 			$this->groupList->filterByAllowedPermission($pk);
 		}
-		if (isset($_GET['gKeywords'])) {
-			$this->groupList->filterByKeywords($_GET['gKeywords']);
+
+		if (isset($_REQUEST['keywords'])) {
+			$this->groupList->filterByKeywords($_REQUEST['keywords']);
 		}
 
-		$ilr = new SearchResult($columns, $this->groupList, URL::to('/system/search/groups/submit'), $this->fields);
+		$this->groupList->sortBy('gName', 'asc');
+
+		$columns = new GroupSearchColumnSet();
+		$ilr = new SearchResult($columns, $this->groupList, URL::to('/system/search/groups/submit'));
 		$this->result = $ilr;
 	}
 
@@ -40,7 +41,7 @@ class Concrete5_Controller_Search_Groups extends Controller {
 	}
 
 	public function getSearchRequest() {
-		return $this->userList->getSearchRequest();
+		return $this->groupList->getSearchRequest();
 	}
 
 

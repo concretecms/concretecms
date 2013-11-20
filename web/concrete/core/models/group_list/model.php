@@ -19,6 +19,8 @@ class Concrete5_Model_GroupSearch extends DatabaseItemList {
 	protected $itemsPerPage = 10;
 	protected $minimumGroupID = REGISTERED_GROUP_ID;
 	
+	protected $autoSortColumns = array('gName', 'gID');
+
 	public function includeAllGroups() {
 		$this->minimumGroupID = -1;
 	}
@@ -44,11 +46,18 @@ class Concrete5_Model_GroupSearch extends DatabaseItemList {
 	
 	function __construct() {
 		$this->setQuery("select Groups.gID, Groups.gName, Groups.gDescription from Groups");
-		$this->sortBy('gName', 'asc');
+	}
+
+	public function get($itemsToGet = 100, $offset = 0) {
+		$r = parent::get( $itemsToGet, intval($offset));
+		$groups = array();
+		foreach($r as $row) {
+			$g = Group::getByID($row['gID']);			
+			if (is_object($g)) {
+				$groups[] = $g;
+			}
+		}
+		return $groups;
 	}
 	
-	public function getPage() {
-		$this->filter('gID', $this->minimumGroupID, '>');
-		return parent::getPage();
-	}
 }
