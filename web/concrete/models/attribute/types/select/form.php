@@ -151,12 +151,12 @@ if ($akSelectAllowMultipleValues && $akSelectAllowOtherValues) { // display auto
 		<? foreach($options as $opt) { ?>
 			<label class="checkbox">
 				<?=$form->checkbox($this->field('atSelectOptionID') . '[]', $opt->getSelectAttributeOptionID(), in_array($opt->getSelectAttributeOptionID(), $selectedOptions)); ?>
-				<?=$opt->getSelectAttributeOptionValue()?></label>
+				<?=$opt->getSelectAttributeOptionDisplayValue()?></label>
 		<? } ?>
 	<? } else {
 		$opts = array('' => t('** None'));
 		foreach($options as $opt) {
-			$opts[$opt->getSelectAttributeOptionID()] = $opt->getSelectAttributeOptionValue();
+			$opts[$opt->getSelectAttributeOptionID()] = $opt->getSelectAttributeOptionDisplayValue();
 		}
 		?>
 		<?=$form->select($this->field('atSelectOptionID') . '[]', $opts, $selectedOptions[0]); ?>

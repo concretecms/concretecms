@@ -267,18 +267,13 @@ class Concrete5_Controller_AttributeType_Select extends AttributeTypeController 
 		$list = $this->getSelectedOptions();
 		$html = '';
 		foreach($list as $l) {
-			$html .= $l . '<br/>';
+			$html .= $l->getSelectAttributeOptionDisplayValue() . '<br/>';
 		}
 		return $html;
 	}
 
 	public function getDisplaySanitizedValue() {
-		$list = $this->getSelectedOptions();
-		$html = '';
-		foreach($list as $l) {
-			$html .= $l->getSelectAttributeOptionValue() . '<br/>';
-		}
-		return $html;
+		return $this->getDisplayValue();
 	}
 	
 	public function validateForm($p) {
@@ -304,22 +299,21 @@ class Concrete5_Controller_AttributeType_Select extends AttributeTypeController 
 	
 	public function searchForm($list) {
 		$options = $this->request('atSelectOptionID');
-		$optionText = array();
 		$db = Loader::db();
 		$tbl = $this->attributeKey->getIndexedSearchTable();
 		if (!is_array($options)) {
 			return $list;
 		}
+		$optionQuery = array();
 		foreach($options as $id) {
 			if ($id > 0) {
 				$opt = SelectAttributeTypeOption::getByID($id);
 				if (is_object($opt)) {
-					$optionText[] = $opt->getSelectAttributeOptionValue(true);
 					$optionQuery[] = $opt->getSelectAttributeOptionValue(false);
 				}
 			}
 		}
-		if (count($optionText) == 0) {
+		if (count($optionQuery) == 0) {
 			return false;
 		}
 		
@@ -360,12 +354,14 @@ class Concrete5_Controller_AttributeType_Select extends AttributeTypeController 
 			$this->load();
 		}
 		$db = Loader::db();
+		$sortByDisplayName = false;
 		switch($this->akSelectOptionDisplayOrder) {
 			case 'popularity_desc':
 				$options = $db->GetAll("select ID, value, displayOrder, (select count(s2.atSelectOptionID) from atSelectOptionsSelected s2 where s2.atSelectOptionID = ID) as total from atSelectOptionsSelected inner join atSelectOptions on atSelectOptionsSelected.atSelectOptionID = atSelectOptions.ID where avID = ? order by total desc, value asc", array($this->getAttributeValueID()));
 				break;
 			case 'alpha_asc':
-				$options = $db->GetAll("select ID, value, displayOrder from atSelectOptionsSelected inner join atSelectOptions on atSelectOptionsSelected.atSelectOptionID = atSelectOptions.ID where avID = ? order by value asc", array($this->getAttributeValueID()));
+				$options = $db->GetAll("select ID, value, displayOrder from atSelectOptionsSelected inner join atSelectOptions on atSelectOptionsSelected.atSelectOptionID = atSelectOptions.ID where avID = ?", array($this->getAttributeValueID()));
+				$sortByDisplayName = true;
 				break;
 			default:
 				$options = $db->GetAll("select ID, value, displayOrder from atSelectOptionsSelected inner join atSelectOptions on atSelectOptionsSelected.atSelectOptionID = atSelectOptions.ID where avID = ? order by displayOrder asc", array($this->getAttributeValueID()));
@@ -376,6 +372,9 @@ class Concrete5_Controller_AttributeType_Select extends AttributeTypeController 
 		foreach($options as $row) {
 			$opt = new SelectAttributeTypeOption($row['ID'], $row['value'], $row['displayOrder']);
 			$list->add($opt);
+		}
+		if($sortByDisplayName) {
+			$list->sortByDisplayName();
 		}
 		return $list;
 	}
@@ -554,6 +553,22 @@ class Concrete5_Model_SelectAttributeTypeOption extends Object {
 			return $this->th->specialchars($this->value);
 		}
 	}
+	/** Returns the display name for this select option value (localized and escaped accordingly to $format)
+	* @param string $format = 'html'
+	*	Escape the result in html format (if $format is 'html').
+	*	If $format is 'text' or any other value, the display name won't be escaped.
+	* @return string
+	*/
+	public function getSelectAttributeOptionDisplayValue($format = 'html') {
+		$value = tc('SelectAttributeValue', $this->getSelectAttributeOptionValue(false));
+		switch($format) {
+			case 'html':
+				return h($value);
+			case 'text':
+			default:
+				return $value;
+		}
+	}
 	public function getSelectAttributeOptionDisplayOrder() {return $this->displayOrder;}
 	public function getSelectAttributeOptionTemporaryID() {return $this->tempID;}
 	
@@ -664,7 +679,20 @@ class Concrete5_Model_SelectAttributeTypeOptionList extends Object implements It
 	public function getOptions() {
 		return $this->options;
 	}
-	
+
+	/** Sort the options by their display value. */
+	public function sortByDisplayName() {
+		usort($this->options, array(__CLASS__, 'displayValueSorter'));
+	}
+	/**
+	* @param SelectAttributeTypeOption $a
+	* @param SelectAttributeTypeOption $b
+	* @return int
+	*/
+	protected static function displayValueSorter($a, $b) {
+		return strcasecmp($a->getSelectAttributeOptionDisplayValue('text'), $b->getSelectAttributeOptionDisplayValue('text'));
+	}
+
 	public function __toString() {
 		$str = '';
 		$i = 0;
