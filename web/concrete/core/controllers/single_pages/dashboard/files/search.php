@@ -3,20 +3,14 @@ defined('C5_EXECUTE') or die("Access Denied.");
 class Concrete5_Controller_Page_Dashboard_Files_Search extends DashboardController {
 
 	public function view() {
-		$html = Loader::helper('html');
-		$form = Loader::helper('form');
-		$this->set('form', $form);
-		$searchInstance = 'file' . time();
-		$this->addHeaderItem('<script type="text/javascript">$(function() { ccm_activateFileManager(\'DASHBOARD\', \'' . $searchInstance . '\'); });</script>');
-		$fileList = $this->getRequestedSearchResults();
-		$files = $fileList->getPage();
-				
-		$this->set('fileList', $fileList);		
-		$this->set('files', $files);		
-		$this->set('searchInstance', $searchInstance);		
-		$this->set('pagination', $fileList->getPagination());
+		$cnt = new SearchFilesController();
+		$cnt->search();
+		$this->set('searchController', $cnt);
+		$result = Loader::helper('json')->encode($cnt->getSearchResultObject()->getJSONObject());
+		$this->addFooterItem("<script type=\"text/javascript\">$(function() { $('div[data-search=pages]').concreteAjaxSearch({result: " . $result . "}); });</script>");
 	}
 	
+/*
 	public function getRequestedSearchResults() {
 		$fileList = new FileList();
 		$fileList->enableStickySearchRequest();
@@ -146,6 +140,7 @@ class Concrete5_Controller_Page_Dashboard_Files_Search extends DashboardControll
 		}
 		return $fileList;
 	}
+	*/
 }
 
 ?>
