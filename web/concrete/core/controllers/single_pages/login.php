@@ -152,13 +152,7 @@ class Concrete5_Controller_Login extends Controller {
 				$u->saveConfig('NEWSFLOW_LAST_VIEWED', 0);
 			}
 
-			if ($loginData['redirectURL']) {
-				//make double secretly sure there's no caching going on
-				header("Cache-Control: no-store, no-cache, must-revalidate");
-				header("Pragma: no-cache");
-				header('Expires: Fri, 30 Oct 1998 14:19:41 GMT'); //in the past
-				$this->externalRedirect( $loginData['redirectURL'] );
-			} elseif ($dbp->canRead() && $adminToDash) {
+			if ($dbp->canRead() && $adminToDash) {
 				$this->redirect('/dashboard');
 			} else {
 				//options set in dashboard/users/registration
