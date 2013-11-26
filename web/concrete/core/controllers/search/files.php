@@ -68,15 +68,14 @@ class Concrete5_Controller_Search_Files extends Controller {
 			$this->fileList->filterByType($type);
 		}
 
-		if (isset($_GET['fExtension']) && $_GET['fExtension'] != '') {
+		if (isset($req['fExtension']) && $req['fExtension'] != '') {
 			$ext = $_GET['fExtension'];
 			$fileList->filterByExtension($ext);
 		}
 		
 		$selectedSets = array();
-
-		if (is_array($req['selectedSearchField'])) {
-			foreach($req['selectedSearchField'] as $i => $item) {
+		if (is_array($req['field'])) {
+			foreach($req['field'] as $i => $item) {
 				$this->fields[] = $this->getField($item);
 				// due to the way the form is setup, index will always be one more than the arrays
 				if ($item != '') {
@@ -116,7 +115,6 @@ class Concrete5_Controller_Search_Files extends Controller {
 							$this->fileList->filterBySize($from, $to);
 							break;
 						default:
-							Loader::model('file_attributes');
 							$akID = $item;
 							$fak = FileAttributeKey::get($akID);
 							$type = $fak->getAttributeType();
@@ -145,7 +143,7 @@ class Concrete5_Controller_Search_Files extends Controller {
 		$r = $this->getField($field);
 		Loader::helper('ajax')->sendResult($r);
 	}
-/*
+
 	protected function getField($field) {
 		$r = new stdClass;
 		$r->field = $field;
@@ -153,66 +151,39 @@ class Concrete5_Controller_Search_Files extends Controller {
 		$form = Loader::helper('form');
 		ob_start();
 		switch($field) {
-			case 'keywords':
-				print $form->text('keywords', $searchRequest['keywords'], array('style' => 'width: 120px'));
+			case 'size': ?>
+				<?=$form->text('size_from', $searchRequest['size_from'], array('style' => 'width:  60px'))?>
+				<?=t('to')?>
+				<?=$form->text('size_to', $searchRequest['size_to'], array('style' => 'width: 60px'))?>
+				<? break;
+			case 'type':
+				$t1 = FileList::getTypeList();
+				$types = array();
+				foreach($t1 as $value) {
+					$types[$value] = FileType::getGenericTypeText($value);
+				}
+				print $form->select('types', $types, $searchRequest['types'], array('style' => 'width: 120px'));
 				break;
-			case 'date_public': ?>
-				<?=$form->text('date_public_from', array('style' => 'width: 86px'))?>
-				<?=t('to')?>
-				<?=$form->text('date_public_from', array('style' => 'width: 86px'))?>
-				<? break;
+			case 'extension':
+				$ext1 = FileList::getExtensionList();
+				$extensions = array();
+				foreach($ext1 as $value) {
+					$extensions[$value] = $value;
+				}				
+				print $form->select('extensions', $extensions, $searchRequest['extensions'], array('style' => 'width: 120px'));
+				break;
 			case 'date_added': ?>
-				<?=$form->text('date_added_from', array('style' => 'width: 86px'))?>
+				<?=$form->text('date_from', $searchRequest['date_from'], array('style' => 'width: 86px'))?>
 				<?=t('to')?>
-				<?=$form->text('date_added_to', array('style' => 'width: 86px'))?>
+				<?=$form->text('date_to', $searchRequest['date_to'], array('style' => 'width: 86px'))?>
 				<? break;
-			case 'last_modified': ?>
-				<?=$form->text('last_modified_from', array('style' => 'width: 86px'))?>
-				<?=t('to')?>
-				<?=$form->text('last_modified_to', array('style' => 'width: 86px'))?>
-				<? break;
-			case 'owner': ?>
-				<?=$form->text('owner', array('class'=>'span5'))?>
-				<? break;
-			case 'permissions_inheritance': ?>
-				<select name="cInheritPermissionsFrom">
-					<option value="PARENT"<? if ($req['cInheritPermissionsFrom'] == 'PARENT') { ?> selected <? } ?>><?=t('Parent Page')?></option>
-					<option value="TEMPLATE" <? if ($req['cInheritPermissionsFrom'] == 'TEMPLATE') { ?> selected <? } ?>><?=t('Page Type')?></option>
-					<option value="OVERRIDE"<? if ($req['cInheritPermissionsFrom'] == 'OVERRIDE') { ?> selected <? } ?>><?=t('Itself (Override)')?></option>
-				</select>
-				<? break;
-			case 'version_status': ?>
-				<label class="checkbox"><?=$form->radio('cvIsApproved', 0, false)?> <span><?=t('Unapproved')?></span></label>
-				<label class="checkbox"><?=$form->radio('cvIsApproved', 1, false)?> <span><?=t('Approved')?></span></label>
-				<? break;
-			case 'parent': ?>
+			case 'added_to': ?>
 				<? $ps = Loader::helper("form/page_selector");
-				print $ps->selectPage('cParentIDSearchField');
-				?>
-				
-				<br/><strong><?=t('Search All Children?')?></strong><br/>
-				<label class="checkbox"><?=$form->radio('cParentAll', 0, false)?> <span><?=t('No')?></span></label>
-				<label class="checkbox"><?=$form->radio('cParentAll', 1, false)?> <span><?=t('Yes')?></span></label>
-				<? break;
-			case 'num_children': ?>
-				<select name="cChildrenSelect">
-					<option value="gt"<? if ($req['cChildrenSelect'] == 'gt') { ?> selected <? } ?>><?=t('More Than')?></option>
-					<option value="eq" <? if ($req['cChildrenSelect'] == 'eq') { ?> selected <? } ?>><?=t('Equal To')?></option>
-					<option value="lt"<? if ($req['cChildrenSelect'] == 'lt') { ?> selected <? } ?>><?=t('Fewer Than')?></option>
-				</select>
-				<input type="text" name="cChildren" value="<?=$req['cChildren']?>" />
-				<? break;
-			case 'theme': ?>
-				<select name="pThemeID">
-				<? $themes = PageTheme::getList(); ?>
-				<? foreach($themes as $pt) { ?>
-					<option value="<?=$pt->getThemeID()?>" <? if ($pt->getThemeID() == $searchRequest['pThemeID']) { ?> selected<? } ?>><?=$pt->getThemeName()?></option>			
-				<? } ?>
-				</select>
-				<? break;
+				print $ps->selectPage('ocIDSearchField');
+				break;
 			default: 
 				if (Loader::helper('validation/numbers')->integer($field)) {
-					$ak = CollectionAttributeKey::getByID($field);
+					$ak = FileAttributeKey::getByID($field);
 					$ak->render('search');
 				}
 				break;
@@ -222,7 +193,6 @@ class Concrete5_Controller_Search_Files extends Controller {
 		$r->html = $contents;
 		return $r;
 	}
-	*/
 	
 	public function submit() {
 		$this->search();
@@ -235,7 +205,7 @@ class Concrete5_Controller_Search_Files extends Controller {
 	}
 
 	public function getSearchRequest() {
-		return $this->pageList->getSearchRequest();
+		return $this->fileList->getSearchRequest();
 	}
 
 

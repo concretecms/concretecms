@@ -59,7 +59,7 @@
 				jQuery.fn.dialog.hideLoader();
 			},
 			error: function(r) {
-				ConcreteAlert.notice(r);
+    			ConcreteAlert.notice('Error', '<div class="alert alert-danger">' + r.responseText + '</div>');
 			},
 			success: function(r) {
 				if (!callback) {

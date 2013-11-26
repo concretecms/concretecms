@@ -2,20 +2,6 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 $form = Loader::helper('form');
 
-/*
-$ext1 = FileList::getExtensionList();
-$extensions = array();
-foreach($ext1 as $value) {
-	$extensions[$value] = $value;
-}
-
-$t1 = FileList::getTypeList();
-$types = array();
-foreach($t1 as $value) {
-	$types[$value] = FileType::getGenericTypeText($value);
-}
-*/
-
 $searchFields = array(
 	'size' => t('Size'),
 	'type' => t('Type'),
@@ -100,7 +86,7 @@ $searchRequest = $controller->getSearchRequest();
 </script>
 
 <script type="text/template" data-template="search-results-menu">
-<div class="popover fade" data-search-menu="<%=item.cID%>">
+<div class="popover fade" data-search-menu="<%=item.fID%>">
 	<div class="arrow"></div>
 	<div class="popover-inner">
 	<ul class="dropdown-menu">
