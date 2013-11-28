@@ -14,14 +14,14 @@ if (!$fp->canSearchFileSet()) {
 $ci = Loader::helper('file');
 
 
-if (isset($_REQUEST['fID']) && is_array($_REQUEST['fID'])) {
+if (isset($_REQUEST['item']) && is_array($_REQUEST['item'])) {
 
 	// zipem up
 	
 	$filename = $fh->getTemporaryDirectory() . '/' . $vh->getString() . '.zip';
 	$files = '';
 	$filenames = array();
-	foreach($_REQUEST['fID'] as $fID) {
+	foreach($_REQUEST['item'] as $fID) {
 		$f = File::getByID(intval($fID));
 		$fp = new Permissions($f);
 		if ($fp->canViewFile()) {
@@ -35,7 +35,7 @@ if (isset($_REQUEST['fID']) && is_array($_REQUEST['fID'])) {
 	exec(DIR_FILES_BIN_ZIP . ' -j \'' . addslashes($filename) . '\' ' . $files);
 	$ci->forceDownload($filename);	
 
-} else if($_REQUEST['fID']) {
+} else if($_REQUEST['item']) {
 	
 	$f = File::getByID(intval($_REQUEST['fID']));
 	$fp = new Permissions($f);
