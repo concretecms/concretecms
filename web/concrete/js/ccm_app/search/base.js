@@ -2,7 +2,7 @@
  * Base search class for AJAX searching
  */
 
-!function(window, $) {
+!function(global, $) {
 	'use strict';
 
 	function ConcreteAjaxSearch($element, options) {
@@ -197,6 +197,19 @@
 		});
 	}
 
+	ConcreteAjaxSearch.prototype.handleSelectedBulkAction = function(value, $option, items) {
+		var cs = this;
+		if (value == 'dialog') {
+			jQuery.fn.dialog.open({
+				width: $option.attr('data-bulk-action-dialog-width'),
+				height: $option.attr('data-bulk-action-dialog-height'),
+				modal: true,
+				href: $option.attr('data-bulk-action-url') + '?' + jQuery.param(items),
+				title: $option.attr('data-bulk-action-title')				
+			});
+		}
+	}
+
 	ConcreteAjaxSearch.prototype.setupBulkActions = function() {
 		var cs = this;
 		cs.$bulkActions = cs.$element.find('select[data-bulk-action]');
@@ -208,15 +221,7 @@
 			$.each(cs.$element.find('input[data-search-checkbox=individual]:checked'), function(i, checkbox) {
 				items.push({'name': 'item[]', 'value': $(checkbox).val()});
 			});
-			if (value == 'dialog') {
-				jQuery.fn.dialog.open({
-					width: $option.attr('data-bulk-action-dialog-width'),
-					height: $option.attr('data-bulk-action-dialog-height'),
-					modal: true,
-					href: $option.attr('data-bulk-action-url') + '?' + jQuery.param(items),
-					title: $option.attr('data-bulk-action-title')				
-				});
-			}
+			cs.handleSelectedBulkAction(value, $option, items);
 		});
 	}
 
@@ -248,4 +253,6 @@
 		return new ConcreteAjaxSearch(this, options);
 	}
 
-}(window, $);
+	global.ConcreteAjaxSearch = ConcreteAjaxSearch;
+
+}(this, $);

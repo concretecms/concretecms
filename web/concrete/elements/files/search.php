@@ -28,20 +28,13 @@ $searchRequest = $controller->getSearchRequest();
 	<div class="ccm-search-fields-row">
 	<div class="form-group">
 		<select data-bulk-action="files" disabled class="ccm-search-bulk-action form-control">
-			<?/*
 			<option value=""><?=t('Items Selected')?></option>
-			<option data-bulk-action-type="dialog" data-bulk-action-title="<?=t('File Properties')?>" data-bulk-action-url="<?=URL::to('/system/dialogs/file/bulk/properties')?>" data-bulk-action-dialog-width="640" data-bulk-action-dialog-height="480"><?=t('Edit Properties')?></option>
-			<option value="move_copy"><?=t('Move/Copy')?></option>
-			<option value="speed_settings"><?=t('Speed Settings')?></option>
-			<? if (PERMISSIONS_MODEL == 'advanced') { ?>
-				<option value="permissions"><?=t('Change Permissions')?></option>
-				<option value="permissions_add_access"><?=t('Change Permissions - Add Access')?></option>
-				<option value="permissions_remove_access"><?=t('Change Permissions - Remove Access')?></option>
-			<? } ?>
-			<option value="design"><?=t('Design')?></option>
-			<option value="delete"><?=t('Delete')?></option>
-			*/ ?>
-
+			<option data-bulk-action-type="download"><?=t('Download')?></option>
+			<option><?=t('Sets')?></option>
+			<option><?=t('Properties')?></option>
+			<option><?=t('Rescan')?></option>
+			<option><?=t('Copy')?></option>
+			<option><?=t('Delete')?></option>
 		</select>	
 	</div>
 	<div class="form-group">
