@@ -204,6 +204,27 @@ class Concrete5_Controller_Search_Files extends Controller {
 		return $this->fields;		
 	}
 
+	public function star() {
+		$fs = FileSet::createAndGetSet('Starred Files', FileSet::TYPE_STARRED);
+		$f = File::getByID($_POST['fID']);
+		$fp = new Permissions($f);
+		if (!is_object($f) || !$fp->canViewFile()) {
+			die(t("Access Denied."));
+		}
+
+		$r = new FileEditResponse();
+		$r->setFile($f);
+
+		if ($f->inFileSet($fs)) {
+			$fs->removeFileFromSet($f);
+			$r->setAdditionalDataAttribute('star', false);
+		} else {
+			$fs->addFileToSet($f);
+			$r->setAdditionalDataAttribute('star', true);
+		}
+		$r->outputJSON();
+	}
+
 	public function getSearchRequest() {
 		return $this->fileList->getSearchRequest();
 	}

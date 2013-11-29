@@ -87,6 +87,7 @@ $rl->register('/system/dialogs/file/search/customize', 'FileSearchCustomizeDialo
 $rl->register('/system/dialogs/file/search/customize/submit', 'FileSearchCustomizeDialogController::submit');
 $rl->register('/system/search/files/submit', 'SearchFilesController::submit');
 $rl->register('/system/search/files/field/{field}', 'SearchFilesController::field');
+$rl->register('/system/search/files/star', 'SearchFilesController::star');
 
 $rl->register('/system/dialogs/user/search/customize', 'UserSearchCustomizeDialogController::view');
 $rl->register('/system/dialogs/user/search/customize/submit', 'UserSearchCustomizeDialogController::submit');

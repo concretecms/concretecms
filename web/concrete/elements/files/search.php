@@ -49,6 +49,27 @@ $searchRequest = $controller->getSearchRequest();
 		<li><a href="#" data-search-toggle="customize" data-search-column-customize-url="<?=URL::to('/system/dialogs/file/search/customize')?>"><?=t('Customize Results')?></a>
 	</ul>
 	</div>
+	<?
+	$s1 = FileSet::getMySets();
+	if (count($s1) > 0) { ?>
+	<div class="ccm-search-fields-row">
+		<div class="form-group">
+		<?=$form->label('fsID', t('File Set'))?>
+		<div class="ccm-search-field-content">			
+		<select multiple name="fsID[]" class="chosen-select">
+			<optgroup label="<?=t('Sets')?>">
+			<? foreach($s1 as $s) { ?>
+				<option value="<?=$s->getFileSetID()?>"  <? if (is_array($searchRequest['fsID']) && in_array($s->getFileSetID(), $searchRequest['fsID'])) { ?> selected="selected" <? } ?>><?=wordwrap($s->getFileSetName(), '23', '&shy;', true)?></option>
+			<? } ?>
+			</optgroup>
+			<optgroup label="<?=t('Other')?>">
+				<option value="-1" <? if (is_array($searchRequest['fsID']) && in_array(-1, $searchRequest['fsID'])) { ?> selected="selected" <? } ?>><?=t('Files in no sets.')?></option>
+			</optgroup>
+		</select>
+		</div>
+		</div>
+	</div>
+	<? } ?>
 	<div class="ccm-search-fields-advanced"></div>
 </form>
 </script>
@@ -70,6 +91,7 @@ $searchRequest = $controller->getSearchRequest();
 <% _.each(items, function(file) {%>
 <tr data-launch-search-menu="<%=file.fID%>">
 	<td><span class="ccm-search-results-checkbox"><input type="checkbox" data-search-checkbox="individual" value="<%=file.fID%>" /></span></td>
+	<td class="ccm-file-manager-search-results-star <% if (file.isStarred) { %>ccm-file-manager-search-results-star-active<% } %>"><a href="#" data-search-toggle="star" data-search-toggle-url="<?=URL::to('/system/search/files/star')?>" data-search-toggle-file-id="<%=file.fID%>"><i class="glyphicon glyphicon-star"></i></a></td>
 	<% for(i = 0; i < file.columns.length; i++) {
 		var column = file.columns[i]; %>
 		<td><%=column.value%></td>
@@ -88,4 +110,41 @@ $searchRequest = $controller->getSearchRequest();
 </div>
 </script>
 
-<? Loader::element('search/template')?>
+<div data-search-element="wrapper"></div>
+
+<div data-search-element="results">
+
+<table border="0" cellspacing="0" cellpadding="0" class="ccm-search-results-table">
+<thead>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+<div class="ccm-search-results-pagination"></div>
+
+</div>
+
+<script type="text/template" data-template="search-results-pagination">
+<ul class="pagination">
+	<li class="<%=pagination.prevClass%>"><%=pagination.previousPage%></li>
+	<%=pagination.pages%>
+	<li class="<%=pagination.nextClass%>"><%=pagination.nextPage%></li>
+</div>
+</script>
+
+<script type="text/template" data-template="search-results-table-head">
+<tr>
+	<th><span class="ccm-search-results-checkbox"><input type="checkbox" data-search-checkbox="select-all" /></span></th>
+	<th class="ccm-file-manager-search-results-star"><span><i class="glyphicon glyphicon-star"></i></span></th>
+	<% 
+	for (i = 0; i < columns.length; i++) {
+		var column = columns[i];
+		if (column.isColumnSortable) { %>
+			<th class="<%=column.className%>"><a href="<%=column.sortURL%>"><%=column.title%></a></th>
+		<% } else { %>
+			<th><span><%=column.title%></span></th>
+		<% } %>
+	<% } %>
+</tr>
+</script>

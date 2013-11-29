@@ -12,6 +12,7 @@ class Concrete5_Library_FileSearchResultItem extends SearchResultItem {
 
 	protected function populateDetails($item) {
 		$this->fID = $item->getFileID();
+		$this->isStarred = $item->isStarred();
 	}
 
 

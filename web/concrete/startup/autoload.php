@@ -9,6 +9,7 @@ $classes = array(
 	'ResponseAssetGroup' => array('library', 'response/asset_group'),
 	'PageEditResponse' => array('library', 'response/edit/page/library'),
 	'PageEditVersionResponse' => array('library', 'response/edit/page/version'),
+	'FileEditResponse' => array('library', 'response/edit/file/library'),
 	'Localization' => array('library','localization'),
 	'Cookie' => array('library', 'cookie'),
 	'Route' => array('library', 'routing/route/library'),
