@@ -6,6 +6,7 @@ abstract class Concrete5_Library_EditResponse {
 	public $time;
 	public $message;
 	public $redirectURL;
+	protected $additionalData = array();
 
 	public function setRedirectURL($url) {
 		$this->redirectURL = $url;
@@ -35,6 +36,10 @@ abstract class Concrete5_Library_EditResponse {
 		return Loader::helper('json')->encode($this->getJSONObject());
 	}
 
+	public function setAdditionalDataAttribute($key, $value) {
+		$this->additionalData[$key] = $value;
+	}
+
 	abstract public function getJSONObject();
 
 	public function getBaseJSONObject() {
@@ -42,6 +47,9 @@ abstract class Concrete5_Library_EditResponse {
 		$o->message = $this->message;
 		$o->time = $this->time;
 		$o->redirectURL = $this->redirectURL;
+		foreach($this->additionalData as $key => $value) {
+			$o->{$key} = $value;
+		}
 		return $o;
 	}
 
