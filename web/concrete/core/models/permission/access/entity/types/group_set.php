@@ -40,8 +40,8 @@ class Concrete5_Model_GroupSetPermissionAccessEntity extends PermissionAccessEnt
 		$users = array();
 		$ingids = array();
 		$db = Loader::db();
-		foreach($user->getUserGroups() as $key => $val) {
-			$ingids[] = $key;
+		foreach($groups as $group) {
+			$ingids[] = $group->getGroupID();
 		}
 		$instr = implode(',',$ingids);
 		$r = $db->Execute('select uID from UserGroups where gID in (' . $instr . ')');
