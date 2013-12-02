@@ -48,6 +48,14 @@ class Concrete5_Controller_Dashboard_Users_Search extends Controller {
 			$this->set('message', t('User created.'));
 		}
 
+		if ($_REQUEST['user_updated']) {
+			$this->set('message', t('User updated successfully.'));
+		}
+
+		if ($_REQUEST['user_updated_with_password']) {
+			$this->set('message', t('User updated successfully. Password changed.'));
+		}
+
 	}
 	
 	
@@ -170,28 +178,50 @@ class Concrete5_Controller_Dashboard_Users_Search extends Controller {
 						$uHasAvatar = $av->updateUserAvatar($_FILES['uAvatar']['tmp_name'], $uo->getUserID());
 					}
 				}
+
+				$uu = User::getByUserID($uo->getUserID());
+				$groups = $uu->getUserGroups();
 				
-				$gIDs = array();
-				if (is_array($_POST['gID'])) {
-					foreach($_POST['gID'] as $gID) {
-						$gx = Group::getByID($gID);
-						$gxp = new Permissions($gx);
-						if ($gxp->canAssignGroup()) {
-							$gIDs[] = $gID;
-						}
+				$currentGroupIDs = array();
+				$submittedGroupIDs = array();
+				$updateGroupIDs = array();
+
+				foreach($groups as $gID => $gName) {
+					if ($gID > REGISTERED_GROUP_ID) {
+						$currentGroupIDs[] = $gID;
 					}
 				}
-				
-				$gIDs = array_unique($gIDs);
 
-				$uo->updateGroups($gIDs);
-
-				$message = t("User updated successfully. ");
-				if ($password) {
-					$message .= t("Password changed.");
+				if (is_array($_POST['gID'])) {
+					foreach($_POST['gID'] as $gID) {
+						$submittedGroupIDs[] = $gID;
+					}
 				}
+
+				$updateGroupIDs = array();
+				// now we have a merged array of all groups that the user is currently in
+				// as well as the ones that may have been checked on on the form.
+				foreach(array_unique(array_merge($currentGroupIDs, $submittedGroupIDs)) as $gID) {
+					$gx = Group::getByID($gID);
+					$gxp = new Permissions($gx);
+					if ($gxp->canAssignGroup()) {
+						if (in_array($gID, $submittedGroupIDs)) {
+							$updateGroupIDs[] = $gID;
+						}
+					} else if ($uu->inGroup($gx)) {
+						$updateGroupIDs[] = $gID;
+					}
+				}
+				$uo->updateGroups($updateGroupIDs);
+
+				$success = 'user_updated=1';
+				if ($password) {
+					$success = 'user_updated_with_password=1';
+				}
+
 				$editComplete = true;
 				// reload user object
+				$this->redirect('/dashboard/users/search?uID=' . $uu->getUserID() . '&' . $success);
 				$uo = UserInfo::getByID(intval($_GET['uID']));
 				$this->set('message', $message);
 			} else {
@@ -202,7 +232,6 @@ class Concrete5_Controller_Dashboard_Users_Search extends Controller {
 		}else{
 			$this->set('error',$this->error);
 		}		
-
 	}
 	
 	public function getRequestedSearchResults() {

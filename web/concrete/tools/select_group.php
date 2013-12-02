@@ -18,8 +18,7 @@ if (!$tp->canAccessGroupSearch()) {
 		$gl->includeAllGroups();
 	}
 	if ($_REQUEST['filter'] == 'assign') {
-		$pk = PermissionKey::getByHandle('assign_user_groups');
-		$gl->filterByAllowedPermission($pk);
+		$gl->filterByAssignable();
 	}
 	if (isset($_GET['gKeywords'])) {
 		$gl->filterByKeywords($_GET['gKeywords']);
@@ -44,6 +43,7 @@ if (!$tp->canAccessGroupSearch()) {
 		<input type="submit" value="<?=t('Search')?>" class="btn" />
 		<input type="hidden" name="group_submit_search" value="1" />
 		<input type="hidden" name="callback" value="<?=h($_REQUEST['callback'])?>" />
+		<input type="hidden" name="filter" value="<?=h($_REQUEST['filter'])?>" />
 		<input type="hidden" name="include_core_groups" value="<?=h($_REQUEST['include_core_groups'])?>" />
 		</div>
 		</form>
@@ -52,7 +52,7 @@ if (!$tp->canAccessGroupSearch()) {
 
 	<div id="ccm-list-wrapper">
 
-	<? if ($_REQUEST['group_submit_search']) { ?>
+	<? if ($_REQUEST['group_submit_search'] || $_REQUEST['filter'] == 'assign') { ?>
 		<? if (count($gResults) > 0) { 
 		
 			print $gl->displaySummary();
@@ -66,6 +66,7 @@ if (!$tp->canAccessGroupSearch()) {
 					<a class="ccm-group-inner-atag" id="g<?=$g->getGroupID()?>" group-id="<?=$g->getGroupID()?>" group-name="<?=$g->getGroupDisplayName(false)?>" href="javascript:void(0)"><?=$g->getGroupDisplayName()?></a>
 					<?=( $g->getGroupDescription() != '' ? ' - <span class="ccm-group-description">'. $g->getGroupDescription() .'</span>' : '' )?>
 				</div>
+			</div>
 			
 			<? }
 

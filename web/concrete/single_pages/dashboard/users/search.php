@@ -289,10 +289,12 @@ if (is_object($uo)) {
             	<tr class="inputs-list">
 					<td>
                     
-					<? foreach ($gArray as $g) { ?>
+					<? foreach ($gArray as $g) {
+						$gp = new Permissions($g);
+						 ?>
                     
                             <label>
-                                <input type="checkbox" name="gID[]" value="<?=$g->getGroupID()?>" <? 
+                                <input <? if (!$gp->canAssignGroup()) { ?>disabled<? } ?> type="checkbox" name="gID[]" value="<?=$g->getGroupID()?>" <? 
                                     if (is_array($_POST['gID'])) {
                                         if (in_array($g->getGroupID(), $_POST['gID'])) {
                                             echo(' checked ');
