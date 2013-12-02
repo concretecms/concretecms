@@ -36,6 +36,9 @@ class Concrete5_Model_GroupSetPermissionAccessEntity extends PermissionAccessEnt
 	}
 	
 	public function getAccessEntityUsers(PermissionAccess $pa) {
+		if (!isset($this->groupset)) {
+			$this->load();
+		}
 		$groups = $this->groupset->getGroups();
 		$users = array();
 		$ingids = array();
