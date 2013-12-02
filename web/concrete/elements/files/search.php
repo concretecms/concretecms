@@ -46,7 +46,7 @@ $searchRequest = $controller->getSearchRequest();
 	</div>
 	<ul class="ccm-search-form-advanced list-inline">
 		<li><a href="#" data-search-toggle="advanced"><?=t('Advanced Search')?></a>
-		<li><a href="#" data-search-toggle="customize" data-search-column-customize-url="<?=URL::to('/system/dialogs/file/search/customize')?>"><?=t('Customize Results')?></a>
+			<li><a href="#" data-search-toggle="customize" data-search-column-customize-url="<?=URL::to('/system/dialogs/file/search/customize')?>"><?=t('Customize Results')?></a>
 	</ul>
 	</div>
 	<?
@@ -105,7 +105,22 @@ $searchRequest = $controller->getSearchRequest();
 	<div class="arrow"></div>
 	<div class="popover-inner">
 	<ul class="dropdown-menu">
-		<li><a href="">derb</a></li>
+		<? /*
+		<li><a href=""><?=t('Choose File')?></a></li>
+		<li><a href=""><?=t('Clear File')?></a></li>
+		<li class="divider"></li>
+		*/ ?>
+		<li><a href=""><?=t('View')?></a></li>
+		<li><a href=""><?=t('Download')?></a></li>
+		<li><a href=""><?=t('Properties')?></a></li>
+		<li><a href=""><?=t('Edit')?></a></li>
+		<li><a href=""><?=t('Replace')?></a></li>
+		<li><a href=""><?=t('Duplicate')?></a></li>
+		<li><a href=""><?=t('Sets')?></a></li>
+		<li class="divider"></li>
+		<li><a href=""><?=t('Permissions')?></a></li>
+		<li><a href=""><?=t('Delete')?></a></li>
+
 	</ul>
 </div>
 </script>
