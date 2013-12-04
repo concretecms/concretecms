@@ -73,13 +73,15 @@
 
 	ConcreteAjaxSearch.prototype.setupMenus = function() {
 		var cs = this;
-		if (cs.$menuTemplate.length) {
+		if (cs._templateSearchResultsMenu) {
 			cs.$element.find('[data-search-menu]').remove();
+
 			// loop through all results,
 			// create nodes for them.
 			$.each(cs.options.result.items, function(i, item) {
 				cs.$results.append(cs._templateSearchResultsMenu({'item': item}));
 			});
+
 			cs.$element.find('tbody tr').each(function() {
 				$(this).concreteMenu({
 					'menu': $('[data-search-menu=' + $(this).attr('data-launch-search-menu') + ']')

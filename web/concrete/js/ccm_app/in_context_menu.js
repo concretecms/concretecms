@@ -1,7 +1,3 @@
-/**
- * Base search class for AJAX forms in the UI
- */
-
 !function(global, $, _) {
 	'use strict';
 
@@ -102,7 +98,7 @@
 			}
 
 			my.positionAt($clickProxy, $specificLauncher);
-			$clickProxy.addClass(menuLauncherHoverClass);
+			$clickProxy.removeClass().addClass(menuLauncherHoverClass);
 			ConcreteMenuManager.hoverMenu = my;
 		},
 
@@ -213,7 +209,7 @@
 		activeMenu: false,
 
 		reset: function() {
-
+			
 		},
 
 		enable: function() {

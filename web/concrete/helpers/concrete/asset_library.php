@@ -48,32 +48,35 @@
 			
 			if (is_object($bf) && (!$bf->isError()) && $bf->getFileID() > 0) {
 				$fileID = $bf->getFileID();
-				$selectedDisplay = 'block';
-				$resetDisplay = 'none';
 			}
-				
-			$html = '<div id="' . $id . '-fm-selected" onclick="ccm_chooseAsset=false" class="ccm-file-selected-wrapper" style="display: ' . $selectedDisplay . '"><img src="' . ASSETS_URL_IMAGES . '/throbber_white_16.gif" /></div>';
+
+			$loader = ASSETS_URL_IMAGES . '/throbber_white_16.gif';
+			if ($fileID) {
+				$args = "{'inputName': '{$postname}', 'fID': {$fileID}}";
+			} else {
+				$args = "{'inputName': '{$postname}'}";
+			}
+
+			$html =<<<EOL
+			<div class="ccm-file-selector" data-file-selector="{$id}"></div>
+			<script type="text/javascript">
+			$(function() {
+				$('[data-file-selector={$id}]').concreteFileSelector({$args});
+			});
+			</script>
+EOL;
+/*
+			$html = '<div id="' . $id . '-fm-selected" class="ccm-file-selected-wrapper">';
 			
 			$html .= '<div class="ccm-file-manager-select" id="' . $id . '-fm-display" ccm-file-manager-field="' . $id . '" style="display: ' . $resetDisplay . '">';
 			$html .= '<a href="javascript:void(0)" onclick="ccm_chooseAsset=false; ccm_alLaunchSelectorFileManager(\'' . $id . '\')">' . $chooseText . '</a>';
-			if ($filterArgs != false) {
-				foreach($filterArgs as $key => $value) {
-					if(is_array($value)) {
-						foreach($value as $valueItem) {
-							$html .= '<input type="hidden" class="ccm-file-manager-filter" name="' . $key . '" value="' . $valueItem . '" />';
-						}
-					}
-					else {
-						$html .= '<input type="hidden" class="ccm-file-manager-filter" name="' . $key . '" value="' . $value . '" />';
-					}
-				}
-			}
 			$html .= '</div><input id="' . $id . '-fm-value" type="hidden" name="' . $postname . '" value="' . $fileID . '" />';
-
+			$html .= '<script type="text/javascript">$(function() { 
 			if (is_object($bf) && (!$bf->isError()) && $bf->getFileID() > 0) {
 				$html .= '<script type="text/javascript">$(function() { ccm_triggerSelectFile(' . $fileID . ', \'' . $id . '\'); });</script>';
 			}
-			
+			*/
+
 			return $html;
 		}
 		

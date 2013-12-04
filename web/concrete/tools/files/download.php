@@ -35,7 +35,7 @@ if (isset($_REQUEST['item']) && is_array($_REQUEST['item'])) {
 	exec(DIR_FILES_BIN_ZIP . ' -j \'' . addslashes($filename) . '\' ' . $files);
 	$ci->forceDownload($filename);	
 
-} else if($_REQUEST['item']) {
+} else if($_REQUEST['fID']) {
 	
 	$f = File::getByID(intval($_REQUEST['fID']));
 	$fp = new Permissions($f);

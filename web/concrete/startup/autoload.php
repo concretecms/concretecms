@@ -419,6 +419,7 @@ $classes = array(
 	'FrontendStylesheetController' => array('controller', '/frontend/stylesheet'),
 	
 	'UserSearchDialogController' => array('controller', '/dialogs/user/search'),
+	'FileSearchDialogController' => array('controller', '/dialogs/file/search'),
 	'GroupSearchDialogController' => array('controller', '/dialogs/group/search'),
 	'PageSearchCustomizeDialogController' => array('controller', '/dialogs/page/search/customize'),
 	'UserSearchCustomizeDialogController' => array('controller', '/dialogs/user/search/customize'),

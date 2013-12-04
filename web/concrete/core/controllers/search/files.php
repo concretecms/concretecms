@@ -225,6 +225,30 @@ class Concrete5_Controller_Search_Files extends Controller {
 		$r->outputJSON();
 	}
 
+	public function getJSONFileDetails() {
+		$files = array();
+		if (is_array($_REQUEST['fID'])) {
+			$fileIDs = $_REQUEST['fID'];
+		} else {
+			$fileIDs[] = $_REQUEST['fID'];
+		}
+		foreach($fileIDs as $fID) {
+			$f = File::getByID($fID);
+			$fp = new Permissions($f);
+			if ($fp->canViewFileInFileManager()) {
+				$files[] = $f;
+			}
+		}
+
+		if (count($files) == 0) {
+			throw new Exception(t("Access Denied."));
+		}
+
+		$r = new FileEditResponse();
+		$r->setFiles($files);
+		$r->outputJSON();
+	}
+
 	public function getSearchRequest() {
 		return $this->fileList->getSearchRequest();
 	}
