@@ -68,7 +68,7 @@ var CCMInlineEditMode = function() {
 			$('#ccm-inline-toolbar-container').remove();
 
 			jQuery.fn.dialog.hideLoader();
-			c5.editMode.scanBlocks();
+			Concrete.editMode.scanBlocks();
 		},
 
 		editBlock: function(cID, aID, arHandle, bID, params) {
@@ -97,10 +97,10 @@ var CCMInlineEditMode = function() {
 			success: function(r) {
 				var $container = $('[data-block-id=' + bID + '][data-area-id=' + aID + ']');
 				$container.html(r);
-				if (!$container.data('c5.block')) {
+				if (!$container.data('Concrete.block')) {
 					var block;
-					c5.editMode.addBlock(block = new c5.Block($container, c5.editMode));
-					_(c5.editMode.getAreas()).findWhere({id: block.getAreaId()}).addBlock(block);
+					Concrete.editMode.addBlock(block = new Concrete.Block($container, Concrete.editMode));
+					_(Concrete.editMode.getAreas()).findWhere({id: block.getAreaId()}).addBlock(block);
 				}
 				completeInlineEditMode($container);
 				jQuery.fn.dialog.hideLoader();

@@ -1,15 +1,16 @@
-var c5 = (function(ccm_event) {
+var Concrete = (function(ccm_event) {
   'use strict';
 
   function getAttribute(attributes, key) {
     return attributes[key];
   }
+
   function setAttribute(attributes, key, value) {
     attributes[key] = value;
     return value;
   }
 
-  var concrete5 = {
+  return {
     editMode: null,
     event: ccm_event,
 
@@ -35,9 +36,33 @@ var c5 = (function(ccm_event) {
         }
       });
       return true;
-    }
-  };
+    },
 
-  return concrete5;
+    /** 
+     * Send an AJAX request and expects an AJAX response.
+     */
+    sendRequest: function(url, data, callback) {
+      data = data || [];
+      jQuery.fn.dialog.showLoader();
+      $.ajax({
+        type: 'post', 
+        data: data,
+        dataType: 'json',
+        url: url,
+        complete: function() {
+          jQuery.fn.dialog.hideLoader();
+        },
+        error: function(r) {
+            ConcreteAlert.notice('Error', '<div class="alert alert-danger">' + r.responseText + '</div>');
+        },
+        success: function(r) {
+          if (callback) {
+            callback(r);
+          }
+        }
+      });
+    }    
+
+  };
 
 }(ccm_event));

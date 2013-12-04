@@ -51,7 +51,7 @@
 				} else {
 					ConcreteAlert.hud(ccmi18n.updateBlockMsg, 2000, 'ok', ccmi18n.updateBlock);
 				}
-				c5.editMode.scanBlocks();
+				Concrete.editMode.scanBlocks();
 			});
 		}
 	}

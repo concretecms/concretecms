@@ -62,7 +62,7 @@
 			$.ajax({
 				type: 'post', 
 				dataType: 'json',
-				url: CCM_DISPATCHER_FILENAME + '/system/file/details',
+				url: CCM_DISPATCHER_FILENAME + '/system/file/get_json',
 				data: {'fID': fID},
 				error: function(r) {
 	    			ConcreteAlert.notice('Error', '<div class="alert alert-danger">' + r.responseText + '</div>');

@@ -47,26 +47,12 @@
 	}
 
 	ConcreteAjaxSearch.prototype.ajaxUpdate = function(url, data, callback) {
-		data = data || [];
 		var cs = this;
-		jQuery.fn.dialog.showLoader();
-		$.ajax({
-			type: 'post', 
-			data: data,
-			dataType: 'json',
-			url: url,
-			complete: function() {
-				jQuery.fn.dialog.hideLoader();
-			},
-			error: function(r) {
-    			ConcreteAlert.notice('Error', '<div class="alert alert-danger">' + r.responseText + '</div>');
-			},
-			success: function(r) {
-				if (!callback) {
-					cs.updateResults(r);
-				} else {
-					callback(r);
-				}
+		Concrete.sendRequest(url, data, function(r) {
+			if (!callback) {
+				cs.updateResults(r);
+			} else {
+				callback(r);
 			}
 		});
 	}
@@ -77,14 +63,14 @@
 		});
 	}
 
-	ConcreteAjaxSearch.prototype.setupMenus = function() {
+	ConcreteAjaxSearch.prototype.setupMenus = function(result) {
 		var cs = this;
 		if (cs._templateSearchResultsMenu) {
 			cs.$element.find('[data-search-menu]').remove();
 
 			// loop through all results,
 			// create nodes for them.
-			$.each(cs.options.result.items, function(i, item) {
+			$.each(result.items, function(i, item) {
 				cs.$results.append(cs._templateSearchResultsMenu({'item': item}));
 			});
 
@@ -150,7 +136,7 @@
 		$.each(result.fields, function(i, field) {
 			cs.$advancedFields.append(cs._templateAdvancedSearchFieldRow({'field': field}));
 		});
-		cs.setupMenus();
+		cs.setupMenus(result);
 	}
 
 	ConcreteAjaxSearch.prototype.setupAdvancedSearch = function() {
@@ -190,6 +176,11 @@
 			cs.ajaxUpdate($(this).attr('href'));
 			return false;
 		});
+	}
+
+	ConcreteAjaxSearch.prototype.refreshResults = function() {
+		var cs = this;
+		cs.$element.find('form[data-search-form]').trigger('submit');
 	}
 
 	ConcreteAjaxSearch.prototype.setupSearch = function() {

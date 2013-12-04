@@ -1,7 +1,7 @@
 /**
  * concrete5 in context editing
  */
-(function(window, $, _, c5) {
+(function(window, $, _, Concrete) {
   'use strict';
 
   /**
@@ -11,10 +11,10 @@
   /**
    * Edit mode object for managing editing.
    */
-  var EditMode = c5.EditMode = function EditMode() {
+  var EditMode = Concrete.EditMode = function EditMode() {
     var my = this;
 
-    c5.createGetterSetters.call(my, {
+    Concrete.createGetterSetters.call(my, {
       dragging: false,
       areas: [],
       blocks: [],
@@ -23,16 +23,16 @@
       dragAreaBlacklist: []
     });
 
-    c5.event.bind('panel.open', function editModePanelOpenEventHandler(event) {
+    Concrete.event.bind('panel.open', function editModePanelOpenEventHandler(event) {
       my.panelOpened(event.eventData.panel, event.eventData.element);
     });
 
-    c5.event.bind('EditModeBlockEditInline', function(event) {
+    Concrete.event.bind('EditModeBlockEditInline', function(event) {
       var data = event.eventData, block = data.block, area = block.getArea();
       window.CCMInlineEditMode.editBlock(CCM_CID, area.getId(), area.getHandle(), block.getId(), $(this).data('menu-action-params'));
     });
 
-    c5.event.bind('EditModeBlockAddToClipboard', function(event) {
+    Concrete.event.bind('EditModeBlockAddToClipboard', function(event) {
       var data = event.eventData, block = data.block, area = block.getArea();
       CCMToolbar.disableDirectExit();
       // got to grab the message too, eventually
@@ -45,12 +45,12 @@
       }});
     });
 
-    c5.event.bind('EditModeBlockDelete', function(event) {
+    Concrete.event.bind('EditModeBlockDelete', function(event) {
       var data = event.eventData, block = data.block, area = block.getArea(), message = data.message;
       block.delete(data.message);
     });
 
-    c5.event.bind('EditModeBlockDrag', _.throttle(function editModeEditModeBlockDragEventHandler(event) {
+    Concrete.event.bind('EditModeBlockDrag', _.throttle(function editModeEditModeBlockDragEventHandler(event) {
       if (!my.getDragging()) {
         return;
       }
@@ -61,18 +61,18 @@
       }), true);
 
       _.defer(function() {
-        c5.event.fire('EditModeContenders', contenders);
+        Concrete.event.fire('EditModeContenders', contenders);
         my.selectContender(pep, block, contenders, data.event);
       });
     }, 250, true));
 
-    c5.event.bind('EditModeBlockDragStop', function editModeEditModeBlockDragStopEventHandler() {
-      c5.event.fire('EditModeContenders', []);
-      c5.event.fire('EditModeSelectableContender');
+    Concrete.event.bind('EditModeBlockDragStop', function editModeEditModeBlockDragStopEventHandler() {
+      Concrete.event.fire('EditModeContenders', []);
+      Concrete.event.fire('EditModeSelectableContender');
       my.setDragging(false);
     });
 
-    c5.event.bind('EditModeBlockMove', function editModeEditModeBlockMoveEventHandler(e) {
+    Concrete.event.bind('EditModeBlockMove', function editModeEditModeBlockMoveEventHandler(e) {
       var moved_block = e.eventData, area = moved_block.getArea(), data = {
         cID: CCM_CID,
         ccm_token: window.CCM_SECURITY_TOKEN,
@@ -97,7 +97,7 @@
       });
     });
 
-    c5.event.bind('EditModeBlockDragStart', function editModeEditModeBlockDragStartEventHandler() {
+    Concrete.event.bind('EditModeBlockDragStart', function editModeEditModeBlockDragStartEventHandler() {
       my.setDragging(true);
     });
 
@@ -109,14 +109,14 @@
    * @param {jQuery}   elem      The area's HTML element
    * @param {EditMode} edit_mode The EditMode instance
    */
-  var Area = c5.Area = function Area(elem, edit_mode) {
+  var Area = Concrete.Area = function Area(elem, edit_mode) {
     var my = this,
       totalBlocks = parseInt(elem.attr('data-total-blocks')),
       menuHandle = (totalBlocks == 0) ? 'div[data-area-menu-handle=' + elem.attr('data-area-id') + ']' : '#area-menu-footer-' + elem.attr('data-area-id');
 
-    elem.data('c5.area', my);
+    elem.data('Concrete.area', my);
 
-    c5.createGetterSetters.call(my, {
+    Concrete.createGetterSetters.call(my, {
       id: elem.data('area-id'),
       elem: elem,
       handle: elem.data('area-handle'),
@@ -142,13 +142,13 @@
    * @param {jQuery}   elem      The blocks HTML element
    * @param {EditMode} edit_mode The EditMode instance
    */
-  var Block = c5.Block = function Block(elem, edit_mode, peper){
+  var Block = Concrete.Block = function Block(elem, edit_mode, peper){
     var my = this,
         menuHandle = elem.attr('data-block-menu-handle');
 
-    elem.data('c5.block', my);
+    elem.data('Concrete.block', my);
 
-    c5.createGetterSetters.call(my, {
+    Concrete.createGetterSetters.call(my, {
       id: elem.data('block-id'),
       handle: elem.data('block-type-handle'),
       areaId: elem.data('area-id'),
@@ -177,15 +177,15 @@
     }
 
     elem.find('a[data-menu-action=edit_inline]').on('click', function() {
-      c5.event.fire('EditModeBlockEditInline', {block: my, event: event});
+      Concrete.event.fire('EditModeBlockEditInline', {block: my, event: event});
     });
 
     elem.find('a[data-menu-action=block_scrapbook]').on('click', function() {
-      c5.event.fire('EditModeBlockAddToClipboard', {block: my, event: event});
+      Concrete.event.fire('EditModeBlockAddToClipboard', {block: my, event: event});
     });
 
     elem.find('a[data-menu-action=delete_block]').on('click', function() {
-      c5.event.fire('EditModeBlockDelete', {message: $(this).attr('data-menu-delete-message'), block: my, event: event});
+      Concrete.event.fire('EditModeBlockDelete', {message: $(this).attr('data-menu-delete-message'), block: my, event: event});
     });
 
    _(my.getPepSettings()).extend({
@@ -206,7 +206,7 @@
       place: false
     });
 
-    c5.event.bind('EditModeSelectableContender', function(e) {
+    Concrete.event.bind('EditModeSelectableContender', function(e) {
       if (my.getDragging() && e.eventData instanceof DragArea) {
         my.setSelected(e.eventData);
       } else {
@@ -222,7 +222,7 @@
     }).pep(my.getPepSettings());
   };
 
-  var BlockType = c5.BlockType = function BlockType(elem, edit_mode, dragger) {
+  var BlockType = Concrete.BlockType = function BlockType(elem, edit_mode, dragger) {
     var my = this;
 
     Block.call(my, elem, edit_mode, dragger);
@@ -234,10 +234,10 @@
    * @param {Area} area  The area it belongs to
    * @param {Block} block The block that this drag_area is above, this may be null.
    */
-  var DragArea = c5.DragArea = function DragArea(elem, area, block) {
+  var DragArea = Concrete.DragArea = function DragArea(elem, area, block) {
     var my = this;
 
-    c5.createGetterSetters.call(my, {
+    Concrete.createGetterSetters.call(my, {
       block: block,
       elem: elem,
       area: area,
@@ -246,11 +246,11 @@
       animationLength: 500
     });
 
-    c5.event.bind('EditModeContenders', function(e) {
+    Concrete.event.bind('EditModeContenders', function(e) {
       var drag_areas = e.eventData;
       my.setIsContender(_.contains(drag_areas, my));
     });
-    c5.event.bind('EditModeSelectableContender', function(e) {
+    Concrete.event.bind('EditModeSelectableContender', function(e) {
       my.setIsSelectable(e.eventData == my);
     });
   };
@@ -260,12 +260,12 @@
     scanBlocks: function editModeScanBlocks() {
       var my = this, area, block;
       $('div.ccm-area').each(function(){
-        if ($(this).data('c5.area')) return;
+        if ($(this).data('Concrete.area')) return;
         area = new Area($(this), my);
         my.addArea(area);
       });
       $('div.ccm-block-edit').each(function(){
-        if ($(this).data('c5.block')) return;
+        if ($(this).data('Concrete.block')) return;
         my.addBlock(block = new Block($(this), my));
         _(my.getAreas()).findWhere({id: block.getAreaId()}).addBlock(block);
       });
@@ -307,7 +307,7 @@
         return drag_area.isSelectable(pep, block, event);
       });
       if (contenders.length < 2) {
-        return c5.event.fire('EditModeSelectableContender', _(contenders).first());
+        return Concrete.event.fire('EditModeSelectableContender', _(contenders).first());
       }
 
       var selectedCache = my.getSelectedCache(), blacklist = my.getDragAreaBlacklist();
@@ -332,7 +332,7 @@
       selectedCache.push(selected);
       my.setSelectedCache(_(selectedCache).last(my.getSelectedThreshold()));
 
-      c5.event.fire('EditModeSelectableContender', selected);
+      Concrete.event.fire('EditModeSelectableContender', selected);
       return selected;
     },
 
@@ -476,7 +476,7 @@
         if (typeof(callback) == 'function') {
           callback();
         }
-        c5.editMode.scanBlocks();
+        Concrete.editMode.scanBlocks();
 
       }
     },
@@ -642,13 +642,13 @@
       my.getDragger().fadeIn(250);
 
       _.defer(function(){
-        c5.event.fire('EditModeBlockDragInitialization', {block: my, pep: pep, event: event});
+        Concrete.event.fire('EditModeBlockDragInitialization', {block: my, pep: pep, event: event});
       });
     },
     pepDrag: function blockPepDrag(context, event, pep) {
       var my = this;
       _.defer(function(){
-        c5.event.fire('EditModeBlockDrag', {block: my, pep: pep, event: event});
+        Concrete.event.fire('EditModeBlockDrag', {block: my, pep: pep, event: event});
       });
     },
     pepStart: function blockPepStart(context, event, pep) {
@@ -665,7 +665,7 @@
         }
       }});
       _.defer(function(){
-        c5.event.fire('EditModeBlockDragStart', {block: my, pep: pep, event: event});
+        Concrete.event.fire('EditModeBlockDragStart', {block: my, pep: pep, event: event});
       });
     },
     pepStop: function blockPepStop(context, event, pep) {
@@ -682,13 +682,13 @@
           my.getSelected().getArea().addBlockToIndex(my, 0);
         }
         my.getPeper().pep(my.getPepSettings());
-        c5.event.fire('EditModeBlockMove', my);
+        Concrete.event.fire('EditModeBlockMove', my);
       }
 
       my.animateToElem();
 
       _.defer(function(){
-        c5.event.fire('EditModeBlockDragStop', {block: my, pep: pep, event: event});
+        Concrete.event.fire('EditModeBlockDragStop', {block: my, pep: pep, event: event});
       });
     },
 
@@ -785,7 +785,7 @@
       }
 
       _.defer(function(){
-        c5.event.fire('EditModeBlockDragStop', {block: my, pep: pep, event: event});
+        Concrete.event.fire('EditModeBlockDragStop', {block: my, pep: pep, event: event});
       });
       my.getDragger().remove();
       my.setAttr('dragger', null);
@@ -874,4 +874,4 @@
     }
   };
 
-}(window, jQuery, _, c5));
+}(window, jQuery, _, Concrete));

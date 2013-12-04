@@ -38,7 +38,7 @@ if (!$dh->inDashboard()) {
 	$editMode = $c->isEditMode();
 	$tools = REL_DIR_FILES_TOOLS_REQUIRED;
 	if ($c->isEditMode()) {
-		$startEditMode = 'new c5.EditMode();';
+		$startEditMode = 'new Concrete.EditMode();';
 	}
 	if ($cp->canEditPageContents() && $_REQUEST['ctask'] == 'check-out-first') {
 		$pagetype = $c->getPageTypeObject();

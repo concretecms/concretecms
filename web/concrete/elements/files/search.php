@@ -91,7 +91,7 @@ $searchRequest = $controller->getSearchRequest();
 <% _.each(items, function(file) {%>
 <tr data-launch-search-menu="<%=file.fID%>" data-file-manager-file="<%=file.fID%>">
 	<td><span class="ccm-search-results-checkbox"><input type="checkbox" data-search-checkbox="individual" value="<%=file.fID%>" /></span></td>
-	<td class="ccm-file-manager-search-results-star <% if (file.isStarred) { %>ccm-file-manager-search-results-star-active<% } %>"><a href="#" data-search-toggle="star" data-search-toggle-url="<?=URL::to('/system/search/files/star')?>" data-search-toggle-file-id="<%=file.fID%>"><i class="glyphicon glyphicon-star"></i></a></td>
+	<td class="ccm-file-manager-search-results-star <% if (file.isStarred) { %>ccm-file-manager-search-results-star-active<% } %>"><a href="#" data-search-toggle="star" data-search-toggle-url="<?=URL::to('/system/file/star')?>" data-search-toggle-file-id="<%=file.fID%>"><i class="glyphicon glyphicon-star"></i></a></td>
 	<% for(i = 0; i < file.columns.length; i++) {
 		var column = file.columns[i]; %>
 		<td><%=column.value%></td>
