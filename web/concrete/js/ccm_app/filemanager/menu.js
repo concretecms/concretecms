@@ -17,6 +17,7 @@
 	ConcreteFileMenu.prototype.setupMenuOptions = function($menu) {
 		var my = this, 
 			parent = ConcreteMenu.prototype,
+			fID = $menu.attr('data-search-file-menu'),
 			container = my.options.container;
 
 		parent.setupMenuOptions($menu);
@@ -29,7 +30,13 @@
 			return false;
 		});
 		$menu.find('a[data-file-manager-action=duplicate]').on('click', function() {
-			
+			Concrete.sendRequest(CCM_DISPATCHER_FILENAME + '/system/file/duplicate', {
+				fID: fID
+			}, function(r) {
+				if (typeof(container.refreshResults) != 'undefined') {
+					container.refreshResults();
+				}
+			});
 			return false;
 		});
 	}

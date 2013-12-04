@@ -88,7 +88,6 @@ $rl->register('/system/dialogs/file/search/customize', 'FileSearchCustomizeDialo
 $rl->register('/system/dialogs/file/search/customize/submit', 'FileSearchCustomizeDialogController::submit');
 $rl->register('/system/search/files/submit', 'SearchFilesController::submit');
 $rl->register('/system/search/files/field/{field}', 'SearchFilesController::field');
-$rl->register('/system/search/files/star', 'SearchFilesController::star');
 
 $rl->register('/system/dialogs/user/search/customize', 'UserSearchCustomizeDialogController::view');
 $rl->register('/system/dialogs/user/search/customize/submit', 'UserSearchCustomizeDialogController::submit');
@@ -96,12 +95,17 @@ $rl->register('/system/search/users/submit', 'SearchUsersController::submit');
 $rl->register('/system/search/users/field/{field}', 'SearchUsersController::field');
 
 $rl->register('/system/search/groups/submit', 'SearchGroupsController::submit');
+
+/* Files */
+$rl->register('/system/file/star', 'FileController::star');
+$rl->register('/system/file/get_json', 'FileController::getJSON');
+$rl->register('/system/file/duplicate', 'FileController::duplicate');
+
 /** 
  * Misc
  */
 $rl->register('/system/css/page/{cID}/{cvID}/{stylesheet}', 'FrontendStylesheetController::page');
 $rl->register('/system/css/layout/{bID}', 'FrontendStylesheetController::layout');
-$rl->register('/system/file/details', 'SearchFilesController::getJSONFileDetails');
 
 /** 
  * Page Routes - these must come at the end.

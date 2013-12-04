@@ -45,7 +45,7 @@ function CCMPanel(options) {
     this.onPanelLoad = function(element) {
         this.setupPanelDetails();
         this.setupSubPanels();
-        c5.event.publish('panel.open', {panel:this, element:element});
+        Concrete.event.publish('panel.open', {panel:this, element:element});
     };
 
     this.hide = function() {
@@ -54,7 +54,7 @@ function CCMPanel(options) {
             delay = 0;
         }
         var obj = this;
-        c5.event.publish('panel.close', {panel:this});
+        Concrete.event.publish('panel.close', {panel:this});
         $(window).delay(delay).queue(function() {
             $('[data-launch-panel=\'' + obj.getIdentifier() + '\']').removeClass('ccm-launch-panel-active');
             $('#' + obj.getDOMID()).removeClass('ccm-panel-active');
@@ -175,7 +175,7 @@ function CCMPanel(options) {
             $(this).dequeue();
         });
 
-        c5.event.publish('panel.closeDetail', this.detail);
+        Concrete.event.publish('panel.closeDetail', this.detail);
         this.detail = false;
 
         if ($('.ccm-panel-detail').length > 0) {
@@ -191,7 +191,7 @@ function CCMPanel(options) {
         $('.ccm-panel-detail').remove();
         $('.ccm-panel-detail-form-actions').remove();
         $('.ccm-page').removeClass().addClass('ccm-page');
-        c5.event.publish('panel.closeDetail', this.detail);
+        Concrete.event.publish('panel.closeDetail', this.detail);
         this.detail = false;
     };
 
@@ -237,7 +237,7 @@ function CCMPanel(options) {
             $content.find('.launch-tooltip').tooltip({'container': '#ccm-tooltip-holder'});
             obj.loadPanelDetailActions($content);
         });
-        c5.event.publish('panel.openDetail', obj);
+        Concrete.event.publish('panel.openDetail', obj);
     };
 
     this.loadPanelDetailActions = function($content) {
@@ -302,7 +302,7 @@ function CCMPanel(options) {
                 var height = $inner.height();
                 if ($clg.hasClass('ccm-panel-list-group-item-expanded')) {
                     $title.text(ccmi18n.expand);
-                    c5.event.publish('collapse.' + menuID);
+                    Concrete.event.publish('collapse.' + menuID);
                     $inner.
                     queue(function() {
                         $(this).css('height', 0);
@@ -315,7 +315,7 @@ function CCMPanel(options) {
                         $(this).dequeue();
                     });
                 } else {
-                    c5.event.publish('expand.' + menuID);
+                    Concrete.event.publish('expand.' + menuID);
                     $title.text(ccmi18n.collapse);
                     $inner.
                     queue(function() {
