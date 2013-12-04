@@ -134,6 +134,7 @@
 
 		cs.$advancedFields.html('');
 		$.each(result.fields, function(i, field) {
+			console.log(field);
 			cs.$advancedFields.append(cs._templateAdvancedSearchFieldRow({'field': field}));
 		});
 		cs.setupMenus(result);
