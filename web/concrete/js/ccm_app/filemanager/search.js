@@ -70,6 +70,14 @@
 		}
 	}
 
+	ConcreteAjaxSearch.prototype.createMenu = function($selector) {
+		var my = this;
+		$selector.concreteFileMenu({
+			'container': my,
+			'menu': $('[data-search-menu=' + $selector.attr('data-launch-search-menu') + ']')
+		});
+	}
+
 	var ConcreteFileManagerMenu = {
 
 		get: function() {
@@ -84,7 +92,7 @@
 				'<li><a class="dialog-launch" dialog-modal="true" dialog-width="680" dialog-height="450" dialog-title="' + ccmi18n_filemanager.edit + '" href="' + CCM_TOOLS_PATH + '/files/edit?fID=<%=item.fID%>">' + ccmi18n_filemanager.edit + '</a></li>' +
 				'<li><a class="dialog-launch" dialog-modal="true" dialog-width="680" dialog-height="450" dialog-title="' + ccmi18n_filemanager.properties + '" href="' + CCM_TOOLS_PATH + '/files/properties?fID=<%=item.fID%>">' + ccmi18n_filemanager.properties + '</a></li>' +
 				'<li><a class="dialog-launch" dialog-modal="true" dialog-width="300" dialog-height="260" dialog-title="' + ccmi18n_filemanager.replace + '" href="' + CCM_TOOLS_PATH + '/files/replace?fID=<%=item.fID%>">' + ccmi18n_filemanager.replace + '</a></li>' +
-				'<li><a class="dialog-launch" data-file-manager-action="duplicate">' + ccmi18n_filemanager.duplicate + '</a></li>' +
+				'<li><a href="#" data-file-manager-action="duplicate">' + ccmi18n_filemanager.duplicate + '</a></li>' +
 				'<li><a class="dialog-launch" dialog-modal="true" dialog-width="500" dialog-height="400" dialog-title="' + ccmi18n_filemanager.sets + '" href="' + CCM_TOOLS_PATH + '/files/add_to?fID=<%=item.fID%>">' + ccmi18n_filemanager.sets + '</a></li>' +
 				'<li class="divider"></li>' +
 				'<li><a class="dialog-launch" dialog-modal="true" dialog-width="400" dialog-height="450" dialog-title="' + ccmi18n_filemanager.permissions + '" href="' + CCM_TOOLS_PATH + '/files/permissions?fID=<%=item.fID%>">' + ccmi18n_filemanager.permissions + '</a></li>' +

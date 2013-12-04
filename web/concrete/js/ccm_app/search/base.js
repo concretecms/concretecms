@@ -71,6 +71,12 @@
 		});
 	}
 
+	ConcreteAjaxSearch.prototype.createMenu = function($selector) {
+		$selector.concreteMenu({
+			'menu': $('[data-search-menu=' + $selector.attr('data-launch-search-menu') + ']')
+		});
+	}
+
 	ConcreteAjaxSearch.prototype.setupMenus = function() {
 		var cs = this;
 		if (cs._templateSearchResultsMenu) {
@@ -83,9 +89,7 @@
 			});
 
 			cs.$element.find('tbody tr').each(function() {
-				$(this).concreteMenu({
-					'menu': $('[data-search-menu=' + $(this).attr('data-launch-search-menu') + ']')
-				});
+				cs.createMenu($(this));
 			});
 		}
 	}

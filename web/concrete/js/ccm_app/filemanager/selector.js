@@ -71,15 +71,8 @@
 					var file = r.files[0];
 					my.$element.html(my._fileLoadedTemplate({'inputName': my.options.inputName, 'file': file}));
 					my.$element.append(my._fileMenuTemplate({'displayClear': true, 'item': file}));
-					my.$element.find('a[data-file-manager-action=clear]').on('click', function() {
-						var menu = ConcreteMenuManager.getActiveMenu();
-						if (menu) {
-							menu.hide();
-						}
-						_.defer(function() { my.$element.html(my._chooseTemplate); });
-						return false;
-					});
-					my.$element.find('.ccm-file-selector-file-selected').concreteMenu({
+					my.$element.find('.ccm-file-selector-file-selected').concreteFileMenu({
+						'container': my,
 						'menu': $('[data-search-file-menu=' + file.fID + ']'),
 						'menuLauncherHoverClass': 'ccm-file-manager-menu-item-hover'
 					});
