@@ -87,3 +87,6 @@ If short tags are not enabled in your development environment you can enable the
 You *do not* need to build assets in order to run the github master
 This is only needed if you are hacking core javascript and css.
 For further details see the `build` folder.
+
+### Requirements
+PHP 5.3+
