@@ -69,6 +69,7 @@ $rl->register('/system/dialogs/page/bulk/properties', 'PageBulkPropertiesDialogC
 
 $rl->register('/system/dialogs/user/search', 'UserSearchDialogController::view');
 $rl->register('/system/dialogs/group/search', 'GroupSearchDialogController::view');
+$rl->register('/system/dialogs/file/search', 'FileSearchDialogController::view');
 
 /**
  * Editing Actions
@@ -100,6 +101,7 @@ $rl->register('/system/search/groups/submit', 'SearchGroupsController::submit');
  */
 $rl->register('/system/css/page/{cID}/{cvID}/{stylesheet}', 'FrontendStylesheetController::page');
 $rl->register('/system/css/layout/{bID}', 'FrontendStylesheetController::layout');
+$rl->register('/system/file/details', 'SearchFilesController::getJSONFileDetails');
 
 /** 
  * Page Routes - these must come at the end.

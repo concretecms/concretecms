@@ -590,4 +590,26 @@ class Concrete5_Model_FileVersion extends Object {
 		//the leading and trailing line break char is for searching: fvTag like %\ntag\n%
 		return "\n".join("\n",$cleanTags)."\n";
 	}
+
+	/** 
+	 * Return a representation of the current FileVersion object as something easily serializable.
+	 */
+	public function getJSONObject() {
+		$ats = $this->getAttributeList();
+		$r = new stdClass;
+		$r->filePathDirect = $this->getRelativePath();
+		$r->filePathInline = View::url('/download_file', 'view_inline', $this->getFileID());
+		$r->filePath = View::url('/download_file', 'view', $this->getFileID());
+		$r->title = $this->getTitle();
+		$r->description = $this->getDescription();
+		$r->fileName = $this->getFilename();
+		$r->thumbnailLevel1 = $this->getThumbnailSRC(1);
+		$r->thumbnailLevel2 = $this->getThumbnailSRC(2);
+		$r->thumbnailLevel3 = $this->getThumbnailSRC(3);
+		$r->fID = $this->getFileID();
+		foreach($ats as $key => $value) {
+			$r->{$key} = $value;
+		}
+		return $r;
+	}
 }

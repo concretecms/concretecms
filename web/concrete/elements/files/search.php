@@ -89,7 +89,7 @@ $searchRequest = $controller->getSearchRequest();
 
 <script type="text/template" data-template="search-results-table-body">
 <% _.each(items, function(file) {%>
-<tr data-launch-search-menu="<%=file.fID%>">
+<tr data-launch-search-menu="<%=file.fID%>" data-file-manager-file="<%=file.fID%>">
 	<td><span class="ccm-search-results-checkbox"><input type="checkbox" data-search-checkbox="individual" value="<%=file.fID%>" /></span></td>
 	<td class="ccm-file-manager-search-results-star <% if (file.isStarred) { %>ccm-file-manager-search-results-star-active<% } %>"><a href="#" data-search-toggle="star" data-search-toggle-url="<?=URL::to('/system/search/files/star')?>" data-search-toggle-file-id="<%=file.fID%>"><i class="glyphicon glyphicon-star"></i></a></td>
 	<% for(i = 0; i < file.columns.length; i++) {
@@ -98,31 +98,6 @@ $searchRequest = $controller->getSearchRequest();
 	<% } %>
 </tr>
 <% }); %>
-</script>
-
-<script type="text/template" data-template="search-results-menu">
-<div class="popover fade" data-search-menu="<%=item.fID%>">
-	<div class="arrow"></div>
-	<div class="popover-inner">
-	<ul class="dropdown-menu">
-		<? /*
-		<li><a href=""><?=t('Choose File')?></a></li>
-		<li><a href=""><?=t('Clear File')?></a></li>
-		<li class="divider"></li>
-		*/ ?>
-		<li><a href=""><?=t('View')?></a></li>
-		<li><a href=""><?=t('Download')?></a></li>
-		<li><a href=""><?=t('Properties')?></a></li>
-		<li><a href=""><?=t('Edit')?></a></li>
-		<li><a href=""><?=t('Replace')?></a></li>
-		<li><a href=""><?=t('Duplicate')?></a></li>
-		<li><a href=""><?=t('Sets')?></a></li>
-		<li class="divider"></li>
-		<li><a href=""><?=t('Permissions')?></a></li>
-		<li><a href=""><?=t('Delete')?></a></li>
-
-	</ul>
-</div>
 </script>
 
 <div data-search-element="wrapper"></div>

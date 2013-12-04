@@ -1,15 +1,19 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
 class Concrete5_Library_FileEditResponse extends EditResponse {
 
-	public $fID;
-
 	public function setFile(File $file) {
-		$this->fID = $file->getFileID();
+		$this->files[] = $file;
+	}
+
+	public function setFiles($files) {
+		$this->files = $files;
 	}
 
 	public function getJSONObject() {
 		$o = parent::getBaseJSONObject();
-		$o->fID = $this->fID;
+		foreach($this->files as $file) {
+			$o->files[] = $file->getJSONObject();
+		}
 		return $o;
 	}
 	
