@@ -114,6 +114,10 @@
 			$launcher.parents('*').slice(0,3).removeClass(options.menuLauncherHoverParentClass);
 		},
 
+		setupMenuOptions: function($menu) {
+			$menu.find('.dialog-launch').dialog();
+		},
+
 		show: function(e) {
 			var my = this, 
 				global = ConcreteMenuManager,
@@ -135,7 +139,8 @@
 
 			$element.addClass(options.menuActiveClass);
 			$element.parents('*').slice(0,3).addClass(options.menuActiveParentClass);
-			$menu.find('.dialog-launch').dialog();
+
+			my.setupMenuOptions($menu);
 			$container.html('');
 			$menu.appendTo($container);
 
