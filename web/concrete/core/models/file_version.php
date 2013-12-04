@@ -597,6 +597,13 @@ class Concrete5_Model_FileVersion extends Object {
 	public function getJSONObject() {
 		$ats = $this->getAttributeList();
 		$r = new stdClass;
+		$fp = new Permissions($this->getFile());
+		$r->canCopyFile = $fp->canCopyFile();
+		$r->canEditFilePermissions = $fp->canEditFilePermissions();
+		$r->canDeleteFile = $fp->canDeleteFile();
+		$r->canReplaceFile = $fp->canEditFileContents();
+		$r->canViewFile = $this->canView();
+		$r->canEditFile = $this->canEdit();
 		$r->filePathDirect = $this->getRelativePath();
 		$r->filePathInline = View::url('/download_file', 'view_inline', $this->getFileID());
 		$r->filePath = View::url('/download_file', 'view', $this->getFileID());

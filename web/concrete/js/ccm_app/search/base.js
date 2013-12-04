@@ -131,10 +131,8 @@
 		cs.$resultsTableHead.html(cs._templateSearchResultsTableHead({'columns': result.columns}));
 		cs.$resultsTableBody.html(cs._templateSearchResultsTableBody({'items': result.items}));
 		cs.$resultsPagination.html(cs._templateSearchResultsPagination({'pagination': result.pagination}));
-
 		cs.$advancedFields.html('');
 		$.each(result.fields, function(i, field) {
-			console.log(field);
 			cs.$advancedFields.append(cs._templateAdvancedSearchFieldRow({'field': field}));
 		});
 		cs.setupMenus(result);
