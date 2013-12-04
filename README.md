@@ -88,5 +88,5 @@ You *do not* need to build assets in order to run the github master
 This is only needed if you are hacking core javascript and css.
 For further details see the `build` folder.
 
-### Requirement
+### Requirements
 PHP 5.3+
