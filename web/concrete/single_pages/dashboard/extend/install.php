@@ -68,7 +68,7 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
 				continue;
 			}
 			?>
-			<h5><?=$text->unhandle($k)?></h5>
+			<h5><?=$pkg->getPackageItemsCategoryDisplayName($k)?></h5>
 			<? foreach($itemArray as $item) { ?>
 				<?=$pkg->getItemName($item)?><br/>
 			<? } ?>
@@ -191,7 +191,7 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
 			}
 			
 			if (count($blocks) > 0) { ?>
-				<h5><?=t("Block Types")?></h5>
+				<h5><?=$pkg->getPackageItemsCategoryDisplayName('block_types')?></h5>
 				<ul id="ccm-block-type-list">
 				<? foreach($blocks as $bt) {
 					$btIcon = $ci->getBlockTypeIconURL($bt);?>
