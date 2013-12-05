@@ -348,7 +348,7 @@ class Concrete5_Model_Package extends Object {
 				$value = t('Workflow types');
 				break;
 			default:
-				$value = Loader::helper('text')->unhandle($categoryHandle);
+				$value = t(Loader::helper('text')->unhandle($categoryHandle));
 				break;
 		}
 		switch($format) {
