@@ -45,7 +45,6 @@ function CCMPanel(options) {
     this.onPanelLoad = function(element) {
         this.setupPanelDetails();
         this.setupSubPanels();
-        Concrete.event.publish('panel.open', {panel:this, element:element});
     };
 
     this.hide = function() {
@@ -376,6 +375,7 @@ function CCMPanel(options) {
                     $(this).dequeue();
                 });
                 obj.onPanelLoad(this);
+                Concrete.event.publish('panel.open', {panel: obj});
             });
             CCMPanelManager.showOverlay(obj.options.translucent);
             $('[data-launch-panel=\'' + obj.getIdentifier() + '\']').addClass('ccm-launch-panel-active');
