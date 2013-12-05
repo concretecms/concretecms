@@ -1,9 +1,12 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
+$token = Loader::helper('validation/token')->generate('composer');
+$cID = $c->getCollectionID();
 ?>
+
 <section class="ccm-ui">
 	<header><?=t('Composer - %s', $pagetype->getPageTypeName())?></header>
-	<form method="post" data-form="composer" class="ccm-panel-detail-content-form">
+	<form method="post" action="<?=$controller->action('submit')?>" data-panel-detail-form="compose">
 		<?=Loader::helper('concrete/interface/help')->notify('panel', '/page/composer')?>
 
 		<? Loader::helper('composer')->display($pagetype, $c); ?>
@@ -15,21 +18,15 @@ defined('C5_EXECUTE') or die("Access Denied.");
 </section>
 
 <script type="text/javascript">
-	$(function() { 
-		$('form[data-form=composer]').ccmcomposer({
-			token: '<?=Loader::helper('validation/token')->generate('composer')?>', 
-			cID: '<?=$c->getCollectionID()?>',
-			onAfterSaveAndExit: function() {
-				var panel = CCMPanelManager.getByIdentifier('page');
-				panel.closePanelDetail();
-			}
-		});
-		ccm_event.subscribe('panel.closeDetail',function(e) {
-			var panelDetail = e.eventData;
-			if (panelDetail && panelDetail.identifier == 'page-composer') {
-				$.fn.ccmcomposer('disableAutoSave');
-			}
-		});
-
+$(function() {
+    $('button[data-page-type-composer-form-btn=discard]').on('click', function() {
+    	$.concreteAjax({
+    		'url': CCM_TOOLS_PATH + '/pages/draft/discard',
+    		'data': {token: '<?=$token?>', cID: '<?=$cID?>'}, 
+    		success: function(r) {
+	 			console.log(r);
+    		}
+    	});
 	});
+});
 </script>
