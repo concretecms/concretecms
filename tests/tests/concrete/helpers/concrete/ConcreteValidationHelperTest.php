@@ -71,6 +71,11 @@ class ConcreteValidationTest extends PHPUnit_Framework_TestCase {
         $false[] = 'ab\'cdefg';
         $false[] = 'ab"cdefg';
         $false[] = 'ab\cdefg';
+        $false[] = '.abcdefg';
+        $false[] = '_abcdefg';
+        $false[] = 'abcdefg.';
+        $false[] = 'abcdefg_';
+        $false[] = '.abcdefg_';
         $false[] = '!@#$%^&*()_+-=';
 
         foreach ($false as $string) {
@@ -80,7 +85,9 @@ class ConcreteValidationTest extends PHPUnit_Framework_TestCase {
         $true = array();
         $true[] = '1234567890';
         $true[] = 'abcdefghijklmnopqrstuvwxyz';
-
+        $true[] = 'abc_defghijklmnopqrstuvwxyz';
+        $true[] = 'abc.defghijklmnopqrstuvwxyz';
+        $true[] = 'abc_def.ghi_jkl.mno_pqr.stu_vwx.yz';
         foreach ($true as $string) {
             $this->assertTrue($this->object->username($string));
         }
