@@ -8,6 +8,14 @@ class Concrete5_Model_ParentPagePageTypePublishTargetConfiguration extends PageT
 		$this->cParentID = $cParentID;
 	}
 
+	/** 
+	 * Note: if a configuration contains this method, it is assumed that the configuration will default to this page and
+	 * can skip composer
+	 */
+	public function getDefaultParentPageID() {
+		return $this->getParentPageID();
+	}
+	
 	public function getParentPageID() {
 		return $this->cParentID;
 	}

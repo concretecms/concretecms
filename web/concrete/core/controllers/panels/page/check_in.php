@@ -37,19 +37,49 @@ class Concrete5_Controller_Panel_Page_CheckIn extends BackendInterfacePageContro
 					}
 				}
 
+				if ($c->isPageDraft() && !$e->has()) {
+					$targetParentID = $c->getPageDraftTargetParentPageID();
+					if ($targetParentID) {
+						$tp = Page::getByID($targetParentID, 'ACTIVE');
+						$pp = new Permissions($tp);
+						if (!is_object($tp) || $tp->isError()) {
+							$e->add(t('Invalid target page.'));
+						} else if (!$pp->canAddSubCollection($pagetype)) {
+							$e->add(t('You do not have permissions to add a page of this type in the selected location.'));
+						}
+					}
+				}
+
 				$pr->setError($e);
 				if (!$e->has()) {
 					$pkr = new ApprovePagePageWorkflowRequest();
 					$pkr->setRequestedPage($c);
 					$pkr->setRequestedVersionID($v->getVersionID());
 					$pkr->setRequesterUserID($u->getUserID());
-					$pr->setMessage(t('Page approval requested.'));
 					$u->unloadCollectionEdit($c);
 					$response = $pkr->trigger();
+					$pr->setMessage(t('Page approved!'));
+					if ($response instanceof WorkflowProgressResponse) {
+						// we only get this response if we have skipped workflows and jumped straight in to an approve() step.
+						$pr->setMessage(t('Page approval requested. You must complete this workflow to approve the page.'));
+					}
+
+					if ($c->isPageDraft()) {
+						$pagetype->publish($c);
+						$pr->setMessage(t('Page published'));
+					}
 				}
-			} else if ($this->request->request->get('action') == 'discard' && $v->canDiscard()) {
-				$v->discard();
-				$pr->setMessage(t('Page version discarded.'));
+			} else if ($this->request->request->get('action') == 'discard') {
+				if ($c->isPageDraft() && $this->permissions->canDeletePage()) {
+					$this->page->delete();
+					$u = new User();
+					$cID = $u->getPreviousFrontendPageID();
+					$pr->setMessage(t('Draft discarded.'));
+					$pr->setRedirectURL(DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $cID);
+				} else if ($v->canDiscard()) {
+					$v->discard();
+					$pr->setMessage(t('Page version discarded.'));
+				}
 			} else {
 				$pr->setMessage(t('Page saved.'));
 				$v->removeNewStatus();
