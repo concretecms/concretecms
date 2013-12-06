@@ -12,12 +12,16 @@ $v = $c->getVersionObject();
 <div class="ccm-panel-check-in-comments"><textarea name="comments" id="ccm-check-in-comments" /></textarea></div>
 
 <? if ($cp->canApprovePageVersions()) {
-	$publishTitle = t('Publish Changes');
-	$pk = PermissionKey::getByHandle('approve_page_versions');
-	$pk->setPermissionObject($c);
-	$pa = $pk->getPermissionAccessObject();
-	if (is_object($pa) && count($pa->getWorkflows()) > 0) {
-		$publishTitle = t('Submit to Workflow');
+	if ($c->isPageDraft()) {
+		$publishTitle = t('Publish Page');
+	} else {
+		$publishTitle = t('Publish Changes');
+		$pk = PermissionKey::getByHandle('approve_page_versions');
+		$pk->setPermissionObject($c);
+		$pa = $pk->getPermissionAccessObject();
+		if (is_object($pa) && count($pa->getWorkflows()) > 0) {
+			$publishTitle = t('Submit to Workflow');
+		}
 	}
 ?>
 <div class="ccm-panel-check-in-publish">

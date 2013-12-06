@@ -5,7 +5,7 @@ class Concrete5_Controller_Panel_Details_Page_Location extends BackendInterfaceP
 	protected $viewPath = '/system/panels/details/page/location';
 
 	protected function canAccess() {
-		return (!$this->page->isPageDraft() && $this->page->getCollectionID() != HOME_CID && is_object($this->asl) && $this->asl->allowEditPaths());
+		return ($this->page->getCollectionID() != HOME_CID && is_object($this->asl) && $this->asl->allowEditPaths());
 	}
 
 	public function __construct() {
@@ -16,8 +16,14 @@ class Concrete5_Controller_Panel_Details_Page_Location extends BackendInterfaceP
 	}
 
 	public function view() {
+		$c = $this->page;
 		$this->requireAsset('core/sitemap');
-		$this->set('parent', Page::getByID($this->page->getCollectionParentID(), 'ACTIVE'));
+		$cParentID = $c->getCollectionParentID();
+		if ($c->isPageDraft()) {
+			$cParentID = $c->getPageDraftTargetParentPageID();
+		}
+		$this->set('parent', Page::getByID($cParentID, 'ACTIVE'));
+		$this->set('cParentID', $cParentID);
 	}
 
 	public function submit() {
@@ -39,18 +45,23 @@ class Concrete5_Controller_Panel_Details_Page_Location extends BackendInterfaceP
 					throw new Exception('You cannot add a page beneath itself.');
 				}
 
-				$pkr = new MovePagePageWorkflowRequest();
-				$pkr->setRequestedPage($oc);
-				$pkr->setRequestedTargetPage($dc);
-				$pkr->setSaveOldPagePath(false);
-				$u = new User();
-				$pkr->setRequesterUserID($u->getUserID());
-				$u->unloadCollectionEdit($oc);
-				$r = $pkr->trigger();
-				if ($r instanceof WorkflowProgressResponse) { 
-					$successMessage .= '"' . $oc->getCollectionName() . '" '.t('was moved beneath').' "' . $dc->getCollectionName() . '." ';
-				} else { 
-					$successMessage .= t("Your request to move \"%s\" beneath \"%s\" has been stored. Someone with approval rights will have to activate the change.\n", $oc->getCollectionName() , $dc->getCollectionName() );
+				if ($oc->isPageDraft()) { 
+					$oc->setPageDraftTargetParentPageID($dc->getCollectionID());
+				} else {
+					$pkr = new MovePagePageWorkflowRequest();
+					$pkr->setRequestedPage($oc);
+					$pkr->setRequestedTargetPage($dc);
+					$pkr->setSaveOldPagePath(false);
+					$u = new User();
+					$pkr->setRequesterUserID($u->getUserID());
+					$u->unloadCollectionEdit($oc);
+					$r = $pkr->trigger();
+					$r->setRedirectURL(Loader::helper('navigation')->getLinkToCollection($nc));
+					if ($r instanceof WorkflowProgressResponse) { 
+						$successMessage .= '"' . $oc->getCollectionName() . '" '.t('was moved beneath').' "' . $dc->getCollectionName() . '." ';
+					} else { 
+						$successMessage .= t("Your request to move \"%s\" beneath \"%s\" has been stored. Someone with approval rights will have to activate the change.\n", $oc->getCollectionName() , $dc->getCollectionName() );
+					}
 				}
 			}
 
@@ -62,8 +73,7 @@ class Concrete5_Controller_Panel_Details_Page_Location extends BackendInterfaceP
 			$r->setPage($this->page);
 			$r->setMessage($successMessage);
 			$nc = Page::getByID($this->page->getCollectionID(), 'ACTIVE');
-			$r->setRedirectURL(Loader::helper('navigation')->getLinkToCollection($nc));
-			Loader::helper('ajax')->sendResult($r);
+			$r->outputJSON();
 		}
 	}
 
