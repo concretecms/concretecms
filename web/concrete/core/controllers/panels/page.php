@@ -8,5 +8,6 @@ class Concrete5_Controller_Panel_Page extends BackendInterfacePageController {
 	}
 
 	public function view() {}
+
 }
 
