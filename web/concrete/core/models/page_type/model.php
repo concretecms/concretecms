@@ -581,6 +581,8 @@ class Concrete5_Model_PageType extends Object {
 	}	
 
 	public function createDraft(PageTemplate $pt, $u = false) {
+		// now we setup in the initial configurated page target
+		
 		if (!is_object($u)) {
 			$u = new User();
 		}

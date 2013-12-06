@@ -403,7 +403,6 @@ $classes = array(
 	'PageTypePermissionResponse' => array('model','permission/response/page_type'),
 
 	/* Editing Controllers */
-	'FrontendPageController' => array('controller', '/frontend/page'),
 	'PageCheckInPanelController' => array('controller', '/panels/page/check_in'),
 	'PageDesignPanelController' => array('controller', '/panels/page/design'),
 	'PageDesignCustomizePanelController' => array('controller', '/panels/page/design/customize'),

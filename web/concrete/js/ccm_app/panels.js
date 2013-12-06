@@ -251,9 +251,9 @@ function CCMPanel(options) {
                         id: 'ccm-panel-detail-form-actions-wrapper',
                         class: 'ccm-ui'
                     });
+                    $wrapper.appendTo(document.body);
                 }
-                $wrapper.appendTo(document.body);
-                $actions.appendTo($wrapper);
+                $wrapper.html('').append($actions);
                 $(this).dequeue();
             })
             .delay(5)
@@ -370,12 +370,13 @@ function CCMPanel(options) {
             $panel.find('.ccm-panel-content-wrapper').html('');
             $panel.addClass('ccm-panel-active ccm-panel-loading');
             $('<div />', {'class': 'ccm-panel-content ccm-panel-content-visible'}).appendTo($panel.find('.ccm-panel-content-wrapper')).load(obj.getURL() + '?cID=' + CCM_CID, function() {
+                var element = this;
                 $panel.delay(1).queue(function() {
                     $(this).removeClass('ccm-panel-loading').addClass('ccm-panel-loaded');
                     $(this).dequeue();
                 });
-                obj.onPanelLoad(this);
-                Concrete.event.publish('panel.open', {panel: obj});
+                obj.onPanelLoad(element);
+                Concrete.event.publish('panel.open', {panel: obj, element: element});
             });
             CCMPanelManager.showOverlay(obj.options.translucent);
             $('[data-launch-panel=\'' + obj.getIdentifier() + '\']').addClass('ccm-launch-panel-active');
