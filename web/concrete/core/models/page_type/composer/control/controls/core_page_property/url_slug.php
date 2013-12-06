@@ -13,10 +13,12 @@ class Concrete5_Model_UrlSlugCorePagePropertyPageTypeComposerControl extends Cor
 		parent::publishToPage($c, $data, $controls);
 	}
 
-	public function validate($data, ValidationErrorHelper $e) {
-		$vt = Loader::helper('validation/strings');
-		if (!($vt->notempty($data['url_slug']))) {
+	public function validate() {
+		$e = Loader::helper('validation/error');
+		$handle = $this->getPageTypeComposerControlDraftValue();
+		if (!$handle) {
 			$e->add(t('You must specify a URL slug.'));
+			return $e;
 		}
 	}
 

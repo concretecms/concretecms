@@ -55,6 +55,7 @@ class Concrete5_Model_BlockPageTypeComposerControl extends PageTypeComposerContr
 				return $this->b;
 			}
 		}
+		return $this->b;
 	}
 
 	public function setPageTypeComposerControlBlockObject($b) {
@@ -225,14 +226,16 @@ class Concrete5_Model_BlockPageTypeComposerControl extends PageTypeComposerContr
 		));
 	}
 
-	public function validate($data, ValidationErrorHelper $e) {
-		$bt = $this->getBlockTypeObject();
-		$controller = $bt->getController();
-		if (method_exists($controller, 'validate_composer')) {
-			$e1 = $controller->validate_composer($data);
-		}
-		if (is_object($e1)) {
-			$e->add($e1);
+	public function validate() {
+		$b = $this->getPageTypeComposerControlBlockObject($this->page);
+		if (is_object($b)) {
+			$controller = $b->getController();
+			if (method_exists($controller, 'validate_composer')) {
+				$e1 = $controller->validate_composer();
+			}
+			if (is_object($e1)) {
+				return $e1;
+			}
 		}
 	}
 

@@ -86,13 +86,13 @@ class Concrete5_Model_CollectionAttributePageTypeComposerControl extends PageTyp
 		$ak->saveAttributeForm($c);				
 	}
 
-	public function validate($data, ValidationErrorHelper $e) {
+	public function validate() {
 		$ak = $this->getAttributeKeyObject();
-		$e1 = $ak->validateAttributeForm();
-		if ($e1 == false) {
+		$value = $this->page->getAttribute($ak);
+		if (!$value) {
+			$e = Loader::helper('validation/error');
 			$e->add(t('The field "%s" is required', $ak->getAttributeKeyName()));
-		} else if ($e1 instanceof ValidationErrorHelper) {
-			$e->add($e1);
+			return $e;
 		}
 	}
 

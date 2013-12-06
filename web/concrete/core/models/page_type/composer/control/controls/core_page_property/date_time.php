@@ -13,10 +13,12 @@ class Concrete5_Model_DateTimeCorePagePropertyPageTypeComposerControl extends Co
 		parent::publishToPage($c, $data, $controls);
 	}
 
-	public function validate($data, ValidationErrorHelper $e) {
-		$date = Loader::helper('form/date_time')->translate('date_time', $data);
+	public function validate() {
+		$e = Loader::helper('validation/error');
+		$date = $this->getPageTypeComposerControlDraftValue();
 		if (!strtotime($date)) {
 			$e->add(t('You must specify a valid date/time for this page.'));
+			return $e;
 		}
 	}
 

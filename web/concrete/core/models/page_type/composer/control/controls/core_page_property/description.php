@@ -13,10 +13,11 @@ class Concrete5_Model_DescriptionCorePagePropertyPageTypeComposerControl extends
 		parent::publishToPage($c, $data, $controls);
 	}
 
-	public function validate($data, ValidationErrorHelper $e) {
-		$vt = Loader::helper('validation/strings');
-		if (!($vt->notempty($data['description']))) {
+	public function validate() {
+		$e = Loader::helper('validation/error');
+		if (!$this->getPageTypeComposerControlDraftValue()) {
 			$e->add(t('You must specify a page description.'));
+			return $e;
 		}
 	}
 

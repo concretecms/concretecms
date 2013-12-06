@@ -15,10 +15,11 @@ class Concrete5_Model_NameCorePagePropertyPageTypeComposerControl extends CorePa
 		parent::publishToPage($c, $data, $controls);
 	}
 
-	public function validate($data, ValidationErrorHelper $e) {
-		$vt = Loader::helper('validation/strings');
-		if (!($vt->notempty($data['name']))) {
+	public function validate() {
+		$e = Loader::helper('validation/error');
+		if (!$this->getPageTypeComposerControlDraftValue()) {
 			$e->add(t('You must specify a page name.'));
+			return $e;
 		}
 	}
 

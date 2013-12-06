@@ -178,10 +178,8 @@ $al->registerGroup('core/groups', array(
 ));
 
 // Page Type Compose Form
-$al->register('javascript', 'core/composer', 'js/ccm.composer.js', array('postprocess' => false));
 $al->register('css', 'core/composer', 'css/ccm.composer.css', array('postprocess' => false));
 $al->registerGroup('core/composer', array(
-	array('javascript', 'core/composer'),
 	array('css', 'core/composer')
 ));
 

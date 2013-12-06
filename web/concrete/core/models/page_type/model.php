@@ -93,7 +93,14 @@ class Concrete5_Model_PageType extends Object {
 			} 
 		}
 
-		return $outputControls;
+
+		$c = Page::getByID($c->getCollectionID(), 'RECENT');
+		$controls = array();
+		foreach($outputControls as $oc) {
+			$oc->setPageObject($c);
+			$controls[] = $oc;
+		}
+		return $controls;
 	}
 
 
@@ -572,29 +579,6 @@ class Concrete5_Model_PageType extends Object {
 		}
 		return $e;
 	}	
-
-	/** 
-	 * Validates an entire request, from create draft, individual controls, and publish location. Useful for front-end forms that make use of composer without
-	 * interim steps like autosave
-	 */
-	public function validatePublishRequest($pt, $parent) {
-		$e = $this->validateCreateDraftRequest($pt);
-
-		$controls = PageTypeComposerControl::getList($this);
-		$outputControls = array();
-		foreach($controls as $cn) {
-			$data = $cn->getRequestValue();
-			if ($cn->isPageTypeComposerFormControlRequiredOnThisRequest()) {
-				$cn->validate($data, $e);
-			}
-		}
-
-		if (!is_object($parent) || $parent->isError()) {
-			$e->add(t('You must choose a page to publish this page beneath.'));
-		}
-
-		return $e;
-	}
 
 	public function createDraft(PageTemplate $pt, $u = false) {
 		if (!is_object($u)) {

@@ -43,6 +43,10 @@ class Concrete5_Library_DispatcherRouteCallback extends RouteCallback {
 		// figure out where we need to go
 		$c = Page::getFromRequest($request);
 		if ($c->isError() && $c->getError() == COLLECTION_NOT_FOUND) {
+			// if we don't have a path and we're doing cID, then this automatically fires a 404.
+			if (!$request->getPath() && $request->get('cID')) {
+				return $this->sendPageNotFound($request);
+			}
 			// let's test to see if this is, in fact, the home page,
 			// and we're routing arguments onto it (which is screwing up the path.)
 			$home = Page::getByID(HOME_CID);

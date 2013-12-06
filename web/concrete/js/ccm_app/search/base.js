@@ -48,13 +48,17 @@
 
 	ConcreteAjaxSearch.prototype.ajaxUpdate = function(url, data, callback) {
 		var cs = this;
-		Concrete.sendRequest(url, data, function(r) {
-			if (!callback) {
-				cs.updateResults(r);
-			} else {
-				callback(r);
+		$.concreteAjax({
+			url: url,
+			data: data,
+			success: function(r) {
+				if (!callback) {
+					cs.updateResults(r);
+				} else {
+					callback(r);
+				}
 			}
-		});
+		})
 	}
 
 	ConcreteAjaxSearch.prototype.createMenu = function($selector) {

@@ -9,16 +9,19 @@ class Concrete5_Model_UserCorePagePropertyPageTypeComposerControl extends CorePa
 	}
 
 	public function publishToPage(Page $c, $data, $controls) {
-		$this->addPageTypeComposerControlRequestValue('uID', $data['user']);
+		if (Loader::helper('validation/numbers')->integer($data['user'])) {
+			$this->addPageTypeComposerControlRequestValue('uID', $data['user']);
+		}
 		parent::publishToPage($c, $data, $controls);
 	}
 
-	public function validate($data, ValidationErrorHelper $e) {
-		if (Loader::helper('validation/numbers')->integer($data['user'])) {
-			$ux = UserInfo::getByID($data['user']);
-		}
+	public function validate() {
+		$uID = $this->getPageTypeComposerControlDraftValue();
+		$ux = UserInfo::getByID($uID);
+		$e = Loader::helper('validation/error');
 		if (!is_object($ux)) {
 			$e->add(t('You must specify a valid user.'));
+			return $e;
 		}
 	}
 
