@@ -30,7 +30,7 @@ if ($canViewSitemap) { ?>
 	<ul class="ccm-panel-sitemap-list">
 	<? foreach($drafts as $dc) { 
 		?> 
-		<li><a href="<?=View::url('/dashboard/composer/write', 'draft', $dc->getCollectionID())?>"><?
+		<li><a href="<?=Loader::helper('navigation')->getLinkToCollection($dc)?>"><?
 			if ($dc->getCollectionName()) {
 				print $dc->getCollectionName();
 			} else {

@@ -1,5 +1,6 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
+$v = $c->getVersionObject();
 ?>
 
 <div class="ccm-panel-content-inner">
@@ -32,7 +33,13 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 <div class="ccm-panel-check-in-preview">
 	<button id="ccm-check-in-preview" type="submit" name="action" value="save" class="btn-success btn"><?=t('Save Changes')?></button>
-	<button id="ccm-check-in-discard" type="submit" name="action" value="discard" class="btn-danger btn"><?=t('Discard Changes')?></button>
+	<? if ($c->isPageDraft() && $cp->canDeletePage()) { ?>
+		<button id="ccm-check-in-discard" type="submit" name="action" value="discard" class="btn-danger btn"><?=t('Discard Draft')?></button>
+	<? } else if ($v->canDiscard()) { ?>
+		<button id="ccm-check-in-discard" type="submit" name="action" value="discard" class="btn-danger btn"><?=t('Discard Changes')?></button>
+
+	<? } ?>
+	</button>
 	<input type="hidden" name="approve" value="PREVIEW" id="ccm-approve-field" />
 </div>
 

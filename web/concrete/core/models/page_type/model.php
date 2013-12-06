@@ -581,8 +581,7 @@ class Concrete5_Model_PageType extends Object {
 	}	
 
 	public function createDraft(PageTemplate $pt, $u = false) {
-		// now we setup in the initial configurated page target
-		
+
 		if (!is_object($u)) {
 			$u = new User();
 		}
@@ -592,6 +591,13 @@ class Concrete5_Model_PageType extends Object {
 		$data = array('cvIsApproved' => 0);
 		$p = $parent->add($this, $data, $pt);
 		$p->deactivate();
+
+		// now we setup in the initial configurated page target
+		$target = $this->getPageTypePublishTargetObject();
+		$cParentID = $target->getDefaultParentPageID();
+		if ($cParentID > 0) {
+			$p->setPageDraftTargetParentPageID($cParentID);
+		}
 
 		// we have to publish the controls to the page. i'm not sure why
 		$controls = PageTypeComposerControl::getList($this);
