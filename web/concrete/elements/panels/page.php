@@ -21,7 +21,7 @@
 		if ($cp->canEditPageProperties() && is_object($seoSet)) { ?>
 			<li><a href="#" data-launch-panel-detail="page-seo" data-panel-detail-url="<?=URL::to('/system/panels/details/page/seo')?>" data-panel-transition="swap"><?=t('SEO')?></a></li>
 		<? }
-		if (!$c->isPageDraft() && $c->getCollectionID() != HOME_CID && is_object($asl) && ($asl->allowEditPaths())) { ?>
+		if ($c->getCollectionID() != HOME_CID && is_object($asl) && ($asl->allowEditPaths())) { ?>
 			<li><a href="#" data-launch-panel-detail="page-location" data-panel-detail-url="<?=URL::to('/system/panels/details/page/location')?>" data-panel-transition="swap"><?=t('Location')?></a></li>
 		<? } ?>
 	</menu>

@@ -8,11 +8,15 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		<?=Loader::helper('concrete/interface/help')->notify('panel', '/page/location')?>
 
 	<div style="min-height: 140px">
-		<p class="lead"><?=t('Where does this page live on the site?')?></p>
+		<? if ($c->isPageDraft()) { ?>
+			<p class="lead"><?=t('Where will this page live on the site?')?></p>
+		<? } else { ?>
+			<p class="lead"><?=t('Where does this page live on the site?')?></p>
+		<? } ?>
 
 		<div id="ccm-panel-detail-location-display"></div>
 
-		<input type="hidden" name="cParentID" value="<?=$c->getCollectionParentID()?>" />
+		<input type="hidden" name="cParentID" value="<?=$cParentID?>" />
 		<button class="btn btn-info"type="button" name="location"><?=t('Choose Location')?></button>
 
 	</div>
@@ -20,7 +24,11 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		<hr/>
 		<p class="lead"><?=t('Current Canonical URL')?></p>
 		<div class="breadcrumb">
-			<?php echo Loader::helper('navigation')->getLinkToCollection($c, true)?>
+			<? if ($c->isPageDraft()) { ?> 
+				<?=t('None. Pages do not have canonical URLs until they are published.')?>
+			<? } else { ?>
+				<?php echo Loader::helper('navigation')->getLinkToCollection($c, true)?>
+			<? } ?>
 		</div>
 
 	<? if (!$c->isGeneratedCollection()) { ?>
@@ -64,10 +72,16 @@ defined('C5_EXECUTE') or die("Access Denied.");
 <? $requestID = mt_rand(100000000,999999999); ?>
 
 <script type="text/template" class="breadcrumb">
+	<% if (parentID > 0) { %>
 	<ol class="breadcrumb">
 	  <li><a href="<%=parentLink%>" target="_blank"><%=parentName%></a></li>
 	  <li class="active"><?=$c->getCollectionName()?></li>
 	</ol>
+	<% } else { %>
+		<div class="breadcrumb">
+		<?=t('A location has not yet been chosen.')?>
+		</div>
+	<% } %>
 </script>
 
 <script type="text/template" class="pagePath">
@@ -98,7 +112,8 @@ $(function() {
 	});
 	$('#ccm-panel-detail-location-display').html(renderBreadcrumb({
 		parentLink: '<?=Loader::helper('navigation')->getLinkToCollection($parent);?>',
-		parentName: '<?=$parent->getCollectionName()?>'
+		parentName: '<?=$parent->getCollectionName()?>',
+		parentID: '<?=$cParentID?>'
 	}));
 	$('#ccm-panel-detail-location-page-paths').on('click', '.ccm-panel-detail-location-page-path a', function() {
 		$(this).parent().remove();
@@ -119,7 +134,8 @@ $(function() {
 		*/
 		$('#ccm-panel-detail-location-display').html(renderBreadcrumb({
 			parentLink: '<?=DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=' + node.data.cID,
-			parentName: node.data.title
+			parentName: node.data.title,
+			parentID: node.data.cID
 		}));
 
 		var container = $('form[data-panel-detail-form=location]');

@@ -70,7 +70,7 @@ ConcretePageComposerDetail = {
 	    $('button[data-page-type-composer-form-btn=preview]').on('click', function() {
 	    	my.disableAutosave();
 	    	redirect = function () {
-	   			window.location.href = CCM_DISPATCHER_FILENAME + '?cID=' + '<?=$cID?>';
+	   			window.location.href = CCM_DISPATCHER_FILENAME + '?cID=<?=$cID?>&ctask=check-out&<?=Loader::helper('validation/token')->getParameter()?>';
 	    	}
 	    	if (!my.saving) {
 	    		my.saveDraft(redirect);
