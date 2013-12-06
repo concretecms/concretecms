@@ -1,12 +1,11 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
 abstract class Concrete5_Library_EditResponse {
 
-	public $error = false;
-	public $errors = array();
 	public $time;
 	public $message;
 	public $redirectURL;
 	protected $additionalData = array();
+	public $error;
 
 	public function setRedirectURL($url) {
 		$this->redirectURL = $url;
@@ -19,9 +18,14 @@ abstract class Concrete5_Library_EditResponse {
 	public function __construct($e = false) {
 		if ($e instanceof ValidationErrorHelper && $e->has()) {
 			$this->error = $e;
-			$this->errors = $e->getList();
+		} else {
+			$this->error = Loader::helper('validation/error');
 		}
 		$this->time = date('F d, Y g:i A');
+	}
+
+	public function setError($error) {
+		$this->error = $error;
 	}
 
 	public function setMessage($message) {
@@ -53,7 +57,9 @@ abstract class Concrete5_Library_EditResponse {
 		return $o;
 	}
 
+
 	public function outputJSON() {
+		$r = $this->getJSONObject();
 		if ($this->error && $this->error->has()) {
 			Loader::helper('ajax')->sendError($this->error);
 		} else {

@@ -22,7 +22,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 <div class="ccm-panel-check-in-publish">
 
 	<div class="btn-group">
-		<button id="ccm-check-in-publish" type="button" class="btn btn-primary"><?=$publishTitle?></button>
+		<button id="ccm-check-in-publish" type="submit" name="action" value="publish" class="btn btn-primary"><?=$publishTitle?></button>
 		<button id="ccm-check-in-publish-time" type="button" class="btn btn-primary"><i class="glyphicon glyphicon-time"></i></button>
 	</div>
 
@@ -31,8 +31,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 <? } ?>
 
 <div class="ccm-panel-check-in-preview">
-	<button id="ccm-check-in-preview" type="button" class="btn-success btn"><?=t('Save Changes')?></button>
-	<button id="ccm-check-in-discard" type="button" class="btn-danger btn"><?=t('Discard Changes')?></button>
+	<button id="ccm-check-in-preview" type="submit" name="action" value="save" class="btn-success btn"><?=t('Save Changes')?></button>
+	<button id="ccm-check-in-discard" type="submit" name="action" value="discard" class="btn-danger btn"><?=t('Discard Changes')?></button>
 	<input type="hidden" name="approve" value="PREVIEW" id="ccm-approve-field" />
 </div>
 
@@ -41,20 +41,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 <script type="text/javascript">
 $(function() {
     setTimeout("$('#ccm-check-in-comments').focus();",300);
-    $("#ccm-check-in-preview").click(function() {
-        $("#ccm-approve-field").val('PREVIEW');
-        $("#ccm-check-in").submit();
-    });
-
-    $("#ccm-check-in-discard").click(function() {
-        $("#ccm-approve-field").val('DISCARD');
-        $("#ccm-check-in").submit();
-    });
-
-    $("#ccm-check-in-publish").click(function() {
-        $("#ccm-approve-field").val('APPROVE');
-        $("#ccm-check-in").submit();
-    });
+    $('#ccm-check-in').concreteAjaxForm();
 });
 </script>
 

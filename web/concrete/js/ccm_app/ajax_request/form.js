@@ -9,10 +9,10 @@
 		var my = this;
 		options = options || {};
 		options = $.extend({
-			'dataType': 'json',
-			'type': 'post'
+			'beforeSubmit': my.before,
+			'complete': my.complete,
+			'data': {}
 		}, options);
-
 		my.$form = $form;
 		ConcreteAjaxRequest.call(my, options);
 		return my.$form;
@@ -21,38 +21,47 @@
 	ConcreteAjaxForm.prototype = Object.create(ConcreteAjaxRequest.prototype);
 
 	ConcreteAjaxForm.prototype.execute = function() {
-		var my = this, options = my.options;
+		var my = this,
+			options = my.options,
+			successCallback = options.success;
+
 		my.$form.ajaxForm({
 			type: options.type,
+			data: options.data,
+			url: options.url,
 			dataType: options.dataType,
 			beforeSubmit: function() {
-				my.before(my)
+				options.beforeSubmit(my);
 			},
 			error: function(r) {
 				my.error(r, my);
 			},
 			success: function(r) {
-				my.success(r, my)
+				my.success(r, my, successCallback);
 			},
 			complete: function() {
-				my.complete(my);
+				options.complete(my);
 			}
 		});
-
 	}
 
-	ConcreteAjaxForm.prototype.success = function(r, my) {
+	ConcreteAjaxForm.prototype.success = function(r, my, callback) {
 		if (my.validateResponse(r)) {
-			ccm_event.publish('AjaxFormSubmitSuccess', r, my.$form.get(0));
-			if (my.$form.attr('data-dialog-form')) {
-				jQuery.fn.dialog.closeTop();
-			}
-			ConcreteAlert.showResponseNotification(r.message, 'ok', 'success');
-			CCMPanelManager.exitPanelMode();
-			if (r.redirectURL) {
-				setTimeout(function() {
-					window.location.href = r.redirectURL;
-				}, 2000);
+			if (callback) {
+				callback(r);
+			} else {
+				// if we get a success function passed through, we use it. Otherwise we use the standard
+				ccm_event.publish('AjaxFormSubmitSuccess', r, my.$form.get(0));
+				if (my.$form.attr('data-dialog-form')) {
+					jQuery.fn.dialog.closeTop();
+				}
+				ConcreteAlert.showResponseNotification(r.message, 'ok', 'success');
+				CCMPanelManager.exitPanelMode();
+				if (r.redirectURL) {
+					setTimeout(function() {
+						window.location.href = r.redirectURL;
+					}, 2000);
+				}
 			}
 		}
 	}

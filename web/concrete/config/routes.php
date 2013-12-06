@@ -51,6 +51,9 @@ $rl->register('/system/panels/details/page/location', 'PageLocationPanelDetailCo
 $rl->register('/system/panels/details/page/location/submit', 'PageLocationPanelDetailController::submit');
 $rl->register('/system/panels/details/page/preview', 'PageDesignPanelController::preview');
 $rl->register('/system/panels/details/page/composer', 'PageComposerPanelDetailController::view');
+$rl->register('/system/panels/details/page/composer/autosave', 'PageComposerPanelDetailController::autosave');
+$rl->register('/system/panels/details/page/composer/publish', 'PageComposerPanelDetailController::publish');
+$rl->register('/system/panels/details/page/composer/discard', 'PageComposerPanelDetailController::discard');
 $rl->register('/system/panels/page/attributes', 'PageAttributesPanelController::view');
 $rl->register('/system/panels/details/page/attributes', 'PageAttributesPanelDetailController::view');
 $rl->register('/system/panels/details/page/attributes/submit', 'PageAttributesPanelDetailController::submit');

@@ -11,8 +11,6 @@
         notice : function(title, message, onCloseFn) {
             $('<div id="ccm-popup-alert" class="ccm-ui"><div id="ccm-popup-alert-message" class="alert alert-danger">' + message + '</div></div>').dialog({
                 title: title,
-                width: 320,
-                height: 160,
                 modal: true,
                 onDestroy: onCloseFn
             });

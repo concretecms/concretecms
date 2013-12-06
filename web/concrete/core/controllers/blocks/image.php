@@ -148,12 +148,10 @@
 			}
 		}
 
-		public function validate_composer($data) {
+		public function validate_composer() {
+			$f = $this->getFileObject();
 			$e = Loader::helper('validation/error');
-			if (Loader::helper('validation/numbers')->integer($data['fID'])) {
-				$f = File::getByID($data['fID']);
-			}
-			if (!is_object($f) || $f->isError()) {
+			if (!is_object($f) || $f->isError() || !$f->getFileID()) {
 				$e->add(t('You must specify a valid image file.'));
 			}
 			return $e;

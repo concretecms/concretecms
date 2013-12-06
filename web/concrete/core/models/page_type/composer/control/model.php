@@ -12,7 +12,7 @@ abstract class Concrete5_Model_PageTypeComposerControl extends Object {
 	abstract public function getPageTypeComposerControlCustomTemplates();
 	abstract public function render($label, $customTemplate);
 	abstract public function publishToPage(Page $c, $data, $controls);
-	abstract public function validate($data, ValidationErrorHelper $e);
+	abstract public function validate();
 	abstract public function getPageTypeComposerControlDraftValue();
 	abstract public function addAssetsToRequest(Controller $cnt);
 	abstract public function export($node);

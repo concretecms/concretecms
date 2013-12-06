@@ -96,6 +96,6 @@ abstract class Concrete5_Model_CorePagePropertyPageTypeComposerControl extends P
 		include($template);
 	}
 
-	public function validate($data, ValidationErrorHelper $e) {}
+	public function validate() {return true;}
 
 }

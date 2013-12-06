@@ -36,32 +36,8 @@ var Concrete = (function(ccm_event) {
         }
       });
       return true;
-    },
+    }
 
-    /** 
-     * Send an AJAX request and expects an AJAX response.
-     */
-    sendRequest: function(url, data, callback) {
-      data = data || [];
-      jQuery.fn.dialog.showLoader();
-      $.ajax({
-        type: 'post', 
-        data: data,
-        dataType: 'json',
-        url: url,
-        complete: function() {
-          jQuery.fn.dialog.hideLoader();
-        },
-        error: function(r) {
-            ConcreteAlert.notice('Error', '<div class="alert alert-danger">' + r.responseText + '</div>');
-        },
-        success: function(r) {
-          if (callback) {
-            callback(r);
-          }
-        }
-      });
-    }    
 
   };
 

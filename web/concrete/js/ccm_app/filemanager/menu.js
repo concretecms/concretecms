@@ -30,11 +30,13 @@
 			return false;
 		});
 		$menu.find('a[data-file-manager-action=duplicate]').on('click', function() {
-			Concrete.sendRequest(CCM_DISPATCHER_FILENAME + '/system/file/duplicate', {
-				fID: fID
-			}, function(r) {
-				if (typeof(container.refreshResults) != 'undefined') {
-					container.refreshResults();
+			$.concreteAjax({
+				url: CCM_DISPATCHER_FILENAME + '/system/file/duplicate',
+				data: {fID: fID},
+				success: function(r) {
+					if (typeof(container.refreshResults) != 'undefined') {
+						container.refreshResults();
+					}
 				}
 			});
 			return false;

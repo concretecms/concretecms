@@ -108,6 +108,7 @@ class Concrete5_Library_Controller_Page extends Controller {
 				$valid = false;
 			}
 		}
+
 		return $valid;
 	}
 }
