@@ -281,7 +281,7 @@ if (is_object($uo)) {
             	<tr>
                 	<th>
 						<span style="line-height:32px;"><?=t('Groups')?></span>
-                    	<a class="btn small ccm-button-v2-right" id="groupSelector" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/user_group_selector.php?mode=groups&filter=assign" dialog-title="<?=t('Add Groups')?>" dialog-modal="false"><?=t('Add Group')?></a>
+                    	<a class="btn small ccm-button-v2-right" id="groupSelector" dialog-width="500" dialog-height="500" dialog-modal="true" href="<?=URL::to('/system/dialogs/group/search')?>/?filter=assign" dialog-title="<?=t('Add Groups')?>" dialog-modal="false"><?=t('Add Group')?></a>
                     </th>
                 </tr>
 			</thead>
