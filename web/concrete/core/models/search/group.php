@@ -46,16 +46,6 @@ class Concrete5_Model_GroupSearch extends DatabaseItemList {
 		}
 	}
 
-	public function filterByAllowedPermission($pk) {
-		$assignment = $pk->getMyAssignment();
-		$r = $assignment->getGroupsAllowedPermission();
-		$gIDs = array('-1');
-		if ($r == 'C') {
-			$gIDs = array_merge($assignment->getGroupsAllowedArray(), $gIDs);
-			$this->filter('gID', $gIDs, 'in');
-		}
-	}
-	
 	public function updateItemsPerPage( $num ) {
 		$this->itemsPerPage = $num;
 	}
