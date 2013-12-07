@@ -109,7 +109,7 @@ class ConcreteDashboardSitemapHelper {
 		$canAddExternalLinks = $cp->canAddExternalLink();
 		
 		$nodeOpen = false;
-		$openNodeArray = explode(',', str_replace('_', '', $_COOKIE['ccmsitemap-expand']));
+		$openNodeArray = explode(',', str_replace('_', '', $_COOKIE['ConcreteSitemap-expand']));
 		if (is_array($openNodeArray)) {
 			if (in_array($cID, $openNodeArray)) {
 				$nodeOpen = true;

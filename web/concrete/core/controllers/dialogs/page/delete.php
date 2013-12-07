@@ -38,7 +38,7 @@ class Concrete5_Controller_Dialogs_Page_Delete extends BackendInterfacePageContr
 						} else {
 							$pr->setMessage(t('Page request saved. This action will have to be approved before the page is deleted.'));
 						}
-						Loader::helper('ajax')->sendResult($pr);
+						$pr->outputJSON();
 					}
 				}
 			}

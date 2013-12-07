@@ -16,7 +16,7 @@ if ($canViewSitemap) { ?>
 	<div id="ccm-sitemap-panel-sitemap"></div>
 	<script type="text/javascript">
 	$(function() {
-		$('#ccm-sitemap-panel-sitemap').ccmsitemap({
+		$('#ccm-sitemap-panel-sitemap').concreteSitemap({
 			onSelectNode: function(node) {
 				window.location.href = CCM_DISPATCHER_FILENAME + '?cID=' + node.data.cID;
 			}

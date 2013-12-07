@@ -228,7 +228,7 @@ if ($successMessage) {
 	<? } else { ?>
 		<a href="javascript:void(0)" onclick="$.fn.dialog.closeTop()" class="pull-left btn btn-hover-danger"><?=t('Cancel')?></a>
 	<? } ?>
-	<a href="javascript:void(0)" onclick="$.fn.ccmsitemap('submitDragRequest')" class="pull-right btn btn-primary"><span><?=t('Go')?></span></a>
+	<a href="javascript:void(0)" onclick="ConcreteSitemap.submitDragRequest()" class="pull-right btn btn-primary"><span><?=t('Go')?></span></a>
 	</div>
 	
 	<div class="ccm-spacer">&nbsp;</div>

@@ -46,8 +46,8 @@ if ($_POST['task'] == 'design_pages') {
 $form = Loader::helper('form');
 
 $pages = array();
-if (is_array($_REQUEST['cID'])) {
-	foreach($_REQUEST['cID'] as $cID) {
+if (is_array($_REQUEST['items'])) {
+	foreach($_REQUEST['items'] as $cID) {
 		$pages[] = Page::getByID($cID);
 	}
 } else {

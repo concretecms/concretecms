@@ -41,16 +41,15 @@ class Concrete5_Helper_Form_PageSelector {
 		}
 
 		$html = '';
-		$requestID = mt_rand(100000000,999999999);
 		$clearStyle = 'display: none';
-		$html .= '<div class="ccm-summary-selected-item" data-page-selector="' . $requestID . '"><div class="ccm-summary-selected-item-inner"><strong class="ccm-summary-selected-item-label">';
+		$html .= '<div class="ccm-summary-selected-item" data-page-selector="' . $fieldName . '"><div class="ccm-summary-selected-item-inner"><strong class="ccm-summary-selected-item-label">';
 		if ($selectedCID > 0) {
 			$oc = Page::getByID($selectedCID);
 			$html .= $oc->getCollectionName();
 			$clearStyle = '';
 		}
 		$html .= '</strong></div>';
-		$html .= '<a class="ccm-sitemap-select-page" dialog-width="90%" dialog-height="70%" dialog-append-buttons="true" dialog-modal="false" dialog-title="' . t('Choose Page') . '" href="' . REL_DIR_FILES_TOOLS_REQUIRED . '/sitemap_search_selector?requestID=' . $requestID . '&amp;cID=' . $selectedCID . '">' . t('Select Page') . '</a>';
+		$html .= '<a class="ccm-sitemap-select-page" dialog-width="90%" dialog-height="70%" dialog-append-buttons="true" dialog-modal="false" dialog-title="' . t('Choose Page') . '" href="' . REL_DIR_FILES_TOOLS_REQUIRED . '/sitemap_search_selector?cID=' . $selectedCID . '">' . t('Select Page') . '</a>';
 		$html .= '&nbsp;<a href="javascript:void(0)" dialog-sender="' . $fieldName . '" class="ccm-sitemap-clear-selected-page" style="float: right; margin-top: -8px;' . $clearStyle . '"><img src="' . ASSETS_URL_IMAGES . '/icons/remove.png" style="vertical-align: middle; margin-left: 3px" /></a>';
 		$html .= '<input type="hidden" data-page-selector="cID" name="' . $fieldName . '" value="' . $selectedCID . '"/>';
 		$html .= '</div>'; 
@@ -58,8 +57,9 @@ class Concrete5_Helper_Form_PageSelector {
 		var ccmActivePageField;
 		function ccm_initSelectPage() {
 			$('a.ccm-sitemap-select-page').unbind().dialog();
-			$.fn.ccmsitemap('onSelectNode', '{$requestID}', function(node) {
-				var container = $('div[data-page-selector={$requestID}]');
+			ccm_event.subscribe('SitemapSelectPage', function(e) {
+				var node = e.eventData.node;
+				var container = $('div[data-page-selector={$fieldName}]');
 				container.find('.ccm-summary-selected-item-label').html(node.data.title);
 				container.find('.ccm-sitemap-clear-selected-page').show();
 				container.find('input[data-page-selector=cID]').val(node.data.cID);
@@ -67,7 +67,7 @@ class Concrete5_Helper_Form_PageSelector {
 			});
 
 			$('a.ccm-sitemap-clear-selected-page').unbind().click(function() {
-				var container = $('div[data-page-selector={$requestID}]');
+				var container = $('div[data-page-selector={$fieldName}]');
 				container.find('.ccm-summary-selected-item-label').html('');
 				container.find('.ccm-sitemap-clear-selected-page').hide();
 				container.find('input[data-page-selector=cID]').val('');
