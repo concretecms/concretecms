@@ -11,6 +11,7 @@ $(function() {
 	$('div[data-search=users]').concreteAjaxSearch({
 		result: <?=$result?>,
 		onLoad: function(concreteSearch) {
+			concreteSearch.$element.find('select[data-bulk-action=users] option:eq(0)').after('<option value="select_users"><?=t('Choose Users')?></option>');
 			concreteSearch.$element.on('click', 'a[data-user-id]', function() {
 				ccm_event.publish('UserSearchDialogSelectUser', {
 					uID: $(this).attr('data-user-id'),
@@ -22,7 +23,7 @@ $(function() {
 			});
 
 			concreteSearch.subscribe('SearchBulkActionSelect', function(e) {
-				if (e.eventData.value == 'choose_users') {
+				if (e.eventData.value == 'select_users') {
 					$.each(e.eventData.items, function(i, item) {
 						var $item = $(item);
 						ccm_event.publish('UserSearchDialogSelectUser', {

@@ -31,7 +31,6 @@ $searchRequest = $controller->getSearchRequest();
 	<div class="form-group">
 		<select data-bulk-action="users" disabled class="ccm-search-bulk-action form-control">
 			<option value=""><?=t('Items Selected')?></option>
-			<option value="choose_users"><?=t('Choose Users')?></option>
 			<? if ($ek->validate()) { ?>
 				<option value="properties"><?=t('Edit Properties')?></option>
 			<? } ?>
