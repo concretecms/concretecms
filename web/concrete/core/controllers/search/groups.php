@@ -6,6 +6,7 @@ class Concrete5_Controller_Search_Groups extends Controller {
 
 	public function __construct() {
 		$this->groupList = new GroupSearch();
+		$this->groupList->includeAllGroups();
 	}
 
 	public function search() {
@@ -23,7 +24,7 @@ class Concrete5_Controller_Search_Groups extends Controller {
 			$this->groupList->filterByKeywords($_REQUEST['keywords']);
 		}
 
-		$this->groupList->sortBy('gName', 'asc');
+		$this->groupList->sortBy('gID', 'asc');
 
 		$columns = new GroupSearchColumnSet();
 		$ilr = new SearchResult($columns, $this->groupList, URL::to('/system/search/groups/submit'));

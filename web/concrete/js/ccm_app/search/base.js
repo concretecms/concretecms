@@ -197,17 +197,34 @@
 		});
 	}
 
-	ConcreteAjaxSearch.prototype.handleSelectedBulkAction = function(value, $option, items) {
-		var cs = this;
-		if (value == 'dialog') {
+	ConcreteAjaxSearch.prototype.handleSelectedBulkAction = function(value, type, $option, $items) {
+		var cs = this,
+			itemIDs = [];
+
+		$.each($items, function(i, checkbox) {
+			itemIDs.push({'name': 'item[]', 'value': $(checkbox).val()});
+		});
+
+		if (type == 'dialog') {
 			jQuery.fn.dialog.open({
 				width: $option.attr('data-bulk-action-dialog-width'),
 				height: $option.attr('data-bulk-action-dialog-height'),
 				modal: true,
-				href: $option.attr('data-bulk-action-url') + '?' + jQuery.param(items),
+				href: $option.attr('data-bulk-action-url') + '?' + jQuery.param(itemIDs),
 				title: $option.attr('data-bulk-action-title')				
 			});
 		}
+		cs.publish('SearchBulkActionSelect', {value: value, option: $option, items: $items});
+	}
+
+	ConcreteAjaxSearch.prototype.publish = function(eventName, data) {
+		var cs = this;
+		ccm_event.publish(eventName, data, cs.$element.get(0));
+	}
+
+	ConcreteAjaxSearch.prototype.subscribe = function(eventName, callback) {
+		var cs = this;
+		ccm_event.subscribe(eventName, callback, cs.$element.get(0));
 	}
 
 	ConcreteAjaxSearch.prototype.setupBulkActions = function() {
@@ -215,13 +232,11 @@
 		cs.$bulkActions = cs.$element.find('select[data-bulk-action]');
 		cs.$element.on('change', 'select[data-bulk-action]', function() {
 			var $option = $(this).find('option:selected'),
-				value = $option.attr('data-bulk-action-type'),
+				value = $option.val(),
+				type = $option.attr('data-bulk-action-type'),
 				items = [];
 
-			$.each(cs.$element.find('input[data-search-checkbox=individual]:checked'), function(i, checkbox) {
-				items.push({'name': 'item[]', 'value': $(checkbox).val()});
-			});
-			cs.handleSelectedBulkAction(value, $option, items);
+			cs.handleSelectedBulkAction(value, type, $option, cs.$element.find('input[data-search-checkbox=individual]:checked'));
 		});
 	}
 

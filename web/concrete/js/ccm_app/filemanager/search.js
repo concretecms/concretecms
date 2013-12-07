@@ -61,12 +61,16 @@
 		}
 	}
 
-	ConcreteFileManager.prototype.handleSelectedBulkAction = function(value, $option, items) {
-		var my = this;
+	ConcreteFileManager.prototype.handleSelectedBulkAction = function(value, type, $option, $items) {
+		var my = this, itemIDs = [];
+		$.each($items, function(i, checkbox) {
+			itemIDs.push({'name': 'item[]', 'value': $(checkbox).val()});
+		});
+
 		if (value == 'download') {
-			my.$downloadTarget.get(0).src = CCM_TOOLS_PATH + '/files/download?' + jQuery.param(items);
+			my.$downloadTarget.get(0).src = CCM_TOOLS_PATH + '/files/download?' + jQuery.param(itemIDs);
 		} else {
-			ConcreteAjaxSearch.prototype.handleSelectedBulkAction.call(this, value, $option, items);
+			ConcreteAjaxSearch.prototype.handleSelectedBulkAction.call(this, value, type, $option, $items);
 		}
 	}
 

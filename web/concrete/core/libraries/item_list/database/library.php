@@ -159,7 +159,21 @@ class Concrete5_Library_DatabaseItemList extends ItemList {
 	 * Adds a filter to this item list
 	 */
 	public function filter($column, $value, $comparison = '=') {
-		$this->filters[] = array($column, $value, $comparison);
+		$foundFilterIndex = -1;
+		if ($column) {
+			foreach($this->filters as $key => $info) {
+				if ($info[0] == $column) {
+					$foundFilterIndex = $key;
+					break;
+				}
+			}
+		}
+		
+		if ($foundFilterIndex > -1) {
+			$this->filters[$foundFilterIndex] = array($column, $value, $comparison);
+		} else {
+			$this->filters[] = array($column, $value, $comparison);
+		}
 	}
 	
 	public function getSearchResultsClass($field) {

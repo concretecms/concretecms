@@ -132,7 +132,7 @@ class Concrete5_Controller_Search_Users extends Controller {
 			}
 		}
 
-		$ilr = new SearchResult($columns, $this->userList, URL::to('/system/search/users/submit'), $this->fields);
+		$ilr = new UserSearchResult($columns, $this->userList, URL::to('/system/search/users/submit'), $this->fields);
 		$this->result = $ilr;
 	}
 
