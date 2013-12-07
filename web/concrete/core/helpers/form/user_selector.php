@@ -53,11 +53,14 @@ class Concrete5_Helper_Form_UserSelector {
 <script type="text/javascript">
 $(function() {
 	$("#ccm-user-selector-{$fieldName}").dialog();
-	ccm_event.subscribe('UserSearchDialogClick', function(e) {
+	ccm_event.subscribe('UserSearchDialogSelectUser', function(e) {
 		var par = $(ccmActiveUserField).parent().find('.ccm-summary-selected-item-label'),
 			pari = $(ccmActiveUserField).parent().find('[name={$fieldName}]');
 		par.html(e.eventData.uName);
 		pari.val(e.eventData.uID);
+		jQuery.fn.dialog.closeTop();
+	});
+	ccm_event.subscribe('UserSearchDialogAfterSelectUser', function(e) {
 		jQuery.fn.dialog.closeTop();
 	});
 });
@@ -94,7 +97,7 @@ EOL;
 		$html .= '<tr>';
 		$html .= '<th>' . t('Username') . '</th>';
 		$html .= '<th>' . t('Email Address') . '</th>';
-		$html .= '<th><a class="ccm-user-select-item dialog-launch" onclick="ccmActiveUserField=this" dialog-append-buttons="true" dialog-width="90%" dialog-height="70%" dialog-modal="false" dialog-title="' . t('Choose User') . '" href="'. URL::to('/system/dialogs/user/search', 'multiple') . '"><img src="' . ASSETS_URL_IMAGES . '/icons/add.png" width="16" height="16" /></a></th>';
+		$html .= '<th><a class="ccm-user-select-item dialog-launch" onclick="ccmActiveUserField=this" dialog-append-buttons="true" dialog-width="90%" dialog-height="70%" dialog-modal="false" dialog-title="' . t('Choose User') . '" href="'. URL::to('/system/dialogs/user/search') . '"><img src="' . ASSETS_URL_IMAGES . '/icons/add.png" width="16" height="16" /></a></th>';
 		$html .= '</tr><tbody id="ccmUserSelect' . $fieldName . '_body" >';
 		/* for ($i = 0; $i < $ul->getTotal(); $i++ ) {
 			$ui = $ul1[$i];
@@ -113,7 +116,8 @@ EOL;
 				$(this).parents(\'tr\').remove();
 			});
 
-			ccm_triggerSelectUser = function(uID, uName, uEmail) {
+			ccm_event.subscribe(\'UserSearchDialogSelectUser\', function(e) {
+				var uID = e.eventData.uID, uName = e.eventData.uName, uEmail = e.eventData.uEmail;
 				$("tr.ccm-user-selected-item-none").hide();
 				if ($("#ccmUserSelect' . $fieldName . '_" + uID).length < 1) {
 					var html = "";
@@ -126,7 +130,10 @@ EOL;
 				$("a.ccm-user-list-clear").click(function() {
 					$(this).parents(\'tr\').remove();
 				});
-			}
+			});
+			ccm_event.subscribe(\'UserSearchDialogAfterSelectUser\', function(e) {
+				jQuery.fn.dialog.closeTop();
+			});
 		});
 		
 		</script>';	

@@ -29,7 +29,7 @@ $searchRequest = $controller->getSearchRequest();
 	<div class="form-group">
 		<select data-bulk-action="files" disabled class="ccm-search-bulk-action form-control">
 			<option value=""><?=t('Items Selected')?></option>
-			<option data-bulk-action-type="download"><?=t('Download')?></option>
+			<option value="download"><?=t('Download')?></option>
 			<option><?=t('Sets')?></option>
 			<option><?=t('Properties')?></option>
 			<option><?=t('Rescan')?></option>

@@ -6,8 +6,6 @@ $th = Loader::helper('text');
 Loader::model('attribute/categories/user');
 $attribs = UserAttributeKey::getRegistrationList();
 $assignment = PermissionKey::getByHandle('edit_user_properties')->getMyAssignment();
-
-Loader::model("search/group");
 $gl = new GroupSearch();
 $gl->setItemsPerPage(10000);
 $gArray = $gl->getPage();
@@ -116,8 +114,7 @@ $languages = Localization::getAvailableInterfaceLanguages();
 					<td>
                     
 					<? 
-					foreach ($gArray as $gRow) {
-						$g = Group::getByID($gRow['gID']); 
+					foreach ($gArray as $g) {
 						$gp = new Permissions($g);
 						if ($gp->canAssignGroup()) {
 

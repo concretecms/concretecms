@@ -96,7 +96,6 @@ $rl->register('/system/dialogs/user/search/customize', 'UserSearchCustomizeDialo
 $rl->register('/system/dialogs/user/search/customize/submit', 'UserSearchCustomizeDialogController::submit');
 $rl->register('/system/search/users/submit', 'SearchUsersController::submit');
 $rl->register('/system/search/users/field/{field}', 'SearchUsersController::field');
-
 $rl->register('/system/search/groups/submit', 'SearchGroupsController::submit');
 
 /* Files */

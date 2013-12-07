@@ -22,7 +22,7 @@ class Concrete5_Model_GroupSearch extends DatabaseItemList {
 	protected $autoSortColumns = array('gName', 'gID');
 
 	public function includeAllGroups() {
-		$this->minimumGroupID = -1;
+		$this->filter('gID', -1, '>');
 	}
 	
 	public function filterByKeywords($kw) {
@@ -46,6 +46,7 @@ class Concrete5_Model_GroupSearch extends DatabaseItemList {
 	
 	function __construct() {
 		$this->setQuery("select Groups.gID, Groups.gName, Groups.gDescription from Groups");
+		$this->filter('gID', REGISTERED_GROUP_ID, '>');
 	}
 
 	public function get($itemsToGet = 100, $offset = 0) {

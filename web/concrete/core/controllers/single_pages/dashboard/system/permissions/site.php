@@ -1,11 +1,11 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
 class Concrete5_Controller_Page_Dashboard_System_Permissions_Site extends DashboardController {
 	public function view() {
+		$editAccess = array();
 		if (PERMISSIONS_MODEL != 'simple') {
 			return;
 		}
 		
-		$editAccess = array();
 		
 		$home = Page::getByID(1, "RECENT");
 		$pk = PermissionKey::getByHandle('view_page');
@@ -24,8 +24,8 @@ class Concrete5_Controller_Page_Dashboard_System_Permissions_Site extends Dashbo
 		$gl->filter('gID', REGISTERED_GROUP_ID, '>');
 		$gIDs = $gl->get();
 		$gArray = array();
-		foreach($gIDs as $gID) {
-			$gArray[] = Group::getByID($gID['gID']);
+		foreach($gIDs as $g) {
+			$gArray[] = $g;
 		}
 
 		$pk = PermissionKey::getByHandle('edit_page_contents');
