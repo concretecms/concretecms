@@ -5,7 +5,7 @@ $sh = Loader::helper('concrete/dashboard/sitemap');
 
 <script type="text/javascript">
 	$(function() {
-		$('div#ccm-full-sitemap-container').ccmsitemap({
+		$('div#ccm-full-sitemap-container').concreteSitemap({
 		});
 	});
 </script>

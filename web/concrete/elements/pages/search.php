@@ -32,16 +32,16 @@ $searchRequest = $controller->getSearchRequest();
 	<div class="form-group">
 		<select data-bulk-action="pages" disabled class="ccm-search-bulk-action form-control">
 			<option value=""><?=t('Items Selected')?></option>
-			<option data-bulk-action-type="dialog" data-bulk-action-title="<?=t('Page Properties')?>" data-bulk-action-url="<?=URL::to('/system/dialogs/page/bulk/properties')?>" data-bulk-action-dialog-width="640" data-bulk-action-dialog-height="480"><?=t('Edit Properties')?></option>
-			<option value="move_copy"><?=t('Move/Copy')?></option>
-			<option value="speed_settings"><?=t('Speed Settings')?></option>
+			<option data-bulk-action-type="dialog" data-bulk-action-title="<?=t('Page Properties')?>" data-bulk-action-url="<?=URL::to('/system/dialogs/page/bulk/properties')?>" data-bulk-action-dialog-width="630" data-bulk-action-dialog-height="450"><?=t('Edit Properties')?></option>
+			<option data-bulk-action-type="dialog" data-bulk-action-title="<?=t('Move/Copy')?>" data-bulk-action-url="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/sitemap_search_selector" data-bulk-action-dialog-width="90%" data-bulk-action-dialog-height="70%"><?=t('Move/Copy')?></option>
+			<option data-bulk-action-type="dialog" data-bulk-action-title="<?=t('Speed Settings')?>" data-bulk-action-url="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/pages/speed_settings" data-bulk-action-dialog-width="610" data-bulk-action-dialog-height="340"><?=t('Speed Settings')?></option>
 			<? if (PERMISSIONS_MODEL == 'advanced') { ?>
-				<option value="permissions"><?=t('Change Permissions')?></option>
-				<option value="permissions_add_access"><?=t('Change Permissions - Add Access')?></option>
-				<option value="permissions_remove_access"><?=t('Change Permissions - Remove Access')?></option>
+				<option data-bulk-action-type="dialog" data-bulk-action-title="<?=t('Change Permissions')?>" data-bulk-action-url="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/pages/permissions" data-bulk-action-dialog-width="430" data-bulk-action-dialog-height="630"><?=t('Change Permissions')?></option>
+				<option data-bulk-action-type="dialog" data-bulk-action-title="<?=t('Change Permissions - Add Access')?>" data-bulk-action-url="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/pages/permissions_access?task=add" data-bulk-action-dialog-width="440" data-bulk-action-dialog-height="200"><?=t('Change Permissions - Add Access')?></option>
+				<option data-bulk-action-type="dialog" data-bulk-action-title="<?=t('Change Permissions - Remove Access')?>" data-bulk-action-url="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/pages/permissions_access?task=remove" data-bulk-action-dialog-width="440" data-bulk-action-dialog-height="300"><?=t('Change Permissions - Remove Access')?></option>
 			<? } ?>
-			<option value="design"><?=t('Design')?></option>
-			<option value="delete"><?=t('Delete')?></option>
+			<option data-bulk-action-type="dialog" data-bulk-action-title="<?=t('Design')?>" data-bulk-action-url="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/pages/design" data-bulk-action-dialog-width="610" data-bulk-action-dialog-height="405"><?=t('Design')?></option>
+			<option data-bulk-action-type="dialog" data-bulk-action-title="<?=t('Delete')?>" data-bulk-action-url="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/pages/delete" data-bulk-action-dialog-width="500" data-bulk-action-dialog-height="400"><?=t('Delete')?></option>
 		</select>	
 	</div>
 	<div class="form-group">

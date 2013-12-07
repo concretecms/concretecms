@@ -40,10 +40,6 @@ if ($args['select_mode'] == 'select_page') {
 $args['display_mode'] = 'full';
 $args['instance_id'] = time();
 */
-
-if (isset($_REQUEST['requestID']) && Loader::helper('validation/numbers')->integer($_REQUEST['requestID'])) {
-	$requestID = $_REQUEST['requestID'];
-}
 ?>
 
 <div class="ccm-sitemap-overlay"></div>
@@ -51,10 +47,10 @@ if (isset($_REQUEST['requestID']) && Loader::helper('validation/numbers')->integ
 
 <script type="text/javascript">
 $(function() {
-	$('.ccm-sitemap-overlay').ccmsitemap({
-		<? if (isset($requestID)) { ?>
-			'requestID': '<?=$requestID?>',
-		<? } ?>
+	$('.ccm-sitemap-overlay').concreteSitemap({
+		onSelectNode: function(node) {
+			ccm_event.publish('SitemapSelectPage', {'node': node});
+		},
 		<? if ($_REQUEST['display'] == 'flat') { ?>
 			displaySingleLevel: true,
 		<? } else { ?>
