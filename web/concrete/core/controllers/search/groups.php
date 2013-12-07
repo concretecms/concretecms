@@ -6,7 +6,6 @@ class Concrete5_Controller_Search_Groups extends Controller {
 
 	public function __construct() {
 		$this->groupList = new GroupSearch();
-		$this->groupList->includeAllGroups();
 	}
 
 	public function search() {
@@ -16,14 +15,13 @@ class Concrete5_Controller_Search_Groups extends Controller {
 		}
 
 		if ($_REQUEST['filter'] == 'assign') {
-			$pk = PermissionKey::getByHandle('assign_user_groups');
-			$this->groupList->filterByAllowedPermission($pk);
+			$this->groupList->filterByAssignable();
 		}
 
 		if (isset($_REQUEST['keywords'])) {
 			$this->groupList->filterByKeywords($_REQUEST['keywords']);
 		}
-
+		
 		$this->groupList->sortBy('gID', 'asc');
 
 		$columns = new GroupSearchColumnSet();
