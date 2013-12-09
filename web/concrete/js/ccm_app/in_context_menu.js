@@ -22,16 +22,14 @@
 			my.$launcher = false;
 		} else {
 			my.$launcher = (options.handle == 'this') ? my.$element : $(options.handle);
+			my.$launcher.each(function() {
+				var $specificLauncher = $(this);
+				$specificLauncher.on('mousemove.concreteMenu', function(e) {
+					my.hoverProxy(e, $(this));
+				});
+			});
 		}
 		my.$menu = $(options.menu);
-
-		my.$launcher.each(function() {
-			var $specificLauncher = $(this);
-			$specificLauncher.on('mousemove.concreteMenu', function(e) {
-				my.hoverProxy(e, $(this));
-			});
-		});
-
 		my.setup();
 	}
 
@@ -67,10 +65,12 @@
 		},
 
 		positionAt: function($elementToPosition, $elementToInspect) {
+			if (!$elementToInspect) {
+				return false;
+			}
+			
 			var my = this, 
-				global = ConcreteMenuManager,
 				offset = $elementToInspect.offset(),
-				$clickProxy = global.$clickProxy,
 				properties = {
 					'top': offset.top - my.options.highlightOffset,
 					'left': offset.left - my.options.highlightOffset,
@@ -81,7 +81,8 @@
 					'border-bottom-left-radius': $elementToInspect.css('border-bottom-left-radius'),
 					'border-bottom-right-radius': $elementToInspect.css('border-bottom-right-radius'),
 				};
-				$elementToPosition.css(properties);
+
+			$elementToPosition.css(properties);
 		},
 
 		hoverProxy: function(e, $specificLauncher) {

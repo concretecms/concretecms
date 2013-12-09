@@ -28,8 +28,8 @@ class Concrete5_Library_PageSearchResult extends SearchResult {
 				$column->setColumnSortURL($this->getItemListObject()->getSortByURL('cIndexScore', 'desc', $this->getBaseURL()));
 				array_unshift($this->columns, $column);
 			}
-			return $this->columns;
 		}
+		return $this->columns;
 	}
 
 

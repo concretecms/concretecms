@@ -17,9 +17,9 @@ if ($u->isSuperUser()) {
 	$q = Queue::get('copy_page');
 	if ($q->count() > 0) { ?>
 
-		<div style="position: relative" class="alert alert-warning">
-			<div style="position: absolute; top: 5px; right: 5px"><button class="btn btn-small" onclick="$.fn.ccmsitemap('refreshCopyOperations')"><?=t('Resume Copy')?></button></div>
+		<div class="alert alert-warning">
 			<?=t('Page copy operations pending.')?>
+			<button class="btn btn-xs btn-default pull-right" onclick="ConcreteSitemap.refreshCopyOperations()"><?=t('Resume Copy')?></button>
 		</div>
 
 	<? }

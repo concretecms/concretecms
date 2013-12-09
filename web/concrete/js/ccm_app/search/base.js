@@ -122,8 +122,8 @@
 						}
 					});
 					ccm_event.subscribe('AjaxFormSubmitSuccess', function(e) {
-						cs.updateResults(e.eventData.result);
-					}, $form.get(0));
+						cs.updateResults(e.eventData.response.result);
+					});
 				}
 			});
 			return false;
