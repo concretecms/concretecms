@@ -51,7 +51,7 @@
 				callback(r);
 			} else {
 				// if we get a success function passed through, we use it. Otherwise we use the standard
-				ccm_event.publish('AjaxFormSubmitSuccess', r, my.$form.get(0));
+				ccm_event.publish('AjaxFormSubmitSuccess', {response: r, form: my.$form.attr('data-dialog-form')});
 				if (my.$form.attr('data-dialog-form')) {
 					jQuery.fn.dialog.closeTop();
 				}

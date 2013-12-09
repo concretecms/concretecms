@@ -20,7 +20,6 @@ $(function() {
 			if (r != null && r.rel == 'SITEMAP') {
 				jQuery.fn.dialog.hideLoader();
 				jQuery.fn.dialog.closeTop();
-				$.fn.ccmsitemap('triggerEvent', 'deleteRequestComplete', [r]);
 			} else {
 				window.location.href = '<?=DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=' + r.refreshCID;
 			}

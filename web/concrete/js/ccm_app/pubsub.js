@@ -64,6 +64,9 @@
       if (typeof element['on' + type.toLowerCase()] === 'function') {
         element['on' + type.toLowerCase()](event);
       }
+      if (typeof console == "object") {
+        console.log('concrete5 Publish: ' + type, data, elem);
+      }
       return concrete5_event; // Chaining
     }
   };

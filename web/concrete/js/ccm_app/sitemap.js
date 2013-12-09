@@ -17,6 +17,7 @@
 		my.$element = $element;
 		my._sitemapMenuTemplate = _.template(ConcreteSitemap.getMenu());
 		my.setupTree();
+		my.setupTreeEvents();
 		return my.$element;
 	}
 
@@ -87,7 +88,7 @@
 							if ($menu) {
 								var menu = new ConcreteMenu($(node.span), {
 									menu: $menu,
-									launcher: 'none'
+									handle: 'none'
 								});
 								menu.show(e);
 							}
@@ -139,6 +140,15 @@
 						}
 					}
 				}
+			});
+		},
+
+		setupTreeEvents: function() {
+			var my = this;
+			ccm_event.subscribe('SitemapDeleteRequestComplete', function(e) {
+	 			var node = my.$element.dynatree('getActiveNode');
+				var parent = node.parent;
+				my.reloadNode(parent);
 			});
 		},
 
@@ -245,6 +255,12 @@
 	    		pg.find('div.ccm-pagination').addClass('ccm-pagination-bound').appendTo($tree);
 	    		var node = $.ui.dynatree.getNode(pg);
 	    		node.remove();
+
+				$tree.dynatree('option', 'onActivate', function(node) {
+					if ($(node.span).hasClass('ccm-sitemap-explore-paging')) {
+						node.deactivate();
+					}
+				});
 	    	}
     	},
 
@@ -363,6 +379,13 @@
 				'<% } %>' +
 			'<% } %>' +
 		'</ul></div></div>';
+	}
+
+	ConcreteSitemap.refreshCopyOperations = function() {
+		ccm_triggerProgressiveOperation(CCM_TOOLS_PATH + '/dashboard/sitemap_copy_all', [],	ccmi18n_sitemap.copyProgressTitle, function() {
+			$('.ui-dialog-content').dialog('close');
+			window.location.reload();
+		});
 	}
 
 	ConcreteSitemap.submitDragRequest = function() {
