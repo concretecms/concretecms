@@ -266,7 +266,7 @@
 			$cookie = array($this->getUserID(),$authType);
 			$at = AuthenticationType::getByHandle($authType);
 			$cookie[] = $at->controller->buildHash($this);
-			setcookie("ccmAuthUserHash", implode(':',$cookie), time() + 1209600, DIR_REL . '/');
+			setcookie("ccmAuthUserHash", implode(':',$cookie), time() + 1209600, DIR_REL . '/', SESSION_COOKIE_PARAM_DOMAIN);
 		}
 
 		public function setLastAuthType(AuthenticationType $at) {
@@ -299,11 +299,19 @@
 			}
 		}
 
+		
+		/**
+		 * use verifyAuthTypeCookie instead
+		 * @depricated since before 5.6.3
+		*/
 		function checkUserForeverCookie() {
+			echo var_dump($_COOKIE);
 			if ($_COOKIE['ccmUserHash']) {
+					echo "hello"; exit;
 				$hashVal = explode(':', $_COOKIE['ccmUserHash']);
 				$_uID = $hashVal[0];
 				$uHash = $hashVal[1];
+				echo var_dump($hashVal); exit;
 				if ($uHash == md5(PASSWORD_SALT . $_uID)) {
 					User::loginByUserID($_uID);
 				}
@@ -324,6 +332,10 @@
 			}
 		}
 
+		/**
+		 * authenticatiion types will handle this
+		 * @depricated since before 5.6.3
+		*/
 		function setUserForeverCookie() {
 			$hashVal = md5(PASSWORD_SALT . $this->getUserID());
 			setcookie("ccmUserHash", $this->getUserID() . ':' . $hashVal, time() + 1209600, DIR_REL . '/');
