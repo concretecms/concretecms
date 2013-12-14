@@ -49,21 +49,26 @@ class Concrete5_Helper_Form_PageSelector {
 			$clearStyle = '';
 		}
 		$html .= '</strong></div>';
-		$html .= '<a class="ccm-sitemap-select-page" dialog-width="90%" dialog-height="70%" dialog-append-buttons="true" dialog-modal="false" dialog-title="' . t('Choose Page') . '" href="' . REL_DIR_FILES_TOOLS_REQUIRED . '/sitemap_search_selector?cID=' . $selectedCID . '">' . t('Select Page') . '</a>';
+		$html .= '<a class="ccm-sitemap-select-page" data-page-selector-launch="' . $fieldName . '" dialog-width="90%" dialog-height="70%" dialog-append-buttons="true" dialog-modal="false" dialog-title="' . t('Choose Page') . '" href="' . REL_DIR_FILES_TOOLS_REQUIRED . '/sitemap_search_selector?cID=' . $selectedCID . '">' . t('Select Page') . '</a>';
 		$html .= '&nbsp;<a href="javascript:void(0)" dialog-sender="' . $fieldName . '" class="ccm-sitemap-clear-selected-page" style="float: right; margin-top: -8px;' . $clearStyle . '"><img src="' . ASSETS_URL_IMAGES . '/icons/remove.png" style="vertical-align: middle; margin-left: 3px" /></a>';
 		$html .= '<input type="hidden" data-page-selector="cID" name="' . $fieldName . '" value="' . $selectedCID . '"/>';
 		$html .= '</div>'; 
 		$html .= "<script type=\"text/javascript\"> 
 		var ccmActivePageField;
 		function ccm_initSelectPage() {
-			$('a.ccm-sitemap-select-page').unbind().dialog();
-			ccm_event.subscribe('SitemapSelectPage', function(e) {
-				var node = e.eventData.node;
-				var container = $('div[data-page-selector={$fieldName}]');
-				container.find('.ccm-summary-selected-item-label').html(node.data.title);
-				container.find('.ccm-sitemap-clear-selected-page').show();
-				container.find('input[data-page-selector=cID]').val(node.data.cID);
-				$.fn.dialog.closeTop();
+			$('a[data-page-selector-launch={$fieldName}]').dialog();
+			$('a[data-page-selector-launch={$fieldName}]').on('click', function() {
+				var selector = $(this);
+				ccm_event.subscribe('SitemapSelectPage', function(e) {
+					e.continuePropagation = false;
+					var handle = selector.attr('data-page-selector-launch');
+					var node = e.eventData.node;
+					var container = $('div[data-page-selector=' + handle + ']');
+					container.find('.ccm-summary-selected-item-label').html(node.data.title);
+					container.find('.ccm-sitemap-clear-selected-page').show();
+					container.find('input[data-page-selector=cID]').val(node.data.cID);
+					$.fn.dialog.closeTop();
+				});
 			});
 
 			$('a.ccm-sitemap-clear-selected-page').unbind().click(function() {
@@ -72,7 +77,7 @@ class Concrete5_Helper_Form_PageSelector {
 				container.find('.ccm-sitemap-clear-selected-page').hide();
 				container.find('input[data-page-selector=cID]').val('');
 			});
-		};
+		}
 		$(ccm_initSelectPage); </script>";
 		return $html;
 	}

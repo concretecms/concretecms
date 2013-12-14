@@ -46,22 +46,26 @@ class Concrete5_Helper_Form_UserSelector {
 			$html .= $ui->getUserName();
 		}
 		$html .= '</strong></div>';
-		$html .= '<a class="ccm-sitemap-select-item" id="ccm-user-selector-' . $fieldName . '" onclick="ccmActiveUserField=this" dialog-append-buttons="true" dialog-width="90%" dialog-height="70%" dialog-modal="false" dialog-title="' . t('Choose User') . '" href="' . URL::to('/system/dialogs/user/search') . '">' . t('Select User') . '</a>';
+		$html .= '<a class="ccm-sitemap-select-item" id="ccm-user-selector-' . $fieldName . '" dialog-append-buttons="true" dialog-width="90%" dialog-height="70%" dialog-modal="false" dialog-title="' . t('Choose User') . '" href="' . URL::to('/system/dialogs/user/search') . '">' . t('Select User') . '</a>';
 		$html .= '<input type="hidden" name="' . $fieldName . '" value="' . $selectedUID . '">';
 		$html .= '</div>'; 
 		$html .= <<<EOL
 <script type="text/javascript">
 $(function() {
 	$("#ccm-user-selector-{$fieldName}").dialog();
-	ccm_event.subscribe('UserSearchDialogSelectUser', function(e) {
-		var par = $(ccmActiveUserField).parent().find('.ccm-summary-selected-item-label'),
-			pari = $(ccmActiveUserField).parent().find('[name={$fieldName}]');
-		par.html(e.eventData.uName);
-		pari.val(e.eventData.uID);
-		jQuery.fn.dialog.closeTop();
-	});
-	ccm_event.subscribe('UserSearchDialogAfterSelectUser', function(e) {
-		jQuery.fn.dialog.closeTop();
+	$("#ccm-user-selector-{$fieldName}").on('click', function() {
+		var selector = $(this);
+		ccm_event.subscribe('UserSearchDialogSelectUser', function(e) {
+			var par = selector.parent().find('.ccm-summary-selected-item-label'),
+				pari = selector.parent().find('[name={$fieldName}]');
+			par.html(e.eventData.uName);
+			pari.val(e.eventData.uID);
+			e.continuePropagation = false;
+			jQuery.fn.dialog.closeTop();
+		});
+		ccm_event.subscribe('UserSearchDialogAfterSelectUser', function(e) {
+			jQuery.fn.dialog.closeTop();
+		});
 	});
 });
 </script>
@@ -97,7 +101,7 @@ EOL;
 		$html .= '<tr>';
 		$html .= '<th>' . t('Username') . '</th>';
 		$html .= '<th>' . t('Email Address') . '</th>';
-		$html .= '<th><a class="ccm-user-select-item dialog-launch" onclick="ccmActiveUserField=this" dialog-append-buttons="true" dialog-width="90%" dialog-height="70%" dialog-modal="false" dialog-title="' . t('Choose User') . '" href="'. URL::to('/system/dialogs/user/search') . '"><img src="' . ASSETS_URL_IMAGES . '/icons/add.png" width="16" height="16" /></a></th>';
+		$html .= '<th><a class="ccm-user-select-item dialog-launch" dialog-append-buttons="true" dialog-width="90%" dialog-height="70%" dialog-modal="false" dialog-title="' . t('Choose User') . '" href="'. URL::to('/system/dialogs/user/search') . '"><img src="' . ASSETS_URL_IMAGES . '/icons/add.png" width="16" height="16" /></a></th>';
 		$html .= '</tr><tbody id="ccmUserSelect' . $fieldName . '_body" >';
 		/* for ($i = 0; $i < $ul->getTotal(); $i++ ) {
 			$ui = $ul1[$i];
@@ -116,23 +120,27 @@ EOL;
 				$(this).parents(\'tr\').remove();
 			});
 
-			ccm_event.subscribe(\'UserSearchDialogSelectUser\', function(e) {
-				var uID = e.eventData.uID, uName = e.eventData.uName, uEmail = e.eventData.uEmail;
-				$("tr.ccm-user-selected-item-none").hide();
-				if ($("#ccmUserSelect' . $fieldName . '_" + uID).length < 1) {
-					var html = "";
-					html += "<tr id=\"ccmUserSelect' . $fieldName . '_" + uID + "\" class=\"ccm-list-record\"><td><input type=\"hidden\" name=\"' . $fieldName . '[]\" value=\"" + uID + "\" />" + uName + "</td>";
-					html += "<td>" + uEmail + "</td>";
-					html += "<td><a href=\"javascript:void(0)\" class=\"ccm-user-list-clear\"><img src=\"' . ASSETS_URL_IMAGES . '/icons/close.png\" width=\"16\" height=\"16\" class=\"ccm-user-list-clear-button\" /></a>";
-					html += "</tr>";
-					$("#ccmUserSelect' . $fieldName . '_body").append(html);
-				}
-				$("a.ccm-user-list-clear").click(function() {
-					$(this).parents(\'tr\').remove();
+			$("#ccmUserSelect' . $fieldName . ' .ccm-user-select-item").on(\'click\', function() {
+				ccm_event.subscribe(\'UserSearchDialogSelectUser\', function(e) {
+					console.log(e);
+					var uID = e.eventData.uID, uName = e.eventData.uName, uEmail = e.eventData.uEmail;
+					e.continuePropagation = false;
+					$("tr.ccm-user-selected-item-none").hide();
+					if ($("#ccmUserSelect' . $fieldName . '_" + uID).length < 1) {
+						var html = "";
+						html += "<tr id=\"ccmUserSelect' . $fieldName . '_" + uID + "\" class=\"ccm-list-record\"><td><input type=\"hidden\" name=\"' . $fieldName . '[]\" value=\"" + uID + "\" />" + uName + "</td>";
+						html += "<td>" + uEmail + "</td>";
+						html += "<td><a href=\"javascript:void(0)\" class=\"ccm-user-list-clear\"><img src=\"' . ASSETS_URL_IMAGES . '/icons/close.png\" width=\"16\" height=\"16\" class=\"ccm-user-list-clear-button\" /></a>";
+						html += "</tr>";
+						$("#ccmUserSelect' . $fieldName . '_body").append(html);
+					}
+					$("a.ccm-user-list-clear").click(function() {
+						$(this).parents(\'tr\').remove();
+					});
 				});
-			});
-			ccm_event.subscribe(\'UserSearchDialogAfterSelectUser\', function(e) {
-				jQuery.fn.dialog.closeTop();
+				ccm_event.subscribe(\'UserSearchDialogAfterSelectUser\', function(e) {
+					jQuery.fn.dialog.closeTop();
+				});
 			});
 		});
 		
