@@ -121,7 +121,7 @@
 							}
 						}
 					});
-					ccm_event.subscribe('AjaxFormSubmitSuccess', function(e) {
+					ConcreteEvent.subscribe('AjaxFormSubmitSuccess', function(e) {
 						cs.updateResults(e.eventData.response.result);
 					});
 				}
@@ -219,12 +219,12 @@
 
 	ConcreteAjaxSearch.prototype.publish = function(eventName, data) {
 		var cs = this;
-		ccm_event.publish(eventName, data, cs);
+		ConcreteEvent.publish(eventName, data, cs);
 	}
 
 	ConcreteAjaxSearch.prototype.subscribe = function(eventName, callback) {
 		var cs = this;
-		ccm_event.subscribe(eventName, callback, cs);
+		ConcreteEvent.subscribe(eventName, callback, cs);
 	}
 
 	ConcreteAjaxSearch.prototype.setupBulkActions = function() {

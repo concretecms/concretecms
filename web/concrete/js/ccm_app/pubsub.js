@@ -43,6 +43,5 @@
   ConcreteEvent.pub = ConcreteEvent.fire = ConcreteEvent.trigger = ConcreteEvent.publish;
 
   global.ConcreteEvent = ConcreteEvent;
-  global.ccm_event = ConcreteEvent;
   
 }(window);

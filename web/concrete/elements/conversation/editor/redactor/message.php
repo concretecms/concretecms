@@ -10,8 +10,8 @@ $(function() {
         autoresize: false,
         buttons: [ 'bold','italic','deleted','|','fontcolor','|','link' ],
         callback: function(obj) {
-            ccm_event.publish('conversationsRedactorEditorLoaded',obj);
-            ccm_event.bind('conversationSubmitForm',function(){
+            ConcreteEvent.publish('conversationsRedactorEditorLoaded',obj);
+            ConcreteEvent.bind('conversationSubmitForm',function(){
                 obj.setCode("");
     			$('.preview.processing').each(function(){ 
     				$('input[rel="'+ $(this).attr('rel') +'"]').remove();

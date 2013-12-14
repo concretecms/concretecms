@@ -59,7 +59,7 @@ class Concrete5_Helper_Form_PageSelector {
 			$('a[data-page-selector-launch={$fieldName}]').dialog();
 			$('a[data-page-selector-launch={$fieldName}]').on('click', function() {
 				var selector = $(this);
-				ccm_event.subscribe('SitemapSelectPage', function(e) {
+				ConcreteEvent.subscribe('SitemapSelectPage', function(e) {
 					e.continuePropagation = false;
 					var handle = selector.attr('data-page-selector-launch');
 					var node = e.eventData.node;

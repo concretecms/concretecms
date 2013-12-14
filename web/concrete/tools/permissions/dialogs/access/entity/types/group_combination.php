@@ -36,7 +36,7 @@ $url = $type->getAccessEntityTypeToolsURL(); ?>
 </div>
 
 <script type="text/javascript">
-ccm_event.subscribe('GroupSearchDialogClick', function(e) {
+ConcreteEvent.subscribe('GroupSearchDialogClick', function(e) {
 	var gID = e.eventData.gID, gName = e.eventData.gName;
 	if ($("input[class=combogID][value=" + gID + "]").length == 0) { 
 		$("#ccm-permissions-access-entity-combination-groups-none").hide();

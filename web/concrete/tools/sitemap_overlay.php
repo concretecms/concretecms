@@ -49,7 +49,7 @@ $args['instance_id'] = time();
 $(function() {
 	$('.ccm-sitemap-overlay').concreteSitemap({
 		onSelectNode: function(node) {
-			ccm_event.publish('SitemapSelectPage', {'node': node});
+			ConcreteEvent.publish('SitemapSelectPage', {'node': node});
 		},
 		<? if ($_REQUEST['display'] == 'flat') { ?>
 			displaySingleLevel: true,

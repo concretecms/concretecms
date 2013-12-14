@@ -55,7 +55,7 @@ var CCMToolbar = function() {
 		});
 		$('html').addClass('ccm-panel-ready');
 
-		ccm_event.subscribe('panel.open',function(e) {
+		ConcreteEvent.subscribe('panel.open',function(e) {
 			var panel = e.eventData.panel;
 			if (panel.options.identifier == 'page') {
 				$('#' + panel.getDOMID()).find('[data-launch-panel-detail=\'page-composer\']').click();
@@ -66,7 +66,7 @@ var CCMToolbar = function() {
 			});
 		});
 
-		ccm_event.subscribe('panel.close',function(e) {
+		ConcreteEvent.subscribe('panel.close',function(e) {
 			$('a[data-toolbar-action=check-in]').unbind('click.close-check-in');
 		});
 

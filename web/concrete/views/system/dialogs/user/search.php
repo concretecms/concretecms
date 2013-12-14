@@ -13,12 +13,12 @@ $(function() {
 		onLoad: function(concreteSearch) {
 			concreteSearch.$element.find('select[data-bulk-action=users] option:eq(0)').after('<option value="select_users"><?=t('Choose Users')?></option>');
 			concreteSearch.$element.on('click', 'a[data-user-id]', function() {
-				ccm_event.publish('UserSearchDialogSelectUser', {
+				ConcreteEvent.publish('UserSearchDialogSelectUser', {
 					uID: $(this).attr('data-user-id'),
 					uEmail: $(this).attr('data-user-email'),
 					uName: $(this).attr('data-user-name')
 				});
-				ccm_event.publish('UserSearchDialogAfterSelectUser');
+				ConcreteEvent.publish('UserSearchDialogAfterSelectUser');
 				return false;
 			});
 
@@ -26,13 +26,13 @@ $(function() {
 				if (e.eventData.value == 'select_users') {
 					$.each(e.eventData.items, function(i, item) {
 						var $item = $(item);
-						ccm_event.publish('UserSearchDialogSelectUser', {
+						ConcreteEvent.publish('UserSearchDialogSelectUser', {
 							uID: $item.attr('data-user-id'),
 							uEmail: $item.attr('data-user-email'),
 							uName: $item.attr('data-user-name')
 						});
 					});
-					ccm_event.publish('UserSearchDialogAfterSelectUser');
+					ConcreteEvent.publish('UserSearchDialogAfterSelectUser');
 				}
 			});
 		}
