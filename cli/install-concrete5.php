@@ -155,7 +155,7 @@ require($corePath . '/config/theme_paths.php');
 
 ## Load session handlers
 require($corePath . '/startup/session.php');
-if ($reinstall === 'yes') {
+if ($config['reinstall'] === 'yes') {
 	require($corePath . '/config/app.php');
 
 	// Remove all files from the files directory
