@@ -85,7 +85,7 @@
 	var ConcreteFileManagerMenu = {
 
 		get: function() {
-			return '<div class="ccm-popover-file-menu popover fade" data-search-file-menu="<%=item.fID%>" data-search-menu="<%=item.fID%>">' +
+			return '<div class="ccm-ui"><div class="ccm-popover-file-menu popover fade" data-search-file-menu="<%=item.fID%>" data-search-menu="<%=item.fID%>">' +
 				'<div class="arrow"></div><div class="popover-inner"><ul class="dropdown-menu">' + 
 				'<% if (typeof(displayClear) != \'undefined\' && displayClear) { %>' +
 				'<li><a href="#" data-file-manager-action="clear">' + ccmi18n_filemanager.clear + '</a></li>' +
@@ -115,7 +115,7 @@
 				'<% if (item.canDeleteFile) { %>' + 
 				'<li><a class="dialog-launch" dialog-modal="true" dialog-width="500" dialog-height="200" dialog-title="' + ccmi18n_filemanager.deleteFile + '" href="' + CCM_TOOLS_PATH + '/files/delete?fID=<%=item.fID%>">' + ccmi18n_filemanager.deleteFile + '</a></li>' +
 				'<% } %>' +
-			'</ul></div>';
+			'</ul></div></div>';
 		}
 	}
 

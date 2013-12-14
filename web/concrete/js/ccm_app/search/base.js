@@ -219,12 +219,12 @@
 
 	ConcreteAjaxSearch.prototype.publish = function(eventName, data) {
 		var cs = this;
-		ccm_event.publish(eventName, data, cs.$element.get(0));
+		ccm_event.publish(eventName, data, cs);
 	}
 
 	ConcreteAjaxSearch.prototype.subscribe = function(eventName, callback) {
 		var cs = this;
-		ccm_event.subscribe(eventName, callback, cs.$element.get(0));
+		ccm_event.subscribe(eventName, callback, cs);
 	}
 
 	ConcreteAjaxSearch.prototype.setupBulkActions = function() {
