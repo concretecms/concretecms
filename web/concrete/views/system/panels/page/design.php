@@ -104,7 +104,7 @@ $(function() {
 	    parent2.insertBefore(elm1, next2);
 	}
 
-	ccm_event.subscribe('collapse.page-templates', function(e) {
+	ConcreteEvent.subscribe('collapse.page-templates', function(e) {
 		/* We find the selected page type. If it's not the first one, we make it the first one and swap that one. */
 		var $topitem = $('#ccm-panel-page-design-page-types > label.list-group-item input[type=radio]');
 		var $checkeditem = $('#ccm-panel-page-design-page-types input[type=radio]:checked');
@@ -119,7 +119,7 @@ $(function() {
 		$(this).addClass('ccm-page-design-theme-thumbnail-selected');
 	});
 
-	ccm_event.subscribe('collapse.themes', function(e) {
+	ConcreteEvent.subscribe('collapse.themes', function(e) {
 		/* We find the selected page type. If it's not the first one, we make it the first one and swap that one. */
 		var $topitem = $('#ccm-panel-page-design-themes > div.list-group-item[data-theme-id]');
 		var $checkeditem = $('#ccm-panel-page-design-themes .ccm-page-design-theme-thumbnail-selected');

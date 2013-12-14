@@ -2,7 +2,7 @@
 var me = $(this);
 
 
-ccm_event.bind('FileManagerFileSelected',function(e){
+ConcreteEvent.bind('FileManagerFileSelected',function(e){
 	if (e.eventData.af == "addImageToImageEditor_"+im.uniqid) {
 		im.showLoader();
 		ccm_clearFile({stopPropagation:function(){}},e.eventData.af);

@@ -145,7 +145,7 @@
 
 		setupTreeEvents: function() {
 			var my = this;
-			ccm_event.subscribe('SitemapDeleteRequestComplete', function(e) {
+			ConcreteEvent.subscribe('SitemapDeleteRequestComplete', function(e) {
 	 			var node = my.$element.dynatree('getActiveNode');
 				var parent = node.parent;
 				my.reloadNode(parent);
@@ -222,7 +222,7 @@
 
 			});
 
-			ccm_event.subscribe('SitemapDragRequestComplete', function(e) {
+			ConcreteEvent.subscribe('SitemapDragRequestComplete', function(e) {
 				var reloadNode = destNode.parent;
 				if (dragMode == 'over') {
 					reloadNode = destNode;
@@ -419,7 +419,7 @@
 				[{'name': 'origCID', 'value': origCID}, {'name': 'destCID', 'value': destCID}],
 				dialogTitle, function() {
 					$('.ui-dialog-content').dialog('close');
-					ccm_event.publish('SitemapDragRequestComplete', {'task': ctask});
+					ConcreteEvent.publish('SitemapDragRequestComplete', {'task': ctask});
 				}
 			);
 
@@ -433,7 +433,7 @@
 					jQuery.fn.dialog.closeAll();
 					jQuery.fn.dialog.hideLoader();
 		 			ConcreteAlert.hud(resp.message, 2000);
-					ccm_event.publish('SitemapDragRequestComplete', {'task': ctask});
+					ConcreteEvent.publish('SitemapDragRequestComplete', {'task': ctask});
 					jQuery.fn.dialog.closeTop();
 					jQuery.fn.dialog.closeTop();
 				});

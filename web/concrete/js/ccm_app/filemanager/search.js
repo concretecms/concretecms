@@ -55,7 +55,7 @@
 				$(this).removeClass('ccm-file-manager-select-hover');
 			});
 			my.$element.unbind('.concreteFileManagerChooseFile').on('click.concreteFileManagerChooseFile', 'tr[data-file-manager-file]', function() {
-				ccm_event.publish('FileManagerSelectFile', {fID: $(this).attr('data-file-manager-file')});
+				ConcreteEvent.publish('FileManagerSelectFile', {fID: $(this).attr('data-file-manager-file')});
 				return false;
 			});
 		}

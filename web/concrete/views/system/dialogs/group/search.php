@@ -12,7 +12,7 @@ $(function() {
 		result: <?=$result?>,
 		onLoad: function(concreteSearch) {
 			concreteSearch.$element.on('click', 'a[data-group-id]', function() {
-				ccm_event.publish('GroupSearchDialogClick', {
+				ConcreteEvent.publish('GroupSearchDialogClick', {
 					gID: $(this).attr('data-group-id'),
 					gName: $(this).attr('data-group-name')
 				});

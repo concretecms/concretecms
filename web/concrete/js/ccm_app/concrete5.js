@@ -1,4 +1,4 @@
-var Concrete = (function(ccm_event) {
+var Concrete = (function(ConcreteEvent) {
   'use strict';
 
   function getAttribute(attributes, key) {
@@ -12,7 +12,7 @@ var Concrete = (function(ccm_event) {
 
   return {
     editMode: null,
-    event: ccm_event,
+    event: ConcreteEvent,
 
     /**
      * Create the getter / setter methods and attach them if they don't exist
@@ -41,4 +41,4 @@ var Concrete = (function(ccm_event) {
 
   };
 
-}(ccm_event));
+}(ConcreteEvent));

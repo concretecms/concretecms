@@ -40,7 +40,7 @@
 		publish: function(t,f) {
 			f = f || {};
 			f.CCMConversation = this;
-			window.ccm_event.publish(t,f);
+			window.ConcreteEvent.publish(t,f);
 		},
 		init: function(element,options) {
 			var obj = this;
@@ -123,7 +123,7 @@
 			items.slice(0,20).map(function(item){
 				var listitem = $('<li/>');
 				var anchor = $('<a/>').appendTo(listitem).text(item.getName());
-				anchor.click(function(){ccm_event.fire('conversationsMentionSelect',{obj:obj,item:item},bindTo)});
+				anchor.click(function(){ConcreteEvent.fire('conversationsMentionSelect',{obj:obj,item:item},bindTo)});
 				listitem.appendTo(obj.dropdown.list);
 			});
 			if (!obj.dropdown.active) {
@@ -140,7 +140,7 @@
 			obj.$element.unbind('.cnv');
 			if (obj.options.uninitialized) {
 				obj.options.uninitialized = false;
-				ccm_event.bind('conversationsMention',function(e){
+				ConcreteEvent.bind('conversationsMention',function(e){
 						obj.mentionList(e.eventData.items,e.eventData.coordinates || false, e.eventData.bindTo || obj.$element.get(0));
 					},
 					obj.$element.get(0) // Bind to this conversation only.
@@ -155,23 +155,23 @@
 				obj.dropdown.handle = $('<a/>').appendTo(obj.dropdown.parent);
 				obj.dropdown.list = $('<ul/>').addClass('dropdown-menu').appendTo(obj.dropdown.parent);
 				obj.dropdown.handle.dropdown();
-				ccm_event.bind('conversationsTextareaKeydownUp',function(e){
+				ConcreteEvent.bind('conversationsTextareaKeydownUp',function(e){
 					if (obj.dropdown.activeItem == -1) obj.dropdown.activeItem = obj.dropdown.list.children().length;
 					obj.dropdown.activeItem -= 1;
 					obj.dropdown.activeItem += obj.dropdown.list.children().length;
 					obj.dropdown.activeItem %= obj.dropdown.list.children().length;
 					obj.dropdown.list.children().filter('.active').removeClass('active').end().eq(obj.dropdown.activeItem).addClass('active');
 				}, obj.$element.get(0));
-				ccm_event.bind('conversationsTextareaKeydownDown',function(e){
+				ConcreteEvent.bind('conversationsTextareaKeydownDown',function(e){
 					obj.dropdown.activeItem += 1;
 					obj.dropdown.activeItem += obj.dropdown.list.children().length;
 					obj.dropdown.activeItem %= obj.dropdown.list.children().length;
 					obj.dropdown.list.children().filter('.active').removeClass('active').end().eq(obj.dropdown.activeItem).addClass('active');
 				}, obj.$element.get(0));
-				ccm_event.bind('conversationsTextareaKeydownEnter',function(e){
+				ConcreteEvent.bind('conversationsTextareaKeydownEnter',function(e){
 					obj.dropdown.list.children().filter('.active').children('a').click();
 				}, obj.$element.get(0));
-				ccm_event.bind('conversationPostError',function(e){
+				ConcreteEvent.bind('conversationPostError',function(e){
 					var $form = e.eventData.form,
 						messages = e.eventData.messages;
 					var s = '';
@@ -180,7 +180,7 @@
 					});
 					$form.find('div.ccm-conversation-errors').html(s).show();
 				});
-				ccm_event.bind('conversationSubmitForm',function(e){
+				ConcreteEvent.bind('conversationSubmitForm',function(e){
 					e.eventData.form.find('div.ccm-conversation-errors').hide();
 				});
 			}

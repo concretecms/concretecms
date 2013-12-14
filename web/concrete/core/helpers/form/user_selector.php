@@ -55,7 +55,7 @@ $(function() {
 	$("#ccm-user-selector-{$fieldName}").dialog();
 	$("#ccm-user-selector-{$fieldName}").on('click', function() {
 		var selector = $(this);
-		ccm_event.subscribe('UserSearchDialogSelectUser', function(e) {
+		ConcreteEvent.subscribe('UserSearchDialogSelectUser', function(e) {
 			var par = selector.parent().find('.ccm-summary-selected-item-label'),
 				pari = selector.parent().find('[name={$fieldName}]');
 			par.html(e.eventData.uName);
@@ -63,7 +63,7 @@ $(function() {
 			e.continuePropagation = false;
 			jQuery.fn.dialog.closeTop();
 		});
-		ccm_event.subscribe('UserSearchDialogAfterSelectUser', function(e) {
+		ConcreteEvent.subscribe('UserSearchDialogAfterSelectUser', function(e) {
 			jQuery.fn.dialog.closeTop();
 		});
 	});
@@ -121,7 +121,7 @@ EOL;
 			});
 
 			$("#ccmUserSelect' . $fieldName . ' .ccm-user-select-item").on(\'click\', function() {
-				ccm_event.subscribe(\'UserSearchDialogSelectUser\', function(e) {
+				ConcreteEvent.subscribe(\'UserSearchDialogSelectUser\', function(e) {
 					console.log(e);
 					var uID = e.eventData.uID, uName = e.eventData.uName, uEmail = e.eventData.uEmail;
 					e.continuePropagation = false;
@@ -138,7 +138,7 @@ EOL;
 						$(this).parents(\'tr\').remove();
 					});
 				});
-				ccm_event.subscribe(\'UserSearchDialogAfterSelectUser\', function(e) {
+				ConcreteEvent.subscribe(\'UserSearchDialogAfterSelectUser\', function(e) {
 					jQuery.fn.dialog.closeTop();
 				});
 			});
