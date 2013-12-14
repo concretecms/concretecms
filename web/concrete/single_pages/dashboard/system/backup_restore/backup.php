@@ -91,7 +91,7 @@ $dh = Loader::helper('date');
 $tp = new TaskPermission();
 if ($tp->canBackup()) {
 	?>
-	<?= Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Backup Database'), false, 'span8 offset2') ?>
+	<?= Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Backup Database'), false, 'span10 offset1') ?>
 		<h3><?=t('Existing Backups')?></h3>
 		<?php
 		if (count($backups) > 0) {
