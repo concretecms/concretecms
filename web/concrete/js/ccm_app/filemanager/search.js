@@ -49,10 +49,10 @@
 		if (my.options.mode == 'choose') {
 			my.$element.unbind('.concreteFileManagerHoverFile');
 			my.$element.on('mouseover.concreteFileManagerHoverFile', 'tr[data-file-manager-file]', function() {
-				$(this).addClass('ccm-file-manager-select-hover');
+				$(this).addClass('ccm-search-select-hover');
 			});
 			my.$element.on('mouseout.concreteFileManagerHoverFile', 'tr[data-file-manager-file]', function() {
-				$(this).removeClass('ccm-file-manager-select-hover');
+				$(this).removeClass('ccm-search-select-hover');
 			});
 			my.$element.unbind('.concreteFileManagerChooseFile').on('click.concreteFileManagerChooseFile', 'tr[data-file-manager-file]', function() {
 				ConcreteEvent.publish('FileManagerSelectFile', {fID: $(this).attr('data-file-manager-file')});

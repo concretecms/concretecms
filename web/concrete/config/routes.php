@@ -73,6 +73,7 @@ $rl->register('/system/dialogs/page/bulk/properties', 'PageBulkPropertiesDialogC
 $rl->register('/system/dialogs/user/search', 'UserSearchDialogController::view');
 $rl->register('/system/dialogs/group/search', 'GroupSearchDialogController::view');
 $rl->register('/system/dialogs/file/search', 'FileSearchDialogController::view');
+$rl->register('/system/dialogs/page/search', 'PageSearchDialogController::view');
 
 /**
  * Editing Actions

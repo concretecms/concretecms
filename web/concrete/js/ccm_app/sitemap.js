@@ -321,7 +321,7 @@
     }
 
 	ConcreteSitemap.getMenu = function() {
-		return '<div class="ccm-popover-file-menu popover fade" data-search-page-menu="<%=data.cID%>" data-search-menu="<%=data.cID%>">' +
+		return '<div class="ccm-popover-page-menu popover fade" data-search-page-menu="<%=data.cID%>" data-search-menu="<%=data.cID%>">' +
 			'<div class="arrow"></div><div class="popover-inner"><ul class="dropdown-menu">' + 
 			'<% if (data.isTrash && data.numSubpages) { %>' + 
 				'<li><a onclick="ConcreteSitemap.deleteForever(<%=data.cID%>)" href="javascript:void(0)">' + ccmi18n_sitemap.emptyTrash + '</a></li>' + 

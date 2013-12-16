@@ -50,15 +50,11 @@ class Concrete5_Controller_Panel_Details_Page_Permissions extends BackendInterfa
 			
 			$gl = new GroupSearch();
 			$gl->sortBy('gID', 'asc');
-			$gIDs = $gl->get();
-			$gArray = array();
-			foreach($gIDs as $g) {
-				$gArray[] = Group::getByID($g['gID']);
-			}
+			$groups = $gl->get();
 
 			$this->set('editAccess', $editAccess);
 			$this->set('viewAccess', $viewAccess);
-			$this->set('gArray', $gArray);
+			$this->set('gArray', $groups);
 		}
 	}
 	

@@ -88,7 +88,7 @@ $(function() {
 		ccm_sitemapSearchSelectorShowBottom();
 		if ($('#ccm-tab-content-search').html() == '') { 
 			jQuery.fn.dialog.showLoader();
-			$('#ccm-tab-content-search').load('<?=REL_DIR_FILES_TOOLS_REQUIRED?>/pages/search_dialog', function() {
+			$('#ccm-tab-content-search').load('<?=URL::to('/system/dialogs/page/search')?>', function() {
 				jQuery.fn.dialog.hideLoader();
 			});
 		}
