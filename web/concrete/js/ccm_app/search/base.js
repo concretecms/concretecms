@@ -9,7 +9,8 @@
 		options = options || {};
 		options = $.extend({
 			'result': {},
-			'onLoad': false
+			'onLoad': false,
+			'onUpdateResults': false
 		}, options);
 		this.$element = $element;
 		this.$results = $element.find('div[data-search-element=results]');
@@ -131,7 +132,9 @@
 	}
 
 	ConcreteAjaxSearch.prototype.updateResults = function(result) {
-		var cs = this;
+		var cs = this,
+			options = cs.options;
+			
 		cs.$resultsTableHead.html(cs._templateSearchResultsTableHead({'columns': result.columns}));
 		cs.$resultsTableBody.html(cs._templateSearchResultsTableBody({'items': result.items}));
 		cs.$resultsPagination.html(cs._templateSearchResultsPagination({'pagination': result.pagination}));
@@ -140,6 +143,9 @@
 			cs.$advancedFields.append(cs._templateAdvancedSearchFieldRow({'field': field}));
 		});
 		cs.setupMenus(result);
+		if (options.onUpdateResults) {
+			options.onUpdateResults(this);
+		}
 	}
 
 	ConcreteAjaxSearch.prototype.setupAdvancedSearch = function() {

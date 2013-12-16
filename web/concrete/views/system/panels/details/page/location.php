@@ -128,11 +128,11 @@ $(function() {
 	});
 
 	ConcreteEvent.subscribe('SitemapSelectPage', function(e) {
-		var node = e.eventData.node;
+		var data = e.eventData;
 		$('#ccm-panel-detail-location-display').html(renderBreadcrumb({
-			parentLink: '<?=DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=' + node.data.cID,
-			parentName: node.data.title,
-			parentID: node.data.cID
+			parentLink: '<?=DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=' + data.cID,
+			parentName: data.title,
+			parentID: data.cID
 		}));
 
 		var container = $('form[data-panel-detail-form=location]');

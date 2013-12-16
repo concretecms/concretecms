@@ -62,11 +62,11 @@ class Concrete5_Helper_Form_PageSelector {
 				ConcreteEvent.subscribe('SitemapSelectPage', function(e) {
 					e.continuePropagation = false;
 					var handle = selector.attr('data-page-selector-launch');
-					var node = e.eventData.node;
+					var data = e.eventData;
 					var container = $('div[data-page-selector=' + handle + ']');
-					container.find('.ccm-summary-selected-item-label').html(node.data.title);
+					container.find('.ccm-summary-selected-item-label').html(data.title);
 					container.find('.ccm-sitemap-clear-selected-page').show();
-					container.find('input[data-page-selector=cID]').val(node.data.cID);
+					container.find('input[data-page-selector=cID]').val(data.cID);
 					$.fn.dialog.closeTop();
 				});
 			});

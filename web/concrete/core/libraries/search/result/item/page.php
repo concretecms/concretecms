@@ -16,6 +16,7 @@ class Concrete5_Library_PageSearchResultItem extends SearchResultItem {
 
 	protected function populateDetails($item) {
 		$this->cID = $item->getCollectionID();
+		$this->cvName = $item->getCollectionName();
 	}
 
 
