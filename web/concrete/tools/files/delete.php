@@ -10,8 +10,8 @@ if (!$fp->canAccessFileManager()) {
 if ($_POST['task'] == 'delete_files') {
 	$json['error'] = false;
 	
-	if (is_array($_POST['fID'])) {
-		foreach($_POST['fID'] as $fID) {
+	if (is_array($_POST['item'])) {
+		foreach($_POST['item'] as $fID) {
 			$f = File::getByID($fID);
 			$fp = new Permissions($f);
 			if ($fp->canDeleteFile()) {
@@ -30,8 +30,8 @@ if ($_POST['task'] == 'delete_files') {
 $form = Loader::helper('form');
 
 $files = array();
-if (is_array($_REQUEST['fID'])) {
-	foreach($_REQUEST['fID'] as $fID) {
+if (is_array($_REQUEST['item'])) {
+	foreach($_REQUEST['item'] as $fID) {
 		$files[] = File::getByID($fID);
 	}
 } else {

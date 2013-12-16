@@ -26,8 +26,8 @@ $files = array();
 $searchInstance = Loader::helper('text')->entities($_REQUEST['searchInstance']);
 $extensions = array();
 
-if (is_array($_REQUEST['fID'])) {
-	foreach($_REQUEST['fID'] as $fID) {
+if (is_array($_REQUEST['item'])) {
+	foreach($_REQUEST['item'] as $fID) {
 		$f = File::getByID($fID);
 		$fp = new Permissions($f);
 		if ($fp->canViewFile()) {
@@ -118,8 +118,15 @@ if ($_POST['task'] == 'add_to_sets') {
 ?>
 
 <script type="text/javascript">
-$(function() {
-	ccm_alSetupSetsForm('<?=$searchInstance?>');
+$("#ccm-add-to-set-form").ajaxSubmit(function(resp) {
+	jQuery.fn.dialog.closeTop();
+	jQuery.fn.dialog.hideLoader();		
+	$("#ccm-" + searchInstance + "-advanced-search").ajaxSubmit(function(resp) {
+		$("#ccm-" + searchInstance + "-sets-search-wrapper").load(CCM_TOOLS_PATH + '/files/search_sets_reload', {'searchInstance': searchInstance}, function() {
+			$(".chosen-select").chosen();
+			ccm_parseAdvancedSearchResponse(resp, searchInstance);
+		});
+	});
 });
 </script>
 

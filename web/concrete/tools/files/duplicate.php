@@ -12,8 +12,8 @@ if (!$fp->canAccessFileManager()) {
 if ($_POST['task'] == 'duplicate_multiple_files') {
 	$json['error'] = false;
 	
-	if (is_array($_POST['fID'])) {
-		foreach($_POST['fID'] as $fID) {
+	if (is_array($_POST['item'])) {
+		foreach($_POST['item'] as $fID) {
 			$f = File::getByID($fID);
 			$fp = new Permissions($f);
 			if ($fp->canCopyFile()) {
@@ -29,7 +29,7 @@ if ($_POST['task'] == 'duplicate_multiple_files') {
 }
 
 
-if (!is_array($_REQUEST['fID'])) {
+if (!is_array($_REQUEST['item'])) {
 
 	$obj = new stdClass;
 	$obj->message = '';
@@ -59,7 +59,7 @@ if (!is_array($_REQUEST['fID'])) {
 	
 	$files = array();
 	
-	foreach($_REQUEST['fID'] as $fID) {
+	foreach($_REQUEST['item'] as $fID) {
 		$files[] = File::getByID($fID);
 	}
 

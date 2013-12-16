@@ -20,7 +20,7 @@ $form = Loader::helper('form');
 
 print '<ol>';
 $fcnt = 0;
-if(is_array($_REQUEST['fID'])) foreach($_REQUEST['fID'] as $fID) {
+if(is_array($_REQUEST['item'])) foreach($_REQUEST['item'] as $fID) {
 	$f = File::getByID($fID);
 	$fp = new Permissions($f);
 	if ($fp->canEditFileContents()) {

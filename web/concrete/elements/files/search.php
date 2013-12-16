@@ -30,11 +30,11 @@ $searchRequest = $controller->getSearchRequest();
 		<select data-bulk-action="files" disabled class="ccm-search-bulk-action form-control">
 			<option value=""><?=t('Items Selected')?></option>
 			<option value="download"><?=t('Download')?></option>
-			<option><?=t('Sets')?></option>
-			<option><?=t('Properties')?></option>
-			<option><?=t('Rescan')?></option>
-			<option><?=t('Copy')?></option>
-			<option><?=t('Delete')?></option>
+			<option data-bulk-action-type="dialog" data-bulk-action-title="<?=t('Sets')?>" data-bulk-action-url="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/add_to" data-bulk-action-dialog-width="500" data-bulk-action-dialog-height="400"><?=t('Sets')?></option>
+			<option data-bulk-action-type="dialog" data-bulk-action-title="<?=t('Properties')?>" data-bulk-action-url="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/bulk_properties" data-bulk-action-dialog-width="690" data-bulk-action-dialog-height="440"><?=t('Properties')?></option>
+			<option data-bulk-action-type="dialog" data-bulk-action-title="<?=t('Rescan')?>" data-bulk-action-url="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/rescan" data-bulk-action-dialog-width="350" data-bulk-action-dialog-height="200"><?=t('Rescan')?></option>
+			<option data-bulk-action-type="dialog" data-bulk-action-title="<?=t('Duplicate')?>" data-bulk-action-url="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/duplicate" data-bulk-action-dialog-width="500" data-bulk-action-dialog-height="400"><?=t('Copy')?></option>
+			<option data-bulk-action-type="dialog" data-bulk-action-title="<?=t('Delete')?>" data-bulk-action-url="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/delete" data-bulk-action-dialog-width="500" data-bulk-action-dialog-height="400"><?=t('Delete')?></option>
 		</select>	
 	</div>
 	<div class="form-group">
