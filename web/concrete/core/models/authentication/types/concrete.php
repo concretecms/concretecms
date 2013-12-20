@@ -195,6 +195,7 @@ class Concrete5_Controller_AuthenticationType_Concrete extends AuthenticationTyp
 						$this->set('authType', $this->getAuthenticationType());
 						$this->set('authTypeElement', 'change_password');
 						$this->set('errorMsg', join( '<br>', $e->getList() ) );
+						$this->set('error', $e);
 					}
 				}else{
 					$this->set('uHash', $uHash);
