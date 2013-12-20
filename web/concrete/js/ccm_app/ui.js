@@ -699,13 +699,15 @@ ccm_saveArrangement = function(cID, block, source, destination) {
 
 		for (i = 0; i < bArray.length; i++ ) {
 			if (bArray[i] != '' && bArray[i].substring(0, 1) == 'b') {
-				// make sure to only go from b to -, meaning b28-9 becomes "28"
-				var bID = bArray[i].substring(1, bArray[i].indexOf('-'));
 				var bObj = $('#' + bArray[i]);
-				if (bObj.attr('custom-style')) {
-					bID += '-' + bObj.attr('custom-style');
+				if(bObj.closest('div.ccm-area')[0] == area[0]) {
+					// make sure to only go from b to -, meaning b28-9 becomes "28"
+					var bID = bArray[i].substring(1, bArray[i].indexOf('-'));
+					if (bObj.attr('custom-style')) {
+						bID += '-' + bObj.attr('custom-style');
+					}
+					serial += areaStr + bID;
 				}
-				serial += areaStr + bID;
 			}
 		}
 	});
