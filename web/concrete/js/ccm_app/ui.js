@@ -677,28 +677,25 @@ ccm_saveArrangement = function(cID, origin, destination) {
 
 */
 
-ccm_saveArrangement = function(cID, block, origin, destination) {
+ccm_saveArrangement = function(cID, block, source, destination) {
 	if (!cID) {
 		cID = CCM_CID;
 	}
 
 	var bID = block.attr('id').substring(1, block.attr('id').indexOf('-'));
-	var baID = block.attr('id').substring(block.attr('id').indexOf('-')+1);
+	var sourceBlockAreaID = source.attr('id').substring(1);
 	var destinationBlockAreaID = destination.attr('id').substring(1);
 
 	ccm_mainNavDisableDirectExit();
-	var serial = '&sourceBlockID=' + bID + '&sourceBlockAreaID=' + baID + '&destinationBlockAreaID=' + destinationBlockAreaID;
-	var areaArray;
-	if (origin.attr('id') == destination.attr('id')) {
-		areaArray = [origin];
-	} else {
-		areaArray = [origin, destination];
+	var serial = '&sourceBlockID=' + bID + '&sourceBlockAreaID=' + sourceBlockAreaID + '&destinationBlockAreaID=' + destinationBlockAreaID;
+	var areaArray = [source];
+	if(sourceBlockAreaID != destinationBlockAreaID) {
+		areaArray.push(destination);
 	}
 	$.each(areaArray, function(idx, area) {
-		var $area = $(area);
-		areaStr = '&area[' + $area.attr('id').substring(1) + '][]=';
+		areaStr = '&area[' + area.attr('id').substring(1) + '][]=';
 
-		bArray = $area.sortable('toArray');
+		bArray = area.sortable('toArray');
 
 		for (i = 0; i < bArray.length; i++ ) {
 			if (bArray[i] != '' && bArray[i].substring(0, 1) == 'b') {
@@ -763,9 +760,9 @@ ccm_arrangeInit = function() {
 				// 1, we could be dropping a block into a different area
 				// or are we could be rearranging an existing area. Very
 				// different use cases.
-				var origin = area;
+				var source = area;
 				var destination = ui.item.closest('.ccm-area');
-				ccm_saveArrangement(cID, ui.item, origin, destination);
+				ccm_saveArrangement(cID, ui.item, source, destination);
 			}
 		});
 	});
