@@ -216,7 +216,7 @@
 		 * </code>
 		 */
 		public static function block($bl) {
-			$db = self::db();
+			$db = Loader::db();
 			$pkgHandle = $db->GetOne('select pkgHandle from Packages left join BlockTypes on BlockTypes.pkgID = Packages.pkgID where BlockTypes.btHandle = ?', array($bl));
 			$env = Environment::get();
 			require_once($env->getPath(DIRNAME_BLOCKS . '/' . $bl . '/' . FILENAME_BLOCK_CONTROLLER, $pkgHandle));
@@ -380,7 +380,7 @@
 			$include = false;
 
 			if (is_string($item)) {
-				$db = self::db();
+				$db = Loader::db();
 				if (is_object($db)) {
 					try {
 						$_item = Page::getByPath($item);
