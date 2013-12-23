@@ -503,6 +503,19 @@ class Concrete5_Model_PageType extends Object {
 		return $list;
 	}
 
+	public static function getListByPackage(Package $pkg) {
+		$db = Loader::db();
+		$ptIDs = $db->GetCol('select ptID from PageTypes where pkgID = ? order by ptID asc', array($pkg->getPackageID()));
+		$list = array();
+		foreach($ptIDs as $ptID) {
+			$cm = PageType::getByID($ptID);
+			if (is_object($cm)) {
+				$list[] = $cm;
+			}
+		}
+		return $list;
+	}
+
 	public static function getByID($ptID) {
 		$db = Loader::db();
 		$r = $db->GetRow('select * from PageTypes where ptID = ?', array($ptID));
