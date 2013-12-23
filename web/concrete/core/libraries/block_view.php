@@ -31,9 +31,6 @@ class Concrete5_Library_BlockView extends AbstractView {
 			}
 		}
 		
-		if (is_object($this->area)) {
-			$this->controller->setAreaObject($this->area);
-		}
 	}		
 
 	public function setAreaObject(Area $area) {
@@ -43,6 +40,9 @@ class Concrete5_Library_BlockView extends AbstractView {
 	public function getAreaObject() {return $this->area;}
 	
 	public function start($state) {
+		if (is_object($this->area)) {
+			$this->controller->setAreaObject($this->area);
+		}
 		/** 
 		 * Legacy shit
 		 */
