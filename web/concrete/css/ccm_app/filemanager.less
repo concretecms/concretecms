@@ -52,6 +52,34 @@ div#ccm-popover-menu-container {
 	visibility: hidden;
 }
 
+div#ccm-file-manager-upload {
+	position: absolute;
+	top: 30px;
+	right: 10px;
+	width: 320px;
+	border: 1px solid #e1e1e1;
+	.border-radius(2px);
+	text-align: center;
+	padding: 18px 0px 18px 0px;
+	color: #acacac;
+	font-size: @font-size-small;
+	position: absolute;
+
+	strong {
+		color: #09f;
+	}
+
+	input[type=file] {
+		position: absolute;
+		.opacity(0);
+		top:  0px;
+		left: 0px;
+		width: 320px;
+		height: 55px;
+		cursor: pointer;
+	}
+}
+
 /** 
  * Select in page
  */

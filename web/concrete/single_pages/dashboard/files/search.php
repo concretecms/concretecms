@@ -6,6 +6,9 @@ $ocID = $c->getCollectionID();
 $fp = FilePermissions::getGlobal();
 if ($fp->canAddFile() || $fp->canSearchFiles()) { ?>
 
+<? if ($fp->canAddFile()) { ?>
+	<div id="ccm-file-manager-upload"><?=t("<strong>Upload Files</strong> / Click to Choose or Drag &amp; Drop")?><input type="file" name="files[]" /></div>
+<? } ?>
 
 <div class="ccm-dashboard-content-full" data-search="files">
 <? Loader::element('files/search', array('controller' => $searchController))?>
