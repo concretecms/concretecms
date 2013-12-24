@@ -55,6 +55,7 @@ if (!$dh->inDashboard()) {
 	$js = <<<EOL
 <script type="text/javascript" src="{$tools}/i18n_js"></script>
 <script type="text/javascript">$(function() {
+	$('html').addClass('ccm-toolbar-visible');
 	CCMPanelManager.register({'identifier': 'dashboard', 'position': 'right', url: '{$panelDashboard}'});
 	CCMPanelManager.register({'identifier': 'page', url: '{$panelPage}'});
 	CCMPanelManager.register({'identifier': 'sitemap', 'position': 'right', url: '{$panelSitemap}'});

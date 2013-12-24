@@ -216,9 +216,7 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
 	<?
 	
 	 } else { ?>
-		
-		<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Add Functionality'), t('Install custom add-ons or those downloaded from the concrete5.org marketplace.'), 'span10 offset1');?>
-			
+					
 		<? if (is_object($installedPKG) && $installedPKG->hasInstallPostScreen()) { ?>
 	
 			<div style="display: none">
@@ -240,40 +238,40 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
 			});	
 			</script>
 		<? } ?>
+
+		<? if ($updates > 0) { ?>
+			<div class="alert alert-info">
+			<h5><?=t('Add-On updates are available!')?></h5>
+			<a class="btn-xs btn-default btn pull-right" href="<?=$this->url('/dashboard/extend/update')?>"><?=t('Update Add-Ons')?></a>
+			<? if ($updates == 1) { ?>
+				<p><?=t('There is currently <strong>1</strong> update available.')?></p>
+			<? } else { ?>
+				<p><?=t('There are currently <strong>%s</strong> updates available.', $updates)?></p>
+			<? } ?>
+			</div>
+		<? } ?>
+	
 		
 		<h3><?=t('Currently Installed')?></h3>
 		<? if (count($pkgArray) > 0) { ?>
 			
-			<? if ($updates > 0) { ?>
-				<div class="block-message alert-message info">
-				<h4><?=t('Add-On updates are available!')?></h4>
-				<? if ($updates == 1) { ?>
-					<p><?=t('There is currently <strong>1</strong> update available.')?></p>
-				<? } else { ?>
-					<p><?=t('There are currently <strong>%s</strong> updates available.', $updates)?></p>
-				<? } ?>
-				<div class="alert-actions"><a class="btn-small btn" href="<?=$this->url('/dashboard/extend/update')?>"><?=t('Update Add-Ons')?></a></div>
+			<?	foreach ($pkgArray as $pkg) { ?>
+				<div class="media">
+					<div class="pull-left"><img style="width: 49px" src="<?=$ci->getPackageIconURL($pkg)?>" class"media-object" /></div>
+					<div class="media-body">
+						<a href="<?=URL::to('/dashboard/extend/install', 'inspect_package', $pkg->getPackageID())?>" class="btn pull-right btn-sm btn-default"><?=t('Details')?></a>
+						<h4 class="media-heading"><?=$pkg->getPackageName()?> <span class="badge badge-info" style="margin-right: 10px"><?=tc('AddonVersion', 'v.%s', $pkg->getPackageVersion())?></span></h4>
+						<p><?=$pkg->getPackageDescription()?></p>
+					</div>
 				</div>
 			<? } ?>
-
-			<table class="table table-bordered table-striped">
-		
-			<?	foreach ($pkgArray as $pkg) { ?>
-				<tr>
-					<td class="ccm-marketplace-list-thumbnail"><img src="<?=$ci->getPackageIconURL($pkg)?>" /></td>
-					<td class="ccm-addon-list-description"><h3><?=$pkg->getPackageName()?> - <?=$pkg->getPackageVersion()?></h3><?=$pkg->getPackageDescription()?>
-
-					</td>
-					<td class="ccm-marketplace-list-install-button"><?=$ch->button(t("Edit"), View::url('/dashboard/extend/install', 'inspect_package', $pkg->getPackageID()), "")?></td>					
-				</tr>
-			<? } ?>
-			</table>
 
 		<? } else { ?>		
 			<p><?=t('No packages have been installed.')?></p>
 		<? } ?>
 
 		<? if ($tp->canInstallPackages()) { ?>
+			<hr/>
 			<h3><?=t('Awaiting Installation')?></h3>
 		<? if (count($availableArray) == 0 && count($purchasedBlocks) == 0) { ?>
 			
@@ -283,28 +281,33 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
 			
 		<? } else { ?>
 	
-			<table class="table table-bordered table-striped">
 			<? foreach ($purchasedBlocks as $pb) {
 				$file = $pb->getRemoteFileURL();
 				if (!empty($file)) {?>
-				<tr>
-					<td class="ccm-marketplace-list-thumbnail"><img src="<?=$pb->getRemoteIconURL()?>" /></td>
-					<td class="ccm-addon-list-description"><h3><?=$pb->getName()?></h3>
-					<?=$pb->getDescription()?>
-					</td>
-					<td class="ccm-marketplace-list-install-button"><?=$ch->button(t("Download"), View::url('/dashboard/extend/install', 'download', $pb->getMarketplaceItemID()), "", 'primary')?></td>
-				</tr>
+
+				<div class="media">
+					<div class="pull-left"><img style="width: 49px" src="<?=$pb->getRemoteIconURL()?>" class"media-object" /></div>
+					<div class="media-body">
+						<a href="<?=URL::to('/dashboard/extend/install', 'download', $pb->getMarketplaceItemID())?>" class="btn pull-right btn-sm btn-default"><?=t('Download')?></a>
+						<h4 class="media-heading"><?=$pb->getName()?> <span class="badge badge-info" style="margin-right: 10px"><?=tc('AddonVersion', 'v.%s', $pb->getVersion())?></span></h4>
+						<p><?=$pb->getDescription()?></p>
+					</div>
+				</div>
+
 				<? } ?>
 			<? } ?>
 			<?	foreach ($availableArray as $obj) { ?>
-				<tr>
-					<td class="ccm-marketplace-list-thumbnail"><img src="<?=$ci->getPackageIconURL($obj)?>" /></td>
-					<td class="ccm-addon-list-description"><h3><?=$obj->getPackageName()?></h3>
-					<?=$obj->getPackageDescription()?></td>
-					<td class="ccm-marketplace-list-install-button"><?=$ch->button(t("Install"), $this->url('/dashboard/extend/install','install_package', $obj->getPackageHandle()), "");?></td>
-				</tr>
+
+				<div class="media">
+					<div class="pull-left"><img style="width: 49px" src="<?=$ci->getPackageIconURL($obj)?>" class"media-object" /></div>
+					<div class="media-body">
+						<a href="<?=URL::to('/dashboard/extend/install', 'install_package', $obj->getPackageHandle())?>" class="btn pull-right btn-sm btn-default"><?=t('Install')?></a>
+						<h4 class="media-heading"><?=$obj->getPackageName()?> <span class="badge badge-info" style="margin-right: 10px"><?=tc('AddonVersion', 'v.%s', $obj->getPackageVersion())?></span></h4>
+						<p><?=$obj->getPackageDescription()?></p>
+					</div>
+				</div>
+
 			<? } ?>
-			</table>
 	
 	
 			<? } ?>
@@ -312,6 +315,8 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
 		<?
 		if (is_object($mi) && $mi->isConnected()) { ?>
 
+		<hr/>
+			
 			<h3><?=t("Project Page")?></h3>
 			<p><?=t('Your site is currently connected to the concrete5 community. Your project page URL is:')?><br/>
 			<a href="<?=$mi->getSitePageURL()?>"><?=$mi->getSitePageURL()?></a></p>
@@ -323,7 +328,8 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
 
 		<? } else if ($tp->canInstallPackages() && ENABLE_MARKETPLACE_SUPPORT == true) { ?>
 
-			<br/><br/>
+			<hr/>
+
 			<div class="well clearfix" style="padding:10px 20px;">
 				<h4><?=t('Connect to Community')?></h4>
 				<p><?=t('Your site is not connected to the concrete5 community. Connecting lets you easily extend a site with themes and add-ons.')?></p>
