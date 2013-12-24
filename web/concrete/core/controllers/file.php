@@ -41,6 +41,42 @@ class Concrete5_Controller_File extends Controller {
 		return $files;
 	}
 
+	public function upload() {
+		$fp = FilePermissions::getGlobal();
+		$cf = Loader::helper('file');
+		if (!$fp->canAddFiles()) {
+			throw new Exception(t("Unable to add files."));
+		}
+		if (!Loader::helper('validation/token')->validate()) {
+			throw new Exception(Loader::helper('validation/token')->getErrorMessage());
+		}
+		$files = array();
+		if (isset($_FILES['files']) && (is_uploaded_file($_FILES['files']['tmp_name'][0]))) {
+			for ($i = 0; $i < count($_FILES['files']['tmp_name']); $i++) {
+				if (!$fp->canAddFileType($cf->getExtension($_FILES['files']['name'][$i]))) {
+					throw new Exception(FileImporter::getErrorMessage(FileImporter::E_FILE_INVALID_EXTENSION));
+				} else {
+					$importer = new FileImporter();
+					$response = $importer->import($_FILES['files']['tmp_name'][$i], $_FILES['files']['name'][$i]);
+				}
+				if (!($response instanceof FileVersion)) {
+					throw new Exception(FileImporter::getErrorMessage($response));
+				} else {
+					$file = $response->getFile();
+					if (isset($_POST['ocID'])) {
+						// we check $fr because we don't want to set it if we are replacing an existing file
+						$file->setOriginalPage($_POST['ocID']);
+					}
+					$files[] = $file->getJSONObject();
+				}
+			}
+		} else {
+			throw new Exception(FileImporter::getErrorMessage($_FILES['Filedata']['error']));
+		}
+
+		Loader::helper('ajax')->sendResult($files);
+	}
+
 	public function duplicate() {
 		$files = $this->getRequestFiles('canCopyFile');
 		$r = new FileEditResponse();

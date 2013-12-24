@@ -20,6 +20,9 @@
     },
 
     publish: function(type, data, target) {
+      if (typeof console == 'object') {
+        console.log('ConcreteEvent Publish', type, data, target);
+      }
       (new ConcreteEvent.Event(type.toLowerCase(), data, target)).propagate();
       return ConcreteEvent;
     }

@@ -32,6 +32,8 @@
 			$selectedDisplay = 'none';
 			$resetDisplay = 'block';
 			$fileID = 0;
+			$v = View::getInstance();
+			$v->requireAsset('core/filemanager');
 			
 			/**
 			 * If $_POST[$postname] is a valid File ID

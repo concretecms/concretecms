@@ -18,9 +18,6 @@ if (LANGUAGE != 'en') {
 }
 
 $valt = Loader::helper('validation/token');
-$disp = '<script type="text/javascript">'."\n";
-$disp .=  "var CCM_SECURITY_TOKEN = '" . $valt->generate() . "';"."\n";
-$disp .= "</script>"."\n";
 //require(DIR_FILES_ELEMENTS_CORE . '/header_required.php'); 
 $v->addHeaderItem($disp);
 Loader::element('header_required', array('disableTrackingCode' => true));

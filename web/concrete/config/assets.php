@@ -148,6 +148,16 @@ $al->register('css', 'core/frontend/captcha', 'css/frontend/captcha.css');
 $al->register('css', 'core/frontend/pagination', 'css/frontend/pagination.css');
 $al->register('css', 'core/frontend/errors', 'css/frontend/errors.css');
 
+// File Manager
+$al->register('javascript', 'core/filemanager', 'js/ccm.filemanager.js', array('postprocess' => false));
+$al->register('css', 'core/filemanager', 'css/ccm.filemanager.css', array('postprocess' => false));
+$al->registerGroup('core/filemanager', array(
+	array('css', 'core/app'),
+	array('css', 'core/filemanager'),
+	array('javascript', 'core/app'),
+	array('javascript', 'core/filemanager')
+));
+
 // Sitemap
 $al->register('javascript', 'core/sitemap', 'js/ccm.sitemap.js', array('postprocess' => false));
 $al->register('css', 'core/sitemap', 'css/ccm.sitemap.css', array('postprocess' => false));

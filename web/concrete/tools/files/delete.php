@@ -9,22 +9,25 @@ if (!$fp->canAccessFileManager()) {
 
 if ($_POST['task'] == 'delete_files') {
 	$json['error'] = false;
-	
-	if (is_array($_POST['item'])) {
-		foreach($_POST['item'] as $fID) {
+
+	$fr = new FileEditResponse();
+	$files = array();
+	if (is_array($_POST['fID'])) {
+		foreach($_POST['fID'] as $fID) {
 			$f = File::getByID($fID);
 			$fp = new Permissions($f);
 			if ($fp->canDeleteFile()) {
+				$files[] = $f;
 				$f->delete();
 			} else {
-				$json['error'] = t('Unable to delete one or more files.');
+				throw new Exception(t('Unable to delete one or more files.'));
 			}
 		}
 	}
 
-	$js = Loader::helper('json');
-	print $js->encode($json);
-	exit;
+	$fr->setFiles($files);
+	$fr->setMessage(t2('%s file deleted successfully.', '%s files deleted successfully.', count($files)));
+	$fr->outputJSON();
 }
 
 $form = Loader::helper('form');
@@ -46,8 +49,6 @@ foreach($files as $f) {
 	}
 }
 
-$searchInstance = Loader::helper('text')->entities($_REQUEST['searchInstance']);
-
 ?>
 
 <div class="ccm-ui">
@@ -58,7 +59,7 @@ $searchInstance = Loader::helper('text')->entities($_REQUEST['searchInstance']);
 
 	<p><?=t('Are you sure you want to delete the following files?')?></p>
 
-	<form id="ccm-<?=$searchInstance?>-delete-form" method="post" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/delete">
+	<form data-dialog-form="delete-file" method="post" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/delete">
 	<?=$form->hidden('task', 'delete_files')?>
 	<table border="0" cellspacing="0" cellpadding="0" width="100%" class="table table-bordered">
 	
@@ -84,15 +85,23 @@ $searchInstance = Loader::helper('text')->entities($_REQUEST['searchInstance']);
 	} ?>
 	</table>
 	</form>
-	<br/>
-	
-	<? $ih = Loader::helper('concrete/interface')?>
+
 	<div class="dialog-buttons">
-	<?=$ih->button_js(t('Delete'), 'ccm_alDeleteFiles(\'' . $searchInstance . '\')', 'right', 'error')?>
-	<?=$ih->button_js(t('Cancel'), 'jQuery.fn.dialog.closeTop()', 'left')?>	
+	<button class="btn pull-left" data-dialog-action="cancel"><?=t('Cancel')?></button>
+	<button type="button" data-dialog-action="submit" class="btn btn-danger pull-right"><?=t('Delete')?></button>
 	</div>
 	
 </div>
+
+	<script type="text/javascript">
+	$(function() {
+		ConcreteEvent.subscribe('AjaxFormSubmitSuccess', function(e) {
+			if (e.eventData.form == 'delete-file') {
+				ConcreteEvent.publish('FileManagerDeleteRequestComplete', {files: e.eventData.response.files});
+			}
+		});
+	});
+	</script>
 		
 	<?
 	

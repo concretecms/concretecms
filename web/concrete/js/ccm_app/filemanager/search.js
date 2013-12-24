@@ -9,7 +9,8 @@
 		'use strict';
 		var my = this;
 		options = $.extend({
-			'mode': 'menu'
+			'mode': 'menu',
+			'uploadElement': 'body'
 		}, options);
 
 		my.options = options;
@@ -17,14 +18,55 @@
 
 		ConcreteAjaxSearch.call(my, $element, options);
 
+		my.setupFileDownloads();
+		my.setupFileUploads();
+		my.setupEvents();
+
+    }
+
+	ConcreteFileManager.prototype = Object.create(ConcreteAjaxSearch.prototype);
+
+	ConcreteFileManager.prototype.setupFileDownloads = function() {
+		var my = this;
 		if (!$('#ccm-file-manager-download-target').length) {
 			my.$downloadTarget = $('<iframe />', {'id': 'ccm-file-manager-download-target'}).appendTo(document.body);
 		} else {
 			my.$downloadTarget = $('#ccm-file-manager-download-target');
 		}
-	}
+	};
 
-	ConcreteFileManager.prototype = Object.create(ConcreteAjaxSearch.prototype);
+	ConcreteFileManager.prototype.setupFileUploads = function() {
+		var my = this;
+		switch(my.options.uploadElement) {
+			case 'body':
+				my.$uploadElement = $(document.body);
+				break;
+		}
+		my.$uploadElement.fileupload({
+    		url: CCM_DISPATCHER_FILENAME + '/system/file/upload',
+    		dataType: 'json',
+    		formData: {'ccm_token': CCM_SECURITY_TOKEN},
+			error: function(r) {
+				ConcreteAlert.notice('Error', '<div class="alert alert-danger">' + r.responseText + '</div>');
+			},
+	        start: function() {
+
+	        },
+	        success: function(r) {
+				my.refreshResults();
+	        },
+	        complete: function(r) {
+	
+	        }
+	    });
+	};
+
+	ConcreteFileManager.prototype.setupEvents = function() {
+		var my = this;
+		ConcreteEvent.subscribe('FileManagerDeleteRequestComplete', function(e) {
+			my.refreshResults();
+		});
+	};
 
 	ConcreteFileManager.prototype.setupStarredResults = function() {
 		var my = this;

@@ -61,7 +61,6 @@ module.exports = function(grunt) {
 				'<%= DIR_BASE %>/concrete/js/ccm_app/json.js',
 				'<%= DIR_BASE %>/concrete/js/ccm_app/jquery.form.js',
 				'<%= DIR_BASE %>/concrete/js/ccm_app/concrete5.js',
-				'<%= DIR_BASE %>/concrete/js/ccm_app/jquery.hoverIntent.js',
 				'<%= DIR_BASE %>/concrete/js/ccm_app/jquery.liveupdate.js',
 				'<%= DIR_BASE %>/concrete/js/ccm_app/chosen.jquery.js',
 				'<%= DIR_BASE %>/concrete/js/ccm_app/jquery.pep.js',
@@ -81,15 +80,22 @@ module.exports = function(grunt) {
 				'<%= DIR_BASE %>/concrete/js/ccm_app/quicksilver.js',
 				'<%= DIR_BASE %>/concrete/js/ccm_app/remote_marketplace.js',
 				'<%= DIR_BASE %>/concrete/js/ccm_app/search/base.js',
-				'<%= DIR_BASE %>/concrete/js/ccm_app/filemanager/search.js',
-				'<%= DIR_BASE %>/concrete/js/ccm_app/filemanager/selector.js',
-				'<%= DIR_BASE %>/concrete/js/ccm_app/filemanager/menu.js',
 				'<%= DIR_BASE %>/concrete/js/ccm_app/progressive_operations.js',
 				'<%= DIR_BASE %>/concrete/js/ccm_app/inline_edit.js',
 				'<%= DIR_BASE %>/concrete/js/ccm_app/custom_style.js',
 				'<%= DIR_BASE %>/concrete/js/ccm_app/tabs.js',
 				'<%= DIR_BASE %>/concrete/js/ccm_app/toolbar.js',
 				'<%= DIR_BASE %>/concrete/js/ccm_app/themes.js'
+			]
+		},
+		filemanager: {
+			dest: '<%= DIR_BASE %>/concrete/js/ccm.filemanager.js',
+			src: [
+				'<%= DIR_BASE %>/concrete/js/ccm_app/jquery.iframe-transport.js',
+				'<%= DIR_BASE %>/concrete/js/ccm_app/jquery.fileupload.js',
+				'<%= DIR_BASE %>/concrete/js/ccm_app/filemanager/search.js',
+				'<%= DIR_BASE %>/concrete/js/ccm_app/filemanager/selector.js',
+				'<%= DIR_BASE %>/concrete/js/ccm_app/filemanager/menu.js'
 			]
 		},
 		bootstrap: {
@@ -229,6 +235,7 @@ module.exports = function(grunt) {
 		'<%= DIR_BASE %>/concrete/css/ccm.account.css': '<%= DIR_BASE %>/concrete/css/ccm_app/build/ccm.account.less',
 		'<%= DIR_BASE %>/concrete/css/dynatree.css': '<%= DIR_BASE %>/concrete/css/ccm_app/build/dynatree.less',
 		'<%= DIR_BASE %>/concrete/css/ccm.sitemap.css': '<%= DIR_BASE %>/concrete/css/ccm_app/build/ccm.sitemap.less',
+		'<%= DIR_BASE %>/concrete/css/ccm.filemanager.css': '<%= DIR_BASE %>/concrete/css/ccm_app/build/ccm.filemanager.less',
 		'<%= DIR_BASE %>/concrete/css/ccm.conversations.css': '<%= DIR_BASE %>/concrete/css/ccm_app/build/ccm.conversations.less',
 		'<%= DIR_BASE %>/concrete/css/ccm.gathering.display.css': '<%= DIR_BASE %>/concrete/css/ccm_app/build/ccm.gathering.display.less',
 		'<%= DIR_BASE %>/concrete/css/ccm.gathering.base.css': '<%= DIR_BASE %>/concrete/css/ccm_app/build/ccm.gathering.base.less',
