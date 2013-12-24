@@ -14,6 +14,13 @@
 		}, options);
 
 		my.options = options;
+		my._templateFileProgress = _.template('<div id="ccm-file-upload-progress" class="ccm-ui"><div id="ccm-file-upload-progress-bar">' +
+			'<% if (progress == \'-1\') { %>' +
+				'<div class="progress progress-striped active"><div class="progress-bar" style="width: 100%;"></div></div>' +
+			'<% } else { %>' + 
+				'<div class="progress"><div class="progress-bar" style="width: <%=progress%>%;"></div></div>' +
+				'<% } %>' +
+	        '</div></div>');
 		my._templateSearchResultsMenu = _.template(ConcreteFileManagerMenu.get());
 
 		ConcreteAjaxSearch.call(my, $element, options);
@@ -49,14 +56,24 @@
 			error: function(r) {
 				ConcreteAlert.notice('Error', '<div class="alert alert-danger">' + r.responseText + '</div>');
 			},
+			progress: function(e, data) {
+			    var progress = parseInt(data.loaded / data.total * 100, 10);
+				$('#ccm-file-upload-progress-wrapper').html(my._templateFileProgress({'progress': progress}));
+			},
 	        start: function() {
-
+	        	$('#ccm-file-upload-progress-wrapper').remove();
+	        	$('<div />', {'id': 'ccm-file-upload-progress-wrapper'}).html(my._templateFileProgress({'progress': -1})).appendTo(document.body);
+	        	$.fn.dialog.open({
+	        		title: ccmi18n_filemanager.uploadProgress,
+	        		width: 400,
+	        		height: 50,
+	        		element: $('#ccm-file-upload-progress-wrapper'),
+	        		modal: true
+	        	});
 	        },
 	        success: function(r) {
+	        	jQuery.fn.dialog.closeTop();
 				my.refreshResults();
-	        },
-	        complete: function(r) {
-	
 	        }
 	    });
 	};
