@@ -62,6 +62,7 @@ function CCMPanel(options) {
                 $(this).dequeue();
             }).delay(1000).hide(0);
             $('html').removeClass(obj.getPositionClass());
+            $('html').removeClass('ccm-panel-open');
             obj.isOpen = false;
             $(this).dequeue();
         });
@@ -365,6 +366,7 @@ function CCMPanel(options) {
             }
         }
         var obj = this;
+        $('html').addClass('ccm-panel-open');
         $(window).delay(delay).queue(function() {
             var $panel = $('#' + obj.getDOMID());
             $panel.find('.ccm-panel-content-wrapper').html('');
