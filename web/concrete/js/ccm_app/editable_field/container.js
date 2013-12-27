@@ -62,7 +62,7 @@
 		    $field.fileupload({
 		    	url: my.getAjaxURL($field),
 		        dataType: 'json',
-		        data: my.options.data,
+		        formData: my.options.data,
 		        start: function() {
 		        	ConcreteAlert.showLoader();
 		        },
@@ -101,12 +101,15 @@
 			my.$element.on('click', '[data-editable-field-command=clear]', function() {
 				var $icon = $(this), 
 					$field = $icon.closest('[data-editable-field-type]'),
-					method = 'update'  + $field.attr('data-editable-field-type').charAt(0).toUpperCase() + $field.attr('data-editable-field-type').slice(1) + 'Field';
+					method = 'update'  + $field.attr('data-editable-field-type').charAt(0).toUpperCase() + $field.attr('data-editable-field-type').slice(1) + 'Field',
+					data = my.options.data;
+
+				data.task = 'clear';
 
 				var url = my.getAjaxURL($field);
 				return new ConcreteAjaxRequest({
 					url: url,
-					data: {'task': 'clear'},
+					data: data, 
 					success: function(r) {
 						my[method](r, $field);
 

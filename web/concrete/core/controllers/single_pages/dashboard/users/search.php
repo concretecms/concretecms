@@ -10,6 +10,9 @@ class Concrete5_Controller_Page_Dashboard_Users_Search extends DashboardControll
 
 	public function update_avatar($uID = false) {
 		$this->setupUser($uID);
+		if (!Loader::helper('validation/token')->validate()) {
+			throw new Exception(Loader::helper('validation/token')->getErrorMessage());
+		}
 		if ($this->canEditAvatar) {
 			$av = Loader::helper('concrete/avatar'); 
 			if (is_uploaded_file($_FILES['avatar']['tmp_name']) ) {
@@ -61,6 +64,9 @@ class Concrete5_Controller_Page_Dashboard_Users_Search extends DashboardControll
 		$this->setupUser($uID);
 		if ($this->canEditEmail) {
 			$email = $this->post('value');
+			if (!Loader::helper('validation/token')->validate()) {
+				$this->error->add(Loader::helper('validation/token')->getErrorMessage());
+			}
 			if (!Loader::helper('validation/strings')->email($email)) {
 				$this->error->add(t('Invalid email address provided.'));
 			} else if (!Loader::helper('concrete/validation')->isUniqueEmail($email) && $this->user->getUserEmail() != $email) {
@@ -85,6 +91,9 @@ class Concrete5_Controller_Page_Dashboard_Users_Search extends DashboardControll
 		if ($this->canEditUserName) {
 			$username = $this->post('value');
 			if (USER_REGISTRATION_WITH_EMAIL_ADDRESS == false) {
+				if (!Loader::helper('validation/token')->validate()) {
+					$this->error->add(Loader::helper('validation/token')->getErrorMessage());
+				}
 				if (strlen($username) < USER_USERNAME_MINIMUM) {
 					$this->error->add(t('A username must be at least %s characters long.',USER_USERNAME_MINIMUM));
 				}
@@ -117,9 +126,42 @@ class Concrete5_Controller_Page_Dashboard_Users_Search extends DashboardControll
 				$sr->outputJSON();
 			}
 		}
-
 	}
 
+	public function change_password($uID = false) {
+		$this->setupUser($uID);
+		if ($this->canEditPassword) {
+			$password = $this->post('uPassword');
+			$passwordConfirm = $this->post('uPasswordConfirm');
+			if ((strlen($password) < USER_PASSWORD_MINIMUM) || (strlen($password) > USER_PASSWORD_MAXIMUM)) {
+				$this->error->add( t('A password must be between %s and %s characters',USER_PASSWORD_MINIMUM,USER_PASSWORD_MAXIMUM));
+			}
+			if (!Loader::helper('validation/token')->validate('change_password')) {
+				$this->error->add(Loader::helper('validation/token')->getErrorMessage());
+			}
+			if (strlen($password) >= USER_PASSWORD_MINIMUM && !Loader::helper('concrete/validation')->password($password)) {
+				$this->error->add(t('A password may not contain ", \', >, <, or any spaces.'));
+			}
+			
+			if ($password != $passwordConfirm) {
+				$this->error->add(t('The two passwords provided do not match.'));
+			}
+			
+			$sr = new UserEditResponse();
+			$sr->setUser($this->user);
+			if (!$this->error->has()) {
+				$data['uPassword'] = $password;
+				$data['uPasswordConfirm'] = $passwordConfirm;
+				$this->user->update($data);
+				$sr->setMessage(t('Password updated successfully.'));
+			} else {
+				$sr->setError($this->error);
+			}
+			$sr->outputJSON();
+		
+		}
+
+	}
 	public function view($uID = false) {
 		if ($uID) {
 			$this->setupUser($uID);
@@ -127,6 +169,8 @@ class Concrete5_Controller_Page_Dashboard_Users_Search extends DashboardControll
 				$r = ResponseAssetGroup::get();
 				$r->requireAsset('core/app/editable-fields');
 			}
+			$uo = $this->user->getUserObject();
+			$this->set('groups', $uo->getUserGroupObjects());
 		}
 		$ui = $this->user;
 		if (!is_object($ui)) {

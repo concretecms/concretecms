@@ -230,8 +230,13 @@ class Concrete5_Model_Group extends Object {
 	function inGroup() {
 		return $this->inGroup;
 	}
-	function getGroupDateTimeEntered() {
-		return $this->gDateTimeEntered;
+	function getGroupDateTimeEntered($user) {
+		$db = Loader::db();
+		$q = "select ugEntered from UserGroups where gID = ? and uID = ?";
+		$r = $db->GetOne($q, array($this->gID, $user->getUserID()));
+		if ($r) {
+			return $r;
+		}
 	}
 
 	function getGroupID() {
