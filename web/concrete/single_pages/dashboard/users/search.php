@@ -11,7 +11,7 @@
 		</div>
 		<div class="row">
 			<div class="col-md-2"><p><?=t('Password')?></p></div>
-			<div class="col-md-4"><p><a href="#" class="btn btn-xs btn-default"><?=t('Change')?></a></p></div>
+			<div class="col-md-4"><p><? if ($canEditPassword) { ?><a href="#" class="btn btn-xs btn-default" data-button="change-password"><?=t('Change')?></a><? } else { ?>*********<? } ?></p></div>
 			<div class="col-md-2"><p><?=t('Profile Picture')?></p></div>
 			<div class="col-md-4"><p>
 				<div <? if ($canEditAvatar) { ?>data-editable-field-type="image" data-url="<?=$this->action('update_avatar', $user->getUserID())?>"<? } ?>>
@@ -44,6 +44,24 @@
 
 </div>
 
+<? if ($canEditPassword) { ?>
+	
+	<div style="display: none">
+		<div data-dialog="change-password">
+			<form data-dialog-form="change-password" action="<?=$view->action('change_password', $user->getUserID())?>">
+				<?=Loader::helper('validation/token')->output('change_password')?>
+
+				<div class="dialog-buttons">
+				<button class="btn pull-left" data-dialog-action="cancel"><?=t('Cancel')?></button>
+				<button type="button" data-dialog-action="submit" class="btn btn-primary pull-right"><?=t('Update')?></button>
+				</div>
+				
+
+			</form>
+		</div>
+	</div>
+<? } ?>
+
 <script type="text/javascript">
 $(function() {
 	$('div[data-container=editable-fields]').concreteEditableFieldContainer({
@@ -51,6 +69,17 @@ $(function() {
 		data: {
 			token: '<?=Loader::helper('validation/token')->generate('save')?>'
 		}
+	});
+
+	$('div[data-container=editable-fields]').on('click', 'a[data-button=change-password]', function() {
+		$.fn.dialog.open({
+			element: 'div[data-dialog=change-password]',
+			title: '<?=t('Change Password')?>',
+			width: '280',
+			height: '140',
+			modal: true
+		});
+		return false;
 	});
 });
 </script>

@@ -47,11 +47,13 @@ class Concrete5_Controller_Page_Dashboard_Users_Search extends DashboardControll
 				$this->canEditAvatar = $this->assignment->allowEditAvatar();
 				$this->canEditUserName = $this->assignment->allowEditUserName();
 				$this->canEditEmail = $this->assignment->allowEditEmail();
+				$this->canEditPassword = $this->assignment->allowEditPassword();
 			}
 			$this->set('user', $ui);
 			$this->set('canEditAvatar', $this->canEditAvatar);
 			$this->set('canEditUserName', $this->canEditUserName);
 			$this->set('canEditEmail', $this->canEditEmail);
+			$this->set('canEditPassword', $this->canEditPassword);
 		}
 	}
 
