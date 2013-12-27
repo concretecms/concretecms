@@ -10,7 +10,7 @@ class Concrete5_Controller_Page_Dashboard_Users_Search extends DashboardControll
 
 	public function update_avatar($uID = false) {
 		$this->setupUser($uID);
-		if ($this->assignment->allowEditAvatar()) {
+		if ($this->canEditAvatar) {
 			$av = Loader::helper('concrete/avatar'); 
 			if (is_uploaded_file($_FILES['avatar']['tmp_name']) ) {
 				$av->updateUserAvatar($_FILES['avatar']['tmp_name'], $this->user->getUserID());
@@ -40,10 +40,80 @@ class Concrete5_Controller_Page_Dashboard_Users_Search extends DashboardControll
 				throw new Exception(t('Access Denied.'));
 			}
 			$pke = PermissionKey::getByHandle('edit_user_properties');
-			$this->set('user', $ui);
 			$this->user = $ui;
-			$this->canEdit = $up->canEditUser();		
 			$this->assignment = $pke->getMyAssignment();
+			$this->canEdit = $up->canEditUser();
+			if ($this->canEdit) {
+				$this->canEditAvatar = $this->assignment->allowEditAvatar();
+				$this->canEditUserName = $this->assignment->allowEditUserName();
+				$this->canEditEmail = $this->assignment->allowEditEmail();
+			}
+			$this->set('user', $ui);
+			$this->set('canEditAvatar', $this->canEditAvatar);
+			$this->set('canEditUserName', $this->canEditUserName);
+			$this->set('canEditEmail', $this->canEditEmail);
+		}
+	}
+
+	public function update_email($uID = false) {
+		$this->setupUser($uID);
+		if ($this->canEditEmail) {
+			$email = $this->post('value');
+			if (!Loader::helper('validation/strings')->email($email)) {
+				$this->error->add(t('Invalid email address provided.'));
+			} else if (!Loader::helper('concrete/validation')->isUniqueEmail($email) && $this->user->getUserEmail() != $email) {
+				$this->error->add(t("The email address '%s' is already in use. Please choose another.",$email));
+			}
+
+			$sr = new UserEditResponse();
+			$sr->setUser($this->user);
+			if (!$this->error->has()) {
+				$data = array('uEmail' => $email);
+				$this->user->update($data);
+				$sr->setMessage(t('Email saved successfully.'));
+			} else {
+				$sr->setError($this->error);
+			}
+			$sr->outputJSON();
+		}
+	}
+
+	public function update_username($uID = false) {
+		$this->setupUser($uID);
+		if ($this->canEditUserName) {
+			$username = $this->post('value');
+			if (USER_REGISTRATION_WITH_EMAIL_ADDRESS == false) {
+				if (strlen($username) < USER_USERNAME_MINIMUM) {
+					$this->error->add(t('A username must be at least %s characters long.',USER_USERNAME_MINIMUM));
+				}
+	
+				if (strlen($username) > USER_USERNAME_MAXIMUM) {
+					$this->error->add(t('A username cannot be more than %s characters long.',USER_USERNAME_MAXIMUM));
+				}
+	
+				
+				if (strlen($username) >= USER_USERNAME_MINIMUM && !Loader::helper('concrete/validation')->username($username)) {
+					if(USER_USERNAME_ALLOW_SPACES) {
+						$this->error->add(t('A username may only contain letters, numbers and spaces.'));
+					} else {
+						$this->error->add(t('A username may only contain letters or numbers.'));
+					}
+				}
+				if (!Loader::Helper('concrete/validation')->isUniqueUsername($username) && $this->user->getUserName() != $username) {
+					$this->error->add(t("The username '%s' already exists. Please choose another",$username));
+				}
+
+				$sr = new UserEditResponse();
+				$sr->setUser($this->user);
+				if (!$this->error->has()) {
+					$data = array('uName' => $username);
+					$this->user->update($data);
+					$sr->setMessage(t('Username saved successfully.'));
+				} else {
+					$sr->setError($this->error);
+				}
+				$sr->outputJSON();
+			}
 		}
 
 	}

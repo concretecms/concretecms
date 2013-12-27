@@ -5,16 +5,16 @@
 		<legend><?=t('Basic Details')?></legend>
 		<div class="row">
 			<div class="col-md-2"><p><?=t('Username')?></p></div>
-			<div class="col-md-4"><p><strong data-editable-field-type="xeditable" data-type="text" data-name="uName"><?=$user->getUserName()?></strong></p></div>
+			<div class="col-md-4"><p><strong <? if ($canEditUserName) { ?>data-editable-field-type="xeditable" data-url="<?=$view->action('update_username', $user->getUserID())?>" data-type="text" data-name="uName" <? } ?>><?=$user->getUserName()?></strong></p></div>
 			<div class="col-md-2"><p><?=t('Email Address')?></p></div>
-			<div class="col-md-4"><p><strong data-editable-field-type="xeditable" data-type="email" data-name="uEmail"><?=$user->getUserEmail()?></strong></p></div>
+			<div class="col-md-4"><p><strong <? if ($canEditEmail) { ?>data-editable-field-type="xeditable" data-url="<?=$view->action('update_email', $user->getUserID())?>"data-type="email" data-name="uEmail"<? } ?>><?=$user->getUserEmail()?></strong></p></div>
 		</div>
 		<div class="row">
 			<div class="col-md-2"><p><?=t('Password')?></p></div>
 			<div class="col-md-4"><p><a href="#" class="btn btn-xs btn-default"><?=t('Change')?></a></p></div>
 			<div class="col-md-2"><p><?=t('Profile Picture')?></p></div>
 			<div class="col-md-4"><p>
-				<div <? if ($controller->assignment->allowEditAvatar()) { ?>data-editable-field-type="image" data-url="<?=$this->action('update_avatar', $user->getUserID())?>"<? } ?>>
+				<div <? if ($canEditAvatar) { ?>data-editable-field-type="image" data-url="<?=$this->action('update_avatar', $user->getUserID())?>"<? } ?>>
 					<a href="#" class="ccm-icon-wrapper" data-editable-field-command="clear"><i class="glyphicon glyphicon-trash"></i></a>
                     <span class="editable-image-wrapper">
 	                    <input type="file" id="file-avatar" name="avatar" />

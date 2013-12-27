@@ -44,13 +44,10 @@ class Concrete5_Controller_Search_Users extends Controller {
 			$gIDs = array(-1);
 			$gs = new GroupSearch();
 			$groups = $gs->get();
-			foreach($groups as $gRow) {
-				$g = Group::getByID($gRow['gID']);
-				if (is_object($g)) {
-					$gp = new Permissions($g);
-					if ($gp->canSearchUsersInGroup()) {
-						$gIDs[] = $g->getGroupID();
-					}
+			foreach($groups as $g) {
+				$gp = new Permissions($g);
+				if ($gp->canSearchUsersInGroup()) {
+					$gIDs[] = $g->getGroupID();
 				}
 			}
 			$this->userList->addToQuery("left join UserGroups ugRequired on ugRequired.uID = u.uID ");	

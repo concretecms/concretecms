@@ -36,9 +36,19 @@
 		setupXeditableField: function($field) {
 			var my = this;
 			$field.editable({
+				ajaxOptions: {
+					dataType: 'json'
+				},
 				showbuttons: false,
 				params: my.options.data,
 				url: my.options.url,
+				success: function(r, newValue) {
+		        	if (ConcreteAjaxRequest.validateResponse(r)) {
+		        		return {'newValue': newValue};
+		        	} else {
+		        		return '';
+		        	}
+				},
 				pk: '_x' // we have to include this otherwise xeditable doesn't work.
 			});
 		},
