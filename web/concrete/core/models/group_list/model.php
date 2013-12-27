@@ -22,7 +22,7 @@ class Concrete5_Model_GroupSearch extends DatabaseItemList {
 	protected $autoSortColumns = array('gName', 'gID');
 
 	public function includeAllGroups() {
-		$this->filter('gID', -1, '>');
+		$this->filter('Groups.gID', -1, '>');
 	}
 	
 	public function filterByKeywords($kw) {
@@ -44,8 +44,13 @@ class Concrete5_Model_GroupSearch extends DatabaseItemList {
 					$excludeGroupIDs[] = $row['gID'];
 				}
 			}
-			$this->filter('gID', $excludeGroupIDs, 'not in');
+			$this->filter('Groups.gID', $excludeGroupIDs, 'not in');
 		}
+	}
+
+	public function filterByUserID($uID) {
+		$this->addToQuery('inner join UserGroups ug on Groups.gID = ug.gID');
+		$this->filter('ug.uID', $uID);
 	}
 
 	public function updateItemsPerPage( $num ) {
@@ -54,7 +59,7 @@ class Concrete5_Model_GroupSearch extends DatabaseItemList {
 	
 	function __construct() {
 		$this->setQuery("select Groups.gID, Groups.gName, Groups.gDescription from Groups");
-		$this->filter('gID', REGISTERED_GROUP_ID, '>');
+		$this->filter('Groups.gID', REGISTERED_GROUP_ID, '>');
 	}
 
 	public function get($itemsToGet = 100, $offset = 0) {

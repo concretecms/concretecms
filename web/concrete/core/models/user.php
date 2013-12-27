@@ -318,6 +318,12 @@
 			setcookie("ccmUserHash", $this->getUserID() . ':' . $hashVal, time() + 1209600, DIR_REL . '/');
 		}
 
+		public function getUserGroupObjects() {
+			$gs = new GroupSearch();
+			$gs->filterByUserID($this->uID);
+			return $gs->get();
+		}
+		
 		function getUserGroups() {
 			$ugtmp = array();
 			// we have to do this because we don't have a localized version of the guest and registered group names
