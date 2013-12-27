@@ -28,4 +28,16 @@ class Concrete5_Model_UserInfoPermissionResponse extends PermissionResponse {
 	}
 
 
+	public function canEditUser() {
+		$ui = $this->getPermissionObject();
+		$u = new User();
+		if ($ui->getUserID() == USER_SUPER_ID && !$u->isSuperUser()) {
+			return false;
+		}
+
+		$pk = PermissionKey::getByHandle('edit_user_properties');
+		return $pk->validate();
+	}
+
+
 }
