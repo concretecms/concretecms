@@ -62,6 +62,7 @@
 		    $field.fileupload({
 		    	url: my.getAjaxURL($field),
 		        dataType: 'json',
+		        data: my.options.data,
 		        start: function() {
 		        	ConcreteAlert.showLoader();
 		        },
