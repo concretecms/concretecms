@@ -2,23 +2,62 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 class Concrete5_Controller_Page_Dashboard_Users_Search extends DashboardController {
 
+	protected $user = false;
+
 	public function on_start(){
 		$this->error = Loader::helper('validation/error');
 	}
 
-	public function view() {
-
-		if (isset($_GET['uID'])) {
-			$uo = UserInfo::getByID(intval($_GET['uID']));
-			if (is_object($uo)) {
-				$up = new Permissions($uo);
-				if (!$up->canViewUser()) {
-					$this->redirect('/dashboard/users/search');
+	public function update_avatar($uID = false) {
+		$this->setupUser($uID);
+		if ($this->assignment->allowEditAvatar()) {
+			$av = Loader::helper('concrete/avatar'); 
+			if (is_uploaded_file($_FILES['avatar']['tmp_name']) ) {
+				$av->updateUserAvatar($_FILES['avatar']['tmp_name'], $this->user->getUserID());
+			} else {
+				if ($_POST['task'] == 'clear') {
+					$this->user->update(array('uHasAvatar' => false));
 				}
 			}
+		} else {
+			throw new Exception(t('Access Denied.'));
 		}
-			// this is hacky as hell, we need to make this page MVC
-		if (!is_object($uo)) {
+
+		$ui = UserInfo::getByID($uID); // avatar doesn't reload automatically
+		$sr = new UserEditResponse();
+		$sr->setUser($this->user);
+		$sr->setMessage(t('Avatar saved successfully.'));
+		$html = $av->outputUserAvatar($ui);
+		$sr->setAdditionalDataAttribute('imageHTML', $html);
+		$sr->outputJSON();
+	}
+
+	protected function setupUser($uID) {
+		$ui = UserInfo::getByID(Loader::helper('security')->sanitizeInt($uID));
+		if (is_object($ui)) {
+			$up = new Permissions($ui);
+			if (!$up->canViewUser()) {
+				throw new Exception(t('Access Denied.'));
+			}
+			$pke = PermissionKey::getByHandle('edit_user_properties');
+			$this->set('user', $ui);
+			$this->user = $ui;
+			$this->canEdit = $up->canEditUser();		
+			$this->assignment = $pke->getMyAssignment();
+		}
+
+	}
+
+	public function view($uID = false) {
+		if ($uID) {
+			$this->setupUser($uID);
+			if ($this->canEdit) {
+				$r = ResponseAssetGroup::get();
+				$r->requireAsset('core/app/editable-fields');
+			}
+		}
+		$ui = $this->user;
+		if (!is_object($ui)) {
 			$cnt = new SearchUsersController();
 			$cnt->search();
 			$this->set('searchController', $cnt);
@@ -30,13 +69,30 @@ class Concrete5_Controller_Page_Dashboard_Users_Search extends DashboardControll
 					result: " . $result . ", 
 					onLoad: function(concreteSearch) { 
 						concreteSearch.\$element.on('click', 'a[data-user-id]', function() {
-							window.location.href='" . URL::to('/dashboard/users/search') . "?uID=' + $(this).attr('data-user-id');
+							window.location.href='" . URL::to('/dashboard/users/search', 'view') . "/' + $(this).attr('data-user-id');
 							return false;
 						});
 					}
 				});
 			});
 			</script>");
+		}
+	}
+
+	/*
+
+	public function view() {
+
+		if (isset($_GET['uID'])) {
+			$uo = UserInfo::getByID(intval($_GET['uID']));
+			if (is_object($uo)) {
+				if (!$up->canViewUser()) {
+					$this->redirect('/dashboard/users/search');
+				}
+			}
+		}
+			// this is hacky as hell, we need to make this page MVC
+		if (!is_object($uo)) {
 		}
 
 		$form = Loader::helper('form');
@@ -112,16 +168,6 @@ class Concrete5_Controller_Page_Dashboard_Users_Search extends DashboardControll
 					$this->error->add(t('A username cannot be more than %s characters long.',USER_USERNAME_MAXIMUM));
 				}
 	
-				/*
-				if (strlen($username) >= USER_USERNAME_MINIMUM && !$vals->alphanum($username,USER_USERNAME_ALLOW_SPACES)) {
-					if(USER_USERNAME_ALLOW_SPACES) {
-						$e->add(t('A username may only contain letters, numbers and spaces.'));
-					} else {
-						$e->add(t('A username may only contain letters or numbers.'));
-					}
-					
-				}
-				*/
 				
 				if (strlen($username) >= USER_USERNAME_MINIMUM && !$valc->username($username)) {
 					if(USER_USERNAME_ALLOW_SPACES) {
@@ -325,5 +371,6 @@ class Concrete5_Controller_Page_Dashboard_Users_Search extends DashboardControll
 		$this->view();
 
 	}
+	*/
 
 }

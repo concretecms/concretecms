@@ -118,7 +118,7 @@ class Concrete5_Controller_Page_Dashboard_Users_Add extends DashboardController 
 		
 						$uo->updateGroups($gIDs);
 						$uID = $uo->getUserID();
-						$this->redirect('/dashboard/users/search?uID=' . $uID . '&user_created=1');
+						$this->redirect('/dashboard/users/search', 'view', $uID, 'created');
 					} else {
 						$this->error->add(t('An error occurred while trying to create the account.'));
 						$this->set('error',$this->error);

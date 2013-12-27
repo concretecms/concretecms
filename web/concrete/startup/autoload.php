@@ -10,6 +10,7 @@ $classes = array(
 	'PageEditResponse' => array('library', 'response/edit/page/library'),
 	'PageEditVersionResponse' => array('library', 'response/edit/page/version'),
 	'FileEditResponse' => array('library', 'response/edit/file/library'),
+	'UserEditResponse' => array('library', 'response/edit/user/library'),
 	'Localization' => array('library','localization'),
 	'Cookie' => array('library', 'cookie'),
 	'Route' => array('library', 'routing/route/library'),

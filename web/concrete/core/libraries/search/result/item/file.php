@@ -11,15 +11,10 @@ class Concrete5_Library_FileSearchResultItem extends SearchResultItem {
 	}
 
 	protected function populateDetails($item) {
-		$this->fID = $item->getFileID();
-		$this->isStarred = $item->isStarred();
-		$fp = new Permissions($item);
-		$this->canCopyFile = $fp->canCopyFile();
-		$this->canEditFilePermissions = $fp->canEditFilePermissions();
-		$this->canDeleteFile = $fp->canDeleteFile();
-		$this->canViewFile = $item->canView();
-		$this->canEditFile = $item->canEdit();
-		$this->canReplaceFile = $fp->canEditFileContents();
+		$obj = $item->getJSONObject();
+		foreach($obj as $key => $value) {
+			$this->{$key} = $value;
+		}
 	}
 
 
