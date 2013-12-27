@@ -61,6 +61,9 @@
 		}
 	}
 
+	// static method
+	ConcreteAjaxRequest.validateResponse = ConcreteAjaxRequest.prototype.validateResponse;
+	
 	// jQuery Plugin
 	$.concreteAjax = function(options) {
 		new ConcreteAjaxRequest(options);

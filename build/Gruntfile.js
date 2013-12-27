@@ -75,6 +75,7 @@ module.exports = function(grunt) {
 				'<%= DIR_BASE %>/concrete/js/ccm_app/dialog.js',
 				'<%= DIR_BASE %>/concrete/js/ccm_app/alert.js',
 				'<%= DIR_BASE %>/concrete/js/ccm_app/newsflow.js',
+				'<%= DIR_BASE %>/concrete/js/ccm_app/editable_field/container.js',
 				'<%= DIR_BASE %>/concrete/js/ccm_app/page_reindexing.js',
 				'<%= DIR_BASE %>/concrete/js/ccm_app/in_context_menu.js',
 				'<%= DIR_BASE %>/concrete/js/ccm_app/quicksilver.js',
@@ -113,10 +114,17 @@ module.exports = function(grunt) {
 			dest: '<%= DIR_BASE %>/concrete/js/underscore.js',
 			src: '<%= DIR_BASE %>/concrete/js/ccm_app/underscore.js'
 		},
+
 		jquery_cookie: {
 			dest: '<%= DIR_BASE %>/concrete/js/jquery.cookie.js',
 			src: '<%= DIR_BASE %>/concrete/js/ccm_app/jquery.cookie.js'
 		},
+
+		jquery_fileupload: {
+			dest: '<%= DIR_BASE %>/concrete/js/jquery.fileupload.js',
+			src: '<%= DIR_BASE %>/concrete/js/ccm_app/jquery.fileupload.js'
+		},
+
 
 		jquery_form: {
 			dest: '<%= DIR_BASE %>/concrete/js/jquery.form.js',
@@ -177,6 +185,14 @@ module.exports = function(grunt) {
 			]
 		},
 
+		bootstrap_editable: {
+			dest: '<%= DIR_BASE %>/concrete/js/bootstrap-editable.js',
+			src: [
+				'<%= DIR_BASE %>/concrete/js/bootstrap-editable/bootstrap3-editable.js'
+			]
+		},
+
+
 		ccm_gathering: {
 			dest: '<%= DIR_BASE %>/concrete/js/ccm.gathering.js',
 			src: [
@@ -224,6 +240,7 @@ module.exports = function(grunt) {
 	// List of the CSS files to be generated
 	var css = {
 		'<%= DIR_BASE %>/concrete/css/ccm.app.css': '<%= DIR_BASE %>/concrete/css/ccm_app/build/ccm.app.less',
+		'<%= DIR_BASE %>/concrete/css/ccm.editable.fields.css': '<%= DIR_BASE %>/concrete/css/ccm_app/build/ccm.editable.fields.less',
 		'<%= DIR_BASE %>/concrete/css/jquery.ui.css': '<%= DIR_BASE %>/concrete/css/ccm_app/build/jquery.ui.less',
 		'<%= DIR_BASE %>/concrete/css/jquery.rating.css': '<%= DIR_BASE %>/concrete/css/ccm_app/build/jquery.rating.less',
 		'<%= DIR_BASE %>/concrete/css/ccm.default.theme.css': '<%= DIR_BASE %>/concrete/css/ccm_app/build/ccm.default.theme.less',

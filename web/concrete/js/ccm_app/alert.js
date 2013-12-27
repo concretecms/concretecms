@@ -43,8 +43,23 @@
                 $(this).remove();
                 $(this).dequeue();
             });
-        }
+        },
 
+        showLoader: function() {
+            var $lm = $('<div id="ccm-modal-overlay"><div id="ccm-loader"></div></div>').appendTo($(document.body));
+            $lm.delay(1).queue(function() {
+                $lm.addClass("ccm-modal-overlay-active");
+                $(this).dequeue();
+            }).delay(300).queue(function() {
+                $('#ccm-loader').addClass('ccm-loader-active');
+                $(this).dequeue();
+            });
+        },
+
+
+        hideLoader: function() {
+            $('#ccm-modal-overlay').remove();
+        }
     }
 
     global.ConcreteAlert = ConcreteAlert;

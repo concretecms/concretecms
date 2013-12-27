@@ -45,6 +45,12 @@ $al->registerGroup('jquery/colorpicker', array(
 	array('css', 'jquery/colorpicker')
 ));
 
+// jquery file uploader
+$al->register('javascript', 'jquery/fileupload', 'js/jquery.fileupload.js');
+$al->registerGroup('jquery/fileupload', array(
+	array('javascript', 'jquery/fileupload')
+));
+
 // swfobject
 $al->register('javascript', 'swfobject', 'js/swfobject.js');
 
@@ -108,6 +114,14 @@ $al->registerGroup('core/app', array(
 	array('css', 'jqueryui')
 ));
 
+$al->register('javascript', 'bootstrap-editable', 'js/bootstrap-editable.js', array('postprocess' => false));
+$al->register('css', 'core/app/editable-fields', 'css/ccm.editable.fields.css', array('postprocess' => false));
+$al->registerGroup('core/app/editable-fields', array(
+	array('javascript', 'bootstrap-editable'),
+	array('css', 'core/app/editable-fields'),
+	array('javascript', 'jquery/fileupload')
+));
+
 // Image Editor
 $al->register('javascript', 'kinetic', 'js/kinetic.js');
 $al->register('css', 'core/imageeditor', 'css/ccm.image_editor.css');
@@ -127,7 +141,6 @@ $al->registerGroup('dashboard', array(
 	array('javascript', 'jqueryui'),
 	array('javascript', 'underscore'),
 	array('javascript', 'dashboard'),
-	array('javascript', 'backstretch'),
 	array('javascript', 'core/observer'),
 	array('javascript', 'bootstrap/dropdown'),
 	array('javascript', 'bootstrap/popover'),
