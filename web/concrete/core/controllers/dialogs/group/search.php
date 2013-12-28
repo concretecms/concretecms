@@ -15,6 +15,8 @@ class Concrete5_Controller_Dialogs_Group_Search extends BackendInterfaceControll
 		$result = Loader::helper('json')->encode($cnt->getSearchResultObject()->getJSONObject());
 		$this->set('result', $result);
 		$this->set('searchController', $cnt);
+		$this->set('tree', GroupTree::get());
+		$this->requireAsset('core/groups');
 	}
 
 }

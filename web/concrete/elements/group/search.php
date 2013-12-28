@@ -2,13 +2,17 @@
 <?
 $form = Loader::helper('form');
 $searchRequest = $controller->getSearchRequest();
+$result = Loader::helper('json')->encode($controller->getSearchResultObject()->getJSONObject());
+$tree = GroupTree::get();
 ?>
 
 <style type="text/css">
-	div[data-search=groups].ccm-ui form.ccm-search-fields {
-		margin-left: 0px;
+	div[data-search=groups] form.ccm-search-fields {
+		margin-left: 0px !important;
 	}
 </style>
+
+<div data-search="groups">
 
 <script type="text/template" data-template="search-form">
 <form role="form" data-search-form="groups" action="<?=URL::to('/system/search/groups/submit')?>" class="form-inline ccm-search-fields">
@@ -25,10 +29,10 @@ $searchRequest = $controller->getSearchRequest();
 </script>
 
 <script type="text/template" data-template="search-results-table-body">
-<% _.each(items, function(user) {%>
+<% _.each(items, function(group) {%>
 <tr>
-	<% for(i = 0; i < user.columns.length; i++) {
-		var column = user.columns[i]; 
+	<% for(i = 0; i < group.columns.length; i++) {
+		var column = group.columns[i]; 
 		%>
 		<td><%=column.value%></td>
 	<% } %>
@@ -36,7 +40,10 @@ $searchRequest = $controller->getSearchRequest();
 <% }); %>
 </script>
 
+
 <div data-search-element="wrapper"></div>
+
+<div class="group-tree" data-group-tree="<?=$tree->getTreeID()?>"></div>
 
 <div data-search-element="results">
 
@@ -50,6 +57,7 @@ $searchRequest = $controller->getSearchRequest();
 <div class="ccm-search-results-pagination"></div>
 
 </div>
+
 
 <script type="text/template" data-template="search-results-pagination">
 <ul class="pagination">
@@ -72,6 +80,54 @@ $searchRequest = $controller->getSearchRequest();
 	<% } %>
 </tr>
 </script>
+
+<script type="text/javascript">
+$(function() {
+	$('[data-group-tree]').concreteGroupsTree({
+		'treeID': '<?=$tree->getTreeID()?>',
+		<? if ($selectMode) { ?>
+			onSelectNode: function(node) {
+				ConcreteEvent.publish('SelectGroup', {'gID': node.data.gID, 'gName': node.data.title});
+			},
+		<? } ?>
+		'enableDragAndDrop': false
+	});
+	$('div[data-search=groups]').concreteAjaxSearch({
+		result: <?=$result?>,
+		onLoad: function(concreteSearch) {
+			var handleSubmit = function() {
+				var $input = concreteSearch.$element.find('input[name=keywords]');
+				if ($input.val() != '') {
+					concreteSearch.$element.find('[data-group-tree]').hide();
+					concreteSearch.$results.show();
+				} else {
+					concreteSearch.$element.find('[data-group-tree]').show();
+					concreteSearch.$results.hide();
+				}
+			}
+			concreteSearch.$element.on('submit', 'form[data-search-form=groups]', handleSubmit);
+			handleSubmit();
+			concreteSearch.$element.on('keyup', 'input[name=keywords]', function(e) {
+				if ($(this).val() == '') {
+					handleSubmit();
+				}
+			});
+			<? if ($selectMode) { ?>
+			concreteSearch.$element.on('click', 'a[data-group-id]', function() {
+				ConcreteEvent.publish('SelectGroup', {
+					gID: $(this).attr('data-group-id'),
+					gName: $(this).attr('data-group-name')
+				});
+				return false;
+			});
+			<? } ?>
+		}
+	});
+
+});
+</script>
+
+</div>
 
 
 

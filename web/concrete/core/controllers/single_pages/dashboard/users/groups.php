@@ -9,28 +9,9 @@ class Concrete5_Controller_Page_Dashboard_Users_Groups extends DashboardControll
 		$this->set('tree', $tree);
 		$this->requireAsset('core/groups');
 
-		if (isset($_GET['gKeywords'])) {
-			$gKeywords = Loader::helper('security')->sanitizeString($_GET['gKeywords']);
-		}
-
-		$tp = new Permissions();
-		if ($_REQUEST['group_submit_search'] && $gKeywords && $tp->canAccessGroupSearch()) {
-
-			$gl = new GroupSearch();
-			$gl->filterByKeywords($gKeywords);
-			$gResults = $gl->getPage();
-			$results = array();
-			foreach($gResults as $gRow) {
-				$g = Group::getByID($gRow['gID']);
-				if (is_object($g)) {
-					$results[] = $g;
-				}
-			}
-
-			$this->set('results', $results);
-			$this->set('groupList', $gl);
-
-		}
+		$cnt = new SearchGroupsController();
+		$cnt->search();
+		$this->set('searchController', $cnt);
 	}	
 
 	public function edit($gID = false) {

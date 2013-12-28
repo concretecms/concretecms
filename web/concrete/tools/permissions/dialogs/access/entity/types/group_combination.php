@@ -31,12 +31,13 @@ $url = $type->getAccessEntityTypeToolsURL(); ?>
 
 </form>
 
-<input type="button" class="btn btn-small pull-right dialog-launch" dialog-width="500" dialog-height="500" id="ccm-permissions-access-entity-members-add-group" href="<?=URL::to('/system/dialogs/group/search')?>" dialog-modal="false" dialog-title="<?=t('Add Group')?>" value="<?=t('Add Group')?>" />
+<input type="button" class="btn btn-small pull-right dialog-launch" dialog-width="640" dialog-height="480" id="ccm-permissions-access-entity-members-add-group" href="<?=URL::to('/system/dialogs/group/search')?>" dialog-modal="false" dialog-title="<?=t('Add Group')?>" value="<?=t('Add Group')?>" />
 
 </div>
 
 <script type="text/javascript">
-ConcreteEvent.subscribe('GroupSearchDialogClick', function(e) {
+ConcreteEvent.subscribe('SelectGroup', function(e) {
+	e.continuePropagation = false;
 	var gID = e.eventData.gID, gName = e.eventData.gName;
 	if ($("input[class=combogID][value=" + gID + "]").length == 0) { 
 		$("#ccm-permissions-access-entity-combination-groups-none").hide();

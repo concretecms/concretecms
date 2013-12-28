@@ -46,19 +46,19 @@ $registeredGroupNode = GroupTreeNode::getTreeNodeByGroupID(REGISTERED_GROUP_ID);
     
     <script type="text/javascript">
     $(function() {
-       $('[data-groups-tree=<?=$tree->getTreeID()?>]').ccmgroupstree({
+       $('[data-groups-tree=<?=$tree->getTreeID()?>]').concreteGroupsTree({
           'treeID': '<?=$tree->getTreeID()?>',
-          'chooseNodeInForm': true,
+          'chooseNodeInForm': 'single',
+		  'enableDragAndDrop': false,
           <? if ($this->controller->isPost()) { ?> 
              'selectNodeByKey': '<?=$_POST['gParentNodeID']?>',
           <? } else {
-
           	if (is_object($rootNode)) { ?>
           		'selectNodeByKey': '<?=$rootNode->getTreeNodeID()?>',
           		<? } ?>
 	      	<? } ?>
-		removeNodesByID: ['<?=$guestGroupNode->getTreeNodeID()?>','<?=$registeredGroupNode->getTreeNodeID()?>'],
-          'onSelect': function(select, node) {
+	      'removeNodesByID': ['<?=$guestGroupNode->getTreeNodeID()?>','<?=$registeredGroupNode->getTreeNodeID()?>'],
+		  'onSelect': function(select, node) {
              if (select) {
                 $('input[name=gParentNodeID]').val(node.data.key);
              } else {

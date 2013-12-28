@@ -16,6 +16,8 @@ class Concrete5_Controller_Search_Groups extends Controller {
 
 		if ($_REQUEST['filter'] == 'assign') {
 			$this->groupList->filterByAssignable();
+		} else {
+			$this->groupList->includeAllGroups();
 		}
 
 		if (isset($_REQUEST['keywords'])) {

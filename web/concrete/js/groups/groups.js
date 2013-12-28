@@ -1,8 +1,31 @@
-(function($, window) {
+/**
+ * Groups tree
+ */
 
-  var methods = {
+!function(global, $, _) {
+	'use strict';
 
-    private:  {
+	function ConcreteGroupsTree($element, options) {
+		var my = this;
+		options = options || {};
+		options = $.extend({
+			treeID: false,
+			minimumExpandLevel: 2,
+			selectNodeByKey: false,
+			enableDragAndDrop: true,
+			readOnly: false,
+			removeNodesByID: [],
+			chooseNodeInForm: false // false (no ability to choose a node as a form element), "single" uses radio, "multiple" = checkbox.
+		}, options);
+		my.options = options;
+		my.$element = $element;
+		my._menuTemplate = _.template(ConcreteGroupsTree.getMenu());
+		my.setupTree();
+		my.setupTreeEvents();
+		return my.$element;
+	}
+
+	ConcreteGroupsTree.prototype = {
 
     	dragRequest: function(sourceNode, node, hitMode) {
     		var treeNodeParentID = node.parent.data.key;
@@ -13,7 +36,7 @@
 			var params = [{'name': 'sourceTreeNodeID', 'value': sourceNode.data.key}, {'name': 'treeNodeParentID', 'value': treeNodeParentID}];
 			var childNodes = node.parent.getChildren();
 			if (childNodes) {
-				for (i = 0; i < childNodes.length; i++) {
+				for (var i = 0; i < childNodes.length; i++) {
 					var childNode = childNodes[i];
 					params.push({'name': 'treeNodeID[]', 'value': childNode.data.key});
 				}
@@ -30,213 +53,56 @@
 			});
     	},
 
-		getMenu: function(data, options) {
-			var menu = '<div class="ccm-popover-menu popover fade"><div class="arrow"></div><div class="popover-inner">';
-			menu += '<ul class="dropdown-menu">';
-			if (data.canEditTreeNode && data.treeNodeTypeHandle == 'group' && data.gID) {
-				menu += '<li><a href="' + CCM_DISPATCHER_FILENAME + '/dashboard/users/groups/-/edit/' + data.gID + '">Edit Group<\/a><\/li>';
-			}
+		setupTree: function() {
+			var my = this,
+				options = my.options,
+				classNames = {},
+				checkbox = false,
+				ajaxData = {};
 
-			if (data.canEditTreeNodePermissions) {
-				menu += '<li><a class="dialog-launch" dialog-width="480" dialog-height="380" dialog-modal="true" dialog-title="Edit Permissions" href="' + CCM_TOOLS_PATH + '/tree/node/permissions?treeNodeID=' + data.key + '">Edit Permissions<\/a><\/li>';
-			}
-			/*
-			if (data.treeNodeParentID > 0 && data.treeNodeTypeHandle == 'topic' && data.canDeleteTreeNode) {
-				menu += '<li><a class="dialog-launch" dialog-width="550" dialog-on-open="$(\'[data-topic-form=remove-tree-node]\').ccmtopicstree(\'initRemoveNodeForm\', ' + options.treeID + ');" dialog-height="140" dialog-modal="false" dialog-title="Remove" href="' + CCM_TOOLS_PATH + '/tree/node/remove?treeNodeID=' + data.key + '">Delete Topic<\/a><\/li>';
-			}
-			*/
+			ajaxData.treeID = options.treeID;
 
-			menu += '</ul></div></div>';
-			var $menu = $(menu);
-			if ($menu.find('li').length == 0) {
-				return false;
-			}
-
-			return $menu;
-
-		},
-    	
-
-    	reloadNode: function(node, onComplete) {
-    		var obj = this;
-    		var params = {
-				url: CCM_TOOLS_PATH + '/tree/node/load',
-				data: {
-					treeNodeParentID: node.data.key
-				},
-				success: function() {
-					if (onComplete) {
-						onComplete();
-					}
+			if (options.chooseNodeInForm) {
+				checkbox = true;
+				switch(options.chooseNodeInForm) {
+					case 'single':
+						classNames = {'checkbox': 'dynatree-radio'};
+						break;
+					case 'multiple':
+						classNames = {'checkbox': 'dynatree-checkbox'};
+						break;
+							
 				}
-			};
-			
-			node.appendAjax(params);
-
-    	},
-
-		setupDialogForm: function($form, onSuccess) {
-	    	$form.closest('.ui-dialog').find("button[type=submit]").on('click', function() { $form.trigger('submit'); });
-	    	$form.on('submit', function() {
-	    		jQuery.fn.dialog.showLoader();
-	    		var data = $form.serializeArray();
-	    		$.ajax({
-	    			'dataType': 'json',
-	    			'type': 'post',
-	    			'data': data,
-	    			'url': $form.attr('action'),
-	    			success: function(r) {
-	    				if (r.error == true) {
-	    					ConcreteAlert.notice('Error', '<div class="alert alert-danger">' + r.messages.join("<br>") + '</div>');
-	    				} else {
-	    					jQuery.fn.dialog.closeTop();
-	    					onSuccess(r);
-	    				}
-	    			},
-	    			error: function(r) {
-    					ConcreteAlert.notice('Error', '<div class="alert alert-danger">' + r.responseText + '</div>');
-	    			},
-	    			complete: function() {
-	    				jQuery.fn.dialog.hideLoader();
-	    			}
-	    		});
-	    		return false;
-	    	});
-		}
-    },
-
-    initAddNodeForm: function(treeID) {
-    	methods.private.setupDialogForm($(this), function(r) {
-    		var $tree = $('[data-group-tree=' + treeID + ']');
-    		if (r.length) {
-    			for (i = 0; i < r.length; i++) {
-		    		var node = $tree.dynatree('getTree').getNodeByKey(r[i].treeNodeParentID);
-    				node.addChild(r[i]);
-    			}
-    		} else {
-	    		var node = $tree.dynatree('getTree').getNodeByKey(r.treeNodeParentID);
-	    		node.addChild(r);
-	    	}
-    		node.expand();
-    	});
-    },
-
-    initUpdateGroupNodeForm: function(treeID) {
-    	methods.private.setupDialogForm($(this), function(r) {
-    		var $tree = $('[data-group-tree=' + treeID + ']');
-    		var node = $tree.dynatree('getTree').getNodeByKey(r.key);
-    		node.data = r;
-    		node.render();
-    	});
-    },
-
-
-    initRemoveNodeForm: function(treeID) {
-    	methods.private.setupDialogForm($(this), function(r) {
-    		var $tree = $('[data-group-tree=' + treeID + ']');
-    		var node = $tree.dynatree('getTree').getNodeByKey(r.treeNodeID);
-    		node.remove();
-    	});
-    },
-
-	init: function(options) {
-		var options = $.extend({
-			readonly: false,
-			chooseNodeInForm: false,
-			onSelect: false,
-			onClick: false,
-			selectNodeByKey: false,
-			removeNodesByID: [],
-			disableDragAndDrop: false
-		}, options);
-
-		var checkbox = false,
-			classNames = false;
-
-		if(!options.treeNodeParentID) {
-			var ajaxData = { 'treeID': options.treeID };
-		} else {
-			var ajaxData = { 'treeNodeParentID': options.treeNodeParentID };
-		}
-
-		var persist = true;
-
-		if (options.chooseNodeInForm) {
-			checkbox = true;
-			persist = false;
-			classNames = {
-				'checkbox': 'dynatree-radio'
-			};
-			if (options.selectNodeByKey) {
-				ajaxData.treeNodeSelectedID = options.selectNodeByKey;
+				if (options.selectNodeByKey) {
+					ajaxData.treeNodeSelectedID = options.selectNodeByKey;
+				}
 			}
-		}
-		
-		if (options.chooseNodeInForm === 'multiple') {
-			checkbox = true;
-			persist = false;
-			classNames = {
-				'checkbox': 'dynatree-checkbox'
-			};
-			if (options.selectNodeByKey) {
-				ajaxData.treeNodeSelectedID = options.selectNodeByKey;
-			}
-		}
-		
-		if(options.allChildren) {
-			ajaxData.allChildren = true;
-		}
-		
-		var selectMode = 1;
-		if(options.selectMode) {
-			selectMode = options.selectMode;
-		}
-		var minExpandLevel = 2;
-		if(options.minExpandLevel) {
-			minExpandLevel = options.minExpandLevel;
-		}
-
-		return this.each(function() {
-			if(!options.treeNodeParentID) {
-				var loadToolsURL = CCM_TOOLS_PATH + '/tree/load';
-			} else {
-				var loadToolsURL = CCM_TOOLS_PATH + '/tree/node/load';
-			}
-			var $obj = $(this);
-			$obj.data('options', options);
-			$obj.dynatree({
+						
+    		$(my.$element).dynatree({
 				autoFocus: false,
-				/*cookieId: cookieId,
+				cookieId: 'ConcreteGroups',
 				cookie: {
 					path: CCM_REL + '/'
-				},*/
-
-				onSelect: function(select, node) {
-					if (options.chooseNodeInForm) {
-						options.onSelect(select, node);
-					}
 				},
-				/*
-				persist: persist,
-				*/
-				selectMode: selectMode,
-				checkbox: checkbox,
-				classNames: classNames,
-				minExpandLevel:  minExpandLevel,
-				clickFolderMode: 1,
 				initAjax: {
-					url: loadToolsURL,
+					url: CCM_TOOLS_PATH + '/tree/load',
 					type: 'post',
-					data: ajaxData, 
+					data: ajaxData,
 				},
 				onLazyRead: function(node) {
-					methods.private.reloadNode(node);
+					my.reloadNode(node);
 				},
 
+				selectMode: 1,
+				checkbox: checkbox,
+				classNames: classNames,
+				minExpandLevel: options.minimumExpandLevel,
+				clickFolderMode: 1,
 				onPostInit: function() {
-		    		var $tree = $obj;
+		    		var $tree = my.$element;
+
 		    		if (options.removeNodesByID.length) {
-		    			for (i = 0; i < options.removeNodesByID.length; i++) {
+		    			for (var i = 0; i < options.removeNodesByID.length; i++) {
 		    				var nodeID = options.removeNodesByID[i];
 		    				var node = this.getNodeByKey(nodeID);
 		    				if (node) {
@@ -244,7 +110,8 @@
 		    				}
 		    			}
 		    		}
-					if (options.readonly) {
+
+					if (options.readOnly) {
 			    		$tree.dynatree('disable');
 					}
 
@@ -256,16 +123,15 @@
 							options.onSelect(true, node);
 						}
 					}
-					if(selectedNodes) {
+					if (selectedNodes) {
 						var selKeys = $.map(selectedNodes, function(node){
 			                node.makeVisible();
-			            });
-		           }
-
+			        	});
+			        }
 				},
 				onClick: function(node, e) {
-					if (options.onClick && node.getEventTargetType(e) == 'title') {
-						options.onClick(e, node);
+					if (options.onSelectNode && node.getEventTargetType(e) == 'title') {
+						options.onSelectNode(node);
 						return false;
 					}
 
@@ -278,23 +144,24 @@
 					if (!node.getEventTargetType(e)) {
 						return false;
 					}
-					if (!options.chooseNodeInForm && node.getEventTargetType(e) == 'title' && !options.noMenu) {
-						var $menu = methods.private.getMenu(node.data, options);
+					if (!options.chooseNodeInForm && node.getEventTargetType(e) == 'title') {
+						var $menu = my._menuTemplate({options: my.options, data: node.data});
 						if ($menu) {
 							var menu = new ConcreteMenu($(node.span), {
 								menu: $menu,
-								launcher: 'none'
+								handle: 'none'
 							});
 							menu.show(e);
 						}
 					}
 				},
+				fx: {height: 'toggle', duration: 200},
 				dnd: {
 					onDragStart: function(node) {
-						if(options.disableDragAndDrop) {
-							return false;
-						} else {
+						if (options.enableDragAndDrop) {
 							return true;
+						} else {
+							return false;
 						}
 					},
 					onDragStop: function(node) {
@@ -315,30 +182,62 @@
 				          return false;
 				        }
 				        return true;
-
 					},
 					onDrop: function(node, sourceNode, hitMode, ui, draggable) {
 						sourceNode.move(node, hitMode);
-						methods.private.dragRequest(sourceNode, node, hitMode);
+						my.dragRequest(sourceNode, node, hitMode);
 					}
-				}				
+				}
 			});
+		},
 
+		setupTreeEvents: function() {
+
+		},
+
+    	reloadNode: function(node, onComplete) {
+    		var my = this,
+    			options = my.options,
+    			params = {
+					url: CCM_TOOLS_PATH + '/tree/node/load',
+					data: {
+						treeNodeParentID: node.data.key
+					},
+					success: function() {
+						if (onComplete) {
+							onComplete();
+						}
+					}
+				};
+				
+			node.appendAjax(params);
+    	}
+
+	}
+
+	/** 
+	 * Static methods
+	 */
+
+	ConcreteGroupsTree.getMenu = function() {
+		return '<div class="ccm-popover-page-menu popover fade" data-search-page-menu="<%=data.cID%>" data-search-menu="<%=data.cID%>">' +
+			'<div class="arrow"></div><div class="popover-inner"><ul class="dropdown-menu">' + 
+			'<% if (data.canEditTreeNode && data.treeNodeTypeHandle == \'group\' && data.gID) { %>' + 
+				'<li><a href="' + CCM_DISPATCHER_FILENAME + '/dashboard/users/groups/-/edit/<%=data.gID%>">' + ccmi18n_groups.editGroup + '</a></li>' + 
+			'<% } %>' +
+			'<% if (data.canEditTreeNodePermissions) { %>' + 
+				'<li><a class="dialog-launch" dialog-width="480" dialog-height="380" dialog-modal="true" dialog-title="Edit Permissions" href="' + CCM_TOOLS_PATH + '/tree/node/permissions?treeNodeID=<%=data.key%>">' + ccmi18n_groups.editPermissions + '</a></li>' + 
+			'<% } %>' +
+		'</ul></div></div>';
+	}
+
+	// jQuery Plugin
+	$.fn.concreteGroupsTree = function(options) {
+		return $.each($(this), function(i, obj) {
+			new ConcreteGroupsTree($(this), options);
 		});
-    }
+	}
 
+	global.ConcreteGroupsTree = ConcreteGroupsTree;
 
-  };
-
-  $.fn.ccmgroupstree = function(method) {
-
-    if ( methods[method] ) {
-      return methods[method].apply( this, Array.prototype.slice.call( arguments, 1 ));
-    } else if ( typeof method === 'object' || ! method ) {
-      return methods.init.apply( this, arguments );
-    } else {
-      $.error( 'Method ' +  method + ' does not exist on jQuery.ccmgroupstree' );
-    }   
-
-  };
-})(jQuery, window);
+}(this, $, _);

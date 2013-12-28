@@ -56,25 +56,26 @@ Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Bulk Upda
 </div>
 
 <div class="span4">
-<?
-	$guestGroupNode = GroupTreeNode::getTreeNodeByGroupID(GUEST_GROUP_ID);
-	$registeredGroupNode = GroupTreeNode::getTreeNodeByGroupID(REGISTERED_GROUP_ID);
-?>
+
 <h3><?=t('3. Choose New Parent Location')?></h3><br/>
 
     <div class="nested-groups-tree" data-groups-tree="<?=$tree->getTreeID()?>">
     </div>
     <?=$form->hidden('gParentNodeID')?>
     
+<?
+$guestGroupNode = GroupTreeNode::getTreeNodeByGroupID(GUEST_GROUP_ID);
+$registeredGroupNode = GroupTreeNode::getTreeNodeByGroupID(REGISTERED_GROUP_ID);
+?>
     <script type="text/javascript">
     $(function() {
-       $('[data-groups-tree=<?=$tree->getTreeID()?>]').ccmgroupstree({
+       $('[data-groups-tree=<?=$tree->getTreeID()?>]').concreteGroupsTree({
           'treeID': '<?=$tree->getTreeID()?>',
-          'chooseNodeInForm': true,
+          'chooseNodeInForm': 'single',
           <? if ($this->controller->isPost()) { ?> 
              'selectNodeByKey': '<?=$_POST['gParentNodeID']?>',
           <? } ?>
-		removeNodesByID: ['<?=$guestGroupNode->getTreeNodeID()?>','<?=$registeredGroupNode->getTreeNodeID()?>'],
+	      'removeNodesByID': ['<?=$guestGroupNode->getTreeNodeID()?>','<?=$registeredGroupNode->getTreeNodeID()?>'],
           'onSelect': function(select, node) {
              if (select) {
                 $('input[name=gParentNodeID]').val(node.data.key);

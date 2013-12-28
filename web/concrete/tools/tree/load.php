@@ -20,5 +20,6 @@ if ($_REQUEST['treeNodeSelectedID']) {
 	}
 }
 
+$tree->setRequest($_REQUEST);
 $result = $tree->getJSON();
 print Loader::helper('ajax')->sendResult($result);

@@ -36,7 +36,7 @@
 				<th><?
 				$p = new Permissions();
 				if ($p->canAccessGroupSearch()) { ?>
-					<a class="btn btn-default btn-xs" data-button="assign-groups" dialog-width="500" dialog-height="500" dialog-modal="true" href="<?=URL::to('/system/dialogs/group/search')?>/?filter=assign" dialog-title="<?=t('Add Groups')?>" dialog-modal="false"><?=t('Add Group')?></a>
+					<a class="btn btn-default btn-xs" data-button="assign-groups" dialog-width="640" dialog-height="480" dialog-modal="true" href="<?=URL::to('/system/dialogs/group/search')?>?filter=assign" dialog-title="<?=t('Add Groups')?>" dialog-modal="false"><?=t('Add Group')?></a>
 				<? } ?></th>
 			</tr>
 		</thead>

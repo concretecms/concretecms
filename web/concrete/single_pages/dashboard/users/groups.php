@@ -272,88 +272,8 @@ $(function() {
 </script>
 <? } else { ?>
 
-	<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Groups'), false, false, false);?>
+<? Loader::element('group/search', array('controller' => $searchController, 'selectMode' => false))?>
 
-
-	<div class="ccm-pane-options">
-	<?
-	$tp = new TaskPermission();
-	if ($tp->canAccessGroupSearch()) { ?>
-	<form method="get" class="form-horizontal" action="<?=$this->url('/dashboard/users/groups')?>">
-	<div class="ccm-pane-options-permanent-search">
-	<? $form = Loader::helper('form'); ?>
-	<?=$form->label('gKeywords', t('Keywords'))?>
-	<div class="controls">
-		<input type="text" name="gKeywords" value="<?=htmlentities($_REQUEST['gKeywords'])?>"  />
-		<input class="btn" type="submit" value="<?=t('Search')?>" />
-	</div>
-	<input type="hidden" name="group_submit_search" value="1" />
-		<a href="<?=$this->url('/dashboard/users/add_group')?>" class="btn btn-primary pull-right" style="margin-left: 10px;"><?=t('Add Group')?></a>
-		<a href="<?=$this->url('/dashboard/users/groups/bulk_update')?>" class="btn pull-right"><?=t('Organize')?></a>
-	</div>
-	</form>
-	<? } ?>
-	</div>
-
-	<? if (is_array($results)) { ?>
-
-	<div class="ccm-pane-body <? if (!$groupList->requiresPaging()) { ?> ccm-pane-body-footer <? } ?>">
-
-	<? if (count($results) > 0) { 
-		$groupList->displaySummary();
-		foreach ($results as $g) {
-			$gp = new Permissions($g);
-			$canEditGroup = $gp->canEditGroup();
-			?>
-			
-			<div class="ccm-group">
-				<<? if ($canEditGroup) { ?>a<? } else {?>span<? } ?> class="ccm-group-inner" <? if ($canEditGroup) { ?>href="<?=$this->url('/dashboard/users/groups', 'edit', $g->getGroupID())?>"<? } ?> style="background-image: url(<?=ASSETS_URL_IMAGES?>/icons/group.png)"><?=$g->getGroupDisplayName()?><? if ($canEditGroup) { ?></a><? } else {?></span><? } ?>
-				<? if ($g->getGroupDescription()) { ?>
-					<div class="ccm-group-description"><?=$g->getGroupDescription()?></div>
-				<? } ?>
-			</div>
-
-
-		<? }
-
-	} else { ?>
-
-		<p><?=t('No groups found.')?></p>
-		
-	<? } ?>
-
-	</div>
-	<? if ($groupList->requiresPaging()) { ?>
-	<div class="ccm-pane-footer">
-		<?=$groupList->displayPagingV2();?>
-	</div>
-	<? } ?>
-
-	</div>
-
-	<? } else { 
-
-		$guestGroupNode = GroupTreeNode::getTreeNodeByGroupID(GUEST_GROUP_ID);
-		$registeredGroupNode = GroupTreeNode::getTreeNodeByGroupID(REGISTERED_GROUP_ID);
-		?>
-
-	<div class="ccm-pane-body ccm-pane-body-footer">
-		<? if (is_object($tree)) { ?>
-			<div class="group-tree" data-group-tree="<?=$tree->getTreeID()?>">
-			</div>
-		<script type="text/javascript">
-		$(function() {
-			$('[data-group-tree]').ccmgroupstree({
-				'treeID': '<?=$tree->getTreeID()?>',
-				removeNodesByID: ['<?=$guestGroupNode->getTreeNodeID()?>','<?=$registeredGroupNode->getTreeNodeID()?>']
-			});
-		});
-		</script>
-	<? } ?>
-
-	</div>
-
-	<? } ?>
 
 <? } ?>
 
