@@ -236,10 +236,6 @@
 			}
 		}
 		
-		if(options.allChildren) {
-			ajaxData.allChildren = true;
-		}
-		
 		var selectMode = 1;
 		if(options.selectMode) {
 			selectMode = options.selectMode;

@@ -114,7 +114,7 @@ class Concrete5_Controller_Panel_Details_Page_Permissions extends BackendInterfa
 			$r = new PageEditVersionResponse();
 			$r->setPage($this->page);
 			$r->setMessage(t('Page permissions saved successfully.'));
-			Loader::helper('ajax')->sendResult($r);
+			$r->outputJSON();
 
 		}
 	}

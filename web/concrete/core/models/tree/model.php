@@ -32,6 +32,10 @@ abstract class Concrete5_Model_Tree extends Object {
 	public function getTreeID() {return $this->treeID;}
 	public function getRootTreeNodeObject() {return TreeNode::getByID($this->rootTreeNodeID);}
 
+	public function setRequest($data) {
+		$this->requestData = $data;
+	}
+
 	public function delete() {
 		$db = Loader::db();
 		// delete top level node
@@ -54,13 +58,9 @@ abstract class Concrete5_Model_Tree extends Object {
 		return $tree;
 	}
 
-	public function getJSON($allChildren = false) {
+	public function getJSON() {
 		$root = $this->getRootTreeNodeObject();
-		if($allChildren) {
-			$root->populateChildren();
-		} else {
-			$root->populateDirectChildrenOnly();
-		}
+		$root->populateDirectChildrenOnly();
 		if(is_array($this->getSelectedTreeNodeID())) {
 			foreach($this->getSelectedTreeNodeID() as $magicNodes) {
 				$root->selectChildrenNodesByID($magicNodes);

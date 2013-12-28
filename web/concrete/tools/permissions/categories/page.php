@@ -134,7 +134,7 @@ if (count($pages) > 0) {
 		} else {
 			$r->setMessage(t('Page permissions saved successfully.'));
 		}
-		Loader::helper('ajax')->sendResult($r);
+		$r->outputJSON();
 	}
 
 	if ($_REQUEST['task'] == 'bulk_add_access' && Loader::helper('validation/token')->validate('bulk_add_access')) {

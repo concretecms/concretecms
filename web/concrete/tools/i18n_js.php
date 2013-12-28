@@ -153,6 +153,13 @@ var ccmi18n_spellchecker = {
 	
 }
 
+var ccmi18n_groups = {
+
+	editGroup: "<?=t('Edit Group')?>",
+	editPermissions: "<?=t('Edit Permissions')?>"
+	
+}
+
 var ccmi18n_filemanager = {
 	
 	view: "<?=t('View')?>",
