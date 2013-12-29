@@ -1,0 +1,75 @@
+<?
+defined('C5_EXECUTE') or die("Access Denied.");
+class Concrete5_Controller_User extends Controller {
+
+	public function addGroup() {
+		$this->modifyGroup('add');
+	}
+
+	public function removeGroup() {
+		$this->modifyGroup('remove');
+	}
+
+	protected function modifyGroup($task) {
+		$g = Group::getByID(Loader::helper('security')->sanitizeInt($_POST['gID']));
+		if (is_object($g)) {
+			$gp = new Permissions($g);
+			if ($gp->canAssignGroup()) {
+				$users = $this->getRequestUsers();
+				$r = new UserEditResponse();
+				$r->setUsers($users);
+				foreach($users as $ui) {
+					$uo = $ui->getUserObject();
+					if ($task == 'add') {
+						if (!$uo->inGroup($g)) {
+							$uo->enterGroup($g);
+							$obj = new stdClass;
+							$obj->gDisplayName = $g->getGroupDisplayName();
+							$obj->gDateTimeEntered = $g->getGroupDateTimeEntered($ui);
+							$r->setAdditionalDataAttribute('groups', array($obj));
+						}
+					} else {
+
+					}
+				}
+				$r->outputJSON();
+			} else {
+				throw new Exception(t('Access Denied.'));
+			}
+		} else {
+			throw new Exception(t('Invalid group.'));
+		}
+
+	}
+
+	protected function getRequestUsers($permission = 'canViewUser') {
+		$users = array();
+		if (is_array($_REQUEST['uID'])) {
+			$userIDs = $_REQUEST['uID'];
+		} else {
+			$userIDs[] = $_REQUEST['uID'];
+		}
+		foreach($userIDs as $uID) {
+			$ui = UserInfo::getByID($uID);
+			$uip = new Permissions($ui);
+			if ($uip->$permission()) {
+				$users[] = $ui;
+			}
+		}
+
+		if (count($users) == 0) {
+			throw new Exception(t("Access Denied."));
+		}
+
+		return $users;
+	}
+
+	public function getJSON() {
+		$users = $this->getRequestUsers();
+		$r = new UserEditResponse();
+		$r->setUsers($users);
+		$r->outputJSON();
+	}
+
+	
+}
