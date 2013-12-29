@@ -167,8 +167,8 @@ $al->register('css', 'core/filemanager', 'css/ccm.filemanager.css', array('postp
 $al->registerGroup('core/filemanager', array(
 	array('css', 'core/app'),
 	array('css', 'core/filemanager'),
-	array('javascript', 'core/app'),
-	array('javascript', 'core/filemanager')
+	array('javascript', 'core/filemanager'),
+	array('javascript', 'core/app')
 ));
 
 // Sitemap
