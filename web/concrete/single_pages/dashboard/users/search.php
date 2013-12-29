@@ -1,76 +1,85 @@
 <? if (is_object($user)) { ?>
 
+<style type="text/css">
+div[data-container=editable-fields] section {
+	margin-bottom: 40px;
+	position: relative;
+}
+
+div[data-container=editable-fields] section .group-header {
+	position: relative;
+	font-weight: bold;
+}
+
+div[data-container=editable-fields] section a[data-button=assign-groups] {
+
+}
+</style>
+
 <div class="container" data-container="editable-fields">
-	<fieldset>
-		<legend><?=t('Basic Details')?></legend>
+
+<section>
+	<div class="row">
+		<div class="col-md-6">
+		<h4><?=t('Basic Details')?></h4>
 		<div class="row">
-			<div class="col-md-2"><p><?=t('Username')?></p></div>
-			<div class="col-md-4"><p><strong <? if ($canEditUserName) { ?>data-editable-field-type="xeditable" data-url="<?=$view->action('update_username', $user->getUserID())?>" data-type="text" data-name="uName" <? } ?>><?=$user->getUserName()?></strong></p></div>
-			<div class="col-md-2"><p><?=t('Email Address')?></p></div>
-			<div class="col-md-4"><p><strong <? if ($canEditEmail) { ?>data-editable-field-type="xeditable" data-url="<?=$view->action('update_email', $user->getUserID())?>"data-type="email" data-name="uEmail"<? } ?>><?=$user->getUserEmail()?></strong></p></div>
+			<div class="col-md-4"><p><?=t('Username')?></p></div>
+			<div class="col-md-8"><p><strong <? if ($canEditUserName) { ?>data-editable-field-type="xeditable" data-url="<?=$view->action('update_username', $user->getUserID())?>" data-type="text" data-name="uName" <? } ?>><?=$user->getUserName()?></strong></p></div>
 		</div>
 		<div class="row">
-			<div class="col-md-2"><p><?=t('Password')?></p></div>
-			<div class="col-md-4"><p><? if ($canEditPassword) { ?><a href="#" class="btn btn-xs btn-default" data-button="change-password"><?=t('Change')?></a><? } else { ?>*********<? } ?></p></div>
-			<div class="col-md-2"><p><?=t('Profile Picture')?></p></div>
-			<div class="col-md-4"><p>
-				<div <? if ($canEditAvatar) { ?>data-editable-field-type="image" data-url="<?=$this->action('update_avatar', $user->getUserID())?>"<? } ?>>
-					<a href="#" class="ccm-icon-wrapper" data-editable-field-command="clear"><i class="glyphicon glyphicon-trash"></i></a>
-                    <span class="editable-image-wrapper">
+			<div class="col-md-4"><p><?=t('Email Address')?></p></div>
+			<div class="col-md-8"><p><strong <? if ($canEditEmail) { ?>data-editable-field-type="xeditable" data-url="<?=$view->action('update_email', $user->getUserID())?>"data-type="email" data-name="uEmail"<? } ?>><?=$user->getUserEmail()?></strong></p></div>
+		</div>
+		<div class="row">
+			<div class="col-md-4"><p><?=t('Password')?></p></div>
+			<div class="col-md-8"><p><? if ($canEditPassword) { ?><a href="#" class="btn btn-xs btn-default" data-button="change-password"><?=t('Change')?></a><? } else { ?>*********<? } ?></p></div>
+		</div>
+		<div class="row">
+			<div class="col-md-4"><p><?=t('Profile Picture')?></p></div>
+			<div class="col-md-8"><p>
+				<div <? if ($canEditAvatar) { ?>data-editable-field-type="image" data-editable-field-inline-commands="true" data-url="<?=$this->action('update_avatar', $user->getUserID())?>"<? } ?>>
+					<ul class="ccm-edit-mode-inline-commands">
+						<li><a href="#" class="ccm-icon-wrapper" data-editable-field-command="clear"><i class="glyphicon glyphicon-trash"></i></a></li>
+					</ul>
+	                <span class="editable-image-wrapper">
 	                    <input type="file" id="file-avatar" name="avatar" />
 	                    <div class="editable-image-display"><?=Loader::helper('concrete/avatar')->outputUserAvatar($user)?></div>
 					</span>
 				</div>
 			</p>
+			</div>
 		</div>
-	</fieldset>
-	<br/>
+		</div>
 
-	<fieldset>
-		<legend><?=t('Groups')?></legend>
-		<table class="table table-striped">
-		<thead>
-			<tr>
-				<th style="width: 50%"><?=t('Group')?></th>
-				<th style="width: 50%"><?=t('Date Entered')?></th>
-				<th><?
-				$p = new Permissions();
-				if ($p->canAccessGroupSearch()) { ?>
-					<a class="btn btn-default btn-xs" data-button="assign-groups" dialog-width="640" dialog-height="480" dialog-modal="true" href="<?=URL::to('/system/dialogs/group/search')?>?filter=assign" dialog-title="<?=t('Add Groups')?>" dialog-modal="false"><?=t('Add Group')?></a>
-				<? } ?></th>
-			</tr>
-		</thead>
-		<tbody>
-		<?
-		if (count($groups) > 0) {
-			foreach($groups as $g) { ?>
-				<tr>
-					<td><?=$g->getGroupDisplayName()?></td>
-					<td><?=$g->getGroupDateTimeEntered($user);?>
-					<td></td>
-				</tr>
+		<div class="col-md-6">
+			<h4><?=t('Groups')?></h4>
+			<div class="row group-header">
+				<div class="col-md-6"><p><?=t('Group')?></p></div>
+				<div class="col-md-6"><p><?=t('Date Entered')?></p></div>
+			</div>
 
+			<div data-container="group-list"></div>
+
+			<?
+			$p = new Permissions();
+			if ($p->canAccessGroupSearch()) { ?>
+			<hr>
+				<a class="btn btn-default btn-xs" data-button="assign-groups" dialog-width="640" dialog-height="480" dialog-modal="true" href="<?=URL::to('/system/dialogs/group/search')?>?filter=assign" dialog-title="<?=t('Add Groups')?>" dialog-modal="false"><?=t('Add Group')?></a>
 			<? } ?>
-
-		<? } else { ?>
-
-			<tr>
-				<td colspan="3"><?=t('None')?></td>
-			</tr>
-
-		<? } ?>
-		</tbody>
-
-		</table>
-	</fieldset>
-
-	<fieldset>
-		<legend><?=t('Other Attributes')?></legend>
-		<div class="row">
-			<div class="col-md-2"><p><?=t('Username')?></p></div>
-			<div class="col-md-10"><p><strong data-editable="true" data-type="text" data-name="uName"><?=$user->getUserName()?></strong></p></div>
 		</div>
-	</fieldset>
+
+	</div>
+	</div>
+</section>
+
+<section>
+
+
+</section>
+
+<section>
+	<h4><?=t('Other Attributes')?></h4>
+</section>
 
 </div>
 
@@ -102,13 +111,50 @@
 	</div>
 <? } ?>
 
+<script type="text/template" data-template="user-add-groups">
+<% _.each(groups, function(group) { %>
+	<div class="row" data-editable-field-inline-commands="true" data-group-id="<%=group.gID%>">
+		<ul class="ccm-edit-mode-inline-commands">
+			<li><a href="#" class="ccm-icon-wrapper" data-group-id="<%=group.gID%>" data-button="delete-group"><i class="glyphicon glyphicon-trash"></i></a></li>
+		</ul>
+		<div class="col-md-6"><p><%=group.gDisplayName%></p></div>
+		<div class="col-md-6"><p><%=group.gDateTimeEntered%></p></div>
+	</div>
+<% }); %>
+</script>
+
 <script type="text/javascript">
 $(function() {
+
+	var _addGroupsTemplate = _.template($('script[data-template=user-add-groups]').html());
+	$('div[data-container=group-list]').append(
+		_addGroupsTemplate({'groups': <?=$groupsJSON?>})
+	);
 	$('div[data-container=editable-fields]').concreteEditableFieldContainer({
 		url: '<?=$this->action('save', $user->getUserID())?>',
 		data: {
 			ccm_token: '<?=Loader::helper('validation/token')->generate()?>'
 		}
+	});
+
+	ConcreteEvent.subscribe('SelectGroup', function(e) {
+		$.concreteAjax({
+			url: "<?=URL::to('/system/user/add_group')?>",
+			data: {
+				gID: e.eventData.gID,
+				uID: '<?=$user->getUserID()?>'
+			},
+			success: function(r) {
+				ConcreteAlert.hud('<?=t('Group added successfully.')?>');
+				$('div[data-container=group-list]').append(
+					_addGroupsTemplate({'groups': r.groups})
+				);
+				_.each(r.groups, function(group) {
+					$('div[data-container=group-list] div[data-group-id=' + group.gID + ']').addClass('animated bounceIn');
+				});
+				jQuery.fn.dialog.closeTop();
+			}
+		});
 	});
 
 	$('div[data-container=editable-fields]').on('click', 'a[data-button=change-password]', function() {
@@ -118,6 +164,28 @@ $(function() {
 			width: '280',
 			height: '220',
 			modal: true
+		});
+		return false;
+	});
+
+	$('div[data-container=editable-fields]').on('click', 'a[data-button=delete-group]', function() {
+		$.concreteAjax({
+			url: "<?=URL::to('/system/user/remove_group')?>",
+			data: {
+				gID: $(this).attr('data-group-id'),
+				uID: '<?=$user->getUserID()?>'
+			},
+			success: function(r) {
+				ConcreteAlert.hud('<?=t('Group removed successfully.')?>');
+				$('div[data-container=group-list] div[data-group-id=' + r.group.gID + ']').queue(function() {
+					$(this).addClass('animated bounceOutLeft');
+					$(this).dequeue();
+				}).delay(500).queue(function() {
+					$(this).remove();
+					$(this).dequeue();
+				})
+				jQuery.fn.dialog.closeTop();
+			}
 		});
 		return false;
 	});
