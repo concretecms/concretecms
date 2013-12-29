@@ -1,21 +1,22 @@
 div[data-container=editable-fields] {
 
-	/** 
-	 * Clear fields
-	 */
-	a[data-editable-field-command=clear] {
-		float: right;
-		display: none;
+	div[data-editable-field-inline-commands] {
 		position: relative;
-		z-index: @index-level-editable-field-commands;
-	}
+		a {
+			cursor: pointer;
+		}
 
-	div[data-editable-field-type]:hover {
-		a[data-editable-field-command=clear] {
-			display: inline;
+	}
+	div[data-editable-field-inline-commands]:hover {
+		> .ccm-edit-mode-inline-commands {
+
+		float: none;
+		list-style-type: none;
+		margin: 0px !important;
+		opacity: 1;
+
 		}
 	}
-
 	/** 
 	 * Editable images
 	 */

@@ -4,6 +4,8 @@ $form = Loader::helper('form');
 $searchRequest = $controller->getSearchRequest();
 $result = Loader::helper('json')->encode($controller->getSearchResultObject()->getJSONObject());
 $tree = GroupTree::get();
+$guestGroupNode = GroupTreeNode::getTreeNodeByGroupID(GUEST_GROUP_ID);
+$registeredGroupNode = GroupTreeNode::getTreeNodeByGroupID(REGISTERED_GROUP_ID);
 ?>
 
 <style type="text/css">
@@ -13,9 +15,9 @@ $tree = GroupTree::get();
 </style>
 
 <div data-search="groups">
-
 <script type="text/template" data-template="search-form">
 <form role="form" data-search-form="groups" action="<?=URL::to('/system/search/groups/submit')?>" class="form-inline ccm-search-fields">
+	<input type="hidden" name="filter" value="<?=$searchRequest['filter']?>" />
 	<div class="ccm-search-fields-row">
 	<div class="form-group">
 		<div class="ccm-search-main-lookup-field">
@@ -85,6 +87,9 @@ $tree = GroupTree::get();
 $(function() {
 	$('[data-group-tree]').concreteGroupsTree({
 		'treeID': '<?=$tree->getTreeID()?>',
+		<? if ($searchRequest['filter'] == 'assign') { ?>
+	      'removeNodesByID': ['<?=$guestGroupNode->getTreeNodeID()?>','<?=$registeredGroupNode->getTreeNodeID()?>'],
+	      <? } ?>
 		<? if ($selectMode) { ?>
 			onSelectNode: function(node) {
 				ConcreteEvent.publish('SelectGroup', {'gID': node.data.gID, 'gName': node.data.title});

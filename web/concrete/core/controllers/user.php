@@ -25,11 +25,17 @@ class Concrete5_Controller_User extends Controller {
 							$uo->enterGroup($g);
 							$obj = new stdClass;
 							$obj->gDisplayName = $g->getGroupDisplayName();
+							$obj->gID = $g->getGroupID();
 							$obj->gDateTimeEntered = $g->getGroupDateTimeEntered($ui);
 							$r->setAdditionalDataAttribute('groups', array($obj));
 						}
 					} else {
-
+						if ($uo->inGroup($g)) {
+							$uo->exitGroup($g);
+							$obj = new stdClass;
+							$obj->gID = $g->getGroupID();
+							$r->setAdditionalDataAttribute('group', $obj);
+						}
 					}
 				}
 				$r->outputJSON();

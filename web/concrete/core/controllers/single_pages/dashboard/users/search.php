@@ -170,7 +170,15 @@ class Concrete5_Controller_Page_Dashboard_Users_Search extends DashboardControll
 				$r->requireAsset('core/app/editable-fields');
 			}
 			$uo = $this->user->getUserObject();
-			$this->set('groups', $uo->getUserGroupObjects());
+			$groups = array();
+			foreach($uo->getUserGroupObjects() as $g) {
+				$obj = new stdClass;
+				$obj->gDisplayName = $g->getGroupDisplayName();
+				$obj->gID = $g->getGroupID();
+				$obj->gDateTimeEntered = $g->getGroupDateTimeEntered($this->user);
+				$groups[] = $obj;
+			}
+			$this->set('groupsJSON', Loader::helper('json')->encode($groups));
 		}
 		$ui = $this->user;
 		if (!is_object($ui)) {

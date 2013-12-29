@@ -106,6 +106,10 @@ $rl->register('/system/file/duplicate', 'FileController::duplicate');
 $rl->register('/system/page/create/{ptID}', 'BackendPageController::create');
 $rl->register('/system/file/upload', 'FileController::upload');
 
+/* Users */
+$rl->register('/system/user/add_group', 'UserController::addGroup');
+$rl->register('/system/user/remove_group', 'UserController::removeGroup');
+
 /** 
  * Misc
  */
