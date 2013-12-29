@@ -34,10 +34,13 @@
         showResponseNotification: function(message, icon, class) {
             $('<div id="ccm-notification-hud" class="ccm-ui ccm-notification ccm-notification-' + class + '"><i class="glyphicon glyphicon-' + icon + '"></i><div class="ccm-notification-inner">' + message + '</div></div>').
             appendTo(document.body).delay(5).queue(function() {
-                $(this).css('opacity', 1);
+                $(this).addClass('animated fadeIn');
                 $(this).dequeue();
             }).delay(2000).queue(function() {
-                $(this).css('opacity', 0);
+                $(this).css('opacity', 1);
+                $(this).dequeue();
+            }).delay(1).queue(function() {
+                $(this).addClass('animated bounceOutRight');
                 $(this).dequeue();
             }).delay(1000).queue(function() {
                 $(this).remove();
