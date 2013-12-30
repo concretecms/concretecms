@@ -118,6 +118,7 @@ $al->register('javascript', 'bootstrap-editable', 'js/bootstrap-editable.js', ar
 $al->register('css', 'core/app/editable-fields', 'css/ccm.editable.fields.css', array('postprocess' => false));
 $al->registerGroup('core/app/editable-fields', array(
 	array('javascript', 'bootstrap-editable'),
+	array('javascript', 'core/app'),
 	array('css', 'core/app/editable-fields'),
 	array('javascript', 'jquery/fileupload')
 ));

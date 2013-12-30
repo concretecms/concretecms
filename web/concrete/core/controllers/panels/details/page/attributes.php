@@ -22,7 +22,7 @@ class Concrete5_Controller_Panel_Details_Page_Attributes extends BackendInterfac
 			$caValue = $this->page->getAttributeValueObject($ak);
 			$ak->render('form', $caValue);
 		} else {
-			$av->render('form');
+			print $av->render('form');
 		}
 		$html = ob_get_contents();
 		ob_end_clean();
@@ -114,7 +114,7 @@ class Concrete5_Controller_Panel_Details_Page_Attributes extends BackendInterfac
 	 */
 	public function add_attribute() {
 		$allowed = $this->assignment->getAttributesAllowedArray();
-		$ak = CollectionAttributeKey::getByID($this->request->request->get('akID'));
+		$ak = CollectionAttributeKey::getByID($_REQUEST['akID']);
 		if (is_object($ak) && in_array($ak->getAttributeKeyID(), $allowed)) {
 			$obj = $this->getAttributeJSONRepresentation($ak, 'add');
 			$obj->pending = true;

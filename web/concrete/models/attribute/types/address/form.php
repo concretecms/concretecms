@@ -1,7 +1,7 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?>
 <? $f = Loader::helper('form'); ?>
 <? $co = Loader::helper('lists/countries'); ?>
-<?=$der?>
+
 <fieldset class="ccm-attribute-address-<?=$key->getAttributeKeyID()?>">
 <div class="ccm-attribute-address-line">
 <?=$f->label($this->field('address1'), t('Address 1'))?>

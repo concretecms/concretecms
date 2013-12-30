@@ -100,9 +100,9 @@ var CCMPageVersionList = {
 		for (i = 0; i < r.versions.length; i++) {
 			var $row = $('input[type=checkbox][value=' + r.versions[i].cvID + ']').parent().parent();
 			$row.queue(function() {
-				$(this).addClass('ccm-panel-page-versions-version-deleted');
+				$(this).addClass('bounceOutLeft animated');
 				$(this).dequeue();
-			}).delay(200).queue(function() {
+			}).delay(600).queue(function() {
 				$(this).remove();
 				$(this).dequeue();
 			});

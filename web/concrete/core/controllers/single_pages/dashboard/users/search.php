@@ -127,7 +127,24 @@ class Concrete5_Controller_Page_Dashboard_Users_Search extends DashboardControll
 			}
 		}
 	}
+	/*
 
+	public function get_attribute_form($uID = false) {
+		if (Loader::helper('validation/token')->validate(false, $_REQUEST['token'])) {
+			$uak = UserAttributeKey::getByID($_REQUEST['akID']);
+			$ui = UserInfo::getByID($uID);
+			if (is_object($ui)) {
+				$up = new Permissions($ui);
+				if ($up->canViewUser()) {
+					$vo = $ui->getAttributeValueObject($uak);
+					$uak->render('form', $vo);
+				}
+			}
+		}
+		exit;
+	}
+
+	*/
 	public function change_password($uID = false) {
 		$this->setupUser($uID);
 		if ($this->canEditPassword) {
@@ -179,7 +196,10 @@ class Concrete5_Controller_Page_Dashboard_Users_Search extends DashboardControll
 				$groups[] = $obj;
 			}
 			$this->set('groupsJSON', Loader::helper('json')->encode($groups));
+			$attributes = UserAttributeKey::getList(true);
+			$this->set('attributes', $attributes);
 		}
+
 		$ui = $this->user;
 		if (!is_object($ui)) {
 			$cnt = new SearchUsersController();

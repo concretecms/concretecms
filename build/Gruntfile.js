@@ -188,7 +188,8 @@ module.exports = function(grunt) {
 		bootstrap_editable: {
 			dest: '<%= DIR_BASE %>/concrete/js/bootstrap-editable.js',
 			src: [
-				'<%= DIR_BASE %>/concrete/js/bootstrap-editable/bootstrap3-editable.js'
+				'<%= DIR_BASE %>/concrete/js/bootstrap-editable/bootstrap3-editable.js',
+				'<%= DIR_BASE %>/concrete/js/ccm_app/editable_field/attribute.js'
 			]
 		},
 
