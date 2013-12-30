@@ -550,6 +550,8 @@ class Concrete5_Model_AttributeKey extends Object {
 		$resp = $at->render($view, $this, $value, $return);
 		if ($return) {
 			return $resp;
+		} else {
+			print $resp;
 		}
 	}
 	

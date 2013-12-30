@@ -2,8 +2,10 @@
 
 <style type="text/css">
 div[data-container=editable-fields] section {
-	margin-bottom: 40px;
+	margin-bottom: 30px;
 	position: relative;
+	border-bottom: 1px solid #f1f1f1;
+	padding-bottom: 30px;
 }
 
 div[data-container=editable-fields] section .group-header {
@@ -11,9 +13,6 @@ div[data-container=editable-fields] section .group-header {
 	font-weight: bold;
 }
 
-div[data-container=editable-fields] section a[data-button=assign-groups] {
-
-}
 </style>
 
 <div class="container" data-container="editable-fields">
@@ -39,7 +38,7 @@ div[data-container=editable-fields] section a[data-button=assign-groups] {
 			<div class="col-md-8"><p>
 				<div <? if ($canEditAvatar) { ?>data-editable-field-type="image" data-editable-field-inline-commands="true" data-url="<?=$this->action('update_avatar', $user->getUserID())?>"<? } ?>>
 					<ul class="ccm-edit-mode-inline-commands">
-						<li><a href="#" class="ccm-icon-wrapper" data-editable-field-command="clear"><i class="glyphicon glyphicon-trash"></i></a></li>
+						<li><a href="#" data-editable-field-command="clear"><i class="glyphicon glyphicon-trash"></i></a></li>
 					</ul>
 	                <span class="editable-image-wrapper">
 	                    <input type="file" id="file-avatar" name="avatar" />
@@ -69,16 +68,16 @@ div[data-container=editable-fields] section a[data-button=assign-groups] {
 		</div>
 
 	</div>
-	</div>
-</section>
-
-<section>
-
-
 </section>
 
 <section>
 	<h4><?=t('Other Attributes')?></h4>
+	<? Loader::element('attribute/editable_list', array(
+		'attributes' => $attributes, 
+		'object' => $user,
+		'formAction' => $view->action('get_attribute_form', $user->getUserID()),
+		'action' => $view->action('update_attribute', $user->getUserID())
+	));?>
 </section>
 
 </div>
@@ -115,7 +114,7 @@ div[data-container=editable-fields] section a[data-button=assign-groups] {
 <% _.each(groups, function(group) { %>
 	<div class="row" data-editable-field-inline-commands="true" data-group-id="<%=group.gID%>">
 		<ul class="ccm-edit-mode-inline-commands">
-			<li><a href="#" class="ccm-icon-wrapper" data-group-id="<%=group.gID%>" data-button="delete-group"><i class="glyphicon glyphicon-trash"></i></a></li>
+			<li><a href="#" data-group-id="<%=group.gID%>" data-button="delete-group"><i class="glyphicon glyphicon-trash"></i></a></li>
 		</ul>
 		<div class="col-md-6"><p><%=group.gDisplayName%></p></div>
 		<div class="col-md-6"><p><%=group.gDateTimeEntered%></p></div>

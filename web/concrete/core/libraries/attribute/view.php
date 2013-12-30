@@ -102,7 +102,7 @@ class Concrete5_Library_AttributeTypeView extends AbstractView {
 	}
 	
 	public function finishRender($contents) {
-		return $contents;
+		print $contents;
 	}
 
 	protected function onBeforeGetContents() {

@@ -39,7 +39,7 @@
 				ajaxOptions: {
 					dataType: 'json'
 				},
-				showbuttons: false,
+				showbuttons: true,
 				params: my.options.data,
 				url: my.options.url,
 				success: function(r, newValue) {
@@ -64,7 +64,8 @@
 		        dataType: 'json',
 		        formData: my.options.data,
 		        start: function() {
-		        	ConcreteAlert.showLoader();
+		        	jQuery.fn.dialog.showLoader();
+		        	//ConcreteAlert.showLoader();
 		        },
 		        success: function(r) {
 		        	my.updateImageField(r, $field);
@@ -73,7 +74,8 @@
 					ConcreteAlert.notice('Error', '<div class="alert alert-danger">' + r.responseText + '</div>');
 		        },
 		        complete: function(r) {
-		        	ConcreteAlert.hideLoader()
+		        	jQuery.fn.dialog.hideLoader();
+		        	//ConcreteAlert.hideLoader()
 		        }
 		    });
 		},

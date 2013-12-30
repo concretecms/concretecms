@@ -5,16 +5,6 @@ class Concrete5_Controller_Page_Dashboard_Users_Attributes extends DashboardCont
 	
 	public $helpers = array('form');
 	
-	public function __construct() {
-		parent::__construct();
-		$otypes = AttributeType::getList('user');
-		$types = array();
-		foreach($otypes as $at) {
-			$types[$at->getAttributeTypeID()] = tc('AttributeTypeName', $at->getAttributeTypeName());
-		}
-		$this->set('types', $types);
-	}
-	
 	public function delete($akID, $token = null){
 		try {
 			$ak = UserAttributeKey::getByID($akID); 
@@ -38,6 +28,12 @@ class Concrete5_Controller_Page_Dashboard_Users_Attributes extends DashboardCont
 	
 	public function on_start() {
 		$this->set('category', AttributeKeyCategory::getByHandle('user'));
+		$otypes = AttributeType::getList('user');
+		$types = array();
+		foreach($otypes as $at) {
+			$types[$at->getAttributeTypeID()] = tc('AttributeTypeName', $at->getAttributeTypeName());
+		}
+		$this->set('types', $types);
 	}
 	
 	public function activate($akID, $token = null) {

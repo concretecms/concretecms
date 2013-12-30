@@ -168,13 +168,7 @@
 		});
 		cs.$element.on('click', 'a[data-search-remove=search-field]', function() {
 			var $row = $(this).parent();
-			$row.queue(function () {
-				$(this).addClass('ccm-search-field-removing');
-				$(this).dequeue()
-			}).delay(200).queue(function() {
-				$(this).remove();
-				$(this).dequeue();
-			});
+			$row.remove();
 			return false;
 		});
 	}
