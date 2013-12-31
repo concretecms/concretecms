@@ -127,24 +127,33 @@ class Concrete5_Controller_Page_Dashboard_Users_Search extends DashboardControll
 			}
 		}
 	}
-	/*
 
-	public function get_attribute_form($uID = false) {
-		if (Loader::helper('validation/token')->validate(false, $_REQUEST['token'])) {
-			$uak = UserAttributeKey::getByID($_REQUEST['akID']);
-			$ui = UserInfo::getByID($uID);
-			if (is_object($ui)) {
-				$up = new Permissions($ui);
-				if ($up->canViewUser()) {
-					$vo = $ui->getAttributeValueObject($uak);
-					$uak->render('form', $vo);
+	public function update_attribute($uID = false) {
+		$this->setupUser($uID);
+		$sr = new UserEditResponse();
+		if (Loader::helper('validation/token')->validate()) {
+			$ak = UserAttributeKey::getByID(Loader::helper('security')->sanitizeInt($_REQUEST['name']));
+			if (is_object($ak)) {
+				if (!in_array($ak->getAttributeKeyID(), $this->assignment->getAttributesAllowedArray())) {
+					throw new Exception(t('You do not have permission to modify this attribute.'));
 				}
+				
+				$ak->saveAttributeForm($this->user);
+				$val = $this->user->getAttributeValueObject($ak);
 			}
+		} else {
+			$this->error->add(Loader::helper('validation/token')->getErrorMessage());
 		}
-		exit;
+		$sr->setUser($this->user);
+		if ($this->error->has()) {
+			$sr->setError($this->error);
+		} else {
+			$sr->setMessage(t('Avatar saved successfully.'));
+			$sr->setAdditionalDataAttribute('value',  $val->getValue('displaySanitized','display'));
+		}
+		$sr->outputJSON();
 	}
 
-	*/
 	public function change_password($uID = false) {
 		$this->setupUser($uID);
 		if ($this->canEditPassword) {
