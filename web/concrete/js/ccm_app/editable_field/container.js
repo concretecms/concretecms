@@ -53,6 +53,39 @@
 			});
 		},
 
+		setupXeditableAttributeField: function($field) {
+			var my = this;
+			$field.editable({
+				ajaxOptions: {
+					dataType: 'json'
+				},
+				showbuttons: true,
+				savenochange: true,
+				autotext: 'never',
+				url: my.options.url,
+				params: function(args) {
+					var newParams = {};
+					newParams.name = args.name;
+					newParams.pk = args.pk
+					_.each(my.options.data, function(value, key) {
+						newParams[key] = value;
+					});
+					_.each(args.value, function(value) {
+						newParams[value.name] = value.value;
+					});
+					return newParams;
+				},
+				success: function(r, newValue) {
+		        	if (ConcreteAjaxRequest.validateResponse(r)) {
+		        		return {'newValue': r.value};
+		        	} else {
+		        		return '';
+		        	}
+				},
+				pk: '_x' // we have to include this otherwise xeditable doesn't work.
+			});
+		},
+
 		setupImageField: function($field) {
 			var my = this;
 			// automatically set the width and height of the proxy field
