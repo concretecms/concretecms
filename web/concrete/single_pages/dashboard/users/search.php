@@ -7,13 +7,34 @@ div[data-container=editable-fields] section {
 	border-bottom: 1px solid #f1f1f1;
 	padding-bottom: 30px;
 }
-
-div[data-container=editable-fields] section .group-header {
-	position: relative;
-	font-weight: bold;
-}
-
 </style>
+
+<form action="<?=$this->action('update_status', $user->getUserID())?>" method="post">
+<?=Loader::helper('validation/token')->output()?>
+<div class="ccm-dashboard-header-buttons btn-group">
+	<? if (USER_VALIDATE_EMAIL == true && $canActivateUser) { ?>
+		<? if ($user->isValidated() < 1) { ?>
+		<button type="submit" name="task" value="validate" class="btn btn-default"><?=t('Mark Email as Valid')?></button>
+		<? } ?>
+	<? } ?>
+
+<? if ($canActivateUser) { ?>
+	<? if ($user->isActive()) { ?>
+		<button type="submit" name="task" value="deactivate" class="btn btn-default"><?=t('Deactivate User')?></button>
+	<? } else { ?>
+		<button type="submit" name="task" value="activate" class="btn btn-default"><?=t('Activate User')?></button>
+	<? } ?>
+<? } ?>
+
+<? if ($canSignInAsUser) { ?>
+	<button type="submit" name="task" value="sudo" class="btn btn-default"><?=t('Sign in As User')?></button>
+<? } ?>
+<? if ($canDeleteUser) { ?>
+	<button type="submit" name="task" value="delete" class="btn btn-danger"><?=t('Delete')?></button>
+<? } ?>
+</div>		
+</form>
+
 
 <div class="container" data-container="editable-fields">
 
@@ -23,11 +44,11 @@ div[data-container=editable-fields] section .group-header {
 		<h4><?=t('Basic Details')?></h4>
 		<div class="row">
 			<div class="col-md-4"><p><?=t('Username')?></p></div>
-			<div class="col-md-8"><p><strong <? if ($canEditUserName) { ?>data-editable-field-type="xeditable" data-url="<?=$view->action('update_username', $user->getUserID())?>" data-type="text" data-name="uName" <? } ?>><?=$user->getUserName()?></strong></p></div>
+			<div class="col-md-8"><p <? if ($canEditUserName) { ?>data-editable-field-type="xeditable" data-url="<?=$view->action('update_username', $user->getUserID())?>" data-type="text" data-name="uName" <? } ?>><?=$user->getUserName()?></p></div>
 		</div>
 		<div class="row">
 			<div class="col-md-4"><p><?=t('Email Address')?></p></div>
-			<div class="col-md-8"><p><strong <? if ($canEditEmail) { ?>data-editable-field-type="xeditable" data-url="<?=$view->action('update_email', $user->getUserID())?>"data-type="email" data-name="uEmail"<? } ?>><?=$user->getUserEmail()?></strong></p></div>
+			<div class="col-md-8"><p <? if ($canEditEmail) { ?>data-editable-field-type="xeditable" data-url="<?=$view->action('update_email', $user->getUserID())?>"data-type="email" data-name="uEmail"<? } ?>><?=$user->getUserEmail()?></p></div>
 		</div>
 		<div class="row">
 			<div class="col-md-4"><p><?=t('Password')?></p></div>
@@ -51,17 +72,57 @@ div[data-container=editable-fields] section .group-header {
 		</div>
 
 		<div class="col-md-6">
-			<h4><?=t('Groups')?></h4>
-			<div class="row group-header">
-				<div class="col-md-6"><p><?=t('Group')?></p></div>
-				<div class="col-md-6"><p><?=t('Date Entered')?></p></div>
+			<h4><?=t('Account')?></h4>
+			<div class="row">
+				<div class="col-md-4"><p><?=t('Date Created')?></p></div>
+				<div class="col-md-8"><p><?=date(DATE_APP_GENERIC_MDYT, strtotime($user->getUserDateAdded('user')))?></p></div>
 			</div>
+			<div class="row">
+				<div class="col-md-4"><p><?=t('Last IP Address')?></p></div>
+				<div class="col-md-8"><p><?=$user->getLastIPAddress()?></p></div>
+			</div>
+			<? if (ENABLE_USER_TIMEZONE) { ?>
+			<div class="row">
+				<div class="col-md-4"><p><?=t('Timezone')?></p></div>
+				<div class="col-md-8"><p <? if ($canEditTimezone) { ?>data-editable-field-type="xeditable" data-source="<?=$view->action('get_timezones')?>" data-url="<?=$view->action('update_timezone', $user->getUserID())?>" data-type="select" data-name="uTimezone"<? } ?>><? if ($user->getUserTimezone()) { print $user->getUserTimezone(); } else { print date_default_timezone_get(); } ?></p></div>
+			</div>
+			<? } ?>
+			<?
+			$languages = Localization::getAvailableInterfaceLanguages();
+			if (count($languages) > 0) { ?>
+			<div class="row">
+				<div class="col-md-4"><p><?=t('Language')?></p></div>
+				<div class="col-md-8"><p <? if ($canEditLanguage) { ?>data-editable-field-type="xeditable" data-source="<?=$view->action('get_languages')?>" data-url="<?=$view->action('update_language', $user->getUserID())?>" data-type="select" data-name="uDefaultLanguage"<? } ?>><?=$user->getUserDefaultLanguage();?></p></div>
+			</div>
+			<? } ?>
+			<? if (USER_VALIDATE_EMAIL) { ?>
+				<div class="row">
+					<div class="col-md-4"><p><?=t('Full Record')?></p></div>
+					<div class="col-md-8"><p><?= ($user->isFullRecord()) ? "Yes" : "No" ?></p></div>
+				</div>
+				<div class="row">
+					<div class="col-md-4"><p><?=t('Email Validated')?></p></div>
+					<div class="col-md-8"><p><?
+					switch($user->isValidated()) {
+						case '-1':
+							print t('Unknown');
+							break;
+						case '0':
+							print t('No');
+							break;
+						case '1':
+							print t('Yes');
+							break;
+					}?></p></div>
+				</div>
+			<? } ?>
+
+			<h4><?=t('Groups')?></h4>
 
 			<div data-container="group-list"></div>
 
 			<?
-			$p = new Permissions();
-			if ($p->canAccessGroupSearch()) { ?>
+			if ($canAddGroup) { ?>
 			<hr>
 				<a class="btn btn-default btn-xs" data-button="assign-groups" dialog-width="640" dialog-height="480" dialog-modal="true" href="<?=URL::to('/system/dialogs/group/search')?>?filter=assign" dialog-title="<?=t('Add Groups')?>" dialog-modal="false"><?=t('Add Group')?></a>
 			<? } ?>
@@ -136,6 +197,13 @@ $(function() {
 		}
 	});
 
+	$('button[name=task][value=sudo]').on('click', function() {
+		return confirm('<?=t("This will end your current session and sign you in as %s", $user->getUserName())?>');
+	});
+
+	$('button[name=task][value=delete]').on('click', function() {
+		return confirm('<?=t("Are you sure you want to permanently remove this user?")?>');
+	});
 	ConcreteEvent.subscribe('SelectGroup', function(e) {
 		$.concreteAjax({
 			url: "<?=URL::to('/system/user/add_group')?>",

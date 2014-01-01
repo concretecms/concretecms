@@ -104,7 +104,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		
 		private function get($where, $var) {
 			$db = Loader::db();
-			$q = "select Users.uID, Users.uLastLogin, Users.uLastIP, Users.uIsValidated, Users.uPreviousLogin, Users.uIsFullRecord, Users.uNumLogins, Users.uDateAdded, Users.uIsActive, Users.uLastOnline, Users.uHasAvatar, Users.uName, Users.uEmail, Users.uPassword, Users.uTimezone from Users " . $where;
+			$q = "select Users.uID, Users.uLastLogin, Users.uLastIP, Users.uIsValidated, Users.uPreviousLogin, Users.uIsFullRecord, Users.uNumLogins, Users.uDateAdded, Users.uIsActive, Users.uDefaultLanguage, Users.uLastOnline, Users.uHasAvatar, Users.uName, Users.uEmail, Users.uPassword, Users.uTimezone from Users " . $where;
 			$r = $db->query($q, array($var));
 			if ($r && $r->numRows() > 0) {
 				$ui = new UserInfo;
@@ -648,6 +648,24 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			return $this->uTimezone;
 		}
 		
+		public function getUserDefaultLanguage() {
+			return $this->uDefaultLanguage;
+		}
+
+		/*
+		Loader::library('3rdparty/Zend/Locale');
+		Loader::library('3rdparty/Zend/Locale/Data');
+		Zend_Locale_Data::setCache(Cache::getLibrary());
+		foreach($languages as $lang) {
+			$loc = new Zend_Locale($lang);
+			$obj = new stdClass;
+			$obj->value = $lang;
+			$obj->text = Zend_Locale::getTranslation($loc->getLanguage(), 'language', $lang);
+			$result[] = $obj;
+		}
+*/
+
+
 		/**
 		* Gets the date a user was added to the system, 
 		* if user is specified, returns in the current user's timezone
