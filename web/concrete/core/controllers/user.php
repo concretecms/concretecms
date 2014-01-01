@@ -26,7 +26,7 @@ class Concrete5_Controller_User extends Controller {
 							$obj = new stdClass;
 							$obj->gDisplayName = $g->getGroupDisplayName();
 							$obj->gID = $g->getGroupID();
-							$obj->gDateTimeEntered = $g->getGroupDateTimeEntered($ui);
+							$obj->gDateTimeEntered = date(DATE_APP_GENERIC_MDYT, strtotime($g->getGroupDateTimeEntered($uo)));
 							$r->setAdditionalDataAttribute('groups', array($obj));
 						}
 					} else {

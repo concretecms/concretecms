@@ -42,22 +42,90 @@ class Concrete5_Controller_Page_Dashboard_Users_Search extends DashboardControll
 			if (!$up->canViewUser()) {
 				throw new Exception(t('Access Denied.'));
 			}
+			$tp = new Permissions();
 			$pke = PermissionKey::getByHandle('edit_user_properties');
 			$this->user = $ui;
 			$this->assignment = $pke->getMyAssignment();
 			$this->canEdit = $up->canEditUser();
 			if ($this->canEdit) {
+				$this->canActivateUser = $tp->canActivateUser();
 				$this->canEditAvatar = $this->assignment->allowEditAvatar();
 				$this->canEditUserName = $this->assignment->allowEditUserName();
+				$this->canEditLanguage = $this->assignment->allowEditDefaultLanguage();
+				$this->canEditTimezone = $this->assignment->allowEditTimezone();
 				$this->canEditEmail = $this->assignment->allowEditEmail();
 				$this->canEditPassword = $this->assignment->allowEditPassword();
+				$this->canSignInAsUser = $tp->canSudo();
+				$this->canDeleteUser = $tp->canDeleteUser();
+				$this->canAddGroup = $tp->canAccessGroupSearch();
 			}
 			$this->set('user', $ui);
 			$this->set('canEditAvatar', $this->canEditAvatar);
 			$this->set('canEditUserName', $this->canEditUserName);
 			$this->set('canEditEmail', $this->canEditEmail);
 			$this->set('canEditPassword', $this->canEditPassword);
+			$this->set('canEditTimezone', $this->canEditTimezone);
+			$this->set('canEditLanguage', $this->canEditLanguage);
+			$this->set('canActivateUser', $this->canActivateUser);
+			$this->set('canSignInAsUser', $this->canSignInAsUser );
+			$this->set('canDeleteUser', $this->canDeleteUser);
+			$this->set('canAddGroup', $this->canAddGroup);
 		}
+	}
+
+	public function update_status($uID = false) {
+		switch($_POST['task']) {
+			case 'activate':
+				$this->setupUser($uID);
+				if ($this->canActivateUser && Loader::helper('validation/token')->validate()) {
+					$this->user->activate();
+					$mh = Loader::helper('mail');
+					$mh->to($this->user->getUserEmail());
+					$mh->load('user_registered_approval_complete');
+					if(defined('EMAIL_ADDRESS_REGISTER_NOTIFICATION_FROM')) {
+						$mh->from(EMAIL_ADDRESS_REGISTER_NOTIFICATION_FROM, t('Website Registration Notification'));
+					} else {
+						$adminUser = UserInfo::getByID(USER_SUPER_ID);
+						$mh->from($adminUser->getUserEmail(), t('Website Registration Notification'));
+					}
+					$mh->addParameter('uID',    $this->user->getUserID());
+					$mh->addParameter('user',   $this->user);
+					$mh->addParameter('uName',  $this->user->getUserName());
+					$mh->addParameter('uEmail', $this->user->getUserEmail());
+					$mh->sendMail();
+					$this->redirect('/dashboard/users/search', 'view', $this->user->getUserID(), 'activated');
+				}
+				break;
+			case 'deactivate':
+				$this->setupUser($uID);
+				if ($this->canActivateUser && Loader::helper('validation/token')->validate()) {
+					$this->user->deactivate();
+					$this->redirect('/dashboard/users/search', 'view', $this->user->getUserID(), 'deactivated');
+				}
+				break;
+			case 'validate':
+				$this->setupUser($uID);
+				if ($this->canActivateUser && Loader::helper('validation/token')->validate()) {
+					$this->user->markValidated();
+					$this->redirect('/dashboard/users/search', 'view', $this->user->getUserID(), 'email_validated');
+				}
+				break;
+			case 'sudo':
+				$this->setupUser($uID);
+				if ($this->canSignInAsUser && Loader::helper('validation/token')->validate()) {
+					User::loginByUserID($uID);
+					$this->redirect('/');
+				}
+				break;
+			case 'delete':
+				$this->setupUser($uID);
+				if ($this->canDeleteUser && Loader::helper('validation/token')->validate()) {
+					$this->user->delete();
+					$this->redirect('/dashboard/users/search', 'delete_complete');
+				}
+				break;
+		}
+		$this->view($uID);
 	}
 
 	public function update_email($uID = false) {
@@ -79,6 +147,46 @@ class Concrete5_Controller_Page_Dashboard_Users_Search extends DashboardControll
 				$data = array('uEmail' => $email);
 				$this->user->update($data);
 				$sr->setMessage(t('Email saved successfully.'));
+			} else {
+				$sr->setError($this->error);
+			}
+			$sr->outputJSON();
+		}
+	}
+
+	public function update_timezone($uID = false) {
+		$this->setupUser($uID);
+		if ($this->canEditTimezone) {
+			$timezone = $this->post('value');
+			if (!Loader::helper('validation/token')->validate()) {
+				$this->error->add(Loader::helper('validation/token')->getErrorMessage());
+			}
+			$sr = new UserEditResponse();
+			$sr->setUser($this->user);
+			if (!$this->error->has()) {
+				$data = array('uTimezone' => $timezone);
+				$this->user->update($data);
+				$sr->setMessage(t('Time zone saved successfully.'));
+			} else {
+				$sr->setError($this->error);
+			}
+			$sr->outputJSON();
+		}
+	}
+
+	public function update_language($uID = false) {
+		$this->setupUser($uID);
+		if ($this->canEditLanguage) {
+			$language = $this->post('value');
+			if (!Loader::helper('validation/token')->validate()) {
+				$this->error->add(Loader::helper('validation/token')->getErrorMessage());
+			}
+			$sr = new UserEditResponse();
+			$sr->setUser($this->user);
+			if (!$this->error->has()) {
+				$data = array('uDefaultLanguage' => $language);
+				$this->user->update($data);
+				$sr->setMessage(t('Language saved successfully.'));
 			} else {
 				$sr->setError($this->error);
 			}
@@ -207,33 +315,82 @@ class Concrete5_Controller_Page_Dashboard_Users_Search extends DashboardControll
 				$sr->setError($this->error);
 			}
 			$sr->outputJSON();
-		
 		}
+	}
+
+	public function get_timezones() {
+		$timezones = Loader::helper("date")->getTimezones();
+		$result = array();
+		foreach($timezones as $timezone) {
+			$obj = new stdClass;
+			$obj->value = $timezone;
+			$obj->text = $timezone;
+			$result[] = $obj;
+		}
+		Loader::helper('ajax')->sendResult($result);
+	}
+
+	public function get_languages() {
+		$languages = Localization::getAvailableInterfaceLanguages();
+		array_unshift($languages, 'en_US');
+		$obj = new stdClass;
+		$obj->text = t('** Default');
+		$obj->value = '';
+		$result = array($obj);
+		Loader::library('3rdparty/Zend/Locale');
+		Loader::library('3rdparty/Zend/Locale/Data');
+		Zend_Locale_Data::setCache(Cache::getLibrary());
+		foreach($languages as $lang) {
+			$loc = new Zend_Locale($lang);
+			$obj = new stdClass;
+			$obj->value = $lang;
+			$obj->text = Zend_Locale::getTranslation($loc->getLanguage(), 'language', $lang);
+			$result[] = $obj;
+		}
+		Loader::helper('ajax')->sendResult($result);
 
 	}
-	public function view($uID = false) {
+
+	public function delete_complete() {
+		$this->set('message', t('User deleted successfully.'));
+		$this->view();
+	}
+
+	public function view($uID = false, $status = false) {
 		if ($uID) {
 			$this->setupUser($uID);
-			if ($this->canEdit) {
-				$r = ResponseAssetGroup::get();
-				$r->requireAsset('core/app/editable-fields');
-			}
+		}
+
+		$ui = $this->user;
+		if (is_object($ui)) {
+			$r = ResponseAssetGroup::get();
+			$r->requireAsset('core/app/editable-fields');
 			$uo = $this->user->getUserObject();
 			$groups = array();
 			foreach($uo->getUserGroupObjects() as $g) {
 				$obj = new stdClass;
 				$obj->gDisplayName = $g->getGroupDisplayName();
 				$obj->gID = $g->getGroupID();
-				$obj->gDateTimeEntered = $g->getGroupDateTimeEntered($this->user);
+				$obj->gDateTimeEntered = date(DATE_APP_GENERIC_MDYT, strtotime($g->getGroupDateTimeEntered($this->user)));
 				$groups[] = $obj;
 			}
 			$this->set('groupsJSON', Loader::helper('json')->encode($groups));
 			$attributes = UserAttributeKey::getList(true);
 			$this->set('attributes', $attributes);
-		}
+			$this->set('pageTitle', t('View/Edit %s', $this->user->getUserDisplayName()));
+			switch($status) {
+				case 'activated':
+					$this->set('success', t('User activated successfully.'));
+					break;
+				case 'deactivated':
+					$this->set('message', t('User deactivated successfully.'));
+					break;
+				case 'email_validated':
+					$this->set('message', t('Email marked as valid.'));
+					break;
+			}
+		} else {
 
-		$ui = $this->user;
-		if (!is_object($ui)) {
 			$cnt = new SearchUsersController();
 			$cnt->search();
 			$this->set('searchController', $cnt);
@@ -254,299 +411,5 @@ class Concrete5_Controller_Page_Dashboard_Users_Search extends DashboardControll
 			</script>");
 		}
 	}
-
-	/*
-
-	public function view() {
-
-		if (isset($_GET['uID'])) {
-			$uo = UserInfo::getByID(intval($_GET['uID']));
-			if (is_object($uo)) {
-				if (!$up->canViewUser()) {
-					$this->redirect('/dashboard/users/search');
-				}
-			}
-		}
-			// this is hacky as hell, we need to make this page MVC
-		if (!is_object($uo)) {
-		}
-
-		$form = Loader::helper('form');
-		$this->set('form', $form);
-
-		if($_POST['edit'])	{
-			$this->validate_user();
-		}
-		
-		if ($_REQUEST['deactivated']) {
-			$this->set('message', t('User deactivated.'));
-		}
-		if ($_REQUEST['activated']) {
-			$this->set('message', t('User activated.'));
-		}
-		if ($_REQUEST['validated']) {
-			$this->set('message', t('Email marked as valid.'));
-		}
-		if ($_REQUEST['user_created']) {
-			$this->set('message', t('User created.'));
-		}
-
-	}
-	
-	
-	
-	public function validate_user() {
-		$pke = PermissionKey::getByHandle('edit_user_properties');
-		if (!$pke->validate()) {
-			return false;
-		}
-		
-		$assignment = $pke->getMyAssignment();
-		
-		
-		$vals = Loader::helper('validation/strings');
-		$valt = Loader::helper('validation/token');
-		$valc = Loader::helper('concrete/validation');
-
-		$uo = UserInfo::getByID(intval($_GET['uID']));			
-		
-		$username = trim($_POST['uName']);
-		$username = preg_replace("/\s+/", " ", $username);
-		
-		if ($assignment->allowEditPassword()) { 
-
-			$password = $_POST['uPassword'];
-			$passwordConfirm = $_POST['uPasswordConfirm'];
-
-			if ($password) {
-				if ((strlen($password) < USER_PASSWORD_MINIMUM) || (strlen($password) > USER_PASSWORD_MAXIMUM)) {
-					$this->error->add( t('A password must be between %s and %s characters',USER_PASSWORD_MINIMUM,USER_PASSWORD_MAXIMUM));
-				}
-			}
-		}		
-		
-		if ($assignment->allowEditEmail()) { 
-			if (!$vals->email($_POST['uEmail'])) {
-				$this->error->add(t('Invalid email address provided.'));
-			} else if (!$valc->isUniqueEmail($_POST['uEmail']) && $uo->getUserEmail() != $_POST['uEmail']) {
-				$this->error->add(t("The email address '%s' is already in use. Please choose another.",$_POST['uEmail']));
-			}
-		}
-
-		if ($assignment->allowEditUserName()) { 
-			$_POST['uName'] = $username;		
-			if (USER_REGISTRATION_WITH_EMAIL_ADDRESS == false) {
-				if (strlen($username) < USER_USERNAME_MINIMUM) {
-					$this->error->add(t('A username must be at least %s characters long.',USER_USERNAME_MINIMUM));
-				}
-	
-				if (strlen($username) > USER_USERNAME_MAXIMUM) {
-					$this->error->add(t('A username cannot be more than %s characters long.',USER_USERNAME_MAXIMUM));
-				}
-	
-				
-				if (strlen($username) >= USER_USERNAME_MINIMUM && !$valc->username($username)) {
-					if(USER_USERNAME_ALLOW_SPACES) {
-						$this->error->add(t('A username may only contain letters, numbers and spaces.'));
-					} else {
-						$this->error->add(t('A username may only contain letters or numbers.'));
-					}
-				}
-				if (!$valc->isUniqueUsername($username) && $uo->getUserName() != $username) {
-					$this->error->add(t("The username '%s' already exists. Please choose another",$username));
-				}		
-			}
-		}
-
-		if ($assignment->allowEditPassword()) { 
-			if (strlen($password) >= USER_PASSWORD_MINIMUM && !$valc->password($password)) {
-				$this->error->add(t('A password may not contain ", \', >, <, or any spaces.'));
-			}
-			
-			if ($password) {
-				if ($password != $passwordConfirm) {
-					$this->error->add(t('The two passwords provided do not match.'));
-				}
-			}
-		}
-		
-		if (!$valt->validate('update_account_' . intval($_GET['uID']) )) {
-			$this->error->add($valt->getErrorMessage());
-		}
-	
-		if (!$this->error->has()) {
-			// do the registration
-			$data = array();
-			if ($assignment->allowEditUserName()) { 
-				$data['uName'] = $_POST['uName'];
-			}
-			if ($assignment->allowEditEmail()) { 
-				$data['uEmail'] = $_POST['uEmail'];
-			}
-			if ($assignment->allowEditPassword()) { 
-				$data['uPassword'] = $_POST['uPassword'];
-				$data['uPasswordConfirm'] = $_POST['uPasswordConfirm'];
-			}
-			if ($assignment->allowEditTimezone()) { 
-				$data['uTimezone'] = $_POST['uTimezone'];
-			}
-			if ($assignment->allowEditDefaultLanguage()) { 
-				$data['uDefaultLanguage'] = $_POST['uDefaultLanguage'];
-			}
-			$process = $uo->update($data);
-			
-			//$db = Loader::db();
-			if ($process) {
-				if ($assignment->allowEditAvatar()) {
-					$av = Loader::helper('concrete/avatar'); 
-					if ( is_uploaded_file($_FILES['uAvatar']['tmp_name']) ) {
-						$uHasAvatar = $av->updateUserAvatar($_FILES['uAvatar']['tmp_name'], $uo->getUserID());
-					}
-				}
-				
-				$gIDs = array();
-				if (is_array($_POST['gID'])) {
-					foreach($_POST['gID'] as $gID) {
-						$gx = Group::getByID($gID);
-						$gxp = new Permissions($gx);
-						if ($gxp->canAssignGroup()) {
-							$gIDs[] = $gID;
-						}
-					}
-				}
-				
-				$gIDs = array_unique($gIDs);
-
-				$uo->updateGroups($gIDs);
-
-				$message = t("User updated successfully. ");
-				if ($password) {
-					$message .= t("Password changed.");
-				}
-				$editComplete = true;
-				// reload user object
-				$uo = UserInfo::getByID(intval($_GET['uID']));
-				$this->set('message', $message);
-			} else {
-				$db = Loader::db();
-				$this->error->add($db->ErrorMsg());
-				$this->set('error',$this->error);
-			}
-		}else{
-			$this->set('error',$this->error);
-		}		
-
-	}
-	
-	public function sign_in_as_user($uID, $token = null) {
-		try {
-			$u = new User();
-			
-			$tp = new TaskPermission();
-			if (!$tp->canSudo()) { 
-				throw new Exception(t('You do not have permission to perform this action.'));
-			}
-			
-			if($uID == USER_SUPER_ID) {
-				throw new Exception(t('You can\'t sign in as the %s user.', USER_SUPER));
-			}
-			
-			$ui = UserInfo::getByID($uID); 
-			if(!($ui instanceof UserInfo)) {
-				throw new Exception(t('Invalid user ID.'));
-			}
-	
-			$valt = Loader::helper('validation/token');
-			if (!$valt->validate('sudo', $token)) {
-				throw new Exception($valt->getErrorMessage());
-			}
-			
-			User::loginByUserID($uID);
-			$this->redirect('/');
-
-		} catch(Exception $e) {
-			$this->set('error', $e);
-			$this->view();
-		}
-	}
-	
-	public function edit_attribute() {
-		$uo = UserInfo::getByID($_POST['uID']);
-		$u = new User();
-		if ($uo->getUserID() == USER_SUPER_ID && (!$u->isSuperUser())) {
-			throw new Exception(t('Only the super user may edit this account.'));
-		}
-		
-		$assignment = PermissionKey::getByHandle('edit_user_properties')->getMyAssignment();
-		$akID = $_REQUEST['uakID'];
-		if (!in_array($akID, $assignment->getAttributesAllowedArray())) {
-			throw new Exception(t('You do not have permission to modify this attribute.'));
-		}
-		
-		$ak = UserAttributeKey::get($akID);
-
-		if ($_POST['task'] == 'update_extended_attribute') { 
-			$ak->saveAttributeForm($uo);
-			$val = $uo->getAttributeValueObject($ak);
-			print $val->getValue('displaySanitized','display');
-			exit;
-		}
-		
-		if ($_POST['task'] == 'clear_extended_attribute') {
-			$uo->clearAttribute($ak);			
-			$val = $uo->getAttributeValueObject($ak);
-			print '<div class="ccm-attribute-field-none">' . t('None') . '</div>';
-			exit;
-		}
-	}
-	
-	public function delete($delUserId, $token = null){
-		$u=new User();
-		try {
-
-			$delUI=UserInfo::getByID($delUserId); 
-			
-			if(!($delUI instanceof UserInfo)) {
-				throw new Exception(t('Invalid user ID.'));
-			}
-
-			$dp = new Permissions($delUI);
-			if (!$dp->canViewUser()) {
-				throw new Exception(t('Access Denied.'));
-			}
-		
-			$tp = new TaskPermission();
-			if (!$tp->canDeleteUser()) { 
-				throw new Exception(t('You do not have permission to perform this action.'));
-			}
-
-			if ($delUserId == USER_SUPER_ID) {
-				throw new Exception(t('You may not remove the super user account.'));
-			}			
-
-			if($delUserId==$u->getUserID()) {
-				throw new Exception(t('You cannot delete your own user account.'));
-			}
-
-
-			$valt = Loader::helper('validation/token');
-			if (!$valt->validate('delete_account', $token)) {
-				throw new Exception($valt->getErrorMessage());
-			}
-			
-			$delUI->delete(); 
-			$resultMsg=t('User deleted successfully.');
-			
-			$_REQUEST=array();
-			$_GET=array();
-			$_POST=array();		
-			$this->set('message', $resultMsg);
-		} catch (Exception $e) {
-			$this->set('error', $e);
-		}
-		$this->view();
-
-	}
-	*/
 
 }
