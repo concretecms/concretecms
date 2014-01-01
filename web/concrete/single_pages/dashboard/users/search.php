@@ -75,8 +75,8 @@ div[data-container=editable-fields] section .group-header {
 	<? Loader::element('attribute/editable_list', array(
 		'attributes' => $attributes, 
 		'object' => $user,
-		'formAction' => $view->action('get_attribute_form', $user->getUserID()),
-		'action' => $view->action('update_attribute', $user->getUserID())
+		'saveAction' => $view->action('update_attribute', $user->getUserID()),
+		'clearAction' => $view->action('clear_attribute', $user->getUserID())
 	));?>
 </section>
 

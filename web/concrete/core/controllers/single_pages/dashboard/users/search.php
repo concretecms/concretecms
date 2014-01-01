@@ -148,8 +148,31 @@ class Concrete5_Controller_Page_Dashboard_Users_Search extends DashboardControll
 		if ($this->error->has()) {
 			$sr->setError($this->error);
 		} else {
-			$sr->setMessage(t('Avatar saved successfully.'));
+			$sr->setMessage(t('Attribute saved successfully.'));
 			$sr->setAdditionalDataAttribute('value',  $val->getValue('displaySanitized','display'));
+		}
+		$sr->outputJSON();
+	}
+
+	public function clear_attribute($uID = false) {
+		$this->setupUser($uID);
+		$sr = new UserEditResponse();
+		if (Loader::helper('validation/token')->validate()) {
+			$ak = UserAttributeKey::getByID(Loader::helper('security')->sanitizeInt($_REQUEST['akID']));
+			if (is_object($ak)) {
+				if (!in_array($ak->getAttributeKeyID(), $this->assignment->getAttributesAllowedArray())) {
+					throw new Exception(t('You do not have permission to modify this attribute.'));
+				}
+				$this->user->clearAttribute($ak);			
+			}
+		} else {
+			$this->error->add(Loader::helper('validation/token')->getErrorMessage());
+		}
+		$sr->setUser($this->user);
+		if ($this->error->has()) {
+			$sr->setError($this->error);
+		} else {
+			$sr->setMessage(t('Attribute cleared successfully.'));
 		}
 		$sr->outputJSON();
 	}

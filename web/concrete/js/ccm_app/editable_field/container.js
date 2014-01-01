@@ -39,6 +39,7 @@
 				ajaxOptions: {
 					dataType: 'json'
 				},
+				emptytext: ccmi18n.none,
 				showbuttons: true,
 				params: my.options.data,
 				url: my.options.url,
@@ -59,6 +60,7 @@
 				ajaxOptions: {
 					dataType: 'json'
 				},
+				emptytext: ccmi18n.none,
 				showbuttons: true,
 				savenochange: true,
 				autotext: 'never',
@@ -148,6 +150,23 @@
 					success: function(r) {
 						my[method](r, $field);
 
+					}
+				})
+				return false;
+			});
+			my.$element.on('click', '[data-editable-field-command=clear_attribute]', function() {
+				var data = my.options.data,
+					url = my.getAjaxURL($(this));
+
+				data.akID = $(this).attr('data-key-id');
+
+				return new ConcreteAjaxRequest({
+					url: url,
+					data: data, 
+					success: function(r) {
+						console.log(r);
+						console.log($('[data-key-id=' + data.akID + '][data-editable-field-type=xeditableAttribute]'));
+     					$('[data-key-id=' + data.akID + '][data-editable-field-type=xeditableAttribute]').editable('setValue', '');
 					}
 				})
 				return false;

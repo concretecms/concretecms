@@ -83,7 +83,8 @@ var ccmi18n = {
 	user_deactivate: "<?=t('Deactivate Users')?>",
 	user_delete: "<?=t('Delete')?>",
 	user_group_remove: "<?=t('Remove From Group')?>",
-	user_group_add: "<?=t('Add to Group')?>"
+	user_group_add: "<?=t('Add to Group')?>",
+	none: "<?=t('None')?>"
 }
 
 var ccmi18n_editor = {
