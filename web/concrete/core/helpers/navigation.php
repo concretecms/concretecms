@@ -52,6 +52,11 @@ class Concrete5_Helper_Navigation {
 		if ($appendBaseURL) {
 			$link = BASE_URL . $link;
 		}
+
+		if (!URL_USE_TRAILING_SLASH) {
+			$link = rtrim($link, '/');
+		}
+
 		return $link;
 	}
 	
