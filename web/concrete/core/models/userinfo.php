@@ -477,7 +477,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			}
 
 			$dh = Loader::helper('date');
-				
+
 			$datetime = $dh->getSystemDateTime();
 			if (is_array($groupArray)) {
 				foreach ($groupArray as $gID) {
@@ -487,13 +487,29 @@ defined('C5_EXECUTE') or die("Access Denied.");
 						unset($existingGIDArray[$key]);
 					} else {
 						// this item is new, so we add it.
+						// Fire on_user_enter_group for each group entered
+						$group = Group::getByID($gID);
+						if ($group) {
+							Events::fire('on_user_enter_group', $this->getUserObject(), $group);
+						}
 						$q = "insert into UserGroups (uID, gID, ugEntered) values ({$this->uID}, $gID, '{$datetime}')";
 						$r = $db->query($q);
 					}
 				}
 			}
 
-				// now we go through the existing GID Array, and remove everything, since whatever is left is not wanted.
+
+			// now we go through the existing GID Array, and remove everything, since whatever is left is not wanted.
+
+			// Fire on_user_exit_group event for each group exited
+			foreach ($existingGIDArray as $gID) {
+				$group = Group::getByID($gID);
+				if ($group) {
+					Events::fire('on_user_exit_group', $this->getUserObject(), $group);
+				}
+			}
+
+			// Remove from db
 			if (count($existingGIDArray) > 0) {
 				$inStr = implode(',', $existingGIDArray);
 				$q2 = "delete from UserGroups where uID = '{$this->uID}' and gID in ({$inStr})";
