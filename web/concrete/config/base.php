@@ -101,10 +101,6 @@ if (!defined("PAGE_PATH_SEPARATOR")) {
 	define('PAGE_PATH_SEPARATOR', '-');
 }
 
-if (!defined("GROUP_DISPLAY_NAME_SEPARATOR")) {
-	define('GROUP_DISPLAY_NAME_SEPARATOR', '>');
-}
-
 if (!defined('PAGE_PATH_SEGMENT_MAX_LENGTH')) {
 	define('PAGE_PATH_SEGMENT_MAX_LENGTH', '128');
 }

@@ -197,10 +197,10 @@ class Concrete5_Library_BlockViewTemplate {
 					if(!strlen($url)) { continue; }
 					switch($t) {
 						case 'CSS':
-							$items[] = $h->css($url);
+							$items[] = $h->css($uh->getBlockTypeAssetsURL($bt, $i));
 							break;
 						case 'JAVASCRIPT':
-							$items[] = $h->javascript($url);
+							$items[] = $h->javascript($uh->getBlockTypeAssetsURL($bt, $i));
 							break;
 					}
 				}

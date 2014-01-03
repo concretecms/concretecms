@@ -71,7 +71,7 @@ $dh = Loader::helper('date');
 	
 	
 		<div class="clearfix">
-			<label><?=tc('AttributeKeyName', $ak->getAttributeKeyName())?></label>
+			<label><?=$ak->getAttributeKeyDisplayName()?></label>
 			<div class="input">
 			<?=$ak->render('composer', $caValue); ?>
 			</div>
