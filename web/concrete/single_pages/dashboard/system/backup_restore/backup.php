@@ -1,5 +1,8 @@
-<?php
-defined('C5_EXECUTE') or die("Access Denied.");
+<?php defined('C5_EXECUTE') or die('Access Denied.');
+
+/* @var $dh DateHelper */
+$dh = Loader::helper('date');
+
 ?>
 <script type="text/javascript">
 	dNum = 0;
@@ -88,7 +91,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 $tp = new TaskPermission();
 if ($tp->canBackup()) {
 	?>
-	<?= Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Backup Database'), false, 'span8 offset2') ?>
+	<?= Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Backup Database'), false, 'span10 offset1') ?>
 		<h3><?=t('Existing Backups')?></h3>
 		<?php
 		if (count($backups) > 0) {
@@ -104,7 +107,7 @@ if ($tp->canBackup()) {
 				<tbody>
 					<?php foreach ($backups as $arr_bkupInf) { ?>
 						<tr> 
-							<td width="50%" style="white-space: nowrap"><?= date(DATE_APP_GENERIC_MDYT_FULL, strtotime($arr_bkupInf['date'])) ?></td>
+							<td width="50%" style="white-space: nowrap"><?= $dh->date(DATE_APP_GENERIC_MDYT_FULL, strtotime($arr_bkupInf['date'])) ?></td>
 							<td width="50%"><?= $arr_bkupInf['file']; ?></td>
 							<td style="white-space: nowrap">
 								<?= $interface->button_js(t('Download'), 'window.location.href=\'' . $this->action('download', $arr_bkupInf['file']) . '\'', 'left', 'small'); ?>

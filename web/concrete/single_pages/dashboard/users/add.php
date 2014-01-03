@@ -93,7 +93,7 @@ $languages = Localization::getAvailableInterfaceLanguages();
 				?>
                 <tr>
                     <td class="clearfix">
-                    	<label><?=tc('AttributeKeyName', $ak->getAttributeKeyName())?> <? if ($ak->isAttributeKeyRequiredOnRegister()) { ?><span class="required">*</span><? } ?></label>
+                    	<label><?=$ak->getAttributeKeyDisplayName()?> <? if ($ak->isAttributeKeyRequiredOnRegister()) { ?><span class="required">*</span><? } ?></label>
                         <? $ak->render('form', $caValue, false)?>
                     </td>
                 </tr>
@@ -120,12 +120,11 @@ $languages = Localization::getAvailableInterfaceLanguages();
 						$g = Group::getByID($gRow['gID']); 
 						$gp = new Permissions($g);
 						if ($gp->canAssignGroup()) {
-
 						?>
 						<label>
-							<input type="checkbox" name="gID[]" value="<?=$g->getGroupID()?>" <? 
+							<input type="checkbox" name="gID[]" value="<?=$g['gID']?>" <? 
                             if (is_array($_POST['gID'])) {
-                                if (in_array($g->getGroupID(), $_POST['gID'])) {
+                                if (in_array($g['gID'], $_POST['gID'])) {
                                     echo(' checked ');
                                 }
                             }

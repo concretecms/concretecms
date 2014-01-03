@@ -100,6 +100,7 @@ class Concrete5_Controller_Login extends Controller {
 			} else {
 				$message = call_user_method($method, $at->controller);
 			}
+
 			if (trim($message)) {
 				$this->set('message',$message);
 			}

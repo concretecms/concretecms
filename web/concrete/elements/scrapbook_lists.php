@@ -30,7 +30,7 @@ $ap = new Permissions($a);
 							$bv = new BlockView();
 							$bv->render($item, 'scrapbook');
 						} catch(Exception $e) {
-							print BLOCK_NOT_AVAILABLE_TEXT;
+							print t('This block is no longer available.');
 						}	
 						?>
 					</div>
@@ -46,7 +46,7 @@ $ap = new Permissions($a);
 					<a class="ccm-scrapbook-delete" title="<?php echo t('Remove from Clipboard')?>" href="javascript:void(0)" id="sb<?=$obj->getPileContentID()?>"><img src="<?=ASSETS_URL_IMAGES?>/icons/delete_small.png" width="16" height="16" /></a>
 					<div class="ccm-scrapbook-list-item-detail">	
 						<?	
-						print BLOCK_NOT_AVAILABLE_TEXT;
+						print t('This block is no longer available.');
 						?>
 					</div>
 				</div>

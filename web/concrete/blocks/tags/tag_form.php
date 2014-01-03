@@ -30,8 +30,9 @@ if(!$ak instanceof CollectionAttributeKey) {?>
 	</div>
 	</div>
 
+	<?php if (!$inStackDashboardPage) { ?>
 	<div id="ccm-tags-display-page" class="clearfix">
-	<label><?php echo tc('AttributeKeyName', $ak->getAttributeKeyName());?></label>
+	<label><?php echo $ak->getAttributeKeyDisplayName();?></label>
 	<div class="input">
 		<?php
 			$av = $c->getAttributeValueObject($ak);
@@ -39,6 +40,7 @@ if(!$ak instanceof CollectionAttributeKey) {?>
 		?>
 	</div>
 	</div>
+	<?php } ?>
 
 	<div id="ccm-tags-display-cloud" class="clearfix">
 	<?=$form->label('cloudCount', t('Number to Display'))?>

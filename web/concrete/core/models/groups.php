@@ -112,28 +112,16 @@
 				return $g;
 			}
 		}
-
-		public static function getByPath($gPath) {
-			$db = Loader::db();
-			$row = $db->getRow("select * from Groups where gPath = ?", array($gPath));
-			if (isset($row['gID'])) {
-				$g = new Group;
-				$g->setPropertiesFromArray($row);
-				return $g;
-			}
-		}
-
+		
 		public function getGroupMembers() {
 			$user_list = new UserList();
 			$user_list->filterByGroup($this);
-
 			return $user_list->get();
 		}
 
 		public function getGroupMemberIDs() {
 			$user_list = new UserList();
 			$user_list->filterByGroup($this);
-
 			return $user_list->getUserIDs();
 		}
 
@@ -143,13 +131,14 @@
 			if ($obj instanceof UserInfo) {
 				$uID = $this->pObj->getUserID();
 				if ($uID) {
-					$q = "select gID, ugEntered from UserGroups where gID = '{$this->gID}' and uID = {$uID}";
+					$q = "select gID, ugEntered, UserGroups.type from UserGroups where gID = '{$this->gID}' and uID = {$uID}";
 					$r = $db->query($q);
 					if ($r) {
 						$row = $r->fetchRow();
 						if ($row['gID']) {
 							$this->inGroup = true;
 							$this->gDateTimeEntered = $row['ugEntered'];
+							$this->gMemberType = $row['type'];
 						}
 					}
 				}
@@ -235,6 +224,10 @@
 			return $this->gDateTimeEntered;
 		}
 
+		function getGroupMemberType() {
+			return $this->gMemberType;
+		}
+		
 		function getGroupID() {
 			return $this->gID;
 		}
@@ -242,6 +235,7 @@
 		function getGroupName() {
 			return $this->gName;
 		}
+
 
 		public function getGroupPath() {return $this->gPath;}
 
@@ -258,7 +252,6 @@
 					}
 				}
 			}
-			return $parentGroups;
 		}
 
 		public function getChildGroups() {
@@ -309,6 +302,23 @@
 
 		function getGroupDescription() {
 			return $this->gDescription;
+		}
+
+		/** Returns the display description for this group (localized and escaped accordingly to $format)
+		* @param string $format = 'html'
+		*	Escape the result in html format (if $format is 'html').
+		*	If $format is 'text' or any other value, the display name won't be escaped.
+		* @return string
+		*/
+		public function getGroupDisplayDescription($format = 'html') {
+			$value = tc('GroupDescription', $this->getGroupDescription());
+			switch($format) {
+				case 'html':
+					return h($value);
+				case 'text':
+				default:
+					return $value;
+			}
 		}
 
 		/**
@@ -372,12 +382,10 @@
 		function update($gName, $gDescription) {
 			$db = Loader::db();
 			if ($this->gID) {
-				$g = CacheLocal::delete('group', $this->gID);
 				$v = array($gName, $gDescription, $this->gID);
 				$r = $db->prepare("update Groups set gName = ?, gDescription = ? where gID = ?");
 				$res = $db->Execute($r, $v);
 				$group = Group::getByID($this->gID);
-				$group->rescanGroupPath();
 		        Events::fire('on_group_update', $this);
 
         		return $group;
@@ -389,16 +397,16 @@
 		* @param string $gDescription
 		* @return Group
 		*/
-		public static function add($gName, $gDescription, $parentGroup = false) {
+
+		public static function add($gName, $gDescription, $parentGroup = false, $gID = null) {
 			$db = Loader::db();
-			$v = array($gName, $gDescription);
-			$r = $db->prepare("insert into Groups (gName, gDescription) values (?, ?)");
+			$v = array($gID, $gName, $gDescription);
+			$r = $db->prepare("insert into Groups (gID, gName, gDescription) values (?, ?, ?)");
 			$res = $db->Execute($r, $v);
 
 			if ($res) {
-				$ng = Group::getByID($db->Insert_ID());
+				$ng = Group::getByID($gID ? $gID : $db->Insert_ID());
 				// create a node for this group.
-
 				if (is_object($parentGroup)) {
 					$node = GroupTreeNode::getTreeNodeByGroupID($parentGroup->getGroupID());
 				}
@@ -408,9 +416,7 @@
 				}
 
 				GroupTreeNode::add($ng, $node);
-
 				Events::fire('on_group_add', $ng);
-				$ng->rescanGroupPath();
 				return $ng;
 			}
 		}

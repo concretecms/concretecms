@@ -24,7 +24,7 @@ $text = Loader::helper('text');
 Loader::model('file_attributes');
 $searchFieldAttributes = FileAttributeKey::getSearchableList();
 foreach($searchFieldAttributes as $ak) {
-	$searchFields[$ak->getAttributeKeyID()] = tc('AttributeKeyName', $ak->getAttributeKeyName());
+	$searchFields[$ak->getAttributeKeyID()] = $ak->getAttributeKeyDisplayName();
 }
 
 $ext1 = FileList::getExtensionList();
@@ -123,6 +123,7 @@ foreach($t1 as $value) {
 		print $form->hidden('fileSelector', $fileSelector); 
 	?>	
 	<input type="hidden" name="searchInstance" value="<?=$searchInstance?>" />
+	<br/>
 	<div class="ccm-pane-options-permanent-search">
 
 	<?
@@ -150,7 +151,7 @@ foreach($t1 as $value) {
 			
 		<? } ?>
 
-		<div class="span3">
+		<div class="span4">
 		<?=$form->label('fvKeywords', t('Keywords'))?>
 		<div class="controls">
 			<?=$form->text('fKeywords', $searchRequest['fKeywords'], array('style'=> 'width: 130px')); ?>

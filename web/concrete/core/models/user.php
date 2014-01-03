@@ -342,21 +342,7 @@
 		}
 
 		function getUserGroups() {
-			$ugtmp = array();
-			// we have to do this because we don't have a localized version of the guest and registered group names
-			// when we called _getUserGroups() below. So we have to push out the defining of the guest and registered
-			// names til runtime
-
-			foreach($this->uGroups as $key => $value) {
-				$ugtmp[$key] = $value;
-				if ($key == GUEST_GROUP_ID) {
-					$ugtmp[$key] = GUEST_GROUP_NAME;
-				}
-				if ($key == REGISTERED_GROUP_ID) {
-					$ugtmp[$key] = REGISTERED_GROUP_NAME;
-				}
-			}
-			return $ugtmp;
+			return $this->uGroups;
 		}
 
 		/**
@@ -442,14 +428,6 @@
 								}
 							} else {
 								$ug[$row['gID']] = $row['gName'];
-
-								// now we have to test for hierarchy
-								$g = Group::getByID($row['gID']);
-								$parents = $g->getParentGroups();
-								foreach($parents as $pg) {
-									$ug[$pg->getGroupID()] = $pg->getGroupName();
-								}
-
 							}
 
 						}
@@ -481,7 +459,7 @@
 				Events::fire('on_user_enter_group', $this, $g);
 			}
 		}
-
+		
 		function exitGroup($g) {
 			// takes a group object, and, if the user is in the group, they exit the group
 			if (is_object($g)) {
@@ -497,8 +475,8 @@
 		function inGroup($g) {
 			$db = Loader::db();
 			$v = array($this->uID, $g->getGroupID());
-			$groups = $this->getUserGroups();
-			return array_key_exists($g->getGroupID(), $groups);
+			$cnt = $db->GetOne("select gID from UserGroups where uID = ? and gID = ?", $v);
+			return $cnt > 0;
 		}
 
 		function loadMasterCollectionEdit($mcID, $ocID) {

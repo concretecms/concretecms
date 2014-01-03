@@ -269,8 +269,6 @@ class Concrete5_Model_Package extends Object {
 		$items['permission_access_entity_types'] = PermissionAccessEntityType::getListByPackage($this);
 		$items['attribute_keys'] = AttributeKey::getListByPackage($this);
 		$items['attribute_sets'] = AttributeSet::getListByPackage($this);
-		$items['tree_types'] = TreeType::getListByPackage($this);
-		$items['tree_node_types'] = TreeNodeType::getListByPackage($this);
 		$items['group_sets'] = GroupSet::getListByPackage($this);
 		$items['page_types'] = CollectionType::getListByPackage($this);
 		$items['mail_importers'] = MailImporter::getListByPackage($this);
@@ -301,23 +299,19 @@ class Concrete5_Model_Package extends Object {
 			return $item->getMailImporterName();		
 		} else if ($item instanceof SinglePage) {
 			return $item->getCollectionPath();
-		} else if ($item instanceof TreeType) {
-			return ucwords(strtolower($txt->unhandle($item->getTreeTypeHandle())));
-		} else if ($item instanceof TreeNodeType) {
-			return ucwords(strtolower($txt->unhandle($item->getTreeNodeTypeHandle())));
 		} else if ($item instanceof AttributeType) {
-			return tc('AttributeTypeName', $item->getAttributeTypeName());
+			return $item->getAttributeTypeDisplayName();
 		} else if ($item instanceof PermissionAccessEntityType) {
-			return tc('PermissionAccessEntityTypeName', $item->getAccessEntityTypeName());
+			return $item->getAccessEntityTypeDisplayName();
 		} else if ($item instanceof PermissionKeyCategory) {
 			return $txt->unhandle($item->getPermissionKeyCategoryHandle());
 		} else if ($item instanceof AttributeKeyCategory) {
 			return $txt->unhandle($item->getAttributeKeyCategoryHandle());
 		} else if ($item instanceof AttributeSet) {
 			$at = AttributeKeyCategory::getByID($item->getAttributeSetKeyCategoryID());
-			return t('%s (%s)', tc('AttributeSetName', $item->getAttributeSetName()), $txt->unhandle($at->getAttributeKeyCategoryHandle()));
+			return t('%s (%s)', $item->getAttributeSetDisplayName(), $txt->unhandle($at->getAttributeKeyCategoryHandle()));
 		} else if ($item instanceof GroupSet) {
-			return $item->getGroupSetNAme();
+			return $item->getGroupSetDisplayName();
 		} else if (is_a($item, 'AttributeKey')) {
 			$akc = AttributeKeyCategory::getByID($item->getAttributeKeyCategoryID());
 			return t(' %s (%s)', $txt->unhandle($item->getAttributeKeyHandle()), $txt->unhandle($akc->getAttributeKeyCategoryHandle()));
@@ -326,7 +320,7 @@ class Concrete5_Model_Package extends Object {
 		} else if ($item instanceof SystemAntispamLibrary) {
 			return $item->getSystemAntispamLibraryName();
 		} else if (is_a($item, 'PermissionKey')) {
-			return tc('PermissionKeyName', $item->getPermissionKeyName());			
+			return $item->getPermissionKeyDisplayName();			
 		} else if (is_a($item, 'Job')) {
 			return $item->getJobName();
 		} else if (is_a($item, 'WorkflowType')) {
@@ -385,8 +379,6 @@ class Concrete5_Model_Package extends Object {
 						case 'WorkflowType':
 						case 'PermissionKey':
 						case 'PermissionAccessEntityType':
-						case 'TreeType':
-						case 'TreeNodeType':
 							$item->delete();
 							break;
 						default:

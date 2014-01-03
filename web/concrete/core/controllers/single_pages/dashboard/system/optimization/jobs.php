@@ -193,7 +193,7 @@ class Concrete5_Controller_Dashboard_System_Optimization_Jobs extends DashboardB
 	public function update_job_schedule() {
 		$jID = $this->post('jID');
 		$J = Job::getByID($jID);
-		$J->setSchedule($this->post('isScheduled'), $this->post('unit'), $this->post('value'));
+		$J->setSchedule($this->post('isScheduled'), $this->post('unit'), max(0,(int)$this->post('value')));
 		
 		$this->redirect('/dashboard/system/optimization/jobs', 'job_scheduled');
 	}

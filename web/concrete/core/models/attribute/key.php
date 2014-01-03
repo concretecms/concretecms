@@ -11,6 +11,23 @@ class Concrete5_Model_AttributeKey extends Object {
 	 */
 	public function getAttributeKeyName() { return $this->akName;}
 
+	/** Returns the display name for this attribute (localized and escaped accordingly to $format)
+	* @param string $format = 'html'
+	*	Escape the result in html format (if $format is 'html').
+	*	If $format is 'text' or any other value, the display name won't be escaped. 
+	* @return string
+	*/
+	public function getAttributeKeyDisplayName($format = 'html') {
+		$value = tc('AttributeKeyName', $this->getAttributeKeyName());
+		switch($format) {
+			case 'html':
+				return h($value);
+			case 'text':
+			default:
+				return $value;
+		}
+	}
+
 	/** 
 	 * Returns the handle for this attribute key
 	 */
@@ -202,8 +219,12 @@ class Concrete5_Model_AttributeKey extends Object {
 		if ($ak['internal']) {
 			$akIsInternal = 1;
 		}
-		$akn = self::add($akCategoryHandle, $type, array('akHandle' => $ak['handle'], 'akName' => $ak['name'], 'akIsInternal' => $akIsInternal, 'akIsSearchableIndexed' => $ak['indexed'], 'akIsSearchable' => $ak['searchable']), $pkg);
-		$akn->getController()->importKey($ak);
+		$db = Loader::db();
+		$akID = $db->GetOne('select akID from AttributeKeys where akHandle = ?', array($ak['handle']));
+		if (!$akID) {
+			$akn = self::add($akCategoryHandle, $type, array('akHandle' => $ak['handle'], 'akName' => $ak['name'], 'akIsInternal' => $akIsInternal, 'akIsSearchableIndexed' => $ak['indexed'], 'akIsSearchable' => $ak['searchable']), $pkg);
+			$akn->getController()->importKey($ak);
+		}
 	}
 	
 	/** 
@@ -253,10 +274,11 @@ class Concrete5_Model_AttributeKey extends Object {
 		$a = array($akHandle, $akName, $_akIsSearchable, $_akIsSearchableIndexed, $_akIsInternal, $_akIsAutoCreated, $_akIsEditable, $atID, $akCategoryID, $pkgID);
 		$r = $db->query("insert into AttributeKeys (akHandle, akName, akIsSearchable, akIsSearchableIndexed, akIsInternal, akIsAutoCreated, akIsEditable, atID, akCategoryID, pkgID) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", $a);
 		
-		$category = AttributeKeyCategory::getByID($akCategoryID);
-		
 		if ($r) {
+			//getting the insert id must happen right after insertion or
+			//certain adodb drivers (like mysqli) will fail and return 0
 			$akID = $db->Insert_ID();
+			$category = AttributeKeyCategory::getByID($akCategoryID);
 			$className = $txt->camelcase($akCategoryHandle) . 'AttributeKey';
 			$ak = new $className();
 			$ak->load($akID);
