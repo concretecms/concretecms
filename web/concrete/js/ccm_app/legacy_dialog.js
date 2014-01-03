@@ -54,32 +54,46 @@ jQuery.fn.dialog.open = function(obj) {
 	nd++;
 	$('body').append('<div id="ccm-dialog-content' + nd + '" style="display: none"></div>');
 	
-	if (typeof(obj.width) == 'string') {
-		if (obj.width.indexOf('%', 0) > 0) {
-			w = obj.width.replace('%', '');
-			w = $(window).width() * (w / 100);
-			w = w + 50;
-		} else {
-			w = parseInt(obj.width) + 50;
-		}
-		
-		if (obj.height.indexOf('%', 0) > 0) {
-			h = obj.height.replace('%', '');
-			h = $(window).height() * (h / 100);
-			h = h + 100;
-		} else {
-			h = parseInt(obj.height) + 100;
-		}
-	} else if (obj.width) { 
-		w = parseInt(obj.width) + 50;
-		h = parseInt(obj.height) + 100;
+	if (obj.width == 'auto') {
+		w = 'auto';
 	} else {
-		w = 550;
-		h = 400;
+		if (typeof(obj.width) == 'string') {
+			if (obj.width.indexOf('%', 0) > 0) {
+				w = obj.width.replace('%', '');
+				w = $(window).width() * (w / 100);
+				w = w + 50;
+			} else {
+				w = parseInt(obj.width) + 50;
+			}
+		} else if (obj.width) { 
+			w = parseInt(obj.width) + 50;
+		} else {
+			w = 550;
+		}
 	}
-	if (h > $(window).height()) {
-		h = $(window).height();
+
+	if (obj.height == 'auto') {
+		h = 'auto';
+	} else {
+		if (typeof(obj.height) == 'string') {
+			if (obj.height.indexOf('%', 0) > 0) {
+				h = obj.height.replace('%', '');
+				h = $(window).height() * (h / 100);
+				h = h + 100;
+			} else {
+				h = parseInt(obj.height) + 100;
+			}
+		} else if (obj.height) {
+			h = parseInt(obj.height) + 100;
+		} else {
+			h = 400;
+		}
+
+		if (h > $(window).height()) {
+			h = $(window).height();
+		}
 	}
+	
 	$("#ccm-dialog-content" + nd).jqdialog({
 		'modal': true,
 		'height': h,
