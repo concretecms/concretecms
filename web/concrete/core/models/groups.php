@@ -112,6 +112,17 @@
 				return $g;
 			}
 		}
+
+		public static function getByPath($gPath) {
+			$db = Loader::db();
+			$row = $db->getRow("select * from Groups where gPath = ?", array($gPath));
+			if (isset($row['gID'])) {
+				$g = new Group;
+				$g->setPropertiesFromArray($row);
+				return $g;
+			}
+		}
+
 		
 		public function getGroupMembers() {
 			$user_list = new UserList();
@@ -386,6 +397,7 @@
 				$r = $db->prepare("update Groups set gName = ?, gDescription = ? where gID = ?");
 				$res = $db->Execute($r, $v);
 				$group = Group::getByID($this->gID);
+				$group->rescanGroupPath();
 		        Events::fire('on_group_update', $this);
 
         		return $group;
@@ -417,6 +429,7 @@
 
 				GroupTreeNode::add($ng, $node);
 				Events::fire('on_group_add', $ng);
+				$ng->rescanGroupPath();
 				return $ng;
 			}
 		}
