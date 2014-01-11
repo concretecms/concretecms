@@ -1,13 +1,5 @@
 <?
 /**
- * @package Helpers
- * @category Concrete
- * @author Andrew Embler <andrew@concrete5.org>
- * @copyright  Copyright (c) 2003-2008 Concrete5. (http://www.concrete5.org)
- * @license    http://www.concrete5.org/license/     MIT License
- */
-
-/**
  * Functions useful for working with text.
  * @package Helpers
  * @category Concrete
@@ -18,27 +10,76 @@
 
 defined('C5_EXECUTE') or die("Access Denied.");
 class Concrete5_Helper_Text { 
-	
+
+	/** Takes text and converts it to an ASCII-only string (characters with code between 32 and 127, plus \t, \n and \r).
+	* @param string $text The text to be converted.
+	* @param string $locale='' The locale for the string. If not specified we consider the current locale.
+	* @return string
+	*/
+	public function asciify($text, $locale = '') {
+		if(!strlen($locale)) {
+			$locale = Localization::activeLocale();
+		}
+		$language = substr($locale, 0, strcspn($locale, '_'));
+		Loader::library('3rdparty/urlify');
+		$text = URLify::downcode($text, $language);
+		if(preg_match('/[^\\t\\r\\n\\x20-\\x7e]/', $text)) {
+			if(function_exists('iconv')) {
+				$t = @iconv(APP_CHARSET, 'US-ASCII//IGNORE//TRANSLIT', $text);
+				if(is_string($t)) {
+					$text = $t;
+				}
+			}
+			$text = preg_replace('/[^\\t\\r\\n\\x20-\\x7e]/', '', $text);
+		}
+		return $text;
+	}
+
 	/** 
 	 * @access private
 	 * @param string $handle
 	 * @return string $handle
 	 */
 	public function sanitizeFileSystem($handle) {
-		return $this->urlify($handle);
+		return $this->urlify($handle, PAGE_PATH_SEGMENT_MAX_LENGTH, '', false);
 	}	
 	
 	/** 
 	 * Takes text and returns it in the "lowercase-and-dashed-with-no-punctuation" format
 	 * @param string $handle
-	 * @param int $maxlength Max number of characters of the return value
-	 * @param string $lang Language code of the language rules that should be priorized
+	 * @param int $maxlength=PAGE_PATH_SEGMENT_MAX_LENGTH Max number of characters of the return value
+	 * @param string $lang='' Language code of the language rules that should be priorized
+	 * @param bool $removeExcludedWords=true Set to true to remove excluded words, false to allow them.
 	 * @return string $handle
 	 */
-	public function urlify($handle, $maxlength = PAGE_PATH_SEGMENT_MAX_LENGTH, $lang = LANGUAGE) {
-		Loader::library('3rdparty/urlify');
-		$handle = URLify::filter($handle, $maxlength, $lang);
-		return $handle;
+	public function urlify($handle, $maxlength = PAGE_PATH_SEGMENT_MAX_LENGTH, $locale = '', $removeExcludedWords = true) {
+		$text = strtolower(str_replace(array("\r", "\n", "\t"), ' ', $this->asciify($handle, $locale)));
+		if($removeExcludedWords) {
+			$excludeSeoWords = Config::get('SEO_EXCLUDE_WORDS');
+			if(is_string($excludeSeoWords)) {
+				if(strlen($excludeSeoWords)) {
+					$remove_list = explode(',', $excludeSeoWords);
+					$remove_list = array_map('trim', $remove_list);
+					$remove_list = array_filter($remove_list, 'strlen');
+				}
+				else {
+					$remove_list = array();
+				}
+			}
+			else {
+				Loader::library('3rdparty/urlify');
+				$remove_list = URLify::$remove_list;
+			}
+			if(count($remove_list)) {
+				$text = preg_replace('/\b(' . join ('|', $remove_list) . ')\b/i', '', $text);
+			}
+		}
+		$text = preg_replace('/[^-\w\s]/', '', $text);		// remove unneeded chars
+		$text = str_replace('_', ' ', $text);		// treat underscores as spaces
+		$text = preg_replace('/^\s+|\s+$/', '', $text);	// trim leading/trailing spaces
+		$text = preg_replace('/[-\s]+/', '-', $text);		// convert spaces to hyphens
+		$text = strtolower ($text);							// convert to lowercase
+		return trim(substr($text, 0, $maxlength), '-');	// trim to first $maxlength chars
 	}
 		
 

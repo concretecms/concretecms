@@ -49,6 +49,7 @@ class Concrete5_Controller_Dashboard_Reports_Forms extends DashboardBaseControll
 			echo "rowspan=\"2\" valign='bottom'";
 		}
 		echo "><b>Submitted Date</b></td>\r\n";
+		echo "<td><b>User</b></td>\r\n";
 		
 		foreach($questions as $questionId=>$question){ 
             if ($question['inputType'] == 'checkboxlist')
@@ -89,6 +90,14 @@ class Concrete5_Controller_Dashboard_Reports_Forms extends DashboardBaseControll
 			$numQuestionsToShow=2;
 			echo "\t<tr>\r\n";
 			echo "\t\t<td>". $dateHelper->getSystemDateTime($answerSet['created'])."</td>\r\n";
+			echo "\t\t<td>";
+			if ($answerSet['uID'] > 0) {
+				$ui = UserInfo::getByID($answerSet['uID']);
+				if (is_object($ui)) {
+					echo $ui->getUserName();
+				}
+			}
+			echo "</td>\r\n";
 			foreach($questions as $questionId=>$question){ 
 				$questionNumber++;
                 if ($question['inputType'] == 'checkboxlist'){

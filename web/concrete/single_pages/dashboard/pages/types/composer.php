@@ -112,7 +112,7 @@ if ($cap->canAccessComposer()) { ?>
                     	<td width="33%">
                             <label>
                                 <?=$form->checkbox('composerAKID[]', $ak->getAttributeKeyID(), in_array($ak->getAttributeKeyID(), $selectedAttributes))?>
-                                <span><?=tc('AttributeKeyName', $ak->getAttributeKeyName())?></span>
+                                <span><?=$ak->getAttributeKeyDisplayName()?></span>
                             </label>
                         </td>
                     
@@ -155,7 +155,7 @@ if ($cap->canAccessComposer()) { ?>
                             ?>
                         
                         <div class="ccm-composer-content-item" id="item_akID<?=$ak->getAttributeKeyID()?>">
-                            <img class="ccm-composer-content-item-icon" src="<?=$ak->getAttributeKeyIconSRC()?>" width="16" height="16" /><?=tc('AttributeKeyName', $ak->getAttributeKeyName())?>
+                            <img class="ccm-composer-content-item-icon" src="<?=$ak->getAttributeKeyIconSRC()?>" width="16" height="16" /><?=$ak->getAttributeKeyDisplayName()?>
                         </div>
                 
                             <? } else if ($ci instanceof Block) { 

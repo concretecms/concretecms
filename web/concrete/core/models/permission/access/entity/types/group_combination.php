@@ -85,7 +85,7 @@ class Concrete5_Model_GroupCombinationPermissionAccessEntity extends PermissionA
 				$g = Group::getByID($gIDs[$i]);
 				if (is_object($g)) {
 					$this->groups[] = $g;
-					$this->label .= $g->getGroupName();
+					$this->label .= $g->getGroupDisplayName();
 					if ($i + 1 < count($gIDs)) {
 						$this->label .= t(' + ');
 					}

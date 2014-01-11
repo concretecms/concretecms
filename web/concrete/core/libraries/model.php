@@ -14,11 +14,9 @@ defined('C5_EXECUTE') or die("Access Denied.");
 */
 class Concrete5_Library_Model extends ADOdb_Active_Record {
 
-
 	public function __construct() {
-	 	$db = Loader::db();
-	 	parent::__construct();
-	}		 
-
+		$db = Loader::db();
+		parent::__construct();
+	}
 
 }

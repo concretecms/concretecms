@@ -24,7 +24,7 @@ if (!$searchDialog) {
 Loader::model('attribute/categories/collection');
 $searchFieldAttributes = CollectionAttributeKey::getSearchableList();
 foreach($searchFieldAttributes as $ak) {
-	$searchFields[$ak->getAttributeKeyID()] = tc('AttributeKeyName', $ak->getAttributeKeyName());
+	$searchFields[$ak->getAttributeKeyID()] = $ak->getAttributeKeyDisplayName();
 }
 
 ?>
