@@ -154,7 +154,7 @@ if ($ctEditMode) {
                             <td width="33%">
                             <label>
                             <input type="checkbox" name="akID[]" value="<?=$ak->getAttributeKeyID()?>" <? if (($this->controller->isPost() && in_array($ak->getAttributeKeyID(), $akIDArray))) { ?> checked <? } else if ((!$this->controller->isPost()) && $ct->isAvailableCollectionTypeAttribute($ak->getAttributeKeyID())) { ?> checked <? } ?> />
-                            <span><?=tc('AttributeKeyName', $ak->getAttributeKeyName())?></span>
+                            <span><?=$ak->getAttributeKeyDisplayName()?></span>
                             </label>
                             </td>
                     

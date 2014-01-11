@@ -13,7 +13,7 @@ if (PERMISSIONS_MODEL == 'advanced') {
 Loader::model('user_attributes');
 $searchFieldAttributes = UserAttributeKey::getSearchableList();
 foreach($searchFieldAttributes as $ak) {
-	$searchFields[$ak->getAttributeKeyID()] = tc('AttributeKeyName', $ak->getAttributeKeyName());
+	$searchFields[$ak->getAttributeKeyID()] = $ak->getAttributeKeyDisplayName();
 }
 
 
@@ -38,7 +38,7 @@ foreach($searchFieldAttributes as $ak) {
 			$gsl = new GroupSetList();
 			$groupsets = array();
 			foreach($gsl->get() as $gs) { 
-				$groupsets[$gs->getGroupSetID()] = $gs->getGroupSetName();
+				$groupsets[$gs->getGroupSetID()] = $gs->getGroupSetDisplayName();
 			}
 		?>
 		<span class="ccm-search-option"  search-field="group_set">
@@ -56,10 +56,10 @@ foreach($searchFieldAttributes as $ak) {
 	<?=$form->hidden('mode', $mode); ?>
 	<?=$form->hidden('searchType', $searchType); ?>
 	<input type="hidden" name="search" value="1" />
-	
+	<br/>
 	<div class="ccm-pane-options-permanent-search">
 
-		<div class="span3">
+		<div class="span4">
 		<?=$form->label('keywords', t('Keywords'))?>
 		<div class="controls">
 			<?=$form->text('keywords', $_REQUEST['keywords'], array('placeholder' => t('Username or Email'), 'style'=> 'width: 140px')); ?>
@@ -74,13 +74,13 @@ foreach($searchFieldAttributes as $ak) {
 		$g1 = $gl->getPage();
 		?>		
 
-		<div class="span4" >
+		<div class="span4" style="width:280px">
 			<?=$form->label('gID', t('Group(s)'))?>
 			<div class="controls">
-				<select multiple name="gID[]" class="chosen-select" style="width: 200px">
+				<select multiple name="gID[]" class="chosen-select" style="width: 220px">
 					<? foreach($g1 as $g) {
 						if ($pk->validate($g['gID'])) { ?>
-						<option value="<?=$g['gID']?>"  <? if (is_array($_REQUEST['gID']) && in_array($g['gID'], $_REQUEST['gID'])) { ?> selected="selected" <? } ?>><?=$g['gName']?></option>
+						<option value="<?=$g['gID']?>"  <? if (is_array($_REQUEST['gID']) && in_array($g['gID'], $_REQUEST['gID'])) { ?> selected="selected" <? } ?>><?=h(tc('GroupName', $g['gName']))?></option>
 					<? 
 						}
 					} ?>
@@ -88,7 +88,7 @@ foreach($searchFieldAttributes as $ak) {
 			</div>
 		</div>
 		
-		<div class="span3" style="width: 300px; white-space: nowrap">
+		<div class="span3">
 		<?=$form->label('numResults', t('# Per Page'))?>
 		<div class="controls">
 			<?=$form->select('numResults', array(
@@ -106,7 +106,7 @@ foreach($searchFieldAttributes as $ak) {
 		
 	</div>
 
-	<a href="javascript:void(0)" onclick="ccm_paneToggleOptions(this)" class="ccm-icon-option-closed"><?=t('Advanced')?></a>
+	<a href="javascript:void(0)" onclick="ccm_paneToggleOptions(this)" class="ccm-icon-option-closed"><?=t('Advanced Search')?></a>
 	<div class="clearfix ccm-pane-options-content">
 		<br/>
 		<table class="table table-bordered table-striped ccm-search-advanced-fields" id="ccm-user-search-advanced-fields">

@@ -236,6 +236,7 @@
 		 * $db = Loader::db();
 		 * $db->query($sql);
 		 * </code>
+		 * @return ADOConnection
 		 */
 		public static function db($server = null, $username = null, $password = null, $database = null, $create = false, $autoconnect = true) {
 			static $_dba;

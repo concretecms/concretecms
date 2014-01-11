@@ -1,5 +1,5 @@
 // This is an sample configuration file.
-// Set your values and save this file as Gruntfile.c5config.js
+// Set your values and save this file as Gruntfile.parameters.js
 
 module.exports = {
 
@@ -11,13 +11,13 @@ module.exports = {
 	DIR_BASE: '../web',
 
 	// Your Transifex login.
-	// It's needed only if you have do run tasks that interacts with Transifex.
+	// It's needed only if you have to run tasks that interact with Transifex.
 	txUsername: '',
 	// Your Transifex password.
-	// It's needed only if you have do run tasks that interacts with Transifex.
+	// It's needed only if you have to run tasks that interact with Transifex.
 	txPassword: '',
-	// The resource identifier of the Transifex resource, for instance 'core-5621'.
-	// It's needed only if you have do run tasks that interacts with Transifex.
+	// The identifier of the Transifex resource, for instance 'core-5621'.
+	// It's needed only if you have to run tasks that interact with Transifex.
 	txResource: '',
 	// A list of locales. If empty then all the Transifex locales are retrieved.
 	txLocales: [],

@@ -62,8 +62,8 @@ if (!$tp->canAccessGroupSearch()) {
 	
 		<div class="ccm-group">
 			<div style="background-image: url(<?=ASSETS_URL_IMAGES?>/icons/group.png)" class="ccm-group-inner-indiv">
-				<a class="ccm-group-inner-atag" id="g<?=$g['gID']?>" group-id="<?=$g['gID']?>" group-name="<?=h(t($g['gName']))?>" href="javascript:void(0)"><?=t($g['gName'])?></a>
-				<?=( $g['gDescription'] != '' ? ' - <span class="ccm-group-description">'. t($g['gDescription']) .'</span>' : '' )?>
+				<a class="ccm-group-inner-atag" id="g<?=$g['gID']?>" group-id="<?=$g['gID']?>" group-name="<?=h(tc('GroupName', $g['gName']))?>" href="javascript:void(0)"><?=h(tc('GroupName', $g['gName']))?></a>
+				<?=( tc('GroupDescription', $g['gDescription']) != '' ? ' - <span class="ccm-group-description">'. h(tc('GroupDescription', $g['gDescription'])) .'</span>' : '' )?>
 			</div>
 		</div>
 	

@@ -1,7 +1,7 @@
 /* Finnish initialisation for the jQuery UI date picker plugin. */
 /* Written by Harri Kilpiö (harrikilpio@gmail.com). */
 
-$(document).ready(function(){
+jQuery(function($){
     $.datepicker.regional['fi'] = {
 		clearText: 'Tyhjenn&auml;', clearStatus: '',
 		closeText: 'Sulje', closeStatus: '',
@@ -14,11 +14,11 @@ $(document).ready(function(){
         'Hein&auml;','Elo','Syys','Loka','Marras','Joulu'],
 		monthStatus: '', yearStatus: '',
 		weekHeader: 'Vk', weekStatus: '',
-		dayNamesShort: ['Su','Ma','Ti','Ke','To','Pe','Su'],
+		dayNamesShort: ['Su','Ma','Ti','Ke','To','Pe','La'],
 		dayNames: ['Sunnuntai','Maanantai','Tiistai','Keskiviikko','Torstai','Perjantai','Lauantai'],
 		dayNamesMin: ['Su','Ma','Ti','Ke','To','Pe','La'],
 		dayStatus: 'DD', dateStatus: 'D, M d',
-        dateFormat: 'dd.mm.yy', firstDay: 1,
+		dateFormat: 'd.m.yy', firstDay: 1,
 		initStatus: '', isRTL: false};
     $.datepicker.setDefaults($.datepicker.regional['fi']);
 });

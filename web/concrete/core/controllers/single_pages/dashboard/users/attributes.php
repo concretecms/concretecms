@@ -10,7 +10,7 @@ class Concrete5_Controller_Dashboard_Users_Attributes extends Controller {
 		$otypes = AttributeType::getList('user');
 		$types = array();
 		foreach($otypes as $at) {
-			$types[$at->getAttributeTypeID()] = tc('AttributeTypeName', $at->getAttributeTypeName());
+			$types[$at->getAttributeTypeID()] = $at->getAttributeTypeDisplayName();
 		}
 		$this->set('types', $types);
 	}

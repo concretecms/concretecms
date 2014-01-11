@@ -51,7 +51,7 @@ $form = Loader::helper('form');
 				<li>
 					<label>
 						<?=$form->checkbox('gID[]', $g->getGroupID(), in_array($g->getGroupID(), $editAccess))?>
-						<span><?=$g->getGroupName()?></span>
+						<span><?=$g->getGroupDisplayName()?></span>
 					</label>
 				</li>
 				<?endforeach?>

@@ -92,9 +92,9 @@ $canEditGroups = $gp->canEditGroups();
 foreach ($gResults as $g) { ?>
 	
 	<div class="ccm-group">
-		<<? if ($canEditGroups) { ?>a<? } else {?>span<? } ?> class="ccm-group-inner" <? if ($canEditGroups) { ?>href="<?=$this->url('/dashboard/users/groups?task=edit&gID=' . $g['gID'])?>"<? } ?> style="background-image: url(<?=ASSETS_URL_IMAGES?>/icons/group.png)"><?=t($g['gName'])?><? if ($canEditGroups) { ?></a><? } else {?></span><? } ?>
+		<<? if ($canEditGroups) { ?>a<? } else {?>span<? } ?> class="ccm-group-inner" <? if ($canEditGroups) { ?>href="<?=$this->url('/dashboard/users/groups?task=edit&gID=' . $g['gID'])?>"<? } ?> style="background-image: url(<?=ASSETS_URL_IMAGES?>/icons/group.png)"><?=h(tc('GroupName', $g['gName']))?><? if ($canEditGroups) { ?></a><? } else {?></span><? } ?>
 		<? if ($g['gDescription']) { ?>
-			<div class="ccm-group-description"><?=$g['gDescription']?></div>
+			<div class="ccm-group-description"><?=h(tc('GroupDescription', $g['gDescription']))?></div>
 		<? } ?>
 	</div>
 
@@ -151,7 +151,7 @@ foreach ($gResults as $g) { ?>
 	<div class="control-group">
 	<?=$form->label('gName', t('Name'))?>
 	<div class="controls">
-		<input type="text" name="gName" class="span6" value="<?=Loader::helper('text')->entities(t($gName))?>" />
+		<input type="text" name="gName" class="span6" value="<?=Loader::helper('text')->entities($gName)?>" />
 	</div>
 	</div>
 	

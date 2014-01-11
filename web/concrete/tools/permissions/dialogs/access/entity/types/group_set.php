@@ -28,7 +28,7 @@ if (!$tp->canAccessGroupSearch()) {
 	
 		<div class="ccm-group">
 			<div style="background-image: url(<?=ASSETS_URL_IMAGES?>/icons/group.png)" class="ccm-group-inner-indiv">
-				<a class="ccm-group-inner-atag" id="g<?=$g['gID']?>" href="javascript:void(0)" onclick="ccm_selectGroupSet(<?=$gs->getGroupSetID()?>)"><?=$gs->getGroupSetName()?></a>
+				<a class="ccm-group-inner-atag" id="g<?=$g['gID']?>" href="javascript:void(0)" onclick="ccm_selectGroupSet(<?=$gs->getGroupSetID()?>)"><?=$gs->getGroupSetDisplayName()?></a>
 			</div>
 		</div>
 	

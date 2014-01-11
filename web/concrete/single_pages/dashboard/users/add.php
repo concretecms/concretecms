@@ -93,7 +93,7 @@ $languages = Localization::getAvailableInterfaceLanguages();
 				?>
                 <tr>
                     <td class="clearfix">
-                    	<label><?=tc('AttributeKeyName', $ak->getAttributeKeyName())?> <? if ($ak->isAttributeKeyRequiredOnRegister()) { ?><span class="required">*</span><? } ?></label>
+                    	<label><?=$ak->getAttributeKeyDisplayName()?> <? if ($ak->isAttributeKeyRequiredOnRegister()) { ?><span class="required">*</span><? } ?></label>
                         <? $ak->render('form', $caValue, false)?>
                     </td>
                 </tr>
@@ -130,7 +130,7 @@ $languages = Localization::getAvailableInterfaceLanguages();
                                 }
                             }
                         ?> />
-							<span><?=t($g['gName'])?></span>
+							<span><?=h(tc('GroupName', $g['gName']))?></span>
 						</label>
                     <? }
                     

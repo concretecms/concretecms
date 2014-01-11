@@ -121,28 +121,32 @@ module.exports = function(grunt, config, parameters, done) {
 	}
 
 	if(!parameters.txUsername) {
-		process.stderr.write('Transifex username not defined. Define a txUsername variable in Gruntfile.c5config.js file.\n');
+		process.stderr.write('Transifex username not defined. Define a txUsername variable in Gruntfile.parameters.js file or use a --txUsername=... command line parameter.\n');
 		done(false);
 		return;
 	}
 	if(!parameters.txPassword) {
-		process.stderr.write('Transifex password not defined. Define a txPassword variable in Gruntfile.c5config.js file.\n');
+		process.stderr.write('Transifex password not defined. Define a txPassword variable in Gruntfile.parameters.js file or use a --txPassword=... command line parameter.\n');
 		done(false);
 		return;
 	}
 	if(!parameters.txResource) {
-		process.stderr.write('Transifex resource not defined. Define a txResource variable in Gruntfile.c5config.js file.\n');
+		process.stderr.write('Transifex resource not defined. Define a txResource variable in Gruntfile.parameters.js file or use a --txResource=... command line parameter.\n');
 		done(false);
 		return;
 	}
 	
-	var txProgressLimit = ('txProgressLimit' in parameters) ? parameters.txProgressLimit : 95;
+	var txProgressLimit = parseFloat(parameters.txProgressLimit);
+	if(isNaN(txProgressLimit)) {
+		txProgressLimit = 95;
+	}
 	
 	var getAllLocales;
 	if(parameters.txLocales && parameters.txLocales.length) {
 		getAllLocales = function(callback) {
 			var cfgLocales = [];
-			parameters.txLocales.forEach(function(code) {
+			var txLocales = (typeof parameters.txLocales == 'string') ? parameters.txLocales.split(',') : parameters.txLocales;
+			txLocales.forEach(function(code) {
 				cfgLocales.push({code: code, name: code});
 			});
 			callback(cfgLocales);

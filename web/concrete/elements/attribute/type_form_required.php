@@ -42,7 +42,7 @@ if (is_object($key)) {
 
 
 <fieldset>
-<legend><?=t('%s: Basic Details', tc('AttributeTypeName', $type->getAttributeTypeName()))?></legend>
+<legend><?=t('%s: Basic Details', $type->getAttributeTypeDisplayName())?></legend>
 
 <div class="clearfix">
 <?=$form->label('akHandle', t('Handle'))?>
@@ -68,7 +68,7 @@ if (is_object($key)) {
 		$sel = array('0' => t('** None'));
 		$sets = $category->getAttributeSets();
 		foreach($sets as $as) {
-			$sel[$as->getAttributeSetID()] = tc('AttributeSetName', $as->getAttributeSetName());
+			$sel[$as->getAttributeSetID()] = $as->getAttributeSetDisplayName();
 		}
 		print $form->select('asID', $sel, $asID);
 		?>

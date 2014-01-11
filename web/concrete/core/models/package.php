@@ -300,18 +300,18 @@ class Concrete5_Model_Package extends Object {
 		} else if ($item instanceof SinglePage) {
 			return $item->getCollectionPath();
 		} else if ($item instanceof AttributeType) {
-			return tc('AttributeTypeName', $item->getAttributeTypeName());
+			return $item->getAttributeTypeDisplayName();
 		} else if ($item instanceof PermissionAccessEntityType) {
-			return tc('PermissionAccessEntityTypeName', $item->getAccessEntityTypeName());
+			return $item->getAccessEntityTypeDisplayName();
 		} else if ($item instanceof PermissionKeyCategory) {
 			return $txt->unhandle($item->getPermissionKeyCategoryHandle());
 		} else if ($item instanceof AttributeKeyCategory) {
 			return $txt->unhandle($item->getAttributeKeyCategoryHandle());
 		} else if ($item instanceof AttributeSet) {
 			$at = AttributeKeyCategory::getByID($item->getAttributeSetKeyCategoryID());
-			return t('%s (%s)', tc('AttributeSetName', $item->getAttributeSetName()), $txt->unhandle($at->getAttributeKeyCategoryHandle()));
+			return t('%s (%s)', $item->getAttributeSetDisplayName(), $txt->unhandle($at->getAttributeKeyCategoryHandle()));
 		} else if ($item instanceof GroupSet) {
-			return $item->getGroupSetNAme();
+			return $item->getGroupSetDisplayName();
 		} else if (is_a($item, 'AttributeKey')) {
 			$akc = AttributeKeyCategory::getByID($item->getAttributeKeyCategoryID());
 			return t(' %s (%s)', $txt->unhandle($item->getAttributeKeyHandle()), $txt->unhandle($akc->getAttributeKeyCategoryHandle()));
@@ -320,7 +320,7 @@ class Concrete5_Model_Package extends Object {
 		} else if ($item instanceof SystemAntispamLibrary) {
 			return $item->getSystemAntispamLibraryName();
 		} else if (is_a($item, 'PermissionKey')) {
-			return tc('PermissionKeyName', $item->getPermissionKeyName());			
+			return $item->getPermissionKeyDisplayName();			
 		} else if (is_a($item, 'Job')) {
 			return $item->getJobName();
 		} else if (is_a($item, 'WorkflowType')) {
