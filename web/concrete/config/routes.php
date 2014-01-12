@@ -77,6 +77,8 @@ $rl->register('/system/dialogs/page/search', 'PageSearchDialogController::view')
 
 $rl->register('/system/dialogs/file/properties', 'FilePropertiesDialogController::view');
 $rl->register('/system/dialogs/file/properties/save', 'FilePropertiesDialogController::save');
+$rl->register('/system/dialogs/file/properties/update_attribute', 'FilePropertiesDialogController::update_attribute');
+$rl->register('/system/dialogs/file/properties/clear_attribute', 'FilePropertiesDialogController::clear_attribute');
 
 /**
  * Editing Actions

@@ -24,6 +24,48 @@ class Concrete5_Controller_Dialogs_File_Properties extends BackendInterfaceFileC
 		$this->set('dateHelper', Loader::helper('date'));
 	}
 
+	public function clear_attribute() {
+		if ($this->validateAction()) {
+			$fp = new Permissions($this->file);
+			if ($fp->canEditFileProperties()) {
+				$fv = $this->file->getVersionToModify();
+
+				$ak = FileAttributeKey::get($_REQUEST['akID']);
+				$fv->clearAttribute($ak);
+
+				$sr = new FileEditResponse();
+				$sr->setFile($this->file);
+				$sr->setMessage(t('Attribute cleared successfully.'));
+				$sr->outputJSON();
+			}
+		}
+
+		throw new Exception(t('Access Denied'));
+
+	}
+
+	public function update_attribute() {
+		if ($this->validateAction()) {
+			$fp = new Permissions($this->file);
+			if ($fp->canEditFileProperties()) {
+				$fv = $this->file->getVersionToModify();
+
+				$ak = FileAttributeKey::get($_REQUEST['name']);
+				$ak->saveAttributeForm($fv);
+				$val = $this->file->getAttributeValueObject($ak);
+
+				$sr = new FileEditResponse();
+				$sr->setFile($this->file);
+				$sr->setMessage(t('Attribute saved successfully.'));
+				$sr->setAdditionalDataAttribute('value',  $val->getValue('displaySanitized','display'));
+				$sr->outputJSON();
+			}
+		}
+
+		throw new Exception(t('Access Denied'));
+
+	}
+
 	public function save() {
 		if ($this->validateAction()) {
 			$fp = new Permissions($this->file);

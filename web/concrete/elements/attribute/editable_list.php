@@ -5,7 +5,7 @@
 	<div class="row">
 		<div class="col-md-3"><p><?=tc('AttributeKeyName', $ak->getAttributeKeyName())?></p></div>
 		<div class="col-md-9" <? if ($canEdit) { ?>data-editable-field-inline-commands="true"<? } ?>>
-		<? if (!$canEdit) { ?>
+		<? if ($canEdit) { ?>
 		<ul class="ccm-edit-mode-inline-commands">
 			<li><a href="#" data-key-id="<?=$ak->getAttributeKeyID()?>" data-url="<?=$clearAction?>" data-editable-field-command="clear_attribute"><i class="glyphicon glyphicon-trash"></i></a></li>
 		</ul>
