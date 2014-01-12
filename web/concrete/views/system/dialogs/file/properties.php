@@ -12,26 +12,27 @@ $tabs[] = array('statistics', t('Statistics'));
 
 print Loader::helper('concrete/interface')->tabs($tabs); ?>
 
-<div class="ccm-tab-content" id="ccm-tab-content-details" data-container="editable-fields">
+<div class="ccm-tab-content container" id="ccm-tab-content-details" data-container="editable-fields">
+
+<section>
 
 <? if (!$previewMode && $fp->canEditFileContents()) { ?>
 	<button class="btn pull-right btn-default btn-xs" data-action="rescan" type="button"><?=t('Rescan')?></button>
 <? } ?>
 
 <h4><?=t('Basic Properties')?></h4>
-<table border="0" cellspacing="0" cellpadding="0" class="table">
-<tr>
-	<td><strong><?=t('ID')?></strong></td>
-	<td width="100%"><?=$fv->getFileID()?> <span style="color: #afafaf">(<?=t('Version')?> <?=$fv->getFileVersionID()?>)</span></td>
-</tr>
-<tr>
-	<td><strong><?=t('Filename')?></strong></td>
-	<td width="100%"><?=$fv->getFileName()?></td>
-</tr>
-<tr>
-	<td><strong><?=t('URL to File')?></strong></td>
-	<td width="100%"><?=$fv->getRelativePath(true)?></td>
-</tr>
+<div class="row">
+	<div class="col-md-3"><p><?=t('ID')?></p></div>
+	<div class="col-md-9"><p><?=$fv->getFileID()?> <span style="color: #afafaf">(<?=t('Version')?> <?=$fv->getFileVersionID()?>)</p></div>
+</div>
+<div class="row">
+	<div class="col-md-3"><p><?=t('Filename')?></p></div>
+	<div class="col-md-9"><p><?=$fv->getFileName()?></p></div>
+</div>
+<div class="row">
+	<div class="col-md-3"><p><?=t('URL to File')?></p></div>
+	<div class="col-md-9"><p><?=$fv->getRelativePath(true)?></p></div>
+</div>
 <?
 $oc = $f->getOriginalPageObject();
 if (is_object($oc)) { 
@@ -43,25 +44,24 @@ if (is_object($oc)) {
 		}
 	}
 	?>
-
-<tr>
-	<td><strong><?=t('Page Added To')?></strong></td>
-	<td width="100%"><a href="<?=Loader::helper('navigation')->getLinkToCollection($oc)?>" target="_blank"><?=$ocName?></a></td>
-</tr>
+	<div class="row">
+		<div class="col-md-3"><p><?=t('Page Added To')?></p></div>
+		<div class="col-md-9"><p><a href="<?=Loader::helper('navigation')->getLinkToCollection($oc)?>" target="_blank"><?=$ocName?></a></p></div>
+	</div>
 <? } ?>
 
-<tr>
-	<td><strong><?=t('Type')?></strong></td>
-	<td><?=$fv->getType()?></td>
-</tr>
-<tr>
-	<td><strong><?=t('Size')?></strong></td>
-	<td><?=$fv->getSize()?> (<?=t2(/*i18n: %s is a number */ '%s byte', '%s bytes', $fv->getFullSize(), Loader::helper('number')->format($fv->getFullSize()))?>)</td>
-</tr>
-<tr>
-	<td><strong><?=t('Date Added')?></strong></td>
-	<td><?=t('Added by <strong>%s</strong> on %s', $fv->getAuthorName(), $dateHelper->date(DATE_APP_FILE_PROPERTIES, strtotime($f->getDateAdded())))?></td>
-</tr>
+<div class="row">
+	<div class="col-md-3"><p><?=t('Type')?></p></div>
+	<div class="col-md-9"><p><?=$fv->getType()?></p></div>
+</div>
+<div class="row">
+	<div class="col-md-3"><p><?=t('Size')?></p></div>
+	<div class="col-md-9"><p><?=$fv->getSize()?> (<?=t2(/*i18n: %s is a number */ '%s byte', '%s bytes', $fv->getFullSize(), Loader::helper('number')->format($fv->getFullSize()))?>)</p></div>
+</div>
+<div class="row">
+	<div class="col-md-3"><p><?=t('Date Added')?></p></div>
+	<div class="col-md-9"><p><?=t('Added by <strong>%s</strong> on %s', $fv->getAuthorName(), $dateHelper->date(DATE_APP_FILE_PROPERTIES, strtotime($f->getDateAdded())))?></p></div>
+</div>
 <?
 Loader::model("file_storage_location");
 $fsl = FileStorageLocation::getByID(FileStorageLocation::ALTERNATE_ID);
@@ -70,30 +70,76 @@ if (is_object($fsl)) {
 		$sli = $fsl->getName() . ' <span style="color: #afafaf">(' . $fsl->getDirectory() . ')</span>';;
 	}
 }
-
 if (!isset($sli)) {
 	$sli = t('Default Location') . ' <span style="color: #afafaf">(' . DIR_FILES_UPLOADED . ')</span>';
 }
-
 ?>
-<tr>
-	<td><strong><?=t('Location')?></strong></td>
-	<td><?=$sli?></td>
-</tr>
-<tr>
-	<td><strong><?=t('Title')?></strong></td>
-	<td><span <? if ($fp->canEditFileProperties()) { ?>data-editable-field-type="xeditable" data-type="text" data-name="fvTitle"<? } ?>><?=$fv->getTitle()?></span></td>
-</tr>
-<tr>
-	<td><strong><?=t('Description')?></strong></td>
-	<td><span <? if ($fp->canEditFileProperties()) { ?>data-editable-field-type="xeditable" data-type="textarea" data-name="fvDescription"<? } ?>><?=$fv->getDescription()?></span></td>
-</tr>
-<tr>
-	<td><strong><?=t('Tags')?></strong></td>
-	<td><span <? if ($fp->canEditFileProperties()) { ?>data-editable-field-type="xeditable" data-type="textarea" data-name="fvTags"<? } ?>><?=$fv->getTags()?></span></td>
-</tr>
+<div class="row">
+	<div class="col-md-3"><p><?=t('Location')?></p></div>
+	<div class="col-md-9"><p><?=$sli?></p></div>
+</div>
+<div class="row">
+	<div class="col-md-3"><p><?=t('Title')?></p></div>
+	<div class="col-md-9"><p><span <? if ($fp->canEditFileProperties()) { ?>data-editable-field-type="xeditable" data-type="text" data-name="fvTitle"<? } ?>><?=$fv->getTitle()?></span></p></div>
+</div>
+<div class="row">
+	<div class="col-md-3"><p><?=t('Description')?></p></div>
+	<div class="col-md-9"><p><span <? if ($fp->canEditFileProperties()) { ?>data-editable-field-type="xeditable" data-type="textarea" data-name="fvDescription"<? } ?>><?=$fv->getDescription()?></span></p></div>
+</div>
+<div class="row">
+	<div class="col-md-3"><p><?=t('Tags')?></p></div>
+	<div class="col-md-9"><p><span <? if ($fp->canEditFileProperties()) { ?>data-editable-field-type="xeditable" data-type="textarea" data-name="fvTags"<? } ?>><?=$fv->getTags()?></span></p></div>
+</div>
+</section>
 
-</table>
+<?
+$attribs = FileAttributeKey::getImporterList($fv);
+$ft = $fv->getType();
+
+if (count($attribs) > 0) { ?>
+
+<section>
+<h4><?=t('%s File Properties', $ft)?></h4>
+
+<?
+
+Loader::element('attribute/editable_list', array(
+	'attributes' => $attribs, 
+	'object' => $f,
+	'saveAction' => $view->action('update_attribute', $f->getFileID()),
+	'clearAction' => $view->action('clear_attribute', $f->getFileID()),
+	'permissionsArguments' => $fp->canEditFileProperties(),
+	'permissionsCallback' => function($ak, $permissionsArguments) {
+		return $permissionsArguments;
+	}
+));?>
+
+<? } ?>
+</section>
+
+<? 
+$attribs = FileAttributeKey::getUserAddedList();
+
+if (count($attribs) > 0) { ?>
+
+<section>
+
+<h4><?=t('Other Properties')?></h4>
+
+<? Loader::element('attribute/editable_list', array(
+	'attributes' => $attribs, 
+	'object' => $f,
+	'saveAction' => $view->action('update_attribute', $f->getFileID()),
+	'clearAction' => $view->action('clear_attribute', $f->getFileID()),
+	'permissionsArguments' => $fp->canEditFileProperties(),
+	'permissionsCallback' => function($ak, $permissionsArguments) {
+		return $permissionsArguments;
+	}
+));?>
+
+</section>
+
+<? } ?>
 
 </div>
 

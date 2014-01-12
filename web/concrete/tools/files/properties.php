@@ -1,32 +1,5 @@
 <?
-defined('C5_EXECUTE') or die("Access Denied.");
-$form = Loader::helper('form');
-$f = File::getByID(Loader::helper('security')->sanitizeInt($_REQUEST['fID']));
-$fp = new Permissions($f);
-if (!$fp->canViewFileInFileManager()) {
-	die(t("Access Denied."));
-}
-$previewMode = false;
-if ($_REQUEST['task'] == 'preview_version') { 
-	$previewMode = true;
-}
-$u = new User();
-if (isset($_REQUEST['fvID'])) {
-	$fv = $f->getVersion(Loader::helper('security')->sanitizeInt($_REQUEST['fvID']));
-} else {
-	$fv = $f->getApprovedVersion();
-}
-
-
-$dateHelper = Loader::helper('date');
-
 /*
-global $previewMode, $f, $fp;
-
-Loader::model("file_attributes");
-
-
-
 
 if ($_POST['task'] == 'approve_version' && $fp->canEditFileProperties() && (!$previewMode)) {
 	$fv->approve();
@@ -35,31 +8,6 @@ if ($_POST['task'] == 'approve_version' && $fp->canEditFileProperties() && (!$pr
 
 if ($_POST['task'] == 'delete_version' && $fp->canEditFileContents() && (!$previewMode)) {
 	$fv->delete();
-	exit;
-}
-
-
-if ($_POST['task'] == 'update_core' && $fp->canEditFileProperties() && (!$previewMode)) {
-	$fv = $f->getVersionToModify();
-
-	switch($_POST['attributeField']) {
-		case 'fvTitle':
-			$text = $_POST['fvTitle'];
-			$fv->updateTitle($text);
-			print $text;
-			break;
-		case 'fvDescription':
-			$text = $_POST['fvDescription'];
-			$fv->updateDescription($text);
-			print $text;
-			break;
-		case 'fvTags':
-			$text = $_POST['fvTags'];
-			$fv->updateTags($text);
-			print $text;
-			break;
-	}
-	
 	exit;
 }
 
@@ -87,45 +35,6 @@ if ($_POST['task'] == 'clear_extended_attribute' && $fp->canEditFileProperties()
 	exit;
 }
 
-
-function printCorePropertyRow($title, $field, $value, $formText) {
-	global $previewMode, $f, $fp;
-	if ($value == '') {
-		$text = '<div class="ccm-attribute-field-none">' . t('None') . '</div>';
-	} else { 
-		$text = htmlentities( $value, ENT_QUOTES, APP_CHARSET);
-	}
-
-	if ($fp->canEditFileProperties() && (!$previewMode)) {
-	
-	$html = '
-	<tr class="ccm-attribute-editable-field">
-		<td><strong><a href="javascript:void(0)">' . $title . '</a></strong></td>
-		<td width="100%" class="ccm-attribute-editable-field-central"><div class="ccm-attribute-editable-field-text">' . $text . '</div>
-		<form method="post" action="' . REL_DIR_FILES_TOOLS_REQUIRED . '/files/properties">
-		<input type="hidden" name="attributeField" value="' . $field . '" />
-		<input type="hidden" name="fID" value="' . $f->getFileID() . '" />
-		<input type="hidden" name="task" value="update_core" />
-		<div class="ccm-attribute-editable-field-form ccm-attribute-editable-field-type-text">
-		' . $formText . '
-		</div>
-		</form>
-		</td>
-		<td class="ccm-attribute-editable-field-save"><a href="javascript:void(0)"><img src="' . ASSETS_URL_IMAGES . '/icons/edit_small.png" width="16" height="16" class="ccm-attribute-editable-field-save-button" /></a>
-		<img src="' . ASSETS_URL_IMAGES . '/throbber_white_16.gif" width="16" height="16" class="ccm-attribute-editable-field-loading" />
-		</td>
-	</tr>';
-	
-	} else {
-		$html = '
-		<tr>
-			<td><strong>' . $title . '</strong></td>
-			<td width="100%" colspan="2">' . $text . '</td>
-		</tr>';	
-	}
-	
-	print $html;
-}
 
 function printFileAttributeRow($ak, $fv) {
 	global $previewMode, $f, $fp;
@@ -185,85 +94,7 @@ if (!isset($_REQUEST['reload'])) { ?>
 
 
 
-<div class="ccm-tab-content" id="ccm-tab-content-details" data-container="editable-fields">
-<?
-if (!$previewMode && $fp->canEditFileContents()) { ?>
-	<button data-action="rescan" type="button"><?=t('Rescan')?></button>
-<? } ?>
-<div id="ccm-file-properties">
-<h4><?=t('Basic Properties')?></h4>
-<table border="0" cellspacing="0" cellpadding="0" class="table">
-<tr>
-	<td><strong><?=t('ID')?></strong></td>
-	<td width="100%"><?=$fv->getFileID()?> <span style="color: #afafaf">(<?=t('Version')?> <?=$fv->getFileVersionID()?>)</span></td>
-</tr>
-<tr>
-	<td><strong><?=t('Filename')?></strong></td>
-	<td width="100%"><?=$fv->getFileName()?></td>
-</tr>
-<tr>
-	<td><strong><?=t('URL to File')?></strong></td>
-	<td width="100%"><?=$fv->getRelativePath(true)?></td>
-</tr>
-<?
-$oc = $f->getOriginalPageObject();
-if (is_object($oc)) { 
-	$fileManager = Page::getByPath('/dashboard/files/search'); 
-	$ocName = $oc->getCollectionName();
-	if (is_object($fileManager) && !$fileManager->isError()) {
-		if ($fileManager->getCollectionID() == $oc->getCollectionID()) {
-			$ocName = t('Dashboard File Manager');
-		}
-	}
-	?>
 
-<tr>
-	<td><strong><?=t('Page Added To')?></strong></td>
-	<td width="100%"><a href="<?=Loader::helper('navigation')->getLinkToCollection($oc)?>" target="_blank"><?=$ocName?></a></td>
-</tr>
-<? } ?>
-
-<tr>
-	<td><strong><?=t('Type')?></strong></td>
-	<td><?=$fv->getType()?></td>
-</tr>
-<tr>
-	<td><strong><?=t('Size')?></strong></td>
-	<td><?=$fv->getSize()?> (<?=t2(/*i18n: %s is a number */ '%s byte', '%s bytes', $fv->getFullSize(), Loader::helper('number')->format($fv->getFullSize()))?>)</td>
-</tr>
-<tr>
-	<td><strong><?=t('Date Added')?></strong></td>
-	<td><?=t('Added by <strong>%s</strong> on %s', $fv->getAuthorName(), $dateHelper->date(DATE_APP_FILE_PROPERTIES, strtotime($f->getDateAdded())))?></td>
-</tr>
-<?
-Loader::model("file_storage_location");
-$fsl = FileStorageLocation::getByID(FileStorageLocation::ALTERNATE_ID);
-if (is_object($fsl)) {
-	if ($f->getStorageLocationID() > 0) {
-		$sli = $fsl->getName() . ' <span style="color: #afafaf">(' . $fsl->getDirectory() . ')</span>';;
-	}
-}
-
-if (!isset($sli)) {
-	$sli = t('Default Location') . ' <span style="color: #afafaf">(' . DIR_FILES_UPLOADED . ')</span>';
-}
-
-?>
-<tr>
-	<td><strong><?=t('Location')?></strong></td>
-	<td><?=$sli?></td>
-</tr>
-<tr>
-	<td><strong><?=t('Title')?></strong></td>
-	<td><span <? if ($fp->canEditFileProperties()) { ?>data-editable-field-type="xeditable" data-url="<?=$view->action('update_title', $f->getFileID())?>"data-type="text" data-name="fvTitle"<? } ?>><?=$fv->getTitle()?></span></td>
-</tr>
-
-<?
-//printCorePropertyRow(t('Description'), 'fvDescription', $fv->getDescription(), $form->textarea('fvDescription', $fv->getDescription()));
-//printCorePropertyRow(t('Tags'), 'fvTags', $fv->getTags(), $form->textarea('fvTags', $fv->getTags()));
-?>
-
-</table>
 
 
 <? 

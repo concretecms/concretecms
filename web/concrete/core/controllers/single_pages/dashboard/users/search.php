@@ -58,6 +58,7 @@ class Concrete5_Controller_Page_Dashboard_Users_Search extends DashboardControll
 				$this->canSignInAsUser = $tp->canSudo();
 				$this->canDeleteUser = $tp->canDeleteUser();
 				$this->canAddGroup = $tp->canAccessGroupSearch();
+				$this->allowedEditAttributes = $this->assignment->getAttributesAllowedArray();
 			}
 			$this->set('user', $ui);
 			$this->set('canEditAvatar', $this->canEditAvatar);
@@ -69,6 +70,7 @@ class Concrete5_Controller_Page_Dashboard_Users_Search extends DashboardControll
 			$this->set('canActivateUser', $this->canActivateUser);
 			$this->set('canSignInAsUser', $this->canSignInAsUser );
 			$this->set('canDeleteUser', $this->canDeleteUser);
+			$this->set('allowedEditAttributes', $this->allowedEditAttributes);
 			$this->set('canAddGroup', $this->canAddGroup);
 		}
 	}
@@ -242,7 +244,7 @@ class Concrete5_Controller_Page_Dashboard_Users_Search extends DashboardControll
 		if (Loader::helper('validation/token')->validate()) {
 			$ak = UserAttributeKey::getByID(Loader::helper('security')->sanitizeInt($_REQUEST['name']));
 			if (is_object($ak)) {
-				if (!in_array($ak->getAttributeKeyID(), $this->assignment->getAttributesAllowedArray())) {
+				if (!in_array($ak->getAttributeKeyID(), $this->allowedEditAttributes)) {
 					throw new Exception(t('You do not have permission to modify this attribute.'));
 				}
 				
@@ -268,7 +270,7 @@ class Concrete5_Controller_Page_Dashboard_Users_Search extends DashboardControll
 		if (Loader::helper('validation/token')->validate()) {
 			$ak = UserAttributeKey::getByID(Loader::helper('security')->sanitizeInt($_REQUEST['akID']));
 			if (is_object($ak)) {
-				if (!in_array($ak->getAttributeKeyID(), $this->assignment->getAttributesAllowedArray())) {
+				if (!in_array($ak->getAttributeKeyID(), $this->allowedEditAttributes)) {
 					throw new Exception(t('You do not have permission to modify this attribute.'));
 				}
 				$this->user->clearAttribute($ak);			

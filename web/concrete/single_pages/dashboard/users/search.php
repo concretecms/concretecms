@@ -44,11 +44,11 @@ div[data-container=editable-fields] section {
 		<h4><?=t('Basic Details')?></h4>
 		<div class="row">
 			<div class="col-md-4"><p><?=t('Username')?></p></div>
-			<div class="col-md-8"><p <? if ($canEditUserName) { ?>data-editable-field-type="xeditable" data-url="<?=$view->action('update_username', $user->getUserID())?>" data-type="text" data-name="uName" <? } ?>><?=$user->getUserName()?></p></div>
+			<div class="col-md-8"><p><span <? if ($canEditUserName) { ?>data-editable-field-type="xeditable" data-url="<?=$view->action('update_username', $user->getUserID())?>" data-type="text" data-name="uName" <? } ?>><?=$user->getUserName()?></span></p></div>
 		</div>
 		<div class="row">
 			<div class="col-md-4"><p><?=t('Email Address')?></p></div>
-			<div class="col-md-8"><p <? if ($canEditEmail) { ?>data-editable-field-type="xeditable" data-url="<?=$view->action('update_email', $user->getUserID())?>"data-type="email" data-name="uEmail"<? } ?>><?=$user->getUserEmail()?></p></div>
+			<div class="col-md-8"><p><span <? if ($canEditEmail) { ?>data-editable-field-type="xeditable" data-url="<?=$view->action('update_email', $user->getUserID())?>"data-type="email" data-name="uEmail"<? } ?>><?=$user->getUserEmail()?></span></p></div>
 		</div>
 		<div class="row">
 			<div class="col-md-4"><p><?=t('Password')?></p></div>
@@ -84,7 +84,7 @@ div[data-container=editable-fields] section {
 			<? if (ENABLE_USER_TIMEZONE) { ?>
 			<div class="row">
 				<div class="col-md-4"><p><?=t('Timezone')?></p></div>
-				<div class="col-md-8"><p <? if ($canEditTimezone) { ?>data-editable-field-type="xeditable" data-source="<?=$view->action('get_timezones')?>" data-url="<?=$view->action('update_timezone', $user->getUserID())?>" data-type="select" data-name="uTimezone"<? } ?>><? if ($user->getUserTimezone()) { print $user->getUserTimezone(); } else { print date_default_timezone_get(); } ?></p></div>
+				<div class="col-md-8"><p><span <? if ($canEditTimezone) { ?>data-editable-field-type="xeditable" data-source="<?=$view->action('get_timezones')?>" data-url="<?=$view->action('update_timezone', $user->getUserID())?>" data-type="select" data-name="uTimezone"<? } ?>><? if ($user->getUserTimezone()) { print $user->getUserTimezone(); } else { print date_default_timezone_get(); } ?></span></p></div>
 			</div>
 			<? } ?>
 			<?
@@ -92,7 +92,7 @@ div[data-container=editable-fields] section {
 			if (count($languages) > 0) { ?>
 			<div class="row">
 				<div class="col-md-4"><p><?=t('Language')?></p></div>
-				<div class="col-md-8"><p <? if ($canEditLanguage) { ?>data-editable-field-type="xeditable" data-source="<?=$view->action('get_languages')?>" data-url="<?=$view->action('update_language', $user->getUserID())?>" data-type="select" data-name="uDefaultLanguage"<? } ?>><?=$user->getUserDefaultLanguage();?></p></div>
+				<div class="col-md-8"><p><span <? if ($canEditLanguage) { ?>data-editable-field-type="xeditable" data-source="<?=$view->action('get_languages')?>" data-url="<?=$view->action('update_language', $user->getUserID())?>" data-type="select" data-name="uDefaultLanguage"<? } ?>><?=$user->getUserDefaultLanguage();?></span></p></div>
 			</div>
 			<? } ?>
 			<? if (USER_VALIDATE_EMAIL) { ?>
@@ -137,7 +137,11 @@ div[data-container=editable-fields] section {
 		'attributes' => $attributes, 
 		'object' => $user,
 		'saveAction' => $view->action('update_attribute', $user->getUserID()),
-		'clearAction' => $view->action('clear_attribute', $user->getUserID())
+		'clearAction' => $view->action('clear_attribute', $user->getUserID()),
+		'permissionsArguments' => array('attributes' => $allowedEditAttributes),
+		'permissionsCallback' => function($ak, $permissionsArguments) {
+			return (is_array($permissionsArguments['attributes']) && in_array($ak->getAttributeKeyID(), $permissionsArguments['attributes']));
+		}
 	));?>
 </section>
 
