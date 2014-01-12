@@ -1,28 +1,32 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-global $previewMode, $f, $fp;
-
-$u = new User();
 $form = Loader::helper('form');
-Loader::model("file_attributes");
-$previewMode = false;
-
-$f = File::getByID($_REQUEST['fID']);
-
+$f = File::getByID(Loader::helper('security')->sanitizeInt($_REQUEST['fID']));
 $fp = new Permissions($f);
 if (!$fp->canViewFileInFileManager()) {
 	die(t("Access Denied."));
 }
-
+$previewMode = false;
+if ($_REQUEST['task'] == 'preview_version') { 
+	$previewMode = true;
+}
+$u = new User();
 if (isset($_REQUEST['fvID'])) {
-	$fv = $f->getVersion($_REQUEST['fvID']);
+	$fv = $f->getVersion(Loader::helper('security')->sanitizeInt($_REQUEST['fvID']));
 } else {
 	$fv = $f->getApprovedVersion();
 }
 
-if ($_REQUEST['task'] == 'preview_version') { 
-	$previewMode = true;
-}
+
+$dateHelper = Loader::helper('date');
+
+/*
+global $previewMode, $f, $fp;
+
+Loader::model("file_attributes");
+
+
+
 
 if ($_POST['task'] == 'approve_version' && $fp->canEditFileProperties() && (!$previewMode)) {
 	$fv->approve();
@@ -169,60 +173,37 @@ function printFileAttributeRow($ak, $fv) {
 	print $html;
 }
 
-$dateHelper = Loader::helper('date');
 
 if (!isset($_REQUEST['reload'])) { ?>
 	<div id="ccm-file-properties-wrapper">
 <? } ?>
 
-<div class="ccm-ui ccm-file-properties-tabs" id="ccm-file-properties-tab-<?=$f->getFileID()?>-<?=$fv->getFileVersionID()?>">
-
-<ul class="nav nav-tabs">
-<li class="active"><a href="javascript:void(0)" id="ccm-file-properties-details-<?=$f->getFileID()?>-<?=$fv->getFileVersionID()?>"><?=t('Details')?></a></li>
-<? if (!$previewMode) { ?>
-	<li><a href="javascript:void(0)" id="ccm-file-properties-versions-<?=$f->getFileID()?>-<?=$fv->getFileVersionID()?>"><?=t('Versions')?></a></li>
-<? } ?>
-<li><a href="javascript:void(0)" id="ccm-file-properties-statistics-<?=$f->getFileID()?>-<?=$fv->getFileVersionID()?>"><?=t('Statistics')?></a></li>
-</ul>
-
-<script type="text/javascript">
-//var ccm_fiActiveTab = "ccm-file-properties-details-<?=$f->getFileID()?>-<?=$fv->getFileVersionID()?>";
-$("#ccm-file-properties-tab-<?=$f->getFileID()?>-<?=$fv->getFileVersionID()?> ul a").click(function() {
-	$("#ccm-file-properties-tab-<?=$f->getFileID()?>-<?=$fv->getFileVersionID()?> li").removeClass('active');
-	$("#ccm-file-properties-tab-<?=$f->getFileID()?>-<?=$fv->getFileVersionID()?> .ccm-file-properties-details-tab").hide();
-	$(this).parent().addClass("active");
-	$('#' + $(this).attr('id') + '-tab').show();
-});
-</script>
-
-<div class="ccm-file-properties-details-tab" id="ccm-file-properties-details-<?=$f->getFileID()?>-<?=$fv->getFileVersionID()?>-tab">
-
-<?
-if (!$previewMode && $fp->canEditFileContents()) { 
-	$h = Loader::helper('concrete/interface');
-	$b1 = $h->button_js(t('Rescan'), 'ccm_alRescanFiles(' . $f->getFileID() . ')');
-	print $b1;
-}
-
+*/ 
 ?>
 
-<h3><?=t('File Details')?></h3>
 
 
+
+
+<div class="ccm-tab-content" id="ccm-tab-content-details" data-container="editable-fields">
+<?
+if (!$previewMode && $fp->canEditFileContents()) { ?>
+	<button data-action="rescan" type="button"><?=t('Rescan')?></button>
+<? } ?>
 <div id="ccm-file-properties">
 <h4><?=t('Basic Properties')?></h4>
-<table border="0" cellspacing="0" cellpadding="0" class="ccm-grid">
+<table border="0" cellspacing="0" cellpadding="0" class="table">
 <tr>
 	<td><strong><?=t('ID')?></strong></td>
-	<td width="100%" colspan="2"><?=$fv->getFileID()?> <span style="color: #afafaf">(<?=t('Version')?> <?=$fv->getFileVersionID()?>)</span></td>
+	<td width="100%"><?=$fv->getFileID()?> <span style="color: #afafaf">(<?=t('Version')?> <?=$fv->getFileVersionID()?>)</span></td>
 </tr>
 <tr>
 	<td><strong><?=t('Filename')?></strong></td>
-	<td width="100%" colspan="2"><?=$fv->getFileName()?></td>
+	<td width="100%"><?=$fv->getFileName()?></td>
 </tr>
 <tr>
 	<td><strong><?=t('URL to File')?></strong></td>
-	<td width="100%" colspan="2"><?=$fv->getRelativePath(true)?></td>
+	<td width="100%"><?=$fv->getRelativePath(true)?></td>
 </tr>
 <?
 $oc = $f->getOriginalPageObject();
@@ -238,21 +219,21 @@ if (is_object($oc)) {
 
 <tr>
 	<td><strong><?=t('Page Added To')?></strong></td>
-	<td width="100%" colspan="2"><a href="<?=Loader::helper('navigation')->getLinkToCollection($oc)?>" target="_blank"><?=$ocName?></a></td>
+	<td width="100%"><a href="<?=Loader::helper('navigation')->getLinkToCollection($oc)?>" target="_blank"><?=$ocName?></a></td>
 </tr>
 <? } ?>
 
 <tr>
 	<td><strong><?=t('Type')?></strong></td>
-	<td colspan="2"><?=$fv->getType()?></td>
+	<td><?=$fv->getType()?></td>
 </tr>
 <tr>
 	<td><strong><?=t('Size')?></strong></td>
-	<td colspan="2"><?=$fv->getSize()?> (<?=t2(/*i18n: %s is a number */ '%s byte', '%s bytes', $fv->getFullSize(), Loader::helper('number')->format($fv->getFullSize()))?>)</td>
+	<td><?=$fv->getSize()?> (<?=t2(/*i18n: %s is a number */ '%s byte', '%s bytes', $fv->getFullSize(), Loader::helper('number')->format($fv->getFullSize()))?>)</td>
 </tr>
 <tr>
 	<td><strong><?=t('Date Added')?></strong></td>
-	<td colspan="2"><?=t('Added by <strong>%s</strong> on %s', $fv->getAuthorName(), $dateHelper->date(DATE_APP_FILE_PROPERTIES, strtotime($f->getDateAdded())))?></td>
+	<td><?=t('Added by <strong>%s</strong> on %s', $fv->getAuthorName(), $dateHelper->date(DATE_APP_FILE_PROPERTIES, strtotime($f->getDateAdded())))?></td>
 </tr>
 <?
 Loader::model("file_storage_location");
@@ -270,19 +251,23 @@ if (!isset($sli)) {
 ?>
 <tr>
 	<td><strong><?=t('Location')?></strong></td>
-	<td colspan="2"><?=$sli?></td>
+	<td><?=$sli?></td>
 </tr>
-<?
-printCorePropertyRow(t('Title'), 'fvTitle', $fv->getTitle(), $form->text('fvTitle', $fv->getTitle()));
-printCorePropertyRow(t('Description'), 'fvDescription', $fv->getDescription(), $form->textarea('fvDescription', $fv->getDescription()));
-printCorePropertyRow(t('Tags'), 'fvTags', $fv->getTags(), $form->textarea('fvTags', $fv->getTags()));
+<tr>
+	<td><strong><?=t('Title')?></strong></td>
+	<td><span <? if ($fp->canEditFileProperties()) { ?>data-editable-field-type="xeditable" data-url="<?=$view->action('update_title', $f->getFileID())?>"data-type="text" data-name="fvTitle"<? } ?>><?=$fv->getTitle()?></span></td>
+</tr>
 
+<?
+//printCorePropertyRow(t('Description'), 'fvDescription', $fv->getDescription(), $form->textarea('fvDescription', $fv->getDescription()));
+//printCorePropertyRow(t('Tags'), 'fvTags', $fv->getTags(), $form->textarea('fvTags', $fv->getTags()));
 ?>
 
 </table>
 
 
 <? 
+/*
 $attribs = FileAttributeKey::getImporterList($fv);
 $ft = $fv->getType();
 
@@ -323,7 +308,7 @@ foreach($attribs as $at) {
 
 ?>
 </table>
-<? } ?>
+<? } */ ?>
 
 <br/>
 
@@ -339,7 +324,7 @@ foreach($attribs as $at) {
 
 <? if (!$previewMode) { ?>
 	
-	<div class="ccm-file-properties-details-tab" id="ccm-file-properties-versions-<?=$f->getFileID()?>-<?=$fv->getFileVersionID()?>-tab" style="display: none">
+	<div class="ccm-tab-content" id="ccm-tab-content-versions">
 	
 		<h3><?=t('File Versions')?></h3>
 	
@@ -409,7 +394,7 @@ foreach($attribs as $at) {
 
 <? } ?>
 
-<div class="ccm-file-properties-details-tab" id="ccm-file-properties-statistics-<?=$f->getFileID()?>-<?=$fv->getFileVersionID()?>-tab" style="display: none">
+<div class="ccm-tab-content" id="ccm-tab-content-statistics">
 	
 	<?
 	$downloadStatistics = $f->getDownloadStatistics();
@@ -453,15 +438,3 @@ foreach($attribs as $at) {
 </div>
 
 </div>
-
-<script type="text/javascript">
-$(function() { 
-	ccm_activateEditablePropertiesGrid(); 
-	ccm_alSetupVersionSelector();
-});
-</script>
-
-<?
-if (!isset($_REQUEST['reload'])) { ?>
-</div>
-<? }

@@ -75,6 +75,9 @@ $rl->register('/system/dialogs/group/search', 'GroupSearchDialogController::view
 $rl->register('/system/dialogs/file/search', 'FileSearchDialogController::view');
 $rl->register('/system/dialogs/page/search', 'PageSearchDialogController::view');
 
+$rl->register('/system/dialogs/file/properties', 'FilePropertiesDialogController::view');
+$rl->register('/system/dialogs/file/properties/save', 'FilePropertiesDialogController::save');
+
 /**
  * Editing Actions
  */

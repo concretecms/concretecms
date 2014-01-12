@@ -429,6 +429,7 @@ $classes = array(
 	'PageSearchCustomizeDialogController' => array('controller', '/dialogs/page/search/customize'),
 	'UserSearchCustomizeDialogController' => array('controller', '/dialogs/user/search/customize'),
 	'FileSearchCustomizeDialogController' => array('controller', '/dialogs/file/search/customize'),
+	'FilePropertiesDialogController' => array('controller', '/dialogs/file/properties'),
 
 	'AreaLayoutPresetsDialogController' => array('controller', '/dialogs/area/layout/presets'),
 	'PageDeleteDialogController' => array('controller', '/dialogs/page/delete'),

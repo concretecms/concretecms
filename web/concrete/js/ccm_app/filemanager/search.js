@@ -159,7 +159,7 @@
 				'<% if (item.canEditFile) { %>' + 
 					'<li><a class="dialog-launch" dialog-modal="true" dialog-width="680" dialog-height="450" dialog-title="' + ccmi18n_filemanager.edit + '" href="' + CCM_TOOLS_PATH + '/files/edit?fID=<%=item.fID%>">' + ccmi18n_filemanager.edit + '</a></li>' +
 				'<% } %>' +
-				'<li><a class="dialog-launch" dialog-modal="true" dialog-width="680" dialog-height="450" dialog-title="' + ccmi18n_filemanager.properties + '" href="' + CCM_TOOLS_PATH + '/files/properties?fID=<%=item.fID%>">' + ccmi18n_filemanager.properties + '</a></li>' +
+				'<li><a class="dialog-launch" dialog-modal="true" dialog-width="680" dialog-height="450" dialog-title="' + ccmi18n_filemanager.properties + '" href="' + CCM_DISPATCHER_FILENAME + '/system/dialogs/file/properties?fID=<%=item.fID%>">' + ccmi18n_filemanager.properties + '</a></li>' +
 				'<% if (item.canReplaceFile) { %>' + 
 					'<li><a class="dialog-launch" dialog-modal="true" dialog-width="300" dialog-height="260" dialog-title="' + ccmi18n_filemanager.replace + '" href="' + CCM_TOOLS_PATH + '/files/replace?fID=<%=item.fID%>">' + ccmi18n_filemanager.replace + '</a></li>' +
 				'<% } %>' +
