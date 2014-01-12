@@ -106,8 +106,8 @@ if (count($attribs) > 0) { ?>
 Loader::element('attribute/editable_list', array(
 	'attributes' => $attribs, 
 	'object' => $f,
-	'saveAction' => $view->action('update_attribute', $f->getFileID()),
-	'clearAction' => $view->action('clear_attribute', $f->getFileID()),
+	'saveAction' => $controller->action('update_attribute'),
+	'clearAction' => $controller->action('clear_attribute'),
 	'permissionsArguments' => $fp->canEditFileProperties(),
 	'permissionsCallback' => function($ak, $permissionsArguments) {
 		return $permissionsArguments;
@@ -129,8 +129,8 @@ if (count($attribs) > 0) { ?>
 <? Loader::element('attribute/editable_list', array(
 	'attributes' => $attribs, 
 	'object' => $f,
-	'saveAction' => $view->action('update_attribute', $f->getFileID()),
-	'clearAction' => $view->action('clear_attribute', $f->getFileID()),
+	'saveAction' => $controller->action('update_attribute'),
+	'clearAction' => $controller->action('clear_attribute'),
 	'permissionsArguments' => $fp->canEditFileProperties(),
 	'permissionsCallback' => function($ak, $permissionsArguments) {
 		return $permissionsArguments;
@@ -140,6 +140,16 @@ if (count($attribs) > 0) { ?>
 </section>
 
 <? } ?>
+
+<section>
+
+<h4><?=t('File Preview')?></h4>
+
+<div style="text-align: center">
+<?=$fv->getThumbnail(2)?>
+</div>
+
+</section>
 
 </div>
 
