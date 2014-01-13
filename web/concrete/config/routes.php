@@ -106,6 +106,7 @@ $rl->register('/system/search/groups/submit', 'SearchGroupsController::submit');
 
 /* Files */
 $rl->register('/system/file/star', 'FileController::star');
+$rl->register('/system/file/rescan', 'FileController::rescan');
 $rl->register('/system/file/get_json', 'FileController::getJSON');
 $rl->register('/system/file/duplicate', 'FileController::duplicate');
 $rl->register('/system/page/create/{ptID}', 'BackendPageController::create');

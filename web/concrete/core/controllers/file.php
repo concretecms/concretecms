@@ -19,6 +19,35 @@ class Concrete5_Controller_File extends Controller {
 		$r->outputJSON();
 	}
 
+	public function rescan() {
+		$files = $this->getRequestFiles('canEditFileContents');
+		$r = new FileEditResponse();
+		$r->setFiles($files);
+		$successMessage = '';
+		$errorMessage = '';
+		$successCount = 0;
+
+		foreach($files as $f) {
+			$fv = $f->getApprovedVersion();
+			$resp = $fv->refreshAttributes();
+			switch($resp) {
+				case File::F_ERROR_FILE_NOT_FOUND:
+					$errorMessage .= t('File %s could not be found.', $fv->getFilename()) . '<br/>';
+					break;
+				default:
+					$successCount++;
+					$successMessage = t2('%s file rescanned successfully.', '%s files rescanned successfully.', $successCount);
+					break;
+			}
+		}
+		if ($errorMessage && !$successMessage) {
+			throw new Exception($errorMessage);
+		} else {
+			$r->setMessage($errorMessage . $successMessage);
+		}
+		$r->outputJSON();
+	}
+
 	protected function getRequestFiles($permission = 'canViewFileInFileManager') {
 		$files = array();
 		if (is_array($_REQUEST['fID'])) {

@@ -14,10 +14,12 @@ print Loader::helper('concrete/interface')->tabs($tabs); ?>
 
 <div class="ccm-tab-content container" id="ccm-tab-content-details" data-container="editable-fields">
 
+<div id="ccm-file-properties-response"></div>
+
 <section>
 
 <? if (!$previewMode && $fp->canEditFileContents()) { ?>
-	<button class="btn pull-right btn-default btn-xs" data-action="rescan" type="button"><?=t('Rescan')?></button>
+	<a href="#" class="btn pull-right btn-default btn-xs" data-action="rescan"><?=t('Rescan')?></a>
 <? } ?>
 
 <h4><?=t('Basic Properties')?></h4>
@@ -153,13 +155,149 @@ if (count($attribs) > 0) { ?>
 
 </div>
 
+<div class="ccm-tab-content" id="ccm-tab-content-versions">
+
+	<h4><?=t('Versions')?></h4>
+
+	<table border="0" cellspacing="0" width="100%" id="ccm-file-versions-grid" class="table" cellpadding="0">
+	<tr>
+		<th>&nbsp;</th>
+		<th><?=t('Filename')?></th>
+		<th><?=t('Title')?></th>
+		<th><?=t('Comments')?></th>
+		<th><?=t('Creator')?></th>
+		<th><?=t('Added On')?></th>
+		<? if ($fp->canEditFileContents()) { ?>
+			<th>&nbsp;</th>
+		<? } ?>
+	</tr>
+	<?
+	$versions = $f->getVersionList();
+	foreach($versions as $fvv) { ?>
+		<tr fID="<?=$f->getFileID()?>" fvID="<?=$fvv->getFileVersionID()?>" <? if ($fvv->getFileVersionID() == $fv->getFileVersionID()) { ?> class="ccm-file-versions-grid-active" <? } ?>>
+			<td style="text-align: center">
+				<?=$form->radio('vlfvID', $fvv->getFileVersionID(), $fvv->getFileVersionID() == $fv->getFileVersionID())?>
+			</td>
+			<td width="100">
+				<div style="width: 150px; word-wrap: break-word">
+				<a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/properties?fID=<?=$f->getFileID()?>&fvID=<?=$fvv->getFileVersionID()?>&task=preview_version" dialog-modal="false" dialog-width="630" dialog-height="450" dialog-title="<?=t('Preview File')?>" class="dialog-launch">
+					<?=$fvv->getFilename()?>
+				</a>
+				</div>
+			</td>
+			<td> 
+				<div style="width: 150px; word-wrap: break-word">
+					<?=$fvv->getTitle()?>
+				</div>
+			</td>
+			<td><?
+				$comments = $fvv->getVersionLogComments();
+				if (count($comments) > 0) {
+					print t('Updated ');
+
+					for ($i = 0; $i < count($comments); $i++) {
+						print $comments[$i];
+						if (count($comments) > ($i + 1)) {
+							print ', ';
+						}
+					}
+					
+					print '.';
+				}
+				?>
+				</td>
+			<td><?=$fvv->getAuthorName()?></td>
+			<td><?=$dateHelper->date(DATE_APP_FILE_VERSIONS, strtotime($fvv->getDateAdded()))?></td>
+			<? if ($fp->canEditFileContents()) { ?>
+				<? if ($fvv->getFileVersionID() == $fv->getFileVersionID()) { ?>
+					<td>&nbsp;</td>
+				<? } else { ?>
+					<td><a class="ccm-file-versions-remove" href="javascript:void(0)"><?=t('Delete')?></a></td>
+				<? } ?>
+			<? } ?>
+		</tr>	
+	
+	<? } ?>
+	
+	</table>
+
 </div>
 
+<div class="ccm-tab-content" id="ccm-tab-content-statistics">
+	
+	<?
+	$downloadStatistics = $f->getDownloadStatistics();
+	?>
+
+<section>
+	<h4><?=t('Total Downloads')?></h4>
+	<div><?=$f->getTotalDownloads()?></div>
+</section>
+
+<section>
+	<h4><?=t('Most Recent Downloads')?></h4>
+	<table border="0" cellspacing="0" width="100%" class="table" cellpadding="0">
+		<tr> 
+			<th><?=t('User')?></th>
+			<th><?=t('Download Time')?></th>
+			<th><?=t('File Version ID')?></th>
+		</tr>	
+		<?
+		
+		$downloadStatsCounter=0;
+		foreach($downloadStatistics as $download){ 
+			$downloadStatsCounter++;
+			if($downloadStatsCounter>20) break;
+			?>
+		<tr>
+			<td>
+				<? 
+				$uID=intval($download['uID']);
+				if(!$uID){
+					echo t('Anonymous');
+				}else{ 
+					$downloadUI = UserInfo::getById($uID);
+					if($downloadUI instanceof UserInfo) {
+						echo $downloadUI->getUserName();
+					} else {
+						echo t('Deleted User');
+					}
+				} 
+				?>
+			</td>
+			<td><?=$dateHelper->date(DATE_APP_FILE_DOWNLOAD, strtotime($download['timestamp']))?></td>
+			<td><?=intval($download['fvID'])?></td>
+		</tr>
+		<? } ?>
+	</table>
+</section>
+</div>
+
+</div>
+
+<style type="text/css">
+div#ccm-file-properties-response .alert {
+	margin-top: 20px;
+}
+</style>
 <script type="text/javascript">
 $(function() {
-
-	$('div[data-container=editable-fields]').concreteEditableFieldContainer({
+	$('div[data-container=file-properties]').concreteEditableFieldContainer({
 		url: '<?=$controller->action('save')?>'
+	});
+	$('a[data-action=rescan]').on('click', function() {
+		$.concreteAjax({
+			url: '<?=URL::to('/system/file/rescan')?>',
+			data: {'fID': '<?=$f->getFileID()?>'},
+			success: function(r) {
+				if (r.error) {
+					$('#ccm-file-properties-response').html('<div class="alert alert-danger">' + r.message + '</div>');
+				} else {
+					$('#ccm-file-properties-response').html('<div class="alert alert-success"><?=t('File rescanned successfully.')?></div>');
+				}
+			}
+		});
+		return false;
 	});
 });
 </script>
