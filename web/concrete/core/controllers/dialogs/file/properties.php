@@ -21,6 +21,7 @@ class Concrete5_Controller_Dialogs_File_Properties extends BackendInterfaceFileC
 		$previewMode = false;
 		$this->set('previewMode', $previewMode);
 		$this->set('fv', $fv);
+		$this->set('form', Loader::helper('form'));
 		$this->set('dateHelper', Loader::helper('date'));
 	}
 
