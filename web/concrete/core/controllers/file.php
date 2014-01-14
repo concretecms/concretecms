@@ -48,6 +48,19 @@ class Concrete5_Controller_File extends Controller {
 		$r->outputJSON();
 	}
 
+	public function approveVersion() {
+		$files = $this->getRequestFiles('canEditFileProperties');
+		$r = new FileEditResponse();
+		$r->setFiles($files);
+		$fv = $files[0]->getVersion(Loader::helper('security')->sanitizeInt($_REQUEST['fvID']));
+		if (is_object($fv)) {
+			$fv->approve();
+		} else {
+			throw new Exception(t('Invalid file version.'));
+		}
+		$r->outputJSON();
+	}
+
 	protected function getRequestFiles($permission = 'canViewFileInFileManager') {
 		$files = array();
 		if (is_array($_REQUEST['fID'])) {
