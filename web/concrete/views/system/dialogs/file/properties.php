@@ -3,6 +3,9 @@ defined('C5_EXECUTE') or die("Access Denied.");
 ?>
 
 <div class="ccm-ui">
+
+<div id="ccm-file-properties-response"></div>
+
 <?
 $tabs = array(array('details', t('Details'), true));
 if (!$previewMode) {
@@ -13,8 +16,6 @@ $tabs[] = array('statistics', t('Statistics'));
 print Loader::helper('concrete/interface')->tabs($tabs); ?>
 
 <div class="ccm-tab-content container" id="ccm-tab-content-details" data-container="editable-fields">
-
-<div id="ccm-file-properties-response"></div>
 
 <section>
 
@@ -159,7 +160,7 @@ if (count($attribs) > 0) { ?>
 
 	<h4><?=t('Versions')?></h4>
 
-	<table border="0" cellspacing="0" width="100%" id="ccm-file-versions-grid" class="table" cellpadding="0">
+	<table border="0" cellspacing="0" width="100%" id="ccm-file-versions" class="table" cellpadding="0">
 	<tr>
 		<th>&nbsp;</th>
 		<th><?=t('Filename')?></th>
@@ -174,9 +175,9 @@ if (count($attribs) > 0) { ?>
 	<?
 	$versions = $f->getVersionList();
 	foreach($versions as $fvv) { ?>
-		<tr fID="<?=$f->getFileID()?>" fvID="<?=$fvv->getFileVersionID()?>" <? if ($fvv->getFileVersionID() == $fv->getFileVersionID()) { ?> class="ccm-file-versions-grid-active" <? } ?>>
+		<tr <? if ($fvv->getFileVersionID() == $fv->getFileVersionID()) { ?> class="success" <? } ?> data-file-version-id="<?=$fvv->getFileVersionID()?>">
 			<td style="text-align: center">
-				<?=$form->radio('vlfvID', $fvv->getFileVersionID(), $fvv->getFileVersionID() == $fv->getFileVersionID())?>
+				<input type="radio" name="fvID" value="<?=$fvv->getFileVersionID()?>" <? if ($fvv->getFileVersionID() == $fv->getFileVersionID()) { ?>checked<? } ?> />
 			</td>
 			<td width="100">
 				<div style="width: 150px; word-wrap: break-word">
@@ -209,11 +210,7 @@ if (count($attribs) > 0) { ?>
 			<td><?=$fvv->getAuthorName()?></td>
 			<td><?=$dateHelper->date(DATE_APP_FILE_VERSIONS, strtotime($fvv->getDateAdded()))?></td>
 			<? if ($fp->canEditFileContents()) { ?>
-				<? if ($fvv->getFileVersionID() == $fv->getFileVersionID()) { ?>
-					<td>&nbsp;</td>
-				<? } else { ?>
-					<td><a class="ccm-file-versions-remove" href="javascript:void(0)"><?=t('Delete')?></a></td>
-				<? } ?>
+				<td><a class="ccm-file-versions-remove" href="javascript:void(0)"><?=t('Delete')?></a></td>
 			<? } ?>
 		</tr>	
 	
@@ -274,30 +271,85 @@ if (count($attribs) > 0) { ?>
 </div>
 
 </div>
-
 <style type="text/css">
-div#ccm-file-properties-response .alert {
-	margin-top: 20px;
+#ccm-file-properties-response #ccm-notification-hud {
+	position: relative;
+	padding: 10px 10px 10px 30px;
+	margin-bottom: 20px;
+	top: 0px;
+	left: 0px;
 }
+
+#ccm-file-properties-response #ccm-notification-hud i {
+	top: 11px;
+	left: 8px;
+}
+
+tr.success a.ccm-file-versions-remove {
+	display: none;
+}
+
 </style>
+
 <script type="text/javascript">
-$(function() {
+
+var ConcreteFilePropertiesDialog = function() {
+	var my = this;
 	$('div[data-container=file-properties]').concreteEditableFieldContainer({
 		url: '<?=$controller->action('save')?>'
 	});
-	$('a[data-action=rescan]').on('click', function() {
-		$.concreteAjax({
-			url: '<?=URL::to('/system/file/rescan')?>',
-			data: {'fID': '<?=$f->getFileID()?>'},
-			success: function(r) {
-				if (r.error) {
-					$('#ccm-file-properties-response').html('<div class="alert alert-danger">' + r.message + '</div>');
-				} else {
-					$('#ccm-file-properties-response').html('<div class="alert alert-success"><?=t('File rescanned successfully.')?></div>');
+	my.setupFileVersionsTable();
+	my.setupFileRescan();
+}
+
+ConcreteFilePropertiesDialog.prototype = {
+
+	handleAjaxResponse: function(r, callback) {
+		if (r.error) {
+			ConcreteAlert.showResponseNotification(r.message, 'exclamation-sign', '#ccm-file-properties-response');
+		} else if (callback) {
+			callback(r);
+		} else {
+			ConcreteAlert.showResponseNotification('<?=t('File recanned successfully.')?>', 'pencil', 'success', '#ccm-file-properties-response');
+		}
+	},
+
+	setupFileRescan: function() {
+		var my = this;
+		$('a[data-action=rescan]').on('click', function() {
+			$.concreteAjax({
+				url: '<?=URL::to('/system/file/rescan')?>',
+				data: {'fID': '<?=$f->getFileID()?>'},
+				success: function(r) {
+					my.handleAjaxResponse(r);
 				}
-			}
+			});
+			return false;
 		});
-		return false;
-	});
+	},
+
+	setupFileVersionsTable: function() {
+		var my = this;
+		$versions = $('#ccm-file-versions');
+		$versions.on('click', 'input[name=fvID]', function() {
+			var fvID = $(this).val();
+			$.concreteAjax({
+				url: '<?=URL::to('/system/file/approve_version')?>',
+				data: {'fID': '<?=$f->getFileID()?>', 'fvID': fvID},
+				success: function(r) {
+					my.handleAjaxResponse(r, function() {
+						$versions.find('tr[class=success]').removeClass();
+						$versions.find('tr[data-file-version-id=' + fvID + ']').addClass('success');
+					});
+				}
+			});
+		});
+
+	}
+
+}
+
+$(function() {
+	var dialog = new ConcreteFilePropertiesDialog();
 });
 </script>

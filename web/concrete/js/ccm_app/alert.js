@@ -31,9 +31,14 @@
             ConcreteAlert.showResponseNotification(messageText, icon, style);
         },
 
-        showResponseNotification: function(message, icon, class) {
+        showResponseNotification: function(message, icon, class, appendTo) {
+            if (appendTo) {
+                var $appendTo = $(appendTo);
+            } else {
+                var $appendTo = $(document.body);
+            }
             $('<div id="ccm-notification-hud" class="ccm-ui ccm-notification ccm-notification-' + class + '"><i class="glyphicon glyphicon-' + icon + '"></i><div class="ccm-notification-inner">' + message + '</div></div>').
-            appendTo(document.body).delay(5).queue(function() {
+            appendTo($appendTo).delay(5).queue(function() {
                 $(this).addClass('animated fadeIn');
                 $(this).dequeue();
             }).delay(2000).queue(function() {
