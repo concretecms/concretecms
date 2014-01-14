@@ -14,12 +14,12 @@ class Concrete5_Controller_Dialogs_File_Properties extends BackendInterfaceFileC
 
 		if (isset($_REQUEST['fvID'])) {
 			$fv = $this->file->getVersion(Loader::helper('security')->sanitizeInt($_REQUEST['fvID']));
+			$this->set('previewMode', true);
 		} else {
 			$fv = $this->file->getApprovedVersion();
+			$this->set('previewMode', false);
 		}
 
-		$previewMode = false;
-		$this->set('previewMode', $previewMode);
 		$this->set('fv', $fv);
 		$this->set('form', Loader::helper('form'));
 		$this->set('dateHelper', Loader::helper('date'));

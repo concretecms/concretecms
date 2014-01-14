@@ -49,12 +49,25 @@ class Concrete5_Controller_File extends Controller {
 	}
 
 	public function approveVersion() {
-		$files = $this->getRequestFiles('canEditFileProperties');
+		$files = $this->getRequestFiles('canEditFileContents');
 		$r = new FileEditResponse();
 		$r->setFiles($files);
 		$fv = $files[0]->getVersion(Loader::helper('security')->sanitizeInt($_REQUEST['fvID']));
 		if (is_object($fv)) {
 			$fv->approve();
+		} else {
+			throw new Exception(t('Invalid file version.'));
+		}
+		$r->outputJSON();
+	}
+
+	public function deleteVersion() {
+		$files = $this->getRequestFiles('canEditFileContents');
+		$r = new FileEditResponse();
+		$r->setFiles($files);
+		$fv = $files[0]->getVersion(Loader::helper('security')->sanitizeInt($_REQUEST['fvID']));
+		if (is_object($fv) && !$fv->isApproved()) {
+			$fv->delete();
 		} else {
 			throw new Exception(t('Invalid file version.'));
 		}
