@@ -8,14 +8,19 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 <?
 $tabs = array(array('details', t('Details'), true));
-if (!$previewMode) {
-	$tabs[] = array('versions', t('Versions'));
-}
+$tabs[] = array('versions', t('Versions'));
 $tabs[] = array('statistics', t('Statistics'));
 
-print Loader::helper('concrete/interface')->tabs($tabs); ?>
+if (!$previewMode) {
+	print Loader::helper('concrete/interface')->tabs($tabs);
+}
+?>
 
+<? if (!$previewMode) { ?>
 <div class="ccm-tab-content container" id="ccm-tab-content-details" data-container="editable-fields">
+<? } else { ?>
+<div class="container">
+<? } ?>
 
 <section>
 
@@ -156,6 +161,8 @@ if (count($attribs) > 0) { ?>
 
 </div>
 
+<? if (!$previewMode) { ?>
+
 <div class="ccm-tab-content" id="ccm-tab-content-versions">
 
 	<h4><?=t('Versions')?></h4>
@@ -181,7 +188,7 @@ if (count($attribs) > 0) { ?>
 			</td>
 			<td width="100">
 				<div style="width: 150px; word-wrap: break-word">
-				<a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/properties?fID=<?=$f->getFileID()?>&fvID=<?=$fvv->getFileVersionID()?>&task=preview_version" dialog-modal="false" dialog-width="630" dialog-height="450" dialog-title="<?=t('Preview File')?>" class="dialog-launch">
+				<a href="<?=URL::to('/system/dialogs/file/properties')?>?fID=<?=$f->getFileID()?>&amp;fvID=<?=$fvv->getFileVersionID()?>" dialog-modal="false" dialog-width="630" dialog-height="450" dialog-title="<?=t('Preview File')?>" class="dialog-launch">
 					<?=$fvv->getFilename()?>
 				</a>
 				</div>
@@ -210,7 +217,7 @@ if (count($attribs) > 0) { ?>
 			<td><?=$fvv->getAuthorName()?></td>
 			<td><?=$dateHelper->date(DATE_APP_FILE_VERSIONS, strtotime($fvv->getDateAdded()))?></td>
 			<? if ($fp->canEditFileContents()) { ?>
-				<td><a class="ccm-file-versions-remove" href="javascript:void(0)"><?=t('Delete')?></a></td>
+				<td><a data-action="delete-version" data-file-version-id="<?=$fvv->getFileVersionID()?>" href="javascript:void(0)"><i class="glyphicon glyphicon-trash"></i></a></td>
 			<? } ?>
 		</tr>	
 	
@@ -269,6 +276,7 @@ if (count($attribs) > 0) { ?>
 	</table>
 </section>
 </div>
+<? } ?>
 
 </div>
 <style type="text/css">
@@ -285,8 +293,17 @@ if (count($attribs) > 0) { ?>
 	left: 8px;
 }
 
-tr.success a.ccm-file-versions-remove {
+tr.success a[data-action=delete-version] {
 	display: none;
+}
+
+a[data-action=delete-version] {
+	color: #333;
+}
+
+a[data-action=delete-version]:hover {
+	color: #000;
+	text-decoration: none;
 }
 
 </style>
@@ -344,12 +361,33 @@ ConcreteFilePropertiesDialog.prototype = {
 				}
 			});
 		});
+		$versions.on('click', 'a[data-action=delete-version]', function() {
+			var fvID = $(this).attr('data-file-version-id');
+			$.concreteAjax({
+				url: '<?=URL::to('/system/file/delete_version')?>',
+				data: {'fID': '<?=$f->getFileID()?>', 'fvID': fvID},
+				success: function(r) {
+					my.handleAjaxResponse(r, function() {
+						var $row = $versions.find('tr[data-file-version-id=' + fvID + ']');
+						$row.queue(function() {
+							$(this).addClass('animated fadeOutDown');
+							$(this).dequeue();
+						}).delay(500).queue(function() {
+							$(this).remove();
+							$(this).dequeue();
+						});
+					});
+				}
+			});
+		});
 
 	}
 
 }
 
+<? if (!$previewMode) { ?>
 $(function() {
 	var dialog = new ConcreteFilePropertiesDialog();
 });
+<? } ?>
 </script>
