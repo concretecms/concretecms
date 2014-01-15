@@ -11,7 +11,7 @@ class Concrete5_Controller_Dialogs_File_Properties extends BackendInterfaceFileC
 	public function view() {
 		$r = ResponseAssetGroup::get();
 		$r->requireAsset('core/app/editable-fields');
-
+		
 		if (isset($_REQUEST['fvID'])) {
 			$fv = $this->file->getVersion(Loader::helper('security')->sanitizeInt($_REQUEST['fvID']));
 			$this->set('previewMode', true);

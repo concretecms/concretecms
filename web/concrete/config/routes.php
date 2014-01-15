@@ -79,6 +79,9 @@ $rl->register('/system/dialogs/file/properties', 'FilePropertiesDialogController
 $rl->register('/system/dialogs/file/properties/save', 'FilePropertiesDialogController::save');
 $rl->register('/system/dialogs/file/properties/update_attribute', 'FilePropertiesDialogController::update_attribute');
 $rl->register('/system/dialogs/file/properties/clear_attribute', 'FilePropertiesDialogController::clear_attribute');
+$rl->register('/system/dialogs/file/bulk/properties', 'FileBulkPropertiesDialogController::view');
+$rl->register('/system/dialogs/file/bulk/properties/update_attribute', 'FileBulkPropertiesDialogController::updateAttribute');
+$rl->register('/system/dialogs/file/bulk/properties/clear_attribute', 'FileBulkPropertiesDialogController::clearAttribute');
 
 /**
  * Editing Actions

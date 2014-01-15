@@ -1,5 +1,17 @@
 <? foreach($attributes as $ak) { 
 
+	if (isset($objects)) {
+		foreach($objects as $object) {
+			$display = $object->getAttribute($ak->getAttributeKeyHandle(), 'displaySanitized', 'display');
+			if (isset($lastDisplay) && $display != $lastDisplay) {
+				$display = t('Multiple Values');
+			}
+			$lastDisplay = $display;
+		}
+	} else {
+		$display = $object->getAttribute($ak->getAttributeKeyHandle(), 'displaySanitized', 'display');
+	}
+
 	$canEdit = $permissionsCallback($ak, $permissionsArguments); ?>
 
 	<div class="row">
@@ -9,7 +21,7 @@
 		<ul class="ccm-edit-mode-inline-commands">
 			<li><a href="#" data-key-id="<?=$ak->getAttributeKeyID()?>" data-url="<?=$clearAction?>" data-editable-field-command="clear_attribute"><i class="glyphicon glyphicon-trash"></i></a></li>
 		</ul>
-		<? } ?><p><span <? if ($canEdit) { ?>data-title="<?=$ak->getAttributeKeyName()?>" data-key-id="<?=$ak->getAttributeKeyID()?>" data-name="<?=$ak->getAttributeKeyID()?>" data-editable-field-type="xeditableAttribute" data-url="<?=$saveAction?>" data-type="concreteattribute"<? } ?>><?=$object->getAttribute($ak->getAttributeKeyHandle(), 'displaySanitized', 'display')?></span></p>
+		<? } ?><p><span <? if ($canEdit) { ?>data-title="<?=$ak->getAttributeKeyName()?>" data-key-id="<?=$ak->getAttributeKeyID()?>" data-name="<?=$ak->getAttributeKeyID()?>" data-editable-field-type="xeditableAttribute" data-url="<?=$saveAction?>" data-type="concreteattribute"<? } ?>><?=$display?></span></p>
 	</div>
 	</div>
 
@@ -25,5 +37,9 @@
 		</div>
 
 	<? } ?>
+
+
+
+	<? unset($lastDisplay); ?>
 
 <? } ?>

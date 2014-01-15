@@ -312,7 +312,7 @@ a[data-action=delete-version]:hover {
 
 var ConcreteFilePropertiesDialog = function() {
 	var my = this;
-	$('div[data-container=file-properties]').concreteEditableFieldContainer({
+	$('div[data-container=editable-fields]').concreteEditableFieldContainer({
 		url: '<?=$controller->action('save')?>'
 	});
 	my.setupFileVersionsTable();

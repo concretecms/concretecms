@@ -66,14 +66,18 @@
 				autotext: 'never',
 				url: my.options.url,
 				params: function(args) {
-					var newParams = {};
-					newParams.name = args.name;
-					newParams.pk = args.pk
+					var newParams = [];
+					newParams.push({name: 'name', 'value': args.name});
+					newParams.push({name: 'pk', 'value': args.pk});
 					_.each(my.options.data, function(value, key) {
-						newParams[key] = value;
+						if (typeof(value) == 'object') {
+							newParams.push({name: value.name, 'value': value.value});
+						} else {
+							newParams.push({name: key, 'value': value});
+						}
 					});
 					_.each(args.value, function(value) {
-						newParams[value.name] = value.value;
+						newParams.push({name: value.name, 'value': value.value});
 					});
 					return newParams;
 				},
@@ -156,17 +160,25 @@
 			});
 			my.$element.on('click', '[data-editable-field-command=clear_attribute]', function() {
 				var data = my.options.data,
-					url = my.getAjaxURL($(this));
+					url = my.getAjaxURL($(this)),
+					akID = $(this).attr('data-key-id'),
+					ajaxData = [];
 
-				data.akID = $(this).attr('data-key-id');
+				_.each(data, function(value, key) {
+					if (typeof(value) == 'object') {
+						ajaxData.push({name: value.name, 'value': value.value});
+					} else {
+						ajaxData.push({name: key, 'value': value});
+					}
+				});
 
+				ajaxData.push({'name': 'akID', 'value': akID});
+				
 				return new ConcreteAjaxRequest({
 					url: url,
-					data: data, 
+					data: ajaxData, 
 					success: function(r) {
-						console.log(r);
-						console.log($('[data-key-id=' + data.akID + '][data-editable-field-type=xeditableAttribute]'));
-     					$('[data-key-id=' + data.akID + '][data-editable-field-type=xeditableAttribute]').editable('setValue', '');
+     					$('[data-key-id=' + akID + '][data-editable-field-type=xeditableAttribute]').editable('setValue', '');
 					}
 				})
 				return false;
