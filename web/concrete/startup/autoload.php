@@ -434,6 +434,7 @@ $classes = array(
 	'AreaLayoutPresetsDialogController' => array('controller', '/dialogs/area/layout/presets'),
 	'PageDeleteDialogController' => array('controller', '/dialogs/page/delete'),
 	'PageBulkPropertiesDialogController' => array('controller', '/dialogs/page/bulk/properties'),
+	'FileBulkPropertiesDialogController' => array('controller', '/dialogs/file/bulk/properties'),
 	'DashboardBaseController' => array('controller', '/dashboard/base'),
 	'AccountController' => array('controller', '/account'),
 	'AccountProfileEditController' => array('controller', '/account/profile/edit'),
