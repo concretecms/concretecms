@@ -53,23 +53,18 @@
 					}
 					var block = new Concrete.Block($('[data-block-id=' + resp.bID + ']'), editor);
 					area.addBlock(block);
-					area.incrementTotalBlocks();
-				} else {
-					$('[data-block-id=' + my.options.bID + '][data-area-id=' + resp.aID + ']').before(r).remove();
-					var block = new Concrete.Block($('[data-block-id=' + resp.bID + ']'), editor);
-					area.addBlock(block);
-				}
-
-
-				if (my.task == 'add') {
-					var tb = parseInt($('div.ccm-area[data-area-id=' + resp.aID + ']').attr('data-total-blocks'));
-					$('div.ccm-area[data-area-id=' + resp.aID + ']').attr('data-total-blocks', tb + 1);
+					if (area.getTotalBlocks() == 1) {
+						// we have to destroy the old menu and create it anew
+						area.bindMenu();
+					}
 					ConcreteAlert.hud(ccmi18n.addBlockMsg, 2000, 'ok', ccmi18n.addBlock);
 					jQuery.fn.dialog.closeAll();
 				} else {
+					$('[data-block-id=' + my.options.bID + '][data-area-id=' + resp.aID + ']').before(r).remove();
+					var block = new Concrete.Block($('[data-block-id=' + resp.bID + ']'), editor);
 					ConcreteAlert.hud(ccmi18n.updateBlockMsg, 2000, 'ok', ccmi18n.updateBlock);
 				}
-				//Concrete.editMode.scanBlocks();
+	
 			});
 		}
 	}

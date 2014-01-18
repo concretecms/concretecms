@@ -64,6 +64,15 @@
 			}
 		},
 
+		destroy: function() {
+			var my = this, global = ConcreteMenuManager;
+			my.hide();
+			global.$container.html('');
+			my.$launcher.each(function() {
+				$(this).unbind('mousemove.concreteMenu');
+			});
+		},
+
 		positionAt: function($elementToPosition, $elementToInspect) {
 			if (!$elementToInspect) {
 				return false;
