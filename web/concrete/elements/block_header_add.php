@@ -31,12 +31,6 @@ if (is_array($headerItems[$identifier])) {
 }
 ?>
 
-$(function() {
-	$('#ccm-block-form').concreteAjaxBlockForm({
-		'task': 'add'
-	});
-});
-
 </script>
 
 <input type="hidden" name="ccm-block-pane-action" value="<?= Loader::helper('security')->sanitizeURL($_SERVER['REQUEST_URI']); ?>" />

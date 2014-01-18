@@ -102,6 +102,11 @@
     });
 
     my.scanBlocks();
+
+    Concrete.getEditMode = function() {
+      return my;
+    }
+
   };
 
   /**
@@ -288,7 +293,8 @@
     },
 
     getAreaByID: function areaGetByID(arID) {
-      return _(this.getAreas()).findWhere({id: arID});
+      var areas = this.getAreas();
+      return _.findWhere(areas, {id: parseInt(arID)});
     },
 
     /**
@@ -358,6 +364,16 @@
   };
 
   Area.prototype = {
+
+    getBlockByID: function blockGetByID(bID) {
+      var my = this;
+      return _.findWhere(my.getBlocks(), {id: bID});
+    },
+
+    incrementTotalBlocks: function() {
+      var my = this, totalBlocks = my.getElem().data('total-blocks');
+      my.getElem().attr('data-total-blocks', parseInt(totalBlocks) + 1);
+    },
 
     /**
      * Add block to area
@@ -476,7 +492,7 @@
         if (typeof(callback) == 'function') {
           callback();
         }
-        Concrete.editMode.scanBlocks();
+        //Concrete.editMode.scanBlocks();
 
       }
     },
@@ -751,8 +767,14 @@
             area = my.getSelected().getArea(),
             area_handle = area.getHandle(),
             area_id = area.getId(),
+            dragAreaBlockID = 0,
+            dragAreaBlock = my.getSelected().getBlock(),
             is_inline = !!elem.data('supports-inline-add'),
             has_add = !!elem.data('has-add-template');
+
+        if (dragAreaBlock) {
+          var dragAreaBlockID = dragAreaBlock.getId();
+        }
 
         CCMPanelManager.exitPanelMode();
 
@@ -775,6 +797,14 @@
             onClose: function() {
               $(document).trigger('blockWindowClose');
               jQuery.fn.dialog.closeAll();
+            },
+            onOpen: function() {
+              $(function() {
+                $('#ccm-block-form').concreteAjaxBlockForm({
+                  'task': 'add',
+                  'dragAreaBlockID': dragAreaBlockID
+                });
+              });
             },
             width: parseInt(elem.data('dialog-width'), 10),
             height: parseInt(elem.data('dialog-height'), 10) + 20,
