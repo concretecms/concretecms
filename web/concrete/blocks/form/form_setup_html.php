@@ -18,7 +18,7 @@ $bt = BlockType::getByHandle('form');
 	</ul>
 	<div class="spacer"></div>
 	
-	<input type="hidden" name="miniSurveyServices" value="<?php echo $uh->getBlockTypeToolsURL($bt)?>/services.php" />
+	<input type="hidden" name="miniSurveyServices" value="<?php echo $uh->getBlockTypeToolsURL($bt)?>/services" />
 	
 	<? /* these question ids have been deleted, or edited, and so shouldn't be duplicated for block versioning */ ?>
 	<input type="hidden" id="ccm-ignoreQuestionIDs" name="ignoreQuestionIDs" value="" />

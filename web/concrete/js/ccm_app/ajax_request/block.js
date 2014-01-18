@@ -11,6 +11,7 @@
 		options = $.extend({
 			'iframe': true,
 			'task': false,
+			'dragAreaBlockID': false,
 			'bID': false
 		}, options);
 		my.options = options;
@@ -33,15 +34,32 @@
 			jQuery.fn.dialog.closeTop();
 
 			$.get(action, function(r) {
-				if (my.task == 'add') {
-					$("#a" + resp.aID + " > div.ccm-area-block-list").append(r);
-				} else {
-					$('[data-block-id=' + my.options.bID + '][data-area-id=' + resp.aID + ']').before(r).remove();
-				}
 
 				CCMInlineEditMode.exit();
 				CCMToolbar.disableDirectExit();
 				jQuery.fn.dialog.hideLoader();
+
+				if (my.options.task == 'add') {
+					var $area = $('div[data-area-id=' + resp.aID + ']'),
+						editor = new Concrete.getEditMode(),
+						area = editor.getAreaByID(resp.aID);
+
+					if (my.options.dragAreaBlockID) {
+						// we are adding this block AFTER this other block.
+						var $block = $area.find('div[data-block-id=' + my.options.dragAreaBlockID + ']');
+						$block.next('.ccm-area-drag-area').after(r);
+					} else {
+						$area.find('.ccm-area-block-list').prepend(r);
+					}
+					var block = new Concrete.Block($('[data-block-id=' + resp.bID + ']'), editor);
+					area.addBlock(block);
+					area.incrementTotalBlocks();
+				} else {
+					$('[data-block-id=' + my.options.bID + '][data-area-id=' + resp.aID + ']').before(r).remove();
+					var block = new Concrete.Block($('[data-block-id=' + resp.bID + ']'), editor);
+					area.addBlock(block);
+				}
+
 
 				if (my.task == 'add') {
 					var tb = parseInt($('div.ccm-area[data-area-id=' + resp.aID + ']').attr('data-total-blocks'));
@@ -51,7 +69,7 @@
 				} else {
 					ConcreteAlert.hud(ccmi18n.updateBlockMsg, 2000, 'ok', ccmi18n.updateBlock);
 				}
-				Concrete.editMode.scanBlocks();
+				//Concrete.editMode.scanBlocks();
 			});
 		}
 	}
