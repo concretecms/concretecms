@@ -34,7 +34,6 @@ if ($c->isMasterCollection()) {
 }
 ?>
 <div id="a<?=$a->getAreaID()?>" data-maximum-blocks="<?=$a->getMaximumBlocks()?>"
-data-total-blocks="<?=$a->getTotalBlocksInAreaEditMode()?>" 
 data-accepts-block-types="<?=trim($handles)?>" 
 data-area-id="<?=$a->getAreaID()?>" 
 data-cID="<?=$a->getCollectionID()?>" 

@@ -115,15 +115,13 @@
    * @param {EditMode} edit_mode The EditMode instance
    */
   var Area = Concrete.Area = function Area(elem, edit_mode) {
-    var my = this,
-      totalBlocks = parseInt(elem.attr('data-total-blocks')),
-      menuHandle = (totalBlocks == 0) ? 'div[data-area-menu-handle=' + elem.attr('data-area-id') + ']' : '#area-menu-footer-' + elem.attr('data-area-id');
-
+    var my = this;
     elem.data('Concrete.area', my);
 
     Concrete.createGetterSetters.call(my, {
       id: elem.data('area-id'),
       elem: elem,
+      totalBlocks: 0,
       handle: elem.data('area-handle'),
       dragAreas: [],
       blocks: [],
@@ -133,13 +131,8 @@
     });
 
     my.id = my.getId();
+    my.setTotalBlocks(0); // we also need to update the DOM which this does.
     my.addDragArea();
-    elem.concreteMenu({
-      'handle': menuHandle,
-      'highlightClassName': 'ccm-area-highlight',
-      'menuActiveClass': 'ccm-area-highlight',
-      'menu': $('[data-area-menu=' + elem.attr('data-launch-area-menu') + ']')
-    });
   };
 
   /**
@@ -148,11 +141,8 @@
    * @param {EditMode} edit_mode The EditMode instance
    */
   var Block = Concrete.Block = function Block(elem, edit_mode, peper){
-    var my = this,
-        menuHandle = elem.attr('data-block-menu-handle');
-
+    var my = this;
     elem.data('Concrete.block', my);
-
     Concrete.createGetterSetters.call(my, {
       id: elem.data('block-id'),
       handle: elem.data('block-type-handle'),
@@ -172,14 +162,6 @@
     });
 
     my.id = my.getId();
-    if (menuHandle != 'none') {
-      elem.concreteMenu({
-        'handle': 'this',
-        'highlightClassName': 'ccm-block-highlight',
-        'menuActiveClass': 'ccm-block-highlight',
-        'menu': $('[data-block-menu=' + elem.attr('data-launch-block-menu') + ']')
-      });
-    }
 
     elem.find('a[data-menu-action=edit_inline]').on('click', function() {
       Concrete.event.fire('EditModeBlockEditInline', {block: my, event: event});
@@ -210,6 +192,8 @@
       },
       place: false
     });
+
+    my.bindMenu();
 
     Concrete.event.bind('EditModeSelectableContender', function(e) {
       if (my.getDragging() && e.eventData instanceof DragArea) {
@@ -274,6 +258,7 @@
         my.addBlock(block = new Block($(this), my));
         _(my.getAreas()).findWhere({id: block.getAreaId()}).addBlock(block);
       });
+      _.invoke(my.getAreas(), 'bindMenu');
     },
 
     panelOpened: function editModePanelOpened(panel, element) {
@@ -370,9 +355,23 @@
       return _.findWhere(my.getBlocks(), {id: bID});
     },
 
-    incrementTotalBlocks: function() {
-      var my = this, totalBlocks = my.getElem().data('total-blocks');
-      my.getElem().attr('data-total-blocks', parseInt(totalBlocks) + 1);
+    bindMenu: function() {
+      var my = this,
+          elem = my.getElem(),
+          totalBlocks = my.getTotalBlocks(),
+          menuHandle = (totalBlocks == 0) ? 
+            'div[data-area-menu-handle=' + my.getId() + ']' 
+            : '#area-menu-footer-' + my.getId();
+
+      if (my.menu) {
+        my.menu.destroy();
+      }
+      my.menu = new ConcreteMenu(elem, {
+        'handle': menuHandle,
+        'highlightClassName': 'ccm-area-highlight',
+        'menuActiveClass': 'ccm-area-highlight',
+        'menu': $('[data-area-menu=' + elem.attr('data-launch-area-menu') + ']')
+      });
     },
 
     /**
@@ -382,14 +381,21 @@
      * @return {Boolean}           Success, always true
      */
     addBlock: function areaAddBlock(block, sub_block) {
-      var my = this;
+      var my = this,
+          totalBlocks = my.getTotalBlocks();
+
       if (sub_block) {
         return this.addBlockToIndex(block, _(my.getBlocks()).indexOf(sub_block) + 1);
       }
-
+      my.setTotalBlocks(totalBlocks+1);
       return this.addBlockToIndex(block, my.getBlocks().length);
     },
 
+    setTotalBlocks: function(totalBlocks) {
+      var my = this;
+      this.setAttr('totalBlocks', totalBlocks);
+      this.getElem().attr('data-total-blocks', totalBlocks);
+    },
     /**
      * Add to specific index, pipes to addBlock
      * @param  {Block}   block Block to add
@@ -409,10 +415,12 @@
      * @return {Boolean}       Success, always true.
      */
     removeBlock: function areaRemoveBlock(block) {
-      var my = this;
+      var my = this, totalBlocks = my.getTotalBlocks();
 
       block.getElem().remove();
       my.setBlocks(_(my.getBlocks()).without(block));
+
+      my.setTotalBlocks(totalBlocks - 1);
 
       var drag_area = _.first(_(my.getDragAreas()).filter(function(drag_area){
         return drag_area.getBlock() == block;
@@ -421,6 +429,12 @@
         drag_area.getElem().remove();
         my.setDragAreas(_(my.getDragAreas()).without(drag_area));
       }
+
+      if (my.getTotalBlocks() == 0) {
+        // we have to destroy the old menu and create it anew
+        my.bindMenu();          
+      }
+
       return true;
     },
 
@@ -472,18 +486,14 @@
       var my = this, bID = my.getId(),
         area = my.getArea(),
         aID = area.getId(),
+        block = area.getBlockByID(bID),
         cID = CCM_CID,
         arHandle = area.getHandle();
 
       if (confirm(msg)) {
         CCMToolbar.disableDirectExit();
-        // got to grab the message too, eventually
-        var $d = $('[data-block-id=' + bID + '][data-area-id=' + aID + ']'),
-          tb = parseInt($('[data-area-id=' + aID + ']').attr('data-total-blocks'));
-        
-        $d.hide().remove();
+        area.removeBlock(block);
         ConcreteAlert.hud(ccmi18n.deleteBlockMsg, 2000, 'delete_small', ccmi18n.deleteBlock);
-        $('[data-area-id=' + aID + ']').attr('data-total-blocks', tb - 1);
         $.ajax({
           type: 'POST',
           url: CCM_DISPATCHER_FILENAME,
@@ -492,8 +502,21 @@
         if (typeof(callback) == 'function') {
           callback();
         }
-        //Concrete.editMode.scanBlocks();
+      }
+    },
 
+    bindMenu: function() {
+      var my = this,
+          elem = my.getElem(),
+          menuHandle = elem.attr('data-block-menu-handle');
+        
+      if (menuHandle != 'none') {
+        my.menu = new ConcreteMenu(elem, {
+          'handle': 'this',
+          'highlightClassName': 'ccm-block-highlight',
+          'menuActiveClass': 'ccm-block-highlight',
+          'menu': $('[data-block-menu=' + elem.attr('data-launch-block-menu') + ']')
+        });
       }
     },
 
