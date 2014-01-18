@@ -16,7 +16,6 @@
             });
         },
 
-
         hud: function(message, time, icon, title) {
             if (title == null) {    
                 var messageText = message;
