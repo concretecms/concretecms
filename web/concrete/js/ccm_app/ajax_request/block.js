@@ -38,7 +38,7 @@
 				CCMInlineEditMode.exit();
 				CCMToolbar.disableDirectExit();
 				jQuery.fn.dialog.hideLoader();
-
+				
 				if (my.options.task == 'add') {
 					var $area = $('div[data-area-id=' + resp.aID + ']'),
 						editor = new Concrete.getEditMode(),

@@ -260,11 +260,13 @@ module.exports = function(grunt) {
 		'<%= DIR_BASE %>/concrete/css/redactor.css': '<%= DIR_BASE %>/concrete/css/ccm_app/build/redactor.less',
 		'<%= DIR_BASE %>/concrete/css/ccm.topics.css': '<%= DIR_BASE %>/concrete/css/ccm_app/build/topics.less',
 	};
+
 	// Let's include the dependencies
 	grunt.loadNpmTasks('grunt-contrib-concat');
 	grunt.loadNpmTasks('grunt-contrib-uglify');
 	grunt.loadNpmTasks('grunt-contrib-cssmin');
 	grunt.loadNpmTasks('grunt-contrib-less');
+	grunt.loadNpmTasks('grunt-contrib-watch');
 
 	// Now let's build the final configuration for Grunt.
 	var extend = require('util')._extend;
@@ -280,10 +282,22 @@ module.exports = function(grunt) {
 			jsTargets.debug.push('concat:' + concatKey);
 		}
 	}
+
+	var watchJS = [];
+	var watchCSS = [];
+
 	config.uglify = {options: jsOptions};
 	for(var key in js) {
 		var target = {files: {}};
 		target.files[js[key].dest] = js[key].src;
+		var srcFile = js[key].src;
+		if (typeof(srcFile) == 'string') {
+			watchJS.push(srcFile);
+		} else {
+			for (i = 0; i < srcFile.length; i++) {
+				watchJS.push(srcFile[i]);
+			}
+		}
 		config.uglify[key + '_release'] = extend({}, target);
 		jsTargets.release.push('uglify:' + key + '_release');
 		target.options = {};
@@ -313,6 +327,20 @@ module.exports = function(grunt) {
 			files: css
 		}
 	};
+	
+
+	config.watch = {
+		javascript: {
+           	files: watchJS,
+            tasks: ['js']
+        },
+
+		css: {
+           	files: '<%=DIR_BASE%>/concrete/css/**/*.less',
+            tasks: ['css']
+        }
+	};
+		
 
 	// Set Grunt tasks
 	grunt.initConfig(config);
@@ -326,10 +354,11 @@ module.exports = function(grunt) {
 
 	grunt.registerTask('debug', ['js:debug', 'css:debug']);
 	grunt.registerTask('release', ['js:release', 'css:release']);
+	grunt.registerTask('debug', ['js:debug', 'css:debug']);
 
 	grunt.registerTask('translations', 'Download and compile translations.', function() {
 		require('./tasks/translations.js')(grunt, config, parameters, this.async());
 	});
 
-	grunt.registerTask('default', 'release');
+//	grunt.registerTask('default', 'release');
 };
