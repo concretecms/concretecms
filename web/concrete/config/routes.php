@@ -69,11 +69,17 @@ $rl->register('/system/dialogs/page/delete/submit', 'PageDeleteDialogController:
 $rl->register('/system/dialogs/area/layout/presets/submit/{arLayoutID}', 'AreaLayoutPresetsDialogController::submit');
 $rl->register('/system/dialogs/area/layout/presets/{arLayoutID}/{token}', 'AreaLayoutPresetsDialogController::view');
 $rl->register('/system/dialogs/page/bulk/properties', 'PageBulkPropertiesDialogController::view');
+$rl->register('/system/dialogs/page/bulk/properties/update_attribute', 'PageBulkPropertiesDialogController::updateAttribute');
+$rl->register('/system/dialogs/page/bulk/properties/clear_attribute', 'PageBulkPropertiesDialogController::clearAttribute');
 
 $rl->register('/system/dialogs/user/search', 'UserSearchDialogController::view');
 $rl->register('/system/dialogs/group/search', 'GroupSearchDialogController::view');
 $rl->register('/system/dialogs/file/search', 'FileSearchDialogController::view');
 $rl->register('/system/dialogs/page/search', 'PageSearchDialogController::view');
+
+$rl->register('/system/dialogs/user/bulk/properties', 'UserBulkPropertiesDialogController::view');
+$rl->register('/system/dialogs/user/bulk/properties/update_attribute', 'UserBulkPropertiesDialogController::updateAttribute');
+$rl->register('/system/dialogs/user/bulk/properties/clear_attribute', 'UserBulkPropertiesDialogController::clearAttribute');
 
 $rl->register('/system/dialogs/file/properties', 'FilePropertiesDialogController::view');
 $rl->register('/system/dialogs/file/properties/save', 'FilePropertiesDialogController::save');
