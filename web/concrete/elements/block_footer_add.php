@@ -30,7 +30,7 @@ $(document).unbind('inlineEditCancel').on('inlineEditCancel', function(e, onComp
 <? if (!$bt->supportsInlineAdd()) { ?>	
 
 	<div class="ccm-buttons dialog-buttons">
-	<a href="javascript:void(0)" <? if ($replaceOnUnload) { ?> onclick="location.href='<?=DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=<?=$c->getCollectionID()?>'; return true" class="btn ccm-button-left cancel" <? } else { ?> onclick="$(document).trigger('blockWindowClose');jQuery.fn.dialog.closeTop()" class="btn btn-hover-danger pull-left"<? } ?>><?=t('Cancel')?></a>
+	<a href="javascript:void(0)" onclick="Query.fn.dialog.closeTop()" class="btn btn-hover-danger btn-default pull-left"><?=t('Cancel')?></a>
 	<a href="javascript:void(0)" onclick="$('#ccm-form-submit-button').get(0).click()" class="pull-right btn btn-primary"><?=t('Add')?></a>
 	</div>
 

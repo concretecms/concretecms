@@ -6,9 +6,11 @@
 		$bf = $controller->getFileObject();
 	}
 ?>
-<h2><?=t('File')?></h2>
+<div class="form-group">
+<?=$form->label('fID', t('File'))?>
 <?=$al->file('ccm-b-file', 'fID', t('Choose File'), $bf);?>
-
-<br/>
-<h2><?=t('Link Text')?></h2>
-<input type="text" style="width: 200px" name="fileLinkText" value="<?=$controller->getLinkText()?>" /><br/>
+</div>
+<div class="form-group">
+<?=$form->label('fileLinkText', t('Link'))?>
+<?=$form->text('fileLinkText', $controller->getLinkText())?>
+</div>

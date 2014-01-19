@@ -18,17 +18,19 @@ var miniSurvey ={
 			$("#answerType").change(function(r) {
 				miniSurvey.optionsCheck($('#answerType').get(0));
 				miniSurvey.settingsCheck($('#answerType').get(0));
-			});
+			}).trigger('change');
 
 			$("#answerTypeEdit").change(function(r) {
 				miniSurvey.optionsCheck($('#answerTypeEdit').get(0), 'Edit');
 				miniSurvey.settingsCheck($('#answerTypeEdit').get(0), 'Edit');
 			});
 
-			$('#refreshButton').click( function(){ miniSurvey.refreshSurvey(); return false; } );
 			$('#addQuestion').click(   function(){ miniSurvey.addQuestion(); return false; } );
 			$('#editQuestion').click(  function(){ miniSurvey.addQuestion('Edit'); return false; } );
-			$('#cancelEditQuestion').click(   function(){ $('#editQuestionForm').css('display','none') } );			
+			$('#cancelEditQuestion').click(function(){ 
+				$('#miniSurvey').show();
+				$('#editQuestionForm').css('display','none');
+			} );			
 			this.serviceURL+='cID='+this.cID+'&arHandle='+this.arHandle+'&bID='+this.bID+'&btID='+this.btID+'&';
 			miniSurvey.refreshSurvey();
 			$('#emailSettings').hide();
@@ -136,6 +138,7 @@ var miniSurvey ={
 							   //miniSurvey.saveOrder();
 						   }
 						   $('#editQuestionForm').css('display','none');
+						   $('#miniSurvey').show();
 						   miniSurvey.qsID=jsonObj.qsID;
 						   miniSurvey.ignoreQuestionId(jsonObj.msqID);
 						   $('#qsID').val(jsonObj.qsID);
@@ -192,6 +195,7 @@ var miniSurvey ={
 
 						$('#msqID').val(jsonObj.msqID);    
 						$('#answerTypeEdit').val(jsonObj.inputType);
+						$('#miniSurvey').hide();
 						miniSurvey.optionsCheck($('#answerTypeEdit').get(0), 'Edit');
 						miniSurvey.settingsCheck($('#answerTypeEdit').get(0), 'Edit');
 						
