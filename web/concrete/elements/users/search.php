@@ -32,7 +32,7 @@ $searchRequest = $controller->getSearchRequest();
 		<select data-bulk-action="users" disabled class="ccm-search-bulk-action form-control">
 			<option value=""><?=t('Items Selected')?></option>
 			<? if ($ek->validate()) { ?>
-				<option value="properties"><?=t('Edit Properties')?></option>
+				<option data-bulk-action-type="dialog" data-bulk-action-title="<?=t('Edit Properties')?>" data-bulk-action-url="<?=URL::to('/system/dialogs/user/bulk/properties')?>" data-bulk-action-dialog-width="630" data-bulk-action-dialog-height="450"><?=t('Edit Properties')?></option>
 			<? } ?>
 			<? if ($ik->validate()) { ?>
 				<option value="activate"><?=t('Activate')?></option>

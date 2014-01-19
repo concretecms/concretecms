@@ -2,13 +2,22 @@
 
 	if (isset($objects)) {
 		foreach($objects as $object) {
-			$display = $object->getAttribute($ak->getAttributeKeyHandle(), 'displaySanitized', 'display');
+			$value = $object->getAttributeValueObject($ak);
+			if (!is_object($value)) {
+				$display = '';
+			} else {
+				$display = $value->getValue('displaySanitized', 'display');
+			}
 			if (isset($lastDisplay) && $display != $lastDisplay) {
 				$display = t('Multiple Values');
 			}
 			$lastDisplay = $display;
 		}
 	} else {
+		$value = $object->getAttributeValueObject($ak);
+		if (is_object($value)) {
+			$display = $value->getValue('displaySanitized', 'display');
+		}
 		$display = $object->getAttribute($ak->getAttributeKeyHandle(), 'displaySanitized', 'display');
 	}
 

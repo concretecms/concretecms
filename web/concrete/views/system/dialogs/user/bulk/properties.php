@@ -6,16 +6,17 @@ defined('C5_EXECUTE') or die("Access Denied.");
 <div class="container" data-container="editable-fields">
 
 <section>
-	<h4><?=t('Page Attributes')?></h4>
+	<h4><?=t('Other Attributes')?></h4>
 	<? 
 
 	Loader::element('attribute/editable_list', array(
 		'attributes' => $attributes, 
-		'objects' => $pages,
+		'objects' => $users,
 		'saveAction' => $controller->action('update_attribute'),
 		'clearAction' => $controller->action('clear_attribute'),
+		'permissionsArguments' => array('attributes' => $allowedEditAttributes),
 		'permissionsCallback' => function($ak, $permissionsArguments) {
-			return true;
+			return (is_array($permissionsArguments['attributes']) && in_array($ak->getAttributeKeyID(), $permissionsArguments['attributes']));
 		}
 	));?>
 </section>
@@ -23,8 +24,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 <script type="text/javascript">
 	$('div[data-container=editable-fields]').concreteEditableFieldContainer({
 		data: [
-			<? foreach($pages as $c) { ?>
-				{'name': 'item[]', 'value': '<?=$c->getCollectionID()?>'},
+			<? foreach($users as $ui) { ?>
+				{'name': 'item[]', 'value': '<?=$ui->getUserID()?>'},
 			<? } ?>	
 		]
 	});

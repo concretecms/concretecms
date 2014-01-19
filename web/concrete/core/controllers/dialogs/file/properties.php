@@ -53,7 +53,9 @@ class Concrete5_Controller_Dialogs_File_Properties extends BackendInterfaceFileC
 
 				$ak = FileAttributeKey::get($_REQUEST['name']);
 				$ak->saveAttributeForm($fv);
-				$val = $this->file->getAttributeValueObject($ak);
+
+				$file = File::getByID($this->file->getFileID());
+				$val = $file->getAttributeValueObject($ak); // ugh this is some kind of race condition or cache issue.
 
 				$sr = new FileEditResponse();
 				$sr->setFile($this->file);
