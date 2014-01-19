@@ -73,17 +73,22 @@
     });
 
     Concrete.event.bind('EditModeBlockMove', function editModeEditModeBlockMoveEventHandler(e) {
-      var moved_block = e.eventData, area = moved_block.getArea(), data = {
-        cID: CCM_CID,
-        ccm_token: window.CCM_SECURITY_TOKEN,
-        btask: 'ajax_do_arrange',
-        area: area.getId(),
-        block: moved_block.getId(),
-        blocks: {}
-      };
-      _(area.getBlocks()).each(function(block, key){
+      var block = e.eventData.block,
+          targetArea = e.eventData.targetArea,
+          sourceArea = e.eventData.sourceArea,
+          data = {
+            cID: CCM_CID,
+            ccm_token: window.CCM_SECURITY_TOKEN,
+            btask: 'ajax_do_arrange',
+            area: targetArea.getId(),
+            block: block.getId(),
+            blocks: {}
+          };
+
+      _(targetArea.getBlocks()).each(function(block, key){
         data.blocks[key] = block.getId();
       });
+      block.bindMenu();
       var loading = false, timeout = setTimeout(function() {
         loading = true;
         $.fn.dialog.showLoader();
@@ -381,13 +386,10 @@
      * @return {Boolean}           Success, always true
      */
     addBlock: function areaAddBlock(block, sub_block) {
-      var my = this,
-          totalBlocks = my.getTotalBlocks();
-
+      var my = this;
       if (sub_block) {
         return this.addBlockToIndex(block, _(my.getBlocks()).indexOf(sub_block) + 1);
       }
-      my.setTotalBlocks(totalBlocks+1);
       return this.addBlockToIndex(block, my.getBlocks().length);
     },
 
@@ -403,9 +405,14 @@
      * @return {Boolean}       Success, always true
      */
     addBlockToIndex: function areaAddBlockToIndex(block, index) {
+      var totalBlocks = this.getTotalBlocks();
+      this.setTotalBlocks(totalBlocks+1);
       block.setArea(this);
       this.getBlocks().splice(index, 0, block);
       this.addDragArea(block);
+
+      // ensure that the DOM attributes are correct
+      block.getElem().attr("data-area-id", this.getId());
       return true;
     },
 
@@ -708,12 +715,13 @@
       });
     },
     pepStop: function blockPepStop(context, event, pep) {
-      var selected_block, my = this;
+      var selected_block, my = this, sourceArea = my.getArea();
       my.getDragger().stop(1);
       my.getDragger().css({top:0, left:0});
       my.dragPosition(pep);
       if (my.getSelected()) {
-        my.getArea().removeBlock(my);
+        var targetArea = my.getSelected().getArea();
+        sourceArea.removeBlock(my);
         my.getSelected().getElem().after(my.getElem());
         if (selected_block = my.getSelected().getBlock()) {
           my.getSelected().getArea().addBlock(my, selected_block);
@@ -721,7 +729,15 @@
           my.getSelected().getArea().addBlockToIndex(my, 0);
         }
         my.getPeper().pep(my.getPepSettings());
-        Concrete.event.fire('EditModeBlockMove', my);
+        if (targetArea.getTotalBlocks() == 1) {
+          // we have to destroy the old menu and create it anew
+          targetArea.bindMenu();
+        }
+        Concrete.event.fire('EditModeBlockMove', {
+          block: my,
+          sourceArea: sourceArea,
+          targetArea: targetArea
+        });
       }
 
       my.animateToElem();

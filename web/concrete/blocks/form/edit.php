@@ -18,5 +18,4 @@ $ui=UserInfo::getByID($u->uID);
 var thisbtID=parseInt(<?php echo $b->getBlockTypeID()?>); 
 </script>
 
-<?php  $this->inc('styles_include.php', array('c' => $c, 'b' => $b, 'miniSurveyInfo' => $miniSurveyInfo, 'miniSurvey' => $miniSurvey,  'a' => $a, 'bt' => $bt)); ?>
 <?php  $this->inc('form_setup_html.php', array('c' => $c, 'b' => $b, 'miniSurveyInfo' => $miniSurveyInfo, 'miniSurvey' => $miniSurvey, 'a' => $a, 'bt' => $bt)); ?>

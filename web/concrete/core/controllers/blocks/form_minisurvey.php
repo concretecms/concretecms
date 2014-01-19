@@ -144,7 +144,7 @@ class Concrete5_Controller_Block_FormMinisurvey {
 		
 		
 			if(!$showEdit){
-				echo '<table class="formBlockSurveyTable">';					
+				echo '<div>';					
 				while( $questionRow=$questionsRS->fetchRow() ){	
 				
 					if( in_array($questionRow['qID'], $hideQIDs) ) continue;
@@ -161,54 +161,50 @@ class Concrete5_Controller_Block_FormMinisurvey {
 						      </tr>';
 					} else { */
 						$requiredSymbol=($questionRow['required'])?'&nbsp;<span class="required">*</span>':'';
-						echo '<tr>
-						        <td valign="top" class="question"><label for="Question'.intval($questionRow['msqID']).'">'.$questionRow['question'].''.$requiredSymbol.'</label></td>
-						        <td valign="top">'.$this->loadInputType($questionRow, $showEdit).'</td>
-						      </tr>';
+						echo '<div class="form-group">
+						        <label class="control-label" for="Question'.intval($questionRow['msqID']).'">'.$questionRow['question'].''.$requiredSymbol.'</label></td>
+						        <div>'.$this->loadInputType($questionRow, $showEdit).'</div>
+						      </div>';
 					//}
 				}			
 				$surveyBlockInfo = $this->getMiniSurveyBlockInfoByQuestionId($qsID,intval($bID));
 				
 				if($surveyBlockInfo['displayCaptcha']) {
-				  echo '<tr><td colspan="2">';
+				  echo '<div class="form-group">';
    				$captcha = Loader::helper('validation/captcha');				
 				echo $captcha->label();
-   				echo '</td></tr><tr><td>&nbsp;</td><td>';
+   				echo '<div>';
    				
    				$captcha->showInput();
    				$captcha->display();
    
    				//echo isset($errors['captcha'])?'<span class="error">' . $errors['captcha'] . '</span>':'';
-				  echo '</td></tr>';
-   				
-   			}
+				  echo '</div></div>';
+      			}
 			
-				echo '<tr><td>&nbsp;</td><td><input class="formBlockSubmitButton ccm-input-button" name="Submit" type="submit" value="'.t('Submit').'" /></td></tr>';
-				echo '</table>';
-				
+				echo '<div class="form-group"><input class="btn btn-primary" name="Submit" type="submit" value="'.t('Submit').'" /></div>';
+				echo '</div>';				
 			}else{
 			
 			
-				echo '<div id="miniSurveyTableWrap"><div id="miniSurveyPreviewTable" class="miniSurveyTable">';					
+				echo '<div id="miniSurveyTableWrap"><ul id="miniSurveyPreviewTable" class="list-group">';					
 				while( $questionRow=$questionsRS->fetchRow() ){	 
 				
 					if( in_array($questionRow['qID'], $hideQIDs) ) continue;
 				
 					$requiredSymbol=($questionRow['required'])?'<span class="required">*</span>':'';				
 					?>
-					<div id="miniSurveyQuestionRow<?php echo $questionRow['msqID']?>" class="miniSurveyQuestionRow">
+					<li id="miniSurveyQuestionRow<?php echo $questionRow['msqID']?>" class="miniSurveyQuestionRow list-group-item">
 						<div class="miniSurveyQuestion"><?php echo $questionRow['question'].' '.$requiredSymbol?></div>
 						<?php  /* <div class="miniSurveyResponse"><?php echo $this->loadInputType($questionRow,$showEdit)?></div> */ ?>
 						<div class="miniSurveyOptions">
-							<div style="float:right">
-								<a href="javascript:void(0)" onclick="miniSurvey.moveUp(this,<?php echo $questionRow['msqID']?>);return false" class="moveUpLink"></a> 
-								<a href="javascript:void(0)" onclick="miniSurvey.moveDown(this,<?php echo $questionRow['msqID']?>);return false" class="moveDownLink"></a>						  
-							</div>						
-							<a href="javascript:void(0)" onclick="miniSurvey.reloadQuestion(<?=intval($questionRow['qID']) ?>);return false"><?php echo t('edit')?></a> &nbsp;&nbsp; 
-							<a href="javascript:void(0)" onclick="miniSurvey.deleteQuestion(this,<?=intval($questionRow['msqID']) ?>,<?=intval($questionRow['qID'])?>);return false"><?= t('remove')?></a>
+							<a href="javascript:void(0)" class="ccm-icon-wrapper" onclick="miniSurvey.moveUp(this,<?php echo $questionRow['msqID']?>);return false"><i class="glyphicon glyphicon-chevron-up"></i></a> 
+							<a href="javascript:void(0)" class="ccm-icon-wrapper" onclick="miniSurvey.moveDown(this,<?php echo $questionRow['msqID']?>);return false"><i class="glyphicon glyphicon-chevron-down"></i></a>						  
+							<a href="javascript:void(0)" class="ccm-icon-wrapper" onclick="miniSurvey.reloadQuestion(<?=intval($questionRow['qID']) ?>);return false"><i class="glyphicon glyphicon-pencil"></i></a>
+							<a href="javascript:void(0)" class="ccm-icon-wrapper" onclick="miniSurvey.deleteQuestion(this,<?=intval($questionRow['msqID']) ?>,<?=intval($questionRow['qID'])?>);return false"><i class="glyphicon glyphicon-trash"></i></a>
 						</div>
-						<div class="miniSurveySpacer"></div>
-					</div>
+						<div class="clearfix"></div>
+					</li>
 				<?php  }			 
 				echo '</div></div>';
 			}

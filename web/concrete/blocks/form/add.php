@@ -9,5 +9,4 @@ var thisbID=parseInt(<?php echo intval($_REQUEST['bID'])?>);
 var thisbtID=parseInt(<?php echo $bt->getBlockTypeID()?>); 
 </script>
 
-<?php $this->inc('styles_include.php'); ?>
 <?php $this->inc('form_setup_html.php'); ?>
