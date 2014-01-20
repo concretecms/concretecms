@@ -34,21 +34,9 @@ class Concrete5_Model_Area extends Object {
 	public $enclosingStart = '';
 	
 	/**
-	 * Denotes if we should run sprintf() on blockWrapperStart
-	 * @var boolean
-	*/
-	public $enclosingStartHasReplacements = false;
-	
-	/**
 	 * @var string
 	*/ 
 	public $enclosingEnd = '';
-	
-	/**
-	 * Denotes if we should run sprintf() on blockWrapperStartEnd
-	 * @var boolean
-	*/ 
-	public $enclosingEndHasReplacements = false;
 	
 	/**
 	 * Array of Blocks within the current area
@@ -553,8 +541,6 @@ class Concrete5_Model_Area extends Object {
 		}
 		Loader::element('block_area_header_view', array('a' => $this));	
 
-		$blockPositionInArea = 1; //for blockWrapper output		
-
 		foreach ($blocksToDisplay as $b) {
 			$includeEditStrip = false;
 			$bv = new BlockView($b);
@@ -564,7 +550,7 @@ class Concrete5_Model_Area extends Object {
 			}
 			if ($p->canViewBlock()) {
 				if (!$c->isEditMode()) {
-					$this->outputBlockWrapper(true, $b, $blockPositionInArea);
+					echo $this->enclosingStart;
 				}
 				if ($includeEditStrip) {
 					Loader::element('block_header', array(
@@ -578,39 +564,15 @@ class Concrete5_Model_Area extends Object {
 					Loader::element('block_footer');
 				}
 				if (!$c->isEditMode()) {
-					$this->outputBlockWrapper(false, $b, $blockPositionInArea);
+					echo $this->enclosingEnd;
 				}
 			}			
-			$blockPositionInArea++;
 		}
 
 		Loader::element('block_area_footer_view', array('a' => $this));	
 
 		if ($this->showControls && $c->isEditMode() && $ap->canViewAreaControls()) {
 			Loader::element('block_area_footer', array('a' => $this));	
-		}
-	}
-	
-	/**
-	 * outputs the block wrapers for each block
-	 * Internal helper function for display()
-	 * @return void
-	 */
-	protected function outputBlockWrapper($isStart, &$block, $blockPositionInArea) {
-		static $th = null;
-		$enclosing = $isStart ? $this->enclosingStart : $this->enclosingEnd;
-		$hasReplacements = $isStart ? $this->enclosingStartHasReplacements : $this->enclosingEndHasReplacements;
-		
-		if (!empty($enclosing) && $hasReplacements) {
-			$bID = $block->getBlockID();
-			$btHandle = $block->getBlockTypeHandle();
-			$bName = ($btHandle == 'core_stack_display') ? Stack::getByID($block->getInstance()->stID)->getStackName() : $block->getBlockName();
-			$th = is_null($th) ? Loader::helper('text') : $th;
-			$bSafeName = $th->entities($bName);
-			$alternatingClass = ($blockPositionInArea % 2 == 0) ? 'even' : 'odd';
-			echo sprintf($enclosing, $bID, $btHandle, $bSafeName, $blockPositionInArea, $alternatingClass);
-		} else {
-			echo $enclosing;
 		}
 	}
 	
@@ -630,33 +592,20 @@ class Concrete5_Model_Area extends Object {
 
 	/** 
 	 * Specify HTML to automatically print before blocks contained within the area
-	 * Pass true for $hasReplacements if the $html contains sprintf replacements tokens.
-	 * Available tokens:
-	 *  %1$s -> Block ID
-	 *  %2$s -> Block Type Handle
-	 *  %3$s -> Block/Stack Name
-	 *  %4$s -> Block position in area (first block is 1, second block is 2, etc.)
-	 *  %5$s -> 'odd' or 'even' (useful for "zebra stripes" CSS classes)
 	 * @param string $html
-	 * @param boolean $hasReplacements
 	 * @return void
 	 */
-	function setBlockWrapperStart($html, $hasReplacements = false) {
+	function setBlockWrapperStart($html) {
 		$this->enclosingStart = $html;
-		$this->enclosingStartHasReplacements = $hasReplacements;
 	}
 	
 	/** 
 	 * Set HTML that automatically prints after any blocks contained within the area
-	 * Pass true for $hasReplacements if the $html contains sprintf replacements tokens.
-	 * See setBlockWrapperStart() comments for available tokens.
 	 * @param string $html
-	 * @param boolean $hasReplacements
 	 * @return void
 	 */
-	function setBlockWrapperEnd($html, $hasReplacements = false) {
+	function setBlockWrapperEnd($html) {
 		$this->enclosingEnd = $html;
-		$this->enclosingEndHasReplacements = $hasReplacements;
 	}
 	
 	public function overridePagePermissions() {
