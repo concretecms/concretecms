@@ -28,8 +28,118 @@
     });
 
     Concrete.event.bind('EditModeBlockEditInline', function(event) {
-      var data = event.eventData, block = data.block, area = block.getArea();
-      window.CCMInlineEditMode.editBlock(CCM_CID, area.getId(), area.getHandle(), block.getId(), $(this).data('menu-action-params'));
+      event.continuePropagation = false;
+      var data = event.eventData,
+        block = data.block,
+        area = block.getArea(),
+        postData = [
+          {name: 'btask', value: 'edit'},
+          {name: 'cID', value: CCM_CID},
+          {name: 'arHandle', value: area.getHandle()},
+          {name: 'aID', value: area.getId()},
+          {name: 'bID', value: block.getId()}
+        ],
+        bID = block.getId(),
+        $container = block.getElem();
+
+      if (data.postData) {
+        for (var prop in data.postData) {
+          postData.push({name: prop, value: data.postData[prop]});
+        }
+      }
+
+      Concrete.event.bind('EditModeExitInline', function(e) {
+        e.continuePropagation = false;
+        var action = CCM_TOOLS_PATH + '/edit_block_popup?cID=' + CCM_CID + '&bID=' + block.getId() + '&arHandle=' + escape(area.getHandle()) + '&btask=view_edit_mode';   
+        jQuery.fn.dialog.showLoader();
+        $.get(action,     
+          function(r) {
+            block.getElem().before(r).remove();
+            _.defer(function() {
+              var block = new Block($('div[data-block-id=' + bID + ']'), my);
+              ConcreteEvent.fire('EditModeExitInlineComplete', {
+                block: block
+              });
+              my.destroyInlineEditModeToolbars();
+            });
+          }
+        );
+      });
+
+      ConcreteMenuManager.disable();
+      CCMToolbar.disable();
+      area.getElem().addClass('ccm-area-inline-edit-disabled');
+      $container.addClass('ccm-block-edit-inline-active');
+
+      $.ajax({
+        type: 'GET',
+        url: CCM_TOOLS_PATH + '/edit_block_popup',
+        data: postData,
+        success: function(r) {
+          $container.html(r);
+          my.loadInlineEditModeToolbars($container);
+          jQuery.fn.dialog.hideLoader();
+        }
+      });
+    });
+
+    Concrete.event.bind('EditModeBlockAddInline', function(event) {
+      var data = event.eventData,
+        area = data.area,
+        selected = data.selected,
+        btID = data.btID,
+        postData = [
+          {name: 'btask', value: 'edit'},
+          {name: 'cID', value: CCM_CID},
+          {name: 'arHandle', value: area.getHandle()},
+          {name: 'btID', value: btID}
+        ];
+
+
+      if (selected) {
+        var elem = selected.getElem();
+        var dragAreaBlock = selected.getBlock();
+      } else {
+        var elem = area.getElem();
+        var dragAreaBlock = event.eventData.dragAreaBlock;
+      }
+
+      if (dragAreaBlock) {
+        var dragAreaBlockID = dragAreaBlock.getId();
+      }
+
+      ConcreteMenuManager.disable();
+      CCMToolbar.disable();
+
+      $('div.ccm-area').addClass('ccm-area-inline-edit-disabled');
+
+      jQuery.fn.dialog.showLoader();
+
+      Concrete.event.bind('EditModeExitInline', function() {
+        $('#a' + area.getId() + '-bt' + btID).remove();
+        my.destroyInlineEditModeToolbars();
+      });
+      $.ajax({
+        type: 'GET',
+        url: CCM_TOOLS_PATH + '/add_block_popup',
+        data: postData,
+        success: function(r) {
+          var $container = $('<div id="a' + area.getId() + '-bt' + btID + '" class="ccm-block-edit-inline-active">' + r + '</div>');
+          elem.addClass("ccm-area-edit-inline-active");
+          elem.append($container);
+          $(function() {
+            elem.find('#ccm-block-form').concreteAjaxBlockForm({
+              'task': 'add',
+              'btSupportsInlineAdd': true,
+              'dragAreaBlockID': dragAreaBlockID
+            });
+          });
+          my.loadInlineEditModeToolbars($container);
+        },
+        complete: function() {
+          jQuery.fn.dialog.hideLoader();
+        }
+      });
     });
 
     Concrete.event.bind('EditModeBlockAddToClipboard', function(event) {
@@ -112,6 +222,7 @@
       return my;
     }
 
+
   };
 
   /**
@@ -138,6 +249,7 @@
     my.id = my.getId();
     my.setTotalBlocks(0); // we also need to update the DOM which this does.
     my.addDragArea();
+
   };
 
   /**
@@ -167,18 +279,6 @@
     });
 
     my.id = my.getId();
-
-    elem.find('a[data-menu-action=edit_inline]').on('click', function() {
-      Concrete.event.fire('EditModeBlockEditInline', {block: my, event: event});
-    });
-
-    elem.find('a[data-menu-action=block_scrapbook]').on('click', function() {
-      Concrete.event.fire('EditModeBlockAddToClipboard', {block: my, event: event});
-    });
-
-    elem.find('a[data-menu-action=delete_block]').on('click', function() {
-      Concrete.event.fire('EditModeBlockDelete', {message: $(this).attr('data-menu-delete-message'), block: my, event: event});
-    });
 
    _(my.getPepSettings()).extend({
       deferPlacement: true,
@@ -350,7 +450,57 @@
       var my = this;
 
       my.getBlocks().push(block);
-    }
+    },
+
+    destroyInlineEditModeToolbars: function() {
+      ConcreteMenuManager.enable();
+      $('div.ccm-area-edit-inline-active').removeClass('ccm-area-edit-inline-active');
+      $('div.ccm-block-edit-inline-active').remove();
+      $('div.ccm-area').removeClass('ccm-area-inline-edit-disabled');
+      $('#ccm-toolbar').css('opacity', 1);
+      $('#ccm-inline-toolbar-container').remove();
+
+      $(window).unbind('scroll.inline-toolbar');
+      CCMToolbar.enable();
+      jQuery.fn.dialog.hideLoader();
+    },
+
+    loadInlineEditModeToolbars: function($container) {
+      $('#ccm-inline-toolbar-container').remove();
+
+      var $toolbar = $container.find('.ccm-inline-toolbar'),
+        $holder = $('<div />', {id: 'ccm-inline-toolbar-container'}).appendTo(document.body),
+        $window = $(window),
+        pos = $container.offset(),
+        l = pos.left;
+
+      $toolbar.appendTo($holder);
+      var tw = l + parseInt($toolbar.width());
+      if (tw > $window.width()) {
+        var overage = tw - (l + $container.width());
+        $toolbar.css('left', l - overage);
+      } else {
+        $toolbar.css('left', l);
+      }
+      $toolbar.css('opacity', 1);
+      $toolbar.find('.dialog-launch').dialog();
+      var t = pos.top - $holder.outerHeight() - 5;
+      $holder.css('top', t).css('opacity', 1);
+
+      if ($window.scrollTop() > t) {
+        $('#ccm-toolbar-disabled,#ccm-toolbar').css('opacity', 0);
+        $holder.addClass('ccm-inline-toolbar-affixed');
+      }
+
+      $window.on('scroll.inline-toolbar', function() {
+        $holder.toggleClass('ccm-inline-toolbar-affixed', $window.scrollTop() > t);
+        if ($window.scrollTop() > t) {
+          $('#ccm-toolbar-disabled,#ccm-toolbar').css('opacity', 0);
+        } else {
+          $('#ccm-toolbar-disabled,#ccm-toolbar').css('opacity', 1);
+        }
+      });
+    }  
   };
 
   Area.prototype = {
@@ -360,13 +510,19 @@
       return _.findWhere(my.getBlocks(), {id: bID});
     },
 
+    getMenuElem: function() {
+      var my = this;
+      return $('[data-area-menu=area-menu-a' + my.getId() + ']');
+    },
+
     bindMenu: function() {
       var my = this,
           elem = my.getElem(),
           totalBlocks = my.getTotalBlocks(),
           menuHandle = (totalBlocks == 0) ? 
             'div[data-area-menu-handle=' + my.getId() + ']' 
-            : '#area-menu-footer-' + my.getId();
+            : '#area-menu-footer-' + my.getId(),
+          $menuElem = my.getMenuElem();
 
       if (my.menu) {
         my.menu.destroy();
@@ -377,6 +533,38 @@
         'menuActiveClass': 'ccm-area-highlight',
         'menu': $('[data-area-menu=' + elem.attr('data-launch-area-menu') + ']')
       });
+
+      $menuElem.find('a[data-menu-action=add-inline]').on('click', function(e) {
+        // we are going to place this at the END of the list.
+        var dragAreaLastBlock = false;
+        _.each(my.getBlocks(), function(block) {
+          dragAreaLastBlock = block;
+        });
+        Concrete.event.fire('EditModeBlockAddInline', {
+          area: my,
+          btID: $(this).attr('data-block-type-id'),
+          event: e,
+          dragAreaBlock: dragAreaLastBlock
+        });
+        return false;
+      });
+
+      $menuElem.find('a[data-menu-action=edit-container-layout]').on('click', function(e) {
+        // we are going to place this at the END of the list.
+        var dragAreaLastBlock = false;
+        _.each(my.getBlocks(), function(block) {
+          dragAreaLastBlock = block;
+        });
+        var bID = parseInt($(this).attr('data-container-layout-block-id'));
+        var editor = Concrete.getEditMode();
+        var block = _.findWhere(editor.getBlocks(), {id: bID});
+        Concrete.event.fire('EditModeBlockEditInline', {
+          block: block,
+          event: e,
+        });
+        return false;
+      });
+
     },
 
     /**
@@ -512,17 +700,36 @@
       }
     },
 
+    getMenuElem: function() {
+      var my = this;
+      return $('[data-block-menu=block-menu-b' + my.getId() + '-' + my.getAreaId() + ']');
+    },
+
     bindMenu: function() {
       var my = this,
           elem = my.getElem(),
-          menuHandle = elem.attr('data-block-menu-handle');
+          menuHandle = elem.attr('data-block-menu-handle'),
+          $menuElem = my.getMenuElem();
         
       if (menuHandle != 'none') {
+
         my.menu = new ConcreteMenu(elem, {
           'handle': 'this',
           'highlightClassName': 'ccm-block-highlight',
           'menuActiveClass': 'ccm-block-highlight',
           'menu': $('[data-block-menu=' + elem.attr('data-launch-block-menu') + ']')
+        });
+
+        $menuElem.find('a[data-menu-action=edit_inline]').on('click', function() {
+          Concrete.event.fire('EditModeBlockEditInline', {block: my, event: event});
+        });
+
+        $menuElem.find('a[data-menu-action=block_scrapbook]').on('click', function() {
+          Concrete.event.fire('EditModeBlockAddToClipboard', {block: my, event: event});
+        });
+
+        $menuElem.find('a[data-menu-action=delete_block]').on('click', function() {
+          Concrete.event.fire('EditModeBlockDelete', {message: $(this).attr('data-menu-delete-message'), block: my, event: event});
         });
       }
     },
@@ -830,11 +1037,16 @@
             CCMEditMode.parseBlockResponse(response, false, 'add');
           })
         } else if (is_inline) {
-          CCMInlineEditMode.loadAdd(CCM_CID, area_handle, area_id, block_type_id);
+          ConcreteEvent.fire('EditModeBlockAddInline', {
+            'selected': my.getSelected(),
+            'area': my.getSelected().getArea(),
+            'btID': block_type_id,
+            'dragAreaBlockID': dragAreaBlockID
+          });
         } else {
           jQuery.fn.dialog.open({
             onClose: function() {
-              $(document).trigger('blockWindowClose');
+              ConcreteEvent.publish('BlockWindowClose');
               jQuery.fn.dialog.closeAll();
             },
             onOpen: function() {

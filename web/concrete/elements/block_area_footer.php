@@ -54,14 +54,16 @@ $class = 'ccm-area-footer';
 		<? if ($showAreaDesign) { ?>
 			<li><a dialog-title="<?=t('Custom Style')?>" class="dialog-launch" dialog-modal="false" dialog-width="475" dialog-height="500" id="menuAreaStyle<?=$a->getAreaID()?>" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_area_popup.php?cID=<?=$c->getCollectionID()?>&arHandle=<?=urlencode($a->getAreaHandle())?>&atask=design"><?=t("Edit Area Design")?></a></li>		
 		<? } ?>
-		<? if ($showAreaLayouts) { ?>
+		<? if ($showAreaLayouts) {
+			$areabt = BlockType::getByHandle(BLOCK_HANDLE_LAYOUT_PROXY);
+		 ?>
 			<? $areaLayoutBT = BlockType::getByHandle('core_area_layout'); ?>
 			<? $params = 'false'; ?>
 
 			<? if ($a->getAreaGridColumnSpan() > 0) {
 				$params = '{arGridColumnSpan: ' . $a->getAreaGridColumnSpan() . '}';
 			} ?>
-			<li><a dialog-title="<?=t('Add Layout')?>" onclick="CCMInlineEditMode.loadAdd(<?=$c->getCollectionID()?>, '<?=htmlspecialchars($arHandle)?>', <?=$a->getAreaID()?>, <?=$areaLayoutBT->getBlockTypeID()?>, <?=$params?>)" id="menuLayout<?=$a->getAreaID()?>" href="javascript:void(0)"><?=t("Add Layout")?></a></li>		
+			<li><a dialog-title="<?=t('Add Layout')?>" data-menu-action="add-inline" href="#" data-block-type-id="<?=$areabt->getBlockTypeID()?>"><?=t("Add Layout")?></a></li>		
 		<? } ?>
 		<? if ($canEditAreaPermissions) { ?>
 			<li class="divider"></li>
@@ -75,14 +77,16 @@ $class = 'ccm-area-footer';
 	<? 
 	if ($a instanceof SubArea) {
 		$pk = PermissionKey::getByHandle('manage_layout_presets');
-		$bt = BlockType::getByHandle(BLOCK_HANDLE_LAYOUT_PROXY);
+		if (!is_object($areabt)) {
+			$areabt = BlockType::getByHandle(BLOCK_HANDLE_LAYOUT_PROXY);
+		}
 		$ax = $a->getSubAreaParentPermissionsObject();
 		$axp = new Permissions($ax);
 		if ($axp->canAddBlockToArea($bt)) { 
 			$bx = $a->getSubAreaBlockObject();
 			if (is_object($bx) && !$bx->isError()) { ?>
 				<li class="divider"></li>
-				<li><a href="javascript:void(0)" data-menu-action="edit_inline" data-menu-edit-params="<?=$params?>"><?=t("Edit Container Layout")?></a></li>
+				<li><a href="javascript:void(0)" data-container-layout-block-id="<?=$bx->getBlockID()?>" data-menu-action="edit-container-layout" data-menu-edit-params="<?=$params?>"><?=t("Edit Container Layout")?></a></li>
 				<? if ($pk->validate()) { 
 					$btc = $bx->getController();
 					$arLayout = $btc->getAreaLayoutObject(); ?>

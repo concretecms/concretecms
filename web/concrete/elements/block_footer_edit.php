@@ -6,32 +6,12 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 <?
 $bt = $b->getBlockTypeObject();
-if ($bt->supportsInlineEdit()) { ?>
 
-<script type="text/javascript">
-$(document).unbind('inlineEditCancel').on('inlineEditCancel', function(e, onComplete) {
-	jQuery.fn.dialog.showLoader();
-	var action = CCM_TOOLS_PATH + '/edit_block_popup?cID=<?=$c->getCollectionID()?>&bID=<?=$b->getBlockID()?>&arHandle=<?=htmlspecialchars($a->getAreaHandle())?>&btask=view_edit_mode';	 
-	$.get(action, 		
-		function(r) { 
-			$('[data-block-id=<?=$b->getBlockID()?>][data-area-id=<?=$a->getAreaID()?>]').before(r).remove();
-			if (onComplete) {
-				onComplete();
-			}
-			CCMInlineEditMode.finishExit();
-		}
-	);
-});
-</script>
-
-<? } ?>
-
-	
-	<? if (is_array($extraParams)) { // defined within the area/content classes 
-		foreach($extraParams as $key => $value) { ?>
-			<input type="hidden" name="<?=$key?>" value="<?=$value?>">
-		<? } ?>
+if (is_array($extraParams)) { // defined within the area/content classes 
+	foreach($extraParams as $key => $value) { ?>
+		<input type="hidden" name="<?=$key?>" value="<?=$value?>">
 	<? } ?>
+<? } ?>
 
 <? if (!$b->getProxyBlock() && !$bt->supportsInlineEdit()) { ?>	
 	<div class="ccm-buttons dialog-buttons">

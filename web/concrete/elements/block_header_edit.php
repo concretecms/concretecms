@@ -31,7 +31,12 @@ if (is_array($headerItems[$identifier])) {
 $(function() {
 	$('#ccm-block-form').concreteAjaxBlockForm({
 		'task': 'edit',
-		'bID': <? if (is_object($b->getProxyBlock())) { ?><?=$b->getProxyBlock()->getBlockID()?><? } else { ?><?=$b->getBlockID()?><? } ?>
+		'bID': <? if (is_object($b->getProxyBlock())) { ?><?=$b->getProxyBlock()->getBlockID()?><? } else { ?><?=$b->getBlockID()?><? } ?>,
+		<? if ($bt->supportsInlineEdit()) { ?>
+			btSupportsInlineEdit: true,
+		<? } else { ?>
+			btSupportsInlineEdit: false
+		<? } ?>
 	});
 });
 </script>

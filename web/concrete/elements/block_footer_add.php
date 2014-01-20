@@ -12,25 +12,10 @@
 		<input type="hidden" name="_add" value="1">
 	<? } ?>
 
-<?
-if ($bt->supportsInlineAdd()) { ?>
-
-<script type="text/javascript">
-$(document).unbind('inlineEditCancel').on('inlineEditCancel', function(e, onComplete) {
-	$('#a<?=$a->getAreaID()?>-bt<?=$bt->getBlockTypeID()?>').remove();
-	if (onComplete) {
-		onComplete();
-	}
-	CCMInlineEditMode.finishExit();
-});
-</script>
-
-<? } ?>
-
 <? if (!$bt->supportsInlineAdd()) { ?>	
 
 	<div class="ccm-buttons dialog-buttons">
-	<a href="javascript:void(0)" onclick="Query.fn.dialog.closeTop()" class="btn btn-hover-danger btn-default pull-left"><?=t('Cancel')?></a>
+	<a href="javascript:void(0)" onclick="jQuery.fn.dialog.closeTop()" class="btn btn-hover-danger btn-default pull-left"><?=t('Cancel')?></a>
 	<a href="javascript:void(0)" onclick="$('#ccm-form-submit-button').get(0).click()" class="pull-right btn btn-primary"><?=t('Add')?></a>
 	</div>
 

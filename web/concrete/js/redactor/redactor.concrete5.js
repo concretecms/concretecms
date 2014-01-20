@@ -14,9 +14,8 @@ RedactorPlugins.concrete5inline = {
 		$('#ccm-redactor-cancel-button').on('click', function() {
 			toolbar.hide();
 			$('li#ccm-redactor-actions-buttons').hide();
-			CCMInlineEditMode.exit(function() {
-				editor.destroyEditor();
-			});
+			ConcreteEvent.fire('EditModeExitInline');
+			editor.destroyEditor();
 		});
 		$('#ccm-redactor-save-button').on('click', function() {
 			$('#redactor-content').val(editor.getCode());

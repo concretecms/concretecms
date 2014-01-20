@@ -60,7 +60,7 @@
 		if ($bp->canDeleteBlock()) { 
 			$deleteMessage = t('Do you want to delete this layout? This will remove all blocks inside it.');
 			?>
-			<li class="ccm-inline-toolbar-icon-cell"><a href="#" onclick="CCMEditMode.deleteBlock(<?=$b->getBlockCollectionID()?>, <?=$b->getBlockID()?>, <?=$a->getAreaID()?>, '<?=Loader::helper('text')->entities($a->getAreaHandle())?>', '<?=$deleteMessage?>', function() { CCMInlineEditMode.finishExit(); })"><i class="glyphicon glyphicon-trash"></i></a></li>
+			<li class="ccm-inline-toolbar-icon-cell"><a href="#" data-menu-action="delete-layout"><i class="glyphicon glyphicon-trash"></i></a></li>
 		<? } ?>
 	<? } ?>
 
@@ -90,6 +90,17 @@ if ($controller->getTask() == 'edit') {
 ?>
 
 $(function() {
+
+	<?
+	if ($controller->getTask() == 'edit') { ?>
+	$('#ccm-layouts-toolbar').on('click', 'a[data-menu-action=delete-layout]', function(e) {
+		var editor = new Concrete.getEditMode(),
+			area = editor.getAreaByID(<?=$a->getAreaID()?>),
+			block = area.getBlockByID(<?=$b->getBlockID()?>);
+		Concrete.event.fire('EditModeBlockDelete', {message: '<?=$deleteMessage?>', block: block, event: e});
+		return false;
+	});
+	<? } ?>
 	$('[data-input=number]').each(function() {
 		var $spin = $(this);
 		$(this).spinner({
