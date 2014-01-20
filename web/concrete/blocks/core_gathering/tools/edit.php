@@ -66,7 +66,7 @@ if ($cID > 0 && $bID > 0) {
 							function(r) {
 								// now we swap out the content with the new block
 								$('[data-area-id=' + resp.aID + '][data-block-id=<?=$bID?>]').before(r).remove();
-								CCMInlineEditMode.editBlock(<?=$cID?>, resp.aID, resp.arHandle, resp.bID);
+								//CCMInlineEditMode.editBlock(<?=$cID?>, resp.aID, resp.arHandle, resp.bID);
 								CCMToolbar.disableDirectExit();
 								jQuery.fn.dialog.closeTop();
 							}

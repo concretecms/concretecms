@@ -84,14 +84,30 @@ CCMLayout.prototype._setupDOM = function() {
 CCMLayout.prototype._setupFormSaveAndCancel = function() {
 	var obj = this;
 	this.$cancelbtn.on('click', function() {
-		CCMInlineEditMode.exit(function() {
-			obj.$toolbar.remove();
-		});
+		ConcreteEvent.fire('EditModeExitInline');
+		obj.$toolbar.remove();
+		ConcreteEvent.on('EditModeExitInlineComplete', function(e) {
+			obj._rescanAreasInPage(e);
+      	});
 	});
 	this.$savebtn.on('click', function() {
 		// move the toolbar back into the form so it submits. so great.
 		obj.$toolbar.hide().prependTo('#ccm-block-form');
 		$('#ccm-block-form').submit();
+		ConcreteEvent.on('EditModeExitInlineComplete', function(e) {
+			obj._rescanAreasInPage(e);
+      	});
+	});
+}
+
+CCMLayout.prototype._rescanAreasInPage = function(e) {
+	var editor = Concrete.getEditMode();
+	var block = e.eventData.block;
+	e.continuePropagation = false;
+	block.getElem().find('div.ccm-area').each(function() {
+        area = new Concrete.Area($(this), editor);
+        area.bindMenu();
+        editor.addArea(area);
 	});
 }
 

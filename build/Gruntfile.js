@@ -82,7 +82,6 @@ module.exports = function(grunt) {
 				'<%= DIR_BASE %>/concrete/js/ccm_app/remote_marketplace.js',
 				'<%= DIR_BASE %>/concrete/js/ccm_app/search/base.js',
 				'<%= DIR_BASE %>/concrete/js/ccm_app/progressive_operations.js',
-				'<%= DIR_BASE %>/concrete/js/ccm_app/inline_edit.js',
 				'<%= DIR_BASE %>/concrete/js/ccm_app/custom_style.js',
 				'<%= DIR_BASE %>/concrete/js/ccm_app/tabs.js',
 				'<%= DIR_BASE %>/concrete/js/ccm_app/toolbar.js',

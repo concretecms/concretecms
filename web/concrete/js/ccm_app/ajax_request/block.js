@@ -35,10 +35,8 @@
 
 			$.get(action, function(r) {
 
-				CCMInlineEditMode.exit();
 				CCMToolbar.disableDirectExit();
 				jQuery.fn.dialog.hideLoader();
-				
 				if (my.options.task == 'add') {
 					var $area = $('div[data-area-id=' + resp.aID + ']'),
 						editor = new Concrete.getEditMode(),
@@ -59,12 +57,31 @@
 					}
 					ConcreteAlert.hud(ccmi18n.addBlockMsg, 2000, 'ok', ccmi18n.addBlock);
 					jQuery.fn.dialog.closeAll();
+
+					if (my.options.btSupportsInlineAdd) {
+						var editor = new Concrete.getEditMode();
+						editor.destroyInlineEditModeToolbars();
+						ConcreteEvent.fire('EditModeExitInlineComplete', {
+							block: block
+						});
+					}
+
 				} else {
 					$('[data-block-id=' + my.options.bID + '][data-area-id=' + resp.aID + ']').before(r).remove();
 					var block = new Concrete.Block($('[data-block-id=' + resp.bID + ']'), editor);
 					ConcreteAlert.hud(ccmi18n.updateBlockMsg, 2000, 'ok', ccmi18n.updateBlock);
-				}
 	
+					if (my.options.btSupportsInlineEdit) {
+						var editor = new Concrete.getEditMode();
+						editor.destroyInlineEditModeToolbars();
+						ConcreteEvent.fire('EditModeExitInlineComplete', {
+							block: block
+						});
+					}
+
+				}
+
+
 			});
 		}
 	}
