@@ -122,7 +122,6 @@ EOL;
 
 			$("#ccmUserSelect' . $fieldName . ' .ccm-user-select-item").on(\'click\', function() {
 				ConcreteEvent.subscribe(\'UserSearchDialogSelectUser\', function(e) {
-					console.log(e);
 					var uID = e.eventData.uID, uName = e.eventData.uName, uEmail = e.eventData.uEmail;
 					e.continuePropagation = false;
 					$("tr.ccm-user-selected-item-none").hide();

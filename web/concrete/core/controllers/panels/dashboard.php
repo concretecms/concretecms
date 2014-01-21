@@ -18,7 +18,7 @@ class Concrete5_Controller_Panel_Dashboard extends BackendInterfacePageControlle
 		}
 
 		$nav = array();
-		if ($tab == 'dashboard') {
+		if ($tab != 'favorites') {
 			$c = Page::getByPath('/dashboard');
 			$ids = $c->getCollectionChildrenArray(true);
 			foreach($ids as $cID) {

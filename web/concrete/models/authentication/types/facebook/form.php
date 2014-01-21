@@ -21,7 +21,6 @@
 			setTimeout(loginStatus, 500);
 		}
 		loginStatus();
-		console.log(login);
 		return false;
 	});
 </script>
