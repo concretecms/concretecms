@@ -28,7 +28,6 @@
     });
 
     Concrete.event.bind('EditModeBlockEditInline', function(event) {
-      event.continuePropagation = false;
       var data = event.eventData,
         block = data.block,
         area = block.getArea(),
@@ -49,7 +48,7 @@
       }
 
       Concrete.event.bind('EditModeExitInline', function(e) {
-        e.continuePropagation = false;
+        e.stopPropagation();
         var action = CCM_TOOLS_PATH + '/edit_block_popup?cID=' + CCM_CID + '&bID=' + block.getId() + '&arHandle=' + escape(area.getHandle()) + '&btask=view_edit_mode';   
         jQuery.fn.dialog.showLoader();
         $.get(action,     
@@ -57,6 +56,7 @@
             block.getElem().before(r).remove();
             _.defer(function() {
               var block = new Block($('div[data-block-id=' + bID + ']'), my);
+              block.setArea(area);
               ConcreteEvent.fire('EditModeExitInlineComplete', {
                 block: block
               });
@@ -720,15 +720,15 @@
           'menu': $('[data-block-menu=' + elem.attr('data-launch-block-menu') + ']')
         });
 
-        $menuElem.find('a[data-menu-action=edit_inline]').on('click', function() {
+        $menuElem.find('a[data-menu-action=edit_inline]').unbind().on('click', function() {
           Concrete.event.fire('EditModeBlockEditInline', {block: my, event: event});
         });
 
-        $menuElem.find('a[data-menu-action=block_scrapbook]').on('click', function() {
+        $menuElem.find('a[data-menu-action=block_scrapbook]').unbind().on('click', function() {
           Concrete.event.fire('EditModeBlockAddToClipboard', {block: my, event: event});
         });
 
-        $menuElem.find('a[data-menu-action=delete_block]').on('click', function() {
+        $menuElem.find('a[data-menu-action=delete_block]').unbind().on('click', function() {
           Concrete.event.fire('EditModeBlockDelete', {message: $(this).attr('data-menu-delete-message'), block: my, event: event});
         });
       }

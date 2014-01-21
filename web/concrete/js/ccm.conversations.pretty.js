@@ -745,7 +745,6 @@
 		},
 		
 		deleteAttachment: function(options) {
-			console.log(options);
 			var cnvMessageAttachmentID = options.cnvMessageAttachmentID;
 			var obj = options.cnvObj; 
 			var attachmentsDialog = options.dialogObj;

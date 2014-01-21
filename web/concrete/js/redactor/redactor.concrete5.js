@@ -11,13 +11,13 @@ RedactorPlugins.concrete5inline = {
 		var editor = this.$editor;
 
 
-		$('#ccm-redactor-cancel-button').on('click', function() {
+		$('#ccm-redactor-cancel-button').unbind().on('click', function() {
 			toolbar.hide();
 			$('li#ccm-redactor-actions-buttons').hide();
 			ConcreteEvent.fire('EditModeExitInline');
 			editor.destroyEditor();
 		});
-		$('#ccm-redactor-save-button').on('click', function() {
+		$('#ccm-redactor-save-button').unbind().on('click', function() {
 			$('#redactor-content').val(editor.getCode());
 			toolbar.hide();
 			editor.destroyEditor();
