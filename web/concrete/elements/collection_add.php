@@ -11,7 +11,7 @@ $dh = Loader::helper('date');
 
 <? if ($_REQUEST['ctID']) { ?>
 
-	<form method="post" action="<?=$c->getCollectionAction()?>" id="ccmAddPage" onsubmit="if($('#ccm-url-slug-loader').is(':visible'))return false;jQuery.fn.dialog.showLoader()" class="dialog-form">		
+	<form method="post" action="<?=$c->getCollectionAction()?>" id="ccmAddPage" class="dialog-form">		
 	<input type="hidden" name="rel" value="<?=$_REQUEST['rel']?>" />
 	<input type="hidden" name="ctID" value="<?=$_REQUEST['ctID']?>" />
 	<input type="hidden" name="mode" value="<?=$_REQUEST['mode']?>" />
@@ -136,7 +136,22 @@ $dh = Loader::helper('date');
 				}
 				dlog.dialog('option','position','center');
 			}
-		} 
+		}
+
+		$('#ccmAddPage').submit(function(e) {
+			var proceed = true;
+			if ($('#ccm-url-slug-loader').is(':visible')) {
+				proceed = false;
+			}
+			if(proceed) {
+				jQuery.fn.dialog.showLoader();
+			}
+			else {
+				e.preventDefault();
+			}
+			return proceed;
+		});
+
 	});
 	
 	var addPageTimer = {};
