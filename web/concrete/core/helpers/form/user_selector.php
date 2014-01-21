@@ -63,7 +63,7 @@ class Concrete5_Helper_Form_UserSelector {
 		if($javascriptFunc=='' || $javascriptFunc=='ccm_triggerSelectUser'){
 			$html .= '
 			var par = $(ccmActiveUserField).parent().find(\'.ccm-summary-selected-item-label\');
-			var pari = $(ccmActiveUserField).parent().find(\'[name=' . $fieldName . ']\');
+			var pari = $(ccmActiveUserField).parent().find(\'[name="' . $fieldName . '"]\');
 			par.html(uName);
 			pari.val(uID);
 			$(ccmActiveUserField).parent().find(\'.ccm-clear-selected-user\').show();
