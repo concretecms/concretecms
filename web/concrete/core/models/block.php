@@ -959,28 +959,28 @@ class Concrete5_Model_Block extends Object {
 			// forceDelete is used by the administration console
 
 			// this is an original. We're deleting it, and everything else having to do with it
-			$q = "delete from CollectionVersionBlocks where bID = '$bID'";
-			$r = $db->query($q);
+			$q = "delete from CollectionVersionBlocks where bID = ?";
+			$r = $db->query($q, array($bID));
 
-			$q = "delete from ComposerContentLayout where bID = '$bID'";
-			$r = $db->query($q);
+			$q = "delete from ComposerContentLayout where bID = ?";
+			$r = $db->query($q, array($bID));
 
-			$q = "delete from BlockPermissionAssignments where bID = '$bID'";
-			$r = $db->query($q);
+			$q = "delete from BlockPermissionAssignments where bID = ?";
+			$r = $db->query($q, array($bID));
 			
-			$q = "delete from CollectionVersionBlockStyles where bID = ".intval($bID);
-			$r = $db->query($q);
+			$q = "delete from CollectionVersionBlockStyles where bID = ?";
+			$r = $db->query($q, array($bID));
 			
 		} else {
-			$q = "delete from CollectionVersionBlocks where cID = '$cID' and (cvID = '$cvID' or cbIncludeAll=1) and bID = '$bID' and arHandle = ?";
-			$r = $db->query($q, array($arHandle));
+			$q = "delete from CollectionVersionBlocks where cID = ? and (cvID = ? or cbIncludeAll=1) and bID = ? and arHandle = ?";
+			$r = $db->query($q, array($cID, $cvID, $bID, $arHandle));
 
 			// next, we delete the groups instance of this block
-			$q = "delete from BlockPermissionAssignments where bID = '$bID' and cvID = '$cvID' and cID = '$cID'";
-			$r = $db->query($q);
+			$q = "delete from BlockPermissionAssignments where bID = ? and cvID = ? and cID = ?";
+			$r = $db->query($q, array($bID, $cvID, $cID));
 			
-			$q = "delete from CollectionVersionBlockStyles where cID = '$cID' and cvID = '$cvID' and bID = '$bID' and arHandle = '$arHandle'";
-			$r = $db->query($q);				
+			$q = "delete from CollectionVersionBlockStyles where cID = ? and cvID = ? and bID = ? and arHandle = ?";
+			$r = $db->query($q, array($cID, $cvID, $bID, $arHandle));				
 		}
 
 		//then, we see whether or not this block is aliased to anything else
@@ -1058,42 +1058,42 @@ class Concrete5_Model_Block extends Object {
 		switch($i) {
 			case '1':
 				// we're moving the block up
-				$q = "select cbDisplayOrder from CollectionVersionBlocks where cID = '$cID' and (cvID = '{$cvID}' or cbIncludeAll=1) and bID = '$bID' and arHandle = '$arHandle'";
-				$origDisplayOrder = $db->getOne($q);
+				$q = "select cbDisplayOrder from CollectionVersionBlocks where cID = ? and (cvID = ? or cbIncludeAll=1) and bID = ? and arHandle = ?";
+				$origDisplayOrder = $db->getOne($q, array($cID, $cvID, $bID, $arHandle));
 
 				// So now we have the display order for the original element. If it's 0, we do nothing.
 
 				if ($origDisplayOrder != '0') {
 					$newDisplayOrder = $origDisplayOrder - 1;
-					$q = "update CollectionVersionBlocks set cbDisplayOrder = '$origDisplayOrder' where cbDisplayOrder = '$newDisplayOrder' and cID = '$cID' and (cvID = '{$cvID}' or cbIncludeAll=1) and arHandle = '$arHandle'";
-					$r = $db->query($q);
+					$q = "update CollectionVersionBlocks set cbDisplayOrder = ? where cbDisplayOrder = ? and cID = ? and (cvID = ? or cbIncludeAll=1) and arHandle = ?";
+					$r = $db->query($q, array($origDisplayOrder, $newDisplayOrder, $cID, $cvID, $arHandle));
 
 					// now that we've set the other block to our original display order, we set our block to the new display order
 
-					$q = "update CollectionVersionBlocks set cbDisplayOrder = '$newDisplayOrder' where bID = '$bID' and cID = '$cID' and (cvID = '{$cvID}' or cbIncludeAll=1) and arHandle = '$arHandle'";
-					$r = $db->query($q);
+					$q = "update CollectionVersionBlocks set cbDisplayOrder = ? where bID = ? and cID = ? and (cvID = ? or cbIncludeAll=1) and arHandle = ?";
+					$r = $db->query($q, array($newDisplayOrder, $bID, $cID, $cvID, $arHandle));
 				}
 				break;
 			case '-1':
 				// we're moving the block down
-				$q = "select cbDisplayOrder from CollectionVersionBlocks where cID = '$cID' and (cvID = '{$cvID}' or cbIncludeAll=1) and bID = '$bID' and arHandle = '$arHandle'";
-				$origDisplayOrder = $db->getOne($q);
+				$q = "select cbDisplayOrder from CollectionVersionBlocks where cID = ? and (cvID = ? or cbIncludeAll=1) and bID = ? and arHandle = ?";
+				$origDisplayOrder = $db->getOne($q, array($cID, $cvID, $bID, $arHandle));
 
 				// Now, to ensure that we don't screw up the display order stuff in the database, we can't set a display order greater than
 				// n - 1 blocks (meaning if there are 5 blocks in this particular area+collection, we can't have a display order greater than 4
 
-				$q = "select count(*) as total from CollectionVersionBlocks where cID = '$cID' and (cvID = '{$cvID}' or cbIncludeAll=1) and arHandle = '$arHandle'";
-				$maxDisplayOrder = ($db->getOne($q) - 1);
+				$q = "select count(*) as total from CollectionVersionBlocks where cID = ? and (cvID = ? or cbIncludeAll=1) and arHandle = ?";
+				$maxDisplayOrder = ($db->getOne($q, array($cID, $cvID, $arHandle)) - 1);
 
 				if ($origDisplayOrder <= $maxDisplayOrder) {
 					$newDisplayOrder = $origDisplayOrder + 1;
-					$q = "update CollectionVersionBlocks set cbDisplayOrder = '$origDisplayOrder' where cbDisplayOrder = '$newDisplayOrder' and cID = '$cID' and (cvID = '{$cvID}' or cbIncludeAll=1) and arHandle = '$arHandle'";
-					$r = $db->query($q);
+					$q = "update CollectionVersionBlocks set cbDisplayOrder = ? where cbDisplayOrder = ? and cID = ? and (cvID = ? or cbIncludeAll=1) and arHandle = ?";
+					$r = $db->query($q, array($origDisplayOrder, $newDisplayOrder, $cID, $cvID, $arHandle));
 
 					// now that we've set the other block to our original display order, we set our block to the new display order
 
-					$q = "update CollectionVersionBlocks set cbDisplayOrder = '$newDisplayOrder' where bID = '$bID' and cID = '$cID' and arHandle = '$arHandle'";
-					$r = $db->query($q);
+					$q = "update CollectionVersionBlocks set cbDisplayOrder = ? where bID = ? and cID = ? and arHandle = ?";
+					$r = $db->query($q, array($newDisplayOrder, $bID, $cID, $arHandle));
 				}
 				break;
 		}
