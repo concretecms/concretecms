@@ -21,7 +21,7 @@ class Concrete5_Library_ResponseAssetGroup {
 	 * Assets
 	 */
 	public function addHeaderAsset($item) {
-		$this->outputAssets[Asset::ASSET_POSITION_HEADER]['unweighted'][] = $item;
+		$this->outputAssets[Asset::ASSET_POSITION_HEADER][] = $item;
 	}
 	
 	/** 
@@ -29,22 +29,110 @@ class Concrete5_Library_ResponseAssetGroup {
 	 * @access private
 	 */
 	public function addFooterAsset($item) {
-		$this->outputAssets[Asset::ASSET_POSITION_FOOTER]['unweighted'][] = $item;
+		$this->outputAssets[Asset::ASSET_POSITION_FOOTER][] = $item;
 	}
 
 	public function addOutputAsset(Asset $asset) {
-		if ($asset->getAssetWeight() > 0) {
-			$this->outputAssets[$asset->getAssetPosition()]['weighted'][] = $asset;
-		} else {
-			$this->outputAssets[$asset->getAssetPosition()]['unweighted'][] = $asset;
-		}
+		$this->outputAssets[$asset->getAssetPosition()][] = $asset;
 	}
 
+	/** 
+	 * Responsible for a number of things. 
+	 * 1. Gets the required assets and adds them to the output assets array (which also contains other assets we have specifically asked for.)
+	 * 2. Returns the assets with the non-post-process-able assets FIRST, in the order in which they were added, with post-processable assets 
+	 * grouped after. We also make sure to maintain the proper position.
+	 */
 	public function getAssetsToOutput() {
 		$assets = $this->getRequiredAssetsToOutput();
 		foreach($assets as $asset) {
 			$this->addOutputAsset($asset);
 		}
+
+		$outputAssetsPre = array();
+		$outputAssets = array();
+
+		// now we create temporary objects to store assets and their original key.
+		// Why? Because not all "assets" in here are instances of the Asset class. Sometimes they're just strings.
+		foreach($this->outputAssets as $position => $assets) {
+			$outputAssetsPre[$position] = array();
+			foreach($assets as $key => $asset) {
+				$o = new stdClass;
+				$o->key = $key;
+				$o->asset = $asset;
+				$outputAssetsPre[$position][] = $o;
+			}
+		}
+
+		function sortByKey($k1, $k2) {
+			if ($k1 > $k2) {
+				return 1;
+			} else if ($k1 < $k2) {
+				return -1;
+			} else {
+				return 0;
+			}
+		}
+
+		// now we iterate through the $outputAssetsPre array, maintaining position, and sorting all the stdClass
+		// objects within each array, keeping non-post-processed items first, and sorting by key.
+		foreach($outputAssetsPre as $position => $assets) {
+			$outputAssets[$position] = usort($assets, function($o1, $o2) {
+				$a1 = $o1->asset;
+				$a2 = $o2->asset;
+				$k1 = $o1->key;
+				$k2 = $o2->key;
+
+				// o1 not an asset, o2 not an asset
+				if ((!($a1 instanceof Asset)) && (!($a2 instanceof Asset))) {
+					return sortByKey($k1, $k2);
+				}
+
+				// o1 an asset, doesn't support post processing, o2 not an asset
+				if ($a1 instanceof Asset && (!$a1->assetSupportsPostProcessing()) && (!($a2 instanceof Asset))) {
+					return -1; // always come before post processing.
+				}
+
+				// o1 an asset, supports post processing, o2 not an asset
+				if ($a1 instanceof Asset && $a1->assetSupportsPostProcessing() && (!($a2 instanceof Asset))) {
+					return 1; // asset 1 must ALWAYS come after asset 2
+				}
+
+				// o1 not an asset, o2 an asset, doesn't support post processing
+				if ((!($a1 instanceof Asset)) && $a2 instanceof Asset && (!$a2->assetSupportsPostProcessing())) {
+					return -1; // always come before post processing.
+				}
+
+				// o1 an asset, doesn't support post processing, o2 an asset, doesn't support post processing
+				if ($a1 instanceof Asset && !$a1->assetSupportsPostProcessing() && $a2 instanceof Asset && !$a2->assetSupportsPostProcessing()) {
+					return sortByKey($k1, $k2);
+				}
+
+				// o1 an asset, supports post processing, o2 an asset, doesn't support post processing
+				if ($a1 instanceof Asset && $a1->assetSupportsPostProcessing() && $a2 instanceof Asset && (!$a2->assetSupportsPostProcessing())) {
+					return 1; // asset 1 must ALWAYS come after asset 2
+				}
+
+				// o1 not an asset, o2 an asset, supports post processing
+				if ((!($a1 instanceof Asset)) && $a2 instanceof Asset && ($a2->assetSupportsPostProcessing())) {
+					return sortByKey($k1, $k2);
+				}
+
+				// o1 an asset, doesn't support post processing, o2 an asset, supports post processing
+				if ($a1 instanceof Asset && !$a1->assetSupportsPostProcessing() && $a2 instanceof Asset && $a2->assetSupportsPostProcessing()) {
+					return -1;
+				}
+
+				// o1 an asset, supports post processing, o2 an asset, supports post processing
+				if ($a1 instanceof Asset && $a1->assetSupportsPostProcessing() && $a2 instanceof Asset && !$a2->assetSupportsPostProcessing()) {
+					return sortByKey($k1, $k2);
+				}
+
+			});		
+		}
+
+
+
+
 		return $this->outputAssets;
 	}
 
