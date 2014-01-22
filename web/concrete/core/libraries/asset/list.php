@@ -20,7 +20,6 @@ class Concrete5_Library_AssetList {
 
 	public function register($assetType, $assetHandle, $filename, $args = array(), $pkg = false) {
 		$defaults = array(
-			'weight' => false,
 			'position' => false,
 			'local' => true,
 			'version' => false,
@@ -39,9 +38,6 @@ class Concrete5_Library_AssetList {
 		}
 		if ($args['version']) {
 			$o->setAssetVersion($args['version']);
-		}
-		if ($args['weight']) {
-			$o->setAssetWeight($args['weight']);
 		}
 		if ($args['position']) {
 			$o->setAssetPosition($args['position']);
