@@ -67,7 +67,6 @@
 		destroy: function() {
 			var my = this, global = ConcreteMenuManager;
 			my.hide();
-			global.$container.html('');
 			my.$launcher.each(function() {
 				$(this).unbind('mousemove.concreteMenu');
 			});
@@ -206,6 +205,7 @@
 			_.defer(function() { 
 				my.$element.removeClass(my.options.menuActiveClass); 
 				my.$element.parents('*').slice(0,3).removeClass(my.options.menuActiveParentClass);
+				global.$container.html('');
 			});
 
 			global.$clickProxy.css(reset);
