@@ -148,8 +148,8 @@ class Concrete5_Model_StartingPointPackage extends Package {
 
 	protected function indexAdditionalDatabaseFields() {
 		$db = Loader::db();
-		$db->Execute('alter table PagePaths add index (`cPath` (500))');
-		$db->Execute('alter table Groups add index (`gPath` (500))');
+		$db->Execute('alter table PagePaths add index (`cPath` (255))');
+		$db->Execute('alter table Groups add index (`gPath` (255))');
 	}
 
 	public function add_users() {
