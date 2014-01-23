@@ -9,7 +9,6 @@ class Concrete5_Library_ControllerRouteCallback extends RouteCallback {
 	    $arguments = $resolver->getArguments($request, $callback);
 	    $controller = $callback[0];
 	    $method = $callback[1];
-	    $controller->setControllerPath($request->getPath());
 		$controller->on_start();
 		$response = $controller->runAction($method, $arguments);
 		if ($response instanceof Response || $response instanceof RedirectResponse) {

@@ -25,7 +25,7 @@ abstract class Concrete5_Controller_Backend_Interface extends Controller {
 	}
 
 	protected function validateAction() {
-		if (!Loader::helper('validation/token')->validate($this->viewPath)) {
+		if (!Loader::helper('validation/token')->validate($this->getControllerActionPath())) {
 			$this->error->add(Loader::helper('validation/token')->getErrorMessage());
 			return false;
 		}
@@ -34,7 +34,7 @@ abstract class Concrete5_Controller_Backend_Interface extends Controller {
 
 	public function action() {
 		$url = call_user_func_array('parent::action', func_get_args());
-		$url .= '?ccm_token=' . Loader::helper('validation/token')->generate($this->viewPath);
+		$url .= '?ccm_token=' . Loader::helper('validation/token')->generate($this->getControllerActionPath());
 		return $url;
 	}
 
