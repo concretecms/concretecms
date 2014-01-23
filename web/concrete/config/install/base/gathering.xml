@@ -4,6 +4,7 @@
         <gatheringsource handle="page" name="Site Page" package="" />
         <gatheringsource handle="rss_feed" name="RSS Feed" package="" />
         <gatheringsource handle="flickr_feed" name="Flickr Feed" package="" />
+        <gatheringsource handle="twitter" name="Twitter" package="" />
     </gatheringsources>
     <features>
         <feature handle="title" score="1" />
@@ -13,6 +14,7 @@
         <feature handle="conversation" score="10" has-custom-class="true" />
         <feature handle="description" score="1" />
         <feature handle="featured" score="1000" />
+        <feature handle="tweet" score="1000" />
     </features>
     <gatheringitemtemplatetypes>
         <gatheringitemtemplatetype handle="tile" package="" />
@@ -112,8 +114,8 @@
 			<feature handle="description" />
 			<feature handle="image" />
 		</gatheringitemtemplate>
-		<gatheringitemtemplate handle="twitter" type="tile" name="Twitter" package="">
-			<feature handle="title" />
+		<gatheringitemtemplate handle="tweet" type="tile" name="Tweet" package="">
+			<feature handle="tweet" />
 		</gatheringitemtemplate>
 		<gatheringitemtemplate handle="vimeo" type="tile" name="Vimeo" package="">
 			<feature handle="title" />
