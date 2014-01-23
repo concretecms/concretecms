@@ -117,8 +117,15 @@ $al->registerGroup('core/app', array(
 $al->register('javascript', 'bootstrap-editable', 'js/bootstrap-editable.js', array('postprocess' => false));
 $al->register('css', 'core/app/editable-fields', 'css/ccm.editable.fields.css', array('postprocess' => false));
 $al->registerGroup('core/app/editable-fields', array(
-	array('javascript', 'bootstrap-editable'),
+	array('javascript', 'jquery'),
+	array('javascript', 'bootstrap/dropdown'),
+	array('javascript', 'bootstrap/tooltip'),
+	array('javascript', 'bootstrap/popover'),
+	array('javascript', 'jqueryui'),
+	array('javascript', 'core/observer'),
+	array('javascript', 'underscore'),
 	array('javascript', 'core/app'),
+	array('javascript', 'bootstrap-editable'),
 	array('css', 'core/app/editable-fields'),
 	array('javascript', 'jquery/fileupload')
 ));
