@@ -425,7 +425,12 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		public function populateAvailableAttributeKeys() {
 			$db = Loader::db();
 			$v = array($this->getCollectionTypeID());
-			$q = "select akID from PageTypeAttributes where ctID = ?";
+			$q = 'SELECT pta.akID'
+			   . ' FROM PageTypeAttributes pta'
+			   . ' LEFT JOIN (AttributeSetKeys sk INNER JOIN AttributeSets s ON sk.asID = s.asID)'
+			   . ' ON pta.akID = sk.akID'
+			   . ' WHERE pta.ctID = ?'
+			   . ' ORDER BY (s.asID IS NULL), s.asDisplayOrder, sk.displayOrder';
 			$r = $db->query($q, $v);
 			if ($r) {
 				$this->akIDArray = array();
