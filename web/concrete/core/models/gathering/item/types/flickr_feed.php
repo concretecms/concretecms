@@ -44,6 +44,10 @@ class Concrete5_Model_FlickrFeedGatheringItem extends GatheringItem {
 		if ($description != '') {
 			$this->addFeatureAssignment('description', $description);
 		}
+		$author = $post->get_author();
+		if ($author) {
+			$this->addFeatureAssignment('author', $author->get_name());
+		}
 		if ($thumbnail) {
 			$this->addFeatureAssignment('image', $thumbnail);
 		}

@@ -102,6 +102,8 @@ class Concrete5_Model_Gathering extends Object {
 		$db = Loader::db();
 		foreach($items as $it) {
 			$it->setGatheringItemBatchTimestamp($agiBatchTimestamp);
+			$it->setAutomaticGatheringItemSlotWidth();
+			$it->setAutomaticGatheringItemSlotHeight();
 		}
 
 		// now, we find all the items with that timestamp, and we update their display order.
