@@ -230,8 +230,11 @@ $al->register('css', 'core/gathering/display', 'css/ccm.gathering.display.css');
 $al->register('css', 'core/gathering/base', 'css/ccm.gathering.base.css');
 $al->registerGroup('core/gathering', array(
 	array('javascript', 'core/gathering'),
+	array('javascript', 'redactor'),
 	array('css', 'core/gathering/base'),
-	array('css', 'core/gathering/display')
+	array('css', 'core/conversation'),
+	array('css', 'core/gathering/display'),
+	array('css', 'redactor')
 ));
 
 // Conversation
