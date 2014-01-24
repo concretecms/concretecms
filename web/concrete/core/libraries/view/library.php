@@ -50,7 +50,8 @@ class Concrete5_Library_View extends AbstractView {
 	 */
 	public function action($action) {
 		$a = func_get_args();
-		array_unshift($a, $this->viewPath);
+		$controllerPath = $this->controller->getControllerActionPath();
+		array_unshift($a, $controllerPath);
 		$ret = call_user_func_array(array($this, 'url'), $a);
 		return $ret;
 	}
@@ -174,18 +175,6 @@ class Concrete5_Library_View extends AbstractView {
 		return $contents;
 	}
 
-
-	protected function sortAssetsByWeightDescending($assetA, $assetB) {
-		$weightA = $assetA->getAssetWeight();
-		$weightB = $assetB->getAssetWeight();
-
-		if ($weightA == $weightB) {
-			return 0;
-		}
-
-		return $weightA < $weightB ? 1 : -1;
-	}
-
 	protected function sortAssetsByPostProcessDescending($assetA, $assetB) {
 		$ppA = ($assetA instanceof Asset && $assetA->assetSupportsPostProcessing());
 		$ppB = ($assetB instanceof Asset && $assetB->assetSupportsPostProcessing());
@@ -251,29 +240,12 @@ class Concrete5_Library_View extends AbstractView {
 		$outputItems = array();
 		foreach($outputAssets as $position => $assets) {
 			$output = '';
-			if (is_array($assets['weighted'])) {
-				$weightedAssets = $assets['weighted'];
-				usort($weightedAssets, array($this, 'sortAssetsByWeightDescending'));
-				$transformed = $this->postProcessAssets($weightedAssets);
-				foreach($transformed as $item) {
-					$itemstring = (string) $item;
-					if (!in_array($itemstring, $outputItems)) {
-						$output .= $this->outputAssetIntoView($item);
-						$outputItems[] = $itemstring;
-					}
-				}
-			}
-			if (is_array($assets['unweighted'])) {
-				// now the unweighted
-				$unweightedAssets = $assets['unweighted'];
-				usort($unweightedAssets, array($this, 'sortAssetsByPostProcessDescending'));
-				$transformed = $this->postProcessAssets($unweightedAssets);
-				foreach($transformed as $item) {
-					$itemstring = (string) $item;
-					if (!in_array($itemstring, $outputItems)) {
-						$output .= $this->outputAssetIntoView($item);
-						$outputItems[] = $itemstring;
-					}
+			$transformed = $this->postProcessAssets($assets);
+			foreach($transformed as $item) {
+				$itemstring = (string) $item;
+				if (!in_array($itemstring, $outputItems)) {
+					$output .= $this->outputAssetIntoView($item);
+					$outputItems[] = $itemstring;
 				}
 			}
 			$pageContent = str_replace('<!--ccm:assets:' . $position . '//-->', $output, $pageContent);

@@ -4,7 +4,6 @@ abstract class Concrete5_Library_Asset {
 
 	protected $assetVersion = '0';
 	protected $assetHandle;
-	protected $weight = 0;
 	protected $local = true;
 	protected $assetURL;
 	protected $assetPath;
@@ -37,9 +36,6 @@ abstract class Concrete5_Library_Asset {
 		return $this->filename;
 	}
 
-	public function setAssetWeight($weight) {
-		$this->weight = $weight;
-	}
 	public function setAssetVersion($version) {
 		$this->assetVersion = $version;
 	}
@@ -68,8 +64,6 @@ abstract class Concrete5_Library_Asset {
 	public function getAssetPosition() {
 		return $this->position;
 	}
-
-	public function getAssetWeight() {return $this->weight;}
 
 	public function mapAssetLocation($path) {
 		if ($this->isAssetLocal()) {

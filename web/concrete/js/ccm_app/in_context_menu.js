@@ -67,7 +67,6 @@
 		destroy: function() {
 			var my = this, global = ConcreteMenuManager;
 			my.hide();
-			global.$container.html('');
 			my.$launcher.each(function() {
 				$(this).unbind('mousemove.concreteMenu');
 			});
@@ -95,8 +94,7 @@
 		},
 
 		hoverProxy: function(e, $specificLauncher) {
-			//e.stopPropagation();
-			// OMG I'm not sure why stop propagation is here but it plays hell with gathering so i'm disabling it
+			e.stopPropagation();
 			
 			// we pass $launcher in because some menus can have multiple items
 			// launch the same and we want to know which item triggered the launch
@@ -206,6 +204,7 @@
 			_.defer(function() { 
 				my.$element.removeClass(my.options.menuActiveClass); 
 				my.$element.parents('*').slice(0,3).removeClass(my.options.menuActiveParentClass);
+				global.$container.html('');
 			});
 
 			global.$clickProxy.css(reset);

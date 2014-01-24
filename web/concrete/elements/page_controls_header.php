@@ -72,7 +72,7 @@ EOL;
 	$this->addFooterItem($js);
 
 	if (ENABLE_PROGRESSIVE_PAGE_REINDEX && Config::get('DO_PAGE_REINDEX_CHECK')) {
-		$this->addHeaderItem('<script type="text/javascript">$(function() { ccm_doPageReindexing(); });</script>');
+		$this->addFooterItem('<script type="text/javascript">$(function() { ccm_doPageReindexing(); });</script>');
 	}
 	$cih = Loader::helper('concrete/interface');
 	if (LANGUAGE != 'en') {

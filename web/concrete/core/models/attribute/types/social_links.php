@@ -120,7 +120,6 @@ class Concrete5_Controller_AttributeType_SocialLinks extends AttributeTypeContro
 	}
 	
 	public function form() {
-		$this->addHeaderItem(Loader::helper('html')->javascript("bootstrap.js"));
 		if ($this->isPost()) {
 			$data['service'] = $this->post('service');			
 			$data['serviceInfo'] = $this->post('serviceInfo');			

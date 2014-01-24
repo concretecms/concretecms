@@ -8,10 +8,10 @@ $al = AssetList::getInstance();
  */
 
 // jquery
-$al->register('javascript', 'jquery', 'js/jquery.js', array('weight' => 100, 'position' => Asset::ASSET_POSITION_HEADER, 'postprocess' => false));
+$al->register('javascript', 'jquery', 'js/jquery.js', array('position' => Asset::ASSET_POSITION_HEADER, 'postprocess' => false));
 
 // jquery ui
-$al->register('javascript', 'jqueryui', 'js/jquery.ui.js', array('weight' => 95, 'postprocess' => false));
+$al->register('javascript', 'jqueryui', 'js/jquery.ui.js', array('postprocess' => false));
 $al->register('css', 'jqueryui', 'css/jquery.ui.css', array('postprocess' => false));
 
 $al->registerGroup('jqueryui', array(
@@ -20,7 +20,7 @@ $al->registerGroup('jqueryui', array(
 ));
 
 // Underscore
-$al->register('javascript', 'underscore', 'js/underscore.js');
+$al->register('javascript', 'underscore', 'js/underscore.js', array('postprocess' => false));
 
 // dropzone
 $al->register('javascript', 'dropzone', 'js/dropzone.js');
@@ -78,7 +78,7 @@ $al->register('javascript', 'hoverintent', 'js/ccm_app/jquery.hoverIntent.js');
 
 // bootstrap
 $al->register('javascript', 'bootstrap/dropdown', 'js/bootstrap/dropdown.js');
-$al->register('javascript', 'bootstrap/tooltip', 'js/bootstrap/tooltip.js', array('weight' => 95)); // has to come before popover
+$al->register('javascript', 'bootstrap/tooltip', 'js/bootstrap/tooltip.js'); // has to come before popover
 $al->register('javascript', 'bootstrap/popover', 'js/bootstrap/popover.js');
 $al->register('javascript', 'bootstrap/alert', 'js/bootstrap/alert.js');
 $al->register('javascript', 'bootstrap/button', 'js/bootstrap/button.js');
@@ -106,8 +106,8 @@ $al->registerGroup('core/app', array(
 	array('javascript', 'core/observer'),
 	array('javascript', 'underscore'),
 	array('javascript', 'bootstrap/dropdown'),
-	array('javascript', 'bootstrap/popover'),
 	array('javascript', 'bootstrap/tooltip'),
+	array('javascript', 'bootstrap/popover'),
 	array('javascript', 'jqueryui'),
 	array('javascript', 'core/app'),
 	array('css', 'core/app'),
@@ -117,8 +117,15 @@ $al->registerGroup('core/app', array(
 $al->register('javascript', 'bootstrap-editable', 'js/bootstrap-editable.js', array('postprocess' => false));
 $al->register('css', 'core/app/editable-fields', 'css/ccm.editable.fields.css', array('postprocess' => false));
 $al->registerGroup('core/app/editable-fields', array(
-	array('javascript', 'bootstrap-editable'),
+	array('javascript', 'jquery'),
+	array('javascript', 'bootstrap/dropdown'),
+	array('javascript', 'bootstrap/tooltip'),
+	array('javascript', 'bootstrap/popover'),
+	array('javascript', 'jqueryui'),
+	array('javascript', 'core/observer'),
+	array('javascript', 'underscore'),
 	array('javascript', 'core/app'),
+	array('javascript', 'bootstrap-editable'),
 	array('css', 'core/app/editable-fields'),
 	array('javascript', 'jquery/fileupload')
 ));
@@ -144,8 +151,8 @@ $al->registerGroup('dashboard', array(
 	array('javascript', 'dashboard'),
 	array('javascript', 'core/observer'),
 	array('javascript', 'bootstrap/dropdown'),
-	array('javascript', 'bootstrap/popover'),
 	array('javascript', 'bootstrap/tooltip'),
+	array('javascript', 'bootstrap/popover'),
 	array('javascript', 'bootstrap/transition'),
 	array('javascript', 'bootstrap/alert'),
 	array('javascript', 'core/app'),
@@ -168,8 +175,11 @@ $al->register('css', 'core/filemanager', 'css/ccm.filemanager.css', array('postp
 $al->registerGroup('core/filemanager', array(
 	array('css', 'core/app'),
 	array('css', 'core/filemanager'),
-	array('javascript', 'core/filemanager'),
-	array('javascript', 'core/app')
+	array('javascript', 'core/observer'),
+	array('javascript', 'underscore'),
+	array('javascript', 'jqueryui'),
+	array('javascript', 'core/app'),
+	array('javascript', 'core/filemanager')
 ));
 
 // Sitemap
@@ -177,8 +187,10 @@ $al->register('javascript', 'core/sitemap', 'js/ccm.sitemap.js', array('postproc
 $al->register('css', 'core/sitemap', 'css/ccm.sitemap.css', array('postprocess' => false));
 $al->registerGroup('core/sitemap', array(
 	array('javascript', 'core/observer'),
-	array('javascript', 'core/sitemap'),
+	array('javascript', 'underscore'),
+	array('javascript', 'jqueryui'),
 	array('javascript', 'dynatree'),
+	array('javascript', 'core/sitemap'),
 	array('css', 'dynatree'),
 	array('css', 'core/sitemap')
 ));
@@ -187,8 +199,10 @@ $al->registerGroup('core/sitemap', array(
 $al->register('javascript', 'core/topics', 'js/ccm.topics.js', array('postprocess' => false));
 $al->register('css', 'core/topics', 'css/ccm.topics.css', array('postprocess' => false));
 $al->registerGroup('core/topics', array(
-	array('javascript', 'core/topics'),
+	array('javascript', 'core/observer'),
+	array('javascript', 'jqueryui'),
 	array('javascript', 'dynatree'),
+	array('javascript', 'core/topics'),
 	array('css', 'dynatree'),
 	array('css', 'core/topics')
 ));
@@ -196,9 +210,12 @@ $al->registerGroup('core/topics', array(
 // Groups (Group Tree)
 $al->register('javascript', 'core/groups', 'js/ccm.groups.js', array('postprocess' => false));
 $al->registerGroup('core/groups', array(
+	array('javascript', 'core/observer'),
+	array('javascript', 'underscore'),
+	array('javascript', 'jqueryui'),
 	array('javascript', 'dynatree'),
-	array('css', 'dynatree'),
-	array('javascript', 'core/groups')
+	array('javascript', 'core/groups'),
+	array('css', 'dynatree')
 ));
 
 // Page Type Compose Form

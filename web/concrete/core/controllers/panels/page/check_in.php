@@ -86,7 +86,7 @@ class Concrete5_Controller_Panel_Page_CheckIn extends BackendInterfacePageContro
 			}
 			$nc = Page::getByID($c->getCollectionID(), $v->getVersionID());
 			$u->unloadCollectionEdit();
-			$pr->setRedirectURL(Loader::helper('navigation')->getLinkToCollection($nc));
+			$pr->setRedirectURL(Loader::helper('navigation')->getLinkToCollection($nc, true));
 			$pr->outputJSON();
 		}
 	}
