@@ -62,6 +62,10 @@
             <feature handle="image" />
             <feature handle="link" />
         </gatheringitemtemplate>
+        <gatheringitemtemplate handle="image_conversation" type="detail" name="Image Conversation" package="">
+            <feature handle="image" />
+            <feature handle="link" />
+        </gatheringitemtemplate>
         <gatheringitemtemplate handle="image" type="detail" name="Large Image" package="">
             <feature handle="image" />
         </gatheringitemtemplate>
