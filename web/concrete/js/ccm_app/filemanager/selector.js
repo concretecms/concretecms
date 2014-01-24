@@ -31,10 +31,10 @@
 				modal: true,
 				title: ccmi18n_filemanager.title,
 				onOpen: function() {
-					ConcreteEvent.subscribe('FileManagerSelectFile', function(e) {
+					ConcreteEvent.subscribe('FileManagerSelectFile', function(e, data) {
 						jQuery.fn.dialog.closeTop();
 						e.continuePropagation = false;
-						my.loadFile(e.eventData.fID);
+						my.loadFile(data.fID);
 					});
 				}
 			});
@@ -52,16 +52,16 @@
 
 		chooseTemplate: '<div class="ccm-file-selector-choose-new"><%=options.chooseText%></div>',
 		loadingTemplate: '<div class="ccm-file-selector-loading"><img src="' + CCM_IMAGE_PATH + '/throbber_white_16.gif" /></div>',
-		fileLoadedTemplate: '<div class="ccm-file-selector-file-selected"><input type="hidden" name="<%=inputName%>" value="<%=file.fID%>" />' + 
-			'<div class="ccm-file-selector-file-selected-thumbnail"><img src="<%=file.thumbnailLevel1%>" /></div>' + 
-			'<div class="ccm-file-selector-file-selected-title"><div><%=file.title%></div></div><div class="clearfix"></div>' + 
+		fileLoadedTemplate: '<div class="ccm-file-selector-file-selected"><input type="hidden" name="<%=inputName%>" value="<%=file.fID%>" />' +
+			'<div class="ccm-file-selector-file-selected-thumbnail"><img src="<%=file.thumbnailLevel1%>" /></div>' +
+			'<div class="ccm-file-selector-file-selected-title"><div><%=file.title%></div></div><div class="clearfix"></div>' +
 			'</div>',
 
 		loadFile: function(fID) {
 			var my = this;
 			my.$element.html(my._loadingTemplate);
 			$.ajax({
-				type: 'post', 
+				type: 'post',
 				dataType: 'json',
 				url: CCM_DISPATCHER_FILENAME + '/system/file/get_json',
 				data: {'fID': fID},

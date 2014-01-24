@@ -1,4 +1,4 @@
-/** 
+/**
  * Free-Form Layouts
  */
 
@@ -100,9 +100,9 @@ CCMLayout.prototype._setupFormSaveAndCancel = function() {
 	});
 }
 
-CCMLayout.prototype._rescanAreasInPage = function(e) {
+CCMLayout.prototype._rescanAreasInPage = function(e, data) {
 	var editor = Concrete.getEditMode();
-	var block = e.eventData.block;
+	var block = data.block;
 	e.continuePropagation = false;
 	block.getElem().find('div.ccm-area').each(function() {
         area = new Concrete.Area($(this), editor);
@@ -258,10 +258,10 @@ CCMLayout.prototype._buildThemeGridGridFromPresetColumns = function(arLayoutColu
 	var row = this.options.rowstart;
 	row += '<div id="ccm-theme-grid-edit-mode-row-wrapper">';
 	$.each(arLayoutColumns, function(i, column) {
-		var columnHTML = '<div id="ccm-edit-layout-column-' + i + '" class="ccm-theme-grid-column" ' + 
+		var columnHTML = '<div id="ccm-edit-layout-column-' + i + '" class="ccm-theme-grid-column" ' +
 		'data-offset="' + column.arLayoutColumnOffset + '" data-span="' + column.arLayoutColumnSpan + '"><div class="ccm-layout-column-highlight">' +
-		'<input type="hidden" id="ccm-edit-layout-column-offset-' + i + '" name="offset[' + i + ']" value="' + column.arLayoutColumnOffset + 
-		'" /><input type="hidden" id="ccm-edit-layout-column-span-' + i + '" name="span[' + i + ']" value="' + column.arLayoutColumnSpan + 
+		'<input type="hidden" id="ccm-edit-layout-column-offset-' + i + '" name="offset[' + i + ']" value="' + column.arLayoutColumnOffset +
+		'" /><input type="hidden" id="ccm-edit-layout-column-span-' + i + '" name="span[' + i + ']" value="' + column.arLayoutColumnSpan +
 		'" /></div></div>';
 
 		// now, sometimes we might need to set the next column to a smaller amount
@@ -350,7 +350,7 @@ CCMLayout.prototype._updateCustomView = function(presetLoad) {
 		} else {
 			var width = (100 / this.columns) + '%';
 		}
-		$column.css('width', width);		
+		$column.css('width', width);
 	}
 
 	this._resetSlider();
@@ -474,7 +474,7 @@ CCMLayout.prototype._showThemeGridSlider = function() {
 			if (obj.$selectgridtype.val() != 'TG') {
 				obj.$selectgridtype.find('option[value=TG]').prop('selected', true);
 			}
-			
+
 			var index = $(ui.handle).index();
 			var pointsToCheck;
 

@@ -21,11 +21,11 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 class Concrete5_Helper_Form_PageSelector {
 
-	
-	/** 
+
+	/**
 	 * Creates form fields and JavaScript page chooser for choosing a page. For use with inclusion in blocks.
 	 * <code>
-	 *     $dh->selectPage('pageID', '1'); // prints out the home page and makes it selectable. 
+	 *     $dh->selectPage('pageID', '1'); // prints out the home page and makes it selectable.
 	 * </code>
 	 * @param int $cID
 	 */
@@ -52,17 +52,16 @@ class Concrete5_Helper_Form_PageSelector {
 		$html .= '<a class="ccm-sitemap-select-page" data-page-selector-launch="' . $fieldName . '" dialog-width="90%" dialog-height="70%" dialog-append-buttons="true" dialog-modal="false" dialog-title="' . t('Choose Page') . '" href="' . REL_DIR_FILES_TOOLS_REQUIRED . '/sitemap_search_selector?cID=' . $selectedCID . '">' . t('Select Page') . '</a>';
 		$html .= '&nbsp;<a href="javascript:void(0)" dialog-sender="' . $fieldName . '" class="ccm-sitemap-clear-selected-page" style="float: right; margin-top: -8px;' . $clearStyle . '"><img src="' . ASSETS_URL_IMAGES . '/icons/remove.png" style="vertical-align: middle; margin-left: 3px" /></a>';
 		$html .= '<input type="hidden" data-page-selector="cID" name="' . $fieldName . '" value="' . $selectedCID . '"/>';
-		$html .= '</div>'; 
-		$html .= "<script type=\"text/javascript\"> 
+		$html .= '</div>';
+		$html .= "<script type=\"text/javascript\">
 		var ccmActivePageField;
 		function ccm_initSelectPage() {
 			$('a[data-page-selector-launch={$fieldName}]').dialog();
 			$('a[data-page-selector-launch={$fieldName}]').on('click', function() {
 				var selector = $(this);
-				ConcreteEvent.subscribe('SitemapSelectPage', function(e) {
-					e.continuePropagation = false;
+				ConcreteEvent.subscribe('SitemapSelectPage', function(e, data) {
+					e.stopPropagation();
 					var handle = selector.attr('data-page-selector-launch');
-					var data = e.eventData;
 					var container = $('div[data-page-selector=' + handle + ']');
 					container.find('.ccm-summary-selected-item-label').html(data.title);
 					container.find('.ccm-sitemap-clear-selected-page').show();
@@ -81,11 +80,11 @@ class Concrete5_Helper_Form_PageSelector {
 		$(ccm_initSelectPage); </script>";
 		return $html;
 	}
-	
+
 	/* Embed a sitemap in javascript dialog.  Supports the following args:
      *  'node_action'   - path to script containing code to be execute when user clicks on a node in the sitemap
      *  'dialog_title'  - dialog title
-     *  'dialog_height' - dialog height (default: 350px) 
+     *  'dialog_height' - dialog height (default: 350px)
      *  'dialog_width'  - dialog width (default: 350px)
      *  'target_id'     - id of the (hidden) field on the parent page that is to receive the CID of the chosen page
 	 *                    (do not include the '#')
@@ -116,7 +115,7 @@ class Concrete5_Helper_Form_PageSelector {
 		} else if ($cID > 0) {
 			$selectedCID = $cID;
 		}
-		
+
 		$cName = '';
 		if ($selectedCID > 0) {
 			$oc = Page::getByID($selectedCID);
@@ -164,5 +163,5 @@ class Concrete5_Helper_Form_PageSelector {
 		<input type="text" class="ccm-input-text" name="ccm-quick-page-selector-label-'  . $key . '" id="ccm-quick-page-selector-label-'  . $key . '" value="' . $cName . '" /></span>';
 		return $html;
 	}
-	
+
 }

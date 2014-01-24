@@ -1,8 +1,8 @@
 var me = $(this);
 
 im.activeTextElement = false;
-im.on('changeActiveComponent',function(e){
-	if (e.eventData != im.namespace) return im.hideSlideOut();
+im.on('changeActiveComponent',function(e, data){
+	if (data != im.namespace) return im.hideSlideOut();
 	im.activeTextElement = new Kinetic.Text({
 		fontFamily:"arial",
 		fontSize:23,
@@ -136,7 +136,7 @@ slider = $('<div/>').css({
 colorPicker.append(hueslider);
 
 var sliderSliding = false,sliderClientStart,sliderStart;
-slider.draggable({ 
+slider.draggable({
 	containment: "parent",
 	drag:function(ev){
 		cpo.color.h = -(12/5)*(154-(""+slider.css('left')).spx() - 154);

@@ -36,8 +36,8 @@ im.setActiveElement = function(element) {
   im.trigger('changeActiveElement',element);
   im.stage.draw();
 };
-im.bind('ClickedElement',function(e) {
-  im.setActiveElement(e.eventData);
+im.bind('ClickedElement',function(e, data) {
+  im.setActiveElement(data);
 });
 
 im.bind('stageChanged',function(e){

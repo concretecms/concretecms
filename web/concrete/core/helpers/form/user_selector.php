@@ -21,16 +21,16 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 class Concrete5_Helper_Form_UserSelector {
 
-	
-	/** 
+
+	/**
 	 * Creates form fields and JavaScript user chooser for choosing a user. For use with inclusion in blocks and addons.
 	 * <code>
 	 *     $dh->selectUser('userID', '1'); // prints out the admin user and makes it changeable.
 	 * </code>
 	 * @param int $uID
 	 */
-	
-	
+
+
 	public function selectUser($fieldName, $uID = false, $javascriptFunc = 'ccm_triggerSelectUser') {
 		$selectedUID = 0;
 		if (isset($_REQUEST[$fieldName])) {
@@ -48,18 +48,18 @@ class Concrete5_Helper_Form_UserSelector {
 		$html .= '</strong></div>';
 		$html .= '<a class="ccm-sitemap-select-item" id="ccm-user-selector-' . $fieldName . '" dialog-append-buttons="true" dialog-width="90%" dialog-height="70%" dialog-modal="false" dialog-title="' . t('Choose User') . '" href="' . URL::to('/system/dialogs/user/search') . '">' . t('Select User') . '</a>';
 		$html .= '<input type="hidden" name="' . $fieldName . '" value="' . $selectedUID . '">';
-		$html .= '</div>'; 
+		$html .= '</div>';
 		$html .= <<<EOL
 <script type="text/javascript">
 $(function() {
 	$("#ccm-user-selector-{$fieldName}").dialog();
 	$("#ccm-user-selector-{$fieldName}").on('click', function() {
 		var selector = $(this);
-		ConcreteEvent.subscribe('UserSearchDialogSelectUser', function(e) {
+		ConcreteEvent.subscribe('UserSearchDialogSelectUser', function(e, data) {
 			var par = selector.parent().find('.ccm-summary-selected-item-label'),
 				pari = selector.parent().find('[name={$fieldName}]');
-			par.html(e.eventData.uName);
-			pari.val(e.eventData.uID);
+			par.html(data.uName);
+			pari.val(data.uID);
 			e.continuePropagation = false;
 			jQuery.fn.dialog.closeTop();
 		});
@@ -72,7 +72,7 @@ $(function() {
 EOL;
 		return $html;
 	}
-	
+
 	public function quickSelect($key, $val = false, $args = array()) {
 		$form = Loader::helper('form');
 		$valt = Loader::helper('validation/token');
@@ -93,9 +93,9 @@ EOL;
 		$html .= '<span class="ccm-quick-user-selector">'.$form->text($key,$val, $args).'</span>';
 		return $html;
 	}
-	
+
 	public function selectMultipleUsers($fieldName) {
-		
+
 		$html = '';
 		$html .= '<table id="ccmUserSelect' . $fieldName . '" class="ccm-results-list table table-condensed" cellspacing="0" cellpadding="0" border="0">';
 		$html .= '<tr>';
@@ -110,7 +110,7 @@ EOL;
 			$html .= '<td><input type="hidden" name="' . $fieldName . '[]" value="' . $ui->getUserID() . '" />' . $ui->getUserName() . '</td>';
 			$html .= '<td>' . $ui->getUserEmail() . '</td>';
 			$html .= '<td><a href="javascript:void(0)" class="ccm-user-list-clear"><img src="' . ASSETS_URL_IMAGES . '/icons/close.png" width="16" height="16" class="ccm-user-list-clear-button" /></a>';
-			$html .= '</tr>';		
+			$html .= '</tr>';
 		}*/
 		$html .= '<tr class="ccm-user-selected-item-none"><td colspan="3">' . t('No users selected.') . '</td></tr>';
 		$html .= '</tbody></table><script type="text/javascript">
@@ -121,8 +121,8 @@ EOL;
 			});
 
 			$("#ccmUserSelect' . $fieldName . ' .ccm-user-select-item").on(\'click\', function() {
-				ConcreteEvent.subscribe(\'UserSearchDialogSelectUser\', function(e) {
-					var uID = e.eventData.uID, uName = e.eventData.uName, uEmail = e.eventData.uEmail;
+				ConcreteEvent.subscribe(\'UserSearchDialogSelectUser\', function(e, data) {
+					var uID = data.uID, uName = data.uName, uEmail = data.uEmail;
 					e.continuePropagation = false;
 					$("tr.ccm-user-selected-item-none").hide();
 					if ($("#ccmUserSelect' . $fieldName . '_" + uID).length < 1) {
@@ -142,10 +142,10 @@ EOL;
 				});
 			});
 		});
-		
-		</script>';	
+
+		</script>';
 		return $html;
 	}
-	
-	
+
+
 }

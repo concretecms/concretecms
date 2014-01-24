@@ -32,7 +32,7 @@ div[data-container=editable-fields] section {
 <? if ($canDeleteUser) { ?>
 	<button type="submit" name="task" value="delete" class="btn btn-danger"><?=t('Delete')?></button>
 <? } ?>
-</div>		
+</div>
 </form>
 
 
@@ -134,7 +134,7 @@ div[data-container=editable-fields] section {
 <section>
 	<h4><?=t('Other Attributes')?></h4>
 	<? Loader::element('attribute/editable_list', array(
-		'attributes' => $attributes, 
+		'attributes' => $attributes,
 		'object' => $user,
 		'saveAction' => $view->action('update_attribute', $user->getUserID()),
 		'clearAction' => $view->action('clear_attribute', $user->getUserID()),
@@ -148,7 +148,7 @@ div[data-container=editable-fields] section {
 </div>
 
 <? if ($canEditPassword) { ?>
-	
+
 	<div style="display: none">
 		<div data-dialog="change-password" class="ccm-ui">
 			<form data-dialog-form="change-password" action="<?=$view->action('change_password', $user->getUserID())?>">
@@ -163,12 +163,12 @@ div[data-container=editable-fields] section {
 					<?=$form->label('uPasswordConfirm', t('Confirm Password'))?>
 					<?=$form->password('uPasswordConfirm')?>
 				</div>
-				
+
 				<div class="dialog-buttons">
 				<button class="btn pull-left" data-dialog-action="cancel"><?=t('Cancel')?></button>
 				<button type="button" data-dialog-action="submit" class="btn btn-primary pull-right"><?=t('Update')?></button>
 				</div>
-				
+
 
 			</form>
 		</div>
@@ -208,11 +208,11 @@ $(function() {
 	$('button[name=task][value=delete]').on('click', function() {
 		return confirm('<?=t("Are you sure you want to permanently remove this user?")?>');
 	});
-	ConcreteEvent.subscribe('SelectGroup', function(e) {
+	ConcreteEvent.subscribe('SelectGroup', function(e, data) {
 		$.concreteAjax({
 			url: "<?=URL::to('/system/user/add_group')?>",
 			data: {
-				gID: e.eventData.gID,
+				gID: data.gID,
 				uID: '<?=$user->getUserID()?>'
 			},
 			success: function(r) {
@@ -266,10 +266,10 @@ $(function() {
 });
 </script>
 <? } else {
-	
+
 	$tp = Loader::helper('concrete/user');
 	if ($tp->canAccessUserSearchInterface()) { ?>
-		
+
 		<div class="ccm-dashboard-content-full" data-search="users">
 		<? Loader::element('users/search', array('controller' => $searchController))?>
 		</div>
@@ -278,7 +278,7 @@ $(function() {
 	<? } else { ?>
 	<div class="ccm-pane-body">
 		<p><?=t('You do not have access to user search. This setting may be changed in the access section of the dashboard settings page.')?></p>
-	</div>	
+	</div>
 
 	<? } ?>
 

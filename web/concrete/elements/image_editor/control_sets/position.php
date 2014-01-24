@@ -12,23 +12,14 @@
 		<div></div>
 		<input />
 	</div>
-	<button class='btn center'>
-		<i class='icon-screenshot'/>
-		Center
-	</button>
-	<?php /*<button class='btn delete btn-danger'>
-		<i class='icon-trash'/>
-		Delete
-	</button>
-	<div class="btn-group">
-	  <button class="btn up">Move Forward</button>
-	  <button class="btn down">Move Backward</button>
-	</div>*/?>
+	<div class='center btn btn-default'>
+		<span class='glyphicon glyphicon-screenshot'></span>
+	</div>
 	<hr>
 </div>
 <div class='cropcontrols'>
 	<div class='scale'>
-		<span>Scale</span>
+		<span>Size</span>
 		<div></div>
 		<span class='perc'><input />%</span>
 	</div>
@@ -48,21 +39,15 @@
 			<input name='height' />
 		</div>
 	</div>
-	<div class='locked btn'>
-		<i class='icon-glass'>&nbsp;</i>
+	<div class='locked btn btn-default'>
+		<span class='glyphicon glyphicon-lock'></span>
 	</div>
 </div>
 <hr>
-<div class='btn-group'>
-	<button class='rot btn'>
-		<i class='icon-repeat'>&nbsp;</i>
-	</button>
-	<button class='hflip btn'>
-		<i class='icon-repeat'>&nbsp;</i>
-	</button>
-	<button class='vflip btn'>
-		<i class='icon-repeat'>&nbsp;</i>
-	</button>
+<div class="btn-group">
+  <button type="button" class="rot btn btn-default" style='padding:9px 12px 3px 12px'><span class="glyphicon glyphicon-repeat"></span></button>
+  <button type="button" class="hflip btn btn-default" style='padding:9px 12px 3px 12px'><span class="glyphicon glyphicon-resize-horizontal"></span></button>
+  <button type="button" class="vflip btn btn-default" style='padding:9px 12px 3px 12px'><span class="glyphicon glyphicon-resize-vertical"></span></button>
 </div>
 
 <div class='anglelabel'>
