@@ -48,6 +48,7 @@ class Concrete5_Model_TwitterGatheringItem extends GatheringItem {
 		}
 		$this->addFeatureAssignment('tweet', $tweet->text);
 		$this->addFeatureAssignment('date_time', $tweet->created_at);
+		$this->addFeatureAssignment('description', $tweet->user->name);
 	}
 
 }
