@@ -258,6 +258,7 @@ module.exports = function(grunt) {
 		'<%= DIR_BASE %>/concrete/css/ccm.gathering.base.css': '<%= DIR_BASE %>/concrete/css/ccm_app/build/ccm.gathering.base.less',
 		'<%= DIR_BASE %>/concrete/css/redactor.css': '<%= DIR_BASE %>/concrete/css/ccm_app/build/redactor.less',
 		'<%= DIR_BASE %>/concrete/css/ccm.topics.css': '<%= DIR_BASE %>/concrete/css/ccm_app/build/topics.less',
+		'<%= DIR_BASE %>/concrete/css/ccm.image_editor.css': '<%= DIR_BASE %>/concrete/css/image_editor/build/image_editor.less',
 	};
 
 	// Let's include the dependencies
@@ -326,7 +327,7 @@ module.exports = function(grunt) {
 			files: css
 		}
 	};
-	
+
 
 	config.watch = {
 		javascript: {
@@ -339,7 +340,7 @@ module.exports = function(grunt) {
             tasks: ['css']
         }
 	};
-		
+
 
 	// Set Grunt tasks
 	grunt.initConfig(config);

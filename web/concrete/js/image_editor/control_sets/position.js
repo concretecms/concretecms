@@ -24,8 +24,8 @@ function Positioning(im, me, elem) {
   };
 
   im.origin = {};
-  im.bind('changeActiveElement',function(e){
-    if (e.eventData.elementType == 'stage') return im.disable();
+  im.bind('changeActiveElement',function(e, data){
+    if (data && data.elementType == 'stage') return im.disable();
     im.enable();
     if (im.selected) {
       if (im.currentElement) {
@@ -48,8 +48,8 @@ function Positioning(im, me, elem) {
       updateSliders();
     }
   });
-  im.bind('ChangeActiveAction',function(e){
-    if (e.eventData == im.namespace) {
+  im.bind('ChangeActiveAction',function(e, data){
+    if (data == im.namespace) {
       im.selected = true;
       im.currentElement = im.activeElement;
       if (im.strictSize) {
@@ -218,13 +218,10 @@ function Sizing(im, me, elem) {
     slide: function(ev,e){
       our.scaleBox.val(e.value);
       var oldWidth = im.activeElement.getWidth(), oldHeight = im.activeElement.getHeight();
-      im.activeElement.setWidth(Math.round(e.value / 100 * our.scalingSize.width));
-      im.activeElement.setHeight(Math.round(e.value / 100 * our.scalingSize.height));
-      im.activeElement.setX(im.activeElement.getX() - ((im.activeElement.getWidth() - oldWidth) / 2));
-      im.activeElement.setY(im.activeElement.getY() - ((im.activeElement.getHeight() - oldHeight) / 2));
+      im.activeElement.setWidth(Math.round(e.value / 100 * im.activeElement.getWidth()));
+      im.activeElement.setHeight(Math.round(e.value / 100 * im.activeElement.getHeight()));
       im.sizeBoxes.width.val(im.activeElement.getWidth());
       im.sizeBoxes.height.val(im.activeElement.getHeight());
-      im.fire('activeElementSizeChange','scale');
       im.adjustSavers();
       im.activeElement.parent.draw();
     },
@@ -234,8 +231,8 @@ function Sizing(im, me, elem) {
       im.adjustSavers();
     }
   });
-  im.bind('activeElementSizeChange',function(e) {
-    if (e.eventData === 'scale') return;
+  im.bind('activeElementSizeChange',function(e, data) {
+    if (data === 'scale') return;
     our.scalingSize.width  = im.activeElement.getWidth();
     our.scalingSize.height = im.activeElement.getHeight();
     our.slider.slider('option','value',100);
@@ -473,8 +470,8 @@ function Sizing(im, me, elem) {
       im.fire('activeElementSizeChange');
     });
 
-    im.bind(['activeElementDragMove', 'activeElementSizeChange', 'activeElementChangingSize', 'adjustedsavers', 'scaleChange'], function(e){
-      if (e.eventData === my) return;
+    im.bind(['activeElementDragMove', 'activeElementSizeChange', 'activeElementChangingSize', 'adjustedsavers', 'scaleChange'], function(e, data){
+      if (data === my) return;
       my.handle.setSize({width:7 / im.scale, height: 7 / im.scale});
       my.handle.setOffset([(4 / im.scale) + .5, (4 / im.scale) + .5]);
       my.handle.setStrokeWidth(1 / im.scale);
@@ -516,8 +513,8 @@ function Sizing(im, me, elem) {
     positionLayer();
     im.activeElement.parent.draw();
   });
-  im.bind('ChangeActiveAction', function(e) {
-    if (e.eventData == im.namespace) {
+  im.bind('ChangeActiveAction', function(e, data) {
+    if (data == im.namespace) {
       handles.forEach(function(handle) {
         handle.position();
       });
@@ -641,8 +638,8 @@ function Rotation(im, me, elem) {
       im.activeElement.parent.draw();
     }
   });
-  im.bind('rotationChanged', function(e) {
-    if (e.eventData === me) return;
+  im.bind('rotationChanged', function(e, data) {
+    if (data === me) return;
     var deg = im.activeElement.getRotationDeg();
     if (deg > 180) deg = (deg % 360) - 360;
     my.box.val(im.activeElement.getRotationDeg());

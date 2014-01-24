@@ -1,3 +1,3 @@
-;(function(window,jQuery,Kinetic){
-  var $ = jQuery;
+;(function ImageEditorIIFE(window, $, Kinetic, _, ns) {
+  'use strict';
   window.devicePixelRatio = 1;

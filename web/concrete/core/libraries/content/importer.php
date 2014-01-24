@@ -19,7 +19,7 @@
 
 defined('C5_EXECUTE') or die("Access Denied.");
 class Concrete5_Library_Content_Importer {
-	
+
 	protected static $mcBlockIDs = array();
 	protected static $ptComposerOutputControlIDs = array();
 
@@ -62,6 +62,9 @@ class Concrete5_Library_Content_Importer {
 		$this->importPermissions($sx);
 		$this->importJobs($sx);
 		$this->importJobSets($sx);
+		$this->importImageEditorControlSets($sx);
+		$this->importImageEditorComponents($sx);
+		$this->importImageEditorFilters($sx);
 		// import bare page types first, then import structure, then page types blocks, attributes and composer settings, then page content, because we need the structure for certain attributes and stuff set in master collections (like composer)
 		$this->importPageTemplates($sx);
 		$this->importPageTypesBase($sx);
@@ -76,13 +79,13 @@ class Concrete5_Library_Content_Importer {
 		$this->importSystemCaptchaLibraries($sx);
 		$this->importSystemContentEditorSnippets($sx);
 	}
-	
+
 	protected static function getPackageObject($pkgHandle) {
 		$pkg = false;
 		if ($pkgHandle) {
 			$pkg = Package::getByHandle($pkgHandle);
 		}
-		return $pkg;		
+		return $pkg;
 	}
 
 	protected function importStacksStructure(SimpleXMLElement $sx) {
@@ -108,13 +111,13 @@ class Concrete5_Library_Content_Importer {
 			}
 		}
 	}
-	
+
 	protected function importSinglePageStructure(SimpleXMLElement $sx) {
 		if (isset($sx->singlepages)) {
 			foreach($sx->singlepages->page as $p) {
 				$pkg = ContentImporter::getPackageObject($p['package']);
 				$spl = SinglePage::add($p['path'], $pkg);
-				if (is_object($spl)) { 
+				if (is_object($spl)) {
 					if (isset($p['root']) && $p['root'] == true) {
 						$spl->moveToRoot();
 					}
@@ -136,7 +139,7 @@ class Concrete5_Library_Content_Importer {
 				if (isset($px->attributes)) {
 					foreach($px->attributes->children() as $attr) {
 						$ak = CollectionAttributeKey::getByHandle($attr['handle']);
-						if (is_object($ak)) { 
+						if (is_object($ak)) {
 							$page->setAttribute((string) $attr['handle'], $ak->getController()->importValue($attr));
 						}
 					}
@@ -162,7 +165,7 @@ class Concrete5_Library_Content_Importer {
 			return ($numA < $numB) ? -1 : 1;
 		}
 	}
-	
+
 	protected function importPageContent(SimpleXMLElement $sx) {
 		if (isset($sx->pages)) {
 			foreach($sx->pages->page as $px) {
@@ -177,7 +180,7 @@ class Concrete5_Library_Content_Importer {
 				if (isset($px->attributes)) {
 					foreach($px->attributes->children() as $attr) {
 						$ak = CollectionAttributeKey::getByHandle($attr['handle']);
-						if (is_object($ak)) { 
+						if (is_object($ak)) {
 							$page->setAttribute((string) $attr['handle'], $ak->getController()->importValue($attr));
 						}
 					}
@@ -186,7 +189,7 @@ class Concrete5_Library_Content_Importer {
 			}
 		}
 	}
-	
+
 	protected function importPageStructure(SimpleXMLElement $sx) {
 		if (isset($sx->pages)) {
 			$nodes = array();
@@ -209,7 +212,7 @@ class Concrete5_Library_Content_Importer {
 						$data['uID'] = $ui->getUserID();
 					} else {
 						$data['uID'] = USER_SUPER_ID;
-					}	
+					}
 				}
 				$cDatePublic = (string) $px['public-date'];
 				if ($cDatePublic) {
@@ -242,7 +245,7 @@ class Concrete5_Library_Content_Importer {
 						$page = $parent->add($ct, $data);
 					}
 				}
-				
+
 				$args['cName'] = $px['name'];
 				$args['cDescription'] = $px['description'];
 				$args['ptID'] = $ct->getPageTypeID();
@@ -251,7 +254,7 @@ class Concrete5_Library_Content_Importer {
 			}
 		}
 	}
-	
+
 	public function importPageAreas(Page $page, SimpleXMLElement $px) {
 		foreach($px->area as $ax) {
 			if (isset($ax->block)) {
@@ -262,7 +265,7 @@ class Concrete5_Library_Content_Importer {
 						$btc = $bt->getController();
 						$btc->import($page, (string) $ax['name'], $bx);
 					} else if ($bx['mc-block-id'] != '') {
-					
+
 						// we find that block in the master collection block pool and alias it out
 						$bID = array_search((string) $bx['mc-block-id'], self::$mcBlockIDs);
 						if ($bID) {
@@ -279,7 +282,7 @@ class Concrete5_Library_Content_Importer {
 	public static function addMasterCollectionBlockID($b, $id) {
 		self::$mcBlockIDs[$b->getBlockID()] = $id;
 	}
-	
+
 	public static function getMasterCollectionTemporaryBlockID($b) {
 		if (isset(self::$mcBlockIDs[$b->getBlockID()])) {
 			return self::$mcBlockIDs[$b->getBlockID()];
@@ -289,7 +292,7 @@ class Concrete5_Library_Content_Importer {
 	public static function addPageTypeComposerOutputControlID(PageTypeComposerFormLayoutSetControl $control, $id) {
 		self::$ptComposerOutputControlIDs[$id] = $control->getPageTypeComposerFormLayoutSetControlID();
 	}
-	
+
 	public static function getPageTypeComposerFormLayoutSetControlFromTemporaryID($id) {
 		if (isset(self::$ptComposerOutputControlIDs[$id])) {
 			return self::$ptComposerOutputControlIDs[$id];
@@ -301,7 +304,7 @@ class Concrete5_Library_Content_Importer {
 			foreach($sx->pagetemplates->pagetemplate as $pt) {
 				$pkg = ContentImporter::getPackageObject($pt['package']);
 				$ptt = PageTemplate::getByHandle($pt['handle']);
-				if (!is_object($ptt)) { 
+				if (!is_object($ptt)) {
 					$ptt = PageTemplate::add((string) $pt['handle'], (string) $pt['name'], (string) $pt['icon'], $pkg, (string) $pt['internal']);
 				}
 			}
@@ -315,7 +318,7 @@ class Concrete5_Library_Content_Importer {
 				if (is_object($pkg)) {
 					BlockType::installBlockTypeFromPackage($bt['handle'], $pkg);
 				} else {
-					BlockType::installBlockType($bt['handle']);				
+					BlockType::installBlockType($bt['handle']);
 				}
 			}
 		}
@@ -371,7 +374,7 @@ class Concrete5_Library_Content_Importer {
 			}
 		}
 	}
-	
+
 	protected function importPackages(SimpleXMLElement $sx) {
 		if (isset($sx->packages)) {
 			foreach($sx->packages->package as $p) {
@@ -380,7 +383,7 @@ class Concrete5_Library_Content_Importer {
 			}
 		}
 	}
-	
+
 	protected function importThemes(SimpleXMLElement $sx) {
 		if (isset($sx->themes)) {
 			foreach($sx->themes->theme as $th) {
@@ -510,7 +513,7 @@ class Concrete5_Library_Content_Importer {
 				if (is_object($pkg)) {
 					Job::installByPackage($jx['handle'], $pkg);
 				} else {
-					Job::installByHandle($jx['handle']);				
+					Job::installByHandle($jx['handle']);
 				}
 			}
 		}
@@ -526,7 +529,7 @@ class Concrete5_Library_Content_Importer {
 				}
 				foreach($js->children() as $jsk) {
 					$j = Job::getByHandle((string) $jsk['handle']);
-					if (is_object($j)) { 	
+					if (is_object($j)) {
 						$jso->addJob($j);
 					}
 				}
@@ -595,7 +598,7 @@ class Concrete5_Library_Content_Importer {
 				$txt = Loader::helper('text');
 				$className = $txt->camelcase($pkc->getPermissionKeyCategoryHandle());
 				$c1 = $className . 'PermissionKey';
-				$pkx = call_user_func(array($c1, 'import'), $pk);	
+				$pkx = call_user_func(array($c1, 'import'), $pk);
 				if (isset($pk->access)) {
 					foreach($pk->access->children() as $ch) {
 						if ($ch->getName() == 'group') {
@@ -611,7 +614,7 @@ class Concrete5_Library_Content_Importer {
 						}
 					}
 				}
-			
+
 			}
 		}
 	}
@@ -637,7 +640,7 @@ class Concrete5_Library_Content_Importer {
 			}
 		}
 	}
-	
+
 	protected function importAttributeCategories(SimpleXMLElement $sx) {
 		if (isset($sx->attributecategories)) {
 			foreach($sx->attributecategories->category as $akc) {
@@ -646,7 +649,7 @@ class Concrete5_Library_Content_Importer {
 			}
 		}
 	}
-	
+
 	protected function importAttributes(SimpleXMLElement $sx) {
 		if (isset($sx->attributekeys)) {
 			foreach($sx->attributekeys->attributekey as $ak) {
@@ -656,7 +659,7 @@ class Concrete5_Library_Content_Importer {
 				$txt = Loader::helper('text');
 				$className = $txt->camelcase($akc->getAttributeKeyCategoryHandle());
 				$c1 = $className . 'AttributeKey';
-				$ak = call_user_func(array($c1, 'import'), $ak);				
+				$ak = call_user_func(array($c1, 'import'), $ak);
 			}
 		}
 	}
@@ -669,7 +672,7 @@ class Concrete5_Library_Content_Importer {
 				$set = $akc->addSet((string) $as['handle'], (string) $as['name'], $pkg, $as['locked']);
 				foreach($as->children() as $ask) {
 					$ak = $akc->getAttributeKeyByHandle((string) $ask['handle']);
-					if (is_object($ak)) { 	
+					if (is_object($ak)) {
 						$set->addKey($ak);
 					}
 				}
@@ -695,7 +698,6 @@ class Concrete5_Library_Content_Importer {
 		}
 	}
 
-
 	protected function importGatheringItemTemplates(SimpleXMLElement $sx) {
 		if (isset($sx->gatheringitemtemplates)) {
 			foreach($sx->gatheringitemtemplates->gatheringitemtemplate as $at) {
@@ -720,7 +722,7 @@ class Concrete5_Library_Content_Importer {
 				$template = GatheringItemTemplate::add($type, (string) $at['handle'], (string) $at['name'], $gatFixedSlotWidth, $gatFixedSlotHeight, $gatHasCustomClass, $gatForceDefault, $pkg);
 				foreach($at->children() as $fe) {
 					$feo = Feature::getByHandle((string) $fe['handle']);
-					if (is_object($feo)) { 	
+					if (is_object($feo)) {
 						$template->addGatheringItemTemplateFeature($feo);
 					}
 				}
@@ -728,6 +730,44 @@ class Concrete5_Library_Content_Importer {
 		}
 	}
 
+	protected function importImageEditorControlSets(SimpleXMLElement $sx) {
+		if (isset($sx->imageeditor_controlsets)) {
+			foreach($sx->imageeditor_controlsets->imageeditor_controlset as $controlset) {
+				$handle = $controlset['handle'];
+				$name = $controlset['name'];
+				$ob = SystemImageEditorControlSet::getByHandle($handle);
+				if ($ob->getImageEditorControlSetHandle() != $handle) {
+					SystemImageEditorControlSet::add($handle, $name);
+				}
+			}
+		}
+	}
+
+	protected function importImageEditorComponents(SimpleXMLElement $sx) {
+		if (isset($sx->imageeditor_components)) {
+			foreach($sx->imageeditor_components->imageeditor_component as $component) {
+				$handle = $component['handle'];
+				$name = $component['name'];
+				$ob = SystemImageEditorComponent::getByHandle($handle);
+				if ($ob->getImageEditorComponentHandle() != $handle) {
+					SystemImageEditorComponent::add($handle, $name);
+				}
+			}
+		}
+	}
+
+	protected function importImageEditorFilters(SimpleXMLElement $sx) {
+		if (isset($sx->imageeditor_filters)) {
+			foreach($sx->imageeditor_filters->imageeditor_filter as $filter) {
+				$handle = $filter['handle'];
+				$name = $filter['name'];
+				$ob = SystemImageEditorFilter::getByHandle($handle);
+				if ($ob->getImageEditorFilterHandle() != $handle) {
+					SystemImageEditorFilter::add($handle, $name);
+				}
+			}
+		}
+	}
 
 	protected function importBlockTypeSets(SimpleXMLElement $sx) {
 		if (isset($sx->blocktypesets)) {
@@ -736,7 +776,7 @@ class Concrete5_Library_Content_Importer {
 				$set = BlockTypeSet::add((string) $bts['handle'], (string) $bts['name'], $pkg);
 				foreach($bts->children() as $btk) {
 					$bt = BlockType::getByHandle((string) $btk['handle']);
-					if (is_object($bt)) { 	
+					if (is_object($bt)) {
 						$set->addBlockType($bt);
 					}
 				}
@@ -767,6 +807,6 @@ class Concrete5_Library_Content_Importer {
 		} else {
 			return $value;
 		}
-	}	
+	}
 
 }
