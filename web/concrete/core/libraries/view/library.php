@@ -51,7 +51,7 @@ class Concrete5_Library_View extends AbstractView {
 	public function action($action) {
 		$a = func_get_args();
 		$controllerPath = $this->controller->getControllerActionPath();
-		array_unshift($a, $this->controllerPath);
+		array_unshift($a, $controllerPath);
 		$ret = call_user_func_array(array($this, 'url'), $a);
 		return $ret;
 	}
