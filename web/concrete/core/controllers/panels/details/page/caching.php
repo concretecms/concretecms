@@ -18,7 +18,7 @@ class Concrete5_Controller_Panel_Details_Page_Caching extends BackendInterfacePa
 		$r = new PageEditVersionResponse();
 		$r->setPage($this->page);
 		$r->setMessage(t('This page has been purged from the full page cache.'));
-		Loader::helper('ajax')->sendResult($r);
+		$r->outputJSON();
 	}
 
 	public function submit() {
@@ -31,7 +31,7 @@ class Concrete5_Controller_Panel_Details_Page_Caching extends BackendInterfacePa
 			$r = new PageEditVersionResponse();
 			$r->setPage($this->page);
 			$r->setMessage(t('Cache settings saved.'));
-			Loader::helper('ajax')->sendResult($r);
+			$r->outputJSON();
 		}
 	}
 
