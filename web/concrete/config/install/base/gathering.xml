@@ -9,12 +9,12 @@
     <features>
         <feature handle="title" score="1" />
         <feature handle="link" score="1" />
+        <feature handle="author" score="1" />
         <feature handle="date_time" score="1" />
         <feature handle="image" score="500" has-custom-class="true" />
         <feature handle="conversation" score="10" has-custom-class="true" />
         <feature handle="description" score="1" />
         <feature handle="featured" score="1000" />
-        <feature handle="tweet" score="1000" />
     </features>
     <gatheringitemtemplatetypes>
         <gatheringitemtemplatetype handle="tile" package="" />
@@ -82,14 +82,14 @@
 			<feature handle="description" />
 			<feature handle="date_time" />
 			<feature handle="image" />
-			<feature handle="byline" />
+			<feature handle="author" />
 		</gatheringitemtemplate>
 		<gatheringitemtemplate handle="masthead_image_byline_left" type="tile" name="Masthead Image Byline Left" package="">
 			<feature handle="title" />
 			<feature handle="description" />
 			<feature handle="date_time" />
 			<feature handle="image" />
-			<feature handle="byline" />
+			<feature handle="author" />
 		</gatheringitemtemplate>
 		<gatheringitemtemplate handle="image_masthead_description_center" type="tile" name="Image Masthead Description Center" package="">
 			<feature handle="title" />
@@ -98,13 +98,13 @@
 		</gatheringitemtemplate>
 		<gatheringitemtemplate handle="image_byline_description_center" type="tile" name="Image Byline Description Center" package="">
 			<feature handle="image" />
-			<feature handle="byline" />
+			<feature handle="author" />
 			<feature handle="description" />
 		</gatheringitemtemplate>
 		<gatheringitemtemplate handle="masthead_byline_description" type="tile" name="Masthead Byline Description" package="">
 			<feature handle="title" />
 			<feature handle="description" />
-			<feature handle="byline" />
+			<feature handle="author" />
 		</gatheringitemtemplate>
 		<gatheringitemtemplate handle="masthead_description" type="tile" name="Masthead Description" package="">
 			<feature handle="title" />
@@ -115,7 +115,9 @@
 			<feature handle="image" />
 		</gatheringitemtemplate>
 		<gatheringitemtemplate handle="tweet" type="tile" name="Tweet" package="">
-			<feature handle="tweet" />
+            <feature handle="description" />
+            <feature handle="date_time" />
+            <feature handle="author" />
 		</gatheringitemtemplate>
 		<gatheringitemtemplate handle="vimeo" type="tile" name="Vimeo" package="">
 			<feature handle="title" />

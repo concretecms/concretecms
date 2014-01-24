@@ -22,9 +22,9 @@ $(function() {
 				return false;
 			});
 
-			concreteSearch.subscribe('SearchBulkActionSelect', function(e) {
-				if (e.eventData.value == 'select_users') {
-					$.each(e.eventData.items, function(i, item) {
+			concreteSearch.subscribe('SearchBulkActionSelect', function(e, data) {
+				if (data.value == 'select_users') {
+					$.each(data.items, function(i, item) {
 						var $item = $(item);
 						ConcreteEvent.publish('UserSearchDialogSelectUser', {
 							uID: $item.attr('data-user-id'),

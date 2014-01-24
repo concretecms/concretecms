@@ -23,24 +23,27 @@
       dragAreaBlacklist: []
     });
 
-    Concrete.event.bind('panel.open', function editModePanelOpenEventHandler(event) {
-      my.panelOpened(event.eventData.panel, event.eventData.element);
+    Concrete.event.bind('panel.open', function editModePanelOpenEventHandler(event, data) {
+      my.panelOpened(data.panel, data.element);
     });
 
-    Concrete.event.bind('EditModeBlockEditInline', function(event) {
-      var data = event.eventData,
-        block = data.block,
+    Concrete.event.bind('EditModeBlockEditInline', function(event, data) {
+      var block = data.block,
         area = block.getArea(),
         postData = [
           {name: 'btask', value: 'edit'},
           {name: 'cID', value: CCM_CID},
           {name: 'arHandle', value: area.getHandle()},
+          {name: 'arGridColumnSpan', value: data.arGridColumnSpan},
           {name: 'aID', value: area.getId()},
           {name: 'bID', value: block.getId()}
         ],
         bID = block.getId(),
         $container = block.getElem();
 
+      if (block.menu) {
+        block.menu.destroy();
+      }
       if (data.postData) {
         for (var prop in data.postData) {
           postData.push({name: prop, value: data.postData[prop]});
@@ -49,9 +52,9 @@
 
       Concrete.event.bind('EditModeExitInline', function(e) {
         e.stopPropagation();
-        var action = CCM_TOOLS_PATH + '/edit_block_popup?cID=' + CCM_CID + '&bID=' + block.getId() + '&arHandle=' + escape(area.getHandle()) + '&btask=view_edit_mode';   
+        var action = CCM_TOOLS_PATH + '/edit_block_popup?cID=' + CCM_CID + '&bID=' + block.getId() + '&arHandle=' + escape(area.getHandle()) + '&btask=view_edit_mode';
         jQuery.fn.dialog.showLoader();
-        $.get(action,     
+        $.get(action,
           function(r) {
             block.getElem().before(r).remove();
             _.defer(function() {
@@ -83,29 +86,27 @@
       });
     });
 
-    Concrete.event.bind('EditModeBlockAddInline', function(event) {
-      var data = event.eventData,
-        area = data.area,
+    Concrete.event.bind('EditModeBlockAddInline', function(event, data) {
+      var area = data.area,
         selected = data.selected,
         btID = data.btID,
         postData = [
           {name: 'btask', value: 'edit'},
           {name: 'cID', value: CCM_CID},
+          {name: 'arGridColumnSpan', value: data.arGridColumnSpan},
           {name: 'arHandle', value: area.getHandle()},
           {name: 'btID', value: btID}
-        ];
-
-
+        ], dragAreaBlock, dragAreaBlockID, elem;
       if (selected) {
-        var elem = selected.getElem();
-        var dragAreaBlock = selected.getBlock();
+        elem = selected.getElem();
+        dragAreaBlock = selected.getBlock();
       } else {
-        var elem = area.getElem();
-        var dragAreaBlock = event.eventData.dragAreaBlock;
+        elem = area.getElem();
+        dragAreaBlock = data.dragAreaBlock;
       }
 
       if (dragAreaBlock) {
-        var dragAreaBlockID = dragAreaBlock.getId();
+        dragAreaBlockID = dragAreaBlock.getId();
       }
 
       ConcreteMenuManager.disable();
@@ -142,8 +143,8 @@
       });
     });
 
-    Concrete.event.bind('EditModeBlockAddToClipboard', function(event) {
-      var data = event.eventData, block = data.block, area = block.getArea();
+    Concrete.event.bind('EditModeBlockAddToClipboard', function(event, data) {
+      var block = data.block, area = block.getArea();
       CCMToolbar.disableDirectExit();
       // got to grab the message too, eventually
       $.ajax({
@@ -155,16 +156,16 @@
       }});
     });
 
-    Concrete.event.bind('EditModeBlockDelete', function(event) {
-      var data = event.eventData, block = data.block, area = block.getArea(), message = data.message;
+    Concrete.event.bind('EditModeBlockDelete', function(event, data) {
+      var block = data.block, area = block.getArea(), message = data.message;
       block.delete(data.message);
     });
 
-    Concrete.event.bind('EditModeBlockDrag', _.throttle(function editModeEditModeBlockDragEventHandler(event) {
+    Concrete.event.bind('EditModeBlockDrag', _.throttle(function editModeEditModeBlockDragEventHandler(event, data) {
       if (!my.getDragging()) {
         return;
       }
-      var data = event.eventData, block = data.block, pep = data.pep,
+      var block = data.block, pep = data.pep,
           contenders = _.flatten(_(my.getAreas()).map(function(area) {
         var drag_areas = area.contendingDragAreas(pep, block);
         return drag_areas;
@@ -182,10 +183,10 @@
       my.setDragging(false);
     });
 
-    Concrete.event.bind('EditModeBlockMove', function editModeEditModeBlockMoveEventHandler(e) {
-      var block = e.eventData.block,
-          targetArea = e.eventData.targetArea,
-          sourceArea = e.eventData.sourceArea,
+    Concrete.event.bind('EditModeBlockMove', function editModeEditModeBlockMoveEventHandler(e, data) {
+      var block = data.block,
+          targetArea = data.targetArea,
+          sourceArea = data.sourceArea,
           data = {
             cID: CCM_CID,
             ccm_token: window.CCM_SECURITY_TOKEN,
@@ -300,9 +301,9 @@
 
     my.bindMenu();
 
-    Concrete.event.bind('EditModeSelectableContender', function(e) {
-      if (my.getDragging() && e.eventData instanceof DragArea) {
-        my.setSelected(e.eventData);
+    Concrete.event.bind('EditModeSelectableContender', function(e, data) {
+      if (my.getDragging() && data instanceof DragArea) {
+        my.setSelected(data);
       } else {
         if (my.getDragging())
         my.setSelected(null);
@@ -340,12 +341,12 @@
       animationLength: 500
     });
 
-    Concrete.event.bind('EditModeContenders', function(e) {
-      var drag_areas = e.eventData;
+    Concrete.event.bind('EditModeContenders', function(e, data) {
+      var drag_areas = data;
       my.setIsContender(_.contains(drag_areas, my));
     });
-    Concrete.event.bind('EditModeSelectableContender', function(e) {
-      my.setIsSelectable(e.eventData == my);
+    Concrete.event.bind('EditModeSelectableContender', function(e, data) {
+      my.setIsSelectable(data == my);
     });
   };
 
@@ -500,7 +501,7 @@
           $('#ccm-toolbar-disabled,#ccm-toolbar').css('opacity', 1);
         }
       });
-    }  
+    }
   };
 
   Area.prototype = {
@@ -519,8 +520,8 @@
       var my = this,
           elem = my.getElem(),
           totalBlocks = my.getTotalBlocks(),
-          menuHandle = (totalBlocks == 0) ? 
-            'div[data-area-menu-handle=' + my.getId() + ']' 
+          menuHandle = (totalBlocks == 0) ?
+            'div[data-area-menu-handle=' + my.getId() + ']'
             : '#area-menu-footer-' + my.getId(),
           $menuElem = my.getMenuElem();
 
@@ -543,6 +544,7 @@
         Concrete.event.fire('EditModeBlockAddInline', {
           area: my,
           btID: $(this).attr('data-block-type-id'),
+          arGridColumnSpan: $(this).attr('data-area-grid-column-span'),
           event: e,
           dragAreaBlock: dragAreaLastBlock
         });
@@ -551,6 +553,7 @@
 
       $menuElem.find('a[data-menu-action=edit-container-layout]').on('click', function(e) {
         // we are going to place this at the END of the list.
+        var $link = $(this);
         var dragAreaLastBlock = false;
         _.each(my.getBlocks(), function(block) {
           dragAreaLastBlock = block;
@@ -560,6 +563,7 @@
         var block = _.findWhere(editor.getBlocks(), {id: bID});
         Concrete.event.fire('EditModeBlockEditInline', {
           block: block,
+          arGridColumnSpan: $link.attr('data-area-grid-column-span'),
           event: e,
         });
         return false;
@@ -627,7 +631,7 @@
 
       if (my.getTotalBlocks() == 0) {
         // we have to destroy the old menu and create it anew
-        my.bindMenu();          
+        my.bindMenu();
       }
 
       return true;
@@ -710,7 +714,7 @@
           elem = my.getElem(),
           menuHandle = elem.attr('data-block-menu-handle'),
           $menuElem = my.getMenuElem();
-        
+
       if (menuHandle != 'none') {
 
         my.menu = new ConcreteMenu(elem, {

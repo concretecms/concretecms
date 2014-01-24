@@ -116,7 +116,7 @@ Kinetic.Text.prototype.rasterize = function(e) {
     }
   });
 };
-
+var control_sets = [], components = [], filters = [];
 var ImageEditor = function (settings) {
   "use strict";
   if (settings === undefined) return this;
@@ -241,8 +241,8 @@ im.setActiveElement = function(element) {
   im.trigger('changeActiveElement',element);
   im.stage.draw();
 };
-im.bind('ClickedElement',function(e) {
-  im.setActiveElement(e.eventData);
+im.bind('ClickedElement',function(e, data) {
+  im.setActiveElement(data);
 });
 
 im.bind('stageChanged',function(e){
@@ -257,8 +257,8 @@ controlBar.attr('unselectable', 'on');
 
 var zoom = {};
 
-zoom.zoomIn = getElem("<div class='bottombarbutton plus'><i class='icon-plus'></i></div>");
-zoom.zoomOut = getElem("<div class='bottombarbutton'><i class='icon-minus'></i></div>");
+zoom.zoomIn = getElem("<div class='bottombarbutton plus'><i class='glyphicon glyphicon-plus'></i></div>");
+zoom.zoomOut = getElem("<div class='bottombarbutton'><i class='glyphicon glyphicon-minus'></i></div>");
 
 zoom.zoomIn.appendTo(controlBar);
 zoom.zoomOut.appendTo(controlBar);
@@ -452,22 +452,21 @@ im.save = function saveImage() {
       im.stage.setScale(oldScale);
       im.stage.draw();
 
-      $.post('/index.php/tools/files/importers/imageeditor',{
+      $.post('/index.php/tools/required/files/importers/imageeditor',{
         fID: im.fileId,
         imgData: url
       }, function(res){
         var result = JSON.parse(res);
         if (result.error === 1){
           alert(result.message);
-        } else {
+        } else if (result.error === 0) {
           window.location = window.location;
+          window.location.reload();
         }
       });
     }
   });
 }
-
-
 
 im.actualPosition = function actualPosition(x, y, cx, cy, rad) {
   var ay = y - cy,
@@ -814,17 +813,20 @@ im.fit = function(wh,scale) {
     });
     im.addElement(image, 'image');
     image.setPosition(center);
-    im.fire('imageload');
-    var activate = function(){
-      setTimeout(function activateImageElement(){
+    _.defer(function(){
+      im.fire('imageload');
+    });
+    function activate() {
+      _.defer(function activateImageElement(){
+        im.stage.draw();
         im.setActiveElement(image);
         im.fire('changeActiveAction', im.controlSetNamespaces[0]);
-      },0);
+      });
     }
     if (controlSetsLoaded) {
       activate();
     } else {
-      im.bind('ControlSetsLoaded',activate);
+      im.bind('ControlSetsLoaded', activate);
     }
   }, img);
 
@@ -935,8 +937,7 @@ im.bind('ComponentsLoaded',function(){ // do this when the control sets finish l
     });
   }
 });
-im.bind('ChangeActiveAction',function(e){
-  var ns = e.eventData;
+im.bind('ChangeActiveAction',function(e, ns){
   if (ns === im.activeControlSet) return;
   for (var ons in im.controlSets) {
     getElem(im.controlSets[ons]);
@@ -954,8 +955,7 @@ im.bind('ChangeActiveAction',function(e){
   cs.hide().height(height).slideDown(function(){$(this).height('')});
 });
 
-im.bind('ChangeActiveComponent',function(e){
-  var ns = e.eventData;
+im.bind('ChangeActiveComponent',function(e, ns){
   if (ns === im.activeComponent) return;
   for (var ons in im.components) {
     if (ons !== ns) getElem(im.components[ons]).slideUp();
@@ -969,12 +969,11 @@ im.bind('ChangeActiveComponent',function(e){
   cs.hide().height(height).slideDown(function(){$(this).height('')});
 });
 
-im.bind('ChangeNavTab',function(e) {
-  log('changenavtab',e);
-  im.trigger('ChangeActiveAction',e.eventData);
-  im.trigger('ChangeActiveComponent',e.eventData);
+im.bind('ChangeNavTab',function(e, data) {
+  im.trigger('ChangeActiveAction',data);
+  im.trigger('ChangeActiveComponent',data);
   var parent = getElem('div.editorcontrols');
-  switch(e.eventData) {
+  switch(data) {
     case 'add':
       parent.children('div.control-sets').hide();
       parent.children('div.components').show();
@@ -1031,6 +1030,7 @@ im.controlContext.after(im.slideOut);// End the ImageEditor object.
   window.im = im;
   return im;
 };
+
 $.fn.ImageEditor = function (settings) {
   (settings === undefined && (settings = {}));
   settings.imageload = $.fn.dialog.hideLoader;
@@ -1052,12 +1052,12 @@ $.fn.ImageEditor = function (settings) {
   var im = new ImageEditor(settings);
 
   var context = im.domContext;
-  im.on('ChangeActiveAction',function(e){
-    if (!e.eventData)
+  im.on('ChangeActiveAction',function(e, data){
+    if (!data)
       $('h4.active',context).removeClass('active');
   });
-  im.on('ChangeActiveComponent',function(e){
-    if (!e.eventData)
+  im.on('ChangeActiveComponent',function(e, data){
+    if (!data)
       $('h4.active',context).removeClass('active');
   });
   $('div.controls > div.controlscontainer',context).children('div.save').children('button.save').click(function(){
@@ -1067,6 +1067,7 @@ $.fn.ImageEditor = function (settings) {
       $.fn.dialog.closeTop();
   });
   $('div.controls > div.controlscontainer',context).children('ul.nav').children().click(function(){
+    debugger;
     if ($(this).hasClass('active')) return false;
     $('div.controls > div.controlscontainer',context).children('ul.nav').children().removeClass('active');
     $(this).addClass('active');
@@ -1075,6 +1076,7 @@ $.fn.ImageEditor = function (settings) {
   });
   $('div.controlset',context).find('div.control').children('div.contents').slideUp(0)
   .end().end().find('h4').click(function(){
+    debugger;
     if ($(this).parent().hasClass('disabled')) return;
     $(this).addClass('active');
     $('div.controlset',context).find('h4').not($(this)).removeClass('active');
@@ -1082,7 +1084,7 @@ $.fn.ImageEditor = function (settings) {
     im.trigger('ChangeActiveAction',"ControlSet_"+ns);
   });
 
-  $('div.component',context).find('div.control').children('div.contents').slideUp(0).hide()
+  $('div.component',context).find('div.control').children('div.childrenontents').slideUp(0).hide()
   .end().end().find('h4').click(function(){
     if ($(this).hasClass('active')) return false;
     $(this).addClass('active');

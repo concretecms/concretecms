@@ -3,7 +3,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 $al = AssetList::getInstance();
 
-/** 
+/**
  * Third party libraries we rely on
  */
 
@@ -25,7 +25,7 @@ $al->register('javascript', 'underscore', 'js/underscore.js', array('postprocess
 // dropzone
 $al->register('javascript', 'dropzone', 'js/dropzone.js');
 
-// jquery form 
+// jquery form
 $al->register('javascript', 'jquery/form', 'js/jquery.form.js');
 
 // jquery rating
@@ -91,7 +91,7 @@ $al->register('css', 'bootstrap/transition', 'css/ccm.app.css', array('postproce
 $al->register('css', 'bootstrap/button', 'css/ccm.app.css', array('postprocess' => false));
 $al->register('css', 'bootstrap', 'css/ccm.app.css', array('postprocess' => false));
 
-/** 
+/**
  * ## Core functionality and styles
  */
 

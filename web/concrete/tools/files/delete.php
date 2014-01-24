@@ -42,7 +42,7 @@ if (is_array($_REQUEST['item'])) {
 }
 
 $fcnt = 0;
-foreach($files as $f) { 
+foreach($files as $f) {
 	$fp = new Permissions($f);
 	if ($fp->canDeleteFile()) {
 		$fcnt++;
@@ -62,15 +62,15 @@ foreach($files as $f) {
 	<form data-dialog-form="delete-file" method="post" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/delete">
 	<?=$form->hidden('task', 'delete_files')?>
 	<table border="0" cellspacing="0" cellpadding="0" width="100%" class="table table-bordered">
-	
-	<? foreach($files as $f) { 
+
+	<? foreach($files as $f) {
 		$fp = new Permissions($f);
 		if ($fp->canDeleteFile()) {
 			$fv = $f->getApprovedVersion();
 			if (is_object($fv)) { ?>
-			
-			<?=$form->hidden('fID[]', $f->getFileID())?>		
-			
+
+			<?=$form->hidden('fID[]', $f->getFileID())?>
+
 			<tr>
 				<td><?=$fv->getType()?></td>
 				<td class="ccm-file-list-filename" width="100%"><div style="word-wrap: break-word; width: 150px"><?=$fv->getTitle()?></div></td>
@@ -78,10 +78,10 @@ foreach($files as $f) {
 				<td><?=$fv->getSize()?></td>
 				<td><?=$fv->getAuthorName()?></td>
 			</tr>
-			
+
 			<? }
 		}
-		
+
 	} ?>
 	</table>
 	</form>
@@ -90,21 +90,21 @@ foreach($files as $f) {
 	<button class="btn pull-left" data-dialog-action="cancel"><?=t('Cancel')?></button>
 	<button type="button" data-dialog-action="submit" class="btn btn-danger pull-right"><?=t('Delete')?></button>
 	</div>
-	
+
 </div>
 
 	<script type="text/javascript">
 	$(function() {
-		ConcreteEvent.subscribe('AjaxFormSubmitSuccess', function(e) {
-			if (e.eventData.form == 'delete-file') {
-				ConcreteEvent.publish('FileManagerDeleteRequestComplete', {files: e.eventData.response.files});
+		ConcreteEvent.subscribe('AjaxFormSubmitSuccess', function(e, data) {
+			if (data.form == 'delete-file') {
+				ConcreteEvent.publish('FileManagerDeleteRequestComplete', {files: data.response.files});
 			}
 		});
 	});
 	</script>
-		
+
 	<?
-	
+
 }
-	
-	
+
+

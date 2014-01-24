@@ -101,8 +101,7 @@ im.bind('ComponentsLoaded',function(){ // do this when the control sets finish l
     });
   }
 });
-im.bind('ChangeActiveAction',function(e){
-  var ns = e.eventData;
+im.bind('ChangeActiveAction',function(e, ns){
   if (ns === im.activeControlSet) return;
   for (var ons in im.controlSets) {
     getElem(im.controlSets[ons]);
@@ -120,8 +119,7 @@ im.bind('ChangeActiveAction',function(e){
   cs.hide().height(height).slideDown(function(){$(this).height('')});
 });
 
-im.bind('ChangeActiveComponent',function(e){
-  var ns = e.eventData;
+im.bind('ChangeActiveComponent',function(e, ns){
   if (ns === im.activeComponent) return;
   for (var ons in im.components) {
     if (ons !== ns) getElem(im.components[ons]).slideUp();
@@ -135,12 +133,11 @@ im.bind('ChangeActiveComponent',function(e){
   cs.hide().height(height).slideDown(function(){$(this).height('')});
 });
 
-im.bind('ChangeNavTab',function(e) {
-  log('changenavtab',e);
-  im.trigger('ChangeActiveAction',e.eventData);
-  im.trigger('ChangeActiveComponent',e.eventData);
+im.bind('ChangeNavTab',function(e, data) {
+  im.trigger('ChangeActiveAction',data);
+  im.trigger('ChangeActiveComponent',data);
   var parent = getElem('div.editorcontrols');
-  switch(e.eventData) {
+  switch(data) {
     case 'add':
       parent.children('div.control-sets').hide();
       parent.children('div.components').show();

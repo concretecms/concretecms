@@ -23,17 +23,20 @@ if (settings.src) {
     });
     im.addElement(image, 'image');
     image.setPosition(center);
-    im.fire('imageload');
-    var activate = function(){
-      setTimeout(function activateImageElement(){
+    _.defer(function(){
+      im.fire('imageload');
+    });
+    function activate() {
+      _.defer(function activateImageElement(){
+        im.stage.draw();
         im.setActiveElement(image);
         im.fire('changeActiveAction', im.controlSetNamespaces[0]);
-      },0);
+      });
     }
     if (controlSetsLoaded) {
       activate();
     } else {
-      im.bind('ControlSetsLoaded',activate);
+      im.bind('ControlSetsLoaded', activate);
     }
   }, img);
 

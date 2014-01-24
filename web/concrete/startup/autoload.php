@@ -123,6 +123,7 @@ $classes = array(
 	'PageGatheringDataSourceConfiguration' => array('model','gathering/data_source/sources/configurations/page'),
 	'RssFeedGatheringDataSourceConfiguration' => array('model','gathering/data_source/sources/configurations/rss_feed'),
 	'TwitterGatheringDataSourceConfiguration' => array('model','gathering/data_source/sources/configurations/twitter'),
+	'FlickrFeedGatheringDataSourceConfiguration' => array('model','gathering/data_source/sources/configurations/flickr_feed'),
 	'Area' => array('model','area/model'),
 	'AreaLayoutPreset' => array('model','area/layout/preset'),
 	'AreaLayoutColumn' => array('model','area/layout_column/model'),

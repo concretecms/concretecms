@@ -34,7 +34,7 @@ $searchRequest = $controller->getSearchRequest();
 			<option data-bulk-action-type="dialog" data-bulk-action-title="<?=t('Rescan')?>" data-bulk-action-url="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/rescan" data-bulk-action-dialog-width="350" data-bulk-action-dialog-height="200"><?=t('Rescan')?></option>
 			<option data-bulk-action-type="dialog" data-bulk-action-title="<?=t('Duplicate')?>" data-bulk-action-url="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/duplicate" data-bulk-action-dialog-width="500" data-bulk-action-dialog-height="400"><?=t('Copy')?></option>
 			<option data-bulk-action-type="dialog" data-bulk-action-title="<?=t('Delete')?>" data-bulk-action-url="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/delete" data-bulk-action-dialog-width="500" data-bulk-action-dialog-height="400"><?=t('Delete')?></option>
-		</select>	
+		</select>
 	</div>
 	<div class="form-group">
 		<div class="ccm-search-main-lookup-field">
@@ -54,7 +54,7 @@ $searchRequest = $controller->getSearchRequest();
 	<div class="ccm-search-fields-row">
 		<div class="form-group">
 		<?=$form->label('fsID', t('File Set'))?>
-		<div class="ccm-search-field-content">			
+		<div class="ccm-search-field-content">
 		<select multiple name="fsID[]" class="chosen-select">
 			<optgroup label="<?=t('Sets')?>">
 			<? foreach($s1 as $s) { ?>
@@ -82,7 +82,7 @@ $searchRequest = $controller->getSearchRequest();
 		<? } ?>
 	</select>
 	<div class="ccm-search-field-content"><% if (typeof(field) != 'undefined') { %><%=field.html%><% } %></div>
-	<a data-search-remove="search-field" class="ccm-search-remove-field" href="#"><i class="glyphicon glyphicon-minus-sign"></i></a>
+	<a data-search-remove="search-field" class="ccm-search-remove-field" href="#">< class="glyphicon glyphicon-minus-sign"></i></a>
 </div>
 </script>
 
@@ -128,7 +128,7 @@ $searchRequest = $controller->getSearchRequest();
 	<th><span class="ccm-search-results-checkbox"><input type="checkbox" data-search-checkbox="select-all" /></span></th>
 	<th class="ccm-file-manager-search-results-star"><span><i class="glyphicon glyphicon-star"></i></span></th>
 	<th><span><?=t('Thumbnail')?></th>
-	<% 
+	<%
 	for (i = 0; i < columns.length; i++) {
 		var column = columns[i];
 		if (column.isColumnSortable) { %>
