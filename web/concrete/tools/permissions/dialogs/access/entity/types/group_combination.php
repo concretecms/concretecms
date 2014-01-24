@@ -2,11 +2,11 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 $tp = new TaskPermission();
 $dt = Loader::helper('form/date_time');
-if (!$tp->canAccessGroupSearch()) { 
+if (!$tp->canAccessGroupSearch()) {
 	die(t("You do not have group search permissions."));
 }
 ?>
-<? 
+<?
 $type = PermissionAccessEntityType::getByHandle('group_combination');
 $url = $type->getAccessEntityTypeToolsURL(); ?>
 
@@ -36,10 +36,10 @@ $url = $type->getAccessEntityTypeToolsURL(); ?>
 </div>
 
 <script type="text/javascript">
-ConcreteEvent.subscribe('SelectGroup', function(e) {
+ConcreteEvent.subscribe('SelectGroup', function(e, data) {
 	e.continuePropagation = false;
-	var gID = e.eventData.gID, gName = e.eventData.gName;
-	if ($("input[class=combogID][value=" + gID + "]").length == 0) { 
+	var gID = data.gID, gName = data.gName;
+	if ($("input[class=combogID][value=" + gID + "]").length == 0) {
 		$("#ccm-permissions-access-entity-combination-groups-none").hide();
 		var tbl = $("#ccm-permissions-access-entity-combination-groups");
 		html = '<tr><td><input type="hidden" class="combogID" name="gID[]" value="' + gID + '" /><img src="<?=ASSETS_URL_IMAGES?>/icons/group.png" /></td><td>' + gName + '</td><? if (!is_object($pae)) { ?><td><a href="javascript:void(0)" onclick="ccm_removeCombinationGroup(this)"><img src="<?=ASSETS_URL_IMAGES?>/icons/remove.png" /></a></td><? } ?>';
@@ -50,7 +50,7 @@ ConcreteEvent.subscribe('SelectGroup', function(e) {
 ccm_removeCombinationGroup = function(link) {
 	$(link).parent().parent().remove();
 	var tbl = $("#ccm-permissions-access-entity-combination-groups");
-	if (tbl.find('tr').length == 2) { 
+	if (tbl.find('tr').length == 2) {
 		$("#ccm-permissions-access-entity-combination-groups-none").show();
 	}
 }
@@ -62,11 +62,11 @@ $(function() {
 			jQuery.fn.dialog.showLoader();
 		},
 		success: function(r) {
-			jQuery.fn.dialog.hideLoader();			
+			jQuery.fn.dialog.hideLoader();
 			jQuery.fn.dialog.closeTop();
 			$('#ccm-permissions-access-entity-form .btn-group').removeClass('open');
-			$('#ccm-permissions-access-entity-form input[name=peID]').val(r.peID);	
-			$('#ccm-permissions-access-entity-label').html('<div class="alert alert-info">' + r.label + '</div>');	
+			$('#ccm-permissions-access-entity-form input[name=peID]').val(r.peID);
+			$('#ccm-permissions-access-entity-label').html('<div class="alert alert-info">' + r.label + '</div>');
 		}
 	});
 });
