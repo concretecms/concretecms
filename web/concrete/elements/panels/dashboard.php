@@ -16,38 +16,21 @@ foreach($parents as $pc) {
 	</nav>
 	</div>
 
-		<menu>
+		<? if ($tab == 'favorites') { ?>
+			<menu>
 			<? foreach($nav as $cc) {
 				$active = ($cc->getCollectionID() == $c->getCollectionID() || (in_array($cc->getCollectionID(), $pageIDs)));
 				$cp = new Permissions($cc);
-				if ($cp->canViewPage() && $cc->getAttribute('exclude_nav') != true) { ?>
-					<li><a href="<?=Loader::helper('navigation')->getLinkToCollection($cc)?>" <? if ($active) { ?>class="ccm-panel-dashboard-nav-active"<? } ?>><?=$cc->getCollectionName()?></a>
-						<? if ($active) { 
-							$children = $cc->getCollectionChildrenArray(true);
-							$childpages = array();
-							foreach($children as $pcID) {
-								$pc = Page::getByID($pcID, 'ACTIVE');
-								$pcp = new Permissions($pc);
-								if (is_object($c) && !$c->isError() && $pcp->canViewPage()) {
-									$childpages[] = $pc;
-								}
-							}
-							if (count($childpages)) { ?>
-								<ul>
-								<? foreach($childpages as $pc) { 
-									$active = ($pc->getCollectionID() == $c->getCollectionID());
-									?>
-									<li><a href="<?=Loader::helper('navigation')->getLinkToCollection($pc)?>" <? if ($active) { ?>class="ccm-panel-dashboard-nav-active"<? } ?>><?=$pc->getCollectionName()?></a>
-								<? } ?>
-								</ul>
-							<? }
-						} ?>
-					</li>
-				<? }
-			} ?>
+				if ($cp->canViewPage()) { ?>
+					<li><a href="<?=Loader::helper('navigation')->getLinkToCollection($cc)?>" <? if ($active) { ?>class="ccm-panel-dashboard-nav-active"<? } ?>><?=$cc->getCollectionName()?></a></li>
+				<? } ?>
+			<? } ?>
+			</menu>
+		<? } else { ?>
+			<? $nav->render(); ?>
+		<? } ?>
 
-		</menu>
-
+	
 	<div class="ccm-panel-dashboard-footer">
 		<p><?=t('Logged in as %s', $ui->getUserDisplayName());?>.</p>
 		<a href="<?=URL::to('/login', 'logout', Loader::helper('validation/token')->generate('logout'))?>"><?=t('Sign Out.')?></a>

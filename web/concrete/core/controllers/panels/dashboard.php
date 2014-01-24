@@ -20,13 +20,14 @@ class Concrete5_Controller_Panel_Dashboard extends BackendInterfacePageControlle
 		$nav = array();
 		if ($tab != 'favorites') {
 			$c = Page::getByPath('/dashboard');
-			$ids = $c->getCollectionChildrenArray(true);
-			foreach($ids as $cID) {
-				$c = Page::getByID($cID, 'ACTIVE');
-				if (is_object($c) && !$c->isError()) {
-					$nav[] = $c;
-				}
-			}
+			$bt = BlockType::getByHandle('autonav');
+			$bt->controller->displayPages = 'custom';
+			$bt->controller->displaySystemPages = true;
+			$bt->controller->displayPagesCID = $c->getCollectionID();
+			$bt->controller->orderBy = 'display_asc';
+			$bt->controller->displaySubPages = 'relevant'; 
+			$bt->controller->displaySubPageLevels = 'all';
+			$this->set('nav', $bt);
 		} else {
 			$dh = Loader::helper('concrete/dashboard');
 			$qn = ConcreteDashboardMenu::getMine();
@@ -36,9 +37,9 @@ class Concrete5_Controller_Panel_Dashboard extends BackendInterfacePageControlle
 					$nav[] = $c;
 				}
 			}
+			$this->set('nav', $nav);
 		}
 
-		$this->set('nav', $nav);
 		$u = new User();
 		$ui = UserInfo::getByID($u->getUserID());
 		$this->set('ui', $ui);

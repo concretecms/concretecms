@@ -1,9 +1,8 @@
 var me = $(this);
-im.disable();
 
 im.selected = false;
-im.bind('ChangeActiveAction',function(e){
-  if (e.eventData != im.namespace) {
+im.bind('ChangeActiveAction',function(e, data){
+  if (data != im.namespace) {
     if (im.selected)
       im.hideSlideOut();
     im.selected = false;
@@ -33,8 +32,9 @@ var lis = {};
 img.src = "/concrete/images/image_editor/default_filter_image.jpg";
 
 var ul = $($.parseHTML('<ul/>')).addClass('slideOutBlockList');
-im.bind('filterLoad',function(e) {
-  var newFilter = e.eventData;
+im.bind('filterLoad',function(e, data) {
+  var newFilter = data;
+  if (!newFilter) return;
   var li = $($.parseHTML('<li/>')).appendTo(ul);
   var title = $($.parseHTML('<span/>')).appendTo(li).text(newFilter.name).addClass('title');
   lis[newFilter.im.namespace] = li;
@@ -86,24 +86,3 @@ im.bind('filterLoad',function(e) {
 im.bind('filterApplied',function(e){
   im.activeElement.parent.draw();
 });
-/*  console.log('derp');
-  var elem = im.activeElement,
-      layer = elem.parent,
-      rotation = elem.getRotation();
-
-  elem.setRotation(0);
-  elem.draw();
-  var img = new Image();
-  img.src = elem.toDataURL({
-    x: layer.getX(),
-    y: layer.getY(),
-    width: elem.getWidth(),
-    height: elem.getHeight(),
-  });
-
-  elem.setImage(img);
-  elem.setRotation(rotation);
-  elem.clearFilter();
-  layer.draw();
-});
-*/

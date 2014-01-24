@@ -107,7 +107,7 @@
 					$form.on('click', 'input[type=checkbox]', function() {
 						var label = $(this).parent().find('span').html(),
 							id = $(this).attr('id');
-						
+
 						if ($(this).prop('checked')) {
 							if ($form.find('li[data-field-order-column=' + id + ']').length == 0) {
 								$selectDefault.append($('<option>', {'value': id, 'text': label}));
@@ -122,8 +122,8 @@
 							}
 						}
 					});
-					ConcreteEvent.subscribe('AjaxFormSubmitSuccess', function(e) {
-						cs.updateResults(e.eventData.response.result);
+					ConcreteEvent.subscribe('AjaxFormSubmitSuccess', function(e, data) {
+						cs.updateResults(data.response.result);
 					});
 				}
 			});
@@ -134,7 +134,7 @@
 	ConcreteAjaxSearch.prototype.updateResults = function(result) {
 		var cs = this,
 			options = cs.options;
-			
+
 		cs.$resultsTableHead.html(cs._templateSearchResultsTableHead({'columns': result.columns}));
 		cs.$resultsTableBody.html(cs._templateSearchResultsTableBody({'items': result.items}));
 		cs.$resultsPagination.html(cs._templateSearchResultsPagination({'pagination': result.pagination}));
@@ -211,7 +211,7 @@
 				height: $option.attr('data-bulk-action-dialog-height'),
 				modal: true,
 				href: $option.attr('data-bulk-action-url') + '?' + jQuery.param(itemIDs),
-				title: $option.attr('data-bulk-action-title')				
+				title: $option.attr('data-bulk-action-title')
 			});
 		}
 		cs.publish('SearchBulkActionSelect', {value: value, option: $option, items: $items});

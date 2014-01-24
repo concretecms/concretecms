@@ -3,15 +3,15 @@
 
 <script type="text/javascript">
 $(function() {
-	ConcreteEvent.subscribe('SelectGroup', function(e) {
+	ConcreteEvent.subscribe('SelectGroup', function(e, data) {
 		e.continuePropagation = false;
 		jQuery.fn.dialog.closeTop();
 		$('#ccm-permissions-access-entity-form .btn-group').removeClass('open');
 		$.getJSON('<?=$url?>', {
-			'gID': e.eventData.gID
+			'gID': data.gID
 		}, function(r) {
-			$('#ccm-permissions-access-entity-form input[name=peID]').val(r.peID);	
-			$('#ccm-permissions-access-entity-label').html('<div class="alert alert-info">' + r.label + '</div>');	
+			$('#ccm-permissions-access-entity-form input[name=peID]').val(r.peID);
+			$('#ccm-permissions-access-entity-label').html('<div class="alert alert-info">' + r.label + '</div>');
 		});
 	});
 });

@@ -10,7 +10,7 @@ $form = Loader::helper('form');
 $html = Loader::helper('html');
 $url = Loader::helper('concrete/urls');
 
-if ($controller->getFileID() > 0) { 
+if ($controller->getFileID() > 0) {
 	$bf = $controller->getFileObject();
 }
 
@@ -43,7 +43,7 @@ $al = Loader::helper('concrete/asset_library');
 </div>
 
 <script type="text/javascript">
-ccm_triggerSelectFileComplete = function(fID, af) { 
+ccm_triggerSelectFileComplete = function(fID, af) {
 	// af = ccm-b-image-blockid
 	var td = $("#ccm-image-composer-thumbnail-" + af.substring(12));
 	ccm_alGetFileData(fID, function(data) {
@@ -69,10 +69,10 @@ ccm_triggerSelectFileComplete = function(fID, af) {
 			$("#cropper-dialog-" + af.substring(12)).trigger('click');
 		}
 	});
-	
+
 }
 
-ThumbnailBuilder_onSaveCompleted = function(r) { 
+ThumbnailBuilder_onSaveCompleted = function(r) {
 	r = eval('(' + r + ')');
 	jQuery.fn.dialog.closeTop();
 	ccm_triggerSelectFile(r.fID, 'ccm-b-image-' + r.bID, false);

@@ -24,7 +24,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		<hr/>
 		<p class="lead"><?=t('Current Canonical URL')?></p>
 		<div class="breadcrumb">
-			<? if ($c->isPageDraft()) { ?> 
+			<? if ($c->isPageDraft()) { ?>
 				<?=t('None. Pages do not have canonical URLs until they are published.')?>
 			<? } else { ?>
 				<?php echo Loader::helper('navigation')->getLinkToCollection($c, true)?>
@@ -127,8 +127,7 @@ $(function() {
 		);
 	});
 
-	ConcreteEvent.subscribe('SitemapSelectPage', function(e) {
-		var data = e.eventData;
+	ConcreteEvent.subscribe('SitemapSelectPage', function(e, data) {
 		$('#ccm-panel-detail-location-display').html(renderBreadcrumb({
 			parentLink: '<?=DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=' + data.cID,
 			parentName: data.title,

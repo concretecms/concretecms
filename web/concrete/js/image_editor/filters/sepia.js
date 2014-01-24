@@ -1,11 +1,11 @@
 var me = this;
-im.bind('filterFullyLoaded',function(e){
-	if (e.eventData.im.namespace === me.im.namespace){
+im.bind('filterFullyLoaded',function(e, data){
+	if (data.im.namespace === me.im.namespace){
 		//This is me, start initialization.
 	}
 });
-im.bind('filterChange',function(e){
-  if (e.eventData.im.namespace === me.im.namespace) {
+im.bind('filterChange',function(e, data){
+  if (data.im.namespace === me.im.namespace) {
     im.showLoader('Applying Sepia');
 
     setTimeout(function(){
@@ -21,10 +21,9 @@ im.bind('filterChange',function(e){
     }, 10); // Allow loader to show
   }
 });
-im.bind('filterApplyExample',function(e){
-	if (e.eventData.namespace === me.namespace) {
-		console.log(e.eventData);
-		e.eventData.image.setFilter(im.filter.sepia);
-		im.fire('filterBuiltExample', me, e.eventData.elem);
+im.bind('filterApplyExample',function(e, data){
+	if (data.namespace === me.namespace) {
+		data.image.setFilter(im.filter.sepia);
+		im.fire('filterBuiltExample', me, data.elem);
 	}
 });

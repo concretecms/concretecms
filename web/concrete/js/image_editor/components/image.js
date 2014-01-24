@@ -2,11 +2,11 @@
 var me = $(this);
 
 
-ConcreteEvent.bind('FileManagerFileSelected',function(e){
-	if (e.eventData.af == "addImageToImageEditor_"+im.uniqid) {
+ConcreteEvent.bind('FileManagerFileSelected',function(e, data){
+	if (data.af == "addImageToImageEditor_"+im.uniqid) {
 		im.showLoader();
-		ccm_clearFile({stopPropagation:function(){}},e.eventData.af);
-		ccm_alGetFileData(e.eventData.fID,function(data){
+		ccm_clearFile({stopPropagation:function(){}},data.af);
+		ccm_alGetFileData(data.fID,function(data){
 			var img = new Image;
 			img.onload = function(){
         var size = im.fit({width:img.width,height:img.height});
@@ -63,7 +63,7 @@ me.find('a.webcam').click(function(e) {
       console.log("An error occured! " + err);
     }
   );
- 
+
   video.addEventListener('canplay', function(ev){
     if (!streaming) {
       width = dialog.width();

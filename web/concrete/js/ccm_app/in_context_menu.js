@@ -94,8 +94,7 @@
 		},
 
 		hoverProxy: function(e, $specificLauncher) {
-			//e.stopPropagation();
-			// OMG I'm not sure why stop propagation is here but it plays hell with gathering so i'm disabling it
+			e.stopPropagation();
 			
 			// we pass $launcher in because some menus can have multiple items
 			// launch the same and we want to know which item triggered the launch

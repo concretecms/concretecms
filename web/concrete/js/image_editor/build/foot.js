@@ -1,1 +1,1 @@
-}(window,jQuery,Kinetic));
+}(window, jQuery, Kinetic, _, c5));

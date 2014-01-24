@@ -100,16 +100,11 @@ if ($isAlias) {
 	} else if ($p->canEditBlock() && $b->isEditable()) { ?>
 
 		<? if ($editInline) { ?>
-			<? $params = 'false'; ?>
-
-			<? if ($a->getAreaGridColumnSpan() > 0) {
-				$params = '{arGridColumnSpan: ' . $a->getAreaGridColumnSpan() . '}';
-			} ?>
 
 			<? if ($b->getBlockTypeHandle() == BLOCK_HANDLE_LAYOUT_PROXY) { ?>
-				<li><a href="javascript:void(0)" data-menu-action="edit_inline" data-menu-edit-params="<?=$params?>"><?=t("Edit Layout")?></a></li>		
+				<li><a href="javascript:void(0)" data-menu-action="edit_inline" data-area-grid-column-span="<?=$a->getAreaGridColumnSpan()?>"><?=t("Edit Layout")?></a></li>		
 			<? } else { ?>
-				<li><a href="javascript:void(0)" data-menu-action="edit_inline" data-menu-edit-params="<?=$params?>"><?=t("Edit Block")?></a></li>		
+				<li><a href="javascript:void(0)" data-menu-action="edit_inline" data-area-grid-column-span="<?=$a->getAreaGridColumnSpan()?>"><?=t("Edit Block")?></a></li>		
 				<? } ?>
 		<? } else { ?>
 			<li><a data-menu-action="block_dialog" data-menu-href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_block_popup?btask=edit" dialog-title="<?=t('Edit %s', $btOriginal->getBlockTypeName())?>" dialog-modal="false" dialog-on-close="$(document).trigger('blockWindowClose')" dialog-width="<?=$btOriginal->getBlockTypeInterfaceWidth()?>" dialog-height="<?=$btOriginal->getBlockTypeInterfaceHeight() + $heightPlus?>" ><?=t("Edit Block")?></a></li>		
