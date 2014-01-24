@@ -1,4 +1,4 @@
-/** 
+/**
  * Basic concrete5 toolbar class
  */
 
@@ -55,8 +55,8 @@ var CCMToolbar = function() {
 		});
 		$('html').addClass('ccm-panel-ready');
 
-		ConcreteEvent.subscribe('panel.open',function(e) {
-			var panel = e.eventData.panel;
+		ConcreteEvent.subscribe('panel.open',function(e, data) {
+			var panel = data.panel;
 			if (panel.options.identifier == 'page') {
 				$('#' + panel.getDOMID()).find('[data-launch-panel-detail=\'page-composer\']').click();
 			}
@@ -99,7 +99,7 @@ var CCMToolbar = function() {
 			if (e.keyCode == 13 || e.keyCode == 40 || e.keyCode == 38) {
 				e.preventDefault();
 				e.stopPropagation();
-	
+
 				if (e.keyCode == 13 && $("a.ccm-intelligent-search-result-selected").length > 0) {
 					var href = $("a.ccm-intelligent-search-result-selected").attr('href');
 					if (!href || href == '#' || href == 'javascript:void(0)') {
@@ -110,7 +110,7 @@ var CCMToolbar = function() {
 				}
 				var visibleitems = $("#ccm-intelligent-search-results li:visible");
 				var sel;
-				
+
 				if (e.keyCode == 40 || e.keyCode == 38) {
 					$.each(visibleitems, function(i, item) {
 						if ($(item).children('a').hasClass('ccm-intelligent-search-result-selected')) {
@@ -124,17 +124,17 @@ var CCMToolbar = function() {
 					});
 					if (sel && sel.length > 0) {
 						$("a.ccm-intelligent-search-result-selected").removeClass();
-						$(sel).addClass('ccm-intelligent-search-result-selected');				
+						$(sel).addClass('ccm-intelligent-search-result-selected');
 					}
 				}
-			} 
+			}
 		});
 
 		$searchInput.liveUpdate('ccm-intelligent-search-results', 'intelligent-search');
 		$searchInput.bind('keyup.ccm-intelligent-search', function(e) {
 			doRemoteSearchCall($(this).val());
 		});
-		$searchInput.bind('click', function(e) { if ( this.value=="") { 
+		$searchInput.bind('click', function(e) { if ( this.value=="") {
 			$searchResults.hide();
 		}});
 
@@ -153,7 +153,7 @@ var CCMToolbar = function() {
 	}
 
 
-	doRemoteSearchCall = function(query) {	
+	doRemoteSearchCall = function(query) {
 		query = jQuery.trim(query);
 		if (!query) {
 			return;
@@ -162,7 +162,7 @@ var CCMToolbar = function() {
 			if (query == remotesearchquery) {
 				return;
 			}
-			
+
 			if (ajaxtimer) {
 				window.clearTimeout(ajaxtimer);
 			}
@@ -175,7 +175,7 @@ var CCMToolbar = function() {
 				$("#ccm-intelligent-search-results-list-marketplace").parent().addClass('ccm-intelligent-search-results-module-loading');
 				$("#ccm-intelligent-search-results-list-help").parent().addClass('ccm-intelligent-search-results-module-loading');
 				$("#ccm-intelligent-search-results-list-your-site").parent().addClass('ccm-intelligent-search-results-module-loading');
-	
+
 				$.getJSON(CCM_TOOLS_PATH + '/marketplace/intelligent_search', {
 					'q': remotesearchquery
 				},
@@ -198,7 +198,7 @@ var CCMToolbar = function() {
 				}).error(function() {
 					$("#ccm-intelligent-search-results-list-marketplace").parent().hide();
 				});
-	
+
 				$.getJSON(CCM_TOOLS_PATH + '/get_remote_help', {
 					'q': remotesearchquery
 				},
@@ -245,7 +245,7 @@ var CCMToolbar = function() {
 
 				}).error(function() {
 					$("#ccm-intelligent-search-results-list-your-site").parent().hide();
-				});	
+				});
 			}, 500);
 		}
 	}

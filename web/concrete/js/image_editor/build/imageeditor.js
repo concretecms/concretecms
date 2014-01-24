@@ -1,4 +1,4 @@
-
+var control_sets = [], components = [], filters = [];
 var ImageEditor = function (settings) {
   "use strict";
   if (settings === undefined) return this;

@@ -1,15 +1,15 @@
 var me = this;
 me.controls = $(document.createElement('div'));
-im.bind('filterFullyLoaded', function(e){
-  if (e.eventData.namespace === me.namespace){
+im.bind('filterFullyLoaded', function(e, data){
+  if (data.namespace === me.namespace){
     me.applybutton = $($.parseHTML("<button/>")).text('apply').addClass('btn');
     me.radius = $($.parseHTML("<input/>")).val(1);
 
     me.controls.append(me.radius).append(me.applybutton);
   }
 });
-im.bind('filterChange',function(e){
-  if (e.eventData.im.namespace === me.im.namespace) {
+im.bind('filterChange',function(e, data){
+  if (data.im.namespace === me.im.namespace) {
     im.showLoader('Applying Blur');
 
     setTimeout(function(){
@@ -26,10 +26,10 @@ im.bind('filterChange',function(e){
     },10); // Allow loader to show
   }
 });
-im.bind('filterApplyExample',function(e){
-  if (e.eventData.namespace === me.namespace) {
-    e.eventData.image.setFilter(Kinetic.Filters.Blur);
-    e.eventData.image.setFilterRadius(5);
-    im.fire('filterBuiltExample', me, e.eventData.elem);
+im.bind('filterApplyExample',function(e, data){
+  if (data.namespace === me.namespace) {
+    data.image.setFilter(Kinetic.Filters.Blur);
+    data.image.setFilterRadius(5);
+    im.fire('filterBuiltExample', me, data.elem);
   }
 });

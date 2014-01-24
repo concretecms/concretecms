@@ -5,7 +5,6 @@ im.activeTextElement = false;
 var standinText = new Kinetic.Text({});
 var updateFields = function() {
 	$('textarea',me).val(im.activeTextElement.getText());
-	console.log(im.activeTextElement.getFill())
 	colorButton.ColorPickerSetColor(im.activeTextElement.getFill());
 	colorButton.css('background',im.activeTextElement.getFill());
 	$('button.active',me).removeClass('active');
@@ -30,14 +29,13 @@ im.on("changeActiveElement",function(e){
 		updateFields();
 	}
 });
-im.on("changeActiveAction",function(e){
-	if (e.eventData != im.namespace) {
+im.on("changeActiveAction",function(e, data){
+	if (data != im.namespace) {
 		im.selected = false;
 		return;
 	}
 	im.selected = true;
 	im.activeTextElement = im.activeElement;
-	console.log('derp');
 	updateFields();
 });
 
@@ -152,7 +150,7 @@ slider = $('<div/>').css({
 colorPicker.append(hueslider);
 
 var sliderSliding = false,sliderClientStart,sliderStart;
-slider.draggable({ 
+slider.draggable({
 	containment: "parent",
 	drag:function(ev){
 		cpo.color.h = -(12/5)*(154-(""+slider.css('left')).spx() - 154);
@@ -202,7 +200,6 @@ $('div.style',me).children('button').click(function(){
 	if ($(this).parent().children('[data-style="italic"]').hasClass('active')) {
 		style.push('italic');
 	}
-	console.log(style.join(' '));
 	im.activeTextElement.setFontStyle(style.join(' '));
 	im.activeTextElement.parent.draw();
 	return false;

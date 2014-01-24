@@ -1,52 +1,43 @@
-!function(global) {
+;(function(global, $) {
   'use strict';
+  global.c5 = global.c5 || {};
 
-  var ConcreteEvent = {
-
-    bindings: {},
-
-    Event: function(type, data, target) {
-      this.target = target || ConcreteEvent.bindings;
-      this.continuePropagation = true;
-      this.eventData = data || {};
-      this.type = type;
-    },
-
-    subscribe: function(type, handler, target) {
-      target = target || ConcreteEvent.bindings;
-      type = type.toLowerCase();
-      (target[type] = target[type] || []).push(handler);
-      return ConcreteEvent;
-    },
-
-    publish: function(type, data, target) {
-      /*
-      if (typeof console == 'object') {
-        console.log('ConcreteEvent Publish', type, data, target);
-      }
-      */
-      (new ConcreteEvent.Event(type.toLowerCase(), data, target)).propagate();
-      return ConcreteEvent;
+  global.ConcreteEvent = (function(ns, $) {
+    var target = $('<span />');
+    function getTarget(given_target) {
+      if (!given_target) given_target = target;
+      if (!(given_target instanceof $)) given_target = $(given_target);
+      if (!given_target.length) given_target = target;
+      return given_target;
     }
-  }
+    var ConcreteEvent = {
 
-  ConcreteEvent.Event.prototype = {
-    stopPropagation: function() {
-      this.continuePropagation = false;
-    },
-    propagate: function() {
-      this.continuePropagation = true;
-      var bound = this.target[this.type] || [], l = bound.length;
-      while (l-- && this.continuePropagation) {
-        bound[l].call(this, this);
+      subscribe: function(type, handler, target) {
+        if (type instanceof Array) {
+          return _(type).each(function(v) {
+            ConcreteEvent.subscribe(v, handler, target);
+          });
+        }
+        getTarget(target).bind(type.toLowerCase(), handler);
+        return ConcreteEvent;
+      },
+
+      publish: function(type, data, target) {
+        if (type instanceof Array) {
+          return _(type).each(function(v) {
+            ConcreteEvent.publish(v, data, target);
+          });
+        }
+        getTarget(target).trigger(type.toLowerCase(), data);
+        return ConcreteEvent;
       }
-    }
-  };
-  
+    };
 
-  ConcreteEvent.sub = ConcreteEvent.bind = ConcreteEvent.watch   = ConcreteEvent.on = ConcreteEvent.subscribe;
-  ConcreteEvent.pub = ConcreteEvent.fire = ConcreteEvent.trigger = ConcreteEvent.publish;
+    ConcreteEvent.sub = ConcreteEvent.bind = ConcreteEvent.watch   = ConcreteEvent.on = ConcreteEvent.subscribe;
+    ConcreteEvent.pub = ConcreteEvent.fire = ConcreteEvent.trigger = ConcreteEvent.publish;
 
-  global.ConcreteEvent = ConcreteEvent;
-  
-}(window);
+    ns.event = ConcreteEvent;
+    return ConcreteEvent;
+  }(global.c5, jQuery));
+
+}(window, jQuery));

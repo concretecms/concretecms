@@ -7,6 +7,7 @@
   window.im = im;
   return im;
 };
+
 $.fn.ImageEditor = function (settings) {
   (settings === undefined && (settings = {}));
   settings.imageload = $.fn.dialog.hideLoader;
@@ -28,12 +29,12 @@ $.fn.ImageEditor = function (settings) {
   var im = new ImageEditor(settings);
 
   var context = im.domContext;
-  im.on('ChangeActiveAction',function(e){
-    if (!e.eventData)
+  im.on('ChangeActiveAction',function(e, data){
+    if (!data)
       $('h4.active',context).removeClass('active');
   });
-  im.on('ChangeActiveComponent',function(e){
-    if (!e.eventData)
+  im.on('ChangeActiveComponent',function(e, data){
+    if (!data)
       $('h4.active',context).removeClass('active');
   });
   $('div.controls > div.controlscontainer',context).children('div.save').children('button.save').click(function(){
@@ -43,6 +44,7 @@ $.fn.ImageEditor = function (settings) {
       $.fn.dialog.closeTop();
   });
   $('div.controls > div.controlscontainer',context).children('ul.nav').children().click(function(){
+    debugger;
     if ($(this).hasClass('active')) return false;
     $('div.controls > div.controlscontainer',context).children('ul.nav').children().removeClass('active');
     $(this).addClass('active');
@@ -51,6 +53,7 @@ $.fn.ImageEditor = function (settings) {
   });
   $('div.controlset',context).find('div.control').children('div.contents').slideUp(0)
   .end().end().find('h4').click(function(){
+    debugger;
     if ($(this).parent().hasClass('disabled')) return;
     $(this).addClass('active');
     $('div.controlset',context).find('h4').not($(this)).removeClass('active');
@@ -58,7 +61,7 @@ $.fn.ImageEditor = function (settings) {
     im.trigger('ChangeActiveAction',"ControlSet_"+ns);
   });
 
-  $('div.component',context).find('div.control').children('div.contents').slideUp(0).hide()
+  $('div.component',context).find('div.control').children('div.childrenontents').slideUp(0).hide()
   .end().end().find('h4').click(function(){
     if ($(this).hasClass('active')) return false;
     $(this).addClass('active');

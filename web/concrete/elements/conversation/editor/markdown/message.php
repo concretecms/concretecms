@@ -8,7 +8,7 @@ print $form->textarea($editor->getConversationEditorInputName(), $editor->getCon
 		var obj = window.obj;
 		ConcreteEvent.bind('conversationSubmitForm',function(){
 			me.val('');
-			$('.preview.processing').each(function(){ 
+			$('.preview.processing').each(function(){
 				$('input[rel="'+ $(this).attr('rel') +'"]').remove();
 				$(this).remove();
 			});
@@ -57,8 +57,8 @@ print $form->textarea($editor->getConversationEditorInputName(), $editor->getCon
 			);
 		});
 		// Bind to item selection event
-		ConcreteEvent.bind('conversationsMentionSelect',function(e){
-				var selected = e.eventData.item;
+		ConcreteEvent.bind('conversationsMentionSelect',function(e, data){
+				var selected = data.item;
 				if (!selected.textarea.is(me)) return;
 				var start = me.val();
 				var fin = start.substr(0,selected.caretPos - selected.string.length + 1) + selected.getName() + start.substr(selected.caretPos);
