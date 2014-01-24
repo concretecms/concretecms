@@ -561,7 +561,7 @@ class Concrete5_Model_PageTheme extends Object {
 	}
 
 	public function getThemeGatheringGridItemMargin() {
-		return 1;
+		return 20;
 	}
 
 	public function getThemeGatheringGridItemWidth() {
