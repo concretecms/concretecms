@@ -9,7 +9,7 @@ class Concrete5_Library_View_Dialog extends View {
 
 	public function outputAssetIntoView($item) {
 		$str = '';
-		if ($item instanceof CssAsset) {
+		if ($item instanceof CssAsset || !is_object($item)) {
 			$str .= $item;
 		} else {
 			$str .= '<script type="text/javascript">';	
