@@ -105,7 +105,7 @@ class Concrete5_Controller_Panel_Details_Page_Attributes extends BackendInterfac
 			$r = new PageEditVersionResponse();
 			$r->setPage($c);
 			$r->setMessage(t('Page attributes saved.'));
-			Loader::helper('ajax')->sendResult($r);
+			$r->outputJSON();
 		}
 	}
 

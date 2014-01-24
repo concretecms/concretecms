@@ -20,6 +20,9 @@ class Concrete5_Library_BlockView extends AbstractView {
 			$this->area = $mixed->getBlockAreaObject();
 		} else {
 			$this->blockType = $mixed;
+			if ($this->blockType->controller) {
+				$this->controller = $this->blockType->controller;
+			}
 		}
 		$this->blockTypePkgHandle = $this->blockType->getPackageHandle();
 		if (!isset($this->controller)) {
@@ -108,18 +111,21 @@ class Concrete5_Library_BlockView extends AbstractView {
 			case 'view':
 				$this->setBlockViewHeaderFile(DIR_FILES_ELEMENTS_CORE . '/block_header_view.php');
 				$this->setBlockViewFooterFile(DIR_FILES_ELEMENTS_CORE . '/block_footer_view.php');
-				$bFilename = $this->block->getBlockFilename();
-				$bvt = new BlockViewTemplate($this->block);
 				if ($this->controller->blockViewRenderOverride) {
 					$template = DIRNAME_BLOCKS . '/' . $this->blockType->getBlockTypeHandle() . '/' . $this->controller->blockViewRenderOverride . '.php';
 					$this->setViewTemplate($env->getPath($template, $this->blockTypePkgHandle));
-				} else {
+				} else if ($this->block) {
+					$bFilename = $this->block->getBlockFilename();
+					$bvt = new BlockViewTemplate($this->block);
 					if ($bFilename) {
 						$bvt->setBlockCustomTemplate($bFilename); // this is PROBABLY already set by the method above, but in the case that it's passed by area we have to set it here
 					} else if ($customFilenameToRender) {
 						$bvt->setBlockCustomRender($customFilenameToRender); 
 					}
 					$this->setViewTemplate($bvt->getTemplate());
+				} else {
+					$template = DIRNAME_BLOCKS . '/' . $this->blockType->getBlockTypeHandle() . '/' . $view . '.php';
+					$this->setViewTemplate($env->getPath($template, $this->blockTypePkgHandle));
 				}
 				break;
 			case 'add':

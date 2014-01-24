@@ -34,12 +34,16 @@
           {name: 'btask', value: 'edit'},
           {name: 'cID', value: CCM_CID},
           {name: 'arHandle', value: area.getHandle()},
+          {name: 'arGridColumnSpan', value: data.arGridColumnSpan},
           {name: 'aID', value: area.getId()},
           {name: 'bID', value: block.getId()}
         ],
         bID = block.getId(),
         $container = block.getElem();
 
+      if (block.menu) {
+        block.menu.destroy();
+      }
       if (data.postData) {
         for (var prop in data.postData) {
           postData.push({name: prop, value: data.postData[prop]});
@@ -89,6 +93,7 @@
         postData = [
           {name: 'btask', value: 'edit'},
           {name: 'cID', value: CCM_CID},
+          {name: 'arGridColumnSpan', value: data.arGridColumnSpan},
           {name: 'arHandle', value: area.getHandle()},
           {name: 'btID', value: btID}
         ], dragAreaBlock, dragAreaBlockID, elem;
@@ -539,6 +544,7 @@
         Concrete.event.fire('EditModeBlockAddInline', {
           area: my,
           btID: $(this).attr('data-block-type-id'),
+          arGridColumnSpan: $(this).attr('data-area-grid-column-span'),
           event: e,
           dragAreaBlock: dragAreaLastBlock
         });
@@ -547,6 +553,7 @@
 
       $menuElem.find('a[data-menu-action=edit-container-layout]').on('click', function(e) {
         // we are going to place this at the END of the list.
+        var $link = $(this);
         var dragAreaLastBlock = false;
         _.each(my.getBlocks(), function(block) {
           dragAreaLastBlock = block;
@@ -556,6 +563,7 @@
         var block = _.findWhere(editor.getBlocks(), {id: bID});
         Concrete.event.fire('EditModeBlockEditInline', {
           block: block,
+          arGridColumnSpan: $link.attr('data-area-grid-column-span'),
           event: e,
         });
         return false;
