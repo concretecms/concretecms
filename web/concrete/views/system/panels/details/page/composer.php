@@ -60,7 +60,7 @@ ConcretePageComposerDetail = {
 	    	my.disableAutosave();
 	    	$.concreteAjax({
 	    		'url': '<?=$controller->action('discard')?>',
-	    		'data': {token: '<?=$token?>', cID: '<?=$cID?>'}, 
+	    		'data': {token: '<?=$token?>', cID: '<?=$cID?>'},
 	    		success: function(r) {
 					window.location.href = r.redirectURL;
 	    		}
@@ -101,8 +101,7 @@ ConcretePageComposerDetail = {
 			}).submit();
 		});
 
-		ConcreteEvent.subscribe('panel.closeDetail',function(e) {
-			var panelDetail = e.eventData;
+		ConcreteEvent.subscribe('panel.closeDetail',function(e, panelDetail) {
 			if (panelDetail && panelDetail.identifier == 'page-composer') {
 				my.disableAutosave();
 			}
