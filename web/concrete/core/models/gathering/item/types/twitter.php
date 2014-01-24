@@ -19,7 +19,9 @@ class Concrete5_Model_TwitterGatheringItem extends GatheringItem {
 
 		if (is_object($item)) {
 			$item->assignFeatureAssignments($tweet);
-			$item->setAutomaticGatheringItemTemplate();
+			$type = GatheringItemTemplateType::getByHandle('tile');
+			$template = GatheringItemTemplate::getByHandle('tweet');
+			$item->setGatheringItemTemplate($type, $template);
 			return $item;
 		}
 	}
@@ -43,12 +45,15 @@ class Concrete5_Model_TwitterGatheringItem extends GatheringItem {
 		}
 		if(count($tweet->entities->media) > 0) {
 			foreach($tweet->entities->media as $medium) {
-				$tweet->text = str_replace($medium->url, '<a target="_blank" href="'.$medium->url.'">'.$medium->display_url.'</a>', $tweet->text);
+				if ($medium->type == 'photo') {
+					$this->addFeatureAssignment('image', $medium->media_url);
+				}
 			}
 		}
-		$this->addFeatureAssignment('tweet', $tweet->text);
+		$this->addFeatureAssignment('description', $tweet->text);
 		$this->addFeatureAssignment('date_time', $tweet->created_at);
-		$this->addFeatureAssignment('description', $tweet->user->name);
+		$this->addFeatureAssignment('author', $tweet->user->name);
+		$this->addFeatureAssignment('link', 'http://www.twitter.com/' . $tweet->user->name . '/status/' . $tweet->id);
 	}
 
 }
