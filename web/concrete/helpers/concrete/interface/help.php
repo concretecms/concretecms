@@ -97,13 +97,17 @@ class ConcreteInterfaceHelpHelper {
 			'/page/location' => t('Define where this page lives on your website. View and delegate what other pages are redirecting to this page.'),
 			'/page/composer' => t('Use the form below to create your page. You can also preview your page in edit mode at any time.'),
 			'/page/attributes' => t('This is the help text for attributes. This should probably be changed.'),
-			'/page/caching' => t('Full page caching can dramatically improve page speed for pages that don\'t need to have absolutely up-to-the-minute content.'),
-			'/page/design' => t('Control your page\'s theme, template and give your page customize styles.')
+			'/page/caching' => t('Full page caching can dramatically improve page speed for pages that don\'t need to have absolutely up-to-the-minute content.')
+			
 		);
+		
+		$panels['/page/design'][] = ConcreteInterfaceHelpHelperMessage::get('/page/design', 'Welcome to customizing themes, check out this <a href="http://www.youtube.com/watch?v=pischKK2uHQ" target="_blank">video</a> if you would like some guidance.', 1, 1);
+		$panels['/page/design'][] = ConcreteInterfaceHelpHelperMessage::get('/page/design', t('Control your page\'s theme, template and give your page customize styles.'), 3, 5);
+		
 		return $panels;
 	}
 
-	protected function getMessage($type, $identifier) {
+	protected function getMessage($type, $identifier, $displayCount) {
 		switch($type) {
 			case 'panel':
 				$messages = $this->getPanels();
@@ -115,14 +119,33 @@ class ConcreteInterfaceHelpHelper {
 				$messages = $this->getBlockTypes();
 				break;
 		}
-
+		
 		$message = $messages[$identifier];
+		
+		if(is_array($message)) {
+			foreach($message as $m) {
+				if($m instanceof ConcreteInterfaceHelpHelperMessage) {
+					$message = $m->getContentToDisplay($displayCount);
+					if($message) { break; }
+				}
+			}
+		}
+		
 		return $message;
+	}
+
+	protected function getIncrementDisplayCount($type, $identifier) {
+		if(!isset($_SESSION['ccm-help-messages'][$type.'|'.$identifier]['count'])) {
+			$_SESSION['ccm-help-messages'][$type.'|'.$identifier]['count'] = 1;
+		} else {
+			$_SESSION['ccm-help-messages'][$type.'|'.$identifier]['count']++;
+		}
+		return $_SESSION['ccm-help-messages'][$type.'|'.$identifier]['count'];
 	}
 
 
 	public function notify($type, $identifier) {
-		$message = $this->getMessage($type, $identifier);
+		$message = $this->getMessage($type, $identifier, $this->getIncrementDisplayCount($type, $identifier));
 		if (!$message) {
 			return false;
 		}
@@ -173,4 +196,47 @@ EOT;
 		}
 	}
 
+}
+
+class ConcreteInterfaceHelpHelperMessage {
+	/**
+	 * @var string $identifier unique to the event - typically path of the item the help relates to: /dashboard/users/add
+	*/
+	public $identifier;
+	
+	/**
+	 * @var int $displayOnCount - will display on the [x]th call matching the identifier
+	 */
+	public $displayOnCountMin;
+	public $displayOnCountMax;
+	
+	/**
+	 * @var string $content - message content that will be displayed in help dialog
+	 */
+	public $content;
+	
+	public function getContentToDisplay($displayCount) {
+		$content = false;
+		if($displayCount >= $this->displayOnCountMin && $displayCount <= $this->displayOnCountMax) {
+			$content = $this->content;
+		}
+		return $content;
+	}
+
+	
+	/**
+	 
+	 * @param string $handle
+	 * @param string $content
+	 * @param int $displayOnCount
+	 * @return ConcreteInterfaceHelpHelperMessage
+	 */
+	public static function get($identifier, $content, $displayOnCountMin = 0, $displayOnCountMax = 0) {
+		$message = new self();
+		$message->identifier 	= $identifier;
+		$message->content 		= $content;
+		$message->displayOnCountMin = $displayOnCountMin;
+		$message->displayOnCountMax = $displayOnCountMax;
+		return $message;
+	}
 }
