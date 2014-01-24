@@ -125,6 +125,7 @@
 		<gatheringitemtemplate handle="image_overlay_headline" type="tile" name="Image Overlay Headline" package="">
 			<feature handle="title" />
 			<feature handle="image" />
+            <feature handle="author" />
 		</gatheringitemtemplate>
     </gatheringitemtemplates>
     <featurecategories>
