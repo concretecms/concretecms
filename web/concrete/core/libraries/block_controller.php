@@ -432,8 +432,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		
 		public function outputAutoHeaderItems() {
 			$b = $this->getBlockObject();
-			$bvt = new BlockViewTemplate($b);
-			$bvt->registerTemplateAssets();
+			if (is_object($b)) {
+				$bvt = new BlockViewTemplate($b);
+				$bvt->registerTemplateAssets();
+			}
 		}
 		
 		public function setupAndRun($method) {

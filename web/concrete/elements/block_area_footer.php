@@ -58,12 +58,8 @@ $class = 'ccm-area-footer';
 			$areabt = BlockType::getByHandle(BLOCK_HANDLE_LAYOUT_PROXY);
 		 ?>
 			<? $areaLayoutBT = BlockType::getByHandle('core_area_layout'); ?>
-			<? $params = 'false'; ?>
 
-			<? if ($a->getAreaGridColumnSpan() > 0) {
-				$params = '{arGridColumnSpan: ' . $a->getAreaGridColumnSpan() . '}';
-			} ?>
-			<li><a dialog-title="<?=t('Add Layout')?>" data-menu-action="add-inline" href="#" data-block-type-id="<?=$areabt->getBlockTypeID()?>"><?=t("Add Layout")?></a></li>		
+			<li><a dialog-title="<?=t('Add Layout')?>" data-area-grid-column-span="<?=$a->getAreaGridColumnSpan()?>" data-menu-action="add-inline" href="#" data-block-type-id="<?=$areabt->getBlockTypeID()?>"><?=t("Add Layout")?></a></li>		
 		<? } ?>
 		<? if ($canEditAreaPermissions) { ?>
 			<li class="divider"></li>
@@ -86,7 +82,7 @@ $class = 'ccm-area-footer';
 			$bx = $a->getSubAreaBlockObject();
 			if (is_object($bx) && !$bx->isError()) { ?>
 				<li class="divider"></li>
-				<li><a href="javascript:void(0)" data-container-layout-block-id="<?=$bx->getBlockID()?>" data-menu-action="edit-container-layout" data-menu-edit-params="<?=$params?>"><?=t("Edit Container Layout")?></a></li>
+				<li><a href="javascript:void(0)" data-container-layout-block-id="<?=$bx->getBlockID()?>" data-menu-action="edit-container-layout" data-area-grid-column-span="<?=$a->getAreaGridColumnSpan()?>"><?=t("Edit Container Layout")?></a></li>
 				<? if ($pk->validate()) { 
 					$btc = $bx->getController();
 					$arLayout = $btc->getAreaLayoutObject(); ?>

@@ -19,9 +19,13 @@ class Concrete5_Model_TwitterGatheringItem extends GatheringItem {
 
 		if (is_object($item)) {
 			$item->assignFeatureAssignments($tweet);
-			$type = GatheringItemTemplateType::getByHandle('tile');
-			$template = GatheringItemTemplate::getByHandle('tweet');
-			$item->setGatheringItemTemplate($type, $template);
+			if(count($tweet->entities->media) > 0 && $tweet->entities->media[0]->type == 'photo') {
+				$item->setAutomaticGatheringItemTemplate();
+			} else {
+				$type = GatheringItemTemplateType::getByHandle('tile');
+				$template = GatheringItemTemplate::getByHandle('tweet');
+				$item->setGatheringItemTemplate($type, $template);
+			}
 			return $item;
 		}
 	}
