@@ -86,7 +86,7 @@
 					'enableCommentRating': enableCommentRating,
 					'commentRatingUserID': commentRatingUserID,
 					'commentRatingIP':     commentRatingIP
-					
+
 				}, function(r) {
 					var oldobj = window.obj;
 					window.obj = obj;
@@ -133,8 +133,8 @@
 			var obj = this;
 			if (obj.options.uninitialized) {
 				obj.options.uninitialized = false;
-				ccm_event.bind('conversationsMention',function(e){
-						obj.mentionList(e.eventData.items,e.eventData.coordinates || false, e.eventData.bindTo || obj.$element.get(0));
+				ccm_event.bind('conversationsMention',function(e, data){
+						obj.mentionList(data.items, data.coordinates || false, data.bindTo || obj.$element.get(0));
 					},
 					obj.$element.get(0) // Bind to this conversation only.
 				);
@@ -148,33 +148,38 @@
 				obj.dropdown.handle = $('<a/>').appendTo(obj.dropdown.parent);
 				obj.dropdown.list = $('<ul/>').addClass('dropdown-menu').appendTo(obj.dropdown.parent);
 				obj.dropdown.handle.dropdown();
-				ccm_event.bind('conversationsTextareaKeydownUp',function(e){
+
+				ccm_event.bind('conversationsTextareaKeydownUp',function(e, data){
 					if (obj.dropdown.activeItem == -1) obj.dropdown.activeItem = obj.dropdown.list.children().length;
 					obj.dropdown.activeItem -= 1;
 					obj.dropdown.activeItem += obj.dropdown.list.children().length;
 					obj.dropdown.activeItem %= obj.dropdown.list.children().length;
 					obj.dropdown.list.children().filter('.active').removeClass('active').end().eq(obj.dropdown.activeItem).addClass('active');
 				}, obj.$element.get(0));
-				ccm_event.bind('conversationsTextareaKeydownDown',function(e){
+
+				ccm_event.bind('conversationsTextareaKeydownDown',function(e, data){
 					obj.dropdown.activeItem += 1;
 					obj.dropdown.activeItem += obj.dropdown.list.children().length;
 					obj.dropdown.activeItem %= obj.dropdown.list.children().length;
 					obj.dropdown.list.children().filter('.active').removeClass('active').end().eq(obj.dropdown.activeItem).addClass('active');
 				}, obj.$element.get(0));
-				ccm_event.bind('conversationsTextareaKeydownEnter',function(e){
+
+				ccm_event.bind('conversationsTextareaKeydownEnter',function(e, data){
 					obj.dropdown.list.children().filter('.active').children('a').click();
 				}, obj.$element.get(0));
-				ccm_event.bind('conversationPostError',function(e){
-					var $form = e.eventData.form,
-						messages = e.eventData.messages;
+
+				ccm_event.bind('conversationPostError',function(e, data){
+					var $form = data.form,
+						messages = data.messages;
 					var s = '';
 					$.each(messages, function(i, m) {
 						s += m + '<br>';
 					});
 					$form.find('div.ccm-conversation-errors').html(s).show();
 				});
-				ccm_event.bind('conversationSubmitForm',function(e){
-					e.eventData.form.find('div.ccm-conversation-errors').hide();
+
+				ccm_event.bind('conversationSubmitForm',function(e, data){
+					data.form.find('div.ccm-conversation-errors').hide();
 				});
 			}
 			var paginate = (obj.options.paginate) ? 1 : 0;
@@ -193,7 +198,7 @@
 			obj.$loadmore = obj.$element.find('[data-load-page=conversation-message-list]');
 			obj.$messages = obj.$element.find('div.ccm-conversation-messages');
 			obj.$messagerating = obj.$element.find('span.ccm-conversation-message-rating');
-			
+
 			obj.$element.on('click', 'button[data-submit=conversation-message]', function() {
 				obj.submitForm($(this));
 				return false;
@@ -209,28 +214,28 @@
 				var $replyform = obj.$replyholder.appendTo($(this).closest('div[data-conversation-message-id]'));
 				$replyform.attr('data-form', 'conversation-reply').show();
 				$replyform.find('button[data-submit=conversation-message]').attr('data-post-parent-id', $(this).attr('data-post-parent-id'));
-				
+
 				$replyform.attr('rel', 'new-reply' + replyIterator);
-				replyIterator++;  // this may not be necessary, but might come in handy if we need to know how many times a new reply box has been triggered. 
+				replyIterator++;  // this may not be necessary, but might come in handy if we need to know how many times a new reply box has been triggered.
 				return false;
 			});
-			
+
 			$('.ccm-conversation-attachment-container').hide();
-			$('.ccm-conversation-add-new-message .ccm-conversation-attachment-toggle').click(function(event){ 
+			$('.ccm-conversation-add-new-message .ccm-conversation-attachment-toggle').click(function(event){
 				event.preventDefault();
 				if($('.ccm-conversation-add-reply .ccm-conversation-attachment-container').is(':visible')) {
 					$('.ccm-conversation-add-reply .ccm-conversation-attachment-container').toggle();
 				}
 				$('.ccm-conversation-add-new-message .ccm-conversation-attachment-container').toggle();
 			});
-			$('.ccm-conversation-add-reply .ccm-conversation-attachment-toggle').click(function(event){ 
+			$('.ccm-conversation-add-reply .ccm-conversation-attachment-toggle').click(function(event){
 				event.preventDefault();
 				if($('.ccm-conversation-add-new-message .ccm-conversation-attachment-container').is(':visible')) {
 					$('.ccm-conversation-add-new-message .ccm-conversation-attachment-container').toggle();
 				}
 				$('.ccm-conversation-add-reply .ccm-conversation-attachment-container').toggle();
 			});
-			
+
 			obj.$element.on('click', 'a[data-submit=delete-conversation-message]', function() {
 				var $link = $(this);
 				obj.$deletedialog = obj.$deleteholder.clone();
@@ -287,13 +292,13 @@
 					'displayPostingForm':  obj.options.displayPostingForm,
 					'insertNewMessages':   obj.options.insertNewMessages,
 					'enableCommentRating': obj.options.enableCommentRating
-					
+
 				}, function(r) {
 					obj.$replyholder.appendTo(obj.$element);
 					obj.attachBindings();
 				});
 			});
-			
+
 			obj.$element.on('click', '[data-load-page=conversation-message-list]', function() {
 				var nextPage = parseInt(obj.$loadmore.attr('data-next-page'));
 				var totalPages = parseInt(obj.$loadmore.attr('data-total-pages'));
@@ -324,7 +329,7 @@
 					}
 				});
 			});
-			
+
 			obj.$element.on('click', '.conversation-rate-message', function() {
 				var cnvMessageID = $(this).closest('[data-conversation-message-id]').attr('data-conversation-message-id');
 				var cnvRatingTypeHandle = $(this).attr('data-conversation-rating-type');
@@ -380,11 +385,11 @@
 							}
 						]
 					});
-				} 
+				}
 				return false;
 			});
-			
-			obj.$element.ccmconversationattachments(obj); 
+
+			obj.$element.ccmconversationattachments(obj);
 			$('.dropdown-toggle').dropdown();
 
 		},
@@ -578,24 +583,24 @@
 			},
 			getCaretPosition: function(elem) {
 				// http://stackoverflow.com/a/263796/950669
-				if (elem.selectionStart) { 
-					return elem.selectionStart; 
-				} else if (document.selection) { 
-					elem.focus(); 
+				if (elem.selectionStart) {
+					return elem.selectionStart;
+				} else if (document.selection) {
+					elem.focus();
 
-					var r = document.selection.createRange(); 
-					if (r == null) { 
-					return 0; 
-					} 
+					var r = document.selection.createRange();
+					if (r == null) {
+					return 0;
+					}
 
-					var re = elem.createTextRange(), 
-					rc = re.duplicate(); 
-					re.moveToBookmark(r.getBookmark()); 
-					rc.setEndPoint('EndToStart', re); 
+					var re = elem.createTextRange(),
+					rc = re.duplicate();
+					re.moveToBookmark(r.getBookmark());
+					rc.setEndPoint('EndToStart', re);
 
-					return rc.text.length; 
-				}  
-				return 0; 
+					return rc.text.length;
+				}
+				return 0;
 			},
 			testMentionString: function(s) {
 				return /^@[a-z0-9]+$/.test(s);
@@ -620,9 +625,9 @@
 //                               attachments.js                              //
 ///////////////////////////////////////////////////////////////////////////////
 (function($, window) {
-	
+
 	var methods = {
-	
+
 		init: function(options) {
 			var obj = options;
 			obj.$element.on('click', 'a[data-toggle=conversation-reply]', function() {
@@ -634,13 +639,13 @@
 			});
 			if (obj.$newmessageform.dropzone) {  // dropzone new message form
 				obj.$newmessageform.dropzone({
-					'url': CCM_TOOLS_PATH + '/conversations/add_file', 
+					'url': CCM_TOOLS_PATH + '/conversations/add_file',
 					'success' : function(file, raw) {
 						var response = JSON.parse(raw);
 						if(!response.error) {
 							$('div[rel="' + response.tag + '"] form.main-reply-form').append('<input rel="'+response.timestamp+'" type="hidden" name="attachments[]" value="'+response.id+'" />');
 						} else {
-							
+
 							var $form = $('.preview.processing[rel="'+response.timestamp+'"]').closest('form');
 							obj.handlePostError($form, [response.error]);
 							$('.preview.processing[rel="'+response.timestamp+'"]').remove();
@@ -649,14 +654,14 @@
 							});
 						}
 					},
-					'sending' : function(file, xhr, formData) { 
+					'sending' : function(file, xhr, formData) {
 						$(file.previewTemplate).attr('rel', new Date().getTime());
 						formData.append("timestamp", $(file.previewTemplate).attr('rel'));
 						formData.append("tag", $(obj.$newmessageform).parent('div').attr('rel'));
 					},
-					'init' : function() { 
+					'init' : function() {
 						 this.on("complete", function(file) {
-						 	$('.preview.processing').click(function(){ 
+						 	$('.preview.processing').click(function(){
 								$('input[rel="'+ $(this).attr('rel') +'"]').remove();
 								$(this).remove();
 							})
@@ -664,7 +669,7 @@
 					}
 				});
 			}
-			
+
 			obj.$replyholder.find('.dropzone').dropzone({  // dropzone reply form
 				'url': CCM_TOOLS_PATH + '/conversations/add_file',
 				'success' : function(file, raw) {
@@ -680,14 +685,14 @@
 						});
 					}
 				},
-				'sending' : function(file, xhr, formData) { 
+				'sending' : function(file, xhr, formData) {
 					$(file.previewTemplate).attr('rel', new Date().getTime());
 					formData.append("timestamp", $(file.previewTemplate).attr('rel'));
 					formData.append("tag", $(obj.$newmessageform).parent('div').attr('rel'));
 				},
-				'init' : function() { 
-					 this.on("complete", function(file) { 
-					 	$('.preview.processing').click(function(){ 
+				'init' : function() {
+					 this.on("complete", function(file) {
+					 	$('.preview.processing').click(function(){
 							$('input[rel="'+ $(this).attr('rel') +'"]').remove();
 							$(this).remove();
 						})
@@ -701,8 +706,8 @@
 					}
 				});
 			});
-		}, 
-		
+		},
+
 		attachmentDeleteTrigger: function(options){
 			var obj = options;
 			var link = $(this);
@@ -730,31 +735,31 @@
 					]
 				});
 			} else {
-				if (confirm('Remove this message? Replies to it will not be removed.')) { 
+				if (confirm('Remove this message? Replies to it will not be removed.')) {
 					$(this).ccmconversationattachments('deleteAttachment',{ 'cnvMessageAttachmentID' : link.attr('rel'), 'cnvObj' : obj, 'dialogObj' :  obj.$attachmentdeletetdialog});
 				}
-			} 
+			}
 			return false;
 		},
-		
+
 		clearDropzoneQueues : function() {
 			$('.preview.processing').each(function(){    // first remove any previous attachments and hide dropzone if it was open.
 				$('input[rel="'+ $(this).attr('rel') +'"]').remove();
 				$(this).remove();
 			});
 		},
-		
+
 		deleteAttachment: function(options) {
 			var cnvMessageAttachmentID = options.cnvMessageAttachmentID;
-			var obj = options.cnvObj; 
+			var obj = options.cnvObj;
 			var attachmentsDialog = options.dialogObj;
 			/* var obj = this;
 			obj.publish('conversationBeforeDeleteAttachment',{cnvMessageAttachmentID:cnvMessageAttachmentID}); */
 			var	formArray = [{
 				'name': 'cnvMessageAttachmentID',
 				'value': cnvMessageAttachmentID
-			}]; 
-	
+			}];
+
 			$.ajax({
 				type: 'post',
 				data: formArray,
@@ -774,17 +779,17 @@
 			});
 		}
 	}
-	
+
 	$.fn.ccmconversationattachments = function(method) {
-	
+
 		if ( methods[method] ) {
 			return methods[method].apply( this, Array.prototype.slice.call( arguments, 1 ));
 		} else if ( typeof method === 'object' || ! method ) {
 			return methods.init.apply( this, arguments );
 		} else {
 			$.error( 'Method ' +  method + ' does not exist on jQuery.tooltip' );
-		}    
-	
+		}
+
 	}
 
 })(jQuery, window);

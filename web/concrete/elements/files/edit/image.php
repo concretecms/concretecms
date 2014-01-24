@@ -83,28 +83,30 @@ $filters = SystemImageEditorFilter::getList();
 
 <script>
 $(function(){
-  var settings = {src:'<?=$fv->getURL()?>',fID:<?=$fv->fID?>,controlsets:{},filters:{},components:{},debug:true};
-  $('div.controlset','div.controls').each(function(){
-    settings.controlsets[$(this).attr('data-namespace')] = {
-      src:$(this).attr('data-src'),
-      element: $(this).children('div.control').children('div.contents')
-    }
+  _.defer(function(){
+    var settings = {src:'<?=$fv->getURL()?>',fID:<?=$fv->fID?>,controlsets:{},filters:{},components:{},debug:true};
+    $('div.controlset','div.controls').each(function(){
+      settings.controlsets[$(this).attr('data-namespace')] = {
+        src:$(this).attr('data-src'),
+        element: $(this).children('div.control').children('div.contents')
+      }
+    });
+    $('div.component','div.controls').each(function(){
+      settings.components[$(this).attr('data-namespace')] = {
+        src:$(this).attr('data-src'),
+        element: $(this).children('div.control').children('div.contents')
+      }
+    });
+    settings.filters = <?php
+      $fnames = array();
+      foreach ($filters as $filter) {
+        $handle = $filter->getImageEditorFilterHandle();
+        $fnames[$handle] = array("src"=>"/concrete/js/image_editor/filters/{$handle}.js","name"=>$filter->getImageEditorFilterName());
+      }
+      echo Loader::helper('json')->encode($fnames);
+    ?>;
+    var editor = $('div#<?=$editorid?>.Editor');
+    window.im = editor.closest('.ui-dialog-content').css('padding',0).end().ImageEditor(settings);
   });
-  $('div.component','div.controls').each(function(){
-    settings.components[$(this).attr('data-namespace')] = {
-      src:$(this).attr('data-src'),
-      element: $(this).children('div.control').children('div.contents')
-    }
-  });
-  settings.filters = <?php
-    $fnames = array();
-    foreach ($filters as $filter) {
-      $handle = $filter->getImageEditorFilterHandle();
-      $fnames[$handle] = array("src"=>"/concrete/js/image_editor/filters/{$handle}.js","name"=>$filter->getImageEditorFilterName());
-    }
-    echo Loader::helper('json')->encode($fnames);
-  ?>;
-  var editor = $('div#<?=$editorid?>.Editor');
-  window.im = editor.closest('.ui-dialog-content').css('padding',0).end().ImageEditor(settings);
 });
 </script>

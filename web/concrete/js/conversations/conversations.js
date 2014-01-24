@@ -92,7 +92,7 @@
 					'dateFormat': 		   dateFormat,
 					'customDateFormat':    customDateFormat,
 					'blockAreaHandle' :    blockAreaHandle
-					
+
 				}, function(r) {
 					var oldobj = window.obj;
 					window.obj = obj;
@@ -140,8 +140,8 @@
 			obj.$element.unbind('.cnv');
 			if (obj.options.uninitialized) {
 				obj.options.uninitialized = false;
-				ConcreteEvent.bind('conversationsMention',function(e){
-						obj.mentionList(e.eventData.items,e.eventData.coordinates || false, e.eventData.bindTo || obj.$element.get(0));
+				ConcreteEvent.bind('conversationsMention',function(e, data){
+						obj.mentionList(data.items, data.coordinates || false, data.bindTo || obj.$element.get(0));
 					},
 					obj.$element.get(0) // Bind to this conversation only.
 				);
@@ -171,17 +171,17 @@
 				ConcreteEvent.bind('conversationsTextareaKeydownEnter',function(e){
 					obj.dropdown.list.children().filter('.active').children('a').click();
 				}, obj.$element.get(0));
-				ConcreteEvent.bind('conversationPostError',function(e){
-					var $form = e.eventData.form,
-						messages = e.eventData.messages;
+				ConcreteEvent.bind('conversationPostError',function(e, data){
+					var $form = data.form,
+						messages = data.messages;
 					var s = '';
 					$.each(messages, function(i, m) {
 						s += m + '<br>';
 					});
 					$form.find('div.ccm-conversation-errors').html(s).show();
 				});
-				ConcreteEvent.bind('conversationSubmitForm',function(e){
-					e.eventData.form.find('div.ccm-conversation-errors').hide();
+				ConcreteEvent.bind('conversationSubmitForm',function(e, data){
+					data.form.find('div.ccm-conversation-errors').hide();
 				});
 			}
 			var paginate = (obj.options.paginate) ? 1 : 0;
@@ -200,7 +200,7 @@
 			obj.$loadmore = obj.$element.find('[data-load-page=conversation-message-list]');
 			obj.$messages = obj.$element.find('div.ccm-conversation-messages');
 			obj.$messagerating = obj.$element.find('span.ccm-conversation-message-rating');
-			
+
 			obj.$element.on('click.cnv', 'button[data-submit=conversation-message]', function() {
 				obj.submitForm($(this));
 				return false;
@@ -216,28 +216,28 @@
 				var $replyform = obj.$replyholder.appendTo($(this).closest('div[data-conversation-message-id]'));
 				$replyform.attr('data-form', 'conversation-reply').show();
 				$replyform.find('button[data-submit=conversation-message]').attr('data-post-parent-id', $(this).attr('data-post-parent-id'));
-				
+
 				$replyform.attr('rel', 'new-reply' + replyIterator);
-				replyIterator++;  // this may not be necessary, but might come in handy if we need to know how many times a new reply box has been triggered. 
+				replyIterator++;  // this may not be necessary, but might come in handy if we need to know how many times a new reply box has been triggered.
 				return false;
 			});
-			
+
 			$('.ccm-conversation-attachment-container').hide();
-			$('.ccm-conversation-add-new-message .ccm-conversation-attachment-toggle').off('click.cnv').on('click.cnv', function(event){ 
+			$('.ccm-conversation-add-new-message .ccm-conversation-attachment-toggle').off('click.cnv').on('click.cnv', function(event){
 				event.preventDefault();
 				if($('.ccm-conversation-add-reply .ccm-conversation-attachment-container').is(':visible')) {
 					$('.ccm-conversation-add-reply .ccm-conversation-attachment-container').toggle();
 				}
 				$('.ccm-conversation-add-new-message .ccm-conversation-attachment-container').toggle();
 			});
-			$('.ccm-conversation-add-reply .ccm-conversation-attachment-toggle').off('click.cnv').on('click.cnv', function(event){ 
+			$('.ccm-conversation-add-reply .ccm-conversation-attachment-toggle').off('click.cnv').on('click.cnv', function(event){
 				event.preventDefault();
 				if($('.ccm-conversation-add-new-message .ccm-conversation-attachment-container').is(':visible')) {
 					$('.ccm-conversation-add-new-message .ccm-conversation-attachment-container').toggle();
 				}
 				$('.ccm-conversation-add-reply .ccm-conversation-attachment-container').toggle();
 			});
-			
+
 			obj.$element.on('click.cnv', 'a[data-submit=delete-conversation-message]', function() {
 				var $link = $(this);
 				obj.$deletedialog = obj.$deleteholder.clone();
@@ -297,14 +297,14 @@
 					'dateFormat':          obj.options.dateFormat,
 					'customDateFormat':    obj.options.customDateFormat,
 					'blockAreaHandle': 	   obj.options.blockAreaHandle
-					
+
 				}, function(r) {
 					obj.$replyholder.appendTo(obj.$element);
 					$('.ccm-conversation-messages .dropdown-toggle').dropdown();
 					obj.attachBindings();
 				});
 			});
-			
+
 			obj.$element.on('click.cnv', '.image-popover-hover', function() {
 				$.magnificPopup.open({
 				  items: {
@@ -314,9 +314,9 @@
 				  }
 				});
 			});
-			
-			
-			
+
+
+
 			obj.$element.on('click.cnv', '[data-load-page=conversation-message-list]', function() {
 				var nextPage = parseInt(obj.$loadmore.attr('data-next-page'));
 				var totalPages = parseInt(obj.$loadmore.attr('data-total-pages'));
@@ -332,7 +332,7 @@
 					'page':                nextPage,
 					'orderBy':             obj.$sortselect.val(),
 					'enableCommentRating': obj.options.enableCommentRating,
-					'dateFormat':          obj.options.dateFormat, 
+					'dateFormat':          obj.options.dateFormat,
 					'customDateFormat':    obj.options.customDateFormat
 				};
 
@@ -351,7 +351,7 @@
 					}
 				});
 			});
-			
+
 			obj.$element.on('click.cnv', '.conversation-rate-message', function() {
 				var cnvMessageID = $(this).closest('[data-conversation-message-id]').attr('data-conversation-message-id');
 				var cnvRatingTypeHandle = $(this).attr('data-conversation-rating-type');
@@ -407,11 +407,11 @@
 							}
 						]
 					});
-				} 
+				}
 				return false;
 			});
-			
-			obj.$element.ccmconversationattachments(obj); 
+
+			obj.$element.ccmconversationattachments(obj);
 			$('.dropdown-toggle').dropdown();
 		},
 		handlePostError: function($form, messages) {
@@ -569,7 +569,7 @@
 						obj.handlePostError($form, r.messages);
 						return false;
 					}
-					$('.preview.processing').each(function(){    
+					$('.preview.processing').each(function(){
 						$('input[rel="'+ $(this).attr('rel') +'"]').remove();
 					});
 					$('form.dropzone').each(function(){
@@ -612,24 +612,24 @@
 			},
 			getCaretPosition: function(elem) {
 				// http://stackoverflow.com/a/263796/950669
-				if (elem.selectionStart) { 
-					return elem.selectionStart; 
-				} else if (document.selection) { 
-					elem.focus(); 
+				if (elem.selectionStart) {
+					return elem.selectionStart;
+				} else if (document.selection) {
+					elem.focus();
 
-					var r = document.selection.createRange(); 
-					if (r == null) { 
-					return 0; 
-					} 
+					var r = document.selection.createRange();
+					if (r == null) {
+					return 0;
+					}
 
-					var re = elem.createTextRange(), 
-					rc = re.duplicate(); 
-					re.moveToBookmark(r.getBookmark()); 
-					rc.setEndPoint('EndToStart', re); 
+					var re = elem.createTextRange(),
+					rc = re.duplicate();
+					re.moveToBookmark(r.getBookmark());
+					rc.setEndPoint('EndToStart', re);
 
-					return rc.text.length; 
-				}  
-				return 0; 
+					return rc.text.length;
+				}
+				return 0;
 			},
 			testMentionString: function(s) {
 				return /^@[a-z0-9]+$/.test(s);

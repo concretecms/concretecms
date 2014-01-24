@@ -140,9 +140,9 @@ $.each(shapes,function(i,shape) {
 	});
 });
 
-im.bind('changeActiveComponent',function(e){
-	if (e.eventData == im.namespace) {
-		im.fire("selected",e.eventData,elem);
+im.bind('changeActiveComponent',function(e, data){
+	if (data == im.namespace) {
+		im.fire("selected", data, elem);
 		im.selected = true;
 	} else {
 		im.hideSlideOut();

@@ -79,7 +79,7 @@ function CropSetup(im, me, $) {
   // Cropper Lines
   // Vertical Left
   my.cropperLineVLeft = new Kinetic.Line({
-    stroke:'rgba(0,0,0,.7)',
+    stroke:'rgba(0,0,0,.3)',
     strokeWidth:1
   });
   my.cropperLineVLeft.getPoints = function getCropperLinePoints() {
@@ -180,8 +180,8 @@ function CropSetup(im, me, $) {
   };
 
   // Event Bindings
-  im.bind('changeActiveAction', function(e) {
-    if (e.eventData === my.namespace) {
+  im.bind('changeActiveAction', function(e, data) {
+    if (data === my.namespace) {
       my.stage.add(my.cropLayer);
     } else if (my.cropLayer.parent) {
       my.cropLayer.remove();
@@ -189,6 +189,6 @@ function CropSetup(im, me, $) {
   });
 }
 
-setTimeout(function CropSetupTimer(){
+_.defer(function CropSetupTimer(){
   im.instance = new CropSetup(im, me, $);
 });

@@ -66,22 +66,21 @@ im.save = function saveImage() {
       im.stage.setScale(oldScale);
       im.stage.draw();
 
-      $.post('/index.php/tools/files/importers/imageeditor',{
+      $.post('/index.php/tools/required/files/importers/imageeditor',{
         fID: im.fileId,
         imgData: url
       }, function(res){
         var result = JSON.parse(res);
         if (result.error === 1){
           alert(result.message);
-        } else {
+        } else if (result.error === 0) {
           window.location = window.location;
+          window.location.reload();
         }
       });
     }
   });
 }
-
-
 
 im.actualPosition = function actualPosition(x, y, cx, cy, rad) {
   var ay = y - cy,

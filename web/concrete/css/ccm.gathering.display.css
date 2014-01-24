@@ -1,1 +1,3 @@
-div.ccm-gathering-grid{-webkit-transition:opacity .3s linear;transition:opacity .3s linear}div.ccm-gathering-overlay{width:600px;height:400px;margin:40px auto 0 auto;background-color:#fff;position:relative}
+
+div.ccm-gathering-grid{-webkit-transition:opacity .3s linear;transition:opacity .3s linear}
+div.ccm-gathering-overlay{width:600px;height:400px;margin:40px auto 0px auto;background-color:#fff;position:relative}
