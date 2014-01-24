@@ -135,8 +135,8 @@ $al->register('javascript', 'kinetic', 'js/kinetic.js');
 $al->register('css', 'core/imageeditor', 'css/ccm.image_editor.css');
 $al->register('javascript', 'core/imageeditor', 'js/ccm.imageeditor.js');
 $al->registerGroup('core/imageeditor', array(
-	array('javascript', 'core/imageeditor'),
 	array('javascript', 'kinetic'),
+	array('javascript', 'core/imageeditor'),
 	array('css', 'core/imageeditor')
 ));
 
