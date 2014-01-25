@@ -79,7 +79,7 @@ class ConcreteInterfaceHelpHelper {
 			'/dashboard/system/permissions/maintenance_mode' => t("Enable or disable maintenance mode, in which your site is only visible to the admin user. Maintenance Mode is useful for developing, testing or temporarily disabling a site."),
 			'/dashboard/system/optimization/jobs' => t("Have concrete5 perform various tasks to help your site running in top condition, process email posts, and update search engine indexing maps. Click the triangle icon next to the job to start it. A success message will be displayed once the job has been completed."),
 			'/dashboard/system/optimization/clear_cache' => t("If your site is behaving oddly or displaying out-of-date content, it's a good idea to clear the cache. If you're having to clear the cache a lot, you might want to just turn off caching in Cache & Speed Settings."),
-			'/dashboard/system/optimization/cache' => t("The basic cache stores some of concrete5's code in memory. Full page caching saves parts of your website's pages to files on the server. If you are building a new site, it's a good idea to turn the cache off while you are working with code, checking out add-ons and themes, and so on.  Once you feel content creation is your focus, turn caching back on."),
+			
 			'/dashboard/system/seo/urls' => t("Keep your web page addresses easy for humans and search engines to read by automatically removing references to index.php. You may need to create a file called .htaccess on your server for this to work, but we will try to do it for you first."),
 			'/dashboard/system/seo/tracking_codes' => t("Add any HTML or Javascript code you need for analytics tracking to every page of your site, and pick whether it will go in pages' header or footer. This is where you would input code from Google Analytics, for example."),
 			'/dashboard/system/seo/statistics' => t("Turns tracking of page views, file downloads and user registrations on or off. These are displayed on your site's Dashboard > Reports > Statistics page. If your high-traffic site experiences performance issues, you might consider disabling statistics tracking and investigate the use of an alternate, third-party solution for tracking site stats."),
@@ -89,6 +89,12 @@ class ConcreteInterfaceHelpHelper {
 			'/dashboard/users/add' => t('Manually create new user accounts for your concrete5 site.'),
 			'/dashboard' => t('The Dashboard allows you to perform administrative tasks for your site.')
 		);
+		
+		$pages['/dashboard/system/optimization/cache'][] = ConcreteInterfaceHelpHelperMessage::get('/dashboard/system/optimization/cache', t("The basic cache stores some of concrete5's code in memory. Full page caching saves parts of your website's pages to files on the server. If you are building a new site, it's a good idea to turn the cache off while you are working with code, checking out add-ons and themes, and so on.  Once you feel content creation is your focus, turn caching back on."), 1, 1);
+		
+		$msgTxt = "Need help speeding up your site?  contact concrete5's <a href=\"http://enterprise.concrete5.com/\" target=\"_blank\">enterprise services</a>.";
+		$pages['/dashboard/system/optimization/cache'][] = ConcreteInterfaceHelpHelperMessage::get('/page/design', $msgTxt, 3, 5);
+		
 		return $pages;
 	}
 
@@ -101,9 +107,16 @@ class ConcreteInterfaceHelpHelper {
 			
 		);
 		
-		$panels['/page/design'][] = ConcreteInterfaceHelpHelperMessage::get('/page/design', 'Welcome to customizing themes, check out this <a href="http://www.youtube.com/watch?v=pischKK2uHQ" target="_blank">video</a> if you would like some guidance.', 1, 1);
-		$panels['/page/design'][] = ConcreteInterfaceHelpHelperMessage::get('/page/design', t('Control your page\'s theme, template and give your page customize styles.'), 3, 5);
-		
+		$msgTxt = "<b>Welcome to customizing themes!</b><br/>
+		Watch this tutorial for guidance.<br/><br/>
+		<div style=\"text-align: center\" padding: 20px;\">
+		<a style=\"margin: 10px;\" href=\"http://www.youtube.com/watch?v=pischKK2uHQ\" target=\"_blank\"><img src=\"http://www.concrete5.org/files/6413/9067/3863/video_button.png\"/></a></div>
+		";
+		$panels['/page/design'][] = ConcreteInterfaceHelpHelperMessage::get('/page/design', $msgTxt, 0, 1);
+		$msgTxt = "Need some help?<br/>
+		 We noticed you've been in this area a few times recently. There's additional themes you can buy 
+		 <a href=\"http://www.concrete5.org/marketplace/themes\" target=\"_blank\">here</a>, or you can get custom design services from our <a href=\"http://enterprise.concrete5.com/\" target=\"_blank\">partners</a>.";
+		$panels['/page/design'][] = ConcreteInterfaceHelpHelperMessage::get('/page/design', $msgTxt, 3, 6);
 		return $panels;
 	}
 
