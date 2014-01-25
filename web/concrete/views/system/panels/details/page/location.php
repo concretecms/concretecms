@@ -135,7 +135,7 @@ $(function() {
 		}));
 
 		var container = $('form[data-panel-detail-form=location]');
-		container.find('input[name=cParentID]').val(node.data.cID);
+		container.find('input[name=cParentID]').val(data.cID);
 		$.fn.dialog.closeTop();
 	});
 });
