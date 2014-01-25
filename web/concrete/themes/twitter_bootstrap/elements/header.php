@@ -7,6 +7,7 @@
 
 <link type="text/css" rel="stylesheet" href="<?=$view->getThemePath()?>/css/bootstrap.min.css" />
 <link type="text/css" rel="stylesheet" href="<?=$view->getThemePath()?>/css/bootstrap-responsive.min.css" />
+<link type="text/css" rel="stylesheet" href="<?=$view->getStyleSheet('typography.css')?>" />
 
 <div style="height: 200px"></div>
 

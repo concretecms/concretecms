@@ -708,6 +708,39 @@
       }
     },
 
+    /** 
+     * replaces a block in an area with a new block by ID and content 
+     */
+    replace: function(bID, content) {
+      var my = this, editor = Concrete.getEditMode(), oldBID = my.getId(), area = my.getArea(), totalBlocks = area.getTotalBlocks();
+
+      my.getElem().next('.ccm-area-drag-area').remove();
+
+      my.getElem().before(content).remove();
+      var newBlock = new Concrete.Block($('[data-block-id=' + bID + ']'), editor);
+
+      area.setTotalBlocks(totalBlocks-1); // it will get incremented by addBlock below
+
+      // now we go through all the block registries and replace the old one with this one.
+      var editorBlocks = editor.getBlocks();
+      for(var i = 0; i < editorBlocks.length; i++) {
+        var b = editorBlocks[i];
+        if (b.getId() == oldBID) {
+          editorBlocks[i] = newBlock;
+        }
+      }
+      editor.setBlocks(editorBlocks);
+
+      // area specific
+      var areaBlocks = area.getBlocks(), total = areaBlocks.length;
+      for(var i = 0; i < total; i++) {
+        var b = areaBlocks[i];
+        if (b.getId() == oldBID) {
+          area.addBlockToIndex(newBlock, i);
+        }
+      }
+    },
+
     getMenuElem: function() {
       var my = this;
       return $('[data-block-menu=block-menu-b' + my.getId() + '-' + my.getAreaId() + ']');
