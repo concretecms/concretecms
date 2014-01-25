@@ -68,6 +68,7 @@ if ($cID > 0 && $bID > 0) {
 								$('[data-area-id=' + resp.aID + '][data-block-id=<?=$bID?>]').before(r).remove();
 								//CCMInlineEditMode.editBlock(<?=$cID?>, resp.aID, resp.arHandle, resp.bID);
 								CCMToolbar.disableDirectExit();
+								jQuery.fn.dialog.hideLoader();
 								jQuery.fn.dialog.closeTop();
 							}
 						);

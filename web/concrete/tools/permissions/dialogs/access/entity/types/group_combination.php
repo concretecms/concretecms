@@ -37,7 +37,7 @@ $url = $type->getAccessEntityTypeToolsURL(); ?>
 
 <script type="text/javascript">
 ConcreteEvent.subscribe('SelectGroup', function(e, data) {
-	e.continuePropagation = false;
+	e.stopPropagation();
 	var gID = data.gID, gName = data.gName;
 	if ($("input[class=combogID][value=" + gID + "]").length == 0) {
 		$("#ccm-permissions-access-entity-combination-groups-none").hide();
