@@ -96,7 +96,7 @@ $al->register('css', 'bootstrap', 'css/ccm.app.css', array('postprocess' => fals
  */
 
 // JS Events
-$al->register('javascript', 'core/observer', 'js/ccm.pubsub.js');
+$al->register('javascript', 'core/observer', 'js/ccm.pubsub.js', array('postprocess' => false));
 
 // Core App
 $al->register('css', 'core/app', 'css/ccm.app.css', array('postprocess' => false));
