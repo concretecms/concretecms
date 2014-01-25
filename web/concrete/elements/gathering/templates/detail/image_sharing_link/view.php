@@ -1,5 +1,5 @@
-<? defined('C5_EXECUTE') or die("Access Denied."); 
-$nh = Loader::helper('navigation'); 
+<? defined('C5_EXECUTE') or die("Access Denied.");
+$nh = Loader::helper('navigation');
 if (is_array($image)) {
 $image = $image[0];
 }?>
@@ -11,11 +11,11 @@ $image = $image[0];
 			<a href="<?=$link?>"><?=t('Full Article') ?></a>
 			<a href="#" class="gathering-full-screen"><i class="icon-fullscreen icon-white"></i></a>
 			<a href="#" class="gathering-detail-share"><i class="icon-share-alt icon-white"></i></a>
+			<? if ($description) { ?>
+			<div class="description">
+				<p><?=$description?></p>
+			</div>
+			<? } ?>
 		</div>
 	</div>
-	<? if ($description) { ?>
-	<div class="description">
-		<p><?=$description?></p>
-	</div>
-	<? } ?>
 </div>

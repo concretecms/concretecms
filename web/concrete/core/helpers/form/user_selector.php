@@ -55,12 +55,13 @@ $(function() {
 	$("#ccm-user-selector-{$fieldName}").dialog();
 	$("#ccm-user-selector-{$fieldName}").on('click', function() {
 		var selector = $(this);
+		ConcreteEvent.unsubscribe('UserSearchDialogSelectUser');
 		ConcreteEvent.subscribe('UserSearchDialogSelectUser', function(e, data) {
 			var par = selector.parent().find('.ccm-summary-selected-item-label'),
 				pari = selector.parent().find('[name={$fieldName}]');
 			par.html(data.uName);
 			pari.val(data.uID);
-			e.continuePropagation = false;
+			e.stopPropagation();
 			jQuery.fn.dialog.closeTop();
 		});
 		ConcreteEvent.subscribe('UserSearchDialogAfterSelectUser', function(e) {
@@ -123,7 +124,7 @@ EOL;
 			$("#ccmUserSelect' . $fieldName . ' .ccm-user-select-item").on(\'click\', function() {
 				ConcreteEvent.subscribe(\'UserSearchDialogSelectUser\', function(e, data) {
 					var uID = data.uID, uName = data.uName, uEmail = data.uEmail;
-					e.continuePropagation = false;
+					e.stopPropagation();
 					$("tr.ccm-user-selected-item-none").hide();
 					if ($("#ccmUserSelect' . $fieldName . '_" + uID).length < 1) {
 						var html = "";

@@ -30,11 +30,19 @@
         }
         getTarget(target).trigger(type.toLowerCase(), data);
         return ConcreteEvent;
+      },
+
+      unsubscribe: function(type, secondary_argument, target) {
+        var args = [type.toLowerCase()];
+        if (typeof secondary_argument !== undefined) args.push(secondary_argument);
+        $.fn.unbind.apply(getTarget(target), args);
+        return ConcreteEvent;
       }
     };
 
     ConcreteEvent.sub = ConcreteEvent.bind = ConcreteEvent.watch   = ConcreteEvent.on = ConcreteEvent.subscribe;
     ConcreteEvent.pub = ConcreteEvent.fire = ConcreteEvent.trigger = ConcreteEvent.publish;
+    ConcreteEvent.unsub = ConcreteEvent.unbind = ConcreteEvent.unwatch   = ConcreteEvent.off = ConcreteEvent.unsubscribe;
 
     ns.event = ConcreteEvent;
     return ConcreteEvent;

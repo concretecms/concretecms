@@ -3,8 +3,8 @@
 
 <script type="text/javascript">
 $(function() {
+	ConcreteEvent.unsubscribe('SelectGroup');
 	ConcreteEvent.subscribe('SelectGroup', function(e, data) {
-		e.continuePropagation = false;
 		jQuery.fn.dialog.closeTop();
 		$('#ccm-permissions-access-entity-form .btn-group').removeClass('open');
 		$.getJSON('<?=$url?>', {

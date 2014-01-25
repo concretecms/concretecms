@@ -62,6 +62,10 @@
             <feature handle="image" />
             <feature handle="link" />
         </gatheringitemtemplate>
+        <gatheringitemtemplate handle="image_conversation" type="detail" name="Image Conversation" package="">
+            <feature handle="image" />
+            <feature handle="link" />
+        </gatheringitemtemplate>
         <gatheringitemtemplate handle="image" type="detail" name="Large Image" package="">
             <feature handle="image" />
         </gatheringitemtemplate>
@@ -125,6 +129,7 @@
 		<gatheringitemtemplate handle="image_overlay_headline" type="tile" name="Image Overlay Headline" package="">
 			<feature handle="title" />
 			<feature handle="image" />
+            <feature handle="author" />
 		</gatheringitemtemplate>
     </gatheringitemtemplates>
     <featurecategories>
