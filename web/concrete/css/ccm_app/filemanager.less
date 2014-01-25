@@ -60,6 +60,26 @@ div#ccm-popover-menu-container {
 	visibility: hidden;
 }
 
+.ccm-ui form.ccm-search-fields ul.ccm-search-form-advanced li#ccm-file-manager-upload {
+	display: none;
+}
+
+.ui-dialog-content form.ccm-search-fields ul.ccm-search-form-advanced li#ccm-file-manager-upload {
+	display: inline-block;
+	position: relative;
+	input[type=file] {
+		position: absolute;
+		.opacity(0);
+		border: 1px solid black;
+		top:  0px;
+		left: 0px;
+		width: 50px;
+		height: 25px;
+		cursor: pointer;
+	}
+
+}
+
 div#ccm-file-manager-upload {
 	position: absolute;
 	top: 30px;

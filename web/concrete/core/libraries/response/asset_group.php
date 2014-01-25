@@ -76,12 +76,18 @@ class Concrete5_Library_ResponseAssetGroup {
 		// now we iterate through the $outputAssetsPre array, maintaining position, and sorting all the stdClass
 		// objects within each array, keeping non-post-processed items first, and sorting by key.
 		foreach($outputAssetsPre as $position => $assets) {
-			$outputAssets[$position] = usort($assets, function($o1, $o2) {
+			usort($assets, function($o1, $o2) {
 				$a1 = $o1->asset;
 				$a2 = $o2->asset;
 				$k1 = $o1->key;
 				$k2 = $o2->key;
+				
+				// This is a great idea but it's not working. We're going to ditch this attempt at 
+				// intelligent grouping and just sort strictly by key.
 
+				return sortByKey($k1, $k2);
+
+				/*
 				// o1 not an asset, o2 not an asset
 				if ((!($a1 instanceof Asset)) && (!($a2 instanceof Asset))) {
 					return sortByKey($k1, $k2);
@@ -123,17 +129,19 @@ class Concrete5_Library_ResponseAssetGroup {
 				}
 
 				// o1 an asset, supports post processing, o2 an asset, supports post processing
-				if ($a1 instanceof Asset && $a1->assetSupportsPostProcessing() && $a2 instanceof Asset && !$a2->assetSupportsPostProcessing()) {
+				if ($a1 instanceof Asset && $a1->assetSupportsPostProcessing() && $a2 instanceof Asset && $a2->assetSupportsPostProcessing()) {
 					return sortByKey($k1, $k2);
 				}
+				*/
 
-			});		
+			});
+
+			foreach($assets as $object) {
+				$outputAssets[$position][] = $object->asset;
+			}
 		}
 
-
-
-
-		return $this->outputAssets;
+		return $outputAssets;
 	}
 
 	/** 

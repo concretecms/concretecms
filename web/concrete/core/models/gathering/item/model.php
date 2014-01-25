@@ -205,6 +205,16 @@ abstract class Concrete5_Model_GatheringItem extends Object {
 		return mt_rand(0, ($ascore+$bscore)) > $ascore ? 1 : -1;
 	}
 
+	public function setAutomaticGatheringItemSlotWidth() {
+		$amount = floor(1 + pow(lcg_value(), 1.4) * 4);
+		$this->setGatheringItemSlotWidth($amount);
+	}
+
+	public function setAutomaticGatheringItemSlotHeight() {
+		$amount = floor(1 + pow(lcg_value(), 1.4) * 2);
+		$this->setGatheringItemSlotHeight($amount);
+	}
+
 	public function setAutomaticGatheringItemTemplate() {
 		$arr = Loader::helper('array');
 		$db = Loader::db();

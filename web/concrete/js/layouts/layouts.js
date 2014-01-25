@@ -103,7 +103,7 @@ CCMLayout.prototype._setupFormSaveAndCancel = function() {
 CCMLayout.prototype._rescanAreasInPage = function(e, data) {
 	var editor = Concrete.getEditMode();
 	var block = data.block;
-	e.continuePropagation = false;
+	e.stopPropagation();
 	block.getElem().find('div.ccm-area').each(function() {
         area = new Concrete.Area($(this), editor);
         area.bindMenu();

@@ -116,6 +116,10 @@
 
       jQuery.fn.dialog.showLoader();
 
+      if (area.menu) {
+        area.menu.destroy();
+      }
+
       Concrete.event.bind('EditModeExitInline', function() {
         $('#a' + area.getId() + '-bt' + btID).remove();
         my.destroyInlineEditModeToolbars();
