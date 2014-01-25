@@ -31,8 +31,8 @@
 				modal: true,
 				title: ccmi18n_filemanager.title,
 				onOpen: function() {
+					ConcreteEvent.unsubscribe('FileManagerSelectFile');
 					ConcreteEvent.subscribe('FileManagerSelectFile', function(e, data) {
-						e.stopPropagation();
 						jQuery.fn.dialog.closeTop();
 						my.loadFile(data.fID);
 					});

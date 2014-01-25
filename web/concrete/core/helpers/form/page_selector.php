@@ -50,7 +50,7 @@ class Concrete5_Helper_Form_PageSelector {
 		}
 		$html .= '</strong></div>';
 		$html .= '<a class="ccm-sitemap-select-page" data-page-selector-launch="' . $fieldName . '" dialog-width="90%" dialog-height="70%" dialog-append-buttons="true" dialog-modal="false" dialog-title="' . t('Choose Page') . '" href="' . REL_DIR_FILES_TOOLS_REQUIRED . '/sitemap_search_selector?cID=' . $selectedCID . '">' . t('Select Page') . '</a>';
-		$html .= '&nbsp;<a href="javascript:void(0)" dialog-sender="' . $fieldName . '" class="ccm-sitemap-clear-selected-page" style="float: right; margin-top: -8px;' . $clearStyle . '"><img src="' . ASSETS_URL_IMAGES . '/icons/remove.png" style="vertical-align: middle; margin-left: 3px" /></a>';
+		$html .= '&nbsp;<a href="javascript:void(0)" dialog-sender="' . $fieldName . '" data-page-selector-clear="' . $fieldName . '" class="ccm-sitemap-clear-selected-page" style="float: right; margin-top: -8px;' . $clearStyle . '"><img src="' . ASSETS_URL_IMAGES . '/icons/remove.png" style="vertical-align: middle; margin-left: 3px" /></a>';
 		$html .= '<input type="hidden" data-page-selector="cID" name="' . $fieldName . '" value="' . $selectedCID . '"/>';
 		$html .= '</div>';
 		$html .= "<script type=\"text/javascript\">
@@ -59,8 +59,8 @@ class Concrete5_Helper_Form_PageSelector {
 			$('a[data-page-selector-launch={$fieldName}]').dialog();
 			$('a[data-page-selector-launch={$fieldName}]').on('click', function() {
 				var selector = $(this);
+				ConcreteEvent.unsubscribe('SitemapSelectPage');
 				ConcreteEvent.subscribe('SitemapSelectPage', function(e, data) {
-					e.stopPropagation();
 					var handle = selector.attr('data-page-selector-launch');
 					var container = $('div[data-page-selector=' + handle + ']');
 					container.find('.ccm-summary-selected-item-label').html(data.title);
@@ -70,7 +70,7 @@ class Concrete5_Helper_Form_PageSelector {
 				});
 			});
 
-			$('a.ccm-sitemap-clear-selected-page').unbind().click(function() {
+			$('a[data-page-selector-clear={$fieldName}]').click(function() {
 				var container = $('div[data-page-selector={$fieldName}]');
 				container.find('.ccm-summary-selected-item-label').html('');
 				container.find('.ccm-sitemap-clear-selected-page').hide();
