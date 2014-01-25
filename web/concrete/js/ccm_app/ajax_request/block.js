@@ -67,10 +67,10 @@
 					}
 
 				} else {
-					$('[data-block-id=' + my.options.bID + '][data-area-id=' + resp.aID + ']').before(r).remove();
-					var block = new Concrete.Block($('[data-block-id=' + resp.bID + ']'), editor);
-		            block.setArea(area);
-					ConcreteAlert.hud(ccmi18n.updateBlockMsg, 2000, 'ok', ccmi18n.updateBlock);
+					// remove old block from area
+					var block = area.getBlockByID(my.options.bID);
+					block.replace(resp.bID, r);
+		            ConcreteAlert.hud(ccmi18n.updateBlockMsg, 2000, 'ok', ccmi18n.updateBlock);
 	
 					if (my.options.btSupportsInlineEdit) {
 						editor.destroyInlineEditModeToolbars();
