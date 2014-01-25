@@ -1,0 +1,7 @@
+body {
+	/* customize_body_background */ background-color: #fff; /* customize_body_background */
+	/* customize_text */ color:#333 /* customize_text */ 
+	/* customize_text */ font: normal normal 13px Helvetica; /* customize_text */ 
+}
+
+a,a:visited,a:active { /* customize_link */ color: #0088cc /* customize_link */}

@@ -22,5 +22,6 @@ $(function() {
 Loader::element('gathering/display', array(
 	'gathering' => $gathering,
 	'list' => $itemList,
+	'itemsPerPage' => $itemsPerPage,
 	'showTileControls' => true
 ));
