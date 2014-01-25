@@ -151,9 +151,4 @@ $image = $image[0];
 		</div>
 		</div>
 	</div>
-	<? if ($description) { ?>
-	<div class="description">
-		<p><?=$description?></p>
-	</div>
-	<? } ?>
 </div>
