@@ -131,7 +131,7 @@ class Concrete5_Controller_Page_Dashboard_Reports_Forms extends DashboardControl
 	}	
 
 	private function loadSurveyResponses(){
-		$c=$this->getCollectionObject();
+		$c = Page::getCurrentPage();
 		$db = Loader::db();
 		$tempMiniSurvey = new MiniSurvey();
 		$pageBase = DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $c->getCollectionID();

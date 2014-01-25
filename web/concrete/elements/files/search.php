@@ -45,7 +45,13 @@ $searchRequest = $controller->getSearchRequest();
 	</div>
 	<ul class="ccm-search-form-advanced list-inline">
 		<li><a href="#" data-search-toggle="advanced"><?=t('Advanced Search')?></a>
-			<li><a href="#" data-search-toggle="customize" data-search-column-customize-url="<?=URL::to('/system/dialogs/file/search/customize')?>"><?=t('Customize Results')?></a>
+		<li><a href="#" data-search-toggle="customize" data-search-column-customize-url="<?=URL::to('/system/dialogs/file/search/customize')?>"><?=t('Customize Results')?></a>
+		<?
+		$fp = FilePermissions::getGlobal();
+		if ($fp->canAddFile()) { ?>
+			<li id="ccm-file-manager-upload"><a href="#"><?=t('Upload Files')?><input type="file" name="files[]" /></a></li>
+		<? } ?>
+
 	</ul>
 	</div>
 	<?

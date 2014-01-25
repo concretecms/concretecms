@@ -4,7 +4,7 @@
 <script type="text/javascript">
 $(function() {
 	ConcreteEvent.subscribe('SelectGroup', function(e, data) {
-		e.continuePropagation = false;
+		e.stopPropagation();
 		jQuery.fn.dialog.closeTop();
 		$('#ccm-permissions-access-entity-form .btn-group').removeClass('open');
 		$.getJSON('<?=$url?>', {

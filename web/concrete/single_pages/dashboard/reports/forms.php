@@ -23,17 +23,17 @@ jQuery(function($) {
 	var deleteResponse = (<?=$json->encode(t('Are you sure you want to delete this form submission?'))?>),
 		deleteForm = (<?=$json->encode(t('Are you sure you want to delete this form and its form submissions?'))?>),
 		deleteFormAnswers = (<?=$json->encode(t('Are you sure you want to delete this form submissions?'))?>);
-	$('.delete-response').live('click', function(e) {
+	$('.delete-response').on('click', function(e) {
 		if (!confirm(deleteResponse)) {
 			e.preventDefault();
 		}
 	});
-	$('.delete-form').live('click', function(e) {
+	$('.delete-form').on('click', function(e) {
 		if (!confirm(deleteForm)) {
 			e.preventDefault();
 		}
 	});
-	$('.delete-form-answers').live('click', function(e) {
+	$('.delete-form-answers').on('click', function(e) {
 		if (!confirm(deleteFormAnswers)) {
 			e.preventDefault();
 		}
