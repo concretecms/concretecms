@@ -21,6 +21,11 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 	class Concrete5_Model_UserInfo extends Object { 
 
+		public function __construct() {
+		Loader::library('3rdparty/phpass/PasswordHash');
+		$this->hasher = new PasswordHash(PASSWORD_HASH_COST_LOG2, PASSWORD_HASH_PORTABLE);
+}
+			
 		public function __toString() {
 			return 'UserInfo: ' . $this->getUserID();
 		}
@@ -121,6 +126,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			$db = Loader::db();
 			$dh = Loader::helper('date');
 			$uDateAdded = $dh->getSystemDateTime();
+			Loader::library('3rdparty/phpass/PasswordHash');
+			$hasher = new PasswordHash(PASSWORD_HASH_COST_LOG2, PASSWORD_HASH_PORTABLE);
 			
 			if ($data['uIsValidated'] == 1) {
 				$uIsValidated = 1;
@@ -138,13 +145,13 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			
 			$password_to_insert = $data['uPassword'];
 			if (!in_array(self::ADD_OPTIONS_NOHASH, $options)) {
-				$password_to_insert = User::encryptPassword($password_to_insert);			
+				$hash = $hasher->HashPassword($password_to_insert);
 			}	
 			
 			if (isset($data['uDefaultLanguage']) && $data['uDefaultLanguage'] != '') {
 				$uDefaultLanguage = $data['uDefaultLanguage'];
 			}
-			$v = array($data['uName'], $data['uEmail'], $password_to_insert, $uIsValidated, $uDateAdded, $uIsFullRecord, $uDefaultLanguage, 1);
+			$v = array($data['uName'], $data['uEmail'], $hash, $uIsValidated, $uDateAdded, $uIsFullRecord, $uDefaultLanguage, 1);
 			$r = $db->prepare("insert into Users (uName, uEmail, uPassword, uIsValidated, uDateAdded, uIsFullRecord, uDefaultLanguage, uIsActive) values (?, ?, ?, ?, ?, ?, ?, ?)");
 			$res = $db->execute($r, $v);
 			if ($res) {
@@ -433,8 +440,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				$testChange = false;
 				
 				if ($data['uPassword'] != null) {
-					if (User::encryptPassword($data['uPassword']) == User::encryptPassword($data['uPasswordConfirm'])) {
-						$v = array($uName, $uEmail, User::encryptPassword($data['uPassword']), $uHasAvatar, $uTimezone, $uDefaultLanguage, $this->uID);
+					if ($data['uPassword'] == $data['uPasswordConfirm']) {
+						$v = array($uName, $uEmail, $this->hasher->HashPassword($data['uPassword']), $uHasAvatar, $uTimezone, $uDefaultLanguage, $this->uID);
 						$r = $db->prepare("update Users set uName = ?, uEmail = ?, uPassword = ?, uHasAvatar = ?, uTimezone = ?, uDefaultLanguage = ? where uID = ?");
 						$res = $db->execute($r, $v);
 						
@@ -558,7 +565,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		function changePassword($newPassword) { 
 			$db = Loader::db();
 			if ($this->uID) {
-				$v = array(User::encryptPassword($newPassword), $this->uID);
+				$v = array($hasher->HashPassword($newPassword), $this->uID);
 				$q = "update Users set uPassword = ? where uID = ?";
 				$r = $db->prepare($q);
 				$res = $db->execute($r, $v);
@@ -589,16 +596,12 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			$db = Loader::db();
 			if ($this->uID > 0) {
 				$newPassword = '';
-				$salt = "abcdefghijklmnpqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ123456789";
+				$chars = "abcdefghijklmnpqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ123456789";
 				for ($i = 0; $i < 7; $i++) {
-					$newPassword .= substr($salt, rand() %strlen($salt), 1);
+					$newPassword .= substr($chars, rand() %strlen($chars), 1);
 				}
-				$v = array(User::encryptPassword($newPassword), $this->uID);
-				$q = "update Users set uPassword = ? where uID = ?";
-				$r = $db->query($q, $v);
-				if ($r) {
-					return $newPassword;
-				}
+				$this->changePassword($newPassword);
+				return $newPassword;
 			}
 		}
 		
