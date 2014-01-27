@@ -90,11 +90,12 @@ class ConcreteInterfaceHelpHelper {
 			'/dashboard' => t('The Dashboard allows you to perform administrative tasks for your site.')
 		);
 		
-		$pages['/dashboard/system/optimization/cache'][] = ConcreteInterfaceHelpHelperMessage::get('/dashboard/system/optimization/cache', t("The basic cache stores some of concrete5's code in memory. Full page caching saves parts of your website's pages to files on the server. If you are building a new site, it's a good idea to turn the cache off while you are working with code, checking out add-ons and themes, and so on.  Once you feel content creation is your focus, turn caching back on."), 1, 1);
-		
+		// displays views 3 -> 5
 		$msgTxt = "Need help speeding up your site?  contact concrete5's <a href=\"http://enterprise.concrete5.com/\" target=\"_blank\">enterprise services</a>.";
 		$pages['/dashboard/system/optimization/cache'][] = ConcreteInterfaceHelpHelperMessage::get('/page/design', $msgTxt, 3, 5);
 		
+		// default message
+		$pages['/dashboard/system/optimization/cache'][] = ConcreteInterfaceHelpHelperMessage::get('/dashboard/system/optimization/cache', t("The basic cache stores some of concrete5's code in memory. Full page caching saves parts of your website's pages to files on the server. If you are building a new site, it's a good idea to turn the cache off while you are working with code, checking out add-ons and themes, and so on.  Once you feel content creation is your focus, turn caching back on."));
 		return $pages;
 	}
 
@@ -107,16 +108,19 @@ class ConcreteInterfaceHelpHelper {
 			
 		);
 		
+		// displays views 3 -> 6
+		$msgTxt = "Need some help?<br/>
+		 We noticed you've been in this area a few times recently. There's additional themes you can buy 
+		 <a href=\"http://www.concrete5.org/marketplace/themes\" target=\"_blank\">here</a>, or you can get custom design services from our <a href=\"http://enterprise.concrete5.com/\" target=\"_blank\">partners</a>.";
+		$panels['/page/design'][] = ConcreteInterfaceHelpHelperMessage::get('/page/design', $msgTxt, 3, 6);
+		
+		// default message
 		$msgTxt = "<b>Welcome to customizing themes!</b><br/>
 		Watch this tutorial for guidance.<br/><br/>
 		<div style=\"text-align: center\" padding: 20px;\">
 		<a style=\"margin: 10px;\" href=\"http://www.youtube.com/watch?v=pischKK2uHQ\" target=\"_blank\"><img src=\"http://www.concrete5.org/files/6413/9067/3863/video_button.png\"/></a></div>
 		";
-		$panels['/page/design'][] = ConcreteInterfaceHelpHelperMessage::get('/page/design', $msgTxt, 0, 1);
-		$msgTxt = "Need some help?<br/>
-		 We noticed you've been in this area a few times recently. There's additional themes you can buy 
-		 <a href=\"http://www.concrete5.org/marketplace/themes\" target=\"_blank\">here</a>, or you can get custom design services from our <a href=\"http://enterprise.concrete5.com/\" target=\"_blank\">partners</a>.";
-		$panels['/page/design'][] = ConcreteInterfaceHelpHelperMessage::get('/page/design', $msgTxt, 3, 6);
+		$panels['/page/design'][] = ConcreteInterfaceHelpHelperMessage::get('/page/design', $msgTxt);
 		return $panels;
 	}
 
@@ -162,6 +166,7 @@ class ConcreteInterfaceHelpHelper {
 		if (!$message) {
 			return false;
 		}
+		
 		$u = new User();
 		if ($u->isRegistered()) {
 			$disabledHelpNotifications = $u->config('DISABLED_HELP_NOTIFICATIONS');
@@ -174,7 +179,7 @@ class ConcreteInterfaceHelpHelper {
 				}
 			}
 		}
-
+		
 		$ok = t('Ok');
 		$hideAll = t('Hide All');
 		$html =<<<EOT
@@ -218,10 +223,10 @@ class ConcreteInterfaceHelpHelperMessage {
 	public $identifier;
 	
 	/**
-	 * @var int $displayOnCount - will display on the [x]th call matching the identifier
+	 * @var int $displayOnCountMin - will display on the [x]th call matching the identifier
 	 */
-	public $displayOnCountMin;
-	public $displayOnCountMax;
+	public $displayOnCountMin = 0;
+	public $displayOnCountMax = 0;
 	
 	/**
 	 * @var string $content - message content that will be displayed in help dialog
@@ -230,7 +235,7 @@ class ConcreteInterfaceHelpHelperMessage {
 	
 	public function getContentToDisplay($displayCount) {
 		$content = false;
-		if($displayCount >= $this->displayOnCountMin && $displayCount <= $this->displayOnCountMax) {
+		if(($displayCount >= $this->displayOnCountMin && $displayCount <= $this->displayOnCountMax) || $this->displayOnCountMax <= 0) {
 			$content = $this->content;
 		}
 		return $content;
