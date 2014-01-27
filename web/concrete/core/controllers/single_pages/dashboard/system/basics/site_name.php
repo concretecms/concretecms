@@ -15,8 +15,12 @@ class Concrete5_Controller_Dashboard_System_Basics_SiteName extends DashboardBas
 	public function update_sitename() {
 		if ($this->token->validate("update_sitename")) {
 			if ($this->isPost()) {
-				Config::save('SITE', $this->post('SITE'));
-				$this->redirect('/dashboard/system/basics/site_name','sitename_saved');
+				if (Loader::helper('validation/strings')->alphanum($this->post('SITE'))) {
+					Config::save('SITE', $this->post('SITE'));
+					$this->redirect('/dashboard/system/basics/site_name','sitename_saved');
+				} else {
+					$this->error->add(t('Your site name may only contain letters and numbers.'));
+				}
 			}
 		} else {
 			$this->set('error', array($this->token->getErrorMessage()));
