@@ -61,17 +61,15 @@ if ($cID > 0 && $bID > 0) {
 						jQuery.fn.dialog.showLoader();
 					},
 					success: function(resp) {
-						var action = CCM_TOOLS_PATH + '/edit_block_popup?cID=<?=$cID?>&bID=' + resp.bID + '&arHandle=<?=Loader::helper('text')->entities($arHandle)?>&btask=view_edit_mode';	 
-						$.get(action, 		
-							function(r) {
-								// now we swap out the content with the new block
-								$('[data-area-id=' + resp.aID + '][data-block-id=<?=$bID?>]').before(r).remove();
-								//CCMInlineEditMode.editBlock(<?=$cID?>, resp.aID, resp.arHandle, resp.bID);
-								CCMToolbar.disableDirectExit();
-								jQuery.fn.dialog.hideLoader();
-								jQuery.fn.dialog.closeTop();
-							}
-						);
+						var editor = Concrete.getEditMode();
+						var area = editor.getAreaByID(resp.aID);
+						var block = area.getBlockByID(<?=$bID?>);
+						var newBlock = block.replace(resp.bID, false);
+				        Concrete.event.fire('EditModeBlockEditInline', {
+				          block: newBlock
+				        });
+						jQuery.fn.dialog.hideLoader();
+						jQuery.fn.dialog.closeTop();
 					}
 				});
 			});
