@@ -118,6 +118,7 @@
         area.menu.destroy();
       }
 
+      Concrete.event.unsubscribe('EditModeExitInline');
       Concrete.event.bind('EditModeExitInline', function() {
         $('#a' + area.getId() + '-bt' + btID).remove();
         my.destroyInlineEditModeToolbars();
@@ -721,8 +722,13 @@
       var my = this, editor = Concrete.getEditMode(), oldBID = my.getId(), area = my.getArea(), totalBlocks = area.getTotalBlocks();
 
       my.getElem().next('.ccm-area-drag-area').remove();
+      my.getElem().data('block-id', bID); // it's super lame that i have to do this.
+      my.getElem().attr('data-block-id', bID);
 
-      my.getElem().before(content).remove();
+      if (content) {
+        my.getElem().before(content).remove();
+      }
+
       var newBlock = new Concrete.Block($('[data-block-id=' + bID + ']'), editor);
 
       area.setTotalBlocks(totalBlocks-1); // it will get incremented by addBlock below
@@ -745,6 +751,7 @@
           area.addBlockToIndex(newBlock, i);
         }
       }
+
 
       return newBlock;
     },
