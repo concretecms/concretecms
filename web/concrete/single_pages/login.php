@@ -13,53 +13,79 @@ $form = Loader::helper('form');
 </style>
 <div class='row'>
 	<div class='span10 offset1'>
-		
-		<div class="page-header">
-			<h1><?=t('Sign in to %s', SITE)?></h1>
-		</div>
 		<?php
-		// render authentication type specific views
-		if($authType instanceof AuthenticationType && strlen($authTypeElement)) {
-			$authType->renderForm($authTypeElement);
-		} else { // render authentication type(s) initial view
-			if (count($activeAuths) > 1) {
+		if (isset($required_attributes)) {
+			$af = Loader::helper('form/attribute');
+
+			?>
+			<fieldset>
+				<form method="post" action="<?=$this->url('/login', 'fill_attributes')?>">
+					<?php
+					foreach ($required_attributes as $attribute) {
+						?>
+						<div class='row'>
+							<?php
+							echo $af->display($attribute, true);
+							?>
+						</div>
+						<?php
+					}
+					?>
+					<button type="submit" class="btn">Complete Profile</button>
+				</form>
+			</fieldset>
+			<?php
+		} else {
+			?>
+			<div class="page-header">
+				<h1><?=t('Sign in to %s', SITE)?></h1>
+			</div>
+			<?php
+			// render authentication type specific views
+			if($authType instanceof AuthenticationType && strlen($authTypeElement)) {
+				$authType->renderForm($authTypeElement);
+			} else { // render authentication type(s) initial view
+				if (count($activeAuths) > 1) {
+					?>
+					<ul class="nav nav-tabs">
+						<?php
+						$first = true;
+						foreach ($activeAuths as $auth) {
+							?>
+							<li<?=$first?" class='active'":''?>>
+								<a data-authType='<?=$auth->getAuthenticationTypeHandle()?>' href='#<?=$auth->getAuthenticationTypeHandle()?>'><?=$auth->getAuthenticationTypeName()?></a>
+							</li>
+							<?php
+							$first = false;
+						}
+						?>
+					</ul>
+					<?php
+				}
 				?>
-				<ul class="nav nav-tabs">
+				<div class='authTypes row'>
 					<?php
 					$first = true;
 					foreach ($activeAuths as $auth) {
 						?>
-						<li<?=$first?" class='active'":''?>>
-							<a data-authType='<?=$auth->getAuthenticationTypeHandle()?>' href='#<?=$auth->getAuthenticationTypeHandle()?>'><?=$auth->getAuthenticationTypeName()?></a>
-						</li>
+						<div data-authType='<?=$auth->getAuthenticationTypeHandle()?>' style='<?=$first?"display:block":"display:none"?>'>
+							<fieldset>
+								<form method='post' class='form-horizontal' action='<?=$this->url('/login', 'authenticate', $auth->getAuthenticationTypeHandle())?>'>
+									<div class='authForm'>
+										<?$auth->renderForm()?>
+									</div>
+								</form>
+							</fieldset>
+						</div>
 						<?php
 						$first = false;
 					}
 					?>
-				</ul>
+				</div>
 				<?php
 			}
-			?>
-			<div class='authTypes row'>
-				<?php
-				$first = true;
-				foreach ($activeAuths as $auth) {
-					?>
-					<div data-authType='<?=$auth->getAuthenticationTypeHandle()?>' style='<?=$first?"display:block":"display:none"?>'>
-						<fieldset>
-							<form method='post' class='form-horizontal' action='<?=$this->url('/login', 'authenticate', $auth->getAuthenticationTypeHandle())?>'>
-								<div class='authForm'>
-									<?$auth->renderForm()?>
-								</div>
-							</form>
-						</fieldset>
-					</div>
-					<?php
-					$first = false;
-				}
-				?>
-			</div>
-		<? } ?>
+		}
+		?>
 	</div>
 </div>
 <script type="text/javascript">

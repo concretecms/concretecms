@@ -287,19 +287,21 @@
 			}
 		}
 
-		function logout() {
+		function logout($hard = true) {
 			// First, we check to see if we have any collection in edit mode
 			$this->unloadCollectionEdit();
 			$this->unloadAuthenticationTypes();
 			@session_unset();
-			@session_destroy();
+			if ($hard == true) {
+				@session_destroy();
+			}
 			Events::fire('on_user_logout');
 			if ($_COOKIE['ccmAuthUserHash']) {
 				setcookie("ccmAuthUserHash", "", 315532800, DIR_REL . '/');
 			}
 		}
 
-		
+
 		/**
 		 * use verifyAuthTypeCookie instead
 		 * @depricated since before 5.6.3
@@ -459,7 +461,7 @@
 				Events::fire('on_user_enter_group', $this, $g);
 			}
 		}
-		
+
 		function exitGroup($g) {
 			// takes a group object, and, if the user is in the group, they exit the group
 			if (is_object($g)) {
