@@ -4,7 +4,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 class Concrete5_Controller_Dashboard_System_Basics_SiteName extends DashboardBaseController {
 
 	public function view() {
-		$this->set('site', SITE);
+		$this->set('site', h(SITE));
 	}
 
 	public function sitename_saved() {
@@ -15,12 +15,8 @@ class Concrete5_Controller_Dashboard_System_Basics_SiteName extends DashboardBas
 	public function update_sitename() {
 		if ($this->token->validate("update_sitename")) {
 			if ($this->isPost()) {
-				if (Loader::helper('validation/strings')->alphanum($this->post('SITE'))) {
-					Config::save('SITE', $this->post('SITE'));
-					$this->redirect('/dashboard/system/basics/site_name','sitename_saved');
-				} else {
-					$this->error->add(t('Your site name may only contain letters and numbers.'));
-				}
+				Config::save('SITE', $this->post('SITE'));
+				$this->redirect('/dashboard/system/basics/site_name','sitename_saved');
 			}
 		} else {
 			$this->set('error', array($this->token->getErrorMessage()));

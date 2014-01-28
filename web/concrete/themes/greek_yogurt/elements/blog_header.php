@@ -27,7 +27,7 @@
 
 	<div id="header">
 	
-		<h1><a href="<?php echo DIR_REL?>/"><?php echo SITE ?></a></h1>
+		<h1><a href="<?php echo DIR_REL?>/"><?php echo h(SITE) ?></a></h1>
 		
 		<?php 
 		$a = new Area('Header Nav');
