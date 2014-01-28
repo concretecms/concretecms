@@ -84,16 +84,18 @@ CCMLayout.prototype._setupDOM = function() {
 CCMLayout.prototype._setupFormSaveAndCancel = function() {
 	var obj = this;
 	this.$cancelbtn.unbind().on('click', function() {
-		ConcreteEvent.fire('EditModeExitInline');
 		obj.$toolbar.remove();
+		ConcreteEvent.unsubscribe('EditModeExitInlineComplete');
 		ConcreteEvent.on('EditModeExitInlineComplete', function(e, data) {
 			obj._rescanAreasInPage(e, data);
       	});
+		ConcreteEvent.fire('EditModeExitInline');
 	});
 	this.$savebtn.unbind().on('click', function() {
 		// move the toolbar back into the form so it submits. so great.
 		obj.$toolbar.hide().prependTo('#ccm-block-form');
 		$('#ccm-block-form').submit();
+		ConcreteEvent.unsubscribe('EditModeExitInlineComplete');
 		ConcreteEvent.on('EditModeExitInlineComplete', function(e, data) {
 			obj._rescanAreasInPage(e, data);
       	});
@@ -102,13 +104,8 @@ CCMLayout.prototype._setupFormSaveAndCancel = function() {
 
 CCMLayout.prototype._rescanAreasInPage = function(e, data) {
 	var editor = Concrete.getEditMode();
-	var block = data.block;
-	e.stopPropagation();
-	block.getElem().find('div.ccm-area').each(function() {
-        area = new Concrete.Area($(this), editor);
-        area.bindMenu();
-        editor.addArea(area);
-	});
+	editor.reset();
+	editor.scanBlocks();
 }
 
 CCMLayout.prototype._setupToolbarView = function() {
