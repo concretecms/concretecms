@@ -15,7 +15,7 @@ class Concrete5_Controller_Login extends Controller {
 			$this->set('uNameLabel', t('Username'));
 		}
 
-		
+
 		$txt = Loader::helper('text');
 		if (strlen($_GET['uName'])) { // pre-populate the username if supplied, if its an email address with special characters the email needs to be urlencoded first,
 		   $this->set("uName",trim($txt->email($_GET['uName'])));
@@ -123,19 +123,90 @@ class Concrete5_Controller_Login extends Controller {
 		try {
 			$at = AuthenticationType::getByHandle($type);
 			$at->controller->authenticate();
-			$db = Loader::db();
-			$u = new User();
-			if ($u->getUserID() == 1 && $type != 'concrete') {
-				$u->logout();
-				throw new exception('You can only identify as the root user using the concrete login.');
-			}
-			$u->setLastAuthType($at);
-			Events::fire('on_user_login',$this);
-			$this->chooseRedirect();
+			$this->finishAuthentication();
 		} catch (exception $e) {
 			$this->error->add($e->getMessage());
 		}
 		$this->view();
+	}
+
+	public function finishAuthentication(AuthenticationType $type) {
+		$db = Loader::db();
+		$u = new User();
+		if ($u->getUserID() == 1 && $type->getAuthenticationTypeHandle() != 'concrete') {
+			$u->logout();
+			throw new exception('You can only identify as the root user using the concrete login.');
+		}
+
+		$ui = UserInfo::getByID($u->getUserID());
+		$aks = UserAttributeKey::getRegistrationList();
+
+		$unfilled = array_values(array_filter($aks, function($ak) use ($ui) {
+			return $ak->isAttributeKeyRequiredOnRegister() && !is_object($ui->getAttributeValueObject($ak));
+		}));
+
+		if (count($unfilled)) {
+			$u->logout(false);
+
+			if (!$this->error) {
+				$this->on_start();
+			}
+
+
+			$this->set('required_attributes', $unfilled);
+			$this->set('u', $u);
+			$this->error->add('Fill in these required settings in order to continue.');
+
+			$_SESSION['uRequiredAttributeUser'] = $u->getUserID();
+			$_SESSION['uRequiredAttributeUserAuthenticationType'] = $type->getAuthenticationTypeHandle();
+			$this->render('/login');
+		}
+
+		$u->setLastAuthType($type);
+		Events::fire('on_user_login', $this);
+		$this->chooseRedirect();
+	}
+
+	public function fill_attributes() {
+		try {
+			if (!isset($_SESSION['uRequiredAttributeUser']) ||
+			    intval($_SESSION['uRequiredAttributeUser']) < 1 ||
+			    !isset($_SESSION['uRequiredAttributeUserAuthenticationType']) ||
+			    !$_SESSION['uRequiredAttributeUserAuthenticationType']) {
+				unset($_SESSION['uRequiredAttributeUser']);
+				unset($_SESSION['uRequiredAttributeUserAuthenticationType']);
+				throw new Exception('Invalid Request, please attempt login again.');
+			}
+			User::loginByUserID($_SESSION['uRequiredAttributeUser']);
+			unset($_SESSION['uRequiredAttributeUser']);
+			$u = new User;
+			$at = AuthenticationType::getByHandle($_SESSION['uRequiredAttributeUserAuthenticationType']);
+			unset($_SESSION['uRequiredAttributeUserAuthenticationType']);
+			if (!$at) throw new Exception("Invalid Authentication Type");
+
+			$ui = UserInfo::getByID($u->getUserID());
+			$aks = UserAttributeKey::getRegistrationList();
+
+			$unfilled = array_values(array_filter($aks, function($ak) use ($ui) {
+				return $ak->isAttributeKeyRequiredOnRegister() && !is_object($ui->getAttributeValueObject($ak));
+			}));
+
+			foreach ($unfilled as $attribute) {
+				$err = $attribute->validateAttributeForm();
+				if ($err == false) {
+					$this->error->add(t('The field "%s" is required', $attribute->getAttributeKeyDisplayName()));
+				} elseif ($err instanceof ValidationErrorHelper) {
+					$this->error->add($err);
+				} else {
+					$attribute->saveAttributeForm($ui);
+				}
+			}
+
+			$this->finishAuthentication($at);
+		} catch (Exception $e) {
+			$this->error->add($e->getMessage());
+			$this->render('/login');
+		}
 	}
 
 	public function chooseRedirect() {
@@ -201,7 +272,7 @@ class Concrete5_Controller_Login extends Controller {
 			$this->set('validated', true);
 		}
 	}
-	
+
 	*/
 
 }

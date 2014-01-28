@@ -59,10 +59,7 @@ abstract class Concrete5_Library_AuthenticationTypeController extends Controller
 	}
 
 	public function completeAuthentication(User $u) {
-		$u->setLastAuthType($this->getAuthenticationType());
-		$loginController = Loader::controller('/login');
-		Events::fire('on_user_login', $this);
-		$loginController->chooseRedirect();
+		Loader::controller('/login')->finishAuthentication($this->getAuthenticationType());
 	}
 
 }
