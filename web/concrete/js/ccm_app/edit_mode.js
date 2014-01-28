@@ -13,7 +13,6 @@
    */
   var EditMode = Concrete.EditMode = function EditMode() {
     var my = this;
-
     Concrete.createGetterSetters.call(my, {
       dragging: false,
       areas: [],
@@ -49,19 +48,18 @@
           postData.push({name: prop, value: data.postData[prop]});
         }
       }
-
+      Concrete.event.unsubscribe('EditModeExitInline');
       Concrete.event.bind('EditModeExitInline', function(e) {
         e.stopPropagation();
         var action = CCM_TOOLS_PATH + '/edit_block_popup?cID=' + CCM_CID + '&bID=' + block.getId() + '&arHandle=' + escape(area.getHandle()) + '&btask=view_edit_mode';
         jQuery.fn.dialog.showLoader();
         $.get(action,
           function(r) {
-            block.getElem().before(r).remove();
+            var block = area.getBlockByID(bID);
+            var newBlock = block.replace(bID, r);
             _.defer(function() {
-              var block = new Block($('div[data-block-id=' + bID + ']'), my);
-              block.setArea(area);
               ConcreteEvent.fire('EditModeExitInlineComplete', {
-                block: block
+                block: newBlock
               });
               my.destroyInlineEditModeToolbars();
             });
@@ -163,6 +161,9 @@
     Concrete.event.bind('EditModeBlockDelete', function(event, data) {
       var block = data.block, area = block.getArea(), message = data.message;
       block.delete(data.message);
+      ConcreteEvent.fire('EditModeBlockDeleteComplete', {
+        block: block
+      });
     });
 
     Concrete.event.bind('EditModeBlockDrag', _.throttle(function editModeEditModeBlockDragEventHandler(event, data) {
@@ -356,15 +357,20 @@
 
   EditMode.prototype = {
 
+    reset: function() {
+      var my = this;
+      my.setAttr('areas', []);
+      $('.ccm-area-drag-area').remove();
+    },
+
+
     scanBlocks: function editModeScanBlocks() {
       var my = this, area, block;
       $('div.ccm-area').each(function(){
-        if ($(this).data('Concrete.area')) return;
         area = new Area($(this), my);
         my.addArea(area);
       });
       $('div.ccm-block-edit').each(function(){
-        if ($(this).data('Concrete.block')) return;
         my.addBlock(block = new Block($(this), my));
         _(my.getAreas()).findWhere({id: block.getAreaId()}).addBlock(block);
       });
@@ -604,7 +610,7 @@
       var totalBlocks = this.getTotalBlocks();
       this.setTotalBlocks(totalBlocks+1);
       block.setArea(this);
-      this.getBlocks().splice(index, 0, block);
+      this.getBlocks()[index] = block;
       this.addDragArea(block);
 
       // ensure that the DOM attributes are correct
@@ -739,6 +745,8 @@
           area.addBlockToIndex(newBlock, i);
         }
       }
+
+      return newBlock;
     },
 
     getMenuElem: function() {

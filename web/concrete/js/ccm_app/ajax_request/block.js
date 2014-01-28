@@ -69,13 +69,13 @@
 				} else {
 					// remove old block from area
 					var block = area.getBlockByID(my.options.bID);
-					block.replace(resp.bID, r);
+					var newBlock = block.replace(resp.bID, r);
 		            ConcreteAlert.hud(ccmi18n.updateBlockMsg, 2000, 'ok', ccmi18n.updateBlock);
 	
 					if (my.options.btSupportsInlineEdit) {
 						editor.destroyInlineEditModeToolbars();
 						ConcreteEvent.fire('EditModeExitInlineComplete', {
-							block: block
+							block: newBlock
 						});
 					}
 

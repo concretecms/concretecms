@@ -97,6 +97,12 @@ $(function() {
 		var editor = new Concrete.getEditMode(),
 			area = editor.getAreaByID(<?=$a->getAreaID()?>),
 			block = area.getBlockByID(<?=$b->getBlockID()?>);
+
+		ConcreteEvent.subscribe('EditModeBlockDeleteComplete', function() {
+			editor.destroyInlineEditModeToolbars();
+			ConcreteEvent.unsubscribe('EditModeBlockDeleteComplete');
+		});
+
 		Concrete.event.fire('EditModeBlockDelete', {message: '<?=$deleteMessage?>', block: block, event: e});
 		return false;
 	});
