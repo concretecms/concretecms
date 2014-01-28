@@ -11,4 +11,3 @@
  */
 defined('C5_EXECUTE') or die("Access Denied.");
 class Group extends Concrete5_Model_Group {}
-class GroupList extends Concrete5_Model_GroupList {}
