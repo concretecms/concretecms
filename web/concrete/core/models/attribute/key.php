@@ -568,10 +568,20 @@ class Concrete5_Model_AttributeKey extends Object {
 	
 	/** 
 	 * Calls the functions necessary to save this attribute to the database. If no passed value is passed, then we save it via the stock form.
+	 * NOTE: this code is screwy because all code ever written that EXTENDS this code creates an attribute value object and passes it in, like
+	 * this code implies. But if you call this code directly it passes the object that you're messing with (Page, User, etc...) in as the $attributeValue
+	 * object, which is obviously not right. So we're going to do a little procedural if/then checks in this to ensure we're passing the right
+	 * stuff
 	 */
-	protected function saveAttribute($attributeValue, $passedValue = false) {
+	protected function saveAttribute($mixed, $passedValue = false) {
 		$at = $this->getAttributeType();
 		$at->controller->setAttributeKey($this);
+		if ($mixed instanceof AttributeValue) {
+			$attributeValue = $mixed;
+		} else {
+			// $mixed is ACTUALLY the object that we're setting the attribute against
+			$attributeValue = $nvc->getAttributeValueObject($mixed, true);
+		}
 		$at->controller->setAttributeValue($attributeValue);
 		if ($passedValue) {
 			$at->controller->saveValue($passedValue);
