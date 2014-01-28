@@ -53,7 +53,6 @@ if (!defined('URL_REWRITING')) {
 	Config::getOrDefine('URL_REWRITING', false);
 }
 
-
 # Default marketplace support
 if (!defined('ENABLE_MARKETPLACE_SUPPORT')){  
 	$marketplace_enabled=Config::get('ENABLE_MARKETPLACE_SUPPORT');

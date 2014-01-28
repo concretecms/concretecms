@@ -19,6 +19,7 @@ class Concrete5_Library_Dispatcher {
 	 * Loads everything in the proper order to begin a concrete5 visit
 	 */
 	public function bootstrap() {
+		$this->installed = CONFIG_FILE_EXISTS;
 		require(DIR_BASE_CORE . '/startup/autoload.php');
 		if (file_exists(DIR_CONFIG_SITE . '/site_post_autoload.php')) {
 			require(DIR_CONFIG_SITE . '/site_post_autoload.php');
@@ -39,7 +40,6 @@ class Concrete5_Library_Dispatcher {
 		if (file_exists(DIR_CONFIG_SITE . '/routes.php')) {
 			require(DIR_CONFIG_SITE . '/routes.php');
 		}
-		$this->installed = require(DIR_BASE_CORE . '/startup/config_check.php');
 		if ($this->installed) {
 			require(DIR_BASE_CORE . '/startup/check_page_cache.php');
 		}

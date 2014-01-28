@@ -12,10 +12,7 @@ if (!defined('CONFIG_FILE')) {
 
 if (file_exists(CONFIG_FILE)) {
 	include(CONFIG_FILE);
-	$installed = true;
+	define('CONFIG_FILE_EXISTS', true);
 } else {
-	// nothing is installed
-	$installed = false;
+	define('CONFIG_FILE_EXISTS', false);
 }
-
-return $installed;
