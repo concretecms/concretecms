@@ -175,24 +175,6 @@ class Concrete5_Library_View extends AbstractView {
 		return $contents;
 	}
 
-	protected function sortAssetsByPostProcessDescending($assetA, $assetB) {
-		$ppA = ($assetA instanceof Asset && $assetA->assetSupportsPostProcessing());
-		$ppB = ($assetB instanceof Asset && $assetB->assetSupportsPostProcessing());
-		if ($ppA && $ppB) {
-			return 0;
-		}
-		if ($ppA && !$ppB) {
-			return -1;
-		}
-
-		if (!$ppA && $ppB) {
-			return 1;
-		}
-		if (!$ppA && !$ppB) {
-			return 0;
-		}
-	}
-
 	protected function postProcessAssets($assets) {
 		$c = Page::getCurrentPage();
 		if (!is_object($c) || !ENABLE_ASSET_CACHE) {
@@ -208,7 +190,7 @@ class Concrete5_Library_View extends AbstractView {
 			if ($asset instanceof Asset && $nextasset instanceof Asset) {
 				if ($asset->getAssetType() != $nextasset->getAssetType()) {
 					$segment++;
-				} else if (!$asset->assetSupportsPostProcessing() || !$nextasset->assetSupportsPostProcessing()) {
+				} else if (!$asset->assetSupportsMinification() || !$nextasset->assetSupportsMinification()) {
 					$segment++;
 				}
 			} else {
@@ -219,10 +201,10 @@ class Concrete5_Library_View extends AbstractView {
 		// now we have a sub assets array with different segments split by post process and non-post-process
 		$return = array();
 		foreach($subassets as $segment => $assets) {
-			if ($assets[0] instanceof Asset && $assets[0]->assetSupportsPostProcessing()) {
+			if ($assets[0] instanceof Asset && $assets[0]->assetSupportsMinification()) {
 				// this entire segment can be post processed together
 				$class = Loader::helper('text')->camelcase($assets[0]->getAssetType()) . 'Asset';
-				$assets = call_user_func(array($class, 'postprocess'), $assets);
+				$assets = call_user_func(array($class, 'minify'), $assets);
 			}
 			$return = array_merge($return, $assets);
 		}

@@ -125,7 +125,7 @@ class Concrete5_Controller_Block_CoreAreaLayout extends BlockController {
 				} else {
 					$asset = new CSSAsset();
 					$asset->setAssetURL(URL::to('/system/css/layout', $this->bID));
-					$asset->setAssetSupportsPostProcessing(false);
+					$asset->setAssetSupportsMinification(false);
 					$this->requireAsset($asset);
 					$this->render('view');
 				}

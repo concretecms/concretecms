@@ -3,13 +3,13 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 class Concrete5_Library_JavaScriptAsset extends Asset {
 	
-	protected $assetSupportsPostProcessing = true;
+	protected $assetSupportsMinification = true;
 
 	public function getAssetDefaultPosition() {
 		return Asset::ASSET_POSITION_FOOTER;
 	}
 
-	public function postprocess($assets) {
+	public function minify($assets) {
 		if (!file_exists(DIR_FILES_CACHE . '/' . DIRNAME_JAVASCRIPT)) {
 			$proceed = @mkdir(DIR_FILES_CACHE . '/' . DIRNAME_JAVASCRIPT);
 		} else {

@@ -23,7 +23,7 @@ class Concrete5_Library_AssetList {
 			'position' => false,
 			'local' => true,
 			'version' => false,
-			'postprocess' => -1 // use the asset default
+			'minify' => -1 // use the asset default
 		);
 		// overwrite all the defaults with the arguments
 		$args = array_merge($defaults, $args);
@@ -33,8 +33,8 @@ class Concrete5_Library_AssetList {
 		$o->setPackageObject($pkg);
 		$o->setAssetIsLocal($args['local']);
 		$o->mapAssetLocation($filename);
-		if ($args['postprocess'] === true || $args['postprocess'] === false) {
-			$o->setAssetSupportsPostProcessing($args['postprocess']);
+		if ($args['minify'] === true || $args['minify'] === false) {
+			$o->setAssetSupportsMinification($args['minify']);
 		}
 		if ($args['version']) {
 			$o->setAssetVersion($args['version']);
