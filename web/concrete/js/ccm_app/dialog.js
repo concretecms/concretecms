@@ -107,12 +107,11 @@ jQuery.fn.dialog.open = function(options) {
 		'height': h,
 
 		'create': function() {
-			$(this).parent().addClass('ccm-dialog-opening');
+			$(this).parent().addClass('animated fadeIn');
 		},
 
 		'open': function() {
 			var $dialog = $(this);
-			$dialog.parent().addClass('ccm-dialog-open');
 			var nd = $(".ui-dialog").length;
 			if (nd == 1) {
 				$("body").attr('data-last-overflow', $('body').css('overflow'));
