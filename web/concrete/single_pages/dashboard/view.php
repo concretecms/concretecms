@@ -1,3 +1,5 @@
+<? defined('C5_EXECUTE') or die("Access Denied."); ?>
+
 <?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Dashboard'), false, false, false, false, false, false); ?>
 
 <div class="ccm-pane-body" style="padding-bottom: 0px">

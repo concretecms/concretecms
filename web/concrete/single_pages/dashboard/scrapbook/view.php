@@ -1,3 +1,5 @@
+<? defined('C5_EXECUTE') or die("Access Denied."); ?>
+
 <?
 $ih = Loader::helper('concrete/interface'); 
 $ci = Loader::helper('concrete/urls');

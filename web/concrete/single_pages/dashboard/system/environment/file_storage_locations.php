@@ -1,3 +1,5 @@
+<? defined('C5_EXECUTE') or die("Access Denied."); ?>
+
 	<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('File Storage Locations'), false, 'span6 offset3', false)?>
 
 	<form method="post" class="form-inline" id="file-access-storage" action="<?=$this->url('/dashboard/system/environment/file_storage_locations', 'save')?>">
