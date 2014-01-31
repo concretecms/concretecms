@@ -8,6 +8,7 @@ abstract class Concrete5_Library_Asset {
 	protected $assetURL;
 	protected $assetPath;
 	protected $assetSupportsMinification = false;
+	protected $assetSupportsCombination = false;
 	protected $pkg;
 
 	const ASSET_POSITION_HEADER = 'H';
@@ -15,12 +16,15 @@ abstract class Concrete5_Library_Asset {
 
 	abstract public function getAssetDefaultPosition();
 	abstract public function getAssetType();
-	abstract public function minify($assets);
+	abstract public static function minify($assets);
+	abstract public static function combine($assets);
 	abstract public function __toString();
 
 	public function assetSupportsMinification() { return $this->local && $this->assetSupportsMinification;}
+	public function assetSupportsCombination() { return $this->local && $this->assetSupportsCombination; }
 
 	public function setAssetSupportsMinification($minify) {$this->assetSupportsMinification = $minify;}
+	public function setAssetSupportsCombination($combine) {$this->assetSupportsCombination = $combine;}
 	
 	public function getAssetURL() {return $this->assetURL;}
 	public function getAssetPath() {return $this->assetPath;}

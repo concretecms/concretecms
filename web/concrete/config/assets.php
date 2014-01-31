@@ -8,7 +8,7 @@ $al = AssetList::getInstance();
  */
 
 // jquery
-$al->register('javascript', 'jquery', 'js/jquery.js', array('position' => Asset::ASSET_POSITION_HEADER, 'minify' => false));
+$al->register('javascript', 'jquery', 'js/jquery.js', array('position' => Asset::ASSET_POSITION_HEADER, 'minify' => false, 'combine' => false));
 
 // jquery ui
 $al->register('javascript', 'jqueryui', 'js/jquery.ui.js', array('minify' => false));

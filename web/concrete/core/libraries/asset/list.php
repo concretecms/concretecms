@@ -23,6 +23,7 @@ class Concrete5_Library_AssetList {
 			'position' => false,
 			'local' => true,
 			'version' => false,
+			'combine' => -1,
 			'minify' => -1 // use the asset default
 		);
 		// overwrite all the defaults with the arguments
@@ -35,6 +36,9 @@ class Concrete5_Library_AssetList {
 		$o->mapAssetLocation($filename);
 		if ($args['minify'] === true || $args['minify'] === false) {
 			$o->setAssetSupportsMinification($args['minify']);
+		}
+		if ($args['combine'] === true || $args['combine'] === false) {
+			$o->setAssetSupportsCombination($args['combine']);
 		}
 		if ($args['version']) {
 			$o->setAssetVersion($args['version']);
