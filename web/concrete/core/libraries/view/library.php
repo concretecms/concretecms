@@ -180,6 +180,7 @@ class Concrete5_Library_View extends AbstractView {
 		if (!is_object($c) || !ENABLE_ASSET_CACHE) {
 			return $assets;
 		}
+
 		// goes through all assets in this list, creating new URLs and post-processing them where possible.
 		$segment = 0;
 		$subassets[$segment] = array();
@@ -190,7 +191,7 @@ class Concrete5_Library_View extends AbstractView {
 			if ($asset instanceof Asset && $nextasset instanceof Asset) {
 				if ($asset->getAssetType() != $nextasset->getAssetType()) {
 					$segment++;
-				} else if (!$asset->assetSupportsMinification() || !$nextasset->assetSupportsMinification()) {
+				} else if (!$asset->assetSupportsCombination() || !$nextasset->assetSupportsCombination()) {
 					$segment++;
 				}
 			} else {
@@ -198,16 +199,17 @@ class Concrete5_Library_View extends AbstractView {
 			}
 		}
 
-		// now we have a sub assets array with different segments split by post process and non-post-process
+		// now we have a sub assets array with different segments split by whether they can be combined.
 		$return = array();
 		foreach($subassets as $segment => $assets) {
-			if ($assets[0] instanceof Asset && $assets[0]->assetSupportsMinification()) {
+			if ($assets[0] instanceof Asset && $assets[0]->assetSupportsCombination()) {
 				// this entire segment can be post processed together
 				$class = Loader::helper('text')->camelcase($assets[0]->getAssetType()) . 'Asset';
-				$assets = call_user_func(array($class, 'minify'), $assets);
+				$assets = call_user_func(array($class, 'combine'), $assets);
 			}
 			$return = array_merge($return, $assets);
 		}
+
 		return $return;
 	}
 
