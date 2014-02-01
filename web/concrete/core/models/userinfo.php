@@ -140,7 +140,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			
 			$password_to_insert = $data['uPassword'];
 			if (!in_array(self::ADD_OPTIONS_NOHASH, $options)) {
-				$hash = $this->getUserObject()->getUserPasswordHasher()->HashPassword($password_to_insert);
+				$hash = $hasher->HashPassword($password_to_insert);
 			}	
 			
 			if (isset($data['uDefaultLanguage']) && $data['uDefaultLanguage'] != '') {
