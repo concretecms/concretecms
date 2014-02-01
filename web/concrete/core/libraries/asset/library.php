@@ -59,6 +59,10 @@ abstract class Concrete5_Library_Asset {
 	public function setAssetURL($url) {$this->assetURL = $url;}
 	public function setAssetPath($path) {$this->assetPath = $path;}
 
+	public function getAssetURLPath() {
+		return substr($this->getAssetURL(), 0, strrpos($this->getAssetURL(), '/'));		
+	}
+
 	public function isAssetLocal() {return $this->local;}
 
 	public function setAssetIsLocal($isLocal) {

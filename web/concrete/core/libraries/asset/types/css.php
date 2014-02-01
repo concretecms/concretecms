@@ -12,7 +12,11 @@ class Concrete5_Library_CSSAsset extends Asset {
 
 	public function getAssetType() {return 'css';}
 
-	protected static function getDirectory() {
+	protected static function getRelativeOutputDirectory() {
+		return REL_DIR_FILES_CACHE . '/' . DIRNAME_CSS;
+	}
+
+	protected static function getOutputDirectory() {
 		if (!file_exists(DIR_FILES_CACHE . '/' . DIRNAME_CSS)) {
 			$proceed = @mkdir(DIR_FILES_CACHE . '/' . DIRNAME_CSS);
 		} else {
@@ -33,7 +37,7 @@ class Concrete5_Library_CSSAsset extends Asset {
         $target_path_slugs = explode( "/", $target_path );
         $smallest_count = min( count( $current_path_slugs ), count( $target_path_slugs ) );
         for( $i = 0; $i < $smallest_count && $current_path_slugs[$i] === $target_path_slugs[$i]; $i++ );
-        $change_prefix = implode( "/", array_merge( array_fill( 0, count( $target_path_slugs ) - $i, ".." ), array_slice( $current_path_slugs, $i ) ) );
+        $change_prefix = @implode( "/", @array_merge( @array_fill( 0, count( $target_path_slugs ) - $i, ".." ), @array_slice( $current_path_slugs, $i ) ) );
         if( strlen( $change_prefix ) > 0 ) $change_prefix .= "/";
 
         $content = preg_replace_callback(
@@ -82,8 +86,9 @@ class Concrete5_Library_CSSAsset extends Asset {
         return $content;
     }
 
-	public static function combine($assets) {
-		if ($directory = self::getDirectory()) {
+    protected static function process($assets, $processFunction) {
+		if ($directory = self::getOutputDirectory()) {
+
 			$filename = '';
 			for ($i = 0; $i < count($assets); $i++) {
 				$asset = $assets[$i];
@@ -95,46 +100,30 @@ class Concrete5_Library_CSSAsset extends Asset {
 				$css = '';
 				foreach($assets as $asset) {
 					$css .= file_get_contents($asset->getAssetPath()) . "\n\n";
-					$css = self::changePaths($css, substr($asset->getAssetURL(), 0, strrpos($asset->getAssetURL(), '/')), REL_DIR_FILES_CACHE . '/' . DIRNAME_CSS);
+					$css = $processFunction($css, $asset->getAssetURLPath(), self::getRelativeOutputDirectory());
 				}
 				@file_put_contents($cacheFile, $css);
 			}
 			
 			$asset = new CSSAsset();
-			$asset->setAssetURL(REL_DIR_FILES_CACHE . '/' . DIRNAME_CSS . '/' . $filename . '.css');
+			$asset->setAssetURL(self::getRelativeOutputDirectory() . '/' . $filename . '.css');
 			$asset->setAssetPath($directory . '/' . $filename . '.css');
 			return array($asset);
 		}
-		
 		return $assets;
+    }
+
+	public static function combine($assets) {
+		return self::process($assets, function($css, $assetPath, $targetPath) {
+			return CSSAsset::changePaths($css, $assetPath, $targetPath);
+		});
 	}
 
 	public static function minify($assets) {
-		if ($directory = $this->getDirectory()) {
-			$filename = '';
-			for ($i = 0; $i < count($assets); $i++) {
-				$asset = $assets[$i];
-				$filename .= $asset->getAssetURL();
-			}
-			$filename = sha1($filename);
-			$cacheFile = $directory . '/' . $filename . '.css';
-			if (!file_exists($cacheFile)) {
-				Loader::library('3rdparty/cssmin');
-				$css = '';
-				foreach($assets as $asset) {
-					$css .= file_get_contents($asset->getAssetPath()) . "\n\n";
-				}
-				$css = CssMin::minify($css);
-				@file_put_contents($cacheFile, $css);
-			}
-		
-			$asset = new CSSAsset();
-			$asset->setAssetURL(REL_DIR_FILES_CACHE . '/' . DIRNAME_CSS . '/' . $filename . '.css');
-			$asset->setAssetPath($directory . '/' . $filename . '.css');
-			return array($asset);
-		}
-		
-		return $assets;
+		Loader::library('3rdparty/cssmin');
+		return self::process($assets, function($css, $assetPath, $targetPath) {
+			return CssMin::minify($css);
+		});
 	}
 
 	public function __toString() {

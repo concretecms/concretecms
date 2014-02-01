@@ -181,35 +181,56 @@ class Concrete5_Library_View extends AbstractView {
 			return $assets;
 		}
 
-		// goes through all assets in this list, creating new URLs and post-processing them where possible.
-		$segment = 0;
-		$subassets[$segment] = array();
-		for ($i = 0; $i < count($assets); $i++) {
-			$asset = $assets[$i];
-			$nextasset = $assets[$i+1];
-			$subassets[$segment][] = $asset;
-			if ($asset instanceof Asset && $nextasset instanceof Asset) {
-				if ($asset->getAssetType() != $nextasset->getAssetType()) {
-					$segment++;
-				} else if (!$asset->assetSupportsCombination() || !$nextasset->assetSupportsCombination()) {
-					$segment++;
-				}
-			} else {
-				$segment++;
-			}
+		if (!count($assets)) {
+			return array();
 		}
 
-		// now we have a sub assets array with different segments split by whether they can be combined.
+		// goes through all assets in this list, creating new URLs and post-processing them where possible.
+		$segment = 0;
+
+		for ($i = 0; $i < count($assets); $i++) {
+
+			$asset = $assets[$i];
+			$nextasset = $assets[$i+1];
+
+			$groupedAssets[$segment][] = $asset;
+			if (!($asset instanceof Asset) || !($nextasset instanceof Asset)) {
+				$segment++;
+				continue;
+			}
+
+			if ($asset->getAssetType() != $nextasset->getAssetType()) {
+				$segment++;
+				continue;
+			}
+
+			if ($asset->assetSupportsMinification() != $nextasset->assetSupportsMinification()) {
+				$segment++;
+				continue;
+			}
+
+			if ($asset->assetSupportsCombination() != $nextasset->assetSupportsCombination()) {
+				$segment++;
+				continue;
+			}
+
+		}
+
 		$return = array();
-		foreach($subassets as $segment => $assets) {
-			if ($assets[0] instanceof Asset && $assets[0]->assetSupportsCombination()) {
+		// now we have a sub assets array with different segments split by whether they can be combined.
+
+		foreach($groupedAssets as $segment => $assets) {
+			if ($assets[0] instanceof Asset && $assets[0]->assetSupportsMinification()) {
 				// this entire segment can be post processed together
+				$class = Loader::helper('text')->camelcase($assets[0]->getAssetType()) . 'Asset';
+				$assets = call_user_func(array($class, 'minify'), $assets);
+			} else if ($assets[0] instanceof Asset && $assets[0]->assetSupportsCombination()) {
 				$class = Loader::helper('text')->camelcase($assets[0]->getAssetType()) . 'Asset';
 				$assets = call_user_func(array($class, 'combine'), $assets);
 			}
 			$return = array_merge($return, $assets);
 		}
-
+		
 		return $return;
 	}
 
