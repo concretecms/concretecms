@@ -40,6 +40,7 @@
 			$q = "SELECT uID, uName, uIsActive, uLastOnline, uTimezone, uDefaultLanguage FROM Users WHERE uID = ? LIMIT 1";
 			$r = $db->query($q, $v);
 			$row = $r ? $r->FetchRow() : null;
+			$nu = null;
 			if ($row) {
 				$nu = new User();
 				$nu->uID = $row['uID'];
