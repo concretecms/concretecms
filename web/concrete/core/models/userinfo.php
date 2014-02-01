@@ -21,11 +21,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 	class Concrete5_Model_UserInfo extends Object { 
 
-		public function __construct() {
-		Loader::library('3rdparty/phpass/PasswordHash');
-		$this->hasher = new PasswordHash(PASSWORD_HASH_COST_LOG2, PASSWORD_HASH_PORTABLE);
-}
-			
 		public function __toString() {
 			return 'UserInfo: ' . $this->getUserID();
 		}
@@ -145,7 +140,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			
 			$password_to_insert = $data['uPassword'];
 			if (!in_array(self::ADD_OPTIONS_NOHASH, $options)) {
-				$hash = $hasher->HashPassword($password_to_insert);
+				$hash = $this->getUserObject()->getUserPasswordHasher()->HashPassword($password_to_insert);
 			}	
 			
 			if (isset($data['uDefaultLanguage']) && $data['uDefaultLanguage'] != '') {
@@ -441,7 +436,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				
 				if ($data['uPassword'] != null) {
 					if ($data['uPassword'] == $data['uPasswordConfirm']) {
-						$v = array($uName, $uEmail, $this->hasher->HashPassword($data['uPassword']), $uHasAvatar, $uTimezone, $uDefaultLanguage, $this->uID);
+						$v = array($uName, $uEmail, $this->getUserObject()->getUserPasswordHasher()->HashPassword($data['uPassword']), $uHasAvatar, $uTimezone, $uDefaultLanguage, $this->uID);
 						$r = $db->prepare("update Users set uName = ?, uEmail = ?, uPassword = ?, uHasAvatar = ?, uTimezone = ?, uDefaultLanguage = ? where uID = ?");
 						$res = $db->execute($r, $v);
 						
@@ -565,7 +560,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		function changePassword($newPassword) { 
 			$db = Loader::db();
 			if ($this->uID) {
-				$v = array($hasher->HashPassword($newPassword), $this->uID);
+				$v = array($this->getUserObject()->getUserPasswordHasher()->HashPassword($newPassword), $this->uID);
 				$q = "update Users set uPassword = ? where uID = ?";
 				$r = $db->prepare($q);
 				$res = $db->execute($r, $v);
@@ -785,4 +780,5 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				return $this->upEndDate;
 			}
 		}
+
 	}

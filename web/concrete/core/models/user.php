@@ -28,6 +28,7 @@
 		protected $uDefaultLanguage = null;
 		// an associative array of all access entity objects that are associated with this user.
 		protected $accessEntities = array();
+		protected $hasher;
 		
 		/**
 		 * @param int $uID
@@ -116,8 +117,6 @@
 		
 		public function __construct() {
 			$args = func_get_args();
-			Loader::library('3rdparty/phpass/PasswordHash');
-			$this->hasher = new PasswordHash(HASH_COST_LOG2, HASH_PORTABLE);
 			
 			if (isset($args[1])) {
 				// first, we check to see if the username and password match the admin username and password
@@ -139,7 +138,7 @@
 				if ($r) {
 					$row = $r->fetchRow(); 
 					$pw_is_valid_legacy = (User::legacyEncryptPassword($password, PASSWORD_SALT) == $row['uPassword']);
-					$pw_is_valid = $pw_is_valid_legacy || $this->hasher->checkPassword($password, $row['uPassword']); 
+					$pw_is_valid = $pw_is_valid_legacy || $this->getUserPasswordHasher()->checkPassword($password, $row['uPassword']); 
 					if ($row['uID'] && $row['uIsValidated'] === '0' && defined('USER_VALIDATE_EMAIL_REQUIRED') && USER_VALIDATE_EMAIL_REQUIRED == TRUE) {
 						$this->loadError(USER_NON_VALIDATED);
 					} else if ($row['uID'] && $row['uIsActive'] && $pw_is_valid) {
@@ -175,11 +174,11 @@
 					if ($pw_is_valid_legacy) {
 						// this password was generated on a previous version of Concrete5. 
 						// We re-hash it to make it more secure.
-						$v = array($this->hasher->HashPassword($password), $this->uID);
+						$v = array($this->getUserPasswordHasher()->HashPassword($password), $this->uID);
 						$db->execute($db->prepare("update Users set uPassword = ? where uID = ?"), $v);
 					}
 				} else {
-					$this->hasher->hashpassword($password); // hashpassword and checkpassword are slow functions. 
+					$this->getUserPasswordHasher()->hashpassword($password); // hashpassword and checkpassword are slow functions. 
 									 	// We run one here just take time.
 										// Without it an attacker would be able to tell that the 
 										// username doesn't exist using a timing attack.
@@ -556,5 +555,14 @@
 			$r = $db->query($q);
 			return $r;
 		}
-				
+
+		function getUserPasswordHasher() {
+			if (isset($this->hasher)) {
+				return $this->hasher;
+			}
+			Loader::libarary('3rdparty/phpass/PasswordHash');
+			$this->hasher = new PasswordHash(PASSWORD_HASH_COST_LOG2, PASSWORD_HASH_PORTABLE);
+			return $this->hasher;
+		}
+
 	}
