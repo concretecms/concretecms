@@ -11,7 +11,7 @@ $al = AssetList::getInstance();
 $al->register('javascript', 'jquery', 'js/jquery.js', array('position' => Asset::ASSET_POSITION_HEADER, 'minify' => false, 'combine' => false));
 
 // jquery ui
-$al->register('javascript', 'jqueryui', 'js/jquery.ui.js', array('minify' => false));
+$al->register('javascript', 'jqueryui', 'js/jquery.ui.js', array('minify' => false, 'combine' => false));
 $al->register('css', 'jqueryui', 'css/jquery.ui.css', array('minify' => false));
 
 $al->registerGroup('jqueryui', array(
@@ -100,7 +100,7 @@ $al->register('javascript', 'core/observer', 'js/ccm.pubsub.js', array('minify' 
 
 // Core App
 $al->register('css', 'core/app', 'css/ccm.app.css', array('minify' => false));
-$al->register('javascript', 'core/app', 'js/ccm.app.js', array('minify' => false));
+$al->register('javascript', 'core/app', 'js/ccm.app.js', array('minify' => false, 'combine' => false));
 $al->registerGroup('core/app', array(
 	array('javascript', 'jquery'),
 	array('javascript', 'core/observer'),
