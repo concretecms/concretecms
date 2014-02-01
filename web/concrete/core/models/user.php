@@ -37,10 +37,10 @@
 		public static function getByUserID($uID, $login = false, $cacheItemsOnLogin = true) {
 			$db = Loader::db();
 			$v = array($uID);
-			$q = "SELECT uID, uName, uIsActive, uLastOnline, uTimezone, uDefaultLanguage FROM Users WHERE uID = ?";
+			$q = "SELECT uID, uName, uIsActive, uLastOnline, uTimezone, uDefaultLanguage FROM Users WHERE uID = ? LIMIT 1";
 			$r = $db->query($q, $v);
-			if ($r) {
-				$row = $r->fetchRow();
+			$row = $r ? $r->FetchRow() : null;
+			if ($row) {
 				$nu = new User();
 				$nu->uID = $row['uID'];
 				$nu->uName = $row['uName'];
