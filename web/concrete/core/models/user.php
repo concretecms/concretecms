@@ -565,7 +565,7 @@
 			if (isset($this->hasher)) {
 				return $this->hasher;
 			}
-			Loader::libarary('3rdparty/phpass/PasswordHash');
+			Loader::library('3rdparty/phpass/PasswordHash');
 			$this->hasher = new PasswordHash(PASSWORD_HASH_COST_LOG2, PASSWORD_HASH_PORTABLE);
 			return $this->hasher;
 		}
