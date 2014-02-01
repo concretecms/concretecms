@@ -556,6 +556,11 @@
 			return $r;
 		}
 
+		/**
+		 * @see PasswordHash
+		 *
+		 * @return PasswordHash
+		 */
 		function getUserPasswordHasher() {
 			if (isset($this->hasher)) {
 				return $this->hasher;
