@@ -32,9 +32,16 @@
 				if ($cp->canEditPageContents()) {
 					$nvc = $c->getVersionToModify();
 					$doProcessArrangement = true;
+					$sourceAreaID = intval($_POST['sourceBlockAreaID']);
+					$destinationAreaID = intval($_POST['destinationBlockAreaID']);
+					$affectedAreaIDs = array();
+					$affectedAreaIDs[] = $sourceAreaID;
+					if ($sourceAreaID != $destinationAreaID) {
+						$affectedAreaIDs[] = $destinationAreaID;
+					}
 					if (PERMISSIONS_MODEL == 'advanced') {
 						// first, we check to see if we have permissions to edit the area contents for the source area.
-						$arHandle = Area::getAreaHandleFromID($_POST['sourceBlockAreaID']);
+						$arHandle = Area::getAreaHandleFromID($sourceAreaID);
 						$ar = Area::getOrCreate($nvc, $arHandle);
 						$ap = new Permissions($ar);
 						if (!$ap->canEditAreaContents()) {
@@ -45,8 +52,8 @@
 						} else {
 							// now we get further in. We check to see if we're dealing with both a source AND a destination area.
 							// if so, we check the area permissions for the destination area.
-							if ($_POST['sourceBlockAreaID'] != $_POST['destinationBlockAreaID']) {
-								$destAreaHandle = Area::getAreaHandleFromID($_POST['destinationBlockAreaID']);
+							if ($sourceAreaID != $destinationAreaID) {
+								$destAreaHandle = Area::getAreaHandleFromID($destinationAreaID);
 								$destArea = Area::getOrCreate($nvc, $destAreaHandle);
 								$destAP = new Permissions($destArea);
 								if (!$destAP->canEditAreaContents()) {
@@ -74,7 +81,7 @@
 					}
 
 					if ($doProcessArrangement) {
-						$nvc->processArrangement($_POST['area']);
+						$nvc->processArrangement($_POST['area'], $affectedAreaIDs);
 					}
 
 					if (!is_object($r)) {
