@@ -29,18 +29,20 @@
 		// an associative array of all access entity objects that are associated with this user.
 		protected $accessEntities = array();
 		
-		/**
-		 * @param int $uID
-		 * @param boolean $login
-		 * @return User
-		 */
+		/** Return an User instance given its id (or null if it's not found)
+		* @param int $uID The id of the user
+		* @param boolean $login = false Set to true to make the user the current one
+		* @param boolean $cacheItemsOnLogin = false Set to true to cache some items when $login is true
+		* @return User|null
+		*/
 		public static function getByUserID($uID, $login = false, $cacheItemsOnLogin = true) {
 			$db = Loader::db();
 			$v = array($uID);
-			$q = "SELECT uID, uName, uIsActive, uLastOnline, uTimezone, uDefaultLanguage FROM Users WHERE uID = ?";
+			$q = "SELECT uID, uName, uIsActive, uLastOnline, uTimezone, uDefaultLanguage FROM Users WHERE uID = ? LIMIT 1";
 			$r = $db->query($q, $v);
-			if ($r) {
-				$row = $r->fetchRow();
+			$row = $r ? $r->FetchRow() : null;
+			$nu = null;
+			if ($row) {
 				$nu = new User();
 				$nu->uID = $row['uID'];
 				$nu->uName = $row['uName'];
