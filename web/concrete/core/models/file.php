@@ -11,7 +11,7 @@ class Concrete5_Model_File extends Object {
 	 * @param int $fID
 	 * @return File
 	 */
-	public function getByID($fID) {
+	public static function getByID($fID) {
 		
 		$db = Loader::db();
 		$f = new File();
