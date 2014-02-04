@@ -178,17 +178,40 @@ class Concrete5_Model_Page extends Collection {
 	 * Format is like: $area[10][0] = 2, $area[10][1] = 8, $area[15][0] = 27, with the area ID being the 
 	 * key and the block IDs being 1-n values inside it
 	 * @param array $areas
+	 * @param array $affectedAreaIDs
+	 *		IDs of the areas affected by the process arrangement (source and destination when moving blocks between areas, only source if moving in the same area).
+	 *		If specified, we'll sort out only the blocks in the specified areas.
+	 *		If not specified, $areas must contain all the blocks from all the areas of the current collection.
 	 */
-	public function processArrangement($areas) {
+	public function processArrangement($areas, $affectedAreaIDs = array()) {
 
 		// this function is called via ajax, so it's a bit wonky, but the format is generally
 		// a{areaID} = array(b1, b2, b3) (where b1, etc... are blocks with ids appended.)
 		$db = Loader::db();		
-		$db->Execute('delete from CollectionVersionBlockStyles where cID = ? and cvID = ?', array($this->getCollectionID(), $this->getVersionID()));		
+		$s = 'delete from CollectionVersionBlockStyles where cID = ? and cvID = ?';
+		$q = array($this->getCollectionID(), $this->getVersionID());
+		$onlySpecificAreas = false;
+		if(!empty($affectedAreaIDs)) {
+			foreach($affectedAreaIDs as $arID) {
+				if(!$onlySpecificAreas) {
+					$onlySpecificAreas = true;
+					$s .= ' and (';
+				}
+				else {
+					$s .= ' or ';
+				}
+				$s .= 'arHandle = ?';
+				$q[] = Area::getAreaHandleFromID($arID);
+			}
+		}
+		if($onlySpecificAreas) {
+			$s .= ')';
+		}
+		$db->Execute($s, $q);
 		foreach($areas as $arID => $blocks) {
 			if (intval($arID) > 0) {
 				// this is a serialized area;
-				$arHandle = $db->getOne("select arHandle from Areas where arID = ?", array($arID));
+				$arHandle =  Area::getAreaHandleFromID($arID);
 				$startDO = 0;
 				
 				foreach($blocks as $bIdentifier) {
