@@ -148,7 +148,10 @@ class Concrete5_Model_Config extends Object {
 		$db = Loader::db();
 		$r = $db->Execute("select cfKey, cfValue, pkgID from Config where uID = 0 and cfKey not in ('SITE','SITE_APP_VERSION','SEEN_INTRODUCTION')");
 		while ($row = $r->FetchRow()) {
-			$option = $nconfig->addChild($row['cfKey'], $row['cfValue']);
+			$option = $nconfig->addChild($row['cfKey']);
+			$node = dom_import_simplexml($option);
+			$no = $node->ownerDocument;
+			$node->appendChild($no->createCDataSection($row['cfValue']));
 			if ($row['pkgID'] > 0) {
 				$pkg = Package::getByID($row['pkgID']);
 				if (is_object($pkg)) {
