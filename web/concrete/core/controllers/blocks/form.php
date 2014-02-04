@@ -440,9 +440,7 @@ class Concrete5_Controller_Block_Form extends BlockController {
 			}
 			
 			if(intval($this->notifyMeOnSubmission)>0 && !$foundSpam){	
-				if ($this->sendEmailFrom !== false) {
-					$formFormEmailAddress = $this->sendEmailFrom;
-				} else if( strlen(FORM_BLOCK_SENDER_EMAIL)>1 && strstr(FORM_BLOCK_SENDER_EMAIL,'@') ){
+				if( strlen(FORM_BLOCK_SENDER_EMAIL)>1 && strstr(FORM_BLOCK_SENDER_EMAIL,'@') ){
 					$formFormEmailAddress = FORM_BLOCK_SENDER_EMAIL;  
 				}else{ 
 					$adminUserInfo=UserInfo::getByID(USER_SUPER_ID);
