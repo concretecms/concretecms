@@ -161,5 +161,9 @@ module.exports = function(grunt) {
 		require('./tasks/translations.js')(grunt, config, parameters, this.async());
 	});
 
+	grunt.registerTask('remove-short-tags', 'Remove short tags.', function() {
+		require('./tasks/remove-short-tags.js')(grunt, config, parameters, this.async());
+	});
+
 	grunt.registerTask('default', 'release');
 };
