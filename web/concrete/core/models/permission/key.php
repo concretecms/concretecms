@@ -276,8 +276,6 @@ abstract class Concrete5_Model_PermissionKey extends Object {
 		$a = array($pkHandle, $pkName, $pkDescription, $pkCategoryID, $pkCanTriggerWorkflow, $pkHasCustomClass, $pkgID);
 		$r = $db->query("insert into PermissionKeys (pkHandle, pkName, pkDescription, pkCategoryID, pkCanTriggerWorkflow, pkHasCustomClass, pkgID) values (?, ?, ?, ?, ?, ?, ?)", $a);
 		
-		$category = PermissionKeyCategory::getByID($pkCategoryID);
-		
 		if ($r) {
 			$pkID = $db->Insert_ID();
 			$keys = self::loadAll();
