@@ -177,7 +177,7 @@ class Concrete5_Library_View extends AbstractView {
 
 	protected function postProcessAssets($assets) {
 		$c = Page::getCurrentPage();
-		if (!is_object($c) || !ENABLE_ASSET_CACHE) {
+		if (!ENABLE_ASSET_CACHE) {
 			return $assets;
 		}
 
