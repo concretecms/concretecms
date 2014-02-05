@@ -10,6 +10,7 @@ class Concrete5_Controller_Dialogs_Page_Search extends BackendInterfaceControlle
 	}
 
 	public function view() {
+		$this->set('timestamp', time());
 		$cnt = new SearchPagesController();
 		$cnt->search();
 		$result = Loader::helper('json')->encode($cnt->getSearchResultObject()->getJSONObject());
