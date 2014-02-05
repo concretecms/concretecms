@@ -501,8 +501,8 @@
 					}
 				}
 				
-				$q = "update Pages set cIsCheckedOut = 0, cCheckedOutUID = null, cCheckedOutDatetime = null, cCheckedOutDatetimeLastEdit = null where cCheckedOutUID = " . $this->getUserID();
-				$r = $db->query($q);
+				$q = "update Pages set cIsCheckedOut = 0, cCheckedOutUID = null, cCheckedOutDatetime = null, cCheckedOutDatetimeLastEdit = null where cCheckedOutUID = ?";
+				$db->query($q, array($this->getUserID()));
 			}
 		}
 		
