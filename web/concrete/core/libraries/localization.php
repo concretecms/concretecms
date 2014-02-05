@@ -65,7 +65,8 @@
 			$options = array(
 				'adapter' => 'gettext',
 				'content' => $languageDir,
-				'locale'  => $locale
+				'locale'  => $locale,
+				'disableNotices'  => true
 			);
 			if (defined('TRANSLATE_OPTIONS')) {
 				$_options = unserialize(TRANSLATE_OPTIONS);

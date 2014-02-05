@@ -936,21 +936,22 @@ class Concrete5_Model_Page extends Collection {
 
 	/**
 	 * Check if a block is an alias from a page default
-	 * @param array $b
+	 * @param Block $b
 	 * @return bool
-	 */
-	function isBlockAliasedFromMasterCollection(&$b) {
+	 */	
+	function isBlockAliasedFromMasterCollection($b) {
+		if(!$b->isAlias()) {
+			return false;
+		}
 		//Retrieve info for all of this page's blocks at once (and "cache" it)
 		// so we don't have to query the database separately for every block on the page.
 		if (is_null($this->blocksAliasedFromMasterCollection)) {
 			$db = Loader::db();
 			$q = 'SELECT bID FROM CollectionVersionBlocks WHERE cID = ? AND isOriginal = 0 AND cvID = ? AND bID IN (SELECT bID FROM CollectionVersionBlocks AS cvb2 WHERE cvb2.cid = ?)';
 			$v = array($this->getCollectionID(), $this->getVersionObject()->getVersionID(), $this->getMasterCollectionID());
-			$r = $db->execute($q, $v);
 			$this->blocksAliasedFromMasterCollection = $db->GetCol($q, $v);
 		}
-
-		return ($b->isAlias() && in_array($b->getBlockID(), $this->blocksAliasedFromMasterCollection));
+		return in_array($b->getBlockID(), $this->blocksAliasedFromMasterCollection);
 	}
 
 	/**

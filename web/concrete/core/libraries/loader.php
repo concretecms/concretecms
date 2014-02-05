@@ -158,11 +158,13 @@
 				$file = self::getFileFromCorePath('page_type_controller', substr($class, strlen($m)));
 				require_once(DIR_BASE_CORE . '/' . DIRNAME_CORE_CLASSES . '/' . DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_TYPES . '/' . $file. '.php');
 
-			} elseif (preg_match('/^Concrete5_Controller_AuthenticationType_(.*)/i', $class, $m)) {
-				$file = self::getFileFromCorePath('authentication_type_controller', $m[1]);
+			}
+			elseif (stripos($class, $m = 'Concrete5_Controller_AuthenticationType_') === 0) {
+				$file = self::getFileFromCorePath('authentication_type_controller', substr($class, strlen($m)));
 				require_once(DIR_BASE_CORE . '/' . DIRNAME_CORE_CLASSES . '/' . DIRNAME_MODELS . '/' . DIRNAME_AUTHENTICATION . '/' . DIRNAME_AUTHENTICATION_TYPES . '/' . $file . '.php');
-			} elseif (preg_match('/^Concrete5_Controller_AttributeType_(.*)/i', $class, $m)) {
-				$file = self::getFileFromCorePath('attribute_type_controller', $m[1]);
+			}
+			elseif (stripos($class, $m = 'Concrete5_Controller_AttributeType_') === 0) {
+				$file = self::getFileFromCorePath('attribute_type_controller', substr($class, strlen($m)));
 				require_once(DIR_BASE_CORE . '/' . DIRNAME_CORE_CLASSES . '/' . DIRNAME_MODELS . '/' . DIRNAME_ATTRIBUTES . '/' . DIRNAME_ATTRIBUTE_TYPES . '/' . $file . '.php');
 			}
 			elseif (stripos($class, $m = 'Concrete5_Controller_Page_') === 0) {
@@ -231,7 +233,7 @@
 		 * </code>
 		 */
 		public static function block($bl) {
-			$db = self::db();
+			$db = Loader::db();
 			$pkgHandle = $db->GetOne('select pkgHandle from Packages left join BlockTypes on BlockTypes.pkgID = Packages.pkgID where BlockTypes.btHandle = ?', array($bl));
 			$env = Environment::get();
 			require_once($env->getPath(DIRNAME_BLOCKS . '/' . $bl . '/' . FILENAME_BLOCK_CONTROLLER, $pkgHandle));
@@ -403,7 +405,7 @@
 		/** 
 		 * Loads a controller object
 		 */
-		public function controller($mixed) {
+		public static function controller($mixed) {
 			$env = Environment::get();
 			if ($mixed instanceof Block || $mixed instanceof BlockType) {
 				$class = Object::camelcase($mixed->getBlockTypeHandle()) . 'BlockController';

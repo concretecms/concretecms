@@ -7,6 +7,13 @@ module.exports = function(grunt) {
 	}
 	parameters = parameters || {};
 
+	grunt.option.flags().forEach(function(p) {
+		var m = /^--(.+?)=(.+)$/.exec(p);
+		if(m) {
+			parameters[m[1]] = m[2];
+		}
+	});
+
 	var config = {};
 
 	config.DIR_REL = ('DIR_REL' in parameters) ? parameters.DIR_REL : '';
@@ -68,7 +75,6 @@ module.exports = function(grunt) {
 				'<%= DIR_BASE %>/concrete/js/ccm_app/ajax_request/base.js',
 				'<%= DIR_BASE %>/concrete/js/ccm_app/ajax_request/form.js',
 				'<%= DIR_BASE %>/concrete/js/ccm_app/ajax_request/block.js',
-				'<%= DIR_BASE %>/concrete/js/ccm_app/ui.js',
 				'<%= DIR_BASE %>/concrete/js/ccm_app/edit_mode.js',
 				'<%= DIR_BASE %>/concrete/js/ccm_app/jquery.cookie.js',
 				'<%= DIR_BASE %>/concrete/js/ccm_app/panels.js',
@@ -360,5 +366,5 @@ module.exports = function(grunt) {
 		require('./tasks/translations.js')(grunt, config, parameters, this.async());
 	});
 
-//	grunt.registerTask('default', 'release');
+	grunt.registerTask('default', 'release');
 };

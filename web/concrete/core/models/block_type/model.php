@@ -303,6 +303,7 @@ class Concrete5_Model_BlockTypeDB extends ADOdb_Active_Record {
 			}
 
 			$templates = array_unique($templates);
+			asort($templates);
 	
 			return $templates;
 		}

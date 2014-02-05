@@ -43,12 +43,13 @@ class Concrete5_Controller_Block_Tags extends BlockController {
 	public function add() { 
 		$ak = $this->loadAttribute();
 		$this->set('ak',$ak);
-		
+		if ($this->isValidStack(Page::getCurrentPage())) {
+			$this->set('inStackDashboardPage', true);
+		}
 		$this->set('displayMode','page');
 	}
 	
 	protected function loadAttribute() {
-		Loader::model('attribute/categories/collection');
 		$ak = CollectionAttributeKey::getByHandle($this->attributeHandle);
 		return $ak;
 	}
@@ -56,6 +57,9 @@ class Concrete5_Controller_Block_Tags extends BlockController {
 	public function edit() { 
 		$ak = $this->loadAttribute();
 		$this->set('ak',$ak);
+		if ($this->isValidStack(Page::getCurrentPage())) {
+			$this->set('inStackDashboardPage', true);
+		}
 	}
 	
 	public function view() {
@@ -105,12 +109,20 @@ class Concrete5_Controller_Block_Tags extends BlockController {
 		$ak = $this->loadAttribute();
 		if ($_REQUEST['cID']) {
 			$c = Page::getByID($_REQUEST['cID'], 'RECENT');
-			$nvc = $c->getVersionToModify();
-			$ak->saveAttributeForm($nvc);
-			$nvc->refreshCache();
+			// We cannot save the attribute in the Stack Dashboard page
+			// as there is nothing to attach it to
+			if (!$this->isValidStack($c)) {
+				$nvc = $c->getVersionToModify();
+				$ak->saveAttributeForm($nvc);
+				$nvc->refreshCache();
+			}
 		}
 		$args['cloudCount'] = (is_numeric($args['cloudCount'])?$args['cloudCount']:0);
 		$args['targetCID'] = (is_numeric($args['targetCID'])?$args['targetCID']:0);
 		parent::save($args);
-	}	
+	}
+
+	protected function isValidStack($stack) {
+		return $stack->getCollectionParentID() == Page::getByPath(STACKS_PAGE_PATH)->getCollectionID();
+	}
 }

@@ -11,6 +11,23 @@ class Concrete5_Model_AttributeKey extends Object {
 	 */
 	public function getAttributeKeyName() { return $this->akName;}
 
+	/** Returns the display name for this attribute (localized and escaped accordingly to $format)
+	* @param string $format = 'html'
+	*	Escape the result in html format (if $format is 'html').
+	*	If $format is 'text' or any other value, the display name won't be escaped. 
+	* @return string
+	*/
+	public function getAttributeKeyDisplayName($format = 'html') {
+		$value = tc('AttributeKeyName', $this->getAttributeKeyName());
+		switch($format) {
+			case 'html':
+				return h($value);
+			case 'text':
+			default:
+				return $value;
+		}
+	}
+
 	/** 
 	 * Returns the handle for this attribute key
 	 */
@@ -211,8 +228,12 @@ class Concrete5_Model_AttributeKey extends Object {
 		if ($ak['internal']) {
 			$akIsInternal = 1;
 		}
-		$akn = self::add($akCategoryHandle, $type, array('akHandle' => $ak['handle'], 'akName' => $ak['name'], 'akIsInternal' => $akIsInternal, 'akIsSearchableIndexed' => $ak['indexed'], 'akIsSearchable' => $ak['searchable']), $pkg);
-		$akn->getController()->importKey($ak);
+		$db = Loader::db();
+		$akID = $db->GetOne('select akID from AttributeKeys where akHandle = ?', array($ak['handle']));
+		if (!$akID) {
+			$akn = self::add($akCategoryHandle, $type, array('akHandle' => $ak['handle'], 'akName' => $ak['name'], 'akIsInternal' => $akIsInternal, 'akIsSearchableIndexed' => $ak['indexed'], 'akIsSearchable' => $ak['searchable']), $pkg);
+			$akn->getController()->importKey($ak);
+		}
 	}
 	
 	/** 
@@ -262,10 +283,11 @@ class Concrete5_Model_AttributeKey extends Object {
 		$a = array($akHandle, $akName, $_akIsSearchable, $_akIsSearchableIndexed, $_akIsInternal, $_akIsAutoCreated, $_akIsEditable, $atID, $akCategoryID, $pkgID);
 		$r = $db->query("insert into AttributeKeys (akHandle, akName, akIsSearchable, akIsSearchableIndexed, akIsInternal, akIsAutoCreated, akIsEditable, atID, akCategoryID, pkgID) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", $a);
 		
-		$category = AttributeKeyCategory::getByID($akCategoryID);
-		
 		if ($r) {
+			//getting the insert id must happen right after insertion or
+			//certain adodb drivers (like mysqli) will fail and return 0
 			$akID = $db->Insert_ID();
+			$category = AttributeKeyCategory::getByID($akCategoryID);
 			$className = $txt->camelcase($akCategoryHandle) . 'AttributeKey';
 			$ak = new $className();
 			$ak->load($akID);
@@ -557,10 +579,20 @@ class Concrete5_Model_AttributeKey extends Object {
 	
 	/** 
 	 * Calls the functions necessary to save this attribute to the database. If no passed value is passed, then we save it via the stock form.
+	 * NOTE: this code is screwy because all code ever written that EXTENDS this code creates an attribute value object and passes it in, like
+	 * this code implies. But if you call this code directly it passes the object that you're messing with (Page, User, etc...) in as the $attributeValue
+	 * object, which is obviously not right. So we're going to do a little procedural if/then checks in this to ensure we're passing the right
+	 * stuff
 	 */
-	protected function saveAttribute($attributeValue, $passedValue = false) {
+	protected function saveAttribute($mixed, $passedValue = false) {
 		$at = $this->getAttributeType();
 		$at->controller->setAttributeKey($this);
+		if ($mixed instanceof AttributeValue) {
+			$attributeValue = $mixed;
+		} else {
+			// $mixed is ACTUALLY the object that we're setting the attribute against
+			$attributeValue = $nvc->getAttributeValueObject($mixed, true);
+		}
 		$at->controller->setAttributeValue($attributeValue);
 		if ($passedValue) {
 			$at->controller->saveValue($passedValue);

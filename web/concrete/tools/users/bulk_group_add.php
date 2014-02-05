@@ -76,9 +76,8 @@ if (!isset($_REQUEST['reload'])) { ?>
 							$g = Group::getByID($gRow['gID']); 
 							$gp = new Permissions($g);
 							if ($gp->canAssignGroup()) {
-
 						?>
-							<option value="<?=$g->getGroupID()?>"  <? if (is_array($_REQUEST['groupIDs']) && in_array($g->getGroupID(), $_REQUEST['groupIDs'])) { ?> selected="selected" <? } ?>><?=$g->getGroupDisplayName()?></option>
+							<option value="<?=$g['gID']?>"  <? if (is_array($_REQUEST['groupIDs']) && in_array($g['gID'], $_REQUEST['groupIDs'])) { ?> selected="selected" <? } ?>><?=h(tc('GroupName', $g['gName']))?></option>
 						<? } 
 						
 						}?>

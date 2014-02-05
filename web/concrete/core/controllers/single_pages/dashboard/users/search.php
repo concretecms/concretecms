@@ -220,7 +220,7 @@ class Concrete5_Controller_Page_Dashboard_Users_Search extends DashboardControll
 						$this->error->add(t('A username may only contain letters or numbers.'));
 					}
 				}
-				if (!Loader::Helper('concrete/validation')->isUniqueUsername($username) && $this->user->getUserName() != $username) {
+				if (strcasecmp($uo->getUserName(), $username) && !Loader::Helper('concrete/validation')->isUniqueUsername($username)) {
 					$this->error->add(t("The username '%s' already exists. Please choose another",$username));
 				}
 

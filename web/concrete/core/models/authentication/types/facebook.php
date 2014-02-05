@@ -35,8 +35,7 @@ class Concrete5_Controller_AuthenticationType_Facebook extends AuthenticationTyp
 		} else if ($status == 5) {
 			throw new Exception('<h2>Oh No!</h2>The email used by your facebook account is already in use!<br>Please login to your concrete5 account and then use the facebook login to tie your accounts together.');
 		}
-		$u->setLastAuthType(AuthenticationType::getByHandle('facebook'));
-		Loader::controller('/login')->chooseRedirect();
+		$this->completeAuthentication();
 	}
 
 	public function config($key,$value=false) {
@@ -247,5 +246,4 @@ class Concrete5_Controller_AuthenticationType_Facebook extends AuthenticationTyp
 	public function isAuthenticated(User $u) {
 		return ($u->isLoggedIn());
 	}
-
 }

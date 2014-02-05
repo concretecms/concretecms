@@ -4,7 +4,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 class Concrete5_Controller_Page_Dashboard_Users_Attributes extends DashboardController {
 	
 	public $helpers = array('form');
-	
+
 	public function delete($akID, $token = null){
 		try {
 			$ak = UserAttributeKey::getByID($akID); 
@@ -31,7 +31,7 @@ class Concrete5_Controller_Page_Dashboard_Users_Attributes extends DashboardCont
 		$otypes = AttributeType::getList('user');
 		$types = array();
 		foreach($otypes as $at) {
-			$types[$at->getAttributeTypeID()] = tc('AttributeTypeName', $at->getAttributeTypeName());
+			$types[$at->getAttributeTypeID()] = $at->getAttributeTypeDisplayName();
 		}
 		$this->set('types', $types);
 	}

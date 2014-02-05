@@ -370,6 +370,7 @@ class Concrete5_Controller_Block_Form extends BlockController {
 			//loop through each question and get the answers 
 			foreach( $rows as $row ){	
 				//save each answer
+				$answerDisplay = '';
 				if($row['inputType']=='checkboxlist'){
 					$answer = Array();
 					$answerLong="";
@@ -385,6 +386,12 @@ class Concrete5_Controller_Block_Form extends BlockController {
 				}elseif($row['inputType']=='fileupload'){
 					$answerLong="";
 					$answer=intval( $tmpFileIds[intval($row['msqID'])] );
+					if($answer > 0) {
+						$answerDisplay = File::getByID($answer)->getVersion()->getDownloadURL();
+					}
+					else {
+						$answerDisplay = t('No file specified');
+					}
 				}elseif($row['inputType']=='url'){
 					$answerLong="";
 					$answer=$txt->sanitize($_POST['Question'.$row['msqID']]);
@@ -413,6 +420,7 @@ class Concrete5_Controller_Block_Form extends BlockController {
 									
 				$questionAnswerPairs[$row['msqID']]['question']=$row['question'];
 				$questionAnswerPairs[$row['msqID']]['answer']=$txt->sanitize( $answer.$answerLong );
+				$questionAnswerPairs[$row['msqID']]['answerDisplay'] = strlen($answerDisplay) ? $answerDisplay : $questionAnswerPairs[$row['msqID']]['answer'];
 				
 				$v=array($row['msqID'],$answerSetID,$answer,$answerLong);
 				$q="insert into {$this->btAnswersTablename} (msqID,asID,answer,answerLong) values (?,?,?,?)";
