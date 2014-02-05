@@ -9,7 +9,7 @@ class Concrete5_Controller_Page_Dashboard_Sitemap_Search extends DashboardContro
 		$cnt->search();
 		$this->set('searchController', $cnt);
 		$result = Loader::helper('json')->encode($cnt->getSearchResultObject()->getJSONObject());
-		$this->addFooterItem("<script type=\"text/javascript\">$(function() { $('div[data-search=pages]').concreteAjaxSearch({result: " . $result . "}); });</script>");
+		$this->set('result', $result);
 	}
 
 }

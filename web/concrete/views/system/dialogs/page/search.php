@@ -2,13 +2,13 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 ?>
 
-<div data-search="pages" class="ccm-ui">
+<div data-search-pages="<?=$timestamp?>" class="ccm-ui">
 <? Loader::element('pages/search', array('controller' => $searchController))?>
 </div>
 
 <script type="text/javascript">
 $(function() {
-	$('div[data-search=pages]').concreteAjaxSearch({
+	$('div[data-search-pages=<?=$timestamp?>]').concreteAjaxSearch({
 		result: <?=$result?>,
 		onUpdateResults: function(concreteSearch) {
 			var $e = concreteSearch.$element;
