@@ -1,8 +1,9 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
 
-class Concrete5_Controller_Page_Dashboard_System_Registration_AuthenticationTypes extends DashboardController {
+class Concrete5_Controller_Dashboard_System_Registration_AuthenticationTypes extends DashboardBaseController {
 
 	public function view($message = NULL) {
+
 		$ats = AuthenticationType::getList(true);
 		$this->set("ats",$ats);
 		if (!$this->error) {
@@ -73,7 +74,7 @@ class Concrete5_Controller_Page_Dashboard_System_Registration_AuthenticationType
 			$this->redirect('dashboard/system/registration/authentication_types/');
 			exit;
 		}
-		$this->set('message',$at->getAuthenticationTypeName()." authentication has been disabled.");
+		$this->set('message',$at->getAuthenticationTypeName()." authentication has been saved.");
 		$this->view();
 	}
 

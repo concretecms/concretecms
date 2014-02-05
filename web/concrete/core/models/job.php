@@ -117,9 +117,9 @@ abstract class Concrete5_Model_Job extends Object {
 		$db = Loader::db();
 		
 		if($scheduledOnly) {
-			$q = "SELECT jID FROM Jobs WHERE isScheduled = 1 ORDER BY jDateLastRun";
+			$q = "SELECT jID FROM Jobs WHERE isScheduled = 1 ORDER BY jDateLastRun, jID";
 		} else {
-			$q = "SELECT jID FROM Jobs ORDER BY jDateLastRun";
+			$q = "SELECT jID FROM Jobs ORDER BY jDateLastRun, jID";
 		}
 		$r = $db->Execute($q);
 		$jobs = array();

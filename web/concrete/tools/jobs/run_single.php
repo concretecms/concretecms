@@ -49,7 +49,7 @@ if (is_object($job)) {
 		}
 
 		$totalItems = $q->count();
-		Loader::element('progress_bar', array('totalItems' => $totalItems, 'totalItemsSummary' => t2("%d items", "%d items", $totalItems)));
+		Loader::element('progress_bar', array('totalItems' => $totalItems, 'totalItemsSummary' => t2("%d item", "%d items", $totalItems)));
 
 		exit;
 

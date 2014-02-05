@@ -1,14 +1,12 @@
-<?php
-defined('C5_EXECUTE') or die("Access Denied.");
+<?php defined('C5_EXECUTE') or die("Access Denied.");
 Loader::library('authentication/open_id');
 
-class Concrete5_Controller_Page_Login extends PageController { 
-	
+class Concrete5_Controller_Login extends Controller {
+
 	public $helpers = array('form');
-	private $openIDReturnTo;
 	protected $locales = array();
 	protected $supportsPageCache = true;
-	
+
 	public function on_start() {
 		$this->error = Loader::helper('validation/error');
 		if (USER_REGISTRATION_WITH_EMAIL_ADDRESS) {
@@ -17,23 +15,20 @@ class Concrete5_Controller_Page_Login extends PageController {
 			$this->set('uNameLabel', t('Username'));
 		}
 
-		if(!$_COOKIE[SESSION]) {
-			throw new Exception(t('Your browser\'s cookie functionality is turned off. Please turn it on.'));
-		}
 
 		$txt = Loader::helper('text');
-		if (isset($_GET['uName']) && strlen($_GET['uName'])) { // pre-populate the username if supplied, if its an email address with special characters the email needs to be urlencoded first,
-			$this->set("uName",trim($txt->email($_GET['uName'])));
+		if (strlen($_GET['uName'])) { // pre-populate the username if supplied, if its an email address with special characters the email needs to be urlencoded first,
+		   $this->set("uName",trim($txt->email($_GET['uName'])));
 		}
-		
 
-		$languages = array();		
+
+		$languages = array();
 		$locales = array();
 		if (Config::get('LANGUAGE_CHOOSE_ON_LOGIN')) {
 			Loader::library('3rdparty/Zend/Locale');
 			Loader::library('3rdparty/Zend/Locale/Data');
 			$languages = Localization::getAvailableInterfaceLanguages();
-			if (count($languages) > 0) { 
+			if (count($languages) > 0) {
 				array_unshift($languages, 'en_US');
 			}
 			$locales = array();
@@ -54,10 +49,9 @@ class Concrete5_Controller_Page_Login extends PageController {
 		}
 		$this->locales = $locales;
 		$this->set('locales', $locales);
-		
-		$this->openIDReturnTo = BASE_URL . View::url("/login", "complete_openid"); 
+
 	}
-	
+
 	/* automagically run by the controller once we're done with the current method */
 	/* method is passed to this method, the method that we were just finished running */
 	public function on_before_render() {
@@ -66,12 +60,18 @@ class Concrete5_Controller_Page_Login extends PageController {
 		}
 	}
 
-	public function view() {}
-	
+	public function view($type = NULL, $element = 'form') {
+		if(strlen($type)) {
+			$at = AuthenticationType::getByHandle($type);
+			$this->set('authType', $at);
+			$this->set('authTypeElement', $element);
+		}
+	}
+
 	public function account_deactivated() {
 		$this->error->add(t('This user is inactive. Please contact us regarding this account.'));
 	}
-	
+
 
 	/**
 	 * Concrete5_Controller_Login::callback
@@ -100,19 +100,9 @@ class Concrete5_Controller_Page_Login extends PageController {
 			} else {
 				$message = call_user_method($method, $at->controller);
 			}
+
 			if (trim($message)) {
 				$this->set('message',$message);
-			}
-
-			if ($this->post('completePartialProfile')) {
-				foreach($unfilledAttributes as $uak) {
-					$e1 = $uak->validateAttributeForm();
-					if ($e1 == false) {
-						$this->error->add(t('The field "%s" is required', tc('AttributeKeyName', $uak->getAttributeKeyName())));
-					} elseif ($e1 instanceof ValidationErrorHelper) {
-						$this->error->add($e1);
-					}
-				}
 			}
 		} catch (exception $e) {
 			if ($e instanceof AuthenticationTypeFailureException) {
@@ -133,19 +123,90 @@ class Concrete5_Controller_Page_Login extends PageController {
 		try {
 			$at = AuthenticationType::getByHandle($type);
 			$at->controller->authenticate();
-			$db = Loader::db();
-			$u = new User();
-			if ($u->getUserID() == 1 && $type != 'concrete') {
-				$u->logout();
-				throw new exception('You can only identify as the root user using the concrete login.');
-			}
-			$u->setLastAuthType($at);
-			Events::fire('on_user_login',$this);
-			$this->chooseRedirect();
+			$this->finishAuthentication();
 		} catch (exception $e) {
 			$this->error->add($e->getMessage());
 		}
 		$this->view();
+	}
+
+	public function finishAuthentication(AuthenticationType $type) {
+		$db = Loader::db();
+		$u = new User();
+		if ($u->getUserID() == 1 && $type->getAuthenticationTypeHandle() != 'concrete') {
+			$u->logout();
+			throw new exception('You can only identify as the root user using the concrete login.');
+		}
+
+		$ui = UserInfo::getByID($u->getUserID());
+		$aks = UserAttributeKey::getRegistrationList();
+
+		$unfilled = array_values(array_filter($aks, function($ak) use ($ui) {
+			return $ak->isAttributeKeyRequiredOnRegister() && !is_object($ui->getAttributeValueObject($ak));
+		}));
+
+		if (count($unfilled)) {
+			$u->logout(false);
+
+			if (!$this->error) {
+				$this->on_start();
+			}
+
+
+			$this->set('required_attributes', $unfilled);
+			$this->set('u', $u);
+			$this->error->add('Fill in these required settings in order to continue.');
+
+			$_SESSION['uRequiredAttributeUser'] = $u->getUserID();
+			$_SESSION['uRequiredAttributeUserAuthenticationType'] = $type->getAuthenticationTypeHandle();
+			$this->render('/login');
+		}
+
+		$u->setLastAuthType($type);
+		Events::fire('on_user_login', $this);
+		$this->chooseRedirect();
+	}
+
+	public function fill_attributes() {
+		try {
+			if (!isset($_SESSION['uRequiredAttributeUser']) ||
+			    intval($_SESSION['uRequiredAttributeUser']) < 1 ||
+			    !isset($_SESSION['uRequiredAttributeUserAuthenticationType']) ||
+			    !$_SESSION['uRequiredAttributeUserAuthenticationType']) {
+				unset($_SESSION['uRequiredAttributeUser']);
+				unset($_SESSION['uRequiredAttributeUserAuthenticationType']);
+				throw new Exception('Invalid Request, please attempt login again.');
+			}
+			User::loginByUserID($_SESSION['uRequiredAttributeUser']);
+			unset($_SESSION['uRequiredAttributeUser']);
+			$u = new User;
+			$at = AuthenticationType::getByHandle($_SESSION['uRequiredAttributeUserAuthenticationType']);
+			unset($_SESSION['uRequiredAttributeUserAuthenticationType']);
+			if (!$at) throw new Exception("Invalid Authentication Type");
+
+			$ui = UserInfo::getByID($u->getUserID());
+			$aks = UserAttributeKey::getRegistrationList();
+
+			$unfilled = array_values(array_filter($aks, function($ak) use ($ui) {
+				return $ak->isAttributeKeyRequiredOnRegister() && !is_object($ui->getAttributeValueObject($ak));
+			}));
+
+			foreach ($unfilled as $attribute) {
+				$err = $attribute->validateAttributeForm();
+				if ($err == false) {
+					$this->error->add(t('The field "%s" is required', $attribute->getAttributeKeyDisplayName()));
+				} elseif ($err instanceof ValidationErrorHelper) {
+					$this->error->add($err);
+				} else {
+					$attribute->saveAttributeForm($ui);
+				}
+			}
+
+			$this->finishAuthentication($at);
+		} catch (Exception $e) {
+			$this->error->add($e->getMessage());
+			$this->render('/login');
+		}
 	}
 
 	public function chooseRedirect() {
@@ -189,29 +250,19 @@ class Concrete5_Controller_Page_Login extends PageController {
 		}
 	}
 
-	public function password_sent() {
-		$this->set('intro_msg', $this->getPasswordSentMsg() );
+	public function logout() {
+		$u = new User();
+		$u->logout();
+		$this->redirect('/');
 	}
-	
-	public function getPasswordSentMsg(){
-		return t('An email containing instructions on resetting your password has been sent to your account address.');
-	}
-	
-	public function logout($token = false) {
-		if (Loader::helper('validation/token')->validate('logout', $token)) {
-			$u = new User();
-			$u->logout();
-			$this->redirect('/');
-		}
-	}
-	
+
 	public function forward($cID = 0) {
 		$nh = Loader::helper('validation/numbers');
 		if ($nh->integer($cID)) {
 			$this->set('rcID', $cID);
 		}
 	}
-	
+	/* @TODO this functionality needs to be ported to the concrete5 auth type
 	// responsible for validating a user's email address
 	public function v($hash = '') {
 		$ui = UserInfo::getByValidationHash($hash);
@@ -221,117 +272,7 @@ class Concrete5_Controller_Page_Login extends PageController {
 			$this->set('validated', true);
 		}
 	}
-	
-	public function change_password($uHash = '') {
-		$db = Loader::db();
-		$h = Loader::helper('validation/identifier');
-		$e = Loader::helper('validation/error');
-		$ui = UserInfo::getByValidationHash($uHash);		
-		if (is_object($ui)){
-			$hashCreated = $db->GetOne("select uDateGenerated FROM UserValidationHashes where uHash=?", array($uHash));
-			if($hashCreated < (time()-(USER_CHANGE_PASSWORD_URL_LIFETIME))) {
-				$h->deleteKey('UserValidationHashes','uHash',$uHash);
-				throw new Exception( t('Key Expired. Please visit the forgot password page again to have a new key generated.') );
-			}else{	
-			
-				if(strlen($_POST['uPassword'])){
-				
-					$userHelper = Loader::helper('concrete/user');
-					$userHelper->validNewPassword($_POST['uPassword'],$e);
-					
-					if(strlen($_POST['uPassword']) && $_POST['uPasswordConfirm']!=$_POST['uPassword']){			
-						$e->add(t('The two passwords provided do not match.'));
-					}
-					
-					if (!$e->has()){ 
-						$ui->changePassword( $_POST['uPassword'] );						
-						$h->deleteKey('UserValidationHashes','uHash',$uHash);					
-						$this->set('passwordChanged', true);
-						
-						$u = $ui->getUserObject();
-						if (USER_REGISTRATION_WITH_EMAIL_ADDRESS) {
-							$_POST['uName'] =  $ui->getUserEmail();
-						} else {
-							$_POST['uName'] =  $u->getUserName();
-						}
-						$this->do_login();
-							
-						return;
-					}else{
-						$this->set('uHash', $uHash);
-						$this->set('changePasswordForm', true);					
-						$this->set('errorMsg', join( '<br>', $e->getList() ) );					
-					}
-				}else{ 				
-					$this->set('uHash', $uHash);
-					$this->set('changePasswordForm', true);
-				}
-			}		
-		}else{
-			throw new Exception( t('Invalid Key. Please visit the forgot password page again to have a new key generated.') );
-		}
-	}	
-	
-	public function forgot_password() {
-		$loginData['success']=0;
-	
-		$vs = Loader::helper('validation/strings');
-		$em = $this->post('uEmail');
-		try {
-			if (!$vs->email($em)) {
-				throw new Exception(t('Invalid email address.'));
-			}
-			
-			$oUser = UserInfo::getByEmail($em);
-			if (!$oUser) {
-				throw new Exception(t('We have no record of that email address.'));
-			}			
-			
-			$mh = Loader::helper('mail');
-			//$mh->addParameter('uPassword', $oUser->resetUserPassword());
-			if (USER_REGISTRATION_WITH_EMAIL_ADDRESS) {
-				$mh->addParameter('uName', $oUser->getUserEmail());
-			} else {
-				$mh->addParameter('uName', $oUser->getUserName());			
-			}
-			$mh->to($oUser->getUserEmail());
-			
-			//generate hash that'll be used to authenticate user, allowing them to change their password
-			$h = Loader::helper('validation/identifier');
-			$uHash = $h->generate('UserValidationHashes', 'uHash');	
-			$db = Loader::db();
-			$db->Execute("DELETE FROM UserValidationHashes WHERE uID=?", array( $oUser->uID ) );			
-			$db->Execute("insert into UserValidationHashes (uID, uHash, uDateGenerated, type) values (?, ?, ?, ?)", array($oUser->uID, $uHash, time(),intval(UVTYPE_CHANGE_PASSWORD)));		
-			$changePassURL=BASE_URL . View::url('/login', 'change_password', $uHash); 		
-			$mh->addParameter('changePassURL', $changePassURL);
-			
-			if (defined('EMAIL_ADDRESS_FORGOT_PASSWORD')) {
-				$mh->from(EMAIL_ADDRESS_FORGOT_PASSWORD,  t('Forgot Password'));
-			} else {
-				$adminUser = UserInfo::getByID(USER_SUPER_ID);
-				if (is_object($adminUser)) {
-					$mh->from($adminUser->getUserEmail(),  t('Forgot Password'));
-				}
-			}
-			$mh->load('forgot_password');
-			@$mh->sendMail();
-			
-			$loginData['success']=1;
-			$loginData['msg']=$this->getPasswordSentMsg();
 
-		} catch(Exception $e) {
-			$this->error->add($e);
-			$loginData['error']=$e->getMessage();
-		}
-		
-		if( $_REQUEST['format']=='JSON' ){
-			$jsonHelper=Loader::helper('json'); 
-			echo $jsonHelper->encode($loginData);
-			die;
-		}		
-		
-		if($loginData['success']==1)
-			$this->redirect('/login', 'password_sent');	
-	}
-	
+	*/
+
 }

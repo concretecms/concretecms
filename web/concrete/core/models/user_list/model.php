@@ -41,15 +41,20 @@ class Concrete5_Model_UserList extends DatabaseItemList {
 		$this->filter(false, '( u.uName like ' . $qkeywords . $emailSearchStr . $attribsStr . ')');
 	}
 	
-	public function filterByGroup($group, $inGroup = true) {
+	/**
+	 * filters the user list for only users within the provided group.  Accepts an instance of a group object or a string group name
+	 * @param Group|string $group
+	 * @param boolean $inGroup
+	 * @return void
+	*/
+	public function filterByGroup($group='', $inGroup = true){
+		if(!$group instanceof Group) {
+			$group = Group::getByName($group);
+		}
 		$tbl='ug_'.$group->getGroupID();
-		$tblg = 'g_' . $group->getGroupID();
 		$this->addToQuery("left join UserGroups $tbl on {$tbl}.uID = u.uID ");	
 		if ($inGroup) {
-			$this->addToQuery("left join Groups {$tblg} on {$tbl}.gID = {$tblg}.gID ");	
-			$db = Loader::db();
-			$path = $db->quote($group->getGroupPath() . '%');
-			$this->filter(false, "{$tblg}.gPath like {$path}");
+			$this->filter(false, "{$tbl}.gID=".intval($group->getGroupID()) );
 		} else {
 			$this->filter(false, "{$tbl}.gID is null");
 		}
@@ -65,8 +70,9 @@ class Concrete5_Model_UserList extends DatabaseItemList {
 	}
 
 	public function filterByGroupID($gID){ 
-		$g = Group::getByID($gID);
-		$this->filterByGroup($g);
+		$tbl='ug_'.$gID;
+		$this->addToQuery("left join UserGroups $tbl on {$tbl}.uID = u.uID ");			
+		$this->filter(false, "{$tbl}.gID=".$gID);
 	}
 
 	public function filterByDateAdded($date, $comparison = '=') {

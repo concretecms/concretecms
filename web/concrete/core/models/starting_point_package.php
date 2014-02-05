@@ -161,10 +161,9 @@ class Concrete5_Model_StartingPointPackage extends Package {
 	}
 
 	public function add_users() {
-
 		// Firstly, install the core authentication types
-		$cba = AuthenticationType::add('concrete','Concrete5');
-		$fba = AuthenticationType::add('facebook','Facebook');
+		$cba = AuthenticationType::add('concrete', 'concrete5');
+		$fba = AuthenticationType::add('facebook', 'facebook');
 
 		$fba->disable();
 
@@ -176,9 +175,9 @@ class Concrete5_Model_StartingPointPackage extends Package {
 		// insert the default groups
 		// create the groups our site users
 		// specify the ID's since auto increment may not always be +1
-		$g1 = Group::add(t("Guest"), t("The guest group represents unregistered visitors to your site."), false, false, GUEST_GROUP_ID);
-		$g2 = Group::add(t("Registered Users"), t("The registered users group represents all user accounts."), false, false, REGISTERED_GROUP_ID);
-		$g3 = Group::add(t("Administrators"), "", false, false, ADMIN_GROUP_ID);
+		$g1 = Group::add(tc("GroupName", "Guest"), tc("GroupDescription", "The guest group represents unregistered visitors to your site."), false, false, GUEST_GROUP_ID);
+		$g2 = Group::add(tc("GroupName", "Registered Users"), tc("GroupDescription", "The registered users group represents all user accounts."), false, false, REGISTERED_GROUP_ID);
+		$g3 = Group::add(tc("GroupName", "Administrators"), "", false, false, ADMIN_GROUP_ID);
 
 		// insert admin user into the user table
 		if (defined('INSTALL_USER_PASSWORD')) {

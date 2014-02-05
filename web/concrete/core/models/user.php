@@ -262,6 +262,24 @@
 			return $this->uTimezone;
 		}
 
+		function setAuthTypeCookie($authType) {
+			$cookie = array($this->getUserID(),$authType);
+			$at = AuthenticationType::getByHandle($authType);
+			$cookie[] = $at->controller->buildHash($this);
+			setcookie("ccmAuthUserHash", implode(':',$cookie), time() + 1209600, DIR_REL . '/', SESSION_COOKIE_PARAM_DOMAIN);
+		}
+
+		public function setLastAuthType(AuthenticationType $at) {
+			$db = Loader::db();
+			$db->Execute('UPDATE Users SET uLastAuthTypeID=? WHERE uID=?', array($at->getAuthenticationTypeID(), $this->getUserID()));
+		}
+
+		public function getLastAuthType() {
+			$db = Loader::db();
+			$id = $db->getOne('SELECT uLastAuthTypeID FROM Users WHERE uID=?', array($this->getUserID()));
+			return intval($id);
+		}
+
 		function unloadAuthenticationTypes() {
 			$ats = AuthenticationType::getList();
 			foreach ($ats as $at) {
@@ -269,23 +287,33 @@
 			}
 		}
 
-		function logout() {
+		function logout($hard = true) {
 			// First, we check to see if we have any collection in edit mode
 			$this->unloadCollectionEdit();
 			$this->unloadAuthenticationTypes();
 			@session_unset();
-			@session_destroy();
+			if ($hard == true) {
+				@session_destroy();
+			}
 			Events::fire('on_user_logout');
-			if (isset($_COOKIE['ccmUserHash']) && $_COOKIE['ccmUserHash']) {
-				setcookie("ccmUserHash", "", 315532800, DIR_REL . '/');
+			if ($_COOKIE['ccmAuthUserHash']) {
+				setcookie("ccmAuthUserHash", "", 315532800, DIR_REL . '/');
 			}
 		}
 
-		static function checkUserForeverCookie() {
-			if (isset($_COOKIE['ccmUserHash']) && $_COOKIE['ccmUserHash']) {
+
+		/**
+		 * use verifyAuthTypeCookie instead
+		 * @depricated since before 5.6.3
+		*/
+		function checkUserForeverCookie() {
+			echo var_dump($_COOKIE);
+			if ($_COOKIE['ccmUserHash']) {
+					echo "hello"; exit;
 				$hashVal = explode(':', $_COOKIE['ccmUserHash']);
 				$_uID = $hashVal[0];
 				$uHash = $hashVal[1];
+				echo var_dump($hashVal); exit;
 				if ($uHash == md5(PASSWORD_SALT . $_uID)) {
 					User::loginByUserID($_uID);
 				}
@@ -300,19 +328,16 @@
 				if ($u->isError()) {
 					return;
 				}
-				if ($at->controller->verifyHash($u,$uHash)) {
+				if ($at->controller->verifyHash($u, $uHash)) {
 					User::loginByUserID($_uID);
 				}
 			}
 		}
 
-		function setAuthTypeCookie($authType) {
-			$cookie = array($this->getUserID(),$authType);
-			$at = AuthenticationType::getByHandle($authType);
-			$cookie[] = $at->controller->buildHash($this);
-			setcookie("ccmAuthUserHash", implode(':',$cookie), time() + 1209600, DIR_REL . '/');
-		}
-		
+		/**
+		 * authenticatiion types will handle this
+		 * @depricated since before 5.6.3
+		*/
 		function setUserForeverCookie() {
 			$hashVal = md5(PASSWORD_SALT . $this->getUserID());
 			setcookie("ccmUserHash", $this->getUserID() . ':' . $hashVal, time() + 1209600, DIR_REL . '/');
@@ -325,34 +350,9 @@
 		}
 		
 		function getUserGroups() {
-			$ugtmp = array();
-			// we have to do this because we don't have a localized version of the guest and registered group names
-			// when we called _getUserGroups() below. So we have to push out the defining of the guest and registered
-			// names til runtime
-
-			foreach($this->uGroups as $key => $value) {
-				$ugtmp[$key] = $value;
-				if ($key == GUEST_GROUP_ID) {
-					$ugtmp[$key] = GUEST_GROUP_NAME;
-				}
-				if ($key == REGISTERED_GROUP_ID) {
-					$ugtmp[$key] = REGISTERED_GROUP_NAME;
-				}
-			}
-			return $ugtmp;
+			return $this->uGroups;
 		}
 
-		public function setLastAuthType(AuthenticationType $at) {
-			$db = Loader::db();
-			$db->Execute('UPDATE Users SET uLastAuthTypeID=? WHERE uID=?', array($at->getAuthenticationTypeID(), $this->getUserID()));
-		}
-
-		public function getLastAuthType() {
-			$db = Loader::db();
-			$id = $db->getOne('SELECT uLastAuthTypeID FROM Users WHERE uID=?', array($this->getUserID()));
-			return intval($id);
-		}
-		
 		/** 
 		 * Sets a default language for a user record 
 		 */
@@ -436,14 +436,6 @@
 								}
 							} else {
 								$ug[$row['gID']] = $row['gName'];
-
-								// now we have to test for hierarchy
-								$g = Group::getByID($row['gID']);
-								$parents = $g->getParentGroups();
-								foreach($parents as $pg) {
-									$ug[$pg->getGroupID()] = $pg->getGroupName();
-								}
-
 							}
 
 						}
@@ -511,8 +503,8 @@
 		function inGroup($g) {
 			$db = Loader::db();
 			$v = array($this->uID, $g->getGroupID());
-			$groups = $this->getUserGroups();
-			return array_key_exists($g->getGroupID(), $groups);
+			$cnt = $db->GetOne("select gID from UserGroups where uID = ? and gID = ?", $v);
+			return $cnt > 0;
 		}
 
 		function loadMasterCollectionEdit($mcID, $ocID) {

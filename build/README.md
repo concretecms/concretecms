@@ -13,6 +13,21 @@ Unfortunately, this will not put the grunt executable in your PATH, so you'll ne
 
 Once you have installed the grunt client, you need to install the project dependencies: simply launch the following command: `npm install` from inside the `build` directory.
 
+### Task parameters
+
+Every task may have its own parameters. These parameters may be specified inline or in a file called `Gruntfile.parameters.js`.
+
+For instance, you may execute this line of code:
+`grunt taskname --nameOfTheOption=valueOfTheOption`
+
+Or you can have a  `Gruntfile.parameters.js` like this:
+```
+module.exports = {
+	nameOfTheOption: 'valueOfTheOption'
+};
+```
+And you can simply launch `grunt taskname`
+
 ## Building .css files
 
 - For debugging: `grunt css:debug`
@@ -43,3 +58,20 @@ If you have installed concrete5 in a sub-directory and you want to debug JavaScr
 `config.DIR_REL = '';`
 For instance, if your concrete5 installation is at http://www.domain.com/c5subfolder, you should change it to:
 `config.DIR_REL = '/c5subfolder';`
+
+
+## Downloading translations from Transifex
+
+To download translations from Transifex, and compile them in a format that can be used by concrete5 (creating .mo files), you can use the `translations` task.
+You have to specify the following parameters:
+- `txUsername` a valid Transifex username
+- `txPassword` the password for the above Transifex account
+- `txResource` the resource identifier that you want to download (for instance: `core`)
+- `txLocales` a comma-separated list of locale identifiers (for instance: `de_DE,it_IT,el_GE`) that you want to download. If this option is specified in the `Gruntfile.parameters.js` file you can also write a Javascript array (for instance: `module.exports.txLocales = ['de_DE' ,'it_IT', 'el_GE'];`). If you don't specify this value then all the available locales will be fetched.
+- `txProgressLimit` the task will retrieve only translations above this limit. For instance, if you specify `90`, then the task will download translations that are at least at 90% (_the default value for this option is 95%_).
+
+Example:
+```Shell
+grunt translations --txUsername=myName --txPassword=myPwd --txResource=core-5621 --txLocales=de_DE,it_IT,el_GE --txProgressLimit=0
+```
+As stated above, some or all of these options can also be specified in the `Gruntfile.parameters.js` file (but the command-line options take the precedence).

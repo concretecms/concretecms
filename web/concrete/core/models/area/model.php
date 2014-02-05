@@ -65,7 +65,7 @@ class Concrete5_Model_Area extends Object {
 		if (isset($this->arDisplayName)) {
 			return $this->arDisplayName;
 		} else {
-			return $this->arHandle;
+			return tc('AreaName', $this->arHandle);
 		}
 	}
 

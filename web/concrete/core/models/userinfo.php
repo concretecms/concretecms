@@ -225,6 +225,19 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			$r = $db->query("UPDATE Pages set uID=? WHERE uID = ?",array( intval(USER_SUPER_ID), intval($this->uID)));
 		}
 
+		/**
+		 * Called only by the getGroupMembers function it sets the "type" of member for this group. Typically only used programmatically
+		 * @param string $type
+		 * @return void
+		 */
+		public function setGroupMemberType($type) {
+			$this->gMemberType = $type;
+		}
+		
+		public function getGroupMemberType() {
+			return $this->gMemberType;
+		}
+
 		public function canReadPrivateMessage($msg) {
 			return $msg->getMessageUserID() == $this->getUserID();
 		}
@@ -348,8 +361,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			if (is_object($ak)) {
 				$av = $this->getAttributeValueObject($ak);
 				if (is_object($av)) {
-					$args = func_get_args();
-					if (count($args) > 1) {
+					if(func_num_args() > 2) {
+						$args = func_get_args();
 						array_shift($args);
 						return call_user_func_array(array($av, 'getValue'), $args);						
 					} else {
@@ -473,7 +486,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			}
 
 			$dh = Loader::helper('date');
-				
+
 			$datetime = $dh->getSystemDateTime();
 			if (is_array($groupArray)) {
 				foreach ($groupArray as $gID) {
@@ -490,7 +503,18 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				}
 			}
 
-				// now we go through the existing GID Array, and remove everything, since whatever is left is not wanted.
+
+			// now we go through the existing GID Array, and remove everything, since whatever is left is not wanted.
+
+			// Fire on_user_exit_group event for each group exited
+			foreach ($existingGIDArray as $gID) {
+				$group = Group::getByID($gID);
+				if ($group) {
+					Events::fire('on_user_exit_group', $this->getUserObject(), $group);
+				}
+			}
+
+			// Remove from db
 			if (count($existingGIDArray) > 0) {
 				$inStr = implode(',', $existingGIDArray);
 				$q2 = "delete from UserGroups where uID = '{$this->uID}' and gID in ({$inStr})";

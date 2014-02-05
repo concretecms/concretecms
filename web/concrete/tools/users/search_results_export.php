@@ -29,7 +29,7 @@ echo("<td><b>".t('Registered')."</b></td>");
 echo("<td><b>".t('# Logins')."</b></td>");
 $attribs = UserAttributeKey::getList();
 foreach($attribs as $ak) {
-	echo("<td><b>" . tc('AttributeKeyName', $ak->getAttributeKeyName()) . "</b></td>");
+	echo("<td><b>" . $ak->getAttributeKeyDisplayName() . "</b></td>");
 }
 echo("</tr>");
 foreach($users as $ui) { 

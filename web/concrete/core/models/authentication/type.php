@@ -21,7 +21,12 @@ class Concrete5_Model_AuthenticationType extends Object {
 		$db = Loader::db();
 		$db->Execute('UPDATE AuthenticationTypes SET authTypeDisplayOrder=? WHERE authTypeID=?',array($order,$this->getAuthenticationTypeID()));
 	}
-	
+
+
+	/**
+	 * @param int $authTypeID
+	 * @return Concrete5_Model_AuthenticationType
+	 */
 	public static function getByID($authTypeID) {
 		$db = Loader::db();
 		$row = $db->GetRow('SELECT * FROM AuthenticationTypes where authTypeID=?', array($authTypeID));
@@ -128,7 +133,7 @@ class Concrete5_Model_AuthenticationType extends Object {
 		if (method_exists($this->controller, 'deleteType')) {
 			$this->controller->deleteType();
 		}
-		
+
 		$db->Execute("DELETE FROM AuthenticationTypes WHERE authTypeID=?", array($this->authTypeID));
 	}
 
@@ -172,7 +177,7 @@ class Concrete5_Model_AuthenticationType extends Object {
 		}
 		$at = AuthenticationType::load($row);
 		return $at;
-	}	
+	}
 
 	/**
 	 * AuthenticationType::add
@@ -236,7 +241,7 @@ class Concrete5_Model_AuthenticationType extends Object {
 	 * @param string $_file The filename you want.
 	 * @return string This will return false if the file is not found.
 	 */
-	protected function mapAuthenticationTypeFilePath($_file) {
+	public function mapAuthenticationTypeFilePath($_file) {
 		$atHandle = $this->getAuthenticationTypeHandle();
 
 		$locations = array();
@@ -246,7 +251,7 @@ class Concrete5_Model_AuthenticationType extends Object {
 		}
 
 		if ($this->pkgID > 0) {
-			$pkgHandle = PackageList::getHandle($pkgID);
+			$pkgHandle = PackageList::getHandle($this->pkgID);
 			$dirp = is_dir(DIR_PACKAGES.'/'.$pkgHandle)?DIR_PACKAGES.'/'.$pkgHandle:DIR_PACKAGES_CORE.'/'.$pkgHandle;
 			$locations[] = implode('/',array($dirp,DIRNAME_MODELS,DIRNAME_AUTHENTICATION,DIRNAME_AUTHENTICATION_TYPES,$atHandle,$_file));
 			if ($_file == FILENAME_AUTHENTICATION_CONTROLLER) {
@@ -293,13 +298,13 @@ class Concrete5_Model_AuthenticationType extends Object {
 	 * AuthenticationType::renderForm
 	 * Render the login form for this authentication type.
 	 */
-	public function renderForm() {
-		$form = $this->mapAuthenticationTypeFilePath('form.php');
+	public function renderForm($element = 'form') {
+		$form = $this->mapAuthenticationTypeFilePath($element.'.php');
 		if ($form) {
 			ob_start();
 			$this->controller->view();
 			extract($this->controller->getSets());
-			require_once($this->mapAuthenticationTypeFilePath('form.php'));
+			require_once($this->mapAuthenticationTypeFilePath($element.'.php'));
 			$out = ob_get_contents();
 			ob_end_clean();
 			echo $out;
@@ -328,7 +333,7 @@ class Concrete5_Model_AuthenticationType extends Object {
 	 * AuthenticationType::loadController
 	 * Load the AuthenticationTypeController into the AuthenticationType
 	 */
-	protected function loadController() { 
+	protected function loadController() {
 		// local scope
 		$atHandle = $this->authTypeHandle;
 		$txt = Loader::helper('text');
@@ -340,7 +345,7 @@ class Concrete5_Model_AuthenticationType extends Object {
 		require_once($file);
 		$this->controller = new $className($this);
 	}
-	
+
 }
 
 /**

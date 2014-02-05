@@ -61,7 +61,8 @@ class URLify {
 			'З' => 'Z', 'И' => 'I', 'Й' => 'J', 'К' => 'K', 'Л' => 'L', 'М' => 'M', 'Н' => 'N', 'О' => 'O',
 			'П' => 'P', 'Р' => 'R', 'С' => 'S', 'Т' => 'T', 'У' => 'U', 'Ф' => 'F', 'Х' => 'H', 'Ц' => 'C',
 			'Ч' => 'Ch', 'Ш' => 'Sh', 'Щ' => 'Sh', 'Ъ' => '', 'Ы' => 'Y', 'Ь' => '', 'Э' => 'E', 'Ю' => 'Yu',
-			'Я' => 'Ya'
+			'Я' => 'Ya',
+			'№' => ''
 		),
 		'uk' => array ( /* Ukrainian */
 			'Є' => 'Ye', 'І' => 'I', 'Ї' => 'Yi', 'Ґ' => 'G', 'є' => 'ye', 'і' => 'i', 'ї' => 'yi', 'ґ' => 'g'
@@ -121,28 +122,6 @@ class URLify {
 	private static $language = '';
 
 	/**
-	 *  returns the remove list from the concrete5 config or the default from this urlify library
-	 *
-	 * @return array
-	 * @author Ryan Tyler ryan@concrete5.org
-	*/
-	public function get_removed_list() {
-		$remove_list = Config::get('SEO_EXCLUDE_WORDS');
-		if(!isset($remove_list)) {
-			return self::$remove_list;
-		}
-		$remove_array = explode(',', $remove_list);
-		$remove_array = array_map('trim', $remove_array);
-		$remove_array = array_filter($remove_array, 'strlen');
-		return $remove_array;
-	}
-
-
-	public function get_original_removed_list() {
-		return self::$remove_list;
-	}
-
-	/**
 	 * Initializes the character map.
 	 */
 	private static function init ($language = "") {
@@ -156,15 +135,11 @@ class URLify {
 			$m = self::$maps[$language];
 			unset(self::$maps[$language]);
 			self::$maps[$language] = $m;
-			
-			/* Reset static vars */
-			self::$language = $language;
-			self::$map = array();
-			self::$chars = '';
-			self::$regex = '';
 		}
-
-		self::$remove_list = self::get_removed_list();
+		/* Reset static vars */
+		self::$language = $language;
+		self::$map = array();
+		self::$chars = '';
 
 		foreach (self::$maps as $map) {
 			foreach ($map as $orig => $conv) {
@@ -199,8 +174,8 @@ class URLify {
 
 	/**
 	 * Transliterates characters to their ASCII equivalents.
-	 * $language specifies a priority for a specific language. 
-	 * The latter is useful if languages have different rules for the same character.
+     * $language specifies a priority for a specific language. 
+     * The latter is useful if languages have different rules for the same character.
 	 */
 	public static function downcode ($text, $language = "") {
 		self::init ($language);
@@ -219,17 +194,19 @@ class URLify {
 	/**
 	 * Filters a string, e.g., "Petty theft" to "petty-theft"
 	 */
-	public static function filter ($text, $length = 60, $language = "") {
+	public static function filter ($text, $length = 60, $language = "", $file_name = false) {
 		$text = self::downcode ($text,$language);
 
 		// remove all these words from the string before urlifying
 		$text = preg_replace ('/\b(' . join ('|', self::$remove_list) . ')\b/i', '', $text);
 
 		// if downcode doesn't hit, the char will be stripped here
-		$text = preg_replace ('/[^-\w\s]/', '', $text);		// remove unneeded chars
+		$remove_pattern = ($file_name) ? '/[^-.\w\s]/' : '/[^-\w\s]/';
+		$text = preg_replace ($remove_pattern, '', $text);		// remove unneeded chars
+		$text = str_replace ('_', ' ', $text);		// treat underscores as spaces
 		$text = preg_replace ('/^\s+|\s+$/', '', $text);	// trim leading/trailing spaces
 		$text = preg_replace ('/[-\s]+/', '-', $text);		// convert spaces to hyphens
-		$text = strtolower ($text);							// convert to lowercase
+		$text = strtolower ($text);							// convert to lowercase						
 		return trim (substr ($text, 0, $length), '-');	// trim to first $length chars
 	}
 

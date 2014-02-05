@@ -227,5 +227,4 @@ class Concrete5_Library_DatabaseItemList extends ItemList {
 		$this->attributeFilters[] = array('ak_' . $column, $value, $comparison);
 	}
 	
-
 }

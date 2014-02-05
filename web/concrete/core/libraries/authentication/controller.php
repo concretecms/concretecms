@@ -35,7 +35,30 @@ Interface AuthenticationTypeControllerInterface {
 	 * @return	boolean	Is this hash valid?
 	 */
 	public function verifyHash(User $u, $hash);
+
+	/**
+	 * tasks to finalize authentication, call on login events etc
+	 * @param User
+	 * @return void
+	*/
+	public function completeAuthentication(User $u);
 }
 
 // This class must be abstract, as it doesn't actually implement the methods required by AuthenticationTypeControllerInterface.
-abstract class Concrete5_Library_AuthenticationTypeController extends AbstractController implements AuthenticationTypeControllerInterface {}
+abstract class Concrete5_Library_AuthenticationTypeController extends Controller implements AuthenticationTypeControllerInterface {
+
+	protected $authenticationType;
+
+	public function __construct(AuthenticationType $type) {
+		$this->authenticationType = $type;
+	}
+
+	public function getAuthenticationType() {
+		return $this->authenticationType;
+	}
+
+	public function completeAuthentication(User $u) {
+		Loader::controller('/login')->finishAuthentication($this->getAuthenticationType());
+	}
+
+}

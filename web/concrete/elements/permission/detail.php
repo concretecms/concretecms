@@ -37,9 +37,9 @@ $tabs = array();
 	<?=Loader::helper('concrete/interface')->tabs($tabs);?>
 <? } ?>
 	
-<? if ($permissionKey->getPermissionKeyDescription()) { ?>
+<? if ($permissionKey->getPermissionKeyDisplayDescription()) { ?>
 <div class="dialog-help">
-<?=tc('PermissionKeyDescription', $permissionKey->getPermissionKeyDescription())?>
+<?=$permissionKey->getPermissionKeyDisplayDescription()?>
 </div>
 <? } ?>
 

@@ -43,7 +43,7 @@ if (isset($group)) {
 	<div class="control-group">
 	<?=$form->label('gName', t('Name'))?>
 	<div class="controls">
-		<input type="text" name="gName" class="span6" value="<?=Loader::helper('text')->entities(t($gName))?>" />
+		<input type="text" name="gName" class="span6" value="<?=Loader::helper('text')->entities($gName)?>" />
 	</div>
 	</div>
 	

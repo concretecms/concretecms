@@ -74,7 +74,7 @@ if (isset($help) && !$bt->supportsInlineEdit()) { ?>
 <input type="hidden" name="ccm-block-form-method" value="REGULAR" />
 
 <? foreach($this->controller->getJavaScriptStrings() as $key => $val) { ?>
-	<input type="hidden" name="ccm-string-<?=$key?>" value="<?=$val?>" />
+	<input type="hidden" name="ccm-string-<?=$key?>" value="<?=h($val)?>" />
 <? } ?>
 
 <? if (!$bt->supportsInlineEdit()) { ?>

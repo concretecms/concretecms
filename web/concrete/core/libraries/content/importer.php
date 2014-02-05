@@ -345,7 +345,10 @@ class Concrete5_Library_Content_Importer {
 				if (!$name) {
 					$name = Loader::helper('text')->unhandle($at['handle']);
 				}
-				$type = AttributeType::add($at['handle'], $name, $pkg);
+				$type = AttributeType::getByHandle($at['handle']);
+				if (!is_object($type)) {
+					$type = AttributeType::add($at['handle'], $name, $pkg);
+				}
 				if (isset($at->categories)) {
 					foreach($at->categories->children() as $cat) {
 						$catobj = AttributeKeyCategory::getByHandle((string) $cat['handle']);
