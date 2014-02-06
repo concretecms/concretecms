@@ -184,8 +184,18 @@ class Concrete5_Model_FileAttributeKey extends AttributeKey {
 
 class Concrete5_Model_FileAttributeValue extends AttributeValue {
 
+	/**
+	 * @param File $f
+	 */
 	public function setFile($f) {
 		$this->f = $f;
+	}
+
+	/**
+	 * @return File
+	 */
+	public function getFile() {
+		return $this->f;
 	}
 	
 	public static function getByID($avID) {

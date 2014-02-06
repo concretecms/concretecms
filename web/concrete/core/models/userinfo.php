@@ -394,7 +394,9 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				}
 				
 				if ((!is_object($av)) || ($cnt > 1)) {
-					$av = $ak->addAttributeValue();
+					$newAv = $ak->addAttributeValue();
+					$av = UserAttributeValue::getByID($newAv->getAttributeValueID());
+					$av->setUser($this);
 				}
 			}
 			
