@@ -576,8 +576,8 @@ class Concrete5_Model_FileVersion extends Object {
 			}
 
 			if ((!is_object($av)) || ($cnt > 1)) {
-				$newAv = $ak->addAttributeValue();
-				$av = FileAttributeValue::getByID($newAv);
+				$newAV = $ak->addAttributeValue();
+				$av = FileAttributeValue::getByID($newAV->getAttributeValueID());
 				$av->setFile($this->getFile());
 			}
 		}
