@@ -8,7 +8,7 @@ class Concrete5_Controller_AuthenticationType_Concrete extends AuthenticationTyp
 		$post = $this->post();
 
 		if (!isset($post['uName']) || !isset($post['uPassword'])) {
-			throw new Exception('Please provide both username and password.');
+			throw new Exception(t('Please provide both username and password.'));
 		}
 		$uName = $post['uName'];
 		$uPassword = $post['uPassword'];
@@ -75,7 +75,7 @@ class Concrete5_Controller_AuthenticationType_Concrete extends AuthenticationTyp
 		if ($test>10) {
 			// This should only ever happen if by some stroke of divine intervention,
 			// we end up pulling 10 hashes that already exist. the chances of this are very very low.
-			throw new exception('There was a database error, try again.');
+			throw new Exception(t('There was a database error, try again.'));
 		}
 		$db = Loader::db();
 

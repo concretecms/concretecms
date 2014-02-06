@@ -15,25 +15,26 @@ class Concrete5_Controller_AuthenticationType_Facebook extends AuthenticationTyp
 		$u = new User();
 		if (!isset($_SESSION['authFacebookStatus'])) {
 			return;
-			throw new exception('Something went wrong, please try again.');
+			throw new Exception(t('Something went wrong, please try again.'));
 		}
 		$status = $_SESSION['authFacebookStatus'];
 		unset($_SESSION['authFacebookStatus']);
 		if ($status == 1) {
-			$site = SITE;
-			if (in_array(substr($site,0,1),array('a','e','i','o','u'))) {
-				$sitename = "an $site";
-			} else {
-				$sitename = "a $site";
-			}
 			$uname = (USER_REGISTRATION_WITH_EMAIL_ADDRESS?'Email':'Username');
-			throw new Exception('<h2>Oh No!</h2>This facebook account isn\'t tied to '.$sitename.' account!<br>Please login with your '.$uname.' and Password and then use the facebook login to tie them together.');
+			$msg = t(/*i18n %s is the site name*/'<h2>Oh No!</h2>This facebook account isn\'t tied to any account of %1$s!', h(SITE)) . '<br />';
+			if(USER_REGISTRATION_WITH_EMAIL_ADDRESS) {
+				$msg .= t('Please login with your Email and Password and then use the facebook login to tie them together.');
+			}
+			else {
+				$msg .= t('Please login with your Username and Password and then use the facebook login to tie them together.');
+			}
+			throw new Exception($msg);
 		} else if ($status == 2) {
-			return "Successfully attached this facebook account to your user account.";
+			return t("Successfully attached this facebook account to your user account.");
 		} else if ($status == 4) {
-			throw new Exception('This facebook account is already attached to your '.SITE.' account.');
+			throw new Exception(t(/*i18n %s is the site name*/'This facebook account is already attached to your %s account.', h(SITE)));
 		} else if ($status == 5) {
-			throw new Exception('<h2>Oh No!</h2>The email used by your facebook account is already in use!<br>Please login to your concrete5 account and then use the facebook login to tie your accounts together.');
+			throw new Exception(t('<h2>Oh No!</h2>The email used by your facebook account is already in use!<br>Please login to your concrete5 account and then use the facebook login to tie your accounts together.'));
 		}
 		$this->completeAuthentication();
 	}
@@ -52,7 +53,7 @@ class Concrete5_Controller_AuthenticationType_Facebook extends AuthenticationTyp
 		$db = Loader::db();
 		$uid = $db->getOne('SELECT uID FROM authTypeFacebookUserMap WHERE fbUserID=?',array($fbu));
 		if (!$uid) {
-			throw new Exception('This facebook account is not tied to a user.');
+			throw new Exception(t('This facebook account is not tied to a user.'));
 		}
 		return User::getByUserID($uid);
 	}
@@ -61,7 +62,7 @@ class Concrete5_Controller_AuthenticationType_Facebook extends AuthenticationTyp
 		$db = Loader::db();
 		$fbuid = $db->getOne('SELECT fbUserID FROM authTypeFacebookUserMap WHERE uID=?',array($uid));
 		if (!$fbuid) {
-			throw new Exception('This user is not tied to a facebook account.');
+			throw new Exception(t('This user is not tied to a facebook account.'));
 		}
 		return $fbuid;
 	}
