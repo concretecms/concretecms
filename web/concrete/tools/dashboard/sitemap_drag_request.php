@@ -185,7 +185,7 @@ if ($successMessage) {
 </h3><br/>
 	<form>
 
-		<input type="hidden" name="origCID" id="origCID" value="<?=$oc->getCollectionID()?>" />
+		<input type="hidden" name="origCID" id="origCID" value="<?=h($_REQUEST['origCID'])?>" />
 		<input type="hidden" name="destParentID" id="destParentID" value="<?=$dc->getCollectionParentID()?>" />
 		<input type="hidden" name="destCID" id="destCID" value="<?=$dc->getCollectionID()?>" />
 		<input type="hidden" name="instance_id" id="instance_id" value="<?=$_REQUEST['instance_id']?>" />
@@ -234,4 +234,34 @@ if ($successMessage) {
 	<div class="ccm-spacer">&nbsp;</div>
 	</form>
 
+	<script type="text/javascript">
+		$(function() {
+			$('#ctaskMove').on('click', function() {
+				if ($("#copyThisPage").get(0)) {
+					$("#copyThisPage").get(0).disabled = true;
+					$("#copyChildren").get(0).disabled = true;
+					$("#saveOldPagePath").attr('disabled', false);
+				}
+			});
+
+			$('#ctaskAlias').on('click', function() {
+				if ($("#copyThisPage").get(0)) {
+					$("#copyThisPage").get(0).disabled = true;
+					$("#copyChildren").get(0).disabled = true;
+					$("#saveOldPagePath").attr('checked', false);
+					$("#saveOldPagePath").attr('disabled', 'disabled');
+				}
+			});
+
+			$('#ctaskCopy').on('click', function() {
+				if ($("#copyThisPage").get(0)) {
+					$("#copyThisPage").get(0).disabled = false;
+					$("#copyThisPage").get(0).checked = true;
+					$("#copyChildren").get(0).disabled = false;
+					$("#saveOldPagePath").attr('checked', false);
+					$("#saveOldPagePath").attr('disabled', 'disabled');
+				}
+			});
+		});
+	</script>
 </div>
