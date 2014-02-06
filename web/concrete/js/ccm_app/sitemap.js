@@ -190,36 +190,7 @@
 				href: dialog_url,
 				width: dialog_width,
 				modal: false,
-				height: dialog_height,
-				onOpen: function() {
-					$('#ctaskMove').on('click', function() {
-						if ($("#copyThisPage").get(0)) {
-							$("#copyThisPage").get(0).disabled = true;
-							$("#copyChildren").get(0).disabled = true;
-							$("#saveOldPagePath").attr('disabled', false);
-						}
-					});
-
-					$('#ctaskAlias').on('click', function() {
-						if ($("#copyThisPage").get(0)) {
-							$("#copyThisPage").get(0).disabled = true;
-							$("#copyChildren").get(0).disabled = true;
-							$("#saveOldPagePath").attr('checked', false);
-							$("#saveOldPagePath").attr('disabled', 'disabled');
-						}
-					});
-
-					$('#ctaskCopy').on('click', function() {
-						if ($("#copyThisPage").get(0)) {
-							$("#copyThisPage").get(0).disabled = false;
-							$("#copyThisPage").get(0).checked = true;
-							$("#copyChildren").get(0).disabled = false;
-							$("#saveOldPagePath").attr('checked', false);
-							$("#saveOldPagePath").attr('disabled', 'disabled');
-						}
-					});
-				}
-
+				height: dialog_height
 			});
 
 			ConcreteEvent.subscribe('SitemapDragRequestComplete', function(e) {
