@@ -45,7 +45,7 @@ class Concrete5_Controller_Login extends Controller {
 				}
 			}
 			asort($locales);
-			$locales = array_merge(array('' => t('** Default')), $locales);
+			$locales = array_merge(array('' => tc('Default locale', '** Default')), $locales);
 		}
 		$this->locales = $locales;
 		$this->set('locales', $locales);
@@ -84,11 +84,11 @@ class Concrete5_Controller_Login extends Controller {
 	public function callback($type,$method='callback') {
 		$at = AuthenticationType::getByHandle($type);
 		if (!method_exists($at->controller, $method)) {
-			throw new exception('Invalid method.');
+			throw new Exception(t('Invalid method.'));
 		}
 		if ($method != 'callback') {
 			if (!is_array($at->controller->apiMethods) || !in_array($method,$at->controller->apiMethods)) {
-				throw new Exception("Invalid method.");
+				throw new Exception(t("Invalid method."));
 			}
 		}
 		try {
@@ -135,7 +135,7 @@ class Concrete5_Controller_Login extends Controller {
 		$u = new User();
 		if ($u->getUserID() == 1 && $type->getAuthenticationTypeHandle() != 'concrete') {
 			$u->logout();
-			throw new exception('You can only identify as the root user using the concrete login.');
+			throw new Exception(t('You can only identify as the root user using the concrete login.'));
 		}
 
 		$ui = UserInfo::getByID($u->getUserID());
@@ -155,7 +155,7 @@ class Concrete5_Controller_Login extends Controller {
 
 			$this->set('required_attributes', $unfilled);
 			$this->set('u', $u);
-			$this->error->add('Fill in these required settings in order to continue.');
+			$this->error->add(t('Fill in these required settings in order to continue.'));
 
 			$_SESSION['uRequiredAttributeUser'] = $u->getUserID();
 			$_SESSION['uRequiredAttributeUserAuthenticationType'] = $type->getAuthenticationTypeHandle();
@@ -175,14 +175,14 @@ class Concrete5_Controller_Login extends Controller {
 			    !$_SESSION['uRequiredAttributeUserAuthenticationType']) {
 				unset($_SESSION['uRequiredAttributeUser']);
 				unset($_SESSION['uRequiredAttributeUserAuthenticationType']);
-				throw new Exception('Invalid Request, please attempt login again.');
+				throw new Exception(t('Invalid Request, please attempt login again.'));
 			}
 			User::loginByUserID($_SESSION['uRequiredAttributeUser']);
 			unset($_SESSION['uRequiredAttributeUser']);
 			$u = new User;
 			$at = AuthenticationType::getByHandle($_SESSION['uRequiredAttributeUserAuthenticationType']);
 			unset($_SESSION['uRequiredAttributeUserAuthenticationType']);
-			if (!$at) throw new Exception("Invalid Authentication Type");
+			if (!$at) throw new Exception(t("Invalid Authentication Type"));
 
 			$ui = UserInfo::getByID($u->getUserID());
 			$aks = UserAttributeKey::getRegistrationList();
@@ -245,7 +245,7 @@ class Concrete5_Controller_Login extends Controller {
 				} else $this->redirect('/');
 			}
 		} else {
-			$this->error->add('User is not registered. Check your authentication controller.');
+			$this->error->add(t('User is not registered. Check your authentication controller.'));
 			$u->logout();
 		}
 	}
