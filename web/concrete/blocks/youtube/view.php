@@ -22,7 +22,7 @@ if (Page::getCurrentPage()->isEditMode()) { ?>
 <? } elseif ($vPlayer == 1) { ?>
 
 	<div id="youtube<?= $bID; ?>" class="youtubeBlock">
-		<iframe class="youtube-player" width="<?= $vWidth; ?>" height="<?= $vHeight; ?>" src="//www.youtube.com/embed/<?= $videoID; ?>" frameborder="0" allowfullscreen></iframe>
+		<iframe class="youtube-player" width="<?= $vWidth; ?>" height="<?= $vHeight; ?>" src="//www.youtube.com/embed/<?= $videoID; ?>?wmode=transparent" frameborder="0" allowfullscreen></iframe>
 	</div>
 	
 <? } else { ?>
@@ -34,7 +34,7 @@ if (Page::getCurrentPage()->isEditMode()) { ?>
 		wmode: "transparent"
 	};
 	flashvars = {};
-	swfobject.embedSWF('//www.youtube.com/v/<?= $videoID; ?>&amp;hl=en', 'youtube<?= $bID; ?>_video', '<?= $vWidth; ?>', '<?= $vHeight; ?>', '8.0.0', false, flashvars, params);
+	swfobject.embedSWF('//www.youtube.com/v/<?= $videoID; ?>', 'youtube<?= $bID; ?>_video', '<?= $vWidth; ?>', '<?= $vHeight; ?>', '8.0.0', false, flashvars, params);
 	//]]>
 	</script>
 	
