@@ -57,7 +57,7 @@ function printAttributeRow($ak, $uo, $assignment) {
 
 	$html = '
 	<tr>
-		<td width="250">' . $ak->getAttributeKeyDisplayName() . '</th>
+		<th width="250">' . $ak->getAttributeKeyDisplayName() . '</th>
 		<td class="ccm-attribute-editable-field-central" colspan="2">' . $text . '</td>
 	</tr>';	
 	}
