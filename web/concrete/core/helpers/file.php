@@ -96,15 +96,10 @@ class Concrete5_Helper_File {
 		if(!is_dir($source)) {
 			return false;
 		}
-		if (version_compare(PHP_VERSION, '5.3.0') >= 0) { //Better to use SKIP_DOTS here, but it was added in php 5.3 :'(
-			$iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($source, FilesystemIterator::SKIP_DOTS), RecursiveIteratorIterator::CHILD_FIRST);
-		} else {
-			$iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($source), RecursiveIteratorIterator::CHILD_FIRST);
-		}
+
+		$iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($source, FilesystemIterator::SKIP_DOTS), RecursiveIteratorIterator::CHILD_FIRST);
+
 		foreach ($iterator as $path) {
-			if ($iterator->isDot()) { //this is only here for php 5.2, 
-				continue;
-			}
 			if ($path->isDir()) {
 				rmdir($path->__toString());
 			} else {
