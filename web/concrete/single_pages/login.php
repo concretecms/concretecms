@@ -31,7 +31,7 @@ $form = Loader::helper('form');
 						<?php
 					}
 					?>
-					<button type="submit" class="btn">Complete Profile</button>
+					<button type="submit" class="btn"><?php echo t('Complete Profile'); ?></button>
 				</form>
 			</fieldset>
 			<?php
