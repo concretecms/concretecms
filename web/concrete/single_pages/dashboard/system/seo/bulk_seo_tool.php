@@ -154,7 +154,7 @@ if (count($pages) > 0) {
 							<div class="headings"><strong><?php echo t('Modified'); ?></strong>
 								<br />
 								<br />
-								<?php echo $cobj->getCollectionDateLastModified() ? $cobj->getCollectionDateLastModified() : ''; ?>
+								<?php echo $cobj->getCollectionDateLastModified() ? $cobj->getCollectionDateLastModified(DATE_APP_GENERIC_MDYT) : ''; ?>
 								<br />
 								<br />
 							</div>
