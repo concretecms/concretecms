@@ -89,19 +89,32 @@ class Concrete5_Helper_File {
 	/** 
 	 * Removes all files from within a specified directory
 	 * @param string $source Directory
+	 * @param bool $inc Remove the passed directory as well or leave it alone
+	 * @return bool Whether the methods succeeds or fails
 	 */
-	public function removeAll($source) {
-		$r = @glob($source);
-		if (is_array($r)) {
-			foreach($r as $file) {
-				if (is_dir($file)) {
-					$this->removeAll("$file/*");
-					rmdir($file);
-				} else {
-					unlink($file);
-				}
+	public function removeAll($source, $inc = false) {
+		if(!is_dir($source)) {
+			return false;
+		}
+		if (version_compare(PHP_VERSION, '5.3.0') >= 0) { //Better to use SKIP_DOTS here, but it was added in php 5.3 :'(
+			$iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($source, FilesystemIterator::SKIP_DOTS), RecursiveIteratorIterator::CHILD_FIRST);
+		} else {
+			$iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($source), RecursiveIteratorIterator::CHILD_FIRST);
+		}
+		foreach ($iterator as $path) {
+			if ($iterator->isDot()) { //this is only here for php 5.2, 
+				continue;
+			}
+			if ($path->isDir()) {
+				rmdir($path->__toString());
+			} else {
+				unlink($path->__toString());
 			}
 		}
+		if($inc) {
+			rmdir($source);
+		}
+		return true;
 	}
 
 	/** 
