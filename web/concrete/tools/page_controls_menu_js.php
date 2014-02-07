@@ -226,7 +226,7 @@ $(function() {
 	
 			sbitem  = new ccm_statusBarItem();
 			sbitem.setCSSClass('info');
-			sbitem.setDescription('<?= t("This page is an alias of one that actually appears elsewhere.", $c->getCollectionCheckedOutUserName())?>');
+			sbitem.setDescription('<?= t("This page is an alias of one that actually appears elsewhere.")?>');
 			btn1 = new ccm_statusBarItemButton();
 			btn1.setLabel('<?=t('View/Edit Original')?>');
 			btn1.setURL('<?=DIR_REL . "/" . DISPATCHER_FILENAME . "?cID=" . $c->getCollectionID()?>');
@@ -246,7 +246,7 @@ $(function() {
 
 			sbitem = new ccm_statusBarItem();
 			sbitem.setCSSClass('info');
-			sbitem.setDescription('<?= t('Page Defaults for %s Page Type. All edits take effect immediately.', $c->getCollectionTypeName()) ?>');
+			sbitem.setDescription('<?= t('Page Defaults for %s Page Type. All edits take effect immediately.', hq($c->getCollectionTypeName())) ?>');
 			ccm_statusBar.addItem(sbitem);		
 		<? } ?>
 		<?
