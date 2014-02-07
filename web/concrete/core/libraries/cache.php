@@ -170,6 +170,12 @@ class Concrete5_Library_Cache {
 			$fh = Loader::helper("file");
 			$fh->removeAll(DIR_FILES_CACHE . '/' . DIRNAME_CSS);
 		}
+
+		// flush the JS cache
+		if (is_dir(DIR_FILES_CACHE . '/' . DIRNAME_JAVASCRIPT)) {
+			$fh = Loader::helper("file");
+			$fh->removeAll(DIR_FILES_CACHE . '/' . DIRNAME_JAVASCRIPT);
+		}
 		
 		$pageCache = PageCache::getLibrary();
 		if (is_object($pageCache)) {
