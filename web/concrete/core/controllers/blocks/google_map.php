@@ -7,7 +7,7 @@
  * @subpackage Google Map
  * @author Ryan Tyler <ryan@concrete5.org>
  * @author Andrew Embler <andrew@concrete5.org>
- * @copyright  Copyright (c) 2003-2012 Concrete5. (http://www.concrete5.org)
+ * @copyright  Copyright (c) 2003-2013 Concrete5. (http://www.concrete5.org)
  * @license    http://www.concrete5.org/license/     MIT License
  *
  */
@@ -15,7 +15,7 @@
 		
 		protected $btTable = 'btGoogleMap';
 		protected $btInterfaceWidth = "400";
-		protected $btInterfaceHeight = "200";
+		protected $btInterfaceHeight = "220";
 		protected $btCacheBlockRecord = true;
 		protected $btCacheBlockOutput = true;
 		protected $btCacheBlockOutputOnPost = true;
@@ -104,45 +104,16 @@
 		public function save($data) { 
 			$args['title'] = isset($data['title']) ? trim($data['title']) : '';
 			$args['location'] = isset($data['location']) ? trim($data['location']) : '';
-			$args['zoom'] = (intval($data['zoom'])>=0 && intval($data['zoom'])<=21) ? intval($data['zoom']) : 14;
-			
-			if( strlen($args['location'])>0 ){
-				$coords = $this->lookupLatLong($args['location']);
-				$args['latitude']=floatval($coords['lat']);
-				$args['longitude']=floatval($coords['lng']);
-			} else {
-				$args['latitude']=0;
-				$args['longitude']=0;
-			}
-			
+			$args['zoom'] = (intval($data['zoom'])>=0 && intval($data['zoom'])<=21) ? intval($data['zoom']) : 14;		
+            $args['latitude'] = is_numeric($data['latitude']) ? $data['latitude'] : 0;
+            $args['longitude'] = is_numeric($data['longitude']) ? $data['longitude'] : 0;
 			parent::save($args);
 		}
-		
-		public function lookupLatLong($address) {
-			$json = Loader::helper('json');
-			$fh = Loader::helper('file');
-			
-			$base_url = "http://maps.google.com/maps/api/geocode/json?sensor=false";
-			$request_url = $base_url . "&address=".urlencode($address);
-			
-			$res = $fh->getContents($request_url);
-			$res = $json->decode($res);
-			if(!is_object($res)) { 
-				return false;
-			}
-			switch($res->status) {
-				case 'OK':
-					$lat = $res->results[0]->geometry->location->lat;
-					$lng = $res->results[0]->geometry->location->lng;
-					return array('lat'=>$lat,'lng'=>$lng);
-					break;
-				case 'ZERO_RESULTS':
-				case 'OVER_QUERY_LIMIT':
-				case 'REQUEST_DENIED':
-				case 'INVALID_REQUEST':
-					return false;
-					break;
-			}
-		}
+        
+        public function getJavaScriptStrings() {
+          return array(
+             'location-required' => t('You must select a valid location.')
+          );
+       }
 		
 	}
