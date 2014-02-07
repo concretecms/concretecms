@@ -51,13 +51,18 @@ class Concrete5_Controller_Dashboard_Reports_Surveys extends Controller {
 		$q = 
 			'SELECT 
 				btSurveyOptions.optionName, Users.uName, ipAddress, timestamp, question 
-			FROM 
-				btSurveyResults, Users, btSurveyOptions, btSurvey
+			FROM
+				(
+						(
+							btSurvey
+							inner join btSurveyResults on btSurvey.bID= btSurveyResults.bID
+						)
+					inner join btSurveyOptions on btSurveyResults.optionID = btSurveyOptions.optionID
+				)
+				left join Users on btSurveyResults.uID = Users.uID
 			WHERE
-				Users.uID = btSurveyResults.uID AND
-				btSurveyOptions.optionID = btSurveyResults.optionID AND
-				btSurvey.bID= btSurveyResults.bID AND
-				btSurveyResults.bID = ? AND
+				btSurveyResults.bID = ?
+				AND
 				btSurveyResults.cID = ?';
 		$r = $db->query($q, $v);
 		
