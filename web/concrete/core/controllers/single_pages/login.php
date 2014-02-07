@@ -1,7 +1,6 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
-Loader::library('authentication/open_id');
 
-class Concrete5_Controller_Login extends Controller {
+class Concrete5_Controller_Page_Login extends PageController {
 
 	public $helpers = array('form');
 	protected $locales = array();
