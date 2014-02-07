@@ -61,8 +61,8 @@
                     note.innerHTML = 'The place you entered could not be found.';
                     return;
                 } else {
-                    document.getElementById('ccm_googlemap_block_latitude').value = place.geometry.location.jb;
-                    document.getElementById('ccm_googlemap_block_longitude').value = place.geometry.location.kb;
+                    document.getElementById('ccm_googlemap_block_latitude').value = place.geometry.location.lat();
+                    document.getElementById('ccm_googlemap_block_longitude').value = place.geometry.location.lng();
                     input.className = '';
                     note.innerHTML = '';
                 }

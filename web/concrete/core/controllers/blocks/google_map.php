@@ -15,7 +15,7 @@
 		
 		protected $btTable = 'btGoogleMap';
 		protected $btInterfaceWidth = "400";
-		protected $btInterfaceHeight = "220";
+		protected $btInterfaceHeight = "320";
 		protected $btCacheBlockRecord = true;
 		protected $btCacheBlockOutput = true;
 		protected $btCacheBlockOutputOnPost = true;
