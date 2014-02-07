@@ -31,7 +31,7 @@ class Concrete5_Model_AuthenticationType extends Object {
 		$db = Loader::db();
 		$row = $db->GetRow('SELECT * FROM AuthenticationTypes where authTypeID=?', array($authTypeID));
 		if (!$row) {
-			throw new Exception('Invalid Authentication Type ID');
+			throw new Exception(t('Invalid Authentication Type ID'));
 		}
 		$at = AuthenticationType::load($row);
 		$at->loadController();
@@ -101,7 +101,7 @@ class Concrete5_Model_AuthenticationType extends Object {
 	 */
 	public function disable() {
 		if ($this->getAuthenticationTypeID() == 1) {
-			throw new Exception('The core concrete5 authentication cannot be disabled.');
+			throw new Exception(t('The core concrete5 authentication cannot be disabled.'));
 		}
 		$db = Loader::db();
 		$db->Execute('UPDATE AuthenticationTypes SET authTypeIsEnabled=0 WHERE AuthTypeID=?',array($this->getAuthenticationTypeID()));
@@ -173,7 +173,7 @@ class Concrete5_Model_AuthenticationType extends Object {
 		$db = Loader::db();
 		$row = $db->GetRow('SELECT * FROM AuthenticationTypes WHERE authTypeHandle=?', array($atHandle));
 		if (!$row) {
-			throw new Exception('Invalid Authentication Type Handle');
+			throw new Exception(t('Invalid Authentication Type Handle'));
 		}
 		$at = AuthenticationType::load($row);
 		return $at;
@@ -196,7 +196,7 @@ class Concrete5_Model_AuthenticationType extends Object {
 			$die = false;
 		}
 		if ($die) {
-			throw new exception('Authentication type with handle "'.$atHandle.'" already exists!');
+			throw new Exception(t('Authentication type with handle %s already exists!', $atHandle));
 		}
 
 		$pkgID = 0;
