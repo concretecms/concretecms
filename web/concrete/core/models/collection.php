@@ -350,8 +350,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		}
 		
 		function getCollectionDateLastModified($mask = null, $type="system") {
+			$dh = Loader::helper('date');
 			if(ENABLE_USER_TIMEZONES && $type == 'user') {
-				$dh = Loader::helper('date');
 				$cDateModified = $dh->getLocalDateTime($this->cDateModified);
 			} else {
 				$cDateModified = $this->cDateModified;
@@ -359,7 +359,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			if ($mask == null) {
 				return $cDateModified;
 			} else {
-				return date($mask, strtotime($cDateModified));
+				return $dh->date($mask, strtotime($cDateModified));
 			}
 		}
 
@@ -372,17 +372,16 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		}
 
 		function getCollectionDateAdded($mask = null,$type = 'system') {
+			$dh = Loader::helper('date');
 			if(ENABLE_USER_TIMEZONES && $type == 'user') {
-				$dh = Loader::helper('date');
 				$cDateAdded = $dh->getLocalDateTime($this->cDateAdded);
 			} else {
 				$cDateAdded = $this->cDateAdded;
 			}
-			
 			if ($mask == null) {
 				return $cDateAdded;
 			} else {
-				return date($mask, strtotime($cDateAdded));
+				return $dh->date($mask, strtotime($cDateAdded));
 			}
 		}
 
