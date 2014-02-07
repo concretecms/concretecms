@@ -53,6 +53,12 @@ class ConcreteUpgradeVersion570Helper {
 			$bt->refresh();
 		}
 
+		$bt = BlockType::getByHandle('google_map');
+		if (is_object($bt)) {
+			$bt->refresh();
+		}
+
+
 		$bt = BlockType::getByHandle('core_area_layout');
 		if (!is_object($bt)) {
 			$bt->install();

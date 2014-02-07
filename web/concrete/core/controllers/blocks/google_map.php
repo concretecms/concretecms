@@ -15,7 +15,7 @@
 		
 		protected $btTable = 'btGoogleMap';
 		protected $btInterfaceWidth = "400";
-		protected $btInterfaceHeight = "320";
+		protected $btInterfaceHeight = "285";
 		protected $btCacheBlockRecord = true;
 		protected $btCacheBlockOutput = true;
 		protected $btCacheBlockOutputOnPost = true;
@@ -107,6 +107,8 @@
 			$args['zoom'] = (intval($data['zoom'])>=0 && intval($data['zoom'])<=21) ? intval($data['zoom']) : 14;		
             $args['latitude'] = is_numeric($data['latitude']) ? $data['latitude'] : 0;
             $args['longitude'] = is_numeric($data['longitude']) ? $data['longitude'] : 0;
+            $args['width'] = $data['width'];
+            $args['height'] = $data['height'];
 			parent::save($args);
 		}
         
