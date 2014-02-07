@@ -918,19 +918,21 @@ class Concrete5_Model_Page extends Collection {
 	/**
 	 * Gets the date a the current version was made public, 
 	 * if user is specified, returns in the current user's timezone
-	 * @param string $dateFormat
+	 * @param string $mask
 	 * @param string $type (system || user)
-	 * @return string date formated like: 2009-01-01 00:00:00 
+	 * @return string 
 	*/
-	function getCollectionDatePublic($dateFormat = null, $type='system') {
-		if(!$dateFormat) {
-			$dateFormat = 'Y-m-d H:i:s';
-		}
+	function getCollectionDatePublic($mask = null, $type='system') {
 		$dh = Loader::helper('date');
 		if(ENABLE_USER_TIMEZONES && $type == 'user') {
-			return $dh->getLocalDateTime($this->vObj->cvDatePublic, $dateFormat);
+			$cDatePublic = $dh->getLocalDateTime($this->vObj->cvDatePublic);
 		} else {
-			return $dh->date($dateFormat, strtotime($this->vObj->cvDatePublic));
+			$cDatePublic = $this->vObj->cvDatePublic;
+		}
+		if ($mask == null) {
+			return $cDatePublic;
+		} else {
+			return $dh->date($mask, strtotime($cDatePublic));
 		}
 	}
 
