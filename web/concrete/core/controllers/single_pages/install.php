@@ -5,6 +5,11 @@ if (!ini_get('safe_mode')) {
 	@set_time_limit(150);
 }
 
+// The higher this is the longer it will take to create password hashes, to check them, and to crack them.
+if(!defined('PASSWORD_HASH_COST_LOG2')) {
+	define('PASSWORD_HASH_COST_LOG2', 12);
+}
+
 date_default_timezone_set(@date_default_timezone_get());
 
 define('UPLOAD_FILE_EXTENSIONS_ALLOWED','*.flv;*.jpg;*.gif;*.jpeg;*.ico;*.docx;*.xla;*.png;*.psd;*.swf;*.doc;*.txt;*.xls;*.xlsx;*.csv;*.pdf;*.tiff;*.rtf;*.m4a;*.mov;*.wmv;*.mpeg;*.mpg;*.wav;*.avi;*.m4v;*.mp4;*.mp3;*.qt;*.ppt;*.pptx;*.kml;*.xml');
@@ -274,7 +279,6 @@ class Concrete5_Controller_Install extends Controller {
 
 				// write the config file
 				$vh = Loader::helper('validation/identifier');
-				$salt = ( defined('MANUAL_PASSWORD_SALT') ) ? MANUAL_PASSWORD_SALT : $vh->getString(64);
 				$this->fp = @fopen(DIR_CONFIG_SITE . '/site_install.php', 'w+');
 				$this->fpu = @fopen(DIR_CONFIG_SITE . '/site_install_user.php', 'w+');
 				if ($this->fp) {
@@ -286,12 +290,6 @@ class Concrete5_Controller_Install extends Controller {
 					if (isset($setPermissionsModel)) {
 						$configuration .= "define('PERMISSIONS_MODEL', '" . addslashes($setPermissionsModel) . "');\n";
 					}
-					$configuration .= "define('PASSWORD_SALT', '{$salt}');\n";
-					$configuration .= "\n";
-					$configuration .= "// Increasing the PASSWORD_HASH_COST_LOG2 will make passwords harder to crack\n";
-					$configuration .= "// in the event of a database leak, but will also make the site take longer\n";
-					$configuration .= "// to store and check user passwords. Adding one should double the time required.\n";
-					$configuration .= "define('PASSWORD_HASH_COST_LOG2', 12);\n";
 					if (is_array($_POST['SITE_CONFIG'])) {
 						foreach($_POST['SITE_CONFIG'] as $key => $value) { 
 							$configuration .= "define('" . $key . "', '" . $value . "');\n";

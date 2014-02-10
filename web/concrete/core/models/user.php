@@ -139,7 +139,7 @@
 				$r = $db->query($q, $v);
 				if ($r) {
 					$row = $r->fetchRow(); 
-					$pw_is_valid_legacy = (User::legacyEncryptPassword($password, PASSWORD_SALT) == $row['uPassword']);
+					$pw_is_valid_legacy = (defined('PASSWORD_SALT') && User::legacyEncryptPassword($password) == $row['uPassword']);
 					$pw_is_valid = $pw_is_valid_legacy || $this->getUserPasswordHasher()->checkPassword($password, $row['uPassword']); 
 					if ($row['uID'] && $row['uIsValidated'] === '0' && defined('USER_VALIDATE_EMAIL_REQUIRED') && USER_VALIDATE_EMAIL_REQUIRED == TRUE) {
 						$this->loadError(USER_NON_VALIDATED);
@@ -246,8 +246,8 @@
 		
 		// this is for compatibility with passwords generated in older versions of Concrete5. 
 		// Use only for checking password hashes, not generating new ones to store.
-		public function legacyEncryptPassword($uPassword, $salt = PASSWORD_SALT) {
-			return md5($uPassword . ':' . $salt);
+		public function legacyEncryptPassword($uPassword) {
+			return md5($uPassword . ':' . PASSWORD_SALT);
 		}
 		
 		function isActive() {

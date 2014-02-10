@@ -36,7 +36,7 @@ class Concrete5_Helper_Encryption {
             $iv_size = mcrypt_get_iv_size(MCRYPT_XTEA, MCRYPT_MODE_ECB);
             $iv = mcrypt_create_iv($iv_size, MCRYPT_RAND);
             $len = mcrypt_get_key_size(MCRYPT_XTEA, MCRYPT_MODE_ECB);
-            $text = trim(mcrypt_decrypt(MCRYPT_XTEA, substr(PASSWORD_SALT, 0, $len), base64_decode($text), MCRYPT_MODE_ECB, $iv));
+            $text = trim(mcrypt_decrypt(MCRYPT_XTEA, substr(Config::get('SECURITY_TOKEN_ENCRYPTION'), 0, $len), base64_decode($text), MCRYPT_MODE_ECB, $iv));
         }
         return $text;
     }
@@ -53,7 +53,7 @@ class Concrete5_Helper_Encryption {
             $iv_size = mcrypt_get_iv_size(MCRYPT_XTEA, MCRYPT_MODE_ECB);
             $iv = mcrypt_create_iv($iv_size, MCRYPT_RAND);
             $len = mcrypt_get_key_size(MCRYPT_XTEA, MCRYPT_MODE_ECB);
-            $text = base64_encode(mcrypt_encrypt(MCRYPT_XTEA, substr(PASSWORD_SALT, 0, $len), $text, MCRYPT_MODE_ECB, $iv));
+            $text = base64_encode(mcrypt_encrypt(MCRYPT_XTEA, substr(Config::get('SECURITY_TOKEN_ENCRYPTION'), 0, $len), $text, MCRYPT_MODE_ECB, $iv));
         }
         return $text;
     }
