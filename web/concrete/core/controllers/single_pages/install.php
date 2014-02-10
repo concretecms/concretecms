@@ -287,6 +287,11 @@ class Concrete5_Controller_Install extends Controller {
 						$configuration .= "define('PERMISSIONS_MODEL', '" . addslashes($setPermissionsModel) . "');\n";
 					}
 					$configuration .= "define('PASSWORD_SALT', '{$salt}');\n";
+					$configuration .= "\n";
+					$configuration .= "// Increasing the PASSWORD_HASH_COST_LOG2 will make passwords harder to crack\n";
+					$configuration .= "// in the event of a database leak, but will also make the site take longer\n";
+					$configuration .= "// to store and check user passwords. Adding one should double the time required.\n";
+					$configuration .= "define('PASSWORD_HASH_COST_LOG2', 12);\n";
 					if (is_array($_POST['SITE_CONFIG'])) {
 						foreach($_POST['SITE_CONFIG'] as $key => $value) { 
 							$configuration .= "define('" . $key . "', '" . $value . "');\n";
@@ -300,9 +305,11 @@ class Concrete5_Controller_Install extends Controller {
 				}
 
 				if ($this->fpu) {
+					Loader::library('3rdparty/phpass/PasswordHash');
+					$hasher = new PasswordHash(PASSWORD_HASH_COST_LOG2, PASSWORD_HASH_PORTABLE);
 					$configuration = "<?php\n";
 					$configuration .= "define('INSTALL_USER_EMAIL', '" . $_POST['uEmail'] . "');\n";
-					$configuration .= "define('INSTALL_USER_PASSWORD_HASH', '" . User::encryptPassword($_POST['uPassword'], $salt) . "');\n";
+					$configuration .= "define('INSTALL_USER_PASSWORD_HASH', '" . $hasher->HashPassword($_POST['uPassword']) . "');\n";
 					$configuration .= "define('INSTALL_STARTING_POINT', '" . $this->post('SAMPLE_CONTENT') . "');\n";
 					$configuration .= "define('SITE', '" . addslashes($_POST['SITE']) . "');\n";
 					if (defined('ACTIVE_LOCALE') && ACTIVE_LOCALE != '' && ACTIVE_LOCALE != 'en_US') {

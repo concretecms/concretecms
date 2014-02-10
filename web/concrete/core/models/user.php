@@ -28,6 +28,7 @@
 		protected $uDefaultLanguage = null;
 		// an associative array of all access entity objects that are associated with this user.
 		protected $accessEntities = array();
+		protected $hasher;
 		
 		/** Return an User instance given its id (or null if it's not found)
 		* @param int $uID The id of the user
@@ -128,20 +129,21 @@
 				if (!$args[2]) {
 					$_SESSION['uGroups'] = false;
 				}
-				$password = User::encryptPassword($password, PASSWORD_SALT);
-				$v = array($username, $password);
+				$v = array($username);
 				if (defined('USER_REGISTRATION_WITH_EMAIL_ADDRESS') && USER_REGISTRATION_WITH_EMAIL_ADDRESS == true) {
-					$q = "select uID, uName, uIsActive, uIsValidated, uTimezone, uDefaultLanguage from Users where uEmail = ? and uPassword = ?";
+					$q = "select uID, uName, uIsActive, uIsValidated, uTimezone, uDefaultLanguage, uPassword from Users where uEmail = ?";
 				} else {
-					$q = "select uID, uName, uIsActive, uIsValidated, uTimezone, uDefaultLanguage from Users where uName = ? and uPassword = ?";
+					$q = "select uID, uName, uIsActive, uIsValidated, uTimezone, uDefaultLanguage, uPassword from Users where uName = ?";
 				}
 				$db = Loader::db();
 				$r = $db->query($q, $v);
 				if ($r) {
 					$row = $r->fetchRow(); 
+					$pw_is_valid_legacy = (User::legacyEncryptPassword($password, PASSWORD_SALT) == $row['uPassword']);
+					$pw_is_valid = $pw_is_valid_legacy || $this->getUserPasswordHasher()->checkPassword($password, $row['uPassword']); 
 					if ($row['uID'] && $row['uIsValidated'] === '0' && defined('USER_VALIDATE_EMAIL_REQUIRED') && USER_VALIDATE_EMAIL_REQUIRED == TRUE) {
 						$this->loadError(USER_NON_VALIDATED);
-					} else if ($row['uID'] && $row['uIsActive']) {
+					} else if ($row['uID'] && $row['uIsActive'] && $pw_is_valid) {
 						$this->uID = $row['uID'];
 						$this->uName = $row['uName'];
 						$this->uIsActive = $row['uIsActive'];
@@ -171,7 +173,17 @@
 						$this->loadError(USER_INVALID);
 					}
 					$r->free();
+					if ($pw_is_valid_legacy) {
+						// this password was generated on a previous version of Concrete5. 
+						// We re-hash it to make it more secure.
+						$v = array($this->getUserPasswordHasher()->HashPassword($password), $this->uID);
+						$db->execute($db->prepare("update Users set uPassword = ? where uID = ?"), $v);
+					}
 				} else {
+					$this->getUserPasswordHasher()->hashpassword($password); // hashpassword and checkpassword are slow functions. 
+									 	// We run one here just take time.
+										// Without it an attacker would be able to tell that the 
+										// username doesn't exist using a timing attack.
 					$this->loadError(USER_INVALID);
 				}
 			} else {
@@ -232,7 +244,9 @@
 			
 		}
 		
-		public function encryptPassword($uPassword, $salt = PASSWORD_SALT) {
+		// this is for compatibility with passwords generated in older versions of Concrete5. 
+		// Use only for checking password hashes, not generating new ones to store.
+		public function legacyEncryptPassword($uPassword, $salt = PASSWORD_SALT) {
 			return md5($uPassword . ':' . $salt);
 		}
 		
@@ -543,5 +557,19 @@
 			$r = $db->query($q);
 			return $r;
 		}
-				
+
+		/**
+		 * @see PasswordHash
+		 *
+		 * @return PasswordHash
+		 */
+		function getUserPasswordHasher() {
+			if (isset($this->hasher)) {
+				return $this->hasher;
+			}
+			Loader::library('3rdparty/phpass/PasswordHash');
+			$this->hasher = new PasswordHash(PASSWORD_HASH_COST_LOG2, PASSWORD_HASH_PORTABLE);
+			return $this->hasher;
+		}
+
 	}

@@ -33,15 +33,9 @@ class ConcreteValidationTest extends PHPUnit_Framework_TestCase {
         $false[] = ' '; //min length with space
         $false[] = '1a'; //min length alpha num
 
-        $false[] = '012345678901234567890123456789012345678901234567890123456789abcde'; //max is 64, so this is 65
+        $false[] = '012345678901234567890123456789012345678901234567890123456789abcd012345678901234567890123456789012345678901234567890123456789abcde';
+	 //max is 128, so this is 129
 
-        $false[] = 'ab cdefg'; //regex testing
-        $false[] = 'ab>cdefg';
-        $false[] = 'ab<cdefg';
-        $false[] = 'ab\'cdefg';
-        $false[] = 'ab"cdefg';
-        $false[] = 'ab\cdefg';
-        //$false[] = 'ab/cdefg'; //true?
 
         foreach ($false as $string) {
             $this->assertFalse($this->object->password($string));
@@ -51,6 +45,12 @@ class ConcreteValidationTest extends PHPUnit_Framework_TestCase {
         $true[] = '1234567890';
         $true[] = 'abcdefghijklmnopqrstuvwxyz';
         $true[] = '!@#$%^&*()_+-=';
+        $true[] = 'ab cdefg'; 
+        $true[] = 'ab>cdefg';
+        $true[] = 'ab<cdefg';
+        $true[] = 'ab\'cdefg';
+        $true[] = 'ab"cdefg';
+        $true[] = 'ab\cdefg';
 
         foreach ($true as $string) {
             $this->assertTrue($this->object->password($string));
