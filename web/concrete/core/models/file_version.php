@@ -91,7 +91,7 @@ class Concrete5_Model_FileVersion extends Object {
 	}
 
 	public function getSize() {
-		return round($this->fvSize / 1024) . t('KB');
+		return Loader::helper('number')->formatSize($this->fvSize, 'KB');
 	}
 	public function getFullSize() {
 		return $this->fvSize;
