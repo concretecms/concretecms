@@ -305,7 +305,7 @@ table.ccm-grid th {width: 70px}
 
 <tr>
 	<td><strong><?=t('Size')?></strong></td>
-	<td colspan="2"><?=$fv->getSize()?> (<?=t2(/*i18n: %s is a number */ '%s byte', '%s bytes', $fv->getFullSize(), Loader::helper('number')->format($fv->getFullSize()))?>)</td>
+	<td colspan="2"><?=$fv->getSize()?> (<?=Loader::helper('number')->formatSize($fv->getFullSize(), 'bytes')?>)</td>
 </tr>
 <? } ?>
 
