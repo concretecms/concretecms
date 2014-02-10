@@ -27,8 +27,16 @@ class ConcreteUpgradeVersion5622Helper {
 				$pt->assignPermissionAccess($pa);
 			}
 		}
-		
-		
+
+		if (!Config::get('SECURITY_TOKEN_JOBS')) {
+			Config::save('SECURITY_TOKEN_JOBS', Loader::helper('validation/identifier')->getString(64));
+		}
+		if (!Config::get('SECURITY_TOKEN_ENCRYPTION')) {
+			Config::save('SECURITY_TOKEN_ENCRYPTION', Loader::helper('validation/identifier')->getString(64));
+		}
+		if (!Config::get('SECURITY_TOKEN_VALIDATION')) {
+			Config::save('SECURITY_TOKEN_VALIDATION', Loader::helper('validation/identifier')->getString(64));
+		}	
 	}
 
 }
