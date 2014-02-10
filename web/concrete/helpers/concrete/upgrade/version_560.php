@@ -240,8 +240,9 @@ class ConcreteUpgradeVersion560Helper {
 			);
 		foreach ($pageKeywords as $page => $keywords) {
 			$p = Page::getByPath($page, 'ACTIVE');
-			if (is_object($p) && !$p->isError()) {
-			$p->setAttribute('meta_keywords', $keywords);
+			$ak = CollectionAttributeKey::getByHandle('meta_keywords');
+			if (is_object($p) && !$p->isError() && $ak instanceof AttributeKey) {
+				$p->setAttribute('meta_keywords', $keywords);
 			}
 		}	
 		// install the permissions from permissions.xml
