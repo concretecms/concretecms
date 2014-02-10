@@ -204,7 +204,7 @@ var miniSurvey ={
 	//prevent duplication of these questions, for block question versioning
 	pendingDeleteQuestionId:function(msqID){
 		var msqID, el=$('#ccm-pendingDeleteIDs');
-		if(el.val()) msqIDs=ignoreEl.val().split(',');
+		if(el.val()) msqIDs=el.val().split(',');
 		else msqIDs=[];
 		msqIDs.push( parseInt(msqID, 10) );
 		el.val( msqIDs.join(',') );
