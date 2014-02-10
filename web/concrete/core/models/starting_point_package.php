@@ -132,8 +132,10 @@ class Concrete5_Model_StartingPointPackage extends Package {
 		
 		// insert admin user into the user table
 		if (defined('INSTALL_USER_PASSWORD')) {
+			Loader::library('3rdparty/phpass/PasswordHash');
+			$hasher = new PasswordHash(PASSWORD_HASH_COST_LOG2, PASSWORD_HASH_PORTABLE);
 			$uPassword = INSTALL_USER_PASSWORD;
-			$uPasswordEncrypted = User::encryptPassword($uPassword, PASSWORD_SALT);
+			$uPasswordEncrypted = $hasher->HashPassword($uPassword);
 		} else {
 			$uPasswordEncrypted = INSTALL_USER_PASSWORD_HASH;
 		}
