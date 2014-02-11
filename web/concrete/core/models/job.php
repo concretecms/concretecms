@@ -62,7 +62,7 @@ abstract class Concrete5_Model_Job extends Object {
 	//Other Job Variables
 	public $jID=0;
 	public $jStatus='ENABLED';	
-	public $availableJStatus=array( 'ENABLED','RUNNING','DISABLED_ERROR','DISABLED' );
+	public $availableJStatus=array( 'ENABLED','RUNNING','ERROR','DISABLED_ERROR','DISABLED' );
 	public $jDateLastRun;
 	public $jHandle='';
 	public $jNotUninstallable=0;
