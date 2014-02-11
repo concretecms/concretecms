@@ -1,7 +1,7 @@
 <?
 
 defined('C5_EXECUTE') or die("Access Denied.");
-class ConcreteUpgradeVersion5622Helper {
+class ConcreteUpgradeVersion563Helper {
 
 	public $dbRefreshTables = array(
 		'Jobs',
@@ -10,6 +10,12 @@ class ConcreteUpgradeVersion5622Helper {
 
 	public function run() {
 			
+
+		$bt = BlockType::getByHandle('guestbook');
+		if (is_object($bt)) {
+			$bt->refresh();
+		}
+
 		// add user export users task permission
 		$pk = PermissionKey::getByHandle('access_user_search_export');
 		if (!$pk instanceof PermissionKey) {
@@ -27,8 +33,16 @@ class ConcreteUpgradeVersion5622Helper {
 				$pt->assignPermissionAccess($pa);
 			}
 		}
-		
-		
+
+		if (!Config::get('SECURITY_TOKEN_JOBS')) {
+			Config::save('SECURITY_TOKEN_JOBS', Loader::helper('validation/identifier')->getString(64));
+		}
+		if (!Config::get('SECURITY_TOKEN_ENCRYPTION')) {
+			Config::save('SECURITY_TOKEN_ENCRYPTION', Loader::helper('validation/identifier')->getString(64));
+		}
+		if (!Config::get('SECURITY_TOKEN_VALIDATION')) {
+			Config::save('SECURITY_TOKEN_VALIDATION', Loader::helper('validation/identifier')->getString(64));
+		}	
 	}
 
 }

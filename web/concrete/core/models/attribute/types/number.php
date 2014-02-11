@@ -7,15 +7,7 @@ class Concrete5_Controller_AttributeType_Number extends AttributeTypeController 
 
 	public function getValue() {
 		$db = Loader::db();
-		$value = $db->GetOne("select value from atNumber where avID = ?", array($this->getAttributeValueID()));
-		$v = explode('.', $value);
-		$p = 0;
-		for ($i = 0; $i < strlen($v[1]); $i++) {
-			if (substr($v[1], $i, 1) > 0) {
-				$p = $i+1;
-			}
-		}
-		return round($value, $p);	
+		return (float) $db->GetOne("select value from atNumber where avID = ?", array($this->getAttributeValueID()));
 	}
 	
 	public function searchForm($list) {

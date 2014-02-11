@@ -53,11 +53,9 @@
 
 	
 		/**
-		 * Returns true if this is a valid pass. Valid passwords cannot contain
-		 * ',",\ or whitespace. Also checks against the password length constant
+		 * Returns true if this is a valid password. 
 		 */
 		public function password($pass) {
-			$pass = trim($pass);
 			if (strlen($pass) < USER_PASSWORD_MINIMUM) {
 				return false;
 			}
@@ -65,10 +63,6 @@
 				return false;
 			}
 			
-			$resp = preg_match('/[[:space:]]|\>|\<|\"|\'|\\\/i', $pass);
-			if ($resp > 0) {
-				return false;
-			}
 			return true;
 		}
 			

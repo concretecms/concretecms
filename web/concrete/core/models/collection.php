@@ -268,7 +268,9 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				}
 				
 				if ((!is_object($av)) || ($cnt > 1)) {
-					$av = $ak->addAttributeValue();
+					$newAV = $ak->addAttributeValue();
+					$av = CollectionAttributeValue::getByID($newAV->getAttributeValueID());
+					$av->setCollection($this);
 				}
 			}
 			
