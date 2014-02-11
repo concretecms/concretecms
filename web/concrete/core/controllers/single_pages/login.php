@@ -464,11 +464,15 @@ class Concrete5_Controller_Login extends Controller {
 			$mh->to($oUser->getUserEmail());
 
 			//generate hash that'll be used to authenticate user, allowing them to change their password
+			$uHash = UserValidationHash::add($oUser->getUserID(), UVTYPE_CHANGE_PASSWORD);
+			/*
 			$h = Loader::helper('validation/identifier');
 			$uHash = $h->generate('UserValidationHashes', 'uHash');
 			$db = Loader::db();
 			$db->Execute("DELETE FROM UserValidationHashes WHERE uID=?", array( $oUser->uID ) );
 			$db->Execute("insert into UserValidationHashes (uID, uHash, uDateGenerated, type) values (?, ?, ?, ?)", array($oUser->uID, $uHash, time(),intval(UVTYPE_CHANGE_PASSWORD)));
+			*/
+			
 			$changePassURL=BASE_URL . View::url('/login', 'change_password', $uHash);
 			$mh->addParameter('changePassURL', $changePassURL);
 
