@@ -75,7 +75,14 @@
 			unset($_SESSION['dashboardMenus']);
 			unset($_SESSION['ccmQuickNavRecentPages']);
 			unset($_SESSION['accessEntities']);
-			@session_regenerate_id(true);
+
+			$tmpSession = $_SESSION; 
+			session_write_close(); 
+			setcookie(session_name(), session_id(), time()-100000);
+			session_id(sha1(mt_rand())); 
+			session_start(); 
+			$_SESSION = $tmpSession;
+
 		}
 		
 		/**
@@ -91,6 +98,8 @@
 		}
 		
 		public function checkLogin() {
+
+			
 			$aeu = Config::get('ACCESS_ENTITY_UPDATED');
 			if ($aeu && $aeu > $_SESSION['accessEntitiesUpdated']) {
 				User::refreshUserGroups();

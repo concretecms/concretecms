@@ -24,8 +24,6 @@ ini_set('session.gc_maxlifetime', SESSION_MAX_LIFETIME);
 //if we've set the _postSID variable, we populate session_id using it
 if (isset($_POST['ccm-session'])) {
 	session_id($_POST['ccm-session']);
-} else if (isset($_REQUEST['sessionIDOverride'])) {
-	session_id($_REQUEST['sessionIDOverride']);
 }
 
 if (isset($_COOKIE[SESSION]) && strlen($_COOKIE[SESSION]) > 128) {
@@ -34,3 +32,26 @@ if (isset($_COOKIE[SESSION]) && strlen($_COOKIE[SESSION]) > 128) {
 
 session_name(SESSION);
 session_start();
+
+// generate new id for each new session; do not accept a provided id
+if (empty($_SESSION)) {
+   session_regenerate_id(true);
+}
+
+// avoid session fixation; check IP and UA
+if (!empty($_SESSION['client']['REMOTE_ADDR']) && ($_SESSION['client']['REMOTE_ADDR'] != $_SERVER['REMOTE_ADDR']) ||
+   !empty($_SESSION['client']['HTTP_USER_AGENT']) && ($_SESSION['client']['HTTP_USER_AGENT'] != $_SERVER['HTTP_USER_AGENT'])
+) {
+   // provide new session id and leave the old one
+   session_regenerate_id(false);
+   // wipe new session
+   $_SESSION = array();
+}
+ 
+// session defaults
+if (empty($_SESSION['client']['REMOTE_ADDR'])) {
+   $_SESSION['client']['REMOTE_ADDR'] = $_SERVER['REMOTE_ADDR'];
+}
+if (empty($_SESSION['client']['HTTP_USER_AGENT'])) {
+   $_SESSION['client']['HTTP_USER_AGENT'] = $_SERVER['HTTP_USER_AGENT'];
+}
