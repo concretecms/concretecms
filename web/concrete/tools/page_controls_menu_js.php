@@ -211,6 +211,7 @@ menuHTML += '</div>';
 } ?>
 
 $(function() {
+	var item, sbitem, btn, btn1, btn2;
 	<? if ($c->isEditMode()) { ?>
 		$(ccm_editInit);	
 	<? } ?>
