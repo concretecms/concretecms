@@ -85,16 +85,27 @@ abstract class Concrete5_Model_Job extends Object {
 	public function getJobStatus() {return $this->jStatus;}
 	public function getJobLastStatusText() {return $this->jLastStatusText;}
 
-	// authenticateRequest checks against your site's salt and a custom auth field to make 
+	// authenticateRequest checks against your site's job security token and a custom auth field to make 
 	// sure that this is a request that is coming either from something cronned by the site owner
 	// or from the dashboard
 	public static function authenticateRequest($auth) {
-		$val = PASSWORD_SALT . ':' . DIRNAME_JOBS;
-		return md5($val) == $auth;
+		// this is a little tricky. We have TWO ways of doing this
+		// 1. Does the security token for jobs md5 correctly? If so, good.
+		$val = Config::get('SECURITY_TOKEN_JOBS') . ':' . DIRNAME_JOBS;
+		if (md5($val) == $auth) {
+			return true;
+		}
+
+		// 2. Uh oh. We didn't get a match. However, due to backward compatibility
+		// we will check the legacy PASSWORD_SALT parameter here.
+		if (defined('PASSWORD_SALT')) {
+			$val = PASSWORD_SALT . ':' . DIRNAME_JOBS;
+			return md5($val) == $auth;
+		}
 	}
 	
 	public static function generateAuth() {
-		$val = PASSWORD_SALT . ':' . DIRNAME_JOBS;
+		$val = Config::get('SECURITY_TOKEN_JOBS') . ':' . DIRNAME_JOBS;
 		return md5($val);
 	}
 	
