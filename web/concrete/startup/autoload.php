@@ -54,6 +54,7 @@ $classes = array(
 	'PageStatistics' => array('model', 'page_statistics'),
 	'UserStatistics' => array('model', 'user_statistics'),
 	'UsersFriends' => array('model', 'users_friends'),
+	'UserValidationHash' => array('model', 'user_validation_hash'),
 	'BlockType,BlockTypeList' => array('model','block_types'),
 	'Collection' => array('model','collection'),
 	'CollectionVersion' => array('model','collection_version'),

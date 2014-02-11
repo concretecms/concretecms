@@ -432,6 +432,7 @@ define('GUEST_GROUP_ID', '1');
 define('REGISTERED_GROUP_ID', '2');
 define('ADMIN_GROUP_ID', '3');
 define('SESSION_MAX_LIFETIME', 7200); // 2 hours
+define('USER_FOREVER_COOKIE_LIFETIME', 1209600); // 14 days
 define('USER_CHANGE_PASSWORD_URL_LIFETIME',  7200);
 define('NEWSFLOW_VIEWED_THRESHOLD', 86400); // once a day
 

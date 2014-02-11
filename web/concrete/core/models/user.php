@@ -305,18 +305,23 @@
 		
 		static function checkUserForeverCookie() {
 			if (isset($_COOKIE['ccmUserHash']) && $_COOKIE['ccmUserHash']) {
-				$hashVal = explode(':', $_COOKIE['ccmUserHash']);
-				$_uID = $hashVal[0];
-				$uHash = $hashVal[1];
-				if ($uHash == md5(PASSWORD_SALT . $_uID)) {
-					User::loginByUserID($_uID);
+				$hash = $_COOKIE['ccmUserHash'];
+				$uID = UserValidationHash::getUserID($hash, UVTYPE_LOGIN_FOREVER);
+				if (is_numeric($uID) && $uID > 0) {
+					User::loginByUserID($uID);
 				}
 			}
 		}
 		
 		function setUserForeverCookie() {
-			$hashVal = md5(PASSWORD_SALT . $this->getUserID());
-			setcookie("ccmUserHash", $this->getUserID() . ':' . $hashVal, time() + 1209600, DIR_REL . '/');
+			$uHash = UserValidationHash::add($this->getUserID(), UVTYPE_LOGIN_FOREVER);
+			setcookie("ccmUserHash",
+				$uHash, 
+				time() + USER_FOREVER_COOKIE_LIFETIME, 
+				DIR_REL . '/', 
+				SESSION_COOKIE_PARAM_DOMAIN, 
+				SESSION_COOKIE_PARAM_SECURE, 
+				SESSION_COOKIE_PARAM_HTTPONLY);
 		}
 		
 		function getUserGroups() {
