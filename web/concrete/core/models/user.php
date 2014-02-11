@@ -247,8 +247,7 @@
                 // $salt is retained for compatibilty with older versions of concerete5, but not used.
 		public function encryptPassword($uPassword, $salt = null) {
 			return $this->getUserPasswordHasher()->HashPassword($uPassword);
-
-                }
+        }
 
 		// this is for compatibility with passwords generated in older versions of Concrete5. 
 		// Use only for checking password hashes, not generating new ones to store.
