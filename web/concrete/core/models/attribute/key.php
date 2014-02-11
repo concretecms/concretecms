@@ -120,10 +120,14 @@ class Concrete5_Model_AttributeKey extends Object {
 	public static function getList($akCategoryHandle, $filters = array()) {
 		$db = Loader::db();
 		$pkgHandle = $db->GetOne('select pkgHandle from AttributeKeyCategories inner join Packages on Packages.pkgID = AttributeKeyCategories.pkgID where akCategoryHandle = ?', array($akCategoryHandle));
-		$q = 'select akID from AttributeKeys inner join AttributeKeyCategories on AttributeKeys.akCategoryID = AttributeKeyCategories.akCategoryID where akCategoryHandle = ?';
+		$q = 'SELECT k.akID, s.asID, s.asDisplayOrder, sk.displayOrder'
+	 	   . ' FROM (AttributeKeys k INNER JOIN AttributeKeyCategories kc ON k.akCategoryID = kc.akCategoryID)'
+	 	   . ' LEFT JOIN (AttributeSetKeys sk INNER JOIN AttributeSets s ON sk.asID = s.asID) ON k.akID = sk.akID'
+	 	   . ' WHERE kc.akCategoryHandle = ?';
 		foreach($filters as $key => $value) {
 			$q .= ' and ' . $key . ' = ' . $value . ' ';
 		}
+		$q .= ' ORDER BY (s.asID IS NULL), s.asDisplayorder, sk.displayOrder';
 		$r = $db->Execute($q, array($akCategoryHandle));
 		$list = array();
 		$txt = Loader::helper('text');
