@@ -74,12 +74,15 @@
 				$akHandle = $ak->getAttributeKeyHandle();
 			} else {
 				$akHandle = $ak;
+				$ak = null;
 			}
 			$akHash = $akHandle . ':' . $displayMode;
 
 			if (!isset($this->attributes[$akHash])) {
 				$this->attributes[$akHash] = false;
-				$ak = CollectionAttributeKey::getByHandle($akHandle);
+				if(!$ak) {
+					$ak = CollectionAttributeKey::getByHandle($akHandle);
+				}
 				if (is_object($ak)) {
 					$av = $c->getAttributeValueObject($ak);
 					if (is_object($av)) {
