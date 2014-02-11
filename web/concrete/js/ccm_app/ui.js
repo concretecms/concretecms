@@ -457,8 +457,7 @@ ccm_triggerSelectUser = function(uID, uName, uEmail) {
 };
 
 ccm_setupUserSearch = function(searchInstance) {
-	$(".chosen-select").chosen();
-
+	$(".chosen-select").chosen(ccmi18n_chosen);	
 	$("#ccm-user-list-cb-all").click(function() {
 		if ($(this).prop('checked') == true) {
 			$('.ccm-list-record td.ccm-user-list-cb input[type=checkbox]').attr('checked', true);
