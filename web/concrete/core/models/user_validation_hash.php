@@ -57,7 +57,7 @@ class Concrete5_Model_UserValidationHash {
 	public static function getUserID($hash, $type) {
 		self::removeExpired($type);
 		$db = Loader::db();
-		$uID = $db->getOne("SELECT uID FROM UserValidationHashes WHERE uHash = ? AND type = ?", array($uID, $type));
+		$uID = $db->getOne("SELECT uID FROM UserValidationHashes WHERE uHash = ? AND type = ?", array($hash, $type));
 		if(is_numeric($uID) && $uID > 0) {
 			return $uID;
 		} else {
