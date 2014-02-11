@@ -290,7 +290,10 @@
 			@session_destroy();
 			Events::fire('on_user_logout');
 			if (isset($_COOKIE['ccmUserHash']) && $_COOKIE['ccmUserHash']) {
-				setcookie("ccmUserHash", "", 315532800, DIR_REL . '/');
+				setcookie("ccmUserHash", "", 315532800, DIR_REL . '/',
+				(defined('SESSION_COOKIE_PARAM_DOMAIN')?SESSION_COOKIE_PARAM_DOMAIN:''),
+				(defined('SESSION_COOKIE_PARAM_SECURE')?SESSION_COOKIE_PARAM_SECURE:false),
+				(defined('SESSION_COOKIE_PARAM_HTTPONLY')?SESSION_COOKIE_PARAM_HTTPONLY:false));
 			}
 		}
 		
@@ -310,9 +313,10 @@
 				$uHash, 
 				time() + USER_FOREVER_COOKIE_LIFETIME, 
 				DIR_REL . '/', 
-				SESSION_COOKIE_PARAM_DOMAIN, 
-				SESSION_COOKIE_PARAM_SECURE, 
-				SESSION_COOKIE_PARAM_HTTPONLY);
+				(defined('SESSION_COOKIE_PARAM_DOMAIN')?SESSION_COOKIE_PARAM_DOMAIN:''),
+				(defined('SESSION_COOKIE_PARAM_SECURE')?SESSION_COOKIE_PARAM_SECURE:false),
+				(defined('SESSION_COOKIE_PARAM_HTTPONLY')?SESSION_COOKIE_PARAM_HTTPONLY:false)
+				);
 		}
 		
 		function getUserGroups() {
