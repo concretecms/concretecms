@@ -144,7 +144,6 @@ class Concrete5_Model_FileAttributeKey extends AttributeKey {
 		$av = $f->getAttributeValueObject($this, true);
 		parent::saveAttribute($av, $value);
 		$db = Loader::db();
-		$v = array($f->getFileID(), $f->getFileVersionID(), $this->getAttributeKeyID(), $av->getAttributeValueID());
 		$db->Replace('FileAttributeValues', array(
 			'fID' => $f->getFileID(), 
 			'fvID' => $f->getFileVersionID(), 
