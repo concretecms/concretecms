@@ -102,7 +102,7 @@ class Concrete5_Library_ItemList {
 		$this->setCurrentPage($page);
 		$offset = 0;
 		if ($this->currentPage > 1) {
-			$offset = $this->itemsPerPage * ($this->currentPage - 1);
+			$offset = min($this->itemsPerPage * ($this->currentPage - 1), 2147483647); 
 		}
 		return $this->get($this->itemsPerPage, $offset);
 	}

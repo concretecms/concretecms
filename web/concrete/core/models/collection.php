@@ -268,7 +268,9 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				}
 				
 				if ((!is_object($av)) || ($cnt > 1)) {
-					$av = $ak->addAttributeValue();
+					$newAV = $ak->addAttributeValue();
+					$av = CollectionAttributeValue::getByID($newAV->getAttributeValueID());
+					$av->setCollection($this);
 				}
 			}
 			
@@ -517,6 +519,13 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 	public function getAreaCustomStyleRule($area) {
 		$db = Loader::db();
+
+		$areac = $area->getAreaCollectionObject();
+		if ($areac instanceof Stack) {
+			// this fixes the problem of users applying design to the main area on the page, and then that trickling into any
+			// stacks that have been added to other areas of the page.
+			return false;
+		}
 
 		$styles = $this->vObj->getCustomAreaStyles();		
 		$csrID = $styles[$area->getAreaHandle()];

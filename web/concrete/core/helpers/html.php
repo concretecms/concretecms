@@ -82,8 +82,6 @@ class Concrete5_Helper_Html {
 			$css->file = ASSETS_URL_CSS . '/' . $file;
 		}
 
-		$css->file .= (strpos($css->file, '?') > -1) ? '&amp;' : '?';
-		$css->file .= 'v=' . md5(APP_VERSION);		
 		// for the javascript addHeaderItem we need to have a full href available
 		$css->href = $css->file;
 		if (substr($css->file, 0, 4) != 'http') {
@@ -129,9 +127,6 @@ class Concrete5_Helper_Html {
 			$js->file = ASSETS_URL_JAVASCRIPT . '/' . $file;
 		}
 
-		$js->file .= (strpos($js->file, '?') > -1) ? '&amp;' : '?';
-		$js->file .= 'v=' . md5(APP_VERSION);
-		
 		// for the javascript addHeaderItem we need to have a full href available
 		$js->href = $js->file;
 		return $js;

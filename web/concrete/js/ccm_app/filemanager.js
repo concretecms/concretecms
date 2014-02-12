@@ -177,7 +177,7 @@ ccm_alSubmitSetsForm = function(searchInstance) {
 		jQuery.fn.dialog.hideLoader();		
 		$("#ccm-" + searchInstance + "-advanced-search").ajaxSubmit(function(resp) {
 			$("#ccm-" + searchInstance + "-sets-search-wrapper").load(CCM_TOOLS_PATH + '/files/search_sets_reload', {'searchInstance': searchInstance}, function() {
-				$(".chosen-select").chosen();
+				$(".chosen-select").chosen(ccmi18n_chosen);
 				ccm_parseAdvancedSearchResponse(resp, searchInstance);
 			});
 		});
@@ -567,8 +567,8 @@ ccm_alSetupCheckboxes = function(searchInstance) {
 }
 
 ccm_alSetupFileSetSearch = function(searchInstance) {
-	$("#ccm-" + searchInstance + "-sets-search-wrapper select").chosen().unbind();
-	$("#ccm-" + searchInstance + "-sets-search-wrapper select").chosen().change(function() {
+	$("#ccm-" + searchInstance + "-sets-search-wrapper select").chosen(ccmi18n_chosen).unbind();
+	$("#ccm-" + searchInstance + "-sets-search-wrapper select").chosen(ccmi18n_chosen).change(function() {
 		var sel = $("#ccm-" + searchInstance + "-sets-search-wrapper option:selected");
 		$("#ccm-" + searchInstance + "-advanced-search").submit();
 	});

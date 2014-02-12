@@ -119,7 +119,7 @@ if ($_REQUEST['approveImmediately'] == 1) {
 	<? if ($asl->allowEditDescription()) { ?>
 	<div class="clearfix">
 	<label for="cDescription"><?=t('Description')?></label>
-	<div class="input"><textarea id="cDescription" name="cDescription" class="ccm-input-text" style="width: 495px; height: 50px"><?=$c->getCollectionDescription()?></textarea></div>
+	<div class="input"><textarea id="cDescription" name="cDescription" class="ccm-input-text" style="width: 495px; height: 50px"><?=h($c->getCollectionDescription())?></textarea></div>
 	</div>
 	<? } ?>
 	

@@ -80,13 +80,18 @@ class Concrete5_Model_AttributeKey extends Object {
 	 * Loads the required attribute fields for this instantiated attribute
 	 */
 	protected function load($akIdentifier, $loadBy = 'akID') {
-		$db = Loader::db();
-		$akunhandle = Loader::helper('text')->uncamelcase(get_class($this));
-		$akCategoryHandle = substr($akunhandle, 0, strpos($akunhandle, '_attribute_key'));
-		if ($akCategoryHandle != '') {
-			$row = $db->GetRow('select akID, akHandle, akName, AttributeKeys.akCategoryID, akIsInternal, akIsEditable, akIsSearchable, akIsSearchableIndexed, akIsAutoCreated, akIsColumnHeader, AttributeKeys.atID, atHandle, AttributeKeys.pkgID from AttributeKeys inner join AttributeKeyCategories on AttributeKeys.akCategoryID = AttributeKeyCategories.akCategoryID inner join AttributeTypes on AttributeKeys.atID = AttributeTypes.atID where ' . $loadBy . ' = ? and akCategoryHandle = ?', array($akIdentifier, $akCategoryHandle));
-		} else {
-			$row = $db->GetRow('select akID, akHandle, akName, akCategoryID, akIsEditable, akIsInternal, akIsSearchable, akIsSearchableIndexed, akIsAutoCreated, akIsColumnHeader, AttributeKeys.atID, atHandle, AttributeKeys.pkgID from AttributeKeys inner join AttributeTypes on AttributeKeys.atID = AttributeTypes.atID where ' . $loadBy . ' = ?', array($akIdentifier));		
+		if(empty($akIdentifier)) {
+			$row = array();
+		}
+		else {
+			$db = Loader::db();
+			$akunhandle = Loader::helper('text')->uncamelcase(get_class($this));
+			$akCategoryHandle = substr($akunhandle, 0, strpos($akunhandle, '_attribute_key'));
+			if ($akCategoryHandle != '') {
+				$row = $db->GetRow('select akID, akHandle, akName, AttributeKeys.akCategoryID, akIsInternal, akIsEditable, akIsSearchable, akIsSearchableIndexed, akIsAutoCreated, akIsColumnHeader, AttributeKeys.atID, atHandle, AttributeKeys.pkgID from AttributeKeys inner join AttributeKeyCategories on AttributeKeys.akCategoryID = AttributeKeyCategories.akCategoryID inner join AttributeTypes on AttributeKeys.atID = AttributeTypes.atID where ' . $loadBy . ' = ? and akCategoryHandle = ?', array($akIdentifier, $akCategoryHandle));
+			} else {
+				$row = $db->GetRow('select akID, akHandle, akName, akCategoryID, akIsEditable, akIsInternal, akIsSearchable, akIsSearchableIndexed, akIsAutoCreated, akIsColumnHeader, AttributeKeys.atID, atHandle, AttributeKeys.pkgID from AttributeKeys inner join AttributeTypes on AttributeKeys.atID = AttributeTypes.atID where ' . $loadBy . ' = ?', array($akIdentifier));		
+			}
 		}
 		$this->setPropertiesFromArray($row);
 	}
@@ -120,10 +125,14 @@ class Concrete5_Model_AttributeKey extends Object {
 	public static function getList($akCategoryHandle, $filters = array()) {
 		$db = Loader::db();
 		$pkgHandle = $db->GetOne('select pkgHandle from AttributeKeyCategories inner join Packages on Packages.pkgID = AttributeKeyCategories.pkgID where akCategoryHandle = ?', array($akCategoryHandle));
-		$q = 'select akID from AttributeKeys inner join AttributeKeyCategories on AttributeKeys.akCategoryID = AttributeKeyCategories.akCategoryID where akCategoryHandle = ?';
+		$q = 'SELECT k.akID, s.asID, s.asDisplayOrder, sk.displayOrder'
+	 	   . ' FROM (AttributeKeys k INNER JOIN AttributeKeyCategories kc ON k.akCategoryID = kc.akCategoryID)'
+	 	   . ' LEFT JOIN (AttributeSetKeys sk INNER JOIN AttributeSets s ON sk.asID = s.asID) ON k.akID = sk.akID'
+	 	   . ' WHERE kc.akCategoryHandle = ?';
 		foreach($filters as $key => $value) {
 			$q .= ' and ' . $key . ' = ' . $value . ' ';
 		}
+		$q .= ' ORDER BY (s.asID IS NULL), s.asDisplayorder, sk.displayOrder';
 		$r = $db->Execute($q, array($akCategoryHandle));
 		$list = array();
 		$txt = Loader::helper('text');
