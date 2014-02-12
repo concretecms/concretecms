@@ -285,7 +285,81 @@ class Concrete5_Model_Package extends Object {
 		ksort($items);
 		return $items;
 	}
-	
+
+	/** Returns the display name of a category of package items (localized and escaped accordingly to $format)
+	* @param string $categoryHandle The category handle
+	* @param string $format = 'html' Escape the result in html format (if $format is 'html'). If $format is 'text' or any other value, the display name won't be escaped.
+	* @return string
+	*/
+	public static function getPackageItemsCategoryDisplayName($categoryHandle, $format = 'html') {
+		switch($categoryHandle) {
+			case 'attribute_categories':
+				$value = t('Attribute categories');
+				break;
+			case 'permission_categories':
+				$value = t('Permission categories');
+				break;
+			case 'permission_access_entity_types':
+				$value = t('Permission access entity types');
+				break;
+			case 'attribute_keys':
+				$value = t('Attribute keys');
+				break;
+			case 'attribute_sets':
+				$value = t('Attribute sets');
+				break;
+			case 'group_sets':
+				$value = t('Group sets');
+				break;
+			case 'page_types':
+				$value = t('Page types');
+				break;
+			case 'mail_importers':
+				$value = t('Mail importers');
+				break;
+			case 'configuration_values':
+				$value = t('Configuration values');
+				break;
+			case 'block_types':
+				$value = t('Block types');
+				break;
+			case 'page_themes':
+				$value = t('Page themes');
+				break;
+			case 'permissions':
+				$value = t('Permissions');
+				break;
+			case 'single_pages':
+				$value = t('Single pages');
+				break;
+			case 'attribute_types':
+				$value = t('Attribute types');
+				break;
+			case 'captcha_libraries':
+				$value = t('Captcha libraries');
+				break;
+			case 'antispam_libraries':
+				$value = t('Antispam libraries');
+				break;
+			case 'jobs':
+				$value = t('Jobs');
+				break;
+			case 'workflow_types':
+				$value = t('Workflow types');
+				break;
+			default:
+				$value = t(Loader::helper('text')->unhandle($categoryHandle));
+				break;
+		}
+		switch($format) {
+			case 'html':
+				return h($value);
+			case 'text':
+			default:
+				return $value;
+		}
+	}
+
 	public static function getItemName($item) {
 		$txt = Loader::helper('text');
 		Loader::model('single_page');
