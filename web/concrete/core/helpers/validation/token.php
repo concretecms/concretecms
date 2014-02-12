@@ -31,7 +31,7 @@ class Concrete5_Helper_Validation_Token {
 	
 	/**
 	 * Generates a unique token for a given action. This is a token in the form of
-	 * time:hash, where hash is md5(time:userID:action:salt)
+	 * time:hash, where hash is md5(time:userID:action:pepper)
 	 * @param string table
 	 * @param string key
 	 * @param int length
@@ -45,7 +45,7 @@ class Concrete5_Helper_Validation_Token {
 		if ($time == null) {
 			$time = time();
 		}
-		$hash = $time . ':' . md5($time . ':' . $uID . ':' . $action . ':' . PASSWORD_SALT);
+		$hash = $time . ':' . md5($time . ':' . $uID . ':' . $action . ':' . Config::get('SECURITY_TOKEN_VALIDATION'));
 		return $hash;
 	}
 	
@@ -74,7 +74,7 @@ class Concrete5_Helper_Validation_Token {
 	
 	/** 
 	 * Validates against a given action. Basically, we check the passed hash to see if
-	 * a. the hash is valid. That means it computes in the time:action:PASSWORD_SALT format
+	 * a. the hash is valid. That means it computes in the time:action:pepper format
 	 * b. the time included next to the hash is within the threshold.
 	 * @param string $action
 	 * @param string $token

@@ -28,6 +28,7 @@
 		protected $uDefaultLanguage = null;
 		// an associative array of all access entity objects that are associated with this user.
 		protected $accessEntities = array();
+		protected $hasher;
 		
 		/** Return an User instance given its id (or null if it's not found)
 		* @param int $uID The id of the user
@@ -74,7 +75,14 @@
 			unset($_SESSION['dashboardMenus']);
 			unset($_SESSION['ccmQuickNavRecentPages']);
 			unset($_SESSION['accessEntities']);
-			@session_regenerate_id(true);
+
+			$tmpSession = $_SESSION; 
+			session_write_close(); 
+			setcookie(session_name(), session_id(), time()-100000);
+			session_id(sha1(mt_rand())); 
+			session_start(); 
+			$_SESSION = $tmpSession;
+
 		}
 		
 		/**
@@ -90,6 +98,8 @@
 		}
 		
 		public function checkLogin() {
+
+			
 			$aeu = Config::get('ACCESS_ENTITY_UPDATED');
 			if ($aeu && $aeu > $_SESSION['accessEntitiesUpdated']) {
 				User::refreshUserGroups();
@@ -128,20 +138,21 @@
 				if (!$args[2]) {
 					$_SESSION['uGroups'] = false;
 				}
-				$password = User::encryptPassword($password, PASSWORD_SALT);
-				$v = array($username, $password);
+				$v = array($username);
 				if (defined('USER_REGISTRATION_WITH_EMAIL_ADDRESS') && USER_REGISTRATION_WITH_EMAIL_ADDRESS == true) {
-					$q = "select uID, uName, uIsActive, uIsValidated, uTimezone, uDefaultLanguage from Users where uEmail = ? and uPassword = ?";
+					$q = "select uID, uName, uIsActive, uIsValidated, uTimezone, uDefaultLanguage, uPassword from Users where uEmail = ?";
 				} else {
-					$q = "select uID, uName, uIsActive, uIsValidated, uTimezone, uDefaultLanguage from Users where uName = ? and uPassword = ?";
+					$q = "select uID, uName, uIsActive, uIsValidated, uTimezone, uDefaultLanguage, uPassword from Users where uName = ?";
 				}
 				$db = Loader::db();
 				$r = $db->query($q, $v);
 				if ($r) {
 					$row = $r->fetchRow(); 
+					$pw_is_valid_legacy = (defined('PASSWORD_SALT') && User::legacyEncryptPassword($password) == $row['uPassword']);
+					$pw_is_valid = $pw_is_valid_legacy || $this->getUserPasswordHasher()->checkPassword($password, $row['uPassword']); 
 					if ($row['uID'] && $row['uIsValidated'] === '0' && defined('USER_VALIDATE_EMAIL_REQUIRED') && USER_VALIDATE_EMAIL_REQUIRED == TRUE) {
 						$this->loadError(USER_NON_VALIDATED);
-					} else if ($row['uID'] && $row['uIsActive']) {
+					} else if ($row['uID'] && $row['uIsActive'] && $pw_is_valid) {
 						$this->uID = $row['uID'];
 						$this->uName = $row['uName'];
 						$this->uIsActive = $row['uIsActive'];
@@ -171,7 +182,17 @@
 						$this->loadError(USER_INVALID);
 					}
 					$r->free();
+					if ($pw_is_valid_legacy) {
+						// this password was generated on a previous version of Concrete5. 
+						// We re-hash it to make it more secure.
+						$v = array($this->getUserPasswordHasher()->HashPassword($password), $this->uID);
+						$db->execute($db->prepare("update Users set uPassword = ? where uID = ?"), $v);
+					}
 				} else {
+					$this->getUserPasswordHasher()->hashpassword($password); // hashpassword and checkpassword are slow functions. 
+									 	// We run one here just take time.
+										// Without it an attacker would be able to tell that the 
+										// username doesn't exist using a timing attack.
 					$this->loadError(USER_INVALID);
 				}
 			} else {
@@ -232,8 +253,15 @@
 			
 		}
 		
-		public function encryptPassword($uPassword, $salt = PASSWORD_SALT) {
-			return md5($uPassword . ':' . $salt);
+                // $salt is retained for compatibilty with older versions of concerete5, but not used.
+		public function encryptPassword($uPassword, $salt = null) {
+			return $this->getUserPasswordHasher()->HashPassword($uPassword);
+        }
+
+		// this is for compatibility with passwords generated in older versions of Concrete5. 
+		// Use only for checking password hashes, not generating new ones to store.
+		public function legacyEncryptPassword($uPassword) {
+			return md5($uPassword . ':' . PASSWORD_SALT);
 		}
 		
 		function isActive() {
@@ -271,24 +299,33 @@
 			@session_destroy();
 			Events::fire('on_user_logout');
 			if (isset($_COOKIE['ccmUserHash']) && $_COOKIE['ccmUserHash']) {
-				setcookie("ccmUserHash", "", 315532800, DIR_REL . '/');
+				setcookie("ccmUserHash", "", 315532800, DIR_REL . '/',
+				(defined('SESSION_COOKIE_PARAM_DOMAIN')?SESSION_COOKIE_PARAM_DOMAIN:''),
+				(defined('SESSION_COOKIE_PARAM_SECURE')?SESSION_COOKIE_PARAM_SECURE:false),
+				(defined('SESSION_COOKIE_PARAM_HTTPONLY')?SESSION_COOKIE_PARAM_HTTPONLY:false));
 			}
 		}
 		
 		static function checkUserForeverCookie() {
 			if (isset($_COOKIE['ccmUserHash']) && $_COOKIE['ccmUserHash']) {
-				$hashVal = explode(':', $_COOKIE['ccmUserHash']);
-				$_uID = $hashVal[0];
-				$uHash = $hashVal[1];
-				if ($uHash == md5(PASSWORD_SALT . $_uID)) {
-					User::loginByUserID($_uID);
+				$hash = $_COOKIE['ccmUserHash'];
+				$uID = UserValidationHash::getUserID($hash, UVTYPE_LOGIN_FOREVER);
+				if (is_numeric($uID) && $uID > 0) {
+					User::loginByUserID($uID);
 				}
 			}
 		}
 		
 		function setUserForeverCookie() {
-			$hashVal = md5(PASSWORD_SALT . $this->getUserID());
-			setcookie("ccmUserHash", $this->getUserID() . ':' . $hashVal, time() + 1209600, DIR_REL . '/');
+			$uHash = UserValidationHash::add($this->getUserID(), UVTYPE_LOGIN_FOREVER);
+			setcookie("ccmUserHash",
+				$uHash, 
+				time() + USER_FOREVER_COOKIE_LIFETIME, 
+				DIR_REL . '/', 
+				(defined('SESSION_COOKIE_PARAM_DOMAIN')?SESSION_COOKIE_PARAM_DOMAIN:''),
+				(defined('SESSION_COOKIE_PARAM_SECURE')?SESSION_COOKIE_PARAM_SECURE:false),
+				(defined('SESSION_COOKIE_PARAM_HTTPONLY')?SESSION_COOKIE_PARAM_HTTPONLY:false)
+				);
 		}
 		
 		function getUserGroups() {
@@ -543,5 +580,19 @@
 			$r = $db->query($q);
 			return $r;
 		}
-				
+
+		/**
+		 * @see PasswordHash
+		 *
+		 * @return PasswordHash
+		 */
+		function getUserPasswordHasher() {
+			if (isset($this->hasher)) {
+				return $this->hasher;
+			}
+			Loader::library('3rdparty/phpass/PasswordHash');
+			$this->hasher = new PasswordHash(PASSWORD_HASH_COST_LOG2, PASSWORD_HASH_PORTABLE);
+			return $this->hasher;
+		}
+
 	}
