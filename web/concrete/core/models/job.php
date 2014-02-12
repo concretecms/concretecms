@@ -179,7 +179,9 @@ abstract class Concrete5_Model_Job extends Object {
 		$obj->error = $resultCode;
 		$obj->result = $resultMsg;
 		$obj->jDateLastRun = date(DATE_APP_GENERIC_MDYT_FULL_SECONDS);
-
+		$obj->jHandle = $this->getJobHandle();
+		$obj->jID = $this->getJobID();
+		
 		$this->jLastStatusCode = $resultCode;
 		$this->jLastStatusText = $resultMsg;
 		$this->jStatus = $jStatus;
