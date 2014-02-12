@@ -26,6 +26,8 @@ if (Job::authenticateRequest($_REQUEST['auth'])) {
 				}
 				$totalItems = $q->count();	
 				$obj->totalItems = $totalItems;
+				$obj->jHandle = $job->getJobHandle();
+				$obj->jID = $job->getJobID();
 				if ($q->count() == 0) {
 					$result = $job->finish($q);
 					$obj = $job->markCompleted(0, $result);
