@@ -248,7 +248,7 @@ class Concrete5_Model_PageTheme extends Object {
 			$th->ptDescription = $res->ptDescription;	
 			switch($dir) {
 				case DIR_FILES_THEMES:
-					$th->ptURL = BASE_URL . DIR_REL . '/' . DIRNAME_THEMES . '/' . $handle;
+					$th->ptURL = DIR_REL . '/' . DIRNAME_THEMES . '/' . $handle;
 					break;
 			}
 			return $th;
@@ -499,7 +499,7 @@ class Concrete5_Model_PageTheme extends Object {
 			if ($row['pkgID'] > 0) {
 				if (is_dir(DIR_PACKAGES . '/' . $pkgHandle)) {
 					$pl->ptDirectory = DIR_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_THEMES . '/' . $row['ptHandle'];
-					$url = BASE_URL . DIR_REL;
+					$url = DIR_REL;
 				} else {
 					$pl->ptDirectory = DIR_PACKAGES_CORE . '/' . $pkgHandle . '/' . DIRNAME_THEMES . '/' . $row['ptHandle'];
 					$url = ASSETS_URL;
@@ -507,7 +507,7 @@ class Concrete5_Model_PageTheme extends Object {
 				$pl->ptURL = $url . '/' . DIRNAME_PACKAGES  . '/' . $pkgHandle . '/' . DIRNAME_THEMES . '/' . $row['ptHandle'];
 			} else if (is_dir(DIR_FILES_THEMES . '/' . $row['ptHandle'])) {
 				$pl->ptDirectory = DIR_FILES_THEMES . '/' . $row['ptHandle'];
-				$pl->ptURL = BASE_URL . DIR_REL . '/' . DIRNAME_THEMES . '/' . $row['ptHandle'];
+				$pl->ptURL = DIR_REL . '/' . DIRNAME_THEMES . '/' . $row['ptHandle'];
 			} else {
 				$pl->ptDirectory = DIR_FILES_THEMES_CORE . '/' . $row['ptHandle'];
 				$pl->ptURL = ASSETS_URL . '/' . DIRNAME_THEMES . '/' . $row['ptHandle'];
