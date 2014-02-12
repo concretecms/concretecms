@@ -302,7 +302,10 @@ class Concrete5_Library_ItemList {
 
 	/** 
 	 * Sets up a multiple columns to search by. Each argument is taken "as-is" (including asc or desc) and concatenated with commas
-	 * Note that this is overrides any previous sortByMultiple() call, and all sortBy() calls
+	 * Note that this is overrides any previous sortByMultiple() call, and all sortBy() calls. Alternatively, you can pass a single
+	 * array with multiple columns to sort by as its values.
+	 * e.g. $list->sortByMultiple('columna desc', 'columnb asc');
+	 * or $list->sortByMultiple(array('columna desc', 'columnb asc'));
 	 */
 	public function sortByMultiple() {
 		$args = func_get_args();
