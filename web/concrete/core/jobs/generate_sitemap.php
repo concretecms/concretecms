@@ -41,7 +41,10 @@ class Concrete5_Job_GenerateSitemap extends Job {
 				'dashboard' => Loader::helper('concrete/dashboard'),
 				'view_page' => PermissionKey::getByHandle('view_page'),
 				'guestGroup' => Group::getByID(GUEST_GROUP_ID),
-				'now' => new DateTime('now')
+				'now' => new DateTime('now'),
+				'ak_exclude_sitemapxml' => CollectionAttributeKey::getByHandle('exclude_sitemapxml'),
+				'ak_sitemap_changefreq' => CollectionAttributeKey::getByHandle('sitemap_changefreq'),
+				'ak_sitemap_priority' => CollectionAttributeKey::getByHandle('sitemap_priority')
 			);
 			$instances['guestGroupAE'] = array(GroupPermissionAccessEntity::getOrCreate($instances['guestGroup']));
 			$xmlDoc = new SimpleXMLElement('<'.'?xml version="1.0" encoding="' . APP_CHARSET . '"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" />');
@@ -113,7 +116,7 @@ class Concrete5_Job_GenerateSitemap extends Job {
 		if($pubDate > $instances['now']) {
 			return;
 		}
-		if($page->getAttribute('exclude_sitemapxml')) {
+		if($page->getAttribute($instances['ak_exclude_sitemapxml'])) {
 			return;
 		}
 		$instances['view_page']->setPermissionObject($page);
@@ -125,8 +128,8 @@ class Concrete5_Job_GenerateSitemap extends Job {
 			return;
 		}
 		$lastmod = new DateTime($page->getCollectionDateLastModified());
-		$changefreq = $page->getAttribute('sitemap_changefreq');
-		$priority = $page->getAttribute('sitemap_priority');
+		$changefreq = $page->getAttribute($instances['ak_sitemap_changefreq']);
+		$priority = $page->getAttribute($instances['ak_sitemap_priority']);
 		$xmlNode = $xmlDoc->addChild('url');
 		$xmlNode->addChild('loc', SITEMAPXML_BASE_URL . $instances['navigation']->getLinkToCollection($page));
 		$xmlNode->addChild('lastmod', $lastmod->format(DateTime::ATOM));
