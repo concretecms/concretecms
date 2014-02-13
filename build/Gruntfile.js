@@ -21,7 +21,6 @@ module.exports = function(grunt) {
 	// Options for the generation of JavaScripts. See https://github.com/gruntjs/grunt-contrib-uglify
 	var jsOptions = {
 		mangle: true,
-		compress: true,
 		beautify: false,
 		report: 'min',
 		preserveComments: false,
@@ -114,9 +113,9 @@ module.exports = function(grunt) {
 	for(var key in js) {
 		var target = {files: {}};
 		target.files[js[key].dest] = js[key].src;
-		config.uglify[key + '_release'] = extend({}, target);
+		config.uglify[key + '_release'] = extend({options: {compress: {warnings: false}}}, target);
 		jsTargets.release.push('uglify:' + key + '_release');
-		target.options = {};
+		target.options = {compress: {warnings: true}};
 		target.options.sourceMap = js[key].dest + '.map';
 		target.options.sourceMappingURL = target.options.sourceMap.replace(/<%=\s*DIR_BASE\s*%>/g, '<%= DIR_REL %>');
 		target.options.sourceMapRoot = '<%= DIR_REL %>/';
