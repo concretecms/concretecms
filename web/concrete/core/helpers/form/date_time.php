@@ -47,7 +47,7 @@ class Concrete5_Helper_Form_DateTime {
             		if ($arr[$field] == '') {
                 		return '';
 			}
-			$dt = date('Y-m-d', strtotime($arr[$field]));
+			$dt = date('Y-m-d', floor( $arr[$field] / 1000) );
 			return $dt;
 		} else {
 			return false;
