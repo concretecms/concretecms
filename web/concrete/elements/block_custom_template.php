@@ -26,15 +26,11 @@ $txt = Loader::helper('text');
             <div class="controls">
                 <select id="bFilename" name="bFilename" class="xlarge">
                     <option value="">(<?=t('None selected')?>)</option>
-                    <? foreach($templates as $tpl) { ?>
-                        <option value="<?=$tpl?>" <? if ($b->getBlockFilename() == $tpl) { ?> selected <? } ?>><?	
-                            if (strpos($tpl, '.') !== false) {
-                                print substr($txt->unhandle($tpl), 0, strrpos($tpl, '.'));
-                            } else {
-                                print $txt->unhandle($tpl);
-                            }
-                            ?></option>		
-                    <? } ?>
+                    <?
+                    foreach($templates as $tpl) {
+                        ?><option value="<?=$tpl->getTemplateFileFilename()?>" <? if ($b->getBlockFilename() == $tpl->getTemplateFileFilename()) { ?> selected <? } ?>><?=$tpl->getTemplateFileDisplayName()?></option><?
+                    }
+                    ?>
                 </select>
             </div>
 				</div>

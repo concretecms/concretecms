@@ -34,15 +34,11 @@ $txt = Loader::helper('text');
 	<div class="input">
 		<select name="cbFilename">
 			<option value="">(<?=t('None selected')?>)</option>
-			<? foreach($templates as $tpl) { ?>
-				<option value="<?=$tpl?>" <? if ($b->getBlockComposerFilename() == $tpl) { ?> selected <? } ?>><?	
-					if (strpos($tpl, '.') !== false) {
-						print substr($txt->unhandle($tpl), 0, strrpos($tpl, '.'));
-					} else {
-						print $txt->unhandle($tpl);
-					}
-					?></option>		
-			<? } ?>
+			<?
+			foreach($templates as $tpl) {
+				?><option value="<?=$tpl->getTemplateFileFilename()?>" <? if ($b->getBlockComposerFilename() == $tpl->getTemplateFileFilename()) { ?> selected <? } ?>><?=$tpl->getTemplateFileDisplayName()?></option><?php
+			}
+			?>
 		</select>
 	</div>
 	</div>
