@@ -192,7 +192,7 @@ $ih = Loader::helper('concrete/interface');
 
 			<div class="clearfix">
 				<div id="emailSettings">
-					<?php print $form->label('send_notification_from', t('Send Form Email From This Address'));?>
+					<?php print $form->label('send_notification_from', t('Reply to this email address'));?>
 					<div class="input send_notification_from">
 						<?php print $form->checkbox('send_notification_from', 1); ?>
 					</div>
