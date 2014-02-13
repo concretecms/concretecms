@@ -26,14 +26,14 @@ class ConcreteAvatarHelper {
 	function getStockAvatars() {
 		$f = Loader::helper('file');
 		$aDir = $f->getDirectoryContents(DIR_FILES_AVATARS_STOCK);
-		return $aDir;			
+		return $aDir;
 	}
-	/** 
+	/**
 	* Outputs the final user avatar
 	* @param user object $uo
 	* @return string $str
 	*/
-	function outputUserAvatar($uo, $suppressNone = false, $aspectRatio = 1.0) {	
+	function outputUserAvatar($uo, $suppressNone = false, $aspectRatio = 1.0) {
 		if (is_object($uo) && $uo->hasAvatar()) {
 			if (file_exists(DIR_FILES_AVATARS . '/' . $uo->getUserID() . '.jpg')) {
 				$size = DIR_FILES_AVATARS . '/' . $uo->getUserID() . '.jpg';
@@ -47,7 +47,7 @@ class ConcreteAvatarHelper {
 				$isize = getimagesize($size);
 				$isize[0] = round($isize[0]*$aspectRatio);
 				$isize[1] = round($isize[1]*$aspectRatio);
-				
+
 				$str = '<img class="u-avatar" src="' . $src . '" width="' . $isize[0] . '" height="' . $isize[1] . '" alt="' . $uo->getUserName() . '" />';
 				return $str;
 			}
@@ -71,7 +71,7 @@ class ConcreteAvatarHelper {
 		if (!$uo->hasAvatar()) {
 			return false;
 		}
-		
+
 		$cacheStr = "?" . time();
 		if (file_exists(DIR_FILES_AVATARS . '/' . $uo->getUserID() . '.jpg')) {
 			$base = DIR_FILES_AVATARS . '/' . $uo->getUserID() . '.jpg';
@@ -97,7 +97,7 @@ class ConcreteAvatarHelper {
 		$str = '<img class="u-avatar" src="' . AVATAR_NONE . '" width="' . AVATAR_WIDTH*$aspectRatio . '" height="' . AVATAR_HEIGHT*$aspectRatio . '" alt="" />';
 		return $str;
 	}
-	
+
 	/**
 	* Makes the provided image the avatar for the user
 	* It needs to make some various sizes of the image
@@ -110,8 +110,8 @@ class ConcreteAvatarHelper {
 		$imageSize = getimagesize($pointer);
 		$oWidth = $imageSize[0];
 		$oHeight = $imageSize[1];
-		
-		
+
+
 		$finalWidth = 0;
 		$finalHeight = 0;
 
@@ -134,7 +134,7 @@ class ConcreteAvatarHelper {
 				$finalHeight = AVATAR_HEIGHT;
 			}
 		}
-		
+
 		$image = imageCreateTrueColor($finalWidth, $finalHeight);
 		$white = imagecolorallocate($image, 255, 255, 255);
 		imagefill($image, 0, 0, $white);
@@ -150,10 +150,10 @@ class ConcreteAvatarHelper {
 				$im = imageCreateFromPNG($pointer);
 				break;
 		}
-		
-		
+
+
 		$newPath = DIR_FILES_AVATARS . '/' . $uID . '.jpg';
-		
+
 		if ($im) {
 			$res = imageCopyResampled($image, $im, 0, 0, 0, 0, $finalWidth, $finalHeight, $oWidth, $oHeight);
 			if ($res) {
@@ -232,5 +232,3 @@ class ConcreteAvatarHelper {
   }
 
 }
-
-?>
