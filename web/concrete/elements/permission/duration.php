@@ -313,13 +313,9 @@ ccm_accessEntityOnRepeatPeriodChange = function() {
 
 ccm_accessEntityCalculateRepeatEnd = function() {
 	if ($('input[name=pdEndRepeatDate]:checked').val() == 'date') { 
-		$("#ccm-permissions-access-entity-dates-repeat-dates .ccm-input-date-wrapper input").each(function(){
-			$(this).attr('disabled', false);
-		});
+		$("#ccm-permissions-access-entity-dates-repeat-dates .ccm-input-date-wrapper input").attr('disabled', false);
 	} else {
-		$("#ccm-permissions-access-entity-dates-repeat-dates .ccm-input-date-wrapper input").each(function(){
-			$(this).attr('disabled', true);
-		});
+		$("#ccm-permissions-access-entity-dates-repeat-dates .ccm-input-date-wrapper input").attr('disabled', true);
 	}
 }
 
