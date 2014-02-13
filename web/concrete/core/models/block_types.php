@@ -494,73 +494,61 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		
 		/**
 		 * Gets the custom templates available for the current BlockType
-		 * @return array an array of strings
+		 * @return TemplateFile[]
 		 */
 		function getBlockTypeCustomTemplates() {
 			$btHandle = $this->getBlockTypeHandle();
-			$pkgHandle = $this->getPackageHandle();
-
-			$templates = array();
 			$fh = Loader::helper('file');
-			
-			if (file_exists(DIR_FILES_BLOCK_TYPES . "/{$btHandle}/" . DIRNAME_BLOCK_TEMPLATES)) {
-				$templates = array_merge($templates, $fh->getDirectoryContents(DIR_FILES_BLOCK_TYPES . "/{$btHandle}/" . DIRNAME_BLOCK_TEMPLATES));
+			$files = array();
+			$dir = DIR_FILES_BLOCK_TYPES . "/{$btHandle}/" . DIRNAME_BLOCK_TEMPLATES;
+			if(is_dir($dir)) {
+				$files = array_merge($files, $fh->getDirectoryContents($dir));
 			}
-			
-			/*
-			if ($pkgHandle != null) {
-				if (is_dir(DIR_PACKAGES . '/' . $pkgHandle)) {
-					$templates = array_merge($templates, $fh->getDirectoryContents(DIR_PACKAGES . "/{$pkgHandle}/" . DIRNAME_BLOCKS . "/{$btHandle}/" . DIRNAME_BLOCK_TEMPLATES));
-				} else {
-					$templates = array_merge($templates, $fh->getDirectoryContents(DIR_PACKAGES_CORE . "/{$pkgHandle}/" . DIRNAME_BLOCKS . "/{$btHandle}/" . DIRNAME_BLOCK_TEMPLATES));
-				}
-			}
-			*/ 
-			
 			// NOW, we check to see if this btHandle has any custom templates that have been installed as separate packages
-			$pl = PackageList::get();
-			$packages = $pl->getPackages();
-			foreach($packages as $pkg) {
-				$d = (is_dir(DIR_PACKAGES . '/' . $pkg->getPackageHandle())) ? DIR_PACKAGES . '/'. $pkg->getPackageHandle() : DIR_PACKAGES_CORE . '/'. $pkg->getPackageHandle();
-				if (is_dir($d . '/' . DIRNAME_BLOCKS . '/' . $btHandle . '/' . DIRNAME_BLOCK_TEMPLATES)) {
-					$templates = array_merge($templates, $fh->getDirectoryContents($d . '/' . DIRNAME_BLOCKS . '/' . $btHandle . '/' . DIRNAME_BLOCK_TEMPLATES));
+			foreach(PackageList::get()->getPackages() as $pkg) {
+				$dir =
+					(is_dir(DIR_PACKAGES . '/' . $pkg->getPackageHandle()) ? DIR_PACKAGES : DIR_PACKAGES_CORE)
+					. '/'. $pkg->getPackageHandle() . '/' . DIRNAME_BLOCKS . '/' . $btHandle . '/' . DIRNAME_BLOCK_TEMPLATES
+				;
+				if(is_dir($dir)) {
+					$files = array_merge($files, $fh->getDirectoryContents($dir));
 				}
 			}
-			
-			if (file_exists(DIR_FILES_BLOCK_TYPES_CORE . "/{$btHandle}/" . DIRNAME_BLOCK_TEMPLATES)) {
-				$templates = array_merge($templates, $fh->getDirectoryContents(DIR_FILES_BLOCK_TYPES_CORE . "/{$btHandle}/" . DIRNAME_BLOCK_TEMPLATES));
+			$dir = DIR_FILES_BLOCK_TYPES_CORE . "/{$btHandle}/" . DIRNAME_BLOCK_TEMPLATES;
+			if(is_dir($dir)) {
+				$files = array_merge($files, $fh->getDirectoryContents($dir));
 			}
-
-			$templates = array_unique($templates);
-			asort($templates);
-	
-			return $templates;
+			Loader::library('template_file');
+			$templates = array();
+			foreach(array_unique($files) as $file) {
+				$templates[] = new TemplateFile($this, $file);
+			}
+			return TemplateFile::sortTemplateFileList($templates);
 		}
 
-		
-		/** 
-		 * gets the available composer templates 
+		/**
+		 * gets the available composer templates
 		 * used for editing instances of the BlockType while in the composer ui in the dashboard
-		 * @return array array of strings
+		 * @return TemplateFile[]
 		 */
 		function getBlockTypeComposerTemplates() {
 			$btHandle = $this->getBlockTypeHandle();
-			$pkgHandle = $this->getPackageHandle();
-
-			$templates = array();
+			$files = array();
 			$fh = Loader::helper('file');
-			
-			if (file_exists(DIR_FILES_BLOCK_TYPES . "/{$btHandle}/" . DIRNAME_BLOCK_TEMPLATES_COMPOSER)) {
-				$templates = array_merge($templates, $fh->getDirectoryContents(DIR_FILES_BLOCK_TYPES . "/{$btHandle}/" . DIRNAME_BLOCK_TEMPLATES_COMPOSER));
+			$dir = DIR_FILES_BLOCK_TYPES . "/{$btHandle}/" . DIRNAME_BLOCK_TEMPLATES_COMPOSER;
+			if(is_dir($dir)) {
+				$files = array_merge($files, $fh->getDirectoryContents($dir));
 			}
-
-			if (file_exists(DIR_FILES_BLOCK_TYPES_CORE . "/{$btHandle}/" . DIRNAME_BLOCK_TEMPLATES_COMPOSER)) {
-				$templates = array_merge($templates, $fh->getDirectoryContents(DIR_FILES_BLOCK_TYPES_CORE . "/{$btHandle}/" . DIRNAME_BLOCK_TEMPLATES_COMPOSER));
+			$dir = DIR_FILES_BLOCK_TYPES_CORE . "/{$btHandle}/" . DIRNAME_BLOCK_TEMPLATES_COMPOSER;
+			if (file_exists($dir)) {
+				$files = array_merge($files, $fh->getDirectoryContents($dir));
 			}
-
-			$templates = array_unique($templates);
-	
-			return $templates;
+			Loader::library('template_file');
+			$templates = array();
+			foreach(array_unique($files) as $file) {
+				$templates[] = new TemplateFile($this, $file);
+			}
+			return TemplateFile::sortTemplateFileList($templates);
 		}
 		
 		function setBlockTypeDisplayOrder($displayOrder) {
