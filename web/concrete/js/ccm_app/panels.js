@@ -2,7 +2,7 @@
  * Left and right panels
  */
 
-function CCMPanel(options) {
+function ConcretePanel(options) {
     'use strict';
     this.options = options;
     this.isOpen = false;
@@ -357,7 +357,7 @@ function CCMPanel(options) {
         if (this.options.primary) {
             // then it is the only panel that can be open on the screen
             // we hide any other open ones.
-            var panels = CCMPanelManager.getPanels();
+            var panels = ConcretePanelManager.getPanels();
             for (var i = 0; i < panels.length; i++) {
                 var panel = panels[i];
                 if ((panel.getIdentifier() != this.getIdentifier()) && (panel.isOpen)) {
@@ -380,7 +380,7 @@ function CCMPanel(options) {
                 obj.onPanelLoad(element);
                 Concrete.event.publish('PanelOpen', {panel: obj, element: element});
             });
-            CCMPanelManager.showOverlay(obj.options.translucent);
+            ConcretePanelManager.showOverlay(obj.options.translucent);
             $('[data-launch-panel=\'' + obj.getIdentifier() + '\']').addClass('ccm-launch-panel-active');
             $('html').addClass(obj.getPositionClass());
             obj.isOpen = true;
@@ -389,7 +389,7 @@ function CCMPanel(options) {
     };
 }
 
-var CCMPanelManager = (function CCMPanelManagerGenerator() {
+var ConcretePanelManager = (function ConcretePanelManagerGenerator() {
     'use strict';
 
     var panels = [];
@@ -434,7 +434,7 @@ var CCMPanelManager = (function CCMPanelManagerGenerator() {
                 transition: 'slide'
             }, overrides);
 
-            var panel = new CCMPanel(options);
+            var panel = new ConcretePanel(options);
             panels.push(panel);
 
             $('<div />', {

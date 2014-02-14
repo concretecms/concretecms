@@ -43,7 +43,7 @@ if (!$dh->inDashboard()) {
 	if ($cp->canEditPageContents() && $_REQUEST['ctask'] == 'check-out-first') {
 		$pagetype = $c->getPageTypeObject();
 		if (is_object($pagetype) && $pagetype->doesPageTypeLaunchInComposer()) {
-			$launchPageComposer = "$('a[data-launch-panel=page]').toggleClass('ccm-launch-panel-active'); CCMPanelManager.getByIdentifier('page').show();";
+			$launchPageComposer = "$('a[data-launch-panel=page]').toggleClass('ccm-launch-panel-active'); ConcretePanelManager.getByIdentifier('page').show();";
 		}
 	}
 	$panelDashboard = URL::to('/system/panels/dashboard');
@@ -56,12 +56,12 @@ if (!$dh->inDashboard()) {
 <script type="text/javascript" src="{$tools}/i18n_js"></script>
 <script type="text/javascript">$(function() {
 	$('html').addClass('ccm-toolbar-visible');
-	CCMPanelManager.register({'identifier': 'dashboard', 'position': 'right', url: '{$panelDashboard}'});
-	CCMPanelManager.register({'identifier': 'page', url: '{$panelPage}'});
-	CCMPanelManager.register({'identifier': 'sitemap', 'position': 'right', url: '{$panelSitemap}'});
-	CCMPanelManager.register({'identifier': 'add-block', 'translucent': false, 'position': 'left', url: '{$panelAdd}'});
-	CCMPanelManager.register({'identifier': 'check-in', 'position': 'left', url: '{$panelCheckIn}'});
-	CCMToolbar.start();
+	ConcretePanelManager.register({'identifier': 'dashboard', 'position': 'right', url: '{$panelDashboard}'});
+	ConcretePanelManager.register({'identifier': 'page', url: '{$panelPage}'});
+	ConcretePanelManager.register({'identifier': 'sitemap', 'position': 'right', url: '{$panelSitemap}'});
+	ConcretePanelManager.register({'identifier': 'add-block', 'translucent': false, 'position': 'left', url: '{$panelAdd}'});
+	ConcretePanelManager.register({'identifier': 'check-in', 'position': 'left', url: '{$panelCheckIn}'});
+	ConcreteToolbar.start();
 	{$startEditMode}
 	{$launchPageComposer}
 });

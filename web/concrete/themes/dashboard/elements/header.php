@@ -9,7 +9,7 @@ $html = Loader::helper('html');
 $v = View::getInstance();
 $v->requireAsset('dashboard');
 $v->addFooterItem('<script type="text/javascript" src="' . REL_DIR_FILES_TOOLS_REQUIRED . '/i18n_js"></script>'); 
-$v->addFooterItem('<script type="text/javascript">$(function() { CCMToolbar.start(); });</script>');
+$v->addFooterItem('<script type="text/javascript">$(function() { ConcreteToolbar.start(); });</script>');
 if (ENABLE_PROGRESSIVE_PAGE_REINDEX && Config::get('DO_PAGE_REINDEX_CHECK')) {
 	$v->addFooterItem('<script type="text/javascript">$(function() { ccm_doPageReindexing(); });</script>');
 }
@@ -21,7 +21,7 @@ $valt = Loader::helper('validation/token');
 //require(DIR_FILES_ELEMENTS_CORE . '/header_required.php'); 
 $v->addHeaderItem($disp);
 Loader::element('header_required', array('disableTrackingCode' => true));
-$v->addFooterItem('<script type="text/javascript">$(function() { CCMDashboard.start(); });</script>');
+$v->addFooterItem('<script type="text/javascript">$(function() { ConcreteDashboard.start(); });</script>');
 
 $u = new User();
 $frontendPageID = $u->getPreviousFrontendPageID();
