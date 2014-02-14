@@ -123,7 +123,7 @@
 			items.slice(0,20).map(function(item){
 				var listitem = $('<li/>');
 				var anchor = $('<a/>').appendTo(listitem).text(item.getName());
-				anchor.click(function(){ConcreteEvent.fire('conversationsMentionSelect',{obj:obj,item:item},bindTo)});
+				anchor.click(function(){ConcreteEvent.fire('ConversationMentionSelect',{obj:obj,item:item},bindTo)});
 				listitem.appendTo(obj.dropdown.list);
 			});
 			if (!obj.dropdown.active) {
@@ -140,7 +140,7 @@
 			obj.$element.unbind('.cnv');
 			if (obj.options.uninitialized) {
 				obj.options.uninitialized = false;
-				ConcreteEvent.bind('conversationsMention',function(e, data){
+				ConcreteEvent.bind('ConversationMention',function(e, data){
 						obj.mentionList(data.items, data.coordinates || false, data.bindTo || obj.$element.get(0));
 					},
 					obj.$element.get(0) // Bind to this conversation only.
@@ -155,23 +155,23 @@
 				obj.dropdown.handle = $('<a/>').appendTo(obj.dropdown.parent);
 				obj.dropdown.list = $('<ul/>').addClass('dropdown-menu').appendTo(obj.dropdown.parent);
 				obj.dropdown.handle.dropdown();
-				ConcreteEvent.bind('conversationsTextareaKeydownUp',function(e){
+				ConcreteEvent.bind('ConversationTextareaKeydownUp',function(e){
 					if (obj.dropdown.activeItem == -1) obj.dropdown.activeItem = obj.dropdown.list.children().length;
 					obj.dropdown.activeItem -= 1;
 					obj.dropdown.activeItem += obj.dropdown.list.children().length;
 					obj.dropdown.activeItem %= obj.dropdown.list.children().length;
 					obj.dropdown.list.children().filter('.active').removeClass('active').end().eq(obj.dropdown.activeItem).addClass('active');
 				}, obj.$element.get(0));
-				ConcreteEvent.bind('conversationsTextareaKeydownDown',function(e){
+				ConcreteEvent.bind('ConversationTextareaKeydownDown',function(e){
 					obj.dropdown.activeItem += 1;
 					obj.dropdown.activeItem += obj.dropdown.list.children().length;
 					obj.dropdown.activeItem %= obj.dropdown.list.children().length;
 					obj.dropdown.list.children().filter('.active').removeClass('active').end().eq(obj.dropdown.activeItem).addClass('active');
 				}, obj.$element.get(0));
-				ConcreteEvent.bind('conversationsTextareaKeydownEnter',function(e){
+				ConcreteEvent.bind('ConversationTextareaKeydownEnter',function(e){
 					obj.dropdown.list.children().filter('.active').children('a').click();
 				}, obj.$element.get(0));
-				ConcreteEvent.bind('conversationPostError',function(e, data){
+				ConcreteEvent.bind('ConversationPostError',function(e, data){
 					var $form = data.form,
 						messages = data.messages;
 					var s = '';
@@ -180,7 +180,7 @@
 					});
 					$form.find('div.ccm-conversation-errors').html(s).show();
 				});
-				ConcreteEvent.bind('conversationSubmitForm',function(e, data){
+				ConcreteEvent.bind('ConversationSubmitForm',function(e, data){
 					data.form.find('div.ccm-conversation-errors').hide();
 				});
 			}

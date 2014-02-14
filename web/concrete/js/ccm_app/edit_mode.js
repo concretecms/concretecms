@@ -22,7 +22,7 @@
       dragAreaBlacklist: []
     });
 
-    Concrete.event.bind('panel.open', function editModePanelOpenEventHandler(event, data) {
+    Concrete.event.bind('PanelOpen', function editModePanelOpenEventHandler(event, data) {
       my.panelOpened(data.panel, data.element);
     });
 
@@ -1102,7 +1102,6 @@
         } else {
           jQuery.fn.dialog.open({
             onClose: function() {
-              ConcreteEvent.publish('BlockWindowClose');
               jQuery.fn.dialog.closeAll();
             },
             onOpen: function() {

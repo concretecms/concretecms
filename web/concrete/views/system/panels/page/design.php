@@ -12,7 +12,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 	<div class="ccm-panel-content-inner">
 
 	<? if ($cp->canEditPageTemplate() && !$c->isGeneratedCollection()) { ?>
-		<div class="list-group" id="ccm-panel-page-design-page-types" data-panel-menu-id="page-templates" data-panel-menu="collapsible-list-group">
+		<div class="list-group" id="ccm-panel-page-design-page-templates" data-panel-menu-id="page-templates" data-panel-menu="collapsible-list-group">
 			<div class="list-group-item list-group-item-header"><?=t('Page Template')?></div>
 			<?
 			foreach($templates as $tmp) {
@@ -104,27 +104,29 @@ $(function() {
 	    parent2.insertBefore(elm1, next2);
 	}
 
-	ConcreteEvent.subscribe('collapse.page-templates', function(e) {
-		/* We find the selected page type. If it's not the first one, we make it the first one and swap that one. */
-		var $topitem = $('#ccm-panel-page-design-page-types > label.list-group-item input[type=radio]');
-		var $checkeditem = $('#ccm-panel-page-design-page-types input[type=radio]:checked');
-		if (!$topitem.is(':checked')) {
-			swapElements($checkeditem.parent()[0], $topitem.parent()[0]);
-		}
-	});
-
 	$('.list-group-item[data-theme-id]').on('click', function() {
 		$('#ccm-panel-page-design-themes input[name=pThemeID]').val($(this).attr('data-theme-id')).trigger('change');
 		$('.ccm-page-design-theme-thumbnail-selected').removeClass('ccm-page-design-theme-thumbnail-selected');
 		$(this).addClass('ccm-page-design-theme-thumbnail-selected');
 	});
 
-	ConcreteEvent.subscribe('collapse.themes', function(e) {
-		/* We find the selected page type. If it's not the first one, we make it the first one and swap that one. */
-		var $topitem = $('#ccm-panel-page-design-themes > div.list-group-item[data-theme-id]');
-		var $checkeditem = $('#ccm-panel-page-design-themes .ccm-page-design-theme-thumbnail-selected');
-		if ($topitem.attr('data-theme-id') != $checkeditem.attr('data-theme-id')) {
-			swapElements($checkeditem[0], $topitem[0]);
+
+	ConcreteEvent.subscribe('PanelCollapsibleListGroupCollapse', function(e, menuID) {
+		switch(menuID) {
+			case 'page-templates':
+				var $topitem = $('#ccm-panel-page-design-page-templates > label.list-group-item input[type=radio]');
+				var $checkeditem = $('#ccm-panel-page-design-page-templates input[type=radio]:checked');
+				if (!$topitem.is(':checked')) {
+					swapElements($checkeditem.parent()[0], $topitem.parent()[0]);
+				}
+				break;
+			case 'themes':
+				var $topitem = $('#ccm-panel-page-design-themes > div.list-group-item[data-theme-id]');
+				var $checkeditem = $('#ccm-panel-page-design-themes .ccm-page-design-theme-thumbnail-selected');
+				if ($topitem.attr('data-theme-id') != $checkeditem.attr('data-theme-id')) {
+					swapElements($checkeditem[0], $topitem[0]);
+				}
+				break;
 		}
 	});
 

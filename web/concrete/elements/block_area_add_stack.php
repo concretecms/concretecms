@@ -142,7 +142,7 @@ $(function() {
 			if ($asp->canRead() && $ap->canAddStackToArea($s)) { 
 			?>	
 			<li class="ccm-stack-available">
-				<a onclick="ccmStackSearchResetKeys()" dialog-on-destroy="ccmStackSearchMapKeys()" class="dialog-launch ccm-block-type-inner" dialog-on-close="$(document).trigger('blockWindowClose')" dialog-append-buttons="true" dialog-modal="false" dialog-width="620" dialog-height="400" dialog-title="<?=$s->getCollectionName()?> <?=t('Contents')?>" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_area_popup.php?atask=add_stack_contents&cID=<?=$c->getCollectionID()?>&stackID=<?=$s->getCollectionID()?>&arHandle=<?=Loader::helper('text')->entities($a->getAreaHandle())?>"><?=$s->getCollectionName()?></a>
+				<a onclick="ccmStackSearchResetKeys()" dialog-on-destroy="ccmStackSearchMapKeys()" class="dialog-launch ccm-block-type-inner" dialog-append-buttons="true" dialog-modal="false" dialog-width="620" dialog-height="400" dialog-title="<?=$s->getCollectionName()?> <?=t('Contents')?>" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_area_popup.php?atask=add_stack_contents&cID=<?=$c->getCollectionID()?>&stackID=<?=$s->getCollectionID()?>&arHandle=<?=Loader::helper('text')->entities($a->getAreaHandle())?>"><?=$s->getCollectionName()?></a>
 			</li>
 			
 			<? } ?>

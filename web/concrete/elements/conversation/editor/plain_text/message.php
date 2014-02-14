@@ -6,7 +6,7 @@ print $form->textarea($editor->getConversationEditorInputName(), $editor->getCon
 	var me = $('textarea.unbound.plaintext_conversation_editor_<?=$editor->cnvObject->cnvID?>').first().removeClass('unbound');
 	(function($,window,me){
 		var obj = window.obj;
-		ConcreteEvent.bind('conversationSubmitForm',function(){
+		ConcreteEvent.bind('ConversationSubmitForm',function(){
 			me.val('');
 			$('.preview.processing').each(function(){
 				$('input[rel="'+ $(this).attr('rel') +'"]').remove();
@@ -57,7 +57,7 @@ print $form->textarea($editor->getConversationEditorInputName(), $editor->getCon
 			);
 		});
 		// Bind to item selection event
-		ConcreteEvent.bind('conversationsMentionSelect', function(e, data){
+		ConcreteEvent.bind('ConversationMentionSelect', function(e, data){
 				var selected = data.item;
 				if (!selected.textarea.is(me)) return;
 				var start = me.val();
