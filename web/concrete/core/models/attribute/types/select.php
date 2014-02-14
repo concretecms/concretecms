@@ -228,6 +228,8 @@ class Concrete5_Controller_AttributeType_Select extends AttributeTypeController 
 	// If the $value == string, then 1 item is selected
 	// if array, then multiple, but only if the attribute in question is a select multiple
 	// Note, items CANNOT be added to the pool (even if the attribute allows it) through this process.
+	// Items should now be added to the database if they don't exist already & if the allow checkbox is checked under the attribute settings
+	// Code from this bug - http://www.concrete5.org/index.php?cID=595692
 	public function saveValue($value) {
 		$db = Loader::db();
 		$this->load();
@@ -238,7 +240,9 @@ class Concrete5_Controller_AttributeType_Select extends AttributeTypeController 
 				$opt = SelectAttributeTypeOption::getByValue($v, $this->attributeKey);
 				if (is_object($opt)) {
 					$options[] = $opt;	
-				}
+				}else if ($this->akSelectAllowOtherValues) {
+			        $options[] = SelectAttributeTypeOption::add($this->attributeKey, $v, true);
+			    }
 			}
 		} else {
 			if (is_array($value)) {
