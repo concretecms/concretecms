@@ -31,17 +31,7 @@ class Concrete5_Controller_Install extends Controller {
 	public $helpers = array('form', 'html');
 	
 	protected function getLocales() {
-		Loader::library('3rdparty/Zend/Locale');
-		$languages = Localization::getAvailableInterfaceLanguages();
-		if (count($languages) > 0) { 
-			array_unshift($languages, 'en_US');
-		}
-		$locales = array();
-		foreach($languages as $lang) {
-			$loc = new Zend_Locale($lang);
-			$locales[$lang] = Zend_Locale::getTranslation($loc->getLanguage(), 'language', $lang);
-		}
-		return $locales;
+		return Localization::getAvailableInterfaceLanguageDescriptions();
 	}
 	
 	public function view() {
