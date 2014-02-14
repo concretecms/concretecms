@@ -12,7 +12,7 @@ $gl = new GroupSearch();
 $gl->setItemsPerPage(10000);
 $gArray = $gl->getPage();
 
-$languages = Localization::getAvailableInterfaceLanguages();
+$locales = Localization::getAvailableInterfaceLanguageDescriptions(ACTIVE_LOCALE);
 
 ?>
 
@@ -50,26 +50,14 @@ $languages = Localization::getAvailableInterfaceLanguages();
 				</tr>
                 
                 
-				<? if (count($languages) > 0) { ?>
+				<? if (count($locales) > 1) { // "> 1" because en_US is always available ?>
 			
 				<tr>
 					<td colspan="2"><?=t('Language')?></td>
 				</tr>	
 				<tr>
 					<td colspan="2">
-					<?
-						array_unshift($languages, 'en_US');
-						$locales = array();
-						$locales[''] = t('** Default');
-						Loader::library('3rdparty/Zend/Locale');
-						Loader::library('3rdparty/Zend/Locale/Data');
-						Zend_Locale_Data::setCache(Cache::getLibrary());
-						foreach($languages as $lang) {
-							$loc = new Zend_Locale($lang);
-							$locales[$lang] = Zend_Locale::getTranslation($loc->getLanguage(), 'language', ACTIVE_LOCALE);
-						}
-						print $form->select('uDefaultLanguage', $locales);
-					?>
+					<? print $form->select('uDefaultLanguage', $locales); ?>
 					</td>
 				</tr>
                 
