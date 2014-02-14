@@ -109,7 +109,7 @@ if (!defined('DATE_APP_DATE_ATTRIBUTE_TYPE_T')) {
 	define('DATE_APP_DATE_ATTRIBUTE_TYPE_T', DATE_APP_GENERIC_TS);
 }
 if (!defined('DATE_APP_DATE_PICKER')) {
-	define('DATE_APP_DATE_PICKER', t('m/d/yy'));
+	define('DATE_APP_DATE_PICKER', t(/* http://api.jqueryui.com/datepicker/#utility-formatDate */'m/d/yy'));
 }
 
 
