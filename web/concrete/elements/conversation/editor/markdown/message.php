@@ -6,7 +6,7 @@ print $form->textarea($editor->getConversationEditorInputName(), $editor->getCon
 	var me = $('textarea.unbound.markdown_conversation_editor_<?=$editor->cnvObject->cnvID?>').first().removeClass('unbound');
 	(function($,window,me){
 		var obj = window.obj;
-		ConcreteEvent.bind('conversationSubmitForm',function(){
+		ConcreteEvent.bind('ConversationSubmitForm',function(){
 			me.val('');
 			$('.preview.processing').each(function(){
 				$('input[rel="'+ $(this).attr('rel') +'"]').remove();
@@ -17,15 +17,15 @@ print $form->textarea($editor->getConversationEditorInputName(), $editor->getCon
 			}
 		});
 		me.keydown(function(e) {
-			ConcreteEvent.fire('conversationsTextareaKeydown', e, obj.$element.get(0));
+			ConcreteEvent.fire('ConversationTextareaKeydown', e, obj.$element.get(0));
 			if (e.keyCode == 40) {
-				ConcreteEvent.fire('conversationsTextareaKeydownDown',e,obj.$element.get(0));
+				ConcreteEvent.fire('ConversationTextareaKeydownDown',e,obj.$element.get(0));
 				if (obj.dropdown.active) return false;
 			} else if (e.keyCode == 38) {
-				ConcreteEvent.fire('conversationsTextareaKeydownUp',e,obj.$element.get(0));
+				ConcreteEvent.fire('ConversationTextareaKeydownUp',e,obj.$element.get(0));
 				if (obj.dropdown.active) return false;
 			} else if (e.keyCode == 13) {
-				ConcreteEvent.fire('conversationsTextareaKeydownEnter',e,obj.$element.get(0));
+				ConcreteEvent.fire('ConversationTextareaKeydownEnter',e,obj.$element.get(0));
 				if (obj.dropdown.active) return false;
 			}
 		}).keyup(function(e) {
@@ -44,7 +44,7 @@ print $form->textarea($editor->getConversationEditorInputName(), $editor->getCon
 				matches[p].textarea = me;
 			});
 			// Fire mention event regardless of whether there is data or not.
-			ConcreteEvent.fire('conversationsMention',{
+			ConcreteEvent.fire('ConversationMention',{
 					obj: obj,
 					items: matches,
 					bindTo: me.get(0),
@@ -57,7 +57,7 @@ print $form->textarea($editor->getConversationEditorInputName(), $editor->getCon
 			);
 		});
 		// Bind to item selection event
-		ConcreteEvent.bind('conversationsMentionSelect',function(e, data){
+		ConcreteEvent.bind('ConversationMentionSelect',function(e, data){
 				var selected = data.item;
 				if (!selected.textarea.is(me)) return;
 				var start = me.val();

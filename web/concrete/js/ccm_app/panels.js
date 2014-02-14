@@ -53,7 +53,7 @@ function CCMPanel(options) {
             delay = 0;
         }
         var obj = this;
-        Concrete.event.publish('panel.close', {panel:this});
+        Concrete.event.publish('PanelClose', {panel:this});
         $(window).delay(delay).queue(function() {
             $('[data-launch-panel=\'' + obj.getIdentifier() + '\']').removeClass('ccm-launch-panel-active');
             $('#' + obj.getDOMID()).removeClass('ccm-panel-active');
@@ -175,7 +175,7 @@ function CCMPanel(options) {
             $(this).dequeue();
         });
 
-        Concrete.event.publish('panel.closeDetail', this.detail);
+        Concrete.event.publish('PanelCloseDetail', this.detail);
         this.detail = false;
 
         if ($('.ccm-panel-detail').length > 0) {
@@ -191,7 +191,7 @@ function CCMPanel(options) {
         $('.ccm-panel-detail').remove();
         $('.ccm-panel-detail-form-actions').remove();
         $('.ccm-page').removeClass().addClass('ccm-page');
-        Concrete.event.publish('panel.closeDetail', this.detail);
+        Concrete.event.publish('PanelCloseDetail', this.detail);
         this.detail = false;
     };
 
@@ -237,7 +237,7 @@ function CCMPanel(options) {
             $content.find('.launch-tooltip').tooltip({'container': '#ccm-tooltip-holder'});
             obj.loadPanelDetailActions($content);
         });
-        Concrete.event.publish('panel.openDetail', obj);
+        Concrete.event.publish('PanelOpenDetail', obj);
     };
 
     this.loadPanelDetailActions = function($content) {
@@ -302,7 +302,7 @@ function CCMPanel(options) {
                 var height = $inner.height();
                 if ($clg.hasClass('ccm-panel-list-group-item-expanded')) {
                     $title.text(ccmi18n.expand);
-                    Concrete.event.publish('collapse.' + menuID);
+                    Concrete.event.publish('PanelCollapsibleListGroupCollapse', menuID);
                     $inner.
                     queue(function() {
                         $(this).css('height', 0);
@@ -315,7 +315,7 @@ function CCMPanel(options) {
                         $(this).dequeue();
                     });
                 } else {
-                    Concrete.event.publish('expand.' + menuID);
+                    Concrete.event.publish('PanelCollapsibleListGroupExpand', menuID);
                     $title.text(ccmi18n.collapse);
                     $inner.
                     queue(function() {
@@ -378,7 +378,7 @@ function CCMPanel(options) {
                     $(this).dequeue();
                 });
                 obj.onPanelLoad(element);
-                Concrete.event.publish('panel.open', {panel: obj, element: element});
+                Concrete.event.publish('PanelOpen', {panel: obj, element: element});
             });
             CCMPanelManager.showOverlay(obj.options.translucent);
             $('[data-launch-panel=\'' + obj.getIdentifier() + '\']').addClass('ccm-launch-panel-active');

@@ -101,7 +101,7 @@ ConcretePageComposerDetail = {
 			}).submit();
 		});
 
-		ConcreteEvent.subscribe('panel.closeDetail',function(e, panelDetail) {
+		ConcreteEvent.subscribe('PanelCloseDetail',function(e, panelDetail) {
 			if (panelDetail && panelDetail.identifier == 'page-composer') {
 				my.disableAutosave();
 			}
