@@ -35,7 +35,7 @@
 
 			$.get(action, function(r) {
 
-				CCMToolbar.disableDirectExit();
+				ConcreteToolbar.disableDirectExit();
 				jQuery.fn.dialog.hideLoader();
 				var editor = new Concrete.getEditMode(),
 					area = editor.getAreaByID(resp.aID);

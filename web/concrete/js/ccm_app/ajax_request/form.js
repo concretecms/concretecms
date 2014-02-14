@@ -56,7 +56,7 @@
 					jQuery.fn.dialog.closeTop();
 				}
 				ConcreteAlert.showResponseNotification(r.message, 'ok', 'success');
-				CCMPanelManager.exitPanelMode();
+				ConcretePanelManager.exitPanelMode();
 				if (r.redirectURL) {
 					setTimeout(function() {
 						window.location.href = r.redirectURL;

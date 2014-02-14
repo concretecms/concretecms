@@ -89,14 +89,6 @@ for ($i = 0; $i < count($categories); $i++) {
 	<? } ?>
 	
 </div>
-<script type="text/javascript">
-$(function() {
-	CCMDashboard.equalizeMenus();
-	$(window).resize(function() {
-		CCMDashboard.equalizeMenus();
-	});
-});
-</script>
 
 
 <?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(false);?>

@@ -87,7 +87,7 @@ ConcretePageComposerDetail = {
 				success: function(r) {
 					submitSuccess = true;
 					ConcreteAlert.showResponseNotification(r.message, 'ok', 'success');
-					CCMPanelManager.exitPanelMode();
+					ConcretePanelManager.exitPanelMode();
 					setTimeout(function() {
 						window.location.href = r.redirectURL;
 					}, 1000);

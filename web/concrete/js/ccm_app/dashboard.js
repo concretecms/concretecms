@@ -2,7 +2,7 @@
  * Basic concrete5 toolbar class
  */
 
-var CCMDashboard = function() {
+var ConcreteDashboard = function() {
 	setupResultMessages = function() {
 		if ($('#ccm-dashboard-result-message').length > 0) { 
 			if ($('.ccm-pane').length > 0) { 

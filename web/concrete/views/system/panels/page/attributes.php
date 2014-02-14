@@ -26,12 +26,12 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 
 <script type="text/javascript">
-CCMPanelPageAttributes = {
+ConcretePanelPageAttributes = {
 
 	selectAttributeKey: function(akID) {
 		$attribute = $('a[data-attribute-key=' + akID + ']');
 		$attribute.addClass('ccm-panel-page-attribute-selected');
-		CCMPanelPageAttributesDetail.addAttributeKey(akID);
+		ConcretePanelPageAttributesDetail.addAttributeKey(akID);
 	},
 
 	deselectAttributeKey: function(akID) {
@@ -43,7 +43,7 @@ CCMPanelPageAttributes = {
 $(function() {
 	$('#ccm-panel-page-attributes-search-input').liveUpdate('ccm-panel-page-attributes-list', 'attributes');
 	$('#ccm-panel-page-attributes').on('click', 'a[data-attribute-key]:not(.ccm-panel-page-attribute-selected)', function() {
-		CCMPanelPageAttributes.selectAttributeKey($(this).attr('data-attribute-key'));
+		ConcretePanelPageAttributes.selectAttributeKey($(this).attr('data-attribute-key'));
 	});
 });
 </script>

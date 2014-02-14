@@ -127,7 +127,7 @@ $(function() {
 		jQuery.fn.dialog.showLoader();
 		$.getJSON('<?=$pk->getPermissionAssignmentObject()->getPermissionKeyToolsURL("change_subpage_defaults_inheritance")?>&cID=<?=$c->getCollectionID()?>&inherit=' + $(this).val(), function(r) { 
 			if (r.deferred) {
-				CCMPanelManager.exitPanelMode();
+				ConcretePanelManager.exitPanelMode();
 				jQuery.fn.dialog.hideLoader();
 				ConcreteAlert.hud(ccmi18n.setPermissionsDeferredMsg, 2000, 'success', ccmi18n_sitemap.setPagePermissions);
 			} else {
@@ -139,7 +139,7 @@ $(function() {
 });
 
 ccm_refreshPagePermissions = function() {
-	var panel = CCMPanelManager.getByIdentifier('page');
+	var panel = ConcretePanelManager.getByIdentifier('page');
 	panel.openPanelDetail({
 		'identifier': 'page-permissions',
 		'url': '<?=URL::to("/system/panels/details/page/permissions")?>'

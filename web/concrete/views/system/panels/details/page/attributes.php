@@ -70,13 +70,13 @@ var renderAttribute = _.template(
 );
 
 
-CCMPanelPageAttributesDetail = {
+ConcretePanelPageAttributesDetail = {
 
 	removeAttributeKey: function(akID) {
 		var $attribute = $('div[data-attribute-key-id=' + akID + ']');
 		$attribute.queue(function() {
 			$(this).addClass('ccm-panel-page-attribute-removing');
-			CCMPanelPageAttributes.deselectAttributeKey(akID);
+			ConcretePanelPageAttributes.deselectAttributeKey(akID);
 			$(this).dequeue();
 		}).delay(400).queue(function() {
 			$(this).remove();
@@ -119,7 +119,7 @@ $(function() {
 	});
 	$form.on('click', 'a[data-remove-attribute-key]', function() {
 		var akID = $(this).attr('data-remove-attribute-key');
-		CCMPanelPageAttributesDetail.removeAttributeKey(akID);
+		ConcretePanelPageAttributesDetail.removeAttributeKey(akID);
 	});
 
 });

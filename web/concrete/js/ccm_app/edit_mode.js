@@ -68,7 +68,7 @@
       });
 
       ConcreteMenuManager.disable();
-      CCMToolbar.disable();
+      ConcreteToolbar.disable();
       area.getElem().addClass('ccm-area-inline-edit-disabled');
       $container.addClass('ccm-block-edit-inline-active');
 
@@ -108,7 +108,7 @@
       }
 
       ConcreteMenuManager.disable();
-      CCMToolbar.disable();
+      ConcreteToolbar.disable();
 
       $('div.ccm-area').addClass('ccm-area-inline-edit-disabled');
 
@@ -148,7 +148,7 @@
 
     Concrete.event.bind('EditModeBlockAddToClipboard', function(event, data) {
       var block = data.block, area = block.getArea();
-      CCMToolbar.disableDirectExit();
+      ConcreteToolbar.disableDirectExit();
       // got to grab the message too, eventually
       $.ajax({
         type: 'POST',
@@ -473,7 +473,7 @@
       $('#ccm-inline-toolbar-container').remove();
 
       $(window).unbind('scroll.inline-toolbar');
-      CCMToolbar.enable();
+      ConcreteToolbar.enable();
       jQuery.fn.dialog.hideLoader();
     },
 
@@ -701,7 +701,7 @@
         arHandle = area.getHandle();
 
       if (confirm(msg)) {
-        CCMToolbar.disableDirectExit();
+        ConcreteToolbar.disableDirectExit();
         area.removeBlock(block);
         ConcreteAlert.hud(ccmi18n.deleteBlockMsg, 2000, 'delete_small', ccmi18n.deleteBlock);
         $.ajax({
@@ -1078,7 +1078,7 @@
           var dragAreaBlockID = dragAreaBlock.getId();
         }
 
-        CCMPanelManager.exitPanelMode();
+        ConcretePanelManager.exitPanelMode();
 
         if (!has_add) {
           $.get(CCM_DISPATCHER_FILENAME, {

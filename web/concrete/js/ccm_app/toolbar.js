@@ -2,7 +2,7 @@
  * Basic concrete5 toolbar class
  */
 
-var CCMToolbar = function() {
+var ConcreteToolbar = function() {
 
 	var $toolbar = $('#ccm-toolbar');
 	var $searchInput = $('#ccm-nav-intelligent-search');
@@ -49,7 +49,7 @@ var CCMToolbar = function() {
 		$('[data-launch-panel]').unbind().on('click', function() {
 			var panelID = $(this).attr('data-launch-panel');
 			$(this).toggleClass('ccm-launch-panel-active');
-			var panel = CCMPanelManager.getByIdentifier(panelID);
+			var panel = ConcretePanelManager.getByIdentifier(panelID);
 			panel.toggle();
 			return false;
 		});
@@ -61,7 +61,7 @@ var CCMToolbar = function() {
 				$('#' + panel.getDOMID()).find('[data-launch-panel-detail=\'page-composer\']').click();
 			}
 			$('a[data-toolbar-action=check-in]').on('click.close-check-in', function() {
-				CCMPanelManager.exitPanelMode();
+				ConcretePanelManager.exitPanelMode();
 				return false;
 			});
 		});
@@ -287,7 +287,7 @@ var CCMToolbar = function() {
 			if ($link.attr('data-launch-panel') != 'check-in') {
 				$link.attr('data-launch-panel', 'check-in').on('click', function() {
 					$(this).toggleClass('ccm-launch-panel-active');
-					var panel = CCMPanelManager.getByIdentifier('check-in');
+					var panel = ConcretePanelManager.getByIdentifier('check-in');
 					panel.toggle();
 					return false;
 				});

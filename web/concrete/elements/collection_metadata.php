@@ -58,7 +58,7 @@ if ($_REQUEST['approveImmediately'] == 1) {
 						if (r != null && r.rel == 'SITEMAP') {
 							$.fn.ccmsitemap('triggerEvent', 'updateRequestComplete', [r.cID, r.name]);
 						} else {
-							CCMToolbar.disableDirectExit();
+							ConcreteToolbar.disableDirectExit();
 						}
 						ConcreteAlert.hud(ccmi18n.savePropertiesMsg, 2000, 'success', ccmi18n.properties);
 					} catch(e) {

@@ -232,7 +232,7 @@ $pk = PermissionKey::getByHandle('customize_themes');
 
         applyDesignToPage: function() {
             var $form = $('form[data-form=panel-page-design-customize]'),
-                panel = CCMPanelManager.getByIdentifier('page');
+                panel = ConcretePanelManager.getByIdentifier('page');
 
             $form.prop('target', null);
             $form.attr('action', '<?=$controller->action("apply_to_page", $theme->getThemeID())?>');
@@ -242,7 +242,7 @@ $pk = PermissionKey::getByHandle('customize_themes');
 
         applyDesignToSite: function() {
             var $form = $('form[data-form=panel-page-design-customize]'),
-                panel = CCMPanelManager.getByIdentifier('page');
+                panel = ConcretePanelManager.getByIdentifier('page');
 
             $form.prop('target', null);
             $form.attr('action', '<?=$controller->action("apply_to_site", $theme->getThemeID())?>');
@@ -252,7 +252,7 @@ $pk = PermissionKey::getByHandle('customize_themes');
 
         resetPageDesign: function() {
             var $form = $('form[data-form=panel-page-design-customize]'),
-                panel = CCMPanelManager.getByIdentifier('page');
+                panel = ConcretePanelManager.getByIdentifier('page');
 
             $form.prop('target', null);
             $form.attr('action', '<?=$controller->action("reset_page_customizations")?>');
@@ -262,7 +262,7 @@ $pk = PermissionKey::getByHandle('customize_themes');
 
         resetSiteDesign: function() {
             var $form = $('form[data-form=panel-page-design-customize]'),
-                panel = CCMPanelManager.getByIdentifier('page');
+                panel = ConcretePanelManager.getByIdentifier('page');
 
             $form.prop('target', null);
             $form.attr('action', '<?=$controller->action("reset_site_customizations", $theme->getThemeID())?>');
@@ -274,7 +274,7 @@ $pk = PermissionKey::getByHandle('customize_themes');
     }
 
     $(function() {
-        panel = CCMPanelManager.getByIdentifier('page');
+        panel = ConcretePanelManager.getByIdentifier('page');
         $('button[data-panel-detail-action=submit]').unbind().on('click', function() {
             <? if ($pk->can()) { ?>
                 panel.showPanelConfirmationMessage('page-design-customize-apply', "<?=t('Apply this design to just this page, or your entire site?')?>", [

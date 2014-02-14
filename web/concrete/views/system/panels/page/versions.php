@@ -110,7 +110,7 @@ var CCMPageVersionList = {
 	},
 
 	previewSelectedVersions: function(checkboxes) {
-		var panel = CCMPanelManager.getByIdentifier('page');
+		var panel = ConcretePanelManager.getByIdentifier('page');
 		if (checkboxes.length > 0) {
 			var src = '<?=URL::to("/system/panels/details/page/versions")?>';
 			var data = '';
