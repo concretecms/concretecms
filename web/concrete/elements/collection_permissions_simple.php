@@ -35,7 +35,7 @@ if ($cp->canEditPagePermissions()) {
 	$gIDs = $gl->get();
 	$gArray = array();
 	foreach($gIDs as $g) {
-		$gArray[] = Group::getByID($g['gID']);
+		$gArray[] = Group::getByID($g->getGroupID());
 	}
 
 	$rel = Loader::helper('security')->sanitizeString($_REQUEST['rel']);
