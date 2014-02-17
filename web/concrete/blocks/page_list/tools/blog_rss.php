@@ -19,7 +19,7 @@ if($_GET['bID'] && $_GET['cID'] && $nh->integer($_GET['bID']) && $nh->integer($_
 		$rssUrl = $controller->getRssUrl($b);
 		
 		$bp = new Permissions($b);
-		if( $bp->canViewBlock() && $controller->rss && ($b->getBlockFilename() == 'blog_index_thumbnail.php' || $b->getBlockFilename() == 'blog_index.php' || $b->getBlockFilename() == 'blog_index')) {
+		if( $bp->canViewBlock() && $controller->rss) {
 	
 			$cArray = $controller->getPages();
 			$nh = Loader::helper('navigation');
