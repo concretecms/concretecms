@@ -240,6 +240,9 @@
 			}
 		}
 
+		## Fire the on_page_view Eventclass
+		Events::fire('on_page_view', $c, $u);
+
 		## Any custom site-related process
 		if (file_exists(DIR_BASE . '/config/site_process.php')) {
 			require(DIR_BASE . '/config/site_process.php');
@@ -254,9 +257,6 @@
 		if (STATISTICS_TRACK_PAGE_VIEWS == 1) {
 			$u->recordView($c);
 		}
-
-		## Fire the on_page_view Eventclass
-		Events::fire('on_page_view', $c, $u);
 
 		## now we display (provided we've gotten this far)
 
