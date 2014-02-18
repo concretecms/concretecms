@@ -112,7 +112,7 @@ class Concrete5_Library_FileImporter {
 		
 		$fh = Loader::helper('validation/file');
 		$fi = Loader::helper('file');
-		$filename = $fi->sanitize($filename);
+		$sanitized_filename = $fi->sanitize($filename);
 		
 		// test if file is valid, else return FileImporter::E_FILE_INVALID
 		if (!$fh->file($pointer)) {
@@ -129,20 +129,20 @@ class Concrete5_Library_FileImporter {
 		// do save in the FileVersions table
 		
 		// move file to correct area in the filesystem based on prefix
-		$response = $this->storeFile($prefix, $pointer, $filename, $fr);
+		$response = $this->storeFile($prefix, $pointer, $sanitized_filename, $fr);
 		if (!$response) {
 			return FileImporter::E_FILE_UNABLE_TO_STORE;
 		}
 		
 		if (!($fr instanceof File)) {
 			// we have to create a new file object for this file version
-			$fv = File::add($filename, $prefix);
-			$fv->refreshAttributes(true);
+			$fv = File::add($sanitized_filename, $prefix, array('fvTitle'=>$filename));
+			$fv->refreshAttributes();
 			$fr = $fv->getFile();
 		} else {
 			// We get a new version to modify
 			$fv = $fr->getVersionToModify(true);
-			$fv->updateFile($filename, $prefix);
+			$fv->updateFile($sanitized_filename, $prefix);
 			$fv->refreshAttributes();
 		}
 
