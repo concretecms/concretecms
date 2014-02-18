@@ -33,6 +33,14 @@ if (!defined("LANGUAGE")) {
 	define("LANGUAGE", ACTIVE_LOCALE);
 }
 
+if(LANGUAGE != "en" and file_exists(DIR_BASE_CORE . '/' . DIRNAME_JAVASCRIPT . '/tiny_mce/langs/' . LANGUAGE . '.js')){
+	define("EDITOR_LANGUAGE", LANGUAGE);
+}
+
+if (!defined("EDITOR_LANGUAGE")) {
+	define("EDITOR_LANGUAGE", "en");
+}
+
 if (!defined('ENABLE_TRANSLATE_LOCALE_EN_US')) {
 	define('ENABLE_TRANSLATE_LOCALE_EN_US', false);
 }
