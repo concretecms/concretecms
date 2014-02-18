@@ -164,5 +164,31 @@ module.exports = function(grunt) {
 		require('./tasks/remove-short-tags.js')(grunt, config, parameters, this.async());
 	});
 
+	grunt.registerTask('build-release-start', 'Create concrete5 release from Git, run various required functions.', function() {
+		require('./tasks/build-release/start.js')(grunt, config, parameters, this.async());
+	});
+
+	grunt.registerTask('build-release-clean', 'Remove certain dotfiles.', function() {
+		require('./tasks/build-release/clean.js')(grunt, config, parameters, this.async());
+	});
+
+	grunt.registerTask('build-release-finish', 'Create zip file and finish.', function() {
+		require('./tasks/build-release/finish.js')(grunt, config, parameters, this.async());
+	});
+
+	buildTranslationParameters = parameters;
+	buildTranslationParameters.destination = './release/concrete5-master/web';
+
+	buildTagParameters = parameters;
+	buildTagParameters.source = './release/concrete5-master/web';
+
+	grunt.registerTask('build-release-translations', 'Downloading Translations.', function() {
+		require('./tasks/translations.js')(grunt, config, buildTranslationParameters, this.async());
+	});
+
+	grunt.registerTask('build-release-remove-short-tags', 'Remove short tags.', function() {
+		require('./tasks/remove-short-tags.js')(grunt, config, buildTagParameters, this.async());
+	});
+
 	grunt.registerTask('default', 'release');
 };

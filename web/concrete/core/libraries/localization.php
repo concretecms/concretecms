@@ -183,7 +183,10 @@
 				$displayLocale = NULL;
 			} 
 			
-			Zend_Locale_Data::setCache(Cache::getLibrary());
+			$cacheLibrary = Cache::getLibrary();
+			if (is_object($cacheLibrary)) {
+				Zend_Locale_Data::setCache($cacheLibrary);
+			}		
 			
 			$displayLocale = $displayLocale?$displayLocale:$locale;
 			

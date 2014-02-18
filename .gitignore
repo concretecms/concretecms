@@ -49,4 +49,5 @@ error_log
 
 # ignore node modules used for building
 /build/node_modules
+/build/release
 /build/Gruntfile.parameters.js
