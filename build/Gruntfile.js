@@ -190,7 +190,5 @@ module.exports = function(grunt) {
 		require('./tasks/remove-short-tags.js')(grunt, config, buildTagParameters, this.async());
 	});
 
-	grunt.registerTask('build-release', ['build-release-start', 'build-release-remove-short-tags', 'build-release-translations', 'build-release-clean', 'build-release-finish']);
-
 	grunt.registerTask('default', 'release');
 };
