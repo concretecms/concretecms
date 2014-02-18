@@ -37,6 +37,10 @@ module.exports = function(grunt, config, parameters, done) {
 		else {
 			sourceFolder = webRoot;
 		}
+
+		if (parameters.source) {
+			sourceFolder = path.resolve(__dirname, '..', parameters.source);
+		}
 		// Check destination folder
 		var destinationFolder;
 		if(parameters.destination) {
