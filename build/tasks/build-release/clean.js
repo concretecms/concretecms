@@ -10,32 +10,17 @@ module.exports = function(grunt, config, parameters, done) {
 			path = "./release/concrete5-master/web",
 			cleanFiles = [".DS_Store", ".git", ".gitignore"];
 
-		walk = function(directory, onComplete) {
+		walk = function(directory, done) {
 			fs.readdir(directory, function(err, list) {
-				if (err) {
-					onComplete(err);
-				}
-				var total = list.length;
-				if (!total) {
-					onComplete(null);
-				}
-
 				list.forEach(function(file) {
 					var item = directory + '/' + file;
 					fs.stat(item, function(err, stat) {
 						if (stat && stat.isDirectory()) {
-							walk(item, function(err) {
-								if (!--total) {
-									onComplete();
-								}
-							});
+							walk(item);
 						} else {
 							if (cleanFiles.indexOf(file) > -1) {
 								process.stdout.write('Deleting File: ' + item + "\n");
 								fs.unlink(item);
-							}
-							if (!--total) {
-								onComplete();
 							}
 						}
 					});
@@ -43,9 +28,7 @@ module.exports = function(grunt, config, parameters, done) {
 			});
 		}
 
-		walk(path, function(){
-			done();
-		});
+		walk(path);
 	}
 	catch(e) {
 		endForError(e);
