@@ -51,3 +51,4 @@ error_log
 /build/node_modules
 /build/release
 /build/Gruntfile.parameters.js
+/build/npm-debug.log
