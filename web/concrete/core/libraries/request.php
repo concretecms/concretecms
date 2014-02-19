@@ -194,7 +194,7 @@ class Concrete5_Library_Request {
 		$path = $this->requestPath;
 		
 		if (isset($_REQUEST['cID']) && intval($_REQUEST['cID']) > 0) {
-			$this->cID = $_REQUEST['cID'];
+			$this->cID = intval($_REQUEST['cID']);
 		} else {
 			$this->cID = HOME_CID;
 		}
