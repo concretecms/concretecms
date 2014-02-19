@@ -20,10 +20,20 @@
 			$loc = Localization::getInstance();
 			$loc->setLocale($locale);
 		}
-
+		/** Returns the currently active locale
+		* @return string
+		* @example 'en_US'
+		*/
 		public static function activeLocale() {
 			$loc = Localization::getInstance();
 			return $loc->getLocale();
+		}
+		/** Returns the language for the currently active locale
+		* @return string
+		* @example 'en'
+		*/
+		public static function activeLanguage() {
+			return current(explode('_', self::activeLocale()));
 		}
 
 		protected $translate;
