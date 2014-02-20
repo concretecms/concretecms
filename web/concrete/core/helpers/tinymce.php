@@ -120,12 +120,16 @@ class Concrete5_Helper_Tinymce {
 			if(!empty($textEditorOptions['theme'])) {
 				$textEditorLanguagesFolder .= '/themes/' . $textEditorOptions['theme'];
 			}
-			$textEditorLanguagesFolder .= '/langs/' . Localization::activeLanguage() . '.js';
-			if(is_file($textEditorLanguagesFolder)) {
-				$textEditorOptions['language'] = Localization::activeLanguage();
-			}
-			else {
-				//echo '<script>console.log("Missing language file: " + ' . Loader::helper('json')->encode($textEditorLanguagesFolder) . ');</script>';
+			$textEditorLanguagesFolder .= '/langs/';
+			$filenames = array(
+				strtolower(str_replace('_', '-', Localization::activeLocale())),
+				Localization::activeLanguage()
+			);
+			foreach($filenames as $filename) {
+				if(is_file($textEditorLanguagesFolder . $filename . '.js')) {
+					$textEditorOptions['language'] = $filename;
+					break;
+				}
 			}
 		}
 		return $textEditorOptions;
