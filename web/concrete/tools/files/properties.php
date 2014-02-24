@@ -224,7 +224,7 @@ if (!$previewMode && $fp->canEditFileContents()) {
 </tr>
 <tr>
 	<td><strong><?=t('Download URL')?></strong></td>
-	<td width="100%" colspan="2"><a href="<?=h(BASE_URL . View::url('/download_file', $fv->getFileID()))?>" target="_blank"><?=h(BASE_URL . View::url('/download_file', $fv->getFileID()))?></a></td>
+	<td width="100%" colspan="2"><?=h(BASE_URL . View::url('/download_file', $fv->getFileID()))?></td>
 </tr>
 
 <?
