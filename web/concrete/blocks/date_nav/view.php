@@ -26,7 +26,7 @@ foreach($cArray as $page){
 //don't show the outer years UL with flat display
 if( count($postsByDate)>1 && !$controller->flatDisplay ) echo "<ul class='years'> \r \n";
 		
-$monthDisplayFormat = ($controller->flatDisplay && count($postsByDate)>1) ? 'F Y' : 'F'; 
+$monthDisplayFormat = ($controller->flatDisplay && count($postsByDate)>1) ? tc(/*i18n: http://php.net/manual/en/function.date.php */'DateNavView', 'F Y') : tc(/*i18n: http://php.net/manual/en/function.date.php */'DateNavView', 'F'); 
 		
 //show the outer months UL with flat display
 if($controller->flatDisplay) echo "\t <ul class='months collapsible ".$hideMonths."'> \r \n";		
