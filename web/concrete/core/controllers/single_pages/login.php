@@ -234,7 +234,7 @@ class Concrete5_Controller_Login extends Controller {
 						$rc = Page::getByPath('/' . $rcID);
 					}
 					if ($rc instanceof Page && !$rc->isError()) {
-						$rUrl = $navigation->getLinkToCollection($rc, true);
+						$rUrl = $navigation->getLinkToCollection($rc);
 						break;
 					}		
 				}
@@ -245,7 +245,7 @@ class Concrete5_Controller_Login extends Controller {
 				//should administrator be redirected to dashboard?  defaults to yes if not set.
 				$adminToDash=intval(Config::get('LOGIN_ADMIN_TO_DASHBOARD'));
 				if ($dbp->canRead() && $adminToDash) {
-					$rUrl = $navigation->getLinkToCollection($rc, true);
+					$rUrl = $navigation->getLinkToCollection($rc);
 					break;
 				}
 				
@@ -254,7 +254,7 @@ class Concrete5_Controller_Login extends Controller {
 				
 				//redirect to user profile
 				if ($login_redirect_mode=='PROFILE' && ENABLE_USER_PROFILES) {
-					$rUrl = BASE_URL . View::url('/profile',$u->getUserID());
+					$rUrl = View::url('/profile',$u->getUserID());
 					break;
 				} 
 				
@@ -263,7 +263,7 @@ class Concrete5_Controller_Login extends Controller {
 				if ($login_redirect_mode == 'CUSTOM' && $login_redirect_cid > 0) {
 					$rc = Page::getByID($login_redirect_cid);
 					if ($rc instanceof Page && !$rc->isError()) {
-						$rUrl = $navigation->getLinkToCollection($rc, true);
+						$rUrl = $navigation->getLinkToCollection($rc);
 						break;
 					}
 				}
