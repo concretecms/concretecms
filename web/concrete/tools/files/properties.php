@@ -222,6 +222,11 @@ if (!$previewMode && $fp->canEditFileContents()) {
 	<td><strong><?=t('URL to File')?></strong></td>
 	<td width="100%" colspan="2"><?=$fv->getRelativePath(true)?></td>
 </tr>
+<tr>
+	<td><strong><?=t('Download URL')?></strong></td>
+	<td width="100%" colspan="2"><a href="<?=h(BASE_URL . View::url('/download_file', $fv->getFileID()))?>" target="_blank"><?=h(BASE_URL . View::url('/download_file', $fv->getFileID()))?></a></td>
+</tr>
+
 <?
 $oc = $f->getOriginalPageObject();
 if (is_object($oc)) { 
