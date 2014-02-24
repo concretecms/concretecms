@@ -577,8 +577,8 @@ class Concrete5_Model_PageTheme extends Object {
 	
 	private static function getThemeNameAndDescription($dir) {
 		$res = new stdClass;
-		$res->ptName = t('(No Name)');
-		$res->ptDescription = t('(No Description)');
+		$res->ptName = '';
+		$res->ptDescription = '';
 		if (file_exists($dir . '/' . FILENAME_THEMES_DESCRIPTION)) {
 			$con = file($dir . '/' . FILENAME_THEMES_DESCRIPTION);
 			$res->ptName = trim($con[0]);
@@ -626,12 +626,56 @@ class Concrete5_Model_PageTheme extends Object {
 	
 	public function getThemeID() {return $this->ptID;}
 	public function getThemeName() {return $this->ptName;}
+	/** Returns the display name for this theme (localized and escaped accordingly to $format)
+	* @param string $format = 'html'
+	*	Escape the result in html format (if $format is 'html').
+	*	If $format is 'text' or any other value, the display name won't be escaped.
+	* @return string
+	*/
+	public function getThemeDisplayName($format = 'html') {
+		$value = $this->getThemeName();
+		if(strlen($value)) {
+			$value = t($value);
+		}
+		else {
+			$value = t('(No Name)');
+		}
+		switch($format) {
+			case 'html':
+				return h($value);
+			case 'text':
+			default:
+				return $value;
+		}
+	}
 	public function getPackageID() {return $this->pkgID;}
 	public function getPackageHandle() {
 		return PackageList::getHandle($this->pkgID);
 	}
 	public function getThemeHandle() {return $this->ptHandle;}
 	public function getThemeDescription() {return $this->ptDescription;}
+	/** Returns the display description for this theme (localized and escaped accordingly to $format)
+	* @param string $format = 'html'
+	*	Escape the result in html format (if $format is 'html').
+	*	If $format is 'text' or any other value, the display name won't be escaped.
+	* @return string
+	*/
+	public function getThemeDisplayDescription($format = 'html') {
+		$value = $this->getThemeDescription();
+		if(strlen($value)) {
+			$value = t($value);
+		}
+		else {
+			$value = t('(No Description)');
+		}
+		switch($format) {
+			case 'html':
+				return h($value);
+			case 'text':
+			default:
+				return $value;
+		}
+	}
 	public function getThemeDirectory() {return $this->ptDirectory;}
 	public function getThemeURL() {return $this->ptURL;}
 	public function getThemeEditorCSS() {return $this->ptURL . '/' . PageTheme::FILENAME_TYPOGRAPHY_CSS;}
