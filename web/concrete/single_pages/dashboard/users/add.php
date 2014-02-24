@@ -57,7 +57,7 @@ $locales = Localization::getAvailableInterfaceLanguageDescriptions(ACTIVE_LOCALE
 				</tr>	
 				<tr>
 					<td colspan="2">
-					<? print $form->select('uDefaultLanguage', $locales, SITE_LOCALE); ?>
+					<? print $form->select('uDefaultLanguage', $locales, Localization::activeLocale()); ?>
 					</td>
 				</tr>
                 
