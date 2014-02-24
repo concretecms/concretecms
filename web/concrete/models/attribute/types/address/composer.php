@@ -2,6 +2,8 @@
 <? $f = Loader::helper('form'); ?>
 <? $co = Loader::helper('lists/countries'); ?>
 
+<div class="ccm-attribute-address-composer-wrapper ccm-attribute-address-<?=$key->getAttributeKeyID()?>">
+
 <div class="control-group">
 	<?=$f->label($this->field('address1'), t('Address 1'))?>
 	<div class="controls">
@@ -74,6 +76,8 @@ $countries = array_merge(array('' => t('Choose Country')), $countries);
 <div class="controls">
 <?=$f->text($this->field('postal_code'), $postal_code)?>
 </div>
+</div>
+
 </div>
 
 <script type="text/javascript">
