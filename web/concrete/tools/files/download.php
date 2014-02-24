@@ -23,6 +23,9 @@ if (isset($_REQUEST['fID']) && is_array($_REQUEST['fID'])) {
 	$filenames = array();
 	foreach($_REQUEST['fID'] as $fID) {
 		$f = File::getByID(intval($fID));
+		if($f->isError()) {
+			continue;
+		}
 		$fp = new Permissions($f);
 		if ($fp->canViewFile()) {
 			if (!in_array(basename($f->getPath()), $filenames)) {
@@ -32,12 +35,25 @@ if (isset($_REQUEST['fID']) && is_array($_REQUEST['fID'])) {
 			$filenames[] = basename($f->getPath());
 		}
 	}
+	if(!strlen($files)) {
+		die(t("None of the requested files could be found."));
+	}
 	exec(DIR_FILES_BIN_ZIP . ' -j \'' . addslashes($filename) . '\' ' . $files);
 	$ci->forceDownload($filename);	
 
 } else if($_REQUEST['fID']) {
 	
 	$f = File::getByID(intval($_REQUEST['fID']));
+	if($f->isError()) {
+		switch($f->getError()) {
+			case File::F_ERROR_FILE_NOT_FOUND:
+				die(t("The requested file couldn't be found."));
+			case File::F_ERROR_INVALID_FILE:
+				die(t("The requested file is not valid."));
+			default:
+				die(t("An unexpected error occurred while looking for the requested file"));
+		}
+	}
 	$fp = new Permissions($f);
 	if ($fp->canViewFile()) {
 		if (isset($_REQUEST['fvID'])) {
