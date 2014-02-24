@@ -97,7 +97,7 @@ foreach($searchFieldAttributes as $ak) {
 			<select name="ptID">
 			<? $themes = PageTheme::getList(); ?>
 			<? foreach($themes as $pt) { ?>
-				<option value="<?=$pt->getThemeID()?>"><?=$pt->getThemeName()?></option>			
+				<option value="<?=$pt->getThemeID()?>"><?=$pt->getThemeDisplayName()?></option>			
 			<? } ?>
 			</select>
 		</span>		

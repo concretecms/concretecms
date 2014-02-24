@@ -79,8 +79,8 @@ $alreadyActiveMessage = t('This theme is currently active on your site.');
                 
                 <td width="100%" style="vertical-align:middle;">
                 
-                    <p class="ccm-themes-name"><strong><?=$t->getThemeName()?></strong></p>
-                    <p class="ccm-themes-description"><em><?=$t->getThemeDescription()?></em></p>
+                    <p class="ccm-themes-name"><strong><?=$t->getThemeDisplayName()?></strong></p>
+                    <p class="ccm-themes-description"><em><?=$t->getThemeDisplayDescription()?></em></p>
                     
                     <div class="ccm-themes-button-row clearfix">
                     <? if ($siteThemeID == $t->getThemeID()) { ?>
@@ -88,7 +88,7 @@ $alreadyActiveMessage = t('This theme is currently active on your site.');
                     <? } else { ?>
                         <?=$bt->button(t("Activate"), $this->url('/dashboard/pages/themes','activate', $t->getThemeID()), 'left', 'primary');?>
                     <? } ?>
-                        <?=$bt->button_js(t("Preview"), "ccm_previewInternalTheme(1, " . intval($t->getThemeID()) . ",'" . addslashes(str_replace(array("\r","\n",'\n'),'',$t->getThemeName())) . "')", 'left');?>
+                        <?=$bt->button_js(t("Preview"), "ccm_previewInternalTheme(1, " . intval($t->getThemeID()) . ",'" . addslashes(str_replace(array("\r","\n",'\n'),'',$t->getThemeDisplayName())) . "')", 'left');?>
                         <?=$bt->button(t("Inspect"), $this->url('/dashboard/pages/themes/inspect', $t->getThemeID()), 'left');?>
                         <?=$bt->button(t("Customize"), $this->url('/dashboard/pages/themes/customize', $t->getThemeID()), 'left');?>
                     
@@ -116,7 +116,7 @@ $alreadyActiveMessage = t('This theme is currently active on your site.');
     <div class="controls">
     	<? $themes[0] = t('** Same as website (default)'); ?>
     	<? foreach($tArray as $pt) {
-    		$themes[$pt->getThemeID()] = $pt->getThemeName();
+    		$themes[$pt->getThemeID()] = $pt->getThemeDisplayName();
     	} ?>
     	<?=$form->select('MOBILE_THEME_ID', $themes, Config::get('MOBILE_THEME_ID'))?>
     	<?=$form->submit('save_mobile_theme', t('Save'))?>
@@ -144,8 +144,8 @@ $alreadyActiveMessage = t('This theme is currently active on your site.');
 				</td>
                 
                 <td width="100%" style="vertical-align:middle;">
-                <p class="ccm-themes-name"><strong><?=$t->getThemeName()?></strong></p>
-                <p class="ccm-themes-description"><em><?=$t->getThemeDescription()?></em></p>
+                <p class="ccm-themes-name"><strong><?=$t->getThemeDisplayName()?></strong></p>
+                <p class="ccm-themes-description"><em><?=$t->getThemeDisplayDescription()?></em></p>
                 
                 <div class="ccm-themes-button-row clearfix">
                 <?=$bt->button(t("Install"), $this->url('/dashboard/pages/themes','install',$t->getThemeHandle()),'left','primary');?>
