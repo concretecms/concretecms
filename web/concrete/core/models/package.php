@@ -366,7 +366,7 @@ class Concrete5_Model_Package extends Object {
 		if ($item instanceof BlockType) {
 			return t($item->getBlockTypeName());
 		} else if ($item instanceof PageTheme) {
-			return $item->getThemeName();
+			return $item->getThemeDisplayName();
 		} else if ($item instanceof CollectionType) {
 			return $item->getCollectionTypeName();
 		} else if ($item instanceof MailImporter) {
