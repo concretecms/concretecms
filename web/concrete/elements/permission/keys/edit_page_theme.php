@@ -22,7 +22,7 @@
 	<?=$form->select('themesIncluded[' . $entity->getAccessEntityID() . ']', array('A' => t('All Themes'), 'C' => t('Custom')), $assignment->getThemesAllowedPermission())?><br/><br/>
 	<ul class="theme-list inputs-list" <? if ($assignment->getThemesAllowedPermission() != 'C') { ?>style="display: none"<? } ?>>
 		<? foreach($themes as $ct) { ?>
-			<li><label><input type="checkbox" name="ptIDInclude[<?=$entity->getAccessEntityID()?>][]" value="<?=$ct->getThemeID()?>" <? if (in_array($ct->getThemeID(), $assignment->getThemesAllowedArray()) || $assignment->getThemesAllowedPermission() == 'A') { ?> checked="checked" <? } ?> /> <span><?=$ct->getThemeName()?></span></label></li>
+			<li><label><input type="checkbox" name="ptIDInclude[<?=$entity->getAccessEntityID()?>][]" value="<?=$ct->getThemeID()?>" <? if (in_array($ct->getThemeID(), $assignment->getThemesAllowedArray()) || $assignment->getThemesAllowedPermission() == 'A') { ?> checked="checked" <? } ?> /> <span><?=$ct->getThemeDisplayName()?></span></label></li>
 		<? } ?>
 	</ul>
 	</div>
@@ -49,7 +49,7 @@
 	<?=$form->select('themesExcluded[' . $entity->getAccessEntityID() . ']', array('N' => t('No Themes'), 'C' => t('Custom')), $assignment->getThemesAllowedPermission())?><br/><br/>
 	<ul class="theme-list inputs-list" <? if ($assignment->getThemesAllowedPermission() != 'C') { ?>style="display: none"<? } ?>>
 		<? foreach($themes as $ct) { ?>
-			<li><label><input type="checkbox" name="ptIDExclude[<?=$entity->getAccessEntityID()?>][]" value="<?=$ct->getThemeID()?>" <? if (in_array($ct->getThemeID(), $assignment->getThemesAllowedArray()) || $assignment->getThemesAllowedPermission() == 'N') { ?> checked="checked" <? } ?> /> <span><?=$ct->getThemeName()?></span></label></li>
+			<li><label><input type="checkbox" name="ptIDExclude[<?=$entity->getAccessEntityID()?>][]" value="<?=$ct->getThemeID()?>" <? if (in_array($ct->getThemeID(), $assignment->getThemesAllowedArray()) || $assignment->getThemesAllowedPermission() == 'N') { ?> checked="checked" <? } ?> /> <span><?=$ct->getThemeDisplayName()?></span></label></li>
 		<? } ?>
 	</ul>
 	</div>
