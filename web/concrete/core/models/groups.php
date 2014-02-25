@@ -142,14 +142,13 @@
 			if ($obj instanceof UserInfo) {
 				$uID = $this->pObj->getUserID();
 				if ($uID) {
-					$q = "select gID, ugEntered, UserGroups.type from UserGroups where gID = '{$this->gID}' and uID = {$uID}";
+					$q = "select gID, ugEntered from UserGroups where gID = '{$this->gID}' and uID = {$uID}";
 					$r = $db->query($q);
 					if ($r) {
 						$row = $r->fetchRow();
 						if ($row['gID']) {
 							$this->inGroup = true;
 							$this->gDateTimeEntered = $row['ugEntered'];
-							$this->gMemberType = $row['type'];
 						}
 					}
 				}
@@ -235,10 +234,6 @@
 			return $this->gDateTimeEntered;
 		}
 
-		function getGroupMemberType() {
-			return $this->gMemberType;
-		}
-		
 		function getGroupID() {
 			return $this->gID;
 		}
