@@ -885,6 +885,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			$r = $db->Execute('select cID, cvID, b.bID, arHandle from CollectionVersionBlocks cvb inner join Blocks b on b.bID = cvb.bID where btID = ?', array($this->getBlockTypeID()));
 			while ($row = $r->FetchRow()) {
 				$nc = Page::getByID($row['cID'], $row['cvID']);
+				if(!is_object($nc) || $nc->isError()) continue;
 				$b = Block::getByID($row['bID'], $nc, $row['arHandle']);
 				if (is_object($b)) {
 					$b->deleteBlock();
