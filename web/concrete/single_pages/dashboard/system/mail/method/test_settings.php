@@ -7,7 +7,7 @@ $cih = Loader::helper('concrete/interface');
 /* @var $fh FormHelper */
 $fh = Loader::helper('form');
 
-echo $cdh->getDashboardPaneHeaderWrapper(t('Test SMTP Settings'), false, 'span8 offset2', false);
+echo $cdh->getDashboardPaneHeaderWrapper(t('Test Mail Settings'), false, 'span8 offset2', false);
 
 ?><form method="post" action="<?=$this->url('/dashboard/system/mail/method/test_settings', 'test')?>" class="form-horizontal" id="mail-settings-test-form">
 	<div class="ccm-pane-body"><?php
