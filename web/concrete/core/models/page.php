@@ -833,6 +833,14 @@ class Concrete5_Model_Page extends Collection {
 	function getCollectionPath() {
 		return $this->cPath;
 	}
+	
+	/**
+	 * Returns full url for the current page
+	 * @return string
+	 */
+	public function getCollectionLink() {
+		return Loader::helper('navigation')->getLinkToCollection($this);
+	}
 
 	/**
 	 * Returns the path for a page from its cID
