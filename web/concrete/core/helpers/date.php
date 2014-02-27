@@ -31,7 +31,7 @@ class Concrete5_Helper_Date {
 		}
 		
 		$req = Request::get();
-		if ($req->hasCustomRequestUser()) {
+		if ($req->hasCustomRequestUser() && $req->getCustomRequestDateTime()) {
 			return date($mask, strtotime($req->getCustomRequestDateTime()));
 		}
 		
