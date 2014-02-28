@@ -501,7 +501,10 @@ class Concrete5_Library_Content_Importer {
 		if (isset($sx->attributecategories)) {
 			foreach($sx->attributecategories->category as $akc) {
 				$pkg = ContentImporter::getPackageObject($akc['package']);
-				$akx = AttributeKeyCategory::add($akc['handle'], $akc['allow-sets'], $pkg);
+				$akx = AttributeKeyCategory::getByHandle($akc['handle']);
+				if (!is_object($akx)) {
+					$akx = AttributeKeyCategory::add($akc['handle'], $akc['allow-sets'], $pkg);
+				}
 			}
 		}
 	}
