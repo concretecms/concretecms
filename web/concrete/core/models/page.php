@@ -838,8 +838,8 @@ class Concrete5_Model_Page extends Collection {
 	 * Returns full url for the current page
 	 * @return string
 	 */
-	public function getCollectionLink() {
-		return Loader::helper('navigation')->getLinkToCollection($this);
+	public function getCollectionLink($appendBaseURL = false, $ignoreUrlRewriting = false) {
+		return Loader::helper('navigation')->getLinkToCollection($this, $appendBaseURL, $ignoreUrlRewriting);
 	}
 
 	/**
