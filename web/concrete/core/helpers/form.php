@@ -116,7 +116,7 @@ class Concrete5_Helper_Form {
 
 		if ($isChecked && (!isset($_REQUEST[$_field])) && ($_SERVER['REQUEST_METHOD'] != 'POST')) {
 			$checked = true;
-		} else if ($this->getRequestValue($key) == $value) {
+		} else if ($this->getRequestValue($key) == $value && $value != false) {
 			$checked = true;
 		} else if (is_array($this->getRequestValue($key)) && in_array($value, $this->getRequestValue($key))) {
 			$checked = true;
