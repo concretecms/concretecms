@@ -172,7 +172,7 @@
 			foreach($languages as $lang) {
 				$locales[$lang] = self::getLanguageDescription($lang,$displayLocale);
 			}
-			asort($locales);
+			natcasesort($locales);
 			return $locales;
 		}
 		
