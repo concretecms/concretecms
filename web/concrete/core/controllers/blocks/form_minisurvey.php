@@ -218,6 +218,7 @@ class Concrete5_Controller_Block_FormMinisurvey {
 			$options=explode('%%',$questionData['options']);
 			$msqID=intval($questionData['msqID']);
 			$datetime = loader::helper('form/date_time');
+			$html = '';
 			switch($questionData['inputType']){			
 				case 'checkboxlist': 
 					// this is looking really crappy so i'm going to make it behave the same way all the time - andrew
