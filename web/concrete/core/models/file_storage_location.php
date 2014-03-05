@@ -21,6 +21,12 @@ class Concrete5_Model_FileStorageLocation extends Object {
 		
 		return $fsl;	
 	}
+
+	public function delete() {
+		$db = Loader::db();
+		$db->Execute('delete from FileStorageLocations where fslID = ?', array($this->fslID));
+		$db->Execute('update Files set fslID = 0 where fslID = ?', array($this->fslID));
+	}
 	
 	public function update($name, $directory) {
 		$db = Loader::db();
