@@ -643,6 +643,13 @@
 				</attributekey>
 			</attributes>
         </page>
+        <page name="Test Mail Settings" path="/dashboard/system/mail/method/test_settings" filename="/dashboard/system/mail/method/test_settings.php" pagetype="" description="" package="">
+			<attributes>
+				<attributekey handle="meta_keywords">
+					<value>test smtp, test mail</value>
+				</attributekey>
+			</attributes>
+        </page>
         <page name="Email Importers" path="/dashboard/system/mail/importers" filename="/dashboard/system/mail/importers.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
