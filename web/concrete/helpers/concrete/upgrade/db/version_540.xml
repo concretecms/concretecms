@@ -161,17 +161,17 @@
 			<AUTOINCREMENT/>
 		</field> 
 		
-		<field name="layout_rows" type="i" size="5">
+		<field name="layout_rows" type="I" size="5">
 			<NOTNULL/>
 			<DEFAULT value="3"/>
 		</field>
 		
-		<field name="layout_columns" type="i" size="3">
+		<field name="layout_columns" type="I" size="3">
 			<NOTNULL/>
 			<DEFAULT value="3"/>
 		</field>
 		
-		<field name="spacing" type="i" size="3">
+		<field name="spacing" type="I" size="3">
 			<NOTNULL/>
 			<DEFAULT value="3"/>
 		</field>		
