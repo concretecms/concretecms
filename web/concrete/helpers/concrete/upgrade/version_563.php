@@ -42,7 +42,15 @@ class ConcreteUpgradeVersion563Helper {
 		}
 		if (!Config::get('SECURITY_TOKEN_VALIDATION')) {
 			Config::save('SECURITY_TOKEN_VALIDATION', Loader::helper('validation/identifier')->getString(64));
-		}	
+		}
+
+		$sp = Page::getByPath('/dashboard/system/mail/method/test_settings');
+		if (!is_object($sp) || $sp->isError()) {
+			$sp = SinglePage::add('/dashboard/system/mail/method/test_settings');
+			$sp->update(array('cName'=>t('Test Mail Settings')));
+			$sp->setAttribute('meta_keywords', 'test smtp, test mail');
+		}
+
 	}
 
 }

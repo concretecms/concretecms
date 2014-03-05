@@ -29,6 +29,7 @@ class Concrete5_Helper_Mail {
 	public $body = '';
 	protected $template; 
 	protected $bodyHTML = false;
+	protected $testing = false;
 	
 	
 	/**
@@ -49,6 +50,7 @@ class Concrete5_Helper_Mail {
 		$this->body = '';
 		$this->template; 
 		$this->bodyHTML = false;
+		$this->testing = false;
 	}
 	
 	
@@ -286,7 +288,18 @@ class Concrete5_Helper_Mail {
 			$this->replyto[] = array($email, $name);	
 		}
 	}
-		
+	/** Set the testing state (if true the email logging never occurs and sending errors will throw an exception)
+	* @param bool $testing
+	*/
+	public function setTesting($testing) {
+		$this->testing = $testing ? true : false;
+	}
+	/** Retrieve the testing state
+	* @return boolean
+	*/
+	public function getTesting() {
+		return $this->testing;
+	}
 	/** 
 	 * Sends the email
 	 * @return void
@@ -350,6 +363,9 @@ class Concrete5_Helper_Mail {
 				$mail->send($transport);
 					
 			} catch(Exception $e) {
+				if($this->getTesting()) {
+					throw $e;
+				}
 				$l = new Log(LOG_TYPE_EXCEPTIONS, true, true);
 				$l->write(t('Mail Exception Occurred. Unable to send mail: ') . $e->getMessage());
 				$l->write($e->getTraceAsString());
@@ -368,7 +384,7 @@ class Concrete5_Helper_Mail {
 		}
 		
 		// add email to log
-		if (ENABLE_LOG_EMAILS) {
+		if (ENABLE_LOG_EMAILS && !$this->getTesting()) {
 			$l = new Log(LOG_TYPE_EMAILS, true, true);
 			if (ENABLE_EMAILS) {
 				$l->write('**' . t('EMAILS ARE ENABLED. THIS EMAIL WAS SENT TO mail()') . '**');
@@ -401,5 +417,3 @@ class Concrete5_Helper_Mail {
 	}
 	
 }
-
-?>
