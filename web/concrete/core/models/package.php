@@ -94,6 +94,7 @@ class Concrete5_Model_Package extends Object {
 	protected $DIR_PACKAGES = DIR_PACKAGES;
 	protected $REL_DIR_PACKAGES_CORE = REL_DIR_PACKAGES_CORE;
 	protected $REL_DIR_PACKAGES = REL_DIR_PACKAGES;
+	protected $backedUpFname = '';
 	
 	public function getRelativePath() {
 		$dirp = (is_dir($this->DIR_PACKAGES . '/' . $this->getPackageHandle())) ? $this->REL_DIR_PACKAGES : $this->REL_DIR_PACKAGES_CORE;
@@ -735,15 +736,32 @@ class Concrete5_Model_Package extends Object {
 		return $upgradeables;		
 	}	
 	
+	/**
+	 * moves the current package's directory to the trash directory renamed with the package handle and a date code.
+	*/
 	public function backup() {
 		// you can only backup root level packages.
 		// Need to figure something else out for core level
 		if ($this->pkgHandle != '' && is_dir(DIR_PACKAGES . '/' . $this->pkgHandle)) {
-			$ret = @rename(DIR_PACKAGES . '/' . $this->pkgHandle, DIR_FILES_TRASH . '/' . $this->pkgHandle . '_' . date('YmdHis'));
+			$trashName = DIR_FILES_TRASH . '/' . $this->pkgHandle . '_' . date('YmdHis');
+			$ret = @rename(DIR_PACKAGES . '/' . $this->pkgHandle, $trashName);
 			if (!$ret) {
 				return array(Package::E_PACKAGE_MIGRATE_BACKUP);
+			} else {
+				$this->backedUpFname = $trashName; 
 			}
 		}
+	}
+	
+	/**
+	 * if a packate was just backed up by this instance of the package object and the packages/package handle directory doesn't exist, this will restore the 
+	 * package from the trash
+	*/
+	public function restore() {
+		if(strlen($this->backedUpFname) && is_dir($this->backedUpFname) && !is_dir(DIR_PACKAGES . '/' . $this->pkgHandle)) {
+			return @rename($this->backedUpFname, DIR_PACKAGES . '/' . $this->pkgHandle);
+		}
+		return false;
 	}
 
 
