@@ -102,7 +102,7 @@
 
 	# Not sure why this said it had to come in front of startup/packages - but that causes a problem when a package
 	# defines autoload classes like for permissions and then has to act on permissions in upgrade. It can't find the classes
-	require($cdir . '/startup/tools_upgrade_check.php');
+	require($cdir . '/startup/upgrade_check.php');
 
 	## Load permissions and attributes
 	PermissionKey::loadAll();
