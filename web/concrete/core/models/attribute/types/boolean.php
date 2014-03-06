@@ -63,7 +63,7 @@ class Concrete5_Controller_AttributeType_Boolean extends AttributeTypeController
 		}
 		
 		$cb = Loader::helper('form')->checkbox($this->field('value'), 1, $checked);
-		print '<label class="checkbox">' . $cb . ' <span>' . t('Yes') . '</span></label>';
+		print $cb . ' <span>' . t('Yes') . '</span>';
 	}
 	
 	public function composer() {
