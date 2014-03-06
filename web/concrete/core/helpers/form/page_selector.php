@@ -33,7 +33,7 @@ class Concrete5_Helper_Form_PageSelector {
 	public function selectPage($fieldName, $cID = false, $javascriptFunc='ccm_selectSitemapNode') {
 		$selectedCID = 0;
 		if (isset($_REQUEST[$fieldName])) {
-			$selectedCID = $_REQUEST[$fieldName];
+			$selectedCID = Loader::helper('security')->sanitizeInt($_REQUEST[$fieldName]);
 		} else if ($cID > 0) {
 			$selectedCID = $cID;
 		}
