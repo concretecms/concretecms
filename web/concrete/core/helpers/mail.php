@@ -165,6 +165,11 @@ class Concrete5_Helper_Mail {
 	 */
 	public function getBody() {return $this->body;}
 	
+	/**
+	 * Returns the message's html body
+	 * @return string
+	 */
+	public function getBodyHTML() {return $this->bodyHTML;}
 	
 	/**
 	 * manually set the HTML portion of a MIME encoded message, can also be done by setting $bodyHTML in a mail template
