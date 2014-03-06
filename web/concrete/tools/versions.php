@@ -31,6 +31,7 @@
 		if (count($_REQUEST['cvID']) > 0) {
 			$tabs = array();
 			foreach($_REQUEST['cvID'] as $cvID) {
+				$cvID=Loader::helper('security')->sanitizeInt($cvID);
 				$tabs[] = array('view-version-' . $cvID, t('Version %s', $cvID), ($i == 0));
 				$i++;
 			}
@@ -38,7 +39,10 @@
 		}
 
 
-		foreach($_REQUEST['cvID'] as $cvID) { ?>
+		foreach($_REQUEST['cvID'] as $cvID) { 
+			$cvID = Loader::helper('security')->sanitizeInt($cvID);
+?>
+			
 		
 		<div id="ccm-tab-content-view-version-<?=$cvID?>" style="display: <?=$display?>; height: 100%">
 		<iframe border="0" id="v<?=time()?>" frameborder="0" height="100%" width="100%" src="<?=BASE_URL . DIR_REL?>/<?=DISPATCHER_FILENAME?>?cvID=<?=$cvID?>&cID=<?=$_REQUEST['cID']?>&vtask=view_versions" />
