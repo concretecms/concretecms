@@ -433,6 +433,10 @@
     <field name="pkgID" type="I" size="10">
       <UNSIGNED />
     </field>
+    <index name="atHandle">
+      <UNIQUE/>
+      <col>atHandle</col>
+    </index>    
   </table>
   <table name="AttributeValues">
     <field name="avID" type="I" size="10">
