@@ -163,7 +163,7 @@ class Concrete5_Library_ItemList {
 		);
 
 		foreach($additionalVars as $k => $v) {
-			$args[$k] = $v;
+			$args[$k] = Loader::helper('text')->alphanum($v);
 		}
 		$url = $uh->setVariable($args, false, $baseURL);
 		print strip_tags($url);
