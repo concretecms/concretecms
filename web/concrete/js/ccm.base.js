@@ -56,7 +56,7 @@ ccm_activateSite = function() {
 
 ccm_addHeaderItem = function(item, type) {
 	// "item" might already have a "?v=", so avoid invalid query string.
-	var qschar = (item.indexOf('?') != -1 ? '' : '?ts=');
+	var qschar = (item.indexOf('?') != -1 ? '&ts' : '?ts=');
 	if (type == 'CSS') {
 		if (navigator.userAgent.indexOf('MSIE') != -1) {
 			// Most reliable way found to force IE to apply dynamically inserted stylesheet across jQuery versions
