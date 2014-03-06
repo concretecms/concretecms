@@ -20,7 +20,7 @@ class Concrete5_Controller_Dashboard_System_Seo_SearchIndex extends DashboardBas
 						$areas = array();
 					}
 					Config::save('SEARCH_INDEX_AREA_LIST', serialize($areas));
-					Config::save('SEARCH_INDEX_AREA_METHOD', $this->post('SEARCH_INDEX_AREA_METHOD'));
+					Config::save('SEARCH_INDEX_AREA_METHOD', Loader::helper('security')->sanitizeString($this->post('SEARCH_INDEX_AREA_METHOD')));
 					$this->redirect('/dashboard/system/seo/search_index', 'updated');
 				} else {
 					$this->set('error', array($this->token->getErrorMessage()));

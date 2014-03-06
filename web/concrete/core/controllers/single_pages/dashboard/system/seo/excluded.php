@@ -3,7 +3,7 @@
 class Concrete5_Controller_Dashboard_System_Seo_Excluded extends DashboardBaseController {
 		
 	public function save() {
-		Config::save('SEO_EXCLUDE_WORDS',$this->post('SEO_EXCLUDE_WORDS'));
+		Config::save('SEO_EXCLUDE_WORDS',Loader::helper('security')->sanitizeString($this->post('SEO_EXCLUDE_WORDS')));
 		$this->redirect('/dashboard/system/seo/excluded', 'saved');
 	}
 
