@@ -121,18 +121,19 @@ class Concrete5_Library_MailImporter extends Object {
 		if (!$miConnectionMethod) {
 			$miConnectionMethod = 'POP';
 		}
+
 		
 		$pkgID = ($pkg == null) ? 0 : $pkg->getPackageID();
 		
 		$db->Execute('insert into MailImporters (miHandle, miServer, miUsername, miPassword, miEncryption, miIsEnabled, miEmail, miPort, miConnectionMethod, pkgID) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', 
 			array(
 				$miHandle,
-				$miServer,
+				Loader::helper('security')->sanitizeString($miServer),
 				$miUsername,
 				$miPassword,
 				$miEncryption,
 				$miIsEnabled,
-				$miEmail, 
+				Loader::helper('security')->sanitizeString($miEmail),
 				$miPort, 
 				$miConnectionMethod, 
 				$pkgID
@@ -160,12 +161,12 @@ class Concrete5_Library_MailImporter extends Object {
 
 		$db->Execute('update MailImporters set miServer = ?, miUsername = ?, miPassword = ?, miEncryption = ?, miIsEnabled = ?, miEmail = ?, miPort = ?, miConnectionMethod = ? where miID = ?', 
 			array(
-				$miServer,
+				Loader::helper('security')->sanitizeString($miServer),
 				$miUsername,
 				$miPassword,
 				$miEncryption,
 				$miIsEnabled,
-				$miEmail, 
+				Loader::helper('security')->sanitizeString($miEmail),
 				$miPort,
 				$miConnectionMethod,
 				$this->miID
