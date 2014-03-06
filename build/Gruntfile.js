@@ -176,9 +176,10 @@ module.exports = function(grunt) {
 		require('./tasks/build-release/finish.js')(grunt, config, parameters, this.async());
 	});
 
-	buildTranslationParameters = parameters;
+	var buildTranslationParameters = extend({}, parameters);
 	buildTranslationParameters.destination = './release/concrete5-master/web';
 
+	var buildTagParameters = extend({}, parameters);
 	buildTagParameters = parameters;
 	buildTagParameters.source = './release/concrete5-master/web';
 
