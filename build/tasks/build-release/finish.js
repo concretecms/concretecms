@@ -6,19 +6,32 @@ module.exports = function(grunt, config, parameters, done) {
 
 	try {
 		var fs = require('fs'),
-			rimraf = require('rimraf');
-
-		var data = fs.readFileSync('./release/concrete5-master/web/concrete/config/version.php', 'utf8');
-		var version = data.match(/\$APP_VERSION = '(.*)'/);
-		if (version[1]) {
-			var directory = 'concrete' + version[1];
-			var execSync = require('exec-sync');
-			fs.renameSync('./release/concrete5-master/web', './release/' + directory);
-			execSync('pushd release/; zip -r ' + directory + '.zip ' + directory + '; popd');
-			rimraf.sync('./release/' + directory);
-			rimraf.sync('./release/concrete5-master');
-			done();
+			shell = require('shelljs');
+		process.stdout.write('Determining concrete5 version... ');
+		var data = fs.readFileSync('./release/concrete5-master/web/concrete/config/version.php', 'utf8'),
+			version = data.match(/\$APP_VERSION = '(.*)'/)
+		;
+		if (!version) {
+			endForError('$APP_VERSION not found');
+			return;
 		}
+		version = version[1];
+		process.stdout.write(version + '\n');
+		var directory = 'concrete' + version;
+		fs.renameSync('./release/concrete5-master/web', './release/' + directory);
+		shell.pushd('release');
+		process.stdout.write('Creating zip file... ');
+		shell.exec('zip -r ' + directory + '.zip ' + directory, {silent: true, async: true}, function(code, output) {
+			shell.popd();
+			if(code !== 0) {
+				endForError(output);
+				return;
+			}
+			process.stdout.write('done.\n');
+			shell.rm('-rf', './release/' + directory);
+			shell.rm('-rf', './release/concrete5-master');
+			done();
+		});
 	}
 	catch(e) {
 		endForError(e);
