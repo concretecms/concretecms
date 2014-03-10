@@ -177,7 +177,8 @@ jQuery.fn.dialog.replaceTop = function(r) {
 	}
 
 	$("#ccm-dialog-content" + nd + " .dialog-launch").dialog();
-	$("#ccm-dialog-content" + nd + " .ccm-dialog-close").click(function() {
+	$("#ccm-dialog-content" + nd + " .ccm-dialog-close").click(function(event) {
+		event.preventDefault();
 		jQuery.fn.dialog.closeTop();
 	});
 	if ($("#ccm-dialog-content" + nd + " .dialog-buttons").length > 0) {
