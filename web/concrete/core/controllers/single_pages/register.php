@@ -28,7 +28,7 @@ class Concrete5_Controller_Register extends Controller {
 	}
 	
 	public function forward($cID = 0) {
-		$this->set('rcID', $cID);
+		$this->set('rcID', Loader::helper('security')->sanitizeInt($cID));
 	}
 	
 	public function do_register() {
