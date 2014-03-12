@@ -20,6 +20,7 @@ class Concrete5_Controller_Profile_Edit extends Controller {
 	
 	public function on_start() {
 		$this->addHeaderItem(Loader::helper('html')->css('ccm.profile.css'));
+		$this->set('valt', Loader::helper('validation/token'));
 	}
 
 	public function save_complete() {
@@ -33,6 +34,7 @@ class Concrete5_Controller_Profile_Edit extends Controller {
 		$th = Loader::helper('text');
 		$vsh = Loader::helper('validation/strings');
 		$cvh = Loader::helper('concrete/validation');
+		$valt = Loader::helper('validation/token');
 		$e = Loader::helper('validation/error');
 	
 		$data = $this->post();
@@ -40,7 +42,11 @@ class Concrete5_Controller_Profile_Edit extends Controller {
 		/* 
 		 * Validation
 		*/
-		
+		//token
+		if(!$valt->validate('profile_edit')) {
+			$e->add($valt->getErrorMessage());
+		}
+
 		// validate the user's email
 		$email = $this->post('uEmail');
 		if (!$vsh->email($email)) {
@@ -48,6 +54,7 @@ class Concrete5_Controller_Profile_Edit extends Controller {
 		} else if (!$cvh->isUniqueEmail($email) && $ui->getUserEmail() != $email) {
 			$e->add(t("The email address '%s' is already in use. Please choose another.",$email));
 		}
+
 
 		// password
 		if(strlen($data['uPasswordNew'])) {
