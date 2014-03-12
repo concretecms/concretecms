@@ -68,6 +68,9 @@ class Concrete5_Controller_AttributeType_ImageFile extends AttributeTypeControll
 
 	// run when we call setAttribute(), instead of saving through the UI
 	public function saveValue($obj) {
+		if(!is_object($obj)){
+			$obj = File::getByID($obj);
+		}
 		$db = Loader::db();
 		if (is_object($obj) && (!$obj->isError())) {
 			$db->Replace('atFile', array('avID' => $this->getAttributeValueID(), 'fID' => $obj->getFileID()), 'avID', true);
