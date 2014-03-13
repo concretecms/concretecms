@@ -227,7 +227,7 @@
 			?>
 
 			<div class="ccm-stack ccm-group" id="stID_<?=$st->getCollectionID()?>">
-				<? if ($canMoveStacks) { ?><img class="ccm-group-sort" src="<?php  echo ASSETS_URL_IMAGES?>/icons/up_down.png" width="14" height="14" /><? } ?>
+				<? if ($canMoveStacks) { ?><img class="ccm-group-sort" src="<?=ASSETS_URL_IMAGES?>/icons/up_down.png" width="14" height="14" /><? } ?>
 				<a href="<?=$this->url('/dashboard/blocks/stacks/view_details', $st->getCollectionID())?>"><?=$sv->getVersionName()?></a>
 			</div>
 		
@@ -251,7 +251,7 @@
 			?>
 
 			<div class="ccm-stack ccm-group" id="stID_<?=$st->getCollectionID()?>">
-				<? if ($canMoveStacks) { ?><img class="ccm-group-sort" src="<?php  echo ASSETS_URL_IMAGES?>/icons/up_down.png" width="14" height="14" /><? } ?>
+				<? if ($canMoveStacks) { ?><img class="ccm-group-sort" src="<?=ASSETS_URL_IMAGES?>/icons/up_down.png" width="14" height="14" /><? } ?>
 				<a href="<?=$this->url('/dashboard/blocks/stacks/view_details', $st->getCollectionID())?>"><?=$sv->getVersionName()?></a>
 			</div>
 		
