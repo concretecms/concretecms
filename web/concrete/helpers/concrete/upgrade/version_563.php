@@ -5,7 +5,8 @@ class ConcreteUpgradeVersion563Helper {
 
 	public $dbRefreshTables = array(
 		'Jobs',
-		'JobsLog'
+		'JobsLog',
+		'PageSearchIndex'
 	);
 
 	public function run() {
