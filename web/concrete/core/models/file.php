@@ -18,7 +18,7 @@ class Concrete5_Model_File extends Object {
 		$row = $db->GetRow("SELECT Files.*, FileVersions.fvID
 		FROM Files LEFT JOIN FileVersions on Files.fID = FileVersions.fID and FileVersions.fvIsApproved = 1
 		WHERE Files.fID = ?", array($fID));
-		if ($row['fID'] == $fID) {
+		if (!is_null($fID) && $row['fID'] == $fID) {
 			$f->setPropertiesFromArray($row);
 		} else {
 			$f->error = File::F_ERROR_INVALID_FILE;
