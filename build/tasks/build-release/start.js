@@ -6,12 +6,12 @@ module.exports = function(grunt, config, parameters, done) {
 	}
 
 	try {
-		var rimraf = require('rimraf'),
+		var shell = require('shelljs'),
 			fs = require('fs'),
 			download = require('download'),
 			path = "./release";
 
-		rimraf.sync(path);
+		shell.rm('-rf', path);
 		fs.mkdir(path);
 
 		// Download archive from git
