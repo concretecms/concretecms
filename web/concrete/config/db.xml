@@ -1975,7 +1975,7 @@
       <DEFAULT value="0"/>
       <UNSIGNED/>
     </field>
-    <field name="content" type="X"/>
+    <field name="content" type="X2"/>
     <field name="cName" type="C" size="255" />
     <field name="cDescription" type="X"/>
     <field name="cPath" type="X"/>
