@@ -1764,18 +1764,14 @@ class Concrete5_Model_Page extends Collection {
 	}
 	
 	public function movePageDisplayOrderToBottom() {
-		// first, we take the current collection, stick it at the beginning of an array, then get all other items from the current level that aren't that cID, order by display order, and then update
+		// find the highest cDisplayOrder and increment by 1
 		$db = Loader::db();
-		$nodes = $db->GetCol('select cID from Pages where cParentID = ? and cID <> ? order by cDisplayOrder asc', array($this->getCollectionParentID(), $this->getCollectionID()));
-		$displayOrder = 0;
-		$nodes[] = $this->getCollectionID();
-		foreach($nodes as $do) {
-			$co = Page::getByID($do);
-			$co->updateDisplayOrder($displayOrder);
-			$displayOrder++;			
-		}
+		$mx = $db->GetRow("select max(cDisplayOrder) as m from Pages where cParentID = ?",array($this->getCollectionParentID()));
+		$max = $mx['m'];
+		$max++;
+		$this->updateDisplayOrder($max);
 	}
-	
+
 	function rescanCollectionPathIndividual($cID, $cPath, $retainOldPagePath = false) {
 		$db = Loader::db();
 		$q = "select CollectionVersions.cID, CollectionVersions.cvHandle, CollectionVersions.cvID, PagePaths.cID as cpcID from CollectionVersions left join PagePaths on (PagePaths.cID = CollectionVersions.cID) where CollectionVersions.cID = '{$cID}' and CollectionVersions.cvIsApproved = 1";
