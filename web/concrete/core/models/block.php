@@ -456,10 +456,7 @@ class Concrete5_Model_Block extends Object {
 		$r = $db->prepare($q);
 		$res = $db->execute($r, $v);
 
-		$cID = $this->getBlockCollectionID();
-		$c = $this->getBlockCollectionObject();
-		$v = array($c->getCollectionID(), $c->getVersionID(), $this->getAreaHandle(), $bID);
-		$db->Execute('update CollectionVersionBlocksOutputCache set btCachedBlockOutputExpires = 0 where cID = ? and cvID = ? and arHandle = ? and bID = ?', $v);
+		$this->refreshBlockOutputCache();
 
 		$btID = $this->getBlockTypeID();
 		$bt = BlockType::getByID($btID);
@@ -1125,6 +1122,15 @@ class Concrete5_Model_Block extends Object {
 		$data['bName'] = $name;
 		$this->updateBlockInformation($data);
 	}
+
+	public function refreshBlockOutputCache() {
+		$db = Loader::db();
+		$cID = $this->getBlockCollectionID();
+		$bID = $this->getBlockID();
+		$c = $this->getBlockCollectionObject();
+		$v = array($c->getCollectionID(), $c->getVersionID(), $this->getAreaHandle(), $bID);
+		$db->Execute('update CollectionVersionBlocksOutputCache set btCachedBlockOutputExpires = 0 where cID = ? and cvID = ? and arHandle = ? and bID = ?', $v);
+	}
 	
 	/** 
 	 * Removes a cached version of the block 
@@ -1230,6 +1236,8 @@ class Concrete5_Model_Block extends Object {
 		$q = "update Blocks set bName = ?, bFilename = ?, bDateModified = ? where bID = ?";
 		$r = $db->prepare($q);
 		$res = $db->execute($r, $v);
+
+		$this->refreshBlockOutputCache();
 		
 	}
 
