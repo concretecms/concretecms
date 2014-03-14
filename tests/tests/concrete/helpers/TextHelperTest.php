@@ -15,7 +15,7 @@ class TextHelperTest extends PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
-        $this->object = Loader::helper('text');
+        $this->object = new Concrete5_Helper_Text();
     }
 
     /**
@@ -24,53 +24,90 @@ class TextHelperTest extends PHPUnit_Framework_TestCase
      */
     protected function tearDown()
     {
+        unset($this->object);
     }
 
-    public function testAsciify() 
+    public function asciifyDataProvider()
     {
-        $this->assertEquals("Mixed with English and Germaen", $this->object->asciify("Mixed with English and Germän", "de_DE"));
-        $this->assertEquals("Mixed with English and ", $this->object->asciify("Mixed with English and 日本人"));
-        $this->assertEquals("Mixed with English and .doc", $this->object->asciify("Mixed with English and 日本人.doc"));
-        $this->assertEquals("Mixed with English and .", $this->object->asciify("Mixed with English and 日本人.日本人"));
-        $this->assertEquals("", $this->object->asciify("日本人"));
-        $this->assertEquals(".doc", $this->object->asciify("日本人.doc"));
-        $this->assertEquals(".", $this->object->asciify("日本人.日本人"));
+        return array(
+            array('Mixed with English and Germaen', 'Mixed with English and Germän', 'de_DE'),
+            array('Mixed with English and ', 'Mixed with English and 日本人', ''),
+            array('Mixed with English and .doc', 'Mixed with English and 日本人.doc', ''),
+            array('Mixed with English and .', 'Mixed with English and 日本人.日本人', ''),
+            array('', '日本人', ''),
+            array('.doc', '日本人.doc', ''),
+            array('.', '日本人.日本人', ''),
+        );
     }
 
-    public function testUrlify() 
+    public function urlifyDataProvider()
     {
-        $this->assertEquals("simple-test-case", $this->object->urlify("This is a simple test case"));
-        $this->assertEquals ('jetudie-le-francais', $this->object->urlify(' J\'étudie le français '));
-        $this->assertEquals ('lo-siento-no-hablo-espanol', $this->object->urlify('Lo siento, no hablo español.'));
-        $this->assertEquals ('f3pws', $this->object->urlify('ΦΞΠΏΣ'));
-        $this->assertEquals ('yo-hablo-espanol', $this->object->urlify('¿Yo hablo español?'));
-        
-        // Test for many rounds with a language, that has no map associated
-        // This causes a "regular expression is too large" error on old versions
+        return array(
+            array('simple-test-case', 'This is a simple test case'),
+            array('jetudie-le-francais', " J'étudie le français "),
+            array('lo-siento-no-hablo-espanol', 'Lo siento, no hablo español.'),
+            array('f3pws', 'ΦΞΠΏΣ'),
+            array('yo-hablo-espanol', '¿Yo hablo español?'),
+        );
+    }
+
+    public function shortenDataProvider()
+    {
+        return array(
+            array('This is a simple test...', 'This is a simple test case', 24, '...'),
+            array('This is a simple test etc', 'This is a simple test case', 22, ' etc'),
+            array('This is a simple test.', 'This is a simple test case', 21, '.'),
+            array('The quick brown fox jumps over the lazy dog', 'The quick brown fox jumps over the lazy dog', 255, '…'),
+            array('The lazy fox jumps over the quick brown dog', 'The lazy fox jumps over the quick brown dog', 0, '…'),
+            array('This_is_a_simple_test_ca…', 'This_is_a_simple_test_case', 24, '…'),
+        );
+    }
+
+    public function testTextHelper()
+    {
+        $this->assertInstanceOf('Concrete5_Helper_Text', new TextHelper());
+    }
+
+    /**
+     * @dataProvider asciifyDataProvider
+     */
+    public function testAsciify($expected, $input1, $input2)
+    {
+        $this->assertEquals($expected, $this->object->asciify($input1, $input2));
+    }
+
+    /**
+     * @dataProvider urlifyDataProvider
+     */
+    public function testUrlify($expected, $input)
+    {
+        $this->assertEquals($expected, $this->object->urlify($input));
+    }
+
+    /**
+     * Test for many rounds with a language, that has no map associated
+     * This causes a "regular expression is too large" error on old versions
+     */
+    public function testUrlify_regexTooLarge()
+    {
         for ($i = 0; $i < 1000; $i++) {
-            $this->object->urlify('Lo siento, no hablo español.',60,-1);
+            $this->object->urlify('Lo siento, no hablo español.', 60, -1);
         }
     }
 
-    public function testShortenTextWord() 
+    /**
+     * @dataProvider shortenDataProvider
+     */
+    public function testShortenTextWord($expected, $input1, $input2, $input3)
     {
-        $this->assertEquals("This is a simple test...", $this->object->shortenTextWord("This is a simple test case",24,"..."));
-        $this->assertEquals("This is a simple test etc", $this->object->shortenTextWord("This is a simple test case",22," etc"));
-        $this->assertEquals("This is a simple test.", $this->object->shortenTextWord("This is a simple test case",21,"."));
-        $this->assertEquals("The quick brown fox jumps over the lazy dog", $this->object->shortenTextWord("The quick brown fox jumps over the lazy dog"));
-        $this->assertEquals("The lazy fox jumps over the quick brown dog", $this->object->shortenTextWord("The lazy fox jumps over the quick brown dog",0));
-        $this->assertEquals("This_is_a_simple_test_ca…", $this->object->shortenTextWord("This_is_a_simple_test_case",24,"…"));
+        $this->assertEquals($expected, $this->object->shortenTextWord($input1, $input2, $input3));
     }
-    
-    public function testWordSafeShortText() 
-    {
-        $this->assertEquals("This is a simple test...", $this->object->wordSafeShortText("This is a simple test case",24,"..."));
-        $this->assertEquals("This is a simple test etc", $this->object->wordSafeShortText("This is a simple test case",22," etc"));
-        $this->assertEquals("This is a simple test.", $this->object->wordSafeShortText("This is a simple test case",21,"."));
-        $this->assertEquals("The quick brown fox jumps over the lazy dog", $this->object->wordSafeShortText("The quick brown fox jumps over the lazy dog"));
-        $this->assertEquals("The lazy fox jumps over the quick brown dog", $this->object->wordSafeShortText("The lazy fox jumps over the quick brown dog",0));
-        $this->assertEquals("This_is_a_simple_test_ca…", $this->object->wordSafeShortText("This_is_a_simple_test_case",24,"…"));
-    }
-    
 
+    /**
+     * @dataProvider shortenDataProvider
+     */
+    public function testWordSafeShortText($expected, $input1, $input2, $input3)
+    {
+        $this->assertEquals($expected, $this->object->wordSafeShortText($input1, $input2, $input3));
+    }
 }
