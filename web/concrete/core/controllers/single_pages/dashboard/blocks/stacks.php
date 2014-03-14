@@ -21,7 +21,7 @@ class Concrete5_Controller_Dashboard_Blocks_Stacks extends DashboardBaseControll
 		if ($cpc->canMoveOrCopyPage()) {
 			$this->set('canMoveStacks', true);
 			
-			$sortUrl = View::url('/dashboard/blocks/stacks/update_order');
+			$sortUrl = View::url('/dashboard/blocks/stacks', 'update_order');
 			$this->addFooterItem('<script type="text/javascript">
 			$("div.ccm-stack-content-wrapper").sortable({
 				handle: "img.ccm-group-sort",
