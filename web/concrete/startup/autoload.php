@@ -209,6 +209,7 @@ $classes = array(
 	'WorkflowRequest' => array('model','workflow/request/model'),
 	'PageWorkflowRequest' => array('model','workflow/request/categories/page'),
 	'ApprovePagePageWorkflowRequest' => array('model','workflow/request/requests/approve_page'),
+	'ApproveStackPageWorkflowRequest' => array('model','workflow/request/requests/approve_stack'),
 	'ChangePagePermissionsPageWorkflowRequest' => array('model','workflow/request/requests/change_page_permissions'),
 	'ChangePagePermissionsInheritancePageWorkflowRequest' => array('model','workflow/request/requests/change_page_permissions_inheritance'),
 	'ChangeSubpageDefaultsInheritancePageWorkflowRequest' => array('model','workflow/request/requests/change_subpage_defaults_inheritance'),
